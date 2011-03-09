@@ -1,9 +1,9 @@
 --- 
 format: 1
 handler: 
-  commit: afb28caf712815da82cd6bb8ece8ac12ab9b2188
+  commit: 2045d5fbfa3ed857a9eac3722e6f9ecc301593c6
   branch: master
 lock: false
 repository_class: Piston::Git::Repository
 repository_url: git://github.com/hafriedlander/php-peg.git
-exported_to: 0669b742904f8c9f7cd97569166663396897dab9
+exported_to: 654df253d884db2cd397016de1a5105455ba1631

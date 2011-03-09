@@ -1,59 +1,5 @@
 <?php
 
-class ParserExpression {
-
-	function __construct( $parser, $substack, $result ) {
-		$this->parser = $parser ;
-		$this->substack = $substack ;
-		$this->result = $result ;
-	}
-
-	function find( $exp ) {
-		$rule_callback = array( $this->parser, "{$this->result['name']}_DLR{$exp}" ) ;
-		$pars_callback = array( $this->parser, "DLR{$exp}" ) ;
-
-		/* If the current result has that expression, return it */
-		if ( isset( $this->result[$exp] ) ) return $this->result[$exp] ;
-
-		/* Search backwards through the sub-expression stacks */
-		for ( $i = count( $this->substack ) - 1 ; $i >= 0 ; $i-- ) {
-			if ( isset( $this->substack[$i][$exp] ) ) return $this->substack[$i][$exp] ;
-		}
-
-		/* If we have a rule-attached method, call that */
-		if ( is_callable( $rule_callback ) ) return call_user_func( $rule_callback, $result ) ;
-
-		/* If we have a class-wide method, call that */
-		if ( is_callable( $pars_callback ) ) return call_user_func( $pars_callback, $result ) ;
-
-		/* If we have a global function, call that */
-		if ( function_exists( $exp ) ) return call_user_func( $exp, $result ) ;
-
-		/* If we have a global constant, call that */
-		if ( defined( $exp ) ) return constant( $expression ) ;
-
-		return FALSE ;
-	}
-
-	function callback( $m ) {
-		$res = $this->find( $m[1] ) ;
-		if ( $res === FALSE ) return "" ;
-		if ( is_string( $res ) ) return $res ;
-		if ( isset( $res['text'] ) ) return $res['text'] ;
-
-		// If we find no matches, assume we don't want a replacement, and replace it with itself
-		return $m[0] ;
-	}
-
-	function expand( $var ) {
-		return preg_replace_callback( '/\$(\w+)/', array( $this, 'callback' ), $var ) ;
-	}
-
-	function match( $var ) {
-		return $this->find( $var ) ;
-	}
-}
-
 /**
  * We cache the last regex result. This is a low-cost optimization, because we have to do an un-anchored match + check match position anyway
  * (alternative is to do an anchored match on a string cut with substr, but that is very slow for long strings). We then don't need to recheck
@@ -133,23 +79,27 @@ class Parser {
 		return $this->regexps[$rx]->match() ;
 	}
 
-	function expand( $var, $substack, $result ) {
-		$cb = new Parser_ExpressionCallback( $this, $substack, $result ) ;
-		$v = preg_replace_callback( '/\$(\w+)/', array( $cb, 'callback' ), $var ) ;
-		print "Expanded var: $v" ;
-		return $v ;
-	}
-
-	function php( $var, $substack, $result ) {
-		$ex = $this->get_expression( $var, $substack, $result ) ;
-		print_r( $result ) ;
-
-		if ( is_string( $ex ) ) {
-			return ( preg_match( '{^\s*/}', $ex ) ? $this->rx( $ex ) : $this->literal( $ex ) ) ;
+	function expression( $result, $stack, $value ) {
+		$stack[] = $result; $rv = false;
+		
+		/* Search backwards through the sub-expression stacks */
+		for ( $i = count($stack) - 1 ; $i >= 0 ; $i-- ) {
+			$node = $stack[$i];
+			
+			if ( isset($node[$value]) ) { $rv = $node[$value]; break; }
+			
+			foreach ($this->typestack($node['_matchrule']) as $type) {
+				$callback = array($this, "{$type}_DLR{$value}");
+				if ( is_callable( $callback ) ) { $rv = call_user_func( $callback ) ; if ($rv !== FALSE) break; }
+			}
 		}
-		return $ex ;
-	}
 
+		if ($rv === false) $rv = @$this->$value;
+		if ($rv === false) $rv = @$this->$value();
+
+		return is_array($rv) ? $rv['text'] : ($rv ? $rv : '');
+	}
+	
 	function packhas( $key, $pos ) {
 		return false ;
 	}
@@ -162,21 +112,33 @@ class Parser {
 		return $res ;
 	}
 
-	function construct( $name ) {
-		$result = array( 'type' => 'node', 'name' => $name, 'text' => '' ) ;
+	function typestack( $name ) {
+		$prop = "match_{$name}_typestack";
+		return $this->$prop;
+	}
+	
+	function construct( $matchrule, $name, $arguments = null ) {
+		$result = array( '_matchrule' => $matchrule, 'name' => $name, 'text' => '' );
+		if ($arguments) $result = array_merge($result, $arguments) ;
 
-		$callback = array( $this, "{$name}__construct" ) ;
-		if ( is_callable( $callback ) ) {
-			call_user_func_array( $callback, array( &$result ) ) ;
+		foreach ($this->typestack($matchrule) as $type) {
+			$callback = array( $this, "{$type}__construct" ) ;
+			if ( is_callable( $callback ) ) {
+				call_user_func_array( $callback, array( &$result ) ) ;
+				break;
+			}
 		}
 
 		return $result ;
 	}
 
-	function finalise( $name, &$result ) {
-		$callback = array( $this, "{$name}__finalise" ) ;
-		if ( is_callable( $callback ) ) {
-			call_user_func_array( $callback, array( &$result ) ) ;
+	function finalise( &$result ) {
+		foreach ($this->typestack($result['_matchrule']) as $type) {
+			$callback = array( $this, "{$type}__finalise" ) ;
+			if ( is_callable( $callback ) ) {
+				call_user_func_array( $callback, array( &$result ) ) ;
+				break;
+			}
 		}
 
 		return $result ;
@@ -185,16 +147,23 @@ class Parser {
 	function store ( &$result, $subres, $storetag = NULL ) {
 		$result['text'] .= $subres['text'] ;
 
-		$globalcb = array( $this, "{$result['name']}_STR" ) ;
-		$callback = array( $this, $storetag ? "{$result['name']}_{$storetag}" : "{$result['name']}_{$subres['name']}" ) ;
+		$storecalled = false;
 
-		if ( is_callable( $callback ) ) {
-			call_user_func_array( $callback, array( &$result, $subres ) ) ;
-		}
-		elseif ( is_callable( $globalcb ) ) {
-			call_user_func_array( $globalcb, array( &$result, $subres ) ) ;
-		}
-		elseif ( $storetag ) {
+		foreach ($this->typestack($result['_matchrule']) as $type) {
+			$callback = array( $this, $storetag ? "{$type}_{$storetag}" : "{$type}_{$subres['name']}" ) ;
+			if ( is_callable( $callback ) ) {
+				call_user_func_array( $callback, array( &$result, $subres ) ) ;
+				$storecalled = true; break;
+			}
+			
+			$globalcb = array( $this, "{$type}_STR" ) ;
+			if ( is_callable( $globalcb ) ) {
+				call_user_func_array( $globalcb, array( &$result, $subres ) ) ;
+				$storecalled = true; break;
+			}
+		}	
+		
+		if ( $storetag && !$storecalled ) {
 			if ( !isset( $result[$storetag] ) ) $result[$storetag] = $subres ;
 			else {
 				if ( isset( $result[$storetag]['text'] ) ) $result[$storetag] = array( $result[$storetag] ) ;
