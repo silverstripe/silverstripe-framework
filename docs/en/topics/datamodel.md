@@ -20,9 +20,11 @@ See [database-structure](/reference/database-structure) for in-depth information
 ## Generating the database-schema
 
 The SilverStripe database-schema is generated automatically by visiting the URL.
-`http://`<mysite>`/dev/build`
+`http://<mysite>/dev/build`
 
-> Note: You need to be logged in as an administrator to perform this command.
+<div class="notice" markdown='1'>
+Note: You need to be logged in as an administrator to perform this command.
+</div>
 
 ## Querying Data
 
@@ -46,8 +48,8 @@ Passing a *$join* statement to DataObject::get will filter results further by th
 table. **It will NOT return the additionally joined data.**  The returned *$records* will always be a
 `[api:DataObject]`.
 
-When using *$join* statements be sure the string is in the proper format for the respective database engine.  In  MySQL
-the use of backticks may be necessary when referring Table Names and potentially Columns. (see [MySQL
+When using *$join* statements be sure the string is in the proper format for the respective database engine. In MySQL
+the use of back-ticks may be necessary when referring Table Names and potentially Columns. (see [MySQL
 Identifiers](http://dev.mysql.com/doc/refman/5.0/en/identifiers.html)):
 
 	:::php
@@ -58,7 +60,6 @@ Identifiers](http://dev.mysql.com/doc/refman/5.0/en/identifiers.html)):
 	          "", 
 	          "LEFT JOIN `ConsultationPaperHolder` ON `ConsultationPaperHolder`.ID = `SiteTree`.ID",
 	          "0, 10"); 
-
 
 
 ## Properties
@@ -121,11 +122,15 @@ Here we combined a Player's first name and surname, accessible through $myPlayer
 	  }
 	}
 
-**CAUTION: It is common practice to make sure that pairs of custom getters/setter deal with the same data, in a consistent
-format.**
+<div class="warning" markdown='1'>
+**CAUTION:** It is common practice to make sure that pairs of custom getters/setter deal with the same data, in a consistent
+format.
+</div>
 
-**CAUTION: Custom setters can be hard to debug: Please double check if you could transform your data in more
-straight-forward logic embedded to your custom controller or form-saving.**
+<div class="warning" markdown='1'>
+**CAUTION:** Custom setters can be hard to debug: Please double check if you could transform your data in more
+straight-forward logic embedded to your custom controller or form-saving.
+</div>
 
 ### Default Values
 
@@ -139,15 +144,17 @@ new object is created.
 	  );
 	}
 
-> Note: Alternatively you can set defaults directly in the database-schema (rather than the object-model). See
+<div class="notice" markdown='1'>
+Note: Alternatively you can set defaults directly in the database-schema (rather than the object-model). See
 [data-types](data-types) for details.
+</div>
 
 ### Casting
 
 Properties defined in *static $db* are automatically casted to their [data-types](data-types) when used in templates. 
 You can also cast the return-values of your custom functions (e.g. your "virtual properties").
 Calling those functions directly will still return whatever type your php-code generates,
-but using the *obj()*-method or accessing through a template will cast the value accordig to the $casting-definition.
+but using the *obj()*-method or accessing through a template will cast the value according to the $casting-definition.
 
 	:::php
 	class Player extends DataObject {
@@ -164,15 +171,9 @@ but using the *obj()*-method or accessing through a template will cast the value
 	}
 
 
-
-
-
-
-
 ## Relations
 
-Relations are built through static array definitions on a class, in the format:\\
-`<relationship-name>` => `<classname>`{php}
+Relations are built through static array definitions on a class, in the format `<relationship-name> => <classname>`
 
 ### has_one
 
@@ -202,8 +203,10 @@ parent element in the tree:
 
 Defines 1-to-many joins. A database-column named ""`<relationship-name>`ID"" will to be created in the child-class.
 
-**CAUTION: Please specify a $has_one-relationship on the related child-class as well, in order to have the necessary
-accessors available on both ends.**
+<div class="warning" markdown='1'>
+**CAUTION:** Please specify a $has_one-relationship on the related child-class as well, in order to have the necessary
+accessors available on both ends.
+</div>
 
 	:::php
 	// access with $myTeam->Players() or $player->Team()
@@ -219,7 +222,7 @@ accessors available on both ends.**
 	}
 
 
-To specify multiple has_manys to the same object you can use dot notation to distinguish them like below
+To specify multiple $has_manys to the same object you can use dot notation to distinguish them like below
 
 	:::php
 	class Person {
@@ -241,7 +244,6 @@ Multiple $has_one relationships are okay if they aren't linking to the same obje
 
 	:::php
 	/**
-	
 	 * THIS IS BAD
 	 */
 	class Team extends DataObject {
@@ -261,8 +263,10 @@ Multiple $has_one relationships are okay if they aren't linking to the same obje
 
 Defines many-to-many joins. A new table, (this-class)_(relationship-name), will be created with a pair of ID fields.
 
-**CAUTION: Please specify a $belongs_many_many-relationship on the related class as well, in order to have the necessary
-accessors available on both ends.**
+<div class="warning" markdown='1'>
+**CAUTION:** Please specify a $belongs_many_many-relationship on the related class as well, in order to have the necessary
+accessors available on both ends.
+</div>
 
 	:::php
 	// access with $myTeam->Categories() or $myCategory->Teams()
@@ -372,10 +376,6 @@ casting data before saving.
 	);
 
 
-
-
-
-
 ### onBeforeWrite
 
 You can customize saving-behaviour for each DataObject, e.g. for adding security. These functions are private, obviously
@@ -411,8 +411,10 @@ Example: Disallow creation of new players if the currently logged-in player is n
 	}
 
 
-> Note: There are no separate methods for *onBeforeCreate* and *onBeforeUpdate*. Please check for the existence of
+<div class="notice" markdown='1'>
+Note: There are no separate methods for *onBeforeCreate* and *onBeforeUpdate*. Please check for the existence of
 $this->ID to toggle these two modes, as shown in the example above.
+</div>
 
 ### onBeforeDelete
 
@@ -453,14 +455,10 @@ See `[api:SQLQuery]` for custom *INSERT*, *UPDATE*, *DELETE* queries.
 
 ## Decorating DataObjects
 
-You can add properties and methods to existing DataObjects like `[api:Member]` (a core class) without hacking core
+You can add properties and methods to existing `[api:DataObjects]`s like `[api:Member]` (a core class) without hacking core
 code or subclassing.
 Please see `[api:DataObjectDecorator]` for a general description, and `[api:Hierarchy]` for our most
 popular examples.
-
-
-
-
 
 
 
@@ -471,7 +469,7 @@ You can work with both in pretty much the same way, but relationship-getters ret
 A `[api:ComponentSet]` with relation-specific functionality.
 
 	:::php
-	$myTeam = DataObject::get_by_id('Team',$myPlayer->TeamID); // returns DataObjectSet
+	$myTeam = DataObject::get_by_id('Team',$myPlayer->TeamID); // returns DataObject
 	$myTeam->add(new Player()); // fails
 	
 	$myTeam = $myPlayer->Team(); // returns Componentset

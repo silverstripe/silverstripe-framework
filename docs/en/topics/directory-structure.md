@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The directory-structure in Silverstripe it built on "convention over configuration", so the placement of some files and
+The directory-structure in SilverStripe it built on "convention over configuration", so the placement of some files and
 directories is meaningful to its logic.
  
 ## Core Structure
@@ -16,7 +16,7 @@ Directory   | Description
 ## Custom Code Structure
 
 We're using `<mysite>` as an example - arbitrary directory-names are allowed, as long as they don't collide with
-existing modules or the directories listes in "Core Structure".
+existing modules or the directories lists in "Core Structure".
 
  | Directory           | Description                                                         | 
  | ---------           | -----------                                                         | 
@@ -30,7 +30,7 @@ existing modules or the directories listes in "Core Structure".
 ## Themes Structure
 
  | `themes/blackcandy/`      | Standard "blackcandy" theme                                         | 
- | ------------------      | ---------------------------                                         | 
+ | ------------------        | ---------------------------                                         | 
  | `themes/blackcandy_blog/` | Theme additions for the blog module                                 | 
  | `themes/yourtheme/`       | The themes folder can contain more than one theme - here's your own | 
 

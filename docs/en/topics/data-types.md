@@ -22,9 +22,9 @@ for introducing their usage.
 
 ## HTMLText vs. Text, and HTMLVarchar vs. Varchar
 
-The database field types HTMLVarchar and Varchar are exactly the same in the database.  However, the templating engine
-knows to escape the Varchar field and not the HTMLVarchar field.  So, it's important you use the right field if you
-don't want to be putting $FieldType.XML everywhere.
+The database field types `[api:HTMLVarchar]` and `[api:Varchar]` are exactly the same in the database.  However, the 
+templating engine knows to escape the `[api:Varchar]` field and not the `[api:HTMLVarchar]` field.  So, it's important you
+use the right field if you don't want to be putting $FieldType.XML everywhere.
 
 If you're going to put HTML content into the field, please use the field type with the HTML prefix.  Otherwise, you're
 going to risk double-escaping your data, forgetting to escape your data, and generally creating a confusing situation.

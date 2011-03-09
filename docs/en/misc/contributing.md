@@ -72,11 +72,16 @@ If you want to learn more about git, please have a look at the [free online git 
 Other modules will be hosted on [subversion](http://subversion.tigris.org), in which case you have to
 package your changes as a "patch" file. Please read the [official Subversion book](http://svnbook.red-bean.com/) (available free online) for a general introduction to subversion. 
 
-To submit a patch, [register](http://open.silverstripe.com/apply) and attach the patch to the appropriate ticket. 
+To submit a patch, [register](http://open.silverstripe.com/register) or [Login](http://open.silverstripe.org/login) if you have already registered and attach the patch to the appropriate ticket. 
 Please include in the comment the revision number that the patch is applicable for and a brief outline of what you fixed and how. 
 Only use the provided link to submit patches, as it prefills information about owner and ticket-type:
 
 [Submit a patch (requires account on open.silverstripe.org)](http://open.silverstripe.com/newticket?field_type=patch&field_owner=ischommer&attachment=1)
+
+The core team is responsible for reviewing the patches and deciding if they will make it into core.  If
+there are any problems they will assign the ticket back to you, so make sure you have an email address loaded into Trac
+so that it will notify you! The Trac reports [Core Patches](http://open.silverstripe.com/report/101) and [Module Patches](http://open.silverstripe.com/report/102) will let you see
+where all the patches are at.
 
 You can create a patch file through the svn diff-command on the command-line. 
 More info in the [svn redbook](http://svnbook.red-bean.com/en/1.1/ch03s05.html#svn-ch-3-sect-5.3.2). 
@@ -163,7 +168,7 @@ Note: Smaller edits can be performed in the github.com web interface on your for
 every page view should have an "edit this file" button.
 
 The [doc.silverstripe.org](http://doc.silverstripe.org) website itself is powered by a
-SilverStripe project that uses the ["sapphiredocs" module](http://open.silverstripe.org/browser/modules/sapphiredocs/trunk)
+SilverStripe project that uses the ["sapphiredocs" module](https://github.com/silverstripe/silverstripe-sapphiredocs)
 to convert Markdown formatted files into searchable HTML pages with index lists.
 
 ### Repositories
@@ -174,11 +179,11 @@ to convert Markdown formatted files into searchable HTML pages with index lists.
 
 ### Source Control
 
-In order to balance editorial control with effective colaboration, we keep
+In order to balance editorial control with effective collaboration, we keep
 documentation alongside the module source code, e.g. in `sapphire/docs/`,
 or as code comments within PHP code.
 Contributing documentation is the same process as providing any other patch
-(see [Patches and Bugfixes](#submiting-patches-bugfixes-and-enhancements)).
+(see [Patches and Bugfixes](contributing#submitting-patches-bugfixes-and-enhancements)).
 
 ### What to write
 
@@ -187,7 +192,7 @@ Contributing documentation is the same process as providing any other patch
   Not suited for longer textual descriptions, due to the limited support of PHPDoc formatting for headlines. 
 * **Tutorials**: The first contact for new users, guiding them step-by-step through achievable projects, in a book-like style.
   *Example: Building a basic site*
-* **Topics**: Provides an overview on how things fit togehter, the "conceptual glue" between APIs and features. 
+* **Topics**: Provides an overview on how things fit together, the "conceptual glue" between APIs and features. 
   This is where most documentation should live, and is the natural "second step" after finishing the tutorials.
   *Example: Templates, Testing, Datamodel*
 * **Howto**: Recipes that solve a specific task or problem, rather than describing a feature.
@@ -205,7 +210,7 @@ for good rules of thumb for documenting opensource software.
 * Don't duplicate: Search for existing places to put your documentation. Do you really require a new page, or just a new paragraph
 of text somewhere?
 * Use PHPDoc in source code: Leave lowlevel technical documentation to code comments within PHP, in [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) format. 
-* Use Markdown in Developer Guides: We have a slightly customized version of Markdown called [SSMarkdown][ss-markdown]
+* Use Markdown in Developer Guides: We have a slightly customized version of Markdown called [SSMarkdown](ss-markdown)
 * API and Developer Guides complement each other: Both forms of documenting sourcecode (API and Developer Guides) are valueable ressources.
 * Provide context: Give API documentation the "bigger picture" by referring to Developer Guides inside your PHPDoc.
 * Make your documentation findable: Documentation lives by interlinking content, so please make sure your contribution doesn't become an
@@ -271,7 +276,7 @@ on placing HTML blocks inside Markdown.
 Documentation is kept alongside the source code, typically in a module subdirectory like `sapphire/docs/en/`.
 Each language has its own subfolder, which can duplicate parts or the whole body of documentation.
 German documentation would for example live in `sapphire/docs/de/`.
-The [sapphiredocs](http://open.silverstripe.org/browser/modules/sapphiredocs/trunk) module that drives
+The [sapphiredocs](https://github.com/silverstripe/silverstripe-sapphiredocs) module that drives
 [doc.silverstripe.org](http://doc.silverstripe.org) automatically resolves these subfolders into a language dropdown.
 
 ### Further reading

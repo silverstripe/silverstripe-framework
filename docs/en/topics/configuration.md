@@ -1,9 +1,9 @@
-# Common Configuration through _config.php
+# Common configuration through _config.php
 
 ## Introduction
 
-Silverstripe doesn't have a global configuration-array or an interface with all available configuration-options. As all
-Silverstripe logic is contained in classes, the appropriate place to configure their behaviour is directly in the class
+SilverStripe doesn't have a global configuration-array or an interface with all available configuration-options. As all
+SilverStripe logic is contained in classes, the appropriate place to configure their behaviour is directly in the class
 itself. 
 
 This lack of a configuration-GUI is on purpose, as we'd like to keep developer-level options where they belong (into
@@ -12,7 +12,7 @@ CMS"](http://www.silverstripe.com/core-team-discussion/flat/2723) for further re
 
 In addition to these principle, some settings are 
  * Author-level configuration like interface language or date/time formats can be performed in the CMS "My Profile" section (`admin/myprofile`). 
- * Group-related configuration like [api:HTMLEditorField] settings can be found in the "Security" section (`admin/security`).
+ * Group-related configuration like `[api:HTMLEditorField]` settings can be found in the "Security" section (`admin/security`).
  * Site-wide settings like page titles can be set (and extended) on the root tree element in the CMS "Content" section (through the [siteconfig](/reference/siteconfig) API).
 
 ## _ss_environment.php
@@ -24,8 +24,9 @@ See [environment-management](/topics/environment-management).
 This file is detected in each folder by `[api:ManifestBuilder]`. This way, every toplevel-folder (=module)
 can have independent configuration-rules.
 
-//Please note that this is the only place where you can put in procedural code - all other functionality is wrapped in
-classes (see [common-problems](/installation/common-problems)).//
+
+Please note that this is the only place where you can put in procedural code - all other functionality is wrapped in
+classes (see [common-problems](/installation/common-problems)).
 
 You can call most static methods from _config.php - classes will be loaded as required. Here's a list - **this is
 incomplete - please add to it** *Try to keep it in alphabetical order too! :)*

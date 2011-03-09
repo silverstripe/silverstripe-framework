@@ -70,6 +70,7 @@ a number of sets, grouped by the field that is passed as the parameter. In this 
 defined earlier is used to break them up.
 
 	:::ss
+	// Modules list grouped by TitleFirstLetter
 	<h2>Modules</h2>
 	<% control Modules.GroupedBy(TitleFirstLetter) %>
 		<h3>$TitleFirstLetter</h3>
@@ -130,6 +131,7 @@ January to December. This can be accomplshed by sorting by the Date field:
 The final step is the render this into the template using the [api:DataObjectSet->GroupedBy()] method.
 
 	:::ss
+	// Modules list grouped by the Month Posted
 	<h2>Modules</h2>
 	<% control NewsItems.GroupedBy(MonthPosted) %>
 		<h3>$MonthPosted</h3>
@@ -139,4 +141,3 @@ The final step is the render this into the template using the [api:DataObjectSet
 			<% end_control %>
 		</ul>
 	<% end_control %>
-	
