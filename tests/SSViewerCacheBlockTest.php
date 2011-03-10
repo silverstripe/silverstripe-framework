@@ -186,6 +186,11 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		$this->assertEquals($this->_runtemplate($template, array('Foo' => 2, 'Fooa' => 9, 'Foob' => 9, 'Bar' => 2, 'Bara' => 1)), ' 9 9 9 ');
 	}
 
+	function testNoErrorMessageForControlWithinCached() {
+		$this->_reset(true);
+		$this->_runtemplate('<% cached %><% control Foo %>$Bar<% end_control %><% end_cached %>');
+	}
+	
 	/**
      * @expectedException Exception
      */
