@@ -3699,10 +3699,16 @@ class SSTemplateParser extends Parser {
 	 */
 	function Text__finalise(&$res) {
 		$text = $res['text'];
+
+		// TODO: This is _super_ ugly, and a performance killer to boot.
 		
 		$text = preg_replace(
 			'/href\s*\=\s*\"\#/', 
-			'href="<?= SSViewer::{dlr}options[\'rewriteHashlinks\'] ? Convert::raw2att( {dlr}_SERVER[\'REQUEST_URI\'] ) : "" ?>#', 
+			'href="' . PHP_EOL .
+			'SSVIEWER;' . PHP_EOL . 
+			'$val .= SSViewer::$options[\'rewriteHashlinks\'] ? Convert::raw2att( $_SERVER[\'REQUEST_URI\'] ) : "";' . PHP_EOL .
+			'$val .= <<<SSVIEWER' . PHP_EOL . 
+			'#', 
 			$text
 		);
 
