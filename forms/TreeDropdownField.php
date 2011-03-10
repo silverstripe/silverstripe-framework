@@ -135,7 +135,7 @@ class TreeDropdownField extends FormField {
 			array (
 				'id'    => "TreeDropdownField_{$this->id()}",
 				'class' => 'TreeDropdownField single' . ($this->extraClass() ? " {$this->extraClass()}" : '') . ($this->showSearch ? " searchable" : ''),
-				'href' => $this->form ? $this->Link('tree') : "",
+				'data-url-tree' => $this->form ? $this->Link('tree') : "",
 				'data-title' => $title,
 			),
 			$this->createTag (

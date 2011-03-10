@@ -61,7 +61,7 @@
 				var self = this, panel = this.getPanel(), treeHolder = $(panel).find('.tree-holder');
 				var params = (params) ? this.getRequestParams().concat(params) : this.getRequestParams();
 				panel.addClass('loading');
-				treeHolder.load(this.attr('href'), params, function(html, status, xhr) {
+				treeHolder.load(this.data('url-tree'), params, function(html, status, xhr) {
 					var firstLoad = true;
 					if(status == 'success') {
 						$(this)
@@ -101,7 +101,7 @@
 						// TODO Hack to avoid ajax load on init, see http://code.google.com/p/jstree/issues/detail?id=911
 						'data': this.getPanel().find('.tree-holder').html(),
 						'ajax': {
-							'url': this.attr('href'),
+							'url': this.data('url-tree'),
 							'data': function(node) {
 								var id = $(node).data("id") ? $(node).data("id") : 0, params = self.getRequestParams();
 								params = params.concat([{name: 'ID', value: id}, {name: 'ajax', value: 1}]);
@@ -197,7 +197,7 @@
 				var self = this, panel = this.getPanel(), treeHolder = $(panel).find('.tree-holder');
 				var params = (params) ? this.getRequestParams().concat(params) : this.getRequestParams();
 				panel.addClass('loading');
-				treeHolder.load(this.attr('href'), params, function(html, status, xhr) {
+				treeHolder.load(this.data('url-tree'), params, function(html, status, xhr) {
 					var firstLoad = true;
 					if(status == 'success') {
 						$(this)

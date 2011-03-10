@@ -45,7 +45,7 @@
 			beforeEach(function() {
 				// load fixture
 				$('body').append(
-					'<div id="testfield" class="TreeDropdownField single" href="/myurl" data-title="Selected">' +
+					'<div id="testfield" class="TreeDropdownField single" data-url-tree="/myurl" data-title="Selected">' +
 					'<input type="hidden" name="testfield" value="1" />' +
 					'</div>'
 				);
@@ -110,7 +110,7 @@
 			beforeEach(function() {
 				// load fixture
 				$('body').append(
-					'<div id="testfield" class="TreeDropdownField searchable" href="/myurl" data-title="Selected">' +
+					'<div id="testfield" class="TreeDropdownField searchable" data-url-tree="/myurl" data-title="Selected">' +
 					'<input type="hidden" name="testfield" value="1" />' +
 					'</div>'
 				);
@@ -142,7 +142,7 @@
 			beforeEach(function() {
 				// load fixture (check one child node, one root node)
 				$('body').append(
-					'<div id="testfield" class="TreeDropdownField multiple" href="/myurl" data-title="Root Node 2,Root Node 3">' +
+					'<div id="testfield" class="TreeDropdownField multiple" data-url-tree="/myurl" data-title="Root Node 2,Root Node 3">' +
 					'<input type="hidden" name="testfield" value="4,5" />' +
 					'</div>'
 				);
@@ -216,7 +216,7 @@
 				// load fixture
 				$('body').append(
 					'<form id="myform" url="/myform">' +
-					'<div id="testfield" class="TreeDropdownField" href="/myurl" data-title="Selected">' +
+					'<div id="testfield" class="TreeDropdownField" data-url-tree="/myurl" data-title="Selected">' +
 					'<input type="hidden" name="testfield" value="1" />' +
 					'</div>' +
 					'<input type="hidden" name="MyFormValue" value="foo" />' +

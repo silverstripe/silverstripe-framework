@@ -113,7 +113,7 @@ class TreeMultiselectField extends TreeDropdownField {
 			array (
 				'id'    => "TreeDropdownField_{$this->id()}",
 				'class' => 'TreeDropdownField multiple' . ($this->extraClass() ? " {$this->extraClass()}" : '') . ($this->showSearch ? " searchable" : ''),
-				'href' => $this->form ? $this->Link('tree') : "",
+				'data-url-tree' => $this->form ? $this->Link('tree') : "",
 				'data-title' => $title,
 			),
 			$this->createTag (
