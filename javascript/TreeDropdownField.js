@@ -3,6 +3,7 @@
 		
 		var strings = {
 			'openlink': 'Open',
+			'fieldTitle': '(choose)',
 			'searchFieldTitle': '(choose or search)'
 		};
 		
@@ -42,8 +43,10 @@
 				this[this.getPanel().is(':visible') ? 'closePanel' : 'openPanel']();
 			},
 			setTitle: function(title) {
+				if(!title) title = strings.fieldTitle;
+					
 				this.find('.title').text(title);
-				this.data('title', title); // separate view from storage (important for search cancellation)
+				this.data('title', title); // separate view from storage (important for search cancellation)				
 			},
 			getTitle: function() {
 				return this.find('.title').text();
@@ -70,9 +73,15 @@
 							})
 							.jstree(self.getTreeConfig())
 							.bind('select_node.jstree', function(e, data) {
-								var node = data.rslt.obj;
-								self.setValue($(node).data('id'));
-								self.setTitle(data.inst.get_text(node));
+								var node = data.rslt.obj, id = $(node).data('id');
+								if(self.getValue() == id) {
+									self.setValue(null);
+									self.setTitle(null);
+								} else {
+									self.setValue(id);
+									self.setTitle(data.inst.get_text(node));
+								}
+								
 								// Avoid auto-closing panel on first load
 								if(!firstLoad) self.closePanel();
 							});
@@ -144,6 +153,8 @@
 				this.setTitle(title ? title : strings.searchFieldTitle);
 			},
 			setTitle: function(title) {
+				if(!title) title = strings.fieldTitle;
+				
 				this.find('.title').val(title);
 			},
 			getTitle: function() {
