@@ -63,8 +63,10 @@ class SSViewer_Scope {
 			
 			default:
 				$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
-					
-				$this->item = call_user_func_array(array($on, 'obj'), func_get_args());
+				
+				$arguments = func_get_args();
+				$this->item = call_user_func_array(array($on, 'obj'), $arguments);
+				
 				$this->itemIterator = null;
 				$this->upIndex = $this->currentIndex ? $this->currentIndex : count($this->itemStack)-1;
 				$this->currentIndex = count($this->itemStack);
