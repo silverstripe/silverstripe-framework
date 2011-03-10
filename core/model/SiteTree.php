@@ -1779,7 +1779,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 						"root" => _t("SiteTree.PARENTTYPE_ROOT", "Top-level page"),
 						"subpage" => _t("SiteTree.PARENTTYPE_SUBPAGE", "Sub-page underneath a parent page (choose below)"),
 					)),
-					$parentIDField = new TreeDropdownField("ParentID", $this->fieldLabel('ParentID'), 'SiteTree'),
+					$parentIDField = new TreeDropdownField("ParentID", $this->fieldLabel('ParentID'), 'SiteTree', 'ID', 'MenuTitle'),
 					
 					new CheckboxField("ShowInMenus", $this->fieldLabel('ShowInMenus')),
 					new CheckboxField("ShowInSearch", $this->fieldLabel('ShowInSearch')),
