@@ -7,8 +7,6 @@
 		};
 		
 		/**
-		 * @todo Locale support/form serialization
-		 * @todo Multiselect: Select items after tree load, serialize titles, override title on select but keep panel open
 		 * @todo Error display
 		 * @todo No results display for search
 		 * @todo Automatic expansion of ajax children when multiselect is triggered
@@ -58,7 +56,7 @@
 			},
 			loadTree: function(params, callback) {
 				var self = this, panel = this.getPanel(), treeHolder = $(panel).find('.tree-holder');
-				var params = params || {};
+				var params = (params) ? this.getRequestParams().concat(params) : this.getRequestParams();
 				panel.addClass('loading');
 				treeHolder.load(this.attr('href'), params, function(html, status, xhr) {
 					var firstLoad = true;
@@ -84,6 +82,7 @@
 				});
 			},
 			getTreeConfig: function() {
+				var self = this;
 				return {
 					'core': {
 						'initially_open': ['record-0'],
@@ -95,7 +94,9 @@
 						'ajax': {
 							'url': this.attr('href'),
 							'data': function(node) {
-								return { ID : $(node).data("id") ? $(node).data("id") : 0 , ajax: 1};
+								var id = $(node).data("id") ? $(node).data("id") : 0, params = self.getRequestParams();
+								params = params.concat([{name: 'ID', value: id}, {name: 'ajax', value: 1}]);
+								return params;
 							}
 						}
 					},
@@ -108,6 +109,16 @@
 					},
 					'plugins': ['html_data', 'ui', 'themes']
 				};
+			},
+			/**
+			 * If the field is contained in a form, submit all form parameters by default.
+			 * This is useful to keep state like locale values which are typically
+			 * encoded in hidden fields through the form.
+			 * 
+			 * @return {array}
+			 */
+			getRequestParams: function() {
+				return [];
 			}
 		});
 		$('.TreeDropdownField *').entwine({
@@ -173,7 +184,7 @@
 			},
 			loadTree: function(params, callback) {
 				var self = this, panel = this.getPanel(), treeHolder = $(panel).find('.tree-holder');
-				var params = params || {};
+				var params = (params) ? this.getRequestParams().concat(params) : this.getRequestParams();
 				panel.addClass('loading');
 				treeHolder.load(this.attr('href'), params, function(html, status, xhr) {
 					var firstLoad = true;

@@ -190,7 +190,7 @@
 				
 				it('it sets the selected titles', function() {
 					var f = $('#testfield'), panel = f.entwine('ss').getPanel();
-					loadTree(f);
+					var xhr = loadTree(f);
 					
 					// TODO loaded.jstree event works with timeouts, so we have to wait before inspection
 					waits(200);
@@ -200,6 +200,39 @@
 					});
 				});
 				
+			});
+			
+		});
+		
+		describe('when field is contained in a form', function() {
+			
+			beforeEach(function() {
+				$('#myform .TreeDropdownField').entwine('ss', {
+					getRequestParams: function() {
+						return this.parents('form:first').serializeArray();
+					}
+				});
+				
+				// load fixture
+				$('body').append(
+					'<form id="myform" url="/myform">' +
+					'<div id="testfield" class="TreeDropdownField" href="/myurl" data-title="Selected">' +
+					'<input type="hidden" name="testfield" value="1" />' +
+					'</div>' +
+					'<input type="hidden" name="MyFormValue" value="foo" />' +
+					'</form>'
+				);
+		  });
+		
+			afterEach(function() {
+				$('#testfield').remove();
+			});
+			
+			it('sends all form values with ajax requests', function() {
+				var f = $('#testfield'), panel = f.entwine('ss').getPanel();
+				loadTree(f);
+				var xhr = mostRecentAjaxRequest();
+				expect(xhr.params).toContain('MyFormValue=foo');
 			});
 		});
 	});
