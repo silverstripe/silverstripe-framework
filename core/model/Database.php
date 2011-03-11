@@ -785,7 +785,36 @@ abstract class SS_Database {
 	 * @return string SQL datetime expression to query for the interval between $date1 and $date2 in seconds which is the result of the substraction
 	 */
 	abstract function datetimeDifferenceClause($date1, $date2);
+	
+	/*
+	 * Does this database support transactions?
+	 * 
+	 * @return boolean
+	 */
+	abstract function supportsTransactions();
+	
+	/*
+	 * Start a prepared transaction
+	 * See http://developer.postgresql.org/pgdocs/postgres/sql-set-transaction.html for details on transaction isolation options
+	 */
+	abstract function transactionStart($transaction_mode=false, $session_characteristics=false);
 
+	/*
+	 * Create a savepoint that you can jump back to if you encounter problems
+	 */
+	abstract function transactionSavepoint($savepoint);
+
+	/*
+	 * Rollback or revert to a savepoint if your queries encounter problems
+	 * If you encounter a problem at any point during a transaction, you may
+	 * need to rollback that particular query, or return to a savepoint
+	 */
+	abstract function transactionRollback($savepoint=false);
+
+	/*
+	 * Commit everything inside this transaction so far
+	 */
+	abstract function transactionEnd();
 }
 
 /**
