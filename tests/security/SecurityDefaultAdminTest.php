@@ -40,7 +40,7 @@ class SecurityDefaultAdminTest extends SapphireTest {
 		
 		$admin = Security::findAnAdministrator();
 		
-		$this->assertInstanceOf('Member', $admin);
+		$this->assertType('Member', $admin);
 		$this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
 		$this->assertNull($admin->Email);
 		$this->assertNull($admin->Password);

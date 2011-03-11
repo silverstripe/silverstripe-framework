@@ -41,10 +41,10 @@ class DataObjectDecoratorTest extends SapphireTest {
 		$object = DataObject::get_one('DataObjectDecoratorTest_RelatedObject', "\"ContactID\" = {$contactID}");
 
 		$this->assertNotNull($object, 'Related object not null');
-		$this->assertInstanceOf('DataObjectDecoratorTest_Member', $object->Contact(), 'Related contact is a member dataobject');
-		$this->assertInstanceOf('DataObjectDecoratorTest_Member', $object->getComponent('Contact'), 'getComponent does the same thing as Contact()');
+		$this->assertType('DataObjectDecoratorTest_Member', $object->Contact(), 'Related contact is a member dataobject');
+		$this->assertType('DataObjectDecoratorTest_Member', $object->getComponent('Contact'), 'getComponent does the same thing as Contact()');
 		
-		$this->assertInstanceOf('DataObjectDecoratorTest_RelatedObject', $contact->RelatedObjects()->First());
+		$this->assertType('DataObjectDecoratorTest_RelatedObject', $contact->RelatedObjects()->First());
 		$this->assertEquals("Lorem ipsum dolor", $contact->RelatedObjects()->First()->FieldOne);
 		$this->assertEquals("Random notes", $contact->RelatedObjects()->First()->FieldTwo);
 		$contact->delete();
@@ -143,7 +143,7 @@ class DataObjectDecoratorTest extends SapphireTest {
 	function testDbObjectOnDecoratedFields() {
 		$member = $this->objFromFixture('DataObjectDecoratorTest_Member', 'member1');
 		$this->assertNotNull($member->dbObject('Website'));
-		$this->assertInstanceOf('Varchar', $member->dbObject('Website'));
+		$this->assertType('Varchar', $member->dbObject('Website'));
 	}	
 	
 	function testDecoratorCanBeAppliedToDataObject() {

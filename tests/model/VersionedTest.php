@@ -94,11 +94,11 @@ class VersionedTest extends SapphireTest {
 	function testVersionedFieldsAdded() {
 		$obj = new VersionedTest_DataObject();
 		// Check that the Version column is added as a full-fledged column
-		$this->assertInstanceOf('Int', $obj->dbObject('Version'));
+		$this->assertType('Int', $obj->dbObject('Version'));
 	
 		$obj2 = new VersionedTest_Subclass();
 		// Check that the Version column is added as a full-fledged column
-		$this->assertInstanceOf('Int', $obj2->dbObject('Version'));
+		$this->assertType('Int', $obj2->dbObject('Version'));
 	}
 
 	function testPublishCreateNewVersion() {

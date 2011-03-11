@@ -18,18 +18,18 @@ class SS_LogTest extends SapphireTest {
 
 	function testExistingWriter() {
 		$writers = SS_Log::get_writers();
-		$this->assertInternalType('array', $writers);
+		$this->assertType('array', $writers);
 		$this->assertEquals(2, count($writers));
 	}
 
 	function testRemoveWriter() {
 		SS_Log::remove_writer($this->testEmailWriter);
 		$writers = SS_Log::get_writers();
-		$this->assertInternalType('array', $writers);
+		$this->assertType('array', $writers);
 		$this->assertEquals(1, count($writers));
 		SS_Log::remove_writer($this->testFileWriter);
 		$writers = SS_Log::get_writers();
-		$this->assertInternalType('array', $writers);
+		$this->assertType('array', $writers);
 		$this->assertEquals(0, count($writers));
 	}
 

@@ -21,14 +21,14 @@ class MoneyTest extends SapphireTest {
 	
 	function testMoneyFieldsReturnedAsObjects() {
 		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
-		$this->assertInstanceOf('Money', $obj->MyMoney);
+		$this->assertType('Money', $obj->MyMoney);
 	}
 
 	
 	function testLoadFromFixture() {
 		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
 		
-		$this->assertInstanceOf('Money', $obj->MyMoney);
+		$this->assertType('Money', $obj->MyMoney);
 		$this->assertEquals($obj->MyMoney->getCurrency(), 'EUR');
 		$this->assertEquals($obj->MyMoney->getAmount(), 1.23);
 	}
@@ -42,7 +42,7 @@ class MoneyTest extends SapphireTest {
 		$this->assertNotContains('MyMoney', array_keys($changed));
 		
 		// With changes
-		$this->assertInstanceOf('Money', $obj->MyMoney);
+		$this->assertType('Money', $obj->MyMoney);
 		$obj->MyMoney->setAmount(99);
 		$changed = $obj->getChangedFields();
 		$this->assertContains('MyMoney', array_keys($changed));
@@ -280,7 +280,7 @@ class MoneyTest extends SapphireTest {
 	function testLoadIntoDataObject() {
 		$obj = new MoneyTest_DataObject();
 		
-		$this->assertInstanceOf('Money', $obj->obj('MyMoney'));
+		$this->assertType('Money', $obj->obj('MyMoney'));
 		
 		$m = new Money();
 		$m->setValue(array(

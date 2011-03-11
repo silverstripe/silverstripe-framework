@@ -108,7 +108,7 @@ class SearchContextTest extends SapphireTest {
 		
 		$project = $results->First();
 		
-		$this->assertInstanceOf('SearchContextTest_Project', $project);
+		$this->assertType('SearchContextTest_Project', $project);
 		$this->assertEquals("Blog Website", $project->Name);
 		$this->assertEquals(2, $project->Actions()->Count());
 		
