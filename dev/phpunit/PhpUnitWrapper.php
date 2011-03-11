@@ -22,7 +22,7 @@ function fileExistsInIncludePath($filename) {
 /**
  * PHPUnit Wrapper class.
  * Base class for PHPUnit wrapper classes to support different PHPUnit versions.
- * The current implementation supports PHPUnit 3.5.
+ * The current implementation supports PHPUnit 3.4 and PHPUnit 3.5.
  */
 class PhpUnitWrapper implements IPhpUnitWrapper {
 	
@@ -48,6 +48,13 @@ class PhpUnitWrapper implements IPhpUnitWrapper {
 	 * @var PHPUnit_Framework_TestListener
 	 */	
 	private $reporter = null;
+	
+	/**
+	 * Shows the version, implemented by the phpunit-wrapper class instance.
+	 * This instance implements no phpunit, the version is null.
+	 * @var String
+	 */	
+	protected $version = null;
 			
 	private static $phpunit_wrapper = null;
 
@@ -116,10 +123,11 @@ class PhpUnitWrapper implements IPhpUnitWrapper {
 	}	
 
 	/** 
+	 * Getter for $version (@see $version).
 	 * @return String
 	 */	
 	public function getVersion() {
-		return (method_exists('PHPUnit_Runner_Version', 'id')) ? PHPUnit_Runner_Version::id() : null;
+		return $this->version;
 	}
 
 	/**
@@ -132,21 +140,25 @@ class PhpUnitWrapper implements IPhpUnitWrapper {
 		if (self::$phpunit_wrapper == null) {
 			 if (fileExistsInIncludePath("/PHPUnit/Autoload.php")) {
 			 	self::$phpunit_wrapper = new PhpUnitWrapper_3_5();
+			 } else 
+			 if (fileExistsInIncludePath("/PHPUnit/Framework.php")) {
+			 	self::$phpunit_wrapper = new PhpUnitWrapper_3_4();
 			 } else {
-				self::$phpunit_wrapper = new PhpUnitWrapper();
+			 	self::$phpunit_wrapper = new PhpUnitWrapper();
 			 } 
 			self::$phpunit_wrapper->init();
+
 		}		
-		
 		return self::$phpunit_wrapper;
 	}	
 
 	/**
+	 * Returns true if one of the two supported PHPUNIT versions is installed.
+	 *
 	 * @return boolean true if PHPUnit has been installed on the environment.
 	 */
 	static function has_php_unit() {
-		$version = self::inst()->getVersion();
-		return ($version && version_compare($version, '3.5.0', '>='));
+		return (Bool) self::inst()->getVersion();
 	}
 	
 	/** 
