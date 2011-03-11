@@ -115,6 +115,19 @@ abstract class SS_Database {
 	 * database expects.
 	 * @return array
 	 */
+	
+	/**
+	 *
+	 * This is a stub function.  Postgres caches the fieldlist results.
+	 *
+	 * @param string $tableName
+	 *
+	 * @return boolean
+	 */
+	function clearCachedFieldlist($tableName=false){
+		return true;
+	}
+	
 	protected abstract function tableList();
 	
 	

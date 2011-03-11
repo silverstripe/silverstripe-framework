@@ -32,8 +32,7 @@ class DatabaseTest extends SapphireTest {
 	function testRenameField() {
 		$conn = DB::getConn();
 
-		//Reset our cached fieldlists:
-		$conn->clear_cached_fieldlist();
+		$conn->clearCachedFieldlist();
 
 		$conn->renameField('DatabaseTest_MyObject', 'MyField', 'MyRenamedField');
 
