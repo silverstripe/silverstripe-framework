@@ -760,7 +760,7 @@ class Requirements_Backend {
 		if(preg_match('/^http[s]?/', $fileOrUrl)) {
 			return $fileOrUrl;
 		} elseif(Director::fileExists($fileOrUrl)) {
-			$prefix = Director::absoluteBaseURL();
+			$prefix = Director::baseURL();
 			$mtimesuffix = "";
 			$suffix = '';
 			if(strpos($fileOrUrl, '?') !== false) {
