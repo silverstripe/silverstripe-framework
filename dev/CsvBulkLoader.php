@@ -153,7 +153,7 @@ class CsvBulkLoader extends BulkLoader {
 			if(is_string($duplicateCheck)) {
 				$SQL_fieldName = Convert::raw2sql($duplicateCheck); 
 				if(!isset($record[$fieldName])) {
-					return false;
+					continue;
 					//user_error("CsvBulkLoader:processRecord: Couldn't find duplicate identifier '{$fieldName}' in columns", E_USER_ERROR);
 				}
 				$SQL_fieldValue = $record[$fieldName];
