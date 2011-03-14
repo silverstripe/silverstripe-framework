@@ -8,6 +8,11 @@ class GD extends Object {
 	protected $gd, $width, $height;
 	protected $quality;
 	
+	/**
+	 * @var boolean
+	 */
+	protected static $stretchPad_default = false;
+	
 	protected static $default_quality = 75;
 
 	/**
@@ -293,8 +298,10 @@ class GD extends Object {
      * @param height
      * @param backgroundColour
 	 */
-	function paddedResize($width, $height, $backgroundColor = "FFFFFF") {
+	function paddedResize($width, $height, $backgroundColor = "FFFFFF", $stretch=null) {
 		if(!$this->gd) return;
+		if(!$stretch)$stretch=self::$stretchPad_default;
+		
 
 		$width = round($width);
 		$height = round($height);
@@ -317,7 +324,7 @@ class GD extends Object {
 			$noresample=false;
 			
 			// Destination narrower than the source
-			if($destAR > $srcAR && $this->width > $width) {
+			if($destAR > $srcAR && ($stretch=true || $this->width > $width)) {
 				$destWidth = $height * $srcAR;
 				$destX = ($width - $destWidth) / 2;
 
@@ -325,7 +332,7 @@ class GD extends Object {
 				$destY = 0;
 				
 			// Destination shorter than the source
-			} elseif($this->width > $width){
+			} elseif($this->width > $width || $stretch=true){
 				$destWidth = $width;
 				$destX = 0;
 				
@@ -348,6 +355,16 @@ class GD extends Object {
 		$output = clone $this;
 		$output->setGD($newGD);
 		return $output;
+	}
+	
+	/**
+	 * Manually overide 'always pad' images -instead of steteching them
+	 * _config.php
+	 * GD::alwaysPad(true);
+	 * @param boolean $code
+	 */
+	static function alwaysPad($bool=true) {
+		self::$stretchPad_default= $bool;
 	}
 
 	/**
