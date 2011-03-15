@@ -338,7 +338,7 @@ TableListRecord.prototype = {
 			'data' : {'ajax': 1},
 			success : function() {
 				self.select_success();
-			}
+			},
 			failure : ajaxErrorHandler
 		});
 	},
