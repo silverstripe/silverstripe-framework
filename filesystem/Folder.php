@@ -25,6 +25,12 @@ class Folder extends File {
 
 	static $default_sort = "\"Sort\"";
 	
+	function populateDefaults() {
+		parent::populateDefaults();
+		
+		if(!$this->Name) $this->Name = _t('AssetAdmin.NEWFOLDER',"NewFolder");
+	}
+	
 	/**
 	 * Find the given folder or create it both as {@link Folder} database records
 	 * and on the filesystem. If necessary, creates parent folders as well.
