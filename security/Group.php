@@ -35,6 +35,12 @@ class Group extends DataObject {
 		"Hierarchy",
 	);
 	
+	function populateDefaults() {
+		parent::populateDefaults();
+		
+		if(!$this->Title) $this->Title = _t('SecurityAdmin.NEWGROUP',"New Group");
+	}
+	
 	function getAllChildren() {
 		$doSet = new DataObjectSet();
 
