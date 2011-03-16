@@ -57,7 +57,10 @@ class SecurityTest extends FunctionalTest {
 		
 		$response = $this->get('SecurityTest_SecuredController');
 		$this->assertEquals(302, $response->getStatusCode());
-		$this->assertContains('Security/login', $response->getHeader('Location'));
+		$this->assertContains(
+			Config::inst()->get('Security', 'login_url'), 
+			$response->getHeader('Location')
+		);
 
 		$this->logInWithPermission('ADMIN');		
 		$response = $this->get('SecurityTest_SecuredController');
@@ -74,7 +77,7 @@ class SecurityTest extends FunctionalTest {
 		$this->session()->inst_set('loggedInAs', $member->ID);
 
 		/* View the Security/login page */
-		$response = $this->get('Security/login');
+		$response = $this->get(Config::inst()->get('Security', 'login_url'));
 		
 		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.action');
 		
@@ -108,7 +111,7 @@ class SecurityTest extends FunctionalTest {
 		$this->autoFollowRedirection = true;
 		
 		/* Attempt to get into the admin section */
-		$response = $this->get('Security/login/');
+		$response = $this->get(Config::inst()->get('Security', 'login_url'));
 		
 		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.text');
 
@@ -396,7 +399,7 @@ class SecurityTest extends FunctionalTest {
 	public function doTestLoginForm($email, $password, $backURL = 'test/link') {
 		$this->get('Security/logout');
 		$this->session()->inst_set('BackURL', $backURL);
-		$this->get('Security/login');
+		$this->get(Config::inst()->get('Security', 'login_url'));
 		
 		return $this->submitForm(
 			"MemberLoginForm_LoginForm", 

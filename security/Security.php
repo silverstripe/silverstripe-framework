@@ -242,7 +242,10 @@ class Security extends Controller {
 			// Audit logging hook
 			$controller->extend('permissionDenied', $member);
 
-			$controller->redirect("Security/login?BackURL=" . urlencode($_SERVER['REQUEST_URI']));
+			$controller->redirect(
+				Config::inst()->get('Security', 'login_url')
+			 . "?BackURL=" . urlencode($_SERVER['REQUEST_URI'])
+			);
 		}
 		return;
 	}
@@ -927,8 +930,25 @@ class Security extends Controller {
 	public static function set_ignore_disallowed_actions($flag) {
 		self::$ignore_disallowed_actions = $flag;
 	}
+
 	public static function ignore_disallowed_actions() {
 		return self::$ignore_disallowed_actions;
+	}
+
+	protected static $login_url = "Security/login";
+
+	/**
+	 * Set a custom log-in URL if you have built your own log-in page.
+	 */
+	public static function set_login_url($loginUrl) {
+	    self::$login_url = $loginUrl;
+	}
+	/**
+	 * Get the URL of the log-in page.
+	 * Defaults to Security/login but can be re-set with {@link set_login_url()}
+	 */
+	public static function login_url() {
+	    return self::$login_url;
 	}
 
 }

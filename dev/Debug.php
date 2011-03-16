@@ -652,7 +652,7 @@ class Debug {
 		$_SESSION['Security']['Message']['type'] =  'warning';
 		$_SESSION['BackURL'] = $_SERVER['REQUEST_URI'];
 		header($_SERVER['SERVER_PROTOCOL'] . " 302 Found");
-		header("Location: " . Director::baseURL() . "Security/login");
+		header("Location: " . Director::baseURL() . Security::login_url());
 		die();
 	}
 }
