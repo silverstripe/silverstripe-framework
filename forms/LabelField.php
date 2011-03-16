@@ -21,12 +21,10 @@ class LabelField extends DatalessField {
 		if(!isset($args[1])) {
 			$title = (isset($args[0])) ? $args[0] : null;
 			$name = $title;
-			$classname = (isset($args[1])) ? $args[1] : null;
-			$allowHTML = (isset($args[2])) ? $args[2] : null;
 			$form = (isset($args[3])) ? $args[3] : null;
 		} 
 		
-		parent::__construct($name, $title, null, $allowHTML, $form);
+		parent::__construct($name, $title, $form);
 	}
 	
 	/**
