@@ -199,7 +199,7 @@ class SS_HTTPResponse {
 	
 	function redirect($dest, $code=302) {
 		if(!in_array($code, self::$redirect_codes)) $code = 302;
-		$this->statusCode = $code;
+		$this->setStatusCode($code);
 		$this->headers['Location'] = $dest;
 	}
 
