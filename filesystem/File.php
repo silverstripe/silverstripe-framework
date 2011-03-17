@@ -361,7 +361,7 @@ class File extends DataObject {
 	/**
 	 * Make sure the file has a name
 	 */
-	public function onBeforeWrite() {
+	protected function onBeforeWrite() {
 		parent::onBeforeWrite();
 
 		// Set default name
