@@ -524,7 +524,7 @@
 				}
 				this.__callback({});
 			},
-			refresh : function (obj) {
+			refresh : function (obj, s_call, e_call) {
 				var _this = this;
 				this.save_opened();
 				if(!obj) { obj = -1; }
@@ -532,7 +532,15 @@
 				if(!obj) { obj = -1; }
 				if(obj !== -1) { obj.children("UL").remove(); }
 				else { this.get_container_ul().empty(); }
-				this.load_node(obj, function () { _this.__callback({ "obj" : obj}); _this.reload_nodes(); });
+				this.load_node(
+					obj, 
+					function () { 
+						_this.__callback({ "obj" : obj}); 
+						_this.reload_nodes(); 
+						if(s_call) s_call.call(this); 
+					},
+					e_call
+				);
 			},
 			// Dummy function to fire after the first load (so that there is a jstree.loaded event)
 			loaded	: function () { 
