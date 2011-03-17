@@ -21,7 +21,7 @@ class PermissionCheckAspect {
 	 * @param String $method
 	 * @param array $args 
 	 */
-	public function beforeCall($proxied, $method, $args) {
+	public function preCall($proxied, $method, $args) {
 		return Permission::check($this->requiredPermission);
 	}
 }

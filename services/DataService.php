@@ -8,7 +8,9 @@
  * @license BSD http://silverstripe.org/BSD-license
  */
 class DataService {
+	
 	private $validationEnabled = true;
+	
 	public function setValidationEnabled($v) {
 		$this->validationEnabled = true;
 	}
