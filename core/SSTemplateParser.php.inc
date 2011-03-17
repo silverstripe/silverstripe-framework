@@ -841,16 +841,20 @@ class SSTemplateParser extends Parser {
 	
 	# Text matches anything that isn't a template command (not an injection, block of any kind or comment) 
 	 
-	Text: /
-		(
-			(\\.) |              # Any escaped character
-			([^<${]) |           # Any character that isn't <, $ or {
-			(<[^%]) |            # < if not followed by %
-			($[^A-Za-z_]) |      # $ if not followed by A-Z, a-z or _
-			({[^$]) |            # { if not followed by $
-			({$[^A-Za-z_])       # {$ if not followed A-Z, a-z or _
+	Text: (
+			# Any set of characters that aren't potentially a control mark or an escaped character 
+			/ [^<${\\]+ / |
+			# An escaped character
+			/ (\\.) / |
+			# A '<' that isn't the start of a block tag
+			'<' !'%' |
+			# A '$' that isn't the start of an injection
+			'$' !(/[A-Za-z_]/) |
+			# A '{' that isn't the start of an injection
+			'{' !'$' |
+			# A '{$' that isn't the start of an injection
+			'{$' !(/[A-Za-z_]/)
 		)+
-		/
 	*/
 	
 	/**
@@ -858,26 +862,19 @@ class SSTemplateParser extends Parser {
 	 */
 	function Text__finalise(&$res) {
 		$text = $res['text'];
-
-		// TODO: This is _super_ ugly, and a performance killer to boot.
 		
+		// Unescape any escaped characters in the text, then put back escapes for any single quotes and backslashes
+		$text = stripslashes($text);
+		$text = addcslashes($text, '\'\\');
+
+		// TODO: This is pretty ugly & gets applied on all files not just html. I wonder if we can make this non-dynamically calculated
 		$text = preg_replace(
 			'/href\s*\=\s*\"\#/', 
-			'href="' . PHP_EOL .
-			'SSVIEWER;' . PHP_EOL . 
-			'$val .= SSViewer::$options[\'rewriteHashlinks\'] ? Convert::raw2att( $_SERVER[\'REQUEST_URI\'] ) : "";' . PHP_EOL .
-			'$val .= <<<SSVIEWER' . PHP_EOL . 
-			'#', 
+			'href="\' . (SSViewer::$options[\'rewriteHashlinks\'] ? Convert::raw2att( $_SERVER[\'REQUEST_URI\'] ) : "") . \'#',
 			$text
 		);
 
-		// TODO: using heredocs means any left over $ symbols will trigger PHP lookups, as will any escapes
-		// Will it break backwards compatibility to use ' quoted strings, and escape just the ' characters?
-	
-		$res['php'] .=
-			'$val .= <<<SSVIEWER' . PHP_EOL .
-				$text . PHP_EOL .
-			'SSVIEWER;' . PHP_EOL ;				
+		$res['php'] .= '$val .= \'' . $text . '\';' . PHP_EOL;
 	}
 		
 	/******************

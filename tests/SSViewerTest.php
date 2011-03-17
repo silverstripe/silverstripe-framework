@@ -77,6 +77,27 @@ SS
 		$this->assertEquals("This is my templateThis is some contentThis is the final content", preg_replace("/\n?<!--.*-->\n?/U",'',$output));
 	}
 	
+	function testBasicText() {
+		$this->assertEquals('"', $this->render('"'), 'Double-quotes are left alone');
+		$this->assertEquals("'", $this->render("'"), 'Single-quotes are left alone');
+		$this->assertEquals('A', $this->render('\\A'), 'Escaped characters are unescaped');
+		$this->assertEquals('\\A', $this->render('\\\\A'), 'Escaped back-slashed are correctly unescaped');
+	}
+	
+	function testBasicInjection() {
+		$this->assertEquals('[out:Test]', $this->render('$Test'), 'Basic stand-alone injection');
+		$this->assertEquals('[out:Test]', $this->render('{$Test}'), 'Basic stand-alone wrapped injection');
+		$this->assertEquals('A[out:Test]!', $this->render('A$Test!'), 'Basic surrounded injection');
+		$this->assertEquals('A[out:Test]B', $this->render('A{$Test}B'), 'Basic surrounded wrapped injection');
+		
+		$this->assertEquals('A$B', $this->render('A\\$B'), 'No injection as $ escaped');
+		$this->assertEquals('A$ B', $this->render('A$ B'), 'No injection as $ not followed by word character');
+		$this->assertEquals('A{$ B', $this->render('A{$ B'), 'No injection as {$ not followed by word character');
+		
+		$this->assertEquals('{$Test}', $this->render('{\\$Test}'), 'Escapes can be used to avoid injection');
+		$this->assertEquals('{\\[out:Test]}', $this->render('{\\\\$Test}'), 'Escapes before injections are correctly unescaped');
+	}
+	
 	function testObjectDotArguments() {
 		$this->assertEquals(
 			'[out:TestObject.methodWithOneArgument(one)]
