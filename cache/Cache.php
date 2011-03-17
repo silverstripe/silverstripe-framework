@@ -3,7 +3,7 @@
  * SS_Cache provides a bunch of static functions wrapping the Zend_Cache system in something a little more
  * easy to use with the SilverStripe config system.
  * 
- * A {@link Zend_Cache} has both a frontend (determines how to get the value to cache, and how to serialize it for storage)
+ * A Zend_Cache has both a frontend (determines how to get the value to cache, and how to serialize it for storage)
  * and a backend (handles the actual storage).
  * 
  * Rather than require library code to specify the backend directly, cache consumers provide a name for the cache
@@ -15,7 +15,6 @@
  * 
  * USING A CACHE
  * 
- * <code>
  * $cache = SS_Cache::factory('foo') ; // foo is any name (try to be specific), and is used to get configuration & storage info
  * 
  * if (!($result = $cache->load($cachekey))) {
@@ -24,7 +23,6 @@
  * }
  * 
  * return $result;
- * </code>
  * 
  * Normally there's no need to remove things from the cache - the cache backends clear out entries based on age & maximum 
  * allocated storage. If you include the version of the object in the cache key, even object changes don't need any invalidation
@@ -33,15 +31,12 @@
  * 
  * (in _config.php)
  * 
- * <code>
  * if (Director::isDev()) SS_Cache::set_cache_lifetime('any', -1, 100);
- * </code>
  * 
  * USING MEMCACHED AS STORE
  * 
  * (in _config.php)
  * 
- * <code>
  * SS_Cache::add_backend('primary_memcached', 'Memcached',
  * 	array('host' => 'localhost', 'port' => 11211, 'persistent' => true, 'weight' => 1, 'timeout' => 5, 'retry_interval' => 15, 'status' => true, 'failure_callback' => '' )
  * );
@@ -61,7 +56,6 @@
  * ));
  * 
  * SS_Cache::pick_backend('two-level', 'any', 10); // No need for special backend for aggregate - TwoLevels with a File slow backend supports tags
- * </code>
  * 
  * @author hfried
  * @package sapphire
@@ -143,18 +137,15 @@ class SS_Cache {
 	 * 
 	 * -- Cache a calculation
 	 * 
-	 * <code>
 	 * if (!($result = $cache->load($cachekey))) {
 	 * 	$result = caluate some how;
 	 * 	$cache->save($result);
 	 * }
 	 * 
 	 * return $result;
-	 * </code>
 	 * 
 	 * -- Cache captured output
 	 * 
-	 * <code>
 	 * if (!($cache->start($cachekey))) {
 	 * 
 	 * 	// output everything as usual
@@ -163,19 +154,14 @@ class SS_Cache {
 	 * 
 	 * 	$cache->end(); // output buffering ends
 	 * }
-	 * </code>
 	 * 
 	 * -- Invalidate an element
 	 * 
-	 * <code>
 	 * $cache->remove($cachekey);
-	 * </code>
 	 * 
 	 * -- Clear the cache (warning - this clears the entire backend, not just this named cache partition)
 	 * 
-	 * <code>
 	 * $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
-	 * </code>
 	 * 
 	 * See the Zend_Cache documentation at http://framework.zend.com/manual/en/zend.cache.html for more
 	 * 

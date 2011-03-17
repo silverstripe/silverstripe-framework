@@ -34,6 +34,5 @@ methods. For example:
 		} else {
 			$this->FullTitle = $this->Title;
 		}
-		
 		parent::populateDefaults();
 	}

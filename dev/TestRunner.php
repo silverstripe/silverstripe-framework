@@ -173,7 +173,7 @@ class TestRunner extends Controller {
 		ManifestBuilder::load_all_classes();
 		$this->all($request, true);
 	}
-	
+
 	/**
 	 * Run only a single coverage test class or a comma-separated list of tests
 	 */

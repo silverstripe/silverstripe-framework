@@ -8,6 +8,7 @@ sections.
 * [Module release process](module-release-process): Creating and looking after a module
 * [Release process](release-process): Describes the Sapphire and CMS release process
 * [SS markdown](ss-markdown): Markdown syntax for our technical documentation
+* [Subversion](subversion): Describes SilverStripe-specific information on how to handle subversion
 
 ## Feedback
 

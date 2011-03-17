@@ -83,17 +83,17 @@ you can also add an exclusion
 	function allPagesToCache() {
 		$urls = array();
 		$pages = DataObject::get("SiteTree");
-
+		
 		// ignored page types
 		$ignored = array('UserDefinedForm');
-
+		
 		foreach($pages as $page) {
 			// check to make sure this page is not in the classname
 			if(!in_array($page->ClassName, $ignored)) {
 				$urls = array_merge($urls, (array)$page->subPagesToCache());
 			}
 		}
-
+		
 		return $urls;
 	}
 
@@ -127,7 +127,7 @@ example](http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpubli
 .htaccess update simpler.
 
 Just look for this line:
-	
+
 	RewriteRule .* sapphire/main.php?url=%1&%{QUERY_STRING} [L]
 
 

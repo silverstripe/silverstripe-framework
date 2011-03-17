@@ -6,7 +6,7 @@ This class represents a set of `[api:DataObject]`s, such as the results of a que
 [datamodel](/topics/datamodel)-related querying. It implements the [Iterator
 interface](http://php.net/manual/en/language.oop5.iterations.php) introduced in PHP5.
 
-Relations (`has_many`/`many_many`) are described in `[api:ComponentSet]`, a subclass of DataObjectSet.
+Relations (`has_many`/`many_many`) are described in `[api:ComponentSet]`, a subclass of `[api:DataObjectSet]`.
 
 ## Usage
 
@@ -56,7 +56,7 @@ This works on the object itself, so do NOT do something like this:
 	:::php
 	$sortedSet = $mySet->sort('Lastname'); //ascending
 
-## Merge with other DataObjectSets
+## Merge with other `[api:DataObjectSet]`s
 
 	:::php
 	$myFirstSet->merge($mySecondSet);
@@ -88,7 +88,7 @@ It is good practice to check for empty sets before doing any iteration.
 
 ### Paging
 
-DataObjects have native support for dealing with **pagination**.
+`[api:DataObject]`s have native support for dealing with **pagination**.
 See *setPageLimits*, *setPageLength*, etc.
 
 FIXME Complete pagination documentation

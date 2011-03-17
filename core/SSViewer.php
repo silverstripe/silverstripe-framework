@@ -1,4 +1,169 @@
 <?php
+
+/**
+ * This tracks the current scope for an SSViewer instance. It has three goals:
+ *   - Handle entering & leaving sub-scopes in loops and withs
+ *   - Track Up and Top
+ *   - (As a side effect) Inject data that needs to be available globally (used to live in ViewableData)
+ * 
+ * In order to handle up, rather than tracking it using a tree, which would involve constructing new objects
+ * for each step, we use indexes into the itemStack (which already has to exist).
+ * 
+ * Each item has three indexes associated with it
+ * 
+ *   - Pop. Which item should become the scope once the current scope is popped out of
+ *   - Up. Which item is up from this item
+ *   - Current. Which item is the first time this object has appeared in the stack
+ * 
+ * We also keep the index of the current starting point for lookups. A lookup is a sequence of obj calls -
+ * when in a loop or with tag the end result becomes the new scope, but for injections, we throw away the lookup
+ * and revert back to the original scope once we've got the value we're after
+ * 
+ */
+class SSViewer_Scope {
+	
+	// The stack of previous "global" items
+	// And array of item, itemIterator, pop_index, up_index, current_index
+	private $itemStack = array(); 
+	
+	private $item; // The current "global" item (the one any lookup starts from)
+	private $itemIterator; // If we're looping over the current "global" item, here's the iterator that tracks with item we're up to
+	
+	private $popIndex; // A pointer into the item stack for which item should be scope on the next pop call
+	private $upIndex; // A pointer into the item stack for which item is "up" from this one
+	private $currentIndex; // A pointer into the item stack for which item is this one (or null if not in stack yet)
+	
+	private $localIndex;
+	
+	function __construct($item){
+		$this->item = $item;
+		$this->localIndex=0;
+		$this->itemStack[] = array($this->item, null, null, null, 0);
+	}
+	
+	function getItem(){
+		return $this->itemIterator ? $this->itemIterator->current() : $this->item;
+	}
+	
+	function resetLocalScope(){
+		list($this->item, $this->itemIterator, $this->popIndex, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->localIndex];
+		array_splice($this->itemStack, $this->localIndex+1);
+	}
+	
+	function obj($name){
+		
+		switch ($name) {
+			case 'Up':
+				list($this->item, $this->itemIterator, $unused2, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->upIndex];
+				break;
+			
+			case 'Top':
+				list($this->item, $this->itemIterator, $unused2, $this->upIndex, $this->currentIndex) = $this->itemStack[0];
+				break;
+			
+			default:
+				$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
+				
+				$arguments = func_get_args();
+				$this->item = call_user_func_array(array($on, 'obj'), $arguments);
+				
+				$this->itemIterator = null;
+				$this->upIndex = $this->currentIndex ? $this->currentIndex : count($this->itemStack)-1;
+				$this->currentIndex = count($this->itemStack);
+				break;
+		}
+		
+		$this->itemStack[] = array($this->item, $this->itemIterator, null, $this->upIndex, $this->currentIndex);
+		return $this;
+	}
+	
+	function pushScope(){
+		$newLocalIndex = count($this->itemStack)-1;
+		
+		$this->popIndex = $this->itemStack[$newLocalIndex][2] = $this->localIndex;
+		$this->localIndex = $newLocalIndex;
+		
+		// We normally keep any previous itemIterator around, so local $Up calls reference the right element. But
+		// once we enter a new global scope, we need to make sure we use a new one
+		$this->itemIterator = $this->itemStack[$newLocalIndex][1] = null;
+		
+		return $this;
+	}
+
+	function popScope(){
+		$this->localIndex = $this->popIndex;
+		$this->resetLocalScope();
+		
+		return $this;
+	}
+	
+	function next(){
+		if (!$this->item) return false;
+		
+		if (!$this->itemIterator) { 
+			if (is_array($this->item)) $this->itemIterator = new ArrayIterator($this->item);
+			else $this->itemIterator = $this->item->getIterator();
+			
+			$this->itemStack[$this->localIndex][1] = $this->itemIterator;
+			$this->itemIterator->rewind();
+		}
+		else {
+			$this->itemIterator->next();
+		}
+		
+		$this->resetLocalScope();
+		
+		if (!$this->itemIterator->valid()) return false;
+		return $this->itemIterator->key();
+	}
+	
+	function __call($name, $arguments) {
+		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
+		$retval = call_user_func_array(array($on, $name), $arguments);
+		
+		$this->resetLocalScope();
+		return $retval;
+	}
+}
+
+/**
+ * This extends SSViewer_Scope to mix in data on top of what the item provides. This can be "global"
+ * data that is scope-independant (like BaseURL), or type-specific data that is layered on top cross-cut like
+ * (like $FirstLast etc).
+ * 
+ * It's separate from SSViewer_Scope to keep that fairly complex code as clean as possible.
+ */
+class SSViewer_DataPresenter extends SSViewer_Scope {
+	
+	private $extras;
+	
+	function __construct($item, $extras = null){
+		parent::__construct($item);
+		$this->extras = $extras;
+	}
+	
+	function __call($name, $arguments) {
+		$property = $arguments[0];
+		
+		if ($this->extras && array_key_exists($property, $this->extras)) {
+			
+			$this->resetLocalScope();
+			
+			$value = $this->extras[$arguments[0]];
+			
+			switch ($name) {
+				case 'hasValue':
+					return (bool)$value;
+				default:
+					return $value;
+			}
+		}
+		
+		return parent::__call($name, $arguments);
+	}
+}
+
+
 /**
  * Parses a template file with an *.ss file extension.
  * 
@@ -422,14 +587,12 @@ class SSViewer {
 			}
 		}
 		
-		$itemStack = array();
+		$scope = new SSViewer_DataPresenter($item, array('I18NNamespace' => basename($template)));
 		$val = "";
-		$valStack = array();
 		
 		include($cacheFile);
 
-		$output = $val;		
-		$output = Requirements::includeInHTML($template, $output);
+		$output = Requirements::includeInHTML($template, $val);
 		
 		array_pop(SSViewer::$topLevel);
 
@@ -460,174 +623,7 @@ class SSViewer {
 	}
 
 	static function parseTemplateContent($content, $template="") {			
-		// Remove UTF-8 byte order mark:
-		// This is only necessary if you don't have zend-multibyte enabled.
-		if(substr($content, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
-			$content = substr($content, 3);
-		}
-
-		// Add template filename comments on dev sites
-		if(Director::isDev() && self::$source_file_comments && $template && stripos($content, "<?xml") === false) {
-			// If this template is a full HTML page, then put the comments just inside the HTML tag to prevent any IE glitches
-			if(stripos($content, "<html") !== false) {
-				$content = preg_replace('/(<html[^>]*>)/i', "\\1<!-- template $template -->", $content);
-				$content = preg_replace('/(<\/html[^>]*>)/i', "\\1<!-- end template $template -->", $content);
-			} else {
-				$content = "<!-- template $template -->\n" . $content . "\n<!-- end template $template -->";
-			}
-		}
-		
-		// $val, $val.property, $val(param), etc.
-		$replacements = array(
-			'/<%--.*--%>/U' =>  '',
-			'/\$Iteration/' =>  '<?= {dlr}key ?>',
-			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+), *([^),]+)\\)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)}/' => '<?= {dlr}item->obj("\\1",array("\\2","\\3"),true)->obj("\\4",null,true)->XML_val("\\5",null,true) ?>',
-			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+), *([^),]+)\\)\\.([A-Za-z0-9_]+)}/' => '<?= {dlr}item->obj("\\1",array("\\2","\\3"),true)->XML_val("\\4",null,true) ?>',
-			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+), *([^),]+)\\)}/' => '<?= {dlr}item->XML_val("\\1",array("\\2","\\3"),true) ?>',
-			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+)\\)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)}/' => '<?= {dlr}item->obj("\\1",array("\\2"),true)->obj("\\3",null,true)->XML_val("\\4",null,true) ?>',
-			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+)\\)\\.([A-Za-z0-9_]+)}/' => '<?= {dlr}item->obj("\\1",array("\\2"),true)->XML_val("\\3",null,true) ?>',
-			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+)\\)}/' => '<?= {dlr}item->XML_val("\\1",array("\\2"),true) ?>',
-			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)}/' => '<?= {dlr}item->obj("\\1",null,true)->obj("\\2",null,true)->XML_val("\\3",null,true) ?>',
-			'/{\\$([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z0-9_]+)}/' => '<?= {dlr}item->obj("\\1",null,true)->XML_val("\\2",null,true) ?>',
-			'/{\\$([A-Za-z_][A-Za-z0-9_]*)}/' => '<?= {dlr}item->XML_val("\\1",null,true) ?>\\2',
-
-			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z0-9_]+)\\(([^),]+)\\)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->obj("\\1")->XML_val("\\2",array("\\3"),true) ?>\\4',
-			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z0-9_]+)\\(([^),]+), *([^),]+)\\)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->obj("\\1")->XML_val("\\2",array("\\3", "\\4"),true) ?>\\5',
-
-			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+), *([^),]+)\\)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->obj("\\1",array("\\2","\\3"),true)->obj("\\4",null,true)->XML_val("\\5",null,true) ?>\\6',
-			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+), *([^),]+)\\)\\.([A-Za-z0-9_]+)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->obj("\\1",array("\\2","\\3"),true)->XML_val("\\4",null,true) ?>\\5',
-			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+), *([^),]+)\\)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->XML_val("\\1",array("\\2","\\3"),true) ?>\\4',
-			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+)\\)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->obj("\\1",array("\\2"),true)->obj("\\3",null,true)->XML_val("\\4",null,true) ?>\\5',
-			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+)\\)\\.([A-Za-z0-9_]+)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->obj("\\1",array("\\2"),true)->XML_val("\\3",null,true) ?>\\4',
-			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\(([^),]+)\\)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->XML_val("\\1",array("\\2"),true) ?>\\3',
-			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->obj("\\1",null,true)->obj("\\2",null,true)->XML_val("\\3",null,true) ?>\\4',
-			'/\\$([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z0-9_]+)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->obj("\\1",null,true)->XML_val("\\2",null,true) ?>\\3',
-			'/\\$([A-Za-z_][A-Za-z0-9_]*)([^A-Za-z0-9]|$)/' => '<?= {dlr}item->XML_val("\\1",null,true) ?>\\2',
-		);
-		
-		$content = preg_replace(array_keys($replacements), array_values($replacements), $content);
-		$content = str_replace('{dlr}','$',$content);
-
-		// Cache block
-		$content = SSViewer_PartialParser::process($template, $content);
-
-		// legacy
-		$content = ereg_replace('<!-- +pc +([A-Za-z0-9_(),]+) +-->', '<' . '% control \\1 %' . '>', $content);
-		$content = ereg_replace('<!-- +pc_end +-->', '<' . '% end_control %' . '>', $content);
-		
-		// < % control Foo % >
-		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+) +%' . '>', '<? array_push($itemStack, $item); if($loop = $item->obj("\\1")) foreach($loop as $key => $item) { ?>', $content);
-		// < % control Foo.Bar % >
-		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+) +%' . '>', '<? array_push($itemStack, $item); if(($loop = $item->obj("\\1")) && ($loop = $loop->obj("\\2"))) foreach($loop as $key => $item) { ?>', $content);
-		// < % control Foo.Bar(Baz) % >
-		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)\\(([^),]+)\\) +%' . '>', '<? array_push($itemStack, $item); if(($loop = $item->obj("\\1")) && ($loop = $loop->obj("\\2", array("\\3")))) foreach($loop as $key => $item) { ?>', $content);
-		// < % control Foo(Bar) % >
-		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+)\\(([^),]+)\\) +%' . '>', '<? array_push($itemStack, $item); if($loop = $item->obj("\\1", array("\\2"))) foreach($loop as $key => $item) { ?>', $content);
-		// < % control Foo(Bar, Baz) % >
-		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+)\\(([^),]+), *([^),]+)\\) +%' . '>', '<? array_push($itemStack, $item); if($loop = $item->obj("\\1", array("\\2","\\3"))) foreach($loop as $key => $item) { ?>', $content);
-		// < % control Foo(Bar, Baz, Buz) % >
-		$content = ereg_replace('<' . '% +control +([A-Za-z0-9_]+)\\(([^),]+), *([^),]+), *([^),]+)\\) +%' . '>', '<? array_push($itemStack, $item); if($loop = $item->obj("\\1", array("\\2", "\\3", "\\4"))) foreach($loop as $key => $item) { ?>', $content);
-		$content = ereg_replace('<' . '% +end_control +%' . '>', '<? } $item = array_pop($itemStack); ?>', $content);
-		$content = ereg_replace('<' . '% +debug +%' . '>', '<? Debug::show($item) ?>', $content);
-		$content = ereg_replace('<' . '% +debug +([A-Za-z0-9_]+) +%' . '>', '<? Debug::show($item->cachedCall("\\1")) ?>', $content);
-
-		// < % if val1.property % >
-		$content = ereg_replace('<' . '% +if +([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+) +%' . '>', '<? if($item->obj("\\1",null,true)->hasValue("\\2")) {  ?>', $content);
-		
-		// < % if val1(parameter) % >
-		$content = ereg_replace('<' . '% +if +([A-Za-z0-9_]+)\\(([A-Za-z0-9_-]+)\\) +%' . '>', '<? if($item->hasValue("\\1",array("\\2"))) {  ?>', $content);
-
-		// < % if val1 % >
-		$content = ereg_replace('<' . '% +if +([A-Za-z0-9_]+) +%' . '>', '<? if($item->hasValue("\\1")) {  ?>', $content);
-		$content = ereg_replace('<' . '% +else_if +([A-Za-z0-9_]+) +%' . '>', '<? } else if($item->hasValue("\\1")) {  ?>', $content);
-
-		// < % if val1 || val2 % >
-		$content = ereg_replace('<' . '% +if +([A-Za-z0-9_]+) *\\|\\|? *([A-Za-z0-9_]+) +%' . '>', '<? if($item->hasValue("\\1") || $item->hasValue("\\2")) { ?>', $content);
-		$content = ereg_replace('<' . '% +else_if +([A-Za-z0-9_]+) *\\|\\|? *([A-Za-z0-9_]+) +%' . '>', '<? else_if($item->hasValue("\\1") || $item->hasValue("\\2")) { ?>', $content);
-
-		// < % if val1 && val2 % >
-		$content = ereg_replace('<' . '% +if +([A-Za-z0-9_]+) *&&? *([A-Za-z0-9_]+) +%' . '>', '<? if($item->hasValue("\\1") && $item->hasValue("\\2")) { ?>', $content);
-		$content = ereg_replace('<' . '% +else_if +([A-Za-z0-9_]+) *&&? *([A-Za-z0-9_]+) +%' . '>', '<? else_if($item->hasValue("\\1") && $item->hasValue("\\2")) { ?>', $content);
-
-		// < % if val1 == val2 % >
-		$content = ereg_replace('<' . '% +if +([A-Za-z0-9_]+) *==? *"?([A-Za-z0-9_-]+)"? +%' . '>', '<? if($item->XML_val("\\1",null,true) == "\\2") {  ?>', $content);
-		$content = ereg_replace('<' . '% +else_if +([A-Za-z0-9_]+) *==? *"?([A-Za-z0-9_-]+)"? +%' . '>', '<? } else if($item->XML_val("\\1",null,true) == "\\2") {  ?>', $content);
-		
-		// < % if val1 != val2 % >
-		$content = ereg_replace('<' . '% +if +([A-Za-z0-9_]+) *!= *"?([A-Za-z0-9_-]+)"? +%' . '>', '<? if($item->XML_val("\\1",null,true) != "\\2") {  ?>', $content);
-		$content = ereg_replace('<' . '% +else_if +([A-Za-z0-9_]+) *!= *"?([A-Za-z0-9_-]+)"? +%' . '>', '<? } else if($item->XML_val("\\1",null,true) != "\\2") {  ?>', $content);
-
-		$content = ereg_replace('<' . '% +else_if +([A-Za-z0-9_]+) +%' . '>', '<? } else if(($test = $item->cachedCall("\\1")) && ((!is_object($test) && $test) || ($test && $test->exists()) )) {  ?>', $content);
-
-		$content = ereg_replace('<' . '% +if +([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+) +%' . '>', '<? $test = $item->obj("\\1",null,true)->cachedCall("\\2"); if((!is_object($test) && $test) || ($test && $test->exists())) {  ?>', $content);
-		$content = ereg_replace('<' . '% +else_if +([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+) +%' . '>', '<? } else if(($test = $item->obj("\\1",null,true)->cachedCall("\\2")) && ((!is_object($test) && $test) || ($test && $test->exists()) )) {  ?>', $content);
-
-		$content = ereg_replace('<' . '% +if +([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+) +%' . '>', '<? $test = $item->obj("\\1",null,true)->obj("\\2",null,true)->cachedCall("\\3"); if((!is_object($test) && $test) || ($test && $test->exists())) {  ?>', $content);
-		$content = ereg_replace('<' . '% +else_if +([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+)\\.([A-Za-z0-9_]+) +%' . '>', '<? } else if(($test = $item->obj("\\1",null,true)->obj("\\2",null,true)->cachedCall("\\3")) && ((!is_object($test) && $test) || ($test && $test->exists()) )) {  ?>', $content);
-		
-		$content = ereg_replace('<' . '% +else +%' . '>', '<? } else { ?>', $content);
-		$content = ereg_replace('<' . '% +end_if +%' . '>', '<? }  ?>', $content);
-
-		// i18n - get filename of currently parsed template
-		// CAUTION: No spaces allowed between arguments for all i18n calls!
-		ereg('.*[\/](.*)',$template,$path);
-		
-		// i18n _t(...) - with entity only (no dots in namespace), 
-		// meaning the current template filename will be added as a namespace. 
-		// This applies only to "root" templates, not includes which should always have their namespace set already.
-		// See getTemplateContent() for more information.
-		$content = ereg_replace('<' . '% +_t\((\'([^\.\']*)\'|"([^\."]*)")(([^)]|\)[^ ]|\) +[^% ])*)\) +%' . '>', '<?= _t(\''. $path[1] . '.\\2\\3\'\\4) ?>', $content);
-		// i18n _t(...)
-		$content = ereg_replace('<' . '% +_t\((\'([^\']*)\'|"([^"]*)")(([^)]|\)[^ ]|\) +[^% ])*)\) +%' . '>', '<?= _t(\'\\2\\3\'\\4) ?>', $content);
-
-		// i18n sprintf(_t(...),$argument) with entity only (no dots in namespace), meaning the current template filename will be added as a namespace
-		$content = ereg_replace('<' . '% +sprintf\(_t\((\'([^\.\']*)\'|"([^\."]*)")(([^)]|\)[^ ]|\) +[^% ])*)\),\<\?= +([^\?]*) +\?\>) +%' . '>', '<?= sprintf(_t(\''. $path[1] . '.\\2\\3\'\\4),\\6) ?>', $content);
-		// i18n sprintf(_t(...),$argument)
-		$content = ereg_replace('<' . '% +sprintf\(_t\((\'([^\']*)\'|"([^"]*)")(([^)]|\)[^ ]|\) +[^% ])*)\),\<\?= +([^\?]*) +\?\>) +%' . '>', '<?= sprintf(_t(\'\\2\\3\'\\4),\\6) ?>', $content);
-
-		// </base> isnt valid html? !? 
-		$content = ereg_replace('<' . '% +base_tag +%' . '>', '<?= SSViewer::get_base_tag($val); ?>', $content);
-
-		$content = ereg_replace('<' . '% +current_page +%' . '>', '<?= $_SERVER[SCRIPT_URL] ?>', $content);
-		
-		// change < % require x() % > calls to corresponding Requirement::x() ones, including 0, 1 or 2 options
-		$content = preg_replace('/<% +require +([a-zA-Z]+)(?:\(([^),]+)\))? +%>/', '<? Requirements::\\1("\\2"); ?>', $content);
-		$content = preg_replace('/<% +require +([a-zA-Z]+)\(([^),]+), *([^),]+)\) +%>/', '<? Requirements::\\1("\\2", "\\3"); ?>', $content);
-
-		
-		// Add include filename comments on dev sites
-		if(Director::isDev() && self::$source_file_comments) $replacementCode = 'return "<!-- include " . SSViewer::getTemplateFile($matches[1]) . " -->\n" 
-			. "<?= SSViewer::parse_template(\\"" . $matches[1] . "\", \$item); ?>"
-			. "\n<!-- end include " . SSViewer::getTemplateFile($matches[1]) . " -->";';
-		else $replacementCode = 'return "<?= SSViewer::execute_template(\\"" . $matches[1] . "\", \$item); ?>";';
-		
-		$content = preg_replace_callback('/<' . '% include +([A-Za-z0-9_]+) +%' . '>/', create_function(
-			'$matches', $replacementCode
-			), $content);
-		
-		// legacy
-		$content = ereg_replace('<!-- +if +([A-Za-z0-9_]+) +-->', '<? if($item->cachedCall("\\1")) { ?>', $content);
-		$content = ereg_replace('<!-- +else +-->', '<? } else { ?>', $content);
-		$content = ereg_replace('<!-- +if_end +-->', '<? }  ?>', $content);
-			
-		// Fix link stuff
-		$content = ereg_replace('href *= *"#', 'href="<?= SSViewer::$options[\'rewriteHashlinks\'] ? Convert::raw2att( $_SERVER[\'REQUEST_URI\'] ) : "" ?>#', $content);
-	
-		// Protect xml header
-		$content = ereg_replace('<\?xml([^>]+)\?' . '>', '<##xml\\1##>', $content);
-
-		// Turn PHP file into string definition
-		$content = str_replace('<?=',"\nSSVIEWER;\n\$val .= ", $content);
-		$content = str_replace('<?',"\nSSVIEWER;\n", $content);
-		$content = str_replace('?>',";\n \$val .= <<<SSVIEWER\n", $content);
-		
-		$output  = "<?php\n";
-		$output .= '$val .= <<<SSVIEWER' . "\n" . $content . "\nSSVIEWER;\n"; 
-		
-		// Protect xml header @sam why is this run twice ?
-		$output = ereg_replace('<##xml([^>]+)##>', '<' . '?xml\\1?' . '>', $output);
-	
-		return $output;
+		return SSTemplateParser::compileString($content, $template, Director::isDev() && self::$source_file_comments);
 	}
 
 	/**
@@ -695,7 +691,7 @@ class SSViewer_FromString extends SSViewer {
 			echo "</pre>";
 		}
 
-		$itemStack = array();
+		$scope = new SSViewer_DataPresenter($item);
 		$val = "";
 		$valStack = array();
 		
@@ -708,256 +704,3 @@ class SSViewer_FromString extends SSViewer {
 		return $val;
 	}
 }
-
-/**
- * Handle the parsing for cacheblock tags.
- * 
- * Needs to be handled differently from the other tags, because cacheblock can take any number of arguments
- * 
- * This shouldn't be used as an example of how to add functionality to SSViewer - the eventual plan is to re-write
- * SSViewer using a proper parser (probably http://github.com/hafriedlander/php-peg), so that extra functionality
- * can be added without relying on ad-hoc parsers like this.
- * 
- * @package sapphire
- * @subpackage view
- */
-class SSViewer_PartialParser {
- 	
-	static $tag = '/< % [ \t]+ (cached|cacheblock|uncached|end_cached|end_cacheblock|end_uncached) [ \t]+ ([^%]+ [ \t]+)? % >/xS';
-	
-	static $argument_splitter = '/^\s*
-		# The argument itself
-		(
-			(?P<conditional> if | unless ) |                     # The if or unless keybreak
-			(?P<property> (?P<identifier> \w+) \s*               # A property lookup or a function call
-				( \( (?P<arguments> [^\)]*) \) )?
-			) |
-			(?P<sqstring> \' (\\\'|[^\'])+ \' ) |                # A string surrounded by \'
-			(?P<dqstring> " (\\"|[^"])+ " )                      # A string surrounded by "
-		)
-		# Some seperator after the argument
-		(
-			\s*(?P<comma>,)\s* |                                 # A comma (maybe with whitespace before or after)
-			(?P<fullstop>\.)                                     # A period (no whitespace before)
-		)?
-	/xS';
-	
-	static function process($template, $content) {
-		$parser = new SSViewer_PartialParser($template, $content, 0);
-		$parser->parse();
-		return $parser->generate();
-	}
-	
-	function __construct($template, $content, $offset) {
-		$this->template = $template;
-		$this->content = $content;
-		$this->offset = $offset;
-
-		$this->blocks = array();
-	}
-
-	function controlcheck($text) {
-		// NOP - hook for Cached_PartialParser
-	}
-
-	function parse() {
-		$current_tag_offset = 0;
-		
-		while (preg_match(self::$tag, $this->content, $matches, PREG_OFFSET_CAPTURE, $this->offset)) {
-			$tag = $matches[1][0];
-
-			$startpos = $matches[0][1];
-			$endpos = $matches[0][1] + strlen($matches[0][0]);
-
-			switch($tag) {
-				case 'cached':
-				case 'uncached':
-				case 'cacheblock':
-
-					$pretext = substr($this->content, $this->offset, $startpos - $this->offset);
-					$this->controlcheck($pretext);
-					$this->blocks[] = $pretext;
-
-					if ($tag == 'cached' || $tag == 'cacheblock') {
-						list($keyparts, $conditional, $condition) = $this->parseargs(@$matches[2][0]);
-						$parser = new SSViewer_Cached_PartialParser($this->template, $this->content, $endpos, $keyparts, $conditional, $condition);
-					}
-					else {
-						$parser = new SSViewer_PartialParser($this->template, $this->content, $endpos);
-					}
-
-					$parser->parse();
-					$this->blocks[] = $parser;
-					$this->offset = $parser->offset;
-					break;
-
-				case 'end_cached':
-				case 'end_cacheblock':
-				case 'end_uncached':
-					$this->blocks[] = substr($this->content, $this->offset, $startpos - $this->offset);
-					$this->content = null;
-
-					$this->offset = $endpos;
-					return $this;
-			}
-		}
-
-		$this->blocks[] = substr($this->content, $this->offset);
-		$this->content = null;
-	}
-
-	function parseargs($string) {
-		preg_match_all(self::$argument_splitter, $string, $matches, PREG_SET_ORDER);
-
-		$parts = array();
-		$conditional = null; $condition = null;
-
-		$current = '$item->';
-
-		while (strlen($string) && preg_match(self::$argument_splitter, $string, $match)) {
-
-			$string = substr($string, strlen($match[0]));
-
-			// If this is a conditional keyword, break, and the next loop will grab the conditional
-			if (@$match['conditional']) {
-				$conditional = $match['conditional'];
-				continue;
-			}
-
-			// If it's a property lookup or a function call
-			if (@$match['property']) {
-				// Get the property
-				$what = $match['identifier'];
-				$args = array();
-
-				// Extract any arguments passed to the function call
-				if (@$match['arguments']) {
-					foreach (explode(',', $match['arguments']) as $arg) {
-						$args[] = is_numeric($arg) ? (string)$arg : '"'.$arg.'"';
-					}
-				}
-
-				$args = empty($args) ? 'null' : 'array('.implode(',',$args).')';
-
-				// If this fragment ended with '.', then there's another lookup coming, so return an obj for that lookup
-				if (@$match['fullstop']) {
-					$current .= "obj('$what', $args, true)->";
-				}
-				// Otherwise this is the end of the lookup chain, so add the resultant value to the key array and reset the key-get php fragement
-				else {
-					$accessor = $current . "XML_val('$what', $args, true)"; $current = '$item->';
-
-					// If we've hit a conditional already, this is the condition. Set it and be done.
-					if ($conditional) {
-						$condition = $accessor;
-						break;
-					}
-					// Otherwise we're another key component. Add it to array.
-					else $parts[] = $accessor;
-				}
-			}
-
-			// Else it's a quoted string of some kind
-			else if (@$match['sqstring']) $parts[] = $match['sqstring'];
-			else if (@$match['dqstring']) $parts[] = $match['dqstring'];
-		}
-
-		if ($conditional && !$condition) {
-			throw new Exception("You need to have a condition after the conditional $conditional in your cache block");
-		}
-
-		return array($parts, $conditional, $condition);
-	}
-
-	function generate() {
-		$res = array();
-
-		foreach ($this->blocks as $i => $block) {
-			if ($block instanceof SSViewer_PartialParser)
-				$res[] = $block->generate();
-			else {
-				$res[] = $block;
-			}
-		}
-
-		return implode('', $res);
-	}
-}
-
-/**
- * @package sapphire
- * @subpackage view
- */
-class SSViewer_Cached_PartialParser extends SSViewer_PartialParser {
-
-	function __construct($template, $content, $offset, $keyparts, $conditional, $condition) {
-		$this->keyparts = $keyparts;
-		$this->conditional = $conditional;
-		$this->condition = $condition;
-
-		parent::__construct($template, $content, $offset);
-	}
-
-	function controlcheck($text) {
-		$ifs = preg_match_all('/<'.'% +if +/', $text, $matches);
-		$end_ifs = preg_match_all('/<'.'% +end_if +/', $text, $matches);
-
-		if ($ifs != $end_ifs) throw new Exception('You can\'t have cached or uncached blocks within condition structures');
-
-		$controls = preg_match_all('/<'.'% +control +/', $text, $matches);
-		$end_controls = preg_match_all('/<'.'% +end_control +/', $text, $matches);
-
-		if ($controls != $end_controls) throw new Exception('You can\'t have cached or uncached blocks within control structures');
-	}
-
-	function key() {
-		if (empty($this->keyparts)) return "''";
-		return 'sha1(' . implode(".'_'.", $this->keyparts) . ')';
-	}
-
-	function generate() {
-		$res = array();
-		$key = $this->key();
-
-		$condition = "";
-
-		switch ($this->conditional) {
-			case 'if':
-				$condition = "{$this->condition} && ";
-				break;
-			case 'unless':
-				$condition = "!({$this->condition}) && ";
-				break;
-		}
-
-		/* Output this set of blocks */
-
-		foreach ($this->blocks as $i => $block) {
-			if ($block instanceof SSViewer_PartialParser)
-				$res[] = $block->generate();
-			else {
-				// Include the template name and this cache block's current contents as a sha hash, so we get auto-seperation
-				// of cache blocks, and invalidation of the cache when the template changes
-				$partialkey = "'".sha1($this->template . $block)."_'.$key.'_$i'";
-
-				// Try to load from cache
-				$res[] = "<?\n".'if ('.$condition.' ($partial = $cache->load('.$partialkey.'))) $val .= $partial;'."\n";
-
-				// Cache miss - regenerate
-				$res[] = "else {\n";
-				$res[] = '$oldval = $val; $val = "";'."\n";
-				$res[] = "\n?>" . $block . "<?\n";
-				$res[] = $condition . ' $cache->save($val); $val = $oldval . $val ;'."\n";
-				$res[] = "}\n?>";
-			}
-		}
-
-		return implode('', $res);
-	}
-}
-
-function supressOutput() {
-	return "";
-}
-
-?>

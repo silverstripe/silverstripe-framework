@@ -14,20 +14,6 @@ class DatalessField extends FormField {
 	protected $allowHTML;
 	
 	/**
-	 * @param string $name
-	 * @param string $title The label itslef
-	 * @param string $class An HTML class to apply to the label (Deprecated: use addExtraClass())
-	 * @param boolean $allowHTML Determine if the tag content needs to be escaped (Deprecated: use setAllowHTML())
-	 * @param Form $form
-	 */
-	function __construct($name, $title = null, $className = "", $allowHTML = false, $form = null) {
-		if($className) $this->extraClasses = array($className);
-		$this->allowHTML = $allowHTML;
-
-		parent::__construct($name, $title, null, $form);
-	}
-	
-	/**
 	 * Function that returns whether this field contains data.
 	 * Always returns false. 
 	 */

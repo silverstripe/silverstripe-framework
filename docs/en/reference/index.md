@@ -2,6 +2,7 @@
 
 Reference articles complement our auto-generated [API docs](http://api.silverstripe.org) in providing deeper introduction into a specific API. 
 
+* [Advanced templates](advanced-templates): Advanced SilverStripe template syntax
 * [BBCode](bbcode): Extensible shortcode syntax
 * [Built-in page controls](built-in-page-controls): Explains the template syntax and available variables/placeholders
 * [ComplexTableField](complextablefield): Manage records and their relations inside the CMS
@@ -29,7 +30,6 @@ Reference articles complement our auto-generated [API docs](http://api.silverstr
 * [StaticPublisher](staticpublisher): Export a page tree as static HTML for better performance and portability
 * [TableField](tablefield): Add and edit records with inline edits in this form field
 * [TableListField](tablelistfield): View and delete records in the CMS
-* [Templates](templates): Process our data for output in HTML and other formats
 * [Typography](typography): CSS file to enable WYSIWYG previews in the CMS
 * [urlvariabletools](urlvariabletools): Debug and maintenance switches
 * [Versioned](versioned): Extension for SiteTree and other classes to store old versions and provide "staging"

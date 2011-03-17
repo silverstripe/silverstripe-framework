@@ -161,14 +161,14 @@ if(!defined('BASE_URL')) {
 }
 define('MODULES_DIR', 'modules');
 define('MODULES_PATH', BASE_PATH . '/' . MODULES_DIR);
-define('THIRDPARTY_DIR', 'sapphire/thirdparty');
-define('THIRDPARTY_PATH', BASE_PATH . '/' . THIRDPARTY_DIR);
 define('THEMES_DIR', 'themes');
 define('THEMES_PATH', BASE_PATH . '/' . THEMES_DIR);
 define('SAPPHIRE_DIR', 'sapphire');
 define('SAPPHIRE_PATH', BASE_PATH . '/' . SAPPHIRE_DIR);
 define('CMS_DIR', 'cms');
 define('CMS_PATH', BASE_PATH . '/' . CMS_DIR);
+define('THIRDPARTY_DIR', SAPPHIRE_DIR . '/thirdparty');
+define('THIRDPARTY_PATH', BASE_PATH . '/' . THIRDPARTY_DIR);
 define('ASSETS_DIR', 'assets');
 define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
 

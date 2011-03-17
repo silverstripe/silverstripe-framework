@@ -1,3 +1,49 @@
+1.x
+---
+* Improved NL localization (http://plugins.jquery.com/node/14120)
+* Added Georgian (GE) localization, thanks Avtandil Kikabidze
+* Added Serbian (SR) localization, thanks Aleksandar Milovac
+* Added ipv4 and ipv6 to additional methods, thanks Natal Ngétal
+* Added Japanese (JA) localization, thanks Bryan Meyerovich
+* Added Catalan (CA) localization, thanks Xavier de Pedro
+* Fixed missing var statements within for-in loops
+
+1.7
+---
+* Added Lithuanian (LT) localization
+* Added Greek (EL) localization (http://plugins.jquery.com/node/12319)
+* Added Latvian (LV) localization (http://plugins.jquery.com/node/12349)
+* Added Hebrew (HE) localization (http://plugins.jquery.com/node/12039)
+* Fixed Spanish (ES) localization (http://plugins.jquery.com/node/12696)
+* Added jQuery UI themerolled demo
+* Removed cmxform.js 
+* Fixed four missing semicolons (http://plugins.jquery.com/node/12639)
+* Renamed phone-method in additional-methods.js to phoneUS
+* Added phoneUK and mobileUK methods to additional-methods.js (http://plugins.jquery.com/node/12359)
+* Deep extend options to avoid modifying multiple forms when using the rules-method on a single element (http://plugins.jquery.com/node/12411)
+* Bugfixes for compability with jQuery 1.4.2, while maintaining backwards-compability
+
+1.6
+---
+* Added Arabic (AR), Portuguese (PTPT), Persian (FA), Finnish (FI) and Bulgarian (BR) localization
+* Updated Swedish (SE) localization (some missing html iso characters)
+* Fixed $.validator.addMethod to properly handle empty string vs. undefined for the message argument
+* Fixed two accidental global variables
+* Enhanced min/max/rangeWords (in additional-methods.js) to strip html before counting; good when counting words in a richtext editor
+* Added localized methods for DE, NL and PT, removing the dateDE and numberDE methods (use messages_de.js and methods_de.js with date and number methods instead)
+* Fixed remote form submit synchronization, kudos to Matas Petrikas
+* Improved interactive select validation, now validating also on click (via option or select, inconsistent across browsers); doesn't work in Safari, which doesn't trigger a click event at all on select elements; fixes http://plugins.jquery.com/node/11520
+* Updated to latest form plugin (2.36), fixing http://plugins.jquery.com/node/11487
+* Bind to blur event for equalTo target to revalidate when that target changes, fixes http://plugins.jquery.com/node/11450
+* Simplified select validation, delegating to jQuery's val() method to get the select value; should fix http://plugins.jquery.com/node/11239
+* Fixed default message for digits (http://plugins.jquery.com/node/9853)
+* Fixed issue with cached remote message (http://plugins.jquery.com/node/11029 and http://plugins.jquery.com/node/9351)
+* Fixed a missing semicolon in additional-methods.js (http://plugins.jquery.com/node/9233)
+* Added automatic detection of substitution parameters in messages, removing the need to provide format functions (http://plugins.jquery.com/node/11195)
+* Fixed an issue with :filled/:blank somewhat caused by Sizzle (http://plugins.jquery.com/node/11144)
+* Added an integer method to additional-methods.js (http://plugins.jquery.com/node/9612)
+* Fixed errorsFor method where the for-attribute contains characters that need escaping to be valid inside a selector (http://plugins.jquery.com/node/9611)
+
 1.5.5
 ---
 * Fix for http://plugins.jquery.com/node/8659

@@ -365,5 +365,5 @@ class Convert {
 		$t = trim($t, '-');
 		
 		return $t;
-	}  
+	}
 }

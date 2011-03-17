@@ -48,7 +48,7 @@ set {inlcudeDefaultJS} to false and work with behaviour.js.
 
 *  `[FileField](api:FileField)`: Simple file upload dialog.
 *  `[FileIFrameField](api:FileIFrameField)`: File uploads through an iframe
-*  `[api:Image]`: Image upload through an iframe, with thumbnails and file-selection from existing assets
+*  `[api:ImageField]`: Image upload through an iframe, with thumbnails and file-selection from existing assets
 *  `[SimpleImageField](api:SimpleImageField)`:  SimpleImageField provides an easy way of uploading images to Image has_one
 relationships. Unlike ImageField, it doesn't use an iframe.
 

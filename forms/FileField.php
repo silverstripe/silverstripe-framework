@@ -119,6 +119,15 @@ class FileField extends FormField {
 				"id" => $this->id(),
 				"tabindex" => $this->getTabIndex()
 			)
+		) . 
+		$this->createTag(
+			'input', 
+		  	array(
+		  		"type" => "hidden", 
+		  		"name" => "MAX_FILE_SIZE", 
+		  		"value" => $this->getValidator()->getAllowedMaxFileSize(),
+				"tabindex" => $this->getTabIndex()
+		  	)
 		);
 	}
 	
@@ -170,56 +179,6 @@ class FileField extends FormField {
 	}
 	
 	/**
-	 * Get maximum file size for all or specified file extension.
-	 * Falls back to the default filesize restriction ('*')
-	 * if the extension was not found.
-	 *
-	 * @deprecated 2.5
-	 * @param string $ext
-	 * @return int Filesize in bytes (0 means no filesize set)
-	 */
-	public function getAllowedMaxFileSize($ext = null) {
-		user_error('Upload::getAllowedMaxFileSize() is deprecated. Please use Upload_Validator::getAllowedMaxFileSize() instead', E_USER_NOTICE);
-		$this->getValidator()->getAllowedMaxFileSize($ext);
-	}
-	
-	/**
-	 * Set filesize maximums (in bytes).
-	 * Automatically converts extensions to lowercase
-	 * for easier matching.
-	 * 
-	 * Example: 
-	 * <code>
-	 * array('*' => 200, 'jpg' => 1000)
-	 * </code>
-	 *
-	 * @deprecated 2.5
-	 * @param unknown_type $rules
-	 */
-	public function setAllowedMaxFileSize($rules) {
-		user_error('Upload::setAllowedMaxFileSize() is deprecated. Please use Upload_Validator::setAllowedMaxFileSize() instead', E_USER_NOTICE);
-		$this->getValidator()->setAllowedMaxFileSize($rules);
-	}
-	
-	/**
-	 * @deprecated 2.5
-	 * @return array
-	 */
-	public function getAllowedExtensions() {
-		user_error('Upload::getAllowedExtensions() is deprecated. Please use Upload_Validator::getAllowedExtensions() instead', E_USER_NOTICE);
-		return $this->getValidator()->getAllowedExtensions();
-	}
-	
-	/**
-	 * @deprecated 2.5
-	 * @param array $rules
-	 */
-	public function setAllowedExtensions($rules) {
-		user_error('Upload::setAllowedExtensions() is deprecated. Please use Upload_Validator::setAllowedExtensions() instead', E_USER_NOTICE);
-		$this->getValidator()->setAllowedExtensions($rules);
-	}
-	
-	/**
 	 * @param string $folderName
 	 */
 	public function setFolderName($folderName) {
@@ -250,4 +209,3 @@ class FileField extends FormField {
 		return true;
 	}
 }
-?>

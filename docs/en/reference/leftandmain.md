@@ -6,12 +6,6 @@ LeftAndMain is the base class of all the admin area controllers.
 
 ## Best Practices
 
-### Refreshing
-
-Please use LeftAndMain::ForceReload to reload the whole form-area after an Ajax-Request. If you just need to refresh
-parts of the form, please use javascript-replacement in the response of the original Ajax-Request. Consider using
-`[api:Form]` for  compiling Ajax-Responses and automatic detection of Ajax/Non-Ajax-Calls.
-
 ### Custom Access Checking
 
 You can customize access control in `[api:LeftAndMain]`.

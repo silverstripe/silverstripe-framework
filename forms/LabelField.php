@@ -12,23 +12,19 @@ class LabelField extends DatalessField {
 	/**
 	 * @param string $name
 	 * @param string $title
-	 * @param string $className (Deprecated: use addExtraClass())
-	 * @param bool $allowHTML (Deprecated: use setAllowHTML())
 	 * @param Form $form
 	 */
-	function __construct($name, $title, $className = null, $allowHTML = false, $form = null) {
+	function __construct($name, $title, $form = null) {
 		// legacy handling for old parameters: $title, $heading, ...
 		// instead of new handling: $name, $title, $heading, ...
 		$args = func_get_args();
 		if(!isset($args[1])) {
 			$title = (isset($args[0])) ? $args[0] : null;
 			$name = $title;
-			$classname = (isset($args[1])) ? $args[1] : null;
-			$allowHTML = (isset($args[2])) ? $args[2] : null;
 			$form = (isset($args[3])) ? $args[3] : null;
 		} 
 		
-		parent::__construct($name, $title, null, $allowHTML, $form);
+		parent::__construct($name, $title, $form);
 	}
 	
 	/**

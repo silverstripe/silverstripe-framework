@@ -1,4 +1,4 @@
-# Installation from Source Control #
+# Installation from Source Control
 
 ## Introduction
 
@@ -10,7 +10,7 @@ is not already fixed.
 For getting a project up and running quickly with a release, you are typically best off
 with the official [silverstripe.org/download](http://silverstripe.org/download). 
 If you want to get the "latest and greatest" pre-release code (either
-on a release brank, or on "trunk"), you need to use our version control.
+on a release branch, or on "trunk"), you need to use our version control.
 
 <div class="warning" markdown="1">
 **Warning**: These instructions are for intermediate to advanced users only,
@@ -76,7 +76,7 @@ This will add `sapphire`, `cms` and the `blackcandy` theme to your project.
 
 As a fallback solution, you can simply download all necessary files without any dependency management through piston.
 This is handy if you have an existing project in version control, and want a one-off snapshot
-of the modules that won't be updated frequently.
+of the modules. The only way to update this codebase later is to overwrite the whole folder, with no easy way to track and re-apply any changes made to it since.
 
 	cd my-silverstripe-project/
 	tools/new-project -m flat

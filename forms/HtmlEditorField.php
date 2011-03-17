@@ -138,31 +138,24 @@ class HtmlEditorField extends TextareaField {
 		}
 		
 		// Save file & link tracking data.
-		
-		if($record->ID && $record->many_many('LinkTracking')) {
+		if($record->ID && $record->many_many('LinkTracking') && $tracker = $record->LinkTracking()) {
 			$filter = sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID);
-			DB::query("DELETE FROM \"SiteTree_LinkTracking\" WHERE $filter");
+			DB::query("DELETE FROM \"$tracker->tableName\" WHERE $filter");
 
-			if($linkedPages) {
-				$tracker = $record->LinkTracking();
-				foreach($linkedPages as $item) {
-					$SQL_fieldName = Convert::raw2sql($this->name);
-					DB::query("INSERT INTO \"SiteTree_LinkTracking\" (\"SiteTreeID\",\"ChildID\", \"FieldName\")
-						VALUES ($record->ID, $item, '$SQL_fieldName')");
-				}
+			if($linkedPages) foreach($linkedPages as $item) {
+				$SQL_fieldName = Convert::raw2sql($this->name);
+				DB::query("INSERT INTO \"SiteTree_LinkTracking\" (\"SiteTreeID\",\"ChildID\", \"FieldName\")
+					VALUES ($record->ID, $item, '$SQL_fieldName')");
 			}
 		}
 		
-		if($record->ID && $record->many_many('ImageTracking')) {
+		if($record->ID && $record->many_many('ImageTracking') && $tracker = $record->ImageTracking()) {
 			$filter = sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID);
-			DB::query("DELETE FROM \"SiteTree_ImageTracking\" WHERE $filter");
+			DB::query("DELETE FROM \"$tracker->tableName\" WHERE $filter");
 
 			$fieldName = $this->name;
-			if($linkedFiles) {
-				$tracker = $record->ImageTracking();
-				foreach($linkedFiles as $item) {
-					$tracker->add($item, array('FieldName' => $this->name));
-				}
+			if($linkedFiles) foreach($linkedFiles as $item) {
+				$tracker->add($item, array('FieldName' => $this->name));
 			}
 		}
 		

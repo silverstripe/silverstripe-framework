@@ -1,15 +1,24 @@
-jQuery.validator.addMethod("maxWords", function(value, element, params) { 
-    return this.optional(element) || value.match(/\b\w+\b/g).length < params; 
-}, jQuery.validator.format("Please enter {0} words or less.")); 
- 
-jQuery.validator.addMethod("minWords", function(value, element, params) { 
-    return this.optional(element) || value.match(/\b\w+\b/g).length >= params; 
-}, jQuery.validator.format("Please enter at least {0} words.")); 
- 
-jQuery.validator.addMethod("rangeWords", function(value, element, params) { 
-    return this.optional(element) || value.match(/\b\w+\b/g).length >= params[0] && value.match(/bw+b/g).length < params[1]; 
-}, jQuery.validator.format("Please enter between {0} and {1} words."));
+(function() {
+	
+	function stripHtml(value) {
+		// remove html tags and space chars
+		return value.replace(/<.[^<>]*?>/g, ' ').replace(/&nbsp;|&#160;/gi, ' ')
+		// remove numbers and punctuation
+		.replace(/[0-9.(),;:!?%#$'"_+=\/-]*/g,'');
+	}
+	jQuery.validator.addMethod("maxWords", function(value, element, params) { 
+	    return this.optional(element) || stripHtml(value).match(/\b\w+\b/g).length < params; 
+	}, jQuery.validator.format("Please enter {0} words or less.")); 
+	 
+	jQuery.validator.addMethod("minWords", function(value, element, params) { 
+	    return this.optional(element) || stripHtml(value).match(/\b\w+\b/g).length >= params; 
+	}, jQuery.validator.format("Please enter at least {0} words.")); 
+	 
+	jQuery.validator.addMethod("rangeWords", function(value, element, params) { 
+	    return this.optional(element) || stripHtml(value).match(/\b\w+\b/g).length >= params[0] && value.match(/bw+b/g).length < params[1]; 
+	}, jQuery.validator.format("Please enter between {0} and {1} words."));
 
+})();
 
 jQuery.validator.addMethod("letterswithbasicpunc", function(value, element) {
 	return this.optional(element) || /^[a-z-.,()'\"\s]+$/i.test(value);
@@ -30,6 +39,10 @@ jQuery.validator.addMethod("nowhitespace", function(value, element) {
 jQuery.validator.addMethod("ziprange", function(value, element) {
 	return this.optional(element) || /^90[2-5]\d\{2}-\d{4}$/.test(value);
 }, "Your ZIP-code must be in the range 902xx-xxxx to 905-xx-xxxx");
+
+jQuery.validator.addMethod("integer", function(value, element) {
+	return this.optional(element) || /^-?\d+$/.test(value);
+}, "A positive or negative non-decimal number please");
 
 /**
 * Return true, if the value is a valid vehicle identification number (VIN).
@@ -107,7 +120,7 @@ jQuery.validator.addMethod(
 	"dateITA",
 	function(value, element) {
 		var check = false;
-		var re = /^\d{1,2}\/\d{1,2}\/\d{4}$/
+		var re = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
 		if( re.test(value)){
 			var adata = value.split('/');
 			var gg = parseInt(adata[0],10);
@@ -153,11 +166,21 @@ jQuery.validator.addMethod("time", function(value, element) {
  * and not
  * 212 123 4567
  */
-jQuery.validator.addMethod("phone", function(phone_number, element) {
+jQuery.validator.addMethod("phoneUS", function(phone_number, element) {
     phone_number = phone_number.replace(/\s+/g, ""); 
 	return this.optional(element) || phone_number.length > 9 &&
 		phone_number.match(/^(1-?)?(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
 }, "Please specify a valid phone number");
+
+jQuery.validator.addMethod('phoneUK', function(phone_number, element) {
+return this.optional(element) || phone_number.length > 9 &&
+phone_number.match(/^(\(?(0|\+44)[1-9]{1}\d{1,4}?\)?\s?\d{3,4}\s?\d{3,4})$/);
+}, 'Please specify a valid phone number');
+
+jQuery.validator.addMethod('mobileUK', function(phone_number, element) {
+return this.optional(element) || phone_number.length > 9 &&
+phone_number.match(/^((0|\+44)7(5|6|7|8|9){1}\d{2}\s?\d{6})$/);
+}, 'Please specify a valid mobile number');
 
 // TODO check if value starts with <, otherwise don't try stripping anything
 jQuery.validator.addMethod("strippedminlength", function(value, element, param) {
@@ -234,3 +257,11 @@ jQuery.validator.addMethod("creditcardtypes", function(value, element, param) {
 	}
 	return false;
 }, "Please enter a valid credit card number.");
+
+jQuery.validator.addMethod("ipv4", function(value, element, param) { 
+    return this.optional(element) || /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/i.test(value);
+}, "Please enter a valid IP v4 address.");
+
+jQuery.validator.addMethod("ipv6", function(value, element, param) { 
+    return this.optional(element) || /^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/i.test(value);
+}, "Please enter a valid IP v6 address.");

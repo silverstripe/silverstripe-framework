@@ -5,14 +5,13 @@ CMSMain is part of the CMS.  It is the controller for the content editor.
 ## Creating another hierarchical editor by subclassing CMSMain
 
 Sometimes you'll want to provide an administration interface that is pretty much exactly what CMSMain provides, but it's
-not appropriate to include your data in with the site content.  For example, Hayden developed a hierarchical category
-administrator on the Guano application.
+not appropriate to include your data in with the site content.
 
-Here's how you can do this: 
+Here's how you can do this:
 
 ## Using classes other than SiteTree in the site tree
 
-It is possible to use to different classes in two separate site trees. In Guano for example, there is the usual site
+It is possible to use to different classes in two separate site trees. For example, there is the usual site
 content tree and a category tree. To change that find:
 
 	:::php
@@ -50,12 +49,12 @@ where url is the relative link to the page (eg 'admin/categories'). You can chan
 
 ## Overloading EditForm
 
-You may need to overload EditForm if your class does not use the Versioned extension.
+You may need to overload EditForm if your class does not use the `[api:Versioned]` extension.
 
 ## Overloading SiteTreeAsUL
 
 The tree hints can sometimes cause problems when reorganising the tree, and the CMSMain::SiteTreeAsUL function uses
-SiteTree explicitly. Use:
+`[api:SiteTree]` explicitly. Use:
 
 	:::php
 	public function SiteTreeAsUL() {
@@ -64,4 +63,3 @@ SiteTree explicitly. Use:
 	
 		return $this->getSiteTreeFor( $this->stat('tree_class') );
 	}
-

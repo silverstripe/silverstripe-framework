@@ -1,61 +1,63 @@
-
-describe 'Entwine'
-  describe 'Basics'
-    before
-      $.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
-      $('body').append('<div id="dom_test"></div>');
-    end
-    after
-      $('#dom_test').remove();
-    end
+describe( 'Entwine', function() {
   
-    before_each
+  beforeEach(function() {
+    $.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
+    $('body').append('<div id="dom_test"></div>');
+  });
+  
+  afterEach(function() {
+    $('#dom_test').remove();
+  });
+
+  describe( 'Basics', function() {
+    
+    beforeEach(function() {
       $.entwine.clear_all_rules();
       $('#dom_test').html('<div id="a" class="a b c" data-fieldtype="foo"></div><div id="b" class="c d e"></div>');
-    end
+    });
 
-    it 'can attach and call a base function'
+    it( 'can attach and call a base function', function() {
       $('#a').entwine({
         foo: function(){return this.attr('id');}
       });
-      $('.a').foo().should.equal 'a'
-    end
+      expect($('.a').foo()).toEqual('a');
+    });
     
-    it 'can attach and call a base function on a selector using a data attribute selection'
+    it( 'can attach and call a base function on a selector using a data attribute selection', function() {
       $('[data-fieldtype=foo]').entwine({
         foo: function(){return this.attr('id');}
       });
-      $('.a').foo().should.equal 'a'
-    end
-
-    it 'can attach and call several base functions'
+      expect($('.a').foo()).toEqual('a') ;
+    });
+      
+    it( 'can attach and call several base functions', function() {
       $('#a').entwine({
         foo: function(){return 'foo_' + this.attr('id');},
         bar: function(){return 'bar_' + this.attr('id');}
       }); 
-      $('.a').foo().should.equal 'foo_a'
-      $('.a').bar().should.equal 'bar_a'
-    end
-
-    it 'can attach and call a namespaced function'
+      expect($('.a').foo()).toEqual( 'foo_a');
+      expect($('.a').bar()).toEqual( 'bar_a');
+    });
+      
+    it( 'can attach and call a namespaced function', function() {
       $.entwine('bar', function($){
         $('#a').entwine({
           foo: function(){return this.attr('id');}
         });
       });
-      $('.a').entwine('bar').foo().should.equal 'a'
-    end
-
-    it 'can attach and call a nested namespaced function'
+      expect($('.a').entwine('bar').foo()).toEqual( 'a');
+    });
+      
+    it( 'can attach and call a nested namespaced function', function() {
       $.entwine('qux.baz.bar', function($){
         $('#a').entwine({
           foo: function(){return this.attr('id');}
         });
       });
-      $('.a').entwine('qux.baz.bar').foo().should.equal 'a'
-    end
-
-    it 'can call two functions on two elements'
+      expect($('.a').entwine('qux.baz.bar').foo()).toEqual( 'a');
+    });
+      
+    it( 'can call two functions on two elements', function() {
       var res = []
       $('#a').entwine({
         foo: function(){res.push(this.attr('id'));}
@@ -64,10 +66,10 @@ describe 'Entwine'
         foo: function(){res.push(this.attr('id'));}
       });
       $('#dom_test div').foo();
-      res.should.eql ['b', 'a']
-    end
-
-    it 'can call two namespaced functions on two elements'
+      expect(res).toEqual( ['b', 'a']);
+    });
+      
+    it( 'can call two namespaced functions on two elements', function() {
       var res = []
       $.entwine('bar', function($){
         $('#a').entwine({
@@ -78,8 +80,7 @@ describe 'Entwine'
         });
       });
       $('#dom_test div').entwine('bar').foo();
-      res.should.eql ['b', 'a']
-    end
-
-  end
-end
+      expect(res).toEqual( ['b', 'a']);
+    });
+  });
+});

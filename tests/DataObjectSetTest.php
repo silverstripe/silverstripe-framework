@@ -145,7 +145,7 @@ class DataObjectSetTest extends SapphireTest {
 		$comments = DataObject::get('DataObjectSetTest_TeamComment', '', "\"ID\" ASC");
 		
 		/* There are a total of 8 items in the set */
-		$this->assertEquals($comments->Count(), 3, 'There are a total of 8 items in the set');
+		$this->assertEquals($comments->Count(), 3, 'There are a total of 3 items in the set');
 	}
 
 	/**

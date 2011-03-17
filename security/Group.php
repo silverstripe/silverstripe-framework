@@ -35,6 +35,12 @@ class Group extends DataObject {
 		"Hierarchy",
 	);
 	
+	function populateDefaults() {
+		parent::populateDefaults();
+		
+		if(!$this->Title) $this->Title = _t('SecurityAdmin.NEWGROUP',"New Group");
+	}
+	
 	function getAllChildren() {
 		$doSet = new DataObjectSet();
 
@@ -54,6 +60,8 @@ class Group extends DataObject {
 	 * @return FieldSet
 	 */
 	public function getCMSFields() {
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');
+		
 		$fields = new FieldSet(
 			new TabSet("Root",
 				new Tab('Members', _t('SecurityAdmin.MEMBERS', 'Members'),
@@ -278,7 +286,7 @@ class Group extends DataObject {
 	 */
 	public function collateAncestorIDs() {
 		$parent = $this;
-		while(isset($parent)) {
+		while(isset($parent) && $parent instanceof Group) {
 			$items[] = $parent->ID;
 			$parent = $parent->Parent;
 		}

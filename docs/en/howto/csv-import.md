@@ -156,7 +156,7 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 *  Converts property names
 *  Splits a combined "Name" fields from the CSV-data into `FirstName` and `Lastname` by a custom importer method
 *  Avoids duplicate imports by a custom `$duplicateChecks` definition
-*  Creates `Team` relations automatically based on the `Gruppe` colum in the CSV data
+*  Creates `Team` relations automatically based on the `Gruppe` column in the CSV data
 
 
 	:::php

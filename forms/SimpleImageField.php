@@ -64,10 +64,6 @@
  */
 
 class SimpleImageField extends FileField {
-	/**
-	 * @deprecated 2.5
-	 */
-	public $allowedExtensions = array('jpg','gif','png');
 
 	function __construct($name, $title = null, $value = null, $form = null, $rightTitle = null, $folderName = null) {
 		parent::__construct($name, $title, $value, $form, $rightTitle, $folderName);
@@ -101,6 +97,14 @@ class SimpleImageField extends FileField {
 				"id" => $this->id(),
 				"tabindex" => $this->getTabIndex(),
 				'disabled' => $this->disabled
+			)
+		);
+		$html .= $this->createTag("input", 
+			array(
+				"type" => "hidden", 
+				"name" => "MAX_FILE_SIZE", 
+				"value" => $this->getValidator()->getAllowedMaxFileSize(),
+				"tabindex" => $this->getTabIndex()
 			)
 		);
 		$html .= "</div>";

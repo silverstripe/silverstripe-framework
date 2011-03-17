@@ -3,7 +3,7 @@
 This guide helps you to run [PHPUnit](http://phpunit.de) tests in your SilverStripe project.
 See "[Testing](/topics/testing)" for an overview on how to create unit tests.
 
-## Executing through "sake dev/tests" or "phpunit"?
+## Should I execute through "sake dev/tests" or "phpunit"?
 
 Short answer: Both are valid ways.
 
@@ -128,12 +128,12 @@ or through a `<php>` flag in your `phpunit.xml` (see [Appenix C: "Setting PHP IN
 
 	<phpunit>
 		<!-- ... -->
-		
 		<php>
 			<var name="db" value="sqlite3"/>
 		</php>
-
 	</phpunit>
 
-Note: It is recommended that you still run your tests with the original
-database driver (at least on continuous integration) to ensure a realistic test scenario.
+<div class="hint" markdown="1">
+It is recommended that you still run your tests with the original database driver (at least on continuous integration)
+to ensure a realistic test scenario.
+</div>

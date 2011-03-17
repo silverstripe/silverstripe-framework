@@ -359,18 +359,6 @@ class MySQLDatabase extends SS_Database {
 	}
 
 	/**
-	 *
-	 * This is a stub function.  Postgres caches the fieldlist results.
-	 *
-	 * @param string $tableName
-	 *
-	 * @return boolean
-	 */
-	function clear_cached_fieldlist($tableName=false){
-		return true;
-	}
-
-	/**
 	 * Create an index on a table.
 	 *
 	 * @param string $tableName The name of the table.
@@ -984,11 +972,11 @@ class MySQLDatabase extends SS_Database {
 		}
 
 		if($format == '%U') return "UNIX_TIMESTAMP($date)";
-
+		
 		return "DATE_FORMAT($date, '$format')";
-
+		
 	}
-
+	
 	/**
 	 * Function to return an SQL datetime expression that can be used with MySQL
 	 * used for querying a datetime addition

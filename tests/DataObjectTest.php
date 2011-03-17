@@ -365,6 +365,23 @@ class DataObjectTest extends SapphireTest {
 		$this->assertFalse($page->isChanged());
 	}
 	
+	function testRandomSort() {
+		/* If we perforn the same regularly sorted query twice, it should return the same results */
+		$itemsA = DataObject::get("DataObjectTest_TeamComment", "", "ID");
+		foreach($itemsA as $item) $keysA[] = $item->ID;
+
+		$itemsB = DataObject::get("DataObjectTest_TeamComment", "", "ID");
+		foreach($itemsB as $item) $keysB[] = $item->ID;
+		
+		/* Test when there's not field provided */ 
+		$page = $this->objFromFixture('Page', 'home');
+		$page->Title = "New Page Title"; 
+		$this->assertTrue($page->isChanged());
+		
+		$page->write(); 
+		$this->assertFalse($page->isChanged());
+	}
+	
 	function testWriteSavesToHasOneRelations() {
 		/* DataObject::write() should save to a has_one relationship if you set a field called (relname)ID */
 		$team = new DataObjectTest_Team();

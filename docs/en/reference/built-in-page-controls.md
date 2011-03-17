@@ -16,19 +16,19 @@ within another page control.
 
 ### Controlling Menus Datafeeds
 
-#### <% control Menu(1) %>, <% control Menu(2) %>, ...
+#### &lt;% control Menu(1) &gt;%, &lt;% control Menu(2) &gt;%, ...
 
 Returns a fixed level menu.  Because this only works in the top level, you can't use it for nested menus.  Used <%
 control Children %> instead. You can nest `<% control Children %>`.
 
-#### <% control ChildrenOf(page-url) %>
+#### &lt;% control ChildrenOf(page-url) &gt;%
 
 This will create a datafeed of the children of the given page. Handy if you want a list of the subpages under staff (eg
 the staff) on the homepage etc
 
 ### Controlling Certain Pages
 
-#### <% control Level(1) %>, <% control Level(2) %>, $Level(1).Title, $Level(2).Content, etc
+#### &lt;% control Level(1) &gt;%, &lt;% control Level(2) &gt;%, $Level(1).Title, $Level(2).Content, etc
 Returns the current section of the site that we're in, at the level specified by the numbers.  For example, imagine
 you're on the page __about us > staff > bob marley__:
 
@@ -36,7 +36,7 @@ you're on the page __about us > staff > bob marley__:
 *  `<% control Level(2) %>` would return the staff page
 *  `<% control Level(3) %>` would return the bob marley page
 
-#### <% control Page(my-page) %>$Title<% end_control %>
+#### &lt;% control Page(my-page) &gt;%$Title&lt;% end_control &gt;%
 
 "Page" will return a single page from the site tree, looking it up by URL.  You can use it in the `<% control %>` format.
 Can't be called using $Page(my-page).Title.
@@ -60,7 +60,7 @@ SilverStripe supports a simple set of conditional logic
 	<% end_if %>
 
 
-See more information on conditional logic on [templates](templates).
+See more information on conditional logic on [templates](/topics/templates).
 
 ### Site wide settings
 
@@ -69,32 +69,32 @@ line*. This interface is implemented by the [api:SiteConfig] class.
 
 ### Controlling Parents and Children
 
-#### <% control Children %>
+#### &lt;% control Children &gt;%
 
 This will return the children of the current page as a nested datafeed.  Useful for nested navigations such as pop-out
 menus.
 
-#### <% control AllChildren %>
+#### &lt;% control AllChildren &gt;%
 
 This will show all children of a page even if the option 'show in menus?' is unchecked in the tab panel behaviour.
 
-#### <% control Parent %> or $Parent.Title, $Parent.Content, etc
+#### &lt;% control Parent &gt;% or $Parent.Title, $Parent.Content, etc
 
 This will return the parent page.  The $ variable format lets us reference an attribute of the parent page directly.
 
 ### Site Navigation - Breadcrumbs
 
-#### <% control Breadcrumbs %>
+#### &lt;% control Breadcrumbs &gt;%
 
 This will return a breadcrumbs widgets for the given page.  You can call this on any data-object, so, for example, you
 could display the breadcrumbs of every search result if you wanted.  It has a few options.
 
-####  <% control Breadcrumbs(3) %>
+####  &lt;% control Breadcrumbs(3) &gt;%
 
 Will return a maximum of 3 pages in the breadcrumb list, this can be handy if you're wanting to put breadcrumbs in a
 place without spilling
 
-####  <% control Breadcrumbs(3, true) %>
+####  &lt;% control Breadcrumbs(3, true) &gt;%
 
 Will return the same, but without any links. This is handy if you're wanting to put the breadcrumb list into another
 link tag.
@@ -126,7 +126,7 @@ When viewed on the Home page it will render like this
 $LinkOrCurrent ignores the section status, returning link instead.  $LinkOrSection ingores the current status, returning
 section instead.  Both of these options can simplify your CSS when you only have 2 different cases to consider.
 
-#### <% if LinkOrCurrent = current %>
+#### &lt;% if LinkOrCurrent = current &gt;%
 
 This is an alternative way to set up your menus - if you want different HTML for the current menu item, you can do
 something like this:
@@ -139,12 +139,12 @@ something like this:
 	<% end_if %>
 
 
-#### <% if LinkOrSection = section %>
+#### &lt;% if LinkOrSection = section &gt;%
 
 Will return true if you are on the current page OR a child page of the page. Useful for menus which you only want to
 show a second level menu when you are on that page or a child of it
 
-#### <% if InSection(page-url) %>
+#### &lt;% if InSection(page-url) &gt;%
 
 This if block will pass if we're currently on the page-url page or one of its children.
 
@@ -191,10 +191,10 @@ override `<% base_tag %>` with a specific piece of HTML, you can do something li
 
 ### Controlling Members and Visitors Data
 
-#### <% control CurrentMember %>, <% if CurrentMember %> or $CurrentMember.FirstName
+#### &lt;% control CurrentMember &gt;%, &lt;% if CurrentMember &gt;% or $CurrentMember.FirstName
 
 CurrentMember returns the currently logged in member, if there is one.  All of their details or any special Member page
-controls can be called on this.  Alternately, you can use `<% if CurrentMember %>` to detect whether someone has logged
+controls can be called on this.  Alternately, you can use `&lt;% if CurrentMember %>` to detect whether someone has logged
 in. To Display a welcome message you can do
 
 	:::ss
@@ -209,7 +209,7 @@ If the user is logged in this will print out
 	Welcome Back, Admin
 
  
-#### <% if PastMember %>, <% if PastVisitor %>
+#### &lt;% if PastMember &gt;%, &lt;% if PastVisitor &gt;%
 
 These controls detect the visitor's previous experience with the site:
 
@@ -237,11 +237,11 @@ call any of methods of the `[api:Date]` class on it.
 
 If you are using a DataObjectSet you have a wide range of methods you can call on it from the templates
 
-#### <% if Even %>, <% if Odd %>, $EvenOdd
+#### &lt;% if Even &gt;%, &lt;% if Odd &gt;%, $EvenOdd
 
 These controls can be used to do zebra-striping.  $EvenOdd will return 'even' or 'odd' as appropriate.
 
-#### <% if First %>, <% if Last %>, <% if Middle %>, $FirstLast
+#### &lt;% if First &gt;%, &lt;% if Last &gt;%, &lt;% if Middle &gt;%, $FirstLast
 
 These controls can be used to set up special behaviour for the first and last records of a datafeed.  `<% if Middle %>` is
 set when neither first not last are set.  $FirstLast will be 'first', 'last', or ''
@@ -270,14 +270,14 @@ that aren't accessible within `<% control SearchResults %>`.  These can be used 
 
 ### Search Results
 
-#### <% if SearchResults.MoreThanOnePage %>
+#### &lt;% if SearchResults.MoreThanOnePage &gt;%
 
 Returns true when we have a multi-page datafeed, restricted with a limit.
 
 #### $SearchResults.NextLink, $SearchResults.PrevLink
 
 This returns links to the next and previous page in a multi-page datafeed.  They will return blank if there's no
-appropriate page to go to, so $PrevLink will return blank when you're on the first page.  You can therefore use <% if
+appropriate page to go to, so $PrevLink will return blank when you're on the first page.  You can therefore use &lt;% if
 PrevLink %> to keep your template tidy.
 
 #### $SearchResults.CurrentPage, $SearchResults.TotalPages
@@ -288,11 +288,11 @@ CurrentPage returns the number of the page you're currently on, and TotalPages r
 
 This returns the total number of items across all pages.
 
-#### <% control SearchResults.First %>, <% control SearchResults.Last %>
+#### &lt;% control SearchResults.First &gt;%, &lt;% control SearchResults.Last &gt;%
 
 These controls return the first and last item on the current page of the datafeed.
 
-#### <% control SearchResults.Pages %>
+#### &lt;% control SearchResults.Pages &gt;%
 
 This will return another datafeed, listing all of the pages in this datafeed.  It will have the following data
 available:

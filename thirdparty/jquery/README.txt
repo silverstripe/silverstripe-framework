@@ -1,2 +1,0 @@
-- Download newest version from http://code.google.com/p/jqueryjs/downloads/list (both development and minified)
-- Rename to jquery.js and jquery.min.js

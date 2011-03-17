@@ -1,7 +1,7 @@
 #  How To Create a Sapphire Test
 
-A unit test class will test the behaviour of one of your DataObjects.  This simple fragment of SiteTreeTest provides us
-the basics of creating unit tests.
+A unit test class will test the behaviour of one of your `[api:DataObjects]`.  This simple fragment of `[api:SiteTreeTest]`
+provides us the basics of creating unit tests.
 
 	:::php
 	<?php
@@ -47,7 +47,7 @@ the basics of creating unit tests.
 
 There are a number of points to note in this code fragment:
 
-*  Your test is a **subclass of SapphireTest**.  Both unit tests and functional tests are a subclass of SapphireTest.
+*  Your test is a **subclass of SapphireTest**.  Both unit tests and functional tests are a subclass of `[api:SapphireTest]`.
 *  **static $fixture_file** is defined.  The testing framework will automatically set up a new database for **each** of
 your tests.  The initial database content will be sourced from the YML file that you list in $fixture_file.  You must
 define this value.  Note also that, for the time being, you can only point to one YML file for each test class.
@@ -55,7 +55,7 @@ define this value.  Note also that, for the time being, you can only point to on
 database will be rebuilt for each of these.
 *  **$this->objFromFixture($className, $identifier)** can be used to select one of the objects named in your fixture
 file.  To identify to the object, we provide a class name and an identifier.  The identifier is specified in the YML
-file but not saved in the database anywhere.  objFromFixture() looks the DataObject up in memory rather than using the
+file but not saved in the database anywhere.  objFromFixture() looks the `[api:DataObject]` up in memory rather than using the
 database.  This means that you can use it to test the functions responsible for looking up content in the database.
 *  **$this->assertEquals()** is one of the many assert... functions that PHPUnit provides us.  See below for more
 information.
@@ -78,7 +78,7 @@ if it starts with "/".
 
 ## The Database YAML file
 
-The main feature of SapphireTest over the raw PHPUnit classes is that SapphireTest will prepare a temporary database for
+The main feature of `[api:SapphireTest]` over the raw PHPUnit classes is that SapphireTest will prepare a temporary database for
 you.  The content of that database is provided in a special YAML file.  YAML is a simple markup languages that uses tabs
 and colons instead of the more verbose XML tags, and because of this much better for developers creating files by hand.
 

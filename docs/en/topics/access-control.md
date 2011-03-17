@@ -19,22 +19,26 @@ It is unclear how this works for data-objects that are not pages.
 
 In the security tab you can make groups for security.  The way this was intended was as follows (this may be a counter
 intuitive):
-- employees
-1.  marketing
-    - marketing executive
+
+* employees
+	* marketing
+		* marketing executive
+
 Thus, the further up the hierarchy you go the MORE privileges you can get.  Similarly, you could have:
-- members
-1.  coordinators
-    - admins
+
+* members
+	* coordinators
+		* admins
+
 Where members have some privileges, coordinators slightly more and administrators the most; having each group inheriting
 privileges from its parent group.     
 
 ## Permission checking is at class level
 
-SilverStripe provides a security mechanism via the *Permission::check* method (see *LeftAndMain.php* for examples on how
+SilverStripe provides a security mechanism via the *Permission::check* method (see `[api:LeftAndMain]` for examples on how
 the admin screens work)
 
-(next step -- go from *Permission::checkMember*...
+(next step -- go from *Permission::checkMember*...)
 
 ### Nuts and bolts -- figuring it out
 
@@ -44,10 +48,10 @@ works.
 
 ### Loading the admin page: looking at security
 
-If you go to [your site]/admin -- how does that work?
-*Director.php* maps the 'admin' URL request through a *Director* rule to the CMSMain controller (see `[api:CMSMain]`, with no arguments. 
+If you go to [your site]/admin *Director.php* maps the 'admin' URL request through a `[api:Director]` rule to the
+`[api:CMSMain]` controller (see `[api:CMSMain]`, with no arguments). 
 
-*CMSMain.init()* calls its parent which, of all things is called *LeftAndMain*. It's in *LeftAndMain* that the
+*CMSMain.init()* calls its parent which, of all things is called `[api:LeftAndMain]`. It's in `[api:LeftAndMain]` that the
 important security checks are made by calling *Permission::check*. 
 
 `[api:Security::permissionFailure]` is the next utility function you can use to redirect to the login form. 
