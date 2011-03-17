@@ -108,7 +108,6 @@ class RootURLController extends Controller {
 		$request->match('$URLSegment//$Action', true);
 		
 		$controller = new ModelAsController();
-		singleton('Injector')->inject($controller);
 		$result     = $controller->handleRequest($request);
 		
 		$this->popCurrent();

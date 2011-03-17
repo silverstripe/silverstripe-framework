@@ -76,4 +76,3 @@ PasswordEncryptor::register('sha1_v2.4','PasswordEncryptor_PHPHash("sha1")');
 // Zend_Cache temp directory setting
 $_ENV['TMPDIR'] = TEMP_FOLDER; // for *nix
 $_ENV['TMP'] = TEMP_FOLDER; // for Windows
-
