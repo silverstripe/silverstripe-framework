@@ -2272,7 +2272,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			// title and the actual classname might not be obvious, so we add it in parantheses
 			// Example: class "RedirectorPage" has the title "Weiterleitung" in German,
 			// so it shows up as "Weiterleitung (RedirectorPage)"
-			if(i18n::get_locale() != 'en_US') {
+			if(i18n::get_lang_from_locale(i18n::get_locale()) != 'en') {
 				$result[$class] = $result[$class] .  " ({$class})";
 			}
 		}
