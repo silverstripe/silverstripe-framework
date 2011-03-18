@@ -107,34 +107,38 @@ class BasicAuthTest extends FunctionalTest {
 	
 }
 
-class BasicAuthTest_ControllerSecuredWithPermission extends ContentController implements TestOnly {
+class BasicAuthTest_ControllerSecuredWithPermission extends Controller implements TestOnly {
 	
 	static $post_init_called = false;
 	
 	static $index_called = false;
+
+	protected $template = '../sapphire/templates/BlankPage.ss';
 	
 	function init() {
 		self::$post_init_called = false;
 		self::$index_called = false;
 		
 		BasicAuth::protect_entire_site(true, 'MYCODE');
-		
 		parent::init();
-		
+
 		self::$post_init_called = true;
 	}
 	
 	function index() {
 		self::$index_called = true;
 	}
-	
+
+
+
 }
 
-class BasicAuthTest_ControllerSecuredWithoutPermission extends ContentController implements TestOnly {
-	
+class BasicAuthTest_ControllerSecuredWithoutPermission extends Controller implements TestOnly {
+
+	protected $template = '../sapphire/templates/BlankPage.ss';
+
 	function init() {
 		BasicAuth::protect_entire_site(true, null);
-		
 		parent::init();
 	}
 	

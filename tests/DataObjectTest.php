@@ -697,22 +697,20 @@ class DataObjectTest extends SapphireTest {
 	}
 	
 	function testNewClassInstance() {
-		$page = $this->objFromFixture('Page', 'page1');
-		$changedPage = $page->newClassInstance('RedirectorPage');
-		$changedFields = $changedPage->getChangedFields();
+		$dataObject = $this->objFromFixture('DataObjectTest_TeamComment', 'comment1');
+		$changedDO = $dataObject->newClassInstance('File');
+		$changedFields = $changedDO->getChangedFields();
 		
 		// Don't write the record, it will reset changed fields
-		$this->assertType('RedirectorPage', $changedPage);
-		$this->assertEquals($changedPage->ClassName, 'RedirectorPage');
-		$this->assertEquals($changedPage->RedirectionType, 'Internal');
-		//$this->assertEquals($changedPage->RecordClassName, 'RedirectorPage');
+		$this->assertType('File', $changedDO);
+		$this->assertEquals($changedDO->ClassName, 'File');
 		$this->assertContains('ClassName', array_keys($changedFields));
-		$this->assertEquals($changedFields['ClassName']['before'], 'Page');
-		$this->assertEquals($changedFields['ClassName']['after'], 'RedirectorPage');
+		$this->assertEquals($changedFields['ClassName']['before'], 'DataObjectTest_TeamComment');
+		$this->assertEquals($changedFields['ClassName']['after'], 'File');
 		
-		$changedPage->write();
-		$this->assertType('RedirectorPage', $changedPage);
-		$this->assertEquals($changedPage->ClassName, 'RedirectorPage');
+		$changedDO->write();
+		$this->assertType('File', $changedDO);
+		$this->assertEquals($changedDO->ClassName, 'File');
 	}
 	
 	function testManyManyExtraFields() {

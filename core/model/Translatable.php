@@ -453,7 +453,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * @deprecated 2.4 Use Object::add_extension('SiteTree', 'Translatable')
 	 */
 	static function enable() {
-		Object::add_extension('SiteTree', 'Translatable');
+		if(class_exists('SiteTree')) Object::add_extension('SiteTree', 'Translatable');
 	}
 
 	/**
@@ -462,7 +462,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * @deprecated 2.4 Use Object::remove_extension('SiteTree', 'Translatable')
 	 */
 	static function disable() {
-		Object::remove_extension('SiteTree', 'Translatable');
+		if(class_exists('SiteTree')) Object::remove_extension('SiteTree', 'Translatable');
 	}
 	
 	/**
@@ -472,7 +472,11 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * @return boolean True if enabled
 	 */
 	static function is_enabled() {
-		return Object::has_extension('SiteTree', 'Translatable');
+		if(class_exists('SiteTree')){
+			return Object::has_extension('SiteTree', 'Translatable');
+		}else{
+			return false;
+		}
 	}
 	
 		
@@ -620,7 +624,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		))->column();
 		if(!$idsWithoutLocale) return;
 		
-			if($this->owner->class == 'SiteTree') {
+			if(class_exists('SiteTree') && $this->owner->class == 'SiteTree') {
 			foreach(array('Stage', 'Live') as $stage) {
 				foreach($idsWithoutLocale as $id) {
 					$obj = Versioned::get_one_by_stage(
@@ -779,7 +783,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		// Caution: This logic is very sensitve to infinite loops when translation status isn't determined properly
 		// If a parent for the newly written translation was existing before this
 		// onBeforeWrite() call, it will already have been linked correctly through createTranslation()
-		if($this->owner->hasField('ParentID') && $this->owner instanceof SiteTree) {
+		if(class_exists('SiteTree') && $this->owner->hasField('ParentID') && $this->owner instanceof SiteTree) {
 			if(
 				!$this->owner->ID 
 				&& $this->owner->ParentID 
@@ -898,16 +902,19 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	 * seeing readonly fields as well.
 	 */
 	function updateCMSFields(FieldSet &$fields) {
+		if(!class_exists('SiteTree')) return;
 		// Don't apply these modifications for normal DataObjects - they rely on CMSMain logic
 		if(!($this->owner instanceof SiteTree)) return;
 		
 		// used in CMSMain->init() to set language state when reading/writing record
 		$fields->push(new HiddenField("Locale", "Locale", $this->owner->Locale) );
 		
-		// Don't allow translation of virtual pages because of data inconsistencies (see #5000)
-		$excludedPageTypes = array('VirtualPage');
-		foreach($excludedPageTypes as $excludedPageType) {
-			if(is_a($this->owner, $excludedPageType)) return;
+			// Don't allow translation of virtual pages because of data inconsistencies (see #5000)
+		if(class_exists('VirtualPage')){
+			$excludedPageTypes = array('VirtualPage');
+			foreach($excludedPageTypes as $excludedPageType) {
+				if(is_a($this->owner, $excludedPageType)) return;
+			}
 		}
 		
 		$excludeFields = array(
@@ -1271,7 +1278,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 	}
 	
 	function providePermissions() {
-		if(!Object::has_extension('SiteTree', 'Translatable')) return false;
+		if(!Object::has_extension('SiteTree', 'Translatable') || !class_exists('SiteTree')) return false;
 		
 		$locales = self::get_allowed_locales();
 		
@@ -1324,23 +1331,6 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		return $returnMap;
 	}
 	
-	/**
-	 * Get the RelativeLink value for a home page in another locale. This is found by searching for the default home
-	 * page in the default language, then returning the link to the translated version (if one exists).
-	 *
-	 * @return string
-	 */
-	public static function get_homepage_link_by_locale($locale) {
-		$originalLocale = self::get_current_locale();
-		
-		self::set_current_locale(self::default_locale());
-		$original = SiteTree::get_by_link(RootURLController::get_default_homepage_link());
-		self::set_current_locale($originalLocale);
-		
-		if($original) {
-			if($translation = $original->getTranslation($locale)) return trim($translation->RelativeLink(true), '/');
-		}
-	}
 	
 	/**
 	 * @deprecated 2.4 Use {@link Translatable::get_homepage_link_by_locale()}

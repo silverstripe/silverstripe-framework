@@ -417,7 +417,7 @@ class Security extends Controller {
 		Session::clear('Security.Message');
 
 		// custom processing
-		return $customisedController->renderWith(array('Security_login', 'Security', $this->stat('template_main'), 'ContentController'));
+		return $customisedController->renderWith(array('Security_login', 'Security', $this->stat('template_main'), 'BlankPage'));
 	}
 	
 	function basicauthlogin() {
@@ -455,7 +455,7 @@ class Security extends Controller {
 		));
 		
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith(array('Security_lostpassword', 'Security', $this->stat('template_main'), 'ContentController'));
+		return $customisedController->renderWith(array('Security_lostpassword', 'Security', $this->stat('template_main'), 'BlankPage'));
 	}
 
 
@@ -514,7 +514,7 @@ class Security extends Controller {
 		));
 		
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith(array('Security_passwordsent', 'Security', $this->stat('template_main'), 'ContentController'));
+		return $customisedController->renderWith(array('Security_passwordsent', 'Security', $this->stat('template_main'), 'BlankPage'));
 	}
 
 
@@ -594,7 +594,7 @@ class Security extends Controller {
 			}
 		}
 
-		return $customisedController->renderWith(array('Security_changepassword', 'Security', $this->stat('template_main'), 'ContentController'));
+		return $customisedController->renderWith(array('Security_changepassword', 'Security', $this->stat('template_main'), 'BlankPage'));
 	}
 	
 	/**

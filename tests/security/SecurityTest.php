@@ -59,7 +59,7 @@ class SecurityTest extends FunctionalTest {
 		$this->session()->inst_set('loggedInAs', $member->ID);
 
 		/* View the Security/login page */
-		$this->get('Security/login');
+		$response = $this->get('Security/login');
 		
 		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.action');
 		
@@ -93,7 +93,7 @@ class SecurityTest extends FunctionalTest {
 		$this->autoFollowRedirection = true;
 		
 		/* Attempt to get into the admin section */
-		$response = $this->get('admin/cms/');
+		$response = $this->get('Security/login/');
 		
 		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.text');
 

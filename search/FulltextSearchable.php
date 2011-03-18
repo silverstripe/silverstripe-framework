@@ -52,8 +52,9 @@ class FulltextSearchable extends DataObjectDecorator {
 			}
 		}
 		self::$searchable_classes = $searchableClasses;
-
-		Object::add_extension("ContentController", "ContentControllerSearchExtension");
+		if(class_exists("ContentController")){
+			Object::add_extension("ContentController", "ContentControllerSearchExtension");
+		}
 	}
 
 	/**
