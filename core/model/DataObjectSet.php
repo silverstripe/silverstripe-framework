@@ -533,8 +533,8 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * @param int $length
 	 * @return DataObjectSet
 	 */
-	public function getRange($offset, $length) {
-		$set = array_slice($this->items, (int)$offset, (int)$length);
+	public function getRange($offset, $length = null) {
+		$set = array_slice($this->items, (int)$offset, $length);
 		return new DataObjectSet($set);
 	}
 
@@ -1124,5 +1124,3 @@ class DataObjectSet_Iterator implements Iterator {
 		return false;
 	}
 }
-
-?>

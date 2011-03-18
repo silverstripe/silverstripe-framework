@@ -322,8 +322,13 @@ class DataObjectSetTest extends SapphireTest {
 		// And now grab a range that shouldn't be full. Remember counting starts at 0.
 		$range = $comments->getRange(7, 5);
 		$this->assertEquals($range->Count(), 1, 'One comment in the range.');
+		
 		// Make sure it's the last one
 		$this->assertEquals($range->First(), $comments->Last(), 'The only item in the range should be the last one.');
+
+		// And now get all of the items from a specific position.
+		$range = $comments->getRange(2, null);
+		$this->assertEquals($range->Count(), $comments->Count()-2, 'One comment in the remainder of the range.');
 	}
 
 	/**
