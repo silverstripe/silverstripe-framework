@@ -159,15 +159,15 @@ class Image extends File {
 	}
 	
 	public function SetWidth($width) {
-		return $this->getFormattedImage('SetWidth', $width);
+		return $this->getWidth() == $width ? $this:$this->getFormattedImage('SetWidth', $width);
 	}
 	
 	public function SetHeight($height) {
-		return $this->getFormattedImage('SetHeight', $height);
+		return $this->getHeight() == $height ? $this:$this->getFormattedImage('SetHeight', $height);
 	}
 	
 	public function SetSize($width, $height) {
-		return $this->getFormattedImage('SetSize', $width, $height);
+		return (($this->getWidth() == $width) &&  ($this->getHeight() == $height)) ? $this:$this->getFormattedImage('SetSize', $width, $height);
 	}
 	
 	public function SetRatioSize($width, $height) {
