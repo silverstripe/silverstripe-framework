@@ -121,7 +121,7 @@ class FormScaffolder extends Object {
 					$foreignKey = $this->obj->getRemoteJoinField($relationship);
 					$ctf = new ComplexTableField(
 						$this,
-						$relationship,
+						$component,
 						$component,
 						$relationshipFields,
 						"getCMSFields", 
@@ -150,7 +150,7 @@ class FormScaffolder extends Object {
 					$filterJoin = $this->obj->getManyManyJoin($relationship, $component);
 					$ctf =  new ComplexTableField(
 						$this,
-						$relationship,
+						$component,
 						$component,
 						$relationshipFields,
 						"getCMSFields", 
