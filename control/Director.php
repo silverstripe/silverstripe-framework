@@ -87,11 +87,18 @@ class Director {
 			array_merge((array)$_POST, (array)$_FILES),
 			@file_get_contents('php://input')
 		);
-		
-		// @todo find better way to extract HTTP headers
-		if(isset($_SERVER['HTTP_ACCEPT'])) $req->addHeader("Accept", $_SERVER['HTTP_ACCEPT']);
-		if(isset($_SERVER['CONTENT_TYPE'])) $req->addHeader("Content-Type", $_SERVER['CONTENT_TYPE']);
-		if(isset($_SERVER['HTTP_REFERER'])) $req->addHeader("Referer", $_SERVER['HTTP_REFERER']);
+
+		// Load the request headers. If we're not running on Apache, then we
+		// need to manually extract the headers from the $_SERVER array.
+		if (function_exists('apache_request_headers')) {
+			$headers = apache_request_headers();
+		} else {
+			$headers = self::extract_request_headers($_SERVER);
+		}
+
+		foreach ($headers as $header => $value) {
+			$req->addHeader($header, $value);
+		}
 
 		// Load the session into the controller
 		$session = new Session(isset($_SESSION) ? $_SESSION : null);
@@ -536,7 +543,31 @@ class Director {
 		$relativeUrl = Director::makeRelative($url);
 		return (bool)self::is_relative_url($relativeUrl);
 	}
+
+	/**
+	 * Takes a $_SERVER data array and extracts HTTP request headers.
+	 *
+	 * @param  array $data
+	 * @return array
+	 */
+	protected static function extract_request_headers(array $server) {
+		$headers = array();
 	
+		foreach($server as $key => $value) {
+			if(substr($key, 0, 5) == 'HTTP_') {
+				$key = substr($key, 5);
+				$key = strtolower(str_replace('_', ' ', $key));
+				$key = str_replace(' ', '-', ucwords($key));
+				$headers[$key] = $value;
+			}
+		}
+	
+		if(isset($server['CONTENT_TYPE'])) $headers['Content-Type'] = $server['CONTENT_TYPE'];
+		if(isset($server['CONTENT_LENGTH'])) $headers['Content-Length'] = $server['CONTENT_LENGTH'];
+	
+		return $headers;
+	}
+
 	/**
 	 * Given a filesystem reference relative to the site root, return the full file-system path.
 	 * 
