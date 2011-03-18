@@ -29,7 +29,7 @@ application/xhtml+xml				xhtml xht
 application/xml					xml xsl
 application/zip					zip
 application/vnd.mozilla.xul+xml			xul
-application/vnd.ms-excel			xls xlb xlt
+application/vnd.ms-excel			xls xlb xlt xlsx
 application/vnd.ms-pki.seccat			cat
 application/vnd.ms-pki.stl			stl
 application/vnd.ms-powerpoint			ppt pps
