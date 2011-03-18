@@ -10,7 +10,7 @@ application/mac-binhex40			hqx
 application/mac-compactpro			cpt
 application/mathematica				nb
 application/msaccess				mdb
-application/msword				doc dot
+application/msword				doc dot docx
 application/octet-stream			bin
 application/oda					oda
 application/ogg					ogg
