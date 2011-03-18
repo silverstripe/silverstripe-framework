@@ -34,10 +34,6 @@ Director::addRules(1, array(
 	'$URLSegment//$Action/$ID/$OtherID' => 'ModelAsController',
 ));
 
-/**
- * Register the default internal shortcodes.
- */
-ShortcodeParser::get('default')->register('sitetree_link', array('SiteTree', 'link_shortcode_handler'));
 
 /**
  * PHP 5.2 introduced a conflict with the Datetime field type, which was renamed to SSDatetime. This was later renamed
