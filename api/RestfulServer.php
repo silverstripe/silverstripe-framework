@@ -579,7 +579,7 @@ class RestfulServer extends Controller {
 	protected function authenticate() {
 		if(!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])) return false;
 		
-		if($member = Member::currentMember()) return $member;
+		if($member = Member::currentUser()) return $member;
 		$member = MemberAuthenticator::authenticate(array(
 			'Email' => $_SERVER['PHP_AUTH_USER'], 
 			'Password' => $_SERVER['PHP_AUTH_PW'],
