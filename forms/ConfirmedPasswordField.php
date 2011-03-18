@@ -190,7 +190,7 @@ class ConfirmedPasswordField extends FormField {
 				$this->children->fieldByName($this->Name() . '[_PasswordFieldVisible]')->setValue($value['_PasswordFieldVisible']);
 			}
 		} else {
-			if($value || (!$value && !$this->canBeEmpty)) {
+			if($value || (!$value && $this->canBeEmpty)) {
 				$this->value = $value;
 			}
 		}
