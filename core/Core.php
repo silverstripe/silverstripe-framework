@@ -199,44 +199,33 @@ set_include_path(BASE_PATH . '/sapphire' . PATH_SEPARATOR
 	. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
 	. get_include_path());
 
-/**
- * Sapphire class autoloader.  Requires the ManifestBuilder to work.
- * $_CLASS_MANIFEST must have been loaded up by ManifestBuilder for this to successfully load
- * classes.  Classes will be loaded from any PHP file within the application.
- * If your class contains an underscore, for example, Page_Controller, then the filename is
- * expected to be the stuff before the underscore.  In this case, Page.php.
- * 
- * Class names are converted to lowercase for lookup to adhere to PHP's case-insensitive
- * way of dealing with them.
- */
-function sapphire_autoload($className) {
-	global $_CLASS_MANIFEST;
-	$lClassName = strtolower($className);
-	if(isset($_CLASS_MANIFEST[$lClassName])) include_once($_CLASS_MANIFEST[$lClassName]);
-	else if(isset($_CLASS_MANIFEST[$className])) include_once($_CLASS_MANIFEST[$className]);
-}
-
-spl_autoload_register('sapphire_autoload');
-
-require_once("core/ManifestBuilder.php");
-require_once("core/ClassInfo.php");
-require_once('core/Object.php');
-require_once('core/control/Director.php');
-require_once('filesystem/Filesystem.php');
-require_once("core/Session.php");
+// Include the files needed the initial manifest building, as well as any files
+// that are needed for the boostrap process on every request.
+require_once 'cache/Cache.php';
+require_once 'core/Object.php';
+require_once 'core/ClassInfo.php';
+require_once 'core/control/Director.php';
+require_once 'dev/Debug.php';
+require_once 'filesystem/FileFinder.php';
+require_once 'manifest/ClassLoader.php';
+require_once 'manifest/ClassManifest.php';
+require_once 'manifest/ManifestFileFinder.php';
+require_once 'manifest/TokenisedRegularExpression.php';
 
 ///////////////////////////////////////////////////////////////////////////////
 // MANIFEST
 
-/**
- * Include the manifest
- */
-ManifestBuilder::include_manifest();
+// Regenerate the manifest if ?flush is set, or if the database is being built.
+// The coupling is a hack, but it removes an annoying bug where new classes
+// referenced in _config.php files can be referenced during the build process.
+$flush = (isset($_GET['flush']) || isset($_REQUEST['url']) && (
+	$_REQUEST['url'] == 'dev/build' || $_REQUEST['url'] == BASE_URL . '/dev/build'
+));
+$manifest = new SS_ClassManifest(BASE_PATH, false, $flush);
 
-/**
- * ?debugmanifest=1 hook
- */
-if(isset($_GET['debugmanifest'])) Debug::show(file_get_contents(MANIFEST_FILE));
+$loader = SS_ClassLoader::instance();
+$loader->registerAutoloader();
+$loader->pushManifest($manifest);
 
 // If this is a dev site, enable php error reporting
 // This is necessary to force developers to acknowledge and fix
