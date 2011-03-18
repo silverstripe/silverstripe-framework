@@ -44,7 +44,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	/**
 	 * @var int
 	 */
-	protected $iteratorPos, $iteratorTotalItems;
+	protected $iteratorPos, $iteratorPosOffset, $iteratorTotalItems;
 	
 	/**
 	 * A failover object to attempt to get data from if it is not present on this object.
@@ -512,9 +512,10 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @param int $pos position in iterator
 	 * @param int $totalItems total number of items
 	 */
-	public function iteratorProperties($pos, $totalItems) {
+	public function iteratorProperties($pos, $totalItems, $pageOffset = 1) {
 		$this->iteratorPos        = $pos;
 		$this->iteratorTotalItems = $totalItems;
+		$this->iteratorPosOffset  = $pageOffset;
 	}
 	
 	/**
@@ -598,6 +599,15 @@ class ViewableData extends Object implements IteratorAggregate {
 	 */
 	public function Pos($startIndex = 1) {
 		return $this->iteratorPos + $startIndex;
+	}
+	
+	/**
+	 * Return the numerical position of this object in the containing DataObjectSet with respect to pagination.
+	 *
+	 * @return int
+	 */
+	public function PosInSet() {
+		return $this->Pos($this->iteratorPosOffset);
 	}
 	
 	/**

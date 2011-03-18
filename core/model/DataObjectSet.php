@@ -576,7 +576,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * @return DataObjectSet_Iterator
 	 */
 	public function getIterator() {
-		return new DataObjectSet_Iterator($this->items);
+		return new DataObjectSet_Iterator($this->items, $this->PageOffset());
 	}
 	
 	/**
@@ -609,6 +609,18 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 
 		$keys = array_keys($this->items);
 		return $this->items[$keys[sizeof($keys)-1]];
+	}
+	
+	/**
+	 * Return the start index for the Pos() method with respect to pagination,
+	 *   e.g. Pos + PageOffset will give an item's absolute position while respecting page
+	 * @return Int
+	 */
+	public function PageOffset() {
+		// TODO: add ability to work with asceding or descending order
+
+		return (int) ($this->TotalPages() > 1) ?
+			($this->pageLength * ($this->CurrentPage() - 1) + 1) : 1;
 	}
 
 	/**
@@ -1075,9 +1087,9 @@ function column_sort_callback_basic($a, $b) {
  * @subpackage model
  */
 class DataObjectSet_Iterator implements Iterator {
-	function __construct($items) {
+	function __construct($items,$pageOffset = 1) {
 		$this->items = $items;
-		
+		$this->pageOffset = $pageOffset;
 		$this->current = $this->prepareItem(current($this->items));
 	}
 	
@@ -1089,7 +1101,7 @@ class DataObjectSet_Iterator implements Iterator {
 	 */
 	protected function prepareItem($item) {
 		if(is_object($item)) {
-			$item->iteratorProperties(key($this->items), sizeof($this->items));
+			$item->iteratorProperties(key($this->items), sizeof($this->items), $this->pageOffset);
 		}
 		// This gives some reliablity but it patches over the root cause of the bug...
 		// else if(key($this->items) !== null) $item = new ViewableData();
