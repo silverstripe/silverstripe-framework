@@ -69,7 +69,17 @@ class DateField extends TextField {
 		'dateformat' => null,
 		'datavalueformat' => 'yyyy-MM-dd',
 		'min' => null,
-		'max' => null
+		'max' => null,
+		/**
+		 * add useful options to datepicker -- boolean values only
+		 * @see http://docs.jquery.com/UI/Datepicker
+		 */
+		'UI.changeMonth' => true,  // change the month from a drop-down list
+		'UI.changeYear' => true,  // change the year from a drop-down list
+		'UI.selectOtherMonths' => false,  // selectable days in other months shown before or after the current month
+		'UI.showButtonPanel' => false,  // show the button panel
+		'UI.showOtherMonths' => false,  // display dates in other months at the start or end of the current month
+		'UI.showWeek' => false,  // show the week of the year
 	);
 		
 	/**
@@ -141,6 +151,9 @@ class DateField extends TextField {
 			$fields[stripos($format, 'y')] = $fieldYear->Field();
 			ksort($fields);
 			$html = implode($sep, $fields);
+
+			// dmyfields doesn't work with showcalendar
+			$this->setConfig('showcalendar',false);
 		} 
 		// Default text input field
 		else {
@@ -568,6 +581,43 @@ class DateField_View_JQuery {
 				'showcalendar' => true,
 				'dateFormat' => $format
 			);
+
+			/**
+			 * add useful options to datepicker -- boolean values only
+			 * @see http://docs.jquery.com/UI/Datepicker
+			 */
+			if($this->getField()->getConfig('UI.changeMonth')) {
+				$conf['changeMonth'] = true;
+			}
+			if($this->getField()->getConfig('UI.changeYear')) {
+				$conf['changeYear'] = true;
+			}
+			if($this->getField()->getConfig('UI.selectOtherMonths')) {
+				$conf['selectOtherMonths'] = true;
+			}
+			if($this->getField()->getConfig('UI.showButtonPanel')) {
+				$conf['showButtonPanel'] = true;
+			}
+			if($this->getField()->getConfig('UI.showOtherMonths')) {
+				$conf['showOtherMonths'] = true;
+			}
+			if($this->getField()->getConfig('UI.showWeek')) {
+				$conf['showWeek'] = true;
+			}
+
+			/**
+			 * add min/max to datepicker
+			 * ISO format or strtotime() compatible only
+			 */
+			if($this->getField()->getConfig('min')) {
+				$min = new Zend_Date(strtotime($this->getField()->getConfig('min')), null, $this->getField()->locale);
+				$conf['minDate'] = $min->toString($this->getField()->getConfig('dateformat'));
+			}
+			if($this->getField()->getConfig('max')) {
+				$max = new Zend_Date(strtotime($this->getField()->getConfig('max')), null, $this->getField()->locale);
+				$conf['maxDate'] = $max->toString($this->getField()->getConfig('dateformat'));
+			}
+
 			$this->getField()->addExtraClass(str_replace('"', '\'', Convert::raw2json($conf)));
 		}
 	}
