@@ -25,6 +25,11 @@ require_once 'Zend/Date.php';
  * - 'max' (string): Maximum allowed date value (in ISO format, or strtotime() compatible).
  *    Example: '2010-03-31', or '1 year'
  * 
+ * Depending which UI helper is used, further namespaced configuration options are available.
+ * For the default jQuery UI, all options prefixed/namespaced with "jQueryUI." will be respected as well.
+ * Example: <code>$myDateField->setConfig('jQueryUI.showWeek', true);</code>
+ * See http://docs.jquery.com/UI/Datepicker for details.
+ * 
  * # Localization
  * 
  * The field will get its default locale from {@link i18n::get_locale()}, and set the `dateformat`
@@ -73,7 +78,7 @@ class DateField extends TextField {
 		'dateformat' => null,
 		'datavalueformat' => 'yyyy-MM-dd',
 		'min' => null,
-		'max' => null
+		'max' => null,
 	);
 		
 	/**
@@ -145,6 +150,9 @@ class DateField extends TextField {
 			$fields[stripos($format, 'y')] = $fieldYear->Field();
 			ksort($fields);
 			$html = implode($sep, $fields);
+
+			// dmyfields doesn't work with showcalendar
+			$this->setConfig('showcalendar',false);
 		} 
 		// Default text input field
 		else {
@@ -572,6 +580,18 @@ class DateField_View_JQuery {
 				'showcalendar' => true,
 				'dateFormat' => $format
 			);
+			// add min/max to datepicker. ISO format or strtotime() compatible only
+			foreach(array('min', 'max') as $type) {
+				if($this->getField()->getConfig($type)) {
+					$min = new Zend_Date(strtotime($this->getField()->getConfig($type)), null, $this->getField()->locale);
+					$conf[$type . 'Date'] = $min->toString($this->getField()->getConfig('dateformat'));
+				}
+			}
+			// Add other namespaced options (only serializable, no callbacks etc.)
+			foreach($this->getField()->getConfig() as $k => $v) {
+				if(preg_match('/^jQueryUI\.(.*)/', $k, $matches)) $conf[$matches[1]] = $v;
+			}
+
 			$this->getField()->addExtraClass(str_replace('"', '\'', Convert::raw2json($conf)));
 		}
 	}
