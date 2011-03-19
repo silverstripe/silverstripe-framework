@@ -90,6 +90,8 @@ class Session {
 	protected static $cookie_domain;
 
 	protected static $cookie_path;
+	
+	protected static $session_store_path;
 
 	protected static $cookie_secure = false;
 
@@ -156,6 +158,22 @@ class Session {
 	 */
 	public static function get_cookie_secure() {
 		return (bool) self::$cookie_secure;
+	}
+
+	/**
+	 * Set the session store path
+	 * @param string $path Filesystem path to the session store
+	 */ 
+	public static function set_session_store_path($path) {
+		self::$session_store_path = $path;
+	}
+	
+	/**
+	 * Get the session store path
+	 * @return string
+	 */
+	public static function get_session_store_path() {
+		return self::$session_store_path;
 	}
 
 	/**
@@ -430,6 +448,7 @@ class Session {
 		$path = self::get_cookie_path();
 		$domain = self::get_cookie_domain();
 		$secure = self::get_cookie_secure();
+		$session_path = self::get_session_store_path();
 
 		if(!session_id() && !headers_sent()) {
 			if($domain) {
@@ -438,6 +457,9 @@ class Session {
 				session_set_cookie_params(self::$timeout, $path, null, $secure /* secure */, true /* httponly */);
 			}
 
+			// Allow storing the session in a non standard location
+			if($session_path) session_save_path($session_path);
+			
 			// @ is to supress win32 warnings/notices when session wasn't cleaned up properly
 			// There's nothing we can do about this, because it's an operating system function!
 			if($sid) session_id($sid);
