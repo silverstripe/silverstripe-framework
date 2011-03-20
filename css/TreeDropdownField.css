@@ -15,10 +15,10 @@ div.TreeDropdownField .title {
 }
 
 div.TreeDropdownField .panel {
-	position:relative;
+	clear: both;
+	float: left;
 	overflow: auto;
 	display: none;
-	z-index: 1000;
 	cursor: default;
 	border: 1px black solid;
 	width: 200px;
