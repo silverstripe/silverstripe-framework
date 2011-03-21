@@ -52,7 +52,14 @@ class Folder extends File {
 		$item = null;
 		foreach($parts as $part) {
 			if(!$part) continue; // happens for paths with a trailing slash
-			$item = DataObject::get_one("Folder", "\"Name\" = '$part' AND \"ParentID\" = $parentID");
+			$item = DataObject::get_one(
+				"Folder", 
+				sprintf(
+					"\"Name\" = '%s' AND \"ParentID\" = %d",
+					Convert::raw2sql($part), 
+					(int)$parentID
+				)
+			);
 			if(!$item) {
 				$item = new Folder();
 				$item->ParentID = $parentID;
