@@ -29,7 +29,7 @@ class HTMLTextTest extends SapphireTest {
 			'<p>Second paragraph</p><p>should not cause errors or appear in output</p>' => 'Second paragraph',
 			'<img src="hello" /><p>Second paragraph</p><p>should not cause errors or appear in output</p>' => 'Second paragraph',
 			'  <img src="hello" /><p>Second paragraph</p><p>should not cause errors or appear in output</p>' => 'Second paragraph',
-			'<p><img src="remove me">example <img src="include me">text words hello<img src="hello"></p>' => 'example <img src="include me">text words hello<img src="hello">',
+			'<p><img src="remove me">example <img src="include me">text words hello<img src="hello"></p>' => 'example text words hello',
 		);
 		
 		foreach($cases as $originalValue => $expectedValue) {
