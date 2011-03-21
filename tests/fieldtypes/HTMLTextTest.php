@@ -26,7 +26,10 @@ class HTMLTextTest extends SapphireTest {
 			'<h1>Should not take header</h1><p>Should take paragraph</p>' => 'Should take paragraph',
 			'<p>Should strip <b>tags, but leave</b> text</p>' => 'Should strip tags, but leave text',
 			'<p>Unclosed tags <br>should not phase it</p>' => 'Unclosed tags should not phase it',
-			'<p>Second paragraph</p><p>should not cause errors or appear in output</p>' => 'Second paragraph'
+			'<p>Second paragraph</p><p>should not cause errors or appear in output</p>' => 'Second paragraph',
+			'<img src="hello" /><p>Second paragraph</p><p>should not cause errors or appear in output</p>' => 'Second paragraph',
+			'  <img src="hello" /><p>Second paragraph</p><p>should not cause errors or appear in output</p>' => 'Second paragraph',
+			'<p><img src="remove me">example <img src="include me">text words hello<img src="hello"></p>' => 'example <img src="include me">text words hello<img src="hello">',
 		);
 		
 		foreach($cases as $originalValue => $expectedValue) {
