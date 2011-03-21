@@ -221,26 +221,19 @@ class RestfulServer extends Controller {
 		// depending on the request
 		if($id) {
 			// Format: /api/v1/<MyClass>/<ID>
-			$query = $this->getObjectQuery($className, $id, $params);
-			$obj = singleton($className)->buildDataObjectSet($query->execute());
+			$obj = $this->getObjectQuery($className, $id, $params)->First();
 			if(!$obj) return $this->notFound();
-			$obj = $obj->First();
 			if(!$obj->canView()) return $this->permissionFailure();
 
 			// Format: /api/v1/<MyClass>/<ID>/<Relation>
 			if($relationName) {
-				$query = $this->getObjectRelationQuery($obj, $params, $sort, $limit, $relationName);
-				if($query === false) return $this->notFound();
-				$obj = singleton($className)->buildDataObjectSet($query->execute());
+				$obj = $this->getObjectRelationQuery($obj, $params, $sort, $limit, $relationName);
+				if(!$obj) return $this->notFound();
 			} 
 			
 		} else {
 			// Format: /api/v1/<MyClass>
-			$query = $this->getObjectsQuery($className, $params, $sort, $limit);
-			$obj = singleton($className)->buildDataObjectSet($query->execute());
-
-			// show empty serialized result when no records are present
-			if(!$obj) $obj = new DataObjectSet();
+			$obj = $this->getObjectsQuery($className, $params, $sort, $limit);
 		}
 		
 		$this->getResponse()->addHeader('Content-Type', $responseFormatter->getOutputContentType());
@@ -249,7 +242,7 @@ class RestfulServer extends Controller {
 		$fields = $rawFields ? explode(',', $rawFields) : null;
 
 		if($obj instanceof DataObjectSet) {
-			$responseFormatter->setTotalSize($query->unlimitedRowCount());
+			$responseFormatter->setTotalSize($obj->dataQuery()->query()->unlimitedRowCount());
 			return $responseFormatter->convertDataObjectSet($obj, $fields);
 		} else if(!$obj) {
 			$responseFormatter->setTotalSize(0);
@@ -277,9 +270,8 @@ class RestfulServer extends Controller {
 		} else {
 			$searchContext = singleton($className)->getDefaultSearchContext();
 		}
-		$query = $searchContext->getQuery($params, $sort, $limit, $existingQuery);
-		
-		return $query;
+
+        return $searchContext->getQuery($params, $sort, $limit, $existingQuery);
 	}
 	
 	/**
@@ -499,13 +491,10 @@ class RestfulServer extends Controller {
 	 * @param string $className
 	 * @param int $id
 	 * @param array $params
-	 * @return SQLQuery
+	 * @return DataList
 	 */
 	protected function getObjectQuery($className, $id, $params) {
-		$baseClass = ClassInfo::baseDataClass($className);
-		return singleton($className)->extendedSQL(
-			"\"$baseClass\".\"ID\" = {$id}"
-		);
+	    return DataList::create($className)->byIDs(array($id));
 	}
 	
 	/**
@@ -529,24 +518,11 @@ class RestfulServer extends Controller {
 	 * @return SQLQuery|boolean
 	 */
 	protected function getObjectRelationQuery($obj, $params, $sort, $limit, $relationName) {
-		if($obj->hasMethod("{$relationName}Query")) {
-			// @todo HACK Switch to ComponentSet->getQuery() once we implement it (and lazy loading)
-			$query = $obj->{"{$relationName}Query"}(null, $sort, null, $limit);
-			$relationClass = $obj->{"{$relationName}Class"}();
-		} elseif($relationClass = $obj->many_many($relationName)) {
-			// many_many() returns different notation
-			$relationClass = $relationClass[1];
-			$query = $obj->getManyManyComponentsQuery($relationName);
-		} elseif($relationClass = $obj->has_many($relationName)) {
-			$query = $obj->getComponentsQuery($relationName);
-		} elseif($relationClass = $obj->has_one($relationName)) {
-			$query = null;
-		} else {
-			return false;
-		}
-
-		// get all results
- 		return $this->getSearchQuery($relationClass, $params, $sort, $limit, $query);
+	    // The relation method will return a DataList, that getSearchQuery subsequently manipulates
+		if($obj->hasMethod($relationName)) {
+		    $query = $obj->$relationName();
+ 		    return $this->getSearchQuery($query->dataClass(), $params, $sort, $limit, $query);
+	    }
 	}
 	
 	protected function permissionFailure() {
