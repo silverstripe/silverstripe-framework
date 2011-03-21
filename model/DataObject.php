@@ -3040,29 +3040,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		return is_numeric( $this->ID ) && $this->ID > 0;
 	}
 
-	/**
-	 * Sets a 'context object' that can be used to provide hints about how to process a particular get / get_one request.
-	 * In particular, DataExtensions can use this to amend queries more effectively.
-	 * Care must be taken to unset the context object after you're done with it, otherwise you will have a stale context,
-	 * which could cause horrible bugs.
-	 */
-	public static function set_context_obj($obj) {
-		if($obj && self::$context_obj) user_error("Dataobject::set_context_obj passed " . $obj->class . "." . $obj->ID . " when there is already a context: " . self::$context_obj->class . '.' . self::$context_obj->ID, E_USER_WARNING);
-		self::$context_obj = $obj;
-	}
-
-	/**
-	 * Retrieve the current context object.
-	 */
-	public static function context_obj() {
-		return self::$context_obj;
-	}
-
-	/**
-	 * @ignore
-	 */
-	protected static $context_obj = null;
-
 	/*
 	 * @ignore
 	 */
