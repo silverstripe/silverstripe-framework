@@ -480,7 +480,11 @@ class SQLQuery {
 	 * @return string
 	 */
 	function __toString() {
-		return $this->sql();
+	    try {
+		    return $this->sql();
+	    } catch(Exception $e) {
+	        return "<sql query>";
+	    }
 	}
 	
 	/**
