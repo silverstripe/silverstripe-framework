@@ -86,3 +86,8 @@ Exit the editor and then run
 
 	svn up
 
+
+**Useful Links:**
+
+*  [Modules](module-developement)
+*  [Module Release Process](module-release-process)

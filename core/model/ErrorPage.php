@@ -74,7 +74,6 @@ class ErrorPage extends Page {
 				$pageNotFoundErrorPage->ErrorCode = 404;
 				$pageNotFoundErrorPage->Title = _t('ErrorPage.DEFAULTERRORPAGETITLE', 'Page not found');
 				$pageNotFoundErrorPage->Content = _t('ErrorPage.DEFAULTERRORPAGECONTENT', '<p>Sorry, it seems you were trying to access a page that doesn\'t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>');
-				$pageNotFoundErrorPage->Status = 'New page';
 				$pageNotFoundErrorPage->write();
 				$pageNotFoundErrorPage->publish('Stage', 'Live');
 			}
@@ -102,7 +101,6 @@ class ErrorPage extends Page {
 				$serverErrorPage->ErrorCode = 500;
 				$serverErrorPage->Title = _t('ErrorPage.DEFAULTSERVERERRORPAGETITLE', 'Server error');
 				$serverErrorPage->Content = _t('ErrorPage.DEFAULTSERVERERRORPAGECONTENT', '<p>Sorry, there was a problem with handling your request.</p>');
-				$serverErrorPage->Status = 'New page';
 				$serverErrorPage->write();
 				$serverErrorPage->publish('Stage', 'Live');
 			}

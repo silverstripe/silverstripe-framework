@@ -41,7 +41,7 @@ class SecurityTokenTest extends SapphireTest {
 
 	function testInst() {
 		$inst1 = SecurityToken::inst();
-		$this->assertInstanceOf('SecurityToken', $inst1);
+		$this->assertType('SecurityToken', $inst1);
 	}
 	
 	function testInstReturnsSingleton() {
@@ -111,7 +111,7 @@ class SecurityTokenTest extends SapphireTest {
 		$t->updateFieldSet($fs);
 		$f = $fs->dataFieldByName($t->getName());
 		
-		$this->assertInstanceOf('HiddenField', $f);
+		$this->assertType('HiddenField', $f);
 		$this->assertEquals($f->Name(), $t->getName(), 'Name matches');
 		$this->assertEquals($f->Value(), $t->getValue(), 'Value matches');
 	}
@@ -123,7 +123,7 @@ class SecurityTokenTest extends SapphireTest {
 		$t->updateFieldSet($fs); // second
 		$f = $fs->dataFieldByName($t->getName());
 		
-		$this->assertInstanceOf('HiddenField', $f);
+		$this->assertType('HiddenField', $f);
 		$this->assertEquals(1, $fs->Count());
 	}
 	

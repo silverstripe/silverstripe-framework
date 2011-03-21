@@ -627,7 +627,7 @@ a new *StaffHolder* called "Staff" in the "About Us" section, and create some *S
 
 ### Creating the staff section templates
 
-The staff section templates aren't too difficult to create, thanks to the utility methods provided by the *Image* class.
+The staff section templates aren't too difficult to create, thanks to the utility methods provided by the `[api:Image]` class.
 
 **themes/tutorial/templates/Layout/StaffHolder.ss**
 
@@ -650,7 +650,7 @@ The staff section templates aren't too difficult to create, thanks to the utilit
 	</div>
 
 
-This template is very similar to the *ArticleHolder* template. The *FirstSentence* method of the `[api:Text]` class
+This template is very similar to the *ArticleHolder* template. The *SetWidth* method of the `[api:Image]` class
 will resize the image before sending it to the browser. The resized image is cached, so the server doesn't have to
 resize the image every time the page is viewed.
 

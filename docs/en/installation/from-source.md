@@ -1,4 +1,4 @@
-# Installation from Source Control #
+# Installation from Source Control
 
 ## Introduction
 
@@ -10,7 +10,7 @@ is not already fixed.
 For getting a project up and running quickly with a release, you are typically best off
 with the official [silverstripe.org/download](http://silverstripe.org/download). 
 If you want to get the "latest and greatest" pre-release code (either
-on a release brank, or on "trunk"), you need to use our version control.
+on a release branch, or on "trunk"), you need to use our version control.
 
 <div class="warning" markdown="1">
 **Warning**: These instructions are for intermediate to advanced users only,

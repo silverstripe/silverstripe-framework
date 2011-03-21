@@ -64,7 +64,7 @@ class SiteTreeActionsTest extends FunctionalTest {
 		
 		// Get the live version of the page
 		$page = Versioned::get_one_by_stage("SiteTree", "Live", "\"SiteTree\".\"ID\" = $pageID");
-		$this->assertInstanceOf("SiteTree", $page);
+		$this->assertType("SiteTree", $page);
 		
 		// Check that someone without the right permission can't delete the page
 		$editor = $this->objFromFixture('Member', 'cmsnodeleteeditor');
@@ -116,7 +116,7 @@ class SiteTreeActionsTest extends FunctionalTest {
 		
 		// Get the live version of the page
 		$page = Versioned::get_one_by_stage("SiteTree", "Live", "\"SiteTree\".\"ID\" = $pageID");
-		$this->assertInstanceOf('SiteTree', $page);
+		$this->assertType('SiteTree', $page);
 		
 		$actionsArr = $page->getCMSActions()->column('Name');
 		

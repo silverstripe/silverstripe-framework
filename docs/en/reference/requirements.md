@@ -133,8 +133,7 @@ In your controller's init() function, add:
 
 ## CMS Requirements
 
-The Silverstripe core includes a lot of Requirements by itself. Most of these are collated in `[api:LeftAndMain]`//
-first.
+The SilverStripe core includes a lot of Requirements by itself. Most of these are collated in `[api:LeftAndMain]` first.
 
 ## Motivation
 

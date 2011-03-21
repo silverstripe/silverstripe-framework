@@ -2,7 +2,7 @@
 
 Functional tests test your controllers.  The core of these are the same as unit tests:
 
-*  Create a subclass of SapphireTest in the mysite/tests or (module)/tests folder.
+*  Create a subclass of `[api:SapphireTest]` in the `mysite/tests` or `(module)/tests` folder.
 *  Define static $fixture_file to point to a database YAML file.
 *  Create methods that start with "test" to create your tests.
 *  Assertions are used to work out if a test passed or failed.
@@ -15,7 +15,6 @@ URLs.  Here is an example from the subsites module:
 		static $fixture_file = 'subsites/tests/SubsiteTest.yml';
 	
 		/**
-	
 		 * Return a session that has a user logged in as an administrator
 		 */
 		function adminLoggedInSession() {
@@ -25,7 +24,6 @@ URLs.  Here is an example from the subsites module:
 		}
 	
 		/**
-	
 		 * Test generation of the view
 		 */
 		function testBasicView() {
@@ -50,7 +48,7 @@ URLs.  Here is an example from the subsites module:
 We are using a new static method here: **Director::test($url, $postVars, $sessionObj)**
 
 Director::test() lets us execute a URL and see what happens.  It bypasses HTTP, instead relying on the cleanly
-encapsulated execution model of Controller.
+encapsulated execution model of `[api:Controller]`.
 
 It takes 3 arguments:
 
@@ -58,7 +56,7 @@ It takes 3 arguments:
 *  $postVars: Post variables to pass to the URL
 *  $sessionObj: A Session object representing the current session.
 
-And it returns an HTTPResponse object, which will give you the response headers (including redirection), status code,
+And it returns an `[api:HTTPResponse]` object, which will give you the response headers (including redirection), status code,
 and body.
 
 We can use string processing on the body of the response to then see if it fits with our expectations.

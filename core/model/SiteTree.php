@@ -1297,7 +1297,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$homepage->Title = _t('SiteTree.DEFAULTHOMETITLE', 'Home');
 				$homepage->Content = _t('SiteTree.DEFAULTHOMECONTENT', '<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href="admin/">the CMS</a>. You can now access the <a href="http://doc.silverstripe.org">developer documentation</a>, or begin <a href="http://doc.silverstripe.org/doku.php?id=tutorials">the tutorials.</a></p>');
 				$homepage->URLSegment = 'home';
-				$homepage->Status = 'Published';
 				$homepage->Sort = 1;
 				$homepage->write();
 				$homepage->publish('Stage', 'Live');
@@ -1309,7 +1308,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$aboutus = new Page();
 				$aboutus->Title = _t('SiteTree.DEFAULTABOUTTITLE', 'About Us');
 				$aboutus->Content = _t('SiteTree.DEFAULTABOUTCONTENT', '<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>');
-				$aboutus->Status = 'Published';
 				$aboutus->Sort = 2;
 				$aboutus->write();
 				$aboutus->publish('Stage', 'Live');
@@ -1319,7 +1317,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				$contactus = new Page();
 				$contactus->Title = _t('SiteTree.DEFAULTCONTACTTITLE', 'Contact Us');
 				$contactus->Content = _t('SiteTree.DEFAULTCONTACTCONTENT', '<p>You can fill this page out with your own content, or delete it and create your own pages.<br /></p>');
-				$contactus->Status = 'Published';
 				$contactus->Sort = 3;
 				$contactus->write();
 				$contactus->publish('Stage', 'Live');
@@ -1672,11 +1669,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 */
 	function getCMSFields() {
 		require_once("forms/Form.php");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-		Requirements::javascript(CMS_DIR . "/javascript/SitetreeAccess.js");
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/UpdateURL.js');
 
 		// Status / message
 		// Create a status message for multiple parents
@@ -2033,7 +2025,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		// Handle activities undertaken by decorators
 		$this->invokeWithExtensions('onBeforePublish', $original);
-		$this->Status = "Published";
 		//$this->PublishedByID = Member::currentUser()->ID;
 		$this->write();
 		$this->publish("Stage", "Live");
@@ -2124,7 +2115,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// Otherwise, these lines will resurrect an inappropriate record
 		if(DB::query("SELECT \"ID\" FROM \"SiteTree\" WHERE \"ID\" = $this->ID")->value()
 			&& Versioned::current_stage() != 'Live') {
-			$this->Status = "Unpublished";
 			$this->write();
 		}
 

@@ -6,6 +6,8 @@
 
 class PhpUnitWrapper_3_5 extends PhpUnitWrapper {
 
+	protected $version = 'PhpUnit V3.5';
+	
 	protected $coverage = null;
 
 	protected static $test_name = 'SapphireTest';

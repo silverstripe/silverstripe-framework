@@ -77,6 +77,27 @@ SS
 		$this->assertEquals("This is my templateThis is some contentThis is the final content", preg_replace("/\n?<!--.*-->\n?/U",'',$output));
 	}
 	
+	function testBasicText() {
+		$this->assertEquals('"', $this->render('"'), 'Double-quotes are left alone');
+		$this->assertEquals("'", $this->render("'"), 'Single-quotes are left alone');
+		$this->assertEquals('A', $this->render('\\A'), 'Escaped characters are unescaped');
+		$this->assertEquals('\\A', $this->render('\\\\A'), 'Escaped back-slashed are correctly unescaped');
+	}
+	
+	function testBasicInjection() {
+		$this->assertEquals('[out:Test]', $this->render('$Test'), 'Basic stand-alone injection');
+		$this->assertEquals('[out:Test]', $this->render('{$Test}'), 'Basic stand-alone wrapped injection');
+		$this->assertEquals('A[out:Test]!', $this->render('A$Test!'), 'Basic surrounded injection');
+		$this->assertEquals('A[out:Test]B', $this->render('A{$Test}B'), 'Basic surrounded wrapped injection');
+		
+		$this->assertEquals('A$B', $this->render('A\\$B'), 'No injection as $ escaped');
+		$this->assertEquals('A$ B', $this->render('A$ B'), 'No injection as $ not followed by word character');
+		$this->assertEquals('A{$ B', $this->render('A{$ B'), 'No injection as {$ not followed by word character');
+		
+		$this->assertEquals('{$Test}', $this->render('{\\$Test}'), 'Escapes can be used to avoid injection');
+		$this->assertEquals('{\\[out:Test]}', $this->render('{\\\\$Test}'), 'Escapes before injections are correctly unescaped');
+	}
+	
 	function testObjectDotArguments() {
 		$this->assertEquals(
 			'[out:TestObject.methodWithOneArgument(one)]
@@ -218,10 +239,8 @@ after')
 		// Dot syntax
 		$this->assertEquals('ACD',
 			$this->render('A<% if Foo.NotSet %>B<% else_if Foo.IsSet %>C<% end_if %>D'));
-
-		// Broken currently
-		//$this->assertEquals('ACD',
-		//	$this->render('A<% if Foo.Bar.NotSet %>B<% else_if Foo.Bar.IsSet %>C<% end_if %>D'));
+		$this->assertEquals('ACD',
+			$this->render('A<% if Foo.Bar.NotSet %>B<% else_if Foo.Bar.IsSet %>C<% end_if %>D'));
 
 		// Params
 		$this->assertEquals('ACD',
@@ -229,6 +248,12 @@ after')
 		$this->assertEquals('ABD',
 			$this->render('A<% if IsSet(Param) %>B<% else %>C<% end_if %>D'));
 
+		// Negation
+		$this->assertEquals('AC',
+			$this->render('A<% if not IsSet %>B<% end_if %>C'));
+		$this->assertEquals('ABC',
+			$this->render('A<% if not NotSet %>B<% end_if %>C'));
+		
 		// Or
 		$this->assertEquals('ABD',
 			$this->render('A<% if IsSet || NotSet %>B<% else_if A %>C<% end_if %>D'));
@@ -236,12 +261,18 @@ after')
 			$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if IsSet %>C<% end_if %>D'));
 		$this->assertEquals('AD',
 			$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if NotSet3 %>C<% end_if %>D'));
-
-		// Broken currently
-		//$this->assertEquals('ACD',
-		//	$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if IsSet || NotSet %>C<% end_if %>D'));
-		//$this->assertEquals('AD',
-		//	$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if NotSet2 || NotSet3 %>C<% end_if %>D'));
+		$this->assertEquals('ACD',
+			$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if IsSet || NotSet %>C<% end_if %>D'));
+		$this->assertEquals('AD',
+			$this->render('A<% if NotSet || AlsoNotSet %>B<% else_if NotSet2 || NotSet3 %>C<% end_if %>D'));
+		
+		// Negated Or
+		$this->assertEquals('ACD',
+			$this->render('A<% if not IsSet || AlsoNotSet %>B<% else_if A %>C<% end_if %>D'));
+		$this->assertEquals('ABD',
+			$this->render('A<% if not NotSet || AlsoNotSet %>B<% else_if A %>C<% end_if %>D'));
+		$this->assertEquals('ABD',
+			$this->render('A<% if NotSet || not AlsoNotSet %>B<% else_if A %>C<% end_if %>D'));
 
 		// And
 		$this->assertEquals('ABD',
@@ -250,12 +281,10 @@ after')
 			$this->render('A<% if IsSet && NotSet %>B<% else_if IsSet %>C<% end_if %>D'));
 		$this->assertEquals('AD',
 			$this->render('A<% if NotSet && NotSet2 %>B<% else_if NotSet3 %>C<% end_if %>D'));
-
-		// Broken currently
-		//$this->assertEquals('ACD',
-		//	$this->render('A<% if IsSet && NotSet %>B<% else_if IsSet && AlsoSet %>C<% end_if %>D'));
-		//$this->assertEquals('AD',
-		//	$this->render('A<% if NotSet && NotSet2 %>B<% else_if IsSet && NotSet3 %>C<% end_if %>D'));
+		$this->assertEquals('ACD',
+			$this->render('A<% if IsSet && NotSet %>B<% else_if IsSet && AlsoSet %>C<% end_if %>D'));
+		$this->assertEquals('AD',
+			$this->render('A<% if NotSet && NotSet2 %>B<% else_if IsSet && NotSet3 %>C<% end_if %>D'));
 
 		// Equality
 		$this->assertEquals('ABC',
@@ -270,6 +299,10 @@ after')
 		// Else
 		$this->assertEquals('ADE',
 			$this->render('A<% if Right == Wrong %>B<% else_if RawVal != RawVal %>C<% else %>D<% end_if %>E'));
+		
+		// Empty if with else
+		$this->assertEquals('ABC',
+			$this->render('A<% if NotSet %><% else %>B<% end_if %>C'));
 	}
 
 	function testBaseTagGeneration() {
@@ -335,6 +368,137 @@ after')
 		
 		$this->assertEquals('A A1 A1 i A1 ii A2 A3', $rationalisedResult);
 	}
+	
+	function assertEqualIgnoringWhitespace($a, $b) {
+		$this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b));
+	}
+	
+	/**
+	 * Test $Up works when the scope $Up refers to was entered with a "with" block
+	 */
+	function testUpInWith() {
+
+		// Data to run the loop tests on - three levels deep
+		$data = new ArrayData(array(
+			'Name' => 'Top',
+			'Foo' => new ArrayData(array(
+				'Name' => 'Foo',
+				'Bar' => new ArrayData(array(
+					'Name' => 'Bar',
+					'Baz' => new ArrayData(array(
+						'Name' => 'Baz'
+					)),
+					'Qux' => new ArrayData(array(
+						'Name' => 'Qux'
+					))
+				))
+			))
+		));
+		
+		// Basic functionality
+		$this->assertEquals('BarFoo',
+			$this->render('<% with Foo %><% with Bar %>{$Name}{$Up.Name}<% end_with %><% end_with %>', $data));
+		
+		// Two level with block, up refers to internally referenced Bar
+		$this->assertEquals('BarFoo',
+			$this->render('<% with Foo.Bar %>{$Name}{$Up.Name}<% end_with %>', $data));
+
+		// Stepping up & back down the scope tree
+		$this->assertEquals('BazBarQux',
+			$this->render('<% with Foo.Bar.Baz %>{$Name}{$Up.Name}{$Up.Qux.Name}<% end_with %>', $data));
+		
+		// Using $Up in a with block
+		$this->assertEquals('BazBarQux',
+			$this->render('<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}{$Qux.Name}<% end_with %><% end_with %>', $data));
+
+		// Stepping up & back down the scope tree with with blocks
+		$this->assertEquals('BazBarQuxBarBaz',
+			$this->render('<% with Foo.Bar.Baz %>{$Name}<% with $Up %>{$Name}<% with Qux %>{$Name}<% end_with %>{$Name}<% end_with %>{$Name}<% end_with %>', $data));
+
+		// Using $Up.Up, where first $Up points to a previous scope entered using $Up, thereby skipping up to Foo 
+		$this->assertEquals('Foo',
+			$this->render('<% with Foo.Bar.Baz %><% with Up %><% with Qux %>{$Up.Up.Name}<% end_with %><% end_with %><% end_with %>', $data));
+		
+		// Using $Up.Up, where first $Up points to an Up used in a local scope lookup, should still skip to Foo 
+		$this->assertEquals('Foo',
+			$this->render('<% with Foo.Bar.Baz.Up.Qux %>{$Up.Up.Name}<% end_with %>', $data));
+	}
+	
+	/**
+	 * Test $Up works when the scope $Up refers to was entered with a "loop" block
+	 */
+	function testUpInLoop(){
+		
+		// Data to run the loop tests on - one sequence of three items, each with a subitem
+		$data = new ArrayData(array(
+			'Name' => 'Top',
+			'Foo' => new DataObjectSet(array(
+				new ArrayData(array(
+					'Name' => '1',
+					'Sub' => new ArrayData(array(
+						'Name' => 'Bar'
+					))
+				)),
+				new ArrayData(array(
+					'Name' => '2',
+					'Sub' => new ArrayData(array(
+						'Name' => 'Baz'
+					))
+				)),
+				new ArrayData(array(
+					'Name' => '3',
+					'Sub' => new ArrayData(array(
+						'Name' => 'Qux'
+					))
+				))
+			))
+		));
+
+		// Make sure inside a loop, $Up refers to the current item of the loop
+		$this->assertEqualIgnoringWhitespace(
+			'111 222 333',
+			$this->render(
+				'<% loop $Foo %>$Name<% with $Sub %>$Up.Name<% end_with %>$Name<% end_loop %>',
+				$data
+			)
+		);
+
+		// Make sure inside a loop, looping over $Up uses a separate iterator,
+		// and doesn't interfere with the original iterator
+		$this->assertEqualIgnoringWhitespace(
+			'1Bar123Bar1 2Baz123Baz2 3Qux123Qux3',
+			$this->render(
+				'<% loop $Foo %>
+					$Name
+					<% with $Sub %>
+						$Name
+						<% loop $Up %>$Name<% end_loop %>
+						$Name
+					<% end_with %>
+					$Name 
+				<% end_loop %>', 
+				$data
+			)
+		);
+		
+		// Make sure inside a loop, looping over $Up uses a separate iterator,
+		// and doesn't interfere with the original iterator or local lookups
+		$this->assertEqualIgnoringWhitespace(
+			'1 Bar1 123 1Bar 1   2 Baz2 123 2Baz 2   3 Qux3 123 3Qux 3',
+			$this->render(
+				'<% loop $Foo %>
+					$Name
+					<% with $Sub %>
+						{$Name}{$Up.Name}
+						<% loop $Up %>$Name<% end_loop %>
+						{$Up.Name}{$Name}
+					<% end_with %>
+					$Name
+				<% end_loop %>',
+				$data
+			)
+		);
+	}
 }
 
 /**
@@ -345,6 +509,7 @@ class SSViewerTestFixture extends ViewableData {
 
 	function __construct($name = null) {
 		$this->name = $name;
+		parent::__construct();
 	}
 	
 

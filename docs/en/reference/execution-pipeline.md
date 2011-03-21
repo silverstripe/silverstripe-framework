@@ -53,7 +53,7 @@ All requests go through main.php, which sets up the environment and then hands c
 **See:** The API documentation of `[api:Main]` for information about how main.php processes requests.
 ## Director and URL patterns
 
-main.php relies on Director to work out which controller should handle this request.  Director will instantiate that
+main.php relies on `[api:Director]` to work out which controller should handle this request.  `[api:Director]` will instantiate that
 controller object and then call `[api:Controller::run()]`.
 
 **See:** The API documentation of `[api:Director]` for information about how Director parses URLs and hands control over to a controller object.
@@ -73,7 +73,7 @@ When you create a function, you can access the ID like this:
 
 ## Controllers and actions
 
-Controllers are the building blocks of your application.
+`[api:Controller]`s are the building blocks of your application.
 
 **See:** The API documentation for `[api:Controller]`
 

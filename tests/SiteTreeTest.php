@@ -143,7 +143,7 @@ class SiteTreeTest extends SapphireTest {
 	     	$child->Title = 'Page Title';
 		$child->setParent($parent);
 		
-		$this->assertInstanceOf("SiteTree", $child->Parent);
+		$this->assertType("SiteTree", $child->Parent);
 		$this->assertEquals("Section Title", $child->Parent->Title);
 	}
 	
@@ -152,7 +152,7 @@ class SiteTreeTest extends SapphireTest {
 		$child = new SiteTreeTest_PageNode();
 	
 		$child->setParent($parent);
-		$this->assertInstanceOf('SiteTreeTest_PageNode', $child->Parent);
+		$this->assertType('SiteTreeTest_PageNode', $child->Parent);
 	}
 	
 	/**

@@ -24,7 +24,7 @@ See [Developing Themes](theme-development) to get an idea of how themes actually
 
 ## Submitting your theme to SilverStripe
 
-If you want to submit your theme to the silverstripe directory then check
+If you want to submit your theme to the SilverStripe directory then check
 
 * You should ensure your templates are well structured, modular and commented so it's easy for other people to 
  customise them.

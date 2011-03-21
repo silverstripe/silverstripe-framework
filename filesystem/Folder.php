@@ -25,6 +25,12 @@ class Folder extends File {
 
 	static $default_sort = "\"Sort\"";
 	
+	function populateDefaults() {
+		parent::populateDefaults();
+		
+		if(!$this->Name) $this->Name = _t('AssetAdmin.NEWFOLDER',"NewFolder");
+	}
+	
 	/**
 	 * Find the given folder or create it both as {@link Folder} database records
 	 * and on the filesystem. If necessary, creates parent folders as well.
@@ -46,7 +52,14 @@ class Folder extends File {
 		$item = null;
 		foreach($parts as $part) {
 			if(!$part) continue; // happens for paths with a trailing slash
-			$item = DataObject::get_one("Folder", "\"Name\" = '$part' AND \"ParentID\" = $parentID");
+			$item = DataObject::get_one(
+				"Folder", 
+				sprintf(
+					"\"Name\" = '%s' AND \"ParentID\" = %d",
+					Convert::raw2sql($part), 
+					(int)$parentID
+				)
+			);
 			if(!$item) {
 				$item = new Folder();
 				$item->ParentID = $parentID;

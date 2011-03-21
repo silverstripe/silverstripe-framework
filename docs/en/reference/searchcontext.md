@@ -3,16 +3,16 @@
 ## Introduction
 
 Manages searching of properties on one or more `[api:DataObject]` types, based on a given set of input parameters.
-SearchContext is intentionally decoupled from any controller-logic,
+`[api:SearchContext]` is intentionally decoupled from any controller-logic,
 it just receives a set of search parameters and an object class it acts on.
 
-The default output of a SearchContext is either a `[api:SQLQuery]` object for further refinement, or a
+The default output of a `[api:SearchContext]` is either a `[api:SQLQuery]` object for further refinement, or a
 `[api:DataObject]` instance.
 
 In case you need multiple contexts, consider namespacing your request parameters by using `FieldSet->namespace()` on
 the $fields constructor parameter.
 
-SearchContext is mainly used by `[api:ModelAdmin]`, our generic data administration interface. Another
+`[api:SearchContext]` is mainly used by `[api:ModelAdmin]`, our generic data administration interface. Another
 implementation can be found in generic frontend search forms through the [genericviews](http://silverstripe.org/generic-views-module) module.
 
 ## Requirements
@@ -33,9 +33,10 @@ See `[api:DataObject::$searchable_fields]`.
 
 ### Customizing fields and filters
 
-In this example we're defining three attributes on our MyDataObject subclasss: `PublicProperty`, `HiddenProperty`
+In this example we're defining three attributes on our MyDataObject subclass: `PublicProperty`, `HiddenProperty`
 and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDate` should only search for dates
-*after* the search entry (with a `GreaterThanFilter`). Similiar to the built-in `DataObject->getDefaultSearchContext()` method, we're building our own `getCustomSearchContext()` variant.
+*after* the search entry (with a `GreaterThanFilter`). Similiar to the built-in `DataObject->getDefaultSearchContext()`
+method, we're building our own `getCustomSearchContext()` variant.
 
 	:::php
 	class MyDataObject extends DataObject {
@@ -84,11 +85,6 @@ and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDa
 			))->renderWith('Page_results');
 		}
 	}
-
-
-
-
-
 
 
 ### Pagination
@@ -184,7 +180,7 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 
 ## Available SearchFilters
 
-See SearchFilter API Documentation `[api:SearchFilter]` 
+See `[api:SearchFilter]` API Documentation
 
 ## API Documentation
 `[api:SearchContext]`

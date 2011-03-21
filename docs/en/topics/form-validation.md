@@ -6,8 +6,8 @@ Form validation is a combination of PHP and JavaScript
 
 ### Introduction
 
-Validators are implemented as an argument to the [api:Form] constructor.  You create a required fields validator like
-so.  In this case, we're creating a [api:RequiredFields] validator - the [api:Validator] class itself is an abstract
+Validators are implemented as an argument to the `[api:Form]` constructor.  You create a required fields validator like
+so.  In this case, we're creating a `[api:RequiredFields]` validator - the `[api:Validator]` class itself is an abstract
 class.
 
 

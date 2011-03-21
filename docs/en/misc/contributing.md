@@ -17,7 +17,7 @@ If you have discovered a bug in SilverStripe, we'd be glad to hear about it -
 well written bug reports can be half of the solution already!
 Our bugtracker is located on [open.silverstripe.org](http://open.silverstripe.org/) (create a [new ticket](http://open.silverstripe.org/newticket)).
 
-## Submiting Patches, Bugfixes and Enhancements
+## Submiting Bugfixes and Enhancements
 
 We're not perfect, and need your help - for example in the form of patches for our modules and core codebase.
 
@@ -43,11 +43,11 @@ changes
 *  Document your code inline through [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) syntax. See our 
 [API documentation](http://api.silverstripe.org/trunk) for good examples.
 * Also check and update documentation on [doc.silverstripe.org](http://doc.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
-* We will attribute the change to you whereever possible (git does this automatically)
+* We will attribute the change to you whereever possible (git does this automatically for pull requests)
 * If you get stuck, please post to the [forum](http://silverstripe.org/forum) or for deeper core problems, to the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
 
 The core team is responsible for reviewing patches and deciding if they will make it into core.  If
-there are any problems they will assign the ticket back to you, so make sure you have an email address loaded into Trac so that it will notify you! The [Active Patches Report](http://open.silverstripe.com/report/10) will let you see where all the patches are at, and you can review outstanding "pull requests" (for [sapphire](https://github.com/silverstripe/sapphire/pulls) and [cms](https://github.com/silverstripe/silverstripe-cms/pulls)).
+there are any problems they will follow up with you, so please ensure they have a way to contact you! 
 
 ### Sending pull requests (for git)
 
@@ -62,19 +62,21 @@ Example: [Fork the blog module](https://github.com/silverstripe/silverstripe-blo
 Now you have two choices: Smaller fixes (e.g. typos) can be edited directly in the github.com web interface
 (every file view has an "edit this file" link). More commonly, you will work on a working copy on your own computer. After committing your fix, you can send the module authors a so called ["pull request"](http://help.github.com/pull-requests/).
 The module authors will get notified automatically, review your patch, and merge it back as appropriate.
-
 For new features, we recommend creating a ["feature branch"](http://progit.org/book/ch3-3.html) rather than a really big patch.
+
+On github, you can review outstanding [sapphire pull requests](https://github.com/silverstripe/sapphire/pulls) and [cms pull requests](https://github.com/silverstripe/silverstripe-cms/pulls)).
 
 If you want to learn more about git, please have a look at the [free online git book](http://progit.org/book/) and the [git crash course](http://gitref.org/).
 
 ### Submitting patches (for subversion)
 
-Other modules will be hosted on [subversion](http://subversion.tigris.org), in which case you have to
+Some modules will be hosted on [subversion](http://subversion.tigris.org), in which case you have to
 package your changes as a "patch" file. Please read the [official Subversion book](http://svnbook.red-bean.com/) (available free online) for a general introduction to subversion. 
 
-To submit a patch, [register](http://open.silverstripe.com/apply) and attach the patch to the appropriate ticket. 
+Please don't submit patch files for modules on git, as they cause us more work.
+
+To submit a patch, [register](http://open.silverstripe.com/register) or [login](http://open.silverstripe.org/login) on open.silverstripe.org, and attach the patch to an appropriate ticket. 
 Please include in the comment the revision number that the patch is applicable for and a brief outline of what you fixed and how. 
-Only use the provided link to submit patches, as it prefills information about owner and ticket-type:
 
 [Submit a patch (requires account on open.silverstripe.org)](http://open.silverstripe.com/newticket?field_type=patch&field_owner=ischommer&attachment=1)
 
@@ -91,6 +93,8 @@ Some gotchas when using subversion and the patch format:
 *  If your patch involves new files, create a compressed archive for them (including any required directory-structures)
 *  Create patches relative to the working copy (*sapphire/main.php* instead of */Users/myuser/sapphire/main.php*)
 *  Remember the shortcomingsof *svn diff*: Please document moved files and created/deleted directories separately
+
+The "[Patches: Core](http://open.silverstripe.com/report/101)" and "[Patches: Modules](http://open.silverstripe.com/report/102)" reports will let you see where all the patches are at.
 
 ### Commit Messages
 
@@ -163,7 +167,7 @@ Note: Smaller edits can be performed in the github.com web interface on your for
 every page view should have an "edit this file" button.
 
 The [doc.silverstripe.org](http://doc.silverstripe.org) website itself is powered by a
-SilverStripe project that uses the ["sapphiredocs" module](http://open.silverstripe.org/browser/modules/sapphiredocs/trunk)
+SilverStripe project that uses the ["sapphiredocs" module](https://github.com/silverstripe/silverstripe-sapphiredocs)
 to convert Markdown formatted files into searchable HTML pages with index lists.
 
 ### Repositories
@@ -174,11 +178,11 @@ to convert Markdown formatted files into searchable HTML pages with index lists.
 
 ### Source Control
 
-In order to balance editorial control with effective colaboration, we keep
+In order to balance editorial control with effective collaboration, we keep
 documentation alongside the module source code, e.g. in `sapphire/docs/`,
 or as code comments within PHP code.
 Contributing documentation is the same process as providing any other patch
-(see [Patches and Bugfixes](#submiting-patches-bugfixes-and-enhancements)).
+(see [Patches and Bugfixes](contributing#submitting-patches-bugfixes-and-enhancements)).
 
 ### What to write
 
@@ -187,7 +191,7 @@ Contributing documentation is the same process as providing any other patch
   Not suited for longer textual descriptions, due to the limited support of PHPDoc formatting for headlines. 
 * **Tutorials**: The first contact for new users, guiding them step-by-step through achievable projects, in a book-like style.
   *Example: Building a basic site*
-* **Topics**: Provides an overview on how things fit togehter, the "conceptual glue" between APIs and features. 
+* **Topics**: Provides an overview on how things fit together, the "conceptual glue" between APIs and features. 
   This is where most documentation should live, and is the natural "second step" after finishing the tutorials.
   *Example: Templates, Testing, Datamodel*
 * **Howto**: Recipes that solve a specific task or problem, rather than describing a feature.
@@ -205,7 +209,7 @@ for good rules of thumb for documenting opensource software.
 * Don't duplicate: Search for existing places to put your documentation. Do you really require a new page, or just a new paragraph
 of text somewhere?
 * Use PHPDoc in source code: Leave lowlevel technical documentation to code comments within PHP, in [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) format. 
-* Use Markdown in Developer Guides: We have a slightly customized version of Markdown called [SSMarkdown][ss-markdown]
+* Use Markdown in Developer Guides: We have a slightly customized version of Markdown called [SSMarkdown](ss-markdown)
 * API and Developer Guides complement each other: Both forms of documenting sourcecode (API and Developer Guides) are valueable ressources.
 * Provide context: Give API documentation the "bigger picture" by referring to Developer Guides inside your PHPDoc.
 * Make your documentation findable: Documentation lives by interlinking content, so please make sure your contribution doesn't become an
@@ -271,7 +275,7 @@ on placing HTML blocks inside Markdown.
 Documentation is kept alongside the source code, typically in a module subdirectory like `sapphire/docs/en/`.
 Each language has its own subfolder, which can duplicate parts or the whole body of documentation.
 German documentation would for example live in `sapphire/docs/de/`.
-The [sapphiredocs](http://open.silverstripe.org/browser/modules/sapphiredocs/trunk) module that drives
+The [sapphiredocs](https://github.com/silverstripe/silverstripe-sapphiredocs) module that drives
 [doc.silverstripe.org](http://doc.silverstripe.org) automatically resolves these subfolders into a language dropdown.
 
 ### Further reading

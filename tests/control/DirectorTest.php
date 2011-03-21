@@ -165,7 +165,7 @@ class DirectorTest extends SapphireTest {
 				$url = 'DirectorTestRequest_Controller/' . sprintf($testfunction, ucfirst($method)) . '?' . http_build_query($fixture);
 				$getresponse = Director::test($url, $fixture, null, strtoupper($method), null, null, $fixture);
 
-				$this->assertInstanceOf('SS_HTTPResponse', $getresponse, 'Director::test() returns SS_HTTPResponse');
+				$this->assertType('SS_HTTPResponse', $getresponse, 'Director::test() returns SS_HTTPResponse');
 				$this->assertEquals($fixture['somekey'], $getresponse->getBody(), 'Director::test() ' . $testfunction);
 			}
 		}

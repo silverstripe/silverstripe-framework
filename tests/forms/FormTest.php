@@ -243,12 +243,12 @@ class FormTest extends FunctionalTest {
 		SecurityToken::enable();
 		
 		$form1 = $this->getStubForm();
-		$this->assertInstanceOf('SecurityToken', $form1->getSecurityToken());
+		$this->assertType('SecurityToken', $form1->getSecurityToken());
 		
 		SecurityToken::disable();
 		
 		$form2 = $this->getStubForm();
-		$this->assertInstanceOf('NullSecurityToken', $form2->getSecurityToken());
+		$this->assertType('NullSecurityToken', $form2->getSecurityToken());
 		
 		SecurityToken::enable();
 	}
@@ -257,7 +257,7 @@ class FormTest extends FunctionalTest {
 		SecurityToken::enable();
 		
 		$formWithToken = $this->getStubForm();
-		$this->assertInstanceOf(
+		$this->assertType(
 			'HiddenField',
 			$formWithToken->Fields()->fieldByName(SecurityToken::get_default_name()),
 			'Token field added by default'

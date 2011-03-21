@@ -431,7 +431,6 @@ HTML;
 		// The manifest should be built by now, so it's safe to publish the 404 page
 		$fourohfour = Versioned::get_one_by_stage('ErrorPage', 'Stage', '"ErrorCode" = 404');
 		if($fourohfour) {
-			$fourohfour->Status = "Published";
 			$fourohfour->write();
 			$fourohfour->publish("Stage", "Live");
 		}

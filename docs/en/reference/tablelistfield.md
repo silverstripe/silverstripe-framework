@@ -8,9 +8,9 @@ Provides customizeable columns, record-deletion by ajax, paging, sorting, CSV-ex
 
 ## Example
 
-Here's an example of a full featured TableListField implementation. It features editing members in the database directly
-as a button on each record, as well as filtering, and sorting. It also makes use of the 'export' permission, allowing
-export of data as a CSV.
+Here's an example of a full featured `[api:TableListField]` implementation. It features editing members in the database
+directly as a button on each record, as well as filtering, and sorting. It also makes use of the 'export' permission,
+allowing export of data as a CSV.
 
 	:::php
 	function getReportField() {		
@@ -90,7 +90,7 @@ For more information on each of the features used in the example, you can read b
 	$customCsvQuery->select[] = "CONCAT(col1,col2) AS MyCustomSQLColumn";
 	$myTableListField->setCustomCsvQuery($customQuery);
 
-TableListField also tries to resolve Component-relations(has_one, has_many) and custom getters automatically:
+`[api:TableListField]` also tries to resolve Component-relations(has_one, has_many) and custom getters automatically:
 
 	:::php
 	$myTableListField = new TableListField(
@@ -139,12 +139,12 @@ Example (sorting by "FirstName" column):
 	);
 
 
-If you want to sort by custom getters in your DataObject, please reformulate them to a custom SQL column. This
+If you want to sort by custom getters in your `[api:DataObject]`, please reformulate them to a custom SQL column. This
 restriction is needed to avoid performance-hits by caching and sorting potentially large datasets on PHP-level.
 
 ### Casting
 
-Column-values can be casted, based on the casting-types available through DBObject  (sapphire/core/model/fieldtypes).
+Column-values can be casted, based on the casting-types available through DBObject (sapphire/core/model/fieldtypes).
 
 	:::php
 	$myTableListField->setFieldCasting(array(
@@ -155,7 +155,7 @@ Column-values can be casted, based on the casting-types available through DBObje
 
 ### Permissions
 
-Permissions vary in different TableListField-implementations, and are evaluated in the template.
+Permissions vary in different `[api:TableListField]`-implementations, and are evaluated in the template.
 By default, all listed permissions are enabled.
 
 	:::php
@@ -237,7 +237,7 @@ implement averages etc.
 	  )
 	);
 
-In TableField-implementation, these summaries also react to changes in input-fields by javascript.
+In `[api:TableListField]`-implementation, these summaries also react to changes in input-fields by javascript.
 Available methods:
 
 *  sum
@@ -245,7 +245,7 @@ Available methods:
 
 ### Grouping
 
-Used to group by a specific column in the DataObject and create partial summaries.
+Used to group by a specific column in the `[api:DataObject]` and create partial summaries.
 Please use only together with addSummary().
 (Automatically disables sorting).
 
@@ -257,7 +257,7 @@ Please use only together with addSummary().
 
 ### Custom Sorting
 
-Please subclass TableListField to implement custom sorting, following the naming-convention
+Please subclass `[api:TableListField]` to implement custom sorting, following the naming-convention
 "`colFunction_<yourFunctionName>`".
 
 	:::php
@@ -274,7 +274,7 @@ Please subclass TableListField to implement custom sorting, following the naming
 In case you want to perform utility-functions like "export" or "print" through action-buttons,
 make sure to subclass Utility() which collates all possible actions.
 
-### Customizing Look&Feel
+### Customizing Look & Feel
 
 You can exchange the used template, e.g. to change applied CSS-classes or the HTML-markup:
 
@@ -285,4 +285,4 @@ You can exchange the used template, e.g. to change applied CSS-classes or the HT
 
 ## API Documentation
 
-[api:TableListField]
+`[api:TableListField]`

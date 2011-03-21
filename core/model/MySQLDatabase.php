@@ -359,18 +359,6 @@ class MySQLDatabase extends SS_Database {
 	}
 
 	/**
-	 *
-	 * This is a stub function.  Postgres caches the fieldlist results.
-	 *
-	 * @param string $tableName
-	 *
-	 * @return boolean
-	 */
-	function clear_cached_fieldlist($tableName=false){
-		return true;
-	}
-
-	/**
 	 * Create an index on a table.
 	 *
 	 * @param string $tableName The name of the table.

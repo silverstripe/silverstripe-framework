@@ -220,7 +220,7 @@ class TranslatableTest extends FunctionalTest {
 		
 		// first test with default language
 		$fields = $pageOrigLang->getCMSFields();
-		$this->assertInstanceOf(
+		$this->assertType(
 			'TextField', 
 			$fields->dataFieldByName('Title'),
 			'Translatable doesnt modify fields if called in default language (e.g. "non-translation mode")'
@@ -233,13 +233,13 @@ class TranslatableTest extends FunctionalTest {
 		// then in "translation mode"
 		$pageTranslated = $pageOrigLang->createTranslation('fr_FR');
 		$fields = $pageTranslated->getCMSFields();
-		$this->assertInstanceOf(
+		$this->assertType(
 			'TextField', 
 			$fields->dataFieldByName('Title'),
 			'Translatable leaves original formfield intact in "translation mode"'
 		);
 		$readonlyField = $fields->dataFieldByName('Title')->performReadonlyTransformation();
-		$this->assertInstanceOf(
+		$this->assertType(
 			$readonlyField->class, 
 			$fields->dataFieldByName('Title_original'),
 			'Translatable adds the original value as a ReadonlyField in "translation mode"'
@@ -793,7 +793,7 @@ class TranslatableTest extends FunctionalTest {
 			"Users with canEdit() and TRANSLATE_ALL permission can't create a new translation if locale is not in Translatable::get_allowed_locales()"
 		);
 		
-		$this->assertInstanceOf(
+		$this->assertType(
 			'Page',
 			$testPage->createTranslation('ja_JP')
 		);

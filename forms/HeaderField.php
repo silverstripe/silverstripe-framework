@@ -12,7 +12,7 @@ class HeaderField extends DatalessField {
 	 */
 	protected $headingLevel = 2;
 	
-	function __construct($name, $title = null, $headingLevel = 2, $allowHTML = false, $form = null) {
+	function __construct($name, $title = null, $headingLevel = 2, $form = null) {
 		// legacy handling for old parameters: $title, $heading, ...
 		// instead of new handling: $name, $title, $heading, ...
 		$args = func_get_args();
@@ -22,14 +22,12 @@ class HeaderField extends DatalessField {
 			// causing accidental duplicate-field creation.
 			$name = 'HeaderField' . $title; // this means i18nized fields won't be easily accessible through fieldByName()
 			$headingLevel = (isset($args[1])) ? $args[1] : null;
-			$allowHTML = (isset($args[2])) ? $args[2] : null;
 			$form = (isset($args[3])) ? $args[3] : null;
 		} 
 		
 		if($headingLevel) $this->headingLevel = $headingLevel;
-		$this->allowHTML = $allowHTML;
 		
-		parent::__construct($name, $title, null, $allowHTML, $form);
+		parent::__construct($name, $title, null, $form);
 	}
 	
 	function Field() {
