@@ -14,8 +14,8 @@
  */
 class StartsWithMultiFilter extends SearchFilter {
 	
-	public function apply(SQLQuery $query) {
-		$query = $this->applyRelation($query);
+	public function apply(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
 		$values = explode(',', $this->getValue());
 		
 		foreach($values as $value) {
@@ -25,7 +25,7 @@ class StartsWithMultiFilter extends SearchFilter {
 			);
 		}
 		
-		return $query->where(implode(" OR ", $matches));
+		return $query->filter(implode(" OR ", $matches));
 	}
 	
 	public function isEmpty() {

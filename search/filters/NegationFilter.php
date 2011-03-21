@@ -7,8 +7,8 @@
  */
 class NegationFilter extends SearchFilter {
 	
-	public function apply(SQLQuery $query) {
-		return $query->where(sprintf(
+	public function apply(DataQuery $query) {
+		return $query->filter(sprintf(
 			"%s != '%s'",
 			$this->getDbName(),
 			Convert::raw2sql($this->getValue())

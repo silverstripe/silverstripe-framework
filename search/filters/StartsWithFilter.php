@@ -23,9 +23,9 @@ class StartsWithFilter extends SearchFilter {
 	 *
 	 * @return unknown
 	 */
-	public function apply(SQLQuery $query) {
-		$query = $this->applyRelation($query);		
-		$query->where($this->getDbName() . " LIKE '" . Convert::raw2sql($this->getValue()) . "%'");
+	public function apply(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
+		$query->filter($this->getDbName() . " LIKE '" . Convert::raw2sql($this->getValue()) . "%'");
 	}
 	
 	public function isEmpty() {

@@ -65,6 +65,7 @@ class SQLQueryTest extends SapphireTest {
 	}
 	
 	function testSelectWithPredicateFilters() {
+	    /* this is no longer part of this
 		$query = new SQLQuery();
 		$query->select(array("Name"))->from("SQLQueryTest_DO");
 
@@ -77,6 +78,7 @@ class SQLQueryTest extends SapphireTest {
 		$match->apply($query);
 
 		$this->assertEquals("SELECT Name FROM SQLQueryTest_DO WHERE (\"SQLQueryTest_DO\".\"Name\" = 'Value') AND (\"SQLQueryTest_DO\".\"Meta\" LIKE '%Value%')", $query->sql());
+		*/
 	}
 	
 	function testSelectWithLimitClause() {

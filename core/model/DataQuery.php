@@ -352,7 +352,86 @@ class DataQuery {
 			return $this;
 		}
 	}
-	
+
+	/**
+	 * Traverse the relationship fields, and add the table
+	 * mappings to the query object state. This has to be called
+	 * in any overloaded {@link SearchFilter->apply()} methods manually.
+	 * 
+	 * @param $relation The array/dot-syntax relation to follow
+	 * @return The model class of the related item
+	 */
+	function applyRelation($relation) {
+	    // NO-OP
+	    if(!$relation) return $this->dataClass;
+	    
+	    if(is_string($relation)) $relation = explode(".", $relation);
+	    
+	    $modelClass = $this->dataClass;
+	    
+    	foreach($relation as $rel) {
+    		$model = singleton($modelClass);
+    		if ($component = $model->has_one($rel)) {	
+    			if(!$this->query->isJoinedTo($component)) {
+    				$foreignKey = $model->getReverseAssociation($component);
+    				$this->query->leftJoin($component, "\"$component\".\"ID\" = \"{$modelClass}\".\"{$foreignKey}ID\"");
+				
+    				/**
+    				 * add join clause to the component's ancestry classes so that the search filter could search on its 
+    				 * ancester fields.
+    				 */
+    				$ancestry = ClassInfo::ancestry($component, true);
+    				if(!empty($ancestry)){
+    					$ancestry = array_reverse($ancestry);
+    					foreach($ancestry as $ancestor){
+    						if($ancestor != $component){
+    							$this->query->innerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
+    							$component=$ancestor;
+    						}
+    					}
+    				}
+    			}
+    			$modelClass = $component;
+
+    		} elseif ($component = $model->has_many($rel)) {
+    			if(!$this->query->isJoinedTo($component)) {
+    			 	$ancestry = $model->getClassAncestry();
+    				$foreignKey = $model->getRemoteJoinField($rel);
+    				$this->query->leftJoin($component, "\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
+    				/**
+    				 * add join clause to the component's ancestry classes so that the search filter could search on its 
+    				 * ancestor fields.
+    				 */
+    				$ancestry = ClassInfo::ancestry($component, true);
+    				if(!empty($ancestry)){
+    					$ancestry = array_reverse($ancestry);
+    					foreach($ancestry as $ancestor){
+    						if($ancestor != $component){
+    							$this->query->innerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
+    							$component=$ancestor;
+    						}
+    					}
+    				}
+    			}
+    			$modelClass = $component;
+
+    		} elseif ($component = $model->many_many($rel)) {
+    			list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
+    			$parentBaseClass = ClassInfo::baseDataClass($parentClass);
+    			$componentBaseClass = ClassInfo::baseDataClass($componentClass);
+    			$this->query->innerJoin($relationTable, "\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
+    			$this->query->leftJoin($componentBaseClass, "\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
+    			if(ClassInfo::hasTable($componentClass)) {
+    				$this->query->leftJoin($componentClass, "\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
+    			}
+    			$modelClass = $componentClass;
+
+    		}
+		}
+		
+		return $modelClass;
+	}	
+
 	/**
 	 * Select the given fields from the given table
 	 */
