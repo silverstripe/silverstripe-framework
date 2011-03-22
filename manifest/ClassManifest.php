@@ -77,8 +77,9 @@ class SS_ClassManifest {
 	 * @param string $base The manifest base path.
 	 * @param bool   $includeTests Include the contents of "tests" directories.
 	 * @param bool   $forceRegen Force the manifest to be regenerated.
+	 * @param bool   $cache If the manifest is regenerated, cache it.
 	 */
-	public function __construct($base, $includeTests = false, $forceRegen = false) {
+	public function __construct($base, $includeTests = false, $forceRegen = false, $cache = true) {
 		$this->base  = $base;
 		$this->tests = $includeTests;
 
@@ -95,7 +96,7 @@ class SS_ClassManifest {
 			$this->implementors = $data['implementors'];
 			$this->configs      = $data['configs'];
 		} else {
-			$this->regenerate();
+			$this->regenerate($cache);
 		}
 	}
 

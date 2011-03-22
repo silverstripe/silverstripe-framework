@@ -15,8 +15,8 @@ class ClassManifestTest extends SapphireTest {
 		parent::setUp();
 
 		$this->base = dirname(__FILE__) . '/fixtures/classmanifest';
-		$this->manifest      = new SS_ClassManifest($this->base, false, true);
-		$this->manifestTests = new SS_ClassManifest($this->base, true, true);
+		$this->manifest      = new SS_ClassManifest($this->base, false, true, false);
+		$this->manifestTests = new SS_ClassManifest($this->base, true, true, false);
 	}
 
 	public function testGetItemPath() {
