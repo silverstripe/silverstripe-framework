@@ -86,10 +86,6 @@ class File extends DataObject {
 	
 	static $many_many = array();
 	
-	static $belongs_many_many = array(
-		"BackLinkTracking" => "SiteTree",
-	);
-	
 	static $defaults = array();
 	
 	static $extensions = array(
@@ -181,20 +177,6 @@ class File extends DataObject {
 	function getTreeTitle() {
 		return $this->Title;
 	}
-	
-	/**
-	 * @todo Unnecessary shortcut for AssetTableField, coupled with cms module.
-	 * 
-	 * @return Integer
-	 */
-	function BackLinkTrackingCount() {
-		$pages = $this->BackLinkTracking();
-		if($pages) {
-			return $pages->Count();
-		} else {
-			return 0;
-		}
-	}
 
 	/**
 	 * Event handler called before deleting from the database.
@@ -209,28 +191,6 @@ class File extends DataObject {
 
 		if($this->Filename && $this->Name && file_exists($this->getFullPath()) && !is_dir($this->getFullPath())) {
 			unlink($this->getFullPath());
-		}
-	}
-	
-	/**
-	 * Updates link tracking.
-	 */
-	protected function onAfterDelete() {
-		parent::onAfterDelete();
-
-		$brokenPages = $this->BackLinkTracking();
-		if($brokenPages) {
-			$origStage = Versioned::current_stage();
-
-			// This will syncLinkTracking on draft
-			Versioned::reading_stage('Stage');
-			foreach($brokenPages as $brokenPage) $brokenPage->write();
-
-			// This will syncLinkTracking on published
-			Versioned::reading_stage('Live');
-			foreach($brokenPages as $brokenPage) $brokenPage->write();
-
-			Versioned::reading_stage($origStage);
 		}
 	}
 	
@@ -508,24 +468,11 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Rewrite links to the $old file to now point to the $new file.
-	 * 
-	 * @uses SiteTree->rewriteFileURL()
-	 * 
 	 * @param String $old File path relative to the webroot
 	 * @param String $new File path relative to the webroot
 	 */
 	protected function updateLinks($old, $new) {
-		if(class_exists('Subsite')) Subsite::disable_subsite_filter(true);
-	
-		$pages = $this->BackLinkTracking();
-
-		$summary = "";
-		if($pages) {
-			foreach($pages as $page) $page->rewriteFileURL($old,$new);
-		}
-		
-		if(class_exists('Subsite')) Subsite::disable_subsite_filter(false);
+		$this->extend('updateLinks', $old, $new);
 	}
 
 	/**
