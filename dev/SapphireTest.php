@@ -129,7 +129,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		Cookie::set_report_errors(false);
 		
 		RootURLController::reset();
-		Translatable::reset();
+		if(class_exists('Translatable')) Translatable::reset();
 		Versioned::reset();
 		DataObject::reset();
 		SiteTree::reset();

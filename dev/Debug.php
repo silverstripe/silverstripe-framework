@@ -336,7 +336,10 @@ class Debug {
 			echo $friendlyErrorMessage;
 		} else {
 			if(class_exists('ErrorPage')){
-				$errorFilePath = ErrorPage::get_filepath_for_errorcode($statusCode, Translatable::get_current_locale());
+				$errorFilePath = ErrorPage::get_filepath_for_errorcode(
+					$statusCode, 
+					class_exists('Translatable') ? Translatable::get_current_locale() : null
+				);
 				if(file_exists($errorFilePath)) {
 					$content = file_get_contents(ASSETS_PATH . "/error-$statusCode.html");
 					// $BaseURL is left dynamic in error-###.html, so that multi-domain sites don't get broken
