@@ -97,6 +97,15 @@ class ArrayDataTest extends SapphireTest {
 		$this->assertEquals($arrayData->getArray(), $array);
 	}
 
+	function testArrayToObject() {
+		$arr = array("test1" => "result1","test2"=>"result2");
+		$obj = ArrayData::array_to_object($arr);
+		$objExpected = new stdClass();
+		$objExpected->test1 = "result1";
+		$objExpected->test2 = "result2";
+		$this->assertEquals($obj,$objExpected, "Two objects match");
+	}
+
 }
 
 class ArrayDataTest_ArrayData_Exposed extends ArrayData {

@@ -97,6 +97,18 @@ class ArrayData extends ViewableData {
 		
 		return $arr;
 	}
+
+	/**
+	 * Converts an associative array to a simple object
+	 *
+	 * @param array
+	 * @return obj $obj
+	 */
+	public static function array_to_object($arr = null) {
+		$obj = new stdClass();
+		if ($arr) foreach($arr as $name => $value) $obj->$name = $value;
+		return $obj;
+	}
 	
 	/**
 	 * This is pretty crude, but it helps diagnose error situations
