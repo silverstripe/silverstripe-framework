@@ -23,7 +23,6 @@ Director::addRules(10, array(
 	//'Security/$Action/$ID' => 'Security',
 	'db//$Action' => 'DatabaseAdmin',
 	'$Controller//$Action/$ID/$OtherID' => '*',
-	'' => 'RootURLController',
 	'api/v1/live' => 'VersionedRestfulServer',
 	'api/v1' => 'RestfulServer',
 	'soap/v1' => 'SOAPModelAccess',
