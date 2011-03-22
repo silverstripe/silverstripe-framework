@@ -83,6 +83,8 @@ class Security extends Controller {
 	 */
 	protected static $wordlist = './wordlist.txt';
 	
+	static $template = 'BlankPage';
+	
 	/**
 	 * Template thats used to render the pages.
 	 *
@@ -339,15 +341,20 @@ class Security extends Controller {
 			Requirements::css($customCSS);
 		}
 
-		$tmpPage = new Page();
-		$tmpPage->Title = _t('Security.LOGIN', 'Log in');
-		$tmpPage->URLSegment = "Security";
-		// Disable ID-based caching  of the log-in page by making it a random number
-		$tmpPage->ID = -1 * rand(1,10000000);
+		if(class_exists('SiteTree')) {
+			$tmpPage = new Page();
+			$tmpPage->Title = _t('Security.LOGIN', 'Log in');
+			$tmpPage->URLSegment = "Security";
+			// Disable ID-based caching  of the log-in page by making it a random number
+			$tmpPage->ID = -1 * rand(1,10000000);
 
-		$controller = new Page_Controller($tmpPage);
-		$controller->init();
-		//Controller::$currentController = $controller;
+			$controller = new Page_Controller($tmpPage);
+			$controller->init();
+			//Controller::$currentController = $controller;
+		} else {
+			$controller = $this;
+		}
+
 
 		$content = '';
 		$forms = $this->GetLoginForms();
@@ -436,12 +443,16 @@ class Security extends Controller {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
 
-		$tmpPage = new Page();
-		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
-		$tmpPage->URLSegment = 'Security';
-		$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
-		$controller = new Page_Controller($tmpPage);
-		$controller->init();
+		if(class_exists('SiteTree')) {
+			$tmpPage = new Page();
+			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
+			$tmpPage->URLSegment = 'Security';
+			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+			$controller = new Page_Controller($tmpPage);
+			$controller->init();
+		} else {
+			$controller = $this;
+		}
 
 		$customisedController = $controller->customise(array(
 			'Content' => 
@@ -495,12 +506,16 @@ class Security extends Controller {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
 
-		$tmpPage = new Page();
-		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');
-		$tmpPage->URLSegment = 'Security';
-		$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
-		$controller = new Page_Controller($tmpPage);
-		$controller->init();
+		if(class_exists('SiteTree')) {
+			$tmpPage = new Page();
+			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');
+			$tmpPage->URLSegment = 'Security';
+			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+			$controller = new Page_Controller($tmpPage);
+			$controller->init();
+		} else {
+			$controller = $this;
+		}
 
 		$email = Convert::raw2xml($request->param('ID') . '.' . $request->getExtension());
 		
@@ -541,12 +556,16 @@ class Security extends Controller {
 	 * @return string Returns the "change password" page as HTML code.
 	 */
 	public function changepassword() {
-		$tmpPage = new Page();
-		$tmpPage->Title = _t('Security.CHANGEPASSWORDHEADER', 'Change your password');
-		$tmpPage->URLSegment = 'Security';
-		$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
-		$controller = new Page_Controller($tmpPage);
-		$controller->init();
+		if(class_exists('SiteTree')) {
+			$tmpPage = new Page();
+			$tmpPage->Title = _t('Security.CHANGEPASSWORDHEADER', 'Change your password');
+			$tmpPage->URLSegment = 'Security';
+			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+			$controller = new Page_Controller($tmpPage);
+			$controller->init();
+		} else {
+			$controller = $this;
+		}
 
 		// First load with hash: Redirect to same URL without hash to avoid referer leakage
 		if(isset($_REQUEST['h']) && Member::member_from_autologinhash($_REQUEST['h'])) {
@@ -935,4 +954,3 @@ class Security extends Controller {
 	}
 
 }
-?>
