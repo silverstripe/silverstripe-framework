@@ -30,11 +30,6 @@ Director::addRules(10, array(
 	'interactive' => 'SapphireREPL',
 ));
 
-Director::addRules(1, array(
-	'$URLSegment//$Action/$ID/$OtherID' => 'ModelAsController',
-));
-
-
 /**
  * PHP 5.2 introduced a conflict with the Datetime field type, which was renamed to SSDatetime. This was later renamed
  * to SS_Datetime to be consistent with other namespaced classes.
