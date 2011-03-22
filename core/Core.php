@@ -305,16 +305,10 @@ function getTempFolder($base = null) {
 }
 
 /**
- * Return the file where that class is stored.
- * 
- * @param String $className Case-insensitive lookup.
- * @return String
+ * @deprecated 3.0 Please use {@link SS_ClassManifest::getItemPath()}.
  */
 function getClassFile($className) {
-	global $_CLASS_MANIFEST;
-	$lClassName = strtolower($className);
-	if(isset($_CLASS_MANIFEST[$lClassName])) return $_CLASS_MANIFEST[$lClassName];
-	else if(isset($_CLASS_MANIFEST[$className])) return $_CLASS_MANIFEST[$className];
+	return SS_ClassLoader::instance()->getManifest()->getItemPath($className);
 }
 
 /**

@@ -49,7 +49,7 @@ PHP
 	}
 	
 	function testClassDefParser() {
-		$parser = ManifestBuilder::getClassDefParser();
+		$parser = SS_ClassManifest::get_class_parser();
 		
 		$tokens = $this->getTokens();
 
@@ -79,7 +79,7 @@ PHP
 	}
 
 	function testInterfaceDefParser() {
-		$parser = ManifestBuilder::getInterfaceDefParser();
+		$parser = SS_ClassManifest::get_interface_parser();
 		
 		$tokens = $this->getTokens();
 

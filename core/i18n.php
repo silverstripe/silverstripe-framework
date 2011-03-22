@@ -1703,11 +1703,11 @@ class i18n extends Object {
 		} 
 		// $name is assumed to be a PHP class
 		else {
-			global $_CLASS_MANIFEST;
+			$classes = SS_ClassLoader::instance()->getManifest()->getClasses();
 			if(strpos($name,'_') !== false) $name = strtok($name,'_');
 			$name = strtolower($name); // Necessary because of r101131
-			if(isset($_CLASS_MANIFEST[$name])) {
-				$path = str_replace('\\','/',Director::makeRelative($_CLASS_MANIFEST[$name]));
+			if(isset($classes[$name])) {
+				$path = str_replace('\\','/',Director::makeRelative($classes[$name]));
 				ereg('/([^/]+)/', $path, $module);
 			}
 		}

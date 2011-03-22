@@ -12,16 +12,14 @@ class ClassInfo {
 	 * @todo Improve documentation
 	 */
 	static function allClasses() {
-		global $_CLASS_MANIFEST;
-		return ArrayLib::valuekey(array_keys($_CLASS_MANIFEST));
+		return SS_ClassLoader::instance()->allClasses();
 	}
 
 	/**
 	 * @todo Improve documentation
 	 */
 	static function exists($class) {
-		global $_CLASS_MANIFEST;
-		return class_exists($class, false) || array_key_exists(strtolower($class), $_CLASS_MANIFEST);
+		return SS_ClassLoader::instance()->classExists($class);
 	}
 
 	/**
@@ -126,32 +124,16 @@ class ClassInfo {
 	 * @return array Names of all subclasses as an associative array.
 	 */
 	public static function subclassesFor($class) {
-		global $_ALL_CLASSES;
+		$descendants = SS_ClassLoader::instance()->getManifest()->getDescendantsOf($class);
+		$result      = array($class => $class);
 
-		if (is_object($class)) {
-			$class = get_class($class);
+		if ($descendants) {
+			return $result + ArrayLib::valuekey($descendants);
+		} else {
+			return $result;
 		}
-
-		$parents = array($class);
-		$classes = array($class => $class);
-
-		if (!isset($_ALL_CLASSES['children'][$class])) {
-			return $classes;
-		}
-
-		while ($parent = array_shift($parents)) {
-			foreach ($_ALL_CLASSES['children'][$parent] as $class) {
-				$classes[$class] = $class;
-
-				if (isset($_ALL_CLASSES['children'][$class])) {
-					$parents[] = $class;
-				}
-			}
-		}
-
-		return $classes;
 	}
-	
+
 	/**
 	 * Returns the passed class name along with all its parent class names in an
 	 * array, sorted with the root class first.
@@ -185,16 +167,14 @@ class ClassInfo {
 	 * classes and not built-in PHP classes.
 	 */
 	static function implementorsOf($interfaceName) {
-	    global $_ALL_CLASSES;
-		return (isset($_ALL_CLASSES['implementors'][$interfaceName])) ? $_ALL_CLASSES['implementors'][$interfaceName] : false;
+		return SS_ClassLoader::instance()->getManifest()->getImplementorsOf($interfaceName);
 	}
 
 	/**
 	 * Returns true if the given class implements the given interface
 	 */
 	static function classImplements($className, $interfaceName) {
-	    global $_ALL_CLASSES;
-		return isset($_ALL_CLASSES['implementors'][$interfaceName][$className]);
+		return in_array($className, SS_ClassLoader::instance()->getManifest()->getImplementorsOf($interfaceName));
 	}
 
 	/**
@@ -215,11 +195,11 @@ class ClassInfo {
 	 * @return array
 	 */
 	static function classes_for_file($filePath) {
-		$absFilePath = Director::getAbsFile($filePath);
-		global $_CLASS_MANIFEST;
-		
+		$absFilePath    = Director::getAbsFile($filePath);
 		$matchedClasses = array();
-		foreach($_CLASS_MANIFEST as $class => $compareFilePath) {
+		$manifest       = SS_ClassLoader::instance()->getManifest()->getClasses();
+
+		foreach($manifest as $class => $compareFilePath) {
 			if($absFilePath == $compareFilePath) $matchedClasses[] = $class;
 		}
 		
@@ -236,11 +216,11 @@ class ClassInfo {
 	 * @return array Array of class names
 	 */
 	static function classes_for_folder($folderPath) {
-		$absFolderPath = Director::getAbsFile($folderPath);
-		global $_CLASS_MANIFEST;
-
+		$absFolderPath  = Director::getAbsFile($folderPath);
 		$matchedClasses = array();
-		foreach($_CLASS_MANIFEST as $class => $compareFilePath) {
+		$manifest       = SS_ClassLoader::instance()->getManifest()->getClasses();
+
+		foreach($manifest as $class => $compareFilePath) {
 			if(stripos($compareFilePath, $absFolderPath) === 0) $matchedClasses[] = $class;
 		}
 
