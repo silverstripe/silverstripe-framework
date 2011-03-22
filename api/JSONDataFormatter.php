@@ -26,27 +26,38 @@ class JSONDataFormatter extends DataFormatter {
 	}
 	
 	/**
-	 * Generate an XML representation of the given {@link DataObject}.
-	 * 
-	 * @param DataObject $obj
-	 * @param $includeHeader Include <?xml ...?> header (Default: true)
-	 * @return String XML
+	 * Generate a JSON representation of the given {@link DataObject}.
+	 *
+	 * @param DataObject $obj	The object
+	 * @param Array $fields		If supplied, only fields in the list will be returned
+	 * @param $relations		Not used
+	 * @return String JSON
 	 */
 	public function convertDataObject(DataObjectInterface $obj, $fields = null, $relations = null) {
+		return Convert::array2json($this->convertDataObjectToJSONObject($obj, $fields, $relations));
+	}
+
+	/**
+	 * Internal function to do the conversion of a single data object. It builds an empty object and dynamically
+	 * adds the properties it needs to it. If it's done as a nested array, json_encode or equivalent won't use
+	 * JSON object notation { ... }.
+	 * @param DataObjectInterface $obj
+	 * @param  $fields
+	 * @param  $relations
+	 * @return EmptyJSONObject
+	 */
+	public function convertDataObjectToJSONObject(DataObjectInterface $obj, $fields = null, $relations = null) {
 		$className = $obj->class;
 		$id = $obj->ID;
 		
-		$json = "{\n  \"className\" : \"$className\",\n";
+		$serobj = new EmptyJSONObject();
+
 		foreach($this->getFieldsForObj($obj) as $fieldName => $fieldType) {
 			// Field filtering
 			if($fields && !in_array($fieldName, $fields)) continue;
 
 			$fieldValue = $obj->$fieldName;
-			if(is_object($fieldValue) && is_subclass_of($fieldValue, 'Object') && $fieldValue->hasMethod('toJSON')) {
-				$jsonParts[] = "\"$fieldName\" : " . $fieldValue->toJSON();
-			} else {
-				$jsonParts[] = "\"$fieldName\" : " . Convert::raw2json($fieldValue);
-			}
+			$serobj->$fieldName = $fieldValue;
 		}
 
 		if($this->relationDepth > 0) {
@@ -63,7 +74,7 @@ class JSONDataFormatter extends DataFormatter {
 				} else {
 					$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
 				}
-				$jsonParts[] = "\"$relName\" : { \"className\" : \"$relClass\", \"href\" : \"$href.json\", \"id\" : \"{$obj->$fieldName}\" }";
+				$serobj->$relName = new EmptyJSONObject(array("className" => $relClass, "href" => "$href.json", "id" => $obj->$fieldName));
 			}
 	
 			foreach($obj->has_many() as $relName => $relClass) {
@@ -73,14 +84,14 @@ class JSONDataFormatter extends DataFormatter {
 				if($fields && !in_array($relName, $fields)) continue;
 				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
 
-				$jsonInnerParts = array();
+				$innerParts = array();
 				$items = $obj->$relName();
 				foreach($items as $item) {
 					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
 					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-					$jsonInnerParts[] = "{ \"className\" : \"$relClass\", \"href\" : \"$href.json\", \"id\" : \"{$obj->$fieldName}\" }";
+					$innerParts[] = new EmptyJSONObject(array("className" => $relClass, "href" => "$href.json", "id" => $obj->$fieldName));
 				}
-				$jsonParts[] = "\"$relName\" : [\n    " . implode(",\n    ", $jsonInnerParts) . "  \n  ]";
+				$serobj->$relName = $innerParts;
 			}
 	
 			foreach($obj->many_many() as $relName => $relClass) {
@@ -90,38 +101,36 @@ class JSONDataFormatter extends DataFormatter {
 				if($fields && !in_array($relName, $fields)) continue;
 				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
 
-				$jsonInnerParts = array();
+				$innerParts = array();
 				$items = $obj->$relName();
 				foreach($items as $item) {
 					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
 					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-					$jsonInnerParts[] = "    { \"className\" : \"$relClass\", \"href\" : \"$href.json\", \"id\" : \"{$obj->$fieldName}\" }";
+					$innerParts[] = new EmptyJSONObject(array("className" => $relClass, "href" => "$href.json", "id" => $obj->$fieldName));
 				}
-				$jsonParts[] = "\"$relName\" : [\n    " . implode(",\n    ", $jsonInnerParts) . "\n  ]";
+				$serobj->$relName = $innerParts;
 			}
 		}
 		
-		return "{\n  " . implode(",\n  ", $jsonParts) . "\n}";	}
+		return $serobj;
+	}
 
 	/**
-	 * Generate an XML representation of the given {@link DataObjectSet}.
+	 * Generate a JSON representation of the given {@link DataObjectSet}.
 	 * 
 	 * @param DataObjectSet $set
 	 * @return String XML
 	 */
 	public function convertDataObjectSet(DataObjectSet $set, $fields = null) {
-		$jsonParts = array();
-		foreach($set as $item) {
-			if($item->canView()) $jsonParts[] = $this->convertDataObject($item, $fields);
-		}
-		$json = "{\n";
-		$json .= '"totalSize": ';
-		$json .= (is_numeric($this->totalSize)) ? $this->totalSize : 'null';
-		$json .= ",\n";
-		$json .= "\"items\": [\n" . implode(",\n", $jsonParts) . "\n]\n";
-		$json .= "}\n";
+		$items = array();
+		foreach ($set as $do) $items[] = $this->convertDataObjectToJSONObject($do, $fields);
 
-		return $json;
+		$serobj = new EmptyJSONObject(array(
+			"totalSize" => (is_numeric($this->totalSize)) ? $this->totalSize : null,
+			"items" => $items
+		));
+
+		return Convert::array2json($serobj);
 	}
 	
 	public function convertStringToArray($strData) {
@@ -129,3 +138,18 @@ class JSONDataFormatter extends DataFormatter {
 	}
 	
 }
+
+/**
+ * Empty class with no behaviour or properties, so we can give plain objects to the json encoder.
+ */
+class EmptyJSONObject {
+	/**
+	 * @param  $args		An assoc array used to dynamically initialise properties of the new object.
+	 * @return void
+	 */
+	function __construct($args = null) {
+		if ($args) foreach($args as $name => $value) $this->$name = $value;
+	}
+}
+
+?>
