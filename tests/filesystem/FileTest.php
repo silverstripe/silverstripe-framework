@@ -279,7 +279,7 @@ class FileTest extends SapphireTest {
 			fwrite($fh, str_repeat('x',1000000));
 			fclose($fh);
 		}
-	} 
+	}
 	
 	function tearDown() {
 		parent::tearDown();
@@ -302,6 +302,10 @@ class FileTest extends SapphireTest {
 		if(file_exists('../assets/FileTest')) Filesystem::removeFolder('../assets/FileTest');
 		if(file_exists('../assets/FileTest-subfolder')) Filesystem::removeFolder('../assets/FileTest-subfolder');
 		if(file_exists('../assets/FileTest.txt')) unlink('../assets/FileTest.txt');
+
+		if (file_exists("../assets/FileTest-folder-renamed1")) Filesystem::removeFolder("../assets/FileTest-folder-renamed1");
+		if (file_exists("../assets/FileTest-folder-renamed2")) Filesystem::removeFolder("../assets/FileTest-folder-renamed2");
+		if (file_exists("../assets/FileTest-folder-renamed3")) Filesystem::removeFolder("../assets/FileTest-folder-renamed3");
 	}
 
 }
