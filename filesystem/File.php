@@ -18,7 +18,8 @@
  * - "Name": File name (including extension) or folder name.
  *   Should be the same as the actual filesystem. 
  * - "Title": Optional title of the file (for display purposes only).
- *   Defaults to "Name".
+ *   Defaults to "Name". Note that the Title field of Folder (subclass of File)
+ *   is linked to Name, so Name and Title will always be the same.
  * - "Filename": Path of the file or folder, relative to the webroot.
  *   Usually starts with the "assets/" directory, and has no trailing slash.
  *   Defaults to the "assets/" directory plus "Name" property if not set.

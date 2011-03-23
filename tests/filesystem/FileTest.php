@@ -222,7 +222,41 @@ class FileTest extends SapphireTest {
 		$this->assertFileExists($filePath);
 		$this->assertFalse(DataObject::get_by_id('File', $fileID));
 	}
-		
+
+	function testRenameFolder() {
+		$newTitle = "FileTest-folder-renamed";
+
+		//rename a folder's title
+		$folderID = $this->objFromFixture("Folder","folder2")->ID;
+		$folder = DataObject::get_by_id('Folder',$folderID);
+		$folder->Title = $newTitle;
+		$folder->write();
+
+		//get folder again and see if the filename has changed
+		$folder = DataObject::get_by_id('Folder',$folderID);
+		$this->assertEquals($folder->Filename, ASSETS_DIR ."/". $newTitle ."/", "Folder Filename updated after rename of Title");
+
+
+		//rename a folder's name
+		$newTitle2 = "FileTest-folder-renamed2";
+		$folder->Name = $newTitle2;
+		$folder->write();
+
+		//get folder again and see if the Title has changed
+		$folder = DataObject::get_by_id('Folder',$folderID);
+		$this->assertEquals($folder->Title, $newTitle2, "Folder Title updated after rename of Name");
+
+
+		//rename a folder's Filename
+		$newTitle3 = "FileTest-folder-renamed3";
+		$folder->Filename = $newTitle3;
+		$folder->write();
+
+		//get folder again and see if the Title has changed
+		$folder = DataObject::get_by_id('Folder',$folderID);
+		$this->assertEquals($folder->Title, $newTitle3, "Folder Title updated after rename of Filename");
+	}
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	function setUp() {
