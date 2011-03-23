@@ -380,76 +380,21 @@ class SSViewer {
 	public function exists() {
 		return $this->chosenTemplates;
 	}
-	
-	/**
-	 * Searches for a template name in the current theme:
-	 * - themes/mytheme/templates
-	 * - themes/mytheme/templates/Includes
-	 * Falls back to unthemed template files.
-	 * 
-	 * Caution: Doesn't search in any /Layout folders.
-	 * 
-	 * @param string $identifier A template name without '.ss' extension or path.
-	 * @return string Full system path to a template file
-	 */
-	public static function getTemplateFile($identifier) {
-		global $_TEMPLATE_MANIFEST;
-		
-		$includeTemplateFile = self::getTemplateFileByType($identifier, 'Includes');
-		if($includeTemplateFile) return $includeTemplateFile;
-		
-		$mainTemplateFile = self::getTemplateFileByType($identifier, 'main');
-		if($mainTemplateFile) return $mainTemplateFile;
-		
-		return false;
-	}
-	
+
 	/**
 	 * @param string $identifier A template name without '.ss' extension or path
 	 * @param string $type The template type, either "main", "Includes" or "Layout"
 	 * @return string Full system path to a template file
 	 */
 	public static function getTemplateFileByType($identifier, $type) {
-		global $_TEMPLATE_MANIFEST;
-		if(self::current_theme() && isset($_TEMPLATE_MANIFEST[$identifier]['themes'][self::current_theme()][$type])) {
-			return $_TEMPLATE_MANIFEST[$identifier]['themes'][self::current_theme()][$type];
-		} else if(isset($_TEMPLATE_MANIFEST[$identifier][$type])){
-			return $_TEMPLATE_MANIFEST[$identifier][$type];
-		} else {
-			return false;
+		$loader = SS_TemplateLoader::instance();
+		$found  = $loader->findTemplates("$type/$identifier", self::current_theme());
+
+		if ($found) {
+			return $found['main'];
 		}
 	}
-	
-	/**
-	 * Used by <% include Identifier %> statements to get the full
-	 * unparsed content of a template file.
-	 * 
-	 * @uses getTemplateFile()
-	 * @param string $identifier A template name without '.ss' extension or path.
-	 * @return string content of template
-	 */
-	public static function getTemplateContent($identifier) {
-		if(!SSViewer::getTemplateFile($identifier)) {
-			return null;
-		}
-		
-		$content = file_get_contents(SSViewer::getTemplateFile($identifier));
 
-		// $content = "<!-- getTemplateContent() :: identifier: $identifier -->". $content; 
-		// Adds an i18n namespace to all _t(...) calls without an existing one
-		// to avoid confusion when using the include in different contexts.
-		// Entities without a namespace are deprecated, but widely used.
-		$content = ereg_replace('<' . '% +_t\((\'([^\.\']*)\'|"([^\."]*)")(([^)]|\)[^ ]|\) +[^% ])*)\) +%' . '>', '<?= _t(\''. $identifier . '.ss' . '.\\2\\3\'\\4) ?>', $content);
-
-		// Remove UTF-8 byte order mark
-		// This is only necessary if you don't have zend-multibyte enabled.
-		if(substr($content, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
-			$content = substr($content, 3);
-		}
-
-		return $content;
-	}
-	
 	/**
 	 * @ignore
 	 */
