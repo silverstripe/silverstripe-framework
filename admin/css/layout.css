@@ -531,11 +531,6 @@ li.spacer {
 	margin-right: 4px;
 }
 
-/* CMS specific icons for the tree */
-ul.tree li.Root span.Root span.c a {
-	background: url(../../cms/images/treeicons/root.png) no-repeat !important;
-}
-
 /* Misc Styling */
 iframe {
 	border: none;
@@ -659,7 +654,7 @@ iframe {
 	display: block;
 	width: 20px;
 	height: 20px;
-	background: transparent url(../../cms/images/arrow_refresh.gif) no-repeat;
+	background: transparent url(../../../cms/images/arrow_refresh.gif) no-repeat;
 }
 
 #Form_EditorToolbarLinkForm select.hasRefreshButton {

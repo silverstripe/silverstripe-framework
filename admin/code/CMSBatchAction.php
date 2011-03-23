@@ -2,7 +2,7 @@
 
 /**
  * A class representing back actions.
- * See cms/javascript/CMSMain.BatchActions.js on how to add custom javascript
+ * See CMSMain.BatchActions.js on how to add custom javascript
  * functionality.
  * 
  * <code>

@@ -174,7 +174,7 @@ class LeftAndMain extends Controller {
 		$htmlEditorConfig = HtmlEditorConfig::get_active();
 		$htmlEditorConfig->setOption('language', i18n::get_tinymce_lang());
 		if(!$htmlEditorConfig->getOption('content_css')) {
-			$cssFiles = 'cms/css/editor.css';
+			$cssFiles = 'sapphire/admin/css/editor.css';
 			
 			// Use theme from the site config
 			if(($config = SiteConfig::current_site_config()) && $config->Theme) {
@@ -192,10 +192,10 @@ class LeftAndMain extends Controller {
 		}
 		
 
-		Requirements::css(CMS_DIR . '/css/typography.css');
-		Requirements::css(CMS_DIR . '/css/layout.css');
-		Requirements::css(CMS_DIR . '/css/cms_left.css');
-		Requirements::css(CMS_DIR . '/css/cms_right.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/typography.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/layout.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/cms_left.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/cms_right.css');
 		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
 		
 		if(isset($_REQUEST['debug_firebug'])) {
@@ -214,13 +214,13 @@ class LeftAndMain extends Controller {
 
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');  //import all of jquery ui
 
-		Requirements::javascript(CMS_DIR . '/thirdparty/jquery-layout/jquery.layout.js');
-		Requirements::javascript(CMS_DIR . '/thirdparty/jquery-layout/jquery.layout.state.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-layout/jquery.layout.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-layout/jquery.layout.state.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/json-js/json2.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-metadata/jquery.metadata.js');
-		Requirements::javascript(CMS_DIR . '/javascript/jquery-fitheighttoparent/jquery.fitheighttoparent.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/jquery-fitheighttoparent/jquery.fitheighttoparent.js');
 		
-		Requirements::javascript(CMS_DIR . '/javascript/ssui.core.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js');
 		// @todo Load separately so the CSS files can be inlined
 		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.all.css');
 		
@@ -232,11 +232,11 @@ class LeftAndMain extends Controller {
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-cookie/jquery.cookie.js');
-		Requirements::javascript(CMS_DIR . '/thirdparty/jquery-notice/jquery.notice.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js');
-		Requirements::javascript(CMS_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js');
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::add_i18n_javascript(CMS_DIR . '/javascript/lang');
+		Requirements::add_i18n_javascript(SAPPHIRE_ADMIN_DIR . '/javascript/lang');
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/dragdrop.js');
@@ -247,15 +247,11 @@ class LeftAndMain extends Controller {
 		Requirements::javascript(THIRDPARTY_DIR . '/jstree/jquery.jstree.js');
 		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
 		
-		Requirements::javascript(CMS_DIR . '/javascript/LeftAndMain.js');
-		Requirements::javascript(CMS_DIR . '/javascript/LeftAndMain.Tree.js');
-		Requirements::javascript(CMS_DIR . '/javascript/LeftAndMain.EditForm.js');
-		Requirements::javascript(CMS_DIR . '/javascript/LeftAndMain.AddForm.js');
-		Requirements::javascript(CMS_DIR . '/javascript/LeftAndMain.BatchActions.js');
-		
-		// navigator
-		Requirements::css(CMS_DIR . '/css/SilverStripeNavigator.css');
-		Requirements::javascript(CMS_DIR . '/javascript/SilverStripeNavigator.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js');
 
 		Requirements::themedCSS('typography');
 
@@ -271,7 +267,7 @@ class LeftAndMain extends Controller {
 			Requirements::themedCSS($file[0], $file[1]);
 		}
 		
-		Requirements::css(CMS_DIR . '/css/unjquery.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/unjquery.css');
 		
 		// Javascript combined files
 		Requirements::combine_files(
@@ -295,7 +291,7 @@ class LeftAndMain extends Controller {
 				'sapphire/thirdparty/scriptaculous/effects.js',
 				'sapphire/thirdparty/scriptaculous/dragdrop.js',
 				'sapphire/thirdparty/scriptaculous/controls.js',
-				'cms/javascript/LeftAndMain.js',
+				'sapphire/admin/javascript/LeftAndMain.js',
 				'sapphire/javascript/tree/tree.js',
 				'sapphire/javascript/TreeDropdownField.js',
 		 		'cms/javascript/ThumbnailStripField.js',
@@ -971,7 +967,7 @@ class LeftAndMain extends Controller {
 		$form->setActions(null);
 
 		Requirements::clear();
-		Requirements::css(CMS_DIR . '/css/LeftAndMain_printable.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/LeftAndMain_printable.css');
 		return array(
 			"PrintForm" => $form
 		);
@@ -1161,7 +1157,7 @@ class LeftAndMain extends Controller {
 	 *
 	 * @var unknown_type
 	 */
-	static $application_logo = 'cms/images/mainmenu/logo.gif';
+	static $application_logo = 'sapphire/admin/images/mainmenu/logo.gif';
 
 	/**
 	 * The application logo style. Customisable by calling
@@ -1189,7 +1185,7 @@ class LeftAndMain extends Controller {
 	 * If the given image's height is significantly larger or smaller, adjust the loading animation's top offset in 
 	 * positionLoadingSpinner() in LeftAndMain.js
 	 */
-	protected static $loading_image = 'cms/images/logo.gif';
+	protected static $loading_image = 'sapphire/admin/images/logo.gif';
 	
 	/**
 	 * Set the image shown when the CMS is loading.

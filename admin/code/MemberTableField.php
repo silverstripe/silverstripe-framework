@@ -121,8 +121,8 @@ class MemberTableField extends ComplexTableField {
 		$ret = parent::FieldHolder();
 		
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/controls.js");
-		Requirements::javascript(CMS_DIR . '/javascript/MemberTableField.js');
-		Requirements::javascript(CMS_DIR . "/javascript/MemberTableField_popup.js");
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/MemberTableField.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . "/javascript/MemberTableField_popup.js");
 		
 		return $ret;
 	}
@@ -470,9 +470,9 @@ class MemberTableField_Popup extends ComplexTableField_Popup {
 	function forTemplate() {
 		$ret = parent::forTemplate();
 		
-		Requirements::css(CMS_DIR . '/css/SecurityAdmin.css');
-		Requirements::javascript(CMS_DIR . '/javascript/MemberTableField.js');
-		Requirements::javascript(CMS_DIR . '/javascript/MemberTableField_popup.js');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/SecurityAdmin.css');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/MemberTableField.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/MemberTableField_popup.js');
 		
 		return $ret;
 	}

@@ -36,7 +36,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	public function init() {
 		parent::init();
 
-		Requirements::javascript(CMS_DIR . '/javascript/hover.js');
 		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/controls.js");
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
 
@@ -45,12 +44,12 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TableListField.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TableField.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField.js");
-		Requirements::javascript(CMS_DIR . "/javascript/MemberTableField.js");
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . "/javascript/MemberTableField.js");
 		Requirements::css(THIRDPARTY_DIR . "/greybox/greybox.css");
 		Requirements::css(SAPPHIRE_DIR . "/css/ComplexTableField.css");
 
-		Requirements::javascript(CMS_DIR . '/javascript/SecurityAdmin_left.js');
-		Requirements::javascript(CMS_DIR . '/javascript/SecurityAdmin_right.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/SecurityAdmin_left.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/SecurityAdmin_right.js');
 		
 		Requirements::javascript(THIRDPARTY_DIR . "/greybox/AmiJS.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/greybox/greybox.js");
@@ -193,13 +192,13 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::clear();
 		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
 		Requirements::css(CMS_DIR . '/css/typography.css');
-		Requirements::css(CMS_DIR . '/css/cms_right.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/cms_right.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
-		Requirements::css(CMS_DIR . '/css/MemberImportForm.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/MemberImportForm.css');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(CMS_DIR . '/javascript/MemberImportForm.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/MemberImportForm.js');
 		
 		return $this->renderWith('BlankPage', array(
 			'Form' => $this->MemberImportForm()
@@ -225,14 +224,14 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	public function groupimport() {
 		Requirements::clear();
 		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
-		Requirements::css(CMS_DIR . '/css/typography.css');
-		Requirements::css(CMS_DIR . '/css/cms_right.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/typography.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/cms_right.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
-		Requirements::css(CMS_DIR . '/css/MemberImportForm.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/MemberImportForm.css');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(CMS_DIR . '/javascript/MemberImportForm.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/MemberImportForm.js');
 		
 		return $this->renderWith('BlankPage', array(
 			'Form' => $this->GroupImportForm()
