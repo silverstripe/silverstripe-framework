@@ -15,4 +15,3 @@ class ReadonlyField extends FormField {
 		return clone $this;
 	}
 }
-?>

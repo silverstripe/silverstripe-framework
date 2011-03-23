@@ -29,9 +29,6 @@
  * array. Is it also appropriate to accept so many different
  * types of data when just using an array would be appropriate?
  * 
- * @todo Make use of FormField->createTag() to generate the
- * HTML tag(s) for this field.
- * 
  * @package forms
  * @subpackage fields-basic
  */
@@ -47,14 +44,13 @@ class CheckboxSetField extends OptionsetField {
 	/**
 	 * @todo Explain different source data that can be used with this field,
 	 * e.g. SQLMap, ArrayList or an array.
-	 * 
-	 * @todo Should use CheckboxField FieldHolder rather than constructing own markup.
 	 */
-	function Field() {
+	function Field($properties = array()) {
 		Requirements::css(SAPPHIRE_DIR . '/css/CheckboxSetField.css');
 
 		$source = $this->source;
 		$values = $this->value;
+		$items = array();
 
 		// Get values from the join, if available
 		if(is_object($this->form)) {
@@ -109,30 +105,35 @@ class CheckboxSetField extends OptionsetField {
 			$options = "<li>No options available</li>";
 		}
 
-		if($source) foreach($source as $index => $item) {
-			if($item instanceof DataObject) {
-				$key = $item->ID;
-				$value = $item->Title;
-			} else {
-				$key = $index;
-				$value = $item;
-			}
-			
-			$odd = ($odd + 1) % 2;
-			$extraClass = $odd ? 'odd' : 'even';
-			$extraClass .= ' val' . str_replace(' ', '', $key);
-			$itemID = $this->id() . '_' . ereg_replace('[^a-zA-Z0-9]+', '', $key);
-			$checked = '';
-			
-			if(isset($items)) {
-				$checked = (in_array($key, $items) || in_array($key, $this->defaultItems)) ? ' checked="checked"' : '';
-			}
+		if($source) {
+			foreach($source as $value => $item) {
+				if($item instanceof DataObject) {
+					$value = $item->ID;
+					$title = $item->Title;
+				} else {
+					$title = $item;
+				}
 
-			$disabled = ($this->disabled || in_array($key, $this->disabledItems)) ? $disabled = ' disabled="disabled"' : '';
-			$options .= "<li class=\"$extraClass\"><input id=\"$itemID\" name=\"$this->name[$key]\" type=\"checkbox\" value=\"$key\"$checked $disabled class=\"checkbox\" /> <label for=\"$itemID\">$value</label></li>\n"; 
+				$itemID = $this->ID() . '_' . preg_replace('/[^a-zA-Z0-9]/', '', $value);
+				$odd = ($odd + 1) % 2;
+				$extraClass = $odd ? 'odd' : 'even';
+				$extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $value);
+
+				$options[] = new ArrayData(array(
+					'ID' => $itemID,
+					'Class' => $extraClass,
+					'Name' => $this->name,
+					'Value' => $value,
+					'Title' => $title,
+					'isChecked' => in_array($value, $items) || in_array($value, $this->defaultItems),
+					'isDisabled' => $this->disabled || in_array($value, $this->disabledItems)
+				));
+			}
 		}
-		
-		return "<ul id=\"{$this->id()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n$options</ul>\n"; 
+
+		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
+
+		return $this->customise($properties)->renderWith('CheckboxSetField');
 	}
 	
 	function setDisabled($val) {
@@ -288,4 +289,3 @@ class CheckboxSetField extends OptionsetField {
 	}
 	
 }
-?>

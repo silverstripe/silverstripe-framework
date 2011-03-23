@@ -57,5 +57,5 @@ class DatalessField extends FormField {
 	function getAllowHTML() {
 		return $this->allowHTML;
 	}
+
 }
-?>

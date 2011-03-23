@@ -18,7 +18,12 @@
  * @subpackage core
  */
 class FormField extends RequestHandler {
+
+	/**
+	 * @var Form
+	 */
 	protected $form;
+
 	protected $name, $title, $value ,$message, $messageType, $extraClass;
 	
 	/**
@@ -77,7 +82,13 @@ class FormField extends RequestHandler {
 	 * @var Custom Validation Message for the Field
 	 */
 	protected $customValidationMessage = "";
-	
+
+	/**
+	 * Template name to render this FormField field holder into.
+	 * @var string
+	 */
+	protected $fieldHolderTemplate;
+
 	/**
 	 * Create a new field.
 	 * @param name The internal field name, passed to forms.
@@ -108,7 +119,7 @@ class FormField extends RequestHandler {
 	 * The ID is generated as FormName_FieldName.  All Field functions should ensure
 	 * that this ID is included in the field.
 	 */
-	function id() { 
+	function ID() { 
 		$name = ereg_replace('(^-)|(-$)','',ereg_replace('[^A-Za-z0-9_-]+','-',$this->name));
 		if($this->form) return $this->form->FormName() . '_' . $name;
 		else return $name;
@@ -129,10 +140,6 @@ class FormField extends RequestHandler {
 	public function Name() {
 		Deprecation::notice('3.0', 'Use getName() instead.');
 		return $this->getName();
-	}
-
-	function attrName() {
-		return $this->name;
 	}
 	
 	/** 
@@ -191,11 +198,11 @@ class FormField extends RequestHandler {
 	function setTitle($val) { 
 		$this->title = $val;
 	}
-	
+
 	function RightTitle() {
 		return $this->rightTitle;
 	}
-	
+
 	function setRightTitle($val) { 
 		$this->rightTitle = $val;
 	}
@@ -203,11 +210,11 @@ class FormField extends RequestHandler {
 	function LeftTitle() {
 		return $this->leftTitle;
 	}
-	
-	function setLeftTitle($val) { 
+
+	function setLeftTitle($val) {
 		$this->leftTitle = $val;
 	}
-	
+
 	/**
 	 * Set tabindex HTML attribute
 	 * (defaults to none).
@@ -217,10 +224,9 @@ class FormField extends RequestHandler {
 	public function setTabIndex($index) {
 		$this->tabIndex = $index;
 	}
-	
+
 	/**
 	 * Get tabindex (if previously set)
-	 *
 	 * @return int
 	 */
 	public function getTabIndex() {
@@ -327,7 +333,15 @@ class FormField extends RequestHandler {
 	function getForm() {
 		return $this->form; 
 	}
-	
+
+	public function getFieldHolderTemplate() {
+		return $this->fieldHolderTemplate;
+	}
+
+	public function setFieldHolderTemplate($template) {
+		$this->fieldHolderTemplate = $template;
+	}
+
 	/**
 	 * Return TRUE if security token protection is enabled on the parent {@link Form}.
 	 *
@@ -343,7 +357,7 @@ class FormField extends RequestHandler {
 	 * Sets the error message to be displayed on the form field
 	 * Set by php validation of the form
 	 */
-	function setError($message,$messageType){
+	function setError($message, $messageType) {
 		$this->message = $message; 
 		$this->messageType = $messageType; 
 	}
@@ -370,7 +384,7 @@ class FormField extends RequestHandler {
 	public function getCustomValidationMessage() {
 		return $this->customValidationMessage;
 	}
-	
+
 	/**
 	 * Set name of template (without path or extension)
 	 * 
@@ -394,67 +408,33 @@ class FormField extends RequestHandler {
 	 * representation of the field on the form, whereas Field will give you the core editing widget,
 	 * such as an input tag.
 	 * 
-	 * Our base FormField class just returns a span containing the value.  This should be overridden!
+	 * @param array $properties key value pairs of template variables
+	 * @return string
 	 */
-	function Field() {
-		if($this->value) $value = $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
-		else $value = '<i>(' . _t('FormField.NONE', 'none') . ')</i>';
-	
-		$attributes = array(
-			'id' => $this->id(),
-			'class' => 'readonly' . ($this->extraClass() ? $this->extraClass() : '')
-		);
-		
-		$hiddenAttributes = array(
-			'type' => 'hidden',
-			'name' => $this->name,
-			'value' => $this->value,
-			'tabindex' => $this->getTabIndex()
-		);
-		
-		$containerSpan = $this->createTag('span', $attributes, $value);
-		$hiddenInput = $this->createTag('input', $hiddenAttributes);
-		
-		return $containerSpan . "\n" . $hiddenInput;
-	}
-	/**
-	 * Returns a "Field Holder" for this field - used by templates.
-	 * Forms are constructed from by concatenating a number of these field holders.  The default
-	 * field holder is a label and form field inside a paragraph tag.
-	 * 
-	 * Composite fields can override FieldHolder to create whatever visual effects you like.  It's
-	 * a good idea to put the actual HTML for field holders into templates.  The default field holder
-	 * is the DefaultFieldHolder template.  This lets you override the HTML for specific sites, if it's
-	 * necessary.
-	 * 
-	 * @todo Add "validationError" if needed.
-	 */
-	function FieldHolder() {
-		$Title = $this->XML_val('Title');
-		$Message = $this->XML_val('Message');
-		$MessageType = $this->XML_val('MessageType');
-		$RightTitle = $this->XML_val('RightTitle');
-		$Type = $this->XML_val('Type');
-		$extraClass = $this->XML_val('extraClass');
-		$Name = $this->XML_val('Name');
-		$Field = $this->XML_val('Field');
-		
-		// Only of the the following titles should apply
-		$titleBlock = (!empty($Title)) ? "<label class=\"left\" for=\"{$this->id()}\">$Title</label>" : "";
-		$rightTitleBlock = (!empty($RightTitle)) ? "<label class=\"right\" for=\"{$this->id()}\">$RightTitle</label>" : "";
-
-		// $MessageType is also used in {@link extraClass()} with a "holder-" prefix
-		$messageBlock = (!empty($Message)) ? "<span class=\"message $MessageType\">$Message</span>" : "";
-
-		return <<<HTML
-<div id="$Name" class="field $Type $extraClass">$titleBlock<div class="middleColumn">$Field</div>$rightTitleBlock$messageBlock</div>
-HTML;
+	function Field($properties = array()) {
+		return $this->customise($properties)->renderWith('FormField');
 	}
 
 	/**
-	 * Returns a restricted field holder used within things like FieldGroups.
+	 * Returns a "field holder" for this field - used by templates.
+	 * 
+	 * Forms are constructed by concatenating a number of these field holders.
+	 * The default field holder is a label and a form field inside a div.
+	 * @see FieldHolder.ss
+	 * 
+	 * @param array $properties key value pairs of template variables
+	 * @return string
 	 */
-	function SmallFieldHolder() {
+	function FieldHolder($properties = array()) {
+		return $this->customise($properties)->renderWith(
+			($this->fieldHolderTemplate) ? $this->fieldHolderTemplate : 'FieldHolder'
+		);
+	}
+
+   /**
+    * Returns a restricted field holder used within things like FieldGroups.
+    */
+   function SmallFieldHolder() {
 		$result = '';
 		// set label
 		if($title = $this->RightTitle()){
@@ -464,19 +444,20 @@ HTML;
 		} elseif($title = $this->Title()) {
 			$result .= "<label for=\"" . $this->id() . "\">{$title}</label>\n";
 		}
-		
-		$result .= $this->Field();
-		
-		return $result;
-	}
 
-	
+		$result .= $this->Field();
+
+		return $result;
+   }
+
 	/**
 	 * Returns true if this field is a composite field.
 	 * To create composite field types, you should subclass {@link CompositeField}.
 	 */
-	function isComposite() { return false; }
-	
+	function isComposite() {
+		return false;
+	}
+
 	/**
 	 * Returns true if this field has its own data.
 	 * Some fields, such as titles and composite fields, don't actually have any data.  It doesn't
@@ -485,7 +466,9 @@ HTML;
 	 *
 	 * @see FieldList::collateDataFields()
 	 */
-	function hasData() { return true; }
+	function hasData() {
+		return true;
+	}
 
 	/**
 	 * @return boolean
@@ -559,13 +542,18 @@ HTML;
 	 * Returns the field type - used by templates.
 	 * The field type is the class name with the word Field dropped off the end, all lowercase.
 	 * It's handy for assigning HTML classes.
+	 * @return string
 	 */
-	function Type() {return strtolower(ereg_replace('Field$','',$this->class)); }
-	
+	function Type() {
+		return strtolower(ereg_replace('Field$', '', $this->class));
+	}
+
 	/**
 	 * Construct and return HTML tag.
 	 * 
-	 * @return string HTML tag
+	 * @deprecated 3.0 Please define your own FormField template using {@link setFieldTemplate()}
+	 * and/or {@link renderFieldTemplate()}
+	 * 
 	 * @todo Transform to static helper method.
 	 */
 	function createTag($tag, $attributes, $content = null) {
@@ -671,4 +659,3 @@ HTML;
 	}
 	
 }
-?>

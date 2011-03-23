@@ -89,13 +89,11 @@ class FileIFrameField extends FileField {
 					'value' => $this->attrValue()
 				)
 			);
+		} else {
+			return sprintf(_t (
+				'FileIFrameField.ATTACHONCESAVED', '%ss can be attached once you have saved the record for the first time.'
+			), $this->FileTypeName());
 		}
-		
-		$this->setValue(sprintf(_t (
-			'FileIFrameField.ATTACHONCESAVED', '%ss can be attached once you have saved the record for the first time.'
-		), $this->FileTypeName()));
-		
-		return FormField::field();
 	}
 	
 	/**
@@ -119,7 +117,7 @@ class FileIFrameField extends FileField {
 		
 		Requirements::css('sapphire/css/FileIFrameField.css');
 		
-		return $this->renderWith($this->template);
+		return $this->renderWith('FileIframeField_iframe');
 	}
 	
 	/**

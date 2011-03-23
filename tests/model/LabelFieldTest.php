@@ -8,6 +8,6 @@ class LabelFieldTest extends SapphireTest {
 
 	function testFieldHasNoNameAttribute() {
 		$field = new LabelField('MyName', 'MyTitle');
-		$this->assertEquals($field->Field(), '<label id="MyName">MyTitle</label>');
+		$this->assertEquals($field->Field(), '<label id="MyName" class="label">MyTitle</label>');
 	}
 }

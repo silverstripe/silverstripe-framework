@@ -1,0 +1,1 @@
+<h$HeadingLevel id="$ID" class="header$extraClass">$Title</h$HeadingLevel>

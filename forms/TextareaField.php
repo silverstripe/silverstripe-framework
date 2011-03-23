@@ -21,8 +21,9 @@
  * @subpackage fields-basic
  */
 class TextareaField extends FormField {
-	protected $rows, $cols, $disabled = false, $readonly = false;
-	
+
+	protected $rows, $cols;
+
 	/**
 	 * Create a new textarea field.
 	 * 
@@ -38,7 +39,7 @@ class TextareaField extends FormField {
 		$this->cols = $cols;
 		parent::__construct($name, $title, $value, $form);
 	}
-	
+
 	/**
 	 * Create the <textarea> or <span> HTML tag with the
 	 * attributes for this instance of TextareaField. This
@@ -46,47 +47,19 @@ class TextareaField extends FormField {
 	 * 
 	 * @return HTML code for the textarea OR span element
 	 */
-	function Field() {
-		if($this->readonly) {
-			$attributes = array(
-				'id' => $this->id(),
-				'class' => 'readonly' . ($this->extraClass() ? $this->extraClass() : ''),
-				'name' => $this->name,
-				'readonly' => 'readonly'
-			);
+	function Field($properties = array()) {
+		$properties = array_merge(
+			$properties,
+			array(
+				'Rows' => $this->rows,
+				'Cols' => $this->cols,
+				'Value' => htmlentities($this->value, ENT_COMPAT, 'UTF-8')
+			)
+		);
 
-			$value = (($this->value) ? nl2br(htmlentities($this->value, ENT_COMPAT, 'UTF-8')) : '<i>(' . _t('FormField.NONE', 'none') . ')</i>');
-
-			$hiddenAttributes = array(
-				'type' => 'hidden',
-				'name' => $this->name,
-				'value' => $value
- 			);
-			
-			$containerSpan = $this->createTag(
-					'span',
-					$attributes,
-					$value
-				);
-			$hiddenInput = $this->createTag('input', $hiddenAttributes);
-			
-			return $containerSpan . "\n" . $hiddenInput;
-		} else {
-			$attributes = array(
-				'id' => $this->id(),
-				'class' => ($this->extraClass() ? $this->extraClass() : ''),
-				'name' => $this->name,
-				'rows' => $this->rows,
-				'cols' => $this->cols,
-				'tabindex' => $this->getTabIndex()
-			);
-			
-			if($this->disabled) $attributes['disabled'] = 'disabled';
-			
-			return $this->createTag('textarea', $attributes, htmlentities($this->value, ENT_COMPAT, 'UTF-8'));
-		}
+		return $this->customise($properties)->renderWith('TextareaField');
 	}
-	
+
 	/**
 	 * Performs a readonly transformation on this field. You should still be able
 	 * to copy from this field, and it should still send when you submit
@@ -112,9 +85,9 @@ class TextareaField extends FormField {
 		$clone->setReadonly(false);
 		return $clone;
 	}
-	
+
 	function Type() {
-		return parent::Type() . ( $this->readonly ? ' readonly' : '' ); 
+		return parent::Type() . ($this->readonly ? ' readonly' : ''); 
 	}
 	
 	/**

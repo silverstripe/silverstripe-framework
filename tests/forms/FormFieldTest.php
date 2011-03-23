@@ -5,26 +5,6 @@
  */
 class FormFieldTest extends SapphireTest {
 	
-	function testFieldHasExtraClass() {		
-		/* TextField has an extra class name and is in the HTML the field returns */
-		$textField = new TextField('Name');
-		$textField->addExtraClass('thisIsMyClassNameForTheFormField');
-		preg_match('/thisIsMyClassNameForTheFormField/', $textField->Field(), $matches);
-		$this->assertTrue($matches[0] == 'thisIsMyClassNameForTheFormField');
-		
-		/* EmailField has an extra class name and is in the HTML the field returns */
-		$emailField = new EmailField('Email');
-		$emailField->addExtraClass('thisIsMyExtraClassForEmailField');
-		preg_match('/thisIsMyExtraClassForEmailField/', $emailField->Field(), $matches);
-		$this->assertTrue($matches[0] == 'thisIsMyExtraClassForEmailField');
-		
-		/* OptionsetField has an extra class name and is in the HTML the field returns */
-		$optionsetField = new OptionsetField('FeelingOk', 'Are you feeling ok?', array(0 => 'No', 1 => 'Yes'), '', null, '(Select one)');
-		$optionsetField->addExtraClass('thisIsMyExtraClassForOptionsetField');
-		preg_match('/thisIsMyExtraClassForOptionsetField/', $optionsetField->Field(), $matches);
-		$this->assertTrue($matches[0] == 'thisIsMyExtraClassForOptionsetField');
-	}
-	
 	function testEveryFieldTransformsReadonlyAsClone() {
 		$fieldClasses = ClassInfo::subclassesFor('FormField');
 		foreach($fieldClasses as $fieldClass) {

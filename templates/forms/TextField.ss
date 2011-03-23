@@ -1,0 +1,1 @@
+<input id="$ID" class="text$extraClass" type="$Type" value="$Value" name="$Name"<% if TabIndex %> tabindex="$TabIndex"<% end_if %><% if MaxLength %> maxlength="$MaxLength"<% end_if %><% if Size %> size="$Size"<% end_if %><% if isDisabled %> disabled<% end_if %> />

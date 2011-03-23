@@ -39,7 +39,19 @@ if(typeof fromAnOnBlur != 'undefined'){
 }
 JS;
 	}
-	
+
+	public function Field($properties = array()) {
+		return $this->customise($properties)->renderWith('TextField');
+	}
+
+	/**
+	 * Returns the field type - used by templates.
+	 * @return string
+	 */
+	function Type() {
+		return 'text';
+	}
+
 	/**
 	 * Validates for RFC 2822 compliant email adresses.
 	 * 
@@ -69,5 +81,5 @@ JS;
 			return true;
 		}
 	}
+
 }
-?>

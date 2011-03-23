@@ -26,20 +26,12 @@ class LabelField extends DatalessField {
 		
 		parent::__construct($name, $title, $form);
 	}
-	
+
 	/**
 	 * Returns a label containing the title, and an HTML class if given.
 	 */
-	function Field() {
-		$attributes = array(
-			'class' => $this->extraClass(),
-			'id' => $this->id()
-		);
-		return $this->createTag(
-			'label',
-			$attributes,
-			($this->getAllowHTML() ? $this->title : Convert::raw2xml($this->title))
-		);
+	function Field($properties = array()) {
+		return $this->customise($properties)->renderWith('LabelField');
 	}
+
 }
-?>

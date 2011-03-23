@@ -110,27 +110,11 @@ class FileField extends FormField {
 		parent::__construct($name, $title, $value, $form, $rightTitle);
 	}
 
-	public function Field() {
-		return $this->createTag(
-			'input', 
-			array(
-				"type" => "file", 
-				"name" => $this->name, 
-				"id" => $this->id(),
-				"tabindex" => $this->getTabIndex()
-			)
-		) . 
-		$this->createTag(
-			'input', 
-		  	array(
-		  		"type" => "hidden", 
-		  		"name" => "MAX_FILE_SIZE", 
-		  		"value" => $this->getValidator()->getAllowedMaxFileSize(),
-				"tabindex" => $this->getTabIndex()
-		  	)
-		);
+	public function Field($properties = array()) {
+		$properties = array_merge($properties, array('MaxFileSize' => $this->getValidator()->getAllowedMaxFileSize()));
+		return $this->customise($properties)->renderWith('FileField');
 	}
-	
+
 	public function saveInto(DataObject $record) {
 		if(!isset($_FILES[$this->name])) return false;
 		$fileClass = File::get_class_for_file_extension(pathinfo($_FILES[$this->name]['name'], PATHINFO_EXTENSION));
