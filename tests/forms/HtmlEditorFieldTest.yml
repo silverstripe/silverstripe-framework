@@ -1,3 +1,11 @@
+File:
+  example_file:
+    Name: example.pdf
+
+Image:
+  example_image:
+    Name: example.jpg
+
 HtmlEditorFieldTest_Object:
   home:
     Title: Home Page

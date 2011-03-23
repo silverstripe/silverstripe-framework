@@ -13,69 +13,71 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		'HtmlEditorField_Toolbar' => array('HtmlEditorFieldTest_DummyImageFormFieldExtension')
 	);
 	
+	protected $extraDataObjects = array('HtmlEditorFieldTest_Object');
+	
 	public function testBasicSaving() {
-		$sitetree = new SiteTree();
+		$obj = new HtmlEditorFieldTest_Object();
 		$editor   = new HtmlEditorField('Content');
 		
 		$editor->setValue('<p class="foo">Simple Content</p>');
-		$editor->saveInto($sitetree);
-		$this->assertEquals('<p class="foo">Simple Content</p>', $sitetree->Content, 'Attributes are preserved.');
+		$editor->saveInto($obj);
+		$this->assertEquals('<p class="foo">Simple Content</p>', $obj->Content, 'Attributes are preserved.');
 		
 		$editor->setValue('<p>Unclosed Tag');
-		$editor->saveInto($sitetree);
-		$this->assertEquals('<p>Unclosed Tag</p>', $sitetree->Content, 'Unclosed tags are closed.');
+		$editor->saveInto($obj);
+		$this->assertEquals('<p>Unclosed Tag</p>', $obj->Content, 'Unclosed tags are closed.');
 	}
 	
 	public function testNullSaving() {
-		$sitetree = new SiteTree();
+		$obj = new HtmlEditorFieldTest_Object();
 		$editor   = new HtmlEditorField('Content');
 		
 		$editor->setValue(null);
-		$editor->saveInto($sitetree);
-		$this->assertEquals('', $sitetree->Content, "Doesn't choke on empty/null values.");
+		$editor->saveInto($obj);
+		$this->assertEquals('', $obj->Content, "Doesn't choke on empty/null values.");
 	}
 	
 	public function testImageInsertion() {
-		$sitetree = new SiteTree();
+		$obj = new HtmlEditorFieldTest_Object();
 		$editor   = new HtmlEditorField('Content');
 		
 		$editor->setValue('<img src="assets/example.jpg" />');
-		$editor->saveInto($sitetree);
+		$editor->saveInto($obj);
 		
-		$xml = new SimpleXMLElement($sitetree->Content);
+		$xml = new SimpleXMLElement($obj->Content);
 		$this->assertNotNull($xml['alt'], 'Alt tags are added by default.');
 		$this->assertNotNull($xml['title'], 'Title tags are added by default.');
 		
 		$editor->setValue('<img src="assets/example.jpg" alt="foo" title="bar" />');
-		$editor->saveInto($sitetree);
+		$editor->saveInto($obj);
 		
-		$xml = new SimpleXMLElement($sitetree->Content);
+		$xml = new SimpleXMLElement($obj->Content);
 		$this->assertNotNull('foo', $xml['alt'], 'Alt tags are preserved.');
 		$this->assertNotNull('bar', $xml['title'], 'Title tags are preserved.');
 	}
 	
 	public function testMultiLineSaving() {
-		$sitetree = $this->objFromFixture('SiteTree', 'home');
+		$obj = $this->objFromFixture('HtmlEditorFieldTest_Object', 'home');
 		$editor   = new HtmlEditorField('Content');
 		$editor->setValue("<p>First Paragraph</p><p>Second Paragraph</p>");
-		$editor->saveInto($sitetree);
-		$this->assertEquals("<p>First Paragraph</p><p>Second Paragraph</p>", $sitetree->Content);
+		$editor->saveInto($obj);
+		$this->assertEquals("<p>First Paragraph</p><p>Second Paragraph</p>", $obj->Content);
 	}
 	
 	public function testSavingLinksWithoutHref() {
-		$sitetree = $this->objFromFixture('SiteTree', 'home');
+		$obj = $this->objFromFixture('HtmlEditorFieldTest_Object', 'home');
 		$editor   = new HtmlEditorField('Content');
 		
 		$editor->setValue('<p><a name="example-anchor"></a></p>');
-		$editor->saveInto($sitetree);
+		$editor->saveInto($obj);
 		
 		$this->assertEquals (
-			'<p><a name="example-anchor"/></p>', $sitetree->Content, 'Saving a link without a href attribute works'
+			'<p><a name="example-anchor"/></p>', $obj->Content, 'Saving a link without a href attribute works'
 		);
 	}
 
 	public function testExtendImageFormFields() {
-		$controller = new ContentController();
+		$controller = new Controller();
 
 		$toolbar = new HtmlEditorField_Toolbar($controller, 'DummyToolbar');
 
@@ -101,6 +103,7 @@ class HtmlEditorFieldTest_DummyImageFormFieldExtension extends Extension impleme
 
 class HtmlEditorFieldTest_Object extends DataObject implements TestOnly {
 	static $db = array(
-		'Title' => 'Varchar'
+		'Title' => 'Varchar',
+		'Content' => 'HTMLText'
 	);
 }
