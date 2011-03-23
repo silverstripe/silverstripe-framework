@@ -95,13 +95,13 @@ class Versioned extends DataObjectDecorator {
 		$this->liveStage = array_pop($stages);
 	}
 	
-	function extraStatics() {
+	function extraStatics($class) {
 		return array(
 			'db' => array(
 				'Version' => 'Int',
 			),
 			'has_many' => array(
-				'Versions' => 'SiteTree',
+				'Versions' => $class,
 			)
 		);
 	}
