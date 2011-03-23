@@ -304,6 +304,24 @@ class Folder extends File {
 		
 		parent::onBeforeDelete();
 	}
+
+	/** Override setting the Title of Folders to that Name, Filename and Title are always in sync.
+	 * Note that this is not appropriate for files, because someone might want to create a human-readable name
+	 * of a file that is different from its name on disk. But folders should always match their name on disk. */
+	function setTitle($title) {
+		$this->setField('Title',$title);
+		parent::setName($title); //set the name and filename to match the title
+	}
+
+	function setName($name) {
+		$this->setField('Title',$name);
+		parent::setName($name);
+	}
+
+	function setFilename($filename) {
+		$this->setField('Title',$filename);
+		parent::setFilename($filename);
+	}
 	
 	/**
 	 * Delete the database record (recursively for folders) without touching the filesystem
