@@ -319,7 +319,7 @@ class RequestHandlingTest_Controller extends Controller implements TestOnly {
 	}
 
 	public function getViewer(){
-		return new SSViewer('ContentController');
+		return new SSViewer('BlankPage');
 	}
 }
 
@@ -374,7 +374,7 @@ class RequestHandlingTest_FormActionController extends Controller {
 	}
 
 	public function getViewer(){
-		return new SSViewer('ContentController');
+		return new SSViewer('BlankPage');
 	}
 
 }

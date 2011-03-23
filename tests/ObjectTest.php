@@ -17,16 +17,10 @@ class ObjectTest extends SapphireTest {
 	}
 	
 	function testHasmethodBehaviour() {
-		/* SiteTree should have all of the methods that Versioned has, because Versioned is listed in SiteTree's
-		 * extensions */
-		$st = new SiteTree();
+		$obj = new ObjectTest_ExtendTest();
 
-		$this->assertTrue($st->hasMethod('publish'), "Test SiteTree has publish");
-		$this->assertTrue($st->hasMethod('migrateVersion'), "Test SiteTree has migrateVersion");
-		
-		/* This relationship should be case-insensitive, too */
-		$this->assertTrue($st->hasMethod('PuBliSh'), "Test SiteTree has PuBliSh");
-		$this->assertTrue($st->hasMethod('MiGratEVersIOn'), "Test SiteTree has MiGratEVersIOn");
+		$this->assertTrue($obj->hasMethod('extendableMethod'), "Extension method found in original spelling");
+		$this->assertTrue($obj->hasMethod('ExTendableMethod'), "Extension method found case-insensitive");
 		
 		/* The above examples make use of SiteTree, Versioned and ContentController.  Let's test defineMethods() more
 		 * directly, with some sample objects */

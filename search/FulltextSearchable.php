@@ -45,6 +45,8 @@ class FulltextSearchable extends DataObjectDecorator {
 
 		if(!is_array($searchableClasses)) $searchableClasses = array($searchableClasses);
 		foreach($searchableClasses as $class) {
+			if(!class_exists($class)) continue;
+			
 			if(isset($defaultColumns[$class])) {
 				Object::add_extension($class, "FulltextSearchable('{$defaultColumns[$class]}')");
 			} else {

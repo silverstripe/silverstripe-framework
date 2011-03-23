@@ -78,8 +78,8 @@ class TransactionTest extends SapphireTest {
 
 			DataObject::flush_and_destroy_cache();
 
-			$success=DataObject::get('Page', "\"Title\"='Read only success'");
-			$fail=DataObject::get('Page', "\"Title\"='Read only page failed'");
+			$success=DataObject::get('TransactionTest_Object', "\"Title\"='Read only success'");
+			$fail=DataObject::get('TransactionTest_Object', "\"Title\"='Read only page failed'");
 
 			//This page should be in the system
 			$this->assertTrue(is_object($success) && $success->exists());

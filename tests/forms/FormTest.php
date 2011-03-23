@@ -424,7 +424,7 @@ class FormTest_Controller extends Controller implements TestOnly {
 	}
 
 	function getViewer(){
-		return new SSViewer('ContentController');
+		return new SSViewer('BlankPage');
 	}
 
 }
@@ -461,7 +461,7 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 	}
 
 	function getViewer(){
-		return new SSViewer('ContentController');
+		return new SSViewer('BlankPage');
 	}
 }
 

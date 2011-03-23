@@ -13,7 +13,9 @@ class DataObjectSetTest extends SapphireTest {
 		'DataObjectTest_Team',
 		'DataObjectTest_SubTeam',
 		'DataObjectTest_Player',
-		'DataObjectSetTest_TeamComment'
+		'DataObjectSetTest_TeamComment',
+		'DataObjectSetTest_Base',
+		'DataObjectSetTest_ChildClass',
 	);
 	
 	function testArrayAccessExists() {
@@ -232,14 +234,14 @@ class DataObjectSetTest extends SapphireTest {
 
 		// Ensure that duplicates are removed where the base data class is the same.
 		$mixedSet = new DataObjectSet();
-		$mixedSet->push(new SiteTree(array('ID' => 1)));
-		$mixedSet->push(new Page(array('ID' => 1)));		// dup: same base class and ID
-		$mixedSet->push(new Page(array('ID' => 1)));		// dup: more than one dup of the same object
-		$mixedSet->push(new Page(array('ID' => 2)));		// not dup: same type again, but different
-		$mixedSet->push(new SiteTree(array('ID' => 1)));	// dup: another dup, not consequetive.
+		$mixedSet->push(new DataObjectSetTest_Base(array('ID' => 1)));
+		$mixedSet->push(new DataObjectSetTest_ChildClass(array('ID' => 1)));		// dup: same base class and ID
+		$mixedSet->push(new DataObjectSetTest_ChildClass(array('ID' => 1)));		// dup: more than one dup of the same object
+		$mixedSet->push(new DataObjectSetTest_ChildClass(array('ID' => 2)));		// not dup: same type again, but different
+		$mixedSet->push(new DataObjectSetTest_Base(array('ID' => 1)));	// dup: another dup, not consequetive.
 
 		$mixedSet->removeDuplicates('ID');
-
+		
 		$this->assertEquals($mixedSet->Count(), 2, 'There are 3 unique data objects in a very mixed set');
 	}
 
@@ -422,4 +424,13 @@ class DataObjectSetTest_TeamComment extends DataObject implements TestOnly {
 	static $has_one = array(
 		'Team' => 'DataObjectTest_Team',
 	);
+}
+
+class DataObjectSetTest_Base extends DataObject implements TestOnly {
+	static $db = array(
+		'Name' => 'Varchar'
+	);
+}
+
+class DataObjectSetTest_ChildClass extends DataObjectSetTest_Base implements TestOnly {
 }

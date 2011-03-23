@@ -1,12 +1,3 @@
-Page:
-	home:
-		Title: Home
-	page1:
-		Title: First Page
-		Content: <p>Some test content</p>
-	page2:
-		Title: Second Page
-
 DataObjectTest_Team:
 	team1:
 		Title: Team 1
@@ -18,6 +9,7 @@ DataObjectTest_Player:
 		FirstName: Captain
 		FavouriteTeam: =>DataObjectTest_Team.team1
 		Teams: =>DataObjectTest_Team.team1
+		IsRetired: 1
 	captain2:
 		FirstName: Captain 2
 		Teams: =>DataObjectTest_Team.team2
