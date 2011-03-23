@@ -1680,41 +1680,25 @@ class i18n extends Object {
 	}
 	
 	/**
-	 * Given a file name (a php class name, without the .php ext, or a template name, including the .ss extension)
-	 * this helper function determines the module where this file is located
+	 * Given a PHP class name, finds the module where it's located.
 	 * 
-	 * @param string $name php class name or template file name (including *.ss extension)
-	 * @return string Module where the file is located
+	 * @param  string $name
+	 * @return string
 	 */
 	public static function get_owner_module($name) {
-		// if $name is a template file
-		if(substr($name,-3) == '.ss') {
-			global $_TEMPLATE_MANIFEST;
-			$templateManifest = $_TEMPLATE_MANIFEST[substr($name,0,-3)];
-			if(is_array($templateManifest) && isset($templateManifest['themes'])) {
-				$absolutePath = $templateManifest['themes'][SSViewer::current_theme()];
-			} else {
-				$absolutePath = $templateManifest;
-			}
-			
-			$path = str_replace('\\','/',Director::makeRelative(current($absolutePath)));
-			
-			ereg('/([^/]+)/',$path,$module);
-		} 
-		// $name is assumed to be a PHP class
-		else {
-			$classes = SS_ClassLoader::instance()->getManifest()->getClasses();
-			if(strpos($name,'_') !== false) $name = strtok($name,'_');
-			$name = strtolower($name); // Necessary because of r101131
-			if(isset($classes[$name])) {
-				$path = str_replace('\\','/',Director::makeRelative($classes[$name]));
-				ereg('/([^/]+)/', $path, $module);
-			}
-		}
-		return (isset($module)) ? $module[1] : false;
+		$manifest = SS_ClassLoader::instance()->getManifest();
+		$path     = $manifest->getItemPath($name);
 
+		if (!$path) {
+			return false;
+		}
+
+		$path = Director::makeRelative($path);
+		$path = str_replace('\\', '/', $path);
+
+		return substr($path, 0, strpos($path, '/'));
 	}
-	
+
 	/**
 	 * Validates a "long" locale format (e.g. "en_US")
 	 * by checking it against {@link $all_locales}.
