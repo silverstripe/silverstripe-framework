@@ -875,6 +875,17 @@ class Versioned extends DataObjectDecorator {
 		Versioned::set_reading_mode($oldMode);
 		return $result;
 	}
+	
+	/**
+	 * Roll the draft version of this page to match the published page.
+	 * Caution: Doesn't overwrite the object properties with the rolled back version.
+	 * 
+	 * @param $version Either the string 'Live' or a version number
+	 */
+	function doRollbackTo($version) {
+		$this->publish($version, "Stage", true);
+		$this->owner->writeWithoutVersion();
+	}
 		
 	/**
 	 * Build a SQL query to get data from the _version table.
