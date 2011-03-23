@@ -77,13 +77,18 @@ class HtmlEditorFieldTest extends FunctionalTest {
 	}
 
 	public function testExtendImageFormFields() {
-		$controller = new Controller();
+		if(class_exists('ThumbnailStripField')) {
+			$controller = new Controller();
 
-		$toolbar = new HtmlEditorField_Toolbar($controller, 'DummyToolbar');
+			$toolbar = new HtmlEditorField_Toolbar($controller, 'DummyToolbar');
 
-		$imageForm = $toolbar->ImageForm();
-		$this->assertTrue(HtmlEditorFieldTest_DummyImageFormFieldExtension::$update_called);
-		$this->assertEquals($imageForm->Fields(), HtmlEditorFieldTest_DummyImageFormFieldExtension::$fields);
+			$imageForm = $toolbar->ImageForm();
+			$this->assertTrue(HtmlEditorFieldTest_DummyImageFormFieldExtension::$update_called);
+			$this->assertEquals($imageForm->Fields(), HtmlEditorFieldTest_DummyImageFormFieldExtension::$fields);
+		} else {
+			$this->markTestSkipped('Test requires cms module (ThumbnailStripfield class)');
+		}
+		
 	}
 }
 

@@ -288,6 +288,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Form
 	 */
 	function ImageForm() {
+		if(!class_exists('ThumbnailStripField')) {
+			throw new Exception('ThumbnailStripField class required for HtmlEditorField->ImageForm()');
+		}
+		
 		$fields = new FieldSet(
 			new LiteralField(
 				'Heading', 
@@ -348,6 +352,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	}
 
 	function FlashForm() {
+		if(!class_exists('ThumbnailStripField')) {
+			throw new Exception('ThumbnailStripField class required for HtmlEditorField->FlashForm()');
+		}
+		
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/FlashForm", 
