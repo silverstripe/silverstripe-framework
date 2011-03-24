@@ -33,10 +33,22 @@ class ClassInfoTest extends SapphireTest {
 		// 			'ClassInfo::classes_for_folder() returns additional classes not matching the filename'
 		// 		);
 	}
-	
+
+	/**
+	 * @covers ClassInfo::baseDataClass()
+	 */
+	public function testBaseDataClass() {
+		$this->assertEquals('ClassInfoTest_BaseClass', ClassInfo::baseDataClass('ClassInfoTest_BaseClass'));
+		$this->assertEquals('ClassInfoTest_BaseClass', ClassInfo::baseDataClass('ClassInfoTest_ChildClass'));
+		$this->assertEquals('ClassInfoTest_BaseClass', ClassInfo::baseDataClass('ClassInfoTest_GrandChildClass'));
+
+		$this->setExpectedException('Exception');
+		ClassInfo::baseDataClass('DataObject');
+	}
+
 }
 
-class ClassInfoTest_BaseClass {
+class ClassInfoTest_BaseClass extends DataObject {
 	
 }
 
@@ -47,4 +59,3 @@ class ClassInfoTest_ChildClass extends ClassInfoTest_BaseClass {
 class ClassInfoTest_GrandChildClass extends ClassInfoTest_ChildClass {
 	
 }
-?>

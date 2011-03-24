@@ -88,25 +88,30 @@ class ClassInfo {
 			
 		return $dataClasses;
 	}
-	
+
 	/**
-	 * Return the root data class for that class.
-	 * This root table has a lot of special use in the DataObject system.
-	 * 
-	 * @param mixed $class string of the classname or instance of the class
-	 * @return array
+	 * Returns the root class (the first to extend from DataObject) for the
+	 * passed class.
+	 *
+	 * @param  string|object $class
+	 * @return string
 	 */
-	static function baseDataClass($class) {
-		global $_ALL_CLASSES;
+	public static function baseDataClass($class) {
 		if (is_object($class)) $class = get_class($class);
-		reset($_ALL_CLASSES['parents'][$class]);
-		while($val = next($_ALL_CLASSES['parents'][$class])) {
-			if($val == 'DataObject') break;
+
+		if (!self::is_subclass_of($class, 'DataObject')) {
+			throw new Exception("$class is not a subclass of DataObject");
 		}
-		$baseDataClass = next($_ALL_CLASSES['parents'][$class]);
-		return $baseDataClass ? $baseDataClass : $class;
+
+		while ($next = get_parent_class($class)) {
+			if ($next == 'DataObject') {
+				return $class;
+			}
+
+			$class = $next;
+		}
 	}
-	
+
 	/**
 	 * Returns a list of classes that inherit from the given class.
 	 * The resulting array includes the base class passed
