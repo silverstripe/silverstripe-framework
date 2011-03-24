@@ -177,7 +177,7 @@ class LeftAndMain extends Controller {
 			$cssFiles = 'sapphire/admin/css/editor.css';
 			
 			// Use theme from the site config
-			if(($config = SiteConfig::current_site_config()) && $config->Theme) {
+			if(class_exists('SiteConfig') && ($config = SiteConfig::current_site_config()) && $config->Theme) {
 				$theme = $config->Theme;
 			} elseif(SSViewer::current_theme()) {
 				$theme = SSViewer::current_theme();
@@ -541,9 +541,11 @@ class LeftAndMain extends Controller {
 			// This lets us override the tree title with an extension
 			if($this->hasMethod('getCMSTreeTitle') && $customTreeTitle = $this->getCMSTreeTitle()) {
 				$treeTitle = $customTreeTitle;
-			} else {
+			} elseif(class_exists('SiteConfig')) {
 				$siteConfig = SiteConfig::current_site_config();
 				$treeTitle =  $siteConfig->Title;
+			} else {
+				$treeTitle = '...';
 			}
 			
 			$html = "<ul id=\"sitetree\" class=\"tree unformatted\"><li id=\"record-0\" data-id=\"0\"class=\"Root nodelete\"><a href=\"$rootLink\"><strong>$treeTitle</strong></a>"
