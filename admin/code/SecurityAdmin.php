@@ -36,23 +36,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	public function init() {
 		parent::init();
 
-		Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/controls.js");
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
-
-		// needed for MemberTableField (Requirements not determined before Ajax-Call)
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TableListField.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/TableField.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField.js");
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . "/javascript/MemberTableField.js");
-		Requirements::css(THIRDPARTY_DIR . "/greybox/greybox.css");
-		Requirements::css(SAPPHIRE_DIR . "/css/ComplexTableField.css");
-
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/SecurityAdmin_left.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/SecurityAdmin_right.js');
-		
-		Requirements::javascript(THIRDPARTY_DIR . "/greybox/AmiJS.js");
-		Requirements::javascript(THIRDPARTY_DIR . "/greybox/greybox.js");
 	}
 	
 	function getEditForm($id = null) {
