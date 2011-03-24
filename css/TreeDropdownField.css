@@ -1,82 +1,47 @@
 div.TreeDropdownField {
-	width: 35em;
-	padding: 0;
-}
-html>body div.TreeDropdownField {
-	position:relative;
-}
-
-div.TreeDropdownField {
-	width: 27.7em;
-	background: #fff;
-	font-size: 12px;
+	width: 200px;
 	height: 21px;
 }
 
-div.TreeDropdownField span.items {
+div.TreeDropdownField .title {
+	float: left;
+	overflow:hidden;
+	width: 174px;
 	height: 14px;
 	border: 1px #7f9db9 solid;
 	cursor: pointer;
-	width: 25.4em;
-	float: left;
-	padding: 2px 0 2.5px 4px;
+	padding: 2px 0 2px 4px;
 	background-color: #fff;
-	margin:0;
-	font-size: 12px;
-	overflow:hidden;
 }
 
-div.TreeDropdownField div.tree_holder {
-	clear: left;
+div.TreeDropdownField .panel {
+	clear: both;
+	float: left;
+	overflow: auto;
+	display: none;
 	cursor: default;
 	border: 1px black solid;
-	margin: 0;
+	width: 200px;
 	height: 200px;
-	overflow: auto;
 	background-color: #fff;
-	/**
-	 * HACK IE6, see http://www.hedgerwow.com/360/bugs/css-select-free.html
-	 */
-	position:absolute;
-	z-index:10;
-	width:33em;/*must have for any value*/;
 }
 
-div.TreeDropdownField div.tree_holder ul.tree a {
+div.TreeDropdownField .panel.loading {
+	background: #fff url(../images/network-save.gif) center center no-repeat;
+}
+
+div.TreeDropdownField .panel ul.tree a {
 	font-size: 12px;
 }
 
-div.TreeDropdownField div.tree_holder ul.tree {
+div.TreeDropdownField .panel ul.tree {
 	margin-top: 0;
 }
 
-html>body div.TreeDropdownField div.tree_holder {
-	top: 20px;
-	left: 0px;
-	z-index: 1000;
-}
-
-/**
- * HACK IE6, see http://www.hedgerwow.com/360/bugs/css-select-free.html
- */
-div.TreeDropdownField div.tree_holder iframe {
-	display:none;/* IE5*/
-	display/**/:block;/* IE5*/
-	position:absolute;
-	border-style: none;
-	top:0;
-	left:0;
-	z-index:-1;
-	filter:mask();
-	width:31em;/*must have for any big value*/
-	height:200px/*must have for any big value*/;
-	border: none;
-}
-
-div.TreeDropdownField a.editLink {
+div.TreeDropdownField .toggle-panel-link {
 	border:none;
 	text-decoration: none;
-	background: url(../../sapphire/images/TreeDropdownField_button.gif) no-repeat left top;
+	background: url(../images/TreeDropdownField_button.gif) no-repeat left top;
 	width: 19px;
 	height: 21px;
 	margin: 0;
@@ -84,4 +49,8 @@ div.TreeDropdownField a.editLink {
 	z-index: 0;
 	overflow: hidden;
 	float:right;
+}
+
+div.TreeDropdownField .jstree-themeroller a.jstree-loading .jstree-icon { 
+	background:url("../images/network-save.gif") center center no-repeat !important; 
 }

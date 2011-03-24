@@ -7,13 +7,11 @@ ToolbarForm.prototype = {
 	close: function(ed) {
 		if(this.style.display == 'block') {
 			this.style.display = 'none';
-			window.onresize();
 		}
 	},
 	open: function(ed) {
 		if(this.style.display != 'block') {
 			this.style.display = 'block';
-			window.onresize();
 		}
 	},
 	onsubmit: function() {

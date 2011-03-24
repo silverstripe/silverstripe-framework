@@ -182,7 +182,7 @@ class PermissionCheckboxSetField extends FormField {
 					$itemID = $this->id() . '_' . ereg_replace('[^a-zA-Z0-9]+', '', $code);
 					$checked = $disabled = $inheritMessage = '';
 					$checked = (isset($uninheritedCodes[$code]) || isset($inheritedCodes[$code])) ? ' checked="checked"' : '';
-					$title = $permission['help'] ? 'title="' . htmlentities($permission['help']) . '" ' : '';
+					$title = $permission['help'] ? 'title="' . htmlentities($permission['help'], ENT_COMPAT, 'UTF-8') . '" ' : '';
 					
 					if (isset($inheritedCodes[$code])) {
 						// disable inherited codes, as any saving logic would be too complicate to express in this interface

@@ -3662,32 +3662,207 @@ class SSTemplateParser extends Parser {
 		$res['php'] = "<?php" . PHP_EOL;
 	}
 
-	/* Text: /
-	(
-		(\\.) |              # Any escaped character
-		([^<${]) |           # Any character that isn't <, $ or {
-		(<[^%]) |            # < if not followed by %
-		($[^A-Za-z_]) |      # $ if not followed by A-Z, a-z or _
-		({[^$]) |            # { if not followed by $
-		({$[^A-Za-z_])       # {$ if not followed A-Z, a-z or _
-	)+
-	/ */
+	/* Text: (
+		/ [^<${\\]+ / |
+		/ (\\.) / |
+		'<' !'%' |
+		'$' !(/[A-Za-z_]/) |
+		'{' !'$' |
+		'{$' !(/[A-Za-z_]/)
+	)+ */
 	protected $match_Text_typestack = array('Text');
 	function match_Text ($stack = array()) {
 		$matchrule = "Text"; $result = $this->construct($matchrule, $matchrule, null);
-		if (( $subres = $this->rx( '/
-	(
-		(\\\\.) |              # Any escaped character
-		([^<${]) |           # Any character that isn\'t <, $ or {
-		(<[^%]) |            # < if not followed by %
-		($[^A-Za-z_]) |      # $ if not followed by A-Z, a-z or _
-		({[^$]) |            # { if not followed by $
-		({$[^A-Za-z_])       # {$ if not followed A-Z, a-z or _
-	)+
-	/' ) ) !== FALSE) {
-			$result["text"] .= $subres;
-			return $this->finalise($result);
+		$count = 0;
+		while (true) {
+			$res_673 = $result;
+			$pos_673 = $this->pos;
+			$_672 = NULL;
+			do {
+				$_670 = NULL;
+				do {
+					$res_635 = $result;
+					$pos_635 = $this->pos;
+					if (( $subres = $this->rx( '/ [^<${\\\\]+ /' ) ) !== FALSE) {
+						$result["text"] .= $subres;
+						$_670 = TRUE; break;
+					}
+					$result = $res_635;
+					$this->pos = $pos_635;
+					$_668 = NULL;
+					do {
+						$res_637 = $result;
+						$pos_637 = $this->pos;
+						if (( $subres = $this->rx( '/ (\\\\.) /' ) ) !== FALSE) {
+							$result["text"] .= $subres;
+							$_668 = TRUE; break;
+						}
+						$result = $res_637;
+						$this->pos = $pos_637;
+						$_666 = NULL;
+						do {
+							$res_639 = $result;
+							$pos_639 = $this->pos;
+							$_642 = NULL;
+							do {
+								if (substr($this->string,$this->pos,1) == '<') {
+									$this->pos += 1;
+									$result["text"] .= '<';
+								}
+								else { $_642 = FALSE; break; }
+								$res_641 = $result;
+								$pos_641 = $this->pos;
+								if (substr($this->string,$this->pos,1) == '%') {
+									$this->pos += 1;
+									$result["text"] .= '%';
+									$result = $res_641;
+									$this->pos = $pos_641;
+									$_642 = FALSE; break;
+								}
+								else {
+									$result = $res_641;
+									$this->pos = $pos_641;
+								}
+								$_642 = TRUE; break;
+							}
+							while(0);
+							if( $_642 === TRUE ) { $_666 = TRUE; break; }
+							$result = $res_639;
+							$this->pos = $pos_639;
+							$_664 = NULL;
+							do {
+								$res_644 = $result;
+								$pos_644 = $this->pos;
+								$_649 = NULL;
+								do {
+									if (substr($this->string,$this->pos,1) == '$') {
+										$this->pos += 1;
+										$result["text"] .= '$';
+									}
+									else { $_649 = FALSE; break; }
+									$res_648 = $result;
+									$pos_648 = $this->pos;
+									$_647 = NULL;
+									do {
+										if (( $subres = $this->rx( '/[A-Za-z_]/' ) ) !== FALSE) { $result["text"] .= $subres; }
+										else { $_647 = FALSE; break; }
+										$_647 = TRUE; break;
+									}
+									while(0);
+									if( $_647 === TRUE ) {
+										$result = $res_648;
+										$this->pos = $pos_648;
+										$_649 = FALSE; break;
+									}
+									if( $_647 === FALSE) {
+										$result = $res_648;
+										$this->pos = $pos_648;
+									}
+									$_649 = TRUE; break;
+								}
+								while(0);
+								if( $_649 === TRUE ) { $_664 = TRUE; break; }
+								$result = $res_644;
+								$this->pos = $pos_644;
+								$_662 = NULL;
+								do {
+									$res_651 = $result;
+									$pos_651 = $this->pos;
+									$_654 = NULL;
+									do {
+										if (substr($this->string,$this->pos,1) == '{') {
+											$this->pos += 1;
+											$result["text"] .= '{';
+										}
+										else { $_654 = FALSE; break; }
+										$res_653 = $result;
+										$pos_653 = $this->pos;
+										if (substr($this->string,$this->pos,1) == '$') {
+											$this->pos += 1;
+											$result["text"] .= '$';
+											$result = $res_653;
+											$this->pos = $pos_653;
+											$_654 = FALSE; break;
+										}
+										else {
+											$result = $res_653;
+											$this->pos = $pos_653;
+										}
+										$_654 = TRUE; break;
+									}
+									while(0);
+									if( $_654 === TRUE ) { $_662 = TRUE; break; }
+									$result = $res_651;
+									$this->pos = $pos_651;
+									$_660 = NULL;
+									do {
+										if (( $subres = $this->literal( '{$' ) ) !== FALSE) { $result["text"] .= $subres; }
+										else { $_660 = FALSE; break; }
+										$res_659 = $result;
+										$pos_659 = $this->pos;
+										$_658 = NULL;
+										do {
+											if (( $subres = $this->rx( '/[A-Za-z_]/' ) ) !== FALSE) { $result["text"] .= $subres; }
+											else { $_658 = FALSE; break; }
+											$_658 = TRUE; break;
+										}
+										while(0);
+										if( $_658 === TRUE ) {
+											$result = $res_659;
+											$this->pos = $pos_659;
+											$_660 = FALSE; break;
+										}
+										if( $_658 === FALSE) {
+											$result = $res_659;
+											$this->pos = $pos_659;
+										}
+										$_660 = TRUE; break;
+									}
+									while(0);
+									if( $_660 === TRUE ) { $_662 = TRUE; break; }
+									$result = $res_651;
+									$this->pos = $pos_651;
+									$_662 = FALSE; break;
+								}
+								while(0);
+								if( $_662 === TRUE ) { $_664 = TRUE; break; }
+								$result = $res_644;
+								$this->pos = $pos_644;
+								$_664 = FALSE; break;
+							}
+							while(0);
+							if( $_664 === TRUE ) { $_666 = TRUE; break; }
+							$result = $res_639;
+							$this->pos = $pos_639;
+							$_666 = FALSE; break;
+						}
+						while(0);
+						if( $_666 === TRUE ) { $_668 = TRUE; break; }
+						$result = $res_637;
+						$this->pos = $pos_637;
+						$_668 = FALSE; break;
+					}
+					while(0);
+					if( $_668 === TRUE ) { $_670 = TRUE; break; }
+					$result = $res_635;
+					$this->pos = $pos_635;
+					$_670 = FALSE; break;
+				}
+				while(0);
+				if( $_670 === FALSE) { $_672 = FALSE; break; }
+				$_672 = TRUE; break;
+			}
+			while(0);
+			if( $_672 === FALSE) {
+				$result = $res_673;
+				$this->pos = $pos_673;
+				unset( $res_673 );
+				unset( $pos_673 );
+				break;
+			}
+			$count += 1;
 		}
+		if ($count > 0) { return $this->finalise($result); }
 		else { return FALSE; }
 	}
 
@@ -3699,26 +3874,19 @@ class SSTemplateParser extends Parser {
 	 */
 	function Text__finalise(&$res) {
 		$text = $res['text'];
-
-		// TODO: This is _super_ ugly, and a performance killer to boot.
 		
+		// Unescape any escaped characters in the text, then put back escapes for any single quotes and backslashes
+		$text = stripslashes($text);
+		$text = addcslashes($text, '\'\\');
+
+		// TODO: This is pretty ugly & gets applied on all files not just html. I wonder if we can make this non-dynamically calculated
 		$text = preg_replace(
 			'/href\s*\=\s*\"\#/', 
-			'href="' . PHP_EOL .
-			'SSVIEWER;' . PHP_EOL . 
-			'$val .= SSViewer::$options[\'rewriteHashlinks\'] ? Convert::raw2att( $_SERVER[\'REQUEST_URI\'] ) : "";' . PHP_EOL .
-			'$val .= <<<SSVIEWER' . PHP_EOL . 
-			'#', 
+			'href="\' . (SSViewer::$options[\'rewriteHashlinks\'] ? Convert::raw2att( $_SERVER[\'REQUEST_URI\'] ) : "") . \'#',
 			$text
 		);
 
-		// TODO: using heredocs means any left over $ symbols will trigger PHP lookups, as will any escapes
-		// Will it break backwards compatibility to use ' quoted strings, and escape just the ' characters?
-	
-		$res['php'] .=
-			'$val .= <<<SSVIEWER' . PHP_EOL .
-				$text . PHP_EOL .
-			'SSVIEWER;' . PHP_EOL ;				
+		$res['php'] .= '$val .= \'' . $text . '\';' . PHP_EOL;
 	}
 		
 	/******************

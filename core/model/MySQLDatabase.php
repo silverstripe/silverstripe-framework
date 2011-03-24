@@ -391,6 +391,7 @@ class MySQLDatabase extends SS_Database {
 					$indexSpec='unique (' . $indexSpec['value'] . ')';
 					break;
 				case 'btree':
+				case 'index':
 					$indexSpec='using btree (' . $indexSpec['value'] . ')';
 					break;
 				case 'hash':
@@ -752,7 +753,7 @@ class MySQLDatabase extends SS_Database {
 	public function searchEngine($classesToSearch, $keywords, $start, $pageLength, $sortBy = "Relevance DESC", $extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false) {
 		$fileFilter = '';
 	 	$keywords = Convert::raw2sql($keywords);
-		$htmlEntityKeywords = htmlentities($keywords,ENT_NOQUOTES);
+		$htmlEntityKeywords = htmlentities($keywords, ENT_NOQUOTES, 'UTF-8');
 
 		$extraFilters = array('SiteTree' => '', 'File' => '');
 
@@ -888,7 +889,7 @@ class MySQLDatabase extends SS_Database {
 		$fieldNames = '"' . implode('", "', $fields) . '"';
 
 	 	$SQL_keywords = Convert::raw2sql($keywords);
-		$SQL_htmlEntityKeywords = Convert::raw2sql(htmlentities($keywords));
+		$SQL_htmlEntityKeywords = Convert::raw2sql(htmlentities($keywords, ENT_NOQUOTES, 'UTF-8'));
 
 		return "(MATCH ($fieldNames) AGAINST ('$SQL_keywords' $boolean) + MATCH ($fieldNames) AGAINST ('$SQL_htmlEntityKeywords' $boolean))";
 	}

@@ -337,6 +337,8 @@ class Director {
 	 * @todo Document how relativeToSiteBase works
 	 */
 	static function absoluteURL($url, $relativeToSiteBase = false) {
+		if(!isset($_SERVER['REQUEST_URI'])) return false;
+		
 		if(strpos($url,'/') === false && !$relativeToSiteBase) $url = dirname($_SERVER['REQUEST_URI'] . 'x') . '/' . $url;
 
 	 	if(substr($url,0,4) != "http") {
@@ -615,6 +617,8 @@ class Director {
 	 * @return boolean|string String of URL when unit tests running, boolean FALSE if patterns don't match request URI
 	 */
 	static function forceSSL($patterns = null) {
+		if(!isset($_SERVER['REQUEST_URI'])) return false;
+		
 		$matched = false;
 
 		if($patterns) {

@@ -33,12 +33,7 @@ class ErrorPage extends Page {
 	 * @return SS_HTTPResponse
 	 */
 	public static function response_for($statusCode) {
-		// first attempt to dynamically generate the error page
-		if($errorPage = DataObject::get_one('ErrorPage', "\"ErrorCode\" = $statusCode")) {
-			return ModelAsController::controller_for($errorPage)->handleRequest(new SS_HTTPRequest('GET', ''));
-		}
-		
-		// then fall back on a cached version
+		// first look for cached files
 		$cachedPath = self::get_filepath_for_errorcode($statusCode, Translatable::get_current_locale());
 		
 		if(file_exists($cachedPath)) {
@@ -48,6 +43,9 @@ class ErrorPage extends Page {
 			$response->setBody(file_get_contents($cachedPath));
 			
 			return $response;
+		} else if($errorPage = DataObject::get_one('ErrorPage', "\"ErrorCode\" = $statusCode")) {
+			// then attempt to dynamically generate the error page
+			return ModelAsController::controller_for($errorPage)->handleRequest(new SS_HTTPRequest('GET', ''));
 		}
 	}
 	

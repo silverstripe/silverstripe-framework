@@ -25,7 +25,17 @@ class HTMLText extends Text {
 	 */
 	function LimitCharacters($limit = 20, $add = "...") {
 		$value = trim(strip_tags($this->value));
-		return (strlen($value) > $limit) ? substr($value, 0, $limit) . $add : $value;
+		
+		// Content html text to plan text before sub string-ing
+		// to cutting off part of the html entity character
+		// For example, &amp; because &am
+		$value = html_entity_decode($value, ENT_COMPAT, 'UTF-8');
+		$value = (strlen($value) > $limit) ? substr($value, 0, $limit) . $add : $value;
+		
+		// Convert plan text back to html entities 
+		$value = htmlentities($value, ENT_COMPAT, 'UTF-8');
+		
+		return $value;
 	}
 
 	/**

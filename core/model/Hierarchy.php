@@ -212,9 +212,11 @@ class Hierarchy extends DataObjectDecorator {
 	public function markingClasses() {
 		$classes = '';
 		if(!$this->isExpanded()) {
-			$classes .= " unexpanded";
+			$classes .= " unexpanded jstree-closed";
 		}
-		if(!$this->isTreeOpened()) {
+		if($this->isTreeOpened()) {
+			if($this->numChildren() > 0) $classes .= " jstree-open";
+		} else {
 			$classes .= " closed";
 		}
 		return $classes;

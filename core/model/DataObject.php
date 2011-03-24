@@ -97,8 +97,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public $destroyed = false;
 	
 	/**
-	 * Data stored in this objects database record. An array indexed
-	 * by fieldname.
+	 * Data stored in this objects database record. An array indexed by fieldname. 
+	 * 
+	 * Use {@link toMap()} if you want an array representation
+	 * of this object, as the $record array might contain lazy loaded field aliases.
+	 * 
 	 * @var array
 	 */
 	protected $record;
@@ -161,7 +164,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Return the complete map of fields on this object, including Created, LastEdited and ClassName
+	 * Return the complete map of fields on this object, including "Created", "LastEdited" and "ClassName".
+	 * See {@link custom_database_fields()} for a getter that excludes these "base fields".
 	 *
 	 * @param string $class
 	 * @return array
@@ -186,6 +190,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * and {@link DataObject::$has_one}. Resolves instances of {@link CompositeDBField} 
 	 * into the actual database fields, rather than the name of the field which 
 	 * might not equate a database column.
+	 * 
+	 * Does not include "base fields" like "ID", "ClassName", "Created", "LastEdited",
+	 * see {@link database_fields()}.
 	 * 
 	 * @uses CompositeDBField->compositeDatabaseFields()
 	 *
@@ -555,13 +562,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		return ($this->record && $this->record['ID'] > 0);
 	}
 
+	/**
+	 * Returns TRUE if all values (other than "ID") are
+	 * considered empty (by weak boolean comparison).
+	 * Only checks for fields listed in {@link custom_database_fields()}
+	 * 
+	 * @todo Use DBField->hasValue()
+	 * 
+	 * @return boolean
+	 */
 	public function isEmpty(){
 		$isEmpty = true;
-		if($this->record){
-			foreach($this->record as $k=>$v){
-				if($k != "ID"){
-					$isEmpty = $isEmpty && !$v;
-				}
+		$customFields = self::custom_database_fields(get_class($this));
+		if($map = $this->toMap()){
+			foreach($map as $k=>$v){
+				// only look at custom fields
+				if(!array_key_exists($k, $customFields)) continue;
+				
+				$dbObj = ($v instanceof DBField) ? $v : $this->dbObject($k);
+				$isEmpty = ($isEmpty && !$dbObj->hasValue());
 			}
 		}
 		return $isEmpty;
@@ -2963,13 +2982,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public static function get_by_id($callerClass, $id, $cache = true) {
 		if(is_numeric($id)) {
 			if(is_subclass_of($callerClass, 'DataObject')) {
-				$tableClasses = ClassInfo::dataClassesFor($callerClass);
-				$baseClass = array_shift($tableClasses);
-				return DataObject::get_one($callerClass,"\"$baseClass\".\"ID\" = $id", $cache);
+				$baseClass = ClassInfo::baseDataClass($callerClass);
+				return DataObject::get_one($callerClass,"\"$baseClass\".\"ID\" = $id", $cache, 1);
 
 				// This simpler code will be used by non-DataObject classes that implement DataObjectInterface
 			} else {
-				return DataObject::get_one($callerClass,"\"ID\" = $id", $cache);
+				return DataObject::get_one($callerClass,"\"ID\" = $id", $cache, 1);
 			}
 		} else {
 			user_error("DataObject::get_by_id passed a non-numeric ID #$id", E_USER_WARNING);

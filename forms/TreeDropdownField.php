@@ -115,16 +115,13 @@ class TreeDropdownField extends FormField {
 	public function Field() {
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/tree/tree.js');
-		// needed for errorMessage()
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/LeftAndMain.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TreeSelectorField.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jstree/jquery.jstree.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TreeDropdownField.js');
 		
-		Requirements::css(SAPPHIRE_DIR . '/javascript/tree/tree.css');
+		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.all.css');
 		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
 	
 		if($this->Value() && $record = $this->objectForKey($this->Value())) {
@@ -137,8 +134,9 @@ class TreeDropdownField extends FormField {
 			'div',
 			array (
 				'id'    => "TreeDropdownField_{$this->id()}",
-				'class' => 'TreeDropdownField single' . ($this->extraClass() ? " {$this->extraClass()}" : ''),
-				'href' => $this->form ? $this->Link() : "",
+				'class' => 'TreeDropdownField single' . ($this->extraClass() ? " {$this->extraClass()}" : '') . ($this->showSearch ? " searchable" : ''),
+				'data-url-tree' => $this->form ? $this->Link('tree') : "",
+				'data-title' => $title,
 			),
 			$this->createTag (
 				'input',
@@ -148,29 +146,6 @@ class TreeDropdownField extends FormField {
 					'name'  => $this->name,
 					'value' => $this->value
 				)
-			) . ($this->showSearch ?
-					$this->createTag(
-						'input',
-						array(
-							'class' => 'items',
-							'value' => '(Choose or type search)' 
-						)
-					) :
-					$this->createTag (
-						'span',
-						array (
-							'class' => 'items'
-						),
-						$title
-					)
-			) . $this->createTag (
-				'a',
-				array (
-					'href'  => '#',
-					'title' => 'open',
-					'class' => 'editLink'
-				),
-				'&nbsp;'
 			)
 		);
 	}
@@ -195,9 +170,10 @@ class TreeDropdownField extends FormField {
 		// Regular source specification
 		$isSubTree = false;
 
-		$this->search = Convert::Raw2SQL($request->getVar('search'));
+		$this->search = Convert::Raw2SQL($request->requestVar('search'));
 
-		if($ID = (int) $request->latestparam('ID')) {
+		$ID = (is_numeric($request->latestparam('ID'))) ? (int)$request->latestparam('ID') : (int)$request->requestVar('ID');
+		if($ID) {
 			$obj       = DataObject::get_by_id($this->sourceObject, $ID);
 			$isSubTree = true;
 			
@@ -232,15 +208,15 @@ class TreeDropdownField extends FormField {
 				$obj->markToExpose($this->objectForKey($value));
 			}
 		}
-		
-		$eval = '"<li id=\"selector-' . $this->Name() . '-{$child->' . $this->keyField . '}\" class=\"$child->class"' .
+
+		$eval = '"<li id=\"selector-' . $this->Name() . '-{$child->' . $this->keyField . '}\" data-id=\"$child->' . $this->keyField . '\" class=\"$child->class"' .
 				' . $child->markingClasses() . "\"><a rel=\"$child->ID\">" . $child->' . $this->labelField . ' . "</a>"';
 		
 		if($isSubTree) {
 			return substr(trim($obj->getChildrenAsUL('', $eval, null, true)), 4, -5);
+		} else {
+			return $obj->getChildrenAsUL('class="tree"', $eval, null, true);
 		}
-		
-		return $obj->getChildrenAsUL('class="tree"', $eval, null, true);
 	}
 
 	/**

@@ -20,6 +20,9 @@ class SecurityTest extends FunctionalTest {
 		// This test assumes that MemberAuthenticator is present and the default
 		$this->priorAuthenticators = Authenticator::get_authenticators();
 		$this->priorDefaultAuthenticator = Authenticator::get_default_authenticator();
+		foreach($this->priorAuthenticators as $authenticator) {
+			Authenticator::unregister($authenticator);
+		}
 
 		Authenticator::register('MemberAuthenticator');
 		Authenticator::set_default_authenticator('MemberAuthenticator');
@@ -37,6 +40,9 @@ class SecurityTest extends FunctionalTest {
 		// MemberAuthenticator might not actually be present
 		if(!in_array('MemberAuthenticator', $this->priorAuthenticators)) {
 			Authenticator::unregister('MemberAuthenticator');
+		}
+		foreach($this->priorAuthenticators as $authenticator) {
+			Authenticator::register($authenticator);
 		}
 		Authenticator::set_default_authenticator($this->priorDefaultAuthenticator);
 
@@ -340,6 +346,9 @@ class SecurityTest extends FunctionalTest {
 	}
 	
 	function testDatabaseIsReadyWithInsufficientMemberColumns() {
+		$old = Security::$force_database_is_ready;
+		Security::$force_database_is_ready = null;
+		
 		// Assumption: The database has been built correctly by the test runner,
 		// and has all columns present in the ORM
 		DB::getConn()->renameField('Member', 'Email', 'Email_renamed');
@@ -350,6 +359,8 @@ class SecurityTest extends FunctionalTest {
 		// Rebuild the database (which re-adds the Email column), and try again
 		$this->resetDBSchema(true);
 		$this->assertTrue(Security::database_is_ready());
+		
+		Security::$force_database_is_ready = $old;
 	}
 
 	/**

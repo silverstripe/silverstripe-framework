@@ -17,7 +17,7 @@ If you have discovered a bug in SilverStripe, we'd be glad to hear about it -
 well written bug reports can be half of the solution already!
 Our bugtracker is located on [open.silverstripe.org](http://open.silverstripe.org/) (create a [new ticket](http://open.silverstripe.org/newticket)).
 
-## Submiting Patches, Bugfixes and Enhancements
+## Submiting Bugfixes and Enhancements
 
 We're not perfect, and need your help - for example in the form of patches for our modules and core codebase.
 
@@ -43,11 +43,11 @@ changes
 *  Document your code inline through [PHPDoc](http://en.wikipedia.org/wiki/PHPDoc) syntax. See our 
 [API documentation](http://api.silverstripe.org/trunk) for good examples.
 * Also check and update documentation on [doc.silverstripe.org](http://doc.silverstripe.org). Check for any references to functionality deprecated or extended through your patch. Documentation changes should be included in the patch.
-* We will attribute the change to you whereever possible (git does this automatically)
+* We will attribute the change to you whereever possible (git does this automatically for pull requests)
 * If you get stuck, please post to the [forum](http://silverstripe.org/forum) or for deeper core problems, to the [core mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)
 
 The core team is responsible for reviewing patches and deciding if they will make it into core.  If
-there are any problems they will assign the ticket back to you, so make sure you have an email address loaded into Trac so that it will notify you! The [Active Patches Report](http://open.silverstripe.com/report/10) will let you see where all the patches are at, and you can review outstanding "pull requests" (for [sapphire](https://github.com/silverstripe/sapphire/pulls) and [cms](https://github.com/silverstripe/silverstripe-cms/pulls)).
+there are any problems they will follow up with you, so please ensure they have a way to contact you! 
 
 ### Sending pull requests (for git)
 
@@ -62,26 +62,23 @@ Example: [Fork the blog module](https://github.com/silverstripe/silverstripe-blo
 Now you have two choices: Smaller fixes (e.g. typos) can be edited directly in the github.com web interface
 (every file view has an "edit this file" link). More commonly, you will work on a working copy on your own computer. After committing your fix, you can send the module authors a so called ["pull request"](http://help.github.com/pull-requests/).
 The module authors will get notified automatically, review your patch, and merge it back as appropriate.
-
 For new features, we recommend creating a ["feature branch"](http://progit.org/book/ch3-3.html) rather than a really big patch.
+
+On github, you can review outstanding [sapphire pull requests](https://github.com/silverstripe/sapphire/pulls) and [cms pull requests](https://github.com/silverstripe/silverstripe-cms/pulls)).
 
 If you want to learn more about git, please have a look at the [free online git book](http://progit.org/book/) and the [git crash course](http://gitref.org/).
 
 ### Submitting patches (for subversion)
 
-Other modules will be hosted on [subversion](http://subversion.tigris.org), in which case you have to
+Some modules will be hosted on [subversion](http://subversion.tigris.org), in which case you have to
 package your changes as a "patch" file. Please read the [official Subversion book](http://svnbook.red-bean.com/) (available free online) for a general introduction to subversion. 
 
-To submit a patch, [register](http://open.silverstripe.com/register) or [Login](http://open.silverstripe.org/login) if you have already registered and attach the patch to the appropriate ticket. 
+Please don't submit patch files for modules on git, as they cause us more work.
+
+To submit a patch, [register](http://open.silverstripe.com/register) or [login](http://open.silverstripe.org/login) on open.silverstripe.org, and attach the patch to an appropriate ticket. 
 Please include in the comment the revision number that the patch is applicable for and a brief outline of what you fixed and how. 
-Only use the provided link to submit patches, as it prefills information about owner and ticket-type:
 
 [Submit a patch (requires account on open.silverstripe.org)](http://open.silverstripe.com/newticket?field_type=patch&field_owner=ischommer&attachment=1)
-
-The core team is responsible for reviewing the patches and deciding if they will make it into core.  If
-there are any problems they will assign the ticket back to you, so make sure you have an email address loaded into Trac
-so that it will notify you! The Trac reports [Core Patches](http://open.silverstripe.com/report/101) and [Module Patches](http://open.silverstripe.com/report/102) will let you see
-where all the patches are at.
 
 You can create a patch file through the svn diff-command on the command-line. 
 More info in the [svn redbook](http://svnbook.red-bean.com/en/1.1/ch03s05.html#svn-ch-3-sect-5.3.2). 
@@ -96,6 +93,8 @@ Some gotchas when using subversion and the patch format:
 *  If your patch involves new files, create a compressed archive for them (including any required directory-structures)
 *  Create patches relative to the working copy (*sapphire/main.php* instead of */Users/myuser/sapphire/main.php*)
 *  Remember the shortcomingsof *svn diff*: Please document moved files and created/deleted directories separately
+
+The "[Patches: Core](http://open.silverstripe.com/report/101)" and "[Patches: Modules](http://open.silverstripe.com/report/102)" reports will let you see where all the patches are at.
 
 ### Commit Messages
 

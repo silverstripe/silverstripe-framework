@@ -1779,7 +1779,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 						"root" => _t("SiteTree.PARENTTYPE_ROOT", "Top-level page"),
 						"subpage" => _t("SiteTree.PARENTTYPE_SUBPAGE", "Sub-page underneath a parent page (choose below)"),
 					)),
-					$parentIDField = new TreeDropdownField("ParentID", $this->fieldLabel('ParentID'), 'SiteTree'),
+					$parentIDField = new TreeDropdownField("ParentID", $this->fieldLabel('ParentID'), 'SiteTree', 'ID', 'MenuTitle'),
 					
 					new CheckboxField("ShowInMenus", $this->fieldLabel('ShowInMenus')),
 					new CheckboxField("ShowInSearch", $this->fieldLabel('ShowInSearch')),
@@ -2377,7 +2377,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 
 	/**
-	 * TitleWithStatus will return the title in an <ins>, <del> or
+	 * TitleWithStatus will return the title in an <span class="ins">, <span class="del"> or
 	 * <span class=\"modified\"> tag depending on its publication status.
 	 *
 	 * @return string
@@ -2385,12 +2385,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	function getTreeTitle() {
 		if($this->IsDeletedFromStage) {
 			if($this->ExistsOnLive) {
-				$tag ="del title=\"" . _t('SiteTree.REMOVEDFROMDRAFT', 'Removed from draft site') . "\"";
+				$tag ="span class=\"del\" title=\"" . _t('SiteTree.REMOVEDFROMDRAFT', 'Removed from draft site') . "\"";
 			} else {
-				$tag ="del class=\"deletedOnLive\" title=\"" . _t('SiteTree.DELETEDPAGE', 'Deleted page') . "\"";
+				$tag ="span class=\"del\" class=\"deletedOnLive\" title=\"" . _t('SiteTree.DELETEDPAGE', 'Deleted page') . "\"";
 			}
 		} elseif($this->IsAddedToStage) {
-			$tag = "ins title=\"" . _t('SiteTree.ADDEDTODRAFT', 'Added to draft site') . "\"";
+			$tag = "span class=\"ins\" title=\"" . _t('SiteTree.ADDEDTODRAFT', 'Added to draft site') . "\"";
 		} elseif($this->IsModifiedOnStage) {
 			$tag = "span title=\"" . _t('SiteTree.MODIFIEDONDRAFT', 'Modified on draft site') . "\" class=\"modified\"";
 		} else {
