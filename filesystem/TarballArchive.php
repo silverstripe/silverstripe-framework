@@ -81,7 +81,13 @@ class TarballArchive extends Archive {
 			$output = `$command`;
 		}
 	}
+	/* compress $dir placed at $path */
+	function compressDir($dir, $path = ''){
+		$assets = ASSETS_PATH;
+		$Folder = Folder::findOrMake($path);
+		$command = "cd $assets/$path && tar -cv{$this->compressionModifiers}f $assets/$this->filename ./$dir";
+		$output = `$command`;
+		$Folder->constructChild($this->filename);
+	}
 	
 }
-
-?>

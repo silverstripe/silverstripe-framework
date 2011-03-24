@@ -41,8 +41,11 @@ class Tab extends CompositeField {
 		if(isset($args[0]) && is_string($args[0])) {
 			$title = array_shift($args);
 		}
+		if(!isset($title)) {
+			if(!$title = _t(get_class($this).'.TAB'.strtoupper($name)))
+				$title = FormField::name_to_label($name);
+		}
 		$this->title = (isset($title)) ? $title : FormField::name_to_label($name);
-		
 		parent::__construct($args);
 	}
 	
