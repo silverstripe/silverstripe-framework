@@ -49,8 +49,8 @@ class JSONDataFormatter extends DataFormatter {
 	public function convertDataObjectToJSONObject(DataObjectInterface $obj, $fields = null, $relations = null) {
 		$className = $obj->class;
 		$id = $obj->ID;
-		
-		$serobj = new EmptyJSONObject();
+
+		$serobj = ArrayData::array_to_object();
 
 		foreach($this->getFieldsForObj($obj) as $fieldName => $fieldType) {
 			// Field filtering
@@ -74,12 +74,12 @@ class JSONDataFormatter extends DataFormatter {
 				} else {
 					$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName");
 				}
-				$serobj->$relName = new EmptyJSONObject(array("className" => $relClass, "href" => "$href.json", "id" => $obj->$fieldName));
+				$serobj->$relName = ArrayData::array_to_object(array("className" => $relClass, "href" => "$href.json", "id" => $obj->$fieldName));
 			}
-	
+
 			foreach($obj->has_many() as $relName => $relClass) {
 				if(!singleton($relClass)->stat('api_access')) continue;
-				
+
 				// Field filtering
 				if($fields && !in_array($relName, $fields)) continue;
 				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
@@ -89,7 +89,7 @@ class JSONDataFormatter extends DataFormatter {
 				foreach($items as $item) {
 					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
 					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-					$innerParts[] = new EmptyJSONObject(array("className" => $relClass, "href" => "$href.json", "id" => $obj->$fieldName));
+					$innerParts[] = ArrayData::array_to_object(array("className" => $relClass, "href" => "$href.json", "id" => $obj->$fieldName));
 				}
 				$serobj->$relName = $innerParts;
 			}
@@ -106,7 +106,7 @@ class JSONDataFormatter extends DataFormatter {
 				foreach($items as $item) {
 					//$href = Director::absoluteURL(self::$api_base . "$className/$id/$relName/$item->ID");
 					$href = Director::absoluteURL(self::$api_base . "$relClass/$item->ID");
-					$innerParts[] = new EmptyJSONObject(array("className" => $relClass, "href" => "$href.json", "id" => $obj->$fieldName));
+					$innerParts[] = ArrayData::array_to_object(array("className" => $relClass, "href" => "$href.json", "id" => $obj->$fieldName));
 				}
 				$serobj->$relName = $innerParts;
 			}
@@ -125,7 +125,7 @@ class JSONDataFormatter extends DataFormatter {
 		$items = array();
 		foreach ($set as $do) $items[] = $this->convertDataObjectToJSONObject($do, $fields);
 
-		$serobj = new EmptyJSONObject(array(
+		$serobj = ArrayData::array_to_object(array(
 			"totalSize" => (is_numeric($this->totalSize)) ? $this->totalSize : null,
 			"items" => $items
 		));
@@ -136,20 +136,6 @@ class JSONDataFormatter extends DataFormatter {
 	public function convertStringToArray($strData) {
 		return Convert::json2array($strData);
 	}
-	
-}
 
-/**
- * Empty class with no behaviour or properties, so we can give plain objects to the json encoder.
- */
-class EmptyJSONObject {
-	/**
-	 * @param  $args		An assoc array used to dynamically initialise properties of the new object.
-	 * @return void
-	 */
-	function __construct($args = null) {
-		if ($args) foreach($args as $name => $value) $this->$name = $value;
-	}
 }
-
 ?>
