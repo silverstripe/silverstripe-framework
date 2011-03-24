@@ -502,8 +502,8 @@ class Security extends Controller {
 		$controller = new Page_Controller($tmpPage);
 		$controller->init();
 
-		$email = Convert::raw2xml($request->param('ID') . '.' . $request->getExtension());
-		
+		$email = Convert::raw2xml(rawurldecode($request->param('ID')) . '.' . $request->getExtension());
+
 		$customisedController = $controller->customise(array(
 			'Title' => sprintf(_t('Security.PASSWORDSENTHEADER', "Password reset link sent to '%s'"), $email),
 			'Content' =>
