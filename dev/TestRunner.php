@@ -81,11 +81,15 @@ class TestRunner extends Controller {
 	}
 
 	/**
-	 * Pushes a class manifest instance that uses tests onto the top of the
-	 * autoloader stack.
+	 * Pushes a class and template manifest instance that include tests onto the
+	 * top of the loader stacks.
 	 */
 	public static function use_test_manifest() {
 		SS_ClassLoader::instance()->pushManifest(new SS_ClassManifest(
+			BASE_PATH, true, isset($_GET['flush'])
+		));
+
+		SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
 			BASE_PATH, true, isset($_GET['flush'])
 		));
 	}

@@ -210,6 +210,8 @@ require_once 'filesystem/FileFinder.php';
 require_once 'manifest/ClassLoader.php';
 require_once 'manifest/ClassManifest.php';
 require_once 'manifest/ManifestFileFinder.php';
+require_once 'manifest/TemplateLoader.php';
+require_once 'manifest/TemplateManifest.php';
 require_once 'manifest/TokenisedRegularExpression.php';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -226,6 +228,10 @@ $manifest = new SS_ClassManifest(BASE_PATH, false, $flush);
 $loader = SS_ClassLoader::instance();
 $loader->registerAutoloader();
 $loader->pushManifest($manifest);
+
+SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
+	BASE_PATH, false, isset($_GET['flush'])
+));
 
 // If this is a dev site, enable php error reporting
 // This is necessary to force developers to acknowledge and fix

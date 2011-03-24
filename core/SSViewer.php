@@ -182,46 +182,10 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
  *
  * Compiled templates are cached via {@link SS_Cache}, usually on the filesystem.  
  * If you put ?flush=all on your URL, it will force the template to be recompiled.  
- * 
- * <b>Manifest File and Structure</b>
- * 
- * Works with the global $_TEMPLATE_MANIFEST which is compiled by {@link ManifestBuilder->getTemplateManifest()}.
- * This associative array lists all template filepaths by "identifier", meaning the name
- * of the template without its path or extension.
- * 
- * Example:
- * <code>
- * array(
- *  'LeftAndMain' => 
- *  array (
- * 	'main' => '/my/system/path/cms/templates/LeftAndMain.ss',
- *  ),
- * 'CMSMain_left' => 
- *   array (
- *     'Includes' => '/my/system/path/cms/templates/Includes/CMSMain_left.ss',
- *   ),
- * 'Page' => 
- *   array (
- *     'themes' => 
- *     array (
- *       'blackcandy' => 
- *       array (
- *         'Layout' => '/my/system/path/themes/blackcandy/templates/Layout/Page.ss',
- *         'main' => '/my/system/path/themes/blackcandy/templates/Page.ss',
- *       ),
- *       'blue' => 
- *       array (
- *         'Layout' => '/my/system/path/themes/mysite/templates/Layout/Page.ss',
- *         'main' => '/my/system/path/themes/mysite/templates/Page.ss',
- *       ),
- *     ),
- *   ),
- *   // ...
- * )
- * </code>
  *
  * @see http://doc.silverstripe.org/themes
  * @see http://doc.silverstripe.org/themes:developing
+
  * 
  * @package sapphire
  * @subpackage view
@@ -346,8 +310,6 @@ class SSViewer {
 	 *  </code>
 	 */
 	public function __construct($templateList) {
-		global $_TEMPLATE_MANIFEST;
-
 		// flush template manifest cache if requested
 		if (isset($_GET['flush']) && $_GET['flush'] == 'all') {
 			if(Director::isDev() || Director::is_cli() || Permission::check('ADMIN')) {
@@ -360,64 +322,25 @@ class SSViewer {
 		if(substr((string) $templateList,-3) == '.ss') {
 			$this->chosenTemplates['main'] = $templateList;
 		} else {
-			if(!is_array($templateList)) $templateList = array($templateList);
-			
-			if(isset($_GET['debug_request'])) Debug::message("Selecting templates from the following list: " . implode(", ", $templateList));
-
-			foreach($templateList as $template) {
-				// if passed as a partial directory (e.g. "Layout/Page"), split into folder and template components
-				if(strpos($template,'/') !== false) list($templateFolder, $template) = explode('/', $template, 2);
-				else $templateFolder = null;
-
-				// Use the theme template if available
-				if(self::current_theme() && isset($_TEMPLATE_MANIFEST[$template]['themes'][self::current_theme()])) {
-					$this->chosenTemplates = array_merge(
-						$_TEMPLATE_MANIFEST[$template]['themes'][self::current_theme()], 
-						$this->chosenTemplates
-					);
-					
-					if(isset($_GET['debug_request'])) Debug::message("Found template '$template' from main theme '" . self::current_theme() . "': " . var_export($_TEMPLATE_MANIFEST[$template]['themes'][self::current_theme()], true));
-				}
-				
-				// Fall back to unthemed base templates
-				if(isset($_TEMPLATE_MANIFEST[$template]) && (array_keys($_TEMPLATE_MANIFEST[$template]) != array('themes'))) {
-					$this->chosenTemplates = array_merge(
-						$_TEMPLATE_MANIFEST[$template], 
-						$this->chosenTemplates
-					);
-					
-					if(isset($_GET['debug_request'])) Debug::message("Found template '$template' from main template archive, containing the following items: " . var_export($_TEMPLATE_MANIFEST[$template], true));
-					
-					unset($this->chosenTemplates['themes']);
-				}
-
-				if($templateFolder) {
-					$this->chosenTemplates['main'] = $this->chosenTemplates[$templateFolder];
-					unset($this->chosenTemplates[$templateFolder]);
-				}
-			}
-
-			if(isset($_GET['debug_request'])) Debug::message("Final template selections made: " . var_export($this->chosenTemplates, true));
-
+			$this->chosenTemplates = SS_TemplateLoader::instance()->findTemplates(
+				$templateList, self::current_theme()
+			);
 		}
 
 		if(!$this->chosenTemplates) user_error("None of these templates can be found in theme '"
 			. self::current_theme() . "': ". implode(".ss, ", $templateList) . ".ss", E_USER_WARNING);
-			
 	}
 	
 	/**
 	 * Returns true if at least one of the listed templates exists
 	 */
-	static function hasTemplate($templateList) {
-		if(!is_array($templateList)) $templateList = array($templateList);
-	
-		global $_TEMPLATE_MANIFEST;
-		foreach($templateList as $template) {
-			if(strpos($template,'/') !== false) list($templateFolder, $template) = explode('/', $template, 2);
-			if(isset($_TEMPLATE_MANIFEST[$template])) return true;
+	public static function hasTemplate($templates) {
+		$manifest = SS_TemplateLoader::instance()->getManifest();
+
+		foreach ((array) $templates as $template) {
+			if ($manifest->getTemplate($template)) return true;
 		}
-		
+
 		return false;
 	}
 	
