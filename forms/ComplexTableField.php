@@ -243,6 +243,8 @@ class ComplexTableField extends TableListField {
 	 * @return String
 	 */
 	function FieldHolder() {
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/greybox/AmiJS.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/greybox/greybox.js");
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
