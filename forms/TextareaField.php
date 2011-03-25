@@ -55,12 +55,24 @@ class TextareaField extends FormField {
 				'tabindex' => $this->getTabIndex(),
 				'readonly' => 'readonly'
 			);
+
+			$value = (($this->value) ? nl2br(htmlentities($this->value, ENT_COMPAT, 'UTF-8')) : '<i>(' . _t('FormField.NONE', 'none') . ')</i>');
+
+			$hiddenAttributes = array(
+				'type' => 'hidden',
+				'name' => $this->name,
+				'value' => $value,
+				'tabindex' => $this->getTabIndex()
+ 			);
 			
-			return $this->createTag(
-				'span',
-				$attributes,
-				(($this->value) ? nl2br(htmlentities($this->value, ENT_COMPAT, 'UTF-8')) : '<i>(' . _t('FormField.NONE', 'none') . ')</i>')
-			);
+			$containerSpan = $this->createTag(
+					'span',
+					$attributes,
+					$value
+				);
+			$hiddenInput = $this->createTag('input', $hiddenAttributes);
+			
+			return $containerSpan . "\n" . $hiddenInput;
 		} else {
 			$attributes = array(
 				'id' => $this->id(),
@@ -88,10 +100,10 @@ class TextareaField extends FormField {
 		$clone->setDisabled(false);
 		return $clone;
 	}
-	
+
 	/**
 	 * Performs a disabled transformation on this field. You shouldn't be able to
-	 * copy from this field, and it should not send any data when you submit the 
+	 * copy from this field, and it should not send any data when you submit the
 	 * form it's attached to.
 	 * The element shouldn't be both disabled and readonly at the same time.
 	 */
