@@ -91,9 +91,8 @@ class DatabaseAdmin extends Controller {
 		increase_time_limit_to(600);
 
 		// Get all our classes
-		ManifestBuilder::create_manifest_file();
-		require(MANIFEST_FILE);
-		
+		SS_ClassLoader::instance()->getManifest()->regenerate();
+
 		if(isset($_GET['returnURL'])) {
 			echo "<p>Setting up the database; you will be returned to your site shortly....</p>";
 			$this->doBuild(true);

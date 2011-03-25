@@ -79,7 +79,21 @@ class TestRunner extends Controller {
 		if (is_string($reporter)) $reporter = new $reporter;
 		self::$default_reporter = $reporter;
 	}
-	
+
+	/**
+	 * Pushes a class and template manifest instance that include tests onto the
+	 * top of the loader stacks.
+	 */
+	public static function use_test_manifest() {
+		SS_ClassLoader::instance()->pushManifest(new SS_ClassManifest(
+			BASE_PATH, true, isset($_GET['flush'])
+		));
+
+		SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
+			BASE_PATH, true, isset($_GET['flush'])
+		));
+	}
+
 	function init() {
 		parent::init();
 		
@@ -102,7 +116,7 @@ class TestRunner extends Controller {
 	 * Currently excludes PhpSyntaxTest
 	 */
 	function all($request, $coverage = false) {
-		ManifestBuilder::load_test_manifest();
+		self::use_test_manifest();
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
 		unset($tests['FunctionalTest']);
@@ -122,7 +136,7 @@ class TestRunner extends Controller {
 	 * Run test classes that should be run before build - i.e., everything possible.
 	 */
 	function build() {
-		ManifestBuilder::load_test_manifest();
+		self::use_test_manifest();
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
 		unset($tests['FunctionalTest']);
@@ -138,7 +152,7 @@ class TestRunner extends Controller {
 	 * Browse all enabled test cases in the environment
 	 */
 	function browse() {
-		ManifestBuilder::load_test_manifest();
+		self::use_test_manifest();
 		self::$default_reporter->writeHeader();
 		self::$default_reporter->writeInfo('Available Tests', false);
 		if(Director::is_cli()) {
@@ -170,7 +184,7 @@ class TestRunner extends Controller {
 	 * Run a coverage test across all modules
 	 */
 	function coverageAll($request) {
-		ManifestBuilder::load_all_classes();
+		self::use_test_manifest();
 		$this->all($request, true);
 	}
 
@@ -197,7 +211,7 @@ class TestRunner extends Controller {
 	 * Run only a single test class or a comma-separated list of tests
 	 */
 	function only($request, $coverage = false) {
-		ManifestBuilder::load_test_manifest();
+		self::use_test_manifest();
 		if($request->param('TestCase') == 'all') {
 			$this->all();
 		} else {
@@ -217,7 +231,7 @@ class TestRunner extends Controller {
 	 * A module is generally a toplevel folder, e.g. "mysite" or "sapphire".
 	 */
 	function module($request, $coverage = false) {
-		ManifestBuilder::load_test_manifest();
+		self::use_test_manifest();
 		$classNames = array();
 		$moduleNames = explode(',', $request->param('ModuleName'));
 		foreach($moduleNames as $moduleName) {

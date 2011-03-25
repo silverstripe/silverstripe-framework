@@ -116,7 +116,7 @@ class SiteConfig extends DataObject implements PermissionProvider {
 	 * @return array of theme directory names
 	 */
 	public function getAvailableThemes($baseDir = null) {
-		$themes = ManifestBuilder::get_themes($baseDir);
+		$themes = SSViewer::get_themes($baseDir);
 		foreach(self::$disabled_themes as $theme) {
 			if(isset($themes[$theme])) unset($themes[$theme]);
 		}

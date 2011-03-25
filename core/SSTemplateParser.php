@@ -3904,19 +3904,24 @@ class SSTemplateParser extends Parser {
 	 * @return mixed|string - The php that, when executed (via include or exec) will behave as per the template source
 	 */
 	static function compileString($string, $templateName = "", $includeDebuggingComments=false) {
-		// Construct a parser instance
-		$parser = new SSTemplateParser($string);
-		$parser->includeDebuggingComments = $includeDebuggingComments;
-
-		// Ignore UTF8 BOM at begining of string. TODO: Confirm this is needed, make sure SSViewer handles UTF (and other encodings) properly
-		if(substr($string, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) $parser->pos = 3;
-		
-		// Match the source against the parser
-		$result =  $parser->match_TopTemplate();
-		if(!$result) throw new SSTemplateParseException('Unexpected problem parsing template', $parser);
-
-		// Get the result
-		$code = $result['php'];
+		if (!trim($string)) {
+			$code = '';
+		}
+		else {
+			// Construct a parser instance
+			$parser = new SSTemplateParser($string);
+			$parser->includeDebuggingComments = $includeDebuggingComments;
+	
+			// Ignore UTF8 BOM at begining of string. TODO: Confirm this is needed, make sure SSViewer handles UTF (and other encodings) properly
+			if(substr($string, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) $parser->pos = 3;
+			
+			// Match the source against the parser
+			$result =  $parser->match_TopTemplate();
+			if(!$result) throw new SSTemplateParseException('Unexpected problem parsing template', $parser);
+	
+			// Get the result
+			$code = $result['php'];
+		}
 		
 		// Include top level debugging comments if desired
 		if($includeDebuggingComments && $templateName && stripos($code, "<?xml") === false) {
