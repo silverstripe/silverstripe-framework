@@ -168,7 +168,6 @@ table.CMSList tbody td.current td {
 }
 	.TableListField div.utility a {
 		text-decoration: none;
-		background-image:url(../../cms/images/textures/ToolBar.png);
 		border-color: #ccc #999 #999 #ccc;
 		border-style: double;
 		color: #333;
