@@ -32,4 +32,4 @@ if(!class_exists('Object')) {
 
 $_SERVER['REQUEST_URI'] = BASE_URL . '/dev';
 
-ManifestBuilder::load_test_manifest();
+TestRunner::use_test_manifest();

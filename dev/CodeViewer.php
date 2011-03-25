@@ -87,7 +87,7 @@ class CodeViewer extends Controller {
 		parent::init();
 		
 		if(!Permission::check('ADMIN')) return Security::permissionFailure();
-		ManifestBuilder::load_test_manifest();
+		TestRunner::use_test_manifest();
 	}
 	
 	public function browse() {

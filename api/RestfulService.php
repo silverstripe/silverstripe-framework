@@ -121,68 +121,9 @@ class RestfulService extends ViewableData {
 			$response = unserialize($store);
 			
 		} else {
-			$ch = curl_init();
-			$timeout = 5;
-			$useragent = "SilverStripe/" . SapphireInfo::Version();
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-			if(!ini_get('open_basedir')) curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-		
-			// Add headers
-			if($this->customHeaders) {
-				$headers = array_merge((array)$this->customHeaders, (array)$headers);
-			}
-		
-			if($headers) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-		
-			// Add authentication
-			if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, "$this->authUsername:$this->authPassword");
-		
-			// Add fields to POST and PUT requests
-			if($method == 'POST') {
-				curl_setopt($ch, CURLOPT_POST, 1);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-			}
-			else if($method == 'PUT') {
-				$put = fopen("php://temp", 'r+');				
-				fwrite($put, $data);
-				fseek($put, 0); 
-				
-				curl_setopt($ch, CURLOPT_PUT, 1);
-				curl_setopt($ch, CURLOPT_INFILE, $put);
-				curl_setopt($ch, CURLOPT_INFILESIZE, strlen($data)); 
-			}
+			$response = $this->curlRequest($url, $method, $data, $headers, $curlOptions);
 			
-			// Apply proxy settings
-			if(is_array($this->proxy)) {
-				curl_setopt_array($ch, $this->proxy);
-			}
-			
-			// Set any custom options passed to the request() function
-			curl_setopt_array($ch, $curlOptions);
-
-			// Run request
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			$responseBody = curl_exec($ch);
-			$curlError = curl_error($ch);
-			
-			// Problem verifying the server SSL certificate; just ignore it as it's not mandatory
-			if(strpos($curlError,'14090086') !== false) {
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-				$responseBody = curl_exec($ch);
-				$curlError = curl_error($ch);
-			}
-
-			$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); 			
-			if($curlError !== '' || $statusCode == 0) $statusCode = 500;
-			
-			$response = new RestfulService_Response($responseBody, $statusCode);		
-			curl_close($ch);
-			
-			if($curlError === '' && !$response->isError()) {
+			if(!$response->isError()) {
 				// Serialise response object and write to cache
 				$store = serialize($response);
 				file_put_contents($cache_path, $store);
@@ -204,7 +145,83 @@ class RestfulService extends ViewableData {
 
 		return $response;
 	}
-	
+
+	/**
+	 * Actually performs a remote service request using curl. This is used by
+	 * {@link RestfulService::request()}.
+	 *
+	 * @param  string $url
+	 * @param  string $method
+	 * @param  array $data
+	 * @param  array $headers
+	 * @param  array $curlOptions
+	 * @return RestfulService_Response
+	 */
+	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = array()) {
+		$ch        = curl_init();
+		$timeout   = 5;
+		$useragent = 'SilverStripe/' . SapphireInfo::Version();
+
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+		if(!ini_get('open_basedir')) curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+
+		// Add headers
+		if($this->customHeaders) {
+			$headers = array_merge((array)$this->customHeaders, (array)$headers);
+		}
+
+		if($headers) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		// Add authentication
+		if($this->authUsername) curl_setopt($ch, CURLOPT_USERPWD, "$this->authUsername:$this->authPassword");
+
+		// Add fields to POST and PUT requests
+		if($method == 'POST') {
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		} elseif($method == 'PUT') {
+			$put = fopen("php://temp", 'r+');				
+			fwrite($put, $data);
+			fseek($put, 0); 
+
+			curl_setopt($ch, CURLOPT_PUT, 1);
+			curl_setopt($ch, CURLOPT_INFILE, $put);
+			curl_setopt($ch, CURLOPT_INFILESIZE, strlen($data)); 
+		}
+
+		// Apply proxy settings
+		if(is_array($this->proxy)) {
+			curl_setopt_array($ch, $this->proxy);
+		}
+
+		// Set any custom options passed to the request() function
+		curl_setopt_array($ch, $curlOptions);
+
+		// Run request
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		$responseBody = curl_exec($ch);
+		$curlError = curl_error($ch);
+
+		// Problem verifying the server SSL certificate; just ignore it as it's not mandatory
+		if(strpos($curlError,'14090086') !== false) {
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			$responseBody = curl_exec($ch);
+			$curlError = curl_error($ch);
+		}
+
+		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE); 			
+		if($curlError !== '' || $statusCode == 0) $statusCode = 500;
+
+		$response = new RestfulService_Response($responseBody, $statusCode);		
+		curl_close($ch);
+
+		return $response;
+	}
+
 	/** 
 	 * Returns a full request url
 	 * @param string 

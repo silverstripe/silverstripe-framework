@@ -12,16 +12,14 @@ class ClassInfo {
 	 * @todo Improve documentation
 	 */
 	static function allClasses() {
-		global $_ALL_CLASSES;
-		return $_ALL_CLASSES['exists'];
+		return SS_ClassLoader::instance()->allClasses();
 	}
 
 	/**
 	 * @todo Improve documentation
 	 */
 	static function exists($class) {
-		global $_ALL_CLASSES;
-		return isset($_ALL_CLASSES['exists'][$class]) ? $_ALL_CLASSES['exists'][$class] : null;
+		return SS_ClassLoader::instance()->classExists($class);
 	}
 
 	/**
@@ -59,54 +57,54 @@ class ClassInfo {
 	}
 
 	/**
-	 * Return the database tables linked to this class.
-	 * Gets an array of the current class, it subclasses and its ancestors.  It then filters that list
-	 * to those with DB tables
+	 * Returns an array of the current class and all its ancestors and children
+	 * which have a DB table.
 	 * 
-	 * @param mixed $class string of the classname or instance of the class
+	 * @param string|object $class
 	 * @todo Move this into data object
 	 * @return array
 	 */
-	static function dataClassesFor($class) {
-		global $_ALL_CLASSES;
-		if (is_object($class)) $class = get_class($class);
-		
-		$dataClasses = array();
-		
-		if(!$_ALL_CLASSES['parents'][$class]) user_error("ClassInfo::dataClassesFor() no parents for $class", E_USER_WARNING);
-		foreach($_ALL_CLASSES['parents'][$class] as $subclass) {
-			if(self::hasTable($subclass)) $dataClasses[] = $subclass;
-		}
-		
-		if(self::hasTable($class)) $dataClasses[] = $class;
+	public static function dataClassesFor($class) {
+		$result = array();
 
-		if(isset($_ALL_CLASSES['children'][$class]))
-		foreach($_ALL_CLASSES['children'][$class] as $subclass)
-		{
-			if(self::hasTable($subclass)) $dataClasses[] = $subclass;
+		if (is_object($class)) {
+			$class = get_class($class);
 		}
-			
-		return $dataClasses;
+
+		$classes = array_merge(
+			self::ancestry($class),
+			self::subclassesFor($class));
+
+		foreach ($classes as $class) {
+			if (self::hasTable($class)) $result[$class] = $class;
+		}
+
+		return $result;
 	}
-	
+
 	/**
-	 * Return the root data class for that class.
-	 * This root table has a lot of special use in the DataObject system.
-	 * 
-	 * @param mixed $class string of the classname or instance of the class
-	 * @return array
+	 * Returns the root class (the first to extend from DataObject) for the
+	 * passed class.
+	 *
+	 * @param  string|object $class
+	 * @return string
 	 */
-	static function baseDataClass($class) {
-		global $_ALL_CLASSES;
+	public static function baseDataClass($class) {
 		if (is_object($class)) $class = get_class($class);
-		reset($_ALL_CLASSES['parents'][$class]);
-		while($val = next($_ALL_CLASSES['parents'][$class])) {
-			if($val == 'DataObject') break;
+
+		if (!self::is_subclass_of($class, 'DataObject')) {
+			throw new Exception("$class is not a subclass of DataObject");
 		}
-		$baseDataClass = next($_ALL_CLASSES['parents'][$class]);
-		return $baseDataClass ? $baseDataClass : $class;
+
+		while ($next = get_parent_class($class)) {
+			if ($next == 'DataObject') {
+				return $class;
+			}
+
+			$class = $next;
+		}
 	}
-	
+
 	/**
 	 * Returns a list of classes that inherit from the given class.
 	 * The resulting array includes the base class passed
@@ -125,38 +123,43 @@ class ClassInfo {
 	 * @param mixed $class string of the classname or instance of the class
 	 * @return array Names of all subclasses as an associative array.
 	 */
-	static function subclassesFor($class){
-		global $_ALL_CLASSES;
-		if (is_object($class)) $class = get_class($class);
-		
-		// get all classes from the manifest
-		$subclasses = isset($_ALL_CLASSES['children'][$class]) ? $_ALL_CLASSES['children'][$class] : null;
+	public static function subclassesFor($class) {
+		$descendants = SS_ClassLoader::instance()->getManifest()->getDescendantsOf($class);
+		$result      = array($class => $class);
 
-		// add the base class to the array
-		if(isset($subclasses)) {
-			array_unshift($subclasses, $class);
+		if ($descendants) {
+			return $result + ArrayLib::valuekey($descendants);
 		} else {
-			$subclasses[$class] = $class;
+			return $result;
 		}
-		
-		return $subclasses;
 	}
-	
+
 	/**
-	 * @todo Improve documentation
+	 * Returns the passed class name along with all its parent class names in an
+	 * array, sorted with the root class first.
+	 *
+	 * @param  string $class
+	 * @param  bool $tablesOnly Only return classes that have a table in the db.
+	 * @return array
 	 */
-	static function ancestry($class, $onlyWithTables = false) {
-		global $_ALL_CLASSES;
+	public static function ancestry($class, $tablesOnly = false) {
+		$ancestry = array();
 
-		if(is_object($class)) $class = $class->class;
-		else if(!is_string($class)) user_error("Bad class value " . var_export($class, true) . " passed to ClassInfo::ancestry()", E_USER_WARNING);
-
-		$items = $_ALL_CLASSES['parents'][$class];
-		$items[$class] = $class;
-		if($onlyWithTables) foreach($items as $item) {
-			if(!DataObject::has_own_table($item)) unset($items[$item]);
+		if (is_object($class)) {
+			$class = get_class($class);
+		} elseif (!is_string($class)) {
+			throw new Exception(sprintf(
+				'Invalid class value %s, must be an object or string', var_export($class, true)
+			));
 		}
-		return $items;
+
+		do {
+			if (!$tablesOnly || DataObject::has_own_table($class)) {
+				$ancestry[$class] = $class;
+			}
+		} while ($class = get_parent_class($class));
+
+		return array_reverse($ancestry);
 	}
 
 	/**
@@ -164,27 +167,23 @@ class ClassInfo {
 	 * classes and not built-in PHP classes.
 	 */
 	static function implementorsOf($interfaceName) {
-	    global $_ALL_CLASSES;
-		return (isset($_ALL_CLASSES['implementors'][$interfaceName])) ? $_ALL_CLASSES['implementors'][$interfaceName] : false;
+		return SS_ClassLoader::instance()->getManifest()->getImplementorsOf($interfaceName);
 	}
 
 	/**
 	 * Returns true if the given class implements the given interface
 	 */
 	static function classImplements($className, $interfaceName) {
-	    global $_ALL_CLASSES;
-		return isset($_ALL_CLASSES['implementors'][$interfaceName][$className]);
+		return in_array($className, SS_ClassLoader::instance()->getManifest()->getImplementorsOf($interfaceName));
 	}
 
 	/**
-	 * Returns true if $subclass is a subclass of $parentClass.
-	 * Identical to the PHP built-in function, but faster.
+	 * @deprecated 3.0 Please use is_subclass_of.
 	 */
-	static function is_subclass_of($subclass, $parentClass) {
-		global $_ALL_CLASSES;
-		return isset($_ALL_CLASSES['parents'][$subclass][$parentClass]);
+	public static function is_subclass_of($class, $parent) {
+		return is_subclass_of($class, $parent);
 	}
-	
+
 	/**
 	 * Get all classes contained in a file.
 	 * @uses ManifestBuilder
@@ -196,11 +195,11 @@ class ClassInfo {
 	 * @return array
 	 */
 	static function classes_for_file($filePath) {
-		$absFilePath = Director::getAbsFile($filePath);
-		global $_CLASS_MANIFEST;
-		
+		$absFilePath    = Director::getAbsFile($filePath);
 		$matchedClasses = array();
-		foreach($_CLASS_MANIFEST as $class => $compareFilePath) {
+		$manifest       = SS_ClassLoader::instance()->getManifest()->getClasses();
+
+		foreach($manifest as $class => $compareFilePath) {
 			if($absFilePath == $compareFilePath) $matchedClasses[] = $class;
 		}
 		
@@ -217,11 +216,11 @@ class ClassInfo {
 	 * @return array Array of class names
 	 */
 	static function classes_for_folder($folderPath) {
-		$absFolderPath = Director::getAbsFile($folderPath);
-		global $_CLASS_MANIFEST;
-
+		$absFolderPath  = Director::getAbsFile($folderPath);
 		$matchedClasses = array();
-		foreach($_CLASS_MANIFEST as $class => $compareFilePath) {
+		$manifest       = SS_ClassLoader::instance()->getManifest()->getClasses();
+
+		foreach($manifest as $class => $compareFilePath) {
 			if(stripos($compareFilePath, $absFolderPath) === 0) $matchedClasses[] = $class;
 		}
 

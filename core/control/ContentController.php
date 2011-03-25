@@ -230,7 +230,7 @@ class ContentController extends Controller {
 		$hasOnes = $this->dataRecord->has_one();
 		if(!$hasOnes) return false;
 		foreach($hasOnes as $hasOneName => $hasOneClass) {
-			if($hasOneClass == 'WidgetArea' || ClassInfo::is_subclass_of($hasOneClass, 'WidgetArea')) {
+			if($hasOneClass == 'WidgetArea' || is_subclass_of($hasOneClass, 'WidgetArea')) {
 				$widgetAreaRelations[] = $hasOneName;
 			}
 		}

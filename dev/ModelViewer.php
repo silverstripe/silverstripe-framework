@@ -128,11 +128,12 @@ class ModelViewer_Model extends ViewableData {
 	}
 	
 	function getModule() {
-		global $_CLASS_MANIFEST;
+		$classes   = SS_ClassLoader::instance()->getManifest()->getClasses();
 		$className = strtolower($this->className);
+
 		if(($pos = strpos($className,'_')) !== false) $className = substr($className,0,$pos);
-		if(isset($_CLASS_MANIFEST[$className])) {
-			if(preg_match('/^'.str_replace('/','\/',preg_quote(BASE_PATH)).'\/([^\/]+)\//', $_CLASS_MANIFEST[$className], $matches)) {
+		if(isset($classes[$className])) {
+			if(preg_match('/^'.str_replace('/','\/',preg_quote(BASE_PATH)).'\/([^\/]+)\//', $classes[$className], $matches)) {
 				return $matches[1];
 			}
 		}

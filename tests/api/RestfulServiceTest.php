@@ -94,13 +94,13 @@ class RestfulServiceTest extends SapphireTest {
 	 */
 	function testIncorrectData() {
 		$connection = new RestfulService(Director::absoluteBaseURL(), 0);
-		$test1 = $connection->request('RestfulServiceTest_Controller/invalid?usetestmanifest=1&flush=1');
+		$test1 = $connection->request('RestfulServiceTest_Controller/invalid');
 		$test1->xpath("\\fail");
 	}
 	
 	function testHttpErrorWithoutCache() {
 		$connection = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL(), 0);
-		$response = $connection->request('RestfulServiceTest_Controller/httpErrorWithoutCache?usetestmanifest=1&flush=1');
+		$response = $connection->request('RestfulServiceTest_Controller/httpErrorWithoutCache');
 
 		$this->assertEquals(400, $response->getStatusCode());
 		$this->assertFalse($response->getCachedBody());
@@ -110,7 +110,7 @@ class RestfulServiceTest extends SapphireTest {
 	
 	function testHttpErrorWithCache() {
 		$subUrl = 'RestfulServiceTest_Controller/httpErrorWithCache?usetestmanifest=1&flush=1';
-		$connection = new RestfulService(Director::absoluteBaseURL(), 0);
+		$connection = new RestfulServiceTest_MockErrorService(Director::absoluteBaseURL(), 0);
 		$this->createFakeCachedResponse($connection, $subUrl); 
 		$response = $connection->request($subUrl);
 		
@@ -271,4 +271,15 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
 
 		return $response;
 	}
+}
+
+/**
+ * A mock service that returns a 400 error for requests.
+ */
+class RestfulServiceTest_MockErrorService extends RestfulService {
+
+	public function curlRequest() {
+		return new RestfulService_Response('<error>HTTP Error</error>', 400);
+	}
+
 }

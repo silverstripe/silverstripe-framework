@@ -143,15 +143,24 @@ class Requirements {
 	}
 	
 	/**
-	 * Register the given "themeable stylesheet" as required. See {@link Requirements_Backend::themedCSS()}
-	 * 
-	 * @param $name String The identifier of the file.  For example, css/MyFile.css would have the identifier "MyFile"
-	 * @param $media String Comma-separated list of media-types (e.g. "screen,projector") 
+	 * Registers the given themeable stylesheet as required.
+	 *
+	 * A CSS file in the current theme path name "themename/css/$name.css" is
+	 * first searched for, and it that doesn't exist and the module parameter is
+	 * set then a CSS file with that name in the module is used.
+	 *
+	 * NOTE: This API is experimental and may change in the future.
+	 *
+	 * @param string $name The name of the file - e.g. "/css/File.css" would have
+	 *        the name "File".
+	 * @param string $module The module to fall back to if the css file does not
+	 *        exist in the current theme.
+	 * @param string $media The CSS media attribute.
 	 */
-	static function themedCSS($name, $media = null) {
-		return self::backend()->themedCSS($name, $media);
+	public static function themedCSS($name, $module = null, $media = null) {
+		return self::backend()->themedCSS($name, $module, $media);
 	}
-		
+
 	/**
 	 * Clear either a single or all requirements.
 	 * Caution: Clearing single rules works only with customCSS and customScript if you specified a {@uniquenessID}. 
@@ -1044,27 +1053,22 @@ class Requirements_Backend {
 		
 		return $requirements;
 	}
-	
-	/**
-	 * Register the given "themeable stylesheet" as required.
-	 * Themeable stylesheets have globally unique names, just like templates and PHP files.
-	 * Because of this, they can be replaced by similarly named CSS files in the theme directory.
-	 * 
-	 * @param $name String The identifier of the file.  For example, css/MyFile.css would have the identifier "MyFile"
-	 * @param $media String Comma-separated list of media-types (e.g. "screen,projector") 
-	 */
-	function themedCSS($name, $media = null) {
-		global $_CSS_MANIFEST;
-		
-		$theme = SSViewer::current_theme();
-		
-		if($theme && isset($_CSS_MANIFEST[$name]) && isset($_CSS_MANIFEST[$name]['themes']) 
-			&& isset($_CSS_MANIFEST[$name]['themes'][$theme])) 
-			$this->css($_CSS_MANIFEST[$name]['themes'][$theme], $media);
 
-		else if(isset($_CSS_MANIFEST[$name]) && isset($_CSS_MANIFEST[$name]['unthemed'])) $this->css($_CSS_MANIFEST[$name]['unthemed'], $media);
-		// Normal requirements fails quietly when there is no css - we should do the same
-		// else user_error("themedCSS - No CSS file '$name.css' found.", E_USER_WARNING);
+	/**
+	 * @see Requirements::themedCSS()
+	 */
+	public function themedCSS($name, $module = null, $media = null) {
+		$theme = SSViewer::current_theme();
+		$path  = SSViewer::get_theme_folder() . "/css/$name.css";
+
+		if (file_exists(BASE_PATH . '/' . $path)) {
+			$this->css($path, $media);
+			return;
+		}
+
+		if ($module) {
+			$this->css("$module/css/$name.css");
+		}
 	}
 	
 	function debug() {

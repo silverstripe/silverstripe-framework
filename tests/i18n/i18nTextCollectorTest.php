@@ -18,53 +18,28 @@ class i18nTextCollectorTest extends SapphireTest {
 	 */
 	protected $alternateBasePath;
 	
+	protected $manifest;
+	
 	function setUp() {
 		parent::setUp();
 		
 		$this->alternateBasePath = Director::baseFolder() . "/sapphire/tests/i18n/_fakewebroot";
 		$this->alternateBaseSavePath = TEMP_FOLDER . '/i18nTextCollectorTest_webroot';
 		FileSystem::makeFolder($this->alternateBaseSavePath);
-		
-		// SSViewer and ManifestBuilder don't support different webroots, hence we set the paths manually
-		global $_CLASS_MANIFEST;
-		$_CLASS_MANIFEST['i18nTestModule'] = $this->alternateBasePath . '/i18ntestmodule/code/i18nTestModule.php';
-		$_CLASS_MANIFEST['i18nTestModule_Addition'] = $this->alternateBasePath . '/i18ntestmodule/code/i18nTestModule.php';
-		$_CLASS_MANIFEST['i18nTestModuleDecorator'] = $this->alternateBasePath . '/i18nothermodule/code/i18nTestModuleDecorator.php';
-		
-		global $_ALL_CLASSES;
-		$_ALL_CLASSES['parents']['i18nTestModule'] = array('DataObject'=>'DataObject','Object'=>'Object');
-		$_ALL_CLASSES['parents']['i18nTestModule_Addition'] = array('Object'=>'Object');
-		$_ALL_CLASSES['parents']['i18nTestModuleDecorator'] = array('DataObjectDecorator'=>'DataObjectDecorator','Object'=>'Object');
 
-		global $_TEMPLATE_MANIFEST;
-		$_TEMPLATE_MANIFEST['i18nTestModule.ss'] = array(
-			'main' => $this->alternateBasePath . '/i18ntestmodule/templates/i18nTestModule.ss',
-			'Layout' => $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss',
-		);
-		$_TEMPLATE_MANIFEST['i18nTestModuleInclude.ss'] = array(
-			'Includes' => $this->alternateBasePath . '/i18ntestmodule/templates/Includes/i18nTestModuleInclude.ss',
+		// Push a class and template loader running from the fake webroot onto
+		// the stack.
+		$this->manifest = new SS_ClassManifest(
+			$this->alternateBasePath, false, true, false
 		);
 		
-		$_TEMPLATE_MANIFEST['i18nTestTheme1.ss'] = array(
-			'main' => $this->alternateBasePath . '/themes/testtheme1/templates/i18nTestTheme1.ss',
-			'Layout' => $this->alternateBasePath . '/themes/testtheme1/templates/Layout/i18nTestTheme1.ss',
-		);
-		$_TEMPLATE_MANIFEST['i18nTestTheme1Include.ss'] = array(
-			'Includes' => $this->alternateBasePath . '/themes/testtheme1/templates/Includes/i18nTestTheme1Include.ss',
-		);
+		$manifest = new SS_TemplateManifest($this->alternateBasePath, false, true);
+		$manifest->regenerate(false);
+		SS_TemplateLoader::instance()->pushManifest($manifest);
 	}
 	
 	function tearDown() {
-		//FileSystem::removeFolder($this->tmpBasePath);
-		
-		global $_CLASS_MANIFEST;
-		unset($_CLASS_MANIFEST['i18nTestModule']);
-		unset($_CLASS_MANIFEST['i18nTestModule_Addition']);
-		
-		global $_TEMPLATE_MANIFEST;
-		unset($_TEMPLATE_MANIFEST['i18nTestModule.ss']);
-		unset($_TEMPLATE_MANIFEST['i18nTestModuleInclude.ss']);
-		
+		SS_TemplateLoader::instance()->popManifest();
 		parent::tearDown();
 	}
 
@@ -413,6 +388,9 @@ PHP;
 	function testCollectFromThemesTemplates() {
 		$c = new i18nTextCollector();
 		
+		$theme = SSViewer::current_theme();
+		SSViewer::set_theme('testtheme1');
+		
 		$templateFilePath = $this->alternateBasePath . '/themes/testtheme1/templates/Layout/i18nTestTheme1.ss';
 		$html = file_get_contents($templateFilePath);
 		$matches = $c->collectFromTemplate($html, 'themes/testtheme1', 'i18nTestTheme1.ss');
@@ -462,6 +440,8 @@ PHP;
 			$matches['i18nTestTheme1Include.ss.SPRINTFINCLUDENONAMESPACE'],
 			array('Theme1 My include replacement no namespace: %s', null, null)
 		);
+		
+		SSViewer::set_theme($theme);
 	}
 	
 	function testCollectFromFilesystemAndWriteMasterTables() {
