@@ -90,18 +90,6 @@ class ArrayData extends ViewableData {
 	}
 	
 	/**
-	 * @deprecated Use get_object_vars($obj)
-	 * Converts an object with simple properties to
-	 * an associative array.
-	 *
-	 * @param obj $obj
-	 * @return array
-	 */
-	protected static function object_to_array($obj) {
-		return get_object_vars($obj);
-	}
-
-	/**
 	 * Converts an associative array to a simple object
 	 *
 	 * @param array
