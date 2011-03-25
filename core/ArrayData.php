@@ -1,6 +1,6 @@
 <?php
 /**
- * Lets you wrap a bunch of array data into a {@link ViewableData} object.
+ * Lets you wrap a bunch of array data, or object members, into a {@link ViewableData} object.
  *
  * <code>
  * new ArrayData(array(
@@ -21,20 +21,19 @@ class ArrayData extends ViewableData {
 	protected $array;
 	
 	/**
-	 * @param object|array $array Either an object with simple properties or an associative array.
-	 * Converts object-properties to indices of an associative array.
+	 * @param object|array $value An associative array, or an object with simple properties.
+	 * Converts object properties to keys of an associative array.
 	 */
-	public function __construct($array) {
-		if(is_object($array)) {
-			$this->array = self::object_to_array($array);
-		} elseif(is_array($array) && (ArrayLib::is_associative($array) || count($array) === 0)) {
-			$this->array = $array;
+	public function __construct($value) {
+		if (is_object($value)) {
+			$this->array = get_object_vars($value);
+		} elseif (ArrayLib::is_associative($value)) {
+			$this->array = $value;
+		} elseif (is_array($value) && count($value) === 0) {
+			$this->array = array();
 		} else {
-			$this->array = $array;
-			user_error(
-				"ArrayData::__construct: Parameter needs to be an object or associative array", 
-				E_USER_WARNING
-			);
+			$message = 'Parameter to ArrayData constructor needs to be an object or associative array';
+			throw new InvalidArgumentException($message);
 		}
 		parent::__construct();
 	}
@@ -49,19 +48,27 @@ class ArrayData extends ViewableData {
 	}
 	
 	/**
-	 * Get a value from a given field
+	 * Gets a field from this object.
 	 *
-	 * @param string $f field key
-	 * @return mixed
+	 * @param string $field
+	 *
+	 * If the value is an object but not an instance of
+	 * ViewableData, it will be converted recursively to an
+	 * ArrayData.
+	 *
+	 * If the value is an associative array, it will likewise be
+	 * converted recursively to an ArrayData.
 	 */
 	public function getField($f) {
-		if((is_object($this->array[$f]) && !$this->array[$f] instanceof ViewableData) || (is_array($this->array[$f]) && ArrayLib::is_associative($this->array[$f]))) {
-			return new ArrayData($this->array[$f]);
+		$value = $this->array[$f];
+		if (is_object($value) && !$value instanceof ViewableData) {
+			return new ArrayData($value);
+		} elseif (ArrayLib::is_associative($value)) {
+			return new ArrayData($value);
+	    } else {
+			return $value;
 		}
-	
-		return $this->array[$f];
 	}
-	
 	/**
 	* Add or set a field on this object.
 	*
@@ -83,19 +90,15 @@ class ArrayData extends ViewableData {
 	}
 	
 	/**
-	 * Converts an object with simple properties to 
+	 * @deprecated Use get_object_vars($obj)
+	 * Converts an object with simple properties to
 	 * an associative array.
 	 *
 	 * @param obj $obj
 	 * @return array
 	 */
 	protected static function object_to_array($obj) {
-		$arr = array();
-		foreach($obj as $k=>$v) {
-			$arr[$k] = $v;
-		}
-		
-		return $arr;
+		return get_object_vars($obj);
 	}
 
 	/**
