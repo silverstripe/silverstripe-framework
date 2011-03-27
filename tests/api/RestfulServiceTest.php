@@ -109,11 +109,10 @@ class RestfulServiceTest extends SapphireTest {
 	}
 	
 	function testHttpErrorWithCache() {
-		$subUrl = 'RestfulServiceTest_Controller/httpErrorWithCache?usetestmanifest=1&flush=1';
+		$subUrl = 'RestfulServiceTest_Controller/httpErrorWithCache';
 		$connection = new RestfulServiceTest_MockErrorService(Director::absoluteBaseURL(), 0);
 		$this->createFakeCachedResponse($connection, $subUrl); 
 		$response = $connection->request($subUrl);
-		
 		$this->assertEquals(400, $response->getStatusCode());
 		$this->assertEquals("Cache response body",$response->getCachedBody());
 		$this->assertContains("<error>HTTP Error</error>", $response->getBody());
