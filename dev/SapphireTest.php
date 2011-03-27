@@ -659,7 +659,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	private function dataObjectArrayMatch($item, $match) {
 		foreach($match as $k => $v) {
-			if(!isset($item[$k]) || $item[$k] != $v) return false;
+			if(!array_key_exists($k, $item) || $item[$k] != $v) return false;
 		}
 		return true;
 	}
