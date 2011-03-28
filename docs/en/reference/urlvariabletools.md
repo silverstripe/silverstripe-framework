@@ -35,8 +35,6 @@ Append the option and corresponding value to your URL in your browser's address 
 
  | URL Variable    | | Values | | Description                                                                               | 
  | ------------    | | ------ | | -----------                                                                               | 
- | debugmanifest   | | 1      | | Show the entire Sapphire manifest as currently built (Use `/dev/build` to rebuild)        | 
- | usetestmanifest | | 1      | | Force use of the default test manifest                                                    | 
  | debugmethods    | | 1      | | Shows all methods available when an object is constructed (useful when extending classes or using object decorators) | 
  | debugfailover   | | 1      | | Shows failover methods from classes extended                                              | 
 
