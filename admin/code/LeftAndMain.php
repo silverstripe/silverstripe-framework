@@ -198,13 +198,6 @@ class LeftAndMain extends Controller {
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/cms_right.css');
 		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
 		
-		if(isset($_REQUEST['debug_firebug'])) {
-			// Firebug is a useful console for debugging javascript
-			// Its available as a Firefox extension or a javascript library
-			// for easy inclusion in other browsers (just append ?debug_firebug=1 to the URL)
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/firebug-lite/firebug.js');
-		} 
-		
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototypefix/intro.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototypefix/outro.js');
@@ -279,8 +272,6 @@ class LeftAndMain extends Controller {
 				'sapphire/thirdparty/jquery-livequery/jquery.livequery.js',
 				'sapphire/javascript/jquery-ondemand/jquery.ondemand.js',
 				'sapphire/thirdparty/jquery-ui/jquery-ui.js',
-				'sapphire/thirdparty/firebug-lite/firebug.js',
-				'sapphire/thirdparty/firebug-lite/firebugx.js',
 				'sapphire/javascript/i18n.js',
 			)
 		);
