@@ -52,6 +52,21 @@ class SecurityTest extends FunctionalTest {
 		parent::tearDown();
 	}
 	
+	function testAccessingAuthenticatedPageRedirectsToLoginForm() {
+		$this->autoFollowRedirection = false;
+		
+		$response = $this->get('SecurityTest_SecuredController');
+		$this->assertEquals(302, $response->getStatusCode());
+		$this->assertContains('Security/login', $response->getHeader('Location'));
+
+		$this->logInWithPermission('ADMIN');		
+		$response = $this->get('SecurityTest_SecuredController');
+		$this->assertEquals(200, $response->getStatusCode());
+		$this->assertContains('Success', $response->getBody());
+		
+		$this->autoFollowRedirection = true;
+	}
+	
 	function testLogInAsSomeoneElse() {
 		$member = DataObject::get_one('Member');
 
@@ -408,4 +423,11 @@ class SecurityTest extends FunctionalTest {
 	}	
 	
 }
-?>
+
+class SecurityTest_SecuredController extends Controller implements TestOnly {
+	function index() {
+		if(!Permission::check('ADMIN')) return Security::permissionFailure($this);
+		
+		return 'Success';
+	}
+}
