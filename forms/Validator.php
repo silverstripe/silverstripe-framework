@@ -40,7 +40,7 @@ abstract class Validator extends Object {
 	
 	/**
 	 * Call this function to set the javascript validation handler for all valdiation on your site.
-	 * This could be called from _config.php to set site-wide javascript validation, or from ContentController::init()
+	 * This could be called from _config.php to set site-wide javascript validation, or from Controller::init()
 	 * to affect only the front-end site.
 	 * Use instance method {@link setJavascriptValidationHandler()} to
 	 * only set handler for a specific form instance.

@@ -72,31 +72,33 @@ class HtmlEditorField extends TextareaField {
 		
 		$htmlValue = new SS_HTMLValue($this->value);
 		
-		// Populate link tracking for internal links & links to asset files.
-		if($links = $htmlValue->getElementsByTagName('a')) foreach($links as $link) {
-			$href = Director::makeRelative($link->getAttribute('href'));
-			
-			if($href) {
-				if(preg_match('/\[sitetree_link id=([0-9]+)\]/i', $href, $matches)) {
-					$ID = $matches[1];
-					
-					// clear out any broken link classes
-					if($class = $link->getAttribute('class')) {
-						$link->setAttribute('class', preg_replace('/(^ss-broken|ss-broken$| ss-broken )/', null, $class));
-					}
-					
-					$linkedPages[] = $ID;
-					if(!DataObject::get_by_id('SiteTree', $ID))  $record->HasBrokenLink = true;
+		if(class_exists('SiteTree')) {
+			// Populate link tracking for internal links & links to asset files.
+			if($links = $htmlValue->getElementsByTagName('a')) foreach($links as $link) {
+				$href = Director::makeRelative($link->getAttribute('href'));
 
-				} else if(substr($href, 0, strlen(ASSETS_DIR) + 1) == ASSETS_DIR.'/') {
-					$candidateFile = File::find(Convert::raw2sql(urldecode($href)));
-					if($candidateFile) {
-						$linkedFiles[] = $candidateFile->ID;
-					} else {
-						$record->HasBrokenFile = true;
+				if($href) {
+					if(preg_match('/\[sitetree_link id=([0-9]+)\]/i', $href, $matches)) {
+						$ID = $matches[1];
+
+						// clear out any broken link classes
+						if($class = $link->getAttribute('class')) {
+							$link->setAttribute('class', preg_replace('/(^ss-broken|ss-broken$| ss-broken )/', null, $class));
+						}
+
+						$linkedPages[] = $ID;
+						if(!DataObject::get_by_id('SiteTree', $ID))  $record->HasBrokenLink = true;
+
+					} else if(substr($href, 0, strlen(ASSETS_DIR) + 1) == ASSETS_DIR.'/') {
+						$candidateFile = File::find(Convert::raw2sql(urldecode($href)));
+						if($candidateFile) {
+							$linkedFiles[] = $candidateFile->ID;
+						} else {
+							$record->HasBrokenFile = true;
+						}
+					} else if($href == '' || $href[0] == '/') {
+						$record->HasBrokenLink = true;
 					}
-				} else if($href == '' || $href[0] == '/') {
-					$record->HasBrokenLink = true;
 				}
 			}
 		}
@@ -138,24 +140,26 @@ class HtmlEditorField extends TextareaField {
 		}
 		
 		// Save file & link tracking data.
-		if($record->ID && $record->many_many('LinkTracking') && $tracker = $record->LinkTracking()) {
-			$filter = sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID);
-			DB::query("DELETE FROM \"$tracker->tableName\" WHERE $filter");
+		if(class_exists('SiteTree')) {
+			if($record->ID && $record->many_many('LinkTracking') && $tracker = $record->LinkTracking()) {
+				$filter = sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID);
+				DB::query("DELETE FROM \"$tracker->tableName\" WHERE $filter");
 
-			if($linkedPages) foreach($linkedPages as $item) {
-				$SQL_fieldName = Convert::raw2sql($this->name);
-				DB::query("INSERT INTO \"SiteTree_LinkTracking\" (\"SiteTreeID\",\"ChildID\", \"FieldName\")
-					VALUES ($record->ID, $item, '$SQL_fieldName')");
+				if($linkedPages) foreach($linkedPages as $item) {
+					$SQL_fieldName = Convert::raw2sql($this->name);
+					DB::query("INSERT INTO \"SiteTree_LinkTracking\" (\"SiteTreeID\",\"ChildID\", \"FieldName\")
+						VALUES ($record->ID, $item, '$SQL_fieldName')");
+				}
 			}
-		}
-		
-		if($record->ID && $record->many_many('ImageTracking') && $tracker = $record->ImageTracking()) {
-			$filter = sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID);
-			DB::query("DELETE FROM \"$tracker->tableName\" WHERE $filter");
 
-			$fieldName = $this->name;
-			if($linkedFiles) foreach($linkedFiles as $item) {
-				$tracker->add($item, array('FieldName' => $this->name));
+			if($record->ID && $record->many_many('ImageTracking') && $tracker = $record->ImageTracking()) {
+				$filter = sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID);
+				DB::query("DELETE FROM \"$tracker->tableName\" WHERE $filter");
+
+				$fieldName = $this->name;
+				if($linkedFiles) foreach($linkedFiles as $item) {
+					$tracker->add($item, array('FieldName' => $this->name));
+				}
 			}
 		}
 		
@@ -284,6 +288,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return Form
 	 */
 	function ImageForm() {
+		if(!class_exists('ThumbnailStripField')) {
+			throw new Exception('ThumbnailStripField class required for HtmlEditorField->ImageForm()');
+		}
+		
 		$fields = new FieldSet(
 			new LiteralField(
 				'Heading', 
@@ -344,6 +352,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	}
 
 	function FlashForm() {
+		if(!class_exists('ThumbnailStripField')) {
+			throw new Exception('ThumbnailStripField class required for HtmlEditorField->FlashForm()');
+		}
+		
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/FlashForm", 

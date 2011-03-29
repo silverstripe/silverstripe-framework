@@ -472,6 +472,8 @@ class Hierarchy extends DataObjectDecorator {
 	 * from both stage & live.
 	 */
 	public function AllHistoricalChildren() {
+		if(!$this->owner->hasExtension('Versioned')) throw new Exception('Hierarchy->AllHistoricalChildren() only works with Versioned extension applied');
+		
 		$baseClass=ClassInfo::baseDataClass($this->owner->class);
 		return Versioned::get_including_deleted($baseClass, 
 			"\"ParentID\" = " . (int)$this->owner->ID, "\"$baseClass\".\"ID\" ASC");
@@ -481,6 +483,8 @@ class Hierarchy extends DataObjectDecorator {
 	 * Return the number of children that this page ever had, including pages that were deleted
 	 */
 	public function numHistoricalChildren() {
+		if(!$this->owner->hasExtension('Versioned')) throw new Exception('Hierarchy->AllHistoricalChildren() only works with Versioned extension applied');
+		
 		$query = Versioned::get_including_deleted_query(ClassInfo::baseDataClass($this->owner->class), 
 			"\"ParentID\" = " . (int)$this->owner->ID);
 			
@@ -550,6 +554,8 @@ class Hierarchy extends DataObjectDecorator {
 	 * @return DataObjectSet
 	 */
 	public function liveChildren($showAll = false, $onlyDeletedFromStage = false) {
+		if(!$this->owner->hasExtension('Versioned')) throw new Exception('Hierarchy->liveChildren() only works with Versioned extension applied');
+		
 		if($this->owner->db('ShowInMenus')) {
 			$extraFilter = ($showAll) ? '' : " AND \"ShowInMenus\"=1";
 		} else {

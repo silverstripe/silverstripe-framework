@@ -7,7 +7,7 @@ PermissionRole:
 PermissionRoleCode:
    author1:
       Role: =>PermissionRole.author
-      Code: CMS_ACCESS_CMSMain
+      Code: CMS_ACCESS_MyAdmin
    author2:
       Role: =>PermissionRole.author
       Code: CMS_ACCESS_AssetAdmin

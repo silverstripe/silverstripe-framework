@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  piston:remote-revision: 14
+  piston:uuid: c0f28f7c-efbc-11dd-aa46-671127399dce
+lock: false
+repository_url: http://jquery-notice.googlecode.com/svn/trunk/
+repository_class: Piston::Svn::Repository

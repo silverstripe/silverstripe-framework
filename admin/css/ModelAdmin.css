@@ -1,0 +1,173 @@
+.clear{
+	display: block;
+	clear: both;
+}
+
+body.ModelAdmin .ui-layout-west {
+	width: 280px;
+}
+
+body.ModelAdmin #Form_AddForm fieldset {
+	border: none;
+}
+
+body.ModelAdmin #Form_AddForm #ClassName {
+	margin: 0;
+	padding: auto;
+	width: auto;
+}
+
+body.ModelAdmin #Form_AddForm #ClassName label {
+	display: none;
+}
+
+body.ModelAdmin #SearchForm_holder,
+body.ModelAdmin #AddForm_holder {
+	padding: 1em;
+}
+
+body.ModelAdmin #SearchForm_holder {
+	overflow: auto;
+	margin-bottom:1em;
+}
+
+body.ModelAdmin #ModelClassSelector {
+    border-bottom: 1px #AAA solid;
+    padding-bottom: 0.5em;
+}
+
+
+body.ModelAdmin #SearchForm_holder div.ResultAssemblyBlock{
+	margin-bottom: 1em;
+}
+
+body.ModelAdmin #SearchForm_holder form div.field.hidden{
+	display: none;
+}
+
+body.ModelAdmin #SearchForm_holder form div#ResultAssembly{
+	margin: 0;
+	display: block;
+	clear: both;
+}
+	body.ModelAdmin #SearchForm_holder form div#ResultAssembly label{
+		width: auto;
+		clear: both;
+		margin: 0px;
+	}
+
+	body.ModelAdmin #SearchForm_holder form div#ResultAssembly ul.optionset li{
+		float: left;
+		width: 45%;
+	}
+
+body.ModelAdmin .resultsTable {
+	overflow:auto;
+}
+body.ModelAdmin .resultsTable tbody td {
+	cursor: pointer;
+}
+
+body.ModelAdmin #right{
+	overflow:hidden !important;
+	
+}
+
+body.ModelAdmin #right table.results {
+	margin:6px;
+	padding:0;
+	border-spacing:0 2px;
+}
+
+body.ModelAdmin #right table.results td {
+	font-size:12px;
+	font-weight:bold;
+	background-color:#fff;
+	padding:2px;
+}
+
+body.ModelAdmin #right table.results td.over {
+	background-color:#bbb;
+	cursor:pointer;
+}
+
+body.ModelAdmin #right table.results td.active {
+	background-color:#555;
+	color:#fff;
+}
+
+body.ModelAdmin #right .tab {
+	overflow: auto;
+	padding-bottom: 20px;
+}
+
+body.ModelAdmin #Form_ImportForm dt {
+	float: left;
+	width: 10em;
+	margin-right: 2em;
+}
+
+body.ModelAdmin #statusMessage {
+	position: fixed !important;
+	position: absolute;
+	left: auto !important;
+	bottom: 35px !important;
+}
+
+/* Form */
+
+body.ModelAdmin .ui-layout-west form {
+	border-bottom: 2px solid #ddd;
+	padding-bottom: 10px;
+}
+
+body.ModelAdmin .ui-layout-west #Form_ImportForm {
+	border-bottom: none;
+}
+
+body.ModelAdmin .ui-layout-west form .Actions {
+	margin: 5px 0;
+}
+
+body.ModelAdmin #right .Actions {
+	position:absolute;
+	bottom:4px;
+}
+
+body.ModelAdmin #right .ajaxActions {
+	position:absolute;
+	bottom:4px;
+	height: 30px;
+}
+
+body.ModelAdmin .ui-layout-west .tab {
+	padding: 7px;
+}
+
+body.ModelAdmin .tab h3 {
+	margin: 10px 0 5px 0;
+	font-size: 12px;
+}
+
+form .message {
+	font-size: 10px;
+	margin: .3em 0;
+	padding: 0.3em;
+}
+
+body.ModelAdmin .historyNav {
+	background: #aaa;
+	padding: 0 10px;
+	overflow: auto;
+}
+	body.ModelAdmin .historyNav a {
+		display: block;
+		color: white;
+		margin: 3px 0;
+	}
+	body.ModelAdmin .historyNav a.back {
+		float: left;
+	}
+	body.ModelAdmin .historyNav a.forward {
+		float: right;
+	}

@@ -2371,6 +2371,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 					$groupList = implode(', ', $groups->column("ID"));
 
+					// TODO Fix relation table hardcoding
 					$query = new SQLQuery(
 						"\"Page_Can$perm\".PageID",
 					array("\"Page_Can$perm\""),
@@ -2379,6 +2380,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					$permissionCache[$memberID][$perm] = $query->execute()->column();
 
 					if($perm == "View") {
+						// TODO Fix relation table hardcoding
 						$query = new SQLQuery("\"SiteTree\".\"ID\"", array(
 							"\"SiteTree\"",
 							"LEFT JOIN \"Page_CanView\" ON \"Page_CanView\".\"PageID\" = \"SiteTree\".\"ID\""

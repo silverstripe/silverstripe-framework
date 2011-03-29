@@ -57,16 +57,16 @@ class DataObjectDecoratorTest extends SapphireTest {
 		
 		$this->assertEquals(0, $parent->Faves()->Count());
 		
-		$homepage = $this->objFromFixture('Page', 'home');
-		$firstpage = $this->objFromFixture('Page', 'page1');
+		$obj1 = $this->objFromFixture('DataObjectDecoratorTest_RelatedObject', 'obj1');
+		$obj2 = $this->objFromFixture('DataObjectDecoratorTest_RelatedObject', 'obj2');
 
-		$parent->Faves()->add($homepage->ID);
+		$parent->Faves()->add($obj1->ID);
 		$this->assertEquals(1, $parent->Faves()->Count());
 		
-		$parent->Faves()->add($firstpage->ID);
+		$parent->Faves()->add($obj2->ID);
 		$this->assertEquals(2, $parent->Faves()->Count());
 		
-		$parent->Faves()->remove($firstpage->ID);
+		$parent->Faves()->remove($obj2->ID);
 		$this->assertEquals(1, $parent->Faves()->Count());
 	}
 	
@@ -296,7 +296,7 @@ class DataObjectDecoratorTest_Faves extends DataObjectDecorator implements TestO
 	public function extraStatics() {
 		return array(
 			'many_many' => array(
-				'Faves' => 'Page'
+				'Faves' => 'DataObjectDecoratorTest_RelatedObject'
 			)
 		);
 	}

@@ -1,0 +1,32 @@
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="../vendor/jspec/lib/jspec.css" />
+		<script src="../vendor/jquery-1.3.2.js"></script>
+		<script src="../vendor/jspec/lib/jspec.js"></script>
+		<script src="../vendor/jspec/lib/jspec.jquery.js"></script>
+		
+		<script src="../../jquery.selector/src/jquery.class.js"></script>
+		<script src="../../jquery.selector/src/jquery.selector.js"></script>
+		<script src="../../jquery.selector/src/jquery.selector.specifity.js"></script>
+		<script src="../../jquery.selector/src/jquery.selector.matches.js"></script>
+		<script src="../src/jquery.dat.js"></script>
+		<script src="../src/jquery.concrete.js"></script>
+		<script>
+			function runSuites() {
+				JSpec
+				.exec('spec.concrete.basics.js')
+				//.exec('spec.concrete.selectors.js')
+				.exec('spec.concrete.events.js')
+				//.exec('spec.concrete.has.js')
+				//.exec('spec.concrete.properties.js')
+				.run()
+				.report()
+			}
+		</script>
+	</head>
+	<body class="jspec" onLoad="runSuites();">
+		<div id="jspec-top"><h2 id="jspec-title">JSpec <em><script>document.write(JSpec.version)</script></em></h2></div>
+		<div id="jspec"><div class="loading"></div></div>
+		<div id="jspec-bottom"></div>
+	</body>
+</html>

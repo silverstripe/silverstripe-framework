@@ -2,7 +2,7 @@
 /**
  * Base-class for storage and retrieval of translated entities.
  * 
- * Please see the {@link Translatable} extension for managing translations of database-content.
+ * Please see the 'translatable' module for managing translations of database-content.
  * 
  * <b>Usage</b>
  * 
@@ -25,7 +25,7 @@
  * </code>
  * 
  * File-based i18n-translations always have a "locale" (e.g. 'en_US').
- * Common language names (e.g. 'en') are mainly used in {@link Translatable} for
+ * Common language names (e.g. 'en') are mainly used in the 'translatable' module
  * database-entities.
  * 
  * <b>Text Collection</b>
@@ -1726,8 +1726,6 @@ class i18n extends Object {
 	 * for example in the {@link CMSMain} interface the Member locale
 	 * overrules the global locale value set here.
 	 * 
-	 * See {@link Translatable::set_locale()}.
-	 * 
 	 * @param string $locale Locale to be set. See http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html for a list of possible locales.
 	 */
 	static function set_locale($locale) {
@@ -1745,23 +1743,7 @@ class i18n extends Object {
 	static function get_locale() {
 		return (!empty(self::$current_locale)) ? self::$current_locale : self::$default_locale;
 	}
-	
-	/**
-	 * @deprecated 2.4 Use Translatable::set_default_locale() or i18n::set_default_locale()
-	 * @param $lang String
-	 */
-	static function set_default_lang($lang) {
-		Translatable::set_default_lang($lang);
-	}
-	
-	/**
-	 * @deprecated 2.4 Use Translatable::default_locale() or i18n::default_locale()
-	 * @return String
-	 */
-	static function default_lang() {
-		return Translatable::default_locale();
-	}
-	
+		
 	/**
 	 * This is the "fallback locale", in case resources with the "current locale"
 	 * (set through {@link set_locale()}) can't be found.
@@ -1790,24 +1772,6 @@ class i18n extends Object {
 		self::$default_locale = $locale;
 	}
 	
-	/**
-	 * Enables the multilingual content feature (proxy for Translatable::enable()).
-	 * 
-	 * @deprecated 2.4 Use Object::add_extension('Page', 'Translatable');
-	 */
-	static function enable() {
-		Translatable::enable();
-	}
-
-	/**
-	 * Disable the multilingual content feature (proxy for Translatable::disable())
-	 * 
-	 * @deprecated 2.4 Use Object::add_extension('Page', 'Translatable');
-	 */
-	static function disable() {
-		Translatable::disable();
-	}
-
 	/**
 	 * Include a locale file determined by module name and locale 
 	 * 
@@ -1906,18 +1870,6 @@ class i18n extends Object {
 	}
 	
 	//-----------------------------------------------------------------------------------------------//
-	
-	/**
-	 * This method will delete every SiteTree instance in the given language
-	 */
-	public function removelang() {
-		if (!Permission::check("ADMIN")) user_error("You must be an admin to remove a language", E_USER_ERROR);
-		$translatedToDelete = Translatable::get_by_locale('SiteTree',$this->urlParams['ID']);
-		foreach ($translatedToDelete as $object) {
-			$object->delete();
-		}
-		echo "Language {$this->urlParams['ID']} successfully removed";
-	}
 
 	/**
 	 * This variable holds translation plugins that are invoked on a call to _t. It is a two dimensional array,

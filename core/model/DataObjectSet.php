@@ -886,6 +886,8 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * @return DataObjectSet
 	 */
 	public function groupWithParents($groupField, $groupClassName, $sortParents = null, $parentField = 'ID', $collapse = false, $requiredParents = null) {
+		$groupTable = ClassInfo::baseDataClass($groupClassName);
+		
 		// Each item in this DataObjectSet is grouped into a multidimensional array
 		// indexed by it's parent. The parent IDs are later used to find the parents
 		// that make up the returned set.
@@ -913,7 +915,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 			$parentSet = array();
 
 			// get direct parents
-			$parents = DataObject::get( 'SiteTree', "\"SiteTree\".\"$parentField\" IN( " . implode( ",", array_keys( $groupedSet ) ) . ")", $sortParents );	
+			$parents = DataObject::get($groupClassName, "\"$groupTable\".\"$parentField\" IN( " . implode( ",", array_keys( $groupedSet ) ) . ")", $sortParents );	
 			
 			// for each of these parents...
 			foreach($parents as $parent) {
@@ -939,7 +941,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 				if(empty($parentStack)) {
 					$newParent = new DataObjectSet();
 				} else {
-				 	$newParent = DataObject::get_one( $groupClassName, "\"SiteTree\".\"$parentField\" IN( " . implode( ",", $parentStack ) . ")" );		
+				 	$newParent = DataObject::get_one( $groupClassName, "\"$groupTable\".\"$parentField\" IN( " . implode( ",", $parentStack ) . ")" );		
 				}
 			
 				// change each of the descendant's association from the old parent to
@@ -963,7 +965,7 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 			if(empty($requiredIDs)) {
 				$parentSet = new DataObjectSet();
 			} else {
-				$parentSet = DataObject::get( $groupClassName, "\"$groupClassName\".\"$parentField\" IN( " . implode( ",", $requiredIDs ) . ")", $sortParents );	
+				$parentSet = DataObject::get( $groupClassName, "\"$groupTable\".\"$parentField\" IN( " . implode( ",", $requiredIDs ) . ")", $sortParents );	
 			}
 			
 			$parentSet = $parentSet->toArray();

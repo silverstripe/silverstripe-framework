@@ -17,28 +17,11 @@ class ObjectTest extends SapphireTest {
 	}
 	
 	function testHasmethodBehaviour() {
-		/* SiteTree should have all of the methods that Versioned has, because Versioned is listed in SiteTree's
-		 * extensions */
-		$st = new SiteTree();
-		$cc = new ContentController($st);
+		$obj = new ObjectTest_ExtendTest();
 
-		$this->assertTrue($st->hasMethod('publish'), "Test SiteTree has publish");
-		$this->assertTrue($st->hasMethod('migrateVersion'), "Test SiteTree has migrateVersion");
+		$this->assertTrue($obj->hasMethod('extendableMethod'), "Extension method found in original spelling");
+		$this->assertTrue($obj->hasMethod('ExTendableMethod'), "Extension method found case-insensitive");
 		
-		/* This relationship should be case-insensitive, too */
-		$this->assertTrue($st->hasMethod('PuBliSh'), "Test SiteTree has PuBliSh");
-		$this->assertTrue($st->hasMethod('MiGratEVersIOn'), "Test SiteTree has MiGratEVersIOn");
-		
-		/* In a similar manner, all of SiteTree's methods should be available on ContentController, because $failover is set */
-		$this->assertTrue($cc->hasMethod('canView'), "Test ContentController has canView");
-		$this->assertTrue($cc->hasMethod('linkorcurrent'), "Test ContentController has linkorcurrent");
-		
-		/* This 'method copying' is transitive, so all of Versioned's methods should be available on ContentControler.
-		 * Once again, this is case-insensitive */
-		$this->assertTrue($cc->hasMethod('MiGratEVersIOn'), "Test ContentController has MiGratEVersIOn");
-		
-		/* The above examples make use of SiteTree, Versioned and ContentController.  Let's test defineMethods() more
-		 * directly, with some sample objects */
 		$objs = array();
 		$objs[] = new ObjectTest_T2();
 		$objs[] = new ObjectTest_T2();

@@ -1,0 +1,20 @@
+/**
+ * Default Editor Styles for the CMS
+ */
+
+.typography .mceItemFlash {
+	border: 1px dotted #f00;
+}
+
+body.mceContentBody {
+	min-height: 200px;
+	font-size: 62.5%;
+}
+
+body.mceContentBody a.ss-broken {
+	background-color: #FF7B71;
+	border: 1px red solid;
+	color: #fff;
+	padding: 1px;
+	text-decoration: underline;
+}

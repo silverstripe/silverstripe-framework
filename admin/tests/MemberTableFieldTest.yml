@@ -1,0 +1,31 @@
+Group:
+  admin:
+    Title: Administrators
+    Code: admin
+  group1:
+    Title: Group1
+    Code: group1
+  group1_child:
+    Title: Group1 Child
+    Parent: =>Group.group1
+    Code: group1_child
+  group2:
+    Title: Group2
+    Code: group2
+Member:
+  admin:
+    Email: admin@example.com
+    Groups: =>Group.admin
+  member1:
+    Email: member1@test.com
+    Groups: =>Group.group1
+  member2:
+    Email: member2@test.com
+    Groups: =>Group.group1_child
+  member3:
+    Email: member3@test.com
+    Groups: =>Group.group2
+Permission:
+  admin:
+    Code: ADMIN
+    GroupID: =>Group.admin

@@ -422,6 +422,11 @@ class FormTest_Controller extends Controller implements TestOnly {
 		$form->sessionMessage('Test save was successful', 'good');
 		return $this->redirectBack();
 	}
+
+	function getViewer(){
+		return new SSViewer('BlankPage');
+	}
+
 }
 
 class FormTest_ControllerWithSecurityToken extends Controller implements TestOnly {
@@ -453,6 +458,10 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 	function doSubmit($data, $form, $request) {
 		$form->sessionMessage('Test save was successful', 'good');
 		return $this->redirectBack();
+	}
+
+	function getViewer(){
+		return new SSViewer('BlankPage');
 	}
 }
 

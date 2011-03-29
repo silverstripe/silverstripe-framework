@@ -1,7 +1,3 @@
-SiteTree:
-   home:
-      Title: Home
-      URLSegment: home
 ComplexTableFieldTest_Player:
    p1:
       Name: Joe Bloggs

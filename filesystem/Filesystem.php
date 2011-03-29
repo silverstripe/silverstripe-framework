@@ -145,12 +145,14 @@ class Filesystem extends Object {
 		}
 
 		// Update the image tracking of all pages
-		if(class_exists('Subsite')) Subsite::$disable_subsite_filter = true;
-		foreach(DataObject::get("SiteTree") as $page) {
-			// syncLinkTracking is called by SiteTree::onBeforeWrite()
-			$page->write();
+		if(class_exists('SiteTree')) {
+			if(class_exists('Subsite')) Subsite::$disable_subsite_filter = true;
+			foreach(DataObject::get("SiteTree") as $page) {
+				// syncLinkTracking is called by SiteTree::onBeforeWrite()
+				$page->write();
+			}
+			if(class_exists('Subsite')) Subsite::$disable_subsite_filter = false;
 		}
-		if(class_exists('Subsite')) Subsite::$disable_subsite_filter = false;
 		
 		return _t(
 			'Filesystem.SYNCRESULTS',

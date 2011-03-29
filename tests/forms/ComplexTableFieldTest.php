@@ -22,6 +22,8 @@ class ComplexTableFieldTest extends FunctionalTest {
 	 */
 	protected $controller;
 	
+	protected $autoFollowRedirection = false;
+	
 	function setUp() {
 		parent::setUp();
 		

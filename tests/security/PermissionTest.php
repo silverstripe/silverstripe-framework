@@ -20,14 +20,14 @@ class PermissionTest extends SapphireTest {
 	
 	function testPermissionAreInheritedFromOneRole() {
 		$member = $this->objFromFixture('Member', 'author');
-		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_CMSMain"));
+		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
 		$this->assertFalse(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin"));
 	}
 	
 	function testPermissionAreInheritedFromMultipleRoles() {
 		$member = $this->objFromFixture('Member', 'access');
-		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_CMSMain"));
+		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "EDIT_PERMISSIONS"));
@@ -41,7 +41,7 @@ class PermissionTest extends SapphireTest {
 		$this->assertTrue(Permission::checkMember($member, "SITETREE_EDIT_ALL"));
 		
 		// Check that roles from parent groups are there
-		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_CMSMain"));
+		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
 	
 		// Check that permissions from parent groups are there

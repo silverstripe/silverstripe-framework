@@ -8,26 +8,9 @@ class SSViewerTest extends SapphireTest {
 	 * when no user themes are defined.
 	 */
 	function testCurrentTheme() {
-		$config = SiteConfig::current_site_config();
-		$oldTheme = $config->Theme;
-		$config->Theme = '';
-		$config->write();
-		
+		//TODO: SiteConfig moved to CMS 
 		SSViewer::set_theme('mytheme');
 		$this->assertEquals('mytheme', SSViewer::current_theme(), 'Current theme is the default - user has not defined one');
-
-		$config->Theme = 'myusertheme';
-		$config->write();
-
-		// Pretent to load the page
-		$c = new ContentController();
-		$c->handleRequest(new SS_HTTPRequest('GET', '/'));
-
-		$this->assertEquals('myusertheme', SSViewer::current_theme(), 'Current theme is a user defined one');
-
-		// Set the theme back to the original
-		$config->Theme = $oldTheme;
-		$config->write();
 	}
 	
 	/**
@@ -591,4 +574,9 @@ class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
 	function methodWithTwoArguments($arg1, $arg2) {
 		return "arg1:{$arg1},arg2:{$arg2}";
 	}
+}
+
+
+class SSViewerTest_Controller extends Controller {
+	
 }

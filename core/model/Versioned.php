@@ -95,13 +95,13 @@ class Versioned extends DataObjectDecorator {
 		$this->liveStage = array_pop($stages);
 	}
 	
-	function extraStatics() {
+	function extraStatics($class) {
 		return array(
 			'db' => array(
 				'Version' => 'Int',
 			),
 			'has_many' => array(
-				'Versions' => 'SiteTree',
+				'Versions' => $class,
 			)
 		);
 	}
@@ -874,6 +874,17 @@ class Versioned extends DataObjectDecorator {
 		$result = $this->owner->write(false, $forceInsert);
 		Versioned::set_reading_mode($oldMode);
 		return $result;
+	}
+	
+	/**
+	 * Roll the draft version of this page to match the published page.
+	 * Caution: Doesn't overwrite the object properties with the rolled back version.
+	 * 
+	 * @param $version Either the string 'Live' or a version number
+	 */
+	function doRollbackTo($version) {
+		$this->publish($version, "Stage", true);
+		$this->owner->writeWithoutVersion();
 	}
 		
 	/**

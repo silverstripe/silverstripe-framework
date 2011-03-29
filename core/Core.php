@@ -24,6 +24,8 @@
  * - CMS_PATH: Absolute filepath, e.g. "/var/www/my-webroot/cms"
  * - SAPPHIRE_DIR: Path relative to webroot, e.g. "sapphire"
  * - SAPPHIRE_PATH:Absolute filepath, e.g. "/var/www/my-webroot/sapphire"
+ * - SAPPHIRE_ADMIN_DIR: 
+ * - SAPPHIRE_ADMIN_PATH:
  * - THIRDPARTY_DIR: Path relative to webroot, e.g. "sapphire/thirdparty"
  * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/sapphire/thirdparty"
  * 
@@ -165,6 +167,8 @@ define('THEMES_DIR', 'themes');
 define('THEMES_PATH', BASE_PATH . '/' . THEMES_DIR);
 define('SAPPHIRE_DIR', 'sapphire');
 define('SAPPHIRE_PATH', BASE_PATH . '/' . SAPPHIRE_DIR);
+define('SAPPHIRE_ADMIN_DIR', 'sapphire/admin');
+define('SAPPHIRE_ADMIN_PATH', BASE_PATH . '/' . SAPPHIRE_ADMIN_DIR);
 define('CMS_DIR', 'cms');
 define('CMS_PATH', BASE_PATH . '/' . CMS_DIR);
 define('THIRDPARTY_DIR', SAPPHIRE_DIR . '/thirdparty');

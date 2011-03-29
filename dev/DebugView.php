@@ -94,7 +94,7 @@ class DebugView extends Object {
 		echo '.failure span { color:#C80700; font-weight:bold; }';
 		echo '</style></head>';
 		echo '<body>';
-		echo '<div class="header"><img src="'. Director::absoluteBaseURL() .'cms/images/mainmenu/logo.gif" width="26" height="23" /></div>';
+		echo '<div class="header"><img src="'. Director::absoluteBaseURL() .'sapphire/admin/images/mainmenu/logo.gif" width="26" height="23" /></div>';
 	}
 	
 	/**

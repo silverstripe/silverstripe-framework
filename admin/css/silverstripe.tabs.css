@@ -1,0 +1,31 @@
+/**
+ * SilverStripe specific styles that map to elements from the jQuery UI theme.
+ *
+ * This is not a fully functional tab module, but the file naming convention reflects
+ * the jQuery theme format
+ *
+ * @todo move generic tab styles into this file
+ * @todo add to silverstripe specific branch of /sapphire/thirdparty/jquery-ui-themes
+ */
+ 
+/* Caution! Ensure accessibility in print and other media types... */
+@media projection, screen { /* Use class for showing/hiding tab content, so that visibility can be better controlled in different media types... */
+    .ui-tabs-hide {
+        display: none;
+    }
+}
+
+/* Hide useless elements in print layouts... */
+@media print {
+    .ui-tabs-nav {
+        display: none;
+    }
+}
+
+/**
+ * stuff for search forms
+*/
+.loading {
+	cursor:hourglass;
+}
+ 
