@@ -319,7 +319,7 @@ class Folder extends File {
 	}
 
 	function setFilename($filename) {
-		$this->setField('Title',$filename);
+		$this->setField('Title',pathinfo($filename, PATHINFO_BASENAME));
 		parent::setFilename($filename);
 	}
 	
