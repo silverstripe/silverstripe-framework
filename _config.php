@@ -76,3 +76,9 @@ PasswordEncryptor::register('sha1_v2.4','PasswordEncryptor_PHPHash("sha1")');
 // Zend_Cache temp directory setting
 $_ENV['TMPDIR'] = TEMP_FOLDER; // for *nix
 $_ENV['TMP'] = TEMP_FOLDER; // for Windows
+
+$aggregatecachedir = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'aggregate_cache';
+if (!is_dir($aggregatecachedir)) mkdir($aggregatecachedir);
+
+SS_Cache::add_backend('aggregatestore', 'File', array('cache_dir' => $aggregatecachedir));
+SS_Cache::pick_backend('aggregatestore', 'aggregate', 1000);
