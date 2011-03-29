@@ -197,7 +197,7 @@ body {
 	
 	input.action.loading, input.action.loading:hover {
         padding-left: 22px !important;
-        background: url(../images/network-save.gif) 3px 2px no-repeat;
+        background: url(../../images/network-save.gif) 3px 2px no-repeat;
 	}
 
 input.delete:hover,
@@ -209,7 +209,7 @@ button.delete:hover,
 
 input.loading {
 	padding-left: 16px;
-	background: #fff url(../images/network-save.gif) no-repeat center left;
+	background: #fff url(../../images/network-save.gif) no-repeat center left;
 }
 
 input.hidden {
@@ -654,7 +654,7 @@ iframe {
 	display: block;
 	width: 20px;
 	height: 20px;
-	background: transparent url(../../../cms/images/arrow_refresh.gif) no-repeat;
+	background: transparent url(../images/arrow_refresh.gif) no-repeat;
 }
 
 #Form_EditorToolbarLinkForm select.hasRefreshButton {

@@ -88,17 +88,17 @@ class LeftAndMainTest extends FunctionalTest {
 	public function testCMSVersion() {
 		$l = new LeftAndMain();
 		$this->assertEquals("2.4", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/cms/branches/2.4/silverstripe_version $'));
+			'$URL: http://svn.silverstripe.com/open/modules/sapphire/branches/2.4/silverstripe_version $'));
 		$this->assertEquals("2.2.0", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/cms/tags/2.2.0/silverstripe_version $'));
+			'$URL: http://svn.silverstripe.com/open/modules/sapphire/tags/2.2.0/silverstripe_version $'));
 		$this->assertEquals("trunk", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/cms/trunk/silverstripe_version $'));
+			'$URL: http://svn.silverstripe.com/open/modules/sapphire/trunk/silverstripe_version $'));
 		$this->assertEquals("2.4.0-alpha1", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/cms/tags/alpha/2.4.0-alpha1/silverstripe_version $'));
+			'$URL: http://svn.silverstripe.com/open/modules/sapphire/tags/alpha/2.4.0-alpha1/silverstripe_version $'));
 		$this->assertEquals("2.4.0-beta1", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/cms/tags/beta/2.4.0-beta1/silverstripe_version $'));
+			'$URL: http://svn.silverstripe.com/open/modules/sapphire/tags/beta/2.4.0-beta1/silverstripe_version $'));
 		$this->assertEquals("2.4.0-rc1", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/cms/tags/rc/2.4.0-rc1/silverstripe_version $'));
+			'$URL: http://svn.silverstripe.com/open/modules/sapphire/tags/rc/2.4.0-rc1/silverstripe_version $'));
 	}
 	
 	/**

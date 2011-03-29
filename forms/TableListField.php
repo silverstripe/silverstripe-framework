@@ -117,8 +117,8 @@ class TableListField extends FormField {
 	 * array(
 	 * 	'delete' => array(
 	 * 		'label' => 'Delete', 
-	 * 		'icon' => 'cms/images/delete.gif',
-	 * 		'icon_disabled' => 'cms/images/delete_disabled.gif',
+	 * 		'icon' => 'sapphire/images/delete.gif',
+	 * 		'icon_disabled' => 'sapphire/images/delete_disabled.gif',
 	 * 		'class' => 'deletelink',
 	 * 	)
 	 * )
@@ -126,8 +126,8 @@ class TableListField extends FormField {
 	public $actions = array(
 		'delete' => array(
 			'label' => 'Delete',
-			'icon' => 'cms/images/delete.gif',
-			'icon_disabled' => 'cms/images/delete_disabled.gif',
+			'icon' => 'sapphire/images/delete.gif',
+			'icon_disabled' => 'sapphire/images/delete_disabled.gif',
 			'class' => 'deletelink' 
 		)
 	);

@@ -138,7 +138,7 @@ AssetTableField.prototype = {
 		var confirmed = confirm(confirmMessage);
 		if(confirmed)
 		{
-			img.setAttribute("src",'cms/images/network-save.gif'); // TODO doesn't work
+			img.setAttribute("src",'sapphire/admin/images/network-save.gif'); // TODO doesn't work
 			new Ajax.Request(
 				link.getAttribute("href"),
 				{

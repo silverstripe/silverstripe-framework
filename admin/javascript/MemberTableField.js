@@ -226,7 +226,7 @@ MemberTableField.prototype = {
 			if(typeof groupId == 'undefined')
 				var groupId = $('Form_EditForm').elements.ID.value;
 			cell = document.createElement('td')
-			cell.innerHTML = '<a class="deletelink" href="admin/security/removememberfromgroup/' + groupId + '/' + id + '"><img src="cms/images/delete.gif" alt="delete" /></a>';
+			cell.innerHTML = '<a class="deletelink" href="admin/security/removememberfromgroup/' + groupId + '/' + id + '"><img src="sapphire/images/delete.gif" alt="delete" /></a>';
 			cell.getElementsByTagName('0');
 			row.appendChild(cell);
 			

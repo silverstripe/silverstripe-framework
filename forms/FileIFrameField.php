@@ -107,7 +107,6 @@ class FileIFrameField extends FileField {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript('sapphire/javascript/FileIFrameField.js');
 		
-		Requirements::css('cms/css/typography.css');
 		Requirements::css('sapphire/css/FileIFrameField.css');
 		
 		return $this->renderWith('FileIFrameField');

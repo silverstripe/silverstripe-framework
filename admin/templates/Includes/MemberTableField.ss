@@ -32,7 +32,7 @@
 					<td colspan="$ItemCount">
 						<input type="hidden" id="{$id}_PopupHeight" value="$PopupHeight" disabled="disabled"/>
 						<input type="hidden" id="{$id}_PopupWidth" value="$PopupWidth" disabled="disabled"/>
-						<a class="popuplink addlink" href="$AddLink" alt="add"><img src="cms/images/add.gif" alt="add" /></a><a class="popuplink addlink" href="$AddLink" alt="add"><% _t('ADDNEW','Add new',50,'Followed by a member type') %> $Title</a>
+						<a class="popuplink addlink" href="$AddLink" alt="add"><img src="sapphire/images/add.gif" alt="add" /></a><a class="popuplink addlink" href="$AddLink" alt="add"><% _t('ADDNEW','Add new',50,'Followed by a member type') %> $Title</a>
 					</td>
 					<% if Can(show) %><td width="18">&nbsp;</td><% end_if %>
 					<% if Can(edit) %><td width="18">&nbsp;</td><% end_if %>

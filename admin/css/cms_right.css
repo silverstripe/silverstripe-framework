@@ -585,6 +585,6 @@
 	}
 		#UploadFormResponse.loading
 		.loading#UploadFormResponse {
-			background: url(../images/network-save.gif) no-repeat left center;
+			background: url(../../images/network-save.gif) no-repeat left center;
 			padding-left: 20px;
 		}

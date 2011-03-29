@@ -22,11 +22,8 @@
 }
 
 .GB_header {
-  /*border-bottom: 1px solid #ccc;*/
   border-bottom: 3px solid #CCDEF3;
-  /*background: #000 url(../../cms/images/textures/obar-18.gif) repeat-x;*/
-  background: #ccdef3 url(../../cms/images/mainmenu/current.gif) repeat-x;
-  /*color: #fff;*/
+  background: #ccdef3 url(../../admin/images/mainmenu/current.gif) repeat-x;
   color: #555;
 }
 

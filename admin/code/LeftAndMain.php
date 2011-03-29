@@ -280,7 +280,6 @@ class LeftAndMain extends Controller {
 				'sapphire/admin/javascript/LeftAndMain.js',
 				'sapphire/javascript/tree/tree.js',
 				'sapphire/javascript/TreeDropdownField.js',
-		 		'cms/javascript/ThumbnailStripField.js',
 			)
 		);
 
@@ -1035,13 +1034,10 @@ class LeftAndMain extends Controller {
 	 * @return string
 	 */
 	public function CMSVersion() {
-		$sapphireVersionFile = file_get_contents(BASE_PATH . '/sapphire/silverstripe_version');
-		$cmsVersionFile = file_get_contents(BASE_PATH . '/cms/silverstripe_version');
-		
+		$sapphireVersionFile = file_get_contents(BASE_PATH . '/sapphire/silverstripe_version');		
 		$sapphireVersion = $this->versionFromVersionFile($sapphireVersionFile);
-		$cmsVersion = $this->versionFromVersionFile($cmsVersionFile);
 
-		return "cms: $cmsVersion, sapphire: $sapphireVersion";
+		return "sapphire: $sapphireVersion";
 	}
 	
 	/**

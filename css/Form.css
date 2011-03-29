@@ -70,7 +70,7 @@ form button.minorAction {
 	background: none;
 	padding: 0;
 	border: 0;
-	color: #0074C6; /* same for "a" tag in cms/css/typography.css */
+	color: #0074C6;
 	text-decoration: underline;
 }
 
