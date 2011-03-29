@@ -123,11 +123,6 @@ class LeftAndMain extends Controller {
 			_t('LeftAndMain.HELP', 'Help', PR_HIGH, 'Menu title'), 
 			self::$help_link
 		);
-		
-		// set reading lang
-		if(Object::has_extension('SiteTree', 'Translatable') && !$this->isAjax()) {
-			Translatable::choose_site_locale(array_keys(Translatable::get_existing_content_languages('SiteTree')));
-		}
 
 		// Allow customisation of the access check by a decorator
 		// Also all the canView() check to execute Director::redirect()
@@ -503,7 +498,9 @@ class LeftAndMain extends Controller {
 		if($p = $this->currentPage()) $obj->markToExpose($p);
 		
 		// NOTE: SiteTree/CMSMain coupling :-(
-		SiteTree::prepopuplate_permission_cache('CanEditType', $obj->markedNodeIDs(), 'SiteTree::can_edit_multiple');
+		if(class_exists('SiteTree')) {
+			SiteTree::prepopuplate_permission_cache('CanEditType', $obj->markedNodeIDs(), 'SiteTree::can_edit_multiple');
+		}
 
 		// getChildrenAsUL is a flexible and complex way of traversing the tree
 		$titleEval = '
@@ -659,11 +656,13 @@ class LeftAndMain extends Controller {
 			);
 			
 			// Update all dependent pages
-			if($virtualPages = DataObject::get("VirtualPage", "\"CopyContentFromID\" = $node->ID")) {
-				foreach($virtualPages as $virtualPage) {
-					$statusUpdates['modified'][$virtualPage->ID] = array(
-						'TreeTitle' => $virtualPage->TreeTitle()
-					);
+			if(class_exists('VirtualPage')) {
+				if($virtualPages = DataObject::get("VirtualPage", "\"CopyContentFromID\" = $node->ID")) {
+					foreach($virtualPages as $virtualPage) {
+						$statusUpdates['modified'][$virtualPage->ID] = array(
+							'TreeTitle' => $virtualPage->TreeTitle()
+						);
+					}
 				}
 			}
 
