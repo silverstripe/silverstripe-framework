@@ -29,6 +29,10 @@ Director::addRules(10, array(
 	'dev' => 'DevelopmentAdmin',
 	'interactive' => 'SapphireREPL',
 ));
+// Add default routing unless 'cms' module is present (which overrules this with a CMSMain controller)
+Director::addRules(20, array(
+	'admin//$action/$ID/$OtherID' => '->admin/security'
+));
 
 /**
  * PHP 5.2 introduced a conflict with the Datetime field type, which was renamed to SSDatetime. This was later renamed
