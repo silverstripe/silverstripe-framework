@@ -14,6 +14,9 @@
  * @subpackage batchaction
  */
 abstract class CMSBatchAction extends Object {
+	
+	protected $managedClass = 'SiteTree';
+	
 	/**
 	 * The the text to show in the dropdown for this action
 	 */
@@ -23,13 +26,13 @@ abstract class CMSBatchAction extends Object {
 	 * Run this action for the given set of pages.
 	 * Return a set of status-updated JavaScript to return to the CMS.
 	 */
-	abstract function run(DataObjectSet $pages);
+	abstract function run(DataObjectSet $objs);
 	
 	/**
 	 * Helper method for processing batch actions.
 	 * Returns a set of status-updating JavaScript to return to the CMS.
 	 *
-	 * @param $pages The DataObjectSet of SiteTree objects to perform this batch action
+	 * @param $objs The DataObjectSet of objects to perform this batch action
 	 * on.
 	 * @param $helperMethod The method to call on each of those objects.
 	 * @return JSON encoded map in the following format:
@@ -43,32 +46,32 @@ abstract class CMSBatchAction extends Object {
 	 *     }
 	 *  }
 	 */
-	public function batchaction(DataObjectSet $pages, $helperMethod, $successMessage, $arguments = array()) {
+	public function batchaction(DataObjectSet $objs, $helperMethod, $successMessage, $arguments = array()) {
 		$status = array('modified' => array(), 'error' => array());
 		
-		foreach($pages as $page) {
+		foreach($objs as $obj) {
 			
 			// Perform the action
-			if (!call_user_func_array(array($page, $helperMethod), $arguments)) {
-				$status['error'][$page->ID] = '';
+			if (!call_user_func_array(array($obj, $helperMethod), $arguments)) {
+				$status['error'][$obj->ID] = '';
 			}
 			
 			// Now make sure the tree title is appropriately updated
-			$publishedRecord = DataObject::get_by_id('SiteTree', $page->ID);
+			$publishedRecord = DataObject::get_by_id($this->managedClass, $obj->ID);
 			if ($publishedRecord) {
 				$status['modified'][$publishedRecord->ID] = array(
 					'TreeTitle' => $publishedRecord->TreeTitle,
 				);
 			}
-			$page->destroy();
-			unset($page);
+			$obj->destroy();
+			unset($obj);
 		}
 
 		$response = Controller::curr()->getResponse();
 		if($response) {
 			$response->setStatusCode(
 				200, 
-				sprintf($successMessage, $pages->Count(), count($status['error']))
+				sprintf($successMessage, $objs->Count(), count($status['error']))
 			);
 		}
 
@@ -92,23 +95,39 @@ abstract class CMSBatchAction extends Object {
 		$applicableIDs = array();
 		
 		$SQL_ids = implode(', ', array_filter($ids, 'is_numeric'));
-		$draftPages = DataObject::get("SiteTree", "\"SiteTree\".\"ID\" IN ($SQL_ids)");
+		$draftPages = DataObject::get(
+			$this->managedClass, 
+			sprintf(
+				"\"%s\".\"ID\" IN (%s)",
+				ClassInfo::baseDataClass($this->managedClass),
+				$SQL_ids
+			)
+		);
 		
 		$onlyOnLive = array_fill_keys($ids, true);
 		if($checkStagePages) {
-			foreach($draftPages as $page) {
-				unset($onlyOnLive[$page->ID]);
-				if($page->$methodName()) $applicableIDs[] = $page->ID;
+			foreach($draftPages as $obj) {
+				unset($onlyOnLive[$obj->ID]);
+				if($obj->$methodName()) $applicableIDs[] = $obj->ID;
 			}
 		}
 		
-		// Get the pages that only exist on live (deleted from stage)
-		if($checkLivePages && $onlyOnLive) {
-			$SQL_ids = implode(', ', array_keys($onlyOnLive));
-			$livePages = Versioned::get_by_stage("SiteTree", "Live", "\"SiteTree\".\"ID\" IN ($SQL_ids)");
-		
-			if($livePages) foreach($livePages as $page) {
-				if($page->$methodName()) $applicableIDs[] = $page->ID;
+		if(Object::has_extension($this->managedClass, 'Versioned')) {
+			// Get the pages that only exist on live (deleted from stage)
+			if($checkLivePages && $onlyOnLive) {
+				$SQL_ids = implode(', ', array_keys($onlyOnLive));
+				$livePages = Versioned::get_by_stage(
+					$this->managedClass, "Live", 
+					sprintf(
+						"\"%s\".\"ID\" IN (%s)",
+						ClassInfo::baseDataClass($this->managedClass),
+						$SQL_ids
+					)
+				);
+
+				if($livePages) foreach($livePages as $obj) {
+					if($obj->$methodName()) $applicableIDs[] = $obj->ID;
+				}
 			}
 		}
 
