@@ -193,7 +193,7 @@ class ComplexTableField extends TableListField {
 	/**
 	 * See class comments
 	 *
-	 * @param ContentController $controller
+	 * @param Controller $controller
 	 * @param string $name
 	 * @param string $sourceClass
 	 * @param array $fieldList

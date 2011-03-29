@@ -2,7 +2,8 @@
 /**
  * Provides a simple search engine for your site based on the MySQL FULLTEXT index.
  * Adds the {@link FulltextSearchable} extension to data classes,
- * as well as the {@link ContentControllerSearchExtension} to {@link ContentController}.
+ * as well as the {@link ContentControllerSearchExtension} to {@link ContentController}
+ * (if the 'cms' module is available as well).
  * (this means you can use $SearchForm in your template without changing your own implementation).
  * 
  * @see http://doc.silverstripe.org/tutorial:4-site-search

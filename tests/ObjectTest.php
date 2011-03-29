@@ -22,8 +22,6 @@ class ObjectTest extends SapphireTest {
 		$this->assertTrue($obj->hasMethod('extendableMethod'), "Extension method found in original spelling");
 		$this->assertTrue($obj->hasMethod('ExTendableMethod'), "Extension method found case-insensitive");
 		
-		/* The above examples make use of SiteTree, Versioned and ContentController.  Let's test defineMethods() more
-		 * directly, with some sample objects */
 		$objs = array();
 		$objs[] = new ObjectTest_T2();
 		$objs[] = new ObjectTest_T2();
