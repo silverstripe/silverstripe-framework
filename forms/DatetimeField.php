@@ -8,7 +8,15 @@
  * 
  * # Configuration
  * 
- * All options in {@link setConfig()} are passed through to {@link DateField} and {@link TimeField}.
+ * The {@link setConfig()} method is only used to configure common properties of this field.
+ * To configure the {@link DateField} and {@link TimeField} instances contained within, use their own {@link setConfig()} methods.
+ * 
+ * Example:
+ * <code>
+ * $field = new DatetimeField('Name', 'Label');
+ * $field->setConfig('datavalueformat', 'YYYY-MM-dd HH:mm'); // global setting
+ * $field->getDateField()->setConfig('showcalendar', 1); // field-specific setting
+ * </code>
  * 
  * @package sapphire
  * @subpackage forms
