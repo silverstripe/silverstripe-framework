@@ -4,7 +4,10 @@
  * @subpackage tests
  */
 class SecurityAdminTest extends FunctionalTest {
+
 	static $fixture_file = 'sapphire/admin/tests/LeftAndMainTest.yml';
+	
+	protected $extraDataObjects = array('LeftAndMainTest_Object');
 	
 	function testGroupExport() {
 		$this->session()->inst_set('loggedInAs', $this->idFromFixture('Member', 'admin'));
@@ -70,7 +73,7 @@ class SecurityAdminTest extends FunctionalTest {
 		$response = $this->get('admin/security/show/' . $group->ID);
 		
 		$this->assertContains(
-			'CMS_ACCESS_CMSMain',
+			'CMS_ACCESS_SecurityAdmin',
 			$response->getBody()
 		);
 		$this->assertNotContains(

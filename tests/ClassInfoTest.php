@@ -56,17 +56,20 @@ class ClassInfoTest extends SapphireTest {
 	 * @covers ClassInfo::ancestry()
 	 */
 	public function testAncestry() {
-		$ancestry = ClassInfo::ancestry('SiteTree');
+		$ancestry = ClassInfo::ancestry('ClassInfoTest_ChildClass');
 		$expect = ArrayLib::valuekey(array(
 			'Object',
 			'ViewableData',
 			'DataObject',
-			'SiteTree'
+			'ClassInfoTest_BaseClass',
+			'ClassInfoTest_ChildClass',
 		));
 		$this->assertEquals($expect, $ancestry);
 
-		$ancestry = ClassInfo::ancestry('SiteTree', true);
-		$this->assertEquals(array('SiteTree' => 'SiteTree'), $ancestry);
+		$ancestry = ClassInfo::ancestry('ClassInfoTest_ChildClass', true);
+		$this->assertEquals(array('ClassInfoTest_BaseClass' => 'ClassInfoTest_BaseClass'), $ancestry,
+			'$tablesOnly option excludes memory-only inheritance classes'
+		);
 
 		$this->setExpectedException('Exception');
 		ClassInfo::ancestry(42);
