@@ -166,10 +166,19 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			}
 
 			if($fixtureFile) {
+				$pathForClass = $this->getCurrentPath();
 				$fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : array($fixtureFile);
 
 				$i = 0;
 				foreach($fixtureFiles as $fixtureFilePath) {
+					// Support fixture paths relative to the test class, rather than relative to webroot
+					// String checking is faster than file_exists() calls.
+					$isRelativeToFile = (strpos('/', $fixtureFilePath) === false || preg_match('/^\.\./', $fixtureFilePath));
+					if($isRelativeToFile) {
+						$resolvedPath = realpath($pathForClass . '/' . $fixtureFilePath);
+						if($resolvedPath) $fixtureFilePath = $resolvedPath;
+					}
+					
 					$fixture = new YamlFixture($fixtureFilePath);
 					$fixture->saveIntoDatabase();
 					$this->fixtures[] = $fixture;
@@ -368,6 +377,25 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	function clearFixtures() {
 		$this->fixtures = array();
+	}
+	
+	/**
+	 * Useful for writing unit tests without hardcoding folder structures.
+	 * 
+	 * @return String Absolute path to current class.
+	 */
+	protected function getCurrentAbsolutePath() {
+		return dirname(SS_ClassLoader::instance()->getManifest()->getItemPath(get_class($this)));
+	}
+	
+	/**
+	 * @return String File path relative to webroot
+	 */
+	protected function getCurrentRelativePath() {
+		$base = Director::baseFolder();
+		$path = $this->getCurrentAbsolutePath();
+		if(substr($path,0,strlen($base)) == $base) $path = preg_replace('/^\/*/', '', substr($path,strlen($base)));
+		return $path;
 	}
 	
 	function tearDown() {
