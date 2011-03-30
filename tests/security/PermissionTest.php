@@ -78,5 +78,6 @@ class PermissionTest extends SapphireTest {
 		
 		Permission::remove_from_hidden_permissions('CMS_ACCESS_AssetAdmin');
 		$this->assertContains('CMS_ACCESS_AssetAdmin', $permissionCheckboxSet->Field());
+		Permission::remove_from_hidden_permissions('CMS_ACCESS_CMSMain');
 	}	
 }

@@ -173,6 +173,7 @@ class PermissionCheckboxSetField extends FormField {
 				$options .= "<li><h5>$categoryName</h5></li>";
 				foreach($permissions as $code => $permission) {
 					if(in_array($code, $this->hiddenPermissions)) continue;
+					if(in_array($code, Permission::$hidden_permissions)) continue;
 					
 					$value = $permission['name'];
 			
