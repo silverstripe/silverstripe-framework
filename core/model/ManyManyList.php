@@ -52,7 +52,7 @@ class ManyManyList extends RelationList {
 		// Apply relation filter
 		if(is_array($this->foreignID)) {
 			return "\"$this->joinTable\".\"$this->foreignKey\" IN ('" . 
-				implode(', ', array_map('Convert::raw2sql', $this->foreignID)) . "')";
+				implode("', '", array_map('Convert::raw2sql', $this->foreignID)) . "')";
 		} else if($this->foreignID){
 			return "\"$this->joinTable\".\"$this->foreignKey\" = '" . 
 				Convert::raw2sql($this->foreignID) . "'";
