@@ -49,17 +49,14 @@ class HTTPTest extends SapphireTest {
 	public function testSetGetVar() {
 		// Hackery to work around volatile URL formats in test invocation,
 		// and the inability of Director::absoluteBaseURL() to produce consistent URLs.
-		$expectedPath = preg_replace('/\?.*/', '', $_SERVER['REQUEST_URI']);
-		
-		// TODO This should test the absolute URL, but we can't get it reliably
-		// with port and auth URI parts.
-		foreach(array(Director::makeRelative($expectedPath), 'foo=bar') as $e) {
-			$this->assertContains(
-				$e,
-				HTTP::setGetVar('foo', 'bar'),
-				'Omitting a URL falls back to current URL'
-			);
-		}
+		$origURI = $_SERVER['REQUEST_URI'];
+		$_SERVER['REQUEST_URI'] = 'relative/url/';
+				$this->assertContains(
+			'relative/url/?foo=bar',
+			HTTP::setGetVar('foo', 'bar'),
+			'Omitting a URL falls back to current URL'
+		);
+		$_SERVER['REQUEST_URI'] = $origURI;
 
 		$this->assertEquals(
 			'relative/url?foo=bar', 
