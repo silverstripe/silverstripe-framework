@@ -1,4 +1,4 @@
-<div id="Logo" style="$LogoStyle">
+<div id="Logo">
 	<% if ApplicationLogoText %>
 	<a href="$ApplicationLink" target="_blank">$ApplicationLogoText</a><br />
 	<% end_if %>

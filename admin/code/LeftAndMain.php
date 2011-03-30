@@ -1137,38 +1137,15 @@ class LeftAndMain extends Controller {
 	 * @var unknown_type
 	 */
 	static $application_logo = 'sapphire/admin/images/mainmenu/logo.gif';
-
-	/**
-	 * The application logo style. Customisable by calling
-	 * LeftAndMain::setLogo() - the second parameter.
-	 *
-	 * @var String
-	 */
-	static $application_logo_style = '';
 	
 	/**
 	 * Set the CMS application logo.
 	 *
 	 * @param String $logo Relative path to the logo
-	 * @param String $logoStyle Custom CSS styles for the logo
-	 * 							e.g. "border: 1px solid red; padding: 5px;"
 	 */
-	static function setLogo($logo, $logoStyle) {
+	static function setLogo($logo) {
 		self::$application_logo = $logo;
-		self::$application_logo_style = $logoStyle;
 		self::$application_logo_text = '';
-	}
-		
-	/**
-	 * Combines an optional background image and additional CSS styles,
-	 * set through {@link setLogo()}.
-	 * 
-	 * @return String CSS attribute
-	 */
-	function LogoStyle() {
-		$attr = self::$application_logo_style;
-		if(self::$application_logo) $attr .= "background: url(" . self::$application_logo . ") no-repeat; ";
-		return $attr;
 	}
 
 	/**
