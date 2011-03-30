@@ -2,12 +2,6 @@
  * File: LeftAndMain.js
  */
 
-/**
- * Variable: ss_MainLayout
- * jquery.layout Global variable so layout state management can pick it up.
- */
-var ss_MainLayout;
-
 (function($) {
 	$.entwine('ss', function($){
 		/**
@@ -44,11 +38,6 @@ var ss_MainLayout;
 		 *  loadnewpage - ...
 		 */
 		$('.LeftAndMain').entwine({
-			/**
-			 * Variable: MainLayout
-			 * (Object) Reference to jQuery.layout element
-			 */
-			MainLayout: null,
 
 			/**
 			 * Variable: PingIntervalSeconds
@@ -67,24 +56,7 @@ var ss_MainLayout;
 				$('body').removeClass('stillLoading');
 				$(window).unbind('resize', positionLoadingSpinner);
 
-				// Layout
-				ss_MainLayout = this._setupLayout();
-				this.setMainLayout(ss_MainLayout);
-				layoutState.options.keys = "west.size,west.isClosed";
-				$(window).unload(function(){ layoutState.save('ss_MainLayout');});
-				
 				this._setupPinging();
-
-				// HACK Delay resizing to give jquery-ui tabs a change their dimensions
-				// through dynamically added css classes
-				$(window).resize(function () {
-					var timerID = "timerLeftAndMainResize";
-					if (window[timerID]) clearTimeout(window[timerID]);
-					window[timerID] = setTimeout(function() {
-						self._resizeChildren();
-					}, 200);
-				});
-				$(window).resize();
 
 				// If tab has no nested tabs, set overflow to auto
 				$(this).find('.tab').not(':has(.tab)').css('overflow', 'auto');
@@ -101,73 +73,6 @@ var ss_MainLayout;
 				});
 
 				this._super();
-			},
-
-			/**
-			 * Function: _setupLayout
-			 * 
-			 * Initialize jQuery layout manager with the following panes:
-			 * - east: Tree, Page Version History, Site Reports
-			 * - center: Form
-			 * - west: "Insert Image", "Insert Link", "Insert Flash" panes
-			 * - north: CMS area menu bar
-			 * - south: "Page view", "profile" and "logout" links
-			 */
-			_setupLayout: function() {
-				var self = this;
-
-				var widthEast = this.find('.ui-layout-east').width();
-				var widthWest = this.find('.ui-layout-west').width();
-
-				// layout containing the tree, CMS menu, the main form etc.
-				var savedLayoutSettings = layoutState.load('ss_MainLayout');
-
-				var layoutSettings = jQuery.extend({
-					defaults: {
-						// TODO Reactivate once we have localized values
-						togglerTip_open: '',
-						togglerTip_closed: '',
-						resizerTip: '',
-						sliderTip: '',
-						onresize: function() {self._resizeChildren();},
-						onopen: function() {self._resizeChildren();}
-					},
-					north: {
-						slidable: false,
-						resizable: false,
-						size: this.find('.ui-layout-north').height(),
-						togglerLength_open: 0
-					},
-					south: {
-						slidable: false,
-						resizable: false,
-						size: this.find('.ui-layout-south').height(),
-						togglerLength_open: 0
-					},
-					west: {
-						size: (widthWest) ? widthWest : undefined,
-						fxName: "none"
-					},
-					east: {
-						initClosed: true,
-						// multiple panels which are triggered through tinymce buttons,
-						// so a user shouldn't be able to toggle this panel manually
-						initHidden: true,
-						spacing_closed: 0,
-						fxName: "none"
-					},
-					center: {}
-				}, savedLayoutSettings);
-				var layout = $('body').layout(layoutSettings);
-
-				// Adjust tree accordion etc. in left panel to work correctly
-				// with jQuery.layout (see http://layout.jquery-dev.net/tips.html#Widget_Accordion)
-				this.find("#treepanes").accordion({
-					fillSpace: true,
-					animated: false
-				});
-
-				return layout;
 			},
 
 			/**

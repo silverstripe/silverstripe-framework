@@ -1,4 +1,4 @@
-<div id="SearchForm_holder" class="leftbottom ss-tabset ui-layout-content">		
+<div id="SearchForm_holder" class="leftbottom ss-tabset">		
 	<% if SearchClassSelector = tabs %>
 		<ul>
 			<% control ModelForms %>

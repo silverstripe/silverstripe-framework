@@ -15,19 +15,19 @@
 		</div>
 	</div>
 	
-	<div class="ui-layout-north ss-cms-top-menu">
+	<div class="main-menu">
 		$CMSTopMenu
 	</div>
 	
-	<div class="ui-layout-west">
+	<div>
 		$Left
 	</div>
 		
-	<div class="ui-layout-center right" id="right">
+	<div class="right" id="right">
 		$Right
 	</div>
 
-	<div class="ui-layout-east" id="contentPanel">
+	<div id="contentPanel">
 		<% control EditorToolbar %>
 			$ImageForm
 			$LinkForm
@@ -35,7 +35,7 @@
 		<% end_control %>
 	</div>
 	
-	<div class="ui-layout-south ss-cms-bottom-bar">
+	<div class="ss-cms-bottom-bar">
 		<div class="holder">
 			<div id="logInStatus">
 				<a href="$ApplicationLink" title="<% _t('SSWEB','Silverstripe Website') %>">$ApplicationName</a>

@@ -556,14 +556,6 @@
 }
 
 /**
- * jQuery UI Datepicker - necessary because of custom
- * z-indexing performed in jQuery.layout
- */
-#ui-datepicker-div {
-	z-index: 1002;
-}
-
-/**
  * Upload Image (Image Toolbar)
  */
 #Form_EditorToolbarImageForm .file,

@@ -202,8 +202,6 @@ class LeftAndMain extends Controller {
 
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');  //import all of jquery ui
 
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-layout/jquery.layout.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-layout/jquery.layout.state.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/json-js/json2.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-metadata/jquery.metadata.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/jquery-fitheighttoparent/jquery.fitheighttoparent.js');
