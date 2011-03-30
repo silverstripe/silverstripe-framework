@@ -19,6 +19,7 @@
 }
 
 .ss-loading-screen .loading-logo {
+	background-url: url(../images/logo.gif);
 	background-repeat: no-repeat;
 	background-color: transparent;
 	background-position: 50% 50%;

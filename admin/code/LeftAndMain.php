@@ -1158,25 +1158,7 @@ class LeftAndMain extends Controller {
 		self::$application_logo_style = $logoStyle;
 		self::$application_logo_text = '';
 	}
-	
-	/**
-	 * The height of the image should be around 164px to avoid the overlaping between the image and loading animation graphic.
-	 * If the given image's height is significantly larger or smaller, adjust the loading animation's top offset in 
-	 * positionLoadingSpinner() in LeftAndMain.js
-	 */
-	protected static $loading_image = 'sapphire/admin/images/logo.gif';
-	
-	/**
-	 * Set the image shown when the CMS is loading.
-	 */
-	static function set_loading_image($loadingImage) {
-		self::$loading_image = $loadingImage;
-	}
-	
-	function LoadingImage() {
-		return self::$loading_image;
-	}
-	
+		
 	/**
 	 * Combines an optional background image and additional CSS styles,
 	 * set through {@link setLogo()}.
