@@ -1,7 +1,5 @@
-<div id="Logo">
-	<% if ApplicationLogoText %>
-	<a href="$ApplicationLink" target="_blank">$ApplicationLogoText</a><br />
-	<% end_if %>
+<div class="logo">
+	<a href="http://www.silverstripe.org/" target="_blank">SilverStripe</a><br />
 </div>
 <ul id="MainMenu">
 <% control MainMenu %>

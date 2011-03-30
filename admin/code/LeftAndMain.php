@@ -1069,30 +1069,12 @@ class LeftAndMain extends Controller {
 	static $application_name = 'SilverStripe CMS';
 	
 	/**
-	 * The application logo text. Customisable by calling
-	 * LeftAndMain::setApplicationName() - the second parameter.
-	 *
-	 * @var String
-	 */
-	static $application_logo_text = 'SilverStripe';
-
-	/**
-	 * Set the application name, and the logo text.
-	 *
-	 * @param String $name The application name
-	 * @param String $logoText The logo text
-	 */
-	static $application_link = "http://www.silverstripe.org/";
-	
-	/**
 	 * @param String $name
 	 * @param String $logoText
 	 * @param String $link (Optional)
 	 */
-	static function setApplicationName($name, $logoText = null, $link = null) {
+	static function setApplicationName($name) {
 		self::$application_name = $name;
-		self::$application_logo_text = $logoText ? $logoText : $name;
-		if($link) self::$application_link = $link;
 	}
 
 	/**
@@ -1101,21 +1083,6 @@ class LeftAndMain extends Controller {
 	 */
 	function getApplicationName() {
 		return self::$application_name;
-	}
-	
-	/**
-	 * Get the application logo text.
-	 * @return String
-	 */
-	function getApplicationLogoText() {
-		return self::$application_logo_text;
-	}
-	
-	/**
-	 * @return String
-	 */
-	function ApplicationLink() {
-		return self::$application_link;
 	}
 
 	/**
@@ -1145,7 +1112,6 @@ class LeftAndMain extends Controller {
 	 */
 	static function setLogo($logo) {
 		self::$application_logo = $logo;
-		self::$application_logo_text = '';
 	}
 
 	/**
