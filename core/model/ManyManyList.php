@@ -78,7 +78,7 @@ class ManyManyList extends RelationList {
 		}
 
 		// Delete old entries, to prevent duplication
-		$this->remove($itemID);
+		$this->removeById($itemID);
 
 		// Insert new entry
 		$manipulation = array();
@@ -97,12 +97,21 @@ class ManyManyList extends RelationList {
 	/**
 	 * Remove the given item from this list.
 	 * Note that for a ManyManyList, the item is never actually deleted, only the join table is affected
-	 * @param $item The data object or its ID
+	 * @param $itemID The ID of the item to remove.
 	 */
 	function remove($item) {
-		if(is_numeric($item)) $itemID = $item;
-		else if($item instanceof $this->dataClass) $itemID = $item->ID;
-		else user_eror("ManyManyList::remove() expecting a $this->dataClass object, or ID value", E_USER_ERROR);
+        if(!($item instanceof $this->dataClass)) throw new InvalidArgumentException("ManyManyList::remove() expecting a $this->dataClass object");
+        
+        return $this->removeByID($item->ID);
+	}
+
+	/**
+	 * Remove the given item from this list.
+	 * Note that for a ManyManyList, the item is never actually deleted, only the join table is affected
+	 * @param $itemID The item it
+	 */
+	function removeByID($itemID) {
+	    if(!is_numeric($itemID)) throw new InvalidArgumentException("ManyManyList::removeById() expecting an ID");
 
 		$query = new SQLQuery("*", array($this->joinTable));
 		$query->delete = true;

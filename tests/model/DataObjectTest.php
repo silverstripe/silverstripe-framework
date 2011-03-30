@@ -310,7 +310,7 @@ class DataObjectTest extends SapphireTest {
 	   );
 	   
 	   // test removing single DataObject by ID
-	   $player1->Teams()->remove($team1->ID);
+	   $player1->Teams()->removeByID($team1->ID);
 	   $player1->flushCache();
 	   $compareTeams = new ComponentSet();
 	   $this->assertEquals(
@@ -1067,6 +1067,38 @@ class DataObjectTest extends SapphireTest {
 		$objEmpty->Title = '0'; // 
 		$this->assertFalse($objEmpty->isEmpty(), 'Zero value in attribute considered non-empty');
 	}
+	
+	/**
+	 * Test DataList->byID()
+	 */
+	function testByID() {
+	    $id = $this->idFromFixture('DataObjectTest_Team','team2');
+	    $this->assertEquals('Team 2', DataObject::get("DataObjectTest_Team")->byID($id)->Title);
+	}
+
+	/**
+	 * Test DataList->removeByID()
+	 */
+	function testRemoveByID() {
+	    $id = $this->idFromFixture('DataObjectTest_Team','team2');
+	    DataObject::get("DataObjectTest_Team")->removeByID($id);
+	    
+	    $this->assertNull(DataObject::get("DataObjectTest_Team")->byID($id));
+	}
+
+	/**
+	 * Test DataList->canSortBy()
+	 */
+	function testCanSortBy() {
+	    // Basic check
+	    $this->assertTrue(DataObject::get("DataObjectTest_Team")->canSortBy("Title"));
+	    $this->assertFalse(DataObject::get("DataObjectTest_Team")->canSortBy("SomethingElse"));
+
+        // Subclasses
+	    $this->assertTrue(DataObject::get("DataObjectTest_SubTeam")->canSortBy("Title"));
+	    $this->assertTrue(DataObject::get("DataObjectTest_SubTeam")->canSortBy("SubclassDatabaseField"));
+	}
+
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {

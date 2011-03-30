@@ -60,12 +60,21 @@ class HasManyList extends RelationList {
 	/**
 	 * Remove an item from this relation.
 	 * Doesn't actually remove the item, it just clears the foreign key value.
-	 * @param $item The DataObject to be removed, or its ID 
+	 * @param $itemID The ID of the item to be removed
+	 */
+	function removeByID($itemID) {
+        $item = $this->byID($item);
+        return $this->remove($item);
+    }
+    
+	/**
+	 * Remove an item from this relation.
+	 * Doesn't actually remove the item, it just clears the foreign key value.
+	 * @param $item The DataObject to be removed
 	 * @todo Maybe we should delete the object instead? 
 	 */
 	function remove($item) {
-		if(is_numeric($item)) $item = DataObject::get_by_id($this->dataClass, $item);
-		else if(!($item instanceof $this->dataClass)) user_eror("HasManyList::remove() expecting a $this->dataClass object, or ID value", E_USER_ERROR);
+        if(!($item instanceof $this->dataClass)) throw new InvalidArgumentException("HasManyList::remove() expecting a $this->dataClass object, or ID value", E_USER_ERROR);
 
 		$fk = $this->foreignKey;
 		$item->$fk = null;

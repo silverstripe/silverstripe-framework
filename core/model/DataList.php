@@ -76,6 +76,13 @@ class DataList extends DataObjectSet {
 		$this->dataQuery->sort($sort);
 		return $this;
 	}
+	
+	/**
+	 * Returns true if this DataList can be sorted by the given field.
+	 */
+	public function canSortBy($field) {
+	    return $this->dataQuery()->query()->canSortBy($field);
+	}
 
 	/**
 	 * Add an join clause to this data list's query.
@@ -242,6 +249,14 @@ class DataList extends DataObjectSet {
 
 		return $this;
 	}
+
+	/**
+	 * Return the item of the given ID
+	 */
+	public function byID($id) {
+		$baseClass = ClassInfo::baseDataClass($this->dataClass);
+		return $this->filter("\"$baseClass\".\"ID\" = " . (int)$id)->First();
+	}
 	
 	/**
 	 * Return a single column from this DataList.
@@ -318,7 +333,7 @@ class DataList extends DataObjectSet {
 	 */
 	function removeMany($idList) {
 		foreach($idList as $id) {
-			$this->remove($id);
+			$this->removeByID($id);
 		}
 	}
 
@@ -355,6 +370,14 @@ class DataList extends DataObjectSet {
 		// By default, we remove an item from a DataList by deleting it.
 		if($item instanceof $this->dataClass) $item->delete();
 
+	}
+
+    /**
+     * Remove an item from this DataList by ID
+     */
+	function removeByID($itemID) {
+	    $item = $this->byID($itemID);
+	    if($item) return $item->delete();
 	}
 
 	// Methods that won't function on DataLists
