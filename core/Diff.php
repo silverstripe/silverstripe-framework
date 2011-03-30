@@ -677,8 +677,11 @@ class Diff
 		if (!$cleaner) {
 			if (class_exists(self::$html_cleaner_class)) {
 				$cleaner = new self::$html_cleaner_class;
+			} else {
+				$cleaner = HTMLCleaner::inst();    //load cleaner if the dependent class is available
 			}
 		}
+
 		if ($cleaner) {
 			$content = $cleaner->cleanHTML($content);
 		} else {
