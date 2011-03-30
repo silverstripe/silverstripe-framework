@@ -441,7 +441,7 @@ class Group extends DataObject {
 		
 		// Add default author group if no other group exists
 		$allGroups = DataObject::get('Group');
-		if(!$allGroups) {
+		if(!$allGroups->count()) {
 			$authorGroup = new Group();
 			$authorGroup->Code = 'content-authors';
 			$authorGroup->Title = _t('Group.DefaultGroupTitleContentAuthors', 'Content Authors');
@@ -456,7 +456,7 @@ class Group extends DataObject {
 	
 		// Add default admin group if none with permission code ADMIN exists
 		$adminGroups = Permission::get_groups_by_permission('ADMIN');
-		if(!$adminGroups) {
+		if(!$adminGroups->count()) {
 			$adminGroup = new Group();
 			$adminGroup->Code = 'administrators';
 			$adminGroup->Title = _t('Group.DefaultGroupTitleAdministrators', 'Administrators');
