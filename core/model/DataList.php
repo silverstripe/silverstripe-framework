@@ -400,6 +400,41 @@ class DataList extends DataObjectSet {
 	function removeDuplicates() {
 		user_error("Can't call DataList::removeDuplicates() because its data comes from a specific query.", E_USER_ERROR);
 	}
+	
+	/**
+	 * Necessary for interface ArrayAccess. Returns whether an item with $key exists
+	 * @param mixed $key
+	 * @return bool
+	 */
+	public function offsetExists($key) {
+	    return ($this->getRange($key, 1)->First() != null);
+	}
+
+	/**
+	 * Necessary for interface ArrayAccess. Returns item stored in array with index $key
+	 * @param mixed $key
+	 * @return DataObject
+	 */
+	public function offsetGet($key) {
+	    return $this->getRange($key, 1)->First();
+	}
+	
+	/**
+	 * Necessary for interface ArrayAccess. Set an item with the key in $key
+	 * @param mixed $key
+	 * @param mixed $value
+	 */
+	public function offsetSet($key, $value) {
+	    throw new Exception("Can't alter items in a DataList using array-access");
+	}
+
+	/**
+	 * Necessary for interface ArrayAccess. Unset an item with the key in $key
+	 * @param mixed $key
+	 */
+	public function offsetUnset($key) {
+	    throw new Exception("Can't alter items in a DataList using array-access");
+	}	
 
 }
 

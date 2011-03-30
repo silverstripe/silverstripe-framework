@@ -1098,6 +1098,15 @@ class DataObjectTest extends SapphireTest {
 	    $this->assertTrue(DataObject::get("DataObjectTest_SubTeam")->canSortBy("Title"));
 	    $this->assertTrue(DataObject::get("DataObjectTest_SubTeam")->canSortBy("SubclassDatabaseField"));
 	}
+	
+	function testDataListArrayAccess() {
+	    $list = DataObject::get("DataObjectTest_Team")->sort("Title");
+	    
+	    $this->assertEquals("Subteam 1", $list[0]->Title);
+	    $this->assertEquals("Subteam 3", $list[2]->Title);
+	    $this->assertEquals("Team 2", $list[4]->Title);
+	    
+	}
 
 }
 
