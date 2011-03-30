@@ -230,6 +230,18 @@ class VersionedTest extends SapphireTest {
 			'Models w/o Versioned can have their own Version field.'
 		);
 	}
+	
+	/**
+	 * Test that SQLQuery::queriedTables() applies the version-suffixes properly.
+	 */
+	public function testQueriedTables() {
+	    Versioned::reading_stage('Live');
+
+	    $this->assertEquals(array(
+	        'VersionedTest_DataObject_Live',
+	        'VersionedTest_Subclass_Live',
+	    ), DataObject::get('VersionedTest_DataObject')->dataQuery()->query()->queriedTables());
+	}
 }
 
 class VersionedTest_DataObject extends DataObject implements TestOnly {

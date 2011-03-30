@@ -230,7 +230,7 @@ class SQLQuery {
 	public function queriedTables() {
 		$tables = array();
 		foreach($this->from as $key => $tableClause) {
-		    if(is_array($tableClause)) $table = $tableClause['table'];
+		    if(is_array($tableClause)) $table = '"'.$tableClause['table'].'"';
 			else if(is_string($tableClause) && preg_match('/JOIN +("[^"]+") +(AS|ON) +/i', $tableClause, $matches)) $table = $matches[1];
 			else $table = $tableClause;
 
@@ -455,6 +455,9 @@ class SQLQuery {
 	 * @return string
 	 */
 	function sql() {
+	    // TODO: Don't require this internal-state manipulate-and-preserve - let sqlQueryToString() handle the new syntax
+	    $origFrom = $this->from;
+	    
 	    // Build from clauses
 	    foreach($this->from as $alias => $join) {
 	        // $join can be something like this array structure
@@ -468,9 +471,11 @@ class SQLQuery {
 	        }
 	    }
 	    
-	    
 		$sql = DB::getConn()->sqlQueryToString($this);
 		if($this->replacementsOld) $sql = str_replace($this->replacementsOld, $this->replacementsNew, $sql);
+
+	    $this->from = $origFrom;
+
 		return $sql;
 	}
 	
