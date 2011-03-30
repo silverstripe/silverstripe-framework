@@ -292,6 +292,38 @@ class TableListFieldTest extends SapphireTest {
 		
 		unset($_REQUEST['ctf']);
 	}
+
+    /**
+     * Check that a DataObjectSet can be passed to TableListField
+     */
+	function testDataObjectSet() {
+	    $one = new TableListFieldTest_Obj;
+	    $one->A = "A-one";
+	    $two = new TableListFieldTest_Obj;
+	    $two->A = "A-two";
+	    $three = new TableListFieldTest_Obj;
+	    $three->A = "A-three";
+	    
+	    $list = new DataObjectSet($one, $two, $three);
+	    
+		// A TableListField must be inside a form for its links to be generated
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+			new TableListField("Tester", $list, array(
+				"A" => "Col A",
+				"B" => "Col B",
+				"C" => "Col C",
+				"D" => "Col D",
+				"E" => "Col E",
+			))
+		), new FieldSet());
+
+		$table = $form->dataFieldByName('Tester');
+		$rendered = $table->FieldHolder();
+		
+		$this->assertContains('A-one', $rendered);
+		$this->assertContains('A-two', $rendered);
+		$this->assertContains('A-three', $rendered);
+	}
 }
 
 class TableListFieldTest_Obj extends DataObject implements TestOnly {

@@ -100,12 +100,10 @@ class ComplexTableFieldTest_Controller extends Controller {
 		$playersField = new ComplexTableField(
 			$this,
 			'Players',
-			'ComplexTableFieldTest_Player',
+			$team->Players(),
 			ComplexTableFieldTest_Player::$summary_fields,
 			'getCMSFields'
 		);
-		
-		$playersField->setParentClass('ComplexTableFieldTest_Team');
 		
 		$form = new Form(
 			$this,
@@ -131,12 +129,10 @@ class ComplexTableFieldTest_Controller extends Controller {
 		$sponsorsField = new ComplexTableField(
 			$this,
 			'Sponsors',
-			'ComplexTableFieldTest_Sponsor',
+			$team->Sponsors(),
 			ComplexTableFieldTest_Sponsor::$summary_fields,
 			'getCMSFields'
 		);
-		
-		$sponsorsField->setParentClass('ComplexTableFieldTest_Team');
 		
 		$form = new Form(
 			$this,

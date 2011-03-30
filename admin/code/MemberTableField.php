@@ -33,8 +33,6 @@ class MemberTableField extends ComplexTableField {
 	
 	public $itemClass = 'MemberTableField_Item';
 	
-	static $data_class = 'Member';
-	
 	/**
 	 * Set the page size for this table. 
 	 * @var int 
@@ -60,8 +58,24 @@ class MemberTableField extends ComplexTableField {
   	 * @param boolean $hidePassword Hide the password field or not in the summary?
   	 */
 	function __construct($controller, $name, $group = null, $members = null, $hidePassword = true) {
-		$sourceClass = self::$data_class;
-		$SNG_member = singleton($sourceClass);
+	    
+	    if(!$members) {
+	        if($group) {
+			    if(is_numeric($group)) $group = DataObject::get_by_id('Group', $group);
+			    $this->group = $group;
+			    $members = $group->Members();
+
+		    } elseif(isset($_REQUEST['ctf'][$this->Name()]["ID"]) && is_numeric($_REQUEST['ctf'][$this->Name()]["ID"])) {
+		        throw new Exception("Is this still being used?  It's a hack and we should remove it.");
+			    $group = DataObject::get_by_id('Group', $_REQUEST['ctf'][$this->Name()]["ID"]);
+			    $this->group = $group;
+			    $members = $group->Members();
+		    } else {
+		        $members = DataObject::get("Member");
+		    }
+		}
+
+		$SNG_member = singleton('Member');
 		$fieldList = $SNG_member->summaryFields();
 		$memberDbFields = $SNG_member->db();
 		$csvFieldList = array();
@@ -70,52 +84,24 @@ class MemberTableField extends ComplexTableField {
 			$csvFieldList[$field] = $field;
 		}
 		
-		if($group) {
-			if(is_object($group)) {
-				$this->group = $group;
-			} elseif(is_numeric($group)) {
-				$this->group = DataObject::get_by_id('Group', $group);
-			}
-		} else if(isset($_REQUEST['ctf'][$this->Name()]["ID"]) && is_numeric($_REQUEST['ctf'][$this->Name()]["ID"])) {
-			$this->group = DataObject::get_by_id('Group', $_REQUEST['ctf'][$this->Name()]["ID"]);
-		}
-
 		if(!$hidePassword) {
 			$fieldList["SetPassword"] = "Password"; 
 		}
 
 		$this->hidePassword = $hidePassword;
-		
-		// @todo shouldn't this use $this->group? It's unclear exactly
-		// what group it should be customising the custom Member set with.
-		if($members && $group) {
-			$this->setCustomSourceItems($this->memberListWithGroupID($members, $group));
-		}
 
-		parent::__construct($controller, $name, $sourceClass, $fieldList);
-		
+        // Add a search filter
 		$SQL_search = isset($_REQUEST['MemberSearch']) ? Convert::raw2sql($_REQUEST['MemberSearch']) : null;
 		if(!empty($_REQUEST['MemberSearch'])) {
 			$searchFilters = array();
 			foreach($SNG_member->searchableFields() as $fieldName => $fieldSpec) {
 				if(strpos($fieldName, '.') === false) $searchFilters[] = "\"$fieldName\" LIKE '%{$SQL_search}%'";
 			}
-			$this->sourceFilter[] = '(' . implode(' OR ', $searchFilters) . ')';
+		    $members = $members->filter('(' . implode(' OR ', $searchFilters) . ')');
 		}
 		
-		if($this->group) {
-		    user_error("MemberTableField's group setting doesn't yet work in the new-orm branch", E_USER_WARNING);
-			/*
-			$groupIDs = array($this->group->ID);
-			if($this->group->AllChildren()) $groupIDs = array_merge($groupIDs, $this->group->AllChildren()->column('ID'));
-			$this->sourceFilter[] = sprintf(
-				'"Group_Members"."GroupID" IN (%s)', 
-				implode(',', $groupIDs)
-			);
-			*/
-		}
-
-		$this->sourceJoin = " INNER JOIN \"Group_Members\" ON \"MemberID\"=\"Member\".\"ID\"";
+		parent::__construct($controller, $name, $members, $fieldList);
+		
 		$this->setFieldListCsv($csvFieldList);
 		$this->setPageSize($this->stat('page_size'));
 	}
@@ -128,14 +114,6 @@ class MemberTableField extends ComplexTableField {
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . "/javascript/MemberTableField_popup.js");
 		
 		return $ret;
-	}
-
-	function sourceID() {
-		return ($this->group) ? $this->group->ID : 0;
-	}
-
-	function AddLink() {
-		return Controller::join_links($this->Link(), 'add');
 	}
 
 	function SearchForm() {
@@ -168,6 +146,7 @@ class MemberTableField extends ComplexTableField {
 		if(!$token->checkRequest($this->controller->getRequest())) return $this->httpError(400);
 
 		$data = $_REQUEST;
+		
 		$groupID = (isset($data['ctf']['ID'])) ? $data['ctf']['ID'] : null;
 
 		if(!is_numeric($groupID)) {
@@ -177,7 +156,7 @@ class MemberTableField extends ComplexTableField {
 
 		// Get existing record either by ID or unique identifier.
 		$identifierField = Member::get_unique_identifier_field();
-		$className = self::$data_class;
+		$className = 'Member';
 		$record = null;
 		if(isset($data[$identifierField])) {
 			$record = DataObject::get_one(
@@ -204,7 +183,7 @@ class MemberTableField extends ComplexTableField {
 		$valid = $record->validate();
 		if($valid->valid()) {
 			$record->write();
-			$record->Groups()->add($groupID);
+			$this->getDataList()->add($record);
 
 			$this->sourceItems();
 
@@ -233,80 +212,16 @@ class MemberTableField extends ComplexTableField {
 	}
 
 	/**
-	 * Custom delete implementation:
-	 * Remove member from group rather than from the database
-	 */
-	function delete() {
-		// Protect against CSRF on destructive action
-		$token = $this->getForm()->getSecurityToken();
-		// TODO Not sure how this is called, using $_REQUEST to be on the safe side
-		if(!$token->check($_REQUEST['SecurityID'])) return $this->httpError(400);
-		
-		$groupID = Convert::raw2sql($_REQUEST['ctf']['ID']);
-		$memberID = Convert::raw2sql($_REQUEST['ctf']['childID']);
-		if(is_numeric($groupID) && is_numeric($memberID)) {
-			$member = DataObject::get_by_id('Member', $memberID);
-			$member->Groups()->remove($groupID);
-		} else {
-			user_error("MemberTableField::delete: Bad parameters: Group=$groupID, Member=$memberID", E_USER_ERROR);
-		}
-
-		return FormResponse::respond();
-
-	}
-
-	/**
-	 * #################################
-	 *           Utility Functions
-	 * #################################
-	 */
-	function getParentClass() {
-		return 'Group';
-	}
-
-	function getParentIdName($childClass, $parentClass) {
-		return 'GroupID';
-	}
-
-	/**
 	 * #################################
 	 *           Custom Functions
 	 * #################################
 	 */
 	
 	/**
-	 * Customise an existing DataObjectSet of Member
-	 * objects with a GroupID.
-	 * 
-	 * @param DataObjectSet $members Set of Member objects to customise
-	 * @param Group $group Group object to customise with
-	 * @return DataObjectSet Customised set of Member objects
-	 */
-	function memberListWithGroupID($members, $group) {
-		$newMembers = new DataObjectSet();
-		foreach($members as $member) {
-			$newMembers->push($member->customise(array('GroupID' => $group->ID)));
-		}
-		return $newMembers;
-	}
-
-	function setGroup($group) {
-		$this->group = $group;
-	}
-	
-	/**
 	 * @return Group
 	 */
 	function getGroup() {
 		return $this->group;
-	}
-	
-	function setController($controller) {
-		$this->controller = $controller;
-	}
-
-	function GetControllerName() {
-		return $this->controller->class;
 	}
 
 	/**
@@ -361,7 +276,7 @@ class MemberTableField extends ComplexTableField {
 	 *
 	 * @return string
 	 */
-	function saveComplexTableField($data, $form, $params) {		
+	function saveComplexTableField($data, $form, $params) {
 		$className = $this->sourceClass();
 		$childData = new $className();
 		
@@ -389,66 +304,6 @@ class MemberTableField extends ComplexTableField {
 		$form->sessionMessage($message, 'good');
 
 		$this->controller->redirectBack();
-	}	
-	
-	/**
-	 * Cached version for getting the appropraite members for this particular group.
-	 *
-	 * This includes getting inherited groups, such as groups under groups.
-	 */
-	function sourceItems() {
-		// Caching.
-		if($this->sourceItems) {
-			return $this->sourceItems;
-		}
-
-		// Setup limits
-		$limitClause = '';
-		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
-			$limitClause = ($_REQUEST['ctf'][$this->Name()]['start']) . ", {$this->pageSize}";
-		} else {
-			$limitClause = "0, {$this->pageSize}";
-		}
-				
-		// We use the group to get the members, as they already have the bulk of the look up functions
-		$start = isset($_REQUEST['ctf'][$this->Name()]['start']) ? $_REQUEST['ctf'][$this->Name()]['start'] : 0; 
-		
-		$this->sourceItems = false;
-
-		if($this->group) {
-			$this->sourceItems = $this->group->Members( 
-				$this->pageSize, // limit 
-				$start, // offset 
-				$this->sourceFilter,
-				$this->sourceSort
-			);	
-		} else {
-			$this->sourceItems = DataObject::get(self::$data_class,
-				$this->sourceFilter,
-				$this->sourceSort,
-				null,
-				array('limit' => $this->pageSize, 'start' => $start)
-			);
-		}
-		// Because we are not used $this->upagedSourceItems any more, and the DataObjectSet is usually the source
-		// that a large member set runs out of memory. we disable it here.
-		//$this->unpagedSourceItems = $this->group->Members('', '', $this->sourceFilter, $this->sourceSort);
-		$this->totalCount = ($this->sourceItems) ? $this->sourceItems->TotalItems() : 0;
-		
-		return $this->sourceItems;
-	}
-
-	function TotalCount() {
-		$this->sourceItems(); // Called for its side-effect of setting total count
-		return $this->totalCount;
-	}
-
-	/**
-	 * Handles item requests
-	 * MemberTableField needs its own item request class so that it can overload the delete method
-	 */
-	function handleItem($request) {
-		return new MemberTableField_ItemRequest($this, $request->param('ID'));
 	}
 }
 
@@ -460,7 +315,7 @@ class MemberTableField extends ComplexTableField {
 class MemberTableField_Popup extends ComplexTableField_Popup {
 
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
-		$group = ($controller instanceof MemberTableField) ? $controller->getGroup() : $controller->getParent()->getGroup();
+		$group = ($controller instanceof MemberTableField) ? $controller->getGroup() : $controller->getParentController()->getGroup();
 		// Set default groups - also implemented in AddForm()
 		if($group) {
 			$groupsField = $fields->dataFieldByName('Groups');
@@ -510,46 +365,6 @@ class MemberTableField_Item extends ComplexTableField_Item {
 		}
 
 		return $actions;
-	}
-}
-
-/**
-* @package cms
-* @subpackage security
-*/
-
-class MemberTableField_ItemRequest extends ComplexTableField_ItemRequest {
-
-	/**
-	 * Deleting an item from a member table field should just remove that member from the group
-	 */
-	function delete($request) {
-		// Protect against CSRF on destructive action
-		$token = $this->ctf->getForm()->getSecurityToken();
-		if(!$token->checkRequest($request)) return $this->httpError('400');
-		
-		if($this->ctf->Can('delete') !== true) {
-			return false;
-		}
-
-		// if a group limitation is set on the table, remove relation.
-		// otherwise remove the record from the database
-		if($this->ctf->getGroup()) {
-			$groupID = $this->ctf->sourceID();
-			$group = DataObject::get_by_id('Group', $groupID);
-			
-			// Remove from group and all child groups
-			foreach($group->getAllChildren() as $subGroup) {
-				$this->dataObj()->Groups()->remove($subGroup);
-			}
-			$this->dataObj()->Groups()->remove($groupID);
-		} else {
-			$this->dataObj()->delete();
-		}	
-	}
-	
-	function getParent() {
-		return $this->ctf;
 	}
 }
 

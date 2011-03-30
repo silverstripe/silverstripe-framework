@@ -255,7 +255,7 @@ JS;
 		}
 
 		$pageStart = (isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) ? $_REQUEST['ctf'][$this->Name()]['start'] : 0;
-		$sourceItems->setPageLimits($pageStart, $this->pageSize, $this->totalCount);
+		$sourceItems->setPageLimits($pageStart, $this->pageSize, $this->TotalCount());
 
 		$output = new DataObjectSet();
 		foreach($sourceItems as $pageIndex=>$item) {
@@ -343,85 +343,6 @@ JS;
 		$this->controller = $controller;
 	}
 
-	/**
-	 * Determines on which relation-class the DetailForm is saved
-	 * by looking at the surrounding form-record.
-	 *
-	 * @return String
-	 */
-	function getParentClass() {
-		if($this->parentClass === false) {
-			// purposely set parent-relation to false
-			return false;
-		} elseif(!empty($this->parentClass)) {
-			return $this->parentClass;
-		} elseif($this->form && $this->form->getRecord()) {
-			return $this->form->getRecord()->ClassName;
-		}
-	}
-
-	/**
-	 * Return the record in which the CTF resides, if it exists.
-	 */
-	function getParentRecord() {
-		if($this->form && $record = $this->form->getRecord()) {
-			return $record;
-		} else {
-			$parentID = (int)$this->sourceID();
-			$parentClass = $this->getParentClass();
-			
-			if($parentClass) {
-				if($parentID) return DataObject::get_by_id($parentClass, $parentID);
-				else return singleton($parentClass);
-			}
-		}
-	}
-
-	/**
-	 * (Optional) Setter for a correct parent-relation-class.
-	 * Defaults to the record loaded into the surrounding form as a fallback.
-	 * Caution: Please use the classname, not the actual column-name in the database.
-	 *
-	 * @param $className string
-	 */
-	function setParentClass($className) {
-		$this->parentClass = $className;
-	}
-
-	/**
-	 * Returns the db-fieldname of the currently used has_one-relationship.
-	 */
-	function getParentIdName($parentClass, $childClass) {
-		return $this->getParentIdNameRelation($childClass, $parentClass, 'has_one');
-	}
-	
-	/**
-	 * Manually overwrites the parent-ID relations.
-	 * @see setParentClass()
-	 * 
-	 * @param String $str Example: FamilyID (when one Individual has_one Family)
-	 */
-	function setParentIdName($str) {
-		$this->parentIdName = $str;
-	}
-	
-	/**
-	 * Returns the db-fieldname of the currently used relationship.
-	 * Note: constructed resolve ambiguous cases in the same manner as
-	 * DataObject::getComponentJoinField()
-	 */
-	function getParentIdNameRelation($parentClass, $childClass, $relation) {
-		if($this->parentIdName) return $this->parentIdName;
-		
-		$relations = array_flip(singleton($parentClass)->$relation());
-		
-		$classes = array_reverse(ClassInfo::ancestry($childClass));
-		foreach($classes as $class) {
-			if(isset($relations[$class])) return $relations[$class] . 'ID';
-		}
-		return false;
-	}
-
 	function setTemplatePopup($template) {
 		$this->templatePopup = $template;
 	}
@@ -458,44 +379,7 @@ JS;
 	}
 		
 	function getFieldsFor($childData) {
-		$hasManyRelationName = null;
-		$manyManyRelationName = null;
-	
-		// See if our parent class has any many_many relations by this source class
-		if($parentClass = $this->getParentRecord()) {
-			$manyManyRelations = $parentClass->many_many();
-			$manyManyRelationName = null;
-			$manyManyComponentSet = null;
-
-			$hasManyRelations = $parentClass->has_many();
-			$hasManyRelationName = null;
-			$hasManyComponentSet = null;
-
-			if($manyManyRelations) foreach($manyManyRelations as $relation => $class) {
-				if($class == $this->sourceClass()) {
-					$manyManyRelationName = $relation;
-				}
-			}
-
-			if($hasManyRelations) foreach($hasManyRelations as $relation => $class) {
-				if($class == $this->sourceClass()) {
-					$hasManyRelationName = $relation;
-				}
-			}
-		}
-		
-		// Add the relation value to related records
-		if(!$childData->ID && $this->getParentClass()) {
-			// make sure the relation-link is existing, even if we just add the sourceClass and didn't save it
-			$parentIDName = $this->getParentIdName($this->getParentClass(), $this->sourceClass());
-			$childData->$parentIDName = $this->sourceID();
-		}
-		
 		$detailFields = $this->getCustomFieldsFor($childData);
-
-		if($this->getParentClass() && $hasManyRelationName && $childData->ID) {
-			$hasManyComponentSet = $parentClass->getComponents($hasManyRelationName);
-		}
 
 		// the ID field confuses the Controller-logic in finding the right view for ReferencedField
 		$detailFields->removeByName('ID');
@@ -505,9 +389,7 @@ JS;
 			$detailFields->push(new HiddenField('ctf[childID]', '', $childData->ID));
 		}
 		
-		// add a namespaced ID instead thats "converted" by saveComplexTableField()
-		$detailFields->push(new HiddenField('ctf[ClassName]', '', $this->sourceClass()));
-
+        /* TODO: Figure out how to implement this
 		if($this->getParentClass()) {
 			$detailFields->push(new HiddenField('ctf[parentClass]', '', $this->getParentClass()));
 			
@@ -518,6 +400,7 @@ JS;
 				$detailFields->push(new HiddenField($parentIdName, '', $this->sourceID()));
 			}
 		} 
+		*/
 		
 		return $detailFields;
 	}
@@ -688,8 +571,8 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		if($this->ctf->Can('delete') !== true) {
 			return false;
 		}
-
-		$this->dataObj()->delete();
+		
+		$this->ctf->getDataList()->removeByID($this->itemID);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -761,7 +644,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		}
 
 		// Save this item into the given relationship
-		$this->ctf->getDataList()->add($childData);
+		$this->ctf->getDataList()->add($dataObject);
 		
 		$referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
 		
@@ -798,16 +681,16 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	}
 
 	function PopupLastLink() {
-		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->totalCount-1) {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->TotalCount()-1) {
 			return null;
 		}
 		
-		$start = $this->totalCount - 1;
+		$start = $this->TotalCount - 1;
 		return Controller::join_links($this->Link(), "$this->methodName?ctf[start]={$start}");
 	}
 
 	function PopupNextLink() {
-		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->totalCount-1) {
+		if(!isset($_REQUEST['ctf']['start']) || !is_numeric($_REQUEST['ctf']['start']) || $_REQUEST['ctf']['start'] == $this->TotalCount()-1) {
 			return null;
 		}
 
@@ -836,18 +719,18 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		$result = new DataObjectSet();
         if($currentItem < 6) {
         	$offset = 1;
-        } elseif($this->totalCount - $currentItem <= 4) {
-        	$offset = $currentItem - (10 - ($this->totalCount - $currentItem));
+        } elseif($this->TotalCount() - $currentItem <= 4) {
+        	$offset = $currentItem - (10 - ($this->TotalCount() - $currentItem));
         	$offset = $offset <= 0 ? 1 : $offset;
         } else {
         	$offset = $currentItem  - 5; 
         }
-		for($i = $offset;$i <= $offset + $this->pageSize && $i <= $this->totalCount;$i++) {
+		for($i = $offset;$i <= $offset + $this->pageSize && $i <= $this->TotalCount();$i++) {
             $start = $i - 1;
 			$links['link'] = Controller::join_links($this->Link() . "$this->methodName?ctf[start]={$start}");
             $links['number'] = $i;
             $links['active'] = $i == $currentItem ? false : true;
-            $result->push(new ArrayData($links)); 	
+            $result->push(new ArrayData($links));
 		}
         return $result;
 	}
@@ -864,38 +747,15 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	 */
 
 	/**
-	 * Returns the db-fieldname of the currently used has_one-relationship.
-	 */
-	function getParentIdName($parentClass, $childClass) {
-		return $this->getParentIdNameRelation($childClass, $parentClass, 'has_one');
-	}
-	
-	/**
 	 * Manually overwrites the parent-ID relations.
 	 * @see setParentClass()
 	 * 
 	 * @param String $str Example: FamilyID (when one Individual has_one Family)
 	 */
 	function setParentIdName($str) {
-		$this->parentIdName = $str;
+	    throw new Exception("setParentIdName is no longer necessary");
 	}
 	
-	/**
-	 * Returns the db-fieldname of the currently used relationship.
-	 */
-	function getParentIdNameRelation($parentClass, $childClass, $relation) {
-		if($this->parentIdName) return $this->parentIdName; 
-		
-		$relations = singleton($parentClass)->$relation();
-		$classes = ClassInfo::ancestry($childClass);
-		if($relations) {
-			foreach($relations as $k => $v) {
-				if(array_key_exists($v, $classes)) return $k . 'ID';
-			}
-		}
-		return false;
-	}
-
 	function setTemplatePopup($template) {
 		$this->templatePopup = $template;
 	}

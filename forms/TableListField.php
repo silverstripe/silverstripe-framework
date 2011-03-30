@@ -135,14 +135,6 @@ class TableListField extends FormField {
 	protected $customCsvQuery;
 	
 	/**
-	 * @var $customSourceItems DataObjectSet Use the manual setting of a result-set only as a last-resort
-	 * for sets which can't be resolved in a single query.
-	 *
-	 * @todo Add pagination support for customSourceItems.
-	 */
-	protected $customSourceItems;
-	
-	/**
 	 * Character to seperate exported columns in the CSV file
 	 */
 	protected $csvSeparator = ",";
@@ -165,12 +157,6 @@ class TableListField extends FormField {
 		"\r"=>"",
 		"\n"=>"",
 	);
-	
-	
-	/**
-	 * @var int Shows total count regardless or pagination
-	 */
-	protected $totalCount;
 	
 	/**
 	 * @var boolean Trigger pagination
@@ -240,21 +226,28 @@ class TableListField extends FormField {
 	
 	protected $__cachedQuery;
 	
+	/**
+	 * This is a flag that enables some backward-compatibility helpers.
+	 */
+	private $getDataListFromForm;
+	
 	function __construct($name, $sourceClass = null, $fieldList = null, $sourceFilter = null, 
 		$sourceSort = null, $sourceJoin = null) {
 
-		$this->fieldList = ($fieldList) ? $fieldList : singleton($sourceClass)->summaryFields();
-		
 		if($sourceClass) {
-			// You can optionally pass a DataList as the 2nd argument to the constructor
-			if($sourceClass instanceof DataList) {
+			// You can optionally pass a DataList/DataObjectSet
+			if($sourceClass instanceof DataObjectSet) {
 				$this->dataList = $sourceClass;
 				
 			} else {
 				$this->dataList = DataObject::get($sourceClass)->filter($sourceFilter)
 					->sort($sourceSort)->join($sourceJoin);
+				// Grab it from the form relation, if available.
+				$this->getDataListFromForm = true;
 			}
 		}
+
+		$this->fieldList = ($fieldList) ? $fieldList : singleton($this->sourceClass())->summaryFields();
 
 		$this->readOnly = false;
 
@@ -271,7 +264,10 @@ class TableListField extends FormField {
 	);
 
 	function sourceClass() {
-		return $this->getDataList()->dataClass();
+	    $list = $this->getDataList();
+	    if(method_exists($list, 'dataClass')) return $list->dataClass();
+	    // Failover for DataObjectSet
+	    else return get_class($list->First());
 	}
 	
 	function handleItem($request) {
@@ -358,13 +354,10 @@ JS
 	 * @return bool
 	 */	
 	function isFieldSortable($fieldName) {
-		if($this->customSourceItems || $this->disableSorting) {
-			return false;
-		}
-		
-		if(!$this->__cachedQuery) $this->__cachedQuery = $this->getQuery();
-
-		return $this->__cachedQuery->canSortBy($fieldName);
+		if($this->disableSorting) return false;
+		$list = $this->getDataList();
+		if(method_exists($list,'canSortBy')) return $list->canSortBy($fieldName);
+		else return false;
 	}
 	
 	/**
@@ -400,45 +393,42 @@ JS
 	}
 	
 	function setCustomSourceItems(DataObjectSet $items) {
+		user_error('TableList::setCustomSourceItems() deprecated, just pass the items into the constructor', E_USER_WARNING);
+
 		// The type-hinting above doesn't seem to work consistently
 		if($items instanceof DataObjectSet) {
-			$this->customSourceItems = $items;
+		    $this->dataList = $items;
 		} else {
 			user_error('TableList::setCustomSourceItems() should be passed a DataObjectSet', E_USER_WARNING);
 		}
 	}
 	
+	/**
+	 * Get items, with sort & limit applied
+	 */
 	function sourceItems() {
+		// get items (this may actually be a DataObjectSet)
+		$items = clone $this->getDataList();
+
+		// TODO: Sorting could be implemented on regular DataObjectSets.
+		if(method_exists($items,'canSortBy') && isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
+    		$sort = $_REQUEST['ctf'][$this->Name()]['sort'];
+		    // TODO: sort direction
+			if($items->canSortBy($sort)) $items = $items->sort($sort);
+		}
+
 		// Determine pagination limit, offset
-		$SQL_limit = ($this->showPagination && $this->pageSize) ? "{$this->pageSize}" : null;
-		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
-			$SQL_start = (isset($_REQUEST['ctf'][$this->Name()]['start'])) ? intval($_REQUEST['ctf'][$this->Name()]['start']) : "0";
-		} else {
-			$SQL_start = 0;
-		}
-
-		// Custom source items can be explicitly passed
-		if(isset($this->customSourceItems)) {
-			if($this->showPagination && $this->pageSize) {
-				$items = $this->customSourceItems->getRange($SQL_start, $SQL_limit);
-			} else {
-				$items = $this->customSourceItems;
-			}
-
-		// Otherwise we use the internal data list
-		} else {
-			// get the DataList of items
-			$items = $this->getDataList();
-			
-			// we don't limit when doing certain actions        T
-			$methodName = isset($_REQUEST['url']) ? array_pop(explode('/', $_REQUEST['url'])) : null;
-			if(!$methodName || !in_array($methodName,array('printall','export'))) {
-				$items->limit(array(
-					'limit' => $SQL_limit,
-					'start' => (isset($SQL_start)) ? $SQL_start : null 
-				));
-			}
-		}
+		// To disable pagination, set $this->showPagination to false.
+		if($this->showPagination && $this->pageSize) {
+		    $SQL_limit = (int)$this->pageSize;
+		    if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
+			    $SQL_start = (isset($_REQUEST['ctf'][$this->Name()]['start'])) ? intval($_REQUEST['ctf'][$this->Name()]['start']) : "0";
+		    } else {
+			    $SQL_start = 0;
+		    }
+		
+		    $items = $items->getRange($SQL_start, $SQL_limit);
+	    }
 
 		return $items;
 	}
@@ -458,12 +448,9 @@ JS
 	 * Returns the DataList for this field.
 	 */
 	function getDataList() {
-		// Load the data from the form
-		// Note that this will override any specific.  This is so that explicitly-passed sets of
-		// parameters that represent a relation can be replaced with the relation itself.   This is
-		// a little clumsy and won't work if people have used a field name that is the same as a
-		// relation but have specified alternative parameters.
-		if($this->form) {
+		// If we weren't passed in a DataList to begin with, try and get the datalist from the form
+		if($this->form && $this->getDataListFromForm) {
+		    $this->getDataListFromForm = false;
 			$relation = $this->name;
 			if($record = $this->form->getRecord()) {
 				if($record->hasMethod($relation)) $this->dataList = $record->$relation();
@@ -474,20 +461,7 @@ JS
 			user_error(get_class($this). ' is missing a DataList', E_USER_ERROR);
 		}
 		
-		$dl = clone $this->dataList;
-		
-		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$query = $this->dataList->dataQuery()->query();
-			$SQL_sort = Convert::raw2sql($_REQUEST['ctf'][$this->Name()]['sort']);
-			$sql = $query->sql();
-			// see {isFieldSortable}
-			if(in_array($SQL_sort,$query->select) || stripos($sql,"AS {$SQL_sort}")) {
-				$dl->sort($SQL_sort);
-			}
-			if($query->canSortBy($column)) $query->orderby = $column.' '.$dir;
-		}
-		
-		return $dl;
+		return $this->dataList;
 	}
 
 	function getCsvDataList() {
@@ -499,14 +473,20 @@ JS
 	 * @deprecated Use getDataList() instead.
 	 */
 	function getQuery() {
-		return $this->getDataList()->dataQuery()->query();
+	    $list = $this->getDataList();
+	    if(method_exists($list,'dataQuery')) {
+		    return $this->getDataList()->dataQuery()->query();
+	    }
 	}
 
 	/**
 	 * @deprecated Use getCsvDataList() instead.
 	 */
 	function getCsvQuery() {
-		return $this->getCsvDataList()->dataQuery()->query();
+	    $list = $this->getCsvDataList();
+	    if(method_exists($list,'dataQuery')) {
+            return $list->dataQuery()->query();
+        }
 	}
 		
 	function FieldList() {
@@ -562,8 +542,7 @@ JS
 		$childId = Convert::raw2sql($_REQUEST['ctf']['childID']);
 
 		if (is_numeric($childId)) {
-			$childObject = DataObject::get_by_id($this->sourceClass(), $childId);
-			if($childObject) $childObject->delete();
+		    $this->getDataList()->removeById($childId);
 		}
 
 		// TODO return status in JSON etc.
@@ -883,9 +862,20 @@ JS
 			return min($this->pageSize, $this->TotalCount());
 		}
 	}
-	
+
+	/**
+	 * @ignore
+	 */
+	private $_cache_TotalCount;
+
+	/**
+	 * Return the total number of items in the source DataList
+	 */
 	function TotalCount() {
-		return $this->getDataList()->Count();
+	    if($this->_cache_TotalCount === null) {
+	        $this->_cache_TotalCount = $this->getDataList()->Count();
+	    }
+		return $this->_cache_TotalCount;
 	}
 	
 	
@@ -950,6 +940,14 @@ JS
 	function export() {
 		$now = Date("d-m-Y-H-i");
 		$fileName = "export-$now.csv";
+
+        // No pagination for export
+		$oldShowPagination = $this->showPagination;
+		$this->showPagination = false;
+		
+		$result = $this->renderWith(array($this->template . '_printable', 'TableListField_printable'));
+		
+		$this->showPagination = $oldShowPagination;
 		
 		if($fileData = $this->generateExportFileData($numColumns, $numRows)){
 			return SS_HTTPRequest::send_file($fileData, $fileName);
@@ -1562,42 +1560,11 @@ class TableListField_ItemRequest extends RequestHandler {
 		// used to discover fields if requested and for population of field
 		if(is_numeric($this->itemID)) {
  			// we have to use the basedataclass, otherwise we might exclude other subclasses 
- 			return DataObject::get_by_id(ClassInfo::baseDataClass(Object::getCustomClass($this->ctf->sourceClass())), $this->itemID); 
+ 			return $this->ctf->getDataList()->byId($this->itemID);
 		}
 		
 	}
 
-	/**
-	 * Returns the db-fieldname of the currently used has_one-relationship.
-	 */
-	function getParentIdName( $parentClass, $childClass ) {
-		return $this->getParentIdNameRelation( $childClass, $parentClass, 'has_one' );
-	}
-	
-	/**
-	 * Manually overwrites the parent-ID relations.
-	 * @see setParentClass()
-	 * 
-	 * @param String $str Example: FamilyID (when one Individual has_one Family)
-	 */
-	function setParentIdName($str) {
-		$this->parentIdName = $str;
-	}
-	
-	/**
-	 * Returns the db-fieldname of the currently used relationship.
-	 */
-	function getParentIdNameRelation($parentClass, $childClass, $relation) {
-		if($this->parentIdName) return $this->parentIdName; 
-		
-		$relations = singleton($parentClass)->$relation();
-		$classes = ClassInfo::ancestry($childClass);
-		foreach($relations as $k => $v) {
-			if(array_key_exists($v, $classes)) return $k . 'ID';
-		}
-		return false;
-	}
-	
 	/**
 	 * @return TableListField
 	 */
