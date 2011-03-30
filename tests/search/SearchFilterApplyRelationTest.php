@@ -9,7 +9,7 @@
  * @subpackage testing
  */
 class SearchFilterApplyRelationTest extends SapphireTest{
-	static $fixture_file = 'sapphire/tests/search/SearchFilterApplyRelationTest.yml';
+	static $fixture_file = 'SearchFilterApplyRelationTest.yml';
 	
 	protected $extraDataObjects = array(
 		'SearchFilterApplyRelationTest_DO',

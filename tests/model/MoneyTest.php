@@ -13,7 +13,7 @@
  */
 class MoneyTest extends SapphireTest {
 	
-	static $fixture_file = 'sapphire/tests/model/MoneyTest.yml';
+	static $fixture_file = 'MoneyTest.yml';
 
 	protected $extraDataObjects = array(
 		'MoneyTest_DataObject',

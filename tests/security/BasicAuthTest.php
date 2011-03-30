@@ -8,7 +8,7 @@ class BasicAuthTest extends FunctionalTest {
 
 	static $original_unique_identifier_field;
 
-	static $fixture_file = 'sapphire/tests/security/BasicAuthTest.yml';
+	static $fixture_file = 'BasicAuthTest.yml';
 
 	function setUp() {
 		parent::setUp();
@@ -113,7 +113,7 @@ class BasicAuthTest_ControllerSecuredWithPermission extends Controller implement
 	
 	static $index_called = false;
 
-	protected $template = '../sapphire/templates/BlankPage.ss';
+	protected $template = 'BlankPage';
 	
 	function init() {
 		self::$post_init_called = false;
@@ -121,7 +121,7 @@ class BasicAuthTest_ControllerSecuredWithPermission extends Controller implement
 		
 		BasicAuth::protect_entire_site(true, 'MYCODE');
 		parent::init();
-
+		
 		self::$post_init_called = true;
 	}
 	
@@ -135,7 +135,7 @@ class BasicAuthTest_ControllerSecuredWithPermission extends Controller implement
 
 class BasicAuthTest_ControllerSecuredWithoutPermission extends Controller implements TestOnly {
 
-	protected $template = '../sapphire/templates/BlankPage.ss';
+	protected $template = 'BlankPage';
 
 	function init() {
 		BasicAuth::protect_entire_site(true, null);

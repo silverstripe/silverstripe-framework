@@ -5,7 +5,7 @@
  */
 class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 
-	public static $fixture_file = 'sapphire/tests/forms/MemberDatetimeOptionsetFieldTest.yml';
+	public static $fixture_file = 'MemberDatetimeOptionsetFieldTest.yml';
 
 	protected function createDateFormatFieldForMember($member) {
 		require_once 'Zend/Date.php';

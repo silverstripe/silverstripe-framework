@@ -1,7 +1,7 @@
 <?php
 
 class TableFieldTest extends SapphireTest {
-	static $fixture_file = 'sapphire/tests/forms/TableFieldTest.yml';
+	static $fixture_file = 'TableFieldTest.yml';
 
 	protected $extraDataObjects = array(
 		'TableFieldTest_Object',

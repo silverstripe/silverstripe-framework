@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class GroupTest extends FunctionalTest {
-	static $fixture_file = 'sapphire/tests/security/GroupTest.yml';
+	static $fixture_file = 'GroupTest.yml';
 	
 	/**
 	 * Test the Group::map() function

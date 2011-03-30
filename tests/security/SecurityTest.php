@@ -6,7 +6,7 @@
  * @subpackage tests
  */
 class SecurityTest extends FunctionalTest {
-	static $fixture_file = 'sapphire/tests/security/MemberTest.yml';
+	static $fixture_file = 'MemberTest.yml';
 	
 	protected $autoFollowRedirection = false;
 	

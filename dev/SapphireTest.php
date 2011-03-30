@@ -166,7 +166,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			}
 
 			if($fixtureFile) {
-				$pathForClass = $this->getCurrentPath();
+				$pathForClass = $this->getCurrentAbsolutePath();
 				$fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : array($fixtureFile);
 
 				$i = 0;

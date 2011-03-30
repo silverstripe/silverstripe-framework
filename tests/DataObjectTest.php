@@ -5,7 +5,7 @@
  */
 class DataObjectTest extends SapphireTest {
 	
-	static $fixture_file = 'sapphire/tests/DataObjectTest.yml';
+	static $fixture_file = 'DataObjectTest.yml';
 
 	protected $extraDataObjects = array(
 		'DataObjectTest_Team',

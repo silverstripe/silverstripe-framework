@@ -4,11 +4,11 @@
  * @subpackage tests
  */
 class GroupCsvBulkLoaderTest extends SapphireTest {
-	static $fixture_file = 'sapphire/tests/security/GroupCsvBulkLoaderTest.yml';
+	static $fixture_file = 'GroupCsvBulkLoaderTest.yml';
 	
 	function testNewImport() {
 		$loader = new GroupCsvBulkLoader();
-		$results = $loader->load('sapphire/tests/security/GroupCsvBulkLoaderTest.csv');
+		$results = $loader->load($this->getCurrentRelativePath() . '/GroupCsvBulkLoaderTest.csv');
 		$created = $results->Created()->toArray();
 		$this->assertEquals(count($created), 2);
 		$this->assertEquals($created[0]->Code, 'newgroup1');
@@ -24,7 +24,7 @@ class GroupCsvBulkLoaderTest extends SapphireTest {
 		$existinggroup->write();
 		
 		$loader = new GroupCsvBulkLoader();
-		$results = $loader->load('sapphire/tests/security/GroupCsvBulkLoaderTest.csv');
+		$results = $loader->load($this->getCurrentRelativePath() . '/GroupCsvBulkLoaderTest.csv');
 		
 		$created = $results->Created()->toArray();
 		$this->assertEquals(count($created), 1);
@@ -38,7 +38,7 @@ class GroupCsvBulkLoaderTest extends SapphireTest {
 	
 	function testImportPermissions() {
 		$loader = new GroupCsvBulkLoader();
-		$results = $loader->load('sapphire/tests/security/GroupCsvBulkLoaderTest_withExisting.csv');
+		$results = $loader->load($this->getCurrentRelativePath() . '/GroupCsvBulkLoaderTest_withExisting.csv');
 		
 		$created = $results->Created()->toArray();
 		$this->assertEquals(count($created), 1);

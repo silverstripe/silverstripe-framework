@@ -42,6 +42,8 @@ class RequirementsTest extends SapphireTest {
 	}
 
 	protected function setupCombinedRequirements($backend) {
+		$basePath = $this->getCurrentRelativePath();
+		
 		$backend->clear();
 		$backend->setCombinedFilesFolder('assets');
 
@@ -50,21 +52,23 @@ class RequirementsTest extends SapphireTest {
 		$backend->delete_combined_files('RequirementsTest_bc.js');
 
 		// require files normally (e.g. called from a FormField instance)
-		$backend->javascript(SAPPHIRE_DIR . '/tests/forms/RequirementsTest_a.js');
-		$backend->javascript(SAPPHIRE_DIR . '/tests/forms/RequirementsTest_b.js');
-		$backend->javascript(SAPPHIRE_DIR . '/tests/forms/RequirementsTest_c.js');
+		$backend->javascript($basePath . '/RequirementsTest_a.js');
+		$backend->javascript($basePath . '/RequirementsTest_b.js');
+		$backend->javascript($basePath . '/RequirementsTest_c.js');
 
 		// require two of those files as combined includes
 		$backend->combine_files(
 			'RequirementsTest_bc.js',
 			array(
-				SAPPHIRE_DIR . '/tests/forms/RequirementsTest_b.js',
-				SAPPHIRE_DIR . '/tests/forms/RequirementsTest_c.js'
+				$basePath . '/RequirementsTest_b.js',
+				$basePath . '/RequirementsTest_c.js'
 			)
 		);
 	}
 	
 	protected function setupCombinedNonrequiredRequirements($backend) {
+			$basePath = $this->getCurrentRelativePath();
+		
 			$backend->clear();
 			$backend->setCombinedFilesFolder('assets');
 	
@@ -76,8 +80,8 @@ class RequirementsTest extends SapphireTest {
 			$backend->combine_files(
 				'RequirementsTest_bc.js',
 				array(
-					SAPPHIRE_DIR . '/tests/forms/RequirementsTest_b.js',
-					SAPPHIRE_DIR . '/tests/forms/RequirementsTest_c.js'
+					$basePath . '/RequirementsTest_b.js',
+					$basePath . '/RequirementsTest_c.js'
 				)
 			);
 		}
@@ -102,7 +106,7 @@ class RequirementsTest extends SapphireTest {
 		/* COMBINED JAVASCRIPT HAS CORRECT CONTENT */
 		$this->assertTrue((strpos(file_get_contents($combinedFilePath), "alert('b')") !== false), 'combined javascript has correct content');
 		$this->assertTrue((strpos(file_get_contents($combinedFilePath), "alert('c')") !== false), 'combined javascript has correct content');
-		
+
 		/* COMBINED FILES ARE NOT INCLUDED TWICE */
 		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_b\.js/', $html), 'combined files are not included twice');
 		$this->assertFalse((bool)preg_match('/src=".*\/RequirementsTest_c\.js/', $html), 'combined files are not included twice');
@@ -141,6 +145,8 @@ class RequirementsTest extends SapphireTest {
 	}
 	
 	function testBlockedCombinedJavascript() {
+		$basePath = $this->getCurrentRelativePath();
+		
 		$backend = new Requirements_Backend;
 		$backend->set_combined_files_enabled(true);
 		$backend->setCombinedFilesFolder('assets');
@@ -159,7 +165,7 @@ class RequirementsTest extends SapphireTest {
 
 		/* BLOCKED UNCOMBINED FILES ARE NOT INCLUDED */
 		$this->setupCombinedRequirements($backend);
-		$backend->block('sapphire/tests/forms/RequirementsTest_b.js');
+		$backend->block($basePath .'/RequirementsTest_b.js');
 		$backend->delete_combined_files('RequirementsTest_bc.js');
 		clearstatcache(); // needed to get accurate file_exists() results
 		$html = $backend->includeInHTML(false, self::$html_template);
@@ -174,8 +180,8 @@ class RequirementsTest extends SapphireTest {
 		@$backend->combine_files(
 			'RequirementsTest_ac.js',
 			array(
-				'sapphire/tests/forms/RequirementsTest_a.js',
-				'sapphire/tests/forms/RequirementsTest_c.js'
+				$basePath . '/RequirementsTest_a.js',
+				$basePath . '/RequirementsTest_c.js'
 			)
 		);
 
@@ -190,11 +196,13 @@ class RequirementsTest extends SapphireTest {
 	}
 	
 	function testArgsInUrls() {
+		$basePath = $this->getCurrentRelativePath();
+		
 		$backend = new Requirements_Backend;
 		$backend->set_combined_files_enabled(true);
 
-		$backend->javascript(SAPPHIRE_DIR . '/tests/forms/RequirementsTest_a.js?test=1&test=2&test=3');
-		$backend->css(SAPPHIRE_DIR . '/tests/forms/RequirementsTest_a.css?test=1&test=2&test=3');
+		$backend->javascript($basePath . '/RequirementsTest_a.js?test=1&test=2&test=3');
+		$backend->css($basePath . '/RequirementsTest_a.css?test=1&test=2&test=3');
 		$backend->delete_combined_files('RequirementsTest_bc.js');
 
 		$html = $backend->includeInHTML(false, self::$html_template);
@@ -207,29 +215,33 @@ class RequirementsTest extends SapphireTest {
 	}
 	
 	function testRequirementsBackend() {
+		$basePath = $this->getCurrentRelativePath();
+		
 		$backend = new Requirements_Backend();
-		$backend->javascript(SAPPHIRE_DIR . '/tests/forms/a.js');
+		$backend->javascript($basePath . '/a.js');
 		
 		$this->assertTrue(count($backend->get_javascript()) == 1, "There should be only 1 file included in required javascript.");
-		$this->assertTrue(in_array(SAPPHIRE_DIR . '/tests/forms/a.js', $backend->get_javascript()), "/test/forms/a.js should be included in required javascript.");
+		$this->assertTrue(in_array($basePath . '/a.js', $backend->get_javascript()), "a.js should be included in required javascript.");
 		
-		$backend->javascript(SAPPHIRE_DIR . '/tests/forms/b.js');
+		$backend->javascript($basePath . '/b.js');
 		$this->assertTrue(count($backend->get_javascript()) == 2, "There should be 2 files included in required javascript.");
 		
-		$backend->block(SAPPHIRE_DIR . '/tests/forms/a.js');
+		$backend->block($basePath . '/a.js');
 		$this->assertTrue(count($backend->get_javascript()) == 1, "There should be only 1 file included in required javascript.");
-		$this->assertFalse(in_array(SAPPHIRE_DIR . '/tests/forms/a.js', $backend->get_javascript()), "/test/forms/a.js should not be included in required javascript after it has been blocked.");
-		$this->assertTrue(in_array(SAPPHIRE_DIR . '/tests/forms/b.js', $backend->get_javascript()), "/test/forms/b.js should be included in required javascript.");
+		$this->assertFalse(in_array($basePath . '/a.js', $backend->get_javascript()), "a.js should not be included in required javascript after it has been blocked.");
+		$this->assertTrue(in_array($basePath . '/b.js', $backend->get_javascript()), "b.js should be included in required javascript.");
 		
-		$backend->css(SAPPHIRE_DIR . '/tests/forms/a.css');
+		$backend->css($basePath . '/a.css');
 		$this->assertTrue(count($backend->get_css()) == 1, "There should be only 1 file included in required css.");
-		$this->assertArrayHasKey(SAPPHIRE_DIR . '/tests/forms/a.css', $backend->get_css(), "/tests/forms/a.css should be in required css.");
+		$this->assertArrayHasKey($basePath . '/a.css', $backend->get_css(), "a.css should be in required css.");
 		
-		$backend->block(SAPPHIRE_DIR . '/tests/forms/a.css');
+		$backend->block($basePath . '/a.css');
 		$this->assertTrue(count($backend->get_css()) == 0, "There should be nothing in required css after file has been blocked.");
 	}
 
 	function testConditionalTemplateRequire() {
+		$basePath = $this->getCurrentRelativePath();
+		
 		$backend = new RequirementsTest_Backend();
 		$holder = Requirements::backend();
 		Requirements::set_backend($backend);
@@ -237,19 +249,19 @@ class RequirementsTest extends SapphireTest {
 			'FailTest' => true,
 		));
 		$data->renderWith('RequirementsTest_Conditionals');
-		$backend->assertFileIncluded('css', 'sapphire/tests/forms/RequirementsTest_a.css');
-		$backend->assertFileIncluded('js', array('sapphire/tests/forms/RequirementsTest_b.js', 'sapphire/tests/forms/RequirementsTest_c.js'));
-		$backend->assertFileNotIncluded('js', 'sapphire/tests/forms/RequirementsTest_a.js');
-		$backend->assertFileNotIncluded('css', array('sapphire/tests/forms/RequirementsTest_b.css', 'sapphire/tests/forms/RequirementsTest_c.css'));
+		$backend->assertFileIncluded('css', $basePath .'/RequirementsTest_a.css');
+		$backend->assertFileIncluded('js', array($basePath .'/RequirementsTest_b.js', $basePath .'/RequirementsTest_c.js'));
+		$backend->assertFileNotIncluded('js', $basePath .'/RequirementsTest_a.js');
+		$backend->assertFileNotIncluded('css', array($basePath .'/RequirementsTest_b.css', $basePath .'/RequirementsTest_c.css'));
 		$backend->clear();
 		$data = new ArrayData(array(
 			'FailTest' => false,
 		));
 		$data->renderWith('RequirementsTest_Conditionals');
-		$backend->assertFileNotIncluded('css', 'sapphire/tests/forms/RequirementsTest_a.css');
-		$backend->assertFileNotIncluded('js', array('sapphire/tests/forms/RequirementsTest_b.js', 'sapphire/tests/forms/RequirementsTest_c.js'));
-		$backend->assertFileIncluded('js', 'sapphire/tests/forms/RequirementsTest_a.js');
-		$backend->assertFileIncluded('css', array('sapphire/tests/forms/RequirementsTest_b.css', 'sapphire/tests/forms/RequirementsTest_c.css'));
+		$backend->assertFileNotIncluded('css', $basePath .'/RequirementsTest_a.css');
+		$backend->assertFileNotIncluded('js', array($basePath .'/RequirementsTest_b.js', $basePath .'/RequirementsTest_c.js'));
+		$backend->assertFileIncluded('js', $basePath .'/RequirementsTest_a.js');
+		$backend->assertFileIncluded('css', array($basePath .'/RequirementsTest_b.css', $basePath .'/RequirementsTest_c.css'));
 		Requirements::set_backend($holder);
 	}
 }

@@ -10,7 +10,7 @@
  */
 class SoapModelAccessTest extends SapphireTest {
 	
-	static $fixture_file = 'sapphire/tests/SoapModelAccessTest.yml';
+	static $fixture_file = 'SoapModelAccessTest.yml';
 
 	protected $extraDataObjects = array(
 		'SoapModelAccessTest_Comment',

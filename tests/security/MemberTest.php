@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class MemberTest extends FunctionalTest {
-	static $fixture_file = 'sapphire/tests/security/MemberTest.yml';
+	static $fixture_file = 'MemberTest.yml';
 	
 	protected $orig = array();
 	protected $local = null; 

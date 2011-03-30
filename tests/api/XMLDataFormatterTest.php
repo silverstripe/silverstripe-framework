@@ -1,7 +1,7 @@
 <?php
 class XMLDataFormatterTest extends SapphireTest {
 
-	public static $fixture_file = 'sapphire/tests/api/XMLDataFormatterTest.yml';
+	public static $fixture_file = 'XMLDataFormatterTest.yml';
 
 	protected $extraDataObjects = array(
 		'XMLDataFormatterTest_DataObject'

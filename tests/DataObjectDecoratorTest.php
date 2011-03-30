@@ -1,7 +1,7 @@
 <?php
 
 class DataObjectDecoratorTest extends SapphireTest {
-	static $fixture_file = 'sapphire/tests/DataObjectDecoratorTest.yml';
+	static $fixture_file = 'DataObjectDecoratorTest.yml';
 	
 	protected $extraDataObjects = array(
 		'DataObjectDecoratorTest_Member',

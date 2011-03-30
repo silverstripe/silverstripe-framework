@@ -5,7 +5,7 @@
  */
 class FormTest extends FunctionalTest {
 	
-	static $fixture_file = 'sapphire/tests/forms/FormTest.yml';
+	static $fixture_file = 'FormTest.yml';
 
 	protected $extraDataObjects = array(
 		'FormTest_Player',

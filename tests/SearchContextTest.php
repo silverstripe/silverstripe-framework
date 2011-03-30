@@ -2,7 +2,7 @@
 
 class SearchContextTest extends SapphireTest {
 	
-	static $fixture_file = 'sapphire/tests/SearchContextTest.yml';
+	static $fixture_file = 'SearchContextTest.yml';
 
 	protected $extraDataObjects = array(
 		'SearchContextTest_Person',

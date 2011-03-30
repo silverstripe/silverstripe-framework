@@ -6,7 +6,7 @@
  */
 class ImageTest extends SapphireTest {
 	
-	static $fixture_file = 'sapphire/tests/model/ImageTest.yml';
+	static $fixture_file = 'ImageTest.yml';
 
 	function setUp() {
 		parent::setUp();
