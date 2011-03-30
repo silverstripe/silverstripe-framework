@@ -90,7 +90,6 @@ class DbDatetimeTest extends FunctionalTest {
 			$result = DB::query($query)->value();
 			$this->matchesRoughly($result, date('Y-m-d H:i:s', strtotime('+1 Day', $this->getDbNow())), 'tomorrow');
 
-			$firstpage = $this->objFromFixture("Page","first");
 			$query = 'SELECT ' . $this->adapter->datetimeIntervalClause('"Created"', '-15 Minutes') . ' AS "test" FROM "SiteTree" WHERE "URLSegment" = \''.$pageSegment.'\'';
 			$result = DB::query($query)->value();
 			$this->matchesRoughly($result, date('Y-m-d H:i:s', strtotime(Dataobject::get_one('SiteTree',"\"URLSegment\" = '$pageSegment'")->Created) - 900), "15 Minutes before creating SiteTree[$pageSegment]");
