@@ -186,12 +186,6 @@ class LeftAndMain extends Controller {
 			$htmlEditorConfig->setOption('content_css', $cssFiles);
 		}
 		
-
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/typography.css');
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/layout.css');
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/cms_left.css');
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/cms_right.css');
-		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototypefix/intro.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
