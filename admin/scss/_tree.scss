@@ -1,0 +1,64 @@
+// Added through jstree.js on DOM load, but we need it earlier in order to correctly display the uninitialized tree
+
+.jstree {
+	ul {
+		display: block;
+		margin: 0 0 0 0;
+		padding: 0 0 0 0;
+		list-style-type: none; }
+	li {
+		display: block;
+		margin: 0 0 0 0;
+		padding: 0 0 0 0;
+		list-style-type: none;
+		display: block;
+		min-height: 18px;
+		line-height: 18px;
+		white-space: nowrap;
+		margin-left: 18px;
+		min-width: 18px; }
+	ins {
+		display: inline-block;
+		text-decoration: none;
+		width: 18px;
+		height: 18px;
+		margin: 0 0 0 0;
+		padding: 0; }
+	a {
+		display: inline-block;
+		line-height: 16px;
+		height: 16px;
+		color: black;
+		white-space: nowrap;
+		text-decoration: none;
+		padding: 1px 2px;
+		margin: 0;
+		&:focus {
+			outline: none; }
+		> {
+			ins {
+				height: 16px;
+				width: 16px; }
+			.jstree-icon {
+				margin-right: 3px; } } }
+	li {
+		&.jstree-open > ul {
+			display: block; }
+		&.jstree-closed > ul {
+			display: none; } }
+	li.disabled a {
+		color: #aaaaaa; } }
+
+.jstree-rtl {
+	a > .jstree-icon {
+		margin-left: 3px;
+		margin-right: 0; }
+	li {
+		margin-left: 0;
+		margin-right: 18px; } }
+
+.jstree-rtl > ul > li {
+	margin-right: 0px; }
+
+.jstree > ul > li {
+	margin-left: 0px; }
