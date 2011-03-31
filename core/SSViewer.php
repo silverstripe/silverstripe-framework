@@ -177,8 +177,8 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 				$class = array_keys($value);
 				$method = array_values($value);
 
-				//value is the class, property is the function call (output the result of the call)
-				$value = $class[0]::$method[0](); //call method (arrays will only ever have single value)
+				//call method with arguments ($class and $method arrays will only ever have single value)
+				$value = call_user_func_array(array($class[0], $method[0]), array_slice($arguments, 1));
 			}
 			
 			switch ($name) {
