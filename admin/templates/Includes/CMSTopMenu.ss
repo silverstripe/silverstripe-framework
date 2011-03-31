@@ -13,6 +13,16 @@
 </div>
 <ul id="MainMenu">
 <% control MainMenu %>
-	<li class="$LinkingMode" id="Menu-$Code"><a href="$Link">$Title</a></li>
+	<li class="$LinkingMode" id="Menu-$Code">
+		<a href="$Link">$Title</a>
+		<% if Title == 'Edit Page' %>
+		<ul>
+			<li><a href="#">Content</a></li>
+			<li><a href="#">Settings</a></li>
+			<li><a href="#">Reports</a></li>
+			<li><a href="#">History</a></li>
+		</ul>
+		<% end_if %>
+	</li>
 <% end_control %>
 </ul>
