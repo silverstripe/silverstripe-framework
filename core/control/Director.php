@@ -11,7 +11,7 @@
  * @subpackage control
  * @see Director::direct(),Director::addRules(),Director::set_environment_type()
  */
-class Director implements GlobalTemplateVariables {
+class Director implements TemplateGlobalProvider {
 	
 	static private $urlParams;
 

@@ -5,7 +5,7 @@
  * @package sapphire
  * @subpackage core
  */
-interface GlobalTemplateVariables {
+interface TemplateGlobalProvider {
 	/**
 	 * @abstract
 	 * @return array Returns an array of strings of the method names of methods on the call that should be exposed

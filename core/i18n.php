@@ -57,7 +57,7 @@
  * @package sapphire
  * @subpackage misc
  */
-class i18n extends Object implements GlobalTemplateVariables {
+class i18n extends Object implements TemplateGlobalProvider {
 	
 	/**
 	 * This static variable is used to store the current defined locale.

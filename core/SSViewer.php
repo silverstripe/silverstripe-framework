@@ -135,30 +135,31 @@ class SSViewer_Scope {
  */
 class SSViewer_DataPresenter extends SSViewer_Scope {
 	
-	private $extras;
+	private static $extras = null;
 
-	function __construct($item, $extras = null){
+	function __construct($item){
 		parent::__construct($item);
-		$this->extras = $extras;
 
-		if (!$this->extras) $this->extras = array();
+		if (!self::$extras) {   //build up extras array only once per request
+			self::$extras = array();
 
-		//get all the exposed variables from all classes that implement the GlobalTemplateVariables interface
-		$implementers = ClassInfo::implementorsOf("GlobalTemplateVariables");
-		foreach($implementers as $implementer) {
-			$exposedVariables = $implementer::getExposedVariables();    //get the exposed variables
+			//get all the exposed variables from all classes that implement the TemplateGlobalProvider interface
+			$implementers = ClassInfo::implementorsOf("TemplateGlobalProvider");
+			foreach($implementers as $implementer) {
+				$exposedVariables = $implementer::getExposedVariables();    //get the exposed variables
 
-			foreach($exposedVariables as $varName => $methodName) {
-				if (!$varName || is_numeric($varName)) $varName = $methodName;  //array has just a single value, use it for both key and value
+				foreach($exposedVariables as $varName => $methodName) {
+					if (!$varName || is_numeric($varName)) $varName = $methodName;  //array has just a single value, use it for both key and value
 
-				//e.g. "array(Director, absoluteBaseURL)" means call "Director::absoluteBaseURL()"
-				$this->extras[$varName] = array($implementer => $methodName);
-				$firstCharacter = substr($varName, 0, 1);
-				
-				if ((strtoupper($firstCharacter) === $firstCharacter)) {    //is uppercase, so save the lowercase version, too
-					$this->extras[lcfirst($varName)] = array($implementer => $methodName);
-				} else {    //is lowercase, save a version so it also works uppercase
-					$this->extras[ucfirst($varName)] = array($implementer => $methodName);
+					//e.g. "array(Director, absoluteBaseURL)" means call "Director::absoluteBaseURL()"
+					self::$extras[$varName] = array($implementer => $methodName);
+					$firstCharacter = substr($varName, 0, 1);
+
+					if ((strtoupper($firstCharacter) === $firstCharacter)) {    //is uppercase, so save the lowercase version, too
+						self::$extras[lcfirst($varName)] = array($implementer => $methodName);
+					} else {    //is lowercase, save a version so it also works uppercase
+						self::$extras[ucfirst($varName)] = array($implementer => $methodName);
+					}
 				}
 			}
 		}
@@ -167,10 +168,10 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 	function __call($name, $arguments) {
 		$property = $arguments[0];
 
-		if ($this->extras && array_key_exists($property, $this->extras)) {
+		if (self::$extras && array_key_exists($property, self::$extras)) {
 			$this->resetLocalScope();   //if we are inside a chain (e.g. $A.B.C.Up.E) break out to the beginning of it
 
-			$value = $this->extras[$property];  //get the method call
+			$value = self::$extras[$property];  //get the method call
 
 			//only call functions that specify themselves as function=>call
 			if (is_array($value)) {

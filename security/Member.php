@@ -5,7 +5,7 @@
  * @package sapphire
  * @subpackage security
  */
-class Member extends DataObject implements GlobalTemplateVariables {
+class Member extends DataObject implements TemplateGlobalProvider {
 
 	static $db = array(
 		'FirstName' => 'Varchar',

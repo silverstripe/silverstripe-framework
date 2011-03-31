@@ -9,7 +9,7 @@
  * @package sapphire
  * @subpackage control
  */
-class Controller extends RequestHandler implements GlobalTemplateVariables {
+class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 	/**
 	 * @var array $urlParams An array of arguments extracted from the URL 

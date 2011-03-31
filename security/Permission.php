@@ -4,7 +4,7 @@
  * @package sapphire
  * @subpackage security
  */
-class Permission extends DataObject implements GlobalTemplateVariables {
+class Permission extends DataObject implements TemplateGlobalProvider {
 
   // the (1) after Type specifies the DB default value which is needed for
 	// upgrades from older SilverStripe versions
