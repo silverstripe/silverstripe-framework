@@ -10,7 +10,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	
 	static $url_rule = '/$Action/$ID/$OtherID';
 	
-	static $menu_title = 'Security';
+	static $menu_title = 'Users';
 	
 	static $tree_class = 'Group';
 	
