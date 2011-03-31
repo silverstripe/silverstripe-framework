@@ -80,6 +80,35 @@ SS
 		$this->assertEquals('{$Test}', $this->render('{\\$Test}'), 'Escapes can be used to avoid injection');
 		$this->assertEquals('{\\[out:Test]}', $this->render('{\\\\$Test}'), 'Escapes before injections are correctly unescaped');
 	}
+
+	function testGlobalVariableCalls() {
+		$this->assertEquals(Director::absoluteBaseURL(), $this->render('{$absoluteBaseURL}'), 'Director::absoluteBaseURL can be called from within template');
+		$this->assertEquals(Director::absoluteBaseURL(), $this->render('{$AbsoluteBaseURL}'), 'Upper-case %AbsoluteBaseURL can be called from within template');
+
+		$this->assertEquals(Director::is_ajax(), $this->render('{$isAjax}'), 'All variations of is_ajax result in the correct call');
+		$this->assertEquals(Director::is_ajax(), $this->render('{$IsAjax}'), 'All variations of is_ajax result in the correct call');
+		$this->assertEquals(Director::is_ajax(), $this->render('{$is_ajax}'), 'All variations of is_ajax result in the correct call');
+		$this->assertEquals(Director::is_ajax(), $this->render('{$Is_ajax}'), 'All variations of is_ajax result in the correct call');
+
+		$this->assertEquals(i18n::get_locale(), $this->render('{$i18nLocale}'), 'i18n template functions result correct result');
+		$this->assertEquals(i18n::get_locale(), $this->render('{$get_locale}'), 'i18n template functions result correct result');
+
+		$this->assertEquals((string)Controller::curr(), $this->render('{$CurrentPage}'), 'i18n template functions result correct result');
+		$this->assertEquals((string)Controller::curr(), $this->render('{$currentPage}'), 'i18n template functions result correct result');
+
+		$this->assertEquals(Member::currentUser(), $this->render('{$CurrentMember}'), 'Member template functions result correct result');
+		$this->assertEquals(Member::currentUser(), $this->render('{$CurrentUser}'), 'Member template functions result correct result');
+		$this->assertEquals(Member::currentUser(), $this->render('{$currentMember}'), 'Member template functions result correct result');
+		$this->assertEquals(Member::currentUser(), $this->render('{$currentUser}'), 'Member template functions result correct result');
+
+		$this->assertEquals(SecurityToken::getSecurityID(), $this->render('{$getSecurityID}'), 'SecurityToken template functions result correct result');
+		$this->assertEquals(SecurityToken::getSecurityID(), $this->render('{$SecurityID}'), 'SecurityToken template functions result correct result');
+	}
+
+	function testGlobalVariableCallsWithArguments() {
+		$this->assertEquals(Permission::check("ADMIN"), $this->render('{$HasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
+		$this->assertEquals(Permission::check("ADMIN"), $this->render('{$hasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
+	}
 	
 	function testObjectDotArguments() {
 		$this->assertEquals(

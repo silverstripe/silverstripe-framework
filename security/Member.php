@@ -5,7 +5,7 @@
  * @package sapphire
  * @subpackage security
  */
-class Member extends DataObject {
+class Member extends DataObject implements GlobalTemplateVariables {
 
 	static $db = array(
 		'FirstName' => 'Varchar',
@@ -1411,6 +1411,13 @@ class Member extends DataObject {
 		
 		// If can't find a suitable editor, just default to cms
 		return $currentName ? $currentName : 'cms';
+	}
+
+	public static function getExposedVariables() {
+		return array(
+			'CurrentMember' => 'currentUser',
+			'currentUser'
+		);
 	}
 }
 
