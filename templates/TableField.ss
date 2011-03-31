@@ -30,7 +30,7 @@
 		<% if Can(add) %>
 			<tr>
 				<td colspan="$ItemCount">
-					<a href="#" class="addrow" title="<% _t('ADD', 'Add a new row') %>"><img src="cms/images/add.gif" alt="<% _t('ADD','Add a new row') %>" />
+					<a href="#" class="addrow" title="<% _t('ADD', 'Add a new row') %>"><img src="sapphire/images/add.gif" alt="<% _t('ADD','Add a new row') %>" />
 						<% sprintf(_t('ADDITEM','Add %s'),$Title) %>
 					</a>
 				</td>
@@ -47,7 +47,7 @@
 						<td class="$FieldClass $extraClass $ClassName $Title tablecolumn">$Field</td>
 					<% end_control %>
 					<td style="display: none">$ExtraData</td>
-					<% if Can(delete) %><td width="18"><a class="deletelink" href="$DeleteLink" title="<% _t('DELETEROW') %>"><img src="cms/images/delete.gif" alt="<% _t('DELETE') %>" /></a></td><% end_if %>
+					<% if Can(delete) %><td width="18"><a class="deletelink" href="$DeleteLink" title="<% _t('DELETEROW') %>"><img src="sapphire/images/delete.gif" alt="<% _t('DELETE') %>" /></a></td><% end_if %>
 				</tr>
 			<% end_control %>
 			<% else %>

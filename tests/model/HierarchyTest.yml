@@ -1,31 +1,31 @@
-Page:
-   page1:
-      Title: Page 1
-   page2:
-      Title: Page 2
-   page3:
-      Title: Page 3
-   page2a:
-      Parent: =>Page.page2
-      Title: Page 2a
-   page2b:
-      Parent: =>Page.page2
-      Title: Page 2b
-   page3a:
-      Parent: =>Page.page3
-      Title: Page 3a
-   page3b:
-      Parent: =>Page.page3
-      Title: Page 3b
-   page2aa:
-      Parent: =>Page.page2a
-      Title: Page 2aa
-   page2ab:
-      Parent: =>Page.page2a
-      Title: Page 2ab
-   page3aa:
-      Parent: =>Page.page3a
-      Title: Page 3aa
-   page3ab:
-      Parent: =>Page.page3a
-      Title: Page 3ab
+HierarchyTest_Object:
+   obj1:
+      Title: Obj 1
+   obj2:
+      Title: Obj 2
+   obj3:
+      Title: Obj 3
+   obj2a:
+      Parent: =>HierarchyTest_Object.obj2
+      Title: Obj 2a
+   obj2b:
+      Parent: =>HierarchyTest_Object.obj2
+      Title: Obj 2b
+   obj3a:
+      Parent: =>HierarchyTest_Object.obj3
+      Title: Obj 3a
+   obj3b:
+      Parent: =>HierarchyTest_Object.obj3
+      Title: Obj 3b
+   obj2aa:
+      Parent: =>HierarchyTest_Object.obj2a
+      Title: Obj 2aa
+   obj2ab:
+      Parent: =>HierarchyTest_Object.obj2a
+      Title: Obj 2ab
+   obj3aa:
+      Parent: =>HierarchyTest_Object.obj3a
+      Title: Obj 3aa
+   obj3ab:
+      Parent: =>HierarchyTest_Object.obj3a
+      Title: Obj 3ab

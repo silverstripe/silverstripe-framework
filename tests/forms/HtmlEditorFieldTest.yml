@@ -1,11 +1,3 @@
-SiteTree:
-  home:
-    Title: Home Page
-  about:
-    Title: About Us
-  contact:
-    Title: Contact Us
-
 File:
   example_file:
     Name: example.pdf
@@ -13,3 +5,11 @@ File:
 Image:
   example_image:
     Name: example.jpg
+
+HtmlEditorFieldTest_Object:
+  home:
+    Title: Home Page
+  about:
+    Title: About Us
+  contact:
+    Title: Contact Us

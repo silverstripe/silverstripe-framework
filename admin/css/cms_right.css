@@ -1,0 +1,590 @@
+/**
+ * General
+ */
+#right p/*,
+#right .optionset*/ {
+	margin: 7px 0;
+}
+	#right .optionset li {
+		margin: 8px 0;
+	}
+
+/**
+ * Forms
+ */
+.right form {
+	margin: 1em;
+	position: relative;
+}
+
+/* legend tag shows up annoying spacing in IE6/7 */
+.right form legend {
+	display: none;
+}
+
+.right form .field {
+	border: none;
+	margin: 0;
+}
+	.right form .text,
+	.right form .field span.readonly,
+	.right form .field span.readonly i,
+	.right form div.TableListField table i {
+		font-size: 12px;
+	}
+		.right form .field span.readonly {
+			margin: 0;
+			width: auto;
+		}
+			.right form #URL .fieldgroup * {
+				font-size: 12px;
+				font-weight: bold;
+			}
+			.right form .fieldgroupField {
+			    display: inline;
+			}
+			.right form #URL .fieldgroup {
+				display:block;
+				height: 16px;
+				background-color:#F7F7F7;
+				border:1px dotted #CCCCCC;
+				padding:3px;
+			}
+				.right form #URL .originallang_holder {
+					display: inline;
+					border: none;
+					padding: 0;
+				}
+			.right form #URL .fieldgroup input {
+				border: 1px solid #A7A7A7;
+				padding: 2px;
+				margin-top: -3px;
+			}
+			.right form #URL .fieldgroup span.readonly {
+				display: inline;
+				border: none;
+				padding: 0;
+			}
+			
+			.right form .parentTypeSelector {
+				margin-left: 0 !important;
+			}
+			.right form .parentTypeSelector label.left {
+				float: none !important;
+				margin-left: 0 !important;
+				width: auto !important;
+			}
+				
+	.right form .dropdown,
+	.right form .countrydropdown {
+		font-size: 12px;
+	}
+		.right form .dropdown select,
+		.right form .countrydropdown select {
+			font-size: 12px;
+			height: 19px;
+		}
+			.right form .dropdown select option,
+			.right form .countrydropdown select option {
+				font-size: 12px;
+			}
+			
+	.right form .field .middleColumn {
+		display: block;
+		background: #e9e9e9;
+		padding: 3px;
+		width: 97%;
+	}
+		.right form .field .middleColumn .middleColumn {
+			padding: 0;
+		}
+	.right form .field.image .middleColumn,
+	.right form .field.simpleimagefield_disabled .middleColumn {
+		padding-bottom:0;
+	}
+	
+	.right form .htmleditorfield span.readonly *,
+	#right form .htmleditorfield span.readonly * {
+		margin: 0;
+		border: 0;
+		padding: 0;
+	}
+	
+.right form .checkbox input,
+.right form .optionset input {
+	border: none;
+}
+
+.right form .field label {
+	font-size: 11px;
+	color: #666;
+}
+.right form .field label.left {
+	float: none;
+	display: block;
+	margin-left: 0;
+	margin-bottom: 3px;
+	/*font-size: 11px;*/
+	width: 96%;
+}
+
+.time .timeIcon,
+.datetime .timeIcon {
+	margin-left: 2px;
+}
+
+.right form .date input.month,
+.right form .date input.day,
+.right form .date input.year {
+	width: auto;
+}
+
+.right form .datetime .clear {
+	clear: both;
+}
+
+.right form .datetime .date,
+.right form .datetime .time {
+	float: left;
+	clear: none;
+	width: auto;
+}
+	.right form .datetime .middleColumn .middleColumn {
+		width: auto;
+	}
+	.right form .datetime .date input,
+	.right form .datetime .time input {
+		width: auto;
+	}
+
+.right form textarea,
+.right form input.text,
+.right form textarea.htmleditor {
+	border: 1px solid #a7a7a7;
+	padding: 3px;
+	width: 99%;
+}
+.right form textarea {
+	font-size: 12px;
+}
+	
+.right form input.checkbox, 
+.right form .optionset input, 
+.right form .htmleditor select {
+	width: auto;
+	margin-right: 4px;
+}
+
+.right form #Root_Access input {
+	float: left;
+}
+
+.right form ul.optionset {
+	padding: 0;
+}
+.right form .optionset li {
+	list-style: none;
+}
+.right form .optionset li.cancel {
+	float: left;
+}
+.right form .optionset li.submit {
+	float: right;
+}
+
+.right form h1 {
+	font-size: 20px;
+}
+.right form h2 {
+	font-size: 18px;
+	clear: both;
+}
+.right form h3 {
+	font-size: 16px;	
+}
+.right form h4 {
+	font-size: 14px;	
+}
+.right form h5 {
+	font-size: 12px;	
+}
+
+.right form .fieldgroup input, 
+.right form .fieldgroup select {
+	width: auto;
+}
+
+.right form fieldset {
+	height: 100%;
+}
+
+.right form .Actions {
+	text-align: right;
+	padding: 0.5em;
+	background: white;
+	border-top: 1px solid #aaa;
+}
+
+	.right form .Actions input {
+		padding: .5em;
+		font-size: 11px;
+	}
+	
+	.right form.loading {
+		margin-left: -1000em;
+		margin-right: 1000em;
+	}
+
+#SiteTreeFilterDate {
+	width: 68px;
+}
+
+/** 
+ * Tinymce 
+ */
+.right form .mceEditor select.mceNativeListBox { 
+	background: #fff; 
+	padding-top: 2px;
+	width: 95px; /* Added width to stop sizes jumping and text wrapping */
+	font-size: 11px;
+}
+	.right form .mceEditor select.mceNativeListBox option {
+		padding: 0 2px 0 2px;
+		font-size: 11px;
+	}
+	.right form .mceEditor .mceFirst { 
+		background: #f4f4f4; 
+	} 
+	.right form .mceEditor .mceToolbar table { 
+		background: transparent; 
+	} 
+	.right form .mceEditor .mceButton { 
+		padding: 1px; 
+	}
+	.right form .mceEditor select.mceNativeListBox {
+		background: #fff;
+	}
+	.right form .mceEditor .mceFirst {
+		background: #fbfbfb url(../images/textures/mce_editor.gif) repeat-x bottom;
+	}
+	.right form .mceEditor .mceToolbar table {
+		background: transparent;
+	}
+
+	.right form .mceEditor select.mceNativeListBox {
+		background: #fff;
+	}
+
+/**
+ * Non-tabbed scrolling area that can be used in place of tabs in LeftAndMAin
+ */
+.right #ScrollPanel {
+	background: #fff;
+	clear: left;
+	overflow: auto;
+	border: 1px solid #aaa;
+	position: relative;
+	top: 0;
+	padding: 10px;
+}
+
+/**
+ * RHS Action Parameters boxes 
+ */
+#right form.actionparams {
+	border: 1px solid #777;
+	background: #ccc;
+	position: absolute;
+	bottom: 32px;
+	right: 11px;
+	width: 300px;
+	z-index: 200;
+	padding: 10px;	
+}
+
+	#right form.actionparams div.field {
+		margin-left: 6em;
+	}
+
+	#right form.actionparams label.left {
+		width: 6em;
+		margin-left: -6em;
+	}
+	#right form.actionparams input, #right form.actionparams select, #right form.actionparams textarea {
+		width: 100%;
+	}
+	#right form.actionparams  input.checkbox, #right form.actionparams .optionset input {
+		width: auto;
+	}
+
+	#right form.actionparams p.label {
+		margin: 10px 0 0 0;
+	}
+	#right form.actionparams .actions {
+		margin: 10px 0 0 0;
+		text-align: right;
+	}
+	#right form.actionparams .actions input {
+		width: auto;
+	}
+	#right form.actionparams .sendingText {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		padding: 10% 0 0 0;
+		height: 60%;
+		background: #ccc;
+		font-size: 25px;
+		font-weight: bold;
+		color: #fff;
+		text-align: center;
+	}
+
+	#right form.actionparams div.TreeDropdownField {
+		width: 220px;
+		padding-bottom: 150px;
+
+}
+#right form.actionparams div.TreeDropdownField .items {
+	width: 195px;
+}
+#right form.actionparams div.TreeDropdownField div.tree_holder {
+	width: 214px;
+}
+
+/**
+ * Autocomplete
+ */
+.autocomplete {
+	margin-left: 1px;
+	background: white;
+	overflow: visible;
+}
+	.autocomplete ul {
+		border: 1px solid #aaa;
+		background: #FFFFBB;
+	}
+	.autocomplete li {
+		list-style-type: none;
+		cursor: pointer;
+		font-size: 12px;
+		padding: 3px;
+		white-space: nowrap;
+	}
+	.autocomplete li.selected {
+		background: Highlight;
+		color: HighlightText;
+	}
+	.autocomplete .data {
+		display: none;
+	}
+	.autocomplete .informal {
+		font-style: italic;
+	}
+
+
+/**
+ * Status Messages
+ */
+.notice-wrap {
+	position: absolute;
+	z-index: 500;
+	bottom: 4px;
+	left: 10px;
+	z-index: 9999;
+	width: auto;
+}
+
+* html .notice-wrap {
+	position: absolute;		
+}
+
+.notice-item {
+	display: block;
+	position: relative;
+	width: auto;
+	background: #f4f3eb;
+	border: 1px solid #a9a67d;
+	padding: 2px 20px 2px 20px;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 1.5;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+}
+
+.notice-item-close {
+	position: absolute;
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	right: 6px;
+	top: 6px;
+	cursor: pointer;
+}
+
+	.notice-wrap .good {
+		padding-left: 40px;
+		color: #060;
+		background: #E2F9E3 url(../images/alert-good.gif) 7px 50% no-repeat;
+		border: 1px solid #8dd38d;
+	}
+	.notice-wrap .bad {
+		padding-left: 40px;
+		color: #c80700;
+		background: #ffe9e9 url(../images/alert-bad.gif) 7px 50% no-repeat;
+		border: 1px solid #ff8e8e;
+	}
+
+/**
+ * TableField Subclasses
+ */
+ 
+/* Filter box (for search/filter box above a table on Asset/MemberTableField) */
+.right div.filterBox {
+	width: inherit;
+	margin: 5px 0;
+	padding: 5px;
+	background: #EEE;
+	border: 1px solid #BBB;
+}
+	.right div.filterBox .middleColumn {
+		background: none !important;
+	}
+
+	.right form div.filterBox label {
+		display: block;
+		width: 5em;
+		float: left;
+		margin-left: 0;
+		line-height: 2.3;
+		font-weight: bold;
+		font-size: 12px;
+	}
+	
+	.right div.filterBox div.field {
+		margin-left: 0 !important;
+		padding: 0;
+		font-size: 12px;
+		display: inline;
+	}
+	
+	.right div.filterBox input,
+	.right div.filterBox select {
+		width: auto;
+	}
+
+
+/**
+ * i18n
+ */
+.right form div.originallang_holder {
+	border: 1px dashed #aaa;
+	margin-bottom: 10px; 
+	margin-left: 0 !important;
+	padding: 8px 0 6px 5px;
+}
+
+.originallang,
+#Form_EditForm_URLSegment_original {
+	color: #666;
+	font-style: italic;
+}
+
+.right form .CompositeField .originallang label.left,
+.right form div.originallang_holder label.left {
+	margin-left: 0 !important;
+	width: auto !important;
+	float: none !important;
+}
+
+.right form div.CompositeField .originallang .middleColumn {
+	clear: left;
+}
+
+.right form div.languageDropdown {
+	clear: right;
+	float: left;
+	padding-right: 4px;
+}
+
+.right form .createTranslationButton .middleColumn {
+	background: none;
+}
+
+#contentPanel h2 img {
+	float: right;
+	margin-right: 2px;
+	cursor: pointer;
+}
+
+.right form .field.confirmedpassword.nolabel .middleColumn {
+	background-color: #fff;	
+	padding: 0px;
+}
+
+	.right form .field.confirmedpassword.nolabel .middleColumn .middleColumn {
+		background-color: #e9e9e9;
+		padding: 3px;
+	}
+	
+.autocompleteoptions {
+	background-color: white;
+}
+
+/**
+ * Tabs
+ */
+.right form .ss-tabset {
+	/* Need this to stop tabs from disappearing sometimes */
+	position: relative;
+}
+
+	.right form .ss-tabset .tab {
+		position: relative;
+		overflow-x: hidden;
+	}
+
+/**
+ * "Insert Image" forms etc.
+ */
+#Form_EditorToolbarImageForm .field,
+#Form_EditorToolbarFlashForm .field,
+#Form_EditorToolbarLinkForm .field {
+	margin-left: 0;
+}
+
+/**
+ * jQuery UI Datepicker - necessary because of custom
+ * z-indexing performed in jQuery.layout
+ */
+#ui-datepicker-div {
+	z-index: 1002;
+}
+
+/**
+ * Upload Image (Image Toolbar)
+ */
+#Form_EditorToolbarImageForm .file,
+#Form_EditorToolbarImageForm #UploadFormResponse {
+	display: none;
+}
+
+.showUploadField {
+	font-size: 11px;
+	padding: 1px 3px;
+}
+	.showUploadField a {
+		display: none;
+	}
+	
+	#UploadFormResponse {
+		padding: 6px 0;
+		font-size: 12px;
+	}
+		#UploadFormResponse.loading
+		.loading#UploadFormResponse {
+			background: url(../../images/network-save.gif) no-repeat left center;
+			padding-left: 20px;
+		}

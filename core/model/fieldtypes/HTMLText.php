@@ -77,9 +77,13 @@ class HTMLText extends Text {
 		 * that does very badly on broken HTML*/
 		if (!$str) {
 			/* See if we can pull a paragraph out*/
-			if (preg_match('{<p(\s[^<>]*)?>(.*[A-Za-z]+.*)</p>}', $this->value, $matches)) $str = $matches[2];
+
+			// Strip out any images in case there's one at the beginning. Not doing this will return a blank paragraph
+			$str = preg_replace('{^\s*(<.+?>)*<img[^>]*>}', '', $this->value);
+			if (preg_match('{<p(\s[^<>]*)?>(.*[A-Za-z]+.*)</p>}', $str, $matches)) $str = $matches[2];
+
 			/* If _that_ failed, just use the whole text */
-			else $str = $this->value;
+			if (!$str) $str = $this->value;
 			
 			/* Now pull out all the html-alike stuff */
 			$str = preg_replace('{</?[a-zA-Z]+[^<>]*>}', '', $str); /* Take out anything that is obviously a tag */

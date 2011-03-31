@@ -751,6 +751,9 @@ class MySQLDatabase extends SS_Database {
 	 * @param string $keywords Keywords as a string.
 	 */
 	public function searchEngine($classesToSearch, $keywords, $start, $pageLength, $sortBy = "Relevance DESC", $extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false) {
+		if(!class_exists('SiteTree')) throw new Exception('MySQLDatabase->searchEngine() requires "SiteTree" class');
+		if(!class_exists('File')) throw new Exception('MySQLDatabase->searchEngine() requires "File" class');
+		
 		$fileFilter = '';
 	 	$keywords = Convert::raw2sql($keywords);
 		$htmlEntityKeywords = htmlentities($keywords, ENT_NOQUOTES, 'UTF-8');

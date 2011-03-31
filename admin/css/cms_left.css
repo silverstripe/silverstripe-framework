@@ -1,0 +1,414 @@
+#left form.actionparams {
+	background: #eee;
+	padding: 0 5px 5px 5px;
+	_padding-left: 5px;
+	float: left;
+	width: 100%;
+}
+	#left form#search_options {
+		padding-bottom: 8px;
+	}
+#left form.actionparams input,
+#left form.actionparams select {
+	padding: 1px;
+}
+#left form.actionparams select,
+#ReportSelector_holder select {
+	width: 75%;
+}
+	/* reset for a fieldtype that shouldn't have this width setting */
+	#left form.actionparams .dropdownpopup select {
+		width: auto;
+	}
+
+#PageType,
+#ReportSelector_holder select {
+	float: left;
+	margin-right: 4px;
+	padding: 1px;
+}
+#left form.actionparms input.action {
+	width: 5%;
+}
+
+#Form_DeleteItemsForm p {
+	margin: 4px 8px 4px 0;
+	font-size: 11px;
+	color: #666;
+}
+
+form.oneline fieldset {
+	width: 80%;
+	float: left;
+	margin-right: .5em;
+}
+
+/**
+ * Selection Groups
+ */
+#left .SelectionGroup {
+	display: block;
+}
+#left .SelectionGroup li {
+	list-style-type: none;
+	clear: left;
+	border: 1px solid #ccc;
+}
+#left .SelectionGroup li input {
+	width: 20px;
+	float: left;
+}
+#left .SelectionGroup li div.field {
+	display: none;
+	font-size: 1em;
+}
+#left .SelectionGroup li label {
+	margin: 0 0 0 2px;
+	display: block;
+	height: 1.2em;
+	width: auto;
+	float: none;
+}	
+#left .SelectionGroup li.selected div.field {
+	margin-left: 23px;
+	display: block;
+	margin-bottom: 1em;
+}	
+#left div.field select {
+	width: 100%;
+}
+#left .SelectionGroup li.selected label.selector {
+	font-weight: bold;
+}
+
+#publication_key {
+	border-bottom: 1px solid #ccc;
+	background: #eee;
+	padding: 3px;
+	font-weight: bold;
+}
+	#publication_key ins,
+	#publication_key del,
+	#publication_key span {
+		margin: 0 5px;
+		font-weight: normal;
+	}
+	#publication_key span.notinmenu {
+		color: #77A;
+	}
+	/* Created on stage, never published */
+	#publication_key ins {
+		color: orange;
+		text-decoration : none;
+	}
+	/* Deleted on stage */
+	#publication_key del {
+		color: red;
+	}
+	/* Deleted on stage & live (when show deleted pages is active) */
+	#publication_key del.deletedOnLive {
+		color: #700;
+	}
+
+	#publication_key span.modified {
+		color: green;
+		text-decoration : none;
+	}
+
+#left {
+	background-color: #eee;
+}
+
+#treepanes .ui-accordion-content {
+	padding: 0;
+}
+.ui-layout-pane-west {
+	/* OVERRIDE 'default styles' */
+	padding: 0 !important;
+	overflow: hidden !important;
+}
+
+#treepanes h2 {
+	cursor: pointer;
+}
+
+#treepanes h2 img {
+	float:right;
+	margin-right: 2px;
+}
+
+#treepanes form .field {
+	margin: 0;
+}
+
+.listpane p {
+	display: block;
+	margin: 0px 4px 0px 4px;
+	padding: 3px 0px;
+	font-size: 10px;
+}
+.listpane ul {
+	margin: 0;
+	padding: 0;
+}
+.listpane ul li {
+	list-style-type: none;
+	font-size: 10px;
+	border-bottom: 1px #CCC dotted;
+	background-color: #FFF;
+}
+.listpane ul li.odd {
+	background-color: #EEE;
+}
+
+.listpane ul li .extra {
+	font-style: italic;
+	color: #666;
+}
+.listpane div.unitBody {
+	overflow: auto;
+	width: 100%;
+	clear: left;
+}
+
+.listpane li a {
+	display: block;
+	padding: 5px;
+}
+
+.listpane input.action {
+	padding: 0;
+}
+
+.listpane p.message {
+	padding: 5px;
+}
+
+
+#treepanes .pane_actions {
+	margin: 0px 4px 0px 4px; 
+}
+
+#treepanes .pane_actions a {
+	margin: 4px;
+	padding: 3px;
+	background-color: #EEE;
+	border: 1px #CCC solid;
+}
+#treepanes .pane_actions a.current {
+	background-color: #CCC;
+}
+
+
+#treepanes table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#treepanes table thead td {
+	background-color: #aaa;
+	color: #fff;
+	border-bottom: 2px #ccc solid;
+	padding: 0 3px;
+}
+
+#treepanes table tbody tr {
+	cursor: pointer;
+}
+
+#treepanes table tbody td {
+	font-size: 11px;
+	padding: 1px 3px;
+}
+
+#treepanes table tbody tr.even td {
+	background-color: #EEE;
+}
+#treepanes table tbody tr.over td {
+	background-color: #FFFFBB;
+}
+
+#treepanes table tbody tr.current td {
+	background-color: #BBBBFF;
+}
+
+#treepanes #Versions tbody tr.internal {
+	color: #777;
+}
+#treepanes #Versions tbody tr.published {
+	color: black;
+}
+
+.SideReport_RecentlyEdited li a:hover {
+	background-color: #FFFFBB;
+}
+
+/* This applies to both the LHS context menu and the TinyMCE context menu */
+.contextMenu {
+	z-index: 1000;
+	background-color: white;
+	border: 1px #CCC solid;
+}
+
+ul.contextMenu {	
+	padding: 0;
+	margin: 0;
+}
+ul.contextMenu li {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+ul.contextMenu li a {
+	display: block;
+	font-family: Tahoma, Verdana, Arial, Helvetica;
+	font-size: 11px;
+	padding: 5px 10px 5px 5px;
+	color: black;
+	text-decoration: none;
+}
+ul.contextMenu li a:hover {
+	background-color: #B6BDD2;
+	text-decoration: none;
+}
+
+/* Tree */
+
+/* Added through jstree.js on DOM load, but we need it earlier in order to correctly display the uninitialized tree */
+.jstree ul, .jstree li { display:block; margin:0 0 0 0; padding:0 0 0 0; list-style-type:none; } 
+.jstree li { display:block; min-height:18px; line-height:18px; white-space:nowrap; margin-left:18px; min-width:18px; } 
+.jstree-rtl li { margin-left:0; margin-right:18px; } 
+.jstree > ul > li { margin-left:0px; } 
+.jstree-rtl > ul > li { margin-right:0px; } 
+.jstree ins { display:inline-block; text-decoration:none; width:18px; height:18px; margin:0 0 0 0; padding:0; } 
+.jstree a { display:inline-block; line-height:16px; height:16px; color:black; white-space:nowrap; text-decoration:none; padding:1px 2px; margin:0; } 
+.jstree a:focus { outline: none; } 
+.jstree a > ins { height:16px; width:16px; } 
+.jstree a > .jstree-icon { margin-right:3px; } 
+.jstree-rtl a > .jstree-icon { margin-left:3px; margin-right:0; } 
+li.jstree-open > ul { display:block; } 
+li.jstree-closed > ul { display:none; }
+
+ul.tree span.untranslated a:link, 
+ul.tree span.untranslated a:hover, 
+ul.tree span.untranslated a:visited {
+	color: #ccc
+}
+
+#sitetree_ul li.disabled a {
+	color: #aaa;
+}
+
+#Form_SearchTreeForm .field .middleColumn {
+	width: 60%;
+	float: left;
+	margin: 0;
+}
+
+#Form_SearchTreeForm .field label {
+	margin-left: 0;
+	width: 28%;
+}
+
+#Form_SearchTreeForm select.options {
+	clear: left;
+}
+
+/* Change detection CSS */
+#right .compare ins, #right .compare ins * {
+	background-color: #99EE66;
+	text-decoration: none;
+}
+
+#right .compare del, #right .compare del *{
+	background-color: #FF9999;
+	text-decoration: line-through;
+}
+
+#sitetree a.contents {
+	font-style: italic;	
+}
+
+#ShowDrafts {
+	float: none;
+}
+
+.noBottomBorder {
+	border-bottom: none;
+}
+
+.checkboxAboveTree {
+	border-top: 1px solid #cccccc;
+	padding: .5em;
+	overflow: hidden;
+	clear: left;
+}
+	.checkboxAboveTree div {
+		clear: left;
+	}
+	.checkboxAboveTree input, #ShowChanged input, #ShowDrafts input {
+		float: left;
+		margin: 0 3px 0 0;
+	}
+
+#versions_actions {
+	float: left;
+	width: 100%;
+	border-bottom:1px solid #CCC;
+}	
+#versions_actions .versionChoice {
+	float: left;
+	display: block;
+	margin: 0 0 5px 0;
+}
+
+	.versionChoice label {
+		display: block;
+		float: left;
+		margin-top: 3px;
+		_margin-top: 4px;
+	}
+
+#versions_actions input, #Remember input {
+	float: left;
+	display: block;
+	margin: 0 3px 0 0;
+}
+
+#ReportSelector_holder {
+	background: #EEE;
+	margin: 0 !important;
+	padding: 3px 3px 7px;
+	border-bottom: 1px solid #CCC;
+}
+#versions_actions {
+	background: #EEE;
+	overflow: hidden;
+	margin: 0 !important;
+	padding: 4px 7px;
+}
+#Form_VersionsForm td.checkbox {
+
+}
+
+#Form_SideReportsForm select,
+#Form_SideReportsForm .middlecolumn {
+	width: 80%;
+}
+/**
+ * i18n
+ */
+#LangSelector_holder {
+	float: none;
+	background-color: #EEEEEE;
+	border-bottom: 1px solid #CCCCCC;
+	border-top: 1px solid #CCCCCC;
+	padding: 3px 0 3px 7px;
+}
+	#LangSelector_holder .Actions {
+		display: none;
+	}
+	#LangSelector_holder label.left {
+		margin-left: 0;
+		width: auto;
+	}

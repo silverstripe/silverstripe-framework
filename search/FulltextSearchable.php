@@ -2,7 +2,8 @@
 /**
  * Provides a simple search engine for your site based on the MySQL FULLTEXT index.
  * Adds the {@link FulltextSearchable} extension to data classes,
- * as well as the {@link ContentControllerSearchExtension} to {@link ContentController}.
+ * as well as the {@link ContentControllerSearchExtension} to {@link ContentController}
+ * (if the 'cms' module is available as well).
  * (this means you can use $SearchForm in your template without changing your own implementation).
  * 
  * @see http://doc.silverstripe.org/tutorial:4-site-search
@@ -45,6 +46,8 @@ class FulltextSearchable extends DataObjectDecorator {
 
 		if(!is_array($searchableClasses)) $searchableClasses = array($searchableClasses);
 		foreach($searchableClasses as $class) {
+			if(!class_exists($class)) continue;
+			
 			if(isset($defaultColumns[$class])) {
 				Object::add_extension($class, "FulltextSearchable('{$defaultColumns[$class]}')");
 			} else {
@@ -52,8 +55,9 @@ class FulltextSearchable extends DataObjectDecorator {
 			}
 		}
 		self::$searchable_classes = $searchableClasses;
-
-		Object::add_extension("ContentController", "ContentControllerSearchExtension");
+		if(class_exists("ContentController")){
+			Object::add_extension("ContentController", "ContentControllerSearchExtension");
+		}
 	}
 
 	/**

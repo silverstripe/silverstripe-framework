@@ -33,7 +33,7 @@ table.CMSList th {
 table.TableField thead th, 
 .TableListField table.data thead th, 
 table.CMSList thead th {
-	background-image: url(../../cms/images/tables/thead.png);
+	background-image: url(../images/thead.png);
 	background-repeat: repeat-x;
 	background-position: left bottom;
 	background-color: #ebeadb;
@@ -105,7 +105,7 @@ table.TableField tbody td.checkbox,
 table.CMSList tbody td.checkbox {
 	border : 1px solid #f1efe2;
 	padding-left : 5px;
-	background-image : url(../../cms/images/tables/checkbox.png);
+	background-image : url(../images/checkbox.png);
 	background-repeat : repeat-x;
 	background-position : left bottom;
 }
@@ -143,7 +143,7 @@ table.CMSList tbody td.current td {
  */
 .TableListField tr.loading td.first {
     padding-left: 22px;
-    background: url(../../cms/images/network-save.gif) 3px 2px no-repeat;
+    background: url(../images/network-save.gif) 3px 2px no-repeat;
 }
 
 .right form .TableField span.readonly {
@@ -168,7 +168,6 @@ table.CMSList tbody td.current td {
 }
 	.TableListField div.utility a {
 		text-decoration: none;
-		background-image:url(../../cms/images/textures/ToolBar.png);
 		border-color: #ccc #999 #999 #ccc;
 		border-style: double;
 		color: #333;

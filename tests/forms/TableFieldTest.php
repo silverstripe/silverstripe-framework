@@ -39,8 +39,8 @@ class TableFieldTest extends SapphireTest {
 		$tableField->setValue(array(
 			'new' => array(
 				'Code' => array(
-					'CMS_ACCESS_CMSMain',
-					'CMS_ACCESS_AssetAdmin',
+					'CustomPerm1',
+					'CustomPerm2',
 				),
 				'Arg' => array(
 					'1',
@@ -53,8 +53,8 @@ class TableFieldTest extends SapphireTest {
 		// Let's check that the 2 permissions entries have been saved
 		$permissions = $group->Permissions()->toDropdownMap('Arg', 'Code');
 		$this->assertEquals(array(
-			1 => 'CMS_ACCESS_CMSMain',
-			2 => 'CMS_ACCESS_AssetAdmin',
+			1 => 'CustomPerm1',
+			2 => 'CustomPerm2',
 		), $permissions);
 		
 
@@ -65,7 +65,7 @@ class TableFieldTest extends SapphireTest {
 		}
 		$value['new'] = array(
 			'Code' => array(
-				'CMS_ACCESS_NewsletterAdmin',
+				'CustomPerm3',
 			),
 			'Arg' => array(
 				'3',
@@ -77,9 +77,9 @@ class TableFieldTest extends SapphireTest {
 		// Let's check that the 2 existing permissions entries, and the 1 new one, have been saved
 		$permissions = $group->Permissions()->toDropdownMap('Arg', 'Code');
 		$this->assertEquals(array(
-			1 => 'CMS_ACCESS_CMSMain',
-			2 => 'CMS_ACCESS_AssetAdmin',
-			3 => 'CMS_ACCESS_NewsletterAdmin',
+			1 => 'CustomPerm1',
+			2 => 'CustomPerm2',
+			3 => 'CustomPerm3',
 		), $permissions);
 
 	}

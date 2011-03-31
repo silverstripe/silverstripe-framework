@@ -179,29 +179,29 @@ ul.tree span.a.current {
 }
 
 ul.tree span.a.loading span.b span.c a {
-	background-image: url(../../../cms/images/network-save.gif) !important;
+	background-image: url(../../images/network-save.gif) !important;
 	margin-left: -3px;
 	padding-left: 21px;
 	background-position : 2px 2px;
 }
 
 ul.tree.multiselect span.a span.b a {
-	background-image: url(../../../cms/images/tickbox-unticked.gif) !important;
+	background-image: url(../../images/tickbox-unticked.gif) !important;
 }
 
 ul.tree.multiselect span.a.nodelete span.b a {
-	background-image: url(../../../cms/images/tickbox-canttick.gif) !important;
+	background-image: url(../../images/tickbox-canttick.gif) !important;
 }
 ul.tree.multiselect span.a.treeloading span.b a {
-	background-image: url(../../../cms/images/tickbox-greyedout.gif) !important;
+	background-image: url(../../images/tickbox-greyedout.gif) !important;
 }
 ul.tree.multiselect span.a.failed span.b a {
-	background-image: url(../../../cms/images/tickbox-fail.gif) !important;
+	background-image: url(../../images/tickbox-fail.gif) !important;
 }
 
 
 ul.tree.multiselect span.a.selected span.b span.c a {
-	background-image: url(../../../cms/images/tickbox-ticked.gif) !important;
+	background-image: url(../../images/tickbox-ticked.gif) !important;
 }
 
 /* Span-B: Plus/Minus icon */

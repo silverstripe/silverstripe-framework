@@ -3,6 +3,8 @@
 class DbDatetimeTest extends FunctionalTest {
 
 	static $fixture_file = 'sapphire/tests/model/DbDatetimeTest.yml';
+	
+	protected $extraDataObjects = array('DbDatetimeTest_Team');
 
 	private static $offset = 0;					// number of seconds of php and db time are out of sync
 	private static $offset_thresholds = array(	// throw an error if the offset exceeds 30 minutes
@@ -69,10 +71,10 @@ class DbDatetimeTest extends FunctionalTest {
 			$result = DB::query($query)->value();
 			$this->matchesRoughly($result, date('d', $this->getDbNow()), 'todays day');
 
-			$query = 'SELECT ' . $this->adapter->formattedDatetimeClause('"Created"', '%U') . ' AS test FROM "SiteTree" WHERE "URLSegment" = \'home\'';
+			$query = 'SELECT ' . $this->adapter->formattedDatetimeClause('"Created"', '%U') . ' AS test FROM "DbDateTimeTest_Team"';
 			$result = DB::query($query)->value();
 
-			$this->matchesRoughly($result, strtotime(DataObject::get_one('SiteTree',"\"URLSegment\" = 'home'")->Created), 'SiteTree[home]->Created as timestamp');
+			$this->matchesRoughly($result, strtotime(DataObject::get_one('DbDateTimeTest_Team')->Created), 'fixture ->Created as timestamp');
 		}
 	}
 	
@@ -87,9 +89,9 @@ class DbDatetimeTest extends FunctionalTest {
 			$result = DB::query($query)->value();
 			$this->matchesRoughly($result, date('Y-m-d H:i:s', strtotime('+1 Day', $this->getDbNow())), 'tomorrow');
 
-			$query = 'SELECT ' . $this->adapter->datetimeIntervalClause('"Created"', '-15 Minutes') . ' AS "test" FROM "SiteTree" WHERE "URLSegment" = \'home\'';
+			$query = 'SELECT ' . $this->adapter->datetimeIntervalClause('"Created"', '-15 Minutes') . ' AS "test" FROM "DbDateTimeTest_Team" LIMIT 1';
 			$result = DB::query($query)->value();
-			$this->matchesRoughly($result, date('Y-m-d H:i:s', strtotime(Dataobject::get_one('SiteTree',"\"URLSegment\" = 'home'")->Created) - 900), '15 Minutes before creating SiteTree[home]');
+			$this->matchesRoughly($result, date('Y-m-d H:i:s', strtotime(Dataobject::get_one('DbDateTimeTest_Team')->Created) - 900), '15 Minutes before creating fixture');
 
 		}
 	}
@@ -109,13 +111,19 @@ class DbDatetimeTest extends FunctionalTest {
 			$result = DB::query($query)->value();
 			$this->matchesRoughly($result, -45 * 60, 'now - 45 minutes ahead');
 
-			$query = 'SELECT ' . $this->adapter->datetimeDifferenceClause('"LastEdited"', '"Created"') . ' AS "test" FROM "SiteTree" WHERE "URLSegment" = \'home\'';
+			$query = 'SELECT ' . $this->adapter->datetimeDifferenceClause('"LastEdited"', '"Created"') . ' AS "test" FROM "DbDateTimeTest_Team" LIMIT 1';
 			$result = DB::query($query)->value();
-			$lastedited = Dataobject::get_one('SiteTree',"\"URLSegment\" = 'home'")->LastEdited;
-			$created = Dataobject::get_one('SiteTree',"\"URLSegment\" = 'home'")->Created;
+			$lastedited = Dataobject::get_one('DbDateTimeTest_Team')->LastEdited;
+			$created = Dataobject::get_one('DbDateTimeTest_Team')->Created;
 			$this->matchesRoughly($result, strtotime($lastedited) - strtotime($created), 'age of HomePage record in seconds since unix epoc');
 
 		}
 	}
 	
+}
+
+class DbDateTimeTest_Team extends DataObject implements TestOnly {
+	static $db = array(
+		'Title' => 'Varchar'
+	);
 }

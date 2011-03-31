@@ -2,112 +2,131 @@
 
 class HierarchyTest extends SapphireTest {
 	static $fixture_file = 'sapphire/tests/model/HierarchyTest.yml';
+	
+	protected $requiredExtensions = array(
+		'HierarchyTest_Object' => array('Hierarchy', 'Versioned')
+	);
+	
+	protected $extraDataObjects = array(
+		'HierarchyTest_Object'
+	);
 
 	/**
 	 * Test Hierarchy::AllHistoricalChildren().
 	 */
 	function testAllHistoricalChildren() {
-		// Delete some pages
-		$this->objFromFixture('Page', 'page2b')->delete();
-		$this->objFromFixture('Page', 'page3a')->delete();
-		$this->objFromFixture('Page', 'page3')->delete();
+		// Delete some objs
+		$this->objFromFixture('HierarchyTest_Object', 'obj2b')->delete();
+		$this->objFromFixture('HierarchyTest_Object', 'obj3a')->delete();
+		$this->objFromFixture('HierarchyTest_Object', 'obj3')->delete();
 	
-		// Check that page1-3 appear at the top level of the AllHistoricalChildren tree
-		$this->assertEquals(array("Page 1", "Page 2", "Page 3"), 
-			singleton('Page')->AllHistoricalChildren()->column('Title'));
+		// Check that obj1-3 appear at the top level of the AllHistoricalChildren tree
+		$this->assertEquals(array("Obj 1", "Obj 2", "Obj 3"), 
+			singleton('HierarchyTest_Object')->AllHistoricalChildren()->column('Title'));
 	
 		// Check numHistoricalChildren
-		$this->assertEquals(3, singleton('Page')->numHistoricalChildren());
+		$this->assertEquals(3, singleton('HierarchyTest_Object')->numHistoricalChildren());
 
-		// Check that both page 2 children are returned
-		$page2 = $this->objFromFixture('Page', 'page2');
-		$this->assertEquals(array("Page 2a", "Page 2b"), 
-			$page2->AllHistoricalChildren()->column('Title'));
+		// Check that both obj 2 children are returned
+		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$this->assertEquals(array("Obj 2a", "Obj 2b"), 
+			$obj2->AllHistoricalChildren()->column('Title'));
 
 		// Check numHistoricalChildren
-		$this->assertEquals(2, $page2->numHistoricalChildren());
+		$this->assertEquals(2, $obj2->numHistoricalChildren());
 
 			
-		// Page 3 has been deleted; let's bring it back from the grave
-		$page3 = Versioned::get_including_deleted("SiteTree", "\"Title\" = 'Page 3'")->First();
+		// Obj 3 has been deleted; let's bring it back from the grave
+		$obj3 = Versioned::get_including_deleted("HierarchyTest_Object", "\"Title\" = 'Obj 3'")->First();
 	
-		// Check that both page 3 children are returned
-		$this->assertEquals(array("Page 3a", "Page 3b"), 
-			$page3->AllHistoricalChildren()->column('Title'));
+		// Check that both obj 3 children are returned
+		$this->assertEquals(array("Obj 3a", "Obj 3b"), 
+			$obj3->AllHistoricalChildren()->column('Title'));
 			
 		// Check numHistoricalChildren
-		$this->assertEquals(2, $page3->numHistoricalChildren());
+		$this->assertEquals(2, $obj3->numHistoricalChildren());
 		
 	}
 	
 	/**
-	 * Test that you can call Hierarchy::markExpanded/Unexpanded/Open() on a page, and that
+	 * Test that you can call Hierarchy::markExpanded/Unexpanded/Open() on a obj, and that
 	 * calling Hierarchy::isMarked() on a different instance of that object will return true.
 	 */
 	function testItemMarkingIsntRestrictedToSpecificInstance() {
-		// Mark a few pages
-		$this->objFromFixture('Page', 'page2')->markExpanded();
-		$this->objFromFixture('Page', 'page2a')->markExpanded();
-		$this->objFromFixture('Page', 'page2b')->markExpanded();
-		$this->objFromFixture('Page', 'page3')->markUnexpanded();
+		// Mark a few objs
+		$this->objFromFixture('HierarchyTest_Object', 'obj2')->markExpanded();
+		$this->objFromFixture('HierarchyTest_Object', 'obj2a')->markExpanded();
+		$this->objFromFixture('HierarchyTest_Object', 'obj2b')->markExpanded();
+		$this->objFromFixture('HierarchyTest_Object', 'obj3')->markUnexpanded();
 		
-		// Query some pages in a different context and check their m
-		$pages = DataObject::get("Page", '', '"ID" ASC');
+		// Query some objs in a different context and check their m
+		$objs = DataObject::get("HierarchyTest_Object", '', '"ID" ASC');
 		$marked = $expanded = array();
-		foreach($pages as $page) {
-			if($page->isMarked()) $marked[] = $page->Title;
-			if($page->isExpanded()) $expanded[] = $page->Title;
+		foreach($objs as $obj) {
+			if($obj->isMarked()) $marked[] = $obj->Title;
+			if($obj->isExpanded()) $expanded[] = $obj->Title;
 		}
 		
-		$this->assertEquals(array('Page 2', 'Page 3', 'Page 2a', 'Page 2b'), $marked);
-		$this->assertEquals(array('Page 2', 'Page 2a', 'Page 2b'), $expanded);
+		$this->assertEquals(array('Obj 2', 'Obj 3', 'Obj 2a', 'Obj 2b'), $marked);
+		$this->assertEquals(array('Obj 2', 'Obj 2a', 'Obj 2b'), $expanded);
 	}
 	
 	function testNumChildren() {
-		$this->assertEquals($this->objFromFixture('Page', 'page1')->numChildren(), 0);
-		$this->assertEquals($this->objFromFixture('Page', 'page2')->numChildren(), 2);
-		$this->assertEquals($this->objFromFixture('Page', 'page3')->numChildren(), 2);
-		$this->assertEquals($this->objFromFixture('Page', 'page2a')->numChildren(), 2);
-		$this->assertEquals($this->objFromFixture('Page', 'page2b')->numChildren(), 0);
-		$this->assertEquals($this->objFromFixture('Page', 'page3a')->numChildren(), 2);
-		$this->assertEquals($this->objFromFixture('Page', 'page3b')->numChildren(), 0);
+		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj1')->numChildren(), 0);
+		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj2')->numChildren(), 2);
+		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3')->numChildren(), 2);
+		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj2a')->numChildren(), 2);
+		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj2b')->numChildren(), 0);
+		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3a')->numChildren(), 2);
+		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3b')->numChildren(), 0);
 		
-		$page1 = $this->objFromFixture('Page', 'page1');
-		$this->assertEquals($page1->numChildren(), 0);
-		$page1Child1 = new Page();
-		$page1Child1->ParentID = $page1->ID;
-		$page1Child1->write();
-		$this->assertEquals($page1->numChildren(false), 1,
+		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
+		$this->assertEquals($obj1->numChildren(), 0);
+		$obj1Child1 = new HierarchyTest_Object();
+		$obj1Child1->ParentID = $obj1->ID;
+		$obj1Child1->write();
+		$this->assertEquals($obj1->numChildren(false), 1,
 			'numChildren() caching can be disabled through method parameter'
 		);
-		$page1Child2 = new Page();
-		$page1Child2->ParentID = $page1->ID;
-		$page1Child2->write();
-		$page1->flushCache();
-		$this->assertEquals($page1->numChildren(), 2,
+		$obj1Child2 = new HierarchyTest_Object();
+		$obj1Child2->ParentID = $obj1->ID;
+		$obj1Child2->write();
+		$obj1->flushCache();
+		$this->assertEquals($obj1->numChildren(), 2,
 			'numChildren() caching can be disabled by flushCache()'
 		);
 	}
 
 	function testLoadDescendantIDListIntoArray() {
-		$page2 = $this->objFromFixture('Page', 'page2');
-		$page2a = $this->objFromFixture('Page', 'page2a');
-		$page2b = $this->objFromFixture('Page', 'page2b');
-		$page2aa = $this->objFromFixture('Page', 'page2aa');
-		$page2ab = $this->objFromFixture('Page', 'page2ab');
+		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
+		$obj2b = $this->objFromFixture('HierarchyTest_Object', 'obj2b');
+		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+		$obj2ab = $this->objFromFixture('HierarchyTest_Object', 'obj2ab');
 		
-		$page2IdList = $page2->getDescendantIDList();
-		$page2aIdList = $page2a->getDescendantIDList();
+		$obj2IdList = $obj2->getDescendantIDList();
+		$obj2aIdList = $obj2a->getDescendantIDList();
 		
-		$this->assertContains($page2a->ID, $page2IdList);
-		$this->assertContains($page2b->ID, $page2IdList);
-		$this->assertContains($page2aa->ID, $page2IdList);
-		$this->assertContains($page2ab->ID, $page2IdList);
-		$this->assertEquals(4, count($page2IdList));
+		$this->assertContains($obj2a->ID, $obj2IdList);
+		$this->assertContains($obj2b->ID, $obj2IdList);
+		$this->assertContains($obj2aa->ID, $obj2IdList);
+		$this->assertContains($obj2ab->ID, $obj2IdList);
+		$this->assertEquals(4, count($obj2IdList));
 		
-		$this->assertContains($page2aa->ID, $page2aIdList);
-		$this->assertContains($page2ab->ID, $page2aIdList);
-		$this->assertEquals(2, count($page2aIdList));
+		$this->assertContains($obj2aa->ID, $obj2aIdList);
+		$this->assertContains($obj2ab->ID, $obj2aIdList);
+		$this->assertEquals(2, count($obj2aIdList));
 	}
 
+}
+
+class HierarchyTest_Object extends DataObject implements TestOnly {
+	static $db = array(
+		'Title' => 'Varchar'
+	);
+	
+	static $extensions = array(
+		'Hierarchy',
+		"Versioned('Stage', 'Live')",
+	);
 }

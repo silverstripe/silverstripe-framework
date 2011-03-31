@@ -57,7 +57,7 @@ class FileIFrameField extends FileField {
 		
 		if($this->form->getRecord() && $this->form->getRecord()->exists()) {
 			$record = $this->form->getRecord();
-			if(Object::has_extension('SiteTree', 'Translatable') && $record->Locale){
+			if(class_exists('Translatable') && Object::has_extension('SiteTree', 'Translatable') && $record->Locale){
 				$iframe = "iframe?locale=".$record->Locale;
 			}else{
 				$iframe = "iframe";
@@ -107,7 +107,6 @@ class FileIFrameField extends FileField {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript('sapphire/javascript/FileIFrameField.js');
 		
-		Requirements::css('cms/css/typography.css');
 		Requirements::css('sapphire/css/FileIFrameField.css');
 		
 		return $this->renderWith('FileIFrameField');

@@ -4,39 +4,43 @@
  * @subpackage tests
  */
 class TransactionTest extends SapphireTest {
+	
+	protected $extraDataObjects = array(
+		'TransactionTest_Object'
+	);
 
 	function testCreateWithTransaction() {
 
 		if(DB::getConn()->supportsTransactions()==true){
 			DB::getConn()->transactionStart();
-			$page=new Page();
-			$page->Title='First page';
-			$page->write();
+			$obj=new TransactionTest_Object();
+			$obj->Title='First page';
+			$obj->write();
 
-			$page=new Page();
-			$page->Title='Second page';
-			$page->write();
+			$obj=new TransactionTest_Object();
+			$obj->Title='Second page';
+			$obj->write();
 
 			//Create a savepoint here:
 			DB::getConn()->transactionSavepoint('rollback');
 
-			$page=new Page();
-			$page->Title='Third page';
-			$page->write();
+			$obj=new TransactionTest_Object();
+			$obj->Title='Third page';
+			$obj->write();
 
-			$page=new Page();
-			$page->Title='Forth page';
-			$page->write();
+			$obj=new TransactionTest_Object();
+			$obj->Title='Forth page';
+			$obj->write();
 
 			//Revert to a savepoint:
 			DB::getConn()->transactionRollback('rollback');
 
 			DB::getConn()->transactionEnd();
 
-			$first=DataObject::get('Page', "\"Title\"='First page'");
-			$second=DataObject::get('Page', "\"Title\"='Second page'");
-			$third=DataObject::get('Page', "\"Title\"='Third page'");
-			$forth=DataObject::get('Page', "\"Title\"='Forth page'");
+			$first=DataObject::get('TransactionTest_Object', "\"Title\"='First page'");
+			$second=DataObject::get('TransactionTest_Object', "\"Title\"='Second page'");
+			$third=DataObject::get('TransactionTest_Object', "\"Title\"='Third page'");
+			$forth=DataObject::get('TransactionTest_Object', "\"Title\"='Forth page'");
 
 			//These pages should be in the system
 			$this->assertTrue(is_object($first) && $first->exists());
@@ -50,4 +54,47 @@ class TransactionTest extends SapphireTest {
 		}
 	}
 
+	function testReadOnlyTransaction(){
+
+		if(DB::getConn()->supportsTransactions()==true){
+
+			$obj=new TransactionTest_Object();
+			$obj->Title='Read only success';
+			$obj->write();
+
+			DB::getConn()->transactionStart('READ ONLY');
+
+			try {
+				$obj=new TransactionTest_Object();
+				$obj->Title='Read only page failed';
+				$obj->write();
+			} catch (Exception $e) {
+				//could not write this record
+				//We need to do a rollback or a commit otherwise we'll get error messages
+				DB::getConn()->transactionRollback();
+			}
+
+			DB::getConn()->transactionEnd();
+
+			DataObject::flush_and_destroy_cache();
+
+			$success=DataObject::get('TransactionTest_Object', "\"Title\"='Read only success'");
+			$fail=DataObject::get('TransactionTest_Object', "\"Title\"='Read only page failed'");
+
+			//This page should be in the system
+			$this->assertTrue(is_object($success) && $success->exists());
+
+			//This page should NOT exist, we had 'read only' permissions
+			$this->assertFalse(is_object($fail) && $fail->exists());
+
+		}
+
+	}
+
+}
+
+class TransactionTest_Object extends DataObject implements TestOnly {
+	static $db = array(
+		'Title' => 'Varchar(255)'
+	);
 }

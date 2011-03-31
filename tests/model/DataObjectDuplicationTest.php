@@ -1,6 +1,12 @@
 <?php
 
 class DataObjectDuplicationTest extends SapphireTest {
+	
+	protected $extraDataObjects = array(
+		'DataObjectDuplicateTestClass1',
+		'DataObjectDuplicateTestClass2',
+		'DataObjectDuplicateTestClass3'
+	);
 
 	function testDuplicateManyManyClasses() {
 		//create new test classes below
@@ -59,7 +65,7 @@ class DataObjectDuplicationTest extends SapphireTest {
 }
 
 
-class DataObjectDuplicateTestClass1 extends SiteTree {
+class DataObjectDuplicateTestClass1 extends DataObject implements TestOnly {
 
 	static $db = array(
 		'text' => 'Varchar'
@@ -74,7 +80,7 @@ class DataObjectDuplicateTestClass1 extends SiteTree {
 	);
 }
 
-class DataObjectDuplicateTestClass2 extends SiteTree {
+class DataObjectDuplicateTestClass2 extends DataObject implements TestOnly {
 
 	static $db = array(
 		'text' => 'Varchar'
@@ -86,7 +92,7 @@ class DataObjectDuplicateTestClass2 extends SiteTree {
 
 }
 
-class DataObjectDuplicateTestClass3 extends SiteTree {
+class DataObjectDuplicateTestClass3 extends DataObject implements TestOnly {
 
 	static $db = array(
 		'text' => 'Varchar'

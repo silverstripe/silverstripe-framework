@@ -1,6 +1,0 @@
-ErrorPage:
-   404:
-      Title: Page Not Found
-      URLSegment: page-not-found
-      Content: My error page body
-      ErrorCode: 404

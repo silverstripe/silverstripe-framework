@@ -61,28 +61,28 @@ class DataObjectTest extends SapphireTest {
 	function testDelete() {
 		// Test deleting using delete() on the DataObject
 		// Get the first page
-		$page = $this->objFromFixture('Page', 'page1');
-		$pageID = $page->ID;
+		$obj = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+		$objID = $obj->ID;
 		// Check the page exists before deleting
-		$this->assertTrue(is_object($page) && $page->exists());
+		$this->assertTrue(is_object($obj) && $obj->exists());
 		// Delete the page
-		$page->delete();
+		$obj->delete();
 		// Check that page does not exist after deleting
-		$page = DataObject::get_by_id('Page', $pageID);
-		$this->assertTrue(!$page || !$page->exists());
+		$obj = DataObject::get_by_id('DataObjectTest_Player', $objID);
+		$this->assertTrue(!$obj || !$obj->exists());
 		
 		
 		// Test deleting using DataObject::delete_by_id()
 		// Get the second page
-		$page2 = $this->objFromFixture('Page', 'page2');
-		$page2ID = $page2->ID;
+		$obj = $this->objFromFixture('DataObjectTest_Player', 'captain2');
+		$objID = $obj->ID;
 		// Check the page exists before deleting
-		$this->assertTrue(is_object($page2) && $page2->exists());
+		$this->assertTrue(is_object($obj) && $obj->exists());
 		// Delete the page
-		DataObject::delete_by_id('Page', $page2->ID);
+		DataObject::delete_by_id('DataObjectTest_Player', $obj->ID);
 		// Check that page does not exist after deleting
-		$page2 = DataObject::get_by_id('Page', $page2ID);
-		$this->assertTrue(!$page2 || !$page2->exists());
+		$obj = DataObject::get_by_id('DataObjectTest_Player', $objID);
+		$this->assertTrue(!$obj || !$obj->exists());
 	}
 	
 	/**
@@ -146,9 +146,9 @@ class DataObjectTest extends SapphireTest {
 		
 		
 		// Test get_by_id()
-		$homepageID = $this->idFromFixture('Page', 'home');
-		$page = DataObject::get_by_id('Page', $homepageID);
-		$this->assertEquals('Home', $page->Title);
+		$captain1ID = $this->idFromFixture('DataObjectTest_Player', 'captain1');
+		$captain1 = DataObject::get_by_id('DataObjectTest_Player', $captain1ID);
+		$this->assertEquals('Captain', $captain1->FirstName);
 		
 		// Test get_one() without caching
 		$comment1 = DataObject::get_one('DataObjectTest_TeamComment', "\"Name\" = 'Joe'", false);
@@ -184,12 +184,12 @@ class DataObjectTest extends SapphireTest {
 	 *
 	 */
 	function testWritePropertyWithoutDBField() {
-		$page = $this->objFromFixture('Page', 'page1');
-		$page->ParentID = 99;
-		$page->write();
+		$obj = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+		$obj->FavouriteTeamID = 99;
+		$obj->write();
 		// reload the page from the database
-		$savedPage = DataObject::get_by_id('Page', $page->ID);
-		$this->assertTrue($savedPage->ParentID == 99);
+		$savedObj = DataObject::get_by_id('DataObjectTest_Player', $obj->ID);
+		$this->assertTrue($savedObj->FavouriteTeamID == 99);
 	}
 	
 	/**
@@ -278,19 +278,19 @@ class DataObjectTest extends SapphireTest {
 	 * @todo Extend type change tests (e.g. '0'==NULL)
 	 */
 	function testChangedFields() {
-		$page = $this->objFromFixture('Page', 'home');
-		$page->Title = 'Home-Changed';
-		$page->ShowInMenus = true;
+		$obj = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+		$obj->FirstName = 'Captain-changed';
+		$obj->IsRetired = true;
 
 		$this->assertEquals(
-			$page->getChangedFields(false, 1),
+			$obj->getChangedFields(false, 1),
 			array(
-				'Title' => array(
-					'before' => 'Home',
-					'after' => 'Home-Changed',
+				'FirstName' => array(
+					'before' => 'Captain',
+					'after' => 'Captain-changed',
 					'level' => 2
 				),
-				'ShowInMenus' => array(
+				'IsRetired' => array(
 					'before' => 1,
 					'after' => true,
 					'level' => 1
@@ -300,25 +300,25 @@ class DataObjectTest extends SapphireTest {
 		);
 		
 		$this->assertEquals(
-			$page->getChangedFields(false, 2),
+			$obj->getChangedFields(false, 2),
 			array(
-				'Title' => array(
-					'before'=>'Home',
-					'after'=>'Home-Changed',
+				'FirstName' => array(
+					'before'=>'Captain',
+					'after'=>'Captain-changed',
 					'level' => 2
 				)
 			),
 			'Changed fields are correctly detected while ignoring type changes (level=2)'
 		);
 		
-		$newPage = new Page();
-		$newPage->Title = "New Page Title";
+		$newObj = new DataObjectTest_Player();
+		$newObj->FirstName = "New Player";
 		$this->assertEquals(
-			$newPage->getChangedFields(false, 2),
+			$newObj->getChangedFields(false, 2),
 			array(
-				'Title' => array(
+				'FirstName' => array(
 					'before' => null,
-					'after' => 'New Page Title',
+					'after' => 'New Player',
 					'level' => 2
 				)
 			),
@@ -327,42 +327,42 @@ class DataObjectTest extends SapphireTest {
 	}
 	
 	function testIsChanged() {
-		$page = $this->objFromFixture('Page', 'home');
-		$page->Title = 'Home-Changed';
-		$page->ShowInMenus = true; // type change only, database stores "1"
+		$obj = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+		$obj->FirstName = 'Captain-changed';
+		$obj->IsRetired = true; // type change only, database stores "1"
 
-		$this->assertTrue($page->isChanged('Title', 1));
-		$this->assertTrue($page->isChanged('Title', 2));
-		$this->assertTrue($page->isChanged('ShowInMenus', 1));
-		$this->assertFalse($page->isChanged('ShowInMenus', 2));
-		$this->assertFalse($page->isChanged('Content', 1));
-		$this->assertFalse($page->isChanged('Content', 2));
+		$this->assertTrue($obj->isChanged('FirstName', 1));
+		$this->assertTrue($obj->isChanged('FirstName', 2));
+		$this->assertTrue($obj->isChanged('IsRetired', 1));
+		$this->assertFalse($obj->isChanged('IsRetired', 2));
+		$this->assertFalse($obj->isChanged('Email', 1), 'Doesnt change mark unchanged property');
+		$this->assertFalse($obj->isChanged('Email', 2), 'Doesnt change mark unchanged property');
 		
-		$newPage = new Page();
-		$newPage->Title = "New Page Title";
-		$this->assertTrue($newPage->isChanged('Title', 1));
-		$this->assertTrue($newPage->isChanged('Title', 2));
-		$this->assertFalse($newPage->isChanged('Content', 1));
-		$this->assertFalse($newPage->isChanged('Content', 2));
+		$newObj = new DataObjectTest_Player();
+		$newObj->FirstName = "New Player";
+		$this->assertTrue($newObj->isChanged('FirstName', 1));
+		$this->assertTrue($newObj->isChanged('FirstName', 2));
+		$this->assertFalse($newObj->isChanged('Email', 1));
+		$this->assertFalse($newObj->isChanged('Email', 2));
 		
-		$newPage->write();
-		$this->assertFalse($newPage->isChanged('Title', 1));
-		$this->assertFalse($newPage->isChanged('Title', 2));
-		$this->assertFalse($newPage->isChanged('Content', 1));
-		$this->assertFalse($newPage->isChanged('Content', 2));
+		$newObj->write();
+		$this->assertFalse($newObj->isChanged('FirstName', 1));
+		$this->assertFalse($newObj->isChanged('FirstName', 2));
+		$this->assertFalse($newObj->isChanged('Email', 1));
+		$this->assertFalse($newObj->isChanged('Email', 2));
 		
-		$page = $this->objFromFixture('Page', 'home');
-		$page->Title = null;
-		$this->assertTrue($page->isChanged('Title', 1));
-		$this->assertTrue($page->isChanged('Title', 2));
+		$obj = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+		$obj->FirstName = null;
+		$this->assertTrue($obj->isChanged('FirstName', 1));
+		$this->assertTrue($obj->isChanged('FirstName', 2));
 		
 		/* Test when there's not field provided */ 
-		$page = $this->objFromFixture('Page', 'home');
-		$page->Title = "New Page Title"; 
-		$this->assertTrue($page->isChanged());
+		$obj = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+		$obj->FirstName = "New Player"; 
+		$this->assertTrue($obj->isChanged());
 		
-		$page->write(); 
-		$this->assertFalse($page->isChanged());
+		$obj->write(); 
+		$this->assertFalse($obj->isChanged());
 	}
 	
 	function testRandomSort() {
@@ -374,12 +374,12 @@ class DataObjectTest extends SapphireTest {
 		foreach($itemsB as $item) $keysB[] = $item->ID;
 		
 		/* Test when there's not field provided */ 
-		$page = $this->objFromFixture('Page', 'home');
-		$page->Title = "New Page Title"; 
-		$this->assertTrue($page->isChanged());
+		$obj = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+		$obj->FirstName = "New Player"; 
+		$this->assertTrue($obj->isChanged());
 		
-		$page->write(); 
-		$this->assertFalse($page->isChanged());
+		$obj->write(); 
+		$this->assertFalse($obj->isChanged());
 	}
 	
 	function testWriteSavesToHasOneRelations() {
@@ -697,22 +697,20 @@ class DataObjectTest extends SapphireTest {
 	}
 	
 	function testNewClassInstance() {
-		$page = $this->objFromFixture('Page', 'page1');
-		$changedPage = $page->newClassInstance('RedirectorPage');
-		$changedFields = $changedPage->getChangedFields();
+		$dataObject = $this->objFromFixture('DataObjectTest_TeamComment', 'comment1');
+		$changedDO = $dataObject->newClassInstance('File');
+		$changedFields = $changedDO->getChangedFields();
 		
 		// Don't write the record, it will reset changed fields
-		$this->assertType('RedirectorPage', $changedPage);
-		$this->assertEquals($changedPage->ClassName, 'RedirectorPage');
-		$this->assertEquals($changedPage->RedirectionType, 'Internal');
-		//$this->assertEquals($changedPage->RecordClassName, 'RedirectorPage');
+		$this->assertType('File', $changedDO);
+		$this->assertEquals($changedDO->ClassName, 'File');
 		$this->assertContains('ClassName', array_keys($changedFields));
-		$this->assertEquals($changedFields['ClassName']['before'], 'Page');
-		$this->assertEquals($changedFields['ClassName']['after'], 'RedirectorPage');
+		$this->assertEquals($changedFields['ClassName']['before'], 'DataObjectTest_TeamComment');
+		$this->assertEquals($changedFields['ClassName']['after'], 'File');
 		
-		$changedPage->write();
-		$this->assertType('RedirectorPage', $changedPage);
-		$this->assertEquals($changedPage->ClassName, 'RedirectorPage');
+		$changedDO->write();
+		$this->assertType('File', $changedDO);
+		$this->assertEquals($changedDO->ClassName, 'File');
 	}
 	
 	function testManyManyExtraFields() {
@@ -1004,6 +1002,10 @@ class DataObjectTest extends SapphireTest {
 }
 
 class DataObjectTest_Player extends Member implements TestOnly {
+	static $db = array(
+		'IsRetired' => 'Boolean'
+	);
+	
 	static $has_one = array(
 		'FavouriteTeam' => 'DataObjectTest_Team',
 	);

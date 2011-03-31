@@ -128,18 +128,20 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		Member::set_password_validator(null);
 		Cookie::set_report_errors(false);
 		
-		RootURLController::reset();
-		Translatable::reset();
+		if(class_exists('RootURLController')) RootURLController::reset();
+		if(class_exists('Translatable')) Translatable::reset();
 		Versioned::reset();
 		DataObject::reset();
-		SiteTree::reset();
+		if(class_exists('SiteTree')) SiteTree::reset();
 		Hierarchy::reset();
 		if(Controller::has_curr()) Controller::curr()->setSession(new Session(array()));
 		
 		$this->originalTheme = SSViewer::current_theme();
 		
-		// Save nested_urls state, so we can restore it later
-		$this->originalNestedURLsState = SiteTree::nested_urls();
+		if(class_exists('SiteTree')) {
+			// Save nested_urls state, so we can restore it later
+			$this->originalNestedURLsState = SiteTree::nested_urls();
+		}
 
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
@@ -393,11 +395,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// Reset mocked datetime
 		SS_Datetime::clear_mock_now();
 		
-		// Restore nested_urls state
-		if ( $this->originalNestedURLsState )
-			SiteTree::enable_nested_urls();
-		else
-			SiteTree::disable_nested_urls();
+		if(class_exists('SiteTree')) {
+			// Restore nested_urls state
+			if ( $this->originalNestedURLsState )
+				SiteTree::enable_nested_urls();
+			else
+				SiteTree::disable_nested_urls();
+		}
 		
 		// Stop the redirection that might have been requested in the test.
 		// Note: Ideally a clean Controller should be created for each test. 

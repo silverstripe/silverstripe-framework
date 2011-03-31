@@ -71,22 +71,22 @@ class VersionedTest extends SapphireTest {
 	 */
 	function testGetIncludingDeleted() {
 		// Delete a page
-		$this->objFromFixture('Page', 'page3')->delete();
+		$this->objFromFixture('VersionedTest_DataObject', 'page3')->delete();
 	
 		// Get all items, ignoring deleted
-		$remainingPages = DataObject::get("SiteTree", "\"ParentID\" = 0", "\"SiteTree\".\"ID\" ASC");
+		$remainingPages = DataObject::get("VersionedTest_DataObject", "\"ParentID\" = 0", "\"VersionedTest_DataObject\".\"ID\" ASC");
 		// Check that page 3 has gone
 		$this->assertNotNull($remainingPages);
 		$this->assertEquals(array("Page 1", "Page 2"), $remainingPages->column('Title'));
 		
 		// Get all including deleted
-		$allPages = Versioned::get_including_deleted("SiteTree", "\"ParentID\" = 0", "\"SiteTree\".\"ID\" ASC");
+		$allPages = Versioned::get_including_deleted("VersionedTest_DataObject", "\"ParentID\" = 0", "\"VersionedTest_DataObject\".\"ID\" ASC");
 		// Check that page 3 is still there
 		$this->assertEquals(array("Page 1", "Page 2", "Page 3"), $allPages->column('Title'));
 		
 		// Check that this still works if we switch to reading the other stage
 		Versioned::reading_stage("Live");
-		$allPages = Versioned::get_including_deleted("SiteTree", "\"ParentID\" = 0", "\"SiteTree\".\"ID\" ASC");
+		$allPages = Versioned::get_including_deleted("VersionedTest_DataObject", "\"ParentID\" = 0", "\"VersionedTest_DataObject\".\"ID\" ASC");
 		$this->assertEquals(array("Page 1", "Page 2", "Page 3"), $allPages->column('Title'));
 		
 	}
@@ -102,7 +102,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	function testPublishCreateNewVersion() {
-		$page1 = $this->objFromFixture('Page', 'page1');
+		$page1 = $this->objFromFixture('VersionedTest_DataObject', 'page1');
 		$page1->Content = 'orig';
 		$page1->write();
 		$oldVersion = $page1->Version;
@@ -117,7 +117,7 @@ class VersionedTest extends SapphireTest {
 	}
 	
 	function testRollbackTo() {
-		$page1 = $this->objFromFixture('Page', 'page1');
+		$page1 = $this->objFromFixture('VersionedTest_DataObject', 'page1');
 		$page1->Content = 'orig';
 		$page1->write();
 		$page1->publish('Stage', 'Live');
@@ -129,51 +129,51 @@ class VersionedTest extends SapphireTest {
 		$changedVersion = $page1->Version;
 
 		$page1->doRollbackTo($origVersion);
-		$page1 = Versioned::get_one_by_stage('Page', 'Stage', sprintf('"SiteTree"."ID" = %d', $page1->ID));
+		$page1 = Versioned::get_one_by_stage('VersionedTest_DataObject', 'Stage', sprintf('"VersionedTest_DataObject"."ID" = %d', $page1->ID));
 		
 		$this->assertTrue($page1->Version > $changedVersion, 'Create a new higher version number');
 		$this->assertEquals('orig', $page1->Content, 'Copies the content from the old version');
 	}
 	
 	function testDeleteFromStage() {
-		$page1 = $this->objFromFixture('Page', 'page1');
+		$page1 = $this->objFromFixture('VersionedTest_DataObject', 'page1');
 		$pageID = $page1->ID;
 		
 		$page1->Content = 'orig';
 		$page1->write();
 		$page1->publish('Stage', 'Live');
 		
-		$this->assertEquals(1, DB::query('SELECT COUNT(*) FROM "SiteTree" WHERE "ID" = '.$pageID)->value());
-		$this->assertEquals(1, DB::query('SELECT COUNT(*) FROM "SiteTree_Live" WHERE "ID" = '.$pageID)->value());
+		$this->assertEquals(1, DB::query('SELECT COUNT(*) FROM "VersionedTest_DataObject" WHERE "ID" = '.$pageID)->value());
+		$this->assertEquals(1, DB::query('SELECT COUNT(*) FROM "VersionedTest_DataObject_Live" WHERE "ID" = '.$pageID)->value());
 		
 		$page1->deleteFromStage('Live');
 		
 		// Confirm that deleteFromStage() doesn't manipulate the original record
 		$this->assertEquals($pageID, $page1->ID);
 
-		$this->assertEquals(1, DB::query('SELECT COUNT(*) FROM "SiteTree" WHERE "ID" = '.$pageID)->value());
-		$this->assertEquals(0, DB::query('SELECT COUNT(*) FROM "SiteTree_Live" WHERE "ID" = '.$pageID)->value());
+		$this->assertEquals(1, DB::query('SELECT COUNT(*) FROM "VersionedTest_DataObject" WHERE "ID" = '.$pageID)->value());
+		$this->assertEquals(0, DB::query('SELECT COUNT(*) FROM "VersionedTest_DataObject_Live" WHERE "ID" = '.$pageID)->value());
 
 		$page1->delete();
 
 		$this->assertEquals(0, $page1->ID);
-		$this->assertEquals(0, DB::query('SELECT COUNT(*) FROM "SiteTree" WHERE "ID" = '.$pageID)->value());
-		$this->assertEquals(0, DB::query('SELECT COUNT(*) FROM "SiteTree_Live" WHERE "ID" = '.$pageID)->value());
+		$this->assertEquals(0, DB::query('SELECT COUNT(*) FROM "VersionedTest_DataObject" WHERE "ID" = '.$pageID)->value());
+		$this->assertEquals(0, DB::query('SELECT COUNT(*) FROM "VersionedTest_DataObject_Live" WHERE "ID" = '.$pageID)->value());
 	}
 
 	function testWritingNewToStage() {
 		$origStage = Versioned::current_stage();
 		
 		Versioned::reading_stage("Stage");
-		$page = new Page();
+		$page = new VersionedTest_DataObject();
 		$page->Title = "testWritingNewToStage";
 		$page->URLSegment = "testWritingNewToStage";
 		$page->write();
 		
-		$live = Versioned::get_by_stage('SiteTree', 'Live', "\"SiteTree_Live\".\"ID\"='$page->ID'");
+		$live = Versioned::get_by_stage('VersionedTest_DataObject', 'Live', "\"VersionedTest_DataObject_Live\".\"ID\"='$page->ID'");
 		$this->assertNull($live);
 		
-		$stage = Versioned::get_by_stage('SiteTree', 'Stage', "\"SiteTree\".\"ID\"='$page->ID'");
+		$stage = Versioned::get_by_stage('VersionedTest_DataObject', 'Stage', "\"VersionedTest_DataObject\".\"ID\"='$page->ID'");
 		$this->assertNotNull($stage);
 		$this->assertEquals($stage->First()->Title, 'testWritingNewToStage');
 		
@@ -182,23 +182,23 @@ class VersionedTest extends SapphireTest {
 
 	/**
 	 * This tests for the situation described in the ticket #5596. 
-	 * Writing new Page to live first creates a row in SiteTree table (to get the new ID), then "changes
-	 * it's mind" in Versioned and writes SiteTree_Live. It does not remove the SiteTree record though.
+	 * Writing new Page to live first creates a row in VersionedTest_DataObject table (to get the new ID), then "changes
+	 * it's mind" in Versioned and writes VersionedTest_DataObject_Live. It does not remove the VersionedTest_DataObject record though.
 	 */ 
 	function testWritingNewToLive() {
 		$origStage = Versioned::current_stage();
 		
 		Versioned::reading_stage("Live");
-		$page = new Page();
+		$page = new VersionedTest_DataObject();
 		$page->Title = "testWritingNewToLive";
 		$page->URLSegment = "testWritingNewToLive";
 		$page->write();
 		
-		$live = Versioned::get_by_stage('SiteTree', 'Live', "\"SiteTree_Live\".\"ID\"='$page->ID'");
+		$live = Versioned::get_by_stage('VersionedTest_DataObject', 'Live', "\"VersionedTest_DataObject_Live\".\"ID\"='$page->ID'");
 		$this->assertNotNull($live->First());
 		$this->assertEquals($live->First()->Title, 'testWritingNewToLive');
 		
-		$stage = Versioned::get_by_stage('SiteTree', 'Stage', "\"SiteTree\".\"ID\"='$page->ID'");
+		$stage = Versioned::get_by_stage('VersionedTest_DataObject', 'Stage', "\"VersionedTest_DataObject\".\"ID\"='$page->ID'");
 		$this->assertNull($stage);
 		
 		Versioned::reading_stage($origStage);
@@ -235,10 +235,16 @@ class VersionedTest extends SapphireTest {
 class VersionedTest_DataObject extends DataObject implements TestOnly {
 	static $db = array(
 		"Name" => "Varchar",
+		'Title' => 'Varchar',
+		'Content' => 'HTMLText'
 	);
 
 	static $extensions = array(
 		"Versioned('Stage', 'Live')"
+	);
+	
+	static $has_one = array(
+		'Parent' => 'VersionedTest_DataObject'
 	);
 }
 

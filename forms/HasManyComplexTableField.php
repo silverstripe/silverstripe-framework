@@ -76,7 +76,7 @@ class HasManyComplexTableField extends ComplexTableField {
 	 */
 	function controllerClass() {
 		if($this->controller instanceof DataObject) return $this->controller->class;
-		elseif($this->controller instanceof ContentController) return $this->controller->data()->class;
+		elseif($this->controller instanceof Controller) return $this->controller->data()->class;
 	}
 		
 	function getControllerID() {

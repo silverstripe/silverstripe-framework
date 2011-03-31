@@ -67,15 +67,6 @@ class ArrayDataTest extends SapphireTest {
 		$this->assertEquals("array (\n  'b' => 'bunny',\n)", $arrayData->forTemplate());
 	}
 
-	function testObjectToArrayWorks() {
-		$object = new ArrayDataTest_NonEmptyObject();
-
-		$array = ArrayDataTest_ArrayData_Exposed::object_to_array($object);
-
-		$this->assertEquals("Apple", $array['a']);
-		$this->assertEquals("Banana", $array['b']);
-	}
-	
 	function testSetField() {
 		$arrayData = new ArrayData(array());
 		
@@ -97,12 +88,13 @@ class ArrayDataTest extends SapphireTest {
 		$this->assertEquals($arrayData->getArray(), $array);
 	}
 
-}
-
-class ArrayDataTest_ArrayData_Exposed extends ArrayData {
-
-	public static function object_to_array($obj) {
-		return parent::object_to_array($obj);
+	function testArrayToObject() {
+		$arr = array("test1" => "result1","test2"=>"result2");
+		$obj = ArrayData::array_to_object($arr);
+		$objExpected = new stdClass();
+		$objExpected->test1 = "result1";
+		$objExpected->test2 = "result2";
+		$this->assertEquals($obj,$objExpected, "Two objects match");
 	}
 
 }
