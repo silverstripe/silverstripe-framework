@@ -319,7 +319,7 @@ a quick reference (not all of them are described above):
 $NexPageLink, $Link, $RelativeLink, $ChildrenOf, $Page, $Level, $Menu, $Section2, $LoginForm, $SilverStripeNavigator,
 $PageComments, $Now, $LinkTo, $AbsoluteLink, $CurrentMember, $PastVisitor, $PastMember, $XML_val, $RAW_val, $SQL_val,
 $JS_val, $ATT_val, $First, $Last, $FirstLast, $MiddleString, $Middle, $Even, $Odd, $EvenOdd, $Pos, $TotalItems,
-$BaseHref, $Debug, $CurrentPage, $Top
+$BaseHref, $Debug, $Top
 
 ### All fields available in Page_Controller
 
@@ -334,7 +334,7 @@ $LinkToID, $VersionID, $CopyContentFromID, $RecordClassName
 $Link, $LinkOrCurrent, $LinkOrSection, $LinkingMode, $ElementName, $InSection, $Comments, $Breadcrumbs, $NestedTitle,
 $MetaTags, $ContentSource, $MultipleParents, $TreeTitle, $CMSTreeClasses, $Now, $LinkTo, $AbsoluteLink, $CurrentMember,
 $PastVisitor, $PastMember, $XML_val, $RAW_val, $SQL_val, $JS_val, $ATT_val, $First, $Last, $FirstLast, $MiddleString,
-$Middle, $Even, $Odd, $EvenOdd, $Pos, $TotalItems, $BaseHref, $CurrentPage, $Top
+$Middle, $Even, $Odd, $EvenOdd, $Pos, $TotalItems, $BaseHref, $Top
 
 ###  All fields available in Page
 

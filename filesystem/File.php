@@ -714,7 +714,6 @@ class File extends DataObject {
 
 		$records = $query->execute();
 		$ret = $this->buildDataObjectSet($records, $containerClass);
-		if($ret) $ret->parseQueryLimit($query);
 	
 		return $ret;
 	}

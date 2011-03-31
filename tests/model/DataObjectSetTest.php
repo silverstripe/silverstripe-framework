@@ -246,52 +246,6 @@ class DataObjectSetTest extends SapphireTest {
 	}
 
 	/**
-	 * Test {@link DataObjectSet->parseQueryLimit()}
-	 */
-	function testParseQueryLimit() {
-		// Create empty objects, because they don't need to have contents
-		$sql = new SQLQuery('*', '"Member"');
-		$max = $sql->unlimitedRowCount();
-		$set = new DataObjectSet();
-		
-		// Test handling an array
-		$set->parseQueryLimit($sql->limit(array('limit'=>5, 'start'=>2)));
-		$expected = array(
-			'pageStart' => 2,
-			'pageLength' => 5,
-			'totalSize' => $max,
-		);
-		$this->assertEquals($expected, $set->getPageLimits(), 'The page limits match expected values.');
-		
-		// Test handling OFFSET string
-		// uppercase
-		$set->parseQueryLimit($sql->limit('3 OFFSET   1'));
-		$expected = array(
-			'pageStart' => 1,
-			'pageLength' => 3,
-			'totalSize' => $max,
-		);
-		$this->assertEquals($expected, $set->getPageLimits(), 'The page limits match expected values.');
-		// and lowercase
-		$set->parseQueryLimit($sql->limit('32   offset   3'));
-		$expected = array(
-			'pageStart' => 3,
-			'pageLength' => 32,
-			'totalSize' => $max,
-		);
-		$this->assertEquals($expected, $set->getPageLimits(), 'The page limits match expected values.');
-		
-		// Finally check MySQL LIMIT syntax
-		$set->parseQueryLimit($sql->limit('7, 7'));
-		$expected = array(
-			'pageStart' => 7,
-			'pageLength' => 7,
-			'totalSize' => $max,
-		);
-		$this->assertEquals($expected, $set->getPageLimits(), 'The page limits match expected values.');
-	}
-
-	/**
 	 * Test {@link DataObjectSet->insertFirst()}
 	 */
 	function testInsertFirst() {

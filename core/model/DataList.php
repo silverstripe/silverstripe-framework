@@ -122,7 +122,6 @@ class DataList extends DataObjectSet {
 	 */
 	protected function generateItems() {
 		$query = $this->dataQuery->query();
-		$this->parseQueryLimit($query);
 		$rows = $query->execute();
 		$results = array();
 		foreach($rows as $row) {
