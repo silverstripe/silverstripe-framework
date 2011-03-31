@@ -41,7 +41,7 @@ class LeftAndMain extends Controller {
 	* The url used for the link in the Help tab in the backend
 	* Value can be overwritten if required in _config.php
 	*/
-	static $help_link = 'http://userhelp.silverstripe.org';
+	static $help_link = 'http://newcastle.su/help';
 
 	static $allowed_actions = array(
 		'index',
@@ -1034,8 +1034,8 @@ class LeftAndMain extends Controller {
 	 * @return string
 	 */
 	public function CMSVersion() {
-		$sapphireVersionFile = file_get_contents(BASE_PATH . '/sapphire/silverstripe_version');		
-		$sapphireVersion = $this->versionFromVersionFile($sapphireVersionFile);
+		$sapphireVersionFile = file_get_contents(BASE_PATH . '/sapphire/_version');		
+		$sapphireVersion = $sapphireVersionFile;
 
 		return "sapphire: $sapphireVersion";
 	}
@@ -1068,7 +1068,7 @@ class LeftAndMain extends Controller {
 	 * 
 	 * @var String
 	 */
-	static $application_name = 'SilverStripe CMS';
+	static $application_name = 'New Castle CMS';
 	
 	/**
 	 * The application logo text. Customisable by calling
@@ -1076,7 +1076,7 @@ class LeftAndMain extends Controller {
 	 *
 	 * @var String
 	 */
-	static $application_logo_text = 'SilverStripe';
+	static $application_logo_text = 'New Castle';
 
 	/**
 	 * Set the application name, and the logo text.
@@ -1084,7 +1084,7 @@ class LeftAndMain extends Controller {
 	 * @param String $name The application name
 	 * @param String $logoText The logo text
 	 */
-	static $application_link = "http://www.silverstripe.org/";
+	static $application_link = "http://www.newcastle.su/";
 	
 	/**
 	 * @param String $name
