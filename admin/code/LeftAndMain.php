@@ -1070,8 +1070,6 @@ class LeftAndMain extends Controller {
 	
 	/**
 	 * @param String $name
-	 * @param String $logoText
-	 * @param String $link (Optional)
 	 */
 	static function setApplicationName($name) {
 		self::$application_name = $name;
@@ -1095,23 +1093,6 @@ class LeftAndMain extends Controller {
 		foreach($menu as $menuItem) {
 			if($menuItem->LinkingMode == 'current') return $menuItem->Title;
 		}
-	}
-
-	/**
-	 * The application logo path. Customisable by calling
-	 * LeftAndMain::setLogo() - the first parameter.
-	 *
-	 * @var unknown_type
-	 */
-	static $application_logo = 'sapphire/admin/images/mainmenu/logo.gif';
-	
-	/**
-	 * Set the CMS application logo.
-	 *
-	 * @param String $logo Relative path to the logo
-	 */
-	static function setLogo($logo) {
-		self::$application_logo = $logo;
 	}
 
 	/**
