@@ -53,9 +53,9 @@
 	
 	$.entwine('ss', function($){
 		/**
-		 * Class: #Form_EditForm .Actions #Form_EditForm_action_addmember
+		 * Class: .cms-edit-form .Actions #Form_EditForm_action_addmember
 		 */
-		$('#Form_EditForm .Actions #Form_EditForm_action_addmember').entwine({
+		$('.cms-edit-form .Actions #Form_EditForm_action_addmember').entwine({
 			// Function: onclick
 			onclick: function(e) {
 				// CAUTION: Assumes that a MemberTableField-instance is present as an editing form

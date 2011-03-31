@@ -271,10 +271,10 @@
 						// 		// only if the current page was modified
 						// 		tree.jstree('select_node', selectedNode);
 						// 	} else if(data.deleted[selectedNodeId]) {
-						// 		jQuery('#Form_EditForm').entwine('ss').removeForm();
+						// 		jQuery('.cms-edit-form').entwine('ss').removeForm();
 						// 	}
 						// } else {
-						// 	jQuery('#Form_EditForm').entwine('ss').removeForm();
+						// 	jQuery('.cms-edit-form').entwine('ss').removeForm();
 						// }
 					
 						// close panel

@@ -62,7 +62,7 @@
 				$(this).find('.tab').not(':has(.tab)').css('overflow', 'auto');
 
 				// @todo Doesn't resize properly if the response doesn't contain a tabset (see above)
-				$('#Form_EditForm').bind('loadnewpage', function() {
+				$('.cms-edit-form').bind('loadnewpage', function() {
 					// HACK Delay resizing to give jquery-ui tabs a change their dimensions
 					// through dynamically added css classes
 					var timerID = "timerLeftAndMainResize";
@@ -119,14 +119,14 @@
 				$('#contentPanel form', this).fitHeightToParent();
 				$('#contentPanel form fieldset', this).fitHeightToParent();
 				$('#contentPanel form fieldset .content', this).fitHeightToParent();
-				$('#Form_EditForm').fitHeightToParent();
-				$('#Form_EditForm fieldset', this).fitHeightToParent();
+				$('.edit-form').fitHeightToParent();
+				$('.edit-form fieldset', this).fitHeightToParent();
 				// Order of resizing is important: Outer to inner
 				// TODO Only supports two levels of tabs at the moment
-				$('#Form_EditForm fieldset > .ss-tabset', this).fitHeightToParent();
-				$('#Form_EditForm fieldset > .ss-tabset > .tab', this).fitHeightToParent();
-				$('#Form_EditForm fieldset > .ss-tabset > .tab > .ss-tabset', this).fitHeightToParent();
-				$('#Form_EditForm fieldset > .ss-tabset > .tab > .ss-tabset > .tab', this).fitHeightToParent();
+				$('.edit-form fieldset > .ss-tabset', this).fitHeightToParent();
+				$('.edit-form fieldset > .ss-tabset > .tab', this).fitHeightToParent();
+				$('.edit-form fieldset > .ss-tabset > .tab > .ss-tabset', this).fitHeightToParent();
+				$('.edit-form fieldset > .ss-tabset > .tab > .ss-tabset > .tab', this).fitHeightToParent();
 			}
 		});
 
@@ -307,7 +307,7 @@
 			onmatch: function() {
 				this._super();
 				
-				$('#Form_EditForm').bind('loadnewpage delete', function(e) {
+				$('.cms-edit-form').bind('loadnewpage delete', function(e) {
 					var updatedSwitchView = $('#AjaxSwitchView');
 					if(updatedSwitchView.length) {
 						$('#SwitchView').html(updatedSwitchView.html());

@@ -5,7 +5,7 @@
 	$.entwine('ss', function($){
 
 		/**
-		 * Class: #Form_EditForm
+		 * Class: .cms-edit-form
 		 * 
 		 * Base edit form, provides ajaxified saving
 		 * and reloading itself through the ajax return values.
@@ -19,7 +19,7 @@
 		 *  removeform - A form is about to be removed from the DOM
 		 *  load - Form is about to be loaded through ajax
 		 */
-		$('#Form_EditForm').entwine(/** @lends ss.Form_EditForm */{	
+		$('.cms-edit-form').entwine(/** @lends ss.Form_EditForm */{	
 			/**
 			 * Variable: PlaceholderHtml
 			 * (String_ HTML text to show when no form content is chosen.
@@ -340,29 +340,29 @@
 		});
 
 		/**
-		 * Class: #Form_EditForm .Actions :submit
+		 * Class: .cms-edit-form .Actions :submit
 		 * 
 		 * All buttons in the right CMS form go through here by default.
 		 * We need this onclick overloading because we can't get to the
 		 * clicked button from a form.onsubmit event.
 		 */
-		$('#Form_EditForm .Actions :submit').entwine({
+		$('.cms-edit-form .Actions :submit').entwine({
 			
 			/**
 			 * Function: onclick
 			 */
 			onclick: function(e) {
-				jQuery('#Form_EditForm').entwine('ss').ajaxSubmit(this);
+				jQuery('.cms-edit-form').entwine('ss').ajaxSubmit(this);
 				return false;
 			}
 		});
 	
 		/**
-		 * Class: #Form_EditForm textarea.htmleditor
+		 * Class: .cms-edit-form textarea.htmleditor
 		 * 
 		 * Add tinymce to HtmlEditorFields within the CMS.
 		 */
-		$('#Form_EditForm textarea.htmleditor').entwine({
+		$('.cms-edit-form textarea.htmleditor').entwine({
 			
 			/**
 			 * Constructor: onmatch

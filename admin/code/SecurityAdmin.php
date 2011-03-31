@@ -169,6 +169,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			$fields,
 			$actions
 		);
+		$form->addExtraClass('cms-edit-form');
 		
 		return $form;
 	}

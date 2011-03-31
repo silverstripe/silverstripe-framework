@@ -4,16 +4,16 @@
 (function($) {
 	$.entwine('ss', function($){
 		/**
-		 * Class: #Form_AddForm
+		 * Class: .add-form
 		 * 
 		 * Simple form with a page type dropdown
-		 * which creates a new page through #Form_EditForm and adds a new tree node.
+		 * which creates a new page through .cms-edit-form and adds a new tree node.
 		 * 
 		 * Requires:
 		 *  ss.i18n
-		 *  #Form_EditForm
+		 *  .cms-edit-form
 		 */
-		$('#Form_AddForm').entwine({
+		$('.add-form').entwine({
 			/**
 			 * Variable: Tree
 			 * (DOMElement)
@@ -91,7 +91,7 @@
 				data.push({name:button.attr('name'),value:button.val()});
 				
 				// TODO Should be set by hiddenfield already
-				jQuery('#Form_EditForm').entwine('ss').loadForm(
+				jQuery('.cms-edit-form').entwine('ss').loadForm(
 					this.attr('action'),
 					function() {
 						// Tree updates are triggered by Form_EditForm load events

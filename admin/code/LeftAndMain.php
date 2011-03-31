@@ -757,6 +757,7 @@ class LeftAndMain extends Controller {
 			}
 			
 			$form = new Form($this, "EditForm", $fields, $actions);
+			$form->addExtraClass('cms-edit-form');
 			$form->loadDataFrom($record);
 			
 			// Add a default or custom validator.
@@ -821,6 +822,8 @@ class LeftAndMain extends Controller {
 			new FieldSet()
 		);
 		$form->unsetValidator();
+		$form->addExtraClass('cms-edit-form');
+		$form->addExtraClass('root-form');
 		
 		return $form;
 	}
@@ -845,6 +848,7 @@ class LeftAndMain extends Controller {
 			)
 		);
 		$form->addExtraClass('actionparams');
+		$form->addExtraClass('add-form');
 		
 		return $form;
 	}

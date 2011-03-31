@@ -124,7 +124,7 @@
 						})
 						// TODO Move to EditForm logic
 						.bind('select_node.jstree', function(e, data) {
-							var node = data.rslt.obj, loadedNodeID = $('#Form_EditForm :input[name=ID]').val()
+							var node = data.rslt.obj, loadedNodeID = $('.edit-form :input[name=ID]').val()
 							
 							// Don't allow checking disabled nodes
 							if($(node).hasClass('disabled')) return false;
@@ -135,12 +135,12 @@
 
 							var url = $(node).find('a:first').attr('href');
 							if(url && url != '#') {
-								var xmlhttp = $('#Form_EditForm').loadForm(
+								var xmlhttp = $('.edit-form').loadForm(
 									url,
 									function(response) {}
 								);
 							} else {
-								$('#Form_EditForm').removeForm();
+								$('.edit-form').removeForm();
 							}
 						})
 						.bind('move_node.jstree', function(e, data) {
@@ -159,7 +159,7 @@
 							});
 						});
 					
-					$('#Form_EditForm').bind('loadnewpage', function(e, data) {
+					$('.cms-edit-form').bind('loadnewpage', function(e, data) {
 						self._onLoadNewPage(e, data);
 					});
 			},
