@@ -136,20 +136,50 @@ class SSViewer_Scope {
 class SSViewer_DataPresenter extends SSViewer_Scope {
 	
 	private $extras;
-	
+
 	function __construct($item, $extras = null){
 		parent::__construct($item);
 		$this->extras = $extras;
+
+		if (!$this->extras) $this->extras = array();
+
+		//get all the exposed variables from all classes that implement the GlobalTemplateVariables interface
+		$implementers = ClassInfo::implementorsOf("GlobalTemplateVariables");
+		foreach($implementers as $implementer) {
+			$exposedVariables = $implementer::getExposedVariables();    //get the exposed variables
+
+			foreach($exposedVariables as $varName => $methodName) {
+				if (!$varName || is_numeric($varName)) $varName = $methodName;  //array has just a single value, use it for both key and value
+
+				//e.g. "array(Director, absoluteBaseURL)" means call "Director::absoluteBaseURL()"
+				$this->extras[$varName] = array($implementer => $methodName);
+				$firstCharacter = substr($varName, 0, 1);
+				
+				if ((strtoupper($firstCharacter) === $firstCharacter)) {    //is uppercase, so save the lowercase version, too
+					$this->extras[lcfirst($varName)] = array($implementer => $methodName);
+				} else {    //is lowercase, save a version so it also works uppercase
+					$this->extras[ucfirst($varName)] = array($implementer => $methodName);
+				}
+			}
+		}
 	}
 	
 	function __call($name, $arguments) {
 		$property = $arguments[0];
-		
+
 		if ($this->extras && array_key_exists($property, $this->extras)) {
-			
-			$this->resetLocalScope();
-			
-			$value = $this->extras[$arguments[0]];
+			$this->resetLocalScope();   //if we are inside a chain (e.g. $A.B.C.Up.E) break out to the beginning of it
+
+			$value = $this->extras[$property];  //get the method call
+
+			//only call functions that specify themselves as function=>call
+			if (is_array($value)) {
+				$class = array_keys($value);
+				$method = array_values($value);
+
+				//value is the class, property is the function call (output the result of the call)
+				$value = $class[0]::$method[0](); //call method (arrays will only ever have single value)
+			}
 			
 			switch ($name) {
 				case 'hasValue':
