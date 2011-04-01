@@ -5,9 +5,8 @@
  * @package    sapphire
  * @subpackage view
  */
-class PaginatedList extends ViewableData implements IteratorAggregate {
+class PaginatedList extends SS_ListDecorator {
 
-	protected $list;
 	protected $request;
 	protected $getVar = 'start';
 
@@ -28,16 +27,8 @@ class PaginatedList extends ViewableData implements IteratorAggregate {
 			throw new Exception('The request must be readable as an array.');
 		}
 
-		$this->list     = $list;
-		$this->failover = $list;
-		$this->request  = $request;
-	}
-
-	/**
-	 * @return DataObjectSet
-	 */
-	public function getList() {
-		return $this->list;
+		$this->request = $request;
+		parent::__construct($list);
 	}
 
 	/**
