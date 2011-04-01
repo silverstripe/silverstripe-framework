@@ -255,7 +255,6 @@ JS;
 		}
 
 		$pageStart = (isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) ? $_REQUEST['ctf'][$this->Name()]['start'] : 0;
-		$sourceItems->setPageLimits($pageStart, $this->pageSize, $this->TotalCount());
 
 		$output = new DataObjectSet();
 		foreach($sourceItems as $pageIndex=>$item) {
