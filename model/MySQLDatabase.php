@@ -832,8 +832,12 @@ class MySQLDatabase extends SS_Database {
 		if(isset($objects)) $doSet = new DataObjectSet($objects);
 		else $doSet = new DataObjectSet();
 
-		$doSet->setPageLimits($start, $pageLength, $totalCount);
-		return $doSet;
+		$list = new PaginatedList($doSet);
+		$list->setPageStart($start);
+		$list->setPageLEngth($pageLength);
+		$list->setTotalItems($totalCount);
+
+		return $list;
 	}
 
 	/**
