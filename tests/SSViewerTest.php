@@ -109,6 +109,16 @@ SS
 		$this->assertEquals(Permission::check("ADMIN"), $this->render('{$HasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
 		$this->assertEquals(Permission::check("ADMIN"), $this->render('{$hasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
 	}
+
+	/* //TODO: enable this test
+	  function testLocalFunctionsTakePriorityOverGlobals() {
+		$data = new ArrayData(array(
+			'Page' => new SSViewerTest_Page()
+		));
+
+		$result = $this->render('<% control Page %>$absoluteBaseURL<% end_control %>',$data);
+		$this->assertEquals("testPageCalled",$result, "Local Object's function called. Did not return the actual baseURL of the current site");
+	}*/
 	
 	function testObjectDotArguments() {
 		$this->assertEquals(
@@ -608,4 +618,11 @@ class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
 
 class SSViewerTest_Controller extends Controller {
 	
+}
+
+class SSViewerTest_Page extends SiteTree {
+
+	function absoluteBaseURL() {
+		return "testPageCalled";
+	}
 }
