@@ -187,7 +187,7 @@ class ConfirmedPasswordField extends FormField {
 			if($value['_Password'] || (!$value['_Password'] && !$this->canBeEmpty)) {
 				$this->value = $value['_Password'];
 			}
-			if(isset($value['_PasswordFieldVisible'])){
+			if($this->showOnClick && isset($value['_PasswordFieldVisible'])){
 				$this->children->fieldByName($this->Name() . '[_PasswordFieldVisible]')->setValue($value['_PasswordFieldVisible']);
 			}
 		} else {
