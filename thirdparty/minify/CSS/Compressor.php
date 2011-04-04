@@ -142,11 +142,11 @@ class Minify_CSS_Compressor {
         $css = preg_replace('/([\\w#\\.\\*]+)\\s+([\\w#\\.\\*]+){/', "$1\n$2{", $css);
         
         // Use newline after 1st numeric value (to limit line lengths).
-        $css = preg_replace('/
+        /*$css = preg_replace('/
             ((?:padding|margin|border|outline):\\d+(?:px|em)?) # 1 = prop : 1st numeric value
             \\s+
             /x'
-            ,"$1\n", $css);
+            ,"$1\n", $css);*/
         
         // prevent triggering IE6 bug: http://www.crankygeek.com/ie6pebug/
         $css = preg_replace('/:first-l(etter|ine)\\{/', ':first-l$1 {', $css);

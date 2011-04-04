@@ -232,7 +232,12 @@ class SS_HTTPResponse {
 			if(Director::isLive() && $this->isError() && !$this->body) {
 				Debug::friendlyError($this->statusCode, $this->getStatusDescription());
 			} else {
-				echo $this->body;
+				if(!Director::isDev() && !Director::is_ajax()) {
+					require_once('thirdparty/minify/HTML.php'); //Minifing HTML
+					echo Minify_HTML::minify($this->body);
+				} else {
+					echo $this->body;
+				}
 			}
 			
 		}

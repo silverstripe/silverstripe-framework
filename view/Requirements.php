@@ -1015,6 +1015,13 @@ class Requirements_Backend {
 					
 					increase_time_limit_to();
 					$fileContent = JSMin::minify($fileContent);
+				} else { // Let's compress CSS too
+					$isCSS = stripos($file, '.css');
+					if($isCSS) {
+						require_once('thirdparty/minify/CSS/Compressor.php');
+						increase_time_limit_to();
+						$fileContent = Minify_CSS_Compressor::process($fileContent);
+					}					
 				}
 				// write a header comment for each file for easier identification and debugging
 				// also the semicolon between each file is required for jQuery to be combinable properly
