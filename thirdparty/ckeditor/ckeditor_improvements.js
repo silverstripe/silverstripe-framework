@@ -1,3 +1,31 @@
+/**
+* Retrieve HTML presentation of the current selected range, require editor
+* to be focused first.
+*/
+CKEDITOR.editor.prototype.getSelectedHtml = function()
+{
+   var selection = this.getSelection();
+   if( selection )
+   {
+      var bookmarks = selection.createBookmarks(),
+         range = selection.getRanges()[ 0 ],
+         fragment = range.clone().cloneContents();
+
+      selection.selectBookmarks( bookmarks );
+
+      var retval = "",
+         childList = fragment.getChildren(),
+         childCount = childList.count();
+      for ( var i = 0; i < childCount; i++ )
+      {
+         var child = childList.getItem( i );
+         retval += ( child.getOuterHtml?
+            child.getOuterHtml() : child.getText() );
+      }
+      return retval;
+   }
+};
+
 ToolbarForm = Class.create();
 ToolbarForm.prototype = {
 	toggle: function(ed) {
@@ -70,11 +98,15 @@ LinkForm.prototype = {
 		(function($) { 
 			if (!$('#Form_EditorToolbarLinkForm_AnchorSelector').length) {
 				// this function collects the anchors in the currently active editor and regenerates the dropdown
+				var ed = getCkEditorInstance();
 				var refreshAnchors = function(selector) {
 					var anchors = new Array();
 					// name attribute is defined as CDATA, should accept all characters and entities
 					// http://www.w3.org/TR/1999/REC-html401-19991224/struct/links.html#h-12.2
-					var raw = tinyMCE.activeEditor.getContent().match(/name="([^"]+?)"|name='([^']+?)'/gim);
+					if( ed.getSelection().getStartElement() != null) {
+						var raw = ed.getSelection().getStartElement().getOuterHtml().match(/name="([^"]+?)"|name='([^']+?)'/gim);
+					}
+					
 					if (raw && raw.length) {
 						for(var i = 0; i < raw.length; i++) {
 							anchors.push(raw[i].substr(6).replace(/"$/, ''));
@@ -89,7 +121,7 @@ LinkForm.prototype = {
 				}
 
 				// refresh the anchor selector on click, or in case of IE - button click
-				if( !tinymce.isIE ) {
+				if( !CKEDITOR.isIE ) {
 					var anchorSelector = $('<select id="Form_EditorToolbarLinkForm_AnchorSelector"></select>');
 					$('#Form_EditorToolbarLinkForm_Anchor').parent().append(anchorSelector);
 
@@ -136,7 +168,7 @@ LinkForm.prototype = {
 		this.ToolbarForm.open();
 		
 		this.originalSelection = null;
-		var mceInst = tinyMCE.activeEditor;
+		var mceInst = CKEDITOR.activeEditor;
 	},
 	
 	updateSelection: function(ed) {
@@ -146,7 +178,7 @@ LinkForm.prototype = {
     },
 	
 	respondToNodeChange: function(ed) {
-	    if(ed == null) ed = tinyMCE.activeEditor;
+	    if(ed == null) ed = CKEDITOR.activeEditor;
 	    
 		if(this.style.display == 'block') {
 			var i,data = this.getCurrentLink(ed);
@@ -210,7 +242,7 @@ LinkForm.prototype = {
 		}
 
 		if(this.originalSelection) {
-		    tinyMCE.activeEditor.selection.setRng(this.originalSelection);
+		    CKEDITOR.activeEditor.selection.setRng(this.originalSelection);
 		}
 		
 		var attributes = {
@@ -221,7 +253,7 @@ LinkForm.prototype = {
 		};
 
         // Add the new link
-		this.ssInsertLink(tinyMCE.activeEditor, attributes, this);
+		this.ssInsertLink(getCkEditorInstance(), attributes, this);
 	},
 	
 	/**
@@ -230,51 +262,27 @@ LinkForm.prototype = {
 	 */
 	ssInsertLink: function(ed, attributes, linkFormObj) {
 	    var v = attributes;
-		var s = ed.selection, e = ed.dom.getParent(s.getNode(), 'A');
+		element = ed.document.createElement( 'a' );
+		var s = ed.getSelection(), e = element;
+		if(attributes['innerHTML'] != '') {
+			element.setAttribute('href', attributes['href']);
+			if(attributes['target'] != null) {
+				element.setAttribute('target', attributes['target']);
+			}
+			if(attributes['title'] != '') {
+				element.setAttribute('title', attributes['title']);
+			}
+			element.setHtml(attributes['innerHTML']);
 
-		if (tinymce.is(attributes, 'string'))
-			attributes = {href : attributes};
-
-		function set(e) {
-			tinymce.each(attributes, function(v, k) {
-			    if(k == 'innerHTML') e.innerHTML = v;
-				else ed.dom.setAttrib(e, k, v);
-			});
-			try {
-				s.select(e);
-				if(linkFormObj) linkFormObj.updateSelection(ed);
-			} catch(er) {}
-		};
-		
-		function replace() {
-			tinymce.each(ed.dom.select('a'), function(e) {
-				if (e.href == 'javascript:mctmp(0);') set(e);
-			});
+			ed.insertElement( element );
+			showSidePanel('', [ 'ssflash', 'ssimage', 'sslink' ], ed);
+			this.respondToNodeChange(ed);
 		}
-
-	    if(attributes.innerHTML && !ed.selection.getContent()) {
-            if(tinymce.isIE) var rng = ed.selection.getRng();
-	        e = ed.getDoc().createElement('a');
-	        e.href = 'javascript:mctmp(0);';
-	        s.setNode(e);
-	        if(tinymce.isIE) tinyMCE.activeEditor.selection.setRng(rng);
-			replace();
-        }
-		if (!e) {
-			ed.execCommand('CreateLink', false, 'javascript:mctmp(0);');
-			replace();
-		} else {
-			if (attributes.href)
-				set(e);
-			else
-				ed.dom.remove(e, 1);
-		}
-		
-		this.respondToNodeChange(ed);
 	},
 	
 	handleaction_remove: function() {
-		tinyMCE.activeEditor.execCommand('unlink', false);
+		if(ed == null) ed = getCkEditorInstance();
+		ed.execCommand( 'unlink', false, null );
 	},
 	
 	/**
@@ -282,14 +290,14 @@ LinkForm.prototype = {
 	 * form.
 	 */
 	getCurrentLink: function(ed) {
-	    if(ed == null) ed = tinyMCE.activeEditor;
+	    if(ed == null) ed = getCkEditorInstance();
 	    
 		var selectedText = "";
-	    selectedText = ed.selection.getContent({format : 'text'});
-	    var selectedElement = ed.selection.getNode();
+	    selectedText = ed.getSelection().getStartElement().getText();
+	    var selectedElement = ed.getSelection().getStartElement();
 
         /*
-		if ((selectedElement.nodeName.toLowerCase() != "img") && (selectedText.length <= 0)) {
+		if ((selectedElement.getName() != "img") && (selectedText.length <= 0)) {
 		    return {};
 	    }
 	    */
@@ -301,12 +309,12 @@ LinkForm.prototype = {
 		// but we don't use it as the destination for the link insertion
 		var linkDataSource = null;
 
-		if(selectedElement && (selectedElement.nodeName.toLowerCase() == "a")) {
+		if(selectedElement && (selectedElement.getName() == "a")) {
 			linkDataSource = selectedElement;
-    		ed.selection.select(linkDataSource);
-		} else if(selectedElement && (selectedElement.getElementsByTagName('a').length > 0)) {
-		    if(selectedElement.getElementsByTagName('a')[0]) {
-		    	linkDataSource = selectedElement.getElementsByTagName('a')[0];
+    		ed.getSelection().selectElement(linkDataSource);
+		} else if(selectedElement && (selectedElement.getElementsByTag('a').length > 0)) {
+		    if(selectedElement.getElementsByTag('a')[0]) {
+		    	linkDataSource = selectedElement.getElementsByTag('a')[0];
 		    }
 		} else {
 			var sel = selectedElement;
@@ -322,41 +330,41 @@ LinkForm.prototype = {
 		}
 		
 		// Is anchor not a link
-		if (linkDataSource != null && tinymce.DOM.getAttrib(linkDataSource, 'href') == "")
+		if (linkDataSource != null && linkDataSource.getAttribute('href') == "")
 			linkDataSource = null;
 
 		if (linkDataSource) {
-			href = tinymce.DOM.getAttrib(linkDataSource, 'href');
-			target = tinymce.DOM.getAttrib(linkDataSource, 'target');
-			title = tinymce.DOM.getAttrib(linkDataSource, 'title');
-              onclick = tinymce.DOM.getAttrib(linkDataSource, 'onclick');
-			style_class = tinymce.DOM.getAttrib(linkDataSource, 'class');
+			href = linkDataSource.getAttribute('href');
+			target = linkDataSource.getAttribute('target');
+			title = linkDataSource.getAttribute('title');
+			onclick = linkDataSource.getAttribute('onclick');
+			style_class = linkDataSource.getAttribute('class');
 
 			// Try old onclick to if copy/pasted content
 			if (onclick == "")
-				onclick = tinymce.DOM.getAttrib(linkDataSource, 'onclick');
+				onclick = linkDataSource.getAttribute('onclick');
 
             /*
-			onclick = tinyMCE.cleanupEventStr(onclick);
+			onclick = CKEDITOR.cleanupEventStr(onclick);
 			*/
 
             /*
 			// Fix for drag-drop/copy paste bug in Mozilla
-			mceRealHref = tinymce.DOM.getAttrib(linkDataSource, 'mce_real_href');
+			mceRealHref = linkDataSource.getAttribute('mce_real_href');
 			if (mceRealHref != "")
 				href = mceRealHref;
 			*/
 
-			href = eval(tinyMCE.settings['urlconverter_callback'] + "(href, linkDataSource, true);");
+			// href = eval(CKEDITOR.settings['urlconverter_callback'] + "(href, linkDataSource, true);");
 			action = "update";
 		}
 		
 		// Turn into relative
-		if(href.match(new RegExp('^' + tinyMCE.settings['document_base_url'] + '(.*)$'))) {
+		if(href.match(new RegExp('^' + CKEDITOR.config['baseHref'] + '(.*)$'))) {
 			href = RegExp.$1;
 		}
 		
-		var linkText = ed.selection.getContent({format : 'html'}).replace(/<\/?a[^>]*>/ig,'');
+		var linkText = ed.getSelection().getNative();
 		
 		// Get rid of TinyMCE's temporary URLs
 		if(href.match(/^javascript:\s*mctmp/)) href = '';
@@ -425,11 +433,7 @@ SideFormAction.prototype = {
 	},
 	onclick: function() {
 		if(this.parentForm['handle' + this.name]) {
-			try {
 				this.parentForm['handle' + this.name]();
-			} catch(er) {
-				alert("An error occurred.  Please try again, or reload the CMS if the problem persists.\n\nError details: " + er.message);
-			}
 		} else {
 			alert("Couldn't find form method handle" + this.name);
 		}
@@ -474,8 +478,11 @@ ImageForm.prototype = {
 		this.elements.Height.onchange = null;
 	},
 	update_params: function(updatedFieldName) {
-		var ed = tinyMCE.activeEditor;
-		var imgElement = ed.selection.getNode();
+		for(var i in CKEDITOR.instances) {
+   			ed = CKEDITOR.instances[i];
+		}
+		var imgElement = ed.getSelection().getSelectedElement();
+
 		if (!imgElement || imgElement.tagName != 'IMG') {
 			imgElement = this.selectedNode;
 		}
@@ -622,10 +629,10 @@ ImageThumbnail.prototype = {
 		var relativeHref = this.href.substr(baseURL.length);
 		var captionText = formObj.elements.CaptionText.value;
 		
-		if(!tinyMCE.selectedInstance) tinyMCE.selectedInstance = tinyMCE.activeEditor;
-		if(tinyMCE.selectedInstance.contentWindow.focus) tinyMCE.selectedInstance.contentWindow.focus();
+		if(!CKEDITOR.selectedInstance) CKEDITOR.selectedInstance = CKEDITOR.activeEditor;
+		//if(CKEDITOR.selectedInstance.contentWindow.focus) CKEDITOR.selectedInstance.contentWindow.focus();
 		
-		this.ssInsertImage(tinyMCE.activeEditor, {
+		this.ssInsertImage(CKEDITOR.activeEditor, {
 			'src' : relativeHref,
 			'alt' : altText,
 			'width' : $('Form_EditorToolbarImageForm_Width').value,
@@ -641,35 +648,27 @@ ImageThumbnail.prototype = {
 	 * Insert an image with the given attributes
 	 */
 	 ssInsertImage: function(ed, attributes, captionText) {
-		el = ed.selection.getNode();
-		var html;
-		
-		if(captionText) {
-			html = '<div style="width: ' + attributes.width + 'px;" class="captionImage ' + attributes['class'] + '">';
-			html += '<img id="__mce_tmp" />';
-			html += '<p class="caption">' + captionText + '</p>';
-			html += '</div>';
-		} else {
-			html = '<img id="__mce_tmp" />';
+		for(var i in CKEDITOR.instances) {
+    		ed = CKEDITOR.instances[i];
 		}
-		
-		if(el && el.nodeName == 'IMG') {
-			ed.dom.setAttribs(el, attributes);
-		} else {
-			// Focus gets saved in tinymce_ssbuttons when opening the sidebar.
-			// Unless the focus has changed in the meantime, reset it to the previous position.
-			// This is necessary because IE can lose its focus if any of the sidebar input fields are used.
-			if(ed.ss_focus_bookmark) {
-				ed.selection.moveToBookmark(ed.ss_focus_bookmark);
-				delete ed.ss_focus_bookmark;
-			}
-			ed.execCommand('mceInsertContent', false, html, {
-				skip_undo : 1
+
+		var img = new CKEDITOR.dom.element( 'img' );
+		img.setAttributes(attributes);
+
+		if(captionText) {
+			var div = new CKEDITOR.dom.element( 'div' );
+			div.setAttributes({
+					'style': 'width:' + attributes.width + 'px;',
+					'class' : 'captionImage' + attributes['class']
 			});
-			
-			ed.dom.setAttribs('__mce_tmp', attributes);
-			ed.dom.setAttrib('__mce_tmp', 'id', '');
-			ed.undoManager.add();
+			var p = new CKEDITOR.dom.element( 'p' );
+			p.addClass('caption');
+			p.appendText(captionText);
+			div.append(img);
+			div.append(p);
+			ed.insertElement(div);
+		} else {
+			ed.insertElement(img);
 		}
 	}
 	
@@ -728,11 +727,11 @@ FlashForm.prototype = {
 
 	},
 	update_params: function(event) {
-		if(tinyMCE.imgElement) {
+		if(CKEDITOR.imgElement) {
 		}
 	},
 	respondToNodeChange: function() {
-		if(tinyMCE.imgElement) {
+		if(CKEDITOR.imgElement) {
 		} else {
 		}
 	},
@@ -769,8 +768,8 @@ FlashThumbnail.prototype = {
 		var width = formObj.elements.Width.value;
 		var height = formObj.elements.Height.value;
 		
-		if(!tinyMCE.selectedInstance) tinyMCE.selectedInstance = tinyMCE.activeEditor;
-		if(tinyMCE.selectedInstance.contentWindow.focus) tinyMCE.selectedInstance.contentWindow.focus();
+		if(!CKEDITOR.selectedInstance) CKEDITOR.selectedInstance = CKEDITOR.activeEditor;
+		if(CKEDITOR.selectedInstance.contentWindow.focus) CKEDITOR.selectedInstance.contentWindow.focus();
 
 		if (width == "") width = 100;
 		if (height == "") height = 100;
@@ -780,8 +779,8 @@ FlashThumbnail.prototype = {
 		html += '<param value="'+ relativeHref +'" name="movie">';
 		html += '</object>';
 		
-		tinyMCE.selectedInstance.execCommand("mceInsertContent", false, html);
-		tinyMCE.selectedInstance.execCommand('mceRepaint');
+		CKEDITOR.selectedInstance.execCommand("mceInsertContent", false, html);
+		CKEDITOR.selectedInstance.execCommand('mceRepaint');
 	//	ed.execCommand('mceInsertContent', false, html, {skip_undo : 1}); 
 		return false;
 	}
@@ -891,6 +890,14 @@ MCEDLResizer.prototype = {
 	}
 }
 
+function getCkEditorInstance () {
+	if(typeof CKEDITOR != 'undefined') {
+		for(var i in CKEDITOR.instances) {
+			/* CK instance */
+			return ed = CKEDITOR.instances[i];
+		}
+	}
+}
 /**
  * These callback hook it into tinymce.  They need to be referenced in the TinyMCE config.
  */
@@ -959,9 +966,11 @@ function sapphiremce_cleanup(type, value) {
 contentPanelCloseButton = Class.create();
 contentPanelCloseButton.prototype = {
 	onclick: function() {
-	    tinyMCE.activeEditor.execCommand('ssclosesidepanel');
+		for(var i in CKEDITOR.instances) {
+    		ed = CKEDITOR.instances[i];
+		}
+		showSidePanel('', [ 'sslink', 'ssimage', 'ssflash' ], ed);
 	}
 }
 
 contentPanelCloseButton.applyTo('#contentPanel h2 img');
-

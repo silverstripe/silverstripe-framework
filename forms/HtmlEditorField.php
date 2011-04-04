@@ -12,8 +12,10 @@ class HtmlEditorField extends TextareaField {
 	 * Includes the JavaScript neccesary for this field to work using the {@link Requirements} system.
 	 */
 	public static function include_js() {
-		Requirements::javascript(MCE_ROOT . 'tiny_mce_src.js');
-		Requirements::customScript(HtmlEditorConfig::get_active()->generateJS(), 'htmlEditorConfig');
+		// SiteConfig fix
+		CkEditField::include_js();
+		//Requirements::javascript(MCE_ROOT . 'tiny_mce_src.js');
+		//Requirements::customScript(HtmlEditorConfig::get_active()->generateJS(), 'htmlEditorConfig');
 	}
 	
 	/**
@@ -205,7 +207,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	function __construct($controller, $name) {
 		parent::__construct();
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/tiny_mce_improvements.js");
+		//Requirements::javascript(SAPPHIRE_DIR . "/javascript/tiny_mce_improvements.js");
 		
 		Requirements::javascript(SAPPHIRE_DIR ."/thirdparty/jquery-form/jquery.form.js");
 		Requirements::javascript(SAPPHIRE_DIR ."/javascript/HtmlEditorField.js");

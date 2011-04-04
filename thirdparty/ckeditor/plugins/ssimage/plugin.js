@@ -10,6 +10,9 @@ CKEDITOR.plugins.add('ssimage',{
 		a.addCommand("ssflash", {
 			exec:function(ed){showSidePanel('ssflash', [ 'ssimage', 'sslink' ], ed);}
 		});
+		a.addCommand("ssclosesidepanel", {
+			exec:function(ed) {showSidePanel('', [ 'sslink', 'ssimage', 'ssflash' ]);}
+		});
 
         a.ui.addButton('ssimage',{ 
 									label:'Добавить изображение..',

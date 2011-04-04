@@ -73,7 +73,7 @@
 			  var self = this;
 		  
 				// @todo TinyMCE coupling
-				if(typeof tinyMCE != 'undefined') tinyMCE.triggerSave();
+				ckEditorUpdate();
 			
 				// check for form changes
 				if(self.is('.changed')) {
@@ -124,7 +124,7 @@
 				$(button).addClass('loading');
 	
 				// @todo TinyMCE coupling
-				if(typeof tinyMCE != 'undefined') tinyMCE.triggerSave();
+				ckEditorUpdate();
 	
 				// validate if required
 				if(!this.validate()) {
@@ -260,14 +260,8 @@
 			 * Remove all the currently active TinyMCE editors.
 			 * Note: Everything that calls this externally has an inappropriate coupling to TinyMCE.
 			 */
-			cleanup: function() {
-				if((typeof tinymce != 'undefined') && tinymce.EditorManager) {
-					var id;
-					for(id in tinymce.EditorManager.editors) {
-						tinymce.EditorManager.editors[id].remove();
-					}
-					tinymce.EditorManager.editors = {};
-				}
+			cleanup: function (){
+				ckEditor_removeAll();
 			},
 
 			/**
@@ -362,21 +356,43 @@
 		 * 
 		 * Add tinymce to HtmlEditorFields within the CMS.
 		 */
-		$('#Form_EditForm textarea.htmleditor').entwine({
+		$('#Form_EditForm textarea.ckeditor').entwine({
 			
 			/**
 			 * Constructor: onmatch
 			 */
 			onmatch : function() {
-				tinyMCE.execCommand("mceAddControl", true, this.attr('id'));
-				this.isChanged = function() {
+				//alert('aaa');
+				if(typeof CKEDITOR != 'undefined'){
+					ckEditor_removeAll();
+					CKEDITOR.replace(this.attr('id'),{ baseHref: CKEDITOR_BASEHREF,contentsCss: CKEDITOR_CONTENTSCSS});
+				}
+				/*this.isChanged = function() {
 					return tinyMCE.getInstanceById(this.attr('id')).isDirty();
-				};
+				};*/
 				this.resetChanged = function() {
-					var inst = tinyMCE.getInstanceById(this.attr('id'));
-					if (inst) inst.startContent = tinymce.trim(inst.getContent({format : 'raw', no_events : 1}));
+					inst = CKEDITOR.instances[this.attr('id')];
+					if (inst) inst.startContent = CKEDITOR.tools.trim(inst.getData());
 				};
 			}
 		});
 	});
 }(jQuery));
+
+function ckEditorUpdate() {
+	if(typeof CKEDITOR != 'undefined') {
+		for(var i in CKEDITOR.instances) {
+		   /* this updates the value of the textarea from the CK instances.. */
+		   CKEDITOR.instances[i].updateElement();
+		}
+	}
+}
+function ckEditor_removeAll() {
+	if(typeof CKEDITOR != 'undefined') {
+		for(var i in CKEDITOR.instances) {
+		   /* this updates the value of the textarea from the CK instances.. */
+		   CKEDITOR.instances[i].destroy();
+		}
+	}
+		
+}

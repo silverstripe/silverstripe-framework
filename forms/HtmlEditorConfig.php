@@ -299,7 +299,6 @@ class HtmlEditorConfig {
 		foreach ($this->buttons as $i=>$buttons) {
 			$config['theme_advanced_buttons'.$i] = implode(',', $buttons);
 		}
-		
 		return "
 if((typeof tinyMCE != 'undefined')) {
 	$externalPluginsJS
