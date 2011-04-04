@@ -5,7 +5,7 @@
  */
 class DecimalTest extends SapphireTest {
 
-	public static $fixture_file = 'sapphire/tests/fieldtypes/DecimalTest.yml';
+	public static $fixture_file = 'DecimalTest.yml';
 
 	protected $testDataObject;
 	

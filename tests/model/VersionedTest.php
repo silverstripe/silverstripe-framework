@@ -1,7 +1,7 @@
 <?php
 
 class VersionedTest extends SapphireTest {
-	static $fixture_file = 'sapphire/tests/model/VersionedTest.yml';
+	static $fixture_file = 'VersionedTest.yml';
 
 	protected $extraDataObjects = array(
 		'VersionedTest_DataObject',

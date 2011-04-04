@@ -45,7 +45,7 @@ class AggregateTest_Baz extends DataObject implements TestOnly {
 }
 
 class AggregateTest extends SapphireTest {
-	static $fixture_file = 'sapphire/tests/model/AggregateTest.yml';
+	static $fixture_file = 'AggregateTest.yml';
 	
 	protected $extraDataObjects = array(
 		'AggregateTest_Foo',

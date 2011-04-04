@@ -67,7 +67,7 @@ global $databaseConfig;
 $_SESSION = null;
 
 // Connect to database
-require_once("core/model/DB.php");
+require_once("model/DB.php");
 DB::connect($databaseConfig);
 
 // Get the request URL from the querystring arguments

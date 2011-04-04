@@ -9,7 +9,7 @@
  */
 class FormScaffolderTest extends SapphireTest {
 	
-	static $fixture_file = 'sapphire/tests/forms/FormScaffolderTest.yml';
+	static $fixture_file = 'FormScaffolderTest.yml';
 
 	protected $extraDataObjects = array(
 		'FormScaffolderTest_Article',

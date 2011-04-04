@@ -208,15 +208,15 @@ set_include_path(BASE_PATH . '/sapphire' . PATH_SEPARATOR
 require_once 'cache/Cache.php';
 require_once 'core/Object.php';
 require_once 'core/ClassInfo.php';
-require_once 'core/control/Director.php';
+require_once 'control/Director.php';
 require_once 'dev/Debug.php';
 require_once 'filesystem/FileFinder.php';
-require_once 'manifest/ClassLoader.php';
-require_once 'manifest/ClassManifest.php';
-require_once 'manifest/ManifestFileFinder.php';
-require_once 'manifest/TemplateLoader.php';
-require_once 'manifest/TemplateManifest.php';
-require_once 'manifest/TokenisedRegularExpression.php';
+require_once 'core/manifest/ClassLoader.php';
+require_once 'core/manifest/ClassManifest.php';
+require_once 'core/manifest/ManifestFileFinder.php';
+require_once 'core/manifest/TemplateLoader.php';
+require_once 'core/manifest/TemplateManifest.php';
+require_once 'core/manifest/TokenisedRegularExpression.php';
 
 ///////////////////////////////////////////////////////////////////////////////
 // MANIFEST

@@ -1,7 +1,7 @@
 <?php
 
 class ControllerTest extends FunctionalTest {
-	static $fixture_file = 'sapphire/tests/ControllerTest.yml';
+	static $fixture_file = 'ControllerTest.yml';
 	
 	function testDefaultAction() {
 		/* For a controller with a template, the default action will simple run that template. */

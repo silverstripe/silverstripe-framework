@@ -5,7 +5,7 @@
  */
 class HtmlEditorFieldTest extends FunctionalTest {
 	
-	public static $fixture_file = 'sapphire/tests/forms/HtmlEditorFieldTest.yml';
+	public static $fixture_file = 'HtmlEditorFieldTest.yml';
 	
 	public static $use_draft_site = true;
 	

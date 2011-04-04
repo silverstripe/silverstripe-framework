@@ -23,7 +23,7 @@ class i18nTextCollectorTest extends SapphireTest {
 	function setUp() {
 		parent::setUp();
 		
-		$this->alternateBasePath = Director::baseFolder() . "/sapphire/tests/i18n/_fakewebroot";
+		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
 		$this->alternateBaseSavePath = TEMP_FOLDER . '/i18nTextCollectorTest_webroot';
 		FileSystem::makeFolder($this->alternateBaseSavePath);
 
@@ -572,8 +572,8 @@ PHP;
 	
 	function testCollectFromEntityProvidersInCustomObject() {
 		$c = new i18nTextCollector();
-		
-		$filePath = Director::baseFolder() . '/sapphire/tests/i18n/i18nTextCollectorTestMyObject.php';
+
+		$filePath = $this->getCurrentAbsolutePath() . '/i18nTextCollectorTestMyObject.php';
 		$matches = $c->collectFromEntityProviders($filePath);
 		$this->assertEquals(
 			array_keys($matches),

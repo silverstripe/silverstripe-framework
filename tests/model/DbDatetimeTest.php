@@ -2,7 +2,7 @@
 
 class DbDatetimeTest extends FunctionalTest {
 
-	static $fixture_file = 'sapphire/tests/model/DbDatetimeTest.yml';
+	static $fixture_file = 'DbDatetimeTest.yml';
 	
 	protected $extraDataObjects = array('DbDatetimeTest_Team');
 

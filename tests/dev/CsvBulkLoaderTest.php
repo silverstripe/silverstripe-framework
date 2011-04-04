@@ -5,7 +5,7 @@
  * @todo Test with columnn headers and custom mappings
  */
 class CsvBulkLoaderTest extends SapphireTest {
-	static $fixture_file = 'sapphire/tests/dev/CsvBulkLoaderTest.yml';
+	static $fixture_file = 'CsvBulkLoaderTest.yml';
 
 	protected $extraDataObjects = array(
 		'CsvBulkLoaderTest_Team',
@@ -18,7 +18,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	 */
 	function testLoad() {
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
-		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithHeader.csv';
+		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv';
 		$file = fopen($filepath, 'r');
 		$compareCount = $this->getLineCount($file);
 		fgetcsv($file); // pop header row
@@ -43,7 +43,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	 	 */ 
 	function testDeleteExistingRecords() { 
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player'); 
-		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithHeader.csv'; 
+		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv'; 
 		$loader->deleteExistingRecords = true;
 		$results1 = $loader->load($filepath);
 		$this->assertEquals(4, $results1->Count(), 'Test correct count of imported data on first load'); 
@@ -59,7 +59,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	 */
 	function testLoadWithColumnMap() {
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
-		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_Players.csv';
+		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_Players.csv';
 		$file = fopen($filepath, 'r');
 		$compareCount = $this->getLineCount($file);
 		$compareRow = fgetcsv($file);
@@ -95,7 +95,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	 */
 	function testLoadWithCustomHeaderAndRelation() {
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
-		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithCustomHeaderAndRelation.csv';
+		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_PlayersWithCustomHeaderAndRelation.csv';
 		$file = fopen($filepath, 'r');
 		$compareCount = $this->getLineCount($file);
 		fgetcsv($file); // pop header row
@@ -145,7 +145,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	function testLoadWithIdentifiers() {
 		// first load
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
-		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithId.csv';
+		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_PlayersWithId.csv';
 		$loader->duplicateChecks = array(
 			'ExternalIdentifier' => 'ExternalIdentifier' 
 		);
@@ -168,7 +168,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	
 	function testLoadWithCustomImportMethods() {
 		$loader = new CsvBulkLoaderTest_CustomLoader('CsvBulkLoaderTest_Player');
-		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithHeader.csv';
+		$filepath = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv';
 		$loader->columnMap = array(
 			'FirstName' => '->importFirstName',
 			'Biography' => 'Biography', 

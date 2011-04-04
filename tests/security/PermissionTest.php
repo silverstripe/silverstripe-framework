@@ -1,7 +1,7 @@
 <?php
 
 class PermissionTest extends SapphireTest {
-	static $fixture_file = 'sapphire/tests/security/PermissionTest.yml';
+	static $fixture_file = 'PermissionTest.yml';
 	
 	function testGetCodesGrouped() {
 		$codes = Permission::get_codes();

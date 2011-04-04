@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class UploadTest extends SapphireTest {
-	static $fixture_file = 'sapphire/tests/filesystem/UploadTest.yml';
+	static $fixture_file = 'UploadTest.yml';
 
 	function testUpload() {
 		// create tmp file

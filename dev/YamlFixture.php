@@ -68,13 +68,11 @@ require_once 'thirdparty/spyc/spyc.php';
  * @see http://code.google.com/p/spyc/
  * 
  * @todo Write unit test for YamlFixture
- *  
- * @param $fixtureFile The location of the .yml fixture file, relative to the site base dir
  */
 class YamlFixture extends Object {
 	
 	/**
-	 * The location of the .yml fixture file, relative to the site base dir
+	 * Absolute path to the .yml fixture file
 	 *
 	 * @var string
 	 */
@@ -87,13 +85,26 @@ class YamlFixture extends Object {
 	 */
 	protected $fixtureDictionary;
 	
+	/**
+	 * @param String Absolute file path, or relative path to {@link Director::baseFolder()}
+	 */
 	function __construct($fixtureFile) {
-		if(!file_exists(Director::baseFolder().'/'. $fixtureFile)) {
-			user_error('YamlFixture::__construct(): Fixture path "' . $fixtureFile . '" not found', E_USER_ERROR);
+		if(!Director::is_absolute($fixtureFile)) $fixtureFile = Director::baseFolder().'/'. $fixtureFile;
+		
+		if(!file_exists($fixtureFile)) {
+			throw new InvalidArgumentException('YamlFixture::__construct(): Fixture path "' . $fixtureFile . '" not found');
 		}
 		
 		$this->fixtureFile = $fixtureFile;
+		
 		parent::__construct();
+	}
+	
+	/**
+	 * @return String Absolute file path
+	 */
+	function getFixtureFile() {
+		return $this->fixtureFile;
 	}
 	
 	/**
@@ -151,7 +162,7 @@ class YamlFixture extends Object {
 		DataObject::set_validation_enabled(false);
 		
 		$parser = new Spyc();
-		$fixtureContent = $parser->loadFile(Director::baseFolder().'/'.$this->fixtureFile);
+		$fixtureContent = $parser->loadFile($this->fixtureFile);
 
 		$this->fixtureDictionary = array();
 		foreach($fixtureContent as $dataClass => $items) {

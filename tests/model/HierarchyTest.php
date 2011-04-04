@@ -1,7 +1,8 @@
 <?php
 
 class HierarchyTest extends SapphireTest {
-	static $fixture_file = 'sapphire/tests/model/HierarchyTest.yml';
+
+	static $fixture_file = 'HierarchyTest.yml';
 	
 	protected $requiredExtensions = array(
 		'HierarchyTest_Object' => array('Hierarchy', 'Versioned')

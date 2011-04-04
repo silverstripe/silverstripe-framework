@@ -8,7 +8,7 @@
  */
 class RestfulServerTest extends SapphireTest {
 	
-	static $fixture_file = 'sapphire/tests/api/RestfulServerTest.yml';
+	static $fixture_file = 'RestfulServerTest.yml';
 
 	protected $extraDataObjects = array(
 		'RestfulServerTest_Comment',

@@ -5,7 +5,7 @@
  */
 class FileTest extends SapphireTest {
 	
-	static $fixture_file = 'sapphire/tests/filesystem/FileTest.yml';
+	static $fixture_file = 'FileTest.yml';
 	
 	function testCreateWithFilenameWithSubfolder() {
 		// Note: We can't use fixtures/setUp() for this, as we want to create the db record manually.
