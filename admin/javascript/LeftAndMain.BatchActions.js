@@ -36,7 +36,7 @@
 			 * Constructor: onmatch
 			 */
 			onmatch: function() {
-				var self = this, tree = $('#sitetree_ul');
+				var self = this, tree = $('#sitetree');
 				
 				this.setTree(tree);
 				
