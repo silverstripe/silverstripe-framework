@@ -50,17 +50,37 @@
 								'initially_select': [this.find('.current').attr('id')]
 							},
 							 "crrm": {
-								'move': {
+								 'move': {
 									// Check if a node is allowed to be moved.
 									// Caution: Runs on every drag over a new node
 									'check_move': function(data) {
+
 										var movedNode = $(data.o), newParent = $(data.np), 
-											isMovedOntoContainer = data.ot.get_container()[0] == data.np[0];
+											isMovedOntoContainer = data.ot.get_container()[0] == data.np[0],
+											pattern = /class-[^\s]*/gi, match, movedNodeClass, newParentNodeClass, 
+											allowedChildren, allowedChild = true;
+
+										// Check allowedChildren of newParent, if movedNodeClass is not in list reject move
+										match = newParent.attr('class').match(pattern);
+										newParentNodeClass = (match) ? match.toString().substr(6) : null;
+										if (newParentNodeClass) {
+											allowedChildren = siteTreeHints[newParentNodeClass].allowedChildren;
+											match = movedNode.attr('class').match(pattern);
+											movedNodeClass = (match) ? match.toString().substr(6) : null;
+											
+											if (allowedChildren == null) allowedChild = false;
+											else allowedChild = ($.inArray(movedNodeClass, allowedChildren) == -1) ? false : true ;
+										}
+										//Else at root node, assuming all children can have root as parent (redundant)
+										else allowedChild = true
+										
 										var isAllowed = (
 											// Don't allow moving the root node
 											movedNode.data('id') != 0 
 											// Only allow moving node inside the root container, not before/after it
 											&& (!isMovedOntoContainer || data.p == 'inside')
+											// movedNode is allowed as a child
+											&& allowedChild
 										);
 										return isAllowed;
 									}
