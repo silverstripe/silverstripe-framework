@@ -849,7 +849,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		$message = sprintf(
 			_t('ComplexTableField.SUCCESSEDIT', 'Saved %s %s %s'),
 			$dataObject->singular_name(),
-			'<a href="' . $this->Link() . '">"' . htmlspecialchars($dataObject->Title, ENT_QUOTES) . '"</a>',
+			'<a href="' . $this->Link('edit') . '">"' . htmlspecialchars($dataObject->Title, ENT_QUOTES) . '"</a>',
 			$closeLink
 		);
 		
