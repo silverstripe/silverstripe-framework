@@ -1,5 +1,20 @@
+//@import "compass/reset";
 @import "tree.scss";
 @import "forms.scss";
+
+body {
+//	@include global-reset;
+	font-size: 13px;
+	font-family: Verdana, Arial, sans-serif;
+}
+
+body * {
+	font-size: 13px;
+}
+
+body .ui-widget {
+	font-size: 1em;
+}
 
 .logo {
 	.version {
