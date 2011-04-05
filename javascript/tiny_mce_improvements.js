@@ -564,13 +564,8 @@ ImageForm.prototype = {
 		if(this.selectedImage) {
 			this.selectedImage.insert();
 		}
-	},
-	
-	handleaction_editimage: function() {
-		if(this.selectedImage) {
-			this.selectedImage.edit();
-		}
 	}
+	
 }
 
 ImageThumbnail = Class.create();
@@ -582,42 +577,6 @@ ImageThumbnail.prototype = {
 	onclick: function(e) {
 		$('Form_EditorToolbarImageForm').selectImage(this);
 		return false;
-	},
-	
-	edit: function() {
-		var windowWidth = Element.getDimensions(window.top.document.body).width;
-       var windowHeight = Element.getDimensions(window.top.document.body).height;
-		var iframe = window.top.document.getElementById('imageEditorIframe');
-		if(iframe != null) {
-			iframe.parentNode.removeChild(iframe);
-		}
-		iframe = window.top.document.createElement('iframe');
-		var fileToEdit = this.href;
-		iframe.setAttribute("src","admin/ImageEditor?fileToEdit=" + fileToEdit);
-		iframe.id = 'imageEditorIframe';
-		iframe.style.width = windowWidth - 6 + 'px';
-		iframe.style.height = windowHeight + 10 + 'px';
-		iframe.style.zIndex = "1000";
-		iframe.style.position = "absolute";
-		iframe.style.top = "8px";
-		iframe.style.left = "8px";
-		window.top.document.body.appendChild(iframe);
-		var divLeft = window.top.document.createElement('div');
-		var divRight = window.top.document.createElement('div');
-        divLeft.style.width = "8px";
-        divLeft.style.height = "300%";
-        divLeft.style.zIndex = "1000";
-        divLeft.style.top = "0";
-        divLeft.style.position = "absolute";
-        divRight.style.width = "10px";
-        divRight.style.height = "300%";
-        divRight.style.zIndex = "1000";
-        divRight.style.top = "0";
-        divRight.style.position = "absolute";
-        divRight.style.left = Element.getDimensions(divLeft).width + Element.getDimensions(iframe).width - 4 + 'px';
-		window.top.document.body.appendChild(divLeft);
-		window.top.document.body.appendChild(divRight);
-		return;
 	},
 	
 	insert: function() {
@@ -700,29 +659,6 @@ function reselectImage(transport) {
 
 		$('Image').reapplyBehaviour();
       this.addToTinyMCE = this.addToTinyMCE.bind(this);
-}
-
-function imageEditorClosed() {
-	if(self.refreshAsset) {
-		refreshAsset();
-	}
-	if($('Form_EditorToolbarImageForm')) {
-		if($('Form_EditorToolbarImageForm').style.display != "none") {
-			// FInd the selected image
-			links = $('Image').getElementsByTagName('a');
-			for(i =0; link = links[i]; i++) {
-				if(link.className == 'selectedImage') {
-					var quesmark = link.href.lastIndexOf('?');
-					selectedimage = link.href.substring(0, quesmark);
-					break;
-				}
-			}
-		
-			// Trick the folder dropdown into registering a change, so the image thumbnails are reloaded
-			folderID = $('Form_EditorToolbarImageForm_FolderID').value;
-			$('Image').ajaxGetFiles(folderID, null, reselectImage);
-		}
-	}
 }
 
 FlashForm = Class.extend('ToolbarForm');
