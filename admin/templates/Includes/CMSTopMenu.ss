@@ -11,7 +11,7 @@
 		<a href="Security/logout" class="logout-link"><% _t('LOGOUT','Log out') %></a>
 	<% end_control %>
 </div>
-<ul id="MainMenu">
+<ul class="main-menu">
 <% control MainMenu %>
 	<li class="$LinkingMode" id="Menu-$Code">
 		<a href="$Link">$Title</a>

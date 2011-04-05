@@ -15,7 +15,7 @@
 		</div>
 	</div>
 	
-	<div class="main-menu">
+	<div class="east">
 		$CMSTopMenu
 	</div>
 	
