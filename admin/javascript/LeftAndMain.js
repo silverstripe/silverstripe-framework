@@ -53,7 +53,7 @@
 
 				// Remove loading screen
 				$('.ss-loading-screen').hide();
-				$('body').removeClass('stillLoading');
+				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
 
 				this._setupPinging();

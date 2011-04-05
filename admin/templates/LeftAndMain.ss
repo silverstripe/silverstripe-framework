@@ -7,7 +7,7 @@
 <title>$ApplicationName | $SectionTitle</title>
 </head>
 
-<body class="stillLoading $CSSClasses">
+<body class="loading $CSSClasses">
 	<div class="ss-loading-screen">
 		<div class="loading-logo">
 			<img class="loading-animation" src="sapphire/admin/images/spinner.gif" alt="<% _t('LOADING','Loading...',PR_HIGH) %>" />
