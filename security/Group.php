@@ -211,7 +211,7 @@ class Group extends DataObject {
 
 		// Call the relation method on the DataList to get the members from all the groups
 		return $groups->relation('DirectMembers')
-			->filter($filter)->sort($sort)->join($join)->limit($limit);
+			->where($filter)->sort($sort)->join($join)->limit($limit);
 	}
 	
 	/**

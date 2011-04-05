@@ -955,7 +955,7 @@ class Versioned extends DataExtension {
 	 */
 	static function get_latest_version($class, $id) {
 		$baseClass = ClassInfo::baseDataClass($class);
-	    $list = DataList::create($class)->filter("\"$baseClass\".\"RecordID\" = $id");
+	    $list = DataList::create($class)->where("\"$baseClass\".\"RecordID\" = $id");
 	    $list->dataQuery()->setQueryParam("Versioned.mode", "latest_versions");
         return $list->First();
 	}
@@ -967,7 +967,7 @@ class Versioned extends DataExtension {
 	 * In particular, this will query deleted records as well as active ones.
 	 */
 	static function get_including_deleted($class, $filter = "", $sort = "") {
-	    $list = DataList::create($class)->filter($filter)->sort($sort);
+	    $list = DataList::create($class)->where($filter)->sort($sort);
 	    $list->dataQuery()->setQueryParam("Versioned.mode", "latest_versions");
 	    return $list;
 	}
@@ -978,7 +978,7 @@ class Versioned extends DataExtension {
 	 */
 	static function get_version($class, $id, $version) {
 		$baseClass = ClassInfo::baseDataClass($class);
-	    $list = DataList::create($class)->filter("\"$baseClass\".\"RecordID\" = $id")->filter("\"$baseClass\".\"Version\" = " . (int)$version);
+	    $list = DataList::create($class)->where("\"$baseClass\".\"RecordID\" = $id")->where("\"$baseClass\".\"Version\" = " . (int)$version);
 	    $list->dataQuery()->setQueryParam('Versioned.mode', 'all_versions');
         return $list->First();
 	}
@@ -989,7 +989,7 @@ class Versioned extends DataExtension {
 	 */
 	static function get_all_versions($class, $id) {
         $baseClass = ClassInfo::baseDataClass($class);
-	    $list = DataList::create($class)->filter("\"$baseClass\".\"RecordID\" = $id");
+	    $list = DataList::create($class)->where("\"$baseClass\".\"RecordID\" = $id");
 	    $list->dataQuery()->setQueryParam('Versioned.mode', 'all_versions');
 	    return $list;
 	}

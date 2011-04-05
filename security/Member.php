@@ -953,7 +953,7 @@ class Member extends DataObject {
 		foreach($groups as $group) {
 			if(!$group->allowedIPAddress($ip)) $disallowedGroups[] = $groupID;
 		}
-		if($disallowedGroups) $group->filter("\"Group\".\"ID\" NOT IN (" .
+		if($disallowedGroups) $group->where("\"Group\".\"ID\" NOT IN (" .
 			implode(',',$disallowedGroups) . ")");
 
 		return $groups;

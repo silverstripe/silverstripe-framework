@@ -548,8 +548,8 @@ class Hierarchy extends DataExtension {
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
 		$id = $this->owner->ID;
 		
-		$children = DataObject::get($baseClass)->filter("\"{$baseClass}\".\"ParentID\" = $id AND \"{$baseClass}\".\"ID\" != $id");
-		if(!$showAll) $children = $children->filter('"ShowInMenus" = 1');
+		$children = DataObject::get($baseClass)->where("\"{$baseClass}\".\"ParentID\" = $id AND \"{$baseClass}\".\"ID\" != $id");
+		if(!$showAll) $children = $children->where('"ShowInMenus" = 1');
 
 		// Query the live site
 		$children->dataQuery()->setQueryParam('Versioned.mode', 'stage');
@@ -558,13 +558,13 @@ class Hierarchy extends DataExtension {
 		if($onlyDeletedFromStage) {
 			// Note that this makes a second query, and could be optimised to be a joi;
 			$stageChildren = DataObject::get($baseClass)
-				->filter("\"{$baseClass}\".\"ParentID\" = $id AND \"{$baseClass}\".\"ID\" != $id");
+				->where("\"{$baseClass}\".\"ParentID\" = $id AND \"{$baseClass}\".\"ID\" != $id");
 			$stageChildren->dataQuery()->setQueryParam('Versioned.mode', 'stage');
 			$stageChildren->dataQuery()->setQueryParam('Versioned.stage', '');
 			
 			$ids = $stageChildren->column("ID");
 			if($ids) {
-				$children->filter("\"$baseClass\".\"ID\" NOT IN (" . implode(',',$ids) . ")");
+				$children->where("\"$baseClass\".\"ID\" NOT IN (" . implode(',',$ids) . ")");
 			}
 		}
 		

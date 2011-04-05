@@ -14,7 +14,7 @@ class PartialMatchFilter extends SearchFilter {
 	
 	public function apply(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
-		return $query->filter(sprintf(
+		return $query->where(sprintf(
 			"%s LIKE '%%%s%%'",
 			$this->getDbName(),
 			Convert::raw2sql($this->getValue())

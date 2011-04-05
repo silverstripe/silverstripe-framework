@@ -60,11 +60,12 @@ class DataList extends DataObjectSet {
 	}
 	
 	/**
-	 * Filter this data list by a WHERE clause
-	 * @todo Implement array syntax for this.  Perhaps the WHERE clause should be $this->where()?
+	 * Add a WHERE clause to the query.
+	 *
+	 * @param string $filter
 	 */
-	public function filter($filter) {
-		$this->dataQuery->filter($filter);
+	public function where($filter) {
+		$this->dataQuery->where($filter);
 		return $this;
 	}
 
@@ -235,7 +236,7 @@ class DataList extends DataObjectSet {
 	 * Find an element of this DataList where the given key = value
 	 */
 	public function find($key, $value) {
-		return $this->filter("\"$key\" = '" . Convert::raw2sql($value) . "'")->First();
+		return $this->where("\"$key\" = '" . Convert::raw2sql($value) . "'")->First();
 	}
 	
 	
@@ -244,7 +245,7 @@ class DataList extends DataObjectSet {
 	 */
 	public function byIDs(array $ids) {
 		$baseClass = ClassInfo::baseDataClass($this->dataClass);
-		$this->filter("\"$baseClass\".\"ID\" IN (" . implode(',', $ids) .")");
+		$this->where("\"$baseClass\".\"ID\" IN (" . implode(',', $ids) .")");
 
 		return $this;
 	}
@@ -254,7 +255,7 @@ class DataList extends DataObjectSet {
 	 */
 	public function byID($id) {
 		$baseClass = ClassInfo::baseDataClass($this->dataClass);
-		return $this->filter("\"$baseClass\".\"ID\" = " . (int)$id)->First();
+		return $this->where("\"$baseClass\".\"ID\" = " . (int)$id)->First();
 	}
 	
 	/**
@@ -340,7 +341,7 @@ class DataList extends DataObjectSet {
 	 * Remove every element in this DataList matching the given $filter.
 	 */
 	function removeByFilter($filter) {
-		foreach($this->filter($filter) as $item) {
+		foreach($this->where($filter) as $item) {
 			$this->remove($item);
 		}
 	}

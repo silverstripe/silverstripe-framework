@@ -97,7 +97,7 @@ class MemberTableField extends ComplexTableField {
 			foreach($SNG_member->searchableFields() as $fieldName => $fieldSpec) {
 				if(strpos($fieldName, '.') === false) $searchFilters[] = "\"$fieldName\" LIKE '%{$SQL_search}%'";
 			}
-		    $members = $members->filter('(' . implode(' OR ', $searchFilters) . ')');
+		    $members = $members->where('(' . implode(' OR ', $searchFilters) . ')');
 		}
 		
 		parent::__construct($controller, $name, $members, $fieldList);

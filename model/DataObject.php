@@ -1199,7 +1199,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		//  - move the details of the delete code in the DataQuery system
 		//  - update the code to just delete the base table, and rely on cascading deletes in the DB to do the rest
 		//    obviously, that means getting requireTable() to configure cascading deletes ;-)
-		$srcQuery = DataList::create($this->class)->filter("ID = $this->ID")->dataQuery()->query();
+		$srcQuery = DataList::create($this->class)->where("ID = $this->ID")->dataQuery()->query();
 		foreach($srcQuery->queriedTables() as $table) {
 			$query = new SQLQuery("*", array('"'.$table.'"'));
 			$query->where("\"ID\" = $this->ID");
@@ -1329,7 +1329,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$result = new HasManyList($componentClass, $joinField);
 		if($this->ID) $result->setForeignID($this->ID);
 
-		$result = $result->filter($filter)->limit($limit)->sort($sort)->join($join);
+		$result = $result->where($filter)->limit($limit)->sort($sort)->join($join);
 
 		return $result;
 	}
@@ -1419,7 +1419,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// foreignID set elsewhere.
 		if($this->ID) $result->setForeignID($this->ID);
 			
-		return $result->filter($filter)->sort($sort)->limit($limit);
+		return $result->where($filter)->sort($sort)->limit($limit);
 	}
 	
 	/**
@@ -2487,7 +2487,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Deprecated 2.5?
 		// Todo: Make the $containerClass method redundant
 		if($containerClass != "DataList") user_error("The DataObject::get() \$containerClass argument has been deprecated", E_USER_NOTICE);
-		$result = DataList::create($callerClass)->filter($filter)->sort($sort)->join($join)->limit($limit);
+		$result = DataList::create($callerClass)->where($filter)->sort($sort)->join($join)->limit($limit);
 		return $result;
 	}
 	
@@ -2595,7 +2595,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			] = false;
 		}
 		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$cacheKey])) {
-			$dl = DataList::create($callerClass)->filter($filter)->sort($orderby);
+			$dl = DataList::create($callerClass)->where($filter)->sort($orderby);
 			$item = $dl->First();
 
 			if($cache) {

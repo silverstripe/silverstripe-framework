@@ -39,7 +39,7 @@ class ExactMatchMultiFilter extends SearchFilter {
 		}
 		$SQL_valueStr = "'" . implode("','", $values) . "'";
 		
-		return $query->filter(sprintf(
+		return $query->where(sprintf(
 			"%s IN (%s)",
 			$this->getDbName(),
 			$SQL_valueStr

@@ -269,7 +269,7 @@ class DataQuery {
 	/**
 	 * Set the WHERE clause of this query
 	 */
-	function filter($filter) {
+	function where($filter) {
 		if($filter) {
 			$clone = $this;
 			$clone->query->where($filter);

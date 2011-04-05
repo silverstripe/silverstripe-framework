@@ -25,7 +25,7 @@ class StartsWithMultiFilter extends SearchFilter {
 			);
 		}
 		
-		return $query->filter(implode(" OR ", $matches));
+		return $query->where(implode(" OR ", $matches));
 	}
 	
 	public function isEmpty() {

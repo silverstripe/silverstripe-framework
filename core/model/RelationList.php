@@ -18,7 +18,7 @@ abstract class RelationList extends DataList {
 		if(is_array($id) && sizeof($id) == 1) $id = reset($id);
 		$this->foreignID = $id;
 		
-		$this->dataQuery->filter($this->foreignIDFilter());
+		$this->dataQuery->where($this->foreignIDFilter());
 	}
 	
 	/**
