@@ -143,7 +143,7 @@
 		
 	});
 	
-	$.ajaxSetup({
+	/*$.ajaxSetup({
 		// beforeSend is the only place to access the XHR object before success handlers are added
 		beforeSend: function(jqXHR, s) {
 			// Avoid recursion in ajax callbacks caused by getScript(), by not parsing
@@ -166,7 +166,7 @@
 				dfd.done(callback);
 			}
 		}
-	});
+	});*/
 	
 
 })(jQuery);

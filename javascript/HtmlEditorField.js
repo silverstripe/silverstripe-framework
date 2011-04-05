@@ -28,11 +28,11 @@
 			return false;
 		}).show();
 		
-		/**
-		 * On folder change - lookup the new images
-		 */
+		/*
+		* On submit file on file field change
+		*/
 		$("#Form_EditorToolbarImageForm_Files-0").change(function() {
-			$("#contentPanel #Form_EditorToolbarImageForm").ajaxForm({
+			$("#contentPanel #Form_EditorToolbarImageForm").ajaxSubmit({
 				url: 'admin/assets/UploadForm?action_doUpload=1',
 				iframe: true,
 				dataType: 'json',
@@ -48,7 +48,13 @@
 					
 					loadImages(data);
 				}
-			}).submit();
+			});
+		});
+		/**
+		 * On folder change - lookup the new images
+		 */
+		$("#TreeDropdownField_Form_EditorToolbarImageForm_FolderID .tree-holder a").live("click", function(e) {
+			loadImages();
 		});
 		
 		/**
@@ -73,7 +79,7 @@
 				});
 				
 				if(params) {
-					$("#FolderImages a[href*="+ params.Filename +"]").click();
+					$("#FolderImages a[href*='"+ params.Filename +"']").click();
 				}
 			});	
 		}
