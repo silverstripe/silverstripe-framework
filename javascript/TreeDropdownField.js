@@ -53,6 +53,8 @@
 			},
 			setValue: function(val) {
 				this.find(':input:hidden').val(val);
+				
+				this.trigger('change');
 			},
 			getValue: function() {
 				return this.find(':input:hidden').val();
