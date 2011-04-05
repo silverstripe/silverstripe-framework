@@ -5,14 +5,10 @@ ToolbarForm.prototype = {
 		else this.open(ed);
 	},
 	close: function(ed) {
-		if(this.style.display == 'block') {
-			this.style.display = 'none';
-		}
+		jQuery(this).dialog('close');
 	},
 	open: function(ed) {
-		if(this.style.display != 'block') {
-			this.style.display = 'block';
-		}
+		jQuery(this).dialog('open');
 	},
 	onsubmit: function() {
 		return false;
@@ -140,6 +136,7 @@ LinkForm.prototype = {
 	},
 	
 	updateSelection: function(ed) {
+		if(ed == null) ed = tinyMCE.activeEditor;
 		if(ed.selection.getRng()) {
 		    this.originalSelection = ed.selection.getRng();
 	    }
@@ -164,14 +161,14 @@ LinkForm.prototype = {
 						Form.Element.setValue(this.elements[i], selected);
 					}
 				}
-				
-			// If we haven't selected an existing link, then just make sure we default to "internal" for the link
-			// type.
-			} else {
-				if(!Form.Element.getValue(this.elements.LinkType)) Form.Element.setValue(this.elements.LinkType, 'internal');
 			}
-			this.linkTypeChanged(data ? false : true);
+			
+		// If we haven't selected an existing link, then just make sure we default to "internal" for the link
+		// type.
+		} else {
+			if(!Form.Element.getValue(this.elements.LinkType)) Form.Element.setValue(this.elements.LinkType, 'internal');
 		}
+		this.linkTypeChanged(data ? false : true);
 	},
 	
 	handleaction_insert: function() {
@@ -437,6 +434,7 @@ SideFormAction.prototype = {
 			} catch(er) {
 				alert("An error occurred.  Please try again, or reload the CMS if the problem persists.\n\nError details: " + er.message);
 			}
+			jQuery(this).parents('form').dialog('close');
 		} else {
 			alert("Couldn't find form method handle" + this.name);
 		}
@@ -622,13 +620,6 @@ ImageThumbnail.prototype = {
 		if(el && el.nodeName == 'IMG') {
 			ed.dom.setAttribs(el, attributes);
 		} else {
-			// Focus gets saved in tinymce_ssbuttons when opening the sidebar.
-			// Unless the focus has changed in the meantime, reset it to the previous position.
-			// This is necessary because IE can lose its focus if any of the sidebar input fields are used.
-			if(ed.ss_focus_bookmark) {
-				ed.selection.moveToBookmark(ed.ss_focus_bookmark);
-				delete ed.ss_focus_bookmark;
-			}
 			ed.execCommand('mceInsertContent', false, html, {
 				skip_undo : 1
 			});
@@ -898,13 +889,3 @@ function sapphiremce_cleanup(type, value) {
 	}
 	return value;
 }
-
-contentPanelCloseButton = Class.create();
-contentPanelCloseButton.prototype = {
-	onclick: function() {
-	    tinyMCE.activeEditor.execCommand('ssclosesidepanel');
-	}
-}
-
-contentPanelCloseButton.applyTo('#contentPanel h2 img');
-

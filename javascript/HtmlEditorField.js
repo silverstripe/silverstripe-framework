@@ -7,7 +7,11 @@
  */
 
 (function($) {
+		
 	$(document).ready(function() {
+		
+		$('.htmleditorfield-form').dialog({autoOpen: false, bgiframe: true, modal: true, height: 500, width: 500, ghost: true});
+		
 		/**
 		 * On page refresh load the initial images (in root)
 		 */
