@@ -261,12 +261,12 @@
 			 * Note: Everything that calls this externally has an inappropriate coupling to TinyMCE.
 			 */
 			cleanup: function() {
-				if((typeof tinymce != 'undefined') && tinymce.EditorManager) {
-					var id;
-					for(id in tinymce.EditorManager.editors) {
-						tinymce.EditorManager.editors[id].remove();
-					}
-					tinymce.EditorManager.editors = {};
+				if((typeof tinymce != 'undefined') && tinymce.editors) {
+					$(tinymce.editors).each(function() {
+						if(typeof(this.remove) == 'function') {
+							this.remove();
+						}
+					});
 				}
 			},
 
