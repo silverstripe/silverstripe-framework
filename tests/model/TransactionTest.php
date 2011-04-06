@@ -54,43 +54,6 @@ class TransactionTest extends SapphireTest {
 		}
 	}
 
-	function testReadOnlyTransaction(){
-
-		if(DB::getConn()->supportsTransactions()==true){
-
-			$obj=new TransactionTest_Object();
-			$obj->Title='Read only success';
-			$obj->write();
-
-			DB::getConn()->transactionStart('READ ONLY');
-
-			try {
-				$obj=new TransactionTest_Object();
-				$obj->Title='Read only page failed';
-				$obj->write();
-			} catch (Exception $e) {
-				//could not write this record
-				//We need to do a rollback or a commit otherwise we'll get error messages
-				DB::getConn()->transactionRollback();
-			}
-
-			DB::getConn()->transactionEnd();
-
-			DataObject::flush_and_destroy_cache();
-
-			$success=DataObject::get('TransactionTest_Object', "\"Title\"='Read only success'");
-			$fail=DataObject::get('TransactionTest_Object', "\"Title\"='Read only page failed'");
-
-			//This page should be in the system
-			$this->assertTrue(is_object($success) && $success->exists());
-
-			//This page should NOT exist, we had 'read only' permissions
-			$this->assertFalse(is_object($fail) && $fail->exists());
-
-		}
-
-	}
-
 }
 
 class TransactionTest_Object extends DataObject implements TestOnly {
