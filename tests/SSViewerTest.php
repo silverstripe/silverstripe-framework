@@ -93,21 +93,22 @@ SS
 		$this->assertEquals(i18n::get_locale(), $this->render('{$i18nLocale}'), 'i18n template functions result correct result');
 		$this->assertEquals(i18n::get_locale(), $this->render('{$get_locale}'), 'i18n template functions result correct result');
 
-		$this->assertEquals((string)Controller::curr(), $this->render('{$CurrentPage}'), 'i18n template functions result correct result');
-		$this->assertEquals((string)Controller::curr(), $this->render('{$currentPage}'), 'i18n template functions result correct result');
+		//only run this test if we have a controller - i.e. if we are running this test from a web-browser
+		if (Controller::has_curr()) $this->assertEquals((string)Controller::curr(), $this->render('{$CurrentPage}'), 'i18n template functions result correct result');
+		if (Controller::has_curr()) $this->assertEquals((string)Controller::curr(), $this->render('{$currentPage}'), 'i18n template functions result correct result');
 
-		$this->assertEquals(Member::currentUser(), $this->render('{$CurrentMember}'), 'Member template functions result correct result');
-		$this->assertEquals(Member::currentUser(), $this->render('{$CurrentUser}'), 'Member template functions result correct result');
-		$this->assertEquals(Member::currentUser(), $this->render('{$currentMember}'), 'Member template functions result correct result');
-		$this->assertEquals(Member::currentUser(), $this->render('{$currentUser}'), 'Member template functions result correct result');
+		$this->assertEquals((string)Member::currentUser(), $this->render('{$CurrentMember}'), 'Member template functions result correct result');
+		$this->assertEquals((string)Member::currentUser(), $this->render('{$CurrentUser}'), 'Member template functions result correct result');
+		$this->assertEquals((string)Member::currentUser(), $this->render('{$currentMember}'), 'Member template functions result correct result');
+		$this->assertEquals((string)Member::currentUser(), $this->render('{$currentUser}'), 'Member template functions result correct result');
 
 		$this->assertEquals(SecurityToken::getSecurityID(), $this->render('{$getSecurityID}'), 'SecurityToken template functions result correct result');
 		$this->assertEquals(SecurityToken::getSecurityID(), $this->render('{$SecurityID}'), 'SecurityToken template functions result correct result');
 	}
 
 	function testGlobalVariableCallsWithArguments() {
-		$this->assertEquals(Permission::check("ADMIN"), $this->render('{$HasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
-		$this->assertEquals(Permission::check("ADMIN"), $this->render('{$hasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
+		$this->assertEquals(Permission::check("ADMIN"), (bool)$this->render('{$HasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
+		$this->assertEquals(Permission::check("ADMIN"), (bool)$this->render('{$hasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
 	}
 
 	/* //TODO: enable this test
@@ -368,7 +369,7 @@ after')
 	
 	function testRecursiveInclude() {
 		$view = new SSViewer(array('SSViewerTestRecursiveInclude'));
-		
+
 		$data = new ArrayData(array(
 			'Title' => 'A',
 			'Children' => new DataObjectSet(array(
@@ -394,7 +395,108 @@ after')
 	function assertEqualIgnoringWhitespace($a, $b) {
 		$this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b));
 	}
-	
+
+	function testSSViewerBasicIteratorSupport() {
+		$data = new ArrayData(array(
+			'Set' => new DataObjectSet(array(
+				new SSViewerTest_Page("1"),
+				new SSViewerTest_Page("2"),
+				new SSViewerTest_Page("3"),
+				new SSViewerTest_Page("4"),
+				new SSViewerTest_Page("5"),
+				new SSViewerTest_Page("6"),
+				new SSViewerTest_Page("7"),
+				new SSViewerTest_Page("8"),
+				new SSViewerTest_Page("9"),
+				new SSViewerTest_Page("10"),
+			))
+		));
+
+		//base test
+		$result = $this->render('<% loop Set %>$Number<% end_loop %>',$data);
+		$this->assertEquals("12345678910",$result,"Numbers rendered in order");
+
+		//test First
+		$result = $this->render('<% loop Set %><% if First %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("1",$result,"Only the first number is rendered");
+
+		//test Last
+		$result = $this->render('<% loop Set %><% if Last %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("10",$result,"Only the last number is rendered");
+				
+		//test Even
+		$result = $this->render('<% loop Set %><% if Even() %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("246810",$result,"Even numbers rendered in order");
+
+		//test Even with quotes
+		$result = $this->render('<% loop Set %><% if Even("1") %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("246810",$result,"Even numbers rendered in order");
+
+		//test Even without quotes
+		$result = $this->render('<% loop Set %><% if Even(1) %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("246810",$result,"Even numbers rendered in order");
+
+		//test Even with zero-based start index
+		$result = $this->render('<% loop Set %><% if Even("0") %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("13579",$result,"Even (with zero-based index) numbers rendered in order");
+
+		//test Odd
+		$result = $this->render('<% loop Set %><% if Odd %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("13579",$result,"Odd numbers rendered in order");
+
+		//test FirstLast
+		$result = $this->render('<% loop Set %><% if FirstLast %>$Number$FirstLast<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("1first10last",$result,"First and last numbers rendered in order");
+
+		//test Middle
+		$result = $this->render('<% loop Set %><% if Middle %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("23456789",$result,"Middle numbers rendered in order");
+
+		//test MiddleString
+		$result = $this->render('<% loop Set %><% if MiddleString == "middle" %>$Number$MiddleString<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("2middle3middle4middle5middle6middle7middle8middle9middle",$result,"Middle numbers rendered in order");
+
+		//test EvenOdd
+		$result = $this->render('<% loop Set %>$EvenOdd<% end_loop %>',$data);
+		$this->assertEquals("oddevenoddevenoddevenoddevenoddeven",$result,"Even and Odd is returned in sequence numbers rendered in order");
+
+		//test Pos
+		$result = $this->render('<% loop Set %>$Pos<% end_loop %>',$data);
+		$this->assertEquals("12345678910",$result,"Even and Odd is returned in sequence numbers rendered in order");
+
+		//test Total
+		$result = $this->render('<% loop Set %>$TotalItems<% end_loop %>',$data);
+		$this->assertEquals("10101010101010101010",$result,"10 total items X 10 are returned");
+
+		//test Modulus
+		$result = $this->render('<% loop Set %>$Modulus(2,1)<% end_loop %>',$data);
+		$this->assertEquals("1010101010",$result,"1-indexed pos modular divided by 2 rendered in order");
+
+		//test MultipleOf 3
+		$result = $this->render('<% loop Set %><% if MultipleOf(3) %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("369",$result,"Only numbers that are multiples of 3 are returned");
+
+		//test MultipleOf 4
+		$result = $this->render('<% loop Set %><% if MultipleOf(4) %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("48",$result,"Only numbers that are multiples of 4 are returned");
+
+		//test MultipleOf 5
+		$result = $this->render('<% loop Set %><% if MultipleOf(5) %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("510",$result,"Only numbers that are multiples of 5 are returned");
+
+		//test MultipleOf 10
+		$result = $this->render('<% loop Set %><% if MultipleOf(10,1) %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("10",$result,"Only numbers that are multiples of 10 (with 1-based indexing) are returned");
+
+		//test MultipleOf 9 zero-based
+		$result = $this->render('<% loop Set %><% if MultipleOf(9,0) %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("110",$result,"Only numbers that are multiples of 9 with zero-based indexing are returned. I.e. the first and last item");
+
+		//test MultipleOf 11
+		$result = $this->render('<% loop Set %><% if MultipleOf(11) %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("",$result,"Only numbers that are multiples of 11 are returned. I.e. nothing returned");
+	}
+
 	/**
 	 * Test $Up works when the scope $Up refers to was entered with a "with" block
 	 */
@@ -621,6 +723,17 @@ class SSViewerTest_Controller extends Controller {
 }
 
 class SSViewerTest_Page extends SiteTree {
+
+	public $number = null;
+
+	function __construct($number = null) {
+		parent::__construct();
+		$this->number = $number;
+	}
+
+	function Number() {
+		return $this->number;
+	}
 
 	function absoluteBaseURL() {
 		return "testPageCalled";
