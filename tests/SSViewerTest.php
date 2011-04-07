@@ -111,15 +111,27 @@ SS
 		$this->assertEquals(Permission::check("ADMIN"), (bool)$this->render('{$hasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
 	}
 
-	/* //TODO: enable this test
-	  function testLocalFunctionsTakePriorityOverGlobals() {
+	function testLocalFunctionsTakePriorityOverGlobals() {
 		$data = new ArrayData(array(
 			'Page' => new SSViewerTest_Page()
 		));
 
+		//call method with lots of arguments
+		$result = $this->render('<% control Page %>$lotsOfArguments11("a","b","c","d","e","f","g","h","i","j","k")<% end_control %>',$data);
+		$this->assertEquals("abcdefghijk",$result, "Function can accept up to 11 arguments");
+
+		//call method that does not exist
+		$result = $this->render('<% control Page %><% if IDoNotExist %>hello<% end_if %><% end_control %>',$data);
+		$this->assertEquals("",$result, "Method does not exist - empty result");
+
+		//call if that does not exist
+		$result = $this->render('<% control Page %>$IDoNotExist("hello")<% end_control %>',$data);
+		$this->assertEquals("",$result, "Method does not exist - empty result");
+
+		//call method with same name as a global method (local call should take priority)
 		$result = $this->render('<% control Page %>$absoluteBaseURL<% end_control %>',$data);
-		$this->assertEquals("testPageCalled",$result, "Local Object's function called. Did not return the actual baseURL of the current site");
-	}*/
+		$this->assertEquals("testLocalFunctionPriorityCalled",$result, "Local Object's function called. Did not return the actual baseURL of the current site");
+	}
 	
 	function testObjectDotArguments() {
 		$this->assertEquals(
@@ -736,6 +748,10 @@ class SSViewerTest_Page extends SiteTree {
 	}
 
 	function absoluteBaseURL() {
-		return "testPageCalled";
+		return "testLocalFunctionPriorityCalled";
+	}
+
+	function lotsOfArguments11($a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k) {
+		return $a. $b. $c. $d. $e. $f. $g. $h. $i. $j. $k;
 	}
 }

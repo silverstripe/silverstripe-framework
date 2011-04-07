@@ -26,7 +26,7 @@ class SSViewer_Scope {
 	// And array of item, itemIterator, pop_index, up_index, current_index
 	private $itemStack = array(); 
 	
-	private $item; // The current "global" item (the one any lookup starts from)
+	protected $item; // The current "global" item (the one any lookup starts from)
 	protected $itemIterator; // If we're looping over the current "global" item, here's the iterator that tracks with item we're up to
 	protected $itemIteratorTotal;   //Total number of items in the iterator
 	
@@ -335,13 +335,18 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 	}
 	
 	function __call($name, $arguments) {
-		//TODO: make local functions take priority over global functions
-		
+		//extract the method name and parameters
 		$property = $arguments[0];  //the name of the function being called
 		if ($arguments[1]) $params = $arguments[1]; //the function parameters in an array
 		else $params = array();
 
-		//call a "global" function
+		//check if the method to-be-called exists on the target object
+		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
+		if (method_exists($on, $property)) {    //return the result immediately without trying global functions
+			return parent::__call($name, $arguments);
+		}
+
+		//attempt to call a "global" functions
 		if (array_key_exists($property, self::$extras) || array_key_exists($property, self::$iteratorSupport)) {
 			$this->resetLocalScope();   //if we are inside a chain (e.g. $A.B.C.Up.E) break out to the beginning of it
 
