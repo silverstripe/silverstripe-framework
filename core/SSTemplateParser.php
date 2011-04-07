@@ -2960,17 +2960,22 @@ class SSTemplateParser extends Parser {
 	 * This is an example of a block handler function. This one handles the loop tag.
 	 */
 	function ClosedBlock_Handle_Loop(&$res) {
-		if ($res['ArgumentCount'] != 1) {
+		if ($res['ArgumentCount'] > 1) {
 			throw new SSTemplateParseException('Either no or too many arguments in control block. Must be one argument only.', $this);
 		}
-		
-		$arg = $res['Arguments'][0];
-		if ($arg['ArgumentMode'] == 'string') {
-			throw new SSTemplateParseException('Control block cant take string as argument.', $this);
+
+		//loop without arguments loops on the current scope
+		if ($res['ArgumentCount'] == 0) {
+			$on = '$scope->obj(\'Up\', null, true)->obj(\'Foo\', null, true)';
+		} else {    //loop in the normal way
+			$arg = $res['Arguments'][0];
+			if ($arg['ArgumentMode'] == 'string') {
+				throw new SSTemplateParseException('Control block cant take string as argument.', $this);
+			}
+			$on = str_replace('$$FINAL', 'obj', ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
 		}
-		
-		$on = str_replace('$$FINAL', 'obj', ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
-		return 
+
+		return
 			$on . '; $scope->pushScope(); while (($key = $scope->next()) !== false) {' . PHP_EOL .
 				$res['Template']['php'] . PHP_EOL .
 			'}; $scope->popScope(); ';
