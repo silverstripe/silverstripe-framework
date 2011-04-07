@@ -19,7 +19,6 @@
 				 * @todo Add siteTreeHints to field (as "data-hints" attribute with serialized JSON instead of javascript global variable)
 				 * @todo Disallow drag'n'drop when node has "noChildren" set (see siteTreeHints)
 				 * @todo Disallow moving of pages marked as deleted 
-				 * @todo Enforce sitetreeHints rules on page creation ("allowedChildren", "noChildren") -
 				 *  most likely by server response codes rather than clientside
 				 * @todo "defaultChild" when creating a page (sitetreeHints)
 				 * @todo Duplicate page (originally located in context menu)
@@ -65,6 +64,8 @@
 											movedNode.data('id') != 0 
 											// Only allow moving node inside the root container, not before/after it
 											&& (!isMovedOntoContainer || data.p == 'inside')
+											// Children are generally allowed on parent
+											&& !newParent.hasClass('nochildren')
 											// movedNode is allowed as a child
 											&& ($.inArray(movedNodeClass, allowedChildren) != -1)
 										);
