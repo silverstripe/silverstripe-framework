@@ -1080,24 +1080,8 @@ class DataObjectSet_Iterator implements Iterator {
 	function __construct($items) {
 		$this->items = $items;
 		
-		$this->current = $this->prepareItem(current($this->items));
+		$this->current = current($this->items);
 	}
-	
-	/**
-	 * Prepare an item taken from the internal array for 
-	 * output by this iterator.  Ensures that it is an object.
-	 * @param DataObject $item Item to prepare
-	 * @return DataObject
-	 */
-	protected function prepareItem($item) {
-		if(is_object($item)) {
-			$item->iteratorProperties(key($this->items), sizeof($this->items));
-		}
-		// This gives some reliablity but it patches over the root cause of the bug...
-		// else if(key($this->items) !== null) $item = new ViewableData();
-		return $item;
-	}
-	
 	
 	/**
 	 * Return the current object of the iterator.
@@ -1120,7 +1104,7 @@ class DataObjectSet_Iterator implements Iterator {
 	 * @return DataObject
 	 */
 	public function next() {
-		$this->current = $this->prepareItem(next($this->items));
+		$this->current = next($this->items);
 		return $this->current;
 	}
 	
@@ -1129,7 +1113,7 @@ class DataObjectSet_Iterator implements Iterator {
 	 * @return DataObject The first item in the set.
 	 */
 	public function rewind() {
-		$this->current = $this->prepareItem(reset($this->items));
+		$this->current = reset($this->items);
 		return $this->current;
 	}
 	
