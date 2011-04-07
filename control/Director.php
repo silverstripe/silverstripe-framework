@@ -420,12 +420,18 @@ class Director implements TemplateGlobalProvider {
 	 *
 	 * @return String
 	 */
-	public static function protocol() {
-		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])&&strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])=='https') {
-			return "https://";
-		}
-		return (isset($_SERVER['SSL']) || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) 
-			? 'https://' : 'http://';
+	static function protocol() {
+		return self::is_ssl() ? 'https://' : 'http://';
+	}
+
+	/**
+	 * Returns true if the site is being accessed via SSL.
+	 */
+	static function is_ssl() {
+		if(isset($_SERVER['SSL'])) return true;
+		if(isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off') return true;
+		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https') return true;
+		return false;
 	}
 
 	/**
