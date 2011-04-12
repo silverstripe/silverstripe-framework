@@ -175,6 +175,46 @@ class SSTemplateParser extends Parser {
 		$this->Lookup_AddLookupStep($res, $sub, '$$FINAL');
 	}
 
+
+	/*!*
+	# Translatable call
+
+	Translate: "<%t" Entity (Default)? (!("is" "=") "is" Context)? (InjectionVariables)* "%>"
+	InjectionVariables: InjectionName:Word "=" Argument
+	*/
+	
+	function Translate__construct(&$res) {
+		$res['php'] = "_t(";
+	}
+
+	function Translate_Entity(&$res, $sub) {
+		$res['php'] .= $sub['php'];
+		Debug::show($sub);
+	}
+	function Translate_Default(&$res, $sub) {
+		Debug::show($sub);
+	}
+	function Translate_Context(&$res, $sub) {
+		Debug::show($sub);
+	}
+
+	function Translate__finalise(&$res) {
+		$res['php'] .= ')';
+	}
+
+
+	function InjectionVariables__construct(&$res) {
+	}
+
+	function InjectionVariables_InjectionName(&$res, $sub) {
+	}
+
+	function InjectionVariables_Argument(&$res, $sub) {
+		
+	}
+
+
+
 	/*!*
 	
 	# Injections are where, outside of a block, a value needs to be inserted into the output. You can either

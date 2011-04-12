@@ -138,7 +138,7 @@ class i18nTest extends SapphireTest {
 	function testTemplateTranslation() {
 		global $lang;
 		$oldLocale = i18n::get_locale();
-		
+
 		i18n::set_locale('en_US');
 		$lang['en_US']['i18nTestModule']['MAINTEMPLATE'] = 'Main Template';
 		$lang['en_US']['i18nTestModule.ss']['SPRINTFNONAMESPACE'] = 'My replacement no namespace: %s';
@@ -205,6 +205,90 @@ class i18nTest extends SapphireTest {
 			$parsedHtml
 		);
 		
+		i18n::set_locale($oldLocale);
+	}
+
+	function testNewTMethodSignature() {
+		global $lang;
+		$oldLocale = i18n::get_locale();
+
+		i18n::set_locale('en_US');
+		$lang['en_US']['i18nTestModule']['NEWMETHODSIG'] = 'TRANS New _t method signature test';
+		$lang['en_US']['i18nTestModule']['INJECTIONS'] = 'TRANS Hello {name} {greeting}. But it is late, {goodbye}';
+
+		$entity = "i18nTestModule.INJECTIONS";
+		$default = "Hello {name} {greeting}. But it is late, {goodbye}";
+
+		$translated = i18n::_t('i18nTestModule.NEWMETHODSIG',"New _t method signature test");
+		$this->assertContains(
+			"TRANS New _t method signature test",
+			$translated
+		);
+
+		$translated = i18n::_t($entity.'_DOES_NOT_EXIST', $default, array("name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye"));
+		$this->assertContains(
+			"Hello Mark welcome. But it is late, bye",
+			$translated, "Testing fallback to the translation default (but using the injection array)"
+		);
+
+		$translated = i18n::_t($entity, $default, array("name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"));
+		$this->assertContains(
+			"TRANS Hello Paul good you are here. But it is late, see you",
+			$translated, "Testing entity, default string and injection array"
+		);
+
+		$translated = i18n::_t($entity, $default, "New context (this should be ignored)", array("name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"));
+		$this->assertContains(
+			"TRANS Hello Steffen willkommen. But it is late, wiedersehen",
+			$translated, "Full test of translation, using default, context and injection array"
+		);
+
+		$translated = i18n::_t($entity, array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
+		$this->assertContains(
+			"TRANS Hello Cat meow. But it is late, meow",
+			$translated, "Testing a translation with just entity and injection array"
+		);
+
+		i18n::set_locale($oldLocale);
+	}
+
+	/**
+	 * See @i18nTestModule.ss for the template that is being used for this test
+	 * */
+	function testNewTemplateTranslation() {
+		global $lang;
+		$oldLocale = i18n::get_locale();
+
+		i18n::set_locale('en_US');
+		$lang['en_US']['i18nTestModule']['NEWMETHODSIG'] = 'TRANS New _t method signature test';
+		$lang['en_US']['i18nTestModule']['INJECTIONS'] = 'TRANS Hello {name} {greeting}. But it is late, {goodbye}';
+
+		$viewer = new SSViewer('i18nTestModule');
+		$parsedHtml = $viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue')));
+		$this->assertContains(
+			"Hello Mark welcome. But it is late, bye\n",
+			$parsedHtml, "Testing fallback to the translation default (but using the injection array)"
+		);
+		$this->assertContains(
+			"TRANS Hello Paul good you are here. But it is late, see you\n",
+			$parsedHtml, "Testing entity, default string and injection array"
+		);
+		$this->assertContains(
+			"TRANS Hello Steffen willkommen. But it is late, wiedersehen\n",
+			$parsedHtml, "Full test of translation, using default, context and injection array"
+		);
+
+		$this->assertContains(
+			"TRANS Hello Cat meow. But it is late, meow\n",
+			$parsedHtml, "Testing a translation with just entity and injection array"
+		);
+
+		//test injected calls
+		$this->assertContains(
+			"TRANS Hello ".Director::absoluteBaseURL()." ".i18n::get_locale().". But it is late, global calls\n",
+			$parsedHtml, "Testing a translation with just entity and injection array, but with global variables injected in"
+		);
+
 		i18n::set_locale($oldLocale);
 	}
 	
