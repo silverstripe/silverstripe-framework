@@ -146,7 +146,8 @@ LinkForm.prototype = {
     },
 	
 	respondToNodeChange: function(ed) {
-	    if(ed == null) ed = tinyMCE.activeEditor;
+		var htmlTagPattern = /<\S[^><]*>/g; 
+		if(ed == null) ed = tinyMCE.activeEditor;
 	    
 		if(this.style.display == 'block') {
 			var i,data = this.getCurrentLink(ed);
@@ -154,7 +155,13 @@ LinkForm.prototype = {
 			if(data) {
 				for(i in data) {
 					if(this.elements[i]) {
-						Form.Element.setValue(this.elements[i], data[i]);
+						var selected = data[i];
+						// Remove html tags in the selected text that occurs on IE browsers
+						if(typeof(selected) == 'string') {
+							selected = selected.replace(htmlTagPattern, ''); 
+						}
+						
+						Form.Element.setValue(this.elements[i], selected);
 					}
 				}
 				
