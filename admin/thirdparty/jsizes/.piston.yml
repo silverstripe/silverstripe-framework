@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  commit: 15dc4845734b83b31fb820131c675a5f0c10db95
+  branch: master
+lock: false
+repository_class: Piston::Git::Repository
+repository_url: git://github.com/bramstein/jsizes.git
