@@ -17,10 +17,8 @@
 				 * @todo Automatic load of full subtree via ajax on node checkbox selection (minNodeCount = 0)
 				 *  to avoid doing partial selection with "hidden nodes" (unloaded markup)
 				 * @todo Add siteTreeHints to field (as "data-hints" attribute with serialized JSON instead of javascript global variable)
-				 * @todo Disallow drag'n'drop when not matching "allowedChildren" or "allowedParents" (see siteTreeHints)
 				 * @todo Disallow drag'n'drop when node has "noChildren" set (see siteTreeHints)
 				 * @todo Disallow moving of pages marked as deleted 
-				 * @todo Enforce sitetreeHints rules on page creation ("allowedChildren", "noChildren") -
 				 *  most likely by server response codes rather than clientside
 				 * @todo "defaultChild" when creating a page (sitetreeHints)
 				 * @todo Duplicate page (originally located in context menu)
@@ -57,31 +55,22 @@
 
 										var movedNode = $(data.o), newParent = $(data.np), 
 											isMovedOntoContainer = data.ot.get_container()[0] == data.np[0],
-											pattern = /class-[^\s]*/gi, match, movedNodeClass, newParentNodeClass, 
-											allowedChildren, allowedChild = true;
+											movedNodeClass = movedNode.getClassname(), 
+											newParentClass = newParent.getClassname(),
+											// Check allowedChildren of newParent or against root node rules
+											allowedChildren = siteTreeHints[newParentClass ? newParentClass : 'Root'].allowedChildren || [];
 
-										// Check allowedChildren of newParent, if movedNodeClass is not in list reject move
-										match = newParent.attr('class').match(pattern);
-										newParentNodeClass = (match) ? match.toString().substr(6) : null;
-										if (newParentNodeClass) {
-											allowedChildren = siteTreeHints[newParentNodeClass].allowedChildren;
-											match = movedNode.attr('class').match(pattern);
-											movedNodeClass = (match) ? match.toString().substr(6) : null;
-											
-											if (allowedChildren == null) allowedChild = false;
-											else allowedChild = ($.inArray(movedNodeClass, allowedChildren) == -1) ? false : true ;
-										}
-										//Else at root node, assuming all children can have root as parent (redundant)
-										else allowedChild = true
-										
 										var isAllowed = (
 											// Don't allow moving the root node
 											movedNode.data('id') != 0 
 											// Only allow moving node inside the root container, not before/after it
 											&& (!isMovedOntoContainer || data.p == 'inside')
+											// Children are generally allowed on parent
+											&& !newParent.hasClass('nochildren')
 											// movedNode is allowed as a child
-											&& allowedChild
+											&& ($.inArray(movedNodeClass, allowedChildren) != -1)
 										);
+										
 										return isAllowed;
 									}
 								}
@@ -306,6 +295,16 @@
 		 */
 		setEnabled: function(bool) {
 			this.toggleClass('disabled', !(bool));
+		},
+		
+		/**
+		 * Function: getClassname
+		 * 
+		 * Returns PHP class for this element. Useful to check business rules like valid drag'n'drop targets.
+		 */
+		getClassname: function() {
+			var matches = this.attr('class').match(/class-([^\s]*)/i);
+			return matches ? matches[1] : '';
 		},
 		
 		/**
