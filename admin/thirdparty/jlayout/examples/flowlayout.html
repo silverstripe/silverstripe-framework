@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Flow Layout example</title>
+		<meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
+		<script type="text/javascript" src="../../lib/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="../../lib/jquery-ui-1.7.2.custom.min.js"></script>
+		<script type="text/javascript" src="../../lib/jquery.metadata.js"></script>
+		<script type="text/javascript" src="../jsizes/jquery.sizes.js"></script>
+		<script type="text/javascript" src="jlayout.flow.js"></script>
+		<script type="text/javascript" src="jquery.jlayout.js"></script>
+		<script type="text/javascript">
+			jQuery(function($) {
+				var flow = $('#flow'),
+					align = 'left';
+
+				function layout() {
+					flow.layout({alignment: align});
+				}
+
+				// Note the "appendTo" and "helper" options. The "appendTo" options is necessary
+				// because otherwise the layout would also lay out the dragged item. The 
+				// "appendTo" option only works when "helper" has been set to 'clone', so we
+				// need to set that too.
+				flow.sortable({
+					appendTo: 'body',
+					helper: 'clone',
+					update: layout,
+					change: layout
+				});
+
+				$('#left').click(function () {
+					align = 'left';
+					layout();
+				});
+
+
+				$('#right').click(function () {
+					align = 'right';
+					layout();
+				});
+
+				$('#center').click(function () {
+					align = 'center';
+					layout();
+				});
+
+				layout();
+			});
+		</script>
+		<style>
+			#flow {
+				border: 1px solid red;
+				overflow: none;
+				width: 350px;
+				height: 200px;
+			}
+
+			.c {
+				background-color: rgb(220,220,220);
+				border: 1px solid rgb(200,200,200);
+				text-align: center;
+				font-size: 3em;
+				display: inline-block;
+			}
+
+
+			.ui-sortable-placeholder {
+				border: 1px solid red;
+				visibility: visible;
+			}			
+
+			.d {
+				font-size: 3.5em;
+			}
+
+			.e {
+				font-size: 2em;
+			}
+		</style>
+	</head>
+	<body>
+		<h1><a href="http://www.bramstein.com/projects/jlayout/">jLayout project homepage</a></h1>
+		<button id="left">Left</button><button id="center">Center</button><button id="right">Right</button>
+		<div id="flow" class="{layout: {type: 'flow', resize: false}}">
+			<div class="c e">
+				One
+			</div>
+			<div class="c">
+				Two
+			</div>
+			<div class="c">
+				Three
+			</div>
+			<div class="c d">
+				Four
+			</div>
+			<div class="c e">
+				Five
+			</div>
+		</div>
+		
+	</body>
+</html>

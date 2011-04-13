@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Resizing Border Layout example</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<style>
+			html, body {	
+				width: 100%;
+				height: 100%;
+				padding: 0;
+				margin: 0;
+				overflow: auto;
+			}
+
+			.center, .west, .north, .south {
+                background-color: white;
+				text-align: center;
+                display: inline-block;
+				overflow: hidden;
+			}
+
+			.west {
+				width: 200px;
+				min-width: 200px;
+				max-width: 200px;
+			}
+
+			.north, .south, .west {
+				background-color: rgb(240, 240, 240);
+			}
+
+			.center {
+				width: 100%;
+			}
+		</style>
+		<script type="text/javascript" src="../../lib/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="../../lib/jquery.metadata.js"></script>
+		<script type="text/javascript" src="../jsizes/jquery.sizes.js"></script>
+		<script type="text/javascript" src="jlayout.border.js"></script>
+		<script type="text/javascript" src="jquery.jlayout.js"></script>
+		<script type="text/javascript">
+			jQuery(function($)
+			{
+                var container = $('.layout');
+
+				function layout() {
+					container.height($(document).height());
+					container.layout({resize: false, type: 'border', vgap: 0, hgap: 0});
+				}
+
+				$(window).resize(layout);
+
+                layout();
+			});
+		</script>
+	</head>
+	<body>
+		
+		<div class="layout">
+			<div class="north">North</div>
+			<div class="west">West</div>
+			<div class="center">
+				Center
+				<h1><a href="http://www.bramstein.com/projects/jlayout/">jLayout project homepage</a></h1>
+				<h1><a href="http://www.bramstein.com/projects/jlayout/">jLayout project homepage</a></h1>
+				<h1><a href="http://www.bramstein.com/projects/jlayout/">jLayout project homepage</a></h1>
+				<h1><a href="http://www.bramstein.com/projects/jlayout/">jLayout project homepage</a></h1>
+				<h1><a href="http://www.bramstein.com/projects/jlayout/">jLayout project homepage</a></h1>
+				<h1><a href="http://www.bramstein.com/projects/jlayout/">jLayout project homepage</a></h1>
+				<h1><a href="http://www.bramstein.com/projects/jlayout/">jLayout project homepage</a></h1>
+				<h1><a href="http://www.bramstein.com/projects/jlayout/">jLayout project homepage</a></h1>
+				<h1><a href="http://www.bramstein.com/projects/jlayout/">jLayout project homepage</a></h1>
+				<h1><a href="http://www.bramstein.com/projects/jlayout/">jLayout project homepage</a></h1>
+				<h1><a href="http://www.bramstein.com/projects/jlayout/">jLayout project homepage</a></h1>
+				<h1><a href="http://www.bramstein.com/projects/jlayout/">jLayout project homepage</a></h1>
+				<h1><a href="http://www.bramstein.com/projects/jlayout/">jLayout project homepage</a></h1>
+			</div>
+			<div class="south">South</div>
+		</div>
+
+	</body>
+</html>

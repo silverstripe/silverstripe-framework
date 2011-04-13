@@ -1,0 +1,128 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Resizing Border Layout example</title>
+		<meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
+		<link type="text/css" href="../../lib/jquery-ui-1.7.1.custom.css" rel="stylesheet" />
+		<script type="text/javascript" src="../../lib/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="../../lib/jquery-ui-1.7.1.custom.min.js"></script>
+		<script type="text/javascript" src="../../lib/jquery.metadata.js"></script>
+		<script type="text/javascript" src="../jsizes/jquery.sizes.js"></script>
+		<script type="text/javascript" src="jlayout.border.js"></script>
+		<script type="text/javascript" src="jquery.jlayout.js"></script>
+		<script type="text/javascript">
+			jQuery(function($) {
+				// Just call the inner layout once to initialize it. This
+				// must happen before the outer layout is initialized. It
+				// will be automatically resized when the outer layout is
+				// resized.
+				$('.layout-inner').layout();
+
+				var outerContainer = $('.layout-outer');
+
+				function layout() {
+					outerContainer.layout({resize: false});
+				}
+				layout();
+
+				$(window).resize(layout);
+
+				// This selector is changed to only select the west and east
+				// components of the outer layout.
+				$('.layout-outer > .east').resizable({
+					handles: 'w',
+					stop: layout
+				});
+
+				$('.layout-outer > .west').resizable({
+					handles: 'e',
+					stop: layout
+				});
+			});
+		</script>
+		<style>
+			html, body {	
+				width: 100%;
+				height: 100%;
+				padding: 0;
+				margin: 0;
+				overflow: hidden;
+			}
+
+			.layout-outer {
+				height: 100%;
+			}
+
+			.center, .east, .west, .north, .south {
+				background-color: rgb(220,220,220);
+				border: 1px solid rgb(200,200,200);
+				text-align: center;
+                display: inline-block;
+			}
+
+			.west, .east {
+				width: 8%;
+			}
+
+			.north, .south {
+				height: 10%;
+			}
+
+			/**
+			 * To get correct percentages widths and heights in the inner layout
+			 * you have to set the container to take up all space that's left after
+			 * the outer columns east, west, north and south components. In this case:
+			 *  width = 100% - 8% - 8% = 84%
+			 *  height = 100% - 10% - 10% = 80%
+			 */
+			.layout-inner {
+				width: 84%;
+				height: 80%;
+				background-color: white;
+				border: 0px;
+			}
+
+			.layout-inner .west, .layout-inner .east {
+				width: 25%;
+			}
+
+			.layout-inner .south, .layout-inner .north {
+				height: 20%;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="layout-outer {layout: {type: 'border', hgap: 3, vgap: 3}}">
+			<div class="center layout-inner {layout: {type: 'border', hgap: 3, vgap: 3}}">
+				<div class="center">
+			        inner center
+			    </div>
+			    <div class="east">
+			        inner East
+			    </div>
+			    <div class="west">
+			        inner West
+			    </div>
+			    <div class="north">
+			        inner North
+			    </div>
+			    <div class="south">
+			        inner South
+			    </div>
+			</div>
+			<div class="east">
+				East
+			</div>
+			<div class="west">
+				West
+			</div>
+			<div class="north">
+				North
+			</div>
+			<div class="south">
+				South
+			</div>
+		</div>
+	</body>
+</html>
