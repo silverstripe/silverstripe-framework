@@ -99,7 +99,7 @@ class SSTemplateParser extends Parser {
 	# Template is any structurally-complete portion of template (a full nested level in other words). It's the primary matcher, 
 	# and is used by all enclosing blocks, as well as a base for the top level
 	 
-	Template: (Comment | If | Require | CacheBlock | UncachedBlock | OldI18NTag | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+
+	Template: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+
 	*/
 	function Template_STR(&$res, $sub) {
 		$res['php'] .= $sub['php'] . PHP_EOL ;
@@ -177,42 +177,56 @@ class SSTemplateParser extends Parser {
 
 
 	/*!*
-	# Translatable call
 
-	Translate: "<%t" Entity (Default)? (!("is" "=") "is" Context)? (InjectionVariables)* "%>"
-	InjectionVariables: InjectionName:Word "=" Argument
+	# New Translatable Syntax
+	# <%t Entity DefaultString is Context name1=string name2=$functionCall
+	# (This is a new way to call translatable strings. The parser transforms this into a call to the _t() method)
+
+	Translate: "<%t" < Entity < (Default:QuotedString)? < (!("is" "=") < "is" < Context:QuotedString)? < (InjectionVariables)? > "%>"
+	InjectionVariables: (< InjectionName:Word "=" Argument)+
+	Entity: / [A-Za-z_] [\w\.]* /
 	*/
-	
+
 	function Translate__construct(&$res) {
-		$res['php'] = "_t(";
+		$res['php'] = '$val .= _t(';
 	}
 
 	function Translate_Entity(&$res, $sub) {
-		$res['php'] .= $sub['php'];
-		Debug::show($sub);
+		$res['php'] .= "'$sub[text]'";
 	}
+
 	function Translate_Default(&$res, $sub) {
-		Debug::show($sub);
+		$res['php'] .= ",$sub[text]";
 	}
+
 	function Translate_Context(&$res, $sub) {
-		Debug::show($sub);
+		$res['php'] .= ",$sub[text]";
+	}
+
+	function Translate_InjectionVariables(&$res, $sub) {
+		$res['php'] .= ",$sub[php]";
 	}
 
 	function Translate__finalise(&$res) {
-		$res['php'] .= ')';
+		$res['php'] .= ');';
 	}
 
-
 	function InjectionVariables__construct(&$res) {
+		$res['php'] = "array(";
 	}
 
 	function InjectionVariables_InjectionName(&$res, $sub) {
+		$res['php'] .= "'$sub[text]'=>";
 	}
 
 	function InjectionVariables_Argument(&$res, $sub) {
-		
+		$res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php']) . ',';
 	}
 
+	function InjectionVariables__finalise(&$res) {
+		if (substr($res['php'], -1) == ',') $res['php'] = substr($res['php'], 0, -1); //remove last comma in the array
+		$res['php'] .= ')';
+	}
 
 
 	/*!*

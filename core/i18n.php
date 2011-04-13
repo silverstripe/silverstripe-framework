@@ -1452,6 +1452,18 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @return string The translated string, according to the currently set locale {@link i18n::set_locale()}
 	 */
 	static function _t($entity, $string = "", $priority = 40, $context = "") {
+		$argList = func_get_args();
+		$argNum = func_num_args();
+
+		//fetch the injection array out of the parameters (if it is present)
+		//_t($entity, $string = "", $context (optional), $injectionArray (optional))
+		$injectionArray = null;
+		for($i = 0; $i < $argNum; $i++) {
+			if (is_array($argList[$i])) {   //we have reached the injectionArray
+				$injectionArray = $argList[$i]; //any array in the args will be the injection array
+			}
+		}
+
 		global $lang;
 		
 		// get current locale (either default or user preference)
@@ -1469,7 +1481,21 @@ class i18n extends Object implements TemplateGlobalProvider {
 		$transEntity = isset($lang[$locale][$class][$realEntity]) ? $lang[$locale][$class][$realEntity] : $string;
 
 		// entities can be stored in both array and literal values in the language tables
-		return (is_array($transEntity) ? $transEntity[0] : $transEntity);
+		// so pick the first entry off any array (both numbered and associative)
+		if (is_array($transEntity)) {
+			if (isset($transEntity[0])) $transEntity = $transEntity[0];
+			else $transEntity = array_shift($transEntity);
+		}
+
+		// inject the variables from injectionArray (if present)
+		if ($injectionArray && count($injectionArray) > 0) {
+			foreach($injectionArray as $variable => $injection) {
+				$transEntity = str_replace('{'.$variable.'}', $injection, $transEntity);
+			}
+		}
+
+		// entities can be stored in both array and literal values in the language tables
+		return $transEntity;
 	}
 
 	/**
