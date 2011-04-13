@@ -88,6 +88,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	private $extensionsToReapply = array(), $extensionsToRemove = array();
 	
 	/**
+	 * @var boolean If set to TRUE, force generation of database schema even if no fixture_file is provided.
+	 * Setting it to FALSE doesn't impact the logic.
+	 */
+	protected $usesDatabase;
+	
+	/**
 	 * Determines if unit tests are currently run (via {@link TestRunner}).
 	 * This is used as a cheap replacement for fully mockable state
 	 * in certain contiditions (e.g. access checks).
@@ -137,7 +143,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
 		
 		// Set up fixture
-		if($fixtureFile || !self::using_temp_db()) {
+		if($fixtureFile || !self::using_temp_db() || $this->usesDatabase) {
 			if(substr(DB::getConn()->currentDatabase(),0,5) != 'tmpdb') {
 				//echo "Re-creating temp database... ";
 				self::create_temp_db();
