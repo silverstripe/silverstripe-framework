@@ -68,7 +68,36 @@ PHP;
 				'Test.CONCATENATED2' => array("Line \"4\" and Line 5",null,null)
 			)
 		);
-	}	
+	}
+
+	function testCollectFromNewTemplateSyntaxUsingParserSubclass() {
+		$c = new i18nTextCollector();
+
+		$html = <<<SS
+		<% _t('Test.SINGLEQUOTE','Single Quote'); %>
+<%t i18nTestModule.NEWMETHODSIG "New _t method signature test" %>
+<%t i18nTestModule.INJECTIONS_0 "Hello {name} {greeting}. But it is late, {goodbye}" name="Mark" greeting="welcome" goodbye="bye" %>
+<%t i18nTestModule.INJECTIONS_1 "Hello {name} {greeting}. But it is late, {goodbye}" name="Paul" greeting="good you are here" goodbye="see you" %>
+<%t i18nTestModule.INJECTIONS_2 "Hello {name} {greeting}. But it is late, {goodbye}" is "New context (this should be ignored)" name="Steffen" greeting="willkommen" goodbye="wiedersehen" %>
+<%t i18nTestModule.INJECTIONS_3 name="Cat" greeting='meow' goodbye="meow" %>
+<%t i18nTestModule.INJECTIONS_4 name=\$absoluteBaseURL greeting=\$get_locale goodbye="global calls" %>
+SS;
+		$c->collectFromTemplate($html, 'mymodule', 'Test');
+
+		$this->assertEquals(
+			$c->collectFromTemplate($html, 'mymodule', 'Test'),
+			array(
+				'Test.SINGLEQUOTE' => array('Single Quote',null,null),
+				'i18nTestModule.NEWMETHODSIG' => array("New _t method signature test",null,null),
+				'i18nTestModule.INJECTIONS_0' => array("Hello {name} {greeting}. But it is late, {goodbye}", null, null),
+				'i18nTestModule.INJECTIONS_1' => array("Hello {name} {greeting}. But it is late, {goodbye}", null, null),
+				'i18nTestModule.INJECTIONS_2' => array("Hello {name} {greeting}. But it is late, {goodbye}", null, "New context (this should be ignored)"),
+				'i18nTestModule.INJECTIONS_3' => array(null, null, null),
+				'i18nTestModule.INJECTIONS_4' => array(null, null, null),
+			)
+		);
+	}
+
 	function testCollectFromTemplateSimple() {
 		$c = new i18nTextCollector();
 

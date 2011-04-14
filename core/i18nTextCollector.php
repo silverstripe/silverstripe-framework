@@ -228,6 +228,11 @@ class i18nTextCollector extends Object {
 			// @todo Will get massively confused if you include the includer -> infinite loop
 		}
 
+		// use parser to extract <%t style translatable entities
+		$translatables = i18nTextCollector_Parser::GetTranslatables($content);
+		$entitiesArr = array_merge($entitiesArr,(array)$translatables);
+
+		// use the old method of getting _t() style translatable entities
 		// @todo respect template tags (< % _t() % > instead of _t())
 		$regexRule = '_t[[:space:]]*\(' .
 			'[[:space:]]*("[^"]*"|\\\'[^\']*\\\')[[:space:]]*,' . // namespace.entity
@@ -440,6 +445,50 @@ class i18nTextCollector extends Object {
 	
 	public function setDefaultLocale($locale) {
 		$this->defaultLocale = $locale;
+	}
+}
+/**
+ * Parser that scans through a template and extracts the parameters to the _t and <%t calls
+ */
+class i18nTextCollector_Parser extends SSTemplateParser {
+
+	static $entities = array();
+	static $currentEntity = array();
+
+	function Translate__construct(&$res) {
+		self::$currentEntity = array(null,null,null); //start with empty array
+	}
+
+	function Translate_Entity(&$res, $sub) {
+		self::$currentEntity[0] = $sub['text']; //entity
+	}
+
+	function Translate_Default(&$res, $sub) {
+		self::$currentEntity[1] = $sub['String']['text']; //value
+	}
+
+	function Translate_Context(&$res, $sub) {
+		self::$currentEntity[2] = $sub['String']['text']; //comment
+	}
+
+	function Translate__finalise(&$res) {
+		// set the entity name and the value (default), as well as the context (comment)
+		// priority is no longer used, so that is blank
+		self::$entities[self::$currentEntity[0]] = array(self::$currentEntity[1],null,self::$currentEntity[2]);
+	}
+
+	/**
+	 * Parses a template and returns any translatable entities
+	 */
+	static function GetTranslatables($template) {
+		self::$entities = array();
+
+		// Run the parser and throw away the result
+		$parser = new i18nTextCollector_Parser($template);
+		if(substr($template, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) $parser->pos = 3;
+		$parser->match_TopTemplate();
+
+		return self::$entities;
 	}
 }
 ?>
