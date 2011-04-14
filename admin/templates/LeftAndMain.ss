@@ -40,7 +40,7 @@
 
 	</div>
 	
-	<div id="contentPanel">
+	<div id=".cms-editor-dialogs">
 		<% control EditorToolbar %>
 			$ImageForm
 			$LinkForm

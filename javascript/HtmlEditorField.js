@@ -36,7 +36,7 @@
 		 * On folder change - lookup the new images
 		 */
 		$("#Form_EditorToolbarImageForm_Files-0").change(function() {
-			$("#contentPanel #Form_EditorToolbarImageForm").ajaxForm({
+			$(".cms-editor-dialogs #Form_EditorToolbarImageForm").ajaxForm({
 				url: 'admin/assets/UploadForm?action_doUpload=1',
 				iframe: true,
 				dataType: 'json',

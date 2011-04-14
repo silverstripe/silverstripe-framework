@@ -64,7 +64,7 @@
 				// Import forms are processed without ajax
 				if(this.attr('id').match(/^Form_ImportForm/)) return true;
 				
-				$('#contentPanel').closeRightPanel();
+				$('.cms-editor-dialogs').closeRightPanel();
 			
 				this.trigger('beforeSubmit');
 
@@ -197,14 +197,14 @@
 			}
 		});
 
-		$('#contentPanel').entwine({
+		$('.cms-editor-dialogs').entwine({
 			/**
 			* Close TinyMCE image, link or flash panel.
 			* this function is called everytime a new search, back or add new DataObject are clicked
 			**/
 			closeRightPanel: function(){
-				if($('#contentPanel').is(':visible')) {
-					$('#contentPanel').hide();
+				if($('.cms-editor-dialogs').is(':visible')) {
+					$('.cms-editor-dialogs').hide();
 					$('#Form_EditorToolbarImageForm').hide();
 					$('#Form_EditorToolbarFlashForm').hide();
 					$('#Form_EditorToolbarLinkForm').hide();
