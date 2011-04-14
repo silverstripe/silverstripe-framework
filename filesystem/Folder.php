@@ -475,4 +475,15 @@ HTML;
 
 		return $classes;
 	}
+	
+	/**
+	 * Site tree hints do not apply to this class, function is 
+	 * defined to avoid errors.
+	 * 
+	 * @see LeftAndMain::getSiteTreeFor()
+	 * @return String Empty string
+	 */
+	function CMSTreeHints() {
+	  return '';
+	}
 }
