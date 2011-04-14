@@ -14,7 +14,7 @@
 		</strong>
 	<% end_control %>
 </div>
-<ul class="main-menu">
+<ul class="cms-menu-list">
 <% control MainMenu %>
 	<li class="$LinkingMode" id="Menu-$Code">
 		<a href="$Link">$Title</a>

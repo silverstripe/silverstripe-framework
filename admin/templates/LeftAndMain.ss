@@ -8,25 +8,38 @@
 </head>
 
 <body class="loading $CSSClasses">
-	<div class="ss-loading-screen">
-		<div class="loading-logo">
-			<img class="loading-animation" src="sapphire/admin/images/spinner.gif" alt="<% _t('LOADING','Loading...',PR_HIGH) %>" />
-			<noscript><p class="nojs-warning"><span class="message notice"><% _t('REQUIREJS','The CMS requires that you have JavaScript enabled.',PR_HIGH) %></span></p></noscript>
-		</div>
-	</div>
 	
-	<div class="east">
-		$CMSTopMenu
-	</div>
+	$CMSLoadingScreen
 	
-	<div>
-		$Left
-	</div>
-		
-	<div class="right" id="right">
-		$Right
-	</div>
+	<div class="cms-container {layout: {type: 'border'}}">
 
+		<div class="cms-menu west">
+			$CMSTopMenu
+		</div>
+
+		<div class="cms-content center {layout: {type: 'border'}}" id="right">
+
+			<div class="cms-content-header north">
+				<h2>Section title</h2>
+				<ul>
+					<li>Tab 1</li>
+					<li>Tab 2</li>
+				</ul>
+				<div class="cms-content-search"></div>
+			</div>
+
+			<div class="cms-content-tools west">
+				$Left
+			</div>
+			
+			<div class="cms-content-form center">
+				$Right
+			</div>
+
+		</div>
+
+	</div>
+	
 	<div id="contentPanel">
 		<% control EditorToolbar %>
 			$ImageForm
@@ -34,16 +47,17 @@
 			$FlashForm
 		<% end_control %>
 	</div>
-	
-	<div class="ss-cms-bottom-bar">
-		<div class="holder">
-			<div id="switchView" class="bottomTabs">
-				<% if ShowSwitchView %>
-					<div class="blank"> <% _t('VIEWPAGEIN','Page view:') %> </div>
-					<span id="SwitchView">$SwitchView</span>
-				<% end_if %>
+
+	<!-- <div class="ss-cms-bottom-bar">
+			<div class="holder">
+				<div id="switchView" class="bottomTabs">
+					<% if ShowSwitchView %>
+						<div class="blank"> <% _t('VIEWPAGEIN','Page view:') %> </div>
+						<span id="SwitchView">$SwitchView</span>
+					<% end_if %>
+				</div>
 			</div>
-		</div>
-	</div>
+		</div> -->
+
 </body>
 </html>

@@ -1,3 +1,26 @@
+/* line 14, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td { margin: 0; padding: 0; border: 0; outline: 0; font-weight: inherit; font-style: inherit; font-size: 100%; font-family: inherit; vertical-align: baseline; }
+
+/* line 17, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+body { line-height: 1; color: black; background: white; }
+
+/* line 19, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+ol, ul { list-style: none; }
+
+/* line 21, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+table { border-collapse: separate; border-spacing: 0; vertical-align: middle; }
+
+/* line 23, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+caption, th, td { text-align: left; font-weight: normal; vertical-align: middle; }
+
+/* line 25, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+q, blockquote { quotes: "" ""; }
+/* line 96, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+q:before, q:after, blockquote:before, blockquote:after { content: ""; }
+
+/* line 27, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+a img { border: none; }
+
 /* line 4, ../scss/_tree.scss */
 .jstree ul { display: block; margin: 0 0 0 0; padding: 0 0 0 0; list-style-type: none; }
 /* line 9, ../scss/_tree.scss */
@@ -30,26 +53,84 @@
 /* line 63, ../scss/_tree.scss */
 .jstree > ul > li { margin-left: 0px; }
 
-/* line 5, ../scss/screen.scss */
+/* line 6, ../scss/screen.scss */
+html, body { width: 100%; height: 100%; padding: 0; margin: 0; overflow: hidden; }
+
+/* line 14, ../scss/screen.scss */
 body { font-size: 13px; font-family: Verdana, Arial, sans-serif; }
-
-/* line 11, ../scss/screen.scss */
-body * { font-size: 13px; }
-
-/* line 15, ../scss/screen.scss */
-body .ui-widget { font-size: 1em; }
+/* line 14, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+body html, body body, body div, body span, body applet, body object, body iframe, body h1, body h2, body h3, body h4, body h5, body h6, body p, body blockquote, body pre, body a, body abbr, body acronym, body address, body big, body cite, body code, body del, body dfn, body em, body font, body img, body ins, body kbd, body q, body s, body samp, body small, body strike, body strong, body sub, body sup, body tt, body var, body dl, body dt, body dd, body ol, body ul, body li, body fieldset, body form, body label, body legend, body table, body caption, body tbody, body tfoot, body thead, body tr, body th, body td { margin: 0; padding: 0; border: 0; outline: 0; font-weight: inherit; font-style: inherit; font-size: 100%; font-family: inherit; vertical-align: baseline; }
+/* line 17, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+body body { line-height: 1; color: black; background: white; }
+/* line 19, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+body ol, body ul { list-style: none; }
+/* line 21, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+body table { border-collapse: separate; border-spacing: 0; vertical-align: middle; }
+/* line 23, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+body caption, body th, body td { text-align: left; font-weight: normal; vertical-align: middle; }
+/* line 25, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+body q, body blockquote { quotes: "" ""; }
+/* line 96, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+body q:before, body q:after, body blockquote:before, body blockquote:after { content: ""; }
+/* line 27, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+body a img { border: none; }
 
 /* line 20, ../scss/screen.scss */
-.logo .version { display: none; }
+body * { font-size: 13px; }
 
-/* line 26, ../scss/screen.scss */
+/* line 24, ../scss/screen.scss */
+body .ui-widget { font-size: 1em; }
+
+/* line 30, ../scss/screen.scss */
+.cms-container { height: 100%; }
+
+/* line 34, ../scss/screen.scss */
+.cms-menu { width: 250px; overflow: auto; }
+
+/* line 42, ../scss/screen.scss */
+.center, .east, .west, .north, .south { display: inline-block; }
+
+/* line 46, ../scss/screen.scss */
+.cms-content-tools { width: 250px; overflow: auto; }
+
+/* line 51, ../scss/screen.scss */
+.cms-content-form { overflow: auto; }
+
+/* line 61, ../scss/screen.scss */
+.cms-menu { background-color: #b0bfc6; }
+
+/* line 65, ../scss/screen.scss */
+.cms-content-header { background-color: #a0b2be; }
+
+/* line 69, ../scss/screen.scss */
+.cms-content { background-color: #eef2f3; }
+
+/* line 73, ../scss/screen.scss */
+.cms-content-tools { background-color: #c6d7df; }
+
+/* line 77, ../scss/screen.scss */
+.cms-logo { background-color: #002a43; }
+/* line 80, ../scss/screen.scss */
+.cms-logo .version { display: none; }
+
+/* line 88, ../scss/screen.scss */
+.cms-logo * { color: #3ebae0; }
+/* line 92, ../scss/screen.scss */
+.cms-logo a { display: block; height: 20px; }
+
+/* line 101, ../scss/screen.scss */
+.cms-menu li { display: block; height: 50px; background-color: #afbdc6; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #afbdc6), color-stop(100%, #8ea4b2)); background-image: -moz-linear-gradient(top, #afbdc6 0%, #8ea4b2 100%); background-image: linear-gradient(top, #afbdc6 0%, #8ea4b2 100%); }
+/* line 107, ../scss/screen.scss */
+.cms-menu li.current { background-color: #409dc9; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #409dc9), color-stop(100%, #1f78b0)); background-image: -moz-linear-gradient(top, #409dc9 0%, #1f78b0 100%); background-image: linear-gradient(top, #409dc9 0%, #1f78b0 100%); }
+
+/* line 117, ../scss/screen.scss */
 .ss-loading-screen, .ss-loading-screen .loading-logo { width: 100%; height: 100%; overflow: hidden; position: absolute; background: #fff; background: -moz-radial-gradient(50% 50% 180deg, circle cover, white, #efefef, #c7c7c7 100%); background: -webkit-gradient(radial, 50% 50%, 350, 50% 50%, 0, from(#e3e3e3), to(white)); z-index: 100000; margin: 0; padding: 0; }
 
-/* line 40, ../scss/screen.scss */
+/* line 131, ../scss/screen.scss */
 .ss-loading-screen .loading-logo { background-url: url(../images/logo.gif); background-repeat: no-repeat; background-color: transparent; background-position: 50% 50%; }
-/* line 46, ../scss/screen.scss */
+/* line 137, ../scss/screen.scss */
 .ss-loading-screen p { width: 100%; text-align: center; position: absolute; bottom: 80px; }
-/* line 52, ../scss/screen.scss */
+/* line 143, ../scss/screen.scss */
 .ss-loading-screen p span.notice { display: inline-block; font-size: 14px; padding: 10px 20px; color: #dc7f00; border: none; -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; -moz-box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.1); -o-box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.1); box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.1); }
-/* line 70, ../scss/screen.scss */
+/* line 161, ../scss/screen.scss */
 .ss-loading-screen .loading-animation { display: none; position: absolute; left: 49%; top: 75%; }

@@ -55,6 +55,15 @@
 				$('.ss-loading-screen').hide();
 				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
+				
+				// Initialize layouts, inner to outer
+				$('.cms-content').layout();
+				var outer = $('.cms-container');
+				var layout = function() {
+					outer.layout({resize: false});
+				}
+				layout();
+				$(window).resize(layout);
 
 				this._setupPinging();
 
@@ -68,7 +77,7 @@
 					var timerID = "timerLeftAndMainResize";
 					if (window[timerID]) clearTimeout(window[timerID]);
 					window[timerID] = setTimeout(function() {
-						self._resizeChildren();
+						layout();
 					}, 200);
 				});
 
@@ -102,31 +111,6 @@
 						complete: onSessionLost
 					});
 				}, this.getPingIntervalSeconds() * 1000);
-			},
-
-			/**
-			 * Function: _resizeChildren
-			 * 
-			 * Resize elements in center panel
-			 * to fit the boundary box provided by the layout manager.
-			 * 
-			 * Todo:
-			 *  Replace with automated less ugly parent/sibling traversal
-			 */
-			_resizeChildren: function() {
-				$("#treepanes", this).accordion("resize");
-				$('#sitetree_and_tools', this).fitHeightToParent();
-				$('#contentPanel form', this).fitHeightToParent();
-				$('#contentPanel form fieldset', this).fitHeightToParent();
-				$('#contentPanel form fieldset .content', this).fitHeightToParent();
-				$('.edit-form').fitHeightToParent();
-				$('.edit-form fieldset', this).fitHeightToParent();
-				// Order of resizing is important: Outer to inner
-				// TODO Only supports two levels of tabs at the moment
-				$('.edit-form fieldset > .ss-tabset', this).fitHeightToParent();
-				$('.edit-form fieldset > .ss-tabset > .tab', this).fitHeightToParent();
-				$('.edit-form fieldset > .ss-tabset > .tab > .ss-tabset', this).fitHeightToParent();
-				$('.edit-form fieldset > .ss-tabset > .tab > .ss-tabset > .tab', this).fitHeightToParent();
 			}
 		});
 
