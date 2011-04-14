@@ -57,44 +57,47 @@
 			return $.vakata.css.get_css(rule_name, true, sheet); 
 		},
 		add_sheet : function(opts) {
-			var tmp = false, is_new = true;
-			if(opts.str) {
-				if(opts.title) { tmp = $("style[id='" + opts.title + "-stylesheet']")[0]; }
-				if(tmp) { is_new = false; }
-				else {
-					tmp = document.createElement("style");
-					tmp.setAttribute('type',"text/css");
-					if(opts.title) { tmp.setAttribute("id", opts.title + "-stylesheet"); }
-				}
-				if(tmp.styleSheet) {
-					if(is_new) { 
-						document.getElementsByTagName("head")[0].appendChild(tmp); 
-						tmp.styleSheet.cssText = opts.str; 
-					}
-					else {
-						tmp.styleSheet.cssText = tmp.styleSheet.cssText + " " + opts.str; 
-					}
-				}
-				else {
-					tmp.appendChild(document.createTextNode(opts.str));
-					document.getElementsByTagName("head")[0].appendChild(tmp);
-				}
-				return tmp.sheet || tmp.styleSheet;
-			}
-			if(opts.url) {
-				if(document.createStyleSheet) {
-					try { tmp = document.createStyleSheet(opts.url); } catch (e) { }
-				}
-				else {
-					tmp			= document.createElement('link');
-					tmp.rel		= 'stylesheet';
-					tmp.type	= 'text/css';
-					tmp.media	= "all";
-					tmp.href	= opts.url;
-					document.getElementsByTagName("head")[0].appendChild(tmp);
-					return tmp.styleSheet;
-				}
-			}
+		  // MODIFIED ischommer/SilverStripe: add_sheet significantly slows down rendering,
+		  // we're loading all required CSS directly rather than adding it inline
+		  
+      // var tmp = false, is_new = true;
+      // if(opts.str) {
+      //  if(opts.title) { tmp = $("style[id='" + opts.title + "-stylesheet']")[0]; }
+      //  if(tmp) { is_new = false; }
+      //  else {
+      //    tmp = document.createElement("style");
+      //    tmp.setAttribute('type',"text/css");
+      //    if(opts.title) { tmp.setAttribute("id", opts.title + "-stylesheet"); }
+      //  }
+      //  if(tmp.styleSheet) {
+      //    if(is_new) { 
+      //      document.getElementsByTagName("head")[0].appendChild(tmp); 
+      //      tmp.styleSheet.cssText = opts.str; 
+      //    }
+      //    else {
+      //      tmp.styleSheet.cssText = tmp.styleSheet.cssText + " " + opts.str; 
+      //    }
+      //  }
+      //  else {
+      //    tmp.appendChild(document.createTextNode(opts.str));
+      //    document.getElementsByTagName("head")[0].appendChild(tmp);
+      //  }
+      //  return tmp.sheet || tmp.styleSheet;
+      // }
+      // if(opts.url) {
+      //  if(document.createStyleSheet) {
+      //    try { tmp = document.createStyleSheet(opts.url); } catch (e) { }
+      //  }
+      //  else {
+      //    tmp     = document.createElement('link');
+      //    tmp.rel   = 'stylesheet';
+      //    tmp.type  = 'text/css';
+      //    tmp.media = "all";
+      //    tmp.href  = opts.url;
+      //    document.getElementsByTagName("head")[0].appendChild(tmp);
+      //    return tmp.styleSheet;
+      //  }
+      // }
 		}
 	};
 
