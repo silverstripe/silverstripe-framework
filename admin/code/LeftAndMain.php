@@ -169,7 +169,8 @@ class LeftAndMain extends Controller {
 		$htmlEditorConfig = HtmlEditorConfig::get_active();
 		$htmlEditorConfig->setOption('language', i18n::get_tinymce_lang());
 		if(!$htmlEditorConfig->getOption('content_css')) {
-			$cssFiles = 'sapphire/admin/css/editor.css';
+			$cssFiles = array();
+			$cssFiles[] = 'sapphire/admin/css/editor.css';
 			
 			// Use theme from the site config
 			if(class_exists('SiteConfig') && ($config = SiteConfig::current_site_config()) && $config->Theme) {
@@ -180,10 +181,15 @@ class LeftAndMain extends Controller {
 				$theme = false;
 			}
 			
-			if($theme) $cssFiles .= ',' . THEMES_DIR . "/{$theme}/css/editor.css";
-			else if(project()) $cssFiles .= ',' . project() . '/css/editor.css';
+			if($theme) $cssFiles[] = THEMES_DIR . "/{$theme}/css/editor.css";
+			else if(project()) $cssFiles[] = project() . '/css/editor.css';
+			
+			// Remove files that don't exist
+			foreach($cssFiles as $k => $cssFile) {
+				if(!file_exists(BASE_PATH . '/' . $cssFile)) unset($cssFiles[$k]);
+			}
 
-			$htmlEditorConfig->setOption('content_css', $cssFiles);
+			$htmlEditorConfig->setOption('content_css', implode(',', $cssFiles));
 		}
 		
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
