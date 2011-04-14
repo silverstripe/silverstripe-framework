@@ -8,7 +8,7 @@ digraph g {
 
     <% control Modules %>
     <% control Models %>
-        $Name [shape=record,label="{$Name|<% control Fields %>$Name\\n<% end_control %>}"];
+        $Name [shape=record,label="{{$Name}|<% control Fields %>$Name\\n<% end_control %>}"];
 	<% if ParentModel %>
 		$Name -> $ParentModel [style=dotted];
 	<% end_if %>
