@@ -1,0 +1,76 @@
+.cms-menu {
+	z-index: 10;
+	background-color: #b0bfc6;
+	@include box-shadow(#aaa, 3px, 0, 3px);
+	
+	a {
+		text-decoration: none;
+	}
+}
+
+.cms-menu-list {
+	li {
+		background-color: #afbdc6;
+		@include linear-gradient(color-stops(#afbdc6, #8ea4b2));
+		border-bottom: 1px solid #aaa;
+		
+		a {
+			display: block;
+			height: 32px;
+			vertical-align: middle;
+			font-size: 14px;
+			@include text-shadow(#ddd);
+			color: #333;
+			margin: 5px;
+			
+			.icon {
+				display: block;
+				float: left;
+				margin-right: 5px;
+				@include sprite-background("icons-32.png");
+				@include sprite-position(1, 1);
+			}
+			
+			.text {
+				display: block;
+				padding-top: 10px;
+			}
+		}
+		
+		&.current {
+			background-color: #338dc1;
+			@include linear-gradient(color-stops(#338dc1, #338dc1));
+			@include box-shadow(#333, 0, 4px, 4px);
+			
+			a {
+				color: white;
+				@include text-shadow(#333);
+			}
+		}
+		
+		// nested elements
+		li {
+			background-color: #1d76ae;
+			@include linear-gradient(color-stops(#1d76ae, #1d76ae));
+			
+			a {
+				font-size: 12px;
+				@include text-shadow(#333);
+				margin: 0;
+				padding-left: 30px;
+				color: white;
+			}
+			
+			&.current a {
+				font-weight: bold;
+			}
+		}
+		
+	}
+		
+	li#Menu-CMSMain a .icon {@include sprite-position(1, 1);}
+	li#Menu-CMSMain.current a .icon, li#Menu-CMSMain a:hover .icon {@include sprite-position(2, 1);}
+	li#Menu-AssetAdmin a .icon {@include sprite-position(1, 2);}
+	li#Menu-AssetAdmin.current a .icon, li#Menu-AssetAdmin a:hover .icon {@include sprite-position(2, 2);}
+	
+}

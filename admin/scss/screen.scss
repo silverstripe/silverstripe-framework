@@ -1,167 +1,22 @@
+/**
+ * This file is the central collection of included modules, links to custom SCSS files,
+ * and any global SCSS variable definitions.
+ * 
+ * DO NOT ADD stylesheet rules to this file directly!
+ * 
+ * Note: By prefixing files with an underscore, they won't create individual CSS files.
+ */
+
 @import "compass/reset";
+@import "compass/css3";
+@import "compass/utilities/sprites/sprite-img";
+
+// colour definitions
+$widget-bg: #eef2f3;
+
+@import "layout.scss";
 @import "tree.scss";
+@import "menu.scss";
 @import "forms.scss";
-@import "compass/css3/gradient";
-
-html, body {	
-	width: 100%;
-	height: 100%;
-	padding: 0;
-	margin: 0;
-	overflow: hidden; // avoid jlayout jitter when resizing
-}
-
-body {
-	@include global-reset;
-	font-size: 13px;
-	font-family: Verdana, Arial, sans-serif;
-}
-
-body * {
-	font-size: 13px;
-}
-
-body .ui-widget {
-	font-size: 1em;
-}
-
-// layout
-
-.cms-container {
-	height: 100%
-}
-
-.cms-menu {
-	width: 250px;
-	overflow: auto;
-}
-
-.cms-content {
-}
-
-.center, .east, .west, .north, .south {
-	display: inline-block;
-}
-
-.cms-content-tools {
-	width: 250px;
-	overflow: auto;
-}
-
-.cms-content-form {
-	overflow: auto;
-}
-
-.cms-content-header {
-
-}
-
-// main styles
-
-.cms-menu {
-	background-color: #b0bfc6;
-}
-
-.cms-content-header {
-	background-color: #a0b2be
-}
-
-.cms-content {
-	background-color: #eef2f3;
-}
-
-.cms-content-tools {
-	background-color: #c6d7df;
-}
-
-.cms-logo {
-	background-color: #002a43;
-	
-	.version {
-		display: none; 
-	} 
-}
-
-// logo
-
-.cms-logo {
-	* {
-		color: #3ebae0;
-	}
-	
-	a {
-		display: block;
-		height: 20px;
-	}
-}
-
-// menu
-
-.cms-menu {
-	li {
-		display: block;
-		height: 50px;
-		background-color: #afbdc6;
-		@include linear-gradient(color-stops(#afbdc6, #8ea4b2));
-		
-		&.current {
-			background-color: #409dc9;
-			@include linear-gradient(color-stops(#409dc9, #1f78b0));
-		}
-	}
-}
-
-// loading screen
-
-.ss-loading-screen, 
-.ss-loading-screen .loading-logo {
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
-	position: absolute;
-	background: #fff;
-	background: -moz-radial-gradient(50% 50% 180deg, circle cover, #FFFFFF, #EFEFEF, #C7C7C7 100%);
-	background: -webkit-gradient(radial, 50% 50%, 350, 50% 50%, 0, from(#E3E3E3), to(white));
-	z-index: 100000;
-	margin: 0;
-	padding: 0;
-}
-
-.ss-loading-screen {
-	.loading-logo {
-		background-url: url(../images/logo.gif);
-		background-repeat: no-repeat;
-		background-color: transparent;
-		background-position: 50% 50%;
-	}
-	p {
-		width: 100%;
-		text-align: center;
-		position: absolute;
-		bottom: 80px;
-		
-		span.notice {
-			display: inline-block;
-			font-size: 14px;
-			padding: 10px 20px;
-			color: #dc7f00;
-			border: none;
-
-			-moz-border-radius: 5px;
-			-webkit-border-radius: 5px;
-			-o-border-radius: 5px;
-
-			-moz-box-shadow: 1px 1px 15px rgba(0,0,0, 0.1);
-			-webkit-box-shadow: 1px 1px 15px rgba(0,0,0, 0.1);
-			-o-box-shadow: 1px 1px 15px rgba(0,0,0, 0.1);
-			box-shadow: 1px 1px 15px rgba(0,0,0, 0.1);
-		}
-	}
-	
-	.loading-animation {
-		display: none;
-		position: absolute;
-		left: 49%;
-		top: 75%;
-	}
-}
+@import "uitheme.scss";
+@import "style.scss";

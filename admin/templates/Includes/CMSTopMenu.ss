@@ -20,7 +20,7 @@
 		<a href="$Link">$Title</a>
 		<% if Title == 'Edit Page' %>
 		<ul>
-			<li><a href="#">Content</a></li>
+			<li class="current"><a href="#">Content</a></li>
 			<li><a href="#">Settings</a></li>
 			<li><a href="#">Reports</a></li>
 			<li><a href="#">History</a></li>

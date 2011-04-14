@@ -1,1 +1,32 @@
+/**
+ * This file defines common styles for form elements used throughout the CMS interface.
+ * It is an addition to the base styles defined in sapphire/css/Form.css.
+ */
+.cms {
+	
+	// Form fields
+	
+	input, textarea {
+		background-color: #f9f9f9;
+	}
+	
+	input.loading {
+		padding-left: 16px;
+		background: #fff url(../../images/network-save.gif) no-repeat center left;
+	}
+	
+	.edit-form {
 
+		padding-bottom: 20px;
+
+		// Hide first level tabs for CMS, see CMSEditForm.ss
+		& > fieldset > .ss-tabset > ul {
+			display: none;
+		} 
+
+		// TODO Unclear if "button bar" concept is edit form specific
+		.Actions {
+			text-align: right;
+		}
+	}
+}

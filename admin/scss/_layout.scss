@@ -1,0 +1,65 @@
+/**
+ * This file defines the structural layout of the CMS interface.
+ * Ideally, you should be able to lay out the base elements of the CMS with only this file.
+ * 
+ * Please put any presentational definitions (color, fonts, backgrounds, paddings)
+ * into _style.scss or _uitheme.scss instead.
+ */
+
+html, body {	
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	overflow: hidden; // avoid jlayout jitter when resizing
+}
+
+.cms-container {
+	height: 100%
+}
+
+.cms-menu {
+	width: 250px;
+	overflow: auto;
+}
+
+.cms-content {
+}
+
+.cms-menu,
+.cms-content,
+.cms-content-header,
+.cms-content-tools,
+.cms-content-form {
+	@include inline-block;
+}
+
+.cms-content-tools {
+	width: 250px;
+	overflow: auto;
+}
+
+.cms-content-form {
+	overflow: auto;
+}
+
+.cms-content-header {
+	height: 40px;
+	overflow: hidden;
+}
+
+.cms-content-actions {
+	padding: 10px;
+}
+
+.cms-logo {
+	height: 30px;
+	overflow: hidden;
+	vertical-align: middle;
+}
+
+.cms-login-status {
+	height: 30px;
+	overflow: hidden;
+	vertical-align: middle;
+}
