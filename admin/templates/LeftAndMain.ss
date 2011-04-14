@@ -9,7 +9,7 @@
 
 <body class="loading $CSSClasses">
 	
-	$CMSLoadingScreen
+	<% include CMSLoadingScreen %>
 	
 	<div class="cms-container {layout: {type: 'border'}}">
 

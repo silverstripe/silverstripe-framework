@@ -50,11 +50,6 @@
 			 */
 			onmatch: function() {
 				var self = this;
-
-				// Remove loading screen
-				$('.ss-loading-screen').hide();
-				$('body').removeClass('loading');
-				$(window).unbind('resize', positionLoadingSpinner);
 				
 				// Initialize layouts, inner to outer
 				$('.cms-content').layout();
@@ -64,6 +59,11 @@
 				}
 				layout();
 				$(window).resize(layout);
+				
+				// Remove loading screen
+				$('.ss-loading-screen').hide();
+				$('body').removeClass('loading');
+				$(window).unbind('resize', positionLoadingSpinner);
 
 				this._setupPinging();
 
