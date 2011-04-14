@@ -76,6 +76,9 @@ forbidden)
  
 Closed Block: An SS template block that wraps content, and requires a counterpart <% end_blockname %> tag
 
+Angle Bracket: angle brackets "<" and ">" are used to eat whitespace between template elements
+N: eats white space including newlines (using in legacy _t support)
+
 */
 class SSTemplateParser extends Parser {
 
@@ -97,7 +100,8 @@ class SSTemplateParser extends Parser {
 	/*!* SSTemplateParser
 
 	# Template is any structurally-complete portion of template (a full nested level in other words). It's the primary matcher, 
-	# and is used by all enclosing blocks, as well as a base for the top level
+	# and is used by all enclosing blocks, as well as a base for the top level.
+	# Any new template elements need to be included in this list, if they are to work.
 	 
 	Template: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+
 	*/
@@ -561,8 +565,10 @@ class SSTemplateParser extends Parser {
 	 
 	# This is the core used by both syntaxes, without the block start & end tags
 	 
-	OldTPart: "_t" < "(" < QuotedString (< "," < CallArguments)? > ")"
-	
+	OldTPart: "_t" N "(" N QuotedString (N "," N CallArguments)? N ")" N (";")?
+
+	# whitespace with a newline
+	N: / [\s\n]* /
 	*/
 	function OldTPart__construct(&$res) {
 		$res['php'] = "_t(";
