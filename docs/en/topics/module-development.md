@@ -15,7 +15,7 @@ project, like a forum, an ecommerce package or a blog you can do it like this;
 
 Try and keep your module as generic as possible - for example if you're making a forum module, your members section
 shouldn't contain fields like 'Games You Play' or 'Your LiveJournal Name' - if people want to add these fields they can
-sub-class your class, or decorate the fields on to it.
+sub-class your class, or extend the fields on to it.
 
 If you're using Requirements to include generic support files for your project like CSS or Javascript, and want to
 override these files to be more specific in your project, the following code is an example of how to do so using the
@@ -54,5 +54,5 @@ adherence to conventions, writing documentation, and releasing updates. See [con
 *  [Modules](modules)
 *  [Module Release Process](module-release-process)
 *  [Debugging methods](/topics/debugging)
-*  [URL Variable Tools](/reference/urlvariabletools) - Lists a number of “page options” , “rendering tools” or “special
-URL variables” that you can use to debug your sapphire applications
+*  [URL Variable Tools](/reference/urlvariabletools) - Lists a number of ���page options��� , ���rendering tools��� or ���special
+URL variables��� that you can use to debug your sapphire applications

@@ -13,7 +13,7 @@ Object::useCustomClass(), and the like.  So, by unpacking a module into site's m
 
 *  You can create subclasses of base classes such as SiteTree to extend behaviour.
 *  You can use Object::useCustomClass() to replace a built in class with a class of your own.
-*  You can use [a decorator](api:DataObjectDecorator) to extend or alter the behaviour of a built-in class without replacing
+*  You can use [an extension](api:DataExtension) to extend or alter the behaviour of a built-in class without replacing
 it.
 *  You can provide additional director rules to define your own controller for particular URLs.
 
