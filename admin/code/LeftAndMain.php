@@ -392,7 +392,9 @@ class LeftAndMain extends Controller {
 
 			$linkingmode = "";
 			
-			if(strpos($this->Link(), $menuItem->url) !== false) {
+			if($menuItem->controller && $this instanceof $menuItem->controller) {
+				$linkingmode = "current";
+			} else if(strpos($this->Link(), $menuItem->url) !== false) {
 				if($this->Link() == $menuItem->url) {
 					$linkingmode = "current";
 				
@@ -430,8 +432,8 @@ class LeftAndMain extends Controller {
 		return $menu;
 	}
 
-	public function CMSTopMenu() {
-		return $this->renderWith(array('CMSTopMenu_alternative','CMSTopMenu'));
+	public function Menu() {
+		return $this->renderWith($this->getTemplatesWithSuffix('_Menu'));
 	}
 
 	/**
@@ -446,12 +448,8 @@ class LeftAndMain extends Controller {
 		return $templates;
 	}
 
-	public function Left() {
-		return $this->renderWith($this->getTemplatesWithSuffix('_left'));
-	}
-
-	public function Right() {
-		return $this->renderWith($this->getTemplatesWithSuffix('_right'));
+	public function Content() {
+		return $this->renderWith($this->getTemplatesWithSuffix('_Content'));
 	}
 
 	public function getRecord($id) {
@@ -1066,6 +1064,13 @@ class LeftAndMain extends Controller {
 			$nav = SilverStripeNavigator::get_for_record($page); 
 			return $nav['items']; 
 		} 
+	}
+	
+	/**
+	 * @return SiteConfig
+	 */
+	function SiteConfig() {
+		return SiteConfig::current_site_config();
 	}
 
 	/**
