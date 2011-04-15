@@ -331,8 +331,11 @@ class Group extends DataObject {
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
 		
-		if(stripos($this->Code, _t('SecurityAdmin.NEWGROUPPREFIX','new-')) === 0) {
-			$this->setCode($this->Title);
+		// Only set code property when the group has a custom title, and no code exists.
+		// The "Code" attribute is usually treated as a more permanent identifier than database IDs
+		// in custom application logic, so can't be changed after its first set.
+		if(!$this->Code && $this->Title != _t('SecurityAdmin.NEWGROUP',"New Group")) {
+			if(!$this->Code) $this->setCode($this->Title);
 		}
 	}
 	
