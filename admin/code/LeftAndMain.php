@@ -207,12 +207,12 @@ class LeftAndMain extends Controller {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-metadata/jquery.metadata.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/jquery-fitheighttoparent/jquery.fitheighttoparent.js');
 		
+		// entwine
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+		
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js');
 		// @todo Load separately so the CSS files can be inlined
 		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.all.css');
-		
-		// entwine
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		
 		// Required for TreeTools panel above tree
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
@@ -719,7 +719,14 @@ class LeftAndMain extends Controller {
 		return $this->getEditForm();
 	}
 
-	public function getEditForm($id = null) {
+	/**
+	 * Calls {@link SiteTree->getCMSFields()}
+	 * 
+	 * @param Int $id
+	 * @param FieldSet $fields
+	 * @return Form
+	 */
+	public function getEditForm($id = null, $fields = null) {
 		if(!$id) $id = $this->currentPageID();
 		
 		if(is_object($id)) {
@@ -730,7 +737,7 @@ class LeftAndMain extends Controller {
 		}
 
 		if($record) {
-			$fields = $record->getCMSFields();
+			$fields = ($fields) ? $fields : $record->getCMSFields();
 			if ($fields == null) {
 				user_error(
 					"getCMSFields() returned null  - it should return a FieldSet object. 
@@ -831,6 +838,7 @@ class LeftAndMain extends Controller {
 		$form->unsetValidator();
 		$form->addExtraClass('cms-edit-form');
 		$form->addExtraClass('root-form');
+		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		
 		return $form;
 	}
@@ -946,6 +954,7 @@ class LeftAndMain extends Controller {
 	public function myprofile() {
 		$form = $this->Member_ProfileForm();
 		return $this->customise(array(
+			'Content' => ' ',
 			'Form' => $form
 		))->renderWith('BlankPage');
 	}

@@ -7,38 +7,19 @@
 <title>$ApplicationName | $SectionTitle</title>
 </head>
 
-<body class="loading $CSSClasses">
+<body class="loading cms $CSSClasses">
 	
 	<% include CMSLoadingScreen %>
 	
-	<div class="cms-container {layout: {type: 'border'}}">
+	<div class="cms-container" data-layout="{type: 'border'}">
 
 		$Menu
 
-		<div class="cms-content center {layout: {type: 'border'}}" id="right">
-
-			<div class="cms-content-header north">
-				<h2>Section title</h2>
-				<ul>
-					<li>Tab 1</li>
-					<li>Tab 2</li>
-				</ul>
-				<div class="cms-content-search"></div>
-			</div>
-
-			<div class="cms-content-tools west">
-				$Left
-			</div>
-			
-			<div class="cms-content-form center">
-				$Right
-			</div>
-
-		</div>
+		$Content
 
 	</div>
 	
-	<div id=".cms-editor-dialogs">
+	<div id="cms-editor-dialogs">
 		<% control EditorToolbar %>
 			$ImageForm
 			$LinkForm

@@ -163,6 +163,9 @@
 						  self._loadResponse(xmlhttp.responseText, status, xmlhttp, formData);
 						}
 						
+						// Re-init tabs (in case the form tag itself is a tabset)
+						if(self.hasClass('ss-tabset')) self.removeClass('ss-tabset').addClass('ss-tabset');
+						
 						// re-select previously saved tabs
 						$.each(selectedTabs, function(i, selectedTab) {
 							self.find('#' + selectedTab.id).tabs('select', selectedTab.selected);
@@ -308,8 +311,8 @@
 						this.removeForm();
 					}
 				
-					// @todo Coupling to avoid FOUC (entwine applies to late)
-					this.find('.ss-tabset').tabs();
+					// If the form itself is a tabset, force re-rendering
+					if(this.hasClass('ss-tabset')) this.tabs('destroy').tabs();
 				
 					this._setupChangeTracker();
 			
