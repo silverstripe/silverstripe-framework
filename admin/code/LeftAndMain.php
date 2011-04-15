@@ -503,7 +503,7 @@ class LeftAndMain extends Controller {
 
 		// getChildrenAsUL is a flexible and complex way of traversing the tree
 		$titleEval = '
-			"<li id=\"record-$child->ID\" data-id=\"$child->ID\" class=\"" . $child->CMSTreeClasses($extraArg) . "\" data-hints=\"" . $child->CMSTreeHints() . "\">" .
+			"<li id=\"record-$child->ID\" data-id=\"$child->ID\" class=\"" . $child->CMSTreeClasses($extraArg) . "\">" .
 			"<ins class=\"jstree-icon\">&nbsp;</ins>" .
 			"<a href=\"" . Controller::join_links(substr($extraArg->Link(),0,-1), "show", $child->ID) . "\" title=\"' 
 			. _t('LeftAndMain.PAGETYPE','Page type: ') 
