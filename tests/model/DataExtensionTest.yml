@@ -1,4 +1,4 @@
-DataObjectDecoratorTest_RelatedObject:
+DataExtensionTest_RelatedObject:
    obj1:
       FieldOne: Obj1
    obj2:
@@ -15,10 +15,10 @@ Member:
       Groups: =>Group.admingroup
    websiteuser:
       Email: websiteuser@test.com
-DataObjectDecoratorTest_Member:
+DataExtensionTest_Member:
    member1:
       Name: Sam
       Website: http://www.example.org
-DataObjectDecoratorTest_MyObject:
+DataExtensionTest_MyObject:
    object1:
       Title: Object 1

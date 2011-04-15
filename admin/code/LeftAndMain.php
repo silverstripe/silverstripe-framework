@@ -86,7 +86,7 @@ class LeftAndMain extends Controller {
 		// cms menus only for logged-in members
 		if(!$member) return false;
 		
-		// alternative decorated checks
+		// alternative extended checks
 		if($this->hasMethod('alternateAccessCheck')) {
 			$alternateAllowed = $this->alternateAccessCheck();
 			if($alternateAllowed === FALSE) return false;
@@ -102,8 +102,8 @@ class LeftAndMain extends Controller {
 	}
 	
 	/**
-	 * @uses LeftAndMainDecorator->init()
-	 * @uses LeftAndMainDecorator->accessedCMS()
+	 * @uses LeftAndMainExtension->init()
+	 * @uses LeftAndMainExtension->accessedCMS()
 	 * @uses CMSMenu
 	 */
 	function init() {
@@ -124,7 +124,7 @@ class LeftAndMain extends Controller {
 			self::$help_link
 		);
 
-		// Allow customisation of the access check by a decorator
+		// Allow customisation of the access check by a extension
 		// Also all the canView() check to execute Director::redirect()
 		if(!$this->canView() && !$this->response->isFinished()) {
 			// When access /admin/, we should try a redirect to another part of the admin rather than be locked out

@@ -688,9 +688,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$dbConn = DB::getConn();
 			$dbName = $dbConn->currentDatabase();
 			if($dbName && DB::getConn()->databaseExists($dbName)) {
-				// Some DataObjectsDecorators keep a static cache of information that needs to 
+				// Some DataExtensions keep a static cache of information that needs to 
 				// be reset whenever the database is killed
-				foreach(ClassInfo::subclassesFor('DataObjectDecorator') as $class) {
+				foreach(ClassInfo::subclassesFor('DataExtension') as $class) {
 					$toCall = array($class, 'on_db_reset');
 					if(is_callable($toCall)) call_user_func($toCall);
 				}
@@ -709,9 +709,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$dbadmin = new DatabaseAdmin();
 			$dbadmin->clearAllData();
 			
-			// Some DataObjectsDecorators keep a static cache of information that needs to 
+			// Some DataExtensions keep a static cache of information that needs to 
 			// be reset whenever the database is cleaned out
-			foreach(array_merge(ClassInfo::subclassesFor('DataObjectDecorator'), ClassInfo::subclassesFor('DataObject')) as $class) {
+			foreach(array_merge(ClassInfo::subclassesFor('DataExtension'), ClassInfo::subclassesFor('DataObject')) as $class) {
 				$toCall = array($class, 'on_db_reset');
 				if(is_callable($toCall)) call_user_func($toCall);
 			}
