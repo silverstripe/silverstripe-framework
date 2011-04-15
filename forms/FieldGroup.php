@@ -28,7 +28,7 @@
  * 	$fields = parent::getCMSFields();
  * 	
  * 	$fields->addFieldToTab(
- * 		'Root.Content.Main', 
+ * 		'Root.Content', 
  * 		new FieldGroup(
  * 			new TimeField("StartTime","What's the start time?"),
  * 			new TimeField("EndTime","What's the end time?")

@@ -97,7 +97,7 @@ This example sets another CSS class typographybis:
 	        ...
 	        $htmleditor = new HTMLEditorField("ContentBis", "Content Bis");
 		$htmleditor->setCSSClass('typographybis');
-		$fields->addFieldToTab("Root.Content.Main", $htmleditor);
+		$fields->addFieldToTab("Root.Content", $htmleditor);
 		...
 	        return $fields;
 	}
