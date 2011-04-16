@@ -10,6 +10,8 @@
  */
 class FileIFrameField extends FileField {
 	
+	protected $template = 'FileIFrameField';
+	
 	public static $allowed_actions = array (
 		'iframe',
 		'EditFileForm',
@@ -109,7 +111,7 @@ class FileIFrameField extends FileField {
 		
 		Requirements::css('sapphire/css/FileIFrameField.css');
 		
-		return $this->renderWith('FileIFrameField');
+		return $this->renderWith($this->template);
 	}
 	
 	/**

@@ -27,6 +27,8 @@
  */
 class TabSet extends CompositeField {
 	
+	protected $template = "TabSetFieldHolder";
+	
 	/**
 	 * @param string $name Identifier
 	 * @param string $title (Optional) Natural language title of the tabset
@@ -80,7 +82,7 @@ class TabSet extends CompositeField {
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
 		
-		return $this->renderWith("TabSetFieldHolder");
+		return $this->renderWith($this->template);
 	}
 	
 	/**
