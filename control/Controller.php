@@ -76,8 +76,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			$member = Member::currentUser();
 			if($member) {
 				if(!headers_sent()) Cookie::set("PastMember", true, 90, null, null, false, true);
-				DB::query("UPDATE \"Member\" SET \"LastVisited\" = " . DB::getConn()->now()
-					. " WHERE \"ID\" = $member->ID", null);
+				DB::query("UPDATE \"Member\" SET \"LastVisited\" = '" . Convert::raw2sql(SS_Datetime::now()->Rfc2822())
+					. "' WHERE \"ID\" = $member->ID", null);
 			}
 		}
 		

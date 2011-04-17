@@ -15,6 +15,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'RememberLoginToken' => 'Varchar(160)', // Note: this currently holds a hash, not a token.
 		'NumVisit' => 'Int',
 		'LastVisited' => 'SS_Datetime',
+		'LastLoggedOut' => 'SS_Datetime',
 		'Bounced' => 'Boolean', // Note: This does not seem to be used anywhere.
 		'AutoLoginHash' => 'Varchar(160)',
 		'AutoLoginExpired' => 'SS_Datetime',
@@ -421,6 +422,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$this->extend('memberLoggedOut');
 
 		$this->RememberLoginToken = null;
+		$this->LastLoggedOut = SS_Datetime::now()->Rfc2822();
+
 		Cookie::set('alc_enc', null);
 		Cookie::forceExpiry('alc_enc');
 
