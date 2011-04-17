@@ -36,7 +36,7 @@
 			</label>
 		</div>
 
-		<div id="sitetree" data-url-tree="$Link(getsubtree)" data-url-savetreenode="$Link(savetreenode)" class="jstree jstree-apple">
+		<div data-url-tree="$Link(getsubtree)" data-url-savetreenode="$Link(savetreenode)" class="cms-tree jstree jstree-apple">
 			$SiteTreeAsUL
 		</div>
 		

@@ -40,7 +40,7 @@
 		
 				Observable.applyTo(this[0]);
 		
-				var tree = $('#sitetree');
+				var tree = $('.cms-tree');
 				this.setTree(tree);
 				
 				// Event bindings

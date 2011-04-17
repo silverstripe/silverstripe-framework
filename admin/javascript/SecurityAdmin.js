@@ -12,7 +12,7 @@
 			if(memberTableField) memberTableField.refresh();
 			
 			// Refresh tree
-			var tree = $(window.parent.document).find('#sitetree').get(0);
+			var tree = $(window.parent.document).find('.cms-tree').get(0);
 			if(tree) tree.reload();
 		}
 	};

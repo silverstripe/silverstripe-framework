@@ -6,7 +6,7 @@
 	
 	$.entwine('ss', function($){
 	
-		$('#sitetree').entwine({
+		$('.cms-tree').entwine({
 			onmatch: function() {
 				this._super();
 				
@@ -264,7 +264,7 @@
 		});
 	});
 	
-	$('#sitetree.multiple').entwine({
+	$('.cms-tree.multiple').entwine({
 		onmatch: function() {
 			this._super();
 			
@@ -286,7 +286,7 @@
 		}
 	});
 	
-	$('#sitetree li').entwine({
+	$('.cms-tree li').entwine({
 		
 		/**
 		 * Function: setEnabled
