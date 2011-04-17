@@ -850,18 +850,17 @@ class LeftAndMain extends Controller {
 		$class = $this->stat('tree_class');
 		
 		$typeMap = array($class => singleton($class)->i18n_singular_name());
-		$typeField = new DropdownField('Type', false, $typeMap, $class);
 		$form = new Form(
 			$this,
 			'AddForm',
 			new FieldSet(
-				new HiddenField('ParentID'),
-				$typeField->performReadonlyTransformation()
+				new HiddenField('ParentID')
 			),
 			new FieldSet(
-				new FormAction('doAdd', _t('AssetAdmin_left.ss.GO','Go'))
+				$addAction = new FormAction('doAdd', _t('AssetAdmin_left.ss.GO','Go'))
 			)
 		);
+		$addAction->addExtraClass('ss-ui-action-constructive');
 		$form->addExtraClass('actionparams');
 		$form->addExtraClass('add-form');
 		

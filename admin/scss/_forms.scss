@@ -15,8 +15,18 @@
 		background: #fff url(../../images/network-save.gif) no-repeat center left;
 	}
 	
+	// Buttons
+	
+	.ui-state-default.ss-ui-action-constructive {
+		@include linear-gradient(color-stops(#77b53f, #0c8a44));
+		color: white;
+	}
+	
+	.ui-state-default.ss-ui-action-destructive {
+		color: red;
+	}
+	
 	.edit-form {
-
 		padding-bottom: 20px;
 
 		// Hide first level tabs for CMS, see CMSEditForm.ss
