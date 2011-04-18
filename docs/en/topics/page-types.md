@@ -12,15 +12,10 @@ when the form is submitted
 All the pages on the base installation are of the page type "Page". See
 [tutorial:2-extending-a-basic-site](/tutorials/2-extending-a-basic-site) for a good introduction to page-types.
 
+## Page type templates
+
 Each page type on your website is a sub-class of the SiteTree class. Usually, you’ll define a class called ‘Page’
-and use this template to lay out the basic design elements that don’t change. Take a look at mysite/templates/Page.ss.
-It contains standard HTML markup, with some differences. We’ll go over these later, but for now, you can see that this
-file only generates some of the content – it sets up the `<html>` tags, deals with the `<head>` section, creates the
-first-level navigation, and then closes it all off again. See $Layout? That’s what is doing most of the work when you
-visit a page. Now take a look at `mysite/templates/Layout/Page.ss`. This as you can see has a lot more markup in it –
-it’s what is included into $Layout when the ‘Page’ page type is rendered. Similarly,
-`mysite/templates/Layout/HomePage.ss` would be rendered into $Layout when the ‘HomePage’ page type is selected for the
-current page you’re viewing.
+and use this template to lay out the basic design elements that don’t change. 
 
 Why do we sub-class Page for everything? The easiest way to explain this is to use the example of a search form. If we
 create a search form on the Page class, then any other sub-class can also use it in their templates. This saves us
@@ -42,6 +37,18 @@ introduction to PHP classes](http://www-128.ibm.com/developerworks/opensource/li
 We put the Page class into a file called Page.php inside `mysite/code`. We also put Page_Controller in here. Any other
 classes that are based on Page – for example, the class Page_AnythingElse will also go into Page.php. Likewise, the
 StaffPage_Image class will go into StaffPage.php.
+
+## Templates
+
+Take a look at mysite/templates/Page.ss. It contains standard HTML markup, with some differences. We’ll go over
+these later, but for now, you can see that this file only generates some of the content – it sets up the 
+`<html>` tags, deals with the `<head>` section, creates the first-level navigation, and then closes it all off again. 
+See $Layout? That’s what is doing most of the work when you visit a page. Now take a look at `mysite/templates/Layout/Page.ss`. 
+This as you can see has a lot more markup in it – it’s what is included into $Layout when the ‘Page’ page type is rendered. 
+Similarly, `mysite/templates/Layout/HomePage.ss` would be rendered into $Layout when the ‘HomePage’ page type is selected for the
+current page you’re viewing.
+
+See the [Page Type Templates](/topics/page-type-templates) page for more information.
 
 ## Adding database-fields
 
