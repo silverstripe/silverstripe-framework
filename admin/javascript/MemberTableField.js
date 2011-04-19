@@ -307,14 +307,7 @@ MemberFilterButton.prototype = {
     		}
     		updateURL += ($('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '');
 
-    		new Ajax.Updater( fieldID, updateURL, {
-    			onComplete: function() {
-    			    Behaviour.apply($(fieldID), true);
-    			},
-    			onFailure: function( response ) {
-    				errorMessage('Could not filter results: ' + response.responseText );
-    			}
-    		});
+    		jQuery($(fieldID)).get(updateURL, null, function() {Behaviour.apply($(fieldID), true);});
 		} catch(er) {
 			errorMessage('Error searching');
 		}
@@ -346,12 +339,10 @@ function ajaxSubmitFieldSet(href, fieldSet, extraData) {
 		'method' : 'post', 
 		'data' : data,
 		'success' : function(response) {
-			//alert(response.responseText);
-			Ajax.Evaluator(response);
+			eval(response);
 		},
 		'error' : function(response) {
 			alert(response.responseText);
-			//errorMessage('Error: ', response);
 		}
 	});
 }
