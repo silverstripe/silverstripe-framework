@@ -767,12 +767,8 @@ class ModelAdmin_CollectionController extends Controller {
 			$this,
 			'ResultsForm',
 			new FieldSet(
-				new TabSet('Root',
-					new Tab('SearchResults',
-						_t('ModelAdmin.SEARCHRESULTS','Search Results'),
-						$tf
-					)
-				)
+				new HeaderField('SearchResults', _t('ModelAdmin.SEARCHRESULTS','Search Results'), 2),
+				$tf
 			),
 			new FieldSet()
 		);
