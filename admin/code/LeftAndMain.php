@@ -454,7 +454,7 @@ class LeftAndMain extends Controller {
 
 	public function getRecord($id) {
 		$className = $this->stat('tree_class');
-		if($id instanceof $className) {
+		if($className && $id instanceof $className) {
 			return $id;
 		} else if(is_numeric($id)) {
 			return DataObject::get_by_id($className, $id);
@@ -764,7 +764,7 @@ class LeftAndMain extends Controller {
 				$actions = $record->getCMSActions();
 				// add default actions if none are defined
 				if(!$actions || !$actions->Count()) {
-					if($record->canEdit()) {
+					if($record->hasMethod('canEdit') && $record->canEdit()) {
 						$actions->push(new FormAction('save',_t('CMSMain.SAVE','Save')));
 					}
 				}
@@ -794,7 +794,7 @@ class LeftAndMain extends Controller {
 				$form->unsetValidator();
 			}
 		
-			if(!$record->canEdit()) {
+			if($record->hasMethod('canEdit') && !$record->canEdit()) {
 				$readonlyFields = $form->Fields()->makeReadonly();
 				$form->setFields($readonlyFields);
 			}
