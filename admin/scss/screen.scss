@@ -11,9 +11,7 @@
 @import "compass/css3";
 @import "compass/utilities/sprites/sprite-img";
 
-// colour definitions
-$widget-bg: #eef2f3;
-
+@import "colours.scss";
 @import "layout.scss";
 @import "tree.scss";
 @import "menu.scss";

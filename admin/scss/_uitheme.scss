@@ -6,29 +6,29 @@
  * This file should be fairly short, as we're using our own custom jQuery UI theme already.
  * TODO Add theme reference
  * 
- * Use _style.scss to add more generic style information.
+ * Use _style.scss to add more generic style information,
+ * and read the jQuery UI theming API: http://jqueryui.com/docs/Theming/API
  */
 
-.cms {
-	.ui-widget-content {
-		background-color: $widget-bg;
-	}
-	
+.cms {	
 	.ui-tabs {
 		padding: 0
 	}
 	
-	.ui-widget-content {
+	.ui-widget-content,
+	.ui-tabs .ui-tabs-panel {
+		color: $color-text;
+		font-size: 1em;
 		border: 0;
-		background-color: #eef2f3;
-	}
-	
-	.cms-content-header .ui-widget-content {
-		background: none;
+		background: none; // avoid overwritten background properties from jQuery UI
 	}
 	
 	.ui-widget-header {
 		background: none;
 		border: 0;
+	}
+	
+	.ss-ui-button {
+		padding: 5px;
 	}
 }

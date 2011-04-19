@@ -1,0 +1,42 @@
+/**
+ * This file only contains color definitions.
+ * Please put any further formatting into _style.scss.
+ */
+
+// colour definitions
+$color-base: #B0BFC6;
+$color-widget-bg: lighten($color-base, 20%);
+$color-dark-bg: #003050;
+$color-shadow-light: #aaa;
+$color-shadow-dark: #333;
+$color-menu-button: #338DC1; // darkened and desaturated as required
+$color-text: #444;
+$color-text-light: white;
+$color-text-light-link: white;
+$color-text-dark: #333;
+$color-text-dark-link: #3EBAE0;
+$color-button-constructive: #77b53f;
+$color-button-destructive: #f00;
+$color-warning: #FF9300;
+$color-error: #FF9300;
+$color-notice: #FF9300;
+
+/*
+// simple grayscale theme
+$color-base: grayscale(#B0BFC6);
+$color-widget-bg: grayscale(lighten($color-base, 20%));
+$color-dark-bg: grayscale(#003050);
+$color-shadow-light: grayscale(#aaa);
+$color-shadow-dark: grayscale(#333);
+$color-menu-button: grayscale(#338DC1); 
+$color-text: grayscale(#444);
+$color-text-light: white;
+$color-text-light-link: white;
+$color-text-dark: grayscale(#333);
+$color-text-dark-link: grayscale(#3EBAE0);
+$color-button-constructive: grayscale(#77b53f);
+$color-button-destructive: grayscale(#f00);
+$color-warning: grayscale(#FF9300);
+$color-error: grayscale(#FF9300);
+$color-notice: grayscale(#FF9300);
+*/

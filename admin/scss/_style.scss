@@ -7,18 +7,19 @@
  * like '.cms-container' or '.cms-header' in here, use the _layout.scss file instead.
  * 
  * Use SCSS variable definitions in screen.css to avoid repeating styles like background colours
- * or padding dimensions. 
+ * or padding dimensions. See _colours.scss to get started.
  * 
  * To avoid this file getting too large and complicated, it is encouraged to create new SCSS files
  * for larger components like the CMS menu or tree (see _tree.scss and _menu.scss).
  */
 
-// main styles
+// ######################### Base styles #########################
 
 body {
 	@include global-reset;
 	font-size: 13px;
 	font-family: Verdana, Arial, sans-serif;
+	color: $color-text;
 }
 
 body * {
@@ -29,9 +30,13 @@ body .ui-widget {
 	font-size: 1em;
 }
 
+// ######################### Misc Panels #########################
+
 .cms-content-header {
-	background-color: #a0b2be;
-	@include linear-gradient(color-stops(#abbbc4, #93a8b6));
+	@include linear-gradient(color-stops(
+		darken($color-widget-bg, 20%),
+		darken($color-widget-bg, 30%)
+	));
 	
 	h2 {
 		float: left;
@@ -42,7 +47,10 @@ body .ui-widget {
 	
 	.cms-content-header-tabs {
 		float: left;
-		margin-top: 8px; // TODO Ingo is too dumb to do bottom vertical position
+	}
+	
+	.ui-tabs-nav li {
+		height: 40px;
 	}
 	
 	.cms-content-header-actions {
@@ -51,18 +59,21 @@ body .ui-widget {
 }
 
 .cms-content-tools {
-	background-color: #c6d7df;
+	background-color: darken($color-widget-bg, 5%);
 }
 
-// header and logo
+// ######################### Header and Logo #########################
 
 .cms-header {
 	padding: 10px;
-	background-color: #002a43;
-	@include linear-gradient(color-stops(#002236, #003050, #002236));
+	@include linear-gradient(color-stops(
+		darken($color-dark-bg, 10%), 
+		$color-dark-bg, 
+		darken($color-dark-bg, 10%)
+	));
 	
 	* {
-		color: white;
+		color: $color-text-light;
 	}
 }
 
@@ -73,7 +84,7 @@ body .ui-widget {
 	} 
 	
 	* {
-		color: #3ebae0;
+		color: $color-text-dark-link;
 	}
 	
 	a {
@@ -100,7 +111,7 @@ body .ui-widget {
 	}
 }
 
-// loading screen
+// ######################### Loading Screen #########################
 
 .ss-loading-screen, 
 .ss-loading-screen .loading-logo {
@@ -108,6 +119,7 @@ body .ui-widget {
 	height: 100%;
 	overflow: hidden;
 	position: absolute;
+	// TODO Convert to compass gradient include
 	background: #fff;
 	background: -moz-radial-gradient(50% 50% 180deg, circle cover, #FFFFFF, #EFEFEF, #C7C7C7 100%);
 	background: -webkit-gradient(radial, 50% 50%, 350, 50% 50%, 0, from(#E3E3E3), to(white));
@@ -135,15 +147,7 @@ body .ui-widget {
 			padding: 10px 20px;
 			color: #dc7f00;
 			border: none;
-
-			-moz-border-radius: 5px;
-			-webkit-border-radius: 5px;
-			-o-border-radius: 5px;
-
-			-moz-box-shadow: 1px 1px 15px rgba(0,0,0, 0.1);
-			-webkit-box-shadow: 1px 1px 15px rgba(0,0,0, 0.1);
-			-o-box-shadow: 1px 1px 15px rgba(0,0,0, 0.1);
-			box-shadow: 1px 1px 15px rgba(0,0,0, 0.1);
+			@include border-radius(5px);
 		}
 	}
 	
@@ -152,5 +156,50 @@ body .ui-widget {
 		position: absolute;
 		left: 49%;
 		top: 75%;
+	}
+}
+
+// ######################### Actions #########################
+
+.cms-content-actions {
+	
+}
+
+// ######################### Messages #########################
+
+/**
+ * Messages (see sapphire/css/Form.css)
+ */
+.message {
+	margin: 1em 0;
+	padding: 0.5em;
+	font-weight: bold;
+	border: 1px black solid;
+	
+	&.notice {
+		background-color: lighten($color-notice, 20%);
+		border-color: $color-notice;
+	}
+	
+	&.warning {
+		background-color: lighten($color-warning, 20%);
+		border-color: $color-warning;
+	}
+	&.error {
+		background-color: lighten($color-error, 20%);
+		border-color: $color-error;
+	}
+}
+
+// ######################### ModelAdmin #########################
+
+.ModelAdmin {
+	.cms-content-tools {
+		width: 300px;
+	}
+	
+	// Disable by default, will be replaced by more intuitive column selection in new data grid
+	.ResultAssemblyBlock {
+		display: none;
 	}
 }

@@ -6,33 +6,70 @@
 	
 	// Form fields
 	
+	.field {
+		display: block;
+		padding: 10px 0;
+		border-bottom: 1px solid $color-shadow-light;
+		
+		label {
+			float: left;
+			width: 10em;
+		}
+		
+		// Don't float inner/contained fields
+		.middleColumn {
+			margin-left: 10em;
+			
+			.field {
+				display: inline;
+				padding: 0;
+				border: none;
+			}
+
+			label {
+				float: none;
+				width: auto;
+			}
+		}
+		
+	}
+	
 	input, textarea {
-		background-color: #f9f9f9;
+		@include border-radius(5px);
+		@include linear-gradient(color-stops(
+			$color-widget-bg, 
+			lighten($color-widget-bg, 10%), 
+			$color-widget-bg
+		));
+		border: 1px solid $color-shadow-light;
+		padding: 3px;
 	}
 	
 	input.loading {
 		padding-left: 16px;
-		background: #fff url(../../images/network-save.gif) no-repeat center left;
+		background: $color-widget-bg url(../../images/network-save.gif) no-repeat center left;
 	}
 	
 	// Buttons
-	
-	.ui-state-default.ss-ui-action-constructive {
-		@include linear-gradient(color-stops(#77b53f, #0c8a44));
-		color: white;
+	.ss-ui-action-constructive,
+	.ui-widget-content .ss-ui-action-constructive,
+	.ui-widget-header .ss-ui-action-constructive {
+		background: none; // avoid overwritten gradient from jQuery UI styles
+		@include linear-gradient(color-stops(
+			$color-button-constructive, 
+			darken($color-button-constructive, 20%)
+		));
+		color: $color-text-light;
 	}
 	
-	.ui-state-default.ss-ui-action-destructive {
-		color: red;
+	.ss-ui-action-destructive,
+	.ui-widget-content .ss-ui-action-destructive,
+	.ui-widget-header .ss-ui-action-destructive {
+		color: $color-button-destructive;
 	}
 	
-	.edit-form {
+	.cms-edit-form {
 		padding-bottom: 20px;
-
-		// Hide first level tabs for CMS, see CMSEditForm.ss
-		& > fieldset > .ss-tabset > ul {
-			display: none;
-		} 
 
 		// TODO Unclear if "button bar" concept is edit form specific
 		.Actions {

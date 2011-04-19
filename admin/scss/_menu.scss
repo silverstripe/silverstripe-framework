@@ -1,7 +1,7 @@
 .cms-menu {
 	z-index: 10;
-	background-color: #b0bfc6;
-	@include box-shadow(#aaa, 3px, 0, 3px);
+	background-color: $color-widget-bg;
+	@include box-shadow($color-shadow-light, 3px, 0, 3px);
 	
 	a {
 		text-decoration: none;
@@ -10,18 +10,20 @@
 
 .cms-menu-list {
 	li {
-		background-color: #afbdc6;
-		@include linear-gradient(color-stops(#afbdc6, #8ea4b2));
-		border-bottom: 1px solid #aaa;
+		@include linear-gradient(color-stops(
+			$color-base,
+			darken($color-base, 20%)
+		));
+		border-bottom: 1px solid $color-shadow-light;
 		
 		a {
 			display: block;
 			height: 32px;
 			vertical-align: middle;
 			font-size: 14px;
-			@include text-shadow(#ddd);
-			color: #333;
-			margin: 5px;
+			@include text-shadow($color-shadow-light);
+			color: $color-text-dark;
+			padding: 5px;
 			
 			.icon {
 				display: block;
@@ -38,27 +40,38 @@
 		}
 		
 		&.current {
-			background-color: #338dc1;
-			@include linear-gradient(color-stops(#338dc1, #338dc1));
-			@include box-shadow(#333, 0, 4px, 4px);
+			@include linear-gradient(color-stops(
+				$color-menu-button, 
+				darken($color-menu-button, 20%)
+			));
+			
+			li {
+				@include linear-gradient(color-stops(
+					darken($color-menu-button, 5%),
+					darken($color-menu-button, 10%)
+				));
+			}
 			
 			a {
-				color: white;
-				@include text-shadow(#333);
+				color: $color-text-light;
+				@include text-shadow($color-shadow-dark);
 			}
 		}
 		
 		// nested elements
 		li {
-			background-color: #1d76ae;
-			@include linear-gradient(color-stops(#1d76ae, #1d76ae));
+		
+			
+			&:first {
+				@include box-shadow($color-shadow-dark, 0, 4px, 4px);
+			}
 			
 			a {
 				font-size: 12px;
-				@include text-shadow(#333);
+				@include text-shadow($color-shadow-dark);
 				margin: 0;
 				padding-left: 30px;
-				color: white;
+				color: $color-text-light;
 			}
 			
 			&.current a {
