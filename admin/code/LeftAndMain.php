@@ -205,7 +205,6 @@ class LeftAndMain extends Controller {
 
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/json-js/json2.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-metadata/jquery.metadata.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/jquery-fitheighttoparent/jquery.fitheighttoparent.js');
 		
 		// entwine
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
