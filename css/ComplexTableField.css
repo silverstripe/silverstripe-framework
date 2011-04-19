@@ -5,8 +5,6 @@
  	top: 0;
 	font-size : 14px;
 	font-weight : bold;
-	color: white;
-	background: #0075C9 url(../images/textures/obar.gif) 0px 0px repeat-x !important;
 	height : 22px !important;
 }
 
@@ -17,7 +15,6 @@
 #GB_close {
 	padding: 2px 5px 0 0;
 	float: right;
-	color: #fff;
 	font-size: 11px;
 }
 
