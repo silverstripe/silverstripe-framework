@@ -601,6 +601,21 @@ class LeftAndMain extends Controller {
 		
 		return $form->formHtmlContent();
 	}
+	
+	public function delete($data, $form) {
+		$className = $this->stat('tree_class');
+		
+		$record = DataObject::get_by_id($className, Convert::raw2sql($data['ID']));
+		if($record && !$record->canDelete()) return Security::permissionFailure();
+		
+		$record->delete();
+		
+		if($this->isAjax()) {
+			return $this->EmptyForm()->formHtmlContent();
+		} else {
+			$this->redirectBack();
+		}
+	}
 
 	/**
 	 * Update the position and parent of a tree node.
@@ -764,8 +779,13 @@ class LeftAndMain extends Controller {
 				$actions = $record->getCMSActions();
 				// add default actions if none are defined
 				if(!$actions || !$actions->Count()) {
+					if($record->hasMethod('canDelete') && $record->canDelete()) {
+						$actions->push($deleteAction = new FormAction('delete',_t('ModelAdmin.DELETE','Delete')));
+						$deleteAction->addExtraClass('ss-ui-action-destructive');
+					}
 					if($record->hasMethod('canEdit') && $record->canEdit()) {
-						$actions->push(new FormAction('save',_t('CMSMain.SAVE','Save')));
+						$actions->push($saveAction = new FormAction('save',_t('CMSMain.SAVE','Save')));
+						$saveAction->addExtraClass('ss-ui-action-constructive');
 					}
 				}
 			}
