@@ -124,27 +124,6 @@
 								}
 							}
 						})
-						// TODO Move to EditForm logic
-						.bind('select_node.jstree', function(e, data) {
-							var node = data.rslt.obj, loadedNodeID = $('.edit-form :input[name=ID]').val()
-							
-							// Don't allow checking disabled nodes
-							if($(node).hasClass('disabled')) return false;
-
-							// Don't allow reloading of currently selected node,
-							// mainly to avoid doing an ajax request on initial page load
-							if($(node).data('id') == loadedNodeID) return;
-
-							var url = $(node).find('a:first').attr('href');
-							if(url && url != '#') {
-								var xmlhttp = $('.edit-form').loadForm(
-									url,
-									function(response) {}
-								);
-							} else {
-								$('.edit-form').removeForm();
-							}
-						})
 						.bind('move_node.jstree', function(e, data) {
 							var movedNode = data.rslt.o, newParentNode = data.rslt.np, oldParentNode = data.inst._get_parent(movedNode);
 							var siblingIDs = $.map($(movedNode).siblings().andSelf(), function(el) {
