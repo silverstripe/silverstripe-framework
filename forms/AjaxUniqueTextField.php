@@ -21,6 +21,8 @@ class AjaxUniqueTextField extends TextField {
 		
 		$this->restrictedTable = $restrictedTable;
 
+
+                // We kinda need the ID of the page or DataObject, to exclude it in the validator function. Haven't found a better method yet.
                 $this->id = $id;
 		
 		$this->validateURL = $validationURL;
@@ -110,7 +112,9 @@ JS;
 	}
 
 function validate( $validator ) {
-
+                // Excluding the ID of the DataObject from the query, so the AjaxUnique is actually unique on this DataObject.
+                // Without excluding the ID itself, the count will always return 1 if the field itself hasn't changed. This means a "Not unique", even though it is.
+                // First thought was to make the result > 1, but that won't work sadly.
                 $result = DB::query(sprintf(
 			"SELECT COUNT(*) FROM \"%s\" WHERE \"%s\" = '%s' AND ID != '%d'",
 			$this->restrictedTable,
