@@ -289,7 +289,7 @@ function encodeMultipart($parts, $contentType, $headers = false) {
  */
 function wrapImagesInline($htmlContent) {
 	global $_INLINED_IMAGES;
-	$_INLINED_IMAGES = null;
+	$_INLINED_IMAGES = array();
 	
 	$replacedContent = imageRewriter($htmlContent, 'wrapImagesInline_rewriter($URL)');
 	
@@ -301,8 +301,8 @@ function wrapImagesInline($htmlContent) {
 	
 	// Make all the image parts		
 	global $_INLINED_IMAGES;
-	foreach($_INLINED_IMAGES as $url => $cid) {
-		$multiparts[] = encodeFileForEmail($url, false, "inline", "Content-ID: <$cid>\n");		
+	if($_INLINED_IMAGES) foreach($_INLINED_IMAGES as $url => $cid) {
+		$multiparts[] = encodeFileForEmail(BASE_PATH . '/' . $url, false, "inline", "Content-ID: <$cid>\n");		
 	}
 
 	// Merge together in a multipart
@@ -310,10 +310,10 @@ function wrapImagesInline($htmlContent) {
 	return processHeaders($headers, $body);
 }
 function wrapImagesInline_rewriter($url) {
-	$url = relativiseURL($url);
+	$url = Director::makeRelative($url);
 	
 	global $_INLINED_IMAGES;
-	if(!$_INLINED_IMAGES[$url]) {
+	if(!isset($_INLINED_IMAGES[$url])) {
 		$identifier = "automatedmessage." . rand(1000,1000000000) . "@silverstripe.com";
 		$_INLINED_IMAGES[$url] = $identifier;
 	}
@@ -382,6 +382,7 @@ function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $
 		$file = array('filename' => $file);
 		$fh = fopen($file['filename'], "rb");
 		if ($fh) {
+			$file['contents'] = "";
 			while(!feof($fh)) $file['contents'] .= fread($fh, 10000);	
 			fclose($fh);
 		}
@@ -391,12 +392,12 @@ function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $
 	if(!$destFileName) $base = basename($file['filename']);
 	else $base = $destFileName;
 
-	$mimeType = $file['mimetype'] ? $file['mimetype'] : HTTP::get_mime_type($file['filename']);
+	$mimeType = !empty($file['mimetype']) ? $file['mimetype'] : HTTP::get_mime_type($file['filename']);
 	if(!$mimeType) $mimeType = "application/unknown";
 	if (empty($disposition)) $disposition = isset($file['contentLocation']) ? 'inline' : 'attachment';
 	
 	// Encode for emailing
-	if (substr($file['mimetype'], 0, 4) != 'text') {
+	if (substr($mimeType, 0, 4) != 'text') {
 		$encoding = "base64";
 		$file['contents'] = chunk_split(base64_encode($file['contents']));
 	} else {
