@@ -14,12 +14,14 @@ class AjaxUniqueTextField extends TextField {
 	
 	protected $restrictedRegex;
 	
-	function __construct($name, $title, $restrictedField, $restrictedTable, $value = "", $maxLength = null, $validationURL = null, $restrictedRegex = null ){
+	function __construct($name, $title, $restrictedField, $restrictedTable, $id, $value = "", $maxLength = null, $validationURL = null, $restrictedRegex = null ){
 		$this->maxLength = $maxLength;
 		
 		$this->restrictedField = $restrictedField;
 		
 		$this->restrictedTable = $restrictedTable;
+
+                $this->id = $id;
 		
 		$this->validateURL = $validationURL;
 		
@@ -107,16 +109,17 @@ JS;
 
 	}
 
-	function validate( $validator ) {
-		
-		$result = DB::query(sprintf(
-			"SELECT COUNT(*) FROM \"%s\" WHERE \"%s\" = '%s'",
+function validate( $validator ) {
+
+                $result = DB::query(sprintf(
+			"SELECT COUNT(*) FROM \"%s\" WHERE \"%s\" = '%s' AND ID != '%d'",
 			$this->restrictedTable,
 			$this->restrictedField,
-			Convert::raw2sql($this->value)
+			Convert::raw2sql($this->value),
+                        $this->id
 		))->value();
 
-		if( $result && ( $result > 0 ) ) {
+                if( $result && ( $result > 0 ) ) {
 			$validator->validationError( $this->name, _t('Form.VALIDATIONNOTUNIQUE', "The value entered is not unique") );
 			return false;
 		}
