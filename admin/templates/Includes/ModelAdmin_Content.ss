@@ -1,7 +1,9 @@
 <div class="cms-content center" data-layout="{type: 'border'}">
 
 	<div class="cms-content-header north">
-		<h2><% _t('ModelAdmin.Title', 'My Model') %></h2>
+		<div>
+			<h2><% _t('ModelAdmin.Title', 'My Model') %></h2>
+		</div>
 	</div>
 
 

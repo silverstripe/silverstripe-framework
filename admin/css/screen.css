@@ -46,15 +46,19 @@ html, body { width: 100%; height: 100%; padding: 0; margin: 0; overflow: hidden;
 .cms-content-form { overflow: auto; }
 
 /* line 46, ../scss/_layout.scss */
-.cms-content-header { height: 40px; overflow: hidden; }
+.cms-content-header { height: 40px; }
+/* line 49, ../scss/_layout.scss */
+.cms-content-header h2 { width: 226px; }
+/* line 53, ../scss/_layout.scss */
+.cms-content-header > div { width: 9999em; overflow: hidden; }
 
-/* line 51, ../scss/_layout.scss */
+/* line 59, ../scss/_layout.scss */
 .cms-content-actions { padding: 10px; }
 
-/* line 55, ../scss/_layout.scss */
+/* line 63, ../scss/_layout.scss */
 .cms-logo { height: 30px; overflow: hidden; vertical-align: middle; }
 
-/* line 61, ../scss/_layout.scss */
+/* line 69, ../scss/_layout.scss */
 .cms-login-status { height: 30px; overflow: hidden; vertical-align: middle; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
@@ -237,7 +241,7 @@ li.jstree-closed > ul { display: none; }
 /* line 19, ../scss/_menu.scss */
 .cms-menu-list li a { display: block; height: 32px; vertical-align: middle; font-size: 14px; text-shadow: #aaaaaa 1px 1px 1px; color: #333333; padding: 5px; }
 /* line 28, ../scss/_menu.scss */
-.cms-menu-list li a .icon { display: block; float: left; margin-right: 5px; background: url('../images/icons-32.png?1303211593') no-repeat; width: 32px; height: 32px; overflow: hidden; background-position: 0px 0px; }
+.cms-menu-list li a .icon { display: block; float: left; margin-right: 5px; background: url('../images/icons-32.png?1303452911') no-repeat; width: 32px; height: 32px; overflow: hidden; background-position: 0px 0px; }
 /* line 36, ../scss/_menu.scss */
 .cms-menu-list li a .text { display: block; padding-top: 10px; }
 /* line 42, ../scss/_menu.scss */
@@ -273,17 +277,23 @@ li.jstree-closed > ul { display: none; }
 /* line 29, ../scss/_forms.scss */
 .cms .field .middleColumn label { float: none; width: auto; }
 /* line 37, ../scss/_forms.scss */
+.cms .field.nolabel .middleColumn { margin-left: 0; }
+/* line 42, ../scss/_forms.scss */
 .cms input, .cms textarea { -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; -ms-border-radius: 5px; -khtml-border-radius: 5px; border-radius: 5px; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #ebeff1), color-stop(50%, #ffffff), color-stop(100%, #ebeff1)); background-image: -moz-linear-gradient(top, #ebeff1 0%, #ffffff 50%, #ebeff1 100%); background-image: linear-gradient(top, #ebeff1 0%, #ffffff 50%, #ebeff1 100%); border: 1px solid #aaaaaa; padding: 3px; }
-/* line 48, ../scss/_forms.scss */
+/* line 53, ../scss/_forms.scss */
 .cms input.loading { padding-left: 16px; background: #ebeff1 url(../../images/network-save.gif) no-repeat center left; }
-/* line 56, ../scss/_forms.scss */
+/* line 61, ../scss/_forms.scss */
 .cms .ss-ui-action-constructive, .cms .ui-widget-content .ss-ui-action-constructive, .cms .ui-widget-header .ss-ui-action-constructive { background: none; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #77b53f), color-stop(100%, #456925)); background-image: -moz-linear-gradient(top, #77b53f 0%, #456925 100%); background-image: linear-gradient(top, #77b53f 0%, #456925 100%); color: white; }
-/* line 67, ../scss/_forms.scss */
+/* line 72, ../scss/_forms.scss */
 .cms .ss-ui-action-destructive, .cms .ui-widget-content .ss-ui-action-destructive, .cms .ui-widget-header .ss-ui-action-destructive { color: red; }
-/* line 71, ../scss/_forms.scss */
+/* line 76, ../scss/_forms.scss */
 .cms .cms-edit-form { padding-bottom: 20px; }
-/* line 75, ../scss/_forms.scss */
+/* line 80, ../scss/_forms.scss */
 .cms .cms-edit-form .Actions { text-align: right; }
+/* line 87, ../scss/_forms.scss */
+.cms .cms-content-tools .field label { float: none; width: auto; }
+/* line 92, ../scss/_forms.scss */
+.cms .cms-content-tools .field .middleColumn { margin-left: 0; }
 
 /** This file defines CMS-specific customizations to the jQuery UI theme. Every rule in this file should be wrapped in the '.cms' selector (to make it more specific), and contain ONLY overwritten jQuery UI rules (with 'ui-' prefix).  This file should be fairly short, as we're using our own custom jQuery UI theme already. TODO Add theme reference  Use _style.scss to add more generic style information, and read the jQuery UI theming API: http://jqueryui.com/docs/Theming/API */
 /* line 14, ../scss/_uitheme.scss */

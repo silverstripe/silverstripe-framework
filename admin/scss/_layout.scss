@@ -45,7 +45,15 @@ html, body {
 
 .cms-content-header {
 	height: 40px;
-	overflow: hidden;
+	
+	h2 {
+		width: 250px - (10px*2) /* padding */ - 4px /* em adjustment hacketyhack */;
+	}
+	
+	& > div {
+		width: 9999em;
+		overflow: hidden;
+	}
 }
 
 .cms-content-actions {
