@@ -485,7 +485,8 @@ class LeftAndMain extends Controller {
 		if (!$numChildrenMethod) $numChildrenMethod = 'numChildren';
 		
 		// Get the tree root
-		$obj = $rootID ? $this->getRecord($rootID) : singleton($className);
+		$record = ($rootID) ? $this->getRecord($rootID) : null;
+		$obj = $record ? $record : singleton($className);
 		
 		// Mark the nodes of the tree to return
 		if ($filterFunction) $obj->setMarkingFilterFunction($filterFunction);
