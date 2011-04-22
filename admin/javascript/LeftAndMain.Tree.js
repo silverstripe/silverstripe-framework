@@ -109,8 +109,8 @@
 						})
 						.bind('before.jstree', function(e, data) {
 							if(data.func == 'start_drag') {
-								// Only allow drag'n'drop if it has been specifically enabled, or the tree is in search mode
-								if(!$('input[id=sortitems]').is(':checked') || self.data('searchparams')) {
+								// Don't allow drag'n'drop if multi-select is enabled'
+								if(!self.hasClass('draggable') || self.hasClass('multiselect')) {
 									e.stopImmediatePropagation();
 									return false;
 								}
@@ -295,6 +295,17 @@
 		 */
 		getID: function() {
 			return this.data('id');
+		}
+	});
+	
+	$('.cms-tree-tools :input[name=view-mode]').entwine({
+		onmatch: function() {
+			// set active by default
+			this.trigger('click');
+			this._super();
+		},
+		onclick: function(e) {
+			$('.cms-tree').toggleClass('draggable', $(e.target).val() == 'draggable');
 		}
 	});
 

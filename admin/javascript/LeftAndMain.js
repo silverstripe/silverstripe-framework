@@ -125,27 +125,6 @@
 		});
 
 		/**
-		 * Class: #TreeActions
-		 * 
-		 * Container for tree actions like "create", "search", etc.
-		 */
-		$('#TreeActions').entwine({
-			/**
-			 * Constructor: onmatch
-			 * 
-			 * Setup "create", "search", "batch actions" layers above tree.
-			 * All tab contents are closed by default.
-			 */
-			onmatch: function() {
-				this.tabs({
-					collapsible: true,
-					selected: parseInt(jQuery.cookie('ui-tabs-TreeActions'), 10) || null,
-					cookie: { expires: 30, path: '/', name: 'ui-tabs-TreeActions' }
-				});
-			}
-		});
-
-		/**
 		 * Class: a#EditMemberProfile
 		 * 
 		 * Link for editing the profile for a logged-in member through a modal dialog.

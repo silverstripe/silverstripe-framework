@@ -935,22 +935,13 @@ class LeftAndMain extends Controller {
 	 */
 	function BatchActionsForm() {
 		$actions = $this->batchactions()->batchActionList();
-		$actionsMap = array();
+		$actionsMap = array('-1' => _t('LeftAndMain.DropdownBatchActionsDefault', 'Actions'));
 		foreach($actions as $action) $actionsMap[$action->Link] = $action->Title;
 		
 		$form = new Form(
 			$this,
 			'BatchActionsForm',
 			new FieldSet(
-				new LiteralField(
-					'Intro',
-					sprintf('<p><small>%s</small></p>',
-						_t(
-							'CMSMain_left.ss.SELECTPAGESACTIONS',
-							'Select the pages that you want to change &amp; then click an action:'
-						)
-					)
-				),
 				new HiddenField('csvIDs'),
 				new DropdownField(
 					'Action',

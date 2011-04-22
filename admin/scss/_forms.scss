@@ -10,7 +10,7 @@
 		display: block;
 		padding: 10px 0;
 		border-bottom: 1px solid $color-shadow-light;
-		
+				
 		label {
 			float: left;
 			width: 10em;
@@ -31,7 +31,12 @@
 				width: auto;
 			}
 		}
-		
+	}
+	
+	.field.nolabel {	
+		.middleColumn {
+			margin-left: 0;
+		}
 	}
 	
 	input, textarea {
@@ -74,6 +79,19 @@
 		// TODO Unclear if "button bar" concept is edit form specific
 		.Actions {
 			text-align: right;
+		}
+	}
+	
+	.cms-content-tools {
+		.field {
+			label {
+				float: none;
+				width: auto;
+			}
+			
+			.middleColumn {
+				margin-left: 0;
+			}
 		}
 	}
 }
