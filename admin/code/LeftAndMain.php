@@ -881,7 +881,6 @@ class LeftAndMain extends Controller {
 			)
 		);
 		$addAction->addExtraClass('ss-ui-action-constructive');
-		$form->addExtraClass('actionparams');
 		$form->addExtraClass('add-form');
 		
 		return $form;
@@ -964,7 +963,7 @@ class LeftAndMain extends Controller {
 				new FormAction('submit', "Go")
 			)
 		);
-		$form->addExtraClass('actionparams');
+		$form->addExtraClass('cms-batch-actions');
 		$form->unsetValidator();
 		
 		return $form;
