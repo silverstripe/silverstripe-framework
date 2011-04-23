@@ -840,18 +840,18 @@ class LeftAndMain extends Controller {
 			$this, 
 			"EditForm", 
 			new FieldSet(
-				new HeaderField(
-					'WelcomeHeader',
-					$this->getApplicationName()
-				),
-				new LiteralField(
-					'WelcomeText',
-					sprintf('<p id="WelcomeMessage">%s %s. %s</p>',
-						_t('LeftAndMain_right.ss.WELCOMETO','Welcome to'),
-						$this->getApplicationName(),
-						_t('CHOOSEPAGE','Please choose an item from the left.')
-					)
-				)
+				// new HeaderField(
+				// 	'WelcomeHeader',
+				// 	$this->getApplicationName()
+				// ),
+				// new LiteralField(
+				// 	'WelcomeText',
+				// 	sprintf('<p id="WelcomeMessage">%s %s. %s</p>',
+				// 		_t('LeftAndMain_right.ss.WELCOMETO','Welcome to'),
+				// 		$this->getApplicationName(),
+				// 		_t('CHOOSEPAGE','Please choose an item from the left.')
+				// 	)
+				// )
 			), 
 			new FieldSet()
 		);
