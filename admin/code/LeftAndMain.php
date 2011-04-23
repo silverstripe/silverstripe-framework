@@ -954,7 +954,7 @@ class LeftAndMain extends Controller {
 				new FormAction('submit', "Go")
 			)
 		);
-		$form->addExtraClass('cms-batch-actions');
+		$form->addExtraClass('cms-batch-actions nostyle');
 		$form->unsetValidator();
 		
 		return $form;

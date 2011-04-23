@@ -33,6 +33,24 @@
 		}
 	}
 	
+	// TODO Change to mixin?
+	form.nostyle {
+		.field {
+			display: inline;
+			padding: 0;
+			border: 0;
+		}
+		
+		label {
+			float: none;
+			width: auto;
+		}
+		
+		.middleColumn {
+			margin-left: 0;
+		}
+	}
+	
 	.field.nolabel {	
 		.middleColumn {
 			margin-left: 0;
@@ -56,9 +74,9 @@
 	}
 	
 	// Buttons
-	.ss-ui-action-constructive,
-	.ui-widget-content .ss-ui-action-constructive,
-	.ui-widget-header .ss-ui-action-constructive {
+	.ss-ui-button.ss-ui-action-constructive,
+	.ui-widget-content .ss-ui-button.ss-ui-action-constructive,
+	.ui-widget-header .ss-ui-button.ss-ui-action-constructive {
 		background: none; // avoid overwritten gradient from jQuery UI styles
 		@include linear-gradient(color-stops(
 			$color-button-constructive, 
@@ -67,10 +85,20 @@
 		color: $color-text-light;
 	}
 	
-	.ss-ui-action-destructive,
-	.ui-widget-content .ss-ui-action-destructive,
-	.ui-widget-header .ss-ui-action-destructive {
+	.ss-ui-button.ss-ui-action-destructive,
+	.ui-widget-content .ss-ui-button.ss-ui-action-destructive,
+	.ui-widget-header .ss-ui-button.ss-ui-action-destructive {
 		color: $color-button-destructive;
+	}
+	
+	.ss-ui-button.ss-ui-action-minor,
+	.ui-widget-content .ss-ui-button.ss-ui-action-minor
+	.ui-widget-header .ss-ui-button.ss-ui-action-minor {
+		background: none;
+		padding: 0;
+		border: 0;
+		color: $color-text-dark;
+		text-decoration: underline;
 	}
 	
 	.cms-edit-form {

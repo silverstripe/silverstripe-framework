@@ -44,7 +44,7 @@
 					self.serializeFromTree();
 				});
 						
-				$('.cms-tree-tools :input[name=view-mode]').bind('click', function(e) {
+				$('.cms-tree-view-modes :input[name=view-mode]').bind('click', function(e) {
 					if($(e.target).val() == 'multiselect') {
 						tree.addClass('multiple');
 						self.serializeFromTree();
@@ -100,7 +100,7 @@
 			 *  (boolean)
 			 */
 			_isActive: function() {
-				return $('#TreeActions-batchactions').is(':visible');
+				return $('.cms-content-batchactions').is(':visible');
 			},
 		
 			/**

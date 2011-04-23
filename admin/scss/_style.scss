@@ -30,6 +30,10 @@ body .ui-widget {
 	font-size: 1em;
 }
 
+strong {
+	font-weight: bold;
+}
+
 // ######################### Misc Panels #########################
 
 .cms-content-header {
@@ -49,12 +53,32 @@ body .ui-widget {
 		float: left;
 	}
 	
+}
+
+.ui-tabs .cms-content-header {
 	.ui-tabs-nav li {
 		height: 40px;
+
+		a {
+			font-weight: bold;
+			font-size: 11px;
+			padding-top: 1em;
+		}
 	}
 	
-	.cms-content-header-actions {
-		
+	.ui-state-default, 
+	.ui-widget-content .ui-state-default, 
+	.ui-widget-header .ui-state-default {
+		@include linear-gradient(color-stops(
+			lighten($color-shadow-light, 20%),
+			lighten($color-shadow-light, 5%)
+		));
+	}
+	
+	.ui-state-active, 
+	.ui-widget-content .ui-state-active, 
+	.ui-widget-header .ui-state-active {
+		background: $color-widget-bg;
 	}
 }
 
@@ -201,5 +225,50 @@ body .ui-widget {
 	// Disable by default, will be replaced by more intuitive column selection in new data grid
 	.ResultAssemblyBlock {
 		display: none;
+	}
+}
+
+// ######################### "Add page" dialog #########################
+.cms-page-add-form-dialog {
+	#PageType li {
+		clear: left;
+		height: 40px;
+		border-bottom: 1px solid $color-shadow-dark;
+		
+		&:hover, &.selected {
+			background-color: lighten($color-highlight, 10%);
+		}
+		
+		input, label, .icon, .title {
+			float: left;
+		}
+		
+		.icon {
+			width: 20px;
+		}
+		
+		.title {
+			width: 100px;
+			font-weight: bold;
+		}
+		
+		.description {
+			font-style: italic;
+		}
+	}
+}
+
+// ######################### Content toolbar #########################
+.cms-content-toolbar {
+	& > * {
+		display: inline-block;
+	}
+	
+	.cms-tree-view-modes * {
+		display: inline-block;
+	}
+	
+	.cms-content-batchactions form * {
+		display: inline-block;
 	}
 }

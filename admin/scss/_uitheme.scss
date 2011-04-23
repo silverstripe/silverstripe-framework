@@ -12,7 +12,12 @@
 
 .cms {	
 	.ui-tabs {
-		padding: 0
+		padding: 0;
+		
+		.ui-widget-header {
+			border: 0;
+			background: none;
+		}
 	}
 	
 	.ui-widget-content,
@@ -20,15 +25,16 @@
 		color: $color-text;
 		font-size: 1em;
 		border: 0;
-		background: none; // avoid overwritten background properties from jQuery UI
+		background: $color-widget-bg;
 	}
 	
 	.ui-widget-header {
-		background: none;
+		background: $color-widget-bg;
 		border: 0;
 	}
 	
 	.ss-ui-button {
 		padding: 5px;
+		text-decoration: none;
 	}
 }

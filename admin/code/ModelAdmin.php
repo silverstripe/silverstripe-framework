@@ -413,7 +413,7 @@ class ModelAdmin_CollectionController extends Controller {
 		$form->setHTMLID("Form_SearchForm_" . $this->modelClass);
 		$form->disableSecurityToken();
 		$clearAction->useButtonTag = true;
-		$clearAction->addExtraClass('minorAction');
+		$clearAction->addExtraClass('ss-ui-action-minor');
 
 		return $form;
 	}
