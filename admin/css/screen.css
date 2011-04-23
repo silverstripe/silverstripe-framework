@@ -241,7 +241,7 @@ li.jstree-closed > ul { display: none; }
 /* line 19, ../scss/_menu.scss */
 .cms-menu-list li a { display: block; height: 32px; vertical-align: middle; font-size: 14px; text-shadow: #aaaaaa 1px 1px 1px; color: #333333; padding: 5px; }
 /* line 28, ../scss/_menu.scss */
-.cms-menu-list li a .icon { display: block; float: left; margin-right: 5px; background: url('../images/icons-32.png?1303510063') no-repeat; width: 32px; height: 32px; overflow: hidden; background-position: 0px 0px; }
+.cms-menu-list li a .icon { display: block; float: left; margin-right: 5px; background: url('../images/icons-32.png?1303601510') no-repeat; width: 32px; height: 32px; overflow: hidden; background-position: 0px 0px; }
 /* line 36, ../scss/_menu.scss */
 .cms-menu-list li a .text { display: block; padding-top: 10px; }
 /* line 42, ../scss/_menu.scss */
@@ -424,3 +424,6 @@ strong { font-weight: bold; }
 .cms-content-toolbar .cms-tree-view-modes * { display: inline-block; }
 /* line 271, ../scss/_style.scss */
 .cms-content-toolbar .cms-content-batchactions form * { display: inline-block; }
+
+/* line 277, ../scss/_style.scss */
+.cms-preview-header { background-color: #FFBE66; padding: 10px; font-weight: bold; }

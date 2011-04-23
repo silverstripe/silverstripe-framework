@@ -12,6 +12,14 @@
 	<% include CMSLoadingScreen %>
 	
 	<div class="cms-container" data-layout="{type: 'border'}">
+		
+		<div class="cms-preview-header north">
+			Caution! The CMS is in alpha stage, and might not behave as expected. Get updates on the 
+			<a href="https://groups.google.com/forum/#!forum/silverstripe-dev">developer mailinglist</a>
+			and help us by
+			<a href="http://silverstripe.org/contribute">contributing</a> and
+			<a href="http://open.silverstripe.org">reporting bugs</a>.
+		</div>
 
 		$Menu
 
