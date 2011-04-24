@@ -54,6 +54,16 @@
 			onmatch: function() {
 				var self = this;
 				
+				// Browser detection
+				if($.browser.msie && parseInt($.browser.version, 10) < 7) {
+					$('.ss-loading-screen').append(
+						'<p><span class="notice">' + 
+						ss.i18n._t('LeftAndMain.IncompatBrowserWarning') +
+						'</span></p>'
+					);
+					return;
+				}
+				
 				// Initialize layouts, inner to outer
 				var doInnerLayout = function() {$('.cms-content').layout();}
 				var outer = $('.cms-container');
