@@ -1633,16 +1633,7 @@ class Member_ProfileForm extends Form {
 	function __construct($controller, $name, $member) {
 		Requirements::clear();
 		Requirements::css(CMS_DIR . '/css/typography.css');
-		Requirements::css(CMS_DIR . '/css/cms_right.css');
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/controls.js");
 		Requirements::css(SAPPHIRE_DIR . "/css/Form.css");
-		
-		Requirements::css(SAPPHIRE_DIR . "/css/MemberProfileForm.css");
-		
 		
 		$fields = $member->getCMSFields();
 		$fields->push(new HiddenField('ID','ID',$member->ID));

@@ -194,24 +194,22 @@ class LeftAndMain extends Controller {
 		
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
 		
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototypefix/intro.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototypefix/outro.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/prototype/prototype.js');
 		
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
 
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');  //import all of jquery ui
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');  //import all of jquery ui
 
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/json-js/json2.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-metadata/jquery.metadata.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/json-js/json2.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-metadata/jquery.metadata.js');
 		
 		// entwine
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
 		
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js');
 		// @todo Load separately so the CSS files can be inlined
-		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.all.css');
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 		
 		// Required for TreeTools panel above tree
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
@@ -219,20 +217,14 @@ class LeftAndMain extends Controller {
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js');
 		
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-cookie/jquery.cookie.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/behaviour/behaviour.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js');
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::add_i18n_javascript(SAPPHIRE_ADMIN_DIR . '/javascript/lang');
 		
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/dragdrop.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/controls.js');
-		
-		Requirements::javascript(THIRDPARTY_DIR . '/tree/tree.js');
-		Requirements::css(THIRDPARTY_DIR . '/tree/tree.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jstree/jquery.jstree.js');
 		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
 		
@@ -257,30 +249,44 @@ class LeftAndMain extends Controller {
 		}
 		
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/unjquery.css');
-		
+
 		// Javascript combined files
 		Requirements::combine_files(
-			'base.js',
+			'lib.js',
 			array(
-				'sapphire/thirdparty/prototype/prototype.js',
-				'sapphire/thirdparty/behaviour/behaviour.js',
-				'sapphire/thirdparty/jquery/jquery.js',
-				'sapphire/thirdparty/jquery-livequery/jquery.livequery.js',
-				'sapphire/javascript/jquery-ondemand/jquery.ondemand.js',
-				'sapphire/thirdparty/jquery-ui/jquery-ui.js',
-				'sapphire/javascript/i18n.js',
+				THIRDPARTY_DIR . '/prototype/prototype.js',
+				THIRDPARTY_DIR . '/behaviour/behaviour.js',
+				THIRDPARTY_DIR . '/jquery/jquery.js',
+				SAPPHIRE_DIR . '/javascript/jquery_improvements.js',
+				THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js',
+				SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js',
+				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
+				THIRDPARTY_DIR . '/json-js/json2.js',
+				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
+				THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js',
+				THIRDPARTY_DIR . '/jquery-metadata/jquery.metadata.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
+				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js',
+				SAPPHIRE_DIR . '/javascript/TreeDropdownField.js',
+				SAPPHIRE_DIR . '/javascript/TabSet.js',
+				SAPPHIRE_DIR . '/javascript/Validator.js',
+				SAPPHIRE_DIR . '/javascript/i18n.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js',
 			)
 		);
 
 		Requirements::combine_files(
 			'leftandmain.js',
 			array(
-				'sapphire/thirdparty/scriptaculous/effects.js',
-				'sapphire/thirdparty/scriptaculous/dragdrop.js',
-				'sapphire/thirdparty/scriptaculous/controls.js',
-				'sapphire/admin/javascript/LeftAndMain.js',
-				'sapphire/javascript/tree/tree.js',
-				'sapphire/javascript/TreeDropdownField.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
 			)
 		);
 
