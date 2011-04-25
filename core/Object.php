@@ -679,7 +679,7 @@ abstract class Object {
 	public function __call($method, $arguments) {
 		// If the method cache was cleared by an an Object::add_extension() / Object::remove_extension()
 		// call, then we should rebuild it.
-		if(empty(self::$cached_statics[get_class($this)])) {
+		if(empty(self::$extra_methods[get_class($this)])) {
 			$this->defineMethods();
 		}
 		
