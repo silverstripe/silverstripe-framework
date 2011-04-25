@@ -10,7 +10,20 @@
 		
 	$(document).ready(function() {
 		
-		$('.htmleditorfield-form').dialog({autoOpen: false, bgiframe: true, modal: true, height: 500, width: 500, ghost: true});
+		// Move title from headline to (jQuery compatible) title attribute
+		$('.htmleditorfield-form').each(function() {
+			var titleEl = $(this).find(':header:first');
+			$(this).attr('title', titleEl.text());
+			titleEl.remove();
+		});
+		$('.htmleditorfield-form').dialog({
+			autoOpen: false, 
+			bgiframe: true, 
+			modal: true, 
+			height: 500, 
+			width: 500, 
+			ghost: true
+		});
 		
 		/**
 		 * On page refresh load the initial images (in root)
