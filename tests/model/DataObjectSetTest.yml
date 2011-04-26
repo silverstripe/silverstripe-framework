@@ -22,11 +22,11 @@ DataObjectTest_SubTeam:
    subteam1:
       Title: Subteam 1
       SubclassDatabaseField: Subclassed 1
-      DecoratedDatabaseField: Decorated 1
+      ExtendedDatabaseField: Extended 1
    subteam2_with_player_relation:
       Title: Subteam 2
       SubclassDatabaseField: Subclassed 2
-      DecoratedHasOneRelationship: =>DataObjectTest_Player.player1
+      ExtendeHasOneRelationship: =>DataObjectTest_Player.player1
    subteam3_with_empty_fields:
       Title: Subteam 3
       

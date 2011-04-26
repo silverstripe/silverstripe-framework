@@ -1,21 +1,17 @@
 <?php
 /**
- * Plug-ins for additional functionality in your LeftAndMain classes.
- * 
- * @package cms
- * @subpackage core
+ * @package    sapphire
+ * @subpackage admin
+ * @deprecated 3.0 Use {@link LeftAndMainExtension}
  */
-abstract class LeftAndMainDecorator extends Extension {
-
-	function init() {
+abstract class LeftAndMainDecorator extends LeftAndMainExtension {
+	
+	public function __construct() {
+		user_error(
+			'LeftAndMainDecorator is deprecated, please use LeftAndMainExtension instead.',
+			E_USER_NOTICE
+		);
+		parent::__construct();
 	}
 	
-	function accessedCMS() {
-	}
-	
-	function augmentNewSiteTreeItem(&$item) {
-	}
-
 }
-
-?>

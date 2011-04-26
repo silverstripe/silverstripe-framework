@@ -1,11 +1,11 @@
 <?php
 /**
- * The Versioned decorator allows your DataObjects to have several versions, allowing
+ * The Versioned extension allows your DataObjects to have several versions, allowing
  * you to rollback changes and view history. An example of this is the pages used in the CMS.
  * @package sapphire
  * @subpackage model
  */
-class Versioned extends DataObjectDecorator {
+class Versioned extends DataExtension {
 	/**
 	 * An array of possible stages.
 	 * @var array
@@ -42,7 +42,7 @@ class Versioned extends DataObjectDecorator {
 	/**
 	 * Additional database columns for the new
 	 * "_versions" table. Used in {@link augmentDatabase()}
-	 * and all Versioned calls decorating or creating
+	 * and all Versioned calls extending or creating
 	 * SELECT statements.
 	 * 
 	 * @var array $db_for_versions_table

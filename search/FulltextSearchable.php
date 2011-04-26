@@ -11,7 +11,7 @@
  * @package sapphire
  * @subpackage search
  */
-class FulltextSearchable extends DataObjectDecorator {
+class FulltextSearchable extends DataExtension {
 
 	/**
 	 * @var String Comma-separated list of database column names
