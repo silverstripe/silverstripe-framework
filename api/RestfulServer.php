@@ -87,7 +87,7 @@
  * @todo URL parameter namespacing for search-fields, limit, fields, add_fields (might all be valid dataobject properties)
  *       e.g. you wouldn't be able to search for a "limit" property on your subclass as its overlayed with the search logic
  * @todo i18n integration (e.g. Page/1.xml?lang=de_DE)
- * @todo Access to decoratable methods/relations like SiteTree/1/Versions or SiteTree/1/Version/22
+ * @todo Access to extendable methods/relations like SiteTree/1/Versions or SiteTree/1/Version/22
  * @todo Respect $api_access array notation in search contexts
  * 
  * @package sapphire

@@ -1264,7 +1264,7 @@ class Member extends DataObject {
 	function canView($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		// decorated access checks
+		// extended access checks
 		$results = $this->extend('canView', $member);
 		if($results && is_array($results)) {
 			if(!min($results)) return false;
@@ -1291,7 +1291,7 @@ class Member extends DataObject {
 	function canEdit($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		// decorated access checks
+		// extended access checks
 		$results = $this->extend('canEdit', $member);
 		if($results && is_array($results)) {
 			if(!min($results)) return false;
@@ -1318,7 +1318,7 @@ class Member extends DataObject {
 	function canDelete($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		// decorated access checks
+		// extended access checks
 		$results = $this->extend('canDelete', $member);
 		if($results && is_array($results)) {
 			if(!min($results)) return false;
