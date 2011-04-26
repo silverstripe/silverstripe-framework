@@ -148,6 +148,7 @@ class CSVParser extends Object implements Iterator {
 	protected function remapHeader($header) {
 		$mappedHeader = array();
 		foreach($header as $item) {
+			$item = trim($item);
 			if(isset($this->columnMap[strtolower($item)])) $item = $this->columnMap[strtolower($item)];
 			$mappedHeader[] = $item;
 		}
