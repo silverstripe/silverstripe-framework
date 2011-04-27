@@ -10,6 +10,7 @@
 
 .cms-menu-list {
 	li {
+		background-color: $color-base;
 		@include linear-gradient(color-stops(
 			$color-base,
 			darken($color-base, 20%)
@@ -40,12 +41,14 @@
 		}
 		
 		&.current {
+			background-color: $color-menu-button;
 			@include linear-gradient(color-stops(
 				$color-menu-button, 
 				darken($color-menu-button, 20%)
 			));
 			
 			li {
+				background-color: darken($color-menu-button, 5%);
 				@include linear-gradient(color-stops(
 					darken($color-menu-button, 5%),
 					darken($color-menu-button, 10%)

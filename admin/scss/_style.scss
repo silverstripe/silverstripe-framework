@@ -37,6 +37,7 @@ strong {
 // ######################### Misc Panels #########################
 
 .cms-content-header {
+	background-color: darken($color-widget-bg, 20%);
 	@include linear-gradient(color-stops(
 		darken($color-widget-bg, 20%),
 		darken($color-widget-bg, 30%)
@@ -69,6 +70,7 @@ strong {
 	.ui-state-default, 
 	.ui-widget-content .ui-state-default, 
 	.ui-widget-header .ui-state-default {
+		background-color: lighten($color-shadow-light, 20%);
 		@include linear-gradient(color-stops(
 			lighten($color-shadow-light, 20%),
 			lighten($color-shadow-light, 5%)
@@ -90,6 +92,7 @@ strong {
 
 .cms-header {
 	padding: 10px;
+	background-color: darken($color-dark-bg, 10%);
 	@include linear-gradient(color-stops(
 		darken($color-dark-bg, 10%), 
 		$color-dark-bg, 
