@@ -3,14 +3,6 @@
  */
 
 (function($) {
-	
-	$(document).ready(function(){
-		
-		var testing = $.parseJSON($('#sitetree_ul').attr('data-hints'));
-		console.log(testing);
-		
-		console.log(siteTreeHints);
-	});
 
 	$.entwine('ss', function($){
 	
@@ -66,7 +58,8 @@
 											movedNodeClass = movedNode.getClassname(), 
 											newParentClass = newParent.getClassname(),
 											// Check allowedChildren of newParent or against root node rules
-											allowedChildren = siteTreeHints[newParentClass ? newParentClass : 'Root'].allowedChildren || [];
+											siteTreeHints = $.parseJSON($('#sitetree_ul').attr('data-hints')),
+											disallowedChildren = siteTreeHints[newParentClass ? newParentClass : 'Root'].disallowedChildren || [];
 
 										var isAllowed = (
 											// Don't allow moving the root node
@@ -76,7 +69,7 @@
 											// Children are generally allowed on parent
 											&& !newParent.hasClass('nochildren')
 											// movedNode is allowed as a child
-											&& ($.inArray(movedNodeClass, allowedChildren) != -1)
+											&& ($.inArray(movedNodeClass, disallowedChildren) == -1)
 										);
 										
 										return isAllowed;

@@ -112,7 +112,7 @@
 			 *  (DOMElement) selectedNode
 			 */
 			refresh: function(selectedNode) {
-				// Note: Uses siteTreeHints global
+				
 				var tree = this.getTree(),
 				 	selectedNode = selectedNode || $(tree).jstree('get_selected')
 					origOptions = this.getOrigOptions(), 
