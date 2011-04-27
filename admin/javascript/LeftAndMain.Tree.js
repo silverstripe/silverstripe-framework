@@ -4,6 +4,14 @@
 
 (function($) {
 	
+	$(document).ready(function(){
+		
+		var testing = $.parseJSON($('#sitetree_ul').attr('data-hints'));
+		console.log(testing);
+		
+		console.log(siteTreeHints);
+	});
+
 	$.entwine('ss', function($){
 	
 		$('#sitetree_ul').entwine({

@@ -116,40 +116,34 @@
 				var tree = this.getTree(),
 				 	selectedNode = selectedNode || $(tree).jstree('get_selected')
 					origOptions = this.getOrigOptions(), 
-					dropdown = this.find('select[name=PageType]');
+					dropdown = this.find('select[name=PageType]'),
+					disallowed = [],
+					className = (selectedNode) ? selectedNode.getClassname() : null,
+					siteTreeHints = $.parseJSON($('#sitetree_ul').attr('data-hints')),
+					disableDropDown = true;
 
 				// Clear all existing <option> elements
 				// (IE doesn't allow setting display:none on these elements)
 				dropdown.find('option').remove();
 				
-				// Find allowed children through preferences on node or globally
-				var allowed = [];
-				if(selectedNode) {
-					if(selectedNode.hints && selectedNode.hints.allowedChildren) {
-						allowed = selectedNode.hints.allowedChildren;
-					} else {
-						// Fallback to globals
-						allowed = (typeof siteTreeHints !== 'undefined') ? siteTreeHints['Root'].allowedChildren : [];
-					}
-					
-					// Re-add all allowed <option> to the dropdown
-					for(i=0;i<allowed.length;i++) {
-						var optProps = origOptions[allowed[i]];
-						if(optProps) dropdown.append($('<option value="' + optProps.value + '">' + optProps.html + '</option>'));
-					}
-				} else {
-					// No tree node selected, reset to original elements
-					$.each(origOptions, function(i, optProps) {
-						if(optProps) dropdown.append($('<option value="' + optProps.value + '">' + optProps.html + '</option>'));
-					});
+				//Use tree hints to find allowed children for this node
+				if (className && typeof siteTreeHints !== 'undefined') {
+					disallowed = siteTreeHints[className].disallowedChildren;
 				}
 				
-				// TODO Re-select the currently selected element
+				$.each(origOptions, function(i, optProps) { 
+				  if ($.inArray(i, disallowed) === -1 && optProps) {
+					  dropdown.append($('<option value="' + optProps.value + '">' + optProps.html + '</option>'));
+					  disableDropDown = false;
+				  }
+				});
 				
 				// Disable dropdown if no elements are selectable
-				if(allowed) dropdown.removeAttr('disabled');
+				if (!disableDropDown) dropdown.removeAttr('disabled');
 				else dropdown.attr('disabled', 'disabled');
-				
+
+				// TODO Re-select the currently selected element
+
 				// Set default child (optional)
 				if(selectedNode.hints && selectedNode.hints.defaultChild) {
 					dropdown.val(selectedNode.hints.defaultChild);
