@@ -385,8 +385,8 @@ class Folder extends File {
 	
 	/**
 	 * Return the FieldSet used to edit this folder in the CMS.
-	 * You can modify this fieldset by subclassing folder, or by creating a {@link DataObjectDecorator}
-	 * and implemeting updateCMSFields(FieldSet $fields) on that decorator.	
+	 * You can modify this fieldset by subclassing folder, or by creating a {@link DataExtension}
+	 * and implemeting updateCMSFields(FieldSet $fields) on that extension.
 	 */
 	function getCMSFields() {
 		$fileList = new AssetTableField(

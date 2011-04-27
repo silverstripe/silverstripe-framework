@@ -277,7 +277,6 @@ abstract class Object {
 		}
 
 		if(!isset(self::$cached_statics[$class][$name]) || $uncached) {
-			//if($class == 'DataObjectDecoratorTest_MyObject') Debug::message("$class - $name");
 			$extra     = $builtIn = $break = $replacedAt = false;
 			$ancestry  = array_reverse(ClassInfo::ancestry($class));
 			
@@ -500,7 +499,7 @@ abstract class Object {
 	 * Keep in mind that the extension will only be applied to new
 	 * instances, not existing ones (including all instances created through {@link singleton()}).
 	 *
-	 * @param string $class Class that should be decorated - has to be a subclass of {@link Object}
+	 * @param string $class Class that should be extended - has to be a subclass of {@link Object}
 	 * @param string $extension Subclass of {@link Extension} with optional parameters 
 	 *  as a string, e.g. "Versioned" or "Translatable('Param')"
 	 */
@@ -538,11 +537,11 @@ abstract class Object {
 		
 		// load statics now for DataObject classes
 		if(is_subclass_of($class, 'DataObject')) {
-			if(is_subclass_of($extensionClass, 'DataObjectDecorator')) {
-				DataObjectDecorator::load_extra_statics($class, $extension);
+			if(is_subclass_of($extensionClass, 'DataExtension')) {
+				DataExtension::load_extra_statics($class, $extension);
 			}
 			else {
-				user_error("$extensionClass cannot be applied to $class without being a DataObjectDecorator", E_USER_ERROR);
+				user_error("$extensionClass cannot be applied to $class without being a DataExtension", E_USER_ERROR);
 			}
 		}
 	}
@@ -568,11 +567,11 @@ abstract class Object {
 						$extensionClass = $matches[1];
 					}
 					
-					if(is_subclass_of($extensionClass, 'DataObjectDecorator')) {
-						DataObjectDecorator::load_extra_statics($class, $extension);
+					if(is_subclass_of($extensionClass, 'DataExtension')) {
+						DataExtension::load_extra_statics($class, $extension);
 					}
 					else {
-						user_error("$extensionClass cannot be applied to $class without being a DataObjectDecorator", E_USER_ERROR);
+						user_error("$extensionClass cannot be applied to $class without being a DataExtension", E_USER_ERROR);
 					}
 				}
 			}
@@ -624,7 +623,7 @@ abstract class Object {
 	 * @param string $class
 	 * @param bool $includeArgumentString Include the argument string in the return array,
 	 *  FALSE would return array("Versioned"), TRUE returns array("Versioned('Stage','Live')").
-	 * @return array Numeric array of either {@link DataObjectDecorator} classnames,
+	 * @return array Numeric array of either {@link DataExtension} classnames,
 	 *  or eval'ed classname strings with constructor arguments.
 	 */
 	function get_extensions($class, $includeArgumentString = false) {
@@ -679,7 +678,7 @@ abstract class Object {
 	public function __call($method, $arguments) {
 		// If the method cache was cleared by an an Object::add_extension() / Object::remove_extension()
 		// call, then we should rebuild it.
-		if(empty(self::$cached_statics[get_class($this)])) {
+		if(empty(self::$extra_methods[get_class($this)])) {
 			$this->defineMethods();
 		}
 		
@@ -950,7 +949,7 @@ abstract class Object {
 	 * you wanted to return results, you're hosed
 	 *
 	 * Currently returns an array, with an index resulting every time the function is called. Only adds returns if
-	 * they're not NULL, to avoid bogus results from methods just defined on the parent decorator. This is important for
+	 * they're not NULL, to avoid bogus results from methods just defined on the parent extension. This is important for
 	 * permission-checks through extend, as they use min() to determine if any of the returns is FALSE. As min() doesn't
 	 * do type checking, an included NULL return would fail the permission checks.
 	 * 
@@ -992,7 +991,7 @@ abstract class Object {
 	 * in {@link $extension_instances}. Extension instances are initialized
 	 * at constructor time, meaning if you use {@link add_extension()}
 	 * afterwards, the added extension will just be added to new instances
-	 * of the decorated class. Use the static method {@link has_extension()}
+	 * of the extended class. Use the static method {@link has_extension()}
 	 * to check if a class (not an instance) has a specific extension.
 	 * Caution: Don't use singleton(<class>)->hasExtension() as it will
 	 * give you inconsistent results based on when the singleton was first
@@ -1010,7 +1009,7 @@ abstract class Object {
 	 * See {@link get_extensions()} to get all applied extension classes
 	 * for this class (not the instance).
 	 * 
-	 * @return array Map of {@link DataObjectDecorator} instances, keyed by classname.
+	 * @return array Map of {@link DataExtension} instances, keyed by classname.
 	 */
 	public function getExtensionInstances() {
 		return $this->extension_instances;

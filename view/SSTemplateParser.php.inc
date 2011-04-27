@@ -601,7 +601,7 @@ class SSTemplateParser extends Parser {
 	 *   'Arguments' an array of the Argument match rule result arrays
 	 *
 	 * Once a block has successfully been matched against, it will then look for the actual handler, which should
-	 * be on this class (either defined or decorated on) as ClosedBlock_Handler_Name(&$res), where Name is the
+	 * be on this class (either defined or extended on) as ClosedBlock_Handler_Name(&$res), where Name is the
 	 * tag name, first letter captialized (i.e Control, Loop, With, etc).
 	 * 
 	 * This function will be called with the match rule result array as it's first argument. It should return

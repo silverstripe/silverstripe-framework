@@ -1,5 +1,5 @@
 <?php
-class i18nTestModuleDecorator extends DataObjectDecorator {
+class i18nTestModuleExtension extends DataExtension {
 	function extraStatics() {
 		return array(
 			'db' => array(

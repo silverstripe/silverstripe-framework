@@ -1,11 +1,11 @@
 <?php
 /**
- * DataObjects that use the Hierachy decorator can be be organised as a hierachy, with children and parents.
+ * DataObjects that use the Hierachy extension can be be organised as a hierachy, with children and parents.
  * The most obvious example of this is SiteTree.
  * @package sapphire
  * @subpackage model
  */
-class Hierarchy extends DataObjectDecorator {
+class Hierarchy extends DataExtension {
 	
 	protected $markedNodes;
 	

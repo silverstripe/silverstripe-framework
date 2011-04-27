@@ -455,9 +455,9 @@ class DataObjectTest extends SapphireTest {
 		//$this->assertFalse($teamInstance->hasField('SubclassDatabaseField'), 'hasField() doesnt find subclass fields in parentclass instances');
 		$this->assertTrue($teamInstance->hasField('DynamicField'), 'hasField() finds dynamic getters in instances');
 		$this->assertTrue($teamInstance->hasField('HasOneRelationshipID'), 'hasField() finds foreign keys in instances');
-		$this->assertTrue($teamInstance->hasField('DecoratedDatabaseField'), 'hasField() finds decorated fields in instances');
-		$this->assertTrue($teamInstance->hasField('DecoratedHasOneRelationshipID'), 'hasField() finds decorated foreign keys in instances');
-		//$this->assertTrue($teamInstance->hasField('DecoratedDynamicField'), 'hasField() includes decorated dynamic getters in instances');
+		$this->assertTrue($teamInstance->hasField('ExtendedDatabaseField'), 'hasField() finds extended fields in instances');
+		$this->assertTrue($teamInstance->hasField('ExtendedHasOneRelationshipID'), 'hasField() finds extended foreign keys in instances');
+		//$this->assertTrue($teamInstance->hasField('ExtendedDynamicField'), 'hasField() includes extended dynamic getters in instances');
 		
 		/* hasField() subclass checks */
 		$this->assertTrue($subteamInstance->hasField('ID'), 'hasField() finds built-in fields in subclass instances');
@@ -466,8 +466,8 @@ class DataObjectTest extends SapphireTest {
 		$this->assertTrue($subteamInstance->hasField('SubclassDatabaseField'), 'hasField() finds custom fields in subclass instances');
 		$this->assertTrue($subteamInstance->hasField('DynamicField'), 'hasField() finds dynamic getters in subclass instances');
 		$this->assertTrue($subteamInstance->hasField('HasOneRelationshipID'), 'hasField() finds foreign keys in subclass instances');
-		$this->assertTrue($subteamInstance->hasField('DecoratedDatabaseField'), 'hasField() finds decorated fields in subclass instances');
-		$this->assertTrue($subteamInstance->hasField('DecoratedHasOneRelationshipID'), 'hasField() finds decorated foreign keys in subclass instances');
+		$this->assertTrue($subteamInstance->hasField('ExtendedDatabaseField'), 'hasField() finds extended fields in subclass instances');
+		$this->assertTrue($subteamInstance->hasField('ExtendedHasOneRelationshipID'), 'hasField() finds extended foreign keys in subclass instances');
 		
 		/* hasDatabaseField() singleton checks */
 		//$this->assertTrue($teamSingleton->hasDatabaseField('ID'), 'hasDatabaseField() finds built-in fields in singletons');
@@ -481,9 +481,9 @@ class DataObjectTest extends SapphireTest {
 		$this->assertFalse($teamInstance->hasDatabaseField('SubclassDatabaseField'), 'hasDatabaseField() doesnt find subclass fields in parentclass instances');
 		//$this->assertFalse($teamInstance->hasDatabaseField('DynamicField'), 'hasDatabaseField() doesnt dynamic getters in instances');
 		$this->assertTrue($teamInstance->hasDatabaseField('HasOneRelationshipID'), 'hasDatabaseField() finds foreign keys in instances');
-		$this->assertTrue($teamInstance->hasDatabaseField('DecoratedDatabaseField'), 'hasDatabaseField() finds decorated fields in instances');
-		$this->assertTrue($teamInstance->hasDatabaseField('DecoratedHasOneRelationshipID'), 'hasDatabaseField() finds decorated foreign keys in instances');
-		$this->assertFalse($teamInstance->hasDatabaseField('DecoratedDynamicField'), 'hasDatabaseField() doesnt include decorated dynamic getters in instances');
+		$this->assertTrue($teamInstance->hasDatabaseField('ExtendedDatabaseField'), 'hasDatabaseField() finds extended fields in instances');
+		$this->assertTrue($teamInstance->hasDatabaseField('ExtendedHasOneRelationshipID'), 'hasDatabaseField() finds extended foreign keys in instances');
+		$this->assertFalse($teamInstance->hasDatabaseField('ExtendedDynamicField'), 'hasDatabaseField() doesnt include extended dynamic getters in instances');
 		
 		/* hasDatabaseField() subclass checks */
 		$this->assertTrue($subteamInstance->hasField('DatabaseField'), 'hasField() finds custom fields in subclass instances');
@@ -507,12 +507,12 @@ class DataObjectTest extends SapphireTest {
 				//'LastEdited',
 				'Title',
 				'DatabaseField',
-				'DecoratedDatabaseField',
+				'ExtendedDatabaseField',
 				'CaptainID',
 				'HasOneRelationshipID',
-				'DecoratedHasOneRelationshipID'
+				'ExtendedHasOneRelationshipID'
 			),
-			'inheritedDatabaseFields() contains all fields defined on instance, including base fields, decorated fields and foreign keys'
+			'inheritedDatabaseFields() contains all fields defined on instance, including base fields, extended fields and foreign keys'
 		);
 		
 		$this->assertEquals(
@@ -524,12 +524,12 @@ class DataObjectTest extends SapphireTest {
 				'LastEdited',
 				'Title',
 				'DatabaseField',
-				'DecoratedDatabaseField',
+				'ExtendedDatabaseField',
 				'CaptainID',
 				'HasOneRelationshipID',
-				'DecoratedHasOneRelationshipID'
+				'ExtendedHasOneRelationshipID'
 			),
-			'databaseFields() contains only fields defined on instance, including base fields, decorated fields and foreign keys'
+			'databaseFields() contains only fields defined on instance, including base fields, extended fields and foreign keys'
 		);
 		
 		$this->assertEquals(
@@ -542,12 +542,12 @@ class DataObjectTest extends SapphireTest {
 				'SubclassDatabaseField',
 				'Title',
 				'DatabaseField',
-				'DecoratedDatabaseField',
+				'ExtendedDatabaseField',
 				'CaptainID',
 				'HasOneRelationshipID',
-				'DecoratedHasOneRelationshipID',
+				'ExtendedHasOneRelationshipID',
 			),
-			'inheritedDatabaseFields() on subclass contains all fields defined on instance, including base fields, decorated fields and foreign keys'
+			'inheritedDatabaseFields() on subclass contains all fields defined on instance, including base fields, extended fields and foreign keys'
 		);
 		
 		$this->assertEquals(
@@ -803,8 +803,8 @@ class DataObjectTest extends SapphireTest {
 			"hasOwnDatabaseField() doesn't detect non-existend fields"
 		);
 		$this->assertTrue(
-			$team->hasDatabaseField('DecoratedDatabaseField'),
-			"hasOwnDatabaseField() works with decorated fields"
+			$team->hasDatabaseField('ExtendedDatabaseField'),
+			"hasOwnDatabaseField() works with extended fields"
 		);
 		$this->assertFalse(
 			$team->hasDatabaseField('SubclassDatabaseField'),
@@ -1087,21 +1087,21 @@ class DataObjectTest_FieldlessSubTable extends DataObjectTest_Team implements Te
 }
 
 
-class DataObjectTest_Team_Decorator extends DataObjectDecorator implements TestOnly {
+class DataObjectTest_Team_Extension extends DataExtension implements TestOnly {
 	
 	function extraStatics() {
 		return array(
 			'db' => array(
-				'DecoratedDatabaseField' => 'Varchar'
+				'ExtendedDatabaseField' => 'Varchar'
 			),
 			'has_one' => array(
-				'DecoratedHasOneRelationship' => 'DataObjectTest_Player'
+				'ExtendedHasOneRelationship' => 'DataObjectTest_Player'
 			)
 		);
 	}
 	
-	function getDecoratedDynamicField() {
-		return "decorated dynamic field";
+	function getExtendedDynamicField() {
+		return "extended dynamic field";
 	}
 	
 }
@@ -1159,6 +1159,6 @@ class DataObjectTest_TeamComment extends DataObject {
 	);
 }
 
-DataObject::add_extension('DataObjectTest_Team', 'DataObjectTest_Team_Decorator');
+DataObject::add_extension('DataObjectTest_Team', 'DataObjectTest_Team_Extension');
 
 ?>

@@ -2,9 +2,9 @@
 /**
  * A single database record & abstract class for the data-access-model.
  *
- * <h2>Extensions and Decorators</h2>
+ * <h2>Extensions</h2>
  *
- * See {@link Extension} and {@link DataObjectDecorator}.
+ * See {@link Extension} and {@link DataExtension}.
  * 
  * <h2>Permission Control</h2>
  * 
@@ -890,7 +890,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * This called after {@link $this->validate()}, so you can be sure that your data is valid.
 	 * 
-	 * @uses DataObjectDecorator->onBeforeWrite()
+	 * @uses DataExtension->onBeforeWrite()
 	 */
 	protected function onBeforeWrite() {
 		$this->brokenOnWrite = false;
@@ -905,7 +905,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * $this->changed will have a record
 	 * database.  Don't forget to call parent::onAfterWrite(), though!
 	 *
-	 * @uses DataObjectDecorator->onAfterWrite()
+	 * @uses DataExtension->onAfterWrite()
 	 */
 	protected function onAfterWrite() {
 		$dummy = null;
@@ -917,7 +917,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * You can overload this to clean up or otherwise process data before delete this
 	 * record.  Don't forget to call parent::onBeforeDelete(), though!
 	 *
-	 * @uses DataObjectDecorator->onBeforeDelete()
+	 * @uses DataExtension->onBeforeDelete()
 	 */
 	protected function onBeforeDelete() {
 		$this->brokenOnDelete = false;
@@ -935,7 +935,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Will traverse the defaults of the current class and all its parent classes.
 	 * Called by the constructor when creating new records.
 	 * 
-	 *  @uses DataObjectDecorator->populateDefaults()
+	 *  @uses DataExtension->populateDefaults()
 	 */
 	public function populateDefaults() {
 		$classes = array_reverse(ClassInfo::ancestry($this));
@@ -976,7 +976,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *  - Extensions such as Versioned will ammend the database-write to ensure that a version is saved.
 	 *  - Calls to {@link DataObjectLog} can be used to see everything that's been changed.
 	 * 
-	 *  @uses DataObjectDecorator->augmentWrite()
+	 *  @uses DataExtension->augmentWrite()
 	 *
 	 * @param boolean $showDebug Show debugging information
 	 * @param boolean $forceInsert Run INSERT command rather than UPDATE, even if record already exists
@@ -1183,7 +1183,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Delete this data object.
 	 * $this->onBeforeDelete() gets called.
 	 * Note that in Versioned objects, both Stage and Live will be deleted.
-	 *  @uses DataObjectDecorator->augmentSQL()
+	 *  @uses DataExtension->augmentSQL()
 	 */
 	public function delete() {
 		$this->brokenOnDelete = true;
@@ -1983,7 +1983,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * which returns a {@link FieldSet} suitable for a {@link Form} object.
 	 * If not overloaded, we're using {@link scaffoldFormFields()} to automatically
 	 * generate this set. To customize, overload this method in a subclass
-	 * or decorate onto it by using {@link DataObjectDecorator->updateCMSFields()}.
+	 * or extended onto it by using {@link DataExtension->updateCMSFields()}.
 	 *
 	 * <code>
 	 * klass MyCustomClass extends DataObject {
@@ -2019,7 +2019,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	
 	/**
 	 * need to be overload by solid dataobject, so that the customised actions of that dataobject,
-	 * including that dataobject's decorator customised actions could be added to the EditForm.
+	 * including that dataobject's extensions customised actions could be added to the EditForm.
 	 * 
 	 * @return an Empty FieldSet(); need to be overload by solid subclass
 	 */
@@ -2034,7 +2034,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Used for simple frontend forms without relation editing
 	 * or {@link TabSet} behaviour. Uses {@link scaffoldFormFields()}
 	 * by default. To customize, either overload this method in your
-	 * subclass, or decorate it by {@link DataObjectDecorator->updateFrontEndFields()}.
+	 * subclass, or extend it by {@link DataExtension->updateFrontEndFields()}.
 	 * 
 	 * @todo Decide on naming for "website|frontend|site|page" and stick with it in the API
 	 *
@@ -2277,7 +2277,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($field == "LastEdited" && get_parent_class($this) == "DataObject") return "SS_Datetime";
 		if($field == "Created" && get_parent_class($this) == "DataObject") return "SS_Datetime";
 
-		// Add fields from Versioned decorator
+		// Add fields from Versioned extension
 		if($field == 'Version' && $this->hasExtension('Versioned')) { 
 			return 'Int';
 		}
@@ -2408,11 +2408,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Process tri-state responses from permission-alterting decorators.  The decorators are
+	 * Process tri-state responses from permission-alterting extensions.  The extensions are
 	 * expected to return one of three values:
 	 * 
-	 *  - false: Disallow this permission, regardless of what other decorators say
-	 *  - true: Allow this permission, as long as no other decorators return false
+	 *  - false: Disallow this permission, regardless of what other extensions say
+	 *  - true: Allow this permission, as long as no other extensions return false
 	 *  - NULL: Don't affect the outcome
 	 * 
 	 * This method itself returns a tri-state value, and is designed to be used like this:
@@ -2756,7 +2756,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Like {@link buildSQL}, but applies the extension modifications.
 	 * 
-	 * @uses DataObjectDecorator->augmentSQL()
+	 * @uses DataExtension->augmentSQL()
 	 *
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string|array $sort A sort expression to be inserted into the ORDER BY clause. If omitted, self::$default_sort will be used.
@@ -2936,7 +2936,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Does the hard work for get_one()
 	 * 
-	 * @uses DataObjectDecorator->augmentSQL()
+	 * @uses DataExtension->augmentSQL()
 	 *
 	 * @param string $filter A filter to be inserted into the WHERE clause
 	 * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
@@ -3042,7 +3042,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Check the database schema and update it as necessary.
 	 * 
-	 * @uses DataObjectDecorator->augmentDatabase()
+	 * @uses DataExtension->augmentDatabase()
 	 */
 	public function requireTable() {
 		// Only build the table if we've actually got fields
@@ -3091,7 +3091,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * this to add default records when the database is built, but make sure you
 	 * call parent::requireDefaultRecords().
 	 * 
-	 * @uses DataObjectDecorator->requireDefaultRecords()
+	 * @uses DataExtension->requireDefaultRecords()
 	 */
 	public function requireDefaultRecords() {
 		$defaultRecords = $this->stat('default_records');
@@ -3172,8 +3172,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(!$fields) $fields = array_keys($this->summaryFields());
 		
 		// we need to make sure the format is unified before
-		// augmenting fields, so decorators can apply consistent checks
-		// but also after augmenting fields, because the decorator
+		// augmenting fields, so extensions can apply consistent checks
+		// but also after augmenting fields, because the extension
 		// might use the shorthand notation as well
 
 		// rewrite array, if it is using shorthand syntax
@@ -3210,7 +3210,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		$fields = $rewrite;
 		
-		// apply DataObjectDecorators if present
+		// apply DataExtensions if present
 		$this->extend('updateSearchableFields', $fields);
 
 		return $fields;
@@ -3349,7 +3349,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Sets a 'context object' that can be used to provide hints about how to process a particular get / get_one request.
-	 * In particular, DataObjectDecorators can use this to amend queries more effectively.
+	 * In particular, DataExtensions can use this to amend queries more effectively.
 	 * Care must be taken to unset the context object after you're done with it, otherwise you will have a stale context,
 	 * which could cause horrible bugs.
 	 */
