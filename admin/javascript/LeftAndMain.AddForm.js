@@ -107,6 +107,7 @@
 			
 			/**
 			 * Function: refresh
+			 * This is called after each change event of PageType dropdown
 			 * 
 			 * Parameters:
 			 *  (DOMElement) selectedNode
@@ -120,7 +121,8 @@
 					disallowed = [],
 					className = (selectedNode) ? selectedNode.getClassname() : null,
 					siteTreeHints = $.parseJSON($('#sitetree_ul').attr('data-hints')),
-					disableDropDown = true;
+					disableDropDown = true,
+					selectedOption = dropdown.val();
 
 				// Clear all existing <option> elements
 				// (IE doesn't allow setting display:none on these elements)
@@ -142,7 +144,8 @@
 				if (!disableDropDown) dropdown.removeAttr('disabled');
 				else dropdown.attr('disabled', 'disabled');
 
-				// TODO Re-select the currently selected element
+				//Re-select the currently selected element
+				if (selectedOption) dropdown.val(selectedOption);
 
 				// Set default child (optional)
 				if(selectedNode.hints && selectedNode.hints.defaultChild) {
