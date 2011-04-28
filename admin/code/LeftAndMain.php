@@ -363,14 +363,6 @@ class LeftAndMain extends Controller {
 		return $content;
 	}
 
-	/**
-	 * @deprecated 2.4 Please use show()
-	 */
-	public function getitem($request) {
-		$form = $this->getEditForm($request->getVar('ID'));
-		return $form->formHtmlContent();
-	}
-
 	//------------------------------------------------------------------------------------------//
 	// Main UI components
 
