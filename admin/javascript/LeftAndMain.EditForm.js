@@ -5,7 +5,7 @@
 	$.entwine('ss', function($){
 
 		/**
-		 * Class: #Form_EditForm
+		 * Class: .cms-edit-form
 		 * 
 		 * Base edit form, provides ajaxified saving
 		 * and reloading itself through the ajax return values.
@@ -19,7 +19,7 @@
 		 *  removeform - A form is about to be removed from the DOM
 		 *  load - Form is about to be loaded through ajax
 		 */
-		$('#Form_EditForm').entwine(/** @lends ss.Form_EditForm */{	
+		$('.cms-edit-form').entwine(/** @lends ss.Form_EditForm */{	
 			/**
 			 * Variable: PlaceholderHtml
 			 * (String_ HTML text to show when no form content is chosen.
@@ -40,6 +40,27 @@
 				var self = this;
 			
 				this._setupChangeTracker();
+				
+				$('.cms-tree').bind('select_node.jstree', function(e, data) {
+					var node = data.rslt.obj, loadedNodeID = self.find(':input[name=ID]').val()
+					
+					// Don't allow checking disabled nodes
+					if($(node).hasClass('disabled')) return false;
+
+					// Don't allow reloading of currently selected node,
+					// mainly to avoid doing an ajax request on initial page load
+					if($(node).data('id') == loadedNodeID) return;
+
+					var url = $(node).find('a:first').attr('href');
+					if(url && url != '#') {
+						var xmlhttp = self.loadForm(
+							url,
+							function(response) {}
+						);
+					} else {
+						self.removeForm();
+					}
+				});
 
 				// Can't bind this through jQuery
 				window.onbeforeunload = function(e) {return self._checkChangeTracker(false);};
@@ -162,6 +183,9 @@
 						if(loadResponse !== false) {
 						  self._loadResponse(xmlhttp.responseText, status, xmlhttp, formData);
 						}
+						
+						// Re-init tabs (in case the form tag itself is a tabset)
+						if(self.hasClass('ss-tabset')) self.removeClass('ss-tabset').addClass('ss-tabset');
 						
 						// re-select previously saved tabs
 						$.each(selectedTabs, function(i, selectedTab) {
@@ -308,8 +332,8 @@
 						this.removeForm();
 					}
 				
-					// @todo Coupling to avoid FOUC (entwine applies to late)
-					this.find('.ss-tabset').tabs();
+					// If the form itself is a tabset, force re-rendering
+					if(this.hasClass('ss-tabset')) this.tabs('destroy').tabs();
 				
 					this._setupChangeTracker();
 			
@@ -327,7 +351,7 @@
 					// focus input on first form element
 					this.find(':input:visible:first').focus();
 
-					this.trigger('loadnewpage', {data: data, origData: origData});
+					this.trigger('loadnewpage', {data: data, origData: origData, xmlhttp: xmlhttp});
 				}
 
 				// set status message based on response
@@ -340,29 +364,29 @@
 		});
 
 		/**
-		 * Class: #Form_EditForm .Actions :submit
+		 * Class: .cms-edit-form .Actions :submit
 		 * 
 		 * All buttons in the right CMS form go through here by default.
 		 * We need this onclick overloading because we can't get to the
 		 * clicked button from a form.onsubmit event.
 		 */
-		$('#Form_EditForm .Actions :submit').entwine({
+		$('.cms-edit-form .Actions :submit').entwine({
 			
 			/**
 			 * Function: onclick
 			 */
 			onclick: function(e) {
-				jQuery('#Form_EditForm').entwine('ss').ajaxSubmit(this);
+				jQuery('.cms-edit-form').entwine('ss').ajaxSubmit(this);
 				return false;
 			}
 		});
 	
 		/**
-		 * Class: #Form_EditForm textarea.htmleditor
+		 * Class: .cms-edit-form textarea.htmleditor
 		 * 
 		 * Add tinymce to HtmlEditorFields within the CMS.
 		 */
-		$('#Form_EditForm textarea.htmleditor').entwine({
+		$('.cms-edit-form textarea.htmleditor').entwine({
 			
 			/**
 			 * Constructor: onmatch

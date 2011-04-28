@@ -174,8 +174,8 @@ method to the *ArticlePage* class.
 		function getCMSFields() {
 			$fields = parent::getCMSFields();
 			
-			$fields->addFieldToTab('Root.Content.Main', new DateField('Date'), 'Content');
-			$fields->addFieldToTab('Root.Content.Main', new TextField('Author'), 'Content');
+			$fields->addFieldToTab('Root.Content', new DateField('Date'), 'Content');
+			$fields->addFieldToTab('Root.Content', new TextField('Author'), 'Content');
 			
 			return $fields;
 		}
@@ -195,12 +195,12 @@ Firstly, we get the fields from the parent class; we want to add fields, not rep
 returned is a `[api:FieldSet]` object.
 
 	:::php
-	$fields->addFieldToTab('Root.Content.Main', new DateField('Date'), 'Content');
-	$fields->addFieldToTab('Root.Content.Main', new TextField('Author'), 'Content');
+	$fields->addFieldToTab('Root.Content', new DateField('Date'), 'Content');
+	$fields->addFieldToTab('Root.Content', new TextField('Author'), 'Content');
 
 
 We can then add our new fields with *addFieldToTab*. The first argument is the tab on which we want to add the field to:
-"Root.Content.Main" is the tab which the content editor is on. The second argument is the field to add; this is not a
+"Root.Content" is the tab which the content editor is on. The second argument is the field to add; this is not a
 database field, but a `[api:FormField]` documentation for more details.
 
 	:::php
@@ -232,11 +232,11 @@ To make the date field a bit more user friendly, you can add a dropdown calendar
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 		
-		$fields->addFieldToTab('Root.Content.Main', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
+		$fields->addFieldToTab('Root.Content', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
 		$dateField->setConfig('showcalendar', true);
 		$dateField->setConfig('dateformat', 'dd/MM/YYYY');
 		
-		$fields->addFieldToTab('Root.Content.Main', new TextField('Author','Author Name'), 'Content');
+		$fields->addFieldToTab('Root.Content', new TextField('Author','Author Name'), 'Content');
 		
 		return $fields;
 	}
@@ -244,7 +244,7 @@ To make the date field a bit more user friendly, you can add a dropdown calendar
 Let's walk through these changes.
 
 	:::php
-	$fields->addFieldToTab('Root.Content.Main', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
+	$fields->addFieldToTab('Root.Content', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
 
 *$dateField* is added only to the DateField in order to change the configuration.
 
@@ -259,7 +259,7 @@ Set *showCalendar* to true to have a calendar appear underneath the Date field w
 *dateFormat* allows you to specify how you wish the date to be entered and displayed in the CMS field.
 
 	:::php
-	$fields->addFieldToTab('Root.Content.Main', new TextField('Author','Author Name'), 'Content');
+	$fields->addFieldToTab('Root.Content', new TextField('Author','Author Name'), 'Content');
 
 By default the first argument *'Date'* or *'Author'* is shown as the title, however this might not be that helpful so to change the title,
 add the new title as the second argument. See the `[api:DateField]` documentation for more details.

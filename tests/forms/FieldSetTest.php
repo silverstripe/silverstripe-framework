@@ -213,7 +213,7 @@ class FieldSetTest extends SapphireTest {
 		
 		/* 2 tabs get created within a TabSet inside our set */
 		$tab = new TabSet('Root',
-			new TabSet('Content',
+			new TabSet('MyContent',
 				$mainTab = new Tab('Main'),
 				$otherTab = new Tab('Others')
 			)
@@ -221,8 +221,8 @@ class FieldSetTest extends SapphireTest {
 		$fields->push($tab);
 
 		/* Some fields get added to the 2 tabs we just created */
-		$fields->addFieldToTab('Root.Content.Main', new TextField('Country'));
-		$fields->addFieldToTab('Root.Content.Others', new TextField('Email'));
+		$fields->addFieldToTab('Root.MyContent.Main', new TextField('Country'));
+		$fields->addFieldToTab('Root.MyContent.Others', new TextField('Email'));
 		
 		/* The fields we just added actually exists in the set */
 		$this->assertNotNull($fields->dataFieldByName('Country'));
@@ -236,8 +236,8 @@ class FieldSetTest extends SapphireTest {
 		$this->assertEquals(1, $mainTab->Fields()->Count());
 		$this->assertEquals(1, $otherTab->Fields()->Count());
 		
-		$this->assertNotNull($fields->fieldByName('Root.Content'));
-		$this->assertNotNull($fields->fieldByName('Root.Content.Main'));
+		$this->assertNotNull($fields->fieldByName('Root.MyContent'));
+		$this->assertNotNull($fields->fieldByName('Root.MyContent'));
 	}
 	
 	function testTabTitles() {

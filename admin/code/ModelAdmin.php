@@ -147,7 +147,6 @@ abstract class ModelAdmin extends LeftAndMain {
 			//user_error('ModelAdmin::init(): Invalid Model class', E_USER_ERROR);
 		}
 		
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/ModelAdmin.css'); // standard layout formatting for management UI
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/silverstripe.tabs.css'); // follows the jQuery UI theme conventions
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
@@ -414,7 +413,7 @@ class ModelAdmin_CollectionController extends Controller {
 		$form->setHTMLID("Form_SearchForm_" . $this->modelClass);
 		$form->disableSecurityToken();
 		$clearAction->useButtonTag = true;
-		$clearAction->addExtraClass('minorAction');
+		$clearAction->addExtraClass('ss-ui-action-minor');
 
 		return $form;
 	}
@@ -439,7 +438,7 @@ class ModelAdmin_CollectionController extends Controller {
 						new FieldSet($createButton = new FormAction('add', $buttonLabel)),
 						$validator = new RequiredFields()
 				);
-	
+		$createButton->addExtraClass('ss-ui-action-constructive');
 		$createButton->dontEscape = true;
 		$validator->setJavascriptValidationHandler('none');
 		$form->setHTMLID("Form_CreateForm_" . $this->modelClass);
@@ -768,12 +767,8 @@ class ModelAdmin_CollectionController extends Controller {
 			$this,
 			'ResultsForm',
 			new FieldSet(
-				new TabSet('Root',
-					new Tab('SearchResults',
-						_t('ModelAdmin.SEARCHRESULTS','Search Results'),
-						$tf
-					)
-				)
+				new HeaderField('SearchResults', _t('ModelAdmin.SEARCHRESULTS','Search Results'), 2),
+				$tf
 			),
 			new FieldSet()
 		);
@@ -847,7 +842,7 @@ class ModelAdmin_CollectionController extends Controller {
 			$actions = new FieldSet (
 				new FormAction("doCreate", _t('ModelAdmin.ADDBUTTON', "Add"))
 			);
-			
+
 			$form = new Form($this, "AddForm", $fields, $actions, $validator);
 			$form->loadDataFrom($newRecord);
 			
@@ -952,7 +947,8 @@ class ModelAdmin_RecordController extends Controller {
 		$actions = $this->currentRecord->getCMSActions();
 		if($this->currentRecord->canEdit(Member::currentUser())){
 			if(!$actions->fieldByName('action_doSave') && !$actions->fieldByName('action_save')) {
-				$actions->push(new FormAction("doSave", _t('ModelAdmin.SAVE', "Save")));
+				$actions->push($saveAction = new FormAction("doSave", _t('ModelAdmin.SAVE', "Save")));
+				$saveAction->addExtraClass('ss-ui-action-constructive');
 			}
 		}else{
 			$fields = $fields->makeReadonly();
@@ -962,7 +958,7 @@ class ModelAdmin_RecordController extends Controller {
 			if(!$actions->fieldByName('action_doDelete')) {
 				$actions->insertFirst($deleteAction = new FormAction('doDelete', _t('ModelAdmin.DELETE', 'Delete')));
 			}
-			$deleteAction->addExtraClass('delete');
+			$deleteAction->addExtraClass('delete ss-ui-action-destructive');
 		}
 
 		$form = new Form($this, "EditForm", $fields, $actions, $validator);

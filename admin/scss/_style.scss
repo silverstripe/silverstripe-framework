@@ -1,0 +1,299 @@
+/**
+ * This file defines the 'theme' of the CMS: Colors, fonts, backgrounds, and detailed alignments.
+ * Together with _layout.css it provides the presentational backbone to the CMS.
+ * Ideally a developer should be able to exchange this file with his own theme easily.
+ * 
+ * Please don't put any dimension, display or float information on major structural components
+ * like '.cms-container' or '.cms-header' in here, use the _layout.scss file instead.
+ * 
+ * Use SCSS variable definitions in screen.css to avoid repeating styles like background colours
+ * or padding dimensions. See _colours.scss to get started.
+ * 
+ * To avoid this file getting too large and complicated, it is encouraged to create new SCSS files
+ * for larger components like the CMS menu or tree (see _tree.scss and _menu.scss).
+ */
+
+// ######################### Base styles #########################
+
+body {
+	@include global-reset;
+	font-size: 13px;
+	font-family: Verdana, Arial, sans-serif;
+	color: $color-text;
+}
+
+body * {
+	font-size: 13px;
+}
+
+body .ui-widget {
+	font-size: 1em;
+}
+
+strong {
+	font-weight: bold;
+}
+
+// ######################### Misc Panels #########################
+
+.cms-content-header {
+	background-color: darken($color-widget-bg, 20%);
+	@include linear-gradient(color-stops(
+		darken($color-widget-bg, 20%),
+		darken($color-widget-bg, 30%)
+	));
+	
+	h2 {
+		float: left;
+		padding: 10px;
+		font-size: 14px;
+		font-weight: bold;
+	}
+	
+	.cms-content-header-tabs {
+		float: left;
+	}
+	
+}
+
+.ui-tabs .cms-content-header {
+	.ui-tabs-nav li {
+		height: 40px;
+
+		a {
+			font-weight: bold;
+			font-size: 11px;
+			padding-top: 1em;
+		}
+	}
+	
+	.ui-state-default, 
+	.ui-widget-content .ui-state-default, 
+	.ui-widget-header .ui-state-default {
+		background-color: lighten($color-shadow-light, 20%);
+		@include linear-gradient(color-stops(
+			lighten($color-shadow-light, 20%),
+			lighten($color-shadow-light, 5%)
+		));
+	}
+	
+	.ui-state-active, 
+	.ui-widget-content .ui-state-active, 
+	.ui-widget-header .ui-state-active {
+		background: $color-widget-bg;
+	}
+}
+
+.cms-content-tools {
+	background-color: darken($color-widget-bg, 5%);
+}
+
+// ######################### Header and Logo #########################
+
+.cms-header {
+	padding: 10px;
+	background-color: darken($color-dark-bg, 10%);
+	@include linear-gradient(color-stops(
+		darken($color-dark-bg, 10%), 
+		$color-dark-bg, 
+		darken($color-dark-bg, 10%)
+	));
+	
+	* {
+		color: $color-text-light;
+	}
+}
+
+.cms-logo {
+	
+	.version {
+		display: none; 
+	} 
+	
+	* {
+		color: $color-text-dark-link;
+	}
+	
+	a {
+		display: inline-block;
+		height: 25px;
+		width: 25px;
+		float: left;
+		margin-right: 10px;
+		background: url(../images/logo_small.png) no-repeat;
+		text-indent: -9999em;
+	}
+}
+
+.cms-login-status {
+	
+	.logout-link {
+		display: inline-block;
+		height: 25px;
+		width: 25px;
+		float: left;
+		margin-right: 10px;
+		background: url(../images/logout.png) no-repeat;
+		text-indent: -9999em;
+	}
+}
+
+// ######################### Loading Screen #########################
+
+.ss-loading-screen, 
+.ss-loading-screen .loading-logo {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	position: absolute;
+	// TODO Convert to compass gradient include
+	background: #fff;
+	background: -moz-radial-gradient(50% 50% 180deg, circle cover, #FFFFFF, #EFEFEF, #C7C7C7 100%);
+	background: -webkit-gradient(radial, 50% 50%, 350, 50% 50%, 0, from(#E3E3E3), to(white));
+	z-index: 100000;
+	margin: 0;
+	padding: 0;
+}
+
+.ss-loading-screen {
+	.loading-logo {
+		background-url: url(../images/logo.gif);
+		background-repeat: no-repeat;
+		background-color: transparent;
+		background-position: 50% 50%;
+	}
+	p {
+		width: 100%;
+		text-align: center;
+		position: absolute;
+		bottom: 80px;
+		
+		span.notice {
+			display: inline-block;
+			font-size: 14px;
+			padding: 10px 20px;
+			color: #dc7f00;
+			border: none;
+			@include border-radius(5px);
+		}
+	}
+	
+	.loading-animation {
+		display: none;
+		position: absolute;
+		left: 49%;
+		top: 75%;
+	}
+}
+
+// ######################### Actions #########################
+
+.cms-content-actions {
+	
+}
+
+// ######################### Messages #########################
+
+/**
+ * Messages (see sapphire/css/Form.css)
+ */
+.message {
+	margin: 1em 0;
+	padding: 0.5em;
+	font-weight: bold;
+	border: 1px black solid;
+	
+	&.notice {
+		background-color: lighten($color-notice, 20%);
+		border-color: $color-notice;
+	}
+	
+	&.warning {
+		background-color: lighten($color-warning, 20%);
+		border-color: $color-warning;
+	}
+	&.error {
+		background-color: lighten($color-error, 20%);
+		border-color: $color-error;
+	}
+}
+
+// ######################### ModelAdmin #########################
+
+.ModelAdmin {
+	.cms-content-tools {
+		width: 300px;
+	}
+	
+	// Disable by default, will be replaced by more intuitive column selection in new data grid
+	.ResultAssemblyBlock {
+		display: none;
+	}
+}
+
+// ######################### "Add page" dialog #########################
+.cms-page-add-form-dialog {
+	#PageType li {
+		clear: left;
+		height: 40px;
+		border-bottom: 1px solid $color-shadow-dark;
+		
+		&:hover, &.selected {
+			background-color: lighten($color-highlight, 10%);
+		}
+		
+		input, label, .icon, .title {
+			float: left;
+		}
+		
+		.icon {
+			width: 20px;
+		}
+		
+		.title {
+			width: 100px;
+			font-weight: bold;
+		}
+		
+		.description {
+			font-style: italic;
+		}
+	}
+}
+
+// ######################### Content toolbar #########################
+.cms-content-toolbar {
+	& > * {
+		display: inline-block;
+	}
+	
+	.cms-tree-view-modes * {
+		display: inline-block;
+	}
+	
+	.cms-content-batchactions form * {
+		display: inline-block;
+	}
+}
+
+// ######################### Preview header (remove before release) #########################
+.cms-preview-header {
+	background-color: #FFBE66;
+	padding: 10px;
+	font-weight: bold;
+}
+
+// ######################### Other #########################
+.cms-preview {
+	background-color: $color-base;
+	
+	.cms-preview-toggle {
+		cursor: pointer;
+		
+		a {
+			color: $color-text-light;
+			font-weight: bold;
+			text-decoration: none;
+		}
+	}
+}

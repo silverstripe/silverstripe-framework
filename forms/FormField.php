@@ -69,6 +69,11 @@ class FormField extends RequestHandler {
 	protected $disabled = false;
 	
 	/**
+	 * @var String
+	 */
+	protected $template;
+	
+	/**
 	 * @var Custom Validation Message for the Field
 	 */
 	protected $customValidationMessage = "";
@@ -354,6 +359,22 @@ class FormField extends RequestHandler {
 	 */
 	public function getCustomValidationMessage() {
 		return $this->customValidationMessage;
+	}
+	
+	/**
+	 * Set name of template (without path or extension)
+	 * 
+	 * @param String
+	 */
+	function setTemplate($template) {
+		$this->template = $template;
+	}
+	
+	/**
+	 * @return String
+	 */
+	function getTemplate() {
+		return $this->template;
 	}
 	
 	/**

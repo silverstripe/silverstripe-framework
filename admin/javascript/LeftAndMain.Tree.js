@@ -6,7 +6,7 @@
 	
 	$.entwine('ss', function($){
 	
-		$('#sitetree_ul').entwine({
+		$('.cms-tree').entwine({
 			onmatch: function() {
 				this._super();
 				
@@ -79,9 +79,11 @@
 								"drag_target" : false
 							},
 							'themes': {
-								'theme': 'apple'
+								'theme': 'apple',
+								'url': 'sapphire/thirdparty/jstree/themes/apple/style.css'
 							},
-							// 'plugins': ['html_data', 'ui', 'dnd', 'crrm', 'themeroller']
+							// Caution: SilverStripe has disabled $.vakata.css.add_sheet() for performance reasons,
+							// which means you need to add any CSS manually to sapphire/admin/scss/_tree.css
 							'plugins': [
 								'html_data', 'ui', 'dnd', 'crrm', 'themes', 
 								'checkbox' // checkboxes are hidden unless .multiple is set
@@ -107,8 +109,8 @@
 						})
 						.bind('before.jstree', function(e, data) {
 							if(data.func == 'start_drag') {
-								// Only allow drag'n'drop if it has been specifically enabled, or the tree is in search mode
-								if(!$('input[id=sortitems]').is(':checked') || self.data('searchparams')) {
+								// Don't allow drag'n'drop if multi-select is enabled'
+								if(!self.hasClass('draggable') || self.hasClass('multiselect')) {
 									e.stopImmediatePropagation();
 									return false;
 								}
@@ -120,27 +122,6 @@
 									e.stopImmediatePropagation();
 									return false;
 								}
-							}
-						})
-						// TODO Move to EditForm logic
-						.bind('select_node.jstree', function(e, data) {
-							var node = data.rslt.obj, loadedNodeID = $('#Form_EditForm :input[name=ID]').val()
-							
-							// Don't allow checking disabled nodes
-							if($(node).hasClass('disabled')) return false;
-
-							// Don't allow reloading of currently selected node,
-							// mainly to avoid doing an ajax request on initial page load
-							if($(node).data('id') == loadedNodeID) return;
-
-							var url = $(node).find('a:first').attr('href');
-							if(url && url != '#') {
-								var xmlhttp = $('#Form_EditForm').loadForm(
-									url,
-									function(response) {}
-								);
-							} else {
-								$('#Form_EditForm').removeForm();
 							}
 						})
 						.bind('move_node.jstree', function(e, data) {
@@ -159,7 +140,7 @@
 							});
 						});
 					
-					$('#Form_EditForm').bind('loadnewpage', function(e, data) {
+					$('.cms-edit-form').bind('loadnewpage', function(e, data) {
 						self._onLoadNewPage(e, data);
 					});
 			},
@@ -262,7 +243,7 @@
 		});
 	});
 	
-	$('#sitetree_ul.multiple').entwine({
+	$('.cms-tree.multiple').entwine({
 		onmatch: function() {
 			this._super();
 			
@@ -284,7 +265,7 @@
 		}
 	});
 	
-	$('#sitetree_ul li').entwine({
+	$('.cms-tree li').entwine({
 		
 		/**
 		 * Function: setEnabled
@@ -314,6 +295,17 @@
 		 */
 		getID: function() {
 			return this.data('id');
+		}
+	});
+	
+	$('.cms-tree-view-modes :input[name=view-mode]').entwine({
+		onmatch: function() {
+			// set active by default
+			this.trigger('click');
+			this._super();
+		},
+		onclick: function(e) {
+			$('.cms-tree').toggleClass('draggable', $(e.target).val() == 'draggable');
 		}
 	});
 

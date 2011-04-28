@@ -27,6 +27,8 @@
  */
 class TabSet extends CompositeField {
 	
+	protected $template = "TabSetFieldHolder";
+	
 	/**
 	 * @param string $name Identifier
 	 * @param string $title (Optional) Natural language title of the tabset
@@ -73,14 +75,13 @@ class TabSet extends CompositeField {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-cookie/jquery.cookie.js');
 		
-		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.all.css');
-		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.tabs.css');
+		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.css');
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
 		
-		return $this->renderWith("TabSetFieldHolder");
+		return $this->renderWith($this->template);
 	}
 	
 	/**

@@ -365,10 +365,6 @@ class Security extends Controller {
 		// only display tabs when more than one authenticator is provided
 		// to save bandwidth and reduce the amount of custom styling needed 
 		if(count($forms) > 1) {
-			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
-			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-			Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
-			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/effects.js");
 			Requirements::css(SAPPHIRE_DIR . "/css/Form.css");
 			
 			// Needed because the <base href=".."> in the template makes problems
@@ -381,8 +377,7 @@ class Security extends Controller {
 			
 			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 			
-			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery.ui.all.css');
-			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery.ui.tabs.css');
+			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 			
 			Requirements::css(SAPPHIRE_DIR . '/css/Security_login.css');
 			
@@ -438,11 +433,6 @@ class Security extends Controller {
 	 * @return string Returns the "lost password" page as HTML code.
 	 */
 	public function lostpassword() {
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
-
 		if(class_exists('SiteTree')) {
 			$tmpPage = new Page();
 			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
@@ -501,11 +491,6 @@ class Security extends Controller {
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	public function passwordsent($request) {
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
-
 		if(class_exists('SiteTree')) {
 			$tmpPage = new Page();
 			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');

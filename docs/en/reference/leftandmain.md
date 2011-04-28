@@ -37,26 +37,17 @@ The PHP file defining your new subclass is the first step in the process.  This 
 	class MyAdmin extends LeftAndMain {
 	
 		static $url_segment = 'myadmin';
-	
 		static $url_rule = '$Action/$ID';
-	
 		static $menu_title = 'My Admin';
-	
 		static $menu_priority = 60;
 	
-		/**
-	
-		 * Initialisation method called before accessing any functionality that BulkLoaderAdmin has to offer
-		 */
 		public function init() {
-			Requirements::javascript('cms/javascript/MyAdmin.js');
-			
+			Requirements::javascript('cms/javascript/MyAdmin.js');			
 			parent::init();
 		}
 	
 		/**
-	
-		 * Form that will be shown when we open one of the items
+		 * Form which will be shown when we open one of the items
 		 */	 
 		public function getEditForm($id = null) {
 			return new Form($this, "EditForm",
@@ -171,7 +162,6 @@ You could insert this code using Requirements from a custom page class.
 	});
 
 See [Javascript in the CMS](/topics/javascript#javascript-cms)
-
 
 ## Related
 

@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  commit: b5ff32977e136f519236d29593433e87dadb74d0
+  branch: master
+lock: false
+repository_class: Piston::Git::Repository
+repository_url: https://github.com/bramstein/jlayout.git

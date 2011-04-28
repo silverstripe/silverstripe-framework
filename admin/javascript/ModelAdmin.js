@@ -64,14 +64,14 @@
 				// Import forms are processed without ajax
 				if(this.attr('id').match(/^Form_ImportForm/)) return true;
 				
-				$('#contentPanel').closeRightPanel();
+				$('.cms-editor-dialogs').closeRightPanel();
 			
 				this.trigger('beforeSubmit');
 
 				var btn = $(this[0].clickedButton);
 				btn.addClass('loading');
 
-				$('#Form_EditForm').loadForm(
+				$('.cms-edit-form').loadForm(
 					this.attr('action'),
 					function() {
 						btn.removeClass('loading');
@@ -135,7 +135,7 @@
 			onclick: function(e) {
 				var firstLink = this.find('a[href]');
 				if(!firstLink) return;
-				$('#Form_EditForm').loadForm(firstLink.attr('href'));
+				$('.cms-edit-form').loadForm(firstLink.attr('href'));
 				return false;
 			}
 		});
@@ -153,7 +153,7 @@
 				className = $('select option:selected', this).val();
 				requestPath = this.attr('action').replace('ManagedModelsSelect', className + '/add');
 				var $button = $(':submit', this);
-				$('#Form_EditForm').loadForm(
+				$('.cms-edit-form').loadForm(
 					requestPath,
 					function() {
 						$button.removeClass('loading');
@@ -166,11 +166,11 @@
 		});
 	
 		/**
-		 * Class: #Form_EditForm input[name=action_doDelete]
+		 * Class: .cms-edit-form input[name=action_doDelete]
 		 * 
 		 * RHS panel Delete button
 		 */
-		$('#Form_EditForm input[name=action_doDelete]').entwine({
+		$('.cms-edit-form input[name=action_doDelete]').entwine({
 			// Function: onclick
 			onclick: function(e) {
 				if(!confirm(ss.i18n._t('ModelAdmin.REALLYDELETE', 'Really delete?'))) {
@@ -197,14 +197,14 @@
 			}
 		});
 
-		$('#contentPanel').entwine({
+		$('.cms-editor-dialogs').entwine({
 			/**
 			* Close TinyMCE image, link or flash panel.
 			* this function is called everytime a new search, back or add new DataObject are clicked
 			**/
 			closeRightPanel: function(){
-				if($('#contentPanel').is(':visible')) {
-					$('#contentPanel').hide();
+				if($('.cms-editor-dialogs').is(':visible')) {
+					$('.cms-editor-dialogs').hide();
 					$('#Form_EditorToolbarImageForm').hide();
 					$('#Form_EditorToolbarFlashForm').hide();
 					$('#Form_EditorToolbarLinkForm').hide();

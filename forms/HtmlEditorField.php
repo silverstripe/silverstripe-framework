@@ -275,6 +275,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		
 		$form->unsetValidator();
 		$form->loadDataFrom($this);
+		$form->addExtraClass('htmleditorfield-form htmleditorfield-linkform');
 		
 		$this->extend('updateLinkForm', $form);
 		
@@ -347,6 +348,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$form->unsetValidator();
 		$form->disableSecurityToken();
 		$form->loadDataFrom($this);
+		$form->addExtraClass('htmleditorfield-form htmleditorfield-imageform');
 		
 		return $form;
 	}
@@ -385,6 +387,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$form->unsetValidator();
 		$form->loadDataFrom($this);
 		$form->disableSecurityToken();
+		$form->addExtraClass('htmleditorfield-form htmleditorfield-flashform');
 		
 		return $form;
 	}

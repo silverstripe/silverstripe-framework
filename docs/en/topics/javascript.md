@@ -602,7 +602,7 @@ The CMS has a number of Observer-pattern hooks you can access: (The elements whi
   * BeforeSave -- after user clicks 'Save', before AJAX save-request (#Form_EditForm)
   * PageLoaded -- after new SiteTree page is loaded. (#Form_EditForm)
   * PageSaved -- after AJAX save-request is successful (#Form_EditForm)
-  * SelectionChanged -- when new item is chosen from SiteTree (#sitetree)
+  * SelectionChanged -- when new item is chosen from SiteTree (.cms-tree)
 
 Here's an example of hooking the 'PageLoaded' and 'BeforeSave' methods:
 

@@ -17,7 +17,7 @@
  * 		if ($galleries) {
  * 			$galleries = $galleries->toDropdownMap('ID', 'Title', '(Select one)', true);
  * 		}
- * 		$fields->addFieldToTab('Root.Content.Main', new DropdownField('GalleryID', 'Gallery', $galleries), 'Content');
+ * 		$fields->addFieldToTab('Root.Content', new DropdownField('GalleryID', 'Gallery', $galleries), 'Content');
  * </code>
  * 
  * As you see, you need to put "GalleryID", rather than "Gallery" here.

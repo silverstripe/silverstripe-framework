@@ -88,24 +88,24 @@ AjaxMemberLookup = {
  * Class: MemberTableField
  */
 MemberTableField = Class.create();
-MemberTableField.applyTo('#Form_EditForm div.MemberTableField');
+MemberTableField.applyTo('.cms-edit-form div.MemberTableField');
 MemberTableField.prototype = {
 	
 	initialize: function() {
 		Behaviour.register({
-			'#Form_EditForm div.MemberFilter input' : {
+			'.cms-edit-form div.MemberFilter input' : {
 				onkeypress : this.prepareSearch.bind(this)
 			},
 
-			'#Form_EditForm div.MemberTableField table.data tr.addtogrouprow input' : {
+			'.cms-edit-form div.MemberTableField table.data tr.addtogrouprow input' : {
 				onkeypress : this.prepareAddToGroup.bind(this)
 			},
 
-			'#Form_EditForm div.MemberTableField table.data tr.addtogrouprow #Form_AddRecordForm_action_addtogroup' : {
+			'.cms-edit-form div.MemberTableField table.data tr.addtogrouprow #Form_AddRecordForm_action_addtogroup' : {
 				onclick : this.prepareAddToGroup.bind(this)
 			},
 
-			'#Form_EditForm div.MemberTableField table.data tr.addtogrouprow td.actions input' : {
+			'.cms-edit-form div.MemberTableField table.data tr.addtogrouprow td.actions input' : {
 				initialise: function() {
 					data = this.parentNode.parentNode.getElementsByTagName('input');
 					var i,item,error = [];
@@ -116,9 +116,9 @@ MemberTableField.prototype = {
 				onclick : this.addToGroup.bind(this)
 			},
 			
-			//'#Form_EditForm div.MemberTableField input' : AjaxMemberLookup,
+			//'.cms-edit-form div.MemberTableField input' : AjaxMemberLookup,
 			
-			'#Form_EditForm' : {
+			'.cms-edit-form' : {
 				changeDetection_fieldsToIgnore : {
 					'ctf[start]' : true,
 					'ctf[ID]' : true,
@@ -307,14 +307,7 @@ MemberFilterButton.prototype = {
     		}
     		updateURL += ($('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '');
 
-    		new Ajax.Updater( fieldID, updateURL, {
-    			onComplete: function() {
-    			    Behaviour.apply($(fieldID), true);
-    			},
-    			onFailure: function( response ) {
-    				errorMessage('Could not filter results: ' + response.responseText );
-    			}
-    		});
+    		jQuery($(fieldID)).get(updateURL, null, function() {Behaviour.apply($(fieldID), true);});
 		} catch(er) {
 			errorMessage('Error searching');
 		}
@@ -325,7 +318,7 @@ MemberFilterButton.prototype = {
 
 // has to be external from initialize() because otherwise request will double on each reload - WTF
 Behaviour.register({
-	'#Form_EditForm div.MemberTableField table.data input.text' : AjaxMemberLookup
+	'.cms-edit-form div.MemberTableField table.data input.text' : AjaxMemberLookup
 });
 
 /**
@@ -346,12 +339,10 @@ function ajaxSubmitFieldSet(href, fieldSet, extraData) {
 		'method' : 'post', 
 		'data' : data,
 		'success' : function(response) {
-			//alert(response.responseText);
-			Ajax.Evaluator(response);
+			eval(response);
 		},
 		'error' : function(response) {
 			alert(response.responseText);
-			//errorMessage('Error: ', response);
 		}
 	});
 }

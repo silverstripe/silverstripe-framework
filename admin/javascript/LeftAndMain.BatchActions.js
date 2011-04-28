@@ -36,7 +36,7 @@
 			 * Constructor: onmatch
 			 */
 			onmatch: function() {
-				var self = this, tree = $('#sitetree_ul');
+				var self = this, tree = $('.cms-tree');
 				
 				this.setTree(tree);
 				
@@ -44,16 +44,12 @@
 					self.serializeFromTree();
 				});
 						
-				// if tab which contains this form is shown, make the tree selectable
-				$('#TreeActions').bind('tabsselect', function(e, ui) {
-					// if we are selecting another tab, or the panel is visible (meaning about to be closed),
-					// disable tree selection and reset any values. Otherwise enable it.
-					if($(ui.panel).attr('id') != 'TreeActions-batchactions' || $(ui.panel).is(':visible')) {
-						// @TODO: this is unneccessarily fired also when switching between two other tabs
-						tree.removeClass('multiple');
-					} else {
+				$('.cms-tree-view-modes :input[name=view-mode]').bind('click', function(e) {
+					if($(e.target).val() == 'multiselect') {
 						tree.addClass('multiple');
 						self.serializeFromTree();
+					} else {
+						tree.removeClass('multiple');	
 					}
 				});
 				
@@ -104,7 +100,7 @@
 			 *  (boolean)
 			 */
 			_isActive: function() {
-				return $('#TreeActions-batchactions').is(':visible');
+				return $('.cms-content-batchactions').is(':visible');
 			},
 		
 			/**
@@ -271,10 +267,10 @@
 						// 		// only if the current page was modified
 						// 		tree.jstree('select_node', selectedNode);
 						// 	} else if(data.deleted[selectedNodeId]) {
-						// 		jQuery('#Form_EditForm').entwine('ss').removeForm();
+						// 		jQuery('.cms-edit-form').entwine('ss').removeForm();
 						// 	}
 						// } else {
-						// 	jQuery('#Form_EditForm').entwine('ss').removeForm();
+						// 	jQuery('.cms-edit-form').entwine('ss').removeForm();
 						// }
 					
 						// close panel
@@ -295,6 +291,11 @@
 	 */
 	$('#Form_BatchActionsForm select[name=Action]').entwine({
 		
+		onmatch: function() {
+			this.trigger('change');
+			this._super();
+		},
+		
 		/**
 		 * Function: onchange
 		 * 
@@ -302,7 +303,13 @@
 		 *  (Event) e
 		 */
 		onchange: function(e) {
-			$(e.target.form).entwine('ss').refreshSelected();
+			var form = $(e.target.form), btn = form.find(':submit');
+			if($(e.target).val() == -1) {
+				btn.attr('disabled', 'disabled');
+			} else {
+				btn.removeAttr('disabled');
+				form.entwine('ss').refreshSelected();
+			} 
 		}
 	});
 	

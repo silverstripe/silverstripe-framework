@@ -97,22 +97,17 @@ TableListField.prototype = {
 			jQuery.ajax({
 				'url': link.getAttribute("href"),
 				'method': 'post', 
-				'data': {forceajax: 1, SecurityID: $('SecurityID') ? $('SecurityID').value : null},
+				'data': {forceajax: 1, SecurityID: jQuery('input[name=SecurityID]').val()},
 				'success':  function(){
-					Effect.Fade(
-						row,
-						{
-							afterFinish: function(obj) {
-								// remove row from DOM
-								obj.element.parentNode.removeChild(obj.element);
-								// recalculate summary if needed (assumes that TableListField.js is present)
-								// TODO Proper inheritance
-								if(self._summarise) self._summarise();
-								// custom callback
-								if(self.callback_deleteRecord) self.callback_deleteRecord(e);
-							}
-						}
-					);
+					jQuery(row).fadeOut('fast', function() {
+						// remove row from DOM
+						this.element.parentNode.removeChild(obj.element);
+						// recalculate summary if needed (assumes that TableListField.js is present)
+						// TODO Proper inheritance
+						if(self._summarise) self._summarise();
+						// custom callback
+						if(self.callback_deleteRecord) self.callback_deleteRecord(e);
+					});
 				},
 				'error': this.ajaxErrorHandler
 			});
@@ -183,13 +178,12 @@ TableListField.prototype = {
 		if(el.getAttribute('href')) {
     		jQuery.ajax({
 					'url': el.getAttribute('href'),
-					'data': {'update': 1, 'params': (params)},
+					'data': {'update': 1},
   				'success': function(response) {
-  					Element.replace(self.id, response.responseText);
+						jQuery('#' + self.id).replaceWith(response)
 					// reapply behaviour and reattach methods to TF container node
 					// e.g. <div class="TableListField">
   					Behaviour.apply($(self.id), true);
-						if(oncomplete) oncomplete.apply(response);
   				}
 				});
 		}

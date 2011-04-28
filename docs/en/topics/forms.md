@@ -267,7 +267,7 @@ If you want to remove certain fields from your subclass:
 Adds a new text field called FavouriteColour next to the Content field in the CMS
 
 	:::php
-	$fields->addFieldToTab('Root.Content.Main', new TextField('FavouriteColour'), 'Content');
+	$fields->addFieldToTab('Root.Content', new TextField('FavouriteColour'), 'Content');
 
 
 

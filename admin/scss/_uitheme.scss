@@ -1,0 +1,40 @@
+/**
+ * This file defines CMS-specific customizations to the jQuery UI theme.
+ * Every rule in this file should be wrapped in the '.cms' selector (to make it more specific),
+ * and contain ONLY overwritten jQuery UI rules (with 'ui-' prefix).
+ * 
+ * This file should be fairly short, as we're using our own custom jQuery UI theme already.
+ * TODO Add theme reference
+ * 
+ * Use _style.scss to add more generic style information,
+ * and read the jQuery UI theming API: http://jqueryui.com/docs/Theming/API
+ */
+
+.cms {	
+	.ui-tabs {
+		padding: 0;
+		
+		.ui-widget-header {
+			border: 0;
+			background: none;
+		}
+	}
+	
+	.ui-widget-content,
+	.ui-tabs .ui-tabs-panel {
+		color: $color-text;
+		font-size: 1em;
+		border: 0;
+		background: $color-widget-bg;
+	}
+	
+	.ui-widget-header {
+		background: $color-widget-bg;
+		border: 0;
+	}
+	
+	.ss-ui-button {
+		padding: 5px;
+		text-decoration: none;
+	}
+}

@@ -1101,9 +1101,9 @@ class Form extends RequestHandler {
 	 * than <% control FormObject %>
 	 */
 	function forTemplate() {
-		return $this->renderWith(array(
-			$this->getTemplate(),
-			'Form'
+		return $this->renderWith(array_merge(
+			(array)$this->getTemplate(),
+			array('Form')
 		));
 	}
 

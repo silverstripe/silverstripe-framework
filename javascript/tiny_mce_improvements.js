@@ -5,14 +5,10 @@ ToolbarForm.prototype = {
 		else this.open(ed);
 	},
 	close: function(ed) {
-		if(this.style.display == 'block') {
-			this.style.display = 'none';
-		}
+		jQuery(this).dialog('close');
 	},
 	open: function(ed) {
-		if(this.style.display != 'block') {
-			this.style.display = 'block';
-		}
+		jQuery(this).dialog('open');
 	},
 	onsubmit: function() {
 		return false;
@@ -140,6 +136,7 @@ LinkForm.prototype = {
 	},
 	
 	updateSelection: function(ed) {
+		if(ed == null) ed = tinyMCE.activeEditor;
 		if(ed.selection.getRng()) {
 		    this.originalSelection = ed.selection.getRng();
 	    }
@@ -164,14 +161,14 @@ LinkForm.prototype = {
 						Form.Element.setValue(this.elements[i], selected);
 					}
 				}
-				
-			// If we haven't selected an existing link, then just make sure we default to "internal" for the link
-			// type.
-			} else {
-				if(!Form.Element.getValue(this.elements.LinkType)) Form.Element.setValue(this.elements.LinkType, 'internal');
 			}
-			this.linkTypeChanged(data ? false : true);
+			
+		// If we haven't selected an existing link, then just make sure we default to "internal" for the link
+		// type.
+		} else {
+			if(!Form.Element.getValue(this.elements.LinkType)) Form.Element.setValue(this.elements.LinkType, 'internal');
 		}
+		this.linkTypeChanged(data ? false : true);
 	},
 	
 	handleaction_insert: function() {
@@ -437,6 +434,7 @@ SideFormAction.prototype = {
 			} catch(er) {
 				alert("An error occurred.  Please try again, or reload the CMS if the problem persists.\n\nError details: " + er.message);
 			}
+			jQuery(this).parents('form').dialog('close');
 		} else {
 			alert("Couldn't find form method handle" + this.name);
 		}
@@ -564,13 +562,8 @@ ImageForm.prototype = {
 		if(this.selectedImage) {
 			this.selectedImage.insert();
 		}
-	},
-	
-	handleaction_editimage: function() {
-		if(this.selectedImage) {
-			this.selectedImage.edit();
-		}
 	}
+	
 }
 
 ImageThumbnail = Class.create();
@@ -582,42 +575,6 @@ ImageThumbnail.prototype = {
 	onclick: function(e) {
 		$('Form_EditorToolbarImageForm').selectImage(this);
 		return false;
-	},
-	
-	edit: function() {
-		var windowWidth = Element.getDimensions(window.top.document.body).width;
-       var windowHeight = Element.getDimensions(window.top.document.body).height;
-		var iframe = window.top.document.getElementById('imageEditorIframe');
-		if(iframe != null) {
-			iframe.parentNode.removeChild(iframe);
-		}
-		iframe = window.top.document.createElement('iframe');
-		var fileToEdit = this.href;
-		iframe.setAttribute("src","admin/ImageEditor?fileToEdit=" + fileToEdit);
-		iframe.id = 'imageEditorIframe';
-		iframe.style.width = windowWidth - 6 + 'px';
-		iframe.style.height = windowHeight + 10 + 'px';
-		iframe.style.zIndex = "1000";
-		iframe.style.position = "absolute";
-		iframe.style.top = "8px";
-		iframe.style.left = "8px";
-		window.top.document.body.appendChild(iframe);
-		var divLeft = window.top.document.createElement('div');
-		var divRight = window.top.document.createElement('div');
-        divLeft.style.width = "8px";
-        divLeft.style.height = "300%";
-        divLeft.style.zIndex = "1000";
-        divLeft.style.top = "0";
-        divLeft.style.position = "absolute";
-        divRight.style.width = "10px";
-        divRight.style.height = "300%";
-        divRight.style.zIndex = "1000";
-        divRight.style.top = "0";
-        divRight.style.position = "absolute";
-        divRight.style.left = Element.getDimensions(divLeft).width + Element.getDimensions(iframe).width - 4 + 'px';
-		window.top.document.body.appendChild(divLeft);
-		window.top.document.body.appendChild(divRight);
-		return;
 	},
 	
 	insert: function() {
@@ -663,13 +620,6 @@ ImageThumbnail.prototype = {
 		if(el && el.nodeName == 'IMG') {
 			ed.dom.setAttribs(el, attributes);
 		} else {
-			// Focus gets saved in tinymce_ssbuttons when opening the sidebar.
-			// Unless the focus has changed in the meantime, reset it to the previous position.
-			// This is necessary because IE can lose its focus if any of the sidebar input fields are used.
-			if(ed.ss_focus_bookmark) {
-				ed.selection.moveToBookmark(ed.ss_focus_bookmark);
-				delete ed.ss_focus_bookmark;
-			}
 			ed.execCommand('mceInsertContent', false, html, {
 				skip_undo : 1
 			});
@@ -700,29 +650,6 @@ function reselectImage(transport) {
 
 		$('Image').reapplyBehaviour();
       this.addToTinyMCE = this.addToTinyMCE.bind(this);
-}
-
-function imageEditorClosed() {
-	if(self.refreshAsset) {
-		refreshAsset();
-	}
-	if($('Form_EditorToolbarImageForm')) {
-		if($('Form_EditorToolbarImageForm').style.display != "none") {
-			// FInd the selected image
-			links = $('Image').getElementsByTagName('a');
-			for(i =0; link = links[i]; i++) {
-				if(link.className == 'selectedImage') {
-					var quesmark = link.href.lastIndexOf('?');
-					selectedimage = link.href.substring(0, quesmark);
-					break;
-				}
-			}
-		
-			// Trick the folder dropdown into registering a change, so the image thumbnails are reloaded
-			folderID = $('Form_EditorToolbarImageForm_FolderID').value;
-			$('Image').ajaxGetFiles(folderID, null, reselectImage);
-		}
-	}
 }
 
 FlashForm = Class.extend('ToolbarForm');
@@ -962,13 +889,3 @@ function sapphiremce_cleanup(type, value) {
 	}
 	return value;
 }
-
-contentPanelCloseButton = Class.create();
-contentPanelCloseButton.prototype = {
-	onclick: function() {
-	    tinyMCE.activeEditor.execCommand('ssclosesidepanel');
-	}
-}
-
-contentPanelCloseButton.applyTo('#contentPanel h2 img');
-

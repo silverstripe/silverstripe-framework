@@ -1,15 +1,12 @@
 /**
  * File: LeftAndMain.js
  */
-
-/**
- * Variable: ss_MainLayout
- * jquery.layout Global variable so layout state management can pick it up.
- */
-var ss_MainLayout;
-
 (function($) {
+
+	$.metadata.setType('html5');
+	
 	$.entwine('ss', function($){
+		
 		/**
 		 * Position the loading spinner animation below the ss logo
 		 */ 
@@ -44,11 +41,6 @@ var ss_MainLayout;
 		 *  loadnewpage - ...
 		 */
 		$('.LeftAndMain').entwine({
-			/**
-			 * Variable: MainLayout
-			 * (Object) Reference to jQuery.layout element
-			 */
-			MainLayout: null,
 
 			/**
 			 * Variable: PingIntervalSeconds
@@ -61,113 +53,38 @@ var ss_MainLayout;
 			 */
 			onmatch: function() {
 				var self = this;
-
+				
+				// Browser detection
+				if($.browser.msie && parseInt($.browser.version, 10) < 7) {
+					$('.ss-loading-screen').append(
+						'<p><span class="notice">' + 
+						ss.i18n._t('LeftAndMain.IncompatBrowserWarning') +
+						'</span></p>'
+					);
+					return;
+				}
+				
+				// Initialize layouts, inner to outer
+				var doInnerLayout = function() {$('.cms-content').layout();}
+				var outer = $('.cms-container');
+				var doOuterLayout = function() {outer.layout({resize: false});}
+				doInnerLayout();
+				doOuterLayout();
+				$(window).resize(doOuterLayout);
+				
 				// Remove loading screen
 				$('.ss-loading-screen').hide();
-				$('body').removeClass('stillLoading');
+				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
 
-				// Layout
-				ss_MainLayout = this._setupLayout();
-				this.setMainLayout(ss_MainLayout);
-				layoutState.options.keys = "west.size,west.isClosed";
-				$(window).unload(function(){ layoutState.save('ss_MainLayout');});
-				
 				this._setupPinging();
 
-				// HACK Delay resizing to give jquery-ui tabs a change their dimensions
-				// through dynamically added css classes
-				$(window).resize(function () {
-					var timerID = "timerLeftAndMainResize";
-					if (window[timerID]) clearTimeout(window[timerID]);
-					window[timerID] = setTimeout(function() {
-						self._resizeChildren();
-					}, 200);
-				});
-				$(window).resize();
-
-				// If tab has no nested tabs, set overflow to auto
-				$(this).find('.tab').not(':has(.tab)').css('overflow', 'auto');
-
-				// @todo Doesn't resize properly if the response doesn't contain a tabset (see above)
-				$('#Form_EditForm').bind('loadnewpage', function() {
-					// HACK Delay resizing to give jquery-ui tabs a change their dimensions
-					// through dynamically added css classes
-					var timerID = "timerLeftAndMainResize";
-					if (window[timerID]) clearTimeout(window[timerID]);
-					window[timerID] = setTimeout(function() {
-						self._resizeChildren();
-					}, 200);
+				$('.cms-edit-form').live('loadnewpage', function() {
+					doInnerLayout();
+					doOuterLayout();
 				});
 
 				this._super();
-			},
-
-			/**
-			 * Function: _setupLayout
-			 * 
-			 * Initialize jQuery layout manager with the following panes:
-			 * - east: Tree, Page Version History, Site Reports
-			 * - center: Form
-			 * - west: "Insert Image", "Insert Link", "Insert Flash" panes
-			 * - north: CMS area menu bar
-			 * - south: "Page view", "profile" and "logout" links
-			 */
-			_setupLayout: function() {
-				var self = this;
-
-				var widthEast = this.find('.ui-layout-east').width();
-				var widthWest = this.find('.ui-layout-west').width();
-
-				// layout containing the tree, CMS menu, the main form etc.
-				var savedLayoutSettings = layoutState.load('ss_MainLayout');
-
-				var layoutSettings = jQuery.extend({
-					defaults: {
-						// TODO Reactivate once we have localized values
-						togglerTip_open: '',
-						togglerTip_closed: '',
-						resizerTip: '',
-						sliderTip: '',
-						onresize: function() {self._resizeChildren();},
-						onopen: function() {self._resizeChildren();}
-					},
-					north: {
-						slidable: false,
-						resizable: false,
-						size: this.find('.ui-layout-north').height(),
-						togglerLength_open: 0
-					},
-					south: {
-						slidable: false,
-						resizable: false,
-						size: this.find('.ui-layout-south').height(),
-						togglerLength_open: 0
-					},
-					west: {
-						size: (widthWest) ? widthWest : undefined,
-						fxName: "none"
-					},
-					east: {
-						initClosed: true,
-						// multiple panels which are triggered through tinymce buttons,
-						// so a user shouldn't be able to toggle this panel manually
-						initHidden: true,
-						spacing_closed: 0,
-						fxName: "none"
-					},
-					center: {}
-				}, savedLayoutSettings);
-				var layout = $('body').layout(layoutSettings);
-
-				// Adjust tree accordion etc. in left panel to work correctly
-				// with jQuery.layout (see http://layout.jquery-dev.net/tips.html#Widget_Accordion)
-				this.find("#treepanes").accordion({
-					fillSpace: true,
-					animated: false
-				});
-
-				return layout;
 			},
 
 			/**
@@ -197,31 +114,6 @@ var ss_MainLayout;
 						complete: onSessionLost
 					});
 				}, this.getPingIntervalSeconds() * 1000);
-			},
-
-			/**
-			 * Function: _resizeChildren
-			 * 
-			 * Resize elements in center panel
-			 * to fit the boundary box provided by the layout manager.
-			 * 
-			 * Todo:
-			 *  Replace with automated less ugly parent/sibling traversal
-			 */
-			_resizeChildren: function() {
-				$("#treepanes", this).accordion("resize");
-				$('#sitetree_and_tools', this).fitHeightToParent();
-				$('#contentPanel form', this).fitHeightToParent();
-				$('#contentPanel form fieldset', this).fitHeightToParent();
-				$('#contentPanel form fieldset .content', this).fitHeightToParent();
-				$('#Form_EditForm').fitHeightToParent();
-				$('#Form_EditForm fieldset', this).fitHeightToParent();
-				// Order of resizing is important: Outer to inner
-				// TODO Only supports two levels of tabs at the moment
-				$('#Form_EditForm fieldset > .ss-tabset', this).fitHeightToParent();
-				$('#Form_EditForm fieldset > .ss-tabset > .tab', this).fitHeightToParent();
-				$('#Form_EditForm fieldset > .ss-tabset > .tab > .ss-tabset', this).fitHeightToParent();
-				$('#Form_EditForm fieldset > .ss-tabset > .tab > .ss-tabset > .tab', this).fitHeightToParent();
 			}
 		});
 
@@ -233,60 +125,12 @@ var ss_MainLayout;
 		 * a new 'clickedButton' property on the form DOM element.
 		 */
 		$('.LeftAndMain :submit, .LeftAndMain button, .LeftAndMain :reset').entwine({
-			
-			/**
-			 * Constructor: onmatch
-			 */
 			onmatch: function() {
-				this.addClass(
-					'ui-state-default ' +
-					'ui-corner-all'
-				)
-				.hover(
-					function() {
-						$(this).addClass('ui-state-hover');
-					},
-					function() {
-						$(this).removeClass('ui-state-hover');
-					}
-				)
-				.focus(function() {
-					$(this).addClass('ui-state-focus');
-				})
-				.blur(function() {
-					$(this).removeClass('ui-state-focus');
-				})
-				.click(function() {
-					var form = this.form;
-					// forms don't natively store the button they've been triggered with
-					form.clickedButton = this;
-					// Reset the clicked button shortly after the onsubmit handlers
-					// have fired on the form
-					setTimeout(function() {form.clickedButton = null;}, 10);
-				});
-
+				// TODO Adding classes in onmatch confuses entwine
+				var self = this;
+				setTimeout(function() {self.addClass('ss-ui-button');}, 10);
+				
 				this._super();
-			}
-		});
-
-		/**
-		 * Class: #TreeActions
-		 * 
-		 * Container for tree actions like "create", "search", etc.
-		 */
-		$('#TreeActions').entwine({
-			/**
-			 * Constructor: onmatch
-			 * 
-			 * Setup "create", "search", "batch actions" layers above tree.
-			 * All tab contents are closed by default.
-			 */
-			onmatch: function() {
-				this.tabs({
-					collapsible: true,
-					selected: parseInt(jQuery.cookie('ui-tabs-TreeActions'), 10) || null,
-					cookie: { expires: 30, path: '/', name: 'ui-tabs-TreeActions' }
-				});
 			}
 		});
 
@@ -402,7 +246,7 @@ var ss_MainLayout;
 			onmatch: function() {
 				this._super();
 				
-				$('#Form_EditForm').bind('loadnewpage delete', function(e) {
+				$('.cms-edit-form').bind('loadnewpage delete', function(e) {
 					var updatedSwitchView = $('#AjaxSwitchView');
 					if(updatedSwitchView.length) {
 						$('#SwitchView').html(updatedSwitchView.html());
@@ -431,6 +275,7 @@ var ss_MainLayout;
 				return false;
 			}
 		});
+		
 	});
 }(jQuery));
 

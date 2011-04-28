@@ -10,6 +10,8 @@
  */
 class FileIFrameField extends FileField {
 	
+	protected $template = 'FileIFrameField';
+	
 	public static $allowed_actions = array (
 		'iframe',
 		'EditFileForm',
@@ -49,7 +51,7 @@ class FileIFrameField extends FileField {
 	 * @return string
 	 */
 	public function Field() {
-		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.all.css');
+		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
@@ -109,7 +111,7 @@ class FileIFrameField extends FileField {
 		
 		Requirements::css('sapphire/css/FileIFrameField.css');
 		
-		return $this->renderWith('FileIFrameField');
+		return $this->renderWith($this->template);
 	}
 	
 	/**

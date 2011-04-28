@@ -10,7 +10,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	
 	static $url_rule = '/$Action/$ID/$OtherID';
 	
-	static $menu_title = 'Security';
+	static $menu_title = 'Users';
 	
 	static $tree_class = 'Group';
 	
@@ -36,8 +36,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	public function init() {
 		parent::init();
 
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/SecurityAdmin_left.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/SecurityAdmin_right.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/SecurityAdmin.js');
 	}
 	
 	function getEditForm($id = null) {
@@ -169,6 +168,14 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			$fields,
 			$actions
 		);
+		$form->addExtraClass('cms-edit-form');
+		
+		return $form;
+	}
+	
+	function AddForm() {
+		$form = parent::AddForm();
+		$form->Actions()->fieldByName('action_doAdd')->setTitle(_t('AssetAdmin.ActionAdd', 'Add folder'));
 		
 		return $form;
 	}

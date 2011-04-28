@@ -1,1 +1,0 @@
-if (browserGetElementsByClassName) document.getElementsByClassName = browserGetElementsByClassName;
