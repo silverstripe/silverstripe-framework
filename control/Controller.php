@@ -395,15 +395,6 @@ class Controller extends RequestHandler {
 	}
 
 	/**
-	 * Returns true if the visitor has been here before
-	 * @return boolean
-	 */
-	function PastVisitor() {
-		user_error("Controller::PastVisitor() is deprecated", E_USER_NOTICE);
-		return false;
-	}
-
-	/**
 	 * Return true if the visitor has signed up for a login account before
 	 * @return boolean
 	 */
