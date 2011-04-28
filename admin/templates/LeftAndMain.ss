@@ -11,8 +11,8 @@
 	
 	<% include CMSLoadingScreen %>
 	
-	<div class="cms-container" data-layout="{type: 'border'}">
-		
+	<div class="cms-container center" data-layout="{type: 'border'}">
+	
 		<div class="cms-preview-header north">
 			Caution! The CMS is in alpha stage, and might not behave as expected. Get updates on the 
 			<a href="https://groups.google.com/forum/#!forum/silverstripe-dev">developer mailinglist</a>
@@ -24,9 +24,15 @@
 		$Menu
 
 		$Content
+		
+		<% if currentPage %>
+		<div class="cms-preview east">
+			<iframe src="$currentPage.Link"></iframe>
+		</div>
+		<% end_if %>
 
 	</div>
-	
+		
 	<div id="cms-editor-dialogs">
 		<% control EditorToolbar %>
 			$ImageForm

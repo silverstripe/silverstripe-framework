@@ -351,7 +351,7 @@
 					// focus input on first form element
 					this.find(':input:visible:first').focus();
 
-					this.trigger('loadnewpage', {data: data, origData: origData});
+					this.trigger('loadnewpage', {data: data, origData: origData, xmlhttp: xmlhttp});
 				}
 
 				// set status message based on response

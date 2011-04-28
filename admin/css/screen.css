@@ -29,36 +29,43 @@ a img { border: none; }
 html, body { width: 100%; height: 100%; padding: 0; margin: 0; overflow: hidden; }
 
 /* line 17, ../scss/_layout.scss */
+.cms-preview { width: 1px; overflow: hidden; }
+/* line 21, ../scss/_layout.scss */
+.cms-preview .cms-preview-toggle { width: 10px; }
+/* line 25, ../scss/_layout.scss */
+.cms-preview iframe { width: 100%; height: 100%; }
+
+/* line 31, ../scss/_layout.scss */
 .cms-container { height: 100%; }
 
-/* line 21, ../scss/_layout.scss */
+/* line 35, ../scss/_layout.scss */
 .cms-menu { width: 250px; overflow: auto; }
 
-/* line 33, ../scss/_layout.scss */
+/* line 47, ../scss/_layout.scss */
 .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-form { display: -moz-inline-box; -moz-box-orient: vertical; display: inline-block; vertical-align: middle; *vertical-align: auto; }
 /* line 7, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/css3/_inline-block.scss */
 .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-form { *display: inline; }
 
-/* line 37, ../scss/_layout.scss */
+/* line 51, ../scss/_layout.scss */
 .cms-content-tools { width: 250px; overflow: auto; }
 
-/* line 42, ../scss/_layout.scss */
+/* line 56, ../scss/_layout.scss */
 .cms-content-form { overflow: auto; }
 
-/* line 46, ../scss/_layout.scss */
+/* line 60, ../scss/_layout.scss */
 .cms-content-header { height: 40px; }
-/* line 49, ../scss/_layout.scss */
+/* line 63, ../scss/_layout.scss */
 .cms-content-header h2 { width: 226px; }
-/* line 53, ../scss/_layout.scss */
+/* line 67, ../scss/_layout.scss */
 .cms-content-header > div { width: 9999em; overflow: hidden; }
 
-/* line 59, ../scss/_layout.scss */
+/* line 73, ../scss/_layout.scss */
 .cms-content-actions { padding: 10px; }
 
-/* line 63, ../scss/_layout.scss */
+/* line 77, ../scss/_layout.scss */
 .cms-logo { height: 30px; overflow: hidden; vertical-align: middle; }
 
-/* line 69, ../scss/_layout.scss */
+/* line 83, ../scss/_layout.scss */
 .cms-login-status { height: 30px; overflow: hidden; vertical-align: middle; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
@@ -241,7 +248,7 @@ li.jstree-closed > ul { display: none; }
 /* line 20, ../scss/_menu.scss */
 .cms-menu-list li a { display: block; height: 32px; vertical-align: middle; font-size: 14px; text-shadow: #aaaaaa 1px 1px 1px; color: #333333; padding: 5px; }
 /* line 29, ../scss/_menu.scss */
-.cms-menu-list li a .icon { display: block; float: left; margin-right: 5px; background: url('../images/icons-32.png?1303602411') no-repeat; width: 32px; height: 32px; overflow: hidden; background-position: 0px 0px; }
+.cms-menu-list li a .icon { display: block; float: left; margin-right: 5px; background: url('../images/icons-32.png?1303890208') no-repeat; width: 32px; height: 32px; overflow: hidden; background-position: 0px 0px; }
 /* line 37, ../scss/_menu.scss */
 .cms-menu-list li a .text { display: block; padding-top: 10px; }
 /* line 43, ../scss/_menu.scss */
@@ -427,3 +434,10 @@ strong { font-weight: bold; }
 
 /* line 280, ../scss/_style.scss */
 .cms-preview-header { background-color: #FFBE66; padding: 10px; font-weight: bold; }
+
+/* line 287, ../scss/_style.scss */
+.cms-preview { background-color: #b0bfc6; }
+/* line 290, ../scss/_style.scss */
+.cms-preview .cms-preview-toggle { cursor: pointer; }
+/* line 293, ../scss/_style.scss */
+.cms-preview .cms-preview-toggle a { color: white; font-weight: bold; text-decoration: none; }

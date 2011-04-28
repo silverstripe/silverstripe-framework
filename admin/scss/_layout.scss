@@ -14,6 +14,20 @@ html, body {
 	overflow: hidden; // avoid jlayout jitter when resizing
 }
 
+.cms-preview {
+	width: 1px; // collapsed by default
+	overflow: hidden;
+		
+	.cms-preview-toggle {
+		width: 10px;
+	}
+	
+	iframe {
+		width: 100%;
+		height: 100%;
+	}
+}
+
 .cms-container {
 	height: 100%
 }

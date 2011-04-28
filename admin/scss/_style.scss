@@ -282,3 +282,18 @@ strong {
 	padding: 10px;
 	font-weight: bold;
 }
+
+// ######################### Other #########################
+.cms-preview {
+	background-color: $color-base;
+	
+	.cms-preview-toggle {
+		cursor: pointer;
+		
+		a {
+			color: $color-text-light;
+			font-weight: bold;
+			text-decoration: none;
+		}
+	}
+}
