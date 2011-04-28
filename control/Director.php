@@ -21,12 +21,7 @@ class Director {
 	 * @var SiteTree
 	 */
 	private static $current_page;
-	
-	/**
-	 * @deprecated 2.4
-	 */
-	static $siteMode;
-	
+		
 	static $alternateBaseFolder;
 
 	static $alternateBaseURL;
@@ -36,12 +31,6 @@ class Director {
 	static $test_servers = array();
 	
 	static protected $environment_type;
-
-	/** 
-	 * @deprecated 2.4
- 	 */ 
-	static protected $callbacks;
-
 
 	/**
 	 * Add URL matching rules to the Director.
@@ -323,13 +312,6 @@ class Director {
 	 */
 	public static function set_current_page($page) {
 		self::$current_page = $page;
-	}
-	
-	/**
-	 * @deprecated 2.4 Use {@link Director::get_current_page()}.
-	 */
-	static function currentPage() {
-		return self::get_current_page();
 	}
 
 	/**
@@ -687,49 +669,6 @@ class Director {
 	 */
 	public static function is_cli() {
 		return (php_sapi_name() == "cli");
-	}
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Site mode methods
-	////////////////////////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * @deprecated 2.4
-	 */
-	static function set_site_mode($mode) {
-		user_error (
-			'Director::set_site_mode() is deprecated as the functionality is no longer neccesary.', E_USER_NOTICE
-		);
-		
-		Director::$siteMode = $mode;
-		
-		if(isset(self::$callbacks[$mode])) {
-			foreach(self::$callbacks[$mode] as $extension) {
-				call_user_func($extension);
-			}
-		}
-	}
-	
-	/**
-	 * @deprecated 2.4
-	 */
-	static function get_site_mode() {
-		user_error (
-			'Director::set_site_mode() is deprecated as the functionality is no longer neccesary.', E_USER_NOTICE
-		);
-		
-		return Director::$siteMode;
-	}
-
-	/**
-	 * @deprecated 2.4 Use a custom extension on your controller.
-	 */
-	static function add_callback($function, $mode = 'site') {
-		user_error (
-			'Director::add_callback() is deprecated, please use a custom extension on your controller', E_USER_NOTICE
-		);
-		
-		self::$callbacks[$mode][] = $function;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////
