@@ -35,7 +35,7 @@ class RequiredFields extends Validator {
 	 * Clears all the validation from this object.
 	 */
 	public function removeValidation(){
-		$this->required = null;
+		$this->required = array();
 	}
 
 	/**
