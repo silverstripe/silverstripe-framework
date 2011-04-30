@@ -1133,17 +1133,7 @@ class Member extends DataObject {
 		$password->setCanBeEmpty(true);
 		if(!$this->ID) $password->showOnClick = false;
 		$mainFields->replaceField('Password', $password);
-		
-		$mainFields->insertBefore(
-			new HeaderField('MemberDetailsHeader',_t('Member.PERSONALDETAILS', "Personal Details", PR_MEDIUM, 'Headline for formfields')),
-			'FirstName'
-		);
-		
-		$mainFields->insertBefore(
-			new HeaderField('MemberUserDetailsHeader',_t('Member.USERDETAILS', "User Details", PR_MEDIUM, 'Headline for formfields')),
-			'Email'
-		);
-		
+				
 		$mainFields->replaceField('Locale', new DropdownField(
 			"Locale", 
 			_t('Member.INTERFACELANG', "Interface Language", PR_MEDIUM, 'Language of the CMS'), 
