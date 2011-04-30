@@ -235,6 +235,9 @@ class LeftAndMain extends Controller {
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js');
+		
+		// Handled by LeftAndMain.js
+		Requirements::block(SAPPHIRE_DIR . '/javascript/DateField.js');
 
 		Requirements::themedCSS('typography');
 
