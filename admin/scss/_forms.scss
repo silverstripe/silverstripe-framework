@@ -2,45 +2,117 @@
  * This file defines common styles for form elements used throughout the CMS interface.
  * It is an addition to the base styles defined in sapphire/css/Form.css.
  */
-.cms {
 	
-	// Form fields
-	
-	.field {
-		display: block;
-		padding: 10px 0;
-		border-bottom: 1px solid $color-shadow-light;
-				
-		label {
-			float: left;
-			width: 10em;
-		}
-		
-		// Don't float inner/contained fields
-		.middleColumn {
-			margin-left: 10em;
+.field {
+	display: block;
+	padding: 10px 0;
+	border-bottom: 1px solid $color-shadow-light;
 			
-			.field {
-				display: inline;
-				padding: 0;
-				border: none;
-			}
-
-			label {
-				float: none;
-				width: auto;
-			}
-		}
+	label {
+		float: left;
+		width: 10em;
 	}
 	
-	// TODO Change to mixin?
-	form.nostyle {
+	// Don't float inner/contained fields
+	.middleColumn {
+		margin-left: 10em;
+		
 		.field {
 			display: inline;
 			padding: 0;
-			border: 0;
+			border: none;
 		}
-		
+
+		label {
+			float: none;
+			width: auto;
+		}
+	}
+}
+
+// TODO Change to mixin?
+form.nostyle {
+	.field {
+		display: inline;
+		padding: 0;
+		border: 0;
+	}
+	
+	label {
+		float: none;
+		width: auto;
+	}
+	
+	.middleColumn {
+		margin-left: 0;
+	}
+}
+
+.field.nolabel {	
+	.middleColumn {
+		margin-left: 0;
+	}
+}
+
+input, textarea {
+	@include border-radius(5px);
+	@include linear-gradient(color-stops(
+		$color-widget-bg, 
+		lighten($color-widget-bg, 10%), 
+		$color-widget-bg
+	));
+	border: 1px solid $color-shadow-light;
+	padding: 3px;
+}
+
+input.loading {
+	padding-left: 16px;
+	background: $color-widget-bg url(../../images/network-save.gif) no-repeat center left;
+}
+
+// Buttons
+.ss-ui-button.ss-ui-action-constructive,
+.ui-widget-content .ss-ui-button.ss-ui-action-constructive,
+.ui-widget-header .ss-ui-button.ss-ui-action-constructive {
+	background: none; // avoid overwritten gradient from jQuery UI styles
+	@include linear-gradient(color-stops(
+		$color-button-constructive, 
+		darken($color-button-constructive, 20%)
+	));
+	color: $color-text-light;
+}
+
+.ss-ui-button.ss-ui-action-destructive,
+.ui-widget-content .ss-ui-button.ss-ui-action-destructive,
+.ui-widget-header .ss-ui-button.ss-ui-action-destructive {
+	color: $color-button-destructive;
+}
+
+.ss-ui-button.ss-ui-action-minor,
+.ui-widget-content .ss-ui-button.ss-ui-action-minor
+.ui-widget-header .ss-ui-button.ss-ui-action-minor {
+	background: none;
+	padding: 0;
+	border: 0;
+	color: $color-text-dark;
+	text-decoration: underline;
+}
+
+.cms-edit-form {
+	padding-bottom: 20px;
+	
+	.text input, textarea {
+		width: 300px;
+	}
+
+	// TODO Unclear if "button bar" concept is edit form specific
+	.Actions {
+		text-align: right;
+	}
+}
+
+.cms-content-tools {
+	.field {
 		label {
 			float: none;
 			width: auto;
@@ -50,76 +122,10 @@
 			margin-left: 0;
 		}
 	}
-	
-	.field.nolabel {	
-		.middleColumn {
-			margin-left: 0;
-		}
-	}
-	
-	input, textarea {
-		@include border-radius(5px);
-		@include linear-gradient(color-stops(
-			$color-widget-bg, 
-			lighten($color-widget-bg, 10%), 
-			$color-widget-bg
-		));
-		border: 1px solid $color-shadow-light;
-		padding: 3px;
-	}
-	
-	input.loading {
-		padding-left: 16px;
-		background: $color-widget-bg url(../../images/network-save.gif) no-repeat center left;
-	}
-	
-	// Buttons
-	.ss-ui-button.ss-ui-action-constructive,
-	.ui-widget-content .ss-ui-button.ss-ui-action-constructive,
-	.ui-widget-header .ss-ui-button.ss-ui-action-constructive {
-		background: none; // avoid overwritten gradient from jQuery UI styles
-		@include linear-gradient(color-stops(
-			$color-button-constructive, 
-			darken($color-button-constructive, 20%)
-		));
-		color: $color-text-light;
-	}
-	
-	.ss-ui-button.ss-ui-action-destructive,
-	.ui-widget-content .ss-ui-button.ss-ui-action-destructive,
-	.ui-widget-header .ss-ui-button.ss-ui-action-destructive {
-		color: $color-button-destructive;
-	}
-	
-	.ss-ui-button.ss-ui-action-minor,
-	.ui-widget-content .ss-ui-button.ss-ui-action-minor
-	.ui-widget-header .ss-ui-button.ss-ui-action-minor {
-		background: none;
-		padding: 0;
-		border: 0;
-		color: $color-text-dark;
-		text-decoration: underline;
-	}
-	
-	.cms-edit-form {
-		padding-bottom: 20px;
+}
 
-		// TODO Unclear if "button bar" concept is edit form specific
-		.Actions {
-			text-align: right;
-		}
-	}
-	
-	.cms-content-tools {
-		.field {
-			label {
-				float: none;
-				width: auto;
-			}
-			
-			.middleColumn {
-				margin-left: 0;
-			}
-		}
+.field#ViewerGroups, .field#EditorGroups, .field#CreateTopLevelGroups {
+	label {
+		display: none;
 	}
 }

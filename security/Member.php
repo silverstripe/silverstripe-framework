@@ -1634,6 +1634,7 @@ class Member_ProfileForm extends Form {
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		
+		$this->addExtraClass('member-profile-form');
 		$this->loadDataFrom($member);
 	}
 	
@@ -1858,7 +1859,6 @@ class Member_Validator extends RequiredFields {
 class Member_DatetimeOptionsetField extends OptionsetField {
 
 	function Field() {
-		Requirements::css(SAPPHIRE_DIR . '/css/MemberDatetimeOptionsetField.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/MemberDatetimeOptionsetField.js');
 

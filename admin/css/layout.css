@@ -1,69 +1,43 @@
 /** This file defines the structural layout of the CMS interface. Ideally, you should be able to lay out the base elements of the CMS with only this file.  Please put any presentational definitions (color, fonts, backgrounds, paddings) into _style.scss or _uitheme.scss instead. */
-/* line 17, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; }
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td { margin: 0; padding: 0; border: 0; outline: 0; font-weight: inherit; font-style: inherit; font-size: 100%; font-family: inherit; vertical-align: baseline; }
 
-/* line 20, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
-body { line-height: 1; }
+body { line-height: 1; color: black; background: white; }
 
-/* line 22, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 ol, ul { list-style: none; }
 
-/* line 24, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
-table { border-collapse: collapse; border-spacing: 0; }
+table { border-collapse: separate; border-spacing: 0; vertical-align: middle; }
 
-/* line 26, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 caption, th, td { text-align: left; font-weight: normal; vertical-align: middle; }
 
-/* line 28, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
-q, blockquote { quotes: none; }
-/* line 101, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
-q:before, q:after, blockquote:before, blockquote:after { content: ""; content: none; }
+q, blockquote { quotes: "" ""; }
+q:before, q:after, blockquote:before, blockquote:after { content: ""; }
 
-/* line 30, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 a img { border: none; }
 
-/* line 115, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.1/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
-article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
-
-/* line 12, ../scss/layout.scss */
+@charset "UTF-8";
 html, body { width: 100%; height: 100%; padding: 0; margin: 0; overflow: hidden; }
 
-/* line 20, ../scss/layout.scss */
 .cms-preview { width: 1px; overflow: hidden; }
-/* line 24, ../scss/layout.scss */
 .cms-preview .cms-preview-toggle { width: 10px; }
-/* line 28, ../scss/layout.scss */
 .cms-preview iframe { width: 100%; height: 100%; }
 
-/* line 34, ../scss/layout.scss */
 .cms-container { height: 100%; }
 
-/* line 38, ../scss/layout.scss */
 .cms-menu { width: 250px; overflow: auto; }
 
-/* line 51, ../scss/layout.scss */
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-form { display: -moz-inline-box; -moz-box-orient: vertical; display: inline-block; vertical-align: middle; *vertical-align: auto; }
-/* line 7, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.1/frameworks/compass/stylesheets/compass/css3/_inline-block.scss */
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-form { *display: inline; }
 
-/* line 55, ../scss/layout.scss */
 .cms-content-tools { width: 230px; padding: 10px; overflow: auto; }
 
-/* line 61, ../scss/layout.scss */
 .cms-content-form { overflow: auto; }
 
-/* line 65, ../scss/layout.scss */
 .cms-content-header { height: 40px; }
-/* line 68, ../scss/layout.scss */
 .cms-content-header h2 { width: 226px; }
-/* line 72, ../scss/layout.scss */
 .cms-content-header > div { width: 9999em; overflow: hidden; }
 
-/* line 78, ../scss/layout.scss */
 .cms-content-actions { padding: 10px; }
 
-/* line 82, ../scss/layout.scss */
 .cms-logo { height: 30px; overflow: hidden; vertical-align: middle; }
 
-/* line 88, ../scss/layout.scss */
 .cms-login-status { height: 30px; overflow: hidden; vertical-align: middle; }

@@ -86,12 +86,12 @@ strong {
 
 .cms-content-tools {
 	background-color: darken($color-widget-bg, 5%);
+	padding: 10px;
 }
 
 // ######################### Header and Logo #########################
 
 .cms-header {
-	padding: 10px;
 	background-color: darken($color-dark-bg, 10%);
 	@include linear-gradient(color-stops(
 		darken($color-dark-bg, 10%), 
@@ -271,7 +271,7 @@ strong {
 		display: inline-block;
 	}
 	
-	.cms-content-batchactions form * {
+	.cms-content-batchactions form > * {
 		display: inline-block;
 	}
 }
@@ -281,6 +281,51 @@ strong {
 	background-color: #FFBE66;
 	padding: 10px;
 	font-weight: bold;
+}
+
+// ######################### Member Profile #########################
+
+form.member-profile-form {
+	
+	#CsvFile .middleColumn {
+		background: none !important;
+	}
+	
+	.advanced h4 {
+		margin-bottom: .5em;
+	}
+	
+	.Actions {
+		text-align: left;
+		border: 0;
+	}
+	
+	input.customFormat {
+		border: 1px solid #ccc !important;
+		padding: 3px;
+		margin-left: 2px;
+	}
+	.formattingHelpToggle {
+		font-size: 11px;
+		padding: 3px;
+	}
+	.formattingHelpText {
+		margin: 5px auto;
+		color: #333;
+		padding: 5px 10px;
+		width: 90%;
+		background: #fff;
+		border: 1px solid #ccc;
+	}
+	.formattingHelpText ul {
+		padding: 0;
+	}
+	.formattingHelpText li {
+		font-size: 11px;
+		color: #333;
+		margin-bottom: 2px;
+	}
+	
 }
 
 // ######################### Other #########################

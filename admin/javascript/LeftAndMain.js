@@ -135,11 +135,11 @@
 		});
 
 		/**
-		 * Class: a#EditMemberProfile
+		 * Class: a#profile-link
 		 * 
 		 * Link for editing the profile for a logged-in member through a modal dialog.
 		 */
-		$('a#EditMemberProfile').entwine({
+		$('.LeftAndMain .profile-link').entwine({
 			
 			/**
 			 * Constructor: onmatch
