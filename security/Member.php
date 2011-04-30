@@ -1631,9 +1631,7 @@ class Member_GroupSet extends ComponentSet {
 class Member_ProfileForm extends Form {
 	
 	function __construct($controller, $name, $member) {
-		Requirements::clear();
-		Requirements::css(CMS_DIR . '/css/typography.css');
-		Requirements::css(SAPPHIRE_DIR . "/css/Form.css");
+		Requirements::block(SAPPHIRE_DIR . '/admin/css/layout.css');
 		
 		$fields = $member->getCMSFields();
 		$fields->push(new HiddenField('ID','ID',$member->ID));

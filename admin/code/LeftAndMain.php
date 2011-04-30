@@ -192,6 +192,7 @@ class LeftAndMain extends Controller {
 			$htmlEditorConfig->setOption('content_css', implode(',', $cssFiles));
 		}
 		
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/layout.css');
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
 		
 		Requirements::javascript(THIRDPARTY_DIR . '/prototype/prototype.js');
