@@ -1092,7 +1092,7 @@ class LeftAndMain extends Controller {
 	 * @return SiteConfig
 	 */
 	function SiteConfig() {
-		return SiteConfig::current_site_config();
+		return (class_exists('SiteConfig')) ? SiteConfig::current_site_config() : null;
 	}
 
 	/**
