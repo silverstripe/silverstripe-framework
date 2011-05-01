@@ -2,6 +2,8 @@
 	$.entwine('ss', function($){
 		$('.LeftAndMain .cms-preview').entwine({
 			
+			SharedWidth: null,
+			
 			onmatch: function() {
 				var self = this, layoutContainer = this.parent();
 				// this.resizable({
@@ -10,6 +12,9 @@
 				// 		$('.cms-container').layout({resize: false});
 				// 	}
 				// });
+				
+				// TODO Compute dynamically
+				this.setSharedWidth(500);
 				
 				// Create layout and controls
 				this.prepend('<div class="cms-preview-toggle west"><a href="#">&lt;</a></div>');
@@ -50,14 +55,13 @@
 				if(id && form.find(':input[name=ID]').val() != id) form.loadForm('admin/page/edit/show/' + id);
 			},
 			
-			toggle: function() {
+			toggle: function(bool) {
 				var self = this, 
 					width = this.width(), 
 					relayout = function() {$('.cms-container').layout({resize: false});},
 					minWidth = this.find('.cms-preview-toggle').width(),
-					wasCollapsed = (width <= minWidth), 
-					sharedWidth = $('.cms-content').width() / 2, // half of content area by default
-					newWidth = wasCollapsed ? sharedWidth : minWidth,
+					wasCollapsed = (bool === true || bool === false) ? bool : (width <= minWidth), 
+					newWidth = wasCollapsed ? this.getSharedWidth() : minWidth,
 					newOverflow = wasCollapsed ? 'auto' : 'hidden';
 					
 				this.css('overflow', newOverflow).width(newWidth);
@@ -96,6 +100,15 @@
 			onclick: function(e) {
 				e.preventDefault();
 				this.parents('.cms-preview').toggle();
+			}
+		});
+		
+		$('.LeftAndMain .cms-switch-view a').entwine({
+			onclick: function(e) {
+				e.preventDefault();
+				var preview = $('.cms-preview');
+				preview.toggle(true);
+				preview.loadUrl($(e.target).attr('href'));
 			}
 		});
 	});

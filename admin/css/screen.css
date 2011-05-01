@@ -159,7 +159,7 @@ form.nostyle .middleColumn { margin-left: 0; }
 
 input, textarea { -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; -ms-border-radius: 5px; -khtml-border-radius: 5px; border-radius: 5px; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #ebeff1), color-stop(50%, #ffffff), color-stop(100%, #ebeff1)); background-image: -moz-linear-gradient(top, #ebeff1 0%, #ffffff 50%, #ebeff1 100%); background-image: linear-gradient(top, #ebeff1 0%, #ffffff 50%, #ebeff1 100%); border: 1px solid #aaaaaa; padding: 3px; }
 
-input.loading { padding-left: 16px; background: #ebeff1 url(../../images/network-save.gif) no-repeat center left; }
+input.loading, input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, .ui-widget-header input.ui-state-default.loading { padding-left: 16px; background: #ebeff1 url(../../images/network-save.gif) no-repeat center left; }
 
 .ss-ui-button.ss-ui-action-constructive, .ui-widget-content .ss-ui-button.ss-ui-action-constructive, .ui-widget-header .ss-ui-button.ss-ui-action-constructive { background: none; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #77b53f), color-stop(100%, #456925)); background-image: -moz-linear-gradient(top, #77b53f 0%, #456925 100%); background-image: linear-gradient(top, #77b53f 0%, #456925 100%); color: white; }
 
@@ -261,3 +261,5 @@ form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; 
 .cms-preview { background-color: #b0bfc6; }
 .cms-preview .cms-preview-toggle { cursor: pointer; }
 .cms-preview .cms-preview-toggle a { color: white; font-weight: bold; text-decoration: none; }
+
+.cms-switch-view a { padding-right: 1em; }
