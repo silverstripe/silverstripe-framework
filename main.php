@@ -123,8 +123,10 @@ if (isset($_GET['debug_profile'])) Profiler::unmark('DB::connect');
 
 if (isset($_GET['debug_profile'])) Profiler::unmark('main.php init');
 
+
 // Direct away - this is the "main" function, that hands control to the appropriate controller
-Director::direct($url);
+DataModel::set_inst(new DataModel());
+Director::direct($url, DataModel::inst());
 
 if (isset($_GET['debug_profile'])) {
 	Profiler::unmark('all_execution');

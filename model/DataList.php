@@ -16,6 +16,11 @@ class DataList extends DataObjectSet {
 	protected $dataQuery;
 	
 	/**
+	 * The DataModel from which this DataList comes.
+	 */
+	protected $model;
+	
+	/**
 	 * Synonym of the constructor.  Can be chained with literate methods.
 	 * DataList::create("SiteTree")->sort("Title") is legal, but
 	 * new DataList("SiteTree")->sort("Title") is not.
@@ -33,6 +38,10 @@ class DataList extends DataObjectSet {
 		$this->dataClass = $dataClass;
 		$this->dataQuery = new DataQuery($this->dataClass);
 		parent::__construct();
+	}
+	
+	public function setModel(DataModel $model) {
+		$this->model = $model;
 	}
 	
 	public function dataClass() {
@@ -141,8 +150,10 @@ class DataList extends DataObjectSet {
 		if(empty($row['RecordClassName'])) $row['RecordClassName'] = $row['ClassName'];
 		
 		// Instantiate the class mentioned in RecordClassName only if it exists, otherwise default to $this->dataClass
-		if(class_exists($row['RecordClassName'])) return new $row['RecordClassName']($row);
-		else return new $defaultClass($row);
+		if(class_exists($row['RecordClassName'])) $item = new $row['RecordClassName']($row, false, $this->model);
+		else $item = new $defaultClass($row, false, $this->model);
+		
+		return $item;
 	}
 	
 	/**
@@ -361,6 +372,15 @@ class DataList extends DataObjectSet {
 	function add($item) {
 		// Nothing needs to happen by default
 		// TO DO: If a filter is given to this data list then
+	}
+
+	/**
+	 * Return a new item to add to this DataList.
+	 * @todo This doesn't factor in filters.
+	 */
+	function newObject($initialFields = null) {
+		$class = $this->dataClass;
+ 		return new $class($initialFields, false, $this->model);
 	}
 	
 	function remove($item) {

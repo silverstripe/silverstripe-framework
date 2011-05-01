@@ -112,6 +112,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	protected $fixtures; 
 	
+	protected $model;
+	
 	function setUp() {
 		// Mark test as being run
 		$this->originalIsRunningTest = self::$is_running_test;
@@ -146,6 +148,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
+		
+		// Todo: this could be a special test model
+		$this->model = DataModel::inst();
 
 		// Set up fixture
 		if($fixtureFile || $this->usesDatabase || !self::using_temp_db()) {
@@ -180,7 +185,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 					}
 					
 					$fixture = new YamlFixture($fixtureFilePath);
-					$fixture->saveIntoDatabase();
+					$fixture->saveIntoDatabase($this->model);
 					$this->fixtures[] = $fixture;
 
 					// backwards compatibility: Load first fixture into $this->fixture

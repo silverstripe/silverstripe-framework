@@ -349,6 +349,7 @@ class Security extends Controller {
 			$tmpPage->ID = -1 * rand(1,10000000);
 
 			$controller = new Page_Controller($tmpPage);
+			$controller->setModel($this->model);
 			$controller->init();
 			//Controller::$currentController = $controller;
 		} else {

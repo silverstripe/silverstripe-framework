@@ -11,10 +11,11 @@ class VersionedRestfulServer extends Controller {
 		'index'
 	);
 	
-	function handleRequest($request) {
+	function handleRequest($request, $model) {
+		$this->setModel($model);
 		Versioned::reading_stage('Live');
 		$restfulserver = new RestfulServer();
-		$response = $restfulserver->handleRequest($request);
+		$response = $restfulserver->handleRequest($request, $model);
 		return $response;
 	}
 }

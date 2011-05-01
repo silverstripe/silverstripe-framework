@@ -134,7 +134,7 @@ class DevelopmentAdmin extends Controller {
 	function build($request) {
 		if(Director::is_cli()) {
 			$da = Object::create('DatabaseAdmin');
-			return $da->handleRequest($request);
+			return $da->handleRequest($request, $this->model);
 		} else {
 			$renderer = Object::create('DebugView');
 			$renderer->writeHeader();
@@ -143,7 +143,7 @@ class DevelopmentAdmin extends Controller {
 			echo "<div class=\"status pending\"><h2 class='buildProgress'>Database is building.... Check below for any errors</h2><h2 class='buildCompleted'>Database has been built successfully</h2></div>";
 
 			$da = Object::create('DatabaseAdmin');
-			return $da->handleRequest($request);
+			return $da->handleRequest($request, $this->model);
 
 			echo "</div>";
 			$renderer->writeFooter();

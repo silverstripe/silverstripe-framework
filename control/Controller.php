@@ -115,13 +115,14 @@ class Controller extends RequestHandler {
 	 * @return SS_HTTPResponse The response that this controller produces, 
 	 *  including HTTP headers such as redirection info
 	 */
-	function handleRequest(SS_HTTPRequest $request) {
+	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
 		if(!$request) user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
 		
 		$this->pushCurrent();
 		$this->urlParams = $request->allParams();
 		$this->request = $request;
 		$this->response = new SS_HTTPResponse();
+		$this->setModel($model);
 		
 		$this->extend('onBeforeInit');
 
@@ -138,7 +139,7 @@ class Controller extends RequestHandler {
 			return $this->response;
 		}
 
-		$body = parent::handleRequest($request);
+		$body = parent::handleRequest($request, $model);
 		if($body instanceof SS_HTTPResponse) {
 			if(isset($_REQUEST['debug_request'])) Debug::message("Request handler returned SS_HTTPResponse object to $this->class controller; returning it without modification.");
 			$this->response = $body;

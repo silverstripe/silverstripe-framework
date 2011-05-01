@@ -97,6 +97,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public $destroyed = false;
 	
 	/**
+	 * The DataModel from this this object comes
+	 */
+	protected $model;
+	
+	/**
 	 * Data stored in this objects database record. An array indexed by fieldname. 
 	 * 
 	 * Use {@link toMap()} if you want an array representation
@@ -289,7 +294,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param boolean $isSingleton This this to true if this is a singleton() object, a stub for calling methods.  Singletons
 	 * don't have their defaults set.
 	 */
-	function __construct($record = null, $isSingleton = false) {
+	function __construct($record = null, $isSingleton = false, $model = null) {
 		// Set the fields data.
 		if(!$record) {
 			$record = array(
@@ -374,6 +379,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// prevent populateDefaults() and setField() from marking overwritten defaults as changed
 		$this->changed = array();
+		
+		$this->model = $model ? $model : DataModel::inst();
+	}
+	
+	/**
+	 * Set the DataModel
+	 */
+	function setModel(DataModel $model) {
+		$this->model = $model;
 	}
 
 	/**
@@ -399,7 +413,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	function duplicate($doWrite = true) {
 		$className = $this->class;
-		$clone = new $className( $this->record );
+		$clone = new $className( $this->record, false, $this->model );
 		$clone->ID = 0;
 
 		if($doWrite) {
@@ -497,7 +511,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				'ClassName' => $originalClass,
 				'RecordClassName' => $originalClass,
 			)
-		));
+		), false, $this->model);
 		
 		if($newClassName != $originalClass) {
 			$newInstance->setClassName($newClassName);
@@ -1199,7 +1213,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		//  - move the details of the delete code in the DataQuery system
 		//  - update the code to just delete the base table, and rely on cascading deletes in the DB to do the rest
 		//    obviously, that means getting requireTable() to configure cascading deletes ;-)
-		$srcQuery = DataList::create($this->class)->where("ID = $this->ID")->dataQuery()->query();
+		$srcQuery = DataList::create($this->class, $this->model)->where("ID = $this->ID")->dataQuery()->query();
 		foreach($srcQuery->queriedTables() as $table) {
 			$query = new SQLQuery("*", array('"'.$table.'"'));
 			$query->where("\"ID\" = $this->ID");
@@ -1274,11 +1288,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$joinID    = $this->getField($joinField);
 			
 			if($joinID) {
-				$component = DataObject::get_by_id($class, $joinID);
+				$component = $this->model->$class->byID($joinID);
 			}
 			
 			if(!isset($component) || !$component) {
-				$component = new $class();
+				$component = $this->model->$class->newObject();
 			}
 		} elseif($class = $this->belongs_to($componentName)) {
 			$joinField = $this->getRemoteJoinField($componentName, 'belongs_to');
@@ -1289,7 +1303,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 			
 			if(!isset($component) || !$component) {
-				$component = new $class();
+				$component = $this->model->$class->newObject();
 				$component->$joinField = $this->ID;
 			}
 		} else {
@@ -1327,6 +1341,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$joinField = $this->getRemoteJoinField($componentName, 'has_many');
 		
 		$result = new HasManyList($componentClass, $joinField);
+		if($this->model) $result->setModel($this->model);
 		if($this->ID) $result->setForeignID($this->ID);
 
 		$result = $result->where($filter)->limit($limit)->sort($sort)->join($join);
@@ -1414,6 +1429,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		$result = new ManyManyList($componentClass, $table, $componentField, $parentField,
 			$this->many_many_extraFields($componentName));
+		if($this->model) $result->setModel($this->model);
 
 		// If this is called on a singleton, then we return an 'orphaned relation' that can have the
 		// foreignID set elsewhere.
@@ -2488,6 +2504,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Todo: Make the $containerClass method redundant
 		if($containerClass != "DataList") user_error("The DataObject::get() \$containerClass argument has been deprecated", E_USER_NOTICE);
 		$result = DataList::create($callerClass)->where($filter)->sort($sort)->join($join)->limit($limit);
+		$result->setModel(DataModel::inst());
 		return $result;
 	}
 	
@@ -2495,9 +2512,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @deprecated 
 	 */
 	public function Aggregate($class = null) {
-	    if($class) return new DataList($class);
-	    else if(isset($this)) return new DataList(get_class($this));
+	    if($class) {
+			$list = new DataList($class);
+			$list->setModel(DataModel::inst());
+		} else if(isset($this)) {
+			$list = new DataList(get_class($this));
+			$list->setModel($this->model);
+		}
 	    else throw new InvalidArgumentException("DataObject::aggregate() must be called as an instance method or passed a classname");
+		return $list;
 	}
 
 	/**
@@ -2596,6 +2619,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$cacheKey])) {
 			$dl = DataList::create($callerClass)->where($filter)->sort($orderby);
+			$dl->setModel(DataModel::inst());
 			$item = $dl->First();
 
 			if($cache) {
@@ -2794,7 +2818,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(!$hasData) {
 				$className = $this->class;
 				foreach($defaultRecords as $record) {
-					$obj = new $className($record);
+					$obj = $this->model->$className->newObject($record);
 					$obj->write();
 				}
 				DB::alteration_message("Added default records to $className table","created");

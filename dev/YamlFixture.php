@@ -154,7 +154,7 @@ class YamlFixture extends Object {
 	 * the record is written twice: first after populating all non-relational fields,
 	 * then again after populating all relations (has_one, has_many, many_many).
 	 */
-	public function saveIntoDatabase() {
+	public function saveIntoDatabase(DataModel $model) {
 		// We have to disable validation while we import the fixtures, as the order in
 		// which they are imported doesnt guarantee valid relations until after the
 		// import is complete.
@@ -167,7 +167,7 @@ class YamlFixture extends Object {
 		$this->fixtureDictionary = array();
 		foreach($fixtureContent as $dataClass => $items) {
 			if(ClassInfo::exists($dataClass)) {
-				$this->writeDataObject($dataClass, $items);
+				$this->writeDataObject($model, $dataClass, $items);
 			} else {
 				$this->writeSQL($dataClass, $items);
 			}
@@ -182,9 +182,9 @@ class YamlFixture extends Object {
 	 * @param string $dataClass
 	 * @param array $items
 	 */
-	protected function writeDataObject($dataClass, $items) {
+	protected function writeDataObject($model, $dataClass, $items) {
 		foreach($items as $identifier => $fields) {
-			$obj = new $dataClass();
+			$obj = $model->$dataClass->newObject();
 			
 			// If an ID is explicitly passed, then we'll sort out the initial write straight away
 			// This is just in case field setters triggered by the population code in the next block

@@ -80,6 +80,7 @@ if(!$url) {
 $_SERVER['REQUEST_URI'] = BASE_URL . '/' . $url;
 
 // Direct away - this is the "main" function, that hands control to the apporopriate controller
-Director::direct($url);
+DataModel::set_inst(new DataModel());
+Director::direct($url, DataModel::inst());
 
 ?>
