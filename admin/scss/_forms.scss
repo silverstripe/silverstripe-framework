@@ -65,7 +65,9 @@ input, textarea {
 	padding: 3px;
 }
 
-input.loading {
+input.loading,
+input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, 
+.ui-widget-header input.ui-state-default.loading {
 	padding-left: 16px;
 	background: $color-widget-bg url(../../images/network-save.gif) no-repeat center left;
 }
