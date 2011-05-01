@@ -50,6 +50,7 @@ incomplete - please add to it** *Try to keep it in alphabetical order too! :)*
  | Email::bcc_all_emails_to(string $email) |                            | BCC all emails to this address, similar to CC'ing emails (above)  |        
  | MathSpamProtection::setEnabled()  |                                  | Adds a math spam question to all page comment forms |        
  | PageComment::enableModeration();  |                                  | Enables comment moderation |        
+ | Requirements::set_suffix_requirements(false); |                      | Disable appending the current date to included files |   
  | Security::encrypt_passwords($encrypt_passwords);  |                  | Specify if you want store your passwords in clear text or encrypted (for more details see [security](/topics/security)) |        
  | Security::set_password_encryption_algorithm($algorithm, $use_salt);| | If you choose to encrypt your passwords, you can choose which algorithm is used to and if a salt should be used to increase the security level even more (for more details see [security](/topics/security)). |        
  | Security::setDefaultAdmin('admin','password'); |                     | Set default admin email and password, helpful for recovering your password |        
