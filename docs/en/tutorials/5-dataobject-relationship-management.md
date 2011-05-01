@@ -770,6 +770,6 @@ CMS and how to display them on the website.
 
 ## Download the code
 
-Download all the [code](http://doc.silverstripe.org/src/github/master/sapphire/docs/en/tutorials/_images/tutorial5-completecode.zip) for this tutorial.
+Download all the [code](http://doc.silverstripe.org/sapphire/docs/en/tutorials/_images/tutorial5-completecode.zip) for this tutorial.
 
-You can also download the [code](http://doc.silverstripe.org/src/github/master/sapphire/docs/en/tutorials/_images/tutorial5-completecode-blackcandy.zip) for use in the blackcandy template.
+You can also download the [code](http://doc.silverstripe.org/sapphire/docs/en/tutorials/_images/tutorial5-completecode-blackcandy.zip) for use in the blackcandy template.
