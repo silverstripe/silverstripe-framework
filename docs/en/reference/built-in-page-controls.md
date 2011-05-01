@@ -209,12 +209,14 @@ If the user is logged in this will print out
 	Welcome Back, Admin
 
 
-#### <% if PastMember %>, <% if PastVisitor %>
+#### <% if PastMember %>
 
 These controls detect the visitor's previous experience with the site:
 
-*  $PastVisitor will return true if the visitor has been to the site before
 *  $PastMember will return true if the visitor has signed up or logged in on the site before
+
+Note that as of version 2.4 `$PastVisitor` is deprecated. If you wish to check if a visitor has been to the site before,
+set a cookie with `Cookie::set()` and test for it with `Cookie::get()`.
 
 ### Date and Time
 
@@ -333,7 +335,7 @@ $LinkToID, $VersionID, $CopyContentFromID, $RecordClassName
 
 $Link, $LinkOrCurrent, $LinkOrSection, $LinkingMode, $ElementName, $InSection, $Comments, $Breadcrumbs, $NestedTitle,
 $MetaTags, $ContentSource, $MultipleParents, $TreeTitle, $CMSTreeClasses, $Now, $LinkTo, $AbsoluteLink, $CurrentMember,
-$PastVisitor, $PastMember, $XML_val, $RAW_val, $SQL_val, $JS_val, $ATT_val, $First, $Last, $FirstLast, $MiddleString,
+$PastMember, $XML_val, $RAW_val, $SQL_val, $JS_val, $ATT_val, $First, $Last, $FirstLast, $MiddleString,
 $Middle, $Even, $Odd, $EvenOdd, $Pos, $TotalItems, $BaseHref, $CurrentPage, $Top
 
 ###  All fields available in Page
