@@ -1068,45 +1068,6 @@ class DataObjectTest extends SapphireTest {
 		$this->assertFalse($objEmpty->isEmpty(), 'Zero value in attribute considered non-empty');
 	}
 	
-	/**
-	 * Test DataList->byID()
-	 */
-	function testByID() {
-	    $id = $this->idFromFixture('DataObjectTest_Team','team2');
-	    $this->assertEquals('Team 2', DataObject::get("DataObjectTest_Team")->byID($id)->Title);
-	}
-
-	/**
-	 * Test DataList->removeByID()
-	 */
-	function testRemoveByID() {
-	    $id = $this->idFromFixture('DataObjectTest_Team','team2');
-	    DataObject::get("DataObjectTest_Team")->removeByID($id);
-	    
-	    $this->assertNull(DataObject::get("DataObjectTest_Team")->byID($id));
-	}
-
-	/**
-	 * Test DataList->canSortBy()
-	 */
-	function testCanSortBy() {
-	    // Basic check
-	    $this->assertTrue(DataObject::get("DataObjectTest_Team")->canSortBy("Title"));
-	    $this->assertFalse(DataObject::get("DataObjectTest_Team")->canSortBy("SomethingElse"));
-
-        // Subclasses
-	    $this->assertTrue(DataObject::get("DataObjectTest_SubTeam")->canSortBy("Title"));
-	    $this->assertTrue(DataObject::get("DataObjectTest_SubTeam")->canSortBy("SubclassDatabaseField"));
-	}
-	
-	function testDataListArrayAccess() {
-	    $list = DataObject::get("DataObjectTest_Team")->sort("Title");
-	    
-	    $this->assertEquals("Subteam 1", $list[0]->Title);
-	    $this->assertEquals("Subteam 3", $list[2]->Title);
-	    $this->assertEquals("Team 2", $list[4]->Title);
-	    
-	}
 
 }
 
