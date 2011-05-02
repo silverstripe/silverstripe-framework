@@ -1,10 +1,9 @@
 <?php
-
 /**
  * Implements a "lazy loading" DataObjectSet.
  * Uses {@link DataQuery} to do the actual query generation.
  */
-class DataList extends DataObjectSet {
+class DataList extends ViewableData implements SS_List {
 	/**
 	 * The DataObject class name that this data list is querying
 	 */
@@ -129,8 +128,10 @@ class DataList extends DataObjectSet {
 	/**
 	 * Return an array of the actual items that this DataList contains at this stage.
 	 * This is when the query is actually executed.
+	 *
+	 * @return array
 	 */
-	protected function generateItems() {
+	public function toArray() {
 		$query = $this->dataQuery->query();
 		$rows = $query->execute();
 		$results = array();
@@ -139,7 +140,27 @@ class DataList extends DataObjectSet {
 		}
 		return $results;
 	}
-		
+
+	public function toNestedArray() {
+		$result = array();
+
+		foreach ($this as $item) {
+			$result[] = $item->toMap();
+		}
+
+		return $result;
+	}
+
+	public function map($keyfield, $titlefield) {
+		$map = array();
+
+		foreach ($this as $item) {
+			$map[$item->$keyfield] = $item->$titlefield;
+		}
+
+		return $map;
+	}
+
 	/**
 	 * Create a data object from the given SQL row
 	 */
@@ -162,23 +183,13 @@ class DataList extends DataObjectSet {
 	 * @return DataObjectSet_Iterator
 	 */
 	public function getIterator() {
-		return new DataObjectSet_Iterator($this->generateItems());
-	}
-
-	/**
-	 * Convert this DataList to a DataObjectSet.
-	 * Useful if you want to push additional records onto the list.
-	 */
-	public function toDataObjectSet() {
-		$array = array();
-		foreach($this as $item) $array[] = $item;
-		return new DataObjectSet($array);
+		return new ArrayIterator($this->toArray());
 	}
 
 	/**
 	 * Return the number of items in this DataList
 	 */
-	function Count() {
+	function count() {
 		return $this->dataQuery->count();
 	}
 	
