@@ -459,6 +459,8 @@ class LeftAndMain extends Controller {
 		$className = $this->stat('tree_class');
 		if($className && $id instanceof $className) {
 			return $id;
+		} else if($id == 'root') {
+			return singleton($className);
 		} else if(is_numeric($id)) {
 			return DataObject::get_by_id($className, $id);
 		} else {
@@ -751,7 +753,7 @@ class LeftAndMain extends Controller {
 		if(is_object($id)) {
 			$record = $id;
 		} else {
-			$record = ($id && $id != "root") ? $this->getRecord($id) : null;
+			$record = $this->getRecord($id);
 			if($record && !$record->canView()) return Security::permissionFailure($this);
 		}
 
