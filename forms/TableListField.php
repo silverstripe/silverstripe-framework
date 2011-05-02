@@ -392,7 +392,7 @@ JS
 		$this->customCsvQuery = $query;
 	}
 	
-	function setCustomSourceItems(DataObjectSet $items) {
+	function setCustomSourceItems(SS_List $items) {
 		user_error('TableList::setCustomSourceItems() deprecated, just pass the items into the constructor', E_USER_WARNING);
 
 		// The type-hinting above doesn't seem to work consistently

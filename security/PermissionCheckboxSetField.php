@@ -42,9 +42,9 @@ class PermissionCheckboxSetField extends FormField {
 		$this->filterField = $filterField;
 		$this->managedClass = $managedClass;
 
-		if(is_a($records, 'DataObjectSet')) {
+		if($records instanceof SS_List) {
 			$this->records = $records;
-		} elseif(is_a($records, 'DataObject')) {
+		} elseif($records instanceof Group) {
 			$this->records = new DataObjectSet($records);
 		} elseif($records) {
 			throw new InvalidArgumentException('$record should be either a Group record, or a DataObjectSet of Group records');

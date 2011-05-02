@@ -17,12 +17,12 @@ class PaginatedList extends SS_ListDecorator {
 	/**
 	 * Constructs a new paginated list instance around a list.
 	 *
-	 * @param DataObjectSet $list The list to paginate. The getRange method will
+	 * @param SS_List $list The list to paginate. The getRange method will
 	 *        be used to get the subset of objects to show.
 	 * @param array|ArrayAccess Either a map of request parameters or
 	 *        request object that the pagination offset is read from.
 	 */
-	public function __construct(DataObjectSet $list, $request = array()) {
+	public function __construct(SS_List $list, $request = array()) {
 		if (!is_array($request) && !$request instanceof ArrayAccess) {
 			throw new Exception('The request must be readable as an array.');
 		}

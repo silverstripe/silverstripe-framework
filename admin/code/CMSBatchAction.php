@@ -26,7 +26,7 @@ abstract class CMSBatchAction extends Object {
 	 * Run this action for the given set of pages.
 	 * Return a set of status-updated JavaScript to return to the CMS.
 	 */
-	abstract function run(DataObjectSet $objs);
+	abstract function run(SS_List $objs);
 	
 	/**
 	 * Helper method for processing batch actions.
@@ -46,7 +46,7 @@ abstract class CMSBatchAction extends Object {
 	 *     }
 	 *  }
 	 */
-	public function batchaction(DataObjectSet $objs, $helperMethod, $successMessage, $arguments = array()) {
+	public function batchaction(SS_List $objs, $helperMethod, $successMessage, $arguments = array()) {
 		$status = array('modified' => array(), 'error' => array());
 		
 		foreach($objs as $obj) {
