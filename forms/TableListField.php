@@ -235,8 +235,8 @@ class TableListField extends FormField {
 		$sourceSort = null, $sourceJoin = null) {
 
 		if($sourceClass) {
-			// You can optionally pass a DataList/DataObjectSet
-			if($sourceClass instanceof DataObjectSet) {
+			// You can optionally pass a list
+			if($sourceClass instanceof SS_List) {
 				$this->dataList = $sourceClass;
 				
 			} else {
