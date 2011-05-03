@@ -140,18 +140,18 @@ class MemberTest extends FunctionalTest {
 	
 		$passwords = DataObject::get("MemberPassword", "\"MemberID\" = $member->ID", "\"Created\" DESC, \"ID\" DESC")->getIterator();
 		$this->assertNotNull($passwords);
-		$record = $passwords->rewind();
-		$this->assertTrue($record->checkPassword('test3'), "Password test3 not found in MemberRecord");
+		$passwords->rewind();
+		$this->assertTrue($passwords->current()->checkPassword('test3'), "Password test3 not found in MemberRecord");
 	
-		$record = $passwords->next();
-		$this->assertTrue($record->checkPassword('test2'), "Password test2 not found in MemberRecord");
+		$passwords->next();
+		$this->assertTrue($passwords->current()->checkPassword('test2'), "Password test2 not found in MemberRecord");
 	
-		$record = $passwords->next();
-		$this->assertTrue($record->checkPassword('test1'), "Password test1 not found in MemberRecord");
+		$passwords->next();
+		$this->assertTrue($passwords->current()->checkPassword('test1'), "Password test1 not found in MemberRecord");
 	
-		$record = $passwords->next();
-		$this->assertType('DataObject', $record);
-		$this->assertTrue($record->checkPassword('1nitialPassword'), "Password 1nitialPassword not found in MemberRecord");
+		$passwords->next();
+		$this->assertType('DataObject', $passwords->current());
+		$this->assertTrue($passwords->current()->checkPassword('1nitialPassword'), "Password 1nitialPassword not found in MemberRecord");
 	}
 	
 	/**
