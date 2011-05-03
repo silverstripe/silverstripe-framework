@@ -241,7 +241,7 @@ class RestfulServer extends Controller {
 		$rawFields = $this->request->getVar('fields');
 		$fields = $rawFields ? explode(',', $rawFields) : null;
 
-		if($obj instanceof DataObjectSet) {
+		if($obj instanceof SS_List) {
 			$responseFormatter->setTotalSize($obj->dataQuery()->query()->unlimitedRowCount());
 			return $responseFormatter->convertDataObjectSet($obj, $fields);
 		} else if(!$obj) {
