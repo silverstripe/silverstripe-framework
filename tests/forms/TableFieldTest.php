@@ -51,7 +51,7 @@ class TableFieldTest extends SapphireTest {
 		$tableField->saveInto($group);
 
 		// Let's check that the 2 permissions entries have been saved
-		$permissions = $group->Permissions()->toDropdownMap('Arg', 'Code');
+		$permissions = $group->Permissions()->map('Arg', 'Code');
 		$this->assertEquals(array(
 			1 => 'CustomPerm1',
 			2 => 'CustomPerm2',
@@ -75,7 +75,7 @@ class TableFieldTest extends SapphireTest {
 		$tableField->saveInto($group);
 
 		// Let's check that the 2 existing permissions entries, and the 1 new one, have been saved
-		$permissions = $group->Permissions()->toDropdownMap('Arg', 'Code');
+		$permissions = $group->Permissions()->map('Arg', 'Code');
 		$this->assertEquals(array(
 			1 => 'CustomPerm1',
 			2 => 'CustomPerm2',
@@ -126,7 +126,7 @@ class TableFieldTest extends SapphireTest {
 		$tableField->saveInto($group);
 
 		// Let's check that the 2 permissions entries have been saved
-		$permissions = $group->Permissions()->toDropdownMap('Arg', 'Code');
+		$permissions = $group->Permissions()->map('Arg', 'Code');
 		$this->assertEquals(array(
 			101 => 'Perm1 Modified',
 			102 => 'Perm2 Modified',

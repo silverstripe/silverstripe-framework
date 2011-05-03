@@ -52,7 +52,7 @@ class TableListFieldTest extends SapphireTest {
 		$items = $table->sourceItems();
 		$this->assertNotNull($items);
 		
-		$itemMap = $items->toDropdownMap("ID", "A") ;
+		$itemMap = $items->map("ID", "A") ;
 		$this->assertEquals(array(
 			$item1->ID => "a1", 
 			$item2->ID => "a2", 
@@ -88,7 +88,7 @@ class TableListFieldTest extends SapphireTest {
 		$items = $table->sourceItems();
 		$this->assertNotNull($items);
 	
-		$itemMap = $items->toDropdownMap("ID", "A") ;
+		$itemMap = $items->map("ID", "A") ;
 		$this->assertEquals(array(
 			$item1->ID => "a1", 
 			$item2->ID => "a2"
@@ -122,7 +122,7 @@ class TableListFieldTest extends SapphireTest {
 		$items = $table->sourceItems();
 		$this->assertNotNull($items);
 	
-		$itemMap = $items->toDropdownMap("ID", "A") ;
+		$itemMap = $items->map("ID", "A") ;
 		$this->assertEquals(array($item3->ID => "a3", $item4->ID => "a4"), $itemMap);
 	}
 	

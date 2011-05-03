@@ -177,25 +177,16 @@ class DataObjectSetTest extends SapphireTest {
 		$comments = DataObject::get('DataObjectSetTest_TeamComment', '', "\"ID\" ASC");
 
 		/* Now we get a map of all the PageComment records */
-		$map = $comments->map('ID', 'Title', '(Select one)');
+		$map = $comments->map('ID', 'Title');
 		
 		$expectedMap = array(
-			'' => '(Select one)',
 			1 => 'Joe',
 			2 => 'Bob',
 			3 => 'Phil'
 		);
 		
 		/* There are 9 items in the map. 3 are records. 1 is the empty value */
-		$this->assertEquals(count($map), 4, 'There are 4 items in the map. 3 are records. 1 is the empty value');
-		
-		/* We have the same map as our expected map, asserted above */
-		
-		/* toDropDownMap() is an alias of map() - let's make a map from that */
-		$map2 = $comments->toDropDownMap('ID', 'Title', '(Select one)');
-		
-		/* There are 4 items in the map. 3 are records. 1 is the empty value */
-		$this->assertEquals(count($map), 4, 'There are 4 items in the map. 3 are records. 1 is the empty value.');
+		$this->assertEquals(count($map), 3, 'There are 3 items in the map.');
 	}
 
 	function testRemoveDuplicates() {

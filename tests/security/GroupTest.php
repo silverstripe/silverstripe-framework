@@ -128,7 +128,7 @@ class GroupTest_Member extends Member implements TestOnly {
    
    function getCMSFields() {
       $groups = DataObject::get('Group');
-      $groupsMap = ($groups) ? $groups->toDropDownMap() : false;
+      $groupsMap = ($groups) ? $groups->map() : false;
       $fields = new FieldSet(
          new HiddenField('ID', 'ID'),
          new CheckboxSetField(
