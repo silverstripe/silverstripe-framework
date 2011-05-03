@@ -5,7 +5,7 @@
  * @package sapphire
  * @subpackage model
  */
-class DataObjectSet extends ViewableData implements IteratorAggregate, Countable, ArrayAccess {
+class DataObjectSet extends ViewableData implements SS_List {
 	/**
 	 * The DataObjects in this set.
 	 * @var array
@@ -163,6 +163,10 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 */
 	public function toDropDownMap($index = 'ID', $titleField = 'Title', $emptyString = null, $sort = false) {
 		return $this->map($index, $titleField, $emptyString, $sort);
+	}
+
+	public function add($item) {
+		$this->push($item);
 	}
 
 	/**
@@ -527,6 +531,10 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 		$output .= "</ul>\n";
 
 		return $output;
+	}
+
+	public function canSortBy($by) {
+		return true;
 	}
 
 	/**
