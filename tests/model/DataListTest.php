@@ -18,7 +18,7 @@ class DataListTest extends SapphireTest {
 
 	function testListCreationSortAndLimit() {
 		// By default, a DataList will contain all items of that class
-		$list = DataList::create('DataObjectTest_TeamComment');
+		$list = DataList::create('DataObjectTest_TeamComment')->sort('ID');
 		
 		// We can iterate on the DataList
 		$names = array();
