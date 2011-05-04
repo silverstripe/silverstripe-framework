@@ -10,7 +10,7 @@ application/mac-binhex40			hqx
 application/mac-compactpro			cpt
 application/mathematica				nb
 application/msaccess				mdb
-application/msword				doc dot
+application/msword				doc dot docx docm dotx dotm
 application/octet-stream			bin
 application/oda					oda
 application/ogg					ogg
@@ -29,10 +29,10 @@ application/xhtml+xml				xhtml xht
 application/xml					xml xsl
 application/zip					zip
 application/vnd.mozilla.xul+xml			xul
-application/vnd.ms-excel			xls xlb xlt
+application/vnd.ms-excel			xls xlb xlt xlsx xlsm xltx xltm xlsb xlam
 application/vnd.ms-pki.seccat			cat
 application/vnd.ms-pki.stl			stl
-application/vnd.ms-powerpoint			ppt pps
+application/vnd.ms-powerpoint			ppt pps pptx pptm potx potm ppam ppsx ppsm sldx sldm thmx
 application/vnd.oasis.opendocument.chart	odc
 application/vnd.oasis.opendocument.database	odb
 application/vnd.oasis.opendocument.formula	odf
