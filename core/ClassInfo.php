@@ -150,6 +150,8 @@ class ClassInfo {
 
 		if(is_object($class)) $class = $class->class;
 		else if(!is_string($class)) user_error("Bad class value " . var_export($class, true) . " passed to ClassInfo::ancestry()", E_USER_WARNING);
+		
+		if(!isset($_ALL_CLASSES['parents'][$class])) return false;
 
 		$items = $_ALL_CLASSES['parents'][$class];
 		$items[$class] = $class;
