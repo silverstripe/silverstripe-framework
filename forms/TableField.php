@@ -164,9 +164,10 @@ class TableField extends TableListField {
 			$rows = $this->sortData(ArrayLib::invert($this->value));
 			// ignore all rows which are already saved
 			if(isset($rows['new'])) {
-				if($sourceItems instanceof DataList) $sourceItems = $sourceItems->toDataObjectSet();
-	
-	
+				if($sourceItems instanceof DataList) {
+					$sourceItems = new ArrayList($sourceItems->toArray());
+				}
+
 				$newRows = $this->sortData($rows['new']);
 				// iterate over each value (not each row)
 				$i = 0;
@@ -183,7 +184,7 @@ class TableField extends TableListField {
 
 					// generate a temporary DataObject container (not saved in the database)
 					$sourceClass = $this->sourceClass();
-					$sourceItems->push(new $sourceClass($newRow));
+					$sourceItems->add(new $sourceClass($newRow));
 
 					$i++;
 				}
