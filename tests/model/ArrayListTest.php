@@ -90,6 +90,25 @@ class ArrayListTest extends SapphireTest {
 		));
 	}
 
+	public function testRemoveDuplicates() {
+		$list = new ArrayList(array(
+			array('ID' => 1, 'Field' => 1),
+			array('ID' => 2, 'Field' => 2),
+			array('ID' => 3, 'Field' => 3),
+			array('ID' => 4, 'Field' => 1),
+			(object) array('ID' => 5, 'Field' => 2)
+		));
+
+		$this->assertEquals(5, count($list));
+		$list->removeDuplicates();
+		$this->assertEquals(5, count($list));
+
+		$list->removeDuplicates('Field');
+		$this->assertEquals(3, count($list));
+		$this->assertEquals(array(1, 2, 3), $list->column('Field'));
+		$this->assertEquals(array(1, 2, 3), $list->column('ID'));
+	}
+
 	public function testPushPop() {
 		$list = new ArrayList(array('Num' => 1));
 		$this->assertEquals(1, count($list));

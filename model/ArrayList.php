@@ -91,6 +91,26 @@ class ArrayList extends ViewableData implements SS_List {
 	}
 
 	/**
+	 * Removes items from this list which have a duplicate value for a certain
+	 * field. This is especially useful when combining lists.
+	 *
+	 * @param string $field
+	 */
+	public function removeDuplicates($field = 'ID') {
+		$seen = array();
+
+		foreach ($this->array as $key => $item) {
+			$value = $this->extract($item, $field);
+
+			if (array_key_exists($value, $seen)) {
+				unset($this->array[$key]);
+			}
+
+			$seen[$value] = true;
+		}
+	}
+
+	/**
 	 * Pushes an item onto the end of this list.
 	 *
 	 * @param array|object $item
