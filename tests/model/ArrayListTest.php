@@ -5,6 +5,34 @@
  */
 class ArrayListTest extends SapphireTest {
 
+	public function testArrayAccessExists() {
+		$list = new ArrayList(array(
+			$one = new DataObject(array('Title' => 'one')),
+			$two = new DataObject(array('Title' => 'two')),
+			$three = new DataObject(array('Title' => 'three'))
+		));
+		$this->assertEquals(count($list), 3);
+		$this->assertTrue(isset($list[0]), 'First item in the set is set');
+		$this->assertEquals($one, $list[0], 'First item in the set is accessible by array notation');
+	}
+
+	public function testArrayAccessUnset() {
+		$list = new ArrayList(array(
+			$one = new DataObject(array('Title' => 'one')),
+			$two = new DataObject(array('Title' => 'two')),
+			$three = new DataObject(array('Title' => 'three'))
+		));
+		unset($list[0]);
+		$this->assertEquals(count($list), 2);
+	}
+
+	public function testArrayAccessSet() {
+		$list = new ArrayList();
+		$this->assertEquals(0, count($list));
+		$list['testing!'] = $test = new DataObject(array('Title' => 'I\'m testing!'));
+		$this->assertEquals($test, $list['testing!'], 'Set item is accessible by the key we set it as');
+	}
+
 	public function testCount() {
 		$list = new ArrayList();
 		$this->assertEquals(0, $list->count());
