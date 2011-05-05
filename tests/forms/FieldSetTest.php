@@ -333,7 +333,7 @@ class FieldSetTest extends SapphireTest {
 		$this->assertEquals(4, $fields->Count());
 		
 		/* The position of the Title field is at number 3 */
-		$this->assertEquals(3, $fields->fieldByName('Title')->Pos());
+		$this->assertEquals('Title', $fields[2]->Name());
 	}
 
 	function testInsertBeforeMultipleFields() {
@@ -383,7 +383,7 @@ class FieldSetTest extends SapphireTest {
 		$this->assertEquals(4, $fields->Count());
 		
 		/* The position of the Title field should be at number 2 */
-		$this->assertEquals(2, $fields->fieldByName('Title')->Pos());
+		$this->assertEquals('Title', $fields[1]->Name());
 	}
 
 	function testRootFieldSet() {

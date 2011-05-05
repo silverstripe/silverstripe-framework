@@ -1,11 +1,11 @@
 <?php
 /**
- * DataObjectSet designed for form fields.
- * It extends the DataObjectSet with the ability to get a sequential set of fields.
- * @package forms
+ * A list designed to hold form field instances.
+ *
+ * @package    forms
  * @subpackage fields-structural
  */
-class FieldSet extends DataObjectSet {
+class FieldSet extends ArrayList {
 	
 	/**
 	 * Cached flat representation of all fields in this set,
@@ -26,20 +26,16 @@ class FieldSet extends DataObjectSet {
 	 */
 	protected $containerField;
 	
-	public function __construct($items = null) {
-		// if the first parameter is not an array, or we have more than one parameter, collate all parameters to an array
-		// otherwise use the passed array
-		$itemsArr = (!is_array($items) || count(func_get_args()) > 1) ? func_get_args() : $items;
-		parent::__construct($itemsArr);
-		
-		if(isset($this->items) && count($this->items)) {
-			foreach($this->items as $item) {
-				if(isset($item) && is_a($item, 'FormField')) {
-					$item->setContainerFieldSet($this);
-				}
-			}
+	public function __construct($items = array()) {
+		if (!is_array($items) || func_num_args() > 1) {
+			$items = func_get_args();
 		}
-		
+
+		parent::__construct($items);
+
+		foreach ($items as $item) {
+			if ($item instanceof FormField) $item->setContainerFieldSet($this);
+		}
 	}
 	
 	/**
