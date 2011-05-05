@@ -190,25 +190,128 @@ class i18nTextCollector extends Object {
 	
 	public function collectFromCode($content, $module) {
 		$entitiesArr = array();
-		
-		$regexRule = '_t[[:space:]]*\(' .
-			'[[:space:]]*("[^"]*"|\\\'[^\']*\\\')[[:space:]]*,' . // namespace.entity
-			'[[:space:]]*(("([^"]|\\\")*"|\'([^\']|\\\\\')*\')' .  // value
-			'([[:space:]]*\\.[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))*)' . // concatenations
-			'([[:space:]]*,[[:space:]]*[^,)]*)?([[:space:]]*,' . // priority (optional)
-			'[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))?[[:space:]]*' . // comment (optional)
-		'\)';
-		
-		while (ereg($regexRule, $content, $regs)) {
-			$entitiesArr = array_merge($entitiesArr, (array)$this->entitySpecFromRegexMatches($regs));
-			
-			// remove parsed content to continue while() loop
-			$content = str_replace($regs[0],"",$content);
+
+		$newRegexRule = '/_t\s*\(\s*(.+?)\s*\)\s*;\s*/is';
+
+		$matchesArray = array();    //array for the matches to go into
+		if (preg_match_all($newRegexRule, $content, $matchesArray) > 0) {   //we have at least one match
+
+			//take all the matched _t entities
+			foreach($matchesArray[1] as $match) {
+				//replace all commas with backticks (unique character to explode on later)
+				$replacedMatch = preg_replace('/("|\'|_LOW|_MEDIUM|_HIGH)\s*,\s*([\'"]|"|\'|array|PR)/','$1`$2',$match);  //keep array text
+
+				//$replacedMatch = trim($replacedMatch," \"'\n");  //remove starting and ending quotes
+				$replacedMatch = trim($replacedMatch," \n");  //remove starting and ending spaces and newlines
+
+				$parts = explode('`',$replacedMatch);   //cut up the _t call
+
+				$partsWOQuotes = array();
+				foreach($parts as $part) {
+					$part = trim($part,"\n");  //remove spaces and newlines from part
+
+					$firstChar = substr($part,0,1);
+					if ($firstChar == "'" || $firstChar == '"') {
+						//remove wrapping quotes
+						$part = substr($part,1,-1);
+
+						//remove inner concatenation
+						$part = preg_replace("/$firstChar\\s*\\.\\s*$firstChar/",'',$part);
+					}
+
+					$partsWOQuotes[] = $part;  //remove starting and ending quotes from inner parts
+				}
+				
+				if ($parts && count($partsWOQuotes) > 0) {
+
+					$entitiesArr = array_merge($entitiesArr, (array)$this->entitySpecFromNewParts($partsWOQuotes));
+				}
+			}
 		}
-		
+
 		ksort($entitiesArr);
-		
+
 		return $entitiesArr;
+	}
+
+	/**
+	 * Test if one string starts with another
+	 */
+	protected function startsWith($haystack, $needle) {
+        $length = strlen($needle);
+        return (substr($haystack, 0, $length) === $needle);
+	}
+
+	/**
+	 * Converts a parts array from explode function into an array of entities for the i18n text collector
+	 * @return array
+	 */
+	protected function entitySpecFromNewParts($parts, $namespace = null) {
+		// first thing in the parts array will always be the entity
+		// split fullname into entity parts
+		//set defaults
+		$value = "";
+		$prio = null;
+		$comment = null;
+
+		$entityParts = explode('.', $parts[0]);
+		if(count($entityParts) > 1) {
+			// templates don't have a custom namespace
+			$entity = array_pop($entityParts);
+			// namespace might contain dots, so we explode
+			$namespace = implode('.',$entityParts);
+		} else {
+			$entity = array_pop($entityParts);
+			$namespace = $namespace;
+		}
+
+		//find the array (if found, then we are dealing with the new _t syntax
+		$newSyntax = false;
+		$offset = 0;
+		foreach($parts as $p) {
+			if ($this->startsWith($p,'array')) {    //remove everything after (and including) the array
+				$newSyntax = true;
+				$parts = array_splice($parts,0,$offset);
+				break;
+			}
+			$offset++;
+		}
+
+		//2nd part of array is always "string"
+		if (isset($parts[1])) $value = $parts[1];
+
+
+		//3rd part can either be priority or context, if old or now syntax is used
+		if (isset($parts[2])) {
+			if ($newSyntax) {
+				$prio = 40; //default priority
+				$comment = $parts[2];
+			} else {
+				if (stripos($parts[2], 'PR_LOW') !== false ||
+				    stripos($parts[2], 'PR_MEDIUM') !== false ||
+				    stripos($parts[2], 'PR_HIGH') !== false) {  //definitely old syntax
+					$prio = $parts[2];
+				} else {    //default to new syntax (3rd position is comment/context
+					$prio = 40; //default priority
+					$comment = $parts[2];
+				}
+			}
+		}
+
+		//if 4th position is set then this is old syntax and it is the context
+		//it would be array in the new syntax and therefore should have already been spliced off
+		if (isset($parts[3])) {
+			$comment = $parts[3];
+			$prio = $parts[2];  //3rd position is now definitely priority
+		}
+
+		return array(
+			"{$namespace}.{$entity}" => array(
+				$value,
+				$prio,
+				$comment
+			)
+		);
 	}
 
 	public function collectFromTemplate($content, $module, $fileName) {
