@@ -180,15 +180,35 @@ class ArrayList extends ViewableData implements SS_List {
 		return true;
 	}
 
+	/**
+	 * Sorts this list by one or more fields. You can either pass in a single
+	 * field name and direction, or a map of field names to sort directions.
+	 *
+	 * @param string|array $by
+	 * @param string $dir
+	 * @see   SS_List::sort()
+	 */
 	public function sort($by, $dir = 'ASC') {
 		$sorts = array();
-		$dir   = strtoupper($dir) == 'DESC' ? SORT_DESC : SORT_ASC;
 
-		foreach ($this->array as $item) {
-			$sorts[] = $this->extract($item, $by);
+		if (!is_array($by)) {
+			$by = array($by => $dir);
 		}
 
-		array_multisort($sorts, $dir, $this->array);
+		foreach ($by as $field => $dir) {
+			$dir  = strtoupper($dir) == 'DESC' ? SORT_DESC : SORT_ASC;
+			$vals = array();
+
+			foreach ($this->array as $item) {
+				$vals[] = $this->extract($item, $field);
+			}
+
+			$sorts[] = $vals;
+			$sorts[] = $dir;
+		}
+
+		$sorts[] = &$this->array;
+		call_user_func_array('array_multisort', $sorts);
 	}
 
 	public function offsetExists($offset) {

@@ -208,6 +208,26 @@ class ArrayListTest extends SapphireTest {
 		));
 	}
 
+	public function testMultiSort() {
+		$list = new ArrayList(array(
+			(object) array('Name'=>'Object1', 'F1'=>1, 'F2'=>2, 'F3'=>3),
+			(object) array('Name'=>'Object2', 'F1'=>2, 'F2'=>1, 'F3'=>4),
+			(object) array('Name'=>'Object3', 'F1'=>5, 'F2'=>2, 'F3'=>2),
+		));
+
+		$list->sort('F3', 'ASC');
+		$this->assertEquals($list->first()->Name, 'Object3', 'Object3 should be first in the list');
+
+		$list->sort('F3', 'DESC');
+		$this->assertEquals($list->first()->Name, 'Object2', 'Object2 should be first in the list');
+
+		$list->sort(array('F2'=>'ASC', 'F1'=>'ASC'));
+		$this->assertEquals($list->last()->Name, 'Object3', 'Object3 should be last in the list');
+
+		$list->sort(array('F2'=>'ASC', 'F1'=>'DESC'));
+		$this->assertEquals($list->last()->Name, 'Object1', 'Object1 should be last in the list');
+	}
+
 }
 
 /**
