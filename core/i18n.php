@@ -1444,6 +1444,14 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * 						 the class name where this string is used and Entity identifies the string inside the namespace.
 	 * @param string $string The original string itself. In a usual call this is a mandatory parameter, but if you are reusing a string which
 	 *				 has already been "declared" (using another call to this function, with the same class and entity), you can omit it.
+	 * @param string $context (optional) If the string can be difficult to translate by any reason, you can help translators with some more info using this param
+	 * @param string injectionArray (optional) array of key value pairs that are used to replace corresponding expressions in {curly brackets} in the $string
+	 *
+	 * (deprecated _t() syntax below)
+	 * @param string $entity Entity that identifies the string. It must be in the form "Namespace.Entity" where Namespace will be usually
+	 * 						 the class name where this string is used and Entity identifies the string inside the namespace.
+	 * @param string $string The original string itself. In a usual call this is a mandatory parameter, but if you are reusing a string which
+	 *				 has already been "declared" (using another call to this function, with the same class and entity), you can omit it.
 	 * @param string $priority Optional parameter to set a translation priority. If a string is widely used, should have a high priority (PR_HIGH),
 	 * 				    in this way translators will be able to prioritise this strings. If a string is rarely shown, you should use PR_LOW.
 	 *				    You can use PR_MEDIUM as well. Leaving this field blank will be interpretated as a "normal" priority (less than PR_MEDIUM).
