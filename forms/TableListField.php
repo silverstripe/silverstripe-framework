@@ -338,7 +338,7 @@ JS
 				"SortDirection" => (isset($_REQUEST['ctf'][$this->Name()]['dir'])) ? $_REQUEST['ctf'][$this->Name()]['dir'] : null 
 			));
 		}
-		return new DataObjectSet($headings);
+		return new ArrayList($headings);
 	}
 	
 	function disableSorting($to = true) {
@@ -367,7 +367,7 @@ JS
 	 * @return DataObjectSet
 	 */
 	function Actions() {
-		$allowedActions = new DataObjectSet();
+		$allowedActions = new ArrayList();
 		foreach($this->actions as $actionName => $actionSettings) {
 			if($this->Can($actionName)) {
 				$allowedActions->push(new ViewableData());
@@ -437,7 +437,7 @@ JS
 	 * Return a DataObjectSet of TableListField_Item objects, suitable for display in the template.
 	 */
 	function Items() {
-		$fieldItems = new DataObjectSet();
+		$fieldItems = new ArrayList();
 		if($items = $this->sourceItems()) foreach($items as $item) {
 			if($item) $fieldItems->push(new $this->itemClass($item, $this));
 		}
@@ -630,7 +630,7 @@ JS
 				'Title' => DBField::create('Varchar', $fieldTitle),
 			));
 		}
-		return new DataObjectSet($summaryFields);
+		return new ArrayList($summaryFields);
 	}
 	
 	function HasGroupedItems() {
@@ -648,9 +648,9 @@ JS
 		}
 		
 		$groupedItems = $items->groupBy($this->groupByField);
-		$groupedArrItems = new DataObjectSet();
+		$groupedArrItems = new ArrayList();
 		foreach($groupedItems as $key => $group) {
-			$fieldItems = new DataObjectSet();
+			$fieldItems = new ArrayList();
 			foreach($group as $item) {
 				if($item) $fieldItems->push(new $this->itemClass($item, $this));
 			}
@@ -961,7 +961,7 @@ JS
 		$csvColumns = ($this->fieldListCsv) ? $this->fieldListCsv : $this->fieldList;
 		$fileData = '';
 		$columnData = array();
-		$fieldItems = new DataObjectSet();
+		$fieldItems = new ArrayList();
 		
 		if($this->csvHasHeader) {
 			$fileData .= "\"" . implode("\"{$separator}\"", array_values($csvColumns)) . "\"";
@@ -1064,7 +1064,7 @@ JS
 	 * #################################
 	 */
 	function Utility() {
-		$links = new DataObjectSet();
+		$links = new ArrayList();
 		if($this->can('export')) {
 			$links->push(new ArrayData(array(
 				'Title' => _t('TableListField.CSVEXPORT', 'Export to CSV'),
@@ -1280,7 +1280,7 @@ JS
 	function SelectOptions(){
 		if(!$this->selectOptions) return;
 		
-		$selectOptionsSet = new DataObjectSet();
+		$selectOptionsSet = new ArrayList();
 		foreach($this->selectOptions as $k => $v) {
 			$selectOptionsSet->push(new ArrayData(array(
 				'Key' => $k,
@@ -1377,7 +1377,7 @@ class TableListField_Item extends ViewableData {
 				"CsvSeparator" => $this->parent->getCsvSeparator(),
 			));
 		}
-		return new DataObjectSet($fields);
+		return new ArrayList($fields);
 	}
 	
 	function Markable() {
@@ -1430,7 +1430,7 @@ class TableListField_Item extends ViewableData {
 	 * @return DataObjectSet
 	 */
 	function Actions() {
-		$allowedActions = new DataObjectSet();
+		$allowedActions = new ArrayList();
 		foreach($this->parent->actions as $actionName => $actionSettings) {
 			if($this->parent->Can($actionName)) {
 				$allowedActions->push(new ArrayData(array(

@@ -128,7 +128,7 @@ class TableField extends TableListField {
 			$headings[] = new ArrayData(array("Name" => $fieldName, "Title" => $fieldTitle, "Class" => $class));
 			$i++;
 		}
-		return new DataObjectSet($headings);
+		return new ArrayList($headings);
 	}
 	
 	/**
@@ -151,14 +151,14 @@ class TableField extends TableListField {
 	 */
 	function Items() {
 		// holds TableField_Item instances
-		$items = new DataObjectSet();
+		$items = new ArrayList();
 
 		$sourceItems = $this->sourceItems();
 
 		// either load all rows from the field value,
 		// (e.g. when validation failed), or from sourceItems()
 		if($this->value) {
-			if(!$sourceItems) $sourceItems = new DataObjectSet();
+			if(!$sourceItems) $sourceItems = new ArrayList();
 
 			// get an array keyed by rows, rather than values
 			$rows = $this->sortData(ArrayLib::invert($this->value));
@@ -221,7 +221,7 @@ class TableField extends TableListField {
 		);
 		$form->loadDataFrom($dataObj);
 
-		// Add the item to our new DataObjectSet, with a wrapper class.
+		// Add the item to our new ArrayList, with a wrapper class.
 		return new TableField_Item($dataObj, $this, $form, $this->fieldTypes);
 	}
 	

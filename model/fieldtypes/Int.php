@@ -31,7 +31,7 @@ class Int extends DBField {
 	}
 
 	function Times() {
-		$output = new DataObjectSet();
+		$output = new ArrayList();
 		for( $i = 0; $i < $this->value; $i++ )
 			$output->push( new ArrayData( array( 'Number' => $i + 1 ) ) );
 

@@ -42,7 +42,7 @@ class Group extends DataObject {
 	}
 	
 	function getAllChildren() {
-		$doSet = new DataObjectSet();
+		$doSet = new ArrayList();
 
 		if ($children = DataObject::get('Group', '"ParentID" = '.$this->ID)) {
 			foreach($children as $child) {
@@ -137,7 +137,7 @@ class Group extends DataObject {
 			// Add roles (and disable all checkboxes for inherited roles)
 			$allRoles = Permission::check('ADMIN') ? DataObject::get('PermissionRole') : DataObject::get('PermissionRole', 'OnlyAdminCanApply = 0');
 			$groupRoles = $this->Roles();
-			$inheritedRoles = new DataObjectSet();
+			$inheritedRoles = new ArrayList();
 			$ancestors = $this->getAncestors();
 			foreach($ancestors as $ancestor) {
 				$ancestorRoles = $ancestor->Roles();
@@ -399,7 +399,7 @@ class Group extends DataObject {
 		$children = $extInstance->AllChildrenIncludingDeleted();
 		$extInstance->clearOwner();
 		
-		$filteredChildren = new DataObjectSet();
+		$filteredChildren = new ArrayList();
 		
 		if($children) foreach($children as $child) {
 			if($child->canView()) $filteredChildren->push($child);

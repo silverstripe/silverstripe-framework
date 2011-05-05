@@ -382,10 +382,10 @@ class LeftAndMain extends Controller {
 	 */
 	public function MainMenu() {
 		// Don't accidentally return a menu if you're not logged in - it's used to determine access.
-		if(!Member::currentUser()) return new DataObjectSet();
+		if(!Member::currentUser()) return new ArrayList();
 
 		// Encode into DO set
-		$menu = new DataObjectSet();
+		$menu = new ArrayList();
 		$menuItems = CMSMenu::get_viewable_menu_items();
 		if($menuItems) foreach($menuItems as $code => $menuItem) {
 			// alternate permission checks (in addition to LeftAndMain->canView())

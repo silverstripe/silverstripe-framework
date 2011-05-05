@@ -136,7 +136,7 @@ class OptionsetField extends DropdownField {
 	}
 	
 	function ExtraOptions() {
-		return new DataObjectSet();
+		return new ArrayList();
 	}
 }
 ?>

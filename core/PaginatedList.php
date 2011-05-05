@@ -165,7 +165,7 @@ class PaginatedList extends SS_ListDecorator {
 	 * @return DataObjectSet
 	 */
 	public function Pages($max = null) {
-		$result = new DataObjectSet();
+		$result = new ArrayList();
 
 		if ($max) {
 			$start = ($this->CurrentPage() - floor($max / 2)) - 1;
@@ -232,7 +232,7 @@ class PaginatedList extends SS_ListDecorator {
 	 * @return DataObjectSet
 	 */
 	public function PaginationSummary($context = 4) {
-		$result  = new DataObjectSet();
+		$result  = new ArrayList();
 		$current = $this->CurrentPage();
 		$total   = $this->TotalPages();
 

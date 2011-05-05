@@ -700,7 +700,7 @@ class Versioned extends DataExtension {
 		$query->orderby = ($sort) ? $sort : "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC";
 		
 		$records = $query->execute();
-		$versions = new DataObjectSet();
+		$versions = new ArrayList();
 		
 		foreach($records as $record) {
 			$versions->push(new Versioned_Version($record));

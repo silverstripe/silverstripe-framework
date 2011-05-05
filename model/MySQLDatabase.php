@@ -829,8 +829,8 @@ class MySQLDatabase extends SS_Database {
 			$objects[] = new $record['ClassName']($record);
 
 
-		if(isset($objects)) $doSet = new DataObjectSet($objects);
-		else $doSet = new DataObjectSet();
+		if(isset($objects)) $doSet = new ArrayList($objects);
+		else $doSet = new ArrayList();
 
 		$list = new PaginatedList($doSet);
 		$list->setPageStart($start);

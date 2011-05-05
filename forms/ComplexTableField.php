@@ -256,7 +256,7 @@ JS;
 
 		$pageStart = (isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) ? $_REQUEST['ctf'][$this->Name()]['start'] : 0;
 
-		$output = new DataObjectSet();
+		$output = new ArrayList();
 		foreach($sourceItems as $pageIndex=>$item) {
 			$output->push(Object::create($this->itemClass,$item, $this, $pageStart+$pageIndex));
 		}
@@ -540,7 +540,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	 */
 	/* this doesn't actually work :-(
 	function Paginator() { 
-		$paginatingSet = new DataObjectSet(array($this->dataObj()));
+		$paginatingSet = new ArrayList(array($this->dataObj()));
 		$start = isset($_REQUEST['ctf']['start']) ? $_REQUEST['ctf']['start'] : 0;
 		$paginatingSet->setPageLimits($start, 1, $this->ctf->TotalCount());
 		return $paginatingSet;
@@ -715,7 +715,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	function Pagination() {
 		$this->pageSize = 9;
 		$currentItem  = $this->PopupCurrentItem();
-		$result = new DataObjectSet();
+		$result = new ArrayList();
         if($currentItem < 6) {
         	$offset = 1;
         } elseif($this->TotalCount() - $currentItem <= 4) {

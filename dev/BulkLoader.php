@@ -399,7 +399,7 @@ class BulkLoader_Result extends Object {
 	 * @return DataObjectSet
 	 */
 	protected function mapToDataObjectSet($arr) {
-		$set = new DataObjectSet();
+		$set = new ArrayList();
 		foreach($arr as $arrItem) {
 			$obj = DataObject::get_by_id($arrItem['ClassName'], $arrItem['ID']);
 			$obj->_BulkLoaderMessage = $arrItem['Message'];

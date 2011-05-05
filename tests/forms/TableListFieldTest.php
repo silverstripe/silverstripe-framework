@@ -304,7 +304,7 @@ class TableListFieldTest extends SapphireTest {
 	    $three = new TableListFieldTest_Obj;
 	    $three->A = "A-three";
 	    
-	    $list = new DataObjectSet($one, $two, $three);
+	    $list = new ArrayList(array($one, $two, $three));
 	    
 		// A TableListField must be inside a form for its links to be generated
 		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(

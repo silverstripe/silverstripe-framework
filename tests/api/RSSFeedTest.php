@@ -8,7 +8,7 @@ class RSSFeedTest extends SapphireTest {
 	protected static $original_host;
 
 	function testRSSFeed() {
-		$list = new DataObjectSet();
+		$list = new ArrayList();
 		$list->push(new RSSFeedTest_ItemA());
 		$list->push(new RSSFeedTest_ItemB());
 		$list->push(new RSSFeedTest_ItemC());

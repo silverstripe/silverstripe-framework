@@ -248,7 +248,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 */
 	protected function getModelForms() {
 		$models = $this->getManagedModels();
-		$forms  = new DataObjectSet();
+		$forms  = new ArrayList();
 		
 		foreach($models as $class => $options) { 
 			if(is_numeric($class)) $class = $options;
@@ -476,11 +476,11 @@ class ModelAdmin_CollectionController extends Controller {
 		$importerClass = $importers[$modelName];
 		$importer = new $importerClass($modelName);
 		$spec = $importer->getImportSpec();
-		$specFields = new DataObjectSet();
+		$specFields = new ArrayList();
 		foreach($spec['fields'] as $name => $desc) {
 			$specFields->push(new ArrayData(array('Name' => $name, 'Description' => $desc)));
 		}
-		$specRelations = new DataObjectSet();
+		$specRelations = new ArrayList();
 		foreach($spec['relations'] as $name => $desc) {
 			$specRelations->push(new ArrayData(array('Name' => $name, 'Description' => $desc)));
 		}

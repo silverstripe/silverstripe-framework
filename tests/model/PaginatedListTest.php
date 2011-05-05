@@ -8,27 +8,27 @@
 class PaginatedListTest extends SapphireTest {
 
 	public function testPageStart() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 		$this->assertEquals(0, $list->getPageStart(), 'The start defaults to 0.');
 
 		$list->setPageStart(10);
 		$this->assertEquals(10, $list->getPageStart(), 'You can set the page start.');
 
-		$list = new PaginatedList(new DataObjectSet(), array('start' => 50));
+		$list = new PaginatedList(new ArrayList(), array('start' => 50));
 		$this->assertEquals(50, $list->getPageStart(), 'The page start can be read from the request.');
 	}
 
 	public function testGetTotalItems() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 		$this->assertEquals(0, $list->getTotalItems());
 
 		$list->setTotalItems(10);
 		$this->assertEquals(10, $list->getTotalItems());
 
-		$list = new PaginatedList(new DataObjectSet(
+		$list = new PaginatedList(new ArrayList(array(
 			new ArrayData(array()),
 			new ArrayData(array())
-		));
+		)));
 		$this->assertEquals(2, $list->getTotalItems());
 	}
 
@@ -39,7 +39,7 @@ class PaginatedListTest extends SapphireTest {
 		      ->method('unlimitedRowCount')
 		      ->will($this->returnValue(100));
 
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 		$list->setPaginationFromQuery($query);
 
 		$this->assertEquals(15, $list->getPageLength());
@@ -48,7 +48,7 @@ class PaginatedListTest extends SapphireTest {
 	}
 
 	public function testSetCurrentPage() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 		$list->setPageLength(10);
 		$list->setCurrentPage(10);
 
@@ -57,7 +57,7 @@ class PaginatedListTest extends SapphireTest {
 	}
 
 	public function testGetIterator() {
-		$list = new PaginatedList(new DataObjectSet(array(
+		$list = new PaginatedList(new ArrayList(array(
 			new DataObject(array('Num' => 1)),
 			new DataObject(array('Num' => 2)),
 			new DataObject(array('Num' => 3)),
@@ -85,7 +85,7 @@ class PaginatedListTest extends SapphireTest {
 	}
 
 	public function testPages() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 		$list->setPageLength(10);
 		$list->setTotalItems(50);
 
@@ -113,7 +113,7 @@ class PaginatedListTest extends SapphireTest {
 	}
 
 	public function testPaginationSummary() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 
 		$list->setPageLength(10);
 		$list->setTotalItems(250);
@@ -134,7 +134,7 @@ class PaginatedListTest extends SapphireTest {
 	}
 
 	public function testCurrentPage() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 		$list->setTotalItems(50);
 
 		$this->assertEquals(1, $list->CurrentPage());
@@ -145,7 +145,7 @@ class PaginatedListTest extends SapphireTest {
 	}
 
 	public function testTotalPages() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 
 		$list->setPageLength(1);
 		$this->assertEquals(0, $list->TotalPages());
@@ -158,7 +158,7 @@ class PaginatedListTest extends SapphireTest {
 	}
 
 	public function testMoreThanOnePage() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 
 		$list->setPageLength(1);
 		$list->setTotalItems(1);
@@ -169,14 +169,14 @@ class PaginatedListTest extends SapphireTest {
 	}
 
 	public function testNotFirstPage() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 		$this->assertFalse($list->NotFirstPage());
 		$list->setCurrentPage(2);
 		$this->assertTrue($list->NotFirstPage());
 	}
 
 	public function testNotLastPage() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 		$list->setTotalItems(50);
 
 		$this->assertTrue($list->NotLastPage());
@@ -185,14 +185,14 @@ class PaginatedListTest extends SapphireTest {
 	}
 
 	public function testFirstItem() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 		$this->assertEquals(1, $list->FirstItem());
 		$list->setPageStart(10);
 		$this->assertEquals(11, $list->FirstItem());
 	}
 
 	public function testLastItem() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 		$list->setPageLength(10);
 		$list->setTotalItems(25);
 
@@ -205,19 +205,19 @@ class PaginatedListTest extends SapphireTest {
 	}
 
 	public function testFirstLink() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 		$this->assertContains('start=0', $list->FirstLink());
 	}
 
 	public function testLastLink() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 		$list->setPageLength(10);
 		$list->setTotalItems(100);
 		$this->assertContains('start=90', $list->LastLink());
 	}
 
 	public function testNextLink() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 		$list->setTotalItems(50);
 
 		$this->assertContains('start=10', $list->NextLink());
@@ -232,7 +232,7 @@ class PaginatedListTest extends SapphireTest {
 	}
 
 	public function testPrevLink() {
-		$list = new PaginatedList(new DataObjectSet());
+		$list = new PaginatedList(new ArrayList());
 		$list->setTotalItems(50);
 
 		$this->assertNull($list->PrevLink());

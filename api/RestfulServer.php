@@ -246,7 +246,7 @@ class RestfulServer extends Controller {
 			return $responseFormatter->convertDataObjectSet($obj, $fields);
 		} else if(!$obj) {
 			$responseFormatter->setTotalSize(0);
-			return $responseFormatter->convertDataObjectSet(new DataObjectSet(), $fields);
+			return $responseFormatter->convertDataObjectSet(new ArrayList(), $fields);
 		} else {
 			return $responseFormatter->convertDataObject($obj, $fields);
 		}

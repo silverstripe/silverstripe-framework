@@ -137,7 +137,7 @@ class RSSFeed extends ViewableData {
 	 * @return DataObjectSet Returns the {@link RSSFeed_Entry} objects.
 	 */
 	function Entries() {
-		$output = new DataObjectSet();
+		$output = new ArrayList();
 		if(isset($this->entries)) {
 			foreach($this->entries as $entry) {
 				$output->push(new RSSFeed_Entry($entry, $this->titleField, $this->descriptionField, $this->authorField));

@@ -74,7 +74,7 @@ class SelectionGroup extends CompositeField {
 
 			$firstSelected = $checked ="";			
 		}
-		return new DataObjectSet($newItems);
+		return new ArrayList($newItems);
 	}
 	
 	function hasData() {

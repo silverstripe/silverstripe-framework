@@ -96,7 +96,7 @@ class DataDifferencer extends ViewableData {
 	 *  - To: The newer version of the field
 	 */
 	function ChangedFields() {
-		$changedFields = new DataObjectSet();
+		$changedFields = new ArrayList();
 
 		if($this->fromRecord) {
 			$base = $this->fromRecord;
