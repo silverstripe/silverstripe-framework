@@ -825,14 +825,13 @@ class MySQLDatabase extends SS_Database {
 		// Get records
 		$records = DB::query($fullQuery);
 
-		foreach($records as $record)
+		$objects = array();
+
+		foreach($records as $record) {
 			$objects[] = new $record['ClassName']($record);
+		}
 
-
-		if(isset($objects)) $doSet = new ArrayList($objects);
-		else $doSet = new ArrayList();
-
-		$list = new PaginatedList($doSet);
+		$list = new PaginatedList(new ArrayList($objects));
 		$list->setPageStart($start);
 		$list->setPageLEngth($pageLength);
 		$list->setTotalItems($totalCount);
