@@ -21,6 +21,10 @@ class ArrayList extends ViewableData implements SS_List {
 		return count($this->array);
 	}
 
+	public function exists() {
+		return (bool) count($this);
+	}
+
 	public function getIterator() {
 		return new ArrayIterator($this->array);
 	}
@@ -52,13 +56,74 @@ class ArrayList extends ViewableData implements SS_List {
 	}
 
 	public function add($item) {
-		$this->array[] = $item;
+		$this->push($item);
 	}
 
 	public function remove($item) {
 		foreach ($this->array as $key => $value) {
 			if ($item === $value) unset($this->array[$key]);
 		}
+	}
+
+	/**
+	 * Replaces an item in this list with another item.
+	 *
+	 * @param array|object $item
+	 * @param array|object $with
+	 */
+	public function replace($item, $with) {
+		foreach ($this->array as $key => $candidate) {
+			if ($candidate === $item) {
+				$this->array[$key] = $with;
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Merges with another array or list by pushing all the items in it onto the
+	 * end of this list.
+	 *
+	 * @param array|object $with
+	 */
+	public function merge($with) {
+		foreach ($with as $item) $this->push($item);
+	}
+
+	/**
+	 * Pushes an item onto the end of this list.
+	 *
+	 * @param array|object $item
+	 */
+	public function push($item) {
+		$this->array[] = $item;
+	}
+
+	/**
+	 * Pops the last element off the end of the list and returns it.
+	 *
+	 * @return array|object
+	 */
+	public function pop() {
+		return array_pop($this->array);
+	}
+
+	/**
+	 * Unshifts an item onto the beginning of the list.
+	 *
+	 * @param array|object $item
+	 */
+	public function unshift($item) {
+		array_unshift($this->array, $item);
+	}
+
+	/**
+	 * Shifts the item off the beginning of the list and returns it.
+	 *
+	 * @return array|object
+	 */
+	public function shift() {
+		return array_shift($this->array);
 	}
 
 	public function first() {

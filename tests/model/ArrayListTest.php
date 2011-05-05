@@ -12,6 +12,13 @@ class ArrayListTest extends SapphireTest {
 		$this->assertEquals(3, $list->count());
 	}
 
+	public function testExists() {
+		$list = new ArrayList();
+		$this->assertFalse($list->exists());
+		$list = new ArrayList(array(1, 2, 3));
+		$this->assertTrue($list->exists());
+	}
+
 	public function testToNestedArray() {
 		$list = new ArrayList(array(
 			array('First' => 'FirstFirst', 'Second' => 'FirstSecond'),
@@ -49,6 +56,72 @@ class ArrayListTest extends SapphireTest {
 		$this->assertEquals(array_values($list->toArray()), array(
 			array('Key' => 1), array('Key' => 3)
 		));
+	}
+
+	public function testReplace() {
+		$list = new ArrayList(array(
+			array('Key' => 1),
+			$two = (object) array('Key' => 2),
+			(object) array('Key' => 3)
+		));
+
+		$this->assertEquals(array('Key' => 1), $list[0]);
+		$list->replace(array('Key' => 1), array('Replaced' => 1));
+		$this->assertEquals(3, count($list));
+		$this->assertEquals(array('Replaced' => 1), $list[0]);
+
+		$this->assertEquals($two, $list[1]);
+		$list->replace($two, array('Replaced' => 2));
+		$this->assertEquals(3, count($list));
+		$this->assertEquals(array('Replaced' => 2), $list[1]);
+	}
+
+	public function testMerge() {
+		$list = new ArrayList(array(
+			array('Num' => 1), array('Num' => 2)
+		));
+		$list->merge(array(
+			array('Num' => 3), array('Num' => 4)
+		));
+
+		$this->assertEquals(4, count($list));
+		$this->assertEquals($list->toArray(), array(
+			array('Num' => 1), array('Num' => 2), array('Num' => 3), array('Num' => 4)
+		));
+	}
+
+	public function testPushPop() {
+		$list = new ArrayList(array('Num' => 1));
+		$this->assertEquals(1, count($list));
+
+		$list->push(array('Num' => 2));
+		$this->assertEquals(2, count($list));
+		$this->assertEquals(array('Num' => 2), $list->last());
+
+		$list->push(array('Num' => 3));
+		$this->assertEquals(3, count($list));
+		$this->assertEquals(array('Num' => 3), $list->last());
+
+		$this->assertEquals(array('Num' => 3), $list->pop());
+		$this->assertEquals(2, count($list));
+		$this->assertEquals(array('Num' => 2), $list->last());
+	}
+
+	public function testShiftUnshift() {
+		$list = new ArrayList(array('Num' => 1));
+		$this->assertEquals(1, count($list));
+
+		$list->unshift(array('Num' => 2));
+		$this->assertEquals(2, count($list));
+		$this->assertEquals(array('Num' => 2), $list->first());
+
+		$list->unshift(array('Num' => 3));
+		$this->assertEquals(3, count($list));
+		$this->assertEquals(array('Num' => 3), $list->first());
+
+		$this->assertEquals(array('Num' => 3), $list->shift());
+		$this->assertEquals(2, count($list));
+		$this->assertEquals(array('Num' => 2), $list->first());
 	}
 
 	public function testFirstLast() {
