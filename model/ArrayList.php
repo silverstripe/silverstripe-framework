@@ -52,7 +52,7 @@ class ArrayList extends ViewableData implements SS_List {
 	}
 
 	public function getRange($offset, $length) {
-		return array_slice($this->array, $offset, $length);
+		return new ArrayList(array_slice($this->array, $offset, $length));
 	}
 
 	public function add($item) {

@@ -37,7 +37,7 @@ class ArrayListTest extends SapphireTest {
 		$list = new ArrayList(array(
 			array('Key' => 1), array('Key' => 2), array('Key' => 3)
 		));
-		$this->assertEquals($list->getRange(1, 2), array(
+		$this->assertEquals($list->getRange(1, 2)->toArray(), array(
 			array('Key' => 2), array('Key' => 3)
 		));
 	}
