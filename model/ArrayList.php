@@ -10,15 +10,15 @@ class ArrayList extends ViewableData implements SS_List {
 	/**
 	 * @var array
 	 */
-	protected $array;
+	protected $items;
 
-	public function __construct(array $array = array()) {
-		$this->array = $array;
+	public function __construct(array $items = array()) {
+		$this->items = $items;
 		parent::__construct();
 	}
 
 	public function count() {
-		return count($this->array);
+		return count($this->items);
 	}
 
 	public function exists() {
@@ -26,17 +26,17 @@ class ArrayList extends ViewableData implements SS_List {
 	}
 
 	public function getIterator() {
-		return new ArrayIterator($this->array);
+		return new ArrayIterator($this->items);
 	}
 
 	public function toArray() {
-		return $this->array;
+		return $this->items;
 	}
 
 	public function toNestedArray() {
 		$result = array();
 
-		foreach ($this->array as $item) {
+		foreach ($this->items as $item) {
 			if (is_object($item)) {
 				if (method_exists($item, 'toMap')) {
 					$result[] = $item->toMap();
@@ -52,7 +52,7 @@ class ArrayList extends ViewableData implements SS_List {
 	}
 
 	public function getRange($offset, $length) {
-		return new ArrayList(array_slice($this->array, $offset, $length));
+		return new ArrayList(array_slice($this->items, $offset, $length));
 	}
 
 	public function add($item) {
@@ -60,8 +60,8 @@ class ArrayList extends ViewableData implements SS_List {
 	}
 
 	public function remove($item) {
-		foreach ($this->array as $key => $value) {
-			if ($item === $value) unset($this->array[$key]);
+		foreach ($this->items as $key => $value) {
+			if ($item === $value) unset($this->items[$key]);
 		}
 	}
 
@@ -72,9 +72,9 @@ class ArrayList extends ViewableData implements SS_List {
 	 * @param array|object $with
 	 */
 	public function replace($item, $with) {
-		foreach ($this->array as $key => $candidate) {
+		foreach ($this->items as $key => $candidate) {
 			if ($candidate === $item) {
-				$this->array[$key] = $with;
+				$this->items[$key] = $with;
 				return;
 			}
 		}
@@ -99,11 +99,11 @@ class ArrayList extends ViewableData implements SS_List {
 	public function removeDuplicates($field = 'ID') {
 		$seen = array();
 
-		foreach ($this->array as $key => $item) {
+		foreach ($this->items as $key => $item) {
 			$value = $this->extract($item, $field);
 
 			if (array_key_exists($value, $seen)) {
-				unset($this->array[$key]);
+				unset($this->items[$key]);
 			}
 
 			$seen[$value] = true;
@@ -116,7 +116,7 @@ class ArrayList extends ViewableData implements SS_List {
 	 * @param array|object $item
 	 */
 	public function push($item) {
-		$this->array[] = $item;
+		$this->items[] = $item;
 	}
 
 	/**
@@ -125,7 +125,7 @@ class ArrayList extends ViewableData implements SS_List {
 	 * @return array|object
 	 */
 	public function pop() {
-		return array_pop($this->array);
+		return array_pop($this->items);
 	}
 
 	/**
@@ -134,7 +134,7 @@ class ArrayList extends ViewableData implements SS_List {
 	 * @param array|object $item
 	 */
 	public function unshift($item) {
-		array_unshift($this->array, $item);
+		array_unshift($this->items, $item);
 	}
 
 	/**
@@ -143,34 +143,34 @@ class ArrayList extends ViewableData implements SS_List {
 	 * @return array|object
 	 */
 	public function shift() {
-		return array_shift($this->array);
+		return array_shift($this->items);
 	}
 
 	public function first() {
-		return reset($this->array);
+		return reset($this->items);
 	}
 
 	public function last() {
-		return end($this->array);
+		return end($this->items);
 	}
 
 	public function map($keyfield, $titlefield) {
 		$map = array();
-		foreach ($this->array as $item) {
+		foreach ($this->items as $item) {
 			$map[$this->extract($item, $keyfield)] = $this->extract($item, $titlefield);
 		}
 		return $map;
 	}
 
 	public function find($key, $value) {
-		foreach ($this->array as $item) {
+		foreach ($this->items as $item) {
 			if ($this->extract($item, $key) == $value) return $item;
 		}
 	}
 
 	public function column($field = 'ID') {
 		$result = array();
-		foreach ($this->array as $item) {
+		foreach ($this->items as $item) {
 			$result[] = $this->extract($item, $field);
 		}
 		return $result;
@@ -199,7 +199,7 @@ class ArrayList extends ViewableData implements SS_List {
 			$dir  = strtoupper($dir) == 'DESC' ? SORT_DESC : SORT_ASC;
 			$vals = array();
 
-			foreach ($this->array as $item) {
+			foreach ($this->items as $item) {
 				$vals[] = $this->extract($item, $field);
 			}
 
@@ -207,24 +207,24 @@ class ArrayList extends ViewableData implements SS_List {
 			$sorts[] = $dir;
 		}
 
-		$sorts[] = &$this->array;
+		$sorts[] = &$this->items;
 		call_user_func_array('array_multisort', $sorts);
 	}
 
 	public function offsetExists($offset) {
-		return array_key_exists($offset, $this->array);
+		return array_key_exists($offset, $this->items);
 	}
 
 	public function offsetGet($offset) {
-		if ($this->offsetExists($offset)) return $this->array[$offset];
+		if ($this->offsetExists($offset)) return $this->items[$offset];
 	}
 
 	public function offsetSet($offset, $value) {
-		$this->array[$offset] = $value;
+		$this->items[$offset] = $value;
 	}
 
 	public function offsetUnset($offset) {
-		unset($this->array[$offset]);
+		unset($this->items[$offset]);
 	}
 
 	/**
