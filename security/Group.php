@@ -507,6 +507,5 @@ class Group extends DataObject {
 
 		return $classes;
 	}
-}
 	
-?>
+}

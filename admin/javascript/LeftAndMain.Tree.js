@@ -3,7 +3,7 @@
  */
 
 (function($) {
-	
+
 	$.entwine('ss', function($){
 	
 		$('.cms-tree').entwine({
@@ -52,12 +52,14 @@
 									// Check if a node is allowed to be moved.
 									// Caution: Runs on every drag over a new node
 									'check_move': function(data) {
+
 										var movedNode = $(data.o), newParent = $(data.np), 
 											isMovedOntoContainer = data.ot.get_container()[0] == data.np[0],
 											movedNodeClass = movedNode.getClassname(), 
 											newParentClass = newParent.getClassname(),
 											// Check allowedChildren of newParent or against root node rules
-											allowedChildren = siteTreeHints[newParentClass ? newParentClass : 'Root'].allowedChildren || [];
+											siteTreeHints = $.parseJSON($('#sitetree_ul').attr('data-hints')),
+											disallowedChildren = siteTreeHints[newParentClass ? newParentClass : 'Root'].disallowedChildren || [];
 
 										var isAllowed = (
 											// Don't allow moving the root node
@@ -67,7 +69,7 @@
 											// Children are generally allowed on parent
 											&& !newParent.hasClass('nochildren')
 											// movedNode is allowed as a child
-											&& ($.inArray(movedNodeClass, allowedChildren) != -1)
+											&& ($.inArray(movedNodeClass, disallowedChildren) == -1)
 										);
 										
 										return isAllowed;
