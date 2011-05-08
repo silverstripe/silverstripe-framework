@@ -77,11 +77,13 @@
 							.bind('select_node.jstree', function(e, data) {
 								var node = data.rslt.obj, id = $(node).data('id');
 								if(self.getValue() == id) {
-									self.setValue(null);
+									self.data('metadata', null);
 									self.setTitle(null);
+									self.setValue(null);
 								} else {
-									self.setValue(id);
+									self.data('metadata', [$.extend({id: id}, $(node).getMetaData())]);
 									self.setTitle(data.inst.get_text(node));
+									self.setValue(id);
 								}
 								
 								// Avoid auto-closing panel on first load
@@ -130,6 +132,19 @@
 			 */
 			getRequestParams: function() {
 				return [];
+			}
+		});
+		$('.TreeDropdownField .tree-holder li').entwine({
+			/**
+			 * Overload to return more data. The same data should be set on initial
+			 * value through PHP as well (see TreeDropdownField->Field()).
+			 * 
+			 * @return {object}
+			 */
+			getMetaData: function() {
+				var matches = this.attr('class').match(/class-([^\s]*)/i);
+				var klass = matches ? matches[1] : '';
+				return {ClassName: klass};
 			}
 		});
 		$('.TreeDropdownField *').entwine({
@@ -218,6 +233,9 @@
 								}));
 								self.setTitle($.map(nodes, function(el, i) {
 									return data.inst.get_text(el);
+								}));
+								self.data('metadata', $.map(nodes, function(el, i) {
+									return {id: $(el).data('id'), metadata: $(el).getMetaData()};
 								}));
 							});
 					}
