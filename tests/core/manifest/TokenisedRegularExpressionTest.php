@@ -43,6 +43,10 @@ implements InterfaceA, InterfaceB {
 	
 }
 
+interface InterfaceC extends InterfaceA, InterfaceB {
+}
+interface InterfaceD extends InterfaceA, InterfaceB, InterfaceC {
+}
 ?>
 PHP
 );
@@ -88,8 +92,8 @@ PHP
 		if($matches) foreach($matches as $match) $interfaces[$match['interfaceName']] = $match;
 
 		$this->assertArrayHasKey('InterfaceA', $interfaces);
-
 		$this->assertArrayHasKey('InterfaceB', $interfaces);
-		$this->assertEquals('Something', $interfaces['InterfaceB']['extends']);
+		$this->assertArrayHasKey('InterfaceC', $interfaces);
+		$this->assertArrayHasKey('InterfaceD', $interfaces);
 	}
 }

@@ -60,13 +60,7 @@ class SS_ClassManifest {
 		return new TokenisedRegularExpression(array(
 			0 => T_INTERFACE,
 			1 => T_WHITESPACE,
-			2 => array(T_STRING, 'can_jump_to' => 7, 'save_to' => 'interfaceName'),
-			3 => T_WHITESPACE,
-			4 => T_EXTENDS,
-			5 => T_WHITESPACE,
-			6 => array(T_STRING, 'save_to' => 'extends'),
-			7 => array(T_WHITESPACE, 'optional' => true),
-			8 => '{',
+			2 => array(T_STRING, 'save_to' => 'interfaceName')
 		));
 	}
 
