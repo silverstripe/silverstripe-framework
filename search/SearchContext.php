@@ -63,14 +63,14 @@ class SearchContext extends Object {
 	 * 
 	 * @param string $modelClass The base {@link DataObject} class that search properties related to.
 	 * 						Also used to generate a set of result objects based on this class.
-	 * @param FieldSet $fields Optional. FormFields mapping to {@link DataObject::$db} properties
+	 * @param FieldList $fields Optional. FormFields mapping to {@link DataObject::$db} properties
 	 *	 					which are to be searched. Derived from modelclass using 
 	 *						{@link DataObject::scaffoldSearchFields()} if left blank.
 	 * @param array $filters Optional. Derived from modelclass if left blank
 	 */	
 	function __construct($modelClass, $fields = null, $filters = null) {
 		$this->modelClass = $modelClass;
-		$this->fields = ($fields) ? $fields : new FieldSet();
+		$this->fields = ($fields) ? $fields : new FieldList();
 		$this->filters = ($filters) ? $filters : array();
 		
 		parent::__construct();
@@ -241,7 +241,7 @@ class SearchContext extends Object {
 	/**
 	 * Apply a list of searchable fields to the current search context.
 	 *
-	 * @param FieldSet $fields
+	 * @param FieldList $fields
 	 */
 	public function setFields($fields) {
 		$this->fields = $fields;

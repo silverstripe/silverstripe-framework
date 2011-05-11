@@ -386,7 +386,7 @@ class Folder extends File {
 	/**
 	 * Return the FieldSet used to edit this folder in the CMS.
 	 * You can modify this fieldset by subclassing folder, or by creating a {@link DataExtension}
-	 * and implemeting updateCMSFields(FieldSet $fields) on that extension.
+	 * and implemeting updateCMSFields(FieldList $fields) on that extension.
 	 */
 	function getCMSFields() {
 		$fileList = new AssetTableField(
@@ -407,7 +407,7 @@ class Folder extends File {
 			$deleteButton = new HiddenField('deletemarked');
 		}
 
-		$fields = new FieldSet(
+		$fields = new FieldList(
 			new HiddenField("Name"),
 			new TabSet("Root", 
 				new Tab("Files", _t('Folder.FILESTAB', "Files"),

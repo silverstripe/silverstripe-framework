@@ -164,7 +164,7 @@ class SecurityToken extends Object {
 	 * on the returned {@link HiddenField}, you'll need to take
 	 * care of this yourself.
 	 * 
-	 * @param FieldSet $fieldset
+	 * @param FieldList $fieldset
 	 * @return HiddenField|false
 	 */
 	function updateFieldSet(&$fieldset) {
@@ -234,7 +234,7 @@ class NullSecurityToken extends SecurityToken {
 	}
 	
 	/**
-	 * @param FieldSet $fieldset
+	 * @param FieldList $fieldset
 	 * @return false
 	 */
 	function updateFieldSet(&$fieldset) {

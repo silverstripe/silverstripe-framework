@@ -28,8 +28,8 @@ class TableFieldTest extends SapphireTest {
 		$form = new Form(
 			new TableFieldTest_Controller(), 
 			"Form", 
-			new FieldSet($tableField), 
-			new FieldSet()
+			new FieldList($tableField), 
+			new FieldList()
 		);
 		
 		// Test Insert
@@ -106,8 +106,8 @@ class TableFieldTest extends SapphireTest {
 		$form = new Form(
 			new TableFieldTest_Controller(), 
 			"Form", 
-			new FieldSet($tableField), 
-			new FieldSet()
+			new FieldList($tableField), 
+			new FieldList()
 		);
 		
 		$this->assertEquals(2, $tableField->sourceItems()->Count());
@@ -155,8 +155,8 @@ class TableFieldTest extends SapphireTest {
 		$form = new Form(
 			new TableFieldTest_Controller(), 
 			"Form", 
-			new FieldSet($tableField), 
-			new FieldSet()
+			new FieldList($tableField), 
+			new FieldList()
 		);
 		
 		$this->assertContains($perm1->ID, $tableField->sourceItems()->column('ID'));
@@ -185,7 +185,7 @@ class TableFieldTest extends SapphireTest {
 		);
 		
 		// Test with auto relation setting
-		$form = new Form(new TableFieldTest_Controller(), "Form", new FieldSet($tf), new FieldSet());
+		$form = new Form(new TableFieldTest_Controller(), "Form", new FieldList($tf), new FieldList());
 		$form->loadDataFrom($o);
 		
 		$tf->setValue(array(

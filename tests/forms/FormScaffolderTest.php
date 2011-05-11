@@ -20,7 +20,7 @@ class FormScaffolderTest extends SapphireTest {
 	
 	function testGetCMSFieldsSingleton() {
 		$fields = singleton('FormScaffolderTest_Article')->getCMSFields();
-		$form = new Form(new Controller(), 'TestForm', $fields, new FieldSet());
+		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
 		$form->loadDataFrom(singleton('FormScaffolderTest_Article'));
 
 		$this->assertTrue($fields->hasTabSet(), 'getCMSFields() produces a TabSet');
@@ -34,7 +34,7 @@ class FormScaffolderTest extends SapphireTest {
 		$article1 = $this->objFromFixture('FormScaffolderTest_Article', 'article1');
 
 		$fields = $article1->getCMSFields();
-		$form = new Form(new Controller(), 'TestForm', $fields, new FieldSet());
+		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
 		$form->loadDataFrom($article1);
 
 		$this->assertNotNull($fields->dataFieldByName('AuthorID'), 'getCMSFields() includes has_one fields on instances');
@@ -45,7 +45,7 @@ class FormScaffolderTest extends SapphireTest {
 		$article1 = $this->objFromFixture('FormScaffolderTest_Article', 'article1');
 		
 		$fields = $article1->getCMSFields();
-		$form = new Form(new Controller(), 'TestForm', $fields, new FieldSet());
+		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
 		$form->loadDataFrom($article1);
 		
 		$this->assertNotNull(
@@ -60,7 +60,7 @@ class FormScaffolderTest extends SapphireTest {
 		$fields = $article1->scaffoldFormFields(array(
 			'restrictFields' => array('Title')
 		));
-		$form = new Form(new Controller(), 'TestForm', $fields, new FieldSet());
+		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
 		$form->loadDataFrom($article1);
 
 		$this->assertNotNull($fields->dataFieldByName('Title'), 'scaffoldCMSFields() includes explitly defined "restrictFields"');
@@ -73,7 +73,7 @@ class FormScaffolderTest extends SapphireTest {
 		$fields = $article1->scaffoldFormFields(array(
 			'fieldClasses' => array('Title' => 'HtmlEditorField')
 		));
-		$form = new Form(new Controller(), 'TestForm', $fields, new FieldSet());
+		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
 		$form->loadDataFrom($article1);
 
 		$this->assertNotNull(
@@ -88,7 +88,7 @@ class FormScaffolderTest extends SapphireTest {
 	
 	function testGetFormFields() {
 		$fields = singleton('FormScaffolderTest_Article')->getFrontEndFields();
-		$form = new Form(new Controller(), 'TestForm', $fields, new FieldSet());
+		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
 		$form->loadDataFrom(singleton('FormScaffolderTest_Article'));
 
 		$this->assertFalse($fields->hasTabSet(), 'getFrontEndFields() doesnt produce a TabSet by default');

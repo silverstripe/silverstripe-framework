@@ -22,10 +22,10 @@ class DatetimeFieldTest extends SapphireTest {
 		$form = new Form(
 			new Controller(), 
 			'Form',
-			new FieldSet(
+			new FieldList(
 				$f = new DatetimeField('MyDatetime', null)
 			),
-			new FieldSet(
+			new FieldList(
 				new FormAction('doSubmit')
 			)
 		);

@@ -32,12 +32,12 @@
  * 
  * <code>
  * function Form() {
- *    return new Form($this, "Form", new FieldSet(
+ *    return new Form($this, "Form", new FieldList(
  *        new SimpleImageField (
  *            $name = "FileTypeID",
  *            $title = "Upload your FileType"
  *        )
- *    ), new FieldSet(
+ *    ), new FieldList(
  * 
  *    // List the action buttons here - doform executes the function 'doform' below
  *        new FormAction("doform", "Submit")

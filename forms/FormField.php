@@ -653,7 +653,7 @@ HTML;
 	/**
 	 * Set the fieldset that contains this field. 
 	 *
-	 * @param FieldSet $containerFieldSet
+	 * @param FieldList $containerFieldSet
 	 */ 
 	function setContainerFieldSet($containerFieldSet) {
 		$this->containerFieldSet = $containerFieldSet;

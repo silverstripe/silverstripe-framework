@@ -217,7 +217,7 @@ class TableField extends TableListField {
 			$this, 
 			null, 
 			$this->FieldSetForRow(), 
-			new FieldSet()
+			new FieldList()
 		);
 		$form->loadDataFrom($dataObj);
 
@@ -281,7 +281,7 @@ class TableField extends TableListField {
 	 * @return FieldSet
 	 */
 	function FieldSetForRow() {
-		$fieldset = new FieldSet();
+		$fieldset = new FieldList();
 		if($this->fieldTypes){
 			foreach($this->fieldTypes as $key => $fieldType) {
 				if(isset($fieldType->class) && is_subclass_of($fieldType, 'FormField')) {
@@ -360,7 +360,7 @@ class TableField extends TableListField {
 			}
 		}
 
-		$form = new Form($this, null, $fieldset, new FieldSet());
+		$form = new Form($this, null, $fieldset, new FieldList());
 
 		foreach ($dataObjects as $objectid => $fieldValues) {
 			// 'new' counts as an empty column, don't save it
@@ -592,7 +592,7 @@ JS;
 class TableField_Item extends TableListField_Item {
 	
 	/**
-	 * @var FieldSet $fields
+	 * @var FieldList $fields
 	 */
 	protected $fields;
 	
@@ -719,7 +719,7 @@ class TableField_Item extends TableListField_Item {
 				$i++;
 			}
 		}
-		return new FieldSet($this->fields);
+		return new FieldList($this->fields);
 	}
 	
 	function Fields() {

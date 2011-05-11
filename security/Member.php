@@ -1570,7 +1570,7 @@ class Member_ProfileForm extends Form {
 		$fields = $member->getCMSFields();
 		$fields->push(new HiddenField('ID','ID',$member->ID));
 
-		$actions = new FieldSet(
+		$actions = new FieldList(
 			new FormAction('dosave',_t('CMSMain.SAVE', 'Save'))
 		);
 		

@@ -17,9 +17,9 @@ class TableListFieldTest extends SapphireTest {
 			"E" => "Col E",
 		));
 		// A TableListField must be inside a form for its links to be generated
-		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			$table
-		), new FieldSet());
+		), new FieldList());
 		
 		$result = $table->FieldHolder();
 	
@@ -45,9 +45,9 @@ class TableListFieldTest extends SapphireTest {
 			"E" => "Col E",
 		));
 		// A TableListField must be inside a form for its links to be generated
-		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			$table
-		), new FieldSet());
+		), new FieldList());
 	
 		$items = $table->sourceItems();
 		$this->assertNotNull($items);
@@ -78,9 +78,9 @@ class TableListFieldTest extends SapphireTest {
 			"E" => "Col E",
 		));
 		// A TableListField must be inside a form for its links to be generated
-		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			$table
-		), new FieldSet());
+		), new FieldList());
 	
 		$table->ShowPagination = true;
 		$table->PageSize = 2;
@@ -111,9 +111,9 @@ class TableListFieldTest extends SapphireTest {
 			"E" => "Col E",
 		));
 		// A TableListField must be inside a form for its links to be generated
-		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			$table
-		), new FieldSet());
+		), new FieldList());
 	
 		$table->ShowPagination = true;
 		$table->PageSize = 2;
@@ -182,9 +182,9 @@ class TableListFieldTest extends SapphireTest {
 			"B" => "Col B"
 		));
 		
-		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			$table
-		), new FieldSet());
+		), new FieldList());
 		
 		$csvResponse = $table->export();
 		
@@ -219,7 +219,7 @@ class TableListFieldTest extends SapphireTest {
 
 	function testLink() {
 		// A TableListField must be inside a form for its links to be generated
-		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			new TableListField("Tester", "TableListFieldTest_Obj", array(
 				"A" => "Col A",
 				"B" => "Col B",
@@ -227,7 +227,7 @@ class TableListFieldTest extends SapphireTest {
 				"D" => "Col D",
 				"E" => "Col E",
 			))
-		), new FieldSet());
+		), new FieldList());
 
 		$table = $form->dataFieldByName('Tester');
 		$this->assertEquals(
@@ -252,9 +252,9 @@ class TableListFieldTest extends SapphireTest {
 			"E" => "Col E",
 		));
 		// A TableListField must be inside a form for its links to be generated
-		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			$table
-		), new FieldSet());
+		), new FieldList());
 
 		$table->ShowPagination = true;
 		$table->PageSize = 2;
@@ -307,7 +307,7 @@ class TableListFieldTest extends SapphireTest {
 	    $list = new ArrayList(array($one, $two, $three));
 	    
 		// A TableListField must be inside a form for its links to be generated
-		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			new TableListField("Tester", $list, array(
 				"A" => "Col A",
 				"B" => "Col B",
@@ -315,7 +315,7 @@ class TableListFieldTest extends SapphireTest {
 				"D" => "Col D",
 				"E" => "Col E",
 			))
-		), new FieldSet());
+		), new FieldList());
 
 		$table = $form->dataFieldByName('Tester');
 		$rendered = $table->FieldHolder();
@@ -367,8 +367,8 @@ class TableListFieldTest_TestController extends Controller {
 		$table->disableSorting();
 
 		// A TableListField must be inside a form for its links to be generated
-		return new Form($this, "TestForm", new FieldSet(
+		return new Form($this, "TestForm", new FieldList(
 			$table
-		), new FieldSet());
+		), new FieldList());
 	}
 }

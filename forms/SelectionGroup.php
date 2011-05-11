@@ -42,7 +42,7 @@ class SelectionGroup extends CompositeField {
 			$newChildren[$idx] = $child;
 		}
 
-		$clone->setChildren(new FieldSet($newChildren));
+		$clone->setChildren(new FieldList($newChildren));
 		$clone->setReadonly(true);
 		return $clone;
 	}

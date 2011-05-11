@@ -1782,7 +1782,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			),
 			(array)$_params
 		);
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		foreach($this->searchableFields() as $fieldName => $spec) {
 			if($params['restrictFields'] && !in_array($fieldName, $params['restrictFields'])) continue;
 			
@@ -1899,7 +1899,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return an Empty FieldSet(); need to be overload by solid subclass
 	 */
 	public function getCMSActions() {
-		$actions = new FieldSet();
+		$actions = new FieldList();
 		$this->extend('updateCMSActions', $actions);
 		return $actions;
 	}

@@ -110,7 +110,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		// unset 'inlineadd' permission, we don't want inline addition
 		$memberList->setPermissions(array('edit', 'delete', 'add'));
 		
-		$fields = new FieldSet(
+		$fields = new FieldList(
 			new TabSet(
 				'Root',
 				new Tab('Members', singleton('Member')->i18n_plural_name(),
@@ -155,7 +155,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			$rolesTab->push($rolesCTF);
 		}
 
-		$actions = new FieldSet(
+		$actions = new FieldList(
 			new FormAction('addmember',_t('SecurityAdmin.ADDMEMBER','Add Member'))
 		);
 		

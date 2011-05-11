@@ -402,7 +402,7 @@ class ModelAdmin_CollectionController extends Controller {
 		
 		$form = new Form($this, "SearchForm",
 			$fields,
-			new FieldSet(
+			new FieldList(
 				new FormAction('search', _t('MemberTableField.SEARCH', 'Search')),
 				$clearAction = new ResetFormAction('clearsearch', _t('ModelAdmin.CLEAR_SEARCH','Clear Search'))
 			),
@@ -434,8 +434,8 @@ class ModelAdmin_CollectionController extends Controller {
 		$buttonLabel = sprintf(_t('ModelAdmin.CREATEBUTTON', "Create '%s'", PR_MEDIUM, "Create a new instance from a model class"), singleton($modelName)->i18n_singular_name());
 
 		$form = new Form($this, "CreateForm",
-						new FieldSet(),
-						new FieldSet($createButton = new FormAction('add', $buttonLabel)),
+						new FieldList(),
+						new FieldList($createButton = new FormAction('add', $buttonLabel)),
 						$validator = new RequiredFields()
 				);
 		$createButton->addExtraClass('ss-ui-action-constructive');
@@ -467,7 +467,7 @@ class ModelAdmin_CollectionController extends Controller {
 		
 		if(!singleton($modelName)->canCreate(Member::currentUser())) return false;
 
-		$fields = new FieldSet(
+		$fields = new FieldList(
 			new HiddenField('ClassName', _t('ModelAdmin.CLASSTYPE'), $modelName),
 			new FileField('_CsvFile', false)
 		);
@@ -493,7 +493,7 @@ class ModelAdmin_CollectionController extends Controller {
 		$fields->push(new LiteralField("SpecFor{$modelName}", $specHTML));
 		$fields->push(new CheckboxField('EmptyBeforeImport', 'Clear Database before import', false)); 
 		
-		$actions = new FieldSet(
+		$actions = new FieldList(
 			new FormAction('import', _t('ModelAdmin.IMPORT', 'Import from CSV'))
 		);
 		
@@ -766,11 +766,11 @@ class ModelAdmin_CollectionController extends Controller {
 		$form = new Form(
 			$this,
 			'ResultsForm',
-			new FieldSet(
+			new FieldList(
 				new HeaderField('SearchResults', _t('ModelAdmin.SEARCHRESULTS','Search Results'), 2),
 				$tf
 			),
-			new FieldSet()
+			new FieldList()
 		);
 		
 		// Include the search criteria on the results form URL, but not dodgy variables like those below
@@ -839,7 +839,7 @@ class ModelAdmin_CollectionController extends Controller {
 			if(!$validator) $validator = new RequiredFields();
 			$validator->setJavascriptValidationHandler('none');
 			
-			$actions = new FieldSet (
+			$actions = new FieldList (
 				new FormAction("doCreate", _t('ModelAdmin.ADDBUTTON', "Add"))
 			);
 
@@ -1030,7 +1030,7 @@ class ModelAdmin_RecordController extends Controller {
 	 */
 	public function ViewForm() {
 		$fields = $this->currentRecord->getCMSFields();
-		$form = new Form($this, "EditForm", $fields, new FieldSet());
+		$form = new Form($this, "EditForm", $fields, new FieldList());
 		$form->loadDataFrom($this->currentRecord);
 		$form->makeReadonly();
 		return $form;

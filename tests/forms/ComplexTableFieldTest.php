@@ -108,11 +108,11 @@ class ComplexTableFieldTest_Controller extends Controller {
 		$form = new Form(
 			$this,
 			'ManyManyForm',
-			new FieldSet(
+			new FieldList(
 				new HiddenField('ID', '', $team->ID),
 				$playersField
 			),
-			new FieldSet(
+			new FieldList(
 				new FormAction('doSubmit', 'Submit')
 			)
 		);
@@ -137,11 +137,11 @@ class ComplexTableFieldTest_Controller extends Controller {
 		$form = new Form(
 			$this,
 			'HasManyForm',
-			new FieldSet(
+			new FieldList(
 				new HiddenField('ID', '', $team->ID),
 				$sponsorsField
 			),
-			new FieldSet(
+			new FieldList(
 				new FormAction('doSubmit', 'Submit')
 			)
 		);

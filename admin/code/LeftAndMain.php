@@ -746,7 +746,7 @@ class LeftAndMain extends Controller {
 	 * Calls {@link SiteTree->getCMSFields()}
 	 * 
 	 * @param Int $id
-	 * @param FieldSet $fields
+	 * @param FieldList $fields
 	 * @return Form
 	 */
 	public function getEditForm($id = null, $fields = null) {
@@ -847,7 +847,7 @@ class LeftAndMain extends Controller {
 		$form = new Form(
 			$this, 
 			"EditForm", 
-			new FieldSet(
+			new FieldList(
 				// new HeaderField(
 				// 	'WelcomeHeader',
 				// 	$this->getApplicationName()
@@ -861,7 +861,7 @@ class LeftAndMain extends Controller {
 				// 	)
 				// )
 			), 
-			new FieldSet()
+			new FieldList()
 		);
 		$form->unsetValidator();
 		$form->addExtraClass('cms-edit-form');
@@ -881,10 +881,10 @@ class LeftAndMain extends Controller {
 		$form = new Form(
 			$this,
 			'AddForm',
-			new FieldSet(
+			new FieldList(
 				new HiddenField('ParentID')
 			),
-			new FieldSet(
+			new FieldList(
 				$addAction = new FormAction('doAdd', _t('AssetAdmin_left.ss.GO','Go'))
 			)
 		);
@@ -949,7 +949,7 @@ class LeftAndMain extends Controller {
 		$form = new Form(
 			$this,
 			'BatchActionsForm',
-			new FieldSet(
+			new FieldList(
 				new HiddenField('csvIDs'),
 				new DropdownField(
 					'Action',
@@ -957,7 +957,7 @@ class LeftAndMain extends Controller {
 					$actionsMap
 				)
 			),
-			new FieldSet(
+			new FieldList(
 				// TODO i18n
 				new FormAction('submit', "Go")
 			)

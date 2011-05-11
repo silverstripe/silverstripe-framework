@@ -1,34 +1,34 @@
 <?php
 
 /**
- * Tests for FieldSet
+ * Tests for FieldList
  * 
  * @package sapphire
  * @subpackage tests
  * 
- * @todo test for {@link FieldSet->setValues()}. Need to check
+ * @todo test for {@link FieldList->setValues()}. Need to check
  * 	that the values that were set are the correct ones given back.
- * @todo test for {@link FieldSet->transform()} and {@link FieldSet->makeReadonly()}.
- *  Need to ensure that it correctly transforms the FieldSet object.
- * @todo test for {@link FieldSet->HiddenFields()}. Need to check
+ * @todo test for {@link FieldList->transform()} and {@link FieldList->makeReadonly()}.
+ *  Need to ensure that it correctly transforms the FieldList object.
+ * @todo test for {@link FieldList->HiddenFields()}. Need to check
  * 	the fields returned are the correct HiddenField objects for a
- * 	given FieldSet instance.
- * @todo test for {@link FieldSet->dataFields()}.
- * @todo test for {@link FieldSet->findOrMakeTab()}.
+ * 	given FieldList instance.
+ * @todo test for {@link FieldList->dataFields()}.
+ * @todo test for {@link FieldList->findOrMakeTab()}.
  * @todo the same as above with insertBefore() and insertAfter()
  *
  */
-class FieldSetTest extends SapphireTest {
+class FieldListTest extends SapphireTest {
 
 	/**
 	 * Test adding a field to a tab in a set.
 	 */
 	function testAddFieldToTab() {
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		$tab = new Tab('Root');
 		$fields->push($tab);
 		
-		/* We add field objects to the FieldSet, using two different methods */
+		/* We add field objects to the FieldList, using two different methods */
 		$fields->addFieldToTab('Root', new TextField('Country'));
 		$fields->addFieldsToTab('Root', array(
 			new EmailField('Email'),
@@ -53,7 +53,7 @@ class FieldSetTest extends SapphireTest {
 	 * Test removing a single field from a tab in a set.
 	 */
 	function testRemoveSingleFieldFromTab() {
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		$tab = new Tab('Root');
 		$fields->push($tab);
 
@@ -71,7 +71,7 @@ class FieldSetTest extends SapphireTest {
 	}
 	
 	function testRemoveTab() {
-		$fields = new FieldSet(new TabSet(
+		$fields = new FieldList(new TabSet(
 			'Root',
 			$tab1 = new Tab('Tab1'),
 			$tab2 = new Tab('Tab2'),
@@ -85,12 +85,12 @@ class FieldSetTest extends SapphireTest {
 	}
 	
 	function testHasTabSet() {
-		$untabbedFields = new FieldSet(
+		$untabbedFields = new FieldList(
 			new TextField('Field1')
 		);
 		$this->assertFalse($untabbedFields->hasTabSet());
 		
-		$tabbedFields = new FieldSet(
+		$tabbedFields = new FieldList(
 			new TabSet('Root',
 				new Tab('Tab1')
 			)
@@ -102,7 +102,7 @@ class FieldSetTest extends SapphireTest {
 	 * Test removing an array of fields from a tab in a set.
 	 */
 	function testRemoveMultipleFieldsFromTab() {
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		$tab = new Tab('Root');
 		$fields->push($tab);
 		
@@ -131,9 +131,9 @@ class FieldSetTest extends SapphireTest {
 	 * Test removing a field from a set by it's name.
 	 */
 	function testRemoveFieldByName() {
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		
-		/* First of all, we add a field into our FieldSet object */
+		/* First of all, we add a field into our FieldList object */
 		$fields->push(new TextField('Name', 'Your name'));
 		
 		/* We have 1 field in our set now */
@@ -150,7 +150,7 @@ class FieldSetTest extends SapphireTest {
 	 * Test replacing a field with another one.
 	 */
 	function testReplaceField() {
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		$tab = new Tab('Root');
 		$fields->push($tab);
 		
@@ -168,7 +168,7 @@ class FieldSetTest extends SapphireTest {
 	}
 	
 	function testRenameField() {
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		$nameField = new TextField('Name', 'Before title');
 		$fields->push($nameField);
 		
@@ -186,8 +186,8 @@ class FieldSetTest extends SapphireTest {
 	}
 
 	function testReplaceAFieldInADifferentTab() {
-		/* A FieldSet gets created with a TabSet and some field objects */
-		$fieldSet = new FieldSet(
+		/* A FieldList gets created with a TabSet and some field objects */
+		$FieldList = new FieldList(
 			new TabSet('Root', $main = new Tab('Main',
 				new TextField('A'),
 				new TextField('B')
@@ -197,8 +197,8 @@ class FieldSetTest extends SapphireTest {
 			))
 		);		
 		
-		/* The field "A" gets added to the FieldSet we just created created */
-		$fieldSet->addFieldToTab('Root.Other', $newA = new TextField('A', 'New Title'));
+		/* The field "A" gets added to the FieldList we just created created */
+		$FieldList->addFieldToTab('Root.Other', $newA = new TextField('A', 'New Title'));
 		
 		/* The field named "A" has been removed from the Main tab to make way for our new field named "A" in Other tab. */
 		$this->assertEquals(1, $main->Fields()->Count());
@@ -209,7 +209,7 @@ class FieldSetTest extends SapphireTest {
 	 * Test finding a field that's inside a tabset, within another tab.
 	 */
 	function testNestedTabsFindingFieldByName() {
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		
 		/* 2 tabs get created within a TabSet inside our set */
 		$tab = new TabSet('Root',
@@ -241,7 +241,7 @@ class FieldSetTest extends SapphireTest {
 	}
 	
 	function testTabTitles() {
-		$set = new FieldSet(
+		$set = new FieldList(
 			$rootTabSet = new TabSet('Root',
 				$tabSetWithoutTitle = new TabSet('TabSetWithoutTitle'),
 				$tabSetWithTitle = new TabSet('TabSetWithTitle', 'My TabSet Title',
@@ -281,10 +281,10 @@ class FieldSetTest extends SapphireTest {
 	/**
 	 * Test pushing a field to a set.
 	 * 
-	 * This tests {@link FieldSet->push()}.
+	 * This tests {@link FieldList->push()}.
 	 */
 	function testPushFieldToSet() {
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		
 		/* A field named Country is added to the set */
 		$fields->push(new TextField('Country'));
@@ -310,10 +310,10 @@ class FieldSetTest extends SapphireTest {
 	/**
 	 * Test inserting a field before another in a set.
 	 * 
-	 * This tests {@link FieldSet->insertBefore()}.
+	 * This tests {@link FieldList->insertBefore()}.
 	 */
 	function testInsertBeforeFieldToSet() {
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		
 		/* 3 fields are added to the set */
 		$fields->push(new TextField('Country'));
@@ -337,7 +337,7 @@ class FieldSetTest extends SapphireTest {
 	}
 
 	function testInsertBeforeMultipleFields() {
-		$fields = new FieldSet(
+		$fields = new FieldList(
 			$root = new TabSet("Root", 
 				$main = new Tab("Main",
 					$a = new TextField("A"),
@@ -363,7 +363,7 @@ class FieldSetTest extends SapphireTest {
 	 * Test inserting a field after another in a set.
 	 */
 	function testInsertAfterFieldToSet() {
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		
 		/* 3 fields are added to the set */
 		$fields->push(new TextField('Country'));
@@ -379,16 +379,16 @@ class FieldSetTest extends SapphireTest {
 		/* The field we just added actually exists in the set */
 		$this->assertNotNull($fields->dataFieldByName('Title'));
 		
-		/* We now have 4 fields in the FieldSet */
+		/* We now have 4 fields in the FieldList */
 		$this->assertEquals(4, $fields->Count());
 		
 		/* The position of the Title field should be at number 2 */
 		$this->assertEquals('Title', $fields[1]->Name());
 	}
 
-	function testRootFieldSet() {
-		/* Given a nested set of FormField, CompositeField, and FieldSet objects */
-		$fieldSet = new FieldSet(
+	function testrootFieldSet() {
+		/* Given a nested set of FormField, CompositeField, and FieldList objects */
+		$FieldList = new FieldList(
 			$root = new TabSet("Root", 
 				$main = new Tab("Main",
 					$a = new TextField("A"),
@@ -397,27 +397,27 @@ class FieldSetTest extends SapphireTest {
 			)
 		);
 		
-		/* rootFieldSet() should always evaluate to the same object: the topmost fieldset */		
-		$this->assertSame($fieldSet, $fieldSet->rootFieldSet());
-		$this->assertSame($fieldSet, $root->rootFieldSet());
-		$this->assertSame($fieldSet, $main->rootFieldSet());
-		$this->assertSame($fieldSet, $a->rootFieldSet());
-		$this->assertSame($fieldSet, $b->rootFieldSet());
+		/* rootFieldSet() should always evaluate to the same object: the topmost FieldList */		
+		$this->assertSame($FieldList, $FieldList->rootFieldSet());
+		$this->assertSame($FieldList, $root->rootFieldSet());
+		$this->assertSame($FieldList, $main->rootFieldSet());
+		$this->assertSame($FieldList, $a->rootFieldSet());
+		$this->assertSame($FieldList, $b->rootFieldSet());
 		
 		/* If we push additional fields, they should also have the same rootFieldSet() */
 		$root->push($other = new Tab("Other"));
 		$other->push($c = new TextField("C"));
 		$root->push($third = new Tab("Third", $d = new TextField("D")));
 
-		$this->assertSame($fieldSet, $other->rootFieldSet());
-		$this->assertSame($fieldSet, $third->rootFieldSet());
-		$this->assertSame($fieldSet, $c->rootFieldSet());
-		$this->assertSame($fieldSet, $d->rootFieldSet());
+		$this->assertSame($FieldList, $other->rootFieldSet());
+		$this->assertSame($FieldList, $third->rootFieldSet());
+		$this->assertSame($FieldList, $c->rootFieldSet());
+		$this->assertSame($FieldList, $d->rootFieldSet());
 	}
 	
 	function testAddingDuplicateReplacesOldField() {
-		/* Given a nested set of FormField, CompositeField, and FieldSet objects */
-		$fieldSet = new FieldSet(
+		/* Given a nested set of FormField, CompositeField, and FieldList objects */
+		$FieldList = new FieldList(
 			$root = new TabSet("Root", 
 				$main = new Tab("Main",
 					$a = new TextField("A"),
@@ -430,27 +430,27 @@ class FieldSetTest extends SapphireTest {
 		$newA = new TextField("A", "New A");
 		$newB = new TextField("B", "New B");
 		
-		$fieldSet->addFieldToTab("Root.Main", $newA);
-		$fieldSet->addFieldToTab("Root.Other", $newB);
+		$FieldList->addFieldToTab("Root.Main", $newA);
+		$FieldList->addFieldToTab("Root.Other", $newB);
 
-		$this->assertSame($newA, $fieldSet->dataFieldByName("A"));
-		$this->assertSame($newB, $fieldSet->dataFieldByName("B"));
+		$this->assertSame($newA, $FieldList->dataFieldByName("A"));
+		$this->assertSame($newB, $FieldList->dataFieldByName("B"));
 		$this->assertEquals(1, $main->Fields()->Count());
 		
 		/* Pushing fields on the end of the field set should remove them from the tab */
 		$thirdA = new TextField("A", "Third A");
 		$thirdB = new TextField("B", "Third B");
-		$fieldSet->push($thirdA);
-		$fieldSet->push($thirdB);
+		$FieldList->push($thirdA);
+		$FieldList->push($thirdB);
 
-		$this->assertSame($thirdA, $fieldSet->fieldByName("A"));
-		$this->assertSame($thirdB, $fieldSet->fieldByName("B"));
+		$this->assertSame($thirdA, $FieldList->fieldByName("A"));
+		$this->assertSame($thirdB, $FieldList->fieldByName("B"));
 		
 		$this->assertEquals(0, $main->Fields()->Count());
 	}
 
 	function testAddingFieldToNonExistentTabCreatesThatTab() {
-		$fieldSet = new FieldSet(
+		$FieldList = new FieldList(
 			$root = new TabSet("Root", 
 				$main = new Tab("Main",
 					$a = new TextField("A")
@@ -459,13 +459,13 @@ class FieldSetTest extends SapphireTest {
 		);
 
 		/* Add a field to a non-existent tab, and it will be created */
-		$fieldSet->addFieldToTab("Root.Other", $b = new TextField("B"));
-		$this->assertNotNull($fieldSet->fieldByName('Root')->fieldByName('Other'));
-		$this->assertSame($b, $fieldSet->fieldByName('Root')->fieldByName('Other')->Fields()->First());
+		$FieldList->addFieldToTab("Root.Other", $b = new TextField("B"));
+		$this->assertNotNull($FieldList->fieldByName('Root')->fieldByName('Other'));
+		$this->assertSame($b, $FieldList->fieldByName('Root')->fieldByName('Other')->Fields()->First());
 	}
 
 	function testAddingFieldToATabWithTheSameNameAsTheField() {
-		$fieldSet = new FieldSet(
+		$FieldList = new FieldList(
 			$root = new TabSet("Root", 
 				$main = new Tab("Main",
 					$a = new TextField("A")
@@ -475,13 +475,13 @@ class FieldSetTest extends SapphireTest {
 
 		/* If you have a tab with the same name as the field, then technically it's a duplicate. However, it's allowed because
 		tab isn't a data field.  Only duplicate data fields are problematic */
-		$fieldSet->addFieldToTab("Root.MyName", $myName = new TextField("MyName"));
-		$this->assertNotNull($fieldSet->fieldByName('Root')->fieldByName('MyName'));
-		$this->assertSame($myName, $fieldSet->fieldByName('Root')->fieldByName('MyName')->Fields()->First());
+		$FieldList->addFieldToTab("Root.MyName", $myName = new TextField("MyName"));
+		$this->assertNotNull($FieldList->fieldByName('Root')->fieldByName('MyName'));
+		$this->assertSame($myName, $FieldList->fieldByName('Root')->fieldByName('MyName')->Fields()->First());
 	}
 	
 	function testInsertBeforeWithNestedCompositeFields() {
-		$fieldSet = new FieldSet(
+		$FieldList = new FieldList(
 			new TextField('A_pre'),
 			new TextField('A'),
 			new TextField('A_post'),
@@ -497,34 +497,34 @@ class FieldSetTest extends SapphireTest {
 			)
 		);
 		
-		$fieldSet->insertBefore(
+		$FieldList->insertBefore(
 			$A_insertbefore = new TextField('A_insertbefore'),
 			'A'
 		);
 		$this->assertSame(
 			$A_insertbefore,
-			$fieldSet->dataFieldByName('A_insertbefore'),
-			'Field on toplevel fieldset can be inserted'
+			$FieldList->dataFieldByName('A_insertbefore'),
+			'Field on toplevel FieldList can be inserted'
 		);
 		
-		$fieldSet->insertBefore(
+		$FieldList->insertBefore(
 			$B_insertbefore = new TextField('B_insertbefore'),
 			'B'
 		);
 		$this->assertSame(
-			$fieldSet->dataFieldByName('B_insertbefore'),
+			$FieldList->dataFieldByName('B_insertbefore'),
 			$B_insertbefore,
-			'Field on one nesting level fieldset can be inserted'
+			'Field on one nesting level FieldList can be inserted'
 		);
 		
-		$fieldSet->insertBefore(
+		$FieldList->insertBefore(
 			$C_insertbefore = new TextField('C_insertbefore'),
 			'C'
 		);
 		$this->assertSame(
-			$fieldSet->dataFieldByName('C_insertbefore'),
+			$FieldList->dataFieldByName('C_insertbefore'),
 			$C_insertbefore,
-			'Field on two nesting levels fieldset can be inserted'
+			'Field on two nesting levels FieldList can be inserted'
 		);
 	}
 	
@@ -532,7 +532,7 @@ class FieldSetTest extends SapphireTest {
 	 * @todo check actual placement of fields
 	 */
 	function testInsertBeforeWithNestedTabsets() {
-		$fieldSetA = new FieldSet(
+		$FieldListA = new FieldList(
 			$tabSetA = new TabSet('TabSet_A',
 				$tabA1 = new Tab('Tab_A1',
 					new TextField('A_pre'),
@@ -549,7 +549,7 @@ class FieldSetTest extends SapphireTest {
 			'A'
 		);
 		$this->assertEquals(
-			$fieldSetA->dataFieldByName('A_insertbefore'),
+			$FieldListA->dataFieldByName('A_insertbefore'),
 			$A_insertbefore,
 			'Field on toplevel tab can be inserted'
 		);
@@ -559,7 +559,7 @@ class FieldSetTest extends SapphireTest {
 		$this->assertEquals(2, $tabA1->fieldPosition('A'));
 		$this->assertEquals(3, $tabA1->fieldPosition('A_post'));
 
-		$fieldSetB = new FieldSet(
+		$FieldListB = new FieldList(
 			new TabSet('TabSet_A',
 				$tabsetB = new TabSet('TabSet_B',
 					$tabB1 = new Tab('Tab_B1',
@@ -573,12 +573,12 @@ class FieldSetTest extends SapphireTest {
 				)
 			)
 		);
-		$fieldSetB->insertBefore(
+		$FieldListB->insertBefore(
 			$B_insertbefore = new TextField('B_insertbefore'),
 			'B'
 		);
 		$this->assertSame(
-			$fieldSetB->dataFieldByName('B_insertbefore'),
+			$FieldListB->dataFieldByName('B_insertbefore'),
 			$B_insertbefore,
 			'Field on nested tab can be inserted'
 		);
@@ -589,7 +589,7 @@ class FieldSetTest extends SapphireTest {
 	}
 	
 	function testInsertAfterWithNestedCompositeFields() {
-		$fieldSet = new FieldSet(
+		$FieldList = new FieldList(
 			new TextField('A_pre'),
 			new TextField('A'),
 			new TextField('A_post'),
@@ -605,34 +605,34 @@ class FieldSetTest extends SapphireTest {
 			)
 		);
 		
-		$fieldSet->insertAfter(
+		$FieldList->insertAfter(
 			$A_insertafter = new TextField('A_insertafter'),
 			'A'
 		);
 		$this->assertSame(
 			$A_insertafter,
-			$fieldSet->dataFieldByName('A_insertafter'),
-			'Field on toplevel fieldset can be inserted after'
+			$FieldList->dataFieldByName('A_insertafter'),
+			'Field on toplevel FieldList can be inserted after'
 		);
 		
-		$fieldSet->insertAfter(
+		$FieldList->insertAfter(
 			$B_insertafter = new TextField('B_insertafter'),
 			'B'
 		);
 		$this->assertSame(
-			$fieldSet->dataFieldByName('B_insertafter'),
+			$FieldList->dataFieldByName('B_insertafter'),
 			$B_insertafter,
-			'Field on one nesting level fieldset can be inserted after'
+			'Field on one nesting level FieldList can be inserted after'
 		);
 		
-		$fieldSet->insertAfter(
+		$FieldList->insertAfter(
 			$C_insertafter = new TextField('C_insertafter'),
 			'C'
 		);
 		$this->assertSame(
-			$fieldSet->dataFieldByName('C_insertafter'),
+			$FieldList->dataFieldByName('C_insertafter'),
 			$C_insertafter,
-			'Field on two nesting levels fieldset can be inserted after'
+			'Field on two nesting levels FieldList can be inserted after'
 		);
 	}
 	
@@ -640,7 +640,7 @@ class FieldSetTest extends SapphireTest {
 	 * @todo check actual placement of fields
 	 */
 	function testInsertAfterWithNestedTabsets() {
-		$fieldSetA = new FieldSet(
+		$FieldListA = new FieldList(
 			$tabSetA = new TabSet('TabSet_A',
 				$tabA1 = new Tab('Tab_A1',
 					new TextField('A_pre'),
@@ -657,7 +657,7 @@ class FieldSetTest extends SapphireTest {
 			'A'
 		);
 		$this->assertEquals(
-			$fieldSetA->dataFieldByName('A_insertafter'),
+			$FieldListA->dataFieldByName('A_insertafter'),
 			$A_insertafter,
 			'Field on toplevel tab can be inserted after'
 		);
@@ -666,7 +666,7 @@ class FieldSetTest extends SapphireTest {
 		$this->assertEquals(2, $tabA1->fieldPosition('A_insertafter'));
 		$this->assertEquals(3, $tabA1->fieldPosition('A_post'));
 
-		$fieldSetB = new FieldSet(
+		$FieldListB = new FieldList(
 			new TabSet('TabSet_A',
 				$tabsetB = new TabSet('TabSet_B',
 					$tabB1 = new Tab('Tab_B1',
@@ -680,12 +680,12 @@ class FieldSetTest extends SapphireTest {
 				)
 			)
 		);
-		$fieldSetB->insertAfter(
+		$FieldListB->insertAfter(
 			$B_insertafter = new TextField('B_insertafter'),
 			'B'
 		);
 		$this->assertSame(
-			$fieldSetB->dataFieldByName('B_insertafter'),
+			$FieldListB->dataFieldByName('B_insertafter'),
 			$B_insertafter,
 			'Field on nested tab can be inserted after'
 		);
@@ -696,7 +696,7 @@ class FieldSetTest extends SapphireTest {
 	}
 	
 	function testFieldPosition() {
-		$set = new FieldSet(
+		$set = new FieldList(
 			new TextField('A'),
 			new TextField('B'),
 			new TextField('C')
@@ -716,17 +716,17 @@ class FieldSetTest extends SapphireTest {
 	}
 	
 	function testMakeFieldReadonly() {
-		$fieldSet = new FieldSet(
+		$FieldList = new FieldList(
 			new TabSet('Root', new Tab('Main',
 				new TextField('A'),
 				new TextField('B')
 			)
 		));
 		
-		$fieldSet->makeFieldReadonly('A');
+		$FieldList->makeFieldReadonly('A');
 		$this->assertTrue(
-			$fieldSet->dataFieldByName('A')->isReadonly(),
-			'Field nested inside a TabSet and FieldSet can be marked readonly by FieldSet->makeFieldReadonly()'
+			$FieldList->dataFieldByName('A')->isReadonly(),
+			'Field nested inside a TabSet and FieldList can be marked readonly by FieldList->makeFieldReadonly()'
 		);
 	}
 }

@@ -441,7 +441,7 @@ class FieldList extends ArrayList {
 	 */
 	function transform($trans) {
 		$this->flushFieldsCache();
-		$newFields = new FieldSet();
+		$newFields = new FieldList();
 		foreach($this as $field) {
 			$newFields->push($field->transform($trans));
 		}

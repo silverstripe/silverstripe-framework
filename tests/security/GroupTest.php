@@ -129,7 +129,7 @@ class GroupTest_Member extends Member implements TestOnly {
    function getCMSFields() {
       $groups = DataObject::get('Group');
       $groupsMap = ($groups) ? $groups->map() : false;
-      $fields = new FieldSet(
+      $fields = new FieldList(
          new HiddenField('ID', 'ID'),
          new CheckboxSetField(
             'Groups',
@@ -147,7 +147,7 @@ class GroupTest_MemberForm extends Form {
    
    function __construct($controller, $name) {
       $fields = singleton('GroupTest_Member')->getCMSFields();
-      $actions = new FieldSet(
+      $actions = new FieldList(
          new FormAction('doSave','save')
       );
       

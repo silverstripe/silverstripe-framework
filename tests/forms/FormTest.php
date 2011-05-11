@@ -16,13 +16,13 @@ class FormTest extends FunctionalTest {
 		$form = new Form(
 			new Controller(),
 			'Form',
-			new FieldSet(
+			new FieldList(
 				new TextField('key1'),
 				new TextField('namespace[key2]'),
 				new TextField('namespace[key3][key4]'),
 				new TextField('othernamespace[key5][key6][key7]')
 			),
-			new FieldSet()
+			new FieldList()
 		);
 		
 		// url would be ?key1=val1&namespace[key2]=val2&namespace[key3][key4]=val4&othernamespace[key5][key6][key7]=val7
@@ -56,11 +56,11 @@ class FormTest extends FunctionalTest {
 		$form = new Form(
 			new Controller(),
 			'Form',
-			new FieldSet(
+			new FieldList(
 				new TextField('key1'),
 				new TextField('key2')
 			),
-			new FieldSet()
+			new FieldList()
 		);
 		$form->loadDataFrom(array(
 			'key1' => 'save',
@@ -81,14 +81,14 @@ class FormTest extends FunctionalTest {
 		$form = new Form(
 			new Controller(),
 			'Form',
-			new FieldSet(
+			new FieldList(
 				new HeaderField('MyPlayerHeader','My Player'),
 				new TextField('Name'), // appears in both Player and Team
 				new TextareaField('Biography'),
 				new DateField('Birthday'),
 				new NumericField('BirthdayYear') // dynamic property
 			),
-			new FieldSet()
+			new FieldList()
 		);
 		
 		$captainWithDetails = $this->objFromFixture('FormTest_Player', 'captainWithDetails');
@@ -122,7 +122,7 @@ class FormTest extends FunctionalTest {
 		$form = new Form(
 			new Controller(),
 			'Form',
-			new FieldSet(
+			new FieldList(
 				new HeaderField('MyPlayerHeader','My Player'),
 				new TextField('Name'), // appears in both Player and Team
 				new TextareaField('Biography'),
@@ -131,7 +131,7 @@ class FormTest extends FunctionalTest {
 				$unrelatedField = new TextField('UnrelatedFormField')
 				//new CheckboxSetField('Teams') // relation editing
 			),
-			new FieldSet()
+			new FieldList()
 		);
 		$unrelatedField->setValue("random value");
 		
@@ -329,8 +329,8 @@ class FormTest extends FunctionalTest {
 		return new Form(
 			new Controller(),
 			'Form',
-			new FieldSet(new TextField('key1')),
-			new FieldSet()
+			new FieldList(new TextField('key1')),
+			new FieldList()
 		);
 	}
 	
@@ -383,12 +383,12 @@ class FormTest_Controller extends Controller implements TestOnly {
 		$form = new Form(
 			$this,
 			'Form',
-			new FieldSet(
+			new FieldList(
 				new EmailField('Email'),
 				new TextField('SomeRequiredField'),
 				new CheckboxSetField('Boxes', null, array('1'=>'one','2'=>'two'))
 			),
-			new FieldSet(
+			new FieldList(
 				new FormAction('doSubmit')
 			),
 			new RequiredFields(
@@ -407,10 +407,10 @@ class FormTest_Controller extends Controller implements TestOnly {
 		$form = new Form(
 			$this,
 			'FormWithSecurityToken',
-			new FieldSet(
+			new FieldList(
 				new EmailField('Email')
 			),
-			new FieldSet(
+			new FieldList(
 				new FormAction('doSubmit')
 			)
 		);
@@ -444,10 +444,10 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 		$form = new Form(
 			$this,
 			'Form',
-			new FieldSet(
+			new FieldList(
 				new EmailField('Email')
 			),
-			new FieldSet(
+			new FieldList(
 				new FormAction('doSubmit')
 			)
 		);

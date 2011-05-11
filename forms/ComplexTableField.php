@@ -189,7 +189,7 @@ class ComplexTableField extends TableListField {
 	 * @param string $name
 	 * @param string $sourceClass
 	 * @param array $fieldList
-	 * @param FieldSet $detailFormFields
+	 * @param FieldList $detailFormFields
 	 * @param string $sourceFilter
 	 * @param string $sourceSort
 	 * @param string $sourceJoin
@@ -331,7 +331,7 @@ JS;
 	 * @return FieldSet
 	 */
 	function createFieldSet() {
-		$fieldset = new FieldSet();
+		$fieldset = new FieldList();
 		foreach($this->fieldTypes as $key => $fieldType){
 			$fieldset->push(new $fieldType($key));
 		}
@@ -813,7 +813,7 @@ class ComplexTableField_Popup extends Form {
 		Requirements::clear();
 		Requirements::unblock_all();
 		
-		$actions = new FieldSet();	
+		$actions = new FieldList();	
 		if(!$readonly) {
 			$actions->push(
 				$saveAction = new FormAction(

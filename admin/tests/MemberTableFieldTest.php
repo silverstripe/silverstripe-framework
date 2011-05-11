@@ -116,8 +116,8 @@ class MemberTableFieldTest_Controller extends Controller implements TestOnly {
 		return new Form(
 			$this,
 			'FormNoGroup',
-			new FieldSet(new MemberTableField($this, "Members", $group1)),
-			new FieldSet(new FormAction('submit'))
+			new FieldList(new MemberTableField($this, "Members", $group1)),
+			new FieldList(new FormAction('submit'))
 		);
 	}
 
@@ -131,8 +131,8 @@ class MemberTableFieldTest_Controller extends Controller implements TestOnly {
 		return new Form(
 			$this,
 			'FormNoGroup',
-			new FieldSet(new MemberTableField($this, "Members")),
-			new FieldSet(new FormAction('submit'))
+			new FieldList(new MemberTableField($this, "Members")),
+			new FieldList(new FormAction('submit'))
 		);
 	}
 	

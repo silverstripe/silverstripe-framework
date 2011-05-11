@@ -228,7 +228,7 @@ class MemberTableField extends ComplexTableField {
 	 * Add existing member to group by name (with JS-autocompletion)
 	 */
 	function AddRecordForm() {
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		foreach($this->FieldList() as $fieldName => $fieldTitle) {
 			// If we're adding the set password field, we want to hide the text from any peeping eyes
 			if($fieldName == 'SetPassword') {
@@ -240,7 +240,7 @@ class MemberTableField extends ComplexTableField {
 		if($this->group) {
 			$fields->push(new HiddenField('ctf[ID]', null, $this->group->ID));
 		}
-		$actions = new FieldSet(
+		$actions = new FieldList(
 			new FormAction('addtogroup', _t('MemberTableField.ADD','Add'))
 		);
 		

@@ -298,10 +298,10 @@ class RequestHandlingTest_Controller extends Controller implements TestOnly {
 	}
 	
 	function TestForm() {
-		return new RequestHandlingTest_Form($this, "TestForm", new FieldSet(
+		return new RequestHandlingTest_Form($this, "TestForm", new FieldList(
 			new RequestHandlingTest_FormField("MyField"),
 			new RequestHandlingTest_SubclassedFormField("SubclassedField")
-		), new FieldSet(
+		), new FieldList(
 			new FormAction("myAction")
 		));
 	}
@@ -350,10 +350,10 @@ class RequestHandlingTest_FormActionController extends Controller {
 		return new Form(
 			$this, 
 			"Form", 
-			new FieldSet(
+			new FieldList(
 				new TextField("MyField")
 			), 
-			new FieldSet(
+			new FieldList(
 				new FormAction("formaction"),
 				new FormAction('formactionInAllowedActions')
 			)
@@ -472,8 +472,8 @@ class RequestHandlingTest_ControllerFormWithAllowedActions extends Controller im
 		return new RequestHandlingTest_FormWithAllowedActions(
 			$this,
 			'Form',
-			new FieldSet(),
-			new FieldSet(
+			new FieldList(),
+			new FieldList(
 				new FormAction('allowedformaction'),
 				new FormAction('disallowedformaction') // disallowed through $allowed_actions in form
 			)

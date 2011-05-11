@@ -470,10 +470,10 @@ class Security extends Controller {
 		return Object::create('MemberLoginForm',
 			$this,
 			'LostPasswordForm',
-			new FieldSet(
+			new FieldList(
 				new EmailField('Email', _t('Member.EMAIL', 'Email'))
 			),
-			new FieldSet(
+			new FieldList(
 				new FormAction(
 					'forgotPassword',
 					_t('Security.BUTTONSEND', 'Send me the password reset link')

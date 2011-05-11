@@ -34,7 +34,7 @@ class MemberImportForm extends Form {
 			$importSpec = $importer->getImportSpec();
 			$helpHtml = sprintf($helpHtml, implode(', ', array_keys($importSpec['fields'])));
 			
-			$fields = new FieldSet(
+			$fields = new FieldList(
 				new LiteralField('Help', $helpHtml),
 				$fileField = new FileField(
 					'CsvFile', 
@@ -47,7 +47,7 @@ class MemberImportForm extends Form {
 			$fileField->getValidator()->setAllowedExtensions(array('csv'));
 		}
 		
-		if(!$actions) $actions = new FieldSet(
+		if(!$actions) $actions = new FieldList(
 			new FormAction('doImport', _t('SecurityAdmin_MemberImportForm.BtnImport', 'Import'))
 		);
 		
