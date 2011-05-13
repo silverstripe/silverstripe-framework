@@ -65,12 +65,8 @@
 				}
 				
 				// Initialize layouts, inner to outer
-				var doInnerLayout = function() {$('.cms-content').layout();}
-				var outer = $('.cms-container');
-				var doOuterLayout = function() {outer.layout({resize: false});}
-				doInnerLayout();
-				doOuterLayout();
-				$(window).resize(doOuterLayout);
+				this.updateLayout();
+				$(window).resize(function() {self.updateLayout()});
 				
 				// Remove loading screen
 				$('.ss-loading-screen').hide();
@@ -79,12 +75,14 @@
 
 				this._setupPinging();
 
-				$('.cms-edit-form').live('loadnewpage', function() {
-					doInnerLayout();
-					doOuterLayout();
-				});
+				$('.cms-edit-form').live('loadnewpage', function() {self.updateLayout()});
 
 				this._super();
+			},
+			
+			updateLayout: function() {
+				$('.cms-content').layout();
+				$('.cms-container').layout({resize: false})
 			},
 
 			/**
@@ -114,6 +112,15 @@
 						complete: onSessionLost
 					});
 				}, this.getPingIntervalSeconds() * 1000);
+			}
+		});
+		
+		/**
+		 * Monitor all panels for layout changes
+		 */
+		$('.LeftAndMain .cms-panel').entwine({
+			ontoggle: function(e) {
+				this.parents('.LeftAndMain').updateLayout();
 			}
 		});
 

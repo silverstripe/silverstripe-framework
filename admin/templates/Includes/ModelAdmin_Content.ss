@@ -6,34 +6,37 @@
 		</div>
 	</div>
 
-
-	<div class="cms-content-tools west">
-
-		<div id="SearchForm_holder" class="leftbottom ss-tabset">		
-			<% if SearchClassSelector = tabs %>
-				<ul>
-					<% control ModelForms %>
-						 <li class="$FirstLast"><a id="tab-ModelAdmin_$Title.HTMLATT" href="#{$Form.Name}_$ClassName">$Title</a></li>
-					<% end_control %>
-				</ul>
-			<% end_if %>
-
-			<% if SearchClassSelector = dropdown %>
-				<div id="ModelClassSelector" class="ui-widget-container">
-					Search for:
-					<select>
+	<div class="cms-content-tools west cms-panel" data-expandOnClick="true">
+		
+		<h3 class="cms-panel-header">Filter</h3>
+	
+		<div class="cms-panel-content">
+			<div id="SearchForm_holder" class="leftbottom ss-tabset">		
+				<% if SearchClassSelector = tabs %>
+					<ul>
 						<% control ModelForms %>
-							<option value="{$Form.Name}_$ClassName">$Title</option>
+							 <li class="$FirstLast"><a id="tab-ModelAdmin_$Title.HTMLATT" href="#{$Form.Name}_$ClassName">$Title</a></li>
 						<% end_control %>
-					</select>
-				</div>
-			<% end_if %>
+					</ul>
+				<% end_if %>
 
-			<% control ModelForms %>
-				<div class="tab" id="{$Form.Name}_$ClassName">
-					$Content
-				</div>
-			<% end_control %>
+				<% if SearchClassSelector = dropdown %>
+					<div id="ModelClassSelector" class="ui-widget-container">
+						Search for:
+						<select>
+							<% control ModelForms %>
+								<option value="{$Form.Name}_$ClassName">$Title</option>
+							<% end_control %>
+						</select>
+					</div>
+				<% end_if %>
+
+				<% control ModelForms %>
+					<div class="tab" id="{$Form.Name}_$ClassName">
+						$Content
+					</div>
+				<% end_control %>
+			</div>
 		</div>
 		
 	</div>

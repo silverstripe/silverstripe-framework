@@ -24,11 +24,14 @@ html, body { width: 100%; height: 100%; padding: 0; margin: 0; overflow: hidden;
 .cms-container { height: 100%; }
 
 .cms-menu { width: 250px; overflow: auto; }
+.cms-menu .cms-panel-content { width: 250px; }
+.cms-menu.collapsed { width: 40px; }
 
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-form { display: -moz-inline-box; -moz-box-orient: vertical; display: inline-block; vertical-align: middle; *vertical-align: auto; }
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-form { *display: inline; }
 
-.cms-content-tools { width: 230px; padding: 10px; overflow: auto; }
+.cms-content-tools { width: 230px; overflow: auto; }
+.cms-content-tools .cms-panel-header, .cms-content-tools .cms-panel-content { padding: 10px; }
 
 .cms-content-form { overflow: auto; }
 
@@ -37,6 +40,8 @@ html, body { width: 100%; height: 100%; padding: 0; margin: 0; overflow: hidden;
 .cms-content-header > div { width: 9999em; overflow: hidden; }
 
 .cms-content-actions { padding: 10px; }
+
+.cms-header { padding: 7px 0 7px 7px; }
 
 .cms-logo { height: 30px; overflow: hidden; vertical-align: middle; }
 

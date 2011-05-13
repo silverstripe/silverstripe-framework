@@ -121,9 +121,13 @@ strong {
 
 .cms-content-tools {
 	background-color: darken($color-widget-bg, 5%);
-	padding: 10px;	
 	width: 230px;
 	overflow: auto;	
+	
+	.cms-panel-header,
+	.cms-panel-content {
+		padding: 10px;
+	}
 }
 
 
@@ -405,6 +409,59 @@ form.member-profile-form {
 	overflow: auto;
 }
 
+// ######################### Panels #########################
+.cms-panel {
+	
+	overflow: hidden;
+
+	.toggle-expand,
+	.toggle-collapse {
+		display: block;
+		position: absolute;
+		bottom: 0;
+		text-align: right;
+		@include linear-gradient(color-stops(
+			darken($color-widget-bg, 20%),
+			darken($color-widget-bg, 30%)
+		));
+		
+		span {
+			display: inline-block;
+			margin: 5px;
+			color: $color-text-dark;
+			font-size: 16px;
+		}
+	}
+	
+	.toggle-collapse {
+		width: 100%;
+	}
+	
+	.toggle-expand {
+		width: 40px; // will set the collapsed width
+	}
+	
+	&.collapsed {
+		
+		.cms-panel-content {
+			display: none;
+		}
+		
+		.cms-panel-header {
+			@include rotate(-90deg);
+			// TODO How to reflow container to correct height?
+			position: relative;
+			top: 100px;
+		}
+	}
+	
+}
+
+.cms-content .cms-panel.collapsed {
+	cursor: pointer;
+}
+
+// ######################### Other #########################
 .cms-preview {
 	background-color: $color-base;
 	

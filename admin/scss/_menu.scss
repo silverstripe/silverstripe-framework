@@ -21,6 +21,30 @@
 	a {
 		text-decoration: none;
 	}
+	
+	.cms-panel-content {
+		width: 250px; // avoids floating of elements when collapsed
+	}
+		
+	// toggled via JS
+	&.collapsed {
+	
+		width: 40px;
+		cursor: auto;
+		
+		.cms-menu-list {
+			li span.text {
+				display: none;
+			}
+			li ul {
+				display: none; 
+			}
+		}
+		
+		&.cms-panel .cms-panel-content {
+			display: block; // override panel defaults
+		}
+	}
 }
 
 .cms-menu-list {
@@ -138,6 +162,21 @@
 					border-top: none;
 				}
 			}
+		}
+	}
+		
+	li#Menu-CMSMain a .icon {@include sprite-position(1, 1);}
+	li#Menu-CMSMain.current a .icon, li#Menu-CMSMain a:hover .icon {@include sprite-position(2, 1);}
+	li#Menu-AssetAdmin a .icon {@include sprite-position(1, 2);}
+	li#Menu-AssetAdmin.current a .icon, li#Menu-AssetAdmin a:hover .icon {@include sprite-position(2, 2);}
+	
+	&.collapsed {
+		li .text {
+			display: none;
+		}
+		
+		li > li {
+			display: none;
 		}
 	}
 }
