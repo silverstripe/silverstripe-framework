@@ -103,6 +103,10 @@
 				@include sprite-position(1, 1);
 			}
 			
+			&:hover .icon {
+				@include sprite-position(2, 1);
+			}
+			
 			.text {
 				display: block;
 			}
@@ -124,6 +128,15 @@
 			ul {
 				border-top: 1px solid darken($color-menu-button, 20%);
 			}
+			
+			a .icon {
+				@include sprite-position(2, 1);
+			}
+		}
+		
+		// nested elements
+		li {
+		
 			
 			li {
 				background-color: darken($color-menu-button, 10%);
@@ -167,8 +180,12 @@
 		
 	li#Menu-CMSMain a .icon {@include sprite-position(1, 1);}
 	li#Menu-CMSMain.current a .icon, li#Menu-CMSMain a:hover .icon {@include sprite-position(2, 1);}
-	li#Menu-AssetAdmin a .icon {@include sprite-position(1, 2);}
-	li#Menu-AssetAdmin.current a .icon, li#Menu-AssetAdmin a:hover .icon {@include sprite-position(2, 2);}
+	li#Menu-AssetAdmin a .icon {@include sprite-position(1, 4);}
+	li#Menu-AssetAdmin.current a .icon, li#Menu-AssetAdmin a:hover .icon {@include sprite-position(2, 4);}
+	li#Menu-SecurityAdmin a .icon {@include sprite-position(1, 5);}
+	li#Menu-SecurityAdmin.current a .icon, li#Menu-SecurityAdmin a:hover .icon {@include sprite-position(2, 5);}
+	li#Menu-CMSPagesController a .icon {@include sprite-position(1, 2);}
+	li#Menu-CMSPagesController.current a .icon, li#Menu-CMSPagesController a:hover .icon {@include sprite-position(2, 2);}
 	
 	&.collapsed {
 		li .text {

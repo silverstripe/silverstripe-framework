@@ -144,18 +144,24 @@ li.jstree-closed > ul { display: none; }
 
 .cms-menu-list li { background-color: #b0bfc6; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b0bfc6), color-stop(100%, #758f9b)); background-image: -moz-linear-gradient(top, #b0bfc6 0%, #758f9b 100%); background-image: linear-gradient(top, #b0bfc6 0%, #758f9b 100%); border-bottom: 1px solid #aaaaaa; }
 .cms-menu-list li a { display: block; height: 32px; vertical-align: middle; font-size: 14px; text-shadow: #aaaaaa 1px 1px 1px; color: #333333; padding: 5px; }
-.cms-menu-list li a .icon { display: block; float: left; margin-right: 5px; background: url('../images/icons-32.png?1305180670') no-repeat; width: 32px; height: 32px; overflow: hidden; background-position: 0px 0px; }
+.cms-menu-list li a .icon { display: block; float: left; margin-right: 5px; background: url('../images/icons-32.png?1305262748') no-repeat; width: 32px; height: 32px; overflow: hidden; background-position: 0px 0px; }
+.cms-menu-list li a:hover .icon { background-position: -32px 0px; }
 .cms-menu-list li a .text { display: block; padding-top: 10px; }
 .cms-menu-list li.current { background-color: #338dc1; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #338dc1), color-stop(100%, #1e5270)); background-image: -moz-linear-gradient(top, #338dc1 0%, #1e5270 100%); background-image: linear-gradient(top, #338dc1 0%, #1e5270 100%); }
 .cms-menu-list li.current li { background-color: #2e7ead; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #2e7ead), color-stop(100%, #287099)); background-image: -moz-linear-gradient(top, #2e7ead 0%, #287099 100%); background-image: linear-gradient(top, #2e7ead 0%, #287099 100%); }
 .cms-menu-list li.current a { color: white; text-shadow: #333333 1px 1px 1px; }
+.cms-menu-list li.current a .icon { background-position: -32px 0px; }
 .cms-menu-list li li:first { -moz-box-shadow: #333333 0 4px 4px 0; -webkit-box-shadow: #333333 0 4px 4px 0; -o-box-shadow: #333333 0 4px 4px 0; box-shadow: #333333 0 4px 4px 0; }
 .cms-menu-list li li a { font-size: 12px; text-shadow: #333333 1px 1px 1px; margin: 0; padding-left: 30px; color: white; }
 .cms-menu-list li li.current a { font-weight: bold; }
 .cms-menu-list li#Menu-CMSMain a .icon { background-position: 0px 0px; }
 .cms-menu-list li#Menu-CMSMain.current a .icon, .cms-menu-list li#Menu-CMSMain a:hover .icon { background-position: -32px 0px; }
-.cms-menu-list li#Menu-AssetAdmin a .icon { background-position: 0px -32px; }
-.cms-menu-list li#Menu-AssetAdmin.current a .icon, .cms-menu-list li#Menu-AssetAdmin a:hover .icon { background-position: -32px -32px; }
+.cms-menu-list li#Menu-AssetAdmin a .icon { background-position: 0px -96px; }
+.cms-menu-list li#Menu-AssetAdmin.current a .icon, .cms-menu-list li#Menu-AssetAdmin a:hover .icon { background-position: -32px -96px; }
+.cms-menu-list li#Menu-SecurityAdmin a .icon { background-position: 0px -128px; }
+.cms-menu-list li#Menu-SecurityAdmin.current a .icon, .cms-menu-list li#Menu-SecurityAdmin a:hover .icon { background-position: -32px -128px; }
+.cms-menu-list li#Menu-CMSPagesController a .icon { background-position: 0px -32px; }
+.cms-menu-list li#Menu-CMSPagesController.current a .icon, .cms-menu-list li#Menu-CMSPagesController a:hover .icon { background-position: -32px -32px; }
 .cms-menu-list.collapsed li .text { display: none; }
 .cms-menu-list.collapsed li > li { display: none; }
 
