@@ -297,7 +297,7 @@ form.member-profile-form .formattingHelpText ul { padding: 0; }
 form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; margin-bottom: 2px; }
 
 .cms-panel { overflow: hidden; }
-.cms-panel .toggle-expand, .cms-panel .toggle-collapse { display: block; position: absolute; bottom: 0; text-align: right; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #afbfc7), color-stop(100%, #91a7b2)); background-image: -moz-linear-gradient(top, #afbfc7 0%, #91a7b2 100%); background-image: linear-gradient(top, #afbfc7 0%, #91a7b2 100%); }
+.cms-panel .toggle-expand, .cms-panel .toggle-collapse { display: block; position: absolute; bottom: 0; text-align: right; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #afbfc7), color-stop(100%, #91a7b2)); background-image: -moz-linear-gradient(top, #afbfc7 0%, #91a7b2 100%); background-image: linear-gradient(top, #afbfc7 0%, #91a7b2 100%); text-decoration: none; }
 .cms-panel .toggle-expand span, .cms-panel .toggle-collapse span { display: inline-block; margin: 5px; color: #333333; font-size: 16px; }
 .cms-panel .toggle-collapse { width: 100%; }
 .cms-panel .toggle-expand { width: 40px; }
@@ -308,6 +308,7 @@ form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; 
 
 .cms-preview { background-color: #b0bfc6; }
 .cms-preview .cms-preview-toggle { cursor: pointer; }
-.cms-preview .cms-preview-toggle a { color: white; font-weight: bold; text-decoration: none; }
+.cms-preview .cms-preview-toggle a { display: block; width: 15px; height: 15px; position: relative; left: 10px; top: 48%; background-color: #b0bfc6; color: white; font-weight: bold; text-decoration: none; z-index: 2000; }
+.cms-preview.is-collapsed .cms-preview-toggle a { left: -15px; }
 
 .cms-switch-view a { padding-right: 1em; }

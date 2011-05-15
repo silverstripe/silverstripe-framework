@@ -25,11 +25,9 @@
 
 		$Content
 		
-		<% if currentPage %>
-		<div class="cms-preview east">
-			<iframe src="$currentPage.Link/?stage=Stage"></iframe>
+		<div class="cms-preview east <% if IsPreviewExpanded %>is-expanded<% else %>is-collapsed<% end_if %>">
+			<iframe src="$PreviewLink"></iframe>
 		</div>
-		<% end_if %>
 
 	</div>
 		

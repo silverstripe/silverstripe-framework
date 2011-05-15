@@ -1074,12 +1074,17 @@ class LeftAndMain extends Controller {
 	}
 	
 	/**
-	 * Get the staus of a certain page and version.
-	 *
-	 * This function is used for concurrent editing, and providing alerts
-	 * when multiple users are editing a single page. It echoes a json
-	 * encoded string to the UA.
+	 * URL to a previewable record which is shown through this controller.
+	 * The controller might not have any previewable content, in which case 
+	 * this method returns FALSE.
+	 * 
+	 * @return String|boolean
 	 */
+	public function PreviewLink() {
+		$record = $this->getRecord($this->currentPageID());
+		$baseLink = ($record && $record instanceof Page) ? $record->Link('?stage=Stage') : Director::absoluteBaseURL();
+		return Controller::join_links($baseLink, '?cms-preview-disabled=1');
+	}
 
 	/**
 	 * Return the version number of this application.
@@ -1164,6 +1169,10 @@ class LeftAndMain extends Controller {
 	 */
 	function MceRoot() {
 		return MCE_ROOT;
+	}
+	
+	function IsPreviewExpanded() {
+		return ($this->request->getVar('cms-preview-expanded'));
 	}
 	
 	/**

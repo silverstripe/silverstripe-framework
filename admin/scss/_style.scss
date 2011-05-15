@@ -342,7 +342,6 @@ strong {
 // ######################### Preview header (remove before release) #########################
 .cms-preview {
 	width: 1px; // collapsed by default
-	overflow: hidden;
 		
 	.cms-preview-toggle {
 		width: 10px;
@@ -424,6 +423,7 @@ form.member-profile-form {
 			darken($color-widget-bg, 20%),
 			darken($color-widget-bg, 30%)
 		));
+		text-decoration: none;
 		
 		span {
 			display: inline-block;
@@ -469,9 +469,25 @@ form.member-profile-form {
 		cursor: pointer;
 		
 		a {
+			display: block;
+			width: 15px;
+			height: 15px;
+			position: relative;
+			left: 10px; // point right (width of toggle)
+			top: 48%;
+			background-color: $color-base;
 			color: $color-text-light;
 			font-weight: bold;
 			text-decoration: none;
+			z-index: 2000;
+		}
+	}
+	
+	&.is-collapsed {
+		.cms-preview-toggle {
+			a {
+				left: -15px; // point left
+			}
 		}
 	}
 }

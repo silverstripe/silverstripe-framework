@@ -65,8 +65,8 @@
 				}
 				
 				// Initialize layouts, inner to outer
-				this.updateLayout();
-				$(window).resize(function() {self.updateLayout()});
+				this.redraw();
+				$(window).resize(function() {self.redraw()});
 				
 				// Remove loading screen
 				$('.ss-loading-screen').hide();
@@ -75,12 +75,12 @@
 
 				this._setupPinging();
 
-				$('.cms-edit-form').live('loadnewpage', function() {self.updateLayout()});
+				$('.cms-edit-form').live('loadnewpage', function() {self.redraw()});
 
 				this._super();
 			},
 			
-			updateLayout: function() {
+			redraw: function() {
 				$('.cms-content').layout();
 				$('.cms-container').layout({resize: false})
 			},
@@ -120,7 +120,7 @@
 		 */
 		$('.LeftAndMain .cms-panel').entwine({
 			ontoggle: function(e) {
-				this.parents('.LeftAndMain').updateLayout();
+				this.parents('.LeftAndMain').redraw();
 			}
 		});
 
