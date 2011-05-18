@@ -7,10 +7,11 @@
 abstract class LeftAndMainDecorator extends LeftAndMainExtension {
 	
 	public function __construct() {
-		user_error(
-			'LeftAndMainDecorator is deprecated, please use LeftAndMainExtension instead.',
-			E_USER_NOTICE
-		);
+		// TODO Re-enable before we release 3.0 beta, for now it "breaks" too many modules
+		// user_error(
+		// 	'LeftAndMainDecorator is deprecated, please use LeftAndMainExtension instead.',
+		// 	E_USER_NOTICE
+		// );
 		parent::__construct();
 	}
 	
