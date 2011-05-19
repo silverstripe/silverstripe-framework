@@ -1,4 +1,5 @@
 /** This file is the central collection of included modules, links to custom SCSS files, and any global SCSS variable definitions.  DO NOT ADD stylesheet rules to this file directly!  Note: By prefixing files with an underscore, they won't create individual CSS files. */
+/** ----------------------------- Core Compass Libraries ------------------------------ */
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td { margin: 0; padding: 0; border: 0; outline: 0; font-weight: inherit; font-style: inherit; font-size: 100%; font-family: inherit; vertical-align: baseline; }
 
 body { line-height: 1; color: black; background: white; }
@@ -15,7 +16,12 @@ q:before, q:after, blockquote:before, blockquote:after { content: ""; }
 a img { border: none; }
 
 @charset "UTF-8";
-/** This file only contains color definitions. Please put any further formatting into _style.scss. */
+/** ----------------------------- Theme ------------------------------ */
+/** This file contains the default theme definitions for the admin interface.  @package sapphire @subpackage admin */
+/** ----------------------------------------------- Colours ------------------------------------------------ */
+/** ----------------------------------------------- Typography ------------------------------------------------ */
+/** ----------------------------------------------- Application Logo (CMS Logo) ------------------------------------------------ */
+/** ----------------------------- CMS Components ------------------------------ */
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .jstree ul { display: block; margin: 0 0 0 0; padding: 0 0 0 0; list-style-type: none; }
 .jstree li { display: block; margin: 0 0 0 0; padding: 0 0 0 0; list-style-type: none; display: block; min-height: 18px; line-height: 18px; white-space: nowrap; margin-left: 18px; min-width: 18px; }
@@ -126,26 +132,28 @@ li.jstree-closed > ul { display: none; }
 .cms .jstree-apple.jstree-focused { background: none; }
 .cms .jstree-apple > ul { background: none; }
 
-.cms-menu { z-index: 10; background-color: #ebeff1; -moz-box-shadow: #aaaaaa 3px 0 3px 0; -webkit-box-shadow: #aaaaaa 3px 0 3px 0; -o-box-shadow: #aaaaaa 3px 0 3px 0; box-shadow: #aaaaaa 3px 0 3px 0; }
+/** Styles for the left hand side menu  @package sapphire @subpackage admin */
+/** ------------------------------------------------------- CMS Menu Bar -------------------------------------------------------- */
+@charset "UTF-8";
+.cms-menu { z-index: 10; background: #c6d7df; border-right: 1px solid #8c99a1; width: 250px; overflow: auto; -moz-box-shadow: rgba(107, 120, 123, 0.5) 2px 0 6px 0; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 2px 0 6px 0; -o-box-shadow: rgba(107, 120, 123, 0.5) 2px 0 6px 0; box-shadow: rgba(107, 120, 123, 0.5) 2px 0 6px 0; }
 .cms-menu a { text-decoration: none; }
 
-.cms-menu-list li { background-color: #b0bfc6; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b0bfc6), color-stop(100%, #758f9b)); background-image: -moz-linear-gradient(top, #b0bfc6 0%, #758f9b 100%); background-image: linear-gradient(top, #b0bfc6 0%, #758f9b 100%); border-bottom: 1px solid #aaaaaa; }
-.cms-menu-list li a { display: block; height: 32px; vertical-align: middle; font-size: 14px; text-shadow: #aaaaaa 1px 1px 1px; color: #333333; padding: 5px; }
-.cms-menu-list li a .icon { display: block; float: left; margin-right: 5px; background: url('../images/icons-32.png?1303987682') no-repeat; width: 32px; height: 32px; overflow: hidden; background-position: 0px 0px; }
-.cms-menu-list li a .text { display: block; padding-top: 10px; }
-.cms-menu-list li.current { background-color: #338dc1; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #338dc1), color-stop(100%, #1e5270)); background-image: -moz-linear-gradient(top, #338dc1 0%, #1e5270 100%); background-image: linear-gradient(top, #338dc1 0%, #1e5270 100%); }
-.cms-menu-list li.current li { background-color: #2e7ead; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #2e7ead), color-stop(100%, #287099)); background-image: -moz-linear-gradient(top, #2e7ead 0%, #287099 100%); background-image: linear-gradient(top, #2e7ead 0%, #287099 100%); }
-.cms-menu-list li.current a { color: white; text-shadow: #333333 1px 1px 1px; }
-.cms-menu-list li li:first { -moz-box-shadow: #333333 0 4px 4px 0; -webkit-box-shadow: #333333 0 4px 4px 0; -o-box-shadow: #333333 0 4px 4px 0; box-shadow: #333333 0 4px 4px 0; }
-.cms-menu-list li li a { font-size: 12px; text-shadow: #333333 1px 1px 1px; margin: 0; padding-left: 30px; color: white; }
-.cms-menu-list li li.current a { font-weight: bold; }
-.cms-menu-list li#Menu-CMSMain a .icon { background-position: 0px 0px; }
-.cms-menu-list li#Menu-CMSMain.current a .icon, .cms-menu-list li#Menu-CMSMain a:hover .icon { background-position: -32px 0px; }
-.cms-menu-list li#Menu-AssetAdmin a .icon { background-position: 0px -32px; }
-.cms-menu-list li#Menu-AssetAdmin.current a .icon, .cms-menu-list li#Menu-AssetAdmin a:hover .icon { background-position: -32px -32px; }
+.cms-menu-list li a { display: block; height: 30px; line-height: 30px; vertical-align: middle; font-size: 13px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-shadow: #ced7dc 1px 1px 0; color: #1f1f1f; padding: 5px; background-color: #b0bec7; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b0bec7), color-stop(100%, #98aab6)); background-image: -moz-linear-gradient(top, #b0bec7 0%, #98aab6 100%); background-image: linear-gradient(top, #b0bec7 0%, #98aab6 100%); border-top: 1px solid #ced7dc; border-bottom: 1px solid #748d9d; }
+.cms-menu-list li a:hover { text-decoration: none; background-color: #b6c3cb; border-bottom: 1px solid #8399a7; color: #2c2c2c; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #bfcad2), color-stop(100%, #b0bec7)); background-image: -moz-linear-gradient(top, #bfcad2 0%, #b0bec7 100%); background-image: linear-gradient(top, #bfcad2 0%, #b0bec7 100%); }
+.cms-menu-list li a:focus { border-top: 1px solid #a1b2bc; text-decoration: none; background-color: #a1b2bc; color: #393939; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #92a5b2), color-stop(100%, #a1b2bc)); background-image: -moz-linear-gradient(top, #92a5b2 0%, #a1b2bc 100%); background-image: linear-gradient(top, #92a5b2 0%, #a1b2bc 100%); }
+.cms-menu-list li a .icon { display: block; float: left; margin-right: 4px; background: url('../images/icons-32.png') no-repeat; width: 32px; height: 32px; overflow: hidden; background-position: 0px 0px; }
+.cms-menu-list li a .text { display: block; }
+.cms-menu-list li.current a { color: white; text-shadow: #1e5270 0 -1px 0; border-top: 1px solid #55a4d2; border-bottom: 1px solid #1e5270; background-color: #338dc1; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #338dc1), color-stop(100%, #287099)); background-image: -moz-linear-gradient(top, #338dc1 0%, #287099 100%); background-image: linear-gradient(top, #338dc1 0%, #287099 100%); }
+.cms-menu-list li.current ul { border-top: 1px solid #1e5270; }
+.cms-menu-list li.current li { background-color: #287099; }
+.cms-menu-list li.current li a { font-size: 11px; padding: 0 10px 0 36px; height: 32px; line-height: 32px; color: #e2f0f7; background: none; border-top: 1px solid #338dc1; border-bottom: 1px solid #1e5270; }
+.cms-menu-list li.current li a.current, .cms-menu-list li.current li a:hover { background: #2e7ead; border-top: 1px solid #2e7ead; color: white; }
+.cms-menu-list li.current li a:focus { background: #236184; border-top: 1px solid #1e5270; color: white; }
+.cms-menu-list li.current li.current a { font-weight: bold; color: white; }
+.cms-menu-list li.current li.first a { border-top: none; }
 
 /** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in sapphire/css/Form.css. */
-.field { display: block; padding: 10px 0; border-bottom: 1px solid #aaaaaa; }
+.field { display: block; padding: 10px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); }
 .field label { float: left; width: 10em; }
 .field .middleColumn { margin-left: 10em; }
 .field .middleColumn .field { display: inline; padding: 0; border: none; }
@@ -157,15 +165,15 @@ form.nostyle .middleColumn { margin-left: 0; }
 
 .field.nolabel .middleColumn { margin-left: 0; }
 
-input, textarea { -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; -ms-border-radius: 5px; -khtml-border-radius: 5px; border-radius: 5px; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #ebeff1), color-stop(50%, #ffffff), color-stop(100%, #ebeff1)); background-image: -moz-linear-gradient(top, #ebeff1 0%, #ffffff 50%, #ebeff1 100%); background-image: linear-gradient(top, #ebeff1 0%, #ffffff 50%, #ebeff1 100%); border: 1px solid #aaaaaa; padding: 3px; }
+input, textarea { -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; -ms-border-radius: 5px; -khtml-border-radius: 5px; border-radius: 5px; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #eceff1), color-stop(50%, #ffffff), color-stop(100%, #eceff1)); background-image: -moz-linear-gradient(top, #eceff1 0%, #ffffff 50%, #eceff1 100%); background-image: linear-gradient(top, #eceff1 0%, #ffffff 50%, #eceff1 100%); border: 1px solid rgba(201, 205, 206, 0.8); padding: 3px; }
 
-input.loading, input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, .ui-widget-header input.ui-state-default.loading { padding-left: 16px; background: #ebeff1 url(../../images/network-save.gif) no-repeat center left; }
+input.loading, input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, .ui-widget-header input.ui-state-default.loading { padding-left: 16px; background: #eceff1 url(../../images/network-save.gif) no-repeat center left; }
 
 .ss-ui-button.ss-ui-action-constructive, .ui-widget-content .ss-ui-button.ss-ui-action-constructive, .ui-widget-header .ss-ui-button.ss-ui-action-constructive { background: none; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #77b53f), color-stop(100%, #456925)); background-image: -moz-linear-gradient(top, #77b53f 0%, #456925 100%); background-image: linear-gradient(top, #77b53f 0%, #456925 100%); color: white; }
 
 .ss-ui-button.ss-ui-action-destructive, .ui-widget-content .ss-ui-button.ss-ui-action-destructive, .ui-widget-header .ss-ui-button.ss-ui-action-destructive { color: red; }
 
-.ss-ui-button.ss-ui-action-minor, .ui-widget-content .ss-ui-button.ss-ui-action-minor .ui-widget-header .ss-ui-button.ss-ui-action-minor { background: none; padding: 0; border: 0; color: #333333; text-decoration: underline; }
+.ss-ui-button.ss-ui-action-minor, .ui-widget-content .ss-ui-button.ss-ui-action-minor .ui-widget-header .ss-ui-button.ss-ui-action-minor { background: none; padding: 0; border: 0; color: #1f1f1f; text-decoration: underline; }
 
 .cms-edit-form { padding-bottom: 20px; }
 .cms-edit-form .text input, .cms-edit-form textarea { width: 300px; }
@@ -179,46 +187,57 @@ input.loading, input.ui-state-default.loading, .ui-widget-content input.ui-state
 /** This file defines CMS-specific customizations to the jQuery UI theme. Every rule in this file should be wrapped in the '.cms' selector (to make it more specific), and contain ONLY overwritten jQuery UI rules (with 'ui-' prefix).  This file should be fairly short, as we're using our own custom jQuery UI theme already. TODO Add theme reference  Use _style.scss to add more generic style information, and read the jQuery UI theming API: http://jqueryui.com/docs/Theming/API */
 .cms .ui-tabs { padding: 0; }
 .cms .ui-tabs .ui-widget-header { border: 0; background: none; }
-.cms .ui-widget-content, .cms .ui-tabs .ui-tabs-panel { color: #444444; font-size: 1em; border: 0; background: #ebeff1; }
-.cms .ui-widget-header { background: #ebeff1; border: 0; }
+.cms .ui-widget-content, .cms .ui-tabs .ui-tabs-panel { color: #444444; font-size: 1em; border: 0; background: #eceff1; }
+.cms .ui-widget-header { background: #eceff1; border: 0; padding: 0; }
 .cms .ss-ui-button { padding: 5px; text-decoration: none; }
 
 /** This file defines the 'theme' of the CMS: Colors, fonts, backgrounds, and detailed alignments. Together with _layout.css it provides the presentational backbone to the CMS. Ideally a developer should be able to exchange this file with his own theme easily.  Please don't put any dimension, display or float information on major structural components like '.cms-container' or '.cms-header' in here, use the _layout.scss file instead.  Use SCSS variable definitions in screen.css to avoid repeating styles like background colours or padding dimensions. See _colours.scss to get started.  To avoid this file getting too large and complicated, it is encouraged to create new SCSS files for larger components like the CMS menu or tree (see _tree.scss and _menu.scss). */
-body { font-size: 13px; font-family: Verdana, Arial, sans-serif; color: #444444; }
-body html, body body, body div, body span, body applet, body object, body iframe, body h1, body h2, body h3, body h4, body h5, body h6, body p, body blockquote, body pre, body a, body abbr, body acronym, body address, body big, body cite, body code, body del, body dfn, body em, body font, body img, body ins, body kbd, body q, body s, body samp, body small, body strike, body strong, body sub, body sup, body tt, body var, body dl, body dt, body dd, body ol, body ul, body li, body fieldset, body form, body label, body legend, body table, body caption, body tbody, body tfoot, body thead, body tr, body th, body td { margin: 0; padding: 0; border: 0; outline: 0; font-weight: inherit; font-style: inherit; font-size: 100%; font-family: inherit; vertical-align: baseline; }
-body body { line-height: 1; color: black; background: white; }
-body ol, body ul { list-style: none; }
-body table { border-collapse: separate; border-spacing: 0; vertical-align: middle; }
-body caption, body th, body td { text-align: left; font-weight: normal; vertical-align: middle; }
-body q, body blockquote { quotes: "" ""; }
-body q:before, body q:after, body blockquote:before, body blockquote:after { content: ""; }
-body a img { border: none; }
+/** ---------------------------------------------------- Core Styles ---------------------------------------------------- */
+html, body { width: 100%; height: 100%; overflow: hidden; font-size: 13px; font-family: Verdana, Arial, sans-serif; color: #444444; }
+html html, html body, html div, html span, html applet, html object, html iframe, html h1, html h2, html h3, html h4, html h5, html h6, html p, html blockquote, html pre, html a, html abbr, html acronym, html address, html big, html cite, html code, html del, html dfn, html em, html font, html img, html ins, html kbd, html q, html s, html samp, html small, html strike, html strong, html sub, html sup, html tt, html var, html dl, html dt, html dd, html ol, html ul, html li, html fieldset, html form, html label, html legend, html table, html caption, html tbody, html tfoot, html thead, html tr, html th, html td, body html, body body, body div, body span, body applet, body object, body iframe, body h1, body h2, body h3, body h4, body h5, body h6, body p, body blockquote, body pre, body a, body abbr, body acronym, body address, body big, body cite, body code, body del, body dfn, body em, body font, body img, body ins, body kbd, body q, body s, body samp, body small, body strike, body strong, body sub, body sup, body tt, body var, body dl, body dt, body dd, body ol, body ul, body li, body fieldset, body form, body label, body legend, body table, body caption, body tbody, body tfoot, body thead, body tr, body th, body td { margin: 0; padding: 0; border: 0; outline: 0; font-weight: inherit; font-style: inherit; font-size: 100%; font-family: inherit; vertical-align: baseline; }
+html body, body body { line-height: 1; color: black; background: white; }
+html ol, html ul, body ol, body ul { list-style: none; }
+html table, body table { border-collapse: separate; border-spacing: 0; vertical-align: middle; }
+html caption, html th, html td, body caption, body th, body td { text-align: left; font-weight: normal; vertical-align: middle; }
+html q, html blockquote, body q, body blockquote { quotes: "" ""; }
+html q:before, html q:after, html blockquote:before, html blockquote:after, body q:before, body q:after, body blockquote:before, body blockquote:after { content: ""; }
+html a img, body a img { border: none; }
 
-body * { font-size: 13px; }
+a { color: #3ebae0; text-decoration: none; }
+a:hover, a:focus { text-decoration: underline; }
 
-body .ui-widget { font-size: 1em; }
+body .ui-widget { font-size: 13px; }
+
+.cms-container { height: 100%; }
+
+.cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-form { display: -moz-inline-box; -moz-box-orient: vertical; display: inline-block; vertical-align: middle; *vertical-align: auto; }
+.cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-form { *display: inline; }
 
 strong { font-weight: bold; }
 
-.cms-content-header { background-color: #afbfc7; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #afbfc7), color-stop(100%, #91a7b2)); background-image: -moz-linear-gradient(top, #afbfc7 0%, #91a7b2 100%); background-image: linear-gradient(top, #afbfc7 0%, #91a7b2 100%); }
-.cms-content-header h2 { float: left; padding: 10px; font-size: 14px; font-weight: bold; }
+.cms-content-header { background-color: #b1bec6; padding: 8px; height: 32px; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b1bec6), color-stop(100%, #94a5b0)); background-image: -moz-linear-gradient(top, #b1bec6 0%, #94a5b0 100%); background-image: linear-gradient(top, #b1bec6 0%, #94a5b0 100%); }
+.cms-content-header h2 { float: left; padding: 8px; font-size: 14px; font-weight: bold; width: 230px; }
+.cms-content-header > div { width: 9999em; overflow: hidden; }
 .cms-content-header .cms-content-header-tabs { float: left; }
 
 .ui-tabs .cms-content-header .ui-tabs-nav li { height: 40px; }
-.ui-tabs .cms-content-header .ui-tabs-nav li a { font-weight: bold; font-size: 11px; padding-top: 1em; }
-.ui-tabs .cms-content-header .ui-state-default, .ui-tabs .cms-content-header .ui-widget-content .ui-state-default, .ui-tabs .cms-content-header .ui-widget-header .ui-state-default { background-color: #dddddd; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #dddddd), color-stop(100%, #b7b7b7)); background-image: -moz-linear-gradient(top, #dddddd 0%, #b7b7b7 100%); background-image: linear-gradient(top, #dddddd 0%, #b7b7b7 100%); }
-.ui-tabs .cms-content-header .ui-state-active, .ui-tabs .cms-content-header .ui-widget-content .ui-state-active, .ui-tabs .cms-content-header .ui-widget-header .ui-state-active { background: #ebeff1; }
+.ui-tabs .cms-content-header .ui-tabs-nav li a { font-weight: bold; font-size: 11px; padding-top: 8px; }
+.ui-tabs .cms-content-header .ui-state-default, .ui-tabs .cms-content-header .ui-widget-content .ui-state-default, .ui-tabs .cms-content-header .ui-widget-header .ui-state-default { background-color: #feffff; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #feffff), color-stop(100%, #d6d9da)); background-image: -moz-linear-gradient(top, #feffff 0%, #d6d9da 100%); background-image: linear-gradient(top, #feffff 0%, #d6d9da 100%); }
+.ui-tabs .cms-content-header .ui-state-active, .ui-tabs .cms-content-header .ui-widget-content .ui-state-active, .ui-tabs .cms-content-header .ui-widget-header .ui-state-active { background: #eceff1; }
 
-.cms-content-tools { background-color: #dce3e6; padding: 10px; }
+.cms-content-tools { background-color: #dde3e6; padding: 10px; width: 230px; overflow: auto; }
 
-.cms-header { background-color: #00111d; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #00111d), color-stop(50%, #003050), color-stop(100%, #00111d)); background-image: -moz-linear-gradient(top, #00111d 0%, #003050 50%, #00111d 100%); background-image: linear-gradient(top, #00111d 0%, #003050 50%, #00111d 100%); }
-.cms-header * { color: white; }
+/** ------------------------------------------------------- Top Left Header and logo area -------------------------------------------------------- */
+.cms-header { background-color: #00111d; position: relative; padding: 16px 8px 8px; line-height: 24px; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #00111d), color-stop(50%, #003050), color-stop(100%, #00111d)); background-image: -moz-linear-gradient(top, #00111d 0%, #003050 50%, #00111d 100%); background-image: linear-gradient(top, #00111d 0%, #003050 50%, #00111d 100%); }
+.cms-header span { color: white; white-space: no-wrap; text-overflow: ellipsis; display: block; }
+.cms-header span a { color: #3ebae0; display: inline; }
 
+.cms-logo { border-bottom: 1px solid #03090c; height: 31px; overflow: hidden; padding: 0 4px; vertical-align: middle; }
 .cms-logo .version { display: none; }
-.cms-logo * { color: #3ebae0; }
-.cms-logo a { display: inline-block; height: 25px; width: 25px; float: left; margin-right: 10px; background: url(../images/logo_small.png) no-repeat; text-indent: -9999em; }
+.cms-logo a { display: inline-block; height: 25px; width: 25px; float: left; margin-right: 10px; background: url('../images/logo_small.png?1305762003') no-repeat; text-indent: -9999em; }
 
-.cms-login-status .logout-link { display: inline-block; height: 25px; width: 25px; float: left; margin-right: 10px; background: url(../images/logout.png) no-repeat; text-indent: -9999em; }
+.cms-login-status { border-top: 1px solid #19435c; height: 23px; padding: 8px 0 0 14px; overflow: hidden; line-height: 16px; font-size: 11px; }
+.cms-login-status .logout-link { display: inline-block; height: 16px; width: 16px; float: left; margin-right: 10px; background: url(../images/logout.png) no-repeat; text-indent: -9999em; }
 
 .ss-loading-screen, .ss-loading-screen .loading-logo { width: 100%; height: 100%; overflow: hidden; position: absolute; background: #fff; background: -moz-radial-gradient(50% 50% 180deg, circle cover, white, #efefef, #c7c7c7 100%); background: -webkit-gradient(radial, 50% 50%, 350, 50% 50%, 0, from(#e3e3e3), to(white)); z-index: 100000; margin: 0; padding: 0; }
 
@@ -226,6 +245,8 @@ strong { font-weight: bold; }
 .ss-loading-screen p { width: 100%; text-align: center; position: absolute; bottom: 80px; }
 .ss-loading-screen p span.notice { display: inline-block; font-size: 14px; padding: 10px 20px; color: #dc7f00; border: none; -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; -ms-border-radius: 5px; -khtml-border-radius: 5px; border-radius: 5px; }
 .ss-loading-screen .loading-animation { display: none; position: absolute; left: 49%; top: 75%; }
+
+.cms-content-actions { padding: 8px; }
 
 /** Messages (see sapphire/css/Form.css) */
 .message { margin: 1em 0; padding: 0.5em; font-weight: bold; border: 1px black solid; }
@@ -236,7 +257,7 @@ strong { font-weight: bold; }
 .ModelAdmin .cms-content-tools { width: 300px; }
 .ModelAdmin .ResultAssemblyBlock { display: none; }
 
-.cms-page-add-form-dialog #PageType li { clear: left; height: 40px; border-bottom: 1px solid #333333; }
+.cms-page-add-form-dialog #PageType li { clear: left; height: 40px; border-bottom: 1px solid rgba(107, 120, 123, 0.5); }
 .cms-page-add-form-dialog #PageType li:hover, .cms-page-add-form-dialog #PageType li.selected { background-color: #ffff99; }
 .cms-page-add-form-dialog #PageType li input, .cms-page-add-form-dialog #PageType li label, .cms-page-add-form-dialog #PageType li .icon, .cms-page-add-form-dialog #PageType li .title { float: left; }
 .cms-page-add-form-dialog #PageType li .icon { width: 20px; }
@@ -246,6 +267,10 @@ strong { font-weight: bold; }
 .cms-content-toolbar > * { display: inline-block; }
 .cms-content-toolbar .cms-tree-view-modes * { display: inline-block; }
 .cms-content-toolbar .cms-content-batchactions form > * { display: inline-block; }
+
+.cms-preview { width: 1px; overflow: hidden; }
+.cms-preview .cms-preview-toggle { width: 10px; }
+.cms-preview iframe { width: 100%; height: 100%; }
 
 .cms-preview-header { background-color: #FFBE66; padding: 10px; font-weight: bold; }
 
@@ -258,7 +283,9 @@ form.member-profile-form .formattingHelpText { margin: 5px auto; color: #333; pa
 form.member-profile-form .formattingHelpText ul { padding: 0; }
 form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; margin-bottom: 2px; }
 
-.cms-preview { background-color: #b0bfc6; }
+.cms-content-form { overflow: auto; }
+
+.cms-preview { background-color: #b0bec7; }
 .cms-preview .cms-preview-toggle { cursor: pointer; }
 .cms-preview .cms-preview-toggle a { color: white; font-weight: bold; text-decoration: none; }
 

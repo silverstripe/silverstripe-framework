@@ -8,28 +8,28 @@
 			<span>$SiteConfig.Title</span>
 		</div>
 		<div class="cms-login-status">
-			<a href="Security/logout" class="logout-link"><% _t('LOGOUT','Log out') %></a>
+			<a href="Security/logout" class="logout-link" title="<% _t('LOGOUT','Log out') %>"><% _t('LOGOUT','Log out') %></a>
 			<% control CurrentMember %>
-				<% _t('Hello','Hi') %> 
-				<strong>
+				<span>
+					<% _t('Hello','Hi') %>
 					<a href="{$AbsoluteBaseURL}admin/myprofile" class="profile-link">
 						<% if FirstName && Surname %>$FirstName $Surname<% else_if FirstName %>$FirstName<% else %>$Email<% end_if %>
 					</a>
-				</strong>
+				</span>
 			<% end_control %>
 		</div>
 	</div>
 
 	<ul class="cms-menu-list">
 	<% control MainMenu %>
-		<li class="$LinkingMode" id="Menu-$Code">
+		<li class="$LinkingMode $FirstLast" id="Menu-$Code">
 			<a href="$Link">
 				<span class="icon">&nbsp;</span>
 				<span class="text">$Title</span>
 			</a>
 			<% if Code == 'CMSMain' && LinkingMode == 'current' %>
 			<ul>
-				<li <% if Top.class == 'CMSPageEditController' %>class="current"<% end_if %>><a href="admin/page/edit/show/$Top.CurrentPageID">
+				<li class="first <% if Top.class == 'CMSPageEditController' %>current<% end_if %>"><a href="admin/page/edit/show/$Top.CurrentPageID">
 					<span class="text">Content</span>
 				</a></li>
 				<li <% if Top.class == 'CMSPageSettingsController' %>class="current"<% end_if %>><a href="admin/page/settings/show/$Top.CurrentPageID">

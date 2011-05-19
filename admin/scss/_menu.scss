@@ -1,8 +1,23 @@
+/**
+ * Styles for the left hand side menu
+ *
+ * @package sapphire
+ * @subpackage admin
+ */
+/** -------------------------------------------------------
+ * CMS Menu Bar
+ * -------------------------------------------------------- */
+@import "compass/css3";
+
 .cms-menu {
 	z-index: 10;
-	background-color: $color-widget-bg;
-	@include box-shadow($color-shadow-light, 3px, 0, 3px);
+	background: $color-menu-background;
+	border-right: 1px solid $color-menu-border;
+	width: 250px;
+	overflow: auto;
 	
+	@include box-shadow($color-shadow-dark, 2px, 0, 6px);
+
 	a {
 		text-decoration: none;
 	}
@@ -10,83 +25,119 @@
 
 .cms-menu-list {
 	li {
-		background-color: $color-base;
-		@include linear-gradient(color-stops(
-			$color-base,
-			darken($color-base, 20%)
-		));
-		border-bottom: 1px solid $color-shadow-light;
 		
 		a {
 			display: block;
-			height: 32px;
+			height: 30px;
+			line-height: 30px;
 			vertical-align: middle;
-			font-size: 14px;
-			@include text-shadow($color-shadow-light);
+			font-size: $font-base-size;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			text-shadow: lighten($color-base, 10%) 1px 1px 0;
 			color: $color-text-dark;
 			padding: 5px;
+			background-color: $color-base;
+			
+			@include linear-gradient(color-stops(
+				$color-base,
+				darken($color-base, 8%)
+			));
+
+			border-top: 1px solid lighten($color-base, 10%);
+			border-bottom: 1px solid darken($color-base, 20%);
+			
+			&:hover {
+				text-decoration: none;
+				background-color: lighten($color-base, 2%);
+				border-bottom: 1px solid darken($color-base, 15%);
+				color: lighten($color-text-dark, 5%);
+				
+				@include linear-gradient(color-stops(
+					lighten($color-base, 5%),
+					$color-base
+				));
+			}
+			&:focus {
+				border-top: 1px solid darken($color-base, 5%);
+				text-decoration: none;
+				background-color: darken($color-base, 5%);
+				color: lighten($color-text-dark, 10%);
+				
+				@include linear-gradient(color-stops(
+					darken($color-base, 10%),
+					darken($color-base, 5%)
+				));			
+			}
 			
 			.icon {
 				display: block;
 				float: left;
-				margin-right: 5px;
+				margin-right: 4px;
 				@include sprite-background("icons-32.png");
 				@include sprite-position(1, 1);
 			}
 			
 			.text {
 				display: block;
-				padding-top: 10px;
 			}
 		}
-		
+
 		&.current {
-			background-color: $color-menu-button;
-			@include linear-gradient(color-stops(
-				$color-menu-button, 
-				darken($color-menu-button, 20%)
-			));
-			
-			li {
-				background-color: darken($color-menu-button, 5%);
+			a {
+				color: $color-text-light;
+				text-shadow: darken($color-menu-button, 20%) 0 -1px 0;
+				border-top: 1px solid lighten($color-menu-button, 10%);
+				border-bottom: 1px solid darken($color-menu-button, 20%);
+				background-color: $color-menu-button;
 				@include linear-gradient(color-stops(
-					darken($color-menu-button, 5%),
+					$color-menu-button, 
 					darken($color-menu-button, 10%)
 				));
 			}
 			
-			a {
-				color: $color-text-light;
-				@include text-shadow($color-shadow-dark);
+			ul {
+				border-top: 1px solid darken($color-menu-button, 20%);
+			}
+			
+			li {
+				background-color: darken($color-menu-button, 10%);
+
+				a {
+					font-size: $font-small-size;
+					padding: 0 10px 0 36px;
+					height: 32px;
+					line-height: 32px;
+					color: lighten($color-menu-button, 45%);
+				 	background: none;
+					border-top: 1px solid $color-menu-button;
+					border-bottom: 1px solid darken($color-menu-button, 20%);
+					
+					&.current,
+					&:hover {
+						background: darken($color-menu-button, 5%);
+						border-top: 1px solid darken($color-menu-button, 5%);
+						color: $color-text-light;
+					}
+					
+					&:focus {
+						background: darken($color-menu-button, 15%);
+						border-top: 1px solid darken($color-menu-button, 20%);
+						color: lighten($color-menu-button, 60%);
+					}
+
+				}
+				
+				&.current a {
+					font-weight: bold;
+					color: $color-text-light;
+				}
+				
+				&.first a {
+					border-top: none;
+				}
 			}
 		}
-		
-		// nested elements
-		li {
-		
-			
-			&:first {
-				@include box-shadow($color-shadow-dark, 0, 4px, 4px);
-			}
-			
-			a {
-				font-size: 12px;
-				@include text-shadow($color-shadow-dark);
-				margin: 0;
-				padding-left: 30px;
-				color: $color-text-light;
-			}
-			
-			&.current a {
-				font-weight: bold;
-			}
-		}
-		
 	}
-		
-	li#Menu-CMSMain a .icon {@include sprite-position(1, 1);}
-	li#Menu-CMSMain.current a .icon, li#Menu-CMSMain a:hover .icon {@include sprite-position(2, 1);}
-	li#Menu-AssetAdmin a .icon {@include sprite-position(1, 2);}
-	li#Menu-AssetAdmin.current a .icon, li#Menu-AssetAdmin a:hover .icon {@include sprite-position(2, 2);}
-	
 }

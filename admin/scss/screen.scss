@@ -7,13 +7,24 @@
  * Note: By prefixing files with an underscore, they won't create individual CSS files.
  */
 
+/** -----------------------------
+ * Core Compass Libraries
+ * ------------------------------ */
 @import "compass/reset";
 @import "compass/css3";
 @import "compass/utilities/sprites/sprite-img";
 
-@import "colours.scss";
+/** -----------------------------
+ * Theme
+ * ------------------------------ */
+@import "themes/default.scss";
+
+/** -----------------------------
+ * CMS Components
+ * ------------------------------ */
 @import "tree.scss";
 @import "menu.scss";
 @import "forms.scss";
 @import "uitheme.scss";
 @import "style.scss";
+

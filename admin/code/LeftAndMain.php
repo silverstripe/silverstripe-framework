@@ -20,29 +20,53 @@ class LeftAndMain extends Controller {
 	 */
 	static $url_base = "admin";
 	
+	/**
+	 * The current url segment attached to the LeftAndMain instance
+	 *
+	 * @var string
+	 */
 	static $url_segment;
 	
+	/**
+	 * @var string
+	 */
 	static $url_rule = '/$Action/$ID/$OtherID';
 	
+	/**
+	 * @var string
+	 */
 	static $menu_title;
 	
+	/**
+	 * @var int
+	 */
 	static $menu_priority = 0;
 	
+	/**
+	 * @var int
+	 */
 	static $url_priority = 50;
 
 	/**
-	 * @var string A subclass of {@link DataObject}. 
-	 * Determines what is managed in this interface,
-	 * through {@link getEditForm()} and other logic.
+	 * A subclass of {@link DataObject}. 
+	 * 
+	 * Determines what is managed in this interface, through 
+	 * {@link getEditForm()} and other logic.
+	 *
+	 * @var string 
 	 */
 	static $tree_class = null;
 	
 	/**
-	* The url used for the link in the Help tab in the backend
-	* Value can be overwritten if required in _config.php
-	*/
+	 * The url used for the link in the Help tab in the backend
+	 * 
+	 * @var string
+	 */
 	static $help_link = 'http://userhelp.silverstripe.org';
 
+	/**
+	 * @var array
+	 */
 	static $allowed_actions = array(
 		'index',
 		'savetreenode',
@@ -62,7 +86,7 @@ class LeftAndMain extends Controller {
 	);
 	
 	/**
-	 * Register additional requirements through the {@link Requirements class}.
+	 * Register additional requirements through the {@link Requirements} class.
 	 * Used mainly to work around the missing "lazy loading" functionality
 	 * for getting css/javascript required after an ajax-call (e.g. loading the editform).
 	 *
@@ -76,6 +100,7 @@ class LeftAndMain extends Controller {
 	
 	/**
 	 * @param Member $member
+	 *
 	 * @return boolean
 	 */
 	function canView($member = null) {
@@ -192,7 +217,6 @@ class LeftAndMain extends Controller {
 			$htmlEditorConfig->setOption('content_css', implode(',', $cssFiles));
 		}
 		
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/layout.css');
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
 		
 		Requirements::javascript(THIRDPARTY_DIR . '/prototype/prototype.js');
@@ -238,8 +262,6 @@ class LeftAndMain extends Controller {
 		
 		// Handled by LeftAndMain.js
 		Requirements::block(SAPPHIRE_DIR . '/javascript/DateField.js');
-
-		Requirements::themedCSS('typography');
 
 		foreach (self::$extra_requirements['javascript'] as $file) {
 			Requirements::javascript($file[0]);
@@ -315,6 +337,7 @@ class LeftAndMain extends Controller {
 		return false;
 	}
 
+	
 	//------------------------------------------------------------------------------------------//
 	// Main controllers
 
