@@ -2,8 +2,12 @@
 	
 	$.entwine('ss', function($){
 		
-		$('.cms-menu').entwine({
-			
+		$('.cms-menu li a').entwine({
+			onclick: function(e) {
+				e.preventDefault();
+				console.debug($('.LeftAndMain .cms-content'));
+				$('.LeftAndMain .cms-content').entwine('ss').loadPanel(this.attr('href'));
+			}
 		});
 		
 		$('.cms-menu.collapsed li').entwine({

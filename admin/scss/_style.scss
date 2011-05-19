@@ -130,6 +130,13 @@ strong {
 	}
 }
 
+.cms-content {
+	&.loading {
+		background: url(../images/spinner.gif) no-repeat 50% 50%;
+	}
+}
+
+// ######################### Header and Logo #########################
 
 /** -------------------------------------------------------
  * Top Left Header and logo area

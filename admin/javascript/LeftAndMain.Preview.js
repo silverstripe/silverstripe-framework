@@ -54,9 +54,9 @@
 				if(!container.hasClass('CMSMain')) return;
 
 				// Load this page in the admin interface if appropriate
-				var id = $(doc).find('meta[name=x-page-id]').attr('content'), form = $('.cms-edit-form');
+				var id = $(doc).find('meta[name=x-page-id]').attr('content'), contentPanel = $('.cms-content');
 				// TODO Remove hardcoding
-				if(id && form.find(':input[name=ID]').val() != id) form.loadForm('admin/page/edit/show/' + id);
+				if(id && contentPanel.find(':input[name=ID]').val() != id) contentPanel.loadPanel('admin/page/edit/show/' + id);
 			},
 			
 			_fixIframeLinks: function() {

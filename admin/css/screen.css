@@ -144,7 +144,7 @@ li.jstree-closed > ul { display: none; }
 
 .cms-menu-list li { background-color: #b0bfc6; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b0bfc6), color-stop(100%, #758f9b)); background-image: -moz-linear-gradient(top, #b0bfc6 0%, #758f9b 100%); background-image: linear-gradient(top, #b0bfc6 0%, #758f9b 100%); border-bottom: 1px solid #aaaaaa; }
 .cms-menu-list li a { display: block; height: 32px; vertical-align: middle; font-size: 14px; text-shadow: #aaaaaa 1px 1px 1px; color: #333333; padding: 5px; }
-.cms-menu-list li a .icon { display: block; float: left; margin-right: 5px; background: url('../images/icons-32.png?1305262748') no-repeat; width: 32px; height: 32px; overflow: hidden; background-position: 0px 0px; }
+.cms-menu-list li a .icon { display: block; float: left; margin-right: 5px; background: url('../images/icons-32.png?1305837920') no-repeat; width: 32px; height: 32px; overflow: hidden; background-position: 0px 0px; }
 .cms-menu-list li a:hover .icon { background-position: -32px 0px; }
 .cms-menu-list li a .text { display: block; padding-top: 10px; }
 .cms-menu-list li.current { background-color: #338dc1; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #338dc1), color-stop(100%, #1e5270)); background-image: -moz-linear-gradient(top, #338dc1 0%, #1e5270 100%); background-image: linear-gradient(top, #338dc1 0%, #1e5270 100%); }
@@ -240,10 +240,10 @@ strong { font-weight: bold; }
 
 .cms-content-tools { background-color: #dce3e6; }
 
-/** ------------------------------------------------------- Top Left Header and logo area -------------------------------------------------------- */
-.cms-header { background-color: #00111d; position: relative; padding: 16px 8px 8px; line-height: 24px; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #00111d), color-stop(50%, #003050), color-stop(100%, #00111d)); background-image: -moz-linear-gradient(top, #00111d 0%, #003050 50%, #00111d 100%); background-image: linear-gradient(top, #00111d 0%, #003050 50%, #00111d 100%); }
-.cms-header span { color: white; white-space: no-wrap; text-overflow: ellipsis; display: block; }
-.cms-header span a { color: #3ebae0; display: inline; }
+.cms-content.loading { background: url(../images/spinner.gif) no-repeat 50% 50%; }
+
+.cms-header { background-color: #00111d; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #00111d), color-stop(50%, #003050), color-stop(100%, #00111d)); background-image: -moz-linear-gradient(top, #00111d 0%, #003050 50%, #00111d 100%); background-image: linear-gradient(top, #00111d 0%, #003050 50%, #00111d 100%); }
+.cms-header * { color: white; }
 
 .cms-logo { border-bottom: 1px solid #03090c; height: 31px; overflow: hidden; padding: 0 4px; vertical-align: middle; }
 .cms-logo .version { display: none; }
