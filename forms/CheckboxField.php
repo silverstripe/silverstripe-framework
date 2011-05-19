@@ -123,7 +123,7 @@ class CheckboxField_Disabled extends CheckboxField {
 	function Field() {
 		$attributes = array(
 			'type' => 'checkbox',
-			'class' => 'text' . ($this->extraClass() ? $this->extraClass() : ''),
+			'class' => ($this->extraClass() ? $this->extraClass() : ''),
 			'id' => $this->id(),
 			'name' => $this->Name(),
 			'tabindex' => $this->getTabIndex(),
