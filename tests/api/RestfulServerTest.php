@@ -375,7 +375,7 @@ class RestfulServerTest extends SapphireTest {
 		);
 		$this->assertEquals(
 			$formatter->convertDataObjectSet($set, array("FirstName", "Email")),
-			'{"totalSize":null,"items":[{"FirstName":"Editor","Email":"editor@test.com"},{"FirstName":"User","Email":"user@test.com"}]',
+			'{"totalSize":null,"items":[{"FirstName":"Editor","Email":"editor@test.com"},{"FirstName":"User","Email":"user@test.com"}]}',
 			"Correct JSON formatting on a dataobjectset with field filter");
 	}
 	
