@@ -256,6 +256,7 @@ class LeftAndMain extends Controller {
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Content.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js');
@@ -315,6 +316,7 @@ class LeftAndMain extends Controller {
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
