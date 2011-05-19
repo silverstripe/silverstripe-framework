@@ -378,6 +378,10 @@ class SQLQuery {
 	 * @return string
 	 */
 	function sql() {
+		// Don't process empty queries
+		$select = is_array($this->select) ? $this->select[0] : $this->select;
+		if($select == '*' && !$this->from) return '';
+		
 		$sql = DB::getConn()->sqlQueryToString($this);
 		if($this->replacementsOld) $sql = str_replace($this->replacementsOld, $this->replacementsNew, $sql);
 		return $sql;
