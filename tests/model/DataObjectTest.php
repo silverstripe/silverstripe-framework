@@ -697,20 +697,21 @@ class DataObjectTest extends SapphireTest {
 	}
 	
 	function testNewClassInstance() {
-		$dataObject = $this->objFromFixture('DataObjectTest_TeamComment', 'comment1');
-		$changedDO = $dataObject->newClassInstance('File');
+		$dataObject = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$changedDO = $dataObject->newClassInstance('DataObjectTest_SubTeam');
 		$changedFields = $changedDO->getChangedFields();
 		
 		// Don't write the record, it will reset changed fields
-		$this->assertType('File', $changedDO);
-		$this->assertEquals($changedDO->ClassName, 'File');
+		$this->assertType('DataObjectTest_SubTeam', $changedDO);
+		$this->assertEquals($changedDO->ClassName, 'DataObjectTest_SubTeam');
 		$this->assertContains('ClassName', array_keys($changedFields));
-		$this->assertEquals($changedFields['ClassName']['before'], 'DataObjectTest_TeamComment');
-		$this->assertEquals($changedFields['ClassName']['after'], 'File');
-		
+		$this->assertEquals($changedFields['ClassName']['before'], 'DataObjectTest_Team');
+		$this->assertEquals($changedFields['ClassName']['after'], 'DataObjectTest_SubTeam');
+
 		$changedDO->write();
-		$this->assertType('File', $changedDO);
-		$this->assertEquals($changedDO->ClassName, 'File');
+
+		$this->assertType('DataObjectTest_SubTeam', $changedDO);
+		$this->assertEquals($changedDO->ClassName, 'DataObjectTest_SubTeam');
 	}
 	
 	function testManyManyExtraFields() {
