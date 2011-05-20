@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  commit: 861b4b1f7240b9d5e50d560ba5b94de78aa439e5
+  branch: master
+lock: false
+repository_class: Piston::Git::Repository
+repository_url: https://github.com/balupton/history.js.git
