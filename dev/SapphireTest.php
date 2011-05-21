@@ -205,8 +205,16 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
+
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
 
+		// Set up email
+		$this->originalMailer = Email::mailer();
+		$this->mailer = new TestMailer();
+		Email::set_mailer($this->mailer);
+		Config::inst()->remove('Email', 'send_all_emails_to');
+		Email::send_all_emails_to(null);
+		
 		// Todo: this could be a special test model
 		$this->model = DataModel::inst();
 
@@ -258,13 +266,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			
 			$this->logInWithPermission("ADMIN");
 		}
-		
-		// Set up email
-		$this->originalMailer = Email::mailer();
-		$this->mailer = new TestMailer();
-		Email::set_mailer($this->mailer);
-		Config::inst()->remove('Email', 'send_all_emails_to');
-		Email::send_all_emails_to(null);
 		
 		// Preserve memory settings
 		$this->originalMemoryLimit = ini_get('memory_limit');
