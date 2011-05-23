@@ -40,8 +40,8 @@ class CheckboxFieldTest extends SapphireTest {
 		$field = new CheckboxField('IsChecked', 'Checked');
 		$field->setValue(null);
 		
-		/* dataValue() for the field is 0 */
-		$this->assertEquals($field->dataValue(), 0, 'dataValue() returns a 0');
+		/* dataValue() for the field is null */
+		$this->assertEquals($field->dataValue(), null, 'dataValue() returns a 0');
 		
 		/* Value() returns 0 as well */
 		$this->assertEquals($field->Value(), 0, 'Value() returns a 0');
@@ -52,8 +52,8 @@ class CheckboxFieldTest extends SapphireTest {
 		$field = new CheckboxField('IsChecked', 'Checked');
 		$field->setValue(false);
 		
-		/* dataValue() for the field is 0 */
-		$this->assertEquals($field->dataValue(), 0, 'dataValue() returns a 0');
+		/* dataValue() for the field is null */
+		$this->assertEquals($field->dataValue(), null, 'dataValue() returns a 0');
 		
 		/* Value() returns 0 as well */
 		$this->assertEquals($field->Value(), 0, 'Value() returns a 0');
@@ -63,8 +63,8 @@ class CheckboxFieldTest extends SapphireTest {
 		/* Create the field, but don't set any value on it */
 		$field = new CheckboxField('IsChecked', 'Checked');
 		
-		/* dataValue() for the field is 0 */
-		$this->assertEquals($field->dataValue(), 0, 'dataValue() returns a 0');
+		/* dataValue() for the field is null */
+		$this->assertEquals($field->dataValue(), null, 'dataValue() returns a 0');
 		
 		/* Value() returns 0 as well */
 		$this->assertEquals($field->Value(), 0, 'Value() returns a 0');
