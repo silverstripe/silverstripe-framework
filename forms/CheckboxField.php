@@ -13,7 +13,7 @@ class CheckboxField extends FormField {
 	}
 
 	function dataValue() {
-		return ($this->value) ? 1 : 0;
+		return ($this->value) ? 1 : NULL;
 	}
 	
 	function Value() {
