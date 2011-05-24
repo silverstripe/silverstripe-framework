@@ -105,6 +105,12 @@ class CSSContentParser extends Object {
 		}
 		return $xpath;		
 	}
-
+	
+	/**
+	 * @return SimpleXMLElement
+	 */
+	function getXML() {
+		return $this->simpleXML;
+	}
 
 }
