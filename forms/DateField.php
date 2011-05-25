@@ -14,6 +14,8 @@ require_once 'Zend/Date.php';
  *    Only useful in combination with {@link DateField_View_JQuery}.
  * - 'dmyfields' (boolean): Show three input fields for day, month and year separately.
  *    CAUTION: Might not be useable in combination with 'showcalendar', depending on the used javascript library
+ * - 'dmyseparator' (string): HTML markup to separate day, month and year fields.
+ *    Only applicable with 'dmyfields'=TRUE. Use 'dateformat' to influence date representation with 'dmyfields'=FALSE.
  * - 'dateformat' (string): Date format compatible with Zend_Date.
  *    Usually set to default format for {@link locale} through {@link Zend_Locale_Format::getDateFormat()}.
  * - 'datavalueformat' (string): Internal ISO format string used by {@link dataValue()} to save the
@@ -28,6 +30,8 @@ require_once 'Zend/Date.php';
  * The field will get its default locale from {@link i18n::get_locale()}, and set the `dateformat`
  * configuration accordingly. Changing the locale through {@link setLocale()} will not update the 
  * `dateformat` configuration automatically.
+ * 
+ * See http://doc.silverstripe.org/sapphire/en/topics/i18n for more information about localizing form fields.
  * 
  * # Usage
  * 
