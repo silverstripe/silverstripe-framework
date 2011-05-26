@@ -36,3 +36,4 @@ HtmlEditorConfig::get('cms')->insertButtonsAfter ('advcode', 'fullscreen', 'sepa
 			
 HtmlEditorConfig::get('cms')->removeButtons('tablecontrols');
 HtmlEditorConfig::get('cms')->addButtonsToLine(3, 'tablecontrols');
+

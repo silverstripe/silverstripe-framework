@@ -37,6 +37,8 @@ for stability and regression testing. Naming convention is *A.B.C-alpha* and *A.
 *  Major, minor and micro releases can have one or more *release candidates (RC)*, to be used by the wider community. A
 release candidate signifies that the core team thinks the release is ready without further changes. The actual release
 should be a identical copy of the latest RC. Naming convention is *A.B.C-rc1* (and further increments).
+* Major releases may have a *preview* cycle which is a early snapshot of the codebase for developers before 
+going into the *alpha* cycle. Preview releases are named *A.B.C-pr1* (and further increments).
 
 ### Major releases
 

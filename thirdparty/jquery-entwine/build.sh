@@ -29,6 +29,8 @@ do \
   echo >> $FILE
 done
 
+cp $FILE "dist/jquery.concrete-dist.js"
+
 # cp LICENSE /tmp/
 # cp $FILE /tmp/
 

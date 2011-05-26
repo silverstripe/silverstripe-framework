@@ -20,29 +20,53 @@ class LeftAndMain extends Controller {
 	 */
 	static $url_base = "admin";
 	
+	/**
+	 * The current url segment attached to the LeftAndMain instance
+	 *
+	 * @var string
+	 */
 	static $url_segment;
 	
+	/**
+	 * @var string
+	 */
 	static $url_rule = '/$Action/$ID/$OtherID';
 	
+	/**
+	 * @var string
+	 */
 	static $menu_title;
 	
+	/**
+	 * @var int
+	 */
 	static $menu_priority = 0;
 	
+	/**
+	 * @var int
+	 */
 	static $url_priority = 50;
 
 	/**
-	 * @var string A subclass of {@link DataObject}. 
-	 * Determines what is managed in this interface,
-	 * through {@link getEditForm()} and other logic.
+	 * A subclass of {@link DataObject}. 
+	 * 
+	 * Determines what is managed in this interface, through 
+	 * {@link getEditForm()} and other logic.
+	 *
+	 * @var string 
 	 */
 	static $tree_class = null;
 	
 	/**
-	* The url used for the link in the Help tab in the backend
-	* Value can be overwritten if required in _config.php
-	*/
+	 * The url used for the link in the Help tab in the backend
+	 * 
+	 * @var string
+	 */
 	static $help_link = 'http://userhelp.silverstripe.org';
 
+	/**
+	 * @var array
+	 */
 	static $allowed_actions = array(
 		'index',
 		'savetreenode',
@@ -62,7 +86,7 @@ class LeftAndMain extends Controller {
 	);
 	
 	/**
-	 * Register additional requirements through the {@link Requirements class}.
+	 * Register additional requirements through the {@link Requirements} class.
 	 * Used mainly to work around the missing "lazy loading" functionality
 	 * for getting css/javascript required after an ajax-call (e.g. loading the editform).
 	 *
@@ -76,6 +100,7 @@ class LeftAndMain extends Controller {
 	
 	/**
 	 * @param Member $member
+	 *
 	 * @return boolean
 	 */
 	function canView($member = null) {
@@ -234,8 +259,9 @@ class LeftAndMain extends Controller {
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js');
-
-		Requirements::themedCSS('typography');
+		
+		// Handled by LeftAndMain.js
+		Requirements::block(SAPPHIRE_DIR . '/javascript/DateField.js');
 
 		foreach (self::$extra_requirements['javascript'] as $file) {
 			Requirements::javascript($file[0]);
@@ -311,6 +337,7 @@ class LeftAndMain extends Controller {
 		return false;
 	}
 
+	
 	//------------------------------------------------------------------------------------------//
 	// Main controllers
 
@@ -361,14 +388,6 @@ class LeftAndMain extends Controller {
 		}
 		
 		return $content;
-	}
-
-	/**
-	 * @deprecated 2.4 Please use show()
-	 */
-	public function getitem($request) {
-		$form = $this->getEditForm($request->getVar('ID'));
-		return $form->formHtmlContent();
 	}
 
 	//------------------------------------------------------------------------------------------//
@@ -463,6 +482,8 @@ class LeftAndMain extends Controller {
 		$className = $this->stat('tree_class');
 		if($className && $id instanceof $className) {
 			return $id;
+		} else if($id == 'root') {
+			return singleton($className);
 		} else if(is_numeric($id)) {
 			return DataObject::get_by_id($className, $id);
 		} else {
@@ -755,7 +776,7 @@ class LeftAndMain extends Controller {
 		if(is_object($id)) {
 			$record = $id;
 		} else {
-			$record = ($id && $id != "root") ? $this->getRecord($id) : null;
+			$record = $this->getRecord($id);
 			if($record && !$record->canView()) return Security::permissionFailure($this);
 		}
 
@@ -1096,7 +1117,7 @@ class LeftAndMain extends Controller {
 	 * @return SiteConfig
 	 */
 	function SiteConfig() {
-		return SiteConfig::current_site_config();
+		return (class_exists('SiteConfig')) ? SiteConfig::current_site_config() : null;
 	}
 
 	/**

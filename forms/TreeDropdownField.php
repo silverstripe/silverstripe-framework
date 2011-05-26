@@ -124,12 +124,20 @@ class TreeDropdownField extends FormField {
 		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
 	
-		if($this->Value() && $record = $this->objectForKey($this->Value())) {
+		$record = $this->Value() ? $this->objectForKey($this->Value()) : null;
+		if($record) {
 			$title = $record->{$this->labelField};
 		} else {
 			$title = _t('DropdownField.CHOOSE', '(Choose)', PR_MEDIUM, 'start value of a dropdown');
 		}
 		
+		// TODO Implement for TreeMultiSelectField
+		if($record) {
+			$metadata = array('id' => $record->ID, 'metadata' => array('ClassName' => $record->ClassName));
+		} else {
+			$metadata = null;
+		}
+
 		return $this->createTag (
 			'div',
 			array (
@@ -137,6 +145,8 @@ class TreeDropdownField extends FormField {
 				'class' => 'TreeDropdownField single' . ($this->extraClass() ? " {$this->extraClass()}" : '') . ($this->showSearch ? " searchable" : ''),
 				'data-url-tree' => $this->form ? $this->Link('tree') : "",
 				'data-title' => $title,
+				// Any additional data from the selected record
+				'data-metadata' => ($metadata) ? Convert::raw2json($metadata) : null
 			),
 			$this->createTag (
 				'input',
@@ -209,7 +219,7 @@ class TreeDropdownField extends FormField {
 			}
 		}
 
-		$eval = '"<li id=\"selector-' . $this->Name() . '-{$child->' . $this->keyField . '}\" data-id=\"$child->' . $this->keyField . '\" class=\"$child->class"' .
+		$eval = '"<li id=\"selector-' . $this->Name() . '-{$child->' . $this->keyField . '}\" data-id=\"$child->' . $this->keyField . '\" class=\"class-$child->class"' .
 				' . $child->markingClasses() . "\"><a rel=\"$child->ID\">" . $child->' . $this->labelField . ' . "</a>"';
 		
 		if($isSubTree) {

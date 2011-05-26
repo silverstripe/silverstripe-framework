@@ -60,13 +60,7 @@ class SS_ClassManifest {
 		return new TokenisedRegularExpression(array(
 			0 => T_INTERFACE,
 			1 => T_WHITESPACE,
-			2 => array(T_STRING, 'can_jump_to' => 7, 'save_to' => 'interfaceName'),
-			3 => T_WHITESPACE,
-			4 => T_EXTENDS,
-			5 => T_WHITESPACE,
-			6 => array(T_STRING, 'save_to' => 'extends'),
-			7 => array(T_WHITESPACE, 'optional' => true),
-			8 => '{',
+			2 => array(T_STRING, 'save_to' => 'interfaceName')
 		));
 	}
 
@@ -209,6 +203,20 @@ class SS_ClassManifest {
 	public function getConfigs() {
 		return $this->configs;
 	}
+	
+	/**
+	 * Returns an array of module names mapped to their paths.
+	 * "Modules" in sapphire are simply directories with a _config.php file.
+	 * 
+	 * @return array
+	 */
+	public function getModules() {
+		$modules = array();
+		foreach($this->configs as $configPath) {
+			$modules[basename(dirname($configPath))] = dirname($configPath);
+		}
+		return $modules;
+	}
 
 	/**
 	 * Completely regenerates the manifest file.
@@ -252,7 +260,7 @@ class SS_ClassManifest {
 	}
 
 	public function handleFile($basename, $pathname, $depth) {
-		if ($depth == 1 && $basename == self::CONF_FILE) {
+		if ($basename == self::CONF_FILE) {
 			$this->configs[] = $pathname;
 			return;
 		}

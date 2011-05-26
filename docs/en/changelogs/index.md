@@ -9,6 +9,7 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
 
 ## Stable Releases
 
+ * [3.0.0](3.0.0) - unreleased
  * [2.4.5](2.4.5) - 2 February 2011
  * [2.4.4](2.4.4) - 21 December 2010
  * [2.4.3](2.4.3) - 11 November 2010
@@ -40,6 +41,7 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
 
 ## Alpha/beta/release candidate ##
 
+ * [3.0.0-pr1](pr/0.0-pr1) - unreleased
  * [2.4.5-rc1](rc/2.4.5-rc1) - 31 January 2011
  * [2.4.4-rc2](rc/2.4.4-rc2) - 20 December 2010
  * [2.4.4-rc1](rc/2.4.4-rc1) - 10 December 2010

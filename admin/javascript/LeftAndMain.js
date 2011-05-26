@@ -135,11 +135,11 @@
 		});
 
 		/**
-		 * Class: a#EditMemberProfile
+		 * Class: a#profile-link
 		 * 
 		 * Link for editing the profile for a logged-in member through a modal dialog.
 		 */
-		$('a#EditMemberProfile').entwine({
+		$('.LeftAndMain .profile-link').entwine({
 			
 			/**
 			 * Constructor: onmatch
@@ -275,6 +275,29 @@
 				return false;
 			}
 		});
+		
+		/**
+		 * Duplicates functionality in DateField.js, but due to using entwine we can match
+		 * the DOM element on creation, rather than onclick - which allows us to decorate
+		 * the field with a calendar icon
+		 */
+		$('.LeftAndMain .field.date input.text').entwine({
+			onmatch: function() {
+				var holder = $(this).parents('.field.date:first'), config = holder.metadata({type: 'class'});
+				if(!config.showcalendar) return;
+
+				config.showOn = 'button';
+				if(config.locale && $.datepicker.regional[config.locale]) {
+					config = $.extend(config, $.datepicker.regional[config.locale], {});
+				}
+
+				$(this).datepicker(config);
+				// // Unfortunately jQuery UI only allows configuration of icon images, not sprites
+				// this.next('button').button('option', 'icons', {primary : 'ui-icon-calendar'});
+				
+				this._super();
+			}
+		})
 		
 	});
 }(jQuery));

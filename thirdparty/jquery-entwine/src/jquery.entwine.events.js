@@ -1,9 +1,23 @@
 (function($) {	
 
-	/* If we are any browser other than IE or Safari, we don't have to do anything special to handle
-	 * onchange delegation */ 
-	$.support.bubblingChange = !($.browser.msie || $.browser.safari);
-	
+	/** Taken from jQuery 1.5.2 for backwards compatibility */
+	if ($.support.changeBubbles == undefined) {
+		$.support.changeBubbles = true;
+
+		var el = document.createElement("div");
+		eventName = "onchange";
+
+		if (el.attachEvent) {
+			var isSupported = (eventName in el);
+			if (!isSupported) {
+				el.setAttribute(eventName, "return;");
+				isSupported = typeof el[eventName] === "function";
+			}
+
+			$.support.changeBubbles = isSupported;
+		}
+	}
+
 	/* Return true if node b is the same as, or is a descendant of, node a */
 	if (document.compareDocumentPosition) {
 		var is_or_contains = function(a, b) {
@@ -64,46 +78,104 @@
 		
 		build_change_proxy: function(name) {
 			var one = this.one(name, 'func');
-			
-			var prxy = function(e) {
-				var el = e.target;
-				// If this is a keydown event, only worry about the enter key, since browsers only trigger onchange on enter or focus loss
-				if (e.type === 'keydown' && e.keyCode !== 13) return;
-				// Make sure this is event is for an input type we're interested in
-				if (el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA' && el.tagName !== 'SELECT') return;
-					
-				var $el = $(el), nowVal, oldVal = $el.data('changeVal');
-			
-				// Detect changes on checkboxes & radiobuttons, which have different value logic. We don't use el.value, since el is part
-				// of a set, and we only want to raise onchange once for a single user action.
-				if (el.type == 'checkbox' || el.type == 'radio') {
-					if (!el.disabled && e.type === 'click') {
-						nowVal = el.checked;
-						// If radio, we get two changes - the activation, and the deactivation. We only want to fire one change though
-						if ((el.type === 'checkbox' || nowVal === true) && oldVal !== nowVal) e.type = 'change';
+
+			/*
+			This change bubble emulation code is taken mostly from jQuery 1.6 - unfortunately we can't easily reuse any of
+			it without duplication, so we'll have to re-migrate any bugfixes
+			*/
+
+			// Get the value of an item. Isn't supposed to be interpretable, just stable for some value, and different
+			// once the value changes
+			var getVal = function( elem ) {
+				var type = elem.type, val = elem.value;
+
+				if (type === "radio" || type === "checkbox") {
+					val = elem.checked;
+				}
+				else if (type === "select-multiple") {
+					val = "";
+					if (elem.selectedIndex > -1) {
+						val = jQuery.map(elem.options, function(elem){ return elem.selected; }).join("-");
 					}
 				}
-				// Detect changes on other input types. In this case value is OK.
-				else {
-					nowVal = el.value;
-					if (oldVal !== undefined && oldVal !== nowVal) e.type = 'change';
+				else if (jQuery.nodeName(elem, "select")) {
+					val = elem.selectedIndex;
 				}
-			
-				// Save the current value for next time
-				if (nowVal !== undefined) $el.data('changeVal', nowVal);
-			
-				// And if we decided that a change happened, do the actual triggering
-				if (e.type == 'change') {
-					while (el && el.nodeType == 1 && !e.isPropagationStopped()) {
-						var ret = one(el, arguments);
+
+				return val;
+			};
+
+			// Test if a node name is a form input
+			var rformElems = /^(?:textarea|input|select)$/i;
+
+			// Check if this event is a change, and bubble the change event if it is
+			var testChange = function(e) {
+				var elem = e.target, data, val;
+
+				if (!rformElems.test(elem.nodeName) || elem.readOnly) return;
+
+				data = jQuery.data(elem, "_entwine_change_data");
+				val = getVal(elem);
+
+				// the current data will be also retrieved by beforeactivate
+				if (e.type !== "focusout" || elem.type !== "radio") {
+					jQuery.data(elem, "_entwine_change_data", val);
+				}
+
+				if (data === undefined || val === data) return;
+
+				if (data != null || val) {
+					e.type = "change";
+
+					while (elem && elem.nodeType == 1 && !e.isPropagationStopped()) {
+						var ret = one(elem, arguments);
 						if (ret !== undefined) e.result = ret;
 						if (ret === false) { e.preventDefault(); e.stopPropagation(); }
-						
-						el = el.parentNode;
+
+						elem = elem.parentNode;
 					}
 				}
 			};
-			
+
+			// The actual proxy - responds to several events, some of which triger a change check, some
+			// of which just store the value for future change checks
+			var prxy = function(e) {
+				var event = e.type, elem = e.target, type = jQuery.nodeName( elem, "input" ) ? elem.type : "";
+
+				switch (event) {
+					case 'focusout':
+					case 'beforedeactivate':
+						testChange.apply(this, arguments);
+						break;
+
+					case 'click':
+						if ( type === "radio" || type === "checkbox" || jQuery.nodeName( elem, "select" ) ) {
+							testChange.apply(this, arguments);
+						}
+						break;
+
+					// Change has to be called before submit
+					// Keydown will be called before keypress, which is used in submit-event delegation
+					case 'keydown':
+						if (
+							(e.keyCode === 13 && !jQuery.nodeName( elem, "textarea" ) ) ||
+							(e.keyCode === 32 && (type === "checkbox" || type === "radio")) ||
+							type === "select-multiple"
+						) {
+							testChange.apply(this, arguments);
+						}
+						break;
+
+					// Beforeactivate happens also before the previous element is blurred
+					// with this event you can't trigger a change event, but you can store
+					// information
+					case 'focusin':
+					case 'beforeactivate':
+						jQuery.data( elem, "_entwine_change_data", getVal(elem) );
+						break;
+				}
+			}
+
 			return prxy;
 		},
 		
@@ -124,9 +196,9 @@
 						event = 'mouseout';
 						break;
 					case 'onchange':
-						if (!$.support.bubblingChange) {
+						if (!$.support.changeBubbles) {
 							proxies[name] = this.build_change_proxy(name);
-							event = 'click focusin focusout keydown';
+							event = 'click keydown focusin focusout beforeactivate beforedeactivate';
 						}
 						break;
 					case 'onsubmit':
@@ -139,8 +211,8 @@
 				
 				// If none of the special handlers created a proxy, use the generic proxy
 				if (!proxies[name]) proxies[name] = this.build_event_proxy(name);
-				
-				$(document).bind(event+'.entwine', proxies[name]);
+
+				$(document).bind(event.replace(/(\s+|$)/g, '.entwine$1'), proxies[name]);
 			}
 		}
 	});

@@ -988,7 +988,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *  - All relevant tables will be updated.
 	 *  - $this->onBeforeWrite() gets called beforehand.
 	 *  - Extensions such as Versioned will ammend the database-write to ensure that a version is saved.
-	 *  - Calls to {@link DataObjectLog} can be used to see everything that's been changed.
 	 * 
 	 *  @uses DataExtension->augmentWrite()
 	 *
@@ -1130,13 +1129,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 				
 				DB::manipulate($manipulation);
-
-				if(isset($isNewRecord) && $isNewRecord) {
-					DataObjectLog::addedObject($this);
-				} else {
-					DataObjectLog::changedObject($this);
-				}
-				
 				$this->onAfterWrite();
 
 				$this->changed = null;
@@ -1227,8 +1219,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		$this->OldID = $this->ID;
 		$this->ID = 0;
-
-		DataObjectLog::deletedObject($this);
 	}
 
 	/**

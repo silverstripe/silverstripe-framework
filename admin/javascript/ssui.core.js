@@ -26,10 +26,12 @@
 			.click(function() {
 				var form = this.form;
 				// forms don't natively store the button they've been triggered with
-				form.clickedButton = this;
-				// Reset the clicked button shortly after the onsubmit handlers
-				// have fired on the form
-				setTimeout(function() {form.clickedButton = null;}, 10);
+				if(form) {
+					form.clickedButton = this;
+					// Reset the clicked button shortly after the onsubmit handlers
+					// have fired on the form
+					setTimeout(function() {form.clickedButton = null;}, 10);
+				}
 			});
 
 			this._super();

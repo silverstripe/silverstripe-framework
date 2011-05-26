@@ -360,17 +360,22 @@ class RestfulServerTest extends SapphireTest {
 
 	public function testJSONDataFormatter() {
 		$formatter = new JSONDataFormatter();
-		$single_do = $this->objFromFixture('Member', 'editor');
+		$editor = $this->objFromFixture('Member', 'editor');
+		$user = $this->objFromFixture('Member', 'user');
 
 		$this->assertEquals(
-			$formatter->convertDataObject($single_do, array("FirstName", "Email")),
+			$formatter->convertDataObject($editor, array("FirstName", "Email")),
 			'{"FirstName":"Editor","Email":"editor@test.com"}',
 			"Correct JSON formatting with field subset");
 
-		$set = DataObject::get("Member");
+		$set = DataObject::get(
+			"Member", 
+			sprintf('"Member"."ID" IN (%s)', implode(',', array($editor->ID, $user->ID))), 
+			'"Email" ASC' // for sorting for postgres
+		);
 		$this->assertEquals(
 			$formatter->convertDataObjectSet($set, array("FirstName", "Email")),
-			'{"totalSize":null,"items":[{"FirstName":"Editor","Email":"editor@test.com"},{"FirstName":"User","Email":"user@test.com"},{"FirstName":"ADMIN","Email":"ADMIN@example.org"}]}',
+			'{"totalSize":null,"items":[{"FirstName":"Editor","Email":"editor@test.com"},{"FirstName":"User","Email":"user@test.com"}]}',
 			"Correct JSON formatting on a dataobjectset with field filter");
 	}
 	

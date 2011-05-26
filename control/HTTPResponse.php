@@ -246,32 +246,6 @@ class SS_HTTPResponse {
 		return in_array($this->statusCode, array(301, 302, 401, 403));
 	}
 	
-	/**
-	 * @deprecated 2.4 Use {@link HTTP::getLinksIn()} on DOMDocument.
-	 */
-	public function getLinks() {
-		user_error (
-			'SS_HTTPResponse->getLinks() is deprecated, please use HTTP::getLinksIn() or DOMDocument.', E_USER_NOTICE
-		);
-		
-		$attributes = array('id', 'href', 'class');
-		$links      = array();
-		$results    = array();
-		
-		if(preg_match_all('/<a[^>]+>/i', $this->body, $links)) foreach($links[0] as $link) {
-			$processedLink = array();
-			foreach($attributes as $attribute) {
-				$matches = array();
-				if(preg_match('/' . $attribute  . '\s*=\s*"([^"]+)"/i', $link, $matches)) {
-					$processedLink[$attribute] = $matches[1];
-				}
-			}
-			$results[] = $processedLink;
-		}
-		
-		return $results;
-    }
-	
 }
 
 /**

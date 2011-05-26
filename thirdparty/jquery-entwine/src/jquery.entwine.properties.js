@@ -58,7 +58,7 @@
 			var getterName = 'get'+k;
 			var setterName = 'set'+k;
 
-			this.bind_proxy(selector, getterName, function() { return this.entwineData(k) || v ; });
+			this.bind_proxy(selector, getterName, function() { var r = this.entwineData(k); return r === undefined ? v : r; });
 			this.bind_proxy(selector, setterName, function(v){ return this.entwineData(k, v); });
 			
 			// Get the get and set proxies we just created

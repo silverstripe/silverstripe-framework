@@ -27,7 +27,7 @@
 		
 		<% if currentPage %>
 		<div class="cms-preview east">
-			<iframe src="$currentPage.Link"></iframe>
+			<iframe src="$currentPage.Link/?stage=Stage"></iframe>
 		</div>
 		<% end_if %>
 

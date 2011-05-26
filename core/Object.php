@@ -1063,18 +1063,6 @@ abstract class Object {
 	}
 	
 	/**
-	 * @deprecated
-	 */
-	public function cacheToFileWithArgs($callback, $arguments = array(), $lifetime = 3600, $ID = false) {
-		user_error (
-			'Object->cacheToFileWithArgs() is deprecated, please use Object->cacheToFile() with the $arguments param',
-			E_USER_NOTICE
-		);
-		
-		return $this->cacheToFile($callback, $lifetime, $ID, $arguments);
-	}
-	
-	/**
 	 * Loads a cache from the filesystem if a valid on is present and within the specified lifetime
 	 *
 	 * @param string $cache the cache name

@@ -13,7 +13,7 @@ class CheckboxField extends FormField {
 	}
 
 	function dataValue() {
-		return ($this->value) ? 1 : 0;
+		return ($this->value) ? 1 : NULL;
 	}
 	
 	function Value() {
@@ -123,7 +123,7 @@ class CheckboxField_Disabled extends CheckboxField {
 	function Field() {
 		$attributes = array(
 			'type' => 'checkbox',
-			'class' => 'text' . ($this->extraClass() ? $this->extraClass() : ''),
+			'class' => ($this->extraClass() ? $this->extraClass() : ''),
 			'id' => $this->id(),
 			'name' => $this->Name(),
 			'tabindex' => $this->getTabIndex(),

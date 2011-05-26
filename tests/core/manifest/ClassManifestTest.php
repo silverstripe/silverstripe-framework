@@ -105,6 +105,12 @@ class ClassManifestTest extends SapphireTest {
 		$this->assertEquals($expect, $this->manifest->getConfigs());
 		$this->assertEquals($expect, $this->manifestTests->getConfigs());
 	}
+	
+	public function testGetModules() {
+		$expect = array("module" => "{$this->base}/module");
+		$this->assertEquals($expect, $this->manifest->getModules());
+		$this->assertEquals($expect, $this->manifestTests->getModules());
+	}
 
 	public function testTestManifestIncludesTestClasses() {
 		$this->assertNotContains('testclassa', array_keys($this->manifest->getClasses()));

@@ -3,12 +3,17 @@
  */
 
 (function($) {
-	
+
 	$.entwine('ss', function($){
 	
 		$('.cms-tree').entwine({
+			
+			Hints: null,
+			
 			onmatch: function() {
 				this._super();
+				
+				this.setHints($.parseJSON(this.attr('data-hints')));
 				
 				/**
 				 * @todo Icon and page type hover support
@@ -16,7 +21,6 @@
 				 * @todo Refresh after language <select> change (with Translatable enabled)
 				 * @todo Automatic load of full subtree via ajax on node checkbox selection (minNodeCount = 0)
 				 *  to avoid doing partial selection with "hidden nodes" (unloaded markup)
-				 * @todo Add siteTreeHints to field (as "data-hints" attribute with serialized JSON instead of javascript global variable)
 				 * @todo Disallow drag'n'drop when node has "noChildren" set (see siteTreeHints)
 				 * @todo Disallow moving of pages marked as deleted 
 				 *  most likely by server response codes rather than clientside
@@ -52,13 +56,14 @@
 									// Check if a node is allowed to be moved.
 									// Caution: Runs on every drag over a new node
 									'check_move': function(data) {
+
 										var movedNode = $(data.o), newParent = $(data.np), 
 											isMovedOntoContainer = data.ot.get_container()[0] == data.np[0],
 											movedNodeClass = movedNode.getClassname(), 
 											newParentClass = newParent.getClassname(),
 											// Check allowedChildren of newParent or against root node rules
-											allowedChildren = siteTreeHints[newParentClass ? newParentClass : 'Root'].allowedChildren || [];
-
+											hints = self.getHints(),
+											disallowedChildren = hints[newParentClass ? newParentClass : 'Root'].disallowedChildren || [];
 										var isAllowed = (
 											// Don't allow moving the root node
 											movedNode.data('id') != 0 
@@ -67,7 +72,7 @@
 											// Children are generally allowed on parent
 											&& !newParent.hasClass('nochildren')
 											// movedNode is allowed as a child
-											&& ($.inArray(movedNodeClass, allowedChildren) != -1)
+											&& ($.inArray(movedNodeClass, disallowedChildren) == -1)
 										);
 										
 										return isAllowed;
