@@ -134,9 +134,16 @@
 			}
 		}
 		
+		ul {
+			display: none;
+		}
+		
+		&.opened ul {
+			display: block;
+		}
+		
 		// nested elements
 		li {
-		
 			
 			li {
 				background-color: darken($color-menu-button, 10%);

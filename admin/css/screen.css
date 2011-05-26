@@ -151,6 +151,8 @@ li.jstree-closed > ul { display: none; }
 .cms-menu-list li.current li { background-color: #2e7ead; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #2e7ead), color-stop(100%, #287099)); background-image: -moz-linear-gradient(top, #2e7ead 0%, #287099 100%); background-image: linear-gradient(top, #2e7ead 0%, #287099 100%); }
 .cms-menu-list li.current a { color: white; text-shadow: #333333 1px 1px 1px; }
 .cms-menu-list li.current a .icon { background-position: -32px 0px; }
+.cms-menu-list li ul { display: none; }
+.cms-menu-list li.opened ul { display: block; }
 .cms-menu-list li li:first { -moz-box-shadow: #333333 0 4px 4px 0; -webkit-box-shadow: #333333 0 4px 4px 0; -o-box-shadow: #333333 0 4px 4px 0; box-shadow: #333333 0 4px 4px 0; }
 .cms-menu-list li li a { font-size: 12px; text-shadow: #333333 1px 1px 1px; margin: 0; padding-left: 30px; color: white; }
 .cms-menu-list li li.current a { font-weight: bold; }
