@@ -682,7 +682,7 @@ class Director {
 	 * @return boolean
 	 */
 	public static function is_cli() {
-		return (php_sapi_name() == "cli");
+		return (substr(php_sapi_name(),0,3) == "cli");
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////
