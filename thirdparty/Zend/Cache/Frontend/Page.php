@@ -15,8 +15,9 @@
  * @category   Zend
  * @package    Zend_Cache
  * @subpackage Zend_Cache_Frontend
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Page.php 23775 2011-03-01 17:25:24Z ralph $
  */
 
 
@@ -29,7 +30,7 @@ require_once 'Zend/Cache/Core.php';
 /**
  * @package    Zend_Cache
  * @subpackage Zend_Cache_Frontend
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Cache_Frontend_Page extends Zend_Cache_Core
@@ -242,9 +243,11 @@ class Zend_Cache_Frontend_Page extends Zend_Cache_Core
     {
         $this->_cancel = false;
         $lastMatchingRegexp = null;
-        foreach ($this->_specificOptions['regexps'] as $regexp => $conf) {
-            if (preg_match("`$regexp`", $_SERVER['REQUEST_URI'])) {
-                $lastMatchingRegexp = $regexp;
+        if (isset($_SERVER['REQUEST_URI'])) {
+            foreach ($this->_specificOptions['regexps'] as $regexp => $conf) {
+                if (preg_match("`$regexp`", $_SERVER['REQUEST_URI'])) {
+                    $lastMatchingRegexp = $regexp;
+                }
             }
         }
         $this->_activeOptions = $this->_specificOptions['default_options'];
@@ -274,7 +277,7 @@ class Zend_Cache_Frontend_Page extends Zend_Cache_Core
                     header("$name: $value");
                 }
             }
-        	if ($this->_specificOptions['debug_header']) {
+            if ($this->_specificOptions['debug_header']) {
                 echo 'DEBUG HEADER : This is a cached page !';
             }
             echo $data;
@@ -313,7 +316,7 @@ class Zend_Cache_Frontend_Page extends Zend_Cache_Core
         $headersList = headers_list();
         foreach($this->_specificOptions['memorize_headers'] as $key=>$headerName) {
             foreach ($headersList as $headerSent) {
-                $tmp = split(':', $headerSent);
+                $tmp = explode(':', $headerSent);
                 $headerSentName = trim(array_shift($tmp));
                 if (strtolower($headerName) == strtolower($headerSentName)) {
                     $headerSentValue = trim(implode(':', $tmp));
@@ -338,9 +341,9 @@ class Zend_Cache_Frontend_Page extends Zend_Cache_Core
     {
         $tmp = $_SERVER['REQUEST_URI'];
         $array = explode('?', $tmp, 2);
-      	$tmp = $array[0];
+          $tmp = $array[0];
         foreach (array('Get', 'Post', 'Session', 'Files', 'Cookie') as $arrayName) {
-        	$tmp2 = $this->_makePartialId($arrayName, $this->_activeOptions['cache_with_' . strtolower($arrayName) . '_variables'], $this->_activeOptions['make_id_with_' . strtolower($arrayName) . '_variables']);
+            $tmp2 = $this->_makePartialId($arrayName, $this->_activeOptions['cache_with_' . strtolower($arrayName) . '_variables'], $this->_activeOptions['make_id_with_' . strtolower($arrayName) . '_variables']);
             if ($tmp2===false) {
                 return false;
             }
@@ -359,7 +362,7 @@ class Zend_Cache_Frontend_Page extends Zend_Cache_Core
      */
     protected function _makePartialId($arrayName, $bool1, $bool2)
     {
-    	switch ($arrayName) {
+        switch ($arrayName) {
         case 'Get':
             $var = $_GET;
             break;

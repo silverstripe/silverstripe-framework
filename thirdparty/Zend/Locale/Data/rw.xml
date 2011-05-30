@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.6/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 1.20 $"/>
-		<generation date="$Date: 2008/05/28 15:49:36 $"/>
+		<version number="$Revision: 1.28 $"/>
+		<generation date="$Date: 2009/06/15 17:12:26 $"/>
 		<language type="rw"/>
 	</identity>
 	<localeDisplayNames>
@@ -238,17 +237,17 @@
 				<dateFormats>
 					<dateFormatLength type="full">
 						<dateFormat>
-							<pattern>EEEE, yyyy MMMM dd</pattern>
+							<pattern>EEEE, y MMMM dd</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="long">
 						<dateFormat>
-							<pattern>yyyy MMMM d</pattern>
+							<pattern>y MMMM d</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="medium">
 						<dateFormat>
-							<pattern>yyyy MMM d</pattern>
+							<pattern>y MMM d</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="short">
@@ -260,7 +259,7 @@
 				<timeFormats>
 					<timeFormatLength type="full">
 						<timeFormat>
-							<pattern>HH:mm:ss v</pattern>
+							<pattern>HH:mm:ss zzzz</pattern>
 						</timeFormat>
 					</timeFormatLength>
 					<timeFormatLength type="long">
@@ -280,11 +279,6 @@
 					</timeFormatLength>
 				</timeFormats>
 				<dateTimeFormats>
-					<dateTimeFormatLength>
-						<dateTimeFormat>
-							<pattern>{1} {0}</pattern>
-						</dateTimeFormat>
-					</dateTimeFormatLength>
 					<availableFormats>
 						<dateFormatItem id="yyQ">Q yy</dateFormatItem>
 					</availableFormats>
@@ -304,7 +298,7 @@
 		</symbols>
 		<currencies>
 			<currency type="RWF">
-				<symbol>F</symbol>
+				<symbol>RF</symbol>
 			</currency>
 		</currencies>
 	</numbers>

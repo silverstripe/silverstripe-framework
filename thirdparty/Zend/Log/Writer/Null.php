@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Log
  * @subpackage Writer
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Null.php 8064 2008-02-16 10:58:39Z thomas $
+ * @version    $Id: Null.php 23775 2011-03-01 17:25:24Z ralph $
  */
 
 /** Zend_Log_Writer_Abstract */
@@ -27,9 +27,9 @@ require_once 'Zend/Log/Writer/Abstract.php';
  * @category   Zend
  * @package    Zend_Log
  * @subpackage Writer
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Null.php 8064 2008-02-16 10:58:39Z thomas $
+ * @version    $Id: Null.php 23775 2011-03-01 17:25:24Z ralph $
  */
 class Zend_Log_Writer_Null extends Zend_Log_Writer_Abstract
 {
@@ -43,4 +43,14 @@ class Zend_Log_Writer_Null extends Zend_Log_Writer_Abstract
     {
     }
 
+    /**
+     * Create a new instance of Zend_Log_Writer_Null
+     *
+     * @param  array|Zend_Config $config
+     * @return Zend_Log_Writer_Null
+     */
+    static public function factory($config)
+    {
+        return new self();
+    }
 }
