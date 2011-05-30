@@ -1,27 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.6/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 1.56 $"/>
-		<generation date="$Date: 2008/06/17 14:12:12 $"/>
+		<version number="$Revision: 1.60 $"/>
+		<generation date="$Date: 2009/06/12 23:03:31 $"/>
 		<language type="sv"/>
 		<territory type="FI"/>
 	</identity>
 	<localeDisplayNames>
-		<languages>
-			<language type="phn">fenikiska</language>
-		</languages>
 		<territories>
-			<territory type="019">Amerika</territory>
-			<territory type="BA">Bosnien-Hercegovina</territory>
-			<territory type="HK">Hongkong</territory>
-			<territory type="MO">Macao</territory>
 			<territory type="UM">USA:s yttre öar</territory>
 		</territories>
 		<variants>
 			<variant type="1996">1996 års stavning</variant>
-			<variant type="FONIPA">internationell fonetisk notation (IPA)</variant>
-			<variant type="FONUPA">uralisk fonetisk notation (UPA)</variant>
 		</variants>
 		<types>
 			<type type="big5han" key="collation">kinesiska i big5-sorteringsordning</type>
@@ -37,7 +27,7 @@
 	</localeDisplayNames>
 	<characters>
 		<exemplarCharacters>[a à b-e é f-v x-z å ä ö]</exemplarCharacters>
-		<exemplarCharacters type="auxiliary">[à ã ç é ë í ñ ó š w ÿ ü ž]</exemplarCharacters>
+		<exemplarCharacters type="auxiliary">[ã ç ë í ñ ó š ÿ ü ž]</exemplarCharacters>
 	</characters>
 	<dates>
 		<calendars>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.6/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 1.78 $"/>
-		<generation date="$Date: 2008/06/15 08:09:47 $"/>
+		<version number="$Revision: 1.95 $"/>
+		<generation date="$Date: 2009/06/15 03:46:26 $"/>
 		<language type="et"/>
 	</identity>
+	<fallback>en fi</fallback>
 	<localeDisplayNames>
 		<languages>
 			<language type="aa">afari</language>
@@ -77,6 +77,7 @@
 			<language type="cai">muu Kesk-Ameerika indiaani</language>
 			<language type="car">kariibi</language>
 			<language type="cau">muu Kaukaasia</language>
+			<language type="cch">atsam</language>
 			<language type="ce">tšetšeeni</language>
 			<language type="ceb">sebu</language>
 			<language type="cel">muu keldi</language>
@@ -129,7 +130,7 @@
 			<language type="el">kreeka</language>
 			<language type="elx">eelami</language>
 			<language type="en">inglise</language>
-			<language type="en_US">inglise keel (US)</language>
+			<language type="en_US">inglise (USA)</language>
 			<language type="enm">keskinglise</language>
 			<language type="eo">esperanto</language>
 			<language type="es">hispaania</language>
@@ -218,10 +219,13 @@
 			<language type="kaa">karakalpaki</language>
 			<language type="kab">kabiili</language>
 			<language type="kac">katšini</language>
+			<language type="kaj">jju</language>
 			<language type="kam">kamba</language>
 			<language type="kar">kareni</language>
 			<language type="kaw">kaavi</language>
 			<language type="kbd">kabardi-tšerkessi</language>
+			<language type="kcg">tyap</language>
+			<language type="kfo">koro</language>
 			<language type="kg">kongo</language>
 			<language type="kha">khasi</language>
 			<language type="khi">muu khoisani</language>
@@ -361,7 +365,6 @@
 			<language type="pro">vanaprovansi</language>
 			<language type="ps">puštu</language>
 			<language type="pt">portugali</language>
-			<language type="pt_BR">portugali (Braziilia)</language>
 			<language type="qu">ketšua</language>
 			<language type="raj">radžastani</language>
 			<language type="rap">rapanui</language>
@@ -728,7 +731,7 @@
 			<territory type="GU">Guam</territory>
 			<territory type="GW">Guinea-Bissau</territory>
 			<territory type="GY">Guyana</territory>
-			<territory type="HK">Hongkong</territory>
+			<territory type="HK">Hongkong - Hiina erihalduspiirkond</territory>
 			<territory type="HM">Heard ja McDonald</territory>
 			<territory type="HN">Honduras</territory>
 			<territory type="HR">Horvaatia</territory>
@@ -780,7 +783,7 @@
 			<territory type="ML">Mali</territory>
 			<territory type="MM">Myanmar</territory>
 			<territory type="MN">Mongoolia</territory>
-			<territory type="MO">Aomen</territory>
+			<territory type="MO">Aomen - Hiina erihalduspiirkond</territory>
 			<territory type="MP">Põhja-Mariaanid</territory>
 			<territory type="MQ">Martinique</territory>
 			<territory type="MR">Mauritaania</territory>
@@ -914,13 +917,10 @@
 			<type type="traditional" key="collation">traditsiooniline</type>
 		</types>
 		<measurementSystemNames>
-			<measurementSystemName type="US">inglise mõõdustik</measurementSystemName>
 			<measurementSystemName type="metric">meetermõõdustik</measurementSystemName>
+			<measurementSystemName type="US">inglise mõõdustik</measurementSystemName>
 		</measurementSystemNames>
 	</localeDisplayNames>
-	<layout>
-		<inText type="languages">lowercase-words</inText>
-	</layout>
 	<characters>
 		<exemplarCharacters>[a-s š z ž t-w õ ä ö ü x y]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary">[á à â å ā æ ç é è ê ë ē í ì î ï ī ñ ó ò ŏ ô ø ō œ ß ú ù û ū]</exemplarCharacters>
@@ -932,7 +932,7 @@
 		<alternateQuotationEnd>‚</alternateQuotationEnd>
 	</delimiters>
 	<dates>
-		<localizedPatternChars>GanjkHmsSEDFwWxhKzAeugXZvcL</localizedPatternChars>
+		<dateRangePattern>{0}−{1}</dateRangePattern>
 		<calendars>
 			<calendar type="gregorian">
 				<months>
@@ -1047,12 +1047,12 @@
 				<dateFormats>
 					<dateFormatLength type="full">
 						<dateFormat>
-							<pattern>EEEE, d, MMMM yyyy</pattern>
+							<pattern>EEEE, d, MMMM y</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="long">
 						<dateFormat>
-							<pattern>d MMMM yyyy</pattern>
+							<pattern>d MMMM y</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="medium">
@@ -1069,7 +1069,7 @@
 				<timeFormats>
 					<timeFormatLength type="full">
 						<timeFormat>
-							<pattern>H:mm:ss v</pattern>
+							<pattern>H:mm:ss zzzz</pattern>
 						</timeFormat>
 					</timeFormatLength>
 					<timeFormatLength type="long">
@@ -1089,43 +1089,16 @@
 					</timeFormatLength>
 				</timeFormats>
 				<dateTimeFormats>
-					<dateTimeFormatLength>
-						<dateTimeFormat>
-							<pattern>{1} {0}</pattern>
-						</dateTimeFormat>
-					</dateTimeFormatLength>
 					<availableFormats>
-						<dateFormatItem id="MMMMd">d MMMM</dateFormatItem>
 						<dateFormatItem id="MMdd">dd.MM</dateFormatItem>
+						<dateFormatItem id="MMMMd">d MMMM</dateFormatItem>
 						<dateFormatItem id="mmss">mm:ss</dateFormatItem>
 						<dateFormatItem id="yyQ">Q yy</dateFormatItem>
 						<dateFormatItem id="yyyyMM">MM.yyyy</dateFormatItem>
-						<dateFormatItem id="yyyyMMMM">MMMM yyyy</dateFormatItem>
+						<dateFormatItem id="yyyyMMMM">MMMM y</dateFormatItem>
 					</availableFormats>
 					<intervalFormats>
 						<intervalFormatFallback>{0} - {1}</intervalFormatFallback>
-						<intervalFormatItem id="M">
-							<greatestDifference id="M">M-M</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MEd">
-							<greatestDifference id="M">E, dd.MM - E, dd.MM</greatestDifference>
-							<greatestDifference id="d">E, dd.MM - E, dd.MM</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MMM">
-							<greatestDifference id="M">MMM-MMM</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MMMEd">
-							<greatestDifference id="M">E, d MMM - E, d MMM</greatestDifference>
-							<greatestDifference id="d">E, d - E, d MMM</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MMMd">
-							<greatestDifference id="M">d MMM - d MMM</greatestDifference>
-							<greatestDifference id="d">d-d MMM</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="Md">
-							<greatestDifference id="M">dd.MM - dd.MM</greatestDifference>
-							<greatestDifference id="d">dd.MM - dd.MM</greatestDifference>
-						</intervalFormatItem>
 						<intervalFormatItem id="d">
 							<greatestDifference id="d">d-d</greatestDifference>
 						</intervalFormatItem>
@@ -1143,6 +1116,28 @@
 						<intervalFormatItem id="hv">
 							<greatestDifference id="h">H-H v</greatestDifference>
 						</intervalFormatItem>
+						<intervalFormatItem id="M">
+							<greatestDifference id="M">M-M</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Md">
+							<greatestDifference id="d">dd.MM - dd.MM</greatestDifference>
+							<greatestDifference id="M">dd.MM - dd.MM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MEd">
+							<greatestDifference id="d">E, dd.MM - E, dd.MM</greatestDifference>
+							<greatestDifference id="M">E, dd.MM - E, dd.MM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMM">
+							<greatestDifference id="M">MMM-MMM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMMd">
+							<greatestDifference id="d">d-d MMM</greatestDifference>
+							<greatestDifference id="M">d MMM - d MMM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMMEd">
+							<greatestDifference id="d">E, d - E, d MMM</greatestDifference>
+							<greatestDifference id="M">E, d MMM - E, d MMM</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="y">
 							<greatestDifference id="y">y-y</greatestDifference>
 						</intervalFormatItem>
@@ -1150,29 +1145,29 @@
 							<greatestDifference id="M">MM.yy - MM.yy</greatestDifference>
 							<greatestDifference id="y">MM.yy - MM.yy</greatestDifference>
 						</intervalFormatItem>
+						<intervalFormatItem id="yMd">
+							<greatestDifference id="d">dd.MM.yy - dd.MM.yy</greatestDifference>
+							<greatestDifference id="M">dd.MM.yy - dd.MM.yy</greatestDifference>
+							<greatestDifference id="y">dd.MM.yy - dd.MM.yy</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="yMEd">
-							<greatestDifference id="M">E, dd.MM.yy - E, dd.MM.yy</greatestDifference>
 							<greatestDifference id="d">E, dd.MM.yy - E, dd.MM.yy</greatestDifference>
+							<greatestDifference id="M">E, dd.MM.yy - E, dd.MM.yy</greatestDifference>
 							<greatestDifference id="y">E, dd.MM.yy - E, dd.MM.yy</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="yMMM">
-							<greatestDifference id="M">MMM-MMM yyyy</greatestDifference>
-							<greatestDifference id="y">MMM yyyy - MMM yyyy</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="yMMMEd">
-							<greatestDifference id="M">E, d, MMM - E, d, MMM yyyy</greatestDifference>
-							<greatestDifference id="d">E, d - E, d, MMM yyyy</greatestDifference>
-							<greatestDifference id="y">E, d, MMM yyyy - E, d, MMM yyyy</greatestDifference>
+							<greatestDifference id="M">MMM-MMM y</greatestDifference>
+							<greatestDifference id="y">MMM y - MMM y</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="yMMMd">
-							<greatestDifference id="M">d MMM - d MMM yyyy</greatestDifference>
-							<greatestDifference id="d">d-d MMM yyyy</greatestDifference>
-							<greatestDifference id="y">d MMM yyyy - d MMM yyyy</greatestDifference>
+							<greatestDifference id="d">d-d MMM y</greatestDifference>
+							<greatestDifference id="M">d MMM - d MMM y</greatestDifference>
+							<greatestDifference id="y">d MMM y - d MMM y</greatestDifference>
 						</intervalFormatItem>
-						<intervalFormatItem id="yMd">
-							<greatestDifference id="M">dd.MM.yy - dd.MM.yy</greatestDifference>
-							<greatestDifference id="d">dd.MM.yy - dd.MM.yy</greatestDifference>
-							<greatestDifference id="y">dd.MM.yy - dd.MM.yy</greatestDifference>
+						<intervalFormatItem id="yMMMEd">
+							<greatestDifference id="d">E, d - E, d, MMM y</greatestDifference>
+							<greatestDifference id="M">E, d, MMM - E, d, MMM y</greatestDifference>
+							<greatestDifference id="y">E, d, MMM y - E, d, MMM y</greatestDifference>
 						</intervalFormatItem>
 					</intervalFormats>
 				</dateTimeFormats>
@@ -1182,6 +1177,7 @@
 			<hourFormat>+HH:mm;-HH:mm</hourFormat>
 			<gmtFormat>GMT{0}</gmtFormat>
 			<regionFormat>{0}</regionFormat>
+			<fallbackFormat>{1} ({0})</fallbackFormat>
 			<zone type="Etc/Unknown">
 				<exemplarCity>määramata</exemplarCity>
 			</zone>
@@ -1314,6 +1310,16 @@
 		<symbols>
 			<decimal>,</decimal>
 			<group> </group>
+			<list>;</list>
+			<percentSign>%</percentSign>
+			<nativeZeroDigit>0</nativeZeroDigit>
+			<patternDigit>#</patternDigit>
+			<plusSign>+</plusSign>
+			<minusSign>−</minusSign>
+			<exponential>×10^</exponential>
+			<perMille>‰</perMille>
+			<infinity>∞</infinity>
+			<nan>¤¤¤</nan>
 		</symbols>
 		<decimalFormats>
 			<decimalFormatLength>
@@ -1342,6 +1348,8 @@
 					<pattern>#,##0.00 ¤</pattern>
 				</currencyFormat>
 			</currencyFormatLength>
+			<unitPattern count="one">{0} {1}</unitPattern>
+			<unitPattern count="other">{0} {1}</unitPattern>
 		</currencyFormats>
 		<currencies>
 			<currency type="ADP">
@@ -1516,7 +1524,6 @@
 			</currency>
 			<currency type="EUR">
 				<displayName>euro</displayName>
-				<symbol>€</symbol>
 			</currency>
 			<currency type="FIM">
 				<displayName>Soome mark</displayName>
@@ -1532,7 +1539,6 @@
 			</currency>
 			<currency type="GBP">
 				<displayName>Suurbritannia naelsterling</displayName>
-				<symbol>£</symbol>
 			</currency>
 			<currency type="GEL">
 				<displayName>Gruusia lari</displayName>
@@ -1913,7 +1919,6 @@
 			</currency>
 			<currency type="XXX">
 				<displayName>määramata</displayName>
-				<symbol>XXX</symbol>
 			</currency>
 			<currency type="YDD">
 				<displayName>Jeemeni dinaar</displayName>
@@ -1938,6 +1943,36 @@
 			</currency>
 		</currencies>
 	</numbers>
+	<units>
+		<unit type="day">
+			<unitPattern count="one">{0} ööpäev</unitPattern>
+			<unitPattern count="other">{0} ööpäeva</unitPattern>
+		</unit>
+		<unit type="hour">
+			<unitPattern count="one">{0} tund</unitPattern>
+			<unitPattern count="other">{0} tunniga</unitPattern>
+		</unit>
+		<unit type="minute">
+			<unitPattern count="one">{0} minut</unitPattern>
+			<unitPattern count="other">{0} minut</unitPattern>
+		</unit>
+		<unit type="month">
+			<unitPattern count="one">{0} kuu</unitPattern>
+			<unitPattern count="other">{0} kuud</unitPattern>
+		</unit>
+		<unit type="second">
+			<unitPattern count="one">{0} sekund</unitPattern>
+			<unitPattern count="other">{0} sekundit</unitPattern>
+		</unit>
+		<unit type="week">
+			<unitPattern count="one">{0} nädal</unitPattern>
+			<unitPattern count="other">{0} nädalat</unitPattern>
+		</unit>
+		<unit type="year">
+			<unitPattern count="one">{0} aasta</unitPattern>
+			<unitPattern count="other">{0} aastat</unitPattern>
+		</unit>
+	</units>
 	<posix>
 		<messages>
 			<yesstr>jah:j</yesstr>
@@ -1945,3 +1980,4 @@
 		</messages>
 	</posix>
 </ldml>
+

@@ -15,15 +15,16 @@
  * @category   Zend
  * @package    Zend_Cache
  * @subpackage Zend_Cache_Backend
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id: Backend.php 23800 2011-03-10 20:52:08Z mabe $
  */
 
 
 /**
  * @package    Zend_Cache
  * @subpackage Zend_Cache_Backend
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Cache_Backend
@@ -141,32 +142,75 @@ class Zend_Cache_Backend
     }
 
     /**
-     * Return a system-wide tmp directory
+     * Determine system TMP directory and detect if we have read access
      *
-     * @return string System-wide tmp directory
+     * inspired from Zend_File_Transfer_Adapter_Abstract
+     *
+     * @return string
+     * @throws Zend_Cache_Exception if unable to determine directory
      */
-    static function getTmpDir()
+    public function getTmpDir()
     {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            // windows...
-            foreach (array($_ENV, $_SERVER) as $tab) {
-                foreach (array('TEMP', 'TMP', 'windir', 'SystemRoot') as $key) {
-                    if (isset($tab[$key])) {
-                        $result = $tab[$key];
-                        if (($key == 'windir') or ($key == 'SystemRoot')) {
-                            $result = $result . '\\temp';
-                        }
-                        return $result;
+        $tmpdir = array();
+        foreach (array($_ENV, $_SERVER) as $tab) {
+            foreach (array('TMPDIR', 'TEMP', 'TMP', 'windir', 'SystemRoot') as $key) {
+                if (isset($tab[$key])) {
+                    if (($key == 'windir') or ($key == 'SystemRoot')) {
+                        $dir = realpath($tab[$key] . '\\temp');
+                    } else {
+                        $dir = realpath($tab[$key]);
+                    }
+                    if ($this->_isGoodTmpDir($dir)) {
+                        return $dir;
                     }
                 }
             }
-            return '\\temp';
-        } else {
-            // unix...
-            if (isset($_ENV['TMPDIR']))    return $_ENV['TMPDIR'];
-            if (isset($_SERVER['TMPDIR'])) return $_SERVER['TMPDIR'];
+        }
+        $upload = ini_get('upload_tmp_dir');
+        if ($upload) {
+            $dir = realpath($upload);
+            if ($this->_isGoodTmpDir($dir)) {
+                return $dir;
+            }
+        }
+        if (function_exists('sys_get_temp_dir')) {
+            $dir = sys_get_temp_dir();
+            if ($this->_isGoodTmpDir($dir)) {
+                return $dir;
+            }
+        }
+        // Attemp to detect by creating a temporary file
+        $tempFile = tempnam(md5(uniqid(rand(), TRUE)), '');
+        if ($tempFile) {
+            $dir = realpath(dirname($tempFile));
+            unlink($tempFile);
+            if ($this->_isGoodTmpDir($dir)) {
+                return $dir;
+            }
+        }
+        if ($this->_isGoodTmpDir('/tmp')) {
             return '/tmp';
         }
+        if ($this->_isGoodTmpDir('\\temp')) {
+            return '\\temp';
+        }
+        Zend_Cache::throwException('Could not determine temp directory, please specify a cache_dir manually');
+    }
+
+    /**
+     * Verify if the given temporary directory is readable and writable
+     *
+     * @param string $dir temporary directory
+     * @return boolean true if the directory is ok
+     */
+    protected function _isGoodTmpDir($dir)
+    {
+        if (is_readable($dir)) {
+            if (is_writable($dir)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -182,24 +226,20 @@ class Zend_Cache_Backend
         if (!isset($this->_directives['logging']) || !$this->_directives['logging']) {
             return;
         }
-        try {
-            /**
-             * @see Zend_Log
-             */
-            require_once 'Zend/Log.php';
-        } catch (Zend_Exception $e) {
-            Zend_Cache::throwException('Logging feature is enabled but the Zend_Log class is not available');
-        }
+
         if (isset($this->_directives['logger'])) {
             if ($this->_directives['logger'] instanceof Zend_Log) {
                 return;
-            } else {
-                Zend_Cache::throwException('Logger object is not an instance of Zend_Log class.');
             }
+            Zend_Cache::throwException('Logger object is not an instance of Zend_Log class.');
         }
+
         // Create a default logger to the standard output stream
+        require_once 'Zend/Log.php';
         require_once 'Zend/Log/Writer/Stream.php';
+        require_once 'Zend/Log/Filter/Priority.php';
         $logger = new Zend_Log(new Zend_Log_Writer_Stream('php://output'));
+        $logger->addFilter(new Zend_Log_Filter_Priority(Zend_Log::WARN, '<='));
         $this->_directives['logger'] = $logger;
     }
 
@@ -217,7 +257,7 @@ class Zend_Cache_Backend
         }
 
         if (!isset($this->_directives['logger'])) {
-        	Zend_Cache::throwException('Logging is enabled but logger is not set.');
+            Zend_Cache::throwException('Logging is enabled but logger is not set.');
         }
         $logger = $this->_directives['logger'];
         if (!$logger instanceof Zend_Log) {
