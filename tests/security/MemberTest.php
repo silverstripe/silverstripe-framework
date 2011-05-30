@@ -300,8 +300,8 @@ class MemberTest extends FunctionalTest {
 	
 	function testMemberWithNoDateFormatFallsbackToGlobalLocaleDefaultFormat() {
 		$member = $this->objFromFixture('Member', 'noformatmember');
-		$this->assertEquals('MM/dd/yyyy', $member->DateFormat);
-		$this->assertEquals('hh:mm a', $member->TimeFormat);
+		$this->assertEquals('MMM d, y', $member->DateFormat);
+		$this->assertEquals('h:mm:ss a', $member->TimeFormat);
 	}
 	
 	function testMemberWithNoDateFormatFallsbackToTheirLocaleDefaultFormat() {
