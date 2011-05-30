@@ -71,7 +71,7 @@ class i18nTest extends SapphireTest {
 	
 	function testDateFormatFromLocale() {
 		i18n::set_locale('en_US');
-		$this->assertEquals('MM/dd/yyyy', i18n::get_date_format());
+		$this->assertEquals('MMM d, y', i18n::get_date_format());
 		i18n::set_locale('en_NZ');
 		$this->assertEquals('d/MM/yyyy', i18n::get_date_format());
 		i18n::set_locale('en_US');
@@ -79,7 +79,7 @@ class i18nTest extends SapphireTest {
 	
 	function testTimeFormatFromLocale() {
 		i18n::set_locale('en_US');
-		$this->assertEquals('hh:mm a', i18n::get_time_format());
+		$this->assertEquals('h:mm:ss a', i18n::get_time_format());
 		i18n::set_locale('de_DE');
 		$this->assertEquals('HH:mm:ss', i18n::get_time_format());
 		i18n::set_locale('en_US');
@@ -87,14 +87,14 @@ class i18nTest extends SapphireTest {
 	
 	function testDateFormatCustom() {
 		i18n::set_locale('en_US');
-		$this->assertEquals('MM/dd/yyyy', i18n::get_date_format());
+		$this->assertEquals('MMM d, y', i18n::get_date_format());
 		i18n::set_date_format('d/MM/yyyy');
 		$this->assertEquals('d/MM/yyyy', i18n::get_date_format());
 	}
 	
 	function testTimeFormatCustom() {
 		i18n::set_locale('en_US');
-		$this->assertEquals('hh:mm a', i18n::get_time_format());
+		$this->assertEquals('h:mm:ss a', i18n::get_time_format());
 		i18n::set_time_format('HH:mm:ss');
 		$this->assertEquals('HH:mm:ss', i18n::get_time_format());
 	}

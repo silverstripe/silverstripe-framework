@@ -102,73 +102,24 @@ class MoneyTest extends SapphireTest {
 	
 	public function testToCurrency() {
 		$USD = new Money();
-		$USD->setCurrency('USD');
 		$USD->setLocale('en_US');
-		
-		$EGP = new Money();
-		$EGP->setCurrency('EGP');
-		$EGP->setLocale('ar_EG');
-
 		$USD->setAmount(53292.18);
 		$this->assertSame('$53,292.18', $USD->Nice());
-		$USD->setAmount(53292.18);
-		$this->assertSame('$٥٣,٢٩٢.١٨', $USD->Nice(array('script' => 'Arab' )));
-		$USD->setAmount(53292.18);
-		$this->assertSame('$ ٥٣.٢٩٢,١٨', $USD->Nice(array('script' => 'Arab', 'format' => 'de_AT')));
-		$USD->setAmount(53292.18);
 		$this->assertSame('$ 53.292,18', $USD->Nice(array('format' => 'de_AT')));
-
-		$EGP->setAmount(53292.18);
-		$this->assertSame('ج.م.‏ 53٬292٫18', $EGP->Nice());
-		$EGP->setAmount(53292.18);
-		$this->assertSame('ج.م.‏ ٥٣٬٢٩٢٫١٨', $EGP->Nice(array('script' => 'Arab' )));
-		$EGP->setAmount(53292.18);
-		$this->assertSame('ج.م.‏ ٥٣.٢٩٢,١٨', $EGP->Nice(array('script' =>'Arab', 'format' => 'de_AT')));
-		$EGP->setAmount(53292.18);
-		$this->assertSame('ج.م.‏ 53.292,18', $EGP->Nice(array('format' => 'de_AT')));
-
-		$USD = new Money();
-		$USD->setLocale('en_US');
-		$USD->setAmount(53292.18);
-		$this->assertSame('$53,292.18', $USD->Nice());
-		/*
-		try {
-			$this->assertSame('$ 53,292.18', $USD->Nice('nocontent'));
-			$this->fail("No currency expected");
-		} catch (Exception $e) {
-			$this->assertContains("has to be numeric", $e->getMessage());
-		}
-		*/
-
-		$INR = new Money();
-		$INR->setLocale('de_AT');
-		$INR->setCurrency('INR');
-		$INR->setAmount(1.2);
-		$this->assertSame('Rs. 1,20', $INR->Nice());
-		$INR->setAmount(1);
-		$this->assertSame('Re. 1,00', $INR->Nice());
-		$INR->setAmount(0);
-		$this->assertSame('Rs. 0,00', $INR->Nice());
-		$INR->setAmount(-3);
-		$this->assertSame('-Rs. 3,00', $INR->Nice());
 	}
 
 	public function testGetSign() {
-		$EGP = new Money();
-		$EGP->setValue(array(
-			'Currency' => 'EGP',
+		$SKR = new Money();
+		$SKR->setValue(array(
+			'Currency' => 'SKR',
 			'Amount' => 3.44
 		));
-		$EGP->setLocale('ar_EG');
 
-		$this->assertSame('ج.م.‏', $EGP->getSymbol('EGP','ar_EG'));
-		$this->assertSame('€',	$EGP->getSymbol('EUR','de_AT'));
-		$this->assertSame('ج.م.‏', $EGP->getSymbol(null, 'ar_EG'));
-		//$this->assertSame('€',	$EGP->getSymbol(null, 'de_AT'));
-		$this->assertSame('ج.م.‏',	$EGP->getSymbol());
+		$this->assertSame('€',	$SKR->getSymbol('EUR','de_AT'));
+		$this->assertSame(null,	$SKR->getSymbol());
 
 		try {
-			$EGP->getSymbol('EGP', 'de_XX');
+			$SKR->getSymbol('EGP', 'de_XX');
 			$this->setExpectedException("Exception");
 		} catch(Exception $e) {
 		}
@@ -191,10 +142,7 @@ class MoneyTest extends SapphireTest {
 		));
 		$m->setLocale('ar_EG');
 
-		$this->assertSame('جنيه مصرى', $m->getName('EGP','ar_EG'));
 		$this->assertSame('Estnische Krone', $m->getName('EEK','de_AT'));
-		//$this->assertSame('جنيه مصرى', $m->getName(null, 'ar_EG'));
-		//$this->assertSame('Euro', $m->getName('de_AT'));
 		$this->assertSame('يورو', $m->getName());
 
 		try {
