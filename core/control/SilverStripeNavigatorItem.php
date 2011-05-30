@@ -67,12 +67,20 @@ class SilverStripeNavigatorItem_CMSLink extends SilverStripeNavigatorItem {
 		if(is_a(Controller::curr(), 'CMSMain')) {
 			return '<a class="current">CMS</a>';
 		} else {
-			$cmsLink = 'admin/show/' . $page->ID;
+
+			$cmsLink = 'admin/show/' . $page->ID ;		
+			$cmsLink = $this->appendPageLocalToUrl($page, $cmsLink); 
 			$cmsLink = "<a href=\"$cmsLink\" class=\"newWindow\" target=\"cms\">". _t('ContentController.CMS', 'CMS') ."</a>";
-	
 			return $cmsLink;
 		}
-	}
+	} 
+	
+	function appendPageLocalToUrl($page, $url){
+		if (isset($page->Locale)){
+			$url .= "?locale={$page->Locale}";
+		}
+		return $url; 
+	} 
 	
 	function getLink($page) {
 		if(is_a(Controller::curr(), 'CMSMain')) {
