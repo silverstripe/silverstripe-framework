@@ -6,16 +6,23 @@
 .field {
 	display: block;
 	padding: 10px 0;
-	border-bottom: 1px solid $color-shadow-light;
-			
+	border-bottom-width: 2px;
+	border-bottom: 2px groove lighten($color-shadow-light, 95%);
+	-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+	border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+	//@include border-image(url(../images/textures/bg_fieldset_elements_border.png), 2, stretch); //not yet supported
+	
 	label {
 		float: left;
-		width: 10em;
+		width: 15em;
+		font-weight: bold;
+		padding: 5px 0;
+		font-size: 11px;
 	}
 	
 	// Don't float inner/contained fields
 	.middleColumn {
-		margin-left: 10em;
+		margin-left: 15em;
 		
 		.field {
 			display: inline;
@@ -27,6 +34,18 @@
 			float: none;
 			width: auto;
 		}
+	}
+}
+
+.htmleditor {
+	label {
+		display: block;
+		float: none;
+		padding-bottom: 10px;
+	}
+	
+	.middleColumn {
+		margin-left: 0px
 	}
 }
 
@@ -55,11 +74,10 @@ form.nostyle {
 }
 
 input, textarea {
-	@include border-radius(5px);
+	@include border-radius(3px);
 	@include linear-gradient(color-stops(
-		$color-widget-bg, 
-		lighten($color-widget-bg, 10%), 
-		$color-widget-bg
+		lighten($color-widget-bg, 25%), 
+		lighten($color-widget-bg, 2%)
 	));
 	border: 1px solid $color-shadow-light;
 	padding: 3px;
@@ -104,7 +122,7 @@ input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loadin
 	padding-bottom: 20px;
 	
 	.text input, textarea {
-		width: 300px;
+		width: 99%;
 	}
 
 	// TODO Unclear if "button bar" concept is edit form specific
