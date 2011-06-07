@@ -73,6 +73,8 @@
 			},
 			
 			redraw: function() {
+				// Not all edit forms are layouted
+				var editForm = this.find('.cms-edit-form[data-layout]').layout();
 				this.find('.cms-content').layout();
 				this.find('.cms-container').layout({resize: false})
 			}

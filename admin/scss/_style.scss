@@ -51,7 +51,8 @@ body .ui-widget {
 .cms-content,
 .cms-content-header,
 .cms-content-tools,
-.cms-content-form {
+.cms-content-form,
+.cms-edit-form {
 	@include inline-block;
 }
 

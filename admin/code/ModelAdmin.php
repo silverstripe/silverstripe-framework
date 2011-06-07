@@ -664,7 +664,7 @@ class ModelAdmin_CollectionController extends Controller {
 			$msg = _t('ModelAdmin.NORESULTS',"Your search didn't return any matching items");
 		}
 		return new SS_HTTPResponse(
-			$resultsForm->formHtmlContent(), 
+			$resultsForm->forTemplate(), 
 			200, 
 			$msg
 		);
@@ -794,7 +794,7 @@ class ModelAdmin_CollectionController extends Controller {
 	 */
 	function add($request) {
 		return new SS_HTTPResponse(
-			$this->AddForm()->formHtmlContent(), 
+			$this->AddForm()->forTemplate(), 
 			200, 
 			sprintf(
 				_t('ModelAdmin.ADDFORM', "Fill out this form to add a %s to the database."),
@@ -845,6 +845,7 @@ class ModelAdmin_CollectionController extends Controller {
 
 			$form = new Form($this, "AddForm", $fields, $actions, $validator);
 			$form->loadDataFrom($newRecord);
+			$form->addExtraClass('cms-edit-form');
 			
 			return $form;
 		}
@@ -862,7 +863,7 @@ class ModelAdmin_CollectionController extends Controller {
 			$class = $this->parentController->getRecordControllerClass($this->getModelClass());
 			$recordController = new $class($this, $request, $model->ID);
 			return new SS_HTTPResponse(
-				$recordController->EditForm()->formHtmlContent(), 
+				$recordController->EditForm()->forTemplate(), 
 				200, 
 				sprintf(
 					_t('ModelAdmin.LOADEDFOREDITING', "Loaded '%s' for editing."),
@@ -912,7 +913,7 @@ class ModelAdmin_RecordController extends Controller {
 	function edit($request) {
 		if ($this->currentRecord) {
 			if($this->isAjax()) {
-				$this->response->setBody($this->EditForm()->formHtmlContent());
+				$this->response->setBody($this->EditForm()->forTemplate());
 				$this->response->setStatusCode(
 					200, 
 					sprintf(
@@ -924,10 +925,10 @@ class ModelAdmin_RecordController extends Controller {
 			} else {
 				// This is really quite ugly; to fix will require a change in the way that customise() works. :-(
 				return $this->parentController->parentController->customise(array(
-					'Right' => $this->parentController->parentController->customise(array(
+					'Content' => $this->parentController->parentController->customise(array(
 						'EditForm' => $this->EditForm()
-					))->renderWith(array("{$this->class}_right",'LeftAndMain_right'))
-				))->renderWith(array('ModelAdmin','LeftAndMain'));
+					))->renderWith(array("{$this->class}_Content",'ModelAdmin_Content', 'LeftAndMain_Content'))
+				))->renderWith(array('ModelAdmin', 'LeftAndMain'));
 			}
 		} else {
 			return _t('ModelAdmin.ITEMNOTFOUND', "I can't find that item");
@@ -963,6 +964,7 @@ class ModelAdmin_RecordController extends Controller {
 
 		$form = new Form($this, "EditForm", $fields, $actions, $validator);
 		$form->loadDataFrom($this->currentRecord);
+		$form->addExtraClass('cms-edit-form');
 
 		return $form;
 	}
@@ -1017,7 +1019,7 @@ class ModelAdmin_RecordController extends Controller {
 	function view($request) {
 		if($this->currentRecord) {
 			$form = $this->ViewForm();
-			return $form->formHtmlContent();
+			return $form->forTemplate();
 		} else {
 			return _t('ModelAdmin.ITEMNOTFOUND');
 		}

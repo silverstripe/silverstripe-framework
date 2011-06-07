@@ -377,17 +377,20 @@ class LeftAndMain extends Controller {
 		if(!$title) $title = preg_replace('/Admin$/', '', $class);
 		return $title;
 	}
-
+	
 	public function show($request) {
 		// TODO Necessary for TableListField URLs to work properly
 		if($request->param('ID')) $this->setCurrentPageID($request->param('ID'));
 		
 		if($this->isAjax()) {
-			SSViewer::setOption('rewriteHashlinks', false);
-			$form = $this->getEditForm($request->param('ID'));
-			$content = $form->formHtmlContent();
+			if($request->getVar('cms-view-form')) {
+				$form = $this->getEditForm();
+				$content = $form->forTemplate();
+			} else {
+				// Rendering is handled by template, which will call EditForm() eventually
+				$content = $this->renderWith($this->getTemplatesWithSuffix('_Content'));
+			}
 		} else {
-			// Rendering is handled by template, which will call EditForm() eventually
 			$content = $this->renderWith($this->getViewer('show'));
 		}
 		
@@ -636,7 +639,7 @@ class LeftAndMain extends Controller {
 		// write process might've changed the record, so we reload before returning
 		$form = $this->getEditForm($record->ID);
 		
-		return $form->formHtmlContent();
+		return $form->forTemplate();
 	}
 	
 	public function delete($data, $form) {
@@ -648,7 +651,7 @@ class LeftAndMain extends Controller {
 		$record->delete();
 		
 		if($this->isAjax()) {
-			return $this->EmptyForm()->formHtmlContent();
+			return $this->EmptyForm()->forTemplate();
 		} else {
 			$this->redirectBack();
 		}
@@ -954,7 +957,7 @@ class LeftAndMain extends Controller {
 			return $record->ID;
 		} else if($this->isAjax()) {
 			$form = $this->getEditForm($record->ID);
-			return $form->formHtmlContent();
+			return $form->forTemplate();
 		} else {
 			return $this->redirect(Controller::join_links($this->Link('show'), $record->ID));
 		}

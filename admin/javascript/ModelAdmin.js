@@ -71,8 +71,9 @@
 				var btn = $(this[0].clickedButton);
 				btn.addClass('loading');
 
-				$('.cms-edit-form').loadForm(
+				$('.cms-content').loadForm(
 					this.attr('action'),
+					null,
 					function() {
 						btn.removeClass('loading');
 					},
@@ -135,7 +136,8 @@
 			onclick: function(e) {
 				var firstLink = this.find('a[href]');
 				if(!firstLink) return;
-				$('.cms-edit-form').loadForm(firstLink.attr('href'));
+				
+				window.History.pushState({selector: '.cms-edit-form'}, '', firstLink.attr('href'));
 				return false;
 			}
 		});
@@ -153,8 +155,9 @@
 				className = $('select option:selected', this).val();
 				requestPath = this.attr('action').replace('ManagedModelsSelect', className + '/add');
 				var $button = $(':submit', this);
-				$('.cms-edit-form').loadForm(
+				$('.cms-content').loadForm(
 					requestPath,
+					null,
 					function() {
 						$button.removeClass('loading');
 						$button = null;
