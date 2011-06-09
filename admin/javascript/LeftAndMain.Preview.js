@@ -36,6 +36,12 @@
 					var url = $(this).find(':input[name=StageURLSegment]').val();
 					if(url) self.loadUrl(url + '&cms-preview-disabled=1');
 				});
+				
+				$('.cms-container').bind('afterstatechange', function(e) {
+					// var url = ui.xmlhttp.getResponseHeader('x-frontend-url');
+					var url = $('.cms-edit-form').find(':input[name=StageURLSegment]').val();
+					if(url) self.loadUrl(url + '&cms-preview-disabled=1');
+				});
 
 				if(this.hasClass('is-expanded')) this.expand();
 				else this.collapse();
@@ -51,12 +57,14 @@
 				var doc = this.find('iframe')[0].contentDocument, container = this.getLayoutContainer();
 
 				// Only load if we're in the "edit page" view
-				if(!container.hasClass('CMSMain')) return;
+				if(!container.hasClass('CMSMain') || container.hasClass('CMSPagesController')) return;
 
 				// Load this page in the admin interface if appropriate
 				var id = $(doc).find('meta[name=x-page-id]').attr('content'), contentPanel = $('.cms-content');
 				// TODO Remove hardcoding
-				if(id && contentPanel.find(':input[name=ID]').val() != id) contentPanel.loadPanel('admin/page/edit/show/' + id);
+				if(id && contentPanel.find(':input[name=ID]').val() != id) {
+					window.History.pushState({}, '', 'admin/page/edit/show/' + id);
+				}
 			},
 			
 			_fixIframeLinks: function() {
@@ -69,7 +77,7 @@
 					if (href && href.match(/^http:\/\//)) {
 						links[i].setAttribute('href', 'javascript:false');
 					} else {
-						links[i].setAttribute('href', href + '?cms-preview=1');
+						links[i].setAttribute('href', href + '?cms-preview-disabled=1');
 					}
 				}
 			},

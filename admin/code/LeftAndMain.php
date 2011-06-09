@@ -69,6 +69,7 @@ class LeftAndMain extends Controller {
 	 */
 	static $allowed_actions = array(
 		'index',
+		'save',
 		'savetreenode',
 		'getitem',
 		'getsubtree',
@@ -241,6 +242,9 @@ class LeftAndMain extends Controller {
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js');
 		
 		Requirements::javascript(THIRDPARTY_DIR . '/behaviour/behaviour.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js');
@@ -300,6 +304,9 @@ class LeftAndMain extends Controller {
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
 				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js',
 				SAPPHIRE_DIR . '/javascript/TreeDropdownField.js',
@@ -332,6 +339,16 @@ class LeftAndMain extends Controller {
 		// The user's theme shouldn't affect the CMS, if, for example, they have replaced
 		// TableListField.ss or Form.ss.
 		SSViewer::set_theme(null);
+	}
+	
+	function handleRequest($request) {
+		$response = parent::handleRequest($request);
+		$response->addHeader('X-Controller', $this->class);
+		return $response;
+	}
+
+	function index($request) {
+		return ($this->isAjax()) ? $this->show($request) : $this->getViewer('index')->process($this);
 	}
 
 	

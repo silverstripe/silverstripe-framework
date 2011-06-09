@@ -66,6 +66,8 @@
 			redraw: function() {
 				this.find('.historyNav .forward').toggle(Boolean(this.getFuture().length > 0));
 				this.find('.historyNav .back').toggle(Boolean(this.getHistory().length > 1));
+				
+				this._super();
 			},
 		
 			/**
@@ -116,7 +118,7 @@
 					this.trigger('historyGoBack', {url:previousPage});
 				
 					// load new location
-					$('.cms-edit-form').loadForm(previousPage);
+					$('.cms-content').loadForm(previousPage);
 				
 					this.redraw();
 				}
@@ -136,7 +138,7 @@
 					this.trigger('historyGoForward', {url:nextPage});
 				
 					// load new location
-					$('.cms-edit-form').loadForm(nextPage);
+					$('.cms-content').loadForm(nextPage);
 				
 					this.redraw();
 				}

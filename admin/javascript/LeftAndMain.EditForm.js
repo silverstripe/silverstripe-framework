@@ -79,6 +79,13 @@
 					$(this).remove();
 				});
 				
+				// Remove all TinyMCE instances
+				if((typeof tinymce != 'undefined') && tinymce.editors) {
+					$(tinymce.editors).each(function() {
+						if(typeof(this.remove) == 'function') this.remove();
+					});
+				}
+				
 				this._super();
 			},
 		
@@ -150,20 +157,6 @@
 				this.trigger('validate', {isValid: isValid});
 	
 				return isValid;
-			},
-
-			/**
-			 * Function: cleanup
-			 * 
-			 * Remove all the currently active TinyMCE editors.
-			 * Note: Everything that calls this externally has an inappropriate coupling to TinyMCE.
-			 */
-			cleanup: function() {
-				if((typeof tinymce != 'undefined') && tinymce.editors) {
-					$(tinymce.editors).each(function() {
-						if(typeof(this.remove) == 'function') this.remove();
-					});
-				}
 			}
 		});
 

@@ -41,13 +41,15 @@
 		 *  loadnewpage - ...
 		 */
 		$('.LeftAndMain').entwine({
-
+			
+			CurrentXHR: null,
+			
 			/**
 			 * Constructor: onmatch
 			 */
 			onmatch: function() {
 				var self = this;
-				
+
 				// Browser detection
 				if($.browser.msie && parseInt($.browser.version, 10) < 7) {
 					$('.ss-loading-screen').append(
@@ -68,6 +70,10 @@
 				$(window).unbind('resize', positionLoadingSpinner);
 
 				$('.cms-edit-form').live('loadnewpage', function() {self.redraw()});
+				
+				 History.Adapter.bind(window,'statechange',function(){ 
+					self.handleStateChange();
+				});
 
 				this._super();
 			},
@@ -77,6 +83,53 @@
 				var editForm = this.find('.cms-edit-form[data-layout]').layout();
 				this.find('.cms-content').layout();
 				this.find('.cms-container').layout({resize: false})
+			},
+			
+			/**
+			 * Handles ajax loading of new panels through the window.History object.
+			 * To trigger loading, pass a new URL to window.History.pushState().
+			 * 
+			 * Due to the nature of history management, no callbacks are allowed.
+			 * Use the 'beforestatechange' and 'afterstatechange' events instead,
+			 * or overwrite the beforeLoad() and afterLoad() methods on the 
+			 * DOM element you're loading the new content into.
+			 * Although you can pass data into pushState(), it shouldn't contain 
+			 * DOM elements or callback closures.
+			 * 
+			 * The passed URL should allow reconstructing important interface state
+			 * without additional parameters, in the following use cases:
+			 * - Explicit loading through History.pushState()
+			 * - Implicit loading through browser navigation event triggered by the user (forward or back)
+			 * - Full window refresh without ajax
+			 * For example, a ModelAdmin search event should contain the search terms
+			 * as URL parameters, and the result display should automatically appear 
+			 * if the URL is loaded without ajax.
+			 * 
+			 * Alternatively, you can load new content via $('.cms-content').loadForm(<url>).
+			 * In this case, the action won't be recorded in the browser history.
+			 */
+			handleStateChange: function() {
+				var self = this, h = window.History, state = h.getState(); 
+				
+				// Don't allow parallel loading to avoid edge cases
+				if(this.getCurrentXHR()) this.getCurrentXHR().abort();
+				
+				// TODO Support loading into multiple panels
+				var contentEl = $(state.data.selector || '.LeftAndMain .cms-content');
+				this.trigger('beforestatechange', {state: state});
+				contentEl.beforeLoad(state.url);
+				
+				var xhr = $.ajax({
+					url: state.url,
+					success: function(data, status, xhr) {
+						// Update panels
+						contentEl.afterLoad(data, status, xhr);
+						self.redraw();
+						
+						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr});
+					}
+				});
+				this.setCurrentXHR(xhr);
 			}
 		});
 		

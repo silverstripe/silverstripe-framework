@@ -20,11 +20,7 @@
 
 					var url = $(node).find('a:first').attr('href');
 					if(url && url != '#') {
-						var xmlhttp = self.loadForm(
-							url,
-							null,
-							function(response) {}
-						);
+						window.History.pushState({}, '', url);
 					} else {
 						self.removeForm();
 					}
@@ -33,9 +29,18 @@
 				this._super();
 			},
 			
+			onunmatch: function() {
+				this._super();
+			},
+
 			beforeLoad: function(url) {
 				this.addClass('loading');
 				this.cleanup();
+			},
+			
+			afterLoad: function(data, status, xhr) {
+				this.removeClass('loading');
+				this.replaceWith(data);
 			},
 			
 			cleanup: function() {
