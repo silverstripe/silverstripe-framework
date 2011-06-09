@@ -122,6 +122,10 @@
 				var xhr = $.ajax({
 					url: state.url,
 					success: function(data, status, xhr) {
+						// Update title
+						var title = xhr.getResponseHeader('X-Title');
+						if(title) document.title = title;
+						
 						// Update panels
 						contentEl.afterLoad(data, status, xhr);
 						self.redraw();

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-language" content="$i18nLocale" />
 <% base_tag %>
-<title>$ApplicationName | $SectionTitle</title>
+<title>$Title</title>
 </head>
 
 <body class="loading cms $CSSClasses">

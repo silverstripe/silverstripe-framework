@@ -342,8 +342,12 @@ class LeftAndMain extends Controller {
 	}
 	
 	function handleRequest($request) {
+		$title = $this->Title();
+		
 		$response = parent::handleRequest($request);
 		$response->addHeader('X-Controller', $this->class);
+		$response->addHeader('X-Title', $title);
+		
 		return $response;
 	}
 
@@ -1174,6 +1178,13 @@ class LeftAndMain extends Controller {
 	 */
 	function getApplicationName() {
 		return self::$application_name;
+	}
+	
+	/**
+	 * @return String
+	 */
+	function Title() {
+		return sprintf('%s | %s', $this->getApplicationName(), $this->SectionTitle());
 	}
 
 	/**
