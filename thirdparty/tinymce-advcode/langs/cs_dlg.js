@@ -1,4 +1,4 @@
-tinyMCE.addI18n('en.advcode_dlg',{
+tinyMCE.addI18n('cs.advcode_dlg',{
   title : 'HTML Editor zdrojového kódu',
   number_toggle : 'Čísla řádků'
 })

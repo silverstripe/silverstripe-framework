@@ -1,3 +1,3 @@
-tinyMCE.addI18n('en.advcode',{
+tinyMCE.addI18n('cs.advcode',{
   desc : 'Editovat HTML zdrojový kód'
 })
