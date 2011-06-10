@@ -7,10 +7,13 @@
 	display: block;
 	padding: 10px 0;
 	border-bottom: 1px solid $color-shadow-light;
-			
-	label {
+	overflow: hidden;
+	
+	label.left {
 		float: left;
-		width: 10em;
+		width: 170px;
+		padding: 8px 20px 8px 4px;
+		line-height: $font-base-lineheight;
 	}
 	
 	// Don't float inner/contained fields
@@ -55,14 +58,16 @@ form.nostyle {
 }
 
 input, textarea {
-	@include border-radius(5px);
+	@include border-radius(4px);
+	background: #fff;
 	@include linear-gradient(color-stops(
-		$color-widget-bg, 
-		lighten($color-widget-bg, 10%), 
-		$color-widget-bg
+		#efefef,
+		#fff 10%,
+		#fff 90%,
+		#efefef
 	));
-	border: 1px solid $color-shadow-light;
-	padding: 3px;
+	border: 1px solid lighten($color-medium-separator, 20%);
+	padding: 7px;
 }
 
 input.loading,
@@ -105,9 +110,10 @@ input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loadin
 	
 	.text input, textarea {
 		width: 300px;
+		font-family: $font-family;
+		font-size: $font-base-size;
 	}
 
-	// TODO Unclear if "button bar" concept is edit form specific
 	.Actions {
 		text-align: right;
 	}

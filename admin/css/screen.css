@@ -153,8 +153,8 @@ li.jstree-closed > ul { display: none; }
 .cms-menu-list li.current li.first a { border-top: none; }
 
 /** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in sapphire/css/Form.css. */
-.field { display: block; padding: 10px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); }
-.field label { float: left; width: 10em; }
+.field { display: block; padding: 10px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); overflow: hidden; }
+.field label.left { float: left; width: 170px; padding: 8px 20px 8px 4px; line-height: 16px; }
 .field .middleColumn { margin-left: 10em; }
 .field .middleColumn .field { display: inline; padding: 0; border: none; }
 .field .middleColumn label { float: none; width: auto; }
@@ -165,7 +165,7 @@ form.nostyle .middleColumn { margin-left: 0; }
 
 .field.nolabel .middleColumn { margin-left: 0; }
 
-input, textarea { -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; -ms-border-radius: 5px; -khtml-border-radius: 5px; border-radius: 5px; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #eceff1), color-stop(50%, #ffffff), color-stop(100%, #eceff1)); background-image: -moz-linear-gradient(top, #eceff1 0%, #ffffff 50%, #eceff1 100%); background-image: linear-gradient(top, #eceff1 0%, #ffffff 50%, #eceff1 100%); border: 1px solid rgba(201, 205, 206, 0.8); padding: 3px; }
+input, textarea { -moz-border-radius: 4px; -webkit-border-radius: 4px; -o-border-radius: 4px; -ms-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; background: #fff; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -moz-linear-gradient(top, #efefef 0%, #ffffff 10%, #ffffff 90%, #efefef 100%); background-image: linear-gradient(top, #efefef 0%, #ffffff 10%, #ffffff 90%, #efefef 100%); border: 1px solid #b3b3b3; padding: 7px; }
 
 input.loading, input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, .ui-widget-header input.ui-state-default.loading { padding-left: 16px; background: #eceff1 url(../../images/network-save.gif) no-repeat center left; }
 
@@ -176,7 +176,7 @@ input.loading, input.ui-state-default.loading, .ui-widget-content input.ui-state
 .ss-ui-button.ss-ui-action-minor, .ui-widget-content .ss-ui-button.ss-ui-action-minor .ui-widget-header .ss-ui-button.ss-ui-action-minor { background: none; padding: 0; border: 0; color: #1f1f1f; text-decoration: underline; }
 
 .cms-edit-form { padding-bottom: 20px; }
-.cms-edit-form .text input, .cms-edit-form textarea { width: 300px; }
+.cms-edit-form .text input, .cms-edit-form textarea { width: 300px; font-family: Arial, sans-serif; font-size: 13px; }
 .cms-edit-form .Actions { text-align: right; }
 
 .cms-content-tools .field label { float: none; width: auto; }
@@ -220,7 +220,7 @@ body .ui-widget { font-family: Arial, sans-serif; font-size: 13px; }
 strong { font-weight: bold; }
 
 /** -------------------------------------------- Misc Panels -------------------------------------------- */
-.cms-content-header { background-color: #b1bec6; padding: 8px 8px 6px 8px; height: 32px; border-bottom: 2px solid #8598a5; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b1bec6), color-stop(100%, #94a5b0)); background-image: -moz-linear-gradient(top, #b1bec6 0%, #94a5b0 100%); background-image: linear-gradient(top, #b1bec6 0%, #94a5b0 100%); }
+.cms-content-header { background-color: #b0bec7; padding: 8px 8px 6px 8px; height: 32px; border-bottom: 2px solid #8399a7; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b0bec7), color-stop(100%, #92a5b2)); background-image: -moz-linear-gradient(top, #b0bec7 0%, #92a5b2 100%); background-image: linear-gradient(top, #b0bec7 0%, #92a5b2 100%); }
 .cms-content-header h2 { float: left; padding: 12px 0 0 8px; font-size: 13px; font-weight: bold; width: 230px; }
 .cms-content-header > div { width: 9999em; overflow: hidden; }
 .cms-content-header .cms-content-header-tabs { float: left; }
@@ -230,7 +230,7 @@ strong { font-weight: bold; }
 .ui-tabs .cms-content-header .ui-state-active, .ui-tabs .cms-content-header .ui-widget-content .ui-state-active, .ui-tabs .cms-content-header .ui-widget-header .ui-state-active { background: #eceff1; }
 .ui-tabs .cms-content-header .ui-state-active a, .ui-tabs .cms-content-header .ui-widget-content .ui-state-active a, .ui-tabs .cms-content-header .ui-widget-header .ui-state-active a { border-bottom: 2px solid #eceff1; }
 
-.cms-content-tools { background-color: #dde3e6; padding: 8px; width: 230px; overflow: auto; }
+.cms-content-tools { background-color: #dde3e7; padding: 8px; width: 230px; overflow: auto; }
 
 /** ------------------------------------------------------- Top Left Header and logo area -------------------------------------------------------- */
 .cms-header { background-color: #00111d; position: relative; padding: 16px 8px 8px; line-height: 24px; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #00111d), color-stop(50%, #003050), color-stop(100%, #00111d)); background-image: -moz-linear-gradient(top, #00111d 0%, #003050 50%, #00111d 100%); background-image: linear-gradient(top, #00111d 0%, #003050 50%, #00111d 100%); }
