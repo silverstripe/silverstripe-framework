@@ -323,7 +323,8 @@
 			}
 		})
 		
-	});
+	});	 
+	
 }(jQuery));
 
 // Backwards compatibility

@@ -143,23 +143,37 @@ li.jstree-closed > ul { display: none; }
 .cms-menu.collapsed .cms-menu-list li ul { display: none; }
 .cms-menu.collapsed.cms-panel .cms-panel-content { display: block; }
 
-.cms-menu-list li a { display: block; height: 30px; line-height: 30px; vertical-align: middle; font-size: 13px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-shadow: #bfcad2 1px 1px 0; color: #1f1f1f; padding: 5px; background-color: #b0bec7; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b0bec7), color-stop(100%, #98aab6)); background-image: -moz-linear-gradient(top, #b0bec7 0%, #98aab6 100%); background-image: linear-gradient(top, #b0bec7 0%, #98aab6 100%); border-top: 1px solid #ced7dc; border-bottom: 1px solid #748d9d; }
+.cms-menu-list li a { display: block; height: 30px; line-height: 30px; vertical-align: middle; font-size: 13px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-shadow: #bfcad2 1px 1px 0; color: #1f1f1f; padding: 5px 5px 5px 12px; background-color: #b0bec7; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b0bec7), color-stop(100%, #8ca1ae)); background-image: -moz-linear-gradient(top, #b0bec7 0%, #8ca1ae 100%); background-image: linear-gradient(top, #b0bec7 0%, #8ca1ae 100%); border-top: 1px solid #ced7dc; border-bottom: 1px solid #748d9d; }
 .cms-menu-list li a:hover { text-decoration: none; background-color: #b6c3cb; border-bottom: 1px solid #8399a7; color: #2c2c2c; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #bfcad2), color-stop(100%, #b0bec7)); background-image: -moz-linear-gradient(top, #bfcad2 0%, #b0bec7 100%); background-image: linear-gradient(top, #bfcad2 0%, #b0bec7 100%); }
 .cms-menu-list li a:focus { border-top: 1px solid #a1b2bc; text-decoration: none; background-color: #a1b2bc; color: #393939; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #92a5b2), color-stop(100%, #a1b2bc)); background-image: -moz-linear-gradient(top, #92a5b2 0%, #a1b2bc 100%); background-image: linear-gradient(top, #92a5b2 0%, #a1b2bc 100%); }
 .cms-menu-list li a .icon { display: block; float: left; margin-right: 4px; }
+.cms-menu-list li a:hover .icon { background-position: -32px 0px; }
 .cms-menu-list li a .text { display: block; }
 .cms-menu-list li.current a { color: white; text-shadow: #1e5270 0 -1px 0; border-top: 1px solid #55a4d2; border-bottom: 1px solid #1e5270; background-color: #338dc1; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #338dc1), color-stop(100%, #287099)); background-image: -moz-linear-gradient(top, #338dc1 0%, #287099 100%); background-image: linear-gradient(top, #338dc1 0%, #287099 100%); }
 .cms-menu-list li.current ul { border-top: 1px solid #1e5270; }
-.cms-menu-list li.current li { background-color: #287099; }
-.cms-menu-list li.current li a { font-size: 12px; padding: 0 10px 0 36px; height: 32px; line-height: 32px; color: #e2f0f7; background: none; border-top: 1px solid #338dc1; border-bottom: 1px solid #1e5270; }
-.cms-menu-list li.current li a.current, .cms-menu-list li.current li a:hover { background: #2e7ead; border-top: 1px solid #2e7ead; color: white; }
-.cms-menu-list li.current li a:focus { background: #236184; border-top: 1px solid #1e5270; color: white; }
-.cms-menu-list li.current li.current a { font-weight: bold; color: white; }
-.cms-menu-list li.current li.first a { border-top: none; }
+.cms-menu-list li.current a .icon { background-position: -32px 0px; }
+.cms-menu-list li ul { display: none; }
+.cms-menu-list li.opened ul { display: block; }
+.cms-menu-list li li li { background-color: #287099; }
+.cms-menu-list li li li a { font-size: 12px; padding: 0 10px 0 48px; height: 32px; line-height: 32px; color: #e2f0f7; background: none; border-top: 1px solid #338dc1; border-bottom: 1px solid #1e5270; }
+.cms-menu-list li li li a.current, .cms-menu-list li li li a:hover { background: #2e7ead; border-top: 1px solid #2e7ead; color: white; }
+.cms-menu-list li li li a:focus { background: #236184; border-top: 1px solid #1e5270; color: white; }
+.cms-menu-list li li li.current a { font-weight: bold; color: white; }
+.cms-menu-list li li li.first a { border-top: none; }
+.cms-menu-list li#Menu-CMSMain a .icon { background-position: 0px 0px; }
+.cms-menu-list li#Menu-CMSMain.current a .icon, .cms-menu-list li#Menu-CMSMain a:hover .icon { background-position: -32px 0px; }
+.cms-menu-list li#Menu-AssetAdmin a .icon { background-position: 0px -96px; }
+.cms-menu-list li#Menu-AssetAdmin.current a .icon, .cms-menu-list li#Menu-AssetAdmin a:hover .icon { background-position: -32px -96px; }
+.cms-menu-list li#Menu-SecurityAdmin a .icon { background-position: 0px -128px; }
+.cms-menu-list li#Menu-SecurityAdmin.current a .icon, .cms-menu-list li#Menu-SecurityAdmin a:hover .icon { background-position: -32px -128px; }
+.cms-menu-list li#Menu-CMSPagesController a .icon { background-position: 0px -32px; }
+.cms-menu-list li#Menu-CMSPagesController.current a .icon, .cms-menu-list li#Menu-CMSPagesController a:hover .icon { background-position: -32px -32px; }
+.cms-menu-list.collapsed li .text { display: none; }
+.cms-menu-list.collapsed li > li { display: none; }
 
 /** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in sapphire/css/Form.css. */
-.field { display: block; padding: 10px 0; border-bottom-width: 2px; border-bottom: 2px groove white; -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
-.field label { float: left; width: 15em; font-weight: bold; padding: 5px 0; font-size: 11px; }
+.field { display: block; padding: 10px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); overflow: hidden; }
+.field label.left { float: left; width: 170px; padding: 8px 20px 8px 4px; line-height: 16px; }
 .field .middleColumn { margin-left: 15em; }
 .field .middleColumn .field { display: inline; padding: 0; border: none; }
 .field .middleColumn label { float: none; width: auto; }
@@ -173,24 +187,48 @@ form.nostyle .middleColumn { margin-left: 0; }
 
 .field.nolabel .middleColumn { margin-left: 0; }
 
-input, textarea { -moz-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px; -khtml-border-radius: 3px; border-radius: 3px; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #ffffff), color-stop(100%, #f2f4f5)); background-image: -moz-linear-gradient(top, #ffffff 0%, #f2f4f5 100%); background-image: linear-gradient(top, #ffffff 0%, #f2f4f5 100%); border: 1px solid rgba(201, 205, 206, 0.8); padding: 3px; }
+input, textarea { -moz-border-radius: 4px; -webkit-border-radius: 4px; -o-border-radius: 4px; -ms-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; background: #fff; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -moz-linear-gradient(top, #efefef 0%, #ffffff 10%, #ffffff 90%, #efefef 100%); background-image: linear-gradient(top, #efefef 0%, #ffffff 10%, #ffffff 90%, #efefef 100%); border: 1px solid #b3b3b3; padding: 7px; }
 
 input.loading, input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, .ui-widget-header input.ui-state-default.loading { padding-left: 16px; background: #eceff1 url(../../images/network-save.gif) no-repeat center left; }
 
-.ss-ui-button.ss-ui-action-constructive, .ui-widget-content .ss-ui-button.ss-ui-action-constructive, .ui-widget-header .ss-ui-button.ss-ui-action-constructive { background: none; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #77b53f), color-stop(100%, #456925)); background-image: -moz-linear-gradient(top, #77b53f 0%, #456925 100%); background-image: linear-gradient(top, #77b53f 0%, #456925 100%); color: white; }
+.ui-state-hover { cursor: pointer; }
+
+.ss-ui-button.ss-ui-action-constructive, .ui-widget-content .ss-ui-button.ss-ui-action-constructive, .ui-widget-header .ss-ui-button.ss-ui-action-constructive { padding: 5px 7px 5px 23px; color: white; border-color: #118021; background: url('../images/../images/btn_icons_sprite.png?1309961413') no-repeat 5px 6px, linear-gradient(#84be3f, #128945); text-shadow: #475964 1px 1px 0 1px 1px 1px; -moz-box-shadow: #748d9d 1px 1px 2px 1px 1px 5px 0; -webkit-box-shadow: #748d9d 1px 1px 2px 1px 1px 5px 0; -o-box-shadow: #748d9d 1px 1px 2px 1px 1px 5px 0; box-shadow: #748d9d 1px 1px 2px 1px 1px 5px 0; }
+
+.ss-ui-button.ss-ui-action-constructive.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1309961413') no-repeat 5px 6px, linear-gradient(#7fb63c, #107b3e); -moz-box-shadow: #92a5b2 1px 1px 1px 1px 1px 5px 0; -webkit-box-shadow: #92a5b2 1px 1px 1px 1px 1px 5px 0; -o-box-shadow: #92a5b2 1px 1px 1px 1px 1px 5px 0; box-shadow: #92a5b2 1px 1px 1px 1px 1px 5px 0; }
+
+.ss-ui-button.ss-ui-action-constructive.cms-page-add-button { background: url('../images/../images/btn_icons_sprite.png?1309961413') no-repeat 5px -155px, linear-gradient(#84be3f, #128945); }
+
+.ss-ui-button.ss-ui-action-constructive.cms-page-add-button.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1309961413') no-repeat 5px -155px, linear-gradient(#7fb63c, #107b3e); -moz-box-shadow: #92a5b2 1px 1px 1px 1px 1px 5px 0; -webkit-box-shadow: #92a5b2 1px 1px 1px 1px 1px 5px 0; -o-box-shadow: #92a5b2 1px 1px 1px 1px 1px 5px 0; box-shadow: #92a5b2 1px 1px 1px 1px 1px 5px 0; }
 
 .ss-ui-button.ss-ui-action-destructive, .ui-widget-content .ss-ui-button.ss-ui-action-destructive, .ui-widget-header .ss-ui-button.ss-ui-action-destructive { color: red; }
+
+.ss-ui-button.ss-ui-action-destructive.delete { padding: 5px 7px 5px 23px; color: red; border-color: #ababab; background: url('../images/../images/btn_icons_sprite.png?1309961413') no-repeat 5px -26px, linear-gradient(#f5f5f5, #c3c3c3); text-shadow: none; -moz-box-shadow: #aab9c3 1px 1px 2px 1px 1px 5px 0; -webkit-box-shadow: #aab9c3 1px 1px 2px 1px 1px 5px 0; -o-box-shadow: #aab9c3 1px 1px 2px 1px 1px 5px 0; box-shadow: #aab9c3 1px 1px 2px 1px 1px 5px 0; }
+
+.ss-ui-button.ss-ui-action-destructive.delete.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1309961413') no-repeat 5px -26px, linear-gradient(#f0f0f0, #bbbbbb); -moz-box-shadow: #92a5b2 1px 1px 1px 1px 1px 5px 0; -webkit-box-shadow: #92a5b2 1px 1px 1px 1px 1px 5px 0; -o-box-shadow: #92a5b2 1px 1px 1px 1px 1px 5px 0; box-shadow: #92a5b2 1px 1px 1px 1px 1px 5px 0; }
 
 .ss-ui-button.ss-ui-action-minor, .ui-widget-content .ss-ui-button.ss-ui-action-minor .ui-widget-header .ss-ui-button.ss-ui-action-minor { background: none; padding: 0; border: 0; color: #1f1f1f; text-decoration: underline; }
 
 .cms-edit-form { padding-bottom: 20px; }
-.cms-edit-form .text input, .cms-edit-form textarea { width: 99%; }
+.cms-edit-form .text input, .cms-edit-form textarea { width: 300px; font-family: Arial, sans-serif; font-size: 13px; }
 .cms-edit-form .Actions { text-align: right; }
 
 .cms-content-tools .field label { float: none; width: auto; }
 .cms-content-tools .field .middleColumn { margin-left: 0; }
 
+.cms-content-toolbar { display: block; padding: 10px 0; margin: 0 0 15px 0; border-bottom-width: 2px; border-bottom: 2px groove white; -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
+
+.cms-content-batchactions, .cms-content-constructive-actions { float: right; }
+
+.cms-content-batchactions { position: relative; display: block; margin-right: 8px; }
+
+form.cms-batch-actions { float: left; }
+
+.cms-content-constructive-actions a { display: block; }
+
 .field#ViewerGroups label, .field#EditorGroups label, .field#CreateTopLevelGroups label { display: none; }
+
+.action-hidden { display: none; }
 
 /** This file defines CMS-specific customizations to the jQuery UI theme. Every rule in this file should be wrapped in the '.cms' selector (to make it more specific), and contain ONLY overwritten jQuery UI rules (with 'ui-' prefix).  This file should be fairly short, as we're using our own custom jQuery UI theme already. TODO Add theme reference  Use _style.scss to add more generic style information, and read the jQuery UI theming API: http://jqueryui.com/docs/Theming/API */
 .cms .ui-tabs { padding: 0; }
@@ -199,9 +237,11 @@ input.loading, input.ui-state-default.loading, .ui-widget-content input.ui-state
 .cms .ui-tabs .ui-tabs-nav li { top: 0; }
 .cms .ui-tabs .ui-tabs-nav li a { padding: 0 15px; }
 .cms .ui-tabs .ui-tabs-nav.ui-state-active { border-color: gray; }
-.cms .ui-widget-content, .cms .ui-tabs .ui-tabs-panel { color: #444444; font-size: 13px; border: 0; background: #eceff1; }
+.cms .ui-widget-content, .cms .ui-tabs .ui-tabs-panel { color: #444444; font-size: 13px; border: 0; background: transparent; }
 .cms .ui-widget-header { background: #eceff1; border: 0; padding: 0; }
 .cms .ss-ui-button { padding: 5px; text-decoration: none; }
+
+.cms-content-form { overflow: auto; background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left !important; }
 
 /** This file defines the 'theme' of the CMS: Colors, fonts, backgrounds, and detailed alignments. Together with _layout.css it provides the presentational backbone to the CMS. Ideally a developer should be able to exchange this file with his own theme easily.  Please don't put any dimension, display or float information on major structural components like '.cms-container' or '.cms-header' in here, use the _layout.scss file instead.  Use SCSS variable definitions in screen.css to avoid repeating styles like background colours or padding dimensions. See _colours.scss to get started.  To avoid this file getting too large and complicated, it is encouraged to create new SCSS files for larger components like the CMS menu or tree (see _tree.scss and _menu.scss). */
 /** ---------------------------------------------------- Core Styles ---------------------------------------------------- */
@@ -228,8 +268,8 @@ body .ui-widget { font-family: Arial, sans-serif; font-size: 13px; }
 strong { font-weight: bold; }
 
 /** -------------------------------------------- Misc Panels -------------------------------------------- */
-.cms-content-header { background-color: #b1bec6; padding: 8px 8px 6px 8px; height: 32px; border-bottom: 2px solid #8598a5; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b1bec6), color-stop(100%, #94a5b0)); background-image: -moz-linear-gradient(top, #b1bec6 0%, #94a5b0 100%); background-image: linear-gradient(top, #b1bec6 0%, #94a5b0 100%); }
-.cms-content-header h2 { float: left; padding: 12px 0 0 8px; font-size: 13px; font-weight: bold; width: 230px; }
+.cms-content-header { background-color: #b1bec6; padding: 8px 8px 6px 8px; height: 32px; border-bottom: 2px solid #8598a5; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #dde3e6), color-stop(100%, #94a5b0)); background-image: -moz-linear-gradient(top, #dde3e6 0%, #94a5b0 100%); background-image: linear-gradient(top, #dde3e6 0%, #94a5b0 100%); border-bottom: 3px solid #5e7280; padding: 8px; height: 32px; }
+.cms-content-header h2 { float: left; padding: 12px 0 0 8px; font-size: 13px; font-weight: bold; text-shadow: #ced7dc 1px 1px 0; width: 230px; }
 .cms-content-header > div { width: 9999em; overflow: hidden; }
 .cms-content-header .cms-content-header-tabs { float: left; }
 
@@ -239,6 +279,7 @@ strong { font-weight: bold; }
 .ui-tabs .cms-content-header .ui-state-active a, .ui-tabs .cms-content-header .ui-widget-content .ui-state-active a, .ui-tabs .cms-content-header .ui-widget-header .ui-state-active a { border-bottom: 2px solid #eceff1; }
 
 .cms-content-tools { background-color: #dde3e6; padding: 8px; width: 230px; overflow: auto; }
+.cms-content-tools .cms-panel-header, .cms-content-tools .cms-panel-content { padding: 10px; }
 
 .cms-content.loading { background: url(../images/spinner.gif) no-repeat 50% 50%; }
 
@@ -249,7 +290,7 @@ strong { font-weight: bold; }
 
 .cms-logo { border-bottom: 1px solid #03090c; height: 31px; overflow: hidden; padding: 0 4px; vertical-align: middle; }
 .cms-logo .version { display: none; }
-.cms-logo a { display: inline-block; height: 25px; width: 25px; float: left; margin-right: 10px; background: url('../images/logo_small.png?1306827534') no-repeat; text-indent: -9999em; }
+.cms-logo a { display: inline-block; height: 25px; width: 25px; float: left; margin-right: 10px; background: url('../images/logo_small.png?1309939638') no-repeat; text-indent: -9999em; }
 
 .cms-login-status { border-top: 1px solid #19435c; height: 23px; padding: 8px 4px 0 4px; overflow: hidden; line-height: 16px; font-size: 11px; }
 .cms-login-status .logout-link { display: inline-block; height: 16px; width: 16px; float: left; margin: 0 15px 0 5px; background: url(../images/logout.png) no-repeat; text-indent: -9999em; }
