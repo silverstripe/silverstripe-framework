@@ -68,13 +68,15 @@ strong {
 .cms-content-header {
 	background-color: darken($color-widget-bg, 20%);
 	padding: 8px 8px 6px 8px;	
-	height: 32px;
 	border-bottom: 2px solid darken($color-widget-bg, 35%);
-
 	@include linear-gradient(color-stops(
-		darken($color-widget-bg, 20%),
+		darken($color-widget-bg, 5%),
 		darken($color-widget-bg, 30%)
 	));
+	
+	border-bottom: 3px solid darken($color-widget-bg, 50%);
+	padding: 8px;	
+	height: 32px;
 
 	
 	h2 {
@@ -82,6 +84,7 @@ strong {
 		padding: 12px 0 0 8px;
 		font-size: $font-base-size;
 		font-weight: bold;
+		text-shadow: lighten($color-base, 10%) 1px 1px 0;
 		width: 250px - (10px*2);
 	}
 
@@ -113,7 +116,7 @@ strong {
 			$color-tab,
 			darken($color-tab, 10%)
 		));
-		
+		/*border-bottom: 3px solid darken($color-widget-bg, 50%) !important;*/
 		border-color: darken($color-tab, 20%);
 		margin: 0 3px 0 0;
 		text-shadow: lighten($color-tab, 60%) 0 1px 0;
@@ -122,11 +125,12 @@ strong {
 	.ui-state-active, 
 	.ui-widget-content .ui-state-active, 
 	.ui-widget-header .ui-state-active {
-		background: $color-widget-bg;
-		
+		background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left;
+				
 		a {
 			border-bottom: 2px solid $color-widget-bg;
 		}
+
 	}
 }
 
@@ -192,7 +196,7 @@ strong {
 .cms-login-status {
 	border-top: 1px solid $color-dark-separator;
 	height: 23px;
-	padding: 8px 0 0 14px;
+	padding: 8px 4px 0 4px;
 	overflow: hidden;
 	line-height: 16px;
 	font-size: $font-base-size - 2;
@@ -202,7 +206,7 @@ strong {
 		height: 16px;
 		width: 16px;
 		float: left;
-		margin-right: 10px;
+		margin: 0 15px 0 5px;
 		background: url(../images/logout.png) no-repeat;
 		text-indent: -9999em;
 	}
@@ -261,6 +265,7 @@ strong {
 
 .cms-content-actions {
 	padding: 8px;
+	background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left;
 }
 
 // ######################### Messages #########################
@@ -415,6 +420,7 @@ form.member-profile-form {
 
 .cms-content-form {
 	overflow: auto;
+	background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left;
 }
 
 .cms-preview {
