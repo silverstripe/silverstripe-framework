@@ -18,16 +18,33 @@
 			border: 0;
 			background: none;
 		}
+	 	
+		.ui-tabs-nav {
+			margin: 0;
+			padding: 0;
+			
+			li {
+				top: 0;
+				
+				a {
+					padding: 0 15px;
+				}
+			}
+			
+			&.ui-state-active {
+				border-color: $color-medium-separator;
+			}
+		}
 	}
 	
 	.ui-widget-content,
 	.ui-tabs .ui-tabs-panel {
 		color: $color-text;
-		font-size: 1em;
+		font-size: $font-base-size;
 		border: 0;
 		background: transparent;
 	}
-	
+
 	.ui-widget-header {
 		background: $color-widget-bg;
 		border: 0;

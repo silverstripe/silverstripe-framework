@@ -10,14 +10,16 @@
 	border-bottom: 2px groove lighten($color-shadow-light, 95%);
 	-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
 	border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+	//TODO: use single border line with shadow instead:: http://daverupert.com/2011/06/two-tone-borders-with-css3/
 	//@include border-image(url(../images/textures/bg_fieldset_elements_border.png), 2, stretch); //not yet supported
+	overflow: hidden;
 	
-	label {
+	label.left {
 		float: left;
-		width: 15em;
+		width: 170px;
 		font-weight: bold;
-		padding: 5px 0;
-		font-size: 11px;
+		padding: 8px 20px 8px 4px;
+		line-height: $font-base-lineheight;
 	}
 	
 	// Don't float inner/contained fields
@@ -74,13 +76,16 @@ form.nostyle {
 }
 
 input, textarea {
-	@include border-radius(3px);
+	@include border-radius(4px);
+	background: #fff;
 	@include linear-gradient(color-stops(
-		lighten($color-widget-bg, 25%), 
-		lighten($color-widget-bg, 2%)
+		#efefef,
+		#fff 10%,
+		#fff 90%,
+		#efefef
 	));
-	border: 1px solid $color-shadow-light;
-	padding: 3px;
+	border: 1px solid lighten($color-medium-separator, 20%);
+	padding: 7px;
 }
 
 input.loading,
@@ -153,10 +158,11 @@ input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loadin
 	padding-bottom: 20px;
 	
 	.text input, textarea {
-		width: 99%;
+		width: 300px;
+		font-family: $font-family;
+		font-size: $font-base-size;
 	}
 
-	// TODO Unclear if "button bar" concept is edit form specific
 	.Actions {
 		text-align: right;
 	}
