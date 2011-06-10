@@ -270,27 +270,36 @@ input, textarea { -moz-border-radius: 3px; -webkit-border-radius: 3px; -o-border
 input.loading, input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, .ui-widget-header input.ui-state-default.loading { padding-left: 16px; background: #eceff1 url(../../images/network-save.gif) no-repeat center left; }
 
 /* line 96, ../scss/_forms.scss */
-.ss-ui-button.ss-ui-action-constructive, .ui-widget-content .ss-ui-button.ss-ui-action-constructive, .ui-widget-header .ss-ui-button.ss-ui-action-constructive { background: none; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #77b53f), color-stop(100%, #456925)); background-image: -webkit-linear-gradient(top, #77b53f, #456925); background-image: -moz-linear-gradient(top, #77b53f, #456925); background-image: -o-linear-gradient(top, #77b53f, #456925); background-image: linear-gradient(top, #77b53f, #456925); color: white; }
+.ss-ui-button.ss-ui-action-constructive, .ui-widget-content .ss-ui-button.ss-ui-action-constructive, .ui-widget-header .ss-ui-button.ss-ui-action-constructive { padding: 5px 7px 5px 23px; color: white; border-color: #118021; background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px 6px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #84be3f), color-stop(100%, #128945)); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px 6px, -webkit-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px 6px, -moz-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px 6px, -o-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px 6px, linear-gradient(#84be3f, #128945); text-shadow: #475964 1px 1px 0; -moz-box-shadow: #748d9d 1px 1px 2px; -webkit-box-shadow: #748d9d 1px 1px 2px; -o-box-shadow: #748d9d 1px 1px 2px; box-shadow: #748d9d 1px 1px 2px; }
 
-/* line 107, ../scss/_forms.scss */
+/* line 108, ../scss/_forms.scss */
+.ss-ui-button.ss-ui-action-constructive.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px 6px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #7fb63c), color-stop(100%, #107b3e)); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px 6px, -webkit-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px 6px, -moz-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px 6px, -o-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px 6px, linear-gradient(#7fb63c, #107b3e); -moz-box-shadow: #92a5b2 1px 1px 1px; -webkit-box-shadow: #92a5b2 1px 1px 1px; -o-box-shadow: #92a5b2 1px 1px 1px; box-shadow: #92a5b2 1px 1px 1px; }
+
+/* line 118, ../scss/_forms.scss */
 .ss-ui-button.ss-ui-action-destructive, .ui-widget-content .ss-ui-button.ss-ui-action-destructive, .ui-widget-header .ss-ui-button.ss-ui-action-destructive { color: red; }
 
-/* line 113, ../scss/_forms.scss */
+/* line 122, ../scss/_forms.scss */
+.ss-ui-button.ss-ui-action-destructive.delete { padding: 5px 7px 5px 23px; color: red; border-color: #ababab; background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px -26px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f5f5), color-stop(100%, #c3c3c3)); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px -26px, -webkit-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px -26px, -moz-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px -26px, -o-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px -26px, linear-gradient(#f5f5f5, #c3c3c3); text-shadow: none; -moz-box-shadow: #aab9c3 1px 1px 2px; -webkit-box-shadow: #aab9c3 1px 1px 2px; -o-box-shadow: #aab9c3 1px 1px 2px; box-shadow: #aab9c3 1px 1px 2px; }
+
+/* line 134, ../scss/_forms.scss */
+.ss-ui-button.ss-ui-action-destructive.delete.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px -26px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f0f0f0), color-stop(100%, #bbbbbb)); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px -26px, -webkit-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px -26px, -moz-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px -26px, -o-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1307081104') no-repeat 5px -26px, linear-gradient(#f0f0f0, #bbbbbb); -moz-box-shadow: #92a5b2 1px 1px 1px; -webkit-box-shadow: #92a5b2 1px 1px 1px; -o-box-shadow: #92a5b2 1px 1px 1px; box-shadow: #92a5b2 1px 1px 1px; }
+
+/* line 144, ../scss/_forms.scss */
 .ss-ui-button.ss-ui-action-minor, .ui-widget-content .ss-ui-button.ss-ui-action-minor .ui-widget-header .ss-ui-button.ss-ui-action-minor { background: none; padding: 0; border: 0; color: #1f1f1f; text-decoration: underline; }
 
-/* line 121, ../scss/_forms.scss */
+/* line 152, ../scss/_forms.scss */
 .cms-edit-form { padding-bottom: 20px; }
-/* line 124, ../scss/_forms.scss */
+/* line 155, ../scss/_forms.scss */
 .cms-edit-form .text input, .cms-edit-form textarea { width: 99%; }
-/* line 129, ../scss/_forms.scss */
+/* line 160, ../scss/_forms.scss */
 .cms-edit-form .Actions { text-align: right; }
 
-/* line 136, ../scss/_forms.scss */
+/* line 167, ../scss/_forms.scss */
 .cms-content-tools .field label { float: none; width: auto; }
-/* line 141, ../scss/_forms.scss */
+/* line 172, ../scss/_forms.scss */
 .cms-content-tools .field .middleColumn { margin-left: 0; }
 
-/* line 148, ../scss/_forms.scss */
+/* line 179, ../scss/_forms.scss */
 .field#ViewerGroups label, .field#EditorGroups label, .field#CreateTopLevelGroups label { display: none; }
 
 /** This file defines CMS-specific customizations to the jQuery UI theme. Every rule in this file should be wrapped in the '.cms' selector (to make it more specific), and contain ONLY overwritten jQuery UI rules (with 'ui-' prefix).  This file should be fairly short, as we're using our own custom jQuery UI theme already. TODO Add theme reference  Use _style.scss to add more generic style information, and read the jQuery UI theming API: http://jqueryui.com/docs/Theming/API */
