@@ -39,6 +39,7 @@ a {
 	}
 }
 body .ui-widget {
+	font-family: $font-family;
 	font-size: $font-base-size;
 }
 
@@ -61,10 +62,16 @@ strong {
 	font-weight: bold;
 }
 
-// ######################### Misc Panels #########################
+/** --------------------------------------------
+ * Misc Panels
+ * -------------------------------------------- */
 
 .cms-content-header {
 	background-color: darken($color-widget-bg, 20%);
+	padding: 8px 8px 6px 8px;	
+	height: 32px;
+	border-bottom: 2px solid darken($color-widget-bg, 35%);
+
 	@include linear-gradient(color-stops(
 		darken($color-widget-bg, 5%),
 		darken($color-widget-bg, 30%)
@@ -77,8 +84,8 @@ strong {
 	
 	h2 {
 		float: left;
-		padding: 8px;
-		font-size: 14px;
+		padding: 12px 0 0 8px;
+		font-size: $font-base-size;
 		font-weight: bold;
 		text-shadow: lighten($color-base, 10%) 1px 1px 0;
 		width: 250px - (10px*2);
@@ -96,38 +103,42 @@ strong {
 
 .ui-tabs .cms-content-header {
 	.ui-tabs-nav li {
-		height: 37px;
-
 		a {
 			font-weight: bold;
-			font-size: 11px;
-			padding-top: 11px;
+			font-size: $font-base-size;
+			padding: 11px 15px 9px;
+			border-bottom: 2px solid darken($color-tab, 15%);
 		}
 	}
 	
 	.ui-state-default, 
 	.ui-widget-content .ui-state-default, 
 	.ui-widget-header .ui-state-default {
-		background-color: lighten($color-shadow-light, 20%);
+		background-color: $color-tab;
 		@include linear-gradient(color-stops(
-			lighten($color-shadow-light, 20%),
-			lighten($color-shadow-light, 5%)
+			$color-tab,
+			darken($color-tab, 10%)
 		));
-		border: none;
-		border-bottom: 3px solid darken($color-widget-bg, 50%) !important;
-		margin: 0 2px;
+		
+		border-color: darken($color-tab, 20%);
+		margin: 0 3px 0 0;
+		text-shadow: lighten($color-tab, 60%) 0 1px 0;
 	}
 	
 	.ui-state-active, 
 	.ui-widget-content .ui-state-active, 
 	.ui-widget-header .ui-state-active {
-		background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left;
-		height: 40px;
+		background: $color-widget-bg;
+		
+		a {
+			border-bottom: 2px solid $color-widget-bg;
+		}
 	}
 }
 
 .cms-content-tools {
 	background-color: darken($color-widget-bg, 5%);
+	padding: 8px;	
 	width: 230px;
 	overflow: auto;	
 	
@@ -202,7 +213,7 @@ strong {
 	padding: 8px 4px 0 4px;
 	overflow: hidden;
 	line-height: 16px;
-	font-size: 11px;
+	font-size: $font-base-size - 2;
 	
 	.logout-link {
 		display: inline-block;
@@ -215,8 +226,9 @@ strong {
 	}
 }
 
-// ######################### Loading Screen #########################
-
+/** -----------------------------------------------
+ * Loading Screen
+ * ------------------------------------------------ */
 .ss-loading-screen, 
 .ss-loading-screen .loading-logo {
 	width: 100%;

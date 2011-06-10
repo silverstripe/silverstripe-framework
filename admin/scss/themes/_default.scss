@@ -14,6 +14,9 @@ $color-widget-bg: lighten($color-base, 20%);
 
 $color-dark-bg: #003050;
 $color-dark-separator: #19435c;
+$color-medium-separator: #808080;
+
+$color-tab: #d9d9d9;
 
 $color-shadow-light: rgba(201, 205, 206, 0.8);
 $color-shadow-dark: rgba(107, 120, 123, 0.5);
@@ -37,12 +40,12 @@ $color-warning: #FF9300;
 $color-error: #FF9300;
 $color-notice: #FF9300;
 
+
 /** -----------------------------------------------
  * Typography
  * ------------------------------------------------ */
-$font-family: Verdana, Arial, sans-serif;
+$font-family: Arial, sans-serif;
 $font-base-size: 13px;
-$font-small-size: 11px;
 $font-base-lineheight: 16px;
 
 /** -----------------------------------------------
