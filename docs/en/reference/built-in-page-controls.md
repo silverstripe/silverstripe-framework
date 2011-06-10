@@ -84,20 +84,22 @@ This will return the parent page.  The $ variable format lets us reference an at
 
 ### Site Navigation - Breadcrumbs
 
-#### <% control Breadcrumbs %>
+#### $Breadcrumbs
 
-This will return a breadcrumbs widgets for the given page.  You can call this on any data-object, so, for example, you
-could display the breadcrumbs of every search result if you wanted.  It has a few options.
+This will return a breadcrumbs widget for the current page.  You can call this on any SiteTree descendant, so, for
+example, you could display the breadcrumbs of every search result if you wanted. The Breadcrumbs method returns a string
+of text, so this can't be used as a control block (that is, you can't usefully say "<% control Breadcrumbs %>"). You can
+limit the number of items in the breadcrumbs, as well as whether the breadcrumb items are links.
 
-####  <% control Breadcrumbs(3) %>
+####  $Breadcrumbs(3)
 
-Will return a maximum of 3 pages in the breadcrumb list, this can be handy if you're wanting to put breadcrumbs in a
-place without spilling
+This returns a maximum of 3 pages in the breadcrumb list, which can be handy if you wanting to limit the size of your
+breadcrumbs to conform to your page design.
 
 ####  <% control Breadcrumbs(3, true) %>
 
-Will return the same, but without any links. This is handy if you're wanting to put the breadcrumb list into another
-link tag.
+This returns the same, but without any links. This is handy if you want to put the breadcrumb list into another link
+tag.
 
 
 ### Links and Classes
