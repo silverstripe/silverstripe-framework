@@ -93,7 +93,7 @@ limit the number of items in the breadcrumbs, as well as whether the breadcrumb 
 
 ####  $Breadcrumbs(3)
 
-This returns a maximum of 3 pages in the breadcrumb list, which can be handy if you wanting to limit the size of your
+This returns a maximum of 3 pages in the breadcrumb list, which can be handy if you want to limit the size of your
 breadcrumbs to conform to your page design.
 
 ####  <% control Breadcrumbs(3, true) %>
