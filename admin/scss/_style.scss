@@ -61,6 +61,14 @@ strong {
 	font-weight: bold;
 }
 
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
 /** --------------------------------------------
  * Misc Panels
  * -------------------------------------------- */
@@ -416,11 +424,6 @@ form.member-profile-form {
 		margin-bottom: 2px;
 	}
 	
-}
-
-.cms-content-form {
-	overflow: auto;
-	background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left;
 }
 
 .cms-preview {
