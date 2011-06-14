@@ -96,6 +96,10 @@ input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loadin
 }
 
 // Buttons
+.ui-state-hover {
+	cursor: pointer;
+}
+
 .ss-ui-button.ss-ui-action-constructive,
 .ui-widget-content .ss-ui-button.ss-ui-action-constructive,
 .ui-widget-header .ss-ui-button.ss-ui-action-constructive {
@@ -115,6 +119,21 @@ input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loadin
 	                      linear-gradient(color-stops(
 	                      	darken($color-button-constructive-light, 2%),
 	                      	darken($color-button-constructive-dark, 3%))));
+	@include box-shadow(darken($color-base, 10%) 1px 1px 1px);
+}
+
+.ss-ui-button.ss-ui-action-constructive.cms-page-add-button {
+	@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px -155px,
+	                      linear-gradient(color-stops(
+	                      	$color-button-constructive-light,
+	                      	$color-button-constructive-dark)));
+}
+
+.ss-ui-button.ss-ui-action-constructive.cms-page-add-button.ui-state-hover {
+	@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px -155px,
+	                      linear-gradient(color-stops(
+	                    	darken($color-button-constructive-light, 2%),
+	                    	darken($color-button-constructive-dark, 3%))));
 	@include box-shadow(darken($color-base, 10%) 1px 1px 1px);
 }
 
@@ -181,8 +200,201 @@ input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loadin
 	}
 }
 
+.cms-content-toolbar {
+	display: block;
+	padding: 10px 0;
+	margin: 0 0 15px 0;
+	border-bottom-width: 2px;
+	border-bottom: 2px groove lighten($color-shadow-light, 95%);
+	-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+	border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+	//TODO: use single border line with shadow instead:: http://daverupert.com/2011/06/two-tone-borders-with-css3/
+}
+
+.cms-content-batchactions, .cms-content-constructive-actions {
+	float: right;
+}
+
+.cms-content-batchactions {
+	position:  relative;
+	display: block;
+	margin-right:  8px;
+}
+
+form.cms-batch-actions {
+	float:  left;
+}
+
+.cms-content-constructive-actions a {
+	display:  block;
+}
+
 .field#ViewerGroups, .field#EditorGroups, .field#CreateTopLevelGroups {
 	label {
 		display: none;
 	}
+}
+
+/*****************************
+//Actions Dropdown List Styles
+******************************/
+
+/*select button styles*/
+.cms-batchactions-custom-select { 
+	text-align:left;
+	float:  left;
+	display: block;
+	cursor:pointer;
+	position:relative;
+	overflow:visible; 
+	padding: 5px 15px 5px 23px;
+	color: $color-button-destructive;
+	border:  1px solid $color-button-generic-border;
+	@include border-radius(4px, 4px);
+	@include background(linear-gradient(color-stops(
+	                      	$color-button-generic-light,
+	                      	$color-button-generic-dark)));
+	@include text-shadow(none);
+	@include box-shadow(darken($color-base, 2%) 1px 1px 2px);
+}
+
+.cms-batchactions-custom-select:hover,.cms-batchactions-custom-select:focus,.cms-batchactions-custom-select-open { 
+	text-decoration:  none;
+	@include background(linear-gradient(color-stops(
+	                      	darken($color-button-generic-light, 2%),
+	                      	darken($color-button-generic-dark, 3%))));
+	@include box-shadow(darken($color-base, 10%) 1px 1px 1px);
+	
+
+}
+/*status text*/
+.cms-batchactions-custom-select-status { }
+
+.cms-batchactions-custom-select-roletext { position: absolute; left: -99999px; }
+/* button arrow icon*/
+.cms-batchactions-custom-select-button-icon { 
+	float:right;
+	background: transparent url(../images/btn_arrow_down_grey.png) no-repeat right center;
+	width:  16px;
+	height:  1em;
+}
+.cms-batchactions-custom-select:hover .cms-batchactions-custom-select-button-icon,
+.cms-batchactions-custom-select:focus .cms-batchactions-custom-select-button-icon,
+.cms-batchactions-custom-select-open .cms-batchactions-custom-select-button-icon {  }
+
+
+/*menu styles*/
+.cms-batchactions-custom-select-menu { 
+	background: $color-cms-batchactions-menu-background;
+	z-index:999999;
+	position:absolute;
+	margin:0;
+	padding:5px;
+	width:170px;
+	cursor: pointer;
+	text-shadow:1px 1px 0 #fafafa;
+	overflow: auto;
+	overflow-x: hidden;
+	@include box-shadow(darken($color-base, 10%) 0px 0px 4px);
+	font-size: 0.9em;
+	
+	
+	li { 
+		padding:0;
+		margin:0;
+		list-style:none;
+		clear:both;
+		
+		a {
+			text-decoration:none;
+			color:#1556B2;
+			display:block;
+			cursor: pointer;
+			padding:.6em 5px .6em 20px;
+			text-shadow:1px 1px 0 #f9f9f9;
+			outline: none;
+		}
+		
+		&.cms-batch-action-group-header a {
+			padding-left: 2px;
+			font-weight: bold;
+			color:  #555;
+		}
+		
+		&.publish a {
+			color: #008545;
+		}
+		
+		&.deletefromlive a {
+			color: #B4272D;
+		}
+		
+		&:before {
+			content:"";
+			display: block;
+			background: transparent url("../images/btn_icons_sprite.png") no-repeat;
+			width: 16px;
+			height: 16px;
+			float: left;
+			margin-top: 4px;
+			margin-left: 1px;
+		}
+		
+		&.publish:before { background-position: 0 0; }
+		&.unpublish:before { background-position: 0 -64px; }
+		&.delete:before { background-position: 0 -33px; }
+		&.deletefromlive:before { background-position: 0 -33px; }
+		&.cms-batch-action-group-header:before { 
+			background:  none;
+			width:  5px;
+		}
+		
+		&.hover-focus { 
+			background:#e6e6e6 url(../images/button-silver.gif) right center repeat-x; color:#444;
+		}
+		
+		&.selected { 
+			background-color: $color-cms-batchactions-menu-selected-background;
+		}		
+		
+	}
+	
+}
+
+#Form_BatchActionsForm_action_submit {
+	font-family: arial;
+    font-size: 13px;
+    line-height: 13px !important;
+    margin: 0;
+    padding: 5px 5px 5px 23px;
+    color: $color-text-light;
+    border-color: $color-button-constructive-border;
+    @include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 4px,
+                          linear-gradient(color-stops(
+                          	$color-button-constructive-light,
+                          	$color-button-constructive-dark)));
+    @include text-shadow(darken($color-base, 40%) 1px 1px 0);
+    @include box-shadow(darken($color-base, 20%) 1px 1px 2px);
+}
+
+#Form_BatchActionsForm_action_submit.ui-state-hover {
+	@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 4px,
+	                      linear-gradient(color-stops(
+	                      	darken($color-button-constructive-light, 2%),
+	                      	darken($color-button-constructive-dark, 3%))));
+	@include box-shadow(darken($color-base, 10%) 1px 1px 1px);
+}
+
+/*hidden menu state*/
+.cms-batchactions-custom-select-menu-hidden { 
+	display:none;
+}
+
+/*hide native select*/
+.select-hidden { 
+	display: none;
+}
+
+.action-hidden {
+	display:  none;
 }

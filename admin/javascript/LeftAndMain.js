@@ -300,6 +300,257 @@
 		})
 		
 	});
+	
+	
+	$(document).ready(function() {
+	 	/**
+	 	 * GUI Display Code - Actions - Select Box
+	 	 * Hooking up UI to replace select box with UL LI elements
+	 	 */
+	 	 
+	 	//$('#Form_BatchActionsForm').hide();
+	 	//grab a reference to the BatchActions Select element
+	 	//var selectElement = $('#Form_BatchActionsForm_Action');
+	 	var selectElement = $('form.cms-batch-actions select');
+
+	 	//get the option elements in that selectBox
+	 	var optionValues = selectElement.find('option');
+	 	var actionButton = $('form.cms-batch-actions input.action');
+	 	
+	 	//mapping class names to match actions (use for style & js hooks)
+	 	optionValues.each(function() {
+	 		optionValueAttr = ($(this).attr('value'));
+	 		optionValueAttrArray = optionValueAttr.split('/');
+	 		optionClassAttr = optionValueAttrArray.pop();
+	 		$(this).addClass(optionClassAttr);
+	 	})
+	 	
+	 	//get the ID of the select element
+	 	var selectElementID = selectElement.attr('id');
+	 	
+	 	//get initial selected index put in try/catch block to avoid throwing errors on empty set
+	 	try {
+	 		var initialSelectedIndex = selectElement[0].selectedIndex;
+	 	} catch(e) {	}
+	 	
+	 	//get the selected option's text value
+	 	var selectedOptionText = selectElement.find('option') .eq(initialSelectedIndex).text();
+	 	
+	 	//get the selected option's class attribute value
+	 	var selectedOptionClass = selectElement.find('option') .eq(initialSelectedIndex).attr('class');
+	 	
+	 	//get array of all select option classes, for quick removal
+	 	var allOptionClasses = selectElement.find('option')
+	 	//convert option classes to array
+	 	.map(function(){ return $(this).attr('class'); })
+	 	//join array into string of classes separated by a space
+	 	.get().join(' ');
+	 	
+	 	//create IDs for button, menu
+	 	var buttonID = selectElementID + '-button'; 
+	 	var actionMenuID = selectElementID + '-menu';
+	 	
+	
+	 	//create empty menu button
+	 	var button = $('<a class="cms-batchactions-custom-select" id="'+ buttonID +'" role="button" href="#" aria-haspopup="true" aria-owns="' + actionMenuID +'"></a>');
+	 	
+	 	//create button text, icon, and roletext spans, and append to button
+	 	var selectmenuStatus = $('<span class="cms-batchactions-custom-select-status">' + selectedOptionText +'</span>').appendTo(button);
+	 	var selectmenuIcon = $('<span class="cms-batchactions-custom-select-button-icon"></span>') .appendTo(button);
+	 	var roleText = $('<span class="cms-batchactions-custom-select-roletext"> select</span>') .appendTo(button);
+	 	
+	 	//transfer tabindex attribute from select, if it's specified
+	 	if(selectElement.is('[tabindex]')){ 
+	 		button.attr('tabindex', selectElement.attr('tabindex'));
+	 	}
+	 	//add selected option class defined earlier
+	 	button.addClass(selectedOptionClass);
+	 	//insert button after select
+	 	button.prependTo('.cms-content-batchactions');
+	 	
+	 	//associate select's label to new button
+	 	$('label[for='+selectElementID+']').attr('for', buttonID).bind('click', function(){
+	 		button.focus(); return false;
+	 	});
+	 	
+	 	//Create the UL and LI replacements/substitions for the select/options
+	 	//create menu ul
+	 	var menu = $('<ul class="cms-batchactions-custom-select-menu" id="'+ actionMenuID +'" role="listbox" aria-hidden="true" aria-labelledby="' + buttonID +'"></ul>');
+	 	
+	 	//find all option elements in selectElement
+        selectElement.find('option')
+            //iterate through each option element, tracking the index
+            .each(function(index){
+                //create li with option's text and class attribute 
+                var li = $('<li class="'+ $(this).attr('class') +'"><a href="#" tabindex="-1" role="option" aria-selected="false">'+  $(this).text() +'</a></li>');
+
+                //check if option is selected
+                if(index == initialSelectedIndex){
+                    //add selected attributes
+                    li.addClass('selected')
+                        .attr('aria-selected',true);
+                }
+                if($(this).attr('class')== -1) {
+                	li.addClass('cms-batch-action-group-header');
+                }
+                //append li to menu
+                li.appendTo(menu);  
+            });	 	
+	 	//append menu to end of page (still visual)     
+        menu.appendTo('.cms-content-batchactions');
+                
+        //set height of menu, if needed for overflow)
+        if(menu.outerHeight() > 300){
+            menu.height(300);
+        }
+            
+        //hide menu
+        menu.addClass('cms-batchactions-custom-select-menu-hidden');
+        
+	 	
+	 	//custom show event
+	 	menu.bind('show', function(){
+	 		$(this)
+		 	//remove hidden class
+		 	.removeClass('cms-batchactions-custom-select-menu-hidden')
+		 	//remove aria hidden attribute
+		 	.attr('aria-hidden', false)
+		 	//position the menu under the button
+		 	.css({ top: button.outerHeight(), left: button.outerWidth()-menu.outerWidth()})
+		 	//send focus to the selected option
+		 	.find('.selected a')[0].focus();
+		 	//add open class from button
+		 	button.addClass('cms-batchactions-custom-select-open');
+		 });
+		 
+		 //custom hide event
+		 menu.bind('hide', function(){
+			 //remove open class from button
+			 button.removeClass('cms-batchactions-custom-select-open');
+			 $(this)
+				 //remove hidden class
+				 .addClass('cms-batchactions-custom-select-menu-hidden')
+				 //remove aria hidden attribute
+				 .attr('aria-hidden', false);
+	 	});
+	 	
+	 	//The toggle event conditionally shows and hides the menu. If the menu is hidden, we’ll trigger the show event; if the menu is already visible, we’ll trigger the hide event:
+	 	//apply mousedown event to button
+	 	menu.bind('toggle', function(){
+		 	//if the menu is hidden, first set its positioning
+		 	if(menu.is(':hidden')){
+			 	//show menu
+			 	menu.trigger('show');
+		 	}
+		 	else {
+		 		//hide menu
+		 		menu.trigger('hide');
+		 	}
+		 });
+		 
+		 //event to update select menu with current selection (proxy to select)
+         menu.find('a').bind('select',function(){        
+             
+             //deselect previous option in menu
+             menu
+                 .find('li.selected')
+                 .removeClass('selected')
+                 .attr('aria-selected', false);
+                         
+             //get new selected li's class attribute
+             var newListItemClass = $(this).parent().attr('class');
+             
+             //update button icon class to match this li
+             button.removeClass(allOptionClasses).addClass( newListItemClass );  
+             
+             //update button text this anchor's content
+             selectmenuStatus.html( $(this).html() );
+             
+             //update this list item's selected attributes 
+             $(this)
+                 .parent()
+                 .addClass('selected')
+                 .attr('aria-selected', true);
+             
+             //hide menu
+             menu.trigger('hide');
+                 
+             var changed = false;
+                 
+             //update the native select with the new selection
+             if(selectElement[0].selectedIndex != menu.find('a').index(this)){
+                 changed = true;
+             }
+             
+             selectElement[0].selectedIndex = menu.find('a').index(this);
+                     
+             if(changed){ 
+             	$(this).trigger('change');
+             	selectElement.trigger('change');
+             	var currentSelectValue = selectElement[0].options[selectElement[0].selectedIndex].value;
+             	if (currentSelectValue == -1){
+             		actionButton.addClass('action-hidden');
+             	} 
+             	else {
+             		actionButton.removeClass('action-hidden');
+             	}
+             }
+         });
+		         
+		 //specific events
+		         
+         //apply click to button 
+         button.mousedown(function(){
+             menu.trigger('toggle');
+             return false;   
+         });
+         
+  
+         //disable click event (use mousedown/up instead)
+         button.click(function(){ return false; });
+         
+         
+         //apply mouseup event to menu, for making selections    
+         //allows us to drag and release
+         menu.find('a').mouseup(function(event){
+         	 event.preventDefault();
+             $(this).trigger('select');
+             //prevent browser scroll
+         });
+          
+         //bind click to document for hiding menu
+         $(document).click(function(){ menu.trigger('hide'); });
+ 
+         //hover and focus states
+         menu.find('a').bind('mouseover focus',function(){ 
+                 //remove class from previous hover-focused option
+                 menu.find('.hover-focus').removeClass('hover-focus');
+                 //add class to this option 
+                 if(!$(this).parent().hasClass('selected')) {
+                 	$(this).parent().addClass('hover-focus');
+                 }                  
+                  
+             })
+             .bind('mouseout blur',function(){ 
+                 //remove class from this option
+                 $(this).parent().removeClass('hover-focus'); 
+             });
+	 	
+	 	/*define menu instance in select element's data*/
+        selectElement.data('selectmenu', menu);
+        
+        //hide native select
+        selectElement.addClass('select-hidden').attr('aria-hidden', true);
+        actionButton.addClass('action-hidden').attr('aria-hidden', true);
+        
+        $('#' + actionMenuID + ' a').bind('click', function(event){
+        	event.preventDefault();
+        });
+	 	
+	 	//end batchActions GUI alterations and actions
+	 });
+	 
+	
 }(jQuery));
 
 // Backwards compatibility
