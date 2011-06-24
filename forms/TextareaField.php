@@ -52,7 +52,6 @@ class TextareaField extends FormField {
 				'id' => $this->id(),
 				'class' => 'readonly' . ($this->extraClass() ? $this->extraClass() : ''),
 				'name' => $this->name,
-				'tabindex' => $this->getTabIndex(),
 				'readonly' => 'readonly'
 			);
 
