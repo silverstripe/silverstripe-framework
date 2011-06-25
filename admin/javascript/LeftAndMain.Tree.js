@@ -313,5 +313,48 @@
 			$('.cms-tree').toggleClass('draggable', $(e.target).val() == 'draggable');
 		}
 	});
+	
+	
+	//Listens for click event on the jstree checkbox
+	$(".cms-tree").delegate("ins.jstree-checkbox", "click", function(){
+		if ($(this).parent().parent().hasClass('jstree-checked')) {
+			$(this).parent().parent().find('.cms-tree-action-list').remove();
+		} else {
+			$('#cmsTreeActionListTemplate').clone().insertAfter($(this).parent());
+			$(this).parent().parent().find('.cms-tree-action-list').removeClass('hidden').addClass('shown');
+		} 
+	});
+	
+	//Create a click event listener to return false so it follow through to page (overwrites deeper clickthrough call in js-tree)
+	$(".cms-tree-action-list").delegate("a.cms-tree-action-list-menu-trigger", "click", function(event){
+		return false;
+	});
+	
+	$(".cms-tree-action-list").delegate("a.cms-tree-action-list-menu-trigger", "mousedown", function(event){
+		var $currentTreeActionList = $('ul.cms-tree-action-list-batchactions.shown');
+		var $clickedTreeActionList = $(this).parent().find('.cms-tree-action-list-batchactions');
+		
+		if ($clickedTreeActionList.hasClass('shown')) {
+			$clickedTreeActionList.removeClass('shown');
+		} else {
+			$currentTreeActionList.removeClass('shown');
+			$clickedTreeActionList.addClass('shown');
+		}
+		return false;
+	});
+	
+	$(".cms-tree-action-list-batchactions").delegate("a", "click", function(event){
+		return true;
+	});
+	
+	$(document).click(function(){ 
+		$('.cms-tree-action-list-batchactions').removeClass('shown'); 
+	});
+	
+		
+	
+	
+	
+	
 
 }(jQuery));
