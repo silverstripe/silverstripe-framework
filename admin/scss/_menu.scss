@@ -104,10 +104,6 @@
 				//@include sprite-position(1, 1);
 			}
 			
-			&:hover .icon {
-				@include sprite-position(2, 1);
-			}
-			
 			.text {
 				display: block;
 			}
@@ -130,28 +126,12 @@
 				border-top: 1px solid darken($color-menu-button, 20%);
 			}
 			
-			a .icon {
-				@include sprite-position(2, 1);
-			}
-		}
-		
-		ul {
-			display: none;
-		}
-		
-		&.opened ul {
-			display: block;
-		}
-		
-		// nested elements
-		li {
-			
 			li {
 				background-color: darken($color-menu-button, 10%);
 
 				a {
 					font-size: $font-base-size - 1;
-					padding: 0 10px 0 48px;
+					padding: 0 10px 0 36px;
 					height: 32px;
 					line-height: 32px;
 					color: lighten($color-menu-button, 45%);
