@@ -7,7 +7,7 @@
 <title>$Title</title>
 </head>
 
-<body class="loading cms $CSSClasses">
+<body class="loading cms $BaseCSSClasses">
 	
 	<% include CMSLoadingScreen %>
 	

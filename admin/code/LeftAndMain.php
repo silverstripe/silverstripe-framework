@@ -1206,6 +1206,17 @@ class LeftAndMain extends Controller {
 		return MCE_ROOT;
 	}
 	
+	/**
+	 * Same as {@link ViewableData->CSSClasses()}, but with a changed name
+	 * to avoid problems when using {@link ViewableData->customise()}
+	 * (which always returns "ArrayData" from the $original object).
+	 * 
+	 * @return String
+	 */
+	function BaseCSSClasses() {
+		return $this->CSSClasses();
+	}
+	
 	function IsPreviewExpanded() {
 		return ($this->request->getVar('cms-preview-expanded'));
 	}
