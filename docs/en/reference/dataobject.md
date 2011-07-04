@@ -12,7 +12,7 @@ A single database record & abstract class for the data-access-model.
 
 ## Basics
 
-The call to `DataObject->getCMSFields()` is the centerpiece of every data administration interface in Silverstripe,
+The call to `DataObject->getCMSFields()` is the centerpiece of every data administration interface in SilverStripe,
 which returns a `[api:FieldSet]`''.
 
 	:::php
@@ -32,8 +32,6 @@ These calls retrieve a `[api:FieldSet]` for the area where you intend to work wi
 ### For the CMS
 
  * Requirements: SilverStripe 2.3.*
-
-// bla
 
 	:::php
 	$fields = singleton('MyDataObject')->getCMSFields();
@@ -82,8 +80,8 @@ Example: Simple Definition
 	}
 
 
-Searchable fields will be appear in the search interface with a default form field (usually a TextField) and a default
-search filter assigned (usually an ExactMatchFilter). To override these defaults, you can specify additional information
+Searchable fields will be appear in the search interface with a default form field (usually a `[api:TextField]`) and a default
+search filter assigned (usually an `[api:ExactMatchFilter]`). To override these defaults, you can specify additional information
 on `$searchable_fields`:
 
 	:::php
@@ -95,7 +93,7 @@ on `$searchable_fields`:
 	}
 
 
-If you assign a single string value, you can set it to be either a FormField or SearchFilter. To specify both, you can
+If you assign a single string value, you can set it to be either a `[api:FormField]` or `[api:SearchFilter]`. To specify both, you can
 assign an array:
 
 	:::php
@@ -144,7 +142,7 @@ To include relations (''$has_one'', `$has_many` and `$many_many`) in your search
 
 * Requirements: SilverStripe 2.3.*
 
-Summary fields can be used to show a quick overview of the data for a specific DataObject record. Most common use is
+Summary fields can be used to show a quick overview of the data for a specific `[api:DataObject]` record. Most common use is
 their display as table columns, e.g. in the search results of a `[api:ModelAdmin]` CMS interface.
 
 Example: Getting predefined summary fields

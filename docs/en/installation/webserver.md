@@ -4,7 +4,7 @@ These instructions show you how to install SilverStripe on any web server.
 
 For additional information about installing SilverStripe on specific operation systems, refer to:
 
-*  [Installation on a Windows Server](windows-pi.md)
+*  [Installation on a Windows Server](windows-pi)
 *  [Installation on OSX](mac-osx)
 
 ## Installation Steps

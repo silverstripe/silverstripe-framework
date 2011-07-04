@@ -5,7 +5,7 @@
 An object representing a SQL query. It is easier to deal with object-wrappers than string-parsing a raw SQL-query. This
 object is used by `[api:DataObject]`, though...
 
-A word of caution: Dealing with low-level SQL is not encouraged in the Silverstripe [datamodel](/topics/datamodel) for various
+A word of caution: Dealing with low-level SQL is not encouraged in the SilverStripe [datamodel](/topics/datamodel) for various
 reasons. You'll break the behaviour of:
 
 *  Custom getters/setters
@@ -15,7 +15,7 @@ reasons. You'll break the behaviour of:
 *  `[api:DataObject]`
 *  Database abstraction
 
-We'll explain some ways to use *SELECT* with the full power of SQL, but still maintain a connection to the Silverstripe
+We'll explain some ways to use *SELECT* with the full power of SQL, but still maintain a connection to the SilverStripe
 [datamodel](/topics/datamodel).
 
 ## Usage
@@ -109,7 +109,7 @@ Useful for creating dropdowns.
 
 ### "Raw" SQL with DB::query()
 
-This is not recommended for most cases, but you can also use the Silverstripe database-layer to fire off a raw query:
+This is not recommended for most cases, but you can also use the SilverStripe database-layer to fire off a raw query:
 
 	:::php
 	DB::query("UPDATE Player SET Status='Active'");
@@ -142,10 +142,10 @@ This form of building a query has the following advantages:
 *  Selection of *ID*, *ClassName*, *RecordClassName*, which are necessary to use *buildDataObjectSet* later on
 *  Filtering records for correct *ClassName*
 
-### Transforming a result to DataObjectSet
+### Transforming a result to `[api:DataObjectSet]`
 
-This is a commonly used technique inside Silverstripe: Use raw SQL, but transfer the resulting rows back into
-DataObjects.
+This is a commonly used technique inside SilverStripe: Use raw SQL, but transfer the resulting rows back into
+`[api:DataObject]`s.
 
 	:::php
 	$sqlQuery = new SQLQuery();
@@ -183,16 +183,16 @@ DataObjects.
 	var_dump($myFirstPlayer->Status); // undefined, as we didn't LEFT JOIN the BasePlayer-table
 
 
-CAUTION: Depending on the selected columns in your query, you might get into one of the following scenarios:
+**CAUTION:** Depending on the selected columns in your query, you might get into one of the following scenarios:
 
 *  Not all object-properties accessible: You need to take care of selecting the right stuff yourself
 *  Overlayed object-properties: If you *LEFT JOIN* a table which also has a column 'Birthdate' and do a global select on
 this table, you might not be able to access original object-properties.
-*  You can't create DataObjects where no scalar record-data is available, e.g. when using *GROUP BY*
+*  You can't create `[api:DataObject]`s where no scalar record-data is available, e.g. when using *GROUP BY*
 *  Naming conflicts with custom getters: A getter like Player->getName() will overlay the column-data selected in the
 above example
 
-Be careful when saving back DataObjects created through *buildDataObjectSet*, you might get strange side-effects due to
+Be careful when saving back `[api:DataObject]`s created through *buildDataObjectSet*, you might get strange side-effects due to
 the issues noted above.
 ## Using FormFields with custom SQL
 

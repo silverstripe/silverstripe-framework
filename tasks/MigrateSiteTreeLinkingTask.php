@@ -29,8 +29,8 @@ class MigrateSiteTreeLinkingTask extends BuildTask {
 				$linked = DataObject::get_by_id('SiteTree', $childID);
 				
 				// TOOD: Replace in all HTMLText fields
-				$page->Content = preg_replace (
-					"/href *= *([\"']?){$linked->URLSegment}\/?/i",
+				$page->Content = preg_replace(
+					"/(*ANYCRLF)href *= *([\"']?){$linked->URLSegment}\/?/i",
 					"href=$1[sitetree_link id={$linked->ID}]",
 					$page->Content,
 					-1,

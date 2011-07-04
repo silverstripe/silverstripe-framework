@@ -40,7 +40,7 @@ friendlier - much like the 404 page, the error content can be edited within the 
 *  Set the error code to 500
 *  Publish the page.
 
-**HOW IT WORKS: **The publication script for ErrorPage will write the full HTML content, including the template styling,
+**HOW IT WORKS: **The publication script for `[api:ErrorPage]` will write the full HTML content, including the template styling,
 to assets/error-500.html.  The fatal error handler looks for the presence of this file, and if it exists, dumps the
 content.  This means that database access isn't required to provide a 500 error page.
 
@@ -55,7 +55,7 @@ You can indicate a log file relative to the site root. The named file will have 
 (an encoded file containing backtraces and things) will go to a file of a similar name, but with the suffix ".full"
 added.
 
-<mysite>/_config.php:
+`<mysite>/_config.php`:
 
 	:::php
 	// log errors and warnings
@@ -66,7 +66,7 @@ added.
 
 #### Deprecated method (SS 2.3 ?)
 
-<mysite>/_config.php:
+`<mysite>/_config.php`:
 
 	:::php
 	Debug::log_errors_to("/my/logfile/path");
@@ -77,7 +77,7 @@ added.
 In addition to SilverStripe-integrated logging, it is adviseable to fall back to PHPs native logging functionality. A
 script might terminate before it reaches the SilverStripe errorhandling, for example in the case of a fatal error.
 
-<mysite>/_config.php:
+`<mysite>/_config.php`:
 
 	:::php
 	ini_set("log_errors", "On");
@@ -88,7 +88,8 @@ script might terminate before it reaches the SilverStripe errorhandling, for exa
 ## Email Logs
 
 You can send both fatal errors and warnings in your code to a specified email-address.
-<mysite>/_config.php:
+
+`<mysite>/_config.php`:
 
 	:::php
 	// log errors and warnings

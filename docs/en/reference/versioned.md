@@ -29,5 +29,3 @@ whenever a blog entry has been published.
 	    parent::onAfterPublish();
 	  }
 	}
-
-

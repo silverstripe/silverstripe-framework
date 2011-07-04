@@ -5,10 +5,7 @@
 This is a short tutorial demonstrating how to add search functionality to a SilverStripe site. It is recommended that
 you have completed the earlier tutorials, especially the tutorial on forms, before attempting this tutorial. While this
 tutorial will add search functionality to the site built in the previous tutorials, it should be straight forward to
-follow this tutorial on any site of your own. If you are adding the search form to the tutorial site, please get
-[this updated css file](http://doc.silverstripe.org/src/github/master/sapphire/docs/en/tutorials/_images/layout.css) and place it in *themes/tutorial/css* (as layout.css) and this
-![search file tree icon](_images/search-file.gif) search file tree icon and place it in *themes/tutorial/images/treeicons* (as
-search-file.gif).
+follow this tutorial on any site of your own. 
 
 ## What are we working towards?
 
@@ -50,7 +47,7 @@ instructions below as well.
 
 If you are using SilverStripe 2.2 or earlier then you need to define your own code. The first step in implementing
 search on your site is to create a form for the user to type their query. Create a function named *SearchForm* on the
-*Page_Controller* class (//mysite/code/Page.php//).
+*Page_Controller* class (/mysite/code/Page.php).
 
 	:::php
 	class Page_Controller extends ContentController {
@@ -69,6 +66,69 @@ search on your site is to create a form for the user to type their query. Create
 		}
 	}
 
+### Custom CSS code
+
+Add the following css code to the *themes/tutorial/css/layout.css* file. This will style the header form and search
+results page.
+
+	:::css
+	#Header form {
+		float:right;
+		width:160px;
+		margin:25px 25px 0px 25px;
+	}
+		#Header form * {
+			display:inline !important;
+		}
+		#Header form div {
+		}
+		#Header form input.text {
+			width:110px;
+			color:#000;
+			background:#f0f0f0;
+			border:1px solid #aaa;
+			padding:3px;
+		}
+		#Header form input.action {
+			font-weight:bold;
+		}
+
+	.searchResults h2 {
+		font-size:2.2em;
+		font-weight:normal;
+		color:#0083C8;
+		margin-bottom:15px;
+	}
+	.searchResults p.searchQuery {
+		color:#333;
+		margin-bottom:10px;
+	}
+
+	.searchResults ul#SearchResults li {
+		margin-bottom:20px;
+	}
+		ul#SearchResults p {
+			font-size:1.1em;
+			font-weight:normal;
+			line-height:2em;
+			color:#333;
+		}
+		ul#SearchResults a.searchResultHeader {
+			font-size:1.3em;
+			font-weight:bold;
+			color:#0083C8;
+			text-decoration:none;
+			margin:20px 0 8px 0;
+			padding-left:20px;
+			background:url(../images/treeicons/search-file.gif) no-repeat left center;
+		}
+			ul#SearchResults a {
+				text-decoration:none;
+				color:#0083C8;
+			}
+			ul#SearchResults a:hover {
+			border-bottom:1px dotted #0083C8;
+			}
 
 ## Adding the search form
 

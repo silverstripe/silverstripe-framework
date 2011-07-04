@@ -24,7 +24,7 @@ See [Developing Themes](theme-development) to get an idea of how themes actually
 
 ## Submitting your theme to SilverStripe
 
-If you want to submit your theme to the silverstripe directory then check
+If you want to submit your theme to the SilverStripe directory then check
 
 * You should ensure your templates are well structured, modular and commented so it's easy for other people to 
  customise them.
@@ -36,6 +36,8 @@ Your theme file must be in a .tar.gz format. A useful tool for this is - [7 Zip]
 must select the your_theme folder and Add to archive, select TAR and create. Then after you have the TAR file right
 click it -> Add to Archive (again) -> Then use the archive format GZIP.
 
-## Discussing
+## Links
 
-Head over to the [ Themes Forum ](http://www.silverstripe.org/themes-2/)
+ * [Themes Listing on silverstripe.org](http://silverstripe.org/themes)
+ * [Themes Forum on silverstripe.org](http://www.silverstripe.org/themes-2/)
+ * [Themes repository on github.com](http://github.com/silverstripe-themes)
