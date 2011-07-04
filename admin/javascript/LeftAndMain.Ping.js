@@ -11,11 +11,11 @@
 			 */
 			PingIntervalSeconds: 5*60,
 			
-			onmatch: function() {
-				this._super();
-				
-				this._setupPinging();
-			},
+			// onmatch: function() {
+			// 	this._super();
+			// 	
+			// 	this._setupPinging();
+			// },
 			
 			/**
 			 * Function: _setupPinging
