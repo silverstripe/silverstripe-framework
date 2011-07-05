@@ -137,7 +137,7 @@
 				var firstLink = this.find('a[href]');
 				if(!firstLink) return;
 				
-				window.History.pushState({selector: '.cms-edit-form'}, '', firstLink.attr('href'));
+				window.History.pushState({selector: '.cms-content-fields form:first'}, '', firstLink.attr('href'));
 				return false;
 			}
 		});

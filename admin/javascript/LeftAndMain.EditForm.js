@@ -88,6 +88,16 @@
 				
 				this._super();
 			},
+			
+			beforeLoad: function(url) {
+				this.addClass('loading');
+				this.cleanup();
+			},
+			
+			afterLoad: function(data, status, xhr) {
+				this.removeClass('loading');
+				this.replaceWith(data);
+			},
 		
 			/**
 			 * Function: _setupChangeTracker

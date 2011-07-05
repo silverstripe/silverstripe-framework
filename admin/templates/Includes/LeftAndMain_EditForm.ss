@@ -21,7 +21,7 @@
 		</div>
 	</div>
 
-	<div class="cms-content-form center">
+	<div class="cms-content-fields center">
 
 		<!-- <div class="cms-content-tools west">
 			$Left

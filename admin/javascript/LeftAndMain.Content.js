@@ -1,7 +1,42 @@
 (function($) {
 
 	$.entwine('ss', function($){
+		
+		$('.LeftAndMain .cms-content, .LeftAndMain .cms-content *').entwine({
+			/**
+			 * Triggered before a new URL is loaded, typically via ajax.
+			 * Loading itself is handled by .LeftAndMain and window.history.
+			 * 
+			 * @param {String}
+			 */
+			beforeLoad: function(url) {
+				this.addClass('loading');
+				this.cleanup();
+			},
+			
+			/**
+			 * Triggered after an ajax request with new HTML data.
+			 * 
+			 * @param {String}
+			 * @param {String}
+			 * @param {XMLHTTPRequest}
+			 */
+			afterLoad: function(data, status, xhr) {
+				this.removeClass('loading');
+				this.replaceWith(data);
+			},
+			
+			cleanup: function() {
+				this.empty();
+			}
+		});
 
+		/**
+		 * The "content" area contains all of the section specific UI (excluding the menu).
+		 * This area can be a form itself, as well as contain one or more forms.
+		 * For example, a page edit form might fill the whole area, 
+		 * while a ModelAdmin layout shows a search form on the left, and edit form on the right.
+		 */
 		$('.LeftAndMain .cms-content').entwine({
 			
 			onmatch: function() {
@@ -32,20 +67,6 @@
 			onunmatch: function() {
 				this._super();
 			},
-
-			beforeLoad: function(url) {
-				this.addClass('loading');
-				this.cleanup();
-			},
-			
-			afterLoad: function(data, status, xhr) {
-				this.removeClass('loading');
-				this.replaceWith(data);
-			},
-			
-			cleanup: function() {
-				this.empty();
-			},
 			
 			/**
 			 * Function: loadForm
@@ -60,7 +81,7 @@
 			 */
 			loadForm: function(url, form, callback, ajaxOptions) {
 				var self = this;
-				if(!form || !form.length) var form = $('.cms-content-form form:first');
+				if(!form || !form.length) var form = $('.cms-content-fields form:first');
 
 				// Alert when unsaved changes are present
 				if(form._checkChangeTracker(true) == false) return false;
