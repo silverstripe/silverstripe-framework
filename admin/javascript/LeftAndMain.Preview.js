@@ -2,7 +2,7 @@
 	
 	$.entwine('ss', function($){
 
-		$('.LeftAndMain .cms-preview').entwine({
+		$('.cms-preview').entwine({
 			
 			// Minimum width to keep the CMS operational
 			SharedWidth: null,
@@ -31,7 +31,7 @@
 				self._fixIframeLinks();
 				
 				// Limit to CMS forms for the moment
-				$('.CMSMain .cms-edit-form').bind('loadnewpage', function(e, ui) {
+				$('.cms-edit-form').bind('loadnewpage', function(e, ui) {
 					// var url = ui.xmlhttp.getResponseHeader('x-frontend-url');
 					var url = $(this).find(':input[name=StageURLSegment]').val();
 					if(url) self.loadUrl(url + '&cms-preview-disabled=1');
@@ -54,10 +54,12 @@
 			},
 			
 			loadCurrentPage: function() {				
-				var doc = this.find('iframe')[0].contentDocument, container = this.getLayoutContainer();
+				var doc = this.find('iframe')[0].contentDocument, 
+					containerEl = this.getLayoutContainer(), 
+					contentEl = containerEl.find('.cms-content');
 
 				// Only load if we're in the "edit page" view
-				if(!container.hasClass('CMSMain') || container.hasClass('CMSPagesController')) return;
+				if(!contentEl.hasClass('CMSMain') || contentEl.hasClass('CMSPagesController') || contentEl.hasClass('CMSSettingsController')) return;
 
 				// Load this page in the admin interface if appropriate
 				var id = $(doc).find('meta[name=x-page-id]').attr('content'), contentPanel = $('.cms-content');
@@ -105,7 +107,7 @@
 			},
 			
 			getLayoutContainer: function() {
-				return this.parents('.LeftAndMain');
+				return this.parents('.cms-container');
 			},
 			
 			toggle: function(bool) {
@@ -113,26 +115,26 @@
 			}
 		});
 		
-		$('.LeftAndMain .cms-preview.collapsed').entwine({
+		$('.cms-preview.collapsed').entwine({
 			onmatch: function() {
 				this.find('a').text('<');
 			}
 		});
 		
-		$('.LeftAndMain .cms-preview.expanded').entwine({
+		$('.cms-preview.expanded').entwine({
 			onmatch: function() {
 				this.find('a').text('>');
 			}
 		});
 		
-		$('.LeftAndMain .cms-preview .cms-preview-toggle').entwine({
+		$('.cms-preview .cms-preview-toggle').entwine({
 			onclick: function(e) {
 				e.preventDefault();
 				this.parents('.cms-preview').toggle();
 			}
 		});
 		
-		$('.LeftAndMain .cms-switch-view a').entwine({
+		$('.cms-switch-view a').entwine({
 			onclick: function(e) {
 				e.preventDefault();
 				var preview = $('.cms-preview');
@@ -141,7 +143,7 @@
 			}
 		});
 		
-		$('.LeftAndMain .cms-menu li').entwine({
+		$('.cms-menu li').entwine({
 			onclick: function(e) {
 				// Prevent reloading of interface when opening the edit panel
 				if(this.hasClass('Menu-CMSMain')) {

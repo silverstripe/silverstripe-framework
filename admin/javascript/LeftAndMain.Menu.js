@@ -32,7 +32,7 @@
 				// 	$(this).find('a:first').append('<span class="toggle">o</span>');
 				// });
 				
-				$('.LeftAndMain').bind('afterstatechange', function(e, data) {
+				$('.cms-container').bind('afterstatechange', function(e, data) {
 					var controller = data.xhr.getResponseHeader('X-Controller');
 					if(controller) self.find('li#Menu-' + controller).select();
 				});

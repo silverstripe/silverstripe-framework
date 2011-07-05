@@ -31,8 +31,6 @@
 		});
 		
 		/**
-		 * Class: .LeftAndMain
-		 * 
 		 * Main LeftAndMain interface with some control panel and an edit form.
 		 * 
 		 * Events:
@@ -40,7 +38,7 @@
 		 *  validate - ...
 		 *  loadnewpage - ...
 		 */
-		$('.LeftAndMain').entwine({
+		$('.cms-container').entwine({
 			
 			CurrentXHR: null,
 			
@@ -80,9 +78,9 @@
 			
 			redraw: function() {
 				// Not all edit forms are layouted
-				var editForm = this.find('.cms-edit-form[data-layout]').layout();
-				this.find('.cms-content').layout();
-				this.find('.cms-container').layout({resize: false})
+				var editForm = $('.cms-edit-form[data-layout]').layout();
+				$('.cms-content').layout();
+				$('.cms-container').layout({resize: false})
 			},
 			
 			/**
@@ -114,8 +112,7 @@
 				// Don't allow parallel loading to avoid edge cases
 				if(this.getCurrentXHR()) this.getCurrentXHR().abort();
 				
-				// TODO Support loading into multiple panels
-				var contentEl = $(state.data.selector || '.LeftAndMain .cms-content');
+				var contentEl = $(state.data.selector || '.cms-content');
 				this.trigger('beforestatechange', {state: state});
 				contentEl.beforeLoad(state.url);
 				
@@ -140,20 +137,18 @@
 		/**
 		 * Monitor all panels for layout changes
 		 */
-		$('.LeftAndMain .cms-panel').entwine({
+		$('.cms-panel').entwine({
 			ontoggle: function(e) {
-				this.parents('.LeftAndMain').redraw();
+				this.parents('.cms-container').redraw();
 			}
 		});
 
 		/**
-		 * Class: .LeftAndMain :submit, .LeftAndMain button, .LeftAndMain :reset
-		 * 
 		 * Make all buttons "hoverable" with jQuery theming.
 		 * Also sets the clicked button on a form submission, making it available through
 		 * a new 'clickedButton' property on the form DOM element.
 		 */
-		$('.LeftAndMain :submit, .LeftAndMain button, .LeftAndMain :reset').entwine({
+		$('.cms-container :submit, .cms-container button, .cms-container :reset').entwine({
 			onmatch: function() {
 				// TODO Adding classes in onmatch confuses entwine
 				var self = this;
@@ -168,7 +163,7 @@
 		 * 
 		 * Link for editing the profile for a logged-in member through a modal dialog.
 		 */
-		$('.LeftAndMain .profile-link').entwine({
+		$('.cms-container .profile-link').entwine({
 			
 			/**
 			 * Constructor: onmatch
@@ -310,7 +305,7 @@
 		 * the DOM element on creation, rather than onclick - which allows us to decorate
 		 * the field with a calendar icon
 		 */
-		$('.LeftAndMain .field.date input.text').entwine({
+		$('.cms-container .field.date input.text').entwine({
 			onmatch: function() {
 				var holder = $(this).parents('.field.date:first'), config = holder.metadata({type: 'class'});
 				if(!config.showcalendar) return;

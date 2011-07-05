@@ -2,10 +2,10 @@
 
 	$.entwine('ss', function($){
 		
-		$('.LeftAndMain .cms-content, .LeftAndMain .cms-content *').entwine({
+		$('.cms-content, .cms-content *').entwine({
 			/**
 			 * Triggered before a new URL is loaded, typically via ajax.
-			 * Loading itself is handled by .LeftAndMain and window.history.
+			 * Loading itself is handled by $('.cms-container') and window.history.
 			 * 
 			 * @param {String}
 			 */
@@ -37,7 +37,7 @@
 		 * For example, a page edit form might fill the whole area, 
 		 * while a ModelAdmin layout shows a search form on the left, and edit form on the right.
 		 */
-		$('.LeftAndMain .cms-content').entwine({
+		$('.cms-content').entwine({
 			
 			onmatch: function() {
 				var self = this;
@@ -70,6 +70,9 @@
 			
 			/**
 			 * Function: loadForm
+			 * 
+			 * See $('.cms-container').handleStateChange() on a frequently used alternative
+			 * to direct ajax loading of content, with support for the window.History object.
 			 * 
 			 * Parameters:
 			 *  (String) url - ..

@@ -4,7 +4,7 @@
 (function($) {
 	$.entwine('ss', function($){
 
-		$('.LeftAndMain').entwine(/** @lends ss.Form_EditForm */{	
+		$('.cms-container').entwine(/** @lends ss.Form_EditForm */{	
 			/**
 			 * Variable: PingIntervalSeconds
 			 * (Number) Interval in which /Security/ping will be checked for a valid login session.
