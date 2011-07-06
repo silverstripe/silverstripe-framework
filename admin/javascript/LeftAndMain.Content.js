@@ -43,8 +43,13 @@
 				var self = this;
 				
 				// Listen to tree selection events
-				$('.cms-tree').bind('select_node.jstree', function(e, data) {
-					var node = data.rslt.obj, loadedNodeID = self.find(':input[name=ID]').val()
+				this.find('.cms-tree').bind('select_node.jstree', function(e, data) {
+					var node = data.rslt.obj, loadedNodeID = self.find(':input[name=ID]').val(), origEvent = data.args[2];
+					
+					// Don't trigger unless coming from a click event.
+					// Avoids problems with automated section switches from tree to detail view
+					// when JSTree auto-selects elements on first load.
+					if(!origEvent) return false;
 					
 					// Don't allow checking disabled nodes
 					if($(node).hasClass('disabled')) return false;
