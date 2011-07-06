@@ -35,6 +35,22 @@ class FileIFrameField extends FileField {
 	}
 	
 	/**
+	 * Flag that controls whether or not existing files can only be chosen
+	 * from the foldername set
+	 * @var boolean
+	 */
+	protected $restrictToUploadFolder = false;
+	
+	/**
+	 * Sets whether or not existing files can be chosen from the foldername set
+	 * 
+	 * @param boolean $do
+	 */
+	public function setRestrictToUploadFolder($do) {
+		$this->restrictToUploadFolder = $do;
+	} 
+	
+	/**
 	 * The data class that this field is editing.
 	 * @return string Class name
 	 */
@@ -136,7 +152,15 @@ class FileIFrameField extends FileField {
 		}
 		
 		$fileSources["existing//$selectFile"] = new TreeDropdownField('ExistingFile', '', 'File');
-
+		if ($this->restrictToUploadFolder) {
+			$folder = File::find($this->folderName);
+			if ($folder) {
+				$fileSources["existing//$selectFile"]->setTreeBaseID($folder->ID);
+			} else {
+				user_error('Can not find folder to restrict selection to', E_USER_WARNING);
+			}
+			
+		}
 		$fields = new FieldSet (
 			new HeaderField('EditFileHeader', $title),
 			new SelectionGroup('FileSource', $fileSources)
