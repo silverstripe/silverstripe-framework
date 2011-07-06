@@ -143,7 +143,7 @@ li.jstree-closed > ul { display: none; }
 .cms-menu.collapsed .cms-menu-list li ul { display: none; }
 .cms-menu.collapsed.cms-panel .cms-panel-content { display: block; }
 
-.cms-menu-list li a { display: block; height: 30px; line-height: 30px; vertical-align: middle; font-size: 13px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-shadow: #ced7dc 1px 1px 0; color: #1f1f1f; padding: 5px; background-color: #b0bec7; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b0bec7), color-stop(100%, #98aab6)); background-image: -moz-linear-gradient(top, #b0bec7 0%, #98aab6 100%); background-image: linear-gradient(top, #b0bec7 0%, #98aab6 100%); border-top: 1px solid #ced7dc; border-bottom: 1px solid #748d9d; }
+.cms-menu-list li a { display: block; height: 30px; line-height: 30px; vertical-align: middle; font-size: 13px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-shadow: #ced7dc 1px 1px 0; color: #1f1f1f; padding: 5px 5px 5px 12px; background-color: #b0bec7; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b0bec7), color-stop(100%, #8ca1ae)); background-image: -moz-linear-gradient(top, #b0bec7 0%, #8ca1ae 100%); background-image: linear-gradient(top, #b0bec7 0%, #8ca1ae 100%); border-top: 1px solid #ced7dc; border-bottom: 1px solid #748d9d; }
 .cms-menu-list li a:hover { text-decoration: none; background-color: #b6c3cb; border-bottom: 1px solid #8399a7; color: #2c2c2c; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #bfcad2), color-stop(100%, #b0bec7)); background-image: -moz-linear-gradient(top, #bfcad2 0%, #b0bec7 100%); background-image: linear-gradient(top, #bfcad2 0%, #b0bec7 100%); }
 .cms-menu-list li a:focus { border-top: 1px solid #a1b2bc; text-decoration: none; background-color: #a1b2bc; color: #393939; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #92a5b2), color-stop(100%, #a1b2bc)); background-image: -moz-linear-gradient(top, #92a5b2 0%, #a1b2bc 100%); background-image: linear-gradient(top, #92a5b2 0%, #a1b2bc 100%); }
 .cms-menu-list li a .icon { display: block; float: left; margin-right: 4px; background: url('../images/icons-32.png') no-repeat; width: 32px; height: 32px; overflow: hidden; background-position: 0px 0px; }
@@ -155,7 +155,7 @@ li.jstree-closed > ul { display: none; }
 .cms-menu-list li ul { display: none; }
 .cms-menu-list li.opened ul { display: block; }
 .cms-menu-list li li li { background-color: #287099; }
-.cms-menu-list li li li a { font-size: 11px; padding: 0 10px 0 36px; height: 32px; line-height: 32px; color: #e2f0f7; background: none; border-top: 1px solid #338dc1; border-bottom: 1px solid #1e5270; }
+.cms-menu-list li li li a { font-size: 11px; padding: 0 10px 0 48px; height: 32px; line-height: 32px; color: #e2f0f7; background: none; border-top: 1px solid #338dc1; border-bottom: 1px solid #1e5270; }
 .cms-menu-list li li li a.current, .cms-menu-list li li li a:hover { background: #2e7ead; border-top: 1px solid #2e7ead; color: white; }
 .cms-menu-list li li li a:focus { background: #236184; border-top: 1px solid #1e5270; color: white; }
 .cms-menu-list li li li.current a { font-weight: bold; color: white; }
@@ -172,11 +172,14 @@ li.jstree-closed > ul { display: none; }
 .cms-menu-list.collapsed li > li { display: none; }
 
 /** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in sapphire/css/Form.css. */
-.field { display: block; padding: 10px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); }
-.field label { float: left; width: 10em; }
-.field .middleColumn { margin-left: 10em; }
+.field { display: block; padding: 10px 0; border-bottom-width: 2px; border-bottom: 2px groove white; -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
+.field label { float: left; width: 15em; font-weight: bold; padding: 5px 0; font-size: 11px; }
+.field .middleColumn { margin-left: 15em; }
 .field .middleColumn .field { display: inline; padding: 0; border: none; }
 .field .middleColumn label { float: none; width: auto; }
+
+.htmleditor label { display: block; float: none; padding-bottom: 10px; }
+.htmleditor .middleColumn { margin-left: 0px; }
 
 form.nostyle .field { display: inline; padding: 0; border: 0; }
 form.nostyle label { float: none; width: auto; }
@@ -184,7 +187,7 @@ form.nostyle .middleColumn { margin-left: 0; }
 
 .field.nolabel .middleColumn { margin-left: 0; }
 
-input, textarea { -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; -ms-border-radius: 5px; -khtml-border-radius: 5px; border-radius: 5px; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #eceff1), color-stop(50%, #ffffff), color-stop(100%, #eceff1)); background-image: -moz-linear-gradient(top, #eceff1 0%, #ffffff 50%, #eceff1 100%); background-image: linear-gradient(top, #eceff1 0%, #ffffff 50%, #eceff1 100%); border: 1px solid rgba(201, 205, 206, 0.8); padding: 3px; }
+input, textarea { -moz-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px; -khtml-border-radius: 3px; border-radius: 3px; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #ffffff), color-stop(100%, #f2f4f5)); background-image: -moz-linear-gradient(top, #ffffff 0%, #f2f4f5 100%); background-image: linear-gradient(top, #ffffff 0%, #f2f4f5 100%); border: 1px solid rgba(201, 205, 206, 0.8); padding: 3px; }
 
 input.loading, input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, .ui-widget-header input.ui-state-default.loading { padding-left: 16px; background: #eceff1 url(../../images/network-save.gif) no-repeat center left; }
 
@@ -195,7 +198,7 @@ input.loading, input.ui-state-default.loading, .ui-widget-content input.ui-state
 .ss-ui-button.ss-ui-action-minor, .ui-widget-content .ss-ui-button.ss-ui-action-minor .ui-widget-header .ss-ui-button.ss-ui-action-minor { background: none; padding: 0; border: 0; color: #1f1f1f; text-decoration: underline; }
 
 .cms-edit-form { padding-bottom: 20px; }
-.cms-edit-form .text input, .cms-edit-form textarea { width: 300px; }
+.cms-edit-form .text input, .cms-edit-form textarea { width: 99%; }
 .cms-edit-form .Actions { text-align: right; }
 
 .cms-content-tools .field label { float: none; width: auto; }
@@ -206,7 +209,7 @@ input.loading, input.ui-state-default.loading, .ui-widget-content input.ui-state
 /** This file defines CMS-specific customizations to the jQuery UI theme. Every rule in this file should be wrapped in the '.cms' selector (to make it more specific), and contain ONLY overwritten jQuery UI rules (with 'ui-' prefix).  This file should be fairly short, as we're using our own custom jQuery UI theme already. TODO Add theme reference  Use _style.scss to add more generic style information, and read the jQuery UI theming API: http://jqueryui.com/docs/Theming/API */
 .cms .ui-tabs { padding: 0; }
 .cms .ui-tabs .ui-widget-header { border: 0; background: none; }
-.cms .ui-widget-content, .cms .ui-tabs .ui-tabs-panel { color: #444444; font-size: 1em; border: 0; background: #eceff1; }
+.cms .ui-widget-content, .cms .ui-tabs .ui-tabs-panel { color: #444444; font-size: 1em; border: 0; background: transparent; }
 .cms .ui-widget-header { background: #eceff1; border: 0; padding: 0; }
 .cms .ss-ui-button { padding: 5px; text-decoration: none; }
 
@@ -234,15 +237,15 @@ body .ui-widget { font-size: 13px; }
 
 strong { font-weight: bold; }
 
-.cms-content-header { background-color: #b1bec6; padding: 8px; height: 32px; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b1bec6), color-stop(100%, #94a5b0)); background-image: -moz-linear-gradient(top, #b1bec6 0%, #94a5b0 100%); background-image: linear-gradient(top, #b1bec6 0%, #94a5b0 100%); }
-.cms-content-header h2 { float: left; padding: 8px; font-size: 14px; font-weight: bold; width: 230px; }
+.cms-content-header { background-color: #b1bec6; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #dde3e6), color-stop(100%, #94a5b0)); background-image: -moz-linear-gradient(top, #dde3e6 0%, #94a5b0 100%); background-image: linear-gradient(top, #dde3e6 0%, #94a5b0 100%); border-bottom: 3px solid #5e7280; padding: 8px; height: 32px; }
+.cms-content-header h2 { float: left; padding: 8px; font-size: 14px; font-weight: bold; text-shadow: #ced7dc 1px 1px 0; width: 230px; }
 .cms-content-header > div { width: 9999em; overflow: hidden; }
 .cms-content-header .cms-content-header-tabs { float: left; }
 
-.ui-tabs .cms-content-header .ui-tabs-nav li { height: 40px; }
-.ui-tabs .cms-content-header .ui-tabs-nav li a { font-weight: bold; font-size: 11px; padding-top: 8px; }
-.ui-tabs .cms-content-header .ui-state-default, .ui-tabs .cms-content-header .ui-widget-content .ui-state-default, .ui-tabs .cms-content-header .ui-widget-header .ui-state-default { background-color: #feffff; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #feffff), color-stop(100%, #d6d9da)); background-image: -moz-linear-gradient(top, #feffff 0%, #d6d9da 100%); background-image: linear-gradient(top, #feffff 0%, #d6d9da 100%); }
-.ui-tabs .cms-content-header .ui-state-active, .ui-tabs .cms-content-header .ui-widget-content .ui-state-active, .ui-tabs .cms-content-header .ui-widget-header .ui-state-active { background: #eceff1; }
+.ui-tabs .cms-content-header .ui-tabs-nav li { height: 37px; }
+.ui-tabs .cms-content-header .ui-tabs-nav li a { font-weight: bold; font-size: 11px; padding-top: 11px; }
+.ui-tabs .cms-content-header .ui-state-default, .ui-tabs .cms-content-header .ui-widget-content .ui-state-default, .ui-tabs .cms-content-header .ui-widget-header .ui-state-default { background-color: #feffff; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #feffff), color-stop(100%, #d6d9da)); background-image: -moz-linear-gradient(top, #feffff 0%, #d6d9da 100%); background-image: linear-gradient(top, #feffff 0%, #d6d9da 100%); border: none; border-bottom: 3px solid #5e7280 !important; margin: 0 2px; }
+.ui-tabs .cms-content-header .ui-state-active, .ui-tabs .cms-content-header .ui-widget-content .ui-state-active, .ui-tabs .cms-content-header .ui-widget-header .ui-state-active { background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left; height: 40px; }
 
 .cms-content-tools { background-color: #dde3e6; width: 230px; overflow: auto; }
 .cms-content-tools .cms-panel-header, .cms-content-tools .cms-panel-content { padding: 10px; }
@@ -258,8 +261,8 @@ strong { font-weight: bold; }
 .cms-logo .version { display: none; }
 .cms-logo a { display: inline-block; height: 25px; width: 25px; float: left; margin-right: 10px; background: url('../images/logo_small.png?1309939638') no-repeat; text-indent: -9999em; }
 
-.cms-login-status { border-top: 1px solid #19435c; height: 23px; padding: 8px 0 0 14px; overflow: hidden; line-height: 16px; font-size: 11px; }
-.cms-login-status .logout-link { display: inline-block; height: 16px; width: 16px; float: left; margin-right: 10px; background: url(../images/logout.png) no-repeat; text-indent: -9999em; }
+.cms-login-status { border-top: 1px solid #19435c; height: 23px; padding: 8px 4px 0 4px; overflow: hidden; line-height: 16px; font-size: 11px; }
+.cms-login-status .logout-link { display: inline-block; height: 16px; width: 16px; float: left; margin: 0 15px 0 5px; background: url(../images/logout.png) no-repeat; text-indent: -9999em; }
 
 .ss-loading-screen, .ss-loading-screen .loading-logo { width: 100%; height: 100%; overflow: hidden; position: absolute; background: #fff; background: -moz-radial-gradient(50% 50% 180deg, circle cover, white, #efefef, #c7c7c7 100%); background: -webkit-gradient(radial, 50% 50%, 350, 50% 50%, 0, from(#e3e3e3), to(white)); z-index: 100000; margin: 0; padding: 0; }
 
@@ -268,7 +271,7 @@ strong { font-weight: bold; }
 .ss-loading-screen p span.notice { display: inline-block; font-size: 14px; padding: 10px 20px; color: #dc7f00; border: none; -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; -ms-border-radius: 5px; -khtml-border-radius: 5px; border-radius: 5px; }
 .ss-loading-screen .loading-animation { display: none; position: absolute; left: 49%; top: 75%; }
 
-.cms-content-actions { padding: 8px; }
+.cms-content-actions { padding: 8px; background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left; }
 
 /** Messages (see sapphire/css/Form.css) */
 .message { margin: 1em 0; padding: 0.5em; font-weight: bold; border: 1px black solid; }
@@ -286,6 +289,7 @@ strong { font-weight: bold; }
 .cms-page-add-form-dialog #PageType li .title { width: 100px; font-weight: bold; }
 .cms-page-add-form-dialog #PageType li .description { font-style: italic; }
 
+.cms-content-toolbar { overflow: hidden; *zoom: 1; }
 .cms-content-toolbar > * { display: inline-block; }
 .cms-content-toolbar .cms-tree-view-modes * { display: inline-block; }
 .cms-content-toolbar .cms-content-batchactions form > * { display: inline-block; }
@@ -305,7 +309,7 @@ form.member-profile-form .formattingHelpText { margin: 5px auto; color: #333; pa
 form.member-profile-form .formattingHelpText ul { padding: 0; }
 form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; margin-bottom: 2px; }
 
-.cms-content-fields { overflow: auto; }
+.cms-content-fields { overflow: auto; background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left; }
 
 .cms-panel { overflow: hidden; }
 .cms-panel .toggle-expand, .cms-panel .toggle-collapse { display: block; position: absolute; bottom: 0; text-align: right; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b1bec6), color-stop(100%, #94a5b0)); background-image: -moz-linear-gradient(top, #b1bec6 0%, #94a5b0 100%); background-image: linear-gradient(top, #b1bec6 0%, #94a5b0 100%); text-decoration: none; }

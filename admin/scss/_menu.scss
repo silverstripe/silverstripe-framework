@@ -48,6 +48,7 @@
 }
 
 .cms-menu-list {
+	
 	li {
 		
 		a {
@@ -61,12 +62,12 @@
 			text-overflow: ellipsis;
 			text-shadow: lighten($color-base, 10%) 1px 1px 0;
 			color: $color-text-dark;
-			padding: 5px;
+			padding: 5px 5px 5px 12px; //left aligning with SS logo at top
 			background-color: $color-base;
 			
 			@include linear-gradient(color-stops(
 				$color-base,
-				darken($color-base, 8%)
+				darken($color-base, 12%)
 			));
 
 			border-top: 1px solid lighten($color-base, 10%);
@@ -150,7 +151,7 @@
 
 				a {
 					font-size: $font-small-size;
-					padding: 0 10px 0 36px;
+					padding: 0 10px 0 48px;
 					height: 32px;
 					line-height: 32px;
 					color: lighten($color-menu-button, 45%);
