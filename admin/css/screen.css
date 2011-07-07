@@ -344,73 +344,43 @@ form.nostyle .middleColumn { margin-left: 0; }
 .field.nolabel .middleColumn { margin-left: 0; }
 
 /* line 64, ../scss/_forms.scss */
-input, textarea { -moz-border-radius: 4px; -webkit-border-radius: 4px; -o-border-radius: 4px; -ms-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; background: #fff; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(top, #efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(top, #efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(top, #efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -ms-linear-gradient(top, #efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(top, #efefef, #ffffff 10%, #ffffff 90%, #efefef); border: 1px solid #b3b3b3; padding: 7px; }
+.field.text input, textarea { -moz-border-radius: 4px; -webkit-border-radius: 4px; -o-border-radius: 4px; -ms-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; background: #fff; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(top, #efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(top, #efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(top, #efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -ms-linear-gradient(top, #efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(top, #efefef, #ffffff 10%, #ffffff 90%, #efefef); border: 1px solid #b3b3b3; padding: 7px; }
 
 /** ---------------------------------------------------- Buttons ---------------------------------------------------- */
-/* line 83, ../scss/_forms.scss */
-input.loading, input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, .ui-widget-header input.ui-state-default.loading { padding-left: 16px; background: #eceff1 url(../../images/network-save.gif) no-repeat center left; }
-
-/* line 90, ../scss/_forms.scss */
-.ss-ui-button.ss-ui-action-constructive, .ui-widget-content .ss-ui-button.ss-ui-action-constructive, .ui-widget-header .ss-ui-button.ss-ui-action-constructive { padding-left: 23px; color: white; border-color: #118021; background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #84be3f), color-stop(100%, #128945)); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -webkit-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -moz-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -o-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -ms-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, linear-gradient(#84be3f, #128945); text-shadow: #475964 1px 1px 0; -moz-box-shadow: #748d9d 1px 1px 2px; -webkit-box-shadow: #748d9d 1px 1px 2px; -o-box-shadow: #748d9d 1px 1px 2px; box-shadow: #748d9d 1px 1px 2px; }
-
-/* line 104, ../scss/_forms.scss */
-.ss-ui-button.ss-ui-action-constructive.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #7fb63c), color-stop(100%, #107b3e)); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -webkit-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -moz-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -o-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -ms-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, linear-gradient(#7fb63c, #107b3e); -moz-box-shadow: #92a5b2 1px 1px 1px; -webkit-box-shadow: #92a5b2 1px 1px 1px; -o-box-shadow: #92a5b2 1px 1px 1px; box-shadow: #92a5b2 1px 1px 1px; }
-
-/* line 114, ../scss/_forms.scss */
-.ss-ui-button.ss-ui-action-constructive.cms-page-add-button { background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #84be3f), color-stop(100%, #128945)); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -webkit-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -moz-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -o-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -ms-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, linear-gradient(#84be3f, #128945); }
-
+/* line 84, ../scss/_forms.scss */
+.cms input.loading, .cms input.ui-state-default.loading, .cms .ui-widget-content input.ui-state-default.loading, .cms .ui-widget-header input.ui-state-default.loading { padding-left: 16px; background: #eceff1 url(../../images/network-save.gif) no-repeat center left; }
+/* line 91, ../scss/_forms.scss */
+.cms .ss-ui-button.ss-ui-action-constructive, .cms .ui-widget-content .ss-ui-button.ss-ui-action-constructive, .cms .ui-widget-header .ss-ui-button.ss-ui-action-constructive { padding-left: 23px; color: white; border-color: #118021; background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px 6px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #84be3f), color-stop(100%, #128945)); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px 6px, -webkit-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px 6px, -moz-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px 6px, -o-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px 6px, -ms-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px 6px, linear-gradient(#84be3f, #128945); background-color: #84be3f; text-shadow: #475964 1px 1px 0; -moz-box-shadow: #748d9d 1px 1px 2px; -webkit-box-shadow: #748d9d 1px 1px 2px; -o-box-shadow: #748d9d 1px 1px 2px; box-shadow: #748d9d 1px 1px 2px; }
+/* line 106, ../scss/_forms.scss */
+.cms .ss-ui-button.ss-ui-action-constructive.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px 6px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #7fb63c), color-stop(100%, #107b3e)); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px 6px, -webkit-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px 6px, -moz-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px 6px, -o-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px 6px, -ms-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px 6px, linear-gradient(#7fb63c, #107b3e); background-color: #128945; -moz-box-shadow: #92a5b2 1px 1px 1px; -webkit-box-shadow: #92a5b2 1px 1px 1px; -o-box-shadow: #92a5b2 1px 1px 1px; box-shadow: #92a5b2 1px 1px 1px; }
+/* line 117, ../scss/_forms.scss */
+.cms .ss-ui-button.ss-ui-action-constructive.cms-page-add-button { background-position: 5px -155px; }
 /* line 123, ../scss/_forms.scss */
-.ss-ui-button.ss-ui-action-constructive.cms-page-add-button.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #7fb63c), color-stop(100%, #107b3e)); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -webkit-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -moz-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -o-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -ms-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, linear-gradient(#7fb63c, #107b3e); -moz-box-shadow: #92a5b2 1px 1px 1px; -webkit-box-shadow: #92a5b2 1px 1px 1px; -o-box-shadow: #92a5b2 1px 1px 1px; box-shadow: #92a5b2 1px 1px 1px; }
+.cms .ss-ui-button.ss-ui-action-destructive, .cms .ui-widget-content .ss-ui-button.ss-ui-action-destructive, .cms .ui-widget-header .ss-ui-button.ss-ui-action-destructive { color: red; background-color: #f5f5f5; }
+/* line 128, ../scss/_forms.scss */
+.cms .ss-ui-button.ss-ui-action-destructive.delete { padding-left: 23px; color: red; border-color: #ababab; background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px -26px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f5f5), color-stop(100%, #c3c3c3)); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px -26px, -webkit-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px -26px, -moz-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px -26px, -o-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px -26px, -ms-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px -26px, linear-gradient(#f5f5f5, #c3c3c3); text-shadow: none; -moz-box-shadow: #aab9c3 1px 1px 2px; -webkit-box-shadow: #aab9c3 1px 1px 2px; -o-box-shadow: #aab9c3 1px 1px 2px; box-shadow: #aab9c3 1px 1px 2px; }
+/* line 142, ../scss/_forms.scss */
+.cms .ss-ui-button.ss-ui-action-destructive.delete.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px -26px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f0f0f0), color-stop(100%, #bbbbbb)); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px -26px, -webkit-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px -26px, -moz-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px -26px, -o-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px -26px, -ms-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 5px -26px, linear-gradient(#f0f0f0, #bbbbbb); background-color: #c3c3c3; -moz-box-shadow: #92a5b2 1px 1px 1px; -webkit-box-shadow: #92a5b2 1px 1px 1px; -o-box-shadow: #92a5b2 1px 1px 1px; box-shadow: #92a5b2 1px 1px 1px; }
+/* line 155, ../scss/_forms.scss */
+.cms .ss-ui-button.ss-ui-action-minor, .cms .ui-widget-content .ss-ui-button.ss-ui-action-minor .ui-widget-header .ss-ui-button.ss-ui-action-minor { background: none; padding: 0; border: 0; color: #1f1f1f; text-decoration: underline; }
 
-/* line 135, ../scss/_forms.scss */
-.ss-ui-button.ss-ui-action-destructive, .ui-widget-content .ss-ui-button.ss-ui-action-destructive, .ui-widget-header .ss-ui-button.ss-ui-action-destructive { color: red; }
-
-/* line 139, ../scss/_forms.scss */
-.ss-ui-button.ss-ui-action-destructive.delete { padding-left: 23px; color: red; border-color: #ababab; background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f5f5), color-stop(100%, #c3c3c3)); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -webkit-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -moz-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -o-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -ms-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, linear-gradient(#f5f5f5, #c3c3c3); text-shadow: none; -moz-box-shadow: #aab9c3 1px 1px 2px; -webkit-box-shadow: #aab9c3 1px 1px 2px; -o-box-shadow: #aab9c3 1px 1px 2px; box-shadow: #aab9c3 1px 1px 2px; }
-
-/* line 153, ../scss/_forms.scss */
-.ss-ui-button.ss-ui-action-destructive.delete.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f0f0f0), color-stop(100%, #bbbbbb)); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -webkit-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -moz-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -o-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -ms-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, linear-gradient(#f0f0f0, #bbbbbb); -moz-box-shadow: #92a5b2 1px 1px 1px; -webkit-box-shadow: #92a5b2 1px 1px 1px; -o-box-shadow: #92a5b2 1px 1px 1px; box-shadow: #92a5b2 1px 1px 1px; }
-
-/* line 165, ../scss/_forms.scss */
-.ss-ui-button.ss-ui-action-minor, .ui-widget-content .ss-ui-button.ss-ui-action-minor .ui-widget-header .ss-ui-button.ss-ui-action-minor { background: none; padding: 0; border: 0; color: #1f1f1f; text-decoration: underline; }
-
-/* line 173, ../scss/_forms.scss */
+/* line 164, ../scss/_forms.scss */
 .cms-edit-form { padding-bottom: 20px; }
-/* line 176, ../scss/_forms.scss */
+/* line 167, ../scss/_forms.scss */
 .cms-edit-form .text input, .cms-edit-form textarea { width: 300px; font-family: Arial, sans-serif; font-size: 13px; }
-/* line 182, ../scss/_forms.scss */
+/* line 173, ../scss/_forms.scss */
 .cms-edit-form .Actions { text-align: right; }
 
-/* line 189, ../scss/_forms.scss */
-.cms-content-tools .field label { float: none; width: auto; }
-/* line 194, ../scss/_forms.scss */
-.cms-content-tools .field .middleColumn { margin-left: 0; }
-
-/* line 200, ../scss/_forms.scss */
-.cms-content-toolbar { display: block; padding: 10px 0; margin: 0 0 15px 0; border-bottom-width: 2px; border-bottom: 2px groove rgba(255, 255, 255, 0.8); -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
-
-/* line 211, ../scss/_forms.scss */
-.cms-content-batchactions, .cms-content-constructive-actions { float: right; }
-
-/* line 215, ../scss/_forms.scss */
-.cms-content-batchactions { position: relative; display: block; margin-right: 8px; }
-
-/* line 221, ../scss/_forms.scss */
-form.cms-batch-actions { float: left; }
-
-/* line 225, ../scss/_forms.scss */
-.cms-content-constructive-actions a { display: block; }
-
 /** ---------------------------------------------------- Specific field overrides ---------------------------------------------------- */
-/* line 234, ../scss/_forms.scss */
+/* line 183, ../scss/_forms.scss */
 .htmleditor label { display: block; float: none; padding-bottom: 10px; }
-/* line 240, ../scss/_forms.scss */
+/* line 189, ../scss/_forms.scss */
 .htmleditor .middleColumn { margin-left: 0px; clear: left; }
 
-/* line 247, ../scss/_forms.scss */
+/* line 196, ../scss/_forms.scss */
 .field#ViewerGroups label, .field#EditorGroups label, .field#CreateTopLevelGroups label { display: none; }
 
-/* line 252, ../scss/_forms.scss */
+/* line 201, ../scss/_forms.scss */
 .action-hidden { display: none; }
 
 /** This file defines CMS-specific customizations to the jQuery UI theme. Every rule in this file should be wrapped in the '.cms' selector (to make it more specific), and contain ONLY overwritten jQuery UI rules (with 'ui-' prefix).  This file should be fairly short, as we're using our own custom jQuery UI theme already. TODO Add theme reference  Use _style.scss to add more generic style information, and read the jQuery UI theming API: http://jqueryui.com/docs/Theming/API */
@@ -435,9 +405,9 @@ form.cms-batch-actions { float: left; }
 /* line 59, ../scss/_uitheme.scss */
 .cms .ui-state-hover { cursor: pointer; }
 /* line 65, ../scss/_uitheme.scss */
-.cms .ss-ui-button, .cms .ui-widget-content .ss-ui-button, .cms .ui-widget-header .ss-ui-button { padding: 5px 7px 5px 7px; color: white; background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 999px 999px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #84be3f), color-stop(100%, #128945)); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 999px 999px, -webkit-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 999px 999px, -moz-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 999px 999px, -o-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 999px 999px, -ms-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 999px 999px, linear-gradient(#84be3f, #128945); -moz-box-shadow: #748d9d 1px 1px 2px; -webkit-box-shadow: #748d9d 1px 1px 2px; -o-box-shadow: #748d9d 1px 1px 2px; box-shadow: #748d9d 1px 1px 2px; }
+.cms .ss-ui-button, .cms .ui-widget-content .ss-ui-button, .cms .ui-widget-header .ss-ui-button { padding: 5px 7px 5px 7px; color: #1f1f1f; background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 999px 999px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f5f5), color-stop(100%, #c3c3c3)); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 999px 999px, -webkit-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 999px 999px, -moz-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 999px 999px, -o-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 999px 999px, -ms-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310018832') no-repeat 999px 999px, linear-gradient(#f5f5f5, #c3c3c3); background-color: #f5f5f5; -moz-box-shadow: #748d9d 1px 1px 2px; -webkit-box-shadow: #748d9d 1px 1px 2px; -o-box-shadow: #748d9d 1px 1px 2px; box-shadow: #748d9d 1px 1px 2px; }
 
-/* line 79, ../scss/_uitheme.scss */
+/* line 80, ../scss/_uitheme.scss */
 .cms-content-form { overflow: auto; background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left !important; }
 
 /** This file defines most styles of the CMS: Colors, fonts, backgrounds, alignments, dimensions.  Use SCSS variable definitions in screen.css to avoid repeating styles like background colours or padding dimensions. See themes/_default.scss to get started.  To avoid this file getting too large and complicated, it is encouraged to create new SCSS files for larger components like the CMS menu or tree (see _tree.scss and _menu.scss). */
@@ -578,74 +548,91 @@ strong { font-weight: bold; }
 
 /** -------------------------------------------- Content toolbar -------------------------------------------- */
 /* line 358, ../scss/_style.scss */
-.cms-content-toolbar { overflow: hidden; *zoom: 1; }
-/* line 361, ../scss/_style.scss */
-.cms-content-toolbar > * { float: left; }
-/* line 365, ../scss/_style.scss */
-.cms-content-toolbar .cms-tree-view-modes * { display: inline-block; }
+.cms-content-toolbar { overflow: hidden; *zoom: 1; display: block; padding: 10px 0; margin: 0 0 15px 0; border-bottom-width: 2px; border-bottom: 2px groove rgba(255, 255, 255, 0.8); -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
 /* line 369, ../scss/_style.scss */
+.cms-content-toolbar > * { float: left; }
+/* line 373, ../scss/_style.scss */
+.cms-content-toolbar .cms-tree-view-modes * { display: inline-block; }
+/* line 377, ../scss/_style.scss */
 .cms-content-toolbar .cms-content-batchactions form > * { display: inline-block; }
 
+/* line 384, ../scss/_style.scss */
+.cms-content-tools .field label { float: none; width: auto; }
+/* line 389, ../scss/_style.scss */
+.cms-content-tools .field .middleColumn { margin-left: 0; }
+
+/* line 395, ../scss/_style.scss */
+.cms-content-batchactions, .cms-content-constructive-actions { float: right; }
+
+/* line 399, ../scss/_style.scss */
+.cms-content-batchactions { float: right; position: relative; display: block; margin-right: 8px; }
+
+/* line 406, ../scss/_style.scss */
+form.cms-batch-actions { float: left; }
+
+/* line 410, ../scss/_style.scss */
+.cms-content-constructive-actions a { display: block; float: right; }
+
 /** -------------------------------------------- Preview header (remove before release) -------------------------------------------- */
-/* line 378, ../scss/_style.scss */
+/* line 419, ../scss/_style.scss */
 .cms-preview { width: 1px; }
-/* line 381, ../scss/_style.scss */
+/* line 422, ../scss/_style.scss */
 .cms-preview .cms-preview-toggle { width: 10px; }
-/* line 385, ../scss/_style.scss */
+/* line 426, ../scss/_style.scss */
 .cms-preview iframe { width: 100%; height: 100%; }
 
-/* line 391, ../scss/_style.scss */
+/* line 432, ../scss/_style.scss */
 .cms-preview-header { background-color: #FFBE66; padding: 10px; font-weight: bold; }
 
 /** -------------------------------------------- Member Profile -------------------------------------------- */
-/* line 403, ../scss/_style.scss */
+/* line 444, ../scss/_style.scss */
 form.member-profile-form #CsvFile .middleColumn { background: none !important; }
-/* line 407, ../scss/_style.scss */
+/* line 448, ../scss/_style.scss */
 form.member-profile-form .advanced h4 { margin-bottom: .5em; }
-/* line 411, ../scss/_style.scss */
+/* line 452, ../scss/_style.scss */
 form.member-profile-form .Actions { text-align: left; border: 0; }
-/* line 416, ../scss/_style.scss */
+/* line 457, ../scss/_style.scss */
 form.member-profile-form input.customFormat { border: 1px solid #ccc !important; padding: 3px; margin-left: 2px; }
-/* line 421, ../scss/_style.scss */
+/* line 462, ../scss/_style.scss */
 form.member-profile-form .formattingHelpToggle { font-size: 11px; padding: 3px; }
-/* line 425, ../scss/_style.scss */
+/* line 466, ../scss/_style.scss */
 form.member-profile-form .formattingHelpText { margin: 5px auto; color: #333; padding: 5px 10px; width: 90%; background: #fff; border: 1px solid #ccc; }
-/* line 433, ../scss/_style.scss */
+/* line 474, ../scss/_style.scss */
 form.member-profile-form .formattingHelpText ul { padding: 0; }
-/* line 436, ../scss/_style.scss */
+/* line 477, ../scss/_style.scss */
 form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; margin-bottom: 2px; }
 
-/* line 444, ../scss/_style.scss */
+/* line 485, ../scss/_style.scss */
 .cms-content-fields { overflow: auto; background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left; }
 
 /** -------------------------------------------- Panels -------------------------------------------- */
-/* line 453, ../scss/_style.scss */
+/* line 494, ../scss/_style.scss */
 .cms-panel { overflow: hidden; }
-/* line 458, ../scss/_style.scss */
+/* line 499, ../scss/_style.scss */
 .cms-panel .toggle-expand, .cms-panel .toggle-collapse { display: block; position: absolute; bottom: 0; text-align: right; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(top, #b0bec7, #92a5b2); background-image: -moz-linear-gradient(top, #b0bec7, #92a5b2); background-image: -o-linear-gradient(top, #b0bec7, #92a5b2); background-image: -ms-linear-gradient(top, #b0bec7, #92a5b2); background-image: linear-gradient(top, #b0bec7, #92a5b2); text-decoration: none; }
-/* line 469, ../scss/_style.scss */
+/* line 510, ../scss/_style.scss */
 .cms-panel .toggle-expand span, .cms-panel .toggle-collapse span { display: inline-block; margin: 5px; color: #1f1f1f; font-size: 16px; }
-/* line 477, ../scss/_style.scss */
+/* line 518, ../scss/_style.scss */
 .cms-panel .toggle-collapse { width: 100%; }
-/* line 481, ../scss/_style.scss */
+/* line 522, ../scss/_style.scss */
 .cms-panel .toggle-expand { width: 40px; }
-/* line 487, ../scss/_style.scss */
+/* line 528, ../scss/_style.scss */
 .cms-panel.collapsed .cms-panel-content { display: none; }
-/* line 491, ../scss/_style.scss */
+/* line 532, ../scss/_style.scss */
 .cms-panel.collapsed .cms-panel-header { -moz-transform: rotate(-90deg); -webkit-transform: rotate(-90deg); -o-transform: rotate(-90deg); -ms-transform: rotate(-90deg); transform: rotate(-90deg); position: relative; top: 100px; }
 
-/* line 501, ../scss/_style.scss */
+/* line 542, ../scss/_style.scss */
 .cms-content .cms-panel.collapsed { cursor: pointer; }
 
 /** -------------------------------------------- Other -------------------------------------------- */
-/* line 509, ../scss/_style.scss */
+/* line 550, ../scss/_style.scss */
 .cms-preview { background-color: #b0bec7; }
-/* line 512, ../scss/_style.scss */
+/* line 553, ../scss/_style.scss */
 .cms-preview .cms-preview-toggle { cursor: pointer; }
-/* line 515, ../scss/_style.scss */
+/* line 556, ../scss/_style.scss */
 .cms-preview .cms-preview-toggle a { display: block; width: 15px; height: 15px; position: relative; left: 10px; top: 48%; background-color: #b0bec7; color: white; font-weight: bold; text-decoration: none; z-index: 2000; }
-/* line 532, ../scss/_style.scss */
+/* line 573, ../scss/_style.scss */
 .cms-preview.is-collapsed .cms-preview-toggle a { left: -15px; }
 
-/* line 540, ../scss/_style.scss */
+/* line 581, ../scss/_style.scss */
 .cms-switch-view a { padding-right: 1em; }

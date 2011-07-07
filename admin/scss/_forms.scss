@@ -61,7 +61,7 @@ form.nostyle {
 	}
 }
 
-input, textarea {
+.field.text input, textarea {
 	@include border-radius(4px);
 	background: #fff;
 	@include linear-gradient(color-stops(
@@ -78,96 +78,87 @@ input, textarea {
  * Buttons
  * ---------------------------------------------------- */
 
-input.loading,
-input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, 
-.ui-widget-header input.ui-state-default.loading {
-	padding-left: 16px;
-	background: $color-widget-bg url(../../images/network-save.gif) no-repeat center left;
-}
+.cms {
+	input.loading,
+	input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, 
+	.ui-widget-header input.ui-state-default.loading {
+		padding-left: 16px;
+		background: $color-widget-bg url(../../images/network-save.gif) no-repeat center left;
+	}
 
-.ss-ui-button.ss-ui-action-constructive,
-.ui-widget-content .ss-ui-button.ss-ui-action-constructive,
-.ui-widget-header .ss-ui-button.ss-ui-action-constructive {
-	padding-left: 23px;
-	color: $color-text-light;
-	border-color: $color-button-constructive-border;
-	@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 6px,
-		linear-gradient(color-stops(
-			$color-button-constructive-light,
-			$color-button-constructive-dark
-		))
-	);
-	@include text-shadow(darken($color-base, 40%) 1px 1px 0);
-	@include box-shadow(darken($color-base, 20%) 1px 1px 2px);
-}
+	.ss-ui-button.ss-ui-action-constructive,
+	.ui-widget-content .ss-ui-button.ss-ui-action-constructive,
+	.ui-widget-header .ss-ui-button.ss-ui-action-constructive {
+		padding-left: 23px;
+		color: $color-text-light;
+		border-color: $color-button-constructive-border;
+		@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 6px,
+			linear-gradient(color-stops(
+				$color-button-constructive-light,
+				$color-button-constructive-dark
+			))
+		);
+		background-color: $color-button-constructive-light;
+		@include text-shadow(darken($color-base, 40%) 1px 1px 0);
+		@include box-shadow(darken($color-base, 20%) 1px 1px 2px);
+	}
 
-.ss-ui-button.ss-ui-action-constructive.ui-state-hover {
-	@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 6px,
-		linear-gradient(color-stops(
-			darken($color-button-constructive-light, 2%),
-			darken($color-button-constructive-dark, 3%)
-		))
-	);
-	@include box-shadow(darken($color-base, 10%) 1px 1px 1px);
-}
+	.ss-ui-button.ss-ui-action-constructive.ui-state-hover {
+		@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 6px,
+			linear-gradient(color-stops(
+				darken($color-button-constructive-light, 2%),
+				darken($color-button-constructive-dark, 3%)
+			))
+		);
+		background-color: $color-button-constructive-dark;
+		@include box-shadow(darken($color-base, 10%) 1px 1px 1px);
+	}
 
-.ss-ui-button.ss-ui-action-constructive.cms-page-add-button {
-	@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px -155px,
-		linear-gradient(color-stops(
-			$color-button-constructive-light,
-			$color-button-constructive-dark
-		))
-	);
-}
+	.ss-ui-button.ss-ui-action-constructive.cms-page-add-button {
+		background-position: 5px -155px;
+	}
 
-.ss-ui-button.ss-ui-action-constructive.cms-page-add-button.ui-state-hover {
-	@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px -155px,
-		linear-gradient(color-stops(
-			darken($color-button-constructive-light, 2%),
-			darken($color-button-constructive-dark, 3%)
-		))
-	);
-	@include box-shadow(darken($color-base, 10%) 1px 1px 1px);
-}
+	.ss-ui-button.ss-ui-action-destructive,
+	.ui-widget-content .ss-ui-button.ss-ui-action-destructive,
+	.ui-widget-header .ss-ui-button.ss-ui-action-destructive {
+		color: $color-button-destructive;
+		background-color: $color-button-generic-light;
+	}
 
-.ss-ui-button.ss-ui-action-destructive,
-.ui-widget-content .ss-ui-button.ss-ui-action-destructive,
-.ui-widget-header .ss-ui-button.ss-ui-action-destructive {
-	color: $color-button-destructive;
-}
+	.ss-ui-button.ss-ui-action-destructive.delete {
+		padding-left: 23px;
+		color: $color-button-destructive;
+		border-color: $color-button-generic-border;
+		@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px -26px,
+			linear-gradient(color-stops(
+				$color-button-generic-light,
+				$color-button-generic-dark
+			))
+		);
+		@include text-shadow(none);
+		@include box-shadow(darken($color-base, 2%) 1px 1px 2px);
+	}
 
-.ss-ui-button.ss-ui-action-destructive.delete {
-	padding-left: 23px;
-	color: $color-button-destructive;
-	border-color: $color-button-generic-border;
-	@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px -26px,
-		linear-gradient(color-stops(
-			$color-button-generic-light,
-			$color-button-generic-dark
-		))
-	);
-	@include text-shadow(none);
-	@include box-shadow(darken($color-base, 2%) 1px 1px 2px);
-}
+	.ss-ui-button.ss-ui-action-destructive.delete.ui-state-hover {
+		@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px -26px,
+			linear-gradient(color-stops(
+				darken($color-button-generic-light, 2%),
+				darken($color-button-generic-dark, 3%)
+			))
+		);
+		background-color: $color-button-generic-dark;
+		@include box-shadow(darken($color-base, 10%) 1px 1px 1px);
+	}
 
-.ss-ui-button.ss-ui-action-destructive.delete.ui-state-hover {
-	@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px -26px,
-		linear-gradient(color-stops(
-			darken($color-button-generic-light, 2%),
-			darken($color-button-generic-dark, 3%)
-		))
-	);
-	@include box-shadow(darken($color-base, 10%) 1px 1px 1px);
-}
-
-.ss-ui-button.ss-ui-action-minor,
-.ui-widget-content .ss-ui-button.ss-ui-action-minor
-.ui-widget-header .ss-ui-button.ss-ui-action-minor {
-	background: none;
-	padding: 0;
-	border: 0;
-	color: $color-text-dark;
-	text-decoration: underline;
+	.ss-ui-button.ss-ui-action-minor,
+	.ui-widget-content .ss-ui-button.ss-ui-action-minor
+	.ui-widget-header .ss-ui-button.ss-ui-action-minor {
+		background: none;
+		padding: 0;
+		border: 0;
+		color: $color-text-dark;
+		text-decoration: underline;
+	}
 }
 
 .cms-edit-form {

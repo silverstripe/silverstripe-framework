@@ -64,13 +64,14 @@
 	.ui-widget-content .ss-ui-button,
 	.ui-widget-header .ss-ui-button {
 		padding: 5px 7px 5px 7px;
-		color: $color-text-light;
+		color: $color-text-dark;
 		@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
 			linear-gradient(color-stops(
-				$color-button-constructive-light,
-				$color-button-constructive-dark
+				$color-button-generic-light,
+				$color-button-generic-dark
 			))
 		);
+		background-color: $color-button-generic-light;
 		@include box-shadow(darken($color-base, 20%) 1px 1px 2px);
 	}
 	
