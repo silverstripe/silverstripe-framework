@@ -3,6 +3,10 @@
  * It is an addition to the base styles defined in sapphire/css/Form.css.
  */
 	
+/** ----------------------------------------------------
+ * Basic form fields
+ * ---------------------------------------------------- */	
+
 .field {
 	display: block;
 	padding: 10px 0;
@@ -30,18 +34,6 @@
 			float: none;
 			width: auto;
 		}
-	}
-}
-
-.htmleditor {
-	label {
-		display: block;
-		float: none;
-		padding-bottom: 10px;
-	}
-	
-	.middleColumn {
-		margin-left: 0px
 	}
 }
 
@@ -82,6 +74,10 @@ input, textarea {
 	padding: 7px;
 }
 
+/** ----------------------------------------------------
+ * Buttons
+ * ---------------------------------------------------- */
+
 input.loading,
 input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, 
 .ui-widget-header input.ui-state-default.loading {
@@ -89,15 +85,10 @@ input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loadin
 	background: $color-widget-bg url(../../images/network-save.gif) no-repeat center left;
 }
 
-// Buttons
-.ui-state-hover {
-	cursor: pointer;
-}
-
 .ss-ui-button.ss-ui-action-constructive,
 .ui-widget-content .ss-ui-button.ss-ui-action-constructive,
 .ui-widget-header .ss-ui-button.ss-ui-action-constructive {
-	padding: 5px 7px 5px 23px;
+	padding-left: 23px;
 	color: $color-text-light;
 	border-color: $color-button-constructive-border;
 	@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 6px,
@@ -146,7 +137,7 @@ input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loadin
 }
 
 .ss-ui-button.ss-ui-action-destructive.delete {
-	padding: 5px 7px 5px 23px;
+	padding-left: 23px;
 	color: $color-button-destructive;
 	border-color: $color-button-generic-border;
 	@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px -26px,
@@ -193,46 +184,21 @@ input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loadin
 	}
 }
 
-.cms-content-tools {
-	.field {
-		label {
-			float: none;
-			width: auto;
-		}
-		
-		.middleColumn {
-			margin-left: 0;
-		}
+/** ----------------------------------------------------
+ * Specific field overrides
+ * ---------------------------------------------------- */
+
+.htmleditor {
+	label {
+		display: block;
+		float: none;
+		padding-bottom: 10px;
 	}
-}
-
-.cms-content-toolbar {
-	display: block;
-	padding: 10px 0;
-	margin: 0 0 15px 0;
-	border-bottom-width: 2px;
-	border-bottom: 2px groove lighten($color-shadow-light, 95%);
-	-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
-	border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
-	//TODO: use single border line with shadow instead:: http://daverupert.com/2011/06/two-tone-borders-with-css3/
-}
-
-.cms-content-batchactions, .cms-content-constructive-actions {
-	float: right;
-}
-
-.cms-content-batchactions {
-	position:  relative;
-	display: block;
-	margin-right:  8px;
-}
-
-form.cms-batch-actions {
-	float:  left;
-}
-
-.cms-content-constructive-actions a {
-	display:  block;
+	
+	.middleColumn {
+		margin-left: 0px;
+		clear: left;
+	}
 }
 
 .field#ViewerGroups, .field#EditorGroups, .field#CreateTopLevelGroups {

@@ -27,7 +27,7 @@ a img { border: none; }
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
 
 /** ----------------------------- Theme ------------------------------ */
-/** This file contains the default theme definitions for the admin interface.  @package sapphire @subpackage admin */
+/** This file contains the default theme definitions for the admin interface. Please put mostly SCSS variable definitions in here, and leave the actual styling to _style.scss and auxilliary files. */
 /** ----------------------------------------------- Colours ------------------------------------------------ */
 /** ----------------------------------------------- Typography ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) ------------------------------------------------ */
@@ -256,37 +256,6 @@ li.class-VirtualPage a .jstree-pageicon { background-position: 0 -32px; }
 /* line 527, ../scss/_tree.scss */
 li.class-ErrorPage a .jstree-pageicon { background-position: 0 -112px; }
 
-/* line 534, ../scss/_tree.scss */
-.cms-tree-action-list { display: none; position: relative; }
-/* line 538, ../scss/_tree.scss */
-.cms-tree-action-list > a { display: block; position: relative; text-indent: -9999px; width: 15px; height: 15px; background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 4px -190px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #338dc1), color-stop(100%, #287099)); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 4px -190px, -webkit-linear-gradient(#338dc1, #287099); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 4px -190px, -moz-linear-gradient(#338dc1, #287099); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 4px -190px, -o-linear-gradient(#338dc1, #287099); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 4px -190px, -ms-linear-gradient(#338dc1, #287099); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 4px -190px, linear-gradient(#338dc1, #287099); -webkit-border-radius: 4px 4px; -moz-border-radius: 4px / 4px; -o-border-radius: 4px / 4px; -ms-border-radius: 4px / 4px; -khtml-border-radius: 4px / 4px; border-radius: 4px / 4px; border: 1px #0071AF solid; }
-/* line 553, ../scss/_tree.scss */
-.cms-tree-action-list > a:hover { background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 4px -190px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #338dc1), color-stop(100%, #1e5270)); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 4px -190px, -webkit-linear-gradient(#338dc1, #1e5270); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 4px -190px, -moz-linear-gradient(#338dc1, #1e5270); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 4px -190px, -o-linear-gradient(#338dc1, #1e5270); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 4px -190px, -ms-linear-gradient(#338dc1, #1e5270); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 4px -190px, linear-gradient(#338dc1, #1e5270); }
-/* line 563, ../scss/_tree.scss */
-.cms-tree-action-list.hidden { display: none; }
-/* line 567, ../scss/_tree.scss */
-.cms-tree-action-list.shown { display: inline; }
-
-/* line 575, ../scss/_tree.scss */
-ul.cms-tree-action-list-batchactions { background-color: #f5f5f5; z-index: 999999; position: absolute; display: none; overflow: visible; top: -2px; left: 40px; padding: 5px; cursor: pointer; border: 1px solid #a4b5bf; text-shadow: 1px 1px 0 #fafafa; -moz-box-shadow: #92a5b2 0px 0px 4px; -webkit-box-shadow: #92a5b2 0px 0px 4px; -o-box-shadow: #92a5b2 0px 0px 4px; box-shadow: #92a5b2 0px 0px 4px; font-size: 0.9em; }
-/* line 590, ../scss/_tree.scss */
-ul.cms-tree-action-list-batchactions li, ul.cms-tree-action-list-batchactions li.jstree-checked { padding: 0; margin: 0; list-style: none; clear: both; background: none; }
-/* line 597, ../scss/_tree.scss */
-ul.cms-tree-action-list-batchactions li a, ul.cms-tree-action-list-batchactions li a:link, ul.cms-tree-action-list-batchactions li.jstree-checked a, ul.cms-tree-action-list-batchactions li.jstree-checked a:link { text-decoration: none; color: #1556b2; display: block; padding: .3em 5px .3em 5px; outline: none; background: none !important; }
-/* line 606, ../scss/_tree.scss */
-ul.cms-tree-action-list-batchactions li:hover, ul.cms-tree-action-list-batchactions li.jstree-checked:hover { background-color: #e6e6e6; }
-/* line 613, ../scss/_tree.scss */
-ul.cms-tree-action-list-batchactions li.delete a, ul.cms-tree-action-list-batchactions li.delete a:link { color: red; }
-/* line 618, ../scss/_tree.scss */
-ul.cms-tree-action-list-batchactions.shown { display: inline; }
-
-/* line 624, ../scss/_tree.scss */
-ul.cms-tree-action-list-batchactions:before { content: ""; position: absolute; top: 4px; bottom: auto; /* value = - border-top-width - border-bottom-width */ left: -7px; /* controls horizontal position */ border-width: 6px 7px 6px 0; border-style: solid; border-color: transparent #a4b5bf; /* reduce the damage in FF3.0 */ display: block; width: 0; }
-
-/* creates the smaller  triangle */
-/* line 639, ../scss/_tree.scss */
-ul.cms-tree-action-list-batchactions:after { content: ""; position: absolute; top: 5px; bottom: auto; /* value = - border-top-width - border-bottom-width */ left: -6px; /* value = (:before left) + (:before border-left) - (:after border-left) */ border-width: 5px 6px 5px 0; border-style: solid; border-color: transparent #fff; /* reduce the damage in FF3.0 */ display: block; width: 0; }
-
 /** Styles for the left hand side menu  @package sapphire @subpackage admin */
 /** ------------------------------------------------------- CMS Menu Bar -------------------------------------------------------- */
 /* line 12, ../scss/_menu.scss */
@@ -352,96 +321,96 @@ ul.cms-tree-action-list-batchactions:after { content: ""; position: absolute; to
 .cms-menu-list.collapsed li > li { display: none; }
 
 /** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in sapphire/css/Form.css. */
-/* line 6, ../scss/_forms.scss */
+/** ---------------------------------------------------- Basic form fields ---------------------------------------------------- */
+/* line 10, ../scss/_forms.scss */
 .field { display: block; padding: 10px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); overflow: hidden; }
-/* line 12, ../scss/_forms.scss */
+/* line 16, ../scss/_forms.scss */
 .field label.left { float: left; width: 170px; padding: 8px 20px 8px 4px; line-height: 16px; }
-/* line 20, ../scss/_forms.scss */
+/* line 24, ../scss/_forms.scss */
 .field .middleColumn { margin-left: 15em; }
-/* line 23, ../scss/_forms.scss */
+/* line 27, ../scss/_forms.scss */
 .field .middleColumn .field { display: inline; padding: 0; border: none; }
-/* line 29, ../scss/_forms.scss */
+/* line 33, ../scss/_forms.scss */
 .field .middleColumn label { float: none; width: auto; }
 
-/* line 37, ../scss/_forms.scss */
-.htmleditor label { display: block; float: none; padding-bottom: 10px; }
-/* line 43, ../scss/_forms.scss */
-.htmleditor .middleColumn { margin-left: 0px; }
-
-/* line 50, ../scss/_forms.scss */
+/* line 42, ../scss/_forms.scss */
 form.nostyle .field { display: inline; padding: 0; border: 0; }
-/* line 56, ../scss/_forms.scss */
+/* line 48, ../scss/_forms.scss */
 form.nostyle label { float: none; width: auto; }
-/* line 61, ../scss/_forms.scss */
+/* line 53, ../scss/_forms.scss */
 form.nostyle .middleColumn { margin-left: 0; }
 
-/* line 67, ../scss/_forms.scss */
+/* line 59, ../scss/_forms.scss */
 .field.nolabel .middleColumn { margin-left: 0; }
 
-/* line 72, ../scss/_forms.scss */
+/* line 64, ../scss/_forms.scss */
 input, textarea { -moz-border-radius: 4px; -webkit-border-radius: 4px; -o-border-radius: 4px; -ms-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; background: #fff; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(top, #efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(top, #efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(top, #efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -ms-linear-gradient(top, #efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(top, #efefef, #ffffff 10%, #ffffff 90%, #efefef); border: 1px solid #b3b3b3; padding: 7px; }
 
-/* line 87, ../scss/_forms.scss */
+/** ---------------------------------------------------- Buttons ---------------------------------------------------- */
+/* line 83, ../scss/_forms.scss */
 input.loading, input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, .ui-widget-header input.ui-state-default.loading { padding-left: 16px; background: #eceff1 url(../../images/network-save.gif) no-repeat center left; }
 
-/* line 93, ../scss/_forms.scss */
-.ui-state-hover { cursor: pointer; }
+/* line 90, ../scss/_forms.scss */
+.ss-ui-button.ss-ui-action-constructive, .ui-widget-content .ss-ui-button.ss-ui-action-constructive, .ui-widget-header .ss-ui-button.ss-ui-action-constructive { padding-left: 23px; color: white; border-color: #118021; background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #84be3f), color-stop(100%, #128945)); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -webkit-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -moz-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -o-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -ms-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, linear-gradient(#84be3f, #128945); text-shadow: #475964 1px 1px 0; -moz-box-shadow: #748d9d 1px 1px 2px; -webkit-box-shadow: #748d9d 1px 1px 2px; -o-box-shadow: #748d9d 1px 1px 2px; box-shadow: #748d9d 1px 1px 2px; }
 
-/* line 99, ../scss/_forms.scss */
-.ss-ui-button.ss-ui-action-constructive, .ui-widget-content .ss-ui-button.ss-ui-action-constructive, .ui-widget-header .ss-ui-button.ss-ui-action-constructive { padding: 5px 7px 5px 23px; color: white; border-color: #118021; background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px 6px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #84be3f), color-stop(100%, #128945)); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px 6px, -webkit-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px 6px, -moz-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px 6px, -o-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px 6px, -ms-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px 6px, linear-gradient(#84be3f, #128945); text-shadow: #475964 1px 1px 0; -moz-box-shadow: #748d9d 1px 1px 2px; -webkit-box-shadow: #748d9d 1px 1px 2px; -o-box-shadow: #748d9d 1px 1px 2px; box-shadow: #748d9d 1px 1px 2px; }
+/* line 104, ../scss/_forms.scss */
+.ss-ui-button.ss-ui-action-constructive.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #7fb63c), color-stop(100%, #107b3e)); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -webkit-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -moz-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -o-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, -ms-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px 6px, linear-gradient(#7fb63c, #107b3e); -moz-box-shadow: #92a5b2 1px 1px 1px; -webkit-box-shadow: #92a5b2 1px 1px 1px; -o-box-shadow: #92a5b2 1px 1px 1px; box-shadow: #92a5b2 1px 1px 1px; }
 
-/* line 113, ../scss/_forms.scss */
-.ss-ui-button.ss-ui-action-constructive.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px 6px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #7fb63c), color-stop(100%, #107b3e)); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px 6px, -webkit-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px 6px, -moz-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px 6px, -o-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px 6px, -ms-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px 6px, linear-gradient(#7fb63c, #107b3e); -moz-box-shadow: #92a5b2 1px 1px 1px; -webkit-box-shadow: #92a5b2 1px 1px 1px; -o-box-shadow: #92a5b2 1px 1px 1px; box-shadow: #92a5b2 1px 1px 1px; }
+/* line 114, ../scss/_forms.scss */
+.ss-ui-button.ss-ui-action-constructive.cms-page-add-button { background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #84be3f), color-stop(100%, #128945)); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -webkit-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -moz-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -o-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -ms-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, linear-gradient(#84be3f, #128945); }
 
 /* line 123, ../scss/_forms.scss */
-.ss-ui-button.ss-ui-action-constructive.cms-page-add-button { background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -155px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #84be3f), color-stop(100%, #128945)); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -155px, -webkit-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -155px, -moz-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -155px, -o-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -155px, -ms-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -155px, linear-gradient(#84be3f, #128945); }
+.ss-ui-button.ss-ui-action-constructive.cms-page-add-button.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #7fb63c), color-stop(100%, #107b3e)); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -webkit-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -moz-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -o-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, -ms-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -155px, linear-gradient(#7fb63c, #107b3e); -moz-box-shadow: #92a5b2 1px 1px 1px; -webkit-box-shadow: #92a5b2 1px 1px 1px; -o-box-shadow: #92a5b2 1px 1px 1px; box-shadow: #92a5b2 1px 1px 1px; }
 
-/* line 132, ../scss/_forms.scss */
-.ss-ui-button.ss-ui-action-constructive.cms-page-add-button.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -155px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #7fb63c), color-stop(100%, #107b3e)); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -155px, -webkit-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -155px, -moz-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -155px, -o-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -155px, -ms-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -155px, linear-gradient(#7fb63c, #107b3e); -moz-box-shadow: #92a5b2 1px 1px 1px; -webkit-box-shadow: #92a5b2 1px 1px 1px; -o-box-shadow: #92a5b2 1px 1px 1px; box-shadow: #92a5b2 1px 1px 1px; }
-
-/* line 144, ../scss/_forms.scss */
+/* line 135, ../scss/_forms.scss */
 .ss-ui-button.ss-ui-action-destructive, .ui-widget-content .ss-ui-button.ss-ui-action-destructive, .ui-widget-header .ss-ui-button.ss-ui-action-destructive { color: red; }
 
-/* line 148, ../scss/_forms.scss */
-.ss-ui-button.ss-ui-action-destructive.delete { padding: 5px 7px 5px 23px; color: red; border-color: #ababab; background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -26px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f5f5), color-stop(100%, #c3c3c3)); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -26px, -webkit-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -26px, -moz-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -26px, -o-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -26px, -ms-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -26px, linear-gradient(#f5f5f5, #c3c3c3); text-shadow: none; -moz-box-shadow: #aab9c3 1px 1px 2px; -webkit-box-shadow: #aab9c3 1px 1px 2px; -o-box-shadow: #aab9c3 1px 1px 2px; box-shadow: #aab9c3 1px 1px 2px; }
+/* line 139, ../scss/_forms.scss */
+.ss-ui-button.ss-ui-action-destructive.delete { padding-left: 23px; color: red; border-color: #ababab; background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f5f5), color-stop(100%, #c3c3c3)); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -webkit-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -moz-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -o-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -ms-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, linear-gradient(#f5f5f5, #c3c3c3); text-shadow: none; -moz-box-shadow: #aab9c3 1px 1px 2px; -webkit-box-shadow: #aab9c3 1px 1px 2px; -o-box-shadow: #aab9c3 1px 1px 2px; box-shadow: #aab9c3 1px 1px 2px; }
 
-/* line 162, ../scss/_forms.scss */
-.ss-ui-button.ss-ui-action-destructive.delete.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -26px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f0f0f0), color-stop(100%, #bbbbbb)); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -26px, -webkit-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -26px, -moz-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -26px, -o-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -26px, -ms-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1309961535') no-repeat 5px -26px, linear-gradient(#f0f0f0, #bbbbbb); -moz-box-shadow: #92a5b2 1px 1px 1px; -webkit-box-shadow: #92a5b2 1px 1px 1px; -o-box-shadow: #92a5b2 1px 1px 1px; box-shadow: #92a5b2 1px 1px 1px; }
+/* line 153, ../scss/_forms.scss */
+.ss-ui-button.ss-ui-action-destructive.delete.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f0f0f0), color-stop(100%, #bbbbbb)); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -webkit-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -moz-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -o-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, -ms-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 5px -26px, linear-gradient(#f0f0f0, #bbbbbb); -moz-box-shadow: #92a5b2 1px 1px 1px; -webkit-box-shadow: #92a5b2 1px 1px 1px; -o-box-shadow: #92a5b2 1px 1px 1px; box-shadow: #92a5b2 1px 1px 1px; }
 
-/* line 174, ../scss/_forms.scss */
+/* line 165, ../scss/_forms.scss */
 .ss-ui-button.ss-ui-action-minor, .ui-widget-content .ss-ui-button.ss-ui-action-minor .ui-widget-header .ss-ui-button.ss-ui-action-minor { background: none; padding: 0; border: 0; color: #1f1f1f; text-decoration: underline; }
 
-/* line 182, ../scss/_forms.scss */
+/* line 173, ../scss/_forms.scss */
 .cms-edit-form { padding-bottom: 20px; }
-/* line 185, ../scss/_forms.scss */
+/* line 176, ../scss/_forms.scss */
 .cms-edit-form .text input, .cms-edit-form textarea { width: 300px; font-family: Arial, sans-serif; font-size: 13px; }
-/* line 191, ../scss/_forms.scss */
+/* line 182, ../scss/_forms.scss */
 .cms-edit-form .Actions { text-align: right; }
 
-/* line 198, ../scss/_forms.scss */
+/* line 189, ../scss/_forms.scss */
 .cms-content-tools .field label { float: none; width: auto; }
-/* line 203, ../scss/_forms.scss */
+/* line 194, ../scss/_forms.scss */
 .cms-content-tools .field .middleColumn { margin-left: 0; }
 
-/* line 209, ../scss/_forms.scss */
+/* line 200, ../scss/_forms.scss */
 .cms-content-toolbar { display: block; padding: 10px 0; margin: 0 0 15px 0; border-bottom-width: 2px; border-bottom: 2px groove rgba(255, 255, 255, 0.8); -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
 
-/* line 220, ../scss/_forms.scss */
+/* line 211, ../scss/_forms.scss */
 .cms-content-batchactions, .cms-content-constructive-actions { float: right; }
 
-/* line 224, ../scss/_forms.scss */
+/* line 215, ../scss/_forms.scss */
 .cms-content-batchactions { position: relative; display: block; margin-right: 8px; }
 
-/* line 230, ../scss/_forms.scss */
+/* line 221, ../scss/_forms.scss */
 form.cms-batch-actions { float: left; }
 
-/* line 234, ../scss/_forms.scss */
+/* line 225, ../scss/_forms.scss */
 .cms-content-constructive-actions a { display: block; }
 
-/* line 239, ../scss/_forms.scss */
+/** ---------------------------------------------------- Specific field overrides ---------------------------------------------------- */
+/* line 234, ../scss/_forms.scss */
+.htmleditor label { display: block; float: none; padding-bottom: 10px; }
+/* line 240, ../scss/_forms.scss */
+.htmleditor .middleColumn { margin-left: 0px; clear: left; }
+
+/* line 247, ../scss/_forms.scss */
 .field#ViewerGroups label, .field#EditorGroups label, .field#CreateTopLevelGroups label { display: none; }
 
-/* line 244, ../scss/_forms.scss */
+/* line 252, ../scss/_forms.scss */
 .action-hidden { display: none; }
 
 /** This file defines CMS-specific customizations to the jQuery UI theme. Every rule in this file should be wrapped in the '.cms' selector (to make it more specific), and contain ONLY overwritten jQuery UI rules (with 'ui-' prefix).  This file should be fairly short, as we're using our own custom jQuery UI theme already. TODO Add theme reference  Use _style.scss to add more generic style information, and read the jQuery UI theming API: http://jqueryui.com/docs/Theming/API */
@@ -463,13 +432,17 @@ form.cms-batch-actions { float: left; }
 .cms .ui-widget-header { background: #eceff1; border: 0; padding: 0; }
 /* line 53, ../scss/_uitheme.scss */
 .cms .ss-ui-button { padding: 5px; text-decoration: none; }
-
 /* line 59, ../scss/_uitheme.scss */
+.cms .ui-state-hover { cursor: pointer; }
+/* line 65, ../scss/_uitheme.scss */
+.cms .ss-ui-button, .cms .ui-widget-content .ss-ui-button, .cms .ui-widget-header .ss-ui-button { padding: 5px 7px 5px 7px; color: white; background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 999px 999px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #84be3f), color-stop(100%, #128945)); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 999px 999px, -webkit-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 999px 999px, -moz-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 999px 999px, -o-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 999px 999px, -ms-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1309967718') no-repeat 999px 999px, linear-gradient(#84be3f, #128945); -moz-box-shadow: #748d9d 1px 1px 2px; -webkit-box-shadow: #748d9d 1px 1px 2px; -o-box-shadow: #748d9d 1px 1px 2px; box-shadow: #748d9d 1px 1px 2px; }
+
+/* line 79, ../scss/_uitheme.scss */
 .cms-content-form { overflow: auto; background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left !important; }
 
-/** This file defines the 'theme' of the CMS: Colors, fonts, backgrounds, and detailed alignments. Together with _layout.css it provides the presentational backbone to the CMS. Ideally a developer should be able to exchange this file with his own theme easily.  Please don't put any dimension, display or float information on major structural components like '.cms-container' or '.cms-header' in here, use the _layout.scss file instead.  Use SCSS variable definitions in screen.css to avoid repeating styles like background colours or padding dimensions. See _colours.scss to get started.  To avoid this file getting too large and complicated, it is encouraged to create new SCSS files for larger components like the CMS menu or tree (see _tree.scss and _menu.scss). */
+/** This file defines most styles of the CMS: Colors, fonts, backgrounds, alignments, dimensions.  Use SCSS variable definitions in screen.css to avoid repeating styles like background colours or padding dimensions. See themes/_default.scss to get started.  To avoid this file getting too large and complicated, it is encouraged to create new SCSS files for larger components like the CMS menu or tree (see _tree.scss and _menu.scss). */
 /** ---------------------------------------------------- Core Styles ---------------------------------------------------- */
-/* line 20, ../scss/_style.scss */
+/* line 15, ../scss/_style.scss */
 html, body { width: 100%; height: 100%; overflow: hidden; font-size: 13px; font-family: Arial, sans-serif; color: #444444; }
 /* line 17, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.4/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 html html, html body, html div, html span, html applet, html object, html iframe, html h1, html h2, html h3, html h4, html h5, html h6, html p, html blockquote, html pre, html a, html abbr, html acronym, html address, html big, html cite, html code, html del, html dfn, html em, html img, html ins, html kbd, html q, html s, html samp, html small, html strike, html strong, html sub, html sup, html tt, html var, html b, html u, html i, html center, html dl, html dt, html dd, html ol, html ul, html li, html fieldset, html form, html label, html legend, html table, html caption, html tbody, html tfoot, html thead, html tr, html th, html td, html article, html aside, html canvas, html details, html embed, html figure, html figcaption, html footer, html header, html hgroup, html menu, html nav, html output, html ruby, html section, html summary, html time, html mark, html audio, html video, body html, body body, body div, body span, body applet, body object, body iframe, body h1, body h2, body h3, body h4, body h5, body h6, body p, body blockquote, body pre, body a, body abbr, body acronym, body address, body big, body cite, body code, body del, body dfn, body em, body img, body ins, body kbd, body q, body s, body samp, body small, body strike, body strong, body sub, body sup, body tt, body var, body b, body u, body i, body center, body dl, body dt, body dd, body ol, body ul, body li, body fieldset, body form, body label, body legend, body table, body caption, body tbody, body tfoot, body thead, body tr, body th, body td, body article, body aside, body canvas, body details, body embed, body figure, body figcaption, body footer, body header, body hgroup, body menu, body nav, body output, body ruby, body section, body summary, body time, body mark, body audio, body video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; }
@@ -490,103 +463,106 @@ html a img, body a img { border: none; }
 /* line 115, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.4/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 html article, html aside, html details, html figcaption, html figure, html footer, html header, html hgroup, html menu, html nav, html section, body article, body aside, body details, body figcaption, body figure, body footer, body header, body hgroup, body menu, body nav, body section { display: block; }
 
-/* line 32, ../scss/_style.scss */
+/* line 27, ../scss/_style.scss */
 a { color: #3ebae0; text-decoration: none; }
-/* line 37, ../scss/_style.scss */
+/* line 32, ../scss/_style.scss */
 a:hover, a:focus { text-decoration: underline; }
 
-/* line 41, ../scss/_style.scss */
+/* line 36, ../scss/_style.scss */
 body .ui-widget { font-family: Arial, sans-serif; font-size: 13px; }
 
-/* line 46, ../scss/_style.scss */
+/* line 41, ../scss/_style.scss */
 .cms-container { height: 100%; }
 
-/* line 56, ../scss/_style.scss */
+/* line 51, ../scss/_style.scss */
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form { display: -moz-inline-box; -moz-box-orient: vertical; display: inline-block; vertical-align: middle; *vertical-align: auto; }
 /* line 7, ../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.4/frameworks/compass/stylesheets/compass/css3/_inline-block.scss */
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form { *display: inline; }
 
-/* line 61, ../scss/_style.scss */
+/* line 56, ../scss/_style.scss */
 strong { font-weight: bold; }
 
 /** -------------------------------------------- Misc Panels -------------------------------------------- */
-/* line 69, ../scss/_style.scss */
-.cms-content-header { background-color: #b0bec7; padding: 8px 8px 6px 8px; height: 32px; border-bottom: 2px solid #8399a7; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dde3e7), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(top, #dde3e7, #92a5b2); background-image: -moz-linear-gradient(top, #dde3e7, #92a5b2); background-image: -o-linear-gradient(top, #dde3e7, #92a5b2); background-image: -ms-linear-gradient(top, #dde3e7, #92a5b2); background-image: linear-gradient(top, #dde3e7, #92a5b2); border-bottom: 3px solid #5c7382; padding: 8px; height: 32px; }
-/* line 85, ../scss/_style.scss */
+/* line 64, ../scss/_style.scss */
+.cms-content-header { background-color: #b0bec7; padding: 8px 8px 6px 8px; height: 32px; border-bottom: 2px solid #8399a7; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dde3e7), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(top, #dde3e7, #92a5b2); background-image: -moz-linear-gradient(top, #dde3e7, #92a5b2); background-image: -o-linear-gradient(top, #dde3e7, #92a5b2); background-image: -ms-linear-gradient(top, #dde3e7, #92a5b2); background-image: linear-gradient(top, #dde3e7, #92a5b2); border-bottom: 1px solid #5c7382; padding: 10px; height: 32px; }
+/* line 80, ../scss/_style.scss */
 .cms-content-header h2 { float: left; padding: 12px 0 0 8px; font-size: 13px; font-weight: bold; text-shadow: #ced7dc 1px 1px 0; width: 230px; }
-/* line 94, ../scss/_style.scss */
+/* line 89, ../scss/_style.scss */
 .cms-content-header > div { width: 9999em; overflow: hidden; }
-/* line 99, ../scss/_style.scss */
+/* line 94, ../scss/_style.scss */
 .cms-content-header .cms-content-header-tabs { float: left; }
 
-/* line 106, ../scss/_style.scss */
+/* line 101, ../scss/_style.scss */
 .ui-tabs .cms-content-header .ui-tabs-nav li a { font-weight: bold; font-size: 13px; padding: 11px 15px 9px; border-bottom: 2px solid #b3b3b3; }
-/* line 116, ../scss/_style.scss */
+/* line 111, ../scss/_style.scss */
 .ui-tabs .cms-content-header .ui-state-default, .ui-tabs .cms-content-header .ui-widget-content .ui-state-default, .ui-tabs .cms-content-header .ui-widget-header .ui-state-default { background-color: #d9d9d9; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #d9d9d9), color-stop(100%, #c0c0c0)); background-image: -webkit-linear-gradient(top, #d9d9d9, #c0c0c0); background-image: -moz-linear-gradient(top, #d9d9d9, #c0c0c0); background-image: -o-linear-gradient(top, #d9d9d9, #c0c0c0); background-image: -ms-linear-gradient(top, #d9d9d9, #c0c0c0); background-image: linear-gradient(top, #d9d9d9, #c0c0c0); border-color: #a6a6a6; margin: 0 3px 0 0; text-shadow: white 0 1px 0; }
-/* line 130, ../scss/_style.scss */
+/* line 125, ../scss/_style.scss */
 .ui-tabs .cms-content-header .ui-state-active, .ui-tabs .cms-content-header .ui-widget-content .ui-state-active, .ui-tabs .cms-content-header .ui-widget-header .ui-state-active { background: #eceff1; }
-/* line 133, ../scss/_style.scss */
+/* line 128, ../scss/_style.scss */
 .ui-tabs .cms-content-header .ui-state-active a, .ui-tabs .cms-content-header .ui-widget-content .ui-state-active a, .ui-tabs .cms-content-header .ui-widget-header .ui-state-active a { border-bottom: 2px solid #eceff1; }
 
-/* line 139, ../scss/_style.scss */
+/* line 134, ../scss/_style.scss */
 .cms-content-tools { background-color: #dde3e7; padding: 8px; width: 230px; overflow: auto; }
-/* line 146, ../scss/_style.scss */
+/* line 141, ../scss/_style.scss */
 .cms-content-tools .cms-panel-header, .cms-content-tools .cms-panel-content { padding: 10px; }
 
-/* line 152, ../scss/_style.scss */
+/* line 147, ../scss/_style.scss */
 .cms-content.loading { background: url(../images/spinner.gif) no-repeat 50% 50%; }
 
 /** ------------------------------------------------------- Top Left Header and logo area -------------------------------------------------------- */
-/* line 163, ../scss/_style.scss */
+/* line 156, ../scss/_style.scss */
 .cms-header { background-color: #00111d; position: relative; padding: 16px 8px 8px; line-height: 24px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #00111d), color-stop(50%, #003050), color-stop(100%, #00111d)); background-image: -webkit-linear-gradient(top, #00111d, #003050, #00111d); background-image: -moz-linear-gradient(top, #00111d, #003050, #00111d); background-image: -o-linear-gradient(top, #00111d, #003050, #00111d); background-image: -ms-linear-gradient(top, #00111d, #003050, #00111d); background-image: linear-gradient(top, #00111d, #003050, #00111d); }
-/* line 175, ../scss/_style.scss */
+/* line 168, ../scss/_style.scss */
 .cms-header span { color: white; white-space: no-wrap; text-overflow: ellipsis; display: block; }
-/* line 181, ../scss/_style.scss */
+/* line 174, ../scss/_style.scss */
 .cms-header span a { color: #3ebae0; display: inline; }
 
-/* line 188, ../scss/_style.scss */
+/* line 181, ../scss/_style.scss */
 .cms-logo { border-bottom: 1px solid #03090c; height: 31px; overflow: hidden; padding: 0 4px; vertical-align: middle; }
-/* line 195, ../scss/_style.scss */
+/* line 188, ../scss/_style.scss */
 .cms-logo .version { display: none; }
-/* line 199, ../scss/_style.scss */
+/* line 192, ../scss/_style.scss */
 .cms-logo a { display: inline-block; height: 25px; width: 25px; float: left; margin-right: 10px; background: url('../images/logo_small.png?1309939638') no-repeat; text-indent: -9999em; }
 
-/* line 210, ../scss/_style.scss */
+/* line 203, ../scss/_style.scss */
 .cms-login-status { border-top: 1px solid #19435c; height: 23px; padding: 8px 4px 0 4px; overflow: hidden; line-height: 16px; font-size: 11px; }
-/* line 218, ../scss/_style.scss */
+/* line 211, ../scss/_style.scss */
 .cms-login-status .logout-link { display: inline-block; height: 16px; width: 16px; float: left; margin: 0 15px 0 5px; background: url(../images/logout.png) no-repeat; text-indent: -9999em; }
 
 /** ----------------------------------------------- Loading Screen ------------------------------------------------ */
-/* line 233, ../scss/_style.scss */
+/* line 226, ../scss/_style.scss */
 .ss-loading-screen, .ss-loading-screen .loading-logo { width: 100%; height: 100%; overflow: hidden; position: absolute; background: #fff; background: -moz-radial-gradient(50% 50% 180deg, circle cover, white, #efefef, #c7c7c7 100%); background: -webkit-gradient(radial, 50% 50%, 350, 50% 50%, 0, from(#e3e3e3), to(white)); z-index: 100000; margin: 0; padding: 0; }
 
-/* line 248, ../scss/_style.scss */
+/* line 241, ../scss/_style.scss */
 .ss-loading-screen .loading-logo { background-url: url(../images/logo.gif); background-repeat: no-repeat; background-color: transparent; background-position: 50% 50%; }
-/* line 254, ../scss/_style.scss */
+/* line 247, ../scss/_style.scss */
 .ss-loading-screen p { width: 100%; text-align: center; position: absolute; bottom: 80px; }
-/* line 260, ../scss/_style.scss */
+/* line 253, ../scss/_style.scss */
 .ss-loading-screen p span.notice { display: inline-block; font-size: 14px; padding: 10px 20px; color: #dc7f00; border: none; -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; -ms-border-radius: 5px; -khtml-border-radius: 5px; border-radius: 5px; }
-/* line 270, ../scss/_style.scss */
+/* line 263, ../scss/_style.scss */
 .ss-loading-screen .loading-animation { display: none; position: absolute; left: 49%; top: 75%; }
 
-/* line 280, ../scss/_style.scss */
-.cms-content-actions { padding: 8px; background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left; }
+/** -------------------------------------------- Actions -------------------------------------------- */
+/* line 275, ../scss/_style.scss */
+.cms-content-actions { border-top: 1px solid #8399a7; padding: 8px; background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left; }
 
-/** Messages (see sapphire/css/Form.css) */
-/* line 290, ../scss/_style.scss */
+/** -------------------------------------------- Messages -------------------------------------------- */
+/* line 285, ../scss/_style.scss */
 .message { margin: 1em 0; padding: 0.5em; font-weight: bold; border: 1px black solid; }
-/* line 296, ../scss/_style.scss */
+/* line 291, ../scss/_style.scss */
 .message.notice { background-color: #ffbe66; border-color: #ff9300; }
-/* line 301, ../scss/_style.scss */
+/* line 296, ../scss/_style.scss */
 .message.warning { background-color: #ffbe66; border-color: #ff9300; }
-/* line 305, ../scss/_style.scss */
+/* line 300, ../scss/_style.scss */
 .message.error { background-color: #ffbe66; border-color: #ff9300; }
 
-/* line 314, ../scss/_style.scss */
+/** -------------------------------------------- ModelAdmin -------------------------------------------- */
+/* line 311, ../scss/_style.scss */
 .ModelAdmin .cms-content-tools { width: 300px; }
-/* line 319, ../scss/_style.scss */
+/* line 316, ../scss/_style.scss */
 .ModelAdmin .ResultAssemblyBlock { display: none; }
 
+/** -------------------------------------------- "Add page" dialog -------------------------------------------- */
 /* line 326, ../scss/_style.scss */
 .cms-page-add-form-dialog #PageType li { clear: left; height: 40px; border-bottom: 1px solid rgba(107, 120, 123, 0.5); }
 /* line 331, ../scss/_style.scss */
@@ -600,71 +576,76 @@ strong { font-weight: bold; }
 /* line 348, ../scss/_style.scss */
 .cms-page-add-form-dialog #PageType li .description { font-style: italic; }
 
-/* line 355, ../scss/_style.scss */
-.cms-content-toolbar { overflow: hidden; *zoom: 1; }
+/** -------------------------------------------- Content toolbar -------------------------------------------- */
 /* line 358, ../scss/_style.scss */
+.cms-content-toolbar { overflow: hidden; *zoom: 1; }
+/* line 361, ../scss/_style.scss */
 .cms-content-toolbar > * { float: left; }
-/* line 362, ../scss/_style.scss */
+/* line 365, ../scss/_style.scss */
 .cms-content-toolbar .cms-tree-view-modes * { display: inline-block; }
-/* line 366, ../scss/_style.scss */
+/* line 369, ../scss/_style.scss */
 .cms-content-toolbar .cms-content-batchactions form > * { display: inline-block; }
 
-/* line 372, ../scss/_style.scss */
+/** -------------------------------------------- Preview header (remove before release) -------------------------------------------- */
+/* line 378, ../scss/_style.scss */
 .cms-preview { width: 1px; }
-/* line 375, ../scss/_style.scss */
+/* line 381, ../scss/_style.scss */
 .cms-preview .cms-preview-toggle { width: 10px; }
-/* line 379, ../scss/_style.scss */
+/* line 385, ../scss/_style.scss */
 .cms-preview iframe { width: 100%; height: 100%; }
 
-/* line 385, ../scss/_style.scss */
+/* line 391, ../scss/_style.scss */
 .cms-preview-header { background-color: #FFBE66; padding: 10px; font-weight: bold; }
 
-/* line 395, ../scss/_style.scss */
-form.member-profile-form #CsvFile .middleColumn { background: none !important; }
-/* line 399, ../scss/_style.scss */
-form.member-profile-form .advanced h4 { margin-bottom: .5em; }
+/** -------------------------------------------- Member Profile -------------------------------------------- */
 /* line 403, ../scss/_style.scss */
+form.member-profile-form #CsvFile .middleColumn { background: none !important; }
+/* line 407, ../scss/_style.scss */
+form.member-profile-form .advanced h4 { margin-bottom: .5em; }
+/* line 411, ../scss/_style.scss */
 form.member-profile-form .Actions { text-align: left; border: 0; }
-/* line 408, ../scss/_style.scss */
+/* line 416, ../scss/_style.scss */
 form.member-profile-form input.customFormat { border: 1px solid #ccc !important; padding: 3px; margin-left: 2px; }
-/* line 413, ../scss/_style.scss */
+/* line 421, ../scss/_style.scss */
 form.member-profile-form .formattingHelpToggle { font-size: 11px; padding: 3px; }
-/* line 417, ../scss/_style.scss */
-form.member-profile-form .formattingHelpText { margin: 5px auto; color: #333; padding: 5px 10px; width: 90%; background: #fff; border: 1px solid #ccc; }
 /* line 425, ../scss/_style.scss */
+form.member-profile-form .formattingHelpText { margin: 5px auto; color: #333; padding: 5px 10px; width: 90%; background: #fff; border: 1px solid #ccc; }
+/* line 433, ../scss/_style.scss */
 form.member-profile-form .formattingHelpText ul { padding: 0; }
-/* line 428, ../scss/_style.scss */
+/* line 436, ../scss/_style.scss */
 form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; margin-bottom: 2px; }
 
-/* line 436, ../scss/_style.scss */
+/* line 444, ../scss/_style.scss */
 .cms-content-fields { overflow: auto; background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left; }
 
-/* line 442, ../scss/_style.scss */
+/** -------------------------------------------- Panels -------------------------------------------- */
+/* line 453, ../scss/_style.scss */
 .cms-panel { overflow: hidden; }
-/* line 447, ../scss/_style.scss */
-.cms-panel .toggle-expand, .cms-panel .toggle-collapse { display: block; position: absolute; bottom: 0; text-align: right; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(top, #b0bec7, #92a5b2); background-image: -moz-linear-gradient(top, #b0bec7, #92a5b2); background-image: -o-linear-gradient(top, #b0bec7, #92a5b2); background-image: -ms-linear-gradient(top, #b0bec7, #92a5b2); background-image: linear-gradient(top, #b0bec7, #92a5b2); text-decoration: none; }
 /* line 458, ../scss/_style.scss */
+.cms-panel .toggle-expand, .cms-panel .toggle-collapse { display: block; position: absolute; bottom: 0; text-align: right; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(top, #b0bec7, #92a5b2); background-image: -moz-linear-gradient(top, #b0bec7, #92a5b2); background-image: -o-linear-gradient(top, #b0bec7, #92a5b2); background-image: -ms-linear-gradient(top, #b0bec7, #92a5b2); background-image: linear-gradient(top, #b0bec7, #92a5b2); text-decoration: none; }
+/* line 469, ../scss/_style.scss */
 .cms-panel .toggle-expand span, .cms-panel .toggle-collapse span { display: inline-block; margin: 5px; color: #1f1f1f; font-size: 16px; }
-/* line 466, ../scss/_style.scss */
+/* line 477, ../scss/_style.scss */
 .cms-panel .toggle-collapse { width: 100%; }
-/* line 470, ../scss/_style.scss */
+/* line 481, ../scss/_style.scss */
 .cms-panel .toggle-expand { width: 40px; }
-/* line 476, ../scss/_style.scss */
+/* line 487, ../scss/_style.scss */
 .cms-panel.collapsed .cms-panel-content { display: none; }
-/* line 480, ../scss/_style.scss */
+/* line 491, ../scss/_style.scss */
 .cms-panel.collapsed .cms-panel-header { -moz-transform: rotate(-90deg); -webkit-transform: rotate(-90deg); -o-transform: rotate(-90deg); -ms-transform: rotate(-90deg); transform: rotate(-90deg); position: relative; top: 100px; }
 
-/* line 490, ../scss/_style.scss */
+/* line 501, ../scss/_style.scss */
 .cms-content .cms-panel.collapsed { cursor: pointer; }
 
-/* line 495, ../scss/_style.scss */
+/** -------------------------------------------- Other -------------------------------------------- */
+/* line 509, ../scss/_style.scss */
 .cms-preview { background-color: #b0bec7; }
-/* line 498, ../scss/_style.scss */
+/* line 512, ../scss/_style.scss */
 .cms-preview .cms-preview-toggle { cursor: pointer; }
-/* line 501, ../scss/_style.scss */
+/* line 515, ../scss/_style.scss */
 .cms-preview .cms-preview-toggle a { display: block; width: 15px; height: 15px; position: relative; left: 10px; top: 48%; background-color: #b0bec7; color: white; font-weight: bold; text-decoration: none; z-index: 2000; }
-/* line 518, ../scss/_style.scss */
+/* line 532, ../scss/_style.scss */
 .cms-preview.is-collapsed .cms-preview-toggle a { left: -15px; }
 
-/* line 526, ../scss/_style.scss */
+/* line 540, ../scss/_style.scss */
 .cms-switch-view a { padding-right: 1em; }
