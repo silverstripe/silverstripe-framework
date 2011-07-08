@@ -4,10 +4,10 @@
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-language" content="$i18nLocale" />
 <% base_tag %>
-<title>$ApplicationName | $SectionTitle</title>
+<title>$Title</title>
 </head>
 
-<body class="loading cms $CSSClasses">
+<body class="loading cms">
 	
 	<% include CMSLoadingScreen %>
 	
@@ -25,11 +25,9 @@
 
 		$Content
 		
-		<% if currentPage %>
-		<div class="cms-preview east">
-			<iframe src="$currentPage.Link/?stage=Stage"></iframe>
+		<div class="cms-preview east <% if IsPreviewExpanded %>is-expanded<% else %>is-collapsed<% end_if %>">
+			<iframe src="$PreviewLink"></iframe>
 		</div>
-		<% end_if %>
 
 	</div>
 		

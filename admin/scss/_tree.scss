@@ -32,6 +32,7 @@
 		height: 18px;
 		margin: 0 0 0 0;
 		padding: 0;
+		float: left;
 	}
 	a {
 		display: inline-block;
@@ -363,4 +364,166 @@ li.jstree-closed > ul {
 	.jstree-apple > ul {
 		background: none;
 	}
+}
+
+.jstree li {
+	line-height:  25px;
+}
+
+.cms-tree.jstree-apple {
+	
+	& li.Root {
+		& strong {
+			font-weight:  bold;
+			padding-left:  1px;
+		}
+		
+		& > a .jstree-icon {
+			background-position: -56px -36px;
+		}
+	}
+	
+	& a, a:link {
+		color:  $color-text-blue-link;
+		padding: 3px 6px 3px 3px;
+		border: none;
+		display:  inline-block;
+		margin-right: 5px;
+		
+		
+		& span.status:after {
+			clear: both;
+			text-transform: uppercase;
+			display: inline-block;
+			padding: 0px 3px;
+			font-size: 0.75em;
+			line-height: 1em;
+			margin-left: 3px;
+			margin-right: 6px;
+			margin-top:  -1px;
+			@include border-radius(2px, 2px);
+		}
+	}
+		
+		& span.modified:after {
+			content: "draft";
+			color:  #7E7470;
+			border: 1px solid #C9B800;
+			background-color: #FFF0BC;
+		}
+		
+		& span.new:after {
+			content: "new";
+			color:  #7E7470;
+			border: 1px solid #C9B800;
+			background-color: #FFF0BC;
+		}
+		
+		& span.private:after {
+			content: "private";
+			color:  #636363;
+			border: 1px solid #E49393;
+			background-color: #F2DADB;
+		}
+		
+		& span.workflow-approval:after {
+			content: "awaiting approval";
+			color:  #56660C;
+			border: 1px solid #7C8816;
+			background-color: #DAE79A;
+		}
+		
+		/* comment speech bubble - ccs3 only - source: http://nicolasgallagher.com/pure-css-speech-bubbles/demo/ */
+		& span.comment-count {
+			clear: both;
+			position: relative;
+			text-transform: uppercase;
+			display: inline-block;
+			overflow: visible;
+			padding: 0px 3px;
+			font-size: 0.75em;
+			line-height: 1em;
+			margin-left: 3px;
+			margin-right: 6px;
+			@include border-radius(2px, 2px);
+			color:  #7E7470;
+			border: 1px solid #C9B800;
+			background-color: #FFF0BC;
+		}
+		
+		& span.comment-count:before {
+			content:"";
+		    position:absolute;
+		    bottom:-4px; /* value = - border-top-width - border-bottom-width */
+		    left:3px; /* controls horizontal position */
+		    border-width:4px 4px 0;
+		    border-style:solid;
+		    border-color:#C9B800 transparent;
+		    /* reduce the damage in FF3.0 */
+		    display:block; 
+		    width:0;
+		}
+		
+		& span.comment-count:after {
+			content:"";
+		    position:absolute;
+		    bottom:-3px; /* value = - border-top-width - border-bottom-width */
+		    left:4px; /* value = (:before left) + (:before border-left) - (:after border-left) */
+		    border-width:3px 3px 0;
+		    border-style:solid;
+		    border-color:#FFF0BC transparent;
+		    /* reduce the damage in FF3.0 */
+		    display:block; 
+		    width:0;
+		}
+	
+	.jstree-hovered {
+		text-shadow: none;
+		text-decoration: none;    
+	}
+	
+	& li {
+		padding: 0px;
+		clear:  left;
+	}
+	
+	& li, ins {
+		background-color: transparent;
+		background-image: url(../images/sitetree_ss_default_icons.png);
+	}
+	
+	& li.jstree-checked a, li.jstree-checked a:link  {
+		background-color: $color-cms-batchactions-menu-selected-background;
+	}
+}
+
+.jstree-apple #record-0.jstree-open > ins {
+	display: none;
+}
+
+a .jstree-pageicon {
+	display: block;
+	float:  left;
+	width:  16px;
+	height:  16px;
+	margin-right: 4px;
+	background-color: transparent;
+	background-image: url(../images/sitetree_ss_pageclass_icons_default.png);
+	background-repeat: no-repeat;
+}
+
+li.class-HomePage a .jstree-pageicon {
+	background-position: 0 -48px;
+}
+
+li.class-RedirectorPage a .jstree-pageicon {
+	background-position: 0 -16px;
+}
+
+li.class-VirtualPage a .jstree-pageicon {
+	background-position: 0 -32px;
+}
+
+li.class-ErrorPage a .jstree-pageicon {
+	background-position: 0 -112px;
 }

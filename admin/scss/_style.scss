@@ -1,13 +1,8 @@
 /**
- * This file defines the 'theme' of the CMS: Colors, fonts, backgrounds, and detailed alignments.
- * Together with _layout.css it provides the presentational backbone to the CMS.
- * Ideally a developer should be able to exchange this file with his own theme easily.
- * 
- * Please don't put any dimension, display or float information on major structural components
- * like '.cms-container' or '.cms-header' in here, use the _layout.scss file instead.
+ * This file defines most styles of the CMS: Colors, fonts, backgrounds, alignments, dimensions.
  * 
  * Use SCSS variable definitions in screen.css to avoid repeating styles like background colours
- * or padding dimensions. See _colours.scss to get started.
+ * or padding dimensions. See themes/_default.scss to get started.
  * 
  * To avoid this file getting too large and complicated, it is encouraged to create new SCSS files
  * for larger components like the CMS menu or tree (see _tree.scss and _menu.scss).
@@ -39,6 +34,7 @@ a {
 	}
 }
 body .ui-widget {
+	font-family: $font-family;
 	font-size: $font-base-size;
 }
 
@@ -51,7 +47,8 @@ body .ui-widget {
 .cms-content,
 .cms-content-header,
 .cms-content-tools,
-.cms-content-form {
+.cms-content-fields,
+.cms-edit-form {
 	@include inline-block;
 }
 
@@ -60,24 +57,32 @@ strong {
 	font-weight: bold;
 }
 
-// ######################### Misc Panels #########################
+/** --------------------------------------------
+ * Misc Panels
+ * -------------------------------------------- */
 
 .cms-content-header {
 	background-color: darken($color-widget-bg, 20%);
-	padding: 8px;	
+	padding: 8px 8px 6px 8px;	
 	height: 32px;
+	border-bottom: 2px solid darken($color-widget-bg, 35%);
 
 	@include linear-gradient(color-stops(
-		darken($color-widget-bg, 20%),
+		darken($color-widget-bg, 5%),
 		darken($color-widget-bg, 30%)
 	));
+	
+	border-bottom: 1px solid darken($color-widget-bg, 50%);
+	padding: 10px;	
+	height: 32px;
 
 	
 	h2 {
 		float: left;
-		padding: 8px;
-		font-size: 14px;
+		padding: 12px 0 0 8px;
+		font-size: $font-base-size;
 		font-weight: bold;
+		text-shadow: lighten($color-base, 10%) 1px 1px 0;
 		width: 250px - (10px*2);
 	}
 
@@ -93,39 +98,56 @@ strong {
 
 .ui-tabs .cms-content-header {
 	.ui-tabs-nav li {
-		height: 40px;
-
 		a {
 			font-weight: bold;
-			font-size: 11px;
-			padding-top: 8px;
+			font-size: $font-base-size;
+			padding: 11px 15px 9px;
+			border-bottom: 2px solid darken($color-tab, 15%);
 		}
 	}
 	
 	.ui-state-default, 
 	.ui-widget-content .ui-state-default, 
 	.ui-widget-header .ui-state-default {
-		background-color: lighten($color-shadow-light, 20%);
+		background-color: $color-tab;
 		@include linear-gradient(color-stops(
-			lighten($color-shadow-light, 20%),
-			lighten($color-shadow-light, 5%)
+			$color-tab,
+			darken($color-tab, 10%)
 		));
+		
+		border-color: darken($color-tab, 20%);
+		margin: 0 3px 0 0;
+		text-shadow: lighten($color-tab, 60%) 0 1px 0;
 	}
 	
 	.ui-state-active, 
 	.ui-widget-content .ui-state-active, 
 	.ui-widget-header .ui-state-active {
 		background: $color-widget-bg;
+		
+		a {
+			border-bottom: 2px solid $color-widget-bg;
+		}
 	}
 }
 
 .cms-content-tools {
 	background-color: darken($color-widget-bg, 5%);
-	padding: 10px;	
+	padding: 8px;	
 	width: 230px;
 	overflow: auto;	
+	
+	.cms-panel-header,
+	.cms-panel-content {
+		padding: 10px;
+	}
 }
 
+.cms-content {
+	&.loading {
+		background: url(../images/spinner.gif) no-repeat 50% 50%;
+	}
+}
 
 /** -------------------------------------------------------
  * Top Left Header and logo area
@@ -181,24 +203,25 @@ strong {
 .cms-login-status {
 	border-top: 1px solid $color-dark-separator;
 	height: 23px;
-	padding: 8px 0 0 14px;
+	padding: 8px 4px 0 4px;
 	overflow: hidden;
 	line-height: 16px;
-	font-size: 11px;
+	font-size: $font-base-size - 2;
 	
 	.logout-link {
 		display: inline-block;
 		height: 16px;
 		width: 16px;
 		float: left;
-		margin-right: 10px;
+		margin: 0 15px 0 5px;
 		background: url(../images/logout.png) no-repeat;
 		text-indent: -9999em;
 	}
 }
 
-// ######################### Loading Screen #########################
-
+/** -----------------------------------------------
+ * Loading Screen
+ * ------------------------------------------------ */
 .ss-loading-screen, 
 .ss-loading-screen .loading-logo {
 	width: 100%;
@@ -245,17 +268,20 @@ strong {
 	}
 }
 
-// ######################### Actions #########################
+/** --------------------------------------------
+ * Actions
+ * -------------------------------------------- */
 
 .cms-content-actions {
+	border-top: 1px solid darken($color-widget-bg, 35%);
 	padding: 8px;
+	background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left;
 }
 
-// ######################### Messages #########################
+/** --------------------------------------------
+ * Messages
+ * -------------------------------------------- */
 
-/**
- * Messages (see sapphire/css/Form.css)
- */
 .message {
 	margin: 1em 0;
 	padding: 0.5em;
@@ -277,7 +303,9 @@ strong {
 	}
 }
 
-// ######################### ModelAdmin #########################
+/** --------------------------------------------
+ * ModelAdmin
+ * -------------------------------------------- */
 
 .ModelAdmin {
 	.cms-content-tools {
@@ -290,7 +318,10 @@ strong {
 	}
 }
 
-// ######################### "Add page" dialog #########################
+/** --------------------------------------------
+ * "Add page" dialog
+ * -------------------------------------------- */
+
 .cms-page-add-form-dialog {
 	#PageType li {
 		clear: left;
@@ -320,10 +351,23 @@ strong {
 	}
 }
 
-// ######################### Content toolbar #########################
+/** --------------------------------------------
+ * Content toolbar
+ * -------------------------------------------- */
+
 .cms-content-toolbar {
+	@include clearfix;
+	display: block;
+	padding: 10px 0;
+	margin: 0 0 15px 0;
+	border-bottom-width: 2px;
+	border-bottom: 2px groove lighten($color-shadow-light, 95%);
+	-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+	border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+	//TODO: use single border line with shadow instead:: http://daverupert.com/2011/06/two-tone-borders-with-css3/
+	
 	& > * {
-		display: inline-block;
+		float: left;
 	}
 	
 	.cms-tree-view-modes * {
@@ -335,10 +379,45 @@ strong {
 	}
 }
 
-// ######################### Preview header (remove before release) #########################
+.cms-content-tools {
+	.field {
+		label {
+			float: none;
+			width: auto;
+		}
+		
+		.middleColumn {
+			margin-left: 0;
+		}
+	}
+}
+
+.cms-content-batchactions, .cms-content-constructive-actions {
+	float: right;
+}
+
+.cms-content-batchactions {
+	float: right;
+	position:  relative;
+	display: block;
+	margin-right:  8px;
+}
+
+form.cms-batch-actions {
+	float:  left;
+}
+
+.cms-content-constructive-actions a {
+	display:  block;
+	float: right;
+}
+
+/** --------------------------------------------
+ * Preview header (remove before release)
+ * -------------------------------------------- */
+
 .cms-preview {
 	width: 1px; // collapsed by default
-	overflow: hidden;
 		
 	.cms-preview-toggle {
 		width: 10px;
@@ -356,7 +435,9 @@ strong {
 	font-weight: bold;
 }
 
-// ######################### Member Profile #########################
+/** --------------------------------------------
+ * Member Profile
+ * -------------------------------------------- */
 
 form.member-profile-form {
 	
@@ -401,9 +482,70 @@ form.member-profile-form {
 	
 }
 
-.cms-content-form {
+.cms-content-fields {
 	overflow: auto;
+	background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left;
 }
+
+/** --------------------------------------------
+ * Panels
+ * -------------------------------------------- */
+
+.cms-panel {
+	
+	overflow: hidden;
+
+	.toggle-expand,
+	.toggle-collapse {
+		display: block;
+		position: absolute;
+		bottom: 0;
+		text-align: right;
+		@include linear-gradient(color-stops(
+			darken($color-widget-bg, 20%),
+			darken($color-widget-bg, 30%)
+		));
+		text-decoration: none;
+		
+		span {
+			display: inline-block;
+			margin: 5px;
+			color: $color-text-dark;
+			font-size: 16px;
+		}
+	}
+	
+	.toggle-collapse {
+		width: 100%;
+	}
+	
+	.toggle-expand {
+		width: 40px; // will set the collapsed width
+	}
+	
+	&.collapsed {
+		
+		.cms-panel-content {
+			display: none;
+		}
+		
+		.cms-panel-header {
+			@include rotate(-90deg);
+			// TODO How to reflow container to correct height?
+			position: relative;
+			top: 100px;
+		}
+	}
+	
+}
+
+.cms-content .cms-panel.collapsed {
+	cursor: pointer;
+}
+
+/** --------------------------------------------
+ * Other
+ * -------------------------------------------- */
 
 .cms-preview {
 	background-color: $color-base;
@@ -412,9 +554,25 @@ form.member-profile-form {
 		cursor: pointer;
 		
 		a {
+			display: block;
+			width: 15px;
+			height: 15px;
+			position: relative;
+			left: 10px; // point right (width of toggle)
+			top: 48%;
+			background-color: $color-base;
 			color: $color-text-light;
 			font-weight: bold;
 			text-decoration: none;
+			z-index: 2000;
+		}
+	}
+	
+	&.is-collapsed {
+		.cms-preview-toggle {
+			a {
+				left: -15px; // point left
+			}
 		}
 	}
 }

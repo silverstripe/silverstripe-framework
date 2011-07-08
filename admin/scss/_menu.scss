@@ -21,9 +21,34 @@
 	a {
 		text-decoration: none;
 	}
+	
+	.cms-panel-content {
+		width: 250px; // avoids floating of elements when collapsed
+	}
+		
+	// toggled via JS
+	&.collapsed {
+	
+		width: 40px;
+		cursor: auto;
+		
+		.cms-menu-list {
+			li span.text {
+				display: none;
+			}
+			li ul {
+				display: none; 
+			}
+		}
+		
+		&.cms-panel .cms-panel-content {
+			display: block; // override panel defaults
+		}
+	}
 }
 
 .cms-menu-list {
+	
 	li {
 		
 		a {
@@ -35,14 +60,14 @@
 			overflow: hidden;
 			white-space: nowrap;
 			text-overflow: ellipsis;
-			text-shadow: lighten($color-base, 10%) 1px 1px 0;
+			text-shadow: lighten($color-base, 5%) 1px 1px 0;
 			color: $color-text-dark;
-			padding: 5px;
+			padding: 5px 5px 5px 12px; //left aligning with SS logo at top
 			background-color: $color-base;
 			
 			@include linear-gradient(color-stops(
 				$color-base,
-				darken($color-base, 8%)
+				darken($color-base, 12%)
 			));
 
 			border-top: 1px solid lighten($color-base, 10%);
@@ -75,8 +100,8 @@
 				display: block;
 				float: left;
 				margin-right: 4px;
-				@include sprite-background("icons-32.png");
-				@include sprite-position(1, 1);
+				//@include sprite-background("icons-32.png");
+				//@include sprite-position(1, 1);
 			}
 			
 			.text {
@@ -105,7 +130,7 @@
 				background-color: darken($color-menu-button, 10%);
 
 				a {
-					font-size: $font-small-size;
+					font-size: $font-base-size - 1;
 					padding: 0 10px 0 36px;
 					height: 32px;
 					line-height: 32px;
@@ -138,6 +163,25 @@
 					border-top: none;
 				}
 			}
+		}
+	}
+		
+	li#Menu-CMSMain a .icon {@include sprite-position(1, 1);}
+	li#Menu-CMSMain.current a .icon, li#Menu-CMSMain a:hover .icon {@include sprite-position(2, 1);}
+	li#Menu-AssetAdmin a .icon {@include sprite-position(1, 4);}
+	li#Menu-AssetAdmin.current a .icon, li#Menu-AssetAdmin a:hover .icon {@include sprite-position(2, 4);}
+	li#Menu-SecurityAdmin a .icon {@include sprite-position(1, 5);}
+	li#Menu-SecurityAdmin.current a .icon, li#Menu-SecurityAdmin a:hover .icon {@include sprite-position(2, 5);}
+	li#Menu-CMSPagesController a .icon {@include sprite-position(1, 2);}
+	li#Menu-CMSPagesController.current a .icon, li#Menu-CMSPagesController a:hover .icon {@include sprite-position(2, 2);}
+	
+	&.collapsed {
+		li .text {
+			display: none;
+		}
+		
+		li > li {
+			display: none;
 		}
 	}
 }

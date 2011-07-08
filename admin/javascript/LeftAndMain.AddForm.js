@@ -91,8 +91,9 @@
 				data.push({name:button.attr('name'),value:button.val()});
 				
 				// TODO Should be set by hiddenfield already
-				jQuery('.cms-edit-form').entwine('ss').loadForm(
+				jQuery('.cms-content').entwine('ss').loadForm(
 					this.attr('action'),
+					null,
 					function() {
 						// Tree updates are triggered by Form_EditForm load events
 						button.removeClass('loading');
@@ -129,7 +130,7 @@
 				dropdown.find('option').remove();
 				
 				//Use tree hints to find allowed children for this node
-				if (className && typeof siteTreeHints !== 'undefined') {
+				if (className && siteTreeHints) {
 					disallowed = siteTreeHints[className].disallowedChildren;
 				}
 				

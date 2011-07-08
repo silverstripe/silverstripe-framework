@@ -31,8 +31,6 @@
 		});
 		
 		/**
-		 * Class: .LeftAndMain
-		 * 
 		 * Main LeftAndMain interface with some control panel and an edit form.
 		 * 
 		 * Events:
@@ -40,20 +38,16 @@
 		 *  validate - ...
 		 *  loadnewpage - ...
 		 */
-		$('.LeftAndMain').entwine({
-
-			/**
-			 * Variable: PingIntervalSeconds
-			 * (Number) Interval in which /Security/ping will be checked for a valid login session.
-			 */
-			PingIntervalSeconds: 5*60,
-
+		$('.cms-container').entwine({
+			
+			CurrentXHR: null,
+			
 			/**
 			 * Constructor: onmatch
 			 */
 			onmatch: function() {
 				var self = this;
-				
+
 				// Browser detection
 				if($.browser.msie && parseInt($.browser.version, 10) < 7) {
 					$('.ss-loading-screen').append(
@@ -65,66 +59,96 @@
 				}
 				
 				// Initialize layouts, inner to outer
-				var doInnerLayout = function() {$('.cms-content').layout();}
-				var outer = $('.cms-container');
-				var doOuterLayout = function() {outer.layout({resize: false});}
-				doInnerLayout();
-				doOuterLayout();
-				$(window).resize(doOuterLayout);
+				this.redraw();
+				$(window).resize(function() {self.redraw()});
 				
 				// Remove loading screen
 				$('.ss-loading-screen').hide();
 				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
 
-				this._setupPinging();
-
-				$('.cms-edit-form').live('loadnewpage', function() {
-					doInnerLayout();
-					doOuterLayout();
+				$('.cms-edit-form').live('loadnewpage', function() {self.redraw()});
+				
+				 History.Adapter.bind(window,'statechange',function(){ 
+					self.handleStateChange();
 				});
 
 				this._super();
 			},
-
+			
+			redraw: function() {
+				// Not all edit forms are layouted
+				var editForm = $('.cms-edit-form[data-layout]').layout();
+				$('.cms-content').layout();
+				$('.cms-container').layout({resize: false})
+			},
+			
 			/**
-			 * Function: _setupPinging
+			 * Handles ajax loading of new panels through the window.History object.
+			 * To trigger loading, pass a new URL to window.History.pushState().
 			 * 
-			 * This function is called by prototype when it receives notification that the user was logged out.
-			 * It uses /Security/ping for this purpose, which should return '1' if a valid user session exists.
-			 * It redirects back to the login form if the URL is either unreachable, or returns '0'.
+			 * Due to the nature of history management, no callbacks are allowed.
+			 * Use the 'beforestatechange' and 'afterstatechange' events instead,
+			 * or overwrite the beforeLoad() and afterLoad() methods on the 
+			 * DOM element you're loading the new content into.
+			 * Although you can pass data into pushState(), it shouldn't contain 
+			 * DOM elements or callback closures.
+			 * 
+			 * The passed URL should allow reconstructing important interface state
+			 * without additional parameters, in the following use cases:
+			 * - Explicit loading through History.pushState()
+			 * - Implicit loading through browser navigation event triggered by the user (forward or back)
+			 * - Full window refresh without ajax
+			 * For example, a ModelAdmin search event should contain the search terms
+			 * as URL parameters, and the result display should automatically appear 
+			 * if the URL is loaded without ajax.
+			 * 
+			 * Alternatively, you can load new content via $('.cms-content').loadForm(<url>).
+			 * In this case, the action won't be recorded in the browser history.
 			 */
-			_setupPinging: function() {
-				var onSessionLost = function(xmlhttp, status) {
-					if(xmlhttp.status > 400 || xmlhttp.responseText == 0) {
-						// TODO will pile up additional alerts when left unattended
-						if(window.open('Security/login')) {
-						    alert("Please log in and then try again");
-						} else {
-						    alert("Please enable pop-ups for this site");
-						}
+			handleStateChange: function() {
+				var self = this, h = window.History, state = h.getState(); 
+				
+				// Don't allow parallel loading to avoid edge cases
+				if(this.getCurrentXHR()) this.getCurrentXHR().abort();
+				
+				var contentEl = $(state.data.selector || '.cms-content');
+				this.trigger('beforestatechange', {state: state});
+				contentEl.beforeLoad(state.url);
+				
+				var xhr = $.ajax({
+					url: state.url,
+					success: function(data, status, xhr) {
+						// Update title
+						var title = xhr.getResponseHeader('X-Title');
+						if(title) document.title = title;
+						
+						// Update panels
+						contentEl.afterLoad(data, status, xhr);
+						self.redraw();
+						
+						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr});
 					}
-				};
-
-				// setup pinging for login expiry
-				setInterval(function() {
-					jQuery.ajax({
-						url: "Security/ping",
-						global: false,
-						complete: onSessionLost
-					});
-				}, this.getPingIntervalSeconds() * 1000);
+				});
+				this.setCurrentXHR(xhr);
+			}
+		});
+		
+		/**
+		 * Monitor all panels for layout changes
+		 */
+		$('.cms-panel').entwine({
+			ontoggle: function(e) {
+				this.parents('.cms-container').redraw();
 			}
 		});
 
 		/**
-		 * Class: .LeftAndMain :submit, .LeftAndMain button, .LeftAndMain :reset
-		 * 
 		 * Make all buttons "hoverable" with jQuery theming.
 		 * Also sets the clicked button on a form submission, making it available through
 		 * a new 'clickedButton' property on the form DOM element.
 		 */
-		$('.LeftAndMain :submit, .LeftAndMain button, .LeftAndMain :reset').entwine({
+		$('.cms-container :submit, .cms-container button, .cms-container :reset').entwine({
 			onmatch: function() {
 				// TODO Adding classes in onmatch confuses entwine
 				var self = this;
@@ -139,7 +163,7 @@
 		 * 
 		 * Link for editing the profile for a logged-in member through a modal dialog.
 		 */
-		$('.LeftAndMain .profile-link').entwine({
+		$('.cms-container .profile-link').entwine({
 			
 			/**
 			 * Constructor: onmatch
@@ -281,7 +305,7 @@
 		 * the DOM element on creation, rather than onclick - which allows us to decorate
 		 * the field with a calendar icon
 		 */
-		$('.LeftAndMain .field.date input.text').entwine({
+		$('.cms-container .field.date input.text').entwine({
 			onmatch: function() {
 				var holder = $(this).parents('.field.date:first'), config = holder.metadata({type: 'class'});
 				if(!config.showcalendar) return;
@@ -299,7 +323,8 @@
 			}
 		})
 		
-	});
+	});	 
+	
 }(jQuery));
 
 // Backwards compatibility
