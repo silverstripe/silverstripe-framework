@@ -74,7 +74,7 @@ class Text extends StringField {
 	 * @return string
 	 */
 	function AbsoluteLinks() {
-		return HTTP::absoluteURLs($this->value);
+		return HTTP::absoluteURLs($this->forTemplate());
 	}
 	
 	/**
