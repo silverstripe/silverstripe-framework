@@ -34,7 +34,10 @@
 				
 				$('.cms-container').bind('afterstatechange', function(e, data) {
 					var controller = data.xhr.getResponseHeader('X-Controller');
-					if(controller) self.find('li#Menu-' + controller).select();
+					if(controller) {
+						var item = self.find('li#Menu-' + controller);
+						if(!item.hasClass('current')) item.select();
+					}
 				});
 				
 				// Sync collapsed state with parent panel
@@ -72,6 +75,8 @@
 				this.siblings().removeClass('current').close();
 				this.siblings().find('li').removeClass('current');
 				if(parent) parent.addClass('current').siblings().removeClass('current');
+				
+				this.trigger('select');
 			}
 		});
 		
