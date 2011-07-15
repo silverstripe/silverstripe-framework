@@ -2,35 +2,6 @@
 
 	$.entwine('ss', function($){
 		
-		$('.cms-content, .cms-content *').entwine({
-			/**
-			 * Triggered before a new URL is loaded, typically via ajax.
-			 * Loading itself is handled by $('.cms-container') and window.history.
-			 * 
-			 * @param {String}
-			 */
-			beforeLoad: function(url) {
-				this.addClass('loading');
-				this.cleanup();
-			},
-			
-			/**
-			 * Triggered after an ajax request with new HTML data.
-			 * 
-			 * @param {String}
-			 * @param {String}
-			 * @param {XMLHTTPRequest}
-			 */
-			afterLoad: function(data, status, xhr) {
-				this.removeClass('loading');
-				this.replaceWith(data);
-			},
-			
-			cleanup: function() {
-				this.empty();
-			}
-		});
-
 		/**
 		 * The "content" area contains all of the section specific UI (excluding the menu).
 		 * This area can be a form itself, as well as contain one or more forms.
@@ -65,6 +36,9 @@
 						self.removeForm();
 					}
 				});
+				
+				// Force initialization of tabsets to avoid layout glitches
+				this.find('.ss-tabset').redraw();
 				
 				this._super();
 			},
@@ -263,4 +237,14 @@
 			}
 		});
 	});
+	
+	$('.cms-content.loading').entwine({
+		onmatch: function() {
+			this.append('<div class="cms-content-loading-overlay ui-widget-overlay"></div>');
+		},
+		onunmatch: function() {
+			this.find('.cms-content-loading-overlay').remove();
+		}
+	});
+	
 })(jQuery);

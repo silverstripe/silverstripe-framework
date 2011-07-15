@@ -80,7 +80,7 @@
 				// Not all edit forms are layouted
 				var editForm = $('.cms-edit-form[data-layout]').layout();
 				$('.cms-content').layout();
-				$('.cms-container').layout({resize: false})
+				$('.cms-container').layout({resize: false});
 			},
 			
 			/**
@@ -112,9 +112,10 @@
 				// Don't allow parallel loading to avoid edge cases
 				if(this.getCurrentXHR()) this.getCurrentXHR().abort();
 				
-				var contentEl = $(state.data.selector || '.cms-content');
-				this.trigger('beforestatechange', {state: state});
-				contentEl.beforeLoad(state.url);
+				var selector = state.data.selector || '.cms-content', contentEl = $(selector);
+				this.trigger('beforestatechange', {state: state, element: contentEl});
+
+				contentEl.addClass('loading');
 				
 				var xhr = $.ajax({
 					url: state.url,
@@ -124,10 +125,19 @@
 						if(title) document.title = title;
 						
 						// Update panels
-						contentEl.afterLoad(data, status, xhr);
+						jQuery.entwine.synchronous_mode(true);
+						var newContentEl = $(data);
+						newContentEl.addClass('loading');
+						contentEl.replaceWith(newContentEl);
+						contentEl.remove();
 						self.redraw();
+						newContentEl.removeClass('loading');
+						jQuery.entwine.synchronous_mode(false);
 						
-						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr});
+						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: newContentEl});
+					},
+					error: function(xhr, status, e) {
+						contentEl.removeClass('loading');
 					}
 				});
 				this.setCurrentXHR(xhr);

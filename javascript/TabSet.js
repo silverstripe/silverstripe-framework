@@ -9,14 +9,17 @@
 		 */
 		$('.ss-tabset').entwine({
 			onmatch: function() {
+				this.redraw();
+				this._super();
+			},
+			
+			redraw: function() {
 				this.rewriteHashlinks();
 
 				// Initialize jQuery UI tabs
 				this.tabs({
 					cookie: $.cookie ? { expires: 30, path: '/', name: 'ui-tabs-' + this.attr('id') } : false
 				});
-				
-				this._super();
 			},
 		
 			/**
