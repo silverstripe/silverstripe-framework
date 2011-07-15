@@ -2,6 +2,19 @@
 	
 	$.entwine('ss', function($){
 
+		/**
+		 * Shows a previewable website state alongside its editable version in backend UI, typically a page.
+		 * This allows CMS users to seamlessly switch between preview and edit mode in the same browser window.
+		 * The preview panel is embedded in the layout of the backend UI, and loads its content via an iframe.
+		 * 
+		 * The admin UI itself is collapsible, leaving most screen space to this panel.
+		 * Relies on the server responses to indicate if a preview URL is available for the currently loaded
+		 * admin interface. If no preview is available, the panel is "blocked" automatically.
+		 * 
+		 * When a CMS user is logged in, all page views are redirected to the same view in the CMS,
+		 * with the preview window expanded. All internal links in the preview iframe are 
+		 * automatically rewritten to point to the version without the CMS via ?cms-preview-expanded=1.
+		 */
 		$('.cms-preview').entwine({
 			
 			// Minimum width to keep the CMS operational
@@ -30,21 +43,39 @@
 				});
 				self._fixIframeLinks();
 				
-				// Limit to CMS forms for the moment
-				$('.cms-edit-form').bind('loadnewpage', function(e, ui) {
-					// var url = ui.xmlhttp.getResponseHeader('x-frontend-url');
-					var url = $(this).find(':input[name=StageURLSegment]').val();
-					if(url) self.loadUrl(url + '&cms-preview-disabled=1');
-				});
-				
-				$('.cms-container').bind('afterstatechange', function(e) {
+				var updateAfterXhr = function() {
 					// var url = ui.xmlhttp.getResponseHeader('x-frontend-url');
 					var url = $('.cms-edit-form').find(':input[name=StageURLSegment]').val();
-					if(url) self.loadUrl(url + '&cms-preview-disabled=1');
+					if(url) {
+						url = url.replace(/\?.*/, '') + jQuery.query.load(url).set('cms-preview-disabled', '1').toString();
+						self.loadUrl(url);
+						self.unblock();
+					} else {
+						self.block();
+					}
+				}
+				
+				// Listen to form loads. Limit to CMS forms for the moment
+				$('.cms-edit-form').bind('loadnewpage', function(e, ui) {
+					updateAfterXhr();
+				});
+				
+				// Listen to history state changes
+				$('.cms-container').bind('afterstatechange', function(e) {
+					updateAfterXhr();
+				});
+				
+				// Toggle preview when new menu entry is selected
+				$('.cms-menu-list li').bind('select', function(e) {
+					self.collapse();
 				});
 
 				if(this.hasClass('is-expanded')) this.expand();
 				else this.collapse();
+				
+				// Preview might not be available in all admin interfaces - block/disable when necessary
+				this.append('<div class="cms-preview-overlay ui-widget-overlay"></div>');
+				this.find('.cms-preview-overlay').hide();
 		
 				this._super();
 			},
@@ -76,10 +107,15 @@
 				var links = doc.getElementsByTagName('A');
 				for (var i = 0; i < links.length; i++) {
 					var href = links[i].getAttribute('href');
-					if (href && href.match(/^http:\/\//)) {
+					if(!href) continue;
+					
+					if (href.match(/^http:\/\//)) {
+						// Disable external links
 						links[i].setAttribute('href', 'javascript:false');
 					} else {
-						links[i].setAttribute('href', href + '?cms-preview-disabled=1');
+						// Add GET parameter to internal links to avoid double redirects and infinitely nested CMS UIs
+						var previewUrl = href.replace(/\?.*/, '') + jQuery.query.load(href).set('cms-preview-disabled', '1').toString();
+						links[i].setAttribute('href', previewUrl);
 					}
 				}
 			},
@@ -106,6 +142,14 @@
 				containerEl.redraw();
 			},
 			
+			block: function() {
+				this.addClass('blocked');
+			},
+			
+			unblock: function() {
+				this.removeClass('blocked');
+			},
+			
 			getLayoutContainer: function() {
 				return this.parents('.cms-container');
 			},
@@ -118,6 +162,15 @@
 		$('.cms-preview.collapsed').entwine({
 			onmatch: function() {
 				this.find('a').text('<');
+			}
+		});
+		
+		$('.cms-preview.blocked').entwine({
+			onmatch: function() {
+				this.find('.cms-preview-overlay').show();
+			},
+			onunmatch: function() {
+				this.find('.cms-preview-overlay').hide();
 			}
 		});
 		
