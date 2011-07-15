@@ -81,7 +81,7 @@ class SS_HTTPResponse {
 	 * @var array
 	 */
 	protected $headers = array(
-		"Content-Type" => "text/html; charset=\"utf-8\"",
+		"Content-Type" => "text/html; charset=utf-8",
 	);
 	
 	/**
