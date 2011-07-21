@@ -25,8 +25,9 @@
 
 		$Content
 		
-		<div class="cms-preview east <% if IsPreviewExpanded %>is-expanded<% else %>is-collapsed<% end_if %>">
-			<iframe src="$PreviewLink"></iframe>
+		<div class="cms-preview east <% if IsPreviewExpanded %>is-expanded<% else %>is-collapsed<% end_if %>" data-layout="{type: 'border'}">
+			<iframe src="$PreviewLink" class="center"></iframe>
+			<div class="cms-preview-controls south"></div>
 		</div>
 
 	</div>

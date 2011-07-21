@@ -11,9 +11,8 @@
 		 * Relies on the server responses to indicate if a preview URL is available for the currently loaded
 		 * admin interface. If no preview is available, the panel is "blocked" automatically.
 		 * 
-		 * When a CMS user is logged in, all page views are redirected to the same view in the CMS,
-		 * with the preview window expanded. All internal links in the preview iframe are 
-		 * automatically rewritten to point to the version without the CMS via ?cms-preview-expanded=1.
+		 * Internal links within the preview iframe trigger a refresh of the admin panel as well,
+		 * while all external links are disabled (via JavaScript).
 		 */
 		$('.cms-preview').entwine({
 			
@@ -33,7 +32,6 @@
 				this.setSharedWidth(500);
 				
 				// Create layout and controls
-				this.prepend('<div class="cms-preview-toggle west"><a href="#">&laquo;</a></div>');
 				this.find('iframe').addClass('center');
 				this.layout({type: 'border'});
 		
@@ -82,8 +80,12 @@
 			loadUrl: function(url) {
 				this.find('iframe').attr('src', url);
 			},
-			
-			loadCurrentPage: function() {				
+
+			/**
+			 * Loads the matching edit form for a page viewed in the preview iframe,
+			 * based on metadata sent along with this document.
+			 */
+			loadCurrentPage: function() {
 				var doc = this.find('iframe')[0].contentDocument, 
 					containerEl = this.getLayoutContainer(), 
 					contentEl = containerEl.find('.cms-content');
@@ -92,10 +94,12 @@
 				if(!contentEl.hasClass('CMSMain') || contentEl.hasClass('CMSPagesController') || contentEl.hasClass('CMSSettingsController')) return;
 
 				// Load this page in the admin interface if appropriate
-				var id = $(doc).find('meta[name=x-page-id]').attr('content'), contentPanel = $('.cms-content');
+				var id = $(doc).find('meta[name=x-page-id]').attr('content'), 
+					editLink = $(doc).find('meta[name=x-cms-edit-link]').attr('content'), 
+					contentPanel = $('.cms-content');
 				// TODO Remove hardcoding
 				if(id && contentPanel.find(':input[name=ID]').val() != id) {
-					window.History.pushState({}, '', 'admin/page/edit/show/' + id);
+					window.History.pushState({}, '', editLink);
 				}
 			},
 			
@@ -119,9 +123,12 @@
 				// this.css('overflow', 'auto');
 				contentEl.removeClass('center').hide();
 				this.find('iframe').show();
-				containerEl.find('.cms-menu').collapsePanel();
 				this.find('.cms-preview-toggle a').html('&raquo;');
-				containerEl.redraw();
+				this.find('.cms-preview-controls').show();
+				containerEl.find('.cms-menu').collapsePanel();
+				
+				// Already triggered through panel toggle above
+				// containerEl.redraw();
 			},
 			
 			collapse: function() {
@@ -130,9 +137,12 @@
 				// this.css('overflow', 'hidden');
 				contentEl.addClass('center').show();
 				this.find('iframe').hide();
-				containerEl.find('.cms-menu').expandPanel();
 				this.find('.cms-preview-toggle a').html('&laquo;');
-				containerEl.redraw();
+				this.find('.cms-preview-controls').hide();
+				containerEl.find('.cms-menu').expandPanel();
+				
+				// Already triggered through panel toggle above
+				// containerEl.redraw();
 			},
 			
 			block: function() {
@@ -149,6 +159,9 @@
 			
 			toggle: function(bool) {
 				this[this.hasClass('is-collapsed') ? 'expand' : 'collapse']();
+			},
+			redraw: function() {
+				this.layout();
 			}
 		});
 		
@@ -197,6 +210,30 @@
 					preview.toggle(true);
 					e.preventDefault();
 				}
+			}
+		});
+				
+		$('.cms-preview .cms-preview-states').entwine({
+			onmatch: function() {
+				this.find('a').addClass('ss-ui-button');
+				this.find('.active a').addClass('ui-state-highlight');
+			}
+		});
+		$('.cms-preview .cms-preview-states a').entwine({
+			onclick: function(e) {
+				e.preventDefault();
+				this.parents('.cms-preview').loadUrl(this.attr('href'));
+				this.addClass('ui-state-highlight');
+				this.parents('.cms-preview-states').find('a').not(this).removeClass('ui-state-highlight');
+				
+			}
+		});
+				
+		$('.cms-preview-toggle-link').entwine({
+			onclick: function(e) {
+				e.preventDefault();
+				$('.cms-preview').toggle();
+				
 			}
 		});
 	});

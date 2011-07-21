@@ -60,14 +60,17 @@
 				
 				// Initialize layouts
 				this.redraw();
+
+				// Monitor window resizes, panel changes and edit form loads for layout changes.
+				// Also triggers redraw through handleStateChange()
 				$(window).resize(function() {self.redraw()});
+				$('.cms-panel').live('toggle', function() {self.redraw();});
+				$('.cms-edit-form').live('loadnewpage', function() {self.redraw()});
 				
 				// Remove loading screen
 				$('.ss-loading-screen').hide();
 				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
-
-				$('.cms-edit-form').live('loadnewpage', function() {self.redraw()});
 				
 				 History.Adapter.bind(window,'statechange',function(){ 
 					self.handleStateChange();
@@ -143,15 +146,6 @@
 					}
 				});
 				this.setCurrentXHR(xhr);
-			}
-		});
-		
-		/**
-		 * Monitor all panels for layout changes
-		 */
-		$('.cms-panel').entwine({
-			ontoggle: function(e) {
-				this.parents('.cms-container').redraw();
 			}
 		});
 
@@ -268,47 +262,6 @@
 						{ expires: 30, path: '/'}
 					);
 				}
-			}
-		});
-		
-		/**
-		 * Class: #switchView a
-		 * 
-		 * Updates the different stage links which are generated through 
-		 * the SilverStripeNavigator class on the serverside each time a form record
-		 * is reloaded.
-		 */
-		$('#switchView').entwine({
-			onmatch: function() {
-				this._super();
-				
-				$('.cms-edit-form').bind('loadnewpage delete', function(e) {
-					var updatedSwitchView = $('#AjaxSwitchView');
-					if(updatedSwitchView.length) {
-						$('#SwitchView').html(updatedSwitchView.html());
-						updatedSwitchView.remove();
-					}
-				});
-			}
-		});
-
-		/**
-		 * Class: #switchView a
-		 * 
-		 * Links for viewing the currently loaded page
-		 * in different modes: 'live', 'stage' or 'archived'.
-		 * 
-		 * Requires:
-		 *  jquery.metadata
-		 */
-		$('#switchView a').entwine({
-			/**
-			 * Function: onclick
-			 */
-			onclick: function(e) {
-				// Open in popup
-				window.open($(e.target).attr('href'));
-				return false;
 			}
 		});
 		

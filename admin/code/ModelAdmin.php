@@ -942,6 +942,10 @@ class ModelAdmin_RecordController extends Controller {
 		$fields = $this->currentRecord->getCMSFields();
 		$fields->push(new HiddenField("ID"));
 		
+		if($this->currentRecord->hasMethod('Link')) {
+			$fields->push(new LiteralField('SilverStripeNavigator', $this->getSilverStripeNavigator()));
+		}
+		
 		$validator = ($this->currentRecord->hasMethod('getCMSValidator')) ? $this->currentRecord->getCMSValidator() : new RequiredFields();
 		$validator->setJavascriptValidationHandler('none');
 		

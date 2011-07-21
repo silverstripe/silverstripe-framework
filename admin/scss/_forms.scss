@@ -168,6 +168,21 @@ form.nostyle {
  * Buttons
  * ---------------------------------------------------- */
 
+.Actions {
+	margin-right: 80px; // Accommodate preview button
+	min-height: 30px;
+
+	& > div {
+		overflow: auto;
+	}
+}
+
+.cms-preview-toggle-link {
+	display: block;
+	float: right;
+	font-size: 11px;
+}
+
 .cms {
 	.ui-widget {
 		/* loading */
@@ -194,7 +209,6 @@ form.nostyle {
 			background-color: $color-button-generic;
 			border: 1px solid $color-button-generic-border;
 			@include text-shadow(lighten($color-button-generic, 20%) 0 1px 1px);
-			
 			@include box-shadow(lighten($color-base, 10%) 0 1px 2px);
 			@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
 				linear-gradient(color-stops(
@@ -202,6 +216,7 @@ form.nostyle {
 					darken($color-button-generic, 5%)
 				))
 			);
+			
 			&.ui-state-hover {
 				border: 1px solid darken($color-button-generic-border, 5%);
 				
@@ -213,6 +228,7 @@ form.nostyle {
 					))
 				);
 			}
+			
 			&:focus,
 			&:active {
 				border: 1px solid darken($color-button-generic-border, 5%);
@@ -225,6 +241,16 @@ form.nostyle {
 					))
 				);			
 			}
+			
+			&.ss-ui-button-small {
+				padding: ($grid-vertical/2) ($grid-horizontal/2);
+			}
+			
+			&.ui-state-highlight {
+				background-color: $color-button-highlight;
+				border: 1px solid $color-button-highlight-border;
+			}
+			
 			/* constructive */
 			&.ss-ui-action-constructive {
 				padding-left: 24px;
@@ -355,7 +381,9 @@ form.nostyle {
 			cursor: pointer;
 			padding: 0 0 0 $grid-vertical * 2;
 		}
+
 	}
+	
 }
 
 /** ----------------------------------------------------

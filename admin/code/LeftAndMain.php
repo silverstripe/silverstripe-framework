@@ -421,11 +421,7 @@ class LeftAndMain extends Controller {
 		} else {
 			$content = $this->renderWith($this->getViewer('show'));
 		}
-		
-		if($this->ShowSwitchView()) {
-			$content .= '<div id="AjaxSwitchView">' . $this->SwitchView() . '</div>';
-		}
-		
+				
 		return $content;
 	}
 
@@ -844,6 +840,13 @@ class LeftAndMain extends Controller {
 			) {
 				$fields->push(new HiddenField('ParentID'));
 			}
+
+			// Added in-line to the form, but plucked into different view by LeftAndMain.Preview.js upon load
+			if(in_array('CMSPreviewable', class_implements($record))) {
+				$navField = new LiteralField('SilverStripeNavigator', $this->getSilverStripeNavigator());
+				$navField->setAllowHTML(true);
+				$fields->push($navField);
+			}
 			
 			if($record->hasMethod('getAllCMSActions')) {
 				$actions = $record->getAllCMSActions();
@@ -1056,6 +1059,21 @@ class LeftAndMain extends Controller {
 		return array(
 			"PrintForm" => $form
 		);
+	}
+
+	/**
+	 * Used for preview controls, mainly links which switch between different states of the page.
+	 * 
+	 * @return ArrayData
+	 */
+	function getSilverStripeNavigator() {
+		$page = $this->currentPage();
+		if($page) {
+			$navigator = new SilverStripeNavigator($page);
+			return $navigator->renderWith($this->getTemplatesWithSuffix('_SilverStripeNavigator'));
+		} else {
+			return false;
+		}
 	}
 
 	/**

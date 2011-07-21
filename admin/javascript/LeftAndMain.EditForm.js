@@ -68,6 +68,14 @@
 					// TODO validation shouldnt need a special case
 					statusMessage(ss.i18n._t('ModelAdmin.VALIDATIONERROR', 'Validation Error'), 'bad');
 				}
+				
+				// Move navigator to preview if one is available.
+				// If not, just leave the links in the form.
+				var previewEl = $('.cms-preview');
+				if(previewEl.length) {
+					// TODO Relies on DOM element order (the second .cms-navigator is the "old" one)
+					previewEl.find('.cms-preview-controls').html(this.find('.cms-navigator').detach());
+				}
 			
 				this._super();
 			},
