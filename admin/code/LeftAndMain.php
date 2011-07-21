@@ -1122,7 +1122,7 @@ class LeftAndMain extends Controller {
 	public function PreviewLink() {
 		$record = $this->getRecord($this->currentPageID());
 		$baseLink = ($record && $record instanceof Page) ? $record->Link('?stage=Stage') : Director::absoluteBaseURL();
-		return Controller::join_links($baseLink, '?cms-preview-disabled=1');
+		return $baseLink;
 	}
 
 	/**

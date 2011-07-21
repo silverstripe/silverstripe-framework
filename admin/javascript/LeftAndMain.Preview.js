@@ -47,7 +47,6 @@
 					// var url = ui.xmlhttp.getResponseHeader('x-frontend-url');
 					var url = $('.cms-edit-form').find(':input[name=StageURLSegment]').val();
 					if(url) {
-						url = url.replace(/\?.*/, '') + jQuery.query.load(url).set('cms-preview-disabled', '1').toString();
 						self.loadUrl(url);
 						self.unblock();
 					} else {
@@ -109,14 +108,8 @@
 					var href = links[i].getAttribute('href');
 					if(!href) continue;
 					
-					if (href.match(/^http:\/\//)) {
-						// Disable external links
-						links[i].setAttribute('href', 'javascript:false');
-					} else {
-						// Add GET parameter to internal links to avoid double redirects and infinitely nested CMS UIs
-						var previewUrl = href.replace(/\?.*/, '') + jQuery.query.load(href).set('cms-preview-disabled', '1').toString();
-						links[i].setAttribute('href', previewUrl);
-					}
+					// Disable external links
+					if (href.match(/^http:\/\//)) links[i].setAttribute('href', 'javascript:false');
 				}
 			},
 			
