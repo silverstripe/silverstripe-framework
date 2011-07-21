@@ -402,8 +402,8 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * @return string
 	 */
 	public function PrevLink() {
-		if($this->pageStart - $this->pageLength >= 0) {
-			return HTTP::setGetVar($this->paginationGetVar, $this->pageStart - $this->pageLength);
+		 if($this->pageStart != 0) {
+			return HTTP::setGetVar($this->paginationGetVar, max(0, $this->pageStart - $this->pageLength));
 		}
 	}
 	
@@ -412,8 +412,8 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	 * @return string
 	 */
 	public function NextLink() {
-		 if($this->pageStart != 0) {
-			return HTTP::setGetVar($this->paginationGetVar, max(0, $this->pageStart - $this->pageLength));
+		if($this->pageStart + $this->pageLength < $this->totalSize) {
+			return HTTP::setGetVar($this->paginationGetVar, $this->pageStart + $this->pageLength);
 		}
 	}
 
