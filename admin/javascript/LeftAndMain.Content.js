@@ -47,6 +47,10 @@
 				this._super();
 			},
 			
+			redraw: function() {
+				this.layout();
+			},
+			
 			/**
 			 * Function: loadForm
 			 * 
@@ -73,8 +77,6 @@
 
 				this.trigger('loadform', {form: form, url: url});
 			
-				form.cleanup();
-
 				return jQuery.ajax(jQuery.extend({
 					url: url, 
 					// Ensure that form view is loaded (rather than whole "Content" template)
@@ -203,7 +205,6 @@
 			 * @return {jQuery} New form element
 			 */
 			replaceForm: function(form, html) {
-				form.cleanup();
 				if(html) {
 					var parent = form.parent(), id = form.attr('id');
 					form.replaceWith(html);

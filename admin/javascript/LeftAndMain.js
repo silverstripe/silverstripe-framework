@@ -58,7 +58,7 @@
 					return;
 				}
 				
-				// Initialize layouts, inner to outer
+				// Initialize layouts
 				this.redraw();
 				$(window).resize(function() {self.redraw()});
 				
@@ -77,10 +77,12 @@
 			},
 			
 			redraw: function() {
-				// Not all edit forms are layouted
-				var editForm = $('.cms-edit-form[data-layout]').layout();
-				$('.cms-content').layout();
-				$('.cms-container').layout({resize: false});
+				// Move from inner to outer layouts. Some of the elements might not exist.
+				this.find('.cms-edit-form[data-layout]').redraw(); // Not all edit forms are layouted
+				this.find('.cms-preview').redraw();
+				this.find('.cms-content').redraw();
+				
+				this.layout({resize: false});
 			},
 			
 			/**

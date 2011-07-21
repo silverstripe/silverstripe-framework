@@ -9,11 +9,12 @@
 		 */
 		$('.ss-tabset').entwine({
 			onmatch: function() {
-				this.redraw();
+				// Can't name redraw() as it clashes with other CMS entwine classes
+				this.redrawTabs();
 				this._super();
 			},
 			
-			redraw: function() {
+			redrawTabs: function() {
 				this.rewriteHashlinks();
 
 				// Initialize jQuery UI tabs

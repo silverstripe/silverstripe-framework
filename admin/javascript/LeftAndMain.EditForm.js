@@ -89,6 +89,13 @@
 				this._super();
 			},
 			
+			redraw: function() {
+				// TODO Manually set container height before resizing - shouldn't be necessary'
+				this.find('.cms-content-actions').height(this.find('.cms-content-actions .Actions').height());
+				
+				this.layout();
+			},
+			
 			/**
 			 * Function: _setupChangeTracker
 			 */
