@@ -7,32 +7,41 @@
 /** -------------------------------------------------------
  * CMS Menu Bar
  * -------------------------------------------------------- */
-@import "compass/css3";
-
 .cms-menu {
 	z-index: 10;
 	background: $color-menu-background;
 	border-right: 1px solid $color-menu-border;
-	width: 250px;
+	width: 207px; /* 8x24 - 1 */
 	overflow: auto;
 	
-	@include box-shadow($color-shadow-dark, 2px, 0, 6px);
+	@include box-shadow($color-shadow-dark 2px 0 6px);
 
 	a {
 		text-decoration: none;
 	}
 	
 	.cms-panel-content {
-		width: 250px; // avoids floating of elements when collapsed
+		width: 207px; /* 8x24 - 1 */
+		overflow: hidden
 	}
 		
-	// toggled via JS
 	&.collapsed {
-	
 		width: 40px;
 		cursor: auto;
+		z-index: 1000;
+		
+		.cms-header {
+			width: 30px;
+			
+			span {
+				display: none;
+			}
+		}
 		
 		.cms-menu-list {
+			overflow-x: hidden;
+			overflow-y: auto;
+			
 			li span.text {
 				display: none;
 			}
@@ -53,19 +62,18 @@
 		
 		a {
 			display: block;
-			height: 30px;
-			line-height: 30px;
-			vertical-align: middle;
+			height: 24px;
+			line-height: 24px;
 			font-size: $font-base-size;
 			overflow: hidden;
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			text-shadow: lighten($color-base, 5%) 1px 1px 0;
 			color: $color-text-dark;
-			padding: 5px 5px 5px 12px; //left aligning with SS logo at top
+			padding: 7px 5px 7px 8px;
 			background-color: $color-base;
 			
-			@include linear-gradient(color-stops(
+			@include background-image(linear-gradient(
 				$color-base,
 				darken($color-base, 12%)
 			));
@@ -79,7 +87,7 @@
 				border-bottom: 1px solid darken($color-base, 15%);
 				color: lighten($color-text-dark, 5%);
 				
-				@include linear-gradient(color-stops(
+				@include background-image(linear-gradient(
 					lighten($color-base, 5%),
 					$color-base
 				));
@@ -90,7 +98,7 @@
 				background-color: darken($color-base, 5%);
 				color: lighten($color-text-dark, 10%);
 				
-				@include linear-gradient(color-stops(
+				@include background-image(linear-gradient(
 					darken($color-base, 10%),
 					darken($color-base, 5%)
 				));			
@@ -99,9 +107,9 @@
 			.icon {
 				display: block;
 				float: left;
-				margin-right: 4px;
-				//@include sprite-background("icons-32.png");
-				//@include sprite-position(1, 1);
+				margin-right: 8px;
+				
+				@include opacity(0.7);
 			}
 			
 			.text {
@@ -116,7 +124,7 @@
 				border-top: 1px solid lighten($color-menu-button, 10%);
 				border-bottom: 1px solid darken($color-menu-button, 20%);
 				background-color: $color-menu-button;
-				@include linear-gradient(color-stops(
+				@include background-image(linear-gradient(
 					$color-menu-button, 
 					darken($color-menu-button, 10%)
 				));
@@ -131,7 +139,7 @@
 
 				a {
 					font-size: $font-base-size - 1;
-					padding: 0 10px 0 36px;
+					padding: 0 10px 0 40px;
 					height: 32px;
 					line-height: 32px;
 					color: lighten($color-menu-button, 45%);
@@ -165,15 +173,6 @@
 			}
 		}
 	}
-		
-	li#Menu-CMSMain a .icon {@include sprite-position(1, 1);}
-	li#Menu-CMSMain.current a .icon, li#Menu-CMSMain a:hover .icon {@include sprite-position(2, 1);}
-	li#Menu-AssetAdmin a .icon {@include sprite-position(1, 4);}
-	li#Menu-AssetAdmin.current a .icon, li#Menu-AssetAdmin a:hover .icon {@include sprite-position(2, 4);}
-	li#Menu-SecurityAdmin a .icon {@include sprite-position(1, 5);}
-	li#Menu-SecurityAdmin.current a .icon, li#Menu-SecurityAdmin a:hover .icon {@include sprite-position(2, 5);}
-	li#Menu-CMSPagesController a .icon {@include sprite-position(1, 2);}
-	li#Menu-CMSPagesController.current a .icon, li#Menu-CMSPagesController a:hover .icon {@include sprite-position(2, 2);}
 	
 	&.collapsed {
 		li .text {

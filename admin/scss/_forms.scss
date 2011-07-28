@@ -64,7 +64,7 @@ form.nostyle {
 .field.text input, textarea {
 	@include border-radius(4px);
 	background: #fff;
-	@include linear-gradient(color-stops(
+	@include background-image(linear-gradient(
 		#efefef,
 		#fff 10%,
 		#fff 90%,

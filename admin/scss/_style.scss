@@ -40,6 +40,7 @@ body .ui-widget {
 
 .cms-container {
 	height: 100%;
+	background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left;
 }
 
 .cms-preview,
@@ -67,15 +68,9 @@ strong {
 	height: 32px;
 	border-bottom: 2px solid darken($color-widget-bg, 35%);
 
-	@include linear-gradient(color-stops(
-		darken($color-widget-bg, 5%),
-		darken($color-widget-bg, 30%)
-	));
-	
-	border-bottom: 1px solid darken($color-widget-bg, 50%);
-	padding: 10px;	
-	height: 32px;
-
+	@include background-image(
+		linear-gradient(darken($color-widget-bg, 10%), darken($color-widget-bg, 30%))
+	);
 	
 	h2 {
 		float: left;
@@ -83,7 +78,7 @@ strong {
 		font-size: $font-base-size;
 		font-weight: bold;
 		text-shadow: lighten($color-base, 10%) 1px 1px 0;
-		width: 250px - (10px*2);
+		width: 230px;
 	}
 
 	& > div {
@@ -110,9 +105,8 @@ strong {
 	.ui-widget-content .ui-state-default, 
 	.ui-widget-header .ui-state-default {
 		background-color: $color-tab;
-		@include linear-gradient(color-stops(
-			$color-tab,
-			darken($color-tab, 10%)
+		@include background-image(
+			linear-gradient($color-tab, darken($color-tab, 10%)
 		));
 		
 		border-color: darken($color-tab, 20%);
@@ -156,18 +150,16 @@ strong {
 .cms-header {
 	background-color: darken($color-dark-bg, 10%);
 	position: relative;
-	padding: 16px 8px 8px;
+	padding: 16px 8px 4px 4px;
 	line-height: 24px;
 
-	@include linear-gradient(color-stops(
-		darken($color-dark-bg, 10%), 
-		$color-dark-bg, 
-		darken($color-dark-bg, 10%)
+	@include background-image(
+		linear-gradient(darken($color-dark-bg, 10%), $color-dark-bg, darken($color-dark-bg, 10%)
 	));
 	
 	span {
 		color: $color-text-light;
-		white-space: no-wrap;
+		white-space: nowrap;
 		text-overflow: ellipsis;
 		display: block;
 		
@@ -182,7 +174,7 @@ strong {
 	border-bottom: 1px solid darken($color-dark-separator, 20%);
 	height: 31px;
 	overflow: hidden;
-	padding: 0 4px;
+	padding: 0 0 0 4px;
 	vertical-align: middle;
 	
 	.version {
@@ -191,12 +183,14 @@ strong {
 	
 	a {
 		display: inline-block;
-		height: $application-logo-small-ysize;
-		width: $application-logo-small-xsize;
+		height: 24px;
+		width: 24px;
 		float: left;
-		margin-right: 10px;
+		margin-right: 8px;
 		background: $application-logo-small no-repeat;
 		text-indent: -9999em;
+		padding-right: 7px;
+		border-right: 1px solid $color-dark-separator;
 	}
 }
 
@@ -213,7 +207,7 @@ strong {
 		height: 16px;
 		width: 16px;
 		float: left;
-		margin: 0 15px 0 5px;
+		margin: 0 8px 0 3px;
 		background: url(../images/logout.png) no-repeat;
 		text-indent: -9999em;
 	}
@@ -484,7 +478,6 @@ form.member-profile-form {
 
 .cms-content-fields {
 	overflow: auto;
-	background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left;
 }
 
 /** --------------------------------------------
@@ -492,7 +485,6 @@ form.member-profile-form {
  * -------------------------------------------- */
 
 .cms-panel {
-	
 	overflow: hidden;
 
 	.toggle-expand,
@@ -501,10 +493,10 @@ form.member-profile-form {
 		position: absolute;
 		bottom: 0;
 		text-align: right;
-		@include linear-gradient(color-stops(
-			darken($color-widget-bg, 20%),
-			darken($color-widget-bg, 30%)
-		));
+		@include background-image(
+			linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 30%))
+		);
+
 		text-decoration: none;
 		
 		span {
@@ -531,7 +523,6 @@ form.member-profile-form {
 		
 		.cms-panel-header {
 			@include rotate(-90deg);
-			// TODO How to reflow container to correct height?
 			position: relative;
 			top: 100px;
 		}
@@ -546,25 +537,28 @@ form.member-profile-form {
 /** --------------------------------------------
  * Other
  * -------------------------------------------- */
-
 .cms-preview {
-	background-color: $color-base;
 	
 	.cms-preview-toggle {
 		cursor: pointer;
 		
 		a {
 			display: block;
-			width: 15px;
-			height: 15px;
+			padding: 2px 12px 2px 6px;
+			height: 16px;
 			position: relative;
-			left: 10px; // point right (width of toggle)
 			top: 48%;
 			background-color: $color-base;
 			color: $color-text-light;
 			font-weight: bold;
 			text-decoration: none;
 			z-index: 2000;
+			line-height: 16px;
+			
+			@include border-bottom-right-radius(4px);
+			@include border-top-right-radius(4px);
+			
+			@include box-shadow(0 0 10px rgba(180, 180,180,0.4));
 		}
 	}
 	

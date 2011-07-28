@@ -13,6 +13,7 @@
 .cms {	
 	.ui-tabs {
 		padding: 0;
+		background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left;
 		
 		.ui-widget-header {
 			border: 0;
@@ -37,13 +38,14 @@
 		}
 	}
 	
-	.ui-widget-content,
-	.ui-tabs .ui-tabs-panel {
+	.ui-widget-content  {
 		color: $color-text;
 		font-size: $font-base-size;
 		border: 0;
 	}
-
+	.ui-tabs-panel {
+		background: transparent; // default it's weight
+	}
 	.ui-widget-header {
 		background: $color-widget-bg;
 		border: 0;

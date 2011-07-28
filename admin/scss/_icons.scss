@@ -1,0 +1,44 @@
+/**
+ * Icon styles.
+ *
+ * @todo Automatic sprite generation and ensure that developers
+ * can define icons for their own admin interfaces
+ *
+ * @package sapphire
+ * @subpackage admin
+ */
+
+.icon {
+	background-repeat: none;
+	
+	&.icon-24 {
+		width: 24px;
+		height: 24px;
+		
+		&.icon-assetadmin {
+			background-image: url(../images/icons/24x24/picture.png);
+		}
+		&.icon-cmsmain {
+			background-image: url(../images/icons/24x24/pencil.png);
+		}
+		&.icon-cmspagescontroller {
+			background-image: url(../images/icons/24x24/network.png);
+		}
+		&.icon-cmssettingscontroller {
+			background-image: url(../images/icons/24x24/gears.png);
+		}
+		&.icon-securityadmin {
+			background-image: url(../images/icons/24x24/community.png);
+		}
+		&.icon-reportadmin {
+			background-image: url(../images/icons/24x24/pie-chart.png);
+		}
+		&.icon-commentadmin {
+			background-image: url(../images/icons/24x24/blog.png);
+		}
+		&.icon-help {
+			background-image: url(../images/icons/24x24/information.png);
+		}
+	}
+}
+

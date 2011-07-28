@@ -438,53 +438,57 @@ class LeftAndMain extends Controller {
 		// Encode into DO set
 		$menu = new DataObjectSet();
 		$menuItems = CMSMenu::get_viewable_menu_items();
-		if($menuItems) foreach($menuItems as $code => $menuItem) {
-			// alternate permission checks (in addition to LeftAndMain->canView())
-			if(
-				isset($menuItem->controller) 
-				&& $this->hasMethod('alternateMenuDisplayCheck')
-				&& !$this->alternateMenuDisplayCheck($menuItem->controller)
-			) {
-				continue;
-			}
-
-			$linkingmode = "";
-			
-			if($menuItem->controller && $this instanceof $menuItem->controller) {
-				$linkingmode = "current";
-			} else if(strpos($this->Link(), $menuItem->url) !== false) {
-				if($this->Link() == $menuItem->url) {
-					$linkingmode = "current";
-				
-				// default menu is the one with a blank {@link url_segment}
-				} else if(singleton($menuItem->controller)->stat('url_segment') == '') {
-					if($this->Link() == $this->stat('url_base').'/') $linkingmode = "current";
-
-				} else {
-					$linkingmode = "current";
+		if($menuItems) {
+			foreach($menuItems as $code => $menuItem) {
+				// alternate permission checks (in addition to LeftAndMain->canView())
+				if(
+					isset($menuItem->controller) 
+					&& $this->hasMethod('alternateMenuDisplayCheck')
+					&& !$this->alternateMenuDisplayCheck($menuItem->controller)
+				) {
+					continue;
 				}
-			}
+
+				$linkingmode = "";
+				
+				if($menuItem->controller && get_class($this) == $menuItem->controller) {
+					$linkingmode = "current";
+				} else if(strpos($this->Link(), $menuItem->url) !== false) {
+					if($this->Link() == $menuItem->url) {
+						$linkingmode = "current";
+				
+					// default menu is the one with a blank {@link url_segment}
+					} else if(singleton($menuItem->controller)->stat('url_segment') == '') {
+						if($this->Link() == $this->stat('url_base').'/') {
+							$linkingmode = "current";
+						}
+
+					} else {
+						$linkingmode = "current";
+					}
+				}
 		
-			// already set in CMSMenu::populate_menu(), but from a static pre-controller
-			// context, so doesn't respect the current user locale in _t() calls - as a workaround,
-			// we simply call LeftAndMain::menu_title_for_class() again 
-			// if we're dealing with a controller
-			if($menuItem->controller) {
-				$defaultTitle = LeftAndMain::menu_title_for_class($menuItem->controller);
-				$title = _t("{$menuItem->controller}.MENUTITLE", $defaultTitle);
-			} else {
-				$title = $menuItem->title;
+				// already set in CMSMenu::populate_menu(), but from a static pre-controller
+				// context, so doesn't respect the current user locale in _t() calls - as a workaround,
+				// we simply call LeftAndMain::menu_title_for_class() again 
+				// if we're dealing with a controller
+				if($menuItem->controller) {
+					$defaultTitle = LeftAndMain::menu_title_for_class($menuItem->controller);
+					$title = _t("{$menuItem->controller}.MENUTITLE", $defaultTitle);
+				} else {
+					$title = $menuItem->title;
+				}
+				
+				$menu->push(new ArrayData(array(
+					"MenuItem" => $menuItem,
+					"Title" => Convert::raw2xml($title),
+					"Code" => DBField::create('Text', $code),
+					"Link" => $menuItem->url,
+					"LinkingMode" => $linkingmode
+				)));
 			}
-			
-			$menu->push(new ArrayData(array(
-				"MenuItem" => $menuItem,
-				"Title" => Convert::raw2xml($title),
-				"Code" => $code,
-				"Link" => $menuItem->url,
-				"LinkingMode" => $linkingmode
-			)));
 		}
-		
+
 		// if no current item is found, assume that first item is shown
 		//if(!isset($foundCurrent)) 
 		return $menu;
