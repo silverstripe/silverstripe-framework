@@ -21,6 +21,11 @@
 @import "themes/default.scss";
 
 /** -----------------------------
+ * Customise mixins
+ * ------------------------------ */
+@import "mixins.scss";
+
+/** -----------------------------
  * CMS Components
  * ------------------------------ */
 @import "tree.scss";

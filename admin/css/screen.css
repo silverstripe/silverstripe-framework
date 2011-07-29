@@ -20,8 +20,13 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 /** ----------------------------- Theme ------------------------------ */
 /** This file contains the default theme definitions for the admin interface. Please put mostly SCSS variable definitions in here, and leave the actual styling to _style.scss and auxilliary files. */
 /** ----------------------------------------------- Colours ------------------------------------------------ */
-/** ----------------------------------------------- Typography ------------------------------------------------ */
+/** ----------------------------------------------- Typography.  ------------------------------------------------ */
+/** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both vertical and horizontal. All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
+/** ----------------------------- Customise mixins ------------------------------ */
+/** This file contains generic mixins which we use throughout the admin panels.  Mixins should be stored here rather than individual files so that we can keep. */
+/** ---------------------------------------------------- Hides the overflowing text from a container  Note: you must define a width on the element with this overflow. ----------------------------------------------------- */
+/** ---------------------------------------------------- Clear the properties of sub form fields.   Often needed for nested form fields and  ----------------------------------------------------- */
 /** ----------------------------- CMS Components ------------------------------ */
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .jstree ul { display: block; margin: 0 0 0 0; padding: 0 0 0 0; list-style-type: none; }
@@ -174,10 +179,10 @@ li.class-ErrorPage a .jstree-pageicon { background-position: 0 -112px; }
 .cms-menu.collapsed .cms-header span { display: none; }
 .cms-menu.collapsed .cms-menu-list { overflow-x: hidden; overflow-y: auto; }
 .cms-menu.collapsed .cms-menu-list li span.text { display: none; }
-.cms-menu.collapsed .cms-menu-list li ul { display: none; }
+.cms-menu.collapsed .cms-menu-list li ul { display: none !important; }
 .cms-menu.collapsed.cms-panel .cms-panel-content { display: block; }
 
-.cms-menu-list li a { display: block; height: 24px; line-height: 24px; font-size: 13px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-shadow: #bfcad2 1px 1px 0; color: #1f1f1f; padding: 7px 5px 7px 8px; background-color: #b0bec7; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #8ca1ae)); background-image: -webkit-linear-gradient(#b0bec7, #8ca1ae); background-image: -moz-linear-gradient(#b0bec7, #8ca1ae); background-image: -o-linear-gradient(#b0bec7, #8ca1ae); background-image: -ms-linear-gradient(#b0bec7, #8ca1ae); background-image: linear-gradient(#b0bec7, #8ca1ae); border-top: 1px solid #ced7dc; border-bottom: 1px solid #748d9d; }
+.cms-menu-list li a { display: block; height: 24px; line-height: 24px; font-size: 12px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-shadow: #bfcad2 1px 1px 0; color: #1f1f1f; padding: 7px 5px 7px 8px; background-color: #b0bec7; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #8ca1ae)); background-image: -webkit-linear-gradient(#b0bec7, #8ca1ae); background-image: -moz-linear-gradient(#b0bec7, #8ca1ae); background-image: -o-linear-gradient(#b0bec7, #8ca1ae); background-image: -ms-linear-gradient(#b0bec7, #8ca1ae); background-image: linear-gradient(#b0bec7, #8ca1ae); border-top: 1px solid #ced7dc; border-bottom: 1px solid #748d9d; }
 .cms-menu-list li a:hover { text-decoration: none; background-color: #b6c3cb; border-bottom: 1px solid #8399a7; color: #2c2c2c; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #bfcad2), color-stop(100%, #b0bec7)); background-image: -webkit-linear-gradient(#bfcad2, #b0bec7); background-image: -moz-linear-gradient(#bfcad2, #b0bec7); background-image: -o-linear-gradient(#bfcad2, #b0bec7); background-image: -ms-linear-gradient(#bfcad2, #b0bec7); background-image: linear-gradient(#bfcad2, #b0bec7); }
 .cms-menu-list li a:focus { border-top: 1px solid #a1b2bc; text-decoration: none; background-color: #a1b2bc; color: #393939; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #92a5b2), color-stop(100%, #a1b2bc)); background-image: -webkit-linear-gradient(#92a5b2, #a1b2bc); background-image: -moz-linear-gradient(#92a5b2, #a1b2bc); background-image: -o-linear-gradient(#92a5b2, #a1b2bc); background-image: -ms-linear-gradient(#92a5b2, #a1b2bc); background-image: linear-gradient(#92a5b2, #a1b2bc); }
 .cms-menu-list li a .icon { display: block; float: left; margin-right: 8px; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70); opacity: 0.7; }
@@ -185,7 +190,7 @@ li.class-ErrorPage a .jstree-pageicon { background-position: 0 -112px; }
 .cms-menu-list li.current a { color: white; text-shadow: #1e5270 0 -1px 0; border-top: 1px solid #55a4d2; border-bottom: 1px solid #1e5270; background-color: #338dc1; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #338dc1), color-stop(100%, #287099)); background-image: -webkit-linear-gradient(#338dc1, #287099); background-image: -moz-linear-gradient(#338dc1, #287099); background-image: -o-linear-gradient(#338dc1, #287099); background-image: -ms-linear-gradient(#338dc1, #287099); background-image: linear-gradient(#338dc1, #287099); }
 .cms-menu-list li.current ul { border-top: 1px solid #1e5270; }
 .cms-menu-list li.current li { background-color: #287099; }
-.cms-menu-list li.current li a { font-size: 12px; padding: 0 10px 0 40px; height: 32px; line-height: 32px; color: #e2f0f7; background: none; border-top: 1px solid #338dc1; border-bottom: 1px solid #1e5270; }
+.cms-menu-list li.current li a { font-size: 11px; padding: 0 10px 0 40px; height: 32px; line-height: 32px; color: #e2f0f7; background: none; border-top: 1px solid #338dc1; border-bottom: 1px solid #1e5270; }
 .cms-menu-list li.current li a.current, .cms-menu-list li.current li a:hover { background: #2e7ead; border-top: 1px solid #2e7ead; color: white; }
 .cms-menu-list li.current li a:focus { background: #236184; border-top: 1px solid #1e5270; color: white; }
 .cms-menu-list li.current li.current a { font-weight: bold; color: white; }
@@ -193,13 +198,12 @@ li.class-ErrorPage a .jstree-pageicon { background-position: 0 -112px; }
 .cms-menu-list.collapsed li .text { display: none; }
 .cms-menu-list.collapsed li > li { display: none; }
 
-/** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in sapphire/css/Form.css. */
+/** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in sapphire/css/Form.css.  @package sapphire @subpackage admin */
 /** ---------------------------------------------------- Basic form fields ---------------------------------------------------- */
-.field { display: block; padding: 10px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); overflow: hidden; }
-.field label.left { float: left; width: 170px; padding: 8px 20px 8px 4px; line-height: 16px; }
-.field .middleColumn { margin-left: 15em; }
-.field .middleColumn .field { display: inline; padding: 0; border: none; }
-.field .middleColumn label { float: none; width: auto; }
+.field { display: block; padding: 8px 0 7px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); overflow: hidden; }
+.field label.left { float: left; width: 160px; padding: 8px 16px 8px 4px; line-height: 16px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
+.field label.left span { display: block; font-size: 11px; color: #848484; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
+.field .middleColumn { margin-left: 192px; }
 
 form.nostyle .field { display: inline; padding: 0; border: 0; }
 form.nostyle label { float: none; width: auto; }
@@ -207,11 +211,13 @@ form.nostyle .middleColumn { margin-left: 0; }
 
 .field.nolabel .middleColumn { margin-left: 0; }
 
-.field.text input, textarea { -moz-border-radius: 4px; -webkit-border-radius: 4px; -o-border-radius: 4px; -ms-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; background: #fff; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -ms-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); border: 1px solid #b3b3b3; padding: 7px; }
+.field input.text, .field textarea, .field select { width: 70%; }
+.field input.text, .field textarea { -moz-border-radius: 4px; -webkit-border-radius: 4px; -o-border-radius: 4px; -ms-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; background: #fff; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -ms-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); border: 1px solid #b3b3b3; padding: 7px 7px; margin: 0; }
+.field select { margin-top: 8px; }
 
 /** ---------------------------------------------------- Buttons ---------------------------------------------------- */
-.cms input.loading, .cms input.ui-state-default.loading, .cms .ui-widget-content input.ui-state-default.loading, .cms .ui-widget-header input.ui-state-default.loading { padding-left: 16px; background: #eceff1 url(../../images/network-save.gif) no-repeat center left; }
-.cms .ss-ui-button.ss-ui-action-constructive, .cms .ui-widget-content .ss-ui-button.ss-ui-action-constructive, .cms .ui-widget-header .ss-ui-button.ss-ui-action-constructive { padding-left: 23px; color: white; border-color: #118021; background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #84be3f), color-stop(100%, #128945)); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, -webkit-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, -moz-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, -o-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, -ms-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, linear-gradient(#84be3f, #128945); background-color: #84be3f; text-shadow: #475964 1px 1px 0; -moz-box-shadow: #748d9d 1px 1px 2px; -webkit-box-shadow: #748d9d 1px 1px 2px; -o-box-shadow: #748d9d 1px 1px 2px; box-shadow: #748d9d 1px 1px 2px; }
+.cms input.loading, .cms input.ui-state-default.loading, .cms .ui-widget-content input.ui-state-default.loading, .cms .ui-widget-header input.ui-state-default.loading { padding-left: 15px; background: #eceff1 url(../../images/network-save.gif) no-repeat center left; }
+.cms .ss-ui-button.ss-ui-action-constructive, .cms .ui-widget-content .ss-ui-button.ss-ui-action-constructive, .cms .ui-widget-header .ss-ui-button.ss-ui-action-constructive { padding-left: 31px; color: white; border-color: #118021; background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #84be3f), color-stop(100%, #128945)); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, -webkit-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, -moz-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, -o-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, -ms-linear-gradient(#84be3f, #128945); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, linear-gradient(#84be3f, #128945); background-color: #84be3f; text-shadow: #475964 1px 1px 0; -moz-box-shadow: #748d9d 1px 1px 2px; -webkit-box-shadow: #748d9d 1px 1px 2px; -o-box-shadow: #748d9d 1px 1px 2px; box-shadow: #748d9d 1px 1px 2px; }
 .cms .ss-ui-button.ss-ui-action-constructive.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #7fb63c), color-stop(100%, #107b3e)); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, -webkit-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, -moz-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, -o-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, -ms-linear-gradient(#7fb63c, #107b3e); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px 6px, linear-gradient(#7fb63c, #107b3e); background-color: #128945; -moz-box-shadow: #92a5b2 1px 1px 1px; -webkit-box-shadow: #92a5b2 1px 1px 1px; -o-box-shadow: #92a5b2 1px 1px 1px; box-shadow: #92a5b2 1px 1px 1px; }
 .cms .ss-ui-button.ss-ui-action-constructive.cms-page-add-button { background-position: 5px -155px; }
 .cms .ss-ui-button.ss-ui-action-destructive, .cms .ui-widget-content .ss-ui-button.ss-ui-action-destructive, .cms .ui-widget-header .ss-ui-button.ss-ui-action-destructive { color: red; background-color: #f5f5f5; }
@@ -219,15 +225,19 @@ form.nostyle .middleColumn { margin-left: 0; }
 .cms .ss-ui-button.ss-ui-action-destructive.delete.ui-state-hover { background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px -26px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f0f0f0), color-stop(100%, #bbbbbb)); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px -26px, -webkit-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px -26px, -moz-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px -26px, -o-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px -26px, -ms-linear-gradient(#f0f0f0, #bbbbbb); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 5px -26px, linear-gradient(#f0f0f0, #bbbbbb); background-color: #c3c3c3; -moz-box-shadow: #92a5b2 1px 1px 1px; -webkit-box-shadow: #92a5b2 1px 1px 1px; -o-box-shadow: #92a5b2 1px 1px 1px; box-shadow: #92a5b2 1px 1px 1px; }
 .cms .ss-ui-button.ss-ui-action-minor, .cms .ui-widget-content .ss-ui-button.ss-ui-action-minor .ui-widget-header .ss-ui-button.ss-ui-action-minor { background: none; padding: 0; border: 0; color: #1f1f1f; text-decoration: underline; }
 
-.cms-edit-form { padding-bottom: 20px; }
-.cms-edit-form .text input, .cms-edit-form textarea { width: 300px; font-family: Arial, sans-serif; font-size: 13px; }
-.cms-edit-form .Actions { text-align: right; }
+/** ---------------------------------------------------- Grouped form fields ---------------------------------------------------- */
+.fieldgroup .fieldgroup-field { float: left; display: block; width: 184px; padding-right: 8px; }
+
+/** ---------------------------------------------------- Optionsets and Checkboxsets ---------------------------------------------------- */
+.optionset { padding-top: 8px; }
+.optionset li { float: left; display: block; width: 184px; padding-right: 8px; list-style: none; }
+.optionset li label { margin-left: 16px; }
 
 /** ---------------------------------------------------- Specific field overrides ---------------------------------------------------- */
 .htmleditor label { display: block; float: none; padding-bottom: 10px; }
 .htmleditor .middleColumn { margin-left: 0px; clear: left; }
 
-.field#ViewerGroups label, .field#EditorGroups label, .field#CreateTopLevelGroups label { display: none; }
+#Url label .field#ViewerGroups label, .field#EditorGroups label, .field#CreateTopLevelGroups label { display: none; }
 
 .action-hidden { display: none; }
 
@@ -250,18 +260,16 @@ form.nostyle .middleColumn { margin-left: 0; }
 .cms .ui-tabs .ui-tabs-nav li { top: 0; }
 .cms .ui-tabs .ui-tabs-nav li a { padding: 0 15px; }
 .cms .ui-tabs .ui-tabs-nav.ui-state-active { border-color: gray; }
-.cms .ui-widget-content { color: #444444; font-size: 13px; border: 0; }
-.cms .ui-tabs-panel { background: transparent; }
+.cms .ui-tabs .ui-tabs-panel { background: transparent; padding: 16px; }
+.cms .ui-widget-content { color: #444444; font-size: 12px; font-family: Arial, sans-serif; border: 0; }
 .cms .ui-widget-header { background: #eceff1; border: 0; padding: 0; }
 .cms .ss-ui-button { padding: 5px; text-decoration: none; }
 .cms .ui-state-hover { cursor: pointer; }
-.cms .ss-ui-button, .cms .ui-widget-content .ss-ui-button, .cms .ui-widget-header .ss-ui-button { padding: 5px 7px 5px 7px; color: #1f1f1f; background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 999px 999px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f5f5), color-stop(100%, #c3c3c3)); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 999px 999px, -webkit-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 999px 999px, -moz-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 999px 999px, -o-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 999px 999px, -ms-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 999px 999px, linear-gradient(#f5f5f5, #c3c3c3); background-color: #f5f5f5; -moz-box-shadow: #748d9d 1px 1px 2px; -webkit-box-shadow: #748d9d 1px 1px 2px; -o-box-shadow: #748d9d 1px 1px 2px; box-shadow: #748d9d 1px 1px 2px; }
-
-.cms-content-form { overflow: auto; background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left !important; }
+.cms .ui-widget input, .cms .ui-widget select, .cms .ui-widget textarea, .cms .ui-widget button { color: #444444; font-size: 12px; font-family: Arial, sans-serif; }
 
 /** This file defines most styles of the CMS: Colors, fonts, backgrounds, alignments, dimensions.  Use SCSS variable definitions in screen.css to avoid repeating styles like background colours or padding dimensions. See themes/_default.scss to get started.  To avoid this file getting too large and complicated, it is encouraged to create new SCSS files for larger components like the CMS menu or tree (see _tree.scss and _menu.scss). */
-/** ---------------------------------------------------- Core Styles ---------------------------------------------------- */
-html, body { width: 100%; height: 100%; overflow: hidden; font-size: 13px; font-family: Arial, sans-serif; color: #444444; }
+/** ---------------------------------------------------- Core Styles. ---------------------------------------------------- */
+html, body { width: 100%; height: 100%; overflow: hidden; font-size: 12px; line-height: 16px; font-family: Arial, sans-serif; color: #444444; }
 html html, html body, html div, html span, html applet, html object, html iframe, html h1, html h2, html h3, html h4, html h5, html h6, html p, html blockquote, html pre, html a, html abbr, html acronym, html address, html big, html cite, html code, html del, html dfn, html em, html img, html ins, html kbd, html q, html s, html samp, html small, html strike, html strong, html sub, html sup, html tt, html var, html b, html u, html i, html center, html dl, html dt, html dd, html ol, html ul, html li, html fieldset, html form, html label, html legend, html table, html caption, html tbody, html tfoot, html thead, html tr, html th, html td, html article, html aside, html canvas, html details, html embed, html figure, html figcaption, html footer, html header, html hgroup, html menu, html nav, html output, html ruby, html section, html summary, html time, html mark, html audio, html video, body html, body body, body div, body span, body applet, body object, body iframe, body h1, body h2, body h3, body h4, body h5, body h6, body p, body blockquote, body pre, body a, body abbr, body acronym, body address, body big, body cite, body code, body del, body dfn, body em, body img, body ins, body kbd, body q, body s, body samp, body small, body strike, body strong, body sub, body sup, body tt, body var, body b, body u, body i, body center, body dl, body dt, body dd, body ol, body ul, body li, body fieldset, body form, body label, body legend, body table, body caption, body tbody, body tfoot, body thead, body tr, body th, body td, body article, body aside, body canvas, body details, body embed, body figure, body figcaption, body footer, body header, body hgroup, body menu, body nav, body output, body ruby, body section, body summary, body time, body mark, body audio, body video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; }
 html body, body body { line-height: 1; }
 html ol, html ul, body ol, body ul { list-style: none; }
@@ -272,31 +280,36 @@ html q:before, html q:after, html blockquote:before, html blockquote:after, body
 html a img, body a img { border: none; }
 html article, html aside, html details, html figcaption, html figure, html footer, html header, html hgroup, html menu, html nav, html section, html summary, body article, body aside, body details, body figcaption, body figure, body footer, body header, body hgroup, body menu, body nav, body section, body summary { display: block; }
 
-a { color: #3ebae0; text-decoration: none; }
-a:hover, a:focus { text-decoration: underline; }
+.cms a { color: #3ebae0; text-decoration: none; }
+.cms a:hover, .cms a:focus { text-decoration: underline; }
+.cms body .ui-widget { font-family: Arial, sans-serif; font-size: 12px; }
+.cms strong { font-weight: bold; }
 
-body .ui-widget { font-family: Arial, sans-serif; font-size: 13px; }
+/** -------------------------------------------- Typography styles in tabs -------------------------------------------- */
+.ui-tabs-panel h2, .ui-tabs-panel h3, .ui-tabs-panel h4, .ui-tabs-panel h5 { font-weight: bold; margin: 16px 0 8px 0; line-height: 16px; }
+.ui-tabs-panel h2 { font-size: 18px; line-height: 24px; }
+.ui-tabs-panel h3 { font-size: 16px; }
+.ui-tabs-panel h4 { font-size: 14px; }
+.ui-tabs-panel h5 { font-size: 12px; }
 
-.cms-container { height: 100%; background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left; }
+/** -------------------------------------------- Panels Styles -------------------------------------------- */
+.cms-container { height: 100%; background: #f0f3f4 url(../images/textures/bg_cms_main_content.png) repeat top left; }
 
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form { display: -moz-inline-box; -moz-box-orient: vertical; display: inline-block; vertical-align: middle; *vertical-align: auto; }
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form { *display: inline; }
 
-strong { font-weight: bold; }
-
-/** -------------------------------------------- Misc Panels -------------------------------------------- */
 .cms-content-header { background-color: #b0bec7; padding: 8px 8px 6px 8px; height: 32px; border-bottom: 2px solid #8399a7; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ced7dc), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#ced7dc, #92a5b2); background-image: -moz-linear-gradient(#ced7dc, #92a5b2); background-image: -o-linear-gradient(#ced7dc, #92a5b2); background-image: -ms-linear-gradient(#ced7dc, #92a5b2); background-image: linear-gradient(#ced7dc, #92a5b2); }
-.cms-content-header h2 { float: left; padding: 12px 0 0 8px; font-size: 13px; font-weight: bold; text-shadow: #ced7dc 1px 1px 0; width: 230px; }
+.cms-content-header h2 { float: left; padding: 12px 0 0 8px; font-size: 12px; font-weight: bold; text-shadow: #ced7dc 1px 1px 0; width: 192px; }
 .cms-content-header > div { width: 9999em; overflow: hidden; }
 .cms-content-header .cms-content-header-tabs { float: left; }
 
-.ui-tabs .cms-content-header .ui-tabs-nav li a { font-weight: bold; font-size: 13px; padding: 11px 15px 9px; border-bottom: 2px solid #b3b3b3; }
-.ui-tabs .cms-content-header .ui-state-default, .ui-tabs .cms-content-header .ui-widget-content .ui-state-default, .ui-tabs .cms-content-header .ui-widget-header .ui-state-default { background-color: #d9d9d9; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #d9d9d9), color-stop(100%, #c0c0c0)); background-image: -webkit-linear-gradient(#d9d9d9, #c0c0c0); background-image: -moz-linear-gradient(#d9d9d9, #c0c0c0); background-image: -o-linear-gradient(#d9d9d9, #c0c0c0); background-image: -ms-linear-gradient(#d9d9d9, #c0c0c0); background-image: linear-gradient(#d9d9d9, #c0c0c0); border-color: #a6a6a6; margin: 0 3px 0 0; text-shadow: white 0 1px 0; }
+.ui-tabs .cms-content-header .ui-tabs-nav li a { font-weight: bold; line-height: 16px; padding: 10px 12px 10px; border-bottom: 2px solid #b3b3b3; }
+.ui-tabs .cms-content-header .ui-state-default, .ui-tabs .cms-content-header .ui-widget-content .ui-state-default, .ui-tabs .cms-content-header .ui-widget-header .ui-state-default { background-color: #d9d9d9; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #d9d9d9), color-stop(100%, #c0c0c0)); background-image: -webkit-linear-gradient(#d9d9d9, #c0c0c0); background-image: -moz-linear-gradient(#d9d9d9, #c0c0c0); background-image: -o-linear-gradient(#d9d9d9, #c0c0c0); background-image: -ms-linear-gradient(#d9d9d9, #c0c0c0); background-image: linear-gradient(#d9d9d9, #c0c0c0); border-color: #a6a6a6; text-shadow: white 0 1px 0; }
 .ui-tabs .cms-content-header .ui-state-active, .ui-tabs .cms-content-header .ui-widget-content .ui-state-active, .ui-tabs .cms-content-header .ui-widget-header .ui-state-active { background: #eceff1; }
 .ui-tabs .cms-content-header .ui-state-active a, .ui-tabs .cms-content-header .ui-widget-content .ui-state-active a, .ui-tabs .cms-content-header .ui-widget-header .ui-state-active a { border-bottom: 2px solid #eceff1; }
 
-.cms-content-tools { background-color: #dde3e7; padding: 8px; width: 230px; overflow: auto; }
-.cms-content-tools .cms-panel-header, .cms-content-tools .cms-panel-content { padding: 10px; }
+.cms-content-tools { background-color: #dde3e7; padding: 8px 8px; width: 192px; overflow: auto; }
+.cms-content-tools .cms-panel-header, .cms-content-tools .cms-panel-content { padding: 8px 8px; }
 
 .cms-content.loading { background: url(../images/spinner.gif) no-repeat 50% 50%; }
 
@@ -305,11 +318,11 @@ strong { font-weight: bold; }
 .cms-header span { color: white; white-space: nowrap; text-overflow: ellipsis; display: block; }
 .cms-header span a { color: #3ebae0; display: inline; }
 
-.cms-logo { border-bottom: 1px solid #03090c; height: 31px; overflow: hidden; padding: 0 0 0 4px; vertical-align: middle; }
+.cms-logo { border-bottom: 1px solid #03090c; height: 31px; overflow: hidden; padding: 0 0 0 4px; vertical-align: middle; font-size: 12px; }
 .cms-logo .version { display: none; }
 .cms-logo a { display: inline-block; height: 24px; width: 24px; float: left; margin-right: 8px; background: url('../images/logo_small.png?1311826037') no-repeat; text-indent: -9999em; padding-right: 7px; border-right: 1px solid #19435c; }
 
-.cms-login-status { border-top: 1px solid #19435c; height: 23px; padding: 8px 4px 0 4px; overflow: hidden; line-height: 16px; font-size: 11px; }
+.cms-login-status { border-top: 1px solid #19435c; height: 23px; padding: 8px 4px 0 4px; overflow: hidden; line-height: 16px; font-size: 10px; }
 .cms-login-status .logout-link { display: inline-block; height: 16px; width: 16px; float: left; margin: 0 8px 0 3px; background: url(../images/logout.png) no-repeat; text-indent: -9999em; }
 
 /** ----------------------------------------------- Loading Screen ------------------------------------------------ */
@@ -321,10 +334,10 @@ strong { font-weight: bold; }
 .ss-loading-screen .loading-animation { display: none; position: absolute; left: 49%; top: 75%; }
 
 /** -------------------------------------------- Actions -------------------------------------------- */
-.cms-content-actions { border-top: 1px solid #8399a7; padding: 8px; background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left; }
+.cms-content-actions { padding: 8px 8px; text-align: right; }
 
 /** -------------------------------------------- Messages -------------------------------------------- */
-.message { margin: 1em 0; padding: 0.5em; font-weight: bold; border: 1px black solid; }
+.message { margin: 8px 0; padding: 7px 7px; font-weight: bold; border: 1px black solid; }
 .message.notice { background-color: #ffbe66; border-color: #ff9300; }
 .message.warning { background-color: #ffbe66; border-color: #ff9300; }
 .message.error { background-color: #ffbe66; border-color: #ff9300; }

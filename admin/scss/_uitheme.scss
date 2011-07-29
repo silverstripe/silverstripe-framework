@@ -36,16 +36,20 @@
 				border-color: $color-medium-separator;
 			}
 		}
+		
+		.ui-tabs-panel {
+			background: transparent; // default it's white
+			padding: $grid-vertical * 2;
+		}
 	}
-	
+
 	.ui-widget-content  {
 		color: $color-text;
 		font-size: $font-base-size;
+		font-family: $font-family;
 		border: 0;
 	}
-	.ui-tabs-panel {
-		background: transparent; // default it's weight
-	}
+
 	.ui-widget-header {
 		background: $color-widget-bg;
 		border: 0;
@@ -61,7 +65,16 @@
 	.ui-state-hover {
 		cursor: pointer;
 	}
-
+	
+	.ui-widget input, 
+	.ui-widget select, 
+	.ui-widget textarea, 
+	.ui-widget button {
+		color: $color-text;
+		font-size: $font-base-size;
+		font-family: $font-family;
+	}
+	
 	.ss-ui-button,
 	.ui-widget-content .ss-ui-button,
 	.ui-widget-header .ss-ui-button {
@@ -75,11 +88,5 @@
 		);
 		background-color: $color-button-generic-light;
 		@include box-shadow(darken($color-base, 20%) 1px 1px 2px);
-	}
-	
-}
-
-.cms-content-form {
-	overflow: auto;
-	background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left !important;
+	}	
 }

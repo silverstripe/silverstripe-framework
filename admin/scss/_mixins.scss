@@ -1,0 +1,45 @@
+/**
+ * This file contains generic mixins which we use throughout
+ * the admin panels.
+ *
+ * Mixins should be stored here rather than individual files
+ * so that we can keep.
+ */
+
+/** ----------------------------------------------------
+ * Hides the overflowing text from a container
+ *
+ * Note: you must define a width on the element with this
+ * overflow.
+ * ----------------------------------------------------- */
+@mixin hide-text-overflow {
+	overflow: hidden;
+	white-space: nowrap;
+	
+	// could optionally use the compass mixin but that
+	// would require a 3rd party plugin
+	text-overflow: ellipsis;
+	o-text-overflow: ellipsis;
+}
+
+/** ----------------------------------------------------
+ * Clear the properties of sub form fields. 
+ *
+ * Often needed for nested form fields and 
+ * ----------------------------------------------------- */
+@mixin clear-form-field-styles {
+	.field {
+		display: inline;
+		padding: 0;
+		border: 0;
+	}
+
+	label {
+		float: none;
+		width: auto;
+	}
+
+	.middleColumn {
+		margin-left: 0;
+	}
+}

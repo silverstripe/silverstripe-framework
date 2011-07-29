@@ -8,7 +8,6 @@
  * Colours
  * ------------------------------------------------ */
 $color-base: #b0bec7;
-
 $color-widget-bg: lighten($color-base, 20%);
 
 $color-dark-bg: #003050;
@@ -50,11 +49,20 @@ $color-cms-batchactions-menu-selected-background: #efe999;
 
 
 /** -----------------------------------------------
- * Typography
+ * Typography. 
  * ------------------------------------------------ */
 $font-family: Arial, sans-serif;
-$font-base-size: 13px;
-$font-base-lineheight: 16px;
+$font-base-size: 12px;
+
+/** -----------------------------------------------
+ * Grid Units (px)
+ * 
+ * We have a vertical rhythm that the grid is based off
+ * both vertical and horizontal. All internal padding and
+ * margins are scaled to this and accounting for paragraphs
+ * ------------------------------------------------ */
+$grid-vertical: 8px;
+$grid-horizontal: 8px;
 
 /** -----------------------------------------------
  * Application Logo (CMS Logo) Must be 24px x 24px

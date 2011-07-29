@@ -9,7 +9,7 @@
  */
 
 /** ----------------------------------------------------
- * Core Styles
+ * Core Styles.
  * ---------------------------------------------------- */
 
 html,body {	
@@ -20,27 +20,66 @@ html,body {
 	@include global-reset;
 
 	font-size: $font-base-size;
+	line-height: $grid-vertical * 2;
 	font-family: $font-family;
 	color: $color-text;
 }
 
-a {
-	color: $color-text-dark-link;
-	text-decoration: none;
+.cms {
+	a {
+		color: $color-text-dark-link;
+		text-decoration: none;
 	
-	&:hover,
-	&:focus {
-		text-decoration: underline;
+		&:hover,
+		&:focus {
+			text-decoration: underline;
+		}
+	}
+	
+	body .ui-widget {
+		font-family: $font-family;
+		font-size: $font-base-size;
+	}
+	
+	strong {
+		font-weight: bold;
 	}
 }
-body .ui-widget {
-	font-family: $font-family;
-	font-size: $font-base-size;
+
+/** --------------------------------------------
+ * Typography styles in tabs
+ * -------------------------------------------- */
+.ui-tabs-panel {
+	h2, h3, h4, h5 {
+		font-weight: bold;
+		margin: $grid-vertical * 2 0 $grid-vertical 0;
+		line-height: $grid-vertical * 2;
+	}
+	
+	h2 {
+		font-size: $font-base-size + 6;
+		line-height: $grid-vertical * 3;
+	}
+	
+	h3 {
+		font-size: $font-base-size + 4;
+	}
+	
+	h4 {
+		font-size: $font-base-size + 2;
+	}
+	
+	h5 {
+		font-size: $font-base-size;
+	}
 }
 
+/** --------------------------------------------
+ * Panels Styles
+ * -------------------------------------------- */
 .cms-container {
 	height: 100%;
-	background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left;
+	background: #f0f3f4 url(../images/textures/bg_cms_main_content.png) repeat top left;
 }
 
 .cms-preview,
@@ -54,18 +93,11 @@ body .ui-widget {
 }
 
 
-strong {
-	font-weight: bold;
-}
-
-/** --------------------------------------------
- * Misc Panels
- * -------------------------------------------- */
-
 .cms-content-header {
 	background-color: darken($color-widget-bg, 20%);
-	padding: 8px 8px 6px 8px;	
-	height: 32px;
+	padding: $grid-vertical $grid-horizontal ($grid-vertical - 2) $grid-horizontal;	
+	height: $grid-vertical * 4;
+	
 	border-bottom: 2px solid darken($color-widget-bg, 35%);
 
 	@include background-image(
@@ -74,11 +106,11 @@ strong {
 	
 	h2 {
 		float: left;
-		padding: 12px 0 0 8px;
+		padding: ($grid-vertical + 4) 0 0 $grid-horizontal;
 		font-size: $font-base-size;
 		font-weight: bold;
-		text-shadow: lighten($color-base, 10%) 1px 1px 0;
-		width: 230px;
+		text-shadow: darken($color-widget-bg, 10%) 1px 1px 0;
+		width: $grid-horizontal * 24;
 	}
 
 	& > div {
@@ -95,8 +127,8 @@ strong {
 	.ui-tabs-nav li {
 		a {
 			font-weight: bold;
-			font-size: $font-base-size;
-			padding: 11px 15px 9px;
+			line-height: $grid-vertical * 2;
+			padding: ($grid-vertical * 2 - 6) $grid-horizontal + 4 $grid-vertical + 2;
 			border-bottom: 2px solid darken($color-tab, 15%);
 		}
 	}
@@ -110,7 +142,6 @@ strong {
 		));
 		
 		border-color: darken($color-tab, 20%);
-		margin: 0 3px 0 0;
 		text-shadow: lighten($color-tab, 60%) 0 1px 0;
 	}
 	
@@ -127,13 +158,13 @@ strong {
 
 .cms-content-tools {
 	background-color: darken($color-widget-bg, 5%);
-	padding: 8px;	
-	width: 230px;
+	padding: $grid-vertical $grid-horizontal;	
+	width: $grid-horizontal * 24;
 	overflow: auto;	
 	
 	.cms-panel-header,
 	.cms-panel-content {
-		padding: 10px;
+		padding: $grid-vertical $grid-horizontal;
 	}
 }
 
@@ -176,6 +207,7 @@ strong {
 	overflow: hidden;
 	padding: 0 0 0 4px;
 	vertical-align: middle;
+	font-size: $font-base-size;
 	
 	.version {
 		display: none; 
@@ -267,19 +299,21 @@ strong {
  * -------------------------------------------- */
 
 .cms-content-actions {
-	border-top: 1px solid darken($color-widget-bg, 35%);
-	padding: 8px;
-	background: transparent url(../images/textures/bg_cms_main_content.png) repeat top left;
+	padding: $grid_vertical $grid_horizontal;
+	text-align: right;
 }
+
 
 /** --------------------------------------------
  * Messages
  * -------------------------------------------- */
 
 .message {
-	margin: 1em 0;
-	padding: 0.5em;
+	margin: $grid_vertical 0;
+	// minus one for the borders
+	padding: $grid_vertical - 1 $grid_horizontal - 1;
 	font-weight: bold;
+	
 	border: 1px black solid;
 	
 	&.notice {
@@ -493,6 +527,7 @@ form.member-profile-form {
 		position: absolute;
 		bottom: 0;
 		text-align: right;
+		
 		@include background-image(
 			linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 30%))
 		);
