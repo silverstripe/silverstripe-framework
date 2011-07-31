@@ -1,4 +1,4 @@
-/** This file is the central collection of included modules, links to custom SCSS files, and any global SCSS variable definitions.  DO NOT ADD stylesheet rules to this file directly!  Note: By prefixing files with an underscore, they won't create individual CSS files. */
+/** This file is the central collection of included modules, links to custom SCSS files, and any global SCSS variable definitions.  DO NOT ADD stylesheet rules to this file directly!  Note: By prefixing files with an underscore, they won't create individual CSS files.  Notes: -------------------------------------------------------------- Z-indexes: 		* Menu bar on the right should always be on top. This is in the 80 range 		* Top navingation bar must always sit over the content. This is in the 60 range 		* Footer must sit over the content as well so this in the 40 range */
 /** ----------------------------- Core Compass Libraries ------------------------------ */
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; }
 
@@ -23,7 +23,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 /** ----------------------------------------------- Typography.  ------------------------------------------------ */
 /** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both vertical and horizontal. All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
-/** ----------------------------- Customise mixins ------------------------------ */
+/** ----------------------------- Custom mixins ------------------------------ */
 /** This file contains generic mixins which we use throughout the admin panels.  Mixins should be stored here rather than individual files so that we can keep. */
 /** ---------------------------------------------------- Hides the overflowing text from a container  Note: you must define a width on the element with this overflow. ----------------------------------------------------- */
 /** ---------------------------------------------------- Clear the properties of sub form fields.   Often needed for nested form fields and  ----------------------------------------------------- */
@@ -171,9 +171,9 @@ li.class-ErrorPage a .jstree-pageicon { background-position: 0 -112px; }
 
 /** Styles for the left hand side menu  @package sapphire @subpackage admin */
 /** ------------------------------------------------------- CMS Menu Bar -------------------------------------------------------- */
-.cms-menu { z-index: 10; background: #c6d7df; border-right: 1px solid #8c99a1; width: 207px; /* 8x24 - 1 */ overflow: auto; -moz-box-shadow: rgba(107, 120, 123, 0.5) 2px 0 6px; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 2px 0 6px; -o-box-shadow: rgba(107, 120, 123, 0.5) 2px 0 6px; box-shadow: rgba(107, 120, 123, 0.5) 2px 0 6px; }
+.cms-menu { z-index: 80; background: #c6d7df; border-right: 1px solid #8c99a1; width: 191px; /* 8x24 - 1 */ overflow: auto; -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; -o-box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; }
 .cms-menu a { text-decoration: none; }
-.cms-menu .cms-panel-content { width: 207px; /* 8x24 - 1 */ overflow: hidden; }
+.cms-menu .cms-panel-content { width: 191px; /* 8x24 - 1 */ overflow: hidden; }
 .cms-menu.collapsed { width: 40px; cursor: auto; z-index: 1000; }
 .cms-menu.collapsed .cms-header { width: 30px; }
 .cms-menu.collapsed .cms-header span { display: none; }
@@ -200,8 +200,8 @@ li.class-ErrorPage a .jstree-pageicon { background-position: 0 -112px; }
 
 /** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in sapphire/css/Form.css.  @package sapphire @subpackage admin */
 /** ---------------------------------------------------- Basic form fields ---------------------------------------------------- */
-.field { display: block; padding: 8px 0 7px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); overflow: hidden; }
-.field label.left { float: left; width: 160px; padding: 8px 16px 8px 4px; line-height: 16px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
+.field { display: block; padding: 0 0 7px 0; margin: 0 0 8px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); overflow: hidden; }
+.field label.left { float: left; width: 160px; padding: 8px 8px; line-height: 16px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
 .field label.left span { display: block; font-size: 11px; color: #848484; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
 .field .middleColumn { margin-left: 192px; }
 
@@ -212,7 +212,8 @@ form.nostyle .middleColumn { margin-left: 0; }
 .field.nolabel .middleColumn { margin-left: 0; }
 
 .field input.text, .field textarea, .field select { width: 70%; }
-.field input.text, .field textarea { -moz-border-radius: 4px; -webkit-border-radius: 4px; -o-border-radius: 4px; -ms-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; background: #fff; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -ms-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); border: 1px solid #b3b3b3; padding: 7px 7px; margin: 0; }
+.field input.text, .field textarea { -moz-border-radius: 4px; -webkit-border-radius: 4px; -o-border-radius: 4px; -ms-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; background: #fff; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -ms-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); border: 1px solid #b3b3b3; padding: 7px 7px; margin: 0; outline: none; }
+.field input.text:focus, .field textarea:focus { border: 1px solid gray; }
 .field select { margin-top: 8px; }
 
 /** ---------------------------------------------------- Buttons ---------------------------------------------------- */
@@ -228,10 +229,13 @@ form.nostyle .middleColumn { margin-left: 0; }
 /** ---------------------------------------------------- Grouped form fields ---------------------------------------------------- */
 .fieldgroup .fieldgroup-field { float: left; display: block; width: 184px; padding-right: 8px; }
 
+/** ---------------------------------------------------- Checkbox Field ---------------------------------------------------- */
+.checkbox { padding-left: 192px; }
+
 /** ---------------------------------------------------- Optionsets and Checkboxsets ---------------------------------------------------- */
-.optionset { padding-top: 8px; }
-.optionset li { float: left; display: block; width: 184px; padding-right: 8px; list-style: none; }
-.optionset li label { margin-left: 16px; }
+.optionset li { float: left; display: block; width: 248px; padding: 8px 8px; line-height: 16px; list-style: none; position: relative; }
+.optionset li input { position: absolute; top: 9px; left: 2px; margin: 0; }
+.optionset li label { display: block; cursor: pointer; padding: 0 0 0 16px; }
 
 /** ---------------------------------------------------- Specific field overrides ---------------------------------------------------- */
 .htmleditor label { display: block; float: none; padding-bottom: 10px; }
@@ -260,12 +264,13 @@ form.nostyle .middleColumn { margin-left: 0; }
 .cms .ui-tabs .ui-tabs-nav li { top: 0; }
 .cms .ui-tabs .ui-tabs-nav li a { padding: 0 15px; }
 .cms .ui-tabs .ui-tabs-nav.ui-state-active { border-color: gray; }
-.cms .ui-tabs .ui-tabs-panel { background: transparent; padding: 16px; }
+.cms .ui-tabs .ui-tabs-panel { background: transparent; padding: 16px 8px; }
 .cms .ui-widget-content { color: #444444; font-size: 12px; font-family: Arial, sans-serif; border: 0; }
 .cms .ui-widget-header { background: #eceff1; border: 0; padding: 0; }
 .cms .ss-ui-button { padding: 5px; text-decoration: none; }
 .cms .ui-state-hover { cursor: pointer; }
 .cms .ui-widget input, .cms .ui-widget select, .cms .ui-widget textarea, .cms .ui-widget button { color: #444444; font-size: 12px; font-family: Arial, sans-serif; }
+.cms .ss-ui-button, .cms .ui-widget-content .ss-ui-button, .cms .ui-widget-header .ss-ui-button { padding: 7px 8px; color: #1f1f1f; background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 999px 999px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f5f5f5), color-stop(100%, #c3c3c3)); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 999px 999px, -webkit-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 999px 999px, -moz-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 999px 999px, -o-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 999px 999px, -ms-linear-gradient(#f5f5f5, #c3c3c3); background: url('../images/../images/btn_icons_sprite.png?1310770021') no-repeat 999px 999px, linear-gradient(#f5f5f5, #c3c3c3); background-color: #f5f5f5; -moz-box-shadow: #748d9d 1px 1px 2px; -webkit-box-shadow: #748d9d 1px 1px 2px; -o-box-shadow: #748d9d 1px 1px 2px; box-shadow: #748d9d 1px 1px 2px; }
 
 /** This file defines most styles of the CMS: Colors, fonts, backgrounds, alignments, dimensions.  Use SCSS variable definitions in screen.css to avoid repeating styles like background colours or padding dimensions. See themes/_default.scss to get started.  To avoid this file getting too large and complicated, it is encouraged to create new SCSS files for larger components like the CMS menu or tree (see _tree.scss and _menu.scss). */
 /** ---------------------------------------------------- Core Styles. ---------------------------------------------------- */
@@ -291,6 +296,7 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .ui-tabs-panel h3 { font-size: 16px; }
 .ui-tabs-panel h4 { font-size: 14px; }
 .ui-tabs-panel h5 { font-size: 12px; }
+.ui-tabs-panel p { line-height: 16px; margin-bottom: 8px; }
 
 /** -------------------------------------------- Panels Styles -------------------------------------------- */
 .cms-container { height: 100%; background: #f0f3f4 url(../images/textures/bg_cms_main_content.png) repeat top left; }
@@ -298,8 +304,8 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form { display: -moz-inline-box; -moz-box-orient: vertical; display: inline-block; vertical-align: middle; *vertical-align: auto; }
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form { *display: inline; }
 
-.cms-content-header { background-color: #b0bec7; padding: 8px 8px 6px 8px; height: 32px; border-bottom: 2px solid #8399a7; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ced7dc), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#ced7dc, #92a5b2); background-image: -moz-linear-gradient(#ced7dc, #92a5b2); background-image: -o-linear-gradient(#ced7dc, #92a5b2); background-image: -ms-linear-gradient(#ced7dc, #92a5b2); background-image: linear-gradient(#ced7dc, #92a5b2); }
-.cms-content-header h2 { float: left; padding: 12px 0 0 8px; font-size: 12px; font-weight: bold; text-shadow: #ced7dc 1px 1px 0; width: 192px; }
+.cms-content-header { background-color: #b0bec7; padding: 8px 8px 6px 8px; height: 32px; z-index: 60; border-bottom: 2px solid #8399a7; -moz-box-shadow: #eceff1 0 16px 16px; -webkit-box-shadow: #eceff1 0 16px 16px; -o-box-shadow: #eceff1 0 16px 16px; box-shadow: #eceff1 0 16px 16px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ced7dc), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#ced7dc, #92a5b2); background-image: -moz-linear-gradient(#ced7dc, #92a5b2); background-image: -o-linear-gradient(#ced7dc, #92a5b2); background-image: -ms-linear-gradient(#ced7dc, #92a5b2); background-image: linear-gradient(#ced7dc, #92a5b2); }
+.cms-content-header h2 { float: left; padding: 12px 0 0 8px; font-size: 12px; font-weight: bold; text-shadow: #ced7dc 1px 1px 0; width: 184px; }
 .cms-content-header > div { width: 9999em; overflow: hidden; }
 .cms-content-header .cms-content-header-tabs { float: left; }
 
@@ -334,7 +340,7 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .ss-loading-screen .loading-animation { display: none; position: absolute; left: 49%; top: 75%; }
 
 /** -------------------------------------------- Actions -------------------------------------------- */
-.cms-content-actions { padding: 8px 8px; text-align: right; }
+.cms-content-actions { margin: 8px 8px; text-align: right; }
 
 /** -------------------------------------------- Messages -------------------------------------------- */
 .message { margin: 8px 0; padding: 7px 7px; font-weight: bold; border: 1px black solid; }

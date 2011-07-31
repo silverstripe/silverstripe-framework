@@ -39,7 +39,7 @@
 		
 		.ui-tabs-panel {
 			background: transparent; // default it's white
-			padding: $grid-vertical * 2;
+			padding: $grid-vertical * 2 $grid-horizontal;
 		}
 	}
 
@@ -78,7 +78,7 @@
 	.ss-ui-button,
 	.ui-widget-content .ss-ui-button,
 	.ui-widget-header .ss-ui-button {
-		padding: 5px 7px 5px 7px;
+		padding: $grid-vertical - 1 $grid-horizontal;
 		color: $color-text-dark;
 		@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
 			linear-gradient(color-stops(

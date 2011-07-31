@@ -5,6 +5,13 @@
  * DO NOT ADD stylesheet rules to this file directly!
  * 
  * Note: By prefixing files with an underscore, they won't create individual CSS files.
+ *
+ * Notes:
+ * --------------------------------------------------------------
+ * Z-indexes:
+ *		* Menu bar on the right should always be on top. This is in the 80 range
+ *		* Top navingation bar must always sit over the content. This is in the 60 range
+ *		* Footer must sit over the content as well so this in the 40 range
  */
 
 /** -----------------------------
@@ -21,7 +28,7 @@
 @import "themes/default.scss";
 
 /** -----------------------------
- * Customise mixins
+ * Custom mixins
  * ------------------------------ */
 @import "mixins.scss";
 

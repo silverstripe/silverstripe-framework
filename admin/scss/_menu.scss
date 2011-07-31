@@ -4,24 +4,25 @@
  * @package sapphire
  * @subpackage admin
  */
+
 /** -------------------------------------------------------
  * CMS Menu Bar
  * -------------------------------------------------------- */
 .cms-menu {
-	z-index: 10;
+	z-index: 80;
 	background: $color-menu-background;
 	border-right: 1px solid $color-menu-border;
-	width: 207px; /* 8x24 - 1 */
+	width: ($grid-horizontal * 24) - 1; /* 8x24 - 1 */
 	overflow: auto;
 	
-	@include box-shadow($color-shadow-dark 2px 0 6px);
+	@include box-shadow($color-shadow-dark 0 0 $grid-horizontal);
 
 	a {
 		text-decoration: none;
 	}
 	
 	.cms-panel-content {
-		width: 207px; /* 8x24 - 1 */
+		width: ($grid-horizontal * 24) - 1; /* 8x24 - 1 */
 		overflow: hidden
 	}
 		
@@ -57,20 +58,18 @@
 }
 
 .cms-menu-list {
-	
 	li {
-		
 		a {
 			display: block;
-			height: 24px;
-			line-height: 24px;
+			height: $grid-vertical * 3;
+			line-height: $grid-vertical * 3;
 			font-size: $font-base-size;
 			overflow: hidden;
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			text-shadow: lighten($color-base, 5%) 1px 1px 0;
 			color: $color-text-dark;
-			padding: 7px 5px 7px 8px;
+			padding: ($grid-vertical - 1) 5px ($grid-vertical - 1) 8px;
 			background-color: $color-base;
 			
 			@include background-image(linear-gradient(

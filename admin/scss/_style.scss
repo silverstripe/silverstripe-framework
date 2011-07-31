@@ -72,6 +72,11 @@ html,body {
 	h5 {
 		font-size: $font-base-size;
 	}
+	
+	p {
+		line-height: $grid-vertical * 2;
+		margin-bottom: $grid-vertical;
+	}
 }
 
 /** --------------------------------------------
@@ -97,9 +102,10 @@ html,body {
 	background-color: darken($color-widget-bg, 20%);
 	padding: $grid-vertical $grid-horizontal ($grid-vertical - 2) $grid-horizontal;	
 	height: $grid-vertical * 4;
-	
+	z-index: 60;
 	border-bottom: 2px solid darken($color-widget-bg, 35%);
 
+	@include box-shadow($color-widget-bg 0 $grid-vertical*2 $grid-vertical*2);
 	@include background-image(
 		linear-gradient(darken($color-widget-bg, 10%), darken($color-widget-bg, 30%))
 	);
@@ -110,7 +116,7 @@ html,body {
 		font-size: $font-base-size;
 		font-weight: bold;
 		text-shadow: darken($color-widget-bg, 10%) 1px 1px 0;
-		width: $grid-horizontal * 24;
+		width: $grid-horizontal * 23;
 	}
 
 	& > div {
@@ -299,7 +305,7 @@ html,body {
  * -------------------------------------------- */
 
 .cms-content-actions {
-	padding: $grid_vertical $grid_horizontal;
+	margin: $grid_vertical $grid_horizontal;
 	text-align: right;
 }
 
