@@ -200,20 +200,20 @@ li.class-ErrorPage a .jstree-pageicon { background-position: 0 -112px; }
 
 /** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in sapphire/css/Form.css.  @package sapphire @subpackage admin */
 /** ---------------------------------------------------- Basic form fields ---------------------------------------------------- */
-.field { display: block; padding: 0 0 7px 0; margin: 0 0 8px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); overflow: hidden; }
-.field label.left { float: left; width: 160px; padding: 8px 8px; line-height: 16px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
-.field label.left span { display: block; font-size: 11px; color: #848484; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
-.field .middleColumn { margin-left: 192px; }
-
 form.nostyle .field { display: inline; padding: 0; border: 0; }
 form.nostyle label { float: none; width: auto; }
 form.nostyle .middleColumn { margin-left: 0; }
 
-.field.nolabel .middleColumn { margin-left: 0; }
-
-.field input.text, .field textarea, .field select { width: 70%; }
-.field input.text, .field textarea { -moz-border-radius: 4px; -webkit-border-radius: 4px; -o-border-radius: 4px; -ms-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; background: #fff; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -ms-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); border: 1px solid #b3b3b3; padding: 7px 7px; margin: 0; outline: none; }
-.field input.text:focus, .field textarea:focus { border: 1px solid gray; }
+.field { display: block; padding: 0 8px 7px 8px; margin: 0 -8px 8px -8px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); overflow: hidden; /* TreeDropdowns */ }
+.field.noLabel .middleColumn { margin-left: 0; }
+.field label.left { float: left; width: 176px; padding: 8px 8px 8px 0; line-height: 16px; }
+.field label.left span { display: block; font-size: 11px; color: #848484; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
+.field .middleColumn { margin-left: 184px; /* 23 as we lose a column on the field padding */ }
+.field input.text, .field textarea, .field select { width: 90%; max-width: 512px; }
+.field input.text, .field textarea, .field .TreeDropdownField { background: #fff; border: 1px solid #b3b3b3; padding: 7px 7px; margin: 0; outline: none; -moz-border-radius: 4px; -webkit-border-radius: 4px; -o-border-radius: 4px; -ms-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -ms-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); }
+.field input.text:focus, .field textarea:focus, .field .TreeDropdownField:focus { border: 1px solid gray; }
+.field .TreeDropdownField { padding: 0; }
+.field .TreeDropdownField .panel { margin-top: -4px; border: 1px solid #b3b3b3; border-top: none; -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -o-border-bottom-left-radius: 4px; -ms-border-bottom-left-radius: 4px; -khtml-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; -o-border-bottom-right-radius: 4px; -ms-border-bottom-right-radius: 4px; -khtml-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px; }
 .field select { margin-top: 8px; }
 
 /** ---------------------------------------------------- Buttons ---------------------------------------------------- */
@@ -230,18 +230,17 @@ form.nostyle .middleColumn { margin-left: 0; }
 .fieldgroup .fieldgroup-field { float: left; display: block; width: 184px; padding-right: 8px; }
 
 /** ---------------------------------------------------- Checkbox Field ---------------------------------------------------- */
-.checkbox { padding-left: 192px; }
+.field.checkbox { padding-left: 192px; margin-bottom: 8px; }
 
 /** ---------------------------------------------------- Optionsets and Checkboxsets ---------------------------------------------------- */
-.optionset li { float: left; display: block; width: 248px; padding: 8px 8px; line-height: 16px; list-style: none; position: relative; }
+.optionset { overflow: hidden; padding-bottom: 8px; }
+.optionset li { float: left; display: block; width: 216px; padding: 8px 8px 0; line-height: 16px; list-style: none; position: relative; }
 .optionset li input { position: absolute; top: 9px; left: 2px; margin: 0; }
 .optionset li label { display: block; cursor: pointer; padding: 0 0 0 16px; }
 
-/** ---------------------------------------------------- Specific field overrides ---------------------------------------------------- */
+/** ---------------------------------------------------- HTML Text  ---------------------------------------------------- */
 .htmleditor label { display: block; float: none; padding-bottom: 10px; }
 .htmleditor .middleColumn { margin-left: 0px; clear: left; }
-
-#Url label .field#ViewerGroups label, .field#EditorGroups label, .field#CreateTopLevelGroups label { display: none; }
 
 .action-hidden { display: none; }
 
@@ -264,8 +263,8 @@ form.nostyle .middleColumn { margin-left: 0; }
 .cms .ui-tabs .ui-tabs-nav li { top: 0; }
 .cms .ui-tabs .ui-tabs-nav li a { padding: 0 15px; }
 .cms .ui-tabs .ui-tabs-nav.ui-state-active { border-color: gray; }
-.cms .ui-tabs .ui-tabs-panel { background: transparent; padding: 16px 8px; }
-.cms .ui-widget-content { color: #444444; font-size: 12px; font-family: Arial, sans-serif; border: 0; }
+.cms .ui-tabs .ui-tabs-panel { background: transparent; padding: 24px 16px; }
+.cms .ui-widget-content, .cms .ui-widget { color: #444444; font-size: 12px; font-family: Arial, sans-serif; border: 0; }
 .cms .ui-widget-header { background: #eceff1; border: 0; padding: 0; }
 .cms .ss-ui-button { padding: 5px; text-decoration: none; }
 .cms .ui-state-hover { cursor: pointer; }
@@ -291,12 +290,12 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .cms strong { font-weight: bold; }
 
 /** -------------------------------------------- Typography styles in tabs -------------------------------------------- */
-.ui-tabs-panel h2, .ui-tabs-panel h3, .ui-tabs-panel h4, .ui-tabs-panel h5 { font-weight: bold; margin: 16px 0 8px 0; line-height: 16px; }
+.ui-tabs-panel h2, .ui-tabs-panel h3, .ui-tabs-panel h4, .ui-tabs-panel h5 { font-weight: bold; margin: 16px 0 16px 0; line-height: 16px; }
 .ui-tabs-panel h2 { font-size: 18px; line-height: 24px; }
 .ui-tabs-panel h3 { font-size: 16px; }
 .ui-tabs-panel h4 { font-size: 14px; }
 .ui-tabs-panel h5 { font-size: 12px; }
-.ui-tabs-panel p { line-height: 16px; margin-bottom: 8px; }
+.ui-tabs-panel p { line-height: 16px; margin-bottom: 16px; }
 
 /** -------------------------------------------- Panels Styles -------------------------------------------- */
 .cms-container { height: 100%; background: #f0f3f4 url(../images/textures/bg_cms_main_content.png) repeat top left; }
@@ -305,7 +304,7 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form { *display: inline; }
 
 .cms-content-header { background-color: #b0bec7; padding: 8px 8px 6px 8px; height: 32px; z-index: 60; border-bottom: 2px solid #8399a7; -moz-box-shadow: #eceff1 0 16px 16px; -webkit-box-shadow: #eceff1 0 16px 16px; -o-box-shadow: #eceff1 0 16px 16px; box-shadow: #eceff1 0 16px 16px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ced7dc), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#ced7dc, #92a5b2); background-image: -moz-linear-gradient(#ced7dc, #92a5b2); background-image: -o-linear-gradient(#ced7dc, #92a5b2); background-image: -ms-linear-gradient(#ced7dc, #92a5b2); background-image: linear-gradient(#ced7dc, #92a5b2); }
-.cms-content-header h2 { float: left; padding: 12px 0 0 8px; font-size: 12px; font-weight: bold; text-shadow: #ced7dc 1px 1px 0; width: 184px; }
+.cms-content-header h2 { float: left; padding: 8px 0 0 8px; font-size: 12px; line-height: 24px; font-weight: bold; text-shadow: #ced7dc 1px 1px 0; width: 184px; }
 .cms-content-header > div { width: 9999em; overflow: hidden; }
 .cms-content-header .cms-content-header-tabs { float: left; }
 
@@ -343,7 +342,7 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .cms-content-actions { margin: 8px 8px; text-align: right; }
 
 /** -------------------------------------------- Messages -------------------------------------------- */
-.message { margin: 8px 0; padding: 7px 7px; font-weight: bold; border: 1px black solid; }
+.message { margin: 0 0 8px 0; padding: 7px 7px; font-weight: bold; border: 1px black solid; }
 .message.notice { background-color: #ffbe66; border-color: #ff9300; }
 .message.warning { background-color: #ffbe66; border-color: #ff9300; }
 .message.error { background-color: #ffbe66; border-color: #ff9300; }

@@ -20,12 +20,12 @@
 			onmatch: function() {
 				this.append(
 					'<span class="title"></span>' +
-					'<a href="#" title="' + strings.openLink + '" class="toggle-panel-link"></a>' +
+					'<a href="#" title="' + strings.openLink + '" class="toggle-panel-link ui-icon ui-icon-triangle-1-s"></a>' +
 					'<div class="panel"><div class="tree-holder"></div></div>'
 				);
 				if(this.data('title')) this.setTitle(this.data('title'));
-			this.getPanel().hide();
 				
+				this.getPanel().hide();
 				this._super();
 			},
 			getPanel: function() {
@@ -33,10 +33,24 @@
 			},
 			openPanel: function() {
 				var panel = this.getPanel(), tree = this.find('.tree-holder');
+				
+				// set the panel to the bottom of the field
+				panel.css('top', this.position().top + this.height());
 				panel.show();
+				
+				// swap the down arrow with an up arrow
+				this.find(".toggle-panel-link")
+					.removeClass('ui-icon-triangle-1-s')
+					.addClass('ui-icon-triangle-1-n');
+				
 				if(tree.is(':empty')) this.loadTree();
 			},
 			closePanel: function() {
+				// swap the up arrow with a down arrow
+				this.find(".toggle-panel-link")
+					.removeClass('ui-icon-triangle-1-n')
+					.addClass('ui-icon-triangle-1-s');
+					
 				this.getPanel().hide();
 			},
 			togglePanel: function() {

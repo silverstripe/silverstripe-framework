@@ -1,56 +1,55 @@
 div.TreeDropdownField {
-	width: 200px;
-	height: 21px;
-}
-
-div.TreeDropdownField .title {
-	float: left;
-	overflow:hidden;
-	width: 174px;
-	height: 14px;
-	border: 1px #7f9db9 solid;
+	width: 400px;
+	background: #fff;
+	border: 1px solid #666;
 	cursor: pointer;
-	padding: 2px 0 2px 4px;
-	background-color: #fff;
-}
-
-div.TreeDropdownField .panel {
-	clear: left;
-	position: relative;
-	overflow: auto;
-	display: none;
-	cursor: default;
-	border: 1px black solid;
-	width: 200px;
-	height: 200px;
-	background-color: #fff;
-}
-
-div.TreeDropdownField .panel.loading {
-	background: #fff url(../images/network-save.gif) center center no-repeat;
-}
-
-div.TreeDropdownField .panel ul.tree a {
-	font-size: 12px;
-}
-
-div.TreeDropdownField .panel ul.tree {
-	margin-top: 0;
-}
-
-div.TreeDropdownField .toggle-panel-link {
-	border:none;
-	text-decoration: none;
-	background: url(../images/TreeDropdownField_button.gif) no-repeat left top;
-	width: 19px;
-	height: 21px;
-	margin: 0;
-	padding: 0 0 0 1px;
-	z-index: 0;
 	overflow: hidden;
-	float:right;
 }
 
-div.TreeDropdownField .jstree-themeroller a.jstree-loading .jstree-icon { 
-	background:url("../images/network-save.gif") center center no-repeat !important; 
-}
+	div.TreeDropdownField input {
+		border: none;
+		background: none;
+		padding: 0;
+		margin: 0;
+	}
+	
+	div.TreeDropdownField .title {
+		float: left;
+		padding: 7px;
+		overflow:hidden;
+	}
+
+	div.TreeDropdownField .panel {
+		clear: left;
+		position: absolute;
+		overflow: auto;
+		display: none;
+		cursor: default;
+		border: 1px solid #666;
+		border-top: none;
+		margin: 1px 0 0 -1px; /* account for border on container div */
+		width: 400px;
+		height: 200px;
+		background-color: #fff;
+		z-index: 50;
+	}
+		div.TreeDropdownField .panel ul.tree {
+			margin: 0;
+		}
+			div.TreeDropdownField .panel ul.tree a {
+				font-size: 12px;
+			}
+		
+	div.TreeDropdownField .toggle-panel-link {
+		border: none;
+		text-decoration: none;
+		margin: 4px 4px 0 0;
+		z-index: 0;
+		overflow: hidden;
+		float: right;
+	}
+	
+	div.TreeDropdownField .loading,
+	div.TreeDropdownField .jstree-themeroller a.jstree-loading .jstree-icon { 
+		background: #fff url("../images/network-save.gif") center center no-repeat !important; 
+	}

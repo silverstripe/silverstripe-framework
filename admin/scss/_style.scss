@@ -52,7 +52,7 @@ html,body {
 .ui-tabs-panel {
 	h2, h3, h4, h5 {
 		font-weight: bold;
-		margin: $grid-vertical * 2 0 $grid-vertical 0;
+		margin: $grid-vertical * 2 0 $grid-vertical * 2 0;
 		line-height: $grid-vertical * 2;
 	}
 	
@@ -75,7 +75,7 @@ html,body {
 	
 	p {
 		line-height: $grid-vertical * 2;
-		margin-bottom: $grid-vertical;
+		margin-bottom: $grid-vertical * 2;
 	}
 }
 
@@ -112,8 +112,9 @@ html,body {
 	
 	h2 {
 		float: left;
-		padding: ($grid-vertical + 4) 0 0 $grid-horizontal;
+		padding: $grid-vertical 0 0 $grid-horizontal;
 		font-size: $font-base-size;
+		line-height: $grid-horizontal * 3;
 		font-weight: bold;
 		text-shadow: darken($color-widget-bg, 10%) 1px 1px 0;
 		width: $grid-horizontal * 23;
@@ -315,7 +316,7 @@ html,body {
  * -------------------------------------------- */
 
 .message {
-	margin: $grid_vertical 0;
+	margin: 0 0 $grid_vertical 0;
 	// minus one for the borders
 	padding: $grid_vertical - 1 $grid_horizontal - 1;
 	font-weight: bold;

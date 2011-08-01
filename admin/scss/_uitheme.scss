@@ -39,11 +39,12 @@
 		
 		.ui-tabs-panel {
 			background: transparent; // default it's white
-			padding: $grid-vertical * 2 $grid-horizontal;
+			padding: $grid-vertical * 3 $grid-horizontal * 2;
 		}
 	}
 
-	.ui-widget-content  {
+	.ui-widget-content,
+	.ui-widget {
 		color: $color-text;
 		font-size: $font-base-size;
 		font-family: $font-family;
