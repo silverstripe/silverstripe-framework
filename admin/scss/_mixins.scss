@@ -43,3 +43,21 @@
 		margin-left: 0;
 	}
 }
+
+/** ----------------------------------------------------
+ * Double tone borders
+ *
+ * http://daverupert.com/2011/06/two-tone-borders-with-css3/
+ * ----------------------------------------------------- */
+@mixin doubleborder($side, $innerColor, $outerColor) {
+    $shadow: "0 0 0";
+    border-#{$side}: 1px solid $innerColor;
+    @if ($side == "top") { $shadow: 0 -1px 0; }
+    @if ($side == "right") { $shadow: 1px 0 0; }
+    @if ($side == "bottom") { $shadow: 0 1px 0; }
+    @if ($side == "left") { $shadow: -1px 0 0; }
+    -webkit-box-shadow: $shadow $outerColor;
+    -moz-box-shadow: $shadow $outerColor;
+    -o-box-shadow: $shadow $outerColor;
+    box-shadow: $shadow $outerColor;
+}

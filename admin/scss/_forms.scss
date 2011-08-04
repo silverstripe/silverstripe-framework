@@ -21,7 +21,7 @@ form.nostyle {
 	// margin with a postive padding to ensure the bottom border extends
 	// over the edges
 	padding: 0 $grid-horizontal $grid-vertical - 1 $grid-horizontal;
-	margin: 0 $grid-horizontal * -1 $grid-vertical ($grid-horizontal * -1);
+	margin: 0 ($grid-horizontal * -1) $grid-vertical ($grid-horizontal * -1);
 	border-bottom: 1px solid $color-shadow-light;
 	overflow: hidden;
 	
@@ -101,87 +101,112 @@ form.nostyle {
  * ---------------------------------------------------- */
 
 .cms {
-	input.loading,
-	input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, 
-	.ui-widget-header input.ui-state-default.loading {
-		padding-left: ($grid-horizontal * 2) - 1;
-		background: $color-widget-bg url(../../images/network-save.gif) no-repeat center left;
-	}
-
-	.ss-ui-button.ss-ui-action-constructive,
-	.ui-widget-content .ss-ui-button.ss-ui-action-constructive,
-	.ui-widget-header .ss-ui-button.ss-ui-action-constructive {
-		padding-left: ($grid-horizontal * 4) - 1;
+	.ui-widget {
+		/* loading */
+		input.loading,
+		input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, 
+		.ui-widget-header input.ui-state-default.loading {
+			padding-left: 24px;
+			color: lighten($color-text-dark, 20%);
+			background: $color-button-disabled url(../../images/network-save.gif) no-repeat 4px center;
+			border-color: darken($color-button-disabled, 10%);
+			cursor: default;
+			@include text-shadow(none);
+			@include box-shadow(none);
+			
+		}
+	
+		.ss-ui-button {
+			/* all buttons */
+			padding: ($grid-vertical - 3) ($grid-horizontal * 2) - 4;
+			text-decoration: none;
+			line-height: $grid-vertical * 2;
+			color: $color-text-dark;
+			background-color: $color-button-generic;
+			border: 1px solid $color-button-generic-border;
 		
-		color: $color-text-light;
-		border-color: $color-button-constructive-border;
-		@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 6px,
-			linear-gradient(color-stops(
-				$color-button-constructive-light,
-				$color-button-constructive-dark
-			))
-		);
-		background-color: $color-button-constructive-light;
+			@include text-shadow(lighten($color-button-generic, 20%) 0 1px 1px);
+			@include box-shadow(lighten($color-base, 10%) 0 1px 2px);
+			@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+				linear-gradient(color-stops(
+					lighten($color-button-generic, 10%),
+					darken($color-button-generic, 5%)
+				))
+			);
+			&.ui-state-hover {
+				border: 1px solid darken($color-button-generic-border, 5%);
+				@include box-shadow($color-base 0 1px 2px);
+				@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+					linear-gradient(color-stops(
+						lighten($color-button-generic, 20%),
+						$color-button-generic
+					))
+				);
+			}
+			/* constructive */
+			&.ss-ui-action-constructive {
+				padding-left: 24px;
+				font-weight: bold;
+				margin-left: $grid-horizontal;
+				color: $color-text-light;
+				border-color: $color-button-constructive-border;
+				@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 5px,
+					linear-gradient(color-stops(
+						lighten($color-button-constructive, 10%),
+						darken($color-button-constructive, 5%)
+					))
+				);
+			
+				background-color: $color-button-constructive;
 		
-		@include text-shadow(darken($color-base, 40%) 1px 1px 0);
-		@include box-shadow(darken($color-base, 20%) 1px 1px 2px);
-	}
-
-	.ss-ui-button.ss-ui-action-constructive.ui-state-hover {
-		@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 6px,
-			linear-gradient(color-stops(
-				darken($color-button-constructive-light, 2%),
-				darken($color-button-constructive-dark, 3%)
-			))
-		);
-		background-color: $color-button-constructive-dark;
-		@include box-shadow(darken($color-base, 10%) 1px 1px 1px);
-	}
-
-	.ss-ui-button.ss-ui-action-constructive.cms-page-add-button {
-		background-position: 5px -155px;
-	}
-
-	.ss-ui-button.ss-ui-action-destructive,
-	.ui-widget-content .ss-ui-button.ss-ui-action-destructive,
-	.ui-widget-header .ss-ui-button.ss-ui-action-destructive {
-		color: $color-button-destructive;
-		background-color: $color-button-generic-light;
-	}
-
-	.ss-ui-button.ss-ui-action-destructive.delete {
-		padding-left: 23px;
-		color: $color-button-destructive;
-		border-color: $color-button-generic-border;
-		@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px -26px,
-			linear-gradient(color-stops(
-				$color-button-generic-light,
-				$color-button-generic-dark
-			))
-		);
-		@include text-shadow(none);
-		@include box-shadow(darken($color-base, 2%) 1px 1px 2px);
-	}
-
-	.ss-ui-button.ss-ui-action-destructive.delete.ui-state-hover {
-		@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px -26px,
-			linear-gradient(color-stops(
-				darken($color-button-generic-light, 2%),
-				darken($color-button-generic-dark, 3%)
-			))
-		);
-		background-color: $color-button-generic-dark;
-		@include box-shadow(darken($color-base, 10%) 1px 1px 1px);
-	}
-
-	.ss-ui-button.ss-ui-action-minor,
-	.ui-widget-content .ss-ui-button.ss-ui-action-minor
-	.ui-widget-header .ss-ui-button.ss-ui-action-minor {
-		background: none;
-		padding: 0;
-		border: 0;
-		color: $color-text-dark;
-		text-decoration: underline;
+				@include text-shadow(darken($color-button-constructive, 10%) 0 1px 1px);
+				@include box-shadow(darken($color-base, 20%) 1px 1px 2px);
+			
+				&.ui-state-hover {
+					border-color: darken($color-button-constructive-border, 10%);
+					@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 5px,
+						linear-gradient(color-stops(
+							lighten($color-button-constructive, 15%),
+							$color-button-constructive
+						))
+					);
+				
+					background-color: darken($color-button-constructive, 10%);
+				}
+			}
+		
+			/* destructive */
+			&.ss-ui-action-destructive {
+				color: $color-button-destructive;
+				background-color: $color-button-generic;
+			
+				&.delete {
+					padding-left: 26px;
+					@include background(image-url("../images/btn_icons_sprite.png") no-repeat 6px -27px,
+						linear-gradient(color-stops(
+							lighten($color-button-generic, 10%),
+							darken($color-button-generic, 5%)
+						))
+					);
+					&.ui-state-hover {
+						@include background(image-url("../images/btn_icons_sprite.png") no-repeat 6px -27px,
+							linear-gradient(color-stops(
+								lighten($color-button-generic, 20%),
+								$color-button-generic
+							))
+						);
+					}
+				}
+			}
+		
+			&.ss-ui-action-minor {
+				background: none;
+				padding: 0;
+				border: 0;
+				color: $color-text-dark;
+				text-decoration: underline;
+			}
+		}
 	}
 }
 

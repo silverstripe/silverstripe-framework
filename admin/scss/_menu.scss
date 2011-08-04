@@ -91,7 +91,8 @@
 					$color-base
 				));
 			}
-			&:focus {
+			&:focus,
+			&:active {
 				border-top: 1px solid darken($color-base, 5%);
 				text-decoration: none;
 				background-color: darken($color-base, 5%);

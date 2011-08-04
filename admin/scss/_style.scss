@@ -84,7 +84,7 @@ html,body {
  * -------------------------------------------- */
 .cms-container {
 	height: 100%;
-	background: #f0f3f4 url(../images/textures/bg_cms_main_content.png) repeat top left;
+	background: $tab-panel-texture-background;
 }
 
 .cms-preview,
@@ -112,12 +112,14 @@ html,body {
 	
 	h2 {
 		float: left;
-		padding: $grid-vertical 0 0 $grid-horizontal;
+		padding: $grid-vertical $grid-horizontal 0 0;
 		font-size: $font-base-size;
 		line-height: $grid-horizontal * 3;
 		font-weight: bold;
 		text-shadow: darken($color-widget-bg, 10%) 1px 1px 0;
-		width: $grid-horizontal * 23;
+		width: $grid-horizontal * 22 /* 24 - (padding on each side) */;
+		
+		@include hide-text-overflow();
 	}
 
 	& > div {
@@ -135,7 +137,7 @@ html,body {
 		a {
 			font-weight: bold;
 			line-height: $grid-vertical * 2;
-			padding: ($grid-vertical * 2 - 6) $grid-horizontal + 4 $grid-vertical + 2;
+			padding: ($grid-vertical * 2 - 5) $grid-horizontal + 4 $grid-vertical + 1;
 			border-bottom: 2px solid darken($color-tab, 15%);
 		}
 	}
@@ -163,16 +165,17 @@ html,body {
 	}
 }
 
+/* --------------------------------------------------------
+ * Content Tools is the sidebar on the left of the main content
+ * panel
+ */
 .cms-content-tools {
 	background-color: darken($color-widget-bg, 5%);
 	padding: $grid-vertical $grid-horizontal;	
-	width: $grid-horizontal * 24;
+	width: $grid-horizontal * 22 /* 24 - padding */;
+	border-right: 1px solid darken($color-widget-bg, 5%);
 	overflow: auto;	
-	
-	.cms-panel-header,
-	.cms-panel-content {
-		padding: $grid-vertical $grid-horizontal;
-	}
+	z-index: 60;
 }
 
 .cms-content {
@@ -230,6 +233,11 @@ html,body {
 		text-indent: -9999em;
 		padding-right: 7px;
 		border-right: 1px solid $color-dark-separator;
+	}
+	
+	span {
+		font-weight: bold;
+		@include hide-text-overflow();
 	}
 }
 
@@ -306,8 +314,10 @@ html,body {
  * -------------------------------------------- */
 
 .cms-content-actions {
-	margin: $grid_vertical $grid_horizontal;
+	margin: $grid-vertical $grid-horizontal;
 	text-align: right;
+	height: $grid-vertical*4;
+	@include box-shadow($tab-panel-texture-color 0 $grid-vertical*-2 $grid-vertical*2);
 }
 
 
@@ -393,7 +403,6 @@ html,body {
 .cms-content-toolbar {
 	@include clearfix;
 	display: block;
-	padding: 10px 0;
 	margin: 0 0 15px 0;
 	border-bottom-width: 2px;
 	border-bottom: 2px groove lighten($color-shadow-light, 95%);
@@ -415,6 +424,24 @@ html,body {
 }
 
 .cms-content-tools {
+	h3,h4,h5 {
+		font-weight: bold;
+		line-height: $grid-vertical * 2;
+	}
+	h3 {
+		font-size: $font-base-size + 2;
+		margin-left: -2px;
+		padding-left: 2px;
+		
+		@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 10%))
+	}
+	h4 {
+		font-size: $font-base-size + 1;
+	}
+	h5 {
+		font-size: $font-base-size;
+	}
+	
 	.field {
 		label {
 			float: none;
@@ -423,6 +450,12 @@ html,body {
 		
 		.middleColumn {
 			margin-left: 0;
+		}
+	}
+	
+	.fieldgroup {
+		.fieldgroup-field {
+			width: auto;
 		}
 	}
 }
@@ -517,8 +550,11 @@ form.member-profile-form {
 	
 }
 
-.cms-content-fields {
-	overflow: auto;
+.cms {
+	.cms-content-fields {
+		overflow: auto;
+		background: none;
+	}
 }
 
 /** --------------------------------------------
