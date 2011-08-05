@@ -33,12 +33,16 @@
 @import "mixins.scss";
 
 /** -----------------------------
+ * Sprite images
+ * ----------------------------- */
+@import "sprites.scss";
+
+/** -----------------------------
  * CMS Components
  * ------------------------------ */
 @import "tree.scss";
 @import "menu.scss";
 @import "forms.scss";
-@import "icons.scss";
 @import "uitheme.scss";
 @import "style.scss";
 

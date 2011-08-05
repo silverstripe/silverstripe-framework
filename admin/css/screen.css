@@ -29,6 +29,19 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 /** ---------------------------------------------------- Hides the overflowing text from a container  Note: you must define a width on the element with this overflow. ----------------------------------------------------- */
 /** ---------------------------------------------------- Clear the properties of sub form fields.   Often needed for nested form fields and  ----------------------------------------------------- */
 /** ---------------------------------------------------- Double tone borders  http://daverupert.com/2011/06/two-tone-borders-with-css3/ ----------------------------------------------------- */
+/** ----------------------------- Sprite images ----------------------------- */
+/** Helper SCSS file for generating sprites for the interface. 
+ */
+.icon-24 { background: url('../images/icons/24x24-sba30d25a74.png'); text-indent: -9999px; border: none; outline: none; width: 24px; height: 24px; }
+.icon-24.icon-assetadmin { background-position: 0 -192px; }
+.icon-24.icon-cmsmain { background-position: 0 -168px; }
+.icon-24.icon-cmspagescontroller { background-position: 0 -144px; }
+.icon-24.icon-cmssettingscontroller { background-position: 0 -72px; }
+.icon-24.icon-securityadmin { background-position: 0 -24px; }
+.icon-24.icon-reportadmin { background-position: 0 -216px; }
+.icon-24.icon-commentadmin { background-position: 0 0; }
+.icon-24.icon-help { background-position: 0 -120px; }
+
 /** ----------------------------- CMS Components ------------------------------ */
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .jstree ul { display: block; margin: 0 0 0 0; padding: 0 0 0 0; list-style-type: none; }
@@ -256,18 +269,6 @@ form.nostyle .middleColumn { margin-left: 0; }
 .htmleditor .middleColumn { margin-left: 0px; clear: left; }
 
 .action-hidden { display: none; }
-
-/** Icon styles.  @todo Automatic sprite generation and ensure that developers can define icons for their own admin interfaces  @package sapphire @subpackage admin */
-.icon { background-repeat: none; }
-.icon.icon-24 { width: 24px; height: 24px; }
-.icon.icon-24.icon-assetadmin { background-image: url(../images/icons/24x24/picture.png); }
-.icon.icon-24.icon-cmsmain { background-image: url(../images/icons/24x24/pencil.png); }
-.icon.icon-24.icon-cmspagescontroller { background-image: url(../images/icons/24x24/network.png); }
-.icon.icon-24.icon-cmssettingscontroller { background-image: url(../images/icons/24x24/gears.png); }
-.icon.icon-24.icon-securityadmin { background-image: url(../images/icons/24x24/community.png); }
-.icon.icon-24.icon-reportadmin { background-image: url(../images/icons/24x24/pie-chart.png); }
-.icon.icon-24.icon-commentadmin { background-image: url(../images/icons/24x24/blog.png); }
-.icon.icon-24.icon-help { background-image: url(../images/icons/24x24/information.png); }
 
 /** This file defines CMS-specific customizations to the jQuery UI theme. Every rule in this file should be wrapped in the '.cms' selector (to make it more specific), and contain ONLY overwritten jQuery UI rules (with 'ui-' prefix).  This file should be fairly short, as we're using our own custom jQuery UI theme already. TODO Add theme reference  Use _style.scss to add more generic style information, and read the jQuery UI theming API: http://jqueryui.com/docs/Theming/API */
 .cms .ui-tabs { padding: 0; background: #f0f3f4 url(../images/textures/bg_cms_main_content.png) repeat top left; }

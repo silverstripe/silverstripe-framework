@@ -1,0 +1,43 @@
+/**
+ * Helper SCSS file for generating sprites for the interface.
+ *
+
+ */
+@import "compass/utilities/sprites/base";
+
+$icon24: sprite-map("icons/24x24/*.png");
+
+.icon-24 { 
+	background: $icon24;
+	text-indent: -9999px;
+	border: none;
+	outline: none;
+	
+	width: 24px;
+	height: 24px;
+	
+	&.icon-assetadmin {
+		@include sprite($icon24, "picture");
+	}
+	&.icon-cmsmain {
+		@include sprite($icon24, "pencil");
+	}
+	&.icon-cmspagescontroller {
+		@include sprite($icon24, "network");
+	}
+	&.icon-cmssettingscontroller {
+		@include sprite($icon24, "gears");
+	}
+	&.icon-securityadmin {
+		@include sprite($icon24, "community");
+	}
+	&.icon-reportadmin {
+		@include sprite($icon24, "pie-chart");
+	}
+	&.icon-commentadmin {
+		@include sprite($icon24, "blog");
+	}
+	&.icon-help {
+		@include sprite($icon24, "information");
+	}
+}
