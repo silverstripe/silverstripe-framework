@@ -1,5 +1,12 @@
 (function($) {
 	$.entwine('ss', function($){
+		/**
+		 * On resize of any close the open treedropdownfields
+		 * as we'll need to redo with widths
+		 */
+		$(window).resize(function() {
+			$('.TreeDropdownField').closePanel();
+		});
 		
 		var strings = {
 			'openlink': 'Open',
@@ -17,12 +24,16 @@
 		 * @todo Expand title height to fit all elements
 		 */
 		$('.TreeDropdownField').entwine({
-			onmatch: function() {
+			onmatch: function() {		
 				this.append(
 					'<span class="title"></span>' +
-					'<a href="#" title="' + strings.openLink + '" class="toggle-panel-link ui-icon ui-icon-triangle-1-s"></a>' +
+					'<div class="toggle-panel-link"	><a href="#" class="ui-icon ui-icon-triangle-1-s"></a></div>' +
 					'<div class="panel"><div class="tree-holder"></div></div>'
 				);
+			
+				var linkTitle = strings.openLink;
+				if(linkTitle) this.find("toggle-panel-link a").attr('title', linkTitle);
+				
 				if(this.data('title')) this.setTitle(this.data('title'));
 				
 				this.getPanel().hide();
@@ -36,10 +47,15 @@
 				
 				// set the panel to the bottom of the field
 				panel.css('top', this.position().top + this.height());
+				panel.css('width', this.width());
+				
 				panel.show();
 				
 				// swap the down arrow with an up arrow
-				this.find(".toggle-panel-link")
+				var toggle = this.find(".toggle-panel-link");
+				toggle.addClass('open-tree');
+				
+				toggle.find("a")
 					.removeClass('ui-icon-triangle-1-s')
 					.addClass('ui-icon-triangle-1-n');
 				
@@ -47,7 +63,10 @@
 			},
 			closePanel: function() {
 				// swap the up arrow with a down arrow
-				this.find(".toggle-panel-link")
+				var toggle = this.find(".toggle-panel-link");
+				toggle.removeClass('open-tree');
+				
+				toggle.find("a")
 					.removeClass('ui-icon-triangle-1-n')
 					.addClass('ui-icon-triangle-1-s');
 					

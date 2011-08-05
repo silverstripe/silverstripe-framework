@@ -23,7 +23,11 @@ form.nostyle {
 	padding: 0 $grid-horizontal $grid-vertical - 1 $grid-horizontal;
 	margin: 0 ($grid-horizontal * -1) $grid-vertical ($grid-horizontal * -1);
 	border-bottom: 1px solid $color-shadow-light;
-	overflow: hidden;
+	
+	// using the legacy version as some of the more complex form fields
+	// need to use relative positioning and overflow hidden will not expand
+	// the containing boxes
+	@include legacy-pie-clearfix();
 	
 	&.noLabel {
 		.middleColumn {
@@ -53,7 +57,8 @@ form.nostyle {
 	
 	input.text,
 	textarea,
-	select {
+	select,
+	.TreeDropdownField {
 		width: 90%;
 		max-width: $grid-horizontal * 64;
 	}
@@ -63,9 +68,7 @@ form.nostyle {
 	.TreeDropdownField {
 		background: #fff;
 		border: 1px solid lighten($color-medium-separator, 20%);
-
-		// remove 1px for the border.
-		padding: ($grid-vertical - 1) ($grid-horizontal - 1);
+		padding: $grid-vertical $grid-horizontal;
 		margin: 0;
 		outline: none;
 		
@@ -73,26 +76,71 @@ form.nostyle {
 		@include background-image(linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef));
 	
 		&:focus {
-			border: 1px solid $color-medium-separator;
+			border: 1px solid lighten($color-medium-separator, 20%);
+			
+			@include box-shadow(0 0 5px rgba(0,0,0,0.2));
 		}
 	}
 	
 	/* TreeDropdowns */
 	.TreeDropdownField {
-		padding: 0;
+		padding: 0 14px 0 0;
 		
 		.panel {
-			margin-top: $grid-vertical * -0.5;
+			margin-top: -2px;
 			border: 1px solid lighten($color-medium-separator, 20%);
 			border-top: none;
+			padding-right: 14px;
 			
 			@include border-bottom-left-radius(4px);
 			@include border-bottom-right-radius(4px);
 		}
+		.toggle-panel-link {
+			margin-right: -14px;
+		}
 	}
 	
-	select {
-		margin-top: $grid-vertical;
+	/* dropdowns */
+	.dropdown {
+		select {
+			margin-top: $grid-vertical;
+		}
+	}
+	
+	/* chzn override */
+	.chzn-container {
+		.chzn-results li {
+			font-size: 11px;
+			line-height: $grid-vertical * 2;
+			padding: $grid-vertical / 2 $grid-horizontal / 2;
+		}
+	}
+	.chzn-container-active {
+		.chzn-single {
+	  		border: 1px solid lighten($color-medium-separator, 10%);
+		}
+	}
+	
+	.chzn-container-single .chzn-single  {
+		height: 30px;
+		line-height: 32px; /* not relative, as then we'd had to redo most of chzn */
+		font-size: $font-base-size;
+		
+		@include background-image(linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef));
+		
+		
+		&:hover, &:focus, &:active {
+			text-decoration: none;
+			outline: none;
+		}
+	
+		div {
+			width: 24px;
+	
+			b {
+				background-position: 3px 4px;
+			}
+		}
 	}
 }
 
@@ -111,6 +159,7 @@ form.nostyle {
 			background: $color-button-disabled url(../../images/network-save.gif) no-repeat 4px center;
 			border-color: darken($color-button-disabled, 10%);
 			cursor: default;
+			
 			@include text-shadow(none);
 			@include box-shadow(none);
 			

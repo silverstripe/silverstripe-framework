@@ -246,11 +246,16 @@ class LeftAndMain extends Controller {
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js');
 		
+		// styled selects (with search)
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js');
+		Requirements::css(SAPPHIRE_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css');
+		
 		Requirements::javascript(THIRDPARTY_DIR . '/behaviour/behaviour.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js');
+		
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::add_i18n_javascript(SAPPHIRE_ADMIN_DIR . '/javascript/lang');
 		

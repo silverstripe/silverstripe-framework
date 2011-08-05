@@ -321,10 +321,26 @@
 				
 				this._super();
 			}
-		})
+		});
 		
+		/**
+		 * Styled dropdown select fields via chosen. Allows things like search and optgroup
+		 * selection support. Rather than manually adding classes to selects we want 
+		 * styled, we style everything but the ones we tell it not to.
+		 *
+		 * For the CMS we also need to tell the parent div that his has a select so
+		 * we can fix the height cropping.
+		 */
+		
+		$('.cms-container .field.dropdown').entwine({
+			onmatch: function() {
+				$(this).find("select:not(.no-chzn)").chosen();
+				$(this).addClass("has-chzn");
+				
+				this._super();
+			}
+		});	
 	});	 
-	
 }(jQuery));
 
 // Backwards compatibility

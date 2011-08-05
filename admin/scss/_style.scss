@@ -354,7 +354,7 @@ html,body {
 
 .ModelAdmin {
 	.cms-content-tools {
-		width: 300px;
+		width: $grid-horizontal * 24;
 	}
 	
 	// Disable by default, will be replaced by more intuitive column selection in new data grid
@@ -401,15 +401,13 @@ html,body {
  * -------------------------------------------- */
 
 .cms-content-toolbar {
-	@include clearfix;
+
 	display: block;
 	margin: 0 0 15px 0;
-	border-bottom-width: 2px;
-	border-bottom: 2px groove lighten($color-shadow-light, 95%);
-	-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
-	border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
-	//TODO: use single border line with shadow instead:: http://daverupert.com/2011/06/two-tone-borders-with-css3/
 	
+	@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 50%));
+	@include legacy-pie-clearfix();
+		
 	& > * {
 		float: left;
 	}
@@ -551,8 +549,19 @@ form.member-profile-form {
 }
 
 .cms {
+	.cms-content {
+		border-right: 1px solid $color-light-separator;
+		
+		@include box-shadow(3px 0 4px rgba(0,0,0,0.15));
+		@include border-radius(0);
+	}
+	
 	.cms-content-fields {
-		overflow: auto;
+		/* always show a y scroll bar as popups like TreeDropdowns 
+		 can trigger longer pages and the extra scroll bar doesn't 
+		 fire our sizing bar */
+		overflow-y: scroll;
+		overflow-x: auto;
 		background: none;
 	}
 }
