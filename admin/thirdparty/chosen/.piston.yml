@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  commit: b7a531f211b3074c922edf10a4a14b2ab9e9b6c8
+  branch: master
+lock: false
+repository_class: Piston::Git::Repository
+repository_url: https://github.com/harvesthq/chosen.git
