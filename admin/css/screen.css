@@ -211,6 +211,7 @@ form.nostyle .middleColumn { margin-left: 0; }
 .field.noLabel .middleColumn { margin-left: 0; }
 .field label.left { float: left; width: 176px; padding: 8px 8px 8px 0; line-height: 16px; }
 .field label.left span { display: block; font-size: 11px; color: #848484; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
+.field label.right { cursor: pointer; }
 .field .middleColumn { margin-left: 184px; /* 23 as we lose a column on the field padding */ }
 .field input.text, .field textarea, .field select, .field .TreeDropdownField { width: 90%; max-width: 512px; }
 .field input.text, .field textarea, .field .TreeDropdownField { background: #fff; border: 1px solid #b3b3b3; padding: 8px 8px; margin: 0; outline: none; -moz-border-radius: 4px; -webkit-border-radius: 4px; -o-border-radius: 4px; -ms-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -ms-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); }

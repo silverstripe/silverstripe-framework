@@ -35,19 +35,26 @@ form.nostyle {
 		}	
 	}
 	
-	label.left {
-		float: left;
+	label {
 		
-		width: $grid-horizontal * 22;
-		padding: $grid-vertical $grid-horizontal $grid-vertical 0;
-		line-height: $grid-vertical * 2;
+		&.left {
+			float: left;
 		
-		span {
-			display: block;
-			font-size: $font-base-size - 1;
-			color: lighten($color-text, 25%);
+			width: $grid-horizontal * 22;
+			padding: $grid-vertical $grid-horizontal $grid-vertical 0;
+			line-height: $grid-vertical * 2;
+		
+			span {
+				display: block;
+				font-size: $font-base-size - 1;
+				color: lighten($color-text, 25%);
 			
-			@include hide-text-overflow();
+				@include hide-text-overflow();
+			}
+		}
+		
+		&.right {
+			cursor: pointer;
 		}
 	}
 	
@@ -109,10 +116,13 @@ form.nostyle {
 	
 	/* chzn override */
 	.chzn-container {
-		.chzn-results li {
-			font-size: 11px;
-			line-height: $grid-vertical * 2;
-			padding: $grid-vertical / 2 $grid-horizontal / 2;
+		.chzn-results {
+			
+			li {
+				font-size: 11px;
+				line-height: $grid-vertical * 2;
+				padding: $grid-vertical / 2 $grid-horizontal / 2;
+			}
 		}
 	}
 	.chzn-container-active {
