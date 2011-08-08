@@ -100,7 +100,7 @@ html,body {
 
 .cms-content-header {
 	background-color: darken($color-widget-bg, 20%);
-	padding: $grid-vertical $grid-horizontal ($grid-vertical - 2) $grid-horizontal;	
+	padding: $grid-vertical $grid-horizontal ($grid-vertical - 2) $grid-horizontal * 2;	
 	height: $grid-vertical * 4;
 	z-index: 60;
 	border-bottom: 2px solid darken($color-widget-bg, 35%);

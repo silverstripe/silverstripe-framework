@@ -26,7 +26,7 @@
 		<% control MainMenu %>
 			<li class="$LinkingMode $FirstLast <% if LinkingMode == 'current' %>opened<% end_if %>" id="Menu-$Code">
 				<a href="$Link">
-					<span class="icon icon-24 icon-{$Code.LowerCase}">&nbsp;</span>
+					<span class="icon icon-16 icon-{$Code.LowerCase}">&nbsp;</span>
 					<span class="text">$Title</span>
 				</a>
 				

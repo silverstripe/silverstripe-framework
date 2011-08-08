@@ -1,43 +1,60 @@
 /**
  * Helper SCSS file for generating sprites for the interface.
  *
-
+ * S
  */
 @import "compass/utilities/sprites/base";
 
 $icon24: sprite-map("icons/24x24/*.png");
+$icon16: sprite-map("icons/16x16/*.png");
 
-.icon-24 { 
-	background: $icon24;
+
+@mixin icons($sprite) {
+	background: $sprite;
+	
+	&.icon-assetadmin {
+		@include sprite($sprite, "picture");
+	}
+	&.icon-cmsmain {
+		@include sprite($sprite, "pencil");
+	}
+	&.icon-cmspagescontroller {
+		@include sprite($sprite, "network");
+	}
+	&.icon-cmssettingscontroller {
+		@include sprite($sprite, "gears");
+	}
+	&.icon-securityadmin {
+		@include sprite($sprite, "community");
+	}
+	&.icon-reportadmin {
+		@include sprite($sprite, "pie-chart");
+	}
+	&.icon-commentadmin {
+		@include sprite($sprite, "blog");
+	}
+	&.icon-help {
+		@include sprite($sprite, "information");
+	}
+}
+
+
+.icon {
 	text-indent: -9999px;
 	border: none;
 	outline: none;
 	
-	width: 24px;
-	height: 24px;
+	&.icon-24 { 
+		width: 24px;
+		height: 24px;
 	
-	&.icon-assetadmin {
-		@include sprite($icon24, "picture");
+		@include icons($icon24);
 	}
-	&.icon-cmsmain {
-		@include sprite($icon24, "pencil");
-	}
-	&.icon-cmspagescontroller {
-		@include sprite($icon24, "network");
-	}
-	&.icon-cmssettingscontroller {
-		@include sprite($icon24, "gears");
-	}
-	&.icon-securityadmin {
-		@include sprite($icon24, "community");
-	}
-	&.icon-reportadmin {
-		@include sprite($icon24, "pie-chart");
-	}
-	&.icon-commentadmin {
-		@include sprite($icon24, "blog");
-	}
-	&.icon-help {
-		@include sprite($icon24, "information");
+	
+	&.icon-16 {
+		width: 16px;
+		height: 16px;
+		
+		@include icons($icon16);
 	}
 }

@@ -30,17 +30,26 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 /** ---------------------------------------------------- Clear the properties of sub form fields.   Often needed for nested form fields and  ----------------------------------------------------- */
 /** ---------------------------------------------------- Double tone borders  http://daverupert.com/2011/06/two-tone-borders-with-css3/ ----------------------------------------------------- */
 /** ----------------------------- Sprite images ----------------------------- */
-/** Helper SCSS file for generating sprites for the interface. 
- */
-.icon-24 { background: url('../images/icons/24x24-sba30d25a74.png'); text-indent: -9999px; border: none; outline: none; width: 24px; height: 24px; }
-.icon-24.icon-assetadmin { background-position: 0 -192px; }
-.icon-24.icon-cmsmain { background-position: 0 -168px; }
-.icon-24.icon-cmspagescontroller { background-position: 0 -144px; }
-.icon-24.icon-cmssettingscontroller { background-position: 0 -72px; }
-.icon-24.icon-securityadmin { background-position: 0 -24px; }
-.icon-24.icon-reportadmin { background-position: 0 -216px; }
-.icon-24.icon-commentadmin { background-position: 0 0; }
-.icon-24.icon-help { background-position: 0 -120px; }
+/** Helper SCSS file for generating sprites for the interface.  S */
+.icon { text-indent: -9999px; border: none; outline: none; }
+.icon.icon-24 { width: 24px; height: 24px; background: url('../images/icons/24x24-sba30d25a74.png'); }
+.icon.icon-24.icon-assetadmin { background-position: 0 -192px; }
+.icon.icon-24.icon-cmsmain { background-position: 0 -168px; }
+.icon.icon-24.icon-cmspagescontroller { background-position: 0 -144px; }
+.icon.icon-24.icon-cmssettingscontroller { background-position: 0 -72px; }
+.icon.icon-24.icon-securityadmin { background-position: 0 -24px; }
+.icon.icon-24.icon-reportadmin { background-position: 0 -216px; }
+.icon.icon-24.icon-commentadmin { background-position: 0 0; }
+.icon.icon-24.icon-help { background-position: 0 -120px; }
+.icon.icon-16 { width: 16px; height: 16px; background: url('../images/icons/16x16-s4d33bad4d2.png'); }
+.icon.icon-16.icon-assetadmin { background-position: 0 -128px; }
+.icon.icon-16.icon-cmsmain { background-position: 0 -112px; }
+.icon.icon-16.icon-cmspagescontroller { background-position: 0 -96px; }
+.icon.icon-16.icon-cmssettingscontroller { background-position: 0 -48px; }
+.icon.icon-16.icon-securityadmin { background-position: 0 -16px; }
+.icon.icon-16.icon-reportadmin { background-position: 0 -144px; }
+.icon.icon-16.icon-commentadmin { background-position: 0 0; }
+.icon.icon-16.icon-help { background-position: 0 -80px; }
 
 /** ----------------------------- CMS Components ------------------------------ */
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
@@ -200,7 +209,7 @@ li.class-ErrorPage a .jstree-pageicon { background-position: 0 -112px; }
 .cms-menu-list li a { display: block; height: 24px; line-height: 24px; font-size: 12px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-shadow: #bfcad2 1px 1px 0; color: #1f1f1f; padding: 7px 5px 7px 8px; background-color: #b0bec7; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #8ca1ae)); background-image: -webkit-linear-gradient(#b0bec7, #8ca1ae); background-image: -moz-linear-gradient(#b0bec7, #8ca1ae); background-image: -o-linear-gradient(#b0bec7, #8ca1ae); background-image: -ms-linear-gradient(#b0bec7, #8ca1ae); background-image: linear-gradient(#b0bec7, #8ca1ae); border-top: 1px solid #ced7dc; border-bottom: 1px solid #748d9d; }
 .cms-menu-list li a:hover { text-decoration: none; background-color: #b6c3cb; border-bottom: 1px solid #8399a7; color: #2c2c2c; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #bfcad2), color-stop(100%, #b0bec7)); background-image: -webkit-linear-gradient(#bfcad2, #b0bec7); background-image: -moz-linear-gradient(#bfcad2, #b0bec7); background-image: -o-linear-gradient(#bfcad2, #b0bec7); background-image: -ms-linear-gradient(#bfcad2, #b0bec7); background-image: linear-gradient(#bfcad2, #b0bec7); }
 .cms-menu-list li a:focus, .cms-menu-list li a:active { border-top: 1px solid #a1b2bc; text-decoration: none; background-color: #a1b2bc; color: #393939; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #92a5b2), color-stop(100%, #a1b2bc)); background-image: -webkit-linear-gradient(#92a5b2, #a1b2bc); background-image: -moz-linear-gradient(#92a5b2, #a1b2bc); background-image: -o-linear-gradient(#92a5b2, #a1b2bc); background-image: -ms-linear-gradient(#92a5b2, #a1b2bc); background-image: linear-gradient(#92a5b2, #a1b2bc); }
-.cms-menu-list li a .icon { display: block; float: left; margin-right: 8px; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70); opacity: 0.7; }
+.cms-menu-list li a .icon { display: block; float: left; margin: 4px 10px 0 4px; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70); opacity: 0.7; }
 .cms-menu-list li a .text { display: block; }
 .cms-menu-list li.current a { color: white; text-shadow: #1e5270 0 -1px 0; border-top: 1px solid #55a4d2; border-bottom: 1px solid #1e5270; background-color: #338dc1; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #338dc1), color-stop(100%, #287099)); background-image: -webkit-linear-gradient(#338dc1, #287099); background-image: -moz-linear-gradient(#338dc1, #287099); background-image: -o-linear-gradient(#338dc1, #287099); background-image: -ms-linear-gradient(#338dc1, #287099); background-image: linear-gradient(#338dc1, #287099); }
 .cms-menu-list li.current ul { border-top: 1px solid #1e5270; }
@@ -315,7 +324,7 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form { display: -moz-inline-box; -moz-box-orient: vertical; display: inline-block; vertical-align: middle; *vertical-align: auto; }
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form { *display: inline; }
 
-.cms-content-header { background-color: #b0bec7; padding: 8px 8px 6px 8px; height: 32px; z-index: 60; border-bottom: 2px solid #8399a7; -moz-box-shadow: #eceff1 0 16px 16px; -webkit-box-shadow: #eceff1 0 16px 16px; -o-box-shadow: #eceff1 0 16px 16px; box-shadow: #eceff1 0 16px 16px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ced7dc), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#ced7dc, #92a5b2); background-image: -moz-linear-gradient(#ced7dc, #92a5b2); background-image: -o-linear-gradient(#ced7dc, #92a5b2); background-image: -ms-linear-gradient(#ced7dc, #92a5b2); background-image: linear-gradient(#ced7dc, #92a5b2); }
+.cms-content-header { background-color: #b0bec7; padding: 8px 8px 6px 16px; height: 32px; z-index: 60; border-bottom: 2px solid #8399a7; -moz-box-shadow: #eceff1 0 16px 16px; -webkit-box-shadow: #eceff1 0 16px 16px; -o-box-shadow: #eceff1 0 16px 16px; box-shadow: #eceff1 0 16px 16px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ced7dc), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#ced7dc, #92a5b2); background-image: -moz-linear-gradient(#ced7dc, #92a5b2); background-image: -o-linear-gradient(#ced7dc, #92a5b2); background-image: -ms-linear-gradient(#ced7dc, #92a5b2); background-image: linear-gradient(#ced7dc, #92a5b2); }
 .cms-content-header h2 { float: left; padding: 8px 8px 0 0; font-size: 12px; line-height: 24px; font-weight: bold; text-shadow: #ced7dc 1px 1px 0; width: 176px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
 .cms-content-header > div { width: 9999em; overflow: hidden; }
 .cms-content-header .cms-content-header-tabs { float: left; }
