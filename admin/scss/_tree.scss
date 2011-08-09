@@ -6,18 +6,190 @@
  * but we need it earlier in order to correctly display the uninitialized tree.
  */
 
-.jstree {
-	ul {
+.cms {
+	.jstree {
+		ul {
+			display: block;
+			margin: 0;
+			padding: 0;
+			background: none;
+			list-style-type: none;
+		}
+		li {
+			display: block;
+			margin: 0;
+			padding: 0;
+			list-style-type: none;
+			display: block;
+			min-height: 18px;
+			line-height: 18px;
+			white-space: nowrap;
+			margin-left: 18px;
+			min-width: 18px;
+		}
+		ins {
+			display: inline-block;
+			text-decoration: none;
+			width: 18px;
+			height: 18px;
+			margin: 0 0 0 0;
+			padding: 0;
+			float: left;
+		}
+		a {
+			display: inline-block;
+			line-height: 16px;
+			height: 16px;
+			color: black;
+			white-space: nowrap;
+			text-decoration: none;
+			padding: 1px 2px;
+			margin: 0;
+			border: 1px solid #fff;
+			
+			&:focus,
+			&:active,
+			&:hover {
+				outline: none;
+				text-decoration: none;
+				cursor: pointer;
+				text-shadow: none;
+			}
+			> {
+				ins {
+					height: 16px;
+					width: 16px;
+				}
+				.jstree-icon {
+					margin-right: 3px;
+				}
+
+			}
+
+		}
+		li {
+			&.jstree-open > ul {
+				display: block;
+			}
+			&.jstree-closed > ul {
+				display: none;
+			}
+
+		}
+		li.disabled a {
+			color: #aaaaaa;
+		}
+
+	}
+
+	.jstree-rtl {
+		a > .jstree-icon {
+			margin-left: 3px;
+			margin-right: 0;
+		}
+		li {
+			margin-left: 0;
+			margin-right: 18px;
+		}
+
+	}
+
+	.jstree-rtl > ul > li {
+		margin-right: 0px;
+	}
+
+	.jstree > ul > li {
+		margin-left: 0px;
+	}
+
+	#vakata-dragged {
+		display: block;
+		margin: 0 0 0 0;
+		padding: 4px 4px 4px 24px;
+		position: absolute;
+		top: -2000px;
+		line-height: 16px;
+		z-index: 10000;
+	}
+	#vakata-contextmenu {
+		display: block;
+		visibility: hidden;
+		left: 0;
+		top: -200px;
+		position: absolute;
+		margin: 0;
+		padding: 0;
+		min-width: 180px;
+		background: #ebebeb;
+		border: 1px solid silver;
+		z-index: 10000; *width:180px;
+	}
+	#vakata-contextmenu ul {
+		min-width: 180px; *width:180px;
+	}
+	#vakata-contextmenu ul, #vakata-contextmenu li {
+		margin: 0;
+		padding: 0;
+		list-style-type: none;
+		display: block;
+	}
+	#vakata-contextmenu li {
+		line-height: 20px;
+		min-height: 20px;
+		position: relative;
+		padding: 0px;
+	}
+	#vakata-contextmenu li a {
+		padding: 1px 6px;
+		line-height: 17px;
+		display: block;
+		text-decoration: none;
+		margin: 1px 1px 0 1px;
+	}
+	#vakata-contextmenu li ins {
+		float: left;
+		width: 16px;
+		height: 16px;
+		text-decoration: none;
+		margin-right: 2px;
+	}
+	#vakata-contextmenu li a:hover, #vakata-contextmenu li.vakata-hover > a {
+		background: gray;
+		color: white;
+	}
+	#vakata-contextmenu li ul {
+		display: none;
+		position: absolute;
+		top: -2px;
+		left: 100%;
+		background: #ebebeb;
+		border: 1px solid gray;
+	}
+	#vakata-contextmenu .right {
+		right: 100%;
+		left: auto;
+	}
+	#vakata-contextmenu .bottom {
+		bottom: -1px;
+		top: auto;
+	}
+	#vakata-contextmenu li.vakata-separator {
+		min-height: 0;
+		height: 1px;
+		line-height: 1px;
+		font-size: 1px;
+		overflow: hidden;
+		margin: 0 2px;
+		background: silver; /* border-top:1px solid #fefefe; */ padding:0;
+	}
+
+	.jstree ul, .jstree li {
 		display: block;
 		margin: 0 0 0 0;
 		padding: 0 0 0 0;
 		list-style-type: none;
 	}
-	li {
-		display: block;
-		margin: 0 0 0 0;
-		padding: 0 0 0 0;
-		list-style-type: none;
+	.jstree li {
 		display: block;
 		min-height: 18px;
 		line-height: 18px;
@@ -25,16 +197,25 @@
 		margin-left: 18px;
 		min-width: 18px;
 	}
-	ins {
+	.jstree-rtl li {
+		margin-left: 0;
+		margin-right: 18px;
+	}
+	.jstree > ul > li {
+		margin-left: 0px;
+	}
+	.jstree-rtl > ul > li {
+		margin-right: 0px;
+	}
+	.jstree ins {
 		display: inline-block;
 		text-decoration: none;
 		width: 18px;
 		height: 18px;
 		margin: 0 0 0 0;
 		padding: 0;
-		float: left;
 	}
-	a {
+	.jstree a {
 		display: inline-block;
 		line-height: 16px;
 		height: 16px;
@@ -43,331 +224,159 @@
 		text-decoration: none;
 		padding: 1px 2px;
 		margin: 0;
-		&:focus {
-			outline: none;
-		}
-		> {
-			ins {
-				height: 16px;
-				width: 16px;
-			}
-			.jstree-icon {
-				margin-right: 3px;
-			}
-
-		}
-
 	}
-	li {
-		&.jstree-open > ul {
-			display: block;
-		}
-		&.jstree-closed > ul {
-			display: none;
-		}
-
+	.jstree a:focus {
+		outline: none;
 	}
-	li.disabled a {
-		color: #aaaaaa;
+	.jstree a > ins {
+		height: 16px;
+		width: 16px;
 	}
-
-}
-
-.jstree-rtl {
-	a > .jstree-icon {
+	.jstree a > .jstree-icon {
+		margin-right: 3px;
+	}
+	.jstree-rtl a > .jstree-icon {
 		margin-left: 3px;
 		margin-right: 0;
 	}
-	li {
-		margin-left: 0;
-		margin-right: 18px;
+	li.jstree-open > ul {
+		display: block;
+	}
+	li.jstree-closed > ul {
+		display: none;
+	}
+	#vakata-dragged ins {
+		display: block;
+		text-decoration: none;
+		width: 16px;
+		height: 16px;
+		margin: 0 0 0 0;
+		padding: 0;
+		position: absolute;
+		top: 4px;
+		left: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+		-webkit-border-radius: 4px;
+	}
+	#vakata-dragged .jstree-ok {
+		background: green;
+	}
+	#vakata-dragged .jstree-invalid {
+		background: red;
+	}
+	#jstree-marker {
+		padding: 0;
+		margin: 0;
+		font-size: 12px;
+		overflow: hidden;
+		height: 12px;
+		width: 8px;
+		position: absolute;
+		top: -30px;
+		z-index: 10001;
+		background-repeat: no-repeat;
+		display: none;
+		background-color: transparent;
+		text-shadow: 1px 1px 1px white;
+		color: black;
+		line-height: 10px;
+	}
+	#jstree-marker-line {
+		padding: 0;
+		margin: 0;
+		line-height: 0%;
+		font-size: 1px;
+		overflow: hidden;
+		height: 1px;
+		width: 100px;
+		position: absolute;
+		top: -30px;
+		z-index: 10000;
+		background-repeat: no-repeat;
+		display: none;
+		background-color: #456c43;
+		cursor: pointer;
+		border: 1px solid #eeeeee;
+		border-left: 0;
+		-moz-box-shadow: 0px 0px 2px #666;
+		-webkit-box-shadow: 0px 0px 2px #666;
+		box-shadow: 0px 0px 2px #666;
+		-moz-border-radius: 1px;
+		border-radius: 1px;
+		-webkit-border-radius: 1px;
+	}
+	.jstree .jstree-real-checkbox {
+		display: none;
+	}
+	.jstree-themeroller .ui-icon {
+		overflow: visible;
+	}
+	.jstree-themeroller a {
+		padding: 0 2px;
+	}
+	.jstree-themeroller .jstree-no-icon {
+		display: none;
+	}
+	.jstree .jstree-wholerow-real {
+		position: relative;
+		z-index: 1;
+	}
+	.jstree .jstree-wholerow-real li {
+		cursor: pointer;
+	}
+	.jstree .jstree-wholerow-real a {
+		border-left-color: transparent !important;
+		border-right-color: transparent !important;
+	}
+	.jstree .jstree-wholerow {
+		position: relative;
+		z-index: 0;
+		height: 0;
+	}
+	.jstree .jstree-wholerow ul, .jstree .jstree-wholerow li {
+		width: 100%;
+	}
+	.jstree .jstree-wholerow, .jstree .jstree-wholerow ul, .jstree .jstree-wholerow li, .jstree .jstree-wholerow a {
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+	.jstree .jstree-wholerow, .jstree .jstree-wholerow ul, .jstree .jstree-wholerow li {
+		background: transparent !important;
+	}
+	.jstree .jstree-wholerow ins, .jstree .jstree-wholerow span, .jstree .jstree-wholerow input {
+		display: none !important;
+	}
+	.jstree .jstree-wholerow a, .jstree .jstree-wholerow a:hover {
+		text-indent: -9999px !important;
+		width: 100%;
+		padding: 0 !important;
+		border-right-width: 0px !important;
+		border-left-width: 0px !important;
+	}
+	.jstree .jstree-wholerow-span {
+		position: absolute;
+		left: 0;
+		margin: 0px;
+		padding: 0;
+		height: 18px;
+		border-width: 0;
+		padding: 0;
+		z-index: 0;
 	}
 
-}
-
-.jstree-rtl > ul > li {
-	margin-right: 0px;
-}
-
-.jstree > ul > li {
-	margin-left: 0px;
-}
-
-#vakata-dragged {
-	display: block;
-	margin: 0 0 0 0;
-	padding: 4px 4px 4px 24px;
-	position: absolute;
-	top: -2000px;
-	line-height: 16px;
-	z-index: 10000;
-}
-#vakata-contextmenu {
-	display: block;
-	visibility: hidden;
-	left: 0;
-	top: -200px;
-	position: absolute;
-	margin: 0;
-	padding: 0;
-	min-width: 180px;
-	background: #ebebeb;
-	border: 1px solid silver;
-	z-index: 10000; *width:180px;
-}
-#vakata-contextmenu ul {
-	min-width: 180px; *width:180px;
-}
-#vakata-contextmenu ul, #vakata-contextmenu li {
-	margin: 0;
-	padding: 0;
-	list-style-type: none;
-	display: block;
-}
-#vakata-contextmenu li {
-	line-height: 20px;
-	min-height: 20px;
-	position: relative;
-	padding: 0px;
-}
-#vakata-contextmenu li a {
-	padding: 1px 6px;
-	line-height: 17px;
-	display: block;
-	text-decoration: none;
-	margin: 1px 1px 0 1px;
-}
-#vakata-contextmenu li ins {
-	float: left;
-	width: 16px;
-	height: 16px;
-	text-decoration: none;
-	margin-right: 2px;
-}
-#vakata-contextmenu li a:hover, #vakata-contextmenu li.vakata-hover > a {
-	background: gray;
-	color: white;
-}
-#vakata-contextmenu li ul {
-	display: none;
-	position: absolute;
-	top: -2px;
-	left: 100%;
-	background: #ebebeb;
-	border: 1px solid gray;
-}
-#vakata-contextmenu .right {
-	right: 100%;
-	left: auto;
-}
-#vakata-contextmenu .bottom {
-	bottom: -1px;
-	top: auto;
-}
-#vakata-contextmenu li.vakata-separator {
-	min-height: 0;
-	height: 1px;
-	line-height: 1px;
-	font-size: 1px;
-	overflow: hidden;
-	margin: 0 2px;
-	background: silver; /* border-top:1px solid #fefefe; */ padding:0;
-}
-
-.jstree ul, .jstree li {
-	display: block;
-	margin: 0 0 0 0;
-	padding: 0 0 0 0;
-	list-style-type: none;
-}
-.jstree li {
-	display: block;
-	min-height: 18px;
-	line-height: 18px;
-	white-space: nowrap;
-	margin-left: 18px;
-	min-width: 18px;
-}
-.jstree-rtl li {
-	margin-left: 0;
-	margin-right: 18px;
-}
-.jstree > ul > li {
-	margin-left: 0px;
-}
-.jstree-rtl > ul > li {
-	margin-right: 0px;
-}
-.jstree ins {
-	display: inline-block;
-	text-decoration: none;
-	width: 18px;
-	height: 18px;
-	margin: 0 0 0 0;
-	padding: 0;
-}
-.jstree a {
-	display: inline-block;
-	line-height: 16px;
-	height: 16px;
-	color: black;
-	white-space: nowrap;
-	text-decoration: none;
-	padding: 1px 2px;
-	margin: 0;
-}
-.jstree a:focus {
-	outline: none;
-}
-.jstree a > ins {
-	height: 16px;
-	width: 16px;
-}
-.jstree a > .jstree-icon {
-	margin-right: 3px;
-}
-.jstree-rtl a > .jstree-icon {
-	margin-left: 3px;
-	margin-right: 0;
-}
-li.jstree-open > ul {
-	display: block;
-}
-li.jstree-closed > ul {
-	display: none;
-}
-#vakata-dragged ins {
-	display: block;
-	text-decoration: none;
-	width: 16px;
-	height: 16px;
-	margin: 0 0 0 0;
-	padding: 0;
-	position: absolute;
-	top: 4px;
-	left: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-	-webkit-border-radius: 4px;
-}
-#vakata-dragged .jstree-ok {
-	background: green;
-}
-#vakata-dragged .jstree-invalid {
-	background: red;
-}
-#jstree-marker {
-	padding: 0;
-	margin: 0;
-	font-size: 12px;
-	overflow: hidden;
-	height: 12px;
-	width: 8px;
-	position: absolute;
-	top: -30px;
-	z-index: 10001;
-	background-repeat: no-repeat;
-	display: none;
-	background-color: transparent;
-	text-shadow: 1px 1px 1px white;
-	color: black;
-	line-height: 10px;
-}
-#jstree-marker-line {
-	padding: 0;
-	margin: 0;
-	line-height: 0%;
-	font-size: 1px;
-	overflow: hidden;
-	height: 1px;
-	width: 100px;
-	position: absolute;
-	top: -30px;
-	z-index: 10000;
-	background-repeat: no-repeat;
-	display: none;
-	background-color: #456c43;
-	cursor: pointer;
-	border: 1px solid #eeeeee;
-	border-left: 0;
-	-moz-box-shadow: 0px 0px 2px #666;
-	-webkit-box-shadow: 0px 0px 2px #666;
-	box-shadow: 0px 0px 2px #666;
-	-moz-border-radius: 1px;
-	border-radius: 1px;
-	-webkit-border-radius: 1px;
-}
-.jstree .jstree-real-checkbox {
-	display: none;
-}
-.jstree-themeroller .ui-icon {
-	overflow: visible;
-}
-.jstree-themeroller a {
-	padding: 0 2px;
-}
-.jstree-themeroller .jstree-no-icon {
-	display: none;
-}
-.jstree .jstree-wholerow-real {
-	position: relative;
-	z-index: 1;
-}
-.jstree .jstree-wholerow-real li {
-	cursor: pointer;
-}
-.jstree .jstree-wholerow-real a {
-	border-left-color: transparent !important;
-	border-right-color: transparent !important;
-}
-.jstree .jstree-wholerow {
-	position: relative;
-	z-index: 0;
-	height: 0;
-}
-.jstree .jstree-wholerow ul, .jstree .jstree-wholerow li {
-	width: 100%;
-}
-.jstree .jstree-wholerow, .jstree .jstree-wholerow ul, .jstree .jstree-wholerow li, .jstree .jstree-wholerow a {
-	margin: 0 !important;
-	padding: 0 !important;
-}
-.jstree .jstree-wholerow, .jstree .jstree-wholerow ul, .jstree .jstree-wholerow li {
-	background: transparent !important;
-}
-.jstree .jstree-wholerow ins, .jstree .jstree-wholerow span, .jstree .jstree-wholerow input {
-	display: none !important;
-}
-.jstree .jstree-wholerow a, .jstree .jstree-wholerow a:hover {
-	text-indent: -9999px !important;
-	width: 100%;
-	padding: 0 !important;
-	border-right-width: 0px !important;
-	border-left-width: 0px !important;
-}
-.jstree .jstree-wholerow-span {
-	position: absolute;
-	left: 0;
-	margin: 0px;
-	padding: 0;
-	height: 18px;
-	border-width: 0;
-	padding: 0;
-	z-index: 0;
-}
-
-// Custom styles
-.cms {
+	// Custom styles
 	.jstree-apple.jstree-focused {
 		background: none;
+	
+		.jstree-apple > ul {
+			background: none;
+		}
 	}
-	.jstree-apple > ul {
-		background: none;
-	}
-}
 
-.jstree li {
-	line-height:  25px;
+	.jstree li {
+		line-height:  25px;
+	}
 }
 
 .cms-tree.jstree-apple {

@@ -36,11 +36,11 @@
 				if(!this.find('.toggle-collapse').length) this.append('<a class="toggle-collapse" href="#"><span>&laquo;</span></a>');
 
 				// Set panel width same as the content panel it contains. Assumes the panel has overflow: hidden.
-				this.setWidthExpanded(this.find('.cms-panel-content').width());
+				this.setWidthExpanded(this.find('.cms-panel-content').innerWidth());
 				
 				// Assumes the collasped width is indicated by the toggle, or by an optional collapsed view
 				var collapsedContent = this.find('.cms-panel-content-collapsed');
-				this.setWidthCollapsed(collapsedContent.length ? collapsedContent.widht() : this.find('.toggle-expand').width());
+				this.setWidthCollapsed(collapsedContent.length ? collapsedContent.innerWidth() : this.find('.toggle-expand').innerWidth());
 
 				this.togglePanel(!jQuery(this).hasClass('collapsed'));
 				

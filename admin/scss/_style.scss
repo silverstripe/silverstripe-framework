@@ -105,7 +105,7 @@ html,body {
 	z-index: 60;
 	border-bottom: 2px solid darken($color-widget-bg, 35%);
 
-	@include box-shadow($color-widget-bg 0 $grid-vertical*2 $grid-vertical*2);
+	@include box-shadow($color-widget-bg 0 $grid-vertical $grid-vertical*2);
 	@include background-image(
 		linear-gradient(darken($color-widget-bg, 10%), darken($color-widget-bg, 30%))
 	);
@@ -113,11 +113,11 @@ html,body {
 	h2 {
 		float: left;
 		padding: $grid-vertical $grid-horizontal 0 0;
-		font-size: $font-base-size;
+		font-size: $font-base-size + 2;
 		line-height: $grid-horizontal * 3;
 		font-weight: bold;
 		text-shadow: darken($color-widget-bg, 10%) 1px 1px 0;
-		width: $grid-horizontal * 22 /* 24 - (padding on each side) */;
+		width: $grid-horizontal * 21 /* 24 - (padding on each side + margin) */;
 		
 		@include hide-text-overflow();
 	}
@@ -163,19 +163,6 @@ html,body {
 			border-bottom: 2px solid $color-widget-bg;
 		}
 	}
-}
-
-/* --------------------------------------------------------
- * Content Tools is the sidebar on the left of the main content
- * panel
- */
-.cms-content-tools {
-	background-color: darken($color-widget-bg, 5%);
-	padding: $grid-vertical $grid-horizontal;	
-	width: $grid-horizontal * 22 /* 24 - padding */;
-	border-right: 1px solid darken($color-widget-bg, 5%);
-	overflow: auto;	
-	z-index: 60;
 }
 
 .cms-content {
@@ -237,6 +224,7 @@ html,body {
 	
 	span {
 		font-weight: bold;
+		font-size: 14px;
 		@include hide-text-overflow();
 	}
 }
@@ -247,7 +235,7 @@ html,body {
 	padding: 8px 4px 0 4px;
 	overflow: hidden;
 	line-height: 16px;
-	font-size: $font-base-size - 2;
+	font-size: $font-base-size - 1;
 	
 	.logout-link {
 		display: inline-block;
@@ -317,6 +305,8 @@ html,body {
 	margin: $grid-vertical $grid-horizontal;
 	text-align: right;
 	height: $grid-vertical*4;
+	z-index: 70;
+	
 	@include box-shadow($tab-panel-texture-color 0 $grid-vertical*-2 $grid-vertical*2);
 }
 
@@ -353,10 +343,6 @@ html,body {
  * -------------------------------------------- */
 
 .ModelAdmin {
-	.cms-content-tools {
-		width: $grid-horizontal * 24;
-	}
-	
 	// Disable by default, will be replaced by more intuitive column selection in new data grid
 	.ResultAssemblyBlock {
 		display: none;
@@ -421,39 +407,82 @@ html,body {
 	}
 }
 
+
+/* --------------------------------------------------------
+ * Content Tools is the sidebar on the left of the main content
+ * panel
+ */
 .cms-content-tools {
+	background-color: darken($color-widget-bg, 5%);
+	width: $grid-horizontal * 25;
+	border-right: 1px solid darken($color-widget-bg, 15%);
+	overflow: auto;	
+	z-index: 60;
+	
+	.cms-panel-header {
+		padding: 0 $grid-horizontal / 2;
+		margin: $grid-vertical $grid-horizontal * 1.5 0;
+		line-height: $grid-vertical * 3;
+		
+		@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 10%))
+	
+	}
+	
+	.cms-panel-content {
+		width: ($grid-horizontal * 20);
+		padding: $grid-vertical $grid-horizontal * 2;
+		
+		form {
+			width: $grid-horizontal * 20;
+		}
+	}
+
 	h3,h4,h5 {
 		font-weight: bold;
 		line-height: $grid-vertical * 2;
 	}
 	h3 {
-		font-size: $font-base-size + 2;
-		margin-left: -2px;
-		padding-left: 2px;
-		
-		@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 10%))
-	}
-	h4 {
 		font-size: $font-base-size + 1;
-	}
-	h5 {
-		font-size: $font-base-size;
 	}
 	
 	.field {
+		/* fields are more compressed in the sidebar */
 		label {
 			float: none;
 			width: auto;
+			padding: 0 $grid-vertical 0 0;
 		}
 		
 		.middleColumn {
-			margin-left: 0;
+			margin: 2px 0;
+		}
+		
+		input,
+		select,
+		textarea {
+			padding: ($grid-vertical - 2); /* taken 2px off the padding to realign with grid */
+		}
+		
+		/* smaller treedropdown */
+		.chzn-container-single .chzn-single  {
+			height: 26px;
+			line-height: 28px;
+		}
+		
+		.chzn-container-single .chzn-single div b {
+			background-position: 4px 2px;
 		}
 	}
 	
 	.fieldgroup {
 		.fieldgroup-field {
 			width: auto;
+			padding: 0;
+			
+			.field {
+				margin: 0;
+				padding: 0;
+			}
 		}
 	}
 }
@@ -611,7 +640,9 @@ form.member-profile-form {
 		.cms-panel-header {
 			@include rotate(-90deg);
 			position: relative;
-			top: 100px;
+			top: $grid-vertical * 10;
+			border: none;
+			padding: 0;
 		}
 	}
 	
