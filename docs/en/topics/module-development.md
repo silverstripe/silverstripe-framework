@@ -36,7 +36,7 @@ init() function on your module controller classes:
 	}
 
 
-This will use your_project/css/forum.css if it exists, otherwise it falls back to using forum/css/forum.css.
+This will use `<projectname>/css/forum.css` if it exists, otherwise it falls back to using `forum/css/forum.css`.
 
 ## Publication
 
@@ -46,10 +46,13 @@ adherence to conventions, writing documentation, and releasing updates. See [con
 ## Reference
 
 **How To:**
-*  [Add a link to your module in the main SilverStripe Admin Menu](/reference/leftandmain)
-**
-Useful Links:**
 
+*  [Add a link to your module in the main SilverStripe Admin Menu](/reference/leftandmain)
+
+**Useful Links:**
+
+*  [Modules](modules)
+*  [Module Release Process](module-release-process)
 *  [Debugging methods](/topics/debugging)
 *  [URL Variable Tools](/reference/urlvariabletools) - Lists a number of “page options” , “rendering tools” or “special
 URL variables” that you can use to debug your sapphire applications

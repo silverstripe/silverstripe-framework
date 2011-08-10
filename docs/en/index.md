@@ -48,7 +48,7 @@ Please read our [guide to contributing documentation](misc/contributing#writing-
 *  [RSS Feeds](reference/rssfeed)
 *  [Debugging](topics/debugging)
 *  [Errorhandling](topics/error-handling)
-*  [Testing Guide](topics/testing/testing-guide): Framework for automated testing like Unittests
+*  [Testing Guide](topics/testing/): Framework for automated testing like Unittests
 *  [Built-in Page Controls](reference/built-in-page-controls)
 *  [Execution Pipeline](reference/execution-pipeline): Tracking a request from director to template-rendering
 *  [Recipes/Howtos](howto/)

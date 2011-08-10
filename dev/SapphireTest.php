@@ -575,6 +575,45 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	} 
 	
 	/**
+	 * Backported from PHPUnit 3.4 in order to maintain backwards
+	 * compatibility: assertType() is deprecated in PHPUnit 3.5 (with PHP 5.2.7+),
+	 * but as SilverStripe 2.3 and 2.4 support PHP 5.1 we can't require it.
+	 */
+	public static function assertType($expected, $actual, $message = '') {
+      // PHPUnit_Util_DeprecatedFeature_Logger::log(
+      //   'assertType() will be removed in PHPUnit 3.6 and should no longer ' .
+      //   'be used. assertInternalType() should be used for asserting ' .
+      //   'internal types such as "integer" or "string" whereas ' .
+      //   'assertInstanceOf() should be used for asserting that an object is ' .
+      //   'an instance of a specified class or interface.'
+      // );
+
+      if (is_string($expected)) {
+          if (PHPUnit_Util_Type::isType($expected)) {
+              $constraint = new PHPUnit_Framework_Constraint_IsType(
+                $expected
+              );
+          }
+
+          else if (class_exists($expected) || interface_exists($expected)) {
+              $constraint = new PHPUnit_Framework_Constraint_IsInstanceOf(
+                $expected
+              );
+          }
+
+          else {
+              throw PHPUnit_Util_InvalidArgumentHelper::factory(
+                1, 'class or interface name'
+              );
+          }
+      } else {
+          throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'string');
+      }
+
+      self::assertThat($actual, $constraint, $message);
+  }
+	
+	/**
 	 * Helper function for the DOS matchers
 	 */
 	private function dataObjectArrayMatch($item, $match) {

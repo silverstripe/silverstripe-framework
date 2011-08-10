@@ -138,7 +138,7 @@ SVN:externals (also add your own general modules here, etc... etc... this should
 	SVN checkout http://sunny.SVNrepository.com/SVN/myaccountname/myfirstsite.com . 
 
 <div class="hint" markdown="1">
-	DOT at the end to check out files to current directory
+Add a DOT at the end to check out files to current directory
 </div>
 
 *  You should now have all your files on your webserver

@@ -2,22 +2,21 @@
 
 ## Introduction
 
-This page details notes on how to ensure that we develop secure SilverStripe applications. See [security](/topics/security) for
-the Silverstripe-class as a starting-point for most security-related functionality.
+This page details notes on how to ensure that we develop secure SilverStripe applications. See [security](/topics/security)
+for the Silverstripe-class as a starting-point for most security-related functionality.
 
-See our [contributing guidelines](/misc/contributing#reporting-security-issues) on how
-to report security issues.
+See our [contributing guidelines](/misc/contributing#reporting-security-issues) on how to report security issues.
 
 ## SQL Injection
 
 The [coding-conventions](/misc/coding-conventions) help guard against SQL injection attacks but still require developer
-dilligence: ensure that any variable you insert into a filter / sort / join clause has been escaped.
+diligence: ensure that any variable you insert into a filter / sort / join clause has been escaped.
 
 See [http://shiflett.org/articles/sql-injection](http://shiflett.org/articles/sql-injection).
 
 ### Automatic escaping
 
-Silverstripe automatically runs [addslashes()](http://php.net/addslashes) in DataObject::write() wherever possible. Data
+SilverStripe automatically runs [addslashes()](http://php.net/addslashes) in DataObject::write() wherever possible. Data
 is escaped when saving back to the database, not when writing to object-properties.
 
 *  DataObject::get_by_id()
@@ -29,8 +28,10 @@ is escaped when saving back to the database, not when writing to object-properti
 *  FormField->saveInto()
 *  DBField->saveInto()
 
-Note: It is NOT good practice to "be sure" and convert the data passed to the functions below manually. This might
+<div class="warning" markdown='1'>
+It is NOT good practice to "be sure" and convert the data passed to the functions below manually. This might
 result in *double escaping* and alters the actually saved data (e.g. by adding slashes to your content).
+</div>
 
 ### Manual escaping
 
@@ -106,8 +107,10 @@ XSS (Cross-Site-Scripting). With some basic guidelines, you can ensure your outp
 displaying a blog post in HTML from a trusted author, or escaping a search parameter from an untrusted visitor before
 redisplaying it).
 
+<div class="notice" markdown='1'>
 Note: SilverStripe templates do not remove tags, please use [strip_tags()](http://php.net/strip_tags) for this purpose
 or [sanitize](http://htmlpurifier.org/) it correctly.
+</div>
 
 See [http://shiflett.org/articles/foiling-cross-site-attacks](http://shiflett.org/articles/foiling-cross-site-attacks)
 for in-depth information about "Cross-Site-Scripting".
@@ -253,7 +256,7 @@ Template:
 Some rules of thumb:
 
 *  Don't concatenate URLs in a template.  It only works in extremely simple cases that usually contain bugs.
-*  Use *Controller::join_links()* to concatenate URLs.  It deals with querystrings and other such edge cases.
+*  Use *Controller::join_links()* to concatenate URLs.  It deals with query strings and other such edge cases.
 
 
 ## Cross-Site Request Forgery (CSRF)
@@ -292,7 +295,7 @@ Below is an example with different ways you would use this casting technique:
 	function CaseStudies() {
 	
 	   // cast an ID from URL parameters e.g. (mysite.com/home/action/ID)
-	   $anotherID = (int)Director::urlParams['ID'];
+	   $anotherID = (int)Director::urlParam['ID'];
 	
 	   // perform a calculation, the prerequisite being $anotherID must be an integer
 	   $calc = $anotherID + (5 - 2) / 2;
@@ -331,7 +334,6 @@ disallow certain filetypes.
 
 Example configuration for Apache2:
 
-	
 	<VirtualHost *:80>
 	  ...
 	  <LocationMatch assets/>
@@ -346,7 +348,6 @@ file in the assets directory.  This requires PHP to be loaded as an Apache modul
 
 **/assets/.htaccess**
 
-	
 	php_flag engine off
 	Options -ExecCGI -Includes -Indexes 
 

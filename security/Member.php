@@ -693,6 +693,24 @@ class Member extends DataObject {
 			MemberPassword::log($this);
 		}
 	}
+	
+	/**
+	 * If any admin groups are requested, deny the whole save operation.
+	 * 
+	 * @param Array $ids Database IDs of Group records
+	 * @return boolean
+	 */
+	function onChangeGroups($ids) {
+		// Filter out admin groups to avoid privilege escalation, 
+		// unless the current user is an admin already
+		if(!Permission::checkMember($this, 'ADMIN')) {
+			$adminGroups = Permission::get_groups_by_permission('ADMIN');
+			$adminGroupIDs = ($adminGroups) ? $adminGroups->column('ID') : array();
+			return count(array_intersect($ids, $adminGroupIDs)) == 0;
+		} else {
+			return true;
+		}
+	}
 
 
 	/**

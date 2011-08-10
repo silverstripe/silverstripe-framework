@@ -7,6 +7,11 @@ to the *$db* array and how to add an image using the *$has_one* array and so cre
 the *Image* table by storing the id of the respective *Image* in the first table. This tutorial explores all this
 relations between [DataObjects](/topics/datamodel#relations) and the way to manage them easily.
 
+<div class="notice" markdown='1'>
+	I'm using the default tutorial theme in the following examples so the templates may vary or you may need to change
+	the template code in this example to fit your theme
+</div>
+
 ## What are we working towards?
 
 To simulate these relations between objects, we are going to simulate the management via the CMS of the **[Google Summer
@@ -79,9 +84,11 @@ The first step is to create the student and project objects.
 	
 		function getCMSFields_forPopup() {
 			$fields = new FieldSet();
+			
 			$fields->push( new TextField( 'FirstName', 'First Name' ) );
 			$fields->push( new TextField( 'Lastname' ) );
 			$fields->push( new TextField( 'Nationality' ) );
+			
 			return $fields;
 		}
 	
@@ -262,6 +269,8 @@ The first step is to create the mentor object and set the relation with the *Stu
 	}
 	class Mentor_Controller extends Page_Controller {}
 
+*tutorial/code/Student.php*
+
 	:::php
 	class Student extends DataObject {
 	
@@ -278,6 +287,8 @@ This code will create a relationship between the *Student* table and the *Mentor
 respective *Mentor* in the *Student* table.
 
 The second step is to add the table in the method *getCMSFields* which will allow you to manage the *has_many* relation.
+
+*tutorial/code/Mentor.php*
 
 	:::php
 	class Mentor extends Page {
@@ -308,6 +319,7 @@ The second step is to add the table in the method *getCMSFields* which will allo
 		}
 	
 	}
+	class Mentor_Controller extends Page_Controller {}
 
 To know more about the parameters of the *HasManyComplexTableField* constructor, [check](#project_-_student_relation)
 those of the *HasOneComplexTableField* constructor.
@@ -356,6 +368,8 @@ The first step is to create the module object and set the relation with the *Pro
 *tutorial/code/Module.php*
 
 	:::php
+	<?php
+	
 	class Module extends DataObject {
 	
 	   static $db = array(
@@ -373,6 +387,8 @@ The first step is to create the module object and set the relation with the *Pro
 	   }
 	
 	}
+
+*tutorial/code/Project.php*
 
 	:::php
 	class Project extends Page {
@@ -424,9 +440,10 @@ To know more about the parameters of the *ManyManyComplexTableField* constructor
 [check](#project_-_student_relation) those of the *HasOneComplexTableField*
 constructor.
 
-Don't forget to rebuild the database using
-[http://localhost:3000/db/build?flush=1](http://localhost:3000/db/build?flush=1) before you proceed to the next part of
-this tutorial.
+<div class="tip" markdown='1'>
+	Don't forget to rebuild the database using *dev/build?flush=1* before you 
+	proceed to the next part of this tutorial.
+</div>
 
 Select now one of the *Project* page, go in the tab panel *Modules* and add all the modules listed
 [above](#what-are-we-working-towards) by clicking on the link **Add A
@@ -459,7 +476,7 @@ We will see in this section how to display all these relations but also how to c
 
 For every kind of *Page* or *DataObject*, you can access to their relations thanks to the **control** loop.
 
-**__1. GSOC Projects__**
+**1. GSOC Projects**
 
 Let's start with the *ProjectsHolder* page created before. For this template, we are will display the same table than
 [above](#what-are-we-working-towards).
@@ -469,94 +486,79 @@ Let's start with the *ProjectsHolder* page created before. For this template, we
 *tutorial/templates/Layout/ProjectsHolder.ss*
 
 	:::ss
-	<div class="typography">
-	    <% if Menu(2) %>
-	        <% include SideBar %>
-	        <div id="Content">
-	    <% end_if %>
-	
-	    <% if Level(2) %>
+	<% include Menu2 %>
+
+	<div id="Content" class="typography">
+		<% if Level(2) %>
 	        <% include BreadCrumbs %>
 	    <% end_if %>
-	
-	        <h2>$Title</h2>
-	
-	        $Content
-	
-	        <table>
-	            <thead>
+
+		$Content
+
+		<table>
+	        <thead>
+	            <tr>
+	                <th>Project</th>
+	                <th>Student</th>
+	                <th>Mentor</th>
+	                <th>Modules</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	            <% control Children %>
 	                <tr>
-	                    <th>Project</th>
-	                    <th>Student</th>
-	                    <th>Mentor</th>
-	                    <th>Modules</th>
+	                    <td>$Title</td>
+	                    <td>
+	                        <% if MyStudent %>
+	                            <% control MyStudent %>
+	                                $FirstName $Lastname
+	                            <% end_control %>
+	                        <% else %>
+	                            No Student
+	                        <% end_if %>
+	                    </td>
+	                    <td>
+	                        <% if MyStudent %>
+	                            <% control MyStudent %>
+	                                <% if MyMentor %>
+	                                    <% control MyMentor %>
+	                                        $FirstName $Lastname
+	                                    <% end_control %>
+	                                <% else %>
+	                                    No Mentor
+	                                <% end_if %>
+	                            <% end_control %>
+	                        <% else %>
+	                            No Mentor
+	                        <% end_if %>
+	                    </td>
+	                    <td>
+	                        <% if Modules %>
+	                            <% control Modules %>
+	                                $Name &nbsp;
+	                            <% end_control %>
+	                        <% else %>
+	                            No Modules
+	                        <% end_if %>
+	                    </td>
 	                </tr>
-	            </thead>
-	            <tbody>
-	                <% control Children %>
-	                    <tr>
-	                        <td>$Title</td>
-	                        <td>
-	                            <% if MyStudent %>
-	                                <% control MyStudent %>
-	                                    $FirstName $Lastname
-	                                <% end_control %>
-	                            <% else %>
-	                                No Student
-	                            <% end_if %>
-	                        </td>
-	                        <td>
-	                            <% if MyStudent %>
-	                                <% control MyStudent %>
-	                                    <% if MyMentor %>
-	                                        <% control MyMentor %>
-	                                            $FirstName $Lastname
-	                                        <% end_control %>
-	                                    <% else %>
-	                                        No Mentor
-	                                    <% end_if %>
-	                                <% end_control %>
-	                            <% else %>
-	                                No Mentor
-	                            <% end_if %>
-	                        </td>
-	                        <td>
-	                            <% if Modules %>
-	                                <% control Modules %>
-	                                    $Name &nbsp;
-	                                <% end_control %>
-	                            <% else %>
-	                                No Modules
-	                            <% end_if %>
-	                        </td>
-	                    </tr>
-	                <% end_control %>
-	            </tbody>
-	        </table>
-	
-	        $Form
-	        $PageComments
-	
-	    <% if Menu(2) %>
-	        </div>
-	    <% end_if %>
+	            <% end_control %>
+	        </tbody>
+	    </table>
+
+		$Form
+
 	</div>
 
 
-*tutorial/templates/Includes/SideBar.ss*
- You might want to move the include above the typography div in your layouts to get rid of the bullets.
-
-	:::ss
-	<% if Menu(2) %>
-	  <ul id="Menu2">
-		<% control Menu(2) %>
-		  <li class="$LinkingMode"><a href="$Link" title="Go to the &quot;{$Title}&quot; page">$MenuTitle</a></li>
-		<% end_control %>
-	  </ul>
-	<% end_if %>
+<div class="notice" markdown='1'>
+	If you are using the blackcandy template: You might want to move the `<% include Sidebar %>`
+	(tutorial/templates/Includes/SideBar.ss) include in the *tutorial/templates/Layout/Page.ss* template above
+	the typography div to get rid of the bullets
+</div>
 
 
-**__2. Project__**
+**2. Project**
 
 We know now how to easily access and show [relations](../topics/datamodel#relations) between *DataObject* in a template.
 
@@ -567,62 +569,51 @@ We can now do the same for every *Project* page by creating its own template.
 *tutorial/templates/Layout/Project.ss*
 
 	:::ss
-	<div class="typography">
-	    <% if Menu(2) %>
-	        <% include SideBar %>
-	        <div id="Content">
-	    <% end_if %>
-	
-	    <% if Level(2) %>
+	<% include Menu2 %>
+
+	<div id="Content" class="typography">
+		<% if Level(2) %>
 	        <% include BreadCrumbs %>
 	    <% end_if %>
-	
-	        <h2>$Title</h2>
-	
-	        $Content
-	
-	        <h3>Student</h3>
-		
-	        <% if MyStudent %>
-	            <% control MyStudent %>
-	                <p>First Name: <strong>$FirstName</strong></p>
-	                <p>Lastname: <strong>$Lastname</strong></p>
-	                <p>Nationality: <strong>$Nationality</strong></p>
-	
-	                <h3>Mentor</h3>
-			
-	                <% if MyMentor %>
-	                    <% control MyMentor %>
-	                        <p>First Name: <strong>$FirstName</strong></p>
-	                        <p>Lastname: <strong>$Lastname</strong></p>
-	                        <p>Nationality: <strong>$Nationality</strong></p>
-	                    <% end_control %>
-	                <% else %>
-	                    <p>This student doesn't have any mentor.</p>
-	                <% end_if %>
-	            <% end_control %>
-	        <% else %>
-	            <p>There is no any student working on this project.</p>
-	        <% end_if %>
-	
-	        <h3>Modules</h3>
-	
-	        <% if Modules %>
-	            <ul>
-	                <% control Modules %>
-	                    <li>$Name</li>
+
+		$Content
+
+		<% if MyStudent %>
+	        <% control MyStudent %>
+	            <p>First Name: <strong>$FirstName</strong></p>
+	            <p>Lastname: <strong>$Lastname</strong></p>
+	            <p>Nationality: <strong>$Nationality</strong></p>
+
+	            <h3>Mentor</h3>
+
+	            <% if MyMentor %>
+	                <% control MyMentor %>
+	                    <p>First Name: <strong>$FirstName</strong></p>
+	                    <p>Lastname: <strong>$Lastname</strong></p>
+	                    <p>Nationality: <strong>$Nationality</strong></p>
 	                <% end_control %>
-	            </ul>
-	        <% else %>
-	            <p>This project has not used any modules.</p>
-	        <% end_if %>
-	
-	        $Form
-	        $PageComments
-	
-	    <% if Menu(2) %>
-	        </div>
+	            <% else %>
+	                <p>This student doesn't have any mentor.</p>
+	            <% end_if %>
+	        <% end_control %>
+	    <% else %>
+	        <p>There is no any student working on this project.</p>
 	    <% end_if %>
+
+	    <h3>Modules</h3>
+
+	    <% if Modules %>
+	        <ul>
+	            <% control Modules %>
+	                <li>$Name</li>
+	            <% end_control %>
+	        </ul>
+	    <% else %>
+	        <p>This project has not used any modules.</p>
+	    <% end_if %>
+
+		$Form
+
 	</div>
 
 
@@ -647,37 +638,39 @@ from templates either within a control block or dot notation.
 *tutorial/code/Student.php, tutorial/code/Mentor.php*
 
 	:::php
-	   function PersonalInfo() {
-	      $template = 'GSOCPerson';
-	      return $this->renderWith( $template );
-	   }
+	function PersonalInfo() {
+		$template = 'GSOCPerson';
+		return $this->renderWith( $template );
+	}
 
 
-We can now modify the *Project* template.
+We can now modify the *Project.ss* template.
 
 	:::ss
 	
-	    ...
+	...
 	
-	    <% if MyStudent %>
-	        $MyStudent.PersonalInfo
+	<% if MyStudent %>
+		$MyStudent.PersonalInfo
 	
-	        <h3>Mentor</h3>
+		<h3>Mentor</h3>
 		
-	        <% control MyStudent %>
-	            <% if MyMentor %>
-	                $MyMentor.PersonalInfo
-	            <% else %>
-	                <p>This student doesn't have any mentor.</p>
-	            <% end_if %>
-	        <% end_control %>
-	    <% else %>
-	        <p>There is no any student working on this project.</p>
-	    <% end_if %>
+		<% control MyStudent %>
+			<% if MyMentor %>
+				$MyMentor.PersonalInfo
+			<% else %>
+				<p>This student doesn't have any mentor.</p>
+			<% end_if %>
+		<% end_control %>
+	<% else %>
+		<p>There is no any student working on this project.</p>
+	<% end_if %>
 	
-	    ...
-	
+	...
 
+<div class="notice" markdown='1'>
+	Remember to add `?flush=1` to the url when refreshing the project page or otherwise you will get a template error
+</div>
 
 In the *Project* template, it has been really easy to display the **1-to-1** relation with a *Student* object just by
 calling the variable **$MyStudent**. This has been made possible thanks to the code below present in the *Project*
@@ -692,7 +685,7 @@ class.
 However, in the *Student* class, there is no any code relating to the **1-to-1** relation with a *Project* *Page*. So
 how to access it from a *Student* *DataObject* ?
 
-**__3. Mentor__**
+**3. Mentor**
 
 In this template, we are gonna try to access the *Project* details from a *Student* *DataObject*.
 
@@ -707,11 +700,11 @@ it *MyProject* for instance.
 	:::php
 	class Student extends DataObject {
 	
-	   ...
+		...
 	
-	   function MyProject() {
-	      return DataObject::get( 'Project', "`MyStudentID` = '{$this->ID}'" );
-	   }
+		function MyProject() {
+			return DataObject::get( 'Project', "`MyStudentID` = '{$this->ID}'" );
+		}
 	
 	}
 
@@ -722,65 +715,51 @@ That's how we can use this function in the *Mentor* template.
 *tutorial/templates/Layout/Mentor.ss*
 
 	:::ss
-	<div class="typography">
-	    <% if Menu(2) %>
-	        <% include SideBar %>
-	        <div id="Content">
-	    <% end_if %>
-	
-	    <% if Level(2) %>
-	        <% include BreadCrumbs %>
-	    <% end_if %>
-	
-	        <h2>$Title</h2>
-	
-	        $Content
-	
-	        <h3>Personal Details</h3>
-		
-	        <p>First Name: <strong>$FirstName</strong></p>
-	        <p>Lastname: <strong>$Lastname</strong></p>
-	        <p>Nationality: <strong>$Nationality</strong></p>
-	
-	        <h3>Students</h3>
-	
-	        <% if Students %>
-	            <table>
-	                <thead>
-	                    <tr>
-	                        <th>Student</th>
-	                        <th>Project</th>
-	                    </tr>
-	                </thead>
-	                <tbody>
-	                    <% control Students %>
-	                        <tr>
-	                            <td>$FirstName $Lastname</td>
-	                            <td>
-	                                <% if MyProject %>
-	                                    <% control MyProject %>
-	                                        $Title
-	                                    <% end_control %>
-	                                <% else %>
-	                                    No Project
-	                                <% end_if %>
-	                            </td>
-	                        </tr>
-	                    <% end_control %>
-	                </tbody>
-	            </table>
-	        <% else %>
-	            <p>There is no any student working with this mentor.</p>
-	        <% end_if %>
-	
-	        $Form
-	        $PageComments
-	
-	    <% if Menu(2) %>
-	        </div>
-	    <% end_if %>
-	</div>
+	<% include Menu2 %>
 
+	<div id="Content" class="typography">
+		<% include Breadcrumbs %>
+		$Content
+
+	    <h3>Personal Details</h3>
+
+	    <p>First Name: <strong>$FirstName</strong></p>
+	    <p>Lastname: <strong>$Lastname</strong></p>
+	    <p>Nationality: <strong>$Nationality</strong></p>
+
+	    <h3>Students</h3>
+
+	    <% if Students %>
+	        <table>
+	            <thead>
+	                <tr>
+	                    <th>Student</th>
+	                    <th>Project</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <% control Students %>
+	                    <tr>
+	                        <td>$FirstName $Lastname</td>
+	                        <td>
+	                            <% if MyProject %>
+	                                <% control MyProject %>
+	                                    $Title
+	                                <% end_control %>
+	                            <% else %>
+	                                No Project
+	                            <% end_if %>
+	                        </td>
+	                    </tr>
+	                <% end_control %>
+	            </tbody>
+	        </table>
+	    <% else %>
+	        <p>There is no any student working with this mentor.</p>
+	    <% end_if %>
+
+	    $Form
+	</div>
 
 
 ## Summary
@@ -791,4 +770,6 @@ CMS and how to display them on the website.
 
 ## Download the code
 
-You can download all the [complete code](http://doc.silverstripe.org/src/github/master/sapphire/docs/en/tutorials/_images/tutorial5-completecode.zip) of this tutorial.
+Download all the [code](http://doc.silverstripe.org/src/github/master/sapphire/docs/en/tutorials/_images/tutorial5-completecode.zip) for this tutorial.
+
+You can also download the [code](http://doc.silverstripe.org/src/github/master/sapphire/docs/en/tutorials/_images/tutorial5-completecode-blackcandy.zip) for use in the blackcandy template.

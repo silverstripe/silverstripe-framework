@@ -6,23 +6,23 @@ the site reports by clicking "Site Reports" in the left hand side bar and select
 
 ![](_images/sitereport.png) 
 
-By default the CMS ships with a couple basic reports - 
+By default the CMS ships with a couple of basic reports -
 
 ## Default Reports
 
 *  "Empty Pages" which will generate a list of pages without content 
 *  "Pages edited in the last 2 weeks" which will list all the pages edited in the last 2 weeks in order of most recently
 edited.
-*  "To Do" which displays all the ToDo notes you have added to each page and a link to the page. This is in 2.2.2 and
+*  "To Do" which displays all the ToDo notes you have added to each page and a link to the page. Note: This is in 2.2.2 and
 later
 *  Also the Ecommerce module provides 2 or 3 reports out of box. Such as All Products, Orders...
 
 ## Creating Custom Reports
 
-You can create reports for you own data quickly and easily. A general knowledge of Silverstripe's
+You can create reports for you own data quickly and easily. A general knowledge of SilverStripe's
 [Datamodel](/topics/datamodel) would help before you attempt this. 
 
-Inside the Mysite/Code folder - your projects code, create a file called CustomSideReport or MyProjectSiteReport and
+Inside the Mysite/Code folder - your projects code, create a file called `CustomSideReport` or `MyProjectSiteReport` and
 inside this file we can add our site reports.
 
 CustomSideReport.php 
@@ -92,5 +92,3 @@ file and add class's as you need them inside that for each report.
 
 ## API Documentation
 `[api:ReportAdmin]`
-
-

@@ -32,17 +32,17 @@ use devmode on a public server very very carefully
 Test mode is designed for staging environments or other private collaboration sites before deploying a site live. You do
 not need to use test mode if you do not have a staging environment or a place for testing which is on a public server)
 
-In this mode error messages are hidden from the user and it includes BasicAuth integration if you want to password
+In this mode error messages are hidden from the user and it includes `[api:BasicAuth]` integration if you want to password
 protect the site.
 
-To set your site to test mode set this in your mysite/_config.php file
+To set your site to test mode set this in your `mysite/_config.php` file
 
 	:::php
 	Director::set_environment_type("test");
 
 
 A common situation is to enable password protected site viewing on your test site only. You can enable that but adding
-this to your mysite/_config file
+this to your `mysite/_config` file
 
 	:::php
 	if(Director::isTest()) BasicAuth::protect_entire_site();
@@ -54,7 +54,7 @@ Live sites should always run in live mode. Error messages are suppressed from th
 to email the developers. This enables near real time reporting of any fatal errors or warnings on the site and can help
 find any bugs users run into.
 
-To set your site to live mode set this in your mysite/_config.php file
+To set your site to live mode set this in your `mysite/_config.php` file
 
 	:::php
 	Director::set_environment_type("live");
@@ -106,7 +106,7 @@ The Debug class contains a number of static methods
 *  *Debug::show($myVariable)*: performs a kind of *print_r($myVariable)*, but shows it in a more useful format.
 *  *Debug::message("Wow, that's great")*: prints a short debugging message.
 *  *SS_Backtrace::backtrace()* (2.3: *Debug::backtrace()*): prints a calls-stack
-*  *Debug::sendLiveErrorsTo("sam@silverstripe.com")*: On the live site, all errors will get sent to this address.
+*  *Debug::send_errors_to("sam@silverstripe.com")*: All errors will get sent to this address.
 
 ### Error handling
 

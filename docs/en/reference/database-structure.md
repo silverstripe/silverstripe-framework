@@ -5,7 +5,7 @@ opting for "convention over configuration".  This page details what that databas
 
 ## Base tables
 
-Each direct sub-class of DataObject will have its own table.
+Each direct sub-class of `[api:DataObject]` will have its own table.
 
 The following fields are always created.
 
@@ -36,21 +36,21 @@ data sub-classed objects across **multiple tables**.
 
 For example, suppose we have the following set of classes:
 
-*  Class SiteTree extends DataObject: Title, Content fields
-*  Class Page extends SiteTree: Abstract field
-*  Class NewsSection extends SiteTree: *No special fields*
-*  Class NewsArticle extend Page: ArticleDate field
+*  Class `[api:SiteTree]` extends `[api:DataObject]`: Title, Content fields
+*  Class `[api:Page]` extends `[api:SiteTree]`: Abstract field
+*  Class NewsSection extends `[api:SiteTree]`: *No special fields*
+*  Class NewsArticle extend `[api:Page]`: ArticleDate field
 
 The data for the following classes would be stored across the following tables:
 
-*  SiteTree
+*  `[api:SiteTree]`
     * ID: Int
     * ClassName: Enum('SiteTree', 'Page', 'NewsArticle')
     * Created: Datetime
     * LastEdited: Datetime
     * Title: Varchar
     * Content: Text
-*  Page
+*  `[api:Page]`
     * ID: Int
     * Abstract: Text
 *  NewsArticle
@@ -59,16 +59,16 @@ The data for the following classes would be stored across the following tables:
 
 The way it works is this:
 
-*  "Base classes" are direct sub-classes of DataObject.  They are always given a table, whether or not they have special
-fields.  This is called the "base table"
+*  "Base classes" are direct sub-classes of `[api:DataObject]`.  They are always given a table, whether or not they have
+special fields.  This is called the "base table"
 *  The base table's ClassName field is set to class of the given record.  It's an enumeration of all possible
 sub-classes of the base class (including the base class itself)
 *  Each sub-class of the base object will also be given its own table, *as long as it has custom fields*.  In the
 example above, NewsSection didn't have its own data and so an extra table would be redundant.
 *  In all the tables, ID is the primary key.  A matching ID number is used for all parts of a particular record: 
-record #2 in Page refers to the same object as record #2 in SiteTree.
+record #2 in Page refers to the same object as record #2 in `[api:SiteTree]`.
 
-To retrieve a news article, SilverStripe joins the SiteTree, Page and NewsArticle tables by their ID fields.  We use a
+To retrieve a news article, SilverStripe joins the `[api:SiteTree]`, `[api:Page]` and NewsArticle tables by their ID fields.  We use a
 left-join for robustness; if there is no matching record in Page, we can return a record with a blank Article field.
 
 ## Staging and versioning
@@ -126,4 +126,4 @@ other database platforms if we chose to support them.
 *  We'd like to support more than just MySQL, however, there needs to be a pretty good reason for doing so since it will
 become something that needs to be supported for the rest of SilverStripe's life and could easily become an albatross. 
 On the cards are MS SQL, PostgreSQL and SQLite.
-*  It could be desireable to implement a non-repeating auto-numbering system.
+*  It could be desirable to implement a non-repeating auto-numbering system.
