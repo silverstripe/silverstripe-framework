@@ -155,7 +155,6 @@ class TestRunner extends Controller {
 	 * Run a coverage test across all modules
 	 */
 	function coverageAll($request) {
-		ManifestBuilder::load_all_classes();
 		$this->all($request, true);
 	}
 	
