@@ -29,6 +29,14 @@ class SS_SysLogWriter extends Zend_Log_Writer_Abstract {
 	public function __destruct() {
 		closelog();
 	}
+	
+	/**
+	 * @param $option See {@link __construct}
+	 * @return SS_SysLogWriter
+	 */
+	static public function factory($config) {
+		return new SS_SysLogWriter(null, $config);
+	}
 
 	/**
 	 * Write to the system log with the event details.
