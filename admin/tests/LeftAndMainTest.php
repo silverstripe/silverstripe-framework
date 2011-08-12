@@ -133,12 +133,13 @@ class LeftAndMainTest extends FunctionalTest {
 		$adminuser = $this->objFromFixture('Member', 'admin');
 		$securityonlyuser = $this->objFromFixture('Member', 'securityonlyuser');
 		$allcmssectionsuser = $this->objFromFixture('Member', 'allcmssectionsuser');
+		$allValsFn = create_function('$obj', 'return $obj->getValue();');
 		
 		// anonymous user
 		$this->session()->inst_set('loggedInAs', null);
 		$menuItems = singleton('LeftAndMain')->MainMenu();
 		$this->assertEquals(
-			$menuItems->column('Code'),
+			array_map($allValsFn, $menuItems->column('Code')),
 			array(),
 			'Without valid login, members cant access any menu entries'
 		);
@@ -147,7 +148,7 @@ class LeftAndMainTest extends FunctionalTest {
 		$this->session()->inst_set('loggedInAs', $securityonlyuser->ID);
 		$menuItems = singleton('LeftAndMain')->MainMenu();
 		$this->assertEquals(
-			$menuItems->column('Code'),
+			array_map($allValsFn, $menuItems->column('Code')),
 			array('SecurityAdmin','Help'),
 			'Groups with limited access can only access the interfaces they have permissions for'
 		);
@@ -155,10 +156,12 @@ class LeftAndMainTest extends FunctionalTest {
 		// all cms sections user
 		$this->session()->inst_set('loggedInAs', $allcmssectionsuser->ID);
 		$menuItems = singleton('LeftAndMain')->MainMenu();
-		$this->assertContains('SecurityAdmin', $menuItems->column('Code'),
+		$this->assertContains('SecurityAdmin', 
+			array_map($allValsFn, $menuItems->column('Code')),
 			'Group with CMS_ACCESS_LeftAndMain permission can access all sections'
 		);
-		$this->assertContains('Help', $menuItems->column('Code'),
+		$this->assertContains('Help', 
+			array_map($allValsFn, $menuItems->column('Code')),
 			'Group with CMS_ACCESS_LeftAndMain permission can access all sections'
 		);
 		
@@ -167,7 +170,7 @@ class LeftAndMainTest extends FunctionalTest {
 		$menuItems = singleton('LeftAndMain')->MainMenu();
 		$this->assertContains(
 			'SecurityAdmin',
-			$menuItems->column('Code'),
+			array_map($allValsFn, $menuItems->column('Code')),
 			'Administrators can access Security Admin'
 		);
 		
