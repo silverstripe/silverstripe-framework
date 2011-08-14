@@ -19,6 +19,10 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 		'FILEIFRAMEFIELD.CONFIRMDELETE': 'Určitě chcete smazat tento soubor?',
 		'TABLEFIELD.SELECTDELETE': 'Vyberte, prosím, nějaké soubory na smazání!',
 		'TABLEFIELD.CONFIRMDELETEV2': 'Určitě chcete smazat označené soubory?',
-		'TABLEFIELD.SELECTUPLOAD': 'Vyberte, prosím, aspoň jeden soubor na nahrání.'
+		'TABLEFIELD.SELECTUPLOAD': 'Vyberte, prosím, aspoň jeden soubor na nahrání.',
+		'HtmlEditorField.HideUploadForm': 'Skrýt nahrávání souborů',
+		'HtmlEditorField.ShowUploadForm': 'Nahrávát soubor',
+		'HtmlEditorField.Loading': 'Načítám',
+		'HtmlEditorField.UploadingFile': 'Nahrávám soubor...'
 	});
 }
