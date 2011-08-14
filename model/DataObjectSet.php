@@ -687,6 +687,19 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 	}
 	
 	/**
+	 * Filters the set based on a key and a value
+	 * EG: $doSet->filter('Name', 'Bob');
+	 * @return DataObjectSet all matching items
+	 */
+	public function filter($key, $value) {
+		$filtered = new DataObjectSet();
+		foreach($this->items as $item) {
+			if ($item->$key == $value) $filtered->push($item);
+		}
+		return $filtered;
+	}
+	
+	/**
 	 * Return a column of the given field
 	 * @param string $value The field name
 	 * @return array
