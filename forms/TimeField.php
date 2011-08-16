@@ -74,6 +74,7 @@ class TimeField extends TextField {
 	 */
 	protected function FieldDriver($html) {
 		if($this->getConfig('showdropdown')) {
+			Requirements::javascript(THIRDPARTY_DIR . '/behaviour/behaviour.js');
 			Requirements::javascript(SAPPHIRE_DIR . '/javascript/TimeField_dropdown.js');
 			Requirements::css(SAPPHIRE_DIR . '/css/TimeField_dropdown.css');
 			
