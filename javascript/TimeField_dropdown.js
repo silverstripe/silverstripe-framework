@@ -4,11 +4,11 @@ TimeBehaviour = {
 	initialise : function () {
 		this.isOpen = false;
 		
-		this.icon = $( this.id + '-icon' );
+		this.icon = document.getElementById( this.id + '-icon' );
 		
 		this.icon.onclick = this.toggle.bind( this );
 		
-		this.dropdowntime = $( this.id + '-dropdowntime' );
+		this.dropdowntime = document.getElementById( this.id + '-dropdowntime' );
 		
 		var dropdown = 
 			'<select id="' + this.id + '-dropdowntime' + '-select' + '" size="18">' +
@@ -59,7 +59,7 @@ TimeBehaviour = {
 				 	
 		DropdownTime[ DropdownTime.length ] = this.dropdowntime;
 		
-		this.selectTag = $( this.id + '-dropdowntime' + '-select' );
+		this.selectTag = document.getElementById( this.id + '-dropdowntime' + '-select' );
 		
 		this.selectTag.onchange = this.updateValue.bind( this );
 	},
