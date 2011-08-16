@@ -24,14 +24,13 @@
 
 		<ul class="cms-menu-list">
 		<% control MainMenu %>
-			<li class="$LinkingMode $FirstLast <% if LinkingMode == 'current' %>opened<% end_if %>" id="Menu-$Code">
+			<li class="$LinkingMode $FirstLast <% if LinkingMode == 'link' %><% else %>opened<% end_if %>" id="Menu-$Code">
 				<a href="$Link">
 					<span class="icon icon-16 icon-{$Code.LowerCase}">&nbsp;</span>
 					<span class="text">$Title</span>
 				</a>
 				
 				<% if Code == 'CMSMain' %>
-					<% if LinkingMode == 'current' %>
 					<ul>
 						<li class="first <% if Top.class == 'CMSPageEditController' || Top.class == 'CMSMain' %>current<% end_if %>" id="Menu-CMSPageEditController"><a href="admin/page/edit/show/$Top.CurrentPageID">
 							<span class="text">Content</span>
@@ -46,7 +45,6 @@
 							<span class="text">History</span>
 						</a></li>
 					</ul>
-					<% end_if %>
 				<% end_if %>
 			</li>
 		<% end_control %>

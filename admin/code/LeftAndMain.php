@@ -452,7 +452,7 @@ class LeftAndMain extends Controller {
 					continue;
 				}
 
-				$linkingmode = "";
+				$linkingmode = "link";
 				
 				if($menuItem->controller && get_class($this) == $menuItem->controller) {
 					$linkingmode = "current";
