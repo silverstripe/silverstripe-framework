@@ -71,6 +71,7 @@
 			color: $color-text-dark;
 			padding: ($grid-vertical - 1) 5px ($grid-vertical - 1) 8px;
 			background-color: $color-base;
+			cursor: pointer;
 			
 			@include background-image(linear-gradient(
 				$color-base,

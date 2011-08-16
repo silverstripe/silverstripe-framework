@@ -182,7 +182,7 @@ html,body {
 .cms-header {
 	background-color: darken($color-dark-bg, 10%);
 	position: relative;
-	padding: 16px 8px 4px 4px;
+	padding: $grid-vertical * 2 8px 0 4px;
 	line-height: 24px;
 
 	@include background-image(
@@ -235,8 +235,8 @@ html,body {
 
 .cms-login-status {
 	border-top: 1px solid $color-dark-separator;
-	height: 23px;
-	padding: 8px 4px 0 4px;
+	height: 24px;
+	padding: 7px 4px 0 4px;
 	overflow: hidden;
 	line-height: 16px;
 	font-size: $font-base-size - 1;
@@ -405,10 +405,6 @@ html,body {
 	.cms-tree-view-modes * {
 		display: inline-block;
 	}
-	
-	.cms-content-batchactions form > * {
-		display: inline-block;
-	}
 }
 
 
@@ -449,32 +445,49 @@ html,body {
 		font-size: $font-base-size + 1;
 	}
 	
+	.ui-widget-content {
+		background: none;
+	}
+	
 	.field {
-		/* fields are more compressed in the sidebar */
+		/* 
+		 * Fields are more compressed in the sidebar compared to the
+		 * main content editing window so the below alters the internal
+		 * spacing of the fields so we can move that spacing to between
+		 * the form fields rather than padding
+		 */
 		label {
 			float: none;
 			width: auto;
-			padding: 0 $grid-vertical 0 0;
+			font-size: 11px;
+			padding: 0 $grid-horizontal 4px 0;
 		}
 		
 		.middleColumn {
-			margin: 2px 0;
+			margin: 0;
 		}
 		
 		input,
 		select,
 		textarea {
-			padding: ($grid-vertical - 2); /* taken 2px off the padding to realign with grid */
+			padding: 5px;
+			font-size: 11px;
 		}
 		
 		/* smaller treedropdown */
 		.chzn-container-single .chzn-single  {
-			height: 26px;
-			line-height: 28px;
+			height: 24px;
+			line-height: 24px;
+			font-size: 11px;
+	 		
+			div b {
+				background-position: 4px 0;
+			}
 		}
 		
-		.chzn-container-single .chzn-single div b {
-			background-position: 4px 2px;
+		/* buttons should line up with inputs */
+		.ss-ui-button {
+			padding: 5px $grid-horizontal;
 		}
 	}
 	
@@ -491,6 +504,9 @@ html,body {
 	}
 }
 
+/** 
+ * CMS Batch actions
+ */
 .cms-content-batchactions, .cms-content-constructive-actions {
 	float: right;
 }
@@ -499,15 +515,22 @@ html,body {
 	float: right;
 	position:  relative;
 	display: block;
-	margin-right:  8px;
+	margin-right: 8px;
+	
+	form > * {
+		display: block;
+		float: left;
+	}
+	
+	form.cms-batch-actions {
+		float:  left;
+	}
 }
 
-form.cms-batch-actions {
-	float:  left;
-}
+
 
 .cms-content-constructive-actions a {
-	display:  block;
+	display: block;
 	float: right;
 }
 
