@@ -424,6 +424,16 @@ class Geoip {
 		$name = isset(Geoip::$iso_3166_countryCodes[$code]) ? Geoip::$iso_3166_countryCodes[$code] : null;
 		return $name;
 	}
+	
+	/**
+	 * Returns the country code from a country name.
+	 * 
+	 * @return null|string String if the country name is found, null otherwise
+	 */
+	static function countryName2code($name) {
+		$code = array_search($name, Geoip::$iso_3166_countryCodes);
+		return ($code) ? $code : null;
+	}
 
 	/** 
 	 * Returns an array of ISO Country Codes -> Country Names
