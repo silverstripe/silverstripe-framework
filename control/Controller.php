@@ -454,7 +454,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	public function redirect($url, $code=302) {
 		if(!$this->response) $this->response = new SS_HTTPResponse();
 		
-		if($this->response->getHeader('Location')) {
+		if($this->response->getHeader('Location') && $this->response->getHeader('Location') != $url) {
 			user_error("Already directed to " . $this->response->getHeader('Location')
 				. "; now trying to direct to $url", E_USER_WARNING);
 			return;
