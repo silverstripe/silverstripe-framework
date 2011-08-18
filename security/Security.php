@@ -347,7 +347,6 @@ class Security extends Controller {
 			}
 		}
 		
-		
 		$customCSS = project() . '/css/tabs.css';
 		if(Director::fileExists($customCSS)) {
 			Requirements::css($customCSS);
@@ -363,11 +362,12 @@ class Security extends Controller {
 			$controller = Page_Controller::create($tmpPage);
 			$controller->setDataModel($this->model);
 			$controller->init();
-			//Controller::$currentController = $controller;
 		} else {
 			$controller = $this;
 		}
 
+		// if the controller calls Director::redirect(), this will break early
+		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
 
 		$content = '';
 		$forms = $this->GetLoginForms();
@@ -461,6 +461,9 @@ class Security extends Controller {
 			$controller = $this;
 		}
 
+		// if the controller calls Director::redirect(), this will break early
+		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
+
 		$customisedController = $controller->customise(array(
 			'Content' => 
 				'<p>' . 
@@ -519,6 +522,9 @@ class Security extends Controller {
 		} else {
 			$controller = $this;
 		}
+
+		// if the controller calls Director::redirect(), this will break early
+		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
 
 		$email = Convert::raw2xml(rawurldecode($request->param('ID')) . '.' . $request->getExtension());
 
@@ -582,6 +588,9 @@ class Security extends Controller {
 		} else {
 			$controller = $this;
 		}
+
+		// if the controller calls Director::redirect(), this will break early
+		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
 
 		// Extract the member from the URL.
 		$member = null;
