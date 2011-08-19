@@ -89,7 +89,7 @@ array mapping the values to the options listed in the dropdown.
 
 	:::php
 	$actions = new FieldSet(
-		new FormAction('doBrowserPoll', 'Submit');
+		new FormAction('doBrowserPoll', 'Submit')
 	);
 
 
