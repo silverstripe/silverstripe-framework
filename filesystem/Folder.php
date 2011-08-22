@@ -173,12 +173,7 @@ class Folder extends File {
 		if(is_dir($baseDir . $name)) {
 			$className = "Folder";
 		} else {
-			// Could use getimagesize to get the type of the image
-			$ext = strtolower(substr($name,strrpos($name,'.')+1));
-			switch($ext) {
-				case "gif": case "jpg": case "jpeg": case "png": $className = "Image"; break;
-				default: $className = "File";
-			}
+			$className = File::get_class_for_file_extension(pathinfo($name, PATHINFO_EXTENSION));
 		}
 
 		if(Member::currentUser()) $ownerID = Member::currentUser()->ID;
