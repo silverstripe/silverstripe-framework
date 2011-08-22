@@ -790,6 +790,53 @@ class File extends DataObject {
 		return $fields;
 	}
 	
-}
+	/**
+	 * @var Array Only use lowercase extensions in here.
+	 */
+	static $class_for_file_extension = array(
+		'*' => 'File',
+		'jpg' => 'Image',
+		'jpeg' => 'Image',
+		'png' => 'Image',
+		'gif' => 'Image',
+	);
 
-?>
+	/**
+	 * Maps a {@link File} subclass to a specific extension.
+	 * By default, files with common image extensions will be created
+	 * as {@link Image} instead of {@link File} when using 
+	 * {@link Folder::constructChild}, {@link Folder::addUploadToFolder}),
+	 * and the {@link Upload} class (either directly or through {@link FileField}).
+	 * For manually instanciated files please use this mapping getter.
+	 * 
+	 * Caution: Changes to mapping doesn't apply to existing file records in the database.
+	 * Also doesn't hook into {@link Object::getCustomClass()}.
+	 * 
+	 * @param String File extension, without dot prefix. Use an asterisk ('*')
+	 * to specify a generic fallback if no mapping is found for an extension.
+	 * @return String Classname for a subclass of {@link File}
+	 */
+	static function get_class_for_file_extension($ext) {
+		$map = array_change_key_case(self::$class_for_file_extension, CASE_LOWER);
+		return (array_key_exists(strtolower($ext), $map)) ? $map[strtolower($ext)] : $map['*'];
+	}
+	
+	/**
+	 * See {@link get_class_for_file_extension()}.
+	 * 
+	 * @param String|array
+	 * @param String
+	 */
+	static function set_class_for_file_extension($exts, $class) {
+		if(!is_array($exts)) $exts = array($exts);
+		foreach($exts as $ext) {
+			if(ClassInfo::is_subclass_of($ext, 'File')) {
+				throw new InvalidArgumentException(
+					sprintf('Class "%s" (for extension "%s") is not a valid subclass of File', $class, $ext)
+				);
+			}
+			self::$class_for_file_extension[$ext] = $class;
+		}
+	}
+	
+}

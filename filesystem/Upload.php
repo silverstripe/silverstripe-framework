@@ -98,7 +98,10 @@ class Upload extends Controller {
 		
 		if(!$folderPath) $folderPath = self::$uploads_folder;
 		
-		if(!$this->file) $this->file = new File();
+		if(!$this->file) {
+			$fileClass = File::get_class_for_file_extension(pathinfo($tmpFile['name'], PATHINFO_EXTENSION));
+			$this->file = new $fileClass();
+		}
 		
 		if(!is_array($tmpFile)) {
 			user_error("Upload::load() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
