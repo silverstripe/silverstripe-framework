@@ -218,6 +218,8 @@ class LeftAndMain extends Controller {
 			$htmlEditorConfig->setOption('content_css', implode(',', $cssFiles));
 		}
 		
+		// @todo Load separately so the CSS files can be inlined
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
 		
 		Requirements::javascript(THIRDPARTY_DIR . '/prototype/prototype.js');
@@ -234,8 +236,7 @@ class LeftAndMain extends Controller {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
 		
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js');
-		// @todo Load separately so the CSS files can be inlined
-		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
+		
 		
 		// Required for TreeTools panel above tree
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
@@ -1203,28 +1204,36 @@ class LeftAndMain extends Controller {
 
 	/**
 	 * Get the application name.
-	 * @return String
+	 *
+	 * @return string
 	 */
 	function getApplicationName() {
 		return self::$application_name;
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	function Title() {
-		return sprintf('%s | %s', $this->getApplicationName(), $this->SectionTitle());
+		$app = $this->getApplicationName();
+		
+		return ($section = $this->SectionTitle()) ? sprintf('%s - %s', $app, $section) : $app;
 	}
 
 	/**
-	 * Return the title of the current section, as shown on the main menu
+	 * Return the title of the current section. Either this is pulled from
+	 * the current panel's menu_title or from the first active menu
+	 *
+	 * @return string
 	 */
 	function SectionTitle() {
+		if($title = $this->stat('menu_title')) return $title;
+		
 		// Get menu - use obj() to cache it in the same place as the template engine
 		$menu = $this->obj('MainMenu');
-		
+
 		foreach($menu as $menuItem) {
-			if($menuItem->LinkingMode == 'current') return $menuItem->Title;
+			if($menuItem->LinkingMode != 'link') return $menuItem->Title;
 		}
 	}
 

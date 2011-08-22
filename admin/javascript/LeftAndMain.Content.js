@@ -67,7 +67,10 @@
 			 */
 			loadForm: function(url, form, callback, ajaxOptions) {
 				var self = this;
-				if(!form || !form.length) var form = $('.cms-content-fields form:first');
+				if(!form || !form.length) {
+					var form = $('.cms-content-fields form:first', self);
+					if(form.length == 0) form = $('.cms-content-fields').parents("form").eq(0);
+				}
 
 				// Alert when unsaved changes are present
 				if(form._checkChangeTracker(true) == false) return false;
@@ -77,6 +80,7 @@
 
 				this.trigger('loadform', {form: form, url: url});
 			
+				form.cleanup();
 				return jQuery.ajax(jQuery.extend({
 					url: url, 
 					// Ensure that form view is loaded (rather than whole "Content" template)
@@ -89,8 +93,30 @@
 				}, ajaxOptions));
 			},
 			
+			/**
+			 * Function: loadForm_responseHandler
+			 *
+			 * Loads the response into the DOM provided. Assumes oldForm is contains
+			 * the form tag to replace. If oldForm isn't present in the DOM, such as
+			 * if this form is only shown after click, append the whole form.
+			 *
+			 * Parameters:
+			 *  (String) oldForm - HTML or eval'd javascript
+			 *  (String) html - HTML to replace oldForm
+			 *  (String) status
+			 *  (XMLHTTPRequest) xmlhttp
+			 */
 			loadForm_responseHandler: function(oldForm, html, status, xmlhttp) {
-				oldForm.replaceWith(html); // triggers onmatch() on form
+
+				if(oldForm.length > 0) {
+					oldForm.replaceWith(html); // triggers onmatch() on form
+				}
+				else {
+					 $('.cms-content').append(html);
+				}
+				
+				// redraw the layout.
+				jQuery('.cms-container').entwine('ss').redraw();
 				
 				// set status message based on response
 				var _statusMessage = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.statusText;
@@ -194,7 +220,7 @@
 				
 					Behaviour.apply(); // refreshes ComplexTableField
 
-					this.trigger('loadnewpage', {form: form, origData: origData, xmlhttp: xmlhttp});
+					this.trigger('reloadeditform', {form: form, origData: origData, xmlhttp: xmlhttp});
 				}
 
 				// set status message based on response

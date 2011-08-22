@@ -1,11 +1,14 @@
 /**
- * This file defines most styles of the CMS: Colors, fonts, backgrounds, alignments, dimensions.
+ * This file defines most styles of the CMS: Colors, fonts, backgrounds, 
+ * alignments, dimensions.
  * 
- * Use SCSS variable definitions in screen.css to avoid repeating styles like background colours
- * or padding dimensions. See themes/_default.scss to get started.
+ * Use SCSS variable definitions in screen.css to avoid repeating styles 
+ * like background colours or padding dimensions. See themes/_default.scss 
+ * to get started.
  * 
- * To avoid this file getting too large and complicated, it is encouraged to create new SCSS files
- * for larger components like the CMS menu or tree (see _tree.scss and _menu.scss).
+ * To avoid this file getting too large and complicated, it is encouraged to 
+ * create new SCSS files for larger components like the CMS menu or tree 
+ * (see _tree.scss and _menu.scss).
  */
 
 /** ----------------------------------------------------
@@ -46,6 +49,16 @@ html,body {
 	}
 }
 
+/** --------------------------------------------
+ * Helpers
+ * -------------------------------------------- */
+
+.cms-helper-hide-actions {
+	.Actions {
+		display: none;
+	}
+}
+	
 /** --------------------------------------------
  * Typography styles in tabs
  * -------------------------------------------- */
@@ -120,8 +133,8 @@ html,body {
 		font-size: $font-base-size + 2;
 		line-height: $grid-horizontal * 3;
 		font-weight: bold;
-		text-shadow: darken($color-widget-bg, 10%) 1px 1px 0;
-		width: $grid-horizontal * 21 /* 24 - (padding on each side + margin) */;
+		text-shadow: darken($color-widget-bg, 15%) 1px 1px 0;
+		width: $grid-horizontal * 22 /* 24 - (padding on each side + margin) */;
 		
 		@include hide-text-overflow();
 	}
@@ -169,8 +182,12 @@ html,body {
 	}
 }
 
+/** -------------------------------------------------------
+ * Loading Interface
+ * ------------------------------------------------------- */
 .cms-content {
-	&.loading {
+	&.loading,
+	form.loading {
 		background: url(../images/spinner.gif) no-repeat 50% 50%;
 	}
 }
@@ -414,10 +431,11 @@ html,body {
  */
 .cms-content-tools {
 	background-color: darken($color-widget-bg, 5%);
-	width: $grid-horizontal * 25;
+	width: $grid-horizontal * 24;
 	border-right: 1px solid darken($color-widget-bg, 15%);
-	overflow: auto;	
-	z-index: 60;
+	overflow-y: auto;	
+	overflow-x: hidden;
+	z-index: 70;
 	
 	.cms-panel-header {
 		padding: 0 $grid-horizontal / 2;
@@ -429,11 +447,25 @@ html,body {
 	}
 	
 	.cms-panel-content {
-		width: ($grid-horizontal * 20);
+		width: ($grid-horizontal * 21);
 		padding: $grid-vertical $grid-horizontal * 2;
+	}
+	
+	.cms-content-header {
+		background-color: darken($color-widget-bg, 40%);
 		
-		form {
-			width: $grid-horizontal * 20;
+		border-bottom: 2px solid darken($color-widget-bg, 50%);
+
+		@include background-image(
+			linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 40%))
+		);
+
+		h2 {
+			text-shadow: darken($color-widget-bg, 50%) -1px -1px 0;
+			width: $grid-horizontal * 22 /* 24 - (padding on each side + margin) */;
+			color: lighten($color-widget-bg, 60%);
+			
+			@include hide-text-overflow();
 		}
 	}
 
@@ -467,11 +499,19 @@ html,body {
 			margin: 0;
 		}
 		
-		input,
+		input.text,
 		select,
 		textarea {
 			padding: 5px;
 			font-size: 11px;
+		}
+		
+		&.checkbox {
+			padding: 0 8px 7px;
+			
+			input { 
+				margin: 2px 0; 
+			}
 		}
 		
 		/* smaller treedropdown */
@@ -484,13 +524,13 @@ html,body {
 				background-position: 4px 0;
 			}
 		}
-		
-		/* buttons should line up with inputs */
-		.ss-ui-button {
-			padding: 5px $grid-horizontal;
-		}
 	}
-	
+		
+	/* buttons now need to line with with reduced input sizes */
+	.ss-ui-button {
+		padding: 5px $grid-horizontal;
+	}
+		
 	.fieldgroup {
 		.fieldgroup-field {
 			width: auto;
@@ -501,6 +541,45 @@ html,body {
 				padding: 0;
 			}
 		}
+	}
+	
+	table {
+		margin: 8px -4px;
+		thead {
+			th {
+				color: $color-text-dark;
+				font-weight: bold;
+				line-height: 16px;
+				font-size: 11px;
+				padding: 4px;
+			}
+		}
+		
+		tr {
+			&.active {
+				background-color: $color-menu-button;
+				color: $color-text-light;
+
+				td.first-column {
+					@include border-radius(6px 0 0 6px);
+				}
+				td.last-column {
+					@include border-radius(0 6px 6px 0);
+				}
+			}
+		}
+		
+		td {
+			padding: 4px;
+			line-height: 16px;
+			vertical-align: top;
+		}
+	}
+	
+	td {
+		border-bottom: 1px solid darken($color-widget-bg, 10%);
+		padding: $grid-vertical - 1 2px;
+		font-size: 11px;
 	}
 }
 

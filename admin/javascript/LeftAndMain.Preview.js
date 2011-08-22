@@ -53,7 +53,7 @@
 				}
 				
 				// Listen to form loads. Limit to CMS forms for the moment
-				$('.cms-edit-form').bind('loadnewpage', function(e, ui) {
+				$('.cms-edit-form').bind('reloadeditform', function(e, ui) {
 					updateAfterXhr();
 				});
 				

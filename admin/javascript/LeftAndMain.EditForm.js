@@ -104,6 +104,11 @@
 				this.layout();
 			},
 			
+			afterLoad: function(data, status, xhr) {
+				this.replaceWith(data);
+				this.removeClass('loading');
+			},
+		
 			/**
 			 * Function: _setupChangeTracker
 			 */
