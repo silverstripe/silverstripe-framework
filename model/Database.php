@@ -13,6 +13,14 @@ abstract class SS_Database {
 	static $globalConn;
 	
 	/**
+	 * @var boolean Check tables when running /dev/build, and repair them if necessary. 
+	 * In case of large databases or more fine-grained control on how to handle
+	 * data corruption in tables, you can disable this behaviour and handle it
+	 * outside of this class, e.g. through a nightly system task with extended logging capabilities.
+	 */
+	static $check_and_repair_on_build = true;
+	
+	/**
 	 * If this is false, then information about database operations
 	 * will be displayed, eg creation of tables.
 	 * @param boolean
@@ -296,7 +304,7 @@ abstract class SS_Database {
 			$this->transCreateTable($table, $options, $extensions);
 			$this->alterationMessage("Table $table: created","created");
 		} else {
-			$this->checkAndRepairTable($table, $options);
+			if(self::$check_and_repair_on_build) $this->checkAndRepairTable($table, $options);
 			
 			// Check if options changed
 			$tableOptionsChanged = false;
