@@ -81,7 +81,7 @@ function getFittingHeight(el, tweakVal, ignoreElements) {
 	//alert(getDimension(el.parentNode,'paddingTop', true));
 	tweakVal += getDimension(el.parentNode,'paddingTop');
 	tweakVal += getDimension(el.parentNode,'paddingBottom');
-	// Body border fucks up in IE
+	// Body border not correct in IE
 	if(el.parentNode && el.parentNode.tagName != "BODY") {
 		tweakVal += getDimension(el.parentNode,'borderTopWidth');
 		tweakVal += getDimension(el.parentNode,'borderBottomWidth');
