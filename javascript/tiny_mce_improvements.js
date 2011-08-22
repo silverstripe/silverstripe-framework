@@ -274,6 +274,8 @@ LinkForm.prototype = {
 				ed.dom.remove(e, 1);
 		}
 		
+		jQuery(linkFormObj).trigger('onafterinsert', attributes);
+		
 		this.respondToNodeChange(ed);
 	},
 	
@@ -589,14 +591,17 @@ ImageThumbnail.prototype = {
 		if(!tinyMCE.selectedInstance) tinyMCE.selectedInstance = tinyMCE.activeEditor;
 		if(tinyMCE.selectedInstance.contentWindow.focus) tinyMCE.selectedInstance.contentWindow.focus();
 		
-		this.ssInsertImage(tinyMCE.activeEditor, {
+		var data = {
 			'src' : relativeHref,
 			'alt' : altText,
 			'width' : $('Form_EditorToolbarImageForm_Width').value,
 			'height' : $('Form_EditorToolbarImageForm_Height').value,
 			'title' : titleText,
 			'class' : cssClass
-		}, captionText);
+		};
+		this.ssInsertImage(tinyMCE.activeEditor, data, captionText);
+		
+		jQuery(formObj).trigger('onafterinsert', data);
 		
 		return false;
 	},
@@ -717,6 +722,9 @@ FlashThumbnail.prototype = {
 		tinyMCE.selectedInstance.execCommand("mceInsertContent", false, html);
 		tinyMCE.selectedInstance.execCommand('mceRepaint');
 	//	ed.execCommand('mceInsertContent', false, html, {skip_undo : 1}); 
+	
+		jQuery(formObj).trigger('onafterinsert', {html: html, href: relativeHref, width: width, height: height});
+	
 		return false;
 	}
 }
