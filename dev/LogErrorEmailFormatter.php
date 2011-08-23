@@ -49,7 +49,7 @@ class SS_LogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 		$data .= "</div>\n";
 
 		$relfile = Director::makeRelative($errfile);
-		if($relfile[0] == '/') $relfile = substr($relfile, 1);
+		if($relfile && $relfile[0] == '/') $relfile = substr($relfile, 1);
 		
 		$host = @$_SERVER['HTTP_HOST'];
 		$uri = @$_SERVER['REQUEST_URI'];

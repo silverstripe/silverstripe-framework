@@ -133,6 +133,16 @@ class SS_Log {
 				'errline' => $message->getLine(),
 				'errcontext' => $message->getTrace()
 			);
+		} elseif(is_string($message)) {
+			$trace = SS_Backtrace::filtered_backtrace();
+			$lastTrace = $trace[0];
+			$message = array(
+				'errno' => '',
+				'errstr' => $message,
+				'errfile' => @$lastTrace['file'],
+				'errline' => @$lastTrace['line'],
+				'errcontext' => $trace
+			);
 		}
 		try {
 			self::get_logger()->log($message, $priority);
