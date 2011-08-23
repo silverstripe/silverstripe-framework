@@ -267,7 +267,6 @@ in the database.
 
 ### Switching languages
 
-A widget now exists to switch between languages, and is [available here](http://www.silverstripe.org/Language-Chooser-Widget/).
 You can easily make your own switchers with the following basic tools. To stay friendly to  caches and search engines, each
 translation of a page must have a unique URL.
 
@@ -346,12 +345,6 @@ Example:
 	<% control PageByLang(Kontakt,de_DE) %>
 	 <h2><a href="$Link" title="$Title">$Title</a></h2>
 	<% end_control %>
-
-
-### Language Chooser Widget
-
-You can use a widget on your website to provide a list of links for switching languages:
-[download](http://silverstripe.org/Language-Chooser-Widget-2/)
 
 
 ### Enabling the _t() function in templates 
