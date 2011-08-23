@@ -159,13 +159,13 @@ class SS_Log {
 				'errcontext' => $message->getTrace()
 			);
 		} elseif(is_string($message)) {
-			$trace = debug_backtrace();
-			array_pop($trace); // remove the log() call itself
+			$trace = SS_Backtrace::filtered_backtrace();
+			$lastTrace = $trace[0];
 			$message = array(
 				'errno' => '',
 				'errstr' => $message,
-				'errfile' => $trace[0]['file'],
-				'errline' => $trace[0]['line'],
+				'errfile' => @$lastTrace['file'],
+				'errline' => @$lastTrace['line'],
 				'errcontext' => $trace
 			);
 		}
