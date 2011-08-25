@@ -943,6 +943,14 @@ class MySQLDatabase extends SS_Database {
 		//Transactions not set up for MySQL yet
 	}
 	
+	public function transactionStart() {
+		return $this->startTransaction();
+	}
+	
+	public function transactionEnd() {
+		return $this->endTransaction();
+	}
+	
 	/*
 	 * Commit everything inside this transaction so far
 	 */
