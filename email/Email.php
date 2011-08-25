@@ -339,7 +339,7 @@ class Email extends ViewableData {
 			
 			// Process a .SS template file
 			$fullBody = $this->body;
-			if($this->ss_template && !$isPlain) {
+			if($this->ss_template) {
 				// Requery data so that updated versions of To, From, Subject, etc are included
 				$data = $this->templateData();
 				
