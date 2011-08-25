@@ -23,6 +23,9 @@ class SS_LogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 				$errorType = 'Notice';
 				$colour = 'grey';
 				break;
+			default:
+				$errorType = $event['priorityName'];
+				$colour = 'grey';
 		}
 
 		if(!is_array($event['message'])) {
