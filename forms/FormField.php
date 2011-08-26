@@ -387,7 +387,7 @@ class FormField extends RequestHandler {
 	 * Our base FormField class just returns a span containing the value.  This should be overridden!
 	 */
 	function Field() {
-		if($this->value) $value = $this->dontEscape ? ($this->reserveNL ? Convert::raw2xml($this->value) : $this->value) : Convert::raw2xml($this->value);
+		if($this->value) $value = $this->dontEscape ? ($this->reserveNL ? nl2br($this->value) : $this->value) : Convert::raw2xml($this->value);
 		else $value = '<i>(' . _t('FormField.NONE', 'none') . ')</i>';
 	
 		$attributes = array(
