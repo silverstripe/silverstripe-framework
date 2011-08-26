@@ -483,13 +483,8 @@ class File extends DataObject {
 		if(!$name) $name = $this->Title;
 
 		// Fix illegal characters
-		$name = ereg_replace(' +','-',trim($name)); // Replace any spaces
-		$name = ereg_replace('[^A-Za-z0-9.+_\-]','',$name); // Replace non alphanumeric characters
-
-		// Remove all leading dots or underscores
-		while(!empty($name) && ($name[0] == '_' || $name[0] == '.')) {
-			$name = substr($name, 1);
-		}
+		$filter = Object::create('FileNameFilter');
+		$name = $filter->filter($name);
 
 		// We might have just turned it blank, so check again.
 		if(!$name) $name = 'new-folder';

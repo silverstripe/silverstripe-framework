@@ -83,6 +83,8 @@ class Upload extends Controller {
 	
 	/**
 	 * Save an file passed from a form post into this object.
+	 * File names are filtered through {@link FileNameFilter}, see class documentation
+	 * on how to influence this behaviour.
 	 * 
 	 * @param $tmpFile array Indexed array that PHP generated for every file it uploads.
 	 * @param $folderPath string Folder path relative to /assets
@@ -124,10 +126,9 @@ class Upload extends Controller {
 		}
 
 		// Generate default filename
-		$fileName = str_replace(' ', '-',$tmpFile['name']);
-		$fileName = ereg_replace('[^A-Za-z0-9+.-]+','',$fileName);
-		$fileName = ereg_replace('-+', '-',$fileName);
-		$fileName = basename($fileName);
+		$nameFilter = Object::create('FileNameFilter');
+		$file = $nameFilter->filter($tmpFile['name']);
+		$fileName = basename($file);
 
 		$relativeFilePath = ASSETS_DIR . "/" . $folderPath . "/$fileName";
 		
