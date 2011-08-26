@@ -52,6 +52,17 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 .icon.icon-16.icon-help { background-position: 0 -80px; }
 
 /** ----------------------------- CMS Components ------------------------------ */
+/** File: typography.scss  Contains the basic typography related styles for the admin interface. */
+.cms h2, .cms h3, .cms h4, .cms h5 { font-weight: bold; margin: 16px 0 16px 0; line-height: 16px; }
+.cms h2 { font-size: 18px; line-height: 24px; }
+.cms h3 { font-size: 16px; }
+.cms h4 { font-size: 14px; }
+.cms h5 { font-size: 12px; }
+.cms p { line-height: 16px; margin-bottom: 16px; }
+.cms ins { background-color: #DFD; border: 1px solid #aaffaa; padding: 2px; text-decoration: none; }
+.cms del { background-color: #FDD; padding: 2px; color: #ff4444; border: 1px solid #ffaaaa; }
+.cms code { font-family: 'Bitstream Vera Sans Mono','Courier', monospace; }
+
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .cms .jstree ul { display: block; margin: 0; padding: 0; background: none; list-style-type: none; }
 .cms .jstree li { display: block; margin: 0; padding: 0; list-style-type: none; display: block; min-height: 18px; line-height: 18px; white-space: nowrap; margin-left: 18px; min-width: 18px; }
@@ -271,14 +282,6 @@ html article, html aside, html details, html figcaption, html figure, html foote
 /** -------------------------------------------- Helpers -------------------------------------------- */
 .cms-helper-hide-actions .Actions { display: none; }
 
-/** -------------------------------------------- Typography styles in tabs -------------------------------------------- */
-.ui-tabs-panel h2, .ui-tabs-panel h3, .ui-tabs-panel h4, .ui-tabs-panel h5 { font-weight: bold; margin: 16px 0 16px 0; line-height: 16px; }
-.ui-tabs-panel h2 { font-size: 18px; line-height: 24px; }
-.ui-tabs-panel h3 { font-size: 16px; }
-.ui-tabs-panel h4 { font-size: 14px; }
-.ui-tabs-panel h5 { font-size: 12px; }
-.ui-tabs-panel p { line-height: 16px; margin-bottom: 16px; }
-
 /** -------------------------------------------- Panels Styles -------------------------------------------- */
 .cms-container { height: 100%; background: #f0f3f4 url(../images/textures/bg_cms_main_content.png) repeat top left; }
 
@@ -286,7 +289,7 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form, .cms-preview, .cms-preview iframe, .cms-preview-controls { *display: inline; }
 
 .cms-content-header { background-color: #b0bec7; padding: 8px 8px 6px 16px; height: 32px; z-index: 60; border-bottom: 2px solid #8399a7; -moz-box-shadow: #eceff1 0 8px 16px; -webkit-box-shadow: #eceff1 0 8px 16px; -o-box-shadow: #eceff1 0 8px 16px; box-shadow: #eceff1 0 8px 16px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ced7dc), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#ced7dc, #92a5b2); background-image: -moz-linear-gradient(#ced7dc, #92a5b2); background-image: -o-linear-gradient(#ced7dc, #92a5b2); background-image: -ms-linear-gradient(#ced7dc, #92a5b2); background-image: linear-gradient(#ced7dc, #92a5b2); }
-.cms-content-header h2 { float: left; padding: 8px 8px 0 0; font-size: 14px; line-height: 24px; font-weight: bold; text-shadow: #bfcad2 1px 1px 0; width: 176px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
+.cms-content-header h2 { float: left; padding: 8px 8px 0 0; font-size: 14px; line-height: 24px; font-weight: bold; text-shadow: #bfcad2 1px 1px 0; width: 176px; margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
 .cms-content-header > div { width: 9999em; overflow: hidden; }
 .cms-content-header .cms-content-header-tabs { float: left; }
 
@@ -325,6 +328,7 @@ html article, html aside, html details, html figcaption, html figure, html foote
 /** -------------------------------------------- Messages -------------------------------------------- */
 .message { margin: 0 0 8px 0; padding: 7px 7px; font-weight: bold; border: 1px black solid; }
 .message.notice { background-color: #ffbe66; border-color: #ff9300; }
+.message.notice a { color: #999; }
 .message.warning { background-color: #ffbe66; border-color: #ff9300; }
 .message.error { background-color: #ffbe66; border-color: #ff9300; }
 

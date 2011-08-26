@@ -58,39 +58,6 @@ html,body {
 		display: none;
 	}
 }
-	
-/** --------------------------------------------
- * Typography styles in tabs
- * -------------------------------------------- */
-.ui-tabs-panel {
-	h2, h3, h4, h5 {
-		font-weight: bold;
-		margin: $grid-vertical * 2 0 $grid-vertical * 2 0;
-		line-height: $grid-vertical * 2;
-	}
-	
-	h2 {
-		font-size: $font-base-size + 6;
-		line-height: $grid-vertical * 3;
-	}
-	
-	h3 {
-		font-size: $font-base-size + 4;
-	}
-	
-	h4 {
-		font-size: $font-base-size + 2;
-	}
-	
-	h5 {
-		font-size: $font-base-size;
-	}
-	
-	p {
-		line-height: $grid-vertical * 2;
-		margin-bottom: $grid-vertical * 2;
-	}
-}
 
 /** --------------------------------------------
  * Panels Styles
@@ -135,7 +102,7 @@ html,body {
 		font-weight: bold;
 		text-shadow: darken($color-widget-bg, 15%) 1px 1px 0;
 		width: $grid-horizontal * 22 /* 24 - (padding on each side + margin) */;
-		
+		margin: 0;
 		@include hide-text-overflow();
 	}
 
@@ -338,7 +305,6 @@ html,body {
 
 .message {
 	margin: 0 0 $grid_vertical 0;
-	// minus one for the borders
 	padding: $grid_vertical - 1 $grid_horizontal - 1;
 	font-weight: bold;
 	
@@ -347,6 +313,10 @@ html,body {
 	&.notice {
 		background-color: lighten($color-notice, 20%);
 		border-color: $color-notice;
+		
+		a {
+			color: #999;
+		}
 	}
 	
 	&.warning {
@@ -356,6 +326,10 @@ html,body {
 	&.error {
 		background-color: lighten($color-error, 20%);
 		border-color: $color-error;
+	}
+	
+	p {
+		margin: 0;
 	}
 }
 
