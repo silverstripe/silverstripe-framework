@@ -952,6 +952,22 @@ class Versioned extends DataExtension {
 
 		return new $className($record);
 	}
+	
+	/**
+	 * Returns whether the current record is the latest one.
+	 *
+	 * @todo Performance - could do this directly via SQL.
+	 *
+	 * @see get_latest_version()
+	 * @see latestPublished
+	 *
+	 * @return bool
+	 */
+	function isLatestVersion() {
+		$version = self::get_latest_version($this->owner->class, $this->owner->ID);
+		
+		return ($version->Version == $this->owner->Version);
+	}
 
 	/**
 	 * Return the equivalent of a DataObject::get() call, querying the latest
@@ -1055,8 +1071,10 @@ class Versioned extends DataExtension {
 
 /**
  * Represents a single version of a record.
+ *
  * @package sapphire
  * @subpackage model
+ *
  * @see Versioned
  */
 class Versioned_Version extends ViewableData {
