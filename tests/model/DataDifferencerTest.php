@@ -8,20 +8,44 @@ class DataDifferencerTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/model/DataDifferencerTest.yml';
 	
-	protected $extraDataObjects = array('DataDifferencerTest_Object');
+	protected $extraDataObjects = array(
+		'DataDifferencerTest_Object',
+		'DataDifferencerTest_HasOneRelationObject',
+		'DataDifferencerTest_MockImage',
+	);
 	
 	function testArrayValues() {
 		$obj1 = $this->objFromFixture('DataDifferencerTest_Object', 'obj1');
 		// create a new version
 		$obj1->Choices = array('a');
 		$obj1->write();
-		$obj1v1 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, 1);
-		$obj1v2 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, 2);
+		$obj1v1 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, $obj1->Version-1);
+		$obj1v2 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, $obj1->Version);
 		$differ = new DataDifferencer($obj1v1, $obj1v2);
 		$obj1Diff = $differ->diffedData();
 		// TODO Using getter would split up field again, bug only caused by simulating
 		// an array-based value in the first place.
 		$this->assertContains('<ins>a</ins>  <del>a,b</del>', $obj1Diff->getField('Choices'));
+	}
+	
+	function testHasOnes() {
+		$obj1 = $this->objFromFixture('DataDifferencerTest_Object', 'obj1');
+		$image1 = $this->objFromFixture('DataDifferencerTest_MockImage', 'image1');
+		$image2 = $this->objFromFixture('DataDifferencerTest_MockImage', 'image2');
+		$relobj1 = $this->objFromFixture('DataDifferencerTest_HasOneRelationObject', 'relobj1');
+		$relobj2 = $this->objFromFixture('DataDifferencerTest_HasOneRelationObject', 'relobj2');
+
+		// create a new version
+		$obj1->ImageID = $image2->ID;
+		$obj1->HasOneRelationID = $relobj2->ID;
+		$obj1->write();
+		$obj1v1 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, $obj1->Version-1);
+		$obj1v2 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, $obj1->Version);
+		$differ = new DataDifferencer($obj1v1, $obj1v2);
+		$obj1Diff = $differ->diffedData();
+		$this->assertContains($image1->Filename, $obj1Diff->getField('Image'));
+		$this->assertContains($image2->Filename, $obj1Diff->getField('Image'));
+		$this->assertContains('<ins>obj2</ins>  <del>obj1</del>', $obj1Diff->getField('HasOneRelationID'));
 	}
 }
 
@@ -31,6 +55,11 @@ class DataDifferencerTest_Object extends DataObject implements TestOnly {
 
 	static $db = array(
 		'Choices' => "Varchar",
+	);
+	
+	static $has_one = array(
+		'Image' => 'DataDifferencerTest_MockImage',
+		'HasOneRelation' => 'DataDifferencerTest_HasOneRelationObject'
 	);
 	
 	function getCMSFields() {
@@ -54,4 +83,24 @@ class DataDifferencerTest_Object extends DataObject implements TestOnly {
 		$this->setField('Choices', (is_array($val)) ? implode(',', $val) : $val);
 	}
 	
+}
+
+class DataDifferencerTest_HasOneRelationObject extends DataObject implements TestOnly {
+	
+	static $db = array(
+		'Title' => 'Varchar'
+	);
+	
+	static $has_many = array(
+		'Objects' => 'DataDifferencerTest_Object'
+	);
+}
+
+class DataDifferencerTest_MockImage extends Image implements TestOnly {
+	function generateFormattedImage($format, $arg1 = null, $arg2 = null) {
+		$cacheFile = $this->cacheFilename($format, $arg1, $arg2);
+		$gd = new GD(Director::baseFolder()."/" . $this->Filename);
+		// Skip aktual generation
+		return $gd;
+	}
 }
