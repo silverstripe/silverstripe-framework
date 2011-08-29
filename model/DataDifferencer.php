@@ -76,13 +76,54 @@ class DataDifferencer extends ViewableData {
 			$fields = array_keys($this->toRecord->getAllFields());
 		}
 		
+		$hasOnes = $this->fromRecord->has_one();
+		
+		// Loop through properties
 		foreach($fields as $field) {
 			if(in_array($field, $this->ignoredFields)) continue;
+			if(in_array($field, array_keys($hasOnes))) continue;
 			
 			if(!$this->fromRecord) {
 				$diffed->setField($field, "<ins>" . $this->toRecord->$field . "</ins>");
 			} else if($this->fromRecord->$field != $this->toRecord->$field) {			
 				$diffed->setField($field, Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field));
+			}
+		}
+		
+		// Loop through has_one
+		foreach($hasOnes as $relName => $relSpec) {
+			if(in_array($relName, $this->ignoredFields)) continue;
+			
+			$relField = "{$relName}ID";
+			$relObjTo = $this->toRecord->$relName();
+			
+			if(!$this->fromRecord) {
+				if($relObjTo) {
+					if($relObjTo instanceof Image) {
+						// Using relation name instead of database column name, because of FileField etc.
+						// TODO Use CMSThumbnail instead to limit max size, blocked by DataDifferencerTest and GC
+						// not playing nice with mocked images
+						$diffed->setField($relName, "<ins>" . $relObjTo->getTag() . "</ins>");
+					} else {
+						$diffed->setField($relField, "<ins>" . $relObjTo->Title() . "</ins>");
+					}
+				}
+			} else if($this->fromRecord->$relField != $this->toRecord->$relField) {
+				$relObjFrom = $this->fromRecord->$relName();
+				if($relObjFrom instanceof Image) {
+					// TODO Use CMSThumbnail (see above)
+					$diffed->setField(
+						// Using relation name instead of database column name, because of FileField etc.
+						$relName, 
+						Diff::compareHTML($relObjFrom->getTag(), $relObjTo->getTag())
+					);
+				} else {
+					$diffed->setField(
+						$relField, 
+						Diff::compareHTML($relObjFrom->getTitle(), $relObjTo->getTitle())
+					);
+				}
+				
 			}
 		}
 		
