@@ -42,8 +42,11 @@ class DataDifferencer extends ViewableData {
 	/**
 	 * Construct a DataDifferencer to show the changes between $fromRecord and $toRecord.
 	 * If $fromRecord is null, this will represent a "creation".
+	 * 
+	 * @param DataObject (Optional)
+	 * @param DataObject 
 	 */
-	function __construct($fromRecord, $toRecord) {
+	function __construct($fromRecord, DataObject $toRecord) {
 		if(!$toRecord) user_error("DataDifferencer constructed without a toRecord", E_USER_WARNING);
 		$this->fromRecord = $fromRecord;
 		$this->toRecord = $toRecord;
@@ -77,9 +80,9 @@ class DataDifferencer extends ViewableData {
 			if(in_array($field, $this->ignoredFields)) continue;
 			
 			if(!$this->fromRecord) {
-				$diffed->$field = "<ins>" . $this->toRecord->$field . "</ins>";
+				$diffed->setField($field, "<ins>" . $this->toRecord->$field . "</ins>");
 			} else if($this->fromRecord->$field != $this->toRecord->$field) {			
-				$diffed->$field = Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field);
+				$diffed->setField($field, Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field));
 			}
 		}
 		
