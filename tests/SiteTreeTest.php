@@ -10,6 +10,14 @@ class SiteTreeTest extends SapphireTest {
 		'SiteTree' => array('SiteTreeSubsites')
 	);
 	
+	protected $extraDataObjects = array(
+		'SiteTreeTest_ClassA',
+		'SiteTreeTest_ClassB',
+		'SiteTreeTest_ClassC',
+		'SiteTreeTest_ClassD',
+		'SiteTreeTest_ClassCext'
+	);
+	
 	/**
 	 * @todo Necessary because of monolithic Translatable design
 	 */
@@ -715,6 +723,82 @@ class SiteTreeTest extends SapphireTest {
 		$this->assertNotContains('SiteTree', $classes, 'Page types do not include base class');
 		$this->assertContains('Page', $classes, 'Page types do contain subclasses');
 	}
+	
+	function testAllowedChildren() {
+		$page = new SiteTree();
+		$this->assertContains(
+			'VirtualPage', 
+			$page->allowedChildren(),
+			'Includes core subclasses by default'
+		);
+		
+		$classA = new SiteTreeTest_ClassA();
+		$this->assertEquals(
+			array('SiteTreeTest_ClassB'), 
+			$classA->allowedChildren(),
+			'Direct setting of allowed children'
+		);
+		
+		$classB = new SiteTreeTest_ClassB();
+		$this->assertEquals(
+			array('SiteTreeTest_ClassC', 'SiteTreeTest_ClassCext'), 
+			$classB->allowedChildren(),
+			'Includes subclasses'
+		);
+		
+		$classD = new SiteTreeTest_ClassD();
+		$this->assertEquals(
+			array('SiteTreeTest_ClassC'), 
+			$classD->allowedChildren(),
+			'Excludes subclasses if class is prefixed by an asterisk'
+		);
+		
+		$classC = new SiteTreeTest_ClassC();
+		$this->assertEquals(
+			array(), 
+			$classC->allowedChildren(),
+			'Null setting'
+		);
+	}
+
+	function testAllowedChildrenValidation() {
+		$page = new SiteTree();
+		$page->write();
+		$classA = new SiteTreeTest_ClassA();
+		$classA->write();
+		$classB = new SiteTreeTest_ClassB();
+		$classB->write();
+		$classC = new SiteTreeTest_ClassC();
+		$classC->write();
+		$classD = new SiteTreeTest_ClassD();
+		$classD->write();
+		$classCext = new SiteTreeTest_ClassCext();
+		$classCext->write();
+		
+		$classB->ParentID = $page->ID;
+		$valid = $classB->validate();
+		$this->assertTrue($valid->valid(), "Does allow children on unrestricted parent");
+		
+		$classB->ParentID = $classA->ID;
+		$valid = $classB->validate();
+		$this->assertTrue($valid->valid(), "Does allow child specifically allowed by parent");
+
+		$classC->ParentID = $classA->ID;
+		$valid = $classC->validate();
+		$this->assertFalse($valid->valid(), "Doesnt allow child on parents specifically restricting children");
+		
+		$classB->ParentID = $classC->ID;
+		$valid = $classB->validate();
+		$this->assertFalse($valid->valid(), "Doesnt allow child on parents disallowing all children");
+		
+		$classB->ParentID = $classC->ID;
+		$valid = $classB->validate();
+		$this->assertFalse($valid->valid(), "Doesnt allow child on parents disallowing all children");
+		
+		$classCext->ParentID = $classD->ID;
+		$valid = $classCext->validate();
+		$this->assertFalse($valid->valid(), "Doesnt allow child where only parent class is allowed on parent node, and asterisk prefixing is used");
+	}
 
 }
 
@@ -741,6 +825,29 @@ class SiteTreeTest_Conflicted_Controller extends Page_Controller implements Test
 		}
 	}
 	 
+}
+
+class SiteTreeTest_ClassA extends Page implements TestOnly {
+	static $allowed_children = array('SiteTreeTest_ClassB');
+}
+
+class SiteTreeTest_ClassB extends Page implements TestOnly {
+	// Also allowed subclasses
+	static $allowed_children = array('SiteTreeTest_ClassC'); 
+}
+
+class SiteTreeTest_ClassC extends Page implements TestOnly {
+	static $allowed_children = array();
+}
+
+class SiteTreeTest_ClassD extends Page implements TestOnly {
+	// Only allows this class, no children classes
+	static $allowed_children = array('*SiteTreeTest_ClassC');
+}
+
+class SiteTreeTest_ClassCext extends SiteTreeTest_ClassC implements TestOnly {
+	// Override SiteTreeTest_ClassC definitions
+	static $allowed_children = array('SiteTreeTest_ClassB');
 }
 
 /**#@-*/

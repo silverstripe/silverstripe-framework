@@ -16,6 +16,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * If a classname is prefixed by "*", such as "*Page", then only that
 	 * class is allowed - no subclasses. Otherwise, the class and all its
 	 * subclasses are allowed.
+	 * To control allowed children on root level (no parent), use {@link $can_be_root}.
 	 *
 	 * @var array
 	 */
@@ -1457,6 +1458,36 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		parent::onAfterDelete();
 	}
 	
+	function validate() {
+		$result = parent::validate();
+
+		// Allowed children validation 
+		$parent = $this->getParent();
+		if($parent && $parent->exists()) {
+			// No need to check for subclasses or instanceof, as allowedChildren() already 
+			// deconstructs any inheritance trees already.
+			$allowed = $parent->allowedChildren();
+			$subject = ($this instanceof VirtualPage) ? $this->CopyContentFrom() : $this;
+			if($subject->ID && !in_array($subject->ClassName, $allowed)) {
+				
+				$result->error(
+					sprintf(
+						_t(
+							'SiteTree.PageTypeNotAllowed', 
+							'Page type "%s" not allowed as child of this parent page', 
+							PR_MEDIUM,
+							'First argument is a class name'
+						),
+						$subject->i18n_singular_name()
+					),
+					'ALLOWED_CHILDREN'
+				);
+			}
+		}
+		
+		return $result;
+	}
+	
 	/**
 	 * Returns TRUE if this object has a URLSegment value that does not conflict with any other objects. This methods
 	 * checks for:
@@ -2305,9 +2336,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return array
 	 */
 	function allowedChildren() {
+		$allowedChildren = array();
 		$candidates = $this->stat('allowed_children');
 		if($candidates && $candidates != "none" && $candidates != "SiteTree_root") {
 			foreach($candidates as $candidate) {
+				// If a classname is prefixed by "*", such as "*Page", then only that
+				// class is allowed - no subclasses. Otherwise, the class and all its subclasses are allowed.
 				if(substr($candidate,0,1) == '*') {
 					$allowedChildren[] = substr($candidate,1);
 				} else {
@@ -2317,10 +2351,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 					}
 				}
 			}
-			return $allowedChildren;
 		}
+		
+		return $allowedChildren;
 	}
-
 
 	/**
 	 * Returns the class name of the default class for children of this page.
