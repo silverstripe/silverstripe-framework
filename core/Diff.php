@@ -788,7 +788,16 @@ class Diff
 		// echo "<p>" . htmlentities($content) . "</p>";
 		return self::cleanHTML($content);
 	}
+	
+	/**
+	 * @param string|array If passed as an array, values will be concatenated with a comma.
+	 */
 	static function getHTMLChunks($content) {
+		if($content && !is_string($content) && !is_array($content) && !is_numeric($content)) {
+			throw new InvalidArgumentException('$content parameter needs to be a string or array');
+		}
+		if(is_array($content)) $content = implode(',', $content);
+		
 		$content = str_replace(array("&nbsp;","<", ">"),array(" "," <", "> "),$content);
 		$candidateChunks = split("[\t\r\n ]+", $content);
 		while(list($i,$item) = each($candidateChunks)) {
