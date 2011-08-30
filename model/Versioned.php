@@ -764,7 +764,7 @@ class Versioned extends DataExtension {
 			Versioned::reading_stage("Live");
 		}
 
-		if(!headers_sent()) {
+		if(!headers_sent() && !Director::is_cli()) {
 			if(Versioned::current_stage() == 'Live') {
 				Cookie::set('bypassStaticCache', null, 0, null, null, false, true /* httponly */);
 			} else {
