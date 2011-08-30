@@ -2278,7 +2278,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$result = array();
 		foreach($classes as $class) {
 			$instance = singleton($class);
-			if((($instance instanceof HiddenClass) || !$instance->canCreate()) && ($class != $this->class)) continue;
+			if((($instance instanceof HiddenClass) || !$instance->canCreate())) continue;
 			
 			if($perms = $instance->stat('need_permission')) {
 				if(!$this->can($perms)) continue;
