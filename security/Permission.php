@@ -93,7 +93,7 @@ class Permission extends DataObject {
 	/**
 	 * Check that the current member has the given permission.
 	 * 
-	 * @param string $code Code of the permission to check (case-sensitive)
+	 * @param string|array $code Code of the permission to check (case-sensitive)
 	 * @param string $arg Optional argument (e.g. a permissions for a specific page)
 	 * @param int|Member $member Optional member instance or ID. If set to NULL, the permssion
 	 *  will be checked for the current user
