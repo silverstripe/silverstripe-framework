@@ -93,7 +93,7 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List {
 		return $this->list->forTemplate();
 	}
 
-	public function map($index = 'ID', $titleField = 'Title', $emptyString = null, $sort = false) {
+	public function map($index, $titleField, $emptyString = null, $sort = false) {
 		return $this->list->map($index, $titleField, $emptyString, $sort);
 	}
 
@@ -101,7 +101,7 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List {
 		return $this->list->find($key, $value);
 	}
 
-	public function column($value = 'ID') {
+	public function column($value) {
 		return $this->list->column($value);
 	}
 

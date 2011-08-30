@@ -58,7 +58,7 @@ class PermissionTest extends SapphireTest {
 		$accessAuthor = $this->objFromFixture('Member', 'author');
 
 		$result = Permission::get_members_by_permission(array('CMS_ACCESS_SecurityAdmin'));
-		$resultIDs = $result ? $result->column() : array();
+		$resultIDs = $result ? $result->column('ID') : array();
 		
 		$this->assertContains($accessMember->ID, $resultIDs,
 			'Member is found via a permission attached to a role');

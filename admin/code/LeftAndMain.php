@@ -351,7 +351,7 @@ class LeftAndMain extends Controller {
 	function handleRequest($request) {
 		$title = $this->Title();
 		
-		$response = parent::handleRequest($request);
+		$response = parent::handleRequest($request, new DataModel());
 		$response->addHeader('X-Controller', $this->class);
 		$response->addHeader('X-Title', $title);
 		

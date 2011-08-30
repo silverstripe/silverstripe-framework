@@ -59,7 +59,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 		$article = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
 		
 		/* Create a CheckboxSetField with nothing selected */
-		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map());
+		$field = new CheckboxSetField("Tags","Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map('ID','Title'));
 		
 		/* Saving should work */
 		$field->saveInto($article);
@@ -80,7 +80,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 		$tag2 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
 		
 		/* Create a CheckboxSetField with 2 items selected.  Note that the array is in the format (key) => (selected) */
-		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map());
+		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map('ID','Title'));
 		$field->setValue(array(
 			$tag1->ID => true,
 			$tag2->ID => true
@@ -113,7 +113,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 		$tag1 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
 		$tag2 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
 	
-		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map());
+		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map('ID','Title'));
 		$form = new Form(
 			new Controller(), 
 			'Form',

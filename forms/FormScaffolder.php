@@ -152,14 +152,10 @@ class FormScaffolder extends Object {
 					}
 
 					$relationshipFields = singleton($component)->summaryFields();
-<<<<<<< HEAD
-					$ctf =  new ComplexTableField(
-=======
 					$filterWhere = $this->obj->getManyManyFilter($relationship, $component);
 					$filterJoin = $this->obj->getManyManyJoin($relationship, $component);
 					$fieldClass = (isset($this->fieldClasses[$relationship])) ? $this->fieldClasses[$relationship] : 'ComplexTableField';
 					$ctf = new $fieldClass(
->>>>>>> master
 						$this,
 						$relationship,
 						null,
