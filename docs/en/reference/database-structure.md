@@ -121,9 +121,5 @@ it could be beneficial to set up a SilverStripe data-object as an interface laye
 applications.  This kind of configuration support is on the cards for development once we start looking more seriously
 at providing avenues for clean integration between systems.
 *  Some developers have commented that the the database layer could be used to maintain the relational integrity of this
-database structure.  I don't know whether MySQL supports this or not, but in any case, this stuff would be available in
-other database platforms if we chose to support them.
-*  We'd like to support more than just MySQL, however, there needs to be a pretty good reason for doing so since it will
-become something that needs to be supported for the rest of SilverStripe's life and could easily become an albatross. 
-On the cards are MS SQL, PostgreSQL and SQLite.
+database structure.
 *  It could be desirable to implement a non-repeating auto-numbering system.

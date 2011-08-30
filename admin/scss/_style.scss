@@ -1,20 +1,15 @@
 /**
- * This file defines the 'theme' of the CMS: Colors, fonts, backgrounds, and detailed alignments.
- * Together with _layout.css it provides the presentational backbone to the CMS.
- * Ideally a developer should be able to exchange this file with his own theme easily.
- * 
- * Please don't put any dimension, display or float information on major structural components
- * like '.cms-container' or '.cms-header' in here, use the _layout.scss file instead.
+ * This file defines most styles of the CMS: Colors, fonts, backgrounds, alignments, dimensions.
  * 
  * Use SCSS variable definitions in screen.css to avoid repeating styles like background colours
- * or padding dimensions. See _colours.scss to get started.
+ * or padding dimensions. See themes/_default.scss to get started.
  * 
  * To avoid this file getting too large and complicated, it is encouraged to create new SCSS files
  * for larger components like the CMS menu or tree (see _tree.scss and _menu.scss).
  */
 
 /** ----------------------------------------------------
- * Core Styles
+ * Core Styles.
  * ---------------------------------------------------- */
 
 html,body {	
@@ -25,25 +20,71 @@ html,body {
 	@include global-reset;
 
 	font-size: $font-base-size;
+	line-height: $grid-vertical * 2;
 	font-family: $font-family;
 	color: $color-text;
 }
 
-a {
-	color: $color-text-dark-link;
-	text-decoration: none;
+.cms {
+	a {
+		color: $color-text-dark-link;
+		text-decoration: none;
 	
-	&:hover,
-	&:focus {
-		text-decoration: underline;
+		&:hover,
+		&:focus {
+			text-decoration: underline;
+		}
+	}
+	
+	body .ui-widget {
+		font-family: $font-family;
+		font-size: $font-base-size;
+	}
+	
+	strong {
+		font-weight: bold;
 	}
 }
-body .ui-widget {
-	font-size: $font-base-size;
+
+/** --------------------------------------------
+ * Typography styles in tabs
+ * -------------------------------------------- */
+.ui-tabs-panel {
+	h2, h3, h4, h5 {
+		font-weight: bold;
+		margin: $grid-vertical * 2 0 $grid-vertical * 2 0;
+		line-height: $grid-vertical * 2;
+	}
+	
+	h2 {
+		font-size: $font-base-size + 6;
+		line-height: $grid-vertical * 3;
+	}
+	
+	h3 {
+		font-size: $font-base-size + 4;
+	}
+	
+	h4 {
+		font-size: $font-base-size + 2;
+	}
+	
+	h5 {
+		font-size: $font-base-size;
+	}
+	
+	p {
+		line-height: $grid-vertical * 2;
+		margin-bottom: $grid-vertical * 2;
+	}
 }
 
+/** --------------------------------------------
+ * Panels Styles
+ * -------------------------------------------- */
 .cms-container {
 	height: 100%;
+	background: $tab-panel-texture-background;
 }
 
 .cms-preview,
@@ -51,34 +92,38 @@ body .ui-widget {
 .cms-content,
 .cms-content-header,
 .cms-content-tools,
-.cms-content-form {
+.cms-content-fields,
+.cms-edit-form,
+.cms-preview,
+.cms-preview iframe,
+.cms-preview-controls
+ {
 	@include inline-block;
 }
 
 
-strong {
-	font-weight: bold;
-}
-
-// ######################### Misc Panels #########################
-
 .cms-content-header {
 	background-color: darken($color-widget-bg, 20%);
-	padding: 8px;	
-	height: 32px;
+	padding: $grid-vertical $grid-horizontal ($grid-vertical - 2) $grid-horizontal * 2;	
+	height: $grid-vertical * 4;
+	z-index: 60;
+	border-bottom: 2px solid darken($color-widget-bg, 35%);
 
-	@include linear-gradient(color-stops(
-		darken($color-widget-bg, 20%),
-		darken($color-widget-bg, 30%)
-	));
-
+	@include box-shadow($color-widget-bg 0 $grid-vertical $grid-vertical*2);
+	@include background-image(
+		linear-gradient(darken($color-widget-bg, 10%), darken($color-widget-bg, 30%))
+	);
 	
 	h2 {
 		float: left;
-		padding: 8px;
-		font-size: 14px;
+		padding: $grid-vertical $grid-horizontal 0 0;
+		font-size: $font-base-size + 2;
+		line-height: $grid-horizontal * 3;
 		font-weight: bold;
-		width: 250px - (10px*2);
+		text-shadow: darken($color-widget-bg, 10%) 1px 1px 0;
+		width: $grid-horizontal * 21 /* 24 - (padding on each side + margin) */;
+		
+		@include hide-text-overflow();
 	}
 
 	& > div {
@@ -93,39 +138,42 @@ strong {
 
 .ui-tabs .cms-content-header {
 	.ui-tabs-nav li {
-		height: 40px;
-
 		a {
 			font-weight: bold;
-			font-size: 11px;
-			padding-top: 8px;
+			line-height: $grid-vertical * 2;
+			padding: ($grid-vertical * 2 - 5) $grid-horizontal + 4 $grid-vertical + 1;
+			border-bottom: 2px solid darken($color-tab, 15%);
 		}
 	}
 	
 	.ui-state-default, 
 	.ui-widget-content .ui-state-default, 
 	.ui-widget-header .ui-state-default {
-		background-color: lighten($color-shadow-light, 20%);
-		@include linear-gradient(color-stops(
-			lighten($color-shadow-light, 20%),
-			lighten($color-shadow-light, 5%)
+		background-color: $color-tab;
+		@include background-image(
+			linear-gradient($color-tab, darken($color-tab, 10%)
 		));
+		
+		border-color: darken($color-tab, 20%);
+		text-shadow: lighten($color-tab, 60%) 0 1px 0;
 	}
 	
 	.ui-state-active, 
 	.ui-widget-content .ui-state-active, 
 	.ui-widget-header .ui-state-active {
 		background: $color-widget-bg;
+		
+		a {
+			border-bottom: 2px solid $color-widget-bg;
+		}
 	}
 }
 
-.cms-content-tools {
-	background-color: darken($color-widget-bg, 5%);
-	padding: 10px;	
-	width: 230px;
-	overflow: auto;	
+.cms-content {
+	&.loading {
+		background: url(../images/spinner.gif) no-repeat 50% 50%;
+	}
 }
-
 
 /** -------------------------------------------------------
  * Top Left Header and logo area
@@ -134,18 +182,16 @@ strong {
 .cms-header {
 	background-color: darken($color-dark-bg, 10%);
 	position: relative;
-	padding: 16px 8px 8px;
+	padding: 16px 8px 4px 4px;
 	line-height: 24px;
 
-	@include linear-gradient(color-stops(
-		darken($color-dark-bg, 10%), 
-		$color-dark-bg, 
-		darken($color-dark-bg, 10%)
+	@include background-image(
+		linear-gradient(darken($color-dark-bg, 10%), $color-dark-bg, darken($color-dark-bg, 10%)
 	));
 	
 	span {
 		color: $color-text-light;
-		white-space: no-wrap;
+		white-space: nowrap;
 		text-overflow: ellipsis;
 		display: block;
 		
@@ -160,8 +206,9 @@ strong {
 	border-bottom: 1px solid darken($color-dark-separator, 20%);
 	height: 31px;
 	overflow: hidden;
-	padding: 0 4px;
+	padding: 0 0 0 4px;
 	vertical-align: middle;
+	font-size: $font-base-size;
 	
 	.version {
 		display: none; 
@@ -169,36 +216,45 @@ strong {
 	
 	a {
 		display: inline-block;
-		height: $application-logo-small-ysize;
-		width: $application-logo-small-xsize;
+		height: 24px;
+		width: 24px;
 		float: left;
-		margin-right: 10px;
+		margin-right: 8px;
 		background: $application-logo-small no-repeat;
 		text-indent: -9999em;
+		padding-right: 7px;
+		border-right: 1px solid $color-dark-separator;
+	}
+	
+	span {
+		font-weight: bold;
+		font-size: 14px;
+		@include hide-text-overflow();
 	}
 }
 
 .cms-login-status {
 	border-top: 1px solid $color-dark-separator;
 	height: 23px;
-	padding: 8px 0 0 14px;
+	padding: 8px 4px 0 4px;
 	overflow: hidden;
 	line-height: 16px;
-	font-size: 11px;
+	font-size: $font-base-size - 1;
 	
 	.logout-link {
 		display: inline-block;
 		height: 16px;
 		width: 16px;
 		float: left;
-		margin-right: 10px;
+		margin: 0 8px 0 3px;
 		background: url(../images/logout.png) no-repeat;
 		text-indent: -9999em;
 	}
 }
 
-// ######################### Loading Screen #########################
-
+/** -----------------------------------------------
+ * Loading Screen
+ * ------------------------------------------------ */
 .ss-loading-screen, 
 .ss-loading-screen .loading-logo {
 	width: 100%;
@@ -245,21 +301,30 @@ strong {
 	}
 }
 
-// ######################### Actions #########################
+/** --------------------------------------------
+ * Actions
+ * -------------------------------------------- */
 
 .cms-content-actions {
-	padding: 8px;
+	margin: $grid-vertical $grid-horizontal;
+	text-align: right;
+	height: $grid-vertical*4;
+	z-index: 70;
+	
+	@include box-shadow($tab-panel-texture-color 0 $grid-vertical*-2 $grid-vertical*2);
 }
 
-// ######################### Messages #########################
 
-/**
- * Messages (see sapphire/css/Form.css)
- */
+/** --------------------------------------------
+ * Messages
+ * -------------------------------------------- */
+
 .message {
-	margin: 1em 0;
-	padding: 0.5em;
+	margin: 0 0 $grid_vertical 0;
+	// minus one for the borders
+	padding: $grid_vertical - 1 $grid_horizontal - 1;
 	font-weight: bold;
+	
 	border: 1px black solid;
 	
 	&.notice {
@@ -277,20 +342,21 @@ strong {
 	}
 }
 
-// ######################### ModelAdmin #########################
+/** --------------------------------------------
+ * ModelAdmin
+ * -------------------------------------------- */
 
 .ModelAdmin {
-	.cms-content-tools {
-		width: 300px;
-	}
-	
 	// Disable by default, will be replaced by more intuitive column selection in new data grid
 	.ResultAssemblyBlock {
 		display: none;
 	}
 }
 
-// ######################### "Add page" dialog #########################
+/** --------------------------------------------
+ * "Add page" dialog
+ * -------------------------------------------- */
+
 .cms-page-add-form-dialog {
 	#PageType li {
 		clear: left;
@@ -320,10 +386,20 @@ strong {
 	}
 }
 
-// ######################### Content toolbar #########################
+/** --------------------------------------------
+ * Content toolbar
+ * -------------------------------------------- */
+
 .cms-content-toolbar {
+
+	display: block;
+	margin: 0 0 15px 0;
+	
+	@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 50%));
+	@include legacy-pie-clearfix();
+		
 	& > * {
-		display: inline-block;
+		float: left;
 	}
 	
 	.cms-tree-view-modes * {
@@ -335,19 +411,155 @@ strong {
 	}
 }
 
-// ######################### Preview header (remove before release) #########################
+
+/* --------------------------------------------------------
+ * Content Tools is the sidebar on the left of the main content
+ * panel
+ */
+.cms-content-tools {
+	background-color: darken($color-widget-bg, 5%);
+	width: $grid-horizontal * 25;
+	border-right: 1px solid darken($color-widget-bg, 15%);
+	overflow: auto;	
+	z-index: 60;
+	
+	.cms-panel-header {
+		padding: 0 $grid-horizontal / 2;
+		margin: $grid-vertical $grid-horizontal * 1.5 0;
+		line-height: $grid-vertical * 3;
+		
+		@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 10%))
+	
+	}
+	
+	.cms-panel-content {
+		width: ($grid-horizontal * 20);
+		padding: $grid-vertical $grid-horizontal * 2;
+		
+		form {
+			width: $grid-horizontal * 20;
+		}
+	}
+
+	h3,h4,h5 {
+		font-weight: bold;
+		line-height: $grid-vertical * 2;
+	}
+	h3 {
+		font-size: $font-base-size + 1;
+	}
+	
+	.field {
+		/* fields are more compressed in the sidebar */
+		label {
+			float: none;
+			width: auto;
+			padding: 0 $grid-vertical 0 0;
+		}
+		
+		.middleColumn {
+			margin: 2px 0;
+		}
+		
+		input,
+		select,
+		textarea {
+			padding: ($grid-vertical - 2); /* taken 2px off the padding to realign with grid */
+		}
+		
+		/* smaller treedropdown */
+		.chzn-container-single .chzn-single  {
+			height: 26px;
+			line-height: 28px;
+		}
+		
+		.chzn-container-single .chzn-single div b {
+			background-position: 4px 2px;
+		}
+	}
+	
+	.fieldgroup {
+		.fieldgroup-field {
+			width: auto;
+			padding: 0;
+			
+			.field {
+				margin: 0;
+				padding: 0;
+			}
+		}
+	}
+}
+
+.cms-content-batchactions, .cms-content-constructive-actions {
+	float: right;
+}
+
+.cms-content-batchactions {
+	float: right;
+	position:  relative;
+	display: block;
+	margin-right:  8px;
+}
+
+form.cms-batch-actions {
+	float:  left;
+}
+
+.cms-content-constructive-actions a {
+	display:  block;
+	float: right;
+}
+
+/** --------------------------------------------
+ * Preview header (remove before release)
+ * -------------------------------------------- */
+
 .cms-preview {
 	width: 1px; // collapsed by default
-	overflow: hidden;
+	z-index: 100;
 		
 	.cms-preview-toggle {
 		width: 10px;
+	}
+	
+	.cms-preview-overlay {
+		
 	}
 	
 	iframe {
 		width: 100%;
 		height: 100%;
 	}
+	
+	.cms-preview-controls {
+		z-index: 99;
+		background: $color-widget-bg;
+		padding: 10px;
+		min-height: 30px;
+		
+		.cms-navigator {
+			width: 100%;
+			
+			* {
+				display: inline-block;
+			}
+		} 
+		
+		.cms-preview-states {
+			margin-right: 10px;
+		}
+
+		.cms-preview-popup-link {
+			display: inline-block;
+		}
+
+		.cms-preview-toggle-link {
+			float: right;
+			font-size: 11px;
+		}
+	}
+	
 }
 
 .cms-preview-header {
@@ -356,7 +568,9 @@ strong {
 	font-weight: bold;
 }
 
-// ######################### Member Profile #########################
+/** --------------------------------------------
+ * Member Profile
+ * -------------------------------------------- */
 
 form.member-profile-form {
 	
@@ -401,20 +615,114 @@ form.member-profile-form {
 	
 }
 
-.cms-content-form {
-	overflow: auto;
+.cms {
+	.cms-content {
+		border-right: 1px solid $color-light-separator;
+		
+		@include box-shadow(3px 0 4px rgba(0,0,0,0.15));
+		@include border-radius(0);
+	}
+	
+	.cms-content-fields {
+		/* always show a y scroll bar as popups like TreeDropdowns 
+		 can trigger longer pages and the extra scroll bar doesn't 
+		 fire our sizing bar */
+		overflow-y: scroll;
+		overflow-x: auto;
+		background: none;
+	}
 }
 
+/** --------------------------------------------
+ * Panels
+ * -------------------------------------------- */
+
+.cms-panel {
+	overflow: hidden;
+
+	.toggle-expand,
+	.toggle-collapse {
+		display: block;
+		position: absolute;
+		bottom: 0;
+		text-align: right;
+		
+		@include background-image(
+			linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 30%))
+		);
+
+		text-decoration: none;
+		
+		span {
+			display: inline-block;
+			margin: 5px;
+			color: $color-text-dark;
+			font-size: 16px;
+		}
+	}
+	
+	.toggle-collapse {
+		width: 100%;
+	}
+	
+	.toggle-expand {
+		width: 40px; // will set the collapsed width
+	}
+	
+	&.collapsed {
+		
+		.cms-panel-content {
+			display: none;
+		}
+		
+		.cms-panel-header {
+			@include rotate(-90deg);
+			position: relative;
+			top: $grid-vertical * 10;
+			border: none;
+			padding: 0;
+		}
+	}
+	
+}
+
+.cms-content .cms-panel.collapsed {
+	cursor: pointer;
+}
+
+/** --------------------------------------------
+ * Other
+ * -------------------------------------------- */
 .cms-preview {
-	background-color: $color-base;
 	
 	.cms-preview-toggle {
 		cursor: pointer;
 		
 		a {
+			display: block;
+			padding: 2px 12px 2px 6px;
+			height: 16px;
+			position: relative;
+			top: 48%;
+			background-color: $color-base;
 			color: $color-text-light;
 			font-weight: bold;
 			text-decoration: none;
+			z-index: 2000;
+			line-height: 16px;
+			
+			@include border-bottom-right-radius(4px);
+			@include border-top-right-radius(4px);
+			
+			@include box-shadow(0 0 10px rgba(180, 180,180,0.4));
+		}
+	}
+	
+	&.is-collapsed {
+		.cms-preview-toggle {
+			a {
+				left: -15px; // point left
+			}
 		}
 	}
 }

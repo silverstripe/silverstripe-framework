@@ -166,15 +166,15 @@ and send us "[pull requests](http://help.github.com/pull-requests/)".
 Note: Smaller edits can be performed in the github.com web interface on your fork,
 every page view should have an "edit this file" button.
 
-The [doc.silverstripe.org](http://doc.silverstripe.org) website itself is powered by a
-SilverStripe project that uses the ["sapphiredocs" module](https://github.com/silverstripe/silverstripe-sapphiredocs)
-to convert Markdown formatted files into searchable HTML pages with index lists.
-
 ### Repositories
 
-*  End-user: [userhelp.silverstripe.org](http://userhelp.silverstripe.org)
-*  Developer Guides: [doc.silverstripe.org](http://doc.silverstripe.org)
-*  Developer API Docuumentation: [api.silverstripe.org](http://api.silverstripe.org)
+*  End-user: [userhelp.silverstripe.org](http://userhelp.silverstripe.org) - a custom SilverStripe project (not open sourced at the moment).
+*  Developer Guides: [doc.silverstripe.org](http://doc.silverstripe.org) - powered by a
+SilverStripe project that uses the ["sapphiredocs" module](https://github.com/silverstripe/silverstripe-sapphiredocs)
+to convert Markdown formatted files into searchable HTML pages with index lists.
+Its contents are fetched from different releases automatically every couple of minutes.
+*  Developer API Docuumentation: [api.silverstripe.org](http://api.silverstripe.org) - powered by a customized
+[phpDocumentor](http://www.phpdoc.org/) template, and is regenerated automatically every night.
 
 ### Source Control
 

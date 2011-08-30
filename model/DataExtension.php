@@ -61,6 +61,9 @@ abstract class DataExtension extends Extension {
 		
 		// If the extension has been manually applied to a subclass, we should ignore that.
 		if(Object::has_extension(get_parent_class($class), $extensionClass)) return;
+
+		// If there aren't any extraStatics we shouldn't try to load them.
+		if ( ! method_exists($extensionClass, $extraStaticsMethod) ) return;
 		
 		$statics = call_user_func(array($extensionClass, $extraStaticsMethod), $class, $extension);
 		

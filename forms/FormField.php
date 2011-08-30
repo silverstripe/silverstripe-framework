@@ -562,6 +562,7 @@ HTML;
 	/**
 	 * Construct and return HTML tag.
 	 * 
+	 * @return string HTML tag
 	 * @todo Transform to static helper method.
 	 */
 	function createTag($tag, $attributes, $content = null) {
@@ -598,6 +599,8 @@ HTML;
 	 * Describe this field, provide help text for it.
 	 * The function returns this so it can be used like this:
 	 * $action = FormAction::create('submit', 'Submit')->describe("Send your changes to be approved")
+	 * 
+	 * @return string Description
 	 */
 	function describe($description) {
 		$this->description = $description;

@@ -10,7 +10,7 @@ class Member extends DataObject {
 	static $db = array(
 		'FirstName' => 'Varchar',
 		'Surname' => 'Varchar',
-		'Email' => 'Varchar',
+		'Email' => 'Varchar(256)', // See RFC 5321, Section 4.5.3.1.3.
 		'Password' => 'Varchar(160)',
 		'RememberLoginToken' => 'Varchar(50)',
 		'NumVisit' => 'Int',
@@ -400,7 +400,7 @@ class Member extends DataObject {
 				
 				$generator = new RandomGenerator();
 				$member->RememberLoginToken = $generator->generateHash('sha1');
-				Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
+				Cookie::set('alc_enc', $member->ID . ':' . $member->RememberLoginToken, 90, null, null, false, true);
 
 				$member->NumVisit++;
 				$member->write();

@@ -96,7 +96,13 @@ class FormScaffolder extends Object {
 		if($this->obj->has_one()) {
 			foreach($this->obj->has_one() as $relationship => $component) {
 				if($this->restrictFields && !in_array($relationship, $this->restrictFields)) continue;
-				$hasOneField = $this->obj->dbObject("{$relationship}ID")->scaffoldFormField(null, $this->getParamsArray());
+				$fieldName = "{$relationship}ID";
+				if($this->fieldClasses && isset($this->fieldClasses[$fieldName])) {
+					$fieldClass = $this->fieldClasses[$fieldName];
+					$hasOneField = new $fieldClass($fieldName);
+				} else {
+					$hasOneField = $this->obj->dbObject($fieldName)->scaffoldFormField(null, $this->getParamsArray());
+				}
 				$hasOneField->setTitle($this->obj->fieldLabel($relationship));
 				if($this->tabbed) {
 					$fields->addFieldToTab("Root.Main", $hasOneField);
@@ -118,7 +124,9 @@ class FormScaffolder extends Object {
 						);
 					}
 					$relationshipFields = singleton($component)->summaryFields();
-					$ctf = new ComplexTableField(
+					$foreignKey = $this->obj->getRemoteJoinField($relationship);
+					$fieldClass = (isset($this->fieldClasses[$relationship])) ? $this->fieldClasses[$relationship] : 'ComplexTableField';
+					$ctf = new $fieldClass(
 						$this,
 						$relationship,
 						null,
@@ -144,7 +152,14 @@ class FormScaffolder extends Object {
 					}
 
 					$relationshipFields = singleton($component)->summaryFields();
+<<<<<<< HEAD
 					$ctf =  new ComplexTableField(
+=======
+					$filterWhere = $this->obj->getManyManyFilter($relationship, $component);
+					$filterJoin = $this->obj->getManyManyJoin($relationship, $component);
+					$fieldClass = (isset($this->fieldClasses[$relationship])) ? $this->fieldClasses[$relationship] : 'ComplexTableField';
+					$ctf = new $fieldClass(
+>>>>>>> master
 						$this,
 						$relationship,
 						null,
