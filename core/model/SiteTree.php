@@ -680,25 +680,21 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 
 	/**
-	 * This function should return true if the current user can add children
-	 * to this page. It can be overloaded to customise the security model for an
-	 * application.
-	 *
-	 * Returns true if the member is allowed to do the given action.
+	 * This function should return true if the current user can execute this action. 
+	 * It can be overloaded to customise the security model for an application.
+	 * 
+	 * Slightly altered from parent behaviour in {@link DataObject->can()}:
+	 * - Checks for existence of a method named "can<$perm>()" on the object
+	 * - Calls decorators and only returns for FALSE "vetoes"
+	 * - Falls back to {@link Permission::check()}
+	 * - Does NOT check for many-many relations named "Can<$perm>"
 	 *
 	 * @uses DataObjectDecorator->can()
 	 *
-	 * If a page is set to inherit, but has no parent, it inherits from
-	 * {@link SiteConfig}
-	 *
 	 * @param string $perm The permission to be checked, such as 'View'.
 	 * @param Member $member The member whose permissions need checking.
-	 *                       Defaults to the currently logged in user.
-	 *
-	 * @return boolean True if the the member is allowed to do the given
-	 *                 action.
-	 *
-	 * @todo Check we get a endless recursion if we use parent::can()
+	 *        Defaults to the currently logged in user.
+	 * @return boolean True if the the member is allowed to do the given action.
 	 */
 	function can($perm, $member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) {
@@ -707,7 +703,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 
 		if($member && Permission::checkMember($member, "ADMIN")) return true;
 		
-		if(method_exists($this, 'can' . ucfirst($perm))) {
+		if(is_string($perm) && method_exists($this, 'can' . ucfirst($perm))) {
 			$method = 'can' . ucfirst($perm);
 			return $this->$method($member);
 		}
@@ -715,7 +711,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$results = $this->extend('can', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
 
-		return true;
+		return ($member && Permission::checkMember($member, $perm));
 	}
 
 
@@ -2269,7 +2265,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	/**
 	 * Get the class dropdown used in the CMS to change the class of a page.
 	 * This returns the list of options in the drop as a Map from class name
-	 * to text in dropdown.
+	 * to text in dropdown. Filters by {@link SiteTree->canCreate()},
+	 * as well as {@link SiteTree::$needs_permission}.
 	 *
 	 * @return array
 	 */
@@ -2282,6 +2279,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		foreach($classes as $class) {
 			$instance = singleton($class);
 			if((($instance instanceof HiddenClass) || !$instance->canCreate()) && ($class != $this->class)) continue;
+			
+			if($perms = $instance->stat('need_permission')) {
+				if(!$this->can($perms)) continue;
+			} 
 
 			$pageTypeName = $instance->i18n_singular_name();
 
