@@ -81,16 +81,16 @@ class GD extends Object {
 				$srcY = 0;
 				$srcHeight = $this->height;
 				
-				$srcWidth = $this->height * $destAR;
-				$srcX = ($this->width - $srcWidth) / 2;
+				$srcWidth = round( $this->height * $destAR );
+				$srcX = round( ($this->width - $srcWidth) / 2 );
 			
 			// Destination shorter than the source
 			} else {
 				$srcX = 0;
 				$srcWidth = $this->width;
 				
-				$srcHeight = $this->width / $destAR;
-				$srcY = ($this->height - $srcHeight) / 2;
+				$srcHeight = round( $this->width / $destAR );
+				$srcY = round( ($this->height - $srcHeight) / 2 );
 			}
 			
 			imagecopyresampled($newGD, $this->gd, 0,0, $srcX, $srcY, $width, $height, $srcWidth, $srcHeight);
@@ -320,16 +320,16 @@ class GD extends Object {
 				$destY = 0;
 				$destHeight = $height;
 				
-				$destWidth = $height * $srcAR;
-				$destX = ($width - $destWidth) / 2;
+				$destWidth = round( $height * $srcAR );
+				$destX = round( ($width - $destWidth) / 2 );
 			
 			// Destination shorter than the source
 			} else {
 				$destX = 0;
 				$destWidth = $width;
 				
-				$destHeight = $width / $srcAR;
-				$destY = ($height - $destHeight) / 2;
+				$destHeight = round( $width / $srcAR );
+				$destY = round( ($height - $destHeight) / 2 );
 			}
 			
 			imagecopyresampled($newGD, $this->gd, $destX, $destY, 0, 0, $destWidth, $destHeight, $this->width, $this->height);
