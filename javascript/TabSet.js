@@ -9,14 +9,18 @@
 		 */
 		$('.ss-tabset').entwine({
 			onmatch: function() {
+				// Can't name redraw() as it clashes with other CMS entwine classes
+				this.redrawTabs();
+				this._super();
+			},
+			
+			redrawTabs: function() {
 				this.rewriteHashlinks();
 
 				// Initialize jQuery UI tabs
 				this.tabs({
 					cookie: $.cookie ? { expires: 30, path: '/', name: 'ui-tabs-' + this.attr('id') } : false
 				});
-				
-				this._super();
 			},
 		
 			/**

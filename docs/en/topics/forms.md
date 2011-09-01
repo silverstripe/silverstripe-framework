@@ -14,8 +14,8 @@ constructor takes the following arguments:
 *  `$name`: This must be the name of the method on that controller that is called to return the form.  The first two
 fields allow the form object to be re-created after submission.  **It's vital that they are properly set - if you ever
 have problems with form action handler not working, check that these values are correct.**
-*  `$fields`: A `[api:FieldSet]`s that make up the editable portion of the form.
-*  `$actions`: A `[api:FieldSet]`s that make up the control portion of the form - the buttons at the bottom.
+*  `$fields`: A `[api:FieldSet]` containing `[api:FormField]` instances make up fields in the form.
+*  `$actions`: A `[api:FieldSet]` containing the `[api:FormAction]` objects - the buttons at the bottom.
 *  `$validator`: An optional `[api:Validator]` for more information.
 
 Example: 
@@ -211,12 +211,12 @@ basic customisation:
 	   
 	   <fieldset>
 	      <div id="FirstName" class="field text">
-	         <label class="left" for="$FormName_FirstName">First name</label>
+	         <label class="left" for="{$FormName}_FirstName">First name</label>
 	         $dataFieldByName(FirstName)
 	      </div>
 	
 	      <div id="Email" class="field email">
-	         <label class="left" for="$FormName_Email">Email</label>
+	         <label class="left" for="{$FormName}_Email">Email</label>
 	         $dataFieldByName(Email)
 	      </div>
 	
@@ -273,10 +273,12 @@ Adds a new text field called FavouriteColour next to the Content field in the CM
 
 ## Related
 
-*  [form-field-types](/reference/form-field-types)
-*  `[api:FormField]` class
-*  [multiform module](http://silverstripe.org/multi-form-module)
+*  [Form Field Types](/reference/form-field-types)
+*  [MultiForm Module](http://silverstripe.org/multi-form-module)
 
 ##  API Documentation
 
-`[api:Form]`
+* `[api:Form]`
+* `[api:FormField]`
+* `[api:FieldSet]`
+* `[api:FormAction]`

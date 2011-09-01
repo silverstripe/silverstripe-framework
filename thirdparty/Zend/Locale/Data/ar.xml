@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.6/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 1.102 $"/>
-		<generation date="$Date: 2008/06/15 08:09:46 $"/>
+		<version number="$Revision: 1.126 $"/>
+		<generation date="$Date: 2009/06/16 21:53:37 $"/>
 		<language type="ar"/>
 	</identity>
 	<localeDisplayNames>
@@ -172,7 +171,7 @@
 			<language type="gay">الجايو</language>
 			<language type="gba">الجبيا</language>
 			<language type="gd">الغيلية الأسكتلندية</language>
-			<language type="gem">الجرمانية (أخرى)</language>
+			<language type="gem">لغة جرمانية</language>
 			<language type="gez">الجيز</language>
 			<language type="gil">لغة أهل جبل طارق</language>
 			<language type="gl">الجاليكية</language>
@@ -234,7 +233,7 @@
 			<language type="kaj">الجو</language>
 			<language type="kam">الكامبا</language>
 			<language type="kar">الكاريين</language>
-			<language type="kaw">الكوى</language>
+			<language type="kaw">الكوي</language>
 			<language type="kbd">الكاباردايان</language>
 			<language type="kfo">الكورو</language>
 			<language type="kg">الكونغو</language>
@@ -252,15 +251,15 @@
 			<language type="kok">الكونكانية</language>
 			<language type="kos">الكوسراين</language>
 			<language type="kpe">الكبيل</language>
-			<language type="kr">الكانيورى</language>
-			<language type="krc">الكاراتشاى-بالكار</language>
+			<language type="kr">الكانيوري</language>
+			<language type="krc">الكاراتشاي-بالكار</language>
 			<language type="krl">الكريلية</language>
 			<language type="kro">الكرو</language>
 			<language type="ks">الكاشميرية</language>
 			<language type="ku">الكردية</language>
 			<language type="kum">الكميك</language>
-			<language type="kut">الكتيناى</language>
-			<language type="kv">الكومى</language>
+			<language type="kut">الكتيناي</language>
+			<language type="kv">الكومي</language>
 			<language type="kw">الكورنية</language>
 			<language type="ky">القيرغستانية</language>
 			<language type="la">اللاتينية</language>
@@ -281,7 +280,7 @@
 			<language type="lui">اللوسينو</language>
 			<language type="lun">اللوندا</language>
 			<language type="luo">اللو</language>
-			<language type="lus">اللشاى</language>
+			<language type="lus">اللشاي</language>
 			<language type="lv">اللاتفية</language>
 			<language type="mad">المادريز</language>
 			<language type="mag">الماجا</language>
@@ -329,7 +328,7 @@
 			<language type="nd">النديبيل الشمالى</language>
 			<language type="nds">الألمانية السفلى</language>
 			<language type="ne">النيبالية</language>
-			<language type="new">النيوارى</language>
+			<language type="new">النيواري</language>
 			<language type="ng">الندونجا</language>
 			<language type="nia">النياس</language>
 			<language type="nic">النيجر - كوردوفانايان</language>
@@ -385,7 +384,7 @@
 			<language type="rn">الرندى</language>
 			<language type="ro">الرومانية</language>
 			<language type="roa">الرومانسية - أخرى</language>
-			<language type="rom">الرومانية [rom]</language>
+			<language type="rom">rom</language>
 			<language type="root">الجذر</language>
 			<language type="ru">الروسية</language>
 			<language type="rup">الأرومانيان</language>
@@ -407,7 +406,7 @@
 			<language type="sem">السامية - أخرى</language>
 			<language type="sg">السانجو</language>
 			<language type="sga">الأيرلندية القديمة</language>
-			<language type="sgn">لغات الأشارة</language>
+			<language type="sgn">لغات الإشارة</language>
 			<language type="shn">الشانية</language>
 			<language type="si">السريلانكية</language>
 			<language type="sid">السيدامو</language>
@@ -471,7 +470,7 @@
 			<language type="tup">اللغات التوبية</language>
 			<language type="tut">الألطائية - أخرى</language>
 			<language type="tvl">التوفالو</language>
-			<language type="tw">التوى</language>
+			<language type="tw">التوي</language>
 			<language type="ty">التاهيتية</language>
 			<language type="udm">الأدمرت</language>
 			<language type="ug">الأغورية</language>
@@ -592,14 +591,14 @@
 			<script type="Plrd">الصوتيات الجماء</script>
 			<script type="Qaai">الموروث</script>
 			<script type="Roro">رنجورنجو</script>
-			<script type="Runr">الرونى</script>
-			<script type="Sara">الساراتى</script>
-			<script type="Shaw">الشوانى</script>
+			<script type="Runr">الروني</script>
+			<script type="Sara">الساراتي</script>
+			<script type="Shaw">الشواني</script>
 			<script type="Sinh">السينهالا</script>
 			<script type="Sund">السوندانية</script>
 			<script type="Sylo">السيلوتى ناجرى</script>
 			<script type="Syrc">السريانية</script>
-			<script type="Syre">السريانية [Syre]</script>
+			<script type="Syre">السريانية الاسترنجيلية</script>
 			<script type="Syrj">السريانية - متغير غربى</script>
 			<script type="Syrn">السريانية - متغير شرقى</script>
 			<script type="Tagb">التاجبانوا</script>
@@ -615,7 +614,7 @@
 			<script type="Tibt">التبتية</script>
 			<script type="Ugar">الأجاريتيكية</script>
 			<script type="Vaii">الفاى</script>
-			<script type="Visp">الكلام المرئى</script>
+			<script type="Visp">الكلام المرئي</script>
 			<script type="Xpeo">الفارسية القديمة</script>
 			<script type="Xsux">الكتابة المسمارية الأكادية السومارية</script>
 			<script type="Yiii">اليى</script>
@@ -748,14 +747,14 @@
 			<territory type="GU">جوام</territory>
 			<territory type="GW">غينيا بيساو</territory>
 			<territory type="GY">غيانا</territory>
-			<territory type="HK">هونج كونج</territory>
+			<territory type="HK">هونج كونج الصينية</territory>
 			<territory type="HM">جزيرة هيرد وماكدونالد</territory>
 			<territory type="HN">هندوراس</territory>
 			<territory type="HR">كرواتيا</territory>
 			<territory type="HT">هايتي</territory>
 			<territory type="HU">المجر</territory>
 			<territory type="ID">اندونيسيا</territory>
-			<territory type="IE">أيرلاندا</territory>
+			<territory type="IE">أيرلندا</territory>
 			<territory type="IL">اسرائيل</territory>
 			<territory type="IM">جزيرة مان</territory>
 			<territory type="IN">الهند</territory>
@@ -801,7 +800,7 @@
 			<territory type="ML">مالي</territory>
 			<territory type="MM">ميانمار</territory>
 			<territory type="MN">منغوليا</territory>
-			<territory type="MO">ماكاو</territory>
+			<territory type="MO">ماكاو الصينية</territory>
 			<territory type="MP">جزر ماريانا الشمالية</territory>
 			<territory type="MQ">مارتينيك</territory>
 			<territory type="MR">موريتانيا</territory>
@@ -906,16 +905,16 @@
 			<territory type="ZZ">منطقة غير معرفة</territory>
 		</territories>
 		<variants>
-			<variant type="1901">الكتابة الألمانية التقليدية</variant>
-			<variant type="1996">الكتابة الألمانية لعام 1996</variant>
-			<variant type="AREVELA">ارمنية شرقية</variant>
-			<variant type="AREVMDA">ارمنية غربية</variant>
+			<variant type="1901">التهجئة الألمانية التقليدية</variant>
+			<variant type="1996">التهجئة الألمانية لعام 1996</variant>
+			<variant type="AREVELA">أرمنية شرقية</variant>
+			<variant type="AREVMDA">أرمنية غربية</variant>
 			<variant type="BAKU1926">الأبجدية التركية اللاتينية الموحدة</variant>
 			<variant type="MONOTON">أحادي النغمة</variant>
 			<variant type="NEDIS">لهجة ناتيسون</variant>
 			<variant type="POLYTON">متعدد النغمات</variant>
-			<variant type="POSIX">كمبيوتر</variant>
-			<variant type="REVISED">كتابة تم مراجعتها</variant>
+			<variant type="POSIX">حاسب آلي</variant>
+			<variant type="REVISED">تهجئة تم مراجعتها</variant>
 			<variant type="VALENCIA">بلنسية</variant>
 		</variants>
 		<keys>
@@ -935,11 +934,11 @@
 			<type type="islamic-civil" key="calendar">تقويم اسلامي مدني</type>
 			<type type="japanese" key="calendar">التقويم الياباني</type>
 			<type type="phonebook" key="collation">ترتيب دليل الهاتف</type>
-			<type type="traditional" key="collation">تقليدي</type>
+			<type type="traditional" key="collation">ترتيب تقليدي</type>
 		</types>
 		<measurementSystemNames>
-			<measurementSystemName type="US">النظام الأمريكي</measurementSystemName>
 			<measurementSystemName type="metric">النظام المتري</measurementSystemName>
+			<measurementSystemName type="US">النظام الأمريكي</measurementSystemName>
 		</measurementSystemNames>
 		<codePatterns>
 			<codePattern type="language">اللغة: {0}</codePattern>
@@ -951,18 +950,17 @@
 		<orientation characters="right-to-left"/>
 	</layout>
 	<characters>
-		<exemplarCharacters>[ً-ْ ـ ء-غ ف-ي]</exemplarCharacters>
-		<exemplarCharacters type="auxiliary">[\u200C \u200D]</exemplarCharacters>
+		<exemplarCharacters>[\u064B-\u0652 ء-غ ف-ي]</exemplarCharacters>
+		<exemplarCharacters type="auxiliary">[\u0640 \u200C-\u200F]</exemplarCharacters>
 		<exemplarCharacters type="currencySymbol">[a-z]</exemplarCharacters>
 	</characters>
 	<delimiters>
-		<quotationStart>”</quotationStart>
-		<quotationEnd>“</quotationEnd>
-		<alternateQuotationStart>’</alternateQuotationStart>
-		<alternateQuotationEnd>‘</alternateQuotationEnd>
+		<quotationStart>“</quotationStart>
+		<quotationEnd>”</quotationEnd>
+		<alternateQuotationStart>‘</alternateQuotationStart>
+		<alternateQuotationEnd>’</alternateQuotationEnd>
 	</delimiters>
 	<dates>
-		<localizedPatternChars>GanjkHmsSEDFwWxhKzAeugXZvcL</localizedPatternChars>
 		<calendars>
 			<calendar type="buddhist">
 				<eras>
@@ -970,13 +968,6 @@
 						<era type="0">التقويم البوذي</era>
 					</eraAbbr>
 				</eras>
-				<dateFormats>
-					<dateFormatLength type="short">
-						<dateFormat>
-							<pattern>M‏/d‏‏/yyyy</pattern>
-						</dateFormat>
-					</dateFormatLength>
-				</dateFormats>
 			</calendar>
 			<calendar type="coptic">
 				<months>
@@ -1102,17 +1093,17 @@
 				<days>
 					<dayContext type="format">
 						<dayWidth type="abbreviated">
-							<day type="sun">ح</day>
-							<day type="mon">ن</day>
-							<day type="tue">ث</day>
-							<day type="wed">ر</day>
-							<day type="thu">خ</day>
-							<day type="fri">ج</day>
-							<day type="sat">س</day>
+							<day type="sun">أحد</day>
+							<day type="mon">إثنين</day>
+							<day type="tue">ثلاثاء</day>
+							<day type="wed">أربعاء</day>
+							<day type="thu">خميس</day>
+							<day type="fri">جمعة</day>
+							<day type="sat">سبت</day>
 						</dayWidth>
 						<dayWidth type="wide">
 							<day type="sun">الأحد</day>
-							<day type="mon">الاثنين</day>
+							<day type="mon">الإثنين</day>
 							<day type="tue">الثلاثاء</day>
 							<day type="wed">الأربعاء</day>
 							<day type="thu">الخميس</day>
@@ -1121,15 +1112,6 @@
 						</dayWidth>
 					</dayContext>
 					<dayContext type="stand-alone">
-						<dayWidth type="abbreviated">
-							<day type="sun">أحد</day>
-							<day type="mon">اثنين</day>
-							<day type="tue">ثلاثاء</day>
-							<day type="wed">أربعاء</day>
-							<day type="thu">خميس</day>
-							<day type="fri">جمعة</day>
-							<day type="sat">سبت</day>
-						</dayWidth>
 						<dayWidth type="narrow">
 							<day type="sun">ح</day>
 							<day type="mon">ن</day>
@@ -1180,12 +1162,12 @@
 				<dateFormats>
 					<dateFormatLength type="full">
 						<dateFormat>
-							<pattern>EEEE، d MMMM، yyyy</pattern>
+							<pattern>EEEE، d MMMM، y</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="long">
 						<dateFormat>
-							<pattern>d MMMM، yyyy</pattern>
+							<pattern>d MMMM، y</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="medium">
@@ -1202,7 +1184,7 @@
 				<timeFormats>
 					<timeFormatLength type="full">
 						<timeFormat>
-							<pattern>v h:mm:ss a</pattern>
+							<pattern>zzzz h:mm:ss a</pattern>
 						</timeFormat>
 					</timeFormatLength>
 					<timeFormatLength type="long">
@@ -1222,60 +1204,33 @@
 					</timeFormatLength>
 				</timeFormats>
 				<dateTimeFormats>
-					<dateTimeFormatLength>
-						<dateTimeFormat>
-							<pattern>{1} {0}</pattern>
-						</dateTimeFormat>
-					</dateTimeFormatLength>
 					<availableFormats>
+						<dateFormatItem id="d">d</dateFormatItem>
 						<dateFormatItem id="Hm">H:mm</dateFormatItem>
 						<dateFormatItem id="M">L</dateFormatItem>
+						<dateFormatItem id="Md">d/‏M</dateFormatItem>
 						<dateFormatItem id="MEd">E، d-M</dateFormatItem>
-						<dateFormatItem id="MMM">LLL</dateFormatItem>
-						<dateFormatItem id="MMMEd">E d MMM</dateFormatItem>
-						<dateFormatItem id="MMMMEd">E d MMMM</dateFormatItem>
-						<dateFormatItem id="MMMMd">d MMMM</dateFormatItem>
-						<dateFormatItem id="MMMd">d MMM</dateFormatItem>
 						<dateFormatItem id="MMdd">dd‏/MM</dateFormatItem>
-						<dateFormatItem id="Md">d/M</dateFormatItem>
-						<dateFormatItem id="d">d</dateFormatItem>
+						<dateFormatItem id="MMM">LLL</dateFormatItem>
+						<dateFormatItem id="MMMd">d MMM</dateFormatItem>
+						<dateFormatItem id="MMMEd">E d MMM</dateFormatItem>
+						<dateFormatItem id="MMMMd">d MMMM</dateFormatItem>
+						<dateFormatItem id="MMMMEd">E d MMMM</dateFormatItem>
 						<dateFormatItem id="ms">mm:ss</dateFormatItem>
-						<dateFormatItem id="y">yyyy</dateFormatItem>
-						<dateFormatItem id="yM">M/yyyy</dateFormatItem>
-						<dateFormatItem id="yMEd">EEE، d/M/yyyy</dateFormatItem>
-						<dateFormatItem id="yMMM">MMM yyyy</dateFormatItem>
-						<dateFormatItem id="yMMMEd">EEE، d MMM yyyy</dateFormatItem>
-						<dateFormatItem id="yMMMM">MMMM yyyy</dateFormatItem>
+						<dateFormatItem id="y">y</dateFormatItem>
+						<dateFormatItem id="yM">M‏/yyyy</dateFormatItem>
+						<dateFormatItem id="yMEd">EEE، d/‏M/‏yyyy</dateFormatItem>
+						<dateFormatItem id="yMMM">MMM y</dateFormatItem>
+						<dateFormatItem id="yMMMEd">EEE، d MMMM y</dateFormatItem>
+						<dateFormatItem id="yMMMM">MMMM y</dateFormatItem>
 						<dateFormatItem id="yQ">yyyy Q</dateFormatItem>
-						<dateFormatItem id="yQQQ">yyyy QQQ</dateFormatItem>
+						<dateFormatItem id="yQQQ">y QQQ</dateFormatItem>
 						<dateFormatItem id="yyQ">Q yy</dateFormatItem>
 						<dateFormatItem id="yyyyMM">MM‏/yyyy</dateFormatItem>
-						<dateFormatItem id="yyyyMMMM">MMMM, yyyy</dateFormatItem>
+						<dateFormatItem id="yyyyMMMM">MMMM، y</dateFormatItem>
 					</availableFormats>
 					<intervalFormats>
 						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
-						<intervalFormatItem id="M">
-							<greatestDifference id="M">M-M</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MEd">
-							<greatestDifference id="M">E, d‏/M - E, d‏/M</greatestDifference>
-							<greatestDifference id="d">E, d‏/M - E, d‏/M</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MMM">
-							<greatestDifference id="M">MMM-MMM</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MMMEd">
-							<greatestDifference id="M">E, d MMM - E, d MMM</greatestDifference>
-							<greatestDifference id="d">E, d - E, d MMM</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MMMd">
-							<greatestDifference id="M">d MMM - d MMM</greatestDifference>
-							<greatestDifference id="d">d-d MMM</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="Md">
-							<greatestDifference id="M">d‏/M - d‏/M</greatestDifference>
-							<greatestDifference id="d">d‏/M - d‏/M</greatestDifference>
-						</intervalFormatItem>
 						<intervalFormatItem id="d">
 							<greatestDifference id="d">d-d</greatestDifference>
 						</intervalFormatItem>
@@ -1297,6 +1252,31 @@
 							<greatestDifference id="a">v h a - h a</greatestDifference>
 							<greatestDifference id="h">v h–h a</greatestDifference>
 						</intervalFormatItem>
+						<intervalFormatItem id="M">
+							<greatestDifference id="M">M-M</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Md">
+							<greatestDifference id="d">d‏/M - d‏/M</greatestDifference>
+							<greatestDifference id="M">d‏/M - d‏/M</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MEd">
+							<greatestDifference id="d">E، d/‏M -‏ E، d/‏M</greatestDifference>
+							<greatestDifference id="M">E، d/‏M - E، d/‏M</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMM">
+							<greatestDifference id="M">MMM-MMM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMMd">
+							<greatestDifference id="d">d-d MMM</greatestDifference>
+							<greatestDifference id="M">d MMM - d MMM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMMEd">
+							<greatestDifference id="d">E، d - E، d MMM</greatestDifference>
+							<greatestDifference id="M">E، d MMM - E، d MMM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMMM">
+							<greatestDifference id="M">LLLL-LLLL</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="y">
 							<greatestDifference id="y">y-y</greatestDifference>
 						</intervalFormatItem>
@@ -1304,29 +1284,33 @@
 							<greatestDifference id="M">M‏/yyyy - M‏/yyyy</greatestDifference>
 							<greatestDifference id="y">M‏/yyyy - M‏/yyyy</greatestDifference>
 						</intervalFormatItem>
+						<intervalFormatItem id="yMd">
+							<greatestDifference id="d">d‏/M‏/yyyy - d‏/M‏/yyyy</greatestDifference>
+							<greatestDifference id="M">d‏/M‏/yyyy - d‏/M‏/yyyy</greatestDifference>
+							<greatestDifference id="y">d‏/M‏/yyyy - d‏/M‏/yyyy</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="yMEd">
-							<greatestDifference id="M">E, d‏/M‏/yyyy - E, d‏/M‏/yyyy</greatestDifference>
-							<greatestDifference id="d">E, d‏/M‏/yyyy - E, d‏/M‏/yyyy</greatestDifference>
-							<greatestDifference id="y">E, d‏/M‏/yyyy - E, d‏/M‏/yyyy</greatestDifference>
+							<greatestDifference id="d">E، dd‏/MM‏/yyyy - E، dd‏/MM‏/yyyy</greatestDifference>
+							<greatestDifference id="M">E، d‏/M‏/yyyy - E، d‏/M‏/yyyy</greatestDifference>
+							<greatestDifference id="y">E، d‏/M‏/yyyy - E، d‏/M‏/yyyy</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="yMMM">
-							<greatestDifference id="M">MMM-MMM, yyyy</greatestDifference>
-							<greatestDifference id="y">MMM, yyyy - MMM, yyyy</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="yMMMEd">
-							<greatestDifference id="M">E, d MMM - E, d MMM, yyyy</greatestDifference>
-							<greatestDifference id="d">E, d - E, d MMM, yyyy</greatestDifference>
-							<greatestDifference id="y">E, d MMM, yyyy - E, d MMM, yyyy</greatestDifference>
+							<greatestDifference id="M">MMM - MMM، y</greatestDifference>
+							<greatestDifference id="y">MMM، y - MMM، y</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="yMMMd">
-							<greatestDifference id="M">d MMM - d MMM, yyyy</greatestDifference>
-							<greatestDifference id="d">d-d MMM, yyyy</greatestDifference>
-							<greatestDifference id="y">d MMM, yyyy - d MMM, yyyy</greatestDifference>
+							<greatestDifference id="d">d-d MMM، y</greatestDifference>
+							<greatestDifference id="M">d MMM - d MMM، yyyy</greatestDifference>
+							<greatestDifference id="y">d MMM، y - d MMM، y</greatestDifference>
 						</intervalFormatItem>
-						<intervalFormatItem id="yMd">
-							<greatestDifference id="M">d‏/M‏/yyyy - d‏/M‏/yyyy</greatestDifference>
-							<greatestDifference id="d">d‏/M‏/yyyy - d‏/M‏/yyyy</greatestDifference>
-							<greatestDifference id="y">d‏/M‏/yyyy - d‏/M‏/yyyy</greatestDifference>
+						<intervalFormatItem id="yMMMEd">
+							<greatestDifference id="d">E، d - ِE، d MMM، yyyy</greatestDifference>
+							<greatestDifference id="M">E، d MMM - E، d MMM، y</greatestDifference>
+							<greatestDifference id="y">E، d MMM، y - E، d MMM، y</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMMMM">
+							<greatestDifference id="M">MM ‏– MM‏-yyyy‏</greatestDifference>
+							<greatestDifference id="y">MM -‏ MM–‏yyyy</greatestDifference>
 						</intervalFormatItem>
 					</intervalFormats>
 				</dateTimeFormats>
@@ -1345,10 +1329,10 @@
 					</field>
 					<field type="day">
 						<displayName>يوم</displayName>
-						<relative type="0">اليوم</relative>
-						<relative type="1">غدا</relative>
-						<relative type="2">بعد الغد</relative>
 						<relative type="-1">أمس</relative>
+						<relative type="0">اليوم</relative>
+						<relative type="1">غدًا</relative>
+						<relative type="2">بعد الغد</relative>
 					</field>
 					<field type="weekday">
 						<displayName>اليوم</displayName>
@@ -1423,22 +1407,36 @@
 							<month type="12">ذو الحجة</month>
 						</monthWidth>
 					</monthContext>
+					<monthContext type="stand-alone">
+						<monthWidth type="narrow">
+							<month type="1">م</month>
+							<month type="2">ص</month>
+							<month type="3">ر</month>
+							<month type="4">ر</month>
+							<month type="5">ج</month>
+							<month type="6">ج</month>
+							<month type="7">ر</month>
+							<month type="8">ش</month>
+							<month type="9">ر</month>
+							<month type="10">ش</month>
+							<month type="11">ذ</month>
+							<month type="12">ذ</month>
+						</monthWidth>
+					</monthContext>
 				</months>
 				<am>ص</am>
 				<pm>م</pm>
 				<eras>
 					<eraAbbr>
-						<era type="0">ه‍</era>
+						<era type="0">هـ</era>
 					</eraAbbr>
 				</eras>
-			</calendar>
-			<calendar type="islamic-civil">
-				<months>
-					<alias source="locale" path="../../calendar[@type='islamic']/months"/>
-				</months>
-				<eras>
-					<alias source="locale" path="../../calendar[@type='islamic']/eras"/>
-				</eras>
+				<dateTimeFormats>
+					<availableFormats>
+						<dateFormatItem id="Md">d‏/M</dateFormatItem>
+						<dateFormatItem id="yM">M‏/yyyy</dateFormatItem>
+					</availableFormats>
+				</dateTimeFormats>
 			</calendar>
 			<calendar type="japanese">
 				<eras>
@@ -1771,7 +1769,7 @@
 				<exemplarCity>أشوا</exemplarCity>
 			</zone>
 			<zone type="America/Argentina/La_Rioja">
-				<exemplarCity>لاريوها</exemplarCity>
+				<exemplarCity>لا ريوجا</exemplarCity>
 			</zone>
 			<zone type="America/Argentina/San_Luis">
 				<exemplarCity>سان لويس</exemplarCity>
@@ -1798,7 +1796,7 @@
 				<exemplarCity>دارون</exemplarCity>
 			</zone>
 			<zone type="Australia/Adelaide">
-				<exemplarCity>أدليادا</exemplarCity>
+				<exemplarCity>استراليا(توقيت أدليادا</exemplarCity>
 			</zone>
 			<zone type="Australia/Broken_Hill">
 				<exemplarCity>بروكن هيل</exemplarCity>
@@ -1939,7 +1937,7 @@
 				<exemplarCity>جلاس باي</exemplarCity>
 			</zone>
 			<zone type="America/St_Johns">
-				<exemplarCity>سانت جونز</exemplarCity>
+				<exemplarCity>سانت جونس</exemplarCity>
 			</zone>
 			<zone type="Africa/Kinshasa">
 				<exemplarCity>كينشاسا</exemplarCity>
@@ -2095,7 +2093,7 @@
 				<exemplarCity>ميريدا</exemplarCity>
 			</zone>
 			<zone type="America/Cancun">
-				<exemplarCity>كانكون</exemplarCity>
+				<exemplarCity>كانكن</exemplarCity>
 			</zone>
 			<zone type="Asia/Kuala_Lumpur">
 				<exemplarCity>كوالالمبور</exemplarCity>
@@ -2209,7 +2207,7 @@
 				<exemplarCity>هونولولو</exemplarCity>
 			</zone>
 			<zone type="America/Anchorage">
-				<exemplarCity>أنكوريج</exemplarCity>
+				<exemplarCity>أنشوراج</exemplarCity>
 			</zone>
 			<zone type="America/Yakutat">
 				<exemplarCity>ياكوتات</exemplarCity>
@@ -2221,7 +2219,7 @@
 				<exemplarCity>لوس انجلوس</exemplarCity>
 			</zone>
 			<zone type="America/Boise">
-				<exemplarCity>بويزي</exemplarCity>
+				<exemplarCity>بويس</exemplarCity>
 			</zone>
 			<zone type="America/Phoenix">
 				<exemplarCity>فينكس</exemplarCity>
@@ -2248,7 +2246,7 @@
 				<exemplarCity>فينسينس</exemplarCity>
 			</zone>
 			<zone type="America/Indiana/Petersburg">
-				<exemplarCity>بيترسبرج</exemplarCity>
+				<exemplarCity>بيترسبرغ</exemplarCity>
 			</zone>
 			<zone type="America/Indiana/Knox">
 				<exemplarCity>كونكس</exemplarCity>
@@ -2286,14 +2284,20 @@
 		</timeZoneNames>
 	</dates>
 	<numbers>
+		<defaultNumberingSystem>arab</defaultNumberingSystem>
 		<symbols>
-			<decimal>٫</decimal>
-			<group>٬</group>
-			<list>؛</list>
-			<percentSign>٪</percentSign>
-			<nativeZeroDigit>٠</nativeZeroDigit>
-			<exponential>اس</exponential>
-			<nan>ليس رقم</nan>
+			<decimal>,</decimal>
+			<group>.</group>
+			<list>;</list>
+			<percentSign>%</percentSign>
+			<nativeZeroDigit>0</nativeZeroDigit>
+			<patternDigit>#</patternDigit>
+			<plusSign>+</plusSign>
+			<minusSign>-</minusSign>
+			<exponential>E</exponential>
+			<perMille>‰</perMille>
+			<infinity>∞</infinity>
+			<nan>NaN</nan>
 		</symbols>
 		<decimalFormats>
 			<decimalFormatLength>
@@ -2317,241 +2321,241 @@
 		</currencyFormats>
 		<currencies>
 			<currency type="ADP">
-				<displayName>بيستا أندورى</displayName>
+				<displayName>بيستا أندوري</displayName>
 			</currency>
 			<currency type="AED">
-				<displayName>درهم اماراتى</displayName>
+				<displayName>درهم إماراتي</displayName>
 				<symbol>د.إ.‏</symbol>
 			</currency>
 			<currency type="AFA">
 				<displayName>أفغاني - 1927-2002</displayName>
 			</currency>
 			<currency type="AFN">
-				<displayName>أفغانى</displayName>
+				<displayName>أفغاني</displayName>
 			</currency>
 			<currency type="ALL">
 				<displayName>ليك ألباني</displayName>
 			</currency>
 			<currency type="AMD">
-				<displayName>درام أرمينى</displayName>
+				<displayName>درام أرميني</displayName>
 			</currency>
 			<currency type="ANG">
-				<displayName>جلدر هولندى [ANG]</displayName>
+				<displayName>جلدر هولندي [ANG]</displayName>
 			</currency>
 			<currency type="AOA">
-				<displayName>كوانزا أنجولى</displayName>
+				<displayName>كوانزا أنجولي</displayName>
 			</currency>
 			<currency type="AOK">
-				<displayName>كوانزا أنجولى - 1977-1990</displayName>
+				<displayName>كوانزا أنجولي - 1977-1990</displayName>
 			</currency>
 			<currency type="AON">
-				<displayName>كوانزا أنجولى جديدة - 1990-2000</displayName>
+				<displayName>كوانزا أنجولي جديدة - 1990-2000</displayName>
 			</currency>
 			<currency type="AOR">
-				<displayName>كوانزا أنجولى معدلة - 1995 - 1999</displayName>
+				<displayName>كوانزا أنجولي معدلة - 1995 - 1999</displayName>
 			</currency>
 			<currency type="ARA">
-				<displayName>استرال ارجنتينى</displayName>
+				<displayName>استرال أرجنتيني</displayName>
 			</currency>
 			<currency type="ARP">
-				<displayName>بيزو أرجنتينى - 1983-1985</displayName>
+				<displayName>بيزو أرجنتيني - 1983-1985</displayName>
 			</currency>
 			<currency type="ARS">
-				<displayName>بيزو أر±جنتينى</displayName>
+				<displayName>بيزو أرجنتيني</displayName>
 			</currency>
 			<currency type="ATS">
-				<displayName>شلن نمساوى</displayName>
+				<displayName>شلن نمساوي</displayName>
 			</currency>
 			<currency type="AUD">
-				<displayName>دولار أسترالى</displayName>
+				<displayName>دولار أسترالي</displayName>
 			</currency>
 			<currency type="AWG">
-				<displayName>جلدر أروبى</displayName>
+				<displayName>جلدر أروبي</displayName>
 			</currency>
 			<currency type="AZM">
-				<displayName>مانات أذريبجانى</displayName>
+				<displayName>مانات أذريبجاني</displayName>
 			</currency>
 			<currency type="BAD">
-				<displayName>دينار البوسنة و الهرسك</displayName>
+				<displayName>دينار البوسنة والهرسك</displayName>
 			</currency>
 			<currency type="BAM">
-				<displayName>مارك البوسنة و الهرسك قابل للتحويل</displayName>
+				<displayName>مارك البوسنة والهرسك قابل للتحويل</displayName>
 			</currency>
 			<currency type="BBD">
-				<displayName>دولار بربادوسى</displayName>
+				<displayName>دولار بربادوسي</displayName>
 			</currency>
 			<currency type="BDT">
-				<displayName>تاكا بنجلاديشى</displayName>
+				<displayName>تاكا بنجلاديشي</displayName>
 			</currency>
 			<currency type="BEC">
-				<displayName>فرنك بلجيكى (تحويلات)‏</displayName>
+				<displayName>(فرنك بلجيكي قابل للتحويل)</displayName>
 			</currency>
 			<currency type="BEF">
-				<displayName>فرنك بلجيكى</displayName>
+				<displayName>فرنك بلجيكي</displayName>
 			</currency>
 			<currency type="BEL">
-				<displayName>فرنك بلجيكى (مالي)‏</displayName>
+				<displayName>(فرنك بلجيكي مالي)</displayName>
 			</currency>
 			<currency type="BGL">
-				<displayName>ليف بلغارى</displayName>
+				<displayName>ليف بلغاري</displayName>
 			</currency>
 			<currency type="BGN">
-				<displayName>ليف بلغارى جديد</displayName>
+				<displayName>ليف بلغاري جديد</displayName>
 			</currency>
 			<currency type="BHD">
-				<displayName>دينار بحرينى</displayName>
+				<displayName>دينار بحريني</displayName>
 				<symbol>د.ب.‏</symbol>
 			</currency>
 			<currency type="BIF">
-				<displayName>فرنك بروندى</displayName>
+				<displayName>فرنك بروندي</displayName>
 			</currency>
 			<currency type="BMD">
-				<displayName>دولار برمودى</displayName>
+				<displayName>دولار برمودي</displayName>
 			</currency>
 			<currency type="BND">
-				<displayName>دولار بروناى</displayName>
+				<displayName>دولار بروناي</displayName>
 			</currency>
 			<currency type="BOB">
 				<displayName>بوليفاريو</displayName>
 			</currency>
 			<currency type="BOP">
-				<displayName>بيزو بوليفى</displayName>
+				<displayName>بيزو بوليفي</displayName>
 			</currency>
 			<currency type="BOV">
-				<displayName>مفدول بوليفى</displayName>
+				<displayName>مفدول بوليفي</displayName>
 			</currency>
 			<currency type="BRB">
-				<displayName>نوفو كروزايرو برازيلى - 1967-1986</displayName>
+				<displayName>نوفو كروزايرو برازيلي - 1967-1986</displayName>
 			</currency>
 			<currency type="BRC">
-				<displayName>كروزادو برازيلى</displayName>
+				<displayName>كروزادو برازيلي</displayName>
 			</currency>
 			<currency type="BRE">
-				<displayName>كروزايرو برازيلى - 1990-1993</displayName>
+				<displayName>كروزايرو برازيلي - 1990-1993</displayName>
 			</currency>
 			<currency type="BRL">
 				<displayName>ريال برازيلي</displayName>
-				<symbol>.‏ر.ب</symbol>
+				<symbol>ر.ب.‏</symbol>
 			</currency>
 			<currency type="BSD">
-				<displayName>دولار باهامى</displayName>
+				<displayName>دولار باهامي</displayName>
 			</currency>
 			<currency type="BTN">
-				<displayName>نولتوم بوتانى</displayName>
+				<displayName>نولتوم بوتاني</displayName>
 			</currency>
 			<currency type="BUK">
-				<displayName>كيات بورمى</displayName>
+				<displayName>كيات بورمي</displayName>
 			</currency>
 			<currency type="BWP">
-				<displayName>بولا بتسوانى</displayName>
+				<displayName>بولا بتسواني</displayName>
 			</currency>
 			<currency type="BYB">
-				<displayName>روبل بيلاروسى جديد - 1994-1999</displayName>
+				<displayName>روبل بيلاروسي جديد - 1994-1999</displayName>
 			</currency>
 			<currency type="BYR">
-				<displayName>روبل بيلاروسى</displayName>
+				<displayName>روبل بيلاروسي</displayName>
 			</currency>
 			<currency type="BZD">
-				<displayName>دولار بليزى</displayName>
+				<displayName>دولار بليزي</displayName>
 			</currency>
 			<currency type="CAD">
-				<displayName>دولار كندى</displayName>
+				<displayName>دولار كندي</displayName>
 			</currency>
 			<currency type="CDF">
-				<displayName>فنك كونغولى</displayName>
+				<displayName>فنك كونغولي</displayName>
 			</currency>
 			<currency type="CHF">
-				<displayName>فرنك سويسرى</displayName>
+				<displayName>فرنك سويسري</displayName>
 			</currency>
 			<currency type="CLP">
-				<displayName>بيزو شيلى</displayName>
+				<displayName>بيزو شيلي</displayName>
 			</currency>
 			<currency type="CNY">
 				<displayName>يوان صيني</displayName>
-				<symbol>ى.ص</symbol>
+				<symbol>ي.ص</symbol>
 			</currency>
 			<currency type="COP">
-				<displayName>بيزو كولومبى</displayName>
+				<displayName>بيزو كولومبي</displayName>
 			</currency>
 			<currency type="CRC">
-				<displayName>كولن كوستا ريكى</displayName>
+				<displayName>كولن كوستا ريكي</displayName>
 			</currency>
 			<currency type="CSD">
-				<displayName>دينار صربى</displayName>
+				<displayName>دينار صربي</displayName>
 			</currency>
 			<currency type="CSK">
 				<displayName>كرونة تشيكوسلوفاكيا</displayName>
 			</currency>
 			<currency type="CUP">
-				<displayName>بيزو كوبى</displayName>
+				<displayName>بيزو كوبي</displayName>
 			</currency>
 			<currency type="CVE">
 				<displayName>اسكودو الرأس الخضراء</displayName>
 			</currency>
 			<currency type="CYP">
-				<displayName>جنيه قبرصى</displayName>
+				<displayName>جنيه قبرصي</displayName>
 			</currency>
 			<currency type="CZK">
 				<displayName>كرونة تشيكية</displayName>
 			</currency>
 			<currency type="DDM">
-				<displayName>أوستمارك المانى شرقى</displayName>
+				<displayName>أوستمارك ألماني شرقي</displayName>
 			</currency>
 			<currency type="DEM">
-				<displayName>مارك المانى</displayName>
+				<displayName>مارك ألماني</displayName>
 			</currency>
 			<currency type="DJF">
-				<displayName>فرنك جيبوتى</displayName>
+				<displayName>فرنك جيبوتي</displayName>
 			</currency>
 			<currency type="DKK">
-				<displayName>كرونة دانماركى</displayName>
+				<displayName>كرونة دانماركي</displayName>
 			</currency>
 			<currency type="DOP">
 				<displayName>بيزو الدومنيكان</displayName>
 			</currency>
 			<currency type="DZD">
-				<displayName>دينار جزائرى</displayName>
+				<displayName>دينار جزائري</displayName>
 				<symbol>د.ج.‏</symbol>
 			</currency>
 			<currency type="EEK">
 				<displayName>كرونة استونية</displayName>
 			</currency>
 			<currency type="EGP">
-				<displayName>جنيه مصرى</displayName>
+				<displayName>جنيه مصري</displayName>
 				<symbol>ج.م.‏</symbol>
 			</currency>
 			<currency type="ERN">
-				<displayName>ناكفا أريترى</displayName>
+				<displayName>ناكفا أريتري</displayName>
 			</currency>
 			<currency type="ESP">
-				<displayName>بيزيتا اسباني</displayName>
+				<displayName>بيزيتا إسباني</displayName>
 			</currency>
 			<currency type="ETB">
-				<displayName>بير أثيوبى</displayName>
+				<displayName>بير أثيوبي</displayName>
 			</currency>
 			<currency type="EUR">
 				<displayName>يورو</displayName>
 			</currency>
 			<currency type="FIM">
-				<displayName>ماركا فنلندى</displayName>
+				<displayName>ماركا فنلندي</displayName>
 			</currency>
 			<currency type="FJD">
-				<displayName>دولار فيجى</displayName>
+				<displayName>دولار فيجي</displayName>
 			</currency>
 			<currency type="FKP">
 				<displayName>جنيه جزر فوكلاند</displayName>
 			</currency>
 			<currency type="FRF">
-				<displayName>فرنك فرنسى</displayName>
+				<displayName>فرنك فرنسي</displayName>
 			</currency>
 			<currency type="GBP">
-				<displayName>جنيه سترليني</displayName>
+				<displayName>جنيه إسترليني</displayName>
 			</currency>
 			<currency type="GEL">
-				<displayName>لارى جورجى</displayName>
+				<displayName>لارى جورجي</displayName>
 			</currency>
 			<currency type="GHC">
-				<displayName>سيدى غانى</displayName>
+				<displayName>سيدي غاني</displayName>
 			</currency>
 			<currency type="GIP">
 				<displayName>جنيه جبل طارق</displayName>
@@ -2563,19 +2567,19 @@
 				<displayName>فرنك غينيا</displayName>
 			</currency>
 			<currency type="GNS">
-				<displayName>سيلى غينيا</displayName>
+				<displayName>سيلي غينيا</displayName>
 			</currency>
 			<currency type="GQE">
 				<displayName>اكويل جونينا غينيا الاستوائيّة</displayName>
 			</currency>
 			<currency type="GRD">
-				<displayName>دراخما يونانى</displayName>
+				<displayName>دراخما يوناني</displayName>
 			</currency>
 			<currency type="GTQ">
 				<displayName>كوتزال جواتيمالا</displayName>
 			</currency>
 			<currency type="GWE">
-				<displayName>اسكود برتغالى غينيا</displayName>
+				<displayName>اسكود برتغالي غينيا</displayName>
 			</currency>
 			<currency type="GWP">
 				<displayName>بيزو غينيا بيساو</displayName>
@@ -2590,51 +2594,51 @@
 				<displayName>ليمبيرا هنداروس</displayName>
 			</currency>
 			<currency type="HRD">
-				<displayName>دينار كرواتى</displayName>
+				<displayName>دينار كرواتي</displayName>
 			</currency>
 			<currency type="HRK">
-				<displayName>كونا كرواتى</displayName>
+				<displayName>كونا كرواتي</displayName>
 			</currency>
 			<currency type="HTG">
-				<displayName>جوردى هايتى</displayName>
+				<displayName>جوردى هايتي</displayName>
 			</currency>
 			<currency type="HUF">
-				<displayName>فورينت مجرى</displayName>
+				<displayName>فورينت مجري</displayName>
 			</currency>
 			<currency type="IDR">
-				<displayName>روبية اندونيسية</displayName>
+				<displayName>روبية إندونيسية</displayName>
 			</currency>
 			<currency type="IEP">
-				<displayName>جنيه ايرلندى</displayName>
+				<displayName>جنيه إيرلندي</displayName>
 			</currency>
 			<currency type="ILP">
-				<displayName>جنيه اسرائيلى</displayName>
+				<displayName>جنيه إسرائيلي</displayName>
 			</currency>
 			<currency type="ILS">
-				<displayName>شيكل اسرائيلى جديد</displayName>
+				<displayName>شيكل إسرائيلي جديد</displayName>
 			</currency>
 			<currency type="INR">
 				<displayName>روبيه هندي</displayName>
-				<symbol>.‏ر.ه</symbol>
+				<symbol>ر.ه.‏</symbol>
 			</currency>
 			<currency type="IQD">
-				<displayName>دينار عراقى</displayName>
+				<displayName>دينار عراقي</displayName>
 				<symbol>د.ع.‏</symbol>
 			</currency>
 			<currency type="IRR">
-				<displayName>ريال ايرانى</displayName>
+				<displayName>ريال إيراني</displayName>
 			</currency>
 			<currency type="ISK">
-				<displayName>كرونه أيسلندى</displayName>
+				<displayName>كرونه أيسلندي</displayName>
 			</currency>
 			<currency type="ITL">
-				<displayName>ليرة ايطالية</displayName>
+				<displayName>ليرة إيطالية</displayName>
 			</currency>
 			<currency type="JMD">
-				<displayName>دولار جامايكى</displayName>
+				<displayName>دولار جامايكي</displayName>
 			</currency>
 			<currency type="JOD">
-				<displayName>دينار أردنى</displayName>
+				<displayName>دينار أردني</displayName>
 				<symbol>د.أ.‏</symbol>
 			</currency>
 			<currency type="JPY">
@@ -2644,14 +2648,14 @@
 				<displayName>شلن كينيي</displayName>
 			</currency>
 			<currency type="KGS">
-				<displayName>سوم قيرغستانى</displayName>
+				<displayName>سوم قيرغستاني</displayName>
 			</currency>
 			<currency type="KHR">
-				<displayName>رييال كمبودى</displayName>
+				<displayName>رييال كمبودي</displayName>
 			</currency>
 			<currency type="KMF">
 				<displayName>فرنك جزر القمر</displayName>
-				<symbol>.‏ف.ج.ق</symbol>
+				<symbol>ف.ج.ق.‏</symbol>
 			</currency>
 			<currency type="KPW">
 				<displayName>وون كوريا الشمالية</displayName>
@@ -2660,20 +2664,20 @@
 				<displayName>وون كوريا الجنوبية</displayName>
 			</currency>
 			<currency type="KWD">
-				<displayName>دينار كويتى</displayName>
+				<displayName>دينار كويتي</displayName>
 				<symbol>د.ك.‏</symbol>
 			</currency>
 			<currency type="KYD">
 				<displayName>دولار جزر كيمن</displayName>
 			</currency>
 			<currency type="KZT">
-				<displayName>تينغ كازاخستانى</displayName>
+				<displayName>تينغ كازاخستاني</displayName>
 			</currency>
 			<currency type="LAK">
-				<displayName>كيب لاوسى</displayName>
+				<displayName>كيب لاوسي</displayName>
 			</currency>
 			<currency type="LBP">
-				<displayName>جنية لبنانى</displayName>
+				<displayName>جنية لبناني</displayName>
 				<symbol>ل.ل.‏</symbol>
 			</currency>
 			<currency type="LKR">
@@ -2683,16 +2687,13 @@
 				<displayName>دولار ليبيري</displayName>
 			</currency>
 			<currency type="LSL">
-				<displayName>لوتى ليسوتو</displayName>
-			</currency>
-			<currency type="LSM">
-				<displayName>مالوتى</displayName>
+				<displayName>لوتي ليسوتو</displayName>
 			</currency>
 			<currency type="LTL">
 				<displayName>الليتا الليتوانية</displayName>
 			</currency>
 			<currency type="LTT">
-				<displayName>تالوناس ليتوانى</displayName>
+				<displayName>تالوناس ليتواني</displayName>
 			</currency>
 			<currency type="LUC">
 				<displayName>فرنك لوكسمبرج قابل للتحويل</displayName>
@@ -2701,7 +2702,7 @@
 				<displayName>فرنك لوكسمبرج</displayName>
 			</currency>
 			<currency type="LUL">
-				<displayName>فرنك لوكسمبرج المالى</displayName>
+				<displayName>فرنك لوكسمبرج المالي</displayName>
 			</currency>
 			<currency type="LVL">
 				<displayName>لاتس لاتفيا</displayName>
@@ -2710,49 +2711,49 @@
 				<displayName>روبل لاتفيا</displayName>
 			</currency>
 			<currency type="LYD">
-				<displayName>دينار ليبى</displayName>
+				<displayName>دينار ليبي</displayName>
 				<symbol>د.ل.‏</symbol>
 			</currency>
 			<currency type="MAD">
-				<displayName>درهم مغربى</displayName>
+				<displayName>درهم مغربي</displayName>
 				<symbol>د.م.‏</symbol>
 			</currency>
 			<currency type="MAF">
 				<displayName>فرنك مغربي</displayName>
 			</currency>
 			<currency type="MDL">
-				<displayName>لاو مولدوفى</displayName>
+				<displayName>لاو مولدوفي</displayName>
 			</currency>
 			<currency type="MGA">
-				<displayName>ارياري مدغشقر</displayName>
+				<displayName>أرياري مدغشقر</displayName>
 			</currency>
 			<currency type="MGF">
 				<displayName>فرنك مدغشقر</displayName>
 			</currency>
 			<currency type="MKD">
-				<displayName>دينار مقدونى</displayName>
+				<displayName>دينار مقدوني</displayName>
 			</currency>
 			<currency type="MLF">
-				<displayName>فرنك مالى</displayName>
+				<displayName>فرنك مالي</displayName>
 			</currency>
 			<currency type="MMK">
 				<displayName>كيات ميانمار</displayName>
 			</currency>
 			<currency type="MNT">
-				<displayName>توغروغ منغولى</displayName>
+				<displayName>توغروغ منغولي</displayName>
 			</currency>
 			<currency type="MOP">
-				<displayName>باتاكا ماكاوى</displayName>
+				<displayName>باتاكا ماكاوي</displayName>
 			</currency>
 			<currency type="MRO">
 				<displayName>أوقية موريتانية</displayName>
-				<symbol>.‏أ.م</symbol>
+				<symbol>أ.م.‏</symbol>
 			</currency>
 			<currency type="MTL">
 				<displayName>ليرة مالطية</displayName>
 			</currency>
 			<currency type="MTP">
-				<displayName>جنيه مالطى</displayName>
+				<displayName>جنيه مالطي</displayName>
 			</currency>
 			<currency type="MUR">
 				<displayName>روبي موريشي</displayName>
@@ -2761,31 +2762,31 @@
 				<displayName>روفيه جزر المالديف</displayName>
 			</currency>
 			<currency type="MWK">
-				<displayName>كواشا مالاوى</displayName>
+				<displayName>كواشا مالاوي</displayName>
 			</currency>
 			<currency type="MXN">
-				<displayName>بيزو مكسيكى</displayName>
+				<displayName>بيزو مكسيكي</displayName>
 			</currency>
 			<currency type="MXP">
-				<displayName>بيزو فضى مكسيكى - 1861-1992</displayName>
+				<displayName>بيزو فضي مكسيكي - 1861-1992</displayName>
 			</currency>
 			<currency type="MYR">
-				<displayName>رينغيت ماليزى</displayName>
+				<displayName>رينغيت ماليزي</displayName>
 			</currency>
 			<currency type="MZE">
-				<displayName>اسكود موزمبيقى</displayName>
+				<displayName>اسكود موزمبيقي</displayName>
 			</currency>
 			<currency type="NAD">
 				<displayName>دولار نامبيا</displayName>
 			</currency>
 			<currency type="NGN">
-				<displayName>نايرا نيجيرى</displayName>
+				<displayName>نايرا نيجيري</displayName>
 			</currency>
 			<currency type="NIC">
 				<displayName>كوردوبة نيكاراجوا</displayName>
 			</currency>
 			<currency type="NLG">
-				<displayName>جلدر هولندى</displayName>
+				<displayName>جلدر هولندي</displayName>
 			</currency>
 			<currency type="NOK">
 				<displayName>كرونة نرويجية</displayName>
@@ -2794,58 +2795,58 @@
 				<displayName>روبية نيبالي</displayName>
 			</currency>
 			<currency type="NZD">
-				<displayName>دولار نيوزيلندى</displayName>
+				<displayName>دولار نيوزيلندي</displayName>
 			</currency>
 			<currency type="OMR">
-				<displayName>ريال عمانى</displayName>
+				<displayName>ريال عماني</displayName>
 				<symbol>ر.ع.‏</symbol>
 			</currency>
 			<currency type="PAB">
-				<displayName>بالبوا بنمى</displayName>
+				<displayName>بالبوا بنمي</displayName>
 			</currency>
 			<currency type="PGK">
 				<displayName>كينا بابوا غينيا الجديدة</displayName>
 			</currency>
 			<currency type="PHP">
-				<displayName>بيزو فلبينى</displayName>
+				<displayName>بيزو فلبيني</displayName>
 			</currency>
 			<currency type="PKR">
 				<displayName>روبية باكستاني</displayName>
 			</currency>
 			<currency type="PLN">
-				<displayName>زلوتى بولندى</displayName>
+				<displayName>زلوتي بولندي</displayName>
 			</currency>
 			<currency type="PLZ">
-				<displayName>زلوتى بولندى - 1950-1995</displayName>
+				<displayName>زلوتي بولندي - 1950-1995</displayName>
 			</currency>
 			<currency type="PTE">
-				<displayName>اسكود برتغالى</displayName>
+				<displayName>اسكود برتغالي</displayName>
 			</currency>
 			<currency type="PYG">
 				<displayName>جواراني باراجواي</displayName>
 			</currency>
 			<currency type="QAR">
-				<displayName>ريال قطرى</displayName>
+				<displayName>ريال قطري</displayName>
 				<symbol>ر.ق.‏</symbol>
 			</currency>
 			<currency type="RHD">
-				<displayName>دولار روديسى</displayName>
+				<displayName>دولار روديسي</displayName>
 			</currency>
 			<currency type="ROL">
-				<displayName>ليو رومانى قديم</displayName>
+				<displayName>ليو روماني قديم</displayName>
 			</currency>
 			<currency type="RUB">
 				<displayName>روبل روسي</displayName>
 				<symbol>ر.ر.‏</symbol>
 			</currency>
 			<currency type="RUR">
-				<displayName>روبل روسى - 1991-1998</displayName>
+				<displayName>روبل روسي - 1991-1998</displayName>
 			</currency>
 			<currency type="RWF">
-				<displayName>فرنك رواندى</displayName>
+				<displayName>فرنك رواندي</displayName>
 			</currency>
 			<currency type="SAR">
-				<displayName>ريال سعودى</displayName>
+				<displayName>ريال سعودي</displayName>
 				<symbol>ر.س.‏</symbol>
 			</currency>
 			<currency type="SBD">
@@ -2856,17 +2857,17 @@
 			</currency>
 			<currency type="SDD">
 				<displayName>دينار سوداني</displayName>
-				<symbol>.‏د.س</symbol>
+				<symbol>د.س.‏</symbol>
 			</currency>
 			<currency type="SDP">
-				<displayName>جنيه سودانى</displayName>
+				<displayName>جنيه سوداني</displayName>
 				<symbol>ج.س.‏</symbol>
 			</currency>
 			<currency type="SEK">
 				<displayName>كرونة سويدية</displayName>
 			</currency>
 			<currency type="SGD">
-				<displayName>دولار سنغافورى</displayName>
+				<displayName>دولار سنغافوري</displayName>
 			</currency>
 			<currency type="SHP">
 				<displayName>جنيه سانت هيلين</displayName>
@@ -2878,51 +2879,51 @@
 				<displayName>كرونة سلوفاكية</displayName>
 			</currency>
 			<currency type="SLL">
-				<displayName>ليون سيراليونى</displayName>
+				<displayName>ليون سيراليوني</displayName>
 			</currency>
 			<currency type="SOS">
-				<displayName>شلن صومالى</displayName>
+				<displayName>شلن صومالي</displayName>
 			</currency>
 			<currency type="SRD">
-				<displayName>دولار سورينامى</displayName>
+				<displayName>دولار سورينامي</displayName>
 			</currency>
 			<currency type="SRG">
-				<displayName>جلدر سورينامى</displayName>
+				<displayName>جلدر سورينامي</displayName>
 			</currency>
 			<currency type="STD">
 				<displayName>دوبرا ساو تومي وبرينسيبي</displayName>
 			</currency>
 			<currency type="SUR">
-				<displayName>روبل سوفيتى</displayName>
+				<displayName>روبل سوفيتي</displayName>
 			</currency>
 			<currency type="SVC">
-				<displayName>كولون سلفادورى</displayName>
+				<displayName>كولون سلفادوري</displayName>
 			</currency>
 			<currency type="SYP">
-				<displayName>جنيه سورى</displayName>
+				<displayName>جنيه سوري</displayName>
 				<symbol>ل.س.‏</symbol>
 			</currency>
 			<currency type="SZL">
-				<displayName>ليلانجيني سوازيلندى</displayName>
+				<displayName>ليلانجيني سوازيلندي</displayName>
 			</currency>
 			<currency type="THB">
-				<displayName>باخت تايلاندى</displayName>
+				<displayName>باخت تايلاندي</displayName>
 			</currency>
 			<currency type="TJR">
-				<displayName>روبل طاجيكستانى</displayName>
+				<displayName>روبل طاجيكستاني</displayName>
 			</currency>
 			<currency type="TJS">
-				<displayName>سوموني طاجيكستانى</displayName>
+				<displayName>سوموني طاجيكستاني</displayName>
 			</currency>
 			<currency type="TMM">
-				<displayName>مانات تركمنستانى</displayName>
+				<displayName>مانات تركمنستاني</displayName>
 			</currency>
 			<currency type="TND">
-				<displayName>دينارتونسى</displayName>
+				<displayName>دينارتونسي</displayName>
 				<symbol>د.ت.‏</symbol>
 			</currency>
 			<currency type="TPE">
-				<displayName>اسكود تيمورى</displayName>
+				<displayName>اسكود تيموري</displayName>
 			</currency>
 			<currency type="TRL">
 				<displayName>ليرة تركي</displayName>
@@ -2931,22 +2932,22 @@
 				<displayName>ليرة تركية جديدة</displayName>
 			</currency>
 			<currency type="TTD">
-				<displayName>دولار ترينداد و توباجو</displayName>
+				<displayName>دولار ترينداد وتوباجو</displayName>
 			</currency>
 			<currency type="TWD">
-				<displayName>دولار تايوانى</displayName>
+				<displayName>دولار تايواني</displayName>
 			</currency>
 			<currency type="TZS">
-				<displayName>شلن تنزانى</displayName>
+				<displayName>شلن تنزاني</displayName>
 			</currency>
 			<currency type="UAH">
-				<displayName>هريفنيا أوكرانى</displayName>
+				<displayName>هريفنيا أوكراني</displayName>
 			</currency>
 			<currency type="UGS">
-				<displayName>شلن أوغندى - 1966-1987</displayName>
+				<displayName>شلن أوغندي - 1966-1987</displayName>
 			</currency>
 			<currency type="UGX">
-				<displayName>شلن أوغندى</displayName>
+				<displayName>شلن أوغندي</displayName>
 			</currency>
 			<currency type="USD">
 				<displayName>دولار أمريكي</displayName>
@@ -2958,20 +2959,20 @@
 				<displayName>دولار أمريكي (نفس اليوم)‏</displayName>
 			</currency>
 			<currency type="UYP">
-				<displayName>بيزو أوروجواى - 1975-1993</displayName>
+				<displayName>بيزو أوروجواي - 1975-1993</displayName>
 			</currency>
 			<currency type="UZS">
-				<displayName>سوم أوزبكستانى</displayName>
+				<displayName>سوم أوزبكستاني</displayName>
 			</currency>
 			<currency type="VEB">
 				<displayName>بوليفار فنزويلي</displayName>
 			</currency>
 			<currency type="VND">
-				<displayName>دونج فيتنامى</displayName>
+				<displayName>دونج فيتنامي</displayName>
 			</currency>
 			<currency type="XAF">
-				<displayName>فرنك افريقي</displayName>
-				<symbol>.‏ف.ا</symbol>
+				<displayName>فرنك أفريقي</displayName>
+				<symbol>ف.ا.‏</symbol>
 			</currency>
 			<currency type="XAG">
 				<displayName>فضة</displayName>
@@ -2988,14 +2989,23 @@
 			<currency type="XBC">
 				<displayName>الوحدة الحسابية الأوروبية</displayName>
 			</currency>
+			<currency type="XBD">
+				<displayName>XBD</displayName>
+			</currency>
 			<currency type="XCD">
-				<displayName>دولار شرق الكاريبى</displayName>
+				<displayName>دولار شرق الكاريبي</displayName>
+			</currency>
+			<currency type="XDR">
+				<displayName>حقوق السحب الخاصة</displayName>
 			</currency>
 			<currency type="XEU">
 				<displayName>وحدة النقد الأوروبية</displayName>
 			</currency>
 			<currency type="XFO">
-				<displayName>فرنك فرنسى ذهبى</displayName>
+				<displayName>فرنك فرنسي ذهبي</displayName>
+			</currency>
+			<currency type="XFU">
+				<displayName>XFU</displayName>
 			</currency>
 			<currency type="XPT">
 				<displayName>البلاتين</displayName>
@@ -3008,35 +3018,35 @@
 				<symbol>***</symbol>
 			</currency>
 			<currency type="YDD">
-				<displayName>دينار يمنى</displayName>
+				<displayName>دينار يمني</displayName>
 			</currency>
 			<currency type="YER">
-				<displayName>ريال يمنى</displayName>
+				<displayName>ريال يمني</displayName>
 				<symbol>ر.ي.‏</symbol>
 			</currency>
 			<currency type="YUD">
-				<displayName>دينار يوغسلافى</displayName>
+				<displayName>دينار يوغسلافي</displayName>
 			</currency>
 			<currency type="YUN">
-				<displayName>دينار يوغسلافى قابل للتحويل</displayName>
+				<displayName>دينار يوغسلافي قابل للتحويل</displayName>
 			</currency>
 			<currency type="ZAL">
-				<displayName>راند جنوب أفريقيا -مالى</displayName>
+				<displayName>راند جنوب أفريقيا -مالي</displayName>
 			</currency>
 			<currency type="ZAR">
 				<displayName>راند جنوب أفريقيا</displayName>
 			</currency>
 			<currency type="ZMK">
-				<displayName>كواشا زامبى</displayName>
+				<displayName>كواشا زامبي</displayName>
 			</currency>
 			<currency type="ZRN">
-				<displayName>زائير زائيرى جديد</displayName>
+				<displayName>زائير زائيري جديد</displayName>
 			</currency>
 			<currency type="ZRZ">
-				<displayName>زائير زائيرى</displayName>
+				<displayName>زائير زائيري</displayName>
 			</currency>
 			<currency type="ZWD">
-				<displayName>دولار زمبابوى</displayName>
+				<displayName>دولار زمبابوي</displayName>
 			</currency>
 		</currencies>
 	</numbers>
@@ -3105,3 +3115,4 @@
 		</messages>
 	</posix>
 </ldml>
+

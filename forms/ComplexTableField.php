@@ -328,7 +328,7 @@ JS;
 	}
 
 	/**
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function createFieldSet() {
 		$fieldset = new FieldList();
@@ -359,7 +359,7 @@ JS;
 	 * this method.
 	 */
 	function getCustomFieldsFor($childData) {
-		if($this->detailFormFields instanceof FieldSet) {
+		if($this->detailFormFields instanceof FieldList) {
 			return $this->detailFormFields;
 		}
 		

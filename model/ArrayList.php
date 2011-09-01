@@ -168,7 +168,7 @@ class ArrayList extends ViewableData implements SS_List {
 		}
 	}
 
-	public function column($field = 'ID') {
+	public function column($field) {
 		$result = array();
 		foreach ($this->items as $item) {
 			$result[] = $this->extract($item, $field);

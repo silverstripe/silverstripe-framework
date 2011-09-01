@@ -64,7 +64,7 @@ class GroupTest extends FunctionalTest {
 
 	      $this->assertEquals(
 			array($adminGroup->ID, $parentGroup->ID),
-	         $updatedGroups->column(),
+	         $updatedGroups->column('ID'),
 	         "Adding a toplevel group works"
 	      );
 
@@ -80,7 +80,7 @@ class GroupTest extends FunctionalTest {
 	      $updatedGroups = $member->Groups();
 	      $this->assertEquals(
 			array($adminGroup->ID),
-	         $updatedGroups->column(),
+	         $updatedGroups->column('ID'),
 	         "Removing a previously added toplevel group works"
 	      );
 
@@ -128,7 +128,7 @@ class GroupTest_Member extends Member implements TestOnly {
    
    function getCMSFields() {
       $groups = DataObject::get('Group');
-      $groupsMap = ($groups) ? $groups->map() : false;
+      $groupsMap = ($groups) ? $groups->map('ID', 'Title') : false;
       $fields = new FieldList(
          new HiddenField('ID', 'ID'),
          new CheckboxSetField(

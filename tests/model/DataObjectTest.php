@@ -282,7 +282,7 @@ class DataObjectTest extends SapphireTest {
 	   // Test adding single DataObject by reference
 	   $player1->Teams()->add($team1);
 	   $player1->flushCache();
-	   $compareTeams = new ComponentSet($team1);
+	   $compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Player', 'HasOneRelationshipID','ID');
 	   $this->assertEquals(
 	      $player1->Teams()->column('ID'),
 	      $compareTeams->column('ID'),

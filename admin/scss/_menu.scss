@@ -4,45 +4,77 @@
  * @package sapphire
  * @subpackage admin
  */
+
 /** -------------------------------------------------------
  * CMS Menu Bar
  * -------------------------------------------------------- */
-@import "compass/css3";
-
 .cms-menu {
-	z-index: 10;
+	z-index: 80;
 	background: $color-menu-background;
 	border-right: 1px solid $color-menu-border;
-	width: 250px;
+	width: ($grid-horizontal * 24) - 1; /* 8x24 - 1 */
 	overflow: auto;
 	
-	@include box-shadow($color-shadow-dark, 2px, 0, 6px);
+	@include box-shadow($color-shadow-dark 0 0 $grid-horizontal);
 
 	a {
 		text-decoration: none;
+	}
+	
+	.cms-panel-content {
+		width: ($grid-horizontal * 24) - 1; /* 8x24 - 1 */
+		overflow: hidden
+	}
+		
+	&.collapsed {
+		width: 40px;
+		cursor: auto;
+		z-index: 1000;
+		
+		.cms-header {
+			width: 30px;
+			
+			span {
+				display: none;
+			}
+		}
+		
+		.cms-menu-list {
+			overflow-x: hidden;
+			overflow-y: auto;
+			
+			li span.text {
+				display: none;
+			}
+			li ul {
+				display: none !important; 
+			}
+		}
+		
+		&.cms-panel .cms-panel-content {
+			display: block; // override panel defaults
+		}
 	}
 }
 
 .cms-menu-list {
 	li {
-		
 		a {
 			display: block;
-			height: 30px;
-			line-height: 30px;
-			vertical-align: middle;
+			height: $grid-vertical * 3;
+			line-height: $grid-vertical * 3;
 			font-size: $font-base-size;
 			overflow: hidden;
 			white-space: nowrap;
 			text-overflow: ellipsis;
-			text-shadow: lighten($color-base, 10%) 1px 1px 0;
+			text-shadow: lighten($color-base, 5%) 1px 1px 0;
 			color: $color-text-dark;
-			padding: 5px;
+			padding: ($grid-vertical - 1) 5px ($grid-vertical - 1) 8px;
 			background-color: $color-base;
 			
-			@include linear-gradient(color-stops(
+			@include background-image(linear-gradient(
 				$color-base,
-				darken($color-base, 8%)
+				darken($color-base, 12%)
 			));
 
 			border-top: 1px solid lighten($color-base, 10%);
@@ -54,18 +86,19 @@
 				border-bottom: 1px solid darken($color-base, 15%);
 				color: lighten($color-text-dark, 5%);
 				
-				@include linear-gradient(color-stops(
+				@include background-image(linear-gradient(
 					lighten($color-base, 5%),
 					$color-base
 				));
 			}
-			&:focus {
+			&:focus,
+			&:active {
 				border-top: 1px solid darken($color-base, 5%);
 				text-decoration: none;
 				background-color: darken($color-base, 5%);
 				color: lighten($color-text-dark, 10%);
 				
-				@include linear-gradient(color-stops(
+				@include background-image(linear-gradient(
 					darken($color-base, 10%),
 					darken($color-base, 5%)
 				));			
@@ -74,9 +107,9 @@
 			.icon {
 				display: block;
 				float: left;
-				margin-right: 4px;
-				@include sprite-background("icons-32.png");
-				@include sprite-position(1, 1);
+				margin: 4px 10px 0 4px;
+				
+				@include opacity(0.7);
 			}
 			
 			.text {
@@ -91,7 +124,7 @@
 				border-top: 1px solid lighten($color-menu-button, 10%);
 				border-bottom: 1px solid darken($color-menu-button, 20%);
 				background-color: $color-menu-button;
-				@include linear-gradient(color-stops(
+				@include background-image(linear-gradient(
 					$color-menu-button, 
 					darken($color-menu-button, 10%)
 				));
@@ -105,8 +138,8 @@
 				background-color: darken($color-menu-button, 10%);
 
 				a {
-					font-size: $font-small-size;
-					padding: 0 10px 0 36px;
+					font-size: $font-base-size - 1;
+					padding: 0 10px 0 40px;
 					height: 32px;
 					line-height: 32px;
 					color: lighten($color-menu-button, 45%);
@@ -138,6 +171,16 @@
 					border-top: none;
 				}
 			}
+		}
+	}
+	
+	&.collapsed {
+		li .text {
+			display: none;
+		}
+		
+		li > li {
+			display: none;
 		}
 	}
 }

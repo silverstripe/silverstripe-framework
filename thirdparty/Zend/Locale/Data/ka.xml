@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.6/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 1.56 $"/>
-		<generation date="$Date: 2008/06/26 03:47:57 $"/>
+		<version number="$Revision: 1.67 $"/>
+		<generation date="$Date: 2009/06/15 03:46:25 $"/>
 		<language type="ka"/>
 	</identity>
 	<localeDisplayNames>
@@ -49,7 +48,7 @@
 			<language type="en_AU">ავსტრალიური ინგლისური</language>
 			<language type="en_CA">კანადური ინგლისური</language>
 			<language type="en_GB">ბრიტანული ინგლისური</language>
-			<language type="en_US">ამერიკული  ინგლისური</language>
+			<language type="en_US">ამერიკული ინგლისური</language>
 			<language type="eo">ესპერანტო</language>
 			<language type="es">ესპანური</language>
 			<language type="es_419">ლათინურ ამერიკული ესპანური</language>
@@ -503,8 +502,8 @@
 			<type type="traditional" key="collation">ტრადიციული</type>
 		</types>
 		<measurementSystemNames>
-			<measurementSystemName type="US">US</measurementSystemName>
 			<measurementSystemName type="metric">Metric</measurementSystemName>
+			<measurementSystemName type="US">US</measurementSystemName>
 		</measurementSystemNames>
 	</localeDisplayNames>
 	<characters>
@@ -643,17 +642,17 @@
 				<dateFormats>
 					<dateFormatLength type="full">
 						<dateFormat>
-							<pattern>EEEE, yyyy MMMM dd</pattern>
+							<pattern>EEEE, y MMMM dd</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="long">
 						<dateFormat>
-							<pattern>yyyy MMMM d</pattern>
+							<pattern>y MMMM d</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="medium">
 						<dateFormat>
-							<pattern>yyyy MMM d</pattern>
+							<pattern>y MMM d</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="short">
@@ -665,7 +664,7 @@
 				<timeFormats>
 					<timeFormatLength type="full">
 						<timeFormat>
-							<pattern>HH:mm:ss v</pattern>
+							<pattern>HH:mm:ss zzzz</pattern>
 						</timeFormat>
 					</timeFormatLength>
 					<timeFormatLength type="long">
@@ -685,22 +684,17 @@
 					</timeFormatLength>
 				</timeFormats>
 				<dateTimeFormats>
-					<dateTimeFormatLength>
-						<dateTimeFormat>
-							<pattern>{1} {0}</pattern>
-						</dateTimeFormat>
-					</dateTimeFormatLength>
 					<availableFormats>
-						<dateFormatItem id="HHmm">HH:mm</dateFormatItem>
-						<dateFormatItem id="HHmmss">HH:mm:ss</dateFormatItem>
-						<dateFormatItem id="MMMdd">dd MMM</dateFormatItem>
-						<dateFormatItem id="MMdd">dd/MM</dateFormatItem>
 						<dateFormatItem id="hhmm">hh:mm a</dateFormatItem>
+						<dateFormatItem id="HHmm">HH:mm</dateFormatItem>
 						<dateFormatItem id="hhmmss">hh:mm:ss a</dateFormatItem>
+						<dateFormatItem id="HHmmss">HH:mm:ss</dateFormatItem>
+						<dateFormatItem id="MMdd">dd/MM</dateFormatItem>
+						<dateFormatItem id="MMMdd">dd MMM</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/yy</dateFormatItem>
-						<dateFormatItem id="yyMMMEEEd">EEE, d MMM, yy</dateFormatItem>
-						<dateFormatItem id="yyMMMd">d MMM, yy</dateFormatItem>
 						<dateFormatItem id="yyMMdd">dd/MM/yy</dateFormatItem>
+						<dateFormatItem id="yyMMMd">d MMM, yy</dateFormatItem>
+						<dateFormatItem id="yyMMMEEEd">EEE, d MMM, yy</dateFormatItem>
 						<dateFormatItem id="yyQ">Q yy</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ yy</dateFormatItem>
 					</availableFormats>
@@ -720,13 +714,13 @@
 					</field>
 					<field type="day">
 						<displayName>დღე</displayName>
+						<relative type="-3">სამი დღის წინ</relative>
+						<relative type="-2">გუშინწინ</relative>
+						<relative type="-1">გუშინ</relative>
 						<relative type="0">დღეს</relative>
 						<relative type="1">ხვალ</relative>
 						<relative type="2">ზეგ</relative>
 						<relative type="3">სამი დღის შემდეგ</relative>
-						<relative type="-1">გუშინ</relative>
-						<relative type="-2">გუშინწინ</relative>
-						<relative type="-3">სამი დღის წინ</relative>
 					</field>
 					<field type="weekday">
 						<displayName>კვირის დღე</displayName>
@@ -1283,7 +1277,7 @@
 				<exemplarCity>მარკეზასი</exemplarCity>
 			</zone>
 			<zone type="Pacific/Gambier">
-				<exemplarCity>გამბიერი</exemplarCity>
+				<exemplarCity>გმბიერი</exemplarCity>
 			</zone>
 			<zone type="America/Miquelon">
 				<exemplarCity>სენტ პიერი და მიკელონი</exemplarCity>
@@ -1752,7 +1746,6 @@
 			</currency>
 			<currency type="GEL">
 				<displayName>ქართული ლარი</displayName>
-				<symbol>GEL</symbol>
 			</currency>
 			<currency type="GRD">
 				<displayName>ბერძნული დრაჰმა</displayName>
@@ -1825,9 +1818,6 @@
 			</currency>
 			<currency type="LRD">
 				<displayName>ლიბერიული დოლარი</displayName>
-			</currency>
-			<currency type="LSM">
-				<displayName>მალოტი</displayName>
 			</currency>
 			<currency type="LTL">
 				<displayName>ლიტვური ლიტა</displayName>
@@ -2104,7 +2094,6 @@
 			</currency>
 			<currency type="XXX">
 				<displayName>უცნობი ან არასწორი ვალუტა</displayName>
-				<symbol>XXX</symbol>
 			</currency>
 			<currency type="YDD">
 				<displayName>იემენის დინარი</displayName>

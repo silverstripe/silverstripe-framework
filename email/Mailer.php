@@ -66,13 +66,13 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
 	$subject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
 
 	// Make the plain text part
-	$headers["Content-Type"] = "text/plain; charset=\"utf-8\"";
+	$headers["Content-Type"] = "text/plain; charset=utf-8";
 	$headers["Content-Transfer-Encoding"] = $plainEncoding ? $plainEncoding : "quoted-printable";
 
 	$plainPart = processHeaders($headers, ($plainEncoding == "base64") ? chunk_split(base64_encode($plainContent),60) : wordwrap(QuotedPrintable_encode($plainContent),75));
 
 	// Make the HTML part
-	$headers["Content-Type"] = "text/html; charset=\"utf-8\"";
+	$headers["Content-Type"] = "text/html; charset=utf-8";
         
 	
 	// Add basic wrapper tags if the body tag hasn't been given
@@ -179,7 +179,7 @@ function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $cu
 	$subject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
 
 	// Make the plain text part
-	$headers["Content-Type"] = "text/plain; charset=\"utf-8\"";
+	$headers["Content-Type"] = "text/plain; charset=utf-8";
 	$headers["Content-Transfer-Encoding"] = $plainEncoding ? $plainEncoding : "quoted-printable";
 
 	$plainContent = ($plainEncoding == "base64") ? chunk_split(base64_encode($plainContent),60) : QuotedPrintable_encode($plainContent);
@@ -284,7 +284,7 @@ function wrapImagesInline($htmlContent) {
 	
 	
 	// Make the HTML part
-	$headers["Content-Type"] = "text/html; charset=\"utf-8\"";
+	$headers["Content-Type"] = "text/html; charset=utf-8";
 	$headers["Content-Transfer-Encoding"] = "quoted-printable";
 	$multiparts[] = processHeaders($headers, QuotedPrintable_encode($replacedContent));
 	

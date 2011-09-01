@@ -69,6 +69,7 @@ class LeftAndMain extends Controller {
 	 */
 	static $allowed_actions = array(
 		'index',
+		'save',
 		'savetreenode',
 		'getitem',
 		'getsubtree',
@@ -241,12 +242,21 @@ class LeftAndMain extends Controller {
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js');
+		
+		// styled selects (with search)
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js');
+		Requirements::css(SAPPHIRE_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css');
 		
 		Requirements::javascript(THIRDPARTY_DIR . '/behaviour/behaviour.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-query/jquery.query.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js');
+		
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::add_i18n_javascript(SAPPHIRE_ADMIN_DIR . '/javascript/lang');
 		
@@ -254,8 +264,12 @@ class LeftAndMain extends Controller {
 		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
 		
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Content.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js');
@@ -291,11 +305,15 @@ class LeftAndMain extends Controller {
 				THIRDPARTY_DIR . '/json-js/json2.js',
 				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
 				THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js',
+				THIRDPARTY_DIR . '/jquery-query/jquery.query.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js',
 				THIRDPARTY_DIR . '/jquery-metadata/jquery.metadata.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
 				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js',
 				SAPPHIRE_DIR . '/javascript/TreeDropdownField.js',
@@ -310,8 +328,12 @@ class LeftAndMain extends Controller {
 			'leftandmain.js',
 			array(
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
@@ -324,6 +346,20 @@ class LeftAndMain extends Controller {
 		// The user's theme shouldn't affect the CMS, if, for example, they have replaced
 		// TableListField.ss or Form.ss.
 		SSViewer::set_theme(null);
+	}
+	
+	function handleRequest($request) {
+		$title = $this->Title();
+		
+		$response = parent::handleRequest($request, new DataModel());
+		$response->addHeader('X-Controller', $this->class);
+		$response->addHeader('X-Title', $title);
+		
+		return $response;
+	}
+
+	function index($request) {
+		return ($this->isAjax()) ? $this->show($request) : $this->getViewer('index')->process($this);
 	}
 
 	
@@ -369,24 +405,23 @@ class LeftAndMain extends Controller {
 		if(!$title) $title = preg_replace('/Admin$/', '', $class);
 		return $title;
 	}
-
+	
 	public function show($request) {
 		// TODO Necessary for TableListField URLs to work properly
 		if($request->param('ID')) $this->setCurrentPageID($request->param('ID'));
 		
 		if($this->isAjax()) {
-			SSViewer::setOption('rewriteHashlinks', false);
-			$form = $this->getEditForm($request->param('ID'));
-			$content = $form->formHtmlContent();
+			if($request->getVar('cms-view-form')) {
+				$form = $this->getEditForm();
+				$content = $form->forTemplate();
+			} else {
+				// Rendering is handled by template, which will call EditForm() eventually
+				$content = $this->renderWith($this->getTemplatesWithSuffix('_Content'));
+			}
 		} else {
-			// Rendering is handled by template, which will call EditForm() eventually
 			$content = $this->renderWith($this->getViewer('show'));
 		}
-		
-		if($this->ShowSwitchView()) {
-			$content .= '<div id="AjaxSwitchView">' . $this->SwitchView() . '</div>';
-		}
-		
+				
 		return $content;
 	}
 
@@ -406,53 +441,57 @@ class LeftAndMain extends Controller {
 		// Encode into DO set
 		$menu = new ArrayList();
 		$menuItems = CMSMenu::get_viewable_menu_items();
-		if($menuItems) foreach($menuItems as $code => $menuItem) {
-			// alternate permission checks (in addition to LeftAndMain->canView())
-			if(
-				isset($menuItem->controller) 
-				&& $this->hasMethod('alternateMenuDisplayCheck')
-				&& !$this->alternateMenuDisplayCheck($menuItem->controller)
-			) {
-				continue;
-			}
-
-			$linkingmode = "";
-			
-			if($menuItem->controller && $this instanceof $menuItem->controller) {
-				$linkingmode = "current";
-			} else if(strpos($this->Link(), $menuItem->url) !== false) {
-				if($this->Link() == $menuItem->url) {
-					$linkingmode = "current";
-				
-				// default menu is the one with a blank {@link url_segment}
-				} else if(singleton($menuItem->controller)->stat('url_segment') == '') {
-					if($this->Link() == $this->stat('url_base').'/') $linkingmode = "current";
-
-				} else {
-					$linkingmode = "current";
+		if($menuItems) {
+			foreach($menuItems as $code => $menuItem) {
+				// alternate permission checks (in addition to LeftAndMain->canView())
+				if(
+					isset($menuItem->controller) 
+					&& $this->hasMethod('alternateMenuDisplayCheck')
+					&& !$this->alternateMenuDisplayCheck($menuItem->controller)
+				) {
+					continue;
 				}
-			}
+
+				$linkingmode = "";
+				
+				if($menuItem->controller && get_class($this) == $menuItem->controller) {
+					$linkingmode = "current";
+				} else if(strpos($this->Link(), $menuItem->url) !== false) {
+					if($this->Link() == $menuItem->url) {
+						$linkingmode = "current";
+				
+					// default menu is the one with a blank {@link url_segment}
+					} else if(singleton($menuItem->controller)->stat('url_segment') == '') {
+						if($this->Link() == $this->stat('url_base').'/') {
+							$linkingmode = "current";
+						}
+
+					} else {
+						$linkingmode = "current";
+					}
+				}
 		
-			// already set in CMSMenu::populate_menu(), but from a static pre-controller
-			// context, so doesn't respect the current user locale in _t() calls - as a workaround,
-			// we simply call LeftAndMain::menu_title_for_class() again 
-			// if we're dealing with a controller
-			if($menuItem->controller) {
-				$defaultTitle = LeftAndMain::menu_title_for_class($menuItem->controller);
-				$title = _t("{$menuItem->controller}.MENUTITLE", $defaultTitle);
-			} else {
-				$title = $menuItem->title;
+				// already set in CMSMenu::populate_menu(), but from a static pre-controller
+				// context, so doesn't respect the current user locale in _t() calls - as a workaround,
+				// we simply call LeftAndMain::menu_title_for_class() again 
+				// if we're dealing with a controller
+				if($menuItem->controller) {
+					$defaultTitle = LeftAndMain::menu_title_for_class($menuItem->controller);
+					$title = _t("{$menuItem->controller}.MENUTITLE", $defaultTitle);
+				} else {
+					$title = $menuItem->title;
+				}
+				
+				$menu->push(new ArrayData(array(
+					"MenuItem" => $menuItem,
+					"Title" => Convert::raw2xml($title),
+					"Code" => DBField::create('Text', $code),
+					"Link" => $menuItem->url,
+					"LinkingMode" => $linkingmode
+				)));
 			}
-			
-			$menu->push(new ArrayData(array(
-				"MenuItem" => $menuItem,
-				"Title" => Convert::raw2xml($title),
-				"Code" => $code,
-				"Link" => $menuItem->url,
-				"LinkingMode" => $linkingmode
-			)));
 		}
-		
+
 		// if no current item is found, assume that first item is shown
 		//if(!isset($foundCurrent)) 
 		return $menu;
@@ -534,7 +573,7 @@ class LeftAndMain extends Controller {
 		$titleEval = '
 			"<li id=\"record-$child->ID\" data-id=\"$child->ID\" class=\"" . $child->CMSTreeClasses($extraArg) . "\">" .
 			"<ins class=\"jstree-icon\">&nbsp;</ins>" .
-			"<a href=\"" . Controller::join_links(substr($extraArg->Link(),0,-1), "show", $child->ID) . "\" title=\"' 
+			"<a href=\"" . Controller::join_links($extraArg->Link("show"), $child->ID) . "\" title=\"' 
 			. _t('LeftAndMain.PAGETYPE','Page type: ') 
 			. '".$child->class."\" ><ins class=\"jstree-icon\">&nbsp;</ins>" . ($child->TreeTitle) . 
 			"</a>"
@@ -628,7 +667,7 @@ class LeftAndMain extends Controller {
 		// write process might've changed the record, so we reload before returning
 		$form = $this->getEditForm($record->ID);
 		
-		return $form->formHtmlContent();
+		return $form->forTemplate();
 	}
 	
 	public function delete($data, $form) {
@@ -640,7 +679,7 @@ class LeftAndMain extends Controller {
 		$record->delete();
 		
 		if($this->isAjax()) {
-			return $this->EmptyForm()->formHtmlContent();
+			return $this->EmptyForm()->forTemplate();
 		} else {
 			$this->redirectBack();
 		}
@@ -801,6 +840,13 @@ class LeftAndMain extends Controller {
 			) {
 				$fields->push(new HiddenField('ParentID'));
 			}
+
+			// Added in-line to the form, but plucked into different view by LeftAndMain.Preview.js upon load
+			if(in_array('CMSPreviewable', class_implements($record))) {
+				$navField = new LiteralField('SilverStripeNavigator', $this->getSilverStripeNavigator());
+				$navField->setAllowHTML(true);
+				$fields->push($navField);
+			}
 			
 			if($record->hasMethod('getAllCMSActions')) {
 				$actions = $record->getAllCMSActions();
@@ -946,7 +992,7 @@ class LeftAndMain extends Controller {
 			return $record->ID;
 		} else if($this->isAjax()) {
 			$form = $this->getEditForm($record->ID);
-			return $form->formHtmlContent();
+			return $form->forTemplate();
 		} else {
 			return $this->redirect(Controller::join_links($this->Link('show'), $record->ID));
 		}
@@ -1016,6 +1062,21 @@ class LeftAndMain extends Controller {
 	}
 
 	/**
+	 * Used for preview controls, mainly links which switch between different states of the page.
+	 * 
+	 * @return ArrayData
+	 */
+	function getSilverStripeNavigator() {
+		$page = $this->currentPage();
+		if($page) {
+			$navigator = new SilverStripeNavigator($page);
+			return $navigator->renderWith($this->getTemplatesWithSuffix('_SilverStripeNavigator'));
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Identifier for the currently shown record,
 	 * in most cases a database ID. Inspects the following
 	 * sources (in this order):
@@ -1070,12 +1131,17 @@ class LeftAndMain extends Controller {
 	}
 	
 	/**
-	 * Get the staus of a certain page and version.
-	 *
-	 * This function is used for concurrent editing, and providing alerts
-	 * when multiple users are editing a single page. It echoes a json
-	 * encoded string to the UA.
+	 * URL to a previewable record which is shown through this controller.
+	 * The controller might not have any previewable content, in which case 
+	 * this method returns FALSE.
+	 * 
+	 * @return String|boolean
 	 */
+	public function PreviewLink() {
+		$record = $this->getRecord($this->currentPageID());
+		$baseLink = ($record && $record instanceof Page) ? $record->Link('?stage=Stage') : Director::absoluteBaseURL();
+		return $baseLink;
+	}
 
 	/**
 	 * Return the version number of this application.
@@ -1142,6 +1208,13 @@ class LeftAndMain extends Controller {
 	function getApplicationName() {
 		return self::$application_name;
 	}
+	
+	/**
+	 * @return String
+	 */
+	function Title() {
+		return sprintf('%s | %s', $this->getApplicationName(), $this->SectionTitle());
+	}
 
 	/**
 	 * Return the title of the current section, as shown on the main menu
@@ -1160,6 +1233,21 @@ class LeftAndMain extends Controller {
 	 */
 	function MceRoot() {
 		return MCE_ROOT;
+	}
+	
+	/**
+	 * Same as {@link ViewableData->CSSClasses()}, but with a changed name
+	 * to avoid problems when using {@link ViewableData->customise()}
+	 * (which always returns "ArrayData" from the $original object).
+	 * 
+	 * @return String
+	 */
+	function BaseCSSClasses() {
+		return $this->CSSClasses();
+	}
+	
+	function IsPreviewExpanded() {
+		return ($this->request->getVar('cms-preview-expanded'));
 	}
 	
 	/**

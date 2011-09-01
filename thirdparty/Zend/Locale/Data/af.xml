@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.6/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 1.65 $"/>
-		<generation date="$Date: 2008/06/17 14:12:13 $"/>
+		<version number="$Revision: 1.78 $"/>
+		<generation date="$Date: 2009/06/15 03:46:24 $"/>
 		<language type="af"/>
 	</identity>
 	<localeDisplayNames>
@@ -417,8 +416,8 @@
 			<type type="traditional" key="collation">Tradisioneel</type>
 		</types>
 		<measurementSystemNames>
-			<measurementSystemName type="US">VSA</measurementSystemName>
 			<measurementSystemName type="metric">Metriek</measurementSystemName>
+			<measurementSystemName type="US">VSA</measurementSystemName>
 		</measurementSystemNames>
 		<codePatterns>
 			<codePattern type="language">Taal: {0}</codePattern>
@@ -427,7 +426,7 @@
 		</codePatterns>
 	</localeDisplayNames>
 	<characters>
-		<exemplarCharacters>[a á â b-e é è ê ë f-i î ï j-o ô ö p-u û v-z ŉ]</exemplarCharacters>
+		<exemplarCharacters>[a á â b-e é è ê ë f-i î ï j-o ô ö p-u û v-z]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary">[à å-ç ñ ø œ ß]</exemplarCharacters>
 		<exemplarCharacters type="currencySymbol">[a-z]</exemplarCharacters>
 	</characters>
@@ -552,17 +551,17 @@
 				<dateFormats>
 					<dateFormatLength type="full">
 						<dateFormat>
-							<pattern>EEEE dd MMMM yyyy</pattern>
+							<pattern>EEEE dd MMMM y</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="long">
 						<dateFormat>
-							<pattern>dd MMMM yyyy</pattern>
+							<pattern>dd MMMM y</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="medium">
 						<dateFormat>
-							<pattern>dd MMM yyyy</pattern>
+							<pattern>dd MMM y</pattern>
 						</dateFormat>
 					</dateFormatLength>
 					<dateFormatLength type="short">
@@ -574,7 +573,7 @@
 				<timeFormats>
 					<timeFormatLength type="full">
 						<timeFormat>
-							<pattern>h:mm:ss a v</pattern>
+							<pattern>h:mm:ss a zzzz</pattern>
 						</timeFormat>
 					</timeFormatLength>
 					<timeFormatLength type="long">
@@ -594,43 +593,16 @@
 					</timeFormatLength>
 				</timeFormats>
 				<dateTimeFormats>
-					<dateTimeFormatLength>
-						<dateTimeFormat>
-							<pattern>{1} {0}</pattern>
-						</dateTimeFormat>
-					</dateTimeFormatLength>
 					<availableFormats>
+						<dateFormatItem id="MMdd">MM/dd</dateFormatItem>
 						<dateFormatItem id="MMMMd">d MMMM</dateFormatItem>
 						<dateFormatItem id="MMMMdd">dd MMMM</dateFormatItem>
-						<dateFormatItem id="MMdd">MM/dd</dateFormatItem>
 						<dateFormatItem id="yyQ">Q yy</dateFormatItem>
 						<dateFormatItem id="yyyyMM">yyyy/MM</dateFormatItem>
-						<dateFormatItem id="yyyyMMMM">MMMM yyyy</dateFormatItem>
+						<dateFormatItem id="yyyyMMMM">MMMM y</dateFormatItem>
 					</availableFormats>
 					<intervalFormats>
 						<intervalFormatFallback>{0} - {1}</intervalFormatFallback>
-						<intervalFormatItem id="M">
-							<greatestDifference id="M">M-M</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MEd">
-							<greatestDifference id="M">E, MM-dd - E, MM-dd</greatestDifference>
-							<greatestDifference id="d">E, MM-dd - E, MM-dd</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MMM">
-							<greatestDifference id="M">MMM-MMM</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MMMEd">
-							<greatestDifference id="M">E, MMM d - E, MMM d</greatestDifference>
-							<greatestDifference id="d">E, MMM d - E, MMM d</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MMMd">
-							<greatestDifference id="M">MMM d - MMM d</greatestDifference>
-							<greatestDifference id="d">MMM d-d</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="Md">
-							<greatestDifference id="M">MM-dd - MM-dd</greatestDifference>
-							<greatestDifference id="d">MM-dd - MM-dd</greatestDifference>
-						</intervalFormatItem>
 						<intervalFormatItem id="d">
 							<greatestDifference id="d">d-d</greatestDifference>
 						</intervalFormatItem>
@@ -648,6 +620,28 @@
 						<intervalFormatItem id="hv">
 							<greatestDifference id="h">HH-HH v</greatestDifference>
 						</intervalFormatItem>
+						<intervalFormatItem id="M">
+							<greatestDifference id="M">M-M</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Md">
+							<greatestDifference id="d">MM-dd - MM-dd</greatestDifference>
+							<greatestDifference id="M">MM-dd - MM-dd</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MEd">
+							<greatestDifference id="d">E, MM-dd - E, MM-dd</greatestDifference>
+							<greatestDifference id="M">E, MM-dd - E, MM-dd</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMM">
+							<greatestDifference id="M">MMM-MMM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMMd">
+							<greatestDifference id="d">MMM d-d</greatestDifference>
+							<greatestDifference id="M">MMM d - MMM d</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMMEd">
+							<greatestDifference id="d">E, MMM d - E, MMM d</greatestDifference>
+							<greatestDifference id="M">E, MMM d - E, MMM d</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="y">
 							<greatestDifference id="y">y-y</greatestDifference>
 						</intervalFormatItem>
@@ -655,29 +649,29 @@
 							<greatestDifference id="M">yyyy-MM - yyyy-MM</greatestDifference>
 							<greatestDifference id="y">yyyy-MM - yyyy-MM</greatestDifference>
 						</intervalFormatItem>
+						<intervalFormatItem id="yMd">
+							<greatestDifference id="d">yyyy-MM-dd - yyyy-MM-dd</greatestDifference>
+							<greatestDifference id="M">yyyy-MM-dd - yyyy-MM-dd</greatestDifference>
+							<greatestDifference id="y">yyyy-MM-dd - yyyy-MM-dd</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="yMEd">
-							<greatestDifference id="M">E, yyyy-MM-dd - E, yyyy-MM-dd</greatestDifference>
 							<greatestDifference id="d">E, yyyy-MM-dd - E, yyyy-MM-dd</greatestDifference>
+							<greatestDifference id="M">E, yyyy-MM-dd - E, yyyy-MM-dd</greatestDifference>
 							<greatestDifference id="y">E, yyyy-MM-dd - E, yyyy-MM-dd</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="yMMM">
-							<greatestDifference id="M">yyyy MMM-MMM</greatestDifference>
-							<greatestDifference id="y">yyyy MMM - yyyy MMM</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="yMMMEd">
-							<greatestDifference id="M">E, yyyy MMM dd - E, yyyy MMM dd</greatestDifference>
-							<greatestDifference id="d">E, yyyy MMM dd - E, yyyy MMM dd</greatestDifference>
-							<greatestDifference id="y">E, yyyy MMM dd - E, yyyy MMM dd</greatestDifference>
+							<greatestDifference id="M">y MMM-MMM</greatestDifference>
+							<greatestDifference id="y">y MMM - y MMM</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="yMMMd">
-							<greatestDifference id="M">yyyy MMM d - MMM d</greatestDifference>
-							<greatestDifference id="d">yyyy MMM d-d</greatestDifference>
-							<greatestDifference id="y">yyyy MMM d - yyyy MMM d</greatestDifference>
+							<greatestDifference id="d">y MMM d-d</greatestDifference>
+							<greatestDifference id="M">y MMM d - MMM d</greatestDifference>
+							<greatestDifference id="y">y MMM d - y MMM d</greatestDifference>
 						</intervalFormatItem>
-						<intervalFormatItem id="yMd">
-							<greatestDifference id="M">yyyy-MM-dd - yyyy-MM-dd</greatestDifference>
-							<greatestDifference id="d">yyyy-MM-dd - yyyy-MM-dd</greatestDifference>
-							<greatestDifference id="y">yyyy-MM-dd - yyyy-MM-dd</greatestDifference>
+						<intervalFormatItem id="yMMMEd">
+							<greatestDifference id="d">E, y MMM dd - E, y MMM dd</greatestDifference>
+							<greatestDifference id="M">E, y MMM dd - E, y MMM dd</greatestDifference>
+							<greatestDifference id="y">E, y MMM dd - E, y MMM dd</greatestDifference>
 						</intervalFormatItem>
 					</intervalFormats>
 				</dateTimeFormats>
@@ -814,7 +808,6 @@
 			</currency>
 			<currency type="ZAR">
 				<displayName>Rand</displayName>
-				<symbol>R</symbol>
 			</currency>
 		</currencies>
 	</numbers>
@@ -825,3 +818,4 @@
 		</messages>
 	</posix>
 </ldml>
+

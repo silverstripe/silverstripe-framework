@@ -52,7 +52,6 @@ class TextareaField extends FormField {
 				'id' => $this->id(),
 				'class' => 'readonly' . ($this->extraClass() ? $this->extraClass() : ''),
 				'name' => $this->name,
-				'tabindex' => $this->getTabIndex(),
 				'readonly' => 'readonly'
 			);
 
@@ -61,8 +60,7 @@ class TextareaField extends FormField {
 			$hiddenAttributes = array(
 				'type' => 'hidden',
 				'name' => $this->name,
-				'value' => $value,
-				'tabindex' => $this->getTabIndex()
+				'value' => $value
  			);
 			
 			$containerSpan = $this->createTag(
@@ -79,7 +77,8 @@ class TextareaField extends FormField {
 				'class' => ($this->extraClass() ? $this->extraClass() : ''),
 				'name' => $this->name,
 				'rows' => $this->rows,
-				'cols' => $this->cols
+				'cols' => $this->cols,
+				'tabindex' => $this->getTabIndex()
 			);
 			
 			if($this->disabled) $attributes['disabled'] = 'disabled';

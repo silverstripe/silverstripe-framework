@@ -151,7 +151,7 @@ class DataList extends ViewableData implements SS_List {
 		return $result;
 	}
 
-	public function map($keyfield = 'ID', $titlefield = 'Title') {
+	public function map($keyfield, $titlefield) {
 		$map = array();
 
 		foreach ($this as $item) {
@@ -284,7 +284,7 @@ class DataList extends ViewableData implements SS_List {
 	 * Return a single column from this DataList.
 	 * @param $colNum The DataObject field to return.
 	 */
-	function column($colName = "ID") {
+	function column($colName) {
 		return $this->dataQuery->column($colName);
 	}
 	
@@ -299,7 +299,7 @@ class DataList extends ViewableData implements SS_List {
 		$has = array();
 
 		// Index current data
-		foreach($this->column() as $id) {
+		foreach($this->column('ID') as $id) {
 		   $has[$id] = true;
 		}
 		

@@ -14,8 +14,8 @@
  *
  * @category   Zend
  * @package    Zend_Date
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: DateObject.php 14117 2009-02-19 21:29:17Z thomas $
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
+ * @version    $Id: DateObject.php 23775 2011-03-01 17:25:24Z ralph $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -23,7 +23,7 @@
  * @category   Zend
  * @package    Zend_Date
  * @subpackage Zend_Date_DateObject
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 abstract class Zend_Date_DateObject {
@@ -33,6 +33,7 @@ abstract class Zend_Date_DateObject {
      */
     private   $_unixTimestamp;
     protected static $_cache         = null;
+    protected static $_cacheTags     = false;
     protected static $_defaultOffset = 0;
 
     /**
@@ -85,7 +86,7 @@ abstract class Zend_Date_DateObject {
             $this->_unixTimestamp = time();
         } else {
             require_once 'Zend/Date/Exception.php';
-            throw new Zend_Date_Exception('\'' . $timestamp . '\' is not a valid UNIX timestamp', $timestamp);
+            throw new Zend_Date_Exception('\'' . $timestamp . '\' is not a valid UNIX timestamp', 0, null, $timestamp);
         }
 
         return $old;
@@ -144,7 +145,6 @@ abstract class Zend_Date_DateObject {
      */
     protected function mktime($hour, $minute, $second, $month, $day, $year, $gmt = false)
     {
-
         // complete date but in 32bit timestamp - use PHP internal
         if ((1901 < $year) and ($year < 2038)) {
 
@@ -235,7 +235,7 @@ abstract class Zend_Date_DateObject {
 
                     for ($mcount = 11; $mcount > ($month - 1); $mcount--) {
                         $date += self::$_monthTable[$mcount];
-                        if (($leapyear === true) and ($mcount == 1)) {
+                        if (($leapyear === true) and ($mcount == 2)) {
                             $date++;
                         }
 
@@ -255,7 +255,11 @@ abstract class Zend_Date_DateObject {
         }
 
         if (isset(self::$_cache)) {
-            self::$_cache->save( serialize($date), $id);
+            if (self::$_cacheTags) {
+                self::$_cache->save( serialize($date), $id, array('Zend_Date'));
+            } else {
+                self::$_cache->save( serialize($date), $id);
+            }
         }
 
         return $date;
@@ -300,6 +304,7 @@ abstract class Zend_Date_DateObject {
         if ($this->_timezone != $oldzone) {
             date_default_timezone_set($this->_timezone);
         }
+
         if ($timestamp === null) {
             $result = ($gmt) ? @gmdate($format) : @date($format);
             date_default_timezone_set($oldzone);
@@ -312,7 +317,8 @@ abstract class Zend_Date_DateObject {
             return $result;
         }
 
-        $jump = false;
+        $jump      = false;
+        $origstamp = $timestamp;
         if (isset(self::$_cache)) {
             $idstamp = strtr('Zend_DateObject_date_' . $this->_offset . '_'. $timestamp . '_'.(int)$gmt, '-','_');
             if ($result2 = self::$_cache->load($idstamp)) {
@@ -321,40 +327,43 @@ abstract class Zend_Date_DateObject {
             }
         }
 
-        // check on false or null alone failes
+        // check on false or null alone fails
         if (empty($gmt) and empty($jump)) {
             $tempstamp = $timestamp;
             if ($tempstamp > 0) {
                 while (abs($tempstamp) > 0x7FFFFFFF) {
                     $tempstamp -= (86400 * 23376);
                 }
+
                 $dst = date("I", $tempstamp);
                 if ($dst === 1) {
                     $timestamp += 3600;
                 }
-                $temp = date('Z', $tempstamp);
+
+                $temp       = date('Z', $tempstamp);
                 $timestamp += $temp;
             }
 
             if (isset(self::$_cache)) {
-                self::$_cache->save( serialize($timestamp), $idstamp);
+                if (self::$_cacheTags) {
+                    self::$_cache->save( serialize($timestamp), $idstamp, array('Zend_Date'));
+                } else {
+                    self::$_cache->save( serialize($timestamp), $idstamp);
+                }
             }
         }
-
 
         if (($timestamp < 0) and ($gmt !== true)) {
             $timestamp -= $this->_offset;
         }
-        date_default_timezone_set($oldzone);
 
-        $date = $this->getDateParts($timestamp, true);
+        date_default_timezone_set($oldzone);
+        $date   = $this->getDateParts($timestamp, true);
         $length = strlen($format);
         $output = '';
 
         for ($i = 0; $i < $length; $i++) {
-
             switch($format[$i]) {
-
                 // day formats
                 case 'd':  // day of month, 2 digits, with leading zero, 01 - 31
                     $output .= (($date['mday'] < 10) ? '0' . $date['mday'] : $date['mday']);
@@ -563,6 +572,7 @@ abstract class Zend_Date_DateObject {
                 case 'c':  // ISO 8601 date format
                     $difference = $this->getGmtOffset();
                     $difference = sprintf('%s%04d', ($difference <= 0) ? '+' : '-', abs($difference) / 36);
+                    $difference = substr($difference, 0, 3) . ':' . substr($difference, 3);
                     $output .= $date['year'] . '-'
                              . (($date['mon']     < 10) ? '0' . $date['mon']     : $date['mon'])     . '-'
                              . (($date['mday']    < 10) ? '0' . $date['mday']    : $date['mday'])    . 'T'
@@ -586,7 +596,7 @@ abstract class Zend_Date_DateObject {
                     break;
 
                 case 'U':  // Unix timestamp
-                    $output .= $timestamp;
+                    $output .= $origstamp;
                     break;
 
 
@@ -658,13 +668,13 @@ abstract class Zend_Date_DateObject {
     {
 
         // actual timestamp
-        if ($timestamp === null) {
+        if (!is_numeric($timestamp)) {
             return getdate();
         }
 
         // 32bit timestamp
         if (abs($timestamp) <= 0x7FFFFFFF) {
-            return @getdate($timestamp);
+            return @getdate((int) $timestamp);
         }
 
         if (isset(self::$_cache)) {
@@ -827,7 +837,11 @@ abstract class Zend_Date_DateObject {
         }
 
         if (isset(self::$_cache)) {
-            self::$_cache->save( serialize($array), $id);
+            if (self::$_cacheTags) {
+                self::$_cache->save( serialize($array), $id, array('Zend_Date'));
+            } else {
+                self::$_cache->save( serialize($array), $id);
+            }
         }
 
         return $array;
@@ -1001,7 +1015,7 @@ abstract class Zend_Date_DateObject {
         if (function_exists('timezone_open')) {
             if (!@timezone_open($zone)) {
                 require_once 'Zend/Date/Exception.php';
-                throw new Zend_Date_Exception("timezone ($zone) is not a known timezone", $zone);
+                throw new Zend_Date_Exception("timezone ($zone) is not a known timezone", 0, null, $zone);
             }
         }
         // this can generate an error if the date extension is not available and a false timezone is given
@@ -1053,5 +1067,23 @@ abstract class Zend_Date_DateObject {
         date_default_timezone_set($zone);
 
         return $offset;
+    }
+
+    /**
+     * Internal method to check if the given cache supports tags
+     *
+     * @param Zend_Cache $cache
+     */
+    protected static function _getTagSupportForCache()
+    {
+        $backend = self::$_cache->getBackend();
+        if ($backend instanceof Zend_Cache_Backend_ExtendedInterface) {
+            $cacheOptions = $backend->getCapabilities();
+            self::$_cacheTags = $cacheOptions['tags'];
+        } else {
+            self::$_cacheTags = false;
+        }
+
+        return self::$_cacheTags;
     }
 }

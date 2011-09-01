@@ -1,44 +1,52 @@
 <?php
 /**
- * Dropdown-like field that allows you to select an item from a hierachical AJAX-expandable tree.
+ * Dropdown-like field that allows you to select an item from a hierarchical 
+ * AJAX-expandable tree.
  * 
- * Creates a field which opens a dropdown (actually a div via javascript included for you) which contains a tree with the ability to select a singular item for the value of the field. This field has the ability to store one-to-one joins related to hierarchy or a hierarchy based filter.
+ * Creates a field which opens a dropdown (actually a div via javascript 
+ * included for you) which contains a tree with the ability to select a singular 
+ * item for the value of the field. This field has the ability to store one-to-one 
+ * joins related to hierarchy or a hierarchy based filter.
  * 
- * **Note:** your source object must use an implementation of hierarchy for this field to generate the tree correctly, e.g. groups, sitetree etc.
+ * **Note:** your source object must use an implementation of hierarchy for this 
+ * field to generate the tree correctly, e.g. {@link Group}, {@link SiteTree} etc.
  * 
- * All operations are carried out through behaviour and javascript.
+ * All operations are carried out through javascript and provides no fallback
+ * to non JS.
  * 
  * <b>Usage</b>.
  * 
- * treedropdownfield is used on {@link VirtualPage} a class which creates another instance of a page, with exactly the same fields that can be represented on another part of the site. The code below is taken from an example of this.
- * 
  * <code>
- * // Put this at the top of the class that defines your model (e.g. the class that extends DataObject).
  * static $has_one = array(
  *   'RightContent' => 'SiteTree'
  * );
  * 
- * // Setup the linking to the original page. (Put this in your getCMSFields() method or similar)
+ * function getCMSFields() {
+ * ...
  * $treedropdownfield = new TreeDropdownField("RightContentID", "Choose a page to show on the right:", "SiteTree");
+ * ..
+ * }
  * </code>
  * 
- * This will generate a tree allowing the user to expand and contract subsections to find the appropriate page to save to the field.
+ * This will generate a tree allowing the user to expand and contract subsections 
+ * to find the appropriate page to save to the field.
  * 
- * @see TreeMultiselectField for the same implementation allowing multiple selections
- * @see DropdownField for a simple <select> field with a single element.
- * @see CheckboxSetField for multiple selections through checkboxes.
- * @see OptionsetField for single selections via radiobuttons.
+ * @see {@link TreeMultiselectField} for the same implementation allowing multiple selections
+ * @see {@link DropdownField} for a simple dropdown field.
+ * @see {@link CheckboxSetField} for multiple selections through checkboxes.
+ * @see {@link OptionsetField} for single selections via radiobuttons.
  *
  * @package forms
  * @subpackage fields-relational
  */
+
 class TreeDropdownField extends FormField {
 	
-	public static $url_handlers = array (
+	public static $url_handlers = array(
 		'$Action!/$ID' => '$Action'
 	);
 	
-	public static $allowed_actions = array (
+	public static $allowed_actions = array(
 		'tree'
 	);
 	
@@ -50,20 +58,28 @@ class TreeDropdownField extends FormField {
 	/**
 	 * Used by field search to leave only the relevant entries
 	 */
-	protected $searchIds = null, $searchExpanded = array();
+	protected $searchIds = null, $showSearch, $searchExpanded = array();
 	
 	/**
-	 * CAVEAT: for search to work properly $labelField must be a database field, or you need to setSearchFunction.
+	 * CAVEAT: for search to work properly $labelField must be a database field, 
+	 * or you need to setSearchFunction.
 	 *
 	 * @param string $name the field name
 	 * @param string $title the field label
-	 * @param sourceObject The object-type to list in the tree.  Must be a 'hierachy' object.  Alternatively,
-	 * you can set this to an array of key/value pairs, like a dropdown source.  In this case, the field
-	 * will act like show a flat list of tree items, without any hierachy.   This is most useful in
-	 * conjunction with TreeMultiselectField, for presenting a set of checkboxes in a compact view.
-	 * @param string $keyField to field on the source class to save as the field value (default ID).
-	 * @param string $labelField the field name to show as the human-readable value on the tree (default Title).
-	 * @param string $showSearch enable the ability to search the tree by entering the text in the input field.
+	 * @param sourceObject The object-type to list in the tree.  Must be a 
+	 *		{@link Hierarchy} subclass.  Alternatively, you can set this to an 
+	 *		array of key/value pairs, like a {@link DropdownField} source.  In 
+	 *		this case, the field will act like show a flat list of tree items, 
+	 *		without any hierarchy. This is most useful in conjunction with 
+	 *		{@link TreeMultiselectField}, for presenting a set of checkboxes in 
+	 *		a compact view.
+	 *
+	 * @param string $keyField to field on the source class to save as the 
+	 *		field value (default ID).
+	 * @param string $labelField the field name to show as the human-readable 
+	 *		value on the tree (default Title).
+	 * @param bool $showSearch enable the ability to search the tree by 
+	 *		entering the text in the input field.
 	 */
 	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', $labelField = 'Title', $showSearch = false) {
 		$this->sourceObject = $sourceObject;
@@ -75,7 +91,8 @@ class TreeDropdownField extends FormField {
 	}
 	
 	/**
-	 * Set the ID of the root node of the tree. This defaults to 0 - i.e. displays the whole tree.
+	 * Set the ID of the root node of the tree. This defaults to 0 - i.e. 
+	 * displays the whole tree.
 	 *
 	 * @param int $ID
 	 */
@@ -84,7 +101,8 @@ class TreeDropdownField extends FormField {
 	}
 	
 	/**
-	 * Set a callback used to filter the values of the tree before displaying to the user.
+	 * Set a callback used to filter the values of the tree before 
+	 * displaying to the user.
 	 *
 	 * @param callback $callback
 	 */
@@ -97,7 +115,8 @@ class TreeDropdownField extends FormField {
 	}
 	
 	/**
-	 * Set a callback used to search the hierarchy globally, even before applying the filter.
+	 * Set a callback used to search the hierarchy globally, even before 
+	 * applying the filter.
 	 *
 	 * @param callback $callback
 	 */
@@ -138,7 +157,7 @@ class TreeDropdownField extends FormField {
 			$metadata = null;
 		}
 
-		return $this->createTag (
+		return $this->createTag(
 			'div',
 			array (
 				'id'    => "TreeDropdownField_{$this->id()}",
@@ -148,11 +167,12 @@ class TreeDropdownField extends FormField {
 				// Any additional data from the selected record
 				'data-metadata' => ($metadata) ? Convert::raw2json($metadata) : null
 			),
-			$this->createTag (
+			$this->createTag(
 				'input',
 				array (
 					'id'    => $this->id(),
 					'type'  => 'hidden',
+					'class' => 'text' . ($this->extraClass() ? $this->extraClass() : ''),
 					'name'  => $this->name,
 					'value' => $this->value
 				)

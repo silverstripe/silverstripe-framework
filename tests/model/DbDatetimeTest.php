@@ -91,7 +91,7 @@ class DbDatetimeTest extends FunctionalTest {
 
 			$query = new SQLQuery();
 			$query->select($this->adapter->datetimeIntervalClause('"Created"', '-15 Minutes') . ' AS "test"')
-			 	->from("DbDateTimeTest_Team")
+			 	->from('"DbDateTimeTest_Team"')
 				->limit(1);
 			$result = $query->execute()->value();
 			$this->matchesRoughly($result, date('Y-m-d H:i:s', strtotime(Dataobject::get_one('DbDateTimeTest_Team')->Created) - 900), '15 Minutes before creating fixture');
@@ -116,7 +116,7 @@ class DbDatetimeTest extends FunctionalTest {
 
 			$query = new SQLQuery();
 			$query->select($this->adapter->datetimeDifferenceClause('"LastEdited"', '"Created"') . ' AS "test"')
-				->from("DbDateTimeTest_Team")
+				->from('"DbDateTimeTest_Team"')
 				->limit(1);
 				
 			$result = $query->execute()->value();
