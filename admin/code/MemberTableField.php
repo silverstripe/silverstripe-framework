@@ -137,7 +137,7 @@ class MemberTableField extends ComplexTableField {
 
 	function SearchForm() {
 		$groupID = (isset($this->group)) ? $this->group->ID : 0;
-		$query = isset($_GET['MemberSearch']) ? $_GET['MemberSearch'] : null;
+		$query = isset($_REQUEST['MemberSearch']) ? $_REQUEST['MemberSearch'] : null;
 		
 		$searchFields = new FieldGroup(
 			new TextField('MemberSearch', _t('MemberTableField.SEARCH', 'Search'), $query),
@@ -154,6 +154,58 @@ class MemberTableField extends ComplexTableField {
 		);
 
 		return $fieldContainer->FieldHolder();
+	}
+	
+	function FirstLink() {
+		$parent = parent::FirstLink();
+		if($parent == null) {
+			return null;
+		}
+		elseif($_REQUEST['MemberSearch']) {
+			return Controller::join_links($parent, "?MemberSearch=" . $_REQUEST['MemberSearch']);
+		}
+		else {
+			return $parent;
+		}
+	}
+
+	function LastLink() {
+		$parent = parent::LastLink();
+		if($parent == null) {
+			return null;
+		}
+		elseif($_REQUEST['MemberSearch']) {
+			return Controller::join_links($parent, "?MemberSearch=" . $_REQUEST['MemberSearch']);
+		}
+		else {
+			return $parent;
+		}
+	}
+
+	function NextLink() {
+		$parent = parent::NextLink();
+		if($parent == null) {
+			return null;
+		}
+		elseif($_REQUEST['MemberSearch']) {
+			return Controller::join_links($parent, "?MemberSearch=" . $_REQUEST['MemberSearch']);
+		}
+		else {
+			return $parent;
+		}
+	}
+
+	function PrevLink() {
+		$parent = parent::PrevLink();
+		if($parent == null) {
+			return null;
+		}
+		elseif($_REQUEST['MemberSearch']) {
+			return Controller::join_links($parent, "?MemberSearch=" . $_REQUEST['MemberSearch']);
+		}
+		else {
+			return $parent;
+		}
 	}
 
 	/**
