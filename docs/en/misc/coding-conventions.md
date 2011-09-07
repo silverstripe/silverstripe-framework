@@ -74,22 +74,6 @@ Static variables should be `self::$lowercase_with_underscores`
 	:::php
 	self::$my_static_variable = 'foo';
 
-Wherever possible, set up static variables like this:
-
-	:::php
-	protected static $simple_setting = 50;
-		static function set_simple_setting($v) {self::$simple_setting = $v;}
-		static function get_simple_setting() {return self::$simple_setting;}
-		
-	protected static $more_complex_variable = "default value";
-		static function set_more_complex_variable($v) {self::$more_complex_variable = $v;}
-		
-	static function get_more_complex_variable() {
-		//complex code here;
-		//complex code here;
-	}
-	....
-
 Object variables should be `$this->lowerCamelCase`
 
 	:::php
