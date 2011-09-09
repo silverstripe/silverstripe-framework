@@ -710,9 +710,6 @@ class Diff
 		// Go through everything, converting edited tags (and their content) into single chunks.  Otherwise
 		// the generated HTML gets crusty
 		foreach($diff->edits as $edit) {
-			//echo "<li>$edit->type: " . htmlentities(implode(" " ,$edit->orig));
-			//if($edit->final) echo ' / ' . htmlentities(implode(" " ,$edit->final));
-			
 			switch($edit->type) {
 				case 'copy':
 					$lookForTag = false;
@@ -752,8 +749,6 @@ class Diff
 							if(substr($item,0,2) == "</") $tagStack[$listName]--;
 							else if(isset($item[0]) && $item[0] == "<") $tagStack[$listName]++;
 						}
-	
-						// echo "<li>" . htmlentities($item) . " -> "  .$tagStack[$listName];
 					}
 				}
 			}
@@ -763,9 +758,6 @@ class Diff
 		$diff = new Diff($rechunked[1], $rechunked[2]);
 		$content = '';
 		foreach($diff->edits as $edit) {
-			// echo "<li>$edit->type: " . htmlentities(implode(" " ,$edit->orig));
-			// if($edit->final) echo ' / ' . htmlentities(implode(" " ,$edit->final));
-			
 			switch($edit->type) {
 				case 'copy':
 					$content .= " " . implode(" ", $edit->orig) . " ";
@@ -785,7 +777,7 @@ class Diff
 					break;
 			}
 		}		
-		// echo "<p>" . htmlentities($content) . "</p>";
+
 		return self::cleanHTML($content);
 	}
 	
