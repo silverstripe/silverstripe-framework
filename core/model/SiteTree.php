@@ -190,7 +190,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	private static $runCMSFieldsExtensions = true;
 	
 	/**
-	 * Cache for canView/Edit/Publish/Delete permissions
+	 * Cache for canView/Edit/Publish/Delete permissions.
+	 * Keyed by permission type (e.g. 'edit'), with an array
+	 * of IDs mapped to their boolean permission ability (true=allow, false=deny).
+	 * See {@link batch_permission_check()} for details.
 	 */
 	public static $cache_permissions = array();
 	
@@ -1008,6 +1011,24 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		}
 	}
 	
+	/**
+	 * This method is NOT a full replacement for the individual can*() methods, e.g. {@link canEdit()}.
+	 * Rather than checking (potentially slow) PHP logic, it relies on the database group associations,
+	 * e.g. the "CanEditType" field plus the "SiteTree_EditorGroups" many-many table.
+	 * By batch checking multiple records, we can combine the queries efficiently.
+	 * 
+	 * Caches based on $typeField data. To invalidate the cache, use {@link SiteTree::reset()}
+	 * or set the $useCached property to FALSE. 
+	 * 
+	 * @param Array $ids Of {@link SiteTree} IDs
+	 * @param Int $memberID Member ID
+	 * @param String $typeField A property on the data record, e.g. "CanEditType".
+	 * @param String $groupJoinTable A many-many table name on this record, e.g. "SiteTree_EditorGroups"
+	 * @param String $siteConfigMethod Method to call on {@link SiteConfig} for toplevel items, e.g. "canEdit"
+	 * @param String $globalPermission If the member doesn't have this permission code, don't bother iterating deeper.
+	 * @param Boolean $useCached
+	 * @return Array An map of {@link SiteTree} ID keys, to boolean values
+	 */
 	static function batch_permission_check($ids, $memberID, $typeField, $groupJoinTable, $siteConfigMethod, $globalPermission = 'CMS_ACCESS_CMSMain', $useCached = true) {
 		// Sanitise the IDs
 		$ids = array_filter($ids, 'is_numeric');
@@ -1032,7 +1053,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				return $cachedValues;
 			}
 		
-			// If a member doesn't have CMS_ACCESS_CMSMain permission then they can't edit anything
+			// If a member doesn't have a certain permission then they can't edit anything
 			if(!$memberID || ($globalPermission && !Permission::checkMember($memberID, $globalPermission))) {
 				return $result;
 			}
