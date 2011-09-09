@@ -47,6 +47,50 @@ class DataDifferencerTest extends SapphireTest {
 		$this->assertContains($image2->Filename, $obj1Diff->getField('Image'));
 		$this->assertContains('<ins>obj2</ins>  <del>obj1</del>', $obj1Diff->getField('HasOneRelationID'));
 	}
+	
+	function testNonHtmlFieldsAreEscaped() {
+		$obj = new DataDifferencerTest_Object(array(
+			'HtmlProperty' => 'HtmlProperty<b>before</b>',
+			'TextProperty' => 'TextProperty<b>before</b>',
+		));
+		$obj->write();
+		$obj->update(array(
+			'HtmlProperty' => 'HtmlProperty<i>after</i>',
+			'TextProperty' => 'TextProperty<i>after</i>',
+		));
+		$obj->write();
+		
+		$objv1 = Versioned::get_version('DataDifferencerTest_Object', $obj->ID, $obj->Version-1);
+		$objv2 = Versioned::get_version('DataDifferencerTest_Object', $obj->ID, $obj->Version);
+		
+		// On comparing new record to nothing
+		$differ = new DataDifferencer(null, $objv1);
+		$objDiff = $differ->diffedData();
+		$this->assertEquals(
+			'<ins>TextProperty&lt;b&gt;before&lt;/b&gt;</ins>', 
+			str_replace(' ', '', $objDiff->TextProperty),
+			'New record comparisons are escaped for non-xml properties'
+		);
+		$this->assertEquals(
+			'<ins>HtmlProperty<b>before</b></ins>', 
+			str_replace(' ', '', $objDiff->HtmlProperty),
+			'New record comparisons are not escaped for xml properties'
+		);
+		
+		// On comparing two records
+		$differ = new DataDifferencer($objv1, $objv2);
+		$objDiff = $differ->diffedData();
+		$this->assertEquals(
+			'TextProperty<ins>&lt;i&gt;after&lt;/i&gt;</ins><del>&lt;b&gt;before&lt;/b&gt;</del>', 
+			str_replace(' ', '', $objDiff->TextProperty),
+			'Record comparisons are escaped for non-xml properties'
+		);
+		$this->assertEquals(
+			'HtmlProperty<ins><i>after</i></ins><del><b>before</b></del>', 
+			str_replace(' ', '', $objDiff->HtmlProperty),
+			'Record comparisons are not escaped for xml properties'
+		);
+	}
 }
 
 class DataDifferencerTest_Object extends DataObject implements TestOnly {
@@ -55,6 +99,8 @@ class DataDifferencerTest_Object extends DataObject implements TestOnly {
 
 	static $db = array(
 		'Choices' => "Varchar",
+		'HtmlProperty' => 'HTMLText',
+		'TextProperty' => 'Text',
 	);
 	
 	static $has_one = array(

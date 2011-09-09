@@ -76,17 +76,25 @@ class DataDifferencer extends ViewableData {
 			$fields = array_keys($this->toRecord->getAllFields());
 		}
 		
-		$hasOnes = $this->fromRecord->has_one();
+		$hasOnes = ($this->fromRecord) ? $this->fromRecord->has_one() : array();
 		
 		// Loop through properties
 		foreach($fields as $field) {
 			if(in_array($field, $this->ignoredFields)) continue;
 			if(in_array($field, array_keys($hasOnes))) continue;
 			
+			$fieldObj = $this->toRecord->dbObject($field);
 			if(!$this->fromRecord) {
-				$diffed->setField($field, "<ins>" . $this->toRecord->$field . "</ins>");
-			} else if($this->fromRecord->$field != $this->toRecord->$field) {			
-				$diffed->setField($field, Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field));
+				$rawVal = $this->toRecord->$field;
+				$diffVal = (!$fieldObj || $fieldObj->stat('escape_type') == 'xml') ? $rawVal : Convert::raw2xml($rawVal);
+				$diffed->setField($field, "<ins>" . $diffVal . "</ins>");
+			} else if($this->fromRecord->$field != $this->toRecord->$field) {
+				$diffVal = Diff::compareHTML(
+					$this->fromRecord->$field, 
+					$this->toRecord->$field,
+					($fieldObj && $fieldObj->stat('escape_type') != 'xml')
+				);
+				$diffed->setField($field, $diffVal);
 			}
 		}
 		
@@ -153,13 +161,26 @@ class DataDifferencer extends ViewableData {
 		foreach($fields as $field) {
 			if(in_array($field, $this->ignoredFields)) continue;
 
-			if(!$this->fromRecord || $this->fromRecord->$field != $this->toRecord->$field) {			
+			if(!$this->fromRecord || $this->fromRecord->$field != $this->toRecord->$field) {
+				// Only show HTML diffs for fields which allow HTML values in the first place
+				$fieldObj = $this->toRecord->dbObject($field);
+				if($this->fromRecord) {
+					$fieldDiff = Diff::compareHTML(
+						$this->fromRecord->$field, 
+						$this->toRecord->$field, 
+						($fieldObj->stat('escape_type') != 'xml')
+					);
+				} else {
+					if($fieldObj->stat('escape_type') == 'xml') {
+						$fieldDiff = "<ins>" . $this->toRecord->$field . "</ins>";
+					} else {
+						$fieldDiff = "<ins>" . Convert::raw2xml($this->toRecord->$field) . "</ins>";
+					}
+				}
 				$changedFields->push(new ArrayData(array(
 					'Name' => $field,
 					'Title' => $base->fieldLabel($field),
-					'Diff' => $this->fromRecord
-						? Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field)
-						: "<ins>" . $this->toRecord->$field . "</ins>",
+					'Diff' => $fieldDiff,
 					'From' => $this->fromRecord ? $this->fromRecord->$field : null,
 					'To' => $this->toRecord ? $this->toRecord->$field : null,
 				)));
