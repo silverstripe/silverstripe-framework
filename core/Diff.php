@@ -696,11 +696,17 @@ class Diff
 		return $content;
 	}
 
-	static function compareHTML($from, $to) {
+	/**
+	 * @param String
+	 * @param String
+	 * @param Boolean
+	 * @return String
+	 */
+	static function compareHTML($from, $to, $escape = false) {
 		// First split up the content into words and tags
 		$set1 = self::getHTMLChunks($from);
 		$set2 = self::getHTMLChunks($to);
-				
+
 		// Diff that
 		$diff = new Diff($set1, $set2);
 
@@ -758,22 +764,25 @@ class Diff
 		$diff = new Diff($rechunked[1], $rechunked[2]);
 		$content = '';
 		foreach($diff->edits as $edit) {
+			$orig = ($escape) ? Convert::raw2xml($edit->orig) : $edit->orig;
+			$final = ($escape) ? Convert::raw2xml($edit->final) : $edit->final;
+
 			switch($edit->type) {
 				case 'copy':
-					$content .= " " . implode(" ", $edit->orig) . " ";
+					$content .= " " . implode(" ", $orig) . " ";
 					break;
 				
 				case 'change':
-					$content .= " <ins>" . implode(" ", $edit->final) . "</ins> ";
-					$content .= " <del>" . implode(" ", $edit->orig) . "</del> ";
+					$content .= " <ins>" . implode(" ", $final) . "</ins> ";
+					$content .= " <del>" . implode(" ", $orig) . "</del> ";
 					break;
 				
 				case 'add':
-					$content .= " <ins>" . implode(" ", $edit->final) . "</ins> ";
+					$content .= " <ins>" . implode(" ", $final) . "</ins> ";
 					break;
 				
 				case 'delete':
-					$content .= " <del>" . implode(" ", $edit->orig) . "</del> ";
+					$content .= " <del>" . implode(" ", $orig) . "</del> ";
 					break;
 			}
 		}		
