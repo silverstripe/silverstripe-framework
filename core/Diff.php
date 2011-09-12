@@ -749,7 +749,7 @@ class Diff
 						if($tagStack[$listName]) $rechunked[$listName][sizeof($rechunked[$listName])-1] .= ' ' . $item;
 						else $rechunked[$listName][] = $item;
 	
-						if($lookForTag && isset($item[0]) && $item[0] == "<" && substr($item,0,2) != "</") {
+						if($lookForTag && !$tagStack[$listName] && isset($item[0]) && $item[0] == "<" && substr($item,0,2) != "</") { 
 							$tagStack[$listName] = 1;
 						} else if($tagStack[$listName]) {
 							if(substr($item,0,2) == "</") $tagStack[$listName]--;
