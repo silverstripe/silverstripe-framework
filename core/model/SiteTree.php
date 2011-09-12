@@ -1624,7 +1624,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @param $includeVirtuals Set to false to exlcude virtual pages.
 	 */
 	function DependentPages($includeVirtuals = true) {
-		if(is_callable('Subsite::disable_subsite_filter')) Subsite::disable_subsite_filter(true);
+		if(class_exists('Subsite')) {
+			$origDisableSubsiteFilter = Subsite::$disable_subsite_filter;
+			Subsite::disable_subsite_filter(true);
+		}
 		
 		// Content links
 		$items = $this->BackLinkTracking();
@@ -1647,7 +1650,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			$items->merge($redirectors);
 		}
 
-		if(is_callable('Subsite::disable_subsite_filter')) Subsite::disable_subsite_filter(false);
+		if(class_exists('Subsite')) Subsite::disable_subsite_filter($origDisableSubsiteFilter);
+		
 		return $items;
 	}
 	

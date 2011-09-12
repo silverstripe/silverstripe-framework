@@ -522,7 +522,10 @@ class File extends DataObject {
 	 * @param String $new File path relative to the webroot
 	 */
 	protected function updateLinks($old, $new) {
-		if(class_exists('Subsite')) Subsite::disable_subsite_filter(true);
+		if(class_exists('Subsite')) {
+			$origDisableSubsiteFilter = Subsite::$disable_subsite_filter;
+			Subsite::disable_subsite_filter(true);
+		}
 	
 		$pages = $this->BackLinkTracking();
 
@@ -531,7 +534,7 @@ class File extends DataObject {
 			foreach($pages as $page) $page->rewriteFileURL($old,$new);
 		}
 		
-		if(class_exists('Subsite')) Subsite::disable_subsite_filter(false);
+		if(class_exists('Subsite')) Subsite::disable_subsite_filter($origDisableSubsiteFilter);
 	}
 
 	/**
