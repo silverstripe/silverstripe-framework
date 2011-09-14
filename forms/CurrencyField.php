@@ -94,7 +94,7 @@ class CurrencyField_Readonly extends ReadonlyField{
 	 */
 	function Field() {
 		if($this->value){
-			$val = $this->dontEscape ? ($this->reserveNL?Convert::raw2xml($this->value):$this->value) : Convert::raw2xml($this->value);
+			$val = $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
 			$val = _t('CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/',"",$val), 2);
 			
 		}else {
@@ -126,7 +126,7 @@ class CurrencyField_Disabled extends CurrencyField{
 	 */
 	function Field() {
 		if($this->value){
-			$val = $this->dontEscape ? ($this->reserveNL?Convert::raw2xml($this->value):$this->value) : Convert::raw2xml($this->value);
+			$val = $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
 			$val = _t('CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/',"",$val), 2);
 			
 		}else {

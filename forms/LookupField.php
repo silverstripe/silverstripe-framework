@@ -26,9 +26,7 @@ class LookupField extends DropdownField {
 		if(!isset($mappedValue)) $mappedValue = $this->value ? $this->value : "<i>(none)</i>";
 
 		if($this->value) {
-			$val = $this->dontEscape
-				? ($this->reserveNL?Convert::raw2xml($this->value):$this->value)
-				: Convert::raw2xml($this->value);
+			$val = $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
 		} else {
 			$val = '<i>(none)</i>';
 		}
