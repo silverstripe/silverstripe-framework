@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class PermissionRoleTest extends FunctionalTest {
-	static $fixture_file = 'sapphire/tests/security/PermissionRoleTest.yml';
+	static $fixture_file = 'PermissionRoleTest.yml';
 	
 	function testDelete() {
 		$role = $this->objFromFixture('PermissionRole', 'role');

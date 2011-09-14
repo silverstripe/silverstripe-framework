@@ -169,6 +169,7 @@ class Email extends ViewableData {
 	}
 	
 	public function attachFile($filename, $attachedFilename = null, $mimetype = null) {
+		if(!$attachedFilename) $attachedFilename = basename($filename);
 		$absoluteFileName = Director::getAbsFile($filename);
 		if(file_exists($absoluteFileName)) {
 			$this->attachFileFromString(file_get_contents($absoluteFileName), $attachedFilename, $mimetype);

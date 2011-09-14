@@ -34,11 +34,13 @@ These are some unicodes: äöü&<>";
 		
 		// Make sure that the field is smart enough to have its value set after being made readonly
 		$field->setValue($inputText);
-
 		$this->assertEquals(<<<HTML
 <span id="Test" class="readonly" name="Test" readonly="readonly">This is my &lt;text&gt;<br />
 What's on a new-line?<br />
 These are some unicodes: &auml;&ouml;&uuml;&amp;&lt;&gt;</span>
+<input type="hidden" name="Test" value="This is my &amp;lt;text&amp;gt;&lt;br /&gt;
+What&#039;s on a new-line?&lt;br /&gt;
+These are some unicodes: &amp;auml;&amp;ouml;&amp;uuml;&amp;amp;&amp;lt;&amp;gt;" />
 HTML
 			, $field->Field());
 	}

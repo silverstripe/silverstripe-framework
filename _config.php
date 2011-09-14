@@ -23,22 +23,16 @@ Director::addRules(10, array(
 	//'Security/$Action/$ID' => 'Security',
 	'db//$Action' => 'DatabaseAdmin',
 	'$Controller//$Action/$ID/$OtherID' => '*',
-	'' => 'RootURLController',
 	'api/v1/live' => 'VersionedRestfulServer',
 	'api/v1' => 'RestfulServer',
 	'soap/v1' => 'SOAPModelAccess',
 	'dev' => 'DevelopmentAdmin',
 	'interactive' => 'SapphireREPL',
 ));
-
-Director::addRules(1, array(
-	'$URLSegment//$Action/$ID/$OtherID' => 'ModelAsController',
+// Add default routing unless 'cms' module is present (which overrules this with a CMSMain controller)
+Director::addRules(20, array(
+	'admin//$action/$ID/$OtherID' => '->admin/security'
 ));
-
-/**
- * Register the default internal shortcodes.
- */
-ShortcodeParser::get('default')->register('sitetree_link', array('SiteTree', 'link_shortcode_handler'));
 
 /**
  * PHP 5.2 introduced a conflict with the Datetime field type, which was renamed to SSDatetime. This was later renamed
@@ -76,3 +70,12 @@ PasswordEncryptor::register('sha1_v2.4','PasswordEncryptor_PHPHash("sha1")');
 // Zend_Cache temp directory setting
 $_ENV['TMPDIR'] = TEMP_FOLDER; // for *nix
 $_ENV['TMP'] = TEMP_FOLDER; // for Windows
+
+$aggregatecachedir = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'aggregate_cache';
+if (!is_dir($aggregatecachedir)) mkdir($aggregatecachedir);
+
+SS_Cache::add_backend('aggregatestore', 'File', array('cache_dir' => $aggregatecachedir));
+SS_Cache::pick_backend('aggregatestore', 'aggregate', 1000);
+
+// TODO Remove once new ManifestBuilder with submodule support is in place
+require_once('admin/_config.php');

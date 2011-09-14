@@ -1,0 +1,100 @@
+LeftAndMainTest_Object:
+   page1:
+      Title: Page 1
+   page2:
+      Title: Page 2
+   page3:
+      Title: Page 3
+   page31:
+      Title: Page 3.1
+      Parent: =>LeftAndMainTest_Object.page3
+   page32:
+      Title: Page 3.2
+      Parent: =>LeftAndMainTest_Object.page3
+   page4:
+      Title: Page 4
+   page5:
+      Title: Page 5
+   page6:
+      Title: Page 6
+   page7:
+      Title: Page 7
+   page8:
+      Title: Page 8
+   page9:
+      Title: Page 9
+   page10:
+      Title: Page 10
+   page11:
+      Title: Page 11
+   page12:
+      Title: Page 12
+   page13:
+      Title: Page 13
+   page14:
+      Title: Page 14
+   page15:
+      Title: Page 15
+   page16:
+      Title: Page 16
+   page17:
+      Title: Page 17
+   page18:
+      Title: Page 18
+   page19:
+      Title: Page 19
+   page20:
+      Title: Page 20
+   page21:
+      Title: Page 21
+   page22:
+      Title: Page 22
+   page23:
+      Title: Page 23
+   page24:
+      Title: Page 24
+   page25:
+      Title: Page 25
+   page26:
+      Title: Page 26
+   home:
+      Title: Home
+      URLSegment: home
+Group:
+   admin:
+      Title: Administrators
+   empty:
+      Title: Empty Group
+   securityonly:
+      Title: securityonly
+   allcmssections:
+      Title: allcmssections
+   rooteditusers:
+      Title: rooteditusers
+Member:
+   admin:
+      Email: admin@example.com
+      Password: ZXXlkwecxz2390232233
+      Groups: =>Group.admin
+   securityonlyuser:
+      Email: securityonlyuser@test.com
+      Groups: =>Group.securityonly
+   allcmssectionsuser:
+      Email: allcmssectionsuser@test.com
+      Groups: =>Group.allcmssections
+   rootedituser:
+      Email: rootedituser@test.com
+      Groups: =>Group.rooteditusers
+Permission:
+   admin:
+      Code: ADMIN
+      GroupID: =>Group.admin
+   securityonly:
+      Code: CMS_ACCESS_SecurityAdmin
+      GroupID: =>Group.securityonly
+   allcmssections:
+      Code: CMS_ACCESS_LeftAndMain
+      GroupID: =>Group.allcmssections
+   allcmssections2:
+      Code: CMS_ACCESS_LeftAndMain
+      GroupID: =>Group.rooteditusers

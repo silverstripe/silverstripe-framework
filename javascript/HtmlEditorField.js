@@ -7,7 +7,24 @@
  */
 
 (function($) {
+		
 	$(document).ready(function() {
+		
+		// Move title from headline to (jQuery compatible) title attribute
+		$('.htmleditorfield-form').each(function() {
+			var titleEl = $(this).find(':header:first');
+			$(this).attr('title', titleEl.text());
+			titleEl.remove();
+		});
+		$('.htmleditorfield-form').dialog({
+			autoOpen: false, 
+			bgiframe: true, 
+			modal: true, 
+			height: 500, 
+			width: 500, 
+			ghost: true
+		});
+		
 		/**
 		 * On page refresh load the initial images (in root)
 		 */
@@ -32,7 +49,7 @@
 		 * On folder change - lookup the new images
 		 */
 		$("#Form_EditorToolbarImageForm_Files-0").change(function() {
-			$("#contentPanel #Form_EditorToolbarImageForm").ajaxForm({
+			$(".cms-editor-dialogs #Form_EditorToolbarImageForm").ajaxForm({
 				url: 'admin/assets/UploadForm?action_doUpload=1',
 				iframe: true,
 				dataType: 'json',

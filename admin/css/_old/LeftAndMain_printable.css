@@ -1,0 +1,36 @@
+* {
+	font-family: Helvetica, Verdana, Geneva, Arial, Helvetica, sans-serif;
+}
+
+h3 {
+	margin-top: 2em;
+}
+
+form .field {
+	margin-bottom: 1em;
+}
+
+form label.left {
+	float: left;
+	width: 15em;
+	font-weight: bold;
+}
+form div.field {
+	/*margin-left: 10em;*/
+}
+
+form .inlineformaction,
+form .inlineformaction_readonly,
+form .action,
+form .action_readonly {
+	display: none !important;
+}
+
+.TableListField table.data th {
+	background: #eee;
+}
+
+.TableListField table.data {
+	width: 100%;
+	border: 1px #aaa solid;
+}

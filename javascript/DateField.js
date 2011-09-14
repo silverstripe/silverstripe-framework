@@ -1,6 +1,6 @@
 (function($) {
 	$('.field.date input.text').live('click', function() {
-		var holder = $(this).parents('.field.date:first'), config = holder.metadata();
+		var holder = $(this).parents('.field.date:first'), config = holder.metadata({type: 'class'});
 		if(!config.showcalendar) return;
 		
 		if(config.locale && $.datepicker.regional[config.locale]) {

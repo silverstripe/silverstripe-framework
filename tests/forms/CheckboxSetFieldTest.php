@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class CheckboxSetFieldTest extends SapphireTest {
-	static $fixture_file = 'sapphire/tests/forms/CheckboxSetFieldTest.yml';
+	static $fixture_file = 'CheckboxSetFieldTest.yml';
 
 	protected $extraDataObjects = array(
 		'CheckboxSetFieldTest_Article',

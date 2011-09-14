@@ -69,6 +69,11 @@ class FormField extends RequestHandler {
 	protected $disabled = false;
 	
 	/**
+	 * @var String
+	 */
+	protected $template;
+	
+	/**
 	 * @var Custom Validation Message for the Field
 	 */
 	protected $customValidationMessage = "";
@@ -357,6 +362,22 @@ class FormField extends RequestHandler {
 	}
 	
 	/**
+	 * Set name of template (without path or extension)
+	 * 
+	 * @param String
+	 */
+	function setTemplate($template) {
+		$this->template = $template;
+	}
+	
+	/**
+	 * @return String
+	 */
+	function getTemplate() {
+		return $this->template;
+	}
+	
+	/**
 	 * Returns the form field - used by templates.
 	 * Although FieldHolder is generally what is inserted into templates, all of the field holder
 	 * templates make use of $Field.  It's expected that FieldHolder will give you the "complete"
@@ -534,6 +555,7 @@ HTML;
 	/**
 	 * Construct and return HTML tag.
 	 * 
+	 * @return string HTML tag
 	 * @todo Transform to static helper method.
 	 */
 	function createTag($tag, $attributes, $content = null) {
@@ -570,6 +592,8 @@ HTML;
 	 * Describe this field, provide help text for it.
 	 * The function returns this so it can be used like this:
 	 * $action = FormAction::create('submit', 'Submit')->describe("Send your changes to be approved")
+	 * 
+	 * @return string Description
 	 */
 	function describe($description) {
 		$this->description = $description;

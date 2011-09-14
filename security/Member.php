@@ -10,7 +10,7 @@ class Member extends DataObject {
 	static $db = array(
 		'FirstName' => 'Varchar',
 		'Surname' => 'Varchar',
-		'Email' => 'Varchar',
+		'Email' => 'Varchar(256)', // See RFC 5321, Section 4.5.3.1.3.
 		'Password' => 'Varchar(160)',
 		'RememberLoginToken' => 'Varchar(50)',
 		'NumVisit' => 'Int',
@@ -401,7 +401,7 @@ class Member extends DataObject {
 				
 				$generator = new RandomGenerator();
 				$member->RememberLoginToken = $generator->generateHash('sha1');
-				Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
+				Cookie::set('alc_enc', $member->ID . ':' . $member->RememberLoginToken, 90, null, null, false, true);
 
 				$member->NumVisit++;
 				$member->write();
@@ -557,7 +557,7 @@ class Member extends DataObject {
 	static function currentUser() {
 		$id = Member::currentUserID();
 		if($id) {
-			return DataObject::get_one("Member", "\"Member\".\"ID\" = $id");
+			return DataObject::get_one("Member", "\"Member\".\"ID\" = $id", true, 1);
 		}
 	}
 
@@ -1133,17 +1133,7 @@ class Member extends DataObject {
 		$password->setCanBeEmpty(true);
 		if(!$this->ID) $password->showOnClick = false;
 		$mainFields->replaceField('Password', $password);
-		
-		$mainFields->insertBefore(
-			new HeaderField('MemberDetailsHeader',_t('Member.PERSONALDETAILS', "Personal Details", PR_MEDIUM, 'Headline for formfields')),
-			'FirstName'
-		);
-		
-		$mainFields->insertBefore(
-			new HeaderField('MemberUserDetailsHeader',_t('Member.USERDETAILS', "User Details", PR_MEDIUM, 'Headline for formfields')),
-			'Email'
-		);
-		
+				
 		$mainFields->replaceField('Locale', new DropdownField(
 			"Locale", 
 			_t('Member.INTERFACELANG', "Interface Language", PR_MEDIUM, 'Language of the CMS'), 
@@ -1264,7 +1254,7 @@ class Member extends DataObject {
 	function canView($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		// decorated access checks
+		// extended access checks
 		$results = $this->extend('canView', $member);
 		if($results && is_array($results)) {
 			if(!min($results)) return false;
@@ -1291,7 +1281,7 @@ class Member extends DataObject {
 	function canEdit($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		// decorated access checks
+		// extended access checks
 		$results = $this->extend('canEdit', $member);
 		if($results && is_array($results)) {
 			if(!min($results)) return false;
@@ -1318,7 +1308,7 @@ class Member extends DataObject {
 	function canDelete($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		// decorated access checks
+		// extended access checks
 		$results = $this->extend('canDelete', $member);
 		if($results && is_array($results)) {
 			if(!min($results)) return false;
@@ -1631,18 +1621,7 @@ class Member_GroupSet extends ComponentSet {
 class Member_ProfileForm extends Form {
 	
 	function __construct($controller, $name, $member) {
-		Requirements::clear();
-		Requirements::css(CMS_DIR . '/css/typography.css');
-		Requirements::css(CMS_DIR . '/css/cms_right.css');
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/controls.js");
-		Requirements::css(SAPPHIRE_DIR . "/css/Form.css");
-		
-		Requirements::css(SAPPHIRE_DIR . "/css/MemberProfileForm.css");
-		
+		Requirements::block(SAPPHIRE_DIR . '/admin/css/layout.css');
 		
 		$fields = $member->getCMSFields();
 		$fields->push(new HiddenField('ID','ID',$member->ID));
@@ -1655,6 +1634,7 @@ class Member_ProfileForm extends Form {
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		
+		$this->addExtraClass('member-profile-form');
 		$this->loadDataFrom($member);
 	}
 	
@@ -1879,7 +1859,6 @@ class Member_Validator extends RequiredFields {
 class Member_DatetimeOptionsetField extends OptionsetField {
 
 	function Field() {
-		Requirements::css(SAPPHIRE_DIR . '/css/MemberDatetimeOptionsetField.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/MemberDatetimeOptionsetField.js');
 

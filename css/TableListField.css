@@ -4,7 +4,6 @@ table.TableListField,
 table.CMSList {
 	border-collapse: collapse;
 	border-spacing: 0;
-	border : 1px solid #aaaaaa;
 	width : 100%;
 }
 
@@ -33,12 +32,6 @@ table.CMSList th {
 table.TableField thead th, 
 .TableListField table.data thead th, 
 table.CMSList thead th {
-	background-image: url(../../cms/images/tables/thead.png);
-	background-repeat: repeat-x;
-	background-position: left bottom;
-	background-color: #ebeadb;
-	border-right: 1px solid #aca899;
-	border-left: 1px solid #ffffff;
 	white-space: nowrap;
 	padding: 3px;
 	font-size: 12px;
@@ -50,22 +43,10 @@ table.TableField thead th span,
 	font-size: 12px;
 }
 
-table.TableField thead th a, 
-.TableListField table.data thead th a, 
-table.CMSList thead th a {
-	color: #000;
-}
-
 table.TableField thead th span.sortLink, 
 .TableListField table.data thead th span.sortLink, 
 table.CMSList thead th span.sortLink {
 	overflow: hidden;
-}
-
-table.TableField tfoot tr.summary td, 
-.TableListField table.data tfoot tr.summary td, 
-table.CMSList tfoot tr.summary td {
-	background-color : #ebeadb;
 }
 
 table.TableField tbody td, 
@@ -74,7 +55,6 @@ table.TableField tfoot td,
 .TableListField table.data tfoot td, 
 table.CMSList tbody td,
 table.CMSList tfoot td {
-	border: 1px solid #f1efe2;
 	padding: 2px 4px;
 }
 
@@ -103,25 +83,10 @@ table.data tbody td textarea {
 table.TableField tbody td.checkbox, 
 .TableListField table.data tbody td.checkbox, 
 table.CMSList tbody td.checkbox {
-	border : 1px solid #f1efe2;
 	padding-left : 5px;
-	background-image : url(../../cms/images/tables/checkbox.png);
+	background-image : url(../images/checkbox.png);
 	background-repeat : repeat-x;
 	background-position : left bottom;
-}
-
-table.TableField tbody tr.over td, 
-.TableListField table.data tbody tr.over td, 
-.TableListField table.data tbody tr.over td input,
-table.CMSList tbody td.over td{
-	background-color: #FFFFBB;
-}
-
-table.TableField tbody tr.current td, 
-.TableListField table.data tbody tr.current td, 
-table.CMSList tbody td.current td {
-	background-color: #316ac5;
-	color : white;
 }
 
 .TableListField table.data tfoot .addlink img {
@@ -143,7 +108,7 @@ table.CMSList tbody td.current td {
  */
 .TableListField tr.loading td.first {
     padding-left: 22px;
-    background: url(../../cms/images/network-save.gif) 3px 2px no-repeat;
+    background: url(../images/network-save.gif) 3px 2px no-repeat;
 }
 
 .right form .TableField span.readonly {
@@ -168,9 +133,6 @@ table.CMSList tbody td.current td {
 }
 	.TableListField div.utility a {
 		text-decoration: none;
-		background-image:url(../../cms/images/textures/ToolBar.png);
-		border-color: #ccc #999 #999 #ccc;
-		border-style: double;
 		color: #333;
 		cursor: pointer;
 		font-size: 11px;
@@ -179,9 +141,6 @@ table.CMSList tbody td.current td {
 		padding: 3px 2px;
 		width: auto;	
 	}
-		.TableListField div.utility a:hover {
-			background: #fff;
-		}
 
 form .TableField .message {
 	width: auto;
@@ -204,8 +163,6 @@ form .TableField .message {
 	text-align:center;
 	display:block;
 	margin-bottom: 5px;
-	background:#ebeadb;
-	border: 1px #cbc7b7 solid;
 	position: relative;
 }
 .TableListField .PageControls * {
@@ -241,7 +198,6 @@ form .TableField .message {
 #Pagination span {
     
     display: inline;
-    color: red;
     font-size: 14px;
 }
 #Pagination div {

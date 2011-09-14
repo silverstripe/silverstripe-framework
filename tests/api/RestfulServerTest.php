@@ -8,7 +8,7 @@
  */
 class RestfulServerTest extends SapphireTest {
 	
-	static $fixture_file = 'sapphire/tests/api/RestfulServerTest.yml';
+	static $fixture_file = 'RestfulServerTest.yml';
 
 	protected $extraDataObjects = array(
 		'RestfulServerTest_Comment',
@@ -356,6 +356,27 @@ class RestfulServerTest extends SapphireTest {
 		$responseArr = Convert::xml2array($response->getBody());
 		$this->assertEquals($responseArr['Rating'], 42);
 		$this->assertNotEquals($responseArr['WriteProtectedField'], 'haxx0red');
+	}
+
+	public function testJSONDataFormatter() {
+		$formatter = new JSONDataFormatter();
+		$editor = $this->objFromFixture('Member', 'editor');
+		$user = $this->objFromFixture('Member', 'user');
+
+		$this->assertEquals(
+			$formatter->convertDataObject($editor, array("FirstName", "Email")),
+			'{"FirstName":"Editor","Email":"editor@test.com"}',
+			"Correct JSON formatting with field subset");
+
+		$set = DataObject::get(
+			"Member", 
+			sprintf('"Member"."ID" IN (%s)', implode(',', array($editor->ID, $user->ID))), 
+			'"Email" ASC' // for sorting for postgres
+		);
+		$this->assertEquals(
+			$formatter->convertDataObjectSet($set, array("FirstName", "Email")),
+			'{"totalSize":null,"items":[{"FirstName":"Editor","Email":"editor@test.com"},{"FirstName":"User","Email":"user@test.com"}]}',
+			"Correct JSON formatting on a dataobjectset with field filter");
 	}
 	
 	public function testApiAccessWithPOST() {

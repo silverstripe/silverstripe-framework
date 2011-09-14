@@ -128,18 +128,20 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		Member::set_password_validator(null);
 		Cookie::set_report_errors(false);
 		
-		RootURLController::reset();
-		Translatable::reset();
+		if(class_exists('RootURLController')) RootURLController::reset();
+		if(class_exists('Translatable')) Translatable::reset();
 		Versioned::reset();
 		DataObject::reset();
-		SiteTree::reset();
+		if(class_exists('SiteTree')) SiteTree::reset();
 		Hierarchy::reset();
 		if(Controller::has_curr()) Controller::curr()->setSession(new Session(array()));
 		
 		$this->originalTheme = SSViewer::current_theme();
 		
-		// Save nested_urls state, so we can restore it later
-		$this->originalNestedURLsState = SiteTree::nested_urls();
+		if(class_exists('SiteTree')) {
+			// Save nested_urls state, so we can restore it later
+			$this->originalNestedURLsState = SiteTree::nested_urls();
+		}
 
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
@@ -164,10 +166,19 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			}
 
 			if($fixtureFile) {
+				$pathForClass = $this->getCurrentAbsolutePath();
 				$fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : array($fixtureFile);
 
 				$i = 0;
 				foreach($fixtureFiles as $fixtureFilePath) {
+					// Support fixture paths relative to the test class, rather than relative to webroot
+					// String checking is faster than file_exists() calls.
+					$isRelativeToFile = (strpos('/', $fixtureFilePath) === false || preg_match('/^\.\./', $fixtureFilePath));
+					if($isRelativeToFile) {
+						$resolvedPath = realpath($pathForClass . '/' . $fixtureFilePath);
+						if($resolvedPath) $fixtureFilePath = $resolvedPath;
+					}
+					
 					$fixture = new YamlFixture($fixtureFilePath);
 					$fixture->saveIntoDatabase();
 					$this->fixtures[] = $fixture;
@@ -368,6 +379,25 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$this->fixtures = array();
 	}
 	
+	/**
+	 * Useful for writing unit tests without hardcoding folder structures.
+	 * 
+	 * @return String Absolute path to current class.
+	 */
+	protected function getCurrentAbsolutePath() {
+		return dirname(SS_ClassLoader::instance()->getManifest()->getItemPath(get_class($this)));
+	}
+	
+	/**
+	 * @return String File path relative to webroot
+	 */
+	protected function getCurrentRelativePath() {
+		$base = Director::baseFolder();
+		$path = $this->getCurrentAbsolutePath();
+		if(substr($path,0,strlen($base)) == $base) $path = preg_replace('/^\/*/', '', substr($path,strlen($base)));
+		return $path;
+	}
+	
 	function tearDown() {
 		// Preserve memory settings
 		ini_set('memory_limit', ($this->originalMemoryLimit) ? $this->originalMemoryLimit : -1);
@@ -393,11 +423,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// Reset mocked datetime
 		SS_Datetime::clear_mock_now();
 		
-		// Restore nested_urls state
-		if ( $this->originalNestedURLsState )
-			SiteTree::enable_nested_urls();
-		else
-			SiteTree::disable_nested_urls();
+		if(class_exists('SiteTree')) {
+			// Restore nested_urls state
+			if ( $this->originalNestedURLsState )
+				SiteTree::enable_nested_urls();
+			else
+				SiteTree::disable_nested_urls();
+		}
 		
 		// Stop the redirection that might have been requested in the test.
 		// Note: Ideally a clean Controller should be created for each test. 
@@ -656,9 +688,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$dbConn = DB::getConn();
 			$dbName = $dbConn->currentDatabase();
 			if($dbName && DB::getConn()->databaseExists($dbName)) {
-				// Some DataObjectsDecorators keep a static cache of information that needs to 
+				// Some DataExtensions keep a static cache of information that needs to 
 				// be reset whenever the database is killed
-				foreach(ClassInfo::subclassesFor('DataObjectDecorator') as $class) {
+				foreach(ClassInfo::subclassesFor('DataExtension') as $class) {
 					$toCall = array($class, 'on_db_reset');
 					if(is_callable($toCall)) call_user_func($toCall);
 				}
@@ -677,9 +709,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$dbadmin = new DatabaseAdmin();
 			$dbadmin->clearAllData();
 			
-			// Some DataObjectsDecorators keep a static cache of information that needs to 
+			// Some DataExtensions keep a static cache of information that needs to 
 			// be reset whenever the database is cleaned out
-			foreach(array_merge(ClassInfo::subclassesFor('DataObjectDecorator'), ClassInfo::subclassesFor('DataObject')) as $class) {
+			foreach(array_merge(ClassInfo::subclassesFor('DataExtension'), ClassInfo::subclassesFor('DataObject')) as $class) {
 				$toCall = array($class, 'on_db_reset');
 				if(is_callable($toCall)) call_user_func($toCall);
 			}

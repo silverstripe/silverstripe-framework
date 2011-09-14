@@ -453,11 +453,11 @@ See `[api:SQLQuery]` for custom *INSERT*, *UPDATE*, *DELETE* queries.
 
 
 
-## Decorating DataObjects
+## Extending DataObjects
 
 You can add properties and methods to existing `[api:DataObjects]`s like `[api:Member]` (a core class) without hacking core
 code or subclassing.
-Please see `[api:DataObjectDecorator]` for a general description, and `[api:Hierarchy]` for our most
+Please see `[api:DataExtension]` for a general description, and `[api:Hierarchy]` for our most
 popular examples.
 
 

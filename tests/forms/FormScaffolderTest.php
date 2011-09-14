@@ -9,7 +9,7 @@
  */
 class FormScaffolderTest extends SapphireTest {
 	
-	static $fixture_file = 'sapphire/tests/forms/FormScaffolderTest.yml';
+	static $fixture_file = 'FormScaffolderTest.yml';
 
 	protected $extraDataObjects = array(
 		'FormScaffolderTest_Article',
@@ -38,8 +38,8 @@ class FormScaffolderTest extends SapphireTest {
 		$article1 = $this->objFromFixture('FormScaffolderTest_Article', 'article1');
 		$fields = $article1->getCMSFields();
 		$this->assertNotNull(
-			$fields->dataFieldByName('AddedDecoratorField'),
-			'getCMSFields() includes decorated fields'
+			$fields->dataFieldByName('AddedExtensionField'),
+			'getCMSFields() includes extended fields'
 		);
 	}
 	
@@ -102,16 +102,16 @@ class FormScaffolderTest_Tag extends DataObject implements TestOnly {
 		'Articles' => 'FormScaffolderTest_Article'
 	);
 }
-class FormScaffolderTest_ArticleDecorator extends DataObjectDecorator implements TestOnly {
+class FormScaffolderTest_ArticleExtension extends DataExtension implements TestOnly {
 	static $db = array(
-		'DecoratedField' => 'Varchar'
+		'ExtendedField' => 'Varchar'
 	);
 	function updateCMSFields(&$fields) {
 		$fields->addFieldToTab('Root.Main',
-			new TextField('AddedDecoratorField')
+			new TextField('AddedExtensionField')
 		);
 	}
 }
 
-DataObject::add_extension('FormScaffolderTest_Article', 'FormScaffolderTest_ArticleDecorator');
+DataObject::add_extension('FormScaffolderTest_Article', 'FormScaffolderTest_ArticleExtension');
 ?>

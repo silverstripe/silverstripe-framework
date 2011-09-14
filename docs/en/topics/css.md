@@ -86,7 +86,16 @@ file. Then with this file you can define styles for the CMS or just import the s
 
 See [typography](/reference/typography) for more information.
 
-## Best Practices ##
+## Writing good stylesheets for the CMS ##
+
+ * Use the `id` attribute sparingly. Remember that it "closes off" the structure to code reuse, as HTML elements
+   require unique `id` attributes. Code reuse can happen both in CSS and JavaScript behaviour.
+ * Separate presentation from structure in class names, e.g. `left-menu` is encoding the component position
+   (which might change later on). A more structural name could be `cms-menu` (or `cms-tools-menu` for a more specific version)
+ * Class naming: Use the `cms-` class prefix for major components in the cms interface,
+   and the `ss-ui-` prefix for extensions to jQuery UI. Don't use the `ui-` class prefix, its reserved for jQuery UI built-in styles.
+ * Use jQuery UI's built-in styles where possible, e.g. `ui-widget` for a generic container, or `ui-state-highlight` 
+   to highlight a specific component. See the [jQuery UI Theming API](http://jqueryui.com/docs/Theming/API) for a full list.
 
 ## Related ##
 

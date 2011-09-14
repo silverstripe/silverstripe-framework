@@ -28,7 +28,7 @@
  * 	$fields = parent::getCMSFields();
  * 	
  * 	$fields->addFieldToTab(
- * 		'Root.Content.Main', 
+ * 		'Root.Content', 
  * 		new FieldGroup(
  * 			new TimeField("StartTime","What's the start time?"),
  * 			new TimeField("EndTime","What's the end time?")
@@ -94,15 +94,20 @@ class FieldGroup extends CompositeField {
 	 */
 	function Field() {
 		$fs = $this->FieldSet();
-    	$spaceZebra = isset($this->zebra) ? " $this->zebra" : '';
+    	$spaceZebra = isset($this->zebra) ? " fieldgroup-$this->zebra" : '';
     	$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
 		$content = "<div class=\"fieldgroup$spaceZebra\"$idAtt>";
+		
 		foreach($fs as $subfield) {
 			$childZebra = (!isset($childZebra) || $childZebra == "odd") ? "even" : "odd";
-			if($subfield->hasMethod('setZebra')) $subfield->setZebra($childZebra);
-			$content .= "<div class=\"fieldgroupField\">" . $subfield->{$this->subfieldParam}() . "</div>";
+			if($subfield->hasMethod('setZebra'))  {
+				$subfield->setZebra($childZebra);
+			}
+			
+			$content .= "<div class=\"fieldgroup-field\">" . $subfield->{$this->subfieldParam}() . "</div>";
 		}
 		$content .= "</div>";
+		
 		return $content;
 	}
 	

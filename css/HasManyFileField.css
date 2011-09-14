@@ -5,7 +5,6 @@
 	padding-left: 3px;
 }
 #right form .hasmanyfile a.uploadFile {
-	background-image:url(../../cms/images/textures/ToolBar.png);
 	border-color:#CCCCCC rgb(153, 153, 153) rgb(153, 153, 153) rgb(204, 204, 204);
 	border-style:solid;
 	border-width: 2px;
@@ -24,7 +23,6 @@
 }
 
 #right form .hasmanyfile a.removeFile {
-	background-image:url(../../cms/images/textures/ToolBar.png);
 	border-color:#CCCCCC rgb(153, 153, 153) rgb(153, 153, 153) rgb(204, 204, 204);
 	border-style:solid;
 	border-width: 2px;
@@ -43,7 +41,6 @@
 	color: #fff;
 }
 #right form .hasmanyfile a.addFile {
-	background-image:url(../../cms/images/textures/ToolBar.png);
 	border-color:#CCCCCC rgb(153, 153, 153) rgb(153, 153, 153) rgb(204, 204, 204);
 	border-style:solid;
 	border-width: 2px;

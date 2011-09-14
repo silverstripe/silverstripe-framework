@@ -5,7 +5,7 @@
  */
 class FileTest extends SapphireTest {
 	
-	static $fixture_file = 'sapphire/tests/filesystem/FileTest.yml';
+	static $fixture_file = 'FileTest.yml';
 	
 	function testCreateWithFilenameWithSubfolder() {
 		// Note: We can't use fixtures/setUp() for this, as we want to create the db record manually.
@@ -222,7 +222,41 @@ class FileTest extends SapphireTest {
 		$this->assertFileExists($filePath);
 		$this->assertFalse(DataObject::get_by_id('File', $fileID));
 	}
-		
+
+	function testRenameFolder() {
+		$newTitle = "FileTest-folder-renamed";
+
+		//rename a folder's title
+		$folderID = $this->objFromFixture("Folder","folder2")->ID;
+		$folder = DataObject::get_by_id('Folder',$folderID);
+		$folder->Title = $newTitle;
+		$folder->write();
+
+		//get folder again and see if the filename has changed
+		$folder = DataObject::get_by_id('Folder',$folderID);
+		$this->assertEquals($folder->Filename, ASSETS_DIR ."/". $newTitle ."/", "Folder Filename updated after rename of Title");
+
+
+		//rename a folder's name
+		$newTitle2 = "FileTest-folder-renamed2";
+		$folder->Name = $newTitle2;
+		$folder->write();
+
+		//get folder again and see if the Title has changed
+		$folder = DataObject::get_by_id('Folder',$folderID);
+		$this->assertEquals($folder->Title, $newTitle2, "Folder Title updated after rename of Name");
+
+
+		//rename a folder's Filename
+		$newTitle3 = "FileTest-folder-renamed3";
+		$folder->Filename = $newTitle3;
+		$folder->write();
+
+		//get folder again and see if the Title has changed
+		$folder = DataObject::get_by_id('Folder',$folderID);
+		$this->assertEquals($folder->Title, $newTitle3, "Folder Title updated after rename of Filename");
+	}
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	function setUp() {
@@ -245,7 +279,7 @@ class FileTest extends SapphireTest {
 			fwrite($fh, str_repeat('x',1000000));
 			fclose($fh);
 		}
-	} 
+	}
 	
 	function tearDown() {
 		parent::tearDown();
@@ -268,6 +302,10 @@ class FileTest extends SapphireTest {
 		if(file_exists('../assets/FileTest')) Filesystem::removeFolder('../assets/FileTest');
 		if(file_exists('../assets/FileTest-subfolder')) Filesystem::removeFolder('../assets/FileTest-subfolder');
 		if(file_exists('../assets/FileTest.txt')) unlink('../assets/FileTest.txt');
+
+		if (file_exists("../assets/FileTest-folder-renamed1")) Filesystem::removeFolder("../assets/FileTest-folder-renamed1");
+		if (file_exists("../assets/FileTest-folder-renamed2")) Filesystem::removeFolder("../assets/FileTest-folder-renamed2");
+		if (file_exists("../assets/FileTest-folder-renamed3")) Filesystem::removeFolder("../assets/FileTest-folder-renamed3");
 	}
 
 }

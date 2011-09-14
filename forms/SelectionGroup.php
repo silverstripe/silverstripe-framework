@@ -7,6 +7,9 @@
  * @subpackage fields-structural
  */
 class SelectionGroup extends CompositeField {
+	
+	protected $template = "SelectionGroup";
+	
 	/**
 	 * Create a new selection group.
 	 * @param name The field name of the selection group.
@@ -83,7 +86,7 @@ class SelectionGroup extends CompositeField {
 		Requirements::javascript(SAPPHIRE_DIR   . '/javascript/SelectionGroup.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/SelectionGroup.css');
 		
-		return $this->renderWith("SelectionGroup");
+		return $this->renderWith($this->template);
 	}
 }
 

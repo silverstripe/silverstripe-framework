@@ -37,7 +37,7 @@ Create a mysite/code/CustomSiteConfig.php file.
 	:::php
 	<?php
 	
-	class CustomSiteConfig extends DataObjectDecorator {
+	class CustomSiteConfig extends DataExtension {
 		
 		function extraStatics() {
 			return array(

@@ -76,17 +76,19 @@ JS;
 Behaviour.register({
 	'#$id' : {
 		onkeyup: function() {
+			var self = this;
 			if(this.checkValid()) {
-				new Ajax.Request('{$url}?ajax=1&{$this->name}=' + encodeURIComponent(this.value), { 
+				jQuery.ajax({
+					'url': '{$url}?ajax=1&{$this->name}=' + encodeURIComponent(this.value),
 					method: 'get',
-					onSuccess: function(response) {
+					success: function(response) {
 						if(response.responseText == 'ok')
-							Element.removeClassName(this, 'inuse');
+							Element.removeClassName(self, 'inuse');
 						else {
-							Element.addClassName(this, 'inuse');	
+							Element.addClassName(self, 'inuse');	
 						}
-					}.bind(this),
-					onFailure: function(response) {
+					}
+					error: function(response) {
 					
 					}	
 				});

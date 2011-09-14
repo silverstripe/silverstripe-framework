@@ -331,8 +331,11 @@ class Group extends DataObject {
 	function onBeforeWrite() {
 		parent::onBeforeWrite();
 		
-		if(stripos($this->Code, _t('SecurityAdmin.NEWGROUPPREFIX','new-')) === 0) {
-			$this->setCode($this->Title);
+		// Only set code property when the group has a custom title, and no code exists.
+		// The "Code" attribute is usually treated as a more permanent identifier than database IDs
+		// in custom application logic, so can't be changed after its first set.
+		if(!$this->Code && $this->Title != _t('SecurityAdmin.NEWGROUP',"New Group")) {
+			if(!$this->Code) $this->setCode($this->Title);
 		}
 	}
 	
@@ -356,7 +359,7 @@ class Group extends DataObject {
 	public function canEdit($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		// decorated access checks
+		// extended access checks
 		$results = $this->extend('canEdit', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
 		
@@ -386,7 +389,7 @@ class Group extends DataObject {
 	public function canView($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		// decorated access checks
+		// extended access checks
 		$results = $this->extend('canView', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
 		
@@ -399,7 +402,7 @@ class Group extends DataObject {
 	public function canDelete($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		// decorated access checks
+		// extended access checks
 		$results = $this->extend('canDelete', $member);
 		if($results && is_array($results)) if(!min($results)) return false;
 		

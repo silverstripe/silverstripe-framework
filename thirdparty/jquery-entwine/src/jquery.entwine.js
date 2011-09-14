@@ -1,4 +1,9 @@
-var console;
+try {
+	console.log;
+}
+catch (e) {
+	window.console = undefined;
+}
 
 (function($) {	
 	

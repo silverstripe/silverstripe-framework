@@ -87,36 +87,30 @@ TableListField.prototype = {
 		var img = Event.element(e);
 		var link = Event.findElement(e,"a");
 		var row = Event.findElement(e,"tr");
+		var self = this;
 		
 		// TODO ajaxErrorHandler and loading-image are dependent on cms, but formfield is in sapphire
 		var confirmed = confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE', 'Are you sure you want to delete this record?'));
 		if(confirmed)
 		{
-			img.setAttribute("src",'cms/images/network-save.gif'); // TODO doesn't work
-			new Ajax.Request(
-				link.getAttribute("href"),
-				{
-					method: 'post', 
-					postBody: 'forceajax=1' + ($('SecurityID') ? '&SecurityID=' + $('SecurityID').value : ''),
-					onComplete: function(){
-						Effect.Fade(
-							row,
-							{
-								afterFinish: function(obj) {
-									// remove row from DOM
-									obj.element.parentNode.removeChild(obj.element);
-									// recalculate summary if needed (assumes that TableListField.js is present)
-									// TODO Proper inheritance
-									if(this._summarise) this._summarise();
-									// custom callback
-									if(this.callback_deleteRecord) this.callback_deleteRecord(e);
-								}.bind(this)
-							}
-						);
-					}.bind(this),
-					onFailure: this.ajaxErrorHandler
-				}
-			);
+			img.setAttribute("src",'sapphire/images/network-save.gif'); // TODO doesn't work
+			jQuery.ajax({
+				'url': link.getAttribute("href"),
+				'method': 'post', 
+				'data': {forceajax: 1, SecurityID: jQuery('input[name=SecurityID]').val()},
+				'success':  function(){
+					jQuery(row).fadeOut('fast', function() {
+						// remove row from DOM
+						this.element.parentNode.removeChild(obj.element);
+						// recalculate summary if needed (assumes that TableListField.js is present)
+						// TODO Proper inheritance
+						if(self._summarise) self._summarise();
+						// custom callback
+						if(self.callback_deleteRecord) self.callback_deleteRecord(e);
+					});
+				},
+				'error': this.ajaxErrorHandler
+			});
 		}
 		Event.stop(e);
 	},
@@ -172,6 +166,8 @@ TableListField.prototype = {
 	},
 	
 	refresh: function(e) {
+		var self = this;
+		
 		if(e) {
 			var el = Event.element(e);
 			if(el.nodeName != "a") el = Event.findElement(e,"a");
@@ -180,19 +176,16 @@ TableListField.prototype = {
 		}
 		
 		if(el.getAttribute('href')) {
-    		new Ajax.Request( 
-    			el.getAttribute('href'), 
-    			{
-    				postBody: 'update=1' + (params) ? '&' + params : '',
-    				onComplete: function(response) {
-    					Element.replace(this.id, response.responseText);
-						// reapply behaviour and reattach methods to TF container node
-						// e.g. <div class="TableListField">
-    					Behaviour.apply($(this.id), true);
-							if(oncomplete) oncomplete.apply(response);
-    				}.bind(this)
-    			}
-    		);
+    		jQuery.ajax({
+					'url': el.getAttribute('href'),
+					'data': {'update': 1},
+  				'success': function(response) {
+						jQuery('#' + self.id).replaceWith(response)
+					// reapply behaviour and reattach methods to TF container node
+					// e.g. <div class="TableListField">
+  					Behaviour.apply($(self.id), true);
+  				}
+				});
 		}
 		
 		if(e) Event.stop(e);
@@ -322,6 +315,7 @@ TableListRecord.prototype = {
 	},
 
 	ajaxRequest : function(url, subform) {
+		var self = this;
 		// Highlight the new row
 		if(this.parentNode.selectedRow) {
 			Element.removeClassName(this.parentNode.selectedRow,'current');
@@ -332,11 +326,14 @@ TableListRecord.prototype = {
 		this.subform = $(subform);
 		Element.addClassName(this, 'loading');
 		statusMessage('loading');
-		new Ajax.Request(url + this.id.replace('record-',''), {
-			method : 'post', 
-			postBody : 'ajax=1',
-			onSuccess : this.select_success.bind(this),
-			onFailure : ajaxErrorHandler
+		jQuery.ajax({
+			'url': url + this.id.replace('record-',''),
+			'method' : 'post', 
+			'data' : {'ajax': 1},
+			success : function() {
+				self.select_success();
+			},
+			failure : ajaxErrorHandler
 		});
 	},
 	

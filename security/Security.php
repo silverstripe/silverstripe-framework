@@ -83,6 +83,8 @@ class Security extends Controller {
 	 */
 	protected static $wordlist = './wordlist.txt';
 	
+	static $template = 'BlankPage';
+	
 	/**
 	 * Template thats used to render the pages.
 	 *
@@ -339,15 +341,20 @@ class Security extends Controller {
 			Requirements::css($customCSS);
 		}
 
-		$tmpPage = new Page();
-		$tmpPage->Title = _t('Security.LOGIN', 'Log in');
-		$tmpPage->URLSegment = "Security";
-		// Disable ID-based caching  of the log-in page by making it a random number
-		$tmpPage->ID = -1 * rand(1,10000000);
+		if(class_exists('SiteTree')) {
+			$tmpPage = new Page();
+			$tmpPage->Title = _t('Security.LOGIN', 'Log in');
+			$tmpPage->URLSegment = "Security";
+			// Disable ID-based caching  of the log-in page by making it a random number
+			$tmpPage->ID = -1 * rand(1,10000000);
 
-		$controller = new Page_Controller($tmpPage);
-		$controller->init();
-		//Controller::$currentController = $controller;
+			$controller = new Page_Controller($tmpPage);
+			$controller->init();
+			//Controller::$currentController = $controller;
+		} else {
+			$controller = $this;
+		}
+
 
 		$content = '';
 		$forms = $this->GetLoginForms();
@@ -358,10 +365,6 @@ class Security extends Controller {
 		// only display tabs when more than one authenticator is provided
 		// to save bandwidth and reduce the amount of custom styling needed 
 		if(count($forms) > 1) {
-			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
-			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-			Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
-			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/effects.js");
 			Requirements::css(SAPPHIRE_DIR . "/css/Form.css");
 			
 			// Needed because the <base href=".."> in the template makes problems
@@ -374,8 +377,7 @@ class Security extends Controller {
 			
 			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 			
-			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery.ui.all.css');
-			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery.ui.tabs.css');
+			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 			
 			Requirements::css(SAPPHIRE_DIR . '/css/Security_login.css');
 			
@@ -417,7 +419,7 @@ class Security extends Controller {
 		Session::clear('Security.Message');
 
 		// custom processing
-		return $customisedController->renderWith(array('Security_login', 'Security', $this->stat('template_main'), 'ContentController'));
+		return $customisedController->renderWith(array('Security_login', 'Security', $this->stat('template_main'), 'BlankPage'));
 	}
 	
 	function basicauthlogin() {
@@ -431,17 +433,16 @@ class Security extends Controller {
 	 * @return string Returns the "lost password" page as HTML code.
 	 */
 	public function lostpassword() {
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
-
-		$tmpPage = new Page();
-		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
-		$tmpPage->URLSegment = 'Security';
-		$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
-		$controller = new Page_Controller($tmpPage);
-		$controller->init();
+		if(class_exists('SiteTree')) {
+			$tmpPage = new Page();
+			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
+			$tmpPage->URLSegment = 'Security';
+			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+			$controller = new Page_Controller($tmpPage);
+			$controller->init();
+		} else {
+			$controller = $this;
+		}
 
 		$customisedController = $controller->customise(array(
 			'Content' => 
@@ -455,7 +456,7 @@ class Security extends Controller {
 		));
 		
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith(array('Security_lostpassword', 'Security', $this->stat('template_main'), 'ContentController'));
+		return $customisedController->renderWith(array('Security_lostpassword', 'Security', $this->stat('template_main'), 'BlankPage'));
 	}
 
 
@@ -490,20 +491,19 @@ class Security extends Controller {
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	public function passwordsent($request) {
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
+		if(class_exists('SiteTree')) {
+			$tmpPage = new Page();
+			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');
+			$tmpPage->URLSegment = 'Security';
+			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+			$controller = new Page_Controller($tmpPage);
+			$controller->init();
+		} else {
+			$controller = $this;
+		}
 
-		$tmpPage = new Page();
-		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');
-		$tmpPage->URLSegment = 'Security';
-		$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
-		$controller = new Page_Controller($tmpPage);
-		$controller->init();
+		$email = Convert::raw2xml(rawurldecode($request->param('ID')) . '.' . $request->getExtension());
 
-		$email = Convert::raw2xml($request->param('ID') . '.' . $request->getExtension());
-		
 		$customisedController = $controller->customise(array(
 			'Title' => sprintf(_t('Security.PASSWORDSENTHEADER', "Password reset link sent to '%s'"), $email),
 			'Content' =>
@@ -514,7 +514,7 @@ class Security extends Controller {
 		));
 		
 		//Controller::$currentController = $controller;
-		return $customisedController->renderWith(array('Security_passwordsent', 'Security', $this->stat('template_main'), 'ContentController'));
+		return $customisedController->renderWith(array('Security_passwordsent', 'Security', $this->stat('template_main'), 'BlankPage'));
 	}
 
 
@@ -541,12 +541,16 @@ class Security extends Controller {
 	 * @return string Returns the "change password" page as HTML code.
 	 */
 	public function changepassword() {
-		$tmpPage = new Page();
-		$tmpPage->Title = _t('Security.CHANGEPASSWORDHEADER', 'Change your password');
-		$tmpPage->URLSegment = 'Security';
-		$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
-		$controller = new Page_Controller($tmpPage);
-		$controller->init();
+		if(class_exists('SiteTree')) {
+			$tmpPage = new Page();
+			$tmpPage->Title = _t('Security.CHANGEPASSWORDHEADER', 'Change your password');
+			$tmpPage->URLSegment = 'Security';
+			$tmpPage->ID = -1; // Set the page ID to -1 so we dont get the top level pages as its children
+			$controller = new Page_Controller($tmpPage);
+			$controller->init();
+		} else {
+			$controller = $this;
+		}
 
 		// First load with hash: Redirect to same URL without hash to avoid referer leakage
 		if(isset($_REQUEST['h']) && Member::member_from_autologinhash($_REQUEST['h'])) {
@@ -594,7 +598,7 @@ class Security extends Controller {
 			}
 		}
 
-		return $customisedController->renderWith(array('Security_changepassword', 'Security', $this->stat('template_main'), 'ContentController'));
+		return $customisedController->renderWith(array('Security_changepassword', 'Security', $this->stat('template_main'), 'BlankPage'));
 	}
 	
 	/**
@@ -935,4 +939,3 @@ class Security extends Controller {
 	}
 
 }
-?>

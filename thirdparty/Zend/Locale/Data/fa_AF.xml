@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.6/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 1.59 $"/>
-		<generation date="$Date: 2008/06/17 14:12:16 $"/>
+		<version number="$Revision: 1.66 $"/>
+		<generation date="$Date: 2009/06/15 05:50:27 $"/>
 		<language type="fa"/>
 		<territory type="AF"/>
 	</identity>
@@ -132,7 +131,7 @@
 		</territories>
 	</localeDisplayNames>
 	<characters>
-		<exemplarCharacters type="auxiliary">[ٖ ٰ \u200C \u200D ټ ځ څ ډ ړ ږ ښ ګ ڼ ي]</exemplarCharacters>
+		<exemplarCharacters type="auxiliary">[\u0656 \u0670 \u200C \u200D ټ ځ څ ډ ړ ږ ښ ګ ڼ ي]</exemplarCharacters>
 	</characters>
 	<dates>
 		<calendars>
@@ -240,10 +239,10 @@
 	</dates>
 	<numbers>
 		<symbols>
-			<decimal>٫</decimal>
-			<group>٬</group>
-			<percentSign>٪</percentSign>
-			<nativeZeroDigit>۰</nativeZeroDigit>
+			<decimal>,</decimal>
+			<group>.</group>
+			<percentSign>%</percentSign>
+			<nativeZeroDigit>0</nativeZeroDigit>
 			<minusSign>−</minusSign>
 		</symbols>
 		<percentFormats>
@@ -302,3 +301,4 @@
 		</currencies>
 	</numbers>
 </ldml>
+

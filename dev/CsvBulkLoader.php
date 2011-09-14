@@ -4,7 +4,7 @@
  * Uses the fgetcsv() function to process CSV input. Accepts a file-handler as input.
  * 
  * @see http://rfc.net/rfc4180.html
- * @package cms
+ * @package sapphire
  * @subpackage bulkloading
  * @author Ingo Schommer, Silverstripe Ltd. (<myfirstname>@silverstripe.com)
  * 

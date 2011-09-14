@@ -117,8 +117,8 @@ class TableListField extends FormField {
 	 * array(
 	 * 	'delete' => array(
 	 * 		'label' => 'Delete', 
-	 * 		'icon' => 'cms/images/delete.gif',
-	 * 		'icon_disabled' => 'cms/images/delete_disabled.gif',
+	 * 		'icon' => 'sapphire/images/delete.gif',
+	 * 		'icon_disabled' => 'sapphire/images/delete_disabled.gif',
 	 * 		'class' => 'deletelink',
 	 * 	)
 	 * )
@@ -126,8 +126,8 @@ class TableListField extends FormField {
 	public $actions = array(
 		'delete' => array(
 			'label' => 'Delete',
-			'icon' => 'cms/images/delete.gif',
-			'icon_disabled' => 'cms/images/delete_disabled.gif',
+			'icon' => 'sapphire/images/delete.gif',
+			'icon_disabled' => 'sapphire/images/delete_disabled.gif',
 			'class' => 'deletelink' 
 		)
 	);
@@ -295,10 +295,10 @@ class TableListField extends FormField {
 	}
 	
 	function FieldHolder() {
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/TableListField.css');

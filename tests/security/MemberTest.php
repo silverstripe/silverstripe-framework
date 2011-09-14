@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class MemberTest extends FunctionalTest {
-	static $fixture_file = 'sapphire/tests/security/MemberTest.yml';
+	static $fixture_file = 'MemberTest.yml';
 	
 	protected $orig = array();
 	protected $local = null; 
@@ -300,8 +300,8 @@ class MemberTest extends FunctionalTest {
 	
 	function testMemberWithNoDateFormatFallsbackToGlobalLocaleDefaultFormat() {
 		$member = $this->objFromFixture('Member', 'noformatmember');
-		$this->assertEquals('MM/dd/yyyy', $member->DateFormat);
-		$this->assertEquals('hh:mm a', $member->TimeFormat);
+		$this->assertEquals('MMM d, y', $member->DateFormat);
+		$this->assertEquals('h:mm:ss a', $member->TimeFormat);
 	}
 	
 	function testMemberWithNoDateFormatFallsbackToTheirLocaleDefaultFormat() {
@@ -457,7 +457,7 @@ class MemberTest extends FunctionalTest {
 		$this->session()->inst_set('loggedInAs', null);
 	}
 	
-	public function testDecoratedCan() {
+	public function testExtendedCan() {
 		$extensions = $this->removeExtensions(Object::get_extensions('Member'));
 		$member = $this->objFromFixture('Member', 'test');
 		
@@ -466,7 +466,7 @@ class MemberTest extends FunctionalTest {
 		$this->assertFalse($member->canDelete());
 		$this->assertFalse($member->canEdit());
 		
-		/* Apply a decorator that allows viewing in any case (most likely the case for member profiles) */
+		/* Apply a extension that allows viewing in any case (most likely the case for member profiles) */
 		Object::add_extension('Member', 'MemberTest_ViewingAllowedExtension');
 		$member2 = $this->objFromFixture('Member', 'staffmember');
 		
@@ -474,7 +474,7 @@ class MemberTest extends FunctionalTest {
 		$this->assertFalse($member2->canDelete());
 		$this->assertFalse($member2->canEdit());
 	
-		/* Apply a decorator that denies viewing of the Member */
+		/* Apply a extension that denies viewing of the Member */
 		Object::remove_extension('Member', 'MemberTest_ViewingAllowedExtension');
 		Object::add_extension('Member', 'MemberTest_ViewingDeniedExtension');
 		$member3 = $this->objFromFixture('Member', 'managementmember');
@@ -483,7 +483,7 @@ class MemberTest extends FunctionalTest {
 		$this->assertFalse($member3->canDelete());
 		$this->assertFalse($member3->canEdit());
 	
-		/* Apply a decorator that allows viewing and editing but denies deletion */
+		/* Apply a extension that allows viewing and editing but denies deletion */
 		Object::remove_extension('Member', 'MemberTest_ViewingDeniedExtension');
 		Object::add_extension('Member', 'MemberTest_EditingAllowedDeletingDeniedExtension');
 		$member4 = $this->objFromFixture('Member', 'accountingmember');
@@ -589,21 +589,21 @@ class MemberTest extends FunctionalTest {
 	}
 
 }
-class MemberTest_ViewingAllowedExtension extends DataObjectDecorator implements TestOnly {
+class MemberTest_ViewingAllowedExtension extends DataExtension implements TestOnly {
 
 	public function canView() {
 		return true;
 	}
 
 }
-class MemberTest_ViewingDeniedExtension extends DataObjectDecorator implements TestOnly {
+class MemberTest_ViewingDeniedExtension extends DataExtension implements TestOnly {
 
 	public function canView() {
 		return false;
 	}
 
 }
-class MemberTest_EditingAllowedDeletingDeniedExtension extends DataObjectDecorator implements TestOnly {
+class MemberTest_EditingAllowedDeletingDeniedExtension extends DataExtension implements TestOnly {
 
 	public function canView() {
 		return true;

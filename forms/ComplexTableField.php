@@ -138,20 +138,20 @@ class ComplexTableField extends TableListField {
 	public $actions = array(
 		'show' => array(
 			'label' => 'Show',
-			'icon' => 'cms/images/show.png',
-			'icon_disabled' => 'cms/images/show_disabled.png',
+			'icon' => 'sapphire/images/show.png',
+			'icon_disabled' => 'sapphire/images/show_disabled.png',
 			'class' => 'popuplink showlink',
 		),
 		'edit' => array(
 			'label' => 'Edit',
-			'icon' => 'cms/images/edit.gif', 
-			'icon_disabled' => 'cms/images/edit_disabled.gif',
+			'icon' => 'sapphire/images/edit.gif', 
+			'icon_disabled' => 'sapphire/images/edit_disabled.gif',
 			'class' => 'popuplink editlink',
 		),
 		'delete' => array(
 			'label' => 'Delete',
-			'icon' => 'cms/images/delete.gif', 
-			'icon_disabled' => 'cms/images/delete_disabled.gif',
+			'icon' => 'sapphire/images/delete.gif', 
+			'icon_disabled' => 'sapphire/images/delete_disabled.gif',
 			'class' => 'popuplink deletelink',
 		),
 	);
@@ -193,7 +193,7 @@ class ComplexTableField extends TableListField {
 	/**
 	 * See class comments
 	 *
-	 * @param ContentController $controller
+	 * @param Controller $controller
 	 * @param string $name
 	 * @param string $sourceClass
 	 * @param array $fieldList
@@ -243,6 +243,8 @@ class ComplexTableField extends TableListField {
 	 * @return String
 	 */
 	function FieldHolder() {
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/greybox/AmiJS.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/greybox/greybox.js");
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
@@ -847,7 +849,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		$message = sprintf(
 			_t('ComplexTableField.SUCCESSEDIT', 'Saved %s %s %s'),
 			$dataObject->singular_name(),
-			'<a href="' . $this->Link() . '">"' . htmlspecialchars($dataObject->Title, ENT_QUOTES) . '"</a>',
+			'<a href="' . $this->Link('edit') . '">"' . htmlspecialchars($dataObject->Title, ENT_QUOTES) . '"</a>',
 			$closeLink
 		);
 		
@@ -936,29 +938,6 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	 *           Utility
 	 * #################################
 	 */
-
-	/**
-	 * Get part of class ancestry (even if popup is not subclassed it might be styled differently in css)
-	 */
-	function PopupClasses() {
-		global $_ALL_CLASSES;
-
-		$items = array();
-		$parents = isset($_ALL_CLASSES['parents'][$this->class]) ? $_ALL_CLASSES['parents'][$this->class] : null;
-		
-		if($parents) {
-			foreach($parents as $parent) {
-				if(!in_array($parent, $_ALL_CLASSES['parents']['TableListField'])) {
-					$items[] = $parent . '_Popup';
-				}
-			}
-		}
-		
-		$items[] = $this->class . '_Popup';
-
-		return implode(' ', $items);
-	}
-
 
 	/**
 	 * Returns the db-fieldname of the currently used has_one-relationship.

@@ -1,0 +1,49 @@
+/**
+ * Sample alternative theme without colors (grayscale only).
+ */
+
+/** -----------------------------------------------
+ * Colours
+ * ------------------------------------------------ */
+$color-base: grayscale(#b0bec7);
+
+$color-widget-bg: grayscale(lighten($color-base, 20%));
+
+$color-dark-bg: grayscale(#003050);
+$color-dark-separator: grayscale(#19435c);
+
+$color-shadow-light: grayscale(rgba(201, 205, 206, 0.8));
+$color-shadow-dark: grayscale(rgba(107, 120, 123, 0.5));
+
+$color-highlight: grayscale(#FFFF66);
+
+$color-menu-button: grayscale(#338DC1);
+$color-menu-background: grayscale(#c6d7df);
+$color-menu-border: grayscale(#8c99a1);
+
+$color-text: #444;
+$color-text-light: white;
+$color-text-light-link: white;
+$color-text-dark: #1f1f1f;
+$color-text-dark-link: grayscale(#3EBAE0);
+
+$color-button-constructive: #77b53f;
+$color-button-destructive: #f00;
+
+$color-warning: #FF9300;
+$color-error: #FF9300;
+$color-notice: #FF9300;
+
+/** -----------------------------------------------
+ * Typography
+ * ------------------------------------------------ */
+$font-family: Arial, sans-serif;
+$font-base-size: 13px;
+$font-base-lineheight: 16px;
+
+/** -----------------------------------------------
+ * Application Logo (CMS Logo)
+ * ------------------------------------------------ */
+$application-logo-small: image-url("logo_small.png");
+$application-logo-small-ysize: 25px;
+$application-logo-small-xsize: 25px;

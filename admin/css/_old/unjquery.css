@@ -1,0 +1,134 @@
+/**
+ * Clean up border overkill
+ */
+
+.ui-widget-header {
+	background: none;
+	border: none;
+	border-bottom: 1px solid #AAAAAA;
+}
+
+#Root.ui-widget-content {
+	border: 1px solid #AAAAAA;
+}
+
+.ui-widget-content {
+	border: none;
+}
+
+.ui-accordion .ui-accordion-content-active {
+	border: 1px solid #AAA;
+	border-top: none;
+}
+
+.CMSMain .ui-tabs .ui-corner-all {
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+}
+
+
+/* tabs 'reset' */
+.CMSMain .ui-tabs,
+.CMSMain .ui-tabs .ui-tabs-panel {
+	padding: 0;
+}
+
+#Root {
+	-moz-border-radius-bottomleft: 0;
+	-moz-border-radius-bottomright: 0;
+	-webkit-border-bottom-left-radius: 0;
+	-webkit-border-bottom-right-radius: 0;
+}
+
+.CMSMain .ui-tabs .ui-tabs-nav {
+	padding: 0.5em 0.5em 0 0.5em;
+}
+
+.CMSMain .ui-tabs .tab {
+	padding: 1em;
+}
+
+.CMSMain .ui-tabs .tab .ss-tabset {
+	margin: -0.5em -1em -1em -1em;
+}
+
+
+.CMSMain .ui-tabs .ui-tabs-nav li.ui-tabs-selected {
+	border-top:2px solid orange;
+	padding-bottom:0;
+}
+
+
+.ui-layout-pane-center,
+.ui-layout-west {
+	background: none;
+}
+
+#treepanes .ui-widget input {
+	font-size: 1.1em;
+}
+
+#treepanes .ui-tabs-panel {
+	padding: 0.5em;
+	border-bottom: #AAA 1px solid;
+}
+
+#treepanes .ui-tabs-panel.ui-corner-bottom {
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+}
+
+#treepanes .ui-accordion-header.ui-corner-top,
+#treepanes .ui-accordion-header.ui-corner-bottom {
+	-moz-border-radius-topleft: 0;
+	-webkit-border-top-left-radius: 0;
+}
+
+#treepanes .ui-corner-bottom {
+	-moz-border-radius-bottomleft: 0;
+	-moz-border-radius-bottomright: 4px;
+	-webkit-border-bottom-left-radius: 0;
+	-webkit-border-bottom-right-radius: 4px;
+}
+
+#treepanes .ui-accordion-header a {
+	font-size: 120%;
+}
+#treepanes.ui-accordion .ui-accordion-header .ui-icon {
+	right: 0.5em !important;
+	left: none !important;
+}
+
+#treepanes #TreeFooter {
+	border-bottom: 1px solid #ccc;
+	-moz-border-radius-bottomright: 4px;
+	-webkit-border-bottom-right-radius: 4px;		
+}
+
+#treepanes .tree-panel {
+	padding: 0.5em;
+	background: #EEE;
+}
+
+.ui-tabs a {
+	font-size: 120%;
+}
+
+.right form {
+	margin: 1px 0 0 0;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+
+h2#Form_EditForm_WelcomeHeader,
+p#WelcomeMessage {	
+	margin: 1em 0 0 25px;
+}
+
+.ui-layout-resizer {
+	background: #ccdef3;
+}
+.ui-layout-resizer-open:hover, 
+.ui-layout-resizer-dragging {
+	background: #ccdef3 none repeat scroll 0 0;
+}

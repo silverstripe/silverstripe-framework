@@ -902,11 +902,8 @@ class Form extends RequestHandler {
 					$data = $this->getData();
 
 					// Load errors into session and post back
-					Session::set("FormInfo.{$this->FormName()}", array(
-						'errors' => $errors,
-						'data' => $data,
-					));
-
+					Session::set("FormInfo.{$this->FormName()}.errors", $errors); 
+					Session::set("FormInfo.{$this->FormName()}.data", $data);
 				}
 				return false;
 			}
@@ -1101,9 +1098,9 @@ class Form extends RequestHandler {
 	 * than <% control FormObject %>
 	 */
 	function forTemplate() {
-		return $this->renderWith(array(
-			$this->getTemplate(),
-			'Form'
+		return $this->renderWith(array_merge(
+			(array)$this->getTemplate(),
+			array('Form')
 		));
 	}
 

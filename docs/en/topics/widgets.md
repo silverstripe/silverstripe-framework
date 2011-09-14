@@ -297,7 +297,7 @@ Page class). One way to fix this is to comment out line 30 in BlogHolder.php and
 	      .......
 		function getCMSFields() {
 			$fields = parent::getCMSFields();
-			$fields->removeFieldFromTab("Root.Content.Main","Content");
+			$fields->removeFieldFromTab("Root.Content","Content");
 		//	$fields->addFieldToTab("Root.Content.Widgets", new WidgetAreaEditor("SideBar")); COMMENT OUT
 	
 		........

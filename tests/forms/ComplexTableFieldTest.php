@@ -5,7 +5,7 @@
  */
 class ComplexTableFieldTest extends FunctionalTest {
 
-	static $fixture_file = 'sapphire/tests/forms/ComplexTableFieldTest.yml';
+	static $fixture_file = 'ComplexTableFieldTest.yml';
 	static $use_draft_site = true;
 	
 	protected $extraDataObjects = array(
@@ -21,6 +21,8 @@ class ComplexTableFieldTest extends FunctionalTest {
 	 * @var Controller object
 	 */
 	protected $controller;
+	
+	protected $autoFollowRedirection = false;
 	
 	function setUp() {
 		parent::setUp();

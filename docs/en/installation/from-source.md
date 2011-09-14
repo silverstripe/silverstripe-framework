@@ -149,7 +149,8 @@ Please replace `<username>` below with your github username.
 	cd my-silverstripe-project
 	git clone git@github.com:<username>/sapphire.git sapphire
 	git clone git@github.com:<username>/silverstripe-cms.git cms
-	git clone git@github.com:<username>/silverstripe-blackcandy.git themes/blackcandy
+	rm -rf themes
+	git clone git@github.com:<username>/silverstripe-blackcandy.git themes
 
 Now you need to add the original repository as `upstream`, so you can keep your fork updated later on.
 

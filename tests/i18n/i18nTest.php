@@ -26,44 +26,20 @@ class i18nTest extends SapphireTest {
 	function setUp() {
 		parent::setUp();
 		
-		$this->alternateBasePath = Director::baseFolder() . "/sapphire/tests/i18n/_fakewebroot";
+		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
 		$this->alternateBaseSavePath = TEMP_FOLDER . '/i18nTextCollectorTest_webroot';
 		FileSystem::makeFolder($this->alternateBaseSavePath);
-		
-		// SSViewer and ManifestBuilder don't support different webroots, hence we set the paths manually
-		global $_CLASS_MANIFEST;
-		$_CLASS_MANIFEST['i18nTestModule'] = $this->alternateBasePath . '/i18ntestmodule/code/i18nTestModule.php';
-		$_CLASS_MANIFEST['i18nTestModule_Addition'] = $this->alternateBasePath . '/i18ntestmodule/code/i18nTestModule.php';
-		$_CLASS_MANIFEST['i18nTestModuleDecorator'] = $this->alternateBasePath . '/i18nothermodule/code/i18nTestModuleDecorator.php';
-		
-		global $_ALL_CLASSES;
-		$_ALL_CLASSES['parents']['i18nTestModule'] = array('DataObject'=>'DataObject','Object'=>'Object');
-		$_ALL_CLASSES['parents']['i18nTestModule_Addition'] = array('Object'=>'Object');
-		$_ALL_CLASSES['parents']['i18nTestModuleDecorator'] = array('DataObjectDecorator'=>'DataObjectDecorator','Object'=>'Object');
 
-		global $_TEMPLATE_MANIFEST;
-		$_TEMPLATE_MANIFEST['i18nTestModule.ss'] = array(
-			'main' => $this->alternateBasePath . '/i18ntestmodule/templates/i18nTestModule.ss',
-			'Layout' => $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss',
-		);
-		$_TEMPLATE_MANIFEST['i18nTestModuleInclude.ss'] = array(
-			'Includes' => $this->alternateBasePath . '/i18ntestmodule/templates/Includes/i18nTestModuleInclude.ss',
-		);
-		
+		// Push a template loader running from the fake webroot onto the stack.
+		$manifest = new SS_TemplateManifest($this->alternateBasePath, false, true);
+		$manifest->regenerate(false);
+		SS_TemplateLoader::instance()->pushManifest($manifest);
+
 		$this->originalLocale = i18n::get_locale();
 	}
 	
 	function tearDown() {
-		//FileSystem::removeFolder($this->tmpBasePath);
-		
-		global $_CLASS_MANIFEST;
-		unset($_CLASS_MANIFEST['i18nTestModule']);
-		unset($_CLASS_MANIFEST['i18nTestModule_Addition']);
-		
-		global $_TEMPLATE_MANIFEST;
-		unset($_TEMPLATE_MANIFEST['i18nTestModule.ss']);
-		unset($_TEMPLATE_MANIFEST['i18nTestModuleInclude.ss']);
-		
+		SS_TemplateLoader::instance()->popManifest();
 		i18n::set_locale($this->originalLocale);
 		
 		parent::tearDown();
@@ -71,7 +47,7 @@ class i18nTest extends SapphireTest {
 	
 	function testDateFormatFromLocale() {
 		i18n::set_locale('en_US');
-		$this->assertEquals('MM/dd/yyyy', i18n::get_date_format());
+		$this->assertEquals('MMM d, y', i18n::get_date_format());
 		i18n::set_locale('en_NZ');
 		$this->assertEquals('d/MM/yyyy', i18n::get_date_format());
 		i18n::set_locale('en_US');
@@ -79,7 +55,7 @@ class i18nTest extends SapphireTest {
 	
 	function testTimeFormatFromLocale() {
 		i18n::set_locale('en_US');
-		$this->assertEquals('hh:mm a', i18n::get_time_format());
+		$this->assertEquals('h:mm:ss a', i18n::get_time_format());
 		i18n::set_locale('de_DE');
 		$this->assertEquals('HH:mm:ss', i18n::get_time_format());
 		i18n::set_locale('en_US');
@@ -87,14 +63,14 @@ class i18nTest extends SapphireTest {
 	
 	function testDateFormatCustom() {
 		i18n::set_locale('en_US');
-		$this->assertEquals('MM/dd/yyyy', i18n::get_date_format());
+		$this->assertEquals('MMM d, y', i18n::get_date_format());
 		i18n::set_date_format('d/MM/yyyy');
 		$this->assertEquals('d/MM/yyyy', i18n::get_date_format());
 	}
 	
 	function testTimeFormatCustom() {
 		i18n::set_locale('en_US');
-		$this->assertEquals('hh:mm a', i18n::get_time_format());
+		$this->assertEquals('h:mm:ss a', i18n::get_time_format());
 		i18n::set_time_format('HH:mm:ss');
 		$this->assertEquals('HH:mm:ss', i18n::get_time_format());
 	}

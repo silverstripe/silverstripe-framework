@@ -1,12 +1,33 @@
 <?php
 
 class YamlFixtureTest extends SapphireTest {
-	static $fixture_file = 'sapphire/tests/testing/YamlFixtureTest.yml';
+
+	static $fixture_file = 'YamlFixtureTest.yml';
 
 	protected $extraDataObjects = array(
 		'YamlFixtureTest_DataObject',
 		'YamlFixtureTest_DataObjectRelation',
 	);
+	
+	function testAbsoluteFixturePath() {
+		$absPath = Director::baseFolder() . '/sapphire/tests/testing/YamlFixtureTest.yml';
+		$obj = new YamlFixture($absPath);
+		$this->assertEquals($absPath, $obj->getFixtureFile());
+	}
+	
+	function testRelativeFixturePath() {
+		$relPath = 'sapphire/tests/testing/YamlFixtureTest.yml';
+		$obj = new YamlFixture($relPath);
+		$this->assertEquals(Director::baseFolder() . '/' . $relPath, $obj->getFixtureFile());
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	function testFailsWithInvalidFixturePath() {
+		$invalidPath = 'sapphire/tests/testing/invalid.yml';
+		$obj = new YamlFixture($invalidPath);
+	}
 	
 	function testSQLInsert() {
 		$object1 = DataObject::get_by_id("YamlFixtureTest_DataObject", $this->idFromFixture("YamlFixtureTest_DataObject", "testobject1"));

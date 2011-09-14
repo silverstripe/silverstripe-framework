@@ -135,7 +135,7 @@ The second step is to add the table in the method *getCMSFields* which will allo
 			);
 			$tablefield->setParentClass('Project');
 			
-			$fields->addFieldToTab( 'Root.Content.Student', $tablefield );
+			$fields->addFieldToTab( 'Root.Student', $tablefield );
 			
 			return $fields;
 		}
@@ -259,9 +259,9 @@ The first step is to create the mentor object and set the relation with the *Stu
 		function getCMSFields() {
 			$fields = parent::getCMSFields();
 			
-			$fields->addFieldToTab( 'Root.Content.Main', new TextField( 'FirstName' ) );
-			$fields->addFieldToTab( 'Root.Content.Main', new TextField( 'Lastname' ) );
-			$fields->addFieldToTab( 'Root.Content.Main', new TextField( 'Nationality' ) );
+			$fields->addFieldToTab( 'Root.Content', new TextField( 'FirstName' ) );
+			$fields->addFieldToTab( 'Root.Content', new TextField( 'Lastname' ) );
+			$fields->addFieldToTab( 'Root.Content', new TextField( 'Nationality' ) );
 		
 			return $fields;
 		}
@@ -313,7 +313,7 @@ The second step is to add the table in the method *getCMSFields* which will allo
 			);
 			$tablefield->setAddTitle( 'A Student' );
 		
-			$fields->addFieldToTab( 'Root.Content.Students', $tablefield );
+			$fields->addFieldToTab( 'Root.Students', $tablefield );
 		
 			return $fields;
 		}
@@ -429,7 +429,7 @@ relation.
 	      );
 	      $modulesTablefield->setAddTitle( 'A Module' );
 	
-	      $fields->addFieldToTab( 'Root.Content.Modules', $modulesTablefield );
+	      $fields->addFieldToTab( 'Root.Modules', $modulesTablefield );
 	
 	      return $fields;
 	   }
@@ -770,6 +770,6 @@ CMS and how to display them on the website.
 
 ## Download the code
 
-Download all the [code](http://doc.silverstripe.org/src/github/master/sapphire/docs/en/tutorials/_images/tutorial5-completecode.zip) for this tutorial.
+Download all the [code](http://doc.silverstripe.org/sapphire/docs/en/tutorials/_images/tutorial5-completecode.zip) for this tutorial.
 
-You can also download the [code](http://doc.silverstripe.org/src/github/master/sapphire/docs/en/tutorials/_images/tutorial5-completecode-blackcandy.zip) for use in the blackcandy template.
+You can also download the [code](http://doc.silverstripe.org/sapphire/docs/en/tutorials/_images/tutorial5-completecode-blackcandy.zip) for use in the blackcandy template.

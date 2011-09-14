@@ -1,0 +1,409 @@
+/**
+ * This file defines common styles for form elements used throughout the CMS interface.
+ * It is an addition to the base styles defined in sapphire/css/Form.css.
+ *
+ * @package sapphire
+ * @subpackage admin
+ */
+
+/** ----------------------------------------------------
+ * Basic form fields
+ * ---------------------------------------------------- */	
+
+form.nostyle {
+	@include clear-form-field-styles();
+}
+
+.field {
+	display: block;
+	
+	// bottom padding accounts for the border and we have a negative
+	// margin with a postive padding to ensure the bottom border extends
+	// over the edges
+	padding: 0 $grid-horizontal $grid-vertical - 1 $grid-horizontal;
+	margin: 0 $grid-horizontal * -1 $grid-vertical $grid-horizontal * -1;
+	border-bottom: 1px solid $color-shadow-light;
+	
+	// using the legacy version as some of the more complex form fields
+	// need to use relative positioning and overflow hidden will not expand
+	// the containing boxes
+	@include legacy-pie-clearfix();
+	
+	&.noLabel {
+		.middleColumn {
+			margin-left: 0;
+		}	
+	}
+	
+	label {
+		
+		&.left {
+			float: left;
+			display: block;
+			width: $grid-horizontal * 21;
+			padding: $grid-vertical $grid-horizontal $grid-vertical 0;
+			line-height: $grid-vertical * 2;
+		
+			span {
+				display: block;
+				font-size: $font-base-size - 1;
+				color: lighten($color-text, 25%);
+			
+				@include hide-text-overflow();
+			}
+		}
+		
+		&.right {
+			cursor: pointer;
+		}
+	}
+	
+	.middleColumn {
+		margin-left: $grid-horizontal * 22;
+	}
+	
+	input.text,
+	textarea,
+	select,
+	.TreeDropdownField {
+		width: 90%;
+		max-width: $grid-horizontal * 64;
+	}
+	
+	input.text, 
+	textarea,
+	.TreeDropdownField {
+		background: #fff;
+		border: 1px solid lighten($color-medium-separator, 20%);
+		padding: $grid-vertical $grid-horizontal;
+		margin: 0;
+		outline: none;
+		
+		@include border-radius(4px);
+		@include background-image(linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef));
+	
+		&:focus {
+			border: 1px solid lighten($color-medium-separator, 20%);
+			
+			@include box-shadow(0 0 5px rgba(0,0,0,0.2));
+		}
+	}
+	
+	/* TreeDropdowns */
+	.TreeDropdownField {
+		padding: 0 14px 0 0;
+		
+		.treedropdownfield-panel {
+			border: 1px solid lighten($color-medium-separator, 20%);
+			border-top: none;
+			padding-right: 14px;
+			
+			@include border-bottom-left-radius(4px);
+			@include border-bottom-right-radius(4px);
+		}
+		.treedropdownfield-toggle-panel-link {
+			margin-right: -14px;
+		}
+		
+		&.treedropdownfield-open-tree {
+			@include border-bottom-left-radius(0);
+			@include border-bottom-right-radius(0);
+		}
+	}
+	
+	/* dropdowns */
+	.dropdown {
+		select {
+			margin-top: $grid-vertical;
+		}
+	}
+	
+	/* chzn override */
+	.chzn-container {
+		.chzn-results {
+			
+			li {
+				font-size: 11px;
+				line-height: $grid-vertical * 2;
+				padding: $grid-vertical / 2 $grid-horizontal / 2;
+			}
+		}
+	}
+	.chzn-container-active {
+		.chzn-single {
+	  		border: 1px solid lighten($color-medium-separator, 10%);
+		}
+	}
+	
+	.chzn-container-single .chzn-single  {
+		height: 30px;
+		line-height: 32px; /* not relative, as then we'd had to redo most of chzn */
+		font-size: $font-base-size;
+		
+		@include background-image(linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef));
+		
+		
+		&:hover, &:focus, &:active {
+			text-decoration: none;
+			outline: none;
+		}
+	
+		div {
+			width: 24px;
+	
+			b {
+				background-position: 3px 4px;
+			}
+		}
+	}
+	
+	/* Date Fields */
+	input.hasDatepicker {
+		width: 50%;
+		max-width: ($grid-horizontal * 12);
+	}
+}
+
+/** ----------------------------------------------------
+ * Buttons
+ * ---------------------------------------------------- */
+
+.Actions {
+	margin-right: 80px; // Accommodate preview button
+	min-height: 30px;
+
+	& > div {
+		overflow: auto;
+	}
+}
+
+.cms-preview-toggle-link {
+	display: block;
+	float: right;
+	font-size: 11px;
+}
+
+.cms {
+	.ui-widget {
+		/* loading */
+		input.loading,
+		input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, 
+		.ui-widget-header input.ui-state-default.loading {
+			padding-left: 24px;
+			color: lighten($color-text-dark, 20%);
+			background: $color-button-disabled url(../../images/network-save.gif) no-repeat 4px center;
+			border-color: darken($color-button-disabled, 10%);
+			cursor: default;
+			
+			@include text-shadow(none);
+			@include box-shadow(none);
+			
+		}
+	
+		.ss-ui-button {
+			/* all buttons */
+			padding: ($grid-vertical - 3) ($grid-horizontal * 2) - 4;
+			text-decoration: none;
+			line-height: $grid-vertical * 2;
+			color: $color-text-dark;
+			background-color: $color-button-generic;
+			border: 1px solid $color-button-generic-border;
+			@include text-shadow(lighten($color-button-generic, 20%) 0 1px 1px);
+			@include box-shadow(lighten($color-base, 10%) 0 1px 2px);
+			@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+				linear-gradient(color-stops(
+					lighten($color-button-generic, 10%),
+					darken($color-button-generic, 5%)
+				))
+			);
+			
+			&.ui-state-hover {
+				border: 1px solid darken($color-button-generic-border, 5%);
+				
+				@include box-shadow($color-base 0 1px 2px);
+				@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+					linear-gradient(color-stops(
+						lighten($color-button-generic, 20%),
+						$color-button-generic
+					))
+				);
+			}
+			
+			&:focus,
+			&:active {
+				border: 1px solid darken($color-button-generic-border, 5%);
+				
+				@include box-shadow($color-base 0 1px 2px);
+				@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+					linear-gradient(color-stops(
+						$color-button-generic,
+						lighten($color-button-generic, 20%)
+					))
+				);			
+			}
+			
+			&.ss-ui-button-small {
+				padding: ($grid-vertical/2) ($grid-horizontal/2);
+			}
+			
+			&.ui-state-highlight {
+				background-color: $color-button-highlight;
+				border: 1px solid $color-button-highlight-border;
+			}
+			
+			/* constructive */
+			&.ss-ui-action-constructive {
+				padding-left: 24px;
+				font-weight: bold;
+				margin-left: $grid-horizontal;
+				color: $color-text-light;
+				border-color: $color-button-constructive-border;
+				@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 5px,
+					linear-gradient(color-stops(
+						lighten($color-button-constructive, 10%),
+						darken($color-button-constructive, 5%)
+					))
+				);
+			
+				background-color: $color-button-constructive;
+		
+				@include text-shadow(darken($color-button-constructive, 10%) 0 1px 1px);
+				@include box-shadow(darken($color-base, 20%) 1px 1px 2px);
+			
+				&.ui-state-hover {
+					border-color: darken($color-button-constructive-border, 10%);
+					@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 5px,
+						linear-gradient(color-stops(
+							lighten($color-button-constructive, 15%),
+							$color-button-constructive
+						))
+					);
+				
+					background-color: darken($color-button-constructive, 10%);
+				}
+			}
+		
+			/* destructive */
+			&.ss-ui-action-destructive {
+				color: $color-button-destructive;
+				background-color: $color-button-generic;
+			
+				&.delete {
+					padding-left: 26px;
+					@include background(image-url("../images/btn_icons_sprite.png") no-repeat 6px -27px,
+						linear-gradient(color-stops(
+							lighten($color-button-generic, 10%),
+							darken($color-button-generic, 5%)
+						))
+					);
+					&.ui-state-hover {
+						@include background(image-url("../images/btn_icons_sprite.png") no-repeat 6px -27px,
+							linear-gradient(color-stops(
+								lighten($color-button-generic, 20%),
+								$color-button-generic
+							))
+						);
+					}
+				}
+			}
+		
+			&.ss-ui-action-minor {
+				background: none;
+				padding: 0;
+				border: 0;
+				color: $color-text-dark;
+				text-decoration: underline;
+				
+				@include box-shadow(none);
+			}
+		}
+	}
+}
+
+/** ----------------------------------------------------
+ * Grouped form fields
+ * ---------------------------------------------------- */
+.fieldgroup {
+	.fieldgroup-field {
+		float: left;
+		display: block;
+		width: $grid-horizontal * 23;
+		padding-right: $grid-horizontal;
+
+		&.odd {
+			
+		}
+		
+		&.even {
+			
+		}
+		
+		.field {
+			border: none;
+			padding-bottom: 0;
+		}
+	}
+}
+/** ----------------------------------------------------
+ * Checkbox Field
+ * ---------------------------------------------------- */
+.field {
+	&.checkbox {
+		padding-left: $grid-horizontal * 24;
+		margin-bottom: $grid-vertical;
+	}
+}
+/** ----------------------------------------------------
+ * Optionsets and Checkboxsets
+ * ---------------------------------------------------- */
+.optionset {
+	overflow: hidden;
+	padding-bottom: 8px;
+	
+	li {
+		float: left;
+		display: block;
+		width: $grid-horizontal * 27;
+		padding: $grid-vertical $grid-horizontal 0;
+		line-height: $grid-vertical * 2;
+		list-style: none;
+		position: relative;
+
+		input {
+			position: absolute;
+			top: $grid-vertical + 1; // used to get the input off the edge, the overflow
+			left: 2px; // hidden crops the glow.
+			margin: 0;
+		}
+		
+		label {
+			display: block;
+			cursor: pointer;
+			padding: 0 0 0 $grid-vertical * 2;
+		}
+
+	}
+	
+}
+
+/** ----------------------------------------------------
+ * HTML Text 
+ * ---------------------------------------------------- */
+
+.htmleditor {
+	label {
+		display: block;
+		float: none;
+		padding-bottom: 10px;
+	}
+	
+	.middleColumn {
+		margin-left: 0px;
+		clear: left;
+	}
+}
+
+
+.action-hidden {
+	display:  none;
+}

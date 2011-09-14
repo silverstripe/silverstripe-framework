@@ -17,7 +17,7 @@ class WebserverRoutingTest extends SapphireTest {
 	function testCanAccessWebserverThroughCurl() {
 		if(!function_exists('curl_init')) return;
 		
-		$url = Director::absoluteBaseURL() . 'WebserverRoutingTest_Controller/?usetestmanifest=1&flush=1';
+		$url = Director::absoluteBaseURL() . 'Security/ping';
 		
 		$ch = curl_init();
 		curl_setopt ($ch, CURLOPT_URL,$url );
@@ -26,22 +26,9 @@ class WebserverRoutingTest extends SapphireTest {
 		$info = curl_getinfo($ch);
 		
 		$this->assertEquals(curl_error($ch), '');
-		$this->assertTrue(in_array(trim($response), array('ok', _t('BasicAuth.ENTERINFO'))));
+		$this->assertEquals('1', $response);
 		
 		curl_close($ch);
 	}
 	
 }
-
-/**
- * @package sapphire
- * @subpackage tests
- */
-class WebserverRoutingTest_Controller extends Controller implements TestOnly {
-	function index() {
-		BasicAuth::protect_entire_site(false);
-		
-		return "ok";
-	}
-}
-?>

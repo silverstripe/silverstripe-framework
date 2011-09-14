@@ -10,6 +10,8 @@
  */
 class FileIFrameField extends FileField {
 	
+	protected $template = 'FileIFrameField';
+	
 	public static $allowed_actions = array (
 		'iframe',
 		'EditFileForm',
@@ -26,10 +28,18 @@ class FileIFrameField extends FileField {
 	
 	/** 
 	 * Sets whether or not files can be uploaded into the CMS from the user's local computer 
-	 * @param boolean $can
+	 * 
+	 * @param boolean
 	 */
-	public function setCanUploadNewFile($can) {
+	function setCanUploadNewFile($can) {
 		$this->canUploadNewFile = $can;
+	}
+	
+	/**
+	 * @return boolean
+	 */
+	function getCanUploadNewFile() {
+		return $this->canUploadNewFile;
 	}
 	
 	/**
@@ -49,7 +59,7 @@ class FileIFrameField extends FileField {
 	 * @return string
 	 */
 	public function Field() {
-		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.all.css');
+		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
@@ -57,7 +67,7 @@ class FileIFrameField extends FileField {
 		
 		if($this->form->getRecord() && $this->form->getRecord()->exists()) {
 			$record = $this->form->getRecord();
-			if(Object::has_extension('SiteTree', 'Translatable') && $record->Locale){
+			if(class_exists('Translatable') && Object::has_extension('SiteTree', 'Translatable') && $record->Locale){
 				$iframe = "iframe?locale=".$record->Locale;
 			}else{
 				$iframe = "iframe";
@@ -107,10 +117,9 @@ class FileIFrameField extends FileField {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript('sapphire/javascript/FileIFrameField.js');
 		
-		Requirements::css('cms/css/typography.css');
 		Requirements::css('sapphire/css/FileIFrameField.css');
 		
-		return $this->renderWith('FileIFrameField');
+		return $this->renderWith($this->template);
 	}
 	
 	/**

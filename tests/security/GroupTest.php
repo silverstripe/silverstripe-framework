@@ -4,7 +4,26 @@
  * @subpackage tests
  */
 class GroupTest extends FunctionalTest {
-	static $fixture_file = 'sapphire/tests/security/GroupTest.yml';
+
+	static $fixture_file = 'GroupTest.yml';
+	
+	function testGroupCodeDefaultsToTitle() {
+		$g1 = new Group();
+		$g1->Title = "My Title";
+		$g1->write();
+		$this->assertEquals('my-title', $g1->Code, 'Custom title gets converted to code if none exists already');
+		
+		$g2 = new Group();
+		$g2->Title = "My Title";
+		$g2->Code = "my-code";
+		$g2->write();
+		$this->assertEquals('my-code', $g2->Code, 'Custom attributes are not overwritten by Title field');
+		
+		$g3 = new Group();
+		$g3->Title = _t('SecurityAdmin.NEWGROUP',"New Group");
+		$g3->write();
+		$this->assertNull($g3->Code, 'Default title doesnt trigger attribute setting');
+	}
 	
 	/**
 	 * Test the Group::map() function

@@ -28,7 +28,6 @@ It is where most documentation should live, and is the natural "second step" aft
  * [Templates](templates): SilverStripe template syntax: Variables, loops, includes and much more
  * [Testing](testing): Functional and Unit Testing with PHPUnit and SilverStripe's testing framework
  * [Developing Themes](theme-development): Package templates, images and CSS to a reusable theme
- * [Translation](translation): Creating content in multiple languages
  * [Widgets](widgets): Small feature blocks which can be placed on a page by the CMS editor, also outlines how to create and add widgets
 
 ## Feedback

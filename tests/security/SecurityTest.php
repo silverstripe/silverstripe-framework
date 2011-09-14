@@ -6,7 +6,7 @@
  * @subpackage tests
  */
 class SecurityTest extends FunctionalTest {
-	static $fixture_file = 'sapphire/tests/security/MemberTest.yml';
+	static $fixture_file = 'MemberTest.yml';
 	
 	protected $autoFollowRedirection = false;
 	
@@ -20,6 +20,9 @@ class SecurityTest extends FunctionalTest {
 		// This test assumes that MemberAuthenticator is present and the default
 		$this->priorAuthenticators = Authenticator::get_authenticators();
 		$this->priorDefaultAuthenticator = Authenticator::get_default_authenticator();
+		foreach($this->priorAuthenticators as $authenticator) {
+			Authenticator::unregister($authenticator);
+		}
 
 		Authenticator::register('MemberAuthenticator');
 		Authenticator::set_default_authenticator('MemberAuthenticator');
@@ -38,12 +41,30 @@ class SecurityTest extends FunctionalTest {
 		if(!in_array('MemberAuthenticator', $this->priorAuthenticators)) {
 			Authenticator::unregister('MemberAuthenticator');
 		}
+		foreach($this->priorAuthenticators as $authenticator) {
+			Authenticator::register($authenticator);
+		}
 		Authenticator::set_default_authenticator($this->priorDefaultAuthenticator);
 
 		// Restore unique identifier field
 		Member::set_unique_identifier_field($this->priorUniqueIdentifierField);
 		
 		parent::tearDown();
+	}
+	
+	function testAccessingAuthenticatedPageRedirectsToLoginForm() {
+		$this->autoFollowRedirection = false;
+		
+		$response = $this->get('SecurityTest_SecuredController');
+		$this->assertEquals(302, $response->getStatusCode());
+		$this->assertContains('Security/login', $response->getHeader('Location'));
+
+		$this->logInWithPermission('ADMIN');		
+		$response = $this->get('SecurityTest_SecuredController');
+		$this->assertEquals(200, $response->getStatusCode());
+		$this->assertContains('Success', $response->getBody());
+		
+		$this->autoFollowRedirection = true;
 	}
 	
 	function testLogInAsSomeoneElse() {
@@ -53,7 +74,7 @@ class SecurityTest extends FunctionalTest {
 		$this->session()->inst_set('loggedInAs', $member->ID);
 
 		/* View the Security/login page */
-		$this->get('Security/login');
+		$response = $this->get('Security/login');
 		
 		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.action');
 		
@@ -87,7 +108,7 @@ class SecurityTest extends FunctionalTest {
 		$this->autoFollowRedirection = true;
 		
 		/* Attempt to get into the admin section */
-		$response = $this->get('admin/cms/');
+		$response = $this->get('Security/login/');
 		
 		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.text');
 
@@ -340,6 +361,9 @@ class SecurityTest extends FunctionalTest {
 	}
 	
 	function testDatabaseIsReadyWithInsufficientMemberColumns() {
+		$old = Security::$force_database_is_ready;
+		Security::$force_database_is_ready = null;
+		
 		// Assumption: The database has been built correctly by the test runner,
 		// and has all columns present in the ORM
 		DB::getConn()->renameField('Member', 'Email', 'Email_renamed');
@@ -350,6 +374,8 @@ class SecurityTest extends FunctionalTest {
 		// Rebuild the database (which re-adds the Email column), and try again
 		$this->resetDBSchema(true);
 		$this->assertTrue(Security::database_is_ready());
+		
+		Security::$force_database_is_ready = $old;
 	}
 
 	/**
@@ -397,4 +423,11 @@ class SecurityTest extends FunctionalTest {
 	}	
 	
 }
-?>
+
+class SecurityTest_SecuredController extends Controller implements TestOnly {
+	function index() {
+		if(!Permission::check('ADMIN')) return Security::permissionFailure($this);
+		
+		return 'Success';
+	}
+}

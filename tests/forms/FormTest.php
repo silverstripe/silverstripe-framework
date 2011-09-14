@@ -5,7 +5,7 @@
  */
 class FormTest extends FunctionalTest {
 	
-	static $fixture_file = 'sapphire/tests/forms/FormTest.yml';
+	static $fixture_file = 'FormTest.yml';
 
 	protected $extraDataObjects = array(
 		'FormTest_Player',
@@ -422,6 +422,11 @@ class FormTest_Controller extends Controller implements TestOnly {
 		$form->sessionMessage('Test save was successful', 'good');
 		return $this->redirectBack();
 	}
+
+	function getViewer(){
+		return new SSViewer('BlankPage');
+	}
+
 }
 
 class FormTest_ControllerWithSecurityToken extends Controller implements TestOnly {
@@ -453,6 +458,10 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 	function doSubmit($data, $form, $request) {
 		$form->sessionMessage('Test save was successful', 'good');
 		return $this->redirectBack();
+	}
+
+	function getViewer(){
+		return new SSViewer('BlankPage');
 	}
 }
 

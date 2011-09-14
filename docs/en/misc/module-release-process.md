@@ -35,7 +35,7 @@ available for opensource projects, including wiki and bugtracker functionality
 * Add your module to [silverstripe.org/modules](http://silverstripe.org/modules) (and keep the version compatibility information current)
 * Follow our [coding-conventions](coding-conventions)
 * Write unit tests and functional tests covering code bundled with the module - see [testing-guide](/topics/testing)
-* Ensure your code is [localizable](/topics/i18n) and [translatable](/topics/translation)
+* Ensure your code is [localizable](/topics/i18n)
 
 ### Maintenance
 
