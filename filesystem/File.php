@@ -259,7 +259,7 @@ class File extends DataObject {
 	 * @return String
 	 */
 	public function appCategory() {
-		$ext = $this->Extension;
+		$ext = strtolower($this->Extension);
 		switch($ext) {
 			case "aif": case "au": case "mid": case "midi": case "mp3": case "ra": case "ram": case "rm":
 			case "mp3": case "wav": case "m4a": case "snd": case "aifc": case "aiff": case "wma": case "apl":
