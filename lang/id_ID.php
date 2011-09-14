@@ -16,7 +16,7 @@ if(array_key_exists('id_ID', $lang) && is_array($lang['id_ID'])) {
 	$lang['id_ID'] = $lang['en_US'];
 }
 
-$lang['id_ID']['AdvancedSearchForm']['ALLWORDS'] = 'Semua kata-kata';
+$lang['id_ID']['AdvancedSearchForm']['ALLWORDS'] = 'Semua kata';
 $lang['id_ID']['AdvancedSearchForm']['ATLEAST'] = 'Paling tidak salah satu dari kata-kata Ini';
 $lang['id_ID']['AdvancedSearchForm']['EXACT'] = 'Kalimat persis';
 $lang['id_ID']['AdvancedSearchForm']['FROM'] = 'Dari';
@@ -98,7 +98,7 @@ $lang['id_ID']['CreditCardField']['FOURTH'] = 'keempat';
 $lang['id_ID']['CreditCardField']['SECOND'] = 'kedua';
 $lang['id_ID']['CreditCardField']['THIRD'] = 'ketiga';
 $lang['id_ID']['CreditCardField']['VALIDATIONJS1'] = 'Mohon pastikan anda telah memasukkan';
-$lang['id_ID']['CreditCardField']['VALIDATIONJS2'] = 'nomer kartu kredit anda dengan benar.';
+$lang['id_ID']['CreditCardField']['VALIDATIONJS2'] = 'nomor kartu kredit anda dengan benar.';
 $lang['id_ID']['CurrencyField']['CURRENCYSYMBOL'] = '$';
 $lang['id_ID']['CurrencyField']['VALIDATIONJS'] = 'Mohon masukkan mata uang yang sah.';
 $lang['id_ID']['DataObject']['PLURALNAME'] = 'Objek-objek Data';
@@ -119,7 +119,7 @@ $lang['id_ID']['Date']['YEAR'] = 'tahun';
 $lang['id_ID']['Date']['YEARS'] = 'tahun';
 $lang['id_ID']['DateField']['NOTSET'] = 'tidak diset';
 $lang['id_ID']['DateField']['TODAY'] = 'hari ini';
-$lang['id_ID']['DateField']['VALIDATIONJS'] = 'Mohon masukkan format tanggal yabg sah (TT/BB/TTTT).';
+$lang['id_ID']['DateField']['VALIDATIONJS'] = 'Mohon masukkan format tanggal yang sah (TT/BB/TTTT).';
 $lang['id_ID']['DateField']['VALIDDATEFORMAT'] = 'Harap masukkan  format tanggal yang valid (DD/MM/YYYY).';
 $lang['id_ID']['DMYDateField']['VALIDDATEFORMAT'] = 'Mohon masukkan format tanggal yang sah (TT-BB-TTTT).';
 $lang['id_ID']['DropdownField']['CHOOSE'] = '(Pilih)';
