@@ -328,7 +328,7 @@ class Injector {
 			$spec = array('class' => $spec);
 		}
 		$class = $spec['class'];
-		
+
 		// create the object, using any constructor bindings
 		$constructorParams = array();
 		if (isset($spec['constructor']) && is_array($spec['constructor'])) {
@@ -444,14 +444,15 @@ class Injector {
 			}
 		}
 		
-//		disabled static injections for now
-//		if (isset($class::$injections)) {
-//			foreach ($class::$injections as $key => $val) {
-//				$props[$key] = $val;
-//			}
-//		}
-//		
-		
+		if (isset($object::$injections)) {
+			foreach ($object::$injections as $property => $value) {
+				if (!isset($object->$property)) {
+					$value = $this->convertServiceProperty($value);
+					$object->$property = $value;
+				}
+			}
+		}
+
 		foreach ($this->autoProperties as $property => $value) {
 			if (!isset($object->$property)) {
 				$value = $this->convertServiceProperty($value);

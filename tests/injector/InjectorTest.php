@@ -344,15 +344,15 @@ class InjectorTest extends SapphireTest {
 	 * disabled for now
 	 */
 	public function testStaticInjections() {
-//		$injector = new Injector();
-//		$config = array(
-//			'NewRequirementsBackend',
-//		);
-//
-//		$injector->load($config);
-//
-//		$si = $injector->get('TestStaticInjections');
-//		$this->assertEquals('NewRequirementsBackend', get_class($si->backend));
+		$injector = new Injector();
+		$config = array(
+			'NewRequirementsBackend',
+		);
+
+		$injector->load($config);
+
+		$si = $injector->get('TestStaticInjections');
+		$this->assertEquals('NewRequirementsBackend', get_class($si->backend));
 	}
 
 	public function testCustomObjectCreator() {
