@@ -108,7 +108,7 @@ class Injector {
 	 * @var InjectionCreator
 	 */
 	protected $objectCreator;
-	
+
 	/**
 	 * Create a new injector. 
 	 *
