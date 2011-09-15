@@ -75,7 +75,9 @@ class File extends DataObject {
 		"Title" => "Varchar(255)",
 		"Filename" => "Text",
 		"Content" => "Text",
-		"Sort" => "Int"
+		"Sort" => "Int",
+		// Only applies to files, doesn't inherit for folder
+		'ShowInSearch' => 'Boolean(1)',
 	);
 	
 	static $has_one = array(
@@ -87,7 +89,9 @@ class File extends DataObject {
 	
 	static $many_many = array();
 	
-	static $defaults = array();
+	static $defaults = array(
+		"ShowInSearch" => 1,
+	);
 	
 	static $extensions = array(
 		"Hierarchy",
