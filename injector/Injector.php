@@ -237,8 +237,7 @@ class Injector {
 			
 			$priority = isset($spec['priority']) ? $spec['priority'] : 1;
 			
-			// see if we already have this defined. If so, check 
-			// priority weighting
+			// see if we already have this defined. If so, check priority weighting
 			if (isset($this->specs[$id]) && isset($this->specs[$id]['priority'])) {
 				if ($this->specs[$id]['priority'] > $priority) {
 					return;
