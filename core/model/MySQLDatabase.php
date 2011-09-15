@@ -767,6 +767,11 @@ class MySQLDatabase extends SS_Database {
 	 	
 		// Always ensure that only pages with ShowInSearch = 1 can be searched
 		$extraFilters['SiteTree'] .= " AND ShowInSearch <> 0";
+		
+		// File.ShowInSearch was added later, keep the database driver backwards compatible 
+		// by checking for its existence first
+		$fields = $this->fieldList('File');
+		if(array_key_exists('ShowInSearch', $fields)) $extraFilters['File'] .= " AND ShowInSearch <> 0";
 
 		$limit = $start . ", " . (int) $pageLength;
 		
