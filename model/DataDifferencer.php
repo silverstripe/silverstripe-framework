@@ -153,7 +153,22 @@ class DataDifferencer extends ViewableData {
 		foreach($fields as $field) {
 			if(in_array($field, $this->ignoredFields)) continue;
 
-			if(!$this->fromRecord || $this->fromRecord->$field != $this->toRecord->$field) {			
+			if(!$this->fromRecord || $this->fromRecord->$field != $this->toRecord->$field) {
+				// Only show HTML diffs for fields which allow HTML values in the first place
+				$fieldObj = $this->toRecord->dbObject($field);
+				if($this->fromRecord) {
+					$fieldDiff = Diff::compareHTML(
+						$this->fromRecord->$field, 
+						$this->toRecord->$field, 
+						(!$fieldObj || $fieldObj->stat('escape_type') != 'xml')
+					);
+				} else {
+					if($fieldObj && $fieldObj->stat('escape_type') == 'xml') {
+						$fieldDiff = "<ins>" . $this->toRecord->$field . "</ins>";
+					} else {
+						$fieldDiff = "<ins>" . Convert::raw2xml($this->toRecord->$field) . "</ins>";
+					}
+				}
 				$changedFields->push(new ArrayData(array(
 					'Name' => $field,
 					'Title' => $base->fieldLabel($field),
