@@ -347,9 +347,9 @@ class MySQLDatabase extends SS_Database {
 			
 			if($field['Default'] || $field['Default'] === "0") {
 				if(is_numeric($field['Default']))
-					$fieldSpec .= " default " . addslashes($field['Default']);
+					$fieldSpec .= " default " . Convert::raw2sql($field['Default']);
 				else
-					$fieldSpec .= " default '" . addslashes($field['Default']) . "'";
+					$fieldSpec .= " default '" . Convert::raw2sql($field['Default']) . "'";
 			}
 			if($field['Extra']) $fieldSpec .= " $field[Extra]";
 			
@@ -862,8 +862,7 @@ class MySQLDatabase extends SS_Database {
 	}
 	
 	/*
-	 * This will return text which has been escaped in a database-friendly manner
-	 * Using PHP's addslashes method won't work in MSSQL
+	 * This will return text which has been escaped in a database-friendly manner.
 	 */
 	function addslashes($value){
 		return mysql_real_escape_string($value, $this->dbConn);

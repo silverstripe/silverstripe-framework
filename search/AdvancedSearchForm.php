@@ -82,7 +82,7 @@ class AdvancedSearchForm extends SearchForm {
 	 		foreach($_REQUEST['OnlyShow'] as $section => $checked) {
 	 			$items = explode(",", $section);
 	 			foreach($items as $item) {
-	 				$page = DataObject::get_one('SiteTree', "\"URLSegment\" = '" . DB::getConn()->addslashes($item) . "'");
+	 				$page = DataObject::get_one('SiteTree', "\"URLSegment\" = '" . Convert::raw2sql($item) . "'");
 	 				$pageList[] = $page->ID;
 	 				if(!$page) user_error("Can't find a page called '$item'", E_USER_WARNING);
 	 				$page->loadDescendantIDListInto($pageList);

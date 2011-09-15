@@ -392,7 +392,7 @@ class Versioned extends DataObjectDecorator {
 				// Add any extra, unchanged fields to the version record.
 				$data = DB::query("SELECT * FROM \"$table\" WHERE \"ID\" = $id")->record();
 				if($data) foreach($data as $k => $v) {
-					if (!isset($newManipulation['fields'][$k])) $newManipulation['fields'][$k] = "'" . DB::getConn()->addslashes($v) . "'";
+					if (!isset($newManipulation['fields'][$k])) $newManipulation['fields'][$k] = "'" . Convert::raw2sql($v) . "'";
 				}
 
 				// Set up a new entry in (table)_versions
