@@ -104,9 +104,8 @@ class Convert extends Object {
 		if(is_array($val)) {
 			foreach($val as $k => $v) $val[$k] = self::raw2sql($v);
 			return $val;
-			
 		} else {
-			return addslashes($val);
+			return DB::getConn()->addslashes($val);
 		}
 	}
 

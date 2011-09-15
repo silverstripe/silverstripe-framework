@@ -400,6 +400,13 @@ class MySQLDatabase extends Database {
 		
 		user_error($msg, $errorLevel);
 	}
+	
+	/*
+	 * This will return text which has been escaped in a database-friendly manner.
+	 */
+	function addslashes($value){
+		return mysql_real_escape_string($value, $this->dbConn);
+	}
 }
 
 /**
