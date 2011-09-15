@@ -106,7 +106,7 @@ abstract class DBField extends ViewableData {
 		if($value === null || $value === "" || $value === false) {
 			return "null";
 		} else {
-			return "'" . addslashes($value) . "'";
+			return "'" . Convert::raw2sql($value) . "'";
 		}
 	}	
 	

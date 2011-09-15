@@ -332,7 +332,7 @@ class File extends DataObject {
 				$ext = "";
 			}
 			$suffix = 1;
-			while(DataObject::get_one("File", "Name = '" . addslashes($name) . "' AND ParentID = " . (int)$this->ParentID)) {
+			while(DataObject::get_one("File", "Name = '" . Convert::raw2sql($name) . "' AND ParentID = " . (int)$this->ParentID)) {
 				$suffix++;
 				$name = "$base-$suffix$ext";
 			}

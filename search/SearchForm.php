@@ -174,7 +174,7 @@ class SearchForm extends Form {
 	public function searchEngine($keywords, $pageLength = null, $sortBy = "Relevance DESC", $extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false) {
 		if(!$pageLength) $pageLength = $this->pageLength;
 		$fileFilter = '';	 	
-	 	$keywords = addslashes($keywords);
+	 	$keywords = Convert::raw2sql($keywords);
 	
 		$extraFilters = array('SiteTree' => '', 'File' => '');
 	 	

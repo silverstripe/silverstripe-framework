@@ -129,7 +129,7 @@ class ComponentSet extends DataObjectSet {
 			
 			$extraSQL = '';
 			if($extraFields) foreach($extraFields as $k => $v) {
-				$extraSQL .= ", $k = '" . addslashes($v) . "'";
+				$extraSQL .= ", $k = '" . Convert::raw2sql($v) . "'";
 			}
 
 			DB::query("INSERT INTO `$this->tableName` SET $parentField = {$this->ownerObj->ID}, $childField = {$item->ID} $extraSQL");

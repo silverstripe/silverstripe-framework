@@ -290,7 +290,7 @@ class MySQLDatabase extends Database {
 			}
 			
 			if($field['Default'] || $field['Default'] === "0") {
-				$fieldSpec .= " default '" . addslashes($field['Default']) . "'";
+				$fieldSpec .= " default '" . Convert::raw2sql($field['Default']) . "'";
 			}
 			if($field['Extra']) $fieldSpec .= " $field[Extra]";
 			

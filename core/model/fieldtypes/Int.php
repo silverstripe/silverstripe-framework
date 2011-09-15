@@ -52,7 +52,7 @@ class Int extends DBField {
 		} if(!$value || !is_numeric($value)) {
 			return "0";
 		} else {
-			return addslashes($value);
+			return Convert::raw2sql($value);
 		}
 	}
 	

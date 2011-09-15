@@ -159,10 +159,10 @@ class Folder extends File {
 		if(Member::currentUser()) $ownerID = Member::currentUser()->ID;
 		else $ownerID = 0;
 		
-		$filename = addslashes($this->Filename . $name);
+		$filename = Convert::raw2sql($this->Filename . $name);
 		if($className == 'Folder' ) $filename .= '/';
 
-		$name = addslashes($name);
+		$name = Convert::raw2sql($name);
 		
 		DB::query("INSERT INTO `File` SET
 			ClassName = '$className', ParentID = $this->ID, OwnerID = $ownerID,
