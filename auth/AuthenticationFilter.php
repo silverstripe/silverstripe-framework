@@ -9,7 +9,9 @@
 class AuthenticationFilter implements RequestFilter {
 	public $authenticationService;
 	
-	static $injections = array('AuthenticationService');
+	static $injections = array(
+		'authenticationService' => '#$AuthenticationService'
+	);
 
 	public function preRequest(SS_HTTPRequest $request, Session $session) {
 		// lets try authenticating 
