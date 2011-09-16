@@ -43,7 +43,8 @@ class Cookie {
 	
 	static function forceExpiry( $name ) {
 		if(!headers_sent($file, $line)) {
-			setcookie( $name, null, time() - 86400 );
+			//setcookie( $name, null, time() - 86400 );
+			self::set($name, null, -20);
 		}
 	}
 	
