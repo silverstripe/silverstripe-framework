@@ -619,7 +619,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
  			&& (!$stopAtPageType || $page->ClassName != $stopAtPageType)
  		) {
 			if($showHidden || $page->ShowInMenus || ($page->ID == $this->ID)) { 
-				if($page->URLSegment == 'home') $hasHome = true;
 				if(($page->ID == $this->ID) || $unlinked) {
 				 	$parts[] = Convert::raw2xml($page->Title);
 				} else {
