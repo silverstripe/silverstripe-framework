@@ -80,7 +80,6 @@
 
 				this.trigger('loadform', {form: form, url: url});
 			
-				form.cleanup();
 				return jQuery.ajax(jQuery.extend({
 					url: url, 
 					// Ensure that form view is loaded (rather than whole "Content" template)

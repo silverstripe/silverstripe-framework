@@ -145,7 +145,7 @@
 							});
 						});
 					
-					$('.cms-edit-form').bind('loadnewpage', function(e, data) {
+					$('.cms-edit-form').bind('reloadeditform', function(e, data) {
 						self._onLoadNewPage(e, data);
 					});
 			},
