@@ -91,7 +91,8 @@
 					contentEl = containerEl.find('.cms-content');
 
 				// Only load if we're in the "edit page" view
-				if(!contentEl.hasClass('CMSMain') || contentEl.hasClass('CMSPagesController') || contentEl.hasClass('CMSSettingsController')) return;
+				var blockedClasses = ['CMSMain', 'CMSPagesController', 'CMSSettingsController', 'CMSPageHistoryController'];
+				if(contentEl.is('.' + blockedClasses.join(',.'))) return;
 
 				// Load this page in the admin interface if appropriate
 				var id = $(doc).find('meta[name=x-page-id]').attr('content'), 
