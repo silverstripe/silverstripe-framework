@@ -45,7 +45,7 @@
 				window.onbeforeunload = function(e) {return self._checkChangeTracker(false);};
 				
 				// focus input on first form element
-				this.find(':input:visible:first').focus();
+				this.find(':input:visible:not(:submit):first').focus();
 				
 				// Optionally get the form attributes from embedded fields, see Form->formHtmlContent()
 				for(var overrideAttr in {'action':true,'method':true,'enctype':true,'name':true}) {
