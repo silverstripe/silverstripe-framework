@@ -471,11 +471,11 @@ JS;
 	}
 	
 	/**
-	 * @param String $name
-	 * @return mixed
+	 * @param String $name Optional, returns the whole configuration array if empty
+	 * @return mixed|array
 	 */
-	function getConfig($name) {
-		return $this->config[$name];
+	function getConfig($name = null) {
+		return $name ? $this->config[$name] : $this->config;
 	}
 }
 

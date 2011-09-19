@@ -148,11 +148,11 @@ class DatetimeField extends FormField {
 	 * Note: Use {@link getDateField()} and {@link getTimeField()}
 	 * to get field-specific config options.
 	 * 
-	 * @param String $name
+	 * @param String $name Optional, returns the whole configuration array if empty
 	 * @return mixed
 	 */
-	function getConfig($name) {
-		return $this->config[$name];
+	function getConfig($name = null) {
+		return $name ? $this->config[$name] : $this->config;
 	}
 	
 	function validate($validator) {
