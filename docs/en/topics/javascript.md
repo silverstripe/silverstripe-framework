@@ -519,7 +519,7 @@ Example: jQuery.entwine
 	 * <ul>
 	 * <li>ajaxsubmit</li>
 	 * <li>validate</li>
-	 * <li>loadnewpage</li>
+	 * <li>reloadeditform</li>
 	 * </ul>
 	 * 
 	 * @class Main LeftAndMain interface with some control panel and an edit form.

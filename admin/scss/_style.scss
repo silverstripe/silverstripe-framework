@@ -1,11 +1,14 @@
 /**
- * This file defines most styles of the CMS: Colors, fonts, backgrounds, alignments, dimensions.
+ * This file defines most styles of the CMS: Colors, fonts, backgrounds, 
+ * alignments, dimensions.
  * 
- * Use SCSS variable definitions in screen.css to avoid repeating styles like background colours
- * or padding dimensions. See themes/_default.scss to get started.
+ * Use SCSS variable definitions in screen.css to avoid repeating styles 
+ * like background colours or padding dimensions. See themes/_default.scss 
+ * to get started.
  * 
- * To avoid this file getting too large and complicated, it is encouraged to create new SCSS files
- * for larger components like the CMS menu or tree (see _tree.scss and _menu.scss).
+ * To avoid this file getting too large and complicated, it is encouraged to 
+ * create new SCSS files for larger components like the CMS menu or tree 
+ * (see _tree.scss and _menu.scss).
  */
 
 /** ----------------------------------------------------
@@ -47,35 +50,12 @@ html,body {
 }
 
 /** --------------------------------------------
- * Typography styles in tabs
+ * Helpers
  * -------------------------------------------- */
-.ui-tabs-panel {
-	h2, h3, h4, h5 {
-		font-weight: bold;
-		margin: $grid-vertical * 2 0 $grid-vertical * 2 0;
-		line-height: $grid-vertical * 2;
-	}
-	
-	h2 {
-		font-size: $font-base-size + 6;
-		line-height: $grid-vertical * 3;
-	}
-	
-	h3 {
-		font-size: $font-base-size + 4;
-	}
-	
-	h4 {
-		font-size: $font-base-size + 2;
-	}
-	
-	h5 {
-		font-size: $font-base-size;
-	}
-	
-	p {
-		line-height: $grid-vertical * 2;
-		margin-bottom: $grid-vertical * 2;
+
+.cms-helper-hide-actions {
+	.Actions {
+		display: none;
 	}
 }
 
@@ -120,9 +100,9 @@ html,body {
 		font-size: $font-base-size + 2;
 		line-height: $grid-horizontal * 3;
 		font-weight: bold;
-		text-shadow: darken($color-widget-bg, 10%) 1px 1px 0;
-		width: $grid-horizontal * 21 /* 24 - (padding on each side + margin) */;
-		
+		text-shadow: darken($color-widget-bg, 15%) 1px 1px 0;
+		width: $grid-horizontal * 22 /* 24 - (padding on each side + margin) */;
+		margin: 0;
 		@include hide-text-overflow();
 	}
 
@@ -169,8 +149,12 @@ html,body {
 	}
 }
 
+/** -------------------------------------------------------
+ * Loading Interface
+ * ------------------------------------------------------- */
 .cms-content {
-	&.loading {
+	&.loading,
+	form.loading {
 		background: url(../images/spinner.gif) no-repeat 50% 50%;
 	}
 }
@@ -182,7 +166,7 @@ html,body {
 .cms-header {
 	background-color: darken($color-dark-bg, 10%);
 	position: relative;
-	padding: 16px 8px 4px 4px;
+	padding: $grid-vertical * 2 8px 0 4px;
 	line-height: 24px;
 
 	@include background-image(
@@ -235,8 +219,8 @@ html,body {
 
 .cms-login-status {
 	border-top: 1px solid $color-dark-separator;
-	height: 23px;
-	padding: 8px 4px 0 4px;
+	height: 24px;
+	padding: 7px 4px 0 4px;
 	overflow: hidden;
 	line-height: 16px;
 	font-size: $font-base-size - 1;
@@ -321,7 +305,6 @@ html,body {
 
 .message {
 	margin: 0 0 $grid_vertical 0;
-	// minus one for the borders
 	padding: $grid_vertical - 1 $grid_horizontal - 1;
 	font-weight: bold;
 	
@@ -330,6 +313,10 @@ html,body {
 	&.notice {
 		background-color: lighten($color-notice, 20%);
 		border-color: $color-notice;
+		
+		a {
+			color: #999;
+		}
 	}
 	
 	&.warning {
@@ -339,6 +326,10 @@ html,body {
 	&.error {
 		background-color: lighten($color-error, 20%);
 		border-color: $color-error;
+	}
+	
+	p {
+		margin: 0;
 	}
 }
 
@@ -405,10 +396,6 @@ html,body {
 	.cms-tree-view-modes * {
 		display: inline-block;
 	}
-	
-	.cms-content-batchactions form > * {
-		display: inline-block;
-	}
 }
 
 
@@ -418,10 +405,11 @@ html,body {
  */
 .cms-content-tools {
 	background-color: darken($color-widget-bg, 5%);
-	width: $grid-horizontal * 25;
+	width: $grid-horizontal * 24;
 	border-right: 1px solid darken($color-widget-bg, 15%);
-	overflow: auto;	
-	z-index: 60;
+	overflow-y: auto;	
+	overflow-x: hidden;
+	z-index: 70;
 	
 	.cms-panel-header {
 		padding: 0 $grid-horizontal / 2;
@@ -433,11 +421,25 @@ html,body {
 	}
 	
 	.cms-panel-content {
-		width: ($grid-horizontal * 20);
+		width: ($grid-horizontal * 21);
 		padding: $grid-vertical $grid-horizontal * 2;
+	}
+	
+	.cms-content-header {
+		background-color: darken($color-widget-bg, 40%);
 		
-		form {
-			width: $grid-horizontal * 20;
+		border-bottom: 2px solid darken($color-widget-bg, 50%);
+
+		@include background-image(
+			linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 40%))
+		);
+
+		h2 {
+			text-shadow: darken($color-widget-bg, 50%) -1px -1px 0;
+			width: $grid-horizontal * 22 /* 24 - (padding on each side + margin) */;
+			color: lighten($color-widget-bg, 60%);
+			
+			@include hide-text-overflow();
 		}
 	}
 
@@ -449,35 +451,60 @@ html,body {
 		font-size: $font-base-size + 1;
 	}
 	
+	.ui-widget-content {
+		background: none;
+	}
+	
 	.field {
-		/* fields are more compressed in the sidebar */
+		/* 
+		 * Fields are more compressed in the sidebar compared to the
+		 * main content editing window so the below alters the internal
+		 * spacing of the fields so we can move that spacing to between
+		 * the form fields rather than padding
+		 */
 		label {
 			float: none;
 			width: auto;
-			padding: 0 $grid-vertical 0 0;
+			font-size: 11px;
+			padding: 0 $grid-horizontal 4px 0;
 		}
 		
 		.middleColumn {
-			margin: 2px 0;
+			margin: 0;
 		}
 		
-		input,
+		input.text,
 		select,
 		textarea {
-			padding: ($grid-vertical - 2); /* taken 2px off the padding to realign with grid */
+			padding: 5px;
+			font-size: 11px;
+		}
+		
+		&.checkbox {
+			padding: 0 8px 7px;
+			
+			input { 
+				margin: 2px 0; 
+			}
 		}
 		
 		/* smaller treedropdown */
 		.chzn-container-single .chzn-single  {
-			height: 26px;
-			line-height: 28px;
-		}
-		
-		.chzn-container-single .chzn-single div b {
-			background-position: 4px 2px;
+			height: 24px;
+			line-height: 24px;
+			font-size: 11px;
+	 		
+			div b {
+				background-position: 4px 0;
+			}
 		}
 	}
-	
+		
+	/* buttons now need to line with with reduced input sizes */
+	.ss-ui-button {
+		padding: 5px $grid-horizontal;
+	}
+		
 	.fieldgroup {
 		.fieldgroup-field {
 			width: auto;
@@ -489,8 +516,50 @@ html,body {
 			}
 		}
 	}
+	
+	table {
+		margin: 8px -4px;
+		thead {
+			th {
+				color: $color-text-dark;
+				font-weight: bold;
+				line-height: 16px;
+				font-size: 11px;
+				padding: 4px;
+			}
+		}
+		
+		tr {
+			&.active {
+				background-color: $color-menu-button;
+				color: $color-text-light;
+
+				td.first-column {
+					@include border-radius(6px 0 0 6px);
+				}
+				td.last-column {
+					@include border-radius(0 6px 6px 0);
+				}
+			}
+		}
+		
+		td {
+			padding: 4px;
+			line-height: 16px;
+			vertical-align: top;
+		}
+	}
+	
+	td {
+		border-bottom: 1px solid darken($color-widget-bg, 10%);
+		padding: $grid-vertical - 1 2px;
+		font-size: 11px;
+	}
 }
 
+/** 
+ * CMS Batch actions
+ */
 .cms-content-batchactions, .cms-content-constructive-actions {
 	float: right;
 }
@@ -499,15 +568,22 @@ html,body {
 	float: right;
 	position:  relative;
 	display: block;
-	margin-right:  8px;
+	margin-right: 8px;
+	
+	form > * {
+		display: block;
+		float: left;
+	}
+	
+	form.cms-batch-actions {
+		float:  left;
+	}
 }
 
-form.cms-batch-actions {
-	float:  left;
-}
+
 
 .cms-content-constructive-actions a {
-	display:  block;
+	display: block;
 	float: right;
 }
 

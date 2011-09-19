@@ -133,7 +133,7 @@ class Form extends RequestHandler {
 	public $jsValidationIncluded = false;
 	
 	/**
-	 * @var $extraClasses array Extra CSS-classes for the formfield-container
+	 * @var array $extraClasses List of additional CSS classes for the form tag.
 	 */
 	protected $extraClasses = array();
 
@@ -230,7 +230,7 @@ class Form extends RequestHandler {
 		
 		// Populate the form
 		$this->loadDataFrom($vars, true);
-		
+	
 		// Protection against CSRF attacks
 		$token = $this->getSecurityToken();
 		if(!$token->checkRequest($request)) {
@@ -1270,28 +1270,38 @@ class Form extends RequestHandler {
 	/**
 	 * Compiles all CSS-classes. 
 	 * 
-	 * @return String CSS-classnames, separated by a space
+	 * @return string
 	 */
-	function extraClass() {
-		return implode($this->extraClasses, " ");
+	function extraClass() {		
+		return implode(array_unique($this->extraClasses), ' ');
 	}
 	
 	/**
-	 * Add a CSS-class to the form-container.
-	 * 
-	 * @param $class String
+	 * Add a CSS-class to the form-container. If needed, multiple classes can
+	 * be added by delimiting a string with spaces. 
+	 *
+	 * @param string $class A string containing a classname or several class
+	 *				names delimited by a single space.
 	 */
 	function addExtraClass($class) {
-		$this->extraClasses[$class] = $class;
+		$classes = explode(' ', $class);
+		
+		foreach($classes as $class) {
+			$value = trim($class);
+			
+			$this->extraClasses[] = $value;
+		}
 	}
 
 	/**
-	 * Remove a CSS-class from the form-container.
-	 * 
-	 * @param $class String
+	 * Remove a CSS-class from the form-container. Multiple class names can
+	 * be passed through as a space delimited string
+	 *
+	 * @param string $class
 	 */
 	function removeExtraClass($class) {
-		if(array_key_exists($class, $this->extraClasses)) unset($this->extraClasses[$class]);
+		$classes = explode(' ', $class);
+		$this->extraClasses = array_diff($this->extraClasses, $classes);
 	}
 	
 	function debug() {

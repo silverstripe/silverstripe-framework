@@ -37,6 +37,7 @@ class LiteralField extends DatalessField {
   
 	/**
 	 * Sets the content of this field to a new value
+	 *
 	 * @param string $content
 	 */
 	function setContent($content) {
@@ -63,5 +64,3 @@ class LiteralField extends DatalessField {
 		return $clone;
 	}
 }
-
-?>

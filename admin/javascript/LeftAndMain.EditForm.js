@@ -103,7 +103,7 @@
 				
 				this.layout();
 			},
-			
+
 			/**
 			 * Function: _setupChangeTracker
 			 */

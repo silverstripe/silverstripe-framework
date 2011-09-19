@@ -1,0 +1,72 @@
+/**
+ * File: typography.scss
+ *
+ * Contains the basic typography related styles for the admin interface.
+ */
+
+.cms {
+	h2, h3, h4, h5 {
+		font-weight: bold;
+		margin: $grid-vertical * 2 0 $grid-vertical * 2 0;
+		line-height: $grid-vertical * 2;
+	}
+
+	h2 {
+		font-size: $font-base-size + 6;
+		line-height: $grid-vertical * 3;
+	}
+
+	h3 {
+		font-size: $font-base-size + 4;
+	}
+
+	h4 {
+		font-size: $font-base-size + 2;
+	}
+
+	h5 {
+		font-size: $font-base-size;
+	}
+
+	p {
+		line-height: $grid-vertical * 2;
+		margin-bottom: $grid-vertical * 2;
+	}
+	
+	ins {
+		background-color: #DFD;
+		padding: 2px;
+		text-decoration: none;
+	}
+	
+	del {
+		background-color: #FDD;
+		padding: 2px;
+		color: darken(#FDD, 30%);
+	}
+	
+	code {
+		font-family: 'Bitstream Vera Sans Mono','Courier', monospace;
+	}
+	
+	pre {
+		
+	}
+	
+	table {
+		
+		thead {
+			
+		}
+	}
+	
+	ol {
+		
+	}
+	
+	ul {
+		
+	}
+	
+}
+
