@@ -40,6 +40,9 @@
 					self.toggleClass('collapsed', $(this).hasClass('collapsed'));
 				});
 				
+				// Select default element (which might reveal children in hidden parents)
+				this.find('li.current').select();
+				
 				this._super();
 			}
 		});
