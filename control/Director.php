@@ -550,7 +550,7 @@ class Director {
 	 * @param  array $data
 	 * @return array
 	 */
-	protected static function extract_request_headers(array $server) {
+	static function extract_request_headers(array $server) {
 		$headers = array();
 	
 		foreach($server as $key => $value) {

@@ -254,10 +254,7 @@ class DirectorTest extends SapphireTest {
 			'Content-Length'  => '10'
 		);
 		
-		$method = new ReflectionMethod('Director', 'extract_request_headers');
-		$method->setAccessible(true);
-		
-		$this->assertEquals($headers, $method->invoke(null, $request));
+		$this->assertEquals($headers, Director::extract_request_headers($request));
 	}
 
 }
