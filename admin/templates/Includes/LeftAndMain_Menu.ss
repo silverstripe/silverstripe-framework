@@ -38,9 +38,6 @@
 						<li <% if Top.class == 'CMSPageSettingsController' %>class="current"<% end_if %> id="Menu-CMSPageSettingsController"><a href="admin/page/settings/show/$Top.CurrentPageID">
 							<span class="text">Settings</span>
 						</a></li>
-						<li <% if Top.class == 'CMSPageReportsController' %>class="current"<% end_if %> id="Menu-CMSPageReportsController"><a href="admin/page/reports/show/$Top.CurrentPageID">
-							<span class="text">Reports</span>
-						</a></li>
 						<li <% if Top.class == 'CMSPageHistoryController' %>class="current"<% end_if %> id="Menu-CMSPageHistoryController"><a href="admin/page/history/show/$Top.CurrentPageID">
 							<span class="text">History</span>
 						</a></li>
