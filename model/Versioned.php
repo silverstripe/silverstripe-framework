@@ -236,6 +236,7 @@ class Versioned extends DataExtension {
 			else $table = $classTable;
 
 			if($fields = DataObject::database_fields($this->owner->class)) {
+				$options = Object::get_static($this->owner->class, 'create_table_options');
 				$indexes = $this->owner->databaseIndexes();
 				if ($suffix && ($ext = $this->owner->getExtensionInstance($allSuffixes[$suffix]))) {
 					if (!$ext->isVersionedTable($table)) continue;
@@ -257,7 +258,7 @@ class Versioned extends DataExtension {
 					}
 					
 					if($stage != $this->defaultStage) {
-						DB::requireTable("{$table}_$stage", $fields, $indexes, false);
+						DB::requireTable("{$table}_$stage", $fields, $indexes, false, $options);
 					}
 	
 					// Version fields on each root table (including Stage)
@@ -359,7 +360,7 @@ class Versioned extends DataExtension {
 					}
 				}
 
-				DB::requireTable("{$table}_versions", $versionFields, $versionIndexes);
+				DB::requireTable("{$table}_versions", $versionFields, $versionIndexes, true, $options);
 			} else {
 				DB::dontRequireTable("{$table}_versions");
 				foreach($this->stages as $stage) {
@@ -1092,5 +1093,3 @@ class Versioned_Version extends ViewableData {
 		return !empty( $this->record['WasPublished'] );
 	}
 }
-
-?>

@@ -99,6 +99,9 @@ abstract class DataExtension extends Extension {
 
 	/**
 	 * Update the database schema as required by this extension.
+	 *
+	 * When duplicating a table's structure, remember to duplicate the create options
+	 * as well. See {@link Versioned->augmentDatabase} for an example.
 	 */
 	function augmentDatabase() {
 	}
