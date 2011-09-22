@@ -1039,6 +1039,34 @@ class MySQLDatabase extends SS_Database {
 
 		return "UNIX_TIMESTAMP($date1) - UNIX_TIMESTAMP($date2)";
 	}
+	
+	function supportsLocks() {
+		return true;
+	}
+	
+	function canLock($name) {
+		$id = $this->getLockIdentifier($name);
+		return (bool)DB::query(sprintf("SELECT IS_FREE_LOCK('%s')", $id))->value();
+	}
+	
+	function getLock($name, $timeout = 5) {
+		$id = $this->getLockIdentifier($name);
+		
+		// MySQL auto-releases existing locks on subsequent GET_LOCK() calls,
+		// in contrast to PostgreSQL and SQL Server who stack the locks.
+		
+		return (bool)DB::query(sprintf("SELECT GET_LOCK('%s', %d)", $id, $timeout))->value();
+	}
+	
+	function releaseLock($name) {
+		$id = $this->getLockIdentifier($name);
+		return (bool)DB::query(sprintf("SELECT RELEASE_LOCK('%s')", $id))->value();
+	}
+	
+	protected function getLockIdentifier($name) {
+		// Prefix with database name
+		return Convert::raw2sql($this->database . '_' . Convert::raw2sql($name));
+	}
 }
 
 /**

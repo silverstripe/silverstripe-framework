@@ -828,6 +828,59 @@ abstract class SS_Database {
 	 * Commit everything inside this transaction so far
 	 */
 	abstract function transactionEnd();
+
+	/**
+	 * Determines if the used database supports application-level locks,
+	 * which is different from table- or row-level locking.
+	 * See {@link getLock()} for details.
+	 * 
+	 * @return boolean
+	 */
+	function supportsLocks() {
+		return false;
+	}
+	
+	/**
+	 * Returns if the lock is available.
+	 * See {@link supportsLocks()} to check if locking is generally supported.
+	 * 
+	 * @return Boolean
+	 */
+	function canLock($name) {
+		return false;
+	}
+	
+	/** 
+	 * Sets an application-level lock so that no two processes can run at the same time,
+	 * also called a "cooperative advisory lock".
+	 * 
+	 * Return FALSE if acquiring the lock fails; otherwise return TRUE, if lock was acquired successfully.
+	 * Lock is automatically released if connection to the database is broken (either normally or abnormally),
+	 * making it less prone to deadlocks than session- or file-based locks.
+	 * Should be accompanied by a {@link releaseLock()} call after the logic requiring the lock has completed.
+	 * Can be called multiple times, in which case locks "stack" (PostgreSQL, SQL Server),
+	 * or auto-releases the previous lock (MySQL).
+	 * 
+	 * Note that this might trigger the database to wait for the lock to be released, delaying further execution.
+	 * 
+	 * @param String
+	 * @param Int Timeout in seconds
+	 * @return Boolean
+	 */
+	function getLock($name, $timeout = 5) {
+		return false;
+	}
+	
+	/** 
+	 * Remove an application-level lock file to allow another process to run 
+	 * (if the execution aborts (e.g. due to an error) all locks are automatically released).
+	 * 
+	 * @param String
+	 * @return Boolean
+	 */
+	function releaseLock($name) {
+		return false;
+	}
 }
 
 /**
