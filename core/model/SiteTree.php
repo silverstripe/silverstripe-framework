@@ -1407,7 +1407,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$this->syncLinkTracking();
 
 		// Check to see if we've only altered fields that shouldn't affect versioning
-		$fieldsIgnoredByVersioning = array('HasBrokenLink', 'Status', 'HasBrokenFile', 'ToDo');
+		$fieldsIgnoredByVersioning = array('HasBrokenLink', 'Status', 'HasBrokenFile', 'ToDo', 'VersionID', 'SaveCount');
 		$changedFields = array_keys($this->getChangedFields(true, 2));
 
 		// This more rigorous check is inline with the test that write()
