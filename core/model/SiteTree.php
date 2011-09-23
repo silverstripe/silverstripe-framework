@@ -198,14 +198,24 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	public static $cache_permissions = array();
 	
 	/**
-	 * @see SiteTree::enforce_strict_hierarchy()
+	 * @var boolean
 	 */
-	private static $enforce_strict_hierarchy = true;
+	protected static $enforce_strict_hierarchy = true;
 	
+	/**
+	 * Determines if the system should avoid orphaned pages
+	 * by deleting all children when the their parent is deleted (TRUE),
+	 * or rather preserve this data even if its not reachable through any navigation path (FALSE).
+	 * 
+	 * @param boolean
+	 */
 	public static function set_enforce_strict_hierarchy($to) {
 		self::$enforce_strict_hierarchy = $to;
 	}
 	
+	/**
+	 * @return boolean
+	 */
 	public static function get_enforce_strict_hierarchy() {
 		return self::$enforce_strict_hierarchy;
 	}
