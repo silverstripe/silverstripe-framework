@@ -89,6 +89,10 @@ abstract class DataExtension extends Extension {
 		}
 	}
 	
+	public static function unload_extra_statics($class, $extension) {
+		self::$extra_statics_loaded[$class][$extension] = false;
+	}
+	
 	/**
 	 * Edit the given query object to support queries for this extension
 	 *
