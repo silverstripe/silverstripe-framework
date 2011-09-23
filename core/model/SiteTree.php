@@ -841,12 +841,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// Standard mechanism for accepting permission changes from decorators
 		$extended = $this->extendedCan('canDelete', $memberID);
 		if($extended !== null) return $extended;
-		
-		// Check cache (the can_edit_multiple call below will also do this, but this is quicker)
-		if(isset(self::$cache_permissions['delete'][$this->ID])) {
-			return self::$cache_permissions['delete'][$this->ID];
-		}
-		
+				
 		// Regular canEdit logic is handled by can_edit_multiple
 		$results = self::can_delete_multiple(array($this->ID), $memberID);
 		
@@ -918,11 +913,6 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if($extended !== null) return $extended;
 
 		if($this->ID) {
-			// Check cache (the can_edit_multiple call below will also do this, but this is quicker)
-			if(isset(self::$cache_permissions['CanEditType'][$this->ID])) {
-				return self::$cache_permissions['CanEditType'][$this->ID];
-			}
-		
 			// Regular canEdit logic is handled by can_edit_multiple
 			$results = self::can_edit_multiple(array($this->ID), $memberID);
 
@@ -1005,16 +995,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		$batchCallback=explode('::', $batchCallback);
 		
 		if(is_callable($batchCallback)) {
-			$permissionValues = call_user_func($batchCallback, $ids, 
-				Member::currentUserID(), false);
-				
-			if(!isset(self::$cache_permissions[$permission])) {
-				self::$cache_permissions[$permission] = array();
-			}
-			
-			self::$cache_permissions[$permission] = $permissionValues 
-				+ self::$cache_permissions[$permission];
-			
+			call_user_func($batchCallback, $ids, Member::currentUserID(), false);
 		} else {
 			user_error("SiteTree::prepopuplate_permission_cache can't calculate '$permission' "
 				. "with callback '$batchCallback'", E_USER_WARNING);
@@ -1045,7 +1026,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// This is the name used on the permission cache
 		// converts something like 'CanEditType' to 'edit'.
-		$cacheKey = strtolower(substr($typeField, 3, -4));
+		$cacheKey = strtolower(substr($typeField, 3, -4)) . "-$memberID";
 
 		// Default result: nothing editable
 		$result = array_fill_keys($ids, false);
@@ -1141,14 +1122,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		}
 
 		if(isset($combinedStageResult)) {
-			// Cache results
-			// TODO - Caching permissions is breaking unit tests. One possible issue
-			// is the cache needs to be flushed when permission on a page is changed,
-			// but this only solved some of the failing unit tests. Disabled for now.
-			/*foreach($combinedStageResult as $id => $val) {
-				self::$cache_permissions[$typeField][$id] = $val;
-			}*/
-			return $combinedStageResult;
+			// Cache the results
+ 			if(empty(self::$cache_permissions[$cacheKey])) self::$cache_permissions[$cacheKey] = array();
+ 			self::$cache_permissions[$cacheKey] = $combinedStageResult + self::$cache_permissions[$cacheKey];
+ 
+  		return $combinedStageResult;
 		} else {
 			return array();
 		}
@@ -1173,15 +1151,15 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 */
 	static function can_delete_multiple($ids, $memberID, $useCached = true) {
 		$deletable = array();
-		
-		$result = array_fill_keys($ids, false); 
+		$result = array_fill_keys($ids, false);
+		$cacheKey = "delete-$memberID";
 		
 		// Look in the cache for values
-		if($useCached && isset(self::$cache_permissions['delete'])) {
-			$cachedValues = array_intersect_key(self::$cache_permissions['delete'], $result);
+		if($useCached && isset(self::$cache_permissions[$cacheKey])) {
+			$cachedValues = array_intersect_key(self::$cache_permissions[$cacheKey], $result);
 			
 			// If we can't find everything in the cache, then look up the remainder separately
-			$uncachedValues = array_diff_key($result, self::$cache_permissions['delete']);
+			$uncachedValues = array_diff_key($result, self::$cache_permissions[$cacheKey]);
 			if($uncachedValues) {
 				$cachedValues = self::can_delete_multiple(array_keys($uncachedValues), $memberID, false)
 					+ $cachedValues;
@@ -1229,6 +1207,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		// value
 		return array_fill_keys($deletable, true) + array_fill_keys($ids, false);
 	}
+		
 
 	/**
 	 * Collate selected descendants of this page.
@@ -2671,6 +2650,10 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	}
 	
 	static function reset() {
+		self::$cache_permissions = array();
+	}
+	
+	static function on_db_reset() {
 		self::$cache_permissions = array();
 	}
 

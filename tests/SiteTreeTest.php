@@ -486,6 +486,8 @@ class SiteTreeTest extends SapphireTest {
 		$page->CanEditType = 'OnlyTheseUsers';
 		$page->EditorGroups()->add($this->idFromFixture('Group', 'editors'));
 		$page->write();
+		// Clear permission cache
+		SiteTree::on_db_reset();
 		
 		// Confirm that Member.editor can now edit the page
 		$this->objFromFixture('Member','editor')->logIn();
