@@ -348,9 +348,83 @@ class VirtualPageTest extends SapphireTest {
 		$this->assertFalse($valid->valid(), "Doesn't allow child linked to virtual page type disallowed by parent");
 	}
 	
+	function testGetVirtualFields() {
+		$origInitiallyCopiedFields = VirtualPage::$initially_copied_fields;
+		VirtualPage::$initially_copied_fields[] = 'MyInitiallyCopiedField';
+		$origNonVirtualField = VirtualPage::$non_virtual_fields;
+		VirtualPage::$non_virtual_fields[] = 'MyNonVirtualField';
+
+		// Needs association with an original, otherwise will just return the "base" virtual fields
+		$page = new VirtualPageTest_ClassA();
+		$page->write();
+		$virtual = new VirtualPage();
+		$virtual->CopyContentFromID = $page->ID;
+		$virtual->write();
+
+		$this->assertContains('MyVirtualField', $virtual->getVirtualFields());
+		$this->assertNotContains('MyNonVirtualField', $virtual->getVirtualFields());
+		$this->assertNotContains('MyInitiallyCopiedField', $virtual->getVirtualFields());
+		
+		VirtualPage::$initially_copied_fields = $origInitiallyCopiedFields;
+		VirtualPage::$non_virtual_fields = $origNonVirtualField;
+	}
+	
+	function testCopyFrom() {
+		$origInitiallyCopiedFields = VirtualPage::$initially_copied_fields;
+		VirtualPage::$initially_copied_fields[] = 'MyInitiallyCopiedField';
+		$origNonVirtualField = VirtualPage::$non_virtual_fields;
+		VirtualPage::$non_virtual_fields[] = 'MyNonVirtualField';
+		
+		$original = new VirtualPageTest_ClassA();
+		$original->MyInitiallyCopiedField = 'original';
+		$original->MyVirtualField = 'original';
+		$original->MyNonVirtualField = 'original';
+		$original->write();
+
+		$virtual = new VirtualPage();
+		$virtual->CopyContentFromID = $original->ID;
+		$virtual->write();
+		
+		$virtual->copyFrom($original);
+		// Using getField() to avoid side effects from an overloaded __get()
+		$this->assertEquals(
+			'original', 
+			$virtual->getField('MyInitiallyCopiedField'),
+			'Fields listed in $initially_copied_fields are copied on first copyFrom() invocation'
+		);
+		$this->assertEquals(
+			'original', 
+			$virtual->getField('MyVirtualField'),
+			'Fields not listed in $initially_copied_fields are copied in copyFrom()'
+		);
+		$this->assertNull(
+			$virtual->getField('MyNonVirtualField'),
+			'Fields listed in $non_virtual_fields are not copied in copyFrom()'
+		);
+		
+		$original->MyInitiallyCopiedField = 'changed';
+		$original->write();
+		$virtual->copyFrom($original);
+		$this->assertEquals(
+			'original', 
+			$virtual->MyInitiallyCopiedField,
+			'Fields listed in $initially_copied_fields are not copied on subsequent copyFrom() invocations'
+		);
+		
+		VirtualPage::$initially_copied_fields = $origInitiallyCopiedFields;
+		VirtualPage::$non_virtual_fields = $origNonVirtualField;
+	}
+	
 }
 
 class VirtualPageTest_ClassA extends Page implements TestOnly {
+	
+	static $db = array(
+		'MyInitiallyCopiedField' => 'Text',
+		'MyVirtualField' => 'Text',
+		'MyNonVirtualField' => 'Text',
+	);
+	
 	static $allowed_children = array('VirtualPageTest_ClassB');
 }
 

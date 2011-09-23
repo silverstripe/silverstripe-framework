@@ -9,7 +9,32 @@ class VirtualPage extends Page {
 	
 	static $icon = array("cms/images/treeicons/page-shortcut-gold","file");
 	
-	public static $virtualFields;
+	/**
+	 * @var Array Define fields that are not virtual - the virtual page must define these fields themselves.
+	 * Note that anything in {@link self::$initially_copied_fields} is implicitly included in this list.
+	 */
+	public static $non_virtual_fields = array(
+		"SecurityTypeID",
+		"OwnerID",
+		"URLSegment",
+		"Sort",
+		"Status",
+		'ShowInMenus',
+		// 'Locale'
+		'ShowInSearch',
+		'Version',
+		"Embargo",
+		"Expiry",
+	);
+	
+	/**
+	 * @var Array Define fields that are initially copied to virtual pages but left modifiable after that.
+	 */
+	public static $initially_copied_fields = array(
+		'ShowInMenus',
+		'ShowInSearch',
+		'URLSegment',
+	);
 	
 	static $has_one = array(
 		"CopyContentFrom" => "SiteTree",	
@@ -23,26 +48,16 @@ class VirtualPage extends Page {
 	 * Generates the array of fields required for the page type.
 	 */
 	function getVirtualFields() {
-		$nonVirtualFields = array(
-			"SecurityTypeID",
-			"OwnerID",
-			"URLSegment",
-			"Sort",
-			"Status",
-			'ShowInMenus',
-			// 'Locale'
-			'ShowInSearch',
-			'Version',
-			"Embargo",
-			"Expiry",
-		);
+		$nonVirtualFields = array_merge(self::$non_virtual_fields, self::$initially_copied_fields);
+		$record = $this->CopyContentFrom();
 
-		$allFields = $this->db();
-		if($hasOne = $this->has_one()) foreach($hasOne as $link) $allFields[$link . 'ID'] = "Int";
+		$allFields = $record->db();
+		if($hasOne = $record->has_one()) foreach($hasOne as $link) $allFields[$link . 'ID'] = "Int";
+		$virtualFields = array();
 		foreach($allFields as $field => $type) {
 			if(!in_array($field, $nonVirtualFields)) $virtualFields[] = $field;
 		}
-		
+
 		return $virtualFields;
 	}
 
@@ -193,7 +208,7 @@ class VirtualPage extends Page {
 		// On regular write, this will copy from draft source.  This is only executed when the source
 		// page changeds
 		} else {
-			$performCopyFrom = $this->isChanged('CopyContentFromID') && $this->CopyContentFromID != 0;
+			$performCopyFrom = $this->isChanged('CopyContentFromID', 2) && $this->CopyContentFromID != 0;
 		}
 		
 		// On publish, this will copy from published source
@@ -203,7 +218,6 @@ class VirtualPage extends Page {
 			$source = DataObject::get_one("SiteTree",sprintf('"SiteTree"."ID" = %d', $this->CopyContentFromID));
 			// Leave the updating of image tracking until after write, in case its a new record
 			$this->copyFrom($source, false);
-			$this->URLSegment = $source->URLSegment;
 		}
 		
 		parent::onBeforeWrite();
@@ -228,6 +242,9 @@ class VirtualPage extends Page {
 	
 	/**
 	 * Ensure we have an up-to-date version of everything.
+	 * 
+	 * @param SiteTree
+	 * @param Boolean
 	 */
 	function copyFrom($source, $updateImageTracking = true) {
 		if($source) {
@@ -235,10 +252,12 @@ class VirtualPage extends Page {
 				$this->$virtualField = $source->$virtualField;
 			}
 			
-			// We also want to copy ShowInMenus, but only if we're copying the
-			// source page for the first time.
-			if($this->isChanged('CopyContentFromID')) {
-				$this->ShowInMenus = $source->ShowInMenus;
+			// We also want to copy certain, but only if we're copying the source page for the first
+			// time. After this point, the user is free to customise these for the virtual page themselves.
+			if($this->isChanged('CopyContentFromID', 2) && $this->CopyContentFromID != 0) {
+				foreach(self::$initially_copied_fields as $fieldName) {
+					$this->$fieldName = $source->$fieldName;
+				}
 			}
 			
 			if($updateImageTracking) $this->updateImageTracking();
