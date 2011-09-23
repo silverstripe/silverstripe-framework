@@ -161,11 +161,11 @@ class File extends DataObject {
 		return $item;
 	}
 	
-	function Link($action = null) {
-		return Director::baseURL() . $this->RelativeLink($action);
+	function Link() {
+		return Director::baseURL() . $this->RelativeLink();
 	}
 
-	function RelativeLink($action = null){
+	function RelativeLink(){
 		return $this->Filename;
 	}
 	
