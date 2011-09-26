@@ -63,6 +63,15 @@ class TimeField extends TextField {
 		parent::__construct($name,$title,$value);
 	}
 	
+	function Field() {
+		$config = array(
+			'timeformat' => $this->getConfig('timeformat')
+		);
+		$config = array_filter($config);
+		$this->addExtraClass(Convert::raw2json($config));
+		return parent::Field();
+	}
+	
 	/**
 	 * Sets the internal value to ISO date format.
 	 * 

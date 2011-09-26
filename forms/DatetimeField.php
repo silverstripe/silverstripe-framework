@@ -64,6 +64,16 @@ class DatetimeField extends FormField {
 		$this->timezoneField->setForm($form);
 	}
 	
+	function FieldHolder() {
+		$config = array(
+			'datetimeorder' => $this->getConfig('datetimeorder'),
+		);
+		$config = array_filter($config);
+		$this->addExtraClass(Convert::raw2json($config));
+
+		return parent::FieldHolder();
+	}
+	
 	function Field() {
 		Requirements::css(SAPPHIRE_DIR . '/css/DatetimeField.css');
 		

@@ -103,6 +103,16 @@ class DateField extends TextField {
 	}
 
 	function Field() {
+		$config = array(
+			'showcalendar' => $this->getConfig('showcalendar'),
+			'isoDateformat' => $this->getConfig('dateformat'),
+			'jqueryDateformat' => DateField_View_JQuery::convert_iso_to_jquery_format($this->getConfig('dateformat')),
+			'min' => $this->getConfig('min'),
+			'max' => $this->getConfig('max')
+		);
+		$config = array_filter($config);
+		$this->addExtraClass(Convert::raw2json($config));
+		
 		// Three separate fields for day, month and year
 		if($this->getConfig('dmyfields')) {
 			// values
@@ -531,19 +541,7 @@ class DateField_View_JQuery {
 		return $this->field;
 	}
 	
-	/**
-	 * 
-	 */
 	function onBeforeRender() {
-		if($this->getField()->getConfig('showcalendar')) {
-			// Inject configuration into existing HTML
-			$format = self::convert_iso_to_jquery_format($this->getField()->getConfig('dateformat'));
-			$conf = array(
-				'showcalendar' => true,
-				'dateFormat' => $format
-			);
-			$this->getField()->addExtraClass(str_replace('"', '\'', Convert::raw2json($conf)));
-		}
 	}
 	
 	/**
