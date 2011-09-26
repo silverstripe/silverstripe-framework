@@ -118,10 +118,14 @@ class TimeField extends TextField {
 			$this->value = $this->valueObj->get($this->getConfig('timeformat'));
 		}
 		// Fallback: Set incorrect value so validate() can pick it up
-		else {
+		elseif(is_string($val)) {
 			$this->value = $val;
 			$this->valueObj = null;
 		} 
+		else {
+			$this->value = null;
+			$this->valueObj = null;
+		}
 	}
 	
 	/**

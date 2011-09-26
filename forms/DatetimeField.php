@@ -10,6 +10,11 @@
  * 
  * All options in {@link setConfig()} are passed through to {@link DateField} and {@link TimeField}.
  * 
+ * - "timezone": Set a different timezone for viewing. {@link dataValue()} will still save
+ * the time in PHP's default timezone (date_default_timezone_get()), its only a view setting.
+ * Note that the sub-fields ({@link getDateField()} and {@link getTimeField()})
+ * are not timezone aware, and will have their values set in local time, rather than server time.
+ * 
  * @package sapphire
  * @subpackage forms
  */
@@ -29,77 +34,124 @@ class DatetimeField extends FormField {
 	 * @var array
 	 */
 	protected $config = array(
-		'datavalueformat' => 'YYYY-MM-dd HH:mm:ss'
+		'datavalueformat' => 'YYYY-MM-dd HH:mm:ss',
+		'usertimezone' => null,
 	);
 		
 	function __construct($name, $title = null, $value = ""){
 		$this->dateField = new DateField($name . '[date]', false);
 		$this->timeField = new TimeField($name . '[time]', false);
+		$this->timezoneField = new HiddenField($this->Name() . '[timezone]');
 		
 		parent::__construct($name, $title, $value);
 	}
-	
+		
 	function setForm($form) {
 		parent::setForm($form);
 		
 		$this->dateField->setForm($form);
 		$this->timeField->setForm($form);
+		$this->timezoneField->setForm($form);
 	}
 	
 	function Field() {
 		Requirements::css(SAPPHIRE_DIR . '/css/DatetimeField.css');
 		
-		return $this->dateField->FieldHolder() . $this->timeField->FieldHolder() . '<div class="clear"><!-- --></div>';
+		$tzField = ($this->getConfig('usertimezone')) ? $this->timezoneField->FieldHolder() : '';
+		return $this->dateField->FieldHolder() . 
+			$this->timeField->FieldHolder() . 
+			$tzField . 
+			'<div class="clear"><!-- --></div>';
 	}
 	
 	/**
-	 * Sets the internal value to ISO date format.
+	 * Sets the internal value to ISO date format, based on either a database value in ISO date format,
+	 * or a form submssion in the user date format. Uses the individual date and time fields
+	 * to take care of the actual formatting and value conversion.
+	 * 
+	 * Value setting happens *before* validation, so we have to set the value even if its not valid.
+	 * 
+	 * Caution: Only converts user timezones when value is passed as array data (= form submission).
+	 * Weak indication, but unfortunately the framework doesn't support a distinction between
+	 * setting a value from the database, application logic, and user input.
 	 * 
 	 * @param string|array $val String expects an ISO date format. Array notation with 'date' and 'time'
 	 *  keys can contain localized strings. If the 'dmyfields' option is used for {@link DateField},
 	 *  the 'date' value may contain array notation was well (see {@link DateField->setValue()}).
 	 */
 	function setValue($val) {
+		// If timezones are enabled, assume user data needs to be reverted to server timezone
+		if($this->getConfig('usertimezone')) {
+			// Accept user input on timezone, but only when timezone support is enabled
+			$userTz = (is_array($val) && array_key_exists('timezone', $val)) ? $val['timezone'] : null;
+			if(!$userTz) $userTz = $this->getConfig('usertimezone'); // fall back to defined timezone
+		} else {
+			$userTz = null;
+		}
+		
 		if(empty($val)) {
+			$this->value = null;
 			$this->dateField->setValue(null);
 			$this->timeField->setValue(null);
 		} else {
-			// String setting is only possible from the database, so we don't allow anything but ISO format
+			// Case 1: String setting from database, in ISO date format
 			if(is_string($val) && Zend_Date::isDate($val, $this->getConfig('datavalueformat'), $this->locale)) {
-				// split up in date and time string values. 
-				$valueObj = new Zend_Date($val, $this->getConfig('datavalueformat'), $this->locale);
-				// set date either as array, or as string
+				$this->value = $val;
+			}
+			// Case 2: Array form submission with user date format
+			elseif(is_array($val) && array_key_exists('date', $val) && array_key_exists('time', $val)) {
+				
+				$dataTz = date_default_timezone_get();
+				// If timezones are enabled, assume user data needs to be converted to server timezone
+				if($userTz) date_default_timezone_set($userTz);
+
+				// Uses sub-fields to temporarily write values and delegate dealing with their normalization,
+				// actual sub-field value setting happens later
+				$this->dateField->setValue($val['date']);
+				$this->timeField->setValue($val['time']);
+				if($this->dateField->dataValue() && $this->timeField->dataValue()) {
+					$userValueObj = new Zend_Date(null, null, $this->locale);
+					$userValueObj->setDate($this->dateField->dataValue(), $this->dateField->getConfig('datavalueformat'));
+					$userValueObj->setTime($this->timeField->dataValue(), $this->timeField->getConfig('datavalueformat'));
+					if($userTz) $userValueObj->setTimezone($dataTz);
+					$this->value = $userValueObj->get($this->getConfig('datavalueformat'), $this->locale);
+					unset($userValueObj);
+				} else {
+					// Validation happens later, so set the raw string in case Zend_Date doesn't accept it
+					$this->value = $val['date'] . ' ' . $val['time'];
+				}
+				
+				if($userTz) date_default_timezone_set($dataTz);
+			} 
+			// Case 3: Value is invalid, but set it anyway to allow validation by the fields later on
+			else {
+				$this->dateField->setValue($val);
+				if(is_string($val) )$this->timeField->setValue($val);
+				$this->value = $val;
+			}
+
+			// view settings (dates might differ from $this->value based on user timezone settings)
+			if (Zend_Date::isDate($this->value, $this->getConfig('datavalueformat'), $this->locale)) {
+				$valueObj = new Zend_Date($this->value, $this->getConfig('datavalueformat'), $this->locale);
+				if($userTz) $valueObj->setTimezone($userTz);
+
+				// Set view values in sub-fields
 				if($this->dateField->getConfig('dmyfields')) {
 					$this->dateField->setValue($valueObj->toArray());
 				} else {
 					$this->dateField->setValue($valueObj->get($this->dateField->getConfig('dateformat'), $this->locale));
 				}
-				// set time
 				$this->timeField->setValue($valueObj->get($this->timeField->getConfig('timeformat'), $this->locale));
-			}
-			// Setting from form submission
-			elseif(is_array($val) && array_key_exists('date', $val) && array_key_exists('time', $val)) {
-				$this->dateField->setValue($val['date']);
-				$this->timeField->setValue($val['time']);
-			} else {
-				$this->dateField->setValue($val);
-				$this->timeField->setValue($val);
 			}
 		}
 	}
 	
-	function dataValue() {
-		$valDate = $this->dateField->dataValue();
-		$valTime = $this->timeField->dataValue();
-
-		// Only date is actually required, time is optional
-		if($valDate) {
-			if(!$valTime) $valTime = '00:00:00';
-			return $valDate . ' ' . $valTime;
-		} else {
-			// TODO 
-			return null;
-		}
+	function Value() {
+		$valDate = $this->dateField->Value();
+		$valTime = $this->timeField->Value();
+		if(!$valTime) $valTime = '00:00:00';
+		
+		return $valDate . ' ' . $valTime;
 	}
 	
 	/**
@@ -134,6 +186,11 @@ class DatetimeField extends FormField {
 	 */
 	function setConfig($name, $val) {
 		$this->config[$name] = $val;
+		
+		if($name == 'usertimezone') {
+			$this->timezoneField->setValue($val);
+			$this->setValue($this->dataValue());
+		}
 	}
 	
 	/**
