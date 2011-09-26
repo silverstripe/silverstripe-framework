@@ -22,6 +22,8 @@
  * the time in PHP's default timezone (date_default_timezone_get()), its only a view setting.
  * Note that the sub-fields ({@link getDateField()} and {@link getTimeField()})
  * are not timezone aware, and will have their values set in local time, rather than server time.
+ * - "datetimeorder": An sprintf() template to determine in which order the date and time values will
+ * be combined. This is necessary as those separate formats are set in their invididual fields.
  * 
  * @package sapphire
  * @subpackage forms
@@ -44,6 +46,7 @@ class DatetimeField extends FormField {
 	protected $config = array(
 		'datavalueformat' => 'YYYY-MM-dd HH:mm:ss',
 		'usertimezone' => null,
+		'datetimeorder' => '%s %s',
 	);
 		
 	function __construct($name, $title = null, $value = ""){
@@ -126,7 +129,7 @@ class DatetimeField extends FormField {
 					unset($userValueObj);
 				} else {
 					// Validation happens later, so set the raw string in case Zend_Date doesn't accept it
-					$this->value = $val['date'] . ' ' . $val['time'];
+					$this->value = sprintf($this->getConfig('datetimeorder'), $val['date'], $val['time']);
 				}
 				
 				if($userTz) date_default_timezone_set($dataTz);
@@ -159,7 +162,7 @@ class DatetimeField extends FormField {
 		$valTime = $this->timeField->Value();
 		if(!$valTime) $valTime = '00:00:00';
 		
-		return $valDate . ' ' . $valTime;
+		return sprintf($this->getConfig('datetimeorder'), $valDate, $valTime);
 	}
 	
 	/**
@@ -245,9 +248,13 @@ class DatetimeField_Readonly extends DatetimeField {
 		$valDate = $this->dateField->dataValue();
 		$valTime = $this->timeField->dataValue();
 		if($valDate && $valTime) {
-			$format = $this->dateField->getConfig('dateformat') . ' ' . $this->timeField->getConfig('timeformat');
+			$format = sprintf(
+				$this->getConfig('datetimeorder'), 
+				$this->dateField->getConfig('dateformat'), 
+				$this->dateField->getConfig('timeformat')
+			);
 			$valueObj = new Zend_Date(
-				$valDate . ' ' . $valTime, 
+				sprintf($this->getConfig('datetimeorder'), $valDate, $valTime),
 				$this->getConfig('datavalueformat'), 
 				$this->dateField->getLocale()
 			);
