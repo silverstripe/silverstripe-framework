@@ -2,9 +2,7 @@
 require_once 'Zend/Date.php';
 
 /**
- * Form field to display editable time values in an <input type="text">
- * field. Can optionally display a dropdown with predefined time ranges
- * through `setConfig('showdropdown', true)`.
+ * Form field to display editable time values in an <input type="text"> field. 
  * 
  * # Configuration
  * 
@@ -13,15 +11,12 @@ require_once 'Zend/Date.php';
  *    through {@link Zend_Locale_Format::getTimeFormat()}.
  * - 'use_strtotime' (boolean): Accept values in PHP's built-in strtotime() notation, in addition
  *    to the format specified in `timeformat`. Example inputs: 'now', '11pm', '23:59:59'.
- * - 'showdropdown': Show a dropdown with suggested date values.
- *    CAUTION: The dropdown does not support localization.
  * 
  * # Localization
  * 
  * See {@link DateField}
  * 
  * @todo Timezone support
- * @todo 'showdropdown' localization
  *
  * @package forms
  * @subpackage fields-datetime
@@ -29,7 +24,6 @@ require_once 'Zend/Date.php';
 class TimeField extends TextField {
 
 	protected $config = array(
-		'showdropdown' => false,
 		'timeformat' => 'HH:mm:ss',
 		'use_strtotime' => true,
 		'datavalueformat' => 'HH:mm:ss'
@@ -57,33 +51,6 @@ class TimeField extends TextField {
 		}
 		
 		parent::__construct($name,$title,$value);
-	}
-	
-	function Field() {
-		$html = parent::Field();
-		
-		$html = $this->FieldDriver($html);
-		
-		return $html;
-	}
-	
-	/**
-	 * Internal volatile API.
-	 * 
-	 * @see DateField->FieldDriver()
-	 */
-	protected function FieldDriver($html) {
-		if($this->getConfig('showdropdown')) {
-			Requirements::javascript(THIRDPARTY_DIR . '/behaviour/behaviour.js');
-			Requirements::javascript(SAPPHIRE_DIR . '/javascript/TimeField_dropdown.js');
-			Requirements::css(SAPPHIRE_DIR . '/css/TimeField_dropdown.css');
-			
-			$html .= sprintf('<img class="timeIcon" src="sapphire/images/clock-icon.gif" id="%s-icon"/>', $this->id());
-			$html .= sprintf('<div class="dropdownpopup" id="%s-dropdowntime"></div>', $this->id());
-			$html = '<div class="dropdowntime">' . $html . '</div>';
-		}
-		
-		return $html;
 	}
 	
 	/**
