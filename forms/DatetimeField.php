@@ -43,13 +43,20 @@ class DatetimeField extends FormField {
 	/**
 	 * @var array
 	 */
-	protected $config = array(
+	static $default_config = array(
 		'datavalueformat' => 'YYYY-MM-dd HH:mm:ss',
 		'usertimezone' => null,
 		'datetimeorder' => '%s %s',
 	);
+	
+	/**
+	 * @var array
+	 */
+	protected $config;
 		
 	function __construct($name, $title = null, $value = ""){
+		$this->config = self::$default_config;
+		
 		$this->dateField = new DateField($name . '[date]', false);
 		$this->timeField = new TimeField($name . '[time]', false);
 		$this->timezoneField = new HiddenField($this->Name() . '[timezone]');
@@ -177,6 +184,13 @@ class DatetimeField extends FormField {
 	 */
 	function getTimeField() {
 		return $this->timeField;
+	}
+	
+	/**
+	 * @return FormField
+	 */
+	function getTimezoneField() {
+		return $this->timezoneField;
 	}
 	
 	function setLocale($locale) {
