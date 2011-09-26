@@ -22,13 +22,21 @@ require_once 'Zend/Date.php';
  * @subpackage fields-datetime
  */
 class TimeField extends TextField {
-
-	protected $config = array(
+	
+	/**
+	 * @var array
+	 */
+	static $default_config = array(
 		'timeformat' => 'HH:mm:ss',
 		'use_strtotime' => true,
 		'datavalueformat' => 'HH:mm:ss'
 	);
 
+	/**
+	 * @var array
+	 */
+	protected $config;
+	
 	/**
 	 * @var String
 	 */
@@ -45,6 +53,8 @@ class TimeField extends TextField {
 		if(!$this->locale) {
 			$this->locale = i18n::get_locale();
 		}
+		
+		$this->config = self::$default_config;
 		
 		if(!$this->getConfig('timeformat')) {
 			$this->setConfig('timeformat', i18n::get_time_format());

@@ -50,7 +50,7 @@ class DateField extends TextField {
 	/**
 	 * @var array
 	 */
-	protected $config = array(
+	static $default_config = array(
 		'showcalendar' => false,
 		'jslocale' => null,
 		'dmyfields' => false,
@@ -60,6 +60,11 @@ class DateField extends TextField {
 		'min' => null,
 		'max' => null
 	);
+	
+	/**
+	 * @var array
+	 */
+	protected $config;
 		
 	/**
 	 * @var String
@@ -77,6 +82,8 @@ class DateField extends TextField {
 		if(!$this->locale) {
 			$this->locale = i18n::get_locale();
 		}
+		
+		$this->config = self::$default_config;
 		
 		if(!$this->getConfig('dateformat')) {
 			$this->setConfig('dateformat', i18n::get_date_format());
