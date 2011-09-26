@@ -349,10 +349,10 @@ class LeftAndMain extends Controller {
 		SSViewer::set_theme(null);
 	}
 	
-	function handleRequest($request) {
+	function handleRequest($request, DataModel $model) {
 		$title = $this->Title();
 		
-		$response = parent::handleRequest($request);
+		$response = parent::handleRequest($request, $model);
 		$response->addHeader('X-Controller', $this->class);
 		$response->addHeader('X-Title', $title);
 		
