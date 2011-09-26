@@ -458,6 +458,10 @@ class SQLQuery {
 	    // TODO: Don't require this internal-state manipulate-and-preserve - let sqlQueryToString() handle the new syntax
 	    $origFrom = $this->from;
 	    
+		if(!$this->from) {
+			return '';
+		}
+
 	    // Build from clauses
 	    foreach($this->from as $alias => $join) {
 	        // $join can be something like this array structure
