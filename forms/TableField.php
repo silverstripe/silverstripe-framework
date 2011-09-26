@@ -278,7 +278,7 @@ class TableField extends TableListField {
 	 * transformation if {@link $IsReadonly} is set, or the current user
 	 * doesn't have edit permissions.
 	 * 
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function FieldSetForRow() {
 		$fieldset = new FieldList();
@@ -624,7 +624,7 @@ class TableField_Item extends TableListField_Item {
 	/** 
 	 * Represents each cell of the table with an attribute.
 	 *
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function createFields() {
 		// Existing record
