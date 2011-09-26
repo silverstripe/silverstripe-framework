@@ -20,6 +20,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	static $fixture_file = null;
 	
 	/**
+	 * Set whether to include this test in the TestRunner or to skip this.
+	 *
+	 * @var bool
+	 */
+	private static $skip_test = false;
+	
+	/**
 	 * @var Boolean If set to TRUE, this will force a test database to be generated
 	 * in {@link setUp()}. Note that this flag is overruled by the presence of a 
 	 * {@link $fixture_file}, which always forces a database build.
@@ -93,6 +100,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Helper arrays for illegalExtensions/requiredExtensions code
 	 */
 	private $extensionsToReapply = array(), $extensionsToRemove = array();
+
 	
 	/**
 	 * Determines if unit tests are currently run (via {@link TestRunner}).
@@ -113,6 +121,18 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected $fixtures; 
 	
 	function setUp() {
+		// We cannot run the tests on this abstract class.
+		if(get_class($this) == "SapphireTest") self::$skip_test = true;
+		
+		// Ensure we are to run this test case
+		if(self::$skip_test) {
+			$this->markTestSkipped(sprintf(
+				'Skipping %s ', get_class($this)
+			));
+			
+			return;
+		}
+		
 		// Mark test as being run
 		$this->originalIsRunningTest = self::$is_running_test;
 		self::$is_running_test = true;
