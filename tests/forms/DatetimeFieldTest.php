@@ -44,12 +44,6 @@ class DatetimeFieldTest extends SapphireTest {
 		
 		$f = new DatetimeField('Datetime', null, '2003-03-29 23:59:38');
 		$this->assertEquals('2003-03-29 23:59:38', $f->dataValue(), 'From date/time string');
-		
-		$f = new DatetimeField('Datetime', null, '2003-03-29');
-		$this->assertEquals('2003-03-29 00:00:00', $f->dataValue(), 'From date string (no time)');
-		
-		$f = new DatetimeField('Datetime', null, array('date' => '2003-03-29', 'time' => null));
-		$this->assertEquals('2003-03-29 00:00:00', $f->dataValue(), 'From date array (no time)');
 	}
 	
 	function testConstructorWithoutArgs() {
@@ -108,8 +102,65 @@ class DatetimeFieldTest extends SapphireTest {
 		$f = new DatetimeField('Datetime', 'Datetime', '2003-03-29 23:59:38');
 		$this->assertTrue($f->validate(new RequiredFields()));
 		
+		$f = new DatetimeField('Datetime', 'Datetime', '2003-03-29');
+		$this->assertTrue($f->validate(new RequiredFields()));
+		
 		$f = new DatetimeField('Datetime', 'Datetime', 'wrong');
 		$this->assertFalse($f->validate(new RequiredFields()));
+	}
+	
+	function testTimezone() {
+		$oldTz = date_default_timezone_get();
+		
+		date_default_timezone_set('Europe/Berlin');
+		// Berlin and Auckland have 12h time difference in northern hemisphere winter
+		$f = new DatetimeField('Datetime', 'Datetime', '2003-12-24 23:59:59');
+		$f->setConfig('usertimezone', 'Pacific/Auckland');
+		$this->assertEquals('25/12/2003 11:59:59', $f->Value(), 'User value is formatted, and in user timezone');
+		$this->assertEquals('25/12/2003', $f->getDateField()->Value());
+		$this->assertEquals('11:59:59', $f->getTimeField()->Value());
+		$this->assertEquals('2003-12-24 23:59:59', $f->dataValue(), 'Data value is unformatted, and in server timezone');
+		
+		date_default_timezone_set($oldTz);
+	}
+	
+	function testTimezoneFromFormSubmission() {
+		$oldTz = date_default_timezone_get();
+		
+		date_default_timezone_set('Europe/Berlin');
+		// Berlin and Auckland have 12h time difference in northern hemisphere summer, but Berlin and Moscow only 2h.
+		$f = new DatetimeField('Datetime', 'Datetime');
+		$f->setConfig('usertimezone', 'Pacific/Auckland'); // should be overridden by form submission
+		$f->setValue(array(
+			// pass in default format, at user time (Moscow)
+			'date' => '24/06/2003', 
+			'time' => '23:59:59',
+			'timezone' => 'Europe/Moscow'
+		));
+		$this->assertEquals('24/06/2003 23:59:59', $f->Value(), 'View composite value matches user timezone');
+		$this->assertEquals('24/06/2003', $f->getDateField()->Value(), 'View date part matches user timezone');
+		$this->assertEquals('23:59:59', $f->getTimeField()->Value(), 'View time part matches user timezone');
+		// 2h difference to Moscow
+		$this->assertEquals('2003-06-24 21:59:59', $f->dataValue(), 'Data value matches server timezone');
+		
+		date_default_timezone_set($oldTz);
+	}
+	
+	function testTimezoneFromConfig() {
+		$oldTz = date_default_timezone_get();
+		
+		date_default_timezone_set('Europe/Berlin');
+		// Berlin and Auckland have 12h time difference in northern hemisphere summer, but Berlin and Moscow only 2h.
+		$f = new DatetimeField('Datetime', 'Datetime');
+		$f->setConfig('usertimezone', 'Europe/Moscow'); 
+		$f->setValue(array(
+			// pass in default format, at user time (Moscow)
+			'date' => '24/06/2003', 
+			'time' => '23:59:59',
+		));
+		$this->assertEquals('2003-06-24 21:59:59', $f->dataValue(), 'Data value matches server timezone');
+		
+		date_default_timezone_set($oldTz);
 	}
 }
 
