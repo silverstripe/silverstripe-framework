@@ -24,7 +24,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 *
 	 * @var bool
 	 */
-	private static $skip_test = false;
+	protected $skipTest = false;
 	
 	/**
 	 * @var Boolean If set to TRUE, this will force a test database to be generated
@@ -124,10 +124,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	
 	function setUp() {
 		// We cannot run the tests on this abstract class.
-		if(get_class($this) == "SapphireTest") self::$skip_test = true;
+		if(get_class($this) == "SapphireTest") $this->skipTest = true;
 		
-		// Ensure we are to run this test case
-		if(self::$skip_test) {
+		if($this->skipTest) {
 			$this->markTestSkipped(sprintf(
 				'Skipping %s ', get_class($this)
 			));

@@ -58,7 +58,7 @@ class FunctionalTest extends SapphireTest {
 
 	function setUp() {
 		// Skip calling FunctionalTest directly.
-		if(get_class($this) == "FunctionalTest") self::$skip_test = true;
+		if(get_class($this) == "FunctionalTest") $this->skipTest = true;
 		
 		parent::setUp();
 		$this->mainSession = new TestSession();
