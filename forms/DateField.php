@@ -55,17 +55,6 @@ require_once 'Zend/Date.php';
  * @subpackage fields-datetime
  */
 class DateField extends TextField {
-
-	/**
-	 * @var array
-	 */
-	protected static $default_config = array(
-		'showcalendar' => false,
-		'dmyfields' => false,
-		'dmyseparator' => false,
-		'dateformat' => false,
-		'locale' => false
-	);
 	
 	/**
 	 * @var array
@@ -132,6 +121,23 @@ class DateField extends TextField {
 	}
 
 	function Field() {
+		$config = array(
+			'showcalendar' => $this->getConfig('showcalendar'),
+			'isoDateformat' => $this->getConfig('dateformat'),
+			'jqueryDateformat' => DateField_View_JQuery::convert_iso_to_jquery_format($this->getConfig('dateformat')),
+			'min' => $this->getConfig('min'),
+			'max' => $this->getConfig('max')
+		);
+
+		// Add other jQuery UI specific, namespaced options (only serializable, no callbacks etc.)
+		// TODO Move to DateField_View_jQuery once we have a properly extensible HTML5 attribute system for FormField
+		foreach($this->getConfig() as $k => $v) {
+			if(preg_match('/^jQueryUI\.(.*)/', $k, $matches)) $config[$matches[1]] = $v;
+		}
+		
+		$config = array_filter($config);
+		$this->addExtraClass(Convert::raw2json($config));
+		
 		// Three separate fields for day, month and year
 		if($this->getConfig('dmyfields')) {
 			// values
@@ -576,31 +582,7 @@ class DateField_View_JQuery {
 		return $this->field;
 	}
 	
-	/**
-	 * 
-	 */
 	function onBeforeRender() {
-		if($this->getField()->getConfig('showcalendar')) {
-			// Inject configuration into existing HTML
-			$format = self::convert_iso_to_jquery_format($this->getField()->getConfig('dateformat'));
-			$conf = array(
-				'showcalendar' => true,
-				'dateFormat' => $format
-			);
-			// add min/max to datepicker. ISO format or strtotime() compatible only
-			foreach(array('min', 'max') as $type) {
-				if($this->getField()->getConfig($type)) {
-					$min = new Zend_Date(strtotime($this->getField()->getConfig($type)), null, $this->getField()->locale);
-					$conf[$type . 'Date'] = $min->toString($this->getField()->getConfig('dateformat'));
-				}
-			}
-			// Add other namespaced options (only serializable, no callbacks etc.)
-			foreach($this->getField()->getConfig() as $k => $v) {
-				if(preg_match('/^jQueryUI\.(.*)/', $k, $matches)) $conf[$matches[1]] = $v;
-			}
-
-			$this->getField()->addExtraClass(str_replace('"', '\'', Convert::raw2json($conf)));
-		}
 	}
 	
 	/**
