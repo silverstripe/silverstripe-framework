@@ -50,16 +50,16 @@ class MemberLoginForm extends LoginForm {
 		}
 
 		if($checkCurrentUser && Member::currentUser() && Member::logged_in_session_exists()) {
-			$fields = new FieldSet(
+			$fields = new FieldList(
 				new HiddenField("AuthenticationMethod", null, $this->authenticator_class, $this)
 			);
-			$actions = new FieldSet(
+			$actions = new FieldList(
 				new FormAction("logout", _t('Member.BUTTONLOGINOTHER', "Log in as someone else"))
 			);
 		} else {
 			if(!$fields) {
 				$label=singleton('Member')->fieldLabel(Member::get_unique_identifier_field());
-				$fields = new FieldSet(
+				$fields = new FieldList(
 					new HiddenField("AuthenticationMethod", null, $this->authenticator_class, $this),
 					//Regardless of what the unique identifer field is (usually 'Email'), it will be held in the 'Email' value, below:
 					new TextField("Email", $label, Session::get('SessionForms.MemberLoginForm.Email'), null, $this),
@@ -73,7 +73,7 @@ class MemberLoginForm extends LoginForm {
 				}
 			}
 			if(!$actions) {
-				$actions = new FieldSet(
+				$actions = new FieldList(
 					new FormAction('dologin', _t('Member.BUTTONLOGIN', "Log in")),
 					new LiteralField(
 						'forgotPassword',

@@ -42,7 +42,7 @@ class Group extends DataObject {
 	}
 	
 	function getAllChildren() {
-		$doSet = new DataObjectSet();
+		$doSet = new ArrayList();
 
 		if ($children = DataObject::get('Group', '"ParentID" = '.$this->ID)) {
 			foreach($children as $child) {
@@ -62,7 +62,7 @@ class Group extends DataObject {
 	public function getCMSFields() {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');
 		
-		$fields = new FieldSet(
+		$fields = new FieldList(
 			new TabSet("Root",
 				new Tab('Members', _t('SecurityAdmin.MEMBERS', 'Members'),
 					new TextField("Title", $this->fieldLabel('Title')),
@@ -137,7 +137,7 @@ class Group extends DataObject {
 			// Add roles (and disable all checkboxes for inherited roles)
 			$allRoles = Permission::check('ADMIN') ? DataObject::get('PermissionRole') : DataObject::get('PermissionRole', 'OnlyAdminCanApply = 0');
 			$groupRoles = $this->Roles();
-			$inheritedRoles = new DataObjectSet();
+			$inheritedRoles = new ArrayList();
 			$ancestors = $this->getAncestors();
 			foreach($ancestors as $ancestor) {
 				$ancestorRoles = $ancestor->Roles();
@@ -153,9 +153,7 @@ class Group extends DataObject {
 		} 
 		
 		$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));
-		$memberList->setParentClass('Group');
 		$memberList->setPopupCaption(_t('SecurityAdmin.VIEWUSER', 'View User'));
-		$memberList->setRelationAutoSetting(false);
 
 		$fields->push($idField = new HiddenField("ID"));
 		
@@ -207,38 +205,20 @@ class Group extends DataObject {
 	 * @param $join string SQL
 	 * @return ComponentSet
 	 */
-	public function Members($limit = "", $offset = "", $filter = "", $sort = "", $join = "") {
-		$table = "Group_Members";
-		if($filter) $filter = is_array($filter) ? $filter : array($filter);
-		
-		if( is_numeric( $limit ) ) {
-			if( is_numeric( $offset ) )
-				$limit = "$limit OFFSET $offset";
-			else
-				$limit = "$limit OFFSET 0";
-		} else {
-			$limit = "";
-		}
-		
-		// Get all of groups that this group contains
-		$groupFamily = implode(", ", $this->collateFamilyIDs());
-		
-		$filter[] = "\"$table\".\"GroupID\" IN ($groupFamily)";
-		$join .= " INNER JOIN \"$table\" ON \"$table\".\"MemberID\" = \"Member\".\"ID\"" . Convert::raw2sql($join);
-		
-		$result = singleton("Member")->instance_get(
-			$filter, 
-			$sort,
-			$join, 
-			$limit,
-			"ComponentSet" // datatype
-			);
-			
-		if(!$result) $result = new ComponentSet();
+	public function Members($filter = "", $sort = "", $join = "", $limit = "") {
+		// Get a DataList of the relevant groups
+		$groups = DataList::create("Group")->byIDs($this->collateFamilyIDs());
 
-		$result->setComponentInfo("many-to-many", $this, "Group", $table, "Member");
-		foreach($result as $item) $item->GroupID = $this->ID;
-		return $result;
+		// Call the relation method on the DataList to get the members from all the groups
+		return $groups->relation('DirectMembers')
+			->where($filter)->sort($sort)->join($join)->limit($limit);
+	}
+	
+	/**
+	 * Return only the members directly added to this group
+	 */
+	public function DirectMembers() {
+		return $this->getManyManyComponents('Members');
 	}
 	
 	public function map($filter = "", $sort = "", $blank="") {
@@ -419,7 +399,7 @@ class Group extends DataObject {
 		$children = $extInstance->AllChildrenIncludingDeleted();
 		$extInstance->clearOwner();
 		
-		$filteredChildren = new DataObjectSet();
+		$filteredChildren = new ArrayList();
 		
 		if($children) foreach($children as $child) {
 			if($child->canView()) $filteredChildren->push($child);
@@ -461,7 +441,7 @@ class Group extends DataObject {
 		
 		// Add default author group if no other group exists
 		$allGroups = DataObject::get('Group');
-		if(!$allGroups) {
+		if(!$allGroups->count()) {
 			$authorGroup = new Group();
 			$authorGroup->Code = 'content-authors';
 			$authorGroup->Title = _t('Group.DefaultGroupTitleContentAuthors', 'Content Authors');
@@ -476,7 +456,7 @@ class Group extends DataObject {
 	
 		// Add default admin group if none with permission code ADMIN exists
 		$adminGroups = Permission::get_groups_by_permission('ADMIN');
-		if(!$adminGroups) {
+		if(!$adminGroups->count()) {
 			$adminGroup = new Group();
 			$adminGroup->Code = 'administrators';
 			$adminGroup->Title = _t('Group.DefaultGroupTitleAdministrators', 'Administrators');

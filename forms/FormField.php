@@ -119,10 +119,17 @@ class FormField extends RequestHandler {
 	 * 
 	 * @return string
 	 */
-	function Name() {
+	function getName() {
 		return $this->name;
 	}
-	
+
+	/**
+	 * @deprecated 3.0 Use {@link getName()}.
+	 */
+	public function Name() {
+		return $this->getName();
+	}
+
 	function attrName() {
 		return $this->name;
 	}
@@ -649,7 +656,7 @@ HTML;
 	/**
 	 * Set the fieldset that contains this field. 
 	 *
-	 * @param FieldSet $containerFieldSet
+	 * @param FieldList $containerFieldSet
 	 */ 
 	function setContainerFieldSet($containerFieldSet) {
 		$this->containerFieldSet = $containerFieldSet;

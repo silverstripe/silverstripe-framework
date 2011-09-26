@@ -34,7 +34,7 @@
  *  $map = $myDoSet->toDropDownMap();
  *  
  *   // Instantiate the OptionsetField 
- *   $fieldset = new Fieldset(
+ *   $fieldset = new FieldList(
  *     new OptionsetField(
  *      $name = "Foobar",
  *      $title = "FooBar's optionset",
@@ -136,7 +136,7 @@ class OptionsetField extends DropdownField {
 	}
 	
 	function ExtraOptions() {
-		return new DataObjectSet();
+		return new ArrayList();
 	}
 }
 ?>

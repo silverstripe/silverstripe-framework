@@ -84,7 +84,7 @@
 			var self = this, processDfd = new $.Deferred();
 			
 			// CSS
-			if(xhr.getResponseHeader('X-Include-CSS')) {
+			if(xhr.getResponseHeader && xhr.getResponseHeader('X-Include-CSS')) {
 				var cssIncludes = xhr.getResponseHeader('X-Include-CSS').split(',');
 				for(var i=0;i<cssIncludes.length;i++) {
 					// Syntax: "URL:##:media"
@@ -99,7 +99,7 @@
 
 			// JavaScript
 			var newJsIncludes = [];
-			if(xhr.getResponseHeader('X-Include-JS')) {
+			if(xhr.getResponseHeader && xhr.getResponseHeader('X-Include-JS')) {
 				var jsIncludes = xhr.getResponseHeader('X-Include-JS').split(',');
 				for(var i=0;i<jsIncludes.length;i++) {
 					if(!$.isItemLoaded(jsIncludes[i])) {

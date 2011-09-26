@@ -65,12 +65,12 @@ class SapphireSoapServer extends Controller {
 			}
 			$methods[] = new ArrayData(array(
 				"Name" => $methodName,
-				"Arguments" => new DataObjectSet($processedArguments),
+				"Arguments" => new ArrayList($processedArguments),
 				"ReturnType" => self::$xsd_types[$returnType],
 			));
 		}
 		
-		return new DataObjectSet($methods);
+		return new ArrayList($methods);
 	}
 	
 	/**

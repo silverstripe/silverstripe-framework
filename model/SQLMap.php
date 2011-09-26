@@ -68,7 +68,7 @@ class SQLMap extends Object implements IteratorAggregate {
 	 */
 	protected function genItems() {
 		if(!isset($this->items)) {
-			$this->items = new DataObjectSet();
+			$this->items = new ArrayList();
 			$items = $this->query->execute();	
 			
 			foreach($items as $item) {

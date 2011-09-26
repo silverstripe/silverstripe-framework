@@ -731,10 +731,10 @@ abstract class SS_Database {
 			$limit = $sqlQuery->limit;
 			// Pass limit as array or SQL string value
 			if(is_array($limit)) {
-				if(!array_key_exists('limit',$limit)) user_error('SQLQuery::limit(): Wrong format for $limit', E_USER_ERROR);
+				if(!array_key_exists('limit',$limit)) throw new InvalidArgumentException('SQLQuery::limit(): Wrong format for $limit: ' . var_export($limit, true));
 
 				if(isset($limit['start']) && is_numeric($limit['start']) && isset($limit['limit']) && is_numeric($limit['limit'])) {
-					$combinedLimit = "$limit[limit] OFFSET $limit[start]";
+					$combinedLimit = $limit['start'] ? "$limit[limit] OFFSET $limit[start]" : "$limit[limit]";
 				} elseif(isset($limit['limit']) && is_numeric($limit['limit'])) {
 					$combinedLimit = (int)$limit['limit'];
 				} else {
@@ -746,7 +746,6 @@ abstract class SS_Database {
 				$text .= " LIMIT " . $sqlQuery->limit;
 			}
 		}
-		
 		return $text;
 	}
 	

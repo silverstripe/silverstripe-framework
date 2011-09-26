@@ -830,15 +830,18 @@ class MySQLDatabase extends SS_Database {
 		// Get records
 		$records = DB::query($fullQuery);
 
-		foreach($records as $record)
+		$objects = array();
+
+		foreach($records as $record) {
 			$objects[] = new $record['ClassName']($record);
+		}
 
+		$list = new PaginatedList(new ArrayList($objects));
+		$list->setPageStart($start);
+		$list->setPageLEngth($pageLength);
+		$list->setTotalItems($totalCount);
 
-		if(isset($objects)) $doSet = new DataObjectSet($objects);
-		else $doSet = new DataObjectSet();
-
-		$doSet->setPageLimits($start, $pageLength, $totalCount);
-		return $doSet;
+		return $list;
 	}
 
 	/**

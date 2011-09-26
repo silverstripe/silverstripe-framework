@@ -379,7 +379,7 @@ class Permission extends DataObject {
 	 */
 	public static function get_members_by_permission($code) {
 		$toplevelGroups = self::get_groups_by_permission($code);
-		if (!$toplevelGroups) return false;
+		if (!$toplevelGroups) return new ArrayList();
 
 		$groupIDs = array();
 		foreach($toplevelGroups as $group) {
@@ -389,8 +389,7 @@ class Permission extends DataObject {
 			}
 		}
 
-		if(!count($groupIDs))
-			return false;
+		if(!count($groupIDs)) return new ArrayList();
 			
 		$members = DataObject::get(
 			Object::getCustomClass('Member'),

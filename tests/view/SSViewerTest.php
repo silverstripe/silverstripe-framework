@@ -332,10 +332,10 @@ after')
 		
 		$data = new ArrayData(array(
 			'Title' => 'A',
-			'Children' => new DataObjectSet(array(
+			'Children' => new ArrayList(array(
 				new ArrayData(array(
 					'Title' => 'A1',
-					'Children' => new DataObjectSet(array(
+					'Children' => new ArrayList(array(
 						new ArrayData(array( 'Title' => 'A1 i', )),
 						new ArrayData(array( 'Title' => 'A1 ii', )),
 					)),
@@ -415,7 +415,7 @@ after')
 		// Data to run the loop tests on - one sequence of three items, each with a subitem
 		$data = new ArrayData(array(
 			'Name' => 'Top',
-			'Foo' => new DataObjectSet(array(
+			'Foo' => new ArrayList(array(
 				new ArrayData(array(
 					'Name' => '1',
 					'Sub' => new ArrayData(array(
@@ -538,7 +538,7 @@ class SSViewerTestFixture extends ViewableData {
 
 		// Special field name Loop### to create a list
 		if(preg_match('/^Loop([0-9]+)$/', $fieldName, $matches)) {
-			$output = new DataObjectSet();
+			$output = new ArrayList();
 			for($i=0;$i<$matches[1];$i++) $output->push(new SSViewerTestFixture($childName));
 			return $output;
 

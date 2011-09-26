@@ -14,9 +14,8 @@
  */
 class ExactMatchMultiFilter extends SearchFilter {
 	
-	public function apply(SQLQuery $query) {
-		$query = $this->applyRelation($query);
-		
+	public function apply(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
 		// hack
 		// PREVIOUS $values = explode(',',$this->getValue());
 		$values = array();

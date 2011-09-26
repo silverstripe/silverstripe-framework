@@ -62,13 +62,9 @@ class GroupTest extends FunctionalTest {
 	      $form->saveInto($member);
 	      $updatedGroups = $member->Groups();
 
-	      $controlGroups = new Member_GroupSet(
-	         $adminGroup,
-	         $parentGroup
-	      );
 	      $this->assertEquals(
-	         $updatedGroups->Map('ID','ID'),
-	         $controlGroups->Map('ID','ID'),
+			array($adminGroup->ID, $parentGroup->ID),
+	         $updatedGroups->column(),
 	         "Adding a toplevel group works"
 	      );
 
@@ -82,12 +78,9 @@ class GroupTest extends FunctionalTest {
 	      $form->saveInto($member);
 	      $member->flushCache();
 	      $updatedGroups = $member->Groups();
-	      $controlGroups = new Member_GroupSet(
-	         $adminGroup
-	      );
 	      $this->assertEquals(
-	         $updatedGroups->Map('ID','ID'),
-	         $controlGroups->Map('ID','ID'),
+			array($adminGroup->ID),
+	         $updatedGroups->column(),
 	         "Removing a previously added toplevel group works"
 	      );
 
@@ -100,8 +93,8 @@ class GroupTest extends FunctionalTest {
 		
 		$adminGroup->delete();
 		
-		$this->assertNull(DataObject::get('Group', "\"ID\"={$adminGroup->ID}"), 'Group is removed');
-		$this->assertNull(DataObject::get('Permission',"\"GroupID\"={$adminGroup->ID}"), 'Permissions removed along with the group');
+		$this->assertEquals(0, DataObject::get('Group', "\"ID\"={$adminGroup->ID}")->count(), 'Group is removed');
+		$this->assertEquals(0, DataObject::get('Permission',"\"GroupID\"={$adminGroup->ID}")->count(), 'Permissions removed along with the group');
 	}
 	
 	function testCollateAncestorIDs() {
@@ -135,8 +128,8 @@ class GroupTest_Member extends Member implements TestOnly {
    
    function getCMSFields() {
       $groups = DataObject::get('Group');
-      $groupsMap = ($groups) ? $groups->toDropDownMap() : false;
-      $fields = new FieldSet(
+      $groupsMap = ($groups) ? $groups->map() : false;
+      $fields = new FieldList(
          new HiddenField('ID', 'ID'),
          new CheckboxSetField(
             'Groups',
@@ -154,7 +147,7 @@ class GroupTest_MemberForm extends Form {
    
    function __construct($controller, $name) {
       $fields = singleton('GroupTest_Member')->getCMSFields();
-      $actions = new FieldSet(
+      $actions = new FieldList(
          new FormAction('doSave','save')
       );
       

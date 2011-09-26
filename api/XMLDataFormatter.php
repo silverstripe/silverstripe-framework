@@ -132,7 +132,7 @@ class XMLDataFormatter extends DataFormatter {
 	 * @param DataObjectSet $set
 	 * @return String XML
 	 */
-	public function convertDataObjectSet(DataObjectSet $set, $fields = null) {
+	public function convertDataObjectSet(SS_List $set, $fields = null) {
 		Controller::curr()->getResponse()->addHeader("Content-Type", "text/xml");
 		$className = $set->class;
 	

@@ -250,7 +250,7 @@ class RestfulService extends ViewableData {
 	
 	public function getAttributes($xml, $collection=NULL, $element=NULL){
 		$xml = new SimpleXMLElement($xml);
-		$output = new DataObjectSet();
+		$output = new ArrayList();
 		
 		if($collection)
 			$childElements = $xml->{$collection};
@@ -305,7 +305,7 @@ class RestfulService extends ViewableData {
 	
 	public function getValues($xml, $collection=NULL, $element=NULL){
 		$xml = new SimpleXMLElement($xml);
-		$output = new DataObjectSet();
+		$output = new ArrayList();
 		
 			$childElements = $xml;
 		if($collection)
@@ -386,7 +386,7 @@ class RestfulService extends ViewableData {
  	*/
 	function searchAttributes($xml, $node=NULL){
 		$xml = new SimpleXMLElement($xml);
-		$output = new DataObjectSet();
+		$output = new ArrayList();
 	
 		$childElements = $xml->xpath($node);
 		

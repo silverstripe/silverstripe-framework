@@ -17,11 +17,11 @@
  * class ExampleForm_Controller extends Page_Controller {
  * 
  * 	public function Form() {
- * 		$fields = new FieldSet(
+ * 		$fields = new FieldList(
  * 			new TextField('MyName'),
  * 			new FileField('MyFile')
  * 		);
- * 		$actions = new FieldSet(
+ * 		$actions = new FieldList(
  * 			new FormAction('doUpload', 'Upload file')
  * 		);
  *    $validator = new RequiredFields(array('MyName', 'MyFile'));

@@ -164,8 +164,7 @@ class CheckboxSetField extends OptionsetField {
 		// If we're not passed a value directly, we can look for it in a relation method on the object passed as a second arg
 		if(!$value && $obj && $obj instanceof DataObject && $obj->hasMethod($this->name)) {
 			$funcName = $this->name;
-			$selected = $obj->$funcName();
-			$value = $selected->toDropdownMap('ID', 'ID');
+			$value = $obj->$funcName()->getIDList();
 		}
 
 		parent::setValue($value, $obj);

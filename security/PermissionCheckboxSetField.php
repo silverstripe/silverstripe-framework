@@ -42,10 +42,10 @@ class PermissionCheckboxSetField extends FormField {
 		$this->filterField = $filterField;
 		$this->managedClass = $managedClass;
 
-		if(is_a($records, 'DataObjectSet')) {
+		if($records instanceof SS_List) {
 			$this->records = $records;
-		} elseif(is_a($records, 'DataObject')) {
-			$this->records = new DataObjectSet($records);
+		} elseif($records instanceof Group) {
+			$this->records = new ArrayList(array($records));
 		} elseif($records) {
 			throw new InvalidArgumentException('$record should be either a Group record, or a DataObjectSet of Group records');
 		}
@@ -76,7 +76,7 @@ class PermissionCheckboxSetField extends FormField {
 		
 		$uninheritedCodes = array();
 		$inheritedCodes = array();
-		$records = ($this->records) ? $this->records : new DataObjectSet();
+		$records = ($this->records) ? $this->records : new ArrayList();
 		
 		// Get existing values from the form record (assuming the formfield name is a join field on the record)
 		if(is_object($this->form)) {
@@ -173,6 +173,7 @@ class PermissionCheckboxSetField extends FormField {
 				$options .= "<li><h5>$categoryName</h5></li>";
 				foreach($permissions as $code => $permission) {
 					if(in_array($code, $this->hiddenPermissions)) continue;
+					if(in_array($code, Permission::$hidden_permissions)) continue;
 					
 					$value = $permission['name'];
 			

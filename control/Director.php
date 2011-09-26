@@ -63,7 +63,7 @@ class Director {
 	 * @uses handleRequest() rule-lookup logic is handled by this.
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
-	static function direct($url) {
+	static function direct($url, DataModel $model) {
 		// Validate $_FILES array before merging it with $_POST
 		foreach($_FILES as $k => $v) {
 			if(is_array($v['tmp_name'])) {
@@ -103,7 +103,7 @@ class Director {
 		// Load the session into the controller
 		$session = new Session(isset($_SESSION) ? $_SESSION : null);
 		
-		$result = Director::handleRequest($req, $session);
+		$result = Director::handleRequest($req, $session, $model);
 		$session->inst_save();
 
 		// Return code for a redirection request
@@ -202,7 +202,8 @@ class Director {
 
 		$req = new SS_HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
 		if($headers) foreach($headers as $k => $v) $req->addHeader($k, $v);
-		$result = Director::handleRequest($req, $session);
+		// TODO: Pass in the DataModel
+		$result = Director::handleRequest($req, $session, DataModel::inst());
 		
 		// Restore the superglobals
 		$_REQUEST = $existingRequestVars; 
@@ -227,7 +228,7 @@ class Director {
 	 *
 	 * @return SS_HTTPResponse|string
 	 */
-	protected static function handleRequest(SS_HTTPRequest $request, Session $session) {
+	protected static function handleRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
 		krsort(Director::$rules);
 
 		if(isset($_REQUEST['debug'])) Debug::show(Director::$rules);
@@ -260,7 +261,7 @@ class Director {
 						$controllerObj->setSession($session);
 
 						try {
-							$result = $controllerObj->handleRequest($request);
+							$result = $controllerObj->handleRequest($request, $model);
 						} catch(SS_HTTPResponse_Exception $responseException) {
 							$result = $responseException->getResponse();
 						}

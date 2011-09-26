@@ -63,14 +63,14 @@ class SearchContext extends Object {
 	 * 
 	 * @param string $modelClass The base {@link DataObject} class that search properties related to.
 	 * 						Also used to generate a set of result objects based on this class.
-	 * @param FieldSet $fields Optional. FormFields mapping to {@link DataObject::$db} properties
+	 * @param FieldList $fields Optional. FormFields mapping to {@link DataObject::$db} properties
 	 *	 					which are to be searched. Derived from modelclass using 
 	 *						{@link DataObject::scaffoldSearchFields()} if left blank.
 	 * @param array $filters Optional. Derived from modelclass if left blank
 	 */	
 	function __construct($modelClass, $fields = null, $filters = null) {
 		$this->modelClass = $modelClass;
-		$this->fields = ($fields) ? $fields : new FieldSet();
+		$this->fields = ($fields) ? $fields : new FieldList();
 		$this->filters = ($filters) ? $filters : array();
 		
 		parent::__construct();
@@ -115,19 +115,17 @@ class SearchContext extends Object {
 	 * @return SQLQuery
 	 */
 	public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null) {
-		$model = singleton($this->modelClass);
-		
-		if($existingQuery) {
-			$query = $existingQuery;
-		} else {
-			$query = $model->extendedSQL();
-		}
-
-		$SQL_limit = Convert::raw2sql($limit);
-		$query->limit($SQL_limit);
-
-		$SQL_sort = (!empty($sort)) ? Convert::raw2sql($sort) : singleton($this->modelClass)->stat('default_sort');		
-		$query->orderby($SQL_sort);
+	    if($existingQuery) {
+	        if(!($existingQuery instanceof DataList)) throw new InvalidArgumentException("existingQuery must be DataList");
+	        if($existingQuery->dataClass() != $this->modelClass) throw new InvalidArgumentException("existingQuery's dataClass is " . $existingQuery->dataClass() . ", $this->modelClass expected.");
+	        $query = $existingQuery;
+	         
+	    } else {
+	        $query = DataList::create($this->modelClass);
+        }
+        
+		$query->limit($limit);
+		$query->sort($sort);
 		
 		// hack to work with $searchParems when it's an Object 
 		$searchParamArray = array();
@@ -143,15 +141,12 @@ class SearchContext extends Object {
 				$filter->setModel($this->modelClass);
 				$filter->setValue($value);
 				if(! $filter->isEmpty()) {
-					$filter->apply($query);
+					$filter->apply($query->dataQuery());
 				}
 			}
 		}
 		
-		$query->connective = $this->connective;
-		$query->distinct = true;
-		
-		$model->extend('augmentSQL', $query);
+ 		if($this->connective != "AND") throw new Exception("SearchContext connective '$this->connective' not supported after ORM-rewrite.");
 		
 		return $query;
 	}
@@ -168,18 +163,9 @@ class SearchContext extends Object {
 	 */
 	public function getResults($searchParams, $sort = false, $limit = false) {
 		$searchParams = array_filter($searchParams, array($this,'clearEmptySearchFields'));
-		
-		$query = $this->getQuery($searchParams, $sort, $limit);
-		
-		// use if a raw SQL query is needed
-		$results = new DataObjectSet();
-		foreach($query->execute() as $row) {
-			$className = $row['RecordClassName'];
-			$results->push(new $className($row));
-		}
-		return $results;
-		//
-		//return DataObject::get($this->modelClass, $query->getFilter(), "", "", $limit);
+
+		// getQuery actually returns a DataList
+		return $this->getQuery($searchParams, $sort, $limit);
 	}
 
 	/**
@@ -255,7 +241,7 @@ class SearchContext extends Object {
 	/**
 	 * Apply a list of searchable fields to the current search context.
 	 *
-	 * @param FieldSet $fields
+	 * @param FieldList $fields
 	 */
 	public function setFields($fields) {
 		$this->fields = $fields;

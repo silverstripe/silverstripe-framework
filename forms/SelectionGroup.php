@@ -42,7 +42,7 @@ class SelectionGroup extends CompositeField {
 			$newChildren[$idx] = $child;
 		}
 
-		$clone->setChildren(new FieldSet($newChildren));
+		$clone->setChildren(new FieldList($newChildren));
 		$clone->setReadonly(true);
 		return $clone;
 	}
@@ -74,7 +74,7 @@ class SelectionGroup extends CompositeField {
 
 			$firstSelected = $checked ="";			
 		}
-		return new DataObjectSet($newItems);
+		return new ArrayList($newItems);
 	}
 	
 	function hasData() {

@@ -99,7 +99,7 @@ class RSSFeed extends ViewableData {
 	 * @param string $etag The ETag is an unique identifier that is changed
 	 *                         every time the representation does
 	 */
-	function __construct(DataObjectSet $entries, $link, $title,
+	function __construct(SS_List $entries, $link, $title,
 											 $description = null, $titleField = "Title",
 											 $descriptionField = "Content", $authorField = null,
 											 $lastModified = null, $etag = null) {
@@ -137,7 +137,7 @@ class RSSFeed extends ViewableData {
 	 * @return DataObjectSet Returns the {@link RSSFeed_Entry} objects.
 	 */
 	function Entries() {
-		$output = new DataObjectSet();
+		$output = new ArrayList();
 		if(isset($this->entries)) {
 			foreach($this->entries as $entry) {
 				$output->push(new RSSFeed_Entry($entry, $this->titleField, $this->descriptionField, $this->authorField));
