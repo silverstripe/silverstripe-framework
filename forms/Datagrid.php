@@ -13,14 +13,14 @@ class Datagrid extends FormField {
 	protected $datasource = null;
 
 	/**
-	 * Create a new field.
-	 * @param name The internal field name, passed to forms.
-	 * @param title The field label.
-	 * @param value The value of the field.
-	 * @param form Reference to the container form
-	 * @param maxLength The Maximum length of the attribute
+	 * Creates a new datagrid field
+	 *
+	 * @param string $name
+	 * @param string $title
+	 * @param SS_list $source
+	 * @param Form $form 
 	 */
-	function __construct($name, $title = null, SS_list $source = null, $form = null) {
+	function __construct($name, $title = null, SS_list $source = null, Form $form = null) {
 		parent::__construct($name, $title, null, $form);
 	}
 
