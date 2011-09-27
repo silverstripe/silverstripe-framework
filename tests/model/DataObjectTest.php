@@ -24,20 +24,17 @@ class DataObjectTest extends SapphireTest {
 		$obj = new DataObjectTest_SubTeam();
 		$obj->SubclassDatabaseField = "obj-SubTeam";
 		$obj->write();
-		
+
 		// Change the class
 		$obj->ClassName = 'OtherSubclassWithSameField';
 		$obj->write();
 		$obj->flushCache();
-		
-		
-		
-		
-		// Re-fetch from the database and confirm that the data is sourced from 
+
+		// Re-fetch from the database and confirm that the data is sourced from
 		// OtherSubclassWithSameField.SubclassDatabaseField
 		$obj = DataObject::get_by_id('DataObjectTest_Team', $obj->ID);
 		$this->assertNull($obj->SubclassDatabaseField);
-		
+
 		// Confirm that save the object in the other direction.
 		$obj->SubclassDatabaseField = 'obj-Other';
 		$obj->write();
@@ -70,8 +67,8 @@ class DataObjectTest extends SapphireTest {
 		// Check that page does not exist after deleting
 		$obj = DataObject::get_by_id('DataObjectTest_Player', $objID);
 		$this->assertTrue(!$obj || !$obj->exists());
-		
-		
+
+
 		// Test deleting using DataObject::delete_by_id()
 		// Get the second page
 		$obj = $this->objFromFixture('DataObjectTest_Player', 'captain2');
@@ -84,7 +81,7 @@ class DataObjectTest extends SapphireTest {
 		$obj = DataObject::get_by_id('DataObjectTest_Player', $objID);
 		$this->assertTrue(!$obj || !$obj->exists());
 	}
-	
+
 	/**
 	 * Test methods that get DataObjects
 	 *   - DataObject::get()
@@ -103,14 +100,14 @@ class DataObjectTest extends SapphireTest {
 		// Test getting all records of a DataObject
 		$comments = DataObject::get('DataObjectTest_TeamComment');
 		$this->assertEquals(3, $comments->Count());
-		
+
 		// Test WHERE clause
 		$comments = DataObject::get('DataObjectTest_TeamComment', "\"Name\"='Bob'");
 		$this->assertEquals(1, $comments->Count());
 		foreach($comments as $comment) {
 			$this->assertEquals('Bob', $comment->Name);
 		}
-		
+
 		// Test sorting
 		$comments = DataObject::get('DataObjectTest_TeamComment', '', "\"Name\" ASC");
 		$this->assertEquals(3, $comments->Count());
@@ -118,58 +115,58 @@ class DataObjectTest extends SapphireTest {
 		$comments = DataObject::get('DataObjectTest_TeamComment', '', "\"Name\" DESC");
 		$this->assertEquals(3, $comments->Count());
 		$this->assertEquals('Phil', $comments->First()->Name);
-		
+
 		// Test join
 		$comments = DataObject::get(
-			'DataObjectTest_TeamComment', 
-			"\"DataObjectTest_Team\".\"Title\" = 'Team 1'", 
-			"\"Name\" ASC", 
+			'DataObjectTest_TeamComment',
+			"\"DataObjectTest_Team\".\"Title\" = 'Team 1'",
+			"\"Name\" ASC",
 			"INNER JOIN \"DataObjectTest_Team\" ON \"DataObjectTest_TeamComment\".\"TeamID\" = \"DataObjectTest_Team\".\"ID\""
 		);
-			
+
 		$this->assertEquals(2, $comments->Count());
 		$this->assertEquals('Bob', $comments->First()->Name);
 		$this->assertEquals('Joe', $comments->Last()->Name);
-		
+
 		// Test limit
 		$comments = DataObject::get('DataObjectTest_TeamComment', '', "\"Name\" ASC", '', '1,2');
 		$this->assertEquals(2, $comments->Count());
 		$this->assertEquals('Joe', $comments->First()->Name);
 		$this->assertEquals('Phil', $comments->Last()->Name);
-		
+
 		// Test get_by_id()
 		$captain1ID = $this->idFromFixture('DataObjectTest_Player', 'captain1');
 		$captain1 = DataObject::get_by_id('DataObjectTest_Player', $captain1ID);
 		$this->assertEquals('Captain', $captain1->FirstName);
-		
+
 		// Test get_one() without caching
 		$comment1 = DataObject::get_one('DataObjectTest_TeamComment', "\"Name\" = 'Joe'", false);
 		$comment1->Comment = "Something Else";
-		
+
 		$comment2 = DataObject::get_one('DataObjectTest_TeamComment', "\"Name\" = 'Joe'", false);
 		$this->assertNotEquals($comment1->Comment, $comment2->Comment);
-		
+
 		// Test get_one() with caching
 		$comment1 = DataObject::get_one('DataObjectTest_TeamComment', "\"Name\" = 'Bob'", true);
 		$comment1->Comment = "Something Else";
-		
+
 		$comment2 = DataObject::get_one('DataObjectTest_TeamComment', "\"Name\" = 'Bob'", true);
 		$this->assertEquals((string)$comment1->Comment, (string)$comment2->Comment);
-		
+
 		// Test get_one() with order by without caching
 		$comment = DataObject::get_one('DataObjectTest_TeamComment', '', false, "\"Name\" ASC");
 		$this->assertEquals('Bob', $comment->Name);
-		
+
 		$comment = DataObject::get_one('DataObjectTest_TeamComment', '', false, "\"Name\" DESC");
 		$this->assertEquals('Phil', $comment->Name);
-		
+
 		// Test get_one() with order by with caching
 		$comment = DataObject::get_one('DataObjectTest_TeamComment', '', true, '"Name" ASC');
 		$this->assertEquals('Bob', $comment->Name);
 		$comment = DataObject::get_one('DataObjectTest_TeamComment', '', true, '"Name" DESC');
 		$this->assertEquals('Phil', $comment->Name);
 	}
-	
+
 	function testGetSubclassFields() {
 		/* Test that fields / has_one relations from the parent table and the subclass tables are extracted */
 		$captain1 = $this->objFromFixture("DataObjectTest_Player", "captain1");
@@ -180,7 +177,7 @@ class DataObjectTest extends SapphireTest {
 		// Subclass has_one relation
 		$this->assertEquals($this->idFromFixture('DataObjectTest_Team', 'team1'), $captain1->FavouriteTeamID);
 	}
-	
+
 	function testGetHasOneRelations() {
 		$captain1 = $this->objFromFixture("DataObjectTest_Player", "captain1");
 		/* There will be a field called (relname)ID that contains the ID of the object linked to via the has_one relation */
@@ -188,13 +185,13 @@ class DataObjectTest extends SapphireTest {
 		/* There will be a method called $obj->relname() that returns the object itself */
 		$this->assertEquals($this->idFromFixture('DataObjectTest_Team', 'team1'), $captain1->FavouriteTeam()->ID);
 	}
-	
+
 	function testLimitAndCount() {
 		$players = DataObject::get("DataObjectTest_Player");
-		
+
 		// There's 4 records in total
 		$this->assertEquals(4, $players->count());
-		
+
 		// Testing "## offset ##" syntax
 		$this->assertEquals(4, $players->limit("20 OFFSET 0")->count());
 		$this->assertEquals(0, $players->limit("20 OFFSET 20")->count());
@@ -211,7 +208,7 @@ class DataObjectTest extends SapphireTest {
 
 	/**
 	 * Test writing of database columns which don't correlate to a DBField,
-	 * e.g. all relation fields on has_one/has_many like "ParentID". 
+	 * e.g. all relation fields on has_one/has_many like "ParentID".
 	 *
 	 */
 	function testWritePropertyWithoutDBField() {
@@ -222,7 +219,7 @@ class DataObjectTest extends SapphireTest {
 		$savedObj = DataObject::get_by_id('DataObjectTest_Player', $obj->ID);
 		$this->assertTrue($savedObj->FavouriteTeamID == 99);
 	}
-	
+
 	/**
 	 * Test has many relationships
 	 *   - Test getComponents() gets the ComponentSet of the other side of the relation
@@ -230,15 +227,15 @@ class DataObjectTest extends SapphireTest {
 	 */
 	function testHasManyRelationships() {
 		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
-		
+
 		// Test getComponents() gets the ComponentSet of the other side of the relation
 		$this->assertTrue($team->Comments()->Count() == 2);
-		
+
 		// Test the IDs on the DataObjects are set correctly
 		foreach($team->Comments() as $comment) {
 			$this->assertEquals($team->ID, $comment->TeamID);
 		}
-		
+
 		// Test that we can add and remove items that already exist in the database
 		$newComment = new DataObjectTest_TeamComment();
 		$newComment->Name = "Automated commenter";
@@ -246,7 +243,7 @@ class DataObjectTest extends SapphireTest {
 		$newComment->write();
 		$team->Comments()->add($newComment);
 		$this->assertEquals($team->ID, $newComment->TeamID);
-		
+
 		$comment1 = $this->fixture->objFromFixture('DataObjectTest_TeamComment', 'comment1');
 		$comment2 = $this->fixture->objFromFixture('DataObjectTest_TeamComment', 'comment2');
 		$team->Comments()->remove($comment2);
@@ -258,11 +255,11 @@ class DataObjectTest extends SapphireTest {
 	function testHasOneRelationship() {
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$player1 = $this->objFromFixture('DataObjectTest_Player', 'player1');
-	   
+
 		// Add a captain to team 1
 		$team1->setField('CaptainID', $player1->ID);
 		$team1->write();
-		
+
 		$this->assertEquals($player1->ID, $team1->Captain()->ID, 'The captain exists for team 1');
 		$this->assertEquals($player1->ID, $team1->getComponent('Captain')->ID, 'The captain exists through the component getter');
 
@@ -282,7 +279,10 @@ class DataObjectTest extends SapphireTest {
 	   // Test adding single DataObject by reference
 	   $player1->Teams()->add($team1);
 	   $player1->flushCache();
-	   $compareTeams = new ManyManyList($team1);
+	   
+	   $compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID', 'DataObjectTest_PlayerID');
+	   $compareTeams->forForeignID($player1->ID);
+	   $compareTeams->byID($team1->ID);
 	   $this->assertEquals(
 	      $player1->Teams()->column('ID'),
 	      $compareTeams->column('ID'),
@@ -292,7 +292,9 @@ class DataObjectTest extends SapphireTest {
 	   // test removing single DataObject by reference
 	   $player1->Teams()->remove($team1);
 	   $player1->flushCache();
-	   $compareTeams = new ManyManyList();
+	   $compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID', 'DataObjectTest_PlayerID');
+	   $compareTeams->forForeignID($player1->ID);
+	   $compareTeams->byID($team1->ID);
 	   $this->assertEquals(
 	      $player1->Teams()->column('ID'),
 	      $compareTeams->column('ID'),
@@ -302,7 +304,9 @@ class DataObjectTest extends SapphireTest {
 	   // test adding single DataObject by ID
 	   $player1->Teams()->add($team1->ID);
 	   $player1->flushCache();
-	   $compareTeams = new ManyManyList($team1);
+	   $compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID', 'DataObjectTest_PlayerID');
+	   $compareTeams->forForeignID($player1->ID);
+	   $compareTeams->byID($team1->ID);
 	   $this->assertEquals(
 	      $player1->Teams()->column('ID'),
 	      $compareTeams->column('ID'),
@@ -312,7 +316,9 @@ class DataObjectTest extends SapphireTest {
 	   // test removing single DataObject by ID
 	   $player1->Teams()->removeByID($team1->ID);
 	   $player1->flushCache();
-	   $compareTeams = new ManyManyList();
+	   $compareTeams = new ManyManyList('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID', 'DataObjectTest_PlayerID');
+	   $compareTeams->forForeignID($player1->ID);
+	   $compareTeams->byID($team1->ID);
 	   $this->assertEquals(
 	      $player1->Teams()->column('ID'),
 	      $compareTeams->column('ID'),
