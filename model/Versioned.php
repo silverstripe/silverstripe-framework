@@ -679,7 +679,7 @@ class Versioned extends DataExtension {
 	 * Return a list of all the versions available.
 	 * @param string $filter
 	 */
-	function allVersions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
+	public function allVersions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
 		// Make sure the table names are not postfixed (e.g. _Live)
 		$oldMode = self::get_reading_mode();
 		self::reading_stage('Stage');
@@ -687,8 +687,11 @@ class Versioned extends DataExtension {
 		$query = $this->owner->extendedSQL($filter, $sort, $limit, $join, $having);
 
 		foreach($query->from as $table => $tableJoin) {
-			if($tableJoin[0] == '"') $baseTable = str_replace('"','',$tableJoin);
-			else if (substr($tableJoin,0,5) != 'INNER') $query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
+			if(is_string($tableJoin) && $tableJoin[0] == '"') {
+				$baseTable = str_replace('"','',$tableJoin);
+			} elseif(is_string($tableJoin) && substr($tableJoin,0,5) != 'INNER') {
+				$query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
+			}
 			$query->renameTable($table, $table . '_versions');
 		}
 		

@@ -70,6 +70,7 @@ class ArrayList extends ViewableData implements SS_List {
 	 *
 	 * @param array|object $item
 	 * @param array|object $with
+	 * @return void;
 	 */
 	public function replace($item, $with) {
 		foreach ($this->items as $key => $candidate) {
@@ -100,7 +101,7 @@ class ArrayList extends ViewableData implements SS_List {
 		$seen = array();
 
 		foreach ($this->items as $key => $item) {
-			$value = $this->extract($item, $field);
+			$value = $this->extractValue($item, $field);
 
 			if (array_key_exists($value, $seen)) {
 				unset($this->items[$key]);
@@ -157,21 +158,21 @@ class ArrayList extends ViewableData implements SS_List {
 	public function map($keyfield, $titlefield) {
 		$map = array();
 		foreach ($this->items as $item) {
-			$map[$this->extract($item, $keyfield)] = $this->extract($item, $titlefield);
+			$map[$this->extractValue($item, $keyfield)] = $this->extractValue($item, $titlefield);
 		}
 		return $map;
 	}
 
 	public function find($key, $value) {
 		foreach ($this->items as $item) {
-			if ($this->extract($item, $key) == $value) return $item;
+			if ($this->extractValue($item, $key) == $value) return $item;
 		}
 	}
 
 	public function column($field = 'ID') {
 		$result = array();
 		foreach ($this->items as $item) {
-			$result[] = $this->extract($item, $field);
+			$result[] = $this->extractValue($item, $field);
 		}
 		return $result;
 	}
@@ -185,28 +186,28 @@ class ArrayList extends ViewableData implements SS_List {
 	 * field name and direction, or a map of field names to sort directions.
 	 *
 	 * @param string|array $by
-	 * @param string $dir
-	 * @see   SS_List::sort()
+	 * @param string $sortDirection
+	 * @see SS_List::sort()
+	 * @link http://php.net/manual/en/function.array-multisort.php
+	 * @example $list->sort('Name', 'ASC');
+	 * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC');
 	 */
-	public function sort($by, $dir = 'ASC') {
+	public function sort($by, $sortDirection = 'ASC') {
 		$sorts = array();
 
-		if (!is_array($by)) {
-			$by = array($by => $dir);
+		if(!is_array($by)) {
+			$by = array($by => $sortDirection);
 		}
 
-		foreach ($by as $field => $dir) {
-			$dir  = strtoupper($dir) == 'DESC' ? SORT_DESC : SORT_ASC;
-			$vals = array();
-
-			foreach ($this->items as $item) {
-				$vals[] = $this->extract($item, $field);
+		foreach ($by as $field => $sortDirection) {
+			$sortDirection  = strtoupper($sortDirection) == 'DESC' ? SORT_DESC : SORT_ASC;
+			$values = array();
+			foreach($this->items as $item) {
+				$values[] = $this->extractValue($item, $field);
 			}
-
-			$sorts[] = $vals;
-			$sorts[] = $dir;
+			$sorts[] = &$values;
+			$sorts[] = &$sortDirection;
 		}
-
 		$sorts[] = &$this->items;
 		call_user_func_array('array_multisort', $sorts);
 	}
@@ -235,7 +236,7 @@ class ArrayList extends ViewableData implements SS_List {
 	 * @param  string $key
 	 * @return mixed
 	 */
-	protected function extract($item, $key) {
+	protected function extractValue($item, $key) {
 		if (is_object($item)) {
 			return $item->$key;
 		} else {

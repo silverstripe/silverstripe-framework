@@ -44,6 +44,7 @@ class TestRunner extends Controller {
         'index',
         'browse',
         'coverage',
+        'coverageOnly',
         'startsession',
         'endsession',
         'cleanupdb',
