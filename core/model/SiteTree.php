@@ -1433,9 +1433,16 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// Update any virtual pages that might need updating
 		$linkedPages = $this->VirtualPages();
-		if($linkedPages) foreach($linkedPages as $page) {
-			$page->copyFrom($page->CopyContentFrom());
-			$page->write();
+		if($linkedPages) {
+			// The only way after a write() call to determine if it was triggered by a writeWithoutVersion(),
+			// which we have to pass on to the virtual page writes as well.
+			$previous = ($this->Version > 1) ? Versioned::get_version($this->class, $this->ID, $this->Version-1) : null;
+			$withoutVersion = (!$previous || $previous->Version == $this->Version);
+			foreach($linkedPages as $page) {
+				$page->copyFrom($page->CopyContentFrom());
+				if($withoutVersion) $page->writeWithoutVersion();
+				else $page->write();
+			}
 		}
 		
 		parent::onAfterWrite();

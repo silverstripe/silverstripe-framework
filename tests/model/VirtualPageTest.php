@@ -415,6 +415,33 @@ class VirtualPageTest extends SapphireTest {
 		VirtualPage::$non_virtual_fields = $origNonVirtualField;
 	}
 	
+	function testWriteWithoutVersion() {
+		$original = new SiteTree();
+		$original->write();
+		$originalVersion = $original->Version;
+
+		$virtual = new VirtualPage();
+		$virtual->CopyContentFromID = $original->ID;
+		$virtual->write();
+		$virtualVersion = $virtual->Version;
+		
+		$virtual->Title = 'changed 1';
+		$virtual->writeWithoutVersion();
+		$this->assertEquals($virtual->Version, $virtualVersion, 'Explicit write');
+
+		$original->Title = 'changed 2';
+		$original->writeWithoutVersion();
+		DataObject::flush_and_destroy_cache();
+		$virtual = DataObject::get_by_id('VirtualPage', $virtual->ID, false);
+		$this->assertEquals($virtual->Version, $virtualVersion, 'Implicit write through original');
+		
+		$original->Title = 'changed 3';
+		$original->write();
+		DataObject::flush_and_destroy_cache();
+		$virtual = DataObject::get_by_id('VirtualPage', $virtual->ID, false);
+		$this->assertGreaterThan($virtualVersion, $virtual->Version, 'Implicit write through original');
+	}
+	
 }
 
 class VirtualPageTest_ClassA extends Page implements TestOnly {
