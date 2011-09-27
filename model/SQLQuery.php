@@ -457,10 +457,6 @@ class SQLQuery {
 	function sql() {
 	    // TODO: Don't require this internal-state manipulate-and-preserve - let sqlQueryToString() handle the new syntax
 	    $origFrom = $this->from;
-	    
-		if(!$this->from) {
-			return '';
-		}
 
 	    // Build from clauses
 	    foreach($this->from as $alias => $join) {
@@ -474,11 +470,18 @@ class SQLQuery {
 	            $this->from[$alias] = strtoupper($join['type']) . " JOIN \"{$join['table']}\" AS \"$alias\" ON $filter";
 	        }
 	    }
-	    
+
 		$sql = DB::getConn()->sqlQueryToString($this);
-		if($this->replacementsOld) $sql = str_replace($this->replacementsOld, $this->replacementsNew, $sql);
+		if($this->replacementsOld) {
+			$sql = str_replace($this->replacementsOld, $this->replacementsNew, $sql);
+		}
 
 	    $this->from = $origFrom;
+
+		// The query was most likely just created and then exectued.
+		if($sql === 'SELECT *') {
+			return '';
+		}
 
 		return $sql;
 	}
