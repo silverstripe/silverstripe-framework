@@ -123,8 +123,13 @@ class Filesystem extends Object {
 	 * back to the equivalent filesystem record.
 	 * 
 	 * @param int $folderID Folder ID to sync along with all it's children
+	 * @param Boolean $syncLinkTracking Determines if the link tracking data should also 
+	 *        be updated via {@link SiteTree->syncLinkTracking()}. Setting this to FALSE
+	 *        means that broken links inside page content are not noticed, at least until the next
+	 *        call to {@link SiteTree->write()} on this page.
+	 * @return string Localized status message
 	 */
-	static function sync($folderID = null) {
+	static function sync($folderID = null, $syncLinkTracking = true) {
 		$folder = DataObject::get_by_id('Folder', (int) $folderID);
 		if(!($folder && $folder->exists())) $folder = singleton('Folder');
 		
@@ -145,15 +150,17 @@ class Filesystem extends Object {
 		}
 
 		// Update the image tracking of all pages
-		if(class_exists('SiteTree')) {
-			$origDisableSubsiteFilter = Subsite::$disable_subsite_filter;
-			if(class_exists('Subsite')) Subsite::$disable_subsite_filter = true;
-			foreach(DataObject::get("SiteTree") as $page) {
-				// syncLinkTracking is called by SiteTree::onBeforeWrite().
-				// Call it without affecting the page version, as this is an internal change.
-				$page->writeWithoutVersion();
+		if($syncLinkTracking) {
+			if(class_exists('SiteTree')) {
+				$origDisableSubsiteFilter = Subsite::$disable_subsite_filter;
+				if(class_exists('Subsite')) Subsite::$disable_subsite_filter = true;
+				foreach(DataObject::get("SiteTree") as $page) {
+					// syncLinkTracking is called by SiteTree::onBeforeWrite().
+					// Call it without affecting the page version, as this is an internal change.
+					$page->writeWithoutVersion();
+				}
+				if(class_exists('Subsite')) Subsite::disable_subsite_filter($origDisableSubsiteFilter);
 			}
-			if(class_exists('Subsite')) Subsite::disable_subsite_filter($origDisableSubsiteFilter);
 		}
 		
 		return _t(
