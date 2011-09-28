@@ -5,8 +5,8 @@
 	<table>
 		<thead>
 			<tr>
-				<% control Headings %>
-				<th class="<% if FirstLast %>ss-datagrid-{$FirstLast} <% if IsSortable %>ss-datagrid-sortable<% end_if %> <% if IsSorted %>ss-datagrid-sorted ss-datagrid-{$SortedDirection}">
+				<% control Headers %>
+				<th class="<% if FirstLast %>ss-datagrid-{$FirstLast}<% end_if %> <% if IsSortable %>ss-datagrid-sortable<% end_if %> <% if IsSorted %>ss-datagrid-sorted ss-datagrid-{$SortedDirection}<% end_if %>">
 					$Title <span class="ui-icon"></span></th>
 				<% end_control %>
 			</tr>
