@@ -1,0 +1,120 @@
+/**
+ * Core styles for the basic DataGrid form field without any specific style.
+ *
+ * @package sapphire
+ * @subpackage scss
+ */
+
+@import "compass/css3";
+
+$base: #dadada;
+$zebra: #f2f9fd;
+
+.ss-datagrid {
+	border: none;
+	
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		border-spacing: 0;
+		background: #fff;
+		border: 1px solid darken($base, 10%);
+	}
+	
+	thead {
+		color: darken($base, 50%);
+
+		background: $base;		
+			
+		@include background-image(linear-gradient(
+			lighten($base, 10%), $base
+		));
+
+ 		
+		th {
+			font-weight: bold;
+			padding: 8px 24px 8px 8px;
+			position: relative;
+			border: 1px solid darken($base, 10%);
+			border-width: 0 1px 1px 0;
+			
+			&.ss-datagrid-sortable {
+					
+				&.hover {
+					color: darken($base, 40%);
+					cursor: pointer;
+					
+					background: lighten($base, 10%);
+					
+					@include background-image(linear-gradient(
+						lighten($base, 15%), lighten($base, 5%)
+					));
+				}	
+			}
+			
+			&.ss-datagrid-sorted {
+				background: lighten($base, 5%);
+				
+				@include background-image(linear-gradient(
+					$base, lighten($base, 10%)
+				));
+				
+				&.hover {
+					background: lighten($base, 10%);
+					
+					@include background-image(linear-gradient(
+						lighten($base, 5%), lighten($base, 12%)
+					));
+				}
+			}
+			
+			.ui-icon {
+				position: absolute;
+				top: 5px;
+				right: 0;
+			}
+			
+			&.ss-datagrid-desc .ui-icon {
+				background-position: 0 -48px;
+			}
+			
+			&.ss-datagrid-asc .ui-icon {
+				background-position: -64px -48px;
+			}
+		}
+	}
+	
+	tbody {
+
+	}
+	
+	td {
+		padding: 8px;
+		border-right: 1px solid lighten($base, 10%);
+		
+		&.ss-datagrid-last {
+			border-right: none;
+		}
+	}
+	
+	tr {
+		
+		&.ss-datagrid-even {
+			border: 1px solid darken($zebra, 10%);
+			border-width: 1px 0;
+			background: $zebra;
+			
+			&.ss-datagrid-last {
+				border-bottom: none;
+			}
+			
+			td {
+				border-right: 1px solid darken($zebra, 5%);
+				
+				&.ss-datagrid-last {
+					border-right: none;
+				}
+			}
+		}
+	}
+}
