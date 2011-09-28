@@ -23,33 +23,57 @@ class DatagridTest extends SapphireTest {
 	public function testGetInstance() {
 		$this->assertTrue(new Datagrid('Testgrid') instanceof FormField, 'Datagrid should be a FormField');
 	}
-
+	
 	public function testSetDataSource() {
 		$grid = new Datagrid('Testgrid');
 		$source = new ArrayList();
-		$grid->setDatasource( $source );
+		$grid->setDatasource($source);
 		$this->assertEquals($source, $grid->getDatasource());
 	}
-
-	public function testGetDefaultHeadersFromEmptyArrayList() {
+	
+	function testSetEmptyDataPresenter() {
+		$this->setExpectedException('Exception');
 		$grid = new Datagrid('Testgrid');
-		$source = new ArrayList();
-		$grid->setDatasource($source);
-		$this->assertEquals(array(), $grid->getHeaders());
+		$grid->setDataPresenter('');
 	}
-
-	public function testGetDefaultHeadersFromArrayList() {
+	
+	function testSetNonExistingDataPresenter() {
+		$this->setExpectedException('Exception');
 		$grid = new Datagrid('Testgrid');
-		$source = new ArrayList(array(array('ID'=>1,'Name'=>'Aaron Aardwark')));
-		$grid->setDatasource($source);
-		$this->assertEquals(array('ID'=>'ID','Name'=>'Name'), $grid->getHeaders());
+		$grid->setDataPresenter('ifThisClassExistsIWouldBeSurprised');
 	}
-
-	public function testGetDefaultHeadersFromDataList() {
+	
+	function testSetDataPresenterWithDataObject() {
+		$this->setExpectedException('Exception');
 		$grid = new Datagrid('Testgrid');
-		$source = new DataList('DatagridTest_Person');
-		$grid->setDatasource($source);
-		$this->assertEquals(array('Name'=>'Name','ID'=>'ID'), $grid->getHeaders());
+		$grid->setDataPresenter('DataObject');
+	}
+	
+	function testSetDataPresenter() {
+		$grid = new Datagrid('Testgrid');
+		$grid->setDataPresenter('DatagridPresenter');
+	}
+	
+	function testFieldListIsNullWithoutDataSource() {
+		$grid = new Datagrid('Testgrid');
+		$this->assertNull($grid->FieldList());
+	}
+	
+	function testFieldList() {
+		$grid = new Datagrid('Testgrid');
+		$grid->setDatasource(new DataList('DatagridTest_Person'));
+		$this->assertNotNull($grid->FieldList());
+		$this->assertEquals(array('Name'=>'Name','ID'=>'ID'), $grid->FieldList());
+	}
+	
+	/**
+	 * This is better tested in the DatagridFunctionalTest
+	 * 
+	 * @see DatagridFunctionalTest
+	 */
+	function testFieldHolder() {
+		$grid = new Datagrid('Testgrid');
+		$this->assertNotNull($grid->FieldHolder());
 	}
 }
 

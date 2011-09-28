@@ -20,10 +20,6 @@ class DatagridFunctionalTest extends FunctionalTest {
 		'DatagridTest_Person',
 	);
 
-	public function testGetInstance() {
-		$this->assertTrue(new Datagrid('testgrid') instanceof Datagrid, 'Trying to find an instance of Datagrid.');
-	}
-
 	public function testAddToForm() {
 		$firstPerson = $this->objFromFixture('DatagridTest_Person', 'first');
 		$response = $this->get("DatagridFunctionalTest_Controller/");
