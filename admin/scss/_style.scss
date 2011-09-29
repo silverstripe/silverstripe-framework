@@ -899,7 +899,7 @@ $DialogLabelColor: #7B8C91;
 		float: none;
 		color: $DialogHeaderColor;
 		margin-top: -4px;
-		margin-left: 36px;
+		margin-left: 38px;
 	}
 
 	/* Numeric labels in the sitetree */
@@ -956,12 +956,12 @@ $DialogLabelColor: #7B8C91;
 * ----------------------------------------------------------------- */
 .ui-dialog-titlebar.ui-widget-header {
     font-size: $DialogHeaderFontSize;
-	background-color: #b0bec7;
+	background-color: #92a5b2;
 	padding: 4px 4px 3px 16px;
 
 	border-bottom: 2px solid #8399a7;
 	@include border-top-left-radius($DialogBorderRadius/2); /* /2 need to eliminate visual artifact */
 	@include border-top-right-radius($DialogBorderRadius);
 	@include background-image(linear-gradient(#ced7dc, #92a5b2));
-	margin-bottom: 7px;
+	margin-bottom: 12px;
 }
