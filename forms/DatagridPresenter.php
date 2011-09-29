@@ -67,14 +67,17 @@ class DatagridPresenter extends ViewableData {
 	 * 
 	 * @return ArrayList
 	 */
-	function Items() {
+	public function Items() {
 		$fieldItems = new ArrayList();
-		if($items = $this->datagrid->datasource) {
+		if($items = $this->getDatagrid()->getDatasource()) {
+			$counter = 0;
 			foreach($items as $item) {
 				if(!$item) {
 					continue;
 				}
-				$fieldItems->push(new $this->itemClass($item, $this));
+				$datagridPresenterItem = new $this->itemClass($item, $this);
+				$datagridPresenterItem->iteratorProperties($counter++, $items->count());
+				$fieldItems->push($datagridPresenterItem);
 			}
 		}
 		return $fieldItems;
@@ -136,8 +139,17 @@ class DatagridPresenter extends ViewableData {
 	protected function summaryFieldsToList($summaryFields) {
 		$fieldHeaders = new ArrayList();
 		if (is_array($summaryFields)){
+			$counter = 0;
 			foreach ($summaryFields as $name=>$title){
-				$fieldHeaders->push(new ArrayData(array('Name'=>$name, 'Title'=>$title)));
+				$arrayData = new ArrayData(array(
+					'Name'=>$name,
+					'Title'=>$title,
+					'IsSortable'=>true,
+					'IsSorted'=>false,
+					'SortedDirection'=>'desc')
+				);
+				$arrayData->iteratorProperties($counter++, count($summaryFields));
+				$fieldHeaders->push($arrayData);
 			}
 		}
 		return $fieldHeaders;
@@ -212,6 +224,7 @@ class DatagridPresenter_Item extends ViewableData {
 	public function Parent() {
 		return $this->parent;
 	}
+	
 
 	/**
 	 *
@@ -221,7 +234,7 @@ class DatagridPresenter_Item extends ViewableData {
 	public function Fields($xmlSafe = true) {
 		$list = $this->parent->FieldList();
 		
-		
+		$counter = 0;
 		foreach($list as $fieldName => $fieldTitle) {
 			$value = "";
 
@@ -267,11 +280,13 @@ class DatagridPresenter_Item extends ViewableData {
 				}
 			}
 			
-			$fields[] = new ArrayData(array(
+			$arrayData = new ArrayData(array(
 				"Name" => $fieldName, 
 				"Title" => $fieldTitle,
 				"Value" => $value
 			));
+			$arrayData->iteratorProperties($counter++, count($list));
+			$fields[] = $arrayData;
 		}
 		return new ArrayList($fields);
 	}
