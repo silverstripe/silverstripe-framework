@@ -147,13 +147,13 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 
 a .jstree-pageicon { display: block; float: left; width: 16px; height: 16px; margin-right: 4px; background-color: transparent; background-image: url(../images/sitetree_ss_pageclass_icons_default.png); background-repeat: no-repeat; }
 
-li.class-HomePage a .jstree-pageicon { background-position: 0 -48px; }
+li.class-HomePage > a .jstree-pageicon { background-position: 0 -48px; }
 
-li.class-RedirectorPage a .jstree-pageicon { background-position: 0 -16px; }
+li.class-RedirectorPage > a .jstree-pageicon { background-position: 0 -16px; }
 
-li.class-VirtualPage a .jstree-pageicon { background-position: 0 -32px; }
+li.class-VirtualPage > a .jstree-pageicon { background-position: 0 -32px; }
 
-li.class-ErrorPage a .jstree-pageicon { background-position: 0 -112px; }
+li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 
 /** Styles for the left hand side menu  @package sapphire @subpackage admin */
 /** ------------------------------------------------------- CMS Menu Bar -------------------------------------------------------- */
@@ -191,7 +191,7 @@ form.nostyle .field { padding: 0; border: 0; }
 form.nostyle label { float: none; width: auto; }
 form.nostyle .middleColumn { margin-left: 0; }
 
-.field { display: block; padding: 0 8px 7px 8px; margin: 0 -8px 8px -8px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); *zoom: 1; /* TreeDropdowns */ /* dropdowns */ /* chzn override */ /* Date Fields */ }
+.field { display: block; padding: 10px 0; border-bottom-width: 2px; border-bottom: 2px groove rgba(255, 255, 255, 0.8); -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; padding: 0 8px 7px 8px; margin: 0 -8px 8px -8px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); *zoom: 1; /* TreeDropdowns */ /* dropdowns */ /* chzn override */ /* Date Fields */ }
 .field:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
 .field.noLabel .middleColumn { margin-left: 0; }
 .field label.left { float: left; display: block; width: 168px; padding: 8px 8px 8px 0; line-height: 16px; }
@@ -270,7 +270,12 @@ form.nostyle .middleColumn { margin-left: 0; }
 .cms .ui-tabs .ui-tabs-nav.ui-state-active { border-color: gray; }
 .cms .ui-tabs .ui-tabs-panel { background: transparent; padding: 16px 16px; }
 .cms .ui-widget-content, .cms .ui-widget { color: #444444; font-size: 12px; font-family: Arial, sans-serif; border: 0; }
-.cms .ui-widget-header { background: #eceff1; border: 0; padding: 0; }
+.cms .ui-widget-header { background-color: #b0bec7; padding: 8px 8px 6px 8px; border-bottom: 2px solid #8399a7; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dde3e7), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(top, #dde3e7, #92a5b2); background-image: -moz-linear-gradient(top, #dde3e7, #92a5b2); background-image: -o-linear-gradient(top, #dde3e7, #92a5b2); background-image: -ms-linear-gradient(top, #dde3e7, #92a5b2); background-image: linear-gradient(top, #dde3e7, #92a5b2); border-bottom: 3px solid #5c7382; padding: 8px; -moz-border-radius: 0; -webkit-border-radius: 0; -o-border-radius: 0; -ms-border-radius: 0; -khtml-border-radius: 0; border-radius: 0; }
+.cms .ui-widget-header .ui-dialog-title { padding: 6px 0; text-shadow: #ced7dc 1px 1px 0; }
+.cms .ui-widget-header a.ui-dialog-titlebar-close { position: absolute; top: -8px; right: -15px; width: 30px; height: 30px; z-index: 100000; }
+.cms .ui-widget-header a.ui-state-hover { border-color: transparent; background: transparent; }
+.cms .ui-widget-header a.ui-state-hover .ui-icon-closethick { background-position: 0 -30px; }
+.cms .ui-widget-header .ui-icon-closethick { background-image: url(../images/dialog_close.png); background-position: 0 0; width: 30px; height: 30px; }
 .cms .ui-state-hover { cursor: pointer; }
 .cms .ui-widget input, .cms .ui-widget select, .cms .ui-widget textarea, .cms .ui-widget button { color: #444444; font-size: 12px; font-family: Arial, sans-serif; }
 
@@ -350,11 +355,15 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .ModelAdmin .ResultAssemblyBlock { display: none; }
 
 /** -------------------------------------------- "Add page" dialog -------------------------------------------- */
-.cms-page-add-form-dialog #PageType li { clear: left; height: 40px; border-bottom: 1px solid rgba(107, 120, 123, 0.5); }
-.cms-page-add-form-dialog #PageType li:hover, .cms-page-add-form-dialog #PageType li.selected { background-color: #ffff99; }
-.cms-page-add-form-dialog #PageType li input, .cms-page-add-form-dialog #PageType li label, .cms-page-add-form-dialog #PageType li .icon, .cms-page-add-form-dialog #PageType li .title { float: left; }
-.cms-page-add-form-dialog #PageType li .icon { width: 20px; }
-.cms-page-add-form-dialog #PageType li .title { width: 100px; font-weight: bold; }
+.cms-page-add-form-dialog #PageType li { padding: 9px 0 9px 15px; overflow: hidden; border-bottom-width: 2px; border-bottom: 2px groove rgba(255, 255, 255, 0.8); -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
+.cms-page-add-form-dialog #PageType li:hover, .cms-page-add-form-dialog #PageType li.selected { background-color: rgba(255, 255, 102, 0.3); }
+.cms-page-add-form-dialog #PageType li input, .cms-page-add-form-dialog #PageType li label, .cms-page-add-form-dialog #PageType li .icon, .cms-page-add-form-dialog #PageType li .title { float: left; line-height: 1.3em; }
+.cms-page-add-form-dialog #PageType li .icon { width: 20px; display: block; width: 16px; height: 16px; margin: 0 4px; background-color: transparent; background-image: url(../images/sitetree_ss_pageclass_icons_default.png); background-repeat: no-repeat; }
+.cms-page-add-form-dialog #PageType li .class-HomePage { background-position: 0 -48px; }
+.cms-page-add-form-dialog #PageType li .class-RedirectorPage { background-position: 0 -16px; }
+.cms-page-add-form-dialog #PageType li .class-VirtualPage { background-position: 0 -32px; }
+.cms-page-add-form-dialog #PageType li .class-ErrorPage { background-position: 0 -112px; }
+.cms-page-add-form-dialog #PageType li .title { width: 120px; font-weight: bold; padding-right: 10px; }
 .cms-page-add-form-dialog #PageType li .description { font-style: italic; }
 
 /** -------------------------------------------- Content toolbar -------------------------------------------- */
@@ -443,3 +452,24 @@ form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; 
 .cms-preview.is-collapsed .cms-preview-toggle a { left: -15px; }
 
 .cms-switch-view a { padding-right: 1em; }
+
+/** ------------------------------------------------------------------
+* Modal - JQuery UI Dialog pop-up
+* ----------------------------------------------------------------- */
+/* default overlay for the CMS */
+/* Adjusting the color of the background overlay to be darker. */
+.cms .ui-widget-overlay { background-color: #000; background-image: none; }
+
+.ui-dialog { background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; border: 3px solid #000 !important; border-radius: 8px; overflow: visible; padding: 0; /* Labels for all the Dialogs of the pop-up form */ /* Exception for a label that is inline with the selector dropdown box */ }
+.ui-dialog #PageType .middleColumn { margin: 0; padding: 0; }
+.ui-dialog #PageType .middleColumn .optionset li { width: 100%; }
+.ui-dialog #PageType li.selected { background-color: rgba(255, 255, 153, 0.5); /*background-color: #FFFF99;*/ }
+.ui-dialog #PageType li:hover { background-color: #FFFF99 !important; /* lighter highlight on hover */ }
+.ui-dialog .field label.left { font-size: 14px; font-weight: bold; width: 100%; float: none; color: #5f6160; }
+.ui-dialog #ParentID label.left { padding: 8px 0 8px 0; float: right !important; }
+.ui-dialog .Actions { float: right; margin: 0; }
+
+/** ------------------------------------------------------------------
+* Titlebar for pop-up dialog.
+* ----------------------------------------------------------------- */
+.ui-dialog-titlebar.ui-widget-header { font-size: 14px; background-color: #b0bec7; padding: 8px 8px 6px 16px; border-bottom: 2px solid #8399a7; border-radius: 4px 8px 0 0; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ced7dc), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#ced7dc, #92a5b2); background-image: -moz-linear-gradient(#ced7dc, #92a5b2); background-image: -o-linear-gradient(#ced7dc, #92a5b2); background-image: -ms-linear-gradient(#ced7dc, #92a5b2); background-image: linear-gradient(#ced7dc, #92a5b2); }

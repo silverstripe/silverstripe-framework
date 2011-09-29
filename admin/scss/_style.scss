@@ -838,31 +838,89 @@ form.member-profile-form {
 	}
 }
 
-/** -------------------------------------------------------
- * Modal - JQuery UI Dialog
- * -------------------------------------------------------- */
- .cms .ui-widget-overlay {
- 	background-color: #000;
- 	background-image: none;
- }
- 
- .cms .ui-dialog {
- 	background: #fafafa url(../images/textures/bg_cms_main_content.png) repeat top left;
- 	padding:  0;
- 	border:  3px solid #000;
- 	overflow: visible;
- 	
- 	& .ui-dialog-content {
- 		padding: 0.5em 0;
- 	}
- 	
- 	.Actions {
- 		float:  right;
- 		padding: 15px;	
- 	}
- 	
- 	.field {
- 		border-bottom: none;
- 		border-image: none;
- 	}
- }
+
+/** ------------------------------------------------------------------
+* Modal - JQuery UI Dialog pop-up
+* ----------------------------------------------------------------- */
+
+/* default overlay for the CMS */
+.cms .ui-widget-overlay-default {
+	
+}
+
+/* Adjusting the color of the background overlay to be darker. */
+.cms .ui-widget-overlay {
+	background-color: #000;
+	background-image: none;
+}
+
+
+$DialogHeaderColor: #5F6160;
+$DialogHeaderFontSize: 14px;
+$DialogBorderRadius: 8px;
+.ui-dialog {
+    background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+    border: 3px solid #000 !important;
+	border-radius: $DialogBorderRadius;
+    overflow: visible;
+    padding: 0;
+
+	#PageType {
+		.middleColumn {
+			margin: 0;
+			padding: 0;
+
+			.optionset li {
+				width: 100%;
+			}
+		}
+
+		li {
+			&.selected {
+				background-color: rgba(255,255,153, 0.5); /*background-color: #FFFF99;*/
+			}
+
+			&:hover {
+				background-color: #FFFF99 !important; /* lighter highlight on hover */
+			}
+		}
+	}
+
+	/* Labels for all the Dialogs of the pop-up form */
+	.field label.left {
+		font-size: $DialogHeaderFontSize;
+		font-weight: bold;
+		width: 100%;
+		float: none;
+		color: $DialogHeaderColor;
+	}
+
+	/* Exception for a label that is inline with the selector dropdown box */
+	#ParentID {
+		label.left {
+		    padding: 8px 0 8px 0;
+			float: right !important;
+		}
+	}
+
+	.Actions {
+		float: right;
+		margin: 0;
+	}
+}
+
+/** ------------------------------------------------------------------
+* Titlebar for pop-up dialog.
+* ----------------------------------------------------------------- */
+@import "compass";
+@import "compass/css3";
+@import "compass/utilities";
+.ui-dialog-titlebar.ui-widget-header {
+    font-size: $DialogHeaderFontSize;
+	background-color: #b0bec7;
+	padding: 8px 8px 6px 16px;
+
+	border-bottom: 2px solid #8399a7;
+	border-radius: $DialogBorderRadius/2 $DialogBorderRadius 0 0;
+	@include background-image(linear-gradient(#ced7dc, #92a5b2));
+}
