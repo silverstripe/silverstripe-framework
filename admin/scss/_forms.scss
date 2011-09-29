@@ -247,9 +247,31 @@ form.nostyle {
 				))
 			);			
 		}
+
+		/* CMS action button sprite mix-in (used for all the buttons in the bottom row */
+		@mixin actionButtonSprite($horizontalOffset, $verticalOffset) {
+		    padding-left: 24px;
+			padding-right: 6px;
+			@include background(image-url("../images/btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
+				linear-gradient(color-stops(
+					lighten($color-button-generic, 10%),
+					darken($color-button-generic, 5%)
+				))
+			);
+			&.ui-state-hover {
+				@include background(image-url("../images/btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
+					linear-gradient(color-stops(
+						lighten($color-button-generic, 20%),
+						$color-button-generic
+					))
+				);
+			}
+		}
+
 		/* constructive */
 		&.ss-ui-action-constructive {
 			padding-left: 24px;
+			padding-right: 6px;
 			font-weight: bold;
 			margin-left: $grid-horizontal;
 			color: $color-text-light;
@@ -285,22 +307,23 @@ form.nostyle {
 			background-color: $color-button-generic;
 		
 			&.delete {
-				padding-left: 26px;
-				@include background(image-url("../images/btn_icons_sprite.png") no-repeat 6px -27px,
-					linear-gradient(color-stops(
-						lighten($color-button-generic, 10%),
-						darken($color-button-generic, 5%)
-					))
-				);
-				&.ui-state-hover {
-					@include background(image-url("../images/btn_icons_sprite.png") no-repeat 6px -27px,
-						linear-gradient(color-stops(
-							lighten($color-button-generic, 20%),
-							$color-button-generic
-						))
-					);
-				}
+				@include actionButtonSprite(6px, -26px);
 			}
+
+			&.unpublish {
+			    @include actionButtonSprite(6px, -58px);
+			}
+		}
+
+		/* generic action buttons */
+		&.save-draft {
+		    @include actionButtonSprite(6px, -90px);
+		}
+
+		&.cms-preview-toggle-link {
+		    padding-left: 24px !important;
+			margin-left: 4px !important;
+		    @include actionButtonSprite(6px, -124px);
 		}
 
 		&.ss-ui-button-small {
