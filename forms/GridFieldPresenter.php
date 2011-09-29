@@ -1,45 +1,49 @@
 <?php
 
 /**
- * Description of DatagridPresenter
- *
+ * @see GridField
+ * @package sapphire
  */
-class DatagridPresenter extends ViewableData {
+class GridFieldPresenter extends ViewableData {
 	
 	/**
 	 * Template override
 	 * 
 	 * @var string $template 
 	 */
-	protected $template = 'DatagridPresenter';
+	protected $template = 'GridFieldPresenter';
 	
 	/**
 	 * Class name for each item/row
 	 * 
 	 * @var string $itemClass
 	 */
-	protected $itemClass = 'DatagridPresenter_Item';
+	protected $itemClass = 'GridFieldPresenter_Item';
 	
 	/**
-	 *
-	 * @var Datagrid
+	 * @var GridField
 	 */
-	protected $datagrid = null;
+	protected $GridField = null;
 	
 	/**
-	 *
 	 * @var array
 	 */
 	public $fieldCasting = array();
 	
 	/**
-	 *
 	 * @var array
 	 */
 	public $fieldFormatting = array();
 	
 	/**
+	 * List of columns and direction that the {@link GridFieldPresenter} is
+	 * sorted in.
 	 *
+	 * @var array
+	 */
+	protected $sorting = array();
+	
+	/**
 	 * @param string $template 
 	 */
 	function setTemplate($template){
@@ -47,82 +51,122 @@ class DatagridPresenter extends ViewableData {
 	}
 	
 	/**
-	 *
-	 * @param Datagrid $datagrid 
+	 * @param GridField $GridField 
 	 */
-	public function setDatagrid(Datagrid $datagrid){
-		$this->datagrid = $datagrid;
+	public function setGridField(GridField $grid){
+		$this->GridField = $grid;
 	}
 	
 	/**
-	 *
-	 * @return Datagrid
+	 * @return GridField
 	 */
-	public function getDatagrid(){
-		return $this->datagrid;
+	public function getGridField(){
+		return $this->GridField;
 	}
 	
 	/**
-	 * Return a ArrayList of Datagrid_Item objects, suitable for display in the template.
+	 * Sort the grid by columns
+	 *
+	 * @param string $column
+	 * @param string $direction 
+	 */
+	public function sort($column, $direction = 'asc') {
+		$this->sorting[$column] = $direction;
+		
+		return $this;
+	}
+	
+	/**
+	 * Return an {@link ArrayList} of {@link GridField_Item} objects, suitable for display in the template.
 	 * 
 	 * @return ArrayList
 	 */
 	public function Items() {
-		$fieldItems = new ArrayList();
-		if($items = $this->getDatagrid()->getDatasource()) {
+		$items = new ArrayList();
+		
+		if($this->sorting) {
+			$this->setSorting($this->sorting);
+		}
+		
+		if($sources = $this->getGridField()->getDataSource()) {
 			$counter = 0;
-			foreach($items as $item) {
-				if(!$item) {
+			
+			foreach($sources as $source) {
+				if(!$source) {
 					continue;
 				}
-				$datagridPresenterItem = new $this->itemClass($item, $this);
-				$datagridPresenterItem->iteratorProperties($counter++, $items->count());
-				$fieldItems->push($datagridPresenterItem);
+				
+				$itemPresenter = new $this->itemClass($source, $this);
+				$itemPresenter->iteratorProperties($counter++, $sources->count());
+				
+				$items->push($itemPresenter);
 			}
 		}
-		return $fieldItems;
+		
+		return $items;
 	}
 	
 	/**
 	 * Get the headers or column names for this grid
 	 *
 	 * The returning array will have the format of
-	 * array(
-	 *     'FirstName' => 'First name',
-	 *     'Description' => 'A nice description'
-	 * )
+	 * 
+	 * <code>
+	 * 	array(
+	 *		'FirstName' => 'First name',
+	 *  	'Description' => 'A nice description'
+	 *	)
+	 * </code>
 	 *
 	 * @return ArrayList
 	 * @throws Exception
 	 */
 	public function Headers() {
-		
 		if(!$this->getDatasource()) {
-			throw new Exception(get_class($this->getDatagrid()). ' needs an data source to be able to render the form');
+			throw new Exception(sprintf(
+				'%s needs an data source to be able to render the form', get_class($this->getGridField())
+			));
 		}
 		
 		$summaryFields = singleton($this->getModelClass())->summaryFields();
+		
 		return $this->summaryFieldsToList($summaryFields);
 	}
 	
 	/**
-	 *
 	 * @return SS_List
 	 */
 	protected function getDataSource() {
-		return $this->getDatagrid()->getDatasource();
+		return $this->getGridField()->getDatasource();
 	}
 	
 	/**
-	 *
 	 * @return string - name of model
 	 */
 	protected function getModelClass() {
-		return $this->getDatagrid()->getModelClass();
+		return $this->getGridField()->getModelClass();
 	}
 	
 	/**
+	 * Add the combined sorting on the datasource
+	 * 
+	 * If the sorting isn't set in one go on the datasource, only the latest sort
+	 * will be executed.s
 	 *
+	 * @param array $sortColumns 
+	 */
+	protected function setSorting(array $sortColumns) {
+		$resultColumns = array();
+		
+		foreach($sortColumns as $column => $sortOrder) {
+			$resultColumns[] = sprintf("%s %s", $column ,$sortOrder);
+		}
+		
+		$sort = implode(', ', $resultColumns);
+		$this->getDataSource()->sort($sort);
+	}
+	
+	/**
 	 * @return array
 	 */
 	public function FieldList() {
@@ -134,30 +178,41 @@ class DatagridPresenter extends ViewableData {
 	 * by the Form renderer
 	 *
 	 * @param array $summaryFields
+	 *
 	 * @return ArrayList 
 	 */
 	protected function summaryFieldsToList($summaryFields) {
-		$fieldHeaders = new ArrayList();
-		if (is_array($summaryFields)){
+		$headers = new ArrayList();
+		
+		if(is_array($summaryFields)) {
 			$counter = 0;
-			foreach ($summaryFields as $name=>$title){
-				$arrayData = new ArrayData(array(
-					'Name'=>$name,
-					'Title'=>$title,
-					'IsSortable'=>true,
-					'IsSorted'=>false,
-					'SortedDirection'=>'desc')
+			
+			foreach ($summaryFields as $name => $title) {
+				$data = array(
+					'Name' => $name,
+					'Title' => $title,
+					'IsSortable' => true,
+					'IsSorted' => false,
+					'SortedDirection' => 'asc'
 				);
-				$arrayData->iteratorProperties($counter++, count($summaryFields));
-				$fieldHeaders->push($arrayData);
+				
+				if(array_key_exists($name, $this->sorting)) {
+					$data['IsSorted'] = true;
+					$data['SortedDirection'] = $this->sorting[$name];
+				}
+				
+				$result = new ArrayData($data);
+				$result->iteratorProperties($counter++, count($summaryFields));
+				
+				$headers->push($result);
 			}
 		}
-		return $fieldHeaders;
+		
+		return $headers;
 	} 
 	
 	/**
-	 *
-	 * @param type $casting 
+	 * @param array $casting 
 	 */
 	function setFieldCasting($casting) {
 		$this->fieldCasting = $casting;
@@ -172,7 +227,6 @@ class DatagridPresenter extends ViewableData {
 	}
 	
 	/**
-	 *
 	 * @return string - html
 	 */
 	function render(){
@@ -181,36 +235,36 @@ class DatagridPresenter extends ViewableData {
 }
 
 /**
- * A single record in a Datagrid.
- * @package forms
- * @see Datagrid
+ * A single record in a GridField.
+ *
+ * @package sapphire
+ * @see GridField
  */
-class DatagridPresenter_Item extends ViewableData {
+class GridFieldPresenter_Item extends ViewableData {
 	
 	/**
-	 * @var DataObject The underlying data record,
-	 * usually an element of {@link Datagrid->datasource()}.
+	 * @var Object The underlying record, usually an element of 
+	 * {@link GridField->datasource()}.
 	 */
 	protected $item;
 	
 	/**
-	 * @var DatagridPresenter
+	 * @var GridFieldPresenter
 	 */
 	protected $parent;
 	
 	/**
-	 *
-	 * @param type $item
-	 * @param type $parent 
+	 * @param Object $item
+	 * @param GridFieldPresenter $parent 
 	 */
 	public function __construct($item, $parent) {
 		$this->failover = $this->item = $item;
 		$this->parent = $parent;
+		
 		parent::__construct();
 	}
 	
 	/**
-	 *
 	 * @return int
 	 */
 	public function ID() {
@@ -218,7 +272,6 @@ class DatagridPresenter_Item extends ViewableData {
 	}
 	
 	/**
-	 *
 	 * @return type 
 	 */
 	public function Parent() {
@@ -227,14 +280,14 @@ class DatagridPresenter_Item extends ViewableData {
 	
 
 	/**
-	 *
 	 * @param bool $xmlSafe
+	 *
 	 * @return ArrayList 
 	 */
 	public function Fields($xmlSafe = true) {
 		$list = $this->parent->FieldList();
-		
 		$counter = 0;
+		
 		foreach($list as $fieldName => $fieldTitle) {
 			$value = "";
 
@@ -242,10 +295,12 @@ class DatagridPresenter_Item extends ViewableData {
 			// This supports simple FieldName syntax
 			if(strpos($fieldName,'.') === false) {
 				$value = ($this->item->XML_val($fieldName) && $xmlSafe) ? $this->item->XML_val($fieldName) : $this->item->RAW_val($fieldName);
+				
 			// This support the syntax fieldName = Relation.RelatedField
 			} else {					
 				$fieldNameParts = explode('.', $fieldName)	;
 				$tmpItem = $this->item;
+				
 				for($j=0;$j<sizeof($fieldNameParts);$j++) {
 					$relationMethod = $fieldNameParts[$j];
 					$idField = $relationMethod . 'ID';
@@ -274,7 +329,7 @@ class DatagridPresenter_Item extends ViewableData {
 			}
 			
 			//escape
-			if($escape = $this->parent->getDatagrid()->fieldEscape){
+			if($escape = $this->parent->getGridField()->fieldEscape){
 				foreach($escape as $search => $replace){
 					$value = str_replace($search, $replace, $value);
 				}
@@ -288,6 +343,7 @@ class DatagridPresenter_Item extends ViewableData {
 			$arrayData->iteratorProperties($counter++, count($list));
 			$fields[] = $arrayData;
 		}
+		
 		return new ArrayList($fields);
 	}
 }

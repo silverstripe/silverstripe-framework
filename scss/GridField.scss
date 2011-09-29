@@ -1,5 +1,5 @@
 /**
- * Core styles for the basic DataGrid form field without any specific style.
+ * Core styles for the basic GridField form field without any specific style.
  *
  * @package sapphire
  * @subpackage scss
@@ -10,7 +10,7 @@
 $base: #dadada;
 $zebra: #f2f9fd;
 
-.ss-datagrid {
+.ss-gridfield {
 	border: none;
 	
 	table {
@@ -38,7 +38,7 @@ $zebra: #f2f9fd;
 			border: 1px solid darken($base, 10%);
 			border-width: 0 1px 1px 0;
 			
-			&.ss-datagrid-sortable {
+			&.ss-gridfield-sortable {
 					
 				&.hover {
 					color: darken($base, 40%);
@@ -52,7 +52,7 @@ $zebra: #f2f9fd;
 				}	
 			}
 			
-			&.ss-datagrid-sorted {
+			&.ss-gridfield-sorted {
 				background: lighten($base, 5%);
 				
 				@include background-image(linear-gradient(
@@ -74,11 +74,11 @@ $zebra: #f2f9fd;
 				right: 0;
 			}
 			
-			&.ss-datagrid-desc .ui-icon {
+			&.ss-gridfield-desc .ui-icon {
 				background-position: 0 -48px;
 			}
 			
-			&.ss-datagrid-asc .ui-icon {
+			&.ss-gridfield-asc .ui-icon {
 				background-position: -64px -48px;
 			}
 		}
@@ -92,26 +92,26 @@ $zebra: #f2f9fd;
 		padding: 8px;
 		border-right: 1px solid lighten($base, 10%);
 		
-		&.ss-datagrid-last {
+		&.ss-gridfield-last {
 			border-right: none;
 		}
 	}
 	
 	tr {
 		
-		&.ss-datagrid-even {
+		&.ss-gridfield-even {
 			border: 1px solid darken($zebra, 10%);
 			border-width: 1px 0;
 			background: $zebra;
 			
-			&.ss-datagrid-last {
+			&.ss-gridfield-last {
 				border-bottom: none;
 			}
 			
 			td {
 				border-right: 1px solid darken($zebra, 5%);
 				
-				&.ss-datagrid-last {
+				&.ss-gridfield-last {
 					border-right: none;
 				}
 			}
