@@ -10,6 +10,9 @@
  * create new SCSS files for larger components like the CMS menu or tree 
  * (see _tree.scss and _menu.scss).
  */
+@import "compass";
+@import "compass/css3";
+@import "compass/utilities";
 
 /** ----------------------------------------------------
  * Core Styles.
@@ -859,6 +862,7 @@ form.member-profile-form {
 $DialogHeaderColor: #5F6160;
 $DialogHeaderFontSize: 14px;
 $DialogBorderRadius: 8px;
+$DialogLabelColor: #7B8C91;
 .ui-dialog {
     background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
     border: 3px solid #000 !important;
@@ -894,13 +898,50 @@ $DialogBorderRadius: 8px;
 		width: 100%;
 		float: none;
 		color: $DialogHeaderColor;
+		margin-top: -4px;
+		margin-left: 36px;
+	}
+
+	/* Numeric labels in the sitetree */
+	label.numeric-label {
+		font-size: $DialogHeaderFontSize;
+		font-weight: bold;
+		float: left;
+		@include border-top-left-radius(3px);
+		@include border-bottom-left-radius(3px);
+		background-color: $DialogLabelColor;
+		padding: 4px 8px 4px 3px;
+		text-align: right;
+		color: #fff;
+		position: absolute;
+		width: 15px;
+
+		/* Numeric label icon (supports up to two-digit numbers) */
+		.label-triangle {
+		    position: absolute;
+			left: 26px;
+			margin-top: -18px;
+			overflow: visible;
+			display: block;
+			width: 0;
+			height: 0;
+			border-top: 11px solid transparent;
+			border-left: 7px dashed $DialogLabelColor;
+			border-bottom: 11px solid transparent;
+		}
+
 	}
 
 	/* Exception for a label that is inline with the selector dropdown box */
 	#ParentID {
 		label.left {
 		    padding: 8px 0 8px 0;
-			float: right !important;
+			float: left !important;
+			width: 125px;
+		}
+
+		.middleColumn {
+			width: 320px;
 		}
 	}
 
@@ -913,15 +954,14 @@ $DialogBorderRadius: 8px;
 /** ------------------------------------------------------------------
 * Titlebar for pop-up dialog.
 * ----------------------------------------------------------------- */
-@import "compass";
-@import "compass/css3";
-@import "compass/utilities";
 .ui-dialog-titlebar.ui-widget-header {
     font-size: $DialogHeaderFontSize;
 	background-color: #b0bec7;
-	padding: 8px 8px 6px 16px;
+	padding: 4px 4px 3px 16px;
 
 	border-bottom: 2px solid #8399a7;
-	border-radius: $DialogBorderRadius/2 $DialogBorderRadius 0 0;
+	@include border-top-left-radius($DialogBorderRadius/2); /* /2 need to eliminate visual artifact */
+	@include border-top-right-radius($DialogBorderRadius);
 	@include background-image(linear-gradient(#ced7dc, #92a5b2));
+	margin-bottom: 7px;
 }
