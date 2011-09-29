@@ -456,8 +456,10 @@ form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; 
 /** ------------------------------------------------------------------
 * Modal - JQuery UI Dialog pop-up
 * ----------------------------------------------------------------- */
-/* default overlay for the CMS */
-/* Adjusting the color of the background overlay to be darker. */
+/* overlay for switching between CMS panes */
+.cms .ui-widget-overlay-light { background: #aaaaaa url(../../thirdparty/jquery-ui-themes/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: 0.3; }
+
+/* Adjusting the color of the background overlay to be darker for pop-up dialogs (created by jQuery-UI) */
 .cms .ui-widget-overlay { background-color: #000; background-image: none; }
 
 .ui-dialog { background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; border: 3px solid #000 !important; border-radius: 8px; overflow: visible; padding: 0; /* Labels for all the Dialogs of the pop-up form */ /* Exception for a label that is inline with the selector dropdown box */ }

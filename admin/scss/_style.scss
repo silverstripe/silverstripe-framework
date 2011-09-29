@@ -843,12 +843,13 @@ form.member-profile-form {
 * Modal - JQuery UI Dialog pop-up
 * ----------------------------------------------------------------- */
 
-/* default overlay for the CMS */
-.cms .ui-widget-overlay-default {
-	
+/* overlay for switching between CMS panes */
+.cms .ui-widget-overlay-light {
+	background: #aaaaaa url(../../thirdparty/jquery-ui-themes/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
+	opacity: 0.3;
 }
 
-/* Adjusting the color of the background overlay to be darker. */
+/* Adjusting the color of the background overlay to be darker for pop-up dialogs (created by jQuery-UI) */
 .cms .ui-widget-overlay {
 	background-color: #000;
 	background-image: none;

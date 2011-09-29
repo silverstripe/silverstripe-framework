@@ -71,8 +71,8 @@
 				else this.collapse();
 				
 				// Preview might not be available in all admin interfaces - block/disable when necessary
-				this.append('<div class="cms-preview-overlay ui-widget-overlay"></div>');
-				this.find('.cms-preview-overlay').hide();
+				this.append('<div class="cms-preview-overlay ui-widget-overlay-light"></div>');
+				this.find('.cms-preview-overlay-light').hide();
 		
 				this._super();
 			},
