@@ -350,30 +350,59 @@ html,body {
 
 .cms-page-add-form-dialog {
 	#PageType li {
-		clear: left;
-		height: 40px;
-		border-bottom: 1px solid $color-shadow-dark;
-		
+		padding: 9px 0 9px 15px;
+		overflow: hidden;
+		border-bottom-width: 2px;
+		border-bottom: 2px groove lighten($color-shadow-light, 95%);
+		-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+		border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+				
 		&:hover, &.selected {
-			background-color: lighten($color-highlight, 10%);
+			background-color: $color-highlight-opacity;
 		}
 		
 		input, label, .icon, .title {
 			float: left;
+			line-height: 1.3em;
 		}
 		
 		.icon {
 			width: 20px;
+			display: block;
+			width:  16px;
+			height:  16px;
+			margin: 0 4px;
+			background-color: transparent;
+			background-image: url(../images/sitetree_ss_pageclass_icons_default.png);
+			background-repeat: no-repeat;
+		}
+			
+		.class-HomePage {
+			background-position: 0 -48px;
 		}
 		
+		.class-RedirectorPage {
+			background-position: 0 -16px;
+		}
+		
+		.class-VirtualPage {
+			background-position: 0 -32px;
+		}
+		
+		.class-ErrorPage {
+			background-position: 0 -112px;
+		}
+			
 		.title {
-			width: 100px;
+			width: 120px;
 			font-weight: bold;
+			padding-right: 10px;
 		}
 		
 		.description {
 			font-style: italic;
 		}
+		
 	}
 }
 
@@ -808,3 +837,32 @@ form.member-profile-form {
 		padding-right: 1em;
 	}
 }
+
+/** -------------------------------------------------------
+ * Modal - JQuery UI Dialog
+ * -------------------------------------------------------- */
+ .cms .ui-widget-overlay {
+ 	background-color: #000;
+ 	background-image: none;
+ }
+ 
+ .cms .ui-dialog {
+ 	background: #fafafa url(../images/textures/bg_cms_main_content.png) repeat top left;
+ 	padding:  0;
+ 	border:  3px solid #000;
+ 	overflow: visible;
+ 	
+ 	& .ui-dialog-content {
+ 		padding: 0.5em 0;
+ 	}
+ 	
+ 	.Actions {
+ 		float:  right;
+ 		padding: 15px;	
+ 	}
+ 	
+ 	.field {
+ 		border-bottom: none;
+ 		border-image: none;
+ 	}
+ }
