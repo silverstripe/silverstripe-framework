@@ -285,14 +285,14 @@ class HTTP {
 		}
 
 		if(self::$cache_age > 0) {
-			$responseHeaders["Cache-Control"] = "max-age=" . self::$cache_age . ", must-revalidate";
+			$responseHeaders["Cache-Control"] = "max-age=" . self::$cache_age . ", must-revalidate, no-transform";
 			$responseHeaders["Pragma"] = "";
 
 			// To do: User-Agent should only be added in situations where you *are* actually varying according to user-agent.
 			$responseHeaders['Vary'] = 'Cookie, X-Forwarded-Protocol, User-Agent';
 
 		} else {
-			$responseHeaders["Cache-Control"] = "no-cache, max-age=0, must-revalidate";
+			$responseHeaders["Cache-Control"] = "no-cache, max-age=0, must-revalidate, no-transform";
 		}
 
 		if(self::$modification_date && self::$cache_age > 0) {
