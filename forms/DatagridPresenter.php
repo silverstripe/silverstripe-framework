@@ -90,36 +90,58 @@ class DatagridPresenter extends ViewableData {
 	 * )
 	 *
 	 * @return ArrayList
+	 * @throws Exception
 	 */
 	public function Headers() {
-		if($this->datagrid->datasource instanceof DataList ) {
-			return $this->getHeadersFromDatalist();
-		} else {
-			if(!$this->datasource) {
-				return array();
-			}
-			$firstItem = $this->datasource->first();
-			if(!$firstItem) {
-				return array();
-			}
-			return array_combine(array_keys($firstItem),array_keys($firstItem));
+		
+		if(!$this->getDatasource()) {
+			throw new Exception(get_class($this->getDatagrid()). ' needs an data source to be able to render the form');
 		}
+		
+		$summaryFields = singleton($this->getModelClass())->summaryFields();
+		return $this->summaryFieldsToList($summaryFields);
 	}
 	
 	/**
 	 *
-	 * @return ArrayList
+	 * @return SS_List
 	 */
-	protected function getHeadersFromDatalist(){
+	protected function getDataSource() {
+		return $this->getDatagrid()->getDatasource();
+	}
+	
+	/**
+	 *
+	 * @return string - name of model
+	 */
+	protected function getModelClass() {
+		return $this->getDatagrid()->getModelClass();
+	}
+	
+	/**
+	 *
+	 * @return array
+	 */
+	public function FieldList() {
+		return singleton($this->getModelClass())->summaryFields();
+	}
+	
+	/**
+	 * Translate the summaryFields from a model into a format that is understood
+	 * by the Form renderer
+	 *
+	 * @param array $summaryFields
+	 * @return ArrayList 
+	 */
+	protected function summaryFieldsToList($summaryFields) {
 		$fieldHeaders = new ArrayList();
-		$fieldHeadersSummaryFields = singleton($this->datagrid->datasource->dataClass)->summaryFields();
-		if (is_array($fieldHeadersSummaryFields)){
-			foreach ($fieldHeadersSummaryFields as $name=>$title){
+		if (is_array($summaryFields)){
+			foreach ($summaryFields as $name=>$title){
 				$fieldHeaders->push(new ArrayData(array('Name'=>$name, 'Title'=>$title)));
 			}
 		}
 		return $fieldHeaders;
-	}
+	} 
 	
 	/**
 	 *
@@ -160,7 +182,7 @@ class DatagridPresenter_Item extends ViewableData {
 	protected $item;
 	
 	/**
-	 * @var Datagrid
+	 * @var DatagridPresenter
 	 */
 	protected $parent;
 	
@@ -197,7 +219,9 @@ class DatagridPresenter_Item extends ViewableData {
 	 * @return ArrayList 
 	 */
 	public function Fields($xmlSafe = true) {
-		$list = $this->parent->getDatagrid()->FieldList();
+		$list = $this->parent->FieldList();
+		
+		
 		foreach($list as $fieldName => $fieldTitle) {
 			$value = "";
 

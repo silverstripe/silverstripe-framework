@@ -15,20 +15,20 @@ class Datagrid extends FormField {
 	
 	/**
 	 *
-	 * @var array 
-	 */
-	protected $fieldList = null;
-	
-	/**
-	 *
 	 * @var string
 	 */
 	protected $dataPresenterClassName = "DatagridPresenter";
 	
 	/**
+	 *
+	 * @var DatagridPresenter
+	 */
+	protected $datagridPresenter = null;
+	
+	/**
 	 * @var string - the name of the DataObject that the Datagrid will display
 	 */
-	protected $dataClass = '';
+	protected $modelClassName = '';
 
 	/**
 	 * Creates a new datagrid field
@@ -47,10 +47,11 @@ class Datagrid extends FormField {
 	
 	/**
 	 *
-	 * @param string $dataClass 
+	 * @param string $modelClassName 
 	 */
-	function setDataclass($dataClass) {
-		$this->dataClass = $dataClass;
+	function setModelClass($modelClassName) {
+		$this->modelClassName = $modelClassName;
+		return $this;
 	}
 	
 	/**
@@ -70,16 +71,21 @@ class Datagrid extends FormField {
 			throw new Exception('Datapresenter "$dataPresenterClassName" must inherit DatagridPresenter' );
 		}
 		$this->dataPresenterClassName = $dataPresenterClassName;
+		return $this;
 	}
 	
 	/**
 	 *
 	 * @return type 
 	 */
-	function getDataclass() {
-		if ($this->dataClass) return $this->dataClass;
-		if ($this->datasource->dataClass) return $this->datasource->dataClass;
-		throw new Exception(get_class($this).' does not have a dataclass');
+	function getModelClass() {
+		if ($this->modelClassName) {
+			return $this->modelClassName;
+		}
+		if ($this->datasource->dataClass) {
+			return $this->datasource->dataClass;
+		}
+		throw new Exception(get_class($this).' does not have a modelClassName');
 	}
 
 	/**
@@ -89,9 +95,7 @@ class Datagrid extends FormField {
 	 */
 	public function setDatasource(SS_List $datasource) {
 		$this->datasource = $datasource;
-		if($datasource->dataClass){
-			$this->fieldList = singleton($datasource->dataClass)->summaryFields();
-		}
+		return $this;
 	}
 
 	/**
@@ -104,12 +108,15 @@ class Datagrid extends FormField {
 	}
 	
 	/**
-	 * Returns the list of fields, or the 'column header' names of this grid
 	 *
-	 * @return array - e.g array('ID'=>'ID', 'Name'=>'Name)
+	 * @return DatagridPresenter
 	 */
-	function FieldList() {
-		return $this->fieldList;
+	public function getDatagridPresenter(){
+		if(!$this->datagridPresenter) {
+			$this->datagridPresenter = new $this->dataPresenterClassName();
+			$this->datagridPresenter->setDatagrid($this);
+		}
+		return $this->datagridPresenter;
 	}
 	
 	/**
@@ -117,8 +124,6 @@ class Datagrid extends FormField {
 	 * @return string - html for the form 
 	 */
 	function FieldHolder() {
-		$dataPresenter = new $this->dataPresenterClassName();
-		$dataPresenter->setDatagrid($this);
-		return $dataPresenter->render();
+		return $this->getDatagridPresenter()->render();
 	}	
 }

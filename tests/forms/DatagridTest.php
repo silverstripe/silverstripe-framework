@@ -54,16 +54,19 @@ class DatagridTest extends SapphireTest {
 		$grid->setDataPresenter('DatagridPresenter');
 	}
 	
-	function testFieldListIsNullWithoutDataSource() {
+	function testSetDataclass() {
 		$grid = new Datagrid('Testgrid');
-		$this->assertNull($grid->FieldList());
+		$grid->setModelClass('SiteTree');
+		$this->assertEquals('SiteTree', $grid->getModelClass());
 	}
 	
-	function testFieldList() {
+	/**
+	 * 
+	 */
+	function testFieldHolderWithoutDataSource() {
+		$this->setExpectedException('Exception');
 		$grid = new Datagrid('Testgrid');
-		$grid->setDatasource(new DataList('DatagridTest_Person'));
-		$this->assertNotNull($grid->FieldList());
-		$this->assertEquals(array('Name'=>'Name','ID'=>'ID'), $grid->FieldList());
+		$this->assertNotNull($grid->FieldHolder());
 	}
 	
 	/**
@@ -73,6 +76,7 @@ class DatagridTest extends SapphireTest {
 	 */
 	function testFieldHolder() {
 		$grid = new Datagrid('Testgrid');
+		$grid->setDatasource(new DataList('DatagridTest_Person'));
 		$this->assertNotNull($grid->FieldHolder());
 	}
 }
