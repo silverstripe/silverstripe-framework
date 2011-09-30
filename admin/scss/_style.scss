@@ -935,7 +935,7 @@ $DialogLabelColor: #7B8C91;
 	/* Exception for a label that is inline with the selector dropdown box */
 	#ParentID {
 		label.left {
-		    padding: 8px 0 8px 0;
+		    padding: $grid-vertical 0 $grid-vertical 0;
 			float: left !important;
 			width: 125px;
 		}
@@ -957,11 +957,11 @@ $DialogLabelColor: #7B8C91;
 .ui-dialog-titlebar.ui-widget-header {
     font-size: $DialogHeaderFontSize;
 	background-color: #92a5b2;
-	padding: 4px 4px 3px 16px;
+	padding: $grid-vertical/2 $grid-horizontal/2 $grid-vertical/2 $grid-horizontal*2;
 
 	border-bottom: 2px solid #8399a7;
 	@include border-top-left-radius($DialogBorderRadius/2); /* /2 need to eliminate visual artifact */
 	@include border-top-right-radius($DialogBorderRadius);
 	@include background-image(linear-gradient(#ced7dc, #92a5b2));
-	margin-bottom: 12px;
+	margin-bottom: $grid-vertical*1.5;
 }
