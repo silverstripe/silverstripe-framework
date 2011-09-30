@@ -275,6 +275,15 @@ form.nostyle {
 					))
 				);
 			}
+			&.ui-state-disabled {
+			    background-image: none;
+				@include background(image-url("../images/btn_icons_sprite_disabled.png") no-repeat $horizontalOffset $verticalOffset,
+					linear-gradient(color-stops(
+						lighten($color-button-generic, 20%),
+						$color-button-generic
+					))
+				);
+			}
 		}
 
 		/* constructive */
