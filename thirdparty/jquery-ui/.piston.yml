@@ -1,8 +1,0 @@
---- 
-format: 1
-handler: 
-  piston:remote-revision: 4057
-  piston:uuid: a1defee3-d24d-0410-b1e3-3171fe540af7
-lock: false
-repository_class: Piston::Svn::Repository
-repository_url: http://jquery-ui.googlecode.com/svn/tags/1.8.10/ui/
