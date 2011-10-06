@@ -49,8 +49,8 @@ class DatetimeField extends FormField {
 	function __construct($name, $title = null, $value = ""){
 		$this->config = self::$default_config;
 		
-		$this->dateField = new DateField($name . '[date]', false);
-		$this->timeField = new TimeField($name . '[time]', false);
+		$this->dateField = Object::create('DateField', $name . '[date]', false);
+		$this->timeField = Object::create('TimeField', $name . '[time]', false);
 		$this->timezoneField = new HiddenField($this->Name() . '[timezone]');
 		
 		parent::__construct($name, $title, $value);
