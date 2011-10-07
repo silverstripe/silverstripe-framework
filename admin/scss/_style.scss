@@ -791,7 +791,32 @@ form.member-profile-form {
 			padding: 0;
 		}
 	}
-	
+
+	.child-triangle {
+		width:0;
+		height:0;
+		border-right:3px dashed $color-text-dark;
+		border-top:3px solid transparent;
+		border-left:3px solid transparent;
+		border-bottom:3px dashed $color-text-dark;
+		position: absolute;
+		right: 1px;
+		margin-top: -8px;
+		display: none;  /* To be shown by javascript, see LeftAndMain.Panel.js */
+	}
+
+	.collapsed-flyout {
+		display: block !important;
+		left: 41px;
+		margin-top: -40px;
+		position: fixed;
+		width: 191px;
+
+		li a span {
+		   display: block !important;
+		}
+	}
+
 }
 
 .cms-content .cms-panel.collapsed {

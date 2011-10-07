@@ -57,6 +57,34 @@
 			
 			togglePanel: function(bool) {
 				// if((!bool && this.hasClass('collapsed')) || (bool && !this.hasClass('collapsed'))) return;
+
+				//apply or unapply the flyout formatting
+				$('.cms-panel-content ul li.link, .cms-panel-content ul li.opened').each(function(){
+					if (bool) { //expand
+						$(this).children('ul').removeClass('collapsed-flyout').addClass('collapsed');
+					} else {    //collapse
+
+						$(this).children('ul').addClass('collapsed-flyout').removeClass('collapsed');
+					}
+				});
+				if (bool) { //expand
+					//show the flyout
+					$('.collapsed').find('li').show();
+
+					//hide all the triangle
+					$('.cms-menu-list').find('.child-triangle').hide();
+				} else {    //collapse
+					//hide the flyout only if it is not the current section
+					$('.collapsed-flyout').find('li').each(function() {
+						//if (!$(this).hasClass('current'))
+						$(this).hide();
+					});
+
+					//show all the triangles
+					var par = $('.cms-menu-list ul.collapsed-flyout').parent();
+					if (par.children('.child-triangle').length == 0) par.append('<span class="child-triangle"></span>').fadeIn();
+					par.children('.child-triangle').fadeIn();
+				}
 				
 				this.toggleClass('collapsed', !bool);
 				var newWidth = bool ? this.getWidthExpanded() : this.getWidthCollapsed();
@@ -82,6 +110,26 @@
 			
 			collapsePanel: function() {
 				this.togglePanel(false);
+			}
+		});
+
+		/** Toggle the flyout panel to appear/disappear when mouse over */
+		$('.cms-menu-list li').entwine({
+			toggleFlyout: function(bool) {
+				fly = $(this);
+				if (fly.children('ul').first().hasClass('collapsed-flyout')) {
+					if (bool) { //expand
+						fly.children('ul').find('li').fadeIn('fast');
+					} else {    //collapse
+						fly.children('ul').find('li').hide();
+					}
+				}
+			},
+			onmouseenter: function(){
+				$(this).toggleFlyout(true);
+			},
+			onmouseleave: function(){
+				$(this).toggleFlyout(false);
 			}
 		});
 		
