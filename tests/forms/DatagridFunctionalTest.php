@@ -27,7 +27,13 @@ class DatagridFunctionalTest extends FunctionalTest {
 	}
 }
 
-class DatagridFunctionalTest_Controller extends ContentController {
+class DatagridFunctionalTest_Controller extends Controller {
+	
+	protected $template = 'BlankPage';
+	
+	function Link($action = null) {
+		return Controller::join_links('DatagridFunctionalTest_Controller', $action);
+	}
 
 	public function index() {
 		$grid = new Datagrid('testgrid');
