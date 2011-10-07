@@ -98,8 +98,8 @@ class Director {
 		$output = singleton('Injector')->get('RequestProcessor')->preRequest($req, $session);
 		
 		if ($output === false) {
-			// @TODO Need to NOT proceed with the request!
-			throw new Exception("Invalid request");
+			// @TODO Need to NOT proceed with the request in an elegant manner
+			throw new HttpRequestException("Invalid request", 500);
 		}
 
 		$result = Director::handleRequest($req, $session);
@@ -136,7 +136,7 @@ class Director {
 				}
 			} else {
 				// @TODO Proper response here.
-				throw new Exception("Invalid response");
+				throw new SS_HTTPResponse_Exception("Invalid response");
 			}
 			
 
