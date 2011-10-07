@@ -81,7 +81,8 @@ SS_Cache::pick_backend('aggregatestore', 'aggregate', 1000);
 require_once('admin/_config.php');
 
 // configure some services that will be used during the request
-singleton('Injector')->load(array(
+Injector::inst()->load(array(
+	'PermissionService',
 	'DbAuthProvider',
 	'AuthenticationFilter',
 	'AuthenticationService' =>  array(
