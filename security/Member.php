@@ -1412,7 +1412,7 @@ class Member_GroupSet extends ManyManyList {
 		
 		// Find directly applied groups
 		$manymanyFilter = $this->foreignIDFilter();
-		$groupIDs = DB::query('SELECT "GroupID" FROM Group_Members WHERE ' . $manymanyFilter)->column();
+		$groupIDs = DB::query('SELECT "GroupID" FROM "Group_Members" WHERE ' . $manymanyFilter)->column();
 
 		// Get all ancestors
 		$allGroupIDs = array();

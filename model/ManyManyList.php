@@ -113,7 +113,7 @@ class ManyManyList extends RelationList {
 	function removeByID($itemID) {
 	    if(!is_numeric($itemID)) throw new InvalidArgumentException("ManyManyList::removeById() expecting an ID");
 
-		$query = new SQLQuery("*", array($this->joinTable));
+		$query = new SQLQuery("*", array("\"$this->joinTable\""));
 		$query->delete = true;
 		
 		if($filter = $this->foreignIDFilter()) {
@@ -131,7 +131,7 @@ class ManyManyList extends RelationList {
      * @deprecated this is experimental and will change. Don't use it in your projects.
      */
     function removeByFilter($filter) {
-		$query = new SQLQuery("*", array($this->joinTable));
+		$query = new SQLQuery("*", array("\"$this->joinTable\""));
 		$query->delete = true;
 		$query->where($filter);
 		$query->execute();
