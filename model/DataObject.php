@@ -1979,7 +1979,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Update the changed array with references to changed obj-fields
 		foreach($this->record as $k => $v) {
 			if(is_object($v) && method_exists($v, 'isChanged') && $v->isChanged()) {
-				$this->changed[$k] = 1;
+				$this->changed[$k] = 2;
 			}
 		}
 		
