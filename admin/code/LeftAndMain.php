@@ -331,6 +331,7 @@ class LeftAndMain extends Controller {
 		Requirements::combine_files(
 			'leftandmain.js',
 			array(
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.minified.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
