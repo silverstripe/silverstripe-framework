@@ -453,7 +453,7 @@ form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; 
 .cms-panel .toggle-expand { width: 40px; }
 .cms-panel.collapsed .cms-panel-content { display: none; }
 .cms-panel.collapsed .cms-panel-header { -moz-transform: rotate(-90deg); -webkit-transform: rotate(-90deg); -o-transform: rotate(-90deg); -ms-transform: rotate(-90deg); transform: rotate(-90deg); position: relative; top: 80px; border: none; padding: 0; }
-.cms-panel .child-triangle { width: 0; height: 0; border-right: 3px dashed #1f1f1f; border-top: 3px solid transparent; border-left: 3px solid transparent; border-bottom: 3px dashed #1f1f1f; position: absolute; right: 1px; margin-top: -8px; display: none; /* To be shown by javascript, see LeftAndMain.Panel.js */ }
+.cms-panel .child-flyout-indicator { width: 0; height: 0; border-right: 3px dashed #1f1f1f; border-top: 3px solid transparent; border-left: 3px solid transparent; border-bottom: 3px dashed #1f1f1f; position: absolute; right: 1px; margin-top: -8px; display: none; /* To be shown by javascript, see LeftAndMain.Panel.js */ }
 .cms-panel .collapsed-flyout { display: block !important; left: 41px; margin-top: -40px; position: fixed; width: 191px; }
 .cms-panel .collapsed-flyout li a span { display: block !important; }
 
@@ -482,7 +482,7 @@ form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; 
 .ui-dialog #PageType li:hover { background-color: #FFFF99 !important; /* lighter highlight on hover */ }
 .ui-dialog .field label.left { font-size: 14px; font-weight: bold; width: 100%; float: none; color: #5f6160; margin-top: -4px; margin-left: 38px; }
 .ui-dialog label.numeric-label { font-size: 14px; font-weight: bold; float: left; -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; -o-border-top-left-radius: 3px; -ms-border-top-left-radius: 3px; -khtml-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-bottomleft: 3px; -webkit-border-bottom-left-radius: 3px; -o-border-bottom-left-radius: 3px; -ms-border-bottom-left-radius: 3px; -khtml-border-bottom-left-radius: 3px; border-bottom-left-radius: 3px; background-color: #7b8c91; padding: 4px 8px 4px 3px; text-align: right; color: #fff; position: absolute; width: 15px; /* Numeric label icon (supports up to two-digit numbers) */ }
-.ui-dialog label.numeric-label .label-triangle { position: absolute; left: 26px; margin-top: -18px; overflow: visible; display: block; width: 0; height: 0; border-top: 11px solid transparent; border-left: 7px dashed #7b8c91; border-bottom: 11px solid transparent; }
+.ui-dialog label.numeric-label .label-flyout-indicator { position: absolute; left: 26px; margin-top: -18px; overflow: visible; display: block; width: 0; height: 0; border-top: 11px solid transparent; border-left: 7px dashed #7b8c91; border-bottom: 11px solid transparent; }
 .ui-dialog #ParentID label.left { padding: 8px 0 8px 0; float: left !important; width: 125px; }
 .ui-dialog #ParentID .middleColumn { width: 320px; }
 .ui-dialog .Actions { float: right; margin: 0; }

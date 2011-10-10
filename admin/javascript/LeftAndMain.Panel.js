@@ -54,25 +54,14 @@
 					this.expandPanel();
 				}
 			},
-			
-			togglePanel: function(bool) {
-				// if((!bool && this.hasClass('collapsed')) || (bool && !this.hasClass('collapsed'))) return;
 
-				//apply or unapply the flyout formatting
-				$('.cms-panel-content ul li.link, .cms-panel-content ul li.opened').each(function(){
-					if (bool) { //expand
-						$(this).children('ul').removeClass('collapsed-flyout').addClass('collapsed');
-					} else {    //collapse
-
-						$(this).children('ul').addClass('collapsed-flyout').removeClass('collapsed');
-					}
-				});
+			toggleFlyoutState: function(bool) {
 				if (bool) { //expand
 					//show the flyout
 					$('.collapsed').find('li').show();
 
-					//hide all the triangle
-					$('.cms-menu-list').find('.child-triangle').hide();
+					//hide all the flyout-indicator
+					$('.cms-menu-list').find('.child-flyout-indicator').hide();
 				} else {    //collapse
 					//hide the flyout only if it is not the current section
 					$('.collapsed-flyout').find('li').each(function() {
@@ -80,12 +69,38 @@
 						$(this).hide();
 					});
 
-					//show all the triangles
+					//show all the flyout-indicators
 					var par = $('.cms-menu-list ul.collapsed-flyout').parent();
-					if (par.children('.child-triangle').length == 0) par.append('<span class="child-triangle"></span>').fadeIn();
-					par.children('.child-triangle').fadeIn();
+					if (par.children('.child-flyout-indicator').length == 0) par.append('<span class="child-flyout-indicator"></span>').fadeIn();
+					par.children('.child-flyout-indicator').fadeIn();
 				}
-				
+			},
+			
+			togglePanel: function(bool) {
+				// if((!bool && this.hasClass('collapsed')) || (bool && !this.hasClass('collapsed'))) return;
+
+				//apply or unapply the flyout formatting
+				$('.cms-menu-list').children('li').each(function(){
+					if (bool) { //expand
+						$(this).children('ul').each(function() {
+							$(this).removeClass('collapsed-flyout');
+							if ($(this).data('collapse')) {
+								$(this).removeData('collapse');
+								$(this).addClass('collapse');
+							}
+						});
+					} else {    //collapse
+						$(this).children('ul').each(function() {
+							$(this).addClass('collapsed-flyout');
+							$(this).hasClass('collapse');
+							$(this).removeClass('collapse');
+							$(this).data('collapse', true);
+						});
+					}
+				});
+
+				this.toggleFlyoutState(bool);
+
 				this.toggleClass('collapsed', !bool);
 				var newWidth = bool ? this.getWidthExpanded() : this.getWidthCollapsed();
 				

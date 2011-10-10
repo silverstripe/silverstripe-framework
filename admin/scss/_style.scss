@@ -792,7 +792,7 @@ form.member-profile-form {
 		}
 	}
 
-	.child-triangle {
+	.child-flyout-indicator {
 		width:0;
 		height:0;
 		border-right:3px dashed $color-text-dark;
@@ -942,7 +942,7 @@ $DialogLabelColor: #7B8C91;
 		width: 15px;
 
 		/* Numeric label icon (supports up to two-digit numbers) */
-		.label-triangle {
+		.label-flyout-indicator {
 		    position: absolute;
 			left: 26px;
 			margin-top: -18px;
