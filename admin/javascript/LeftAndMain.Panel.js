@@ -139,14 +139,11 @@
 						fly.children('ul').find('li').hide();
 					}
 				}
-			},
-			onmouseenter: function(){
-				$(this).toggleFlyout(true);
-			},
-			onmouseleave: function(){
-				$(this).toggleFlyout(false);
 			}
 		});
+		//slight delay to prevent flyout closing from "sloppy mouse movement"
+		$('.cms-menu-list li').hoverIntent(function(){$(this).toggleFlyout(true);},function(){$(this).toggleFlyout(false);});
+
 		
 		$('.cms-panel *').entwine({
 			getPanel: function() {
