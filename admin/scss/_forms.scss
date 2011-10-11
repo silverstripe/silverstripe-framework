@@ -16,6 +16,15 @@ form.nostyle {
 
 .field {
 	display: block;
+	padding: 10px 0;
+	border-bottom-width: 2px;
+	border-bottom: 2px groove lighten($color-shadow-light, 95%);
+	-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+	border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+	//TODO: use single border line with shadow instead:: http://daverupert.com/2011/06/two-tone-borders-with-css3/
+	//@include border-image(url(../images/textures/bg_fieldset_elements_border.png), 2, stretch); //not yet supported
+	//overflow: hidden;
+
 	
 	// bottom padding accounts for the border and we have a negative
 	// margin with a postive padding to ensure the bottom border extends
@@ -247,9 +256,41 @@ form.nostyle {
 				))
 			);			
 		}
+
+		/* CMS action button sprite mix-in (used for all the buttons in the bottom row */
+		@mixin actionButtonSprite($horizontalOffset, $verticalOffset) {
+		    padding-left: 24px;
+			padding-right: 6px;
+			@include background(image-url("../images/btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
+				linear-gradient(color-stops(
+					lighten($color-button-generic, 10%),
+					darken($color-button-generic, 5%)
+				))
+			);
+			&.ui-state-hover {
+				@include background(image-url("../images/btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
+					linear-gradient(color-stops(
+						lighten($color-button-generic, 20%),
+						$color-button-generic
+					))
+				);
+			}
+			&.ui-state-disabled {
+			    background-image: none;
+				@include background(image-url("../images/btn_icons_sprite_disabled.png") no-repeat $horizontalOffset $verticalOffset,
+					linear-gradient(color-stops(
+						lighten($color-button-generic, 20%),
+						$color-button-generic
+					))
+				);
+			}
+		}
+
 		/* constructive */
 		&.ss-ui-action-constructive {
+		    background-image: none;
 			padding-left: 24px;
+			padding-right: 6px;
 			font-weight: bold;
 			margin-left: $grid-horizontal;
 			color: $color-text-light;
@@ -285,22 +326,23 @@ form.nostyle {
 			background-color: $color-button-generic;
 		
 			&.delete {
-				padding-left: 26px;
-				@include background(image-url("../images/btn_icons_sprite.png") no-repeat 6px -27px,
-					linear-gradient(color-stops(
-						lighten($color-button-generic, 10%),
-						darken($color-button-generic, 5%)
-					))
-				);
-				&.ui-state-hover {
-					@include background(image-url("../images/btn_icons_sprite.png") no-repeat 6px -27px,
-						linear-gradient(color-stops(
-							lighten($color-button-generic, 20%),
-							$color-button-generic
-						))
-					);
-				}
+				@include actionButtonSprite(6px, -26px);
 			}
+
+			&.unpublish {
+			    @include actionButtonSprite(6px, -58px);
+			}
+		}
+
+		/* generic action buttons */
+		&.save-draft {
+		    @include actionButtonSprite(6px, -90px);
+		}
+
+		&.cms-preview-toggle-link {
+		    padding-left: 24px !important;
+			margin-left: 4px !important;
+		    @include actionButtonSprite(6px, -124px);
 		}
 
 		&.ss-ui-button-small {

@@ -263,6 +263,9 @@ class LeftAndMain extends Controller {
 		
 		Requirements::javascript(THIRDPARTY_DIR . '/jstree/jquery.jstree.js');
 		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
+
+		//Plug-in to delay or prevent the accidental firing of the flyout menu in the CMS
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.minified.js');
 		
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js');
@@ -328,6 +331,7 @@ class LeftAndMain extends Controller {
 		Requirements::combine_files(
 			'leftandmain.js',
 			array(
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.minified.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',

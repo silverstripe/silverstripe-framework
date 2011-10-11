@@ -10,6 +10,9 @@
  * create new SCSS files for larger components like the CMS menu or tree 
  * (see _tree.scss and _menu.scss).
  */
+@import "compass";
+@import "compass/css3";
+@import "compass/utilities";
 
 /** ----------------------------------------------------
  * Core Styles.
@@ -350,30 +353,59 @@ html,body {
 
 .cms-page-add-form-dialog {
 	#PageType li {
-		clear: left;
-		height: 40px;
-		border-bottom: 1px solid $color-shadow-dark;
-		
+		padding: 9px 0 9px 15px;
+		overflow: hidden;
+		border-bottom-width: 2px;
+		border-bottom: 2px groove lighten($color-shadow-light, 95%);
+		-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+		border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+				
 		&:hover, &.selected {
-			background-color: lighten($color-highlight, 10%);
+			background-color: $color-highlight-opacity;
 		}
 		
 		input, label, .icon, .title {
 			float: left;
+			line-height: 1.3em;
 		}
 		
 		.icon {
 			width: 20px;
+			display: block;
+			width:  16px;
+			height:  16px;
+			margin: 0 4px;
+			background-color: transparent;
+			background-image: url(../images/sitetree_ss_pageclass_icons_default.png);
+			background-repeat: no-repeat;
+		}
+			
+		.class-HomePage {
+			background-position: 0 -48px;
 		}
 		
+		.class-RedirectorPage {
+			background-position: 0 -16px;
+		}
+		
+		.class-VirtualPage {
+			background-position: 0 -32px;
+		}
+		
+		.class-ErrorPage {
+			background-position: 0 -112px;
+		}
+			
 		.title {
-			width: 100px;
+			width: 120px;
 			font-weight: bold;
+			padding-right: 10px;
 		}
 		
 		.description {
 			font-style: italic;
 		}
+		
 	}
 }
 
@@ -759,7 +791,32 @@ form.member-profile-form {
 			padding: 0;
 		}
 	}
-	
+
+	.child-flyout-indicator {
+		width:0;
+		height:0;
+		border-right:3px dashed $color-text-dark;
+		border-top:3px solid transparent;
+		border-left:3px solid transparent;
+		border-bottom:3px dashed $color-text-dark;
+		position: absolute;
+		right: 1px;
+		margin-top: -8px;
+		display: none;  /* To be shown by javascript, see LeftAndMain.Panel.js */
+	}
+
+	.collapsed-flyout {
+		display: block !important;
+		left: 41px;
+		margin-top: -40px;
+		position: fixed;
+		width: 191px;
+
+		li a span {
+		   display: block !important;
+		}
+	}
+
 }
 
 .cms-content .cms-panel.collapsed {
@@ -807,4 +864,129 @@ form.member-profile-form {
 	a {
 		padding-right: 1em;
 	}
+}
+
+
+/** ------------------------------------------------------------------
+* Modal - JQuery UI Dialog pop-up
+* ----------------------------------------------------------------- */
+
+/* overlay for switching between CMS panes */
+.cms .ui-widget-overlay-light {
+	background: #aaaaaa url(../../thirdparty/jquery-ui-themes/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
+	opacity: 0.3;
+}
+
+/* Adjusting the color of the background overlay to be darker for pop-up dialogs (created by jQuery-UI) */
+.cms .ui-widget-overlay {
+	background-color: #000;
+	background-image: none;
+}
+
+
+$DialogHeaderColor: #5F6160;
+$DialogHeaderFontSize: 14px;
+$DialogBorderRadius: 8px;
+$DialogLabelColor: #7B8C91;
+.ui-dialog {
+    background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+    border: 3px solid #000 !important;
+	border-radius: $DialogBorderRadius;
+    overflow: visible;
+    padding: 0;
+
+	#PageType {
+		.middleColumn {
+			margin: 0;
+			padding: 0;
+
+			.optionset li {
+				width: 100%;
+			}
+		}
+
+		li {
+			&.selected {
+				background-color: rgba(255,255,153, 0.5); /*background-color: #FFFF99;*/
+			}
+
+			&:hover {
+				background-color: #FFFF99 !important; /* lighter highlight on hover */
+			}
+		}
+	}
+
+	/* Labels for all the Dialogs of the pop-up form */
+	.field label.left {
+		font-size: $DialogHeaderFontSize;
+		font-weight: bold;
+		width: 100%;
+		float: none;
+		color: $DialogHeaderColor;
+		margin-top: -4px;
+		margin-left: 38px;
+	}
+
+	/* Numeric labels in the sitetree */
+	label.numeric-label {
+		font-size: $DialogHeaderFontSize;
+		font-weight: bold;
+		float: left;
+		@include border-top-left-radius(3px);
+		@include border-bottom-left-radius(3px);
+		background-color: $DialogLabelColor;
+		padding: 4px 8px 4px 3px;
+		text-align: right;
+		color: #fff;
+		position: absolute;
+		width: 15px;
+
+		/* Numeric label icon (supports up to two-digit numbers) */
+		.label-flyout-indicator {
+		    position: absolute;
+			left: 26px;
+			margin-top: -18px;
+			overflow: visible;
+			display: block;
+			width: 0;
+			height: 0;
+			border-top: 11px solid transparent;
+			border-left: 7px dashed $DialogLabelColor;
+			border-bottom: 11px solid transparent;
+		}
+
+	}
+
+	/* Exception for a label that is inline with the selector dropdown box */
+	#ParentID {
+		label.left {
+		    padding: $grid-vertical 0 $grid-vertical 0;
+			float: left !important;
+			width: 125px;
+		}
+
+		.middleColumn {
+			width: 320px;
+		}
+	}
+
+	.Actions {
+		float: right;
+		margin: 0;
+	}
+}
+
+/** ------------------------------------------------------------------
+* Titlebar for pop-up dialog.
+* ----------------------------------------------------------------- */
+.ui-dialog-titlebar.ui-widget-header {
+    font-size: $DialogHeaderFontSize;
+	background-color: #92a5b2;
+	padding: $grid-vertical/2 $grid-horizontal/2 $grid-vertical/2 $grid-horizontal*2;
+
+	border-bottom: 2px solid #8399a7;
+	@include border-top-left-radius($DialogBorderRadius/2); /* /2 need to eliminate visual artifact */
+	@include border-top-right-radius($DialogBorderRadius);
+	@include background-image(linear-gradient(#ced7dc, #92a5b2));
+	margin-bottom: $grid-vertical*1.5;
 }

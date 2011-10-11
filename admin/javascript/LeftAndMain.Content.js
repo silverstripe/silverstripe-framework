@@ -266,7 +266,7 @@
 	
 	$('.cms-content.loading').entwine({
 		onmatch: function() {
-			this.append('<div class="cms-content-loading-overlay ui-widget-overlay"></div>');
+			this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div>');
 		},
 		onunmatch: function() {
 			this.find('.cms-content-loading-overlay').remove();

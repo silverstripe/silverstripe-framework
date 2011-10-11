@@ -521,18 +521,18 @@ a .jstree-pageicon {
 	background-repeat: no-repeat;
 }
 
-li.class-HomePage a .jstree-pageicon {
+li.class-HomePage > a .jstree-pageicon {
 	background-position: 0 -48px;
 }
 
-li.class-RedirectorPage a .jstree-pageicon {
+li.class-RedirectorPage > a .jstree-pageicon {
 	background-position: 0 -16px;
 }
 
-li.class-VirtualPage a .jstree-pageicon {
+li.class-VirtualPage > a .jstree-pageicon {
 	background-position: 0 -32px;
 }
 
-li.class-ErrorPage a .jstree-pageicon {
+li.class-ErrorPage > a .jstree-pageicon {
 	background-position: 0 -112px;
 }
