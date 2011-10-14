@@ -24,8 +24,26 @@
 		}
 	});
 
-	$('.field.date input.text').live('click', function() {
-		$(this).ssDatepicker();
-		$(this).datepicker('show');
-	});
+	if(typeof($.entwine) != 'undefined') {
+		$('.field.date input.text').entwine({
+			onmatch: function() {
+				this.ssDatepicker();
+				this._super();
+			}
+		});
+	} else if(typeof(Behaviour) != 'undefined') {
+		Behaviour.register({
+			'.field.date input.text': {
+				initialize: function() {
+					$(this).ssDatepicker();
+				}
+			}
+		});
+	} else {
+		$('.field.date input.text').live('click', function() {
+			$(this).ssDatepicker();
+			$(this).datepicker('show');
+		});
+	}
+	
 }(jQuery));
