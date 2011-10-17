@@ -204,6 +204,15 @@ class SSViewer extends Object {
 	public static function setOption($optionName, $optionVal) {
 		SSViewer::$options[$optionName] = $optionVal;
 	}
+	
+	/**
+	 * @param String
+	 * @return Mixed
+	 */
+	static function getOption($optionName) {
+		return SSViewer::$options[$optionName];
+	}
+	
 	protected static $options = array(
 		'rewriteHashlinks' => true,
 	);
