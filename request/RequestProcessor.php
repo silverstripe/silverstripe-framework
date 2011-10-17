@@ -14,9 +14,9 @@ class RequestProcessor {
 		$this->filters = $filters;
 	}
 
-	public function preRequest(SS_HTTPRequest $request, Session $session) {
+	public function preRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
 		foreach ($this->filters as $filter) {
-			$res = $filter->preRequest($request, $session);
+			$res = $filter->preRequest($request, $session, $model);
 			if ($res === false) {
 				return false;
 			}
@@ -26,9 +26,9 @@ class RequestProcessor {
 	/**
 	 * Filter executed AFTER a request
 	 */
-	public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response) {
+	public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model) {
 		foreach ($this->filters as $filter) {
-			$res = $filter->postRequest($request, $response);
+			$res = $filter->postRequest($request, $response, $model);
 			if ($res === false) {
 				return false;
 			}

@@ -130,7 +130,7 @@ class Director {
 				$response->setBody($result);
 			}
 			
-			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response);
+			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
 			if ($res !== false) {
 				// ?debug_memory=1 will output the number of bytes of memory used for this request
 				if(isset($_REQUEST['debug_memory']) && $_REQUEST['debug_memory']) {

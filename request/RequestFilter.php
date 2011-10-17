@@ -15,10 +15,10 @@ interface RequestFilter {
 	 * @return boolean (optional)
 	 *				Whether to continue processing other filters
 	 */
-	public function preRequest(SS_HTTPRequest $request, Session $session);
+	public function preRequest(SS_HTTPRequest $request, Session $session, DataModel $model);
 
 	/**
 	 * Filter executed AFTER a request
 	 */
-	public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response);
+	public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model);
 }

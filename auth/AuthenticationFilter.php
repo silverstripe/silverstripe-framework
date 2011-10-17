@@ -13,7 +13,7 @@ class AuthenticationFilter implements RequestFilter {
 		'authenticationService' => '#$AuthenticationService'
 	);
 
-	public function preRequest(SS_HTTPRequest $request, Session $session) {
+	public function preRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
 		// lets try authenticating 
 		if (isset($_REQUEST['auth']) || isset($_REQUEST['action_dologin'])) {
 			$email = $request->requestVar('Email');
@@ -31,7 +31,7 @@ class AuthenticationFilter implements RequestFilter {
 		}
 	}
 
-	public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response) {
+	public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model) {
 
 	}
 
