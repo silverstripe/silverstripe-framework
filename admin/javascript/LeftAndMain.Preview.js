@@ -53,7 +53,7 @@
 				}
 				
 				// Listen to form loads. Limit to CMS forms for the moment
-				$('.cms-edit-form').bind('loadnewpage', function(e, ui) {
+				$('.cms-edit-form').bind('reloadeditform', function(e, ui) {
 					updateAfterXhr();
 				});
 				
@@ -71,8 +71,8 @@
 				else this.collapse();
 				
 				// Preview might not be available in all admin interfaces - block/disable when necessary
-				this.append('<div class="cms-preview-overlay ui-widget-overlay"></div>');
-				this.find('.cms-preview-overlay').hide();
+				this.append('<div class="cms-preview-overlay ui-widget-overlay-light"></div>');
+				this.find('.cms-preview-overlay-light').hide();
 		
 				this._super();
 			},
@@ -91,7 +91,8 @@
 					contentEl = containerEl.find('.cms-content');
 
 				// Only load if we're in the "edit page" view
-				if(!contentEl.hasClass('CMSMain') || contentEl.hasClass('CMSPagesController') || contentEl.hasClass('CMSSettingsController')) return;
+				var blockedClasses = ['CMSMain', 'CMSPagesController', 'CMSSettingsController', 'CMSPageHistoryController'];
+				if(contentEl.is('.' + blockedClasses.join(',.'))) return;
 
 				// Load this page in the admin interface if appropriate
 				var id = $(doc).find('meta[name=x-page-id]').attr('content'), 

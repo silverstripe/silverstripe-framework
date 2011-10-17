@@ -27,7 +27,7 @@ class ChangePasswordForm extends Form {
 		}
 		
 		if(!$fields) {
-			$fields = new FieldSet();
+			$fields = new FieldList();
 			
 			// Security/changepassword?h=XXX redirects to Security/changepassword
 			// without GET parameter to avoid potential HTTP referer leakage.
@@ -40,7 +40,7 @@ class ChangePasswordForm extends Form {
 			$fields->push(new PasswordField("NewPassword2", _t('Member.CONFIRMNEWPASSWORD', "Confirm New Password")));
 		}
 		if(!$actions) {
-			$actions = new FieldSet(
+			$actions = new FieldList(
 				new FormAction("doChangePassword", _t('Member.BUTTONCHANGEPASSWORD', "Change Password"))
 			);
 		}

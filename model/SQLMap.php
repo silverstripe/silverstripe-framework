@@ -38,8 +38,10 @@ class SQLMap extends Object implements IteratorAggregate {
 	public function getItem($id) {
 		if($id) {
 			$baseTable = reset($this->query->from);
-			$this->query->where[] = "$baseTable.\"ID\" = $id";
+			$where = "$baseTable.\"ID\" = $id";
+			$this->query->where[sha1($where)] = $where;
 			$record = $this->query->execute()->first();
+			unset($this->query->where[sha1($where)]);
 			if($record) {
 				$className = $record['ClassName'];
 				$obj = new $className($record);
@@ -68,7 +70,7 @@ class SQLMap extends Object implements IteratorAggregate {
 	 */
 	protected function genItems() {
 		if(!isset($this->items)) {
-			$this->items = new DataObjectSet();
+			$this->items = new ArrayList();
 			$items = $this->query->execute();	
 			
 			foreach($items as $item) {

@@ -59,7 +59,7 @@ class TreeMultiselectField extends TreeDropdownField {
 			
 		// Otherwise, look data up from the linked relation
 		} if($this->value != 'unchanged' && is_string($this->value)) {
-			$items = new DataObjectSet();
+			$items = new ArrayList();
 			$ids = explode(',', $this->value);
 			foreach($ids as $id) {
 				if(!is_numeric($id)) continue;

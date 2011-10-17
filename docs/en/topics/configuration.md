@@ -74,6 +74,25 @@ All user-related preferences are stored as a property of the `[api:Member]`-clas
 
 See [security](/topics/security) and [permission](/reference/permission)
 
+## Resource Usage (Memory and CPU)
+
+SilverStripe tries to keep its resource usage within the documented limits (see our [server requirements](../installation/server-requirements)).
+These limits are defined through `memory_limit` and `max_execution_time` in the PHP configuration.
+They can be overwritten through `ini_set()`, unless PHP is running with the [Suhoshin Patches](http://www.hardened-php.net/)
+or in "[safe mode](http://php.net/manual/en/features.safe-mode.php)".
+Most shared hosting providers will have maximum values that can't be altered.
+
+For certain tasks like synchronizing a large `assets/` folder with all file and folder entries in the database,
+more resources are required temporarily. In general, we recommend running resource intensive tasks
+through the [commandline](../topics/commandline), where configuration defaults for these settings are higher or even unlimited.
+
+SilverStripe can request more resources through `increase_memory_limit_to()` and `increase_time_limit_to()`.
+If you are concerned about resource usage on a dedicated server (without restrictions imposed through shared hosting providers), you can set a hard limit to these increases through
+`set_increase_memory_limit_max()` and `set_increase_time_limit_max()`.
+These values will just be used for specific scripts (e.g. `[api:Filesystem::sync()]`),
+to raise the limits for all executed scripts please use `ini_set('memory_limit', <value>)`
+and `ini_set('max_execution_time', <value>)` in your own `_config.php`.
+
 ## See Also
 
 [Config Cheat sheet](http://www.ssbits.com/a-config-php-cheatsheet/)

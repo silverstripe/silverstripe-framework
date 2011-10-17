@@ -16,7 +16,7 @@ class ScaffoldingComplexTableField_Popup extends ComplexTableField_Popup {
 		
 		Requirements::clear();
 
-		$actions = new FieldSet();	
+		$actions = new FieldList();	
 		if(!$readonly) {
 			$actions->push(
 				$saveAction = new FormAction("saveComplexTableField", "Save")

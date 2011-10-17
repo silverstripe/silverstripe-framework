@@ -116,5 +116,63 @@ class ListboxField extends DropdownField {
 		$this->multiple = $bool;
 	}
 	
+	function setSource($source) {
+		if($source) {
+			$hasCommas = array_filter(array_keys($source), create_function('$key', 'return strpos($key, ",") !== FALSE;'));
+			if($hasCommas) {
+				throw new InvalidArgumentException('No commas allowed in $source keys');
+			}
+		}
+		
+		parent::setSource($source);
+	}
+	
+	/**
+	 * @return String
+	 */
+	function dataValue() {
+		if($this->value && $this->multiple && is_array($this->value)) {
+			return implode(',', $this->value);
+		} else {
+			return parent::dataValue();
+		}
+	}
+	
+	function setValue($val) {
+		if($val) {
+			if(!$this->multiple && is_array($val)) {
+				throw new InvalidArgumentException('No array values allowed with multiple=false');
+			}
+
+			if($this->multiple) {
+				$parts = (is_array($val)) ? $val : preg_split("/ *, */", trim($val));
+				if(ArrayLib::is_associative($parts)) {
+					throw new InvalidArgumentException('No associative arrays allowed multiple=true');
+				}
+
+				if($diff = array_diff($parts, array_keys($this->source))) {
+					throw new InvalidArgumentException(sprintf(
+						'Invalid keys "%s" in value array for multiple=true', 
+						Convert::raw2xml(implode(',', $diff))
+					));
+				}
+
+				parent::setValue($parts);
+			} else {
+				if(!in_array($val, array_keys($this->source))) {
+					throw new InvalidArgumentException(sprintf(
+						'Invalid value "%s" for multiple=true', 
+						Convert::raw2xml($val)
+					));
+				}
+
+				parent::setValue($val);
+			}
+		} else {
+			parent::setValue($val);
+		}
+		
+	}
+	
 }
 ?>

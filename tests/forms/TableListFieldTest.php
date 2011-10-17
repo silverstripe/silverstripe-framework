@@ -17,9 +17,9 @@ class TableListFieldTest extends SapphireTest {
 			"E" => "Col E",
 		));
 		// A TableListField must be inside a form for its links to be generated
-		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			$table
-		), new FieldSet());
+		), new FieldList());
 		
 		$result = $table->FieldHolder();
 	
@@ -45,14 +45,14 @@ class TableListFieldTest extends SapphireTest {
 			"E" => "Col E",
 		));
 		// A TableListField must be inside a form for its links to be generated
-		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			$table
-		), new FieldSet());
+		), new FieldList());
 	
 		$items = $table->sourceItems();
 		$this->assertNotNull($items);
 		
-		$itemMap = $items->toDropdownMap("ID", "A") ;
+		$itemMap = $items->map("ID", "A") ;
 		$this->assertEquals(array(
 			$item1->ID => "a1", 
 			$item2->ID => "a2", 
@@ -78,9 +78,9 @@ class TableListFieldTest extends SapphireTest {
 			"E" => "Col E",
 		));
 		// A TableListField must be inside a form for its links to be generated
-		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			$table
-		), new FieldSet());
+		), new FieldList());
 	
 		$table->ShowPagination = true;
 		$table->PageSize = 2;
@@ -88,7 +88,7 @@ class TableListFieldTest extends SapphireTest {
 		$items = $table->sourceItems();
 		$this->assertNotNull($items);
 	
-		$itemMap = $items->toDropdownMap("ID", "A") ;
+		$itemMap = $items->map("ID", "A") ;
 		$this->assertEquals(array(
 			$item1->ID => "a1", 
 			$item2->ID => "a2"
@@ -111,9 +111,9 @@ class TableListFieldTest extends SapphireTest {
 			"E" => "Col E",
 		));
 		// A TableListField must be inside a form for its links to be generated
-		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			$table
-		), new FieldSet());
+		), new FieldList());
 	
 		$table->ShowPagination = true;
 		$table->PageSize = 2;
@@ -122,7 +122,7 @@ class TableListFieldTest extends SapphireTest {
 		$items = $table->sourceItems();
 		$this->assertNotNull($items);
 	
-		$itemMap = $items->toDropdownMap("ID", "A") ;
+		$itemMap = $items->map("ID", "A") ;
 		$this->assertEquals(array($item3->ID => "a3", $item4->ID => "a4"), $itemMap);
 	}
 	
@@ -182,9 +182,9 @@ class TableListFieldTest extends SapphireTest {
 			"B" => "Col B"
 		));
 		
-		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			$table
-		), new FieldSet());
+		), new FieldList());
 		
 		$csvResponse = $table->export();
 		
@@ -219,7 +219,7 @@ class TableListFieldTest extends SapphireTest {
 
 	function testLink() {
 		// A TableListField must be inside a form for its links to be generated
-		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			new TableListField("Tester", "TableListFieldTest_Obj", array(
 				"A" => "Col A",
 				"B" => "Col B",
@@ -227,7 +227,7 @@ class TableListFieldTest extends SapphireTest {
 				"D" => "Col D",
 				"E" => "Col E",
 			))
-		), new FieldSet());
+		), new FieldList());
 
 		$table = $form->dataFieldByName('Tester');
 		$this->assertEquals(
@@ -252,9 +252,9 @@ class TableListFieldTest extends SapphireTest {
 			"E" => "Col E",
 		));
 		// A TableListField must be inside a form for its links to be generated
-		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldSet(
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
 			$table
-		), new FieldSet());
+		), new FieldList());
 
 		$table->ShowPagination = true;
 		$table->PageSize = 2;
@@ -291,6 +291,38 @@ class TableListFieldTest extends SapphireTest {
 		$this->assertContains('&ctf[Tester][dir]=desc', $table->FirstLink());
 		
 		unset($_REQUEST['ctf']);
+	}
+
+    /**
+     * Check that a DataObjectSet can be passed to TableListField
+     */
+	function testDataObjectSet() {
+	    $one = new TableListFieldTest_Obj;
+	    $one->A = "A-one";
+	    $two = new TableListFieldTest_Obj;
+	    $two->A = "A-two";
+	    $three = new TableListFieldTest_Obj;
+	    $three->A = "A-three";
+	    
+	    $list = new ArrayList(array($one, $two, $three));
+	    
+		// A TableListField must be inside a form for its links to be generated
+		$form = new Form(new TableListFieldTest_TestController(), "TestForm", new FieldList(
+			new TableListField("Tester", $list, array(
+				"A" => "Col A",
+				"B" => "Col B",
+				"C" => "Col C",
+				"D" => "Col D",
+				"E" => "Col E",
+			))
+		), new FieldList());
+
+		$table = $form->dataFieldByName('Tester');
+		$rendered = $table->FieldHolder();
+		
+		$this->assertContains('A-one', $rendered);
+		$this->assertContains('A-two', $rendered);
+		$this->assertContains('A-three', $rendered);
 	}
 }
 
@@ -335,8 +367,8 @@ class TableListFieldTest_TestController extends Controller {
 		$table->disableSorting();
 
 		// A TableListField must be inside a form for its links to be generated
-		return new Form($this, "TestForm", new FieldSet(
+		return new Form($this, "TestForm", new FieldList(
 			$table
-		), new FieldSet());
+		), new FieldList());
 	}
 }

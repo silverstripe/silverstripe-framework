@@ -75,7 +75,9 @@ class File extends DataObject {
 		"Title" => "Varchar(255)",
 		"Filename" => "Text",
 		"Content" => "Text",
-		"Sort" => "Int"
+		"Sort" => "Int",
+		// Only applies to files, doesn't inherit for folder
+		'ShowInSearch' => 'Boolean(1)',
 	);
 	
 	static $has_one = array(
@@ -87,7 +89,9 @@ class File extends DataObject {
 	
 	static $many_many = array();
 	
-	static $defaults = array();
+	static $defaults = array(
+		"ShowInSearch" => 1,
+	);
 	
 	static $extensions = array(
 		"Hierarchy",
@@ -157,11 +161,11 @@ class File extends DataObject {
 		return $item;
 	}
 	
-	function Link($action = null) {
-		return Director::baseURL() . $this->RelativeLink($action);
+	function Link() {
+		return Director::baseURL() . $this->RelativeLink();
 	}
 
-	function RelativeLink($action = null){
+	function RelativeLink(){
 		return $this->Filename;
 	}
 	
@@ -259,7 +263,7 @@ class File extends DataObject {
 	 * @return String
 	 */
 	public function appCategory() {
-		$ext = $this->Extension;
+		$ext = strtolower($this->Extension);
 		switch($ext) {
 			case "aif": case "au": case "mid": case "midi": case "mp3": case "ra": case "ram": case "rm":
 			case "mp3": case "wav": case "m4a": case "snd": case "aifc": case "aiff": case "wma": case "apl":
@@ -433,13 +437,8 @@ class File extends DataObject {
 		if(!$name) $name = $this->Title;
 
 		// Fix illegal characters
-		$name = ereg_replace(' +','-',trim($name)); // Replace any spaces
-		$name = ereg_replace('[^A-Za-z0-9.+_\-]','',$name); // Replace non alphanumeric characters
-
-		// Remove all leading dots or underscores
-		while(!empty($name) && ($name[0] == '_' || $name[0] == '.')) {
-			$name = substr($name, 1);
-		}
+		$filter = Object::create('FileNameFilter');
+		$name = $filter->filter($name);
 
 		// We might have just turned it blank, so check again.
 		if(!$name) $name = 'new-folder';
@@ -714,7 +713,6 @@ class File extends DataObject {
 
 		$records = $query->execute();
 		$ret = $this->buildDataObjectSet($records, $containerClass);
-		if($ret) $ret->parseQueryLimit($query);
 	
 		return $ret;
 	}
@@ -780,13 +778,60 @@ class File extends DataObject {
 	 * @return FieldSet
 	 */
 	function uploadMetadataFields() {
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		$fields->push(new TextField('Title', $this->fieldLabel('Title')));
 		$this->extend('updateUploadMetadataFields', $fields);
 		
 		return $fields;
 	}
 	
-}
+	/**
+	 * @var Array Only use lowercase extensions in here.
+	 */
+	static $class_for_file_extension = array(
+		'*' => 'File',
+		'jpg' => 'Image',
+		'jpeg' => 'Image',
+		'png' => 'Image',
+		'gif' => 'Image',
+	);
 
-?>
+	/**
+	 * Maps a {@link File} subclass to a specific extension.
+	 * By default, files with common image extensions will be created
+	 * as {@link Image} instead of {@link File} when using 
+	 * {@link Folder::constructChild}, {@link Folder::addUploadToFolder}),
+	 * and the {@link Upload} class (either directly or through {@link FileField}).
+	 * For manually instanciated files please use this mapping getter.
+	 * 
+	 * Caution: Changes to mapping doesn't apply to existing file records in the database.
+	 * Also doesn't hook into {@link Object::getCustomClass()}.
+	 * 
+	 * @param String File extension, without dot prefix. Use an asterisk ('*')
+	 * to specify a generic fallback if no mapping is found for an extension.
+	 * @return String Classname for a subclass of {@link File}
+	 */
+	static function get_class_for_file_extension($ext) {
+		$map = array_change_key_case(self::$class_for_file_extension, CASE_LOWER);
+		return (array_key_exists(strtolower($ext), $map)) ? $map[strtolower($ext)] : $map['*'];
+	}
+	
+	/**
+	 * See {@link get_class_for_file_extension()}.
+	 * 
+	 * @param String|array
+	 * @param String
+	 */
+	static function set_class_for_file_extension($exts, $class) {
+		if(!is_array($exts)) $exts = array($exts);
+		foreach($exts as $ext) {
+			if(ClassInfo::is_subclass_of($ext, 'File')) {
+				throw new InvalidArgumentException(
+					sprintf('Class "%s" (for extension "%s") is not a valid subclass of File', $class, $ext)
+				);
+			}
+			self::$class_for_file_extension[$ext] = $class;
+		}
+	}
+	
+}

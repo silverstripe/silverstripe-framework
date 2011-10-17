@@ -347,9 +347,9 @@ class MySQLDatabase extends SS_Database {
 
 			if($field['Default'] || $field['Default'] === "0") {
 				if(is_numeric($field['Default']))
-					$fieldSpec .= " default " . addslashes($field['Default']);
+					$fieldSpec .= " default " . Convert::raw2sql($field['Default']);
 				else
-					$fieldSpec .= " default '" . addslashes($field['Default']) . "'";
+					$fieldSpec .= " default '" . Convert::raw2sql($field['Default']) . "'";
 			}
 			if($field['Extra']) $fieldSpec .= " $field[Extra]";
 
@@ -771,6 +771,11 @@ class MySQLDatabase extends SS_Database {
 
 		// Always ensure that only pages with ShowInSearch = 1 can be searched
 		$extraFilters['SiteTree'] .= " AND ShowInSearch <> 0";
+		
+		// File.ShowInSearch was added later, keep the database driver backwards compatible 
+		// by checking for its existence first
+		$fields = $this->fieldList('File');
+		if(array_key_exists('ShowInSearch', $fields)) $extraFilters['File'] .= " AND ShowInSearch <> 0";
 
 		$limit = $start . ", " . (int) $pageLength;
 
@@ -825,15 +830,18 @@ class MySQLDatabase extends SS_Database {
 		// Get records
 		$records = DB::query($fullQuery);
 
-		foreach($records as $record)
+		$objects = array();
+
+		foreach($records as $record) {
 			$objects[] = new $record['ClassName']($record);
+		}
 
+		$list = new PaginatedList(new ArrayList($objects));
+		$list->setPageStart($start);
+		$list->setPageLEngth($pageLength);
+		$list->setTotalItems($totalCount);
 
-		if(isset($objects)) $doSet = new DataObjectSet($objects);
-		else $doSet = new DataObjectSet();
-
-		$doSet->setPageLimits($start, $pageLength, $totalCount);
-		return $doSet;
+		return $list;
 	}
 
 	/**
@@ -866,8 +874,7 @@ class MySQLDatabase extends SS_Database {
 	}
 
 	/*
-	 * This will return text which has been escaped in a database-friendly manner
-	 * Using PHP's addslashes method won't work in MSSQL
+	 * This will return text which has been escaped in a database-friendly manner.
 	 */
 	function addslashes($value){
 		return mysql_real_escape_string($value, $this->dbConn);
@@ -1031,6 +1038,34 @@ class MySQLDatabase extends SS_Database {
 		}
 
 		return "UNIX_TIMESTAMP($date1) - UNIX_TIMESTAMP($date2)";
+	}
+	
+	function supportsLocks() {
+		return true;
+	}
+	
+	function canLock($name) {
+		$id = $this->getLockIdentifier($name);
+		return (bool)DB::query(sprintf("SELECT IS_FREE_LOCK('%s')", $id))->value();
+	}
+	
+	function getLock($name, $timeout = 5) {
+		$id = $this->getLockIdentifier($name);
+		
+		// MySQL auto-releases existing locks on subsequent GET_LOCK() calls,
+		// in contrast to PostgreSQL and SQL Server who stack the locks.
+		
+		return (bool)DB::query(sprintf("SELECT GET_LOCK('%s', %d)", $id, $timeout))->value();
+	}
+	
+	function releaseLock($name) {
+		$id = $this->getLockIdentifier($name);
+		return (bool)DB::query(sprintf("SELECT RELEASE_LOCK('%s')", $id))->value();
+	}
+	
+	protected function getLockIdentifier($name) {
+		// Prefix with database name
+		return Convert::raw2sql($this->database . '_' . Convert::raw2sql($name));
 	}
 }
 

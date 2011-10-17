@@ -16,6 +16,15 @@ form.nostyle {
 
 .field {
 	display: block;
+	padding: 10px 0;
+	border-bottom-width: 2px;
+	border-bottom: 2px groove lighten($color-shadow-light, 95%);
+	-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+	border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+	//TODO: use single border line with shadow instead:: http://daverupert.com/2011/06/two-tone-borders-with-css3/
+	//@include border-image(url(../images/textures/bg_fieldset_elements_border.png), 2, stretch); //not yet supported
+	//overflow: hidden;
+
 	
 	// bottom padding accounts for the border and we have a negative
 	// margin with a postive padding to ensure the bottom border extends
@@ -59,7 +68,13 @@ form.nostyle {
 	}
 	
 	.middleColumn {
-		margin-left: $grid-horizontal * 22;
+		margin-left: $grid-horizontal * 23;
+	}
+	
+	span.readonly {
+		padding-top: $grid-vertical;
+		line-height: $grid-vertical * 2;
+		display: block;
 	}
 	
 	input.text,
@@ -75,7 +90,8 @@ form.nostyle {
 	.TreeDropdownField {
 		background: #fff;
 		border: 1px solid lighten($color-medium-separator, 20%);
-		padding: $grid-vertical $grid-horizontal;
+		padding: ($grid-vertical - 1) ($grid-horizontal - 1);
+		line-height: $grid-vertical * 2;
 		margin: 0;
 		outline: none;
 		
@@ -152,7 +168,7 @@ form.nostyle {
 			width: 24px;
 	
 			b {
-				background-position: 3px 4px;
+				background-position: 1px 4px;
 			}
 		}
 	}
@@ -184,137 +200,177 @@ form.nostyle {
 }
 
 .cms {
-	.ui-widget {
-		/* loading */
-		input.loading,
-		input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, 
-		.ui-widget-header input.ui-state-default.loading {
-			padding-left: 24px;
-			color: lighten($color-text-dark, 20%);
-			background: $color-button-disabled url(../../images/network-save.gif) no-repeat 4px center;
-			border-color: darken($color-button-disabled, 10%);
-			cursor: default;
+	input.loading,
+	input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, 
+	.ui-widget-header input.ui-state-default.loading {
+		padding-left: 24px;
+		color: lighten($color-text-dark, 20%);
+		background: $color-button-disabled url(../../images/network-save.gif) no-repeat 4px center;
+		border-color: darken($color-button-disabled, 10%);
+		cursor: default;
+		
+		@include text-shadow(none);
+		@include box-shadow(none);
+	}
+
+	.ss-ui-button {
+		/* all buttons */
+		padding: ($grid-vertical - 1) ($grid-horizontal + 4);
+		font-weight: bold;
+		text-decoration: none;
+		margin: 0;
+		line-height: $grid-vertical * 2;
+		color: lighten($color-text-dark, 10%);
+		background-color: $color-button-generic;
+		border: 1px solid $color-button-generic-border;
+		@include text-shadow(lighten($color-button-generic, 20%) 0 1px 1px);
+		
+		@include box-shadow(lighten($color-base, 10%) 0 1px 2px);
+		@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+			linear-gradient(color-stops(
+				lighten($color-button-generic, 10%),
+				darken($color-button-generic, 5%)
+			))
+		);
+		&.ui-state-hover {
+			border: 1px solid darken($color-button-generic-border, 10%);
+			@include text-shadow(lighten($color-button-generic, 30%) 0 1px 1px);
 			
-			@include text-shadow(none);
-			@include box-shadow(none);
-			
-		}
-	
-		.ss-ui-button {
-			/* all buttons */
-			padding: ($grid-vertical - 3) ($grid-horizontal * 2) - 4;
-			text-decoration: none;
-			line-height: $grid-vertical * 2;
-			color: $color-text-dark;
-			background-color: $color-button-generic;
-			border: 1px solid $color-button-generic-border;
-			@include text-shadow(lighten($color-button-generic, 20%) 0 1px 1px);
-			@include box-shadow(lighten($color-base, 10%) 0 1px 2px);
+			@include box-shadow($color-base 0 1px 2px);
 			@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+				linear-gradient(color-stops(
+					lighten($color-button-generic, 20%),
+					darken($color-button-generic, 5%)
+				))
+			);
+		}
+		&:focus,
+		&:active {
+			border: 1px solid darken($color-button-generic-border, 5%);
+			
+			@include box-shadow($color-base 0 1px 2px);
+			@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+				linear-gradient(color-stops(
+					$color-button-generic,
+					lighten($color-button-generic, 20%)
+				))
+			);			
+		}
+
+		/* CMS action button sprite mix-in (used for all the buttons in the bottom row */
+		@mixin actionButtonSprite($horizontalOffset, $verticalOffset) {
+		    padding-left: 24px;
+			padding-right: 6px;
+			@include background(image-url("../images/btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
 				linear-gradient(color-stops(
 					lighten($color-button-generic, 10%),
 					darken($color-button-generic, 5%)
 				))
 			);
-			
 			&.ui-state-hover {
-				border: 1px solid darken($color-button-generic-border, 5%);
-				
-				@include box-shadow($color-base 0 1px 2px);
-				@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+				@include background(image-url("../images/btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
 					linear-gradient(color-stops(
 						lighten($color-button-generic, 20%),
 						$color-button-generic
 					))
 				);
 			}
-			
-			&:focus,
-			&:active {
-				border: 1px solid darken($color-button-generic-border, 5%);
-				
-				@include box-shadow($color-base 0 1px 2px);
-				@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+			&.ui-state-disabled {
+			    background-image: none;
+				@include background(image-url("../images/btn_icons_sprite_disabled.png") no-repeat $horizontalOffset $verticalOffset,
 					linear-gradient(color-stops(
-						$color-button-generic,
-						lighten($color-button-generic, 20%)
+						lighten($color-button-generic, 20%),
+						$color-button-generic
 					))
-				);			
+				);
 			}
-			
-			&.ss-ui-button-small {
-				padding: ($grid-vertical/2) ($grid-horizontal/2);
-			}
-			
-			&.ui-state-highlight {
-				background-color: $color-button-highlight;
-				border: 1px solid $color-button-highlight-border;
-			}
-			
-			/* constructive */
-			&.ss-ui-action-constructive {
-				padding-left: 24px;
-				font-weight: bold;
-				margin-left: $grid-horizontal;
-				color: $color-text-light;
-				border-color: $color-button-constructive-border;
+		}
+
+		/* constructive */
+		&.ss-ui-action-constructive {
+		    background-image: none;
+			padding-left: 24px;
+			padding-right: 6px;
+			font-weight: bold;
+			margin-left: $grid-horizontal;
+			color: $color-text-light;
+			border-color: $color-button-constructive-border;
+			@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 5px,
+				linear-gradient(color-stops(
+					lighten($color-button-constructive, 10%),
+					darken($color-button-constructive, 5%)
+				))
+			);
+		
+			background-color: $color-button-constructive;
+	
+			@include text-shadow(darken($color-button-constructive, 10%) 0 1px 1px);
+			@include box-shadow(darken($color-base, 20%) 1px 1px 2px);
+		
+			&.ui-state-hover {
+				border-color: darken($color-button-constructive-border, 10%);
 				@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 5px,
 					linear-gradient(color-stops(
-						lighten($color-button-constructive, 10%),
-						darken($color-button-constructive, 5%)
+						lighten($color-button-constructive, 15%),
+						$color-button-constructive
 					))
 				);
 			
-				background-color: $color-button-constructive;
-		
-				@include text-shadow(darken($color-button-constructive, 10%) 0 1px 1px);
-				@include box-shadow(darken($color-base, 20%) 1px 1px 2px);
-			
-				&.ui-state-hover {
-					border-color: darken($color-button-constructive-border, 10%);
-					@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 5px,
-						linear-gradient(color-stops(
-							lighten($color-button-constructive, 15%),
-							$color-button-constructive
-						))
-					);
-				
-					background-color: darken($color-button-constructive, 10%);
-				}
+				background-color: darken($color-button-constructive, 10%);
 			}
+		}
+	
+		/* destructive */
+		&.ss-ui-action-destructive {
+			color: $color-button-destructive;
+			background-color: $color-button-generic;
 		
-			/* destructive */
-			&.ss-ui-action-destructive {
-				color: $color-button-destructive;
-				background-color: $color-button-generic;
-			
-				&.delete {
-					padding-left: 26px;
-					@include background(image-url("../images/btn_icons_sprite.png") no-repeat 6px -27px,
-						linear-gradient(color-stops(
-							lighten($color-button-generic, 10%),
-							darken($color-button-generic, 5%)
-						))
-					);
-					&.ui-state-hover {
-						@include background(image-url("../images/btn_icons_sprite.png") no-repeat 6px -27px,
-							linear-gradient(color-stops(
-								lighten($color-button-generic, 20%),
-								$color-button-generic
-							))
-						);
-					}
-				}
+			&.delete {
+				@include actionButtonSprite(6px, -26px);
 			}
-		
-			&.ss-ui-action-minor {
-				background: none;
-				padding: 0;
-				border: 0;
+
+			&.unpublish {
+			    @include actionButtonSprite(6px, -58px);
+			}
+		}
+
+		/* generic action buttons */
+		&.save-draft {
+		    @include actionButtonSprite(6px, -90px);
+		}
+
+		&.cms-preview-toggle-link {
+		    padding-left: 24px !important;
+			margin-left: 4px !important;
+		    @include actionButtonSprite(6px, -124px);
+		}
+
+		&.ss-ui-button-small {
+			padding: ($grid-vertical/2) ($grid-horizontal/2);
+		}
+			
+		&.ui-state-highlight {
+			background-color: $color-button-highlight;
+			border: 1px solid $color-button-highlight-border;
+		}
+
+		&.ss-ui-action-minor {
+			background: none;
+			padding: 0;
+			border: 0;
+			color: lighten($color-text-dark, 10%);
+			text-decoration: underline;
+			
+			@include box-shadow(none);
+			
+			&:hover {
+				text-decoration: none;
 				color: $color-text-dark;
-				text-decoration: underline;
-				
-				@include box-shadow(none);
+			}
+			&:focus,
+			&:active {
+				text-decoration: none;
+				color: lighten($color-text-dark, 20%);
 			}
 		}
 	}

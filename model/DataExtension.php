@@ -89,6 +89,10 @@ abstract class DataExtension extends Extension {
 		}
 	}
 	
+	public static function unload_extra_statics($class, $extension) {
+		self::$extra_statics_loaded[$class][$extension] = false;
+	}
+	
 	/**
 	 * Edit the given query object to support queries for this extension
 	 *
@@ -99,6 +103,9 @@ abstract class DataExtension extends Extension {
 
 	/**
 	 * Update the database schema as required by this extension.
+	 *
+	 * When duplicating a table's structure, remember to duplicate the create options
+	 * as well. See {@link Versioned->augmentDatabase} for an example.
 	 */
 	function augmentDatabase() {
 	}
@@ -163,11 +170,11 @@ abstract class DataExtension extends Extension {
 	 * should just be used to add or modify tabs, or fields which
 	 * are specific to the CMS-context.
 	 *
-	 * Caution: Use {@link FieldSet->addFieldToTab()} to add fields.
+	 * Caution: Use {@link FieldList->addFieldToTab()} to add fields.
 	 *
-	 * @param FieldSet $fields FieldSet with a contained TabSet
+	 * @param FieldList $fields FieldSet with a contained TabSet
 	 */
-	function updateCMSFields(FieldSet &$fields) {
+	function updateCMSFields(FieldList $fields) {
 	}
 	
 	/**
@@ -176,18 +183,18 @@ abstract class DataExtension extends Extension {
 	 * 
 	 * Caution: Use {@link FieldSet->push()} to add fields.
 	 *
-	 * @param FieldSet $fields FieldSet without TabSet nesting
+	 * @param FieldList $fields FieldSet without TabSet nesting
 	 */
-	function updateFrontEndFields(FieldSet &$fields) {
+	function updateFrontEndFields(FieldList $fields) {
 	}
 	
 	/**
 	 * This is used to provide modifications to the form actions
 	 * used in the CMS. {@link DataObject->getCMSActions()}.
 	 *
-	 * @param FieldSet $actions FieldSet
+	 * @param FieldList $actions FieldSet
 	 */
-	function updateCMSActions(FieldSet &$actions) {
+	function updateCMSActions(FieldList $actions) {
 	}
 	
 	/**

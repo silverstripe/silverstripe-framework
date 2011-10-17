@@ -117,8 +117,8 @@ class CheckboxSetFieldTest extends SapphireTest {
 		$form = new Form(
 			new Controller(), 
 			'Form',
-			new FieldSet($field),
-			new FieldSet()
+			new FieldList($field),
+			new FieldList()
 		);
 		$form->loadDataFrom($articleWithTags);
 		$this->assertEquals(

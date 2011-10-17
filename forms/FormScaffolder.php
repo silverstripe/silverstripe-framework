@@ -65,7 +65,7 @@ class FormScaffolder extends Object {
 	 * @return FieldSet
 	 */
 	public function getFieldSet() {
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		
 		// tabbed or untabbed
 		if($this->tabbed) {
@@ -124,15 +124,15 @@ class FormScaffolder extends Object {
 						);
 					}
 					$relationshipFields = singleton($component)->summaryFields();
+
 					$foreignKey = $this->obj->getRemoteJoinField($relationship);
 					$fieldClass = (isset($this->fieldClasses[$relationship])) ? $this->fieldClasses[$relationship] : 'ComplexTableField';
 					$ctf = new $fieldClass(
 						$this,
 						$relationship,
-						$component,
+						null,
 						$relationshipFields,
-						"getCMSFields", 
-						"\"$foreignKey\" = " . $this->obj->ID
+						"getCMSFields"
 					);
 					$ctf->setPermissions(TableListField::permissions_for_object($component));
 					if($this->tabbed) {
@@ -153,19 +153,15 @@ class FormScaffolder extends Object {
 					}
 
 					$relationshipFields = singleton($component)->summaryFields();
-					$filterWhere = $this->obj->getManyManyFilter($relationship, $component);
-					$filterJoin = $this->obj->getManyManyJoin($relationship, $component);
 					$fieldClass = (isset($this->fieldClasses[$relationship])) ? $this->fieldClasses[$relationship] : 'ComplexTableField';
 					$ctf = new $fieldClass(
 						$this,
 						$relationship,
-						$component,
+						null,
 						$relationshipFields,
-						"getCMSFields", 
-						$filterWhere,
-						'', 
-						$filterJoin
+						"getCMSFields"
 					);
+					
 					$ctf->setPermissions(TableListField::permissions_for_object($component));
 					$ctf->popupClass = "ScaffoldingComplexTableField_Popup";
 					if($this->tabbed) {
@@ -195,6 +191,4 @@ class FormScaffolder extends Object {
 			'ajaxSafe' => $this->ajaxSafe
 		);
 	}
-	
 }
-?>

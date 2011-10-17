@@ -66,7 +66,7 @@ class DataExtensionTest extends SapphireTest {
 		$parent->Faves()->add($obj2->ID);
 		$this->assertEquals(2, $parent->Faves()->Count());
 		
-		$parent->Faves()->remove($obj2->ID);
+		$parent->Faves()->removeByID($obj2->ID);
 		$this->assertEquals(1, $parent->Faves()->Count());
 	}
 	

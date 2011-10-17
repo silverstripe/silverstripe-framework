@@ -366,22 +366,55 @@ function _t($entity, $string = "", $priority = 40, $context = "") {
 
 /**
  * Increase the memory limit to the given level if it's currently too low.
+ * Only increases up to the maximum defined in {@link set_increase_memory_limit_max()},
+ * and defaults to the 'memory_limit' setting in the PHP configuration.
+ * 
  * @param A memory limit string, such as "64M".  If omitted, unlimited memory will be set.
+ * @return Boolean TRUE indicates a successful change, FALSE a denied change.
  */
 function increase_memory_limit_to($memoryLimit = -1) {
 	$curLimit = ini_get('memory_limit');
 	
 	// Can't go higher than infinite
-	if($curLimit == -1) return;
+	if($curLimit == -1 ) return true;
+	
+	// Check hard maximums
+	$max = get_increase_memory_limit_max();
+	if($max != -1 && translate_memstring($memoryLimit) > translate_memstring($max)) return false;
 	
 	// Increase the memory limit if it's too low
 	if($memoryLimit == -1 || translate_memstring($memoryLimit) > translate_memstring($curLimit)) {
 		ini_set('memory_limit', $memoryLimit);
-	}
+	} 
+
+	return true;
+}
+
+$_increase_memory_limit_max = ini_get('memory_limit');
+
+/**
+ * Set the maximum allowed value for {@link increase_memory_limit_to()}.
+ * The same result can also be achieved through 'suhosin.memory_limit'
+ * if PHP is running with the Suhosin system.
+ * 
+ * @param Memory limit string
+ */
+function set_increase_memory_limit_max($memoryLimit) {
+	global $_increase_memory_limit_max;
+	$_increase_memory_limit_max = $memoryLimit;
+}
+
+/**
+ * @return Memory limit string
+ */
+function get_increase_memory_limit_max() {
+	global $_increase_memory_limit_max;
+	return $_increase_memory_limit_max;
 }
 
 /**
  * Turn a memory string, such as 512M into an actual number of bytes.
+ * 
  * @param A memory limit string, such as "64M"
  */
 function translate_memstring($memString) {
@@ -394,18 +427,50 @@ function translate_memstring($memString) {
 }
 
 /**
- * Increase the time limit of this script.  By default, the time will be unlimited.
+ * Increase the time limit of this script. By default, the time will be unlimited.
+ * Only works if 'safe_mode' is off in the PHP configuration.
+ * Only values up to {@link get_increase_time_limit_max()} are allowed.
+ * 
  * @param $timeLimit The time limit in seconds.  If omitted, no time limit will be set.
+ * @return Boolean TRUE indicates a successful change, FALSE a denied change.
  */
 function increase_time_limit_to($timeLimit = null) {
+	$max = get_increase_time_limit_max();
+	if($max != -1 && $timeLimit > $max) return false;
+	
 	if(!ini_get('safe_mode')) {
 		if(!$timeLimit) {
 			set_time_limit(0);
+			return true;
 		} else {
 			$currTimeLimit = ini_get('max_execution_time');
+			// Only increase if its smaller
 			if($currTimeLimit && $currTimeLimit < $timeLimit) {
 				set_time_limit($timeLimit);
-			}
+			} 
+			return true;
 		}
+	} else {
+		return false;
 	}
+}
+
+$_increase_time_limit_max = -1;
+
+/**
+ * Set the maximum allowed value for {@link increase_timeLimit_to()};
+ * 
+ * @param Int Limit in seconds
+ */
+function set_increase_time_limit_max($timeLimit) {
+	global $_increase_time_limit_max;
+	$_increase_time_limit_max = $timeLimit;
+}
+
+/**
+ * @return Int Limit in seconds
+ */
+function get_increase_time_limit_max() {
+	global $_increase_time_limit_max;
+	return $_increase_time_limit_max;
 }

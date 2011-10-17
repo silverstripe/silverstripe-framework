@@ -31,7 +31,7 @@ class Int extends DBField {
 	}
 
 	function Times() {
-		$output = new DataObjectSet();
+		$output = new ArrayList();
 		for( $i = 0; $i < $this->value; $i++ )
 			$output->push( new ArrayData( array( 'Number' => $i + 1 ) ) );
 
@@ -57,9 +57,9 @@ class Int extends DBField {
 			if(strpos($value, '[')===false)
 				return '0';
 			else
-				return addslashes($value);
+				return Convert::raw2sql($value);
 		} else {
-			return addslashes($value);
+			return Convert::raw2sql($value);
 		}
 	}
 	

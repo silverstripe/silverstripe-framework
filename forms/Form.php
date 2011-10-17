@@ -133,7 +133,7 @@ class Form extends RequestHandler {
 	public $jsValidationIncluded = false;
 	
 	/**
-	 * @var $extraClasses array Extra CSS-classes for the formfield-container
+	 * @var array $extraClasses List of additional CSS classes for the form tag.
 	 */
 	protected $extraClasses = array();
 
@@ -142,15 +142,15 @@ class Form extends RequestHandler {
 	 * 
 	 * @param Controller $controller The parent controller, necessary to create the appropriate form action tag.
 	 * @param String $name The method on the controller that will return this form object.
-	 * @param FieldSet $fields All of the fields in the form - a {@link FieldSet} of {@link FormField} objects.
-	 * @param FieldSet $actions All of the action buttons in the form - a {@link FieldSet} of {@link FormAction} objects
+	 * @param FieldList $fields All of the fields in the form - a {@link FieldSet} of {@link FormField} objects.
+	 * @param FieldList $actions All of the action buttons in the form - a {@link FieldSet} of {@link FormAction} objects
 	 * @param Validator $validator Override the default validator instance (Default: {@link RequiredFields})
 	 */
-	function __construct($controller, $name, FieldSet $fields, FieldSet $actions, $validator = null) {
+	function __construct($controller, $name, FieldList $fields, FieldList $actions, $validator = null) {
 		parent::__construct();
 		
-		if(!$fields instanceof FieldSet) throw new InvalidArgumentException('$fields must be a valid FieldSet instance');
-		if(!$actions instanceof FieldSet) throw new InvalidArgumentException('$fields must be a valid FieldSet instance');
+		if(!$fields instanceof FieldList) throw new InvalidArgumentException('$fields must be a valid FieldList instance');
+		if(!$actions instanceof FieldList) throw new InvalidArgumentException('$fields must be a valid FieldList instance');
 		if($validator && !$validator instanceof Validator) throw new InvalidArgumentException('$validator must be a Valdidator instance');
 
 		$fields->setForm($this);
@@ -230,7 +230,7 @@ class Form extends RequestHandler {
 		
 		// Populate the form
 		$this->loadDataFrom($vars, true);
-		
+	
 		// Protection against CSRF attacks
 		$token = $this->getSecurityToken();
 		if(!$token->checkRequest($request)) {
@@ -398,13 +398,13 @@ class Form extends RequestHandler {
 	}
 
 	function transform(FormTransformation $trans) {
-		$newFields = new FieldSet();
+		$newFields = new FieldList();
 		foreach($this->fields as $field) {
 			$newFields->push($field->transform($trans));
 		}
 		$this->fields = $newFields;
 
-		$newActions = new FieldSet();
+		$newActions = new FieldList();
 		foreach($this->actions as $action) {
 			$newActions->push($action->transform($trans));
 		}
@@ -445,7 +445,7 @@ class Form extends RequestHandler {
 	 * Convert this form to another format.
 	 */
 	function transformTo(FormTransformation $format) {
-		$newFields = new FieldSet();
+		$newFields = new FieldList();
 		foreach($this->fields as $field) {
 			$newFields->push($field->transformTo($format));
 		}
@@ -463,7 +463,7 @@ class Form extends RequestHandler {
 	 * @return FieldSet
 	 */
 	public function getExtraFields() {
-		$extraFields = new FieldSet();
+		$extraFields = new FieldList();
 		
 		$token = $this->getSecurityToken();
 		$tokenField = $token->updateFieldSet($this->fields);
@@ -507,7 +507,7 @@ class Form extends RequestHandler {
 	/**
 	 * Setter for the form fields.
 	 *
-	 * @param FieldSet $fields
+	 * @param FieldList $fields
 	 */
 	function setFields($fields) {
 		$this->fields = $fields;
@@ -540,7 +540,7 @@ class Form extends RequestHandler {
 	/**
 	 * Setter for the form actions.
 	 *
-	 * @param FieldSet $actions
+	 * @param FieldList $actions
 	 */
 	function setActions($actions) {
 		$this->actions = $actions;
@@ -550,7 +550,7 @@ class Form extends RequestHandler {
 	 * Unset all form actions
 	 */
 	function unsetAllActions(){
-		$this->actions = new FieldSet();
+		$this->actions = new FieldList();
 	}
 
 	/**
@@ -1270,28 +1270,38 @@ class Form extends RequestHandler {
 	/**
 	 * Compiles all CSS-classes. 
 	 * 
-	 * @return String CSS-classnames, separated by a space
+	 * @return string
 	 */
-	function extraClass() {
-		return implode($this->extraClasses, " ");
+	function extraClass() {		
+		return implode(array_unique($this->extraClasses), ' ');
 	}
 	
 	/**
-	 * Add a CSS-class to the form-container.
-	 * 
-	 * @param $class String
+	 * Add a CSS-class to the form-container. If needed, multiple classes can
+	 * be added by delimiting a string with spaces. 
+	 *
+	 * @param string $class A string containing a classname or several class
+	 *				names delimited by a single space.
 	 */
 	function addExtraClass($class) {
-		$this->extraClasses[$class] = $class;
+		$classes = explode(' ', $class);
+		
+		foreach($classes as $class) {
+			$value = trim($class);
+			
+			$this->extraClasses[] = $value;
+		}
 	}
 
 	/**
-	 * Remove a CSS-class from the form-container.
-	 * 
-	 * @param $class String
+	 * Remove a CSS-class from the form-container. Multiple class names can
+	 * be passed through as a space delimited string
+	 *
+	 * @param string $class
 	 */
 	function removeExtraClass($class) {
-		if(array_key_exists($class, $this->extraClasses)) unset($this->extraClasses[$class]);
+		$classes = explode(' ', $class);
+		$this->extraClasses = array_diff($this->extraClasses, $classes);
 	}
 	
 	function debug() {

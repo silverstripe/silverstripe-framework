@@ -47,10 +47,10 @@
 				display: none;
 			}
 			li ul {
-				display: none !important; 
+				display: none;
 			}
 		}
-		
+
 		&.cms-panel .cms-panel-content {
 			display: block; // override panel defaults
 		}
@@ -71,6 +71,7 @@
 			color: $color-text-dark;
 			padding: ($grid-vertical - 1) 5px ($grid-vertical - 1) 8px;
 			background-color: $color-base;
+			cursor: pointer;
 			
 			@include background-image(linear-gradient(
 				$color-base,
@@ -116,8 +117,12 @@
 				display: block;
 			}
 		}
-
-		&.current {
+		
+		ul {
+			display: none;
+		}
+	
+		&.current { //need to apply current stlye to flyout also (at least line height)
 			a {
 				color: $color-text-light;
 				text-shadow: darken($color-menu-button, 20%) 0 -1px 0;
@@ -131,7 +136,8 @@
 			}
 			
 			ul {
-				border-top: 1px solid darken($color-menu-button, 20%);
+				border-top: none;
+				display: block;
 			}
 			
 			li {
@@ -172,8 +178,35 @@
 				}
 			}
 		}
+
+		/* Style applied to the menu flyout only when the collapsed setting */
+		ul.collapsed-flyout {
+			display: block;
+
+			li {
+				a {
+					font-size: $font-base-size - 1;
+					padding: 0 10px 0 40px;
+					height: 32px;
+					line-height: 32px;
+
+					&.current,
+					&:hover {
+						font-weight: bold;
+					}
+				}
+
+				&.current a {
+					font-weight: bold;
+				}
+
+				&.first a {
+					border-top: 1px solid darken($color-base, 10%);
+				}
+			}
+		}
 	}
-	
+
 	&.collapsed {
 		li .text {
 			display: none;

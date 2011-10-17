@@ -305,7 +305,6 @@ MemberFilterButton.prototype = {
     				updateURL += '&' + this.inputFields[index].name + '=' + encodeURIComponent( this.inputFields[index].value );
     			}
     		}
-    		updateURL += ($('SecurityID') ? '&SecurityID=' + $('SecurityID').value : '');
 
     		jQuery($(fieldID)).get(updateURL, null, function() {Behaviour.apply($(fieldID), true);});
 		} catch(er) {

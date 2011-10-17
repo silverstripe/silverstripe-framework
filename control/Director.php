@@ -63,7 +63,7 @@ class Director {
 	 * @uses handleRequest() rule-lookup logic is handled by this.
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
-	static function direct($url) {
+	static function direct($url, DataModel $model) {
 		// Validate $_FILES array before merging it with $_POST
 		foreach($_FILES as $k => $v) {
 			if(is_array($v['tmp_name'])) {
@@ -87,29 +87,36 @@ class Director {
 			array_merge((array)$_POST, (array)$_FILES),
 			@file_get_contents('php://input')
 		);
-		
-		// @todo find better way to extract HTTP headers
-		if(isset($_SERVER['HTTP_ACCEPT'])) $req->addHeader("Accept", $_SERVER['HTTP_ACCEPT']);
-		if(isset($_SERVER['CONTENT_TYPE'])) $req->addHeader("Content-Type", $_SERVER['CONTENT_TYPE']);
-		if(isset($_SERVER['HTTP_REFERER'])) $req->addHeader("Referer", $_SERVER['HTTP_REFERER']);
+
+		// Load the request headers. If we're not running on Apache, then we
+		// need to manually extract the headers from the $_SERVER array.
+		if (function_exists('apache_request_headers')) {
+			$headers = apache_request_headers();
+		} else {
+			$headers = self::extract_request_headers($_SERVER);
+		}
+
+		foreach ($headers as $header => $value) {
+			$req->addHeader($header, $value);
+		}
 
 		// Load the session into the controller
 		$session = new Session(isset($_SESSION) ? $_SESSION : null);
-		$output = Injector::inst()->get('RequestProcessor')->preRequest($req, $session);
+		$output = Injector::inst()->get('RequestProcessor')->preRequest($req, $session, $model);
 		
 		if ($output === false) {
 			// @TODO Need to NOT proceed with the request in an elegant manner
 			throw new HttpRequestException("Invalid request", 500);
 		}
 
-		$result = Director::handleRequest($req, $session);
+		$result = Director::handleRequest($req, $session, $model);
 		$session->inst_save();
 
 		// Return code for a redirection request
 		if(is_string($result) && substr($result,0,9) == 'redirect:') {
 			$response = new SS_HTTPResponse();
 			$response->redirect(substr($result, 9));
-			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response);
+			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
 			if ($res !== false) {
 				$response->output();
 			}
@@ -210,7 +217,8 @@ class Director {
 
 		$req = new SS_HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
 		if($headers) foreach($headers as $k => $v) $req->addHeader($k, $v);
-		$result = Director::handleRequest($req, $session);
+		// TODO: Pass in the DataModel
+		$result = Director::handleRequest($req, $session, DataModel::inst());
 		
 		// Restore the superglobals
 		$_REQUEST = $existingRequestVars; 
@@ -235,7 +243,7 @@ class Director {
 	 *
 	 * @return SS_HTTPResponse|string
 	 */
-	protected static function handleRequest(SS_HTTPRequest $request, Session $session) {
+	protected static function handleRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
 		krsort(Director::$rules);
 
 		if(isset($_REQUEST['debug'])) Debug::show(Director::$rules);
@@ -268,7 +276,7 @@ class Director {
 						$controllerObj->setSession($session);
 
 						try {
-							$result = $controllerObj->handleRequest($request);
+							$result = $controllerObj->handleRequest($request, $model);
 						} catch(SS_HTTPResponse_Exception $responseException) {
 							$result = $responseException->getResponse();
 						}
@@ -551,7 +559,31 @@ class Director {
 		$relativeUrl = Director::makeRelative($url);
 		return (bool)self::is_relative_url($relativeUrl);
 	}
+
+	/**
+	 * Takes a $_SERVER data array and extracts HTTP request headers.
+	 *
+	 * @param  array $data
+	 * @return array
+	 */
+	static function extract_request_headers(array $server) {
+		$headers = array();
 	
+		foreach($server as $key => $value) {
+			if(substr($key, 0, 5) == 'HTTP_') {
+				$key = substr($key, 5);
+				$key = strtolower(str_replace('_', ' ', $key));
+				$key = str_replace(' ', '-', ucwords($key));
+				$headers[$key] = $value;
+			}
+		}
+	
+		if(isset($server['CONTENT_TYPE'])) $headers['Content-Type'] = $server['CONTENT_TYPE'];
+		if(isset($server['CONTENT_LENGTH'])) $headers['Content-Length'] = $server['CONTENT_LENGTH'];
+	
+		return $headers;
+	}
+
 	/**
 	 * Given a filesystem reference relative to the site root, return the full file-system path.
 	 * 

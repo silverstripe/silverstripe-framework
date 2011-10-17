@@ -197,7 +197,7 @@ class Convert {
 	/**
 	 * Converts an XML string to a PHP array
 	 *
-	 * @uses {@link recursiveXMLToArray()}
+	 * @uses recursiveXMLToArray()
 	 * @param string
 	 *
 	 * @return array

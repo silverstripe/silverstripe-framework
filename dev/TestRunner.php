@@ -44,6 +44,7 @@ class TestRunner extends Controller {
         'index',
         'browse',
         'coverage',
+        'coverageOnly',
         'startsession',
         'endsession',
         'cleanupdb',
@@ -234,15 +235,19 @@ class TestRunner extends Controller {
 		self::use_test_manifest();
 		$classNames = array();
 		$moduleNames = explode(',', $request->param('ModuleName'));
+		
 		foreach($moduleNames as $moduleName) {
 			$classesForModule = ClassInfo::classes_for_folder($moduleName);
-			if($classesForModule) foreach($classesForModule as $class) {
-				if(class_exists($class) && is_subclass_of($class, 'SapphireTest')) {
-					$classNames[] = $class;
+			
+			if($classesForModule) {
+				foreach($classesForModule as $className) {
+					if(class_exists($className) && is_subclass_of($className, 'SapphireTest')) {
+						$classNames[] = $className;
+					}
 				}
 			}
 		}
-
+		
 		$this->runTests($classNames, $coverage);
 	}
 
