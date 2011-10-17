@@ -106,7 +106,7 @@ class SecurityTokenTest extends SapphireTest {
 	}
 	
 	function testUpdateFieldSet() {
-		$fs = new FieldSet();
+		$fs = new FieldList();
 		$t = new SecurityToken();		
 		$t->updateFieldSet($fs);
 		$f = $fs->dataFieldByName($t->getName());
@@ -117,7 +117,7 @@ class SecurityTokenTest extends SapphireTest {
 	}
 	
 	function testUpdateFieldSetDoesntAddTwice() {
-		$fs = new FieldSet();
+		$fs = new FieldList();
 		$t = new SecurityToken();		
 		$t->updateFieldSet($fs); // first
 		$t->updateFieldSet($fs); // second

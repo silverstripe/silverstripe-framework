@@ -32,12 +32,12 @@
  * 
  * <code>
  * function Form() {
- *    return new Form($this, "Form", new FieldSet(
+ *    return new Form($this, "Form", new FieldList(
  *        new SimpleImageField (
  *            $name = "FileTypeID",
  *            $title = "Upload your FileType"
  *        )
- *    ), new FieldSet(
+ *    ), new FieldList(
  * 
  *    // List the action buttons here - doform executes the function 'doform' below
  *        new FormAction("doform", "Submit")
@@ -137,16 +137,23 @@ class SimpleImageField_Disabled extends FormField {
 	function Field() {
 		$record = $this->form->getRecord();
 	    $fieldName = $this->name;
-	    if($record) $imageField = $record->$fieldName();
+			
 	    $field = "<div class=\"simpleimage\">";
-	    if($imageField && $imageField->exists()) {
-	      if($imageField->hasMethod('Thumbnail')) $field .= "<img src=\"".$imageField->Thumbnail()->URL."\" />";
-	      elseif($imageField->CMSThumbnail()) $field .= "<img src=\"".$imageField->CMSThumbnail()->URL."\" />";
-	      else {} // This shouldn't be called but it sometimes is for some reason, so we don't do anything
-	    }else{
-	    	$field .= "<label>" . _t('SimpleImageField.NOUPLOAD', 'No Image Uploaded') . "</label>";
-	    }
+			if($this->value) {
+				// Only the case for DataDifferencer
+				$field .= $this->value;
+			} else {
+				if($record) $imageField = $record->$fieldName();
+				if($imageField && $imageField->exists()) {
+		      if($imageField->hasMethod('Thumbnail')) $field .= "<img src=\"".$imageField->Thumbnail()->URL."\" />";
+		      elseif($imageField->CMSThumbnail()) $field .= "<img src=\"".$imageField->CMSThumbnail()->URL."\" />";
+		      else {} // This shouldn't be called but it sometimes is for some reason, so we don't do anything
+		    }else{
+		    	$field .= "<label>" . _t('SimpleImageField.NOUPLOAD', 'No Image Uploaded') . "</label>";
+		    }
+			}
 	    $field .= "</div>";
+	
 	    return $field;
 	}
 

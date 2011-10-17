@@ -20,6 +20,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	static $fixture_file = null;
 	
 	/**
+	 * Set whether to include this test in the TestRunner or to skip this.
+	 *
+	 * @var bool
+	 */
+	protected $skipTest = false;
+	
+	/**
 	 * @var Boolean If set to TRUE, this will force a test database to be generated
 	 * in {@link setUp()}. Note that this flag is overruled by the presence of a 
 	 * {@link $fixture_file}, which always forces a database build.
@@ -93,6 +100,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Helper arrays for illegalExtensions/requiredExtensions code
 	 */
 	private $extensionsToReapply = array(), $extensionsToRemove = array();
+
 	
 	/**
 	 * Determines if unit tests are currently run (via {@link TestRunner}).
@@ -112,7 +120,20 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	protected $fixtures; 
 	
+	protected $model;
+	
 	function setUp() {
+		// We cannot run the tests on this abstract class.
+		if(get_class($this) == "SapphireTest") $this->skipTest = true;
+		
+		if($this->skipTest) {
+			$this->markTestSkipped(sprintf(
+				'Skipping %s ', get_class($this)
+			));
+			
+			return;
+		}
+		
 		// Mark test as being run
 		$this->originalIsRunningTest = self::$is_running_test;
 		self::$is_running_test = true;
@@ -146,6 +167,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$className = get_class($this);
 		$fixtureFile = eval("return {$className}::\$fixture_file;");
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
+		
+		// Todo: this could be a special test model
+		$this->model = DataModel::inst();
 
 		// Set up fixture
 		if($fixtureFile || $this->usesDatabase || !self::using_temp_db()) {
@@ -180,7 +204,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 					}
 					
 					$fixture = new YamlFixture($fixtureFilePath);
-					$fixture->saveIntoDatabase();
+					$fixture->saveIntoDatabase($this->model);
 					$this->fixtures[] = $fixture;
 
 					// backwards compatibility: Load first fixture into $this->fixture
@@ -659,7 +683,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	private function dataObjectArrayMatch($item, $match) {
 		foreach($match as $k => $v) {
-			if(!isset($item[$k]) || $item[$k] != $v) return false;
+			if(!array_key_exists($k, $item) || $item[$k] != $v) return false;
 		}
 		return true;
 	}

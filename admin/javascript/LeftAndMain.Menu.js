@@ -27,11 +27,6 @@
 			onmatch: function() {
 				var self = this;
 				
-				// TODO Fix icon etc.
-				// this.children('li').each(function() {
-				// 	$(this).find('a:first').append('<span class="toggle">o</span>');
-				// });
-				
 				$('.cms-container').bind('afterstatechange', function(e, data) {
 					var controller = data.xhr.getResponseHeader('X-Controller');
 					if(controller) {
@@ -44,6 +39,9 @@
 				this.parents('.cms-panel:first').bind('toggle', function(e) {
 					self.toggleClass('collapsed', $(this).hasClass('collapsed'));
 				});
+				
+				// Select default element (which might reveal children in hidden parents)
+				this.find('li.current').select();
 				
 				this._super();
 			}

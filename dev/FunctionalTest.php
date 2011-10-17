@@ -57,6 +57,9 @@ class FunctionalTest extends SapphireTest {
 	}
 
 	function setUp() {
+		// Skip calling FunctionalTest directly.
+		if(get_class($this) == "FunctionalTest") $this->skipTest = true;
+		
 		parent::setUp();
 		$this->mainSession = new TestSession();
 
@@ -70,7 +73,7 @@ class FunctionalTest extends SapphireTest {
         
         // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case basis.
         BasicAuth::protect_entire_site(false);
-
+		
 		SecurityToken::disable();
 	}
 

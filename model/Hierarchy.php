@@ -400,7 +400,7 @@ class Hierarchy extends DataExtension {
 		if(!(isset($this->_cache_children) && $this->_cache_children)) { 
 			$result = $this->owner->stageChildren(false); 
 		 	if(isset($result)) { 
-		 		$this->_cache_children = new DataObjectSet(); 
+		 		$this->_cache_children = new ArrayList(); 
 		 		foreach($result as $child) { 
 		 			if($child->canView()) { 
 		 				$this->_cache_children->push($child); 
@@ -452,9 +452,10 @@ class Hierarchy extends DataExtension {
 				// Next, go through the live children.  Only some of these will be listed					
 				$liveChildren = $this->owner->liveChildren(true, true);
 				if($liveChildren) {
-					foreach($liveChildren as $child) {
-						$stageChildren->push($child);
-					}
+				    $merged = new ArrayList();
+				    $merged->merge($stageChildren);
+				    $merged->merge($liveChildren);
+				    $stageChildren = $merged;
 				}
 			}
 
@@ -484,11 +485,9 @@ class Hierarchy extends DataExtension {
 	 */
 	public function numHistoricalChildren() {
 		if(!$this->owner->hasExtension('Versioned')) throw new Exception('Hierarchy->AllHistoricalChildren() only works with Versioned extension applied');
-		
-		$query = Versioned::get_including_deleted_query(ClassInfo::baseDataClass($this->owner->class), 
-			"\"ParentID\" = " . (int)$this->owner->ID);
-			
-		return $query->unlimitedRowCount();
+
+	    return Versioned::get_including_deleted(ClassInfo::baseDataClass($this->owner->class), 
+			"\"ParentID\" = " . (int)$this->owner->ID)->count();
 	}
 
 	/**
@@ -500,20 +499,11 @@ class Hierarchy extends DataExtension {
 	 * @return int
 	 */
 	public function numChildren($cache = true) {
-		$baseClass = ClassInfo::baseDataClass($this->owner->class);
-		
 		// Build the cache for this class if it doesn't exist.
 		if(!$cache || !is_numeric($this->_cache_numChildren)) {
-			// We build the query in an extension-friendly way.
-			$query = new SQLQuery(
-				"COUNT(*)",
-				"\"$baseClass\"", 
-				sprintf('"ParentID" = %d', $this->owner->ID)
-			);
-			$this->owner->extend('augmentSQL', $query);
-			$this->owner->extend('augmentNumChildrenCountQuery', $query);
-			 
-			$this->_cache_numChildren = (int)$query->execute()->value();
+			// Hey, this is efficient now!
+			// We call stageChildren(), because Children() has canView() filtering
+			$this->_cache_numChildren = (int)$this->owner->stageChildren(true)->Count();
 		}
 
 		// If theres no value in the cache, it just means that it doesn't have any children.
@@ -540,7 +530,6 @@ class Hierarchy extends DataExtension {
 			. (int)$this->owner->ID . " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID
 			. $extraFilter, "");
 			
-		if(!$staged) $staged = new DataObjectSet();
 		$this->owner->extend("augmentStageChildren", $staged, $showAll);
 		return $staged;
 	}
@@ -555,43 +544,31 @@ class Hierarchy extends DataExtension {
 	 */
 	public function liveChildren($showAll = false, $onlyDeletedFromStage = false) {
 		if(!$this->owner->hasExtension('Versioned')) throw new Exception('Hierarchy->liveChildren() only works with Versioned extension applied');
-		
-		if($this->owner->db('ShowInMenus')) {
-			$extraFilter = ($showAll) ? '' : " AND \"ShowInMenus\"=1";
-		} else {
-			$extraFilter = '';
-		}
-		$join = "";
 
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$id = $this->owner->ID;
+		
+		$children = DataObject::get($baseClass)->where("\"{$baseClass}\".\"ParentID\" = $id AND \"{$baseClass}\".\"ID\" != $id");
+		if(!$showAll) $children = $children->where('"ShowInMenus" = 1');
 
-		$filter = "\"{$baseClass}\".\"ParentID\" = " . (int)$this->owner->ID 
-			. " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID;
+		// Query the live site
+		$children->dataQuery()->setQueryParam('Versioned.mode', 'stage');
+		$children->dataQuery()->setQueryParam('Versioned.stage', 'Live');
 		
 		if($onlyDeletedFromStage) {
-			// Note that the lack of double-quotes around $baseClass are the only thing preventing
-			// it from being rewritten to {$baseClass}_Live.  This is brittle and a little clumsy
-			$join = "LEFT JOIN {$baseClass} ON {$baseClass}.\"ID\" = \"{$baseClass}\".\"ID\"";
-			$filter .=  " AND {$baseClass}.\"ID\" IS NULL";
+			// Note that this makes a second query, and could be optimised to be a joi;
+			$stageChildren = DataObject::get($baseClass)
+				->where("\"{$baseClass}\".\"ParentID\" = $id AND \"{$baseClass}\".\"ID\" != $id");
+			$stageChildren->dataQuery()->setQueryParam('Versioned.mode', 'stage');
+			$stageChildren->dataQuery()->setQueryParam('Versioned.stage', '');
+			
+			$ids = $stageChildren->column("ID");
+			if($ids) {
+				$children->where("\"$baseClass\".\"ID\" NOT IN (" . implode(',',$ids) . ")");
+			}
 		}
-
-		$oldStage = Versioned::current_stage();
-		Versioned::reading_stage('Live');
 		
-		// Singleton is necessary and not $this->owner so as not to muck with Translatable's
-		// behaviour.
-		$query = singleton($baseClass)->extendedSQL($filter, null, null, $join);
-
-		// Since we didn't include double quotes in the join & filter, we need to add them into the
-		// SQL now, after Versioned has done is query rewriting
-		$correctedSQL = str_replace(array("LEFT JOIN {$baseClass}", "{$baseClass}.\"ID\""),
-			array("LEFT JOIN \"{$baseClass}\"", "\"{$baseClass}\".\"ID\""), $query->sql());
-
-		$result = $this->owner->buildDataObjectSet(DB::query($correctedSQL));
-		
-		Versioned::reading_stage($oldStage);
-		
-		return $result;
+		return $children;
 	}
 	
 	/**
@@ -613,7 +590,7 @@ class Hierarchy extends DataExtension {
 	 * @return DataObjectSet
 	 */
 	public function getAncestors() {
-		$ancestors = new DataObjectSet();
+		$ancestors = new ArrayList();
 		$object    = $this->owner;
 		
 		while($object = $object->getParent()) {

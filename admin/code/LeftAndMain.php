@@ -185,10 +185,81 @@ class LeftAndMain extends Controller {
 
 		// Audit logging hook
 		if(empty($_REQUEST['executeForm']) && !$this->isAjax()) $this->extend('accessedCMS');
+		
+		// Requirements
+		
+		Requirements::combine_files(
+			'lib.js',
+			array(
+				THIRDPARTY_DIR . '/prototype/prototype.js',
+				THIRDPARTY_DIR . '/behaviour/behaviour.js',
+				THIRDPARTY_DIR . '/jquery/jquery.js',
+				SAPPHIRE_DIR . '/javascript/jquery_improvements.js',
+				THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js',
+				SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js',
+				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
+				THIRDPARTY_DIR . '/json-js/json2.js',
+				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
+				THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js',
+				THIRDPARTY_DIR . '/jquery-query/jquery.query.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js',
+				THIRDPARTY_DIR . '/jquery-metadata/jquery.metadata.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
+				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js',
+				SAPPHIRE_DIR . '/javascript/TreeDropdownField.js',
+				SAPPHIRE_DIR ."/thirdparty/jquery-form/jquery.form.js",
+				SAPPHIRE_DIR . '/javascript/DateField.js',
+				SAPPHIRE_DIR . '/javascript/HtmlEditorField.js',
+				SAPPHIRE_DIR . '/javascript/TabSet.js',
+				SAPPHIRE_DIR . '/javascript/Validator.js',
+				SAPPHIRE_DIR . '/javascript/i18n.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js',
+			)
+		);
+
+		Requirements::combine_files(
+			'leftandmain.js',
+			array(
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
+			)
+		);
+		
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
+		Requirements::add_i18n_javascript(SAPPHIRE_ADMIN_DIR . '/javascript/lang');
+		
+		Requirements::combine_files(
+			'lib.css',
+			array(
+				// @todo Load separately so the CSS files can be inlined
+				THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css',
+				SAPPHIRE_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css',
+				THIRDPARTY_DIR . '/jstree/themes/apple/style.css',
+				SAPPHIRE_DIR . '/javascript/TreeDropdownField.css',
+				SAPPHIRE_ADMIN_DIR . '/css/unjquery.css',
+			)
+		);
+		
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
 
 		// Set the members html editor config
 		HtmlEditorConfig::set_active(Member::currentUser()->getHtmlEditorConfigForCMS());
-		
 		
 		// Set default values in the config if missing.  These things can't be defined in the config
 		// file because insufficient information exists when that is being processed
@@ -217,66 +288,7 @@ class LeftAndMain extends Controller {
 
 			$htmlEditorConfig->setOption('content_css', implode(',', $cssFiles));
 		}
-		
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
-		
-		Requirements::javascript(THIRDPARTY_DIR . '/prototype/prototype.js');
-		
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
-
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');  //import all of jquery ui
-
-		Requirements::javascript(THIRDPARTY_DIR . '/json-js/json2.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-metadata/jquery.metadata.js');
-		
-		// entwine
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-		
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js');
-		// @todo Load separately so the CSS files can be inlined
-		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-		
-		// Required for TreeTools panel above tree
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js');
-		
-		// styled selects (with search)
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js');
-		Requirements::css(SAPPHIRE_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css');
-		
-		Requirements::javascript(THIRDPARTY_DIR . '/behaviour/behaviour.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-query/jquery.query.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js');
-		
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::add_i18n_javascript(SAPPHIRE_ADMIN_DIR . '/javascript/lang');
-		
-		Requirements::javascript(THIRDPARTY_DIR . '/jstree/jquery.jstree.js');
-		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
-		
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Content.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js');
-		
-		// Handled by LeftAndMain.js
-		Requirements::block(SAPPHIRE_DIR . '/javascript/DateField.js');
-
+				
 		foreach (self::$extra_requirements['javascript'] as $file) {
 			Requirements::javascript($file[0]);
 		}
@@ -288,57 +300,6 @@ class LeftAndMain extends Controller {
 		foreach (self::$extra_requirements['themedcss'] as $file) {
 			Requirements::themedCSS($file[0], $file[1]);
 		}
-		
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/unjquery.css');
-
-		// Javascript combined files
-		Requirements::combine_files(
-			'lib.js',
-			array(
-				THIRDPARTY_DIR . '/prototype/prototype.js',
-				THIRDPARTY_DIR . '/behaviour/behaviour.js',
-				THIRDPARTY_DIR . '/jquery/jquery.js',
-				SAPPHIRE_DIR . '/javascript/jquery_improvements.js',
-				THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js',
-				SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js',
-				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
-				THIRDPARTY_DIR . '/json-js/json2.js',
-				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
-				THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js',
-				THIRDPARTY_DIR . '/jquery-query/jquery.query.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js',
-				THIRDPARTY_DIR . '/jquery-metadata/jquery.metadata.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
-				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js',
-				SAPPHIRE_DIR . '/javascript/TreeDropdownField.js',
-				SAPPHIRE_DIR . '/javascript/TabSet.js',
-				SAPPHIRE_DIR . '/javascript/Validator.js',
-				SAPPHIRE_DIR . '/javascript/i18n.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js',
-			)
-		);
-
-		Requirements::combine_files(
-			'leftandmain.js',
-			array(
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
-			)
-		);
 
 		$dummy = null;
 		$this->extend('init', $dummy);
@@ -348,10 +309,10 @@ class LeftAndMain extends Controller {
 		SSViewer::set_theme(null);
 	}
 	
-	function handleRequest($request) {
+	function handleRequest($request, DataModel $model) {
 		$title = $this->Title();
 		
-		$response = parent::handleRequest($request);
+		$response = parent::handleRequest($request, $model);
 		$response->addHeader('X-Controller', $this->class);
 		$response->addHeader('X-Title', $title);
 		
@@ -436,10 +397,10 @@ class LeftAndMain extends Controller {
 	 */
 	public function MainMenu() {
 		// Don't accidentally return a menu if you're not logged in - it's used to determine access.
-		if(!Member::currentUser()) return new DataObjectSet();
+		if(!Member::currentUser()) return new ArrayList();
 
 		// Encode into DO set
-		$menu = new DataObjectSet();
+		$menu = new ArrayList();
 		$menuItems = CMSMenu::get_viewable_menu_items();
 		if($menuItems) {
 			foreach($menuItems as $code => $menuItem) {
@@ -452,7 +413,7 @@ class LeftAndMain extends Controller {
 					continue;
 				}
 
-				$linkingmode = "";
+				$linkingmode = "link";
 				
 				if($menuItem->controller && get_class($this) == $menuItem->controller) {
 					$linkingmode = "current";
@@ -652,6 +613,7 @@ class LeftAndMain extends Controller {
 		if(substr($SQL_id,0,3) != 'new') {
 			$record = DataObject::get_by_id($className, $SQL_id);
 			if($record && !$record->canEdit()) return Security::permissionFailure($this);
+			if(!$record || !$record->ID) throw new HTTPResponse_Exception("Bad record ID #" . (int)$data['ID'], 404);
 		} else {
 			if(!singleton($this->stat('tree_class'))->canCreate()) return Security::permissionFailure($this);
 			$record = $this->getNewItem($SQL_id, false);
@@ -675,6 +637,7 @@ class LeftAndMain extends Controller {
 		
 		$record = DataObject::get_by_id($className, Convert::raw2sql($data['ID']));
 		if($record && !$record->canDelete()) return Security::permissionFailure();
+		if(!$record || !$record->ID) throw new HTTPResponse_Exception("Bad record ID #" . (int)$data['ID'], 404);
 		
 		$record->delete();
 		
@@ -806,7 +769,7 @@ class LeftAndMain extends Controller {
 	 * Calls {@link SiteTree->getCMSFields()}
 	 * 
 	 * @param Int $id
-	 * @param FieldSet $fields
+	 * @param FieldList $fields
 	 * @return Form
 	 */
 	public function getEditForm($id = null, $fields = null) {
@@ -914,7 +877,7 @@ class LeftAndMain extends Controller {
 		$form = new Form(
 			$this, 
 			"EditForm", 
-			new FieldSet(
+			new FieldList(
 				// new HeaderField(
 				// 	'WelcomeHeader',
 				// 	$this->getApplicationName()
@@ -928,7 +891,7 @@ class LeftAndMain extends Controller {
 				// 	)
 				// )
 			), 
-			new FieldSet()
+			new FieldList()
 		);
 		$form->unsetValidator();
 		$form->addExtraClass('cms-edit-form');
@@ -948,10 +911,10 @@ class LeftAndMain extends Controller {
 		$form = new Form(
 			$this,
 			'AddForm',
-			new FieldSet(
+			new FieldList(
 				new HiddenField('ParentID')
 			),
-			new FieldSet(
+			new FieldList(
 				$addAction = new FormAction('doAdd', _t('AssetAdmin_left.ss.GO','Go'))
 			)
 		);
@@ -1016,7 +979,7 @@ class LeftAndMain extends Controller {
 		$form = new Form(
 			$this,
 			'BatchActionsForm',
-			new FieldSet(
+			new FieldList(
 				new HiddenField('csvIDs'),
 				new DropdownField(
 					'Action',
@@ -1024,7 +987,7 @@ class LeftAndMain extends Controller {
 					$actionsMap
 				)
 			),
-			new FieldSet(
+			new FieldList(
 				// TODO i18n
 				new FormAction('submit', "Go")
 			)
@@ -1203,28 +1166,36 @@ class LeftAndMain extends Controller {
 
 	/**
 	 * Get the application name.
-	 * @return String
+	 *
+	 * @return string
 	 */
 	function getApplicationName() {
 		return self::$application_name;
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	function Title() {
-		return sprintf('%s | %s', $this->getApplicationName(), $this->SectionTitle());
+		$app = $this->getApplicationName();
+		
+		return ($section = $this->SectionTitle()) ? sprintf('%s - %s', $app, $section) : $app;
 	}
 
 	/**
-	 * Return the title of the current section, as shown on the main menu
+	 * Return the title of the current section. Either this is pulled from
+	 * the current panel's menu_title or from the first active menu
+	 *
+	 * @return string
 	 */
 	function SectionTitle() {
+		if($title = $this->stat('menu_title')) return $title;
+		
 		// Get menu - use obj() to cache it in the same place as the template engine
 		$menu = $this->obj('MainMenu');
-		
+
 		foreach($menu as $menuItem) {
-			if($menuItem->LinkingMode == 'current') return $menuItem->Title;
+			if($menuItem->LinkingMode != 'link') return $menuItem->Title;
 		}
 	}
 

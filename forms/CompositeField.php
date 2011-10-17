@@ -9,7 +9,7 @@
 class CompositeField extends FormField {
 	
 	/**
-	 * @var FieldSet
+	 * @var FieldList
 	 */
 	protected $children;
 	
@@ -29,13 +29,13 @@ class CompositeField extends FormField {
 	protected $columnCount = null;
 	
 	public function __construct($children = null) {
-		if($children instanceof FieldSet) {
+		if($children instanceof FieldList) {
 			$this->children = $children;
 		} elseif(is_array($children)) {
-			$this->children = new FieldSet($children); 
+			$this->children = new FieldList($children); 
 		} else {
 			$children = is_array(func_get_args()) ? func_get_args() : array();
-			$this->children = new FieldSet($children); 
+			$this->children = new FieldList($children); 
 		}
 		$this->children->setContainerField($this);
 		
@@ -46,12 +46,19 @@ class CompositeField extends FormField {
 	}
 
 	/**
-	 * Returns all the sub-fields, suitable for <% control FieldSet %>
+	 * Returns all the sub-fields, suitable for <% control FieldList %>
 	 */
-	public function FieldSet() {
+	public function FieldList() {
 		return $this->children;
 	}
-	
+
+	/**
+	 * @deprecated 3.0 Please use {@link FieldList()}.
+	 */
+	public function FieldSet() {
+		return $this->FieldList();
+	}
+
 	public function setID($id) {
 		$this->id = $id;
 	}
@@ -62,14 +69,14 @@ class CompositeField extends FormField {
 	
 	/**
 	 * Accessor method for $this->children
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function getChildren() {
 		return $this->children;
 	}
 	
 	/**
-	 * @param FieldSet $children
+	 * @param FieldList $children
 	 */
 	public function setChildren($children) {
 		$this->children = $children;
@@ -79,7 +86,7 @@ class CompositeField extends FormField {
 	 * Returns the fields nested inside another DIV
 	 */
 	function FieldHolder() {
-		$fs = $this->FieldSet();
+		$fs = $this->FieldList();
 		$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
 		$className = ($this->columnCount) ? "field CompositeField {$this->extraClass()} multicolumn" : "field CompositeField {$this->extraClass()}";
 		$content = "<div class=\"$className\"$idAtt>\n";
@@ -102,7 +109,7 @@ class CompositeField extends FormField {
 	 * Returns the fields in the restricted field holder inside a DIV.
 	 */
 	function SmallFieldHolder() {//return $this->FieldHolder();
-		$fs = $this->FieldSet();
+		$fs = $this->FieldList();
 		$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
 		$className = ($this->columnCount) ? "field CompositeField {$this->extraClass()} multicolumn" : "field CompositeField {$this->extraClass()}";
 		$content = "<div class=\"$className\"$idAtt>";
@@ -168,7 +175,7 @@ class CompositeField extends FormField {
 	}
 	
 	/**
-	 * @uses FieldSet->insertBefore()
+	 * @uses FieldList->insertBefore()
 	 */
 	public function insertBefore($field, $insertBefore) {
 		$ret = $this->children->insertBefore($field, $insertBefore);
@@ -209,7 +216,7 @@ class CompositeField extends FormField {
 	 * versions of all the children
 	 */
 	public function performReadonlyTransformation() {
-		$newChildren = new FieldSet();
+		$newChildren = new FieldList();
 		$clone = clone $this;
 		foreach($clone->getChildren() as $idx => $child) {
 			if(is_object($child)) $child = $child->transform(new ReadonlyTransformation());
@@ -226,7 +233,7 @@ class CompositeField extends FormField {
 	 * versions of all the children
 	 */
 	public function performDisabledTransformation($trans) {
-		$newChildren = new FieldSet();
+		$newChildren = new FieldList();
 		$clone = clone $this;
 		if($clone->getChildren()) foreach($clone->getChildren() as $idx => $child) {
 			if(is_object($child)) {

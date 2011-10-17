@@ -1,8 +1,8 @@
 --- 
 format: 1
 handler: 
-  piston:remote-revision: 236
-  piston:uuid: 7ee4f3fb-cb41-0410-822c-dd8830bd4fbc
+  commit: 53d377b047f45bb4d4042e5928130c66c01a6e8b
+  branch: v.pre1.0
 lock: false
-repository_class: Piston::Svn::Repository
-repository_url: http://jstree.googlecode.com/svn/trunk
+repository_class: Piston::Git::Repository
+repository_url: git://github.com/vakata/jstree.git

@@ -119,10 +119,17 @@ class FormField extends RequestHandler {
 	 * 
 	 * @return string
 	 */
-	function Name() {
+	function getName() {
 		return $this->name;
 	}
-	
+
+	/**
+	 * @deprecated 3.0 Use {@link getName()}.
+	 */
+	public function Name() {
+		return $this->getName();
+	}
+
 	function attrName() {
 		return $this->name;
 	}
@@ -387,7 +394,7 @@ class FormField extends RequestHandler {
 	 * Our base FormField class just returns a span containing the value.  This should be overridden!
 	 */
 	function Field() {
-		if($this->value) $value = $this->dontEscape ? ($this->reserveNL ? Convert::raw2xml($this->value) : $this->value) : Convert::raw2xml($this->value);
+		if($this->value) $value = $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
 		else $value = '<i>(' . _t('FormField.NONE', 'none') . ')</i>';
 	
 		$attributes = array(
@@ -649,7 +656,7 @@ HTML;
 	/**
 	 * Set the fieldset that contains this field. 
 	 *
-	 * @param FieldSet $containerFieldSet
+	 * @param FieldList $containerFieldSet
 	 */ 
 	function setContainerFieldSet($containerFieldSet) {
 		$this->containerFieldSet = $containerFieldSet;

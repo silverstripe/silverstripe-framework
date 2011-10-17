@@ -69,7 +69,7 @@ class ConfirmedPasswordField extends FormField {
 	 */
 	function __construct($name, $title = null, $value = "", $form = null, $showOnClick = false, $titleConfirmField = null) {
 		// naming with underscores to prevent values from actually being saved somewhere
-		$this->children = new FieldSet(
+		$this->children = new FieldList(
 			new PasswordField(
 				"{$name}[_Password]", 
 				(isset($title)) ? $title : _t('Member.PASSWORD', 'Password')
@@ -190,7 +190,7 @@ class ConfirmedPasswordField extends FormField {
 				$this->children->fieldByName($this->Name() . '[_PasswordFieldVisible]')->setValue($value['_PasswordFieldVisible']);
 			}
 		} else {
-			if($value || (!$value && !$this->canBeEmpty)) {
+			if($value || (!$value && $this->canBeEmpty)) {
 				$this->value = $value;
 			}
 		}

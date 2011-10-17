@@ -142,8 +142,7 @@ class HtmlEditorField extends TextareaField {
 		// Save file & link tracking data.
 		if(class_exists('SiteTree')) {
 			if($record->ID && $record->many_many('LinkTracking') && $tracker = $record->LinkTracking()) {
-				$filter = sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID);
-				DB::query("DELETE FROM \"$tracker->tableName\" WHERE $filter");
+			    $tracker->removeByFilter(sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID));
 
 				if($linkedPages) foreach($linkedPages as $item) {
 					$SQL_fieldName = Convert::raw2sql($this->name);
@@ -151,10 +150,9 @@ class HtmlEditorField extends TextareaField {
 						VALUES ($record->ID, $item, '$SQL_fieldName')");
 				}
 			}
-
+		
 			if($record->ID && $record->many_many('ImageTracking') && $tracker = $record->ImageTracking()) {
-				$filter = sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID);
-				DB::query("DELETE FROM \"$tracker->tableName\" WHERE $filter");
+			    $tracker->removeByFilter(sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID));
 
 				$fieldName = $this->name;
 				if($linkedFiles) foreach($linkedFiles as $item) {
@@ -237,7 +235,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/LinkForm", 
-			new FieldSet(
+			new FieldList(
 				new LiteralField(
 					'Heading', 
 					sprintf('<h3>%s</h3>', _t('HtmlEditorField.LINK', 'Link'))
@@ -265,7 +263,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					new HiddenField('Locale', null, $this->controller->Locale)
 				)
 			),
-			new FieldSet(
+			new FieldList(
 				new FormAction('insert', _t('HtmlEditorField.BUTTONINSERTLINK', 'Insert link')),
 				new FormAction('remove', _t('HtmlEditorField.BUTTONREMOVELINK', 'Remove link'))
 			)
@@ -293,7 +291,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			throw new Exception('ThumbnailStripField class required for HtmlEditorField->ImageForm()');
 		}
 		
-		$fields = new FieldSet(
+		$fields = new FieldList(
 			new LiteralField(
 				'Heading', 
 				sprintf('<h3>%s</h3>', _t('HtmlEditorField.IMAGE', 'Image'))
@@ -301,7 +299,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			
 			$contentComposite = new CompositeField(
 				new TreeDropdownField('FolderID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder'),
-				new CompositeField(new FieldSet(
+				new CompositeField(new FieldList(
 					new LiteralField('ShowUpload', '<p class="showUploadField"><a href="#">'. _t('HtmlEditorField.SHOWUPLOADFORM', 'Upload File') .'</a></p>'),
 					new FileField("Files[0]" , _t('AssetAdmin.CHOOSEFILE','Choose file: ')),
 						new LiteralField('Response', '<div id="UploadFormResponse"></div>'),
@@ -329,7 +327,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			)
 		);
 		
-		$actions = new FieldSet(
+		$actions = new FieldList(
 			new FormAction('insertimage', _t('HtmlEditorField.BUTTONINSERTIMAGE', 'Insert image'))
 		);
 		
@@ -361,7 +359,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/FlashForm", 
-			new FieldSet(
+			new FieldList(
 				new LiteralField(
 					'Heading', 
 					sprintf('<h3>%s</h3>', _t('HtmlEditorField.FLASH', 'Flash'))
@@ -376,7 +374,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					)
 				)
 			),
-			new FieldSet(
+			new FieldList(
 				new FormAction("insertflash", _t('HtmlEditorField.BUTTONINSERTFLASH', 'Insert Flash'))
 			)
 		);		

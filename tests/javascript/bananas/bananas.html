@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Test of Banana javascript</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<!-- This is the minimal jasmin libraries needed -->
+		<link rel="stylesheet" type="text/css" href="../../../thirdparty/jasmine/lib/jasmine.css">
+		<script type="text/javascript" src="../../../thirdparty/jasmine/lib/jasmine.js"></script>
+		<script type="text/javascript" src="../../../thirdparty/jasmine/lib/jasmine-html.js"></script>
+		
+		<script type="text/javascript" >
+			/**
+			 * This is the javascript under test
+			 */
+			Banana = {
+				getAmount: function() {
+					return 2;
+				},
+				getColor: function() {
+					return 'brown';
+				}
+			}
+			
+			/**
+			 * This is the testcase and should be moved out to a individual 
+			 * javascript so other testdrivers can run them.
+			 */		
+			describe("The banana", function() {
+				it("should have two left", function() {
+					expect(Banana.getAmount()).toEqual(2);
+				});
+				it("should be yellow", function() {
+					expect(Banana.getColor()).toEqual('yellow');
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<script type="text/javascript">
+		  jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+		  jasmine.getEnv().execute();
+		</script>
+	</body>
+</html>

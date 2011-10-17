@@ -12,7 +12,7 @@
  */
 class SubstringFilter extends SearchFilter {
 
-	public function apply(SQLQuery $query) {
+	public function apply(DataQuery $query) {
 		return $query->where(sprintf(
 			"LOCATE('%s', %s) != 0",
 			Convert::raw2sql($this->getValue()),

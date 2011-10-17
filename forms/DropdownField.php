@@ -122,7 +122,7 @@ class DropdownField extends FormField {
 	 *  Argument is deprecated in 2.3, please use {@link setHasEmptyDefault()} and {@link setEmptyString()} instead.
 	 */
 	function __construct($name, $title = null, $source = array(), $value = "", $form = null, $emptyString = null) {
-		$this->source = $source;
+		$this->setSource($source);
 		
 		if($emptyString) $this->setHasEmptyDefault(true);
 		if(is_string($emptyString)) $this->setEmptyString($emptyString);

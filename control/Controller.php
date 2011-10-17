@@ -115,13 +115,14 @@ class Controller extends RequestHandler {
 	 * @return SS_HTTPResponse The response that this controller produces, 
 	 *  including HTTP headers such as redirection info
 	 */
-	function handleRequest(SS_HTTPRequest $request) {
+	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
 		if(!$request) user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
 		
 		$this->pushCurrent();
 		$this->urlParams = $request->allParams();
 		$this->request = $request;
 		$this->response = new SS_HTTPResponse();
+		$this->setModel($model);
 		
 		$this->extend('onBeforeInit');
 
@@ -138,7 +139,7 @@ class Controller extends RequestHandler {
 			return $this->response;
 		}
 
-		$body = parent::handleRequest($request);
+		$body = parent::handleRequest($request, $model);
 		if($body instanceof SS_HTTPResponse) {
 			if(isset($_REQUEST['debug_request'])) Debug::message("Request handler returned SS_HTTPResponse object to $this->class controller; returning it without modification.");
 			$this->response = $body;
@@ -451,8 +452,7 @@ class Controller extends RequestHandler {
 	}
 	
 	/**
-	 * Redirect back. Uses either the HTTP_REFERER or a manually set request-variable called
-	 * _REDIRECT_BACK_URL.
+	 * Redirect back. Uses either the HTTP_REFERER or a manually set request-variable called "BackURL".
 	 * This variable is needed in scenarios where not HTTP-Referer is sent (
 	 * e.g when calling a page by location.href in IE).
 	 * If none of the two variables is available, it will redirect to the base
@@ -466,8 +466,8 @@ class Controller extends RequestHandler {
 		// redirect to the homepage - don't break into the global state at this stage because we'll
 		// be calling from a test context or something else where the global state is inappropraite
 		if($this->request) {
-			if($this->request->requestVar('_REDIRECT_BACK_URL')) {
-				$url = $this->request->requestVar('_REDIRECT_BACK_URL');
+			if($this->request->requestVar('BackURL')) {
+				$url = $this->request->requestVar('BackURL');
 			} else if($this->request->getHeader('Referer')) {
 				$url = $this->request->getHeader('Referer');
 			}

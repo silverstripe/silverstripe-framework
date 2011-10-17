@@ -17,11 +17,11 @@
  * class ExampleForm_Controller extends Page_Controller {
  * 
  * 	public function Form() {
- * 		$fields = new FieldSet(
+ * 		$fields = new FieldList(
  * 			new TextField('MyName'),
  * 			new FileField('MyFile')
  * 		);
- * 		$actions = new FieldSet(
+ * 		$actions = new FieldList(
  * 			new FormAction('doUpload', 'Upload file')
  * 		);
  *    $validator = new RequiredFields(array('MyName', 'MyFile'));
@@ -133,14 +133,15 @@ class FileField extends FormField {
 	
 	public function saveInto(DataObject $record) {
 		if(!isset($_FILES[$this->name])) return false;
+		$fileClass = File::get_class_for_file_extension(pathinfo($_FILES[$this->name]['name'], PATHINFO_EXTENSION));
 		
 		if($this->relationAutoSetting) {
 			// assume that the file is connected via a has-one
 			$hasOnes = $record->has_one($this->name);
 			// try to create a file matching the relation
-			$file = (is_string($hasOnes)) ? Object::create($hasOnes) : new File(); 
+			$file = (is_string($hasOnes)) ? Object::create($hasOnes) : new $fileClass(); 
 		} else {
-			$file = new File();
+			$file = new $fileClass();
 		}
 		
 		$this->upload->loadIntoFile($_FILES[$this->name], $file, $this->folderName);

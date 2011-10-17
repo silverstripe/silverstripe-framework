@@ -16,8 +16,10 @@ See [http://shiflett.org/articles/sql-injection](http://shiflett.org/articles/sq
 
 ### Automatic escaping
 
-SilverStripe automatically runs [addslashes()](http://php.net/addslashes) in DataObject::write() wherever possible. Data
-is escaped when saving back to the database, not when writing to object-properties.
+SilverStripe automatically escapes data in `[api:DataObject::write()]` wherever possible,
+through database-specific methods (see `[api:Database->addslashes()]`).
+For `[api:MySQLDatabase]`, this will be `[mysql_real_escape_string()](http://de3.php.net/mysql_real_escape_string)`.
+Data is escaped when saving back to the database, not when writing to object-properties.
 
 *  DataObject::get_by_id()
 *  DataObject::update()

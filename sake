@@ -27,8 +27,8 @@ fi
 
 # Find the PHP binary
 for candidatephp in php php5; do
-	if [ `which $candidatephp` -a -f `which $candidatephp` ]; then
-		php=`which $candidatephp`
+	if [ `which $candidatephp 2>/dev/null` -a -f `which $candidatephp 2>/dev/null` ]; then
+		php=`which $candidatephp 2>/dev/null`
 		break
 	fi
 done

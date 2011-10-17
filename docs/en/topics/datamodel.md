@@ -28,39 +28,180 @@ Note: You need to be logged in as an administrator to perform this command.
 
 ## Querying Data
 
-There are static methods available for querying data. They automatically compile the necessary SQL to query the database
-so they are very helpful. In case you need to fall back to plain-jane SQL, have a look at `[api:SQLQuery]`.
+Every query to data starts with a `DataList::create($class)` call.  For example, this query would return all of the Member objects:
 
 	:::php
-	$records = DataObject::get($obj, $filter, $sort, $join, $limit);
+	$members = DataList::create('Member');
+
+The ORM uses a "fluent" syntax, where you specify a query by chaining together different methods.  Two common methods 
+are filter() and sort():
 
 	:::php
-	$record = DataObject::get_one($obj, $filter);
+	$members = DataList::create('Member')->filter(array('FirstName' => 'Sam'))->sort('Surname');
+	
+Those of you who know a bit about SQL might be thinking "it looks like you're querying all members, and then filtering
+to those with a first name of 'Sam'. Isn't this very slow?"  Is isn't, because the ORM doesn't actually execute the 
+query until you iterate on the result with a `foreach()` or `<% control %>`.
 
 	:::php
-	$record = DataObject::get_by_id($obj, $id);
+	// The SQL query isn't executed here...
+	$members = DataList::create('Member');
+	// ...or here
+	$members = $members->filter(array('FirstName' => 'Sam'));
+	// ...or even here
+	$members = $members->sort('Surname');
+	
+	// *This* is where the query is executed
+	foreach($members as $member) {
+		echo "<p>$member->FirstName $member->Surname</p>";
+	}
 
-**CAUTION: Please make sure to properly escape your SQL-snippets (see [security](/topics/security).**
+This also means that getting the count of a list of objects will be done with a single, efficient query.
 
-## Joining 
+	:::php
+	$members = DataList::create('Member')->filter(array('FirstName' => 'Sam'))->sort('Surname');
+	// This will create an single SELECT COUNT query.
+	echo $members->Count();
+	
+All of this lets you focus on writing your application, and not worrying too much about whether or not your queries are efficient.
 
+### Returning a single DataObject
+
+There are a couple of ways of getting a single DataObject from the ORM.  If you know the ID number of the object, you can use `byID($id)`:
+
+	:::php
+	$member = DataList::create('Member')->byID(5);
+
+If you have constructed a query that you know should return a single record, you can call `First()`:
+
+	:::php
+	$member = DataList::create('Member')->filter(array('FirstName' => 'Sam', 'Surname' => 'Minnee'))->First();
+
+
+### Filters
+
+**FUN FACT:** This isn't implemented in the code yet, but will be shortly.
+
+As you might expect, the `filter()` method filters the list of objects that gets returned.  The previous example 
+included this filter, which returns all Members with a first name of "Sam".
+
+	:::php
+	$members = DataList::create('Member')->filter(array('FirstName' => 'Sam'));
+
+In SilverStripe 2, we would have passed `"\"FirstName\" = 'Sam'` to make this query.  Now, we pass an  array, 
+`array('FirstName' => 'Sam')`, to minimise the risk of SQL injection bugs.  The format of this array follows a few 
+rules:
+
+ * Each element of the array specifies a filter.  You can specify as many filters as you like, and they **all** must be 
+true.
+ * The key in the filter corresponds to the field that you want to filter by.
+ * The value in the filter corresponds to the value that you want to filter to.
+
+So, this would return only those members called "Sam Minnée".
+
+	:::php
+	$members = DataList::create('Member')->filter(array(
+		'FirstName' => 'Sam',
+		'Surname' => 'Minnée',
+	));
+
+By default, these filters specify case-insensitive exact matches.  There are a number of suffixes that you can put on 
+field names to change this: `":StartsWith"`, `":EndsWith"`, `":Contains"`, `":GreaterThan"`, `":LessThan"`, `":Not"`, 
+and `":MatchCase"`. `":Not"` and `":MatchCase"` are special in that you can add it to any of the other filters.
+
+This query will return everyone whose first name doesn't start with S, who have logged on since 1/1/2011.
+
+	:::php
+	$members = DataList::create('Member')->filter(array(
+		'FirstName:StartsWith:Not' => 'S'
+		'LastVisited:GreaterThan' => '2011-01-01'
+	));
+
+If you wish to match against any of a number of columns, you can list several field names, separated by commas.  This 
+will return all members whose first name or surname contain the string 'sam'.
+
+	:::php
+	$members = DataList::create('Member')->filter(array(
+		'FirstName,Surname:Contains' => 'sam'
+	));
+
+If you wish to match against any of a number of values, you can pass an array as the value.  This will return all 
+members whose first name is either Sam or Ingo.
+
+	:::php
+	$members = DataList::create('Member')->filter(array(
+		'FirstName' => array('sam', 'ingo'),
+	));
+
+### Relation filters
+
+So far we have only filtered a data list by fields on the object that you're requesting.  For simple cases, this might 
+be okay, but often, a data model is made up of a number of related objects.  For example, in SilverStripe each member 
+can be placed in a number of groups, and each group has a number of permissions.
+
+For this, Sapphire ORM supports **Relation Filters**.  Any ORM request can be filtered by fields on a related object by 
+specifying the filter key as `<relation-name>.<field-in-related-object>`.  You can chain relations together as many 
+times as is necessary.
+
+For example, this will return all members assigned ot a group that has a permission record with the code "ADMIN".  In other words, it will return all administrators.
+
+	:::php
+	$members = DataList::create('Member')->filter(array(
+		'Groups.Permissions.Code' => 'ADMIN',
+	));
+
+Note that we are just joining to these tables to filter the records.  Even if a member is in more than 1 administrator group, unique members will still be returned by this query.
+
+The other features of filters can be applied to relation filters as well.  This will return all members in groups whose
+names start with 'A' or 'B'.
+
+	:::php
+	$members = DataList::create('Member')->filter(array(
+		'Groups.Title:StartsWith' => array('A', 'B'),
+	));
+
+You can even follow a relation back to the original model class!  This will return all members are in at least 1 group that also has a member called Sam.
+
+	:::php
+	$members = DataList::create('Member')->filter(array(
+		'Groups.Members.FirstName' => 'Sam'
+	));
+
+### Raw SQL options for advanced users
+
+Occassionally, the system described above won't let you do exactly what you need to do.  In these situtations, we have 
+methods that manipulate the SQL query at a lower level.  When using these, please ensure that all table & field names 
+are escaped with double quotes, otherwise some DB back-ends (e.g. PostgreSQL) won't work.
+
+In general, we advise against using these methods unless it's absolutely necessary.  If the ORM doesn't do quite what 
+you need it to, you may also consider extending the ORM with new data types or filter modifiers (that documentation still needs to be written)
+
+#### Where clauses
+
+You can specify a WHERE clause fragment (that will be combined with other filters using AND) with the `where()` method:
+
+	:: php
+	$members = DataList::create('Member')->where("\"FirstName\" = 'Sam'")
+
+#### Joining 
+
+You can specify a join with the innerJoin and leftJoin methods.  Both of these methods have the same arguments:
+
+ * The name of the table to join to
+ * The filter clause for the join
+ * An optional alias
+
+For example:
+
+	:: php
+	// Without an alias
+	$members = DataList::create('Member')->leftJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
+
+	$members = DataList::create('Member')->innerJoin("Group_Members", "\"Rel\".\"MemberID\" = \"Member\".\"ID\"", "REl");
+	
 Passing a *$join* statement to DataObject::get will filter results further by the JOINs performed against the foreign
 table. **It will NOT return the additionally joined data.**  The returned *$records* will always be a
 `[api:DataObject]`.
-
-When using *$join* statements be sure the string is in the proper format for the respective database engine. In MySQL
-the use of back-ticks may be necessary when referring Table Names and potentially Columns. (see [MySQL
-Identifiers](http://dev.mysql.com/doc/refman/5.0/en/identifiers.html)):
-
-	:::php
-	// Example from the forums: http://www.silverstripe.org/archive/show/79865#post79865
-	// Note the use of backticks on table names
-	$links = DataObject::get("SiteTree", 
-	          "ShowInMenus = 1 AND ParentID = 23",
-	          "", 
-	          "LEFT JOIN `ConsultationPaperHolder` ON `ConsultationPaperHolder`.ID = `SiteTree`.ID",
-	          "0, 10"); 
-
 
 ## Properties
 
@@ -312,7 +453,7 @@ Inside sapphire it doesn't matter if you're editing a *has_many*- or a *many_man
 	}
 
 
-### Custom Relation Getters
+### Custom Relations
 
 You can use the flexible datamodel to get a filtered result-list without writing any SQL. For example, this snippet gets
 you the "Players"-relation on a team, but only containing active players. (See `[api:DataObject::$has_many]` for more info on
@@ -324,8 +465,8 @@ the described relations).
 	    "Players" => "Player"
 	  );
 	
-	  // can be accessed by $myTeam->ActivePlayers
-	  function getActivePlayers() {
+	  // can be accessed by $myTeam->ActivePlayers()
+	  function ActivePlayers() {
 	    return $this->Players("Status='Active'");
 	  }
 	}

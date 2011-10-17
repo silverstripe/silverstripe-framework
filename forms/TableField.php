@@ -28,10 +28,6 @@
  
 class TableField extends TableListField {
 	
-	protected $sourceClass;
-	
-	protected $sourceFilter;
-	
 	protected $fieldList;
 	
 	/**
@@ -52,10 +48,6 @@ class TableField extends TableListField {
 	 * preset relations or other default data.
 	 */
 	protected $fieldTypes;
-	
-	protected $sourceSort;
-	
-	protected $sourceJoin;
 
 	/**
 	 * @var $template string Template-Overrides
@@ -105,8 +97,6 @@ class TableField extends TableListField {
 	 *
 	 * @var boolean
 	 */
-	protected $relationAutoSetting = true;
-
 	function __construct($name, $sourceClass, $fieldList = null, $fieldTypes, $filterField = null, 
 						$sourceFilter = null, $editExisting = true, $sourceSort = null, $sourceJoin = null) {
 		
@@ -138,7 +128,7 @@ class TableField extends TableListField {
 			$headings[] = new ArrayData(array("Name" => $fieldName, "Title" => $fieldTitle, "Class" => $class));
 			$i++;
 		}
-		return new DataObjectSet($headings);
+		return new ArrayList($headings);
 	}
 	
 	/**
@@ -161,19 +151,23 @@ class TableField extends TableListField {
 	 */
 	function Items() {
 		// holds TableField_Item instances
-		$items = new DataObjectSet();
+		$items = new ArrayList();
 
 		$sourceItems = $this->sourceItems();
 
 		// either load all rows from the field value,
 		// (e.g. when validation failed), or from sourceItems()
 		if($this->value) {
-			if(!$sourceItems) $sourceItems = new DataObjectSet();
+			if(!$sourceItems) $sourceItems = new ArrayList();
 
 			// get an array keyed by rows, rather than values
 			$rows = $this->sortData(ArrayLib::invert($this->value));
 			// ignore all rows which are already saved
 			if(isset($rows['new'])) {
+				if($sourceItems instanceof DataList) {
+					$sourceItems = new ArrayList($sourceItems->toArray());
+				}
+
 				$newRows = $this->sortData($rows['new']);
 				// iterate over each value (not each row)
 				$i = 0;
@@ -189,8 +183,8 @@ class TableField extends TableListField {
 					}
 
 					// generate a temporary DataObject container (not saved in the database)
-					$sourceClass = $this->sourceClass;
-					$sourceItems->push(new $sourceClass($newRow));
+					$sourceClass = $this->sourceClass();
+					$sourceItems->add(new $sourceClass($newRow));
 
 					$i++;
 				}
@@ -223,11 +217,11 @@ class TableField extends TableListField {
 			$this, 
 			null, 
 			$this->FieldSetForRow(), 
-			new FieldSet()
+			new FieldList()
 		);
 		$form->loadDataFrom($dataObj);
 
-		// Add the item to our new DataObjectSet, with a wrapper class.
+		// Add the item to our new ArrayList, with a wrapper class.
 		return new TableField_Item($dataObj, $this, $form, $this->fieldTypes);
 	}
 	
@@ -264,17 +258,10 @@ class TableField extends TableListField {
 				$savedObjIds = $this->saveData($newFields,false);
  			}
 
-			// Optionally save the newly created records into a relationship
-			// on $record. This assumes the name of this formfield instance
-			// is set to a relationship name on $record.
-			if($this->relationAutoSetting) {
-				$relationName = $this->Name();
-				if($record->has_many($relationName) || $record->many_many($relationName)) {
-					if($savedObjIds) foreach($savedObjIds as $id => $status) {
-						$record->$relationName()->add($id);
-					}	
-				}
-			}
+			// Add the new records to the DataList
+			if($savedObjIds) foreach($savedObjIds as $id => $status) {
+				$this->getDataList()->add($id);
+			}	
 
 			// Update the internal source items cache
 			$this->value = null;
@@ -291,10 +278,10 @@ class TableField extends TableListField {
 	 * transformation if {@link $IsReadonly} is set, or the current user
 	 * doesn't have edit permissions.
 	 * 
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function FieldSetForRow() {
-		$fieldset = new FieldSet();
+		$fieldset = new FieldList();
 		if($this->fieldTypes){
 			foreach($this->fieldTypes as $key => $fieldType) {
 				if(isset($fieldType->class) && is_subclass_of($fieldType, 'FormField')) {
@@ -373,7 +360,7 @@ class TableField extends TableListField {
 			}
 		}
 
-		$form = new Form($this, null, $fieldset, new FieldSet());
+		$form = new Form($this, null, $fieldset, new FieldList());
 
 		foreach ($dataObjects as $objectid => $fieldValues) {
 			// 'new' counts as an empty column, don't save it
@@ -386,9 +373,9 @@ class TableField extends TableListField {
 
 			// either look for an existing object, or create a new one
 			if($existingValues) {
-				$obj = DataObject::get_by_id($this->sourceClass, $objectid);
+				$obj = DataObject::get_by_id($this->sourceClass(), $objectid);
 			} else {
-				$sourceClass = $this->sourceClass;
+				$sourceClass = $this->sourceClass();
 				$obj = new $sourceClass();
 			}
 
@@ -489,13 +476,6 @@ class TableField extends TableListField {
 		Requirements::css(SAPPHIRE_DIR . '/css/TableListField.css');
 		
 		return $this->renderWith($this->template);
-	}
-	
-	/**
-	 * @return Int
-	 */
-	function sourceID() {
-		return $this->filterField;
 	}
 		
 	function setTransformationConditions($conditions) {
@@ -601,20 +581,6 @@ JS;
 	function setRequiredFields($fields) {
 		$this->requiredFields = $fields;
 	}
-	
-	/**
-	 * @param boolean $value 
-	 */
-	function setRelationAutoSetting($value) {
-		$this->relationAutoSetting = $value;
-	}
-	
-	/**
-	 * @return boolean
-	 */
-	function getRelationAutoSetting() {
-		return $this->relationAutoSetting;
-	}
 }
 
 /**
@@ -626,7 +592,7 @@ JS;
 class TableField_Item extends TableListField_Item {
 	
 	/**
-	 * @var FieldSet $fields
+	 * @var FieldList $fields
 	 */
 	protected $fields;
 	
@@ -658,7 +624,7 @@ class TableField_Item extends TableListField_Item {
 	/** 
 	 * Represents each cell of the table with an attribute.
 	 *
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function createFields() {
 		// Existing record
@@ -753,7 +719,7 @@ class TableField_Item extends TableListField_Item {
 				$i++;
 			}
 		}
-		return new FieldSet($this->fields);
+		return new FieldList($this->fields);
 	}
 	
 	function Fields() {

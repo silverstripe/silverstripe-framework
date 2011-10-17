@@ -149,96 +149,7 @@ abstract class SearchFilter extends Object {
 		$dbField->setValue($this->value);
 		return $dbField->RAW();
 	}
-	
-	/**
-	 * Traverse the relationship fields, and add the table
-	 * mappings to the query object state. This has to be called
-	 * in any overloaded {@link SearchFilter->apply()} methods manually.
-	 * 
-	 * @todo try to make this implicitly triggered so it doesn't have to be manually called in child filters
-	 * @param SQLQuery $query
-	 * @return SQLQuery
-	 */
-	function applyRelation($query) {
-		if (is_array($this->relation)) {
-			foreach($this->relation as $rel) {
-				$model = singleton($this->model);
-				if ($component = $model->has_one($rel)) {	
-					if(!$query->isJoinedTo($component)) {
-						$foreignKey = $model->getReverseAssociation($component);
-						$query->leftJoin($component, "\"$component\".\"ID\" = \"{$this->model}\".\"{$foreignKey}ID\"");
-						
-						/**
-						 * add join clause to the component's ancestry classes so that the search filter could search on its 
-						 * ancester fields.
-						 */
-						$ancestry = ClassInfo::ancestry($component, true);
-						if(!empty($ancestry)){
-							$ancestry = array_reverse($ancestry);
-							foreach($ancestry as $ancestor){
-								if($ancestor != $component){
-									$query->innerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
-									$component=$ancestor;
-								}
-							}
-						}
-					}
-					$this->model = $component;
-				} elseif ($component = $model->has_many($rel)) {
-					if(!$query->isJoinedTo($component)) {
-					 	$ancestry = $model->getClassAncestry();
-						$foreignKey = $model->getRemoteJoinField($rel);
-						$query->leftJoin($component, "\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
-						/**
-						 * add join clause to the component's ancestry classes so that the search filter could search on its 
-						 * ancestor fields.
-						 */
-						$ancestry = ClassInfo::ancestry($component, true);
-						if(!empty($ancestry)){
-							$ancestry = array_reverse($ancestry);
-							foreach($ancestry as $ancestor){
-								if($ancestor != $component){
-									$query->innerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
-									$component=$ancestor;
-								}
-							}
-						}
-					}
-					$this->model = $component;
-				} elseif ($component = $model->many_many($rel)) {
-					list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
-					$parentBaseClass = ClassInfo::baseDataClass($parentClass);
-					$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-					$query->innerJoin($relationTable, "\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
-					$query->leftJoin($componentBaseClass, "\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
-					if(ClassInfo::hasTable($componentClass)) {
-						$query->leftJoin($componentClass, "\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
-					}
-					$this->model = $componentClass;
-				
-				// Experimental support for user-defined relationships via a "(relName)Query" method
-				// This will likely be dropped in 2.4 for a system that makes use of Lazy Data Lists.
-				} elseif($model->hasMethod($rel.'Query')) {
-					// Get the query representing the join - it should have "$ID" in the filter
-					$newQuery = $model->{"{$rel}Query"}();
-					if($newQuery) {
-						// Get the table to join to
-						//DATABASE ABSTRACTION: I don't think we need this line anymore:
-						$newModel = str_replace('`','',array_shift($newQuery->from));
-						// Get the filter to use on the join
-					 	$ancestry = $model->getClassAncestry();
-						$newFilter = "(" . str_replace('$ID', "\"{$ancestry[0]}\".\"ID\"" , implode(") AND (", $newQuery->where) ) . ")";
-						$query->leftJoin($newModel, $newFilter);
-						$this->model = $newModel;
-					} else {
-						$this->name = "NULL";
-						return;
-					}
-				}
-			}
-		}
-		return $query;
-	}
+
 	
 	/**
 	 * Apply filter criteria to a SQL query.
@@ -246,7 +157,7 @@ abstract class SearchFilter extends Object {
 	 * @param SQLQuery $query
 	 * @return SQLQuery
 	 */
-	abstract public function apply(SQLQuery $query);
+	abstract public function apply(DataQuery $query);
 	
 	/**
 	 * Determines if a field has a value,

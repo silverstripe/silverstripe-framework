@@ -34,6 +34,13 @@ class SS_ClassLoader {
 	public function getManifest() {
 		return $this->manifests[count($this->manifests) - 1];
 	}
+	
+	/**
+	 * Returns true if this class loader has a manifest.
+	 */
+	public function hasManifest() {
+		return (bool)$this->manifests;
+	}
 
 	/**
 	 * Pushes a class manifest instance onto the top of the stack. This will

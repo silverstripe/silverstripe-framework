@@ -45,7 +45,8 @@ class MoneyTest extends SapphireTest {
 		$this->assertType('Money', $obj->MyMoney);
 		$obj->MyMoney->setAmount(99);
 		$changed = $obj->getChangedFields();
-		$this->assertContains('MyMoney', array_keys($changed));
+		$this->assertContains('MyMoney', array_keys($changed), 'Field is detected as changed');
+		$this->assertEquals(2, $changed['MyMoney']['level'], 'Correct change level');
 	}
 	
 	function testCanOverwriteSettersWithNull() {

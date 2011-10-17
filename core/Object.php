@@ -596,6 +596,16 @@ abstract class Object {
 	 * @param string $extension Classname of an {@link Extension} subclass, without parameters
 	 */
 	public static function remove_extension($class, $extension) {
+		// unload statics now for DataObject classes
+		if(ClassInfo::is_subclass_of($class, 'DataObject')) {
+			if(!preg_match('/^([^(]*)/', $extension, $matches)) {
+				user_error("Bad extension '$extension'", E_USER_WARNING);
+			} else {
+				$extensionClass = $matches[1];
+				DataObjectDecorator::unload_extra_statics($class, $extensionClass);
+			}
+		}
+		
 		if(self::has_extension($class, $extension)) {
 			self::set_static(
 				$class,

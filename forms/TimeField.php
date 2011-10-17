@@ -2,9 +2,7 @@
 require_once 'Zend/Date.php';
 
 /**
- * Form field to display editable time values in an <input type="text">
- * field. Can optionally display a dropdown with predefined time ranges
- * through `setConfig('showdropdown', true)`.
+ * Form field to display editable time values in an <input type="text"> field. 
  * 
  * # Configuration
  * 
@@ -13,28 +11,32 @@ require_once 'Zend/Date.php';
  *    through {@link Zend_Locale_Format::getTimeFormat()}.
  * - 'use_strtotime' (boolean): Accept values in PHP's built-in strtotime() notation, in addition
  *    to the format specified in `timeformat`. Example inputs: 'now', '11pm', '23:59:59'.
- * - 'showdropdown': Show a dropdown with suggested date values.
- *    CAUTION: The dropdown does not support localization.
  * 
  * # Localization
  * 
  * See {@link DateField}
  * 
  * @todo Timezone support
- * @todo 'showdropdown' localization
  *
  * @package forms
  * @subpackage fields-datetime
  */
 class TimeField extends TextField {
-
-	protected $config = array(
-		'showdropdown' => false,
+	
+	/**
+	 * @var array
+	 */
+	static $default_config = array(
 		'timeformat' => 'HH:mm:ss',
 		'use_strtotime' => true,
 		'datavalueformat' => 'HH:mm:ss'
 	);
 
+	/**
+	 * @var array
+	 */
+	protected $config;
+	
 	/**
 	 * @var String
 	 */
@@ -52,6 +54,8 @@ class TimeField extends TextField {
 			$this->locale = i18n::get_locale();
 		}
 		
+		$this->config = self::$default_config;
+		
 		if(!$this->getConfig('timeformat')) {
 			$this->setConfig('timeformat', i18n::get_time_format());
 		}
@@ -60,29 +64,12 @@ class TimeField extends TextField {
 	}
 	
 	function Field() {
-		$html = parent::Field();
-		
-		$html = $this->FieldDriver($html);
-		
-		return $html;
-	}
-	
-	/**
-	 * Internal volatile API.
-	 * 
-	 * @see DateField->FieldDriver()
-	 */
-	protected function FieldDriver($html) {
-		if($this->getConfig('showdropdown')) {
-			Requirements::javascript(SAPPHIRE_DIR . '/javascript/TimeField_dropdown.js');
-			Requirements::css(SAPPHIRE_DIR . '/css/TimeField_dropdown.css');
-			
-			$html .= sprintf('<img class="timeIcon" src="sapphire/images/clock-icon.gif" id="%s-icon"/>', $this->id());
-			$html .= sprintf('<div class="dropdownpopup" id="%s-dropdowntime"></div>', $this->id());
-			$html = '<div class="dropdowntime">' . $html . '</div>';
-		}
-		
-		return $html;
+		$config = array(
+			'timeformat' => $this->getConfig('timeformat')
+		);
+		$config = array_filter($config);
+		$this->addExtraClass(Convert::raw2json($config));
+		return parent::Field();
 	}
 	
 	/**
@@ -117,10 +104,14 @@ class TimeField extends TextField {
 			$this->value = $this->valueObj->get($this->getConfig('timeformat'));
 		}
 		// Fallback: Set incorrect value so validate() can pick it up
-		else {
+		elseif(is_string($val)) {
 			$this->value = $val;
 			$this->valueObj = null;
 		} 
+		else {
+			$this->value = null;
+			$this->valueObj = null;
+		}
 	}
 	
 	/**
@@ -181,11 +172,11 @@ class TimeField extends TextField {
 	}
 	
 	/**
-	 * @param String $name
-	 * @return mixed
+	 * @param String $name Optional, returns the whole configuration array if empty
+	 * @return mixed|array
 	 */
-	function getConfig($name) {
-		return $this->config[$name];
+	function getConfig($name = null) {
+		return $name ? $this->config[$name] : $this->config;
 	}
 		
 	/**

@@ -47,7 +47,7 @@
 		 * Events:
 		 *  ajaxsubmit - ...
 		 *  validate - ...
-		 *  loadnewpage - ...
+		 *  reloadeditform - ...
 		 */
 		$('.cms-container').entwine({
 			
@@ -76,7 +76,7 @@
 				// Also triggers redraw through handleStateChange()
 				$(window).resize(function() {self.redraw()});
 				$('.cms-panel').live('toggle', function() {self.redraw();});
-				$('.cms-edit-form').live('loadnewpage', function() {self.redraw()});
+				$('.cms-edit-form').live('reloadeditform', function() {self.redraw()});
 				
 				// Remove loading screen
 				$('.ss-loading-screen').hide();

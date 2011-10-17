@@ -100,24 +100,23 @@ class ComplexTableFieldTest_Controller extends Controller {
 		$playersField = new ComplexTableField(
 			$this,
 			'Players',
-			'ComplexTableFieldTest_Player',
+			$team->Players(),
 			ComplexTableFieldTest_Player::$summary_fields,
 			'getCMSFields'
 		);
 		
-		$playersField->setParentClass('ComplexTableFieldTest_Team');
-		
 		$form = new Form(
 			$this,
 			'ManyManyForm',
-			new FieldSet(
+			new FieldList(
 				new HiddenField('ID', '', $team->ID),
 				$playersField
 			),
-			new FieldSet(
+			new FieldList(
 				new FormAction('doSubmit', 'Submit')
 			)
 		);
+		$form->loadDataFrom($team);
 		
 		$form->disableSecurityToken();
 		
@@ -130,24 +129,23 @@ class ComplexTableFieldTest_Controller extends Controller {
 		$sponsorsField = new ComplexTableField(
 			$this,
 			'Sponsors',
-			'ComplexTableFieldTest_Sponsor',
+			$team->Sponsors(),
 			ComplexTableFieldTest_Sponsor::$summary_fields,
 			'getCMSFields'
 		);
 		
-		$sponsorsField->setParentClass('ComplexTableFieldTest_Team');
-		
 		$form = new Form(
 			$this,
 			'HasManyForm',
-			new FieldSet(
+			new FieldList(
 				new HiddenField('ID', '', $team->ID),
 				$sponsorsField
 			),
-			new FieldSet(
+			new FieldList(
 				new FormAction('doSubmit', 'Submit')
 			)
 		);
+		$form->loadDataFrom($team);
 		
 		$form->disableSecurityToken();
 		

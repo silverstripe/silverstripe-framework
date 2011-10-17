@@ -89,23 +89,27 @@ method, we're building our own `getCustomSearchContext()` variant.
 
 ### Pagination
 
-For paginating records on multiple pages, you need to get the generated `SQLQuery` before firing off the actual
-search. This way we can set the "page limits" on the result through `setPageLimits()`, and only retrieve a fraction of
-the whole result set.
-
+For pagination records on multiple pages, you need to wrap the results in a
+`PaginatedList` object. This object is also passed the generated `SQLQuery`
+in order to read page limit information. It is also passed the current
+`SS_HTTPRequest` object so it can read the current page from a GET var.
 
 	:::php
-	function getResults($searchCriteria = array()) {
+	public function getResults($searchCriteria = array()) {
 		$start = ($this->request->getVar('start')) ? (int)$this->request->getVar('start') : 0;
 		$limit = 10;
 			
 		$context = singleton('MyDataObject')->getCustomSearchContext();
 		$query = $context->getQuery($searchCriteria, null, array('start'=>$start,'limit'=>$limit));
 		$records = $context->getResults($searchCriteria, null, array('start'=>$start,'limit'=>$limit));
+		
 		if($records) {
-			$records->setPageLimits($start, $limit, $query->unlimitedRowCount());
+			$records = new PaginatedList($records, $this->request);
+			$records->setPageStart($start);
+			$records->setPageSize($limit);
+			$records->setTotalSize($query->unlimitedRowCount());
 		}
-			
+		
 		return $records;
 	}
 
@@ -135,7 +139,7 @@ For more information on how to paginate your results within the template, see [T
 to show the results of your custom search you need at least this content in your template, notice that
 Results.PaginationSummary(4) defines how many pages the search will show in the search results. something like:
 
-**Next   1 2  *3*  4  5  … 558**  
+**Next   1 2  *3*  4  5  ��� 558**  
 
 
 	:::ss

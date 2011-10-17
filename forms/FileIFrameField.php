@@ -145,7 +145,7 @@ class FileIFrameField extends FileField {
 		
 		$fileSources["existing//$selectFile"] = new TreeDropdownField('ExistingFile', '', 'File');
 
-		$fields = new FieldSet (
+		$fields = new FieldList (
 			new HeaderField('EditFileHeader', $title),
 			new SelectionGroup('FileSource', $fileSources)
 		);
@@ -159,7 +159,7 @@ class FileIFrameField extends FileField {
 			$this,
 			'EditFileForm',
 			$fields,
-			new FieldSet(
+			new FieldList(
 				new FormAction('save', $title)
 			)
 		);
@@ -231,10 +231,10 @@ class FileIFrameField extends FileField {
 		$form = new Form (
 			$this,
 			'DeleteFileForm',
-			new FieldSet (
+			new FieldList (
 				new HiddenField('DeleteFile', null, false)
 			),
-			new FieldSet (
+			new FieldList (
 				$deleteButton = new FormAction (
 					'delete', sprintf(_t('FileIFrameField.DELETE', 'Delete %s'), $this->FileTypeName())
 				)

@@ -87,7 +87,7 @@ class Folder extends File {
 		// First, merge any children that are duplicates
 		$duplicateChildrenNames = DB::query("SELECT \"Name\" FROM \"File\" WHERE \"ParentID\" = $parentID GROUP BY \"Name\" HAVING count(*) > 1")->column();
 		if($duplicateChildrenNames) foreach($duplicateChildrenNames as $childName) {
-			$childName = DB::getConn()->addslashes($childName);
+			$childName = Convert::raw2sql($childName);
 			// Note, we do this in the database rather than object-model; otherwise we get all sorts of problems about deleting files
 			$children = DB::query("SELECT \"ID\" FROM \"File\" WHERE \"Name\" = '$childName' AND \"ParentID\" = $parentID")->column();
 			if($children) {
@@ -183,21 +183,16 @@ class Folder extends File {
 		if(is_dir($baseDir . $name)) {
 			$className = "Folder";
 		} else {
-			// Could use getimagesize to get the type of the image
-			$ext = strtolower(substr($name,strrpos($name,'.')+1));
-			switch($ext) {
-				case "gif": case "jpg": case "jpeg": case "png": $className = "Image"; break;
-				default: $className = "File";
-			}
+			$className = File::get_class_for_file_extension(pathinfo($name, PATHINFO_EXTENSION));
 		}
 
 		if(Member::currentUser()) $ownerID = Member::currentUser()->ID;
 		else $ownerID = 0;
 		
-		$filename = DB::getConn()->addslashes($this->Filename . $name);
+		$filename = Convert::raw2sql($this->Filename . $name);
 		if($className == 'Folder' ) $filename .= '/';
 
-		$name = DB::getConn()->addslashes($name);
+		$name = Convert::raw2sql($name);
 		
 		DB::query("INSERT INTO \"File\" 
 			(\"ClassName\", \"ParentID\", \"OwnerID\", \"Name\", \"Filename\", \"Created\", \"LastEdited\", \"Title\")
@@ -208,6 +203,8 @@ class Folder extends File {
 
 	/**
 	 * Take a file uploaded via a POST form, and save it inside this folder.
+	 * File names are filtered through {@link FileNameFilter}, see class documentation
+	 * on how to influence this behaviour.
 	 */
 	function addUploadToFolder($tmpFile) {
 		if(!is_array($tmpFile)) {
@@ -221,10 +218,8 @@ class Folder extends File {
 		// $parentFolder = Folder::findOrMake("Uploads");
 
 		// Generate default filename
-		$file = str_replace(' ', '-',$tmpFile['name']);
-		$file = ereg_replace('[^A-Za-z0-9+.-]+','',$file);
-		$file = ereg_replace('-+', '-',$file);
-
+		$nameFilter = Object::create('FileNameFilter');
+		$file = $nameFilter->filter($tmpFile['name']);
 		while($file[0] == '_' || $file[0] == '.') {
 			$file = substr($file, 1);
 		}
@@ -386,7 +381,7 @@ class Folder extends File {
 	/**
 	 * Return the FieldSet used to edit this folder in the CMS.
 	 * You can modify this fieldset by subclassing folder, or by creating a {@link DataExtension}
-	 * and implemeting updateCMSFields(FieldSet $fields) on that extension.
+	 * and implemeting updateCMSFields(FieldList $fields) on that extension.
 	 */
 	function getCMSFields() {
 		$fileList = new AssetTableField(
@@ -407,7 +402,7 @@ class Folder extends File {
 			$deleteButton = new HiddenField('deletemarked');
 		}
 
-		$fields = new FieldSet(
+		$fields = new FieldList(
 			new HiddenField("Name"),
 			new TabSet("Root", 
 				new Tab("Files", _t('Folder.FILESTAB', "Files"),
