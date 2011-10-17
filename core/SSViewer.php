@@ -366,13 +366,14 @@ class SSViewer extends Object {
 		// If we have our crazy base tag, then fix # links referencing the current page.
 		if(strpos($output, '<base') !== false) {
 			if(SSViewer::$options['rewriteHashlinks'] === 'php') {
-				$thisURLRelativeToBase = "<?php echo \$_SERVER['REQUEST_URI']; ?>";
+				// Emulate Convert::raw2att() without adding this dependency
+				$thisURLRelativeToBase = "<?php echo str_replace(array('&','\"',\"'\",'<','>'), array('&amp;','&quot;','&#39;','&lt;','&gt;'), \$_SERVER['REQUEST_URI']); ?>"; 
 			} else {
-				$thisURLRelativeToBase = Director::makeRelative(Director::absoluteURL($_SERVER['REQUEST_URI']));
+				$thisURLRelativeToBase = Convert::raw2att($_SERVER['REQUEST_URI']); 
 			}
 			$output = preg_replace('/(<a[^>+]href *= *)"#/i', '\\1"' . $thisURLRelativeToBase . '#', $output);
-		}
-
+		}	
+		
 		return $output;
 	}
 
