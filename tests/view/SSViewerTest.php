@@ -513,6 +513,76 @@ after')
 		// Remove all the test themes we created
 		Filesystem::removeFolder($testThemeBaseDir);
 	}
+	
+	function testRewriteHashlinks() {
+		$oldRewriteHashLinks = SSViewer::getOption('rewriteHashlinks');
+		SSViewer::setOption('rewriteHashlinks', true);
+		
+		// Emulate SSViewer::process()
+		$base = Convert::raw2att($_SERVER['REQUEST_URI']);
+		
+		$tmplFile = TEMP_FOLDER . '/SSViewerTest_testRewriteHashlinks_' . sha1(rand()) . '.ss';
+		
+		// Note: SSViewer_FromString doesn't rewrite hash links.
+		file_put_contents($tmplFile, '<!DOCTYPE html>
+			<html>
+				<head><% base_tag %></head>
+				<body>
+				<a class="inline" href="#anchor">InlineLink</a>
+				$InsertedLink
+				<body>
+			</html>');
+		$tmpl = new SSViewer($tmplFile);
+		$obj = new ViewableData();
+		$obj->InsertedLink = '<a class="inserted" href="#anchor">InsertedLink</a>';
+		$result = $tmpl->process($obj);
+		$this->assertContains(
+			'<a class="inserted" href="' . $base . '#anchor">InsertedLink</a>',
+			$result
+		);
+		$this->assertContains(
+			'<a class="inline" href="' . $base . '#anchor">InlineLink</a>',
+			$result
+		);
+		
+		unlink($tmplFile);
+		
+		SSViewer::setOption('rewriteHashlinks', $oldRewriteHashLinks);
+	}
+	
+	function testRewriteHashlinksInPhpMode() {
+		$oldRewriteHashLinks = SSViewer::getOption('rewriteHashlinks');
+		SSViewer::setOption('rewriteHashlinks', 'php');
+		
+		$tmplFile = TEMP_FOLDER . '/SSViewerTest_testRewriteHashlinksInPhpMode_' . sha1(rand()) . '.ss';
+		
+		// Note: SSViewer_FromString doesn't rewrite hash links.
+		file_put_contents($tmplFile, '<!DOCTYPE html>
+			<html>
+				<head><% base_tag %></head>
+				<body>
+				<a class="inline" href="#anchor">InlineLink</a>
+				$InsertedLink
+				<body>
+			</html>');
+		$tmpl = new SSViewer($tmplFile);
+		$obj = new ViewableData();
+		$obj->InsertedLink = '<a class="inserted" href="#anchor">InsertedLink</a>';
+		$result = $tmpl->process($obj);
+		$this->assertContains(
+			'<a class="inserted" href="<?php echo strip_tags(',
+			$result
+		);
+		// TODO Fix inline links in PHP mode
+		// $this->assertContains(
+		// 	'<a class="inline" href="<?php echo str_replace(',
+		// 	$result
+		// );
+		
+		unlink($tmplFile);
+		
+		SSViewer::setOption('rewriteHashlinks', $oldRewriteHashLinks);
+	}
 
 }
 
