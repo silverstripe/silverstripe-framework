@@ -193,7 +193,7 @@ SS
 		$obj->InsertedLink = '<a class="inserted" href="#anchor">InsertedLink</a>';
 		$result = $tmpl->process($obj);
 		$this->assertContains(
-			'<a class="inserted" href="<?php echo str_replace(',
+			'<a class="inserted" href="<?php echo strip_tags(',
 			$result
 		);
 		// TODO Fix inline links in PHP mode
