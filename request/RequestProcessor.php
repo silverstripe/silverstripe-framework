@@ -10,7 +10,7 @@ class RequestProcessor {
 
 	private $filters = array();
 
-	public function __construct($filters) {
+	public function __construct($filters = array()) {
 		$this->filters = $filters;
 	}
 
