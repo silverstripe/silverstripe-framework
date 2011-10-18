@@ -375,10 +375,9 @@ class SSViewer extends Object {
 		// If we have our crazy base tag, then fix # links referencing the current page.
 		if(strpos($output, '<base') !== false) {
 			if(SSViewer::$options['rewriteHashlinks'] === 'php') {
-				// Emulate Convert::raw2att() without adding this dependency
-				$thisURLRelativeToBase = "<?php echo str_replace(array('&','\"',\"'\",'<','>'), array('&amp;','&quot;','&#39;','&lt;','&gt;'), \$_SERVER['REQUEST_URI']); ?>"; 
+				$thisURLRelativeToBase = "<?php echo strip_tags(\$_SERVER['REQUEST_URI']); ?>"; 
 			} else {
-				$thisURLRelativeToBase = Convert::raw2att($_SERVER['REQUEST_URI']); 
+				$thisURLRelativeToBase = strip_tags($_SERVER['REQUEST_URI']); 
 			}
 			$output = preg_replace('/(<a[^>+]href *= *)"#/i', '\\1"' . $thisURLRelativeToBase . '#', $output);
 		}	
@@ -526,7 +525,7 @@ class SSViewer extends Object {
 		$content = ereg_replace('<!-- +if_end +-->', '<? }  ?>', $content);
 			
 		// Fix link stuff
-		$content = ereg_replace('href *= *"#', 'href="<?= SSViewer::$options[\'rewriteHashlinks\']===\'php\' ? \'<\'.\'?php echo $_SERVER[\\\'REQUEST_URI\\\']; ?\'.\'>\' : (SSViewer::$options[\'rewriteHashlinks\'] ? Convert::raw2att($_SERVER[\'REQUEST_URI\']) : "" ) ?>#', $content);
+		$content = ereg_replace('href *= *"#', 'href="<?= SSViewer::$options[\'rewriteHashlinks\'] ? strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "" ?>#', $content);
 	
 		// Protect xml header
 		$content = ereg_replace('<\?xml([^>]+)\?' . '>', '<##xml\\1##>', $content);
