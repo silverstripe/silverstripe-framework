@@ -22,7 +22,7 @@ abstract class Object {
 	 * Example:
 	 * <code>
 	 * public static $extensions = array (
-	 *   'Hierachy',
+	 *   'Hierarchy',
 	 *   "Version('Stage', 'Live')"
 	 * );
 	 * </code>

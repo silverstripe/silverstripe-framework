@@ -297,7 +297,7 @@ class RestfulService extends ViewableData {
 	
 	/**
  	* Gets set of node values as an array. 
- 	* When you get to the depth in the hierachchy use node_child_subchild syntax to get the value.
+ 	* When you get to the depth in the hierarchy use node_child_subchild syntax to get the value.
  	* @param string $xml The the source xml to parse, this could be the original response received.
  	* @param string $collection The name of parent node which wraps the elements, if available
  	* @param string $element The element we need to extract the node values.
