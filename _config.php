@@ -79,3 +79,25 @@ SS_Cache::pick_backend('aggregatestore', 'aggregate', 1000);
 
 // TODO Remove once new ManifestBuilder with submodule support is in place
 require_once('admin/_config.php');
+
+// configure some services that will be used during the request
+Injector::inst()->load(array(
+	'PermissionService',
+	'DbAuthProvider',
+	'AuthenticationFilter',
+	'AuthenticationService' =>  array(
+		'properties'			=> array(
+			'providers'			=> array(
+				'#$DbAuthProvider'
+			)
+		)
+	),
+	'RequestProcessor'		=> array(
+		'class'					=> '',
+		'constructor'			=> array(
+			array(
+				'#$AuthenticationFilter'
+			)
+		)
+	)
+));
