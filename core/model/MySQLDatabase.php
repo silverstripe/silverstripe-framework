@@ -591,7 +591,10 @@ class MySQLDatabase extends SS_Database {
 		//$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=> 'utf8_general_ci', 'default'=>$this->default);
 		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set utf8 collate utf8_general_ci default '{$this->default}'");
 		
-		return 'enum(\'' . implode('\',\'', $values['enums']) . '\') character set utf8 collate utf8_general_ci default \'' . $values['default'] . '\'';
+		if(!is_numeric($values['default'])) {
+			$values['default'] = '\'' . $values['default'] . '\'';
+		}
+		return 'enum(\'' . implode('\',\'', $values['enums']) . '\') character set utf8 collate utf8_general_ci default ' . $values['default'];
 	}
 	
 	/**
