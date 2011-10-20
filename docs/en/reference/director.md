@@ -29,6 +29,26 @@ following two conditions are true:
 redirectBack().
 
 
+## Request processing
+
+The `[api:Director]` is the entry point in Silverstring Framework for processing a request. You can read through
+the execution steps in `[api:Director]``::direct()`, but in short
+
+* File uploads are first analysed to remove potentially harmful uploads (this will likely change!)
+* The `[api:SS_HTTPRequest]` object is created
+* The session object is created
+* The `[api:Injector]` is first referenced, and asks the registered `[api:RequestProcessor]` to pre-process
+  the request object. This allows for analysis of the current request, and allow filtering of parameters
+  etc before any of the core of the application executes
+* The request is handled and response checked
+* The `[api:RequestProcessor]` is called to post-process the request to allow further filtering before
+  content is sent to the end user. 
+* The response is output
+
+The framework provides the ability to hook into the request both before and after it is handled to allow
+developers to bind in their own custom pre- or post- request logic; see the `[api:RequestFilter]` to see how
+this can be used to authenticate the request before the request is handled. 
+
 ## Custom Rewrite Rules
 
 You can influence the way URLs are resolved one of 2 ways
