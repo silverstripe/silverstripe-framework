@@ -13,7 +13,7 @@ class Decimal extends DBField {
 	function __construct($name, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0) {
 		$this->wholeSize = isset($wholeSize) ? $wholeSize : 9;
 		$this->decimalSize = isset($decimalSize) ? $decimalSize : 2;
-		$this->defaultValue = $defaultValue;
+		$this->defaultValue = number_format($defaultValue, $decimalSize);
 		parent::__construct($name);
 	}
 	
@@ -26,7 +26,7 @@ class Decimal extends DBField {
 	}
 	
 	function requireField() {
-		$parts=Array('datatype'=>'decimal', 'precision'=>"$this->wholeSize,$this->decimalSize", 'default'=>(double)$this->defaultValue, 'arrayValue'=>$this->arrayValue);
+		$parts=Array('datatype'=>'decimal', 'precision'=>"$this->wholeSize,$this->decimalSize", 'default'=>$this->defaultValue, 'arrayValue'=>$this->arrayValue);
 		$values=Array('type'=>'decimal', 'parts'=>$parts);
 		DB::requireField($this->tableName, $this->name, $values);
 	}
