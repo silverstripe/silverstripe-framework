@@ -29,6 +29,7 @@ We'll also install SQL Server 2008 R2, and support for connecting to it in PHP.
   * SQL Server 2008 R2
   * PHP 5.3
   * SilverStripe 2.4
+  * [PHP Manager for IIS](http://phpmanager.codeplex.com/)
   * [Microsoft URL Rewrite Module 2.0](http://www.iis.net/download/URLRewrite)
   * [IIS 7 Administration Pack](http://www.iis.net/download/AdministrationPack) (ONLY required for Windows Vista or Server 2008)
   * [Microsoft Drivers for PHP for SQL Server 2.0](http://www.microsoft.com/downloads/en/details.aspx?FamilyID=80E44913-24B4-4113-8807-CAAE6CF2CA05&displaylang=en)
@@ -54,7 +55,7 @@ Once the installation is finished, browse to http://localhost in your browser. I
 ## IIS URL Rewrite Module
 
   * Go to http://www.iis.net/extensions/URLRewrite
-  * Click x86 or x64 on the right, depending on whether you installed a x86 or x64 version of Windows
+  * Click **x86** or **x64** on the right, depending on whether you installed a x86 or x64 version of Windows
   * Run the downloaded file to install and enable the URL Rewrite Module
 
 ## IIS Administration Pack
@@ -82,68 +83,26 @@ Installing SQL Server should be relatively straightforward. Keep a note of the p
 
 ## Install PHP
 
-From http://windows.php.net/download, pick **VC9 x86 Non Thread Safe** of the latest PHP version and click "Installer" to download the PHP installer.
+Recently, a handy tool called [PHP Manager for IIS](http://phpmanager.codeplex.com/) has made installation of PHP on Windows easy.
+
+ * [Download PHP Manager for IIS](http://phpmanager.codeplex.com/releases/view/69115)
+ * Run and install to enable PHP Manager support in IIS (make sure it's x86 or x64 depending on your Windows version)
+ * From [http://windows.php.net/download](http://windows.php.net/download), pick **VC9 x86 Non Thread Safe** of the latest PHP version and click "Zip" to download PHP.
 
 **NOTE**: We chose the "Non Thread Safe" version because we'll run PHP as a FastCGI process through IIS. FastCGI ensures a single threaded execution environment so thread safety checks are not required. This provides significant performance gains over using the thread safe version of PHP.
 
-Once finished downloading, run the installer to get PHP up and running.
+ * Once downloaded, unpack the contents of the zip to **C:\php**
+ * Open **Internet Information Services (IIS) Manager** and click the server node in the left panel
+ * Go to **PHP Manager**
+ * Click **Register new PHP version**
+ * Enter **C:\php\php-cgi.exe**
+ * Click **Configure error reporting** and choose **Development machine** (change to **Production machine** later if you wish. For now we set to development to test PHP is working)
 
-When prompted, select **IIS FastCGI** for the web server setup. When asked for which items to install, expand the Extensions tree and check **LDAP** and **Multi-Byte String**. You'll probably need one or both of these in the future, so it's a safe option to install them. LDAP is required for retrieving data from an Active Directory server, for example.
+If you need to change any PHP settings, you can do so by clicking **Manage all settings** in PHP Manager.
+There is no need to edit C:\php\php.ini any longer, as it can be done from here instead.
 
-Now we need to set up Handler Mappings in IIS to support PHP scripts.
-
-Open up Internet Information Services (IIS) Manager and click on the second node that appears on the tree to the left.
-
-  * Click Handler Mappings
-
-**NOTE**: If you already see an entry for PHP, continue to "Configure FastCGI in IIS" below.
-
-  * Click Add Module Mapping located on the right hand Actions bar
-  * Enter ***.php** into the Request path field
-  * Select FastCGIModule from the Module dropdown menu
-  * Enter **"C:\Program Files (x86)\PHP\php-cgi.exe"** (including the quotes) into the Executable (optional) field
-  * Enter **PHP** into the Name field
-
-You can also do the same via the command line. Run these commands if you prefer to do it the CLI way:
-
-	C:\windows\system32\inetsrv\appcmd set config /section:system.webServer/fastCGI /+[fullPath='"c:\Program Files (x86)\PHP\php-cgi.exe"']
-	C:\windows\system32\inetsrv\appcmd set config /section:system.webServer/handlers /+[name='PHP_via_FastCGI',path='*.php',verb='*',modules='FastCgiModule',scriptProcessor='"c:\Program Files (x86)\PHP\php-cgi.exe"',resourceType='Unspecified']
-
-## Configure FastCGI in IIS
-
-There's some best practice configuration we need to apply to FastCGI so that our websites will run optimally.
-
-  * Click FastCGI Settings in the IIS Manager
-  * Click the PHP entry that appears in the list, and click Edit in the right hand Actions panel
-  * Look for InstanceMaxRequests and change the value to **10000**
-  * Look for ActivityTimeout and change the value to **900**
-  * Look for RequestTimeout and change the value to **900**
-  * Click the (Collection) field and press the ... button that appears to the right
-  * Click Add when the dialog box appears
-  * On the right, enter **PHP_FCGI_MAX_REQUESTS** for the entry to the Name field
-  * On the right, enter **10000** for the entry to the Value field
-
-Again, like adding the handler mappings, the same procedures can be done using the command line:
-
-	C:\windows\system32\inetsrv\appcmd set config -section:system.webServer/fastCgi /[fullPath='"c:\Program Files (x86)\PHP\php-cgi.exe"'].instanceMaxRequests:10000
-	C:\windows\system32\inetsrv\appcmd set config -section:system.webServer/fastCgi /[fullPath='"c:\Program Files (x86)\PHP\php-cgi.exe"'].ActivityTimeout:900
-	C:\windows\system32\inetsrv\appcmd set config -section:system.webServer/fastCgi /[fullPath='"c:\Program Files (x86)\PHP\php-cgi.exe"'].RequestTimeout:900 
-	C:\windows\system32\inetsrv\appcmd set config -section:system.webServer/fastCgi /+"[fullPath='"c:\Program Files (x86)\PHP\php-cgi.exe'].environmentVariables.[name='PHP_FCGI_MAX_REQUESTS',value='10000']"
-
-The [official guide configuring IIS for PHP applications is available](http://learn.iis.net/page.aspx/771/configure-and-optimize-the-microsoft-web-platform-for-php-applications/) for reference.
-
-## Add index.php as default document
-
-This is good practise, so if you browse to http://localhost/silverstripe then it will automatically run index.php. IIS needs to be told which default documents should be checked for when accessing a directory in the URL.
-
-To add index.php as a default document:
-
-  * Open Internet Information Services (IIS) Manager
-  * Click your server name on the left when the program opens
-  * Double click the **Default Document** icon
-  * Verify that index.php doesn't already exist in the file list
-  * Click **Add** on the right sidebar to add a new entry
-  * Enter **index.php** when the dialog box pops up and hit **OK**
+The first thing you should do is make sure the date.timezone setting is correct, so open **Manage all settings**
+and scroll down to date.timezone and make sure you select your correct timezone.
 
 ## Install the SQL Server Driver for PHP
 
@@ -152,62 +111,17 @@ The following steps will install the SQL Server Driver for PHP from Microsoft:
   * Download [Microsoft Drivers for PHP for SQL Server (2.0)](http://www.microsoft.com/downloads/en/details.aspx?FamilyID=80E44913-24B4-4113-8807-CAAE6CF2CA05&displaylang=en)
   * Run the downloaded file, extracting to C:\sqlsrv
   * In Windows Explorer, browse to C:\sqlsrv - you should see a bunch of DLL files
-  * Copy **php_sqlsrv_53_nts_vc9.dll** to C:\Program Files (x86)\PHP\ext
-  * Open C:\Program Files (x86)\PHP\php.ini using Notepad
-
-At the bottom of the file, add this line: **extension=php_sqlsrv_53_nts_vc9.dll**
-
-## Configure PHP
-
-PHP is installed and works with IIS, but the configuration needs a bit of minor tweaking.
-
-Open Windows Explorer. Browse to C:\Program Files (x86)\PHP and open php.ini.
-
-Note: You may need to run Notepad as administrator (right click Notepad.exe and click "Run as administrator"). From inside Notepad, open C:\Program Files (x86)\PHP\php.ini.
-
-First of all, look for **;date.timezone** and replace it with this one (replacing Pacific/Auckland to your timezone if you're not in New Zealand).
-
-	date.timezone = Pacific/Auckland
-
-Secondly, look for **display_errors** and **display_startup_errors**. Replace the Off value for each of these with **On**.
-
-Thirdly, PHP has a very low maximum file size of 2 megabytes for file uploads. Look for **post_max_size**, and **upload_max_filesize**. Change 2M and 8M respectively, to **128M**. This is important to allow large uploads from users, such as video. If you feel you don't require as much, change it to **64M** for both, which is a sensible limit.
-
-Again, look for **max_input_time**. Replace the 60 value with **900**. The reason we're doing this is to match the 900 value we set earlier in IIS.
-
-Lastly, there's one FastCGI setting we need to apply, and it's missing in the configuration by default. Look for **fastcgi.impersonate=1** and add this line below it:
-
-	cgi.fix_pathinfo=1
-
-SilverStripe sites will email errors to developers which are crucial for debugging. It's also needed for any emails generated by the website. PHP needs to know where your SMTP server is located, and which port it listens on to be able to send emails.
-
-In php.ini, look for this block of code:
-
-	[mail function]
-	; For Win32 only.
-	; http://php.net/smtp
-	SMTP = localhost
-	; http://php.net/smtp-port
-	smtp_port = 25
-
-Make sure that the SMTP and smtp_port are set to your mail server's hostname and port respectively.
-
-That should do it for the PHP configuration.
+  * Copy **php_sqlsrv_53_nts_vc9.dll** to C:\php\ext
+  * Open **PHP Manager** in IIS and click **Enable or disable an extension**
+  * Find the php_sqlsrv extension in the list and right click > Enable
+  * Restart IIS
 
 ## Test PHP installation
 
 Now that we've got PHP configured how we want it, let's test that PHP is working correctly.
 
-First things first, restart IIS using IIS Manager.
-
-Create a new file using Notepad called test.php if you haven't already, inside **C:\inetpub\wwwroot**
-
-Inside the file, add this content:
-
-	<?php
-	phpinfo();
-
-Open a browser and point it to http://localhost/test.php
+ * Open **PHP Manager** in IIS Manager
+ * Click **Check phpinfo()** and use **Default web site**
 
 You should receive a long page containing PHP configuration information. If you do receive this, PHP has been installed correctly through IIS. Congratulations!
 
@@ -215,16 +129,16 @@ The next part is to install SilverStripe and verify that it works.
 
 ## Install SilverStripe
 
-Now that we've got the backend server architecture sorted out, it's time to install the SilverStripe CMS/framework.
+Now that we've got the software installed, it's time to install the SilverStripe CMS/framework.
 
 Create a new file called **_ss_environment.php** in **C:\inetpub\wwwroot**
 
-This file tells SilverStripe projects installed on this machine which database server and credentials, as well as anything environment specific. [[environment-management|More information]] on setting up the environment file is available.
+This file tells SilverStripe projects installed on this machine which database server and credentials, as well as anything environment specific. [More information on setting up the environment file](environment-management) is available.
 
 Inside the newly created _ss_environment.php file, insert the following code:
 
 	<?php
-	/* What kind of environment is this: development, test, or live (ie, production)? */
+	/* What kind of environment is this: development, test, or live (i.e, production)? */
 	define('SS_ENVIRONMENT_TYPE', 'dev');
 	/* Database connection */
 	define('SS_DATABASE_SERVER', 'localhost');
@@ -268,18 +182,16 @@ If all goes to plan, you're done, and you should see a basic template with a few
 
 ## Windows Cache Extension "wincache" for PHP
 
-Microsoft has developed an extension for PHP specifically for Windows. This is designed to work similar to xcache by caching PHP code in bytecode memory for peformance improvements. It's recommended you install this for optimal PHP performance.
+Microsoft has developed an extension for PHP specifically for Windows. This is designed to work similar to xcache by caching PHP code in bytecode memory for peformance improvements.
+
+It's highly recommended you install this for optimal PHP performance on Windows.
 
 To install it, follow these steps:
 
   * [Download WinCache](http://www.iis.net/extensions/WinCacheForPHP) (x86 PHP 5.3 link is on the right sidebar of the above page)
   * Extract the files to a temporary location like C:\wincache
-  * Copy the php_wincache.dll file into the ext directory inside C:\Program Files (x86)\PHP
-
-Edit php.ini and add the following line at the bottom of the file:
-
-	extension=php_wincache.dll
-
+  * Copy the php_wincache.dll file into the ext directory inside C:\php\ext
+  * Open **PHP Manager** and use **Enable or disable an extension** to enable the extension
   * Copy wincache.php into C:\inetpub\wwwroot
   * Edit the wincache.php file you just copied, and look for the wincache username and password
   * Replace wincache inside the file with your own username and password
@@ -293,7 +205,7 @@ To examine how it's being cached, visit http://localhost/wincache.php and enter 
 
 ## Configuring PHP and IIS for production environments
 
-**TODO**: Describe turning off PHP errors, and setting up static 404 and 500 error pages instead of giving detailed errors. Finally setting up a specific database user that isn't sa with restricted permissions.
+Once your site is configured correctly and PHP is working, it's recommend you choose **Production machine** in PHP Manager **Configure error reporting** settings.
 
 ## Troubleshooting
 
@@ -308,7 +220,7 @@ Most of the time, it's caused by a loaded PHP extension that is broken.
   * Are you running non-standard PHP extensions? If so, try unloading them one by one
   * Make sure you're using the latest [[http://www.microsoft.com/downloads/en/details.aspx?FamilyID=80E44913-24B4-4113-8807-CAAE6CF2CA05&displaylang=en/|Microsoft Drivers for PHP for SQL Server]]
 
-**Q: I get the error "HTTP Error 500.0 - Internal Server Error - C:\Program Files (x86)\PHP\php-cgi.exe - The FastCGI process exceeded configured request timeout"**
+**Q: I get the error "HTTP Error 500.0 - Internal Server Error - C:\php\php-cgi.exe - The FastCGI process exceeded configured request timeout"**
 
 **A:** A script is running for a long time, such as a unit test. To fix this, you'll need to increase the request timeout to a higher value in both IIS and PHP. Refer to the IIS FastCGI configuration documentation and PHP configuration parts of this document for where to change the appropriate values.
 
@@ -332,7 +244,6 @@ And then verify TCP/IP access is enabled:
   * Open SQL Server Configuration Manager
   * In the node "Protocols for MSSQLSERVER" (or for your instance name) verify TCP/IP is **Enabled**
   * Restart SQL Server if protocol changes were made
-
 
 **Q: When I try running the unit tests, I get this error: "Uncaught Zend_Cache_Exception: cache_dir is not writable"**
 
@@ -386,7 +297,7 @@ If this still doesn't help, enable Failed Request Tracing in IIS. You could also
 You should also ensure you are using the latest version of the [Microsoft Drivers for PHP for SQL Server](http://www.microsoft.com/downloads/en/details.aspx?FamilyID=80E44913-24B4-4113-8807-CAAE6CF2CA05&displaylang=en) driver.
 If possible, you should also use PHP 5.3 which provides performance improvements over 5.2.
 
-Try increasing the IIS **MaxInstances** in IIS Manager > FastCGI from 4 to a higher value. For quad core CPUs, a higher value such as **32** should prove to provide a performance enhancement.
+Try increasing the IIS **MaxInstances** in IIS Manager > FastCGI from to a higher value. For quad core CPUs, a higher value such as **32** should prove to provide a performance enhancement.
 
 You can also [install wincache](http://learn.iis.net/page.aspx/678/use-the-windows-cache-extension-for-php/), to improve performance on live sites.
 

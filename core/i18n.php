@@ -1872,13 +1872,15 @@ class i18n extends Object {
 		
 		// Load translations from themes
 		$themesBase = $base . '/themes';
-		foreach(scandir($themesBase) as $theme) {
-			if(
-				strpos($theme, SSViewer::current_theme()) === 0
-				&& file_exists($file = "$themesBase/$theme/lang/$locale.php")
-			) {				
-				if ($force_load) include($file);
-				else include_once($file);
+		if(is_dir($themesBase)) {
+			foreach(scandir($themesBase) as $theme) {
+				if(
+					strpos($theme, SSViewer::current_theme()) === 0
+					&& file_exists($file = "$themesBase/$theme/lang/$locale.php")
+				) {				
+					if ($force_load) include($file);
+					else include_once($file);
+				}
 			}
 		}
 

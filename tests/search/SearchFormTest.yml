@@ -34,3 +34,10 @@ SiteTree:
    pageWithSpecialChars:
       Title: Brötchen
       Content: Frisch vom B&auml;cker
+File:
+   showInSearchFile:
+      Title: showInSearchFile
+      ShowInSearch: 1
+   dontShowInSearchFile:
+      Title: dontShowInSearchFile
+      ShowInSearch: 0

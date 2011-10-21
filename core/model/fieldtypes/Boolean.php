@@ -59,7 +59,7 @@ class Boolean extends DBField {
 	 */
 	function prepValueForDB($value) {
 		if(strpos($value, '[')!==false)
-			return addslashes($value);
+			return Convert::raw2sql($value);
 		else {		
 			if($value && strtolower($value) != 'f') {
 				return "'1'";

@@ -347,9 +347,9 @@ class MySQLDatabase extends SS_Database {
 			
 			if($field['Default'] || $field['Default'] === "0") {
 				if(is_numeric($field['Default']))
-					$fieldSpec .= " default " . addslashes($field['Default']);
+					$fieldSpec .= " default " . Convert::raw2sql($field['Default']);
 				else
-					$fieldSpec .= " default '" . addslashes($field['Default']) . "'";
+					$fieldSpec .= " default '" . Convert::raw2sql($field['Default']) . "'";
 			}
 			if($field['Extra']) $fieldSpec .= " $field[Extra]";
 			
@@ -767,6 +767,11 @@ class MySQLDatabase extends SS_Database {
 	 	
 		// Always ensure that only pages with ShowInSearch = 1 can be searched
 		$extraFilters['SiteTree'] .= " AND ShowInSearch <> 0";
+		
+		// File.ShowInSearch was added later, keep the database driver backwards compatible 
+		// by checking for its existence first
+		$fields = $this->fieldList('File');
+		if(array_key_exists('ShowInSearch', $fields)) $extraFilters['File'] .= " AND ShowInSearch <> 0";
 
 		$limit = $start . ", " . (int) $pageLength;
 		
@@ -862,8 +867,7 @@ class MySQLDatabase extends SS_Database {
 	}
 	
 	/*
-	 * This will return text which has been escaped in a database-friendly manner
-	 * Using PHP's addslashes method won't work in MSSQL
+	 * This will return text which has been escaped in a database-friendly manner.
 	 */
 	function addslashes($value){
 		return mysql_real_escape_string($value, $this->dbConn);
