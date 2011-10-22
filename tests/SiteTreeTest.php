@@ -804,6 +804,10 @@ class SiteTreeTest extends SapphireTest {
 	}
 	
 	function testClassDropdown() {
+		if(version_compare(PHP_VERSION, '5.3.2', '<')){
+			// @link http://www.php.net/manual/en/reflectionmethod.setaccessible.php
+			$this->markTestSkipped('Need PHP 5.3.2 to run this test.');
+		}
 		$sitetree = new SiteTree();
 		$method = new ReflectionMethod($sitetree, 'getClassDropdown');
 		$method->setAccessible(true);
