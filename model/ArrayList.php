@@ -155,7 +155,7 @@ class ArrayList extends ViewableData implements SS_List {
 		return end($this->items);
 	}
 
-	public function map($keyfield, $titlefield) {
+	public function map($keyfield = 'ID', $titlefield = 'Title') {
 		$map = array();
 		foreach ($this->items as $item) {
 			$map[$this->extractValue($item, $keyfield)] = $this->extractValue($item, $titlefield);

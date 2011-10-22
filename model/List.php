@@ -67,7 +67,7 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 	 * @param  string $titlefield
 	 * @return array
 	 */
-	public function map($keyfield, $titlefield);
+	public function map($keyfield = 'ID', $titlefield = 'Title');
 
 	/**
 	 * Returns the first item in the list where the key field is equal to the
@@ -85,7 +85,7 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 	 * @param  string $field
 	 * @return array
 	 */
-	public function column($field);
+	public function column($colName = "ID");
 
 	/**
 	 * Returns TRUE if the list can be sorted by a field.
