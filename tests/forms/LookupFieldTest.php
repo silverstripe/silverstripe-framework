@@ -66,8 +66,8 @@ class LookupFieldTest extends SapphireTest {
 		$member2 = $this->objFromFixture('Member', 'member2');
 		$member3 = $this->objFromFixture('Member', 'member3');
 		
-		$source = new SQLMap(singleton('Member')->buildSQL());
-		$f = new LookupField('test', 'test', $source);
+		$source = DataObject::get('Member');
+		$f = new LookupField('test', 'test', $source->map());
 		$f->setValue(array($member1->ID, $member2->ID));
 		$this->assertEquals(
 			sprintf(
