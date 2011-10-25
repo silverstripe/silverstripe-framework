@@ -356,7 +356,7 @@ class Image extends File {
 		foreach($methodNames as $methodName) {
 			if(substr($methodName, 0, 8) == 'generate') {
 				$format = substr($methodName, 8);
-				$pattern = '/^' . $format . '[^\-]*\-' . $this->Name . '$/i';
+				$pattern = '/^' . $format . '[^\-]*\-' . preg_quote($this->Name, '/') . '$/i';
 				foreach($cachedFiles as $cfile) {
 					if(preg_match($pattern, $cfile)) {
 						if(Director::fileExists($cacheDir . $cfile)) {
