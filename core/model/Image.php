@@ -335,7 +335,7 @@ class Image extends File {
 		if(!$this->Filename) return 0;
 		
 		$numDeleted = 0;
-		$methodNames = $this->allMethodNames();
+		$methodNames = $this->allMethodNames(true);
 		$cachedFiles = array();
 		
 		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . '/';
