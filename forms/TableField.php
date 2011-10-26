@@ -116,7 +116,7 @@ class TableField extends TableListField {
 	/** 
 	 * Displays the headings on the template
 	 * 
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	function Headings() {
 		$i=0;
@@ -147,7 +147,7 @@ class TableField extends TableListField {
 	 * it generates the rows from array data instead.
 	 * Used in the formfield template to iterate over each row.
 	 * 
-	 * @return DataObjectSet Collection of {@link TableField_Item}
+	 * @return SS_List Collection of {@link TableField_Item}
 	 */
 	function Items() {
 		// holds TableField_Item instances
@@ -341,7 +341,7 @@ class TableField extends TableListField {
 	 * Called on save, it creates the appropriate objects and writes them
 	 * to the database.
 	 * 
-	 * @param DataObjectSet $dataObjects
+	 * @param SS_List $dataObjects
 	 * @param boolean $existingValues If set to TRUE, it tries to find existing objects
 	 *  based on the database IDs passed as array keys in $dataObjects parameter.
 	 *  If set to FALSE, it will always create new object (default: TRUE)
