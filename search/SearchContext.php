@@ -6,7 +6,7 @@
 * it just receives a set of search parameters and an object class it acts on.
 * 
 * The default output of a SearchContext is either a {@link SQLQuery} object
-* for further refinement, or a {@link DataObjectSet} that can be used to display
+* for further refinement, or a {@link SS_List} that can be used to display
 * search results, e.g. in a {@link TableListField} instance.
 * 
 * In case you need multiple contexts, consider namespacing your request parameters
@@ -159,7 +159,7 @@ class SearchContext extends Object {
 	 * @param array $searchParams
 	 * @param string|array $sort
 	 * @param string|array $limit
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function getResults($searchParams, $sort = false, $limit = false) {
 		$searchParams = array_filter($searchParams, array($this,'clearEmptySearchFields'));

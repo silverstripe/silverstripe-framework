@@ -217,7 +217,7 @@ class RestfulServer extends Controller {
 		$responseFormatter = $this->getResponseDataFormatter();
 		if(!$responseFormatter) return $this->unsupportedMediaType();
 		
-		// $obj can be either a DataObject or a DataObjectSet,
+		// $obj can be either a DataObject or a SS_List,
 		// depending on the request
 		if($id) {
 			// Format: /api/v1/<MyClass>/<ID>
@@ -262,7 +262,7 @@ class RestfulServer extends Controller {
 	 *
 	 * @param string $className
 	 * @param array $params
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	protected function getSearchQuery($className, $params = null, $sort = null, $limit = null, $existingQuery = null) {
 		if(singleton($className)->hasMethod('getRestfulSearchContext')) {
@@ -592,7 +592,7 @@ class RestfulServer extends Controller {
 }
 
 /**
- * Restful server handler for a DataObjectSet
+ * Restful server handler for a SS_List
  * 
  * @package sapphire
  * @subpackage api
@@ -630,7 +630,7 @@ class RestfulServer_Item {
 		$funcName = $request('Relation');
 		$relation = $this->item->$funcName();
 
-		if($relation instanceof DataObjectSet) return new RestfulServer_List($relation);
+		if($relation instanceof SS_List) return new RestfulServer_List($relation);
 		else return new RestfulServer_Item($relation);
 	}
 }

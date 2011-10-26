@@ -374,7 +374,7 @@ class Permission extends DataObject {
 	 * Returns all members for a specific permission.
 	 * 
 	 * @param $code String|array Either a single permission code, or a list of permission codes
-	 * @return DataObjectSet Returns a set of member that have the specified
+	 * @return SS_List Returns a set of member that have the specified
 	 *                       permission.
 	 */
 	public static function get_members_by_permission($code) {
@@ -405,7 +405,7 @@ class Permission extends DataObject {
 	/**
 	 * Return all of the groups that have one of the given permission codes
 	 * @param $codes array|string Either a single permission code, or an array of permission codes
-	 * @return DataObjectSet The matching group objects
+	 * @return SS_List The matching group objects
 	 */
 	static function get_groups_by_permission($codes) {
 		if(!is_array($codes)) $codes = array($codes);

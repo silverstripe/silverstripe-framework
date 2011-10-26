@@ -394,7 +394,7 @@ class Hierarchy extends DataExtension {
 	
 	/**
 	 * Get the children for this DataObject.
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function Children() {
 		if(!(isset($this->_cache_children) && $this->_cache_children)) { 
@@ -413,7 +413,7 @@ class Hierarchy extends DataExtension {
 
 	/**
 	 * Return all children, including those 'not in menus'.
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function AllChildren() {
 		return $this->owner->stageChildren(true);
@@ -425,7 +425,7 @@ class Hierarchy extends DataExtension {
 	 * Added children will be marked as "AddedToStage"
 	 * Modified children will be marked as "ModifiedOnStage"
 	 * Everything else has "SameOnStage" set, as an indicator that this information has been looked up.
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function AllChildrenIncludingDeleted($context = null) {
 		return $this->doAllChildrenIncludingDeleted($context);
@@ -435,7 +435,7 @@ class Hierarchy extends DataExtension {
 	 * @see AllChildrenIncludingDeleted
 	 *
 	 * @param unknown_type $context
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function doAllChildrenIncludingDeleted($context = null) {
 		if(!$this->owner) user_error('Hierarchy::doAllChildrenIncludingDeleted() called without $this->owner');
@@ -515,7 +515,7 @@ class Hierarchy extends DataExtension {
 	 * 
 	 * @param showAll Inlcude all of the elements, even those not shown in the menus.
 	 *   (only applicable when extension is applied to {@link SiteTree}).
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function stageChildren($showAll = false) {
 		if($this->owner->db('ShowInMenus')) {
@@ -540,7 +540,7 @@ class Hierarchy extends DataExtension {
 	 * @param boolean $showAll Include all of the elements, even those not shown in the menus.
 	 *   (only applicable when extension is applied to {@link SiteTree}).
 	 * @param boolean $onlyDeletedFromStage Only return items that have been deleted from stage
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function liveChildren($showAll = false, $onlyDeletedFromStage = false) {
 		if(!$this->owner->hasExtension('Versioned')) throw new Exception('Hierarchy->liveChildren() only works with Versioned extension applied');
@@ -587,7 +587,7 @@ class Hierarchy extends DataExtension {
 	/**
 	 * Return all the parents of this class in a set ordered from the lowest to highest parent.
 	 *
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function getAncestors() {
 		$ancestors = new ArrayList();

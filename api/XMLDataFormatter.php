@@ -127,9 +127,9 @@ class XMLDataFormatter extends DataFormatter {
 	}
 
 	/**
-	 * Generate an XML representation of the given {@link DataObjectSet}.
+	 * Generate an XML representation of the given {@link SS_List}.
 	 * 
-	 * @param DataObjectSet $set
+	 * @param SS_List $set
 	 * @return String XML
 	 */
 	public function convertDataObjectSet(SS_List $set, $fields = null) {

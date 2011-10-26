@@ -20,7 +20,7 @@ class RSSFeed extends ViewableData {
 	/**
 	 * Holds the feed entries
 	 *
-	 * @var DataObjectSet
+	 * @var SS_List
 	 */
 	protected $entries;
 
@@ -83,7 +83,7 @@ class RSSFeed extends ViewableData {
 	/**
 	 * Constructor
 	 *
-	 * @param DataObjectSet $entries RSS feed entries
+	 * @param SS_List $entries RSS feed entries
 	 * @param string $link Link to the feed
 	 * @param string $title Title of the feed
 	 * @param string $description Description of the field
@@ -134,7 +134,7 @@ class RSSFeed extends ViewableData {
 	/**
 	 * Get the RSS feed entries
 	 *
-	 * @return DataObjectSet Returns the {@link RSSFeed_Entry} objects.
+	 * @return SS_List Returns the {@link RSSFeed_Entry} objects.
 	 */
 	function Entries() {
 		$output = new ArrayList();

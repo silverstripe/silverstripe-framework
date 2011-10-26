@@ -57,7 +57,7 @@ class SQLMap extends Object implements IteratorAggregate {
 	
 	/**
 	 * Get the items in this class.
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function getItems() {
 		$this->genItems();

@@ -25,7 +25,7 @@
  *   * If the field name matches a database field, a comma-separated list of values will be saved to that field.  The keys can be text or numbers.
  * 
  * @todo Document the different source data that can be used
- * with this form field - e.g ComponentSet, DataObjectSet,
+ * with this form field - e.g ComponentSet, ArrayList,
  * array. Is it also appropriate to accept so many different
  * types of data when just using an array would be appropriate?
  * 
@@ -46,7 +46,7 @@ class CheckboxSetField extends OptionsetField {
 	
 	/**
 	 * @todo Explain different source data that can be used with this field,
-	 * e.g. SQLMap, DataObjectSet or an array.
+	 * e.g. SQLMap, ArrayList or an array.
 	 * 
 	 * @todo Should use CheckboxField FieldHolder rather than constructing own markup.
 	 */
@@ -76,7 +76,7 @@ class CheckboxSetField extends OptionsetField {
 				$items = $values;
 			} else {
 				// Source and values are DataObject sets.
-				if($values && is_a($values, 'DataObjectSet')) {
+				if($values && is_a($values, 'SS_List')) {
 					foreach($values as $object) {
 						if(is_a($object, 'DataObject')) {
 							$items[] = $object->ID;
@@ -88,8 +88,8 @@ class CheckboxSetField extends OptionsetField {
 				}
 			}
 		} else {
-			// Sometimes we pass a singluar default value thats ! an array && !DataObjectSet
-			if(is_a($values, 'DataObjectSet') || is_array($values)) {
+			// Sometimes we pass a singluar default value thats ! an array && !SS_List
+			if(is_a($values, 'SS_List') || is_array($values)) {
 				$items = $values;
 			} else {
 				$items = explode(',', $values);
@@ -247,7 +247,7 @@ class CheckboxSetField extends OptionsetField {
 		
 		if($items) {
 			// Items is a DO Set
-			if(is_a($items, 'DataObjectSet')) {
+			if(is_a($items, 'SS_List')) {
 				foreach($items as $item) {
 					$data[] = $item->Title;
 				}
@@ -264,7 +264,7 @@ class CheckboxSetField extends OptionsetField {
 						$data[] = $item['Title'];
 					} elseif(is_array($this->source) && !empty($this->source[$item])) {
 						$data[] = $this->source[$item];
-					} elseif(is_a($this->source, 'DataObjectSet')) {
+					} elseif(is_a($this->source, 'SS_List')) {
 						$data[] = $sourceTitles[$item];
 					} else {
 						$data[] = $item;

@@ -245,7 +245,7 @@ JS;
 	}
 
 	/**
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	function Items() {
 		$sourceItems = $this->sourceItems();
@@ -709,7 +709,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	/**
      * Method handles pagination in asset popup.
      *
-     * @return Object DataObjectSet
+     * @return Object SS_List
      */
 	
 	function Pagination() {
