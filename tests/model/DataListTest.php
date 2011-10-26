@@ -37,10 +37,81 @@ class DataListTest extends SapphireTest {
 		// We can also restrict the output to a range
 		$this->assertEquals(array('Joe', 'Phil'), $list->getRange(1,2)->column('Name'));
 	}
+	
+	function testDataClass() {
+		$list = DataList::create('DataObjectTest_TeamComment');
+		$this->assertEquals('DataObjectTest_TeamComment',$list->dataClass());
+	}
+	
+	function testClone() {
+		$list = DataList::create('DataObjectTest_TeamComment');
+		$this->assertEquals($list, clone($list));
+	}
+	
+	function testSql() {
+		$list = DataList::create('DataObjectTest_TeamComment');
+		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created", "DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL THEN "DataObjectTest_TeamComment"."ClassName" ELSE \'DataObjectTest_TeamComment\' END AS "RecordClassName" FROM "DataObjectTest_TeamComment"';
+		$this->assertEquals($expected, $list->sql());
+	}
+	
+	function testInnerJoin() {
+		$list = DataList::create('DataObjectTest_TeamComment');
+		$list->innerJoin('DataObjectTest_Team', '"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"', 'Team');
+		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created", "DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL THEN "DataObjectTest_TeamComment"."ClassName" ELSE \'DataObjectTest_TeamComment\' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" INNER JOIN "DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"';
+		$this->assertEquals($expected, $list->sql());
+	}
+	
+	function testLeftJoin() {
+		$list = DataList::create('DataObjectTest_TeamComment');
+		$list->leftJoin('DataObjectTest_Team', '"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"', 'Team');
+		$expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", "DataObjectTest_TeamComment"."Created", "DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", "DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL THEN "DataObjectTest_TeamComment"."ClassName" ELSE \'DataObjectTest_TeamComment\' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" LEFT JOIN "DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"';
+		$this->assertEquals($expected, $list->sql());
+	}
+	
+	function testToNestedArray() {
+		$list = DataList::create('DataObjectTest_TeamComment');
+		$nestedArray = $list->toNestedArray();
+		$expected = array(
+			0=>
+			array(
+				'ClassName'=>'DataObjectTest_TeamComment',
+				'Name'=>'Joe',
+				'Comment'=>'This is a team comment by Joe',
+				'TeamID'=>'1',
+			),
+			1=>
+			array(
+				'ClassName'=>'DataObjectTest_TeamComment',
+				'Name'=>'Bob',
+				'Comment'=>'This is a team comment by Bob',
+				'TeamID'=>'1',
+			),
+			2=>
+			array(
+				'ClassName'=>'DataObjectTest_TeamComment',
+				'Name'=>'Phil',
+				'Comment'=>'Phil is a unique guy, and comments on team2',
+				'TeamID'=>'2',
+			),
+		);
+		$this->assertEquals(3, count($nestedArray));
+		$this->assertEquals($expected[0]['Name'], $nestedArray[0]['Name']);
+		$this->assertEquals($expected[1]['Comment'], $nestedArray[1]['Comment']);
+		$this->assertEquals($expected[2]['TeamID'], $nestedArray[2]['TeamID']);
+	}
+	
+	function testMap() {
+		$map = DataList::create('DataObjectTest_TeamComment')->map();
+		$expected = array(1=>'Joe', 2=>'Bob', 3=>'Phil');
+		$this->assertEquals($expected, $map);
+		$otherMap = DataList::create('DataObjectTest_TeamComment')->map('Name', 'TeamID');
+		$otherExpected = array ('Joe' => '1','Bob' => '1','Phil' => '2');
+		$this->assertEquals($otherExpected, $otherMap);
+	}
 
 	function testFilter() {
 		// coming soon!
-	}
+		}
 		
 	function testWhere() {
 		// We can use raw SQL queries with where.  This is only recommended for advanced uses;
