@@ -15,10 +15,14 @@
 class WebserverRoutingTest extends SapphireTest {
 
 	function testCanAccessWebserverThroughCurl() {
-		if(!function_exists('curl_init')) return;
+		if(!function_exists('curl_init')) {
+			return $this->markTestSkipped('Environment doesn\'t have the curl module installed');
+		}
+		if(php_sapi_name()=='cli') {
+			return $this->markTestSkipped('Testing website routing doesn\t make sense in cli environment');
+		}
 		
 		$url = Director::absoluteBaseURL() . 'Security/ping';
-		
 		$ch = curl_init();
 		curl_setopt ($ch, CURLOPT_URL,$url );
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
