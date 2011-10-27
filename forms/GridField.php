@@ -1,7 +1,25 @@
 <?php
 /**
  * Displays a {@link SS_List} in a grid format.
- *
+ * 
+ * GridFIeld is a field that takes an SS_List and displays it in an table with rows 
+ * and columns. It reminds of the old TableFields but works with SS_List types 
+ * and only loads the necessary rows from the list.
+ * 
+ * The minimum configuration is to pass in name and title of the field and a 
+ * SS_List.
+ * 
+ * <code>
+ * $gridField = new GridField('ExampleGrid', 'Example grid', new DataList('Page'));
+ * </code>
+ * 
+ * If you want to modify the output of the grid you can attach a customised 
+ * DataGridPresenter that are the actual Renderer of the data. Sapphire provides
+ * a default one if you chooses not to.
+ * 
+ * @see GridFieldPresenter
+ * @see SS_List
+ * 
  * @package sapphire
  * @subpackage forms
  */
@@ -10,7 +28,7 @@ class GridField extends FormField {
 	/**
 	 * @var SS_List
 	 */
-	protected $dataSource = null;
+	protected $list = null;
 	
 	/**
 	 * @var string
@@ -26,26 +44,43 @@ class GridField extends FormField {
 	 * @var string - the classname of the DataObject that the GridField will display
 	 */
 	protected $modelClassName = '';
-
+	
+	/**
+	 * Url handlers
+	 *
+	 * @var array
+	 */
+	public static $url_handlers = array(
+		'$Action' => '$Action',
+	);
+	
 	/**
 	 * Creates a new GridField field
 	 *
 	 * @param string $name
 	 * @param string $title
-	 * @param SS_List $datasource
+	 * @param SS_List $dataList
 	 * @param Form $form 
-	 * @param string $dataPresenterClassName
+	 * @param string|GridFieldPresenter $dataPresenterClassName - can either pass in a string or an instance of a GridFieldPresenter
 	 */
-	public function __construct($name, $title = null, SS_List $datasource = null, Form $form = null, $dataPresenterClassName = 'GridFieldPresenter') {
+	public function __construct($name, $title = null, SS_List $dataList = null, Form $form = null, $dataPresenterClassName = 'GridFieldPresenter') {
 		parent::__construct($name, $title, null, $form);
 		
-		if ($datasource) {
-			$this->setDatasource($datasource);
+		if ($dataList) {
+			$this->setList($dataList);
 		}
 		
 		$this->setPresenter($dataPresenterClassName);
 	}
 	
+	/**
+	 *
+	 * @return string - HTML
+	 */
+	public function index() {
+		return $this->FieldHolder();
+	}
+
 	/**
 	 * @param string $modelClassName 
 	 */
@@ -63,8 +98,8 @@ class GridField extends FormField {
 		if ($this->modelClassName) {
 			return $this->modelClassName;
 		}
-		if ($this->datasource->dataClass) {
-			return $this->datasource->dataClass;
+		if ($this->list->dataClass) {
+			return $this->list->dataClass;
 		}
 		
 		throw new Exception(get_class($this).' does not have a modelClassName');
@@ -113,11 +148,10 @@ class GridField extends FormField {
 	/**
 	 * Set the datasource
 	 *
-	 * @param SS_List $datasource
+	 * @param SS_List $list
 	 */
-	public function setDataSource(SS_List $datasource) {
-		$this->datasource = $datasource;
-		
+	public function setList(SS_List $list) {
+		$this->list = $list;
 		return $this;
 	}
 
@@ -126,8 +160,8 @@ class GridField extends FormField {
 	 *
 	 * @return SS_List
 	 */
-	public function getDataSource() {
-		return $this->datasource;
+	public function getList() {
+		return $this->list;
 	}
 	
 	/**
