@@ -319,7 +319,7 @@ class SSViewer {
 			}
 		}
 		
-		if(substr((string) $templateList,-3) == '.ss') {
+		if(!is_array($templateList) && substr((string) $templateList,-3) == '.ss') {
 			$this->chosenTemplates['main'] = $templateList;
 		} else {
 			$this->chosenTemplates = SS_TemplateLoader::instance()->findTemplates(
