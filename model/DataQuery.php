@@ -298,13 +298,9 @@ class DataQuery {
 	 * Set the limit of this query
 	 */
 	function limit($limit) {
-		if($limit) {
-			$clone = $this;
-			$clone->query->limit($limit);
-			return $clone;
-		} else {
-			return $this;
-		}
+		$clone = $this;
+		$clone->query->limit($limit);
+		return $clone;
 	}
 
 	/**

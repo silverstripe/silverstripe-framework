@@ -1,7 +1,46 @@
 <?php
-
 /**
+ * The GridFieldPresenter is responsible for rendering and attach user behaviour
+ * to a GridField.
+ * 
+ * You can create a GridFieldPresenter and inject that into a GridField to 
+ * customise look and feel of GridField.
+ * 
+ * It also have the possibility to let extensions to modify the look and feel of
+ * the GridField if you dont want to make a fully blown GridFieldPresenter.
+ * 
+ * In the following example we configure the GridField to sort the DataList in 
+ * the GridField by Title. This will override the sorting on the DataList.
+ * 
+ * <code>
+ * $presenter = new GridFieldPresenter();
+ * $presenter->sort('Title', 'desc');
+ * $gridField = new GridField('ExampleGrid', 'Example grid', new DataList('Page'),null, $presenter);
+ * </code>
+ * 
+ * Another example is to change the template for the rendering 
+ *
+ * <code>
+ * $presenter = new GridFieldPresenter();
+ * $presenter->setTemplate('MyNiftyGridTemplate');
+ * $gridField = new GridField('ExampleGrid', 'Example grid', new DataList('Page'),null, $presenter);
+ * </code>
+ * 
+ * There is also a possibility to add extensions to the GridPresenter. An 
+ * example is the DataGridPagination that decorates the GridField with 
+ * pagination. Look in the GridFieldPresenter::Items() and the filterList extend
+ * and GridFieldPresenter::Footers()
+ * 
+ * <code>
+ * GridFieldPresenter::add_extension('GridFieldPaginator_Extension');
+ * $presenter = new GridFieldPresenter();
+ * // This is actually calling GridFieldPaginator_Extension::paginationLimit()
+ * $presenter->paginationLimit(3);
+ * $gridField = new GridField('ExampleGrid', 'Example grid', new DataList('Page'),null, $presenter);
+ * </code>
+ * 
  * @see GridField
+ * @see GridFieldPaginator
  * @package sapphire
  */
 class GridFieldPresenter extends ViewableData {
@@ -46,8 +85,17 @@ class GridFieldPresenter extends ViewableData {
 	/**
 	 * @param string $template 
 	 */
-	function setTemplate($template){
+	public function setTemplate($template){
 		$this->template = $template;
+	}
+	
+	/**
+	 * The name of the Field
+	 *
+	 * @return string
+	 */
+	public function Name() {
+		return $this->getGridField()->Name();
 	}
 	
 	/**
@@ -62,6 +110,14 @@ class GridFieldPresenter extends ViewableData {
 	 */
 	public function getGridField(){
 		return $this->GridField;
+	}
+	
+	/**
+	 *
+	 * @param type $extension 
+	 */
+	public static function add_extension($extension) {
+		parent::add_extension(__CLASS__, $extension);
 	}
 	
 	/**
@@ -82,27 +138,29 @@ class GridFieldPresenter extends ViewableData {
 	 * @return ArrayList
 	 */
 	public function Items() {
-		$items = new ArrayList();
+	$items = new ArrayList();
 		
 		if($this->sorting) {
-			$this->setSorting($this->sorting);
+			$this->setSortingOnList($this->sorting);
 		}
+		//empty for now
+		$list = $this->getGridField()->getList();
 		
-		if($sources = $this->getGridField()->getDataSource()) {
+		$parameters = new stdClass();
+		$parameters->Controller = Controller::curr();
+		$parameters->Request = Controller::curr()->getRequest();
+		
+		$this->extend('filterList', $list, $parameters);
+	
+		if($list) {
+			$numberOfRows = $list->count();
 			$counter = 0;
-			
-			foreach($sources as $source) {
-				if(!$source) {
-					continue;
-				}
-				
-				$itemPresenter = new $this->itemClass($source, $this);
-				$itemPresenter->iteratorProperties($counter++, $sources->count());
-				
+			foreach($list as $item) {
+				$itemPresenter = new $this->itemClass($item, $this);
+				$itemPresenter->iteratorProperties($counter++, $numberOfRows);
 				$items->push($itemPresenter);
 			}
 		}
-		
 		return $items;
 	}
 	
@@ -122,22 +180,32 @@ class GridFieldPresenter extends ViewableData {
 	 * @throws Exception
 	 */
 	public function Headers() {
-		if(!$this->getDatasource()) {
+		if(!$this->getList()) {
 			throw new Exception(sprintf(
 				'%s needs an data source to be able to render the form', get_class($this->getGridField())
 			));
 		}
-		
-		$summaryFields = singleton($this->getModelClass())->summaryFields();
-		
-		return $this->summaryFieldsToList($summaryFields);
+		return $this->summaryFieldsToList($this->FieldList());
+	}
+	
+	/**
+	 *
+	 * @return ArrayList 
+	 */
+	public function Footers() {
+		$arrayList = new ArrayList();
+		$footers = $this->extend('Footer');
+		foreach($footers as $footer) {
+			$arrayList->push($footer);
+		}
+		return $arrayList;
 	}
 	
 	/**
 	 * @return SS_List
 	 */
-	protected function getDataSource() {
-		return $this->getGridField()->getDatasource();
+	public function getList() {
+		return $this->getGridField()->getList();
 	}
 	
 	/**
@@ -150,12 +218,12 @@ class GridFieldPresenter extends ViewableData {
 	/**
 	 * Add the combined sorting on the datasource
 	 * 
-	 * If the sorting isn't set in one go on the datasource, only the latest sort
-	 * will be executed.s
+	 * If the sorting isn't set in the datasource, only the latest sort
+	 * will be executed.
 	 *
 	 * @param array $sortColumns 
 	 */
-	protected function setSorting(array $sortColumns) {
+	protected function setSortingOnList(array $sortColumns) {
 		$resultColumns = array();
 		
 		foreach($sortColumns as $column => $sortOrder) {
@@ -163,7 +231,7 @@ class GridFieldPresenter extends ViewableData {
 		}
 		
 		$sort = implode(', ', $resultColumns);
-		$this->getDataSource()->sort($sort);
+		$this->getList()->sort($sort);
 	}
 	
 	/**

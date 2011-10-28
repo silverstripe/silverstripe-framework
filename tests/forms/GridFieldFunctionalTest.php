@@ -38,7 +38,7 @@ class GridFieldFunctionalTest_Controller extends Controller {
 	public function index() {
 		$grid = new GridField('testgrid');
 		$dataSource = DataList::create("GridFieldTest_Person")->sort("Name");
-		$grid->setDataSource($dataSource);
+		$grid->setList($dataSource);
 		$form = new Form($this, 'gridform', new FieldList($grid), new FieldList(new FormAction('rerender', 'rerender')));
 		return array('Form'=>$form);
 	}

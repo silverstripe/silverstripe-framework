@@ -27,8 +27,8 @@ class GridFieldTest extends SapphireTest {
 	public function testSetDataSource() {
 		$grid = new GridField('Testgrid');
 		$source = new ArrayList();
-		$grid->setDatasource($source);
-		$this->assertEquals($source, $grid->getDatasource());
+		$grid->setList($source);
+		$this->assertEquals($source, $grid->getList());
 	}
 	
 	function testSetEmptyDataPresenter() {
@@ -76,7 +76,7 @@ class GridFieldTest extends SapphireTest {
 	 */
 	function testFieldHolder() {
 		$grid = new GridField('Testgrid');
-		$grid->setDatasource(new DataList('GridFieldTest_Person'));
+		$grid->setList(new DataList('GridFieldTest_Person'));
 		$this->assertNotNull($grid->FieldHolder());
 	}
 }
