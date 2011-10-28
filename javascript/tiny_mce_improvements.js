@@ -450,6 +450,7 @@ ImageForm.prototype = {
 		this.elements.ImageTitle.onkeyup =  function() { __form.update_params('ImageTitle'); };
 		this.elements.CaptionText.onkeyup =  function() { __form.update_params('CaptionText'); };
 		this.elements.AltText.onchange = function() { __form.update_params('AltText'); };
+		this.elements.CSSClass.onchange = function() { __form.update_params('CSSClass'); };
 		this.elements.Width.onchange = function() { __form.update_params('Width'); };
 		this.elements.Height.onchange = function() { __form.update_params('Height'); };
 	},
@@ -507,6 +508,8 @@ ImageForm.prototype = {
 				imgElement.height = this.elements.Height.value;
 				imgElement.removeAttribute('width');
 				this.elements.Width.value = imgElement.width;
+			} else if(updatedFieldName == 'CSSClass') {
+				imgElement.className = this.elements.CSSClass.value;
 			}
 		} else if (this.selectedImageWidth && this.selectedImageHeight) {
 			// Proportionate updating of heights
@@ -527,12 +530,9 @@ ImageForm.prototype = {
 			var captionElement = imgElement.nextSibling;
 			if (captionElement && captionElement.tagName == 'P') {
 				this.elements.CaptionText.value = captionElement.innerText || captionElement.textContent;
-			} else {
-				this.elements.CaptionText.disabled = 'disabled';
 			}
 			this.elements.ImageTitle.value = imgElement.title;
 			this.elements.CSSClass.value = imgElement.className;
-			this.elements.CSSClass.disabled = 'disabled';
 			this.elements.Width.value = imgElement.style.width ? parseInt(imgElement.style.width) : imgElement.width;
 			this.elements.Height.value = imgElement.style.height ? parseInt(imgElement.style.height) : imgElement.height;
 		} else {
