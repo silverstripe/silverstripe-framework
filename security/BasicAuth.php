@@ -118,7 +118,7 @@ class BasicAuth {
 	 * @deprecated Use BasicAuth::protect_entire_site() instead.
 	 */
 	static function enable() {
-		user_error("BasicAuth::enable() is deprecated.  Use BasicAuth::protect_entire_site() instead.", E_USER_NOTICE);
+		Deprecation::notice('2.4', 'Use BasicAuth::protect_entire_site() instead.');
 		return self::protect_entire_site();
 	}
 
@@ -126,7 +126,7 @@ class BasicAuth {
 	 * @deprecated Use BasicAuth::protect_entire_site(false) instead.
 	 */
 	static function disable() {
-		user_error("BasicAuth::disable() is deprecated.  Use BasicAuth::protect_entire_site(false) instead.", E_USER_NOTICE);
+		Deprecation::notice('2.4', 'Use BasicAuth::protect_entire_site(false) instead.');
 		return self::protect_entire_site(false);
 	}
 

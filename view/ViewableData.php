@@ -715,7 +715,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @deprecated 3.0
 	 */
 	public function BaseHref() {
-		user_error("Please use AbsoluteBaseURL", E_USER_WARNING);
+		Deprecation::notice('3.0', 'Use AbsoluteBaseURL instead.');
 		
 		return $this->AbsoluteBaseURL();
 	}

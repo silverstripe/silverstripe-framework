@@ -318,6 +318,7 @@ function getTempFolder($base = null) {
  * @deprecated 3.0 Please use {@link SS_ClassManifest::getItemPath()}.
  */
 function getClassFile($className) {
+	Deprecation::notice('3.0', 'Use SS_ClassManifest::getItemPath() instead.');
 	return SS_ClassLoader::instance()->getManifest()->getItemPath($className);
 }
 

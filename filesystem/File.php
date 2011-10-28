@@ -173,6 +173,7 @@ class File extends DataObject {
 	 * @deprecated 3.0 Use getTreeTitle()
 	 */
 	function TreeTitle() {
+		Deprecation::notice('3.0', 'Use getTreeTitle() instead.');
 		return $this->getTreeTitle();
 	}
 
@@ -513,6 +514,7 @@ class File extends DataObject {
 	 * @deprecated 2.4
 	 */
 	function getLinkedURL() {
+		Deprecation::notice('2.4', 'Use getTreeTitle() instead.');
 		return "$this->Name";
 	}
 
@@ -689,6 +691,8 @@ class File extends DataObject {
 	 * @deprecated alternative_instance_get()
 	 */
 	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet", $having="") {
+		Deprecation::notice('2.5', 'Use alternative_instance_get() instead.');
+
 		$query = $this->extendedSQL($filter, $sort, $limit, $join, $having);
 		$baseTable = reset($query->from);
 

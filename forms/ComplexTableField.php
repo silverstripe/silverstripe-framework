@@ -444,10 +444,10 @@ JS;
 	}
 	
 	/**
-	 * @deprecated
+	 * @deprecated 3.0
 	 */
 	function setRelationAutoSetting($value) {
-		user_error("ComplexTableField::setRelationAutoSetting() is deprecated; manipulate the DataList instead", E_USER_WARNING);
+		Deprecation::notice('3.0', 'Manipulate the DataList instead.');
 	}
 	
 	/**

@@ -777,6 +777,7 @@ class Security extends Controller {
 	 *                      store the passwords in clear text.
 	 */
 	public static function encrypt_passwords($encrypt) {
+		Deprecation::notice('2.4', 'Use PasswordEncryptor_None instead.');
 		self::$encryptPasswords = (bool)$encrypt;
 	}
 
@@ -790,6 +791,7 @@ class Security extends Controller {
 	 * @return array Returns an array of strings containing all supported encryption algorithms.
 	 */
 	public static function get_encryption_algorithms() {
+		Deprecation::notice('2.4', 'Use PasswordEncryptor::get_encryptors() instead.');
 		return array_keys(PasswordEncryptor::get_encryptors());
 	}
 

@@ -56,6 +56,7 @@ class CompositeField extends FormField {
 	 * @deprecated 3.0 Please use {@link FieldList()}.
 	 */
 	public function FieldSet() {
+		Deprecation::notice('3.0', 'Use FieldList() instead.');
 		return $this->FieldList();
 	}
 

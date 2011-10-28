@@ -1215,6 +1215,7 @@ class Form extends RequestHandler {
 	 * @deprecated 2.5 Use SecurityToken::disable()
 	 */
 	static function disable_all_security_tokens() {
+		Deprecation::notice('2.5', 'Use SecurityToken::disable() instead.');
 		SecurityToken::disable();
 	}
 	
@@ -1227,6 +1228,7 @@ class Form extends RequestHandler {
 	 * @return bool
 	 */
 	function securityTokenEnabled() {
+		Deprecation::notice('2.5', 'Use Form->getSecurityToken()->isEnabled() instead.');
 		return $this->securityToken->isEnabled();
 	}
 	

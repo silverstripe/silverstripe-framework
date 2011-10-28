@@ -2457,10 +2457,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @deprecated 3.0.0 Use DataObject::get and DataList to do your querying
+	 * @deprecated 3.0 Use DataObject::get and DataList to do your querying
 	 */
 	public function buildSQL($filter = "", $sort = "", $limit = "", $join = "", $restrictClasses = true, $having = "") {
-		Deprecation::notice('3.0.0', 'Use DataObject::get and DataList to do your querying');
+		Deprecation::notice('3.0', 'Use DataObject::get and DataList to do your querying instead.');
 		return $this->extendedSQL($filter, $sort, $limit, $join, $having);
 
 	}
@@ -2471,9 +2471,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	private static $cache_buildSQL_query;
 
 	/**
-	 * @deprecated 3.0.0 Use DataObject::get and DataList to do your querying
+	 * @deprecated 3.0 Use DataObject::get and DataList to do your querying
 	 */
 	public function extendedSQL($filter = "", $sort = "", $limit = "", $join = ""){
+		Deprecation::notice('3.0', 'Use DataObject::get and DataList to do your querying instead.');
 		$dataList = DataObject::get($this->class, $filter, $sort, $join, $limit);
 		return $dataList->dataQuery()->query();
 	}
@@ -2501,10 +2502,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
-	 * @deprecated 3.0.0 Use DataObject::get and DataList to do your querying
+	 * @deprecated 3.0 Use DataObject::get and DataList to do your querying
 	 */
 	public function Aggregate($class = null) {
-		Deprecation::notice('3.0.0', 'Use DataObject::get and DataList to do your querying');
+		Deprecation::notice('3.0', 'Use DataObject::get and DataList to do your querying instead.');
 
 	    if($class) {
 			$list = new DataList($class);
@@ -2518,10 +2519,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @deprecated 3.0.0 Use DataObject::get and DataList to do your querying
+	 * @deprecated 3.0 Use DataObject::get and DataList to do your querying
 	 */
 	public function RelationshipAggregate($relationship) {
-		Deprecation::notice('3.0.0', 'Use DataObject::get and DataList to do your querying');
+		Deprecation::notice('3.0', 'Use DataObject::get and DataList to do your querying instead.');
 
 	    return $this->$relationship();
 	}
@@ -2530,7 +2531,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * The internal function that actually performs the querying for get().
 	 * DataObject::get("Table","filter") is the same as singleton("Table")->instance_get("filter")
 	 *
-	 * @deprecated 3.0.0 Use DataObject::get and DataList to do your querying
+	 * @deprecated 3.0 Use DataObject::get and DataList to do your querying
 	 *
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.  If omitted, self::$default_sort will be used.
@@ -2541,14 +2542,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
 	 */
 	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet") {
-		Deprecation::notice('3.0.0', 'Use DataObject::get and DataList to do your querying');
+		Deprecation::notice('3.0', 'Use DataObject::get and DataList to do your querying instead.');
 		return self::get($this->class, $filter, $sort, $join, $limit, $containerClass);
 	}
 
 	/**
 	 * Take a database {@link SS_Query} and instanciate an object for each record.
 	 * 
-	 * @deprecated 3.0.0 Replaced by DataList
+	 * @deprecated 3.0 Replaced by DataList
 	 *
 	 * @param SS_Query|array $records The database records, a {@link SS_Query} object or an array of maps.
 	 * @param string $containerClass The class to place all of the objects into.
@@ -2556,7 +2557,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return mixed The new objects in an object of type $containerClass
 	 */
 	function buildDataObjectSet($records, $containerClass = "DataObjectSet", $query = null, $baseClass = null) {
-		Deprecation::notice('3.0.0', 'Replaced by DataList');
+		Deprecation::notice('3.0', 'Use DataList instead.');
 
 		foreach($records as $record) {
 			if(empty($record['RecordClassName'])) {
@@ -2673,7 +2674,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Does the hard work for get_one()
 	 *
-	 * @deprecated 3.0.0 Use DataObject::get_one() instead
+	 * @deprecated 3.0 Use DataObject::get_one() instead
 	 * 
 	 * @uses DataExtension->augmentSQL()
 	 *
@@ -2682,7 +2683,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DataObject The first item matching the query
 	 */
 	public function instance_get_one($filter, $orderby = null) {
-		Deprecation::notice('3.0.0', 'Use DataObject::get_one() instead');
+		Deprecation::notice('3.0', 'Use DataObject::get_one() instead.');
 		return DataObject::get_one($this->class, $filter, true, $orderby);
 	}
 
@@ -2825,20 +2826,20 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
-	 * @deprecated 3.0.0 Use DataObject::database_fields() instead
+	 * @deprecated 3.0 Use DataObject::database_fields() instead
 	 * @see DataObject::database_fields()
 	 */
 	public function databaseFields() {
-		Deprecation::notice('3.0.0', 'Use DataObject::database_fields() instead');
+		Deprecation::notice('3.0', 'Use DataObject::database_fields() instead.');
 		return self::database_fields($this->class);
 	}
 	
 	/**
-	 * @deprecated 3.0.0 Use DataObject::custom_database_fields() instead
+	 * @deprecated 3.0 Use DataObject::custom_database_fields() instead
 	 * @see DataObject::custom_database_fields()
 	 */
 	public function customDatabaseFields() {
-		Deprecation::notice('3.0.0', 'Use DataObject::custom_database_fields() instead');
+		Deprecation::notice('3.0', 'Use DataObject::custom_database_fields() instead.');
 		return self::custom_database_fields($this->class);
 	}
 	

@@ -367,6 +367,7 @@ class DataQuery {
 	 * @deprecated Use innerJoin() or leftJoin() instead.
 	 */
 	function join($join) {
+		Deprecation::notice('3.0', 'Use innerJoin() or leftJoin() instead.');
 		if($join) {
 			$clone = $this;
 			$clone->query->from[] = $join;

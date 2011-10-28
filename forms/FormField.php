@@ -127,6 +127,7 @@ class FormField extends RequestHandler {
 	 * @deprecated 3.0 Use {@link getName()}.
 	 */
 	public function Name() {
+		Deprecation::notice('3.0', 'Use getName() instead.');
 		return $this->getName();
 	}
 

@@ -19,6 +19,11 @@
 class Currency extends Decimal {
 	protected static $currencySymbol = '$';
 	
+	function __construct($name, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0) {
+		Deprecation::notice('2.5', 'Use Money class instead.');
+		parent::__construct($name, $wholeSize, $decimalSize, $defaultValue);
+	}
+	
 	/**
 	 * Returns the number as a currency, eg “$1,000.00”.
 	 */

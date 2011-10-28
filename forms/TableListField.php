@@ -473,6 +473,7 @@ JS
 	 * @deprecated Use getDataList() instead.
 	 */
 	function getQuery() {
+		Deprecation::notice('3.0', 'Use getDataList() instead.');
 	    $list = $this->getDataList();
 	    if(method_exists($list,'dataQuery')) {
 		    return $this->getDataList()->dataQuery()->query();
@@ -483,6 +484,7 @@ JS
 	 * @deprecated Use getCsvDataList() instead.
 	 */
 	function getCsvQuery() {
+		Deprecation::notice('3.0', 'Use getCsvDataList() instead.');
 	    $list = $this->getCsvDataList();
 	    if(method_exists($list,'dataQuery')) {
             return $list->dataQuery()->query();
@@ -745,7 +747,7 @@ JS
 	 * @deprecated Put the query string onto your form's link instead :-)
 	 */
 	function setExtraLinkParams($params){
-		user_error("TableListField::setExtraLinkParams() deprecated - put the query string onto your form's FormAction instead; it will be handed down to all field with special handlers", E_USER_NOTICE);
+		Deprecation::notice('2.4', 'Put the query string onto your FormAction instead().');
 		$this->extraLinkParams = $params;
 	}
 	
@@ -1086,6 +1088,7 @@ JS
 	 * @deprecated Please use the standard URL through Link() which gives you the FieldHolder as an HTML fragment.
 	 */
 	function ajax_refresh() {
+		Deprecation::notice('2.4', 'Please use the standard URL through Link() which gives you the FieldHolder as an HTML fragment instead.');
 		// compute sourceItems here instead of Items() to ensure that
 		// pagination and filters are respected on template accessors
 		//$this->sourceItems();

@@ -792,6 +792,7 @@ class Member extends DataObject {
 	 * @return Returns TRUE if this user is an administrator.
 	 */
 	function isAdmin() {
+		Deprecation::notice('2.4', 'Use Permission::check(\'ADMIN\') instead.');
 		return Permission::checkMember($this, 'ADMIN');
 	}
 	
@@ -1431,7 +1432,7 @@ class Member_GroupSet extends ManyManyList {
 	 * @deprecated Use setByIdList() and/or a CheckboxSetField
 	 */
 	function setByCheckboxes(array $checkboxes, array $data) {
-		user_error("Member_GroupSet is deprecated and no longer works", E_USER_WARNING);
+		Deprecation::notice('2.4', 'Use setByIdList() and/or a CheckboxSetField instead.');
 	}
 
 
@@ -1504,7 +1505,7 @@ class Member_GroupSet extends ManyManyList {
 	 * @deprecated Use DataList::addMany
 	 */
 	function addManyByGroupID($ids){
-		user_error('addManyByGroupID is deprecated, use addMany', E_USER_NOTICE);
+		Deprecation::notice('2.4', 'Use addMany() instead.');
 		return $this->addMany($ids);
 	}
 
@@ -1513,7 +1514,7 @@ class Member_GroupSet extends ManyManyList {
 	 * @deprecated Use DataList::removeMany
 	 */
 	function removeManyByGroupID($groupIds) {
-		user_error('removeManyByGroupID is deprecated, use removeMany', E_USER_NOTICE);
+		Deprecation::notice('2.4', 'Use removeMany() instead.');
 		return $this->removeMany($ids);
 	}
 
@@ -1522,7 +1523,7 @@ class Member_GroupSet extends ManyManyList {
 	 * @deprecated Use DataObject::get("Group")->byIds()
 	 */
 	function getGroupsFromIDs($ids) {
-		user_error('getGroupsFromIDs is deprecated, use DataObject::get("Group")->byIds()', E_USER_NOTICE);
+		Deprecation::notice('2.4', 'Use DataObject::get("Group")->byIds() instead.');
 		return DataObject::get("Group")->byIDs($ids);
 	}
 
@@ -1531,7 +1532,7 @@ class Member_GroupSet extends ManyManyList {
 	 * @deprecated Group.Code is deprecated
 	 */
 	function addManyByCodename($codenames) {
-		user_error("addManyByCodename is deprecated and no longer works", E_USER_WARNING);
+		Deprecation::notice('2.4', 'Don\'t rely on codename');
 	}
 
 
@@ -1539,7 +1540,7 @@ class Member_GroupSet extends ManyManyList {
 	 * @deprecated Group.Code is deprecated
 	 */
 	function removeManyByCodename($codenames) {
-		user_error("removeManyByCodename is deprecated and no longer works", E_USER_WARNING);
+		Deprecation::notice('2.4', 'Don\'t rely on codename');
 	}
 }
 

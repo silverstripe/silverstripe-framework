@@ -131,6 +131,7 @@ class ManyManyList extends RelationList {
      * @deprecated this is experimental and will change. Don't use it in your projects.
      */
     function removeByFilter($filter) {
+		Deprecation::notice('3.0', 'This is experimental and will change. Don\'t use it in your projects.');
 		$query = new SQLQuery("*", array("\"$this->joinTable\""));
 		$query->delete = true;
 		$query->where($filter);

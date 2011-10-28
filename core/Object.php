@@ -896,9 +896,7 @@ abstract class Object {
 	 * @deprecated
 	 */
 	public function set_uninherited() {
-		user_error (
-			'Object->set_uninherited() is deprecated, please use a custom static on your object', E_USER_WARNING
-		);
+		Deprecation::notice('2.4', 'Use a custom static on your object instead.');
 	}
 	
 	// -----------------------------------------------------------------------------------------------------------------

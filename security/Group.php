@@ -188,7 +188,7 @@ class Group extends DataObject {
 	 * @deprecated 2.5
 	 */
 	public static function addToGroupByName($member, $groupcode) {
-		user_error('Group::addToGroupByName is deprecated. Please use $member->addToGroupByCode($groupcode)', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use $member->addToGroupByCode($groupcode) instead.');
 		
 		return $member->addToGroupByCode($groupcode);
 	}
@@ -291,6 +291,7 @@ class Group extends DataObject {
 	 * @deprecated 3.0 Use getTreeTitle()
 	 */
 	function TreeTitle() {
+		Deprecation::notice('3.0', 'Use getTreeTitle() instead.');
 		return $this->getTreeTitle();
 	}
 	
