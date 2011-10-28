@@ -2,7 +2,7 @@
 /**
  * Represents a field in a form. 
  *  
- * A FieldSet contains a number of FormField objects which make up the whole of a form.
+ * A FieldList contains a number of FormField objects which make up the whole of a form.
  * In addition to single fields, FormField objects can be "composite", for example, the {@link TabSet}
  * field.  Composite fields let us define complex forms without having to resort to custom HTML.
  * 
@@ -53,8 +53,8 @@ class FormField extends RequestHandler {
 	protected $tabIndex;
 
 	/**
-	 * Stores a reference to the FieldSet that contains this object.
-	 * @var FieldSet
+	 * Stores a reference to the FieldList that contains this object.
+	 * @var FieldList
 	 */ 
 	protected $containerFieldSet;
 	
@@ -480,7 +480,7 @@ HTML;
 	 * make sense for data-focused methods to look at them.  By overloading hasData() to return false,
 	 * you can prevent any data-focused methods from looking at it.
 	 *
-	 * @see FieldSet::collateDataFields()
+	 * @see FieldList::collateDataFields()
 	 */
 	function hasData() { return true; }
 
@@ -654,7 +654,7 @@ HTML;
 	}
 	
 	/**
-	 * Set the fieldset that contains this field. 
+	 * Set the FieldList that contains this field. 
 	 *
 	 * @param FieldList $containerFieldSet
 	 */ 

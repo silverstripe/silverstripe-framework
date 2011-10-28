@@ -504,7 +504,7 @@ class Member extends DataObject {
 	 * Returns the fields for the member form - used in the registration/profile module.
 	 * It should return fields that are editable by the admin and the logged-in user. 
 	 *
-	 * @return FieldSet Returns a {@link FieldSet} containing the fields for
+	 * @return FieldList Returns a {@link FieldList} containing the fields for
 	 *                  the member form.
 	 */
 	public function getMemberFormFields() {
@@ -1091,10 +1091,10 @@ class Member extends DataObject {
 
 
 	/**
-	 * Return a {@link FieldSet} of fields that would appropriate for editing
+	 * Return a {@link FieldList} of fields that would appropriate for editing
 	 * this member.
 	 *
-	 * @return FieldSet Return a FieldSet of fields that would appropriate for
+	 * @return FieldList Return a FieldList of fields that would appropriate for
 	 *                  editing this member.
 	 */
 	public function getCMSFields() {

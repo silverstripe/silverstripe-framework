@@ -85,7 +85,7 @@ Photos), and $description, a short description that will appear in the cms edito
 Flickr). The class may also specify functions to be used in the template like a page type can.
 
 If a Widget has configurable options, then it can specify a number of database fields to store these options in via the
-static $db array, and also specify a getCMSFields function that returns a !FieldSet, much the same way as a page type
+static $db array, and also specify a getCMSFields function that returns a !FieldList, much the same way as a page type
 does.
 
 An example widget is below:
@@ -139,7 +139,7 @@ An example widget is below:
 		}
 	
 		function getCMSFields() {
-			return new FieldSet(
+			return new FieldList(
 				new TextField("User", "User"),
 				new TextField("PhotoSet", "Photo Set"),
 				new TextField("Tags", "Tags"),
@@ -246,10 +246,10 @@ sure that your controller follows the usual naming conventions, and it will be a
 	    return new Form(
 	      $this, 
 	      'MyFormName', 
-	      new FieldSet(
+	      new FieldList(
 	        new TextField('TestValue')
 	      ), 
-	      new FieldSet(
+	      new FieldList(
 	        new FormAction('doAction')
 	      )
 	    );

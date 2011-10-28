@@ -786,7 +786,7 @@ class LeftAndMain extends Controller {
 			$fields = ($fields) ? $fields : $record->getCMSFields();
 			if ($fields == null) {
 				user_error(
-					"getCMSFields() returned null  - it should return a FieldSet object. 
+					"getCMSFields() returned null  - it should return a FieldList object. 
 					Perhaps you forgot to put a return statement at the end of your method?", 
 					E_USER_ERROR
 				);

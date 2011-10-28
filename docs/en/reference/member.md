@@ -64,8 +64,8 @@ Note that if you want to look this class-name up, you can call Object::getCustom
 ## Overloading getCMSFields()
 
 If you overload the built-in function getCMSFields(), then you can change the form that is used to view & edit member
-details in the newsletter system.  This function returns a `[api:FieldSet]` object.  You should generally start by calling
-parent::getCMSFields() and manipulate the `[api:FieldSet]` from there.
+details in the newsletter system.  This function returns a `[api:FieldList]` object.  You should generally start by calling
+parent::getCMSFields() and manipulate the `[api:FieldList]` from there.
 
 	:::php
 	function getCMSFields() {
@@ -106,10 +106,10 @@ things, you should add appropriate `[api:Permission::checkMember()]` calls to th
 	
 	   * Modify the field set to be displayed in the CMS detail pop-up
 	   */
-	  function updateCMSFields(FieldSet $currentFields) {
+	  function updateCMSFields(FieldList $currentFields) {
 	    // Only show the additional fields on an appropriate kind of use 
 	    if(Permission::checkMember($this->owner->ID, "VIEW_FORUM")) {
-	      // Edit the fieldset passed, adding or removing fields as necessary
+	      // Edit the FieldList passed, adding or removing fields as necessary
 	    }
 	  }
 	

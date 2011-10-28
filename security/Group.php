@@ -57,7 +57,7 @@ class Group extends DataObject {
 	/**
 	 * Caution: Only call on instances, not through a singleton.
 	 *
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function getCMSFields() {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');

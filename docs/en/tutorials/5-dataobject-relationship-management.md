@@ -83,7 +83,7 @@ The first step is to create the student and project objects.
 		);
 	
 		function getCMSFields_forPopup() {
-			$fields = new FieldSet();
+			$fields = new FieldList();
 			
 			$fields->push( new TextField( 'FirstName', 'First Name' ) );
 			$fields->push( new TextField( 'Lastname' ) );
@@ -153,7 +153,7 @@ Let’s walk through the parameters of the *HasOneComplexTableField* constructor
 You can also directly replace the last parameter by this code :
 
 	:::php
-	   new FieldSet(
+	   new FieldList(
 	      new TextField( 'FirstName', 'First Name' ),
 	      new TextField( 'Lastname' ),
 	      new TextField( 'Nationality' )
@@ -381,7 +381,7 @@ The first step is to create the module object and set the relation with the *Pro
 	   );
 	
 	   function getCMSFields_forPopup() {
-	      $fields = new FieldSet();
+	      $fields = new FieldList();
 	      $fields->push( new TextField( 'Name' ) );
 	      return $fields;
 	   }

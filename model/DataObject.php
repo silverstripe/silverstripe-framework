@@ -1764,7 +1764,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param array $_params
 	 * 	'fieldClasses': Associative array of field names as keys and FormField classes as values
 	 * 	'restrictFields': Numeric array of a field name whitelist
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function scaffoldSearchFields($_params = null) {
 		$params = array_merge(
@@ -1821,7 +1821,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @uses FormScaffolder
 	 * 
 	 * @param array $_params Associative array passing through properties to {@link FormScaffolder}.
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function scaffoldFormFields($_params = null) {
 		$params = array_merge(
@@ -1867,7 +1867,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @see Good example of complex FormField building: SiteTree::getCMSFields()
 	 *
 	 * @param array $params See {@link scaffoldFormFields()}
-	 * @return FieldSet Returns a TabSet for usage within the CMS - don't use for frontend forms.
+	 * @return FieldList Returns a TabSet for usage within the CMS - don't use for frontend forms.
 	 */
 	public function getCMSFields($params = null) {
 		$tabbedFields = $this->scaffoldFormFields(array_merge(
@@ -1888,7 +1888,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * need to be overload by solid dataobject, so that the customised actions of that dataobject,
 	 * including that dataobject's extensions customised actions could be added to the EditForm.
 	 * 
-	 * @return an Empty FieldSet(); need to be overload by solid subclass
+	 * @return an Empty FieldList(); need to be overload by solid subclass
 	 */
 	public function getCMSActions() {
 		$actions = new FieldList();
@@ -1906,7 +1906,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @todo Decide on naming for "website|frontend|site|page" and stick with it in the API
 	 *
 	 * @param array $params See {@link scaffoldFormFields()}
-	 * @return FieldSet Always returns a simple field collection without TabSet.
+	 * @return FieldList Always returns a simple field collection without TabSet.
 	 */
 	public function getFrontEndFields($params = null) {
 		$untabbedFields = $this->scaffoldFormFields($params);

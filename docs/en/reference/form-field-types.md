@@ -30,7 +30,7 @@ given set of fields in a given set of tables
 *  `[CompositeField](api:CompositeField)`: Base class for all fields that contain other fields. Uses `<div>` in template, but
 doesn't necessarily have any visible styling.
 *  `[FieldGroup](api:FieldGroup)`: Same as CompositeField, but has default styling (indentation) attached in CMS-context.
-*  `[api:FieldSet]`: Basic container for sequential fields, or nested fields through CompositeField. Does NOT render a
+*  `[api:FieldList]`: Basic container for sequential fields, or nested fields through CompositeField. Does NOT render a
 `<fieldgroup>`.
 *  `[TabSet](api:TabSet)`
 *  `[Tab](api:Tab)`
