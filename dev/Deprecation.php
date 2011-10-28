@@ -110,6 +110,9 @@ class Deprecation {
 	public static function notice($atVersion, $string = '') {
 		if(!Director::isDev()) return;
 
+		// If you pass #.#, assume #.#.0
+		if(preg_match('/^[0-9]+\.[0-9]+$/', $atVersion)) $atVersion .= '.0';
+
 		$checkVersion = self::$version;
 		// Getting a backtrace is slow, so we only do it if we need it
 		$backtrace = null;
