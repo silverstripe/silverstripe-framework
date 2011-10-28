@@ -182,7 +182,7 @@ abstract class BulkLoader extends ViewableData {
 	abstract protected function processRecord($record, $columnMap, &$result, $preview = false);
 	
 	/**
-	 * Return a FieldSet containing all the options for this form; this
+	 * Return a FieldList containing all the options for this form; this
 	 * doesn't include the actual upload field itself
 	 */
 	public function getOptionFields() {}

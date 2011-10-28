@@ -135,7 +135,7 @@ abstract class CMSBatchAction extends Object {
 	}
 
 	
-	// if your batchaction has parameters, return a fieldset here
+	// if your batchaction has parameters, return a FieldList here
 	function getParameterFields() {
 		return false;
 	}

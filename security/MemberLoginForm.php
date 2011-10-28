@@ -21,11 +21,11 @@ class MemberLoginForm extends LoginForm {
 	 *                               create the appropriate form action tag.
 	 * @param string $name The method on the controller that will return this
 	 *                     form object.
-	 * @param FieldSet|FormField $fields All of the fields in the form - a
-	 *                                   {@link FieldSet} of {@link FormField}
+	 * @param FieldList|FormField $fields All of the fields in the form - a
+	 *                                   {@link FieldList} of {@link FormField}
 	 *                                   objects.
-	 * @param FieldSet|FormAction $actions All of the action buttons in the
-	 *                                     form - a {@link FieldSet} of
+	 * @param FieldList|FormAction $actions All of the action buttons in the
+	 *                                     form - a {@link FieldList} of
 	 *                                     {@link FormAction} objects
 	 * @param bool $checkCurrentUser If set to TRUE, it will be checked if a
 	 *                               the user is currently logged in, and if

@@ -14,19 +14,19 @@ constructor takes the following arguments:
 *  `$name`: This must be the name of the method on that controller that is called to return the form.  The first two
 fields allow the form object to be re-created after submission.  **It's vital that they are properly set - if you ever
 have problems with form action handler not working, check that these values are correct.**
-*  `$fields`: A `[api:FieldSet]` containing `[api:FormField]` instances make up fields in the form.
-*  `$actions`: A `[api:FieldSet]` containing the `[api:FormAction]` objects - the buttons at the bottom.
+*  `$fields`: A `[api:FieldList]` containing `[api:FormField]` instances make up fields in the form.
+*  `$actions`: A `[api:FieldList]` containing the `[api:FormAction]` objects - the buttons at the bottom.
 *  `$validator`: An optional `[api:Validator]` for more information.
 
 Example: 
 
 	:::php
 	function MyCustomForm() {
-		$fields = new FieldSet(
+		$fields = new FieldList(
 			new EmailField("Email"),
 			new EncryptField("Password")
 		);
-		$actions = new FieldSet(new FormAction("login", "Log in"));
+		$actions = new FieldList(new FormAction("login", "Log in"));
 		return new Form($this, "MyCustomForm", $fields, $actions);
 	}
 
@@ -44,11 +44,11 @@ $name must be passed - their values depend on where the form is instantiated.
 	:::php
 	class MyForm extends Form {
 		function __construct($controller, $name) {
-			$fields = new FieldSet(
+			$fields = new FieldList(
 				new EmailField("Email"),
 				new EncryptedField("Password")
 			);
-			$actions = new FieldSet(new FormAction("login", "Log in"));
+			$actions = new FieldList(new FormAction("login", "Log in"));
 			
 			parent::__construct($controller, $name, $fields, $actions);
 		}
@@ -77,13 +77,13 @@ Full overview at [form-field-types](/reference/form-field-types)
 ### Using Form Fields
 
 To get these fields automatically rendered into a form element, all you need to do is create a new instance of the
-class, and add it to the fieldset of the form. 
+class, and add it to the fieldlist of the form. 
 
 	:::php
 	$form = new Form(
 	        $controller = $this,
 	        $name = "SignupForm",
-	        $fields = new FieldSet(
+	        $fields = new FieldList(
 	            new TextField(
 	                $name = "FirstName", 
 	                $title = "First name"
@@ -91,7 +91,7 @@ class, and add it to the fieldset of the form.
 	            new TextField("Surname"),
 	            new EmailField("Email", "Email address"),
 	         ), 
-	        $actions = new FieldSet(
+	        $actions = new FieldList(
 	            // List the action buttons here
 	            new FormAction("signup", "Sign up")
 	        ), 
@@ -109,7 +109,7 @@ Implementing the more complex fields requires extra arguments.
 	$form = new Form(
 	        $controller = $this,
 	        $name = "SignupForm",
-	        $fields = new FieldSet(
+	        $fields = new FieldList(
 	            // List the your fields here
 	            new TextField(
 	                $name = "FirstName", 
@@ -123,7 +123,7 @@ Implementing the more complex fields requires extra arguments.
 	                 $source = Geoip::getCountryDropDown(),
 	                 $value = Geoip::visitor_country()
 	            )
-	        ), new FieldSet(
+	        ), new FieldList(
 	            // List the action buttons here
 	            new FormAction("signup", "Sign up")
 	 
@@ -141,7 +141,7 @@ Readonly on a Form
 	$myForm->makeReadonly();
 
 
-Readonly on a FieldSet
+Readonly on a FieldList
 
 	:::php
 	$myFieldSet->makeReadonly();
@@ -170,12 +170,12 @@ First of all, you need to create your form on it's own class, that way you can d
 	class MyForm extends Form {
 	
 	   function __construct($controller, $name) {
-	      $fields = new FieldSet(
+	      $fields = new FieldList(
 	         new TextField('FirstName', 'First name'),
 	         new EmailField('Email', 'Email address')
 	      );
 	
-	      $actions = new FieldSet(
+	      $actions = new FieldList(
 	         new FormAction('submit', 'Submit')
 	      );
 	
@@ -280,5 +280,5 @@ Adds a new text field called FavouriteColour next to the Content field in the CM
 
 * `[api:Form]`
 * `[api:FormField]`
-* `[api:FieldSet]`
+* `[api:FieldList]`
 * `[api:FormAction]`

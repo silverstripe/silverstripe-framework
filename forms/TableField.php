@@ -20,7 +20,7 @@
  * @param $sourceSort string
  * @param $sourceJoin string
  * 
- * @todo We should refactor this to support a single FieldSet instead of evaluated Strings for building FormFields
+ * @todo We should refactor this to support a single FieldList instead of evaluated Strings for building FormFields
  * 
  * @package forms
  * @subpackage fields-relational
@@ -43,7 +43,7 @@ class TableField extends TableListField {
 	protected $filterValue = null;
 	
 	/**
-	 * @var $fieldTypes FieldSet
+	 * @var $fieldTypes FieldList
 	 * Caution: Use {@setExtraData()} instead of manually adding HiddenFields if you want to 
 	 * preset relations or other default data.
 	 */
@@ -206,7 +206,7 @@ class TableField extends TableListField {
 
 	/**
 	 * Generates a new {@link TableField} instance
-	 * by loading a fieldset for this row into a temporary form.
+	 * by loading a FieldList for this row into a temporary form.
 	 * 
 	 * @param DataObject $dataObj
 	 * @return TableField_Item
