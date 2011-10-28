@@ -85,10 +85,13 @@ class Deprecation {
 	 *
 	 * @static
 	 * @param $backtrace array - a backtrace as returned from debug_backtrace
+	 * @param $level - 1 (default) will return immediate caller, 2 will return caller's caller, etc.
 	 * @return string - the name of the method
 	 */
-	protected static function get_called_method_from_trace($backtrace) {
-		$called = $backtrace[1];
+	protected static function get_called_method_from_trace($backtrace, $level = 1) {
+		$level = (int)$level;
+		if(!$level) $level = 1;
+		$called = $backtrace[$level];
 		
 		if (isset($called['class'])) {
 			return $called['class'] . $called['type'] . $called['function'];
@@ -133,6 +136,10 @@ class Deprecation {
 			if (!$level) $level = defined(E_USER_DEPRECATED) ? E_USER_DEPRECATED : E_USER_NOTICE;
 
 			// Then raise the notice
+			if(substr($string,-1) != '.') $string .= ".";
+
+			$string .= " Called from " . self::get_called_method_from_trace($backtrace, 2) . '.';
+
 			user_error($caller.' is deprecated.'.($string ? ' '.$string : ''), $level);
 		}
 	}
