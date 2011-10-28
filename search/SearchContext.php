@@ -6,11 +6,11 @@
 * it just receives a set of search parameters and an object class it acts on.
 * 
 * The default output of a SearchContext is either a {@link SQLQuery} object
-* for further refinement, or a {@link DataObjectSet} that can be used to display
+* for further refinement, or a {@link SS_List} that can be used to display
 * search results, e.g. in a {@link TableListField} instance.
 * 
 * In case you need multiple contexts, consider namespacing your request parameters
-* by using {@link FieldSet->namespace()} on the $fields constructor parameter.
+* by using {@link FieldList->namespace()} on the $fields constructor parameter.
 * 
 * Each DataObject subclass can have multiple search contexts for different cases,
 * e.g. for a limited frontend search and a fully featured backend search.
@@ -37,7 +37,7 @@ class SearchContext extends Object {
 	 * FormFields mapping to {@link DataObject::$db} properties
 	 * which are supposed to be searchable.
 	 *
-	 * @var FieldSet
+	 * @var FieldList
 	 */
 	protected $fields;
 	
@@ -79,7 +79,7 @@ class SearchContext extends Object {
 	/**
 	 * Returns scaffolded search fields for UI.
 	 *
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function getSearchFields() {
 		return ($this->fields) ? $this->fields : singleton($this->modelClass)->scaffoldSearchFields();
@@ -159,7 +159,7 @@ class SearchContext extends Object {
 	 * @param array $searchParams
 	 * @param string|array $sort
 	 * @param string|array $limit
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function getResults($searchParams, $sort = false, $limit = false) {
 		$searchParams = array_filter($searchParams, array($this,'clearEmptySearchFields'));
@@ -232,7 +232,7 @@ class SearchContext extends Object {
 	/**
 	 * Get the list of searchable fields in the current search context.
 	 *
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function getFields() {
 		return $this->fields; 

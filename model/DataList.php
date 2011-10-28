@@ -10,7 +10,7 @@ class DataList extends ViewableData implements SS_List {
 	protected $dataClass;
 	
 	/**
-	 * The {@link DataQuery} object responsible for getting this DataObjectSet's records
+	 * The {@link DataQuery} object responsible for getting this DataList's records
 	 */
 	protected $dataQuery;
 	
@@ -178,9 +178,9 @@ class DataList extends ViewableData implements SS_List {
 	}
 	
 	/**
-	 * Returns an Iterator for this DataObjectSet.
-	 * This function allows you to use DataObjectSets in foreach loops
-	 * @return DataObjectSet_Iterator
+	 * Returns an Iterator for this DataList.
+	 * This function allows you to use DataLists in foreach loops
+	 * @return ArrayIterator
 	 */
 	public function getIterator() {
 		return new ArrayIterator($this->toArray());

@@ -1764,7 +1764,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param array $_params
 	 * 	'fieldClasses': Associative array of field names as keys and FormField classes as values
 	 * 	'restrictFields': Numeric array of a field name whitelist
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function scaffoldSearchFields($_params = null) {
 		$params = array_merge(
@@ -1821,7 +1821,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @uses FormScaffolder
 	 * 
 	 * @param array $_params Associative array passing through properties to {@link FormScaffolder}.
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function scaffoldFormFields($_params = null) {
 		$params = array_merge(
@@ -1867,7 +1867,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @see Good example of complex FormField building: SiteTree::getCMSFields()
 	 *
 	 * @param array $params See {@link scaffoldFormFields()}
-	 * @return FieldSet Returns a TabSet for usage within the CMS - don't use for frontend forms.
+	 * @return FieldList Returns a TabSet for usage within the CMS - don't use for frontend forms.
 	 */
 	public function getCMSFields($params = null) {
 		$tabbedFields = $this->scaffoldFormFields(array_merge(
@@ -1888,7 +1888,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * need to be overload by solid dataobject, so that the customised actions of that dataobject,
 	 * including that dataobject's extensions customised actions could be added to the EditForm.
 	 * 
-	 * @return an Empty FieldSet(); need to be overload by solid subclass
+	 * @return an Empty FieldList(); need to be overload by solid subclass
 	 */
 	public function getCMSActions() {
 		$actions = new FieldList();
@@ -1906,7 +1906,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @todo Decide on naming for "website|frontend|site|page" and stick with it in the API
 	 *
 	 * @param array $params See {@link scaffoldFormFields()}
-	 * @return FieldSet Always returns a simple field collection without TabSet.
+	 * @return FieldList Always returns a simple field collection without TabSet.
 	 */
 	public function getFrontEndFields($params = null) {
 		$untabbedFields = $this->scaffoldFormFields($params);
@@ -2457,10 +2457,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @deprecated 2.5 Use DataObject::get() instead, with the new data mapper there's no reason not to.
+	 * @deprecated 3.0.0 Use DataObject::get and DataList to do your querying
 	 */
 	public function buildSQL($filter = "", $sort = "", $limit = "", $join = "", $restrictClasses = true, $having = "") {
-		user_error("DataObject::buildSQL() deprecated; just use DataObject::get() with the new data mapper", E_USER_NOTICE);
+		Deprecation::notice('3.0.0', 'Use DataObject::get and DataList to do your querying');
 		return $this->extendedSQL($filter, $sort, $limit, $join, $having);
 
 	}
@@ -2471,7 +2471,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	private static $cache_buildSQL_query;
 
 	/**
-	 * @deprecated 2.5 Use DataObject::get() instead, with the new data mapper there's no reason not to.
+	 * @deprecated 3.0.0 Use DataObject::get and DataList to do your querying
 	 */
 	public function extendedSQL($filter = "", $sort = "", $limit = "", $join = ""){
 		$dataList = DataObject::get($this->class, $filter, $sort, $join, $limit);
@@ -2492,7 +2492,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
 	 */
 	public static function get($callerClass, $filter = "", $sort = "", $join = "", $limit = "", $containerClass = "DataList") {
-		// Deprecated 2.5?
+		// Todo: Determine if we can deprecate for 3.0.0 and use DI or something instead
 		// Todo: Make the $containerClass method redundant
 		if($containerClass != "DataList") user_error("The DataObject::get() \$containerClass argument has been deprecated", E_USER_NOTICE);
 		$result = DataList::create($callerClass)->where($filter)->sort($sort)->join($join)->limit($limit);
@@ -2501,9 +2501,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
-	 * @deprecated 
+	 * @deprecated 3.0.0 Use DataObject::get and DataList to do your querying
 	 */
 	public function Aggregate($class = null) {
+		Deprecation::notice('3.0.0', 'Use DataObject::get and DataList to do your querying');
+
 	    if($class) {
 			$list = new DataList($class);
 			$list->setModel(DataModel::inst());
@@ -2516,9 +2518,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @deprecated 
+	 * @deprecated 3.0.0 Use DataObject::get and DataList to do your querying
 	 */
 	public function RelationshipAggregate($relationship) {
+		Deprecation::notice('3.0.0', 'Use DataObject::get and DataList to do your querying');
+
 	    return $this->$relationship();
 	}
 
@@ -2526,7 +2530,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * The internal function that actually performs the querying for get().
 	 * DataObject::get("Table","filter") is the same as singleton("Table")->instance_get("filter")
 	 *
-	 * @deprecated 2.5 Use DataObject::get()
+	 * @deprecated 3.0.0 Use DataObject::get and DataList to do your querying
 	 *
 	 * @param string $filter A filter to be inserted into the WHERE clause.
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.  If omitted, self::$default_sort will be used.
@@ -2537,15 +2541,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
 	 */
 	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet") {
-		user_error("instance_get deprecated", E_USER_NOTICE);
+		Deprecation::notice('3.0.0', 'Use DataObject::get and DataList to do your querying');
 		return self::get($this->class, $filter, $sort, $join, $limit, $containerClass);
-
 	}
 
 	/**
 	 * Take a database {@link SS_Query} and instanciate an object for each record.
 	 * 
-	 * @deprecated 2.5 Use DataObject::get(), you don't need to side-step it any more
+	 * @deprecated 3.0.0 Replaced by DataList
 	 *
 	 * @param SS_Query|array $records The database records, a {@link SS_Query} object or an array of maps.
 	 * @param string $containerClass The class to place all of the objects into.
@@ -2553,8 +2556,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return mixed The new objects in an object of type $containerClass
 	 */
 	function buildDataObjectSet($records, $containerClass = "DataObjectSet", $query = null, $baseClass = null) {
-		user_error('buildDataObjectSet is deprecated; use DataList to do your querying', E_USER_NOTICE);
-		
+		Deprecation::notice('3.0.0', 'Replaced by DataList');
+
 		foreach($records as $record) {
 			if(empty($record['RecordClassName'])) {
 				$record['RecordClassName'] = $record['ClassName'];
@@ -2670,7 +2673,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Does the hard work for get_one()
 	 *
-	 * @deprecated 2.5 Use DataObject::get_one() instead
+	 * @deprecated 3.0.0 Use DataObject::get_one() instead
 	 * 
 	 * @uses DataExtension->augmentSQL()
 	 *
@@ -2679,7 +2682,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DataObject The first item matching the query
 	 */
 	public function instance_get_one($filter, $orderby = null) {
-		user_error("DataObjct::instance_get_one is deprecated", E_USER_NOTICE);
+		Deprecation::notice('3.0.0', 'Use DataObject::get_one() instead');
 		return DataObject::get_one($this->class, $filter, true, $orderby);
 	}
 
@@ -2822,22 +2825,20 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
-	 * @deprecated 2.5 use self::database_fields() 
+	 * @deprecated 3.0.0 Use DataObject::database_fields() instead
 	 * @see DataObject::database_fields()
 	 */
 	public function databaseFields() {
-		user_error("databaseFields() is deprecated; use self::database_fields() "
-			. "instead", E_USER_NOTICE);
+		Deprecation::notice('3.0.0', 'Use DataObject::database_fields() instead');
 		return self::database_fields($this->class);
 	}
 	
 	/**
-	 * @deprecated 2.5 use self::custom_database_fields()
+	 * @deprecated 3.0.0 Use DataObject::custom_database_fields() instead
 	 * @see DataObject::custom_database_fields()
 	 */
 	public function customDatabaseFields() {
-		user_error("customDatabaseFields() is deprecated; use self::custom_database_fields() "
-			. "instead", E_USER_NOTICE);
+		Deprecation::notice('3.0.0', 'Use DataObject::custom_database_fields() instead');
 		return self::custom_database_fields($this->class);
 	}
 	

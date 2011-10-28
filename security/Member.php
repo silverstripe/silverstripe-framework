@@ -504,7 +504,7 @@ class Member extends DataObject {
 	 * Returns the fields for the member form - used in the registration/profile module.
 	 * It should return fields that are editable by the admin and the logged-in user. 
 	 *
-	 * @return FieldSet Returns a {@link FieldSet} containing the fields for
+	 * @return FieldList Returns a {@link FieldList} containing the fields for
 	 *                  the member form.
 	 */
 	public function getMemberFormFields() {
@@ -717,7 +717,7 @@ class Member extends DataObject {
 	/**
 	 * Check if the member is in one of the given groups.
 	 *
-	 * @param array|DataObjectSet $groups Collection of {@link Group} DataObjects to check
+	 * @param array|SS_List $groups Collection of {@link Group} DataObjects to check
 	 * @param boolean $strict Only determine direct group membership if set to true (Default: false)
 	 * @return bool Returns TRUE if the member is in one of the given groups, otherwise FALSE.
 	 */
@@ -1001,7 +1001,7 @@ class Member extends DataObject {
 
 		$groupIDList = array();
 
-		if(is_a($groups, 'DataObjectSet')) {
+		if(is_a($groups, 'SS_List')) {
 			foreach( $groups as $group )
 				$groupIDList[] = $group->ID;
 		} elseif(is_array($groups)) {
@@ -1047,7 +1047,7 @@ class Member extends DataObject {
 
 		$groupIDList = array();
 
-		if(is_a($groups, 'DataObjectSet')) {
+		if(is_a($groups, 'SS_List')) {
 			foreach($groups as $group) {
 				$groupIDList[] = $group->ID;
 			}
@@ -1091,10 +1091,10 @@ class Member extends DataObject {
 
 
 	/**
-	 * Return a {@link FieldSet} of fields that would appropriate for editing
+	 * Return a {@link FieldList} of fields that would appropriate for editing
 	 * this member.
 	 *
-	 * @return FieldSet Return a FieldSet of fields that would appropriate for
+	 * @return FieldList Return a FieldList of fields that would appropriate for
 	 *                  editing this member.
 	 */
 	public function getCMSFields() {
