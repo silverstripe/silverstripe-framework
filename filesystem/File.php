@@ -775,7 +775,7 @@ class File extends DataObject {
 	 * 
 	 * Needs to be enabled through {@link AssetAdmin::$metadata_upload_enabled}
 	 * 
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function uploadMetadataFields() {
 		$fields = new FieldList();

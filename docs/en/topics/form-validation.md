@@ -14,11 +14,11 @@ class.
 	:::php
 	function Form() {
 		$form = new Form($this, 'Form',
-			new FieldSet(
+			new FieldList(
 				new TextField('MyRequiredField'),
 				new TextField('MyOptionalField')
 			),
-			new FieldSet(
+			new FieldList(
 				new FormAction('submit', 'Submit')
 			),
 			new RequiredFields(array('MyRequiredField'))

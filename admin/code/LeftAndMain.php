@@ -393,7 +393,7 @@ class LeftAndMain extends Controller {
 	 * Returns the main menu of the CMS.  This is also used by init() 
 	 * to work out which sections the user has access to.
 	 * 
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function MainMenu() {
 		// Don't accidentally return a menu if you're not logged in - it's used to determine access.
@@ -786,7 +786,7 @@ class LeftAndMain extends Controller {
 			$fields = ($fields) ? $fields : $record->getCMSFields();
 			if ($fields == null) {
 				user_error(
-					"getCMSFields() returned null  - it should return a FieldSet object. 
+					"getCMSFields() returned null  - it should return a FieldList object. 
 					Perhaps you forgot to put a return statement at the end of your method?", 
 					E_USER_ERROR
 				);

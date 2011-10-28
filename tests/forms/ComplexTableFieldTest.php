@@ -36,7 +36,7 @@ class ComplexTableFieldTest extends FunctionalTest {
 		$parser = new CSSContentParser($field->FieldHolder());
 		
 		$this->assertEquals(count($parser->getBySelector('tbody tr')), 2, 'There are 2 players (rows) in the table');
-		$this->assertEquals($field->Items()->Count(), 2, 'There are 2 CTF items in the DataObjectSet');
+		$this->assertEquals($field->Items()->Count(), 2, 'There are 2 CTF items in the SS_List');
 	}
 	
 	function testAddingManyManyNewPlayer() {

@@ -78,7 +78,7 @@ See [form](/topics/forms) and [tutorial:2-extending-a-basic-site](/tutorials/2-e
 
 ### removeFieldFromTab()
 
-Overloading `getCMSFields()` you can call `removeFieldFromTab()` on a `[api:FieldSet]` object. For example, if you don't
+Overloading `getCMSFields()` you can call `removeFieldFromTab()` on a `[api:FieldList]` object. For example, if you don't
 want the MenuTitle field to show on your page, which is inherited from `[api:SiteTree]`.
 
 	:::php
@@ -105,7 +105,7 @@ required on a certain page-type.
 	class MyForm extends Form {
 	
 	   function __construct($controller, $name) {
-	      // add a default FieldSet of form fields
+	      // add a default FieldList of form fields
 	      $member = singleton('Member');
 	
 	      $fields = $member->formFields();
@@ -113,7 +113,7 @@ required on a certain page-type.
 	      // We don't want the Country field from our default set of fields, so we remove it.
 	      $fields->removeByName('Country');
 	
-	      $actions = new FieldSet(
+	      $actions = new FieldList(
 	         new FormAction('submit', 'Submit')
 	      );
 	

@@ -7,11 +7,11 @@
  */
 class FieldSet extends FieldList {
 
+	/**
+	 * @deprecated 3.0.0 Use FieldList instead
+	 */
 	public function __construct($items = array()) {
-		// user_error(
-		// 	'FieldSet is deprecated, please use FieldList instead.', E_USER_NOTICE
-		// );
-
+		Deprecation::notice('3.0.0', 'Use FieldList instead');
 		parent::__construct(!is_array($items) || func_num_args() > 1 ? func_get_args(): $items);
 	}
 }

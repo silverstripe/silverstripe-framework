@@ -100,7 +100,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	}
 
 	/**
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function RootForm() {
 		$memberList = new MemberTableField(

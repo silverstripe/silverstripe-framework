@@ -6,11 +6,11 @@
  */
 class DataObjectSet extends ArrayList {
 
+	/**
+	 * @deprecated 3.0.0
+	 */
 	public function __construct($items = array()) {
-		// user_error(
-		// 	'DataObjectSet is deprecated, please use DataList or ArrayList instead.',
-		// 	E_USER_NOTICE
-		// );
+		Deprecation::notice('3.0.0', 'Use DataList or ArrayList instead');
 
 		if ($items) {
 			if (!is_array($items) || func_num_args() > 1) {

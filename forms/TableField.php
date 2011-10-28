@@ -20,7 +20,7 @@
  * @param $sourceSort string
  * @param $sourceJoin string
  * 
- * @todo We should refactor this to support a single FieldSet instead of evaluated Strings for building FormFields
+ * @todo We should refactor this to support a single FieldList instead of evaluated Strings for building FormFields
  * 
  * @package forms
  * @subpackage fields-relational
@@ -43,7 +43,7 @@ class TableField extends TableListField {
 	protected $filterValue = null;
 	
 	/**
-	 * @var $fieldTypes FieldSet
+	 * @var $fieldTypes FieldList
 	 * Caution: Use {@setExtraData()} instead of manually adding HiddenFields if you want to 
 	 * preset relations or other default data.
 	 */
@@ -116,7 +116,7 @@ class TableField extends TableListField {
 	/** 
 	 * Displays the headings on the template
 	 * 
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	function Headings() {
 		$i=0;
@@ -147,7 +147,7 @@ class TableField extends TableListField {
 	 * it generates the rows from array data instead.
 	 * Used in the formfield template to iterate over each row.
 	 * 
-	 * @return DataObjectSet Collection of {@link TableField_Item}
+	 * @return SS_List Collection of {@link TableField_Item}
 	 */
 	function Items() {
 		// holds TableField_Item instances
@@ -206,7 +206,7 @@ class TableField extends TableListField {
 
 	/**
 	 * Generates a new {@link TableField} instance
-	 * by loading a fieldset for this row into a temporary form.
+	 * by loading a FieldList for this row into a temporary form.
 	 * 
 	 * @param DataObject $dataObj
 	 * @return TableField_Item
@@ -341,7 +341,7 @@ class TableField extends TableListField {
 	 * Called on save, it creates the appropriate objects and writes them
 	 * to the database.
 	 * 
-	 * @param DataObjectSet $dataObjects
+	 * @param SS_List $dataObjects
 	 * @param boolean $existingValues If set to TRUE, it tries to find existing objects
 	 *  based on the database IDs passed as array keys in $dataObjects parameter.
 	 *  If set to FALSE, it will always create new object (default: TRUE)

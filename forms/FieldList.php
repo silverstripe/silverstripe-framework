@@ -80,7 +80,7 @@ class FieldList extends ArrayList {
 	}
 	
 	/**
-	 * Add an extra field to a tab within this fieldset.
+	 * Add an extra field to a tab within this FieldList.
 	 * This is most commonly used when overloading getCMSFields()
 	 * 
 	 * @param string $tabName The name of the tab or tabset.  Subtabs can be referred to as TabSet.Tab or TabSet.Tab.Subtab.
@@ -101,7 +101,7 @@ class FieldList extends ArrayList {
 	}
 	
 	/**
-	 * Add a number of extra fields to a tab within this fieldset.
+	 * Add a number of extra fields to a tab within this FieldList.
 	 * This is most commonly used when overloading getCMSFields()
 	 * 
 	 * @param string $tabName The name of the tab or tabset.  Subtabs can be referred to as TabSet.Tab or TabSet.Tab.Subtab.
@@ -143,7 +143,7 @@ class FieldList extends ArrayList {
 	}
 	
 	/**
-	 * Removes a number of fields from a Tab/TabSet within this FieldSet.
+	 * Removes a number of fields from a Tab/TabSet within this FieldList.
 	 *
 	 * @param string $tabName The name of the Tab or TabSet field
 	 * @param array $fields A list of fields, e.g. array('Name', 'Email')
@@ -159,7 +159,7 @@ class FieldList extends ArrayList {
 	}
 	
 	/**
-	 * Remove a field from this FieldSet by Name.
+	 * Remove a field from this FieldList by Name.
 	 * The field could also be inside a CompositeField.
 	 * 
 	 * @param string $fieldName The name of the field or tab
@@ -169,7 +169,7 @@ class FieldList extends ArrayList {
 	 */
 	public function removeByName($fieldName, $dataFieldOnly = false) {
 		if(!$fieldName) {
-			user_error('FieldSet::removeByName() was called with a blank field name.', E_USER_WARNING);
+			user_error('FieldList::removeByName() was called with a blank field name.', E_USER_WARNING);
 		}
 		$this->flushFieldsCache();
 		
@@ -257,7 +257,7 @@ class FieldList extends ArrayList {
 	public function findOrMakeTab($tabName, $title = null) {
 		$parts = explode('.',$tabName);
 		
-		// We could have made this recursive, but I've chosen to keep all the logic code within FieldSet rather than add it to TabSet and Tab too.
+		// We could have made this recursive, but I've chosen to keep all the logic code within FieldList rather than add it to TabSet and Tab too.
 		$currentPointer = $this;
 		foreach($parts as $k => $part) {
 			$parentPointer = $currentPointer;
@@ -274,7 +274,7 @@ class FieldList extends ArrayList {
 					$parentPointer->push($currentPointer);
 				} else {
 					$withName = ($parentPointer->hasMethod('Name')) ? " named '{$parentPointer->Name()}'" : null;
-					user_error("FieldSet::addFieldToTab() Tried to add a tab to object '{$parentPointer->class}'{$withName} - '$part' didn't exist.", E_USER_ERROR);
+					user_error("FieldList::addFieldToTab() Tried to add a tab to object '{$parentPointer->class}'{$withName} - '$part' didn't exist.", E_USER_ERROR);
 				}
 			}
 		}
@@ -324,7 +324,7 @@ class FieldList extends ArrayList {
 	}
 
 	/**
-	 * Inserts a field before a particular field in a FieldSet.
+	 * Inserts a field before a particular field in a FieldList.
 	 *
 	 * @param FormField $item The form field to insert
 	 * @param string $name Name of the field to insert before
@@ -349,7 +349,7 @@ class FieldList extends ArrayList {
 	}
 
 	/**
-	 * Inserts a field after a particular field in a FieldSet.
+	 * Inserts a field after a particular field in a FieldList.
 	 *
 	 * @param FormField $item The form field to insert
 	 * @param string $name Name of the field to insert after
@@ -374,7 +374,7 @@ class FieldList extends ArrayList {
 	}
 	
 	/**
-	 * Push a single field into this FieldSet instance.
+	 * Push a single field into this FieldList instance.
 	 *
 	 * @param FormField $item The FormField to add
 	 * @param string $key An option array key (field name)
@@ -386,7 +386,7 @@ class FieldList extends ArrayList {
 	}
 
 	/**
-	 * Handler method called before the FieldSet is going to be manipulated.
+	 * Handler method called before the FieldList is going to be manipulated.
 	 */
 	protected function onBeforeInsert($item) {
 		$this->flushFieldsCache();
@@ -395,9 +395,9 @@ class FieldList extends ArrayList {
 		
 	
 	/**
-	 * Set the Form instance for this FieldSet.
+	 * Set the Form instance for this FieldList.
 	 *
-	 * @param Form $form The form to set this FieldSet to
+	 * @param Form $form The form to set this FieldList to
 	 */
 	public function setForm($form) {
 		foreach($this as $field) $field->setForm($form);
@@ -406,7 +406,7 @@ class FieldList extends ArrayList {
 	/**
 	 * Load the given data into this form.
 	 * 
-	 * @param data An map of data to load into the FieldSet
+	 * @param data An map of data to load into the FieldList
 	 */
 	public function setValues($data) {
 		foreach($this->dataFields() as $field) {
@@ -420,7 +420,7 @@ class FieldList extends ArrayList {
 	 * in a form - including fields nested in {@link CompositeFields}.
 	 * Useful when doing custom field layouts.
 	 * 
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function HiddenFields() {
 		$hiddenFields = new HiddenFieldSet();
@@ -434,10 +434,10 @@ class FieldList extends ArrayList {
 	}
 
 	/**
-	 * Transform this FieldSet with a given tranform method,
+	 * Transform this FieldList with a given tranform method,
 	 * e.g. $this->transform(new ReadonlyTransformation())
 	 * 
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function transform($trans) {
 		$this->flushFieldsCache();
@@ -461,9 +461,9 @@ class FieldList extends ArrayList {
 	}
 	
 	/**
-	 * Transforms this FieldSet instance to readonly.
+	 * Transforms this FieldList instance to readonly.
 	 *
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function makeReadonly() {
 		return $this->transform(new ReadonlyTransformation());
@@ -481,7 +481,7 @@ class FieldList extends ArrayList {
 	}
 	
 	/**
-	 * Change the order of fields in this FieldSet by specifying an ordered list of field names.
+	 * Change the order of fields in this FieldList by specifying an ordered list of field names.
 	 * This works well in conjunction with SilverStripe's scaffolding functions: take the scaffold, and
 	 * shuffle the fields around to the order that you want.
 	 * 

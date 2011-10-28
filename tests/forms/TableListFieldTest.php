@@ -294,7 +294,7 @@ class TableListFieldTest extends SapphireTest {
 	}
 
     /**
-     * Check that a DataObjectSet can be passed to TableListField
+     * Check that a SS_List can be passed to TableListField
      */
 	function testDataObjectSet() {
 	    $one = new TableListFieldTest_Obj;

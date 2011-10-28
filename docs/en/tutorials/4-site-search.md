@@ -54,11 +54,11 @@ search on your site is to create a form for the user to type their query. Create
 		function SearchForm() {
 			$searchText = isset($this->Query) ? $this->Query : 'Search';
 			
-			$fields = new FieldSet(
+			$fields = new FieldList(
 				new TextField("Search", "", $searchText)
 			);
 	
-			$actions = new FieldSet(
+			$actions = new FieldList(
 				new FormAction('results', 'Go')
 			);
 			
