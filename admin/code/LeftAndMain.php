@@ -251,8 +251,8 @@ class LeftAndMain extends Controller {
 				THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css',
 				SAPPHIRE_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css',
 				THIRDPARTY_DIR . '/jstree/themes/apple/style.css',
-				SAPPHIRE_DIR . '/javascript/TreeDropdownField.css',
-				SAPPHIRE_ADMIN_DIR . '/css/unjquery.css',
+				SAPPHIRE_DIR . '/css/TreeDropdownField.css',
+				SAPPHIRE_ADMIN_DIR . '/css/_old/unjquery.css',
 			)
 		);
 		
