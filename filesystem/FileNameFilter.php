@@ -46,6 +46,13 @@ class FileNameFilter {
 	 * @var Array See {@link setReplacements()}
 	 */
 	public $replacements = array();
+
+	/**
+	 * No Operation due to newInstanceArgs in Object#create throws an error
+	 * without an constructor
+	 */
+	public function __construct() {
+	}
 	
 	/**
 	 * Depending on the applied replacement rules, this method
