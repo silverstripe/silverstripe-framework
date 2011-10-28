@@ -266,7 +266,7 @@ class TableListField extends FormField {
 	function sourceClass() {
 	    $list = $this->getDataList();
 	    if(method_exists($list, 'dataClass')) return $list->dataClass();
-	    // Failover for DataObjectSet
+	    // Failover for SS_List
 	    else return get_class($list->First());
 	}
 	
@@ -364,7 +364,7 @@ JS
 	 * Dummy function to get number of actions originally generated in
 	 * TableListField_Item.
 	 * 
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	function Actions() {
 		$allowedActions = new ArrayList();
@@ -396,10 +396,10 @@ JS
 		user_error('TableList::setCustomSourceItems() deprecated, just pass the items into the constructor', E_USER_WARNING);
 
 		// The type-hinting above doesn't seem to work consistently
-		if($items instanceof DataObjectSet) {
+		if($items instanceof SS_List) {
 		    $this->dataList = $items;
 		} else {
-			user_error('TableList::setCustomSourceItems() should be passed a DataObjectSet', E_USER_WARNING);
+			user_error('TableList::setCustomSourceItems() should be passed a SS_List', E_USER_WARNING);
 		}
 	}
 	
@@ -407,10 +407,10 @@ JS
 	 * Get items, with sort & limit applied
 	 */
 	function sourceItems() {
-		// get items (this may actually be a DataObjectSet)
+		// get items (this may actually be a SS_List)
 		$items = clone $this->getDataList();
 
-		// TODO: Sorting could be implemented on regular DataObjectSets.
+		// TODO: Sorting could be implemented on regular SS_Lists.
 		if(method_exists($items,'canSortBy') && isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
     		$sort = $_REQUEST['ctf'][$this->Name()]['sort'];
 		    // TODO: sort direction
@@ -434,7 +434,7 @@ JS
 	}
 
 	/**
-	 * Return a DataObjectSet of TableListField_Item objects, suitable for display in the template.
+	 * Return a SS_List of TableListField_Item objects, suitable for display in the template.
 	 */
 	function Items() {
 		$fieldItems = new ArrayList();
@@ -586,7 +586,7 @@ JS
 	}
 	
 	/**
-	 * @param DataObjectSet $items Only used to pass grouped sourceItems for creating
+	 * @param SS_List $items Only used to pass grouped sourceItems for creating
 	 * partial summaries.
 	 */
 	function SummaryFields($items = null) {
@@ -1275,7 +1275,7 @@ JS
 	 * Requires {@link Markable()} to return TRUE.
 	 * This is only functional with JavaScript enabled.
 	 * 
-	 * @return DataObjectSet of ArrayData objects
+	 * @return SS_List of ArrayData objects
 	 */
 	function SelectOptions(){
 		if(!$this->selectOptions) return;
@@ -1427,7 +1427,7 @@ class TableListField_Item extends ViewableData {
 	 * See TableListField->Action for a similiar dummy-function to work
 	 * around template-inheritance issues.
 	 * 
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	function Actions() {
 		$allowedActions = new ArrayList();

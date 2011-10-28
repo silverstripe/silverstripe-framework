@@ -51,10 +51,10 @@ The PHP file defining your new subclass is the first step in the process.  This 
 		 */	 
 		public function getEditForm($id = null) {
 			return new Form($this, "EditForm",
-				new FieldSet(
+				new FieldList(
 					new ReadonlyField('id #',$id)
 				),
-				new FieldSet(
+				new FieldList(
 					new FormAction('go')
 				)
 			);

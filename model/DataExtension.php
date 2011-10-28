@@ -172,7 +172,7 @@ abstract class DataExtension extends Extension {
 	 *
 	 * Caution: Use {@link FieldList->addFieldToTab()} to add fields.
 	 *
-	 * @param FieldList $fields FieldSet with a contained TabSet
+	 * @param FieldList $fields FieldList with a contained TabSet
 	 */
 	function updateCMSFields(FieldList $fields) {
 	}
@@ -181,9 +181,9 @@ abstract class DataExtension extends Extension {
 	 * This function is used to provide modifications to the form used
 	 * for front end forms. {@link DataObject->getFrontEndFields()}
 	 * 
-	 * Caution: Use {@link FieldSet->push()} to add fields.
+	 * Caution: Use {@link FieldList->push()} to add fields.
 	 *
-	 * @param FieldList $fields FieldSet without TabSet nesting
+	 * @param FieldList $fields FieldList without TabSet nesting
 	 */
 	function updateFrontEndFields(FieldList $fields) {
 	}
@@ -192,7 +192,7 @@ abstract class DataExtension extends Extension {
 	 * This is used to provide modifications to the form actions
 	 * used in the CMS. {@link DataObject->getCMSActions()}.
 	 *
-	 * @param FieldList $actions FieldSet
+	 * @param FieldList $actions FieldList
 	 */
 	function updateCMSActions(FieldList $actions) {
 	}

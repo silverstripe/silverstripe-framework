@@ -34,7 +34,7 @@
  *  $map = $myDoSet->toDropDownMap();
  *  
  *   // Instantiate the OptionsetField 
- *   $fieldset = new FieldList(
+ *   $FieldList = new FieldList(
  *     new OptionsetField(
  *      $name = "Foobar",
  *      $title = "FooBar's optionset",

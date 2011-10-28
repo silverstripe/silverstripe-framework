@@ -52,7 +52,7 @@ class FieldGroup extends CompositeField {
 		if(is_array($arg1) || is_a($arg1, 'FieldSet')) {
 			$fields = $arg1;
 		
-		} else if(is_array($arg2) || is_a($arg2, 'FieldSet')) {
+		} else if(is_array($arg2) || is_a($arg2, 'FieldList')) {
 			$this->title = $arg1;
 			$fields = $arg2;
 		

@@ -192,7 +192,7 @@ Let's walk through this method.
 
 
 Firstly, we get the fields from the parent class; we want to add fields, not replace them. The *$fields* variable
-returned is a `[api:FieldSet]` object.
+returned is a `[api:FieldList]` object.
 
 	:::php
 	$fields->addFieldToTab('Root.Content', new DateField('Date'), 'Content');

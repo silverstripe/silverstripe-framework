@@ -133,7 +133,7 @@ class TabSet extends CompositeField {
 	}
 	
 	/**
-	 * Inserts a field before a particular field in a FieldSet.
+	 * Inserts a field before a particular field in a FieldList.
 	 *
 	 * @param FormField $item The form field to insert
 	 * @param string $name Name of the field to insert before

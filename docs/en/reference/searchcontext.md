@@ -9,7 +9,7 @@ it just receives a set of search parameters and an object class it acts on.
 The default output of a `[api:SearchContext]` is either a `[api:SQLQuery]` object for further refinement, or a
 `[api:DataObject]` instance.
 
-In case you need multiple contexts, consider namespacing your request parameters by using `FieldSet->namespace()` on
+In case you need multiple contexts, consider namespacing your request parameters by using `FieldList->namespace()` on
 the $fields constructor parameter.
 
 `[api:SearchContext]` is mainly used by `[api:ModelAdmin]`, our generic data administration interface. Another
@@ -71,7 +71,7 @@ method, we're building our own `getCustomSearchContext()` variant.
 			$fields = $context->getSearchFields();
 			$form = new Form($this, "SearchForm",
 				$fields,
-				new FieldSet(
+				new FieldList(
 					new FormAction('doSearch')
 				)
 			);

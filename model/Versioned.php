@@ -908,8 +908,8 @@ class Versioned extends DataExtension {
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.
 	 * @param string $join A join expression, such as LEFT JOIN or INNER JOIN
 	 * @param int $limit A limit on the number of records returned from the database.
-	 * @param string $containerClass The container class for the result set (default is DataObjectSet)
-	 * @return DataObjectSet
+	 * @param string $containerClass The container class for the result set (default is DataList)
+	 * @return SS_List
 	 */
 	static function get_by_stage($class, $stage, $filter = '', $sort = '', $join = '', $limit = '', $containerClass = 'DataList') {
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass);
