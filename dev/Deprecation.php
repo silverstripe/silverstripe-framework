@@ -133,7 +133,7 @@ class Deprecation {
 
 			// Get the level to raise the notice as
 			$level = self::$notice_level;
-			if (!$level) $level = defined(E_USER_DEPRECATED) ? E_USER_DEPRECATED : E_USER_NOTICE;
+			if (!$level) $level = defined('E_USER_DEPRECATED') ? E_USER_DEPRECATED : E_USER_NOTICE;
 
 			// Then raise the notice
 			if(substr($string,-1) != '.') $string .= ".";
