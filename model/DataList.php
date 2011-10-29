@@ -253,7 +253,16 @@ class DataList extends ViewableData implements SS_List {
 	 * Find an element of this DataList where the given key = value
 	 */
 	public function find($key, $value) {
-		return $this->where("\"$key\" = '" . Convert::raw2sql($value) . "'")->First();
+		$clone = clone $this;
+		
+		if($key == 'ID') {
+			$baseClass = ClassInfo::baseDataClass($this->dataClass);
+			$SQL_col = "\"$baseClass\".\"$key\"";
+		} else {
+			$SQL_col = "\"$key\"";
+		}
+
+		return $clone->where("$SQL_col = '" . Convert::raw2sql($value) . "'")->First();
 	}
 	
 	

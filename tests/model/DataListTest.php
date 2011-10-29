@@ -175,4 +175,19 @@ class DataListTest extends SapphireTest {
 	    $this->assertEquals("Subteam 3", $list[2]->Title);
 	    $this->assertEquals("Team 2", $list[4]->Title);
 	}
+	
+	function testFind() {
+	    $list = DataList::create("DataObjectTest_Team");
+		$record = $list->find('Title', 'Team 1');
+		$this->assertEquals($this->idFromFixture('DataObjectTest_Team', 'team1'), $record->ID);
+	}
+	
+	function testFindById() {
+	    $list = DataList::create("DataObjectTest_Team");
+		$record = $list->find('ID', $this->idFromFixture('DataObjectTest_Team', 'team1'));
+		$this->assertEquals('Team 1', $record->Title);
+		// Test that you can call it twice on the same list
+		$record = $list->find('ID', $this->idFromFixture('DataObjectTest_Team', 'team2'));
+		$this->assertEquals('Team 2', $record->Title);
+	}
 }
