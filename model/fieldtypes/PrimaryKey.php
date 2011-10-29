@@ -26,7 +26,7 @@ class PrimaryKey extends Int {
 	
 	public function scaffoldFormField($title = null, $params = null) {
 		$titleField = ($this->object->hasField('Title')) ? "Title" : "Name";
-		$map = new SQLMap($this->object->extendedSQL(), "ID", $titleField);
+		$map = DataList::create(get_class($this->object))->map("ID", $titleField);
 		return new DropdownField($this->name, $title, $map, null, null, ' ');
 	}
 }

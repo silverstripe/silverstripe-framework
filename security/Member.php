@@ -971,17 +971,15 @@ class Member extends DataObject {
 	 *
 	 * @todo Improve documentation of this function! (Markus)
 	 */
-	public function map($filter = "", $sort = "", $blank="") {
-		$ret = new SQLMap(singleton('Member')->extendedSQL($filter, $sort));
-		if($blank) {
-			$blankMember = Object::create('Member');
-			$blankMember->Surname = $blank;
-			$blankMember->ID = 0;
+	public static function map($filter = "", $sort = "", $blank="") {
+		Deprecation::notice('3.0', 'Use DataList::("Member")->map()');
 
-			$ret->getItems()->unshift($blankMember);
-		}
+		$list = DataList::create("Member")->where($filter)->sort($sort);
+		$map = $list->map();
+		
+		if($blank) $map->unshift(0, $blank);
 
-		return $ret;
+		return $map;
 	}
 
 

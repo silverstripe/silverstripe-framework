@@ -37,7 +37,7 @@ class GroupTest extends FunctionalTest {
 		
 		// We will iterate over the map and build mapOuput to more easily call assertions on the result.
 		$map = Group::map();
-		$mapOutput = $map->getItems()->map('ID', 'Title');
+		$mapOutput = $map->toArray();
 		
 		$group1 = $this->objFromFixture('Group', 'group1');
 		$group2 = $this->objFromFixture('Group', 'group2');

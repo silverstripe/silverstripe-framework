@@ -221,16 +221,15 @@ class Group extends DataObject {
 		return $this->getManyManyComponents('Members');
 	}
 	
-	public function map($filter = "", $sort = "", $blank="") {
-		$ret = new SQLMap(singleton('Group')->extendedSQL($filter, $sort));
-		if($blank){
-			$blankGroup = new Group();
-			$blankGroup->Title = $blank;
-			$blankGroup->ID = 0;
+	public static function map($filter = "", $sort = "", $blank="") {
+		Deprecation::notice('3.0', 'Use DataList::("Group")->map()');
 
-			$ret->getItems()->unshift($blankGroup);
-		}
-		return $ret;
+		$list = DataList::create("Group")->where($filter)->sort($sort);
+		$map = $list->map();
+
+		if($blank) $map->unshift(0, $blank);
+		
+		return $map;
 	}
 	
 	/**

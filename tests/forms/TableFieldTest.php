@@ -55,7 +55,7 @@ class TableFieldTest extends SapphireTest {
 		$this->assertEquals(array(
 			1 => 'CustomPerm1',
 			2 => 'CustomPerm2',
-		), $permissions);
+		), $permissions->toArray());
 		
 
 		// Test repeated insert
@@ -80,7 +80,7 @@ class TableFieldTest extends SapphireTest {
 			1 => 'CustomPerm1',
 			2 => 'CustomPerm2',
 			3 => 'CustomPerm3',
-		), $permissions);
+		), $permissions->toArray());
 
 	}
 	
@@ -130,7 +130,7 @@ class TableFieldTest extends SapphireTest {
 		$this->assertEquals(array(
 			101 => 'Perm1 Modified',
 			102 => 'Perm2 Modified',
-		), $permissions);
+		), $permissions->toArray());
 	}
 	
 	function testDelete() {

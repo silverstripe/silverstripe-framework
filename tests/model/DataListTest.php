@@ -101,10 +101,10 @@ class DataListTest extends SapphireTest {
 	}
 	
 	function testMap() {
-		$map = DataList::create('DataObjectTest_TeamComment')->map();
+		$map = DataList::create('DataObjectTest_TeamComment')->map()->toArray();
 		$expected = array(1=>'Joe', 2=>'Bob', 3=>'Phil');
 		$this->assertEquals($expected, $map);
-		$otherMap = DataList::create('DataObjectTest_TeamComment')->map('Name', 'TeamID');
+		$otherMap = DataList::create('DataObjectTest_TeamComment')->map('Name', 'TeamID')->toArray();
 		$otherExpected = array ('Joe' => '1','Bob' => '1','Phil' => '2');
 		$this->assertEquals($otherExpected, $otherMap);
 	}
