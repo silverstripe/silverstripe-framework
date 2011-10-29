@@ -87,7 +87,7 @@ html,body {
 
 .cms-content-header {
 	background-color: darken($color-widget-bg, 20%);
-	padding: $grid-vertical $grid-horizontal ($grid-vertical - 2) $grid-horizontal * 2;	
+	padding: $grid-vertical $grid-horizontal ($grid-vertical - 2);	
 	height: $grid-vertical * 4;
 	z-index: 60;
 	border-bottom: 2px solid darken($color-widget-bg, 35%);
@@ -368,22 +368,22 @@ html,body {
 	z-index: 70;
 	
 	.cms-panel-header {
-		padding: 0 $grid-horizontal / 2;
-		margin: $grid-vertical $grid-horizontal * 1.5 0;
+		padding: 0;
+		margin: 0 0 $grid-vertical - 1;
 		line-height: $grid-vertical * 3;
 		
 		@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 10%))
-	
 	}
 	
 	.cms-panel-content {
-		width: ($grid-horizontal * 21);
-		padding: $grid-vertical $grid-horizontal * 2;
+		width: ($grid-horizontal * 22);
+		padding: $grid-vertical $grid-horizontal;
+		overflow-x: hidden;
+		overflow-y: scroll;
 	}
 	
 	.cms-content-header {
-		background-color: darken($color-widget-bg, 40%);
-		
+		background-color: darken($color-widget-bg, 40%);	
 		border-bottom: 2px solid darken($color-widget-bg, 50%);
 
 		@include background-image(
@@ -437,7 +437,7 @@ html,body {
 		}
 		
 		&.checkbox {
-			padding: 0 8px 7px;
+			padding: 0 8px 0;
 			
 			input { 
 				margin: 2px 0; 

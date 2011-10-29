@@ -189,7 +189,7 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form, .cms-preview, .cms-preview iframe, .cms-preview-controls { display: -moz-inline-box; -moz-box-orient: vertical; display: inline-block; vertical-align: middle; *vertical-align: auto; }
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form, .cms-preview, .cms-preview iframe, .cms-preview-controls { *display: inline; }
 
-.cms-content-header { background-color: #b0bec7; padding: 8px 8px 6px 16px; height: 32px; z-index: 60; border-bottom: 2px solid #8399a7; -moz-box-shadow: #eceff1 0 8px 16px; -webkit-box-shadow: #eceff1 0 8px 16px; -o-box-shadow: #eceff1 0 8px 16px; box-shadow: #eceff1 0 8px 16px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ced7dc), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#ced7dc, #92a5b2); background-image: -moz-linear-gradient(#ced7dc, #92a5b2); background-image: -o-linear-gradient(#ced7dc, #92a5b2); background-image: -ms-linear-gradient(#ced7dc, #92a5b2); background-image: linear-gradient(#ced7dc, #92a5b2); }
+.cms-content-header { background-color: #b0bec7; padding: 8px 8px 6px; height: 32px; z-index: 60; border-bottom: 2px solid #8399a7; -moz-box-shadow: #eceff1 0 8px 16px; -webkit-box-shadow: #eceff1 0 8px 16px; -o-box-shadow: #eceff1 0 8px 16px; box-shadow: #eceff1 0 8px 16px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ced7dc), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#ced7dc, #92a5b2); background-image: -moz-linear-gradient(#ced7dc, #92a5b2); background-image: -o-linear-gradient(#ced7dc, #92a5b2); background-image: -ms-linear-gradient(#ced7dc, #92a5b2); background-image: linear-gradient(#ced7dc, #92a5b2); }
 .cms-content-header h2 { float: left; padding: 8px 8px 0 0; font-size: 14px; line-height: 24px; font-weight: bold; text-shadow: #bfcad2 1px 1px 0; width: 176px; margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
 .cms-content-header > div { width: 9999em; overflow: hidden; }
 .cms-content-header .cms-content-header-tabs { float: left; }
@@ -244,8 +244,8 @@ html article, html aside, html details, html figcaption, html figure, html foote
 
 /* -------------------------------------------------------- Content Tools is the sidebar on the left of the main content panel */
 .cms-content-tools { background-color: #dde3e7; width: 192px; border-right: 1px solid #bfcad2; overflow-y: auto; overflow-x: hidden; z-index: 70; /* buttons now need to line with with reduced input sizes */ }
-.cms-content-tools .cms-panel-header { padding: 0 4px; margin: 8px 12px 0; line-height: 24px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -moz-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -o-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); }
-.cms-content-tools .cms-panel-content { width: 168px; padding: 8px 16px; }
+.cms-content-tools .cms-panel-header { padding: 0; margin: 0 0 7px; line-height: 24px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -moz-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -o-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); }
+.cms-content-tools .cms-panel-content { width: 176px; padding: 8px 8px; overflow-x: hidden; overflow-y: scroll; }
 .cms-content-tools .cms-content-header { background-color: #748d9d; border-bottom: 2px solid #5c7382; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #748d9d)); background-image: -webkit-linear-gradient(#b0bec7, #748d9d); background-image: -moz-linear-gradient(#b0bec7, #748d9d); background-image: -o-linear-gradient(#b0bec7, #748d9d); background-image: -ms-linear-gradient(#b0bec7, #748d9d); background-image: linear-gradient(#b0bec7, #748d9d); }
 .cms-content-tools .cms-content-header h2 { text-shadow: #5c7382 -1px -1px 0; width: 176px; color: white; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
 .cms-content-tools h3, .cms-content-tools h4, .cms-content-tools h5 { font-weight: bold; line-height: 16px; }
@@ -255,7 +255,7 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .cms-content-tools .field label { float: none; width: auto; font-size: 11px; padding: 0 8px 4px 0; }
 .cms-content-tools .field .middleColumn { margin: 0; }
 .cms-content-tools .field input.text, .cms-content-tools .field select, .cms-content-tools .field textarea { padding: 5px; font-size: 11px; }
-.cms-content-tools .field.checkbox { padding: 0 8px 7px; }
+.cms-content-tools .field.checkbox { padding: 0 8px 0; }
 .cms-content-tools .field.checkbox input { margin: 2px 0; }
 .cms-content-tools .field .chzn-container-single .chzn-single { height: 24px; line-height: 24px; font-size: 11px; }
 .cms-content-tools .field .chzn-container-single .chzn-single div b { background-position: 4px 0; }
@@ -429,7 +429,7 @@ form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; 
 .cms-tree.jstree-apple span.comment-count:after { content: ""; position: absolute; bottom: -3px; /* value = - border-top-width - border-bottom-width */ left: 4px; /* value = (:before left) + (:before border-left) - (:after border-left) */ border-width: 3px 3px 0; border-style: solid; border-color: #FFF0BC transparent; /* reduce the damage in FF3.0 */ display: block; width: 0; }
 .cms-tree.jstree-apple .jstree-hovered { text-shadow: none; text-decoration: none; }
 .cms-tree.jstree-apple li { padding: 0px; clear: left; }
-.cms-tree.jstree-apple li, .cms-tree.jstree-apple ins { background-color: transparent; background-image: url(../images/sitetree_ss_default_icons.png); }
+.cms-tree.jstree-apple ins { background-color: transparent; background-image: url(../images/sitetree_ss_default_icons.png); }
 .cms-tree.jstree-apple li.jstree-checked a, .cms-tree.jstree-apple li.jstree-checked a:link { background-color: #efe999; }
 
 .jstree-apple #record-0.jstree-open > ins { display: none; }

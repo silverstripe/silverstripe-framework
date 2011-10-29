@@ -6,11 +6,13 @@
 		</div>
 	</div>
 
-	<div class="cms-content-tools west cms-panel" data-expandOnClick="true">
+	<div class="cms-content-tools west cms-panel cms-panel-layout" data-expandOnClick="true" data-layout="{type: 'border'}">
 		
-		<h3 class="cms-panel-header">Filter</h3>
-	
-		<div class="cms-panel-content">
+		<div class="north">
+			<h3 class="cms-panel-header">Filter</h3>
+		<div>
+			
+		<div class="cms-panel-content center">
 			<div id="SearchForm_holder" class="leftbottom ss-tabset">		
 				<% if SearchClassSelector = tabs %>
 					<ul>

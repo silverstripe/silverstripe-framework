@@ -85,7 +85,6 @@
 			},
 			
 			togglePanel: function(bool) {
-				// if((!bool && this.hasClass('collapsed')) || (bool && !this.hasClass('collapsed'))) return;
 
 				//apply or unapply the flyout formatting
 				$('.cms-menu-list').children('li').each(function(){
