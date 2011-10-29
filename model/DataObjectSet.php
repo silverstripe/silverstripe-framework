@@ -7,10 +7,10 @@
 class DataObjectSet extends ArrayList {
 
 	/**
-	 * @deprecated 3.0.0
+	 * @deprecated 3.0
 	 */
 	public function __construct($items = array()) {
-		Deprecation::notice('3.0.0', 'Use DataList or ArrayList instead');
+		Deprecation::notice('3.0', 'Use DataList or ArrayList instead');
 
 		if ($items) {
 			if (!is_array($items) || func_num_args() > 1) {

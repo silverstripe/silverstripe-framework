@@ -139,7 +139,7 @@ HTML;
 class HasManyComplexTableField_Item extends ComplexTableField_Item {
 	
 	function MarkingCheckbox() {
-		$name = $this->parent->Name() . '[]';
+		$name = $this->parent->getName() . '[]';
 		
 		if(!$this->parent->joinField) {
 			user_error("joinField not set in HasManyComplexTableField '{$this->parent->name}'", E_USER_WARNING);

@@ -300,7 +300,7 @@ class SQLQuery {
 		
 		// If sort contains a function call, let's move the sort clause into a separate selected field.
 		// Some versions of MySQL choke if you have a group function referenced directly in the ORDER BY
-		if($combinedOrderby && strpos($combinedOrderby,'(') !== false && strtoupper(trim($combinedOrderby)) != DB::getConn()->random()) {
+		if($combinedOrderby && strpos($combinedOrderby,'(') !== false) {
 			// Sort can be "Col1 DESC|ASC, Col2 DESC|ASC", we need to handle that
 			$sortParts = explode(",", $combinedOrderby);
 				
@@ -467,7 +467,8 @@ class SQLQuery {
 	            else if(sizeof($join['filter']) == 1) $filter = $join['filter'][0];
 	            else $filter = "(" . implode(") AND (", $join['filter']) . ")";
 	            
-	            $this->from[$alias] = strtoupper($join['type']) . " JOIN \"{$join['table']}\" AS \"$alias\" ON $filter";
+				$aliasClause = ($alias != $join['table']) ? " AS \"$alias\"" : "";
+	            $this->from[$alias] = strtoupper($join['type']) . " JOIN \"{$join['table']}\"$aliasClause ON $filter";
 	        }
 	    }
 

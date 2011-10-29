@@ -152,7 +152,7 @@ class HtmlEditorField extends TextareaField {
 			}
 		
 			if($record->ID && $record->many_many('ImageTracking') && $tracker = $record->ImageTracking()) {
-			    $tracker->removeByFilter(sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID));
+			    $tracker->where(sprintf('"FieldName" = \'%s\' AND "SiteTreeID" = %d', $this->name, $record->ID))->removeAll();
 
 				$fieldName = $this->name;
 				if($linkedFiles) foreach($linkedFiles as $item) {

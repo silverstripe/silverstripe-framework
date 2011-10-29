@@ -56,6 +56,7 @@ class CompositeField extends FormField {
 	 * @deprecated 3.0 Please use {@link FieldList()}.
 	 */
 	public function FieldSet() {
+		Deprecation::notice('3.0', 'Use FieldList() instead.');
 		return $this->FieldList();
 	}
 
@@ -114,7 +115,7 @@ class CompositeField extends FormField {
 		$className = ($this->columnCount) ? "field CompositeField {$this->extraClass()} multicolumn" : "field CompositeField {$this->extraClass()}";
 		$content = "<div class=\"$className\"$idAtt>";
 		
-		foreach($fs as $subfield) {//echo ' subf'.$subfield->Name();
+		foreach($fs as $subfield) {//echo ' subf'.$subfield->getName();
 			if($this->columnCount) {
 				$className = "column{$this->columnCount}";
 				if(!next($fs)) $className .= " lastcolumn";
@@ -141,7 +142,7 @@ class CompositeField extends FormField {
 					$isIncluded =  ($field->hasData());
 				}
 				if($isIncluded) {
-					$name = $field->Name();
+					$name = $field->getName();
 					if($name) {
 						$formName = (isset($this->form)) ? $this->form->FormName() : '(unknown form)';
 						if(isset($list[$name])) user_error("collateDataFields() I noticed that a field called '$name' appears twice in your form: '{$formName}'.  One is a '{$field->class}' and the other is a '{$list[$name]->class}'", E_USER_ERROR);
@@ -265,7 +266,7 @@ class CompositeField extends FormField {
 		
 		$i = 0;
 		foreach($this->children as $child) {
-			if($child->Name() == $field->Name()) return $i;
+			if($child->getName() == $field->getName()) return $i;
 			$i++;
 		}
 		
@@ -278,7 +279,7 @@ class CompositeField extends FormField {
 	 * @param string|FormField
 	 */
 	function makeFieldReadonly($field) {
-		$fieldName = ($field instanceof FormField) ? $field->Name() : $field;
+		$fieldName = ($field instanceof FormField) ? $field->getName() : $field;
 		
 		// Iterate on items, looking for the applicable field
 		foreach($this->children as $i => $item) {
@@ -286,7 +287,7 @@ class CompositeField extends FormField {
 				$item->makeFieldReadonly($fieldName);
 			} else {
 				// Once it's found, use FormField::transform to turn the field into a readonly version of itself.
-				if($item->Name() == $fieldName) {
+				if($item->getName() == $fieldName) {
 					$this->children->replaceField($fieldName, $item->transform(new ReadonlyTransformation()));
 
 					// Clear an internal cache

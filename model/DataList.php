@@ -97,6 +97,7 @@ class DataList extends ViewableData implements SS_List {
 	 * Add an join clause to this data list's query.
 	 */
 	public function join($join) {
+		Deprecation::notice('3.0', 'Use innerJoin() or leftJoin() instead.');
 		$this->dataQuery->join($join);
 		return $this;
 	}
@@ -151,14 +152,8 @@ class DataList extends ViewableData implements SS_List {
 		return $result;
 	}
 
-	public function map($keyfield = 'ID', $titlefield = 'Title') {
-		$map = array();
-
-		foreach ($this as $item) {
-			$map[$item->$keyfield] = $item->$titlefield;
-		}
-
-		return $map;
+	public function map($keyField = 'ID', $titleField = 'Title') {
+		return new SS_Map($this, $keyField, $titleField);
 	}
 
 	/**
@@ -258,7 +253,16 @@ class DataList extends ViewableData implements SS_List {
 	 * Find an element of this DataList where the given key = value
 	 */
 	public function find($key, $value) {
-		return $this->where("\"$key\" = '" . Convert::raw2sql($value) . "'")->First();
+		$clone = clone $this;
+		
+		if($key == 'ID') {
+			$baseClass = ClassInfo::baseDataClass($this->dataClass);
+			$SQL_col = "\"$baseClass\".\"$key\"";
+		} else {
+			$SQL_col = "\"$key\"";
+		}
+
+		return $clone->where("$SQL_col = '" . Convert::raw2sql($value) . "'")->First();
 	}
 	
 	

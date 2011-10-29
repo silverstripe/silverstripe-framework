@@ -153,6 +153,11 @@
 						// Update panels
 						jQuery.entwine.synchronous_mode(true);
 						var newContentEl = $(data);
+						
+						if(newContentEl.find('.cms-container').length) {
+							throw 'Content loaded via ajax is not allowed to contain tags matching the ".cms-container" selector to avoid infinite loops';
+						}
+						
 						newContentEl.addClass('loading');
 						contentEl.replaceWith(newContentEl);
 						contentEl.remove();

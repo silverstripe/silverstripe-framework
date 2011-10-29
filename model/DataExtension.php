@@ -53,7 +53,7 @@ abstract class DataExtension extends Extension {
 		
 		// @deprecated 2.4 - use extraStatics() now, not extraDBFields()
 		if(method_exists($extensionClass, 'extraDBFields')) {
-			user_error('DataExtension::extraDBFields() is deprecated. Please use extraStatics() instead.', E_USER_NOTICE); 
+			Deprecation::notice('2.4', 'DataExtension::extraDBFields() is deprecated. Please use extraStatics() instead.');
 			$extraStaticsMethod = 'extraDBFields';
 		} else {
 			$extraStaticsMethod = 'extraStatics';

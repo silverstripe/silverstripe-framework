@@ -254,7 +254,7 @@ JS;
 			return null;
 		}
 
-		$pageStart = (isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) ? $_REQUEST['ctf'][$this->Name()]['start'] : 0;
+		$pageStart = (isset($_REQUEST['ctf'][$this->getName()]['start']) && is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) ? $_REQUEST['ctf'][$this->getName()]['start'] : 0;
 
 		$output = new ArrayList();
 		foreach($sourceItems as $pageIndex=>$item) {
@@ -444,10 +444,10 @@ JS;
 	}
 	
 	/**
-	 * @deprecated
+	 * @deprecated 3.0
 	 */
 	function setRelationAutoSetting($value) {
-		user_error("ComplexTableField::setRelationAutoSetting() is deprecated; manipulate the DataList instead", E_USER_WARNING);
+		Deprecation::notice('3.0', 'Manipulate the DataList instead.');
 	}
 	
 	/**
@@ -493,8 +493,8 @@ JS;
 		);
 		
 		$form->sessionMessage($message, 'good');
-
-		Director::redirectBack();
+		
+		$this->controller->redirectBack();
 	}
 }
 
@@ -614,7 +614,9 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 			$readonly,
 			$childData
 		);
-	
+		// Don't use ComplexTableField_Popup.ss
+		$form->setTemplate('Form');
+		
 		$form->loadDataFrom($childData);
 		if ($readonly) $form->makeReadonly();
 

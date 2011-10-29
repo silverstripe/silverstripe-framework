@@ -65,9 +65,9 @@ class MemberTableField extends ComplexTableField {
 			    $this->group = $group;
 			    $members = $group->Members();
 
-		    } elseif(isset($_REQUEST['ctf'][$this->Name()]["ID"]) && is_numeric($_REQUEST['ctf'][$this->Name()]["ID"])) {
+		    } elseif(isset($_REQUEST['ctf'][$this->getName()]["ID"]) && is_numeric($_REQUEST['ctf'][$this->getName()]["ID"])) {
 		        throw new Exception("Is this still being used?  It's a hack and we should remove it.");
-			    $group = DataObject::get_by_id('Group', $_REQUEST['ctf'][$this->Name()]["ID"]);
+			    $group = DataObject::get_by_id('Group', $_REQUEST['ctf'][$this->getName()]["ID"]);
 			    $this->group = $group;
 			    $members = $group->Members();
 		    } else {

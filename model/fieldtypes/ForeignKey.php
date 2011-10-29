@@ -44,7 +44,7 @@ class ForeignKey extends Int {
 			}
 		} else {
 			$titleField = (singleton($hasOneClass)->hasField('Title')) ? "Title" : "Name";
-			$map = new SQLMap(singleton($hasOneClass)->extendedSQL(), "ID", $titleField);
+			$map = DataList::create($hasOneClass)->map("ID", $titleField);
 			$field =  new DropdownField($this->name, $title, $map, null, null, ' ');
 		}
 		

@@ -282,6 +282,7 @@ class Director {
 	 * @deprecated 3.0 Use SS_HTTPRequest->latestParam()
 	 */
 	static function urlParam($name) {
+		Deprecation::notice('3.0', 'Use SS_HTTPRequest->latestParam() instead.');
 		if(isset(Director::$urlParams[$name])) return Director::$urlParams[$name];
 	}
 	
@@ -291,6 +292,7 @@ class Director {
 	 * @deprecated 3.0 Use SS_HTTPRequest->latestParams()
 	 */
 	static function urlParams() {
+		Deprecation::notice('3.0', 'Use SS_HTTPRequest->latestParams() instead.');
 		return Director::$urlParams;
 	}
 
@@ -413,6 +415,7 @@ class Director {
 	 * @deprecated 2.5 Use Controller->redirectBack()
 	 */
 	static function redirectBack() {
+		Deprecation::notice('2.5', 'Use Controller->redirectBack() instead.');
 		Controller::curr()->redirectBack();
 	}
 

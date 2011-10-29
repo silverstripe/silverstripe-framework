@@ -830,6 +830,10 @@ class LeftAndMain extends Controller {
 			$form = new Form($this, "EditForm", $fields, $actions);
 			$form->addExtraClass('cms-edit-form');
 			$form->loadDataFrom($record);
+			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
+			
+			// Set this if you want to split up tabs into a separate header row
+			// if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
 			
 			// Add a default or custom validator.
 			// @todo Currently the default Validator.js implementation
@@ -1100,9 +1104,7 @@ class LeftAndMain extends Controller {
 	 * @return String|boolean
 	 */
 	public function PreviewLink() {
-		$record = $this->getRecord($this->currentPageID());
-		$baseLink = ($record && $record instanceof Page) ? $record->Link('?stage=Stage') : Director::absoluteBaseURL();
-		return $baseLink;
+		return false;
 	}
 
 	/**

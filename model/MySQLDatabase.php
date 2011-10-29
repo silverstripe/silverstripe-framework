@@ -834,11 +834,12 @@ class MySQLDatabase extends SS_Database {
 			$match['SiteTree'] = $match['File'] = "1 = 1";
 		}
 
-		// Generate initial queries and base table names
+		// Generate initial DataLists and base table names
+		$lists = array();
 		$baseClasses = array('SiteTree' => '', 'File' => '');
 		foreach($classesToSearch as $class) {
-			$queries[$class] = singleton($class)->extendedSQL($notMatch . $match[$class] . $extraFilters[$class], "");
-			$baseClasses[$class] = reset($queries[$class]->from);
+			$lists[$class] = DataList::create($class)->where($notMatch . $match[$class] . $extraFilters[$class], "");
+			$baseClasses[$class] = '"'.$class.'"';
 		}
 
 		// Make column selection lists
@@ -847,18 +848,17 @@ class MySQLDatabase extends SS_Database {
 			'File' => array("ClassName","$baseClasses[File].ID","_utf8'' AS ParentID","Title","_utf8'' AS MenuTitle","_utf8'' AS URLSegment","Content","LastEdited","Created","Filename","Name","$relevance[File] AS Relevance","NULL AS CanViewType"),
 		);
 
-		// Process queries
-		foreach($classesToSearch as $class) {
-			// There's no need to do all that joining
-			$queries[$class]->from = array(str_replace('`','',$baseClasses[$class]) => $baseClasses[$class]);
-			$queries[$class]->select = $select[$class];
-			$queries[$class]->orderby = null;
-		}
-
-		// Combine queries
+		// Process and combine queries
 		$querySQLs = array();
 		$totalCount = 0;
-		foreach($queries as $query) {
+		foreach($lists as $class => $list) {
+			$query = $list->dataQuery()->query();
+
+			// There's no need to do all that joining
+			$query->from = array(str_replace(array('"','`'),'',$baseClasses[$class]) => $baseClasses[$class]);
+			$query->select = $select[$class];
+			$query->orderby = null;
+			
 			$querySQLs[] = $query->sql();
 			$totalCount += $query->unlimitedRowCount();
 		}

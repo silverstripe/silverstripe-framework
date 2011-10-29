@@ -42,11 +42,7 @@
 				
 				this._super();
 			},
-			
-			onunmatch: function() {
-				this._super();
-			},
-			
+						
 			redraw: function() {
 				this.layout();
 			},
@@ -264,7 +260,7 @@
 		});
 	});
 	
-	$('.cms-content.loading').entwine({
+	$('.cms-content.loading,.cms-edit-form.loading').entwine({
 		onmatch: function() {
 			this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div>');
 		},

@@ -218,8 +218,8 @@ class SQLQueryTest extends SapphireTest {
 		$query->leftJoin( 'MyLastTable', 'MyOtherTable.ID = MyLastTable.ID' );
 
 		$this->assertEquals( 'SELECT * FROM MyTable '.
-			'INNER JOIN "MyOtherTable" AS "MyOtherTable" ON MyOtherTable.ID = 2 '.
-			'LEFT JOIN "MyLastTable" AS "MyLastTable" ON MyOtherTable.ID = MyLastTable.ID',
+			'INNER JOIN "MyOtherTable" ON MyOtherTable.ID = 2 '.
+			'LEFT JOIN "MyLastTable" ON MyOtherTable.ID = MyLastTable.ID',
 			$query->sql()
 		);
 

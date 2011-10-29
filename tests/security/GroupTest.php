@@ -29,11 +29,15 @@ class GroupTest extends FunctionalTest {
 	 * Test the Group::map() function
 	 */
 	function testGroupMap() {
+		// 2.4 only
+		$originalDeprecation = Deprecation::dump_settings();
+		Deprecation::notification_version('2.4');
+		
 		/* Group::map() returns an SQLMap object implementing iterator.  You can use foreach to get ID-Title pairs. */
 		
 		// We will iterate over the map and build mapOuput to more easily call assertions on the result.
 		$map = Group::map();
-		$mapOutput = $map->getItems()->map('ID', 'Title');
+		$mapOutput = $map->toArray();
 		
 		$group1 = $this->objFromFixture('Group', 'group1');
 		$group2 = $this->objFromFixture('Group', 'group2');
@@ -41,6 +45,8 @@ class GroupTest extends FunctionalTest {
 		/* We have added 2 groups to our fixture.  They should both appear in $mapOutput. */
 		$this->assertEquals($mapOutput[$group1->ID], $group1->Title);
 		$this->assertEquals($mapOutput[$group2->ID], $group2->Title);
+
+		Deprecation::restore_settings($originalDeprecation);
 	}
 	
 	function testMemberGroupRelationForm() {

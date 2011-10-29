@@ -163,6 +163,17 @@ html,body {
 	}
 }
 
+.cms-content-loading-overlay {
+	position: absolute; // z-index doesn't apply properly without that
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	// Further styling by .ui-widget-overlay-light which is usually applied at the same time
+	
+}
+
 /** -----------------------------------------------
  * Loading Screen
  * ------------------------------------------------ */
@@ -379,7 +390,7 @@ html,body {
 		width: ($grid-horizontal * 22);
 		padding: $grid-vertical $grid-horizontal;
 		overflow-x: hidden;
-		overflow-y: scroll;
+		overflow-y: auto;
 	}
 	
 	.cms-content-header {
@@ -543,6 +554,10 @@ html,body {
 	float: right;
 }
 
+#Form_BatchActionsForm select {
+	width: 200px;
+}
+
 /** --------------------------------------------
  * Preview header (remove before release)
  * -------------------------------------------- */
@@ -659,7 +674,7 @@ form.member-profile-form {
 		/* always show a y scroll bar as popups like TreeDropdowns 
 		 can trigger longer pages and the extra scroll bar doesn't 
 		 fire our sizing bar */
-		overflow-y: scroll;
+		overflow-y: auto;
 		overflow-x: auto;
 		background: none;
 	}

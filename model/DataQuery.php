@@ -176,8 +176,8 @@ class DataQuery {
 			foreach($orderByFields as $ob => $col) {
 				$col = trim($col);
 
-				// don't touch functions in the ORDER BY
-				if(strpos($col, '(') !== false) continue;
+				// don't touch functions in the ORDER BY or function calls selected as fields
+				if(strpos($col, '(') !== false || preg_match('/_SortColumn/', $col)) continue;
 
 				$columnParts = explode(' ', $col);
 				if (count($columnParts) == 2) {
@@ -367,6 +367,7 @@ class DataQuery {
 	 * @deprecated Use innerJoin() or leftJoin() instead.
 	 */
 	function join($join) {
+		Deprecation::notice('3.0', 'Use innerJoin() or leftJoin() instead.');
 		if($join) {
 			$clone = $this;
 			$clone->query->from[] = $join;
