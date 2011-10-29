@@ -75,8 +75,8 @@ class FieldGroup extends CompositeField {
 			$compositeTitle = '';
 			$count = 0;
 			foreach($fs as $subfield){
-				$compositeTitle .= $subfield->Name();
-				if($subfield->Name()) $count++;
+				$compositeTitle .= $subfield->getName();
+				if($subfield->getName()) $count++;
 			}
 			if($count == 1) $compositeTitle .= 'Group';
 			return ereg_replace("[^a-zA-Z0-9]+","",$compositeTitle);

@@ -254,7 +254,7 @@ JS;
 			return null;
 		}
 
-		$pageStart = (isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) ? $_REQUEST['ctf'][$this->Name()]['start'] : 0;
+		$pageStart = (isset($_REQUEST['ctf'][$this->getName()]['start']) && is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) ? $_REQUEST['ctf'][$this->getName()]['start'] : 0;
 
 		$output = new ArrayList();
 		foreach($sourceItems as $pageIndex=>$item) {

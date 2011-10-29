@@ -302,27 +302,27 @@ JS
 	function Headings() {
 		$headings = array();
 		foreach($this->fieldList as $fieldName => $fieldTitle) {
-			$isSorted = (isset($_REQUEST['ctf'][$this->Name()]['sort']) && $fieldName == $_REQUEST['ctf'][$this->Name()]['sort']);
+			$isSorted = (isset($_REQUEST['ctf'][$this->getName()]['sort']) && $fieldName == $_REQUEST['ctf'][$this->getName()]['sort']);
 			// we can't allow sorting with partial summaries (groupByField)
 			$isSortable = ($this->form && $this->isFieldSortable($fieldName) && !$this->groupByField);
 
 			// sorting links (only if we have a form to refresh with)
 			if($this->form) {
 				$sortLink = $this->Link();
-				$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][sort]", $fieldName, $sortLink,'&');
+				$sortLink = HTTP::setGetVar("ctf[{$this->getName()}][sort]", $fieldName, $sortLink,'&');
 	
 				// Apply sort direction to the current sort field
-				if(!empty($_REQUEST['ctf'][$this->Name()]['sort']) && ($_REQUEST['ctf'][$this->Name()]['sort'] == $fieldName)) {
-					$dir = isset($_REQUEST['ctf'][$this->Name()]['dir']) ? $_REQUEST['ctf'][$this->Name()]['dir'] : null;
+				if(!empty($_REQUEST['ctf'][$this->getName()]['sort']) && ($_REQUEST['ctf'][$this->getName()]['sort'] == $fieldName)) {
+					$dir = isset($_REQUEST['ctf'][$this->getName()]['dir']) ? $_REQUEST['ctf'][$this->getName()]['dir'] : null;
 					$dir = trim(strtolower($dir));
 					$newDir = ($dir == 'desc') ? null : 'desc';
-					$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][dir]", Convert::raw2xml($newDir), $sortLink,'&');
+					$sortLink = HTTP::setGetVar("ctf[{$this->getName()}][dir]", Convert::raw2xml($newDir), $sortLink,'&');
 				}
 
-				if(isset($_REQUEST['ctf'][$this->Name()]['search']) && is_array($_REQUEST['ctf'][$this->Name()]['search'])) {
-					foreach($_REQUEST['ctf'][$this->Name()]['search'] as $parameter => $value) {
+				if(isset($_REQUEST['ctf'][$this->getName()]['search']) && is_array($_REQUEST['ctf'][$this->getName()]['search'])) {
+					foreach($_REQUEST['ctf'][$this->getName()]['search'] as $parameter => $value) {
 						$XML_search = Convert::raw2xml($value);
-						$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][search][$parameter]", $XML_search, $sortLink,'&');
+						$sortLink = HTTP::setGetVar("ctf[{$this->getName()}][search][$parameter]", $XML_search, $sortLink,'&');
 					}
 				}
 			} else {
@@ -335,7 +335,7 @@ JS
 				"IsSortable" => $isSortable,
 				"SortLink" => $sortLink,
 				"SortBy" => $isSorted,
-				"SortDirection" => (isset($_REQUEST['ctf'][$this->Name()]['dir'])) ? $_REQUEST['ctf'][$this->Name()]['dir'] : null 
+				"SortDirection" => (isset($_REQUEST['ctf'][$this->getName()]['dir'])) ? $_REQUEST['ctf'][$this->getName()]['dir'] : null 
 			));
 		}
 		return new ArrayList($headings);
@@ -411,8 +411,8 @@ JS
 		$items = clone $this->getDataList();
 
 		// TODO: Sorting could be implemented on regular SS_Lists.
-		if(method_exists($items,'canSortBy') && isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
-    		$sort = $_REQUEST['ctf'][$this->Name()]['sort'];
+		if(method_exists($items,'canSortBy') && isset($_REQUEST['ctf'][$this->getName()]['sort'])) {
+    		$sort = $_REQUEST['ctf'][$this->getName()]['sort'];
 		    // TODO: sort direction
 			if($items->canSortBy($sort)) $items = $items->sort($sort);
 		}
@@ -421,8 +421,8 @@ JS
 		// To disable pagination, set $this->showPagination to false.
 		if($this->showPagination && $this->pageSize) {
 		    $SQL_limit = (int)$this->pageSize;
-		    if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
-			    $SQL_start = (isset($_REQUEST['ctf'][$this->Name()]['start'])) ? intval($_REQUEST['ctf'][$this->Name()]['start']) : "0";
+		    if(isset($_REQUEST['ctf'][$this->getName()]['start']) && is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) {
+			    $SQL_start = (isset($_REQUEST['ctf'][$this->getName()]['start'])) ? intval($_REQUEST['ctf'][$this->getName()]['start']) : "0";
 		    } else {
 			    $SQL_start = 0;
 		    }
@@ -739,7 +739,7 @@ JS
 	}
 	 
 	function ListStart() {
-		return $_REQUEST['ctf'][$this->Name()]['start'];
+		return $_REQUEST['ctf'][$this->getName()]['start'];
 	}
 	
 	/**
@@ -761,19 +761,19 @@ JS
 	function FirstLink() {
 		$start = 0;
 		
-		if(!isset($_REQUEST['ctf'][$this->Name()]['start']) || !is_numeric($_REQUEST['ctf'][$this->Name()]['start']) || $_REQUEST['ctf'][$this->Name()]['start'] == 0) {
+		if(!isset($_REQUEST['ctf'][$this->getName()]['start']) || !is_numeric($_REQUEST['ctf'][$this->getName()]['start']) || $_REQUEST['ctf'][$this->getName()]['start'] == 0) {
 			return null;
 		}
 		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
-		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
+		$link = Controller::join_links($baseLink, "?ctf[{$this->getName()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		
 		// preserve sort options
-		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$link .= "&ctf[{$this->Name()}][sort]=" . $_REQUEST['ctf'][$this->Name()]['sort'];
+		if(isset($_REQUEST['ctf'][$this->getName()]['sort'])) {
+			$link .= "&ctf[{$this->getName()}][sort]=" . $_REQUEST['ctf'][$this->getName()]['sort'];
 			// direction
-			if(isset($_REQUEST['ctf'][$this->Name()]['dir'])) {
-				$link .= "&ctf[{$this->Name()}][dir]=" . $_REQUEST['ctf'][$this->Name()]['dir'];
+			if(isset($_REQUEST['ctf'][$this->getName()]['dir'])) {
+				$link .= "&ctf[{$this->getName()}][dir]=" . $_REQUEST['ctf'][$this->getName()]['dir'];
 			}
 		}
 		
@@ -781,24 +781,24 @@ JS
 	}
 	
 	function PrevLink() {
-		$currentStart = isset($_REQUEST['ctf'][$this->Name()]['start']) ? $_REQUEST['ctf'][$this->Name()]['start'] : 0;
+		$currentStart = isset($_REQUEST['ctf'][$this->getName()]['start']) ? $_REQUEST['ctf'][$this->getName()]['start'] : 0;
 
 		if($currentStart == 0) {
 			return null;
 		}
 		
-		$start = ($_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize < 0)  ? 0 : $_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize;
+		$start = ($_REQUEST['ctf'][$this->getName()]['start'] - $this->pageSize < 0)  ? 0 : $_REQUEST['ctf'][$this->getName()]['start'] - $this->pageSize;
 		
 		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
-		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
+		$link = Controller::join_links($baseLink, "?ctf[{$this->getName()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		
 		// preserve sort options
-		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$link .= "&ctf[{$this->Name()}][sort]=" . $_REQUEST['ctf'][$this->Name()]['sort'];
+		if(isset($_REQUEST['ctf'][$this->getName()]['sort'])) {
+			$link .= "&ctf[{$this->getName()}][sort]=" . $_REQUEST['ctf'][$this->getName()]['sort'];
 			// direction
-			if(isset($_REQUEST['ctf'][$this->Name()]['dir'])) {
-				$link .= "&ctf[{$this->Name()}][dir]=" . $_REQUEST['ctf'][$this->Name()]['dir'];
+			if(isset($_REQUEST['ctf'][$this->getName()]['dir'])) {
+				$link .= "&ctf[{$this->getName()}][dir]=" . $_REQUEST['ctf'][$this->getName()]['dir'];
 			}
 		}
 		
@@ -807,21 +807,21 @@ JS
 	
 
 	function NextLink() {
-		$currentStart = isset($_REQUEST['ctf'][$this->Name()]['start']) ? $_REQUEST['ctf'][$this->Name()]['start'] : 0;
+		$currentStart = isset($_REQUEST['ctf'][$this->getName()]['start']) ? $_REQUEST['ctf'][$this->getName()]['start'] : 0;
 		$start = ($currentStart + $this->pageSize < $this->TotalCount()) ? $currentStart + $this->pageSize : $this->TotalCount() % $this->pageSize > 0;
 		if($currentStart >= $start-1) {
 			return null;
 		}
 		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
-		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
+		$link = Controller::join_links($baseLink, "?ctf[{$this->getName()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		
 		// preserve sort options
-		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$link .= "&ctf[{$this->Name()}][sort]=" . $_REQUEST['ctf'][$this->Name()]['sort'];
+		if(isset($_REQUEST['ctf'][$this->getName()]['sort'])) {
+			$link .= "&ctf[{$this->getName()}][sort]=" . $_REQUEST['ctf'][$this->getName()]['sort'];
 			// direction
-			if(isset($_REQUEST['ctf'][$this->Name()]['dir'])) {
-				$link .= "&ctf[{$this->Name()}][dir]=" . $_REQUEST['ctf'][$this->Name()]['dir'];
+			if(isset($_REQUEST['ctf'][$this->getName()]['dir'])) {
+				$link .= "&ctf[{$this->getName()}][dir]=" . $_REQUEST['ctf'][$this->getName()]['dir'];
 			}
 		}
 		
@@ -832,20 +832,20 @@ JS
 		$pageSize = ($this->TotalCount() % $this->pageSize > 0) ? $this->TotalCount() % $this->pageSize : $this->pageSize;
 		$start = $this->TotalCount() - $pageSize;
 		// Check if there is only one page, or if we are on last page
-		if($this->TotalCount() <= $pageSize || (isset($_REQUEST['ctf'][$this->Name()]['start']) &&  $_REQUEST['ctf'][$this->Name()]['start'] >= $start)) {
+		if($this->TotalCount() <= $pageSize || (isset($_REQUEST['ctf'][$this->getName()]['start']) &&  $_REQUEST['ctf'][$this->getName()]['start'] >= $start)) {
 			return null;
 		}
 		
 		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
-		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
+		$link = Controller::join_links($baseLink, "?ctf[{$this->getName()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		
 		// preserve sort options
-		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$link .= "&ctf[{$this->Name()}][sort]=" . $_REQUEST['ctf'][$this->Name()]['sort'];
+		if(isset($_REQUEST['ctf'][$this->getName()]['sort'])) {
+			$link .= "&ctf[{$this->getName()}][sort]=" . $_REQUEST['ctf'][$this->getName()]['sort'];
 			// direction
-			if(isset($_REQUEST['ctf'][$this->Name()]['dir'])) {
-				$link .= "&ctf[{$this->Name()}][dir]=" . $_REQUEST['ctf'][$this->Name()]['dir'];
+			if(isset($_REQUEST['ctf'][$this->getName()]['dir'])) {
+				$link .= "&ctf[{$this->getName()}][dir]=" . $_REQUEST['ctf'][$this->getName()]['dir'];
 			}
 		}
 		
@@ -854,12 +854,12 @@ JS
 	
 	function FirstItem() {
 		if ($this->TotalCount() < 1) return 0;
-		return isset($_REQUEST['ctf'][$this->Name()]['start']) ? $_REQUEST['ctf'][$this->Name()]['start'] + 1 : 1;
+		return isset($_REQUEST['ctf'][$this->getName()]['start']) ? $_REQUEST['ctf'][$this->getName()]['start'] + 1 : 1;
 	}
 	
 	function LastItem() {
-		if(isset($_REQUEST['ctf'][$this->Name()]['start'])) {
-			return $_REQUEST['ctf'][$this->Name()]['start'] + min($this->pageSize, $this->TotalCount() - $_REQUEST['ctf'][$this->Name()]['start']);
+		if(isset($_REQUEST['ctf'][$this->getName()]['start'])) {
+			return $_REQUEST['ctf'][$this->getName()]['start'] + min($this->pageSize, $this->TotalCount() - $_REQUEST['ctf'][$this->getName()]['start']);
 		} else {
 			return min($this->pageSize, $this->TotalCount());
 		}
@@ -1053,8 +1053,8 @@ JS
 
 	function PrintLink() {
 		$link = Controller::join_links($this->Link(), 'printall');
-		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$link = HTTP::setGetVar("ctf[{$this->Name()}][sort]",Convert::raw2xml($_REQUEST['ctf'][$this->Name()]['sort']), $link);
+		if(isset($_REQUEST['ctf'][$this->getName()]['sort'])) {
+			$link = HTTP::setGetVar("ctf[{$this->getName()}][sort]",Convert::raw2xml($_REQUEST['ctf'][$this->getName()]['sort']), $link);
 		}
 		return $link;
 	}
@@ -1131,19 +1131,19 @@ JS
 	  // adding this to TODO probably add a method to the classes
 	  // to return they're translated string
 	  // added by ruibarreiros @ 27/11/2007
-		return $this->sourceClass() ? singleton($this->sourceClass())->singular_name() : $this->Name();
+		return $this->sourceClass() ? singleton($this->sourceClass())->singular_name() : $this->getName();
 	}
 	
 	function NameSingular() {
 	  // same as Title()
 	  // added by ruibarreiros @ 27/11/2007
-	  return $this->sourceClass() ? singleton($this->sourceClass())->singular_name() : $this->Name();
+	  return $this->sourceClass() ? singleton($this->sourceClass())->singular_name() : $this->getName();
 	}
 
 	function NamePlural() {
 	  // same as Title()
 	  // added by ruibarreiros @ 27/11/2007
-		return $this->sourceClass() ? singleton($this->sourceClass())->plural_name() : $this->Name();
+		return $this->sourceClass() ? singleton($this->sourceClass())->plural_name() : $this->getName();
 	} 
 	
 	function setTemplate($template) {
@@ -1153,9 +1153,9 @@ JS
 	function CurrentLink() {
 		$link = $this->Link();
 		
-		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
-			$start = ($_REQUEST['ctf'][$this->Name()]['start'] < 0)  ? 0 : $_REQUEST['ctf'][$this->Name()]['start'];
-			$link = Controller::join_links($link, "?ctf[{$this->Name()}][start]={$start}");
+		if(isset($_REQUEST['ctf'][$this->getName()]['start']) && is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) {
+			$start = ($_REQUEST['ctf'][$this->getName()]['start'] < 0)  ? 0 : $_REQUEST['ctf'][$this->getName()]['start'];
+			$link = Controller::join_links($link, "?ctf[{$this->getName()}][start]={$start}");
 		}
 
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
@@ -1461,7 +1461,7 @@ class TableListField_Item extends ViewableData {
 	}
 	
 	function MarkingCheckbox() {
-		$name = $this->parent->Name() . '[]';
+		$name = $this->parent->getName() . '[]';
 		
 		if($this->parent->isReadonly())
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\" />";

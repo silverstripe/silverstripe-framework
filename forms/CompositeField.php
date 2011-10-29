@@ -115,7 +115,7 @@ class CompositeField extends FormField {
 		$className = ($this->columnCount) ? "field CompositeField {$this->extraClass()} multicolumn" : "field CompositeField {$this->extraClass()}";
 		$content = "<div class=\"$className\"$idAtt>";
 		
-		foreach($fs as $subfield) {//echo ' subf'.$subfield->Name();
+		foreach($fs as $subfield) {//echo ' subf'.$subfield->getName();
 			if($this->columnCount) {
 				$className = "column{$this->columnCount}";
 				if(!next($fs)) $className .= " lastcolumn";

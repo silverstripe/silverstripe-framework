@@ -158,7 +158,7 @@ class FileField extends FormField {
 	}
 	
 	public function Value() {
-		return $_FILES[$this->Name()];
+		return $_FILES[$this->getName()];
 	}
 	
 	/**

@@ -94,8 +94,8 @@ class GridFieldPresenter extends ViewableData {
 	 *
 	 * @return string
 	 */
-	public function Name() {
-		return $this->getGridField()->Name();
+	public function getName() {
+		return $this->getGridField()->getName();
 	}
 	
 	/**

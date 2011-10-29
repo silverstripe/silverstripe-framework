@@ -1493,7 +1493,7 @@ class Member_GroupSet extends ManyManyList {
 
 		} else {
 			USER_ERROR("Member::setByCheckboxSetField() - No source items could be found for checkboxsetfield " .
-								 $checkboxsetfield->Name(), E_USER_WARNING);
+								 $checkboxsetfield->getName(), E_USER_WARNING);
 		}
 	}
 
