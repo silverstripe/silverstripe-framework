@@ -493,8 +493,8 @@ JS;
 		);
 		
 		$form->sessionMessage($message, 'good');
-
-		Director::redirectBack();
+		
+		$this->controller->redirectBack();
 	}
 }
 

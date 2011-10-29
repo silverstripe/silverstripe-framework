@@ -136,12 +136,12 @@ JS
 		 	if($backURL) Session::set('BackURL', $backURL);			
 			
 			if($badLoginURL = Session::get("BadLoginURL")) {
-				Director::redirect($badLoginURL);
+				$this->controller->redirect($badLoginURL);
 			} else {
 				// Show the right tab on failed login
 				$loginLink = Director::absoluteURL(Security::Link("login")); 
 				if($backURL) $loginLink .= '?BackURL=' . urlencode($backURL); 
-				Director::redirect($loginLink . '#' . $this->FormName() .'_tab');
+				$this->controller->redirect($loginLink . '#' . $this->FormName() .'_tab');
 			}
 		}
 	}
@@ -171,26 +171,22 @@ JS
 			}
 			$cp = new ChangePasswordForm($this->controller, 'ChangePasswordForm');
 			$cp->sessionMessage('Your password has expired. Please choose a new one.', 'good');
-			Director::redirect('Security/changepassword');
-			return;
+			return $this->controller->redirect('Security/changepassword');
 		}
 		
 		// Absolute redirection URLs may cause spoofing
 		if(isset($_REQUEST['BackURL']) && $_REQUEST['BackURL'] && Director::is_site_url($_REQUEST['BackURL']) ) {
-			Director::redirect($_REQUEST['BackURL']);
-			return;
+			return $this->controller->redirect($_REQUEST['BackURL']);
 		}
 
 		// Spoofing attack, redirect to homepage instead of spoofing url
 		if(isset($_REQUEST['BackURL']) && $_REQUEST['BackURL'] && !Director::is_site_url($_REQUEST['BackURL'])) {
-			Director::redirect(Director::absoluteBaseURL());
-			return;
+			return $this->controller->redirect(Director::absoluteBaseURL());
 		}
 
 		// If a default login dest has been set, redirect to that.
 		if (Security::default_login_dest()) {
-			Director::redirect(Director::absoluteBaseURL() . Security::default_login_dest());
-			return;
+			return $this->controller->redirect(Director::absoluteBaseURL() . Security::default_login_dest());
 		}
 
 		// Redirect the user to the page where he came from
@@ -268,18 +264,18 @@ JS
 				)
 			);
 
-			Director::redirect('Security/passwordsent/' . urlencode($data['Email']));
+			$this->controller->redirect('Security/passwordsent/' . urlencode($data['Email']));
 		} elseif($data['Email']) {
 			// Avoid information disclosure by displaying the same status,
 			// regardless wether the email address actually exists
-			Director::redirect('Security/passwordsent/' . urlencode($data['Email']));
+			$this->controller->redirect('Security/passwordsent/' . urlencode($data['Email']));
 		} else {
 			$this->sessionMessage(
 				_t('Member.ENTEREMAIL', 'Please enter an email address to get a password reset link.'),
 				'bad'
 			);
 			
-			Director::redirect('Security/lostpassword');
+			$this->controller->redirect('Security/lostpassword');
 		}
 	}
 

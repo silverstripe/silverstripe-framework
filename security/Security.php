@@ -314,7 +314,7 @@ class Security extends Controller {
 		$member = Member::currentUser();
 		if($member) $member->logOut();
 
-		if($redirect) Director::redirectBack();
+		if($redirect) $this->redirectBack();
 	}
 
 

@@ -316,11 +316,11 @@ class Form extends RequestHandler {
 						if(Director::is_site_url($pageURL)) {
 							// Remove existing pragmas
 							$pageURL = preg_replace('/(#.*)/', '', $pageURL);
-							return Director::redirect($pageURL . '#' . $this->FormName());
+							return $this->controller->redirect($pageURL . '#' . $this->FormName());
 						}
 					}
 				}
-				return Director::redirectBack();
+				return $this->controller->redirectBack();
 			}
 		}
 		
