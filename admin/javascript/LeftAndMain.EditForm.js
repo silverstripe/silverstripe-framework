@@ -83,7 +83,7 @@
 			onunmatch: function() {
 				// Prepare iframes for removal, otherwise we get loading bugs
 				this.find('iframe').each(function() {
-					this.contentWindow.location.href = 'about:blank';
+					$(this).attr('src', 'about:blank');
 					$(this).remove();
 				});
 				

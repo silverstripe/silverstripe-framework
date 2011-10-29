@@ -42,11 +42,7 @@
 				
 				this._super();
 			},
-			
-			onunmatch: function() {
-				this._super();
-			},
-			
+						
 			redraw: function() {
 				this.layout();
 			},
