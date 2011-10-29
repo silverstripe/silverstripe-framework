@@ -2699,11 +2699,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(is_numeric($id)) {
 			if(is_subclass_of($callerClass, 'DataObject')) {
 				$baseClass = ClassInfo::baseDataClass($callerClass);
-				return DataObject::get_one($callerClass,"\"$baseClass\".\"ID\" = $id", $cache, 1);
+				return DataObject::get_one($callerClass,"\"$baseClass\".\"ID\" = $id", $cache);
 
 				// This simpler code will be used by non-DataObject classes that implement DataObjectInterface
 			} else {
-				return DataObject::get_one($callerClass,"\"ID\" = $id", $cache, 1);
+				return DataObject::get_one($callerClass,"\"ID\" = $id", $cache);
 			}
 		} else {
 			user_error("DataObject::get_by_id passed a non-numeric ID #$id", E_USER_WARNING);
