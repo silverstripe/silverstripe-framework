@@ -24,7 +24,7 @@ class SS_MapTest extends SapphireTest {
 	}
 
 	function testIteration() {
-		$list = DataList::create("DataObjectTest_TeamComment");
+		$list = DataList::create("DataObjectTest_TeamComment")->sort('ID');
 		$map = new SS_Map($list, 'Name', 'Comment');
 		$text = "";
 		foreach($map as $k => $v) {
