@@ -467,7 +467,8 @@ class SQLQuery {
 	            else if(sizeof($join['filter']) == 1) $filter = $join['filter'][0];
 	            else $filter = "(" . implode(") AND (", $join['filter']) . ")";
 	            
-	            $this->from[$alias] = strtoupper($join['type']) . " JOIN \"{$join['table']}\" AS \"$alias\" ON $filter";
+				$aliasClause = ($alias != $join['table']) ? " AS \"$alias\"" : "";
+	            $this->from[$alias] = strtoupper($join['type']) . " JOIN \"{$join['table']}\"$aliasClause ON $filter";
 	        }
 	    }
 
