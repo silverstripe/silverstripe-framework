@@ -149,7 +149,7 @@ class SecurityTest extends FunctionalTest {
 		// Test external redirection on ChangePasswordForm
 		$this->get('Security/changepassword?BackURL=http://myspoofedhost.com');
 		$changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
-		$this->assertNotRegExp('/^' . preg_quote('http://myspoofedhost.com', '/') . '/', $changedResponse->getHeader('Location'),
+		$this->assertNotRegExp('/^' . preg_quote('http://myspoofedhost.com', '/') . '/', (string)$changedResponse->getHeader('Location'),
 			"Redirection to external links in change password form BackURL gets prevented as a measure against spoofing attacks"
 		);
 				
