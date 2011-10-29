@@ -683,8 +683,11 @@ class Versioned extends DataExtension {
 		// Make sure the table names are not postfixed (e.g. _Live)
 		$oldMode = self::get_reading_mode();
 		self::reading_stage('Stage');
-
-		$query = $this->owner->extendedSQL($filter, $sort, $limit, $join, $having);
+		
+		$list = DataObject::get(get_class($this->owner), $filter, $sort, $limit, $join);
+		if($having) $having = $list->having($having);
+		
+		$query = $list->dataQuery()->query();
 
 		foreach($query->from as $table => $tableJoin) {
 			if(is_string($tableJoin) && $tableJoin[0] == '"') {

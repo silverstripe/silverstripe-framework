@@ -257,10 +257,7 @@ class Group extends DataObject {
 			
 			// Get the children of *all* the groups identified in the previous chunk.
 			// This minimises the number of SQL queries necessary			
-			$sql = $this->extendedSQL("\"ParentID\" IN ($idList)", "");
-			$dbResult = $sql->execute();
-			$chunkToAdd = array();
-			foreach($dbResult as $item) $chunkToAdd[] = $item;
+			$chunkToAdd = DataList::create('Group')->where("\"ParentID\" IN ($idList)")->column('ID');
 		}
 		
 		return $familyIDs;
