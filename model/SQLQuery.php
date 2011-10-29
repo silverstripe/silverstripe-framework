@@ -300,7 +300,7 @@ class SQLQuery {
 		
 		// If sort contains a function call, let's move the sort clause into a separate selected field.
 		// Some versions of MySQL choke if you have a group function referenced directly in the ORDER BY
-		if($combinedOrderby && strpos($combinedOrderby,'(') !== false && strtoupper(trim($combinedOrderby)) != DB::getConn()->random()) {
+		if($combinedOrderby && strpos($combinedOrderby,'(') !== false) {
 			// Sort can be "Col1 DESC|ASC, Col2 DESC|ASC", we need to handle that
 			$sortParts = explode(",", $combinedOrderby);
 				
