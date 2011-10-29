@@ -116,7 +116,10 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals(3, $comments->Count());
 		$this->assertEquals('Phil', $comments->First()->Name);
 
-		// Test join
+		// Test join - 2.4 only
+		$originalDeprecation = Deprecation::dump_settings();
+		Deprecation::notification_version('2.4');
+
 		$comments = DataObject::get(
 			'DataObjectTest_TeamComment',
 			"\"DataObjectTest_Team\".\"Title\" = 'Team 1'",
@@ -127,6 +130,8 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals(2, $comments->Count());
 		$this->assertEquals('Bob', $comments->First()->Name);
 		$this->assertEquals('Joe', $comments->Last()->Name);
+
+		Deprecation::restore_settings($originalDeprecation);
 
 		// Test limit
 		$comments = DataObject::get('DataObjectTest_TeamComment', '', "\"Name\" ASC", '', '1,2');

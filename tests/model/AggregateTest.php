@@ -55,6 +55,20 @@ class AggregateTest extends SapphireTest {
 		'AggregateTest_Baz'
 	);
 	
+	protected $originalDeprecation;
+
+	function setUp() {
+		parent::setUp();
+		// This test tests code that was deprecated after 2.4
+		$this->originalDeprecation = Deprecation::dump_settings();
+		Deprecation::notification_version('2.4');
+	}
+
+	function tearDown() {
+		parent::tearDown();
+		Deprecation::restore_settings($this->originalDeprecation);
+	}
+	
 	/**
 	 * Test basic aggregation on a passed type
 	 */
