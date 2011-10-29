@@ -832,6 +832,9 @@ class LeftAndMain extends Controller {
 			$form->loadDataFrom($record);
 			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 			
+			// Set this if you want to split up tabs into a separate header row
+			// if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+			
 			// Add a default or custom validator.
 			// @todo Currently the default Validator.js implementation
 			//  adds javascript to the document body, meaning it won't
