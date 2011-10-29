@@ -50,6 +50,7 @@ class FulltextSearchable extends DataExtension {
 			
 			if(isset($defaultColumns[$class])) {
 				Object::add_extension($class, "FulltextSearchable('{$defaultColumns[$class]}')");
+				Object::add_static_var($class, 'create_table_options', array('MySQLDatabase' => 'ENGINE=MyISAM'));
 			} else {
 				throw new Exception("FulltextSearchable::enable() I don't know the default search columns for class '$class'");
 			}
