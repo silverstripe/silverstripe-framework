@@ -26,11 +26,22 @@
  * When set per-module, only direct calls to deprecated methods from those modules are considered - if the module
  * calls a non-module method which then calls a deprecated method, that call will use the global check version, not
  * the module specific check version.
+ *
+ * @package sapphire
+ * @subpackage dev
  */
 class Deprecation {
 
+	/**
+	 *
+	 * @var string
+	 */
 	protected static $version;
 
+	/**
+	 *
+	 * @var array
+	 */
 	protected static $module_version_overrides = array();
 
 	/**
@@ -92,7 +103,7 @@ class Deprecation {
 		$level = (int)$level;
 		if(!$level) $level = 1;
 		$called = $backtrace[$level];
-		
+
 		if (isset($called['class'])) {
 			return $called['class'] . $called['type'] . $called['function'];
 		}
@@ -104,7 +115,7 @@ class Deprecation {
 	/**
 	 * Raise a notice indicating the method is deprecated if the version passed as the second argument is greater
 	 * than or equal to the check version set via ::notification_version
-	 * 
+	 *
 	 * @static
 	 * @param $string - The notice to raise
 	 * @param $atVersion - The version at which this notice should start being raised
@@ -133,7 +144,7 @@ class Deprecation {
 
 			// Get the level to raise the notice as
 			$level = self::$notice_level;
-			if (!$level) $level = defined(E_USER_DEPRECATED) ? E_USER_DEPRECATED : E_USER_NOTICE;
+			if (!$level) $level = defined('E_USER_DEPRECATED') ? E_USER_DEPRECATED : E_USER_NOTICE;
 
 			// Then raise the notice
 			if(substr($string,-1) != '.') $string .= ".";
@@ -167,5 +178,4 @@ class Deprecation {
 		self::$version = $settings['version'];
 		self::$module_version_overrides = $settings['moduleVersions'];
 	}
-
 }
