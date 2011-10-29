@@ -471,6 +471,28 @@ the described relations).
 	  }
 	}
 
+## Maps
+
+A map is an array where the array indexes contain data as well as the values.  You can build a map
+from any DataList like this:
+
+	:::php
+	$members = DataList::create('Member')->map('ID', 'FirstName');
+	
+This will return a map where the keys are Member IDs, and the values are the corresponding FirstName
+values.  Like everything else in the ORM, these maps are lazy loaded, so the following code will only
+query a single record from the database:
+
+	:::php
+	$members = DataList::create('Member')->map('ID', 'FirstName');
+	echo $member[5];
+	
+This functionality is provided by the `SS_Map` class, which can be used to build a map around any `SS_List`.
+
+	:::php
+	$members = DataList::create('Member');
+	$map = new SS_Map($members, 'ID', 'FirstName');
+
 ## Data Handling
 
 When saving data through the object model, you don't have to manually escape strings to create SQL-safe commands.

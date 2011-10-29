@@ -151,14 +151,8 @@ class DataList extends ViewableData implements SS_List {
 		return $result;
 	}
 
-	public function map($keyfield = 'ID', $titlefield = 'Title') {
-		$map = array();
-
-		foreach ($this as $item) {
-			$map[$item->$keyfield] = $item->$titlefield;
-		}
-
-		return $map;
+	public function map($keyField = 'ID', $titleField = 'Title') {
+		return new SS_Map($this, $keyField, $titleField);
 	}
 
 	/**
