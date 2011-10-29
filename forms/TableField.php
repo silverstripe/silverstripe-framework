@@ -635,7 +635,7 @@ class TableField_Item extends TableListField_Item {
 			if($this->fieldset) {
 				$i=0;
 				foreach($this->fieldset as $field) {
-					$origFieldName = $field->Name();
+					$origFieldName = $field->getName();
 
 					// set unique fieldname with id
 					$combinedFieldName = $this->parent->Name() . "[" . $this->ID() . "][" . $origFieldName . "]";

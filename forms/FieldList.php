@@ -67,7 +67,7 @@ class FieldList extends ArrayList {
 				$isIncluded =  ($field->hasData());
 			}
 			if($isIncluded) {
-				$name = $field->Name();
+				$name = $field->getName();
 				if(isset($list[$name])) {
 					$errSuffix = "";
 					if($this->form) $errSuffix = " in your '{$this->form->class}' form called '" . $this->form->Name() . "'";
@@ -119,9 +119,9 @@ class FieldList extends ArrayList {
 			// Check if a field by the same name exists in this tab
 			if($insertBefore) {
 				$tab->insertBefore($field, $insertBefore);
-			} elseif($tab->fieldByName($field->Name())) {
+			} elseif($tab->fieldByName($field->getName())) {
 				// It exists, so we need to replace the old one
-				$this->replaceField($field->Name(), $field);
+				$this->replaceField($field->getName(), $field);
 			} else {
 				$tab->push($field);
 			}
@@ -175,7 +175,7 @@ class FieldList extends ArrayList {
 		
 		foreach($this->items as $i => $child) {
 			if(is_object($child)){
-				$childName = $child->Name();
+				$childName = $child->getName();
 				if(!$childName) $childName = $child->Title();
 				
 				if(($childName == $fieldName) && (!$dataFieldOnly || $child->hasData())) {
@@ -200,7 +200,7 @@ class FieldList extends ArrayList {
 		$this->flushFieldsCache();
 		foreach($this->items as $i => $field) {
 			if(is_object($field)) {
-				if($field->Name() == $fieldName && $field->hasData()) {
+				if($field->getName() == $fieldName && $field->hasData()) {
 					$this->items[$i] = $newField;
 					return true;
 				
@@ -273,7 +273,7 @@ class FieldList extends ArrayList {
 					}
 					$parentPointer->push($currentPointer);
 				} else {
-					$withName = ($parentPointer->hasMethod('Name')) ? " named '{$parentPointer->Name()}'" : null;
+					$withName = ($parentPointer->hasMethod('Name')) ? " named '{$parentPointer->getName()}'" : null;
 					user_error("FieldList::addFieldToTab() Tried to add a tab to object '{$parentPointer->class}'{$withName} - '$part' didn't exist.", E_USER_ERROR);
 				}
 			}
@@ -293,7 +293,7 @@ class FieldList extends ArrayList {
 		else $remainder = null;
 		
 		foreach($this->items as $child) {
-			if(trim($name) == trim($child->Name()) || $name == $child->id) {
+			if(trim($name) == trim($child->getName()) || $name == $child->id) {
 				if($remainder) {
 					if($child->isComposite()) {
 						return $child->fieldByName($remainder);
@@ -318,7 +318,7 @@ class FieldList extends ArrayList {
 	public function dataFieldByName($name) {
 		if($dataFields = $this->dataFields()) {
 			foreach($dataFields as $child) {
-				if(trim($name) == trim($child->Name()) || $name == $child->id) return $child;
+				if(trim($name) == trim($child->getName()) || $name == $child->id) return $child;
 			}
 		}                                 
 	}
@@ -335,7 +335,7 @@ class FieldList extends ArrayList {
 		
 		$i = 0;
 		foreach($this->items as $child) {
-			if($name == $child->Name() || $name == $child->id) {
+			if($name == $child->getName() || $name == $child->id) {
 				array_splice($this->items, $i, 0, array($item));
 				return $item;
 			} elseif($child->isComposite()) {
@@ -360,7 +360,7 @@ class FieldList extends ArrayList {
 		
 		$i = 0;
 		foreach($this->items as $child) {
-			if($name == $child->Name() || $name == $child->id) {
+			if($name == $child->getName() || $name == $child->id) {
 				array_splice($this->items, $i+1, 0, array($item));
 				return $item;
 			} elseif($child->isComposite()) {
@@ -390,7 +390,7 @@ class FieldList extends ArrayList {
 	 */
 	protected function onBeforeInsert($item) {
 		$this->flushFieldsCache();
-		if($item->Name()) $this->rootFieldSet()->removeByName($item->Name(), true);
+		if($item->getName()) $this->rootFieldSet()->removeByName($item->getName(), true);
 	}
 		
 	
@@ -410,7 +410,7 @@ class FieldList extends ArrayList {
 	 */
 	public function setValues($data) {
 		foreach($this->dataFields() as $field) {
-			$fieldName = $field->Name();
+			$fieldName = $field->getName();
 			if(isset($data[$fieldName])) $field->setValue($data[$fieldName]);
 		}
 	}
@@ -475,7 +475,7 @@ class FieldList extends ArrayList {
 	 * @param string|FormField
 	 */
 	function makeFieldReadonly($field) {
-		$fieldName = ($field instanceof FormField) ? $field->Name() : $field;
+		$fieldName = ($field instanceof FormField) ? $field->getName() : $field;
 		$srcField = $this->dataFieldByName($fieldName);
 		$this->replaceField($fieldName, $srcField->performReadonlyTransformation());
 	}
@@ -495,7 +495,7 @@ class FieldList extends ArrayList {
 		
 		// Build a map of fields indexed by their name.  This will make the 2nd step much easier.
 		$fieldMap = array();
-		foreach($this->dataFields() as $field) $fieldMap[$field->Name()] = $field;
+		foreach($this->dataFields() as $field) $fieldMap[$field->getName()] = $field;
 		
 		// Iterate through the ordered list	of names, building a new array to be put into $this->items.
 		// While we're doing this, empty out $fieldMap so that we can keep track of leftovers.
@@ -525,11 +525,11 @@ class FieldList extends ArrayList {
 	 * @return Position in children collection (first position starts with 0). Returns FALSE if the field can't be found.
 	 */
 	function fieldPosition($field) {
-		if(is_object($field)) $field = $field->Name();
+		if(is_object($field)) $field = $field->getName();
 		
 		$i = 0;
 		foreach($this->dataFields() as $child) {
-			if($child->Name() == $field) return $i;
+			if($child->getName() == $field) return $i;
 			$i++;
 		}
 		

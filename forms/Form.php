@@ -487,7 +487,7 @@ class Form extends RequestHandler {
 	 */
 	function Fields() {
 		foreach($this->getExtraFields() as $field) {
-			if(!$this->fields->fieldByName($field->Name())) $this->fields->push($field);
+			if(!$this->fields->fieldByName($field->getName())) $this->fields->push($field);
 		}
 		
 		return $this->fields;
@@ -522,7 +522,7 @@ class Form extends RequestHandler {
 	 */
 	function dataFieldByName($name) {
 		foreach($this->getExtraFields() as $field) {
-			if(!$this->fields->dataFieldByName($field->Name())) $this->fields->push($field);
+			if(!$this->fields->dataFieldByName($field->getName())) $this->fields->push($field);
 		}
 		
 		return $this->fields->dataFieldByName($name);
@@ -567,7 +567,7 @@ class Form extends RequestHandler {
 	 */
 	function unsetDataFieldByName($fieldName){
 		foreach($this->Fields()->dataFields() as $child) {
-			if(is_object($child) && ($child->Name() == $fieldName || $child->Title() == $fieldName)) {
+			if(is_object($child) && ($child->getName() == $fieldName || $child->Title() == $fieldName)) {
 				$child = null;
 			}
 		}
@@ -948,7 +948,7 @@ class Form extends RequestHandler {
 		// dont include fields without data
 		$dataFields = $this->fields->dataFields();
 		if($dataFields) foreach($dataFields as $field) {
-			$name = $field->Name();
+			$name = $field->getName();
 			
 			// Skip fields that have been exlcuded
 			if($fieldList && !in_array($name, $fieldList)) continue;
@@ -1004,16 +1004,16 @@ class Form extends RequestHandler {
 		$lastField = null;
 		if($dataFields) foreach($dataFields as $field) {
 			// Skip fields that have been exlcuded
-			if($fieldList && is_array($fieldList) && !in_array($field->Name(), $fieldList)) continue;
+			if($fieldList && is_array($fieldList) && !in_array($field->getName(), $fieldList)) continue;
 
 
-			$saveMethod = "save{$field->Name()}";
+			$saveMethod = "save{$field->getName()}";
 
-			if($field->Name() == "ClassName"){
+			if($field->getName() == "ClassName"){
 				$lastField = $field;
 			}else if( $dataObject->hasMethod( $saveMethod ) ){
 				$dataObject->$saveMethod( $field->dataValue());
-			} else if($field->Name() != "ID"){
+			} else if($field->getName() != "ID"){
 				$field->saveInto($dataObject);
 			}
 		}
@@ -1036,8 +1036,8 @@ class Form extends RequestHandler {
 		
 		if($dataFields){
 			foreach($dataFields as $field) {
-				if($field->Name()) {
-					$data[$field->Name()] = $field->dataValue();
+				if($field->getName()) {
+					$data[$field->getName()] = $field->dataValue();
 				}
 			}
 		}
@@ -1054,7 +1054,7 @@ class Form extends RequestHandler {
 	function resetField($fieldName, $fieldValue = null) {
 		$dataFields = $this->fields->dataFields();
 		if($dataFields) foreach($dataFields as $field) {
-			if($field->Name()==$fieldName) {
+			if($field->getName()==$fieldName) {
 				$field = $field->setValue($fieldValue);
 			}
 		}
