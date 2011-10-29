@@ -614,7 +614,9 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 			$readonly,
 			$childData
 		);
-	
+		// Don't use ComplexTableField_Popup.ss
+		$form->setTemplate('Form');
+		
 		$form->loadDataFrom($childData);
 		if ($readonly) $form->makeReadonly();
 
