@@ -1100,9 +1100,7 @@ class LeftAndMain extends Controller {
 	 * @return String|boolean
 	 */
 	public function PreviewLink() {
-		$record = $this->getRecord($this->currentPageID());
-		$baseLink = ($record && $record instanceof Page) ? $record->Link('?stage=Stage') : Director::absoluteBaseURL();
-		return $baseLink;
+		return false;
 	}
 
 	/**
