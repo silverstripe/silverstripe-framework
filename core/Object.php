@@ -600,7 +600,7 @@ abstract class Object {
 	 */
 	public static function remove_extension($class, $extension) {
 		// unload statics now for DataObject classes
-		if(ClassInfo::is_subclass_of($class, 'DataObject')) {
+		if(is_subclass_of($class, 'DataObject')) {
 			if(!preg_match('/^([^(]*)/', $extension, $matches)) {
 				user_error("Bad extension '$extension'", E_USER_WARNING);
 			} else {

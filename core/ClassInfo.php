@@ -92,7 +92,7 @@ class ClassInfo {
 	public static function baseDataClass($class) {
 		if (is_object($class)) $class = get_class($class);
 
-		if (!self::is_subclass_of($class, 'DataObject')) {
+		if (!is_subclass_of($class, 'DataObject')) {
 			throw new Exception("$class is not a subclass of DataObject");
 		}
 
