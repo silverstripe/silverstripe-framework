@@ -33,18 +33,6 @@
 		margin-bottom: $grid-vertical * 2;
 	}
 	
-	ins {
-		background-color: #DFD;
-		padding: 2px;
-		text-decoration: none;
-	}
-	
-	del {
-		background-color: #FDD;
-		padding: 2px;
-		color: darken(#FDD, 30%);
-	}
-	
 	code {
 		font-family: 'Bitstream Vera Sans Mono','Courier', monospace;
 	}

@@ -59,8 +59,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 .cms h4 { font-size: 14px; }
 .cms h5 { font-size: 12px; }
 .cms p { line-height: 16px; margin-bottom: 16px; }
-.cms ins { background-color: #DFD; padding: 2px; text-decoration: none; }
-.cms del { background-color: #FDD; padding: 2px; color: #ff4444; }
 .cms code { font-family: 'Bitstream Vera Sans Mono','Courier', monospace; }
 
 /** This file defines CMS-specific customizations to the jQuery UI theme. Every rule in this file should be wrapped in the '.cms' selector (to make it more specific), and contain ONLY overwritten jQuery UI rules (with 'ui-' prefix).  This file should be fairly short, as we're using our own custom jQuery UI theme already. TODO Add theme reference  Use _style.scss to add more generic style information, and read the jQuery UI theming API: http://jqueryui.com/docs/Theming/API */
