@@ -1,19 +1,90 @@
 /**
- * Styles for the left hand side menu
+ * Styles for the left hand side menu and header for the admin panels.
+ * 
+ * Take into consideration CSS selector performance. 
  *
  * @package sapphire
  * @subpackage admin
  */
 
-/** -------------------------------------------------------
- * CMS Menu Bar
- * -------------------------------------------------------- */
+.cms-logo-header {
+	background-color: darken($color-dark-bg, 10%);
+	position: relative;
+	padding: $grid-vertical * 2 8px 0 4px;
+	line-height: 24px;
+
+	@include background-image(
+		linear-gradient(darken($color-dark-bg, 10%), $color-dark-bg, darken($color-dark-bg, 10%)
+	));
+
+	span {
+		color: $color-text-light;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		display: block;
+
+		a {
+			color: $color-text-dark-link;
+			display: inline;
+		}
+	}
+}
+
+.cms-logo {
+	border-bottom: 1px solid darken($color-dark-separator, 20%);
+	height: 31px;
+	overflow: hidden;
+	padding: 0 0 0 4px;
+	vertical-align: middle;
+	font-size: $font-base-size;
+
+	.version {
+		display: none; 
+	} 
+
+	a {
+		display: inline-block;
+		height: 24px;
+		width: 24px;
+		float: left;
+		margin-right: 8px;
+		background: $application-logo-small no-repeat;
+		text-indent: -9999em;
+		padding-right: 7px;
+		border-right: 1px solid $color-dark-separator;
+	}
+
+	span {
+		font-weight: bold;
+		font-size: 14px;
+		@include hide-text-overflow();
+	}
+}
+
+.cms-login-status {
+	border-top: 1px solid $color-dark-separator;
+	height: 24px;
+	padding: 7px 4px 0 4px;
+	overflow: hidden;
+	line-height: 16px;
+	font-size: $font-base-size - 1;
+
+	.logout-link {
+		display: inline-block;
+		height: 16px;
+		width: 16px;
+		float: left;
+		margin: 0 8px 0 3px;
+		background: url(../images/logout.png) no-repeat;
+		text-indent: -9999em;
+	}
+}
+
 .cms-menu {
 	z-index: 80;
 	background: $color-menu-background;
 	border-right: 1px solid $color-menu-border;
 	width: ($grid-horizontal * 24) - 1; /* 8x24 - 1 */
-	overflow: auto;
 	
 	@include box-shadow($color-shadow-dark 0 0 $grid-horizontal);
 
@@ -23,7 +94,8 @@
 	
 	.cms-panel-content {
 		width: ($grid-horizontal * 24) - 1; /* 8x24 - 1 */
-		overflow: hidden
+		overflow-x: hidden;
+		overflow-y: scroll;
 	}
 		
 	&.collapsed {
@@ -31,7 +103,7 @@
 		cursor: auto;
 		z-index: 1000;
 		
-		.cms-header {
+		.cms-panel-header {
 			width: 30px;
 			
 			span {

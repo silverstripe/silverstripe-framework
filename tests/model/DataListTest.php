@@ -69,7 +69,7 @@ class DataListTest extends SapphireTest {
 	}
 	
 	function testToNestedArray() {
-		$list = DataList::create('DataObjectTest_TeamComment');
+		$list = DataList::create('DataObjectTest_TeamComment')->sort('ID');
 		$nestedArray = $list->toNestedArray();
 		$expected = array(
 			0=>

@@ -297,7 +297,7 @@ class DataList extends ViewableData implements SS_List {
 	 */
 	function setByIDList($idList) {
 		$has = array();
-
+		
 		// Index current data
 		foreach($this->column() as $id) {
 		   $has[$id] = true;
@@ -310,7 +310,9 @@ class DataList extends ViewableData implements SS_List {
 		// $id is the database ID of the record
 		if($idList) foreach($idList as $id) {
 			unset($itemsToDelete[$id]);
-			if($id && !isset($has[$id])) $this->add($id);
+			if($id && !isset($has[$id])) {
+				$this->add($id);
+			}
 		}
 
 		// Remove any items that haven't been mentioned
@@ -468,5 +470,3 @@ class DataList extends ViewableData implements SS_List {
 	}	
 
 }
-
-?>

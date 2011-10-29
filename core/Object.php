@@ -85,7 +85,10 @@ abstract class Object {
 		$args  = func_get_args();
 		$class = self::getCustomClass(array_shift($args));
 		$reflector = new ReflectionClass($class);
-		return $reflector->newInstanceArgs($args);
+		if($reflector->getConstructor()) {
+			return $reflector->newInstanceArgs($args);
+		}
+		return new $class;
 	}
 	
 	private static $_cache_inst_args = array();

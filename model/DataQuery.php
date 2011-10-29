@@ -111,7 +111,7 @@ class DataQuery {
 		$baseClass = array_shift($tableClasses);
 		
 		$collidingFields = array();
-		
+
 		// Join all the tables
 		if($this->querySubclasses) {
 			foreach($tableClasses as $tableClass) {
@@ -152,13 +152,72 @@ class DataQuery {
 
 		$query->select[] = "\"$baseClass\".\"ID\"";
 		$query->select[] = "CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE '$baseClass' END AS \"RecordClassName\"";
-		
+
 		// TODO: Versioned, Translatable, SiteTreeSubsites, etc, could probably be better implemented as subclasses of DataQuery
 		singleton($this->dataClass)->extend('augmentSQL', $query, $this);
-		
+
+		$this->ensureSelectContainsOrderbyColumns($query);
+
 		return $query;
 	}
-	
+
+	/**
+	 * Ensure that if a query has an order by clause, those columns are present in the select.
+	 * 
+	 * @param SQLQuery $query
+	 * @return null
+	 */
+	protected function ensureSelectContainsOrderbyColumns($query) {
+		$tableClasses = ClassInfo::dataClassesFor($this->dataClass);
+		$baseClass = array_shift($tableClasses);
+
+		if($query->orderby) {
+			$orderByFields = explode(',', $query->orderby);
+			foreach($orderByFields as $ob => $col) {
+				$col = trim($col);
+
+				// don't touch functions in the ORDER BY
+				if(strpos($col, '(') !== false) continue;
+
+				$columnParts = explode(' ', $col);
+				if (count($columnParts) == 2) {
+					$dir = $columnParts[1];
+					$col = $columnParts[0];
+				} else {
+					$dir = '';
+				}
+
+				$orderByFields[$ob] = $col;
+				$col = str_replace('"', '', $col);
+				$parts = explode('.', $col);
+
+				if(count($parts) == 1) {
+					$databaseFields = DataObject::database_fields($baseClass);
+					// database_fields() doesn't return ID, so we need to manually add it here
+					$databaseFields['ID'] = true;
+
+					if(isset($databaseFields[$parts[0]])) {
+						$qualCol = "\"$baseClass\".\"{$parts[0]}\"";
+						$orderByFields[$ob] = trim($qualCol . " " . $dir);
+					} else {
+						$qualCol = "\"$parts[0]\"";
+					}
+
+					if(!isset($query->select[$parts[0]]) && !in_array($qualCol, $query->select)) {
+						$query->select[] = $qualCol;
+					}
+				} else {
+					$qualCol = '"' . implode('"."', $parts) . '"';
+					if(!in_array($qualCol, $query->select)) {
+						$query->select[] = $qualCol;
+					}
+				}
+			}
+
+			$query->orderby = implode(',', $orderByFields);
+		}
+	}
+
 	/**
 	 * Execute the query and return the result as {@link Query} object.
 	 */
@@ -298,13 +357,9 @@ class DataQuery {
 	 * Set the limit of this query
 	 */
 	function limit($limit) {
-		if($limit) {
-			$clone = $this;
-			$clone->query->limit($limit);
-			return $clone;
-		} else {
-			return $this;
-		}
+		$clone = $this;
+		$clone->query->limit($limit);
+		return $clone;
 	}
 
 	/**
@@ -448,7 +503,9 @@ class DataQuery {
 	public function column($field = 'ID') {
 		$query = $this->getFinalisedQuery();
 		$query->select($this->expressionForField($field, $query));
-		return $query->execute()->column();
+		$this->ensureSelectContainsOrderbyColumns($query);
+
+		return $query->execute()->column($field);
 	}
 	
 	protected function expressionForField($field, $query) {
@@ -503,5 +560,3 @@ class DataQuery {
 	}
 	
 }
-
-?>

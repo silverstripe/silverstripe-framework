@@ -111,7 +111,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		$memberList->setPermissions(array('edit', 'delete', 'add'));
 		
 		$fields = new FieldList(
-			new TabSet(
+			$root = new TabSet(
 				'Root',
 				new Tab('Members', singleton('Member')->i18n_plural_name(),
 					$memberList,
@@ -137,7 +137,9 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			// necessary for tree node selection in LeftAndMain.EditForm.js
 			new HiddenField('ID', false, 0)
 		);
-
+		
+		$root->setTemplate('CMSTabSet');
+		
 		// Add roles editing interface
 		if(Permission::check('APPLY_ROLES')) {
 			$rolesCTF = new ComplexTableField(

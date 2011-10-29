@@ -1,6 +1,9 @@
 /**
  * Fields
  */
+form * {
+	font-size: 12px;
+}
 form fieldset {
 	margin: 0;
 	padding: 0;
