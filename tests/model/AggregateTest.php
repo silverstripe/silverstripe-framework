@@ -94,12 +94,12 @@ class AggregateTest extends SapphireTest {
 	function testBaseFieldAggregate() {
 		$this->assertEquals(
 			$this->formatDate(DataObject::Aggregate('AggregateTest_Foo')->Max('LastEdited')),
-			$this->formatDate(DataObject::get_one('AggregateTest_Foo', '', '', 'LastEdited DESC')->LastEdited)
+			$this->formatDate(DataObject::get_one('AggregateTest_Foo', '', '', '"LastEdited" DESC')->LastEdited)
 		);
 		
 		$this->assertEquals(
 			$this->formatDate(DataObject::Aggregate('AggregateTest_Foo')->Max('Created')),
-			$this->formatDate(DataObject::get_one('AggregateTest_Foo', '', '', 'Created DESC')->Created)
+			$this->formatDate(DataObject::get_one('AggregateTest_Foo', '', '', '"Created" DESC')->Created)
 		);
 	}
 	/* */
