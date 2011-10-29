@@ -258,10 +258,7 @@ class MySQLDatabase extends SS_Database {
 			$alterList[] .= "DROP INDEX \"$k\"";
 			$alterList[] .= "ADD ". $this->getIndexSqlDefinition($k, $v);
  		}
-
- 		$alterations = implode(",\n", $alterList);
-		$this->query("ALTER TABLE \"$tableName\" $alterations");
-
+ 		
 		if($alteredOptions && isset($alteredOptions[get_class($this)])) {
 			$this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[get_class($this)]));
 			DB::alteration_message(
@@ -269,6 +266,9 @@ class MySQLDatabase extends SS_Database {
 				"changed"
 			);
 		}
+
+ 		$alterations = implode(",\n", $alterList);
+		$this->query("ALTER TABLE \"$tableName\" $alterations");
 	}
 	
 	public function isView($tableName) {
