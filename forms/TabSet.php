@@ -154,4 +154,3 @@ class TabSet extends CompositeField {
 		parent::removeByName( $tabName, $dataFieldOnly );
 	}
 }
-?>

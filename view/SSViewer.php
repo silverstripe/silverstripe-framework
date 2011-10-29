@@ -185,7 +185,6 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
  *
  * @see http://doc.silverstripe.org/themes
  * @see http://doc.silverstripe.org/themes:developing
-
  * 
  * @package sapphire
  * @subpackage view

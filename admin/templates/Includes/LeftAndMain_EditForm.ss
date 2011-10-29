@@ -13,8 +13,8 @@
 						<li><a href="#$id">$Title</a></li>
 					<% end_control %>
 					</ul>
-					<% end_with %>
 				</div>
+				<% end_with %>
 			<% end_if %>
 	
 			<!-- <div class="cms-content-search">...</div> -->
@@ -40,7 +40,6 @@
 			<% end_control %>
 			<div class="clear"><!-- --></div>
 		</fieldset>
-	
 	</div>
 
 	<div class="cms-content-actions south">
