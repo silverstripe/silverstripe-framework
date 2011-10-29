@@ -830,6 +830,7 @@ class LeftAndMain extends Controller {
 			$form = new Form($this, "EditForm", $fields, $actions);
 			$form->addExtraClass('cms-edit-form');
 			$form->loadDataFrom($record);
+			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 			
 			// Add a default or custom validator.
 			// @todo Currently the default Validator.js implementation
