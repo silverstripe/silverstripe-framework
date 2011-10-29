@@ -1847,7 +1847,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	
 	/**
 	 * Centerpiece of every data administration interface in Silverstripe,
-	 * which returns a {@link FieldSet} suitable for a {@link Form} object.
+	 * which returns a {@link FieldList} suitable for a {@link Form} object.
 	 * If not overloaded, we're using {@link scaffoldFormFields()} to automatically
 	 * generate this set. To customize, overload this method in a subclass
 	 * or extended onto it by using {@link DataExtension->updateCMSFields()}.
