@@ -281,6 +281,8 @@ html article, html aside, html details, html figcaption, html figure, html foote
 
 .cms-content-constructive-actions a { display: block; float: right; }
 
+#Form_BatchActionsForm select { width: 200px; }
+
 /** -------------------------------------------- Preview header (remove before release) -------------------------------------------- */
 .cms-preview { width: 1px; z-index: 100; }
 .cms-preview .cms-preview-toggle { width: 10px; }
