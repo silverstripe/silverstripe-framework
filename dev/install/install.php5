@@ -330,7 +330,6 @@ class InstallRequirements {
 
 		$this->requireModule('mysite', array("File permissions", "mysite/ directory exists?"));
 		$this->requireModule('sapphire', array("File permissions", "sapphire/ directory exists?"));
-		$this->requireModule('cms', array("File permissions", "cms/ directory exists?"));
 
 		if($isApache) {
 			$this->requireWriteable('.htaccess', array("File permissions", "Is the .htaccess file writeable?", null));
@@ -339,6 +338,9 @@ class InstallRequirements {
 		}
 
 		$this->requireWriteable('mysite/_config.php', array("File permissions", "Is the mysite/_config.php file writeable?", null));
+		if (!$this->checkModuleExists('cms')) {
+			$this->requireWriteable('mysite/code/RootURLController.php', array("File permissions", "Is the mysite/code/RootURLController.php file writeable?", null));
+		}
 		$this->requireWriteable('assets', array("File permissions", "Is the assets/ directory writeable?", null));
 
 		$tempFolder = $this->getTempFolder();
@@ -576,6 +578,14 @@ class InstallRequirements {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Check that a module exists
+	 */
+	function checkModuleExists($dirname) {
+		$path = $this->getBaseDir() . $dirname;
+		return file_exists($path) && ($dirname == 'mysite' || file_exists($path . '/_config.php'));
 	}
 
 	/**
@@ -936,7 +946,7 @@ class Installer extends InstallRequirements {
 		<div id="BgContainer">
 			<div id="Container">
 				<div id="Header">
-					<h1>SilverStripe CMS Installation</h1>
+					<h1>SilverStripe CMS / Framework Installation</h1>
 				</div>
 
 				<div id="Navigation">&nbsp;</div>
@@ -1035,7 +1045,7 @@ SSViewer::set_theme('$theme');
 i18n::set_locale('$locale');
 
 // enable nested URLs for this site (e.g. page/sub-page/)
-SiteTree::enable_nested_urls();
+if (class_exists('SiteTree')) SiteTree::enable_nested_urls();
 PHP
 			);
 
@@ -1068,7 +1078,22 @@ SSViewer::set_theme('$theme');
 i18n::set_locale('$locale');
 
 // enable nested URLs for this site (e.g. page/sub-page/)
-SiteTree::enable_nested_urls();
+if (class_exists('SiteTree')) SiteTree::enable_nested_urls();
+PHP
+			);
+		}
+
+		if (!$this->checkModuleExists('cms')) {
+			$this->writeToFile("mysite/code/RootURLController.php", <<<PHP
+<?php
+
+class RootURLController extends Controller {
+
+	function index() {
+		echo "<html>Your site is now set up. Start adding controllers to mysite to get started.</html>";
+	}
+
+}
 PHP
 			);
 		}
@@ -1133,15 +1158,18 @@ PHP
 				$this->statusMessage("Checking that friendly URLs work...");
 				$this->checkRewrite();
 			} else {
+				$destinationURL = 'index.php/' .
+					($this->checkModuleExists('cms') ? 'home/successfullyinstalled?flush=1' : '?flush=1');
+
 				echo <<<HTML
 				<li>SilverStripe successfully installed; I am now redirecting you to your SilverStripe site...</li>
 				<script>
 					setTimeout(function() {
-						window.location = "index.php/home/successfullyinstalled?flush=1";
+						window.location = "$destinationURL";
 					}, 2000);
 				</script>
 				<noscript>
-				<li><a href="index.php/home/successfullyinstalled?flush=1">Click here to access your site.</li>
+				<li><a href="$destinationURL">Click here to access your site.</li>
 				</noscript>
 HTML;
 			}
@@ -1257,13 +1285,16 @@ TEXT;
 			return true;
 		}
 
+		$destinationURL = str_replace('install.php', '', $_SERVER['SCRIPT_NAME']) .
+			($this->checkModuleExists('cms') ? 'home/successfullyinstalled?flush=1' : '?flush=1');
+
 		echo <<<HTML
 <li id="ModRewriteResult">Testing...</li>
 <script>
 	if(typeof $ == 'undefined') {
 		document.getElemenyById('ModeRewriteResult').innerHTML = "I can't run jQuery ajax to set rewriting; I will redirect you to the homepage to see if everything is working.";
 		setTimeout(function() {
-			window.location = "home/successfullyinstalled?flush=1";
+			window.location = "$destinationURL";
 		}, 10000);
 	} else {
 		$.ajax({
@@ -1273,7 +1304,7 @@ TEXT;
 				if(response.responseText == 'OK') {
 					$('#ModRewriteResult').html("Friendly URLs set up successfully; I am now redirecting you to your SilverStripe site...")
 					setTimeout(function() {
-						window.location = "home/successfullyinstalled?flush=1";
+						window.location = "$destinationURL";
 					}, 2000);
 				} else {
 					$('#ModRewriteResult').html("Friendly URLs are not working. This is most likely because a rewrite module isn't configured "
@@ -1288,7 +1319,7 @@ TEXT;
 	}
 </script>
 <noscript>
-	<li><a href="home/successfullyinstalled?flush=1">Click here</a> to check friendly URLs are working. If you get a 404 then something is wrong.</li>
+	<li><a href="$destinationURL">Click here</a> to check friendly URLs are working. If you get a 404 then something is wrong.</li>
 </noscript>
 HTML;
 	}
