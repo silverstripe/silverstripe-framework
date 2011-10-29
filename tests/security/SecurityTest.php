@@ -142,7 +142,7 @@ class SecurityTest extends FunctionalTest {
 		
 		// Test external redirect
 		$response = $this->doTestLoginForm('noexpiry@silverstripe.com', '1nitialPassword', 'http://myspoofedhost.com');
-		$this->assertNotRegExp('/^' . preg_quote('http://myspoofedhost.com', '/') . '/', $response->getHeader('Location'),
+		$this->assertNotRegExp('/^' . preg_quote('http://myspoofedhost.com', '/') . '/', (string)$response->getHeader('Location'),
 			"Redirection to external links in login form BackURL gets prevented as a measure against spoofing attacks"
 		);
 

@@ -24,7 +24,7 @@ class LeftAndMainTest extends FunctionalTest {
 	public function testSaveTreeNodeSorting() {	
 		$this->loginWithPermission('ADMIN');
 				
-		$rootPages = DataObject::get('LeftAndMainTest_Object', '"ParentID" = 0'); // implicitly sorted
+		$rootPages = DataObject::get('LeftAndMainTest_Object', '"ParentID" = 0', '"ID"'); // forcing sorting for non-MySQL
 		$siblingIDs = $rootPages->column('ID');
 		$page1 = $rootPages->offsetGet(0);
 		$page2 = $rootPages->offsetGet(1);
