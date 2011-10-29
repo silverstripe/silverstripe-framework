@@ -1,7 +1,7 @@
 <% require css(sapphire/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css) %>
 <% require css(sapphire/css/GridField.css) %>
 
-<div class="ss-gridfield ui-state-default">
+<div class="ss-gridfield ui-state-default" id="$Name">
 	<table>
 		<thead>
 			<tr>
@@ -19,7 +19,11 @@
 		</tbody>
 		
 		<tfoot>
-
 		</tfoot>
 	</table>
+	
+	<% control Footers %>
+		$Render
+	<% end_control %>
+	
 </div>
