@@ -29,7 +29,7 @@ class TransactionTest extends SapphireTest {
 			$obj->write();
 
 			$obj=new TransactionTest_Object();
-			$obj->Title='Forth page';
+			$obj->Title='Fourth page';
 			$obj->write();
 
 			//Revert to a savepoint:
@@ -40,7 +40,7 @@ class TransactionTest extends SapphireTest {
 			$first=DataObject::get('TransactionTest_Object', "\"Title\"='First page'");
 			$second=DataObject::get('TransactionTest_Object', "\"Title\"='Second page'");
 			$third=DataObject::get('TransactionTest_Object', "\"Title\"='Third page'");
-			$forth=DataObject::get('TransactionTest_Object', "\"Title\"='Forth page'");
+			$fourth=DataObject::get('TransactionTest_Object', "\"Title\"='Fourth page'");
 
 			//These pages should be in the system
 			$this->assertTrue(is_object($first) && $first->exists());
@@ -48,7 +48,7 @@ class TransactionTest extends SapphireTest {
 
 			//These pages should NOT exist, we reverted to a savepoint:
 			$this->assertFalse(is_object($third) && $third->exists());
-			$this->assertFalse(is_object($forth) && $forth->exists());
+			$this->assertFalse(is_object($fourth) && $fourth->exists());
 		} else {
 			$this->markTestSkipped('Current database does not support transactions');
 		}
