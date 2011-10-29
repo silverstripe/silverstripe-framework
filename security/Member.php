@@ -1012,9 +1012,8 @@ class Member extends DataObject {
 		if(empty($groupIDList))
 			return Member::map();
 
-		return new SQLMap(singleton('Member')->extendedSQL(
-			"\"GroupID\" IN (" . implode( ',', $groupIDList ) .
-			")", "Surname, FirstName", "", "INNER JOIN \"Group_Members\" ON \"MemberID\"=\"Member\".\"ID\""));
+		return DataList::create("Member")->where("\"GroupID\" IN (" . implode( ',', $groupIDList ) . ")")
+			->sort("\"Surname\", \"FirstName\"")->map();
 	}
 
 
@@ -1040,8 +1039,7 @@ class Member extends DataObject {
 			
 			$SQL_perms = "'" . implode("', '", Convert::raw2sql($perms)) . "'";
 			
-			$groups = DataObject::get('Group', "", "",
-				"INNER JOIN \"Permission\" ON \"Permission\".\"GroupID\" = \"Group\".\"ID\" AND \"Permission\".\"Code\" IN ($SQL_perms)");
+			$groups = DataObject::get('Group')->innerJoin("Permission", "\"Permission\".\"GroupID\" = \"Group\".\"ID\" AND \"Permission\".\"Code\" IN ($SQL_perms)");
 		}
 
 		$groupIDList = array();
@@ -1057,10 +1055,11 @@ class Member extends DataObject {
 		$filterClause = ($groupIDList)
 			? "\"GroupID\" IN (" . implode( ',', $groupIDList ) . ")"
 			: "";
-
-		return new SQLMap(singleton('Member')->extendedSQL($filterClause,
-			"Surname, FirstName", "",
-			"INNER JOIN \"Group_Members\" ON \"MemberID\"=\"Member\".\"ID\" INNER JOIN \"Group\" ON \"Group\".\"ID\"=\"GroupID\""));
+			
+		return DataList::create("Member")->where($filterClause)->sort("\"Surname\", \"FirstName\"")
+			->innerJoin("Group_Members", "\"MemberID\"=\"Member\".\"ID\"")
+			->innerJoin("Group", "\"Group\".\"ID\"=\"GroupID\"")
+			->map();
 	}
 
 
