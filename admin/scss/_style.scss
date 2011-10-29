@@ -379,7 +379,7 @@ html,body {
 		width: ($grid-horizontal * 22);
 		padding: $grid-vertical $grid-horizontal;
 		overflow-x: hidden;
-		overflow-y: scroll;
+		overflow-y: auto;
 	}
 	
 	.cms-content-header {
@@ -659,7 +659,7 @@ form.member-profile-form {
 		/* always show a y scroll bar as popups like TreeDropdowns 
 		 can trigger longer pages and the extra scroll bar doesn't 
 		 fire our sizing bar */
-		overflow-y: scroll;
+		overflow-y: auto;
 		overflow-x: auto;
 		background: none;
 	}

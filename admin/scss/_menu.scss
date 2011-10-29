@@ -95,7 +95,7 @@
 	.cms-panel-content {
 		width: ($grid-horizontal * 24) - 1; /* 8x24 - 1 */
 		overflow-x: hidden;
-		overflow-y: scroll;
+		overflow-y: auto;
 	}
 		
 	&.collapsed {
