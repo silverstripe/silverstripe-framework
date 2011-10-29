@@ -973,8 +973,7 @@ JS
 		if(isset($this->customSourceItems)) {
 			$items = $this->customSourceItems;
 		} else {
-			$dataQuery = $this->getCsvQuery();
-			$items = $dataQuery->execute();
+			$items = $this->getCsvDataList();
 		}
 		
 		// temporary override to adjust TableListField_Item behaviour
