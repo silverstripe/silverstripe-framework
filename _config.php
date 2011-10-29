@@ -21,7 +21,6 @@
 Director::addRules(10, array(
 	'Security//$Action/$ID/$OtherID' => 'Security',
 	//'Security/$Action/$ID' => 'Security',
-	'db//$Action' => 'DatabaseAdmin',
 	'$Controller//$Action/$ID/$OtherID' => '*',
 	'api/v1/live' => 'VersionedRestfulServer',
 	'api/v1' => 'RestfulServer',
