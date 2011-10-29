@@ -334,7 +334,9 @@ class FormField extends RequestHandler {
 	 * @return bool
 	 */
 	public function securityTokenEnabled() {
-		return $this->getForm() && $this->getForm()->securityTokenEnabled();
+		$form = $this->getForm();
+		if(!$form) return false;
+		return $form->getSecurityToken()->isEnabled();
 	}
 	
 	/**
