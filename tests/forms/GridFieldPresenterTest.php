@@ -47,9 +47,15 @@ class GridFieldPresenterTest extends SapphireTest {
 		$presenter->setGridField($GridField);
 		$presenter->sort('Name','desc');
 		$data = $presenter->Items()->map('ID','Name');
-		$this->assertEquals(array(2=>'Second Person', 1=>'First Person'), $data);
+		$this->assertEquals(array(
+			$this->idFromFixture('GridFieldTest_Person', 'second') => 'Second Person',
+			$this->idFromFixture('GridFieldTest_Person', 'first') => 'First Person'
+		), $data);
 		$presenter->sort('Name','asc');
 		$data = $presenter->Items()->map('ID','Name');
-		$this->assertEquals(array(1=>'First Person', 2=>'Second Person'), $data);
+		$this->assertEquals(array(
+			$this->idFromFixture('GridFieldTest_Person', 'first') => 'First Person',
+			$this->idFromFixture('GridFieldTest_Person', 'second') => 'Second Person'
+		), $data);
 	}
 }
