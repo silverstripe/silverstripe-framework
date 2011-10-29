@@ -18,8 +18,10 @@
 		 * <div class="cms-panel">
 		 *  <div class="cms-panel-header">your header</div>
 		 * 	<div class="cms-panel-content">your content here</div>
-		 * 	<a href="#" class="toggle-expande">your toggle text</a>
-		 * 	<a href="#" class="toggle-collapse">your toggle text</a>
+		 *	<div class="cms-panel-toggle">
+		 * 		<a href="#" class="toggle-expande">your toggle text</a>
+		 * 		<a href="#" class="toggle-collapse">your toggle text</a>
+		 *	</div>
 		 * </div>
 		 */
 		$('.cms-panel').entwine({
@@ -31,10 +33,16 @@
 			onmatch: function() {
 				if(!this.find('.cms-panel-content').length) throw new Exception('Content panel for ".cms-panel" not found');
 				
-				// Create default controls unless they already exist
-				if(!this.find('.toggle-expand').length) this.append('<a class="toggle-expand" href="#"><span>&raquo;</span></a>');
-				if(!this.find('.toggle-collapse').length) this.append('<a class="toggle-collapse" href="#"><span>&laquo;</span></a>');
-
+				// Create default controls unless they already exist.
+				
+				if(!this.find('.cms-panel-toggle').length) {
+					var container = $("<div class='cms-panel-toggle south'></div>")
+						.append('<a class="toggle-expand" href="#"><span>&raquo;</span></a>')
+						.append('<a class="toggle-collapse" href="#"><span>&laquo;</span></a>');
+						
+					this.append(container);
+				}
+				
 				// Set panel width same as the content panel it contains. Assumes the panel has overflow: hidden.
 				this.setWidthExpanded(this.find('.cms-panel-content').innerWidth());
 				

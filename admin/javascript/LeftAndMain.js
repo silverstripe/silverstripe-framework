@@ -92,11 +92,14 @@
 			
 			redraw: function() {
 				// Move from inner to outer layouts. Some of the elements might not exist.
+				this.find('.cms-panel-layout').redraw(); // sidebar.
+				
 				this.find('.cms-edit-form[data-layout]').redraw(); // Not all edit forms are layouted
 				this.find('.cms-preview').redraw();
 				this.find('.cms-content').redraw();
 				
 				this.layout({resize: false});
+				console.log('resizing page');
 			},
 			
 			/**
@@ -316,6 +319,13 @@
 				this._super();
 			}
 		});	
+	
+		$(".cms-panel-layout").entwine({
+			redraw: function() {
+				console.log('adding layout');
+				this.layout({resize: false});
+			}
+		});
 	});	 
 }(jQuery));
 

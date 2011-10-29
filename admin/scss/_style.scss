@@ -93,6 +93,7 @@ html,body {
 	border-bottom: 2px solid darken($color-widget-bg, 35%);
 
 	@include box-shadow($color-widget-bg 0 $grid-vertical $grid-vertical*2);
+	
 	@include background-image(
 		linear-gradient(darken($color-widget-bg, 10%), darken($color-widget-bg, 30%))
 	);
@@ -159,83 +160,6 @@ html,body {
 	&.loading,
 	form.loading {
 		background: url(../images/spinner.gif) no-repeat 50% 50%;
-	}
-}
-
-/** -------------------------------------------------------
- * Top Left Header and logo area
- * -------------------------------------------------------- */
-
-.cms-header {
-	background-color: darken($color-dark-bg, 10%);
-	position: relative;
-	padding: $grid-vertical * 2 8px 0 4px;
-	line-height: 24px;
-
-	@include background-image(
-		linear-gradient(darken($color-dark-bg, 10%), $color-dark-bg, darken($color-dark-bg, 10%)
-	));
-	
-	span {
-		color: $color-text-light;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		display: block;
-		
-		a {
-			color: $color-text-dark-link;
-			display: inline;
-		}
-	}
-}
-
-.cms-logo {
-	border-bottom: 1px solid darken($color-dark-separator, 20%);
-	height: 31px;
-	overflow: hidden;
-	padding: 0 0 0 4px;
-	vertical-align: middle;
-	font-size: $font-base-size;
-	
-	.version {
-		display: none; 
-	} 
-	
-	a {
-		display: inline-block;
-		height: 24px;
-		width: 24px;
-		float: left;
-		margin-right: 8px;
-		background: $application-logo-small no-repeat;
-		text-indent: -9999em;
-		padding-right: 7px;
-		border-right: 1px solid $color-dark-separator;
-	}
-	
-	span {
-		font-weight: bold;
-		font-size: 14px;
-		@include hide-text-overflow();
-	}
-}
-
-.cms-login-status {
-	border-top: 1px solid $color-dark-separator;
-	height: 24px;
-	padding: 7px 4px 0 4px;
-	overflow: hidden;
-	line-height: 16px;
-	font-size: $font-base-size - 1;
-	
-	.logout-link {
-		display: inline-block;
-		height: 16px;
-		width: 16px;
-		float: left;
-		margin: 0 8px 0 3px;
-		background: url(../images/logout.png) no-repeat;
-		text-indent: -9999em;
 	}
 }
 
@@ -748,29 +672,28 @@ form.member-profile-form {
 .cms-panel {
 	overflow: hidden;
 
-	.toggle-expand,
-	.toggle-collapse {
-		display: block;
-		position: absolute;
-		bottom: 0;
-		text-align: right;
+	.cms-panel-toggle {
+		@include box-shadow(0 0 5px rgba(107, 120, 123, 0.5));
 		
-		@include background-image(
-			linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 30%))
-		);
+		a { 
+			display: block;
+			text-align: right;
+			padding: $grid-vertical/2 0;
+			width: 100%;
+		
+			@include background-image(
+				linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 30%))
+			);
 
-		text-decoration: none;
+			text-decoration: none;
 		
-		span {
-			display: inline-block;
-			margin: 5px;
-			color: $color-text-dark;
-			font-size: 16px;
+			span {
+				display: inline-block;
+				margin: 0 5px;
+				color: $color-text-dark;
+				font-size: 16px;
+			}
 		}
-	}
-	
-	.toggle-collapse {
-		width: 100%;
 	}
 	
 	.toggle-expand {
