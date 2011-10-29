@@ -151,11 +151,10 @@ class TreeDropdownField extends FormField {
 		}
 		
 		// TODO Implement for TreeMultiSelectField
-		if($record) {
-			$metadata = array('id' => $record->ID, 'metadata' => array('ClassName' => $record->ClassName));
-		} else {
-			$metadata = null;
-		}
+		$metadata = array(
+			'id' => $record ? $record->ID : null, 
+			'ClassName' => $record ? $record->ClassName : $this->sourceObject
+		);
 
 		return $this->createTag(
 			'div',
