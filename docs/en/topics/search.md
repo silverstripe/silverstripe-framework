@@ -5,12 +5,24 @@
 Fulltext search for page content (and other attributes like "Title" or "MetaTags") can be easily added to SilverStripe.
 See [Tutorial: Site Search](/tutorials/4-site-search) for details.
 
-## Searching for DataObject's
+## Searching for DataObjects
 
 The `[api:SearchContext]` class provides a good base implementation that you can hook into your own controllers. 
 A working implementation of searchable DataObjects can be seen in the `[api:ModelAdmin]` class.
 
 [SearchContext](/reference/searchcontext) goes into more detail about setting up a default search form for `[api:DataObject]`s.
+
+### Fulltext search on DataObjects
+
+The `[api:MySQLDatabase]` class now defaults to creating tables using the InnoDB storage engine. As Fulltext search in MySQL
+requires the MyISAM storage engine, any DataObject you wish to use with Fulltext search must be changed to use MyISAM storage
+engine.
+
+You can do so by adding this static variable to your class definition:
+	:::php
+	static $create_table_options = array(
+		'MySQLDatabase' => 'ENGINE=MyISAM'
+	);
 
 ## Searching for Documents
 
