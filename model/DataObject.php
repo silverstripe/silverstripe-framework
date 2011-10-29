@@ -3111,7 +3111,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @var array
 	 */
 	static $create_table_options = array(
-		'MySQLDatabase' => 'ENGINE=MyISAM'
+		'MySQLDatabase' => 'ENGINE=InnoDB'
 	);
 
 	/**

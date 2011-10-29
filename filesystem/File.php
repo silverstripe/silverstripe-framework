@@ -97,6 +97,10 @@ class File extends DataObject {
 		"Hierarchy",
 	);
 	
+	static $create_table_options = array(
+		'MySQLDatabase' => 'ENGINE=MyISAM'
+	);
+	
 	/**
 	 * @var array List of allowed file extensions, enforced through {@link validate()}.
 	 * 
