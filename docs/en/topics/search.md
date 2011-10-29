@@ -19,6 +19,7 @@ requires the MyISAM storage engine, any DataObject you wish to use with Fulltext
 engine.
 
 You can do so by adding this static variable to your class definition:
+
 	:::php
 	static $create_table_options = array(
 		'MySQLDatabase' => 'ENGINE=MyISAM'
