@@ -97,6 +97,7 @@ class DataList extends ViewableData implements SS_List {
 	 * Add an join clause to this data list's query.
 	 */
 	public function join($join) {
+		Deprecation::notice('3.0', 'Use innerJoin() or leftJoin() instead.');
 		$this->dataQuery->join($join);
 		return $this;
 	}

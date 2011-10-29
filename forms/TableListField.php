@@ -240,8 +240,8 @@ class TableListField extends FormField {
 				$this->dataList = $sourceClass;
 				
 			} else {
-				$this->dataList = DataObject::get($sourceClass)->where($sourceFilter)
-					->sort($sourceSort)->join($sourceJoin);
+				$this->dataList = DataObject::get($sourceClass)->where($sourceFilter)->sort($sourceSort);
+				if($sourceJoin) $this->dataList = $this->dataList->join($sourceJoin);
 				// Grab it from the form relation, if available.
 				$this->getDataListFromForm = true;
 			}

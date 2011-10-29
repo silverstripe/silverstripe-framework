@@ -208,10 +208,16 @@ class Group extends DataObject {
 	public function Members($filter = "", $sort = "", $join = "", $limit = "") {
 		// Get a DataList of the relevant groups
 		$groups = DataList::create("Group")->byIDs($this->collateFamilyIDs());
+		
+		if($sort || $join || $limit) {
+			Deprecation::notice('3.0', "The sort, join, and limit arguments are deprcated, use sort(), join() and limit() on the resulting DataList instead.");
+		}
 
 		// Call the relation method on the DataList to get the members from all the groups
-		return $groups->relation('DirectMembers')
-			->where($filter)->sort($sort)->join($join)->limit($limit);
+		$result = $groups->relation('DirectMembers')->where($filter)->sort($sort)->limit($limit);
+		if($join) $result = $result->join($join);
+
+		return $result;
 	}
 	
 	/**

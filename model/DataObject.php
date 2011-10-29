@@ -1336,7 +1336,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($this->model) $result->setModel($this->model);
 		if($this->ID) $result->setForeignID($this->ID);
 
-		$result = $result->where($filter)->limit($limit)->sort($sort)->join($join);
+		$result = $result->where($filter)->limit($limit)->sort($sort);
+		if($join) $result = $result->join($join);
 
 		return $result;
 	}
@@ -2496,7 +2497,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Todo: Determine if we can deprecate for 3.0.0 and use DI or something instead
 		// Todo: Make the $containerClass method redundant
 		if($containerClass != "DataList") user_error("The DataObject::get() \$containerClass argument has been deprecated", E_USER_NOTICE);
-		$result = DataList::create($callerClass)->where($filter)->sort($sort)->join($join)->limit($limit);
+		$result = DataList::create($callerClass)->where($filter)->sort($sort)->limit($limit);
+		if($join) $result = $result->join($join);
 		$result->setModel(DataModel::inst());
 		return $result;
 	}

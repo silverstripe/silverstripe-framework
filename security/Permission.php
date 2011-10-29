@@ -391,13 +391,9 @@ class Permission extends DataObject {
 
 		if(!count($groupIDs)) return new ArrayList();
 			
-		$members = DataObject::get(
-			Object::getCustomClass('Member'),
-			$_filter = "\"Group\".\"ID\" IN (" . implode(",",$groupIDs) . ")",
-			$_sort = "",
-			$_join = "LEFT JOIN \"Group_Members\" ON \"Member\".\"ID\" = \"Group_Members\".\"MemberID\" " . 
-				"LEFT JOIN \"Group\" ON \"Group_Members\".\"GroupID\" = \"Group\".\"ID\" "
-		);
+		$members = DataObject::get('Member')->where("\"Group\".\"ID\" IN (" . implode(",",$groupIDs) . ")")
+			->leftJoin("Group_Members", "\"Member\".\"ID\" = \"Group_Members\".\"MemberID\"")
+			->leftJoin("Group", "\"Group_Members\".\"GroupID\" = \"Group\".\"ID\"");
 		
 		return $members;
 	}
@@ -414,13 +410,11 @@ class Permission extends DataObject {
 		$SQL_codes = join("','", $SQLa_codes);
 		
 		// Via Roles are groups that have the permission via a role
-		return DataObject::get('Group',
-			"\"PermissionRoleCode\".\"Code\" IN ('$SQL_codes') OR \"Permission\".\"Code\" IN ('$SQL_codes')",
-			"",
-			"LEFT JOIN \"Permission\" ON \"Permission\".\"GroupID\" = \"Group\".\"ID\"
-			LEFT JOIN \"Group_Roles\" ON \"Group_Roles\".\"GroupID\" = \"Group\".\"ID\"
-			LEFT JOIN \"PermissionRole\" ON \"Group_Roles\".\"PermissionRoleID\" = \"PermissionRole\".\"ID\"
-			LEFT JOIN \"PermissionRoleCode\" ON \"PermissionRoleCode\".\"RoleID\" = \"PermissionRole\".\"ID\"");
+		return DataObject::get('Group')->where("\"PermissionRoleCode\".\"Code\" IN ('$SQL_codes') OR \"Permission\".\"Code\" IN ('$SQL_codes')")
+			->leftJoin('Permission', "\"Permission\".\"GroupID\" = \"Group\".\"ID\"")
+			->leftJoin('Group_Roles', "\"Group_Roles\".\"GroupID\" = \"Group\".\"ID\"")
+			->leftJoin('PermissionRole', "\"Group_Roles\".\"PermissionRoleID\" = \"PermissionRole\".\"ID\"")
+			->leftJoin('PermissionRoleCode', "\"PermissionRoleCode\".\"RoleID\" = \"PermissionRole\".\"ID\"");
 	}
 
 
