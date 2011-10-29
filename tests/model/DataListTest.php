@@ -77,21 +77,21 @@ class DataListTest extends SapphireTest {
 				'ClassName'=>'DataObjectTest_TeamComment',
 				'Name'=>'Joe',
 				'Comment'=>'This is a team comment by Joe',
-				'TeamID'=>'1',
+				'TeamID'=> $this->objFromFixture('DataObjectTest_TeamComment', 'comment1')->TeamID,
 			),
 			1=>
 			array(
 				'ClassName'=>'DataObjectTest_TeamComment',
 				'Name'=>'Bob',
 				'Comment'=>'This is a team comment by Bob',
-				'TeamID'=>'1',
+				'TeamID'=> $this->objFromFixture('DataObjectTest_TeamComment', 'comment2')->TeamID,
 			),
 			2=>
 			array(
 				'ClassName'=>'DataObjectTest_TeamComment',
 				'Name'=>'Phil',
 				'Comment'=>'Phil is a unique guy, and comments on team2',
-				'TeamID'=>'2',
+				'TeamID'=> $this->objFromFixture('DataObjectTest_TeamComment', 'comment3')->TeamID,
 			),
 		);
 		$this->assertEquals(3, count($nestedArray));
@@ -102,10 +102,20 @@ class DataListTest extends SapphireTest {
 	
 	function testMap() {
 		$map = DataList::create('DataObjectTest_TeamComment')->map()->toArray();
-		$expected = array(1=>'Joe', 2=>'Bob', 3=>'Phil');
+		$expected = array(
+			$this->idFromFixture('DataObjectTest_TeamComment', 'comment1') => 'Joe',
+			$this->idFromFixture('DataObjectTest_TeamComment', 'comment2') => 'Bob',
+			$this->idFromFixture('DataObjectTest_TeamComment', 'comment3') => 'Phil'
+		);
+
 		$this->assertEquals($expected, $map);
 		$otherMap = DataList::create('DataObjectTest_TeamComment')->map('Name', 'TeamID')->toArray();
-		$otherExpected = array ('Joe' => '1','Bob' => '1','Phil' => '2');
+		$otherExpected = array(
+			'Joe' => $this->objFromFixture('DataObjectTest_TeamComment', 'comment1')->TeamID,
+			'Bob' => $this->objFromFixture('DataObjectTest_TeamComment', 'comment2')->TeamID,
+			'Phil' => $this->objFromFixture('DataObjectTest_TeamComment', 'comment3')->TeamID
+		);
+
 		$this->assertEquals($otherExpected, $otherMap);
 	}
 
