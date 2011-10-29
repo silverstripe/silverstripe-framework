@@ -258,17 +258,35 @@ class MySQLDatabase extends SS_Database {
 			$alterList[] .= "DROP INDEX \"$k\"";
 			$alterList[] .= "ADD ". $this->getIndexSqlDefinition($k, $v);
  		}
+ 		
+		if($alteredOptions && isset($alteredOptions[get_class($this)])) {
+			if(!isset($this->indexList[$tableName])) {
+				$this->indexList[$tableName] = $this->indexList($tableName);
+			}
+			
+			$skip = false;
+			foreach($this->indexList[$tableName] as $index) {
+				if(strpos($index, 'fulltext ') === 0) {
+					$skip = true;
+					break;
+				}
+			}
+			if($skip) {
+				DB::alteration_message(
+					sprintf("Table %s options not changed to %s due to fulltextsearch index", $tableName, $alteredOptions[get_class($this)]),
+					"changed"
+				);
+			} else {
+				$this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[get_class($this)]));
+				DB::alteration_message(
+					sprintf("Table %s options changed: %s", $tableName, $alteredOptions[get_class($this)]),
+					"changed"
+				);
+			}
+		}
 
  		$alterations = implode(",\n", $alterList);
 		$this->query("ALTER TABLE \"$tableName\" $alterations");
-
-		if($alteredOptions && isset($alteredOptions[get_class($this)])) {
-			$this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[get_class($this)]));
-			DB::alteration_message(
-				sprintf("Table %s options changed: %s", $tableName, $alteredOptions[get_class($this)]),
-				"changed"
-			);
-		}
 	}
 	
 	public function isView($tableName) {
