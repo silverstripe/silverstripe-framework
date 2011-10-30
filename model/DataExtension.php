@@ -63,9 +63,9 @@ abstract class DataExtension extends Extension {
 		if(Object::has_extension(get_parent_class($class), $extensionClass)) return;
 
 		// If there aren't any extraStatics we shouldn't try to load them.
-		if ( ! method_exists($extensionClass, $extraStaticsMethod) ) return;
+		if (!method_exists($extensionClass, $extraStaticsMethod) ) return;
 		
-		$statics = call_user_func(array($extensionClass, $extraStaticsMethod), $class, $extension);
+		$statics = call_user_func(array(singleton($extensionClass), $extraStaticsMethod), $class, $extension);
 		
 		if($statics) {
 			foreach($statics as $name => $newVal) {
@@ -153,11 +153,14 @@ abstract class DataExtension extends Extension {
 	 *
 	 * Return a map where the keys are db, has_one, etc, and the values are
 	 * additional fields/relations to be defined.
+	 * 
+	 * @param $class since this method might be called on the class directly
+	 * @param $extension since this can help to extract parameters to help set indexes
 	 *
 	 * @return array Returns a map where the keys are db, has_one, etc, and
 	 *               the values are additional fields/relations to be defined.
 	 */
-	function extraStatics() {
+	function extraStatics($class=null, $extension=null) {
 		return array();
 	}
 	

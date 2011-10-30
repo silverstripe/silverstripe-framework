@@ -1172,7 +1172,7 @@ class DataObjectTest_FieldlessSubTable extends DataObjectTest_Team implements Te
 
 class DataObjectTest_Team_Extension extends DataExtension implements TestOnly {
 	
-	function extraStatics() {
+	function extraStatics($class=null, $extension=null) {
 		return array(
 			'db' => array(
 				'ExtendedDatabaseField' => 'Varchar'

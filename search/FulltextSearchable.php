@@ -74,7 +74,13 @@ class FulltextSearchable extends DataExtension {
 		parent::__construct();
 	}
 
-	function extraStatics($class = null, $extension = null) {
+	/**
+	 * 
+	 * @param string $class
+	 * @param string $extension
+	 * @return array
+	 */
+	function extraStatics($class=null, $extension=null) {
 		if($extension && preg_match('/\([\'"](.*)[\'"]\)/', $extension, $matches)) {
 			$searchFields = $matches[1];
 
