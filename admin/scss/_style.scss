@@ -708,11 +708,11 @@ form.member-profile-form {
 				color: $color-text-dark;
 				font-size: 16px;
 			}
+			
+			&.toggle-expand {
+				width: 40px; // will set the collapsed width
+			}
 		}
-	}
-	
-	.toggle-expand {
-		width: 40px; // will set the collapsed width
 	}
 	
 	&.collapsed {
@@ -721,6 +721,7 @@ form.member-profile-form {
 			display: none;
 		}
 		
+		/*
 		.cms-panel-header {
 			@include rotate(-90deg);
 			position: relative;
@@ -728,6 +729,7 @@ form.member-profile-form {
 			border: none;
 			padding: 0;
 		}
+		*/
 	}
 
 	.child-flyout-indicator {

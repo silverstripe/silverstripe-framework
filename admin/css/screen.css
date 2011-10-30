@@ -312,9 +312,17 @@ form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; 
 .cms-panel .cms-panel-toggle { -moz-box-shadow: 0 0 5px rgba(107, 120, 123, 0.5); -webkit-box-shadow: 0 0 5px rgba(107, 120, 123, 0.5); -o-box-shadow: 0 0 5px rgba(107, 120, 123, 0.5); box-shadow: 0 0 5px rgba(107, 120, 123, 0.5); }
 .cms-panel .cms-panel-toggle a { display: block; text-align: right; padding: 4px 0; width: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#b0bec7, #92a5b2); background-image: -moz-linear-gradient(#b0bec7, #92a5b2); background-image: -o-linear-gradient(#b0bec7, #92a5b2); background-image: -ms-linear-gradient(#b0bec7, #92a5b2); background-image: linear-gradient(#b0bec7, #92a5b2); text-decoration: none; }
 .cms-panel .cms-panel-toggle a span { display: inline-block; margin: 0 5px; color: #1f1f1f; font-size: 16px; }
-.cms-panel .toggle-expand { width: 40px; }
+.cms-panel .cms-panel-toggle a.toggle-expand { width: 40px; }
+.cms-panel.collapsed { /*
+.cms-panel-header {
+	@include rotate(-90deg);
+	position: relative;
+	top: $grid-vertical * 10;
+	border: none;
+	padding: 0;
+}
+*/ }
 .cms-panel.collapsed .cms-panel-content { display: none; }
-.cms-panel.collapsed .cms-panel-header { -moz-transform: rotate(-90deg); -webkit-transform: rotate(-90deg); -o-transform: rotate(-90deg); -ms-transform: rotate(-90deg); transform: rotate(-90deg); position: relative; top: 80px; border: none; padding: 0; }
 .cms-panel .child-flyout-indicator { width: 0; height: 0; border-right: 3px dashed #1f1f1f; border-top: 3px solid transparent; border-left: 3px solid transparent; border-bottom: 3px dashed #1f1f1f; position: absolute; right: 1px; margin-top: -8px; display: none; /* To be shown by javascript, see LeftAndMain.Panel.js */ }
 .cms-panel .collapsed-flyout { display: block !important; left: 41px; margin-top: -40px; position: fixed; width: 191px; }
 .cms-panel .collapsed-flyout li a span { display: block !important; }
