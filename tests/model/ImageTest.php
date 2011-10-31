@@ -93,4 +93,13 @@ class ImageTest extends SapphireTest {
 		$actual = $imageSecond->getHeight();
 		$this->assertEquals($expected, $actual);
 	}
+	
+	function testGeneratedImageDeletion() {
+		$image = $this->objFromFixture('Image', 'imageWithMetacharacters');
+		$image_generated = $image->SetWidth(200);
+		$p = $image_generated->getFullPath();
+		$this->assertTrue(file_exists($p));
+		$image->deleteFormattedImages();
+		$this->assertFalse(file_exists($p));
+	}
 }
