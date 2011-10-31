@@ -12,3 +12,7 @@ Image:
     imageWithoutTitleContainingDots: 
         Filename: assets/ImageTest/test.image.with.dots.png
         Parent: =>Folder.folder1
+    imageWithMetacharacters:
+        Title: This is a/an image Title
+        Filename: assets/ImageTest/test_image*).png
+        Parent: =>Folder.folder1
