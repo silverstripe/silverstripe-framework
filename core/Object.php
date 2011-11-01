@@ -678,6 +678,13 @@ abstract class Object {
 		}
 	}
 	
+	public function __wakeup() {
+		if(!isset(self::$classes_constructed[$this->class])) {
+			$this->defineMethods();
+			self::$classes_constructed[$this->class] = true;
+		}
+	}
+	
 	/**
 	 * Attemps to locate and call a method dynamically added to a class at runtime if a default cannot be located
 	 *
