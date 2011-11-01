@@ -95,13 +95,20 @@ class Versioned extends DataExtension {
 		$this->liveStage = array_pop($stages);
 	}
 	
-	function extraStatics($class) {
+	/**
+	 *
+	 * @param string $class
+	 * @param string $extension
+	 * @return array
+	 */
+	function extraStatics($class=null, $extension=null) {
 		return array(
 			'db' => array(
 				'Version' => 'Int',
 			),
 			'has_many' => array(
-				'Versions' => $class,
+				// TODO this method is called *both* statically and on an instance
+				'Versions' => ($class) ? $class : $this->owner->class,
 			)
 		);
 	}

@@ -25,7 +25,13 @@ class Hierarchy extends DataExtension {
 	function augmentWrite(&$manipulation) {
 	}
 	
-	function extraStatics($class = null) {
+	/**
+	 *
+	 * @param string $class
+	 * @param string $extension
+	 * @return array
+	 */
+	function extraStatics($class=null, $extension=null) {
 		return array(
 			'has_one' => array(
 				// TODO this method is called *both* statically and on an instance
