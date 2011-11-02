@@ -153,7 +153,7 @@ class TreeDropdownField extends FormField {
 						'input',
 						array(
 							'class' => 'items',
-							'value' => '(Choose or type search)' 
+							'value' => _t('DropdownField.CHOOSEORTPYE', '(Choose or type search)', PR_MEDIUM, 'start value of a dropdown') 
 						)
 					) :
 					$this->createTag (
