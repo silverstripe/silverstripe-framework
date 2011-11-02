@@ -195,9 +195,8 @@ class ManifestBuilder {
 		// locate and include the exclude files
 		$topLevel = scandir($baseDir);
 		foreach($topLevel as $file) {
-			if($file[0] == '.') continue
+			if($file[0] == '.') continue;
 			
-			$fullPath = '';
 			$fullPath = $baseDir . '/' . $file;
 
 			if(@is_dir($fullPath . '/') && file_exists($fullPath . '/_exclude.php')) {

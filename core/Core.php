@@ -38,7 +38,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // ENVIRONMENT CONFIG
 
-if(defined('E_DEPRECATED')) error_reporting(E_ALL ^ E_DEPRECATED);
+if(defined('E_DEPRECATED')) error_reporting(E_ALL & ~(E_DEPRECATED | E_STRICT));
 else error_reporting(E_ALL);
 /*
  * This is for versions of PHP prior to version 5.2

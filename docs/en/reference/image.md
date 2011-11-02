@@ -31,12 +31,14 @@ your tmp folder.
 	// values
 	$image->getHeight() // Returns the height of the image.
 	$image->getWidth() // Returns the width of the image
-	$image->getOrienation() // Returns a class constant: ORIENTATION_SQUARE or ORIENTATION_PORTRAIT or ORIENTATION_LANDSCAPE
+	$image->getOrientation() // Returns a class constant: ORIENTATION_SQUARE or ORIENTATION_PORTRAIT or ORIENTATION_LANDSCAPE
 
 
 You can also create your own functions by extending the image class, for example
 
 	:::php
+	<?php
+	
 	class MyImage extends Image {
 		public function generateRotateClockwise(GD $gd)	{
 			return $gd->rotate(90);
@@ -101,18 +103,21 @@ For output of an image tag with the image automatically resized to 80px width, y
 ### Form Upload
 
 For usage on a website form, see `[api:SimpleImageField]`.
+
 If you want to upload images within the CMS, see `[api:ImageField]`.
 
 ### Clearing Thumbnail Cache
 
 Images are (like all other Files) synchronized with the SilverStripe database.
+
 This syncing happens whenever you load the "Files & Images" interface,
 and whenever you upload or modify an Image through SilverStripe.
 
 If you encounter problems with images not appearing, or have mysteriously disappeared, you can try manually flushing the
 image cache.
 
-	http://www.mysite.com/images/flush
+	http://www.mysite.com/dev/tasks/FlushGeneratedImagesTask
 
 ## API Documentation
+
 `[api:Image]`

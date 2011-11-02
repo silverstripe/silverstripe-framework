@@ -59,9 +59,9 @@ class Decimal extends DBField {
 			if(strpos($value, '[')===false)
 				return '0';
 			else
-				return addslashes($value);
+				return Convert::raw2sql($value);
 		} else {
-			return addslashes($value);
+			return Convert::raw2sql($value);
 		}
 	}
 	

@@ -170,7 +170,7 @@ class SearchFormTest extends FunctionalTest {
 		$member->logOut();
 	}
 	
-	function testDisabledShowInSearchFlagNotIncluded() {
+	function testDisabledShowInSearchFlagNotIncludedForSiteTree() {
 		$sf = new SearchForm($this->mockController, 'SearchForm');
 		
 		$page = $this->objFromFixture('SiteTree', 'dontShowInSearchPage');
@@ -179,6 +179,26 @@ class SearchFormTest extends FunctionalTest {
 			$page->ID,
 			$results->column('ID'),
 			'Page with "Show in Search" disabled doesnt show'
+		);
+	}
+	
+	function testDisabledShowInSearchFlagNotIncludedForFiles() {
+		$sf = new SearchForm($this->mockController, 'SearchForm');
+		
+		$dontShowInSearchFile = $this->objFromFixture('File', 'dontShowInSearchFile');
+		$showInSearchFile = $this->objFromFixture('File', 'showInSearchFile');
+		$results = $sf->getResults(null, array('Search'=>'dontShowInSearchFile'));
+		$this->assertNotContains(
+			$dontShowInSearchFile->ID,
+			$results->column('ID'),
+			'File with "Show in Search" disabled doesnt show'
+		);
+		
+		$results = $sf->getResults(null, array('Search'=>'showInSearchFile'));
+		$this->assertContains(
+			$showInSearchFile->ID,
+			$results->column('ID'),
+			'File with "Show in Search" enabled can be found'
 		);
 	}
 

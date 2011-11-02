@@ -8,8 +8,8 @@ the *Image* table by storing the id of the respective *Image* in the first table
 relations between [DataObjects](/topics/datamodel#relations) and the way to manage them easily.
 
 <div class="notice" markdown='1'>
-	I'm using the default tutorial theme in the following examples so the templates may vary or you may need to change
-	the template code in this example to fit your theme
+I'm using the default tutorial theme in the following examples so the templates may vary or you may need to change
+the template code in this example to fit your theme
 </div>
 
 ## What are we working towards?
@@ -770,6 +770,6 @@ CMS and how to display them on the website.
 
 ## Download the code
 
-Download all the [code](http://doc.silverstripe.org/src/github/master/sapphire/docs/en/tutorials/_images/tutorial5-completecode.zip) for this tutorial.
+Download all the [code](_images/tutorial5-completecode.zip) for this tutorial.
 
-You can also download the [code](http://doc.silverstripe.org/src/github/master/sapphire/docs/en/tutorials/_images/tutorial5-completecode-blackcandy.zip) for use in the blackcandy template.
+You can also download the [code](_images/tutorial5-completecode-blackcandy.zip) for use in the blackcandy template.
