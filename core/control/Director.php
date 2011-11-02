@@ -473,6 +473,14 @@ class Director {
 	}
 
 	/**
+	 * Returns the root filesystem folder for assets.
+	 * It will be automatically calculated unless it is overridden with {@link setBaseFolder()}.
+	 */
+	static function assetsBaseFolder() {
+		return ASSETS_BASE_PATH;
+	}
+	
+	/**
 	 * Sets the root folder for the website.
 	 * If the site isn't accessible from the folder you provide, weird things will happen.
 	 */
@@ -575,7 +583,13 @@ class Director {
 	 * @return string
 	 */
 	public static function getAbsFile($file) {
-		return self::is_absolute($file) ? $file : Director::baseFolder() . '/' . $file;
+		if (self::is_absolute($file)) {
+			return $file;
+		} elseif (substr($file,0,strlen(ASSETS_DIR)) == ASSETS_DIR) {
+			return self::assetsBaseFolder() . '/' . $file;
+		} else {
+			return self::baseFolder() . '/' . $file;
+		}
 	}
 	
 	/**

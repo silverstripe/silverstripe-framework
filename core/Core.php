@@ -168,7 +168,16 @@ define('CMS_PATH', BASE_PATH . '/' . CMS_DIR);
 define('THIRDPARTY_DIR', SAPPHIRE_DIR . '/thirdparty');
 define('THIRDPARTY_PATH', BASE_PATH . '/' . THIRDPARTY_DIR);
 define('ASSETS_DIR', 'assets');
-define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
+
+/** 
+ * Allows for customization of assets base path. Very usefuly on 
+ * big projects with a lot of developers.
+ * You have to define ASSETS_BASE_PATH before this point, that
+ * is on viable in _ss_environment.php.
+ */
+if (!defined('ASSETS_BASE_PATH')) define('ASSETS_BASE_PATH',BASE_PATH);
+
+define('ASSETS_PATH', ASSETS_BASE_PATH . '/' . ASSETS_DIR);
 
 /**
  * Define the temporary folder if it wasn't defined yet

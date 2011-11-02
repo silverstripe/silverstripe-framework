@@ -222,7 +222,7 @@ class SS_HTTPResponse {
 			if(!headers_sent()) {
 				header($_SERVER['SERVER_PROTOCOL'] . " $this->statusCode " . $this->getStatusDescription());
 				foreach($this->headers as $header => $value) {
-					header("$header: $value");
+					header("$header: $value", true, $this->statusCode);
 				}
 			}
 			
