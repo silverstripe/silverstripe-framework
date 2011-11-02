@@ -352,7 +352,7 @@ class Security extends Controller {
 			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
 			Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
 			Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/effects.js");
-			Requirements::css(SAPPHIRE_DIR . "/css/Form.css");
+			Requirements::themedcss("Form");
 			
 			// Needed because the <base href=".."> in the template makes problems
 			// with the tabstrip library otherwise
@@ -361,7 +361,7 @@ class Security extends Controller {
 			Requirements::javascript(THIRDPARTY_DIR . "/jquery/jquery.js");
 			Requirements::javascript(SAPPHIRE_DIR . "/javascript/jquery_improvements.js");
 			Requirements::javascript(THIRDPARTY_DIR . "/tabstrip/tabstrip.js");
-			Requirements::css(THIRDPARTY_DIR . "/tabstrip/tabstrip.css");
+			Requirements::themedcss("tabstrip");
 			
 			$content = '<div id="Form_EditForm">';
 			$content .= '<ul class="tabstrip">';
@@ -417,6 +417,7 @@ class Security extends Controller {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/loader.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/scriptaculous/effects.js');
+		Requirements::themedcss("Form");
 
 		$tmpPage = new Page();
 		$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
