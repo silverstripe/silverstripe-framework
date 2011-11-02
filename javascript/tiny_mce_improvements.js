@@ -84,7 +84,7 @@ LinkForm.prototype = {
 					}
 
 					selector.empty();
-					selector.append($('<option value="" selected="1">Select an anchor</option>'));
+					selector.append($('<option value="" selected="1">'+ss.i18n._t('TINYMCEIMPROVEMENTS.SELECTANCHOR','Select an anchor')+'</option>'));
 					for (var i = 0; i < anchors.length; i++) {
 						selector.append($('<option value="'+anchors[i]+'">'+anchors[i]+'</option>'));
 					}
