@@ -778,7 +778,7 @@ class Requirements_Backend {
 	
 	/**
 	 * Concatenate several css or javascript files into a single dynamically generated
-	 * file (stored in {@link Director::baseFolder()}). This increases performance
+	 * file (stored in {@link Director::assetsBaseFolder()}). This increases performance
 	 * by fewer HTTP requests.
 	 * 
 	 * The combined file is regenerated
@@ -827,7 +827,7 @@ class Requirements_Backend {
 	 * 
 	 * @todo Should we enforce unique inclusion of files, or leave it to the developer? Can auto-detection cause breaks?
 	 * 
-	 * @param string $combinedFileName Filename of the combined file (will be stored in {@link Director::baseFolder()} by default)
+	 * @param string $combinedFileName Filename of the combined file (will be stored in {@link Director::assetsBaseFolder()} by default)
 	 * @param array $files Array of filenames relative to the webroot
 	 */
 	function combine_files($combinedFileName, $files) { 	
@@ -897,7 +897,7 @@ class Requirements_Backend {
 	 */
 	function delete_combined_files($combinedFileName = null) {
 		$combinedFiles = ($combinedFileName) ? array($combinedFileName => null) : $this->combine_files;
-		$combinedFolder = ($this->getCombinedFilesFolder()) ? (Director::baseFolder() . '/' . $this->combinedFilesFolder) : Director::baseFolder();
+		$combinedFolder = ($this->getCombinedFilesFolder()) ? (Director::assetsBaseFolder() . '/' . $this->combinedFilesFolder) : Director::assetsBaseFolder();
 		foreach($combinedFiles as $combinedFile => $sourceItems) {
 			$filePath = $combinedFolder . '/' . $combinedFile;
 			if(file_exists($filePath)) {
@@ -962,7 +962,7 @@ class Requirements_Backend {
 		}
 
 		// Process the combined files
-		$base = Director::baseFolder() . '/';
+		$base = Director::assetsBaseFolder() . '/';
 		foreach(array_diff_key($combinedFiles, $this->blocked) as $combinedFile => $dummy) {
 			$fileList = $this->combine_files[$combinedFile];
 			$combinedFilePath = $base . $combinedFilesFolder . '/' . $combinedFile;
