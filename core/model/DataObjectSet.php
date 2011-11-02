@@ -798,16 +798,34 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 
 	/**
 	* Sorts the current DataObjectSet instance.
-	* @param string $fieldname The name of the field on the DataObject that you wish to sort the set by.
+	* @param string|array $fieldname The name of the field on the DataObject that you wish to sort the set by.
+	* 					  			 If array, direction for each sort column is set within array element, with string
+	* 								 appendix. Eg. array('SortCol1 DESC','SortCol2 ASC');
 	* @param string $direction Direction to sort by, either "ASC" or "DESC".
 	*/
 	public function sort($fieldname, $direction = "ASC") {
 		if($this->items) {
-			if (preg_match('/(.+?)(\s+?)(A|DE)SC$/', $fieldname, $matches)) {
-				$fieldname = $matches[1];
-				$direction = $matches[3].'SC';
+			$sort_array = array();
+			$tmp_array = array();
+			if (!is_array($fieldname)) {
+				$tmp_array[$fieldname] = $direction;
+			} elseif($fieldname == array_values($fieldname)) {
+				// indexed array, convert it.
+				$tmp_array = array_combine($fieldname, array_fill(0,count($fieldname),$direction));				
+			} else {
+				// assoc. array
+				$tmp_array = $fieldname;
 			}
-			column_sort($this->items, $fieldname, $direction, false);
+			
+			// exctract sort direction strings 
+			foreach ($tmp_array as $sortfld => $dir) {
+				if (preg_match('/(.+?)(\s+?)(A|DE)SC$/', $sortfld, $matches)) {
+					$sort_array[$matches[1]] = $matches[3].'SC';
+				} else {
+					$sort_array[$sortfld] = in_array($dir,array('ASC','DESC'))? $dir : $direction;
+				} 
+			}
+			column_sort($this->items, $sort_array, $direction, false);
 		}
 	}
 
@@ -978,24 +996,31 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 /**
  * Sort a 2D array by particular column.
  * @param array $data The array to sort.
- * @param string $column The name of the column you wish to sort by.
+ * @param mixed $column The name of the column you wish to sort by, or an array of column=>directions to sort by.
  * @param string $direction Direction to sort by, either "ASC" or "DESC".
  * @param boolean $preserveIndexes Preserve indexes
  */
 function column_sort(&$data, $column, $direction = "ASC", $preserveIndexes = true) {
-	global $column_sort_field, $column_sort_multiplier;
-
-	// We have to keep numeric diretions for legacy
-	if(is_numeric($direction)) {
-		$column_sort_multiplier = $direction;
-	} elseif($direction == "ASC") {
-		$column_sort_multiplier = 1;
-	} elseif($direction == "DESC") {
-		$column_sort_multiplier = -1;
-	} else {
-		$column_sort_multiplier = 0;
+	global $column_sort_field;
+	
+	// if we were only given a string for column, move it into an array
+	if (is_string($column)) $column = array($column => $direction);
+	
+	// convert directions to integers
+	foreach ($column as $k => $v) {
+		if ($v == 'ASC') {
+			$column[$k] = 1;
+		}
+		elseif ($v == 'DESC') {
+			$column[$k] = -1;
+		}
+		elseif (!is_numeric($v)) {
+			$column[$k] = 0;
+		}
 	}
+	
 	$column_sort_field = $column;
+	
 	if($preserveIndexes) {
 		uasort($data, "column_sort_callback_basic");
 	} else {
@@ -1007,14 +1032,25 @@ function column_sort(&$data, $column, $direction = "ASC", $preserveIndexes = tru
  * Callback used by column_sort
  */
 function column_sort_callback_basic($a, $b) {
-	global $column_sort_field, $column_sort_multiplier;
-
-	if($a->$column_sort_field == $b->$column_sort_field) {
-		$result  = 0;
-	} else {
-		$result = ($a->$column_sort_field < $b->$column_sort_field) ? -1 * $column_sort_multiplier : 1 * $column_sort_multiplier;
+	global $column_sort_field;
+	$result = 0;
+	// loop through each sort field
+	foreach ($column_sort_field as $field => $multiplier) {
+		// if A < B then no further examination is necessary
+		if ($a->$field < $b->$field) {
+			$result = -1 * $multiplier;
+			break;
+		}
+		// if A > B then no further examination is necessary
+		elseif ($a->$field > $b->$field) {
+			$result = $multiplier;
+			break;
+		}
+		// A == B means we need to compare the two using the next field
+		// if this was the last field, then function returns that objects
+		// are equivalent
 	}
-	
+
 	return $result;
 }
 
