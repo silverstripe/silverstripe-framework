@@ -945,6 +945,7 @@ class i18n extends Object {
 		'si_LK' => 'si',
 		'sk_SK' => 'sk',
 		'sk_RS' => 'sk',
+		'sl_SI' => 'sl',
 		'sq_AL' => 'sq',
 		'sr_BA' => 'sr',
 		'sr_ME' => 'sr',
