@@ -589,14 +589,14 @@ class File extends DataObject {
 	 * @return String 
 	 */
 	function getFullPath() {
-		$baseFolder = Director::baseFolder();
+		$baseFolder = Director::assetsBaseFolder();
 		
 		if(strpos($this->getFilename(), $baseFolder) === 0) {
 			// if path is absolute already, just return
 			return $this->getFilename();
 		} else {
 			// otherwise assume silverstripe-basefolder
-			return Director::baseFolder() . '/' . $this->getFilename();
+			return Director::assetsBaseFolder() . '/' . $this->getFilename();
 		}
 	}
 
