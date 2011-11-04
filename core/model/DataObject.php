@@ -394,7 +394,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$className = $this->class;
 		$clone = new $className( $this->record );
 		$clone->ID = 0;
+		
+		$clone->extend('onBeforeDuplicate', $this, $doWrite);
 		if($doWrite) $clone->write();
+		$clone->extend('onAfterDuplicate', $this, $doWrite);
+		
 		return $clone;
 	}
 

@@ -90,7 +90,7 @@ class Image extends File {
 	 * @return string
 	 */
 	function getTag() {
-		if(file_exists(Director::baseFolder() . '/' . $this->Filename)) {
+		if(file_exists(Director::assetsBaseFolder() . '/' . $this->Filename)) {
 			$url = $this->getURL();
 			$title = ($this->Title) ? $this->Title : $this->Filename;
 			if($this->Title) {
@@ -111,6 +111,10 @@ class Image extends File {
 		return $this->getTag();
 	}
 
+	/**
+	 * File names are filtered through {@link FileNameFilter}, see class documentation
+	 * on how to influence this behaviour.
+	 */
 	function loadUploadedImage($tmpFile) {
 		if(!is_array($tmpFile)) {
 			user_error("Image::loadUploadedImage() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
@@ -132,23 +136,19 @@ class Image extends File {
 		}
 
 		// Generate default filename
-		$file = str_replace(' ', '-',$tmpFile['name']);
-		$file = ereg_replace('[^A-Za-z0-9+.-]+','',$file);
-		$file = ereg_replace('-+', '-',$file);
-		if(!$file) {
-			$file = "file.jpg";
-		}
+		$nameFilter = Object::create('FileNameFilter');
+		$file = $nameFilter->filter($tmpFile['name']);
+		if(!$file) $file = "file.jpg";
 		
 		$file = ASSETS_PATH . "/$class/$file";
 		
-		while(file_exists(BASE_PATH . "/$file")) {
+		while(file_exists("/$file")) {
 			$i = $i ? ($i+1) : 2;
 			$oldFile = $file;
 			$file = ereg_replace('[0-9]*(\.[^.]+$)',$i . '\\1', $file);
 			if($oldFile == $file && $i > 2) user_error("Couldn't fix $file with $i", E_USER_ERROR);
 		}
-		
-		if(file_exists($tmpFile['tmp_name']) && copy($tmpFile['tmp_name'], BASE_PATH . "/$file")) {
+		if(file_exists($tmpFile['tmp_name']) && copy($tmpFile['tmp_name'], "/$file")) {
 			// Remove the old images
 
 			$this->deleteFormattedImages();
@@ -253,7 +253,7 @@ class Image extends File {
 		if($this->ID && $this->Filename && Director::fileExists($this->Filename)) {
 			$cacheFile = $this->cacheFilename($format, $arg1, $arg2);
 
-			if(!file_exists(Director::baseFolder()."/".$cacheFile) || isset($_GET['flush'])) {
+			if(!file_exists(Director::assetsBaseFolder()."/".$cacheFile) || isset($_GET['flush'])) {
 				$this->generateFormattedImage($format, $arg1, $arg2);
 			}
 			
@@ -290,7 +290,7 @@ class Image extends File {
 	function generateFormattedImage($format, $arg1 = null, $arg2 = null) {
 		$cacheFile = $this->cacheFilename($format, $arg1, $arg2);
 	
-		$gd = new GD(Director::baseFolder()."/" . $this->Filename);
+		$gd = new GD(Director::assetsBaseFolder()."/" . $this->Filename);
 		
 		
 		if($gd->hasGD()){
@@ -298,7 +298,7 @@ class Image extends File {
 			if($this->hasMethod($generateFunc)){
 				$gd = $this->$generateFunc($gd, $arg1, $arg2);
 				if($gd){
-					$gd->writeTo(Director::baseFolder()."/" . $cacheFile);
+					$gd->writeTo(Director::assetsBaseFolder()."/" . $cacheFile);
 				}
 	
 			} else {
@@ -379,7 +379,7 @@ class Image extends File {
 	 */
 	function getDimensions($dim = "string") {
 		if($this->getField('Filename')) {
-			$imagefile = Director::baseFolder() . '/' . $this->getField('Filename');
+			$imagefile = Director::assetsBaseFolder() . '/' . $this->getField('Filename');
 			if(file_exists($imagefile)) {
 				$size = getimagesize($imagefile);
 				return ($dim === "string") ? "$size[0]x$size[1]" : $size[$dim];

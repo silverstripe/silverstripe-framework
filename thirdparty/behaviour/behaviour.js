@@ -153,17 +153,23 @@ var Behaviour = {
 	namedList : {},
 	isDebugging : false,
 	
-	register : function(name, sheet){
+	/**
+	 * @param String name (optional)
+	 * @param Object sheet
+	 * @param Boolean Force application of named sheets (overriding existing ones)
+	 */
+	register : function(name, sheet, force){
 		if(typeof name == 'object') {
-			Behaviour.list.push(name);
-
-    		if(Behaviour.alreadyApplied) Behaviour.process(name);
-		} else {
+			// No 'name' argument provided
+			sheet = name;
 			Behaviour.list.push(sheet);
+		} else if(!Behaviour.namedList[name] || force) {
+			// only apply named behaviour if not already present (or its a forced application)
 			Behaviour.namedList[name] = sheet;
-
-    		if(Behaviour.alreadyApplied) Behaviour.process(sheet);
+			Behaviour.list.push(sheet);
 		}
+		
+		if(Behaviour.alreadyApplied) Behaviour.process(sheet);
 	},
 	
 	start : function(){

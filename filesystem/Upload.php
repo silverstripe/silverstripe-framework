@@ -83,6 +83,8 @@ class Upload extends Controller {
 	
 	/**
 	 * Save an file passed from a form post into this object.
+	 * File names are filtered through {@link FileNameFilter}, see class documentation
+	 * on how to influence this behaviour.
 	 * 
 	 * @param $tmpFile array Indexed array that PHP generated for every file it uploads.
 	 * @param $folderPath string Folder path relative to /assets
@@ -93,7 +95,10 @@ class Upload extends Controller {
 		
 		if(!$folderPath) $folderPath = self::$uploads_folder;
 		
-		if(!$this->file) $this->file = new File();
+		if(!$this->file) {
+			$fileClass = File::get_class_for_file_extension(pathinfo($tmpFile['name'], PATHINFO_EXTENSION));
+			$this->file = new $fileClass();
+		}
 		
 		if(!is_array($tmpFile)) {
 			user_error("Upload::load() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
@@ -109,7 +114,7 @@ class Upload extends Controller {
 		
 		// @TODO This puts a HUGE limitation on files especially when lots
 		// have been uploaded.
-		$base = Director::baseFolder();
+		$base = Director::assetsBaseFolder();
 		$parentFolder = Folder::findOrMake($folderPath);
 
 		// Create a folder for uploading.
@@ -121,10 +126,9 @@ class Upload extends Controller {
 		}
 
 		// Generate default filename
-		$fileName = str_replace(' ', '-',$tmpFile['name']);
-		$fileName = ereg_replace('[^A-Za-z0-9+.-]+','',$fileName);
-		$fileName = ereg_replace('-+', '-',$fileName);
-		$fileName = basename($fileName);
+		$nameFilter = Object::create('FileNameFilter');
+		$file = $nameFilter->filter($tmpFile['name']);
+		$fileName = basename($file);
 
 		$relativeFilePath = ASSETS_DIR . "/" . $folderPath . "/$fileName";
 		

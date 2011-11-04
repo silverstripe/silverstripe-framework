@@ -177,6 +177,27 @@ class File extends DataObject {
 	}
 	
 	/**
+	 * Extend through {@link updateBackLinkTracking()} in your own {@link Extension}.
+	 * 
+	 * @return ComponentSet
+	 */
+	function BackLinkTracking($filter = "", $sort = "", $join = "", $limit = "") {
+		if(class_exists("Subsite")){
+			$rememberSubsiteFilter = Subsite::$disable_subsite_filter;
+			Subsite::disable_subsite_filter(true);
+		}
+		
+		$links = $this->getManyManyComponents('BackLinkTracking', $filter, $sort, $join, $limit);
+		$this->extend('updateBackLinkTracking', $links);
+		
+		if(class_exists("Subsite")){
+			Subsite::disable_subsite_filter($rememberSubsiteFilter);
+		}
+		
+		return $links;
+	}
+	
+	/**
 	 * @todo Unnecessary shortcut for AssetTableField, coupled with cms module.
 	 * 
 	 * @return Integer
@@ -466,13 +487,8 @@ class File extends DataObject {
 		if(!$name) $name = $this->Title;
 
 		// Fix illegal characters
-		$name = ereg_replace(' +','-',trim($name)); // Replace any spaces
-		$name = ereg_replace('[^A-Za-z0-9.+_\-]','',$name); // Replace non alphanumeric characters
-
-		// Remove all leading dots or underscores
-		while(!empty($name) && ($name[0] == '_' || $name[0] == '.')) {
-			$name = substr($name, 1);
-		}
+		$filter = Object::create('FileNameFilter');
+		$name = $filter->filter($name);
 
 		// We might have just turned it blank, so check again.
 		if(!$name) $name = 'new-folder';
@@ -510,7 +526,10 @@ class File extends DataObject {
 	 * @param String $new File path relative to the webroot
 	 */
 	protected function updateLinks($old, $new) {
-		if(class_exists('Subsite')) Subsite::disable_subsite_filter(true);
+		if(class_exists('Subsite')) {
+			$origDisableSubsiteFilter = Subsite::$disable_subsite_filter;
+			Subsite::disable_subsite_filter(true);
+		}
 	
 		$pages = $this->BackLinkTracking();
 
@@ -519,7 +538,7 @@ class File extends DataObject {
 			foreach($pages as $page) $page->rewriteFileURL($old,$new);
 		}
 		
-		if(class_exists('Subsite')) Subsite::disable_subsite_filter(false);
+		if(class_exists('Subsite')) Subsite::disable_subsite_filter($origDisableSubsiteFilter);
 	}
 
 	/**
@@ -570,14 +589,14 @@ class File extends DataObject {
 	 * @return String 
 	 */
 	function getFullPath() {
-		$baseFolder = Director::baseFolder();
+		$baseFolder = Director::assetsBaseFolder();
 		
 		if(strpos($this->getFilename(), $baseFolder) === 0) {
 			// if path is absolute already, just return
 			return $this->getFilename();
 		} else {
 			// otherwise assume silverstripe-basefolder
-			return Director::baseFolder() . '/' . $this->getFilename();
+			return Director::assetsBaseFolder() . '/' . $this->getFilename();
 		}
 	}
 
@@ -833,6 +852,53 @@ class File extends DataObject {
 		return $fields;
 	}
 	
-}
+	/**
+	 * @var Array Only use lowercase extensions in here.
+	 */
+	static $class_for_file_extension = array(
+		'*' => 'File',
+		'jpg' => 'Image',
+		'jpeg' => 'Image',
+		'png' => 'Image',
+		'gif' => 'Image',
+	);
 
-?>
+	/**
+	 * Maps a {@link File} subclass to a specific extension.
+	 * By default, files with common image extensions will be created
+	 * as {@link Image} instead of {@link File} when using 
+	 * {@link Folder::constructChild}, {@link Folder::addUploadToFolder}),
+	 * and the {@link Upload} class (either directly or through {@link FileField}).
+	 * For manually instanciated files please use this mapping getter.
+	 * 
+	 * Caution: Changes to mapping doesn't apply to existing file records in the database.
+	 * Also doesn't hook into {@link Object::getCustomClass()}.
+	 * 
+	 * @param String File extension, without dot prefix. Use an asterisk ('*')
+	 * to specify a generic fallback if no mapping is found for an extension.
+	 * @return String Classname for a subclass of {@link File}
+	 */
+	static function get_class_for_file_extension($ext) {
+		$map = array_change_key_case(self::$class_for_file_extension, CASE_LOWER);
+		return (array_key_exists(strtolower($ext), $map)) ? $map[strtolower($ext)] : $map['*'];
+	}
+	
+	/**
+	 * See {@link get_class_for_file_extension()}.
+	 * 
+	 * @param String|array
+	 * @param String
+	 */
+	static function set_class_for_file_extension($exts, $class) {
+		if(!is_array($exts)) $exts = array($exts);
+		foreach($exts as $ext) {
+			if(ClassInfo::is_subclass_of($ext, 'File')) {
+				throw new InvalidArgumentException(
+					sprintf('Class "%s" (for extension "%s") is not a valid subclass of File', $class, $ext)
+				);
+			}
+			self::$class_for_file_extension[$ext] = $class;
+		}
+	}
+	
+}

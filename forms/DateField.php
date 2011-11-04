@@ -50,7 +50,7 @@ class DateField extends TextField {
 	/**
 	 * @var array
 	 */
-	protected $config = array(
+	static $default_config = array(
 		'showcalendar' => false,
 		'jslocale' => null,
 		'dmyfields' => false,
@@ -60,6 +60,11 @@ class DateField extends TextField {
 		'min' => null,
 		'max' => null
 	);
+	
+	/**
+	 * @var array
+	 */
+	protected $config;
 		
 	/**
 	 * @var String
@@ -77,6 +82,8 @@ class DateField extends TextField {
 		if(!$this->locale) {
 			$this->locale = i18n::get_locale();
 		}
+		
+		$this->config = self::$default_config;
 		
 		if(!$this->getConfig('dateformat')) {
 			$this->setConfig('dateformat', i18n::get_date_format());
@@ -96,6 +103,16 @@ class DateField extends TextField {
 	}
 
 	function Field() {
+		$config = array(
+			'showcalendar' => $this->getConfig('showcalendar'),
+			'isoDateformat' => $this->getConfig('dateformat'),
+			'jqueryDateformat' => DateField_View_JQuery::convert_iso_to_jquery_format($this->getConfig('dateformat')),
+			'min' => $this->getConfig('min'),
+			'max' => $this->getConfig('max')
+		);
+		$config = array_filter($config);
+		$this->addExtraClass(Convert::raw2json($config));
+		
 		// Three separate fields for day, month and year
 		if($this->getConfig('dmyfields')) {
 			// values
@@ -524,19 +541,7 @@ class DateField_View_JQuery {
 		return $this->field;
 	}
 	
-	/**
-	 * 
-	 */
 	function onBeforeRender() {
-		if($this->getField()->getConfig('showcalendar')) {
-			// Inject configuration into existing HTML
-			$format = self::convert_iso_to_jquery_format($this->getField()->getConfig('dateformat'));
-			$conf = array(
-				'showcalendar' => true,
-				'dateFormat' => $format
-			);
-			$this->getField()->addExtraClass(str_replace('"', '\'', Convert::raw2json($conf)));
-		}
 	}
 	
 	/**
