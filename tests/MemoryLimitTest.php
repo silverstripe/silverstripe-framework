@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package sapphire
+ * @subpackage tests
+ */
 
 class MemoryLimitTest extends SapphireTest {
 	
@@ -66,10 +70,16 @@ class MemoryLimitTest extends SapphireTest {
 	function setUp() {
 		$this->origMemLimit = ini_get('memory_limit');
 		$this->origTimeLimit = ini_get('max_execution_time');
+		$this->origMemLimitMax = get_increase_memory_limit_max();
+		$this->origTimeLimitMax = get_increase_time_limit_max();
+		set_increase_memory_limit_max(-1);
+		set_increase_time_limit_max(-1);
 	}
 	function tearDown() {
 		ini_set('memory_limit', $this->origMemLimit);
 		set_time_limit($this->origTimeLimit);
+		set_increase_memory_limit_max($this->origMemLimitMax);
+		set_increase_time_limit_max($this->origTimeLimitMax);
 	}
 	
 	/**

@@ -111,6 +111,10 @@ class Image extends File {
 		return $this->getTag();
 	}
 
+	/**
+	 * File names are filtered through {@link FileNameFilter}, see class documentation
+	 * on how to influence this behaviour.
+	 */
 	function loadUploadedImage($tmpFile) {
 		if(!is_array($tmpFile)) {
 			user_error("Image::loadUploadedImage() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
@@ -132,12 +136,9 @@ class Image extends File {
 		}
 
 		// Generate default filename
-		$file = str_replace(' ', '-',$tmpFile['name']);
-		$file = ereg_replace('[^A-Za-z0-9+.-]+','',$file);
-		$file = ereg_replace('-+', '-',$file);
-		if(!$file) {
-			$file = "file.jpg";
-		}
+		$nameFilter = Object::create('FileNameFilter');
+		$file = $nameFilter->filter($tmpFile['name']);
+		if(!$file) $file = "file.jpg";
 		
 		$file = ASSETS_PATH . "/$class/$file";
 		

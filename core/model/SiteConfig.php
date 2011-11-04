@@ -220,6 +220,8 @@ class SiteConfig extends DataObject implements PermissionProvider {
 		if(!$member) $member = Member::currentUserID();
 		if($member && is_numeric($member)) $member = DataObject::get_by_id('Member', $member);
 
+		if ($member && Permission::checkMember($member, "ADMIN")) return true;
+
 		if (!$this->CanViewType || $this->CanViewType == 'Anyone') return true;
 				
 		// check for any logged-in users
@@ -242,6 +244,8 @@ class SiteConfig extends DataObject implements PermissionProvider {
 	public function canEdit($member = null) {
 		if(!$member) $member = Member::currentUserID();
 		if($member && is_numeric($member)) $member = DataObject::get_by_id('Member', $member);
+
+		if ($member && Permission::checkMember($member, "ADMIN")) return true;
 
 		// check for any logged-in users
 		if(!$this->CanEditType || $this->CanEditType == 'LoggedInUsers' && $member) return true;
@@ -276,6 +280,8 @@ class SiteConfig extends DataObject implements PermissionProvider {
 		
 		if (Permission::check('ADMIN')) return true;
 
+		if ($member && Permission::checkMember($member, "ADMIN")) return true;
+		
 		// check for any logged-in users
 		if($this->CanCreateTopLevelType == 'LoggedInUsers' && $member) return true;
 		
