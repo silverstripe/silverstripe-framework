@@ -28,6 +28,7 @@ class ErrorPage extends Page {
 	
 	/**
 	 * Get a {@link SS_HTTPResponse} to response to a HTTP error code if an {@link ErrorPage} for that code is present.
+	 * Optionally; set the title of the page to be unique message
 	 *
 	 * @param int $statusCode
 	 * @return SS_HTTPResponse

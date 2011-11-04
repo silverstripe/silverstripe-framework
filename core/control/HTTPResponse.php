@@ -81,7 +81,7 @@ class SS_HTTPResponse {
 	 * @var array
 	 */
 	protected $headers = array(
-		"Content-Type" => "text/html; charset=\"utf-8\"",
+		"Content-Type" => "text/html; charset=utf-8",
 	);
 	
 	/**
@@ -98,7 +98,7 @@ class SS_HTTPResponse {
 	 *  See {@link setStatusCode()} for more information.
 	 */
 	function __construct($body = null, $statusCode = null, $statusDescription = null) {
-		$this->body = $body;
+		$this->setBody($body);
 		if($statusCode) $this->setStatusCode($statusCode, $statusDescription);
 	}
 	
@@ -150,6 +150,9 @@ class SS_HTTPResponse {
 	
 	function setBody($body) {
 		$this->body = $body;
+		
+		// Set content-length in bytes. Use mbstring to avoid problems with mb_internal_encoding() and mbstring.func_overload
+		$this->headers['Content-Length'] = (function_exists('mb_strlen') ? mb_strlen($this->body,'8bit') : strlen($this->body));
 	}
 	
 	function getBody() {

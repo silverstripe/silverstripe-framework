@@ -13,32 +13,40 @@ class LookupField extends DropdownField {
 	 * Returns a readonly span containing the correct value.
 	 */
 	function Field() {
+		$source = $this->getSource();
 		
-		if(trim($this->value) || $this->value === '0') {
-			$this->value = trim($this->value);
-			$source = $this->getSource();
-			if(is_array($source)) {
-				$mappedValue = isset($source[$this->value]) ? $source[$this->value] : null;
-			} elseif($source instanceof SQLMap) {
-				$mappedValue = $source->getItem($this->value);
-			}
-		}
 		
-		if(!isset($mappedValue)) $mappedValue = "<i>(none)</i>";
+		// Normalize value to array to simplify further processing
+		$values = (is_array($this->value)) ? $this->value : array(trim($this->value));
 
-		if($this->value) {
-			$val = $this->dontEscape
-				? ($this->reserveNL?Convert::raw2xml($this->value):$this->value)
-				: Convert::raw2xml($this->value);
+		$mapped = array();
+		if($source instanceof SQLMap) {
+			foreach($values as $value) $mapped[] = $source->getItem($value);
+		} elseif(is_array($source)) {
+			$mapped = array_intersect_key($source, array_combine($values, $values));
 		} else {
-			$val = '<i>(none)</i>';
+			$mapped = array();
 		}
 
-		$valforInput = $this->value ? Convert::raw2att($val) : "";
+		// Don't check if string arguments are matching against the source,
+		// as they might be generated HTML diff views instead of the actual values
+		if($this->value && !$mapped) {
+			$mapped = array(trim($this->value));
+			$values = array();
+		}
+		
+		if($mapped) {
+			$attrValue = implode(', ', array_values($mapped));
+			if(!$this->dontEscape) $attrValue = Convert::raw2xml($attrValue);
+			$inputValue = implode(', ', array_values($values)); 
+		} else {
+			$attrValue = "<i>(none)</i>";
+			$inputValue = '';
+		}
 
 		return "<span class=\"readonly\" id=\"" . $this->id() .
-			"\">$mappedValue</span><input type=\"hidden\" name=\"" . $this->name .
-			"\" value=\"" . $valforInput . "\" />";
+			"\">$attrValue</span><input type=\"hidden\" name=\"" . $this->name .
+			"\" value=\"" . $inputValue . "\" />";
 	}
 	
 	function performReadonlyTransformation() {

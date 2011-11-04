@@ -10,12 +10,15 @@ class TimeFieldTest extends SapphireTest {
 		
 		$this->originalLocale = i18n::get_locale();
 		i18n::set_locale('en_NZ');
+		$this->origTimeFormat = TimeField::$default_config['timeformat'];
+		TimeField::$default_config['timeformat'] = 'HH:mm:ss';
 	}
 	
 	function tearDown() {
 		parent::tearDown();
 		
 		i18n::set_locale($this->originalLocale);
+		TimeField::$default_config['timeformat'] = $this->origTimeFormat;
 	}
 	
 	function testConstructorWithoutArgs() {
