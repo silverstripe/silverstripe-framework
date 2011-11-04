@@ -68,6 +68,7 @@ class SilverStripeNavigatorItem_CMSLink extends SilverStripeNavigatorItem {
 			return '<a class="current">CMS</a>';
 		} else {
 			$cmsLink = 'admin/show/' . $page->ID;
+			if($page->hasExtension('Translatable')) $cmsLink .= "?locale=" . $page->Locale;
 			$cmsLink = "<a href=\"$cmsLink\" class=\"newWindow\" target=\"cms\">". _t('ContentController.CMS', 'CMS') ."</a>";
 	
 			return $cmsLink;

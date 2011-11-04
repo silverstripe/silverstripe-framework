@@ -34,6 +34,13 @@ class ContentNegotiator {
 	protected static $encoding = 'utf-8';
 
 	protected static $enabled = false;
+	
+	/**
+	 * @var String 'html' or 'xhtml'. Only respected in {@link process()},
+	 * not {@link html()} or {@link xhtml()}, and only in special cases
+	 * excluding the W3C validator user agent, or HTTP Accept headers are set by the client.
+	 */
+	static $default_format = 'html';
 
 	/**
 	 * Set the character set encoding for this page.  By default it's utf-8, but you could change it to, say, windows-1252, to
@@ -88,7 +95,7 @@ class ContentNegotiator {
 		);
 		$q = array();
 		if(headers_sent()) {
-			$chosenFormat = "html";
+			$chosenFormat = self::$default_format;
 
 		} else if(isset($_GET['forceFormat'])) {
 			$chosenFormat = $_GET['forceFormat'];
@@ -113,7 +120,7 @@ class ContentNegotiator {
 					krsort($q);
 					$chosenFormat = reset($q);
 				} else {
-					$chosenFormat = "html";
+					$chosenFormat = self::$default_format;
 				}
 			}
 		}

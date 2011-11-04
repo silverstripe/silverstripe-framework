@@ -306,7 +306,7 @@ class ManifestBuilder {
 			if(@is_dir("$folder/$item") && file_exists("$folder/$item/_manifest_exclude")) continue;
 
 			// i18n: ignore language files (loaded on demand)
-			if($item == 'lang' && @is_dir("$folder/$item") && ereg_replace("/[^/]+/\\.\\.","",$folder.'/..') == Director::baseFolder()) continue;
+            if ($item == 'lang' && @is_dir("$folder/lang") && rtrim(dirname($folder), DIRECTORY_SEPARATOR) == Director::baseFolder()) { continue; }
 
 			if(@is_dir("$folder/$item")) {
 				// Folder exclusion - used to skip over tests/ folders

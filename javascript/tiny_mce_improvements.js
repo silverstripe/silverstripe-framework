@@ -84,7 +84,7 @@ LinkForm.prototype = {
 					}
 
 					selector.empty();
-					selector.append($('<option value="" selected="1">Select an anchor</option>'));
+					selector.append($('<option value="" selected="1">'+ss.i18n._t('TINYMCEIMPROVEMENTS.SELECTANCHOR','Select an anchor')+'</option>'));
 					for (var i = 0; i < anchors.length; i++) {
 						selector.append($('<option value="'+anchors[i]+'">'+anchors[i]+'</option>'));
 					}
@@ -272,6 +272,8 @@ LinkForm.prototype = {
 				ed.dom.remove(e, 1);
 		}
 		
+		jQuery(linkFormObj).trigger('onafterinsert', attributes);
+		
 		this.respondToNodeChange(ed);
 	},
 	
@@ -448,6 +450,7 @@ ImageForm.prototype = {
 		this.elements.ImageTitle.onkeyup =  function() { __form.update_params('ImageTitle'); };
 		this.elements.CaptionText.onkeyup =  function() { __form.update_params('CaptionText'); };
 		this.elements.AltText.onchange = function() { __form.update_params('AltText'); };
+		this.elements.CSSClass.onchange = function() { __form.update_params('CSSClass'); };
 		this.elements.Width.onchange = function() { __form.update_params('Width'); };
 		this.elements.Height.onchange = function() { __form.update_params('Height'); };
 	},
@@ -505,6 +508,8 @@ ImageForm.prototype = {
 				imgElement.height = this.elements.Height.value;
 				imgElement.removeAttribute('width');
 				this.elements.Width.value = imgElement.width;
+			} else if(updatedFieldName == 'CSSClass') {
+				imgElement.className = this.elements.CSSClass.value;
 			}
 		} else if (this.selectedImageWidth && this.selectedImageHeight) {
 			// Proportionate updating of heights
@@ -525,12 +530,9 @@ ImageForm.prototype = {
 			var captionElement = imgElement.nextSibling;
 			if (captionElement && captionElement.tagName == 'P') {
 				this.elements.CaptionText.value = captionElement.innerText || captionElement.textContent;
-			} else {
-				this.elements.CaptionText.disabled = 'disabled';
 			}
 			this.elements.ImageTitle.value = imgElement.title;
 			this.elements.CSSClass.value = imgElement.className;
-			this.elements.CSSClass.disabled = 'disabled';
 			this.elements.Width.value = imgElement.style.width ? parseInt(imgElement.style.width) : imgElement.width;
 			this.elements.Height.value = imgElement.style.height ? parseInt(imgElement.style.height) : imgElement.height;
 		} else {
@@ -627,14 +629,17 @@ ImageThumbnail.prototype = {
 		if(!tinyMCE.selectedInstance) tinyMCE.selectedInstance = tinyMCE.activeEditor;
 		if(tinyMCE.selectedInstance.contentWindow.focus) tinyMCE.selectedInstance.contentWindow.focus();
 		
-		this.ssInsertImage(tinyMCE.activeEditor, {
+		var data = {
 			'src' : relativeHref,
 			'alt' : altText,
 			'width' : $('Form_EditorToolbarImageForm_Width').value,
 			'height' : $('Form_EditorToolbarImageForm_Height').value,
 			'title' : titleText,
 			'class' : cssClass
-		}, captionText);
+		};
+		this.ssInsertImage(tinyMCE.activeEditor, data, captionText);
+		
+		jQuery(formObj).trigger('onafterinsert', data);
 		
 		return false;
 	},
@@ -785,6 +790,9 @@ FlashThumbnail.prototype = {
 		tinyMCE.selectedInstance.execCommand("mceInsertContent", false, html);
 		tinyMCE.selectedInstance.execCommand('mceRepaint');
 	//	ed.execCommand('mceInsertContent', false, html, {skip_undo : 1}); 
+	
+		jQuery(formObj).trigger('onafterinsert', {html: html, href: relativeHref, width: width, height: height});
+	
 		return false;
 	}
 }
