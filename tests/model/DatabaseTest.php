@@ -78,6 +78,46 @@ class DatabaseTest extends SapphireTest {
 		$this->assertFalse(DB::getConn()->hasTable('asdfasdfasdf'));
 	}
 	
+	function testGetAndReleaseLock() {
+		$db = DB::getConn();
+		
+		if(!$db->supportsLocks()) {
+			return $this->markTestSkipped('Tested database doesn\'t support application locks');
+		}
+
+		$this->assertTrue($db->getLock('DatabaseTest'), 'Can aquire lock');
+		// $this->assertFalse($db->getLock('DatabaseTest'), 'Can\'t repeatedly aquire the same lock');
+		$this->assertTrue($db->getLock('DatabaseTest'), 'The same lock can be aquired multiple times in the same connection');
+
+		$this->assertTrue($db->getLock('DatabaseTestOtherLock'), 'Can aquire different lock');
+		$db->releaseLock('DatabaseTestOtherLock');
+		
+		// Release potentially stacked locks from previous getLock() invocations
+		$db->releaseLock('DatabaseTest');
+		$db->releaseLock('DatabaseTest');
+		
+		$this->assertTrue($db->getLock('DatabaseTest'), 'Can aquire lock after releasing it');
+		$db->releaseLock('DatabaseTest');
+	}
+	
+	function testCanLock() {
+		$db = DB::getConn();
+		
+		if(!$db->supportsLocks()) {
+			return $this->markTestSkipped('Database doesn\'t support locks');
+		}
+		
+		if($db instanceof MSSQLDatabase) {
+			return $this->markTestSkipped('MSSQLDatabase doesn\'t support inspecting locks');
+		}
+		
+		$this->assertTrue($db->canLock('DatabaseTest'), 'Can lock before first aquiring one');
+		$db->getLock('DatabaseTest');
+		$this->assertFalse($db->canLock('DatabaseTest'), 'Can\'t lock after aquiring one');
+		$db->releaseLock('DatabaseTest');
+		$this->assertTrue($db->canLock('DatabaseTest'), 'Can lock again after releasing it');
+	}
+	
 }
 
 class DatabaseTest_MyObject extends DataObject implements TestOnly {

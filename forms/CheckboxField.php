@@ -51,11 +51,11 @@ class CheckboxField extends FormField {
 			$Type = $this->XML_val('Type');
 			$extraClass = $this->XML_val('extraClass'); 
 			return <<<HTML
-<p id="$Name" class="field $Type $extraClass">
+<div id="$Name" class="field $Type $extraClass">
 	$Field
 	<label class="right" for="{$this->id()}">$Title</label>
 	$messageBlock
-</p>
+</div>
 HTML;
 			
 		}

@@ -13,6 +13,14 @@ abstract class SS_Database {
 	static $globalConn;
 	
 	/**
+	 * @var boolean Check tables when running /dev/build, and repair them if necessary. 
+	 * In case of large databases or more fine-grained control on how to handle
+	 * data corruption in tables, you can disable this behaviour and handle it
+	 * outside of this class, e.g. through a nightly system task with extended logging capabilities.
+	 */
+	static $check_and_repair_on_build = true;
+	
+	/**
 	 * If this is false, then information about database operations
 	 * will be displayed, eg creation of tables.
 	 * @param boolean
@@ -275,7 +283,7 @@ abstract class SS_Database {
 			$this->transCreateTable($table, $options, $extensions);
 			$this->alterationMessage("Table $table: created","created");
 		} else {
-			$this->checkAndRepairTable($table, $options);
+			if(self::$check_and_repair_on_build) $this->checkAndRepairTable($table, $options);
 			
 			// Check if options changed
 			$tableOptionsChanged = false;
@@ -761,6 +769,59 @@ abstract class SS_Database {
 	 * @return string SQL datetime expression to query for the interval between $date1 and $date2 in seconds which is the result of the substraction
 	 */
 	abstract function datetimeDifferenceClause($date1, $date2);
+	
+	/**
+	 * Determines if the used database supports application-level locks,
+	 * which is different from table- or row-level locking.
+	 * See {@link getLock()} for details.
+	 * 
+	 * @return boolean
+	 */
+	function supportsLocks() {
+		return false;
+	}
+	
+	/**
+	 * Returns if the lock is available.
+	 * See {@link supportsLocks()} to check if locking is generally supported.
+	 * 
+	 * @return Boolean
+	 */
+	function canLock($name) {
+		return false;
+	}
+	
+	/** 
+	 * Sets an application-level lock so that no two processes can run at the same time,
+	 * also called a "cooperative advisory lock".
+	 * 
+	 * Return FALSE if acquiring the lock fails; otherwise return TRUE, if lock was acquired successfully.
+	 * Lock is automatically released if connection to the database is broken (either normally or abnormally),
+	 * making it less prone to deadlocks than session- or file-based locks.
+	 * Should be accompanied by a {@link releaseLock()} call after the logic requiring the lock has completed.
+	 * Can be called multiple times, in which case locks "stack" (PostgreSQL, SQL Server),
+	 * or auto-releases the previous lock (MySQL).
+	 * 
+	 * Note that this might trigger the database to wait for the lock to be released, delaying further execution.
+	 * 
+	 * @param String
+	 * @param Int Timeout in seconds
+	 * @return Boolean
+	 */
+	function getLock($name, $timeout = 5) {
+		return false;
+	}
+	
+	/** 
+	 * Remove an application-level lock file to allow another process to run 
+	 * (if the execution aborts (e.g. due to an error) all locks are automatically released).
+	 * 
+	 * @param String
+	 * @return Boolean
+	 */
+	function releaseLock($name) {
+		return false;
+	}
 
 }
 
