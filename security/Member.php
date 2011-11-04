@@ -399,7 +399,7 @@ class Member extends DataObject {
 				
 				$generator = new RandomGenerator();
 				$member->RememberLoginToken = $generator->generateHash('sha1');
-				Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
+				Cookie::set('alc_enc', $member->ID . ':' . $member->RememberLoginToken, 90, null, null, false, true);
 
 				$member->NumVisit++;
 				$member->write();

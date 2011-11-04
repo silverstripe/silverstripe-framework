@@ -8,6 +8,11 @@ class GD extends Object {
 	protected $gd, $width, $height;
 	protected $quality;
 	
+	/**
+	 * @var boolean
+	 */
+	protected static $stretchPad_default = false;
+	
 	protected static $default_quality = 75;
 
 	/**
@@ -293,12 +298,13 @@ class GD extends Object {
      * @param height
      * @param backgroundColour
 	 */
-	function paddedResize($width, $height, $backgroundColor = "FFFFFF") {
+	function paddedResize($width, $height, $backgroundColor = "FFFFFF", $stretch=null) {
 		if(!$this->gd) return;
+		if(!$stretch)$stretch=self::$stretchPad_default;
+		
 
 		$width = round($width);
 		$height = round($height);
-		
 		
 		$newGD = imagecreatetruecolor($width, $height);
 		
@@ -315,28 +321,50 @@ class GD extends Object {
 			
 			$srcAR = $this->width / $this->height;
 		
+			$noresample=false;
+			
 			// Destination narrower than the source
-			if($destAR > $srcAR) {
-				$destY = 0;
-				$destHeight = $height;
-				
+			if($destAR > $srcAR && ($stretch=true || $this->width > $width)) {
 				$destWidth = $height * $srcAR;
 				$destX = ($width - $destWidth) / 2;
-			
+
+				$destHeight = $height;
+				$destY = 0;
+				
 			// Destination shorter than the source
-			} else {
-				$destX = 0;
+			} elseif($this->width > $width || $stretch=true){
 				$destWidth = $width;
+				$destX = 0;
 				
 				$destHeight = $width / $srcAR;
 				$destY = ($height - $destHeight) / 2;
+			
+			// Destination shorter and narrower than the source
+			}else {
+				$noresample=true;
+				$destX=($width-$this->width)/2;
+				$destY=($height-$this->height)/2;
 			}
 			
-			imagecopyresampled($newGD, $this->gd, $destX, $destY, 0, 0, $destWidth, $destHeight, $this->width, $this->height);
+			if($noresample)
+				imagecopy($newGD, $this->gd, $destX, $destY, 0, 0, $this->width, $this->height);
+			else
+				imagecopyresampled($newGD, $this->gd, $destX, $destY, 0, 0, $destWidth, $destHeight, $this->width, $this->height);
+				
 		}
 		$output = clone $this;
 		$output->setGD($newGD);
 		return $output;
+	}
+	
+	/**
+	 * Manually overide 'always pad' images -instead of steteching them
+	 * _config.php
+	 * GD::alwaysPad(true);
+	 * @param boolean $code
+	 */
+	static function alwaysPad($bool=true) {
+		self::$stretchPad_default= $bool;
 	}
 
 	/**

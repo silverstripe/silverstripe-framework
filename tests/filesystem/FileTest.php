@@ -7,6 +7,8 @@ class FileTest extends SapphireTest {
 	
 	static $fixture_file = 'sapphire/tests/filesystem/FileTest.yml';
 	
+	protected $extraDataObjects = array('FileTest_MyCustomFile');
+	
 	function testCreateWithFilenameWithSubfolder() {
 		// Note: We can't use fixtures/setUp() for this, as we want to create the db record manually.
 		// Creating the folder is necessary to avoid having "Filename" overwritten by setName()/setRelativePath(),
@@ -222,6 +224,42 @@ class FileTest extends SapphireTest {
 		$this->assertFileExists($filePath);
 		$this->assertFalse(DataObject::get_by_id('File', $fileID));
 	}
+	
+	function testGetClassForFileExtension() {
+		$orig = File::$class_for_file_extension;
+		File::$class_for_file_extension['*'] = 'MyGenericFileClass';
+		File::$class_for_file_extension['foo'] = 'MyFooFileClass';
+
+		$this->assertEquals(
+			'MyFooFileClass',
+			File::get_class_for_file_extension('foo'),
+			'Finds directly mapped file classes'
+		);
+		$this->assertEquals(
+			'MyFooFileClass',
+			File::get_class_for_file_extension('FOO'),
+			'Works without case sensitivity'
+		);
+		$this->assertEquals(
+			'MyGenericFileClass',
+			File::get_class_for_file_extension('unknown'),
+			'Falls back to generic class for unknown extensions'
+		);
+		
+		File::$class_for_file_extension = $orig;
+	}
+	
+	function testFolderConstructChild() {
+		$orig = File::$class_for_file_extension;
+		File::$class_for_file_extension['gif'] = 'FileTest_MyCustomFile';
+		
+		$folder1 = $this->objFromFixture('Folder', 'folder1');
+		$fileID = $folder1->constructChild('myfile.gif');
+		$file = DataObject::get_by_id('File', $fileID);
+		$this->assertEquals('FileTest_MyCustomFile', get_class($file));
+		
+		File::$class_for_file_extension = $orig;
+	}
 		
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -270,4 +308,8 @@ class FileTest extends SapphireTest {
 		if(file_exists('../assets/FileTest.txt')) unlink('../assets/FileTest.txt');
 	}
 
+}
+
+class FileTest_MyCustomFile extends File implements TestOnly {
+	
 }

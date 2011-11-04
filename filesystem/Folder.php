@@ -173,12 +173,7 @@ class Folder extends File {
 		if(is_dir($baseDir . $name)) {
 			$className = "Folder";
 		} else {
-			// Could use getimagesize to get the type of the image
-			$ext = strtolower(substr($name,strrpos($name,'.')+1));
-			switch($ext) {
-				case "gif": case "jpg": case "jpeg": case "png": $className = "Image"; break;
-				default: $className = "File";
-			}
+			$className = File::get_class_for_file_extension(pathinfo($name, PATHINFO_EXTENSION));
 		}
 
 		if(Member::currentUser()) $ownerID = Member::currentUser()->ID;
@@ -198,6 +193,8 @@ class Folder extends File {
 
 	/**
 	 * Take a file uploaded via a POST form, and save it inside this folder.
+	 * File names are filtered through {@link FileNameFilter}, see class documentation
+	 * on how to influence this behaviour.
 	 */
 	function addUploadToFolder($tmpFile) {
 		if(!is_array($tmpFile)) {
@@ -211,10 +208,8 @@ class Folder extends File {
 		// $parentFolder = Folder::findOrMake("Uploads");
 
 		// Generate default filename
-		$file = str_replace(' ', '-',$tmpFile['name']);
-		$file = ereg_replace('[^A-Za-z0-9+.-]+','',$file);
-		$file = ereg_replace('-+', '-',$file);
-
+		$nameFilter = Object::create('FileNameFilter');
+		$file = $nameFilter->filter($tmpFile['name']);
 		while($file[0] == '_' || $file[0] == '.') {
 			$file = substr($file, 1);
 		}
