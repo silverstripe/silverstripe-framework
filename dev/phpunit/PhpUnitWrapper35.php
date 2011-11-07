@@ -26,7 +26,6 @@ class PhpUnitWrapper35 extends PhpUnitWrapper {
 		require_once 'PHPUnit/Autoload.php';
 
 		require_once 'PHP/CodeCoverage/Filter.php';
-		PHP_CodeCoverage_Filter::getInstance()->addFileToBlacklist(__FILE__, 'PHPUNIT');
 	}
 	
 	/**
@@ -44,6 +43,8 @@ class PhpUnitWrapper35 extends PhpUnitWrapper {
 			foreach(TestRunner::$coverage_filter_dirs as $dir) {
 				$filter->addDirectoryToBlacklist(BASE_PATH . '/' . $dir);
 			}
+
+			$filter->addFileToBlacklist(__FILE__, 'PHPUNIT');
 			
 			$coverage->start(self::get_test_name());
 		}
