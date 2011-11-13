@@ -518,11 +518,11 @@ class RestfulServer extends Controller {
 	 * @return SQLQuery|boolean
 	 */
 	protected function getObjectRelationQuery($obj, $params, $sort, $limit, $relationName) {
-	    // The relation method will return a DataList, that getSearchQuery subsequently manipulates
+		// The relation method will return a DataList, that getSearchQuery subsequently manipulates
 		if($obj->hasMethod($relationName)) {
-		    $query = $obj->$relationName();
- 		    return $this->getSearchQuery($query->dataClass(), $params, $sort, $limit, $query);
-	    }
+			$query = $obj->$relationName();
+			return $this->getSearchQuery($query->dataClass(), $params, $sort, $limit, $query);
+		}
 	}
 	
 	protected function permissionFailure() {
