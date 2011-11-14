@@ -207,7 +207,7 @@ class TranslatableTest extends FunctionalTest {
 	function testTranslationCantHaveSameURLSegmentAcrossLanguages() {
 		$origPage = $this->objFromFixture('Page', 'testpage_en');
 		$translatedPage = $origPage->createTranslation('de_DE');
-		$this->assertEquals($translatedPage->URLSegment, 'testpage-de-DE');
+		$this->assertEquals($translatedPage->URLSegment, 'testpage-de-de');
 	
 		$translatedPage->URLSegment = 'testpage';
 		$translatedPage->write();
