@@ -6,6 +6,16 @@
  */
 class EmailField extends TextField {
 	
+	/**
+	* Returns an input field, class="text" and type="email" with an optional maxlength
+  	* Added the type for a better experience on smartphones and tablets
+	*/
+	
+	function __construct($name, $title = null, $value = "", $maxLength = null, $form = null){
+		parent::__construct($name, $title, $value, $maxLength, $form);    
+		$this->typeAttributeValue = "email";
+	}
+	
 	function jsValidation() {
 		$formID = $this->form->FormName();
 		$error = _t('EmailField.VALIDATIONJS', 'Please enter an email address.');
