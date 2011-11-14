@@ -12,11 +12,17 @@ class TextField extends FormField {
 	protected $maxLength;
 	
 	/**
+	 * Value to be used in input type text
+	 * @var type 
+	 */
+	protected $typeAttributeValue;
+	
+	/**
 	 * Returns an input field, class="text" and type="text" with an optional maxlength
 	 */
 	function __construct($name, $title = null, $value = "", $maxLength = null, $form = null){
 		$this->maxLength = $maxLength;
-		
+		$this->typeAttributeValue = "text";
 		parent::__construct($name, $title, $value, $form);
 	}
 	
@@ -36,8 +42,8 @@ class TextField extends FormField {
 	
 	function Field() {
 		$attributes = array(
-			'type' => 'text',
-			'class' => 'text' . ($this->extraClass() ? $this->extraClass() : ''),
+			'type' => $this->typeAttributeValue,
+			'class' => $this->typeAttributeValue . ($this->extraClass() ? $this->extraClass() : ''),
 			'id' => $this->id(),
 			'name' => $this->getName(),
 			'value' => $this->Value(),
