@@ -97,7 +97,7 @@ class SiteTreeTest extends SapphireTest {
 			'staff' => 'my-staff',
 			'about' => 'about-us',
 			'staffduplicate' => 'my-staff-2',
-			'product1' => '1-1-test-product',
+			'product1' => '1.1-test-product',
 			'product2' => 'another-product',
 			'product3' => 'another-product-2',
 			'product4' => 'another-product-3',

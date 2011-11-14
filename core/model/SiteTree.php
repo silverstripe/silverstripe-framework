@@ -1361,17 +1361,12 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		if((!$this->URLSegment || $this->URLSegment == 'new-page') && $this->Title) {
 			$this->URLSegment = $this->generateURLSegment($this->Title);
 		} else if($this->isChanged('URLSegment')) {
-			// Make sure the URLSegment is valid for use in a URL
-			$segment = ereg_replace('[^A-Za-z0-9]+','-',$this->URLSegment);
-			$segment = ereg_replace('-+','-',$segment);
-			
+			$filter = Object::create('URLSegmentFilter');
+			$this->URLSegment = $filter->filter($this->URLSegment);
 			// If after sanitising there is no URLSegment, give it a reasonable default
-			if(!$segment) {
-				$segment = "page-$this->ID";
-			}
-			$this->URLSegment = $segment;
+			if(!$this->URLSegment) $this->URLSegment = "page-$this->ID";
 		}
-		
+
 		DataObject::set_context_obj($this);
 		
 		// Ensure that this object has a non-conflicting URLSegment value.
@@ -1564,18 +1559,13 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	 * @return string Generated url segment
 	 */
 	function generateURLSegment($title){
-		$t = (function_exists('mb_strtolower')) ? mb_strtolower($title) : strtolower($title);
-		$t = Object::create('Transliterator')->toASCII($t);
-		$t = str_replace('&amp;','-and-',$t);
-		$t = str_replace('&','-and-',$t);
-		$t = ereg_replace('[^A-Za-z0-9]+','-',$t);
-		$t = ereg_replace('-+','-',$t);
-		if(!$t || $t == '-' || $t == '-1') {
-			$t = "page-$this->ID";
-		}
-		$t = trim($t, '-');
+		$filter = Object::create('URLSegmentFilter');
+		$t = $filter->filter($title);
 		
-		// Hook for decorators
+		// Fallback to generic page name if path is empty (= no valid, convertable characters)
+		if(!$t || $t == '-' || $t == '-1') $t = "page-$this->ID";
+		
+		// Hook for extensions
 		$this->extend('updateURLSegment', $t, $title);
 		
 		return $t;
@@ -1796,18 +1786,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 								Director::absoluteBaseURL(),
 								(self::nested_urls() && $this->ParentID ? $this->Parent()->RelativeLink(true) : null)
 							)),
-							new UniqueRestrictedTextField("URLSegment",
-								"URLSegment",
-								"SiteTree",
-								_t('SiteTree.VALIDATIONURLSEGMENT1', "Another page is using that URL. URL must be unique for each page"),
-								"[^A-Za-z0-9-]+",
-								"-",
-								_t('SiteTree.VALIDATIONURLSEGMENT2', "URLs can only be made up of letters, digits and hyphens."),
-								"",
-								"",
-								"",
-								50
-							),
+							new SiteTreeURLSegmentField("URLSegment", false),
 							new LabelField('TrailingSlashLabel',"/")
 						),
 						new LiteralField('LinkChangeNote', self::nested_urls() && count($this->Children()) ?
