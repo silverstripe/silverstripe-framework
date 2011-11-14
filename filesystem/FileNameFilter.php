@@ -97,7 +97,7 @@ class FileNameFilter {
 	 * @return Transliterator|NULL
 	 */
 	function getTransliterator() {
-		if(!$this->transliterator === null && self::$default_use_transliterator) {
+		if($this->transliterator === null && self::$default_use_transliterator) {
 			$this->transliterator = Object::create('Transliterator');
 		} 
 		return $this->transliterator;
