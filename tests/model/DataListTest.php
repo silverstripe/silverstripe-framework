@@ -142,12 +142,12 @@ class DataListTest extends SapphireTest {
 	 */
 	function testByID() {
 		// We can get a single item by ID.
-	    $id = $this->idFromFixture('DataObjectTest_Team','team2');
+		$id = $this->idFromFixture('DataObjectTest_Team','team2');
 		$team = DataList::create("DataObjectTest_Team")->byID($id);
 		
 		// byID() returns a DataObject, rather than a DataList
 		$this->assertInstanceOf('DataObjectTest_Team', $team);
-	    $this->assertEquals('Team 2', $team->Title);
+		$this->assertEquals('Team 2', $team->Title);
 	}
 
 	/**
@@ -155,45 +155,45 @@ class DataListTest extends SapphireTest {
 	 */
 	function testRemoveByID() {
 		$list = DataList::create("DataObjectTest_Team");
-	    $id = $this->idFromFixture('DataObjectTest_Team','team2');
+		$id = $this->idFromFixture('DataObjectTest_Team','team2');
 		
-	    $this->assertNotNull($list->byID($id));
+		$this->assertNotNull($list->byID($id));
 		$list->removeByID($id);
-	    $this->assertNull($list->byID($id));
+		$this->assertNull($list->byID($id));
 	}
 
 	/**
 	 * Test DataList->canSortBy()
 	 */
 	function testCanSortBy() {
-	    // Basic check
+		// Basic check
 		$team = DataList::create("DataObjectTest_Team");
-	    $this->assertTrue($team->canSortBy("Title"));
-	    $this->assertFalse($team->canSortBy("SomethingElse"));
+		$this->assertTrue($team->canSortBy("Title"));
+		$this->assertFalse($team->canSortBy("SomethingElse"));
 
-        // Subclasses
+		// Subclasses
 		$subteam = DataList::create("DataObjectTest_SubTeam");
-	    $this->assertTrue($subteam->canSortBy("Title"));
-	    $this->assertTrue($subteam->canSortBy("SubclassDatabaseField"));
+		$this->assertTrue($subteam->canSortBy("Title"));
+		$this->assertTrue($subteam->canSortBy("SubclassDatabaseField"));
 	}
 	
 	function testDataListArrayAccess() {
-	    $list = DataList::create("DataObjectTest_Team")->sort("Title");
+		$list = DataList::create("DataObjectTest_Team")->sort("Title");
 	
 		// We can use array access to refer to single items in the DataList, as if it were an array
-	    $this->assertEquals("Subteam 1", $list[0]->Title);
-	    $this->assertEquals("Subteam 3", $list[2]->Title);
-	    $this->assertEquals("Team 2", $list[4]->Title);
+		$this->assertEquals("Subteam 1", $list[0]->Title);
+		$this->assertEquals("Subteam 3", $list[2]->Title);
+		$this->assertEquals("Team 2", $list[4]->Title);
 	}
 	
 	function testFind() {
-	    $list = DataList::create("DataObjectTest_Team");
+		$list = DataList::create("DataObjectTest_Team");
 		$record = $list->find('Title', 'Team 1');
 		$this->assertEquals($this->idFromFixture('DataObjectTest_Team', 'team1'), $record->ID);
 	}
 	
 	function testFindById() {
-	    $list = DataList::create("DataObjectTest_Team");
+		$list = DataList::create("DataObjectTest_Team");
 		$record = $list->find('ID', $this->idFromFixture('DataObjectTest_Team', 'team1'));
 		$this->assertEquals('Team 1', $record->Title);
 		// Test that you can call it twice on the same list
