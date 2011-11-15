@@ -146,7 +146,7 @@ class DataListTest extends SapphireTest {
 		$team = DataList::create("DataObjectTest_Team")->byID($id);
 		
 		// byID() returns a DataObject, rather than a DataList
-		$this->assertInstanceOf('DataObjectTest_Team', $team);
+		$this->assertType('DataObjectTest_Team', $team);
 		$this->assertEquals('Team 2', $team->Title);
 	}
 
