@@ -1,0 +1,14 @@
+hy-AM:
+  AssetAdmin:
+    MENUTITLE: "Նշոցներ և Պատկերներ"
+  CMSMain:
+    MENUTITLE: "Կայքի Պարունակություն"
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: "Փոխել Գաղտնաբառ"
+  LeftAndMain:
+    HELP: "Օգնություն"
+  ReportAdmin:
+    MENUTITLE: "Զեկույցներ"
+  SecurityAdmin:
+    MENUTITLE: "Անվտանգություն"
+  SiteTree:

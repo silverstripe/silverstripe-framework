@@ -1,0 +1,40 @@
+vi-US:
+  AssetAdmin:
+    MENUTITLE: "Tài liệu và hình ảnh"
+  CMSMain:
+    MENUTITLE: "Trang"
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: "Đổi mật khẩu"
+  DataObject:
+    PLURALNAME: "Data Objects"
+    SINGULARNAME: "Data Object"
+  File:
+    INVALIDEXTENSION: "Định dạng không hợp lệ (hợp lê: %s)"
+    PLURALNAME: "Các tập tin"
+    SINGULARNAME: "Tập tin"
+    TOOLARGE: "Dung lượng tập tin quá lớn, tối đa %s"
+  Folder:
+    PLURALNAME: "Các tập tin"
+    SINGULARNAME: "Tập tin"
+  Group:
+    Code: "Mã nhóm"
+    Locked: "Khóa ?"
+    PLURALNAME: "Nhóm"
+    Parent: "Nhóm cha"
+    SINGULARNAME: "Nhóm"
+    has_many_Permissions: "Quyền"
+    many_many_Members: "Thành viên"
+  Image:
+    PLURALNAME: "Các tập tin"
+    SINGULARNAME: "Tập tin"
+  LeftAndMain:
+    HELP: "Giúp đở"
+  Member:
+    PLURALNAME: "Thành viên"
+    SINGULARNAME: "Thành viên"
+    belongs_many_many_Groups: "Nhóm"
+    db_LockedOutUntil: "Khóa cho đến khi"
+  ModelAdmin:
+    CREATEBUTTON: "Tạo '%s'"
+  ReportAdmin:
+    MENUTITLE: "Báo cáo"

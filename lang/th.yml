@@ -1,0 +1,76 @@
+th:
+  AssetAdmin:
+    CHOOSEFILE: "เลือกไฟล์"
+    MENUTITLE: "ไฟล์และภาพ"
+  CMSMain:
+    MENUTITLE: "เนื้อหาเว็บไซต์"
+    SAVE: "บันทึก"
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "คุณเปลี่ยนรหัสผ่านสำหรับ"
+  ComplexTableField.ss:
+    ADDITEM: "เพิ่ม %s"
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: "เปลี่ยนรหัสผ่าน"
+  Date:
+    TIMEDIFFAGO: "%s ที่ผ่านมา"
+  DropdownField:
+    CHOOSE: "(เลือก)"
+  File:
+    INVALIDEXTENSION: "ส่วนขยายไม่ได้รับอนุญาต (ถูกต้อง: %s)"
+    PLURALNAME: "ไฟล์"
+    SINGULARNAME: "ไฟล์"
+    TOOLARGE: "ไฟล์ขนาดใหญ่เกินไป จำกัดสูงสุดที่ %s"
+  Folder:
+    PLURALNAME: "ไฟล์"
+    SINGULARNAME: "ไฟล์"
+  Group:
+    Code: "รหัสกลุ่ม"
+    Locked: "ล็อค?"
+    PLURALNAME: "กลุ่ม"
+    Parent: "กลุ่มแม่"
+    SINGULARNAME: "กลุ่ม"
+    has_many_Permissions: "สิทธิ์"
+    many_many_Members: "สมาชิก"
+  HtmlEditorField:
+  Image:
+    PLURALNAME: "ไฟล์"
+    SINGULARNAME: "ไฟล์"
+  LeftAndMain:
+    HELP: "ช่วยเหลือ"
+    PAGETYPE: "ประเภทหน้า:"
+    SAVED: "บันทึก"
+  Member:
+    EMAIL: "Email"
+    INTERFACELANG: "ภาษา"
+    SINGULARNAME: "สมาชิก"
+    SUBJECTPASSWORDCHANGED: "รหัสผ่านได้รับการเปลี่ยนแปลงแล้ว"
+    SUBJECTPASSWORDRESET: "ลิ้งค์  สำหรับ ตั้งค่า รหัสผ่านใหม่"
+    belongs_many_many_Groups: "กลุ่ม"
+    db_PasswordExpiry: "วันที่รหัสผ่านหมดอายุ"
+  MemberPassword:
+    PLURALNAME: "รหัสผ่านสมาชิก"
+    SINGULARNAME: "รหัสผ่านสมาชิก"
+  MemberTableField:
+    ADD: "เพิ่ม"
+    ADDEDTOGROUP: "เพิ่มสมาชิกเข้ากลุ่ม"
+    DeleteTitleText: "ลบออกจากกลุ่มนี้"
+    DeleteTitleTextDatabase: "ลบออกจากฐานข้อมูลและทุกกลุ่ม"
+  ModelAdmin:
+    CREATEBUTTON: "สร้าง '%s'"
+  Page:
+    PLURALNAME: "หน้า"
+    SINGULARNAME: "หน้า"
+  Permission:
+    PLURALNAME: "สิทธิ์"
+    SINGULARNAME: "สิทธิ์"
+  PermissionRole:
+    PLURALNAME: "บทบาท"
+    SINGULARNAME: "บทบาท"
+  ReportAdmin:
+    MENUTITLE: "รายงาน"
+  SecurityAdmin:
+    MENUTITLE: "รักษาความปลอดภัย"
+  SiteTree:
+    TABMAIN: "หลัก"
+  Versioned:
+    has_many_Versions: "เวอร์ชั่น"

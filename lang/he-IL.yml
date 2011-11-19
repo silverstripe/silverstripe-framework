@@ -1,0 +1,239 @@
+he-IL:
+  AssetAdmin:
+    CHOOSEFILE: "בחר קובץ"
+    MENUTITLE: "קבצים ותמונות"
+    NEWFOLDER: "תיקיהחדשה"
+  AssetAdmin_left.ss:
+    GO: "סע"
+  BasicAuth:
+    ENTERINFO: "נא הכנס שם משתמש וסיסמא"
+    ERRORNOTADMIN: "משתמש זה אינו מנהל"
+    ERRORNOTREC: "שם המשתמש / סיסמא לא מזוהה"
+  CMSMain:
+    MENUTITLE: "תכני האתר"
+    SAVE: "שמור"
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "שינית את הסיסמא עבור"
+    CHANGEPASSWORDTEXT2: "כעת אתה יכול להשתמש בפרטים הבאים בכדי להתחבר:"
+    HELLO: "היי"
+  ComplexTableField:
+    CLOSEPOPUP: "סגור חלון"
+    SUCCESSADD: "%s %s %s הוסף"
+  ComplexTableField.ss:
+    ADDITEM: "הוסף"
+    NOITEMSFOUND: "לא נמצאו פריטים"
+    SORTASC: "סדר בסדר עולה"
+    SORTDESC: "סדר בסדר יורד"
+  ComplexTableField_popup.ss:
+    NEXT: "הבא"
+    PREVIOUS: "הקודם"
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: "שינוי סיסמה"
+  DataObject:
+    PLURALNAME: "אובייקטי מידע"
+    SINGULARNAME: "אובייקט מידע"
+  Date:
+    DAY: "יום"
+    DAYS: "ימים"
+    HOUR: "שעה"
+    HOURS: "שעות"
+    MIN: "דקה"
+    MINS: "דקות"
+    MONTH: "חודש"
+    MONTHS: "חודשים"
+    SEC: "שניה"
+    SECS: "שניות"
+    TIMEDIFFAGO: "לפני %s"
+    YEAR: "שנה"
+    YEARS: "שנים"
+  DateField:
+  DropdownField:
+    CHOOSE: "(בחר)"
+  EmailField:
+    VALIDATION: "נא הכנס כתובת דואר אלקטרוני."
+  File:
+    INVALIDEXTENSION: "הרחבה לא מאושרת"
+    PLURALNAME: "קבצים"
+    SINGULARNAME: "קובץ"
+    TOOLARGE: "הקובץ גדול מדי, גודל מקסימום להעלאה: %s"
+  Folder:
+    PLURALNAME: "קבצים"
+    SINGULARNAME: "קובץ"
+  ForgotPasswordEmail.ss:
+    HELLO: "היי"
+  Form:
+    FIELDISREQUIRED: "דרוש %s"
+    VALIDATIONCREDITNUMBER: "נא וודא שהקשת את %s כרטיס האשראי בצורה תקינה."
+    VALIDATIONFAILED: "אימות נכשל"
+    VALIDATIONNOTUNIQUE: "הערך שהוקש אינו יחודי"
+    VALIDATIONPASSWORDSDONTMATCH: "הסיסמאות לא תואמות"
+    VALIDATIONPASSWORDSNOTEMPTY: "הסיסמאות לא יכול להיות ריקות"
+    VALIDATIONSTRONGPASSWORD: "הסיסמאות צריכות להכיל לפחות ספרה אחת ואות אחת"
+    VALIDCURRENCY: "נא הכנס מטבע תקין."
+  Group:
+    Code: "קוד קבוצה"
+    Locked: "נעול?"
+    PLURALNAME: "קבוצות"
+    Parent: "קבוצת אב"
+    SINGULARNAME: "קבוצה"
+    has_many_Permissions: "הרשאות"
+    many_many_Members: "חברים רשומים"
+  HtmlEditorField:
+    BUTTONINSERTFLASH: "הכנס פלאש"
+    BUTTONINSERTIMAGE: "הכנס תמונה"
+    BUTTONINSERTLINK: "הכנס קישור"
+    BUTTONREMOVELINK: "הסר קישור"
+    CSSCLASS: "יישור/סגנון"
+    CSSCLASSCENTER: "ממורכז, ללא טקסט בצדדים."
+    CSSCLASSLEFT: "לשמאל, עם טקסט מסודר מסביב."
+    CSSCLASSRIGHT: "לימין, עם טקסט מסודר מסביב."
+    EMAIL: "כתובת אימייל"
+    FILE: "קובץ"
+    FOLDER: "תיקיה"
+    IMAGEDIMENSIONS: "ממדים"
+    IMAGEHEIGHTPX: "גובה"
+    IMAGEWIDTHPX: "רוחב"
+    LINKDESCR: "תאור הקישור"
+    LINKOPENNEWWIN: "לפתוח קישור בחלון חדש?"
+  Image:
+    PLURALNAME: "קבצים/"
+    SINGULARNAME: "קובץ"
+  Image_iframe.ss:
+    TITLE: "מסגרת העלאת תמונה"
+  LeftAndMain:
+    HELP: "עזרה"
+    PAGETYPE: "סוג העמוד"
+    PERMAGAIN: "התנתקת מהמערכת. לחיבור מחדש נא להזין שם וסיסמה"
+    PERMALREADY: "צר לנו, אך לא תוכל לגשת לחלק זה של מערכת ניהול התוכן. אם ברצונך להתחבר למערכת בתור משתמש אחר נא להשתמש בתיבה בעמוד זה"
+    PERMDEFAULT: "נא לבחור בשיטת וידוא והזן פרטיך למערכת"
+    PLEASESAVE: "נא לשמור עמוד זה. העמוד לא עודכן מכיוון ולא עודכן."
+    SAVED: "נשמר"
+  LoginAttempt:
+    PLURALNAME: "נסיונות כניסה למערכת"
+    SINGULARNAME: "נסיון כניסה למערכת"
+  Member:
+    ADDRESS: "כתובת"
+    BUTTONCHANGEPASSWORD: "שנה סיסמא"
+    BUTTONLOGIN: "התחבר"
+    BUTTONLOGINOTHER: "התחבר כמשתמש אחר"
+    BUTTONLOSTPASSWORD: "שכחתי את הסיסמא"
+    CONFIRMNEWPASSWORD: "אשר סיסמא חדשה"
+    CONFIRMPASSWORD: "אשר סיסמא"
+    CONTACTINFO: "פרטי קשר"
+    EMAIL: "דואר אלקטרוני"
+    EMAILSIGNUPINTRO1: "תודה על הרשמתך כחבר חדש, הפרטים שלך רשומים להלן לעיון בעתיד."
+    EMAILSIGNUPINTRO2: "אתה יכול להכנס לאתר בעזרת הנתונים הבאים"
+    EMAILSIGNUPSUBJECT: "תודה שנרשמת"
+    ERRORNEWPASSWORD: "הסיסמא החדשה שלך שגויה, נסה שנית."
+    ERRORPASSWORDNOTMATCH: "הסיסמא הנוכחית שלך לא תואמת, נא נסה שנית"
+    ERRORWRONGCRED: "שגיאה בכתובת הדואר או הסיסמא.נא  נסה שנית."
+    FIRSTNAME: "שם פרטי"
+    GREETING: "ברוך הבא"
+    INTERFACELANG: "שפת ממשק"
+    LOGGEDINAS: |
+                 אתה מחובר כ %s.
+                     MOBILE: "נייד"
+    NAME: "שם"
+    NEWPASSWORD: "סיסמא חדשה"
+    PASSWORD: "סיסמא"
+    PHONE: "טלפון"
+    PLURALNAME: "חברים רשומים"
+    REMEMBERME: "זכור אותי בפעם הבאה?"
+    SINGULARNAME: "חבר רשום"
+    SUBJECTPASSWORDCHANGED: "סיסמתך השתנתה"
+    SUBJECTPASSWORDRESET: "קישור לאתחול הסיסמא שלך"
+    SURNAME: "שם משפחה"
+    VALIDATIONMEMBEREXISTS: "קיים כבר משתמש עם כתובת דואר זו."
+    WELCOMEBACK: |
+                  ברוך הבא,  %s
+                      YOUROLDPASSWORD: "הסיסמא הישנה שלך"
+    belongs_many_many_Groups: "קבוצות"
+    db_LockedOutUntil: "נעול עד "
+    db_PasswordExpiry: "תאריך תפוגת סיסמא"
+  MemberAuthenticator:
+    TITLE: "דואר אלקטרוני וסיסמא"
+  MemberPassword:
+    PLURALNAME: "סיסמאות"
+    SINGULARNAME: "סיסמה"
+  MemberTableField:
+    ADD: "הוסף"
+    ADDEDTOGROUP: "חבר הוסף לקבוצה"
+    ADDINGFIELD: "הוספה נכשלה"
+    FILTER: "סנן"
+    SEARCH: "חיפוש"
+  ModelAdmin:
+    ADDBUTTON: "הוסף"
+    ADDFORM: "מלא טופס זה והוסף %s לבסיס הנתונים."
+    CHOOSE_COLUMNS: "בחירת עמודות לתוצאה"
+    CLEAR_SEARCH: "נקוי חיפוש"
+    CREATEBUTTON: "צור '%s'"
+    DELETE: "מחק"
+    DELETEDRECORDS: "%s פריטים נמחקו"
+    FOUNDRESULTS: "נמצאו %s רשומות מתאימות"
+    IMPORT: "ייבא מקובץ CSV"
+    IMPORTEDRECORDS: "%s פריטים יובאו בהצלחה."
+    ITEMNOTFOUND: "הפריט המבוקש לא נמצא"
+    LOADEDFOREDITING: "'%s'  נטען עבור עריכה."
+    NOCSVFILE: "בחר קובץ CSV לייבוא"
+    NOIMPORT: "לא נמצאו פריטים לייבוא"
+    NORESULTS: "לא נמצאו רשומות"
+    SAVE: "שמור"
+    SEARCHRESULTS: "תוצאות חיפוש"
+    SELECTALL: "בחר הכל"
+    SELECTNONE: "נקה בחירה"
+    UPDATEDRECORDS: "%s פריטים עודכנו."
+  NumericField:
+    VALIDATION: "'%s' אינו מספר, רק מספרים מתקבלים עבור שדה זה."
+  Page:
+    PLURALNAME: "דפים"
+    SINGULARNAME: "דף"
+  Permission:
+    PLURALNAME: "הרשאות"
+    SINGULARNAME: "הרשאה"
+  PhoneNumberField:
+    VALIDATION: "יש להכניס מספר טלפון תקין"
+  ReportAdmin:
+    MENUTITLE: "דוחות"
+  Security:
+    ALREADYLOGGEDIN: "אין לך הרשאה לעמוד זה. אם ברשותך חשבון אחר עם גישה לעמוד זה את יכול להתחבר איתו."
+    BUTTONSEND: "שלח לי קישור לאיפוס סיסמא"
+    CHANGEPASSWORDBELOW: "אתה יכול לשנות את סיסמתך להלן."
+    CHANGEPASSWORDHEADER: "שנה את הסיסמא שלך"
+    ENTERNEWPASSWORD: "נא הכנס סיסמא חדשה."
+    ERRORPASSWORDPERMISSION: "אתה מוכרח להיות מחובר על מנת לשנות את הסיסמא שלך!"
+    LOGGEDOUT: "נותקת . אם ברצונך להתחבר שנית הכנס את הפרטים שלך"
+    LOSTPASSWORDHEADER: "איבדת סיסמא"
+    NOTEPAGESECURED: "עמוד זה אינו מאובטח. הכנס את הפרטים שלך להלן ונשלח אליך מייד."
+    NOTERESETPASSWORD: "הכנס את כתובת הדואר האלקטרוני שלך ונשלח אליך קישור שבעזרתו תוכל לאפס את הסיסמא שלך"
+    PASSWORDSENTHEADER: |
+                         קישור לאיפוס סיסמא נשלח ל '%s'
+                             PASSWORDSENTTEXT: |
+                       תודה רבה! קישור לאיפוס הסיסמא נשלח ל '%s'.
+                         SecurityAdmin:
+    ADDMEMBER: "הוסף חבר"
+    EDITPERMISSIONS: "ערוך הרשאות וכתובות IP לכל קבוצה"
+    MENUTITLE: "אבטחה"
+    NEWGROUP: "קבוצה חדשה"
+    SGROUPS: "קבוצות אבטחה"
+  SimpleImageField:
+    NOUPLOAD: "לא הועלתה תמונה"
+  SiteTree:
+  TableField:
+    ISREQUIRED: "ב %s נדרש '%s'"
+  TableField.ss:
+  TableListField_PageControls.ss:
+    DISPLAYING: "מציג"
+    OF: "מתוך"
+    TO: "עד"
+    VIEWFIRST: "הצג ראשון"
+    VIEWLAST: "הצג אחרון"
+    VIEWNEXT: "הצג את הבא"
+    VIEWPREVIOUS: "הצג את הקודם"
+  ToggleCompositeField.ss:
+    HIDE: "הסתר"
+    SHOW: "הצג"
+  ToggleField:
+    LESS: "פחות"
+    MORE: "עוד"
+  Versioned:
+    has_many_Versions: "גירסאות"

@@ -1,0 +1,244 @@
+si:
+  AssetAdmin:
+    CHOOSEFILE: "ලිපිය තෝරන්න"
+    MENUTITLE: "ලිපි හා පිංතූර"
+    NEWFOLDER: "අලත් ගොනුවක්"
+  AssetAdmin_left.ss:
+    GO: "යන්න"
+  BBCodeParser:
+    COLORED: "පාට කළ අකුරු"
+    COLOREDEXAMPLE: "නිල් පැහැ අකුරු"
+    IMAGE: "පින්තූරය"
+    ITALIC: "ඇල අකුරු"
+    ITALICEXAMPLE: "ඇල"
+  BasicAuth:
+    ENTERINFO: "නම හා මුර පදය ඇතුල් කරන්න"
+    ERRORNOTADMIN: "ඵම පරිශීලකයා නියමුවෙකු නොවේ"
+    ERRORNOTREC: "ඵම නම/මුරපදය හදුනාගත නොහැක"
+  CMSMain:
+    MENUTITLE: "අඩවි අන්තර්ගතය"
+    SAVE: "සේවි කරන්න"
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "අලුත් මුර පදය"
+    CHANGEPASSWORDTEXT2: "ප්රවිශ්ට වීමට පහත දත්ත යොදාගන්න"
+    HELLO: "කොහොමද"
+  ComplexTableField.ss:
+    ADDITEM: "එකතු කරන්න"
+    NOITEMSFOUND: "හිස්"
+    SORTASC: "ආරෝහන පිළිවෙලට"
+    SORTDESC: "ආවරෝහන පිළිවෙලට"
+  ComplexTableField_popup.ss:
+    NEXT: "පසු"
+    PREVIOUS: "පෙර"
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: "මුර පදය වෙනස් කිරීම"
+  CreditCardField:
+    FIRST: "පළමු"
+    SECOND: "දෙවන"
+  DataObject:
+    PLURALNAME: "දත්ත වස්තු"
+    SINGULARNAME: "දත්ත වස්තුව"
+  Date:
+    DAY: "ඳිනය"
+    DAYS: "ඳින"
+    HOUR: "පැය"
+    HOURS: "පැය"
+    MIN: "විනාඩිය"
+    MINS: "විනාඩි"
+    MONTH: "මාසය"
+    MONTHS: "මාස"
+    SEC: "තත්පරය"
+    SECS: "තත්පර "
+    TIMEDIFFAGO: "%s කලින්"
+    YEAR: "අවුරුද්ද"
+    YEARS: "අවුරුදු"
+  DateField:
+  DropdownField:
+    CHOOSE: "(තොරන්න)"
+  EmailField:
+    VALIDATION: "ඊමේල් ලිපිනය ඇතුල් කරන්න"
+  File:
+    INVALIDEXTENSION: "දිගුව අවලංගුයි (වලංගු: $s)"
+    PLURALNAME: "ලිපි"
+    SINGULARNAME: "ලිපිය"
+    TOOLARGE: "ලිපියේ තරම විශාලයි, උපරිමය %s"
+  Folder:
+    DELSELECTED: "තෝරාගත් ගොනු මකන්න"
+    DETAILSTAB: "තොරතුරු"
+    FILENAME: "ගොනුවේ නම"
+    FILESTAB: "ගොනු"
+    PLURALNAME: "ලිපි"
+    SINGULARNAME: "ලිපිය"
+    TITLE: "මාතෘකාව"
+    UPLOADTAB: "අප්ලෝඩ්"
+    URL: "URL"
+  ForgotPasswordEmail.ss:
+    HELLO: "කොහොමද"
+    TEXT1: "මෙය ඔබගේ"
+    TEXT3: "සඳහා"
+  Form:
+    FIELDISREQUIRED: "%s අවශ්යයි"
+    VALIDATIONCREDITNUMBER: "ඹබගේ %s ක්රෙඩිට් කාඩ් අංකය පරීක්ෂා කරන්න"
+    VALIDATIONFAILED: "වලංගු කිරීම අසාර්තකයි"
+    VALIDATIONNOTUNIQUE: "අගය අද්විතීය නොවේ"
+    VALIDATIONPASSWORDSDONTMATCH: "මුර පද අසමානය"
+    VALIDATIONPASSWORDSNOTEMPTY: "මුර පදය විය නොහැක"
+    VALIDATIONSTRONGPASSWORD: "මුරපදයකට ඵකදු ඩිඡිට් ඵකක්වත් හා ඵකදු අකුරක් ඇතුලත් විය යුතුය"
+    VALIDCURRENCY: "වලංගු මුදල් ඵේකකයක් යොදන්න"
+  Group:
+    Code: "කාන්ඩ සංකේතය"
+    Locked: "අගුලුලාද?"
+    PLURALNAME: "කාන්ඩ"
+    Parent: "මවු කාන්ඩය"
+    SINGULARNAME: "කාන්ඩය"
+    has_many_Permissions: "අවසර"
+    many_many_Members: "සාමාජිකයින්"
+  HtmlEditorField:
+    BUTTONINSERTFLASH: "Flash ඇතුල් කරන්න"
+    BUTTONINSERTIMAGE: "පි0තුරයක් ඇතුල් කරන්න"
+    BUTTONINSERTLINK: "බැදීමක් යොදන්න"
+    BUTTONREMOVELINK: "බැදීම ගලවන්න"
+    CSSCLASS: "අලයින්මන්ට් / ස්ටයිල්"
+    CSSCLASSLEFT: "වම් පැත්තට, අකුරැ වටේට යොදන්න"
+    CSSCLASSRIGHT: "දකුනු පැත්තට, අකුරැ වටේට යොදන්න"
+    EMAIL: "ඊමේල් ලිපිනය"
+    FILE: "ලිපිය"
+    FLASH: "Flash ඇතුල් කරන්න"
+    FOLDER: "ගොනුව"
+    IMAGE: "පි0තුරයක් ඇතුල් කරන්න"
+    IMAGEDIMENSIONS: "මාන"
+    IMAGEHEIGHTPX: "දිග"
+    IMAGEWIDTHPX: "පලල"
+    LINK: "පාට කල වචන වලට බැදමක් යොදන්න/සංස්කරනය කරන්න"
+    LINKDESCR: "බැදීම් විස්තරය"
+    LINKEMAIL: "ඊමේල් ලිපිනය"
+    LINKEXTERNAL: "වෙනත් වෙබ් අඩවියක්"
+    LINKFILE: "ලිපියක් බාගත කරන්න"
+    LINKINTERNAL: "අඩවියේ පිටුවක්"
+    LINKOPENNEWWIN: "අලුත් වින්ඩෝවක අරින්නද?"
+    LINKTO: "බැදේ"
+    PAGE: "පිටුව"
+    URL: "URL"
+  Image:
+    PLURALNAME: "ලිපි"
+    SINGULARNAME: "ලිපිය"
+  Image_iframe.ss:
+    TITLE: "පිංතූර අප්ලෝඩ් කරන Iframe ඵක"
+  LeftAndMain:
+    HELP: "උදවි"
+    PAGETYPE: "පිටු වර්ගය"
+    PERMAGAIN: "ඹබ CMS ඵකෙන් ඉවත් වී ඇත. නැවත ඇතුල් වීමට නම හා මුරපදය යොදන්න"
+    PERMALREADY: "සමාවන්න ඔබට මෙම කොටස පරිශීලනය කල නොහැක. පහතින් වෙනත් නමකින් ඇතුල් වන්න"
+    PERMDEFAULT: "හදුනාගැනීමේ ක්රමයක් තෝරා ඹබගේ දත්ත ඇතුල් කරන්න"
+    PLEASESAVE: "පිටුව සේව් කරන්න, නැතිනම් මෙම පිටුව යාවත්කාලීන කල නොහැක"
+    SAVED: "සේවි කරන ලදී"
+  LoginAttempt:
+    PLURALNAME: "ඇතුල්වීම් උත්සහයන්"
+    SINGULARNAME: "ඇතුල්වීම් උත්සහය"
+  Member:
+    ADDRESS: "ලිපිනය"
+    BUTTONCHANGEPASSWORD: "මුර පදය අලුත් කරන්න"
+    BUTTONLOGIN: "ඇතුල්වන්න"
+    BUTTONLOGINOTHER: "වෙනත් නමකින් ඇතුල්වන්න"
+    BUTTONLOSTPASSWORD: "මුර පදය නැති වී ඇත"
+    CONFIRMNEWPASSWORD: "අලුත් මුර පදය හරිද"
+    CONFIRMPASSWORD: "මුර පදය හරිද"
+    CONTACTINFO: "දත්ත"
+    EMAIL: "ඊමේල් "
+    EMAILSIGNUPINTRO1: "ඵකතු වීමට ස්තුති, ඹබේ දත්ත පාවිච්චිය සදහා ලැයිස්තුගත කරන ලදී"
+    EMAILSIGNUPINTRO2: "පහත දත්ත උපයෝගී කිරීමෙන් ඹබට ප්රවිශ්ට විය හැක"
+    EMAILSIGNUPSUBJECT: "ඇතුල්වීමට ස්තුතියි"
+    ERRORNEWPASSWORD: "අලුත් මුරපදය වෙනස් වී ඇත, උත්සාහ කරන්න"
+    ERRORPASSWORDNOTMATCH: "ඔෙබ පිවිසුමි වචනය ෙනාගැලෙපේ, කරැණාකර නැවත උත්සාහ කරන්න"
+    ERRORWRONGCRED: "ඵය නිවැරදි ඊමේල් ලිපිනය හෝ මුරපදය නොවේ. උත්සාහ කරන්න"
+    FIRSTNAME: "මුල් නම"
+    GREETING: "ආයුබෝවන්"
+    INTERFACELANG: "භාෂා"
+    LOGGEDINAS: "ඔබ %s නමින් ඇතුල්වී ඇත"
+    MOBILE: "ජ0ගම දුරකතනය"
+    NAME: "නම"
+    NEWPASSWORD: "අලුත් මුර පදයක්"
+    PASSWORD: "මුර පදය"
+    PHONE: "දුරකතනය"
+    PLURALNAME: "සාමාජිකයින්"
+    REMEMBERME: "මතක‌ තබා ගන්න?"
+    SINGULARNAME: "සාමාජිකයා"
+    SUBJECTPASSWORDCHANGED: "මුර පදය අලුත් කරන ලදී"
+    SUBJECTPASSWORDRESET: "මුර පදය අලුත් කරන ලිපිනය"
+    SURNAME: "වාසගම"
+    VALIDATIONMEMBEREXISTS: "මෙම ඊමේල් ලිපිනය ඇති සාමාජිකයකු ඇත"
+    WELCOMEBACK: "ආයුබෝවන් %s"
+    YOUROLDPASSWORD: "පරන මුර පදය"
+    belongs_many_many_Groups: "කාන්ඩ"
+    db_LockedOutUntil: "අගුලුලා ඇත්තේ"
+    db_PasswordExpiry: "මුර පදය කල් ඉකුත් වීමේ දිනය"
+  MemberAuthenticator:
+    TITLE: "ඊමේල් හා මුර පදය"
+  MemberPassword:
+    PLURALNAME: "සාමාජිකය මුර පද"
+    SINGULARNAME: "සාමාජිකය මුර පදය"
+  MemberTableField:
+    ADD: "එකතු කරන්න"
+    ADDEDTOGROUP: "කන්ඩායම් සාමාඡිකයෙකු ඵකතු කරන්න"
+    ADDINGFIELD: "එකතු කිරීම අසාර්ථකයි"
+    FILTER: "Filter"
+    SEARCH: "සොයන්න"
+  ModelAdmin:
+    CREATEBUTTON: "'%s' හදන්න"
+  NumericField:
+    VALIDATION: "'%s' අංකයක් නොවේ, අංක පමනක් බාරගනියි"
+  Page:
+    PLURALNAME: "පිටු"
+    SINGULARNAME: "පිටුව"
+  Permission:
+    PLURALNAME: "අවසර"
+    SINGULARNAME: "අවසරය"
+  PhoneNumberField:
+    VALIDATION: "නිවැරදි දුරකතන අ0කයක් යොදන්න"
+  RelationComplexTableField.ss:
+    ADD: "එකතු කරන්න"
+  ReportAdmin:
+    MENUTITLE: "වාර්තා"
+  Security:
+    ALREADYLOGGEDIN: "මෙම පිටුවට ඇතුල්වීමට ඹබට අවසර නැත, වෙනත් නමකින් ඇතුල් වීමට පහතින් නම හා මුරපදය යොදන්න"
+    BUTTONSEND: "මුරපදය වෙනස් කරන ලිපිනය ඵවන්න"
+    CHANGEPASSWORDBELOW: "පහතින් මුර පදය වෙනස්  කල හැක"
+    CHANGEPASSWORDHEADER: "මුර පදය අලුත් කරන්න"
+    ENTERNEWPASSWORD: "අලුත් මුර පදය ඇතුල් කරන්න"
+    ERRORPASSWORDPERMISSION: "ඹබගේ මුරපදය වෙනස් කිරීමට ප්රවිශ්ට වන්න"
+    LOGGEDOUT: "ඹබ පිටවී ඇත, නැවත ඇතුල් වීමට ඹබගේ දත්ත යොදන්න"
+    LOSTPASSWORDHEADER: "මුර පදය නැති වී ඇත"
+    NOTERESETPASSWORD: "ඹබට ප්රතිස්තාපනය කල හැකි ලිංක් ඵක ඵවීමට ඹබගේ ඊමේල් ලිපිනය යොදන්න"
+    PASSWORDSENTHEADER: "මුර පදය අලුත් කරන ලිපිනය %s ට යවන ලදී"
+    PASSWORDSENTTEXT: "ස්තුති! මුර පදය අලුත් කරන ලිපිනය %s ට යවන ලදී"
+  SecurityAdmin:
+    ADDMEMBER: "සාමාජිකයෙක් ඵකතු කරන්න"
+    MENUTITLE: "ආරක්ශාව"
+    NEWGROUP: "අලුත් කන්ඩාමක්"
+    SGROUPS: "ආරක්ශක කන්ඩායම්"
+  SimpleImageField:
+    NOUPLOAD: "පි0තුර අප්ලෝඩ් කර නැත"
+  SiteTree:
+    TABMAIN: "ප්‍රදාන"
+  TableField:
+    ISREQUIRED: "මෙහි %s මෙය %s අවශ්යයි"
+  TableField.ss:
+    ADD: "නව පෙළක් එකතුකරන්න"
+  TableListField:
+    PRINT: "මුද්රණය කරන්න"
+  TableListField_PageControls.ss:
+    DISPLAYING: "පෙන්වන්නේ"
+    OF: "ගේ"
+    TO: "ට"
+    VIEWFIRST: "පළමු එක පෙන්වන්න"
+    VIEWLAST: "අවසානය පෙන්වන්න"
+    VIEWNEXT: "ඊළඟ එක පෙන්වන්න"
+    VIEWPREVIOUS: "පෙර පෙන්වන්න"
+  ToggleCompositeField.ss:
+    HIDE: "සගවන්න"
+    SHOW: "පෙන්වන්න"
+  ToggleField:
+    LESS: "අඩු"
+    MORE: "වැඩි"
+  Versioned:
+    has_many_Versions: "වෙලුම"

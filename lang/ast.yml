@@ -1,0 +1,101 @@
+ast:
+  AssetAdmin:
+    MENUTITLE: "Ficheros ya imaxes"
+  CMSMain:
+    MENUTITLE: "Páxines"
+    SAVE: "Guardar"
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "Camudasti la contraseña pa"
+  ComplexTableField.ss:
+    ADDITEM: "Amestar %s"
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: "Camudar contraseña"
+  DataObject:
+    PLURALNAME: "Oxetos de datos"
+    SINGULARNAME: "Oxetu de datos"
+  Date:
+    TIMEDIFFAGO: "Hai %s"
+  DropdownField:
+    CHOOSE: "(Escoyer)"
+  Email_BounceRecord:
+    PLURALNAME: "Rexistros de rebote de corréu"
+    SINGULARNAME: "Rexistru de rebote de corréu"
+  File:
+    INVALIDEXTENSION: "La estensión nun ta permitida (válides: %s)"
+    PLURALNAME: "Ficheros"
+    SINGULARNAME: "Ficheru"
+    TOOLARGE: "El tamañu de ficheru ye enforma grande, el máximu permitíu ye %s."
+  Folder:
+    PLURALNAME: "Ficheros"
+    SINGULARNAME: "Ficheru"
+  Group:
+    Code: "Códigu de grupu"
+    Locked: "¿Bloquiáu?"
+    PLURALNAME: "Grupos"
+    Parent: "Grupu padre"
+    SINGULARNAME: "Grupu"
+    has_many_Permissions: "Permisos"
+    many_many_Members: "Miembros"
+  HtmlEditorField:
+  Image:
+    PLURALNAME: "Ficheros"
+    SINGULARNAME: "Ficheru"
+  Image_Cached:
+    PLURALNAME: "Ficheros"
+    SINGULARNAME: "Ficheru"
+  LeftAndMain:
+    HELP: "Ayuda"
+    PAGETYPE: "Triba de páxina:"
+    PERMAGAIN: "Terminó la to sesión nel CMS. Si quies volver a coneutar, escribi un nome d'usuariu y una contraseña abaxo."
+    PERMALREADY: "Lo sentimos, pero nun tienes accesu a esa parte del CMS. Si quies coneutar con otru nome, failo debaxo"
+    PERMDEFAULT: "Escueyi un métodu d'autenticación y escribi les tos credenciales p'acceder al CMS."
+    SAVED: "guardao"
+  LoginAttempt:
+    PLURALNAME: "Intentos de conexón"
+    SINGULARNAME: "Intentu de conexón"
+  Member:
+    EMAIL: "Corréu"
+    INTERFACELANG: "Llingua de la interfaz"
+    PLURALNAME: "Miembros"
+    SINGULARNAME: "Miembru"
+    SUBJECTPASSWORDCHANGED: "Se camudó la to contraseña"
+    SUBJECTPASSWORDRESET: "Enllaz pa reaniciar la contraseña"
+    ValidationIdentifierFailed: "Nun se pue sobroscribir el miembru esistente #%d col mesmu identificador (%s = %s))"
+    belongs_many_many_Groups: "Grupos"
+    db_LockedOutUntil: "Bloquiáu fasta"
+    db_PasswordExpiry: "Data d'espiración de la contraseña"
+  MemberPassword:
+    PLURALNAME: "Contraseñes del miembru"
+    SINGULARNAME: "Contraseña del miembru"
+  MemberTableField:
+    DeleteTitleText: "Desaniciar d'esti grupu"
+    DeleteTitleTextDatabase: "Desaniciar de la base de datos y de tolos grupos"
+  ModelAdmin:
+    CREATEBUTTON: "Crear '%s'"
+  NullableField:
+    IsNullLabel: "Ye nulu"
+  Page:
+    PLURALNAME: "Páxines"
+    SINGULARNAME: "Páxina"
+  Permission:
+    PLURALNAME: "Permisos"
+    SINGULARNAME: "Permisu"
+  PermissionCheckboxSetField:
+    FromGroup: "heredáu del grupu \"%s\""
+    FromRole: "heredáu del rol \"%s\""
+    FromRoleOnGroup: "heredáu del rol \"%s\" nel grupu \"%s\""
+  PermissionRole:
+    PLURALNAME: "Roles"
+    SINGULARNAME: "Rol"
+  PermissionRoleCode:
+    PLURALNAME: "Códigos del rol de permisu"
+    SINGULARNAME: "Códigu del rol de permisu"
+  ReportAdmin:
+    MENUTITLE: "Informes"
+  Security:
+    ALREADYLOGGEDIN: "Nun tienes accesu a esta páxina. Si tienes otra cuenta que pueda entrar nesta páxina, pues <a href=\"%s\">volver a coneutate</a>."
+  SecurityAdmin:
+    MENUTITLE: "Seguridá"
+  SiteTree:
+  Versioned:
+    has_many_Versions: "Versiones"

@@ -1,0 +1,7 @@
+eu-ES:
+  AssetAdmin:
+    MENUTITLE: "Fitxategiak eta irudiak"
+  LeftAndMain:
+    HELP: "Laguntza"
+  SecurityAdmin:
+    MENUTITLE: "Segurtasuna"

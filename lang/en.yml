@@ -1,0 +1,605 @@
+en:
+  AssetAdmin:
+    ActionAdd: "Add folder"
+    CHOOSEFILE: "Choose file: "
+    # Menu title
+    MENUTITLE: "Files"
+    NEWFOLDER: "NewFolder"
+  AssetAdmin_DeleteBatchAction:
+    TITLE: "Delete groups"
+  AssetAdmin_left.ss:
+    GO: "Go"
+  BBCodeParser:
+    ALIGNEMENT: "Alignment"
+    ALIGNEMENTEXAMPLE: "right aligned"
+    BOLD: "Bold Text"
+    BOLDEXAMPLE: "Bold"
+    CODE: "Code Block"
+    CODEDESCRIPTION: "Unformatted code block"
+    CODEEXAMPLE: "Code block"
+    COLORED: "Colored text"
+    COLOREDEXAMPLE: "blue text"
+    EMAILLINK: "Email link"
+    EMAILLINKDESCRIPTION: "Create link to an email address"
+    IMAGE: "Image"
+    IMAGEDESCRIPTION: "Show an image in your post"
+    ITALIC: "Italic Text"
+    ITALICEXAMPLE: "Italics"
+    LINK: "Website link"
+    LINKDESCRIPTION: "Link to another website or URL"
+    STRUCK: "Struck-out Text"
+    STRUCKEXAMPLE: "Struck-out"
+    UNDERLINE: "Underlined Text"
+    UNDERLINEEXAMPLE: "Underlined"
+    UNORDERED: "Unordered list"
+    UNORDEREDDESCRIPTION: "Unordered list"
+    UNORDEREDEXAMPLE1: "unordered item 1"
+  BasicAuth:
+    ENTERINFO: "Please enter a username and password."
+    ERRORNOTADMIN: "That user is not an administrator."
+    ERRORNOTREC: "That username / password isn't recognised"
+  Boolean:
+    ANY: "Any"
+    NO: "No"
+    YES: "Yes"
+  CMSBatchActions:
+    PUBLISHED_PAGES: "published %d pages"
+  CMSMain:
+    # Menu title
+    MENUTITLE: "Edit Page"
+    SAVE: "Save"
+  CMSPageEditController:
+    # Menu title
+    MENUTITLE: "Edit Page"
+  CMSPageHistoryController:
+    # Menu title
+    MENUTITLE: "History"
+  CMSPageSettingsController:
+    # Menu title
+    MENUTITLE: "Edit Page"
+  CMSPagesController:
+    # Menu title
+    MENUTITLE: "Pages"
+  CMSSettingsController:
+    # Menu title
+    MENUTITLE: "Settings"
+  ChangePasswordEmail.ss:
+    # for a url
+    CHANGEPASSWORDTEXT1: "You changed your password for"
+    CHANGEPASSWORDTEXT2: "You can now use the following credentials to log in:"
+    EMAIL: "Email"
+    HELLO: "Hi"
+    PASSWORD: "Password"
+  CheckboxField:
+    NO: "No"
+    YES: "Yes"
+  ComplexTableField:
+    CLOSEPOPUP: "Close Popup"
+    SUCCESSADD: "Added %s %s %s"
+    SUCCESSEDIT: "Saved %s %s %s"
+  ComplexTableField.ss:
+    # Add [name]
+    ADDITEM: "Add %s"
+    NOITEMSFOUND: "No items found"
+    SORTASC: "Sort ascending"
+    SORTDESC: "Sort descending"
+  ComplexTableField_popup.ss:
+    NEXT: "Next"
+    PREVIOUS: "Previous"
+  ConfirmedPasswordField:
+    ATLEAST: "Passwords must be at least %s characters long."
+    BETWEEN: "Passwords must be %s to %s characters long."
+    HAVETOMATCH: "Passwords have to match."
+    LEASTONE: "Passwords must have at least one digit and one alphanumeric character."
+    MAXIMUM: "Passwords must be at most %s characters long."
+    NOEMPTY: "Passwords can't be empty."
+    # Label of the link which triggers display of the "change password" formfields
+    SHOWONCLICKTITLE: "Change Password"
+  CreditCardField:
+    FIRST: "first"
+    FOURTH: "fourth"
+    SECOND: "second"
+    THIRD: "third"
+    VALIDATIONJS1: "Please ensure you have entered the"
+    VALIDATIONJS2: "credit card number correctly."
+  CurrencyField:
+    CURRENCYSYMBOL: "$"
+    VALIDATIONJS: "Please enter a valid currency."
+  DataObject:
+    # Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface
+    PLURALNAME: "Data Objects"
+    # Singular name of the object, used in dropdowns and to generally identify a single object in the interface
+    SINGULARNAME: "Data Object"
+  Date:
+    DAY: " day"
+    DAYS: " days"
+    HOUR: " hour"
+    HOURS: " hours"
+    MIN: " min"
+    MINS: " mins"
+    MONTH: " month"
+    MONTHS: " months"
+    SEC: " sec"
+    SECS: " secs"
+    # Natural language time difference, e.g. 2 hours ago
+    TIMEDIFFAGO: "%s ago"
+    # Natural language time difference, e.g. in 2 hours
+    TIMEDIFFIN: "in %s"
+    YEAR: " year"
+    YEARS: " years"
+  DateField:
+    NOTSET: "not set"
+    TODAY: "today"
+    VALIDATIONJS: "Please enter a valid date format (DD/MM/YYYY)."
+    VALIDDATEFORMAT2: "Please enter a valid date format (%s)."
+    VALIDDATEMAXDATE: "Your date has to be older or matching the maximum allowed date (%s)"
+    VALIDDATEMINDATE: "Your date has to be newer or matching the minimum allowed date (%s)"
+  DropdownField:
+    # start value of a dropdown
+    CHOOSE: "(Choose)"
+  EmailField:
+    VALIDATION: "Please enter an email address."
+    VALIDATIONJS: "Please enter an email address."
+  Email_BounceRecord:
+    # Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface
+    PLURALNAME: "Email Bounce Records"
+    # Singular name of the object, used in dropdowns and to generally identify a single object in the interface
+    SINGULARNAME: "Email Bounce Record"
+  Enum:
+    ANY: "Any"
+  File:
+    Content: "Content"
+    Filename: "Filename"
+    # Argument 1: Comma-separated list of valid extensions
+    INVALIDEXTENSION: "Extension is not allowed (valid: %s)"
+    NOFILESIZE: "Filesize is zero bytes."
+    NOVALIDUPLOAD: "File is not a valid upload"
+    Name: "Name"
+    # Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface
+    PLURALNAME: "Files"
+    # Singular name of the object, used in dropdowns and to generally identify a single object in the interface
+    SINGULARNAME: "File"
+    Sort: "Sort Order"
+    # Argument 1: Filesize (e.g. 1MB)
+    TOOLARGE: "Filesize is too large, maximum %s allowed."
+    Title: "Title"
+  FileIFrameField:
+    ATTACH: "Attach %s"
+    ATTACHONCESAVED: "%ss can be attached once you have saved the record for the first time."
+    DELETE: "Delete %s"
+    DISALLOWEDFILETYPE: "This filetype is not allowed to be uploaded"
+    FILE: "File"
+    FROMCOMPUTER: "From your Computer"
+    FROMFILESTORE: "From the File Store"
+    NOSOURCE: "Please select a source file to attach"
+    REPLACE: "Replace %s"
+  FileIFrameField.ss:
+    TITLE: "Image Uploading Iframe"
+  Folder:
+    CREATED: "First Uploaded"
+    DELSELECTED: "Delete selected files"
+    DETAILSTAB: "Details"
+    FILENAME: "Filename"
+    FILESTAB: "Files"
+    LASTEDITED: "Last Updated"
+    # Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface
+    PLURALNAME: "Folders"
+    # Singular name of the object, used in dropdowns and to generally identify a single object in the interface
+    SINGULARNAME: "Folder"
+    TITLE: "Title"
+    TYPE: "Type"
+    UPLOADTAB: "Upload"
+    URL: "URL"
+    VIEWEDITASSET: "View/Edit Asset"
+  ForgotPasswordEmail.ss:
+    HELLO: "Hi"
+    TEXT1: "Here is your"
+    TEXT2: "password reset link"
+    TEXT3: "for"
+  Form:
+    FIELDISREQUIRED: "%s is required"
+    VALIDATIONCREDITNUMBER: "Please ensure you have entered the %s credit card number correctly."
+    VALIDATIONFAILED: "Validation failed"
+    VALIDATIONNOTUNIQUE: "The value entered is not unique"
+    VALIDATIONPASSWORDSDONTMATCH: "Passwords don't match"
+    VALIDATIONPASSWORDSNOTEMPTY: "Passwords can't be empty"
+    VALIDATIONSTRONGPASSWORD: "Passwords must have at least one digit and one alphanumeric character."
+    VALIDATOR: "Validator"
+    VALIDCURRENCY: "Please enter a valid currency."
+  FormField:
+    NONE: "none"
+  Group:
+    # Programmatical code identifying a group
+    Code: "Group Code"
+    DefaultGroupTitleAdministrators: "Administrators"
+    DefaultGroupTitleContentAuthors: "Content Authors"
+    Description: "Description"
+    IMPORTTABTITLE: "Import"
+    IPRestrictions: "IP Address Restrictions"
+    # Group is locked in the security administration area
+    Locked: "Locked?"
+    # Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface
+    PLURALNAME: "Groups"
+    # One group has one parent group
+    Parent: "Parent Group"
+    RolesAddEditLink: "Add/edit roles"
+    # Singular name of the object, used in dropdowns and to generally identify a single object in the interface
+    SINGULARNAME: "Group"
+    Sort: "Sort Order"
+    # One group has many permissions
+    has_many_Permissions: "Permissions"
+    # One group has many members
+    many_many_Members: "Members"
+  GroupImportForm:
+    Help1: "<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href=\"#\" class=\"toggle-advanced\">Show advanced usage</a></small></p>"
+    Help2: |
+            <div class="advanced">
+            	<h4>Advanced usage</h4>
+            	<ul>
+            	<li>Allowed columns: <em>%s</em></li>
+            	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>
+            	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>
+            	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>
+            	</ul>
+            </div>    ResultCreated: "Created %d groups"
+    ResultDeleted: "Deleted %d groups"
+    ResultUpdated: "Updated %d groups"
+  HtmlEditorField:
+    ANCHORVALUE: "Anchor"
+    BUTTONINSERTFLASH: "Insert Flash"
+    BUTTONINSERTIMAGE: "Insert image"
+    BUTTONINSERTLINK: "Insert link"
+    BUTTONREMOVELINK: "Remove link"
+    CAPTIONTEXT: "Caption text"
+    CSSCLASS: "Alignment / style"
+    CSSCLASSCENTER: "Centered, on its own."
+    CSSCLASSLEFT: "On the left, with text wrapping around."
+    CSSCLASSLEFTALONE: "On the left, on its own."
+    CSSCLASSRIGHT: "On the right, with text wrapping around."
+    EMAIL: "Email address"
+    FILE: "File"
+    FLASH: "Flash"
+    FOLDER: "Folder"
+    IMAGE: "Image"
+    IMAGEALTTEXT: "Alternative text (alt) - shown if image cannot be displayed"
+    IMAGEDIMENSIONS: "Dimensions"
+    IMAGEHEIGHTPX: "Height"
+    IMAGETITLE: "Title text (tooltip) - for additional information about the image"
+    IMAGEWIDTHPX: "Width"
+    LINK: "Link"
+    LINKANCHOR: "Anchor on this page"
+    LINKDESCR: "Link description"
+    LINKEMAIL: "Email address"
+    LINKEXTERNAL: "Another website"
+    LINKFILE: "Download a file"
+    LINKINTERNAL: "Page on the site"
+    LINKOPENNEWWIN: "Open link in a new window?"
+    LINKTEXT: "Link text"
+    LINKTO: "Link to"
+    PAGE: "Page"
+    SEARCHFILENAME: "Search by file name"
+    SHOWUPLOADFORM: "Upload File"
+    URL: "URL"
+  Image:
+    # Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface
+    PLURALNAME: "Files"
+    # Singular name of the object, used in dropdowns and to generally identify a single object in the interface
+    SINGULARNAME: "File"
+  ImageField:
+    IMAGE: "Image"
+  Image_Cached:
+    # Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface
+    PLURALNAME: "Files"
+    # Singular name of the object, used in dropdowns and to generally identify a single object in the interface
+    SINGULARNAME: "File"
+  Image_iframe.ss:
+    TITLE: "Image Uploading Iframe"
+  LeftAndMain:
+    CANT_REORGANISE: "You do not have permission to rearange the site tree. Your change was not saved."
+    DropdownBatchActionsDefault: "Actions"
+    # Menu title
+    HELP: "Help"
+    PAGETYPE: "Page type: "
+    PERMAGAIN: "You have been logged out of the CMS.  If you would like to log in again, enter a username and password below."
+    PERMALREADY: "I'm sorry, but you can't access that part of the CMS.  If you want to log in as someone else, do so below"
+    PERMDEFAULT: "Please choose an authentication method and enter your credentials to access the CMS."
+    PLEASESAVE: "Please Save Page: This page could not be upated because it hasn't been saved yet."
+    SAVED: "saved"
+  LeftAndMain_right.ss:
+    WELCOMETO: "Welcome to"
+  LoginAttempt:
+    Email: "Email Address"
+    IP: "IP Address"
+    # Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface
+    PLURALNAME: "Login Attempts"
+    # Singular name of the object, used in dropdowns and to generally identify a single object in the interface
+    SINGULARNAME: "Login Attempt"
+    Status: "Status"
+  Member:
+    ADDRESS: "Address"
+    BUTTONCHANGEPASSWORD: "Change Password"
+    BUTTONLOGIN: "Log in"
+    BUTTONLOGINOTHER: "Log in as someone else"
+    BUTTONLOSTPASSWORD: "I've lost my password"
+    CONFIRMNEWPASSWORD: "Confirm New Password"
+    CONFIRMPASSWORD: "Confirm Password"
+    CONTACTINFO: "Contact Information"
+    DefaultAdminFirstname: "Default Admin"
+    DefaultDateTime: "default"
+    EMAIL: "Email"
+    EMAILSIGNUPINTRO1: "Thanks for signing up to become a new member, your details are listed below for future reference."
+    EMAILSIGNUPINTRO2: "You can login to the website using the credentials listed below"
+    EMAILSIGNUPSUBJECT: "Thanks for signing up"
+    EMPTYNEWPASSWORD: "The new password can't be empty, please try again"
+    ENTEREMAIL: "Please enter an email address to get a password reset link."
+    ERRORLOCKEDOUT: "Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes."
+    ERRORNEWPASSWORD: "You have entered your new password differently, try again"
+    ERRORPASSWORDNOTMATCH: "Your current password does not match, please try again"
+    ERRORWRONGCRED: "That doesn't seem to be the right e-mail address or password. Please try again."
+    FIRSTNAME: "First Name"
+    GREETING: "Welcome"
+    # Language of the CMS
+    INTERFACELANG: "Interface Language"
+    INVALIDNEWPASSWORD: "We couldn't accept that password: %s"
+    LOGGEDINAS: "You're logged in as %s."
+    MOBILE: "Mobile"
+    NAME: "Name"
+    NEWPASSWORD: "New Password"
+    PASSWORD: "Password"
+    PHONE: "Phone"
+    # Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface
+    PLURALNAME: "Members"
+    PROFILESAVESUCCESS: "Successfully saved."
+    REMEMBERME: "Remember me next time?"
+    # Singular name of the object, used in dropdowns and to generally identify a single object in the interface
+    SINGULARNAME: "Member"
+    # Email subject
+    SUBJECTPASSWORDCHANGED: "Your password has been changed"
+    # Email subject
+    SUBJECTPASSWORDRESET: "Your password reset link"
+    SURNAME: "Surname"
+    VALIDATIONMEMBEREXISTS: "A member already exists with the same %s"
+    # The values in brackets show a fieldname mapped to a value, usually denoting an existing email address
+    ValidationIdentifierFailed: "Can't overwrite existing member #%d with identical identifier (%s = %s))"
+    WELCOMEBACK: "Welcome Back, %s"
+    YOUROLDPASSWORD: "Your old password"
+    # Security Groups this member belongs to
+    belongs_many_many_Groups: "Groups"
+    db_LastVisited: "Last Visited Date"
+    db_Locale: "Interface Locale"
+    # Security related date
+    db_LockedOutUntil: "Locked out until"
+    db_NumVisit: "Number of Visits"
+    db_Password: "Password"
+    # Password expiry date
+    db_PasswordExpiry: "Password Expiry Date"
+  MemberAuthenticator:
+    TITLE: "E-mail &amp; Password"
+  MemberDatetimeOptionsetField:
+    # Help text describing what "a" means in ISO date formatting
+    AMORPM: "AM (Ante meridiem) or PM (Post meridiem)"
+    Custom: "Custom"
+    DATEFORMATBAD: "Date format is invalid"
+    # Help text describing what "d" means in ISO date formatting
+    DAYNOLEADING: "Day of month without leading zero"
+    # Help text describing what "s" means in ISO date formatting
+    DIGITSDECFRACTIONSECOND: "One or more digits representing a decimal fraction of a second"
+    # Help text describing what "YYYY" means in ISO date formatting
+    FOURDIGITYEAR: "Four-digit year"
+    # Help text describing what "MMMM" means in ISO date formatting
+    FULLNAMEMONTH: "Full name of month (e.g. June)"
+    # Help text describing what "h" means in ISO date formatting
+    HOURNOLEADING: "Hour without leading zero"
+    # Help text describing what "m" means in ISO date formatting
+    MINUTENOLEADING: "Minute without leading zero"
+    # Help text describing what "M" means in ISO date formatting
+    MONTHNOLEADING: "Month digit without leading zero"
+    Preview: "Preview"
+    # Help text letting describing what "MMM" means in ISO date formatting
+    SHORTMONTH: "Short name of month (e.g. Jun)"
+    TOGGLEHELP: "Toggle formatting help"
+    # Help text describing what "dd" means in ISO date formatting
+    TWODIGITDAY: "Two-digit day of month"
+    # Help text describing what "hh" means in ISO date formatting
+    TWODIGITHOUR: "Two digits of hour (00 through 23)"
+    # Help text describing what "mm" means in ISO date formatting
+    TWODIGITMINUTE: "Two digits of minute (00 through 59)"
+    # Help text describing what "MM" means in ISO date formatting
+    TWODIGITMONTH: "Two-digit month (01=January, etc.)"
+    # Help text describing what "ss" means in ISO date formatting
+    TWODIGITSECOND: "Two digits of second (00 through 59)"
+    # Help text describing what "YY" means in ISO date formatting
+    TWODIGITYEAR: "Two-digit year"
+  MemberImportForm:
+    Help1: "<p>Import members in <em>CSV format</em> (comma-separated values). <small><a href=\"#\" class=\"toggle-advanced\">Show advanced usage</a></small></p>"
+    Help2: |
+            <div class="advanced">
+            	<h4>Advanced usage</h4>
+            	<ul>
+            	<li>Allowed columns: <em>%s</em></li>
+            	<li>Existing members are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>
+            	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>
+            	</ul>
+            </div>    ResultCreated: "Created %d members"
+    ResultDeleted: "Deleted %d members"
+    ResultNone: "No changes"
+    ResultUpdated: "Updated %d members"
+  MemberPassword:
+    # Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface
+    PLURALNAME: "Member Passwords"
+    # Singular name of the object, used in dropdowns and to generally identify a single object in the interface
+    SINGULARNAME: "Member Password"
+  MemberTableField:
+    ADD: "Add"
+    ADDEDTOGROUP: "Added member to group"
+    ADDINGFIELD: "Adding failed"
+    # Delete button hover text
+    DeleteTitleText: "Delete from this group"
+    # Delete button hover text
+    DeleteTitleTextDatabase: "Delete from database and all groups"
+    ERRORADDINGUSER: "There was an error adding the user to the group: %s"
+    FILTER: "Filter"
+    SEARCH: "Search"
+  ModelAdmin:
+    ADDBUTTON: "Add"
+    ADDFORM: "Fill out this form to add a %s to the database."
+    CHOOSE_COLUMNS: "Select result columns..."
+    CLEAR_SEARCH: "Clear Search"
+    # Create a new instance from a model class
+    CREATEBUTTON: "Create '%s'"
+    DELETE: "Delete"
+    DELETEDRECORDS: "Deleted %s records."
+    FOUNDRESULTS: "Your search found %s matching items"
+    IMPORT: "Import from CSV"
+    IMPORTEDRECORDS: "Imported %s records."
+    ITEMNOTFOUND: "I can't find that item"
+    LOADEDFOREDITING: "Loaded '%s' for editing."
+    NOCSVFILE: "Please browse for a CSV file to import"
+    NOIMPORT: "Nothing to import"
+    NORESULTS: "Your search didn't return any matching items"
+    SAVE: "Save"
+    SEARCHRESULTS: "Search Results"
+    SELECTALL: "select all"
+    SELECTNONE: "select none"
+    UPDATEDRECORDS: "Updated %s records."
+  MoneyField:
+    FIELDLABELAMOUNT: "Amount"
+    FIELDLABELCURRENCY: "Currency"
+  MyEntity:
+    MyNamespace: "My default natural language value"
+  MyModelAdmin:
+    # Menu title
+    MENUTITLE: "MyModel"
+  MyNamespace:
+    MYENTITY: "Counting %s things"
+  NullableField:
+    IsNullLabel: "Is Null"
+  NumericField:
+    VALIDATION: "'%s' is not a number, only numbers can be accepted for this field"
+    VALIDATIONJS: "is not a number, only numbers can be accepted for this field"
+  Page:
+    # Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface
+    PLURALNAME: "Pags"
+    # Singular name of the object, used in dropdowns and to generally identify a single object in the interface
+    SINGULARNAME: "Page"
+  Permission:
+    AdminGroup: "Administrator"
+    FULLADMINRIGHTS: "Full administrative rights"
+    FULLADMINRIGHTS_HELP: "Implies and overrules all other assigned permissions."
+    # Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface
+    PLURALNAME: "Permissions"
+    # Singular name of the object, used in dropdowns and to generally identify a single object in the interface
+    SINGULARNAME: "Permission"
+  PermissionCheckboxSetField:
+    AssignedTo: "assigned to \"%s\""
+    # A permission inherited from a certain group
+    FromGroup: "inherited from group \"%s\""
+    # A permission inherited from a certain permission role
+    FromRole: "inherited from role \"%s\""
+    # A permission inherited from a role on a certain group
+    FromRoleOnGroup: "inherited from role \"%s\" on group \"%s\""
+  PermissionRole:
+    # Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface
+    PLURALNAME: "Roles"
+    # Singular name of the object, used in dropdowns and to generally identify a single object in the interface
+    SINGULARNAME: "Role"
+  PermissionRoleCode:
+    # Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface
+    PLURALNAME: "Permission Role Cods"
+    # Singular name of the object, used in dropdowns and to generally identify a single object in the interface
+    SINGULARNAME: "Permission Role Code"
+  Permissions:
+    PERMISSIONS_CATEGORY: "Roles and access permissions"
+  PhoneNumberField:
+    VALIDATION: "Please enter a valid phone number"
+  RelationComplexTableField.ss:
+    ADD: "Add"
+    CSVEXPORT: "Export to CSV"
+    NOTFOUND: "No items found"
+  ReportAdmin:
+    # Menu title
+    MENUTITLE: "Reports"
+  Security:
+    # %s will be replaced with a link to log in.
+    ALREADYLOGGEDIN: "You don't have access to this page.  If you have another account that can access that page, you can log in again below."
+    BUTTONSEND: "Send me the password reset link"
+    CHANGEPASSWORDBELOW: "You can change your password below."
+    CHANGEPASSWORDHEADER: "Change your password"
+    ENTERNEWPASSWORD: "Please enter a new password."
+    ERRORPASSWORDPERMISSION: "You must be logged in in order to change your password!"
+    IPADDRESSES: "IP Addresses"
+    LOGGEDOUT: "You have been logged out.  If you would like to log in again, enter your credentials below."
+    LOGIN: "Log in"
+    LOSTPASSWORDHEADER: "Lost Password"
+    NOTEPAGESECURED: "That page is secured. Enter your credentials below and we will send you right along."
+    NOTERESETLINKINVALID: "<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href=\"%s\">here</a> or change your password after you <a href=\"%s\">logged in</a>.</p>"
+    NOTERESETPASSWORD: "Enter your e-mail address and we will send you a link with which you can reset your password"
+    PASSWORDSENTHEADER: "Password reset link sent to '%s'"
+    PASSWORDSENTTEXT: "Thank you! A reset link has been sent to  '%s', provided an account exists for this email address."
+  SecurityAdmin:
+    ADDMEMBER: "Add Member"
+    APPLY_ROLES: "Apply roles to groups"
+    APPLY_ROLES_HELP: "Ability to edit the roles assigned to a group. Requires the \"Access to 'Security' section\" permission."
+    EDITPERMISSIONS: "Manage permissions for groups"
+    EDITPERMISSIONS_HELP: "Ability to edit Permissions and IP Addresses for a group. Requires the \"Access to 'Security' section\" permission."
+    GROUPNAME: "Group name"
+    IPADDRESSESHELP: |
+                      <p>You can restrict this group to a particular 
+                      						IP address range (one range per line). <br />Ranges can be in any of the following forms: <br />
+                      						203.96.152.12<br />
+                      						203.96.152/24<br />
+                      						203.96/16<br />
+                      						203/8<br /><br />If you enter one or more IP address ranges in this box, then members will only get
+                      						the rights of being in this group if they log on from one of the valid IP addresses.  It won't prevent
+                      						people from logging in.  This is because the same user might have to log in to access parts of the
+                      						system without IP address restrictions.    MEMBERS: "Members"
+    # Menu title
+    MENUTITLE: "Users"
+    MemberListCaution: "Caution: Removing members from this list will remove them from all groups and the database"
+    NEWGROUP: "New Group"
+    PERMISSIONS: "Permissions"
+    ROLES: "Roles"
+    ROLESDESCRIPTION: "This section allows you to add roles to this group. Roles are logical groupings of permissions, which can be editied in the Roles tab"
+    SGROUPS: "Security Groups"
+    TABIMPORT: "Import"
+    TABROLES: "Roles"
+    VIEWUSER: "View User"
+  SecurityAdmin_MemberImportForm:
+    BtnImport: "Import"
+    FileFieldLabel: "CSV File <small>(Allowed extensions: *.csv)</small>"
+  SimpleImageField:
+    NOUPLOAD: "No Image Uploaded"
+  SiteTree:
+    TABMAIN: "Main"
+  TableField:
+    ISREQUIRED: "In %s '%s' is required."
+  TableField.ss:
+    ADD: "Add a new row"
+    ADDITEM: "Add %s"
+  TableListField:
+    CSVEXPORT: "Export to CSV"
+    PRINT: "Print"
+    SELECT: "Select:"
+  TableListField.ss:
+    NOITEMSFOUND: "No items found"
+    SORTASC: "Sort in ascending order"
+    SORTDESC: "Sort in descending order"
+  TableListField_PageControls.ss:
+    DISPLAYING: "Displaying"
+    OF: "of"
+    TO: "to"
+    VIEWFIRST: "View first"
+    VIEWLAST: "View last"
+    VIEWNEXT: "View next"
+    VIEWPREVIOUS: "View previous"
+  TimeField:
+    VALIDATEFORMAT: "Please enter a valid time format (%s)"
+  ToggleCompositeField.ss:
+    HIDE: "Hide"
+    SHOW: "Show"
+  ToggleField:
+    LESS: "less"
+    MORE: "more"
+  Versioned:
+    # Past Versions of this page
+    has_many_Versions: "Versions"

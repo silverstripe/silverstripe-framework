@@ -1,0 +1,281 @@
+fa-IR:
+  AssetAdmin:
+    CHOOSEFILE: "انتخاب فايل"
+    MENUTITLE: "فايل ها و عكس ها"
+    NEWFOLDER: "پوشه جديد"
+  BBCodeParser:
+    ALIGNEMENT: "جاگذاری"
+    ALIGNEMENTEXAMPLE: "به راست"
+    BOLD: "نوشته درست"
+    BOLDEXAMPLE: "درست"
+    COLORED: "نوشته رنگی"
+    COLOREDEXAMPLE: "نوشته آبی"
+    EMAILLINK: "پیوند ایمیل"
+    IMAGE: "عکس"
+    ITALIC: "نوشته گژ"
+    ITALICEXAMPLE: "گژ"
+    LINK: "پیوند تارگاه"
+    UNDERLINE: "نوشته با زیرخط"
+    UNDERLINEEXAMPLE: "زیرخط"
+  Boolean:
+    ANY: "هر"
+    NO: "نه"
+    YES: "آری"
+  CMSMain:
+    MENUTITLE: "محتواي سايت"
+    SAVE: "نگاهداری"
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "شما گذرواژه تان را دگرگون کردید برای"
+    EMAIL: "ايميل"
+    HELLO: "درود"
+    PASSWORD: "كلمه عبور"
+  CheckboxField:
+    NO: "نه"
+    YES: "آری"
+  ComplexTableField:
+    CLOSEPOPUP: "بستن چنجره"
+    SUCCESSADD: "%s %s %s اضافه شد"
+    SUCCESSEDIT: "%s %s %s ذخيره شد"
+  ComplexTableField.ss:
+    ADDITEM: "افزودن"
+  ConfirmedPasswordField:
+    HAVETOMATCH: "گذرواژه‌ها باید همانند هم باشند."
+    NOEMPTY: "گذرواژه نمی‌تواند تهی باشد"
+    SHOWONCLICKTITLE: "تغيير كلمه عبور"
+  CreditCardField:
+    FIRST: "نخست"
+    FOURTH: "چهارم"
+    SECOND: "دوم"
+    THIRD: "سوم"
+  DataObject:
+    PLURALNAME: "داده های اشیاء"
+    SINGULARNAME: "داده اشیاء"
+  Date:
+    DAY: "روز"
+    DAYS: "روز"
+    HOUR: "ساعت"
+    HOURS: "ساعت"
+    MIN: "دقیقه"
+    MINS: "دقیقه"
+    MONTH: "ماه"
+    MONTHS: "ماه ها"
+    SEC: "ثانیه"
+    SECS: "ثانیه"
+    TIMEDIFFAGO: "%s قبل"
+    YEAR: "سال"
+    YEARS: "سال"
+  DateField:
+    TODAY: "امروز"
+    VALIDDATEFORMAT2: "لطفا تاریخ را صحیح را وارد نمایید (%s)"
+  DropdownField:
+    CHOOSE: "(گزینش)"
+  EmailField:
+    VALIDATIONJS: "لطفاً آدرس ایمیل خود را وارد کنید."
+  File:
+    Content: "محتوا"
+    Filename: "نام پرونده"
+    INVALIDEXTENSION: "گسترش مجاز نیست (درست: %s)"
+    Name: "نام"
+    PLURALNAME: "فايل ها"
+    SINGULARNAME: "فايل"
+    Sort: "ترتیب چیدن"
+    TOOLARGE: "پرونده بیش از اندازه بزرگ است، بیشترین اندازه ممکن %s است."
+    Title: "عنوان"
+  FileIFrameField:
+    NOSOURCE: "لطفا محل یک فایل را جهت پیوست انتخاب کنید"
+  Folder:
+    DELSELECTED: "حذف پرونده های انتخاب شده"
+    DETAILSTAB: "جزئیات"
+    FILENAME: "نام پرونده"
+    FILESTAB: "فایلها"
+    PLURALNAME: "فايل ها"
+    SINGULARNAME: "فايل"
+    TITLE: "عنوان"
+    TYPE: "نوع"
+    UPLOADTAB: "بالاگذاری"
+  ForgotPasswordEmail.ss:
+    HELLO: "درود"
+    TEXT3: "برای"
+  Form:
+    FIELDISREQUIRED: "%s نیاز است."
+    VALIDATIONPASSWORDSDONTMATCH: "گذرواژه‌ها همانند هم نیستند"
+    VALIDATIONPASSWORDSNOTEMPTY: "گذرواژه نباید تهی باشد"
+  FormField:
+    NONE: "هیچ کدام"
+  Group:
+    Code: "كد گروه"
+    DefaultGroupTitleAdministrators: "مدیران کل"
+    DefaultGroupTitleContentAuthors: "نویسندگان مطالب"
+    Description: "توضحیات"
+    IMPORTTABTITLE: "وارد کردن"
+    IPRestrictions: "آی پی های محدود شده"
+    Locked: "بسته شده است؟"
+    PLURALNAME: "گروه "
+    Parent: "گروه مادر"
+    RolesAddEditLink: "اضافه/ویرایش وظیفه"
+    SINGULARNAME: "گروه"
+    Sort: "تربیت چیدن"
+    has_many_Permissions: "مجوز‌ها"
+    many_many_Members: "اعضاء"
+  GroupImportForm:
+    ResultCreated: "گروه %d ایجاد شد"
+    ResultDeleted: "گروه %d حذف شد"
+    ResultUpdated: "گروه %d بروز شد"
+  HtmlEditorField:
+    BUTTONINSERTFLASH: "گذاشتن فلش"
+    BUTTONINSERTIMAGE: "گذاشتن عکس"
+    BUTTONINSERTLINK: "گذاشتن پیوند"
+    BUTTONREMOVELINK: "برداشتن پیوند"
+    CSSCLASS: "جاگیری / الگو"
+    EMAIL: "پست الکترونیک"
+    FILE: "پرونده"
+    FLASH: "فلش"
+    FOLDER: "پوشه"
+    IMAGE: "عکس"
+    IMAGEHEIGHTPX: "بلندی"
+    IMAGEWIDTHPX: "پهنا"
+    LINK: "پیوند"
+    LINKEMAIL: "پست الکترونیک"
+    LINKEXTERNAL: "تارگاه دیگر"
+    LINKFILE: "یک پرونده را بارگزاری کنید"
+    LINKINTERNAL: "برگ در تارگاه"
+    LINKOPENNEWWIN: "در پنجره جدید باز شود ؟"
+    LINKTEXT: "متن لینک"
+    LINKTO: "پیوند به"
+    PAGE: "برگ"
+    SEARCHFILENAME: "جستجو با نام فایل"
+    SHOWUPLOADFORM: "آپلود فایل"
+    URL: "نشانی"
+  Image:
+    PLURALNAME: "پرونده‌ها"
+    SINGULARNAME: "پرونده"
+  Image_Cached:
+    PLURALNAME: "پرونده‌ها"
+    SINGULARNAME: "پرونده"
+  LeftAndMain:
+    HELP: "کمک"
+    PAGETYPE: "نوع صفحه"
+    PERMAGAIN: "شما از سیستم مدیریت محتوا خارج شده اید.اگر میخواهید دوباره وارد شوید نام کاربری و رمز عبور خود را در قسمت زیر وارد کنید"
+    PERMALREADY: "من متاسفم، شما نمی توانید به آن قسمت از سیستم مدیریت محتوا دسترسی پیدا کنید. اگر میخواهید به عنوان شخص دیگری وارد شوید از قسمت زیر تلاش کنید"
+    PLEASESAVE: "لطفاً صفحه را ذخیره کنید : این صفحه نمی تواند بروز شود چراکه هنوز ذخیره نشده است."
+    SAVED: "ذخیره شد"
+  LeftAndMain_right.ss:
+    WELCOMETO: "خوش آمدید به"
+  LoginAttempt:
+    Email: "آدرس های ایمیل"
+    PLURALNAME: "تلاش‌ برای ورود"
+    SINGULARNAME: "تلاش برای ورود"
+  Member:
+    ADDRESS: "نشانی"
+    BUTTONCHANGEPASSWORD: "تغییر رمز عبور"
+    BUTTONLOGIN: "ورود"
+    CONFIRMNEWPASSWORD: "تکرار رمز عبور جدید"
+    CONFIRMPASSWORD: "تکرار رمز عبور"
+    DefaultAdminFirstname: "مدیر پیشفرض"
+    EMAIL: "پست الکترونیک"
+    EMAILSIGNUPSUBJECT: "از ثبت نام شما سپاس گزاریم"
+    EMPTYNEWPASSWORD: "رمز عبور جدید نمیتواند خالی باشد، لطفا دوباره تلاش کنید"
+    FIRSTNAME: "نام"
+    GREETING: "خوش آمدید"
+    INTERFACELANG: "زبان برنامه"
+    INVALIDNEWPASSWORD: "ما نمیتوانیم پسورد شما را قبول کنیم: %s"
+    MOBILE: "موبایل"
+    NAME: "نام"
+    NEWPASSWORD: "گذرواژه تازه"
+    PASSWORD: "رمز عبور"
+    PHONE: "تلفن"
+    PLURALNAME: "اعضاء"
+    SINGULARNAME: "عضو"
+    SUBJECTPASSWORDCHANGED: "گذرواژه شما دگرگون شد"
+    SUBJECTPASSWORDRESET: "پیوند ازنوسازی گذرواژه شما"
+    SURNAME: "نام خانوادگی"
+    YOUROLDPASSWORD: "رمز عبور قدیمی"
+    belongs_many_many_Groups: "گروه‌ها"
+    db_LockedOutUntil: "بسته شده تا "
+    db_PasswordExpiry: "تاریخ از میان رفتن گذرواژه"
+  MemberImportForm:
+    ResultCreated: "کاربر %d ایجاد شد"
+    ResultDeleted: "کاربر %d حذف شد"
+    ResultNone: "تغییری ایجاد نشد"
+    ResultUpdated: "کاربر %d بروز شد"
+  MemberPassword:
+    PLURALNAME: "گذرواژه‌های اعضاء"
+    SINGULARNAME: "گذرواژه عضو"
+  MemberTableField:
+    ADD: "افزودن"
+    ADDEDTOGROUP: "کاربر به گروه افزوده شد"
+    DeleteTitleText: "حذف از این گروه"
+    DeleteTitleTextDatabase: "حذف از بانک اطلاعاتی و همه گروه ها"
+  ModelAdmin:
+    ADDBUTTON: "افزودن"
+    CREATEBUTTON: "ساخت '%s'"
+    DELETE: "حذف"
+    ITEMNOTFOUND: "من نمیتوانم موارد مورد نظر را پیدا کنم"
+    SAVE: "ذخیره"
+    SEARCHRESULTS: "نتايج جستجو"
+  NullableField:
+    IsNullLabel: "خالی است"
+  Page:
+    PLURALNAME: "برگ‌ها"
+    SINGULARNAME: "صفحه"
+  Permission:
+    AdminGroup: "مدیر کل"
+    FULLADMINRIGHTS: "توانایی‌های کامل مدیریتی:"
+    PLURALNAME: "مجوزها"
+    SINGULARNAME: "مجوز"
+  PermissionCheckboxSetField:
+    AssignedTo: "مجوز %s"
+  Permissions:
+    PERMISSIONS_CATEGORY: "مجوز دسترسی ها و وظایف"
+  PhoneNumberField:
+    VALIDATION: "لطفاً شماره تلفن معتبر وارد کنید"
+  RelationComplexTableField.ss:
+    ADD: "افزودن"
+    NOTFOUND: "چیزی یافت نشد"
+  ReportAdmin:
+    MENUTITLE: "گزارش ها"
+  Security:
+    ALREADYLOGGEDIN: "شما به این صفحه دسترسی ندارید. اگر حساب کاربری دیگری دارید که به این صفحه دسترسی دارد، شما میتوانید <a href=\"%s\">دوباره وارد شوید.</a>."
+    IPADDRESSES: "نشانی‌های IP"
+    LOGIN: "ورود"
+  SecurityAdmin:
+    ADDMEMBER: "افزودن عضو"
+    APPLY_ROLES: "اعمال وظایف به گروه"
+    MEMBERS: "کاربران"
+    MENUTITLE: "امنيت"
+    NEWGROUP: "گروه تازه"
+    ROLES: "وظایف"
+    SGROUPS: "گروه های امنیتی"
+    TABIMPORT: "وارد کردن"
+    TABROLES: "وظایف"
+    VIEWUSER: "نمایش کاربر"
+  SecurityAdmin_MemberImportForm:
+    BtnImport: "وارد کردن"
+  SiteTree:
+    TABMAIN: "اصلی"
+  TableField.ss:
+    ADD: "افزودن ردیف تازه"
+  TableListField:
+    PRINT: "چاپ"
+    SELECT: "انتخاب"
+  TableListField.ss:
+    NOITEMSFOUND: "موردی یافت نشد"
+    SORTASC: "چینش صعودی"
+    SORTDESC: "چینش نزولی"
+  TableListField_PageControls.ss:
+    DISPLAYING: "نمایش"
+    OF: "از"
+    TO: "به"
+    VIEWFIRST: "مشاهده اولی"
+    VIEWLAST: "مشاهده آخری"
+    VIEWNEXT: "مشاهده بعدی"
+    VIEWPREVIOUS: "مشاهده قبلی"
+  TimeField:
+    VALIDATEFORMAT: "لطفا قالب زمان را صحیح وارد کنید (%s)"
+  ToggleCompositeField.ss:
+    HIDE: "نهان"
+    SHOW: "آشکار"
+  ToggleField:
+    MORE: "بیشتر"
+  Versioned:
+    has_many_Versions: "نسخه ها"

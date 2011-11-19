@@ -1,0 +1,10 @@
+ku:
+  AssetAdmin:
+    MENUTITLE: "Rûpelan & Xiyalan"
+  Folder:
+    FILESTAB: "Rûpelan"
+  LeftAndMain:
+    HELP: "Arîkarî"
+  SecurityAdmin:
+    MENUTITLE: "Ewleyî"
+  SiteTree:
