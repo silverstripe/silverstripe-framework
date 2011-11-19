@@ -30,6 +30,7 @@ $lang['ar_SA']['AdvancedSearchForm']['SEARCHBY'] = 'البحث بواسطة';
 $lang['ar_SA']['AdvancedSearchForm']['SORTBY'] = 'ترتيب النتائج بواسطة';
 $lang['ar_SA']['AdvancedSearchForm']['TO'] = 'إلى';
 $lang['ar_SA']['AdvancedSearchForm']['WITHOUT'] = 'بدون الكلمات';
+$lang['ar_SA']['AssetAdmin']['CHOOSEFILE'] = 'اخترملف :';
 $lang['ar_SA']['BankAccountField']['VALIDATIONJS'] = 'فضلاً أدخل رقم البنك';
 $lang['ar_SA']['BasicAuth']['ENTERINFO'] = 'فضلاً أدخل اسم المستخدم و كلمة المرور';
 $lang['ar_SA']['BasicAuth']['ERRORNOTADMIN'] = 'هذا المستخدم لا يملك صلاحيات الإدارة';
@@ -109,8 +110,6 @@ $lang['ar_SA']['ContentController']['LOGOUT'] = 'الخروج';
 $lang['ar_SA']['ContentController']['NOTLOGGEDIN'] = 'لم يتم تسجيل الدخول';
 $lang['ar_SA']['ContentController']['PUBLISHEDSITE'] = 'موقع منشور';
 $lang['ar_SA']['ContentController']['VIEWPAGEIN'] = 'مشاهدة الصفحة في:';
-$lang['ar_SA']['Controller']['FILE'] = 'ملف';
-$lang['ar_SA']['Controller']['IMAGE'] = 'صورة';
 $lang['ar_SA']['CreditCardField']['FIRST'] = 'الأول';
 $lang['ar_SA']['CreditCardField']['FOURTH'] = 'الرابع';
 $lang['ar_SA']['CreditCardField']['SECOND'] = 'الثاني';
@@ -119,8 +118,8 @@ $lang['ar_SA']['CreditCardField']['VALIDATIONJS1'] = 'فضلاً تأكد أنك
 $lang['ar_SA']['CreditCardField']['VALIDATIONJS2'] = 'رقم بطاقة الصراف صحيح';
 $lang['ar_SA']['CurrencyField']['CURRENCYSYMBOL'] = '$';
 $lang['ar_SA']['CurrencyField']['VALIDATIONJS'] = 'فضلاً أدخل عملة صحيحة';
-$lang['ar_SA']['DataObject']['PLURALNAME'] = 'Data Object';
-$lang['ar_SA']['DataObject']['SINGULARNAME'] = 'Data Object';
+$lang['ar_SA']['DataObject']['PLURALNAME'] = 'بيانات كائن';
+$lang['ar_SA']['DataObject']['SINGULARNAME'] = 'بيانات كائن';
 $lang['ar_SA']['Date']['DAY'] = 'اليوم';
 $lang['ar_SA']['Date']['DAYS'] = 'الأيام';
 $lang['ar_SA']['Date']['HOUR'] = 'ساعة';
@@ -139,6 +138,9 @@ $lang['ar_SA']['DateField']['NOTSET'] = 'غير محدد';
 $lang['ar_SA']['DateField']['TODAY'] = 'اليوم';
 $lang['ar_SA']['DateField']['VALIDATIONJS'] = 'فضلاً أدخل تنسيق صحيح للتاريخ (DD/MM/YYYY)';
 $lang['ar_SA']['DateField']['VALIDDATEFORMAT'] = 'فضلاً أدخل هيئة تاريخ صحيحة (DD/MM/YYYY)';
+$lang['ar_SA']['DateField']['VALIDDATEFORMAT2'] = 'الرجاء إدخال تنسيق تاريخ صالح (%s)';
+$lang['ar_SA']['DateField']['VALIDDATEMAXDATE'] = 'تاريخك يجب أن يكون أقدم أو مطابق لتاريخ الحد الأقصى المسموح به  (%s)';
+$lang['ar_SA']['DateField']['VALIDDATEMINDATE'] = 'تاريخك يجب أن يكون أحدث أو مطابق للتاريخ الحد الأدنى المسموح به (%s)';
 $lang['ar_SA']['DMYDateField']['VALIDDATEFORMAT'] = 'فضلاً أدخل تنسيق صحيح للتاريخ (DD-MM-YYYY)';
 $lang['ar_SA']['DropdownField']['CHOOSE'] = '(اختر)';
 $lang['ar_SA']['EmailField']['VALIDATION'] = 'فضلاً أدخل عنوان البريد الإلكتروني';
@@ -172,7 +174,7 @@ $lang['ar_SA']['ErrorPage']['505'] = '505 - إصدار HTTP  غير مدعوم';
 $lang['ar_SA']['ErrorPage']['CODE'] = 'كود الخطأ';
 $lang['ar_SA']['ErrorPage']['DEFAULTERRORPAGECONTENT'] = '<p>عذراً ، يبدو أنك تحاول الدخول إلى صفحة غير موجودة.</p><p>فضلاً تأكد من الرابط و أعد محاولة الدخول مرة أخرى.</p>';
 $lang['ar_SA']['ErrorPage']['DEFAULTERRORPAGETITLE'] = 'الصفحة غير موجودة';
-$lang['ar_SA']['ErrorPage']['ERRORFILEPROBLEM'] = 'Error opening file "%s" for writing. Please check file permissions.';
+$lang['ar_SA']['ErrorPage']['ERRORFILEPROBLEM'] = 'خطأ في فتح الملف "%s" للكتابة. الرجاء مراجعة أذونات الملف.';
 $lang['ar_SA']['ErrorPage']['PLURALNAME'] = 'صفحات الخطأ';
 $lang['ar_SA']['ErrorPage']['SINGULARNAME'] = 'صفحة الخطأ';
 $lang['ar_SA']['File']['Content'] = 'المحتوى';
@@ -187,12 +189,12 @@ $lang['ar_SA']['File']['Sort'] = 'ترتيب';
 $lang['ar_SA']['File']['Title'] = 'العنوان';
 $lang['ar_SA']['File']['TOOLARGE'] = 'حجم الملف كبير جداً . الحجم الأقصى المسموح هو %s';
 $lang['ar_SA']['FileIFrameField']['ATTACH'] = 'مرفق %s';
-$lang['ar_SA']['FileIFrameField']['ATTACHONCESAVED'] = '%ss can be attached once you have saved the record for the first time.';
+$lang['ar_SA']['FileIFrameField']['ATTACHONCESAVED'] = '%ss يمكن إرفاقها بمجرد الانتهاء من حفظ السجل لأول مرة.';
 $lang['ar_SA']['FileIFrameField']['DELETE'] = 'حذف %s';
 $lang['ar_SA']['FileIFrameField']['FILE'] = 'ملف';
 $lang['ar_SA']['FileIFrameField']['FROMCOMPUTER'] = 'من جهازك الشخصي';
 $lang['ar_SA']['FileIFrameField']['FROMFILESTORE'] = 'من مكتبة الملفات';
-$lang['ar_SA']['FileIFrameField']['NOTEADDFILES'] = 'تستطيع إضافة الملفات بعد الحفظ للمرة الأولى';
+$lang['ar_SA']['FileIFrameField']['NOSOURCE'] = 'الرجاء اختيارمصدر ملف المرفق';
 $lang['ar_SA']['FileIFrameField']['REPLACE'] = 'استبدال %s';
 $lang['ar_SA']['FileIFrameField.ss']['TITLE'] = 'إطار رفع الصور';
 $lang['ar_SA']['Folder']['CREATED'] = 'أول المرفوعات';
@@ -233,10 +235,9 @@ $lang['ar_SA']['Form']['VALIDATIONSTRONGPASSWORD'] = 'أرقام المرور ي
 $lang['ar_SA']['Form']['VALIDATOR'] = 'المحقق';
 $lang['ar_SA']['Form']['VALIDCURRENCY'] = 'فضلاً أدخل عملة صحيحة';
 $lang['ar_SA']['FormField']['NONE'] = 'لايوجد';
-$lang['ar_SA']['GhostPage']['NOLINKED'] = 'هذه الصفحة لا تحتوي على صفحة مرتبطة';
-$lang['ar_SA']['GhostPage']['PLURALNAME'] = 'Ghost Pags';
-$lang['ar_SA']['GhostPage']['SINGULARNAME'] = 'Ghost Page';
 $lang['ar_SA']['Group']['Code'] = 'شفرة المجموعة';
+$lang['ar_SA']['Group']['DefaultGroupTitleAdministrators'] = 'الإدارة';
+$lang['ar_SA']['Group']['DefaultGroupTitleContentAuthors'] = 'مؤلفي المحتوى';
 $lang['ar_SA']['Group']['Description'] = 'الوصف';
 $lang['ar_SA']['Group']['has_many_Permissions'] = 'الصلاحيات';
 $lang['ar_SA']['Group']['IPRestrictions'] = 'قيود عناوين IP';
@@ -248,7 +249,6 @@ $lang['ar_SA']['Group']['SINGULARNAME'] = 'المجموعة';
 $lang['ar_SA']['Group']['Sort'] = 'ترتيب';
 $lang['ar_SA']['GSTNumberField']['VALIDATION'] = 'فضلاً أدخل رقم GST صحيح';
 $lang['ar_SA']['GSTNumberField']['VALIDATIONJS'] = 'فضلاً أدخل رقم GST صحيح';
-$lang['ar_SA']['HtmlEditorField']['ALTTEXT'] = 'الوصف';
 $lang['ar_SA']['HtmlEditorField']['ANCHOR'] = 'إدخال / تعديل رابط';
 $lang['ar_SA']['HtmlEditorField']['ANCHORVALUE'] = 'رابط';
 $lang['ar_SA']['HtmlEditorField']['BULLETLIST'] = 'قائمة منقطة';
@@ -264,7 +264,6 @@ $lang['ar_SA']['HtmlEditorField']['BUTTONITALIC'] = 'مائل (Ctrl+I)';
 $lang['ar_SA']['HtmlEditorField']['BUTTONREMOVELINK'] = 'إزالة رابط';
 $lang['ar_SA']['HtmlEditorField']['BUTTONSTRIKE'] = 'خط بالمنتصف';
 $lang['ar_SA']['HtmlEditorField']['BUTTONUNDERLINE'] = 'خط بالأسفل (Ctrl+U)';
-$lang['ar_SA']['HtmlEditorField']['CAPTION'] = 'تضمين كنص';
 $lang['ar_SA']['HtmlEditorField']['CAPTIONTEXT'] = 'النص';
 $lang['ar_SA']['HtmlEditorField']['CHARMAP'] = 'إدخال رمز';
 $lang['ar_SA']['HtmlEditorField']['CLOSE'] = 'إغلاق';
@@ -285,12 +284,12 @@ $lang['ar_SA']['HtmlEditorField']['FLASH'] = 'فلاش';
 $lang['ar_SA']['HtmlEditorField']['FOLDER'] = 'المجلد';
 $lang['ar_SA']['HtmlEditorField']['FOLDERCANCEL'] = 'إلغاء';
 $lang['ar_SA']['HtmlEditorField']['FORMATADDR'] = 'العنوان';
-$lang['ar_SA']['HtmlEditorField']['FORMATH1'] = 'Heading 1';
-$lang['ar_SA']['HtmlEditorField']['FORMATH2'] = 'Heading 2';
-$lang['ar_SA']['HtmlEditorField']['FORMATH3'] = 'Heading 3';
-$lang['ar_SA']['HtmlEditorField']['FORMATH4'] = 'Heading 4';
-$lang['ar_SA']['HtmlEditorField']['FORMATH5'] = 'Heading 5';
-$lang['ar_SA']['HtmlEditorField']['FORMATH6'] = 'Heading 6';
+$lang['ar_SA']['HtmlEditorField']['FORMATH1'] = 'عنوان رئيسي 1';
+$lang['ar_SA']['HtmlEditorField']['FORMATH2'] = 'عنوان رئيسي 2';
+$lang['ar_SA']['HtmlEditorField']['FORMATH3'] = 'عنوان رئيسي 3';
+$lang['ar_SA']['HtmlEditorField']['FORMATH4'] = 'عنوان رئيسي 4';
+$lang['ar_SA']['HtmlEditorField']['FORMATH5'] = 'عنوان رئيسي 5';
+$lang['ar_SA']['HtmlEditorField']['FORMATH6'] = 'عنوان رئيسي 6';
 $lang['ar_SA']['HtmlEditorField']['FORMATP'] = 'القطعة';
 $lang['ar_SA']['HtmlEditorField']['FORMATPRE'] = 'منسق';
 $lang['ar_SA']['HtmlEditorField']['HR'] = 'إدخال خط أفقي';
@@ -326,6 +325,7 @@ $lang['ar_SA']['HtmlEditorField']['PASTEWORD'] = 'لصق من برنامج ال�
 $lang['ar_SA']['HtmlEditorField']['REDO'] = 'تقدم (Ctrl+Y)';
 $lang['ar_SA']['HtmlEditorField']['SEARCHFILENAME'] = 'بحث باسم الملف';
 $lang['ar_SA']['HtmlEditorField']['SELECTALL'] = 'تحديد الكل (Ctrl+A)';
+$lang['ar_SA']['HtmlEditorField']['SHOWUPLOADFORM'] = 'تحميل ملف';
 $lang['ar_SA']['HtmlEditorField']['UNDO'] = 'تراجع (Ctrl+Z)';
 $lang['ar_SA']['HtmlEditorField']['UNLINK'] = 'إزالة رابط';
 $lang['ar_SA']['HtmlEditorField']['UPLOAD'] = 'رفع';
@@ -334,15 +334,6 @@ $lang['ar_SA']['HtmlEditorField']['VISUALAID'] = 'عرض / إخفاء الخطو
 $lang['ar_SA']['Image']['PLURALNAME'] = 'الملفات';
 $lang['ar_SA']['Image']['SINGULARNAME'] = 'الملف';
 $lang['ar_SA']['ImageField']['IMAGE'] = 'الصورة';
-$lang['ar_SA']['ImageField']['NOTEADDIMAGES'] = 'تستطبع إضافة الصور عند حفظ الصفحة للمرة الأولى';
-$lang['ar_SA']['ImageUplaoder']['ONEFROMFILESTORE'] = 'من مخزن الملفات';
-$lang['ar_SA']['ImageUploader']['ATTACH'] = 'ارفق %s';
-$lang['ar_SA']['ImageUploader']['DELETE'] = 'احذف %s';
-$lang['ar_SA']['ImageUploader']['FROMCOMPUTER'] = 'من جهازك الشخصي';
-$lang['ar_SA']['ImageUploader']['FROMFILESTORE'] = 'من مخزن الملفات';
-$lang['ar_SA']['ImageUploader']['ONEFROMCOMPUTER'] = 'من جهازك الشخصي';
-$lang['ar_SA']['ImageUploader']['REALLYDELETE'] = 'هل ترغب فعلاً في حذف %s ؟';
-$lang['ar_SA']['ImageUploader']['REPLACE'] = 'استبدل %s';
 $lang['ar_SA']['Image_Cached']['PLURALNAME'] = 'الملفات';
 $lang['ar_SA']['Image_Cached']['SINGULARNAME'] = 'الملف';
 $lang['ar_SA']['Image_iframe.ss']['TITLE'] = 'إطار تحميل الصور';
@@ -366,10 +357,12 @@ $lang['ar_SA']['Member']['db_LockedOutUntil'] = 'مغلق حتى تاريخ';
 $lang['ar_SA']['Member']['db_NumVisit'] = 'عدد الزيارات';
 $lang['ar_SA']['Member']['db_Password'] = 'الرقم السري';
 $lang['ar_SA']['Member']['db_PasswordExpiry'] = 'تاريخ انتهاء صلاحية كلمة المرور';
+$lang['ar_SA']['Member']['DefaultAdminFirstname'] = 'المدير الافتراضي';
 $lang['ar_SA']['Member']['EMAIL'] = 'البريد الإلكتروني';
 $lang['ar_SA']['Member']['EMAILSIGNUPINTRO1'] = 'شكراً لتسجيل الدخول كعضو جديد، تفاصيل العضوية بالأسفل لاستخدامها كمرجع في المستقبل';
 $lang['ar_SA']['Member']['EMAILSIGNUPINTRO2'] = 'يمكنك الدخول للموقع باستخدام بينات الدخول التي بالأسفل';
 $lang['ar_SA']['Member']['EMAILSIGNUPSUBJECT'] = 'شكراً لتسجيلك';
+$lang['ar_SA']['Member']['EMPTYNEWPASSWORD'] = 'كلمة المرور الجديدة لا يمكن أن تكون فارغة  ، فضلاً أعد المحاولة ';
 $lang['ar_SA']['Member']['ENTEREMAIL'] = 'فضلاً أدخل عنوان البريد الإلكتروني للحصول على رابط استعادة كلمة المرور';
 $lang['ar_SA']['Member']['ERRORLOCKEDOUT'] = 'حسابك تم تعطيله مؤقتاً بسبب تجاوزك العدد المسموح به من المحاولات. فضلاً أعد المحاولة بعد 20 دقيقة';
 $lang['ar_SA']['Member']['ERRORNEWPASSWORD'] = 'قمت بإدخال كلمة مرور جديدة مختلفة ، حاول مرة أخرى';
@@ -378,6 +371,7 @@ $lang['ar_SA']['Member']['ERRORWRONGCRED'] = 'هناك خطأ في البريد 
 $lang['ar_SA']['Member']['FIRSTNAME'] = 'الاسم الأول';
 $lang['ar_SA']['Member']['GREETING'] = 'مرحباً';
 $lang['ar_SA']['Member']['INTERFACELANG'] = 'لغة الواجهة';
+$lang['ar_SA']['Member']['INVALIDNEWPASSWORD'] = 'كلمةالسر غير مقبولة : %s';
 $lang['ar_SA']['Member']['LOGGEDINAS'] = 'تم تسجيل الدخول كـ %s';
 $lang['ar_SA']['Member']['MOBILE'] = 'الجوال';
 $lang['ar_SA']['Member']['NAME'] = 'الاسم';
@@ -389,30 +383,43 @@ $lang['ar_SA']['Member']['PHONE'] = 'الهاتف';
 $lang['ar_SA']['Member']['PLURALNAME'] = 'الأعضاء';
 $lang['ar_SA']['Member']['PROFILESAVESUCCESS'] = 'تم الحفظ بنجاح';
 $lang['ar_SA']['Member']['REMEMBERME'] = 'تذكرني في المرة القادمة ؟';
-$lang['ar_SA']['Member']['SECURITYGROUPS'] = 'مجموعات الحماية';
 $lang['ar_SA']['Member']['SINGULARNAME'] = 'العضو';
 $lang['ar_SA']['Member']['SUBJECTPASSWORDCHANGED'] = 'تم تغيير كلمة المرور';
 $lang['ar_SA']['Member']['SUBJECTPASSWORDRESET'] = 'رابط إعادة تكوين كلمة المرور';
 $lang['ar_SA']['Member']['SURNAME'] = 'اسم العائلة';
 $lang['ar_SA']['Member']['USERDETAILS'] = 'تفاصيل المستخدم';
+$lang['ar_SA']['Member']['ValidationIdentifierFailed'] = 'لا يمكن الكتابة عضو القائمة#%d  متطابقة مع د معرف (ق ق  (%s = %s))';
 $lang['ar_SA']['Member']['VALIDATIONMEMBEREXISTS'] = 'يوجد عضو مسجل بهذا البريد الإلكتروني من قبل';
 $lang['ar_SA']['Member']['WELCOMEBACK'] = 'مرحباً بعودتك ، %s';
 $lang['ar_SA']['Member']['YOUROLDPASSWORD'] = 'رقم المرور السابق';
 $lang['ar_SA']['MemberAuthenticator']['TITLE'] = 'البريد الإلكتروني &amp; كلمة المرور';
-$lang['ar_SA']['MemberPassword']['PLURALNAME'] = 'أرقام مرور الأعضاء';
-$lang['ar_SA']['MemberPassword']['SINGULARNAME'] = 'رقم مرور العضو';
+$lang['ar_SA']['MemberPassword']['PLURALNAME'] = 'كلمات مرور الأعضاء';
+$lang['ar_SA']['MemberPassword']['SINGULARNAME'] = 'كلمة مرور العضو';
 $lang['ar_SA']['MoneyField']['FIELDLABELAMOUNT'] = 'الكمية';
 $lang['ar_SA']['MoneyField']['FIELDLABELCURRENCY'] = 'العملة';
 $lang['ar_SA']['MyEntity']['MyNamespace'] = 'القيمة الافتراضية للغة الطبيعية';
 $lang['ar_SA']['MyNamespace']['MYENTITY'] = 'عدد الأشياء %s';
+$lang['ar_SA']['NullableField']['IsNullLabel'] = 'باطل';
 $lang['ar_SA']['NumericField']['VALIDATION'] = '\'%s\' ليس رقم, الأرقام فقط يتم قبولها في هذا الحقل';
 $lang['ar_SA']['NumericField']['VALIDATIONJS'] = 'ليس رقم ، الأرقام فقط هي التي يسمح بها في هذا الحقل';
 $lang['ar_SA']['Page']['PLURALNAME'] = 'الصفحات';
 $lang['ar_SA']['Page']['SINGULARNAME'] = 'الصفحات';
+$lang['ar_SA']['Permission']['AdminGroup'] = 'الإدارة';
 $lang['ar_SA']['Permission']['FULLADMINRIGHTS'] = 'جميع صلاحيات الإدارة';
-$lang['ar_SA']['Permission']['PERMSDEFINED'] = 'صلاحية الدخول معرفة ';
+$lang['ar_SA']['Permission']['FULLADMINRIGHTS_HELP'] = 'يتضمن وينقض جميع الأذونات الأخرىالمساندة.';
 $lang['ar_SA']['Permission']['PLURALNAME'] = 'الصلاحيات';
 $lang['ar_SA']['Permission']['SINGULARNAME'] = 'الصلاحية';
+$lang['ar_SA']['PermissionCheckboxSetField']['AssignedTo'] = 'مساندة إلى  "%s"';
+$lang['ar_SA']['PermissionCheckboxSetField']['FromGroup'] = 'توريت من المجموعة  "%s"
+';
+$lang['ar_SA']['PermissionCheckboxSetField']['FromRole'] = 'توريث من القاعدة "%s"';
+$lang['ar_SA']['PermissionCheckboxSetField']['FromRoleOnGroup'] = 'توريث من القاعدة "%s"  على المجموعة "%s"';
+$lang['ar_SA']['PermissionRole']['PLURALNAME'] = 'القواعد';
+$lang['ar_SA']['PermissionRole']['SINGULARNAME'] = 'قاعدة';
+$lang['ar_SA']['PermissionRoleCode']['PLURALNAME'] = 'أكواد تصريح قاعدة';
+$lang['ar_SA']['PermissionRoleCode']['SINGULARNAME'] = 'كود تصريح قاعدة';
+$lang['ar_SA']['Permissions']['CONTENT_CATEGORY'] = 'تصاريح المحتوى';
+$lang['ar_SA']['Permissions']['PERMISSIONS_CATEGORY'] = 'تصريح الدخول والقواعد';
 $lang['ar_SA']['PhoneNumberField']['VALIDATION'] = 'فضلاً أدخل رقم هاتف صحيح';
 $lang['ar_SA']['QueuedEmail']['PLURALNAME'] = 'مجموعات البيد الإلكتروني المنظمة';
 $lang['ar_SA']['QueuedEmail']['SINGULARNAME'] = 'البريد الإلكتروني المنظم';
@@ -427,21 +434,19 @@ $lang['ar_SA']['RedirectorPage']['SINGULARNAME'] = 'صفحة التحويل';
 $lang['ar_SA']['RedirectorPage']['YOURPAGE'] = 'صفحة في موقعك الشخصي';
 $lang['ar_SA']['RelationComplexTableField.ss']['ADD'] = 'إضافة';
 $lang['ar_SA']['RelationComplexTableField.ss']['CSVEXPORT'] = 'التصدير إلى CSV';
-$lang['ar_SA']['RelationComplexTableField.ss']['DELETE'] = 'حذف';
-$lang['ar_SA']['RelationComplexTableField.ss']['EDIT'] = 'تعديل';
 $lang['ar_SA']['RelationComplexTableField.ss']['NOTFOUND'] = 'لايوجد عناصر';
-$lang['ar_SA']['RelationComplexTableField.ss']['SHOW'] = 'عرض';
 $lang['ar_SA']['RemoveOrphanedPagesTask']['BUTTONRUN'] = 'تشغيل';
 $lang['ar_SA']['RemoveOrphanedPagesTask']['CHOOSEOPERATION'] = 'اختيار العملية:';
 $lang['ar_SA']['RemoveOrphanedPagesTask']['DELETEWARNING'] = 'تحذير: هذه العمليات غير قابلة للتراجع. ';
 $lang['ar_SA']['RemoveOrphanedPagesTask']['HEADER'] = 'Remove all orphaned pages task';
 $lang['ar_SA']['RemoveOrphanedPagesTask']['NONEFOUND'] = 'No orphans found';
 $lang['ar_SA']['RemoveOrphanedPagesTask']['NONEREMOVED'] = 'لم يتم الحذف';
-$lang['ar_SA']['RemoveOrphanedPagesTask']['OPERATION_REMOVE'] = 'Remove selected from all stages (WARNING: Will destroy all selected pages from both stage and live)';
+$lang['ar_SA']['RemoveOrphanedPagesTask']['OPERATION_REMOVE'] = 'إزالة العناصر المختارة من جميع المراحل (تحذير : سوف تدمر كل الصفحات المختارة في كافة المراحل  )';
 $lang['ar_SA']['RemoveOrphanedPagesTask']['SELECTALL'] = 'تحديد الكل';
 $lang['ar_SA']['RemoveOrphanedPagesTask']['UNSELECTALL'] = 'إلغاء تحديد الكل';
 $lang['ar_SA']['SearchForm']['GO'] = 'اذهب';
 $lang['ar_SA']['SearchForm']['SEARCH'] = 'بحث';
+$lang['ar_SA']['SearchForm']['SearchResults'] = 'نتائج البحث';
 $lang['ar_SA']['Security']['ALREADYLOGGEDIN'] = 'لاتملك صلاحية الدخول لهذه الصفحة ، إذا كنت تملك حساب آخر فيمكنك تسجيل الدخول';
 $lang['ar_SA']['Security']['BUTTONSEND'] = 'أرسل لي رابط إعادة تهيئة كلمة المرور';
 $lang['ar_SA']['Security']['CHANGEPASSWORDBELOW'] = 'يمكنك تغيير كلمة المرور بالأسفل';
@@ -484,10 +489,32 @@ $lang['ar_SA']['SecurityAdmin']['IPADDRESSESHELP'] = '<p>يمكنك تحديد �
 هذا لن يمنع الزوار من الدخول. بسبب أن المستخدم نفسه قد يدخل إلى أجزاء من النظام بدون أي قيود في عناوين IP
 ';
 $lang['ar_SA']['SecurityAdmin']['MEMBERS'] = 'الأعضاء';
+$lang['ar_SA']['SecurityAdmin']['NEWGROUPPREFIX'] = 'جديد -';
 $lang['ar_SA']['SecurityAdmin']['OPTIONALID'] = 'ID اختياري';
 $lang['ar_SA']['SecurityAdmin']['PERMISSIONS'] = 'الصلاحيات';
+$lang['ar_SA']['SecurityAdmin']['ROLES'] = 'قواعد';
+$lang['ar_SA']['SecurityAdmin']['ROLESDESCRIPTION'] = 'هذا القسم يسمح لك بإضافة الأدوار إلى هذه المجموعة. قواعد المجموعات بمنطقية من الأذونات، والتي يمكن تعديلها في تبويب القواعد';
 $lang['ar_SA']['SecurityAdmin']['VIEWUSER'] = 'عرض المستخدم';
+$lang['ar_SA']['SilverStripeNavigatorLink']['ShareInstructions'] = 'لمشاركة هذا إلى هذه النسخة، انسخ وإلصق الرابط أدناه....';
+$lang['ar_SA']['SilverStripeNavigatorLink']['ShareLink'] = 'رابط مشترك';
+$lang['ar_SA']['SilverStripeNavigatorLinkl']['CloseLink'] = 'إغلاق';
 $lang['ar_SA']['SimpleImageField']['NOUPLOAD'] = 'لا توجد صور مرفوعة';
+$lang['ar_SA']['SiteConfig']['DEFAULTTHEME'] = '( استخدام الثيم الافتراضي )';
+$lang['ar_SA']['SiteConfig']['EDITHEADER'] = 'من يستطيع تحرير الصفحات الموجودة على هذا الموقع؟';
+$lang['ar_SA']['SiteConfig']['EDIT_PERMISSION'] = 'إدارة إعدادات الموقع';
+$lang['ar_SA']['SiteConfig']['EDIT_PERMISSION_HELP'] = 'القدرة على تحرير إعدادات الوصول العالمي / أذونات صفحة المستوى الأعلى.
+';
+$lang['ar_SA']['SiteConfig']['PLURALNAME'] = 'إعدادات الموقع';
+$lang['ar_SA']['SiteConfig']['SINGULARNAME'] = 'إعداد الموقع';
+$lang['ar_SA']['SiteConfig']['SITENAMEDEFAULT'] = 'اسم عنوان موقعك';
+$lang['ar_SA']['SiteConfig']['SITETAGLINE'] = 'علامة / شعار الموقع';
+$lang['ar_SA']['SiteConfig']['SITETITLE'] = 'عنوان الموقع';
+$lang['ar_SA']['SiteConfig']['TABACCESS'] = 'الوصول';
+$lang['ar_SA']['SiteConfig']['TABMAIN'] = 'الرئيسي';
+$lang['ar_SA']['SiteConfig']['TAGLINEDEFAULT'] = 'علامتك هنا';
+$lang['ar_SA']['SiteConfig']['THEME'] = 'الثيم';
+$lang['ar_SA']['SiteConfig']['TOPLEVELCREATE'] = 'من يستطيع إنشاء صفحات في جذر الموقع؟';
+$lang['ar_SA']['SiteConfig']['VIEWHEADER'] = 'من يستطيع عرض الصفحات على هذا الموقع؟...';
 $lang['ar_SA']['SiteTree']['ACCESSANYONE'] = 'الجميع';
 $lang['ar_SA']['SiteTree']['ACCESSHEADER'] = 'من يستطيع مشاهدة هذه الصفحة ؟';
 $lang['ar_SA']['SiteTree']['ACCESSLOGGEDIN'] = 'الأعضاء المسجلين';
@@ -510,19 +537,23 @@ $lang['ar_SA']['SiteTree']['DEFAULTCONTACTTITLE'] = 'اتصل بنا';
 $lang['ar_SA']['SiteTree']['DEFAULTHOMECONTENT'] = '<p>أهلاً بك في  SilverStripe! هذه هي الصفحة الرئيسة.يمكنك تعديل الصفحة عن طريق  <a href="admin/">نظام إدارة المحتوى</a>.يمكنك الآن الدخول إلى  <a href="http://doc.silverstripe.com">مستندات المطورين</a>, أو الدخول إلى  <a href="http://doc.silverstripe.com/doku.php?id=tutorials">الدروس التعليمية.</a></p>';
 $lang['ar_SA']['SiteTree']['DEFAULTHOMETITLE'] = 'الرئيسة';
 $lang['ar_SA']['SiteTree']['DELETEDPAGE'] = 'صفحة محذوفة';
+$lang['ar_SA']['SiteTree']['DEPENDENT_NOTE'] = 'الصفحات التالية تعتمد على هذه الصفحة. وهذا يشمل صفحات الظاهري، وصفحات معيد التوجيه، والصفحات التي تحتوي على روابط المحتوى.';
+$lang['ar_SA']['SiteTree']['DependtPageColumnLinkType'] = 'نوع الرابط';
+$lang['ar_SA']['SiteTree']['DependtPageColumnURL'] = 'رابط';
 $lang['ar_SA']['SiteTree']['EDITANYONE'] = 'أي شخص ';
 $lang['ar_SA']['SiteTree']['EDITHEADER'] = 'من يستطيع تعديل هذه الصفحة؟';
 $lang['ar_SA']['SiteTree']['EDITONLYTHESE'] = 'فقط هؤلاء الأشخاص (اختر من القائمة)';
 $lang['ar_SA']['SiteTree']['EDITORGROUPS'] = 'مجموعات المحرر';
 $lang['ar_SA']['SiteTree']['Editors'] = 'مجموعات المحررين';
 $lang['ar_SA']['SiteTree']['EDIT_ALL_DESCRIPTION'] = 'Can edit any page on the site, bypassing page specific security';
-$lang['ar_SA']['SiteTree']['GROUP'] = 'المجموعة';
+$lang['ar_SA']['SiteTree']['EDIT_ALL_HELP'] = 'القدرة على تحرير أي صفحة على الموقع ، بغض النظر عن الإعدادات على علامة تبويب الوصول. يتطلب تصريح "الوصول إلى محتوى الموقع" ';
 $lang['ar_SA']['SiteTree']['HASBROKENLINKS'] = 'هذه الصفحة تحتوي على روابط معطوبة';
 $lang['ar_SA']['SiteTree']['has_one_Parent'] = 'الصفحة الرئيسة';
 $lang['ar_SA']['SiteTree']['HOMEPAGEFORDOMAIN'] = 'نطاق/ نطاقات';
 $lang['ar_SA']['SiteTree']['HomepageForDomain'] = 'الصفحة الرئيسة لهذا العنوان';
 $lang['ar_SA']['SiteTree']['HTMLEDITORTITLE'] = 'محتوى';
 $lang['ar_SA']['SiteTree']['INHERIT'] = 'استيراد من الصفحة المرجعية';
+$lang['ar_SA']['SiteTree']['LINKCHANGENOTE'] = 'تغيير هذا وصلة رابط الصفحة سوف تؤثر أيضًا على الوصلات لجميع صفحات الفرعية.';
 $lang['ar_SA']['SiteTree']['many_many_BackLinkTracking'] = 'متابعة التعقيبات';
 $lang['ar_SA']['SiteTree']['many_many_ImageTracking'] = 'متابعة الصور';
 $lang['ar_SA']['SiteTree']['many_many_LinkTracking'] = 'متابعة الروابط';
@@ -533,19 +564,22 @@ $lang['ar_SA']['SiteTree']['METAHEADER'] = 'Meta-tags محركات البحث';
 $lang['ar_SA']['SiteTree']['METAKEYWORDS'] = 'الكلمات المفتاحية';
 $lang['ar_SA']['SiteTree']['METATITLE'] = 'العنوان';
 $lang['ar_SA']['SiteTree']['MODIFIEDONDRAFT'] = 'معدل في مسودة الموقع';
-$lang['ar_SA']['SiteTree']['NOBACKLINKS'] = 'هذه الصفحة لا تحتوي على رابط لأي صفحة';
 $lang['ar_SA']['SiteTree']['NOTEUSEASHOMEPAGE'] = 'استخدم هذه الصفحة كصفحة رئيسة للنطاقات التالية: (افصل بين النطاقات بفاصلة)';
+$lang['ar_SA']['SiteTree']['PAGELOCATION'] = 'موقع الضفحة';
 $lang['ar_SA']['SiteTree']['PAGESLINKING'] = 'الصفحات التالية تشير إلى هذه الصفحة :';
 $lang['ar_SA']['SiteTree']['PAGETITLE'] = 'اسم الصفحة';
 $lang['ar_SA']['SiteTree']['PAGETYPE'] = 'نوع الصفحة';
 $lang['ar_SA']['SiteTree']['PARENTID'] = 'الصفحة الأعلى';
 $lang['ar_SA']['SiteTree']['PARENTTYPE'] = 'مكان الصفحة';
 $lang['ar_SA']['SiteTree']['PARENTTYPE_ROOT'] = 'صفحة في المستوى الأعلى';
-$lang['ar_SA']['SiteTree']['PARENTTYPE_SUBPAGE'] = 'Sub-page underneath a parent page (choose below)';
+$lang['ar_SA']['SiteTree']['PARENTTYPE_SUBPAGE'] = 'صفحة فرعية أسفل صفحة رئيسية (اختر أدناه)';
 $lang['ar_SA']['SiteTree']['PERMISSION_GRANTACCESS_DESCRIPTION'] = 'التحكم في المجموعات التي لها صلاحية الدخول أو التعديل على صفحات محددة';
+$lang['ar_SA']['SiteTree']['PERMISSION_GRANTACCESS_HELP'] = 'السماح بضع القيود على الوصول صفحة محددة في قسم "الصفحات".';
 $lang['ar_SA']['SiteTree']['PLURALNAME'] = 'هياكل الموقع';
 $lang['ar_SA']['SiteTree']['REMOVEDFROMDRAFT'] = 'محذوف من مسودة الموقع';
 $lang['ar_SA']['SiteTree']['REORGANISE_DESCRIPTION'] = 'Can reorganise the site tree';
+$lang['ar_SA']['SiteTree']['REORGANISE_HELP'] = 'إعادة ترتيب الصفحات في  شجرة الموقع من خلال السحب والإسقاط.
+';
 $lang['ar_SA']['SiteTree']['SHOWINMENUS'] = 'عرض في قوائم ؟';
 $lang['ar_SA']['SiteTree']['SHOWINSEARCH'] = 'عرض في البحث ؟';
 $lang['ar_SA']['SiteTree']['SINGULARNAME'] = 'هيكلة الموقع';
@@ -553,12 +587,14 @@ $lang['ar_SA']['SiteTree']['TABACCESS'] = 'الدخول';
 $lang['ar_SA']['SiteTree']['TABBACKLINKS'] = 'الروابط الخلفية';
 $lang['ar_SA']['SiteTree']['TABBEHAVIOUR'] = 'الشسلوك';
 $lang['ar_SA']['SiteTree']['TABCONTENT'] = 'المحتوى';
+$lang['ar_SA']['SiteTree']['TABDEPENDENT'] = 'الصفحات المعتدة';
 $lang['ar_SA']['SiteTree']['TABMAIN'] = 'الرئيسة';
 $lang['ar_SA']['SiteTree']['TABMETA'] = 'Metadata';
 $lang['ar_SA']['SiteTree']['TABREPORTS'] = 'التقارير';
 $lang['ar_SA']['SiteTree']['ToDo'] = 'قائمة المهام';
 $lang['ar_SA']['SiteTree']['TODOHELP'] = '<p>يمكنك استخدامها لمتابعة العمل الذي تحتاج إلى إنجازه في محتوى موقعك . لمشاهدة جميع الصفحات مع قائمة ToDo, افتح نافذة  \'تقارير الموقع\' التي على اليسار و اختر \'To Do\'</p>';
 $lang['ar_SA']['SiteTree']['TOPLEVEL'] = 'محتوى الموقع ( مستوى أعلى )';
+$lang['ar_SA']['SiteTree']['TOPLEVELCREATORGROUPS'] = 'منشيء المستوى الأعلى';
 $lang['ar_SA']['SiteTree']['URL'] = 'رابط';
 $lang['ar_SA']['SiteTree']['URLSegment'] = 'جزء رابط الموقع';
 $lang['ar_SA']['SiteTree']['VALIDATIONURLSEGMENT1'] = 'هناك صفحة أخرى تستخدم هذا الرابط. كل صفحة لابد أن يكون لها رابط مميز';
@@ -566,12 +602,17 @@ $lang['ar_SA']['SiteTree']['VALIDATIONURLSEGMENT2'] = 'الروابط يمكن �
 $lang['ar_SA']['SiteTree']['VIEWERGROUPS'] = 'مجموعات الزوار';
 $lang['ar_SA']['SiteTree']['Viewers'] = 'مجموعات المشاهدين';
 $lang['ar_SA']['SiteTree']['VIEW_ALL_DESCRIPTION'] = 'Can view any page on the site, bypassing page specific security';
+$lang['ar_SA']['SiteTree']['VIEW_ALL_HELP'] = 'القدرة على تحرير أي صفحة على الموقع ، بغض النظر عن الإعدادات على علامة تبويب الوصول. يتطلب تصريح "الوصول إلى محتوى الموقع" ';
+$lang['ar_SA']['SiteTree']['VIEW_DRAFT_CONTENT'] = 'عرض مسودة المحتوى';
+$lang['ar_SA']['SiteTree']['VIEW_DRAFT_CONTENT_HELP'] = 'ينطبق على عرض صفحات خارج اتفاقية إدارة  محتوى الموقع في وضع المسودة. مفيدة للمتعاونين من الخارجين بدون الحصول على اتفاقية إدارة محتوى الموقع';
+$lang['ar_SA']['SiteTree']['VIRTUALPAGESLINKING'] = 'الصفحات المرئية التالية مسحوبة من هذه الصفحة';
 $lang['ar_SA']['TableField']['ISREQUIRED'] = 'في %s \'%s\' مطلوب';
 $lang['ar_SA']['TableField.ss']['ADD'] = 'إضافة صف جديد';
 $lang['ar_SA']['TableField.ss']['ADDITEM'] = 'إضافة %s';
 $lang['ar_SA']['TableField.ss']['CSVEXPORT'] = 'تصدير إلى CSV';
 $lang['ar_SA']['TableListField']['CSVEXPORT'] = 'تصدير إلى CSV';
 $lang['ar_SA']['TableListField']['PRINT'] = 'طباعة';
+$lang['ar_SA']['TableListField']['SELECT'] = 'اختيار';
 $lang['ar_SA']['TableListField.ss']['NOITEMSFOUND'] = 'لم يتم العثور على عناصر';
 $lang['ar_SA']['TableListField.ss']['SORTASC'] = 'ترتيب تصاعدي';
 $lang['ar_SA']['TableListField.ss']['SORTDESC'] = 'ترتيب تنازلي';
@@ -582,6 +623,7 @@ $lang['ar_SA']['TableListField_PageControls.ss']['VIEWFIRST'] = 'عرض الأو
 $lang['ar_SA']['TableListField_PageControls.ss']['VIEWLAST'] = 'عرض الأخير';
 $lang['ar_SA']['TableListField_PageControls.ss']['VIEWNEXT'] = 'عرض التالي';
 $lang['ar_SA']['TableListField_PageControls.ss']['VIEWPREVIOUS'] = 'عرض السابق';
+$lang['ar_SA']['TimeField']['VALIDATEFORMAT'] = 'الرجاء إدخال تنسيق وقت صالح  (%s)';
 $lang['ar_SA']['ToggleCompositeField.ss']['HIDE'] = 'إخفاء';
 $lang['ar_SA']['ToggleCompositeField.ss']['SHOW'] = 'عرض';
 $lang['ar_SA']['ToggleField']['LESS'] = 'أقل';
@@ -590,15 +632,17 @@ $lang['ar_SA']['Translatable']['CREATE'] = 'إنشاء ترجمة جديدة';
 $lang['ar_SA']['Translatable']['CREATEBUTTON'] = 'إنشاء';
 $lang['ar_SA']['Translatable']['EXISTING'] = 'الترجمات الموجودة';
 $lang['ar_SA']['Translatable']['NEWLANGUAGE'] = 'لغة جديدة';
-$lang['ar_SA']['Translatable']['NOTICENEWPAGE'] = 'Please save this page before creating a translation';
+$lang['ar_SA']['Translatable']['NOTICENEWPAGE'] = 'الرجاء حفظ هذه الصفحة قبل إنشاء ترجمة';
+$lang['ar_SA']['Translatable']['TRANSLATEALLPERMISSION'] = 'ترجمة  إلى جميع اللغات المتوفرة';
+$lang['ar_SA']['Translatable']['TRANSLATEPERMISSION'] = 'ترجمة %s';
 $lang['ar_SA']['Translatable']['TRANSLATIONS'] = 'الترجمات';
 $lang['ar_SA']['TreeSelectorField']['CANCEL'] = 'إلغاء';
 $lang['ar_SA']['TreeSelectorField']['SAVE'] = 'حفظ';
-$lang['ar_SA']['TypeDropdown']['NONE'] = 'لا يوجد';
 $lang['ar_SA']['Versioned']['has_many_Versions'] = 'الإصدارات';
 $lang['ar_SA']['VirtualPage']['CHOOSE'] = 'اختر صفحة ليتم ربطها في';
 $lang['ar_SA']['VirtualPage']['EDITCONTENT'] = 'اضغط هنا لتعديل المحتوى';
 $lang['ar_SA']['VirtualPage']['HEADER'] = 'هذه صفحة افتراضية';
+$lang['ar_SA']['VirtualPage']['NOTFOUND'] = 'لا يمكن العثور على محتوى هذه الصفحة الافتراضية.';
 $lang['ar_SA']['VirtualPage']['PLURALNAME'] = 'الصفحات الافتراضية';
 $lang['ar_SA']['VirtualPage']['SINGULARNAME'] = 'الصفحة الافتراضية';
 $lang['ar_SA']['Widget']['PLURALNAME'] = 'الملحقات';
