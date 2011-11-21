@@ -186,7 +186,7 @@ class ContentController extends Controller {
 			// If a specific locale is requested, and it doesn't match the page found by URLSegment,
 			// look for a translation and redirect (see #5001). Only happens on the last child in
 			// a potentially nested URL chain.
-			if($request->getVar('locale') && $this->dataRecord && $this->dataRecord->Locale != $request->getVar('locale')) {
+			if(strlen($request->getVar('locale')) && $this->dataRecord && $this->dataRecord->Locale != $request->getVar('locale')) {
 				$translation = $this->dataRecord->getTranslation($request->getVar('locale'));
 				if($translation) {
 					$response = new SS_HTTPResponse();
