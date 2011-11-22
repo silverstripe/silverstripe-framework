@@ -91,12 +91,12 @@ Create a new file called `zzz_admin/code/BookmarkedPageExtension.php` and insert
 			);
 		}
 	}
-	
+
 Enable the extension with the following line in `zzz_mysite/_config.php`:
 
 	:::php
 	Object::add_extension('SiteTree', 'BookmarkedPageExtension');
-	
+
 In order to add the field to the database, run a `dev/build/?flush=all`.
 Refresh the CMS, open a page for editing and you should see the new checkbox.
 
@@ -105,9 +105,9 @@ Refresh the CMS, open a page for editing and you should see the new checkbox.
 One piece in the puzzle is still missing: How do we get the list of bookmarked
 pages from the datbase into the template we've already created (with hardcoded links)? 
 Again, we extend a core class: The main CMS controller called `LeftAndMain`.
-	
+
 Add the following code to a new file `zzz_admin/code/BookmarkedLeftAndMainExtension.php`;
-	
+
 	:::php
 	<?php
 	class BookmarkedPagesLeftAndMainExtension extends LeftAndMainExtension {
@@ -131,7 +131,7 @@ and replace it with the following:
 		<li><a href="admin/page/edit/show/$ID">Edit "$Title"</a></li>
 		<% end_control %>
 	</ul>
-	
+
 ## Summary
 
 In a few lines of code, we've customized the look and feel of the CMS.
