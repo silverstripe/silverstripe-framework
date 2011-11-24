@@ -85,7 +85,7 @@ HTML;
 class HasOneComplexTableField_Item extends ComplexTableField_Item {
 	
 	function MarkingCheckbox() {
-		$name = $this->parent->Name() . '[]';
+		$name = $this->parent->getName() . '[]';
 		
 		$isOneToOne = $this->parent->isOneToOne;
 		$joinVal = $this->parent->getControllerJoinID();

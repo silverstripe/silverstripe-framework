@@ -63,7 +63,7 @@ class Tab extends CompositeField {
 	 */
 	public function fieldByName($name) {
 		foreach($this->children as $child) {
-			if($name == $child->Name()) return $child;
+			if($name == $child->getName()) return $child;
 		}
 	}
 }

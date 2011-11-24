@@ -52,7 +52,7 @@ class FieldGroup extends CompositeField {
 		if(is_array($arg1) || is_a($arg1, 'FieldSet')) {
 			$fields = $arg1;
 		
-		} else if(is_array($arg2) || is_a($arg2, 'FieldSet')) {
+		} else if(is_array($arg2) || is_a($arg2, 'FieldList')) {
 			$this->title = $arg1;
 			$fields = $arg2;
 		
@@ -71,12 +71,12 @@ class FieldGroup extends CompositeField {
 	 */
 	function Name(){
 		if(!$this->title) {
-			$fs = $this->FieldSet();
+			$fs = $this->FieldList();
 			$compositeTitle = '';
 			$count = 0;
 			foreach($fs as $subfield){
-				$compositeTitle .= $subfield->Name();
-				if($subfield->Name()) $count++;
+				$compositeTitle .= $subfield->getName();
+				if($subfield->getName()) $count++;
 			}
 			if($count == 1) $compositeTitle .= 'Group';
 			return ereg_replace("[^a-zA-Z0-9]+","",$compositeTitle);
@@ -93,7 +93,7 @@ class FieldGroup extends CompositeField {
 	 * it is easier to overwrite the <div class="field"> behaviour in a more specific class
 	 */
 	function Field() {
-		$fs = $this->FieldSet();
+		$fs = $this->FieldList();
     	$spaceZebra = isset($this->zebra) ? " fieldgroup-$this->zebra" : '';
     	$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
 		$content = "<div class=\"fieldgroup$spaceZebra\"$idAtt>";
@@ -143,7 +143,7 @@ HTML;
 	}
 	
 	function Message() {
-		$fs = $this->FieldSet();
+		$fs = $this->FieldList();
 		foreach($fs as $subfield) {
 			if($m = $subfield->Message()) $message[] = $m;
 		}
@@ -151,7 +151,7 @@ HTML;
 	}	
 	
 	function MessageType(){
-		$fs = $this->FieldSet();
+		$fs = $this->FieldList();
 		foreach($fs as $subfield) {
 			if($m = $subfield->MessageType()) $MessageType[] = $m;
 		}
@@ -164,7 +164,7 @@ HTML;
 	 * This allows fields within this fieldgroup to still allow them to get valuated.
 	 */
 	function jsValidation(){
-		$fs = $this->FieldSet();
+		$fs = $this->FieldList();
 		$validationCode = '';
 		
 		foreach($fs as $subfield) {

@@ -1,4 +1,4 @@
-DatagridTest_Person:
+GridFieldTest_Person:
   first:
     Name: First Person
   second:

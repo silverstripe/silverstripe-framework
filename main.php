@@ -107,6 +107,9 @@ require_once("model/DB.php");
 
 // Redirect to the installer if no database is selected
 if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
+	if(!file_exists(BASE_PATH . '/install.php')) {
+		die('SilverStripe Framework requires a $databaseConfig defined.');
+	}
 	$s = (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 's' : '';
 	$installURL = "http$s://" . $_SERVER['HTTP_HOST'] . BASE_URL . '/install.php';
 	

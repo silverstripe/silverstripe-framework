@@ -40,7 +40,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // ENVIRONMENT CONFIG
 
-if(defined('E_DEPRECATED')) error_reporting(E_ALL ^ E_DEPRECATED);
+if(defined('E_DEPRECATED')) error_reporting(E_ALL & ~(E_DEPRECATED | E_STRICT));
 else error_reporting(E_ALL);
 /*
  * This is for versions of PHP prior to version 5.2
@@ -318,6 +318,7 @@ function getTempFolder($base = null) {
  * @deprecated 3.0 Please use {@link SS_ClassManifest::getItemPath()}.
  */
 function getClassFile($className) {
+	Deprecation::notice('3.0', 'Use SS_ClassManifest::getItemPath() instead.');
 	return SS_ClassLoader::instance()->getManifest()->getItemPath($className);
 }
 

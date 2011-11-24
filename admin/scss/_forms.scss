@@ -10,6 +10,35 @@
  * Basic form fields
  * ---------------------------------------------------- */	
 
+/* CMS action button sprite mix-in (used for all the buttons in the bottom row */
+@mixin actionButtonSprite($horizontalOffset, $verticalOffset) {
+    padding-left: 24px;
+	padding-right: 6px;
+	@include background(image-url("../images/btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
+		linear-gradient(color-stops(
+			lighten($color-button-generic, 10%),
+			darken($color-button-generic, 5%)
+		))
+	);
+	&.ui-state-hover {
+		@include background(image-url("../images/btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
+			linear-gradient(color-stops(
+				lighten($color-button-generic, 20%),
+				$color-button-generic
+			))
+		);
+	}
+	&.ui-state-disabled {
+	    background-image: none;
+		@include background(image-url("../images/btn_icons_sprite_disabled.png") no-repeat $horizontalOffset $verticalOffset,
+			linear-gradient(color-stops(
+				lighten($color-button-generic, 20%),
+				$color-button-generic
+			))
+		);
+	}
+}
+	
 form.nostyle {
 	@include clear-form-field-styles();
 }
@@ -103,6 +132,15 @@ form.nostyle {
 			
 			@include box-shadow(0 0 5px rgba(0,0,0,0.2));
 		}
+	}
+	
+	input[disabled],
+	textarea[disabled],
+	select[disabled] {
+		color: lighten($color-text, 20%);
+		background: #efefef;
+		@include background-image(linear-gradient(darken(#efefef, 20%), #efefef 10%, #fff 90%, darken(#efefef, 20%)));
+		border: 1px solid lighten($color-medium-separator, 20%);
 	}
 	
 	/* TreeDropdowns */
@@ -255,35 +293,6 @@ form.nostyle {
 					lighten($color-button-generic, 20%)
 				))
 			);			
-		}
-
-		/* CMS action button sprite mix-in (used for all the buttons in the bottom row */
-		@mixin actionButtonSprite($horizontalOffset, $verticalOffset) {
-		    padding-left: 24px;
-			padding-right: 6px;
-			@include background(image-url("../images/btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
-				linear-gradient(color-stops(
-					lighten($color-button-generic, 10%),
-					darken($color-button-generic, 5%)
-				))
-			);
-			&.ui-state-hover {
-				@include background(image-url("../images/btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
-					linear-gradient(color-stops(
-						lighten($color-button-generic, 20%),
-						$color-button-generic
-					))
-				);
-			}
-			&.ui-state-disabled {
-			    background-image: none;
-				@include background(image-url("../images/btn_icons_sprite_disabled.png") no-repeat $horizontalOffset $verticalOffset,
-					linear-gradient(color-stops(
-						lighten($color-button-generic, 20%),
-						$color-button-generic
-					))
-				);
-			}
 		}
 
 		/* constructive */

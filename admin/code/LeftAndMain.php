@@ -251,8 +251,7 @@ class LeftAndMain extends Controller {
 				THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css',
 				SAPPHIRE_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css',
 				THIRDPARTY_DIR . '/jstree/themes/apple/style.css',
-				SAPPHIRE_DIR . '/javascript/TreeDropdownField.css',
-				SAPPHIRE_ADMIN_DIR . '/css/unjquery.css',
+				SAPPHIRE_DIR . '/css/TreeDropdownField.css'
 			)
 		);
 		
@@ -393,7 +392,7 @@ class LeftAndMain extends Controller {
 	 * Returns the main menu of the CMS.  This is also used by init() 
 	 * to work out which sections the user has access to.
 	 * 
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function MainMenu() {
 		// Don't accidentally return a menu if you're not logged in - it's used to determine access.
@@ -786,7 +785,7 @@ class LeftAndMain extends Controller {
 			$fields = ($fields) ? $fields : $record->getCMSFields();
 			if ($fields == null) {
 				user_error(
-					"getCMSFields() returned null  - it should return a FieldSet object. 
+					"getCMSFields() returned null  - it should return a FieldList object. 
 					Perhaps you forgot to put a return statement at the end of your method?", 
 					E_USER_ERROR
 				);
@@ -831,6 +830,10 @@ class LeftAndMain extends Controller {
 			$form = new Form($this, "EditForm", $fields, $actions);
 			$form->addExtraClass('cms-edit-form');
 			$form->loadDataFrom($record);
+			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
+			
+			// Set this if you want to split up tabs into a separate header row
+			// if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
 			
 			// Add a default or custom validator.
 			// @todo Currently the default Validator.js implementation
@@ -1101,9 +1104,7 @@ class LeftAndMain extends Controller {
 	 * @return String|boolean
 	 */
 	public function PreviewLink() {
-		$record = $this->getRecord($this->currentPageID());
-		$baseLink = ($record && $record instanceof Page) ? $record->Link('?stage=Stage') : Director::absoluteBaseURL();
-		return $baseLink;
+		return false;
 	}
 
 	/**

@@ -1,61 +1,61 @@
 <?php
 
 /**
- * This is a Unittest class for DatagridTest
+ * This is a Unittest class for GridFieldTest
  * 
  */
-class DatagridTest extends SapphireTest {
+class GridFieldTest extends SapphireTest {
 
 	/**
 	 *
 	 * @var string
 	 */
-	static $fixture_file = 'sapphire/tests/forms/DatagridTest.yml';
+	static $fixture_file = 'sapphire/tests/forms/GridFieldTest.yml';
 
 	/**
 	 *
 	 * @var array
 	 */
 	protected $extraDataObjects = array(
-		'DatagridTest_Person',
+		'GridFieldTest_Person',
 	);
 
 	public function testGetInstance() {
-		$this->assertTrue(new Datagrid('Testgrid') instanceof FormField, 'Datagrid should be a FormField');
+		$this->assertTrue(new GridField('Testgrid') instanceof FormField, 'GridField should be a FormField');
 	}
 	
 	public function testSetDataSource() {
-		$grid = new Datagrid('Testgrid');
+		$grid = new GridField('Testgrid');
 		$source = new ArrayList();
-		$grid->setDatasource($source);
-		$this->assertEquals($source, $grid->getDatasource());
+		$grid->setList($source);
+		$this->assertEquals($source, $grid->getList());
 	}
 	
 	function testSetEmptyDataPresenter() {
 		$this->setExpectedException('Exception');
-		$grid = new Datagrid('Testgrid');
-		$grid->setDataPresenter('');
+		$grid = new GridField('Testgrid');
+		$grid->setPresenter('');
 	}
 	
 	function testSetNonExistingDataPresenter() {
 		$this->setExpectedException('Exception');
-		$grid = new Datagrid('Testgrid');
-		$grid->setDataPresenter('ifThisClassExistsIWouldBeSurprised');
+		$grid = new GridField('Testgrid');
+		$grid->setPresenter('ifThisClassExistsIWouldBeSurprised');
 	}
 	
 	function testSetDataPresenterWithDataObject() {
 		$this->setExpectedException('Exception');
-		$grid = new Datagrid('Testgrid');
-		$grid->setDataPresenter('DataObject');
+		$grid = new GridField('Testgrid');
+		$grid->setPresenter('DataObject');
 	}
 	
 	function testSetDataPresenter() {
-		$grid = new Datagrid('Testgrid');
-		$grid->setDataPresenter('DatagridPresenter');
+		$grid = new GridField('Testgrid');
+		$grid->setPresenter('GridFieldPresenter');
 	}
 	
 	function testSetDataclass() {
-		$grid = new Datagrid('Testgrid');
+		$grid = new GridField('Testgrid');
 		$grid->setModelClass('SiteTree');
 		$this->assertEquals('SiteTree', $grid->getModelClass());
 	}
@@ -65,23 +65,23 @@ class DatagridTest extends SapphireTest {
 	 */
 	function testFieldHolderWithoutDataSource() {
 		$this->setExpectedException('Exception');
-		$grid = new Datagrid('Testgrid');
+		$grid = new GridField('Testgrid');
 		$this->assertNotNull($grid->FieldHolder());
 	}
 	
 	/**
-	 * This is better tested in the DatagridFunctionalTest
+	 * This is better tested in the GridFieldFunctionalTest
 	 * 
-	 * @see DatagridFunctionalTest
+	 * @see GridFieldFunctionalTest
 	 */
 	function testFieldHolder() {
-		$grid = new Datagrid('Testgrid');
-		$grid->setDatasource(new DataList('DatagridTest_Person'));
+		$grid = new GridField('Testgrid');
+		$grid->setList(new DataList('GridFieldTest_Person'));
 		$this->assertNotNull($grid->FieldHolder());
 	}
 }
 
-class DatagridTest_Person extends Dataobject implements TestOnly {
+class GridFieldTest_Person extends Dataobject implements TestOnly {
 
 	public static $db = array(
 		'Name' => 'Varchar'

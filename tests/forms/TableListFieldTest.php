@@ -59,7 +59,7 @@ class TableListFieldTest extends SapphireTest {
 			$item3->ID => "a3", 
 			$item4->ID => "a4", 
 			$item5->ID => "a5"
-		), $itemMap);
+		), $itemMap->toArray());
 	}
 	
 	function testFirstPageOfPaginatedSourceItemGeneration() {
@@ -92,7 +92,7 @@ class TableListFieldTest extends SapphireTest {
 		$this->assertEquals(array(
 			$item1->ID => "a1", 
 			$item2->ID => "a2"
-		), $itemMap);
+		), $itemMap->toArray());
 	}
 	
 	function testSecondPageOfPaginatedSourceItemGeneration() {
@@ -123,7 +123,7 @@ class TableListFieldTest extends SapphireTest {
 		$this->assertNotNull($items);
 	
 		$itemMap = $items->map("ID", "A") ;
-		$this->assertEquals(array($item3->ID => "a3", $item4->ID => "a4"), $itemMap);
+		$this->assertEquals(array($item3->ID => "a3", $item4->ID => "a4"), $itemMap->toArray());
 	}
 	
 	function testSelectOptionsAddRemove() {
@@ -294,7 +294,7 @@ class TableListFieldTest extends SapphireTest {
 	}
 
     /**
-     * Check that a DataObjectSet can be passed to TableListField
+     * Check that a SS_List can be passed to TableListField
      */
 	function testDataObjectSet() {
 	    $one = new TableListFieldTest_Obj;

@@ -83,16 +83,9 @@
 			onunmatch: function() {
 				// Prepare iframes for removal, otherwise we get loading bugs
 				this.find('iframe').each(function() {
-					this.contentWindow.location.href = 'about:blank';
+					$(this).attr('src', 'about:blank');
 					$(this).remove();
 				});
-				
-				// Remove all TinyMCE instances
-				if((typeof tinymce != 'undefined') && tinymce.editors) {
-					$(tinymce.editors).each(function() {
-						if(typeof(this.remove) == 'function') this.remove();
-					});
-				}
 				
 				this._super();
 			},
@@ -212,6 +205,14 @@
 					var inst = tinyMCE.getInstanceById(this.attr('id'));
 					if (inst) inst.startContent = tinymce.trim(inst.getContent({format : 'raw', no_events : 1}));
 				};
+
+				this._super();
+			},
+			
+			onunmatch: function() {
+				tinyMCE.execCommand("mceRemoveControl", true, this.attr('id'));
+				
+				this._super();
 			}
 		});
 	});

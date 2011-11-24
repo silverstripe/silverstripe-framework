@@ -74,9 +74,17 @@
 
 				// Monitor window resizes, panel changes and edit form loads for layout changes.
 				// Also triggers redraw through handleStateChange()
-				$(window).resize(function() {self.redraw()});
-				$('.cms-panel').live('toggle', function() {self.redraw();});
-				$('.cms-edit-form').live('reloadeditform', function() {self.redraw()});
+				$(window).resize(function() {
+					self.redraw();
+				});
+				
+				$('.cms-panel').live('toggle', function() {
+					self.redraw();
+				});
+				
+				$('.cms-edit-form').live('reloadeditform', function() {
+					self.redraw()
+				});
 				
 				// Remove loading screen
 				$('.ss-loading-screen').hide();
@@ -97,6 +105,8 @@
 				this.find('.cms-content').redraw();
 				
 				this.layout({resize: false});
+		
+				this.find('.cms-panel-layout').redraw(); // sidebar panels.
 			},
 			
 			/**
@@ -143,6 +153,11 @@
 						// Update panels
 						jQuery.entwine.synchronous_mode(true);
 						var newContentEl = $(data);
+						
+						if(newContentEl.find('.cms-container').length) {
+							throw 'Content loaded via ajax is not allowed to contain tags matching the ".cms-container" selector to avoid infinite loops';
+						}
+						
 						newContentEl.addClass('loading');
 						contentEl.replaceWith(newContentEl);
 						contentEl.remove();
@@ -316,6 +331,12 @@
 				this._super();
 			}
 		});	
+	
+		$(".cms-panel-layout").entwine({
+			redraw: function() {
+				this.layout({resize: false});
+			}
+		});
 	});	 
 }(jQuery));
 

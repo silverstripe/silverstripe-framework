@@ -10,7 +10,7 @@ class DataList extends ViewableData implements SS_List {
 	protected $dataClass;
 	
 	/**
-	 * The {@link DataQuery} object responsible for getting this DataObjectSet's records
+	 * The {@link DataQuery} object responsible for getting this DataList's records
 	 */
 	protected $dataQuery;
 	
@@ -97,6 +97,7 @@ class DataList extends ViewableData implements SS_List {
 	 * Add an join clause to this data list's query.
 	 */
 	public function join($join) {
+		Deprecation::notice('3.0', 'Use innerJoin() or leftJoin() instead.');
 		$this->dataQuery->join($join);
 		return $this;
 	}
@@ -151,14 +152,8 @@ class DataList extends ViewableData implements SS_List {
 		return $result;
 	}
 
-	public function map($keyfield = 'ID', $titlefield = 'Title') {
-		$map = array();
-
-		foreach ($this as $item) {
-			$map[$item->$keyfield] = $item->$titlefield;
-		}
-
-		return $map;
+	public function map($keyField = 'ID', $titleField = 'Title') {
+		return new SS_Map($this, $keyField, $titleField);
 	}
 
 	/**
@@ -178,9 +173,9 @@ class DataList extends ViewableData implements SS_List {
 	}
 	
 	/**
-	 * Returns an Iterator for this DataObjectSet.
-	 * This function allows you to use DataObjectSets in foreach loops
-	 * @return DataObjectSet_Iterator
+	 * Returns an Iterator for this DataList.
+	 * This function allows you to use DataLists in foreach loops
+	 * @return ArrayIterator
 	 */
 	public function getIterator() {
 		return new ArrayIterator($this->toArray());
@@ -258,7 +253,16 @@ class DataList extends ViewableData implements SS_List {
 	 * Find an element of this DataList where the given key = value
 	 */
 	public function find($key, $value) {
-		return $this->where("\"$key\" = '" . Convert::raw2sql($value) . "'")->First();
+		$clone = clone $this;
+		
+		if($key == 'ID') {
+			$baseClass = ClassInfo::baseDataClass($this->dataClass);
+			$SQL_col = "\"$baseClass\".\"$key\"";
+		} else {
+			$SQL_col = "\"$key\"";
+		}
+
+		return $clone->where("$SQL_col = '" . Convert::raw2sql($value) . "'")->First();
 	}
 	
 	
@@ -297,7 +301,7 @@ class DataList extends ViewableData implements SS_List {
 	 */
 	function setByIDList($idList) {
 		$has = array();
-
+		
 		// Index current data
 		foreach($this->column() as $id) {
 		   $has[$id] = true;
@@ -310,7 +314,9 @@ class DataList extends ViewableData implements SS_List {
 		// $id is the database ID of the record
 		if($idList) foreach($idList as $id) {
 			unset($itemsToDelete[$id]);
-			if($id && !isset($has[$id])) $this->add($id);
+			if($id && !isset($has[$id])) {
+				$this->add($id);
+			}
 		}
 
 		// Remove any items that haven't been mentioned
@@ -468,5 +474,3 @@ class DataList extends ViewableData implements SS_List {
 	}	
 
 }
-
-?>

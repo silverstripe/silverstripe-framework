@@ -78,10 +78,10 @@ You can have more customized logic and interface feedback through a custom contr
 			$form = new Form(
 				$this,
 				'Form',
-				new FieldSet(
+				new FieldList(
 					new FileField('CsvFile', false)
 				),
-				new FieldSet(
+				new FieldList(
 					new FormAction('doUpload', 'Upload')
 				),
 				new RequiredFields()

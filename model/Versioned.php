@@ -95,13 +95,20 @@ class Versioned extends DataExtension {
 		$this->liveStage = array_pop($stages);
 	}
 	
-	function extraStatics($class) {
+	/**
+	 *
+	 * @param string $class
+	 * @param string $extension
+	 * @return array
+	 */
+	function extraStatics($class=null, $extension=null) {
 		return array(
 			'db' => array(
 				'Version' => 'Int',
 			),
 			'has_many' => array(
-				'Versions' => $class,
+				// TODO this method is called *both* statically and on an instance
+				'Versions' => ($class) ? $class : $this->owner->class,
 			)
 		);
 	}
@@ -683,8 +690,11 @@ class Versioned extends DataExtension {
 		// Make sure the table names are not postfixed (e.g. _Live)
 		$oldMode = self::get_reading_mode();
 		self::reading_stage('Stage');
-
-		$query = $this->owner->extendedSQL($filter, $sort, $limit, $join, $having);
+		
+		$list = DataObject::get(get_class($this->owner), $filter, $sort, $limit, $join);
+		if($having) $having = $list->having($having);
+		
+		$query = $list->dataQuery()->query();
 
 		foreach($query->from as $table => $tableJoin) {
 			if(is_string($tableJoin) && $tableJoin[0] == '"') {
@@ -908,8 +918,8 @@ class Versioned extends DataExtension {
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.
 	 * @param string $join A join expression, such as LEFT JOIN or INNER JOIN
 	 * @param int $limit A limit on the number of records returned from the database.
-	 * @param string $containerClass The container class for the result set (default is DataObjectSet)
-	 * @return DataObjectSet
+	 * @param string $containerClass The container class for the result set (default is DataList)
+	 * @return SS_List
 	 */
 	static function get_by_stage($class, $stage, $filter = '', $sort = '', $join = '', $limit = '', $containerClass = 'DataList') {
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass);

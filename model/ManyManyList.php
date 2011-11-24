@@ -127,13 +127,14 @@ class ManyManyList extends RelationList {
 	}
 
     /**
-     * Remove all items from this many-many join that match the given filter
-     * @deprecated this is experimental and will change. Don't use it in your projects.
+     * Remove all items from this many-many join.  To remove a subset of items, filter it first.
      */
-    function removeByFilter($filter) {
-		$query = new SQLQuery("*", array("\"$this->joinTable\""));
+    function removeAll() {
+		$query = $this->dataQuery()->query();
 		$query->delete = true;
-		$query->where($filter);
+		$query->select = array('*');
+		$query->from = array("\"$this->joinTable\"");
+		$query->orderby = null;
 		$query->execute();
     }
 

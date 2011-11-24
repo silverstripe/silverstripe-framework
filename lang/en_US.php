@@ -2,6 +2,16 @@
 
 global $lang;
 
+$lang['en_US']['Page']['PLURALNAME'] = array(
+	'Pags',
+	50,
+	'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
+);
+$lang['en_US']['Page']['SINGULARNAME'] = array(
+	'Page',
+	50,
+	'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
+);
 $lang['en_US']['']['CHOOSEPAGE'] = 'Please choose an item from the left.';
 $lang['en_US']['AssetAdmin']['ActionAdd'] = 'Add folder';
 $lang['en_US']['AssetAdmin']['CHOOSEFILE'] = 'Choose file: ';
@@ -56,12 +66,7 @@ $lang['en_US']['CMSPageEditController']['MENUTITLE'] = array(
 	'Menu title'
 );
 $lang['en_US']['CMSPageHistoryController']['MENUTITLE'] = array(
-	'Edit Page',
-	100,
-	'Menu title'
-);
-$lang['en_US']['CMSPageReportsController']['MENUTITLE'] = array(
-	'Edit Page',
+	'History',
 	100,
 	'Menu title'
 );
@@ -747,7 +752,6 @@ $lang['en_US']['SiteTree']['TABMAIN'] = 'Main';
 $lang['en_US']['TableField']['ISREQUIRED'] = 'In %s \'%s\' is required.';
 $lang['en_US']['TableField.ss']['ADD'] = 'Add a new row';
 $lang['en_US']['TableField.ss']['ADDITEM'] = 'Add %s';
-$lang['en_US']['TableField.ss']['CSVEXPORT'] = 'Export to CSV';
 $lang['en_US']['TableListField']['CSVEXPORT'] = 'Export to CSV';
 $lang['en_US']['TableListField']['PRINT'] = 'Print';
 $lang['en_US']['TableListField']['SELECT'] = 'Select:';

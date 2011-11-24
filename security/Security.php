@@ -314,7 +314,7 @@ class Security extends Controller {
 		$member = Member::currentUser();
 		if($member) $member->logOut();
 
-		if($redirect) Director::redirectBack();
+		if($redirect) $this->redirectBack();
 	}
 
 
@@ -672,11 +672,8 @@ class Security extends Controller {
 		$member = null;
 
 		// find a group with ADMIN permission
-		$adminGroup = DataObject::get('Group', 
-								"\"Permission\".\"Code\" = 'ADMIN'", 
-								"\"Group\".\"ID\"", 
-								"JOIN \"Permission\" ON \"Group\".\"ID\"=\"Permission\".\"GroupID\"", 
-								'1')->First();
+		$adminGroup = DataObject::get('Group')->where("\"Permission\".\"Code\" = 'ADMIN'")
+			->sort("\"Group\".\"ID\"")->innerJoin("Permission", "\"Group\".\"ID\"=\"Permission\".\"GroupID\"")->First();
 		
 		if(is_callable('Subsite::changeSubsite')) {
 			Subsite::changeSubsite($origSubsite);
@@ -777,6 +774,7 @@ class Security extends Controller {
 	 *                      store the passwords in clear text.
 	 */
 	public static function encrypt_passwords($encrypt) {
+		Deprecation::notice('2.4', 'Use PasswordEncryptor_None instead.');
 		self::$encryptPasswords = (bool)$encrypt;
 	}
 
@@ -790,6 +788,7 @@ class Security extends Controller {
 	 * @return array Returns an array of strings containing all supported encryption algorithms.
 	 */
 	public static function get_encryption_algorithms() {
+		Deprecation::notice('2.4', 'Use PasswordEncryptor::get_encryptors() instead.');
 		return array_keys(PasswordEncryptor::get_encryptors());
 	}
 

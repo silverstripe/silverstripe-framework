@@ -460,8 +460,7 @@ class Debug {
 	 * @return boolean
 	 */
 	static function emailError($emailAddress, $errno, $errstr, $errfile, $errline, $errcontext, $errorType = "Error") {
-		user_error('Debug::send_errors_to() and Debug::emailError() is deprecated. Please use SS_Log instead.
-			See the class documentation in SS_Log.php for more information.', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use SS_Log instead. See the class documentation in SS_Log.php for more information.');
 		$priority = ($errorType == 'Error') ? SS_Log::ERR : SS_Log::WARN;
 		$writer = new SS_LogEmailWriter($emailAddress);
 		SS_Log::add_writer($writer, $priority);
@@ -489,8 +488,7 @@ class Debug {
 	 * @deprecated 2.5 See SS_Log on setting up error file logging
 	 */
 	protected static function log_error_if_necessary($errno, $errstr, $errfile, $errline, $errcontext, $errtype) {
-		user_error('Debug::log_error_if_necessary() and Debug::log_errors_to() are deprecated. Please use SS_Log instead.
-			See the class documentation in SS_Log.php for more information.', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use SS_Log instead. See the class documentation in SS_Log.php for more information.');
 		$priority = ($errtype == 'Error') ? SS_Log::ERR : SS_Log::WARN;
 		$writer = new SS_LogFileWriter('../' . self::$log_errors_to);
 		SS_Log::add_writer($writer, $priority);
@@ -534,6 +532,7 @@ class Debug {
 	 * @param string $sendWarnings Set to true to send warnings as well as errors (Default: false)
 	 */
 	static function send_errors_to($emailAddress, $sendWarnings = false) {
+		Deprecation::notice('2.5', 'Use SS_Log instead. See SS_Log on setting up error email notification.');
 		self::$send_errors_to = $emailAddress;
 		self::$send_warnings_to = $sendWarnings ? $emailAddress : null;
 	}
@@ -543,6 +542,7 @@ class Debug {
 	 * @deprecated 2.5 See SS_Log on setting up error email notification
 	 */
 	static function get_send_errors_to() {
+		Deprecation::notice('2.5', 'Use SS_Log instead. See SS_Log on setting up error email notification.');
 		return self::$send_errors_to;
 	}
 	
@@ -551,6 +551,7 @@ class Debug {
 	 * @deprecated 2.5 See SS_Log on setting up error email notification
 	 */
 	static function send_warnings_to($emailAddress) {
+		Deprecation::notice('2.5', 'Use SS_Log instead. See SS_Log on setting up error email notification.');
 		self::$send_warnings_to = $emailAddress;
 	}
 
@@ -559,6 +560,7 @@ class Debug {
 	 * @deprecated 2.5 See SS_Log on setting up error email notification
 	 */
 	static function get_send_warnings_to() {
+		Deprecation::notice('2.5', 'Use SS_Log instead. See SS_Log on setting up error email notification.');
 		return self::$send_warnings_to;
 	}
 	
@@ -567,6 +569,7 @@ class Debug {
 	 * @deprecated 2.5 See SS_Log on setting up error file logging
 	 */
 	static function log_errors_to($logFile = ".sserrors") {
+		Deprecation::notice('2.5', 'Use SS_Log instead. See SS_Log on setting up error file logging.');
 		self::$log_errors_to = $logFile;
 	}
 	
@@ -584,7 +587,7 @@ class Debug {
 	 * @deprecated 2.5 Please use {@link SS_Backtrace::backtrace()}
 	 */
 	static function backtrace($returnVal = false, $ignoreAjax = false) {
-		user_error('Debug::backtrace() is deprecated. Please use SS_Backtrace::backtrace() instead', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use SS_Backtrace::backtrace instead.');
 		return SS_Backtrace::backtrace($returnVal, $ignoreAjax);
 	}
 	
@@ -592,7 +595,7 @@ class Debug {
 	 * @deprecated 2.5 Please use {@link SS_Backtrace::get_rendered_backtrace()}
 	 */
 	static function get_rendered_backtrace($bt, $plainText = false) {
-		user_error('Debug::get_rendered_backtrace() is deprecated. Please use SS_Backtrace::get_rendered_backtrace() instead', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use SS_Backtrace::get_rendered_backtrace() instead.');
 		return SS_Backtrace::get_rendered_backtrace($bt, $plainText);
 	}
 	

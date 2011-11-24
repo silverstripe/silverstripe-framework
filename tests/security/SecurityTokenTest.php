@@ -112,7 +112,7 @@ class SecurityTokenTest extends SapphireTest {
 		$f = $fs->dataFieldByName($t->getName());
 		
 		$this->assertType('HiddenField', $f);
-		$this->assertEquals($f->Name(), $t->getName(), 'Name matches');
+		$this->assertEquals($f->getName(), $t->getName(), 'Name matches');
 		$this->assertEquals($f->Value(), $t->getValue(), 'Value matches');
 	}
 	

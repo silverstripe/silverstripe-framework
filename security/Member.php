@@ -504,7 +504,7 @@ class Member extends DataObject {
 	 * Returns the fields for the member form - used in the registration/profile module.
 	 * It should return fields that are editable by the admin and the logged-in user. 
 	 *
-	 * @return FieldSet Returns a {@link FieldSet} containing the fields for
+	 * @return FieldList Returns a {@link FieldList} containing the fields for
 	 *                  the member form.
 	 */
 	public function getMemberFormFields() {
@@ -717,7 +717,7 @@ class Member extends DataObject {
 	/**
 	 * Check if the member is in one of the given groups.
 	 *
-	 * @param array|DataObjectSet $groups Collection of {@link Group} DataObjects to check
+	 * @param array|SS_List $groups Collection of {@link Group} DataObjects to check
 	 * @param boolean $strict Only determine direct group membership if set to true (Default: false)
 	 * @return bool Returns TRUE if the member is in one of the given groups, otherwise FALSE.
 	 */
@@ -792,6 +792,7 @@ class Member extends DataObject {
 	 * @return Returns TRUE if this user is an administrator.
 	 */
 	function isAdmin() {
+		Deprecation::notice('2.4', 'Use Permission::check(\'ADMIN\') instead.');
 		return Permission::checkMember($this, 'ADMIN');
 	}
 	
@@ -970,17 +971,15 @@ class Member extends DataObject {
 	 *
 	 * @todo Improve documentation of this function! (Markus)
 	 */
-	public function map($filter = "", $sort = "", $blank="") {
-		$ret = new SQLMap(singleton('Member')->extendedSQL($filter, $sort));
-		if($blank) {
-			$blankMember = Object::create('Member');
-			$blankMember->Surname = $blank;
-			$blankMember->ID = 0;
+	public static function map($filter = "", $sort = "", $blank="") {
+		Deprecation::notice('3.0', 'Use DataList::("Member")->map()');
 
-			$ret->getItems()->unshift($blankMember);
-		}
+		$list = DataList::create("Member")->where($filter)->sort($sort);
+		$map = $list->map();
+		
+		if($blank) $map->unshift(0, $blank);
 
-		return $ret;
+		return $map;
 	}
 
 
@@ -1001,7 +1000,7 @@ class Member extends DataObject {
 
 		$groupIDList = array();
 
-		if(is_a($groups, 'DataObjectSet')) {
+		if(is_a($groups, 'SS_List')) {
 			foreach( $groups as $group )
 				$groupIDList[] = $group->ID;
 		} elseif(is_array($groups)) {
@@ -1013,9 +1012,8 @@ class Member extends DataObject {
 		if(empty($groupIDList))
 			return Member::map();
 
-		return new SQLMap(singleton('Member')->extendedSQL(
-			"\"GroupID\" IN (" . implode( ',', $groupIDList ) .
-			")", "Surname, FirstName", "", "INNER JOIN \"Group_Members\" ON \"MemberID\"=\"Member\".\"ID\""));
+		return DataList::create("Member")->where("\"GroupID\" IN (" . implode( ',', $groupIDList ) . ")")
+			->sort("\"Surname\", \"FirstName\"")->map();
 	}
 
 
@@ -1041,13 +1039,12 @@ class Member extends DataObject {
 			
 			$SQL_perms = "'" . implode("', '", Convert::raw2sql($perms)) . "'";
 			
-			$groups = DataObject::get('Group', "", "",
-				"INNER JOIN \"Permission\" ON \"Permission\".\"GroupID\" = \"Group\".\"ID\" AND \"Permission\".\"Code\" IN ($SQL_perms)");
+			$groups = DataObject::get('Group')->innerJoin("Permission", "\"Permission\".\"GroupID\" = \"Group\".\"ID\" AND \"Permission\".\"Code\" IN ($SQL_perms)");
 		}
 
 		$groupIDList = array();
 
-		if(is_a($groups, 'DataObjectSet')) {
+		if(is_a($groups, 'SS_List')) {
 			foreach($groups as $group) {
 				$groupIDList[] = $group->ID;
 			}
@@ -1058,10 +1055,11 @@ class Member extends DataObject {
 		$filterClause = ($groupIDList)
 			? "\"GroupID\" IN (" . implode( ',', $groupIDList ) . ")"
 			: "";
-
-		return new SQLMap(singleton('Member')->extendedSQL($filterClause,
-			"Surname, FirstName", "",
-			"INNER JOIN \"Group_Members\" ON \"MemberID\"=\"Member\".\"ID\" INNER JOIN \"Group\" ON \"Group\".\"ID\"=\"GroupID\""));
+			
+		return DataList::create("Member")->where($filterClause)->sort("\"Surname\", \"FirstName\"")
+			->innerJoin("Group_Members", "\"MemberID\"=\"Member\".\"ID\"")
+			->innerJoin("Group", "\"Group\".\"ID\"=\"GroupID\"")
+			->map();
 	}
 
 
@@ -1091,10 +1089,10 @@ class Member extends DataObject {
 
 
 	/**
-	 * Return a {@link FieldSet} of fields that would appropriate for editing
+	 * Return a {@link FieldList} of fields that would appropriate for editing
 	 * this member.
 	 *
-	 * @return FieldSet Return a FieldSet of fields that would appropriate for
+	 * @return FieldList Return a FieldList of fields that would appropriate for
 	 *                  editing this member.
 	 */
 	public function getCMSFields() {
@@ -1431,7 +1429,7 @@ class Member_GroupSet extends ManyManyList {
 	 * @deprecated Use setByIdList() and/or a CheckboxSetField
 	 */
 	function setByCheckboxes(array $checkboxes, array $data) {
-		user_error("Member_GroupSet is deprecated and no longer works", E_USER_WARNING);
+		Deprecation::notice('2.4', 'Use setByIdList() and/or a CheckboxSetField instead.');
 	}
 
 
@@ -1495,7 +1493,7 @@ class Member_GroupSet extends ManyManyList {
 
 		} else {
 			USER_ERROR("Member::setByCheckboxSetField() - No source items could be found for checkboxsetfield " .
-								 $checkboxsetfield->Name(), E_USER_WARNING);
+								 $checkboxsetfield->getName(), E_USER_WARNING);
 		}
 	}
 
@@ -1504,7 +1502,7 @@ class Member_GroupSet extends ManyManyList {
 	 * @deprecated Use DataList::addMany
 	 */
 	function addManyByGroupID($ids){
-		user_error('addManyByGroupID is deprecated, use addMany', E_USER_NOTICE);
+		Deprecation::notice('2.4', 'Use addMany() instead.');
 		return $this->addMany($ids);
 	}
 
@@ -1513,7 +1511,7 @@ class Member_GroupSet extends ManyManyList {
 	 * @deprecated Use DataList::removeMany
 	 */
 	function removeManyByGroupID($groupIds) {
-		user_error('removeManyByGroupID is deprecated, use removeMany', E_USER_NOTICE);
+		Deprecation::notice('2.4', 'Use removeMany() instead.');
 		return $this->removeMany($ids);
 	}
 
@@ -1522,7 +1520,7 @@ class Member_GroupSet extends ManyManyList {
 	 * @deprecated Use DataObject::get("Group")->byIds()
 	 */
 	function getGroupsFromIDs($ids) {
-		user_error('getGroupsFromIDs is deprecated, use DataObject::get("Group")->byIds()', E_USER_NOTICE);
+		Deprecation::notice('2.4', 'Use DataObject::get("Group")->byIds() instead.');
 		return DataObject::get("Group")->byIDs($ids);
 	}
 
@@ -1531,7 +1529,7 @@ class Member_GroupSet extends ManyManyList {
 	 * @deprecated Group.Code is deprecated
 	 */
 	function addManyByCodename($codenames) {
-		user_error("addManyByCodename is deprecated and no longer works", E_USER_WARNING);
+		Deprecation::notice('2.4', 'Don\'t rely on codename');
 	}
 
 
@@ -1539,7 +1537,7 @@ class Member_GroupSet extends ManyManyList {
 	 * @deprecated Group.Code is deprecated
 	 */
 	function removeManyByCodename($codenames) {
-		user_error("removeManyByCodename is deprecated and no longer works", E_USER_WARNING);
+		Deprecation::notice('2.4', 'Don\'t rely on codename');
 	}
 }
 

@@ -20,7 +20,7 @@
  * @param $sourceSort string
  * @param $sourceJoin string
  * 
- * @todo We should refactor this to support a single FieldSet instead of evaluated Strings for building FormFields
+ * @todo We should refactor this to support a single FieldList instead of evaluated Strings for building FormFields
  * 
  * @package forms
  * @subpackage fields-relational
@@ -43,7 +43,7 @@ class TableField extends TableListField {
 	protected $filterValue = null;
 	
 	/**
-	 * @var $fieldTypes FieldSet
+	 * @var $fieldTypes FieldList
 	 * Caution: Use {@setExtraData()} instead of manually adding HiddenFields if you want to 
 	 * preset relations or other default data.
 	 */
@@ -116,7 +116,7 @@ class TableField extends TableListField {
 	/** 
 	 * Displays the headings on the template
 	 * 
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	function Headings() {
 		$i=0;
@@ -147,7 +147,7 @@ class TableField extends TableListField {
 	 * it generates the rows from array data instead.
 	 * Used in the formfield template to iterate over each row.
 	 * 
-	 * @return DataObjectSet Collection of {@link TableField_Item}
+	 * @return SS_List Collection of {@link TableField_Item}
 	 */
 	function Items() {
 		// holds TableField_Item instances
@@ -206,7 +206,7 @@ class TableField extends TableListField {
 
 	/**
 	 * Generates a new {@link TableField} instance
-	 * by loading a fieldset for this row into a temporary form.
+	 * by loading a FieldList for this row into a temporary form.
 	 * 
 	 * @param DataObject $dataObj
 	 * @return TableField_Item
@@ -341,7 +341,7 @@ class TableField extends TableListField {
 	 * Called on save, it creates the appropriate objects and writes them
 	 * to the database.
 	 * 
-	 * @param DataObjectSet $dataObjects
+	 * @param SS_List $dataObjects
 	 * @param boolean $existingValues If set to TRUE, it tries to find existing objects
 	 *  based on the database IDs passed as array keys in $dataObjects parameter.
 	 *  If set to FALSE, it will always create new object (default: TRUE)
@@ -498,7 +498,7 @@ class TableField extends TableListField {
 		if($items && $this->requiredFields && $items->count()) {
 			foreach ($this->requiredFields as $field) {
 				foreach($items as $item){
-					$cellName = $this->Name().'['.$item->ID.']['.$field.']';
+					$cellName = $this->getName().'['.$item->ID.']['.$field.']';
 					$js .= "\n";
 					if($fields->dataFieldByName($cellName)) {
 						$js .= <<<JS
@@ -550,8 +550,8 @@ JS;
 		if($this->requiredFields&&$sourceItemsNew&&$sourceItemsNew->count()) {
 			foreach ($this->requiredFields as $field) {
 				foreach($sourceItemsNew as $item){
-					$cellName = $this->Name().'['.$item->ID.']['.$field.']';
-					$cName =  $this->Name().'[new]['.$field.'][]';
+					$cellName = $this->getName().'['.$item->ID.']['.$field.']';
+					$cName =  $this->getName().'[new]['.$field.'][]';
 					
 					if($fieldObj = $fields->dataFieldByName($cellName)) {
 						if(!trim($fieldObj->Value())){
@@ -635,10 +635,10 @@ class TableField_Item extends TableListField_Item {
 			if($this->fieldset) {
 				$i=0;
 				foreach($this->fieldset as $field) {
-					$origFieldName = $field->Name();
+					$origFieldName = $field->getName();
 
 					// set unique fieldname with id
-					$combinedFieldName = $this->parent->Name() . "[" . $this->ID() . "][" . $origFieldName . "]";
+					$combinedFieldName = $this->parent->getName() . "[" . $this->ID() . "][" . $origFieldName . "]";
 					// ensure to set field to nested array notation
 					// if its an unsaved row, or the "add row" which is present by default
 					if($this->isAddRow || $this->ID() == 'new') $combinedFieldName .= '[]';
@@ -703,7 +703,7 @@ class TableField_Item extends TableListField_Item {
 				} else {
 					$shortFieldName = $fieldName;
 				}
-				$combinedFieldName = $this->parent->Name() . "[new][" . $shortFieldName . "][]";
+				$combinedFieldName = $this->parent->getName() . "[new][" . $shortFieldName . "][]";
 				$fieldType = $this->fieldTypes[$fieldName];
 				if(isset($fieldType->class) && is_subclass_of($fieldType, 'FormField')) {
 					$field = clone $fieldType; // we can't use the same instance all over, as we change names
@@ -731,7 +731,7 @@ class TableField_Item extends TableListField_Item {
 		$id = ($this->item->ID) ? $this->item->ID : "new";
 		if($this->parent->getExtraData()) {
 			foreach($this->parent->getExtraData() as $fieldName=>$fieldValue) {
-				$name = $this->parent->Name() . "[" . $id . "][" . $fieldName . "]";
+				$name = $this->parent->getName() . "[" . $id . "][" . $fieldName . "]";
 				if($this->isAddRow) $name .= '[]';
 				$field = new HiddenField($name, null, $fieldValue);
 				$content .= $field->FieldHolder() . "\n";

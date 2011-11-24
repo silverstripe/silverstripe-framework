@@ -244,7 +244,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * Returns managed models' create, search, and import forms
 	 * @uses SearchContext
 	 * @uses SearchFilter
-	 * @return DataObjectSet of forms 
+	 * @return SS_List of forms 
 	 */
 	protected function getModelForms() {
 		$models = $this->getManagedModels();

@@ -45,7 +45,7 @@ class SapphireSoapServer extends Controller {
 	}
 	
 	/**
-	 * @return DataObjectSet Collection of ArrayData elements describing
+	 * @return SS_List Collection of ArrayData elements describing
 	 *  the method (keys: 'Name', 'Arguments', 'ReturnType')
 	 */
 	function Methods() {

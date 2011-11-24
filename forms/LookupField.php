@@ -17,13 +17,15 @@ class LookupField extends DropdownField {
 		
 		
 		// Normalize value to array to simplify further processing
-		$values = (is_array($this->value)) ? $this->value : array(trim($this->value));
+		$values = (is_array($this->value) || is_object($this->value)) ? $this->value : array(trim($this->value));
 
 		$mapped = array();
 		if($source instanceof SQLMap) {
 			foreach($values as $value) $mapped[] = $source->getItem($value);
-		} elseif(is_array($source)) {
-			$mapped = array_intersect_key($source, array_combine($values, $values));
+		} else if($source instanceof ArrayAccess || is_array($source)) {
+			foreach($values as $value) {
+				if(isset($source[$value])) $mapped[] = $source[$value];
+			}
 		} else {
 			$mapped = array();
 		}

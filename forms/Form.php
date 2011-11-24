@@ -142,8 +142,8 @@ class Form extends RequestHandler {
 	 * 
 	 * @param Controller $controller The parent controller, necessary to create the appropriate form action tag.
 	 * @param String $name The method on the controller that will return this form object.
-	 * @param FieldList $fields All of the fields in the form - a {@link FieldSet} of {@link FormField} objects.
-	 * @param FieldList $actions All of the action buttons in the form - a {@link FieldSet} of {@link FormAction} objects
+	 * @param FieldList $fields All of the fields in the form - a {@link FieldList} of {@link FormField} objects.
+	 * @param FieldList $actions All of the action buttons in the form - a {@link FieldLis} of {@link FormAction} objects
 	 * @param Validator $validator Override the default validator instance (Default: {@link RequiredFields})
 	 */
 	function __construct($controller, $name, FieldList $fields, FieldList $actions, $validator = null) {
@@ -316,11 +316,11 @@ class Form extends RequestHandler {
 						if(Director::is_site_url($pageURL)) {
 							// Remove existing pragmas
 							$pageURL = preg_replace('/(#.*)/', '', $pageURL);
-							return Director::redirect($pageURL . '#' . $this->FormName());
+							return $this->controller->redirect($pageURL . '#' . $this->FormName());
 						}
 					}
 				}
-				return Director::redirectBack();
+				return $this->controller->redirectBack();
 			}
 		}
 		
@@ -338,7 +338,7 @@ class Form extends RequestHandler {
 	/**
 	 * Handle a field request.
 	 * Uses {@link Form->dataFieldByName()} to find a matching field,
-	 * and falls back to {@link FieldSet->fieldByName()} to look
+	 * and falls back to {@link FieldList->fieldByName()} to look
 	 * for tabs instead. This means that if you have a tab and a
 	 * formfield with the same name, this method gives priority
 	 * to the formfield.
@@ -460,7 +460,7 @@ class Form extends RequestHandler {
 	/**
 	 * Generate extra special fields - namely the security token field (if required).
 	 * 
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function getExtraFields() {
 		$extraFields = new FieldList();
@@ -483,11 +483,11 @@ class Form extends RequestHandler {
 	/**
 	 * Return the form's fields - used by the templates
 	 * 
-	 * @return FieldSet The form fields
+	 * @return FieldList The form fields
 	 */
 	function Fields() {
 		foreach($this->getExtraFields() as $field) {
-			if(!$this->fields->fieldByName($field->Name())) $this->fields->push($field);
+			if(!$this->fields->fieldByName($field->getName())) $this->fields->push($field);
 		}
 		
 		return $this->fields;
@@ -498,7 +498,7 @@ class Form extends RequestHandler {
 	 * in a form - including fields nested in {@link CompositeFields}.
 	 * Useful when doing custom field layouts.
 	 * 
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function HiddenFields() {
 		return $this->fields->HiddenFields();
@@ -522,7 +522,7 @@ class Form extends RequestHandler {
 	 */
 	function dataFieldByName($name) {
 		foreach($this->getExtraFields() as $field) {
-			if(!$this->fields->dataFieldByName($field->Name())) $this->fields->push($field);
+			if(!$this->fields->dataFieldByName($field->getName())) $this->fields->push($field);
 		}
 		
 		return $this->fields->dataFieldByName($name);
@@ -531,7 +531,7 @@ class Form extends RequestHandler {
 	/**
 	 * Return the form's action buttons - used by the templates
 	 * 
-	 * @return FieldSet The action list
+	 * @return FieldList The action list
 	 */
 	function Actions() {
 		return $this->actions;
@@ -567,7 +567,7 @@ class Form extends RequestHandler {
 	 */
 	function unsetDataFieldByName($fieldName){
 		foreach($this->Fields()->dataFields() as $child) {
-			if(is_object($child) && ($child->Name() == $fieldName || $child->Title() == $fieldName)) {
+			if(is_object($child) && ($child->getName() == $fieldName || $child->Title() == $fieldName)) {
 				$child = null;
 			}
 		}
@@ -916,7 +916,7 @@ class Form extends RequestHandler {
 	 * It will call $object->MyField to get the value of MyField.
 	 * If you passed an array, it will call $object[MyField].
 	 * Doesn't save into dataless FormFields ({@link DatalessField}),
-	 * as determined by {@link FieldSet->dataFields()}.
+	 * as determined by {@link FieldList->dataFields()}.
 	 * 
 	 * By default, if a field isn't set (as determined by isset()),
 	 * its value will not be saved to the field, retaining
@@ -925,7 +925,7 @@ class Form extends RequestHandler {
 	 * Passed data should not be escaped, and is saved to the FormField instances unescaped.
 	 * Escaping happens automatically on saving the data through {@link saveInto()}.
 	 * 
-	 * @uses FieldSet->dataFields()
+	 * @uses FieldList->dataFields()
 	 * @uses FormField->setValue()
 	 * 
 	 * @param array|DataObject $data
@@ -948,7 +948,7 @@ class Form extends RequestHandler {
 		// dont include fields without data
 		$dataFields = $this->fields->dataFields();
 		if($dataFields) foreach($dataFields as $field) {
-			$name = $field->Name();
+			$name = $field->getName();
 			
 			// Skip fields that have been exlcuded
 			if($fieldList && !in_array($name, $fieldList)) continue;
@@ -1004,16 +1004,16 @@ class Form extends RequestHandler {
 		$lastField = null;
 		if($dataFields) foreach($dataFields as $field) {
 			// Skip fields that have been exlcuded
-			if($fieldList && is_array($fieldList) && !in_array($field->Name(), $fieldList)) continue;
+			if($fieldList && is_array($fieldList) && !in_array($field->getName(), $fieldList)) continue;
 
 
-			$saveMethod = "save{$field->Name()}";
+			$saveMethod = "save{$field->getName()}";
 
-			if($field->Name() == "ClassName"){
+			if($field->getName() == "ClassName"){
 				$lastField = $field;
 			}else if( $dataObject->hasMethod( $saveMethod ) ){
 				$dataObject->$saveMethod( $field->dataValue());
-			} else if($field->Name() != "ID"){
+			} else if($field->getName() != "ID"){
 				$field->saveInto($dataObject);
 			}
 		}
@@ -1022,7 +1022,7 @@ class Form extends RequestHandler {
 	
 	/**
 	 * Get the submitted data from this form through
-	 * {@link FieldSet->dataFields()}, which filters out
+	 * {@link FieldList->dataFields()}, which filters out
 	 * any form-specific data like form-actions.
 	 * Calls {@link FormField->dataValue()} on each field,
 	 * which returns a value suitable for insertion into a DataObject
@@ -1036,8 +1036,8 @@ class Form extends RequestHandler {
 		
 		if($dataFields){
 			foreach($dataFields as $field) {
-				if($field->Name()) {
-					$data[$field->Name()] = $field->dataValue();
+				if($field->getName()) {
+					$data[$field->getName()] = $field->dataValue();
 				}
 			}
 		}
@@ -1054,7 +1054,7 @@ class Form extends RequestHandler {
 	function resetField($fieldName, $fieldValue = null) {
 		$dataFields = $this->fields->dataFields();
 		if($dataFields) foreach($dataFields as $field) {
-			if($field->Name()==$fieldName) {
+			if($field->getName()==$fieldName) {
 				$field = $field->setValue($fieldValue);
 			}
 		}
@@ -1215,6 +1215,7 @@ class Form extends RequestHandler {
 	 * @deprecated 2.5 Use SecurityToken::disable()
 	 */
 	static function disable_all_security_tokens() {
+		Deprecation::notice('2.5', 'Use SecurityToken::disable() instead.');
 		SecurityToken::disable();
 	}
 	
@@ -1227,6 +1228,7 @@ class Form extends RequestHandler {
 	 * @return bool
 	 */
 	function securityTokenEnabled() {
+		Deprecation::notice('2.5', 'Use Form->getSecurityToken()->isEnabled() instead.');
 		return $this->securityToken->isEnabled();
 	}
 	
