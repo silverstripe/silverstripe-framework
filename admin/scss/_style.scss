@@ -280,6 +280,41 @@ html,body {
 	.ResultAssemblyBlock {
 		display: none;
 	}
+	.west {
+		h3.cms-panel-header {
+			display:none;
+		}
+		#SearchForm_holder {
+			div.ui-tabs-panel {
+				border:1px solid #aaa; //following color from the jquery smoothness theme
+				margin-top:-1px;
+				background:#fff; //backround is kept white to follow tabs
+				padding:$grid-horizontal;
+
+				h3 {
+					margin-top:16px;
+					margin-bottom:10px;
+					@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 10%))
+				}
+
+				form {
+					input {
+						margin:0px;
+					}
+					.field {
+						border-bottom:0px;
+						margin-bottom:6px;
+					}
+					.Actions {
+						button.ss-ui-action-minor {
+							//removing the "clear search" button
+							display:none;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 /** --------------------------------------------
