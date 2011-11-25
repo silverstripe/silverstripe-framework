@@ -280,6 +280,37 @@ html,body {
 	.ResultAssemblyBlock {
 		display: none;
 	}
+	.west {
+		h3.cms-panel-header {
+			margin-top:39px;
+		}
+		#SearchForm_holder {
+			ul.ui-tabs-nav {
+				
+			}
+			div.ui-tabs-panel {
+				border:1px solid #AAAAAA;
+				margin-top:-1px;
+				background:#fff;
+				padding:10px;
+				form:first-child {
+					position:absolute;
+					left:-7px;
+					top:-69px;
+				}
+				//form:nth-child(2)
+				form {
+					.Actions {
+						button.ss-ui-action-minor {
+							width:100px;
+							text-align:left;
+							margin-top:6px;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 /** --------------------------------------------
