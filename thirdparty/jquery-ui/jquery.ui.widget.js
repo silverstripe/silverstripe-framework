@@ -1,28 +1,44 @@
 /*!
- * jQuery UI Widget 1.8rc3
+ * jQuery UI Widget 1.8.16
  *
- * Copyright (c) 2010 AUTHORS.txt (http://jqueryui.com/about)
- * Dual licensed under the MIT (MIT-LICENSE.txt)
- * and GPL (GPL-LICENSE.txt) licenses.
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Widget
  */
-(function( $ ) {
+(function( $, undefined ) {
 
-var _remove = $.fn.remove;
-
-$.fn.remove = function( selector, keepData ) {
-	return this.each(function() {
-		if ( !keepData ) {
-			if ( !selector || $.filter( selector, [ this ] ).length ) {
-				$( "*", this ).add( this ).each(function() {
-					$( this ).triggerHandler( "remove" );
-				});
-			}
+// jQuery 1.4+
+if ( $.cleanData ) {
+	var _cleanData = $.cleanData;
+	$.cleanData = function( elems ) {
+		for ( var i = 0, elem; (elem = elems[i]) != null; i++ ) {
+			try {
+				$( elem ).triggerHandler( "remove" );
+			// http://bugs.jquery.com/ticket/8235
+			} catch( e ) {}
 		}
-		return _remove.call( $(this), selector, keepData );
-	});
-};
+		_cleanData( elems );
+	};
+} else {
+	var _remove = $.fn.remove;
+	$.fn.remove = function( selector, keepData ) {
+		return this.each(function() {
+			if ( !keepData ) {
+				if ( !selector || $.filter( selector, [ this ] ).length ) {
+					$( "*", this ).add( [ this ] ).each(function() {
+						try {
+							$( this ).triggerHandler( "remove" );
+						// http://bugs.jquery.com/ticket/8235
+						} catch( e ) {}
+					});
+				}
+			}
+			return _remove.call( $(this), selector, keepData );
+		});
+	};
+}
 
 $.widget = function( name, base, prototype ) {
 	var namespace = name.split( "." )[ 0 ],
@@ -57,7 +73,7 @@ $.widget = function( name, base, prototype ) {
 //			basePrototype[ key ] = $.extend( {}, val );
 //		}
 //	});
-	basePrototype.options = $.extend( {}, basePrototype.options );
+	basePrototype.options = $.extend( true, {}, basePrototype.options );
 	$[ namespace ][ name ].prototype = $.extend( true, basePrototype, {
 		namespace: namespace,
 		widgetName: name,
@@ -80,7 +96,7 @@ $.widget.bridge = function( name, object ) {
 			options;
 
 		// prevent calls to internal methods
-		if ( isMethodCall && options.substring( 0, 1 ) === "_" ) {
+		if ( isMethodCall && options.charAt( 0 ) === "_" ) {
 			return returnValue;
 		}
 
@@ -90,6 +106,15 @@ $.widget.bridge = function( name, object ) {
 					methodValue = instance && $.isFunction( instance[options] ) ?
 						instance[ options ].apply( instance, args ) :
 						instance;
+				// TODO: add this back in 1.9 and use $.error() (see #5972)
+//				if ( !instance ) {
+//					throw "cannot call methods on " + name + " prior to initialization; " +
+//						"attempted to call method '" + options + "'";
+//				}
+//				if ( !$.isFunction( instance[options] ) ) {
+//					throw "no such method '" + options + "' for " + name + " widget instance";
+//				}
+//				var methodValue = instance[ options ].apply( instance, args );
 				if ( methodValue !== instance && methodValue !== undefined ) {
 					returnValue = methodValue;
 					return false;
@@ -99,10 +124,7 @@ $.widget.bridge = function( name, object ) {
 			this.each(function() {
 				var instance = $.data( this, name );
 				if ( instance ) {
-					if ( options ) {
-						instance.option( options );
-					}
-					instance._init();
+					instance.option( options || {} )._init();
 				} else {
 					$.data( this, name, new object( options, this ) );
 				}
@@ -129,10 +151,11 @@ $.Widget.prototype = {
 	_createWidget: function( options, element ) {
 		// $.widget.bridge stores the plugin instance, but we do it anyway
 		// so that it's stored even before the _create function runs
-		this.element = $( element ).data( this.widgetName, this );
+		$.data( element, this.widgetName, this );
+		this.element = $( element );
 		this.options = $.extend( true, {},
 			this.options,
-			$.metadata && $.metadata.get( element )[ this.widgetName ],
+			this._getCreateOptions(),
 			options );
 
 		var self = this;
@@ -141,7 +164,11 @@ $.Widget.prototype = {
 		});
 
 		this._create();
+		this._trigger( "create" );
 		this._init();
+	},
+	_getCreateOptions: function() {
+		return $.metadata && $.metadata.get( this.element[0] )[ this.widgetName ];
 	},
 	_create: function() {},
 	_init: function() {},
@@ -155,7 +182,7 @@ $.Widget.prototype = {
 			.removeAttr( "aria-disabled" )
 			.removeClass(
 				this.widgetBaseClass + "-disabled " +
-				this.namespace + "-state-disabled" );
+				"ui-state-disabled" );
 	},
 
 	widget: function() {
@@ -163,12 +190,11 @@ $.Widget.prototype = {
 	},
 
 	option: function( key, value ) {
-		var options = key,
-			self = this;
+		var options = key;
 
 		if ( arguments.length === 0 ) {
 			// don't return a reference to the internal hash
-			return $.extend( {}, self.options );
+			return $.extend( {}, this.options );
 		}
 
 		if  (typeof key === "string" ) {
@@ -179,11 +205,17 @@ $.Widget.prototype = {
 			options[ key ] = value;
 		}
 
+		this._setOptions( options );
+
+		return this;
+	},
+	_setOptions: function( options ) {
+		var self = this;
 		$.each( options, function( key, value ) {
 			self._setOption( key, value );
 		});
 
-		return self;
+		return this;
 	},
 	_setOption: function( key, value ) {
 		this.options[ key ] = value;
@@ -192,7 +224,7 @@ $.Widget.prototype = {
 			this.widget()
 				[ value ? "addClass" : "removeClass"](
 					this.widgetBaseClass + "-disabled" + " " +
-					this.namespace + "-state-disabled" )
+					"ui-state-disabled" )
 				.attr( "aria-disabled", value );
 		}
 
