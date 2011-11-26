@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/framework/!svn/ver/24017/standard/tags/release-1.11.6/library/Zend/Translate/Adapter
+END
+Csv.php
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/framework/!svn/ver/24017/standard/tags/release-1.11.6/library/Zend/Translate/Adapter/Csv.php
+END
+Tbx.php
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/framework/!svn/ver/24017/standard/tags/release-1.11.6/library/Zend/Translate/Adapter/Tbx.php
+END
+Array.php
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/framework/!svn/ver/24017/standard/tags/release-1.11.6/library/Zend/Translate/Adapter/Array.php
+END
+Ini.php
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/framework/!svn/ver/24017/standard/tags/release-1.11.6/library/Zend/Translate/Adapter/Ini.php
+END
+XmlTm.php
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/framework/!svn/ver/24017/standard/tags/release-1.11.6/library/Zend/Translate/Adapter/XmlTm.php
+END
+Gettext.php
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/framework/!svn/ver/24017/standard/tags/release-1.11.6/library/Zend/Translate/Adapter/Gettext.php
+END
+Qt.php
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/framework/!svn/ver/24017/standard/tags/release-1.11.6/library/Zend/Translate/Adapter/Qt.php
+END
+Tmx.php
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/framework/!svn/ver/24017/standard/tags/release-1.11.6/library/Zend/Translate/Adapter/Tmx.php
+END
+Xliff.php
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/framework/!svn/ver/24017/standard/tags/release-1.11.6/library/Zend/Translate/Adapter/Xliff.php
+END
