@@ -1,0 +1,5 @@
+<phpunit bootstrap="./TestHelper.php">
+    <testsuite name="Zend Framework - Zend_Translate_Adapater_RailsYML Testsuite">
+        <directory>./</directory>
+    </testsuite>
+</phpunit>
