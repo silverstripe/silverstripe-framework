@@ -6,7 +6,7 @@ require_once 'Zend/Locale.php';
 /** Zend_Translate_Adapter */
 require_once 'Zend/Translate/Adapter.php';
 
-require_once 'thirdparty/sfYaml/lib/sfYaml.php';
+// require_once 'thirdparty/sfYaml/lib/sfYaml.php';
 
 class Translate_Adapter_RailsYaml extends Zend_Translate_Adapter {
 

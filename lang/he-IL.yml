@@ -205,11 +205,6 @@ he-IL:
     LOSTPASSWORDHEADER: "איבדת סיסמא"
     NOTEPAGESECURED: "עמוד זה אינו מאובטח. הכנס את הפרטים שלך להלן ונשלח אליך מייד."
     NOTERESETPASSWORD: "הכנס את כתובת הדואר האלקטרוני שלך ונשלח אליך קישור שבעזרתו תוכל לאפס את הסיסמא שלך"
-    PASSWORDSENTHEADER: |
-                         קישור לאיפוס סיסמא נשלח ל '%s'
-                             PASSWORDSENTTEXT: |
-                       תודה רבה! קישור לאיפוס הסיסמא נשלח ל '%s'.
-                         SecurityAdmin:
     ADDMEMBER: "הוסף חבר"
     EDITPERMISSIONS: "ערוך הרשאות וכתובות IP לכל קבוצה"
     MENUTITLE: "אבטחה"

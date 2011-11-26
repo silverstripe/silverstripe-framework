@@ -178,7 +178,7 @@ class SS_ConfigManifest {
 
 		// We use Symfony Yaml since it's the most complete. It still doesn't handle all of YAML, but it's better than
 		// nothing.
-		require_once 'thirdparty/symfony-yaml/lib/sfYamlParser.php';
+		if(!class_exists('sfYamlParser', false)) require_once 'thirdparty/symfony-yaml/lib/sfYamlParser.php';
 		$parser = new sfYamlParser();
 
 		// The base header

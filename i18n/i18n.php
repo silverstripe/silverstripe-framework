@@ -1,4 +1,7 @@
 <?php
+require_once 'Zend/Translate.php';
+require_once 'i18nRailsYamlAdapter.php';
+
 /**
  * Base-class for storage and retrieval of translated entities.
  * 
@@ -84,6 +87,11 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 */
 	protected static $time_format;
 	
+	/**
+	 * @var array Array of priority keys to instances of Zend_Translate, mapped by name.
+	 */
+	protected static $translators;
+		
 	/**
 	 * Use javascript i18n through the ss.i18n class (enabled by default).
 	 * If set to TRUE, includes javascript requirements for the base library
@@ -1452,24 +1460,98 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @return string The translated string, according to the currently set locale {@link i18n::set_locale()}
 	 */
 	static function _t($entity, $string = "", $priority = 40, $context = "") {
-		global $lang;
+		foreach(self::get_translators() as $priority => $translators) {
+			foreach($translators as $name => $translator) {
+				$adapter = $translator->getAdapter();
+
+				// get current locale (either default or user preference)
+				$locale = i18n::get_locale();
+				$adapter->setLocale($locale);
+
+				// if language table isn't loaded for this locale, get it for each of the modules
+				if(!$adapter->isAvailable($locale)) i18n::include_by_locale($locale);
+
+				$translation = $adapter->translate($entity, $locale);
+
+				// Return translation only if we found a match thats not the entity itself (Zend fallback)
+				if($translation && $translation != $entity) return $translation;
+			}
+		}
 		
-		// get current locale (either default or user preference)
-		$locale = i18n::get_locale();
+		// Fall back to default string argument
+		return $string;
+	}
 
-		// parse $entity into its parts
-		$entityParts = explode('.',$entity);
-		$realEntity = array_pop($entityParts);
-		$class = implode('.',$entityParts);
+	/**
+	 * @return array Array of priority keys to instances of Zend_Translate, mapped by name.
+	 */
+	static function get_translators() {
+		if(!self::$translators) {
+			Zend_Translate::setCache(
+				SS_Cache::factory('i18n', 'Output', array('lifetime' => -1, 'automatic_serialization' => true))
+			);
+			
+			$defaultPriority = 10;
+			self::$translators[$defaultPriority] = array(
+				'core' => new Zend_Translate(array(
+					'adapter' => 'i18nRailsYamlAdapter',
+					'locale' => self::$default_locale,
+					'disableNotices' => true,
+				))
+			);
+			self::$translators[$defaultPriority-1] = array(
+				'legacy' => new Zend_Translate(array(
+					'adapter' => 'i18nSSLegacyAdapter',
+					'locale' => self::$default_locale,
+					'disableNotices' => true,
+				))
+			);
+			
+			i18n::include_by_locale('en_US');
+		}
 		
-		// if language table isn't loaded for this locale, get it for each of the modules
-		if(!isset($lang[$locale])) i18n::include_by_locale($locale);
+		return self::$translators;
+	}
+	
+	/**
+	 * @param String
+	 * @return Zend_Translate
+	 */
+	static function get_translator($name) {
+		foreach(self::get_translators() as $priority => $translators) {
+			if(isset($translators[$name])) return $translators[$name];
+		}
+		return false;
+	}
+	
+	/**
+	 * @param Zend_Translate Needs to implement {@link i18nTranslateAdapterInterface}
+	 * @param String If left blank will override the default translator.
+	 * @param Int
+	 */
+	static function register_translator($translator, $name, $priority = 10) {
+		if (!is_int($priority)) throw new InvalidArgumentException("register_translator expects an int priority");
 
-		// fallback to the passed $string if no translation is present
-		$transEntity = isset($lang[$locale][$class][$realEntity]) ? $lang[$locale][$class][$realEntity] : $string;
+		// Ensure it's not there. If it is, we're replacing it. It may exist in a different priority.
+		self::unregister_translator($name);
 
-		// entities can be stored in both array and literal values in the language tables
-		return (is_array($transEntity) ? $transEntity[0] : $transEntity);
+		// Add our new translator
+		if(!isset(self::$translators[$priority])) self::$translators[$priority] = array();
+		self::$translators[$priority][$name] = $translator;
+		
+		// Resort array, ensuring highest priority comes first
+		krsort(self::$translators);
+	
+		i18n::include_by_locale('en_US');
+	}
+	
+	/**
+	 * @param String
+	 */
+	static function unregister_translator($name) {
+		foreach (self::get_translators() as $priority => $translators) {
+			if (isset($translators[$name])) unset(self::$translators[$priority][$name]);
+		}
 	}
 
 	/**
@@ -1517,31 +1599,41 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @return array
 	 */
 	static function get_existing_translations() {
-		$locales = array();
+		$localeWithTitles = array();
 		
-		$baseDir = Director::baseFolder();
-		$modules = scandir($baseDir);
-		foreach($modules as $module) {
-			if($module[0] == '.') continue;
-			
-			$moduleDir = $baseDir . DIRECTORY_SEPARATOR . $module;
-			$langDir = $moduleDir . DIRECTORY_SEPARATOR . "lang";
-			if(is_dir($moduleDir) && is_file($moduleDir . DIRECTORY_SEPARATOR . "_config.php") && is_dir($langDir)) {
-				$moduleLocales = scandir($langDir);
-				foreach($moduleLocales as $moduleLocale) {
-					if(preg_match('/(.*)\.php$/',$moduleLocale, $matches)) {
-						if(isset($matches[1]) && isset(self::$all_locales[$matches[1]])) {
-							$locales[$matches[1]] = self::$all_locales[$matches[1]];
-						}
-					}
-				} 
+		foreach(self::get_translators() as $priority => $translators) {
+			foreach($translators as $name => $translator) {
+				$adapter = $translator->getAdapter();
+				// TODO Inspect themes
+				$modules = SS_ClassLoader::instance()->getManifest()->getModules();
+				foreach($modules as $module) {
+					if(!file_exists("{$module}/lang/")) continue;
+					$adapter->addTranslation(array(
+						'content' => "{$module}/lang/",
+						'scan' => Zend_Translate_Adapter::LOCALE_FILENAME,
+						// TODO Support custom translators with their own file extensions
+						'ignore' => array(
+							'.',
+							'_manifest_exclude',
+							'regex' => '/^.*\.(?!yml).*$/i'
+						)
+					));
+				}
+				$locales = $adapter->getList();
+				foreach($locales as $locale) {
+					// Normalize locale to include likely region tag.
+					// TODO Replace with CLDR list of actually available languages/regions
+					$locale = self::get_locale_from_lang($locale);
+
+					$localeWithTitles[$locale] = (@self::$all_locales[$locale]) ? self::$all_locales[$locale] : $locale;
+				}
 			}
 		}
 
 		// sort by title (not locale)
-		asort($locales);
+		asort($localeWithTitles);
 		
-		return $locales;
+		return $localeWithTitles;
 	}
 	
 	/**
@@ -1729,8 +1821,6 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @param string $locale Locale to be set. See http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html for a list of possible locales.
 	 */
 	static function set_locale($locale) {
-		if(!self::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
-		
 		if ($locale) self::$current_locale = $locale;
 	}
 
@@ -1767,77 +1857,78 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @param String $locale
 	 */
 	static function set_default_locale($locale) {
-		if(!self::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
-		
 		self::$default_locale = $locale;
 	}
 	
 	/**
 	 * Include a locale file determined by module name and locale 
 	 * 
+	 * @deprecated 3.0 Use Zend_Translate instead
+	 * 
 	 * @param string $module Module that contains the locale file
 	 * @param string $locale Locale to be loaded
 	 */
 	static function include_locale_file($module, $locale) {
-		if(!self::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
+		Deprecation::notice('3.0', 'Use Zend_Translate instead.');
 		
 		if (file_exists($file = Director::getAbsFile("$module/lang/$locale.php"))) include_once($file);
 	}
 
 	/**
-	 * Includes all available language files for a certain defined locale
+	 * Includes all available language files for a certain defined locale.
+	 * If the locale is a fully qualified locale (e.g. "en_US" rather than "en"),
+	 * will load the base locale file as well (if available).
 	 * 
 	 * @param string $locale All resources from any module in locale $locale will be loaded
-	 * @param boolean $load_plugins		If true (default), load extra translations from registered plugins
-	 * @param boolean $force_load		If true (not default), we force the inclusion. Generally this should be off
-	 * 									for performance, but enabling this is useful for interfaces like
-	 * 									CustomTranslationAdmin which need to load more than the usual locales,
-	 * 									and may need to reload them. 
 	 */
-	static function include_by_locale($locale, $load_plugins = true, $force_load = false) {
-		if(!self::validate_locale($locale)) throw new InvalidArgumentException(sprintf('Invalid locale "%s"', $locale));
+	static function include_by_locale($locale) {
+		$lang = i18n::get_lang_from_locale($locale);
 		
-		global $lang;
+		// Automatically include fallback language (if applicable)
+		// TODO Also include custom Zend_Translate routing languages
+		$selectedLocales = array_unique(array($lang, $locale));
 
-		$base = Director::baseFolder();
-		$topLevel = scandir($base);
+		// Loop in reverse order, meaning the translator with the highest priority goes first
+		$translators = array_reverse(self::get_translators(), true);
+		foreach($translators as $priority => $translators) {
+			foreach($translators as $name => $translator) {
+				$adapter = $translator->getAdapter();
+				$modules = SS_ClassLoader::instance()->getManifest()->getModules();
 
-		foreach($topLevel as $module) {
-			// $topLevel is the website root, some servers are configured not to allow excess website root's parent level
-			// and we don't need to check website root's parent level and website root level for its lang folder, so
-			// we skip these 2 levels checking.
-			if($module[0] == '.') continue;
+				// Load translations from modules
+				foreach($modules as $module) {
+					foreach($selectedLocales as $selectedLocale) {
+						$filename = $adapter->getFilenameForLocale($selectedLocale);
+						$filepath = "{$module}/lang/" . $filename;
+						if($filename && !file_exists($filepath)) continue;
+						$adapter->addTranslation(
+							array('content' => $filepath, 'locale' => $selectedLocale)
+						);
+					}
+				}
 
-			if (
-				is_dir("$base/$module")
-				&& file_exists("$base/$module/_config.php") 
-			  && file_exists($file = "$base/$module/lang/$locale.php")
-			) {
-				if ($force_load) include($file);
-				else include_once($file);
-			}
-		}
-		
-		// Load translations from themes
-		$themesBase = $base . '/themes';
-		
-		if(is_dir($themesBase) && SSViewer::current_theme()) {
-			foreach(scandir($themesBase) as $theme) {
-				if(
-					strpos($theme, SSViewer::current_theme()) === 0
-					&& file_exists($file = "$themesBase/$theme/lang/$locale.php")
-				) {
-					if ($force_load) include($file);
-					else include_once($file);
+				// Load translations from themes
+				// TODO Replace with theme listing once implemented in TemplateManifest
+				$themesBase = Director::baseFolder() . '/themes';
+				if(is_dir($themesBase)) {
+					foreach(scandir($themesBase) as $theme) {
+						if(
+							strpos($theme, SSViewer::current_theme()) === 0
+							&& file_exists("{$themesBase}/{$theme}/lang/")
+						) {
+							foreach($selectedLocales as $selectedLocale) {
+								$filename = $adapter->getFilenameForLocale($selectedLocale);
+								$filepath = "{$themesBase}/{$theme}/lang/" . $filename;
+								if($filename && !file_exists($filepath)) continue;
+								$adapter->addTranslation(
+									array('content' => $filepath, 'locale' => $selectedLocale)
+								);
+							}
+						}
+					}
 				}
 			}
 		}
-
-		// Load any translations from registered plugins
-		if ($load_plugins) self::plugins_load($locale);
-		
-		// Make sure this is only done once. We don't want to attempt it hundreds of times for missing locals
-		if(!isset($lang[$locale])) $lang[$locale] = array();
 	}
 
 	/**
@@ -1849,113 +1940,18 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 */
 	static function include_by_class($class) {
 		$module = self::get_owner_module($class);
-
-		if(!$module) user_error("i18n::include_by_class: Class {$class} not found", E_USER_WARNING);
-		$locale = self::get_locale();
 		
-		if (file_exists($file = Director::getAbsFile("$module/lang/". self::get_locale() . '.php'))) {
-			include($file);
-		} else if (self::get_locale() != self::$default_locale) {
-		        $old = self::get_locale();
-			self::set_locale(self::$default_locale);
-			self::include_by_class($class);
-			self::set_locale($old);
-
-		} else if(file_exists(Director::getAbsFile("$module/lang"))) {
-			user_error("i18n::include_by_class: Locale file $file should exist", E_USER_WARNING);
-		}
-
-		// If the language file wasn't included for this class, include an empty array to prevent
-		// this method from being called again
-		global $lang;
-		if(!isset($lang[$locale][$class])) $lang[$locale][$class] = array();
-		
-	}
-	
-	//-----------------------------------------------------------------------------------------------//
-
-	/**
-	 * This variable holds translation plugins that are invoked on a call to _t. It is a two dimensional array,
-	 * priority the first dimension and name the second, mapping to the callback.
-	 * Translations from lower priority plugins are used first, and callback is a callback for call_user_func_array.
-	 *
-	 * Callback functions are passed one parameter:
-	 * - locale string
-	 * The callback function should return an array that can be merged with $lang[$locale], overriding values read
-	 * from the language file.
-	 *
-	 * @var array
-	 */
-	private static $plugins = array();
-
-	/**
-	 * Register a named translation plug-in function.
-	 * Plug-ins are assumed to be registered before any call to _t. If registered after a call to _t
-	 * for a given local, it will not be called.
-	 * @static
-	 * @throws Exception
-	 * @param  $name		String		A unique name for the translation plug-in. If the plug-in is already registered,
-	 * 									it is replaced, including if its a different priority.
-	 * @param  $callback				A callback function as given to call_user_func_array.
-	 * @param int $priority				An integer priority, default 10.
-	 * @return void
-	 */
-	static function register_plugin($name, $callback, $priority = 10) {
-		// Validate
-		if (!is_int($priority)) throw new Exception("register_plugin expects an int priority");
-
-		// Ensure it's not there. If it is, we're replacing it. It may exist in a different priority.
-		self::unregister_plugin($name);
-
-		// Add it.
-		self::$plugins[$priority][$name] = $callback;
-	}
-
-	/**
-	 * Unregister a plugin by name.
-	 * @static
-	 * @param  $name	String		Name of previously registered plugin
-	 * @return Boolean				Returns true if remove, false if not.
-	 */
-	static function unregister_plugin($name) {
-		foreach (self::$plugins as $priority => $plugins) {
-			if (isset($plugins[$name])) unset(self::$plugins[$priority][$name]);
-		}
-	}
-
-	/**
-	 * Load any translations from registered plugins. Merges them directly into $lang.
-	 * @static
-	 * @param  $local
-	 * @param  $value
-	 * @return void
-	 */
-	static function plugins_load($locale) {
-		// sort the plugins by lowest priority (highest value) first, as each one replaces translations of the provider
-		// before it.
-		krsort(self::$plugins);
-		foreach (self::$plugins as $priority => $plugins) {
-			foreach ($plugins as $name => $callback) {
-				self::merge_locale_data($locale, call_user_func_array($callback, array($locale)));
-			}
-		}
-	}
-
-	/**
-	 * Merge an extra of language translations into $lang[$locale]. We'd use array_merge_recursive, except
-	 * it doesn't work for translations that specify priorities and comments, because they are indexed by number.
-	 * @static
-	 * @param $locale String		The locale we are merging into
-	 * @param $extra Array			An array of [locale][class][entity]=> translation, keyed on entity, that are to be
-	 * 								merged for this locale.
-	 * @return void
-	 */
-	static function merge_locale_data($locale, $extra) {
-		global $lang;
-		if (!$extra || count($extra) == 0 || !isset($extra[$locale])) return;
-		foreach ($extra[$locale] as $class => $entities) {
-			foreach ($entities as $entity => $translation) {
-				$lang[$locale][$class][$entity] = $translation;
+		$translators = array_reverse(self::get_translators(), true);
+		foreach($translators as $priority => $translators) {
+			foreach($translators as $name => $translator) {
+				$adapter = $translator->getAdapter();
+				$filename = $adapter->getFilenameForLocale(self::get_locale());
+				$filepath = "{$module}/lang/" . $filename;
+				if($filename && !file_exists($filepath)) continue;
+				$adapter->addTranslation(array(
+					'content' => $filepath,
+					'locale' => self::get_locale()
+				));
 			}
 		}
 	}
@@ -1966,6 +1962,5 @@ class i18n extends Object implements TemplateGlobalProvider {
 			'get_locale',
 		);
 	}
+	
 }
-
-
