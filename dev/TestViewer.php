@@ -145,7 +145,7 @@ class TestViewer extends Controller {
 	 * Render the given token as HTML
 	 */
 	function renderToken($token) {
-		$tokenContent = htmlentities(is_array($token) ? $token[1] : $token);
+		$tokenContent = htmlentities(is_array($token) ? $token[1] : $token, ENT_COMPAT, 'UTF-8');
 		$tokenName = is_array($token) ? token_name($token[0]) : 'T_PUNCTUATION';
 
 		switch($tokenName) {

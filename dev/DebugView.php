@@ -73,7 +73,7 @@ class DebugView extends Object {
 	 * Render HTML header for development views
 	 */
 	public function writeHeader() {
-		echo '<!DOCTYPE html><html><head><title>' . htmlentities($_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI']) . '</title>';
+		echo '<!DOCTYPE html><html><head><title>' . htmlentities($_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'], ENT_COMPAT, 'UTF-8') . '</title>';
 		echo '<style type="text/css">';
 		echo 'body { background-color:#eee; margin:0; padding:0; font-family:Helvetica,Arial,sans-serif; }';
 		echo '.info { border-bottom:1px dotted #333; background-color:#ccdef3; margin:0; padding:6px 12px; }';
@@ -122,7 +122,7 @@ class DebugView extends Object {
 	 */
 	public function writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext) {
 		$errorType = self::$error_types[$errno];
-		$httpRequestEnt = htmlentities($httpRequest);
+		$httpRequestEnt = htmlentities($httpRequest, ENT_COMPAT, 'UTF-8');
 		echo '<div class="info ' . $errorType['class'] . '">';
 		echo "<h1>[" . $errorType['title'] . '] ' . strip_tags($errstr) . "</h1>";
 		echo "<h3>$httpRequestEnt</h3>";
@@ -138,7 +138,7 @@ class DebugView extends Object {
 		echo '<div class="trace"><h3>Source</h3>';
 		echo '<pre>';
 		foreach($lines as $offset => $line) {
-			$line = htmlentities($line);
+			$line = htmlentities($line, ENT_COMPAT, 'UTF-8');
 			if ($offset == $errline) {
 				echo "<span>$offset</span> <span class=\"error\">$line</span>";
 			} else {

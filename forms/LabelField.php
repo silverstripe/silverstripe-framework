@@ -42,7 +42,7 @@ class LabelField extends DatalessField {
 		return $this->createTag(
 			'label',
 			$attributes,
-			($this->getAllowHTML() ? $this->title : htmlentities($this->title))
+			($this->getAllowHTML() ? $this->title : htmlentities($this->title, ENT_COMPAT, 'UTF-8'))
 		);
 	}
 }

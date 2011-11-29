@@ -141,7 +141,7 @@ class Debug {
 			$val = '(bool) ' . $val;
 		} else {
 			if(!Director::is_cli() && !Director::is_ajax()) {
-				$val = "<pre style=\"font-family: Courier new\">" . htmlentities($val) . "</pre>\n";
+				$val = "<pre style=\"font-family: Courier new\">" . htmlentities($val, ENT_COMPAT, 'UTF-8') . "</pre>\n";
 			}
 		}
 
@@ -423,7 +423,7 @@ class Debug {
 		echo '<pre>';
 		$offset++;
 		foreach($lines as $line) {
-			$line = htmlentities($line);
+			$line = htmlentities($line, ENT_COMPAT, 'UTF-8');
 			if ($offset == $errline) {
 				echo "<span>$offset</span> <span class=\"error\">$line</span>";
 			} else {
