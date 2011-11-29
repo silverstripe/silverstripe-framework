@@ -406,7 +406,7 @@ class SSViewer {
 			echo "<h2>Template: $cacheFile</h2>";
 			echo "<pre>";
 			foreach($lines as $num => $line) {
-				echo str_pad($num+1,5) . htmlentities($line);
+				echo str_pad($num+1,5) . htmlentities($line, ENT_COMPAT, 'UTF-8');
 			}
 			echo "</pre>";
 		}
@@ -685,7 +685,7 @@ class SSViewer_FromString extends SSViewer {
 			echo "<h2>Template: $tmpFile</h2>";
 			echo "<pre>";
 			foreach($lines as $num => $line) {
-				echo str_pad($num+1,5) . htmlentities($line);
+				echo str_pad($num+1,5) . htmlentities($line, ENT_COMPAT, 'UTF-8');
 			}
 			echo "</pre>";
 		}

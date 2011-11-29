@@ -178,7 +178,7 @@ class CodeViewer extends Controller {
 		$comment = preg_replace('/^\/\*/','',$token[1]);
 		$comment = preg_replace('/\*\/$/','',$comment);
 		$comment = preg_replace('/(^|\n)[\t ]*\* */m',"\n",$comment);
-		$comment = htmlentities($comment);
+		$comment = htmlentities($comment, ENT_COMPAT, 'UTF-8');
 		$comment = str_replace("\n\n", "</p><p>", $comment);
 		return "<p>$comment</p>";
 	}
@@ -197,7 +197,7 @@ class CodeViewer extends Controller {
 			}
 		}
 		
-		$parsed['pretty'] = "<p>" . str_replace("\n\n", "</p><p>", htmlentities($comment)). "</p>";
+		$parsed['pretty'] = "<p>" . str_replace("\n\n", "</p><p>", htmlentities($comment, ENT_COMPAT, 'UTF-8')). "</p>";
 		return $parsed;
 	}
 	
@@ -246,7 +246,7 @@ class CodeViewer extends Controller {
 	 * Render the given token as HTML
 	 */
 	function renderToken($token) {
-		$tokenContent = htmlentities(is_array($token) ? $token[1] : $token);
+		$tokenContent = htmlentities(is_array($token) ? $token[1] : $token, ENT_COMPAT, 'UTF-8');
 		$tokenName = is_array($token) ? token_name($token[0]) : 'T_PUNCTUATION';
 
 		switch($tokenName) {

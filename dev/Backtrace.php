@@ -165,9 +165,9 @@ class SS_Backtrace {
 				} else {
 					$name = self::full_func_name($item,true);
 				}
-				$result .= "<li><b>" . htmlentities($name) . "</b>\n<br />\n";
+				$result .= "<li><b>" . htmlentities($name, ENT_COMPAT, 'UTF-8') . "</b>\n<br />\n";
 				$result .= isset($item['line']) ? "Line $item[line] of " : '';
-				$result .=  isset($item['file']) ? htmlentities(basename($item['file'])) : ''; 
+				$result .=  isset($item['file']) ? htmlentities(basename($item['file']), ENT_COMPAT, 'UTF-8') : ''; 
 				$result .= "</li>\n";
 			}
 		}

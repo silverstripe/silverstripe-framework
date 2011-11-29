@@ -892,7 +892,7 @@ class MySQLDatabase extends SS_Database {
 		$fieldNames = '"' . implode('", "', $fields) . '"';
 
 	 	$SQL_keywords = Convert::raw2sql($keywords);
-		$SQL_htmlEntityKeywords = Convert::raw2sql(htmlentities($keywords));
+		$SQL_htmlEntityKeywords = Convert::raw2sql(htmlentities($keywords, ENT_COMPAT, 'UTF-8'));
 
 		return "(MATCH ($fieldNames) AGAINST ('$SQL_keywords' $boolean) + MATCH ($fieldNames) AGAINST ('$SQL_htmlEntityKeywords' $boolean))";
 	}
