@@ -423,7 +423,7 @@ class FieldList extends ArrayList {
 	 * @return FieldList
 	 */
 	function HiddenFields() {
-		$hiddenFields = new HiddenFieldSet();
+		$hiddenFields = new FieldList();
 		$dataFields = $this->dataFields();
 		
 		if($dataFields) foreach($dataFields as $field) {
