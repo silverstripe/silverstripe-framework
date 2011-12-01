@@ -293,11 +293,17 @@ html,body {
 				margin-top:-1px;
 				background:#fff;
 				padding:10px;
+				
 				form:first-child {
 					position:absolute;
 					left:-7px;
 					top:-69px;
 				}
+				h3 {
+					margin-top:2px;
+					margin-bottom:10px;
+				}
+
 				//form:nth-child(2)
 				form {
 					.Actions {
