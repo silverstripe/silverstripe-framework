@@ -282,35 +282,33 @@ html,body {
 	}
 	.west {
 		h3.cms-panel-header {
-			margin-top:39px;
+			display:none;
 		}
 		#SearchForm_holder {
-			ul.ui-tabs-nav {
-				
-			}
 			div.ui-tabs-panel {
-				border:1px solid #AAAAAA;
+				border:1px solid #aaa; //following color from the jquery smoothness theme
 				margin-top:-1px;
-				background:#fff;
-				padding:10px;
-				
-				form:first-child {
-					position:absolute;
-					left:-7px;
-					top:-69px;
-				}
+				background:#fff; //backround is kept white to follow tabs
+				padding:$grid-horizontal;
+
 				h3 {
-					margin-top:2px;
+					margin-top:16px;
 					margin-bottom:10px;
+					@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 10%))
 				}
 
-				//form:nth-child(2)
 				form {
+					input {
+						margin:0px;
+					}
+					.field {
+						border-bottom:0px;
+						margin-bottom:6px;
+					}
 					.Actions {
 						button.ss-ui-action-minor {
-							width:100px;
-							text-align:left;
-							margin-top:6px;
+							//removing the "clear search" button
+							display:none;
 						}
 					}
 				}
