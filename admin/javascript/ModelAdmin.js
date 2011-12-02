@@ -38,10 +38,10 @@
 			 * Set up an onchange function to show the applicable form and hide all others
 			 */
 			onchange: function(e) {
+				var self = this;
 				this.find('option').each(function() {
-					var $form = $('#'+this.val());
-					if(this.val() == this.val()) $form.show();
-					else $form.hide();
+					var val = $(this).attr('value');
+					$('#' + val)[(val == $(self).val()) ? 'show' : 'hide']();
 				});
 			}
 		});
