@@ -14,57 +14,22 @@ results page.
 
 ![](_images/searchresults-small.jpg)
 
-
-
-
 ## Creating the search form
 
 The Search Form functionality has been altered over time. Please use the section which applies to your SilverStripe
 version.
 
-### 2.4 and newer
-
-SilverStripe 2.4 does not come bundled with the search engine enabled. To enable the search engine you need to include
+SilverStripe does not come bundled with the search engine enabled. To enable the search engine you need to include
 the following code in your mysite/_config.php file
 
 	:::php
 	FulltextSearchable::enable();
 
-
 After including that in your _config.php you will need to rebuild the database by visiting http://yoursite.com/dev/build
 in your web browser. This will add the fulltext search columns.
 
 The actual search form code is already provided in FulltextSearchable so when you add the enable line above to your
-_config you can add your form as $SearchForm.
-
-### 2.3
-
-SilverStripe 2.3 came bundled with the code as well as a MySQL Search engine. If you are using the blackcandy theme you
-should have everything you need already to have a search. If you are using the tutorial theme then you can simply skip
-down to 'Adding the search form' as the PHP code is already provided in Page.php. If it is not then you can follow the
-instructions below as well.
-### 2.2
-
-If you are using SilverStripe 2.2 or earlier then you need to define your own code. The first step in implementing
-search on your site is to create a form for the user to type their query. Create a function named *SearchForm* on the
-*Page_Controller* class (/mysite/code/Page.php).
-
-	:::php
-	class Page_Controller extends ContentController {
-		function SearchForm() {
-			$searchText = isset($this->Query) ? $this->Query : 'Search';
-			
-			$fields = new FieldList(
-				new TextField("Search", "", $searchText)
-			);
-	
-			$actions = new FieldList(
-				new FormAction('results', 'Go')
-			);
-			
-			return new SearchForm($this, "SearchForm", $fields, $actions);
-		}
-	}
+`_config.php` you can add your form as `$SearchForm`.
 
 ### Custom CSS code
 
