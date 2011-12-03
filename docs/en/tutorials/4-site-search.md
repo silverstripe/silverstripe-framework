@@ -16,17 +16,13 @@ results page.
 
 ## Creating the search form
 
-The Search Form functionality has been altered over time. Please use the section which applies to your SilverStripe
-version.
-
-SilverStripe does not come bundled with the search engine enabled. To enable the search engine you need to include
-the following code in your mysite/_config.php file
+To enable the search engine you need to include the following code in your `mysite/_config.php` file. 
+This will enable fulltext search on page content as well as names of all files in the `/assets` folder.
 
 	:::php
 	FulltextSearchable::enable();
 
-After including that in your _config.php you will need to rebuild the database by visiting http://yoursite.com/dev/build
-in your web browser. This will add the fulltext search columns.
+After including that in your `_config.php` you will need to rebuild the database by visiting `http://yoursite.com/dev/build` in your web browser. This will add the fulltext search columns.
 
 The actual search form code is already provided in FulltextSearchable so when you add the enable line above to your
 `_config.php` you can add your form as `$SearchForm`.
