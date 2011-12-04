@@ -55,12 +55,6 @@ if(isset($_SERVER['argv'][2])) {
  */
 require_once("core/Core.php");
 
-if(function_exists('mb_http_output')) {
-	mb_http_output('UTF-8');
-	mb_internal_encoding('UTF-8');
-	mb_regex_encoding('UTF-8');
-}
-
 global $databaseConfig;
 
 // We don't have a session in cli-script, but this prevents errors
