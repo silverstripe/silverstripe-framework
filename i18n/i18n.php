@@ -1597,46 +1597,35 @@ class i18n extends Object implements TemplateGlobalProvider {
 	/**
 	 * Searches the root-directory for module-directories
 	 * (identified by having a _config.php on their first directory-level).
-	 * Returns all found locales.
+	 * Finds locales by filename convention ("<locale>.<extension>", e.g. "de_AT.yml").
 	 * 
 	 * @return array
 	 */
 	static function get_existing_translations() {
-		$localeWithTitles = array();
+		$locales = array();
 		
-		foreach(self::get_translators() as $priority => $translators) {
-			foreach($translators as $name => $translator) {
-				$adapter = $translator->getAdapter();
-				// TODO Inspect themes
-				$modules = SS_ClassLoader::instance()->getManifest()->getModules();
-				foreach($modules as $module) {
-					if(!file_exists("{$module}/lang/")) continue;
-					$adapter->addTranslation(array(
-						'content' => "{$module}/lang/",
-						'scan' => Zend_Translate_Adapter::LOCALE_FILENAME,
-						// TODO Support custom translators with their own file extensions
-						'ignore' => array(
-							'.',
-							'_manifest_exclude',
-							'regex' => '/^.*\.(?!yml).*$/i'
-						)
-					));
-				}
-				$locales = $adapter->getList();
-				foreach($locales as $locale) {
+		// TODO Inspect themes
+		$modules = SS_ClassLoader::instance()->getManifest()->getModules();
+		
+		foreach($modules as $module) {
+			if(!file_exists("{$module}/lang/")) continue;
+			
+			$moduleLocales = scandir("{$module}/lang/");
+			foreach($moduleLocales as $moduleLocale) {
+				preg_match('/(.*)\.[\w\d]+$/',$moduleLocale, $matches);
+				if($locale = @$matches[1]) {
 					// Normalize locale to include likely region tag.
 					// TODO Replace with CLDR list of actually available languages/regions
-					$locale = self::get_locale_from_lang($locale);
-
-					$localeWithTitles[$locale] = (@self::$all_locales[$locale]) ? self::$all_locales[$locale] : $locale;
+					$locale = str_replace('-', '_', self::get_locale_from_lang($locale));
+					$locales[$locale] = (@self::$all_locales[$locale]) ? self::$all_locales[$locale] : $locale;
 				}
 			}
 		}
 
 		// sort by title (not locale)
-		asort($localeWithTitles);
+		asort($locales);
 		
-		return $localeWithTitles;
+		return $locales;
 	}
 	
 	/**
