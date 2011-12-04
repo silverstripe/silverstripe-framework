@@ -1460,16 +1460,19 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @return string The translated string, according to the currently set locale {@link i18n::set_locale()}
 	 */
 	static function _t($entity, $string = "", $priority = 40, $context = "") {
+		// get current locale (either default or user preference)
+		$locale = i18n::get_locale();
+		$lang = i18n::get_lang_from_locale($locale);
+		
 		foreach(self::get_translators() as $priority => $translators) {
 			foreach($translators as $name => $translator) {
 				$adapter = $translator->getAdapter();
-
-				// get current locale (either default or user preference)
-				$locale = i18n::get_locale();
 				$adapter->setLocale($locale);
 
 				// if language table isn't loaded for this locale, get it for each of the modules
-				if(!$adapter->isAvailable($locale)) i18n::include_by_locale($locale);
+				if(!$adapter->isAvailable($locale) && !$adapter->isAvailable($lang)) {
+					i18n::include_by_locale($locale);
+				}
 
 				$translation = $adapter->translate($entity, $locale);
 
@@ -1926,6 +1929,18 @@ class i18n extends Object implements TemplateGlobalProvider {
 							}
 						}
 					}
+				}
+				
+				// Add empty translations to ensure the locales are "registered" with isAvailable(),
+				// and the next invocation of include_by_locale() doesn't cause a new reparse.
+				foreach($selectedLocales as $selectedLocale) {
+					$adapter->addTranslation(
+						array(
+							'content' => array('_' => '_'), 
+							'locale' => $selectedLocale, 
+							'usetranslateadapter' => true
+						)
+					);
 				}
 			}
 		}
