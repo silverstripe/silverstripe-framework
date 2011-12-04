@@ -19,21 +19,23 @@ class i18nSSLegacyAdapter extends Zend_Translate_Adapter implements i18nTranslat
 		parent::__construct($options);
 	}
 	
-	protected function _loadTranslationData($filename, $locale, array $options = array()) {   
+	protected function _loadTranslationData($data, $locale, array $options = array()) {   
 		$options = array_merge($this->_options, $options);
 
 		if ($options['clear']  ||  !isset($this->_translate[$locale])) {
 			$this->_translate[$locale] = array();
 		}
 
-		$this->_filename = $filename;
+		if(is_array($data)) return array($locale => $data);
+
+		$this->_filename = $data;
 		
 		// Ignore files with other extensions
 		if(pathinfo($this->_filename, PATHINFO_EXTENSION) != 'php') return;
 		
 		if (!is_readable($this->_filename)) {
 			require_once 'Zend/Translate/Exception.php';
-			throw new Zend_Translate_Exception('Error opening translation file \'' . $filename . '\'.');
+			throw new Zend_Translate_Exception('Error opening translation file \'' . $this->_filename . '\'.');
 		}
 
 		global $lang;
