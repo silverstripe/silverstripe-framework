@@ -1501,13 +1501,6 @@ class i18n extends Object implements TemplateGlobalProvider {
 					'disableNotices' => true,
 				))
 			);
-			self::$translators[$defaultPriority-1] = array(
-				'legacy' => new Zend_Translate(array(
-					'adapter' => 'i18nSSLegacyAdapter',
-					'locale' => self::$default_locale,
-					'disableNotices' => true,
-				))
-			);
 			
 			i18n::include_by_locale('en_US');
 		}
