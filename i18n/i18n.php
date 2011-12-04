@@ -1467,7 +1467,6 @@ class i18n extends Object implements TemplateGlobalProvider {
 		foreach(self::get_translators() as $priority => $translators) {
 			foreach($translators as $name => $translator) {
 				$adapter = $translator->getAdapter();
-				$adapter->setLocale($locale);
 
 				// if language table isn't loaded for this locale, get it for each of the modules
 				if(!$adapter->isAvailable($locale) && !$adapter->isAvailable($lang)) {
