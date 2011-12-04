@@ -33,3 +33,6 @@ if(!class_exists('Object')) {
 $_SERVER['REQUEST_URI'] = BASE_URL . '/dev';
 
 TestRunner::use_test_manifest();
+
+// Remove the error handler so that PHPUnit can add its own
+restore_error_handler();
