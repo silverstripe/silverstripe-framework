@@ -1490,7 +1490,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 	static function get_translators() {
 		if(!self::$translators) {
 			Zend_Translate::setCache(
-				SS_Cache::factory('i18n', 'Output', array('lifetime' => -1, 'automatic_serialization' => true))
+				SS_Cache::factory('i18n', 'Output', array('lifetime' => null, 'automatic_serialization' => true))
 			);
 			
 			$defaultPriority = 10;
