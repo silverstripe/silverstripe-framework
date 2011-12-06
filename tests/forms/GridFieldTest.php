@@ -32,19 +32,19 @@ class GridFieldTest extends SapphireTest {
 	}
 	
 	function testSetEmptyDataPresenter() {
-		$this->setExpectedException('Exception');
+		$this->setExpectedException('InvalidArgumentException');
 		$grid = new GridField('Testgrid');
 		$grid->setPresenter('');
 	}
 	
 	function testSetNonExistingDataPresenter() {
-		$this->setExpectedException('Exception');
+		$this->setExpectedException('InvalidArgumentException');
 		$grid = new GridField('Testgrid');
 		$grid->setPresenter('ifThisClassExistsIWouldBeSurprised');
 	}
 	
 	function testSetDataPresenterWithDataObject() {
-		$this->setExpectedException('Exception');
+		$this->setExpectedException('InvalidArgumentException');
 		$grid = new GridField('Testgrid');
 		$grid->setPresenter('DataObject');
 	}
@@ -64,7 +64,7 @@ class GridFieldTest extends SapphireTest {
 	 * 
 	 */
 	function testFieldHolderWithoutDataSource() {
-		$this->setExpectedException('Exception');
+		$this->setExpectedException('InvalidArgumentException');
 		$grid = new GridField('Testgrid');
 		$this->assertNotNull($grid->FieldHolder());
 	}

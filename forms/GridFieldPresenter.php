@@ -42,6 +42,7 @@
  * @see GridField
  * @see GridFieldPaginator
  * @package sapphire
+ * @subpackage fields-relational
  */
 class GridFieldPresenter extends ViewableData {
 	
@@ -181,7 +182,7 @@ class GridFieldPresenter extends ViewableData {
 	 */
 	public function Headers() {
 		if(!$this->getList()) {
-			throw new Exception(sprintf(
+			throw new InvalidArgumentException(sprintf(
 				'%s needs an data source to be able to render the form', get_class($this->getGridField())
 			));
 		}
