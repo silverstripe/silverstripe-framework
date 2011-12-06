@@ -175,6 +175,52 @@ class GridField extends FormField {
 	}
 	
 	/**
+	 *
+	 * @return GridState 
+	 * @todo Get the gridstate change in a nicer way than inspecting the request
+	 */
+	public function getState() {
+		
+		if(!$this->state) {
+			$this->state = new GridState($this->getName().'_GridState');
+		}
+
+		// Fetch and insert REQUEST GridStateChanges into the GridState
+		$request = Controller::curr()->getRequest();
+		$stateChangeName = $this->getName().'_GridStateChange';
+		
+		// First check GET params
+		if($request->getVar($stateChangeName)){
+			$changes = json_decode($request->getVar($stateChangeName));
+			foreach($changes as $key => $value ) {
+				$this->state->$key = $value;
+			}
+		}
+		
+		// Then check POST vars to override
+		if($request->postVar($stateChangeName)){
+			$changes = json_decode($request->postVar($stateChangeName));
+			foreach($changes as $key => $value ) {
+				$this->state->$key = $value;
+			}
+		}
+		return $this->state;
+	}
+	
+	/**
+	 * Set the default state of the grid, will be overridden by gridstatechange
+	 *
+	 * @return void 
+	 */
+	public function setDefaultState($key, $value) {
+		if(!$this->state) {
+			$this->state = new GridState($this->getName().'_GridState');
+		}
+
+		$this->state->$key = $value;
+	}
+
+	/**
 	 * @return string - html for the form 
 	 */
 	function FieldHolder() {

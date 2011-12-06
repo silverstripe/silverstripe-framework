@@ -25,6 +25,12 @@ class GridFieldFunctionalTest extends FunctionalTest {
 		$response = $this->get("GridFieldFunctionalTest_Controller/");
 		$this->assertContains($firstPerson->Name, $response->getBody());
 	}
+	
+	public function testGridStateInForm() {
+		$firstPerson = $this->objFromFixture('GridFieldTest_Person', 'first');
+		$response = $this->get("GridFieldFunctionalTest_Controller/");
+		$this->assertContains('<input class="hidden" type="hidden" id="testgrid_GridState" name="testgrid_GridState" value="[]" />', $response->getBody());
+	}
 }
 
 class GridFieldFunctionalTest_Controller extends Controller {

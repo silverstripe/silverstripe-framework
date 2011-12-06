@@ -79,6 +79,11 @@ class GridFieldTest extends SapphireTest {
 		$grid->setList(new DataList('GridFieldTest_Person'));
 		$this->assertNotNull($grid->FieldHolder());
 	}
+	
+	function testGetState() {
+		$grid = new GridField('Testgrid');
+		$this->assertTrue($grid->getState() instanceof GridState, 'getState() should return a GridState');
+	}
 }
 
 class GridFieldTest_Person extends Dataobject implements TestOnly {

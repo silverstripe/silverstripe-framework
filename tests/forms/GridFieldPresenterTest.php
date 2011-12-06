@@ -43,19 +43,14 @@ class GridFieldPresenterTest extends SapphireTest {
 	
 	public function testSorting(){
 		$presenter = new GridFieldPresenter();
-		$GridField = new GridField('testgrid', 'testgrid', new DataList('GridFieldTest_Person'));
-		$presenter->setGridField($GridField);
-		$presenter->sort('Name','desc');
-		$data = $presenter->Items()->map('ID','Name');
-		$this->assertEquals(array(
-			$this->idFromFixture('GridFieldTest_Person', 'second') => 'Second Person',
-			$this->idFromFixture('GridFieldTest_Person', 'first') => 'First Person'
-		), $data);
-		$presenter->sort('Name','asc');
-		$data = $presenter->Items()->map('ID','Name');
-		$this->assertEquals(array(
-			$this->idFromFixture('GridFieldTest_Person', 'first') => 'First Person',
-			$this->idFromFixture('GridFieldTest_Person', 'second') => 'Second Person'
-		), $data);
+		$GridField = new GridField('testgrid', 'testgrid', new DataList('GridFieldTest_Person'), null, $presenter);
+		
+		$GridField->getState()->Sort = array('Name' => 'desc');
+		$this->assertEquals('Second Person', $presenter->Items()->first()->Name);
+		
+		// Reverse the sort
+		$GridField->getState()->Sort = array('Name' => 'asc');
+		$this->assertEquals('First Person', $presenter->Items()->first()->Name);
 	}
+	
 }

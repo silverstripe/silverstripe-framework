@@ -17,27 +17,33 @@ class GridStateTest extends SapphireTest {
 	}
 	
 	public function testFromString() {
-		$gridState = new GridState('{"Bananas":true,"Page":2,"Title":"Tower"}');
+		$gridState = new GridState('GridState', '{"Bananas":true,"Page":2,"Title":"Tower"}');
 		$this->assertEquals('{"Bananas":true,"Page":2,"Title":"Tower"}',$gridState->__toString());
 	}
 	
 	public function testIsset() {
-		$gridState = new GridState('{"Bananas":true,"Page":2,"Title":"Tower"}');
+		$gridState = new GridState('GridState','{"Bananas":true,"Page":2,"Title":"Tower"}');
 		$this->assertTrue(isset($gridState->Bananas));
 		$this->assertFalse(isset($gridState->Monkey));
 	}
 	
 	public function testUnset() {
-		$gridState = new GridState('{"Bananas":true,"Page":2,"Title":"Tower"}');
+		$gridState = new GridState('GridState','{"Bananas":true,"Page":2,"Title":"Tower"}');
 		unset($gridState->Bananas);
 		$this->assertFalse(isset($gridState->Bananas));
 		$this->assertEquals('{"Page":2,"Title":"Tower"}',$gridState->__toString());
 	}
 	
 	public function testToFormField() {
-		$gridState = new GridState('{"Bananas":true,"Page":2,"Title":"Tower"}');
+		$gridState = new GridState('GridState','{"Bananas":true,"Page":2,"Title":"Tower"}');
 		$this->assertEquals('<input class="hidden" type="hidden" id="Title" name="Title" value="'.
 		'{&quot;Bananas&quot;:true,&quot;Page&quot;:2,&quot;Title&quot;:&quot;Tower&quot;}" />',
 		$gridState->Field());
+	}
+	
+	public function testSetArray() {
+		$gridState = new GridState('GridState');
+		$gridState->Sorting = array('Name' => 'DESC');
+		$this->assertEquals('{"Sorting":{"Name":"DESC"}}',$gridState->__toString());
 	}
 }

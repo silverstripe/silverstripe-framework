@@ -2,28 +2,28 @@
 
 <% if Pages %>
 <div class="ss-gridfield-pagination">
-	<% if FirstLink %> 
-	<button class="ss-gridfield-pagination-button" type="submit" name="page" value="$FirstLink">First</button>
+	<% if FirstPageState %> 
+	<button class="ss-gridfield-pagination-button" type="submit" name="$FirstPageState.attrName" value="$FirstPageState.attrValue">First</button>
 	<% end_if %> 
 	
-	<% if PreviousLink %>
-	<button class="ss-gridfield-pagination-button" type="submit" name="page" value="$PreviousLink">Previous page</button>
+	<% if PreviousPageState %>
+	<button class="ss-gridfield-pagination-button" type="submit" name="$PreviousPageState.attrName" value="$PreviousPageState.attrValue">Previous page</button>
 	<% end_if %> 
 	
 	<% control Pages %>
 		<% if Current %>
 			$PageNumber
 		<% else %>
-		<button class="ss-gridfield-pagination-button" type="submit" name="page" value="$PageNumber">$PageNumber</button>
+		<button class="ss-gridfield-pagination-button" type="submit" name="$PageState.attrName" value="$PageState.attrValue">$PageNumber</button>
 		<% end_if %>
 	<% end_control%>
 	
-	<% if NextLink %>
-	<button class="ss-gridfield-pagination-button" type="submit" name="page" value="$NextLink">Next Page</button>
+	<% if NextPageState %>
+	<button class="ss-gridfield-pagination-button" type="submit" name="$NextPageState.attrName" value="$NextPageState.attrValue">Next Page</button>
 	<% end_if %> 
 	
-	<% if LastLink %>
-	<button class="ss-gridfield-pagination-button" type="submit" name="page" value="$LastLink">Last</button>
+	<% if LastPageState %>
+	<button class="ss-gridfield-pagination-button" type="submit" name="$LastPageState.attrName" value="$LastPageState.attrValue">Last</button>
 	<% end_if %> 
 </div>
 <% end_if %> 

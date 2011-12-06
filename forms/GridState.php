@@ -17,17 +17,17 @@ class GridState extends HiddenField {
 	
 	/**
 	 *
-	 * @param string $data - json encoded string
 	 * @param string $name
+	 * @param string $data - json encoded string
 	 * @param string $title 
 	 */
-	public function __construct($data=null, $name=null, $title=null) {
+	public function __construct($name = 'GridState', $data=null) {
 		if(is_string($data)){
 			foreach(json_decode($data) as $name => $value) {
 				$this->box[$name] = $value;
 			}
 		}
-		parent::__construct($name, $title);
+		parent::__construct($name);
 	}
 	
 	/**
@@ -45,6 +45,9 @@ class GridState extends HiddenField {
 	 * @return mixed
 	 */
 	public function __get($name) {
+		if(!array_key_exists($name, $this->box)){
+			return null;
+		}
 		return $this->box[$name];
 	}
 	
@@ -76,5 +79,9 @@ class GridState extends HiddenField {
 	
 	public function attrValue() {
 		return Convert::raw2att($this->__toString());
+	}
+	
+	public function name() {
+		return parent::Name();
 	}
 }

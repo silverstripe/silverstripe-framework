@@ -29,13 +29,20 @@ class GridFieldPaginator extends ViewableData {
 	
 	/**
 	 *
+	 * @var GridField
+	 */
+	protected $gridField = null;
+	
+	/**
+	 *
 	 * @param int $totalNumberOfPages
 	 * @param int $currentPage 
 	 */
-	public function __construct($totalNumberOfPages,$currentPage = 1) {
+	public function __construct(GridField $gridField, $totalNumberOfPages, $currentPage ) {
 		Requirements::javascript('sapphire/javascript/GridFieldPaginator.js');
 		$this->totalNumberOfPages = $totalNumberOfPages;
 		$this->currentPage = $currentPage;
+		$this->gridField = $gridField;
 	}
 	
 	/**
@@ -52,11 +59,13 @@ class GridFieldPaginator extends ViewableData {
 	 *
 	 * @return string 
 	 */
-	public function FirstLink() {
+	public function FirstPageState() {
 		if($this->haveNoPages()) {
 			return false;
 		}
-		return 1;
+		$state = new GridState($this->gridField->getName().'_GridStateChange');
+		$state->Page = 1;
+		return $state;
 	}
 	
 	/**
@@ -64,7 +73,7 @@ class GridFieldPaginator extends ViewableData {
 	 *
 	 * @return string 
 	 */
-	public function PreviousLink() {
+	public function PreviousPageState() {
 		if($this->isFirstPage() || $this->haveNoPages()) {
 			return false;
 		}
@@ -73,7 +82,9 @@ class GridFieldPaginator extends ViewableData {
 			return $this->LastLink();
 		}
 		
-		return ($this->currentPage-1);
+		$state = new GridState($this->gridField->getName().'_GridStateChange');
+		$state->Page = ($this->currentPage-1);
+		return $state;
 	}
 	
 	/**
@@ -90,6 +101,9 @@ class GridFieldPaginator extends ViewableData {
 		$list = new ArrayList();
 		for($idx=1;$idx<=$this->totalNumberOfPages;$idx++) {
 			$data = new ArrayData(array());
+			$state = new GridState($this->gridField->getName().'_GridStateChange');
+			$state->Page = $idx;
+			$data->setField('PageState',$state);
 			$data->setField('PageNumber',$idx);
 			if($idx == $this->currentPage ) {
 				$data->setField('Current',true);
@@ -97,7 +111,6 @@ class GridFieldPaginator extends ViewableData {
 				$data->setField('Current',false);
 			}
 			
-			$data->setField('Link',$idx);
 			$list->push($data);	
 		}
 		return $list;
@@ -108,7 +121,8 @@ class GridFieldPaginator extends ViewableData {
 	 *
 	 * @return string 
 	 */
-	public function NextLink() {
+	public function NextPageState() {
+		
 		if($this->isLastPage() || $this->haveNoPages() ) {
 			return false;
 		}
@@ -116,7 +130,9 @@ class GridFieldPaginator extends ViewableData {
 		if($this->currentPage<1) {
 			return $this->FirstLink();
 		}
-		return ($this->currentPage+1);
+		$state = new GridState($this->gridField->getName().'_GridStateChange');
+		$state->Page = ($this->currentPage+1);
+		return $state;
 	}
 	
 	/**
@@ -124,11 +140,13 @@ class GridFieldPaginator extends ViewableData {
 	 *
 	 * @return string 
 	 */
-	public function LastLink() {
+	public function LastPageState() {
 		if($this->haveNoPages()) {
 			return false;
 		}
-		return ($this->totalNumberOfPages);
+		$state = new GridState($this->gridField->getName().'_GridStateChange');
+		$state->Page = $this->totalNumberOfPages;
+		return $state;
 	}
 	
 	/**
@@ -188,11 +206,16 @@ class GridFieldPaginator_Extension extends Extension {
 	protected $currentPage = 1;
 	
 	/**
+	 * @var GridField
+	 */
+	protected $gridField = null;
+	
+	/**
 	 *
 	 * @return string 
 	 */
 	public function Footer() {
-		return new GridFieldPaginator($this->totalNumberOfPages, $this->currentPage);
+		return new GridFieldPaginator($this->gridField, $this->totalNumberOfPages, $this->currentPage);
 	}
 	
 	/**
@@ -217,12 +240,16 @@ class GridFieldPaginator_Extension extends Extension {
 	 * @return bool - if the pagination was activated
 	 * @see GridFieldPresenter::Items()
 	 */
-	public function filterList(SS_List $list, $parameters){
+	public function filterList(GridField $gridField){
+		$this->gridField = $gridField;
+		
+		$list = $this->gridField->getList();
+		
 		if(!$this->canUsePagination($list)) {
 			return false;
 		}
 		
-		$currentPage = $parameters->Request->requestVar('page');
+		$currentPage = $gridField->getState()->Page;
 		if(!$currentPage) {
 			$currentPage = 1;
 		}

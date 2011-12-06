@@ -13,9 +13,8 @@
  * the GridField by Title. This will override the sorting on the DataList.
  * 
  * <code>
- * $presenter = new GridFieldPresenter();
- * $presenter->sort('Title', 'desc');
- * $gridField = new GridField('ExampleGrid', 'Example grid', new DataList('Page'),null, $presenter);
+ * $gridField = new GridField('ExampleGrid', 'Example grid', new DataList('Page'));
+ * $gridField->getState()->Sort = array('Title' => 'desc');
  * </code>
  * 
  * Another example is to change the template for the rendering 
@@ -115,22 +114,10 @@ class GridFieldPresenter extends ViewableData {
 	
 	/**
 	 *
-	 * @param type $extension 
+	 * @param string $extension 
 	 */
 	public static function add_extension($extension) {
 		parent::add_extension(__CLASS__, $extension);
-	}
-	
-	/**
-	 * Sort the grid by columns
-	 *
-	 * @param string $column
-	 * @param string $direction 
-	 */
-	public function sort($column, $direction = 'asc') {
-		$this->sorting[$column] = $direction;
-		
-		return $this;
 	}
 	
 	/**
@@ -139,19 +126,12 @@ class GridFieldPresenter extends ViewableData {
 	 * @return ArrayList
 	 */
 	public function Items() {
-	$items = new ArrayList();
+		$items = new ArrayList();
+		$this->setDataListSortFromState();
 		
-		if($this->sorting) {
-			$this->setSortingOnList($this->sorting);
-		}
-		//empty for now
 		$list = $this->getGridField()->getList();
 		
-		$parameters = new stdClass();
-		$parameters->Controller = Controller::curr();
-		$parameters->Request = Controller::curr()->getRequest();
-		
-		$this->extend('filterList', $list, $parameters);
+		$this->extend('filterList', $this->getGridField());
 	
 		if($list) {
 			$numberOfRows = $list->count();
@@ -224,8 +204,13 @@ class GridFieldPresenter extends ViewableData {
 	 *
 	 * @param array $sortColumns 
 	 */
-	protected function setSortingOnList(array $sortColumns) {
-		$resultColumns = array();
+	protected function setDataListSortFromState() {
+		
+		$sortColumns = $this->getGridField()->getState()->Sort;
+		
+		if(!$sortColumns) {
+			return;
+		}
 		
 		foreach($sortColumns as $column => $sortOrder) {
 			$resultColumns[] = sprintf("%s %s", $column ,$sortOrder);
@@ -253,6 +238,7 @@ class GridFieldPresenter extends ViewableData {
 	protected function summaryFieldsToList($summaryFields) {
 		$headers = new ArrayList();
 		
+		$sortState = $this->GridField->getState()->Sort;
 		if(is_array($summaryFields)) {
 			$counter = 0;
 			
@@ -265,9 +251,9 @@ class GridFieldPresenter extends ViewableData {
 					'SortedDirection' => 'asc'
 				);
 				
-				if(array_key_exists($name, $this->sorting)) {
+				if(is_array($sortState) && array_key_exists($name, $sortState)) {
 					$data['IsSorted'] = true;
-					$data['SortedDirection'] = $this->sorting[$name];
+					$data['SortedDirection'] = $sortState[$name];
 				}
 				
 				$result = new ArrayData($data);
@@ -293,6 +279,10 @@ class GridFieldPresenter extends ViewableData {
 	 */
 	function setFieldFormatting($formatting) {
 		$this->fieldFormatting = $formatting;
+	}
+	
+	public function GridState() {
+		return $this->GridField->getState();
 	}
 	
 	/**
