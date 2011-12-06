@@ -2,7 +2,7 @@
 /**
  * Displays a {@link SS_List} in a grid format.
  * 
- * GridFIeld is a field that takes an SS_List and displays it in an table with rows 
+ * GridField is a field that takes an SS_List and displays it in an table with rows 
  * and columns. It reminds of the old TableFields but works with SS_List types 
  * and only loads the necessary rows from the list.
  * 
@@ -31,6 +31,8 @@ class GridField extends FormField {
 	protected $list = null;
 	
 	/**
+	 * Used for setting a default GridFieldPresenter if no one is passed in at construct time.
+	 * 
 	 * @var string
 	 */
 	protected $presenterClassName = "GridFieldPresenter";
@@ -91,6 +93,8 @@ class GridField extends FormField {
 	}
 	
 	/**
+	 * Returns a dataclass that is a DataObject type that this field should look like.
+	 * 
 	 * @throws Exception
 	 * @return string
 	 */
