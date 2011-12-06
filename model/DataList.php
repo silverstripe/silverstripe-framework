@@ -114,6 +114,18 @@ class DataList extends ViewableData implements SS_List {
 	public function canSortBy($fieldName) {
 	    return $this->dataQuery()->query()->canSortBy($fieldName);
 	}
+	
+	/**
+	 *
+	 * @param string $fieldName
+	 * @return boolean
+	 */
+	public function canFilterBy($fieldName) {
+		if($t = singleton($this->dataClass)->hasDatabaseField($fieldName)){
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Add an join clause to this data list's query.
@@ -539,7 +551,8 @@ class DataList extends ViewableData implements SS_List {
 	 */
 	public function byID($id) {
 		$baseClass = ClassInfo::baseDataClass($this->dataClass);
-		return $this->where("\"$baseClass\".\"ID\" = " . (int)$id)->First();
+		$clone = clone $this;
+		return $clone->where("\"$baseClass\".\"ID\" = " . (int)$id)->First();
 	}
 	
 	/**

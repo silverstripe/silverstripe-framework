@@ -25,10 +25,24 @@ class Folder extends File {
 
 	static $default_sort = "\"Sort\"";
 	
-	function populateDefaults() {
+	/**
+	 * 
+	 */
+	public function populateDefaults() {
 		parent::populateDefaults();
 		
 		if(!$this->Name) $this->Name = _t('AssetAdmin.NEWFOLDER',"NewFolder");
+	}
+	
+	/**
+	 * @param $folderPath string Absolute or relative path to the file.
+	 *  If path is relative, its interpreted relative to the "assets/" directory.
+	 * @return Folder
+	 * @deprecated in favor of the correct name find_or_make
+	 */
+	public static function findOrMake($folderPath) {
+		Deprecation::notice('3.0', "Folder::findOrMake() is deprecated in favor of Folder::find_or_make()");
+		return self::find_or_make($folderPath);
 	}
 	
 	/**
@@ -39,7 +53,7 @@ class Folder extends File {
 	 *  If path is relative, its interpreted relative to the "assets/" directory.
 	 * @return Folder
 	 */
-	static function findOrMake($folderPath) {
+	public static function find_or_make($folderPath) {
 		// Create assets directory, if it is missing
 		if(!file_exists(ASSETS_PATH)) Filesystem::makeFolder(ASSETS_PATH);
 
