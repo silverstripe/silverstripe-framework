@@ -69,18 +69,7 @@ class Varchar extends StringField {
 	function RTF() {
 		return str_replace("\n", '\par ', $this->value);
 	}
-
-	/**
-	 * Returns the value of the string, limited to the specified number of characters
-	 * @param $limit int Character limit
-	 * @param $add string Extra string to add to the end of the limited string
-	 * @return string
-	 */
-	function LimitCharacters($limit = 20, $add = "...") {
-		$value = trim($this->value);
-		return (strlen($value) > $limit) ? substr($value, 0, $limit) . $add : $value;
-	}
-
+	
 	/**
 	 * (non-PHPdoc)
 	 * @see DBField::scaffoldFormField()

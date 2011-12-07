@@ -73,20 +73,49 @@ abstract class StringField extends DBField {
 			return parent::prepValueForDB($value);
 		}
 	}
-
+	
+	protected function doLimitCharacters($limit, $add, $html) {
+		$value = trim($this->value);
+		if ($html) {
+			$value = strip_tags($value);
+			$value = html_entity_decode($value, ENT_COMPAT, 'UTF-8');
+			$value = (mb_strlen($value) > $limit) ?
+				mb_substr($value, 0, $limit) . $add : $value;
+			// Avoid encoding all multibyte characters as HTML entities by
+			// using htmlspecialchars().
+			$value = htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
+		} else {
+			$value = (mb_strlen($value) > $limit) ?
+				mb_substr($value, 0, $limit) . $add : $value;
+		}
+		return $value;
+	}
+	
+	/**
+	 * Limit this field's content by a number of characters.
+	 * CAUTION: Does not take into account HTML tags, so it
+	 * has the potential to return malformed HTML.
+	 *
+	 * @param int $limit Number of characters to limit by
+	 * @param string $add Ellipsis to add to the end of truncated string
+	 * @return string
+	 */
+	function LimitCharacters($limit = 20, $add = "...") {
+		return $this->doLimitCharacters($limit, $add, false);
+	}
 	
 	/**
 	 * Return another DBField object with this value in lowercase.
 	 */
 	function Lower() {
-		return DBField::create(get_class($this), strtolower($this->value), $this->name);
+		return DBField::create(get_class($this), mb_strtolower($this->value), $this->name);
 	}
 
 	/**
 	 * Return another DBField object with this value in uppercase.
 	 */
 	function Upper() {
-		return DBField::create(get_class($this), strtoupper($this->value), $this->name);
+		return DBField::create(get_class($this), mb_strtoupper($this->value), $this->name);
 	}
 
 }

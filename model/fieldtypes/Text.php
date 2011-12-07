@@ -78,20 +78,6 @@ class Text extends StringField {
 	}
 	
 	/**
-	 * Limit this field's content by a number of characters.
-	 * CAUTION: Does not take into account HTML tags, so it
-	 * has the potential to return malformed HTML.
-	 *
-	 * @param int $limit Number of characters to limit by
-	 * @param string $add Ellipsis to add to the end of truncated string
-	 * @return string
-	 */
-	function LimitCharacters($limit = 20, $add = "...") {
-		$value = trim($this->value);
-		return (strlen($value) > $limit) ? substr($value, 0, $limit) . $add : $value;
-	}
-	
-	/**
 	 * Limit the number of words of the current field's
 	 * content. This is XML safe, so characters like &
 	 * are converted to &amp;
@@ -159,9 +145,10 @@ class Text extends StringField {
 			return "";
 		
 		// grab the first paragraph, or, failing that, the whole content
-		if( strpos( $data, "\n\n" ) )
-			$data = substr( $data, 0, strpos( $data, "\n\n" ) );
-			
+		$pos = strpos( $data, "\n\n" );
+		if( $pos )
+			$data = substr( $data, 0, $pos );
+		
 		$sentences = explode( '.', $data );	
 		
 		$count = count( explode( ' ', $sentences[0] ) );
@@ -241,8 +228,9 @@ class Text extends StringField {
 			if( !$data ) return "";
 		
 			// grab the first paragraph, or, failing that, the whole content
-			if( strpos( $data, "\n\n" ) )
-				$data = substr( $data, 0, strpos( $data, "\n\n" ) );
+			$pos = strpos( $data, "\n\n" );
+			if( $pos )
+				$data = substr( $data, 0, $pos );
 
 			return $data;
 		
