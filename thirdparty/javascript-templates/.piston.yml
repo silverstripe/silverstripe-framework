@@ -1,0 +1,8 @@
+--- 
+repository_url: git://github.com/blueimp/JavaScript-Templates.git
+lock: false
+repository_class: Piston::Git::Repository
+format: 1
+handler: 
+  commit: ddb6a9c25c3a1089c22af6e8a431cefced39e31c
+  branch: master

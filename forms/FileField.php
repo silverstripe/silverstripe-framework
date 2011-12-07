@@ -146,6 +146,7 @@ class FileField extends FormField {
 			// save to record
 			$record->{$this->name . 'ID'} = $file->ID;
 		}
+		return $this;
 	}
 
 	public function Value() {
@@ -168,6 +169,7 @@ class FileField extends FormField {
 	 */
 	public function setValidator($validator) {
 		$this->upload->setValidator($validator);
+		return $this;
 	}
 	
 	/**
@@ -175,6 +177,7 @@ class FileField extends FormField {
 	 */
 	public function setFolderName($folderName) {
 		$this->folderName = $folderName;
+		return $this;
 	}
 	
 	/**

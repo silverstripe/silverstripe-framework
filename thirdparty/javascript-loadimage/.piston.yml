@@ -1,0 +1,8 @@
+--- 
+repository_url: git://github.com/blueimp/JavaScript-Load-Image.git
+lock: false
+repository_class: Piston::Git::Repository
+format: 1
+handler: 
+  commit: 19c8e8cf0d4e854238c78174e593b607f04a1521
+  branch: master
