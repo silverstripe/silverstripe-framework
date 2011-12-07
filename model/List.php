@@ -82,7 +82,7 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 	/**
 	 * Returns an array of a single field value for all items in the list.
 	 *
-	 * @param  string $field
+	 * @param  string $colName
 	 * @return array
 	 */
 	public function column($colName = "ID");
