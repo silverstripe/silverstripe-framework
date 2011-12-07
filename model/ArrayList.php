@@ -8,31 +8,75 @@
 class ArrayList extends ViewableData implements SS_List {
 
 	/**
+	 * Holds the items in the list
+	 * 
 	 * @var array
 	 */
 	protected $items;
-
+	
+	
+	/**
+	 * Synonym of the constructor. Can be chained with literate methods.
+	 * ArrayList::create("SiteTree")->sort("Title") is legal, but
+	 * new ArrayList("SiteTree")->sort("Title") is not.
+	 * 
+	 * @param array $items - an initial array to fill this object with
+	 */
+	public static function create(array $items = array()) {
+		return new ArrayList($items);
+	}
+	
+	/**
+	 *
+	 * @param array $items - an initial array to fill this object with
+	 */
 	public function __construct(array $items = array()) {
 		$this->items = $items;
 		parent::__construct();
 	}
 
+	/**
+	 * Return the number of items in this list
+	 *
+	 * @return int
+	 */
 	public function count() {
 		return count($this->items);
 	}
 
+	/**
+	 * Returns true if this list has items
+	 * 
+	 * @return bool
+	 */
 	public function exists() {
 		return (bool) count($this);
 	}
 
+	/**
+	 * Returns an Iterator for this ArrayList.
+	 * This function allows you to use ArrayList in foreach loops
+	 *
+	 * @return ArrayIterator 
+	 */
 	public function getIterator() {
 		return new ArrayIterator($this->items);
 	}
 
+	/**
+	 * Return an array of the actual items that this ArrayList contains.
+	 *
+	 * @return array 
+	 */
 	public function toArray() {
 		return $this->items;
 	}
 
+	/**
+	 * Return this list as an array and every object it as an sub array as well
+	 * 
+	 * @return array 
+	 */
 	public function toNestedArray() {
 		$result = array();
 
@@ -51,14 +95,31 @@ class ArrayList extends ViewableData implements SS_List {
 		return $result;
 	}
 
+	/**
+	 * Get a sub-range of this dataobjectset as an array
+	 * 
+	 * @param int $offset
+	 * @param int $length
+	 * @return ArrayList 
+	 */
 	public function getRange($offset, $length) {
 		return new ArrayList(array_slice($this->items, $offset, $length));
 	}
 
+	/**
+	 * Add this $item into this list
+	 *
+	 * @param mixed $item 
+	 */
 	public function add($item) {
 		$this->push($item);
 	}
 
+	/**
+	 * Remove this item from this list
+	 * 
+	 * @param mixed $item 
+	 */
 	public function remove($item) {
 		foreach ($this->items as $key => $value) {
 			if ($item === $value) unset($this->items[$key]);
@@ -130,7 +191,7 @@ class ArrayList extends ViewableData implements SS_List {
 	}
 
 	/**
-	 * Unshifts an item onto the beginning of the list.
+	 * Add an item onto the beginning of the list.
 	 *
 	 * @param array|object $item
 	 */
@@ -147,14 +208,31 @@ class ArrayList extends ViewableData implements SS_List {
 		return array_shift($this->items);
 	}
 
+	/**
+	 * Returns the first item in the list
+	 *
+	 * @return mixed
+	 */
 	public function first() {
 		return reset($this->items);
 	}
 
+	/**
+	 * Returns the last item in the list
+	 *
+	 * @return mixed
+	 */
 	public function last() {
 		return end($this->items);
 	}
 
+	/**
+	 * Returns a map of this list
+	 *
+	 * @param type $keyfield - the 'key' field of the result array
+	 * @param type $titlefield - the value field of the result array
+	 * @return array 
+	 */
 	public function map($keyfield = 'ID', $titlefield = 'Title') {
 		$map = array();
 		foreach ($this->items as $item) {
@@ -163,20 +241,39 @@ class ArrayList extends ViewableData implements SS_List {
 		return $map;
 	}
 
+	/**
+	 * Find the first item of this list where the given key = value
+	 *
+	 * @param type $key
+	 * @param type $value
+	 * @return type 
+	 */
 	public function find($key, $value) {
 		foreach ($this->items as $item) {
 			if ($this->extractValue($item, $key) == $value) return $item;
 		}
 	}
 
-	public function column($field = 'ID') {
+	/**
+	 * Returns an array of a single field value for all items in the list.
+	 *
+	 * @param string $colName
+	 * @return array
+	 */
+	public function column($colName = 'ID') {
 		$result = array();
 		foreach ($this->items as $item) {
-			$result[] = $this->extractValue($item, $field);
+			$result[] = $this->extractValue($item, $colName);
 		}
 		return $result;
 	}
 
+	/**
+	 * You can always sort a ArrayList
+	 *
+	 * @param string $by
+	 * @return bool
+	 */
 	public function canSortBy($by) {
 		return true;
 	}
@@ -212,18 +309,41 @@ class ArrayList extends ViewableData implements SS_List {
 		call_user_func_array('array_multisort', $sorts);
 	}
 
+	/**
+	 * Returns whether an item with $key exists
+	 * 
+	 * @param mixed $key
+	 * @return bool
+	 */
 	public function offsetExists($offset) {
 		return array_key_exists($offset, $this->items);
 	}
-
+	
+	/**
+	 * Returns item stored in list with index $key
+	 * 
+	 * @param mixed $key
+	 * @return DataObject
+	 */
 	public function offsetGet($offset) {
 		if ($this->offsetExists($offset)) return $this->items[$offset];
 	}
 
+	/**
+	 * Set an item with the key in $key
+	 * 
+	 * @param mixed $key
+	 * @param mixed $value
+	 */
 	public function offsetSet($offset, $value) {
 		$this->items[$offset] = $value;
 	}
 
+	/**
+	 * Unset an item with the key in $key
+	 * 
+	 * @param mixed $key
+	 */
 	public function offsetUnset($offset) {
 		unset($this->items[$offset]);
 	}
