@@ -78,9 +78,31 @@ If you have constructed a query that you know should return a single record, you
 	$member = DataList::create('Member')->filter(array('FirstName' => 'Sam', 'Surname' => 'Minnee'))->First();
 
 
-### Filters
+### Sort
 
-**FUN FACT:** This isn't implemented in the code yet, but will be shortly.
+Quiet often you would like to sort a list. Doing this on a list could be done in a few ways.
+
+If would like to sort the list by FirstName in a ascending way (from A to Z).
+
+	:::php
+	$member = DataList::create('Member')->sort('FirstName');
+	// Or the more expressive way
+	$member = DataList::create('Member')->sort('FirstName', 'ASC');
+
+To reverse the sort
+
+	:::php
+	$member = DataList::create('Member')->sort('FirstName', 'DESC');
+
+However you might have several entries with the same FirstName and would like to sort them by FirstName and LastName
+
+	:::php
+	$member = DataList::create('Member')->sort(array(
+		'FirstName' => 'ASC',
+		'LastName'=>'ASC'
+	));
+
+### Filter
 
 As you might expect, the `filter()` method filters the list of objects that gets returned.  The previous example 
 included this filter, which returns all Members with a first name of "Sam".
@@ -105,9 +127,73 @@ So, this would return only those members called "Sam Minnée".
 		'Surname' => 'Minnée',
 	));
 
+There are also a short hand way of getting Members with the FirstName of Sam.
+
+	:::php
+	$members = DataList::create('Member')->filter('FirstName', 'Sam');
+
+Or if you want to find both Sam and Sig.
+
+	:::php
+	$members = DataList::create('Member')->filter(
+		'FirstName', array('Sam', 'Sig')
+	);
+
+
+Then there is the most complex task when you want to find Sam and Sig that has either Age 17 or 74.
+
+	:::php
+	$members = DataList::create('Member')->filter(array(
+		'FirstName' => array('Sam', 'Sig'),
+		'Age' => array(17, 74)
+	));
+
+This would be equivalent to a SQL query of
+
+	:::
+	... WHERE ("FirstName" IN ('Sam', 'Sig) AND "Age" IN ('17', '74));
+
+
+### Exclude
+
+The `exclude()` method is the opposite to the filter in that it removes entries from a list.
+
+If we would like to remove all members from the list with the FirstName of Sam.
+
+	:::php
+	$members = DataList::create('Member')->exclude('FirstName', 'Sam');
+
+Remove both Sam and Sig is as easy as.
+
+	:::php
+	$members = DataList::create('Member')->exclude('FirstName', array('Sam','Sig'));
+
+As you can see it follows the same pattern as filter, so for removing only Sam Minnée from the list
+
+	:::php
+	$members = DataList::create('Member')->exclude(array(
+		'FirstName' => 'Sam',
+		'Surname' => 'Minnée',
+	));
+
+And removing Sig and Sam with that are either age 17 or 74.
+
+	:::php
+	$members = DataList::create('Member')->exclude(array(
+		'FirstName' => array('Sam', 'Sig'),
+		'Age' => array(17, 43)
+	));
+
+This would be equivalent to a SQL query of
+
+	:::
+	... WHERE ("FirstName" NOT IN ('Sam','Sig) OR "Age" NOT IN ('17', '74));
+
+
+**FUN FACT:** The functionality below isn't implemented in the code yet.
+
 By default, these filters specify case-insensitive exact matches.  There are a number of suffixes that you can put on 
-field names to change this: `":StartsWith"`, `":EndsWith"`, `":Contains"`, `":GreaterThan"`, `":LessThan"`, `":Not"`, 
-and `":MatchCase"`. `":Not"` and `":MatchCase"` are special in that you can add it to any of the other filters.
+field names to change this: `":StartsWith"`, `":EndsWith"`, `":PartialMatch"`, `":GreaterThan"`, `":LessThan"`, `":Negation"`.
 
 This query will return everyone whose first name doesn't start with S, who have logged on since 1/1/2011.
 
