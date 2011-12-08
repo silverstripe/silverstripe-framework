@@ -282,32 +282,177 @@ class ArrayList extends ViewableData implements SS_List {
 	 * Sorts this list by one or more fields. You can either pass in a single
 	 * field name and direction, or a map of field names to sort directions.
 	 *
-	 * @param string|array $by
-	 * @param string $sortDirection
+	 * @return DataList
 	 * @see SS_List::sort()
-	 * @link http://php.net/manual/en/function.array-multisort.php
+	 * @example $list->sort('Name'); // default ASC sorting
+	 * @example $list->sort('Name DESC'); // DESC sorting
 	 * @example $list->sort('Name', 'ASC');
-	 * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC');
+	 * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
 	 */
-	public function sort($by, $sortDirection = 'ASC') {
-		$sorts = array();
-
-		if(!is_array($by)) {
-			$by = array($by => $sortDirection);
+	public function sort() {
+		if(count(func_get_args())==0){
+			return $this;
 		}
-
-		foreach ($by as $field => $sortDirection) {
-			$sortDirection  = strtoupper($sortDirection) == 'DESC' ? SORT_DESC : SORT_ASC;
-			$values = array();
-			foreach($this->items as $item) {
-				$values[] = $this->extractValue($item, $field);
+		if(count(func_get_args())>2){
+			throw new InvalidArgumentException('This method takes zero, one or two arguments');
+		}
+		
+		// One argument and it's a string
+		if(count(func_get_args())==1 && is_string(func_get_arg(0))){
+			// support 'old' style sorting syntax like "Name DESC, Group ASC"
+			$pattern = '/([a-zA-Z1-9]+)\s?(DESC|ASC)?/';
+			$args = func_get_arg(0);
+			if($hits = preg_match_all($pattern, $args, $matches)) {
+				for($idx=0;$idx<$hits;$idx++){
+					$columnsToSort[$matches[1][$idx]] = (stristr($matches[2][$idx], 'desc'))?SORT_DESC:SORT_ASC;
+				}
 			}
-			$sorts[] = &$values;
-			$sorts[] = &$sortDirection;
 		}
-		$sorts[] = &$this->items;
-		call_user_func_array('array_multisort', $sorts);
+
+		if(count(func_get_args())==2){
+			$columnsToSort[func_get_arg(0)]=(strtolower(func_get_arg(1))=='desc')?SORT_DESC:SORT_ASC;
+		}
+
+		if(is_array(func_get_arg(0))){
+			foreach(func_get_arg(0) as $column => $sort_order){
+				$columnsToSort[$column] = (strtolower($sort_order)=='desc')?SORT_DESC:SORT_ASC;
+			}
+		}
+
+		// This the main sorting algorithm that supports infinite sorting params
+		$multisortArgs = array();
+		$values = array();
+		foreach($columnsToSort as $column => $direction ) {
+			// The reason these are added to columns is of the references, otherwise when the foreach
+			// is done, all $values and $direction look the same
+			$values[$column] = array();
+			$sortDirection[$column] = $direction;
+			// We need to subtract every value into a temporary array for sorting
+			foreach($this->items as $index => $item) {
+				$values[$column][] = $this->extractValue($item, $column);
+			}
+			// PHP 5.3 requires below arguments to be reference when using array_multisort together 
+			// with call_user_func_array
+			// First argument is the 'value' array to be sorted
+			$multisortArgs[] = &$values[$column];
+			// First argument is the direction to be sorted, 
+			$multisortArgs[] = &$sortDirection[$column];
+		}
+		// As the last argument we pass in a reference to the items that all the sorting will be 
+		// applied upon
+		$multisortArgs[] = &$this->items;
+		call_user_func_array('array_multisort', $multisortArgs);
+		return $this;
 	}
+
+	/**
+	 * Filter the list to include items with these charactaristics
+	 * 
+	 * @return ArrayList
+	 * @see SS_List::filter()
+	 * @example $list->filter('Name', 'bob'); // only bob in the list
+	 * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
+	 * @example $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the Age 21 in list
+	 * @example $list->filter(array('Name'=>'bob, 'Age'=>array(21, 43))); // bob with the Age 21 or 43
+	 * @example $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43))); // aziz with the age 21 or 43 and bob with the Age 21 or 43
+	 */
+	public function filter() {
+		if(count(func_get_args())>2){
+			throw new InvalidArgumentException('filter takes one array or two arguments');
+		}
+		
+		if(count(func_get_args()) == 1 && !is_array(func_get_arg(0))){
+			throw new InvalidArgumentException('filter takes one array or two arguments');
+		}
+		
+		$keepUs = array();
+		if(count(func_get_args())==2){
+			$keepUs[func_get_arg(0)] = func_get_arg(1);
+		}
+		
+		if(count(func_get_args())==1 && is_array(func_get_arg(0))){
+			foreach(func_get_arg(0) as $column => $value) {
+				$keepUs[$column] = $value;
+			}
+		}
+		
+		$itemsToKeep = array();
+		foreach($this->items as $item){
+			$keepItem = true;
+			foreach($keepUs as $column => $value ) {
+				if(is_array($value) && !in_array($this->extractValue($item, $column), $value)) {
+					$keepItem = false;
+				} elseif(!is_array($value) && $this->extractValue($item, $column) != $value) {
+					$keepItem = false;
+				}
+			}
+			if($keepItem) {
+				$itemsToKeep[] = $item;
+			}
+		}
+
+		$this->items = $itemsToKeep;
+		return $this;
+	}
+
+	/**
+	 * Exclude the list to not contain items with these charactaristics
+	 *
+	 * @return ArrayList
+	 * @see SS_List::exclude()
+	 * @example $list->exclude('Name', 'bob'); // exclude bob from list
+	 * @example $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
+	 * @example $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob that has Age 21
+	 * @example $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob with Age 21 or 43
+	 * @example $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43))); // bob age 21 or 43, phil age 21 or 43 would be excluded
+	 */
+	public function exclude() {
+		if(count(func_get_args())>2){
+			throw new InvalidArgumentException('exclude() takes one array or two arguments');
+		}
+		
+		if(count(func_get_args()) == 1 && !is_array(func_get_arg(0))){
+			throw new InvalidArgumentException('exclude() takes one array or two arguments');
+		}
+		
+		$removeUs = array();
+		if(count(func_get_args())==2){
+			$removeUs[func_get_arg(0)] = func_get_arg(1);
+		}
+		
+		if(count(func_get_args())==1 && is_array(func_get_arg(0))){
+			foreach(func_get_arg(0) as $column => $excludeValue) {
+				$removeUs[$column] = $excludeValue;
+			}
+		}
+
+		$itemsToKeep = array();
+
+		$hitsRequiredToRemove = count($removeUs);
+		$matches = array();
+		foreach($removeUs as $column => $excludeValue) {
+			foreach($this->items as $key => $item){
+				if(!is_array($excludeValue) && $this->extractValue($item, $column) == $excludeValue) {
+					$matches[$key]=isset($matches[$key])?$matches[$key]+1:1;
+				} elseif(is_array($excludeValue) && in_array($this->extractValue($item, $column), $excludeValue)) {
+					$matches[$key]=isset($matches[$key])?$matches[$key]+1:1;
+				}
+			}
+		}
+
+		$keysToRemove = array_keys($matches,$hitsRequiredToRemove);
+		foreach($keysToRemove as $itemToRemoveIdx){
+			$this->remove($this->items[$itemToRemoveIdx]);
+		}
+		return;
+		
+		return $this;
+	}
+
+	protected function shouldExclude($item, $args) {
+		
+	}
+
 
 	/**
 	 * Returns whether an item with $key exists
