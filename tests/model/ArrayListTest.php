@@ -213,8 +213,47 @@ class ArrayListTest extends SapphireTest {
 			'Steve', 'Bob', 'John'
 		));
 	}
+	
+	public function testSimpleSortWithCondensedSyntax() {
+		$list = new ArrayList(array(
+			array('Name' => 'Steve'),
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John')
+		));
 
-	public function testSort() {
+		$list->sort('Name DESC');
+		$this->assertEquals($list->toArray(), array(
+			array('Name' => 'Steve'),
+			array('Name' => 'John'),
+			(object) array('Name' => 'Bob')
+		));
+	}
+	
+	public function testSortOneArgumentMultipleColumns() {
+		$list = new ArrayList(array(
+			(object) array('ID'=>3, 'Name'=>'Bert', 'Importance'=>1),
+			(object) array('ID'=>1, 'Name'=>'Aron', 'Importance'=>2),
+			(object) array('ID'=>2, 'Name'=>'Aron', 'Importance'=>1),
+		));
+		
+		$list->sort('Name ASC, Importance ASC');
+		$this->assertEquals($list->first()->ID, 2, 'Aron.2 should be first in the list');
+		$this->assertEquals($list->last()->ID, 3, 'Bert.3 should be last in the list');
+		
+		$list->sort('Name ASC, Importance DESC');
+		$this->assertEquals($list->first()->ID, 1, 'Aron.1 should be first in the list');
+		$this->assertEquals($list->last()->ID, 3, 'Bert.3 should be last in the list');
+		
+		$list->sort('Name DESC, Importance ASC');
+		$this->assertEquals($list->first()->ID, 3, 'Bert.3 should be first in the list');
+		$this->assertEquals($list->last()->ID, 1, 'Aron.1 should be last in the list');
+		
+		$list->sort('Name DESC, Importance DESC');
+		$this->assertEquals($list->first()->ID, 3, 'Bert.3 should be first in the list');
+		$this->assertEquals($list->last()->ID, 2, 'Aron.2 should be last in the list');
+	}
+
+	public function testSortSimpleDefualtIsSortedASC() {
 		$list = new ArrayList(array(
 			array('Name' => 'Steve'),
 			(object) array('Name' => 'Bob'),
@@ -227,6 +266,28 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'John'),
 			array('Name' => 'Steve')
 		));
+	}
+	
+	public function testSortSimpleASCOrder() {
+		$list = new ArrayList(array(
+			array('Name' => 'Steve'),
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John')
+		));
+		$list->sort('Name','asc');
+		$this->assertEquals($list->toArray(), array(
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John'),
+			array('Name' => 'Steve')
+		));
+	}
+	
+	public function testSortSimpleDESCOrder() {
+		$list = new ArrayList(array(
+			array('Name' => 'Steve'),
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John')
+		));
 
 		$list->sort('Name', 'DESC');
 		$this->assertEquals($list->toArray(), array(
@@ -236,7 +297,7 @@ class ArrayListTest extends SapphireTest {
 		));
 	}
 
-	public function testMultiSort() {
+	public function testSimpleMultiSort() {
 		$list = new ArrayList(array(
 			(object) array('Name'=>'Object1', 'F1'=>1, 'F2'=>2, 'F3'=>3),
 			(object) array('Name'=>'Object2', 'F1'=>2, 'F2'=>1, 'F3'=>4),
@@ -245,17 +306,304 @@ class ArrayListTest extends SapphireTest {
 
 		$list->sort('F3', 'ASC');
 		$this->assertEquals($list->first()->Name, 'Object3', 'Object3 should be first in the list');
+		$this->assertEquals($list->last()->Name, 'Object2', 'Object2 should be last in the list');
 
 		$list->sort('F3', 'DESC');
 		$this->assertEquals($list->first()->Name, 'Object2', 'Object2 should be first in the list');
-
-		$list->sort(array('F2'=>'ASC', 'F1'=>'ASC'));
 		$this->assertEquals($list->last()->Name, 'Object3', 'Object3 should be last in the list');
-
-		$list->sort(array('F2'=>'ASC', 'F1'=>'DESC'));
-		$this->assertEquals($list->last()->Name, 'Object1', 'Object1 should be last in the list');
+	}
+	
+	public function testMultiSort() {
+		$list = new ArrayList(array(
+			(object) array('ID'=>3, 'Name'=>'Bert', 'Importance'=>1),
+			(object) array('ID'=>1, 'Name'=>'Aron', 'Importance'=>2),
+			(object) array('ID'=>2, 'Name'=>'Aron', 'Importance'=>1),
+		));
+		
+		$list->sort(array('Name'=>'ASC', 'Importance'=>'ASC'));
+		$this->assertEquals($list->first()->ID, 2, 'Aron.2 should be first in the list');
+		$this->assertEquals($list->last()->ID, 3, 'Bert.3 should be last in the list');
+		
+		$list->sort(array('Name'=>'ASC', 'Importance'=>'DESC'));
+		$this->assertEquals($list->first()->ID, 1, 'Aron.2 should be first in the list');
+		$this->assertEquals($list->last()->ID, 3, 'Bert.3 should be last in the list');
+	}
+	
+	/**
+	 * $list->filter('Name', 'bob'); // only bob in the list
+	 */
+	public function testSimpleFilter() {
+		$list = new ArrayList(array(
+			array('Name' => 'Steve'),
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John')
+		));
+		$list->filter('Name','Bob');
+		$this->assertEquals(array((object)array('Name'=>'Bob')), $list->toArray(), 'List should only contain Bob');
+	}
+	
+	/**
+	 * $list->filter('Name', array('Steve', 'John'); // Steve and John in list
+	 */
+	public function testSimpleFilterWithMultiple() {
+		$list = new ArrayList(array(
+			array('Name' => 'Steve'),
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John')
+		));
+		
+		$expected = array(
+			array('Name' => 'Steve'),
+			array('Name' => 'John')
+		);
+		$list->filter('Name',array('Steve','John'));
+		$this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and John');
+	}
+	
+	/**
+	 * $list->filter('Name', array('Steve', 'John'); // negative version
+	 */
+	public function testSimpleFilterWithMultipleNoMatch() {
+		$list = new ArrayList(array(
+			array('Name' => 'Steve', 'ID' => 1),
+			(object) array('Name' => 'Steve', 'ID' => 2),
+			array('Name' => 'John', 'ID' => 2)
+		));
+		$list->filter(array('Name'=>'Clair'));
+		$this->assertEquals(array(), $list->toArray(), 'List should be empty');
+	}
+	
+	/**
+	 * $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the Age 21 in list
+	 */
+	public function testMultipleFilter() {
+		$list = new ArrayList(array(
+			array('Name' => 'Steve', 'ID' => 1),
+			(object) array('Name' => 'Steve', 'ID' => 2),
+			array('Name' => 'John', 'ID' => 2)
+		));
+		$list->filter(array('Name'=>'Steve', 'ID'=>2));
+		$this->assertEquals(array((object)array('Name'=>'Steve', 'ID'=>2)), $list->toArray(), 'List should only contain object Steve');
+	}
+	
+	/**
+	 * $list->filter(array('Name'=>'bob, 'Age'=>21)); // negative version
+	 */
+	public function testMultipleFilterNoMatch() {
+		$list = new ArrayList(array(
+			array('Name' => 'Steve', 'ID' => 1),
+			(object) array('Name' => 'Steve', 'ID' => 2),
+			array('Name' => 'John', 'ID' => 2)
+		));
+		$list->filter(array('Name'=>'Steve', 'ID'=>4));
+		$this->assertEquals(array(), $list->toArray(), 'List should be empty');
+	}
+	
+	/**
+	 * $list->filter(array('Name'=>'Steve', 'Age'=>array(21, 43))); // Steve with the Age 21 or 43
+	 */
+	public function testMultipleWithArrayFilter() {
+		$list = new ArrayList(array(
+			array('Name' => 'Steve', 'ID' => 1, 'Age'=>21),
+			array('Name' => 'Steve', 'ID' => 2, 'Age'=>18),
+			array('Name' => 'Clair', 'ID' => 2, 'Age'=>21),
+			array('Name' => 'Steve', 'ID' => 3, 'Age'=>43)
+		));
+		
+		$list->filter(array('Name'=>'Steve','Age'=>array(21, 43)));
+		
+		$expected = array(
+			array('Name' => 'Steve', 'ID' => 1, 'Age'=>21),
+			array('Name' => 'Steve', 'ID' => 3, 'Age'=>43)
+		);
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and Steve');
+	}
+	
+	/**
+	 * $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43)));
+	 */
+	public function testMultipleWithArrayFilterAdvanced() {
+		$list = new ArrayList(array(
+			array('Name' => 'Steve', 'ID' => 1, 'Age'=>21),
+			array('Name' => 'Steve', 'ID' => 2, 'Age'=>18),
+			array('Name' => 'Clair', 'ID' => 2, 'Age'=>21),
+			array('Name' => 'Clair', 'ID' => 2, 'Age'=>52),
+			array('Name' => 'Steve', 'ID' => 3, 'Age'=>43)
+		));
+		
+		$list->filter(array('Name'=>array('Steve','Clair'),'Age'=>array(21, 43)));
+		
+		$expected = array(
+			array('Name' => 'Steve', 'ID' => 1, 'Age'=>21),
+			array('Name' => 'Clair', 'ID' => 2, 'Age'=>21),
+			array('Name' => 'Steve', 'ID' => 3, 'Age'=>43)
+		);
+		
+		$this->assertEquals(3, $list->count());
+		$this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and Steve and Clair');
+	}
+	
+	/**
+	 * $list->exclude('Name', 'bob'); // exclude bob from list
+	 */
+	public function testSimpleExclude() {
+		$list = new ArrayList(array(
+			0=>array('Name' => 'Steve'),
+			1=>array('Name' => 'Bob'),
+			2=>array('Name' => 'John')
+		));
+		
+		$list->exclude('Name', 'Bob');
+		$expected = array(
+			0=>array('Name' => 'Steve'),
+			2=>array('Name' => 'John')
+		);
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals($expected, $list->toArray(), 'List should not contain Bob');
+	}
+	
+	/**
+	 * $list->exclude('Name', 'bob'); // No exclusion version
+	 */
+	public function testSimpleExcludeNoMatch() {
+		$list = new ArrayList(array(
+			array('Name' => 'Steve'),
+			array('Name' => 'Bob'),
+			array('Name' => 'John')
+		));
+		
+		$list->exclude('Name', 'Clair');
+		$expected = array(
+			array('Name' => 'Steve'),
+			array('Name' => 'Bob'),
+			array('Name' => 'John')
+		);
+		$this->assertEquals($expected, $list->toArray(), 'List should be unchanged');
+	}
+	
+	/**
+	 * $list->exclude('Name', array('Steve','John'));
+	 */
+	public function testSimpleExcludeWithArray() {
+		$list = new ArrayList(array(
+			0=>array('Name' => 'Steve'),
+			1=>array('Name' => 'Bob'),
+			2=>array('Name' => 'John')
+		));
+		$list->exclude('Name', array('Steve','John'));
+		$expected = array(1=>array('Name' => 'Bob'));
+		$this->assertEquals(1, $list->count());
+		$this->assertEquals($expected, $list->toArray(), 'List should only contain Bob');
+	}
+	
+	/**
+	 * $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude all Bob that has Age 21
+	 */
+	public function testExcludeWithTwoArrays() {
+		$list = new ArrayList(array(
+			0=>array('Name' => 'Bob' , 'Age' => 21),
+			1=>array('Name' => 'Bob' , 'Age' => 32),
+			2=>array('Name' => 'John', 'Age' => 21)
+		));
+		
+		$list->exclude(array('Name' => 'Bob', 'Age' => 21));
+		
+		$expected = array(
+			1=>array('Name' => 'Bob', 'Age' => 32),
+			2=>array('Name' => 'John', 'Age' => 21)
+		);
+		
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals($expected, $list->toArray(), 'List should only contain John and Bob');
 	}
 
+	/**
+	 * $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(10, 16)));
+	 */
+	public function testMultipleExclude() {
+		$list = new ArrayList(array(
+			0 => array('Name' => 'bob', 'Age' => 10),
+			1 => array('Name' => 'phil', 'Age' => 11),
+			2 => array('Name' => 'bob', 'Age' => 12),
+			3 => array('Name' => 'phil', 'Age' => 12),
+			4 => array('Name' => 'bob', 'Age' => 14),
+			5 => array('Name' => 'phil', 'Age' => 14),
+			6 => array('Name' => 'bob', 'Age' => 16),
+			7 => array('Name' => 'phil', 'Age' => 16)
+		));
+
+		$list->exclude(array('Name'=>array('bob','phil'),'Age'=>array(10, 16)));
+		$expected = array(
+			1 => array('Name' => 'phil', 'Age' => 11),
+			2 => array('Name' => 'bob', 'Age' => 12),
+			3 => array('Name' => 'phil', 'Age' => 12),
+			4 => array('Name' => 'bob', 'Age' => 14),
+			5 => array('Name' => 'phil', 'Age' => 14),
+		);
+		$this->assertEquals($expected, $list->toArray());
+	}
+	
+	/**
+	 * $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(10, 16), 'Bananas'=>true));
+	 */
+	public function testMultipleExcludeNoMatch() {
+		$list = new ArrayList(array(
+			0 => array('Name' => 'bob', 'Age' => 10),
+			1 => array('Name' => 'phil', 'Age' => 11),
+			2 => array('Name' => 'bob', 'Age' => 12),
+			3 => array('Name' => 'phil', 'Age' => 12),
+			4 => array('Name' => 'bob', 'Age' => 14),
+			5 => array('Name' => 'phil', 'Age' => 14),
+			6 => array('Name' => 'bob', 'Age' => 16),
+			7 => array('Name' => 'phil', 'Age' => 16)
+		));
+
+		$list->exclude(array('Name'=>array('bob','phil'),'Age'=>array(10, 16),'Bananas'=>true));
+		$expected = array(
+			0 => array('Name' => 'bob', 'Age' => 10),
+			1 => array('Name' => 'phil', 'Age' => 11),
+			2 => array('Name' => 'bob', 'Age' => 12),
+			3 => array('Name' => 'phil', 'Age' => 12),
+			4 => array('Name' => 'bob', 'Age' => 14),
+			5 => array('Name' => 'phil', 'Age' => 14),
+			6 => array('Name' => 'bob', 'Age' => 16),
+			7 => array('Name' => 'phil', 'Age' => 16)
+		);
+		$this->assertEquals($expected, $list->toArray());
+	}
+
+	/**
+	 * $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(10, 16), 'HasBananas'=>true));
+	 */
+	public function testMultipleExcludeThreeArguments() {
+		$list = new ArrayList(array(
+			0 => array('Name' => 'bob', 'Age' => 10, 'HasBananas'=>false),
+			1 => array('Name' => 'phil','Age' => 11, 'HasBananas'=>true),
+			2 => array('Name' => 'bob', 'Age' => 12, 'HasBananas'=>true),
+			3 => array('Name' => 'phil','Age' => 12, 'HasBananas'=>true),
+			4 => array('Name' => 'bob', 'Age' => 14, 'HasBananas'=>false),
+			4 => array('Name' => 'ann', 'Age' => 14, 'HasBananas'=>true),
+			5 => array('Name' => 'phil','Age' => 14, 'HasBananas'=>false),
+			6 => array('Name' => 'bob', 'Age' => 16, 'HasBananas'=>false),
+			7 => array('Name' => 'phil','Age' => 16, 'HasBananas'=>true),
+			8 => array('Name' => 'clair','Age' => 16, 'HasBananas'=>true)
+		));
+
+		$list->exclude(array('Name'=>array('bob','phil'),'Age'=>array(10, 16),'HasBananas'=>true));
+		$expected = array(
+			0 => array('Name' => 'bob', 'Age' => 10, 'HasBananas'=>false),
+			1 => array('Name' => 'phil','Age' => 11, 'HasBananas'=>true),
+			2 => array('Name' => 'bob', 'Age' => 12, 'HasBananas'=>true),
+			3 => array('Name' => 'phil','Age' => 12, 'HasBananas'=>true),
+			4 => array('Name' => 'bob', 'Age' => 14, 'HasBananas'=>false),
+			4 => array('Name' => 'ann', 'Age' => 14, 'HasBananas'=>true),
+			5 => array('Name' => 'phil','Age' => 14, 'HasBananas'=>false),
+			6 => array('Name' => 'bob', 'Age' => 16, 'HasBananas'=>false),
+			8 => array('Name' => 'clair','Age' => 16, 'HasBananas'=>true)
+		);
+		$this->assertEquals($expected, $list->toArray());
+	}
 }
 
 /**
