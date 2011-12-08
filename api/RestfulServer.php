@@ -203,10 +203,13 @@ class RestfulServer extends Controller {
 	 * @return String The serialized representation of the requested object(s) - usually XML or JSON.
 	 */
 	protected function getHandler($className, $id, $relationName) {
-		$sort = array(
-			'sort' => $this->request->getVar('sort'),
-			'dir' => $this->request->getVar('dir')
-		);
+		$sort = '';
+		
+		if($this->request->getVar('sort')) {
+			$dir = $this->request->getVar('dir');
+			$sort = array($this->request->getVar('sort') => ($dir ? $dir : 'ASC'));
+		}
+		
 		$limit = array(
 			'start' => $this->request->getVar('start'),
 			'limit' => $this->request->getVar('limit')
