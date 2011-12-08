@@ -106,19 +106,6 @@ class DataList extends ViewableData implements SS_List {
 	}
 
 	/**
-	 * Set the sort order of this data list
-	 *
-	 * @param string $sort
-	 * @param string $direction
-	 * @return DataList 
-	 */
-	public function sort($sort, $direction = "ASC") {
-		if($direction && strtoupper($direction) != 'ASC') $sort = "$sort $direction";
-		$this->dataQuery->sort($sort);
-		return $this;
-	}
-	
-	/**
 	 * Returns true if this DataList can be sorted by the given field.
 	 * 
 	 * @param string $fieldName
@@ -150,7 +137,165 @@ class DataList extends ViewableData implements SS_List {
 		$this->dataQuery->limit($limit);
 		return $this;
 	}
+	
+	/**
+	 * Set the sort order of this data list
+	 *
+	 * @return DataList
+	 * @see SS_List::sort()
+	 * @example $list->sort('Name'); // default ASC sorting
+	 * @example $list->sort('Name DESC'); // DESC sorting
+	 * @example $list->sort('Name', 'ASC');
+	 * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
+	 */
+	public function sort() {
+		if(count(func_get_args())==0){
+			return $this;
+		}
+		if(count(func_get_args())>2){
+			throw new InvalidArgumentException('This method takes zero, one or two arguments');
+		}
 
+		// sort('Name','Desc')
+		if(count(func_get_args())==2){
+			if(!in_array(strtolower(func_get_arg(1)),array('desc','asc'))){
+				user_error('Second argument to sort must be either ASC or DESC');
+			}
+			$this->dataQuery->sort(func_get_arg(0).' '.func_get_arg(1));
+			return $this;
+		}
+		
+		// sort('Name') - default to ASC sorting if not specified
+		if(is_string(func_get_arg(0)) && func_get_arg(0)){
+			// sort('Name ASC')
+			if(stristr(func_get_arg(0), ' asc') || stristr(func_get_arg(0), ' desc')){
+				$this->dataQuery->sort(func_get_arg(0));
+			} else {
+				$this->dataQuery->sort(func_get_arg(0).' ASC');
+			}
+			
+			return $this;
+		}
+		
+		// sort(array('Name'=>'desc'));
+		$argumentArray = func_get_arg(0);
+		if(is_array($argumentArray)){
+			$sort = array();
+			foreach($argumentArray as $column => $direction) {
+				$sort []= '"'.$column.'" '.$direction;
+			}
+			$this->dataQuery->sort(implode(',', $sort));
+			return $this;
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Filter the list to include items with these charactaristics
+	 *
+	 * @return DataList
+	 * @see SS_List::filter()
+	 * @example $list->filter('Name', 'bob'); // only bob in the list
+	 * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
+	 * @example $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the age 21
+	 * @example $list->filter(array('Name'=>'bob, 'Age'=>array(21, 43))); // bob with the Age 21 or 43
+	 * @example $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43))); // aziz with the age 21 or 43 and bob with the Age 21 or 43
+	 *
+	 * @todo extract the sql from $customQuery into a SQLGenerator class
+	 */
+	public function filter() {
+		$numberFuncArgs = count(func_get_args());
+		$whereArguments = array();
+		if($numberFuncArgs == 1 && is_array(func_get_arg(0))){
+			$whereArguments = func_get_arg(0);
+		} elseif($numberFuncArgs == 2) {
+			$whereArguments[func_get_arg(0)] = func_get_arg(1);
+		} else {
+			throw new InvalidArgumentException('Arguments passed to filter() is wrong');
+		}
+
+		$SQL_Statements = array();
+		foreach($whereArguments as $field => $value) {
+			if(is_array($value)) {
+				$customQuery = 'IN (\''.implode('\',\'',Convert::raw2sql($value)).'\')';
+			} else {
+				$customQuery = '= \''.Convert::raw2sql($value).'\'';
+			}
+			
+			if(stristr($field,':')) {
+				$fieldArgs = explode(':',$field);
+				$field = array_shift($fieldArgs);
+				foreach($fieldArgs as $fieldArg){
+					$comparisor = $this->applyFilterContext($field, $fieldArg, $value);
+				}
+			} else {
+				$SQL_Statements[] = '"'.Convert::raw2sql($field).'" '.$customQuery;
+			}
+		}
+		if(count($SQL_Statements)) {
+			foreach($SQL_Statements as $SQL_Statement){
+				$this->dataQuery->where($SQL_Statement);
+			}
+		}
+		return $this;
+	}
+
+	/**
+	 * Translates the comparisator to the sql query
+	 *
+	 * @param string $field - the fieldname in the db
+	 * @param string $comparisators - example StartsWith, relates to a filtercontext
+	 * @param string $value - the value that the filtercontext will use for matching
+	 * @todo Deprecated SearchContexts and pull their functionality into the core of the ORM
+	 */
+	private function applyFilterContext($field, $comparisators, $value) {
+		$t = singleton($this->dataClass())->dbObject($field);
+		$className = "{$comparisators}Filter";
+		if(!class_exists($className)){
+			throw new InvalidArgumentException('There are no '.$comparisators.' comparisator');
+		}
+		$t = new $className($field,$value);
+		$t->apply($this->dataQuery());
+	}
+	
+	/**
+	 * Exclude the list to not contain items with these charactaristics
+	 *
+	 * @return DataList
+	 * @see SS_List::exclude()
+	 * @example $list->exclude('Name', 'bob'); // exclude bob from list
+	 * @example $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
+	 * @example $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob that has Age 21
+	 * @example $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob with Age 21 or 43
+	 * @example $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43))); // bob age 21 or 43, phil age 21 or 43 would be excluded
+	 *
+	 * @todo extract the sql from this method into a SQLGenerator class
+	 */
+	public function exclude(){
+		$numberFuncArgs = count(func_get_args());
+		$whereArguments = array();
+		
+		if($numberFuncArgs == 1 && is_array(func_get_arg(0))){
+			$whereArguments = func_get_arg(0);
+		} elseif($numberFuncArgs == 2) {
+			$whereArguments[func_get_arg(0)] = func_get_arg(1);
+		} else {
+			throw new InvalidArgumentException('Arguments passed to exclude() is wrong');
+		}
+
+		$SQL_Statements = array();
+		foreach($whereArguments as $fieldName => $value) {
+			if(is_array($value)){
+				$SQL_Statements[] = ('"'.$fieldName.'" NOT IN (\''.implode('\',\'', Convert::raw2sql($value)).'\')');
+			} else {
+				$SQL_Statements[] = ('"'.$fieldName.'" != \''.Convert::raw2sql($value).'\'');
+			}
+		}
+		$this->dataQuery->where(implode(' OR ', $SQL_Statements));
+		return $this;
+	}
+	
 	/**
 	 * Add an inner join clause to this data list's query.
 	 *
@@ -647,6 +792,6 @@ class DataList extends ViewableData implements SS_List {
 	 */
 	public function offsetUnset($key) {
 	    user_error("Can't alter items in a DataList using array-access", E_USER_ERROR);
-	}	
+	}
 
 }
