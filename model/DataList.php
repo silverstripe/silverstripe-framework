@@ -292,7 +292,7 @@ class DataList extends ViewableData implements SS_List {
 				$SQL_Statements[] = ('"'.$fieldName.'" != \''.Convert::raw2sql($value).'\'');
 			}
 		}
-		$this->dataQuery->where(implode(' OR ', $SQL_Statements));
+		$this->dataQuery->whereAny($SQL_Statements);
 		return $this;
 	}
 	

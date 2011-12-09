@@ -234,6 +234,15 @@ class SQLQueryTest extends SapphireTest {
 			$query->sql()
 		);
 	}
+
+
+	public function testWhereAny() {
+		$query = new SQLQuery();
+		$query->from( 'MyTable' );
+
+		$query->whereAny(array("Monkey = 'Chimp'", "Color = 'Brown'"));
+		$this->assertEquals("SELECT * FROM MyTable WHERE (Monkey = 'Chimp' OR Color = 'Brown')",$query->sql());
+	}
 }
 
 class SQLQueryTest_DO extends DataObject implements TestOnly {

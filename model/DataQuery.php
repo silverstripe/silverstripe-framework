@@ -337,6 +337,23 @@ class DataQuery {
 			return $this;
 		}
 	}
+
+	/**
+	 * Set a WHERE with OR
+	 *
+	 * @param array $filter
+	 * @return DataQuery
+	 * @example $dataQuery->whereAny(array("Monkey = 'Chimp'", "Color = 'Brown'"));
+	 */
+	function whereAny($filter) {
+		if($filter) {
+			$clone = $this;
+			$clone->query->whereAny($filter);
+			return $clone;
+		} else {
+			return $this;
+		}
+	}
 	
 	/**
 	 * Set the ORDER BY clause of this query
