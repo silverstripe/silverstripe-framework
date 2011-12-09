@@ -13,6 +13,7 @@
 class SubstringFilter extends SearchFilter {
 
 	public function apply(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
 		return $query->where(sprintf(
 			"LOCATE('%s', %s) != 0",
 			Convert::raw2sql($this->getValue()),
