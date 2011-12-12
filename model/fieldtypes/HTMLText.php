@@ -136,8 +136,21 @@ class HTMLText extends Text {
 		return ShortcodeParser::get_active()->parse($this->value);
 	}
 	
+	/**
+	 * Returns true if the field has meaningful content.
+	 * Excludes null content like <h1></h1>, <p></p> ,etc
+	 * 
+	 * @return boolean
+	 */
 	public function exists() {
-		return parent::exists() && $this->value != '<p></p>';
+		// If it's blank, it's blank
+		if(!parent::exists()) return false;
+		// If it's got a content tag
+		if(preg_match('/<(img|embed|object|iframe)[^>]*>/i', $this->value)) return true;
+		// If it's just one or two tags on its own (and not the above) it's empty.  This might be <p></p> or <h1></h1> or whatever.
+		if(preg_match('/^[\\s]*(<[^>]+>[\\s]*){1,2}$/', $this->value)) return false;
+		// Otherwise its content is genuine content
+		return true;
 	}
 	
 	public function scaffoldFormField($title = null, $params = null) {

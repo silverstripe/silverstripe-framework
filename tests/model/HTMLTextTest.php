@@ -139,4 +139,38 @@ class HTMLTextTest extends SapphireTest {
 		$data = DBField::create_field('HTMLText', '"this is a test"');
 		$this->assertEquals($data->ATT(), '&quot;this is a test&quot;');
 	}
+
+	function testExists() {
+		$h = new HTMLText;
+		$h->setValue("");
+		$this->assertFalse($h->exists());
+		$h->setValue("<p></p>");
+		$this->assertFalse($h->exists());
+		$h->setValue("<p> </p>");
+		$this->assertFalse($h->exists());
+		$h->setValue("<h2/>");
+		$this->assertFalse($h->exists());
+		$h->setValue("<h2></h2>");
+		$this->assertFalse($h->exists());
+
+		$h->setValue("something");
+		$this->assertTrue($h->exists());
+		$h->setValue("<img src=\"dummy.png\">");
+		$this->assertTrue($h->exists());
+		$h->setValue("<img src=\"dummy.png\"><img src=\"dummy.png\">");
+		$this->assertTrue($h->exists());
+		$h->setValue("<p><img src=\"dummy.png\"></p>");
+		$this->assertTrue($h->exists());
+
+		$h->setValue("<iframe src=\"http://www.google.com\"></iframe>");
+		$this->assertTrue($h->exists());
+		$h->setValue("<embed src=\"test.swf\">");
+		$this->assertTrue($h->exists());
+		$h->setValue("<object width=\"400\" height=\"400\" data=\"test.swf\"></object>");
+		$this->assertTrue($h->exists());
+
+
+		$h->setValue("<p>test</p>");
+		$this->assertTrue($h->exists());
+	}
 }
