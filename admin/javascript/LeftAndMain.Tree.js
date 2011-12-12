@@ -303,7 +303,7 @@
 		}
 	});
 	
-	$('.cms-tree-view-modes :input[name=view-mode]').entwine({
+	$('.cms-tree-view-modes input.view-mode').entwine({
 		onmatch: function() {
 			// set active by default
 			this.trigger('click');

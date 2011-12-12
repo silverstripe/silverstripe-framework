@@ -180,7 +180,7 @@
 		 * Also sets the clicked button on a form submission, making it available through
 		 * a new 'clickedButton' property on the form DOM element.
 		 */
-		$('.cms-container :submit, .cms-container button, .cms-container :reset').entwine({
+		$('.cms-container input[type="submit"], .cms-container button, .cms-container input[type="reset"]').entwine({
 			onmatch: function() {
 				// TODO Adding classes in onmatch confuses entwine
 				var self = this;
