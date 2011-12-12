@@ -33,13 +33,10 @@
 				
 				// Create layout and controls
 				this.find('iframe').addClass('center');
-				this.layout({type: 'border'});
-		
 				this.find('iframe').bind('load', function() {
 					self._fixIframeLinks();
 					self.loadCurrentPage();
 				});
-				self._fixIframeLinks();
 				
 				var updateAfterXhr = function() {
 					// var url = ui.xmlhttp.getResponseHeader('x-frontend-url');
@@ -67,12 +64,16 @@
 					self.collapse();
 				});
 
+				this.layout({type: 'border'});
+
 				if(this.hasClass('is-expanded')) this.expand();
 				else this.collapse();
 				
 				// Preview might not be available in all admin interfaces - block/disable when necessary
 				this.append('<div class="cms-preview-overlay ui-widget-overlay-light"></div>');
 				this.find('.cms-preview-overlay-light').hide();
+
+				self._fixIframeLinks();
 		
 				this._super();
 			},
