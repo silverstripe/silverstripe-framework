@@ -151,7 +151,6 @@
 						if(title) document.title = title;
 						
 						// Update panels
-						jQuery.entwine.synchronous_mode(true);
 						var newContentEl = $(data);
 						
 						if(newContentEl.find('.cms-container').length) {
@@ -160,10 +159,8 @@
 						
 						newContentEl.addClass('loading');
 						contentEl.replaceWith(newContentEl);
-						contentEl.remove();
 						self.redraw();
 						newContentEl.removeClass('loading');
-						jQuery.entwine.synchronous_mode(false);
 						
 						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: newContentEl});
 					},
