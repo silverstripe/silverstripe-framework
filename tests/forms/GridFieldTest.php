@@ -31,29 +31,6 @@ class GridFieldTest extends SapphireTest {
 		$this->assertEquals($source, $grid->getList());
 	}
 	
-	function testSetEmptyDataPresenter() {
-		$this->setExpectedException('InvalidArgumentException');
-		$grid = new GridField('Testgrid');
-		$grid->setPresenter('');
-	}
-	
-	function testSetNonExistingDataPresenter() {
-		$this->setExpectedException('InvalidArgumentException');
-		$grid = new GridField('Testgrid');
-		$grid->setPresenter('ifThisClassExistsIWouldBeSurprised');
-	}
-	
-	function testSetDataPresenterWithDataObject() {
-		$this->setExpectedException('InvalidArgumentException');
-		$grid = new GridField('Testgrid');
-		$grid->setPresenter('DataObject');
-	}
-	
-	function testSetDataPresenter() {
-		$grid = new GridField('Testgrid');
-		$grid->setPresenter('GridFieldPresenter');
-	}
-	
 	function testSetDataclass() {
 		$grid = new GridField('Testgrid');
 		$grid->setModelClass('SiteTree');
