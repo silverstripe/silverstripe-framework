@@ -228,7 +228,7 @@ class GridField_AlterAction extends FormAction_WithoutLabel {
 		$name = array();
 
 		do {
-			array_unshift($name, $base->Name());
+			array_unshift($name, $base->getName());
 			$base = $base->getForm();
 		}
 		while ($base && !($base instanceof Form));
@@ -274,8 +274,6 @@ class GridFieldForm extends Form {
 	function gridFieldAlterAction($vars) {
 		$gridName = $vars['Change_Grid'];
 		$change = json_decode($vars['Change_State']);
-
-		Debug::dump($gridName);
 
 		$grid = $this->Fields()->fieldByName($gridName);
 		$state = $grid->getState();
