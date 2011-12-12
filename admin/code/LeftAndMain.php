@@ -133,6 +133,9 @@ class LeftAndMain extends Controller {
 	 * @uses CMSMenu
 	 */
 	function init() {
+		// Suppress behaviour/prototype validation instructions in CMS, not compatible with ajax loading of forms.
+		Validator::set_javascript_validation_handler('none');
+
 		parent::init();
 
 		SSViewer::setOption('rewriteHashlinks', false);
@@ -187,6 +190,12 @@ class LeftAndMain extends Controller {
 		if(empty($_REQUEST['executeForm']) && !$this->isAjax()) $this->extend('accessedCMS');
 		
 		// Requirements
+
+		// Suppress behaviour/prototype validation instructions in CMS, not compatible with ajax loading of forms.
+		Validator::set_javascript_validation_handler('none');
+
+		// Set the members html editor config
+		HtmlEditorConfig::set_active(Member::currentUser()->getHtmlEditorConfigForCMS());
 		
 		Requirements::combine_files(
 			'lib.js',
