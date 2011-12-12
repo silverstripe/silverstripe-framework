@@ -38,15 +38,6 @@ class GridFieldTest extends SapphireTest {
 	}
 	
 	/**
-	 * 
-	 */
-	function testFieldHolderWithoutDataSource() {
-		$this->setExpectedException('InvalidArgumentException');
-		$grid = new GridField('Testgrid');
-		$this->assertNotNull($grid->FieldHolder());
-	}
-	
-	/**
 	 * This is better tested in the GridFieldFunctionalTest
 	 * 
 	 * @see GridFieldFunctionalTest
