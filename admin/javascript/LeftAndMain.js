@@ -4,6 +4,9 @@
 (function($) {
 
 	$.metadata.setType('html5');
+
+	// setup jquery.entwine
+		$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 	
 	$.entwine('ss', function($){
 
@@ -29,10 +32,7 @@
 			spinner.show();
 		}
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
-	
-		// setup jquery.entwine
-		$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
-	
+
 		// global ajax error handlers
 		$.ajaxSetup({
 			error: function(xmlhttp, status, error) {
