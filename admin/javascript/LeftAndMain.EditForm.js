@@ -79,17 +79,7 @@
 			
 				this._super();
 			},
-			
-			onunmatch: function() {
-				// Prepare iframes for removal, otherwise we get loading bugs
-				this.find('iframe').each(function() {
-					$(this).attr('src', 'about:blank');
-					$(this).remove();
-				});
-				
-				this._super();
-			},
-			
+						
 			redraw: function() {
 				// TODO Manually set container height before resizing - shouldn't be necessary'
 				this.find('.cms-content-actions').height(this.find('.cms-content-actions .Actions').height());
@@ -189,7 +179,9 @@
 		/**
 		 * Class: .cms-edit-form textarea.htmleditor
 		 * 
-		 * Add tinymce to HtmlEditorFields within the CMS.
+		 * Add tinymce to HtmlEditorFields within the CMS. Works in combination
+		 * with a TinyMCE.init() call which is prepopulated with the used HTMLEditorConfig settings,
+		 * and included in the page as an inline <script> tag.
 		 */
 		$('.cms-edit-form textarea.htmleditor').entwine({
 			
@@ -197,23 +189,48 @@
 			 * Constructor: onmatch
 			 */
 			onmatch : function() {
-				tinyMCE.execCommand("mceAddControl", true, this.attr('id'));
-				this.isChanged = function() {
-					return tinyMCE.getInstanceById(this.attr('id')).isDirty();
-				};
-				this.resetChanged = function() {
-					var inst = tinyMCE.getInstanceById(this.attr('id'));
-					if (inst) inst.startContent = tinymce.trim(inst.getContent({format : 'raw', no_events : 1}));
-				};
+				// Only works after TinyMCE.init() has been invoked, see $(window).bind() call below for details.
+				this.redraw();
 
 				this._super();
 			},
-			
+
+			redraw: function() {
+				// Using a global config (generated through HTMLEditorConfig PHP logic)
+				var config = ssTinyMceConfig, self = this;
+
+				// Avoid flicker (also set in CSS to apply as early as possible)
+				self.css('visibility', '');
+
+				// Create editor instance and render it.
+				// Similar logic to adapter/jquery/jquery.tinymce.js, but doesn't rely on monkey-patching
+				// jQuery methods, and avoids replicate the script lazyloading which is already in place with jQuery.ondemand.
+				var ed = new tinymce.Editor(this.attr('id'), config);
+				ed.onInit.add(function() {
+					self.css('visibility', 'visible');
+				});
+				ed.render();
+
+				this._super();
+			},
+
+			isChanged: function() {
+				return tinyMCE.getInstanceById(this.attr('id')).isDirty();
+			},
+
+			resetChanged: function() {
+				var inst = tinyMCE.getInstanceById(this.attr('id'));
+				if (inst) inst.startContent = tinymce.trim(inst.getContent({format : 'raw', no_events : 1}));
+			},
+
 			onunmatch: function() {
-				tinyMCE.execCommand("mceRemoveControl", true, this.attr('id'));
-				
+				// TODO Throws exceptions in Firefox, most likely due to the element being removed from the DOM at this point
+				// var ed = tinyMCE.get(this.attr('id'));
+				// if(ed) ed.remove();
+
 				this._super();
 			}
 		});
 	});
+
 }(jQuery));
