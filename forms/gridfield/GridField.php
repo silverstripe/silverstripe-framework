@@ -151,11 +151,8 @@ class GridField extends CompositeField {
 	/**
 	 *
 	 * @return GridState 
-	 * @todo Get the gridstate change in a nicer way than inspecting the request
 	 */
 	public function getState() {
-		$state = $this->state;
-
 		return $this->state;
 	}
 
@@ -254,7 +251,7 @@ class GridField_AlterAction extends FormAction_WithoutLabel {
 			'fields' => $this->stateFields
 		);
 		
-		$id = preg_replace('/[^\w]+/', '_', uniqid('gridField_alterActionState', true));
+		$id = preg_replace('/[^\w]+/', '_', uniqid('', true));
 		Session::set($id, $state);
 
 		// And generate field
@@ -263,8 +260,10 @@ class GridField_AlterAction extends FormAction_WithoutLabel {
 			'class' => 'action' . ($this->extraClass() ? $this->extraClass() : ''),
 			'id' => $this->id(),
 			'type' => 'submit',
-			'name' => 'action_gridFieldAlterAction'. '?' . 'Change_ActionStateID='.$id,
-			'tabindex' => $this->getTabIndex()
+			// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch will strip
+			// it from the requests 
+			'name' => 'action_gridFieldAlterAction'. '?' . 'StateID='.$id,
+			'tabindex' => $this->getTabIndex(),
 		);
 
 		if($this->isReadonly()) {
@@ -291,12 +290,11 @@ class GridFieldForm extends Form {
 				$url = $request->getHeader('Referer');
 			}
 		}
-
 		if(Director::is_site_url($url)) return $url;
 	}
 
 	function gridFieldAlterAction($vars) {
-		$id = $vars['Change_ActionStateID'];
+		$id = $vars['StateID'];
 		$stateChange = Session::get($id);
 		
 		$gridName = $stateChange['grid'];
