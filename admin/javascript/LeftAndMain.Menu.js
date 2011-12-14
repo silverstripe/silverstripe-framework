@@ -26,13 +26,13 @@
 		$('.cms-menu-list').entwine({
 			onmatch: function() {
 				var self = this;
-				
 				$('.cms-container').bind('afterstatechange', function(e, data) {
 					var controller = data.xhr.getResponseHeader('X-Controller');
 					if(controller) {
 						var item = self.find('li#Menu-' + controller);
 						if(!item.hasClass('current')) item.select();
 					}
+					self.updateItems();
 				});
 				
 				// Sync collapsed state with parent panel
@@ -43,7 +43,15 @@
 				// Select default element (which might reveal children in hidden parents)
 				this.find('li.current').select();
 
+				this.updateItems();
+
 				this._super();
+			},
+			
+			updateItems: function() {
+				// Hide "edit page" commands unless the section is activated
+				var editPageItem = this.find('#Menu-CMSMain');
+				editPageItem[editPageItem.is('.current') ? 'show' : 'hide']();
 			}
 		});
 		
@@ -73,11 +81,18 @@
 				this.siblings().removeClass('current').close();
 				this.siblings().find('li').removeClass('current');
 				if(parent) parent.addClass('current').siblings().removeClass('current');
+				this.getMenu().updateItems();
 				
 				this.trigger('select');
 			}
 		});
 		
+		$('.cms-menu-list *').entwine({
+			getMenu: function() {
+				return this.parents('.cms-menu-list:first');
+			}
+		});
+
 		$('.cms-menu-list li *').entwine({
 			getMenuItem: function() {
 				return this.parents('li:first');
