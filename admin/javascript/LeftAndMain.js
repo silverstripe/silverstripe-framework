@@ -210,7 +210,7 @@
 					+ '</div>'
 				);
 
-				var cookieVal = (jQuery.cookie) ? JSON.parse(jQuery.cookie('ss-ui-dialog')) : false;
+				var cookieVal = (jQuery.cookie && jQuery.cookie('ss-ui-dialog')) ? JSON.parse(jQuery.cookie('ss-ui-dialog')) : false;
 				$("#ss-ui-dialog").dialog(jQuery.extend({
 					autoOpen: false,
 					bgiframe: true,
