@@ -114,8 +114,8 @@ abstract class GridState_Affector extends ViewableData {
 
 	protected $state;
 
-	function __construct($state) {
-		$this->state = $state;
+	function __construct($state = null) {
+		if ($state) $this->state = $state;
 		parent::__construct();
 	}
 
@@ -134,9 +134,9 @@ class GridState_Pagination extends GridState_Affector {
 	protected $Page = 1;
 	protected $ItemsPerPage = 50;
 
-	function setState($data) {
-		if ($data && isset($data->Pagination)) {
-			$paging = $data->Pagination;
+	function setState($state) {
+		if ($state && isset($state->Pagination)) {
+			$paging = $state->Pagination;
 
 			if (isset($paging->Page)) $this->setPage($paging->Page);
 			if (isset($paging->ItemsPerPage)) $this->setItemsPerPage($paging->ItemsPerPage);
@@ -217,9 +217,9 @@ class GridState_Sorting extends GridState_Affector {
 
 	protected $Order = null;
 
-	function setState($data) {
-		if ($data && isset($data->Sorting)) {
-			$sorting = $data->Sorting;
+	function setState($state) {
+		if ($state && isset($state->Sorting)) {
+			$sorting = $state->Sorting;
 
 			if (isset($sorting->Order)) $this->Order = $sorting->Order;
 		}
