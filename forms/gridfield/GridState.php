@@ -14,33 +14,41 @@ class GridState extends HiddenField {
 
 	/**  @var [GridState_Affector] */
 	protected $affectors = array();
+	
+	// TODO Do we want these three affectors added by default to every gridfield?
+	protected $defaultAffectorClasses = array('GridState_Pagination', 'GridState_Sorting', 'GridState_Filter');
 
 	/**
 	 *
-	 * @param string $name
+	 * @param GridField $name
 	 * @param string $data - json encoded string
-	 * @param string $title 
 	 */
 	public function __construct($grid, $value = null) {
 		$this->grid = $grid;
 
-		foreach (ClassInfo::subclassesFor('GridState_Affector') as $klass){
-			if ($klass == 'GridState_Affector') continue;
-
-			$name = Object::get_static($klass, 'name');
-			$this->affectors[$name] = Object::create($klass, $this);
+		foreach ($this->defaultAffectorClasses as $klass){
+			$this->addAffector(Object::create($klass, $this));
 		}
-
+		
 		if ($value) $this->setValue($value);
 
 		parent::__construct('GridState');
+	}
+	
+	function addAffector(GridState_Affector $affector, $value = null){
+		$this->affectors[Object::get_static(get_class($affector),'name')] = $affector;
+		if ($value) $this->setValue($value);
+	}
+	
+	function removeAffector($name){
+		unset($this->affectors[$name]);
 	}
 
 	function setValue($value) {
 		if (is_string($value)) $value = json_decode($value);
 		foreach ($this->affectors as $affector) $affector->setState($value);
 	}
-
+	
 	public function __get($name) {
 		return $this->affectors[$name];
 	}
