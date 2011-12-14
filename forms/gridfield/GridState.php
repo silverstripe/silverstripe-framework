@@ -261,3 +261,56 @@ class GridState_Sorting extends GridState_Affector {
 
 
 }
+
+class GridState_Filter extends GridState_Affector {
+
+	static $name = 'Filter';
+
+	protected $Criteria = array();
+	
+	protected $ResetFilter = 0;
+
+	function setState($state) {
+		if ($state) {
+		 	if (isset($state->Filter)) {
+				$filter = $state->Filter;
+				if (isset($filter->Criteria)) {
+					$this->Criteria = $filter->Criteria;
+				}
+				if (isset($filter->ResetFilter)) {
+					$this->Criteria = null;
+				}
+			}
+		}
+	}
+
+	function apply() {
+		$filterColumns = $this->Criteria;
+		if (!$filterColumns) return;
+
+		foreach($filterColumns as $column => $value) {
+			$columnName = substr($column,9);
+			$resultColumns[] = sprintf("LOWER(\"%s\") LIKE LOWER('%%%s%%')", Convert::raw2sql($columnName), Convert::raw2sql($value));
+		}
+		$where = implode(' AND ', $resultColumns);
+		$this->getList()->where($where);
+	}
+
+	function getState(&$state) {
+		$state->Filter = new stdClass();
+		$state->Filter->Criteria = $this->Criteria;
+	}
+
+	function setCriteria($criteria) {
+		return $this->Criteria = $criteria;
+	}
+	
+	function getCriteria() {
+		return $this->Criteria;
+	}
+	
+	function setResetFilter($value){
+		$this->ResetFilter = $value;
+		DEbug::dump('reset');die;
+	}
+}
