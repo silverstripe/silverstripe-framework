@@ -76,7 +76,6 @@ class GridField extends CompositeField {
 	 */
 	public function setModelClass($modelClassName) {
 		$this->modelClassName = $modelClassName;
-		
 		return $this;
 	}
 	
@@ -156,7 +155,12 @@ class GridField extends CompositeField {
 		return $this->state;
 	}
 
-	function FieldHolder() {
+	/**
+	 * Returns the whole gridfield rendered with all the attached Elements
+	 *
+	 * @return string
+	 */
+	public function FieldHolder() {
 		$this->getState()->apply();
 
 		$content = array(
@@ -189,64 +193,98 @@ class GridField extends CompositeField {
 
 }
 
+/**
+ * This class is the base class when you want to have an action that alters the state of the gridfield
+ * 
+ * @package sapphire
+ * @subpackage forms
+ * 
+ */
 class GridField_AlterAction extends FormAction_WithoutLabel {
 
+	/**
+	 *
+	 * @var GridField
+	 */
 	protected $gridField;
+	
+	/**
+	 *
+	 * @var string
+	 */
 	protected $buttonLabel;
+	
+	/**
+	 *
+	 * @var array 
+	 */
 	protected $stateValues;
-	protected $stateFields;
+	
+	/**
+	 *
+	 * @var array
+	 */
+	protected $stateFields = array();
 
-	function __construct($gridField, $name, $label) {
+	/**
+	 *
+	 * @param GridField $gridField
+	 * @param string $name
+	 * @param string $label 
+	 */
+	public function __construct(GridField $gridField, $name, $label) {
 		$this->gridField = $gridField;
 		$this->buttonLabel = $label;
-
 		parent::__construct($name);
 	}
 
-	function stateChangeOnTrigger($stateValues) {
+	/**
+	 *
+	 * @param array $stateValues 
+	 */
+	public function stateChangeOnTrigger($stateValues) {
 		$this->stateValues = $stateValues;
 	}
 
-	function applyStateFromFieldsOnTrigger($state, $fields) {
-		if (!$this->stateFields) $this->stateFields = array();
-		
+	/**
+	 *
+	 * @param string $state (Filter.Criteria)
+	 * @param array $fields 
+	 */
+	public function applyStateFromFieldsOnTrigger($state, $fields) {
 		$this->stateFields[$state] = array();
-		foreach ($fields as $field) $this->stateFields[$state][] = $field->getName();
+		foreach ($fields as $field) {
+			$this->stateFields[$state][] = $field->getName();
+		}
 	}
 
 	/**
 	 * urlencode encodes less characters in percent form than we need - we need everything that isn't a \w
+	 * 
+	 * @param string $val
 	 */
-	function nameEncode($val) {
+	public function nameEncode($val) {
 		return preg_replace_callback('/[^\w]/', array($this, '_nameEncode'), $val);
 	}
 
 	/**
 	 * The callback for nameEncode
+	 * 
+	 * @param string $val
 	 */
-	function _nameEncode($match) {
+	public function _nameEncode($match) {
 		return '%'.dechex(ord($match[0]));
 	}
 
-	function Field() {
-		$base = $this->gridField;
-		
-		// Calculate the name of the grid field relative to the Form
-		
-		$name = array();
-
-		do {
-			array_unshift($name, $base->getName());
-			$base = $base->getForm();
-		}
-		while ($base && !($base instanceof Form));
-
-		$name = implode('.', $name);
-		
+	/**
+	 * Default method used by Templates to render the form
+	 *
+	 * @return string HTML tag
+	 */
+	public function Field() {
 		// Store state in session, and pass ID to client side
-		
 		$state = array(
-			'grid' => $name,
+			'grid' => $this->getNameFromParent($this->gridField),
 			'values' => $this->stateValues,
 			'fields' => $this->stateFields
 		);
@@ -255,13 +293,12 @@ class GridField_AlterAction extends FormAction_WithoutLabel {
 		Session::set($id, $state);
 
 		// And generate field
-
 		$attributes = array(
 			'class' => 'action' . ($this->extraClass() ? $this->extraClass() : ''),
 			'id' => $this->id(),
 			'type' => 'submit',
-			// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch will strip
-			// it from the requests 
+			// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch 
+			// will strip it from the requests 
 			'name' => 'action_gridFieldAlterAction'. '?' . 'StateID='.$id,
 			'tabindex' => $this->getTabIndex(),
 		);
@@ -274,11 +311,35 @@ class GridField_AlterAction extends FormAction_WithoutLabel {
 		return $this->createTag('button', $attributes, $this->buttonLabel);
 	}
 
+	/**
+	 * Calculate the name of the gridfield relative to the Form
+	 *
+	 * @param GridField $base
+	 * @return string
+	 */
+	protected function getNameFromParent(GridField $base ) {
+		$name = array();
+		do {
+			array_unshift($name, $base->getName());
+			$base = $base->getForm();
+		} while ($base && !($base instanceof Form));
+		return implode('.', $name);
+	}
 }
 
+/**
+ * This field is needed for being able to change the state of a gridfield.
+ * 
+ * @package sapphire
+ * @subpackage forms 
+ */
 class GridFieldForm extends Form {
 
-	function getFormContainerURL() {
+	/**
+	 *
+	 * @return type 
+	 */
+	public function getFormContainerURL() {
 		$controller = $this->controller;
 		$request = $controller->getRequest();
 
@@ -293,7 +354,12 @@ class GridFieldForm extends Form {
 		if(Director::is_site_url($url)) return $url;
 	}
 
-	function gridFieldAlterAction($vars) {
+	/**
+	 *
+	 * @param type $vars
+	 * @return type 
+	 */
+	public function gridFieldAlterAction($vars) {
 		$id = $vars['StateID'];
 		$stateChange = Session::get($id);
 		
