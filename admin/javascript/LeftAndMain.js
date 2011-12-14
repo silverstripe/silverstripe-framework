@@ -144,7 +144,7 @@ jQuery.noConflict();
 					// which matches one class on the menu
 					window.History.pushState(data, title, url);
 				} else {
-					window.location = url;
+					window.location = $.path.makeUrlAbsolute(url, $('base').attr('href'));
 				}
 			},
 			

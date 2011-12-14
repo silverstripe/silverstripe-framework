@@ -271,7 +271,8 @@
 
 				var url = $(node).find('a:first').attr('href');
 				if(url && url != '#') {
-					if($(node).find('a:first').is(':internal')) url = $('base').attr('href') + url;
+
+					if($(node).find('a:first').is(':internal')) url = url = $.path.makeUrlAbsolute(url, $('base').attr('href'));
 					// Reload only edit form if it exists (side-by-side view of tree and edit view), otherwise reload whole panel
 					if(container.find('.cms-edit-form').length) {
 						url += '?cms-view-form=1';

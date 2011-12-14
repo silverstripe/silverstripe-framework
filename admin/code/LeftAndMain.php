@@ -233,6 +233,7 @@ class LeftAndMain extends Controller {
 				THIRDPARTY_DIR . '/jquery/jquery.js',
 				THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js',
 				SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js',
+				SAPPHIRE_DIR . '/admin/javascript/lib.js',
 				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
 				THIRDPARTY_DIR . '/json-js/json2.js',
 				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
