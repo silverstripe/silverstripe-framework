@@ -137,8 +137,10 @@
 				var firstLink = this.find('a[href]');
 				if(!firstLink) return;
 				
-				window.History.pushState({selector: '.cms-content-fields form:first'}, '', firstLink.attr('href'));
-				return false;
+				if(window.History.enabled) {
+					window.History.pushState({selector: '.cms-content-fields form:first'}, '', firstLink.attr('href'));
+					return false;
+				} 
 			}
 		});
 

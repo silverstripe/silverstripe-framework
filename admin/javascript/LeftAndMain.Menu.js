@@ -97,20 +97,25 @@
 				// Expand this, and collapse all other items
 				var item = this.getMenuItem();
 				item.select();
+
+				var url = this.attr('href');
+				if(this.is(':internal')) url = $('base').attr('href') + url;
 				
 				var children = item.find('li');
 				if(children.length) {
 					children.first().find('a').click();
-				} else {
+				} else if(window.History.enabled) {
 					// Active menu item is set based on X-Controller ajax header,
 					// which matches one class on the menu
-					window.History.pushState({}, '', this.attr('href'));
+					window.History.pushState({}, '', url);
+				} else {
+					window.location = url;
 				}
 			}
 		});
 		
 	});
-	
+
 	// Internal Helper
 	$.expr[':'].internal = function(obj){return obj.href.match(/^mailto\:/) || (obj.hostname == location.hostname);};
 	$.expr[':'].external = function(obj){return !$(obj).is(':internal')};

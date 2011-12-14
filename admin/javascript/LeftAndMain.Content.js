@@ -31,7 +31,12 @@
 
 					var url = $(node).find('a:first').attr('href');
 					if(url && url != '#') {
-						window.History.pushState({}, '', url);
+						if($(node).find('a:first').is(':internal')) url = $('base').attr('href') + url;
+						if(window.History.enabled) {
+							window.History.pushState({}, '', url);
+						} else {
+							window.location = url;
+						}
 					} else {
 						self.removeForm();
 					}

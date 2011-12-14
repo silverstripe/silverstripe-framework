@@ -99,9 +99,9 @@
 				var id = $(doc).find('meta[name=x-page-id]').attr('content'), 
 					editLink = $(doc).find('meta[name=x-cms-edit-link]').attr('content'), 
 					contentPanel = $('.cms-content');
-				// TODO Remove hardcoding
 				if(id && contentPanel.find(':input[name=ID]').val() != id) {
-					window.History.pushState({}, '', editLink);
+					// Ignore behaviour without history support (as we need ajax loading for the new form to load in the background)
+					if(window.History.enabled) window.History.pushState({}, '', editLink);
 				}
 			},
 			
