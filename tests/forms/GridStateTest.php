@@ -11,42 +11,39 @@ class GridStateTest extends SapphireTest {
 	public function testToString() {
 		$gridField = new GridField('GridField');
 		$gridState = new GridState($gridField);
-		$this->assertContains('"Bananas":{"Color":"yellow"}',$gridState->__toString());
+		$this->assertContains('"Sorting":{"Order":null}',$gridState->__toString());
 	}
 	
 	public function testFromString() {
 		$gridField = new GridField('GridField');
-		$gridState = new GridState($gridField, '{"Bananas":{"Color":"green"}}');
+		$gridState = new GridState($gridField);
+		$gridState->addAffector(new GridState_Bananas(), '{"Bananas":{"Color":"green"}}');
 		$this->assertContains('"Bananas":{"Color":"green"}',$gridState->__toString());
 	}
 	
-	public function testIsset() {
+	public function testAddAffector() {
 		$gridField = new GridField('GridField');
-		$gridState = new GridState($gridField, '{"Bananas":{"Color":"green"}}');//Debug::Dump(is_object($gridState->Bananas));die;
+		$gridState = new GridState($gridField);
+		$gridState->addAffector(new GridState_Bananas(), '{"Bananas":{"Color":"green"}}');
 		$this->assertTrue(is_object($gridState->Bananas));
 		$this->assertFalse(isset($gridState->Monkey));
 	}
 	
-	/*public function testUnset() {
+	public function testRemoveAffector() {
 		$gridField = new GridField('GridField');
-		$gridState = new GridState($gridField, '{"Bananas":true,"Page":2,"Title":"Tower"}');
-		unset($gridState->Bananas);
-		$this->assertFalse(isset($gridState->Bananas));
-		$this->assertEquals('{"Page":2,"Title":"Tower"}',$gridState->__toString());
-	}*/
+		$gridState = new GridState($gridField);
+		$gridState->addAffector(new GridState_Bananas(), '{"Bananas":{"Color":"green"}}');
+		$this->assertContains('"Bananas":{"Color":"green"}',$gridState->__toString());
+		$gridState->removeAffector('Bananas');
+		$this->assertNotContains('{"Bananas":{"Color":"green"}}',$gridState->__toString());
+	}
 	
 	public function testToFormField() {
 		$gridField = new GridField('GridField');
-		$gridState = new GridState($gridField, '{"Bananas":{"Color":"green"}}');
+		$gridState = new GridState($gridField);
+		$gridState->addAffector(new GridState_Bananas(), '{"Bananas":{"Color":"green"}}');
 		$this->assertContains('name="GridState"', $gridState->Field());
 		$this->assertContains('Bananas&quot;:{&quot;Color&quot;:&quot;green&quot;}', $gridState->Field());
-	}
-	
-	public function testSetArray() {
-		$gridField = new GridField('GridField');
-		$gridState = new GridState($gridField, 'GridState');
-		$gridState->setValue('{"Bananas":{"Color":"blue"}}');
-		$this->assertContains('"Bananas":{"Color":"blue"}', $gridState->__toString());
 	}
 }
 
