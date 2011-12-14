@@ -267,10 +267,10 @@
 	
 	$('.cms-content.loading,.cms-edit-form.loading').entwine({
 		onmatch: function() {
-			this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div>');
+			this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>');
 		},
 		onunmatch: function() {
-			this.find('.cms-content-loading-overlay').remove();
+			this.find('.cms-content-loading-overlay,.cms-content-loading-spinner').remove();
 		}
 	});
 	
