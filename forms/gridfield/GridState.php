@@ -72,6 +72,32 @@ class GridState extends HiddenField {
 	public function __toString() {
 		return $this->Value();
 	}
+	
+	static function array_to_object($d) {
+		if (is_array($d)) {
+			return (object) array_map(array('GridState', 'array_to_object'), $d);
+		}
+		else {
+			return $d;
+		}
+	}
+	
+	public function update($values){
+		$store = new stdClass();
+		$data = $store;
+		foreach ($values as $field => $val) {
+			$parts = explode('.', $field);
+			$store = $data;
+			while(count($parts) > 1) {
+				$part = array_shift($parts);
+				if (!isset($store->$part)) $store->$part = new stdClass();
+				$store = $store->$part;
+			}
+			$part = array_shift($parts);
+			$store->$part = is_array($val) ? self::array_to_object($val) : $val;
+		}
+		$this->setValue($data);
+	}
 
 }
 

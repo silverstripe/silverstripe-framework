@@ -49,7 +49,7 @@ class GridField extends CompositeField {
 	 * @param Form $form 
 	 * @param string|GridFieldPresenter $dataPresenterClassName - can either pass in a string or an instance of a GridFieldPresenter
 	 */
-	public function __construct($name, $title = null, SS_List $dataList = null, Form $form = null, $dataPresenterClassName = 'GridFieldPresenter') {
+	public function __construct($name, $title = null, SS_List $dataList = null, Form $form = null) {
 		parent::__construct($name, $title, null, $form);
 
 		CompositeField::__construct();
@@ -58,11 +58,13 @@ class GridField extends CompositeField {
 		if ($dataList) $this->setList($dataList);
 
 		$this->state = new GridState($this);
-
-		$this->push($this->state);
+		
 		$this->push(new GridFieldSortableHeader($this));
 		$this->push(new GridFieldBody($this));
 		$this->push(new GridFieldPaginator($this));
+		$this->push(new GridFieldFilter($this));
+		$this->push($this->state);
+		
 	}
 
 	function hasData() { return false; }
@@ -195,6 +197,7 @@ class GridField_AlterAction extends FormAction_WithoutLabel {
 	protected $gridField;
 	protected $buttonLabel;
 	protected $stateValues;
+	protected $stateFields;
 
 	function __construct($gridField, $name, $label) {
 		$this->gridField = $gridField;
@@ -205,6 +208,13 @@ class GridField_AlterAction extends FormAction_WithoutLabel {
 
 	function stateChangeOnTrigger($stateValues) {
 		$this->stateValues = $stateValues;
+	}
+
+	function applyStateFromFieldsOnTrigger($state, $fields) {
+		if (!$this->stateFields) $this->stateFields = array();
+		
+		$this->stateFields[$state] = array();
+		foreach ($fields as $field) $this->stateFields[$state][] = $field->getName();
 	}
 
 	/**
@@ -222,9 +232,10 @@ class GridField_AlterAction extends FormAction_WithoutLabel {
 	}
 
 	function Field() {
-		$values = $this->nameEncode(json_encode($this->stateValues));
-
 		$base = $this->gridField;
+		
+		// Calculate the name of the grid field relative to the Form
+		
 		$name = array();
 
 		do {
@@ -234,12 +245,25 @@ class GridField_AlterAction extends FormAction_WithoutLabel {
 		while ($base && !($base instanceof Form));
 
 		$name = implode('.', $name);
+		
+		// Store state in session, and pass ID to client side
+		
+		$state = array(
+			'grid' => $name,
+			'values' => $this->stateValues,
+			'fields' => $this->stateFields
+		);
+		
+		$id = preg_replace('/[^\w]+/', '_', uniqid('gridField_alterActionState', true));
+		Session::set($id, $state);
+
+		// And generate field
 
 		$attributes = array(
 			'class' => 'action' . ($this->extraClass() ? $this->extraClass() : ''),
 			'id' => $this->id(),
 			'type' => 'submit',
-			'name' => 'action_gridFieldAlterAction'. '?' . 'Change_Grid='. $name . '&Change_State=' . $values,
+			'name' => 'action_gridFieldAlterAction'. '?' . 'Change_ActionStateID='.$id,
 			'tabindex' => $this->getTabIndex()
 		);
 
@@ -272,28 +296,36 @@ class GridFieldForm extends Form {
 	}
 
 	function gridFieldAlterAction($vars) {
-		$gridName = $vars['Change_Grid'];
-		$change = json_decode($vars['Change_State']);
-
+		$id = $vars['Change_ActionStateID'];
+		$stateChange = Session::get($id);
+		
+		$gridName = $stateChange['grid'];
+		
 		$grid = $this->Fields()->fieldByName($gridName);
-		$state = $grid->getState();
-
-		foreach ($change as $field => $val) {
-			$parts = explode('.', $field);
-
-			// TODO: Rewrite this to work. This currently only supports one particular type of set, and is insecure
-			$base = $state;
-			while(count($parts) > 1) $base = $base->getField(array_shift($parts));
-
-			$base->setField($parts[0], $val);
+		if ($grid) {
+			$state = $grid->getState();
+		
+			$values = $stateChange['values'];
+			$fields = $stateChange['fields'];
+		
+			$data = $this->getData();
+			if ($fields) {
+				foreach ($fields as $name => $fieldNames) {
+					foreach ($fieldNames as $fieldName) {
+						if ($data[$fieldName]) {
+							$values[$name][$fieldName] = $vars[$fieldName];	
+						} 		
+					}
+				}
+			}
+			$state->update($values);
 		}
-
+		
 		// Make the form re-load it's values from the Session after redirect
 		// so the changes we just made above survive the page reload
 		// TODO: Form really needs refactoring so we dont have to do this
-
 		if (Director::is_ajax()) {
-			return $grid->forTemplate();
+			return $this->forTemplate();
 		}
 		else {
 			$data = $this->getData();
