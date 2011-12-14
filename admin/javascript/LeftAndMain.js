@@ -152,13 +152,29 @@
 						
 						// Update panels
 						var newContentEl = $(data);
-						
 						if(newContentEl.find('.cms-container').length) {
 							throw 'Content loaded via ajax is not allowed to contain tags matching the ".cms-container" selector to avoid infinite loops';
 						}
 						
+						// Set loading state and store element state
 						newContentEl.addClass('loading');
+						var origStyle = contentEl.attr('style'),
+							layoutClasses = ['east', 'west', 'center', 'north', 'south'],
+							origLayoutClasses = $.grep(
+								contentEl.attr('class').split(' '),
+								function(val) { 
+									return ($.inArray(val, layoutClasses) >= 0);
+								}
+							);
+						newContentEl
+							.removeClass(layoutClasses.join(' '))
+							.addClass(origLayoutClasses.join(' '))
+							.attr('style', origStyle);
+
+						// Replace panel completely (we need to override the "layout" attribute, so can't replace the child instead)
 						contentEl.replaceWith(newContentEl);
+
+						// Unset loading and restore element state (to avoid breaking existing panel visibility, e.g. with preview expanded)
 						self.redraw();
 						newContentEl.removeClass('loading');
 						
