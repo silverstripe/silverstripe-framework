@@ -173,7 +173,8 @@ class TestRunner extends Controller {
 			echo "<h3><a href=\"" . $this->Link() . "coverage\">Runs all tests and make test coverage report</a></h3>";
 			echo "<hr />";
 			foreach ($tests as $test) {
-				echo "<h3><a href=\"" . $this->Link() . "$test\">Run $test</a></h3>";
+				$testUrl = urlencode($test);
+				echo "<h3><a href=\"" . $this->Link() . "$testUrl\">Run $test</a></h3>";
 			}
 			echo '</div>';
 		}

@@ -63,6 +63,7 @@ class DebugView extends Object {
 		foreach($parts as $part) {
 			if ($part != '') {
 				$pathPart .= "$part/";
+				$part = urldecode($part);
 				$pathLinks[] = "<a href=\"$base$pathPart\">$part</a>";
 			}
 		}
