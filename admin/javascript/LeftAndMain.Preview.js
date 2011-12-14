@@ -92,7 +92,7 @@
 					contentEl = containerEl.find('.cms-content');
 
 				// Only load if we're in the "edit page" view
-				var blockedClasses = ['CMSMain', 'CMSPagesController', 'CMSSettingsController', 'CMSPageHistoryController'];
+				var blockedClasses = ['CMSPagesController', 'CMSSettingsController', 'CMSPageHistoryController'];
 				if(contentEl.is('.' + blockedClasses.join(',.'))) return;
 
 				// Load this page in the admin interface if appropriate
