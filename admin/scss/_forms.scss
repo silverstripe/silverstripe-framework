@@ -456,6 +456,11 @@ form.nostyle {
  * ---------------------------------------------------- */
 
 .htmleditor {
+	
+	textarea {
+		visibility: hidden; // enabled by JS
+	}
+
 	label {
 		display: block;
 		float: none;
