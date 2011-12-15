@@ -24,6 +24,10 @@
  * @subpackage forms
  */
 class GridField extends CompositeField {
+	
+	static $allowed_actions = array(
+		'gridFieldAlterAction'
+	);
 
 	/** @var SS_List - the datasource */
 	protected $list = null;
@@ -190,6 +194,52 @@ class GridField extends CompositeField {
 			implode("\n", $content['misc']).
 			$this->createTag('table', $attrs, $head."\n".$body."\n".$foot);
 	}
+	
+	/**
+	 *
+	 * @param type $vars
+	 * @return type 
+	 */
+	public function gridFieldAlterAction($vars, $form, $request) {
+		$id = $vars['StateID'];
+		$stateChange = Session::get($id);
+		
+		$gridName = $stateChange['grid'];
+		
+		$grid = $form->Fields()->fieldByName($gridName);
+		if ($grid) {
+			$state = $grid->getState();
+		
+			$values = $stateChange['values'];
+			$fields = $stateChange['fields'];
+		
+			$data = $form->getData();
+			if ($fields) {
+				foreach ($fields as $name => $fieldNames) {
+					foreach ($fieldNames as $fieldName) {
+						if ($data[$fieldName]) {
+							$values[$name][$fieldName] = $vars[$fieldName];	
+						} 		
+					}
+				}
+			}
+			$state->update($values);
+		}
+		
+		// Make the form re-load it's values from the Session after redirect
+		// so the changes we just made above survive the page reload
+		// TODO: Form really needs refactoring so we dont have to do this
+		if (Director::is_ajax()) {
+			return $form->forTemplate();
+		}
+		else {
+			$data = $this->getData();
+			Session::set("FormInfo.{$form->FormName()}.errors", array());
+			Session::set("FormInfo.{$form->FormName()}.data", $data);
+
+			Controller::curr()->redirectBack();
+		}
+	}
 
 }
 
@@ -325,79 +375,4 @@ class GridField_AlterAction extends FormAction_WithoutLabel {
 		} while ($base && !($base instanceof Form));
 		return implode('.', $name);
 	}
-}
-
-/**
- * This field is needed for being able to change the state of a gridfield.
- * 
- * @package sapphire
- * @subpackage forms 
- */
-class GridFieldForm extends Form {
-
-	/**
-	 *
-	 * @return type 
-	 */
-	public function getFormContainerURL() {
-		$controller = $this->controller;
-		$request = $controller->getRequest();
-
-		if ($request) {
-			if ($request->requestVar('BackURL')) {
-				$url = $request->requestVar('BackURL');
-			}
-			else if($request->getHeader('Referer')) {
-				$url = $request->getHeader('Referer');
-			}
-		}
-		if(Director::is_site_url($url)) return $url;
-	}
-
-	/**
-	 *
-	 * @param type $vars
-	 * @return type 
-	 */
-	public function gridFieldAlterAction($vars) {
-		$id = $vars['StateID'];
-		$stateChange = Session::get($id);
-		
-		$gridName = $stateChange['grid'];
-		
-		$grid = $this->Fields()->fieldByName($gridName);
-		if ($grid) {
-			$state = $grid->getState();
-		
-			$values = $stateChange['values'];
-			$fields = $stateChange['fields'];
-		
-			$data = $this->getData();
-			if ($fields) {
-				foreach ($fields as $name => $fieldNames) {
-					foreach ($fieldNames as $fieldName) {
-						if ($data[$fieldName]) {
-							$values[$name][$fieldName] = $vars[$fieldName];	
-						} 		
-					}
-				}
-			}
-			$state->update($values);
-		}
-		
-		// Make the form re-load it's values from the Session after redirect
-		// so the changes we just made above survive the page reload
-		// TODO: Form really needs refactoring so we dont have to do this
-		if (Director::is_ajax()) {
-			return $this->forTemplate();
-		}
-		else {
-			$data = $this->getData();
-			Session::set("FormInfo.{$this->FormName()}.errors", array());
-			Session::set("FormInfo.{$this->FormName()}.data", $data);
-
-			Controller::curr()->redirectBack();
-		}
-	}
-
 }
