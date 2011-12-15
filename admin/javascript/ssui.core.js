@@ -5,6 +5,12 @@
 		 * Constructor: onmatch
 		 */
 		onmatch: function() {
+			this.redraw();
+
+			this._super();
+		},
+
+		redraw: function() {
 			this.addClass(
 				'ui-state-default ' +
 				'ui-corner-all'
@@ -33,8 +39,6 @@
 					setTimeout(function() {form.clickedButton = null;}, 10);
 				}
 			});
-
-			this._super();
 		}
 	});
 	

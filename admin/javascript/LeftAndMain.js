@@ -90,9 +90,12 @@
 			
 			redraw: function() {
 				// Move from inner to outer layouts. Some of the elements might not exist.
-				this.find('.cms-edit-form[data-layout]').redraw(); // Not all edit forms are layouted
+				// Not all edit forms are layouted, so qualify by their data value.
+				this.find('.cms-edit-form[data-layout]').redraw(); 
 				this.find('.cms-preview').redraw();
-				this.find('.cms-content').redraw();
+				// Only redraw the content area if its not the same as the edit form
+				var contentEl = this.find('.cms-content');
+				if(!contentEl.is('.cms-edit-form')) contentEl.redraw();
 				
 				this.layout({resize: false});
 		
@@ -222,9 +225,8 @@
 		 */
 		$('.cms-container input[type="submit"], .cms-container button, .cms-container input[type="reset"]').entwine({
 			onmatch: function() {
-				// TODO Adding classes in onmatch confuses entwine
-				var self = this;
-				setTimeout(function() {self.addClass('ss-ui-button');}, 10);
+				this.addClass('ss-ui-button');
+				this.redraw();
 				
 				this._super();
 			}

@@ -100,8 +100,8 @@
 				// Force initialization of tabsets to avoid layout glitches
 				this.add(this.find('.ss-tabset')).redrawTabs();
 
-				// TODO Manually set container height before resizing - shouldn't be necessary'
-				this.find('.cms-content-actions').height(this.find('.cms-content-actions .Actions').height());
+				var approxWidth = $('.cms-container').width() - $('.cms-menu').width();
+				this.find('.cms-content-actions').width(approxWidth).height('auto');
 				
 				this.layout();
 			},
