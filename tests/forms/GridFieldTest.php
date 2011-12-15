@@ -21,36 +21,36 @@ class GridFieldTest extends SapphireTest {
 	);
 
 	public function testGetInstance() {
-		$this->assertTrue(new GridField('Testgrid') instanceof FormField, 'GridField should be a FormField');
+		$this->assertTrue(new GridField('Testgrid', 'Test grid', new DataList('GridFieldTest_Person')) instanceof CompositeField, 'Testing constructor of GridField');
 	}
 	
 	public function testSetDataSource() {
-		$grid = new GridField('Testgrid');
-		$source = new ArrayList();
-		$grid->setList($source);
+		$source = new DataList('GridFieldTest_Person');
+		$grid = new GridField('Testgrid', 'Test grid', $source);
 		$this->assertEquals($source, $grid->getList());
 	}
 	
-	function testSetDataclass() {
-		$grid = new GridField('Testgrid');
-		$grid->setModelClass('SiteTree');
-		$this->assertEquals('SiteTree', $grid->getModelClass());
+	public function testGetDisplayFields() {
+		$grid = new GridField('Testgrid', 'Test grid', new DataList('GridFieldTest_Person'));
+		$expected = array( 'Name' => 'Name', 'ID' => 'ID' );
+		$this->assertEquals($expected, $grid->getDisplayFields());
+	}
+	
+	public function testGetState() {
+		$grid = new GridField('Testgrid', 'Test grid', new DataList('GridFieldTest_Person'));
+		$this->assertTrue($grid->getState() instanceof GridState);
 	}
 	
 	/**
-	 * This is better tested in the GridFieldFunctionalTest
-	 * 
-	 * @see GridFieldFunctionalTest
+	 * Will test that the default state changers are rendered
 	 */
-	function testFieldHolder() {
-		$grid = new GridField('Testgrid');
-		$grid->setList(new DataList('GridFieldTest_Person'));
-		$this->assertNotNull($grid->FieldHolder());
-	}
-	
-	function testGetState() {
-		$grid = new GridField('Testgrid');
-		$this->assertTrue($grid->getState() instanceof GridState, 'getState() should return a GridState');
+	public function testFieldHolder() {
+		$grid = new GridField('Testgrid', 'Test grid', new DataList('GridFieldTest_Person'));
+		$html = $grid->FieldHolder();
+		$this->assertContains('id="GridState" name="GridState"',$html);
+		$this->assertContains('id="action_SetOrderID" type="submit"',$html);
+		$this->assertContains('id="SetFilterID" name="SetFilterID" value=""',$html);
+		$this->assertContains('id="action_SetPage1" type="submit"',$html);
 	}
 }
 
