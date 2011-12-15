@@ -171,9 +171,11 @@ class TestRunner extends Controller {
 			asort($tests);
 			echo "<h3><a href=\"" . $this->Link() . "all\">Run all " . count($tests) . " tests</a></h3>";
 			echo "<h3><a href=\"" . $this->Link() . "coverage\">Runs all tests and make test coverage report</a></h3>";
+			echo "<h3><a href=\"" . $this->Link() . "module\">List modules to run module-specific tests</a></h3>";
 			echo "<hr />";
 			foreach ($tests as $test) {
-				echo "<h3><a href=\"" . $this->Link() . "$test\">Run $test</a></h3>";
+				$testUrl = urlencode($test);
+				echo "<h3><a href=\"" . $this->Link() . "$testUrl\">Run $test</a></h3>";
 			}
 			echo '</div>';
 		}
@@ -234,21 +236,43 @@ class TestRunner extends Controller {
 	function module($request, $coverage = false) {
 		self::use_test_manifest();
 		$classNames = array();
-		$moduleNames = explode(',', $request->param('ModuleName'));
-		
-		foreach($moduleNames as $moduleName) {
-			$classesForModule = ClassInfo::classes_for_folder($moduleName);
-			
-			if($classesForModule) {
-				foreach($classesForModule as $className) {
-					if(class_exists($className) && is_subclass_of($className, 'SapphireTest')) {
-						$classNames[] = $className;
+		$moduleName = $request->param('ModuleName');
+		if ($moduleName == '') {
+			self::$default_reporter->writeHeader();
+			chdir('..');
+			$files = scandir('.');
+			$modules = array_filter($files, function ($item) {
+				return is_dir($item) && file_exists($item.DIRECTORY_SEPARATOR."_config.php");
+			});
+			if (count($modules) > 0) {
+				self::$default_reporter->writeInfo("Available Modules", "Select a module to run tests");
+
+				if (Director::is_cli()) {
+					$relativeLink = Director::makeRelative($this->Link())."module/";
+					foreach ($modules as $mod) {
+						echo "sake $relativeLink$mod: Run tests in $mod\n";
+					}
+				} else {
+					echo "<div class=\"trace\">";
+					foreach ($modules as $mod) {
+						$modLink = $this->Link()."module/".$mod;
+						echo "<h3><a href=\"$modLink\">$mod</a></h3>";
+					}
+					echo "</div>";
+				}
+			}
+		} else {
+			$moduleNames = explode(',', $moduleName);
+			foreach($moduleNames as $moduleName) {
+				$classesForModule = ClassInfo::classes_for_folder($moduleName);
+				if($classesForModule) foreach($classesForModule as $class) {
+					if(class_exists($class) && is_subclass_of($class, 'SapphireTest')) {
+						$classNames[] = $class;
 					}
 				}
 			}
+			$this->runTests($classNames, $coverage);
 		}
-		
-		$this->runTests($classNames, $coverage);
 	}
 
 	/**
