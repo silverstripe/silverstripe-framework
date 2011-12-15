@@ -90,7 +90,7 @@
 		 * @param DOMElement field
 		 */
 		this.resetField = function(field) {
-			return $(field).removeData('changetracker.origVal');
+			return $(field).removeData('changetracker.origVal').removeClass('changed');
 		};
 		
 		/**
@@ -99,7 +99,16 @@
 		this.getFields = function() {
 			return this.find(options.fieldSelector).not(options.ignoreFieldSelector);
 		};
-	
-		return this.initialize();
+
+		// Support invoking "public" methods as string arguments
+		if (typeof arguments[0] === 'string') {  
+      var property = arguments[1];  
+      var args = Array.prototype.slice.call(arguments);  
+      args.splice(0, 1);  
+      return this[arguments[0]].apply(this, args);  
+  	} else {
+    	return this.initialize();
+    }
+		
 	};
 }(jQuery));

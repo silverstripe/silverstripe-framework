@@ -103,7 +103,7 @@ describe 'ChangeTracker'
       
       $(':input[name=field_text1]').val('newval').trigger('change');
       $(':input[name=field_text2]').val('newval').trigger('change');
-      $('#form_test').changetracker('resetfield', $(':input[name=field_text1]'));
+      $('#form_test').changetracker('resetField', $(':input[name=field_text1]'));
       $(':input[name=field_text1]').is('.changed').should.be_false
       $(':input[name=field_text2]').is('.changed').should.be_true
       $('#form_test').is('.changed').should.be_true
