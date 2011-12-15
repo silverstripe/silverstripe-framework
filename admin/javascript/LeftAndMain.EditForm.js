@@ -113,34 +113,20 @@
 			},
 		
 			/**
-			 * Function: _checkChangeTracker
+			 * Function: confirmUnsavedChanges
 			 * 
-			 * Checks the jquery.changetracker plugin status for this form.
-			 * Usually bound to window.onbeforeunload.
-			 * 
-			 * Parameters:
-			 *  {boolean} isUnloadEvent - ..
+			 * Checks the jquery.changetracker plugin status for this form,
+			 * and asks the user for confirmation via a browser dialog if changes are detected.
+			 * Doesn't cancel any unload or form removal events, you'll need to implement this based on the return
+			 * value of this message.
 			 * 
 			 * Returns:
-			 *  (String) Either a string with a confirmation message, or the result of a confirm() dialog,
-			 *  based on the isUnloadEvent parameter.
+			 *  (Boolean) FALSE if the user wants to abort with changes present, TRUE if no changes are detected 
+			 *  or the user wants to discard them.
 			 */
-			_checkChangeTracker: function(isUnloadEvent) {
-			  var self = this;
-		  
-				// @todo TinyMCE coupling
-				if(typeof tinyMCE != 'undefined') tinyMCE.triggerSave();
-			
-				// check for form changes
-				if(self.is('.changed')) {
-					// returned string will trigger a confirm() dialog, 
-					// but only if the method is triggered by an event
-					if(isUnloadEvent) {
-						return confirm(ss.i18n._t('LeftAndMain.CONFIRMUNSAVED'));
-					} else {
-						return ss.i18n._t('LeftAndMain.CONFIRMUNSAVEDSHORT');
-					}
-				}
+			confirmUnsavedChanges: function() {
+				this.trigger('beforesave');
+				return (this.is('.changed')) ? confirm(ss.i18n._t('LeftAndMain.CONFIRMUNSAVED')) : true;
 			},
 
 			/**
@@ -205,6 +191,13 @@
 			 * Constructor: onmatch
 			 */
 			onmatch : function() {
+				var self = this;
+				this.closest('form').bind('beforesave', function() {
+					tinyMCE.triggerSave();
+					// TinyMCE assigns value attr directly, which doesn't trigger change event
+					self.trigger('change'); 
+				});
+
 				// Only works after TinyMCE.init() has been invoked, see $(window).bind() call below for details.
 				this.redraw();
 

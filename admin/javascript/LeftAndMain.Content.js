@@ -70,7 +70,7 @@
 				}
 
 				// Alert when unsaved changes are present
-				if(form._checkChangeTracker(true) == false) return false;
+				if(!form.confirmUnsavedChanges()) return false;
 			
 				// hide existing form - shown again through _loadResponse()
 				form.addClass('loading');
@@ -138,13 +138,11 @@
 				// default to first button if none given - simulates browser behaviour
 				if(!button) button = this.find('.Actions :submit:first');
 	
+				form.trigger('beforesave');
 				this.trigger('submitform', {form: form, button: button});
 	
 				// set button to "submitting" state
 				$(button).addClass('loading');
-	
-				// @todo TinyMCE coupling
-				if(typeof tinyMCE != 'undefined') tinyMCE.triggerSave();
 	
 				// validate if required
 				if(!form.validate()) {
@@ -252,7 +250,7 @@
 			removeForm: function(form, placeholderHtml) {
 				if(!placeholderHtml) placeholderHtml = this.getPlaceholderHtml();
 				// Alert when unsaved changes are present
-				if(form._checkChangeTracker(true) == false) return;
+				if(!form.confirmUnsavedChanges()) return;
 				this.trigger('removeform');
 				this.html(placeholderHtml);
 				// TODO This should be using the plugin API

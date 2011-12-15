@@ -112,7 +112,16 @@
 			 */
 			loadPanel: function(url, title, data) {
 				var data = data || {}, selector = data.selector || '.cms-content', contentEl = $(selector);
-				
+				// Check change tracking (can't use events as we need a way to cancel the current state change)
+				var trackedEls = contentEl.find(':data(changetracker)').add(contentEl.filter(':data(changetracker)'));
+				if(trackedEls.length) {
+					var abort = false;
+					trackedEls.each(function() {
+						if(!$(this).confirmUnsavedChanges()) abort = true;
+					});
+					if(abort) return;
+				}
+
 				if(window.History.enabled) {
 					// Active menu item is set based on X-Controller ajax header,
 					// which matches one class on the menu

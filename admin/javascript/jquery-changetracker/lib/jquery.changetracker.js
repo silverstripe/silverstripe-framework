@@ -68,6 +68,8 @@
 			.each(function() {
 				$(this).data('changetracker.origVal', $(this).val());
 			});
+
+			this.data('changetracker', true);
 		};
 			
 		/**
