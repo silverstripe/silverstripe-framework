@@ -11,12 +11,10 @@
 class GridFieldPaginator extends GridFieldElement {
 	static $location = 'foot';
 
-	/** @var string */
-	protected $template = 'GridFieldPaginator';
-	
 	/** @param GridField $gridField */
 	public function __construct(GridField $gridField) {
-		Requirements::javascript('sapphire/javascript/GridFieldPaginator.js');
+		Requirements::javascript(SAPPHIRE_DIR.'/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(SAPPHIRE_DIR.'/javascript/GridField.js');
 
 		parent::__construct($gridField, 'GridFieldPaginator');
 	}
@@ -30,7 +28,7 @@ class GridFieldPaginator extends GridFieldElement {
 			$field->stateChangeOnTrigger(array(
 				'Pagination.Page' => $idx
 			));
-
+			$field->addExtraClass('ss-gridfield-button');
 			$this->push($field);
 		}
 	}

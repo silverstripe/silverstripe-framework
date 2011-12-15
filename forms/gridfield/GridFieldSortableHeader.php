@@ -4,6 +4,8 @@ class GridFieldSortableHeader extends GridFieldElement {
 	static $location = 'head';
 
 	function __construct($gridField) {
+		Requirements::javascript(SAPPHIRE_DIR.'/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(SAPPHIRE_DIR.'/javascript/GridField.js');
 		parent::__construct($gridField, 'GridFieldSortableHeader');
 	}
 
@@ -17,7 +19,7 @@ class GridFieldSortableHeader extends GridFieldElement {
 			$field->stateChangeOnTrigger(array(
 				'Sorting.Order' => array($col => $state->Sorting->getToggledOrder($col))
 			));
-
+			$field->addExtraClass('ss-gridfield-button');
 			$this->push($field);
 		}
 	}

@@ -20,7 +20,6 @@ class GridFieldFilter extends GridFieldElement {
 		$cols = $gridField->DisplayFields;
 		foreach ($cols as $col) {
 			$this->filterFields[] = $field = new TextField('SetFilter'.$col, $col);
-			$field->addExtraClass('ss-gridfield-button');
 			$this->push($field);
 		}
 	}
@@ -49,11 +48,13 @@ class GridFieldFilter extends GridFieldElement {
 		}
 		
 		$setFilter = new GridField_AlterAction($grid, 'SetFilter', 'Filter');
+		$setFilter->addExtraClass('ss-gridfield-button');
 		$setFilter->stateChangeOnTrigger(array('Filter.SetFilter'=>1));
 		$setFilter->applyStateFromFieldsOnTrigger('Filter.Criteria', $this->filterFields);
 		
 		$resetFilter = new GridField_AlterAction($grid, 'ResetFilter', 'Reset');
 		$resetFilter->stateChangeOnTrigger(array('Filter.ResetFilter'=>1));
+		$resetFilter->addExtraClass('ss-gridfield-button');
 		$filterFields.= '<tr><th colspan="'.max(1, count($grid->DisplayFields) - 2).'"></th>';
 		$filterFields.= '<th>'.$setFilter->forTemplate().'</th>';
 		$filterFields.= '<th>'.$resetFilter->forTemplate().'</th>';
