@@ -101,7 +101,7 @@
 					contentPanel = $('.cms-content');
 				if(id && contentPanel.find(':input[name=ID]').val() != id) {
 					// Ignore behaviour without history support (as we need ajax loading for the new form to load in the background)
-					if(window.History.enabled) window.History.pushState({}, '', editLink);
+					if(window.History.enabled) $('.cms-container').loadPanel(editLink);
 				}
 			},
 			

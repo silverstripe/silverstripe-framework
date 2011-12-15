@@ -32,11 +32,7 @@
 					var url = $(node).find('a:first').attr('href');
 					if(url && url != '#') {
 						if($(node).find('a:first').is(':internal')) url = $('base').attr('href') + url;
-						if(window.History.enabled) {
-							window.History.pushState({}, '', url);
-						} else {
-							window.location = url;
-						}
+						$('.cms-container').loadPanel(url);
 					} else {
 						self.removeForm();
 					}
@@ -55,7 +51,7 @@
 			/**
 			 * Function: loadForm
 			 * 
-			 * See $('.cms-container').handleStateChange() on a frequently used alternative
+			 * See $('.cms-container').loadPanel() on a frequently used alternative
 			 * to direct ajax loading of content, with support for the window.History object.
 			 * 
 			 * Parameters:

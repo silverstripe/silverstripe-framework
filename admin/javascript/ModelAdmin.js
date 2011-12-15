@@ -138,7 +138,7 @@
 				if(!firstLink) return;
 				
 				if(window.History.enabled) {
-					window.History.pushState({selector: '.cms-content-fields form:first'}, '', firstLink.attr('href'));
+					$('.cms-container').loadPanel(firstLink.attr('href'), '', {selector: '.cms-content-fields form:first'});
 					return false;
 				} 
 			}

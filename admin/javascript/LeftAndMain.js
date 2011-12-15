@@ -80,7 +80,7 @@
 				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
 				
-				 History.Adapter.bind(window,'statechange',function(){ 
+				History.Adapter.bind(window,'statechange',function(){ 
 					self.handleStateChange();
 				});
 
@@ -97,10 +97,36 @@
 		
 				this.find('.cms-panel-layout').redraw(); // sidebar panels.
 			},
+
+			/**
+			 * Proxy around History.pushState() which handles non-HTML5 fallbacks,
+			 * as well as global change tracking. Change tracking needs to be synchronous rather than event/callback
+			 * based because the user needs to be able to abort the action completely.
+			 * 
+			 * See handleStateChange() for more details.
+			 * 
+			 * Parameters:
+			 *  - {String} url
+			 *  - {String} title New window title
+			 *  - {Object} data Any additional data passed through to History.pushState()
+			 */
+			loadPanel: function(url, title, data) {
+				var data = data || {}, selector = data.selector || '.cms-content', contentEl = $(selector);
+				
+				if(window.History.enabled) {
+					// Active menu item is set based on X-Controller ajax header,
+					// which matches one class on the menu
+					window.History.pushState(data, title, url);
+				} else {
+					window.location = url;
+				}
+			},
 			
 			/**
 			 * Handles ajax loading of new panels through the window.History object.
 			 * To trigger loading, pass a new URL to window.History.pushState().
+			 * Use loadPanel() as a pushState() wrapper as it provides some additional functionality
+			 * like global changetracking and user aborts.
 			 * 
 			 * Due to the nature of history management, no callbacks are allowed.
 			 * Use the 'beforestatechange' and 'afterstatechange' events instead,
