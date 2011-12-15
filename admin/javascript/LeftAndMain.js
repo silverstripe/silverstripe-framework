@@ -11,17 +11,6 @@
 	$.entwine('ss', function($){
 
 		/**
-		 * Turn off autocomplete to fix the access tab randomly switching radio buttons in Firefox
-		 * when refresh the page with an anchor tag in the URL. E.g: /admin#Root_Access.
-		 * Autocomplete in the CMS also causes strangeness in other browsers,
-		 * filling out sections of the form that the user does not want to be filled out,
-		 * so this turns it off for all browsers.
-		 * See the following page for demo and explanation of the Firefox bug:
-		 *  http://www.ryancramer.com/journal/entries/radio_buttons_firefox/
-		 */
-		$("#Form_EditForm").attr("autocomplete", "off");
-
-		/**
 		 * Position the loading spinner animation below the ss logo
 		 */ 
 		var positionLoadingSpinner = function() {

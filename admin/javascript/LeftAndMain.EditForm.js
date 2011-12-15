@@ -38,11 +38,27 @@
 			 */
 			onmatch: function() {
 				var self = this;
+
+				// Turn off autocomplete to fix the access tab randomly switching radio buttons in Firefox
+				// when refresh the page with an anchor tag in the URL. E.g: /admin#Root_Access.
+				// Autocomplete in the CMS also causes strangeness in other browsers,
+				// filling out sections of the form that the user does not want to be filled out,
+				// so this turns it off for all browsers.
+				// See the following page for demo and explanation of the Firefox bug:
+				//  http://www.ryancramer.com/journal/entries/radio_buttons_firefox/
+				this.attr("autocomplete", "off");
 			
 				this._setupChangeTracker();
 
 				// Can't bind this through jQuery
-				window.onbeforeunload = function(e) {return self._checkChangeTracker(false);};
+				window.onbeforeunload = function(e) {
+					self.trigger('beforesave');
+					if(self.is('.changed')) return ss.i18n._t('LeftAndMain.CONFIRMUNSAVEDSHORT');
+				};
+
+				// Catch navigation events before they reach handleStateChange(),
+				// in order to avoid changing the menu state if the action is cancelled by the user
+				$('.cms-menu')
 				
 				// focus input on first form element
 				this.find(':input:visible:not(:submit):first').focus();
