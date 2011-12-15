@@ -54,19 +54,24 @@
 		this.initialize = function() {
 			// optional metadata plugin support
 			if ($.meta) options = $.extend({}, options, this.data());
-			
-			// setup original values
-			this.getFields()
-			.bind('change', function(e) {
+
+			var onchange = function(e) {
 				var $field = $(e.target);
 				var origVal = $field.data('changetracker.origVal');
-				if(origVal === null || $field.val() != origVal) {
+				if(origVal === null || e.target.value != origVal) {
+					// TODO Also add class to radiobutton/checkbox siblings
 					$field.addClass(options.changedCssClass);
 					self.addClass(options.changedCssClass);
 				}
-			})
-			.each(function() {
-				$(this).data('changetracker.origVal', $(this).val());
+			};
+			
+			// setup original values
+			var fields = this.getFields();
+			fields.filter(':radio,:checkbox').bind('click', onchange);
+			fields.not(':radio,:checkbox').bind('change', onchange);
+			fields.each(function() {
+				var origVal = $(this).is(':radio,:checkbox') ? self.find(':input[name=' + $(this).attr('name') + ']:checked').val() : $(this).val();
+				$(this).data('changetracker.origVal', origVal);
 			});
 
 			this.data('changetracker', true);

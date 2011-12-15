@@ -33,15 +33,14 @@ describe 'ChangeTracker'
     
     it 'can track changes on input type=radio fields with existing values'
       $('#form_test').append(
-        '<input type="radio" name="field_radio" value="1" />'
-        + '<input type="radio" name="field_radio" value="2" />'
+        '<input type="radio" id="field_radio1" name="field_radio" value="1" checked="checked" />'
+        + '<input type="radio" id="field_radio2" name="field_radio" value="2" />'
       );
-      
       $('#form_test').changetracker();
-      
-      $(':input[name=field_radio]').val(1).trigger('change');
+      $('#field_radio2').attr('checked', 'checked').trigger('click');
       $('#form_test').is('.changed').should.be_true
-      $(':input[name=field_radio]').is('.changed').should.be_true
+      // $('#field_radio1').is('.changed').should.be_true
+      $('#field_radio2').is('.changed').should.be_true
     end
     
     it 'can track changes on select fields with existing values'
