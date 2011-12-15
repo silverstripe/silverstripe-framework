@@ -208,6 +208,7 @@ class Geoip {
 		'QA' => "Qatar",
 		'RE' => "Reunion",
 		'RO' => "Romania",
+		'RS' => "Republic of Serbia",
 		'RU' => "Russian Federation",
 		'RW' => "Rwanda",
 		'SA' => "Saudi Arabia",
