@@ -196,9 +196,15 @@
 			onmatch : function() {
 				var self = this;
 				this.closest('form').bind('beforesave', function() {
-					tinyMCE.triggerSave();
-					// TinyMCE assigns value attr directly, which doesn't trigger change event
-					self.trigger('change'); 
+					if(typeof tinyMCE == 'undefined') return;
+
+					// TinyMCE modifies input, so change tracking might get false
+					// positives when comparing string values - don't save if the editor doesn't think its dirty.
+					if(self.isChanged()) {
+						tinyMCE.triggerSave();
+						// TinyMCE assigns value attr directly, which doesn't trigger change event
+						self.trigger('change'); 	
+					}
 				});
 
 				// Only works after TinyMCE.init() has been invoked, see $(window).bind() call below for details.
@@ -223,14 +229,26 @@
 				});
 				ed.render();
 
+				// Handle editor de-registration by hooking into state changes.
+				// TODO Move to onunmatch for less coupling (once we figure out how to work with detached DOM nodes in TinyMCE)
+				$('.cms-container').bind('beforestatechange', function() {
+					self.css('visibility', 'hidden');
+					var ed = tinyMCE.get(self.attr('id'));
+					if(ed) ed.remove();
+				});
+
 				this._super();
 			},
 
 			isChanged: function() {
+				if(typeof tinyMCE == 'undefined') return;
+
 				return tinyMCE.getInstanceById(this.attr('id')).isDirty();
 			},
 
 			resetChanged: function() {
+				if(typeof tinyMCE == 'undefined') return;
+
 				var inst = tinyMCE.getInstanceById(this.attr('id'));
 				if (inst) inst.startContent = tinymce.trim(inst.getContent({format : 'raw', no_events : 1}));
 			},
@@ -243,6 +261,7 @@
 				this._super();
 			}
 		});
+		
 	});
 
 }(jQuery));
