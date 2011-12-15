@@ -43,13 +43,17 @@
 	 */
 	$('.ss-ui-tabs-nav').entwine({
 	 onmatch: function() {
-		 this.addClass('ui-tabs ui-widget ui-widget-content ui-corner-all ui-tabs-panel ui-corner-bottom');
-		 this.find('ul').addClass('ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all');
-		 this.find('li').addClass('ui-state-default ui-corner-top');
-		 // TODO Figure out selected tab
-		 this.find('li:first').selectIt();
+		 this.redraw();
 	
 		 this._super();
+	 },
+
+	 redraw: function() {
+	 		this.addClass('ui-tabs ui-widget ui-widget-content ui-corner-all ui-tabs-panel ui-corner-bottom');
+			this.find('ul').addClass('ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all');
+		 	this.find('li').addClass('ui-state-default ui-corner-top');
+		 	// TODO Figure out selected tab
+		 	this.find('li:first').selectIt();
 	 }
 	});
 	

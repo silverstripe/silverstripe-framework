@@ -194,13 +194,15 @@
 						newContentEl
 							.removeClass(layoutClasses.join(' '))
 							.addClass(origLayoutClasses.join(' '))
-							.attr('style', origStyle);
+							.attr('style', origStyle)
+							.css('visibility', 'hidden');
 
 						// Replace panel completely (we need to override the "layout" attribute, so can't replace the child instead)
 						contentEl.replaceWith(newContentEl);
 
 						// Unset loading and restore element state (to avoid breaking existing panel visibility, e.g. with preview expanded)
 						self.redraw();
+						newContentEl.css('visibility', 'visible');
 						newContentEl.removeClass('loading');
 						
 						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: newContentEl});

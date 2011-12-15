@@ -39,12 +39,15 @@
 				});
 				
 				// Force initialization of tabsets to avoid layout glitches
-				this.find('.ss-tabset').redraw();
+				this.find('.ss-tabset').redrawTabs();
 				
 				this._super();
 			},
 						
 			redraw: function() {
+				// Force initialization of tabsets to avoid layout glitches
+				this.add(this.find('.ss-tabset')).redrawTabs();
+
 				this.layout();
 			},
 			
