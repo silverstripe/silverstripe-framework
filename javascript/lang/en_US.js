@@ -14,7 +14,6 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 		'FILEIFRAMEFIELD.DELETEFILE': 'Delete File',
 		'FILEIFRAMEFIELD.UNATTACHFILE': 'Un-Attach File',
 		'FILEIFRAMEFIELD.DELETEIMAGE': 'Delete Image',
-		'FILEIFRAMEFIELD.CONFIRMDELETE': 'Are you sure you want to delete this file?',
-		'LeftAndMain.IncompatBrowserWarning': 'Your browser is not compatible with the CMS interface. Please use Internet Explorer 7+, Google Chrome 10+ or Mozilla Firefox 3.5+.'
+		'FILEIFRAMEFIELD.CONFIRMDELETE': 'Are you sure you want to delete this file?'
 	});
 }
