@@ -181,7 +181,7 @@ class GridFieldPresenter extends ViewableData {
 	 */
 	public function Headers() {
 		if(!$this->getList()) {
-			throw new Exception(sprintf(
+			throw new LogicException(sprintf(
 				'%s needs an data source to be able to render the form', get_class($this->getGridField())
 			));
 		}

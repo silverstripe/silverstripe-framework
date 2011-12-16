@@ -93,7 +93,7 @@ class ClassInfo {
 		if (is_object($class)) $class = get_class($class);
 
 		if (!is_subclass_of($class, 'DataObject')) {
-			throw new Exception("$class is not a subclass of DataObject");
+			throw new InvalidArgumentException("$class is not a subclass of DataObject");
 		}
 
 		while ($next = get_parent_class($class)) {
@@ -148,7 +148,7 @@ class ClassInfo {
 		if (is_object($class)) {
 			$class = get_class($class);
 		} elseif (!is_string($class)) {
-			throw new Exception(sprintf(
+			throw new InvalidArgumentException(sprintf(
 				'Invalid class value %s, must be an object or string', var_export($class, true)
 			));
 		}

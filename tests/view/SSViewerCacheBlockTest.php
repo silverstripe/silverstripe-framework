@@ -192,7 +192,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	}
 	
 	/**
-     * @expectedException Exception
+     * @expectedException SSTemplateParseException
      */
 	function testErrorMessageForCachedWithinControlWithinCached() {
 		$this->_reset(true);
@@ -205,7 +205,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	}
 
 	/**
-     * @expectedException Exception
+     * @expectedException SSTemplateParseException
      */
 	function testErrorMessageForCachedWithinIf() {
 		$this->_reset(true);
@@ -213,7 +213,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	}
 
 	/**
-     * @expectedException Exception
+     * @expectedException SSTemplateParseException
      */
 	function testErrorMessageForInvalidConditional() {
 		$this->_reset(true);
