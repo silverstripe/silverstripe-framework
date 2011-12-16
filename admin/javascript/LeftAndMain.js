@@ -20,6 +20,7 @@
 			spinner.css('top', top + offset);
 			spinner.show();
 		}
+		
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
 
 		// global ajax error handlers
@@ -238,14 +239,21 @@
 		 * Link for editing the profile for a logged-in member through a modal dialog.
 		 */
 		$('.cms-container .profile-link').entwine({
+			DialogPadding: 40,
+			MaxHeight: 800,
+			MaxWidth: 800,
+			MinHeight: 120,
+			MinWidth: 120,
 			
 			/**
 			 * Constructor: onmatch
 			 */
 			onmatch: function() {
+				this.bind('click', function(e) {
+					return self._openPopup();
+				});
+				
 				var self = this;
-
-				this.bind('click', function(e) {return self._openPopup();});
 
 				$('body').append(
 					'<div id="ss-ui-dialog">'
@@ -255,26 +263,88 @@
 					+ '</div>'
 				);
 
-				var cookieVal = (jQuery.cookie && jQuery.cookie('ss-ui-dialog')) ? JSON.parse(jQuery.cookie('ss-ui-dialog')) : false;
+				$('#ss-ui-dialog-iframe').bind('load', function(e) {
+					self._resize();
+				});
+				
+				$(window).bind('resize', function() {
+					self._resize();
+				});
+				
+				self.redraw();
+			},
+			
+			/**
+			 * Function: redraw
+			 *
+			 * Returns: void
+			 */
+			redraw: function() {
+				var self = this;
+				var useCookie = false;
+				var cookieVal = false;
+				
+				if(useCookie && jQuery.cookie && jQuery.cookie('ss-ui-dialog')) {
+					cookieVal = JSON.parse(jQuery.cookie('ss-ui-dialog'));
+				}
+
 				$("#ss-ui-dialog").dialog(jQuery.extend({
 					autoOpen: false,
 					bgiframe: true,
 					modal: true,
-					height: 300,
-					width: 500,
-					ghost: true,
+					width: self._width(),
+					height: self._height(),
+					position: 'center',
+					
 					resizeStop: function(e, ui) {
 						self._resize();
-						self._saveState();
 					},
+					
 					dragStop: function(e, ui) {
 						self._saveState();
 					},
 					// TODO i18n
 					title: 'Edit Profile'
 				}, cookieVal)).css('overflow', 'hidden');
+				
+			},
+			
+			/**
+			 * Function: _popupHeight
+			 * 
+			 * Returns a value > minHeight < max height
+			 * Returns: Int
+			 */
+			_height: function() {
+				var marginTop = parseInt($(this).css('margin-top').replace('px', ''));
+				var marginBottom = parseInt($(this).css('margin-bottom').replace('px', ''));
+				var body = $("body").height();
 
-				$('#ss-ui-dialog-iframe').bind('load', function(e) {self._resize();});
+				var height = body - (marginTop + marginBottom) - (this.getDialogPadding() * 2);
+				
+				if(height > this.getMaxHeight()) 
+					return this.getMaxHeight();
+				else if(height < this.getMinHeight())
+					return this.getMinHeight();
+				
+				return height;
+			},
+			
+			/**
+			 * Function: _popupWidth
+			 *
+			 * Returns: Int
+			 */
+			_width: function() {
+				var body = $("body").width();
+				var width = body - (this.getDialogPadding() * 2);	
+				
+				if(width > this.getMaxWidth()) 
+					return this.getMaxWidth();
+				else if(width < this.getMinWidth())
+					return this.getMinWidth();
+					
+				return width;
 			},
 
 			/**
@@ -294,7 +364,11 @@
 			_resize: function() {
 				var iframe = $('#ss-ui-dialog-iframe');
 				var container = $('#ss-ui-dialog');
-
+				
+				container.dialog("option", "width", this._width());
+				container.dialog("option", "height", this._height());
+				container.dialog('option', 'position', 'center');
+				
 				iframe.attr('width', 
 					container.innerWidth() 
 					- parseFloat(container.css('paddingLeft'))
@@ -305,7 +379,7 @@
 					- parseFloat(container.css('paddingTop')) 
 					- parseFloat(container.css('paddingBottom'))
 				);
-
+				
 				this._saveState();
 			},
 
@@ -321,11 +395,7 @@
 						'ss-ui-dialog',
 						JSON.stringify({
 							width: parseInt(container.width(), 10), 
-							height: parseInt(container.height(), 10),
-							position: [
-								parseInt(container.offset().top, 10),
-								parseInt(container.offset().left, 10)
-							]
+							height: parseInt(container.height(), 10)
 						}),
 						{ expires: 30, path: '/'}
 					);
@@ -376,7 +446,9 @@
 	
 		$(".cms-panel-layout").entwine({
 			redraw: function() {
-				this.layout({resize: false});
+				this.layout({
+					resize: false
+				});
 			}
 		});
 	});	 

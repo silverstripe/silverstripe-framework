@@ -973,3 +973,12 @@ $DialogLabelColor: #7B8C91;
 	@include background-image(linear-gradient(#ced7dc, #92a5b2));
 	margin-bottom: $grid-vertical*1.5;
 }
+
+/**
+ * Dialog Styles
+ */
+	
+body.ArrayData {
+	overflow-y: scroll;
+	overflow-x: auto;
+}
