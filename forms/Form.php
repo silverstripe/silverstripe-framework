@@ -287,7 +287,10 @@ class Form extends RequestHandler {
 				403, 
 				sprintf('Action "%s" not allowed on form (Name: "%s")', $funcName, $this->Name())
 			);
-		} else {
+		}
+		// TODO : Once we switch to a stricter policy regarding allowed_actions (meaning actions must be set explicitly in allowed_actions in order to run)
+		// Uncomment the following for checking security against running actions on form fields
+		/* else {
 			// Try to find a field that has the action, and allows it
 			$fieldsHaveMethod = false;
 			foreach ($this->Fields() as $field){
@@ -301,7 +304,7 @@ class Form extends RequestHandler {
 					sprintf('Action "%s" not allowed on any fields of form (Name: "%s")', $funcName, $this->Name())
 				);
 			}
-		}
+		}*/
 		
 		// Validate the form
 		if(!$this->validate()) {
