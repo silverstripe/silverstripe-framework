@@ -303,7 +303,8 @@ class HtmlEditorConfig {
 		return "
 if((typeof tinyMCE != 'undefined')) {
 	$externalPluginsJS
-	tinyMCE.init(" . Convert::raw2json($config) . ");
+	var ssTinyMceConfig = " . Convert::raw2json($config) . ";
+	tinyMCE.init(ssTinyMceConfig);
 }
 ";
 	}

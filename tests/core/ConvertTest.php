@@ -104,7 +104,7 @@ class ConvertTest extends SapphireTest {
 		$this->assertEquals('foo', Convert::raw2url('foo'));
 		$this->assertEquals('foo-and-bar', Convert::raw2url('foo & bar'));
 		$this->assertEquals('foo-and-bar', Convert::raw2url('foo &amp; bar!'));
-		$this->assertEquals('foo-s-bar-2', Convert::raw2url('foo\'s [bar] (2)'));
+		$this->assertEquals('foos-bar-2', Convert::raw2url('foo\'s [bar] (2)'));
 	}
 
 }

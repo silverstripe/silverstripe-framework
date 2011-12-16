@@ -173,7 +173,7 @@ class SS_Backtrace {
 				}
 				$result .= "<li><b>" . htmlentities($name, ENT_COMPAT, 'UTF-8') . "</b>\n<br />\n";
 				$result .= isset($item['line']) ? "Line $item[line] of " : '';
-				$result .=  isset($item['file']) ? htmlentities(basename($item['file'])) : ''; 
+				$result .=  isset($item['file']) ? htmlentities(basename($item['file']), ENT_COMPAT, 'UTF-8') : ''; 
 				$result .= "</li>\n";
 			}
 		}

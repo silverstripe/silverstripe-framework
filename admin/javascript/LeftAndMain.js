@@ -4,19 +4,11 @@
 (function($) {
 
 	$.metadata.setType('html5');
+
+	// setup jquery.entwine
+		$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 	
 	$.entwine('ss', function($){
-
-		/**
-		 * Turn off autocomplete to fix the access tab randomly switching radio buttons in Firefox
-		 * when refresh the page with an anchor tag in the URL. E.g: /admin#Root_Access.
-		 * Autocomplete in the CMS also causes strangeness in other browsers,
-		 * filling out sections of the form that the user does not want to be filled out,
-		 * so this turns it off for all browsers.
-		 * See the following page for demo and explanation of the Firefox bug:
-		 *  http://www.ryancramer.com/journal/entries/radio_buttons_firefox/
-		 */
-		$("#Form_EditForm").attr("autocomplete", "off");
 
 		/**
 		 * Position the loading spinner animation below the ss logo
@@ -29,10 +21,7 @@
 			spinner.show();
 		}
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
-	
-		// setup jquery.entwine
-		$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
-	
+
 		// global ajax error handlers
 		$.ajaxSetup({
 			error: function(xmlhttp, status, error) {
@@ -62,10 +51,11 @@
 				// Browser detection
 				if($.browser.msie && parseInt($.browser.version, 10) < 7) {
 					$('.ss-loading-screen').append(
-						'<p><span class="notice">' + 
-						ss.i18n._t('LeftAndMain.IncompatBrowserWarning') +
+						'<p class="ss-loading-incompat-warning"><span class="notice">' + 
+						'Your browser is not compatible with the CMS interface. Please use Internet Explorer 7+, Google Chrome 10+ or Mozilla Firefox 3.5+.' +
 						'</span></p>'
-					);
+					).css('z-index', $('.ss-loading-screen').css('z-index')+1);
+					$('.loading-animation').remove();
 					return;
 				}
 				
@@ -91,7 +81,7 @@
 				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
 				
-				 History.Adapter.bind(window,'statechange',function(){ 
+				History.Adapter.bind(window,'statechange',function(){ 
 					self.handleStateChange();
 				});
 
@@ -100,18 +90,56 @@
 			
 			redraw: function() {
 				// Move from inner to outer layouts. Some of the elements might not exist.
-				this.find('.cms-edit-form[data-layout]').redraw(); // Not all edit forms are layouted
+				// Not all edit forms are layouted, so qualify by their data value.
+				this.find('.cms-edit-form[data-layout]').redraw(); 
 				this.find('.cms-preview').redraw();
-				this.find('.cms-content').redraw();
+				// Only redraw the content area if its not the same as the edit form
+				var contentEl = this.find('.cms-content');
+				if(!contentEl.is('.cms-edit-form')) contentEl.redraw();
 				
 				this.layout({resize: false});
 		
 				this.find('.cms-panel-layout').redraw(); // sidebar panels.
 			},
+
+			/**
+			 * Proxy around History.pushState() which handles non-HTML5 fallbacks,
+			 * as well as global change tracking. Change tracking needs to be synchronous rather than event/callback
+			 * based because the user needs to be able to abort the action completely.
+			 * 
+			 * See handleStateChange() for more details.
+			 * 
+			 * Parameters:
+			 *  - {String} url
+			 *  - {String} title New window title
+			 *  - {Object} data Any additional data passed through to History.pushState()
+			 */
+			loadPanel: function(url, title, data) {
+				var data = data || {}, selector = data.selector || '.cms-content', contentEl = $(selector);
+				// Check change tracking (can't use events as we need a way to cancel the current state change)
+				var trackedEls = contentEl.find(':data(changetracker)').add(contentEl.filter(':data(changetracker)'));
+				if(trackedEls.length) {
+					var abort = false;
+					trackedEls.each(function() {
+						if(!$(this).confirmUnsavedChanges()) abort = true;
+					});
+					if(abort) return;
+				}
+
+				if(window.History.enabled) {
+					// Active menu item is set based on X-Controller ajax header,
+					// which matches one class on the menu
+					window.History.pushState(data, title, url);
+				} else {
+					window.location = url;
+				}
+			},
 			
 			/**
 			 * Handles ajax loading of new panels through the window.History object.
 			 * To trigger loading, pass a new URL to window.History.pushState().
+			 * Use loadPanel() as a pushState() wrapper as it provides some additional functionality
+			 * like global changetracking and user aborts.
 			 * 
 			 * Due to the nature of history management, no callbacks are allowed.
 			 * Use the 'beforestatechange' and 'afterstatechange' events instead,
@@ -151,19 +179,34 @@
 						if(title) document.title = title;
 						
 						// Update panels
-						jQuery.entwine.synchronous_mode(true);
 						var newContentEl = $(data);
-						
 						if(newContentEl.find('.cms-container').length) {
 							throw 'Content loaded via ajax is not allowed to contain tags matching the ".cms-container" selector to avoid infinite loops';
 						}
 						
+						// Set loading state and store element state
 						newContentEl.addClass('loading');
+						var origStyle = contentEl.attr('style'),
+							layoutClasses = ['east', 'west', 'center', 'north', 'south'],
+							origLayoutClasses = $.grep(
+								contentEl.attr('class').split(' '),
+								function(val) { 
+									return ($.inArray(val, layoutClasses) >= 0);
+								}
+							);
+						newContentEl
+							.removeClass(layoutClasses.join(' '))
+							.addClass(origLayoutClasses.join(' '))
+							.attr('style', origStyle)
+							.css('visibility', 'hidden');
+
+						// Replace panel completely (we need to override the "layout" attribute, so can't replace the child instead)
 						contentEl.replaceWith(newContentEl);
-						contentEl.remove();
+
+						// Unset loading and restore element state (to avoid breaking existing panel visibility, e.g. with preview expanded)
 						self.redraw();
+						newContentEl.css('visibility', 'visible');
 						newContentEl.removeClass('loading');
-						jQuery.entwine.synchronous_mode(false);
 						
 						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: newContentEl});
 					},
@@ -180,11 +223,10 @@
 		 * Also sets the clicked button on a form submission, making it available through
 		 * a new 'clickedButton' property on the form DOM element.
 		 */
-		$('.cms-container :submit, .cms-container button, .cms-container :reset').entwine({
+		$('.cms-container input[type="submit"], .cms-container button, .cms-container input[type="reset"]').entwine({
 			onmatch: function() {
-				// TODO Adding classes in onmatch confuses entwine
-				var self = this;
-				setTimeout(function() {self.addClass('ss-ui-button');}, 10);
+				this.addClass('ss-ui-button');
+				this.redraw();
 				
 				this._super();
 			}
@@ -213,7 +255,7 @@
 					+ '</div>'
 				);
 
-				var cookieVal = (jQuery.cookie) ? JSON.parse(jQuery.cookie('ss-ui-dialog')) : false;
+				var cookieVal = (jQuery.cookie && jQuery.cookie('ss-ui-dialog')) ? JSON.parse(jQuery.cookie('ss-ui-dialog')) : false;
 				$("#ss-ui-dialog").dialog(jQuery.extend({
 					autoOpen: false,
 					bgiframe: true,

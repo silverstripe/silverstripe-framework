@@ -536,3 +536,7 @@ li.class-VirtualPage > a .jstree-pageicon {
 li.class-ErrorPage > a .jstree-pageicon {
 	background-position: 0 -112px;
 }
+
+.cms-tree {
+	visibility: hidden; // enabled by JS to avoid layout glitches
+}

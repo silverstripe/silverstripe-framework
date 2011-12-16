@@ -6,6 +6,9 @@
  * (if the 'cms' module is available as well).
  * (this means you can use $SearchForm in your template without changing your own implementation).
  * 
+ * CAUTION: Will make all files in your /assets folder searchable by file name
+ * unless "File" is excluded from FulltextSearchable::enable().
+ * 
  * @see http://doc.silverstripe.org/tutorial:4-site-search
  *
  * @package sapphire
