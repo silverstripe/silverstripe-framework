@@ -156,6 +156,7 @@ form.nostyle .middleColumn { margin-left: 0; }
 .optionset li label { display: block; cursor: pointer; padding: 0 0 0 16px; }
 
 /** ---------------------------------------------------- HTML Text  ---------------------------------------------------- */
+.htmleditor textarea { visibility: hidden; }
 .htmleditor label { display: block; float: none; padding-bottom: 10px; }
 .htmleditor .middleColumn { margin-left: 0px; clear: left; }
 
@@ -199,16 +200,15 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .ui-tabs .cms-content-header .ui-state-active a, .ui-tabs .cms-content-header .ui-widget-content .ui-state-active a, .ui-tabs .cms-content-header .ui-widget-header .ui-state-active a { border-bottom: 2px solid #eceff1; }
 
 /** ------------------------------------------------------- Loading Interface ------------------------------------------------------- */
-.cms-content.loading, .cms-content form.loading { background: url(../images/spinner.gif) no-repeat 50% 50%; }
+.cms-content-loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 9998; }
 
-.cms-content-loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
+.cms-content-loading-spinner { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: url(../images/spinner.gif) no-repeat 50% 50%; }
 
 /** ----------------------------------------------- Loading Screen ------------------------------------------------ */
-.ss-loading-screen, .ss-loading-screen .loading-logo { width: 100%; height: 100%; overflow: hidden; position: absolute; background: #fff; background: -moz-radial-gradient(50% 50% 180deg, circle cover, white, #efefef, #c7c7c7 100%); background: -webkit-gradient(radial, 50% 50%, 350, 50% 50%, 0, from(#e3e3e3), to(white)); z-index: 100000; margin: 0; padding: 0; }
-
-.ss-loading-screen .loading-logo { background-url: url(../images/logo.gif); background-repeat: no-repeat; background-color: transparent; background-position: 50% 50%; }
-.ss-loading-screen p { width: 100%; text-align: center; position: absolute; bottom: 80px; }
-.ss-loading-screen p span.notice { display: inline-block; font-size: 14px; padding: 10px 20px; color: #dc7f00; border: none; -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; -ms-border-radius: 5px; -khtml-border-radius: 5px; border-radius: 5px; }
+.ss-loading-screen { width: 100%; height: 100%; overflow: hidden; position: absolute; z-index: 100000; background: #fff; background: -moz-radial-gradient(50% 50% 180deg, circle cover, white, #efefef, #c7c7c7 100%); background: -webkit-gradient(radial, 50% 50%, 350, 50% 50%, 0, from(#e3e3e3), to(white)); }
+.ss-loading-screen .loading-logo { width: 100%; height: 100%; overflow: hidden; position: absolute; background: transparent url(../images/logo.gif) no-repeat 50% 50%; }
+.ss-loading-screen p { width: 100%; text-align: center; position: absolute; bottom: 80px; z-index: 100001; }
+.ss-loading-screen p span.notice { width: 300px; font-size: 14px; padding: 10px 20px; color: #dc7f00; border: none; background: none; -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; -ms-border-radius: 5px; -khtml-border-radius: 5px; border-radius: 5px; display: inline-block; zoom: 1; *display: inline; }
 .ss-loading-screen .loading-animation { display: none; position: absolute; left: 49%; top: 75%; }
 
 /** -------------------------------------------- Actions -------------------------------------------- */
@@ -224,14 +224,20 @@ html article, html aside, html details, html figcaption, html figure, html foote
 
 /** -------------------------------------------- ModelAdmin -------------------------------------------- */
 .ModelAdmin .ResultAssemblyBlock { display: none; }
-.ModelAdmin .west h3.cms-panel-header { display: none; }
-.ModelAdmin .west #SearchForm_holder div.ui-tabs-panel { border: 1px solid #aaa; margin-top: -1px; background: #fff; padding: 8px; }
-.ModelAdmin .west #SearchForm_holder div.ui-tabs-panel h3 { margin-top: 16px; margin-bottom: 10px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -moz-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -o-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); }
-.ModelAdmin .west #SearchForm_holder div.ui-tabs-panel form input { margin: 0px; }
-.ModelAdmin .west #SearchForm_holder div.ui-tabs-panel form .field { border-bottom: 0px; margin-bottom: 6px; }
-.ModelAdmin .west #SearchForm_holder div.ui-tabs-panel form .Actions button.ss-ui-action-minor { display: none; }
+.ModelAdmin .cms-content-tools h3.cms-panel-header { display: none; }
+.ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav { overflow: hidden; }
+.ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav li { max-width: 99%; }
+.ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav li a { white-space: nowrap; overflow: hidden; -o-text-overflow: ellipsis; -ms-text-overflow: ellipsis; text-overflow: ellipsis; -moz-binding: url('xml/ellipsis.xml#ellipsis'); max-width: 95%; padding: 0 7px; }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab { border: 1px solid #aaa; margin-top: -1px; background: #fff; padding: 8px; overflow: hidden; width: 91%; }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab h3 { margin-top: 16px; margin-bottom: 10px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -moz-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -o-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab form input { margin: 0px; }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab form .field { border-bottom: 0px; margin-bottom: 6px; }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab form .Actions { margin-right: 0px; }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab form .Actions button.ss-ui-action-minor { display: none; }
+.ModelAdmin .ss-ui-button { white-space: nowrap; overflow: hidden; -o-text-overflow: ellipsis; -ms-text-overflow: ellipsis; text-overflow: ellipsis; -moz-binding: url('xml/ellipsis.xml#ellipsis'); max-width: 100%; }
 
 /** -------------------------------------------- "Add page" dialog -------------------------------------------- */
+.cms-page-add-form-dialog { display: none; }
 .cms-page-add-form-dialog #PageType li { padding: 9px 0 9px 15px; overflow: hidden; border-bottom-width: 2px; border-bottom: 2px groove rgba(255, 255, 255, 0.8); -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
 .cms-page-add-form-dialog #PageType li:hover, .cms-page-add-form-dialog #PageType li.selected { background-color: rgba(255, 255, 102, 0.3); }
 .cms-page-add-form-dialog #PageType li input, .cms-page-add-form-dialog #PageType li label, .cms-page-add-form-dialog #PageType li .icon, .cms-page-add-form-dialog #PageType li .title { float: left; line-height: 1.3em; }
@@ -460,6 +466,8 @@ li.class-RedirectorPage > a .jstree-pageicon { background-position: 0 -16px; }
 li.class-VirtualPage > a .jstree-pageicon { background-position: 0 -32px; }
 
 li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
+
+.cms-tree { visibility: hidden; }
 
 /** Styles for the left hand side menu and header for the admin panels.  Take into consideration CSS selector performance.   @package sapphire @subpackage admin */
 .cms-logo-header { background-color: #00111d; position: relative; padding: 16px 8px 0 4px; line-height: 24px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #00111d), color-stop(50%, #003050), color-stop(100%, #00111d)); background-image: -webkit-linear-gradient(#00111d, #003050, #00111d); background-image: -moz-linear-gradient(#00111d, #003050, #00111d); background-image: -o-linear-gradient(#00111d, #003050, #00111d); background-image: -ms-linear-gradient(#00111d, #003050, #00111d); background-image: linear-gradient(#00111d, #003050, #00111d); }

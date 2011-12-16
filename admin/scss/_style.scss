@@ -290,11 +290,25 @@ html,body {
 			display:none;
 		}
 		#SearchForm_holder {
+			ul.ui-tabs-nav {
+				overflow:hidden;
+				li {
+					max-width:99%;
+					a {
+						@include ellipsis;
+						max-width:95%;
+						padding:0 7px;
+					}	
+				}
+			}
+
 			div.tab {
 				border:1px solid #aaa; //following color from the jquery smoothness theme
 				margin-top:-1px;
 				background:#fff; //backround is kept white to follow tabs
 				padding:$grid-horizontal;
+				overflow:hidden;
+				width:91%;
 
 				h3 {
 					margin-top:16px;
@@ -311,6 +325,7 @@ html,body {
 						margin-bottom:6px;
 					}
 					.Actions {
+						margin-right:0px;
 						button.ss-ui-action-minor {
 							//removing the "clear search" button
 							display:none;
@@ -320,6 +335,13 @@ html,body {
 			}
 		}
 	}
+	//this could go into _forms.scss, but I'm leaving it here,
+	//as this solution is not working 100%. See: http://open.silverstripe.org/ticket/6782
+	.ss-ui-button {
+		@include ellipsis;
+		max-width:100%;
+	}
+
 }
 
 /** --------------------------------------------

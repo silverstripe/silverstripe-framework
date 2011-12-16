@@ -21,6 +21,8 @@
 @import "compass/css3";
 @import "compass/utilities/sprites/sprite-img";
 @import "compass/utilities/general";
+$use-mozilla-ellipsis-binding: true; //using the elipsis xml file for ff
+@import "compass/typography/text/ellipsis";
 
 /** -----------------------------
  * Theme
