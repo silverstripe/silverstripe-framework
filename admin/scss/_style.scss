@@ -285,12 +285,12 @@ html,body {
 	.ResultAssemblyBlock {
 		display: none;
 	}
-	.west {
+	.cms-content-tools {
 		h3.cms-panel-header {
 			display:none;
 		}
 		#SearchForm_holder {
-			div.ui-tabs-panel {
+			div.tab {
 				border:1px solid #aaa; //following color from the jquery smoothness theme
 				margin-top:-1px;
 				background:#fff; //backround is kept white to follow tabs
