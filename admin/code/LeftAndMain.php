@@ -187,6 +187,40 @@ class LeftAndMain extends Controller {
 		if(empty($_REQUEST['executeForm']) && !$this->isAjax()) $this->extend('accessedCMS');
 		
 		// Requirements
+
+		// Suppress behaviour/prototype validation instructions in CMS, not compatible with ajax loading of forms.
+		Validator::set_javascript_validation_handler('none');
+
+		// Set the members html editor config
+		HtmlEditorConfig::set_active(Member::currentUser()->getHtmlEditorConfigForCMS());
+		
+		// Set default values in the config if missing.  These things can't be defined in the config
+		// file because insufficient information exists when that is being processed
+		$htmlEditorConfig = HtmlEditorConfig::get_active();
+		$htmlEditorConfig->setOption('language', i18n::get_tinymce_lang());
+		if(!$htmlEditorConfig->getOption('content_css')) {
+			$cssFiles = array();
+			$cssFiles[] = 'sapphire/admin/css/editor.css';
+			
+			// Use theme from the site config
+			if(class_exists('SiteConfig') && ($config = SiteConfig::current_site_config()) && $config->Theme) {
+				$theme = $config->Theme;
+			} elseif(SSViewer::current_theme()) {
+				$theme = SSViewer::current_theme();
+			} else {
+				$theme = false;
+			}
+			
+			if($theme) $cssFiles[] = THEMES_DIR . "/{$theme}/css/editor.css";
+			else if(project()) $cssFiles[] = project() . '/css/editor.css';
+			
+			// Remove files that don't exist
+			foreach($cssFiles as $k => $cssFile) {
+				if(!file_exists(BASE_PATH . '/' . $cssFile)) unset($cssFiles[$k]);
+			}
+
+			$htmlEditorConfig->setOption('content_css', implode(',', $cssFiles));
+		}
 		
 		Requirements::combine_files(
 			'lib.js',
@@ -209,7 +243,7 @@ class LeftAndMain extends Controller {
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
+				// SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
 				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.js',
@@ -224,6 +258,8 @@ class LeftAndMain extends Controller {
 				SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js',
 			)
 		);
+
+		HTMLEditorField::include_js();
 
 		Requirements::combine_files(
 			'leftandmain.js',
@@ -256,37 +292,6 @@ class LeftAndMain extends Controller {
 		);
 		
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
-
-		// Set the members html editor config
-		HtmlEditorConfig::set_active(Member::currentUser()->getHtmlEditorConfigForCMS());
-		
-		// Set default values in the config if missing.  These things can't be defined in the config
-		// file because insufficient information exists when that is being processed
-		$htmlEditorConfig = HtmlEditorConfig::get_active();
-		$htmlEditorConfig->setOption('language', i18n::get_tinymce_lang());
-		if(!$htmlEditorConfig->getOption('content_css')) {
-			$cssFiles = array();
-			$cssFiles[] = 'sapphire/admin/css/editor.css';
-			
-			// Use theme from the site config
-			if(class_exists('SiteConfig') && ($config = SiteConfig::current_site_config()) && $config->Theme) {
-				$theme = $config->Theme;
-			} elseif(SSViewer::current_theme()) {
-				$theme = SSViewer::current_theme();
-			} else {
-				$theme = false;
-			}
-			
-			if($theme) $cssFiles[] = THEMES_DIR . "/{$theme}/css/editor.css";
-			else if(project()) $cssFiles[] = project() . '/css/editor.css';
-			
-			// Remove files that don't exist
-			foreach($cssFiles as $k => $cssFile) {
-				if(!file_exists(BASE_PATH . '/' . $cssFile)) unset($cssFiles[$k]);
-			}
-
-			$htmlEditorConfig->setOption('content_css', implode(',', $cssFiles));
-		}
 				
 		foreach (self::$extra_requirements['javascript'] as $file) {
 			Requirements::javascript($file[0]);

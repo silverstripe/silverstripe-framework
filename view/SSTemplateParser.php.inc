@@ -27,11 +27,11 @@ This comment will not appear in the output
 
 // We want this to work when run by hand too
 if (defined(THIRDPARTY_PATH)) {
-	require THIRDPARTY_PATH . '/php-peg/Parser.php' ;
+	require_once(THIRDPARTY_PATH . '/php-peg/Parser.php');
 }
 else {
 	$base = dirname(__FILE__);
-	require $base.'/../thirdparty/php-peg/Parser.php';
+	require_once($base.'/../thirdparty/php-peg/Parser.php');
 }
 
 /**

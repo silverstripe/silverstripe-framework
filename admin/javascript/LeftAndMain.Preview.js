@@ -33,13 +33,10 @@
 				
 				// Create layout and controls
 				this.find('iframe').addClass('center');
-				this.layout({type: 'border'});
-		
 				this.find('iframe').bind('load', function() {
 					self._fixIframeLinks();
 					self.loadCurrentPage();
 				});
-				self._fixIframeLinks();
 				
 				var updateAfterXhr = function() {
 					// var url = ui.xmlhttp.getResponseHeader('x-frontend-url');
@@ -67,12 +64,16 @@
 					self.collapse();
 				});
 
+				this.layout({type: 'border'});
+
 				if(this.hasClass('is-expanded')) this.expand();
 				else this.collapse();
 				
 				// Preview might not be available in all admin interfaces - block/disable when necessary
 				this.append('<div class="cms-preview-overlay ui-widget-overlay-light"></div>');
 				this.find('.cms-preview-overlay-light').hide();
+
+				self._fixIframeLinks();
 		
 				this._super();
 			},
@@ -91,16 +92,16 @@
 					contentEl = containerEl.find('.cms-content');
 
 				// Only load if we're in the "edit page" view
-				var blockedClasses = ['CMSMain', 'CMSPagesController', 'CMSSettingsController', 'CMSPageHistoryController'];
+				var blockedClasses = ['CMSPagesController', 'CMSSettingsController', 'CMSPageHistoryController'];
 				if(contentEl.is('.' + blockedClasses.join(',.'))) return;
 
 				// Load this page in the admin interface if appropriate
 				var id = $(doc).find('meta[name=x-page-id]').attr('content'), 
 					editLink = $(doc).find('meta[name=x-cms-edit-link]').attr('content'), 
 					contentPanel = $('.cms-content');
-				// TODO Remove hardcoding
 				if(id && contentPanel.find(':input[name=ID]').val() != id) {
-					window.History.pushState({}, '', editLink);
+					// Ignore behaviour without history support (as we need ajax loading for the new form to load in the background)
+					if(window.History.enabled) $('.cms-container').loadPanel(editLink);
 				}
 			},
 			

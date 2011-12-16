@@ -126,11 +126,15 @@
 				this.trigger('toggle');
 			},
 			
-			expandPanel: function() {
+			expandPanel: function(force) {
+				if(!force && !this.hasClass('collapsed')) return;
+
 				this.togglePanel(true);
 			},
 			
-			collapsePanel: function() {
+			collapsePanel: function(force) {
+				if(!force && this.hasClass('collapsed')) return;
+
 				this.togglePanel(false);
 			}
 		});
