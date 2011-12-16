@@ -132,7 +132,6 @@ class GridFieldBody_Row extends FormField {
 		return $this->parent->getGridField();
 	}
 
-
 	/**
 	 * @return ArrayList
 	 */
@@ -201,7 +200,7 @@ class GridFieldBody_Row extends FormField {
 		return new ArrayList($fields);
 	}
 
-	function forTemplate() {
+	public function forTemplate() {
 		return $this->renderWith('GridField_Item');
 	}
 }

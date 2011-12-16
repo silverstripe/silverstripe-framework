@@ -19,7 +19,7 @@ class GridFieldPaginator extends GridFieldElement {
 		parent::__construct($gridField, 'GridFieldPaginator');
 	}
 
-	function generateChildren() {
+	public function generateChildren() {
 		$pagination = $this->gridField->getState()->Pagination;
 		$totalPages = $pagination->TotalPages;
 
@@ -33,9 +33,9 @@ class GridFieldPaginator extends GridFieldElement {
 		}
 	}
 
-	function getChildContent() {
+	public function getChildContent() {
 		$content = array();
 		foreach($this->FieldList() as $subfield) $content[] = $subfield->forTemplate();
-		return '<tr><td>'.implode("\n", $content).'</td></tr>';
+		return '<tr><td colspan="'.$this->gridField->getColumnCount().'">'.implode("\n", $content).'</td></tr>';
 	}
 }

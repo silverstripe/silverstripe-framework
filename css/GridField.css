@@ -1,17 +1,21 @@
 /** Core styles for the basic GridField form field without any specific style.  @package sapphire @subpackage scss */
-.ss-gridfield { border: none; }
-.ss-gridfield table { width: 100%; border-collapse: collapse; border-spacing: 0; background: #fff; border: 1px solid #c1c1c1; }
-.ss-gridfield thead { color: #5a5a5a; background: #dadada; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f3f3f3), color-stop(100%, #dadada)); background-image: -webkit-linear-gradient(#f3f3f3, #dadada); background-image: -moz-linear-gradient(#f3f3f3, #dadada); background-image: -o-linear-gradient(#f3f3f3, #dadada); background-image: -ms-linear-gradient(#f3f3f3, #dadada); background-image: linear-gradient(#f3f3f3, #dadada); }
-.ss-gridfield thead th { font-weight: bold; padding: 8px 24px 8px 8px; position: relative; border: 1px solid #c1c1c1; border-width: 0 1px 1px 0; }
-.ss-gridfield thead th.ss-gridfield-sortable.hover { color: #747474; cursor: pointer; background: #f3f3f3; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #e7e7e7)); background-image: -webkit-linear-gradient(#ffffff, #e7e7e7); background-image: -moz-linear-gradient(#ffffff, #e7e7e7); background-image: -o-linear-gradient(#ffffff, #e7e7e7); background-image: -ms-linear-gradient(#ffffff, #e7e7e7); background-image: linear-gradient(#ffffff, #e7e7e7); }
-.ss-gridfield thead th.ss-gridfield-sorted { background: #e7e7e7; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dadada), color-stop(100%, #f3f3f3)); background-image: -webkit-linear-gradient(#dadada, #f3f3f3); background-image: -moz-linear-gradient(#dadada, #f3f3f3); background-image: -o-linear-gradient(#dadada, #f3f3f3); background-image: -ms-linear-gradient(#dadada, #f3f3f3); background-image: linear-gradient(#dadada, #f3f3f3); }
-.ss-gridfield thead th.ss-gridfield-sorted.hover { background: #f3f3f3; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e7e7e7), color-stop(100%, #f9f9f9)); background-image: -webkit-linear-gradient(#e7e7e7, #f9f9f9); background-image: -moz-linear-gradient(#e7e7e7, #f9f9f9); background-image: -o-linear-gradient(#e7e7e7, #f9f9f9); background-image: -ms-linear-gradient(#e7e7e7, #f9f9f9); background-image: linear-gradient(#e7e7e7, #f9f9f9); }
-.ss-gridfield thead th .ui-icon { position: absolute; top: 5px; right: 0; }
-.ss-gridfield thead th.ss-gridfield-desc .ui-icon { background-position: 0 -48px; }
-.ss-gridfield thead th.ss-gridfield-asc .ui-icon { background-position: -64px -48px; }
-.ss-gridfield td { padding: 8px; border-right: 1px solid #f3f3f3; }
-.ss-gridfield td.ss-gridfield-last { border-right: none; }
-.ss-gridfield tr.ss-gridfield-even { border: 1px solid #c6e5f6; border-width: 1px 0; background: #f2f9fd; }
-.ss-gridfield tr.ss-gridfield-even.ss-gridfield-last { border-bottom: none; }
-.ss-gridfield tr.ss-gridfield-even td { border-right: 1px solid #dceffa; }
-.ss-gridfield tr.ss-gridfield-even td.ss-gridfield-last { border-right: none; }
+table.ss-gridfield { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border: 1px solid #819198; }
+table.ss-gridfield thead { color: #1d2224; background: #95a5ab; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b4c3c8), color-stop(100%, #819195)); background-image: -webkit-linear-gradient(#b4c3c8, #819195); background-image: -moz-linear-gradient(#b4c3c8, #819195); background-image: -o-linear-gradient(#b4c3c8, #819195); background-image: -ms-linear-gradient(#b4c3c8, #819195); background-image: linear-gradient(#b4c3c8, #819195); }
+table.ss-gridfield thead th { font-weight: bold; padding: 8px 8px 8px 8px; position: relative; border: 1px solid #819198; border-width: 0 1px 1px 0; }
+table.ss-gridfield thead th button.ss-gridfield-button { width: 99%; background: transparent; border: 0; color: #fff; line-height: 25px; }
+table.ss-gridfield thead th.extra { background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffdd), color-stop(100%, #ffffbb)); background-image: -webkit-linear-gradient(#ffffdd, #ffffbb); background-image: -moz-linear-gradient(#ffffdd, #ffffbb); background-image: -o-linear-gradient(#ffffdd, #ffffbb); background-image: -ms-linear-gradient(#ffffdd, #ffffbb); background-image: linear-gradient(#ffffdd, #ffffbb); padding: 2px 4px; }
+table.ss-gridfield thead th.extra button.ss-gridfield-button { color: #333; }
+table.ss-gridfield thead th.ss-gridfield-sortable.hover { color: #333d41; cursor: pointer; background: #b1bdc2; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #c0c9cd), color-stop(100%, #a3b1b6)); background-image: -webkit-linear-gradient(#c0c9cd, #a3b1b6); background-image: -moz-linear-gradient(#c0c9cd, #a3b1b6); background-image: -o-linear-gradient(#c0c9cd, #a3b1b6); background-image: -ms-linear-gradient(#c0c9cd, #a3b1b6); background-image: linear-gradient(#c0c9cd, #a3b1b6); }
+table.ss-gridfield thead th.ss-gridfield-sorted { background: #a3b1b6; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #95a5ab), color-stop(100%, #b1bdc2)); background-image: -webkit-linear-gradient(#95a5ab, #b1bdc2); background-image: -moz-linear-gradient(#95a5ab, #b1bdc2); background-image: -o-linear-gradient(#95a5ab, #b1bdc2); background-image: -ms-linear-gradient(#95a5ab, #b1bdc2); background-image: linear-gradient(#95a5ab, #b1bdc2); }
+table.ss-gridfield thead th.ss-gridfield-sorted.hover { background: #b1bdc2; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #a3b1b6), color-stop(100%, #b7c2c6)); background-image: -webkit-linear-gradient(#a3b1b6, #b7c2c6); background-image: -moz-linear-gradient(#a3b1b6, #b7c2c6); background-image: -o-linear-gradient(#a3b1b6, #b7c2c6); background-image: -ms-linear-gradient(#a3b1b6, #b7c2c6); background-image: linear-gradient(#a3b1b6, #b7c2c6); }
+table.ss-gridfield thead th .ui-icon { position: absolute; top: 5px; right: 0; }
+table.ss-gridfield thead th.ss-gridfield-desc .ui-icon { background-position: 0 -48px; }
+table.ss-gridfield thead th.ss-gridfield-asc .ui-icon { background-position: -64px -48px; }
+table.ss-gridfield td { padding: 8px; border-right: 1px solid #eaeaea; }
+table.ss-gridfield td.ss-gridfield-last { border-right: none; }
+table.ss-gridfield tr.ss-gridfield-even { border: 1px solid #eaeaea; border-width: 1px 0; background: #f2f9fd; }
+table.ss-gridfield tr.ss-gridfield-even.ss-gridfield-last { border-bottom: none; }
+table.ss-gridfield tr.ss-gridfield-even td { border-right: 1px solid #eaeaea; }
+table.ss-gridfield tr.ss-gridfield-even td.ss-gridfield-last { border-right: none; }
+table.ss-gridfield tfoot { color: #1d2224; background: #95a5ab; }
+table.ss-gridfield input.ss-gridfield-filter { width: 100% !important; }

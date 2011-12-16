@@ -27,7 +27,14 @@ class GridFieldSortableHeader extends GridFieldElement {
 	function getChildContent() {
 		$content = array();
 		foreach($this->FieldList() as $subfield) $content[] = $subfield->forTemplate();
-		return '<tr><th>'.implode("</th>\n<th>", $content).'</th></tr>';
+		$html = '<tr><th>'.implode("</th>\n<th>", $content).'</th>';
+		if($this->gridField->getExtraColumnsCount()) {
+			if($this->gridField->getExtraColumnsCount()) {
+				$html .= '<th colspan="'.$this->gridField->getExtraColumnsCount().'"></th>';
+			}
+		}
+		$html.= '</tr>';
+		return $html;
 	}
 
 }

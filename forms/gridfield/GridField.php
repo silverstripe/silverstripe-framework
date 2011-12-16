@@ -55,11 +55,15 @@ class GridField extends CompositeField {
 	 */
 	public function __construct($name, $title = null, SS_List $dataList = null, Form $form = null) {
 		parent::__construct($name, $title, null, $form);
-
+		$this->addExtraClass('ss-gridfield');
+		Requirements::css('sapphire/css/GridField.css');
+		
 		CompositeField::__construct();
 		FormField::__construct($name);
 
-		if ($dataList) $this->setList($dataList);
+		if ($dataList) {
+			$this->setList($dataList);
+		}
 
 		$this->state = new GridState($this);
 		
@@ -74,6 +78,19 @@ class GridField extends CompositeField {
 	function hasData() { return false; }
 
 	function saveInto(DataObject $record) {}
+	
+	public function getExtraColumnsCount() {
+		$max = 0;
+		foreach($this->FieldList() as $field ){
+			$extras = Object::get_static(get_class($field), 'extra_columns');
+			$max = $extras+$max;
+		}
+		return $max;
+	}
+	
+	public function getColumnCount() {
+		return count($this->getDisplayFields())+$this->getExtraColumnsCount();
+	}
 
 	/**
 	 * @param string $modelClassName 
@@ -166,7 +183,6 @@ class GridField extends CompositeField {
 	 */
 	public function FieldHolder() {
 		$this->getState()->apply();
-
 		$content = array(
 			'head' => array(),
 			'body' => array(),
@@ -177,7 +193,6 @@ class GridField extends CompositeField {
 		foreach($this->FieldList() as $subfield) {
 			$location = 'misc';
 			if ($subfield instanceof GridFieldElement) $location = $subfield->stat('location');
-
 			$content[$location][] = $subfield->forTemplate();
 		}
 
