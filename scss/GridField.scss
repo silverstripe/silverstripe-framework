@@ -29,24 +29,49 @@ table.ss-gridfield {
 		));
 
 		th {
-			font-weight: bold;
-			padding: 8px 8px 8px 8px;
-			position: relative;
+
 			border: 1px solid $header_border;
 			border-width: 0 1px 1px 0;
-			
+
 			button.ss-gridfield-button {
-				width:99%;
-				background: transparent;
-				border:0;
-				color: #fff;
-				line-height:25px;
+
+				&:hover {
+					cursor: pointer;
+				}
+
+				&.ss-gridfield-sorted {
+					@include background-image(linear-gradient(
+						#819195, #b4c3c8
+					));
+				}
+			}
+
+			&.main {
+				font-weight: bold;
+				font-size: 15px;
+				line-height: 24px;
+
+				.ss-gridfield-button {
+					
+					width:100%;
+					background: transparent;
+					border: 0;
+					padding: 0 2px;
+					
+					color: #fff;
+					font-family: Arial, sans-serif;
+					
+					padding: 8px 8px 8px 8px;
+					position: relative;
+					
+				}
 			}
 
 			&.extra {
 				@include background-image(linear-gradient(
 					#ffd, #ffb
 				));
+
 				padding: 2px 4px;
 		
 				button.ss-gridfield-button {
@@ -54,36 +79,6 @@ table.ss-gridfield {
 				}
 			}
 
-			&.ss-gridfield-sortable {
-					
-				&.hover {
-					color: darken($base, 40%);
-					cursor: pointer;
-					
-					background: lighten($base, 10%);
-					
-					@include background-image(linear-gradient(
-						lighten($base, 15%), lighten($base, 5%)
-					));
-				}	
-			}
-			
-			&.ss-gridfield-sorted {
-				background: lighten($base, 5%);
-				
-				@include background-image(linear-gradient(
-					$base, lighten($base, 10%)
-				));
-				
-				&.hover {
-					background: lighten($base, 10%);
-					
-					@include background-image(linear-gradient(
-						lighten($base, 5%), lighten($base, 12%)
-					));
-				}
-			}
-			
 			.ui-icon {
 				position: absolute;
 				top: 5px;
