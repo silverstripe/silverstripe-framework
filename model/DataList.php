@@ -152,6 +152,15 @@ class DataList extends ViewableData implements SS_List {
 		return $result;
 	}
 
+	public function debug() {
+		$val = "<h2>" . $this->class . "</h2><ul>";
+		foreach($this->toNestedArray() as $item) {
+			$val .= "<li style=\"list-style-type: disc; margin-left: 20px\">" . Debug::text($item) . "</li>";
+		}
+		$val .= "</ul>";
+		return $val;
+	}
+
 	public function map($keyField = 'ID', $titleField = 'Title') {
 		return new SS_Map($this, $keyField, $titleField);
 	}
