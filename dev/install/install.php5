@@ -480,7 +480,7 @@ class InstallRequirements {
 			$id = strtolower(str_replace(' ', '_', $section));
 			echo "<table id=\"{$id}_results\" class=\"testResults\" width=\"100%\">";
 			foreach($tests as $test => $result) {
-				echo "<tr class=\"$result[0]\"><td>$test</td><td>" . nl2br(htmlentities($result[1]), ENT_COMPAT, 'UTF-8') . "</td></tr>";
+				echo "<tr class=\"$result[0]\"><td>$test</td><td>" . nl2br(htmlentities($result[1], ENT_COMPAT, 'UTF-8')) . "</td></tr>";
 			}
 			echo "</table>";
 
