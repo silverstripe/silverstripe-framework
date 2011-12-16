@@ -25,7 +25,11 @@ class HTMLVarchar extends Varchar {
 	public function scaffoldSearchField($title = null) {
 		return new TextField($this->name, $title);
 	}
-
+	
+	function LimitCharacters($limit = 20, $add = "...") {
+		return $this->doLimitCharacters($limit, $add, true);
+	}
+	
 }
 
 ?>
