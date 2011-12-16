@@ -102,7 +102,7 @@ class GridField extends FormField {
 			return $this->list->dataClass;
 		}
 		
-		throw new Exception(get_class($this).' does not have a modelClassName');
+		throw new LogicException(get_class($this).' does not have a modelClassName');
 	}
 	
 	/**
@@ -112,7 +112,7 @@ class GridField extends FormField {
 	 */
 	public function setPresenter($presenter) {
 		if(!$presenter){
-			throw new Exception('setPresenter() for GridField must be set with a class');
+			throw new InvalidArgumentException('setPresenter() for GridField must be set with a class');
 		}
 		
 		if(is_object($presenter)) {
@@ -123,11 +123,11 @@ class GridField extends FormField {
 		}
 		
 		if(!class_exists($presenter)){
-			throw new Exception('DataPresenter for GridField must be set with an existing class, '.$presenter.' does not exists.');
+			throw new InvalidArgumentException('DataPresenter for GridField must be set with an existing class, '.$presenter.' does not exists.');
 		}
 		
-		if($presenter !='GridFieldPresenter' && !ClassInfo::is_subclass_of($presenter, 'GridFieldPresenter')) {
-			throw new Exception(sprintf(
+		if($presenter !='GridFieldPresenter' && !is_subclass_of($presenter, 'GridFieldPresenter')) {
+			throw new InvalidArgumentException(sprintf(
 				'DataPresenter "%s" must subclass GridFieldPresenter', $presenter
 			));
 		}
