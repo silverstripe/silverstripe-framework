@@ -301,7 +301,12 @@ html,body {
 					}	
 				}
 			}
-
+			#ModelClassSelector {
+				margin-bottom:2px;
+				select {
+					width:96%;
+				}
+			}
 			div.tab {
 				border:1px solid #aaa; //following color from the jquery smoothness theme
 				margin-top:-1px;

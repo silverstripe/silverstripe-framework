@@ -228,6 +228,8 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav { overflow: hidden; }
 .ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav li { max-width: 99%; }
 .ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav li a { white-space: nowrap; overflow: hidden; -o-text-overflow: ellipsis; -ms-text-overflow: ellipsis; text-overflow: ellipsis; -moz-binding: url('xml/ellipsis.xml#ellipsis'); max-width: 95%; padding: 0 7px; }
+.ModelAdmin .cms-content-tools #SearchForm_holder #ModelClassSelector { margin-bottom: 2px; }
+.ModelAdmin .cms-content-tools #SearchForm_holder #ModelClassSelector select { width: 96%; }
 .ModelAdmin .cms-content-tools #SearchForm_holder div.tab { border: 1px solid #aaa; margin-top: -1px; background: #fff; padding: 8px; overflow: hidden; width: 91%; }
 .ModelAdmin .cms-content-tools #SearchForm_holder div.tab h3 { margin-top: 16px; margin-bottom: 10px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -moz-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -o-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); }
 .ModelAdmin .cms-content-tools #SearchForm_holder div.tab form input { margin: 0px; }
