@@ -170,9 +170,13 @@ class Convert {
 	 * @return mixed JSON safe string
 	 */
 	static function json2obj($val) {
-		require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');
-		$json = new Services_JSON();
-		return $json->decode($val);
+		if(function_exists('json_decode')) {
+			return json_decode($val);
+		} else {
+			require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');
+			$json = new Services_JSON();
+			return $json->decode($val);
+		}
 	}
 
 	/**
@@ -183,15 +187,19 @@ class Convert {
 	 * @return array|boolean
 	 */
 	static function json2array($val) {
-		$json = self::json2obj($val);
-		if(!$json) return false;
-		
-		$arr = array();
-		foreach($json as $k => $v) {
-			$arr[$k] = $v;
+		if(function_exists('json_decode')) {
+			return json_decode($val, true);
+		} else {
+			$json = self::json2obj($val);
+			if(!$json) return false;
+			
+			$arr = array();
+			foreach($json as $k => $v) {
+				$arr[$k] = $v;
+			}
+			
+			return $arr;
 		}
-		
-		return $arr;
 	}
 	
 	/**
