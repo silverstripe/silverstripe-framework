@@ -4,7 +4,7 @@
 
 	<div class="cms-content-header north">
 		<div>
-			<h2>My Page Title</h2>
+			<h2 id="page-title-heading"><% control Fields.dataFieldByName('Title') %>$Value<% end_control %></h2>
 			<% if Fields.hasTabset %>
 				<% with Fields.fieldByName('Root') %>
 				<div class="cms-content-header-tabs">
