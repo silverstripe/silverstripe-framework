@@ -545,6 +545,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return string|null
 	 */
 	public function FirstLast() {
+		if($this->First() && $this->Last()) return 'first last';
 		if($this->First()) return 'first';
 		if($this->Last())  return 'last';
 	}
