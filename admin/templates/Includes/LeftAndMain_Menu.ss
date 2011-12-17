@@ -31,15 +31,21 @@
 			
 				<% if Code == 'CMSMain' %>
 					<ul>
-						<li class="first <% if Top.class == 'CMSPageEditController' || Top.class == 'CMSMain' %>current<% end_if %>" id="Menu-CMSPageEditController"><a href="admin/page/edit/show/$Top.CurrentPageID">
-							<span class="text">Content</span>
-						</a></li>
-						<li <% if Top.class == 'CMSPageSettingsController' %>class="current"<% end_if %> id="Menu-CMSPageSettingsController"><a href="admin/page/settings/show/$Top.CurrentPageID">
-							<span class="text">Settings</span>
-						</a></li>
-						<li <% if Top.class == 'CMSPageHistoryController' %>class="current"<% end_if %> id="Menu-CMSPageHistoryController"><a href="admin/page/history/show/$Top.CurrentPageID">
-							<span class="text">History</span>
-						</a></li>
+						<li class="first <% if Top.class == 'CMSPageEditController' || Top.class == 'CMSMain' %>current<% end_if %>" id="Menu-CMSPageEditController">
+							<a href="admin/page/edit/show/$Top.CurrentPageID">
+								<span class="text">Content</span>
+							</a>
+						</li>
+						<li <% if Top.class == 'CMSPageSettingsController' %>class="current"<% end_if %> id="Menu-CMSPageSettingsController">
+							<a href="admin/page/settings/show/$Top.CurrentPageID">
+								<span class="text">Settings</span>
+							</a>
+						</li>
+						<li <% if Top.class == 'CMSPageHistoryController' %>class="current"<% end_if %> id="Menu-CMSPageHistoryController">
+							<a href="admin/page/history/show/$Top.CurrentPageID">
+								<span class="text">History</span>
+							</a>
+						</li>
 					</ul>
 				<% end_if %>
 			</li>

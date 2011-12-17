@@ -54,7 +54,21 @@
 			updateItems: function() {
 				// Hide "edit page" commands unless the section is activated
 				var editPageItem = this.find('#Menu-CMSMain');
+				
 				editPageItem[editPageItem.is('.current') ? 'show' : 'hide']();
+				
+				// update the menu links to reflect the page ID if the page has changed the URL.
+				var currentID = $('.cms-content input[name=ID]').val();
+				
+				// only handling the sub menu as the other items are global in context
+				if(currentID) {
+					$(this).find("ul a").each(function(i, elem) {
+						var href = $(elem).attr("href").split('/');
+						href[href.length -1] = currentID;
+						
+						$(elem).attr('href', href.join('/'));
+					});
+				}
 			}
 		});
 		
