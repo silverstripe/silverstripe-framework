@@ -405,7 +405,16 @@ class SQLQuery {
 		
 		return $this;
 	}
-	
+
+	/**
+	 *
+	 */
+	function whereAny($filters) {
+		if(is_string($filters)) $filters = func_get_args();
+		$clause = implode(" OR ", $filters);
+		return $this->where($clause);
+	}
+		
 	/**
 	 * Use the disjunctive operator 'OR' to join filter expressions in the WHERE clause.
 	 */

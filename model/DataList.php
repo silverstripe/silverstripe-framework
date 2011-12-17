@@ -2,20 +2,29 @@
 /**
  * Implements a "lazy loading" DataObjectSet.
  * Uses {@link DataQuery} to do the actual query generation.
+ * 
+ * @package    sapphire
+ * @subpackage model
  */
 class DataList extends ViewableData implements SS_List {
 	/**
 	 * The DataObject class name that this data list is querying
+	 * 
+	 * @var string
 	 */
 	protected $dataClass;
 	
 	/**
 	 * The {@link DataQuery} object responsible for getting this DataList's records
+	 * 
+	 * @var DataQuery
 	 */
 	protected $dataQuery;
 	
 	/**
 	 * The DataModel from which this DataList comes.
+	 * 
+	 * @var DataModel
 	 */
 	protected $model;
 	
@@ -23,45 +32,63 @@ class DataList extends ViewableData implements SS_List {
 	 * Synonym of the constructor.  Can be chained with literate methods.
 	 * DataList::create("SiteTree")->sort("Title") is legal, but
 	 * new DataList("SiteTree")->sort("Title") is not.
+	 * 
+	 * @param string $dataClass - The DataObject class to query.
 	 */
-	static function create($dataClass) {
+	public static function create($dataClass) {
 		return new DataList($dataClass);
 	}
 
 	/**
 	 * Create a new DataList.
 	 * No querying is done on construction, but the initial query schema is set up.
-	 * @param $dataClass The DataObject class to query.
+	 *
+	 * @param string $dataClass - The DataObject class to query.
 	 */
 	public function __construct($dataClass) {
 		$this->dataClass = $dataClass;
 		$this->dataQuery = new DataQuery($this->dataClass);
 		parent::__construct();
 	}
-	
+
+	/**
+	 * Set the DataModel
+	 *
+	 * @param DataModel $model 
+	 */
 	public function setModel(DataModel $model) {
 		$this->model = $model;
 	}
 	
+	/**
+	 * Get the dataClass name for this DataList, ie the DataObject ClassName
+	 *
+	 * @return string
+	 */
 	public function dataClass() {
 		return $this->dataClass;
 	}
 
 	/**
-	 * Clone this object
+	 * When cloning this object, clone the dataQuery object as well
 	 */
-	function __clone() {
+	public function __clone() {
 		$this->dataQuery = clone $this->dataQuery;
 	}
 	
 	/**
 	 * Return the internal {@link DataQuery} object for direct manipulation
+	 * 
+	 * @return DataQuery
 	 */
 	public function dataQuery() {
 		return $this->dataQuery;
 	}
+
 	/**
 	 * Returns the SQL query that will be used to get this DataList's records.  Good for debugging. :-)
+	 * 
+	 * @return SQLQuery
 	 */
 	public function sql() {
 		return $this->dataQuery->query()->sql();
@@ -71,6 +98,7 @@ class DataList extends ViewableData implements SS_List {
 	 * Add a WHERE clause to the query.
 	 *
 	 * @param string $filter
+	 * @return DataList
 	 */
 	public function where($filter) {
 		$this->dataQuery->where($filter);
@@ -78,23 +106,21 @@ class DataList extends ViewableData implements SS_List {
 	}
 
 	/**
-	 * Set the sort order of this data list
-	 */
-	public function sort($sort, $direction = "ASC") {
-		if($direction && strtoupper($direction) != 'ASC') $sort = "$sort $direction";
-		$this->dataQuery->sort($sort);
-		return $this;
-	}
-	
-	/**
 	 * Returns true if this DataList can be sorted by the given field.
+	 * 
+	 * @param string $fieldName
+	 * @return boolean
 	 */
-	public function canSortBy($field) {
-	    return $this->dataQuery()->query()->canSortBy($field);
+	public function canSortBy($fieldName) {
+	    return $this->dataQuery()->query()->canSortBy($fieldName);
 	}
 
 	/**
 	 * Add an join clause to this data list's query.
+	 *
+	 * @param type $join
+	 * @return DataList 
+	 * @deprecated 3.0
 	 */
 	public function join($join) {
 		Deprecation::notice('3.0', 'Use innerJoin() or leftJoin() instead.');
@@ -104,14 +130,179 @@ class DataList extends ViewableData implements SS_List {
 
 	/**
 	 * Restrict the records returned in this query by a limit clause
+	 * 
+	 * @param string $limit
 	 */
 	public function limit($limit) {
 		$this->dataQuery->limit($limit);
 		return $this;
 	}
+	
+	/**
+	 * Set the sort order of this data list
+	 *
+	 * @return DataList
+	 * @see SS_List::sort()
+	 * @example $list->sort('Name'); // default ASC sorting
+	 * @example $list->sort('Name DESC'); // DESC sorting
+	 * @example $list->sort('Name', 'ASC');
+	 * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
+	 */
+	public function sort() {
+		if(count(func_get_args())==0){
+			return $this;
+		}
+		if(count(func_get_args())>2){
+			throw new InvalidArgumentException('This method takes zero, one or two arguments');
+		}
+
+		// sort('Name','Desc')
+		if(count(func_get_args())==2){
+			if(!in_array(strtolower(func_get_arg(1)),array('desc','asc'))){
+				user_error('Second argument to sort must be either ASC or DESC');
+			}
+			$this->dataQuery->sort(func_get_arg(0).' '.func_get_arg(1));
+			return $this;
+		}
+		
+		// sort('Name') - default to ASC sorting if not specified
+		if(is_string(func_get_arg(0)) && func_get_arg(0)){
+			// sort('Name ASC')
+			if(stristr(func_get_arg(0), ' asc') || stristr(func_get_arg(0), ' desc')){
+				$this->dataQuery->sort(func_get_arg(0));
+			} else {
+				$this->dataQuery->sort(func_get_arg(0).' ASC');
+			}
+			
+			return $this;
+		}
+		
+		// sort(array('Name'=>'desc'));
+		$argumentArray = func_get_arg(0);
+		if(is_array($argumentArray)){
+			$sort = array();
+			foreach($argumentArray as $column => $direction) {
+				$sort []= '"'.$column.'" '.$direction;
+			}
+			$this->dataQuery->sort(implode(',', $sort));
+			return $this;
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Filter the list to include items with these charactaristics
+	 *
+	 * @return DataList
+	 * @see SS_List::filter()
+	 * @example $list->filter('Name', 'bob'); // only bob in the list
+	 * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
+	 * @example $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the age 21
+	 * @example $list->filter(array('Name'=>'bob, 'Age'=>array(21, 43))); // bob with the Age 21 or 43
+	 * @example $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43))); // aziz with the age 21 or 43 and bob with the Age 21 or 43
+	 *
+	 * @todo extract the sql from $customQuery into a SQLGenerator class
+	 */
+	public function filter() {
+		$numberFuncArgs = count(func_get_args());
+		$whereArguments = array();
+		if($numberFuncArgs == 1 && is_array(func_get_arg(0))){
+			$whereArguments = func_get_arg(0);
+		} elseif($numberFuncArgs == 2) {
+			$whereArguments[func_get_arg(0)] = func_get_arg(1);
+		} else {
+			throw new InvalidArgumentException('Arguments passed to filter() is wrong');
+		}
+
+		$SQL_Statements = array();
+		foreach($whereArguments as $field => $value) {
+			if(is_array($value)) {
+				$customQuery = 'IN (\''.implode('\',\'',Convert::raw2sql($value)).'\')';
+			} else {
+				$customQuery = '= \''.Convert::raw2sql($value).'\'';
+			}
+			
+			if(stristr($field,':')) {
+				$fieldArgs = explode(':',$field);
+				$field = array_shift($fieldArgs);
+				foreach($fieldArgs as $fieldArg){
+					$comparisor = $this->applyFilterContext($field, $fieldArg, $value);
+				}
+			} else {
+				$SQL_Statements[] = '"'.Convert::raw2sql($field).'" '.$customQuery;
+			}
+		}
+		if(count($SQL_Statements)) {
+			foreach($SQL_Statements as $SQL_Statement){
+				$this->dataQuery->where($SQL_Statement);
+			}
+		}
+		return $this;
+	}
 
 	/**
+	 * Translates the comparisator to the sql query
+	 *
+	 * @param string $field - the fieldname in the db
+	 * @param string $comparisators - example StartsWith, relates to a filtercontext
+	 * @param string $value - the value that the filtercontext will use for matching
+	 * @todo Deprecated SearchContexts and pull their functionality into the core of the ORM
+	 */
+	private function applyFilterContext($field, $comparisators, $value) {
+		$t = singleton($this->dataClass())->dbObject($field);
+		$className = "{$comparisators}Filter";
+		if(!class_exists($className)){
+			throw new InvalidArgumentException('There are no '.$comparisator.' comparisator');
+		}
+		$t = new $className($field,$value);
+		$t->apply($this->dataQuery());
+	}
+	
+	/**
+	 * Exclude the list to not contain items with these charactaristics
+	 *
+	 * @return DataList
+	 * @see SS_List::exclude()
+	 * @example $list->exclude('Name', 'bob'); // exclude bob from list
+	 * @example $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
+	 * @example $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob that has Age 21
+	 * @example $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob with Age 21 or 43
+	 * @example $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43))); // bob age 21 or 43, phil age 21 or 43 would be excluded
+	 *
+	 * @todo extract the sql from this method into a SQLGenerator class
+	 */
+	public function exclude(){
+		$numberFuncArgs = count(func_get_args());
+		$whereArguments = array();
+		
+		if($numberFuncArgs == 1 && is_array(func_get_arg(0))){
+			$whereArguments = func_get_arg(0);
+		} elseif($numberFuncArgs == 2) {
+			$whereArguments[func_get_arg(0)] = func_get_arg(1);
+		} else {
+			throw new InvalidArgumentException('Arguments passed to exclude() is wrong');
+		}
+
+		$SQL_Statements = array();
+		foreach($whereArguments as $fieldName => $value) {
+			if(is_array($value)){
+				$SQL_Statements[] = ('"'.$fieldName.'" NOT IN (\''.implode('\',\'', Convert::raw2sql($value)).'\')');
+			} else {
+				$SQL_Statements[] = ('"'.$fieldName.'" != \''.Convert::raw2sql($value).'\'');
+			}
+		}
+		$this->dataQuery->whereAny($SQL_Statements);
+		return $this;
+	}
+	
+	/**
 	 * Add an inner join clause to this data list's query.
+	 *
+	 * @param string $table
+	 * @param string $onClause
+	 * @param string $alias - if you want this table to be aliased under another name
+	 * @return DataList 
 	 */
 	public function innerJoin($table, $onClause, $alias = null) {
 		$this->dataQuery->innerJoin($table, $onClause, $alias);
@@ -120,6 +311,11 @@ class DataList extends ViewableData implements SS_List {
 
 	/**
 	 * Add an left join clause to this data list's query.
+	 *
+	 * @param string $table
+	 * @param string $onClause
+	 * @param string $alias - if you want this table to be aliased under another name
+	 * @return DataList 
 	 */
 	public function leftJoin($table, $onClause, $alias = null) {
 		$this->dataQuery->leftJoin($table, $onClause, $alias);
@@ -142,32 +338,51 @@ class DataList extends ViewableData implements SS_List {
 		return $results;
 	}
 
+	/**
+	 * Return this list as an array and every object it as an sub array as well
+	 *
+	 * @return type 
+	 */
 	public function toNestedArray() {
 		$result = array();
-
-		foreach ($this as $item) {
+		foreach($this as $item) {
 			$result[] = $item->toMap();
 		}
 
 		return $result;
 	}
 
+	/**
+	 * Returns a map of this list
+	 *
+	 * @param string $keyField - the 'key' field of the result array
+	 * @param string $titleField - the value field of the result array
+	 * @return SS_Map 
+	 */
 	public function map($keyField = 'ID', $titleField = 'Title') {
 		return new SS_Map($this, $keyField, $titleField);
 	}
 
 	/**
-	 * Create a data object from the given SQL row
+	 * Create a DataObject from the given SQL row
+	 * 
+	 * @param array $row
+	 * @return DataObject
 	 */
 	protected function createDataObject($row) {
 		$defaultClass = $this->dataClass;
 
 		// Failover from RecordClassName to ClassName
-		if(empty($row['RecordClassName'])) $row['RecordClassName'] = $row['ClassName'];
+		if(empty($row['RecordClassName'])) {
+			$row['RecordClassName'] = $row['ClassName'];
+		}
 		
 		// Instantiate the class mentioned in RecordClassName only if it exists, otherwise default to $this->dataClass
-		if(class_exists($row['RecordClassName'])) $item = new $row['RecordClassName']($row, false, $this->model);
-		else $item = new $defaultClass($row, false, $this->model);
+		if(class_exists($row['RecordClassName'])) {
+			$item = new $row['RecordClassName']($row, false, $this->model);
+		} else {
+			$item = new $defaultClass($row, false, $this->model);
+		}
 		
 		return $item;
 	}
@@ -175,6 +390,7 @@ class DataList extends ViewableData implements SS_List {
 	/**
 	 * Returns an Iterator for this DataList.
 	 * This function allows you to use DataLists in foreach loops
+	 * 
 	 * @return ArrayIterator
 	 */
 	public function getIterator() {
@@ -183,44 +399,60 @@ class DataList extends ViewableData implements SS_List {
 
 	/**
 	 * Return the number of items in this DataList
+	 * 
+	 * @return int
 	 */
-	function count() {
+	public function count() {
 		return $this->dataQuery->count();
 	}
 	
 	/**
 	 * Return the maximum value of the given field in this DataList
+	 *
+	 * @param string $fieldName
+	 * @return mixed
 	 */
-	function Max($field) {
-	    return $this->dataQuery->max($field);
+	public function max($fieldName) {
+	    return $this->dataQuery->max($fieldName);
 	}
 
 	/**
 	 * Return the minimum value of the given field in this DataList
+	 *
+	 * @param string $fieldName
+	 * @return mixed
 	 */
-	function Min($field) {
-	    return $this->dataQuery->min($field);
+	public function min($fieldName) {
+	    return $this->dataQuery->min($fieldName);
 	}
 	
 	/**
 	 * Return the average value of the given field in this DataList
+	 * 
+	 * @param string $fieldName
+	 * @return mixed
 	 */
-	function Avg($field) {
-	    return $this->dataQuery->avg($field);
+	public function avg($fieldName) {
+	    return $this->dataQuery->avg($fieldName);
 	}
 
 	/**
 	 * Return the sum of the values of the given field in this DataList
+	 * 
+	 * @param string $fieldName
+	 * @return mixed
 	 */
-	function Sum($field) {
-	    return $this->dataQuery->sum($field);
+	public function sum($fieldName) {
+	    return $this->dataQuery->sum($fieldName);
 	}
 	
 	
 	/**
 	 * Returns the first item in this DataList
+	 * 
+	 * @return DataObject
 	 */
-	function First() {
+	public function first() {
 		foreach($this->dataQuery->firstRow()->execute() as $row) {
 			return $this->createDataObject($row);
 		}
@@ -228,8 +460,10 @@ class DataList extends ViewableData implements SS_List {
 
 	/**
 	 * Returns the last item in this DataList
+	 *
+	 *  @return DataObject
 	 */
-	function Last() {
+	public function last() {
 		foreach($this->dataQuery->lastRow()->execute() as $row) {
 			return $this->createDataObject($row);
 		}
@@ -237,20 +471,30 @@ class DataList extends ViewableData implements SS_List {
 	
 	/**
 	 * Returns true if this DataList has items
+	 * 
+	 * @return bool
 	 */
-	function exists() {
+	public function exists() {
 		return $this->count() > 0;
 	}
 
 	/**
 	 * Get a sub-range of this dataobjectset as an array
+	 *
+	 * @param int $offset
+	 * @param int $length
+	 * @return DataList
 	 */
 	public function getRange($offset, $length) {
 		return $this->limit(array('start' => $offset, 'limit' => $length));
 	}
 	
 	/**
-	 * Find an element of this DataList where the given key = value
+	 * Find the first DataObject of this DataList where the given key = value
+	 *
+	 * @param string $key
+	 * @param string $value
+	 * @return DataObject|null
 	 */
 	public function find($key, $value) {
 		$clone = clone $this;
@@ -265,19 +509,24 @@ class DataList extends ViewableData implements SS_List {
 		return $clone->where("$SQL_col = '" . Convert::raw2sql($value) . "'")->First();
 	}
 	
-	
+
 	/**
-	 * Filter this list to only contain the given IDs
+	 * Filter this list to only contain the given Primary IDs
+	 *
+	 * @param array $ids
+	 * @return DataList
 	 */
 	public function byIDs(array $ids) {
 		$baseClass = ClassInfo::baseDataClass($this->dataClass);
 		$this->where("\"$baseClass\".\"ID\" IN (" . implode(',', $ids) .")");
-
 		return $this;
 	}
 
 	/**
-	 * Return the item of the given ID
+	 * Return the first DataObject with the given ID
+	 * 
+	 * @param int $id
+	 * @return DataObject
 	 */
 	public function byID($id) {
 		$baseClass = ClassInfo::baseDataClass($this->dataClass);
@@ -285,21 +534,24 @@ class DataList extends ViewableData implements SS_List {
 	}
 	
 	/**
-	 * Return a single column from this DataList.
-	 * @param $colNum The DataObject field to return.
+	 * Returns an array of a single field value for all items in the list.
+	 *
+	 * @param string $colName
+	 * @return array
 	 */
-	function column($colName = "ID") {
+	public function column($colName = "ID") {
 		return $this->dataQuery->column($colName);
 	}
 	
-	
 	// Member altering methods
+	
 	/**
 	 * Sets the ComponentSet to be the given ID list.
 	 * Records will be added and deleted as appropriate.
+	 * 
 	 * @param array $idList List of IDs.
 	 */
-	function setByIDList($idList) {
+	public function setByIDList($idList) {
 		$has = array();
 		
 		// Index current data
@@ -325,8 +577,9 @@ class DataList extends ViewableData implements SS_List {
 	
 	/**
 	 * Returns an array with both the keys and values set to the IDs of the records in this list.
+	 * 
 	 */
-	function getIDList() {
+	public function getIDList() {
 		$ids = $this->column("ID");
 		return $ids ? array_combine($ids, $ids) : array();
 	}
@@ -339,71 +592,95 @@ class DataList extends ViewableData implements SS_List {
 	 * Example: Get members from all Groups:
 	 * 
 	 *     DataObject::get("Group")->relation("Members")
+	 * 
+	 * @param string $relationName
+	 * @return HasManyList|ManyManyList
 	 */
-	
-	function relation($relationName) {
+	public function relation($relationName) {
 		$ids = $this->column('ID');
 		return singleton($this->dataClass)->$relationName()->forForeignID($ids);
 	}
 
 	/**
 	 * Add a number of items to the component set.
+	 * 
 	 * @param array $items Items to add, as either DataObjects or IDs.
+	 * @return DataList
 	 */
-	function addMany($items) {
+	public function addMany($items) {
 		foreach($items as $item) {
 			$this->add($item);
 		}
+		return $this;
 	}
 
 	/**
 	 * Remove the items from this list with the given IDs
+	 * 
+	 * @param array $idList
+	 * @return DataList
 	 */
-	function removeMany($idList) {
+	public function removeMany($idList) {
 		foreach($idList as $id) {
 			$this->removeByID($id);
 		}
+		return $this;
 	}
 
 	/**
 	 * Remove every element in this DataList matching the given $filter.
+	 * 
+	 * @param string $filter - a sql type where filter
+	 * @return DataList
 	 */
-	function removeByFilter($filter) {
+	public function removeByFilter($filter) {
 		foreach($this->where($filter) as $item) {
 			$this->remove($item);
 		}
+		return $this;
 	}
 
 	/**
 	 * Remove every element in this DataList.
+	 *
+	 * @return DataList
 	 */
-	function removeAll() {
+	public function removeAll() {
 		foreach($this as $item) {
 			$this->remove($item);
 		}
+		return $this;
 	}
 
-	// These methods are overloaded by HasManyList and ManyMany list to perform
-	// more sophisticated list manipulation
-	
-	function add($item) {
+	/**
+	 * This method are overloaded by HasManyList and ManyMany list to perform more sophisticated 
+	 * list manipulation
+	 *
+	 * @param type $item 
+	 */
+	public function add($item) {
 		// Nothing needs to happen by default
 		// TO DO: If a filter is given to this data list then
 	}
 
 	/**
 	 * Return a new item to add to this DataList.
+	 * 
 	 * @todo This doesn't factor in filters.
 	 */
-	function newObject($initialFields = null) {
+	public function newObject($initialFields = null) {
 		$class = $this->dataClass;
  		return new $class($initialFields, false, $this->model);
 	}
 	
-	function remove($item) {
-		// TO DO: Allow for amendment of this behaviour - for exmaple, we can remove an item from
-		// an "ActiveItems" DataList by chaning the status to inactive.
-
+	/**
+	 * Remove this item by deleting it
+	 * 
+	 * @param DataClass $item 
+	 * @todo Allow for amendment of this behaviour - for example, we can remove an item from
+	 * an "ActiveItems" DataList by chaning the status to inactive.
+	 */
+	public function remove($item) {
 		// By default, we remove an item from a DataList by deleting it.
 		if($item instanceof $this->dataClass) $item->delete();
 
@@ -411,35 +688,67 @@ class DataList extends ViewableData implements SS_List {
 
     /**
      * Remove an item from this DataList by ID
+	 * 
+	 * @param int $itemID - The primary ID
      */
-	function removeByID($itemID) {
+	public function removeByID($itemID) {
 	    $item = $this->byID($itemID);
 	    if($item) return $item->delete();
 	}
 
-	// Methods that won't function on DataLists
-	
-	function push($item) {
+	/**
+	 * This method won't function on DataLists due to the specific query that it represent
+	 * 
+	 * @param mixed $item
+	 */
+	public function push($item) {
 		user_error("Can't call DataList::push() because its data comes from a specific query.", E_USER_ERROR);
 	}
-	function insertFirst($item) {
+	
+	/**
+	 * This method won't function on DataLists due to the specific query that it represent
+	 *
+	 * @param mixed $item 
+	 */
+	public function insertFirst($item) {
 		user_error("Can't call DataList::insertFirst() because its data comes from a specific query.", E_USER_ERROR);
 	}
-	function shift() {
+	
+	/**
+	 * This method won't function on DataLists due to the specific query that it represent
+	 * 
+	 */
+	public function shift() {
 		user_error("Can't call DataList::shift() because its data comes from a specific query.", E_USER_ERROR);
 	}
-	function replace() {
+	
+	/**
+	 * This method won't function on DataLists due to the specific query that it represent
+	 * 
+	 */
+	public function replace() {
 		user_error("Can't call DataList::replace() because its data comes from a specific query.", E_USER_ERROR);
 	}
-	function merge() {
+	
+	/**
+	 * This method won't function on DataLists due to the specific query that it represent
+	 *
+	 */
+	public function merge() {
 		user_error("Can't call DataList::merge() because its data comes from a specific query.", E_USER_ERROR);
 	}
-	function removeDuplicates() {
+	
+	/**
+	 * This method won't function on DataLists due to the specific query that it represent
+	 * 
+	 */
+	public function removeDuplicates() {
 		user_error("Can't call DataList::removeDuplicates() because its data comes from a specific query.", E_USER_ERROR);
 	}
 	
 	/**
-	 * Necessary for interface ArrayAccess. Returns whether an item with $key exists
+	 * Returns whether an item with $key exists
+	 * 
 	 * @param mixed $key
 	 * @return bool
 	 */
@@ -448,7 +757,8 @@ class DataList extends ViewableData implements SS_List {
 	}
 
 	/**
-	 * Necessary for interface ArrayAccess. Returns item stored in array with index $key
+	 * Returns item stored in list with index $key
+	 * 
 	 * @param mixed $key
 	 * @return DataObject
 	 */
@@ -457,20 +767,22 @@ class DataList extends ViewableData implements SS_List {
 	}
 	
 	/**
-	 * Necessary for interface ArrayAccess. Set an item with the key in $key
+	 * Set an item with the key in $key
+	 * 
 	 * @param mixed $key
 	 * @param mixed $value
 	 */
 	public function offsetSet($key, $value) {
-	    throw new Exception("Can't alter items in a DataList using array-access");
+	    user_error("Can't alter items in a DataList using array-access", E_USER_ERROR);
 	}
 
 	/**
-	 * Necessary for interface ArrayAccess. Unset an item with the key in $key
+	 * Unset an item with the key in $key
+	 * 
 	 * @param mixed $key
 	 */
 	public function offsetUnset($key) {
-	    throw new Exception("Can't alter items in a DataList using array-access");
-	}	
+	    user_error("Can't alter items in a DataList using array-access", E_USER_ERROR);
+	}
 
 }
