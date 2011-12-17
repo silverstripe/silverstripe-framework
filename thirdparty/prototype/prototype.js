@@ -780,10 +780,10 @@ Ajax.Request.prototype = Object.extend(new Ajax.Base(), {
 
       /* Force "Connection: close" for Mozilla browsers to work around
        * a bug where XMLHttpReqeuest sends an incorrect Content-length
-       * header. See Mozilla Bugzilla #246651.
+       * header. See Mozilla Bugzilla #246651. update: causes "connection refused" error in chrome.  246651 is now fixed.
        */
-      if (this.transport.overrideMimeType)
-        requestHeaders.push('Connection', 'close');
+      //if (this.transport.overrideMimeType)
+      //  requestHeaders.push('Connection', 'close');
     }
 
     if (this.options.requestHeaders)
