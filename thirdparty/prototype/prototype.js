@@ -778,12 +778,13 @@ Ajax.Request.prototype = Object.extend(new Ajax.Base(), {
       requestHeaders.push('Content-type',
         'application/x-www-form-urlencoded; charset=utf-8');
 
-      /* Force "Connection: close" for Mozilla browsers to work around
-       * a bug where XMLHttpReqeuest sends an incorrect Content-length
-       * header. See Mozilla Bugzilla #246651.
+      /* Force "Connection: close" for older Mozilla browsers to work
+       * around a bug where XMLHttpRequest sends an incorrect
+       * Content-length header. See Mozilla Bugzilla #246651.
        */
-      if (this.transport.overrideMimeType)
-        requestHeaders.push('Connection', 'close');
+      if (this.transport.overrideMimeType &&
+          (navigator.userAgent.match(/Gecko\/(\d{4})/) || [0,2005])[1] < 2005)
+            headers['Connection'] = 'close';
     }
 
     if (this.options.requestHeaders)
