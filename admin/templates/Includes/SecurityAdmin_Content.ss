@@ -8,7 +8,7 @@
 
 		$AddForm
 
-		<div data-url-tree="$Link(getsubtree)" data-url-savetreenode="$Link(savetreenode)" class="cms-tree security-tree jstree jstree-apple">
+		<div data-url-tree="$Link(getsubtree)" data-url-savetreenode="$Link(savetreenode)" data-hints="$SecurityTreeHints" class="cms-tree cms-groups-tree draggable jstree jstree-apple">
 			$SiteTreeAsUL
 		</div>
 
