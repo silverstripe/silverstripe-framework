@@ -12,7 +12,11 @@ class NamespacedClassManifestTest extends SapphireTest {
 
 	public function setUp() {
 		parent::setUp();
-
+		
+		if(version_compare(PHP_VERSION, '5.3', '<')) {
+			$this->markTestSkipped('Namespaces are not supported before PHP 5.3');
+		}
+		
 		$this->base = dirname(__FILE__) . '/fixtures/namespaced_classmanifest';
 		$this->manifest      = new SS_ClassManifest($this->base, false, true, false);
 	}
