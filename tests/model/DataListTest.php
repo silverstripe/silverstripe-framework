@@ -326,14 +326,6 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
 	}
 
-	public function testSimpleFilterSubstring() {
-		$list = DataList::create("DataObjectTest_TeamComment");
-		$list->filter('Comment:SubString', 'team comment');
-		$this->assertEquals(2, $list->count());
-		$this->assertEquals('Joe', $list->first()->Name, 'First comment should be from Bob');
-		$this->assertEquals('Bob', $list->last()->Name, 'First comment should be from Bob');
-	}
-
 	public function testSimpleFilterWithNonExistingComparisator() {
 		$this->setExpectedException('InvalidArgumentException');
 		$list = DataList::create("DataObjectTest_TeamComment");
