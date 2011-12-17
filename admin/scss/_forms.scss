@@ -14,14 +14,16 @@
 @mixin actionButtonSprite($horizontalOffset, $verticalOffset) {
     padding-left: 24px;
 	padding-right: 6px;
-	@include background(image-url("../images/btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
+	@include background($color-button-generic image-url("btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset);
+	@include background(image-url("btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
 		linear-gradient(color-stops(
 			lighten($color-button-generic, 10%),
 			darken($color-button-generic, 5%)
 		))
 	);
 	&.ui-state-hover {
-		@include background(image-url("../images/btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
+		@include background(lighten($color-button-generic, 10%) image-url("btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset);
+		@include background(image-url("btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
 			linear-gradient(color-stops(
 				lighten($color-button-generic, 20%),
 				$color-button-generic
@@ -30,7 +32,8 @@
 	}
 	&.ui-state-disabled {
 	    background-image: none;
-		@include background(image-url("../images/btn_icons_sprite_disabled.png") no-repeat $horizontalOffset $verticalOffset,
+	    @include background(lighten($color-button-generic, 20%) image-url("btn_icons_sprite_disabled.png") no-repeat $horizontalOffset $verticalOffset);
+		@include background(image-url("btn_icons_sprite_disabled.png") no-repeat $horizontalOffset $verticalOffset,
 			linear-gradient(color-stops(
 				lighten($color-button-generic, 20%),
 				$color-button-generic
@@ -234,7 +237,8 @@ form.nostyle {
 .cms-preview-toggle-link {
 	display: block;
 	float: right;
-	font-size: 11px;
+	font-size: 12px;
+	text-decoration: none;
 }
 
 .cms {
@@ -264,7 +268,8 @@ form.nostyle {
 		@include text-shadow(lighten($color-button-generic, 20%) 0 1px 1px);
 		
 		@include box-shadow(lighten($color-base, 10%) 0 1px 2px);
-		@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+		@include background($color-button-generic image-url("btn_icons_sprite.png") no-repeat 999px 999px);
+		@include background(image-url("btn_icons_sprite.png") no-repeat 999px 999px,
 			linear-gradient(color-stops(
 				lighten($color-button-generic, 10%),
 				darken($color-button-generic, 5%)
@@ -275,7 +280,8 @@ form.nostyle {
 			@include text-shadow(lighten($color-button-generic, 30%) 0 1px 1px);
 			
 			@include box-shadow($color-base 0 1px 2px);
-			@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+			@include background(lighten($color-button-generic, 10%) image-url("btn_icons_sprite.png") no-repeat 999px 999px);
+			@include background(image-url("btn_icons_sprite.png") no-repeat 999px 999px,
 				linear-gradient(color-stops(
 					lighten($color-button-generic, 20%),
 					darken($color-button-generic, 5%)
@@ -287,7 +293,8 @@ form.nostyle {
 			border: 1px solid darken($color-button-generic-border, 5%);
 			
 			@include box-shadow($color-base 0 1px 2px);
-			@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+			@include background(lighten($color-button-generic, 10%) image-url("btn_icons_sprite.png") no-repeat 999px 999px);
+			@include background(image-url("btn_icons_sprite.png") no-repeat 999px 999px,
 				linear-gradient(color-stops(
 					$color-button-generic,
 					lighten($color-button-generic, 20%)
@@ -304,28 +311,26 @@ form.nostyle {
 			margin-left: $grid-horizontal;
 			color: $color-text-light;
 			border-color: $color-button-constructive-border;
-			@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 5px,
+			@include background($color-button-constructive image-url("btn_icons_sprite.png") no-repeat 5px 5px);
+			@include background(image-url("btn_icons_sprite.png") no-repeat 5px 5px,
 				linear-gradient(color-stops(
 					lighten($color-button-constructive, 10%),
 					darken($color-button-constructive, 5%)
 				))
 			);
-		
-			background-color: $color-button-constructive;
 	
 			@include text-shadow(darken($color-button-constructive, 10%) 0 1px 1px);
 			@include box-shadow(darken($color-base, 20%) 1px 1px 2px);
 		
 			&.ui-state-hover {
 				border-color: darken($color-button-constructive-border, 10%);
-				@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 5px,
+				@include background(lighten($color-button-constructive, 10%) image-url("btn_icons_sprite.png") no-repeat 5px 5px);
+				@include background(image-url("btn_icons_sprite.png") no-repeat 5px 5px,
 					linear-gradient(color-stops(
 						lighten($color-button-constructive, 15%),
 						$color-button-constructive
 					))
 				);
-			
-				background-color: darken($color-button-constructive, 10%);
 			}
 		}
 	
@@ -351,7 +356,8 @@ form.nostyle {
 		&.cms-preview-toggle-link {
 		    padding-left: 24px !important;
 			margin-left: 4px !important;
-		    @include actionButtonSprite(6px, -124px);
+			text-decoration: none;
+		    @include actionButtonSprite(6px, -122px);
 		}
 
 		&.ss-ui-button-small {

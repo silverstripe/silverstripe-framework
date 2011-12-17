@@ -44,7 +44,7 @@
 
 	<div class="cms-content-actions south">
 		<% if CurrentPage.PreviewLink %>
-		<a href="$CurrentPage.PreviewLink" class="cms-preview-toggle-link ss-ui-button ss-ui-button-small">
+		<a href="$CurrentPage.PreviewLink" class="cms-preview-toggle-link ss-ui-button">
 			<% _t('LeftAndMain.PreviewButton', 'Preview') %> &raquo;
 		</a>
 
