@@ -40,19 +40,59 @@ class SS_ClassManifest {
 			3 => T_WHITESPACE,
 			4 => T_EXTENDS,
 			5 => T_WHITESPACE,
-			6 => array(T_STRING, 'save_to' => 'extends', 'can_jump_to' => 14),
+			6 => array(T_STRING, 'save_to' => 'extends[]', 'can_jump_to' => 14),
 			7 => T_WHITESPACE,
 			8 => T_IMPLEMENTS,
 			9 => T_WHITESPACE,
 			10 => array(T_STRING, 'can_jump_to' => 14, 'save_to' => 'interfaces[]'),
 			11 => array(T_WHITESPACE, 'optional' => true),
-			12 => array(',', 'can_jump_to' => 10),
+			12 => array(',', 'can_jump_to' => 10, 'save_to' => 'interfaces[]'),
 			13 => array(T_WHITESPACE, 'can_jump_to' => 10),
 			14 => array(T_WHITESPACE, 'optional' => true),
 			15 => '{',
 		));
 	}
-
+	
+	/**
+	 * @return TokenisedRegularExpression
+	 */
+	public static function get_namespaced_class_parser() {
+		return new TokenisedRegularExpression(array(
+			0 => T_CLASS,
+			1 => T_WHITESPACE,
+			2 => array(T_STRING, 'can_jump_to' => array(8, 16), 'save_to' => 'className'),
+			3 => T_WHITESPACE,
+			4 => T_EXTENDS,
+			5 => T_WHITESPACE,
+			6 => array(T_NS_SEPARATOR, 'save_to' => 'extends[]', 'optional' => true),
+			7 => array(T_STRING, 'save_to' => 'extends[]', 'can_jump_to' => array(6, 16)),
+			8 => T_WHITESPACE,
+			9 => T_IMPLEMENTS,
+			10 => T_WHITESPACE,
+			11 => array(T_NS_SEPARATOR, 'save_to' => 'interfaces[]', 'optional' => true),
+			12 => array(T_STRING, 'can_jump_to' => array(11, 16), 'save_to' => 'interfaces[]'),
+			13 => array(T_WHITESPACE, 'optional' => true),
+			14 => array(',', 'can_jump_to' => 11, 'save_to' => 'interfaces[]'),
+			15 => array(T_WHITESPACE, 'can_jump_to' => 11),
+			16 => array(T_WHITESPACE, 'optional' => true),
+			17 => '{',
+		));
+	}
+	
+	/**
+	 * @return TokenisedRegularExpression
+	 */
+	public static function get_namespace_parser() {
+		return new TokenisedRegularExpression(array(
+			0 => T_NAMESPACE,
+			1 => T_WHITESPACE,
+			2 => array(T_NS_SEPARATOR, 'save_to' => 'namespaceName[]', 'optional' => true),
+			3 => array(T_STRING, 'save_to' => 'namespaceName[]', 'can_jump_to' => 2),
+			4 => array(T_WHITESPACE, 'optional' => true),
+			5 => ';',
+		));
+	}
+	
 	/**
 	 * @return TokenisedRegularExpression
 	 */
@@ -63,7 +103,7 @@ class SS_ClassManifest {
 			2 => array(T_STRING, 'save_to' => 'interfaceName')
 		));
 	}
-
+	
 	/**
 	 * Constructs and initialises a new class manifest, either loading the data
 	 * from the cache or re-scanning for classes.
@@ -228,7 +268,7 @@ class SS_ClassManifest {
 			'classes', 'roots', 'children', 'descendants', 'interfaces',
 			'implementors', 'configs'
 		);
-
+		
 		// Reset the manifest so stale info doesn't cause errors.
 		foreach ($reset as $reset) {
 			$this->$reset = array();
@@ -267,6 +307,7 @@ class SS_ClassManifest {
 
 		$classes    = null;
 		$interfaces = null;
+		$namespace = null;
 
 		// The results of individual file parses are cached, since only a few
 		// files will have changed and TokenisedRegularExpression is quite
@@ -277,29 +318,47 @@ class SS_ClassManifest {
 
 		if ($data = $this->cache->load($key)) {
 			$valid = (
-				isset($data['classes']) && isset($data['interfaces'])
-				&& is_array($data['classes']) && is_array($data['interfaces'])
+				isset($data['classes']) && isset($data['interfaces']) && isset($data['namespace'])
+				&& is_array($data['classes']) && is_array($data['interfaces']) && is_array($data['namespace'])
 			);
 
 			if ($valid) {
 				$classes    = $data['classes'];
 				$interfaces = $data['interfaces'];
+				$namespace = $data['namespace'];
 			}
 		}
-
+		
 		if (!$classes) {
 			$tokens     = token_get_all($file);
-			$classes    = self::get_class_parser()->findAll($tokens);
+			if(version_compare(PHP_VERSION, '5.3', '>=')) {
+				$classes = self::get_namespaced_class_parser()->findAll($tokens);
+				$namespace = self::get_namespace_parser()->findAll($tokens);
+				if($namespace) {
+					$namespace = implode('', $namespace[0]['namespaceName']) . '\\';
+				} else {
+					$namespace = '';
+				}
+			} else {
+				$classes = self::get_class_parser()->findAll($tokens);
+				$namespace = '';
+			}
 			$interfaces = self::get_interface_parser()->findAll($tokens);
 
-			$cache = array('classes' => $classes, 'interfaces' => $interfaces);
+			$cache = array('classes' => $classes, 'interfaces' => $interfaces, 'namespace' => $namespace);
 			$this->cache->save($cache, $key, array('fileparse'));
 		}
 
 		foreach ($classes as $class) {
-			$name       = $class['className'];
-			$extends    = isset($class['extends']) ? $class['extends'] : null;
+			$name       = $namespace . $class['className'];
+			$extends    = isset($class['extends']) ? implode('', $class['extends']) : null;
 			$implements = isset($class['interfaces']) ? $class['interfaces'] : null;
+			
+			if($extends && $extends[0] != '/\\') {
+				$extends = $namespace . $extends;
+			} elseif($extends) {
+				$extends = substr($extends, 1);
+			}
 
 			if (array_key_exists($name, $this->classes)) {
 				throw new Exception(sprintf(
@@ -321,20 +380,34 @@ class SS_ClassManifest {
 			} else {
 				$this->roots[] = $name;
 			}
-
-			if ($implements) foreach ($implements as $interface) {
-				$interface = strtolower($interface);
-
-				if (!isset($this->implementors[$interface])) {
-					$this->implementors[$interface] = array($name);
-				} else {
-					$this->implementors[$interface][] = $name;
+			
+			if ($implements) {
+				$interface = $namespace;
+				for($i = 0; $i < count($implements); ++$i) {
+					if($implements[$i] == ',') {
+						$interface = $namespace;
+						continue;
+					}
+					if($implements[$i] == '\\' && $interface == $namespace) {
+						$interface = '';
+					} else {
+						$interface .= $implements[$i];
+					}
+					if($i == count($implements)-1 || $implements[$i+1] == ',') {
+						$interface = strtolower($interface);
+		
+						if (!isset($this->implementors[$interface])) {
+							$this->implementors[$interface] = array($name);
+						} else {
+							$this->implementors[$interface][] = $name;
+						}
+					}
 				}
 			}
 		}
-
+		
 		foreach ($interfaces as $interface) {
-			$this->interfaces[strtolower($interface['interfaceName'])] = $pathname;
+			$this->interfaces[strtolower($namespace . $interface['interfaceName'])] = $pathname;
 		}
 	}
 
@@ -348,7 +421,7 @@ class SS_ClassManifest {
 	protected function coalesceDescendants($class) {
 		$result = array();
 		$lClass = strtolower($class);
-
+		
 		if (array_key_exists($lClass, $this->children)) {
 			$this->descendants[$lClass] = array();
 
