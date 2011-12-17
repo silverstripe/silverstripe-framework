@@ -319,7 +319,7 @@ class SS_ClassManifest {
 		if ($data = $this->cache->load($key)) {
 			$valid = (
 				isset($data['classes']) && isset($data['interfaces']) && isset($data['namespace'])
-				&& is_array($data['classes']) && is_array($data['interfaces']) && is_array($data['namespace'])
+				&& is_array($data['classes']) && is_array($data['interfaces']) && is_string($data['namespace'])
 			);
 
 			if ($valid) {
