@@ -227,6 +227,10 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 			$this->currentTest['timeElapsed'] = $this->timer->timeElapsed();
 		}
 		array_push($this->currentSuite['tests'], $this->currentTest);
+		if(method_exists($test, 'getActualOutput')) {
+			$output = $test->getActualOutput();
+			if($output) echo "\nOutput:\n$output";
+		}
 	}
 	
 	/**
