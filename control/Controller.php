@@ -115,7 +115,7 @@ class Controller extends RequestHandler {
 	 * @return SS_HTTPResponse The response that this controller produces, 
 	 *  including HTTP headers such as redirection info
 	 */
-	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
 		if(!$request) user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
 		
 		$this->pushCurrent();
