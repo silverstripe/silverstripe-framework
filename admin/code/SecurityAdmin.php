@@ -347,6 +347,28 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	static function clear_hidden_permissions(){
 		self::$hidden_permissions = array();
 	}
+	
+	/**
+	 * Create serialized JSON string with site tree hints data to be injected into
+	 * 'data-hints' attribute of root node of jsTree.
+	 * 
+	 * @return String Serialized JSON
+	 */
+	public function SecurityTreeHints() {
+	  $classes = ClassInfo::subclassesFor($this->stat('tree_class'));
+
+		$def['Root'] = array();
+		$def['Root']['disallowedChildren'] = array();
+		$def['Root']['disallowedParents'] = array();
+
+		foreach($classes as $class) {
+		  $def[$class]['disallowedChildren'] = array();
+		  $def[$class]['disallowedParents'] = array();
+			$def['Root']['disallowedParents'][] = $class;
+		}
+
+		return Convert::raw2xml(Convert::raw2json($def));
+	}
 }
 
 /**
