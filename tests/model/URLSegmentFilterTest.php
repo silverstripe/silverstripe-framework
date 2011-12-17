@@ -31,5 +31,22 @@ class URLSegmentFilterTest extends SapphireTest {
 			$f->filter('Brötchen')
 		);
 	}
+
+	function testReplacements() {
+		$f = new URLSegmentFilter();
+		$this->assertEquals(
+			'tim-and-struppi', 
+			$f->filter('Tim&Struppi')
+		);
+
+		// Customize replacements
+		$rs = $f->getReplacements();
+		$rs['/&/u'] = '-und-';
+		$f->setReplacements($rs);
+		$this->assertEquals(
+			'tim-und-struppi', 
+			$f->filter('Tim&Struppi')
+		);
+	}
 	
 }
