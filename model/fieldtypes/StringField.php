@@ -83,7 +83,7 @@ abstract class StringField extends DBField {
 	 * @param string $add Ellipsis to add to the end of truncated string
 	 * @return string
 	 */
-	function LimitCharacters($limit, $add = '...') {
+	function LimitCharacters($limit = 20, $add = '...') {
 		$value = trim($this->value);
 		if($this->stat('escape_type') == 'xml') {
 			$value = strip_tags($value);
