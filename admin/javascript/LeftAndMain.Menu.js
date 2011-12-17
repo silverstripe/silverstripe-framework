@@ -94,6 +94,7 @@
 			select: function() {
 				var parent = this.getMenuItem();
 				this.addClass('current').open();
+
 				// Remove "current" class from all siblings and their children
 				this.siblings().removeClass('current').close();
 				this.siblings().find('li').removeClass('current');
@@ -132,6 +133,7 @@
 				if(this.is(':internal')) url = $('base').attr('href') + url;
 				
 				var children = item.find('li');
+
 				if(children.length) {
 					children.first().find('a').click();
 				} else {

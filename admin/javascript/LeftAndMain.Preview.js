@@ -1,15 +1,17 @@
 (function($) {
-	
 	$.entwine('ss', function($){
 
 		/**
-		 * Shows a previewable website state alongside its editable version in backend UI, typically a page.
-		 * This allows CMS users to seamlessly switch between preview and edit mode in the same browser window.
-		 * The preview panel is embedded in the layout of the backend UI, and loads its content via an iframe.
+		 * Shows a previewable website state alongside its editable version in backend UI, 
+		 * typically a page. This allows CMS users to seamlessly switch between preview and 
+		 * edit mode in the same browser window. The preview panel is embedded in the layout 
+		 * of the backend UI, and loads its content via an iframe.
 		 * 
 		 * The admin UI itself is collapsible, leaving most screen space to this panel.
-		 * Relies on the server responses to indicate if a preview URL is available for the currently loaded
-		 * admin interface. If no preview is available, the panel is "blocked" automatically.
+		 *
+		 * Relies on the server responses to indicate if a preview URL is available for the 
+		 * currently loaded admin interface. If no preview is available, the panel is "blocked" 
+		 * automatically.
 		 * 
 		 * Internal links within the preview iframe trigger a refresh of the admin panel as well,
 		 * while all external links are disabled (via JavaScript).
@@ -78,7 +80,7 @@
 				this._super();
 			},
 			
-			loadUrl: function(url) {
+			loadUrl: function(url) {	
 				this.find('iframe').attr('src', url);
 			},
 
@@ -96,12 +98,15 @@
 				if(contentEl.is('.' + blockedClasses.join(',.'))) return;
 
 				// Load this page in the admin interface if appropriate
-				var id = $(doc).find('meta[name=x-page-id]').attr('content'), 
-					editLink = $(doc).find('meta[name=x-cms-edit-link]').attr('content'), 
-					contentPanel = $('.cms-content');
+				var id = $(doc).find('meta[name=x-page-id]').attr('content'); 
+				var editLink = $(doc).find('meta[name=x-cms-edit-link]').attr('content');
+				var contentPanel = $('.cms-content');
+				
 				if(id && contentPanel.find(':input[name=ID]').val() != id) {
-					// Ignore behaviour without history support (as we need ajax loading for the new form to load in the background)
-					if(window.History.enabled) $('.cms-container').loadPanel(editLink);
+					// Ignore behaviour without history support (as we need ajax loading 
+					// for the new form to load in the background)
+					if(window.History.enabled) 
+						$('.cms-container').loadPanel(editLink);
 				}
 			},
 			
@@ -221,6 +226,7 @@
 				this.find('.active a').addClass('ui-state-highlight');
 			}
 		});
+		
 		$('.cms-preview .cms-preview-states a').entwine({
 			onclick: function(e) {
 				e.preventDefault();
@@ -234,8 +240,8 @@
 		$('.cms-preview-toggle-link').entwine({
 			onclick: function(e) {
 				e.preventDefault();
-				$('.cms-preview').toggle();
 				
+				$('.cms-preview').toggle();
 			}
 		});
 	});

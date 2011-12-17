@@ -2,14 +2,11 @@
  * File: LeftAndMain.js
  */
 (function($) {
-
 	$.metadata.setType('html5');
-
-	// setup jquery.entwine
-		$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 	
-	$.entwine('ss', function($){
-
+	// setup jquery.entwine
+	$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
+	$.entwine('ss', function($) {
 		/**
 		 * Position the loading spinner animation below the ss logo
 		 */ 
@@ -116,14 +113,20 @@
 			 *  - {Object} data Any additional data passed through to History.pushState()
 			 */
 			loadPanel: function(url, title, data) {
-				var data = data || {}, selector = data.selector || '.cms-content', contentEl = $(selector);
+				var data = data || {};
+				var selector = data.selector || '.cms-content'
+				var contentEl = $(selector);
+				
 				// Check change tracking (can't use events as we need a way to cancel the current state change)
 				var trackedEls = contentEl.find(':data(changetracker)').add(contentEl.filter(':data(changetracker)'));
+				
 				if(trackedEls.length) {
 					var abort = false;
+					
 					trackedEls.each(function() {
 						if(!$(this).confirmUnsavedChanges()) abort = true;
 					});
+					
 					if(abort) return;
 				}
 
@@ -168,7 +171,10 @@
 				if(this.getCurrentXHR()) this.getCurrentXHR().abort();
 				
 				var selector = state.data.selector || '.cms-content', contentEl = $(selector);
-				this.trigger('beforestatechange', {state: state, element: contentEl});
+				
+				this.trigger('beforestatechange', {
+					state: state, element: contentEl
+				});
 
 				contentEl.addClass('loading');
 				
@@ -187,14 +193,17 @@
 						
 						// Set loading state and store element state
 						newContentEl.addClass('loading');
-						var origStyle = contentEl.attr('style'),
-							layoutClasses = ['east', 'west', 'center', 'north', 'south'],
-							origLayoutClasses = $.grep(
-								contentEl.attr('class').split(' '),
-								function(val) { 
-									return ($.inArray(val, layoutClasses) >= 0);
-								}
-							);
+						var origStyle = contentEl.attr('style');
+						var layoutClasses = ['east', 'west', 'center', 'north', 'south'];
+						var elemClasses = contentEl.attr('class');
+						
+						var origLayoutClasses = $.grep(
+							elemClasses.split(' '),
+							function(val) { 
+								return ($.inArray(val, layoutClasses) >= 0);
+							}
+						);
+						
 						newContentEl
 							.removeClass(layoutClasses.join(' '))
 							.addClass(origLayoutClasses.join(' '))
@@ -215,6 +224,7 @@
 						contentEl.removeClass('loading');
 					}
 				});
+				
 				this.setCurrentXHR(xhr);
 			}
 		});
