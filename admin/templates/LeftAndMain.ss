@@ -2,12 +2,11 @@
 <html>
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-language" content="$i18nLocale" />
 <% base_tag %>
 <title>$Title</title>
 </head>
 
-<body class="loading cms">
+<body class="loading cms" lang="$Locale.RFC1766">
 	
 	<% include CMSLoadingScreen %>
 	
@@ -18,7 +17,7 @@
 		$Content
 		
 		<div class="cms-preview east <% if IsPreviewExpanded %>is-expanded<% else %>is-collapsed<% end_if %>" data-layout="{type: 'border'}">
-			<iframe src="$PreviewLink" class="center"></iframe>
+			<iframe src="<% if $PreviewLink %>$PreviewLink<% else %>about:blank<% end_if %>" class="center"></iframe>
 			<div class="cms-preview-controls south"></div>
 		</div>
 

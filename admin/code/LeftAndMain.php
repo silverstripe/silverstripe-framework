@@ -568,7 +568,7 @@ class LeftAndMain extends Controller {
 				$treeTitle = '...';
 			}
 			
-			$html = "<ul><li id=\"record-0\" data-id=\"0\"class=\"Root nodelete\"><a href=\"$rootLink\"><strong>$treeTitle</strong></a>"
+			$html = "<ul><li id=\"record-0\" data-id=\"0\" class=\"Root nodelete\"><a href=\"$rootLink\"><strong>$treeTitle</strong></a>"
 				. $html . "</li></ul>";
 		}
 
@@ -1225,6 +1225,13 @@ class LeftAndMain extends Controller {
 	
 	function IsPreviewExpanded() {
 		return ($this->request->getVar('cms-preview-expanded'));
+	}
+
+	/**
+	 * @return String
+	 */
+	function Locale() {
+		return DBField::create('DBLocale', $this->i18nLocale());
 	}
 	
 	/**
