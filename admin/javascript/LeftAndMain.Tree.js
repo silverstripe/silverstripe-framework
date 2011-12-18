@@ -13,7 +13,8 @@
 			onmatch: function() {
 				this._super();
 				
-				this.setHints($.parseJSON(this.attr('data-hints')));
+				var hints = this.attr('data-hints');
+				if(hints) this.setHints($.parseJSON(hints));
 				
 				/**
 				 * @todo Icon and page type hover support
@@ -56,14 +57,15 @@
 									// Check if a node is allowed to be moved.
 									// Caution: Runs on every drag over a new node
 									'check_move': function(data) {
-
 										var movedNode = $(data.o), newParent = $(data.np), 
 											isMovedOntoContainer = data.ot.get_container()[0] == data.np[0],
 											movedNodeClass = movedNode.getClassname(), 
 											newParentClass = newParent.getClassname(),
 											// Check allowedChildren of newParent or against root node rules
 											hints = self.getHints(),
-											disallowedChildren = hints[newParentClass ? newParentClass : 'Root'].disallowedChildren || [];
+											disallowedChildren = [];
+										
+										if(hints) disallowedChildren = hints[newParentClass ? newParentClass : 'Root'].disallowedChildren || [];
 										var isAllowed = (
 											// Don't allow moving the root node
 											movedNode.data('id') != 0 
@@ -72,7 +74,7 @@
 											// Children are generally allowed on parent
 											&& !newParent.hasClass('nochildren')
 											// movedNode is allowed as a child
-											&& ($.inArray(movedNodeClass, disallowedChildren) == -1)
+											&& (!disallowedChildren.length || $.inArray(movedNodeClass, disallowedChildren) == -1)
 										);
 										
 										return isAllowed;
