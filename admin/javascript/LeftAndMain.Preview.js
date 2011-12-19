@@ -37,10 +37,16 @@
 				this.find('iframe').addClass('center');
 				this.find('iframe').bind('load', function() {
 					self._fixIframeLinks();
-					self.loadCurrentPage();
+
+					// Load edit view for new page, but only if the preview is activated at the moment.
+					// This avoids e.g. force-redirections of the edit view on RedirectorPage instances.
+					if(!self.is('.is-collapsed')) self.loadCurrentPage();
 				});
 				
 				var updateAfterXhr = function() {
+					// Only load when panel is visible (see details in iframe load event handler).
+					if(self.is('.is-collapsed')) return;
+
 					// var url = ui.xmlhttp.getResponseHeader('x-frontend-url');
 					var url = $('.cms-edit-form').find(':input[name=StageURLSegment]').val();
 					if(url) {
@@ -241,7 +247,12 @@
 			onclick: function(e) {
 				e.preventDefault();
 				
-				$('.cms-preview').toggle();
+				var preview = $('.cms-preview'), url = $('.cms-edit-form').find(':input[name=StageURLSegment]').val();
+				if(url) {
+						preview.loadUrl(url);
+						preview.unblock();
+						preview.toggle();
+				}
 			}
 		});
 	});
