@@ -210,6 +210,11 @@
 							.attr('style', origStyle)
 							.css('visibility', 'hidden');
 
+						// Allow injection of inline styles, as they're not allowed in the document body.
+						// Not handling this through jQuery.ondemand to avoid parsing the DOM twice.
+						var styles = newContentEl.find('style').detach();
+						if(styles.length) $(document).find('head').append(styles);
+
 						// Replace panel completely (we need to override the "layout" attribute, so can't replace the child instead)
 						contentEl.replaceWith(newContentEl);
 
