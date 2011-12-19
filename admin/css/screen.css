@@ -227,7 +227,7 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .ModelAdmin .cms-content-tools h3.cms-panel-header { display: none; }
 .ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav { overflow: hidden; }
 .ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav li { max-width: 99%; }
-.ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav li a { white-space: nowrap; overflow: hidden; -o-text-overflow: ellipsis; -ms-text-overflow: ellipsis; text-overflow: ellipsis; max-width: 85%; }
+.ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav li a { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 85%; }
 .ModelAdmin .cms-content-tools #SearchForm_holder #ModelClassSelector { margin-bottom: 2px; }
 .ModelAdmin .cms-content-tools #SearchForm_holder #ModelClassSelector select { width: 96%; }
 .ModelAdmin .cms-content-tools #SearchForm_holder div.tab { border: 1px solid #aaa; margin-top: -1px; background: #fff; padding: 8px; }

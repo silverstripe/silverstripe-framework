@@ -295,7 +295,11 @@ html,body {
 				li {
 					max-width:99%;
 					a {
-						@include ellipsis;
+					  white-space: nowrap;
+						overflow: hidden;
+						text-overflow:ellipsis;
+						//above 3 lines can also be achieved with mixin below
+						//@include ellipsis;
 						max-width:85%;
 					}	
 				}
