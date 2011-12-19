@@ -395,66 +395,54 @@ class LeftAndMain extends Controller {
 	 * @return SS_List
 	 */
 	public function MainMenu() {
-		// Don't accidentally return a menu if you're not logged in - it's used to determine access.
-		if(!Member::currentUser()) return new ArrayList();
+            // Don't accidentally return a menu if you're not logged in - it's used to determine access.
+            if(!Member::currentUser()) return new ArrayList();
 
-		// Encode into DO set
-		$menu = new ArrayList();
-		$menuItems = CMSMenu::get_viewable_menu_items();
-		if($menuItems) {
-			foreach($menuItems as $code => $menuItem) {
-				// alternate permission checks (in addition to LeftAndMain->canView())
-				if(
-					isset($menuItem->controller) 
-					&& $this->hasMethod('alternateMenuDisplayCheck')
-					&& !$this->alternateMenuDisplayCheck($menuItem->controller)
-				) {
-					continue;
-				}
+            // Encode into DO set
+            $menu = new ArrayList();
+            $menuItems = CMSMenu::get_viewable_menu_items();
+            if($menuItems) {
+                $i=0;
+                foreach($menuItems as $code => $menuItem) {
+                    // alternate permission checks (in addition to LeftAndMain->canView())
+                    if(isset($menuItem->controller) && 
+                            $this->hasMethod('alternateMenuDisplayCheck') 
+                                && !$this->alternateMenuDisplayCheck($menuItem->controller)) {
+                        continue;
+                    }
+                    
+                    // Add a subnav (if available) who's parent is $menuItem->controller
+                    $l2MenuItems = CMSMenu::get_viewable_submenu_items($menuItem->controller,$code,$i,$this);
 
-				$linkingmode = "link";
-				
-				if($menuItem->controller && get_class($this) == $menuItem->controller) {
-					$linkingmode = "current";
-				} else if(strpos($this->Link(), $menuItem->url) !== false) {
-					if($this->Link() == $menuItem->url) {
-						$linkingmode = "current";
-				
-					// default menu is the one with a blank {@link url_segment}
-					} else if(singleton($menuItem->controller)->stat('url_segment') == '') {
-						if($this->Link() == $this->stat('url_base').'/') {
-							$linkingmode = "current";
-						}
-
-					} else {
-						$linkingmode = "current";
+                    // Style each nav-item:
+                    $linkingMode = 'link';
+                    if($menuItem->controller) {
+                        $linkingMode = CMSMenu::get_linking_mode($menuItem->controller,$menuItem->url,$this);
 					}
-				}
-		
-				// already set in CMSMenu::populate_menu(), but from a static pre-controller
-				// context, so doesn't respect the current user locale in _t() calls - as a workaround,
-				// we simply call LeftAndMain::menu_title_for_class() again 
-				// if we're dealing with a controller
-				if($menuItem->controller) {
-					$defaultTitle = LeftAndMain::menu_title_for_class($menuItem->controller);
-					$title = _t("{$menuItem->controller}.MENUTITLE", $defaultTitle);
-				} else {
-					$title = $menuItem->title;
-				}
-				
-				$menu->push(new ArrayData(array(
-					"MenuItem" => $menuItem,
-					"Title" => Convert::raw2xml($title),
-					"Code" => DBField::create('Text', $code),
-					"Link" => $menuItem->url,
-					"LinkingMode" => $linkingmode
-				)));
-			}
-		}
 
-		// if no current item is found, assume that first item is shown
-		//if(!isset($foundCurrent)) 
-		return $menu;
+                    // already set in CMSMenu::populate_menu(), but from a static pre-controller
+                    // context, so doesn't respect the current user locale in _t() calls - as a workaround,
+                    // we simply call LeftAndMain::menu_title_for_class() again 
+                    // if we're dealing with a controller
+                    if($menuItem->controller) {
+                        $defaultTitle = LeftAndMain::menu_title_for_class($menuItem->controller);
+                        $title = _t("{$menuItem->controller}.MENUTITLE", $defaultTitle);
+                    } 
+                    else {
+                        $title = $menuItem->title;
+                    }
+                    $menu->push(new ArrayData(array(
+                        "SubMenu" => isset($l2MenuItems[$i])?$l2MenuItems[$i]:null,
+                        "MenuItem" => $menuItem,
+                        "Title" => Convert::raw2xml($title),
+                        "Code" => DBField::create('Text', $code),
+                        "Link" => $menuItem->url,
+                        "LinkingMode" => $linkingMode
+                    )));
+                    ++$i;
+                }
+            }
+            return $menu;
 	}
 
 	public function Menu() {

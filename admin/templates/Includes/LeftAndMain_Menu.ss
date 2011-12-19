@@ -22,28 +22,24 @@
 		
 	<div class="cms-panel-content center">
 		<ul class="cms-menu-list">
-		<% control MainMenu %>
-			<li class="$LinkingMode $FirstLast <% if LinkingMode == 'link' %><% else %>opened<% end_if %>" id="Menu-$Code">
-				<a href="$Link">
-					<span class="icon icon-16 icon-{$Code.LowerCase}">&nbsp;</span>
-					<span class="text">$Title</span>
-				</a>
-			
-				<% if Code == 'CMSMain' %>
-					<ul>
-						<li class="first <% if Top.class == 'CMSPageEditController' || Top.class == 'CMSMain' %>current<% end_if %>" id="Menu-CMSPageEditController"><a href="admin/page/edit/show/$Top.CurrentPageID">
-							<span class="text">Content</span>
-						</a></li>
-						<li <% if Top.class == 'CMSPageSettingsController' %>class="current"<% end_if %> id="Menu-CMSPageSettingsController"><a href="admin/page/settings/show/$Top.CurrentPageID">
-							<span class="text">Settings</span>
-						</a></li>
-						<li <% if Top.class == 'CMSPageHistoryController' %>class="current"<% end_if %> id="Menu-CMSPageHistoryController"><a href="admin/page/history/show/$Top.CurrentPageID">
-							<span class="text">History</span>
-						</a></li>
-					</ul>
-				<% end_if %>
-			</li>
-		<% end_control %>
+			<% control MainMenu %>
+				<li class="$LinkingMode $FirstLast <% if LinkingMode == 'link' %><% else %>opened<% end_if %>" id="Menu-$Code">
+					<a href="$Link">
+							<span class="icon icon-16 icon-{$Code.LowerCase}">&nbsp;</span>
+							<span class="text">$Title</span>
+					</a>
+					<% if $SubMenu %>
+							<ul>
+							<% control SubMenu %>
+								<li class="$SubMenuLinkingMode $SubMenuFirstLast <% if SubMenuLinkingMode == 'link' %><% else %>opened<% end_if %>" id="Menu-$SubMenuCode"><a href="$SubMenuLink">
+									<span class="icon icon-{$SubMenuCode.LowerCase}">&nbsp;</span>
+									<span class="text">$SubMenuTitle</span>
+								</a></li>
+							<% end_control %>
+							</ul>
+					<% end_if %>
+				</li>
+			<% end_control %>
 		</ul>
 	</div>
 		

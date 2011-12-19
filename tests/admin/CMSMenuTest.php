@@ -3,10 +3,9 @@
  * @package cms
  * @subpackage tests
  */
-class CMSMenuTest extends SapphireTest implements TestOnly {
-
+class CMSMenuTest extends SapphireTest {
+    
 	public function testBasicMenuHandling() {
-	
 		// Clear existing menu
 		CMSMenu::clear_menu();
 		$menuItems = CMSMenu::get_menu_items();
@@ -75,6 +74,38 @@ class CMSMenuTest extends SapphireTest implements TestOnly {
 			$this->assertLessThanOrEqual($priority, $menuItem->priority, 'Menu item is of lower or equal priority');
 		}
 	}
+        
+        /*
+         * @description test that the array definiton of subnav classes exists
+         */
+        function testSubNavClassesExist() {
+            $subNavControllerClassNames = CMSMain::$page_submenu_items_CMSMain;
+            $this->assertTrue(is_array($subNavControllerClassNames),'Tests that submenu classname definition array exists');
+            $this->assertGreaterThan(0,sizeof($subNavControllerClassNames),'Asserts submenu classname menu has values');
+        }
+
+        /*
+         * @description test known main nav classes: Should return an array of ArrayLists
+         */
+        function testGetViewableSubmenuItems() {
+            // Arguments
+            $subNavControllerClassNames = CMSMain::$page_submenu_items_CMSMain;
+            $mainNavControllerClassName = 'CMSMain';
+            $mainNavIterator = 0;
+            $instanceOfLeftAndMain = new LeftAndMain;
+            // Method call
+            $subNav = CMSMenu::get_viewable_submenu_items($subNavControllerClassNames[0],$mainNavControllerClassName,$mainNavIterator,$instanceOfLeftAndMain);
+
+            // 1). Assert a complete array returned
+            $this->assertNotEmpty($subNav,'Assert that array of subnav items is not empty');
+            // 2). Assert first array element is of type ArrayList
+            $this->assertTrue(is_object($subNav[0]),'Assert that first item of subnav array is an object');
+            $this->assertEquals(get_class($subNav[0]),'ArrayList','Assert that first item of subnav array is of type ArrayList');
+            // 3). Assert first ArrayList key 'items' is an array 
+            $this->assertTrue(is_array($subNav[0]->items),'Assert that the array containing each individual subnav item, is an array');
+            // 4). Assert first ArrayList key 'items' array has >0 values
+            $this->assertGreaterThan(0,sizeof($subNav[0]->items),'Assert that the array of subnav items actually contains some items');
+        }         
 
 }
 

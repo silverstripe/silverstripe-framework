@@ -6,6 +6,7 @@
  * That is, for each class in the CMS that creates an administration panel, a CMS menu item will be created. 
  * The default configuration will also include a 'help' link to the SilverStripe user documentation.
  * 
+ * @todo Submenu construction is sub-optimal. Relies on a static defined in CMSMain and should not be relied upon. Further work required for true child-menu support.
  * @package cms
  * @subpackage content
  */
@@ -65,7 +66,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 		
 		// Don't add menu items defined the old way
 		if($urlSegment === null && $controllerClass != "CMSMain") return;
-
+                
 		$link = Controller::join_links($urlBase, $urlSegment) . '/';
 
 		// doesn't work if called outside of a controller context (e.g. in _config.php)
@@ -73,7 +74,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 		// titles for existing menu entries
 		$defaultTitle = LeftAndMain::menu_title_for_class($controllerClass);
 		$menuTitle = _t("{$controllerClass}.MENUTITLE", $defaultTitle);
-
+                
 		return new CMSMenuItem($menuTitle, $link, $controllerClass, $menuPriority);
 	}
 	
@@ -136,19 +137,21 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 	 * Get a single menu item by its code value.
 	 *
 	 * @param string $code
-	 * @return array
+	 * @param boolean $showAll
+	 * @return array|boolean
 	 */
-	public static function get_menu_item($code) {
-		$menuItems = self::get_menu_items();
+	public static function get_menu_item($code, $showAll = false) {
+		$menuItems = self::get_menu_items($showAll);
 		return (isset($menuItems[$code])) ? $menuItems[$code] : false; 
 	}
 	
 	/**
 	 * Get all menu entries.
 	 *
-	 * @return array
+	 * @param boolean $showAll
+	 * @return array $menuItems
 	 */
-	public static function get_menu_items() {
+	public static function get_menu_items($showAll = false) {
 		$menuItems = array();
 
 		// Set up default menu items
@@ -159,23 +162,21 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 				if($menuItem) $menuItems[$cmsClass] = $menuItem;
 			}
 		}
-		
-		// Apply changes
-		foreach(self::$menu_item_changes as $change) {
-			switch($change['type']) {
-				case 'add':
-					$menuItems[$change['code']] = $change['item'];
-					break;
-				
-				case 'remove':
-					unset($menuItems[$change['code']]);
-					break;
-					
-				default:
-					user_error("Bad menu item change type {$change[type]}", E_USER_WARNING);
+		if(!$showAll) {
+			// Apply changes
+			foreach(self::$menu_item_changes as $change) {
+				switch($change['type']) {
+					case 'add':
+						$menuItems[$change['code']] = $change['item'];
+						break;
+					case 'remove':
+						unset($menuItems[$change['code']]);
+						break;
+					default:
+						user_error("Bad menu item change type {$change[type]}", E_USER_WARNING);
+				}
 			}
 		}
-		
 		// Sort menu items according to priority
 		$menuPriority = array();
 		$i = 0;
@@ -185,10 +186,9 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 			$menuPriority[$key] = $menuItem->priority*100 - $i;
 		}
 		array_multisort($menuPriority, SORT_DESC, $menuItems);
-		
 		return $menuItems;
 	}
-	
+        
 	/**
 	 * Get all menu items that the passed member can view.
 	 * Defaults to {@link Member::currentUser()}.
@@ -221,6 +221,84 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 		
 		return $viewableMenuItems;
 	}
+	
+	/**
+	 * Return an ArrayList of subMenu items, for each top-level menu item
+	 * 
+	 * @param string $subNavController The name of the controller class, objects of whom form each submenu item
+	 * @param string $mainNavCode ("Code" so-named for consistency) The name of the main nav Class for which subclasses as menuitems are needed
+	 * @param integer $mainNavIterator The iterator of the main nav-loop
+	 * @param object LeftAndMain $instance An instance of the LeftAndMain controller
+	 * @return array $l2MenuItems an array comprising submenu ArrayData
+	 */
+	public static function get_viewable_submenu_items($subNavController,$mainNavCode,$mainNavIterator,LeftAndMain $instance) {
+		$l2MenuItems = array();
+		if(!$subNavController) {
+			return $l2MenuItems;
+		}
+
+		if($subNavController) {
+			// Top-level and class-specific static(s) need to exist before L2 menus will "just work"..
+			$subClasses = Object::get_static($subNavController, 'page_submenu_items_'.$mainNavCode);
+			// Check L2 menu subclasses work
+			if($subClasses) {
+				$l2MenuItem = new ArrayList();
+				foreach($subClasses as $controllerName) {
+					$subItem = self::get_menu_item($controllerName, true);
+					if(!class_exists($subItem)){
+						continue;
+					}   
+
+					// Style each nav-item:
+					$subMenuLinkingMode = 'link';
+					if($subItem->controller) {                           
+						$subMenuLinkingMode = self::get_linking_mode($subItem->controller,$subItem->url,$instance);
+					}
+
+					$l2MenuItem->push(new ArrayData(array(
+						"SubMenuItem" => $subItem,
+						"SubMenuTitle" => Convert::raw2xml($subItem->title),
+						"SubMenuCode" => DBField::create('Text',$subItem->controller),
+						"SubMenuCodeToLower" => strtolower($subItem->controller),
+						"SubMenuLink" => $subItem->url,
+						"SubMenuLinkingMode" => $subMenuLinkingMode
+						)));
+					$l2MenuItems[$mainNavIterator] = $l2MenuItem;
+				}
+			}
+		}
+		return $l2MenuItems;
+	}
+
+	/**
+	 * Gets the current CSS linking mode for an individual menu item for passing back to the template
+	 * 
+	 * @param string $controller as returned from $item->controller (a className)
+	 * @param string $url (as returned by $item>url)
+	 * @param object LeftAndMain $instance The instance of the main page Controller
+	 * @return string $linkingmode The CSS class to use for the current menu <li>
+	 */
+	public static function get_linking_mode($controller,$url,LeftAndMain $instance) {
+		$linkingmode = "link";
+		if($controller && get_class($instance) == $controller) {
+			$linkingmode = "current";
+		} 
+		else if(strpos($instance->Link(), $url) !== false) {
+			if($instance->Link() == $url) {
+				$linkingmode = "current";
+				// default menu is the one with a blank {@link url_segment}
+			} 
+			else if(singleton($controller)->stat('url_segment') == '') {
+				if($instance->Link() == $instance->stat('url_base').'/') {
+					$linkingmode = "current";
+				}
+			} 
+			else {
+				$linkingmode = "current";
+			}
+		}     
+		return $linkingmode;
+	}        
 	
 	/**
 	 * Removes an existing item from the menu.
@@ -281,7 +359,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 	 * @return array Valid, unique subclasses
 	 */
 	public static function get_cms_classes($root = 'LeftAndMain', $recursive = true) {
-		$subClasses = array_values(ClassInfo::subclassesFor($root));
+		$subClasses = array_values(ClassInfo::subclassesFor($root));    
 		foreach($subClasses as $className) {
 			if($recursive && $className != $root) {
 				$subClasses = array_merge($subClasses, array_values(ClassInfo::subclassesFor($className)));
@@ -290,16 +368,17 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 		$subClasses = array_unique($subClasses);
 		foreach($subClasses as $key => $className) {
 			// Remove abstract classes and LeftAndMain
-			$classReflection = new ReflectionClass($className);
-			if(
-				!$classReflection->isInstantiable() 
-				|| 'LeftAndMain' == $className 
-				|| ClassInfo::classImplements($className, 'TestOnly')
-			) {
-				unset($subClasses[$key]);
-			}			
+			if(classInfo::exists($className)) {
+				$classReflection = new ReflectionClass($className);
+				if(
+					!$classReflection->isInstantiable() 
+					|| 'LeftAndMain' == $className 
+					|| ClassInfo::classImplements($className, 'TestOnly')
+				) {
+					unset($subClasses[$key]);
+				}
+			}
 		}
-		
 		return $subClasses;
 	}
 	

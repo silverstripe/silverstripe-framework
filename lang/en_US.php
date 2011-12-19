@@ -61,7 +61,7 @@ $lang['en_US']['CMSMain']['MENUTITLE'] = array(
 );
 $lang['en_US']['CMSMain']['SAVE'] = 'Save';
 $lang['en_US']['CMSPageEditController']['MENUTITLE'] = array(
-	'Edit Page',
+	'Content',
 	100,
 	'Menu title'
 );
@@ -71,7 +71,7 @@ $lang['en_US']['CMSPageHistoryController']['MENUTITLE'] = array(
 	'Menu title'
 );
 $lang['en_US']['CMSPageSettingsController']['MENUTITLE'] = array(
-	'Edit Page',
+	'Settings',
 	100,
 	'Menu title'
 );

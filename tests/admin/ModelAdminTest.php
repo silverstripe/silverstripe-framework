@@ -1,7 +1,7 @@
 <?php
 
 class ModelAdminTest extends FunctionalTest {
-	static $fixture_file = 'sapphire/admin/tests/ModelAdminTest.yml';
+	static $fixture_file = 'sapphire/tests/admin/ModelAdminTest.yml';
 	
 	protected $extraDataObjects = array(
 		'ModelAdminTest_Admin',

@@ -6,7 +6,7 @@
 
 class MemberTableFieldTest extends FunctionalTest {
 	
-	static $fixture_file = 'sapphire/admin/tests/MemberTableFieldTest.yml';
+	static $fixture_file = 'sapphire/tests/admin/MemberTableFieldTest.yml';
 	
 	
 	function testLimitsToMembersInGroup() {

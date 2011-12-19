@@ -5,7 +5,7 @@
  */
 class LeftAndMainTest extends FunctionalTest {
 
-	static $fixture_file = 'sapphire/admin/tests/LeftAndMainTest.yml';
+	static $fixture_file = 'sapphire/tests/admin/LeftAndMainTest.yml';
 	
 	protected $extraDataObjects = array('LeftAndMainTest_Object');
 	
@@ -21,7 +21,7 @@ class LeftAndMainTest extends FunctionalTest {
 	 * Note: This test would typically rely on SiteTree and CMSMain, but is mocked by
 	 * LeftAndMain_Controller and LeftAndMain_Object here to remove this dependency.
 	 */
-	public function testSaveTreeNodeSorting() {	
+	public function testSaveTreeNodeSorting() {
 		$this->loginWithPermission('ADMIN');
 				
 		$rootPages = DataObject::get('LeftAndMainTest_Object', '"ParentID" = 0', '"ID"'); // forcing sorting for non-MySQL
