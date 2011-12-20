@@ -57,15 +57,20 @@
 				
 				editPageItem[editPageItem.is('.current') ? 'show' : 'hide']();
 				
-				// update the menu links to reflect the page ID if the page has changed the URL.
+				// Update the menu links to reflect the page ID if the page has changed the URL.
 				var currentID = $('.cms-content input[name=ID]').val();
-				
-				// only handling the sub menu as the other items are global in context
+				var itemsWithPageContext = [
+					'#Menu-CMSPageAddController', 
+					'#Menu-CMSPageSettingsController', 
+					'#Menu-CMSPageHistoryController', 
+					'#Menu-CMSPageEditController'
+				];
 				if(currentID) {
-					$(this).find("ul a").each(function(i, elem) {
+					var links = $(this).find(itemsWithPageContext.join(',')).find('a');
+					links.each(function(i, elem) {
 						var href = $(elem).attr("href").split('/');
 						href[href.length -1] = currentID;
-						
+						// Assumes that current ID will always be the last URL segment (and not a query parameter)
 						$(elem).attr('href', href.join('/'));
 					});
 				}

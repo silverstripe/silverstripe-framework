@@ -70,7 +70,13 @@
 					self.redraw();
 				});
 				
-				$('.cms-edit-form').live('reloadeditform', function() {
+				$('.cms-edit-form').live('reloadeditform', function(e, data) {
+					// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it
+					if(window.History.enabled) {
+						var url = data.xmlhttp.getResponseHeader('X-ControllerURL');
+						if(url) window.history.replaceState({}, '', url);
+					}
+					
 					self.redraw()
 				});
 				
@@ -222,6 +228,12 @@
 						self.redraw();
 						newContentEl.css('visibility', 'visible');
 						newContentEl.removeClass('loading');
+
+						// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it
+						if(window.History.enabled) {
+							var url = xhr.getResponseHeader('X-ControllerURL');
+							if(url) window.history.replaceState({}, '', url);
+						}
 						
 						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: newContentEl});
 					},
