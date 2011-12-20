@@ -224,12 +224,17 @@ html article, html aside, html details, html figcaption, html figure, html foote
 
 /** -------------------------------------------- ModelAdmin -------------------------------------------- */
 .ModelAdmin .ResultAssemblyBlock { display: none; }
-.ModelAdmin .west h3.cms-panel-header { display: none; }
-.ModelAdmin .west #SearchForm_holder div.ui-tabs-panel { border: 1px solid #aaa; margin-top: -1px; background: #fff; padding: 8px; }
-.ModelAdmin .west #SearchForm_holder div.ui-tabs-panel h3 { margin-top: 16px; margin-bottom: 10px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -moz-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -o-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); }
-.ModelAdmin .west #SearchForm_holder div.ui-tabs-panel form input { margin: 0px; }
-.ModelAdmin .west #SearchForm_holder div.ui-tabs-panel form .field { border-bottom: 0px; margin-bottom: 6px; }
-.ModelAdmin .west #SearchForm_holder div.ui-tabs-panel form .Actions button.ss-ui-action-minor { display: none; }
+.ModelAdmin .cms-content-tools h3.cms-panel-header { display: none; }
+.ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav { overflow: hidden; }
+.ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav li { max-width: 99%; }
+.ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav li a { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 85%; }
+.ModelAdmin .cms-content-tools #SearchForm_holder #ModelClassSelector { margin-bottom: 2px; }
+.ModelAdmin .cms-content-tools #SearchForm_holder #ModelClassSelector select { width: 96%; }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab { border: 1px solid #aaa; margin-top: -1px; background: #fff; padding: 8px; }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab h3 { margin-top: 16px; margin-bottom: 10px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -moz-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -o-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab form input { margin: 0px; }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab form .field { border-bottom: 0px; margin-bottom: 6px; }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab form .Actions button.ss-ui-action-minor { display: none; }
 
 /** -------------------------------------------- "Add page" dialog -------------------------------------------- */
 .cms-page-add-form-dialog { display: none; }

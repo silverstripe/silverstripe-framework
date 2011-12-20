@@ -285,12 +285,32 @@ html,body {
 	.ResultAssemblyBlock {
 		display: none;
 	}
-	.west {
+	.cms-content-tools {
 		h3.cms-panel-header {
 			display:none;
 		}
 		#SearchForm_holder {
-			div.ui-tabs-panel {
+			ul.ui-tabs-nav {
+				overflow:hidden;
+				li {
+					max-width:99%;
+					a {
+					  white-space: nowrap;
+						overflow: hidden;
+						text-overflow:ellipsis;
+						//above 3 lines can also be achieved with mixin below
+						//@include ellipsis;
+						max-width:85%;
+					}	
+				}
+			}			
+			#ModelClassSelector {
+				margin-bottom:2px;
+				select {
+					width:96%;
+				}
+			}			
+			div.tab {
 				border:1px solid #aaa; //following color from the jquery smoothness theme
 				margin-top:-1px;
 				background:#fff; //backround is kept white to follow tabs
