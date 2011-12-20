@@ -29,13 +29,20 @@
 		$('.cms-menu-list').entwine({
 			onmatch: function() {
 				var self = this;
-				$('.cms-container').bind('afterstatechange', function(e, data) {
-					var controller = data.xhr.getResponseHeader('X-Controller');
+
+				var updateMenuFromResponse = function(xhr) {
+					var controller = xhr.getResponseHeader('X-Controller');
 					if(controller) {
 						var item = self.find('li#Menu-' + controller);
 						if(!item.hasClass('current')) item.select();
 					}
 					self.updateItems();
+				};
+				$('.cms-container').live('afterstatechange', function(e, data) {
+					updateMenuFromResponse(data.xhr);
+				});
+				$('.cms-edit-form').live('reloadeditform', function(e, data) {
+					updateMenuFromResponse(data.xmlhttp);
 				});
 				
 				// Sync collapsed state with parent panel
@@ -59,19 +66,9 @@
 				
 				// Update the menu links to reflect the page ID if the page has changed the URL.
 				var currentID = $('.cms-content input[name=ID]').val();
-				var itemsWithPageContext = [
-					'#Menu-CMSPageAddController', 
-					'#Menu-CMSPageSettingsController', 
-					'#Menu-CMSPageHistoryController', 
-					'#Menu-CMSPageEditController'
-				];
 				if(currentID) {
-					var links = $(this).find(itemsWithPageContext.join(',')).find('a');
-					links.each(function(i, elem) {
-						var href = $(elem).attr("href").split('/');
-						href[href.length -1] = currentID;
-						// Assumes that current ID will always be the last URL segment (and not a query parameter)
-						$(elem).attr('href', href.join('/'));
+					this.find('li').each(function() {
+						if($.isFunction($(this).setRecordID)) $(this).setRecordID(currentID);
 					});
 				}
 			}
@@ -148,6 +145,23 @@
 				}
 
 				item.select();
+			}
+		});
+
+		
+		$('.cms-menu-list #Menu-CMSPageSettingsController, .cms-menu-list #Menu-CMSPageHistoryController, .cms-menu-list #Menu-CMSPageEditController').entwine({
+			setRecordID: function(id) {
+				var link = this.find('a:first'), href = link.attr("href").split('/')
+				// Assumes that current ID will always be the last URL segment (and not a query parameter)
+				href[href.length -1] = id;
+				link.attr('href', href.join('/'));
+			}
+		})
+
+		$('.cms-menu-list #Menu-CMSPageAddController').entwine({
+			setRecordID: function(id) {
+				var link = this.find('a:first');
+				link.attr('href', link.attr('href').replace('/\?.*/', '?ParentID=' . id));
 			}
 		});
 		
