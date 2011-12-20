@@ -48,6 +48,21 @@
 						</li>
 					</ul>
 				<% end_if %>
+
+				<% if Code == 'CMSPagesController' %>
+					<ul>
+						<li class="last <% if Top.class == 'CMSPagesController' %>current<% end_if %>" id="Menu-CMSPagesController">
+							<a href="admin/pages/">
+								<span class="text">Edit &amp; organize</span>
+							</a>
+						</li>
+						<li class="first <% if Top.class == 'CMSPageAddController' %>current<% end_if %>" id="Menu-CMSPageAddController">
+							<a href="admin/page/add/show/$Top.CurrentPageID">
+								<span class="text">Add pages</span>
+							</a>
+						</li>
+					</ul>
+				<% end_if %>
 			</li>
 		<% end_control %>
 		</ul>
