@@ -45,17 +45,16 @@
 	</div>
 
 	<div class="cms-content-actions south">
-		<% if CurrentPage.PreviewLink %>
-		<a href="$CurrentPage.PreviewLink" class="cms-preview-toggle-link ss-ui-button">
-			<% _t('LeftAndMain.PreviewButton', 'Preview') %> &raquo;
-		</a>
-
-		<% end_if %>
 		<% if Actions %>
 		<div class="Actions">
 			<% control Actions %>
 				$Field
 			<% end_control %>
+			<% if CurrentPage.PreviewLink %>
+			<a href="$CurrentPage.PreviewLink" class="cms-preview-toggle-link ss-ui-button">
+				<% _t('LeftAndMain.PreviewButton', 'Preview') %> &raquo;
+			</a>
+			<% end_if %>
 		</div>
 		<% end_if %>
 	</div>

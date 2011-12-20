@@ -112,10 +112,10 @@ form.nostyle .middleColumn { margin-left: 0; }
 .field input.hasDatepicker { width: 50%; max-width: 96px; }
 
 /** ---------------------------------------------------- Buttons ---------------------------------------------------- */
-.Actions { margin-right: 80px; min-height: 30px; }
+.Actions { min-height: 30px; }
 .Actions > div { overflow: auto; }
 
-.cms-preview-toggle-link { display: block; float: right; font-size: 11px; }
+.cms-preview-toggle-link { display: block; float: right; font-size: 12px; text-decoration: none; }
 
 .cms input.loading, .cms input.ui-state-default.loading, .cms .ui-widget-content input.ui-state-default.loading, .cms .ui-widget-header input.ui-state-default.loading { padding-left: 24px; color: #525252; background: #eeeded url(../../images/network-save.gif) no-repeat 4px center; border-color: #d5d3d3; cursor: default; text-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none; -o-box-shadow: none; box-shadow: none; }
 .cms .ss-ui-button { /* all buttons */ padding: 7px 12px; font-weight: bold; text-decoration: none; margin: 0; line-height: 16px; color: #393939; background-color: #e6e6e6; border: 1px solid #c0c0c2; text-shadow: white 0 1px 1px; -moz-box-shadow: #ced7dc 0 1px 2px; -webkit-box-shadow: #ced7dc 0 1px 2px; -o-box-shadow: #ced7dc 0 1px 2px; box-shadow: #ced7dc 0 1px 2px; background: #e6e6e6 url('../images/btn_icons_sprite.png?1324073872') no-repeat 999px 999px; background: url('../images/btn_icons_sprite.png?1324073872') no-repeat 999px 999px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #d9d9d9)); background: url('../images/btn_icons_sprite.png?1324073872') no-repeat 999px 999px, -webkit-linear-gradient(#ffffff, #d9d9d9); background: url('../images/btn_icons_sprite.png?1324073872') no-repeat 999px 999px, -moz-linear-gradient(#ffffff, #d9d9d9); background: url('../images/btn_icons_sprite.png?1324073872') no-repeat 999px 999px, -o-linear-gradient(#ffffff, #d9d9d9); background: url('../images/btn_icons_sprite.png?1324073872') no-repeat 999px 999px, -ms-linear-gradient(#ffffff, #d9d9d9); background: url('../images/btn_icons_sprite.png?1324073872') no-repeat 999px 999px, linear-gradient(#ffffff, #d9d9d9); /* constructive */ /* destructive */ /* generic action buttons */ }
