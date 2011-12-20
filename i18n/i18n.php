@@ -1465,10 +1465,10 @@ class i18n extends Object implements TemplateGlobalProvider {
 		$lang = i18n::get_lang_from_locale($locale);
 		
 		// Only call getter if static isn't already defined (for performance reasons)
-		$translators = self::$translators;
-		if(!$translators) $translators = self::get_translators();
+		$translatorsByPrio = self::$translators;
+		if(!$translatorsByPrio) $translatorsByPrio = self::get_translators();
 		
-		foreach($translators as $priority => $translators) {
+		foreach($translatorsByPrio as $priority => $translators) {
 			foreach($translators as $name => $translator) {
 				$adapter = $translator->getAdapter();
 
