@@ -335,6 +335,8 @@ form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; 
 .cms-panel .collapsed-flyout { display: block !important; left: 41px; margin-top: -40px; position: fixed; width: 191px; }
 .cms-panel .collapsed-flyout li a span { display: block !important; }
 
+.cms-panel-padded { width: 176px; padding: 16px 16px; overflow-x: hidden; overflow-y: auto; }
+
 .cms-content .cms-panel.collapsed { cursor: pointer; }
 
 /** -------------------------------------------- Other -------------------------------------------- */

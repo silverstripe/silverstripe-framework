@@ -801,6 +801,13 @@ form.member-profile-form {
 
 }
 
+.cms-panel-padded {
+	width: ($grid-horizontal * 22);
+	padding: $grid-vertical*2 $grid-horizontal*2;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
 .cms-content .cms-panel.collapsed {
 	cursor: pointer;
 }
