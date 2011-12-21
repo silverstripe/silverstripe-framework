@@ -120,7 +120,7 @@ html,body {
 	}
 }
 
-.ui-tabs .cms-content-header {
+.ui-tabs .cms-content-header, body.ArrayData .ui-tabs-nav {
 	.ui-tabs-nav li {
 		a {
 			font-weight: bold;
@@ -269,6 +269,11 @@ html,body {
 	&.error {
 		background-color: lighten($color-error, 20%);
 		border-color: $color-error;
+	}
+	
+	&.good {
+		background-color: lighten($color-good, 20%);
+		border-color: $color-good;
 	}
 	
 	p {
@@ -699,17 +704,20 @@ form.member-profile-form {
 	input.customFormat {
 		border: 1px solid #ccc !important;
 		padding: 3px;
-		margin-left: 2px;
+		display: inline;
+		margin-left: 15px;
+		position: relative;
 	}
 	.formattingHelpToggle {
+		display: block;
 		font-size: 11px;
-		padding: 3px;
+		margin-top: 10px;
+		margin-left: 15px;
 	}
 	.formattingHelpText {
-		margin: 5px auto;
+		margin: 5px 0 0 -5px;
 		color: #333;
 		padding: 5px 10px;
-		width: 90%;
 		background: #fff;
 		border: 1px solid #ccc;
 	}
@@ -720,8 +728,17 @@ form.member-profile-form {
 		font-size: 11px;
 		color: #333;
 		margin-bottom: 2px;
+		float: none;
+		width: auto;
 	}
-	
+	#Groups .middleColumn {
+		margin-left: 0;
+		width: 100%;
+		.TreeDropdownField {
+			width: 90%;
+			max-width: 90%;
+		}
+	}
 }
 
 .cms {
@@ -978,10 +995,12 @@ $DialogLabelColor: #7B8C91;
 			width: 320px;
 		}
 	}
-
+	
 	.Actions {
+		position: absolute;
+		bottom: 10px;
+		right: 10px;
 		float: right;
-		margin: 0;
 	}
 }
 
@@ -1005,6 +1024,52 @@ $DialogLabelColor: #7B8C91;
  */
 	
 body.ArrayData {
-	overflow-y: scroll;
+	overflow-y: auto;
 	overflow-x: auto;
+	font-family: Arial, sans-serif;
+	margin-bottom: 60px;
+	.ss-tabset {	
+		background-color: darken($color-widget-bg, 20%);
+		padding: $grid-vertical $grid-horizontal ($grid-vertical - 2);	
+		height: $grid-vertical * 4;
+		z-index: 60;
+
+		border: none;
+		@include box-shadow($color-widget-bg 0 $grid-vertical $grid-vertical*2);
+	
+		@include background-image(
+			linear-gradient(darken($color-widget-bg, 10%), darken($color-widget-bg, 30%))
+		);
+
+		@include border-radius(none);
+		.tab {
+			background: none;
+			overflow-y: auto;
+		}
+
+		&.ui-tabs {
+			.ui-tabs-nav {
+				background: none;
+				border: none;
+				li {	
+					&:first-child {
+						margin-left: 15px;
+					}
+					font-weight: bold;
+					line-height: 16px;
+					padding: 11px 12px 9px;
+					border-bottom: 2px solid #B3B3B3;
+				}
+			}
+		}
+	}
+	.clear {
+		clear: both;
+	}
+	.Actions {
+		z-index: 100;
+		position: fixed;
+		bottom: 3px;
+		right: 20px;
+	}
 }
