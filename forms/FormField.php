@@ -76,7 +76,7 @@ class FormField extends RequestHandler {
 	/**
 	 * @var String
 	 */
-	protected $template;
+	protected $template = 'FormField';
 	
 	/**
 	 * @var Custom Validation Message for the Field
@@ -87,7 +87,7 @@ class FormField extends RequestHandler {
 	 * Template name to render this FormField field holder into.
 	 * @var string
 	 */
-	protected $fieldHolderTemplate;
+	protected $fieldHolderTemplate = 'FieldHolder';
 
 	/**
 	 * Create a new field.
@@ -334,10 +334,22 @@ class FormField extends RequestHandler {
 		return $this->form; 
 	}
 
+	/**
+	 * @return String
+	 */
 	public function getFieldHolderTemplate() {
 		return $this->fieldHolderTemplate;
 	}
 
+	/**
+	 * Set name of template (without path or extension) for the holder,
+	 * which in turn is responsible for rendering {@link Field()}.
+	 * 
+	 * Caution: Not consistently implemented in all subclasses,
+	 * please check the {@link Field()} method on the subclass for support.
+	 * 
+	 * @param String
+	 */
 	public function setFieldHolderTemplate($template) {
 		$this->fieldHolderTemplate = $template;
 	}
@@ -386,7 +398,9 @@ class FormField extends RequestHandler {
 	}
 
 	/**
-	 * Set name of template (without path or extension)
+	 * Set name of template (without path or extension).
+	 * Caution: Not consistently implemented in all subclasses,
+	 * please check the {@link Field()} method on the subclass for support.
 	 * 
 	 * @param String
 	 */
@@ -412,7 +426,8 @@ class FormField extends RequestHandler {
 	 * @return string
 	 */
 	function Field($properties = array()) {
-		return $this->customise($properties)->renderWith('FormField');
+		$obj = ($properties) ? $this->customise($properties) : $this;
+		return $obj->renderWith($this->getTemplate());
 	}
 
 	/**
@@ -426,9 +441,8 @@ class FormField extends RequestHandler {
 	 * @return string
 	 */
 	function FieldHolder($properties = array()) {
-		return $this->customise($properties)->renderWith(
-			($this->fieldHolderTemplate) ? $this->fieldHolderTemplate : 'FieldHolder'
-		);
+		$obj = ($properties) ? $this->customise($properties) : $this;
+		return $obj->renderWith($this->getFieldHolderTemplate());
 	}
 
    /**

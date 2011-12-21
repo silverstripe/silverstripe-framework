@@ -4,7 +4,7 @@
  * @package forms
  * @subpackage fields-formattedinput
  */
-class PasswordField extends FormField {
+class PasswordField extends TextField {
 
 	/**
 	 * maxlength of the password field
@@ -24,19 +24,9 @@ class PasswordField extends FormField {
 	}
 
 
-	function Field() {
-		$disabled = $this->isDisabled()?"disabled=\"disabled\"":""; 
-		$readonly = $this->isReadonly()?"readonly=\"readonly\"":"";
-		if($this->maxLength) {
-			return "<input class=\"text\" type=\"password\" id=\"" . $this->id() .
-				"\" name=\"{$this->name}\" value=\"" . $this->attrValue() .
-				"\" maxlength=\"$this->maxLength\" size=\"$this->maxLength\" $disabled $readonly />"; 
-		} else {
-			return "<input class=\"text\" type=\"password\" id=\"" . $this->id() .
-				"\" name=\"{$this->name}\" value=\"" . $this->attrValue() . "\" $disabled $readonly />"; 
-		}
+	function Type() {
+		return 'password';
 	}
-
 
 	/**
 	 * Makes a pretty readonly field with some stars in it

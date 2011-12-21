@@ -77,6 +77,8 @@
  */
 class DropdownField extends FormField {
 	
+	protected $template = 'DropdownField';
+
 	/**
 	 * @var boolean $source Associative or numeric array of all dropdown items,
 	 * with array key as the submitted field value, and the array value as a
@@ -90,11 +92,6 @@ class DropdownField extends FormField {
 	 * values specified in {@link $source}
 	 */
 	protected $isSelected;
-	
-	/**
-	 * @var boolean $disabled
-	 */
-	protected $disabled;
 	
 	/**
 	 * @var boolean $hasEmptyDefault Show the first <option> element as
@@ -162,7 +159,7 @@ class DropdownField extends FormField {
 
 		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
 
-		return $this->customise($properties)->renderWith('DropdownField');
+		return $this->customise($properties)->renderWith($this->getTemplate());
 	}
 
 	/**

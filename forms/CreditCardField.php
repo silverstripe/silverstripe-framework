@@ -16,6 +16,7 @@ class CreditCardField extends TextField {
 				"<input autocomplete=\"off\" name=\"{$this->name}[3]\" value=\"$parts[3]\" maxlength=\"4\"" . $this->getTabIndexHTML(3) . " /></span>";
 		return $field;
 	}
+	
 	function dataValue() {
 		if(is_array($this->value)) return implode("", $this->value);
 		else return $this->value;

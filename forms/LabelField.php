@@ -8,6 +8,8 @@
  * @subpackage fields-dataless
  */
 class LabelField extends DatalessField {
+
+	protected $template = 'LabelField';
 	
 	/**
 	 * @param string $name
@@ -25,13 +27,6 @@ class LabelField extends DatalessField {
 		} 
 		
 		parent::__construct($name, $title, $form);
-	}
-
-	/**
-	 * Returns a label containing the title, and an HTML class if given.
-	 */
-	function Field($properties = array()) {
-		return $this->customise($properties)->renderWith('LabelField');
 	}
 
 }

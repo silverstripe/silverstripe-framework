@@ -5,7 +5,7 @@
  * @subpackage fields-formattedinput
  */
 class EmailField extends TextField {
-	
+
 	function jsValidation() {
 		$formID = $this->form->FormName();
 		$error = _t('EmailField.VALIDATIONJS', 'Please enter an email address.');
@@ -38,10 +38,6 @@ if(typeof fromAnOnBlur != 'undefined'){
 	$('$formID').validateEmailField('$this->name');
 }
 JS;
-	}
-
-	public function Field($properties = array()) {
-		return $this->customise($properties)->renderWith('TextField');
 	}
 
 	/**

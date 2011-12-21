@@ -33,8 +33,8 @@
  * @subpackage fields-basic
  */
 class CheckboxSetField extends OptionsetField {
-	
-	protected $disabled = false;
+
+	protected $template = 'CheckboxSetField';
 	
 	/**
 	 * @var Array
@@ -133,7 +133,7 @@ class CheckboxSetField extends OptionsetField {
 
 		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
 
-		return $this->customise($properties)->renderWith('CheckboxSetField');
+		return $this->customise($properties)->renderWith($this->getTemplate());
 	}
 	
 	function setDisabled($val) {

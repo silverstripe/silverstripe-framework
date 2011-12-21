@@ -21,6 +21,7 @@ class ImageFormAction extends FormAction {
 		$this->className = $className;
 		parent::__construct($action, $title, $form);
 	}
+
 	function Field() {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/ImageFormAction.js');
@@ -31,5 +32,3 @@ class ImageFormAction extends FormAction {
 		return "<input class=\"{$classClause}action\" id=\"" . $this->id() . "\" type=\"image\" name=\"{$this->name}\" src=\"{$this->image}\" title=\"{$this->title}\" alt=\"{$this->title}\" />";
 	}
 }
-
-?>

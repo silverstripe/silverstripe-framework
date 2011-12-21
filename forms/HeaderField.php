@@ -6,6 +6,8 @@
  * @subpackage fields-dataless
  */
 class HeaderField extends DatalessField {
+
+	protected $template = 'HeaderField';
 	
 	/**
 	 * @var int $headingLevel The level of the <h1> to <h6> HTML tag. Default: 2
@@ -32,10 +34,6 @@ class HeaderField extends DatalessField {
 
 	public function getHeadingLevel() {
 		return $this->headingLevel;
-	}
-	
-	function Field($properties = array()) {
-		return $this->customise($properties)->renderWith('HeaderField');
 	}
 
 }

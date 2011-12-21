@@ -6,6 +6,10 @@
  */
 class CheckboxField extends FormField {
 
+	protected $template = 'CheckboxField';
+
+	protected $fieldHolderTemplate = 'CheckboxFieldHolder';
+
 	function setValue($value) {
 		$this->value = ($value) ? 1 : 0;
 	}
@@ -18,13 +22,6 @@ class CheckboxField extends FormField {
 		return ($this->value) ? 1 : 0;
 	}
 
-	function Field($properties = array()) {
-		return $this->customise($properties)->renderWith('CheckboxField');
-	}
-
-	function FieldHolder() {
-		$this->setFieldHolderTemplate(($this->fieldHolderTemplate) ? $this->fieldHolderTemplate : 'CheckboxFieldHolder');
-		return parent::FieldHolder();
 	}
 
 	/**

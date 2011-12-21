@@ -6,6 +6,8 @@
  */
 class TextField extends FormField {
 
+	protected $template = 'TextField';
+
 	/**
 	 * @var Int
 	 */
@@ -43,7 +45,7 @@ class TextField extends FormField {
 			)
 		);
 
-		return $this->customise($properties)->renderWith('TextField');
+		return parent::Field($properties);
 	}
 
 	function InternallyLabelledField() {

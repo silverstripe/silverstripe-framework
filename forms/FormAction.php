@@ -20,6 +20,8 @@
  */
 class FormAction extends FormField {
 
+	protected $template = 'FormAction';
+
 	protected $extraData;
 
 	protected $action;
@@ -85,7 +87,7 @@ class FormAction extends FormField {
 				'UseButtonTag' => $this->useButtonTag
 			)
 		);
-		return $this->customise($properties)->renderWith('FormAction');
+		return $this->customise($properties)->renderWith($this->getTemplate());
 	}
 
 	public function Type() {

@@ -55,6 +55,8 @@
  * @subpackage fields-basic
  */
 class OptionsetField extends DropdownField {
+
+	protected $template = 'OptionsetField';
 	
 	/**
 	 * @var Array
@@ -86,7 +88,7 @@ class OptionsetField extends DropdownField {
 
 		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
 
-		return $this->customise($properties)->renderWith('OptionsetField');
+		return $this->customise($properties)->renderWith($this->getTemplate());
 	}
 
 	function performReadonlyTransformation() {

@@ -22,6 +22,8 @@
  */
 class TextareaField extends FormField {
 
+	protected $template = 'TextareaField';
+
 	protected $rows, $cols;
 
 	/**
@@ -57,7 +59,7 @@ class TextareaField extends FormField {
 			)
 		);
 
-		return $this->customise($properties)->renderWith('TextareaField');
+		return parent::Field($properties);
 	}
 
 	/**

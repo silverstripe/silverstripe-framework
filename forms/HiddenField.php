@@ -6,9 +6,7 @@
  */
 class HiddenField extends FormField {
 
-	function Field($properties = array()) {
-		return $this->customise($properties)->renderWith('HiddenField');
-	}
+	protected $template = 'HiddenField';
 
 	function FieldHolder() {
 		return $this->Field();
