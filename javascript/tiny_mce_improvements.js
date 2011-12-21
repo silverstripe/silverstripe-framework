@@ -146,7 +146,7 @@ LinkForm.prototype = {
 		var htmlTagPattern = /<\S[^><]*>/g; 
 		if(ed == null) ed = tinyMCE.activeEditor;
 	    
-		if(this.style.display == 'block') {
+		if(jQuery(this).is(':visible')) {
 			var i,data = this.getCurrentLink(ed);
 			
 			if(data) {
