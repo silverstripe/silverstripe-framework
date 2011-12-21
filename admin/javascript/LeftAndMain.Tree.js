@@ -260,6 +260,7 @@
 		onunmatch: function() {
 			this._super();
 			
+			this.jstree('uncheck_all');
 			this.jstree('hide_checkboxes');
 		},
 		/**
