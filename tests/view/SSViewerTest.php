@@ -208,6 +208,10 @@ after')
 		$this->assertEquals('AC',
 			$this->render('A<% if NotSet %>B$NotSet<% end_if %>C'));
 
+		// Nested test
+		$this->assertEquals('AB1C',
+			$this->render('A<% if IsSet %>B$NotSet<% if IsSet %>1<% else %>2<% end_if %><% end_if %>C'));
+
 		// else_if
 		$this->assertEquals('ACD',
 			$this->render('A<% if NotSet %>B<% else_if IsSet %>C<% end_if %>D'));
