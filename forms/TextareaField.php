@@ -62,6 +62,10 @@ class TextareaField extends FormField {
 		return parent::Field($properties);
 	}
 
+	function getTemplate() {
+		return ($this->isReadonly()) ? "{$this->template}_Readonly" : $this->template;
+	}
+
 	/**
 	 * Performs a readonly transformation on this field. You should still be able
 	 * to copy from this field, and it should still send when you submit
