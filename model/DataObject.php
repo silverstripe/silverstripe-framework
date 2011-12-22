@@ -1373,7 +1373,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return substr($remoteClass, $fieldPos + 1) . 'ID';
 		}
 		
-		$remoteRelations = array_flip(Object::combined_static($remoteClass, 'has_one', 'DataObject'));
+		$remoteRelations = array_flip(Config::inst()->get($remoteClass, 'has_one'));
 		
 		// look for remote has_one joins on this class or any parent classes
 		foreach(array_reverse(ClassInfo::ancestry($this)) as $class) {
@@ -1460,7 +1460,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return string|array
 	 */
 	public function belongs_to($component = null, $classOnly = true) {
-		$belongsTo = Object::combined_static($this->class, 'belongs_to', 'DataObject');
+		$belongsTo = $this->config()->belongs_to;
 		
 		if($component) {
 			if($belongsTo && array_key_exists($component, $belongsTo)) {
@@ -1528,7 +1528,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return string|array
 	 */
 	public function has_many($component = null, $classOnly = true) {
-		$hasMany = Object::combined_static($this->class, 'has_many', 'DataObject');
+		$hasMany = $this->config()->has_many;
 		
 		if($component) {
 			if($hasMany && array_key_exists($component, $hasMany)) {
@@ -2755,7 +2755,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Only build the table if we've actually got fields
 		$fields = self::database_fields($this->class);
 		$extensions = self::database_extensions($this->class);
-		
+
 		$indexes = $this->databaseIndexes();
 
 		if($fields) {
@@ -3074,6 +3074,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * This is a map from field names to field type. The field
 	 * type should be a class that extends .
 	 * @var array
+	 * @config
 	 */
 	public static $db = null;
 

@@ -214,13 +214,8 @@ class RequestHandler extends ViewableData {
 	 * @return array|null
 	 */
 	public function allowedActions() {
-		$actions = Object::combined_static(get_class($this), 'allowed_actions', 'RequestHandler');
-		
-		foreach($this->extension_instances as $extension) {
-			if($extensionActions = Object::get_static(get_class($extension), 'allowed_actions')) {
-				$actions = array_merge($actions, $extensionActions);
-			}
-		}
+
+		$actions = Config::inst()->get(get_class($this), 'allowed_actions');
 		
 		if($actions) {
 			// convert all keys and values to lowercase to 
