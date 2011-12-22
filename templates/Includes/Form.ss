@@ -1,5 +1,5 @@
 <% if IncludeFormTag %>
-<form $FormAttributes>
+<form $AttributesHTML>
 <% end_if %>
 	<% if Message %>
 	<p id="{$FormName}_error" class="message $MessageType">$Message</p>

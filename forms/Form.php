@@ -146,6 +146,12 @@ class Form extends RequestHandler {
 	protected $encType;
 
 	/**
+	 * @var array Any custom form attributes set through {@link setAttributes()}.
+	 * Some attributes are calculated on the fly, so please use {@link getAttributes()} to access them.
+	 */
+	protected $attributes = array();
+
+	/**
 	 * Create a new form, with the given fields an action buttons.
 	 * 
 	 * @param Controller $controller The parent controller, necessary to create the appropriate form action tag.
@@ -577,6 +583,40 @@ class Form extends RequestHandler {
 	}
 
 	/**
+	 * @param String
+	 * @param String
+	 */
+	function setAttribute($name, $value) {
+		$this->attributes[$name] = $value;
+	}
+
+	/**
+	 * @return String
+	 */
+	function getAttribute($name) {
+		return @$this->attributes[$name];
+	}
+
+	function getAttributes() {
+		$attrs = array(
+			'id' => $this->FormName(),
+			'action' => $this->FormAction(),
+			'method' => $this->FormMethod(),
+			'enctype' => $this->getEncType(),
+			'target' => $this->target,
+			'class' => $this->extraClass(),
+		);
+		if($this->validator && $this->validator->getErrors()) {
+			if(!isset($attrs['class'])) $attrs['class'] = '';
+			$attrs['class'] .= ' validationerror';
+		}
+
+		$attrs = array_merge($attrs, $this->attributes);
+
+		return $attrs;
+	}
+
+	/**
 	 * Unset the form's dataField by its name
 	 *
 	 * @deprecated 3.0 Use Fields() and FieldList API instead
@@ -603,37 +643,40 @@ class Form extends RequestHandler {
 	/**
 	 * Return the attributes of the form tag - used by the templates.
 	 * 
-	 * @return string The attribute string
+	 * @param Array Custom attributes to process. Falls back to {@link getAttributes()}.
+	 * If at least one argument is passed as a string, all arguments act as excludes by name.
+	 * @return String HTML attributes, ready for insertion into an HTML tag
 	 */
-	function FormAttributes() {
-		$attributes = array();
-		
+	function getAttributesHTML($attrs = null) {
+		$exclude = (is_string($attrs)) ? func_get_args() : null;
+
+		if(!$attrs || is_string($attrs)) $attrs = $this->getAttributes();
+
 		// Forms shouldn't be cached, cos their error messages won't be shown
 		HTTP::set_cache_age(0);
 
 		// workaround to include javascript validation
 		if($this->validator && !$this->jsValidationIncluded) $this->validator->includeJavascriptValidation();
+
+		$attrs = $this->getAttributes();
+
+		// Remove empty
+		$attrs = array_filter((array)$attrs, create_function('$v', 'return ($v || $v === 0);')); 
 		
-		// compile attributes		
-		$attributes['id'] = $this->FormName();
-		$attributes['action'] = $this->FormAction();
-		$attributes['method'] = $this->FormMethod();
-		$attributes['enctype'] = $this->getEncType();
-		if($this->target) $attributes['target'] = $this->target;
-		if($this->extraClass()) $attributes['class'] = $this->extraClass();
-		if($this->validator && $this->validator->getErrors()) {
-			if(!isset($attributes['class'])) $attributes['class'] = '';
-			$attributes['class'] .= ' validationerror';
+		// Remove excluded
+		if($exclude) $attrs = array_diff_key($attrs, array_flip($exclude));
+
+		// Create markkup
+		$parts = array();
+		foreach($attrs as $name => $value) {
+			$parts[] = ($value === true) ? "{$name}=\"{$name}\"" : "{$name}=\"" . Convert::raw2att($value) . "\"";
 		}
-		
-		// implode attributes into string
-		$preparedAttributes = '';
-		foreach($attributes as $k => $v) {
-			// Note: as indicated by the $k == value item here; the decisions over what to include in the attributes can sometimes get finicky
-			if(!empty($v) || $v === '0' || $k == 'value') $preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
-		}
-		
-		return $preparedAttributes;
+
+		return implode(' ', $parts);
+	}
+
+	function FormAttributes() {
+		return $this->getAttributesHTML();
 	}
 
 	/**

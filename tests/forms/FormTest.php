@@ -340,9 +340,39 @@ class FormTest extends FunctionalTest {
 		$this->assertEquals('application/x-www-form-urlencoded', $form->getEncType());
 	}
 
+
+	function testAttributes() {
+		$form = $this->getStubForm();
+		$form->setAttribute('foo', 'bar');
+		$this->assertEquals('bar', $form->getAttribute('foo'));
+		$attrs = $form->getAttributes();
+		$this->assertArrayHasKey('foo', $attrs);
+		$this->assertEquals('bar', $attrs['foo']);
+	}
+
+	function testAttributesHTML() {
+		$form = $this->getStubForm();
+
+		$form->setAttribute('foo', 'bar');
+		$this->assertContains('foo="bar"', $form->getAttributesHTML());
+
+		$form->setAttribute('foo', null);
+		$this->assertNotContains('foo="bar"', $form->getAttributesHTML());
+
+		$form->setAttribute('foo', true);
+		$this->assertContains('foo="foo"', $form->getAttributesHTML());
+
+		$form->setAttribute('one', 1);
+		$form->setAttribute('two', 2);
+		$form->setAttribute('three', 3);
+		$this->assertNotContains('one="1"', $form->getAttributesHTML('one', 'two'));
+		$this->assertNotContains('two="2"', $form->getAttributesHTML('one', 'two'));
+		$this->assertContains('three="3"', $form->getAttributesHTML('one', 'two'));
+	}
+	
 	protected function getStubForm() {
 		return new Form(
-			new Controller(),
+			new FormTest_Controller(),
 			'Form',
 			new FieldList(new TextField('key1')),
 			new FieldList()
