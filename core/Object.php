@@ -255,7 +255,55 @@ abstract class Object {
 		
 		return $class;
 	}
-	
+
+	/**
+	 * Get the value of a static property of a class, even in that property is declared protected (but not private), without any inheritance,
+	 * merging or parent lookup if it doesn't exist on the given class
+	 *
+	 * In 5.3, we can do this fast using $foo::$bar syntax, but this method then needs to be in a base class of $class
+	 * to bust the protected def
+	 *
+	 * @static
+	 * @param $class - The class to get the static from
+	 * @param $name - The property to get from the class
+	 * @param null $default - The value to return if property doesn't exist on class
+	 * @return any - The value of the static property $name on class $class, or $default if that property is not defined
+	 */
+	public static function static_lookup($class, $name, $default = null) {
+		if (version_compare(PHP_VERSION, '5.4', '>=') && is_subclass_of($class, 'Object')) {
+			if (isset($class::$$name)) {
+				$parent = get_parent_class($class);
+				if (!$parent || !isset($parent::$$name) || $parent::$$name !== $class::$$name) return $class::$$name;
+			}
+			return $default;
+		}
+		else {
+			// TODO: This gets set once, then not updated, so any changes to statics after this is called the first time for any class won't be exposed
+			static $static_properties = array();
+
+			if (!isset($static_properties[$class])) {
+				$reflection = new ReflectionClass($class);
+				$static_properties[$class] = $reflection->getStaticProperties();
+			}
+
+			if (isset($static_properties[$class][$name])) {
+				$value = $static_properties[$class][$name];
+
+				$parent = get_parent_class($class);
+				if (!$parent) return $value;
+
+				if (!isset($static_properties[$parent])) {
+					$reflection = new ReflectionClass($parent);
+					$static_properties[$parent] = $reflection->getStaticProperties();
+				}
+
+				if (!isset($static_properties[$parent][$name]) || $static_properties[$parent][$name] !== $value) return $value;
+			}
+		}
+
+		return $default;
+	}
+
 	/**
 	 * Get a static variable, taking into account SS's inbuild static caches and pseudo-statics
 	 *
