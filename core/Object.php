@@ -422,7 +422,9 @@ abstract class Object {
 	 */
 	public static function has_extension($class, $requiredExtension) {
 		$requiredExtension = strtolower($requiredExtension);
-		if($extensions = self::combined_static($class, 'extensions')) foreach($extensions as $extension) {
+		$extensions = Config::inst()->get($class, 'extensions');
+
+		if($extensions) foreach($extensions as $extension) {
 			$left = strtolower(Extension::get_classname_without_arguments($extension));
 			$right = strtolower(Extension::get_classname_without_arguments($requiredExtension));
 			if($left == $right) return true;
@@ -457,30 +459,19 @@ abstract class Object {
 		}
 		
 		// unset some caches
-		self::$cached_statics[$class]['extensions'] = null;
 		$subclasses = ClassInfo::subclassesFor($class);
 		$subclasses[] = $class;
+
 		if($subclasses) foreach($subclasses as $subclass) {
 			unset(self::$classes_constructed[$subclass]);
 			unset(self::$extra_methods[$subclass]);
 		}
-		
-		// merge with existing static vars
-		$extensions = self::uninherited_static($class, 'extensions');
-		
-		// We use unshift rather than push so that module extensions are added before built-in ones.
-		// in particular, this ensures that the Versioned rewriting is done last.
-		if($extensions) array_unshift($extensions, $extension);
-		else $extensions = array($extension);
-		
-		self::set_static($class, 'extensions', $extensions);
-		
+
+		Config::inst()->update($class, 'extensions', array($extension));
+
 		// load statics now for DataObject classes
 		if(is_subclass_of($class, 'DataObject')) {
-			if(is_subclass_of($extensionClass, 'DataExtension')) {
-				DataExtension::load_extra_statics($class, $extension);
-			}
-			else {
+			if(!is_subclass_of($extensionClass, 'DataExtension')) {
 				user_error("$extensionClass cannot be applied to $class without being a DataExtension", E_USER_ERROR);
 			}
 		}
@@ -504,37 +495,19 @@ abstract class Object {
 	 * @param string $extension Classname of an {@link Extension} subclass, without parameters
 	 */
 	public static function remove_extension($class, $extension) {
-		// unload statics now for DataObject classes
-		if(is_subclass_of($class, 'DataObject')) {
-			if(!preg_match('/^([^(]*)/', $extension, $matches)) {
-				user_error("Bad extension '$extension'", E_USER_WARNING);
-			} else {
-				$extensionClass = $matches[1];
-				DataExtension::unload_extra_statics($class, $extensionClass);
-			}
-		}
-		
-		if(self::has_extension($class, $extension)) {
-			self::set_static(
-				$class,
-				'extensions',
-				array_diff(self::uninherited_static($class, 'extensions'), array($extension))
-			);
-		}
-		
+		Config::inst()->remove($class, 'extensions', Config::anything(), $extension);
+
 		// unset singletons to avoid side-effects
 		global $_SINGLETONS;
 		$_SINGLETONS = array();
 
 		// unset some caches
-		self::$cached_statics[$class]['extensions'] = null;
 		$subclasses = ClassInfo::subclassesFor($class);
 		$subclasses[] = $class;
 		if($subclasses) foreach($subclasses as $subclass) {
 			unset(self::$classes_constructed[$subclass]);
 			unset(self::$extra_methods[$subclass]);
 		}
-		
 	}
 	
 	/**
@@ -545,7 +518,8 @@ abstract class Object {
 	 *  or eval'ed classname strings with constructor arguments.
 	 */
 	function get_extensions($class, $includeArgumentString = false) {
-		$extensions = self::get_static($class, 'extensions');
+		$extensions = Config::inst()->get($class, 'extensions');
+
 		if($includeArgumentString) {
 			return $extensions;
 		} else {
@@ -558,7 +532,9 @@ abstract class Object {
 	}
 	
 	// -----------------------------------------------------------------------------------------------------------------
-	
+
+	private static $_added_extensions = array();
+
 	public function __construct() {
 		$this->class = get_class($this);
 
@@ -567,9 +543,22 @@ abstract class Object {
 		
 		if($extensionClasses = ClassInfo::ancestry($this->class)) foreach($extensionClasses as $class) {
 			if(in_array($class, $notExtendable)) continue;
-			
-			if($extensions = self::uninherited_static($class, 'extensions')) {
+
+			if($extensions = Config::inst()->get($class, 'extensions', Config::UNINHERITED)) {
 				foreach($extensions as $extension) {
+					// Get the extension class for this extension
+					$extensionClass = Extension::get_classname_without_arguments($extension);
+
+					// If we haven't told that extension it's attached to this class yet, do that now
+					if (!isset(self::$_added_extensions[$extensionClass][$class])) {
+						// First call the add_to_class method - this will inherit down & is defined on Extension, so if not defined, no worries
+						call_user_func(array($extensionClass, 'add_to_class'), $class, $extensionClass);
+
+						// Then register it as having been told about us
+						if (!isset(self::$_added_extensions[$extensionClass])) self::$_added_extensions[$extensionClass] = array($class => true);
+						else self::$_added_extensions[$extensionClass][$class] = true;
+					}
+
 					$instance = self::create_from_string($extension);
 					$instance->setOwner(null, $class);
 					$this->extension_instances[$instance->class] = $instance;
