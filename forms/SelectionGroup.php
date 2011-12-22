@@ -46,9 +46,13 @@ class SelectionGroup extends CompositeField {
 		$clone->setReadonly(true);
 		return $clone;
 	}
-	
+
 	function FieldSet() {
-		$items = parent::FieldSet()->toArray();
+		return $this->FieldList();
+	}
+	
+	function FieldList() {
+		$items = parent::FieldList()->toArray();
 
 		$count = 0;
 		$firstSelected = $checked ="";
