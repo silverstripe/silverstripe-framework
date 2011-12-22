@@ -354,7 +354,7 @@ class SS_ClassManifest {
 			$extends    = isset($class['extends']) ? implode('', $class['extends']) : null;
 			$implements = isset($class['interfaces']) ? $class['interfaces'] : null;
 			
-			if($extends && $extends[0] != '/\\') {
+			if($extends && $extends[0] != '\\') {
 				$extends = $namespace . $extends;
 			} elseif($extends) {
 				$extends = substr($extends, 1);
