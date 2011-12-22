@@ -559,7 +559,11 @@ class FormField extends RequestHandler {
 	 * @return string
 	 */
 	function Type() {
-		return strtolower(ereg_replace('Field$', '', $this->class));
+		if(get_class($this) == 'FormField') {
+			return 'hidden';
+		} else {
+			return strtolower(ereg_replace('Field$', '', $this->class));	
+		}
 	}
 
 	/**
