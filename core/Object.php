@@ -51,7 +51,26 @@ abstract class Object {
 	 * @var string the class name
 	 */
 	public $class;
-	
+
+
+	/**
+	 * @todo Set this via dependancy injection? Can't call it $config, because too many clashes with form elements etc
+	 * @var Config_ForClass
+	 */
+	private $_config_forclass = null;
+
+	/**
+	 * Get a configuration accessor for this class. Short hand for Config::inst()->get($this->class, .....).
+	 * @return Config_ForClass|null
+	 */
+	public function config() {
+		if (!$this->_config_forclass) {
+			$this->_config_forclass = Config::inst()->forClass($this->class);
+		}
+
+		return $this->_config_forclass;
+	}
+
 	/**
 	 * @var array all current extension instances.
 	 */
@@ -542,7 +561,7 @@ abstract class Object {
 	
 	public function __construct() {
 		$this->class = get_class($this);
-		
+
 		// Don't bother checking some classes that should never be extended
 		static $notExtendable = array('Object', 'ViewableData', 'RequestHandler');
 		
