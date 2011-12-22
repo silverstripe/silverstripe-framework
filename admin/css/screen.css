@@ -32,24 +32,24 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 /** ----------------------------- Sprite images ----------------------------- */
 /** Helper SCSS file for generating sprites for the interface.  S */
 .icon { text-indent: -9999px; border: none; outline: none; }
-.icon.icon-24 { width: 24px; height: 24px; background: url('../images/icons/24x24-sba30d25a74.png'); }
-.icon.icon-24.icon-assetadmin { background-position: 0 -192px; }
-.icon.icon-24.icon-cmsmain { background-position: 0 -168px; }
-.icon.icon-24.icon-cmspagescontroller { background-position: 0 -144px; }
-.icon.icon-24.icon-cmssettingscontroller { background-position: 0 -72px; }
+.icon.icon-24 { width: 24px; height: 24px; background: url('../images/24x24-s0a1a958c85.png'); }
+.icon.icon-24.icon-assetadmin { background-position: 0 -120px; }
+.icon.icon-24.icon-cmsmain { background-position: 0 -48px; }
+.icon.icon-24.icon-cmspagescontroller { background-position: 0 -192px; }
+.icon.icon-24.icon-cmssettingscontroller { background-position: 0 0; }
 .icon.icon-24.icon-securityadmin { background-position: 0 -24px; }
-.icon.icon-24.icon-reportadmin { background-position: 0 -216px; }
-.icon.icon-24.icon-commentadmin { background-position: 0 0; }
-.icon.icon-24.icon-help { background-position: 0 -120px; }
-.icon.icon-16 { width: 16px; height: 16px; background: url('../images/icons/16x16-s4d33bad4d2.png'); }
-.icon.icon-16.icon-assetadmin { background-position: 0 -128px; }
-.icon.icon-16.icon-cmsmain { background-position: 0 -112px; }
-.icon.icon-16.icon-cmspagescontroller { background-position: 0 -96px; }
-.icon.icon-16.icon-cmssettingscontroller { background-position: 0 -48px; }
-.icon.icon-16.icon-securityadmin { background-position: 0 -16px; }
-.icon.icon-16.icon-reportadmin { background-position: 0 -144px; }
-.icon.icon-16.icon-commentadmin { background-position: 0 0; }
-.icon.icon-16.icon-help { background-position: 0 -80px; }
+.icon.icon-24.icon-reportadmin { background-position: 0 -72px; }
+.icon.icon-24.icon-commentadmin { background-position: 0 -168px; }
+.icon.icon-24.icon-help { background-position: 0 -96px; }
+.icon.icon-16 { width: 16px; height: 16px; background: url('../images/16x16-sc73b1b9c66.png'); }
+.icon.icon-16.icon-assetadmin { background-position: 0 -80px; }
+.icon.icon-16.icon-cmsmain { background-position: 0 -16px; }
+.icon.icon-16.icon-cmspagescontroller { background-position: 0 -112px; }
+.icon.icon-16.icon-cmssettingscontroller { background-position: 0 0; }
+.icon.icon-16.icon-securityadmin { background-position: 0 -48px; }
+.icon.icon-16.icon-reportadmin { background-position: 0 -32px; }
+.icon.icon-16.icon-commentadmin { background-position: 0 -128px; }
+.icon.icon-16.icon-help { background-position: 0 -64px; }
 
 /** ----------------------------- CMS Components ------------------------------ */
 /** File: typography.scss  Contains the basic typography related styles for the admin interface. */
@@ -447,11 +447,12 @@ body.ArrayData { overflow-y: scroll; overflow-x: auto; }
 .cms-tree.jstree-apple li.Root strong { font-weight: bold; padding-left: 1px; }
 .cms-tree.jstree-apple li.Root > a .jstree-icon { background-position: -56px -36px; }
 .cms-tree.jstree-apple a, .cms-tree.jstree-apple a:link { color: #1556b2; padding: 3px 6px 3px 3px; border: none; display: inline-block; margin-right: 5px; }
-.cms-tree.jstree-apple a span.status:after, .cms-tree.jstree-apple a:link span.status:after { clear: both; text-transform: uppercase; display: inline-block; padding: 0px 3px; font-size: 0.75em; line-height: 1em; margin-left: 3px; margin-right: 6px; margin-top: -1px; -webkit-border-radius: 2px 2px; -moz-border-radius: 2px / 2px; -o-border-radius: 2px / 2px; -ms-border-radius: 2px / 2px; -khtml-border-radius: 2px / 2px; border-radius: 2px / 2px; }
-.cms-tree.jstree-apple span.modified:after { content: "draft"; color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
-.cms-tree.jstree-apple span.new:after { content: "new"; color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
-.cms-tree.jstree-apple span.private:after { content: "private"; color: #636363; border: 1px solid #E49393; background-color: #F2DADB; }
-.cms-tree.jstree-apple span.workflow-approval:after { content: "awaiting approval"; color: #56660C; border: 1px solid #7C8816; background-color: #DAE79A; }
+.cms-tree.jstree-apple span.badge { clear: both; text-transform: uppercase; display: inline-block; padding: 0px 3px; font-size: 0.75em; line-height: 1em; margin-left: 3px; margin-right: 6px; margin-top: -1px; -webkit-border-radius: 2px 2px; -moz-border-radius: 2px / 2px; -o-border-radius: 2px / 2px; -ms-border-radius: 2px / 2px; -khtml-border-radius: 2px / 2px; border-radius: 2px / 2px; }
+.cms-tree.jstree-apple span.badge.modified { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
+.cms-tree.jstree-apple span.badge.addedtodraft { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
+.cms-tree.jstree-apple span.badge.deletedonlive { color: #636363; border: 1px solid #E49393; background-color: #F2DADB; }
+.cms-tree.jstree-apple span.badge.removedfromdraft { color: #636363; border: 1px solid #E49393; background-color: #F2DADB; }
+.cms-tree.jstree-apple span.badge.workflow-approval { color: #56660C; border: 1px solid #7C8816; background-color: #DAE79A; }
 .cms-tree.jstree-apple span.comment-count { clear: both; position: relative; text-transform: uppercase; display: inline-block; overflow: visible; padding: 0px 3px; font-size: 0.75em; line-height: 1em; margin-left: 3px; margin-right: 6px; -webkit-border-radius: 2px 2px; -moz-border-radius: 2px / 2px; -o-border-radius: 2px / 2px; -ms-border-radius: 2px / 2px; -khtml-border-radius: 2px / 2px; border-radius: 2px / 2px; color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
 .cms-tree.jstree-apple span.comment-count:before { content: ""; position: absolute; bottom: -4px; /* value = - border-top-width - border-bottom-width */ left: 3px; /* controls horizontal position */ border-width: 4px 4px 0; border-style: solid; border-color: #C9B800 transparent; /* reduce the damage in FF3.0 */ display: block; width: 0; }
 .cms-tree.jstree-apple span.comment-count:after { content: ""; position: absolute; bottom: -3px; /* value = - border-top-width - border-bottom-width */ left: 4px; /* value = (:before left) + (:before border-left) - (:after border-left) */ border-width: 3px 3px 0; border-style: solid; border-color: #FFF0BC transparent; /* reduce the damage in FF3.0 */ display: block; width: 0; }
