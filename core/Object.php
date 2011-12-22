@@ -36,19 +36,6 @@ abstract class Object {
 	 */
 	public static $extensions = null;
 	
-	/**#@+
-	 * @var array
-	 */
-	
-	private static
-		$statics = array(),
-		$cached_statics = array(),
-		$uninherited_statics = array(),
-		$cached_uninherited_statics = array(),
-		$extra_statics = array(),
-		$replaced_statics = array(),
-		$_cache_statics_prepared = array();
-	
 	private static
 		$classes_constructed = array(),
 		$extra_methods       = array(),
@@ -323,64 +310,8 @@ abstract class Object {
 	 * @return mixed
 	 */
 	public static function get_static($class, $name, $uncached = false) {
-		if(!isset(self::$_cache_statics_prepared[$class])) {
-			Object::prepare_statics($class);
-		}
-
-		if(!isset(self::$cached_statics[$class][$name]) || $uncached) {
-			$extra     = $builtIn = $break = $replacedAt = false;
-			$ancestry  = array_reverse(ClassInfo::ancestry($class));
-			
-			// traverse up the class tree and build extra static and stop information
-			foreach($ancestry as $ancestor) {
-				if(isset(self::$extra_statics[$ancestor][$name])) {
-					$toMerge = self::$extra_statics[$ancestor][$name];
-					
-					if(is_array($toMerge) && is_array($extra)) {
-						$extra = array_merge($toMerge, $extra);
-					} elseif(!$extra) {
-						$extra = $toMerge;
-					} else {
-						$break = true;
-					}
-					
-					if(isset(self::$replaced_statics[$ancestor][$name])) $replacedAt = $break = $ancestor;
-					
-					if($break) break;
-				}
-			}
-			
-			// check whether to merge in the default value
-			if($replacedAt && ($replacedAt == $class || !is_array($extra))) {
-				$value = $extra;
-			} elseif($replacedAt) {
-				// determine whether to merge in lower-class variables
-				$ancestorRef     = new ReflectionClass(reset($ancestry));
-				$ancestorProps   = $ancestorRef->getStaticProperties();
-				$ancestorInbuilt = array_key_exists($name, $ancestorProps) ? $ancestorProps[$name] : null;
-				
-				$replacedRef     = new ReflectionClass($replacedAt);
-				$replacedProps   = $replacedRef->getStaticProperties();
-				$replacedInbuilt = array_key_exists($name, $replacedProps) ? $replacedProps[$name] : null;
-				
-				if($ancestorInbuilt != $replacedInbuilt) {
-					$value = is_array($ancestorInbuilt) ? array_merge($ancestorInbuilt, (array) $extra) : $extra;
-				} else {
-					$value = $extra;
-				}
-			} else {
-				// get a built-in value
-				$reflector = new ReflectionClass($class);
-				$props     = $reflector->getStaticProperties();
-				$inbuilt   = array_key_exists($name, $props) ? $props[$name] : null;
-				$value     = isset($extra) && is_array($extra) ? array_merge($extra, (array) $inbuilt) : $inbuilt;
-			}
-			
-			self::$cached_statics[$class][$name] = true;
-			self::$statics[$class][$name]        = $value;
-		}
-		
-		return self::$statics[$class][$name];
+		Deprecation::notice('3.0.0', 'combined_static is deprecated, replaced by Config#get');
+		return Config::inst()->get($class, $name, Config::FIRST_SET);
 	}
 
 	/**
@@ -391,14 +322,8 @@ abstract class Object {
 	 * @param mixed $value
 	 */
 	public static function set_static($class, $name, $value) {
-		if(!isset(self::$_cache_statics_prepared[$class])) {
-			Object::prepare_statics($class);
-		}
-
-		self::$statics[$class][$name] = $value;
-		self::$uninherited_statics[$class][$name] = $value;
-		self::$cached_statics[$class][$name] = true;
-		self::$cached_uninherited_statics[$class][$name] = true;
+		Deprecation::notice('3.0.0', 'set_static is deprecated, replaced by Config#set');
+		Config::inst()->update($class, $name, $value);
 	}
 
 	/**
@@ -414,39 +339,8 @@ abstract class Object {
 	 * @return mixed
 	 */
 	public static function uninherited_static($class, $name, $uncached = false) {
-		if(!isset(self::$_cache_statics_prepared[$class])) {
-			Object::prepare_statics($class);
-		}
-		
-		if(!isset(self::$cached_uninherited_statics[$class][$name]) || $uncached) {
-			$classRef = new ReflectionClass($class);
-			$classProp = $classRef->getStaticPropertyValue($name, null);
-
-			$parentClass = get_parent_class($class);
-			if($parentClass) {
-				$parentRef = new ReflectionClass($parentClass);
-				$parentProp = $parentRef->getStaticPropertyValue($name, null);
-				if($parentProp == $classProp) $classProp = null;
-			}
-			
-			// Add data from extra_statics if it has been applied to this specific class (it
-			// wouldn't make sense to have them inherit in this method).  This is kept separate
-			// from the equivalent get_static code because it's so much simpler
-			if(isset(self::$extra_statics[$class][$name])) {
-				$toMerge = self::$extra_statics[$class][$name];
-				
-				if(is_array($toMerge) && is_array($classProp)) {
-					$classProp = array_merge($toMerge, $classProp);
-				} elseif(!$classProp) {
-					$classProp = $toMerge;
-				}
-			}
-			
-			self::$cached_uninherited_statics[$class][$name] = true;
-			self::$uninherited_statics[$class][$name] = $classProp;
-		}
-
-		return self::$uninherited_statics[$class][$name];
+		Deprecation::notice('3.0.0', 'uninherited_static is deprecated, replaced by Config#get');
+		return Config::inst()->get($class, $name, Config::UNINHERITED);
 	}
 	
 	/**
@@ -460,24 +354,10 @@ abstract class Object {
 	 * @return mixed
 	 */
 	public static function combined_static($class, $name, $ceiling = false) {
-		$ancestry = ClassInfo::ancestry($class);
-		$values   = null;
-		
-		if($ceiling) while(current($ancestry) != $ceiling && $ancestry) {
-			array_shift($ancestry);
-		}
-		
-		if($ancestry) foreach($ancestry as $ancestor) {
-			$merge = self::uninherited_static($ancestor, $name);
-			
-			if(is_array($values) && is_array($merge)) {
-				$values = array_merge($values, $merge);
-			} elseif($merge) {
-				$values = $merge;
-			}
-		}
-		
-		return $values;
+		if ($ceiling) throw new Exception('Ceiling argument to combined_static is no longer supported');
+
+		Deprecation::notice('3.0.0', 'combined_static is deprecated, replaced by Config#get');
+		return Config::inst()->get($class, $name);
 	}
 	
 	/**
@@ -488,6 +368,7 @@ abstract class Object {
 	 * @param bool $replace replace existing static vars
 	 */
 	public static function addStaticVars($class, $properties, $replace = false) {
+		Deprecation::notice('3.0.0', 'addStaticVars is deprecated, replaced by Config#set');
 		foreach($properties as $prop => $value) self::add_static_var($class, $prop, $value, $replace);
 	}
 	
@@ -508,23 +389,12 @@ abstract class Object {
 	 * @param bool $replace completely replace existing static values
 	 */
 	public static function add_static_var($class, $name, $value, $replace = false) {
-		if(is_array($value) && isset(self::$extra_statics[$class][$name]) && !$replace) {
-			self::$extra_statics[$class][$name] = array_merge_recursive(self::$extra_statics[$class][$name], $value);
-		} else {
-			self::$extra_statics[$class][$name] = $value;
-		}
-		
-		if ($replace) {
-			self::set_static($class, $name, $value);
-			self::$replaced_statics[$class][$name] = true;
-			
-		// Clear caches
-		} else {
-			self::$cached_statics[$class][$name] = null;
-			self::$cached_uninherited_statics[$class][$name] = null;
-		}
+		Deprecation::notice('3.0.0', 'add_static_var is deprecated, replaced by Config#set');
+
+		if ($replace) Config::inst()->remove($class, $name);
+		Config::inst()->update($class, $name, $value);
 	}
-	
+
 	/**
 	 * Return TRUE if a class has a specified extension
 	 *
@@ -597,39 +467,7 @@ abstract class Object {
 		}
 	}
 
-	/**
-	 * Prepare static variables before processing a {@link get_static} or {@link set_static}
-	 * call.
-	 */
-	private static function prepare_statics($class) {
-		// _cache_statics_prepared setting must come first to prevent infinite loops when we call
-		// get_static below
-		self::$_cache_statics_prepared[$class] = true;
-		
-		// load statics now for DataObject classes
-		if(is_subclass_of($class, 'DataObject')) {
-			$extensions = Object::uninherited_static($class, 'extensions');
-			
-			if($extensions) {
-				foreach($extensions as $extension) {
-					$extensionClass = $extension;
-					
-					if(preg_match('/^([^(]*)/', $extension, $matches)) {
-						$extensionClass = $matches[1];
-					}
-					
-					if(is_subclass_of($extensionClass, 'DataExtension')) {
-						DataExtension::load_extra_statics($class, $extension);
-					}
-					else {
-						user_error("$extensionClass cannot be applied to $class without being a DataExtension", E_USER_ERROR);
-					}
-				}
-			}
-		}
-	}
-	
-	
+
 	/**
 	 * Remove an extension from a class.
 	 * Keep in mind that this won't revert any datamodel additions
