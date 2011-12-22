@@ -99,4 +99,135 @@ class HTTPRequestTest extends SapphireTest {
 		);
 	}
 	
+	public function testRequestVars() {
+		$getVars = array(
+			'first' => 'a',
+			'second' => 'b',
+		);
+		$postVars = array(
+			'third' => 'c',
+			'fourth' => 'd',
+		);
+		$requestVars = array(
+			'first' => 'a',
+			'second' => 'b',
+			'third' => 'c',
+			'fourth' => 'd',
+		);
+		$request = new SS_HTTPRequest(
+			'POST',
+			'admin/crm',
+			$getVars,
+			$postVars
+		);
+		$this->assertEquals(
+			$requestVars,
+			$request->requestVars(),
+			'GET parameters should supplement POST parameters'
+		);
+		
+		$getVars = array(
+			'first' => 'a',
+			'second' => 'b',
+		);
+		$postVars = array(
+			'first' => 'c',
+			'third' => 'd',
+		);
+		$requestVars = array(
+			'first' => 'c',
+			'second' => 'b',
+			'third' => 'd',
+		);
+		$request = new SS_HTTPRequest(
+			'POST',
+			'admin/crm',
+			$getVars,
+			$postVars
+		);
+		$this->assertEquals(
+			$requestVars,
+			$request->requestVars(),
+			'POST parameters should override GET parameters'
+		);
+		
+		$getVars = array(
+			'first' => array(
+				'first' => 'a',
+			),
+			'second' => array(
+				'second' => 'b',
+			),
+		);
+		$postVars = array(
+			'first' => array(
+				'first' => 'c',
+			),
+			'third' => array(
+				'third' => 'd',
+			),
+		);
+		$requestVars = array(
+			'first' => array(
+				'first' => 'c',
+			),
+			'second' => array(
+				'second' => 'b',
+			),
+			'third' => array(
+				'third' => 'd',
+			),
+		);
+		$request = new SS_HTTPRequest(
+			'POST',
+			'admin/crm',
+			$getVars,
+			$postVars
+		);
+		$this->assertEquals(
+			$requestVars,
+			$request->requestVars(),
+			'Nested POST parameters should override GET parameters'
+		);
+		
+		$getVars = array(
+			'first' => array(
+				'first' => 'a',
+			),
+			'second' => array(
+				'second' => 'b',
+			),
+		);
+		$postVars = array(
+			'first' => array(
+				'second' => 'c',
+			),
+			'third' => array(
+				'third' => 'd',
+			),
+		);
+		$requestVars = array(
+			'first' => array(
+				'first' => 'a',
+				'second' => 'c',
+			),
+			'second' => array(
+				'second' => 'b',
+			),
+			'third' => array(
+				'third' => 'd',
+			),
+		);
+		$request = new SS_HTTPRequest(
+			'POST',
+			'admin/crm',
+			$getVars,
+			$postVars
+		);
+		$this->assertEquals(
+			$requestVars,
+			$request->requestVars(),
+			'Nested GET parameters should supplement POST parameters'
+		);
+	}
 }
