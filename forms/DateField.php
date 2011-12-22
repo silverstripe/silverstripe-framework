@@ -174,6 +174,10 @@ class DateField extends TextField {
 		
 		return $html;
 	}
+
+	function Type() {
+		return 'date text';
+	}
 		
 	/**
 	 * Sets the internal value to ISO date format.

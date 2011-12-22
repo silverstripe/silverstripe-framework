@@ -42,24 +42,16 @@ class TextareaField extends FormField {
 		parent::__construct($name, $title, $value, $form);
 	}
 
-	/**
-	 * Create the <textarea> or <span> HTML tag with the
-	 * attributes for this instance of TextareaField. This
-	 * makes use of {@link FormField->createTag()} functionality.
-	 * 
-	 * @return HTML code for the textarea OR span element
-	 */
-	function Field($properties = array()) {
-		$properties = array_merge(
-			$properties,
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
 			array(
-				'Rows' => $this->rows,
-				'Cols' => $this->cols,
-				'Value' => htmlentities($this->value, ENT_COMPAT, 'UTF-8')
+				'rows' => $this->rows,
+				'cols' => $this->cols,
+				'value' => null,
+				'type' => null
 			)
 		);
-
-		return parent::Field($properties);
 	}
 
 	function getTemplate() {
@@ -112,5 +104,9 @@ class TextareaField extends FormField {
 	 */
 	function setColumns($cols) {
 		$this->cols = $cols;
+	}
+
+	function Value() {
+		return htmlentities($this->value, ENT_COMPAT, 'UTF-8');
 	}
 }

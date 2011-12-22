@@ -36,4 +36,18 @@ class HeaderField extends DatalessField {
 		return $this->headingLevel;
 	}
 
+	function getAttributes() {
+		return array_merge(
+			array(
+				'id' => $this->ID(),
+				'class' => $this->extraClass()
+			),
+			$this->attributes
+		);
+	}
+
+	function Type() {
+		return null;
+	}
+
 }

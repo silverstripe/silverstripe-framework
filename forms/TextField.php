@@ -36,16 +36,14 @@ class TextField extends FormField {
 		return $this->maxLength;
 	}
 
-	function Field($properties = array()) {
-		$properties = array_merge(
-			$properties,
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
 			array(
-				'MaxLength' => ($this->getMaxLength()) ? $this->getMaxLength() : null,
-				'Size' => ($this->getMaxLength()) ? min($this->getMaxLength(), 30) : null
+				'maxlength' => $this->getMaxLength(),
+				'size' => ($this->getMaxLength()) ? min($this->getMaxLength(), 30) : null
 			)
 		);
-
-		return parent::Field($properties);
 	}
 
 	function InternallyLabelledField() {

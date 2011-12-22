@@ -27,6 +27,11 @@ class CurrencyField extends TextField {
 			return 0.00;
 		}
 	}
+
+	function Type() {
+		return 'currency text';
+	}
+
 	/**
 	 * Create a new class for this field
 	 */

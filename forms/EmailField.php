@@ -6,6 +6,10 @@
  */
 class EmailField extends TextField {
 
+	function Type() {
+		return 'email text';
+	}
+
 	function jsValidation() {
 		$formID = $this->form->FormName();
 		$error = _t('EmailField.VALIDATIONJS', 'Please enter an email address.');
@@ -38,14 +42,6 @@ if(typeof fromAnOnBlur != 'undefined'){
 	$('$formID').validateEmailField('$this->name');
 }
 JS;
-	}
-
-	/**
-	 * Returns the field type - used by templates.
-	 * @return string
-	 */
-	function Type() {
-		return 'text';
 	}
 
 	/**

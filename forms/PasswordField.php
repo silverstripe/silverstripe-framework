@@ -24,8 +24,11 @@ class PasswordField extends TextField {
 	}
 
 
-	function Type() {
-		return 'password';
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array('type' => 'password')
+		);
 	}
 
 	/**
@@ -38,6 +41,10 @@ class PasswordField extends TextField {
 		$field->setForm($this->form);
 		$field->setReadonly(true);
 		return $field;
+	}
+
+	function Type() {
+		return 'text password';
 	}
 }
 

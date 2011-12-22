@@ -22,14 +22,14 @@ class CountryDropdownField extends DropdownField {
 	function defaultToVisitorCountry($val) {
 		$this->defaultToVisitorCountry = $val;
 	}
-	
-	function Field() {
+
+	function Value() {
 		$source = $this->getSource();
-		
 		if($this->defaultToVisitorCountry && !$this->value || !isset($source[$this->value])) {
-			$this->value = ($vc = Geoip::visitor_country()) ? $vc : Geoip::get_default_country_code();
+			return ($vc = Geoip::visitor_country()) ? $vc : Geoip::get_default_country_code();
+		} else {
+			return $this->value;
 		}
-		
-		return parent::Field();
 	}
+
 }

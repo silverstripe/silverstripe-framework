@@ -90,6 +90,12 @@ class FormField extends RequestHandler {
 	protected $fieldHolderTemplate = 'FieldHolder';
 
 	/**
+	 * @var array All attributes on the form field (not the field holder).
+	 * Partially determined based on other instance properties, please use {@link getAttributes()}.
+	 */
+	protected $attributes = array();
+
+	/**
 	 * Create a new field.
 	 * @param name The internal field name, passed to forms.
 	 * @param title The field label.
@@ -253,21 +259,22 @@ class FormField extends RequestHandler {
 	 * @return String CSS-classnames
 	 */
 	function extraClass() {
-		$output = "";
-		if(is_array($this->extraClasses)) {
-			$output = " " . implode($this->extraClasses, " ");
-		}
+		$classes = array();
+
+		$classes[] = $this->Type();
+
+		if($this->extraClasses) $classes = array_merge($classes, array_values($this->extraClasses));
 		
 		// Allow customization of label and field tag positioning
-		if(!$this->Title()) $output .= " nolabel";
+		if(!$this->Title()) $classes[] = "nolabel";
 		
 		// Allow custom styling of any element in the container based
 		// on validation errors, e.g. red borders on input tags.
 		// CSS-Class needs to be different from the one rendered
 		// through {@link FieldHolder()}
-		if($this->Message()) $output .= " holder-" . $this->MessageType();
+		if($this->Message()) $classes[] .= "holder-" . $this->MessageType();
 		
-		return $output;
+		return implode(' ', $classes);
 	}
 	
 	/**
@@ -286,6 +293,73 @@ class FormField extends RequestHandler {
 	 */
 	function removeExtraClass($class) {
 		if(isset($this->extraClasses) && array_key_exists($class, $this->extraClasses)) unset($this->extraClasses[$class]);
+	}
+
+	/**
+	 * Set an HTML attribute on the field element, mostly an <input> tag.
+	 * 
+	 * CAUTION Doesn't work on most fields which are composed of more than one HTML form field:
+	 * AjaxUniqueTextField, CheckboxSetField, ComplexTableField, CompositeField, ConfirmedPasswordField, CountryDropdownField,
+	 * CreditCardField, CurrencyField, DateField, DatetimeField, FieldGroup, GridField, HtmlEditorField,
+	 * ImageField, ImageFormAction, InlineFormAction, ListBoxField, etc.
+	 * 
+	 * @param String
+	 * @param String
+	 */
+	function setAttribute($name, $value) {
+		$this->attributes[$name] = $value;
+	}
+
+	/**
+	 * Get an HTML attribute defined by the field, or added through {@link setAttribute()}.
+	 * Caution: Doesn't work on all fields, see {@link setAttribute()}.
+	 * 
+	 * @return String
+	 */
+	function getAttribute($name) {
+		$attrs = $this->getAttributes();
+		return @$attrs[$name];
+	}
+
+	/**
+	 * @return array
+	 */
+	function getAttributes() {
+		$attrs = array(
+			'type' => 'text',
+			'name' => $this->getName(),
+			'value' => $this->Value(),			
+			'class' => $this->extraClass(),
+			'id' => $this->ID(),
+			'tabindex' => $this->getTabIndex(),
+			'disabled' => $this->isDisabled(),
+		);
+		return array_merge($attrs, $this->attributes);
+	}
+
+	/**
+	 * @param Array Custom attributes to process. Falls back to {@link getAttributes()}.
+	 * If at least one argument is passed as a string, all arguments act as excludes by name.
+	 * @return String HTML attributes, ready for insertion into an HTML tag
+	 */
+	function getAttributesHTML($attrs = null) {
+		$exclude = (is_string($attrs)) ? func_get_args() : null;
+
+		if(!$attrs || is_string($attrs)) $attrs = $this->getAttributes();
+
+		// Remove empty
+		$attrs = array_filter((array)$attrs, create_function('$v', 'return ($v || $v === 0);')); ; 
+
+		// Remove excluded
+		if($exclude) $attrs = array_diff_key($attrs, array_flip($exclude));
+
+		// Create markkup
+		$parts = array();
+		foreach($attrs as $name => $value) {
+			$parts[] = ($value === true) ? "{$name}=\"{$name}\"" : "{$name}=\"" . Convert::raw2att($value) . "\"";
+		}
+
+		return implode(' ', $parts);
 	}
 
 	/**
@@ -555,15 +629,13 @@ class FormField extends RequestHandler {
 	/**
 	 * Returns the field type - used by templates.
 	 * The field type is the class name with the word Field dropped off the end, all lowercase.
-	 * It's handy for assigning HTML classes.
+	 * It's handy for assigning HTML classes. Doesn't signify the <input type> attribute,
+	 * see {link getAttributes()}.
+	 * 
 	 * @return string
 	 */
 	function Type() {
-		if(get_class($this) == 'FormField') {
-			return 'hidden';
-		} else {
-			return strtolower(ereg_replace('Field$', '', $this->class));	
-		}
+		return strtolower(ereg_replace('Field$', '', $this->class));	
 	}
 
 	/**

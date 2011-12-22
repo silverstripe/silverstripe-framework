@@ -91,7 +91,22 @@ class FormAction extends FormField {
 	}
 
 	public function Type() {
-		return ($this->useButtonTag) ? 'button' : 'submit';
+		return 'action';
+	}
+
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array(
+				'disabled' => ($this->isReadonly() || $this->isDisabled()),
+				'value' => $this->Title(),
+				'type' => ($this->useButtonTag) ? null : 'submit'
+			)
+		);
+	}
+
+	function extraClass() {
+		return 'action ' . parent::extraClass();
 	}
 
 	/**

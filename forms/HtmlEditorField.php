@@ -22,8 +22,6 @@ class HtmlEditorField extends TextareaField {
 	public function __construct($name, $title = null, $rows = 30, $cols = 20, $value = '', $form = null) {
 		parent::__construct($name, $title, $rows, $cols, $value, $form);
 		
-		$this->addExtraClass('htmleditor');
-		
 		self::include_js();
 	}
 	
@@ -47,16 +45,19 @@ class HtmlEditorField extends TextareaField {
 		
 		return $this->createTag (
 			'textarea',
-			array (
-				'class'   => $this->extraClass(),
-				'rows'    => $this->rows,
-				'cols'    => $this->cols,
-				'style'   => 'width: 97%; height: ' . ($this->rows * 16) . 'px', // prevents horizontal scrollbars
-				'tinymce' => 'true',
-				'id'      => $this->id(),
-				'name'    => $this->name
-			),
+			$this->getAttributes(),
 			htmlentities($value->getContent(), ENT_COMPAT, 'UTF-8')
+		);
+	}
+
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array(
+				'tinymce' => 'true',
+				'style'   => 'width: 97%; height: ' . ($this->rows * 16) . 'px', // prevents horizontal scrollbars
+				'value' => null,
+			)
 		);
 	}
 	

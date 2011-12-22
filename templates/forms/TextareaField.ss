@@ -1,1 +1,1 @@
-<textarea id="$ID" class="textarea$extraClass" name="$Name" rows="$Rows" cols="$Cols"<% if isDisabled %> disabled<% end_if %>>$Value</textarea>
+<textarea $AttributesHTML>$Value</textarea>

@@ -117,6 +117,13 @@ class FileField extends FormField {
 		return $this->customise($properties)->renderWith($this->getTemplate());
 	}
 
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array('type' => 'file')
+		);
+	}
+
 	public function saveInto(DataObject $record) {
 		if(!isset($_FILES[$this->name])) return false;
 		$fileClass = File::get_class_for_file_extension(pathinfo($_FILES[$this->name]['name'], PATHINFO_EXTENSION));

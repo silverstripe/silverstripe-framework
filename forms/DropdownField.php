@@ -162,6 +162,13 @@ class DropdownField extends FormField {
 		return $this->customise($properties)->renderWith($this->getTemplate());
 	}
 
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array('type' => null)
+		);
+	}
+
 	/**
 	 * @return boolean
 	 */
@@ -228,12 +235,6 @@ class DropdownField extends FormField {
 		$field->setForm($this->form);
 		$field->setReadonly(true);
 		return $field;
-	}
-
-	function extraClass() {
-		$ret = parent::extraClass();
-		if($this->extraClass) $ret .= " $this->extraClass";
-		return $ret;
 	}
 
 	/**

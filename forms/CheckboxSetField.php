@@ -98,12 +98,9 @@ class CheckboxSetField extends OptionsetField {
 		}
 		
 		$odd = 0;
-		$options = '';
+		$options = array();
 		
-		if ($source == null) {
-			$source = array();
-			$options = "<li>No options available</li>";
-		}
+		if ($source == null) $source = array();
 
 		if($source) {
 			foreach($source as $value => $item) {
@@ -122,7 +119,7 @@ class CheckboxSetField extends OptionsetField {
 				$options[] = new ArrayData(array(
 					'ID' => $itemID,
 					'Class' => $extraClass,
-					'Name' => $this->name,
+					'Name' => "{$this->name}[{$value}]",
 					'Value' => $value,
 					'Title' => $title,
 					'isChecked' => in_array($value, $items) || in_array($value, $this->defaultItems),
@@ -282,6 +279,10 @@ class CheckboxSetField extends OptionsetField {
 		$field->setForm($this->form);
 		
 		return $field;
+	}
+
+	function Type() {
+		return 'optionset checkboxset';
 	}
 	
 	function ExtraOptions() {

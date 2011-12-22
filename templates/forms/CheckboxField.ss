@@ -1,1 +1,1 @@
-<input id="$ID" class="checkbox$extraClass" type="$Type" value="1" name="$Name"<% if TabIndex %> tabindex="$TabIndex"<% end_if %><% if isDisabled %> disabled<% end_if %><% if Value %> checked<% end_if %>>
+<input $AttributesHTML>

@@ -22,6 +22,13 @@ class HiddenField extends FormField {
 		return true;
 	}
 
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array('type' => 'hidden')
+		);
+	}
+
 	static function create($name) {
 		return new HiddenField($name);
 	}

@@ -164,11 +164,15 @@ class TreeDropdownField extends FormField {
 			$properties,
 			array(
 				'Title' => $title,
-				'Metadata' => ($metadata) ? Convert::raw2json($metadata) : null
+				'Metadata' => ($metadata) ? Convert::raw2att(Convert::raw2json($metadata)) : null
 			)
 		);
 
 		return $this->customise($properties)->renderWith('TreeDropdownField');
+	}
+
+	function extraClass() {
+		return implode(' ', array(parent::extraClass(), ($this->showSearch ? "searchable" : null)));
 	}
 	
 	/**

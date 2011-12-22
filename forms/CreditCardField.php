@@ -9,6 +9,8 @@ class CreditCardField extends TextField {
 	function Field() {
 		$parts = explode("\n", chunk_split($this->value,4,"\n"));
 		$parts = array_pad($parts, 4, "");
+
+		// TODO Mark as disabled/readonly
 		$field = "<span id=\"{$this->name}_Holder\" class=\"creditCardField\">" .
 				"<input autocomplete=\"off\" name=\"{$this->name}[0]\" value=\"$parts[0]\" maxlength=\"4\"" . $this->getTabIndexHTML(0) . " /> - " .
 				"<input autocomplete=\"off\" name=\"{$this->name}[1]\" value=\"$parts[1]\" maxlength=\"4\"" . $this->getTabIndexHTML(1) . " /> - " .

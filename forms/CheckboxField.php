@@ -22,8 +22,6 @@ class CheckboxField extends FormField {
 		return ($this->value) ? 1 : 0;
 	}
 
-	}
-
 	/**
 	 * Returns a restricted field holder used within things like FieldGroups
 	 */
@@ -33,6 +31,18 @@ class CheckboxField extends FormField {
 			$result .= "<label for=\"" . $this->id() ."\">$t</label> ";
 		}
 		return $result;
+	}
+
+	function getAttributes() {
+		$attrs = parent::getAttributes();
+		$attrs['value'] = 1;
+		return array_merge(
+			$attrs,
+			array(
+				'checked' => ($this->Value()) ? 'checked' : null,
+				'type' => 'checkbox',
+			)
+		);
 	}
 
 	/**
