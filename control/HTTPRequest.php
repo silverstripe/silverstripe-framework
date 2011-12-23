@@ -149,7 +149,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @return array
 	 */
 	function requestVars() {
-		return array_merge($this->getVars, $this->postVars);
+		return ArrayLib::array_merge_recursive($this->getVars, $this->postVars);
 	}
 	
 	function getVar($name) {
