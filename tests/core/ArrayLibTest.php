@@ -45,5 +45,146 @@ class ArrayLibTest extends SapphireTest {
 			)
 		);
 	}
-
+	
+	function testArrayMergeRecursive() {
+		$first = array(
+			'first' => 'a',
+			'second' => 'b',
+		);
+		$second = array(
+			'third' => 'c',
+			'fourth' => 'd',
+		);
+		$expected = array(
+			'first' => 'a',
+			'second' => 'b',
+			'third' => 'c',
+			'fourth' => 'd',
+		);
+		$this->assertEquals(
+			$expected,
+			ArrayLib::array_merge_recursive($first, $second),
+			'First values should supplement second values'
+		);
+		
+		$first = array(
+			'first' => 'a',
+			'second' => 'b',
+		);
+		$second = array(
+			'first' => 'c',
+			'third' => 'd',
+		);
+		$expected = array(
+			'first' => 'c',
+			'second' => 'b',
+			'third' => 'd',
+		);
+		$this->assertEquals(
+			$expected,
+			ArrayLib::array_merge_recursive($first, $second),
+			'Second values should override first values'
+		);
+		
+		$first = array(
+			'first' => array(
+				'first' => 'a',
+			),
+			'second' => array(
+				'second' => 'b',
+			),
+		);
+		$second = array(
+			'first' => array(
+				'first' => 'c',
+			),
+			'third' => array(
+				'third' => 'd',
+			),
+		);
+		$expected = array(
+			'first' => array(
+				'first' => 'c',
+			),
+			'second' => array(
+				'second' => 'b',
+			),
+			'third' => array(
+				'third' => 'd',
+			),
+		);
+		$this->assertEquals(
+			$expected,
+			ArrayLib::array_merge_recursive($first, $second),
+			'Nested second values should override first values'
+		);
+		
+		$first = array(
+			'first' => array(
+				'first' => 'a',
+			),
+			'second' => array(
+				'second' => 'b',
+			),
+		);
+		$second = array(
+			'first' => array(
+				'second' => 'c',
+			),
+			'third' => array(
+				'third' => 'd',
+			),
+		);
+		$expected = array(
+			'first' => array(
+				'first' => 'a',
+				'second' => 'c',
+			),
+			'second' => array(
+				'second' => 'b',
+			),
+			'third' => array(
+				'third' => 'd',
+			),
+		);
+		$this->assertEquals(
+			$expected,
+			ArrayLib::array_merge_recursive($first, $second),
+			'Nested first values should supplement second values'
+		);
+		
+		$first = array(
+			'first' => array(
+				0 => 'a',
+			),
+			'second' => array(
+				1 => 'b',
+			),
+		);
+		$second = array(
+			'first' => array(
+				0 => 'c',
+			),
+			'third' => array(
+				2 => 'd',
+			),
+		);
+		$expected = array(
+			'first' => array(
+				0 => 'c',
+			),
+			'second' => array(
+				1 => 'b',
+			),
+			'third' => array(
+				2 => 'd',
+			),
+		);
+		
+		$this->assertEquals(
+			$expected,
+			ArrayLib::array_merge_recursive($first, $second),
+			'Numeric keys should behave like string keys'
+		);
+	}
 }
