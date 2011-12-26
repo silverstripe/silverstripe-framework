@@ -156,11 +156,11 @@ class FileField extends FormField {
 			$record->{$this->name . 'ID'} = $file->ID;
 		}
 	}
-	
+
 	public function Value() {
-		return $_FILES[$this->getName()];
+		return isset($_FILES[$this->getName()]) ? $_FILES[$this->getName()] : null;
 	}
-	
+
 	/**
 	 * Get custom validator for this field
 	 * 
