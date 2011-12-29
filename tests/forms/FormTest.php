@@ -324,7 +324,22 @@ class FormTest extends FunctionalTest {
 		
 		SecurityToken::disable(); // restore original
 	}
-	
+
+	public function testEncType() {
+		$form = $this->getStubForm();
+		$this->assertEquals('application/x-www-form-urlencoded', $form->getEncType());
+
+		$form->setEncType(Form::ENC_TYPE_MULTIPART);
+		$this->assertEquals('multipart/form-data', $form->getEncType());
+
+		$form = $this->getStubForm();
+		$form->Fields()->push(new FileField(null));
+		$this->assertEquals('multipart/form-data', $form->getEncType());
+
+		$form->setEncType(Form::ENC_TYPE_URLENCODED);
+		$this->assertEquals('application/x-www-form-urlencoded', $form->getEncType());
+	}
+
 	protected function getStubForm() {
 		return new Form(
 			new Controller(),

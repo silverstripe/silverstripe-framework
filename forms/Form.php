@@ -43,7 +43,10 @@
  * @subpackage core
  */
 class Form extends RequestHandler {
-	
+
+	const ENC_TYPE_URLENCODED = 'application/x-www-form-urlencoded';
+	const ENC_TYPE_MULTIPART  = 'multipart/form-data';
+
 	/**
 	 * @var boolean $includeFormTag Accessed by Form.ss; modified by {@link formHtmlContent()}.
 	 * A performance enhancement over the generate-the-form-tag-and-then-remove-it code that was there previously
@@ -136,6 +139,11 @@ class Form extends RequestHandler {
 	 * @var array $extraClasses List of additional CSS classes for the form tag.
 	 */
 	protected $extraClasses = array();
+
+	/**
+	 * @var string
+	 */
+	protected $encType;
 
 	/**
 	 * Create a new form, with the given fields an action buttons.
@@ -600,7 +608,7 @@ class Form extends RequestHandler {
 		$attributes['id'] = $this->FormName();
 		$attributes['action'] = $this->FormAction();
 		$attributes['method'] = $this->FormMethod();
-		$attributes['enctype'] = $this->FormEncType();
+		$attributes['enctype'] = $this->getEncType();
 		if($this->target) $attributes['target'] = $this->target;
 		if($this->extraClass()) $attributes['class'] = $this->extraClass();
 		if($this->validator && $this->validator->getErrors()) {
@@ -656,23 +664,46 @@ class Form extends RequestHandler {
 		if($this->template) return $this->template;
 		else return $this->class;
 	}
-	
+
 	/**
-	 * Returns the encoding type of the form.
-	 * This will be either "multipart/form-data"" if there are any {@link FileField} instances,
-	 * otherwise "application/x-www-form-urlencoded"
-	 * 
-	 * @return string The encoding mime type
+	 * Returns the encoding type for the form.
+	 *
+	 * By default this will be URL encoded, unless there is a file field present
+	 * in which case multipart is used. You can also set the enc type using
+	 * {@link setEncType}.
 	 */
-	function FormEncType() {
-		if(is_array($this->fields->dataFields())){
-			foreach($this->fields->dataFields() as $field) {
-				if(is_a($field, "FileField")) return "multipart/form-data";
+	public function getEncType() {
+		if ($this->encType) {
+			return $this->encType;
+		}
+
+		if ($fields = $this->fields->dataFields()) {
+			foreach ($fields as $field) {
+				if ($field instanceof FileField) return self::ENC_TYPE_MULTIPART;
 			}
 		}
-		return "application/x-www-form-urlencoded";
+
+		return self::ENC_TYPE_URLENCODED;
 	}
-	
+
+	/**
+	 * Sets the form encoding type. The most common encoding types are defined
+	 * in {@link ENC_TYPE_URLENCODED} and {@link ENC_TYPE_MULTIPART}.
+	 *
+	 * @param string $enctype
+	 */
+	public function setEncType($encType) {
+		$this->encType = $encType;
+	}
+
+	/**
+	 * @deprecated 3.0 Please use {@link getEncType}.
+	 */
+	public function FormEncType() {
+		Deprecation::notice('3.0', 'Please use Form->getEncType() instead.');
+		return $this->getEncType();
+	}
+
 	/**
 	 * Returns the real HTTP method for the form:
 	 * GET, POST, PUT, DELETE or HEAD.
