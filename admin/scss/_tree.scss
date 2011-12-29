@@ -398,93 +398,93 @@
 		border: none;
 		display:  inline-block;
 		margin-right: 5px;
-		
-		
-		& span.status:after {
-			clear: both;
-			text-transform: uppercase;
-			display: inline-block;
-			padding: 0px 3px;
-			font-size: 0.75em;
-			line-height: 1em;
-			margin-left: 3px;
-			margin-right: 6px;
-			margin-top:  -1px;
-			@include border-radius(2px, 2px);
-		}
+	}
+	span.badge {
+		clear: both;
+		text-transform: uppercase;
+		display: inline-block;
+		padding: 0px 3px;
+		font-size: 0.75em;
+		line-height: 1em;
+		margin-left: 3px;
+		margin-right: 6px;
+		margin-top:  -1px;
+		@include border-radius(2px, 2px);
+	}
+	
+	span.badge.modified {
+		color:  #7E7470;
+		border: 1px solid #C9B800;
+		background-color: #FFF0BC;
+	}
+	
+	span.badge.addedtodraft {
+		color:  #7E7470;
+		border: 1px solid #C9B800;
+		background-color: #FFF0BC;
+	}
+	
+	span.badge.deletedonlive {
+		color:  #636363;
+		border: 1px solid #E49393;
+		background-color: #F2DADB;
+	}
+	
+	span.badge.removedfromdraft {
+		color:  #636363;
+		border: 1px solid #E49393;
+		background-color: #F2DADB;
+	}
+	
+	span.badge.workflow-approval {
+		color:  #56660C;
+		border: 1px solid #7C8816;
+		background-color: #DAE79A;
 	}
 		
-		& span.modified:after {
-			content: "draft";
-			color:  #7E7470;
-			border: 1px solid #C9B800;
-			background-color: #FFF0BC;
-		}
-		
-		& span.new:after {
-			content: "new";
-			color:  #7E7470;
-			border: 1px solid #C9B800;
-			background-color: #FFF0BC;
-		}
-		
-		& span.private:after {
-			content: "private";
-			color:  #636363;
-			border: 1px solid #E49393;
-			background-color: #F2DADB;
-		}
-		
-		& span.workflow-approval:after {
-			content: "awaiting approval";
-			color:  #56660C;
-			border: 1px solid #7C8816;
-			background-color: #DAE79A;
-		}
-		
-		/* comment speech bubble - ccs3 only - source: http://nicolasgallagher.com/pure-css-speech-bubbles/demo/ */
-		& span.comment-count {
-			clear: both;
-			position: relative;
-			text-transform: uppercase;
-			display: inline-block;
-			overflow: visible;
-			padding: 0px 3px;
-			font-size: 0.75em;
-			line-height: 1em;
-			margin-left: 3px;
-			margin-right: 6px;
-			@include border-radius(2px, 2px);
-			color:  #7E7470;
-			border: 1px solid #C9B800;
-			background-color: #FFF0BC;
-		}
-		
-		& span.comment-count:before {
-			content:"";
-		    position:absolute;
-		    bottom:-4px; /* value = - border-top-width - border-bottom-width */
-		    left:3px; /* controls horizontal position */
-		    border-width:4px 4px 0;
-		    border-style:solid;
-		    border-color:#C9B800 transparent;
-		    /* reduce the damage in FF3.0 */
-		    display:block; 
-		    width:0;
-		}
-		
-		& span.comment-count:after {
-			content:"";
-		    position:absolute;
-		    bottom:-3px; /* value = - border-top-width - border-bottom-width */
-		    left:4px; /* value = (:before left) + (:before border-left) - (:after border-left) */
-		    border-width:3px 3px 0;
-		    border-style:solid;
-		    border-color:#FFF0BC transparent;
-		    /* reduce the damage in FF3.0 */
-		    display:block; 
-		    width:0;
-		}
+	/* comment speech bubble - ccs3 only - source: http://nicolasgallagher.com/pure-css-speech-bubbles/demo/ */
+	& span.comment-count {
+		clear: both;
+		position: relative;
+		text-transform: uppercase;
+		display: inline-block;
+		overflow: visible;
+		padding: 0px 3px;
+		font-size: 0.75em;
+		line-height: 1em;
+		margin-left: 3px;
+		margin-right: 6px;
+		@include border-radius(2px, 2px);
+		color:  #7E7470;
+		border: 1px solid #C9B800;
+		background-color: #FFF0BC;
+	}
+	
+	& span.comment-count:before {
+		content:"";
+	    position:absolute;
+	    bottom:-4px; /* value = - border-top-width - border-bottom-width */
+	    left:3px; /* controls horizontal position */
+	    border-width:4px 4px 0;
+	    border-style:solid;
+	    border-color:#C9B800 transparent;
+	    /* reduce the damage in FF3.0 */
+	    display:block; 
+	    width:0;
+	}
+	
+	& span.comment-count:after {
+		content:"";
+	    position:absolute;
+	    bottom:-3px; /* value = - border-top-width - border-bottom-width */
+	    left:4px; /* value = (:before left) + (:before border-left) - (:after border-left) */
+	    border-width:3px 3px 0;
+	    border-style:solid;
+	    border-color:#FFF0BC transparent;
+	    /* reduce the damage in FF3.0 */
+	    display:block; 
+	    width:0;
+	}
 	
 	.jstree-hovered {
 		text-shadow: none;
