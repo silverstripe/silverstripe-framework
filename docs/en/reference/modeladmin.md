@@ -111,5 +111,7 @@ customized for each `[api:DataObject]`'s search results using `$summary_fields`.
 ## Related
 
 *  `[api:SearchContext]`
-*  [genericviews Module](http://silverstripe.org/generic-views-module)
-*  [Presentation about ModelAdmin at SupperHappyDevHouse Wellington](http://www.slideshare.net/chillu/modeladmin-in-silverstripe-23)
+* [genericviews Module](http://silverstripe.org/generic-views-module)
+* [Presentation about ModelAdmin at SupperHappyDevHouse Wellington](http://www.slideshare.net/chillu/modeladmin-in-silverstripe-23)
+* [Reference: CMS Architecture](../reference/cms-architecture)
+* [Howto: Extend the CMS Interface](../howto/extend-cms-interface)

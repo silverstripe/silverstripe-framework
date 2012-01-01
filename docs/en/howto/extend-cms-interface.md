@@ -8,6 +8,9 @@ it is relatively easy to extend.
 As an example, we're going to add a permanent "bookmarks" bar to popular pages at the bottom of the CMS.
 A page can be bookmarked by a CMS author through a simple checkbox.
 
+For a deeper introduction to the inner workings of the CMS, please refer to our
+guide on [CMS Architecture](../reference/cms-architecture).
+
 ## Overload a CMS template ##
 
 First of all, create a new folder structure in your SilverStripe webroot, which will
@@ -137,3 +140,7 @@ and replace it with the following:
 In a few lines of code, we've customized the look and feel of the CMS.
 While this example is only scratching the surface, it includes most building
 blocks and concepts for more complex extensions as well.
+
+## Related
+
+ * [CMS Architecture](../reference/cms-architecture)
