@@ -112,7 +112,7 @@ class CompositeField extends FormField {
 			}
 		}
 				
-		$this->createTag('div', $this->getAttributes(), $content);
+		return $this->createTag('div', $this->getAttributes(), $content);
 	}
 		
 	/**
