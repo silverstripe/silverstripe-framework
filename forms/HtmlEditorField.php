@@ -19,8 +19,10 @@ class HtmlEditorField extends TextareaField {
 	/**
 	 * @see TextareaField::__construct()
 	 */
-	public function __construct($name, $title = null, $rows = 30, $cols = 20, $value = '', $form = null) {
-		parent::__construct($name, $title, $rows, $cols, $value, $form);
+	public function __construct($name, $title = null, $value = '') {
+		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRows() and setCols() instead of constructor arguments');
+
+		parent::__construct($name, $title, $value);
 		
 		self::include_js();
 	}

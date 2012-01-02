@@ -101,15 +101,13 @@ class FileField extends FormField {
 	 * @param string $name The internal field name, passed to forms.
 	 * @param string $title The field label.
 	 * @param int $value The value of the field.
-	 * @param Form $form Reference to the container form
-	 * @param string $rightTitle Used in SmallFieldHolder() to force a right-aligned label
-	 * @param string $folderName Folder to upload files to
 	 */
-	function __construct($name, $title = null, $value = null, $form = null, $rightTitle = null, $folderName = null) {
-		if(isset($folderName)) $this->folderName = $folderName;
+	function __construct($name, $title = null, $value = null) {
+		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRightTitle() and setFolderName() instead of constructor arguments');
+
 		$this->upload = new Upload();
 	
-		parent::__construct($name, $title, $value, $form, $rightTitle);
+		parent::__construct($name, $title, $value);
 	}
 
 	public function Field($properties = array()) {

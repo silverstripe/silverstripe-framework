@@ -100,10 +100,8 @@ class FormField extends RequestHandler {
 	 * @param name The internal field name, passed to forms.
 	 * @param title The field label.
 	 * @param value The value of the field.
-	 * @param form Reference to the container form
-	 * @param maxLength The Maximum length of the attribute
 	 */
-	function __construct($name, $title = null, $value = null, $form = null, $rightTitle = null) {
+	function __construct($name, $title = null, $value = null) {
 		$this->name = $name;
 		$this->title = ($title === null) ? $name : $title;
 
