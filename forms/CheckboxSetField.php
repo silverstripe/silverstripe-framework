@@ -85,7 +85,7 @@ class CheckboxSetField extends OptionsetField {
 			}
 		} else {
 			// Sometimes we pass a singluar default value thats ! an array && !SS_List
-			if(is_a($values, 'SS_List') || is_array($values)) {
+			if($values instanceof SS_List || is_array($values)) {
 				$items = $values;
 			} else {
 				$items = explode(',', $values);
@@ -245,7 +245,7 @@ class CheckboxSetField extends OptionsetField {
 		
 		if($items) {
 			// Items is a DO Set
-			if(is_a($items, 'SS_List')) {
+			if($items instanceof SS_List) {
 				foreach($items as $item) {
 					$data[] = $item->Title;
 				}
