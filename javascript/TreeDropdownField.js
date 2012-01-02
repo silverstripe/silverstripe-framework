@@ -120,9 +120,11 @@
 					var firstLoad = true;
 					if(status == 'success') {
 						$(this)
+							.jstree('destroy')
 							.bind('loaded.jstree', function(e, data) {
 								var val = self.getValue();
 								if(val) data.inst.select_node(treeHolder.find('*[data-id=' + val + ']'));
+								data.inst.open_all();
 								firstLoad = false;
 								if(callback) callback.apply(self);
 							})
@@ -141,6 +143,7 @@
 								
 								// Avoid auto-closing panel on first load
 								if(!firstLoad) self.closePanel();
+								firstLoad=false
 							});
 					}
 					
@@ -151,7 +154,7 @@
 				var self = this;
 				return {
 					'core': {
-						'initially_open': ['record-0'],
+						// 'initially_open': ['record-0'],
 						'animation': 0
 					},
 					'html_data': {
@@ -227,7 +230,7 @@
 				this.setTitle(title ? title : strings.searchFieldTitle);
 			},
 			setTitle: function(title) {
-				if(!title) title = strings.fieldTitle;
+				if(!title && title !== '') title = strings.fieldTitle;
 				
 				this.find('.treedropdownfield-title').val(title);
 			},
@@ -246,6 +249,14 @@
 		});
 		
 		$('.TreeDropdownField.searchable input.search').entwine({
+			onfocusin: function(e) {
+				var field = this.getField();
+				field.setTitle('');
+			},
+			onfocusout: function(e) {
+				var field = this.getField();
+				if(!field.getTitle()) field.setTitle(false);
+			},
 			onkeydown: function(e) {
 				var field = this.getField();
 				if(e.keyCode == 13) {
@@ -275,6 +286,7 @@
 					var firstLoad = true;
 					if(status == 'success') {
 						$(this)
+							.jstree('destroy')
 							.bind('loaded.jstree', function(e, data) {
 								$.each(self.getValue(), function(i, val) {
 									data.inst.check_node(treeHolder.find('*[data-id=' + val + ']'));
