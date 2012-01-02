@@ -114,7 +114,7 @@
 			},
 			loadTree: function(params, callback) {
 				var self = this, panel = this.getPanel(), treeHolder = $(panel).find('.tree-holder');
-				var params = (params) ? this.getRequestParams().concat(params) : this.getRequestParams();
+				var params = (params) ? $.extend({}, this.getRequestParams(), params) : this.getRequestParams();
 				panel.addClass('loading');
 				treeHolder.load(this.data('url-tree'), params, function(html, status, xhr) {
 					var firstLoad = true;
@@ -181,10 +181,10 @@
 			 * This is useful to keep state like locale values which are typically
 			 * encoded in hidden fields through the form.
 			 * 
-			 * @return {array}
+			 * @return {object}
 			 */
 			getRequestParams: function() {
-				return [];
+				return {};
 			}
 		});
 		
@@ -220,7 +220,7 @@
 				this._super();
 				
 				var title = this.data('title');
-				this.find('.title').replaceWith(
+				this.find('.treedropdownfield-title').replaceWith(
 					$('<input type="text" class="treedropdownfield-title search" />')
 				);
 				
@@ -269,7 +269,7 @@
 			},
 			loadTree: function(params, callback) {
 				var self = this, panel = this.getPanel(), treeHolder = $(panel).find('.tree-holder');
-				var params = (params) ? this.getRequestParams().concat(params) : this.getRequestParams();
+				var params = (params) ? $.extend({}, this.getRequestParams(), params) : this.getRequestParams();
 				panel.addClass('loading');
 				treeHolder.load(this.data('url-tree'), params, function(html, status, xhr) {
 					var firstLoad = true;
