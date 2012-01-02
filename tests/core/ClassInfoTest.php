@@ -70,9 +70,6 @@ class ClassInfoTest extends SapphireTest {
 		$this->assertEquals(array('ClassInfoTest_BaseClass' => 'ClassInfoTest_BaseClass'), $ancestry,
 			'$tablesOnly option excludes memory-only inheritance classes'
 		);
-
-		$this->setExpectedException('InvalidArgumentException');
-		ClassInfo::ancestry(42);
 	}
 
 	/**
