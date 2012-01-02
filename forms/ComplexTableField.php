@@ -309,7 +309,7 @@ JS;
 	}
 	
 	function sourceID() { 
-		$idField = $this->form->dataFieldByName('ID'); 
+		$idField = $this->form->Fields()->dataFieldByName('ID'); 
 
 		// disabled as it conflicts with scaffolded formfields, and not strictly necessary
 		// if(!$idField) user_error("ComplexTableField needs a formfield named 'ID' to be present", E_USER_ERROR); 

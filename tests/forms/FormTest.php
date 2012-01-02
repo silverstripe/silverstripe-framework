@@ -170,11 +170,11 @@ class FormTest extends FunctionalTest {
 	public function testFormMethodOverride() {
 		$form = $this->getStubForm();
 		$form->setFormMethod('GET');
-		$this->assertNull($form->dataFieldByName('_method'));
+		$this->assertNull($form->Fields()->dataFieldByName('_method'));
 		
 		$form = $this->getStubForm();
 		$form->setFormMethod('PUT');
-		$this->assertEquals($form->dataFieldByName('_method')->Value(), 'put',
+		$this->assertEquals($form->Fields()->dataFieldByName('_method')->Value(), 'put',
 			'PUT override in forms has PUT in hiddenfield'
 		);
 		$this->assertEquals($form->FormMethod(), 'post',
@@ -183,7 +183,7 @@ class FormTest extends FunctionalTest {
 		
 		$form = $this->getStubForm();
 		$form->setFormMethod('DELETE');
-		$this->assertEquals($form->dataFieldByName('_method')->Value(), 'delete',
+		$this->assertEquals($form->Fields()->dataFieldByName('_method')->Value(), 'delete',
 			'PUT override in forms has PUT in hiddenfield'
 		);
 		$this->assertEquals($form->FormMethod(), 'post',

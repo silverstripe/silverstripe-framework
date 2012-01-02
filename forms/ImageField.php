@@ -46,7 +46,7 @@ class ImageField extends FileIFrameField {
 		$filter = create_function('$item', 'return (in_array("Folder", ClassInfo::ancestry($item->ClassName)) || in_array("Image", ClassInfo::ancestry($item->ClassName)));');
 		
 		$form = parent::EditFileForm();
-		$form->dataFieldByName('ExistingFile')->setFilterFunction($filter);
+		$form->Fields()->dataFieldByName('ExistingFile')->setFilterFunction($filter);
 
 		return $form;
 	}

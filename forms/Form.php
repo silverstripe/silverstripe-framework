@@ -355,7 +355,7 @@ class Form extends RequestHandler {
 	 * @return FormField
 	 */
 	function handleField($request) {
-		$field = $this->dataFieldByName($request->param('FieldName'));
+		$field = $this->Fields()->dataFieldByName($request->param('FieldName'));
 		
 		if($field) {
 			return $field;
@@ -526,9 +526,12 @@ class Form extends RequestHandler {
 	 * It will traverse into composite fields for you, to find the field you want.
 	 * It will only return a data field.
 	 * 
+	 * @deprecated 3.0 Use Fields() and FieldList API instead
 	 * @return FormField
 	 */
 	function dataFieldByName($name) {
+		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
+
 		foreach($this->getExtraFields() as $field) {
 			if(!$this->fields->dataFieldByName($field->getName())) $this->fields->push($field);
 		}
@@ -564,16 +567,23 @@ class Form extends RequestHandler {
 	/**
 	 * Unset the form's action button by its name.
 	 * 
+	 * @deprecated 3.0 Use Actions() and FieldList API instead
 	 * @param string $name
 	 */
 	function unsetActionByName($name) {
+		Deprecation::notice('3.0', 'Use Actions() and FieldList API instead');
+
 		$this->actions->removeByName($name);
 	}
 
 	/**
 	 * Unset the form's dataField by its name
+	 *
+	 * @deprecated 3.0 Use Fields() and FieldList API instead
 	 */
 	function unsetDataFieldByName($fieldName){
+		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
+
 		foreach($this->Fields()->dataFields() as $child) {
 			if(is_object($child) && ($child->getName() == $fieldName || $child->Title() == $fieldName)) {
 				$child = null;
@@ -1078,11 +1088,14 @@ class Form extends RequestHandler {
 	/**
 	 * Resets a specific field to its passed default value.
 	 * Does NOT clear out all submitted data in the form.
-	 * 
+	 *
+	 * @deprecated 3.0 Use Fields() and FieldList API instead
 	 * @param string $fieldName
 	 * @param mixed $fieldValue
 	 */
 	function resetField($fieldName, $fieldValue = null) {
+		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
+
 		$dataFields = $this->fields->dataFields();
 		if($dataFields) foreach($dataFields as $field) {
 			if($field->getName()==$fieldName) {

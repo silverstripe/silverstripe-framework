@@ -32,7 +32,7 @@ class ComplexTableFieldTest extends FunctionalTest {
 	}
 	
 	function testCorrectNumberOfRowsInTable() {
-		$field = $this->manyManyForm->dataFieldByName('Players');
+		$field = $this->manyManyForm->Fields()->dataFieldByName('Players');
 		$parser = new CSSContentParser($field->FieldHolder());
 		
 		$this->assertEquals(count($parser->getBySelector('tbody tr')), 2, 'There are 2 players (rows) in the table');
