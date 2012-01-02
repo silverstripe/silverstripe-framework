@@ -12,7 +12,7 @@ class CountryDropdownField extends DropdownField {
 	
 	protected $defaultToVisitorCountry = true;
 	
-	function __construct($name, $title = null, $source = null, $value = "", $form=null) {
+	function __construct($name, $title = null, $source = null, $value = "") {
 		if(!is_array($source)) $source = Geoip::getCountryDropDown();
 		if(!$value) $value = Geoip::visitor_country();
 

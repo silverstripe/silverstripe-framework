@@ -14,7 +14,7 @@ class HeaderField extends DatalessField {
 	 */
 	protected $headingLevel = 2;
 	
-	function __construct($name, $title = null, $headingLevel = 2, $form = null) {
+	function __construct($name, $title = null, $headingLevel = 2) {
 		// legacy handling for old parameters: $title, $heading, ...
 		// instead of new handling: $name, $title, $heading, ...
 		$args = func_get_args();
@@ -29,7 +29,7 @@ class HeaderField extends DatalessField {
 		
 		if($headingLevel) $this->headingLevel = $headingLevel;
 		
-		parent::__construct($name, $title, null, $form);
+		parent::__construct($name, $title);
 	}
 
 	public function getHeadingLevel() {

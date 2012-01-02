@@ -17,14 +17,13 @@ class PhoneNumberField extends FormField {
 	protected $countryCode;
 	protected $ext;
 	
-	public function __construct( $name, $title = null, $value = '', $extension = null, 
-		$areaCode = null, $countryCode = null, $form = null ) {
+	public function __construct( $name, $title = null, $value = '', $extension = null, $areaCode = null, $countryCode = null) {
 		
 		$this->areaCode = $areaCode;
 		$this->ext = $extension;
 		$this->countryCode = $countryCode;
 		
-		parent::__construct( $name, $title, $value, $form );
+		parent::__construct($name, $title, $value);
 	}
 	
 	public function Field() {

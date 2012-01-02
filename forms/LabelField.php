@@ -16,7 +16,7 @@ class LabelField extends DatalessField {
 	 * @param string $title
 	 * @param Form $form
 	 */
-	function __construct($name, $title, $form = null) {
+	function __construct($name, $title) {
 		// legacy handling for old parameters: $title, $heading, ...
 		// instead of new handling: $name, $title, $heading, ...
 		$args = func_get_args();
@@ -26,7 +26,7 @@ class LabelField extends DatalessField {
 			$form = (isset($args[3])) ? $args[3] : null;
 		} 
 		
-		parent::__construct($name, $title, $form);
+		parent::__construct($name, $title);
 	}
 
 }
