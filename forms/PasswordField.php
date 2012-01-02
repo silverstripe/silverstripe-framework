@@ -7,19 +7,12 @@
 class PasswordField extends TextField {
 
 	/**
-	 * maxlength of the password field
-	 *
-	 * @var int
-	 */
-	protected $maxLength;
-
-
-	/**
 	 * Returns an input field, class="text" and type="text" with an optional
 	 * maxlength
 	 */
-	function __construct($name, $title = null, $value = "", $maxLength = null) {
-		$this->maxLength = $maxLength;
+	function __construct($name, $title = null, $value = "") {
+		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setMaxLength() instead of constructor arguments');
+
 		parent::__construct($name, $title, $value);
 	}
 
