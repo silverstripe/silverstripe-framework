@@ -175,6 +175,9 @@ class HtmlEditorField extends TextareaField {
 		return $field;
 	}
 	
+	public function performDisabledTransformation() {
+		return $this->performReadonlyTransformation();
+	}
 }
 
 /**
