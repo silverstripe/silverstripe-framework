@@ -22,8 +22,6 @@ class FormAction extends FormField {
 
 	protected $template = 'FormAction';
 
-	protected $extraData;
-
 	protected $action;
 	
 	/**
@@ -49,17 +47,14 @@ class FormAction extends FormField {
 	 * @param action The method to call when the button is clicked
 	 * @param title The label on the button
 	 * @param form The parent form, auto-set when the field is placed inside a form 
-	 * @param extraData A piece of extra data that can be extracted with $this->extraData.  Useful for
-	 *                  calling $form->buttonClicked()->extraData()
 	 */
-	function __construct($action, $title = "", $form = null, $extraData = null) {
-		$this->extraData = $extraData;
+	function __construct($action, $title = "", $form = null) {
 		$this->action = "action_$action";
 		parent::__construct($this->action, $title, null, $form);
 	}
 
-	static function create($action, $title = "", $extraData = null) {
-		return new FormAction($action, $title, null, $extraData);
+	static function create($action, $title = "") {
+		return new FormAction($action, $title);
 	}
 
 	function actionName() {
@@ -72,10 +67,6 @@ class FormAction extends FormField {
 	 */
 	function setFullAction($fullAction) {
 		$this->action = $fullAction;
-	}
-
-	function extraData() {
-		return $this->extraData;
 	}
 
 	function Field($properties = array()) {
