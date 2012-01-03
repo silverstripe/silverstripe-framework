@@ -268,11 +268,13 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				)
 			),
 			new FieldList(
-				new FormAction('insert', _t('HtmlEditorField.BUTTONINSERTLINK', 'Insert link')),
-				new FormAction('remove', _t('HtmlEditorField.BUTTONREMOVELINK', 'Remove link'))
+				$removeAction = new FormAction('remove', _t('HtmlEditorField.BUTTONREMOVELINK', 'Remove link')),
+				$insertAction = new FormAction('insert', _t('HtmlEditorField.BUTTONINSERTLINK', 'Insert link'))
 			)
 		);
 		
+		$insertAction->addExtraClass('ss-ui-action-constructive');
+		$removeAction->addExtraClass('ss-ui-action-destructive');
 		$contentComposite->addExtraClass('content');
 		
 		$form->unsetValidator();
@@ -332,9 +334,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		);
 		
 		$actions = new FieldList(
-			new FormAction('insertimage', _t('HtmlEditorField.BUTTONINSERTIMAGE', 'Insert image'))
+			$insertAction = new FormAction('insertimage', _t('HtmlEditorField.BUTTONINSERTIMAGE', 'Insert image'))
 		);
-		
+		$insertAction->addExtraClass('ss-ui-action-constructive');
+
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/ImageForm",
@@ -379,9 +382,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				)
 			),
 			new FieldList(
-				new FormAction("insertflash", _t('HtmlEditorField.BUTTONINSERTFLASH', 'Insert Flash'))
+				$insertAction = new FormAction("insertflash", _t('HtmlEditorField.BUTTONINSERTFLASH', 'Insert Flash'))
 			)
 		);		
+		$insertAction->addExtraClass('ss-ui-action-constructive');
 		$contentComposite->addExtraClass('content');
 		
 		$this->extend('updateFlashForm', $form);

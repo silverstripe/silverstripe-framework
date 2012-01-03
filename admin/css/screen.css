@@ -377,7 +377,7 @@ form.member-profile-form #Groups .middleColumn .TreeDropdownField { width: 90%; 
 .ui-dialog label.numeric-label .label-flyout-indicator { position: absolute; left: 26px; margin-top: -18px; overflow: visible; display: block; width: 0; height: 0; border-top: 11px solid transparent; border-left: 7px dashed #7b8c91; border-bottom: 11px solid transparent; }
 .ui-dialog #ParentID label.left { padding: 8px 0 8px 0; float: left !important; width: 125px; }
 .ui-dialog #ParentID .middleColumn { width: 320px; }
-.ui-dialog .Actions { position: absolute; bottom: 10px; right: 10px; float: right; }
+.ui-dialog .Actions { float: right; }
 
 /** ------------------------------------------------------------------
 * Titlebar for pop-up dialog.
