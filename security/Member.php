@@ -1152,7 +1152,7 @@ class Member extends DataObject {
 			if($this->ID) {
 				$permissionsField = new PermissionCheckboxSetField_Readonly(
 					'Permissions',
-					singleton('Permission')->i18n_plural_name(),
+					false,
 					'Permission',
 					'GroupID',
 					// we don't want parent relationships, they're automatically resolved in the field
@@ -1557,8 +1557,9 @@ class Member_ProfileForm extends Form {
 		$fields->push(new HiddenField('ID','ID',$member->ID));
 
 		$actions = new FieldList(
- 			new FormAction('dosave',_t('CMSMain.SAVE', 'Save'), null, null, "ss-ui-button ss-ui-action-constructive")
+ 			$saveAction = new FormAction('dosave',_t('CMSMain.SAVE', 'Save'), null, null, "ss-ui-button ss-ui-action-constructive")
 		);
+		$saveAction->addExtraClass('ss-ui-action-constructive');
 		
 		$validator = new Member_Validator();
 		

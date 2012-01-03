@@ -21,7 +21,6 @@
 html,body {	
 	width: 100%;
 	height: 100%;
-	overflow: hidden;
 	
 	@include global-reset;
 
@@ -29,6 +28,10 @@ html,body {
 	line-height: $grid-vertical * 2;
 	font-family: $font-family;
 	color: $color-text;
+}
+
+body.cms {
+	overflow: hidden;
 }
 
 .cms {
@@ -120,7 +123,7 @@ html,body {
 	}
 }
 
-.ui-tabs .cms-content-header, body.ArrayData .ui-tabs-nav {
+.ui-tabs .cms-content-header, .cms-dialog .ui-tabs-nav {
 	.ui-tabs-nav li {
 		a {
 			font-weight: bold;
@@ -290,15 +293,24 @@ html,body {
 	display: none;
 
 	#PageType li {
+		width: 100%;
 		padding: 9px 0 9px 15px;
 		overflow: hidden;
 		border-bottom-width: 2px;
 		border-bottom: 2px groove lighten($color-shadow-light, 95%);
 		-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
 		border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+
+		&:last-child {
+			border-bottom: none;
+		}
 				
 		&:hover, &.selected {
 			background-color: $color-highlight-opacity;
+		}
+
+		label {
+			padding-left: 0;
 		}
 		
 		input, label, .icon, .title {
@@ -549,8 +561,6 @@ html,body {
 	}
 }
 
-
-
 .cms-content-constructive-actions a {
 	display: block;
 	float: right;
@@ -561,19 +571,47 @@ html,body {
 }
 
 /** --------------------------------------------
- * Preview header (remove before release)
+ * Preview
  * -------------------------------------------- */
-
+.cms-switch-view {
+	a {
+		padding-right: 1em;
+	}
+}
 .cms-preview {
 	width: 1px; // collapsed by default
 	z-index: 100;
 		
 	.cms-preview-toggle {
 		width: 10px;
+		cursor: pointer;
+		
+		a {
+			display: block;
+			padding: 2px 12px 2px 6px;
+			height: 16px;
+			position: relative;
+			top: 48%;
+			background-color: $color-base;
+			color: $color-text-light;
+			font-weight: bold;
+			text-decoration: none;
+			z-index: 2000;
+			line-height: 16px;
+			
+			@include border-bottom-right-radius(4px);
+			@include border-top-right-radius(4px);
+			
+			@include box-shadow(0 0 10px rgba(180, 180,180,0.4));
+		}
 	}
 	
-	.cms-preview-overlay {
-		
+	&.is-collapsed {
+		.cms-preview-toggle {
+			a {
+				left: -15px; // point left
+			}
+		}
 	}
 	
 	iframe {
@@ -783,206 +821,82 @@ form.member-profile-form {
 	cursor: pointer;
 }
 
-/** --------------------------------------------
- * Other
- * -------------------------------------------- */
-.cms-preview {
-	
-	.cms-preview-toggle {
-		cursor: pointer;
-		
-		a {
-			display: block;
-			padding: 2px 12px 2px 6px;
-			height: 16px;
-			position: relative;
-			top: 48%;
-			background-color: $color-base;
-			color: $color-text-light;
-			font-weight: bold;
-			text-decoration: none;
-			z-index: 2000;
-			line-height: 16px;
-			
-			@include border-bottom-right-radius(4px);
-			@include border-top-right-radius(4px);
-			
-			@include box-shadow(0 0 10px rgba(180, 180,180,0.4));
-		}
-	}
-	
-	&.is-collapsed {
-		.cms-preview-toggle {
-			a {
-				left: -15px; // point left
-			}
-		}
-	}
-}
-
-.cms-switch-view {
-	a {
-		padding-right: 1em;
-	}
-}
-
-
 /** ------------------------------------------------------------------
-* Modal - JQuery UI Dialog pop-up
+* Dialog
+* 
+* Contained in a jQuery UI dialog ('.ui-dialog'), with either inline
+* markup (for the "insert" dialogs), or an iframe (for member profile).
 * ----------------------------------------------------------------- */
 
-/* overlay for switching between CMS panes */
+// overlay for switching between CMS panes 
 .cms .ui-widget-overlay-light {
 	background: #aaaaaa url(../../thirdparty/jquery-ui-themes/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
 	opacity: 0.3;
 }
 
-/* Adjusting the color of the background overlay to be darker for pop-up dialogs (created by jQuery-UI) */
+// Adjusting the color of the background overlay to be darker for pop-up dialogs (created by jQuery-UI)
 .cms .ui-widget-overlay {
 	background-color: #000;
 	background-image: none;
 }
 
-
-$DialogHeaderColor: #5F6160;
-$DialogHeaderFontSize: 14px;
-$DialogBorderRadius: 8px;
-$DialogLabelColor: #7B8C91;
+// Elements with this class can either frame inline markup or an iframe,
+// most styles should be applied to .cms-dialog instead (which declares the content in the frame)
 .ui-dialog {
-    background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
-    border: 3px solid #000 !important;
-	border-radius: $DialogBorderRadius;
-    overflow: visible;
-    padding: 0;
+  background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+  border: 3px solid #000 !important;
+	border-radius: $grid-vertical;
+  overflow: visible;
+  padding: 0;
 
-	#PageType {
-		.middleColumn {
-			margin: 0;
-			padding: 0;
-
-			.optionset li {
-				width: 100%;
-			}
-		}
-
-		li {
-			&.selected {
-				background-color: rgba(255,255,153, 0.5); /*background-color: #FFFF99;*/
-			}
-
-			&:hover {
-				background-color: #FFFF99 !important; /* lighter highlight on hover */
-			}
-		}
+  // Titlebar for pop-up dialog.
+	.ui-dialog-titlebar.ui-widget-header {
+	  font-size: $font-base-size+2;
+		background-color: #92a5b2;
+		padding: $grid-vertical/2 $grid-horizontal/2 $grid-vertical/2 $grid-horizontal*2;
+		border-bottom: 2px solid #8399a7;
+		@include border-radius(0);
+		@include background-image(linear-gradient(#ced7dc, #92a5b2));
 	}
+}
 
-	/* Labels for all the Dialogs of the pop-up form */
-	.field label.left {
-		font-size: $DialogHeaderFontSize;
-		font-weight: bold;
-		width: 100%;
-		float: none;
-		color: $DialogHeaderColor;
-		margin-top: -4px;
-		margin-left: 38px;
-	}
+body.cms-dialog {
+	overflow: auto;
+	background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+}
 
-	/* Numeric labels in the sitetree */
-	label.numeric-label {
-		font-size: $DialogHeaderFontSize;
-		font-weight: bold;
-		float: left;
-		@include border-top-left-radius(3px);
-		@include border-bottom-left-radius(3px);
-		background-color: $DialogLabelColor;
-		padding: 4px 8px 4px 3px;
-		text-align: right;
-		color: #fff;
-		position: absolute;
-		width: 15px;
+.cms-dialog-content {
+	background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+	padding-bottom: $grid-vertical;
 
-		/* Numeric label icon (supports up to two-digit numbers) */
-		.label-flyout-indicator {
-		    position: absolute;
-			left: 26px;
-			margin-top: -18px;
-			overflow: visible;
-			display: block;
-			width: 0;
-			height: 0;
-			border-top: 11px solid transparent;
-			border-left: 7px dashed $DialogLabelColor;
-			border-bottom: 11px solid transparent;
-		}
-
-	}
-
-	/* Exception for a label that is inline with the selector dropdown box */
-	#ParentID {
-		label.left {
-		    padding: $grid-vertical 0 $grid-vertical 0;
-			float: left !important;
-			width: 125px;
-		}
-
-		.middleColumn {
-			width: 320px;
-		}
-	}
-	
 	.Actions {
+		overflow: auto;
+		margin: $grid-vertical 0;
+		padding-bottom: $grid-vertical;
 		float: right;
 	}
-}
 
-/** ------------------------------------------------------------------
-* Titlebar for pop-up dialog.
-* ----------------------------------------------------------------- */
-.ui-dialog-titlebar.ui-widget-header {
-    font-size: $DialogHeaderFontSize;
-	background-color: #92a5b2;
-	padding: $grid-vertical/2 $grid-horizontal/2 $grid-vertical/2 $grid-horizontal*2;
-
-	border-bottom: 2px solid #8399a7;
-	@include border-top-left-radius($DialogBorderRadius/2); /* /2 need to eliminate visual artifact */
-	@include border-top-right-radius($DialogBorderRadius);
-	@include background-image(linear-gradient(#ced7dc, #92a5b2));
-	margin-bottom: $grid-vertical*1.5;
-}
-
-/**
- * Dialog Styles
- */
-	
-body.ArrayData {
-	overflow-y: auto;
-	overflow-x: auto;
-	font-family: Arial, sans-serif;
-	margin-bottom: 60px;
 	.ss-tabset {	
-		background-color: darken($color-widget-bg, 20%);
-		padding: $grid-vertical $grid-horizontal ($grid-vertical - 2);	
-		height: $grid-vertical * 4;
 		z-index: 60;
-
-		border: none;
-		@include box-shadow($color-widget-bg 0 $grid-vertical $grid-vertical*2);
-	
-		@include background-image(
-			linear-gradient(darken($color-widget-bg, 10%), darken($color-widget-bg, 30%))
-		);
-
 		@include border-radius(none);
+
 		.tab {
 			background: none;
 			overflow-y: auto;
 		}
 
 		&.ui-tabs {
+			background: none;
+
 			.ui-tabs-nav {
-				background: none;
+				padding: $grid-horizontal 0 0 0;
 				border: none;
+
 				li {	
+					&.ui-tabs-selected {
+						margin-bottom: -1px;
+					}
+
 					&:first-child {
 						margin-left: 15px;
 					}
@@ -992,15 +906,47 @@ body.ArrayData {
 					border-bottom: 2px solid #B3B3B3;
 				}
 			}
+
+			.ui-tabs-panel {
+				border: 1px solid #AAAAAA;
+				background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+			}
 		}
 	}
 	.clear {
 		clear: both;
 	}
-	.Actions {
-		z-index: 100;
-		position: fixed;
-		bottom: 3px;
-		right: 20px;
+	
+}
+
+/**
+ * Numeric labels
+ */
+label.numeric-label {
+	font-size: $font-base-size+2;
+	font-weight: bold;
+	float: left;
+	@include border-top-left-radius(3px);
+	@include border-bottom-left-radius(3px);
+	background-color: $color-dark-grey;
+	padding: 4px 8px 4px 3px;
+	text-align: right;
+	color: #fff;
+	position: absolute;
+	width: 15px;
+
+	/* Numeric label icon (supports up to two-digit numbers) */
+	.label-flyout-indicator {
+	    position: absolute;
+		left: 26px;
+		margin-top: -18px;
+		overflow: visible;
+		display: block;
+		width: 0;
+		height: 0;
+		border-top: 11px solid transparent;
+		border-left: 7px dashed $color-dark-grey;
+		border-bottom: 11px solid transparent;
 	}
+
 }

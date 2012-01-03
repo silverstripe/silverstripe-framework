@@ -107,7 +107,7 @@ form.nostyle {
 	// the containing boxes
 	@include legacy-pie-clearfix();
 	
-	&.noLabel {
+	&.nolabel {
 		.middleColumn {
 			margin-left: 0;
 		}	
@@ -292,7 +292,7 @@ form.stacked .field, .field.stacked {
 	text-decoration: none;
 }
 
-.cms, body.ArrayData {
+.cms {
 
 	input.loading,
 	input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, 

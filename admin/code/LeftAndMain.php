@@ -1017,7 +1017,7 @@ class LeftAndMain extends Controller {
 		return $this->customise(array(
 			'Content' => ' ',
 			'Form' => $form
-		))->renderWith('BlankPage');
+		))->renderWith('CMSDialog');
 	}
 	
 	public function Member_ProfileForm() {

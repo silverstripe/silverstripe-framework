@@ -279,7 +279,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		
 		$form->unsetValidator();
 		$form->loadDataFrom($this);
-		$form->addExtraClass('htmleditorfield-form htmleditorfield-linkform');
+		$form->addExtraClass('htmleditorfield-form htmleditorfield-linkform cms-dialog-content');
 		
 		$this->extend('updateLinkForm', $form);
 		
@@ -353,7 +353,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$form->unsetValidator();
 		$form->disableSecurityToken();
 		$form->loadDataFrom($this);
-		$form->addExtraClass('htmleditorfield-form htmleditorfield-imageform');
+		$form->addExtraClass('htmleditorfield-form htmleditorfield-imageform cms-dialog-content');
 		
 		return $form;
 	}
@@ -393,7 +393,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$form->unsetValidator();
 		$form->loadDataFrom($this);
 		$form->disableSecurityToken();
-		$form->addExtraClass('htmleditorfield-form htmleditorfield-flashform');
+		$form->addExtraClass('htmleditorfield-form htmleditorfield-flashform cms-dialog-content');
 		
 		return $form;
 	}

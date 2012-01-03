@@ -6,7 +6,7 @@
  * but we need it earlier in order to correctly display the uninitialized tree.
  */
 
-.cms, body.ArrayData {
+.cms {
 	.jstree {
 		ul {
 			display: block;
@@ -379,7 +379,7 @@
 	}
 }
 
-.cms-tree.jstree-apple, body.ArrayData .jstree-apple {
+.cms-tree.jstree-apple {
 	
 	& li.Root {
 		& strong {
