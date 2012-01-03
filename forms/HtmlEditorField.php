@@ -236,6 +236,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		// mimic the SiteTree::getMenuTitle(), which is bypassed when the search is performed
 		$siteTree->setSearchFunction(array($this, 'siteTreeSearchCallback'));
 		
+		$numericLabelTmpl = '<span class="step-label"><span class="flyout">%d</span><span class="arrow"></span><strong class="title">%s</strong></span>';
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/LinkForm", 
@@ -247,7 +248,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				$contentComposite = new CompositeField(
 					new OptionsetField(
 						'LinkType',
-						_t('HtmlEditorField.LINKTO', 'Link to'), 
+						sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.LINKTO', 'Link to')),
 						array(
 							'internal' => _t('HtmlEditorField.LINKINTERNAL', 'Page on the site'),
 							'external' => _t('HtmlEditorField.LINKEXTERNAL', 'Another website'),
@@ -255,6 +256,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 							'email' => _t('HtmlEditorField.LINKEMAIL', 'Email address'),
 							'file' => _t('HtmlEditorField.LINKFILE', 'Download a file'),			
 						)
+					),
+					new LiteralField('Step2',
+						'<div class="step2">' . sprintf($numericLabelTmpl, '2', _t('HtmlEditorField.DETAILS', 'Details')) . '</div>'
 					),
 					$siteTree,
 					new TextField('external', _t('HtmlEditorField.URL', 'URL'), 'http://'),

@@ -375,7 +375,10 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .cms-dialog-content .ss-tabset.ui-tabs .ui-tabs-panel { border: 1px solid #AAAAAA; background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; }
 .cms-dialog-content .clear { clear: both; }
 
-/** Numeric labels */
+/** -------------------------------------------- "Insert X" forms -------------------------------------------- */
+.htmleditorfield-linkform .step2 { margin-bottom: 16px; }
+
+/** -------------------------------------------- Step labels -------------------------------------------- */
 .step-label > * { display: inline-block; vertical-align: top; }
 .step-label .flyout { height: 18px; font-size: 14px; font-weight: bold; -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; -o-border-top-left-radius: 3px; -ms-border-top-left-radius: 3px; -khtml-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-bottomleft: 3px; -webkit-border-bottom-left-radius: 3px; -o-border-bottom-left-radius: 3px; -ms-border-bottom-left-radius: 3px; -khtml-border-bottom-left-radius: 3px; border-bottom-left-radius: 3px; background-color: #667980; padding: 4px 3px 4px 6px; text-align: center; text-shadow: none; color: #fff; }
 .step-label .arrow { height: 26px; width: 10px; background: url('../images/sprites/32x32-s8fc6dac693.png') 0 0 no-repeat; margin-right: 4px; }
