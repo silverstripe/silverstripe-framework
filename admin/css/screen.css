@@ -231,20 +231,6 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .message.good { background-color: #99cc66; border-color: #669933; }
 .message p { margin: 0; }
 
-/** -------------------------------------------- ModelAdmin -------------------------------------------- */
-.ModelAdmin .ResultAssemblyBlock { display: none; }
-.ModelAdmin .cms-content-tools h3.cms-panel-header { display: none; }
-.ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav { overflow: hidden; }
-.ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav li { max-width: 99%; }
-.ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav li a { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 85%; }
-.ModelAdmin .cms-content-tools #SearchForm_holder #ModelClassSelector { margin-bottom: 2px; }
-.ModelAdmin .cms-content-tools #SearchForm_holder #ModelClassSelector select { width: 96%; }
-.ModelAdmin .cms-content-tools #SearchForm_holder div.tab { border: 1px solid #aaa; margin-top: -1px; background: #fff; padding: 8px; }
-.ModelAdmin .cms-content-tools #SearchForm_holder div.tab h3 { margin-top: 16px; margin-bottom: 10px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -moz-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -o-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); }
-.ModelAdmin .cms-content-tools #SearchForm_holder div.tab form input { margin: 0px; }
-.ModelAdmin .cms-content-tools #SearchForm_holder div.tab form .field { border-bottom: 0px; margin-bottom: 6px; }
-.ModelAdmin .cms-content-tools #SearchForm_holder div.tab form .Actions button.ss-ui-action-minor { display: none; }
-
 /** -------------------------------------------- "Add page" dialog -------------------------------------------- */
 .cms-page-add-form-dialog { display: none; }
 .cms-page-add-form-dialog #PageType li { padding: 9px 0 9px 15px; overflow: hidden; border-bottom-width: 2px; border-bottom: 2px groove rgba(255, 255, 255, 0.8); -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
@@ -538,3 +524,17 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-menu-list li ul.collapsed-flyout li.first a { border-top: 1px solid #92a5b2; }
 .cms-menu-list.collapsed li .text { display: none; }
 .cms-menu-list.collapsed li > li { display: none; }
+
+/** -------------------------------------------- ModelAdmin -------------------------------------------- */
+.ModelAdmin .ResultAssemblyBlock { display: none; }
+.ModelAdmin .cms-content-tools h3.cms-panel-header { display: none; }
+.ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav { overflow: hidden; }
+.ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav li { max-width: 99%; }
+.ModelAdmin .cms-content-tools #SearchForm_holder ul.ui-tabs-nav li a { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 85%; }
+.ModelAdmin .cms-content-tools #SearchForm_holder #ModelClassSelector { margin-bottom: 2px; }
+.ModelAdmin .cms-content-tools #SearchForm_holder #ModelClassSelector select { width: 96%; }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab { border: 1px solid #aaa; margin-top: -1px; background: #fff; padding: 8px; }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab h3 { margin-top: 16px; margin-bottom: 10px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -moz-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -o-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab form input { margin: 0px; }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab form .field { border-bottom: 0px; margin-bottom: 6px; }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab form .Actions button.ss-ui-action-minor { display: none; }
