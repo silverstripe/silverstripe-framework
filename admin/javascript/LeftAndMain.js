@@ -251,7 +251,7 @@
 		 * Also sets the clicked button on a form submission, making it available through
 		 * a new 'clickedButton' property on the form DOM element.
 		 */
-		$('.cms-container input[type="submit"], .cms-container button, .cms-container input[type="reset"]').entwine({
+		$('.cms input[type="submit"], .cms button, .cms input[type="reset"]').entwine({
 			onmatch: function() {
 				this.addClass('ss-ui-button');
 				this.redraw();
