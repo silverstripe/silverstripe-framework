@@ -44,6 +44,8 @@
 				});
 				
 				var updateAfterXhr = function() {
+					$('.cms-preview-toggle-link')[self.canPreview() ? 'show' : 'hide']();
+
 					// Only load when panel is visible (see details in iframe load event handler).
 					if(self.is('.is-collapsed')) return;
 
@@ -80,6 +82,7 @@
 				// Preview might not be available in all admin interfaces - block/disable when necessary
 				this.append('<div class="cms-preview-overlay ui-widget-overlay-light"></div>');
 				this.find('.cms-preview-overlay-light').hide();
+				$('.cms-preview-toggle-link')[this.canPreview() ? 'show' : 'hide']();
 
 				self._fixIframeLinks();
 		
@@ -95,13 +98,9 @@
 			 * based on metadata sent along with this document.
 			 */
 			loadCurrentPage: function() {
-				var doc = this.find('iframe')[0].contentDocument, 
-					containerEl = this.getLayoutContainer(), 
-					contentEl = containerEl.find('.cms-content');
+				var doc = this.find('iframe')[0].contentDocument, containerEl = this.getLayoutContainer();
 
-				// Only load if we're in the "edit page" view
-				var blockedClasses = ['CMSPagesController', 'CMSSettingsController', 'CMSPageHistoryController'];
-				if(contentEl.is('.' + blockedClasses.join(',.'))) return;
+				if(!this.canPreview()) return;
 
 				// Load this page in the admin interface if appropriate
 				var id = $(doc).find('meta[name=x-page-id]').attr('content'); 
@@ -114,6 +113,18 @@
 					if(window.History.enabled) 
 						$('.cms-container').loadPanel(editLink);
 				}
+			},
+
+			/**
+			 * Determines if the current interface is capable of previewing its managed record.
+			 *
+			 * Returns: {boolean}
+			 */
+			canPreview: function() {
+				var contentEl = this.getLayoutContainer().find('.cms-content');
+				// Only load if we're in the "edit page" view
+				var blockedClasses = ['CMSPagesController', 'CMSSettingsController', 'CMSPageHistoryController'];
+				return !(contentEl.is('.' + blockedClasses.join(',.')));
 			},
 			
 			_fixIframeLinks: function() {
