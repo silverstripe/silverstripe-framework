@@ -13,7 +13,12 @@
 			'fieldTitle': '(choose)',
 			'searchFieldTitle': '(choose or search)'
 		};
-		
+
+		var _clickTestFn = function(e) {
+			// If the click target is not a child of the current field, close the panel automatically.
+			if(!$(e.target).parents('.TreeDropdownField').length) jQuery('.TreeDropdownField').entwine('ss').closePanel();
+		};
+
 		/**
 		 * @todo Error display
 		 * @todo No results display for search
@@ -45,6 +50,9 @@
 			openPanel: function() {
 				// close all other panels
 				$('.TreeDropdownField').closePanel();
+
+				// Listen for clicks outside of the field to auto-close it
+				$('body').bind('click', _clickTestFn);
 				
 				var panel = this.getPanel(), tree = this.find('.tree-holder');
 				
@@ -80,6 +88,8 @@
 				
 			},
 			closePanel: function() {
+				jQuery('body').unbind('click', _clickTestFn);
+
 				// swap the up arrow with a down arrow
 				var toggle = this.find(".treedropdownfield-toggle-panel-link");
 				toggle.removeClass('treedropdownfield-open-tree');
