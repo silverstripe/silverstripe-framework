@@ -123,12 +123,12 @@ LinkForm.prototype = {
 	},
 	
 	toggle: function(ed) {
-		this.addAnchorSelector();
 		this.ToolbarForm.toggle(ed);
 		this.respondToNodeChange(ed);
 	},
 	
 	open: function(ed) {
+		this.addAnchorSelector();
 		this.ToolbarForm.open();
 		
 		this.originalSelection = null;
