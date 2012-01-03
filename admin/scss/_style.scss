@@ -233,7 +233,7 @@ html,body {
  * -------------------------------------------- */
 
 .cms-content-actions {
-	margin: $grid-vertical $grid-horizontal;
+	margin: $grid-vertical $grid-horizontal*2 $grid-vertical*2 $grid-horizontal*2;
 	text-align: right;
 	height: $grid-vertical*4;
 	z-index: 70;

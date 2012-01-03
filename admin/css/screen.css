@@ -86,7 +86,7 @@ form.nostyle .field { padding: 0; border: 0; }
 form.nostyle label { float: none; width: auto; }
 form.nostyle .middleColumn { margin-left: 0; }
 
-.field { display: block; padding: 10px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); padding: 0 0 7px 0; margin: 0 0 8px 0; *zoom: 1; /* TreeDropdowns */ /* dropdowns */ /* chzn override */ /* Date Fields */ }
+.field { display: block; padding: 10px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); padding: 0 0 7px 0; margin: 0 0 8px 0; *zoom: 1; }
 .field:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
 .field.noLabel .middleColumn { margin-left: 0; }
 .field label.left { float: left; display: block; width: 168px; padding: 8px 8px 8px 0; line-height: 16px; font-weight: bold; text-shadow: 1px 1px 0 white; }
@@ -94,13 +94,17 @@ form.nostyle .middleColumn { margin-left: 0; }
 .field label.right { cursor: pointer; }
 .field .middleColumn { margin-left: 184px; }
 .field span.readonly { padding-top: 8px; line-height: 16px; display: block; }
-.field input.text, .field textarea, .field select, .field .TreeDropdownField { width: 90%; max-width: 512px; }
+.field input.text, .field textarea, .field select, .field .TreeDropdownField { width: 100%; max-width: 512px; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box; }
 .field input.text, .field textarea, .field .TreeDropdownField { background: #fff; border: 1px solid #b3b3b3; padding: 7px 7px; line-height: 16px; margin: 0; outline: none; -moz-transition: 0.2s box-shadow ease-in; -webkit-transition: 0.2s box-shadow ease-in; -o-transition: 0.2s box-shadow ease-in; transition: 0.2s box-shadow ease-in; -moz-transition: 0.2s border ease-in; -webkit-transition: 0.2s border ease-in; -o-transition: 0.2s border ease-in; transition: 0.2s border ease-in; -moz-border-radius: 4px; -webkit-border-radius: 4px; -o-border-radius: 4px; -ms-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -ms-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); }
 .field input.text:focus, .field textarea:focus, .field .TreeDropdownField:focus { border: 1px solid #9a9a9a; border-top-color: gray; -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset; -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset; -o-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset; }
 .field input[disabled], .field textarea[disabled], .field select[disabled] { color: #777777; background: #efefef; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #bcbcbc), color-stop(10%, #efefef), color-stop(90%, #ffffff), color-stop(100%, #bcbcbc)); background-image: -webkit-linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); background-image: -moz-linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); background-image: -o-linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); background-image: -ms-linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); background-image: linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); border: 1px solid #b3b3b3; }
-.field .TreeDropdownField { padding: 0 14px 0 0; }
-.field .TreeDropdownField .treedropdownfield-panel { border: 1px solid #b3b3b3; border-top: none; padding-right: 14px; -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -o-border-bottom-left-radius: 4px; -ms-border-bottom-left-radius: 4px; -khtml-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; -o-border-bottom-right-radius: 4px; -ms-border-bottom-right-radius: 4px; -khtml-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px; }
-.field .TreeDropdownField .treedropdownfield-toggle-panel-link { margin-right: -14px; }
+
+form.stacked .field label, .field.stacked label { display: block; float: none; padding-bottom: 10px; }
+form.stacked .field .middleColumn, .field.stacked .middleColumn { margin-left: 0px; clear: left; }
+
+.field { /* TreeDropdowns */ /* dropdowns */ /* chzn override */ /* Date Fields */ }
+.field .TreeDropdownField { padding: 0; }
+.field .TreeDropdownField .treedropdownfield-panel { border: 1px solid #b3b3b3; border-top: none; -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -o-border-bottom-left-radius: 4px; -ms-border-bottom-left-radius: 4px; -khtml-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; -o-border-bottom-right-radius: 4px; -ms-border-bottom-right-radius: 4px; -khtml-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px; }
 .field .TreeDropdownField.treedropdownfield-open-tree { -moz-border-radius-bottomleft: 0; -webkit-border-bottom-left-radius: 0; -o-border-bottom-left-radius: 0; -ms-border-bottom-left-radius: 0; -khtml-border-bottom-left-radius: 0; border-bottom-left-radius: 0; -moz-border-radius-bottomright: 0; -webkit-border-bottom-right-radius: 0; -o-border-bottom-right-radius: 0; -ms-border-bottom-right-radius: 0; -khtml-border-bottom-right-radius: 0; border-bottom-right-radius: 0; }
 .field .dropdown select { margin-top: 8px; }
 .field .chzn-container .chzn-results li { font-size: 11px; line-height: 16px; padding: 4px 4px; }
@@ -151,7 +155,8 @@ form.nostyle .middleColumn { margin-left: 0; }
 .fieldgroup .fieldgroup-field .field { border: none; padding-bottom: 0; }
 
 /** ---------------------------------------------------- Checkbox Field ---------------------------------------------------- */
-.field.checkbox { padding-left: 192px; margin-bottom: 8px; }
+.field.checkbox { padding-left: 184px; margin-bottom: 8px; }
+.field.checkbox input { margin-left: 0; }
 
 /** ---------------------------------------------------- Optionsets and Checkboxsets ---------------------------------------------------- */
 .optionset { overflow: hidden; padding-bottom: 8px; }
@@ -161,8 +166,7 @@ form.nostyle .middleColumn { margin-left: 0; }
 
 /** ---------------------------------------------------- HTML Text  ---------------------------------------------------- */
 .htmleditor textarea { visibility: hidden; }
-.htmleditor label { display: block; float: none; padding-bottom: 10px; }
-.htmleditor .middleColumn { margin-left: 0px; clear: left; }
+.htmleditor .mceEditor input, .htmleditor .mceEditor select { width: auto; }
 
 .action-hidden { display: none; }
 
@@ -216,7 +220,7 @@ html article, html aside, html details, html figcaption, html figure, html foote
 .ss-loading-screen .loading-animation { display: none; position: absolute; left: 49%; top: 75%; }
 
 /** -------------------------------------------- Actions -------------------------------------------- */
-.cms-content-actions { margin: 8px 8px; text-align: right; height: 32px; z-index: 70; -moz-box-shadow: #f0f3f4 0 -16px 16px; -webkit-box-shadow: #f0f3f4 0 -16px 16px; -o-box-shadow: #f0f3f4 0 -16px 16px; box-shadow: #f0f3f4 0 -16px 16px; }
+.cms-content-actions { margin: 8px 16px 16px 16px; text-align: right; height: 32px; z-index: 70; -moz-box-shadow: #f0f3f4 0 -16px 16px; -webkit-box-shadow: #f0f3f4 0 -16px 16px; -o-box-shadow: #f0f3f4 0 -16px 16px; box-shadow: #f0f3f4 0 -16px 16px; }
 
 /** -------------------------------------------- Messages -------------------------------------------- */
 .message { margin: 0 0 8px 0; padding: 7px 7px; font-weight: bold; border: 1px black solid; }
@@ -367,12 +371,11 @@ form.member-profile-form #Groups .middleColumn .TreeDropdownField { width: 90%; 
 /* Adjusting the color of the background overlay to be darker for pop-up dialogs (created by jQuery-UI) */
 .cms .ui-widget-overlay { background-color: #000; background-image: none; }
 
-.ui-dialog { background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; border: 3px solid #000 !important; border-radius: 8px; overflow: visible; padding: 0; /* Labels for all the Dialogs of the pop-up form */ /* Numeric labels in the sitetree */ /* Exception for a label that is inline with the selector dropdown box */ }
+.ui-dialog { background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; border: 3px solid #000 !important; border-radius: 8px; overflow: visible; padding: 0; /* Numeric labels in the sitetree */ /* Exception for a label that is inline with the selector dropdown box */ }
 .ui-dialog #PageType .middleColumn { margin: 0; padding: 0; }
 .ui-dialog #PageType .middleColumn .optionset li { width: 100%; }
 .ui-dialog #PageType li.selected { background-color: rgba(255, 255, 153, 0.5); /*background-color: #FFFF99;*/ }
 .ui-dialog #PageType li:hover { background-color: #FFFF99 !important; /* lighter highlight on hover */ }
-.ui-dialog .field label.left { font-size: 14px; font-weight: bold; width: 100%; float: none; color: #5f6160; margin-top: -4px; margin-left: 38px; }
 .ui-dialog label.numeric-label { font-size: 14px; font-weight: bold; float: left; -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; -o-border-top-left-radius: 3px; -ms-border-top-left-radius: 3px; -khtml-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-bottomleft: 3px; -webkit-border-bottom-left-radius: 3px; -o-border-bottom-left-radius: 3px; -ms-border-bottom-left-radius: 3px; -khtml-border-bottom-left-radius: 3px; border-bottom-left-radius: 3px; background-color: #7b8c91; padding: 4px 8px 4px 3px; text-align: right; color: #fff; position: absolute; width: 15px; /* Numeric label icon (supports up to two-digit numbers) */ }
 .ui-dialog label.numeric-label .label-flyout-indicator { position: absolute; left: 26px; margin-top: -18px; overflow: visible; display: block; width: 0; height: 0; border-top: 11px solid transparent; border-left: 7px dashed #7b8c91; border-bottom: 11px solid transparent; }
 .ui-dialog #ParentID label.left { padding: 8px 0 8px 0; float: left !important; width: 125px; }

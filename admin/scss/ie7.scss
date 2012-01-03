@@ -1,0 +1,9 @@
+.field {
+	input.text, 
+	textarea,
+	.TreeDropdownField {
+		// Left/right padding conflicts with 100% width on the element unless box-sizing is respected, so disable padding for IE
+		padding-left: 0;
+		padding-right: 0;
+	}
+}

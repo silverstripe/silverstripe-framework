@@ -292,15 +292,21 @@ class LeftAndMain extends Controller {
 		);
 		
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
-				
+
+		// Browser-specific requirements
+		$ie = isset($_SERVER['HTTP_USER_AGENT']) ? strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') : false;
+		if($ie) {
+			$version = substr($_SERVER['HTTP_USER_AGENT'], $ie + 5, 3);
+			if($version == 7) Requirements::css('sapphire/admin/css/ie7.css');
+		}
+
+		// Custom requirements				
 		foreach (self::$extra_requirements['javascript'] as $file) {
 			Requirements::javascript($file[0]);
 		}
-		
 		foreach (self::$extra_requirements['css'] as $file) {
 			Requirements::css($file[0], $file[1]);
 		}
-		
 		foreach (self::$extra_requirements['themedcss'] as $file) {
 			Requirements::themedCSS($file[0], $file[1]);
 		}
