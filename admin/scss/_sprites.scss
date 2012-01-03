@@ -9,6 +9,7 @@ $icon24: sprite-map("menu_icons/24x24/*.png");
 $icon16: sprite-map("menu_icons/16x16/*.png");
 
 $btn_icons: sprite-map("btn_icons/*.png", $spacing: 10px);
+$sprites32: sprite-map("sprites/32x32/*.png", $spacing: 10px);
 
 @mixin icons($sprite) {
 	background: $sprite;

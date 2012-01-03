@@ -90,7 +90,6 @@ form.nostyle .middleColumn { margin-left: 0; }
 .field:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
 .field.nolabel .middleColumn { margin-left: 0; }
 .field label.left { float: left; display: block; width: 168px; padding: 8px 8px 8px 0; line-height: 16px; font-weight: bold; text-shadow: 1px 1px 0 white; }
-.field label.left span { display: block; font-size: 11px; color: #848484; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
 .field label.right { cursor: pointer; }
 .field .middleColumn { margin-left: 184px; }
 .field span.readonly { padding-top: 8px; line-height: 16px; display: block; }
@@ -377,8 +376,10 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .cms-dialog-content .clear { clear: both; }
 
 /** Numeric labels */
-label.numeric-label { font-size: 14px; font-weight: bold; float: left; -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; -o-border-top-left-radius: 3px; -ms-border-top-left-radius: 3px; -khtml-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-bottomleft: 3px; -webkit-border-bottom-left-radius: 3px; -o-border-bottom-left-radius: 3px; -ms-border-bottom-left-radius: 3px; -khtml-border-bottom-left-radius: 3px; border-bottom-left-radius: 3px; background-color: #7b8c91; padding: 4px 8px 4px 3px; text-align: right; color: #fff; position: absolute; width: 15px; /* Numeric label icon (supports up to two-digit numbers) */ }
-label.numeric-label .label-flyout-indicator { position: absolute; left: 26px; margin-top: -18px; overflow: visible; display: block; width: 0; height: 0; border-top: 11px solid transparent; border-left: 7px dashed #7b8c91; border-bottom: 11px solid transparent; }
+.step-label > * { display: inline-block; vertical-align: top; }
+.step-label .flyout { height: 18px; font-size: 14px; font-weight: bold; -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; -o-border-top-left-radius: 3px; -ms-border-top-left-radius: 3px; -khtml-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-bottomleft: 3px; -webkit-border-bottom-left-radius: 3px; -o-border-bottom-left-radius: 3px; -ms-border-bottom-left-radius: 3px; -khtml-border-bottom-left-radius: 3px; border-bottom-left-radius: 3px; background-color: #667980; padding: 4px 3px 4px 6px; text-align: center; text-shadow: none; color: #fff; }
+.step-label .arrow { height: 26px; width: 10px; background: url('../images/sprites/32x32-s8fc6dac693.png') 0 0 no-repeat; margin-right: 4px; }
+.step-label .title { height: 18px; padding: 4px; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .cms .jstree ul { display: block; margin: 0; padding: 0; background: none; list-style-type: none; }

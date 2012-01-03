@@ -123,13 +123,6 @@ form.nostyle {
 			line-height: $grid-vertical * 2;
 			font-weight: bold;
 			@include text-shadow(1px 1px 0 $color-text-shadow);
-			span {
-				display: block;
-				font-size: $font-base-size - 1;
-				color: lighten($color-text, 25%);
-
-				@include hide-text-overflow();
-			}
 		}
 		
 		&.right {

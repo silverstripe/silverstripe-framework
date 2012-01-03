@@ -922,31 +922,36 @@ body.cms-dialog {
 /**
  * Numeric labels
  */
-label.numeric-label {
-	font-size: $font-base-size+2;
-	font-weight: bold;
-	float: left;
-	@include border-top-left-radius(3px);
-	@include border-bottom-left-radius(3px);
-	background-color: $color-dark-grey;
-	padding: 4px 8px 4px 3px;
-	text-align: right;
-	color: #fff;
-	position: absolute;
-	width: 15px;
+.step-label {
 
-	/* Numeric label icon (supports up to two-digit numbers) */
-	.label-flyout-indicator {
-	    position: absolute;
-		left: 26px;
-		margin-top: -18px;
-		overflow: visible;
-		display: block;
-		width: 0;
-		height: 0;
-		border-top: 11px solid transparent;
-		border-left: 7px dashed $color-dark-grey;
-		border-bottom: 11px solid transparent;
+	& > * {
+		display: inline-block;
+		vertical-align: top;
 	}
 
+	.flyout {
+		height: 26px - 2*4px; // minus padding
+		font-size: $font-base-size+2;
+		font-weight: bold;
+		@include border-top-left-radius(3px);
+		@include border-bottom-left-radius(3px);
+		background-color: #667980; // hardcoding colour since its tied to the sprite
+		padding: 4px 3px 4px 6px;
+		text-align: center;
+		text-shadow: none;
+		color: #fff;
+	}
+
+	.arrow {
+		height: 26px;
+		width: 10px;
+		background: sprite($sprites32, numeric-label) no-repeat;
+		margin-right: 4px;
+	}
+
+	.title {
+		height: 26px - 2*4px; // minus padding
+		padding: 4px;
+	}
+	
 }
