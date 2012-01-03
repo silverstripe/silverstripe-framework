@@ -227,6 +227,7 @@ class LeftAndMain extends Controller {
 			array(
 				THIRDPARTY_DIR . '/prototype/prototype.js',
 				THIRDPARTY_DIR . '/behaviour/behaviour.js',
+				SAPPHIRE_DIR . '/javascript/prototype_improvements.js',
 				THIRDPARTY_DIR . '/jquery/jquery.js',
 				SAPPHIRE_DIR . '/javascript/jquery_improvements.js',
 				THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js',
@@ -256,6 +257,8 @@ class LeftAndMain extends Controller {
 				SAPPHIRE_DIR . '/javascript/Validator.js',
 				SAPPHIRE_DIR . '/javascript/i18n.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js',
+				SAPPHIRE_DIR . '/javascript/tiny_mce_improvements.js',
+				CMS_DIR . '/javascript/ThumbnailStripField.js',
 			)
 		);
 
@@ -973,6 +976,13 @@ class LeftAndMain extends Controller {
 		} else {
 			return $this->redirect(Controller::join_links($this->Link('show'), $record->ID));
 		}
+	}
+
+	/**
+	 * Return the CMS's HTML-editor toolbar
+	 */
+	public function EditorToolbar() {
+		return Object::create('HtmlEditorField_Toolbar', $this, "EditorToolbar");
 	}
 	
 	/**
