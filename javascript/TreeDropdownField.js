@@ -164,7 +164,7 @@
 							'url': this.data('url-tree'),
 							'data': function(node) {
 								var id = $(node).data("id") ? $(node).data("id") : 0, params = self.getRequestParams();
-								params = params.concat([{name: 'ID', value: id}, {name: 'ajax', value: 1}]);
+								params = $.extend({}, params, {ID: id, ajax: 1});
 								return params;
 							}
 						}
