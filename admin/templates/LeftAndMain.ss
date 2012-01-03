@@ -23,6 +23,7 @@
 
 	</div>
 		
+	<% cached %>
 	<div id="cms-editor-dialogs">
 		<% control EditorToolbar %>
 			$ImageForm
@@ -30,6 +31,7 @@
 			$FlashForm
 		<% end_control %>
 	</div>
+	<% end_cached %>
 
 	<!-- <div class="ss-cms-bottom-bar">
 			<div class="holder">
