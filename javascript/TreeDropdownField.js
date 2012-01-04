@@ -133,7 +133,7 @@
 							.jstree('destroy')
 							.bind('loaded.jstree', function(e, data) {
 								var val = self.getValue();
-								if(val) data.inst.select_node(treeHolder.find('*[data-id=' + val + ']'));
+								if(val) data.inst.select_node(treeHolder.find('*[data-id="' + val + '"]'));
 								data.inst.open_all();
 								firstLoad = false;
 								if(callback) callback.apply(self);
