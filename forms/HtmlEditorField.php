@@ -265,7 +265,6 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					new EmailField('email', _t('HtmlEditorField.EMAIL', 'Email address')),
 					new TreeDropdownField('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'Filename', 'Title', true),
 					new TextField('Anchor', _t('HtmlEditorField.ANCHORVALUE', 'Anchor')),
-					new TextField('LinkText', _t('HtmlEditorField.LINKTEXT', 'Link text')),
 					new TextField('Description', _t('HtmlEditorField.LINKDESCR', 'Link description')),
 					new CheckboxField('TargetBlank', _t('HtmlEditorField.LINKOPENNEWWIN', 'Open link in a new window?')),
 					new HiddenField('Locale', null, $this->controller->Locale)

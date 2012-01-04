@@ -86,6 +86,9 @@
 	$.entwine('ss', function($) {
 
 		$('form.htmleditorfield-form').entwine({
+
+			Bookmark: null,
+
 			onmatch: function() {
 				// Move title from headline to (jQuery compatible) title attribute
 				var titleEl = this.find(':header:first');
@@ -103,10 +106,12 @@
 			},
 			close: function() {
 				this.dialog('close');
+				this.setBookmark(null);
 			},
 			open: function() {
 				this.dialog('open');
 				this.redraw();
+				this.setBookmark(this.getEditor().selection.getBookmark());
 			},
 			getEditor: function() {
 				return tinyMCE.activeEditor;
@@ -114,8 +119,6 @@
 		});
 
 		$('form.htmleditorfield-linkform').entwine({
-
-			OriginalSelection: null,
 
 			onmatch: function() {
 				this._super();
@@ -131,7 +134,7 @@
 				this.respondToNodeChange();
 				this.dialog('open');
 				this.redraw();
-				this.setOriginalSelection(null);
+				this.setBookmark(this.getEditor().selection.getBookmark());
 			},
 
 			close: function() {
@@ -176,7 +179,7 @@
 			},
 
 			insertLink: function() {
-				var href, target = null, anchor = this.find(':input[name=Anchor]').val();
+				var href, target = null, anchor = this.find(':input[name=Anchor]').val(), ed = this.getEditor();
 				
 				// Determine target
 				if(this.find(':input[name=TargetBlank]').is(':checked')) target = '_blank';
@@ -210,66 +213,16 @@
 						break;
 				}
 
-				if(this.getOriginalSelection()) {
-				  tinyMCE.activeEditor.selection.setRng(this.getOriginalSelection());
-				}
-				
-				var linkText = this.find(':input[name=LinkText]').val();
 				var attributes = {
 					href : href, 
 					target : target, 
-					title : this.find(':input[name=Description]').val(),
-					innerHTML : linkText ? linkText : "Your Link"
+					title : this.find(':input[name=Description]').val()
 				};
 
 				// Add the new link
-				this._insertLink(attributes);
-			},
+				ed.selection.moveToBookmark(this.getBookmark());
+				ed.execCommand("mceInsertLink", false, attributes);
 
-			/**
-			 * Insert a link into the given editor.
-			 * Replaces mceInsertLink in that innerHTML can also be set
-			 */
-			_insertLink: function(attributes) {
-			  var ed = this.getEditor(), v = attributes,
-					s = ed.selection, e = ed.dom.getParent(s.getNode(), 'A');
-
-				if(tinymce.is(attributes, 'string')) attributes = {href : attributes};
-
-				function set(e) {
-					tinymce.each(attributes, function(v, k) {
-						if(k == 'innerHTML') e.innerHTML = v;
-						else ed.dom.setAttrib(e, k, v);
-					});
-					try {
-						s.select(e);
-						this.updateSelection();
-					} catch(er) {}
-				};
-				
-				function replace() {
-					tinymce.each(ed.dom.select('a'), function(e) {
-						if (e.href == 'javascript:mctmp(0);') set(e);
-					});
-				}
-
-				if(attributes.innerHTML && !ed.selection.getContent()) {
-					if(tinymce.isIE) var rng = ed.selection.getRng();
-					e = ed.getDoc().createElement('a');
-					e.href = 'javascript:mctmp(0);';
-					s.setNode(e);
-					if(tinymce.isIE) tinyMCE.activeEditor.selection.setRng(rng);
-					replace();
-				}
-
-				if (!e) {
-					ed.execCommand('CreateLink', false, 'javascript:mctmp(0);');
-					replace();
-				} else {
-					if (attributes.href) set(e);
-					else ed.dom.remove(e, 1);
-				}
-				
 				this.trigger('onafterinsert', attributes);
 				
 				this.respondToNodeChange();
@@ -279,11 +232,6 @@
 				this.getEditor().execCommand('unlink', false);
 				this.close();
 			},
-
-			updateSelection: function() {
-				var ed = this.getEditor();
-				if(ed.selection.getRng()) this.setOriginalSelection(ed.selection.getRng());
-		  },
 
 			addAnchorSelector: function() {
 				// Avoid adding twice
@@ -323,7 +271,7 @@
 				var selector = this.find(':input[name=AnchorSelector]'), anchors = new Array();
 				// name attribute is defined as CDATA, should accept all characters and entities
 				// http://www.w3.org/TR/1999/REC-html401-19991224/struct/links.html#h-12.2
-				var raw = tinyMCE.activeEditor.getContent().match(/name="([^"]+?)"|name='([^']+?)'/gim);
+				var raw = this.getEditor().getContent().match(/name="([^"]+?)"|name='([^']+?)'/gim);
 				if (raw && raw.length) {
 					for(var i = 0; i < raw.length; i++) {
 						anchors.push(raw[i].substr(6).replace(/"$/, ''));
@@ -402,8 +350,6 @@
 				href = RegExp.$1;
 			}
 			
-			var linkText = ed.selection.getContent({format : 'html'}).replace(/<\/?a[^>]*>/ig,'');
-			
 			// Get rid of TinyMCE's temporary URLs
 			if(href.match(/^javascript:\s*mctmp/)) href = '';
 			
@@ -411,30 +357,26 @@
 				return {
 					LinkType: 'email',
 					email: RegExp.$1,
-					LinkText: linkText,
 					Description: title
 				}
 			} else if(href.match(/^(assets\/.*)$/)) {
 				return {
 					LinkType: 'file',
 					file: RegExp.$1,
-					LinkText: linkText,
 					Description: title
 				}
 			} else if(href.match(/^#(.*)$/)) {
 				return {
 					LinkType: 'anchor',
 					Anchor: RegExp.$1,
-					LinkText: linkText,
 					Description: title,
 					TargetBlank: target ? true : false
 				}
-			} else if(href.match(/^\[sitetree_link id=([0-9]+)\]?(#.*)?$/)) {
+			} else if(href.match(/^\[sitetree_link\s*(?:%20)?id=([0-9]+)\]?(#.*)?$/)) {
 				return {
 					LinkType: 'internal',
 					internal: RegExp.$1,
 					Anchor: RegExp.$2 ? RegExp.$2.substr(1) : '',
-					LinkText: linkText,
 					Description: title,
 					TargetBlank: target ? true : false
 				}
@@ -442,14 +384,12 @@
 				return {
 					LinkType: 'external',
 					external: href,
-					LinkText: linkText,
 					Description: title,
 					TargetBlank: target ? true : false
 				}
 			} else {
 				return {
-					LinkType: 'internal',
-					LinkText: linkText
+					LinkType: 'internal'
 				}
 			}
 		}	
