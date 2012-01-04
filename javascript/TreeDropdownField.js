@@ -114,9 +114,29 @@
 			getTitle: function() {
 				return this.find('.treedropdownfield-title').text();
 			},
+			/**
+			 * Update title from tree node value
+			 */
+			updateTitle: function() {
+				var self = this, tree = self.find('.tree-holder');
+				var updateFn = function() {
+					var val = self.getValue();
+					if(val) {
+						var node = tree.find('*[data-id="' + val + '"]'),
+							title = (node) ? tree.jstree('get_text', node[0]) : null;
+
+						if(title) self.setTitle(title);
+						if(node) tree.jstree('select_node', node);
+					}
+				};
+
+				// Load the tree if its not already present
+				if(jQuery.jstree._reference(tree)) updateFn();
+				else this.loadTree(null, updateFn);
+			},
 			setValue: function(val) {
 				this.find(':input:hidden').val(val);
-				
+				this.updateTitle();
 				this.trigger('change');
 			},
 			getValue: function() {
@@ -331,6 +351,15 @@
 			},
 			setTitle: function(title) {
 				this._super($.isArray(title) ? title.join(', ') : title);
+			},
+			updateTitle: function() {
+				// TODO Not supported due to multiple values/titles yet
+			}
+		});
+
+		$('.TreeDropdownField input[type=hidden]').entwine({
+			onchange: function() {
+				this.getField().updateTitle();
 			}
 		});
 	});
