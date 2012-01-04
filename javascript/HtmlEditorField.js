@@ -83,11 +83,106 @@
 		}
 	});
 
+	/**
+	 * Wrapper for HTML WYSIWYG libraries, which abstracts library internals
+	 * from interface concerns like inserting and editing links.
+	 */
+	var editorWrapper_TinyMCE = (function() {
+		var bookmark;
+
+		return {
+			getInstance: function() {
+				return tinyMCE.activeEditor;
+			},
+			/**
+			 * Invoked when a content-modifying UI is opened.
+			 */
+			onopen: function() {
+				bookmark = this.getInstance().selection.getBookmark();
+			},
+			/**
+			 * Invoked when a content-modifying UI is closed.
+			 */
+			onclose: function() {
+				bookmark = null;
+			},
+			/**
+			 * HTML representation of the edited content.
+			 * 
+			 * Returns: {String}
+			 */
+			getContent: function() {
+				return this.getInstance().getContent();
+			},
+			/**
+			 * DOM tree of the edited content
+			 * 
+			 * Returns: DOMElement
+			 */
+			getDOM: function() {
+				return this.getInstance().dom;
+			},
+			/**
+			 * Get the closest node matching the current selection.
+			 * 
+			 * Returns: {jQuery} DOMElement
+			 */
+			getSelectedNode: function() {
+				return this.getInstance().selection.getNode();
+			},
+			/**
+			 * Select the given node within the editor DOM
+			 * 
+			 * Parameters: {DOMElement}
+			 */
+			selectNode: function(node) {
+				this.getInstance().selection.select(node)
+			},
+			/**
+			 * Insert or update a link in the content area (based on current editor selection)
+			 * 
+			 * Parameters: {Object} attrs
+			 */
+			insertLink: function(attrs) {
+				// Workaround for IE losing focus
+				this.getInstance().selection.moveToBookmark(bookmark);
+				this.getInstance().execCommand("mceInsertLink", false, attrs);
+			},
+			/**
+			 * Remove the link from the currently selected node (if any).
+			 */
+			removeLink: function() {
+				this.getInstance().execCommand('unlink', false);
+			},
+			/**
+			 * Strip any editor-specific notation from link in order to make it presentable in the UI.
+			 * 
+			 * Parameters: 
+			 *  {Object} 
+			 *  {DOMElement}
+			 */
+			cleanLink: function(href, node) {
+				href = eval(tinyMCE.settings['urlconverter_callback'] + "(href, node, true);");
+
+				// Turn into relative
+				if(href.match(new RegExp('^' + tinyMCE.settings['document_base_url'] + '(.*)$'))) {
+					href = RegExp.$1;
+				}
+				
+				// Get rid of TinyMCE's temporary URLs
+				if(href.match(/^javascript:\s*mctmp/)) href = '';
+
+				return href;
+			}
+		}
+	});
+
 	$.entwine('ss', function($) {
 
 		$('form.htmleditorfield-form').entwine({
 
-			Bookmark: null,
+			// Wrapper for various HTML editors, defaults to editorWrapper_TinyMCE
+			Editor: null,
 
 			onmatch: function() {
 				// Move title from headline to (jQuery compatible) title attribute
@@ -97,6 +192,8 @@
 
 				// Create jQuery dialog
 				this.dialog({autoOpen: false, bgiframe: true, modal: true, height: 500, width: 500, ghost: true});
+
+				this.setEditor(editorWrapper_TinyMCE());
 			},
 			redraw: function() {
 			},
@@ -106,35 +203,22 @@
 			},
 			close: function() {
 				this.dialog('close');
-				this.setBookmark(null);
+				this.getEditor().onclose();
 			},
 			open: function() {
 				this.dialog('open');
 				this.redraw();
-				this.setBookmark(this.getEditor().selection.getBookmark());
-			},
-			getEditor: function() {
-				return tinyMCE.activeEditor;
+				this.getEditor().onopen();
 			}
 		});
 
 		$('form.htmleditorfield-linkform').entwine({
 
-			onmatch: function() {
-				this._super();
-
-				// this.bind('submit', function() {
-				// 	self.insertLink();
-				// 	self.close();
-				// 	return false;
-				// });
-			},
-
 			open: function() {
 				this.respondToNodeChange();
 				this.dialog('open');
 				this.redraw();
-				this.setBookmark(this.getEditor().selection.getBookmark());
+				this.getEditor().onopen();
 			},
 
 			close: function() {
@@ -220,16 +304,13 @@
 				};
 
 				// Add the new link
-				ed.selection.moveToBookmark(this.getBookmark());
-				ed.execCommand("mceInsertLink", false, attributes);
-
+				ed.insertLink(attributes);
 				this.trigger('onafterinsert', attributes);
-				
 				this.respondToNodeChange();
 			},
 
 			removeLink: function() {
-				this.getEditor().execCommand('unlink', false);
+				this.getEditor().removeLink();
 				this.close();
 			},
 
@@ -240,7 +321,7 @@
 				var self = this;
 
 				// refresh the anchor selector on click, or in case of IE - button click
-				if( !tinymce.isIE ) {
+				if( !$.browser.ie ) {
 					var anchorSelector = $('<select id="Form_EditorToolbarLinkForm_AnchorSelector" name="AnchorSelector"></select>');
 					this.find(':input[name=Anchor]').parent().append(anchorSelector);
 
@@ -286,9 +367,7 @@
 			},
 
 			respondToNodeChange: function() {
-				var htmlTagPattern = /<\S[^><]*>/g, ed = this.getEditor();
-				
-				var fieldName,data = this.getCurrentLink();
+				var htmlTagPattern = /<\S[^><]*>/g, fieldName, data = this.getCurrentLink();
 				
 				if(data) {
 					for(fieldName in data) {
@@ -309,8 +388,7 @@
 		 * form.
 		 */
 		getCurrentLink: function() {
-			var ed = this.getEditor(), selectedText = ed.selection.getContent({format : 'text'}),
-				selectedEl = $(ed.selection.getNode()),
+			var ed = this.getEditor(), selectedEl = $(ed.getSelectedNode()),
 				href = "", target = "", title = "", action = "insert", style_class = "";
 			
 			// We use a separate field for linkDataSource from tinyMCE.linkElement.
@@ -331,7 +409,7 @@
 					linkDataSource = selectedEl = selectedEl.parents('a:first');
 				}				
 			}
-			if(linkDataSource && linkDataSource.length) ed.selection.select(linkDataSource[0]);
+			if(linkDataSource && linkDataSource.length) ed.selectNode(linkDataSource[0]);
 			
 			// Is anchor not a link
 			if (!linkDataSource.attr('href')) linkDataSource = null;
@@ -341,17 +419,9 @@
 				target = linkDataSource.attr('target');
 				title = linkDataSource.attr('title');
 				style_class = linkDataSource.attr('class');
-				href = eval(tinyMCE.settings['urlconverter_callback'] + "(href, linkDataSource, true);");
+				href = ed.cleanLink(href, linkDataSource),
 				action = "update";
 			}
-			
-			// Turn into relative
-			if(href.match(new RegExp('^' + tinyMCE.settings['document_base_url'] + '(.*)$'))) {
-				href = RegExp.$1;
-			}
-			
-			// Get rid of TinyMCE's temporary URLs
-			if(href.match(/^javascript:\s*mctmp/)) href = '';
 			
 			if(href.match(/^mailto:(.*)$/)) {
 				return {
