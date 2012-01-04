@@ -272,7 +272,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				)
 			),
 			new FieldList(
-				$removeAction = new FormAction('remove', _t('HtmlEditorField.BUTTONREMOVELINK', 'Remove link')),
+				$removeAction = new ResetFormAction('remove', _t('HtmlEditorField.BUTTONREMOVELINK', 'Remove link')),
 				$insertAction = new FormAction('insert', _t('HtmlEditorField.BUTTONINSERTLINK', 'Insert link'))
 			)
 		);
