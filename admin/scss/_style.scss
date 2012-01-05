@@ -291,8 +291,11 @@ body.cms {
 .cms-page-add-form-dialog {
 
 	display: none;
+}
 
+.cms-add-form {
 	#PageType li {
+		float: none;
 		width: 100%;
 		padding: 9px 0 9px 15px;
 		overflow: hidden;
@@ -309,8 +312,20 @@ body.cms {
 			background-color: $color-highlight-opacity;
 		}
 
+		&.disabled {
+			color: $color-text-disabled;
+			&:hover {
+				background: none;
+			}
+		}
+
+		input {
+			margin: inherit;
+		}
+
 		label {
 			padding-left: 0;
+			padding-bottom: 0;
 		}
 		
 		input, label, .icon, .title {
@@ -355,7 +370,7 @@ body.cms {
 			font-style: italic;
 		}
 		
-	}
+	}	
 }
 
 /** --------------------------------------------

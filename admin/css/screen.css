@@ -234,18 +234,22 @@ body.cms { overflow: hidden; }
 
 /** -------------------------------------------- "Add page" dialog -------------------------------------------- */
 .cms-page-add-form-dialog { display: none; }
-.cms-page-add-form-dialog #PageType li { width: 100%; padding: 9px 0 9px 15px; overflow: hidden; border-bottom-width: 2px; border-bottom: 2px groove rgba(255, 255, 255, 0.8); -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
-.cms-page-add-form-dialog #PageType li:last-child { border-bottom: none; }
-.cms-page-add-form-dialog #PageType li:hover, .cms-page-add-form-dialog #PageType li.selected { background-color: rgba(255, 255, 102, 0.3); }
-.cms-page-add-form-dialog #PageType li label { padding-left: 0; }
-.cms-page-add-form-dialog #PageType li input, .cms-page-add-form-dialog #PageType li label, .cms-page-add-form-dialog #PageType li .icon, .cms-page-add-form-dialog #PageType li .title { float: left; line-height: 1.3em; }
-.cms-page-add-form-dialog #PageType li .icon { width: 20px; display: block; width: 16px; height: 16px; margin: 0 4px; background-color: transparent; background-image: url(../images/sitetree_ss_pageclass_icons_default.png); background-repeat: no-repeat; }
-.cms-page-add-form-dialog #PageType li .class-HomePage { background-position: 0 -48px; }
-.cms-page-add-form-dialog #PageType li .class-RedirectorPage { background-position: 0 -16px; }
-.cms-page-add-form-dialog #PageType li .class-VirtualPage { background-position: 0 -32px; }
-.cms-page-add-form-dialog #PageType li .class-ErrorPage { background-position: 0 -112px; }
-.cms-page-add-form-dialog #PageType li .title { width: 120px; font-weight: bold; padding-right: 10px; }
-.cms-page-add-form-dialog #PageType li .description { font-style: italic; }
+
+.cms-add-form #PageType li { float: none; width: 100%; padding: 9px 0 9px 15px; overflow: hidden; border-bottom-width: 2px; border-bottom: 2px groove rgba(255, 255, 255, 0.8); -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
+.cms-add-form #PageType li:last-child { border-bottom: none; }
+.cms-add-form #PageType li:hover, .cms-add-form #PageType li.selected { background-color: rgba(255, 255, 102, 0.3); }
+.cms-add-form #PageType li.disabled { color: #aaaaaa; }
+.cms-add-form #PageType li.disabled:hover { background: none; }
+.cms-add-form #PageType li input { margin: inherit; }
+.cms-add-form #PageType li label { padding-left: 0; padding-bottom: 0; }
+.cms-add-form #PageType li input, .cms-add-form #PageType li label, .cms-add-form #PageType li .icon, .cms-add-form #PageType li .title { float: left; line-height: 1.3em; }
+.cms-add-form #PageType li .icon { width: 20px; display: block; width: 16px; height: 16px; margin: 0 4px; background-color: transparent; background-image: url(../images/sitetree_ss_pageclass_icons_default.png); background-repeat: no-repeat; }
+.cms-add-form #PageType li .class-HomePage { background-position: 0 -48px; }
+.cms-add-form #PageType li .class-RedirectorPage { background-position: 0 -16px; }
+.cms-add-form #PageType li .class-VirtualPage { background-position: 0 -32px; }
+.cms-add-form #PageType li .class-ErrorPage { background-position: 0 -112px; }
+.cms-add-form #PageType li .title { width: 120px; font-weight: bold; padding-right: 10px; }
+.cms-add-form #PageType li .description { font-style: italic; }
 
 /** -------------------------------------------- Content toolbar -------------------------------------------- */
 .cms-content-toolbar { display: block; margin: 0 0 15px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); *zoom: 1; }
