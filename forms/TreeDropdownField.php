@@ -133,6 +133,13 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
+	 * @param Boolean
+	 */
+	public function setShowSearch($bool) {
+		$this->showSearch = $bool;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function Field($properties = array()) {
