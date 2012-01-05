@@ -201,13 +201,13 @@
 					display: inline-block;
 					width: 8px;
 					height: 8px;
-					background: sprite($sprites32, menu-arrow-down) no-repeat;
+					background: sprite($sprites32, menu-arrow-deselected-down) no-repeat;
 					vertical-align: middle;
 				}
 				
 				&.opened {
 					.toggle-children-icon {
-						background: sprite($sprites32, menu-arrow-up) no-repeat;
+						background: sprite($sprites32, menu-arrow-deselected-up) no-repeat;
 					}
 				}
 			}
@@ -228,6 +228,18 @@
 					$color-menu-button, 
 					darken($color-menu-button, 10%)
 				));
+
+				.toggle-children {
+					.toggle-children-icon {
+						background: sprite($sprites32, menu-arrow-down) no-repeat;
+					}
+					
+					&.opened {
+						.toggle-children-icon {
+							background: sprite($sprites32, menu-arrow-up) no-repeat;
+						}
+					}
+				}
 			}
 			
 			ul {
