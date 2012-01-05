@@ -152,8 +152,9 @@
 						$(this)
 							.jstree('destroy')
 							.bind('loaded.jstree', function(e, data) {
-								var val = self.getValue();
-								if(val) data.inst.select_node(treeHolder.find('*[data-id="' + val + '"]'));
+								var val = self.getValue(), selectNode = treeHolder.find('*[data-id="' + val + '"]'), 
+									currentNode = data.inst.get_selected();
+								if(val && selectNode != currentNode) data.inst.select_node(selectNode);
 								data.inst.open_all();
 								firstLoad = false;
 								if(callback) callback.apply(self);
@@ -161,12 +162,14 @@
 							.jstree(self.getTreeConfig())
 							.bind('select_node.jstree', function(e, data) {
 								var node = data.rslt.obj, id = $(node).data('id');
-								if(self.getValue() == id) {
+								if(!firstLoad && !self.getValue() == id) {
+									// Value is already selected, unselect it (for lack of a better UI to do this)
 									self.data('metadata', null);
 									self.setTitle(null);
 									self.setValue(null);
+									data.inst.deselect_node(node);
 								} else {
-									self.data('metadata', [$.extend({id: id}, $(node).getMetaData())]);
+									self.data('metadata', $.extend({id: id}, $(node).getMetaData()));
 									self.setTitle(data.inst.get_text(node));
 									self.setValue(id);
 								}
