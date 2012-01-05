@@ -385,7 +385,7 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 /** -------------------------------------------- Step labels -------------------------------------------- */
 .step-label > * { display: inline-block; vertical-align: top; }
 .step-label .flyout { height: 18px; font-size: 14px; font-weight: bold; -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; -o-border-top-left-radius: 3px; -ms-border-top-left-radius: 3px; -khtml-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-bottomleft: 3px; -webkit-border-bottom-left-radius: 3px; -o-border-bottom-left-radius: 3px; -ms-border-bottom-left-radius: 3px; -khtml-border-bottom-left-radius: 3px; border-bottom-left-radius: 3px; background-color: #667980; padding: 4px 3px 4px 6px; text-align: center; text-shadow: none; color: #fff; }
-.step-label .arrow { height: 26px; width: 10px; background: url('../images/sprites/32x32-s8fc6dac693.png') 0 0 no-repeat; margin-right: 4px; }
+.step-label .arrow { height: 26px; width: 10px; background: url('../images/sprites/32x32-sad4b9dcce6.png') 0 -32px no-repeat; margin-right: 4px; }
 .step-label .title { height: 18px; padding: 4px; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
@@ -511,8 +511,11 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-menu-list li a { display: block; height: 24px; line-height: 24px; font-size: 12px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-shadow: #bfcad2 1px 1px 0; color: #1f1f1f; padding: 7px 5px 7px 8px; background-color: #b0bec7; cursor: pointer; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #8ca1ae)); background-image: -webkit-linear-gradient(#b0bec7, #8ca1ae); background-image: -moz-linear-gradient(#b0bec7, #8ca1ae); background-image: -o-linear-gradient(#b0bec7, #8ca1ae); background-image: -ms-linear-gradient(#b0bec7, #8ca1ae); background-image: linear-gradient(#b0bec7, #8ca1ae); border-top: 1px solid #ced7dc; border-bottom: 1px solid #748d9d; }
 .cms-menu-list li a:hover { text-decoration: none; background-color: #b6c3cb; border-bottom: 1px solid #8399a7; color: #2c2c2c; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #bfcad2), color-stop(100%, #b0bec7)); background-image: -webkit-linear-gradient(#bfcad2, #b0bec7); background-image: -moz-linear-gradient(#bfcad2, #b0bec7); background-image: -o-linear-gradient(#bfcad2, #b0bec7); background-image: -ms-linear-gradient(#bfcad2, #b0bec7); background-image: linear-gradient(#bfcad2, #b0bec7); }
 .cms-menu-list li a:focus, .cms-menu-list li a:active { border-top: 1px solid #a1b2bc; text-decoration: none; background-color: #a1b2bc; color: #393939; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #92a5b2), color-stop(100%, #a1b2bc)); background-image: -webkit-linear-gradient(#92a5b2, #a1b2bc); background-image: -moz-linear-gradient(#92a5b2, #a1b2bc); background-image: -o-linear-gradient(#92a5b2, #a1b2bc); background-image: -ms-linear-gradient(#92a5b2, #a1b2bc); background-image: linear-gradient(#92a5b2, #a1b2bc); }
-.cms-menu-list li a .icon { display: block; float: left; margin: 4px 10px 0 4px; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70); opacity: 0.7; }
-.cms-menu-list li a .text { display: block; }
+.cms-menu-list li a .icon { display: inline-block; float: left; margin: 4px 10px 0 4px; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70); opacity: 0.7; }
+.cms-menu-list li a .text { display: inline-block; float: left; }
+.cms-menu-list li a .toggle-children { display: inline-block; float: right; width: 20px; height: 100%; cursor: pointer; }
+.cms-menu-list li a .toggle-children .toggle-children-icon { display: inline-block; width: 8px; height: 8px; background: url('../images/sprites/32x32-sad4b9dcce6.png') 0 0 no-repeat; vertical-align: middle; }
+.cms-menu-list li a .toggle-children.opened .toggle-children-icon { background: url('../images/sprites/32x32-sad4b9dcce6.png') 0 -16px no-repeat; }
 .cms-menu-list li ul { display: none; }
 .cms-menu-list li.current a { color: white; text-shadow: #1e5270 0 -1px 0; border-top: 1px solid #55a4d2; border-bottom: 1px solid #1e5270; background-color: #338dc1; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #338dc1), color-stop(100%, #287099)); background-image: -webkit-linear-gradient(#338dc1, #287099); background-image: -moz-linear-gradient(#338dc1, #287099); background-image: -o-linear-gradient(#338dc1, #287099); background-image: -ms-linear-gradient(#338dc1, #287099); background-image: linear-gradient(#338dc1, #287099); }
 .cms-menu-list li.current ul { border-top: none; display: block; }
@@ -527,7 +530,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-menu-list li ul.collapsed-flyout li a.current, .cms-menu-list li ul.collapsed-flyout li a:hover { font-weight: bold; }
 .cms-menu-list li ul.collapsed-flyout li.current a { font-weight: bold; }
 .cms-menu-list li ul.collapsed-flyout li.first a { border-top: 1px solid #92a5b2; }
-.cms-menu-list.collapsed li .text { display: none; }
+.cms-menu-list.collapsed li .text, .cms-menu-list.collapsed li .toggle-children { display: none; }
 .cms-menu-list.collapsed li > li { display: none; }
 
 /** -------------------------------------------- ModelAdmin -------------------------------------------- */

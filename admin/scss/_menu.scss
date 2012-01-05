@@ -178,15 +178,38 @@
 			}
 			
 			.icon {
-				display: block;
+				display: inline-block;
 				float: left;
 				margin: 4px 10px 0 4px;
-				
+
 				@include opacity(0.7);
 			}
 			
 			.text {
-				display: block;
+				display: inline-block;
+				float: left;
+			}
+
+			.toggle-children {
+				display: inline-block;
+				float: right;
+				width: 20px;
+				height: 100%;
+				cursor: pointer;
+
+				.toggle-children-icon {
+					display: inline-block;
+					width: 8px;
+					height: 8px;
+					background: sprite($sprites32, menu-arrow-down) no-repeat;
+					vertical-align: middle;
+				}
+				
+				&.opened {
+					.toggle-children-icon {
+						background: sprite($sprites32, menu-arrow-up) no-repeat;
+					}
+				}
 			}
 		}
 		
@@ -280,8 +303,10 @@
 	}
 
 	&.collapsed {
-		li .text {
-			display: none;
+		li {
+			.text, .toggle-children {
+				display: none;
+			}
 		}
 		
 		li > li {

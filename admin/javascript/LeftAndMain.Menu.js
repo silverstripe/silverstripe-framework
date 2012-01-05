@@ -82,16 +82,27 @@
 		});
 		
 		$('.cms-menu-list li').entwine({
+			onmatch: function() {
+				if(this.find('ul').length) {
+					this.find('a:first').append('<span class="toggle-children"><span class="toggle-children-icon"></span></span>');
+				}
+			},
 			toggle: function() {
 				this[this.hasClass('opened') ? 'close' : 'open']();
 			},
+			/**
+			 * "Open" is just a visual state, and unrelated to "current".
+			 * More than one item can be open at the same time.
+			 */
 			open: function() {
 				var parent = this.getMenuItem();
 				if(parent) parent.open();
 				this.addClass('opened').find('ul').show();
+				this.find('.toggle-children').addClass('opened');
 			},
 			close: function() {
 				this.removeClass('opened').find('ul').hide();
+				this.find('.toggle-children').removeClass('opened');
 			},
 			select: function() {
 				var parent = this.getMenuItem();
@@ -100,7 +111,13 @@
 				// Remove "current" class from all siblings and their children
 				this.siblings().removeClass('current').close();
 				this.siblings().find('li').removeClass('current');
-				if(parent) parent.addClass('current').siblings().removeClass('current');
+				if(parent) {
+					var parentSiblings = parent.siblings();
+					parent.addClass('current');
+					parentSiblings.removeClass('current').close();
+					parentSiblings.find('li').removeClass('current').close();
+				}
+				
 				this.getMenu().updateItems();
 
 				this.trigger('select');
@@ -148,9 +165,19 @@
 			}
 		});
 
+		$('.cms-menu-list li .toggle-children').entwine({
+			onclick: function(e) {
+				var li = this.closest('li');
+				li.toggle();
+				return false; // prevent wrapping link event to fire
+			}
+		});
 		
 		$('.cms-menu-list #Menu-CMSPageSettingsController, .cms-menu-list #Menu-CMSPageHistoryController, .cms-menu-list #Menu-CMSPageEditController').entwine({
 			setRecordID: function(id) {
+				// Only applies to edit forms relating to page elements
+				if(!$('.cms-content').is('.CMSMain')) return;
+
 				var link = this.find('a:first'), href = link.attr("href").split('/')
 				// Assumes that current ID will always be the last URL segment (and not a query parameter)
 				href[href.length -1] = id;
@@ -160,8 +187,12 @@
 
 		$('.cms-menu-list #Menu-CMSPageAddController').entwine({
 			setRecordID: function(id) {
-				var link = this.find('a:first');
-				link.attr('href', link.attr('href').replace('/\?.*/', '?ParentID=' . id));
+				// Only applies to edit forms relating to page elements
+				if(!$('.cms-content').is('.CMSMain')) return;
+
+				var link = this.find('a:first'), href = link.attr('href');
+				if(!href.match(/\?/)) href += '?';
+				link.attr('href', href.replace(/\?.*$/, '?ParentID=' + id));
 			}
 		});
 		

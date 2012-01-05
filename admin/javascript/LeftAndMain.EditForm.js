@@ -243,7 +243,8 @@
 			isChanged: function() {
 				if(typeof tinyMCE == 'undefined') return;
 
-				return tinyMCE.getInstanceById(this.attr('id')).isDirty();
+				var inst = tinyMCE.getInstanceById(this.attr('id'));
+				return inst ? inst.isDirty() : false;
 			},
 
 			resetChanged: function() {

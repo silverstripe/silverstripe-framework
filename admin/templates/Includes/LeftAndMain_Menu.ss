@@ -57,7 +57,7 @@
 							</a>
 						</li>
 						<li class="first <% if Top.class == 'CMSPageAddController' %>current<% end_if %>" id="Menu-CMSPageAddController">
-							<a href="admin/page/add/show/$Top.CurrentPageID">
+							<a href="admin/page/add/?ParentID=$Top.CurrentPageID">
 								<span class="text">Add pages</span>
 							</a>
 						</li>
