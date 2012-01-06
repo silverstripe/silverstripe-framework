@@ -44,7 +44,8 @@ class NamespacedClassManifestTest extends SapphireTest {
 			'sapphire\test\classd' => "{$this->base}/module/classes/ClassD.php",
 			'sapphire\test\classe' => "{$this->base}/module/classes/ClassE.php",
 			'sapphire\test\classf' => "{$this->base}/module/classes/ClassF.php",
-			'sapphire\test\classg' => "{$this->base}/module/classes/ClassG.php"
+			'sapphire\test\classg' => "{$this->base}/module/classes/ClassG.php",
+			'sapphire\test\classh' => "{$this->base}/module/classes/ClassH.php"
 		);
 		
 		$this->assertEquals($expect, $this->manifest->getClasses());
@@ -52,13 +53,13 @@ class NamespacedClassManifestTest extends SapphireTest {
 
 	public function testGetClassNames() {
 		$this->assertEquals(
-			array('sapphire\test\classa', 'sapphire\test\classb', 'sapphire\test\classc', 'sapphire\test\classd', 'sapphire\test\classe', 'sapphire\test\classf', 'sapphire\test\classg'),
+			array('sapphire\test\classa', 'sapphire\test\classb', 'sapphire\test\classc', 'sapphire\test\classd', 'sapphire\test\classe', 'sapphire\test\classf', 'sapphire\test\classg', 'sapphire\test\classh'),
 			$this->manifest->getClassNames());
 	}
 
 	public function testGetDescendants() {
 		$expect = array(
-			'sapphire\test\classa' => array('sapphire\test\ClassB')
+			'sapphire\test\classa' => array('sapphire\test\ClassB', 'sapphire\test\ClassH'),
 		);
 		
 		$this->assertEquals($expect, $this->manifest->getDescendants());
@@ -66,8 +67,8 @@ class NamespacedClassManifestTest extends SapphireTest {
 
 	public function testGetDescendantsOf() {
 		$expect = array(
-			'SAPPHIRE\TEST\CLASSA' => array('sapphire\test\ClassB'),
-			'sapphire\test\classa' => array('sapphire\test\ClassB'),
+			'SAPPHIRE\TEST\CLASSA' => array('sapphire\test\ClassB', 'sapphire\test\ClassH'),
+			'sapphire\test\classa' => array('sapphire\test\ClassB', 'sapphire\test\ClassH'),
 		);
 
 		foreach ($expect as $class => $desc) {

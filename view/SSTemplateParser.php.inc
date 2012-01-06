@@ -490,6 +490,7 @@ class SSTemplateParser extends Parser {
 		$block = ++$res['subblocks'];
 		// Build the key for this block from the passed cache key, the block index, and the sha hash of the template itself
 		$key = "'" . sha1($sub['php']) . (isset($res['key']) && $res['key'] ? "_'.sha1(".$res['key'].")" : "'") . ".'_$block'";
+		$key = preg_replace('/[^a-zA-Z0-9_]/', '_', $key);
 		// Get any condition
 		$condition = isset($res['condition']) ? $res['condition'] : '';
 		
