@@ -283,17 +283,10 @@ class LeftAndMain extends Controller {
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::add_i18n_javascript(SAPPHIRE_ADMIN_DIR . '/javascript/lang');
 		
-		Requirements::combine_files(
-			'lib.css',
-			array(
-				// @todo Load separately so the CSS files can be inlined
-				THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css',
-				SAPPHIRE_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css',
-				THIRDPARTY_DIR . '/jstree/themes/apple/style.css',
-				SAPPHIRE_DIR . '/css/TreeDropdownField.css'
-			)
-		);
-		
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css');
+		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
 
 		// Browser-specific requirements
