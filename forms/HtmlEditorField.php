@@ -7,13 +7,37 @@
  * @subpackage fields-formattedinput
  */
 class HtmlEditorField extends TextareaField {
+
+	/**
+	 * @var Boolean Use TinyMCE's GZIP compressor
+	 */
+	static $use_gzip = true;
 	
 	/**
 	 * Includes the JavaScript neccesary for this field to work using the {@link Requirements} system.
 	 */
 	public static function include_js() {
-		Requirements::javascript(MCE_ROOT . 'tiny_mce_src.js');
-		Requirements::customScript(HtmlEditorConfig::get_active()->generateJS(), 'htmlEditorConfig');
+		require_once 'tinymce/tiny_mce_gzip.php';
+
+		$configObj = HtmlEditorConfig::get_active();
+
+		if(self::$use_gzip) {
+			$internalPlugins = array();
+			foreach($configObj->getPlugins() as $plugin => $path) if(!$path) $internalPlugins[] = $plugin;
+			$tag = TinyMCE_Compressor::renderTag(array(
+				'url' => THIRDPARTY_DIR . '/tinymce/tiny_mce_gzip.php',
+				'plugins' => implode(',', $internalPlugins),
+				'themes' => 'advanced',
+				'languages' => $configObj->getOption('language')
+			), true);
+			preg_match('/src="([^"]*)"/', $tag, $matches);
+			Requirements::javascript($matches[1]);
+
+		} else {
+			Requirements::javascript(MCE_ROOT . 'tiny_mce_src.js');
+		} 
+
+		Requirements::customScript($configObj->generateJS(), 'htmlEditorConfig');
 	}
 	
 	/**
