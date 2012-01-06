@@ -21,63 +21,43 @@ class GridFieldTest extends SapphireTest {
 	);
 
 	public function testGetInstance() {
-		$this->assertTrue(new GridField('Testgrid') instanceof FormField, 'GridField should be a FormField');
+		$this->assertTrue(new GridField('Testgrid', 'Test grid', new DataList('GridFieldTest_Person')) instanceof CompositeField, 'Testing constructor of GridField');
 	}
 	
 	public function testSetDataSource() {
-		$grid = new GridField('Testgrid');
-		$source = new ArrayList();
-		$grid->setList($source);
+		$source = new DataList('GridFieldTest_Person');
+		$grid = new GridField('Testgrid', 'Test grid', $source);
 		$this->assertEquals($source, $grid->getList());
 	}
 	
-	function testSetEmptyDataPresenter() {
-		$this->setExpectedException('InvalidArgumentException');
-		$grid = new GridField('Testgrid');
-		$grid->setPresenter('');
-	}
-	
-	function testSetNonExistingDataPresenter() {
-		$this->setExpectedException('InvalidArgumentException');
-		$grid = new GridField('Testgrid');
-		$grid->setPresenter('ifThisClassExistsIWouldBeSurprised');
-	}
-	
-	function testSetDataPresenterWithDataObject() {
-		$this->setExpectedException('InvalidArgumentException');
-		$grid = new GridField('Testgrid');
-		$grid->setPresenter('DataObject');
-	}
-	
-	function testSetDataPresenter() {
-		$grid = new GridField('Testgrid');
-		$grid->setPresenter('GridFieldPresenter');
-	}
-	
 	function testSetDataclass() {
-		$grid = new GridField('Testgrid');
+		$source = new DataList('GridFieldTest_Person');
+		$grid = new GridField('Testgrid', 'Test grid', $source);
 		$grid->setModelClass('SiteTree');
 		$this->assertEquals('SiteTree', $grid->getModelClass());
 	}
 	
-	/**
-	 * 
-	 */
-	function testFieldHolderWithoutDataSource() {
-		$this->setExpectedException('LogicException');
-		$grid = new GridField('Testgrid');
-		$this->assertNotNull($grid->FieldHolder());
+	public function testGetDisplayFields() {
+		$grid = new GridField('Testgrid', 'Test grid', new DataList('GridFieldTest_Person'));
+		$expected = array( 'Name' => 'Name', 'ID' => 'ID' );
+		$this->assertEquals($expected, $grid->getDisplayFields());
+	}
+	
+	public function testGetState() {
+		$grid = new GridField('Testgrid', 'Test grid', new DataList('GridFieldTest_Person'));
+		$this->assertTrue($grid->getState() instanceof GridState);
 	}
 	
 	/**
-	 * This is better tested in the GridFieldFunctionalTest
-	 * 
-	 * @see GridFieldFunctionalTest
+	 * Will test that the default state changers are rendered
 	 */
-	function testFieldHolder() {
-		$grid = new GridField('Testgrid');
-		$grid->setList(new DataList('GridFieldTest_Person'));
-		$this->assertNotNull($grid->FieldHolder());
+	public function testFieldHolder() {
+		$grid = new GridField('Testgrid', 'Test grid', new DataList('GridFieldTest_Person'));
+		$html = $grid->FieldHolder();
+		$this->assertContains('id="GridState" name="GridState"',$html);
+		$this->assertContains('id="action_SetOrderID" type="submit"',$html);
+		$this->assertContains('id="SetFilterID" name="SetFilterID" value=""',$html);
+		$this->assertContains('id="action_SetPage1" type="submit"',$html);
 	}
 }
 

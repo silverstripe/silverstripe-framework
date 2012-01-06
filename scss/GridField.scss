@@ -7,67 +7,78 @@
 
 @import "compass/css3";
 
-$base: #dadada;
+$base: #95a5ab;
 $zebra: #f2f9fd;
+$header_border: #819198;
+$border: #eaeaea;
 
-.ss-gridfield {
-	border: none;
+table.ss-gridfield {
 	
-	table {
-		width: 100%;
-		border-collapse: collapse;
-		border-spacing: 0;
-		background: #fff;
-		border: 1px solid darken($base, 10%);
-	}
-	
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
+	background: #fff;
+	border: 1px solid $header_border;
+
 	thead {
 		color: darken($base, 50%);
-
 		background: $base;		
 			
 		@include background-image(linear-gradient(
-			lighten($base, 10%), $base
+			#b4c3c8, #819195
 		));
 
- 		
 		th {
-			font-weight: bold;
-			padding: 8px 24px 8px 8px;
-			position: relative;
-			border: 1px solid darken($base, 10%);
+
+			border: 1px solid $header_border;
 			border-width: 0 1px 1px 0;
-			
-			&.ss-gridfield-sortable {
-					
-				&.hover {
-					color: darken($base, 40%);
+
+			button.ss-gridfield-button {
+
+				&:hover {
 					cursor: pointer;
-					
-					background: lighten($base, 10%);
-					
+				}
+
+				&.ss-gridfield-sorted {
 					@include background-image(linear-gradient(
-						lighten($base, 15%), lighten($base, 5%)
-					));
-				}	
-			}
-			
-			&.ss-gridfield-sorted {
-				background: lighten($base, 5%);
-				
-				@include background-image(linear-gradient(
-					$base, lighten($base, 10%)
-				));
-				
-				&.hover {
-					background: lighten($base, 10%);
-					
-					@include background-image(linear-gradient(
-						lighten($base, 5%), lighten($base, 12%)
+						#819195, #b4c3c8
 					));
 				}
 			}
-			
+
+			&.main {
+				font-weight: bold;
+				font-size: 15px;
+				line-height: 24px;
+
+				.ss-gridfield-button {
+					
+					width:100%;
+					background: transparent;
+					border: 0;
+					padding: 0 2px;
+					
+					color: #fff;
+					font-family: Arial, sans-serif;
+					
+					padding: 8px 8px 8px 8px;
+					position: relative;
+					
+				}
+			}
+
+			&.extra {
+				@include background-image(linear-gradient(
+					#ffd, #ffb
+				));
+
+				padding: 2px 4px;
+		
+				button.ss-gridfield-button {
+					color: #333;
+				}
+			}
+
 			.ui-icon {
 				position: absolute;
 				top: 5px;
@@ -90,8 +101,8 @@ $zebra: #f2f9fd;
 	
 	td {
 		padding: 8px;
-		border-right: 1px solid lighten($base, 10%);
-		
+		border-right: 1px solid $border;
+
 		&.ss-gridfield-last {
 			border-right: none;
 		}
@@ -100,7 +111,7 @@ $zebra: #f2f9fd;
 	tr {
 		
 		&.ss-gridfield-even {
-			border: 1px solid darken($zebra, 10%);
+			border: 1px solid $border;
 			border-width: 1px 0;
 			background: $zebra;
 			
@@ -109,12 +120,21 @@ $zebra: #f2f9fd;
 			}
 			
 			td {
-				border-right: 1px solid darken($zebra, 5%);
+				border-right: 1px solid $border;
 				
 				&.ss-gridfield-last {
 					border-right: none;
 				}
 			}
 		}
+	}
+
+	tfoot {
+		color: darken($base, 50%);
+		background: $base;
+	}
+
+	input.ss-gridfield-filter {
+		width: 100% !important;
 	}
 }
