@@ -48,9 +48,12 @@ class Aggregate extends ViewableData {
 		
 		if (!$class || $class == 'DataObject') {
 			$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('aggregate'));
-		}	
-		else {
-			$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG, ClassInfo::ancestry($class));
+		} else {
+			$tags = ClassInfo::ancestry($class);
+			foreach($tags as &$tag) {
+				$tag = preg_replace('/[^a-zA-Z0-9_]/', '_', $tag);
+			}
+			$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG, $tags);
 		}
 	}
 	
@@ -108,7 +111,7 @@ class Aggregate extends ViewableData {
 		
 		if (!($result = $cache->load($cachekey))) {
 			$result = (string)$query->execute()->value(); if (!$result) $result = '0';
-			$cache->save($result, null, array('aggregate', $this->type));
+			$cache->save($result, null, array('aggregate', preg_replace('/[^a-zA-Z0-9_]/', '_', $this->type)));
 		}
 		
 		return $result;
