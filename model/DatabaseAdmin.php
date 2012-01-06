@@ -245,8 +245,15 @@ class DatabaseAdmin extends Controller {
 		}
 		
 		ClassInfo::reset_db_cache();
+
+		$database_cache = SS_Cache::factory('SS_DatabaseCache', 'Core', array(
+			'automatic_serialization' => true,
+			'lifetime' => null
+		));
+
+		$database_cache->remove('database_fields');
 	}
-	
+
 	/**
 	 * Clear all data out of the database
 	 * @todo Move this code into SS_Database class, for DB abstraction
