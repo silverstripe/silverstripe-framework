@@ -726,14 +726,19 @@ class Requirements_Backend {
 
 		foreach(array_diff_key($this->javascript, $this->blocked) as $file => $dummy) { 
 			$path = $this->path_for_file($file);
-			if($path) $jsRequirements[] = $path;
+			if($path) {
+				$jsRequirements[] = str_replace(',', '%2C', $path);
+			}
 		}
 		
 		$response->addHeader('X-Include-JS', implode(',', $jsRequirements));
 
 		foreach(array_diff_key($this->css,$this->blocked) as $file => $params) {  					
 			$path = $this->path_for_file($file);
-			if($path) $cssRequirements[] = isset($params['media']) ? "$path:##:$params[media]" : $path;
+			if($path) {
+				$path = str_replace(',', '%2C', $path);
+				$cssRequirements[] = isset($params['media']) ? "$path:##:$params[media]" : $path;
+			}
 		}
 
 		$response->addHeader('X-Include-CSS', implode(',', $cssRequirements));
