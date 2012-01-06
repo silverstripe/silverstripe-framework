@@ -75,7 +75,7 @@
 		width: 16px;
 		float: left;
 		margin: 0 8px 0 3px;
-		background: url(../images/logout.png) no-repeat;
+		background: sprite($sprites32, logout) no-repeat;
 		text-indent: -9999em;
 	}
 }
