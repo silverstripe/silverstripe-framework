@@ -118,7 +118,7 @@ form.nostyle {
 		&.left {
 			float: left;
 			display: block;
-			width: $grid-horizontal * 21;
+			width: $grid-horizontal * 22;
 			padding: $grid-vertical $grid-horizontal $grid-vertical 0;
 			line-height: $grid-vertical * 2;
 			font-weight: bold;
@@ -444,33 +444,49 @@ form.stacked .field, .field.stacked {
 		margin-left: 0;
 	}
 }
+input.checkbox {
+	margin-left: 0
+}
+
+/** ----------------------------------------------------
+ * Radiobutton Field
+ * ---------------------------------------------------- */
+.field.radio {
+	padding-left: $grid-horizontal * 23;
+	margin-bottom: $grid-vertical;
+
+	input {
+		margin-left: 0;
+	}
+}
+input.radio {
+	margin-left: 0
+}
+
 /** ----------------------------------------------------
  * Optionsets and Checkboxsets
  * ---------------------------------------------------- */
 .optionset {
-	overflow: hidden;
 	padding-bottom: 8px;
 	
 	li {
 		float: left;
 		display: block;
 		width: $grid-horizontal * 27;
-		padding: $grid-vertical $grid-horizontal 0;
+		padding-bottom: $grid-horizontal;
 		line-height: $grid-vertical * 2;
 		list-style: none;
-		position: relative;
 
 		input {
-			position: absolute;
-			top: $grid-vertical + 1; // used to get the input off the edge, the overflow
-			left: 2px; // hidden crops the glow.
-			margin: 0;
+			display: inline-block;
+			padding-right: 0;
+			margin-right: 0;
 		}
 		
 		label {
-			display: block;
+			display: inline;
 			cursor: pointer;
-			padding: 0 0 0 $grid-vertical * 2;
+			padding-left: $grid-vertical;
 		}
 
 	}

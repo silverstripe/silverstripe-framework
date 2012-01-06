@@ -89,7 +89,7 @@ form.nostyle .middleColumn { margin-left: 0; }
 .field { display: block; padding: 10px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); padding: 0 0 7px 0; margin: 0 0 8px 0; *zoom: 1; }
 .field:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
 .field.nolabel .middleColumn { margin-left: 0; }
-.field label.left { float: left; display: block; width: 168px; padding: 8px 8px 8px 0; line-height: 16px; font-weight: bold; text-shadow: 1px 1px 0 white; }
+.field label.left { float: left; display: block; width: 176px; padding: 8px 8px 8px 0; line-height: 16px; font-weight: bold; text-shadow: 1px 1px 0 white; }
 .field label.right { cursor: pointer; }
 .field .middleColumn { margin-left: 184px; }
 .field span.readonly { padding-top: 8px; line-height: 16px; display: block; }
@@ -157,11 +157,19 @@ form.stacked .field .middleColumn, .field.stacked .middleColumn { margin-left: 0
 .field.checkbox { padding-left: 184px; margin-bottom: 8px; }
 .field.checkbox input { margin-left: 0; }
 
+input.checkbox { margin-left: 0; }
+
+/** ---------------------------------------------------- Radiobutton Field ---------------------------------------------------- */
+.field.radio { padding-left: 184px; margin-bottom: 8px; }
+.field.radio input { margin-left: 0; }
+
+input.radio { margin-left: 0; }
+
 /** ---------------------------------------------------- Optionsets and Checkboxsets ---------------------------------------------------- */
-.optionset { overflow: hidden; padding-bottom: 8px; }
-.optionset li { float: left; display: block; width: 216px; padding: 8px 8px 0; line-height: 16px; list-style: none; position: relative; }
-.optionset li input { position: absolute; top: 9px; left: 2px; margin: 0; }
-.optionset li label { display: block; cursor: pointer; padding: 0 0 0 16px; }
+.optionset { padding-bottom: 8px; }
+.optionset li { float: left; display: block; width: 216px; padding-bottom: 8px; line-height: 16px; list-style: none; }
+.optionset li input { display: inline-block; padding-right: 0; margin-right: 0; }
+.optionset li label { display: inline; cursor: pointer; padding-left: 8px; }
 
 /** ---------------------------------------------------- HTML Text  ---------------------------------------------------- */
 .htmleditor textarea { visibility: hidden; }
@@ -317,13 +325,14 @@ body.cms { overflow: hidden; }
 form.member-profile-form #CsvFile .middleColumn { background: none !important; }
 form.member-profile-form .advanced h4 { margin-bottom: .5em; }
 form.member-profile-form .Actions { text-align: left; border: 0; }
-form.member-profile-form input.customFormat { border: 1px solid #ccc !important; padding: 3px; display: inline; margin-left: 15px; position: relative; }
-form.member-profile-form .formattingHelpToggle { display: block; font-size: 11px; margin-top: 10px; margin-left: 15px; }
+form.member-profile-form input.customFormat { width: 80px; border: 1px solid #ccc !important; padding: 3px; display: inline-block; margin-left: 1em; }
+form.member-profile-form .formattingHelpToggle { display: block; font-size: 11px; }
 form.member-profile-form .formattingHelpText { margin: 5px 0 0 -5px; color: #333; padding: 5px 10px; background: #fff; border: 1px solid #ccc; }
 form.member-profile-form .formattingHelpText ul { padding: 0; }
-form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; margin-bottom: 2px; float: none; width: auto; }
+form.member-profile-form .formattingHelpText li { font-size: 11px; color: #333; margin-bottom: 2px; padding-bottom: 0; float: none; width: auto; }
 form.member-profile-form #Groups .middleColumn { margin-left: 0; width: 100%; }
 form.member-profile-form #Groups .middleColumn .TreeDropdownField { width: 90%; max-width: 90%; }
+form.member-profile-form #Permissions .optionset li { float: none; width: auto; }
 
 .cms .cms-content { border-right: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -webkit-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -o-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -moz-border-radius: 0; -webkit-border-radius: 0; -o-border-radius: 0; -ms-border-radius: 0; -khtml-border-radius: 0; border-radius: 0; }
 .cms .cms-content-fields { /* always show a y scroll bar as popups like TreeDropdowns  can trigger longer pages and the extra scroll bar doesn't  fire our sizing bar */ overflow-y: auto; overflow-x: auto; background: none; }

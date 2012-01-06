@@ -689,17 +689,15 @@ form.member-profile-form {
 	}
 	
 	input.customFormat {
+		width: $grid-horizontal * 10;
 		border: 1px solid #ccc !important;
 		padding: 3px;
-		display: inline;
-		margin-left: 15px;
-		position: relative;
+		display: inline-block;
+		margin-left: 1em;
 	}
 	.formattingHelpToggle {
 		display: block;
 		font-size: 11px;
-		margin-top: 10px;
-		margin-left: 15px;
 	}
 	.formattingHelpText {
 		margin: 5px 0 0 -5px;
@@ -715,6 +713,7 @@ form.member-profile-form {
 		font-size: 11px;
 		color: #333;
 		margin-bottom: 2px;
+		padding-bottom: 0;
 		float: none;
 		width: auto;
 	}
@@ -724,6 +723,16 @@ form.member-profile-form {
 		.TreeDropdownField {
 			width: 90%;
 			max-width: 90%;
+		}
+	}
+
+	// Same rules in .SecurityAdmin
+	#Permissions {
+		.optionset {
+			li {
+				float: none;
+				width: auto;
+			}	
 		}
 	}
 }
