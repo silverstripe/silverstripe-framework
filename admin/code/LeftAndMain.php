@@ -300,6 +300,7 @@ class LeftAndMain extends Controller {
 		if($ie) {
 			$version = substr($_SERVER['HTTP_USER_AGENT'], $ie + 5, 3);
 			if($version == 7) Requirements::css('sapphire/admin/css/ie7.css');
+			else if($version == 8) Requirements::css('sapphire/admin/css/ie8.css');
 		}
 
 		// Custom requirements				

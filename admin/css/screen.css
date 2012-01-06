@@ -344,6 +344,8 @@ form.member-profile-form #Groups .middleColumn .TreeDropdownField { width: 90%; 
 }
 */ }
 .cms-panel.collapsed .cms-panel-content { display: none; }
+.cms-panel .cms-panel-content-collapsed { width: 40px; }
+.cms-panel .cms-panel-content-collapsed h2, .cms-panel .cms-panel-content-collapsed h3 { border-bottom: 0; margin-left: 8px; -moz-transform-origin: bottom left; -webkit-transform-origin: bottom left; -o-transform-origin: bottom left; -ms-transform-origin: bottom left; transform-origin: bottom left; -moz-transform: rotate(90deg); -webkit-transform: rotate(90deg); -o-transform: rotate(90deg); -ms-transform: rotate(90deg); transform: rotate(90deg); }
 .cms-panel .child-flyout-indicator { width: 0; height: 0; border-right: 3px dashed #1f1f1f; border-top: 3px solid transparent; border-left: 3px solid transparent; border-bottom: 3px dashed #1f1f1f; position: absolute; right: 1px; margin-top: -8px; display: none; /* To be shown by javascript, see LeftAndMain.Panel.js */ }
 .cms-panel .collapsed-flyout { display: block !important; left: 41px; margin-top: -40px; position: fixed; width: 191px; }
 .cms-panel .collapsed-flyout li a span { display: block !important; }

@@ -796,6 +796,18 @@ form.member-profile-form {
 			padding: 0;
 		}
 		*/
+
+	}
+
+	.cms-panel-content-collapsed {
+		width: 40px;
+
+		h2, h3 {
+			border-bottom: 0;
+			margin-left: $grid-vertical;
+			@include transform-origin(bottom, left);
+			@include rotate(90deg);
+		}
 	}
 
 	.child-flyout-indicator {
