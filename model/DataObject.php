@@ -205,31 +205,41 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array Map of fieldname to specification, similiar to {@link DataObject::$db}.
 	 */
 	public static function custom_database_fields($class) {
-		$fields = Object::uninherited_static($class, 'db');
-		
-		foreach(self::composite_fields($class, false) as $fieldName => $fieldClass) {
-			// Remove the original fieldname, its not an actual database column
-			unset($fields[$fieldName]);
-			
-			// Add all composite columns
-			$compositeFields = singleton($fieldClass)->compositeDatabaseFields();
-			if($compositeFields) foreach($compositeFields as $compositeName => $spec) {
-				$fields["{$fieldName}{$compositeName}"] = $spec;
+		$database_cache = SS_Cache::factory('SS_DatabaseCache', 'Core', array(
+			'automatic_serialization' => true,
+			'lifetime' => null
+		));
+
+		if (!$fields = $database_cache->load('database_fields')) {
+			$fields = Object::uninherited_static($class, 'db');
+
+			foreach (self::composite_fields($class, false) as $fieldName => $fieldClass) {
+				// Remove the original fieldname, its not an actual database column
+				unset($fields[$fieldName]);
+
+				// Add all composite columns
+				if ($compositeFields = singleton($fieldClass)->compositeDatabaseFields()) {
+					foreach($compositeFields as $compositeName => $spec) {
+						$fields["{$fieldName}{$compositeName}"] = $spec;
+					}
+				}
 			}
+
+			// Add has_one relationships
+			if ($hasOne = Object::uninherited_static($class, 'has_one')) {
+				foreach (array_keys($hasOne) as $field) {
+					$fields[$field . 'ID'] = 'ForeignKey';
+				}
+			}
+
+			$database_cache->save($fields);
 		}
-		
-		// Add has_one relationships
-		$hasOne = Object::uninherited_static($class, 'has_one');
-		if($hasOne) foreach(array_keys($hasOne) as $field) {
-			$fields[$field . 'ID'] = 'ForeignKey';
-		}
-		
+
 		return (array)$fields;
 	}
-	
+
 	private static $_cache_custom_database_fields = array();
-	
-	
+
 	/**
 	 * Returns the field class if the given db field on the class is a composite field.
 	 * Will check all applicable ancestor classes and aggregate results.
