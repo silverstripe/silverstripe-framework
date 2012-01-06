@@ -34,7 +34,6 @@
 				if(!this.find('.cms-panel-content').length) throw new Exception('Content panel for ".cms-panel" not found');
 				
 				// Create default controls unless they already exist.
-				
 				if(!this.find('.cms-panel-toggle').length) {
 					var container = $("<div class='cms-panel-toggle south'></div>")
 						.append('<a class="toggle-expand" href="#"><span>&raquo;</span></a>')
@@ -50,7 +49,14 @@
 				var collapsedContent = this.find('.cms-panel-content-collapsed');
 				this.setWidthCollapsed(collapsedContent.length ? collapsedContent.innerWidth() : this.find('.toggle-expand').innerWidth());
 
-				this.togglePanel(!jQuery(this).hasClass('collapsed'));
+				// Set inital collapsed state, either from cookie or from default CSS classes
+				var collapsed, cookieCollapsed;
+				if($.cookie && this.attr('id')) {
+					cookieCollapsed = $.cookie('cms-panel-collapsed-' + this.attr('id'));
+					if(typeof cookieCollapsed != 'undefined') collapsed = (cookieCollapsed == 'true');
+				} 
+				if(typeof collapsed == 'undefined') collapsed = jQuery(this).hasClass('collapsed');
+				this.togglePanel(!collapsed);
 				
 				this._super();
 			},
@@ -122,6 +128,9 @@
 					this.find('.cms-panel-content')[bool ? 'show' : 'hide']();
 					this.find('.cms-panel-content-collapsed')[bool ? 'hide' : 'show']();
 				}
+
+				// Save collapsed state in cookie
+				if($.cookie && this.attr('id')) $.cookie('cms-panel-collapsed-' + this.attr('id'), !bool, {path: '/', expires: 31});
 				
 				this.trigger('toggle');
 			},
