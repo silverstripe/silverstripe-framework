@@ -228,12 +228,15 @@ class Requirements {
 	
 	/**
 	 * Add i18n files from the given javascript directory.
-	 * @param $langDir The javascript lang directory, relative to the site root, e.g., 'sapphire/javascript/lang'
+	 * 
+	 * @param String
+	 * @param Boolean
+	 * @param Boolean
 	 * 
 	 * See {@link Requirements_Backend::add_i18n_javascript()} for more information.
 	 */
-	public static function add_i18n_javascript($langDir) {
-		return self::backend()->add_i18n_javascript($langDir);
+	public static function add_i18n_javascript($langDir, $return = false, $langOnly = false) {
+		return self::backend()->add_i18n_javascript($langDir, $return, $langOnly);
 	}
 	
 	/**
@@ -739,23 +742,33 @@ class Requirements_Backend {
 	/**
 	 * Add i18n files from the given javascript directory.  Sapphire expects that the given directory
 	 * will contain a number of java script files named by language: en_US.js, de_DE.js, etc.
-	 * @param $langDir The javascript lang directory, relative to the site root, e.g., 'sapphire/javascript/lang'
+	 * 
+	 * @param String The javascript lang directory, relative to the site root, e.g., 'sapphire/javascript/lang'
+	 * @param Boolean Return all relative file paths rather than including them in requirements
+	 * @param Boolean Only include language files, not the base libraries
 	 */
-	public function add_i18n_javascript($langDir) {
+	public function add_i18n_javascript($langDir, $return = false, $langOnly = false) {
+		$files = array();
 		if(i18n::get_js_i18n()) {
 			// Include i18n.js even if no languages are found.  The fact that
 			// add_i18n_javascript() was called indicates that the methods in
 			// here are needed.
-			$this->javascript(SAPPHIRE_DIR . '/javascript/i18n.js');
+			if(!$langOnly) $files[] = SAPPHIRE_DIR . '/javascript/i18n.js';
 
 			if(substr($langDir,-1) != '/') $langDir .= '/';
 			
-			$this->javascript($langDir . i18n::default_locale() . '.js');
-			$this->javascript($langDir . i18n::get_locale() . '.js');
+			$files[] = $langDir . i18n::default_locale() . '.js';
+			$files[] = $langDir . i18n::get_locale() . '.js';
 		
 		// Stub i18n implementation for when i18n is disabled.
 		} else {
-			$this->javascript[SAPPHIRE_DIR . '/javascript/i18nx.js'] = true;
+			if(!$langOnly) $files[] = SAPPHIRE_DIR . '/javascript/i18nx.js';
+		}
+
+		if($return) {
+			return $files;
+		} else {
+			foreach($files as $file) $this->javascript($file);
 		}
 	} 
 	
@@ -848,7 +861,6 @@ class Requirements_Backend {
 				return false;
 			}
 		}
-		
 		foreach($files as $index=>$file) {
 			if(is_array($file)) {
 				// Either associative array path=>path type=>type or numeric 0=>path 1=>type
@@ -887,7 +899,6 @@ class Requirements_Backend {
 				}
 			}
 		}
-		
 		$this->combine_files[$combinedFileName] = $files;
 	}
 	

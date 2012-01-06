@@ -222,6 +222,11 @@ class LeftAndMain extends Controller {
 			$htmlEditorConfig->setOption('content_css', implode(',', $cssFiles));
 		}
 		
+		// Using uncompressed files as they'll be processed by JSMin in the Requirements class.
+		// Not as effective as other compressors or pre-compressed+finetuned files, 
+		// but overall the unified minification into a single file brings more performance benefits
+		// than a couple of saved bytes (after gzip) in individual files.
+		// We also re-compress already compressed files through JSMin as this causes weird runtime bugs.
 		Requirements::combine_files(
 			'lib.js',
 			array(
@@ -261,28 +266,29 @@ class LeftAndMain extends Controller {
 				CMS_DIR . '/javascript/ThumbnailStripField.js',
 			)
 		);
-
+		
 		HTMLEditorField::include_js();
 
 		Requirements::combine_files(
 			'leftandmain.js',
-			array(
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
-			)
+			array_unique(array_merge(
+				array(
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
+				),
+				Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang', true, true),
+				Requirements::add_i18n_javascript(SAPPHIRE_ADMIN_DIR . '/javascript/lang', true, true)
+			))
 		);
-		
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::add_i18n_javascript(SAPPHIRE_ADMIN_DIR . '/javascript/lang');
-		
+
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::css(SAPPHIRE_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css');
 		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
