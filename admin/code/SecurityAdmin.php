@@ -95,6 +95,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		} else {
 			$form = $this->RootForm();
 		}
+
+		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
+		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+		$form->addExtraClass('center ss-tabset ' . $this->BaseCSSClasses());
 					
 		return $form;
 	}
@@ -176,16 +180,14 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	
 	function AddForm() {
 		$form = parent::AddForm();
-		$form->Actions()->fieldByName('action_doAdd')->setTitle(_t('AssetAdmin.ActionAdd', 'Add folder'));
+		$form->Actions()->fieldByName('action_doAdd')->setTitle(_t('SecurityAdmin.ActionAdd', 'Add group'));
 		
 		return $form;
 	}
 	
 	public function memberimport() {
 		Requirements::clear();
-		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
-		Requirements::css(CMS_DIR . '/css/typography.css');
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/cms_right.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
@@ -194,7 +196,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/MemberImportForm.js');
 		
 		return $this->renderWith('BlankPage', array(
-			'Form' => $this->MemberImportForm()
+			'Form' => $this->MemberImportForm(),
+			'Content' => ' '
 		));
 	}
 	
@@ -216,9 +219,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		
 	public function groupimport() {
 		Requirements::clear();
-		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/typography.css');
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/cms_right.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');

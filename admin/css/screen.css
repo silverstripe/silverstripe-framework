@@ -559,3 +559,6 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .ModelAdmin .cms-content-tools #SearchForm_holder div.tab form input { margin: 0px; }
 .ModelAdmin .cms-content-tools #SearchForm_holder div.tab form .field { border-bottom: 0px; margin-bottom: 6px; }
 .ModelAdmin .cms-content-tools #SearchForm_holder div.tab form .Actions button.ss-ui-action-minor { display: none; }
+
+.SecurityAdmin .cms-edit-form .cms-content-header h2 { display: none; }
+.SecurityAdmin .permissioncheckboxset .optionset li { float: none; width: auto; }

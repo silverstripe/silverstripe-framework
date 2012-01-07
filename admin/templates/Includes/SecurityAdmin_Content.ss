@@ -14,56 +14,6 @@
 
 	</div>
 
-	<% with EditForm %>
-		<div class="cms-content-fields center ui-widget-content ss-tabset">
+	$EditForm	
 	
-			<% if IncludeFormTag %>
-			<form $FormAttributes data-layout="{type: 'border'}">
-			<% end_if %>
-		
-			<div class="cms-content-header north">
-				<% if Fields.hasTabset %>
-					<% with Fields.fieldByName('Root') %>
-						<div class="cms-content-header-tabs">
-							<ul>
-							<% control Tabs %>
-								<li><a href="#$id">$Title</a></li>
-							<% end_control %>
-							</ul>
-						</div>
-					<% end_with %>
-				<% end_if %>
-			</div>
-
-			<div class="cms-content-fields center">
-				<% if Message %>
-				<p id="{$FormName}_error" class="message $MessageType">$Message</p>
-				<% else %>
-				<p id="{$FormName}_error" class="message $MessageType" style="display: none"></p>
-				<% end_if %>
-
-				<fieldset>
-					<% if Legend %><legend>$Legend</legend><% end_if %> 
-					<% control Fields %>
-						$FieldHolder
-					<% end_control %>
-					<div class="clear"><!-- --></div>
-				</fieldset>
-			</div>
-	
-			<div class="cms-content-actions south">
-				<% if Actions %>
-				<div class="Actions">
-					<% control Actions %>
-						$Field
-					<% end_control %>
-				</div>
-				<% end_if %>
-			</div>
-	
-			<% if IncludeFormTag %>
-			</form>
-			<% end_if %>
-		</div>
-	<% end_with %>
 </div>
