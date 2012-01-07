@@ -1,0 +1,151 @@
+/**
+ * Fields
+ */
+form * {
+	font-size: 12px;
+}
+form fieldset {
+	margin: 0;
+	padding: 0;
+	border-style: none;
+}
+
+form .field {
+	clear: both;
+	padding: 0.2em;
+	margin: 0 0 0 10em;
+	vertical-align: middle;
+}
+
+form p.checkbox {
+	margin: 0 0 0 8.5em;
+}
+
+form .field.nolabel {
+	margin-left: 0;
+}
+
+form label.left {
+	float: left;
+	width: 10em;
+	margin-left: -10em;
+}
+
+form input.maxlength {
+	width: auto;
+}
+
+form .actions{
+	float : right;
+}
+
+form .validation,
+form .error,
+form .required
+{
+	border: 1px solid #f00;
+	background: #fcc;
+	padding: 0.5em;
+	width: 50%;
+}
+
+form .field span.readonly {
+	border: 1px #CCC dotted;
+	background-color: #F7F7F7;
+	display: block;
+	width: 98%;
+	padding: 3px;
+	margin:5px 0;
+}
+
+form .indicator.inline {
+	display: inline;
+	margin-left: 5px;
+	vertical-align: middle;
+}
+
+form .indicator.block {
+	display: inline;
+}
+
+/* Emulating link styling for actions requiring lesser attention, e.g. "cancel" FormActions */
+form button.minorAction {
+	background: none;
+	padding: 0;
+	border: 0;
+	color: #0074C6;
+	text-decoration: underline;
+}
+
+
+/**
+ * Composite Fields - raw concatenation of fields for programmatic purposes.
+ */
+.right form div.CompositeField {
+	margin-left: 7.5em;
+}
+.right form div.CompositeField div.field {
+	font-size: 1em;
+}
+
+.right form div.CompositeField {
+	clear: both;
+}	
+.right form div.CompositeField label.left {
+	float: left;
+	width: 10em;
+	margin-left: -10em;
+}
+
+.right form div.column2 {
+	float: left;
+	width: 45%;
+	margin-right: 4%;
+}
+
+.right form div.multicolumn {
+	width: 100%;
+	float: left;
+	clear: left;
+}
+
+/**
+ * Messages
+ */
+form .message.notice {
+	background-color: #FCFFDF;
+	border-color: #FF9300;
+}
+form .message {
+	margin: 1em 0;
+	padding: 0.5em;
+	font-weight: bold;
+	border: 1px black solid;
+	background-color: #B9FFB9;
+	border-color: #00FF00;
+}
+	form .message.warning {
+		background-color: #FFD2A6;
+		border-color: #FF9300;
+	}
+	form .message.bad {
+		background-color: #FF8080;
+		border-color: #FF0000;
+	}
+	form .message.required,
+	form .message.validation {
+		display:block;
+		margin-top:5px;
+		color:#FF9300;
+		width:240px;
+		border-color: #FF9300;
+	}
+	form .message.validation {
+		color:#FF4040;
+		width:240px;
+		border-color: #FF4040;
+	}
+
+.typography .ss-tabset ul {
+	margin: 0;
+}

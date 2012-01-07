@@ -1,32 +1,6 @@
-#GB_header {
-	position: absolute;
-	z-index: 151;
-	margin: 0;
- 	top: 0;
-	font-size : 14px;
-	font-weight : bold;
-	height : 22px !important;
-}
-
-#GB_window {
-	border: 0;
-}
-
-#GB_close {
-	padding: 2px 5px 0 0;
-	float: right;
-	font-size: 11px;
-}
-
 /* table */
-.ComplexTableField {
-	margin-bottom: 10px;
-}
+.ComplexTableField { margin-bottom: 10px; }
+.ComplexTableField tbody td { cursor: pointer; }
+.ComplexTableField tbody td.markingcheckbox { cursor: default; }
 
-.ComplexTableField tbody td {
-	cursor: pointer;
-}
-
-.ComplexTableField tbody td.markingcheckbox {
-	cursor: default;
-}
+.ui-dialog .ctf-dialog.ui-dialog-content { padding-right: 0; /* scrollbars */ }
