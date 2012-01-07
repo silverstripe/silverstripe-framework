@@ -64,6 +64,8 @@ class GridField extends FormField {
 	/**
 	 * Internal dispatcher for column handlers.
 	 * Keys are column names and values are GridField_ColumnProvider objects
+	 * 
+	 * @var array
 	 */
 	protected $columnDispatch = null;
 
@@ -101,9 +103,12 @@ class GridField extends FormField {
 	}
 	
 	/**
-	 * Set the modelClass that this field will get it column headers from
+	 * Set the modelClass (dataobject) that this field will get it column headers from.
+	 * If no $displayFields has been set, the displayfields will be fetched from
+	 * this modelclass $summary_fields
 	 * 
-	 * @param string $modelClassName 
+	 * @param string $modelClassName
+	 * @see GridField::getDisplayFields()
 	 */
 	public function setModelClass($modelClassName) {
 		$this->modelClassName = $modelClassName;
@@ -111,7 +116,7 @@ class GridField extends FormField {
 	}
 	
 	/**
-	 * Returns a dataclass that is a DataObject type that this field should look like.
+	 * Returns a dataclass that is a DataObject type that this GridField should look like.
 	 * 
 	 * @throws Exception
 	 * @return string
@@ -124,9 +129,10 @@ class GridField extends FormField {
 	}
 	
 	/**
-	 * Set which Components that this GridFields contain by using a GridFieldConfig
+	 * Set which GridFieldComponent's that this GridFields contain by using a GridFieldConfig
 	 *
-	 * @param GridFieldConfig $config 
+	 * @param GridFieldConfig $config
+	 * @see GridFieldComponent
 	 */
 	protected function setComponents(GridFieldConfig $config) {
 		$this->components = $config->getComponents();
@@ -134,7 +140,7 @@ class GridField extends FormField {
 	}
 	
 	/**
-	 * Get a default configuration for this gridfield
+	 * Get a default configuration for this GridField
 	 * 
 	 * @return GridFieldConfig
 	 */
@@ -155,7 +161,10 @@ class GridField extends FormField {
 	}
 
 	/**
+	 * Get the DisplayFields
+	 * 
 	 * @return array
+	 * @see GridField::setDisplayFields
 	 */
 	public function getDisplayFields() {
 		if(!$this->displayFields) {
@@ -165,6 +174,7 @@ class GridField extends FormField {
 	}
 	
 	/**
+	 * Get the GridFieldConfig
 	 *
 	 * @return GridFieldConfig
 	 */
@@ -173,6 +183,9 @@ class GridField extends FormField {
 	}
 	
 	/**
+	 * Override the default behaviour of showing the models summaryFields with
+	 * these fields instead
+	 * Example: array( 'Name' => 'Members name', 'Email' => 'Email address')
 	 *
 	 * @param array $fields 
 	 */
@@ -276,7 +289,7 @@ class GridField extends FormField {
 	}
 	
 	/**
-	 * Get the current GridState
+	 * Get the current GridState_Data or the GridState
 	 *
 	 * @param bool $getData - flag for returning the GridState_Data or the GridState
 	 * @return GridState_data|GridState
@@ -289,7 +302,7 @@ class GridField extends FormField {
 	}
 
 	/**
-	 * Returns the whole gridfield rendered with all the attached Elements
+	 * Returns the whole gridfield rendered with all the attached components
 	 *
 	 * @return string
 	 */
@@ -354,7 +367,12 @@ class GridField extends FormField {
 			);
 	}
 
-	function getColumns() {
+	/**
+	 * Get the columns of this GridField, they are provided by attached GridField_ColumnProvider
+	 *
+	 * @return array
+	 */
+	public function getColumns() {
 		// Get column list
 		$columns = array();
 		foreach($this->components as $item) {
@@ -364,7 +382,15 @@ class GridField extends FormField {
 		}
 		return $columns;
 	}
-	
+
+	/**
+	 * Get the value from a column
+	 *
+	 * @param DataObject $record
+	 * @param string $column
+	 * @return string
+	 * @throws InvalidArgumentException
+	 */
 	public function getColumnContent($record, $column) {
 		// Build the column dispatch
 		if(!$this->columnDispatch) {
@@ -378,7 +404,16 @@ class GridField extends FormField {
 			throw new InvalidArgumentException("Bad column '$column'");
 		}
 	}
-	
+
+	/**
+	 * Get extra columns attributes used as HTML attributes
+	 *
+	 * @param DataObject $record
+	 * @param string $column
+	 * @return array
+	 * @throws LogicException
+	 * @throws InvalidArgumentException
+	 */
 	public function getColumnAttributes($record, $column) {
 		// Build the column dispatch
 		if(!$this->columnDispatch) {
@@ -399,7 +434,15 @@ class GridField extends FormField {
 			throw new InvalidArgumentException("Bad column '$column'");
 		}
 	}
-	
+
+	/**
+	 * Get metadata for a column, example array('Title'=>'Email address')
+	 *
+	 * @param string $column
+	 * @return array
+	 * @throws LogicException
+	 * @throws InvalidArgumentException
+	 */
 	public function getColumnMetadata($column) {
 		// Build the column dispatch
 		if(!$this->columnDispatch) {
@@ -417,13 +460,23 @@ class GridField extends FormField {
 		}
 		throw new InvalidArgumentException("Bad column '$column'");
 	}
-	
+
+	/**
+	 * Return how many columns the grid will have
+	 *
+	 * @return int
+	 */
 	public function getColumnCount() {
 		// Build the column dispatch
 		if(!$this->columnDispatch) $this->buildColumnDispatch();
 		return count($this->columnDispatch);	
 	}
 
+	/**
+	 * Build an columnDispatch that maps a GridField_ColumnProvider to a column
+	 * for reference later
+	 * 
+	 */
 	protected function buildColumnDispatch() {
 		$this->columnDispatch = array();
 		foreach($this->components as $item) {
@@ -470,7 +523,16 @@ class GridField extends FormField {
 				break;
 		}
 	}
-	
+
+	/**
+	 * Pass an action on the first GridField_ActionProvider that matches the $actionName
+	 *
+	 * @param string $actionName
+	 * @param mixed $args
+	 * @param arrray $data - send data from a form
+	 * @return type
+	 * @throws InvalidArgumentException
+	 */
 	public function handleAction($actionName, $args, $data) {
 		$actionName = strtolower($actionName);
 		foreach($this->components as $item) {
