@@ -73,6 +73,31 @@ class Image extends File {
 		parent::defineMethods();
 	}
 	
+	function getCMSFields() {
+		$fields = parent::getCMSFields();
+
+		$urlLink = "<div class='field readonly'>";
+		$urlLink .= "<label class='left'>"._t('AssetTableField.URL','URL')."</label>";
+		$urlLink .= "<span class='readonly'><a href='{$this->Link()}'>{$this->RelativeLink()}</a></span>";
+		$urlLink .= "</div>";
+		
+		$big = $this->URL;
+		$formattedImage = $this->getFormattedImage('AssetLibraryPreview');
+		$thumbnail = $formattedImage ? $formattedImage->URL : '';
+		
+		// Hmm this required the translated string to be appended to BottomRoot to add this to the Main tab
+		$fields->addFieldToTab('Root.Main',
+			new ReadonlyField("Dimensions", _t('AssetTableField.DIM','Dimensions'))
+		);
+		$fields->addFieldToTab('Root.Main',
+			new LiteralField("ImageFull",
+				"<img id='thumbnailImage' src='{$thumbnail}?r=" . rand(1,100000)  . "' alt='{$this->Name}' />"
+			)
+		);
+
+		return $fields;
+	}
+
 	/**
 	 * An image exists if it has a filename.
 	 * Does not do any filesystem checks.

@@ -157,7 +157,7 @@ class FormScaffolder extends Object {
 					$ctf = new $fieldClass(
 						$this,
 						$relationship,
-						null,
+						$this->obj->$relationship(),
 						$relationshipFields,
 						"getCMSFields"
 					);

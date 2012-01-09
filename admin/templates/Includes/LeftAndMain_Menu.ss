@@ -63,6 +63,21 @@
 						</li>
 					</ul>
 				<% end_if %>
+
+				<% if Code == 'AssetAdmin' %>
+					<ul>
+						<li class="last <% if Top.class == 'AssetAdmin' %>current<% end_if %>" id="Menu-AssetAdmin">
+							<a href="admin/assets/">
+								<span class="text">Edit &amp; organize</span>
+							</a>
+						</li>
+						<li class="first <% if Top.class == 'CMSFileAddController' %>current<% end_if %>" id="Menu-CMSFileAddController">
+							<a href="admin/assets/add">
+								<span class="text">Add files</span>
+							</a>
+						</li>
+					</ul>
+				<% end_if %>
 			</li>
 		<% end_control %>
 		</ul>

@@ -61,21 +61,14 @@ $gf_border_radius:	7px;
 		tbody {
 			background: #FFF;
 			td {
-				/* Rounded buttons */
+				/* Emulate a link by default */
 				button {
-					border: #CC0033 solid 1px;
-					background: #CC0033;
-					color: #FFF;
-					@include border-radius(15px);
+					border: none;
+					background: none;
 					margin: 0 0 0 2px;
 					padding: 0;
 					width: auto;
-					min-width: 30px;
-					height: 30px;
 					text-shadow: none;
-					&:hover {
-						color: #222;
-					}
 				}				
 			}			
 		}
