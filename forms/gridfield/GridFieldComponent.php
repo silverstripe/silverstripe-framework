@@ -12,7 +12,7 @@ interface GridFieldComponent {
  */
 interface GridField_HTMLProvider extends GridFieldComponent {
 	/**
-	 * Returns a map with 4 keys 'header', 'fooer', 'before', 'after'.  Each of these can contain an
+	 * Returns a map with 4 keys 'header', 'footer', 'before', 'after'.  Each of these can contain an
 	 * HTML fragment and each of these are optional.
 	 */
 	function getHTMLFragments($gridField);
