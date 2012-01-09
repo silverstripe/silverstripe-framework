@@ -45,12 +45,11 @@ $gf_border_radius:	7px;
 }
 
 .cms {
-	table.ss-gridfield {
-		width: 100%;
+	table.ss-gridfield.field {
+		box-shadow: none;		
 		padding: 0;
 		margin: 20px 0 0 0;
 		border-collapse: separate;	
-		display: table;
 		border-bottom: 0 none;				
 
 		thead {
@@ -123,7 +122,7 @@ $gf_border_radius:	7px;
 						width: auto;
 					}
 					&.fieldgroup {
-						min-width: 200px; /* Not sure why IE think it needs this */
+						min-width: 200px;
 					}
 				}
 				&.extra,&.action {
