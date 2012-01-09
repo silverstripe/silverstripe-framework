@@ -302,6 +302,23 @@ class Form extends RequestHandler {
 				sprintf('Action "%s" not allowed on form (Name: "%s")', $funcName, $this->Name())
 			);
 		}
+		// TODO : Once we switch to a stricter policy regarding allowed_actions (meaning actions must be set explicitly in allowed_actions in order to run)
+		// Uncomment the following for checking security against running actions on form fields
+		/* else {
+			// Try to find a field that has the action, and allows it
+			$fieldsHaveMethod = false;
+			foreach ($this->Fields() as $field){
+				if ($field->hasMethod($funcName) && $field->checkAccessAction($funcName)) {
+					$fieldsHaveMethod = true;
+				}
+			}
+			if (!$fieldsHaveMethod) {
+				return $this->httpError(
+					403, 
+					sprintf('Action "%s" not allowed on any fields of form (Name: "%s")', $funcName, $this->Name())
+				);
+			}
+		}*/
 		
 		// Validate the form
 		if(!$this->validate()) {
@@ -344,6 +361,12 @@ class Form extends RequestHandler {
 		// Otherwise, try a handler method on the form object.
 		} elseif($this->hasMethod($funcName)) {
 			return $this->$funcName($vars, $this, $request);
+		} else {
+			// Finally try to find a field that could handle that action, ie GridField
+			foreach ($this->Fields() as $field){
+				if (!$field->hasMethod($funcName)) continue;
+				return $field->$funcName($vars, $this, $request);
+			}
 		}
 		
 		return $this->httpError(404);
