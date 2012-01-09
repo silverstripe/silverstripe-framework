@@ -157,6 +157,9 @@ $gf_border_radius:	7px;
 				button,button:hover {
 					font-size: 12px;
 					margin-left: -.9em;
+					border-bottom: 0;
+					border-bottom-left-radius: 0;
+					border-bottom-right-radius: 0;					
 					&.ss-gridfield-sort {
 						text-align: left;
 						padding: 0;
