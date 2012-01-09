@@ -400,6 +400,10 @@ class ArrayList extends ViewableData implements SS_List {
 		$this->items = $itemsToKeep;
 		return $this;
 	}
+	
+	public function byID($id) {
+		return $this->filter("ID", $id)->First();
+	}
 
 	/**
 	 * Exclude the list to not contain items with these charactaristics
