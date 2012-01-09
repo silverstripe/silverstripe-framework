@@ -68,6 +68,9 @@ class GridState extends HiddenField {
 
 	/** @return string */
 	public function Value() {
+		if(!$this->gridStateData) {
+			return json_encode(array());
+		}
 		return json_encode($this->gridStateData->toArray());
 	}
 

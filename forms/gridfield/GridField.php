@@ -337,9 +337,11 @@ class GridField extends FormField {
 			'class' => "field CompositeField {$this->extraClass()}"
 		);
 		return
-			implode("\n", $content['before']) .
-			$this->createTag('table', $attrs, $head."\n".$foot."\n".$body) .
-			implode("\n", $content['after']);
+			$this->createTag('fieldset', array('id'=>$this->ID(),'class'=>'ss-gridfield'), 
+				implode("\n", $content['before']) .
+				$this->createTag('table', $attrs, $head."\n".$foot."\n".$body) .
+				implode("\n", $content['after'])
+			);
 	}
 
 	function getColumns() {
@@ -420,30 +422,32 @@ class GridField extends FormField {
 	 * @param array $data
 	 * @return string 
 	 */
-	public function gridFieldAlterAction($data, $form, $request) {
+	public function gridFieldAlterAction($data, $form, SS_HTTPRequest $request) {
 		$id = $data['StateID'];
 		$stateChange = Session::get($id);
+		$gridName = $stateChange['grid'];
+		$grid = $form->Fields()->dataFieldByName($gridName);
 
-		$state = $this->getState(false);
+		$state = $grid->getState(false);
 		$state->setValue($data['GridState']);
 		
-		$gridName = $stateChange['grid'];
-		$grid = $form->Fields()->fieldByName($gridName);
 		$actionName = $stateChange['actionName'];
 		
 		$args = $stateChange['args'];
 		$grid->handleAction($actionName, $args, $data);
 		
-		// Make the form re-load it's values from the Session after redirect
-		// so the changes we just made above survive the page reload
-		// @todo Form really needs refactoring so we dont have to do this
-		if (Director::is_ajax()) {
-			return $form->forTemplate();
-		} else {
-			$data = $form->getData();
-			Session::set("FormInfo.{$form->FormName()}.errors", array());
-			Session::set("FormInfo.{$form->FormName()}.data", $data);
-			Controller::curr()->redirectBack();
+		switch($request->getHeader('X-Get-Fragment')) {
+			case 'CurrentField':
+				return $grid->FieldHolder();
+				break;
+
+			case 'CurrentForm':
+				return $form->forTemplate();
+				break;
+
+			default:
+				return $form->forTemplate();
+				break;
 		}
 		
 	}
