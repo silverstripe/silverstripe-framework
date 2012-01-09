@@ -419,15 +419,22 @@ class Folder extends File {
 		$titleField = ($this->ID && $this->ID != "root") ? new TextField("Title", _t('Folder.TITLE')) : new HiddenField("Title");
 
 		$fields = new FieldList(
+			// The tabs of Root are used to generate the top tabs 
 			new TabSet('Root',
-				new Tab('Main',
+				new Tab('listview', _t('AssetAdmin.ListView', 'List View'),
 					$titleField,
 					$gridField,
 					new HiddenField("ID"),
 					new HiddenField("Name"),
 					new HiddenField("DestFolderID")
+				),
+				new Tab('galleryview', _t('AssetAdmin.GalleryView', 'Gallery View'),
+					new LiteralField("", "<em>Not implemented yet</em>")
+				),
+				new Tab('treeview', _t('AssetAdmin.TreeView', 'Tree View'),
+					new LiteralField("", "<em>Not implemented yet</em>")
 				)
-			)
+			)			
 		);
 		
 		if(!$this->canEdit()) {
