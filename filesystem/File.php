@@ -286,8 +286,7 @@ class File extends DataObject {
 	}
 
 	function CMSThumbnail() {
-		$filename = $this->Icon();
-		return "<div style=\"text-align:center;width: 100px;padding-top: 15px;\"><a target=\"_blank\" href=\"$this->URL\" title=\"Download: $this->URL\"><img src=\"$filename\" alt=\"$filename\" /></a><br /><br /><a style=\"color: #0074C6;\"target=\"_blank\" href=\"$this->URL\" title=\"Download: $this->URL\">Download</a><br /><em>$this->Size</em></div>";
+		return '<img src="' . $this->Icon() . '" />';
 	}
 
 	/**
