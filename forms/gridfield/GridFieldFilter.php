@@ -79,7 +79,7 @@ class GridFieldFilter implements GridField_HTMLProvider, GridField_DataManipulat
 				if(isset($filterArguments[$columnField])) {
 					$value = $filterArguments[$columnField];
 				}
-				$field = new TextField('filter['.$columnField.']', 'filter['.$columnField.']', $value);
+				$field = new TextField('filter['.$columnField.']', '', $value);
 				$field->addExtraClass('ss-gridfield-sort');
 			} else {
 				$field = new LiteralField('', '');
