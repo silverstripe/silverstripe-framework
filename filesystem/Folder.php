@@ -398,30 +398,29 @@ class Folder extends File {
 	 * and implemeting updateCMSFields(FieldList $fields) on that extension.
 	 */
 	function getCMSFields() {
-		$fileList = new AssetTableField(
-			$this,
-			"Files",
-			"File", 
-			array("Title" => _t('Folder.TITLE', "Title"), "Filename" => _t('Folder.FILENAME', "Filename")),
-			""
-		);
-		$fileList->setFolder($this);
-		$fileList->setPopupCaption(_t('Folder.VIEWEDITASSET', "View/Edit Asset"));
+		$config = GridFieldConfig::create();
+		$config->addComponent(new GridFieldFilter());
+		$config->addComponent(new GridFieldDefaultColumns());
+		$config->addComponent(new GridFieldSortableHeader());
+		$config->addComponent(new GridFieldPaginator(2));
+		$config->addComponent(new GridFieldAction_Delete());
+		$files = DataList::create('File')->filter('ParentID', $this->ID)->exclude('ClassName', 'Folder');
+		$gridField = new GridField('File','Files', $files, $config);
+		$gridField->setDisplayFields(array(
+			'StripThumbnail' => '',
+			'Parent.FileName' => 'Folder',
+			'Title'=>'Title',
+			'Size'=>'Size',
+		));
 
 		$titleField = ($this->ID && $this->ID != "root") ? new TextField("Title", _t('Folder.TITLE')) : new HiddenField("Title");
-		if( $this->canEdit() ) {
-			$deleteButton = new InlineFormAction('deletemarked',_t('Folder.DELSELECTED','Delete selected files'), 'delete');
-			$deleteButton->includeDefaultJS(false);
-		} else {
-			$deleteButton = new HiddenField('deletemarked');
-		}
 
 		$fields = new FieldList(
 			new HiddenField("Name"),
 			new TabSet("Root", 
 				new Tab("Files", _t('Folder.FILESTAB', "Files"),
 					$titleField,
-					$fileList,
+					$gridField,
 					new HiddenField("DestFolderID")
 				),
 				new Tab("Details", _t('Folder.DETAILSTAB', "Details"), 
