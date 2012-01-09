@@ -212,9 +212,9 @@
 						
 						newContentEl
 							.removeClass(layoutClasses.join(' '))
-							.addClass(origLayoutClasses.join(' '))
-							.attr('style', origStyle)
-							.css('visibility', 'hidden');
+							.addClass(origLayoutClasses.join(' '));
+						if(origStyle) newContentEl.attr('style', origStyle)
+						newContentEl.css('visibility', 'hidden');
 
 						// Allow injection of inline styles, as they're not allowed in the document body.
 						// Not handling this through jQuery.ondemand to avoid parsing the DOM twice.
