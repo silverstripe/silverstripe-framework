@@ -14,7 +14,6 @@ This example might come from a Controller designed to manage the members of a gr
 	 */
 	function MemberForm() {
 		$field = new GridField("Members", "Members of this group", $this->group->Members());
-
 		return new Form("MemberForm", $this, new FieldSet($field), new FieldSet());
 	}
 
@@ -104,7 +103,7 @@ This component will add a header row with a text field filter for each column, l
 
 ### GridFieldPaginator
 
-This component will add. The constructor takes 1 argument: the number of items per page.
+This component will limit output to a fixed number of items per page add a footer row with pagination controls. The constructor takes 1 argument: the number of items per page.
 
 # Extending GridField with custom components
 
@@ -126,7 +125,7 @@ The core GridField provides the following basic HTML:
 
  * A `<table>`, with an empty `<thead>` and `<tfoot>`
  * A collection of `<tr>`s, based on the grid's data list, each of which will contain a collection or `<td>`s based on the grid's columns.
-	
+
 The `GridField_HTMLProvider` component can provide HTML that goes into the `<thead>` or `<tfoot>`, or that appears before or after the table itself.
 
 It should define the getHTMLFragments() method, which should return a map.  The map keys are can be 'header', 'footer', 'before', or 'after'.  The map values should be strings containing the HTML content to put into each of these spots.  Only the keys for which you wish to provide content need to be defined.
@@ -144,14 +143,16 @@ For example, this components will add a footer row to the grid field, thanking t
 	}
 	
 If you wish to add CSS or JavaScript for your component, you may also make `Requirements` calls in this method.
-	
+
 ### GridField_ColumnProvider
 
-By default, a grid contains no columns.  All the columns displayed in a grid will need to be added by an appropriate component.  For example:
+By default, a grid contains no columns.  All the columns displayed in a grid will need to be added by an appropriate component.
 
- * `GridFieldDefaultColumns` will provide basic data columns.
- * An editor component will provide a column containing action buttons on the right.
- * A multiselect component will provide a column showing a checkbox on the left.
+For example, you may create a grid field with several components providing columns:
+
+ * `GridFieldDefaultColumns` could provide basic data columns.
+ * An editor component could provide a column containing action buttons on the right.
+ * A multiselect component clould provide a column showing a checkbox on the left.
 
 In order to provide additional columns, your component must implement `GridField_ColumnProvider`.
 
@@ -168,7 +169,7 @@ Then you define 3 methods that specify what should be shown in these columns:
 
 ### GridField_ActionProvider
 
-Most grids are interactive.  Where this interaction necessitates an action on the server side, the following generally happens:
+Most grid fields worthy of the name are interactive in some way.  Users might able to page between results, sort by different columns, filter the results or delete records.  Where this interaction necessitates an action on the server side, the following generally happens:
 
  * The user triggers an action.
  * That action updates the state, database, or something else.
@@ -176,7 +177,7 @@ Most grids are interactive.  Where this interaction necessitates an action on th
 
 These actions can be provided by components that implement the `GridField_ActionProvider` interface.
 
-An action is defined by two things: a name, and zero or more named arguments.  There is no built-in notion of a record-specific or column-specific action, but you may choose to define an argument such as ColumnName or RecordID in order to implement these.
+An action is defined by two things: an action name, and zero or more named arguments.  There is no built-in notion of a record-specific or column-specific action, but you may choose to define an argument such as ColumnName or RecordID in order to implement these.
 
 To provide your actions, define the following two functions:
 
@@ -216,7 +217,7 @@ Because there is no schema for the grid state, its good practice to keep your st
 	$state->SortDirection = 'asc';
 	
 	...
-
+	
 	$state = $gridField->State->GridFieldSortableHeader;
 	if ($state->SortColumn == "") {
 		return $dataList;
@@ -226,6 +227,7 @@ Because there is no schema for the grid state, its good practice to keep your st
 
 When checking for empty values in the state, you should compare the state value to the empty string.  This is because state values always return a `GridState_Data` object, and comparing to an empty string will call its `__toString()` method.
 
+	:::php
 	// Good
 	if ($state->SortColumn == "") { ... }
 	// Bad
@@ -254,6 +256,7 @@ For example, this could be used to create a sort button:
 
 Once you have created your button, you need to render it somewhere.  You can include the `GridField_Action` object in a template that is being rendered, or you can call its `Field()` method to generate the HTML content.
 
+	:::php
 	$output .= $field->Field();
 	
 Most likely, you will do this in `GridField_HTMLProvider::getHTMLFragments()` or `GridField_ColumnProvider::getColumnContent()`.
