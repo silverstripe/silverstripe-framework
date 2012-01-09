@@ -194,11 +194,55 @@ A `GridField_DataManipulator` component can modify the data list.  For example, 
 
  * **`getManipulatedData(GridField $gridField, SS_List $dataList)`:** Given this grid's data list, return an updated list to be used with this grid.
 
-### GridField_URLProvider
+### GridField_URLHandler
 
-**COMING SOON**
+Sometimes an action isn't enough: you need to provide additional support URLs for the grid.  These URLs may return user-visible content, for example a pop-up form for editing a record's details, or they may be support URLs for front-end functionality, for example a URL that will return JSON-formatted data for a javascript grid control.
 
-This interface isn't implemented yet, but will let you define a component that provides additional support URLs for the grid.  These URLs may return user-visible content, for example a pop-up form for editing a record's details, or they may be support URLs for front-end functionality, for example a URL that will return JSON-formatted data for a javascript grid control.
+To build these components, you should implement the `GridField_URLHandler` interface.  It only specifies one method: `getURLHandlers($gridField)`.  This method should return an array similar to the `RequestHandler::$url_handlers` static.  The action handlers should also be defined on the component; they will be passed `$gridField` and `$request`.
+
+Here is an example in full.  The actual implementation of the view and edit forms isn't included.
+
+	:::php
+	/**
+	 * Provides view and edit forms at GridField-specific URLs.  These can be placed into pop-ups by an appropriate front-end.
+	 * 
+	 * The URLs provided will be off the following form:
+	 *  - <FormURL>/field/<GridFieldName>/item/<RecordID>
+	 *  - <FormURL>/field/<GridFieldName>/item/<RecordID>/edit
+	 */
+	class GridFieldPopupForms implements GridField_URLHandler {
+		function getURLHandlers($gridField) {
+			return array(
+				'item/$ID' => 'handleItem',
+			);
+		}
+
+		function handleItem($gridField, $request) {
+			$record = $gridField->getList()->byId($request->param("ID"));
+			return new GridFieldPopupForm_ItemRequest($gridField, $this, $record);
+		}
+	}
+
+	class GridFieldPopupForm_ItemRequest extends RequestHandler {
+		protected $gridField;
+		protected $component;
+		protected $record;
+
+		function __construct($gridField, $component, $record) {
+			$this->gridField = $gridField;
+			$this->component = $gridField;
+			$this->record = $record;
+			parent::__construct();
+		}
+
+		function index() {
+			echo "view form for record #" . $record->ID;
+		}
+
+		function edit() {
+			echo "edit form for record #" . $record->ID;
+		}
+	}
 
 ## Other tools
 

@@ -461,6 +461,74 @@ class GridField extends FormField {
 		}
 		throw new InvalidArgumentException("Can't handle action '$actionName'");
 	}
+	
+	/**
+	 * Custom request handler that will check component handlers before proceeding to the default implementation.
+	 * 
+	 * @todo There is too much code copied from RequestHandler here.
+	 */
+	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+		if($this->brokenOnConstruct) {
+			user_error("parent::__construct() needs to be called on {$handlerClass}::__construct()", E_USER_WARNING);
+		}
+
+		$this->request = $request;
+		$this->setModel($model);
+		
+		///
+
+		foreach($this->components as $component) {
+			if(!($component instanceof GridField_URLHandler)) {
+				continue;
+			}
+			
+			$urlHandlers = $component->getURLHandlers($this);
+			
+			if($urlHandlers) foreach($urlHandlers as $rule => $action) {
+				if($params = $request->match($rule, true)) {
+					// Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
+					if($action[0] == '$') $action = $params[substr($action,1)];
+					if(!method_exists($component, 'checkAccessAction') || $component->checkAccessAction($action)) {
+						if(!$action) {
+							$action = "index";
+						} else if(!is_string($action)) {
+							throw new LogicException("Non-string method name: " . var_export($action, true));
+						}
+
+						try {
+							$result = $component->$action($this, $request);
+						} catch(SS_HTTPResponse_Exception $responseException) {
+							$result = $responseException->getResponse();
+						}
+
+						if($result instanceof SS_HTTPResponse && $result->isError()) {
+							return $result;
+						}
+
+						if($this !== $result && !$request->isEmptyPattern($rule) && is_object($result) && $result instanceof RequestHandler) {
+							$returnValue = $result->handleRequest($request, $model);
+
+							if(is_array($returnValue)) {
+								throw new LogicException("GridField_URLHandler handlers can't return arrays");
+							}
+
+							return $returnValue;
+
+						// If we return some other data, and all the URL is parsed, then return that
+						} else if($request->allParsed()) {
+							return $result;
+
+						// But if we have more content on the URL and we don't know what to do with it, return an error.
+						} else {
+							return $this->httpError(404, "I can't handle sub-URLs of a " . get_class($result) . " object.");
+						}
+					}
+				}
+			}
+		}
+		
+		return parent::handleRequest($request, $model);
+	}
 }
 
 

@@ -42,3 +42,14 @@ interface GridField_DataManipulator extends GridFieldComponent {
 	 */
 	function getManipulatedData(GridField $gridField, SS_List $dataList);
 }
+
+interface GridField_URLHandler extends GridFieldComponent {
+	/**
+	 * Return URLs to be handled by this grid field, in an array the same form as $url_handlers.
+	 * 
+	 * Handler methods will be called on the component, rather than the grid field.
+	 * 
+	 * The handlers will be passed two arguments, $gridField and $request
+	 */
+	function getURLHandlers($gridField);
+}
