@@ -404,6 +404,9 @@ class Folder extends File {
 		$config->addComponent(new GridFieldSortableHeader());
 		$config->addComponent(new GridFieldPaginator(2));
 		$config->addComponent(new GridFieldAction_Delete());
+		$config->addComponent(new GridFieldAction_Edit());
+		$config->addComponent($gridFieldForm = new GridFieldItemEditView());
+		$gridFieldForm->setTemplate('CMSGridFieldItemEditView');
 		$files = DataList::create('File')->filter('ParentID', $this->ID)->exclude('ClassName', 'Folder');
 		$gridField = new GridField('File','Files', $files, $config);
 		$gridField->setDisplayFields(array(
@@ -416,30 +419,19 @@ class Folder extends File {
 		$titleField = ($this->ID && $this->ID != "root") ? new TextField("Title", _t('Folder.TITLE')) : new HiddenField("Title");
 
 		$fields = new FieldList(
-			new HiddenField("Name"),
-			new TabSet("Root", 
-				new Tab("Files", _t('Folder.FILESTAB', "Files"),
+			new TabSet('Root',
+				new Tab('Main',
 					$titleField,
 					$gridField,
+					new HiddenField("ID"),
+					new HiddenField("Name"),
 					new HiddenField("DestFolderID")
-				),
-				new Tab("Details", _t('Folder.DETAILSTAB', "Details"), 
-					new ReadonlyField("URL", _t('Folder.URL', 'URL')),
-					new ReadonlyField("ClassName", _t('Folder.TYPE','Type')),
-					new ReadonlyField("Created", _t('Folder.CREATED','First Uploaded')),
-					new ReadonlyField("LastEdited", _t('Folder.LASTEDITED','Last Updated'))
-				),
-				new Tab("Upload", _t('Folder.UPLOADTAB', "Upload"),
-					new LiteralField("UploadIframe",
-						$this->getUploadIframe()
-					)
 				)
-			),
-			new HiddenField("ID")
+			)
 		);
 		
 		if(!$this->canEdit()) {
-			$fields->removeFieldFromTab("Root", "Upload");
+			$fields->removeByName("Upload");
 		}
 
 		$this->extend('updateCMSFields', $fields);
@@ -447,16 +439,6 @@ class Folder extends File {
 		return $fields;
 	}
 
-	/**
-	 * Display the upload form.  Returns an iframe tag that will show admin/assets/uploadiframe.
-	 */
-	function getUploadIframe() {
-		return <<<HTML
-		<iframe name="AssetAdmin_upload" src="admin/assets/uploadiframe/{$this->ID}" id="AssetAdmin_upload" border="0" style="border-style none !important; width: 97%; min-height: 300px; height: 100%; height: expression(document.body.clientHeight) !important;">
-		</iframe>
-HTML;
-	}
-	
 	/**
 	 * Get the children of this folder that are also folders.
 	 */
