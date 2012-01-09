@@ -36,7 +36,7 @@ class GridFieldAction_Delete implements GridField_ColumnProvider, GridField_Acti
 	 */
 	public function getColumnMetadata($gridField, $columnName) {
 		if($columnName == 'DeleteAction') {
-			return array('title' => 'Delete');
+			return array('title' => '');
 		}
 	}
 	
@@ -68,7 +68,13 @@ class GridFieldAction_Delete implements GridField_ColumnProvider, GridField_Acti
 	 * @return string - the HTML for the column 
 	 */
 	public function getColumnContent($gridField, $record, $columnName) {
-		$field = new GridField_Action($gridField, 'DeleteRecord'.$record->ID, "x", "deleterecord", array('RecordID' => $record->ID));
+		$field = new GridField_Action(
+			$gridField, 
+			'DeleteRecord'.$record->ID, 
+			_t('GridAction.Delete', "delete"), 
+			"deleterecord", 
+			array('RecordID' => $record->ID)
+		);
 		$output = $field->Field();
 		return $output;
 	}
