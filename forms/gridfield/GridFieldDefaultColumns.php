@@ -31,23 +31,24 @@ class GridFieldDefaultColumns implements GridField_ColumnProvider {
 		
 		// This supports simple FieldName syntax
 		if(strpos($fieldName, '.') === false) {
-			return ($item->XML_val($fieldName) && $xmlSafe) ? $item->XML_val($fieldName) : $item->RAW_val($fieldName);
-		}
-		$fieldNameParts = explode('.', $fieldName);
-		$tmpItem = $item;
-		for($idx = 0; $idx < sizeof($fieldNameParts); $idx++) {
-			$relationMethod = $fieldNameParts[$idx];
-			// Last value for value
-			if($idx == sizeof($fieldNameParts) - 1) {
-				if($tmpItem) {
-					return ($tmpItem->XML_val($relationMethod) && $xmlSafe) ? $tmpItem->XML_val($relationMethod) : $tmpItem->RAW_val($relationMethod);
+			$value = ($item->XML_val($fieldName) && $xmlSafe) ? $item->XML_val($fieldName) : $item->RAW_val($fieldName);
+		} else {
+			$fieldNameParts = explode('.', $fieldName);
+			$tmpItem = $item;
+			for($idx = 0; $idx < sizeof($fieldNameParts); $idx++) {
+				$relationMethod = $fieldNameParts[$idx];
+				// Last value for value
+				if($idx == sizeof($fieldNameParts) - 1) {
+					if($tmpItem) {
+						$value = ($tmpItem->XML_val($relationMethod) && $xmlSafe) ? $tmpItem->XML_val($relationMethod) : $tmpItem->RAW_val($relationMethod);
+					}
+					// else get the object for the next iteration
+				} else {
+					if($tmpItem) {
+						$tmpItem = $tmpItem->$relationMethod();
+					}
 				}
-				// else get the object for the next iteration
-			} else {
-				if($tmpItem) {
-					$tmpItem = $tmpItem->$relationMethod();
-				}
-			}
+			}			
 		}
 
 		$value = $this->castValue($gridField, $column, $value);
