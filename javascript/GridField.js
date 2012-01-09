@@ -40,8 +40,9 @@ jQuery(function($){
 	 */
 	$('fieldset.ss-gridfield input.ss-gridfield-sort').entwine({
 		onfocusin: function(e) {
-			// Dodgy results in IE <=7
-			if($.browser.msie && $.browser.version <= 7) {
+			// Dodgy results in IE <=7 & ignore if only one filter-field
+			countfields = $('fieldset.ss-gridfield input.ss-gridfield-sort').length;
+			if(($.browser.msie && $.browser.version <= 7) || countfields == 1) {
 				return false;
 			}
 			var eleInput = $(this);
