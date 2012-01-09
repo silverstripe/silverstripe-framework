@@ -120,7 +120,7 @@ class Upload extends Controller {
 		// @TODO This puts a HUGE limitation on files especially when lots
 		// have been uploaded.
 		$base = Director::baseFolder();
-		$parentFolder = Folder::findOrMake($folderPath);
+		$parentFolder = Folder::find_or_make($folderPath);
 
 		// Create a folder for uploading.
 		if(!file_exists(ASSETS_PATH)){
