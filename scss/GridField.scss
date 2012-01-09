@@ -17,6 +17,12 @@ $gf_colour_border: #DBDDDD;
 $gf_colour_zebra: #f2f9fd;
 $gf_border_radius:	7px;
 
+@mixin box-shadow-none {
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
 @mixin gridfield-gradient-top {
 	background: $gf_colour_gradient_light;
 	background: -moz-linear-gradient($gf_colour_gradient_light 20%, $gf_colour_gradient_dark); /* FF3.6+ */
@@ -166,7 +172,7 @@ $gf_border_radius:	7px;
 						width: 95%;
 						background: transparent;
 						border: 0 none;
-						box-shadow: none;
+						@include box-shadow-none;
 						text-shadow: none;
 					}
 				}
@@ -178,7 +184,7 @@ $gf_border_radius:	7px;
 				&.extra button.ss-ui-button {
 					padding: .3em;
 					line-height: 1;
-					box-shadow: none;
+					@include box-shadow-none;
 					position: relative;
 					top: -24px;
 					border: $gf_colour_gradient_light solid 10px;
@@ -193,6 +199,11 @@ $gf_border_radius:	7px;
 						margin: 0 auto;
 						border: $gf_colour_gradient_light solid 10px;
 						border-bottom: 0;
+						border-bottom-left-radius: 0;
+						border-bottom-right-radius: 0;
+						&:focus {
+							@include box-shadow-none;
+						}
 					}
 				}
 			}
