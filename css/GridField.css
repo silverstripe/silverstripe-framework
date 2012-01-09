@@ -2,9 +2,8 @@
 .cms table.ss-gridfield { width: 100%; padding: 0; margin: 20px 0 0 0; border-collapse: separate; display: table; border-bottom: 0 none; }
 .cms table.ss-gridfield thead { color: #1d2224; background: transparent; }
 .cms table.ss-gridfield tbody { background: #FFF; }
-.cms table.ss-gridfield tbody td { /* Rounded buttons */ }
-.cms table.ss-gridfield tbody td button { border: #CC0033 solid 1px; background: #CC0033; color: #FFF; -moz-border-radius: 15px; -webkit-border-radius: 15px; -o-border-radius: 15px; -ms-border-radius: 15px; -khtml-border-radius: 15px; border-radius: 15px; margin: 0 0 0 2px; padding: 0; width: auto; min-width: 30px; height: 30px; text-shadow: none; }
-.cms table.ss-gridfield tbody td button:hover { color: #222; }
+.cms table.ss-gridfield tbody td { /* Emulate a link by default */ }
+.cms table.ss-gridfield tbody td button { border: none; background: none; margin: 0 0 0 2px; padding: 0; width: auto; text-shadow: none; }
 .cms table.ss-gridfield tfoot { color: #1d2224; }
 .cms table.ss-gridfield tfoot tr td { background: #95a5ab; padding: .7em; }
 .cms table.ss-gridfield tr.sortable-header th { background: #7f9198; }

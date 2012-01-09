@@ -262,6 +262,13 @@
 				this._super();
 			}
 		});
+
+		$('.cms-edit-form .ss-gridfield .action-edit').entwine({
+			onclick: function(e) {
+				$('.cms-container').loadPanel(this.attr('href'), '', {selector: '.cms-edit-form'});
+				e.preventDefault();
+			}
+		});
 		
 	});
 

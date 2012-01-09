@@ -254,6 +254,28 @@ class File extends DataObject {
 		
 		return $this->canEdit($member);
 	}
+
+	function getCMSFields() {
+		$urlLink = "<div class='field readonly'>";
+		$urlLink .= "<label class='left'>"._t('AssetTableField.URL','URL')."</label>";
+		$urlLink .= "<span class='readonly'><a href='{$this->Link()}'>{$this->RelativeLink()}</a></span>";
+		$urlLink .= "</div>";
+
+		return new FieldList(
+			new TabSet('Root',
+				new Tab('Main', 
+					new TextField("Title", _t('AssetTableField.TITLE','Title')),
+					new TextField("Name", _t('AssetTableField.FILENAME','Filename')),
+					new LiteralField("AbsoluteURL", $urlLink),
+					new ReadonlyField("FileType", _t('AssetTableField.TYPE','Type')),
+					new ReadonlyField("Size", _t('AssetTableField.SIZE','Size'), $this->getSize()),
+					new DropdownField("OwnerID", _t('AssetTableField.OWNER','Owner'), Member::mapInCMSGroups()),
+					new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded')),
+					new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed'))
+				)
+			)
+		);
+	}
 	
 	/**
 	 * Returns a category based on the file extension.
