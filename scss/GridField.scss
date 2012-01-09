@@ -204,11 +204,15 @@ $gf_border_radius:	7px;
 			}
 			td {
 				border-right: 1px solid $gf_colour_border;
+				border-bottom: 1px solid $gf_colour_border;
 				padding: 10px;
 				&.bottom-all {
 					@include border-bottom-radius($gf_border_radius);
 					@include gridfield-gradient-bottom;	
 				}
+			}
+			&.last td {
+				border-bottom: 0 none;
 			}
 		}
 	}
