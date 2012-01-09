@@ -63,9 +63,11 @@
 											newParentClass = newParent.getClassname(),
 											// Check allowedChildren of newParent or against root node rules
 											hints = self.getHints(),
-											disallowedChildren = [];
+											disallowedChildren = [],
+											hintKey = newParentClass ? newParentClass : 'Root',
+											hint = (typeof hints[hintKey] != 'undefined') ? hints[hintKey] : null;
 										
-										if(hints) disallowedChildren = hints[newParentClass ? newParentClass : 'Root'].disallowedChildren || [];
+										if(hint) disallowedChildren = (typeof hint.disallowedChildren != 'undefined') ? hint.disallowedChildren : [];
 										var isAllowed = (
 											// Don't allow moving the root node
 											movedNode.data('id') != 0 
