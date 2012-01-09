@@ -1,18 +1,21 @@
 jQuery(function($){
 		
-	$('.ss-gridfield .action').entwine({
+	$('fieldset.ss-gridfield .action').entwine({
 		onclick: function(e){
-			button = this;
+			var button = this;
 			e.preventDefault();
 			var form = $(this).closest("form");
+			var field = $(this).closest("fieldset.ss-gridfield");
 			form.addClass('loading');
 			$.ajax({
+				headers: {"X-Get-Fragment" : 'CurrentField'},
 				type: "POST",
 				url: form.attr('action'),
 				data: form.serialize()+'&'+escape(button.attr('name'))+'='+escape(button.val()), 
 				dataType: 'html',
 				success: function(data) {
-					form.replaceWith(data);
+					// Replace the grid field with response, not the form.
+					field.replaceWith(data);
 					form.removeClass('loading');
 				},
 				error: function(e) {
@@ -35,7 +38,7 @@ jQuery(function($){
 	 * ToDo ensure filter-button state is maintained after filtering (see resetState param)
 	 * ToDo get working in IE 6-7
 	 */
-	$('.ss-gridfield input.ss-gridfield-sort').entwine({
+	$('fieldset.ss-gridfield input.ss-gridfield-sort').entwine({
 		onfocusin: function(e) {
 			// Dodgy results in IE <=7
 			if($.browser.msie && $.browser.version <= 7) {

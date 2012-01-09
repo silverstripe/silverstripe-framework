@@ -361,17 +361,31 @@ class Form extends RequestHandler {
 		// Otherwise, try a handler method on the form object.
 		} elseif($this->hasMethod($funcName)) {
 			return $this->$funcName($vars, $this, $request);
-		} else {
-			// Finally try to find a field that could handle that action, ie GridField
-			foreach ($this->Fields() as $field){
-				if (!$field->hasMethod($funcName)) continue;
-				return $field->$funcName($vars, $this, $request);
-			}
+		} elseif($field = $this->checkFieldsForAction($this->Fields(), $funcName)) {
+			return $field->$funcName($vars, $this, $request);
 		}
 		
 		return $this->httpError(404);
 	}
 	
+	/**
+	 * Fields can have action to, let's check if anyone of the responds to $funcname them
+	 * 
+	 * @return FormField
+	 */
+	protected function checkFieldsForAction($fields, $funcName) {
+		foreach($fields as $field){
+			if(method_exists($field, 'FieldList')) {
+				if($field = $this->checkFieldsForAction($field->FieldList(), $funcName)) {
+					return $field;
+				}
+			} elseif (!$field->hasMethod($funcName)) {
+				continue;
+			}
+			return $field;
+		}
+	}
+
 	/**
 	 * Handle a field request.
 	 * Uses {@link Form->dataFieldByName()} to find a matching field,
