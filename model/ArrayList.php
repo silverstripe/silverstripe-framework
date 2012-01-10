@@ -34,6 +34,13 @@ class ArrayList extends ViewableData implements SS_List {
 		$this->items = $items;
 		parent::__construct();
 	}
+	
+	/**
+	 * Return the class of items in this list, by looking at the first item inside it.
+	 */
+	function dataClass() {
+		if(count($this->items) > 0) return get_class($this->items[0]);
+	}
 
 	/**
 	 * Return the number of items in this list
