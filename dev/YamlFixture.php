@@ -228,6 +228,12 @@ class YamlFixture extends Object {
 				}
 			}
 			$obj->write();
+            //If LastEdited was set in the fixture, set it here
+            if (array_key_exists('LastEdited', $fields)) {
+                $manip = array($dataClass => array("command" => "update", "id" => $obj->id,
+                    "fields" => array("LastEdited" => $this->parseFixtureVal($fields['LastEdited']))));
+                DB::manipulate($manip);
+            }
 		}
 	}
 	
