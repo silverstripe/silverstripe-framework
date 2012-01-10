@@ -102,13 +102,7 @@ class Director {
 
 		// Load the session into the controller
 		$session = new Session(isset($_SESSION) ? $_SESSION : null);
-		$output = Injector::inst()->get('RequestProcessor')->preRequest($req, $session, $model);
 		
-		if ($output === false) {
-			// @TODO Need to NOT proceed with the request in an elegant manner
-			throw new HttpRequestException("Invalid request", 500);
-		}
-
 		$result = Director::handleRequest($req, $session, $model);
 		$session->inst_save();
 
@@ -116,10 +110,8 @@ class Director {
 		if(is_string($result) && substr($result,0,9) == 'redirect:') {
 			$response = new SS_HTTPResponse();
 			$response->redirect(substr($result, 9));
-			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
-			if ($res !== false) {
-				$response->output();
-			}
+			$response->output();
+
 		// Handle a controller
 		} else if($result) {
 			if($result instanceof SS_HTTPResponse) {
@@ -130,22 +122,15 @@ class Director {
 				$response->setBody($result);
 			}
 			
-			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
-			if ($res !== false) {
-				// ?debug_memory=1 will output the number of bytes of memory used for this request
-				if(isset($_REQUEST['debug_memory']) && $_REQUEST['debug_memory']) {
-					Debug::message(sprintf(
-						"Peak memory usage in bytes: %s", 
-						number_format(memory_get_peak_usage(),0)
-					));
-				} else {
-					$response->output();
-				}
+			// ?debug_memory=1 will output the number of bytes of memory used for this request
+			if(isset($_REQUEST['debug_memory']) && $_REQUEST['debug_memory']) {
+				Debug::message(sprintf(
+					"Peak memory usage in bytes: %s", 
+					number_format(memory_get_peak_usage(),0)
+				));
 			} else {
-				// @TODO Proper response here.
-				throw new SS_HTTPResponse_Exception("Invalid response");
+				$response->output();
 			}
-			
 
 			//$controllerObj->getSession()->inst_save();
 		}
