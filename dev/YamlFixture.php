@@ -13,14 +13,14 @@ require_once 'thirdparty/spyc/spyc.php';
  *   Each identifier you specify delimits a new database record. 
  *   This means that every record needs to have an identifier, whether you use it or not.
  * - Third level: fields - each field for the record is listed as a 3rd level entry. 
- *   In most cases, the fieldÕs raw content is provided. 
+ *   In most cases, the field's raw content is provided. 
  *   However, if you want to define a relationship, you can do so using "=>"
  * 
  * There are a couple of lines like this:
  * <code>
  * Parent: =>Page.about
  * </code>
- * This will tell the system to set the ParentID database field to the ID of the Page object with the identifier ÒaboutÓ. 
+ * This will tell the system to set the ParentID database field to the ID of the Page object with the identifier 'about'. 
  * This can be used on any has-one or many-many relationship. 
  * Note that we use the name of the relationship (Parent), and not the name of the database field (ParentID)
  *
@@ -231,7 +231,7 @@ class YamlFixture extends Object {
             //If LastEdited was set in the fixture, set it here
             if (array_key_exists('LastEdited', $fields)) {
                 $manip = array($dataClass => array("command" => "update", "id" => $obj->id,
-                    "fields" => array("LastEdited" => $this->parseFixtureVal($fields['LastEdited']))));
+                    "fields" => array("LastEdited" => "'".$this->parseFixtureVal($fields['LastEdited'])."'")));
                 DB::manipulate($manip);
             }
 		}
