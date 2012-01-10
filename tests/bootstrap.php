@@ -30,6 +30,9 @@ if(isset($_SERVER['argv'][2])) {
 	$_REQUEST = $_GET;
 }
 
+// Always flush the manifest for phpunit test runs
+$_GET['flush'] = 1;
+
 // Connect to database
 require_once(getcwd()."/sapphire/core/Core.php");
 global $databaseConfig;
