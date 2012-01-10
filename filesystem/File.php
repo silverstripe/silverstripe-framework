@@ -262,8 +262,6 @@ class File extends DataObject {
 		$urlLink .= "</div>";
 
 		return new FieldList(
-			new TabSet('Root',
-				new Tab('Main', 
 					new TextField("Title", _t('AssetTableField.TITLE','Title')),
 					new TextField("Name", _t('AssetTableField.FILENAME','Filename')),
 					new LiteralField("AbsoluteURL", $urlLink),
@@ -272,8 +270,6 @@ class File extends DataObject {
 					new DropdownField("OwnerID", _t('AssetTableField.OWNER','Owner'), Member::mapInCMSGroups()),
 					new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded')),
 					new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed'))
-				)
-			)
 		);
 	}
 	
@@ -454,7 +450,6 @@ class File extends DataObject {
 	 */
 	function setName($name) {
 		$oldName = $this->Name;
-
 		// It can't be blank, default to Title
 		if(!$name) $name = $this->Title;
 

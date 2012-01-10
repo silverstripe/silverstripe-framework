@@ -86,10 +86,10 @@ class Image extends File {
 		$thumbnail = $formattedImage ? $formattedImage->URL : '';
 		
 		// Hmm this required the translated string to be appended to BottomRoot to add this to the Main tab
-		$fields->addFieldToTab('Root.Main',
+		$fields->push(
 			new ReadonlyField("Dimensions", _t('AssetTableField.DIM','Dimensions'))
 		);
-		$fields->addFieldToTab('Root.Main',
+		$fields->push(
 			new LiteralField("ImageFull",
 				"<img id='thumbnailImage' src='{$thumbnail}?r=" . rand(1,100000)  . "' alt='{$this->Name}' />"
 			)
