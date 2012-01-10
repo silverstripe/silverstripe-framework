@@ -1,5 +1,5 @@
 <div class="cms-navigator">
-	<a href="#" class="ss-ui-button ss-ui-button-small cms-preview-toggle-link">
+	<a href="#" class="ss-ui-button cms-preview-toggle-link">
 		&laquo; <% _t('SilverStripeNavigator.Edit', 'Edit') %>
 	</a>
 	<ul class="cms-preview-states">

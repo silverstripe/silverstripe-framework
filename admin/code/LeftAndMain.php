@@ -187,76 +187,9 @@ class LeftAndMain extends Controller {
 		if(empty($_REQUEST['executeForm']) && !$this->isAjax()) $this->extend('accessedCMS');
 		
 		// Requirements
-		
-		Requirements::combine_files(
-			'lib.js',
-			array(
-				THIRDPARTY_DIR . '/prototype/prototype.js',
-				THIRDPARTY_DIR . '/behaviour/behaviour.js',
-				THIRDPARTY_DIR . '/jquery/jquery.js',
-				SAPPHIRE_DIR . '/javascript/jquery_improvements.js',
-				THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js',
-				SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js',
-				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
-				THIRDPARTY_DIR . '/json-js/json2.js',
-				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
-				THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js',
-				THIRDPARTY_DIR . '/jquery-query/jquery.query.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js',
-				THIRDPARTY_DIR . '/jquery-metadata/jquery.metadata.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
-				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js',
-				SAPPHIRE_DIR . '/javascript/TreeDropdownField.js',
-				SAPPHIRE_DIR ."/thirdparty/jquery-form/jquery.form.js",
-				SAPPHIRE_DIR . '/javascript/DateField.js',
-				SAPPHIRE_DIR . '/javascript/HtmlEditorField.js',
-				SAPPHIRE_DIR . '/javascript/TabSet.js',
-				SAPPHIRE_DIR . '/javascript/Validator.js',
-				SAPPHIRE_DIR . '/javascript/i18n.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js',
-			)
-		);
 
-		Requirements::combine_files(
-			'leftandmain.js',
-			array(
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
-			)
-		);
-		
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::add_i18n_javascript(SAPPHIRE_ADMIN_DIR . '/javascript/lang');
-		
-		Requirements::combine_files(
-			'lib.css',
-			array(
-				// @todo Load separately so the CSS files can be inlined
-				THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css',
-				SAPPHIRE_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css',
-				THIRDPARTY_DIR . '/jstree/themes/apple/style.css',
-				SAPPHIRE_DIR . '/javascript/TreeDropdownField.css',
-				SAPPHIRE_ADMIN_DIR . '/css/unjquery.css',
-			)
-		);
-		
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
+		// Suppress behaviour/prototype validation instructions in CMS, not compatible with ajax loading of forms.
+		Validator::set_javascript_validation_handler('none');
 
 		// Set the members html editor config
 		HtmlEditorConfig::set_active(Member::currentUser()->getHtmlEditorConfigForCMS());
@@ -288,15 +221,95 @@ class LeftAndMain extends Controller {
 
 			$htmlEditorConfig->setOption('content_css', implode(',', $cssFiles));
 		}
-				
+		
+		// Using uncompressed files as they'll be processed by JSMin in the Requirements class.
+		// Not as effective as other compressors or pre-compressed+finetuned files, 
+		// but overall the unified minification into a single file brings more performance benefits
+		// than a couple of saved bytes (after gzip) in individual files.
+		// We also re-compress already compressed files through JSMin as this causes weird runtime bugs.
+		Requirements::combine_files(
+			'lib.js',
+			array(
+				THIRDPARTY_DIR . '/prototype/prototype.js',
+				THIRDPARTY_DIR . '/behaviour/behaviour.js',
+				SAPPHIRE_DIR . '/javascript/prototype_improvements.js',
+				THIRDPARTY_DIR . '/jquery/jquery.js',
+				SAPPHIRE_DIR . '/javascript/jquery_improvements.js',
+				THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js',
+				SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js',
+				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
+				THIRDPARTY_DIR . '/json-js/json2.js',
+				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
+				THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js',
+				THIRDPARTY_DIR . '/jquery-query/jquery.query.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js',
+				THIRDPARTY_DIR . '/jquery-metadata/jquery.metadata.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js',
+				// SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
+				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js',
+				SAPPHIRE_DIR . '/javascript/TreeDropdownField.js',
+				SAPPHIRE_DIR ."/thirdparty/jquery-form/jquery.form.js",
+				SAPPHIRE_DIR . '/javascript/DateField.js',
+				SAPPHIRE_DIR . '/javascript/HtmlEditorField.js',
+				SAPPHIRE_DIR . '/javascript/TabSet.js',
+				SAPPHIRE_DIR . '/javascript/Validator.js',
+				SAPPHIRE_DIR . '/javascript/i18n.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js',
+				SAPPHIRE_DIR . '/javascript/tiny_mce_improvements.js',
+				CMS_DIR . '/javascript/ThumbnailStripField.js',
+			)
+		);
+		
+		HTMLEditorField::include_js();
+
+		Requirements::combine_files(
+			'leftandmain.js',
+			array_unique(array_merge(
+				array(
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
+				),
+				Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang', true, true),
+				Requirements::add_i18n_javascript(SAPPHIRE_ADMIN_DIR . '/javascript/lang', true, true)
+			))
+		);
+
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css');
+		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
+
+		// Browser-specific requirements
+		$ie = isset($_SERVER['HTTP_USER_AGENT']) ? strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') : false;
+		if($ie) {
+			$version = substr($_SERVER['HTTP_USER_AGENT'], $ie + 5, 3);
+			if($version == 7) Requirements::css('sapphire/admin/css/ie7.css');
+			else if($version == 8) Requirements::css('sapphire/admin/css/ie8.css');
+		}
+
+		// Custom requirements				
 		foreach (self::$extra_requirements['javascript'] as $file) {
 			Requirements::javascript($file[0]);
 		}
-		
 		foreach (self::$extra_requirements['css'] as $file) {
 			Requirements::css($file[0], $file[1]);
 		}
-		
 		foreach (self::$extra_requirements['themedcss'] as $file) {
 			Requirements::themedCSS($file[0], $file[1]);
 		}
@@ -313,8 +326,8 @@ class LeftAndMain extends Controller {
 		$title = $this->Title();
 		
 		$response = parent::handleRequest($request, $model);
-		$response->addHeader('X-Controller', $this->class);
-		$response->addHeader('X-Title', $title);
+		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
+		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', $title);
 		
 		return $response;
 	}
@@ -393,7 +406,7 @@ class LeftAndMain extends Controller {
 	 * Returns the main menu of the CMS.  This is also used by init() 
 	 * to work out which sections the user has access to.
 	 * 
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function MainMenu() {
 		// Don't accidentally return a menu if you're not logged in - it's used to determine access.
@@ -564,7 +577,7 @@ class LeftAndMain extends Controller {
 				$treeTitle = '...';
 			}
 			
-			$html = "<ul><li id=\"record-0\" data-id=\"0\"class=\"Root nodelete\"><a href=\"$rootLink\"><strong>$treeTitle</strong></a>"
+			$html = "<ul><li id=\"record-0\" data-id=\"0\" class=\"Root nodelete\"><a href=\"$rootLink\"><strong>$treeTitle</strong></a>"
 				. $html . "</li></ul>";
 		}
 
@@ -786,7 +799,7 @@ class LeftAndMain extends Controller {
 			$fields = ($fields) ? $fields : $record->getCMSFields();
 			if ($fields == null) {
 				user_error(
-					"getCMSFields() returned null  - it should return a FieldSet object. 
+					"getCMSFields() returned null  - it should return a FieldList object. 
 					Perhaps you forgot to put a return statement at the end of your method?", 
 					E_USER_ERROR
 				);
@@ -831,6 +844,10 @@ class LeftAndMain extends Controller {
 			$form = new Form($this, "EditForm", $fields, $actions);
 			$form->addExtraClass('cms-edit-form');
 			$form->loadDataFrom($record);
+			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
+			
+			// Set this if you want to split up tabs into a separate header row
+			// if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
 			
 			// Add a default or custom validator.
 			// @todo Currently the default Validator.js implementation
@@ -960,6 +977,13 @@ class LeftAndMain extends Controller {
 			return $this->redirect(Controller::join_links($this->Link('show'), $record->ID));
 		}
 	}
+
+	/**
+	 * Return the CMS's HTML-editor toolbar
+	 */
+	public function EditorToolbar() {
+		return Object::create('HtmlEditorField_Toolbar', $this, "EditorToolbar");
+	}
 	
 	/**
 	 * Batch Actions Handler
@@ -1003,7 +1027,7 @@ class LeftAndMain extends Controller {
 		return $this->customise(array(
 			'Content' => ' ',
 			'Form' => $form
-		))->renderWith('BlankPage');
+		))->renderWith('CMSDialog');
 	}
 	
 	public function Member_ProfileForm() {
@@ -1101,9 +1125,7 @@ class LeftAndMain extends Controller {
 	 * @return String|boolean
 	 */
 	public function PreviewLink() {
-		$record = $this->getRecord($this->currentPageID());
-		$baseLink = ($record && $record instanceof Page) ? $record->Link('?stage=Stage') : Director::absoluteBaseURL();
-		return $baseLink;
+		return false;
 	}
 
 	/**
@@ -1219,6 +1241,13 @@ class LeftAndMain extends Controller {
 	
 	function IsPreviewExpanded() {
 		return ($this->request->getVar('cms-preview-expanded'));
+	}
+
+	/**
+	 * @return String
+	 */
+	function Locale() {
+		return DBField::create('DBLocale', $this->i18nLocale());
 	}
 	
 	/**

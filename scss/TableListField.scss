@@ -1,0 +1,226 @@
+table.TableField, 
+table.TableListField, 
+.TableListField table.data, 
+table.CMSList {
+	border-collapse: collapse;
+	border-spacing: 0;
+	width : 100%;
+}
+
+/* Preventing IE6 from showing double borders */
+body>div table.TableField, 
+body>div table.TableListField, 
+body>div .TableListField table.data, 
+body>div table.CMSList {
+	border-collapse: separate;
+}
+
+table.TableField td, 
+table.TableListField td, 
+.TableListField table.data td, 
+table.CMSList td {
+	border-style:none;
+}
+
+table.TableField th, 
+table.TableListField th, 
+.TableListField table.data th, 
+table.CMSList th {
+	white-space: nowrap;
+}
+
+table.TableField thead th, 
+.TableListField table.data thead th, 
+table.CMSList thead th {
+	white-space: nowrap;
+	padding: 3px;
+	font-size: 12px;
+	text-align: left;
+}
+
+table.TableField thead th span, 
+.TableListField table.data thead th span {
+	font-size: 12px;
+}
+
+table.TableField thead th span.sortLink, 
+.TableListField table.data thead th span.sortLink, 
+table.CMSList thead th span.sortLink {
+	overflow: hidden;
+}
+
+table.TableField tbody td, 
+table.TableField tfoot td, 
+.TableListField table.data tbody td, 
+.TableListField table.data tfoot td, 
+table.CMSList tbody td,
+table.CMSList tfoot td {
+	padding: 2px 4px;
+}
+
+.TableListField table.data tfoot tr.addtogrouprow td {
+	padding:3px;
+}
+
+.TableListField table.data tfoot .actions {
+   float: none;
+}
+
+.TableListField table.data tfoot tr.addtogrouprow input {
+	width: 94%;
+}
+
+.TableField td input,
+.TableListField td input {
+	width: 98%;
+}
+
+table.data tbody td input,
+table.data tbody td textarea {
+	border:0 !important;
+}
+
+table.TableField tbody td.checkbox, 
+.TableListField table.data tbody td.checkbox, 
+table.CMSList tbody td.checkbox {
+	padding-left : 5px;
+	background-image : url(../images/checkbox.png);
+	background-repeat : repeat-x;
+	background-position : left bottom;
+}
+
+.TableListField table.data tfoot .addlink img {
+	vertical-align: middle;
+	margin: 3px 6px 3px 3px;
+}
+
+.TableListField table.data tfoot tr td a {
+	text-decoration: none;
+}
+
+.TableListField table.data tbody tr td a:hover,
+.TableListField table.data tfoot tr td a:hover {
+	background: none;
+}
+
+/**
+ * Show a loading indication on a TableListField row
+ */
+.TableListField tr.loading td.first {
+    padding-left: 22px;
+    background: url(../images/network-save.gif) 3px 2px no-repeat;
+}
+
+.right form .TableField span.readonly {
+	border: 0;
+	background: none;
+	padding: 0;
+	margin-bottom: 0;
+}
+
+.right form .TableListField td {
+   background: #fff;
+}
+
+.TableListField div.utility {
+	overflow: auto;
+}
+.TableListField div.utility .item {
+	margin-top: 1em;
+	padding: 3px 0 6px 0;
+	display: block;
+	float: left;
+}
+	.TableListField div.utility a {
+		text-decoration: none;
+		color: #333;
+		cursor: pointer;
+		font-size: 11px;
+		margin-right: 2px;
+		overflow: visible;
+		padding: 3px 2px;
+		width: auto;	
+	}
+
+form .TableField .message {
+	width: auto;
+}
+
+.TableListField .selectOptions {
+	overflow: auto;
+	font: 1.3em;
+	margin: 0;
+	padding: 0;
+}
+
+.TableListField .selectOptions li {
+	float: left;
+	margin: 0px 5px;
+}
+
+.TableListField .PageControls {
+	margin: 5px 0;
+	text-align:center;
+	display:block;
+	margin-bottom: 5px;
+	position: relative;
+}
+.TableListField .PageControls * {
+		display:inline;
+		vertical-align: middle;
+		font-weight: bold;
+}
+.TableListField .PageControls .Last{ 
+	display: block;
+	width: 40px; 
+	text-align: right;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+}
+.TableListField .PageControls .First{
+	float:left; display:block;
+	width:40px; text-align:left;
+}
+
+
+#Pagination {
+  margin-top: 10px;
+  margin-left: auto;	
+  margin-right: auto;
+
+  a {
+    font-size: 14px;
+    width: 1px;
+    height: 1px;
+    margin: 1px;
+	}
+	span {
+	    
+	    display: inline;
+	    font-size: 14px;
+	}
+	div {
+	    display: inline;
+	}
+}
+#Pagination_Next a {
+    text-decoration: none;	
+}
+#Pagination_Next a div {
+    position: relative;
+    left: -20px;
+}
+#Pagination_Next a img {
+    position: relative;
+    top: -15px;
+    left: 5px;
+}
+#Pagination_Previous a {
+    text-decoration: none;  
+}
+#Pagination_Previous a img {
+    position: relative;
+    top: -15px;
+    left: 35px;
+}

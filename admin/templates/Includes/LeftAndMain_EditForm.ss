@@ -4,7 +4,9 @@
 
 	<div class="cms-content-header north">
 		<div>
-			<h2>My Page Title</h2>
+			<h2 id="page-title-heading" title="$Record.Breadcrumbs(20, true)">
+				$Record.Title
+			</h2>
 			<% if Fields.hasTabset %>
 				<% with Fields.fieldByName('Root') %>
 				<div class="cms-content-header-tabs">
@@ -13,8 +15,8 @@
 						<li><a href="#$id">$Title</a></li>
 					<% end_control %>
 					</ul>
-					<% end_with %>
 				</div>
+				<% end_with %>
 			<% end_if %>
 	
 			<!-- <div class="cms-content-search">...</div> -->
@@ -40,21 +42,19 @@
 			<% end_control %>
 			<div class="clear"><!-- --></div>
 		</fieldset>
-	
 	</div>
 
 	<div class="cms-content-actions south">
-		<% if CurrentPage.PreviewLink %>
-		<a href="$CurrentPage.PreviewLink" class="cms-preview-toggle-link ss-ui-button ss-ui-button-small">
-			<% _t('LeftAndMain.PreviewButton', 'Preview') %> &raquo;
-		</a>
-
-		<% end_if %>
 		<% if Actions %>
 		<div class="Actions">
 			<% control Actions %>
 				$Field
 			<% end_control %>
+			<% if CurrentPage.PreviewLink %>
+			<a href="$CurrentPage.PreviewLink" class="cms-preview-toggle-link ss-ui-button">
+				<% _t('LeftAndMain.PreviewButton', 'Preview') %> &raquo;
+			</a>
+			<% end_if %>
 		</div>
 		<% end_if %>
 	</div>

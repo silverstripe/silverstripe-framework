@@ -53,7 +53,7 @@ abstract class DataExtension extends Extension {
 		
 		// @deprecated 2.4 - use extraStatics() now, not extraDBFields()
 		if(method_exists($extensionClass, 'extraDBFields')) {
-			user_error('DataExtension::extraDBFields() is deprecated. Please use extraStatics() instead.', E_USER_NOTICE); 
+			Deprecation::notice('2.4', 'DataExtension::extraDBFields() is deprecated. Please use extraStatics() instead.');
 			$extraStaticsMethod = 'extraDBFields';
 		} else {
 			$extraStaticsMethod = 'extraStatics';
@@ -63,9 +63,9 @@ abstract class DataExtension extends Extension {
 		if(Object::has_extension(get_parent_class($class), $extensionClass)) return;
 
 		// If there aren't any extraStatics we shouldn't try to load them.
-		if ( ! method_exists($extensionClass, $extraStaticsMethod) ) return;
+		if (!method_exists($extensionClass, $extraStaticsMethod) ) return;
 		
-		$statics = call_user_func(array($extensionClass, $extraStaticsMethod), $class, $extension);
+		$statics = call_user_func(array(singleton($extensionClass), $extraStaticsMethod), $class, $extension);
 		
 		if($statics) {
 			foreach($statics as $name => $newVal) {
@@ -153,11 +153,14 @@ abstract class DataExtension extends Extension {
 	 *
 	 * Return a map where the keys are db, has_one, etc, and the values are
 	 * additional fields/relations to be defined.
+	 * 
+	 * @param $class since this method might be called on the class directly
+	 * @param $extension since this can help to extract parameters to help set indexes
 	 *
 	 * @return array Returns a map where the keys are db, has_one, etc, and
 	 *               the values are additional fields/relations to be defined.
 	 */
-	function extraStatics() {
+	function extraStatics($class=null, $extension=null) {
 		return array();
 	}
 	
@@ -172,7 +175,7 @@ abstract class DataExtension extends Extension {
 	 *
 	 * Caution: Use {@link FieldList->addFieldToTab()} to add fields.
 	 *
-	 * @param FieldList $fields FieldSet with a contained TabSet
+	 * @param FieldList $fields FieldList with a contained TabSet
 	 */
 	function updateCMSFields(FieldList $fields) {
 	}
@@ -181,9 +184,9 @@ abstract class DataExtension extends Extension {
 	 * This function is used to provide modifications to the form used
 	 * for front end forms. {@link DataObject->getFrontEndFields()}
 	 * 
-	 * Caution: Use {@link FieldSet->push()} to add fields.
+	 * Caution: Use {@link FieldList->push()} to add fields.
 	 *
-	 * @param FieldList $fields FieldSet without TabSet nesting
+	 * @param FieldList $fields FieldList without TabSet nesting
 	 */
 	function updateFrontEndFields(FieldList $fields) {
 	}
@@ -192,7 +195,7 @@ abstract class DataExtension extends Extension {
 	 * This is used to provide modifications to the form actions
 	 * used in the CMS. {@link DataObject->getCMSActions()}.
 	 *
-	 * @param FieldList $actions FieldSet
+	 * @param FieldList $actions FieldList
 	 */
 	function updateCMSActions(FieldList $actions) {
 	}

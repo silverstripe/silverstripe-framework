@@ -21,7 +21,6 @@
 html,body {	
 	width: 100%;
 	height: 100%;
-	overflow: hidden;
 	
 	@include global-reset;
 
@@ -29,6 +28,10 @@ html,body {
 	line-height: $grid-vertical * 2;
 	font-family: $font-family;
 	color: $color-text;
+}
+
+body.cms {
+	overflow: hidden;
 }
 
 .cms {
@@ -87,12 +90,13 @@ html,body {
 
 .cms-content-header {
 	background-color: darken($color-widget-bg, 20%);
-	padding: $grid-vertical $grid-horizontal ($grid-vertical - 2) $grid-horizontal * 2;	
+	padding: $grid-vertical $grid-horizontal ($grid-vertical - 2);	
 	height: $grid-vertical * 4;
 	z-index: 60;
 	border-bottom: 2px solid darken($color-widget-bg, 35%);
 
 	@include box-shadow($color-widget-bg 0 $grid-vertical $grid-vertical*2);
+	
 	@include background-image(
 		linear-gradient(darken($color-widget-bg, 10%), darken($color-widget-bg, 30%))
 	);
@@ -119,7 +123,7 @@ html,body {
 	}
 }
 
-.ui-tabs .cms-content-header {
+.ui-tabs .cms-content-header, .cms-dialog .ui-tabs-nav {
 	.ui-tabs-nav li {
 		a {
 			font-weight: bold;
@@ -155,128 +159,67 @@ html,body {
 /** -------------------------------------------------------
  * Loading Interface
  * ------------------------------------------------------- */
-.cms-content {
-	&.loading,
-	form.loading {
-		background: url(../images/spinner.gif) no-repeat 50% 50%;
-	}
+
+.cms-content-loading-overlay {
+	position: absolute; // z-index doesn't apply properly without that
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9998;
+	// Further styling by .ui-widget-overlay-light which is usually applied at the same time
 }
 
-/** -------------------------------------------------------
- * Top Left Header and logo area
- * -------------------------------------------------------- */
-
-.cms-header {
-	background-color: darken($color-dark-bg, 10%);
-	position: relative;
-	padding: $grid-vertical * 2 8px 0 4px;
-	line-height: 24px;
-
-	@include background-image(
-		linear-gradient(darken($color-dark-bg, 10%), $color-dark-bg, darken($color-dark-bg, 10%)
-	));
-	
-	span {
-		color: $color-text-light;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		display: block;
-		
-		a {
-			color: $color-text-dark-link;
-			display: inline;
-		}
-	}
-}
-
-.cms-logo {
-	border-bottom: 1px solid darken($color-dark-separator, 20%);
-	height: 31px;
-	overflow: hidden;
-	padding: 0 0 0 4px;
-	vertical-align: middle;
-	font-size: $font-base-size;
-	
-	.version {
-		display: none; 
-	} 
-	
-	a {
-		display: inline-block;
-		height: 24px;
-		width: 24px;
-		float: left;
-		margin-right: 8px;
-		background: $application-logo-small no-repeat;
-		text-indent: -9999em;
-		padding-right: 7px;
-		border-right: 1px solid $color-dark-separator;
-	}
-	
-	span {
-		font-weight: bold;
-		font-size: 14px;
-		@include hide-text-overflow();
-	}
-}
-
-.cms-login-status {
-	border-top: 1px solid $color-dark-separator;
-	height: 24px;
-	padding: 7px 4px 0 4px;
-	overflow: hidden;
-	line-height: 16px;
-	font-size: $font-base-size - 1;
-	
-	.logout-link {
-		display: inline-block;
-		height: 16px;
-		width: 16px;
-		float: left;
-		margin: 0 8px 0 3px;
-		background: url(../images/logout.png) no-repeat;
-		text-indent: -9999em;
-	}
+.cms-content-loading-spinner {
+	position: absolute; // z-index doesn't apply properly without that
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: url(../images/spinner.gif) no-repeat 50% 50%;
 }
 
 /** -----------------------------------------------
  * Loading Screen
  * ------------------------------------------------ */
-.ss-loading-screen, 
-.ss-loading-screen .loading-logo {
+.ss-loading-screen {
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
 	position: absolute;
+	z-index: 100000;
 	// TODO Convert to compass gradient include
 	background: #fff;
 	background: -moz-radial-gradient(50% 50% 180deg, circle cover, #FFFFFF, #EFEFEF, #C7C7C7 100%);
 	background: -webkit-gradient(radial, 50% 50%, 350, 50% 50%, 0, from(#E3E3E3), to(white));
-	z-index: 100000;
-	margin: 0;
-	padding: 0;
-}
 
-.ss-loading-screen {
 	.loading-logo {
-		background-url: url(../images/logo.gif);
-		background-repeat: no-repeat;
-		background-color: transparent;
-		background-position: 50% 50%;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		position: absolute;
+		background: transparent url(../images/logo.gif) no-repeat 50% 50%;
 	}
+
 	p {
 		width: 100%;
 		text-align: center;
 		position: absolute;
 		bottom: 80px;
+		z-index: 100001;
 		
 		span.notice {
-			display: inline-block;
+			width: 300px;
 			font-size: 14px;
 			padding: 10px 20px;
 			color: #dc7f00;
 			border: none;
+			background: none;
 			@include border-radius(5px);
+			display: inline-block;
+			zoom: 1;
+      *display: inline;
 		}
 	}
 	
@@ -293,7 +236,7 @@ html,body {
  * -------------------------------------------- */
 
 .cms-content-actions {
-	margin: $grid-vertical $grid-horizontal;
+	margin: $grid-vertical $grid-horizontal*2 $grid-vertical*2 $grid-horizontal*2;
 	text-align: right;
 	height: $grid-vertical*4;
 	z-index: 70;
@@ -331,19 +274,13 @@ html,body {
 		border-color: $color-error;
 	}
 	
+	&.good {
+		background-color: lighten($color-good, 20%);
+		border-color: $color-good;
+	}
+	
 	p {
 		margin: 0;
-	}
-}
-
-/** --------------------------------------------
- * ModelAdmin
- * -------------------------------------------- */
-
-.ModelAdmin {
-	// Disable by default, will be replaced by more intuitive column selection in new data grid
-	.ResultAssemblyBlock {
-		display: none;
 	}
 }
 
@@ -352,16 +289,43 @@ html,body {
  * -------------------------------------------- */
 
 .cms-page-add-form-dialog {
+
+	display: none;
+}
+
+.cms-add-form {
 	#PageType li {
+		float: none;
+		width: 100%;
 		padding: 9px 0 9px 15px;
 		overflow: hidden;
 		border-bottom-width: 2px;
 		border-bottom: 2px groove lighten($color-shadow-light, 95%);
 		-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
 		border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+
+		&:last-child {
+			border-bottom: none;
+		}
 				
 		&:hover, &.selected {
 			background-color: $color-highlight-opacity;
+		}
+
+		&.disabled {
+			color: $color-text-disabled;
+			&:hover {
+				background: none;
+			}
+		}
+
+		input {
+			margin: inherit;
+		}
+
+		label {
+			padding-left: 0;
+			padding-bottom: 0;
 		}
 		
 		input, label, .icon, .title {
@@ -406,7 +370,7 @@ html,body {
 			font-style: italic;
 		}
 		
-	}
+	}	
 }
 
 /** --------------------------------------------
@@ -444,22 +408,22 @@ html,body {
 	z-index: 70;
 	
 	.cms-panel-header {
-		padding: 0 $grid-horizontal / 2;
-		margin: $grid-vertical $grid-horizontal * 1.5 0;
+		padding: 0;
+		margin: 0 0 $grid-vertical - 1;
 		line-height: $grid-vertical * 3;
 		
 		@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 10%))
-	
 	}
 	
 	.cms-panel-content {
-		width: ($grid-horizontal * 21);
-		padding: $grid-vertical $grid-horizontal * 2;
+		width: ($grid-horizontal * 22);
+		padding: $grid-vertical $grid-horizontal;
+		overflow-x: hidden;
+		overflow-y: auto;
 	}
 	
 	.cms-content-header {
-		background-color: darken($color-widget-bg, 40%);
-		
+		background-color: darken($color-widget-bg, 40%);	
 		border-bottom: 2px solid darken($color-widget-bg, 50%);
 
 		@include background-image(
@@ -513,7 +477,7 @@ html,body {
 		}
 		
 		&.checkbox {
-			padding: 0 8px 7px;
+			padding: 0 8px 0;
 			
 			input { 
 				margin: 2px 0; 
@@ -612,27 +576,57 @@ html,body {
 	}
 }
 
-
-
 .cms-content-constructive-actions a {
 	display: block;
 	float: right;
 }
 
-/** --------------------------------------------
- * Preview header (remove before release)
- * -------------------------------------------- */
+#Form_BatchActionsForm select {
+	width: 200px;
+}
 
+/** --------------------------------------------
+ * Preview
+ * -------------------------------------------- */
+.cms-switch-view {
+	a {
+		padding-right: 1em;
+	}
+}
 .cms-preview {
 	width: 1px; // collapsed by default
 	z-index: 100;
 		
 	.cms-preview-toggle {
 		width: 10px;
+		cursor: pointer;
+		
+		a {
+			display: block;
+			padding: 2px 12px 2px 6px;
+			height: 16px;
+			position: relative;
+			top: 48%;
+			background-color: $color-base;
+			color: $color-text-light;
+			font-weight: bold;
+			text-decoration: none;
+			z-index: 2000;
+			line-height: 16px;
+			
+			@include border-bottom-right-radius(4px);
+			@include border-top-right-radius(4px);
+			
+			@include box-shadow(0 0 10px rgba(180, 180,180,0.4));
+		}
 	}
 	
-	.cms-preview-overlay {
-		
+	&.is-collapsed {
+		.cms-preview-toggle {
+			a {
+				left: -15px; // point left
+			}
+		}
 	}
 	
 	iframe {
@@ -664,7 +658,6 @@ html,body {
 
 		.cms-preview-toggle-link {
 			float: right;
-			font-size: 11px;
 		}
 	}
 	
@@ -696,19 +689,20 @@ form.member-profile-form {
 	}
 	
 	input.customFormat {
+		width: $grid-horizontal * 10;
 		border: 1px solid #ccc !important;
 		padding: 3px;
-		margin-left: 2px;
+		display: inline-block;
+		margin-left: 1em;
 	}
 	.formattingHelpToggle {
+		display: block;
 		font-size: 11px;
-		padding: 3px;
 	}
 	.formattingHelpText {
-		margin: 5px auto;
+		margin: 5px 0 0 -5px;
 		color: #333;
 		padding: 5px 10px;
-		width: 90%;
 		background: #fff;
 		border: 1px solid #ccc;
 	}
@@ -719,8 +713,28 @@ form.member-profile-form {
 		font-size: 11px;
 		color: #333;
 		margin-bottom: 2px;
+		padding-bottom: 0;
+		float: none;
+		width: auto;
 	}
-	
+	#Groups .middleColumn {
+		margin-left: 0;
+		width: 100%;
+		.TreeDropdownField {
+			width: 90%;
+			max-width: 90%;
+		}
+	}
+
+	// Same rules in .SecurityAdmin
+	#Permissions {
+		.optionset {
+			li {
+				float: none;
+				width: auto;
+			}	
+		}
+	}
 }
 
 .cms {
@@ -735,7 +749,7 @@ form.member-profile-form {
 		/* always show a y scroll bar as popups like TreeDropdowns 
 		 can trigger longer pages and the extra scroll bar doesn't 
 		 fire our sizing bar */
-		overflow-y: scroll;
+		overflow-y: auto;
 		overflow-x: auto;
 		background: none;
 	}
@@ -748,33 +762,32 @@ form.member-profile-form {
 .cms-panel {
 	overflow: hidden;
 
-	.toggle-expand,
-	.toggle-collapse {
-		display: block;
-		position: absolute;
-		bottom: 0;
-		text-align: right;
+	.cms-panel-toggle {
+		@include box-shadow(0 0 5px rgba(107, 120, 123, 0.5));
 		
-		@include background-image(
-			linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 30%))
-		);
+		a { 
+			display: block;
+			text-align: right;
+			padding: $grid-vertical/2 0;
+			width: 100%;
+		
+			@include background-image(
+				linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 30%))
+			);
 
-		text-decoration: none;
+			text-decoration: none;
 		
-		span {
-			display: inline-block;
-			margin: 5px;
-			color: $color-text-dark;
-			font-size: 16px;
+			span {
+				display: inline-block;
+				margin: 0 5px;
+				color: $color-text-dark;
+				font-size: 16px;
+			}
+			
+			&.toggle-expand {
+				width: 40px; // will set the collapsed width
+			}
 		}
-	}
-	
-	.toggle-collapse {
-		width: 100%;
-	}
-	
-	.toggle-expand {
-		width: 40px; // will set the collapsed width
 	}
 	
 	&.collapsed {
@@ -783,12 +796,26 @@ form.member-profile-form {
 			display: none;
 		}
 		
+		/*
 		.cms-panel-header {
 			@include rotate(-90deg);
 			position: relative;
 			top: $grid-vertical * 10;
 			border: none;
 			padding: 0;
+		}
+		*/
+
+	}
+
+	.cms-panel-content-collapsed {
+		width: 40px;
+
+		h2, h3 {
+			border-bottom: 0;
+			margin-left: $grid-vertical;
+			@include transform-origin(bottom, left);
+			@include rotate(90deg);
 		}
 	}
 
@@ -819,174 +846,157 @@ form.member-profile-form {
 
 }
 
+.cms-panel-padded {
+	width: ($grid-horizontal * 22);
+	padding: $grid-vertical*2 $grid-horizontal*2;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
 .cms-content .cms-panel.collapsed {
 	cursor: pointer;
 }
 
-/** --------------------------------------------
- * Other
- * -------------------------------------------- */
-.cms-preview {
-	
-	.cms-preview-toggle {
-		cursor: pointer;
-		
-		a {
-			display: block;
-			padding: 2px 12px 2px 6px;
-			height: 16px;
-			position: relative;
-			top: 48%;
-			background-color: $color-base;
-			color: $color-text-light;
-			font-weight: bold;
-			text-decoration: none;
-			z-index: 2000;
-			line-height: 16px;
-			
-			@include border-bottom-right-radius(4px);
-			@include border-top-right-radius(4px);
-			
-			@include box-shadow(0 0 10px rgba(180, 180,180,0.4));
-		}
-	}
-	
-	&.is-collapsed {
-		.cms-preview-toggle {
-			a {
-				left: -15px; // point left
-			}
-		}
-	}
-}
-
-.cms-switch-view {
-	a {
-		padding-right: 1em;
-	}
-}
-
-
 /** ------------------------------------------------------------------
-* Modal - JQuery UI Dialog pop-up
+* Dialog
+* 
+* Contained in a jQuery UI dialog ('.ui-dialog'), with either inline
+* markup (for the "insert" dialogs), or an iframe (for member profile).
 * ----------------------------------------------------------------- */
 
-/* overlay for switching between CMS panes */
+// overlay for switching between CMS panes 
 .cms .ui-widget-overlay-light {
 	background: #aaaaaa url(../../thirdparty/jquery-ui-themes/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
 	opacity: 0.3;
 }
 
-/* Adjusting the color of the background overlay to be darker for pop-up dialogs (created by jQuery-UI) */
+// Adjusting the color of the background overlay to be darker for pop-up dialogs (created by jQuery-UI)
 .cms .ui-widget-overlay {
 	background-color: #000;
 	background-image: none;
 }
 
-
-$DialogHeaderColor: #5F6160;
-$DialogHeaderFontSize: 14px;
-$DialogBorderRadius: 8px;
-$DialogLabelColor: #7B8C91;
+// Elements with this class can either frame inline markup or an iframe,
+// most styles should be applied to .cms-dialog instead (which declares the content in the frame)
 .ui-dialog {
-    background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
-    border: 3px solid #000 !important;
-	border-radius: $DialogBorderRadius;
-    overflow: visible;
-    padding: 0;
+  background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+  border: 3px solid #000 !important;
+	border-radius: $grid-vertical;
+  overflow: visible;
+  padding: 0;
 
-	#PageType {
-		.middleColumn {
-			margin: 0;
-			padding: 0;
-
-			.optionset li {
-				width: 100%;
-			}
-		}
-
-		li {
-			&.selected {
-				background-color: rgba(255,255,153, 0.5); /*background-color: #FFFF99;*/
-			}
-
-			&:hover {
-				background-color: #FFFF99 !important; /* lighter highlight on hover */
-			}
-		}
-	}
-
-	/* Labels for all the Dialogs of the pop-up form */
-	.field label.left {
-		font-size: $DialogHeaderFontSize;
-		font-weight: bold;
-		width: 100%;
-		float: none;
-		color: $DialogHeaderColor;
-		margin-top: -4px;
-		margin-left: 38px;
-	}
-
-	/* Numeric labels in the sitetree */
-	label.numeric-label {
-		font-size: $DialogHeaderFontSize;
-		font-weight: bold;
-		float: left;
-		@include border-top-left-radius(3px);
-		@include border-bottom-left-radius(3px);
-		background-color: $DialogLabelColor;
-		padding: 4px 8px 4px 3px;
-		text-align: right;
-		color: #fff;
-		position: absolute;
-		width: 15px;
-
-		/* Numeric label icon (supports up to two-digit numbers) */
-		.label-flyout-indicator {
-		    position: absolute;
-			left: 26px;
-			margin-top: -18px;
-			overflow: visible;
-			display: block;
-			width: 0;
-			height: 0;
-			border-top: 11px solid transparent;
-			border-left: 7px dashed $DialogLabelColor;
-			border-bottom: 11px solid transparent;
-		}
-
-	}
-
-	/* Exception for a label that is inline with the selector dropdown box */
-	#ParentID {
-		label.left {
-		    padding: $grid-vertical 0 $grid-vertical 0;
-			float: left !important;
-			width: 125px;
-		}
-
-		.middleColumn {
-			width: 320px;
-		}
-	}
-
-	.Actions {
-		float: right;
-		margin: 0;
+  // Titlebar for pop-up dialog.
+	.ui-dialog-titlebar.ui-widget-header {
+	  font-size: $font-base-size+2;
+		background-color: #92a5b2;
+		padding: $grid-vertical/2 $grid-horizontal/2 $grid-vertical/2 $grid-horizontal*2;
+		border-bottom: 2px solid #8399a7;
+		@include border-radius(0);
+		@include background-image(linear-gradient(#ced7dc, #92a5b2));
 	}
 }
 
-/** ------------------------------------------------------------------
-* Titlebar for pop-up dialog.
-* ----------------------------------------------------------------- */
-.ui-dialog-titlebar.ui-widget-header {
-    font-size: $DialogHeaderFontSize;
-	background-color: #92a5b2;
-	padding: $grid-vertical/2 $grid-horizontal/2 $grid-vertical/2 $grid-horizontal*2;
+body.cms-dialog {
+	overflow: auto;
+	background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+}
 
-	border-bottom: 2px solid #8399a7;
-	@include border-top-left-radius($DialogBorderRadius/2); /* /2 need to eliminate visual artifact */
-	@include border-top-right-radius($DialogBorderRadius);
-	@include background-image(linear-gradient(#ced7dc, #92a5b2));
-	margin-bottom: $grid-vertical*1.5;
+.cms-dialog-content {
+	background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+	padding-bottom: $grid-vertical;
+
+	.Actions {
+		overflow: auto;
+		margin: $grid-vertical 0;
+		padding-bottom: $grid-vertical;
+		float: right;
+	}
+
+	.ss-tabset {	
+		z-index: 60;
+		@include border-radius(none);
+
+		.tab {
+			background: none;
+			overflow-y: auto;
+		}
+
+		&.ui-tabs {
+			background: none;
+
+			.ui-tabs-nav {
+				padding: $grid-horizontal 0 0 0;
+				border: none;
+
+				li {	
+					&.ui-tabs-selected {
+						margin-bottom: -1px;
+					}
+
+					&:first-child {
+						margin-left: 15px;
+					}
+					font-weight: bold;
+					line-height: 16px;
+					padding: 11px 12px 9px;
+					border-bottom: 2px solid #B3B3B3;
+				}
+			}
+
+			.ui-tabs-panel {
+				border: 1px solid #AAAAAA;
+				background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+			}
+		}
+	}
+	.clear {
+		clear: both;
+	}
+	
+}
+
+/** --------------------------------------------
+ * "Insert X" forms
+ * -------------------------------------------- */
+.htmleditorfield-linkform {
+	.step2 {
+		margin-bottom: $grid-horizontal*2;
+	}
+}
+
+/** --------------------------------------------
+ * Step labels
+ * -------------------------------------------- */
+.step-label {
+
+	& > * {
+		display: inline-block;
+		vertical-align: top;
+	}
+
+	.flyout {
+		height: 26px - 2*4px; // minus padding
+		font-size: $font-base-size+2;
+		font-weight: bold;
+		@include border-top-left-radius(3px);
+		@include border-bottom-left-radius(3px);
+		background-color: #667980; // hardcoding colour since its tied to the sprite
+		padding: 4px 3px 4px 6px;
+		text-align: center;
+		text-shadow: none;
+		color: #fff;
+	}
+
+	.arrow {
+		height: 26px;
+		width: 10px;
+		background: sprite($sprites32, numeric-label) no-repeat;
+		margin-right: 4px;
+	}
+
+	.title {
+		height: 26px - 2*4px; // minus padding
+		padding: 4px;
+	}
+	
 }

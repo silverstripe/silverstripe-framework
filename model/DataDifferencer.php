@@ -131,7 +131,7 @@ class DataDifferencer extends ViewableData {
 	}
 	
 	/**
-	 * Get a DataObjectSet of the changed fields.
+	 * Get a SS_List of the changed fields.
 	 * Each element is an array data containing
 	 *  - Name: The field name
 	 *  - Title: The human-readable field title

@@ -18,9 +18,10 @@
 				this.rewriteHashlinks();
 
 				// Initialize jQuery UI tabs
+				var id = this.attr('id');
 				this.tabs({
-					cookie: $.cookie ? { expires: 30, path: '/', name: 'ui-tabs-' + this.attr('id') } : false
-				});
+					cookie: ($.cookie && id) ? { expires: 30, path: '/', name: 'ui-tabs-' + id } : false
+			});
 			},
 		
 			/**

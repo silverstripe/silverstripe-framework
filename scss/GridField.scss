@@ -1,0 +1,219 @@
+/**
+ * Core styles for the basic GridField form field without any specific style.
+ *
+ * @package sapphire
+ * @subpackage scss
+ * @todo Add radial gradient to default delete button state
+ * @todo Create SASS mixin-function to simply swap the from/to, to to/from colours in grsdient mixins?
+ */
+
+@import "compass/css3";
+
+$gf_colour_gradient_light: #B1C0C5;
+$gf_colour_gradient_dark: #7F9198;
+$gf_colour_base: #95a5ab;
+$gf_colour_header_border: #819198;
+$gf_colour_border: #DBDDDD;
+$gf_colour_zebra: #f2f9fd;
+$gf_border_radius:	7px;
+
+@mixin box-shadow-none {
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+@mixin gridfield-gradient-top {
+	background: $gf_colour_gradient_light;
+	background: -moz-linear-gradient($gf_colour_gradient_light 20%, $gf_colour_gradient_dark); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(20%,$gf_colour_gradient_light), color-stop(80%,$gf_colour_gradient_dark)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, $gf_colour_gradient_light 20%,$gf_colour_gradient_dark 80%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, $gf_colour_gradient_light 20%,$gf_colour_gradient_dark 80%); /* Opera 11.10+ */
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#{$gf_colour_gradient_light}', endColorstr='#{$gf_colour_gradient_dark}');	/* IE5.5+ */	
+	background: -ms-linear-gradient(top, $gf_colour_gradient_light 20%,$gf_colour_gradient_dark 80%); /* IE10+ */	
+	background: linear-gradient(top, $gf_colour_gradient_light 20%,$gf_colour_gradient_dark 80%); /* W3C */	
+}
+@mixin gridfield-gradient-bottom {
+	background: $gf_colour_gradient_dark;
+	background: -moz-linear-gradient($gf_colour_gradient_dark 20%, $gf_colour_gradient_light); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(20%,$gf_colour_gradient_dark), color-stop(80%,$gf_colour_gradient_light)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, $gf_colour_gradient_dark 20%,$gf_colour_gradient_light 80%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, $gf_colour_gradient_dark 20%,$gf_colour_gradient_light 80%); /* Opera 11.10+ */
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#{$gf_colour_gradient_dark}', endColorstr='#{$gf_colour_gradient_light}');	/* IE5.5+ */
+	background: -ms-linear-gradient(top, $gf_colour_gradient_dark 20%,$gf_colour_gradient_dark 80%); /* IE10+ */
+	background: linear-gradient(top, $gf_colour_gradient_dark 20%,$gf_colour_gradient_light 80%); /* W3C */	
+}
+
+.cms {
+	table.ss-gridfield.field {
+		box-shadow: none;		
+		padding: 0;
+		margin: 20px 0 0 0;
+		border-collapse: separate;	
+		border-bottom: 0 none;				
+
+		thead {
+			color: darken($gf_colour_base, 50%);	
+			background: transparent;
+		}
+		
+		tbody {
+			background: #FFF;
+			td {
+				/* Emulate a link by default */
+				button {
+					border: none;
+					background: none;
+					margin: 0 0 0 2px;
+					padding: 0;
+					width: auto;
+					text-shadow: none;
+				}				
+			}			
+		}
+
+		tfoot {
+			color: darken($gf_colour_base, 50%);
+			tr {
+				td {
+					background: $gf_colour_base;
+					padding: .7em;
+				}
+			}
+		}
+		
+		tr {			
+			&.sortable-header {
+				th {
+					background: $gf_colour_gradient_dark;
+				}
+			}			
+			&:hover {
+				background: #FFFAD6 !important;
+			}
+			&:first-child {
+				background: transparent;
+			}
+			&.ss-gridfield-even {
+				background: $gf_colour_zebra;
+
+				&.ss-gridfield-last {
+					border-bottom: none;
+				}
+			}
+			th {
+				font-weight: bold;
+				font-size: 12px;
+				color: #FFF;
+				padding: 0;	
+				border-right: 1px solid #85959C;
+				height: 20px;
+				
+				/* Makes it appear as though the text sits over the boundary of the two <tr>'s in <thead> */
+				span {
+					display: block;
+					position: relative;
+					left: 20px;
+					top: -7px;
+					width: 100%;
+				}
+				div {
+					&.fieldgroup,&.fieldgroup-field {
+						width: auto;
+					}
+					&.fieldgroup {
+						min-width: 200px;
+					}
+				}
+				&.extra,&.action {
+					background: $gf_colour_gradient_dark;
+					padding: 0;
+					cursor: default;
+					button,button:hover {
+						&.ss-ui-button {
+							margin-left: .9em;
+							color: #222;
+						}
+					}
+				}
+				&.extra {
+					text-align: center;
+					@include gridfield-gradient-top;					
+					span {
+						width: auto;
+						display: inline;
+						position: static;
+					}
+				}
+				&.action {
+					border-right: 0;
+				}
+				&.first {
+					@include border-top-left-radius($gf_border_radius);
+				}
+				&.last {
+					@include border-top-right-radius($gf_border_radius);
+				}
+				button,button:hover {
+					font-size: 12px;
+					margin-left: -.9em;
+					border-bottom: 0;
+					border-bottom-left-radius: 0;
+					border-bottom-right-radius: 0;					
+					&.ss-gridfield-sort {
+						text-align: left;
+						padding: 0;
+						color: #FFF;
+						width: 95%;
+						background: transparent;
+						border: 0 none;
+						@include box-shadow-none;
+						text-shadow: none;
+					}
+				}
+				button {
+					&:hover {
+						color: #CCC !important; /* Not sure why IE think it needs this */
+					}					
+				}
+				&.extra button.ss-ui-button {
+					padding: .3em;
+					line-height: 1;
+					@include box-shadow-none;
+					position: relative;
+					top: -24px;
+					border: $gf_colour_gradient_light solid 10px;
+					border-bottom-width: 0;					
+				}				
+				input {
+					&.ss-gridfield-sort {
+						position: relative;
+						top: -24px;
+						padding: 2px;
+						width: 65%;
+						margin: 0 auto;
+						border: $gf_colour_gradient_light solid 10px;
+						border-bottom: 0;
+						border-bottom-left-radius: 0;
+						border-bottom-right-radius: 0;
+						&:focus {
+							@include box-shadow-none;
+						}
+					}
+				}
+			}
+			td {
+				border-right: 1px solid $gf_colour_border;
+				border-bottom: 1px solid $gf_colour_border;
+				padding: 10px;
+				&.bottom-all {
+					@include border-bottom-radius($gf_border_radius);
+					@include gridfield-gradient-bottom;	
+				}
+			}
+			&.last td {
+				border-bottom: 0 none;
+			}
+		}
+	}
+}

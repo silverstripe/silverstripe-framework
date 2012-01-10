@@ -152,7 +152,7 @@ class Filesystem extends Object {
 		// Update the image tracking of all pages
 		if($syncLinkTracking) {
 			if(class_exists('SiteTree')) {
-				$origDisableSubsiteFilter = Subsite::$disable_subsite_filter;
+				if(class_exists('Subsite')) $origDisableSubsiteFilter = Subsite::$disable_subsite_filter;
 				if(class_exists('Subsite')) Subsite::$disable_subsite_filter = true;
 				foreach(DataObject::get("SiteTree") as $page) {
 					// syncLinkTracking is called by SiteTree::onBeforeWrite().

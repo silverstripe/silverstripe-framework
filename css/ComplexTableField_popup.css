@@ -1,144 +1,35 @@
-html {
-	overflow-y: auto !important;
-}
-body {
-	height: 100%;
-}
+html { overflow-y: auto !important; }
 
-#ComplexTableField_Popup_DetailForm input.loading {
-	background: #fff url(../images/network-save.gif) left center no-repeat;
-	padding-left: 16px;
-}
+body { height: 100%; }
 
-.PageControls {
-	padding: 5px;
-	width: 100%;
-}
+#ComplexTableField_Popup_DetailForm input.loading { background: white url(../images/network-save.gif) left center no-repeat; padding-left: 16px; }
 
-.PageControls * {
-	vertical-align: middle;
-}
+.PageControls { padding: 5px; width: 100%; }
+.PageControls * { vertical-align: middle; }
+.PageControls .Left { width: 33%; }
+.PageControls .Count { width: 33%; text-align: center; }
+.PageControls .Right { width: 33%; text-align: right; }
 
-.PageControls .Left {
-	width: 33%;
-}
+.ComplexTableField_Popup td.hidden { display: none; }
+.ComplexTableField_Popup th.HiddenField { display: none; }
+.ComplexTableField_Popup span.right { float: right; clear: none; }
+.ComplexTableField_Popup span.left { float: left; clear: none; }
+.ComplexTableField_Popup form p.checkbox input { margin: 0pt 1px; }
+.ComplexTableField_Popup form ul.optionset { margin: 0; padding: 0; }
+.ComplexTableField_Popup form ul.optionset li { margin: 4px 0; }
+.ComplexTableField_Popup form div.Actions input { font-size: 11px; margin-top: 10px; }
 
-.PageControls .Count {
-	width: 33%;
-	text-align: center;
-}
+/* Pagination */
+#ComplexTableField_Pagination, #ComplexTableField_Pagination * { vertical-align: middle; }
 
-.PageControls .Right {
-	width: 33%;
-	text-align: right;
-}
+#ComplexTableField_Pagination { margin-top: 10px; margin-left: auto; margin-right: auto; font-size: 11px; }
+#ComplexTableField_Pagination a { /*font-size: 1.2em;*/ font-size: 13px; font-weight: bold; text-decoration: none; width: 1px; height: 1px; margin: 1px; }
+#ComplexTableField_Pagination a:hover { background: none; }
+#ComplexTableField_Pagination span { display: inline; font-weight: bold; font-size: 15px; color: #f00; }
+#ComplexTableField_Pagination div { display: inline; }
 
-form {
-	margin: 0 !important;
-}
+#ComplexTableField_Pagination_Previous { padding-right: 10px; }
 
-form fieldset {
-	border: 0 !important;
-}
+#ComplexTableField_Pagination_Next { padding-left: 10px; }
 
-/* IE6 hack */
-* html body,
-* html .ComplexTableField_Popup form .middleColumn span,
-* html .ComplexTableField_Popup form .middleColumn *,
-* html .ComplexTableField_Popup form .readonly .readonly {
-	width: 90%;
-}
-* html .autocomplete {
-	display: none;
-}
-
-.ComplexTableField_Popup td.hidden {
-	display: none;
-}
-
-.ComplexTableField_Popup th.HiddenField{
-	display: none;
-}
-
-.ComplexTableField_Popup span.right{
-	float: right;
-	clear: none;
-}
-.ComplexTableField_Popup span.left{
-	float: left;
-	clear: none;
-}
-
-.right.ComplexTableField_Popup form textarea,
-.right.ComplexTableField_Popup form input.text,
-.right.ComplexTableField_Popup form textarea.htmleditor {
-	width: 98.3%;
-}
-
-.right.ComplexTableField_Popup form h2 {
-	line-height: normal;
-}
-
-.ComplexTableField_Popup form p.checkbox input {
-	margin:0pt 1px;
-}
-.ComplexTableField_Popup form ul.optionset {
-	margin: 0;
-	padding: 0;
-}
-.ComplexTableField_Popup form ul.optionset li {
-	margin: 4px 0;
-}
-
-.right.ComplexTableField_Popup form div.Actions input {
-	font-size: 11px;
-	margin-top: 10px;
-}
-
-/* Pagination */ 
-#ComplexTableField_Pagination,
-#ComplexTableField_Pagination * {
-	vertical-align: middle;
-}
-
-#ComplexTableField_Pagination {
-	margin-top: 10px;
-	margin-left: auto;
-	margin-right: auto;
-	font-size: 11px;
-}
-
-#ComplexTableField_Pagination a {
-	/*font-size: 1.2em;*/
-	font-size: 13px;
-	font-weight: bold;
-	text-decoration: none;
-	width: 1px;
-	height: 1px;
-	margin: 1px;
-}
-
-#ComplexTableField_Pagination a:hover {
-	background: none;
-}
-
-#ComplexTableField_Pagination span {
-	display: inline;
-	font-weight: bold;
-	font-size: 15px;
-	color: #f00;
-}
-
-#ComplexTableField_Pagination div {
-	display: inline;
-}
-
-#ComplexTableField_Pagination_Previous {
-	padding-right: 10px;
-}
-#ComplexTableField_Pagination_Next {
-	padding-left: 10px;
-}
-#ComplexTableField_Pagination_Next img,#ComplexTableField_Pagination_Previous img {
-	margin: 0 3px 2px;
-}
+#ComplexTableField_Pagination_Next img, #ComplexTableField_Pagination_Previous img { margin: 0 3px 2px; }

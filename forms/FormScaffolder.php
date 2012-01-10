@@ -62,7 +62,7 @@ class FormScaffolder extends Object {
 	 * Depending on those parameters, the fields can be used in ajax-context,
 	 * contain {@link TabSet}s etc.
 	 * 
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function getFieldSet() {
 		$fields = new FieldList();
@@ -157,7 +157,7 @@ class FormScaffolder extends Object {
 					$ctf = new $fieldClass(
 						$this,
 						$relationship,
-						null,
+						$this->obj->$relationship(),
 						$relationshipFields,
 						"getCMSFields"
 					);

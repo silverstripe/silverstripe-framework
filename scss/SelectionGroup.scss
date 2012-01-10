@@ -1,0 +1,39 @@
+.SelectionGroup {
+	padding: 0px;
+	clear : both;
+
+	li {
+		list-style-type: none;
+		float : left;
+		width: 100%;
+		clear : both;
+	}
+	li input.selector {
+		width: 20px;
+		float : left;
+	}
+	li div.field {
+		display: none;
+		font-size: 1em;
+	}
+	li input, .right .SelectionGroup li label {
+		display: block;
+	}	
+	li.selected div.field {
+		margin-left: 30px;
+		display: block;
+		margin-bottom: 1em;
+	}	
+	li.selected label.selector {
+		font-weight: bold;
+	}
+}
+
+.mainblock.allassets ul {
+   padding: 0 0 0 10px;
+   height:100px;
+   overflow-y:scroll;
+}	
+.mainblock.allassets ul li {
+   width: 150px;
+}

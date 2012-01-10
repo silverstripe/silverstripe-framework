@@ -38,10 +38,10 @@
 			 * Set up an onchange function to show the applicable form and hide all others
 			 */
 			onchange: function(e) {
+				var self = this;
 				this.find('option').each(function() {
-					var $form = $('#'+this.val());
-					if(this.val() == this.val()) $form.show();
-					else $form.hide();
+					var val = $(this).attr('value');
+					$('#' + val)[(val == $(self).val()) ? 'show' : 'hide']();
 				});
 			}
 		});
@@ -137,8 +137,10 @@
 				var firstLink = this.find('a[href]');
 				if(!firstLink) return;
 				
-				window.History.pushState({selector: '.cms-content-fields form:first'}, '', firstLink.attr('href'));
-				return false;
+				if(window.History.enabled) {
+					$('.cms-container').loadPanel(firstLink.attr('href'), '', {selector: '.cms-content-fields form:first'});
+					return false;
+				} 
 			}
 		});
 

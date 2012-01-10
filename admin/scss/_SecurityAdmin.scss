@@ -1,0 +1,15 @@
+.SecurityAdmin {
+	.cms-edit-form .cms-content-header h2 {
+		display: none;
+	}
+
+	// Same rules in .member-profile-form
+	.permissioncheckboxset {
+		.optionset {
+			li {
+				float: none;
+				width: auto;
+			}	
+		}
+	}
+}

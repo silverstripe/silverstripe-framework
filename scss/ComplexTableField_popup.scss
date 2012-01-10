@@ -1,0 +1,115 @@
+html {
+	overflow-y: auto !important;
+}
+body {
+	height: 100%;
+}
+
+#ComplexTableField_Popup_DetailForm input.loading {
+	background: #fff url(../images/network-save.gif) left center no-repeat;
+	padding-left: 16px;
+}
+
+.PageControls {
+	padding: 5px;
+	width: 100%;
+
+	* {
+		vertical-align: middle;
+	}
+
+	.Left {
+		width: 33%;
+	}
+
+	.Count {
+		width: 33%;
+		text-align: center;
+	}
+
+	.Right {
+		width: 33%;
+		text-align: right;
+	}
+}
+
+.ComplexTableField_Popup {
+	td.hidden {
+		display: none;
+	}
+	th.HiddenField{
+		display: none;
+	}
+
+	span.right{
+		float: right;
+		clear: none;
+	}
+	span.left{
+		float: left;
+		clear: none;
+	}
+	form p.checkbox input {
+		margin:0pt 1px;
+	}
+	form ul.optionset {
+		margin: 0;
+		padding: 0;
+	}
+	form ul.optionset li {
+		margin: 4px 0;
+	}
+
+	form div.Actions input {
+		font-size: 11px;
+		margin-top: 10px;
+	}
+}
+
+/* Pagination */ 
+#ComplexTableField_Pagination,
+#ComplexTableField_Pagination * {
+	vertical-align: middle;
+}
+
+#ComplexTableField_Pagination {
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 11px;
+
+	a {
+		/*font-size: 1.2em;*/
+		font-size: 13px;
+		font-weight: bold;
+		text-decoration: none;
+		width: 1px;
+		height: 1px;
+		margin: 1px;
+	}
+
+	a:hover {
+		background: none;
+	}
+
+	span {
+		display: inline;
+		font-weight: bold;
+		font-size: 15px;
+		color: #f00;
+	}
+
+	div {
+		display: inline;
+	}
+}
+
+#ComplexTableField_Pagination_Previous {
+	padding-right: 10px;
+}
+#ComplexTableField_Pagination_Next {
+	padding-left: 10px;
+}
+#ComplexTableField_Pagination_Next img,#ComplexTableField_Pagination_Previous img {
+	margin: 0 3px 2px;
+}

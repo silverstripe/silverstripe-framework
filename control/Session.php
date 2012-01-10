@@ -448,7 +448,17 @@ class Session {
 	public static function destroy($removeCookie = true) {
 		if(session_id()) {
 			if($removeCookie) {
-				setcookie(session_name(), '');
+				$path = self::get_cookie_path();
+				$domain = self::get_cookie_domain();
+				$secure = self::get_cookie_secure(); 
+				
+				if($domain) {
+					setcookie(session_name(), '', null, $path, $domain, $secure, true); 
+				}
+				else { 
+					setcookie(session_name(), '', null, $path, null, $secure, true); 
+				}
+				
 				unset($_COOKIE[session_name()]);
 			}
 			session_destroy();

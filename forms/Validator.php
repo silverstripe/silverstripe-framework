@@ -127,6 +127,7 @@ abstract class Validator extends Object {
 	 * @deprecated 2.4 Use Validator->getErrors() and custom code
 	 */
 	function showError() {
+		Deprecation::notice('2.4', 'Use Validator->getErrors() and custom code instead.');
 		Debug::show($this->errors);
 	}
 	
@@ -134,6 +135,7 @@ abstract class Validator extends Object {
 	 * @deprecated 2.4 Use custom code
 	 */
 	function getCombinedError(){
+		Deprecation::notice('2.4', 'Use custom code instead.');
 		if($this->errors) {
 			foreach($this->errors as $error){
 				$ret['message'] .= $error['message']."<br />";
@@ -148,6 +150,7 @@ abstract class Validator extends Object {
 	 * @deprecated 2.4 Use getErrors()
 	 */
 	function getError(){
+		Deprecation::notice('2.4', 'Use getErrors() instead.');
 		return $this->getErrors();
 	}
 	

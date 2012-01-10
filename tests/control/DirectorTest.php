@@ -172,14 +172,24 @@ class DirectorTest extends SapphireTest {
 	}
 	
 	function testURLParam() {
+		// 2.4 only
+		$originalDeprecation = Deprecation::dump_settings();
+		Deprecation::notification_version('2.4');
+
 		Director::test('DirectorTestRule/myaction/myid/myotherid');
 		// TODO Works on the assumption that urlParam() is not unset after a test run, which is dodgy
 		$this->assertEquals(Director::urlParam('Action'), 'myaction');
 		$this->assertEquals(Director::urlParam('ID'), 'myid');
 		$this->assertEquals(Director::urlParam('OtherID'), 'myotherid');
+
+		Deprecation::restore_settings($originalDeprecation);
 	}
 	
 	function testURLParams() {
+		// 2.4 only
+		$originalDeprecation = Deprecation::dump_settings();
+		Deprecation::notification_version('2.4');
+
 		Director::test('DirectorTestRule/myaction/myid/myotherid');
 		// TODO Works on the assumption that urlParam() is not unset after a test run, which is dodgy
 		$this->assertEquals(
@@ -191,6 +201,8 @@ class DirectorTest extends SapphireTest {
 				'OtherID' => 'myotherid'
 			)
 		);
+
+		Deprecation::restore_settings($originalDeprecation);
 	}
 
 	function testForceSSLProtectsEntireSite() {

@@ -36,7 +36,7 @@
  * @subpackage fields-relational
  */
 class TreeMultiselectField extends TreeDropdownField {
-	function __construct($name, $title, $sourceObject = "Group", $keyField = "ID", $labelField = "Title") {
+	function __construct($name, $title = null, $sourceObject = "Group", $keyField = "ID", $labelField = "Title") {
 		parent::__construct($name, $title, $sourceObject, $keyField, $labelField);
 		$this->value = 'unchanged';
 	}

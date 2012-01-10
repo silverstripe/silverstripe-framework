@@ -13,30 +13,6 @@
 class HTMLText extends Text {
 	
 	public static $escape_type = 'xml';
-	
-	/**
-	 * Limit this field's content by a number of characters.
-	 * This makes use of strip_tags() to avoid malforming the
-	 * HTML tags in the string of text.
-	 *
-	 * @param int $limit Number of characters to limit by
-	 * @param string $add Ellipsis to add to the end of truncated string
-	 * @return string
-	 */
-	function LimitCharacters($limit = 20, $add = "...") {
-		$value = trim(strip_tags($this->value));
-		
-		// Content html text to plan text before sub string-ing
-		// to cutting off part of the html entity character
-		// For example, &amp; because &am
-		$value = html_entity_decode($value, ENT_COMPAT, 'UTF-8');
-		$value = (strlen($value) > $limit) ? substr($value, 0, $limit) . $add : $value;
-		
-		// Convert plan text back to html entities 
-		$value = htmlentities($value, ENT_COMPAT, 'UTF-8');
-		
-		return $value;
-	}
 
 	/**
 	 * Create a summary of the content. This will be some section of the first paragraph, limited by

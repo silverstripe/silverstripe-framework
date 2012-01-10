@@ -13,7 +13,7 @@ class NullableFieldTests extends SapphireTest {
 	 */
 	function testWithContent() {
 		$a = new NullableField(new TextField("Field1", "Field 1", "abc"));
-		$this->assertEquals("Field1", $a->Name());
+		$this->assertEquals("Field1", $a->getName());
 		$this->assertEquals("Field 1", $a->Title());
 		$this->assertSame("abc", $a->Value());
 		$this->assertSame("abc", $a->dataValue());
@@ -34,7 +34,7 @@ class NullableFieldTests extends SapphireTest {
 	 */
 	function testWithEmpty() {
 		$a = new NullableField(new TextField("Field1", "Field 1", ""));
-		$this->assertEquals("Field1", $a->Name());
+		$this->assertEquals("Field1", $a->getName());
 		$this->assertEquals("Field 1", $a->Title());
 		$this->assertSame("", $a->Value());
 		$this->assertSame("", $a->dataValue());
@@ -55,7 +55,7 @@ class NullableFieldTests extends SapphireTest {
 	 */
 	function testWithNull() {
 		$a = new NullableField(new TextField("Field1", "Field 1", null));
-		$this->assertEquals("Field1", $a->Name());
+		$this->assertEquals("Field1", $a->getName());
 		$this->assertEquals("Field 1", $a->Title());
 		$this->assertSame(null, $a->Value());
 		$this->assertSame(null, $a->dataValue());

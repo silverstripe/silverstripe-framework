@@ -43,7 +43,10 @@
  * @subpackage core
  */
 class Form extends RequestHandler {
-	
+
+	const ENC_TYPE_URLENCODED = 'application/x-www-form-urlencoded';
+	const ENC_TYPE_MULTIPART  = 'multipart/form-data';
+
 	/**
 	 * @var boolean $includeFormTag Accessed by Form.ss; modified by {@link formHtmlContent()}.
 	 * A performance enhancement over the generate-the-form-tag-and-then-remove-it code that was there previously
@@ -138,12 +141,23 @@ class Form extends RequestHandler {
 	protected $extraClasses = array();
 
 	/**
+	 * @var string
+	 */
+	protected $encType;
+
+	/**
+	 * @var array Any custom form attributes set through {@link setAttributes()}.
+	 * Some attributes are calculated on the fly, so please use {@link getAttributes()} to access them.
+	 */
+	protected $attributes = array();
+
+	/**
 	 * Create a new form, with the given fields an action buttons.
 	 * 
 	 * @param Controller $controller The parent controller, necessary to create the appropriate form action tag.
 	 * @param String $name The method on the controller that will return this form object.
-	 * @param FieldList $fields All of the fields in the form - a {@link FieldSet} of {@link FormField} objects.
-	 * @param FieldList $actions All of the action buttons in the form - a {@link FieldSet} of {@link FormAction} objects
+	 * @param FieldList $fields All of the fields in the form - a {@link FieldList} of {@link FormField} objects.
+	 * @param FieldList $actions All of the action buttons in the form - a {@link FieldLis} of {@link FormAction} objects
 	 * @param Validator $validator Override the default validator instance (Default: {@link RequiredFields})
 	 */
 	function __construct($controller, $name, FieldList $fields, FieldList $actions, $validator = null) {
@@ -288,6 +302,23 @@ class Form extends RequestHandler {
 				sprintf('Action "%s" not allowed on form (Name: "%s")', $funcName, $this->Name())
 			);
 		}
+		// TODO : Once we switch to a stricter policy regarding allowed_actions (meaning actions must be set explicitly in allowed_actions in order to run)
+		// Uncomment the following for checking security against running actions on form fields
+		/* else {
+			// Try to find a field that has the action, and allows it
+			$fieldsHaveMethod = false;
+			foreach ($this->Fields() as $field){
+				if ($field->hasMethod($funcName) && $field->checkAccessAction($funcName)) {
+					$fieldsHaveMethod = true;
+				}
+			}
+			if (!$fieldsHaveMethod) {
+				return $this->httpError(
+					403, 
+					sprintf('Action "%s" not allowed on any fields of form (Name: "%s")', $funcName, $this->Name())
+				);
+			}
+		}*/
 		
 		// Validate the form
 		if(!$this->validate()) {
@@ -316,11 +347,11 @@ class Form extends RequestHandler {
 						if(Director::is_site_url($pageURL)) {
 							// Remove existing pragmas
 							$pageURL = preg_replace('/(#.*)/', '', $pageURL);
-							return Director::redirect($pageURL . '#' . $this->FormName());
+							return $this->controller->redirect($pageURL . '#' . $this->FormName());
 						}
 					}
 				}
-				return Director::redirectBack();
+				return $this->controller->redirectBack();
 			}
 		}
 		
@@ -330,15 +361,35 @@ class Form extends RequestHandler {
 		// Otherwise, try a handler method on the form object.
 		} elseif($this->hasMethod($funcName)) {
 			return $this->$funcName($vars, $this, $request);
+		} elseif($field = $this->checkFieldsForAction($this->Fields(), $funcName)) {
+			return $field->$funcName($vars, $this, $request);
 		}
 		
 		return $this->httpError(404);
 	}
 	
 	/**
+	 * Fields can have action to, let's check if anyone of the responds to $funcname them
+	 * 
+	 * @return FormField
+	 */
+	protected function checkFieldsForAction($fields, $funcName) {
+		foreach($fields as $field){
+			if(method_exists($field, 'FieldList')) {
+				if($field = $this->checkFieldsForAction($field->FieldList(), $funcName)) {
+					return $field;
+				}
+			} elseif (!$field->hasMethod($funcName)) {
+				continue;
+			}
+			return $field;
+		}
+	}
+
+	/**
 	 * Handle a field request.
 	 * Uses {@link Form->dataFieldByName()} to find a matching field,
-	 * and falls back to {@link FieldSet->fieldByName()} to look
+	 * and falls back to {@link FieldList->fieldByName()} to look
 	 * for tabs instead. This means that if you have a tab and a
 	 * formfield with the same name, this method gives priority
 	 * to the formfield.
@@ -347,7 +398,7 @@ class Form extends RequestHandler {
 	 * @return FormField
 	 */
 	function handleField($request) {
-		$field = $this->dataFieldByName($request->param('FieldName'));
+		$field = $this->Fields()->dataFieldByName($request->param('FieldName'));
 		
 		if($field) {
 			return $field;
@@ -460,7 +511,7 @@ class Form extends RequestHandler {
 	/**
 	 * Generate extra special fields - namely the security token field (if required).
 	 * 
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function getExtraFields() {
 		$extraFields = new FieldList();
@@ -483,11 +534,11 @@ class Form extends RequestHandler {
 	/**
 	 * Return the form's fields - used by the templates
 	 * 
-	 * @return FieldSet The form fields
+	 * @return FieldList The form fields
 	 */
 	function Fields() {
 		foreach($this->getExtraFields() as $field) {
-			if(!$this->fields->fieldByName($field->Name())) $this->fields->push($field);
+			if(!$this->fields->fieldByName($field->getName())) $this->fields->push($field);
 		}
 		
 		return $this->fields;
@@ -498,7 +549,7 @@ class Form extends RequestHandler {
 	 * in a form - including fields nested in {@link CompositeFields}.
 	 * Useful when doing custom field layouts.
 	 * 
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function HiddenFields() {
 		return $this->fields->HiddenFields();
@@ -518,11 +569,14 @@ class Form extends RequestHandler {
 	 * It will traverse into composite fields for you, to find the field you want.
 	 * It will only return a data field.
 	 * 
+	 * @deprecated 3.0 Use Fields() and FieldList API instead
 	 * @return FormField
 	 */
 	function dataFieldByName($name) {
+		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
+
 		foreach($this->getExtraFields() as $field) {
-			if(!$this->fields->dataFieldByName($field->Name())) $this->fields->push($field);
+			if(!$this->fields->dataFieldByName($field->getName())) $this->fields->push($field);
 		}
 		
 		return $this->fields->dataFieldByName($name);
@@ -531,7 +585,7 @@ class Form extends RequestHandler {
 	/**
 	 * Return the form's action buttons - used by the templates
 	 * 
-	 * @return FieldSet The action list
+	 * @return FieldList The action list
 	 */
 	function Actions() {
 		return $this->actions;
@@ -556,18 +610,59 @@ class Form extends RequestHandler {
 	/**
 	 * Unset the form's action button by its name.
 	 * 
+	 * @deprecated 3.0 Use Actions() and FieldList API instead
 	 * @param string $name
 	 */
 	function unsetActionByName($name) {
+		Deprecation::notice('3.0', 'Use Actions() and FieldList API instead');
+
 		$this->actions->removeByName($name);
 	}
 
 	/**
+	 * @param String
+	 * @param String
+	 */
+	function setAttribute($name, $value) {
+		$this->attributes[$name] = $value;
+	}
+
+	/**
+	 * @return String
+	 */
+	function getAttribute($name) {
+		return @$this->attributes[$name];
+	}
+
+	function getAttributes() {
+		$attrs = array(
+			'id' => $this->FormName(),
+			'action' => $this->FormAction(),
+			'method' => $this->FormMethod(),
+			'enctype' => $this->getEncType(),
+			'target' => $this->target,
+			'class' => $this->extraClass(),
+		);
+		if($this->validator && $this->validator->getErrors()) {
+			if(!isset($attrs['class'])) $attrs['class'] = '';
+			$attrs['class'] .= ' validationerror';
+		}
+
+		$attrs = array_merge($attrs, $this->attributes);
+
+		return $attrs;
+	}
+
+	/**
 	 * Unset the form's dataField by its name
+	 *
+	 * @deprecated 3.0 Use Fields() and FieldList API instead
 	 */
 	function unsetDataFieldByName($fieldName){
+		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
+
 		foreach($this->Fields()->dataFields() as $child) {
-			if(is_object($child) && ($child->Name() == $fieldName || $child->Title() == $fieldName)) {
+			if(is_object($child) && ($child->getName() == $fieldName || $child->Title() == $fieldName)) {
 				$child = null;
 			}
 		}
@@ -585,37 +680,40 @@ class Form extends RequestHandler {
 	/**
 	 * Return the attributes of the form tag - used by the templates.
 	 * 
-	 * @return string The attribute string
+	 * @param Array Custom attributes to process. Falls back to {@link getAttributes()}.
+	 * If at least one argument is passed as a string, all arguments act as excludes by name.
+	 * @return String HTML attributes, ready for insertion into an HTML tag
 	 */
-	function FormAttributes() {
-		$attributes = array();
-		
+	function getAttributesHTML($attrs = null) {
+		$exclude = (is_string($attrs)) ? func_get_args() : null;
+
+		if(!$attrs || is_string($attrs)) $attrs = $this->getAttributes();
+
 		// Forms shouldn't be cached, cos their error messages won't be shown
 		HTTP::set_cache_age(0);
 
 		// workaround to include javascript validation
 		if($this->validator && !$this->jsValidationIncluded) $this->validator->includeJavascriptValidation();
+
+		$attrs = $this->getAttributes();
+
+		// Remove empty
+		$attrs = array_filter((array)$attrs, create_function('$v', 'return ($v || $v === 0);')); 
 		
-		// compile attributes		
-		$attributes['id'] = $this->FormName();
-		$attributes['action'] = $this->FormAction();
-		$attributes['method'] = $this->FormMethod();
-		$attributes['enctype'] = $this->FormEncType();
-		if($this->target) $attributes['target'] = $this->target;
-		if($this->extraClass()) $attributes['class'] = $this->extraClass();
-		if($this->validator && $this->validator->getErrors()) {
-			if(!isset($attributes['class'])) $attributes['class'] = '';
-			$attributes['class'] .= ' validationerror';
+		// Remove excluded
+		if($exclude) $attrs = array_diff_key($attrs, array_flip($exclude));
+
+		// Create markkup
+		$parts = array();
+		foreach($attrs as $name => $value) {
+			$parts[] = ($value === true) ? "{$name}=\"{$name}\"" : "{$name}=\"" . Convert::raw2att($value) . "\"";
 		}
-		
-		// implode attributes into string
-		$preparedAttributes = '';
-		foreach($attributes as $k => $v) {
-			// Note: as indicated by the $k == value item here; the decisions over what to include in the attributes can sometimes get finicky
-			if(!empty($v) || $v === '0' || $k == 'value') $preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
-		}
-		
-		return $preparedAttributes;
+
+		return implode(' ', $parts);
+	}
+
+	function FormAttributes() {
+		return $this->getAttributesHTML();
 	}
 
 	/**
@@ -656,23 +754,46 @@ class Form extends RequestHandler {
 		if($this->template) return $this->template;
 		else return $this->class;
 	}
-	
+
 	/**
-	 * Returns the encoding type of the form.
-	 * This will be either "multipart/form-data"" if there are any {@link FileField} instances,
-	 * otherwise "application/x-www-form-urlencoded"
-	 * 
-	 * @return string The encoding mime type
+	 * Returns the encoding type for the form.
+	 *
+	 * By default this will be URL encoded, unless there is a file field present
+	 * in which case multipart is used. You can also set the enc type using
+	 * {@link setEncType}.
 	 */
-	function FormEncType() {
-		if(is_array($this->fields->dataFields())){
-			foreach($this->fields->dataFields() as $field) {
-				if(is_a($field, "FileField")) return "multipart/form-data";
+	public function getEncType() {
+		if ($this->encType) {
+			return $this->encType;
+		}
+
+		if ($fields = $this->fields->dataFields()) {
+			foreach ($fields as $field) {
+				if ($field instanceof FileField) return self::ENC_TYPE_MULTIPART;
 			}
 		}
-		return "application/x-www-form-urlencoded";
+
+		return self::ENC_TYPE_URLENCODED;
 	}
-	
+
+	/**
+	 * Sets the form encoding type. The most common encoding types are defined
+	 * in {@link ENC_TYPE_URLENCODED} and {@link ENC_TYPE_MULTIPART}.
+	 *
+	 * @param string $enctype
+	 */
+	public function setEncType($encType) {
+		$this->encType = $encType;
+	}
+
+	/**
+	 * @deprecated 3.0 Please use {@link getEncType}.
+	 */
+	public function FormEncType() {
+		Deprecation::notice('3.0', 'Please use Form->getEncType() instead.');
+		return $this->getEncType();
+	}
+
 	/**
 	 * Returns the real HTTP method for the form:
 	 * GET, POST, PUT, DELETE or HEAD.
@@ -916,7 +1037,7 @@ class Form extends RequestHandler {
 	 * It will call $object->MyField to get the value of MyField.
 	 * If you passed an array, it will call $object[MyField].
 	 * Doesn't save into dataless FormFields ({@link DatalessField}),
-	 * as determined by {@link FieldSet->dataFields()}.
+	 * as determined by {@link FieldList->dataFields()}.
 	 * 
 	 * By default, if a field isn't set (as determined by isset()),
 	 * its value will not be saved to the field, retaining
@@ -925,7 +1046,7 @@ class Form extends RequestHandler {
 	 * Passed data should not be escaped, and is saved to the FormField instances unescaped.
 	 * Escaping happens automatically on saving the data through {@link saveInto()}.
 	 * 
-	 * @uses FieldSet->dataFields()
+	 * @uses FieldList->dataFields()
 	 * @uses FormField->setValue()
 	 * 
 	 * @param array|DataObject $data
@@ -948,7 +1069,7 @@ class Form extends RequestHandler {
 		// dont include fields without data
 		$dataFields = $this->fields->dataFields();
 		if($dataFields) foreach($dataFields as $field) {
-			$name = $field->Name();
+			$name = $field->getName();
 			
 			// Skip fields that have been exlcuded
 			if($fieldList && !in_array($name, $fieldList)) continue;
@@ -1004,16 +1125,16 @@ class Form extends RequestHandler {
 		$lastField = null;
 		if($dataFields) foreach($dataFields as $field) {
 			// Skip fields that have been exlcuded
-			if($fieldList && is_array($fieldList) && !in_array($field->Name(), $fieldList)) continue;
+			if($fieldList && is_array($fieldList) && !in_array($field->getName(), $fieldList)) continue;
 
 
-			$saveMethod = "save{$field->Name()}";
+			$saveMethod = "save{$field->getName()}";
 
-			if($field->Name() == "ClassName"){
+			if($field->getName() == "ClassName"){
 				$lastField = $field;
 			}else if( $dataObject->hasMethod( $saveMethod ) ){
 				$dataObject->$saveMethod( $field->dataValue());
-			} else if($field->Name() != "ID"){
+			} else if($field->getName() != "ID"){
 				$field->saveInto($dataObject);
 			}
 		}
@@ -1022,7 +1143,7 @@ class Form extends RequestHandler {
 	
 	/**
 	 * Get the submitted data from this form through
-	 * {@link FieldSet->dataFields()}, which filters out
+	 * {@link FieldList->dataFields()}, which filters out
 	 * any form-specific data like form-actions.
 	 * Calls {@link FormField->dataValue()} on each field,
 	 * which returns a value suitable for insertion into a DataObject
@@ -1036,8 +1157,8 @@ class Form extends RequestHandler {
 		
 		if($dataFields){
 			foreach($dataFields as $field) {
-				if($field->Name()) {
-					$data[$field->Name()] = $field->dataValue();
+				if($field->getName()) {
+					$data[$field->getName()] = $field->dataValue();
 				}
 			}
 		}
@@ -1047,14 +1168,17 @@ class Form extends RequestHandler {
 	/**
 	 * Resets a specific field to its passed default value.
 	 * Does NOT clear out all submitted data in the form.
-	 * 
+	 *
+	 * @deprecated 3.0 Use Fields() and FieldList API instead
 	 * @param string $fieldName
 	 * @param mixed $fieldValue
 	 */
 	function resetField($fieldName, $fieldValue = null) {
+		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
+
 		$dataFields = $this->fields->dataFields();
 		if($dataFields) foreach($dataFields as $field) {
-			if($field->Name()==$fieldName) {
+			if($field->getName()==$fieldName) {
 				$field = $field->setValue($fieldValue);
 			}
 		}
@@ -1215,6 +1339,7 @@ class Form extends RequestHandler {
 	 * @deprecated 2.5 Use SecurityToken::disable()
 	 */
 	static function disable_all_security_tokens() {
+		Deprecation::notice('2.5', 'Use SecurityToken::disable() instead.');
 		SecurityToken::disable();
 	}
 	
@@ -1227,6 +1352,7 @@ class Form extends RequestHandler {
 	 * @return bool
 	 */
 	function securityTokenEnabled() {
+		Deprecation::notice('2.5', 'Use Form->getSecurityToken()->isEnabled() instead.');
 		return $this->securityToken->isEnabled();
 	}
 	

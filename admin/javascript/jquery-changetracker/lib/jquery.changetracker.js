@@ -54,20 +54,27 @@
 		this.initialize = function() {
 			// optional metadata plugin support
 			if ($.meta) options = $.extend({}, options, this.data());
-			
-			// setup original values
-			this.getFields()
-			.bind('change', function(e) {
+
+			var onchange = function(e) {
 				var $field = $(e.target);
 				var origVal = $field.data('changetracker.origVal');
-				if(origVal === null || $field.val() != origVal) {
+				if(origVal === null || e.target.value != origVal) {
+					// TODO Also add class to radiobutton/checkbox siblings
 					$field.addClass(options.changedCssClass);
 					self.addClass(options.changedCssClass);
 				}
-			})
-			.each(function() {
-				$(this).data('changetracker.origVal', $(this).val());
+			};
+			
+			// setup original values
+			var fields = this.getFields();
+			fields.filter(':radio,:checkbox').bind('click', onchange);
+			fields.not(':radio,:checkbox').bind('change', onchange);
+			fields.each(function() {
+				var origVal = $(this).is(':radio,:checkbox') ? self.find(':input[name=' + $(this).attr('name') + ']:checked').val() : $(this).val();
+				$(this).data('changetracker.origVal', origVal);
 			});
+
+			this.data('changetracker', true);
 		};
 			
 		/**
@@ -88,7 +95,7 @@
 		 * @param DOMElement field
 		 */
 		this.resetField = function(field) {
-			return $(field).removeData('changetracker.origVal');
+			return $(field).removeData('changetracker.origVal').removeClass('changed');
 		};
 		
 		/**
@@ -97,7 +104,16 @@
 		this.getFields = function() {
 			return this.find(options.fieldSelector).not(options.ignoreFieldSelector);
 		};
-	
-		return this.initialize();
+
+		// Support invoking "public" methods as string arguments
+		if (typeof arguments[0] === 'string') {  
+      var property = arguments[1];  
+      var args = Array.prototype.slice.call(arguments);  
+      args.splice(0, 1);  
+      return this[arguments[0]].apply(this, args);  
+  	} else {
+    	return this.initialize();
+    }
+		
 	};
 }(jQuery));

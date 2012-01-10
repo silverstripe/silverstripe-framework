@@ -51,27 +51,21 @@ class ListboxField extends DropdownField {
 	 * @param int $size Optional size of the select element
 	 * @param form The parent form
 	 */
-	function __construct($name, $title = '', $source = array(), $value = '', $size = null, $multiple = false, $form = null) {
+	function __construct($name, $title = '', $source = array(), $value = '', $size = null, $multiple = false) {
 		if($size) $this->size = $size;
 		if($multiple) $this->multiple = $multiple;
-		parent::__construct($name, $title, $source, $value, $form);
+		parent::__construct($name, $title, $source, $value);
 	}
 	
 	/**
 	 * Returns a <select> tag containing all the appropriate <option> tags
 	 */
-	function Field() {
-		$size = '';
-		$multiple = '';
-		
-		if($this->size) $size = "size=\"$this->size\"";
-		
+	function Field($properties = array()) {
 		if($this->multiple) {
-			$multiple = "multiple=\"multiple\"";
 			$this->name .= '[]';
 		}
 		
-		$options = "";
+		$options = array();
 		
 		// We have an array of values
 		if(is_array($this->value)){
@@ -86,18 +80,36 @@ class ListboxField extends DropdownField {
 						break;
 					}
 				}
-				$options .= "<option$selected value=\"$value\">$title</option>\n";
+				$options[] = new ArrayData(array(
+					'Title' => $title,
+					'Value' => $value,
+					'Selected' => $selected,
+				));
 			}
-		}else{
+		} else {
 			// Listbox was based a singlular value, so treat it like a dropdown.
 			foreach($this->getSource() as $value => $title) {
 				$selected = $value == $this->value ? " selected=\"selected\"" : ""; 
-				$options .= "<option$selected value=\"$value\">$title</option>";
+				$options[] = new ArrayData(array(
+					'Title' => $title,
+					'Value' => $value,
+					'Selected' => $selected,
+				));
 			}
 		}
 		
-		$id = $this->id();
-		return "<select $size $multiple name=\"$this->name\" id=\"$id\">$options</select>";
+		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
+		return $this->customise($properties)->renderWith($this->getTemplate());
+	}
+
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array(
+				'multiple' => $this->multiple,
+				'size' => $this->size
+			)
+		);
 	}
 	
 	/** 

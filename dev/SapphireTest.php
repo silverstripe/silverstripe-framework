@@ -513,12 +513,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 
 	/**
-	 * Assert that the given {@link DataObjectSet} includes DataObjects matching the given key-value
+	 * Assert that the given {@link SS_List} includes DataObjects matching the given key-value
 	 * pairs.  Each match must correspond to 1 distinct record.
 	 * 
 	 * @param $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
 	 * either pass a single pattern or an array of patterns.
-	 * @param $dataObjectSet The {@link DataObjectSet} to test.
+	 * @param $dataObjectSet The {@link SS_List} to test.
 	 *
 	 * Examples
 	 * --------
@@ -550,8 +550,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			// We couldn't find a match - assertion failed
 			if(!$matched) {
 				throw new PHPUnit_Framework_AssertionFailedError(
-	                "Failed asserting that the DataObjectSet contains an item matching "
-						. var_export($match, true) . "\n\nIn the following DataObjectSet:\n" 
+	                "Failed asserting that the SS_List contains an item matching "
+						. var_export($match, true) . "\n\nIn the following SS_List:\n" 
 						. $this->DOSSummaryForMatch($dataObjectSet, $match)
 	            );
 			}
@@ -560,12 +560,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	} 
 	
 	/**
-	 * Assert that the given {@link DataObjectSet} includes only DataObjects matching the given 
+	 * Assert that the given {@link SS_List} includes only DataObjects matching the given 
 	 * key-value pairs.  Each match must correspond to 1 distinct record.
 	 * 
 	 * @param $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
 	 * either pass a single pattern or an array of patterns.
-	 * @param $dataObjectSet The {@link DataObjectSet} to test.
+	 * @param $dataObjectSet The {@link SS_List} to test.
 	 *
 	 * Example
 	 * --------
@@ -596,8 +596,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			// We couldn't find a match - assertion failed
 			if(!$matched) {
 				throw new PHPUnit_Framework_AssertionFailedError(
-	                "Failed asserting that the DataObjectSet contains an item matching "
-						. var_export($match, true) . "\n\nIn the following DataObjectSet:\n" 
+	                "Failed asserting that the SS_List contains an item matching "
+						. var_export($match, true) . "\n\nIn the following SS_List:\n" 
 						. $this->DOSSummaryForMatch($dataObjectSet, $match)
 	            );
 			}
@@ -607,18 +607,18 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		if($extracted) {
 			// If we didn't break by this point then we couldn't find a match
 			throw new PHPUnit_Framework_AssertionFailedError(
-	            "Failed asserting that the DataObjectSet contained only the given items, the "
+	            "Failed asserting that the SS_List contained only the given items, the "
 					. "following items were left over:\n" . var_export($extracted, true)
 	        );
 		}
 	} 
 
 	/**
-	 * Assert that the every record in the given {@link DataObjectSet} matches the given key-value
+	 * Assert that the every record in the given {@link SS_List} matches the given key-value
 	 * pairs.
 	 * 
 	 * @param $match The pattern to match.  The pattern is a map of key-value pairs.
-	 * @param $dataObjectSet The {@link DataObjectSet} to test.
+	 * @param $dataObjectSet The {@link SS_List} to test.
 	 *
 	 * Example
 	 * --------

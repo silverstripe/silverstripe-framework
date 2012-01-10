@@ -33,7 +33,7 @@ the form in a method on *HomePage_Controller*.
 	
 		function BrowserPollForm() {
 			// Create fields
-			$fields = new FieldSet(
+			$fields = new FieldList(
 				new TextField('Name'),
 				new OptionsetField('Browser', 'Your Favourite Browser', array(
 					'Firefox' => 'Firefox',
@@ -46,7 +46,7 @@ the form in a method on *HomePage_Controller*.
 			);
 			
 			// Create actions
-			$actions = new FieldSet(
+			$actions = new FieldList(
 				new FormAction('doBrowserPoll', 'Submit')
 			);
 		
@@ -63,7 +63,7 @@ Let's step through this code.
 
 	:::php
 	// Create fields
-		$fields = new FieldSet(
+		$fields = new FieldList(
 			new TextField('Name'),
 			new OptionsetField('Browser', 'Your Favourite Browser', array(
 				'Firefox' => 'Firefox',
@@ -78,7 +78,7 @@ Let's step through this code.
 
 First we create our form fields.
 
-We do this by creating a `[api:FieldSet]` and passing our fields as arguments. The first field is a new
+We do this by creating a `[api:FieldList]` and passing our fields as arguments. The first field is a new
 `[api:TextField]` with the name 'Name'.
 
 There is a second argument when creating a field which specifies the text on the label of the field. If no second
@@ -88,7 +88,7 @@ The second field we create is an `[api:OptionsetField]`. This is a dropdown, and
 array mapping the values to the options listed in the dropdown.
 
 	:::php
-	$actions = new FieldSet(
+	$actions = new FieldList(
 		new FormAction('doBrowserPoll', 'Submit');
 	);
 
@@ -100,7 +100,7 @@ button.
 
 Here we create a 'Submit' button which calls the 'doBrowserPoll' method, which we will create later.
 
-All the form actions (in this case only one) are collected into a `[api:FieldSet]` object the same way we did with
+All the form actions (in this case only one) are collected into a `[api:FieldList]` object the same way we did with
 the fields.
 
 	:::php
@@ -111,7 +111,7 @@ Finally we create the `[api:Form]` object and return it.
 
 The first argument is the controller that contains the form, in most cases '$this'. The second is the name of the method
 that returns the form, which is 'BrowserPollForm' in our case. The third and fourth arguments are the
-FieldSets containing the fields and form actions respectively.
+FieldLists containing the fields and form actions respectively.
 
 After creating the form function, we need to add the form to our home page template.
 
@@ -139,7 +139,7 @@ Add the following code to the form style sheet:
 		margin: 20px 10px 0 0;
 		width: 20%;
 	}
-		form fieldset {
+		form FieldList {
 			border:0;
 		}
 		#BrowserPoll .message {

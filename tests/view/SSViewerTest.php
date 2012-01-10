@@ -1,6 +1,10 @@
 <?php
 
 class SSViewerTest extends SapphireTest {
+	function setUp() {
+		parent::setUp();
+		SSViewer::set_source_file_comments(false);
+	}
 	
 	/**
 	 * Tests for {@link SSViewer::current_theme()} for different behaviour
@@ -207,6 +211,10 @@ after')
 		// Basic test
 		$this->assertEquals('AC',
 			$this->render('A<% if NotSet %>B$NotSet<% end_if %>C'));
+
+		// Nested test
+		$this->assertEquals('AB1C',
+			$this->render('A<% if IsSet %>B$NotSet<% if IsSet %>1<% else %>2<% end_if %><% end_if %>C'));
 
 		// else_if
 		$this->assertEquals('ACD',
@@ -512,6 +520,108 @@ after')
 
 		// Remove all the test themes we created
 		Filesystem::removeFolder($testThemeBaseDir);
+	}
+	
+	function testRewriteHashlinks() {
+		$oldRewriteHashLinks = SSViewer::getOption('rewriteHashlinks');
+		SSViewer::setOption('rewriteHashlinks', true);
+		
+		// Emulate SSViewer::process()
+		$base = Convert::raw2att($_SERVER['REQUEST_URI']);
+		
+		$tmplFile = TEMP_FOLDER . '/SSViewerTest_testRewriteHashlinks_' . sha1(rand()) . '.ss';
+		
+		// Note: SSViewer_FromString doesn't rewrite hash links.
+		file_put_contents($tmplFile, '<!DOCTYPE html>
+			<html>
+				<head><% base_tag %></head>
+				<body>
+				<a class="inline" href="#anchor">InlineLink</a>
+				$InsertedLink
+				<body>
+			</html>');
+		$tmpl = new SSViewer($tmplFile);
+		$obj = new ViewableData();
+		$obj->InsertedLink = '<a class="inserted" href="#anchor">InsertedLink</a>';
+		$result = $tmpl->process($obj);
+		$this->assertContains(
+			'<a class="inserted" href="' . $base . '#anchor">InsertedLink</a>',
+			$result
+		);
+		$this->assertContains(
+			'<a class="inline" href="' . $base . '#anchor">InlineLink</a>',
+			$result
+		);
+		
+		unlink($tmplFile);
+		
+		SSViewer::setOption('rewriteHashlinks', $oldRewriteHashLinks);
+	}
+	
+	function testRewriteHashlinksInPhpMode() {
+		$oldRewriteHashLinks = SSViewer::getOption('rewriteHashlinks');
+		SSViewer::setOption('rewriteHashlinks', 'php');
+		
+		$tmplFile = TEMP_FOLDER . '/SSViewerTest_testRewriteHashlinksInPhpMode_' . sha1(rand()) . '.ss';
+		
+		// Note: SSViewer_FromString doesn't rewrite hash links.
+		file_put_contents($tmplFile, '<!DOCTYPE html>
+			<html>
+				<head><% base_tag %></head>
+				<body>
+				<a class="inline" href="#anchor">InlineLink</a>
+				$InsertedLink
+				<body>
+			</html>');
+		$tmpl = new SSViewer($tmplFile);
+		$obj = new ViewableData();
+		$obj->InsertedLink = '<a class="inserted" href="#anchor">InsertedLink</a>';
+		$result = $tmpl->process($obj);
+		$this->assertContains(
+			'<a class="inserted" href="<?php echo strip_tags(',
+			$result
+		);
+		// TODO Fix inline links in PHP mode
+		// $this->assertContains(
+		// 	'<a class="inline" href="<?php echo str_replace(',
+		// 	$result
+		// );
+		
+		unlink($tmplFile);
+		
+		SSViewer::setOption('rewriteHashlinks', $oldRewriteHashLinks);
+	}
+	
+	function testRenderWithSourceFileComments() {
+		SSViewer::set_source_file_comments(true);
+		
+		$view = new SSViewer(array('SSViewerTestCommentsFullSource'));
+		$data = new ArrayData(array());
+		
+		$result = $view->process($data);
+		$expected = '<!doctype html>
+<html><!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsFullSource.ss -->
+	<head></head>
+	<body></body>
+<!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsFullSource.ss --></html>
+';
+		$this->assertEquals($result, $expected);
+		
+		$view = new SSViewer(array('SSViewerTestCommentsPartialSource'));
+		$data = new ArrayData(array());
+		
+		$result = $view->process($data);
+		$expected = '<!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsPartialSource.ss --><div class=\'typography\'></div><!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsPartialSource.ss -->';
+		$this->assertEquals($result, $expected);
+		
+		$view = new SSViewer(array('SSViewerTestCommentsWithInclude'));
+		$data = new ArrayData(array());
+		
+		$result = $view->process($data);
+		$expected = '<!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsWithInclude.ss --><div class=\'typography\'><!-- include \'SSViewerTestCommentsInclude\' --><!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsInclude.ss -->Included<!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsInclude.ss --><!-- end include \'SSViewerTestCommentsInclude\' --></div><!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsWithInclude.ss -->';
+		$this->assertEquals($result, $expected);
+		
+		SSViewer::set_source_file_comments(false);
 	}
 
 }

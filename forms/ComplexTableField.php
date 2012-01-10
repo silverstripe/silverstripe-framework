@@ -32,7 +32,7 @@ class ComplexTableField extends TableListField {
 
 	/**
 	 * Determines the fields of the detail pop-up form.  It can take many forms:
-	 *  - A FieldSet object: Use that field set directly.
+	 *  - A FieldList object: Use that field set directly.
 	 *  - A method name, eg, 'getCMSFields': Call that method on the child object to get the fields.
 	 */
 	protected $addTitle;
@@ -245,7 +245,7 @@ JS;
 	}
 
 	/**
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	function Items() {
 		$sourceItems = $this->sourceItems();
@@ -254,7 +254,7 @@ JS;
 			return null;
 		}
 
-		$pageStart = (isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) ? $_REQUEST['ctf'][$this->Name()]['start'] : 0;
+		$pageStart = (isset($_REQUEST['ctf'][$this->getName()]['start']) && is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) ? $_REQUEST['ctf'][$this->getName()]['start'] : 0;
 
 		$output = new ArrayList();
 		foreach($sourceItems as $pageIndex=>$item) {
@@ -309,7 +309,7 @@ JS;
 	}
 	
 	function sourceID() { 
-		$idField = $this->form->dataFieldByName('ID'); 
+		$idField = $this->form->Fields()->dataFieldByName('ID'); 
 
 		// disabled as it conflicts with scaffolded formfields, and not strictly necessary
 		// if(!$idField) user_error("ComplexTableField needs a formfield named 'ID' to be present", E_USER_ERROR); 
@@ -330,7 +330,7 @@ JS;
 	/**
 	 * @return FieldList
 	 */
-	function createFieldSet() {
+	function createFieldList() {
 		$fieldset = new FieldList();
 		foreach($this->fieldTypes as $key => $fieldType){
 			$fieldset->push(new $fieldType($key));
@@ -352,7 +352,7 @@ JS;
 	 * Return the object-specific fields for the given record, to be shown in the detail pop-up
 	 * 
 	 * This won't include all the CTF-specific 'plumbing; this method is called by self::getFieldsFor()
-	 * and the result is then processed further to get the actual FieldSet for the form.
+	 * and the result is then processed further to get the actual FieldList for the form.
 	 *
 	 * The default implementation of this processes the value of $this->detailFormFields; consequently, if you want to 
 	 * set the value of the fields to something that $this->detailFormFields doesn't allow, you can do so by overloading
@@ -444,10 +444,10 @@ JS;
 	}
 	
 	/**
-	 * @deprecated
+	 * @deprecated 3.0
 	 */
 	function setRelationAutoSetting($value) {
-		user_error("ComplexTableField::setRelationAutoSetting() is deprecated; manipulate the DataList instead", E_USER_WARNING);
+		Deprecation::notice('3.0', 'Manipulate the DataList instead.');
 	}
 	
 	/**
@@ -493,8 +493,8 @@ JS;
 		);
 		
 		$form->sessionMessage($message, 'good');
-
-		Director::redirectBack();
+		
+		$this->controller->redirectBack();
 	}
 }
 
@@ -614,7 +614,9 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 			$readonly,
 			$childData
 		);
-	
+		// Don't use ComplexTableField_Popup.ss
+		$form->setTemplate('Form');
+		
 		$form->loadDataFrom($childData);
 		if ($readonly) $form->makeReadonly();
 
@@ -709,7 +711,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 	/**
      * Method handles pagination in asset popup.
      *
-     * @return Object DataObjectSet
+     * @return Object SS_List
      */
 	
 	function Pagination() {

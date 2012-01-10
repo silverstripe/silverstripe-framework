@@ -127,11 +127,22 @@ class TreeDropdownField extends FormField {
 		
 		$this->searchCallback = $callback;
 	}
-	
+
+	public function getShowSearch() {
+		return $this->showSearch;
+	}
+
+	/**
+	 * @param Boolean
+	 */
+	public function setShowSearch($bool) {
+		$this->showSearch = $bool;
+	}
+
 	/**
 	 * @return string
 	 */
-	public function Field() {
+	public function Field($properties = array()) {
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
@@ -149,35 +160,26 @@ class TreeDropdownField extends FormField {
 		} else {
 			$title = _t('DropdownField.CHOOSE', '(Choose)', PR_MEDIUM, 'start value of a dropdown');
 		}
-		
-		// TODO Implement for TreeMultiSelectField
-		if($record) {
-			$metadata = array('id' => $record->ID, 'metadata' => array('ClassName' => $record->ClassName));
-		} else {
-			$metadata = null;
-		}
 
-		return $this->createTag(
-			'div',
-			array (
-				'id'    => "TreeDropdownField_{$this->id()}",
-				'class' => 'TreeDropdownField single' . ($this->extraClass() ? " {$this->extraClass()}" : '') . ($this->showSearch ? " searchable" : ''),
-				'data-url-tree' => $this->form ? $this->Link('tree') : "",
-				'data-title' => $title,
-				// Any additional data from the selected record
-				'data-metadata' => ($metadata) ? Convert::raw2json($metadata) : null
-			),
-			$this->createTag(
-				'input',
-				array (
-					'id'    => $this->id(),
-					'type'  => 'hidden',
-					'class' => 'text' . ($this->extraClass() ? $this->extraClass() : ''),
-					'name'  => $this->name,
-					'value' => $this->value
-				)
+		// TODO Implement for TreeMultiSelectField
+		$metadata = array(
+			'id' => $record ? $record->ID : null, 
+			'ClassName' => $record ? $record->ClassName : $this->sourceObject
+		);
+
+		$properties = array_merge(
+			$properties,
+			array(
+				'Title' => $title,
+				'Metadata' => ($metadata) ? Convert::raw2att(Convert::raw2json($metadata)) : null
 			)
 		);
+
+		return $this->customise($properties)->renderWith('TreeDropdownField');
+	}
+
+	function extraClass() {
+		return implode(' ', array(parent::extraClass(), ($this->showSearch ? "searchable" : null)));
 	}
 	
 	/**
@@ -239,7 +241,7 @@ class TreeDropdownField extends FormField {
 			}
 		}
 
-		$eval = '"<li id=\"selector-' . $this->Name() . '-{$child->' . $this->keyField . '}\" data-id=\"$child->' . $this->keyField . '\" class=\"class-$child->class"' .
+		$eval = '"<li id=\"selector-' . $this->getName() . '-{$child->' . $this->keyField . '}\" data-id=\"$child->' . $this->keyField . '\" class=\"class-$child->class"' .
 				' . $child->markingClasses() . "\"><a rel=\"$child->ID\">" . $child->' . $this->labelField . ' . "</a>"';
 		
 		if($isSubTree) {

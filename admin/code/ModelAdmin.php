@@ -244,7 +244,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * Returns managed models' create, search, and import forms
 	 * @uses SearchContext
 	 * @uses SearchFilter
-	 * @return DataObjectSet of forms 
+	 * @return SS_List of forms 
 	 */
 	protected function getModelForms() {
 		$models = $this->getManagedModels();
@@ -961,7 +961,7 @@ class ModelAdmin_RecordController extends Controller {
 		
 		if($this->currentRecord->canDelete(Member::currentUser())) {
 			if(!$actions->fieldByName('action_doDelete')) {
-				$actions->insertFirst($deleteAction = new FormAction('doDelete', _t('ModelAdmin.DELETE', 'Delete')));
+				$actions->unshift($deleteAction = new FormAction('doDelete', _t('ModelAdmin.DELETE', 'Delete')));
 			}
 			$deleteAction->addExtraClass('delete ss-ui-action-destructive');
 		}

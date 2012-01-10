@@ -136,7 +136,8 @@ class SS_Backtrace {
 			$args = array();
 			foreach($item['args'] as $arg) {
 				if(!is_object($arg) || method_exists($arg, '__toString')) {
-					$args[] = (strlen((string)$arg) > $argCharLimit) ? substr((string)$arg, 0, $argCharLimit) . '...' : (string)$arg;
+					$sarg = is_array($arg) ? 'Array' : strval($arg);
+					$args[] = (strlen($sarg) > $argCharLimit) ? substr($sarg, 0, $argCharLimit) . '...' : $sarg;
 				} else {
 					$args[] = get_class($arg);
 				}
@@ -172,7 +173,7 @@ class SS_Backtrace {
 				}
 				$result .= "<li><b>" . htmlentities($name, ENT_COMPAT, 'UTF-8') . "</b>\n<br />\n";
 				$result .= isset($item['line']) ? "Line $item[line] of " : '';
-				$result .=  isset($item['file']) ? htmlentities(basename($item['file'])) : ''; 
+				$result .=  isset($item['file']) ? htmlentities(basename($item['file']), ENT_COMPAT, 'UTF-8') : ''; 
 				$result .= "</li>\n";
 			}
 		}

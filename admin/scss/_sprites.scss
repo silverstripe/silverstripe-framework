@@ -5,9 +5,11 @@
  */
 @import "compass/utilities/sprites/base";
 
-$icon24: sprite-map("icons/24x24/*.png");
-$icon16: sprite-map("icons/16x16/*.png");
+$icon24: sprite-map("menu_icons/24x24/*.png");
+$icon16: sprite-map("menu_icons/16x16/*.png");
 
+$btn_icons: sprite-map("btn_icons/*.png", $spacing: 10px);
+$sprites32: sprite-map("sprites_32x32/*.png", $spacing: 10px);
 
 @mixin icons($sprite) {
 	background: $sprite;
@@ -37,7 +39,6 @@ $icon16: sprite-map("icons/16x16/*.png");
 		@include sprite($sprite, "information");
 	}
 }
-
 
 .icon {
 	text-indent: -9999px;

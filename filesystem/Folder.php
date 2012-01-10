@@ -25,10 +25,24 @@ class Folder extends File {
 
 	static $default_sort = "\"Sort\"";
 	
-	function populateDefaults() {
+	/**
+	 * 
+	 */
+	public function populateDefaults() {
 		parent::populateDefaults();
 		
 		if(!$this->Name) $this->Name = _t('AssetAdmin.NEWFOLDER',"NewFolder");
+	}
+	
+	/**
+	 * @param $folderPath string Absolute or relative path to the file.
+	 *  If path is relative, its interpreted relative to the "assets/" directory.
+	 * @return Folder
+	 * @deprecated in favor of the correct name find_or_make
+	 */
+	public static function findOrMake($folderPath) {
+		Deprecation::notice('3.0', "Folder::findOrMake() is deprecated in favor of Folder::find_or_make()");
+		return self::find_or_make($folderPath);
 	}
 	
 	/**
@@ -39,7 +53,7 @@ class Folder extends File {
 	 *  If path is relative, its interpreted relative to the "assets/" directory.
 	 * @return Folder
 	 */
-	static function findOrMake($folderPath) {
+	public static function find_or_make($folderPath) {
 		// Create assets directory, if it is missing
 		if(!file_exists(ASSETS_PATH)) Filesystem::makeFolder(ASSETS_PATH);
 
@@ -379,54 +393,44 @@ class Folder extends File {
 	}
 	
 	/**
-	 * Return the FieldSet used to edit this folder in the CMS.
-	 * You can modify this fieldset by subclassing folder, or by creating a {@link DataExtension}
+	 * Return the FieldList used to edit this folder in the CMS.
+	 * You can modify this FieldList by subclassing folder, or by creating a {@link DataExtension}
 	 * and implemeting updateCMSFields(FieldList $fields) on that extension.
 	 */
 	function getCMSFields() {
-		$fileList = new AssetTableField(
-			$this,
-			"Files",
-			"File", 
-			array("Title" => _t('Folder.TITLE', "Title"), "Filename" => _t('Folder.FILENAME', "Filename")),
-			""
-		);
-		$fileList->setFolder($this);
-		$fileList->setPopupCaption(_t('Folder.VIEWEDITASSET', "View/Edit Asset"));
+		$config = GridFieldConfig::create();
+		$config->addComponent(new GridFieldFilter());
+		$config->addComponent(new GridFieldDefaultColumns());
+		$config->addComponent(new GridFieldSortableHeader());
+		$config->addComponent(new GridFieldPaginator(10));
+		$config->addComponent(new GridFieldAction_Delete());
+		$config->addComponent(new GridFieldAction_Edit());
+		$config->addComponent($gridFieldForm = new GridFieldPopupForms());
+		$gridFieldForm->setTemplate('CMSGridFieldPopupForms');
+		$files = DataList::create('File')->filter('ParentID', $this->ID)->exclude('ClassName', 'Folder');
+		$gridField = new GridField('File','Files', $files, $config);
+		$gridField->setDisplayFields(array(
+			'StripThumbnail' => '',
+			'Parent.FileName' => 'Folder',
+			'Title'=>'Title',
+			'Size'=>'Size',
+		));
 
 		$titleField = ($this->ID && $this->ID != "root") ? new TextField("Title", _t('Folder.TITLE')) : new HiddenField("Title");
-		if( $this->canEdit() ) {
-			$deleteButton = new InlineFormAction('deletemarked',_t('Folder.DELSELECTED','Delete selected files'), 'delete');
-			$deleteButton->includeDefaultJS(false);
-		} else {
-			$deleteButton = new HiddenField('deletemarked');
-		}
-
+		
 		$fields = new FieldList(
-			new HiddenField("Name"),
-			new TabSet("Root", 
-				new Tab("Files", _t('Folder.FILESTAB', "Files"),
+			new TabSet('Root',
+				new Tab('Main',
 					$titleField,
-					$fileList,
+					$gridField,
+					new HiddenField("ID"),
 					new HiddenField("DestFolderID")
-				),
-				new Tab("Details", _t('Folder.DETAILSTAB', "Details"), 
-					new ReadonlyField("URL", _t('Folder.URL', 'URL')),
-					new ReadonlyField("ClassName", _t('Folder.TYPE','Type')),
-					new ReadonlyField("Created", _t('Folder.CREATED','First Uploaded')),
-					new ReadonlyField("LastEdited", _t('Folder.LASTEDITED','Last Updated'))
-				),
-				new Tab("Upload", _t('Folder.UPLOADTAB', "Upload"),
-					new LiteralField("UploadIframe",
-						$this->getUploadIframe()
-					)
 				)
-			),
-			new HiddenField("ID")
+			)
 		);
 		
 		if(!$this->canEdit()) {
-			$fields->removeFieldFromTab("Root", "Upload");
+			$fields->removeByName("Upload");
 		}
 
 		$this->extend('updateCMSFields', $fields);
@@ -434,16 +438,6 @@ class Folder extends File {
 		return $fields;
 	}
 
-	/**
-	 * Display the upload form.  Returns an iframe tag that will show admin/assets/uploadiframe.
-	 */
-	function getUploadIframe() {
-		return <<<HTML
-		<iframe name="AssetAdmin_upload" src="admin/assets/uploadiframe/{$this->ID}" id="AssetAdmin_upload" border="0" style="border-style none !important; width: 97%; min-height: 300px; height: 100%; height: expression(document.body.clientHeight) !important;">
-		</iframe>
-HTML;
-	}
-	
 	/**
 	 * Get the children of this folder that are also folders.
 	 */

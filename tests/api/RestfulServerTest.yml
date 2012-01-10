@@ -56,9 +56,11 @@ RestfulServerTest_AuthorRating:
       WriteProtectedField: Dont overwrite me
       SecretField: Dont look at me!
       Author: =>RestfulServerTest_Author.author1
+      SecretRelation: =>RestfulServerTest_Author.author1
    rating2:
       Rating: 5
       Author: =>RestfulServerTest_Author.author1
+      SecretRelation: =>RestfulServerTest_Author.author1
 RestfulServerTest_SecretThing:
    thing1:
       Name: Unspeakable

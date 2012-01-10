@@ -57,7 +57,7 @@ class Group extends DataObject {
 	/**
 	 * Caution: Only call on instances, not through a singleton.
 	 *
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function getCMSFields() {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');
@@ -188,7 +188,7 @@ class Group extends DataObject {
 	 * @deprecated 2.5
 	 */
 	public static function addToGroupByName($member, $groupcode) {
-		user_error('Group::addToGroupByName is deprecated. Please use $member->addToGroupByCode($groupcode)', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use $member->addToGroupByCode($groupcode) instead.');
 		
 		return $member->addToGroupByCode($groupcode);
 	}
@@ -208,10 +208,16 @@ class Group extends DataObject {
 	public function Members($filter = "", $sort = "", $join = "", $limit = "") {
 		// Get a DataList of the relevant groups
 		$groups = DataList::create("Group")->byIDs($this->collateFamilyIDs());
+		
+		if($sort || $join || $limit) {
+			Deprecation::notice('3.0', "The sort, join, and limit arguments are deprcated, use sort(), join() and limit() on the resulting DataList instead.");
+		}
 
 		// Call the relation method on the DataList to get the members from all the groups
-		return $groups->relation('DirectMembers')
-			->where($filter)->sort($sort)->join($join)->limit($limit);
+		$result = $groups->relation('DirectMembers')->where($filter)->sort($sort)->limit($limit);
+		if($join) $result = $result->join($join);
+
+		return $result;
 	}
 	
 	/**
@@ -221,16 +227,15 @@ class Group extends DataObject {
 		return $this->getManyManyComponents('Members');
 	}
 	
-	public function map($filter = "", $sort = "", $blank="") {
-		$ret = new SQLMap(singleton('Group')->extendedSQL($filter, $sort));
-		if($blank){
-			$blankGroup = new Group();
-			$blankGroup->Title = $blank;
-			$blankGroup->ID = 0;
+	public static function map($filter = "", $sort = "", $blank="") {
+		Deprecation::notice('3.0', 'Use DataList::("Group")->map()');
 
-			$ret->getItems()->unshift($blankGroup);
-		}
-		return $ret;
+		$list = DataList::create("Group")->where($filter)->sort($sort);
+		$map = $list->map();
+
+		if($blank) $map->unshift(0, $blank);
+		
+		return $map;
 	}
 	
 	/**
@@ -252,10 +257,7 @@ class Group extends DataObject {
 			
 			// Get the children of *all* the groups identified in the previous chunk.
 			// This minimises the number of SQL queries necessary			
-			$sql = $this->extendedSQL("\"ParentID\" IN ($idList)", "");
-			$dbResult = $sql->execute();
-			$chunkToAdd = array();
-			foreach($dbResult as $item) $chunkToAdd[] = $item;
+			$chunkToAdd = DataList::create('Group')->where("\"ParentID\" IN ($idList)")->column('ID');
 		}
 		
 		return $familyIDs;
@@ -291,6 +293,7 @@ class Group extends DataObject {
 	 * @deprecated 3.0 Use getTreeTitle()
 	 */
 	function TreeTitle() {
+		Deprecation::notice('3.0', 'Use getTreeTitle() instead.');
 		return $this->getTreeTitle();
 	}
 	

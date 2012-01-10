@@ -40,14 +40,7 @@
 class GroupedDropdownField extends DropdownField {
 
 	function Field() {
-		// Initialisations
 		$options = '';
-		$classAttr = '';
-
-		if($extraClass = trim($this->extraClass())) {
-			$classAttr = "class=\"$extraClass\"";
-		}
-		
 		foreach($this->getSource() as $value => $title) {
 			if(is_array($title)) {
 				$options .= "<optgroup label=\"$value\">";
@@ -62,9 +55,7 @@ class GroupedDropdownField extends DropdownField {
 			}
 		}
 
-		$id = $this->id();
-
-		return "<select $classAttr name=\"$this->name\" id=\"$id\">$options</select>";
+		return $this->createTag('select', $this->getAttributes(), $options);
 	}
 }
 

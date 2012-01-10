@@ -116,7 +116,10 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals(3, $comments->Count());
 		$this->assertEquals('Phil', $comments->First()->Name);
 
-		// Test join
+		// Test join - 2.4 only
+		$originalDeprecation = Deprecation::dump_settings();
+		Deprecation::notification_version('2.4');
+
 		$comments = DataObject::get(
 			'DataObjectTest_TeamComment',
 			"\"DataObjectTest_Team\".\"Title\" = 'Team 1'",
@@ -127,6 +130,8 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals(2, $comments->Count());
 		$this->assertEquals('Bob', $comments->First()->Name);
 		$this->assertEquals('Joe', $comments->Last()->Name);
+
+		Deprecation::restore_settings($originalDeprecation);
 
 		// Test limit
 		$comments = DataObject::get('DataObjectTest_TeamComment', '', "\"Name\" ASC", '', '1,2');
@@ -248,7 +253,7 @@ class DataObjectTest extends SapphireTest {
 		$comment2 = $this->fixture->objFromFixture('DataObjectTest_TeamComment', 'comment2');
 		$team->Comments()->remove($comment2);
 
-		$commentIDs = $team->Comments()->column('ID');
+		$commentIDs = $team->Comments()->sort('ID')->column('ID');
 		$this->assertEquals(array($comment1->ID, $newComment->ID), $commentIDs);
 	}
 
@@ -1167,7 +1172,7 @@ class DataObjectTest_FieldlessSubTable extends DataObjectTest_Team implements Te
 
 class DataObjectTest_Team_Extension extends DataExtension implements TestOnly {
 	
-	function extraStatics() {
+	function extraStatics($class=null, $extension=null) {
 		return array(
 			'db' => array(
 				'ExtendedDatabaseField' => 'Varchar'

@@ -25,7 +25,5 @@ class HTMLVarchar extends Varchar {
 	public function scaffoldSearchField($title = null) {
 		return new TextField($this->name, $title);
 	}
-
+	
 }
-
-?>
