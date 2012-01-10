@@ -424,7 +424,6 @@ class Folder extends File {
 					$titleField,
 					$gridField,
 					new HiddenField("ID"),
-					new HiddenField("Name"),
 					new HiddenField("DestFolderID")
 				)
 			)
