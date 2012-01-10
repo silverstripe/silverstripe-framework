@@ -2,36 +2,28 @@
 <html>
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-language" content="$i18nLocale" />
 <% base_tag %>
 <title>$Title</title>
 </head>
 
-<body class="loading cms">
+<body class="loading cms" lang="$Locale.RFC1766">
 	
 	<% include CMSLoadingScreen %>
 	
 	<div class="cms-container center" data-layout="{type: 'border'}">
 	
-		<div class="cms-preview-header north">
-			Caution! The CMS is in alpha stage, and might not behave as expected. Get updates on the 
-			<a href="https://groups.google.com/forum/#!forum/silverstripe-dev">developer mailinglist</a>
-			and help us by
-			<a href="http://silverstripe.org/contribute">contributing</a> and
-			<a href="http://open.silverstripe.org">reporting bugs</a>.
-		</div>
-
 		$Menu
 
 		$Content
 		
 		<div class="cms-preview east <% if IsPreviewExpanded %>is-expanded<% else %>is-collapsed<% end_if %>" data-layout="{type: 'border'}">
-			<iframe src="$PreviewLink" class="center"></iframe>
+			<iframe src="about:blank" class="center"></iframe>
 			<div class="cms-preview-controls south"></div>
 		</div>
 
 	</div>
 		
+	<% cached %>
 	<div id="cms-editor-dialogs">
 		<% control EditorToolbar %>
 			$ImageForm
@@ -39,6 +31,7 @@
 			$FlashForm
 		<% end_control %>
 	</div>
+	<% end_cached %>
 
 	<!-- <div class="ss-cms-bottom-bar">
 			<div class="holder">

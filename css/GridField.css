@@ -1,17 +1,33 @@
-/** Core styles for the basic GridField form field without any specific style.  @package sapphire @subpackage scss */
-.ss-gridfield { border: none; }
-.ss-gridfield table { width: 100%; border-collapse: collapse; border-spacing: 0; background: #fff; border: 1px solid #c1c1c1; }
-.ss-gridfield thead { color: #5a5a5a; background: #dadada; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f3f3f3), color-stop(100%, #dadada)); background-image: -webkit-linear-gradient(#f3f3f3, #dadada); background-image: -moz-linear-gradient(#f3f3f3, #dadada); background-image: -o-linear-gradient(#f3f3f3, #dadada); background-image: -ms-linear-gradient(#f3f3f3, #dadada); background-image: linear-gradient(#f3f3f3, #dadada); }
-.ss-gridfield thead th { font-weight: bold; padding: 8px 24px 8px 8px; position: relative; border: 1px solid #c1c1c1; border-width: 0 1px 1px 0; }
-.ss-gridfield thead th.ss-gridfield-sortable.hover { color: #747474; cursor: pointer; background: #f3f3f3; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #e7e7e7)); background-image: -webkit-linear-gradient(#ffffff, #e7e7e7); background-image: -moz-linear-gradient(#ffffff, #e7e7e7); background-image: -o-linear-gradient(#ffffff, #e7e7e7); background-image: -ms-linear-gradient(#ffffff, #e7e7e7); background-image: linear-gradient(#ffffff, #e7e7e7); }
-.ss-gridfield thead th.ss-gridfield-sorted { background: #e7e7e7; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dadada), color-stop(100%, #f3f3f3)); background-image: -webkit-linear-gradient(#dadada, #f3f3f3); background-image: -moz-linear-gradient(#dadada, #f3f3f3); background-image: -o-linear-gradient(#dadada, #f3f3f3); background-image: -ms-linear-gradient(#dadada, #f3f3f3); background-image: linear-gradient(#dadada, #f3f3f3); }
-.ss-gridfield thead th.ss-gridfield-sorted.hover { background: #f3f3f3; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e7e7e7), color-stop(100%, #f9f9f9)); background-image: -webkit-linear-gradient(#e7e7e7, #f9f9f9); background-image: -moz-linear-gradient(#e7e7e7, #f9f9f9); background-image: -o-linear-gradient(#e7e7e7, #f9f9f9); background-image: -ms-linear-gradient(#e7e7e7, #f9f9f9); background-image: linear-gradient(#e7e7e7, #f9f9f9); }
-.ss-gridfield thead th .ui-icon { position: absolute; top: 5px; right: 0; }
-.ss-gridfield thead th.ss-gridfield-desc .ui-icon { background-position: 0 -48px; }
-.ss-gridfield thead th.ss-gridfield-asc .ui-icon { background-position: -64px -48px; }
-.ss-gridfield td { padding: 8px; border-right: 1px solid #f3f3f3; }
-.ss-gridfield td.ss-gridfield-last { border-right: none; }
-.ss-gridfield tr.ss-gridfield-even { border: 1px solid #c6e5f6; border-width: 1px 0; background: #f2f9fd; }
-.ss-gridfield tr.ss-gridfield-even.ss-gridfield-last { border-bottom: none; }
-.ss-gridfield tr.ss-gridfield-even td { border-right: 1px solid #dceffa; }
-.ss-gridfield tr.ss-gridfield-even td.ss-gridfield-last { border-right: none; }
+/** Core styles for the basic GridField form field without any specific style.  @package sapphire @subpackage scss @todo Add radial gradient to default delete button state @todo Create SASS mixin-function to simply swap the from/to, to to/from colours in grsdient mixins? */
+.cms table.ss-gridfield.field { box-shadow: none; padding: 0; margin: 20px 0 0 0; border-collapse: separate; border-bottom: 0 none; }
+.cms table.ss-gridfield.field thead { color: #1d2224; background: transparent; }
+.cms table.ss-gridfield.field tbody { background: #FFF; }
+.cms table.ss-gridfield.field tbody td { /* Emulate a link by default */ }
+.cms table.ss-gridfield.field tbody td button { border: none; background: none; margin: 0 0 0 2px; padding: 0; width: auto; text-shadow: none; }
+.cms table.ss-gridfield.field tfoot { color: #1d2224; }
+.cms table.ss-gridfield.field tfoot tr td { background: #95a5ab; padding: .7em; }
+.cms table.ss-gridfield.field tr.sortable-header th { background: #7f9198; }
+.cms table.ss-gridfield.field tr:hover { background: #FFFAD6 !important; }
+.cms table.ss-gridfield.field tr:first-child { background: transparent; }
+.cms table.ss-gridfield.field tr.ss-gridfield-even { background: #f2f9fd; }
+.cms table.ss-gridfield.field tr.ss-gridfield-even.ss-gridfield-last { border-bottom: none; }
+.cms table.ss-gridfield.field tr th { font-weight: bold; font-size: 12px; color: #FFF; padding: 0; border-right: 1px solid #85959C; height: 20px; /* Makes it appear as though the text sits over the boundary of the two <tr>'s in <thead> */ }
+.cms table.ss-gridfield.field tr th span { display: block; position: relative; left: 20px; top: -7px; width: 100%; }
+.cms table.ss-gridfield.field tr th div.fieldgroup, .cms table.ss-gridfield.field tr th div.fieldgroup-field { width: auto; }
+.cms table.ss-gridfield.field tr th div.fieldgroup { min-width: 200px; }
+.cms table.ss-gridfield.field tr th.extra, .cms table.ss-gridfield.field tr th.action { background: #7f9198; padding: 0; cursor: default; }
+.cms table.ss-gridfield.field tr th.extra button.ss-ui-button, .cms table.ss-gridfield.field tr th.extra button:hover.ss-ui-button, .cms table.ss-gridfield.field tr th.action button.ss-ui-button, .cms table.ss-gridfield.field tr th.action button:hover.ss-ui-button { margin-left: .9em; color: #222; }
+.cms table.ss-gridfield.field tr th.extra { text-align: center; background: #b1c0c5; background: -moz-linear-gradient(#b1c0c5 20%, #7f9198); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(20%, #b1c0c5), color-stop(80%, #7f9198)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #b1c0c5 20%, #7f9198 80%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #b1c0c5 20%, #7f9198 80%); /* Opera 11.10+ */ filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#b1c0c5', endColorstr='#7f9198'); /* IE5.5+ */ background: -ms-linear-gradient(top, #b1c0c5 20%, #7f9198 80%); /* IE10+ */ background: linear-gradient(top, #b1c0c5 20%, #7f9198 80%); /* W3C */ }
+.cms table.ss-gridfield.field tr th.extra span { width: auto; display: inline; position: static; }
+.cms table.ss-gridfield.field tr th.action { border-right: 0; }
+.cms table.ss-gridfield.field tr th.first { -moz-border-radius-topleft: 7px; -webkit-border-top-left-radius: 7px; -o-border-top-left-radius: 7px; -ms-border-top-left-radius: 7px; -khtml-border-top-left-radius: 7px; border-top-left-radius: 7px; }
+.cms table.ss-gridfield.field tr th.last { -moz-border-radius-topright: 7px; -webkit-border-top-right-radius: 7px; -o-border-top-right-radius: 7px; -ms-border-top-right-radius: 7px; -khtml-border-top-right-radius: 7px; border-top-right-radius: 7px; }
+.cms table.ss-gridfield.field tr th button, .cms table.ss-gridfield.field tr th button:hover { font-size: 12px; margin-left: -0.9em; border-bottom: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.cms table.ss-gridfield.field tr th button.ss-gridfield-sort, .cms table.ss-gridfield.field tr th button:hover.ss-gridfield-sort { text-align: left; padding: 0; color: #FFF; width: 95%; background: transparent; border: 0 none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; text-shadow: none; }
+.cms table.ss-gridfield.field tr th button:hover { color: #CCC !important; /* Not sure why IE think it needs this */ }
+.cms table.ss-gridfield.field tr th.extra button.ss-ui-button { padding: .3em; line-height: 1; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; position: relative; top: -24px; border: #b1c0c5 solid 10px; border-bottom-width: 0; }
+.cms table.ss-gridfield.field tr th input.ss-gridfield-sort { position: relative; top: -24px; padding: 2px; width: 65%; margin: 0 auto; border: #b1c0c5 solid 10px; border-bottom: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.cms table.ss-gridfield.field tr th input.ss-gridfield-sort:focus { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
+.cms table.ss-gridfield.field tr td { border-right: 1px solid #dbdddd; border-bottom: 1px solid #dbdddd; padding: 10px; }
+.cms table.ss-gridfield.field tr td.bottom-all { -moz-border-radius-bottomleft: 7px; -webkit-border-bottom-left-radius: 7px; -o-border-bottom-left-radius: 7px; -ms-border-bottom-left-radius: 7px; -khtml-border-bottom-left-radius: 7px; border-bottom-left-radius: 7px; -moz-border-radius-bottomright: 7px; -webkit-border-bottom-right-radius: 7px; -o-border-bottom-right-radius: 7px; -ms-border-bottom-right-radius: 7px; -khtml-border-bottom-right-radius: 7px; border-bottom-right-radius: 7px; background: #7f9198; background: -moz-linear-gradient(#7f9198 20%, #b1c0c5); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(20%, #7f9198), color-stop(80%, #b1c0c5)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #7f9198 20%, #b1c0c5 80%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #7f9198 20%, #b1c0c5 80%); /* Opera 11.10+ */ filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#7f9198', endColorstr='#b1c0c5'); /* IE5.5+ */ background: -ms-linear-gradient(top, #7f9198 20%, #7f9198 80%); /* IE10+ */ background: linear-gradient(top, #7f9198 20%, #b1c0c5 80%); /* W3C */ }
+.cms table.ss-gridfield.field tr.last td { border-bottom: 0 none; }

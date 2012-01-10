@@ -253,7 +253,6 @@ class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 		"ExactMatch" => "ExactMatchFilter",
 		"PartialMatch" => "PartialMatchFilter",
 		"Negation" => "NegationFilter",
-		"SubstringMatch" => "SubstringFilter",
 		"CollectionMatch" => "ExactMatchMultiFilter",
 		"StartsWith" => "StartsWithFilter",
 		"EndsWith" => "EndsWithFilter",

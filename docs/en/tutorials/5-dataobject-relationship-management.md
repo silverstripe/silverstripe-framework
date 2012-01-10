@@ -718,7 +718,7 @@ That's how we can use this function in the *Mentor* template.
 	<% include Menu2 %>
 
 	<div id="Content" class="typography">
-		<% include Breadcrumbs %>
+		<% include BreadCrumbs %>
 		$Content
 
 	    <h3>Personal Details</h3>

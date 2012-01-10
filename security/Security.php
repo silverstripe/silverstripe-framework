@@ -297,7 +297,7 @@ class Security extends Controller {
 	 * @param string $action Name of the action
 	 * @return string Returns the link to the given action
 	 */
-	public static function Link($action = null) {
+	public function Link($action = null) {
 		return "Security/$action";
 	}
 
@@ -366,8 +366,6 @@ class Security extends Controller {
 		// only display tabs when more than one authenticator is provided
 		// to save bandwidth and reduce the amount of custom styling needed 
 		if(count($forms) > 1) {
-			Requirements::css(SAPPHIRE_DIR . "/css/Form.css");
-			
 			// Needed because the <base href=".."> in the template makes problems
 			// with the tabstrip library otherwise
 			$link_base = Director::absoluteURL($this->Link("login"));
@@ -619,34 +617,6 @@ class Security extends Controller {
 	public function ChangePasswordForm() {
 		return new ChangePasswordForm($this, 'ChangePasswordForm');
 	}
-
-
-	/**
-	 * Authenticate using the given email and password, returning the
-	 * appropriate member object if
-	 *
-	 * @return bool|Member Returns FALSE if authentication fails, otherwise
-	 *                     the member object
-	 * @see setDefaultAdmin()
-	 */
-	public static function authenticate($RAW_email, $RAW_password) {
-		$SQL_email = Convert::raw2sql($RAW_email);
-		$SQL_password = Convert::raw2sql($RAW_password);
-
-		// Default login (see {@setDetaultAdmin()})
-		if(($RAW_email == self::$default_username) && ($RAW_password == self::$default_password)
-				&& !empty(self::$default_username) && !empty(self::$default_password)) {
-			$member = self::findAnAdministrator();
-		} else {
-			$member = DataObject::get_one("Member", 	"\"" . Member::get_unique_identifier_field() . "\" = '$SQL_email' AND \"Password\" IS NOT NULL");
-			if($member && ($member->checkPassword($RAW_password) == false)) {
-				$member = null;
-			}
-		}
-
-		return $member;
-	}
-
 
 	/**
 	 * Return an existing member with administrator privileges, or create one of necessary.

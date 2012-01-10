@@ -68,6 +68,7 @@ Tied into i18n.
 *  `[TreeMultiselectField](api:TreeMultiselectField)`: represents many-many joins using a tree selector shown in a
 dropdown-like element
 *  `[api:WidgetArea]`
+* `[GridField](/topics/grid-field)`
 
 
 

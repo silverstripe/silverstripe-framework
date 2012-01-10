@@ -84,13 +84,12 @@
 			background: transparent;
 			
 			& .ui-icon-closethick {
-				background-position: 0 -30px;
+				background: sprite($sprites32, dialog-close-over) no-repeat;
 			}
 		}
 		
 		& .ui-icon-closethick {
-			background-image: url(../images/dialog_close.png);
-			background-position: 0 0;
+			background: sprite($sprites32, dialog-close) no-repeat;
 			width: 30px;
 			height:  30px;
 		}

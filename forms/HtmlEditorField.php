@@ -7,22 +7,46 @@
  * @subpackage fields-formattedinput
  */
 class HtmlEditorField extends TextareaField {
+
+	/**
+	 * @var Boolean Use TinyMCE's GZIP compressor
+	 */
+	static $use_gzip = true;
 	
 	/**
 	 * Includes the JavaScript neccesary for this field to work using the {@link Requirements} system.
 	 */
 	public static function include_js() {
-		Requirements::javascript(MCE_ROOT . 'tiny_mce_src.js');
-		Requirements::customScript(HtmlEditorConfig::get_active()->generateJS(), 'htmlEditorConfig');
+		require_once 'tinymce/tiny_mce_gzip.php';
+
+		$configObj = HtmlEditorConfig::get_active();
+
+		if(self::$use_gzip) {
+			$internalPlugins = array();
+			foreach($configObj->getPlugins() as $plugin => $path) if(!$path) $internalPlugins[] = $plugin;
+			$tag = TinyMCE_Compressor::renderTag(array(
+				'url' => THIRDPARTY_DIR . '/tinymce/tiny_mce_gzip.php',
+				'plugins' => implode(',', $internalPlugins),
+				'themes' => 'advanced',
+				'languages' => $configObj->getOption('language')
+			), true);
+			preg_match('/src="([^"]*)"/', $tag, $matches);
+			Requirements::javascript($matches[1]);
+
+		} else {
+			Requirements::javascript(MCE_ROOT . 'tiny_mce_src.js');
+		} 
+
+		Requirements::customScript($configObj->generateJS(), 'htmlEditorConfig');
 	}
 	
 	/**
 	 * @see TextareaField::__construct()
 	 */
-	public function __construct($name, $title = null, $rows = 30, $cols = 20, $value = '', $form = null) {
-		parent::__construct($name, $title, $rows, $cols, $value, $form);
-		
-		$this->addExtraClass('htmleditor');
+	public function __construct($name, $title = null, $value = '') {
+		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRows() and setCols() instead of constructor arguments');
+
+		parent::__construct($name, $title, $value);
 		
 		self::include_js();
 	}
@@ -47,16 +71,19 @@ class HtmlEditorField extends TextareaField {
 		
 		return $this->createTag (
 			'textarea',
-			array (
-				'class'   => $this->extraClass(),
-				'rows'    => $this->rows,
-				'cols'    => $this->cols,
-				'style'   => 'width: 97%; height: ' . ($this->rows * 16) . 'px', // prevents horizontal scrollbars
-				'tinymce' => 'true',
-				'id'      => $this->id(),
-				'name'    => $this->name
-			),
+			$this->getAttributes(),
 			htmlentities($value->getContent(), ENT_COMPAT, 'UTF-8')
+		);
+	}
+
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array(
+				'tinymce' => 'true',
+				'style'   => 'width: 97%; height: ' . ($this->rows * 16) . 'px', // prevents horizontal scrollbars
+				'value' => null,
+			)
 		);
 	}
 	
@@ -174,6 +201,9 @@ class HtmlEditorField extends TextareaField {
 		return $field;
 	}
 	
+	public function performDisabledTransformation() {
+		return $this->performReadonlyTransformation();
+	}
 }
 
 /**
@@ -232,6 +262,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		// mimic the SiteTree::getMenuTitle(), which is bypassed when the search is performed
 		$siteTree->setSearchFunction(array($this, 'siteTreeSearchCallback'));
 		
+		$numericLabelTmpl = '<span class="step-label"><span class="flyout">%d</span><span class="arrow"></span><strong class="title">%s</strong></span>';
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/LinkForm", 
@@ -243,7 +274,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				$contentComposite = new CompositeField(
 					new OptionsetField(
 						'LinkType',
-						_t('HtmlEditorField.LINKTO', 'Link to'), 
+						sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.LINKTO', 'Link to')),
 						array(
 							'internal' => _t('HtmlEditorField.LINKINTERNAL', 'Page on the site'),
 							'external' => _t('HtmlEditorField.LINKEXTERNAL', 'Another website'),
@@ -252,28 +283,32 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 							'file' => _t('HtmlEditorField.LINKFILE', 'Download a file'),			
 						)
 					),
+					new LiteralField('Step2',
+						'<div class="step2">' . sprintf($numericLabelTmpl, '2', _t('HtmlEditorField.DETAILS', 'Details')) . '</div>'
+					),
 					$siteTree,
 					new TextField('external', _t('HtmlEditorField.URL', 'URL'), 'http://'),
 					new EmailField('email', _t('HtmlEditorField.EMAIL', 'Email address')),
 					new TreeDropdownField('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'Filename', 'Title', true),
 					new TextField('Anchor', _t('HtmlEditorField.ANCHORVALUE', 'Anchor')),
-					new TextField('LinkText', _t('HtmlEditorField.LINKTEXT', 'Link text')),
 					new TextField('Description', _t('HtmlEditorField.LINKDESCR', 'Link description')),
 					new CheckboxField('TargetBlank', _t('HtmlEditorField.LINKOPENNEWWIN', 'Open link in a new window?')),
 					new HiddenField('Locale', null, $this->controller->Locale)
 				)
 			),
 			new FieldList(
-				new FormAction('insert', _t('HtmlEditorField.BUTTONINSERTLINK', 'Insert link')),
-				new FormAction('remove', _t('HtmlEditorField.BUTTONREMOVELINK', 'Remove link'))
+				$removeAction = new ResetFormAction('remove', _t('HtmlEditorField.BUTTONREMOVELINK', 'Remove link')),
+				$insertAction = new FormAction('insert', _t('HtmlEditorField.BUTTONINSERTLINK', 'Insert link'))
 			)
 		);
 		
+		$insertAction->addExtraClass('ss-ui-action-constructive');
+		$removeAction->addExtraClass('ss-ui-action-destructive');
 		$contentComposite->addExtraClass('content');
 		
 		$form->unsetValidator();
 		$form->loadDataFrom($this);
-		$form->addExtraClass('htmleditorfield-form htmleditorfield-linkform');
+		$form->addExtraClass('htmleditorfield-form htmleditorfield-linkform cms-dialog-content');
 		
 		$this->extend('updateLinkForm', $form);
 		
@@ -328,9 +363,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		);
 		
 		$actions = new FieldList(
-			new FormAction('insertimage', _t('HtmlEditorField.BUTTONINSERTIMAGE', 'Insert image'))
+			$insertAction = new FormAction('insertimage', _t('HtmlEditorField.BUTTONINSERTIMAGE', 'Insert image'))
 		);
-		
+		$insertAction->addExtraClass('ss-ui-action-constructive');
+
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/ImageForm",
@@ -346,7 +382,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$form->unsetValidator();
 		$form->disableSecurityToken();
 		$form->loadDataFrom($this);
-		$form->addExtraClass('htmleditorfield-form htmleditorfield-imageform');
+		$form->addExtraClass('htmleditorfield-form htmleditorfield-imageform cms-dialog-content');
 		
 		return $form;
 	}
@@ -375,9 +411,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				)
 			),
 			new FieldList(
-				new FormAction("insertflash", _t('HtmlEditorField.BUTTONINSERTFLASH', 'Insert Flash'))
+				$insertAction = new FormAction("insertflash", _t('HtmlEditorField.BUTTONINSERTFLASH', 'Insert Flash'))
 			)
 		);		
+		$insertAction->addExtraClass('ss-ui-action-constructive');
 		$contentComposite->addExtraClass('content');
 		
 		$this->extend('updateFlashForm', $form);
@@ -385,7 +422,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$form->unsetValidator();
 		$form->loadDataFrom($this);
 		$form->disableSecurityToken();
-		$form->addExtraClass('htmleditorfield-form htmleditorfield-flashform');
+		$form->addExtraClass('htmleditorfield-form htmleditorfield-flashform cms-dialog-content');
 		
 		return $form;
 	}

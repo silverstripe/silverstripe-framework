@@ -200,4 +200,286 @@ class DataListTest extends SapphireTest {
 		$record = $list->find('ID', $this->idFromFixture('DataObjectTest_Team', 'team2'));
 		$this->assertEquals('Team 2', $record->Title);
 	}
+	
+	public function testSimpleSort() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->sort('Name');
+		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
+		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
+	}
+	
+	public function testSimpleSortOneArgumentASC() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->sort('Name ASC');
+		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
+		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
+	}
+	
+	public function testSimpleSortOneArgumentDESC() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->sort('Name DESC');
+		$this->assertEquals('Phil', $list->first()->Name, 'Last comment should be from Phil');
+		$this->assertEquals('Bob', $list->last()->Name, 'First comment should be from Bob');
+	}
+	
+	public function testSortOneArgumentMultipleColumns() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->sort('TeamID ASC, Name DESC');
+		$this->assertEquals('Joe', $list->first()->Name, 'First comment should be from Bob');
+		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
+	}
+	
+	public function testSimpleSortASC() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->sort('Name', 'asc');
+		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
+		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
+	}
+	
+	public function testSimpleSortDESC() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->sort('Name', 'desc');
+		$this->assertEquals('Phil', $list->first()->Name, 'Last comment should be from Phil');
+		$this->assertEquals('Bob', $list->last()->Name, 'First comment should be from Bob');
+	}
+	
+	public function testSortWithArraySyntaxSortASC() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->sort(array('Name'=>'asc'));
+		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
+		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
+	}
+	
+	public function testSortWithArraySyntaxSortDESC() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->sort(array('Name'=>'desc'));
+		$this->assertEquals('Phil', $list->first()->Name, 'Last comment should be from Phil');
+		$this->assertEquals('Bob', $list->last()->Name, 'First comment should be from Bob');
+	}
+	
+	public function testSortWithMultipleArraySyntaxSort() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->sort(array('TeamID'=>'asc','Name'=>'desc'));
+		$this->assertEquals('Joe', $list->first()->Name, 'First comment should be from Bob');
+		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
+	}
+	
+	/**
+	 * $list->filter('Name', 'bob'); // only bob in the list
+	 */
+	public function testSimpleFilter() {
+		$list = DataList::create("DataObjectTest_Team");
+		$list->filter('Title','Team 2');
+		$this->assertEquals(1, $list->count());
+		$this->assertEquals('Team 2', $list->first()->Title, 'List should only contain Team 2');
+		$this->assertEquals('Team 2', $list->last()->Title, 'Last should only contain Team 2');
+	}
+
+	public function testSimpleFilterEndsWith() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->filter('Name:EndsWith', 'b');
+		$this->assertEquals(1, $list->count());
+		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
+	}
+
+	public function testSimpleFilterExactMatchFilter() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->filter('Name:ExactMatch', 'Bob');
+		$this->assertEquals(1, $list->count());
+		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
+	}
+
+	public function testSimpleFilterGreaterThanFilter() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->filter('TeamID:GreaterThan', 1);
+		$this->assertEquals(1, $list->count());
+		$this->assertEquals('Phil', $list->first()->Name, 'First comment should be from Bob');
+	}
+
+	public function testSimpleFilterLessThanFilter() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list = $list->filter('TeamID:LessThan', $this->idFromFixture('DataObjectTest_TeamComment', 'comment2'))->sort('Name');
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
+		$this->assertEquals('Joe', $list->Last()->Name, 'Last comment should be from Joe');
+	}
+
+	public function testSimpleNegationFilter() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->filter('TeamID:Negation', 1);
+		$this->assertEquals(1, $list->count());
+		$this->assertEquals('Phil', $list->first()->Name, 'First comment should be from Bob');
+	}
+
+	public function testSimplePartialMatchFilter() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->filter('Name:PartialMatch', 'o')->sort('Name');
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
+		$this->assertEquals('Joe', $list->last()->Name, 'First comment should be from Joe');
+	}
+
+	public function testSimpleFilterStartsWith() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->filter('Name:StartsWith', 'B');
+		$this->assertEquals(1, $list->count());
+		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
+	}
+
+	public function testSimpleFilterWithNonExistingComparisator() {
+		$this->setExpectedException('InvalidArgumentException');
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->filter('Comment:Bogus', 'team comment');
+	}
+
+	/**
+	 * $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
+	 */
+	public function testSimpleFilterWithMultiple() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->filter('Name', array('Bob','Phil'));
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
+		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
+	}
+	
+	public function testMultipleFilterWithNoMatch() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->filter(array('Name'=>'Bob', 'Comment'=>'Phil is a unique guy, and comments on team2'));
+		$this->assertEquals(0, $list->count());
+	}
+	
+	/**
+	 *  $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the age 21
+	 */
+	public function testFilterMultipleArray() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->filter(array('Name'=>'Bob', 'Comment'=>'This is a team comment by Bob'));
+		$this->assertEquals(1, $list->count());
+		$this->assertEquals('Bob', $list->first()->Name, 'Only comment should be from Bob');
+	}
+	
+	public function testFilterMultipleWithTwoMatches() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->filter(array('TeamID'=>1));
+		$this->assertEquals(2, $list->count());
+	}
+	
+	public function testFilterMultipleWithArrayFilter() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->filter(array('Name'=>array('Bob','Phil')));
+		$this->assertEquals(2, $list->count(), 'There should be two comments');
+		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
+		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
+	}
+	
+	/**
+	 * $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43)));
+	 */
+	public function testFilterArrayInArray() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->filter(array('Name'=>array('Bob','Phil'), 'TeamID'=>array(1)));
+		$this->assertEquals(1, $list->count(), 'There should be one comments');
+		$this->assertEquals('Bob', $list->first()->Name, 'Only comment should be from Bob');
+	}
+	
+	/**
+	 * $list->exclude('Name', 'bob'); // exclude bob from list
+	 */
+	public function testSimpleExclude() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->exclude('Name', 'Bob');
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals('Joe', $list->first()->Name, 'First comment should be from Joe');
+		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
+	}
+//	
+	/**
+	 * $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
+	 */
+	public function testSimpleExcludeWithMultiple() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->exclude('Name', array('Joe','Phil'));
+		$this->assertEquals(1, $list->count());
+		$this->assertEquals('Bob', $list->first()->Name, 'First comment should be from Bob');
+	}
+
+	/**
+	 * $list->exclude(array('Name'=>'bob, 'Age'=>21)); // negative version
+	 */
+	public function testMultipleExcludeWithMiss() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->exclude(array('Name'=>'Bob', 'Comment'=>'Does not match any comments'));
+		$this->assertEquals(3, $list->count());
+	}
+	
+	/**
+	 * $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob that has Age 21
+	 */
+	public function testMultipleExclude() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->exclude(array('Name'=>'Bob', 'Comment'=>'This is a team comment by Bob'));
+		$this->assertEquals(2, $list->count());
+	}
+	
+	/**
+	 * $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob with Age 21 or 43
+	 */
+	public function testMultipleExcludeWithMultipleThatCheersEitherTeam() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->exclude(array('Name'=>'Bob', 'TeamID'=>array(1,2)));
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals('Joe', $list->first()->Name, 'First comment should be from Phil');
+		$this->assertEquals('Phil', $list->last()->Name, 'First comment should be from Phil');
+	}
+	
+	/**
+	 * $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // negative version
+	 */
+	public function testMultipleExcludeWithMultipleThatCheersOnNonExistingTeam() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->exclude(array('Name'=>'Bob', 'TeamID'=>array(3)));
+		$this->assertEquals(3, $list->count());
+	}
+	
+	/**
+	 * $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43))); //negative version
+	 */
+	public function testMultipleExcludeWithNoExclusion() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->exclude(array('Name'=>array('Bob','Joe'), 'Comment' => 'Phil is a unique guy, and comments on team2'));
+		$this->assertEquals(3, $list->count());
+	}
+	
+	/**
+	 *  $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43))); 
+	 */
+	public function testMultipleExcludeWithTwoArray() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->exclude(array('Name'=>array('Bob','Joe'), 'TeamID' => array(1,2)));
+		$this->assertEquals(1, $list->count());
+		$this->assertEquals('Phil', $list->last()->Name, 'Only comment should be from Phil');
+	}
+	
+	/**
+	 *  $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43))); 
+	 */
+	public function testMultipleExcludeWithTwoArrayOneTeam() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->exclude(array('Name'=>array('Bob','Phil'), 'TeamID' => array(1)));
+		$this->assertEquals(2, $list->count());
+		$this->assertEquals('Joe', $list->first()->Name, 'First comment should be from Joe');
+		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
+	}
+
+	/**
+	 * 
+	 */
+	public function testSortByRelation() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list = $list->sort(array('Team.Title' => 'DESC'));
+		$this->assertEquals(3, $list->count());
+		$this->assertEquals(2, $list->first()->TeamID, 'First comment should be for Team 2');
+		$this->assertEquals(1, $list->last()->TeamID, 'Last comment should be for Team 1');
+	}
 }

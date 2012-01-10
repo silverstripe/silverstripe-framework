@@ -469,7 +469,7 @@ class InstallRequirements {
 		if($this->errors) {
 			echo "<p>The following problems are preventing me from installing SilverStripe CMS:</p>\n\n";
 			foreach($this->errors as $error) {
-				echo "<li>" . htmlentities(implode(", ", $error)) . "</li>\n";
+				echo "<li>" . htmlentities(implode(", ", $error), ENT_COMPAT, 'UTF-8') . "</li>\n";
 			}
 		}
 	}
@@ -480,7 +480,7 @@ class InstallRequirements {
 			$id = strtolower(str_replace(' ', '_', $section));
 			echo "<table id=\"{$id}_results\" class=\"testResults\" width=\"100%\">";
 			foreach($tests as $test => $result) {
-				echo "<tr class=\"$result[0]\"><td>$test</td><td>" . nl2br(htmlentities($result[1])) . "</td></tr>";
+				echo "<tr class=\"$result[0]\"><td>$test</td><td>" . nl2br(htmlentities($result[1], ENT_COMPAT, 'UTF-8')) . "</td></tr>";
 			}
 			echo "</table>";
 
@@ -502,7 +502,7 @@ class InstallRequirements {
 								break;
 						}
 					}
-					$output .= "<tr class=\"$result[0]\"><td>$test</td><td>" . nl2br(htmlentities($result[1])) . "</td></tr>";
+					$output .= "<tr class=\"$result[0]\"><td>$test</td><td>" . nl2br(htmlentities($result[1], ENT_COMPAT, 'UTF-8')) . "</td></tr>";
 				}
 				$className = "good";
 				$text = "All Requirements Pass";

@@ -5,7 +5,11 @@
  * @subpackage fields-formattedinput
  */
 class EmailField extends TextField {
-	
+
+	function Type() {
+		return 'email text';
+	}
+
 	function jsValidation() {
 		$formID = $this->form->FormName();
 		$error = _t('EmailField.VALIDATIONJS', 'Please enter an email address.');
@@ -39,7 +43,7 @@ if(typeof fromAnOnBlur != 'undefined'){
 }
 JS;
 	}
-	
+
 	/**
 	 * Validates for RFC 2822 compliant email adresses.
 	 * 
@@ -69,5 +73,5 @@ JS;
 			return true;
 		}
 	}
+
 }
-?>

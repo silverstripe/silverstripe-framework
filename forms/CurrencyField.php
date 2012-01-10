@@ -27,6 +27,11 @@ class CurrencyField extends TextField {
 			return 0.00;
 		}
 	}
+
+	function Type() {
+		return 'currency text';
+	}
+
 	/**
 	 * Create a new class for this field
 	 */
@@ -103,6 +108,7 @@ class CurrencyField_Readonly extends ReadonlyField{
 		$valforInput = $this->value ? Convert::raw2att($val) : "";
 		return "<span class=\"readonly ".$this->extraClass()."\" id=\"" . $this->id() . "\">$val</span><input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
 	}
+	
 	/**
 	 * This already is a readonly field.
 	 */

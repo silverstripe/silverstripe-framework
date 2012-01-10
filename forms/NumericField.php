@@ -13,6 +13,10 @@ class NumericField extends TextField{
 		
 		return $html;
 	}
+
+	function Type() {
+		return 'numeric text';
+	}
 	
 	function jsValidation() {
 		$formID = $this->form->FormName();

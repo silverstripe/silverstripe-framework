@@ -21,72 +21,40 @@
  * @subpackage fields-basic
  */
 class TextareaField extends FormField {
-	protected $rows, $cols, $disabled = false, $readonly = false;
-	
+
+	protected $template = 'TextareaField';
+
+	protected $rows, $cols;
+
 	/**
 	 * Create a new textarea field.
 	 * 
 	 * @param $name Field name
 	 * @param $title Field title
-	 * @param $rows The number of rows
-	 * @param $cols The number of columns
 	 * @param $value The current value
-	 * @param $form The parent form.  Auto-set when the field is placed in a form.
 	 */
-	function __construct($name, $title = null, $rows = 5, $cols = 20, $value = "", $form = null) {
-		$this->rows = $rows;
-		$this->cols = $cols;
-		parent::__construct($name, $title, $value, $form);
+	function __construct($name, $title = null, $value = '') {
+		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRows() and setCols() instead of constructor arguments');
+
+		parent::__construct($name, $title, $value);
 	}
-	
-	/**
-	 * Create the <textarea> or <span> HTML tag with the
-	 * attributes for this instance of TextareaField. This
-	 * makes use of {@link FormField->createTag()} functionality.
-	 * 
-	 * @return HTML code for the textarea OR span element
-	 */
-	function Field() {
-		if($this->readonly) {
-			$attributes = array(
-				'id' => $this->id(),
-				'class' => 'readonly' . ($this->extraClass() ? $this->extraClass() : ''),
-				'name' => $this->name,
-				'readonly' => 'readonly'
-			);
 
-			$value = (($this->value) ? nl2br(htmlentities($this->value, ENT_COMPAT, 'UTF-8')) : '<i>(' . _t('FormField.NONE', 'none') . ')</i>');
-
-			$hiddenAttributes = array(
-				'type' => 'hidden',
-				'name' => $this->name,
-				'value' => $value
- 			);
-			
-			$containerSpan = $this->createTag(
-					'span',
-					$attributes,
-					$value
-				);
-			$hiddenInput = $this->createTag('input', $hiddenAttributes);
-			
-			return $containerSpan . "\n" . $hiddenInput;
-		} else {
-			$attributes = array(
-				'id' => $this->id(),
-				'class' => ($this->extraClass() ? $this->extraClass() : ''),
-				'name' => $this->name,
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array(
 				'rows' => $this->rows,
 				'cols' => $this->cols,
-				'tabindex' => $this->getTabIndex()
-			);
-			
-			if($this->disabled) $attributes['disabled'] = 'disabled';
-			
-			return $this->createTag('textarea', $attributes, htmlentities($this->value, ENT_COMPAT, 'UTF-8'));
-		}
+				'value' => null,
+				'type' => null
+			)
+		);
 	}
-	
+
+	function getTemplate() {
+		return ($this->isReadonly()) ? "{$this->template}_Readonly" : $this->template;
+	}
+
 	/**
 	 * Performs a readonly transformation on this field. You should still be able
 	 * to copy from this field, and it should still send when you submit
@@ -112,9 +80,9 @@ class TextareaField extends FormField {
 		$clone->setReadonly(false);
 		return $clone;
 	}
-	
+
 	function Type() {
-		return parent::Type() . ( $this->readonly ? ' readonly' : '' ); 
+		return parent::Type() . ($this->readonly ? ' readonly' : ''); 
 	}
 	
 	/**
@@ -133,5 +101,9 @@ class TextareaField extends FormField {
 	 */
 	function setColumns($cols) {
 		$this->cols = $cols;
+	}
+
+	function Value() {
+		return htmlentities($this->value, ENT_COMPAT, 'UTF-8');
 	}
 }

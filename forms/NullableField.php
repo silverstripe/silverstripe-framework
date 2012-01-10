@@ -82,6 +82,7 @@ class NullableField extends FormField {
 			$nullableCheckbox = new CheckboxField($this->getIsNullId());
 		}
 		$nullableCheckbox->setValue(is_null($this->dataValue()));
+
 		return $this->valueField->Field() . ' ' . $nullableCheckbox->Field() . '&nbsp;<span>' . $this->getIsNullLabel().'</span>';
 	}
 

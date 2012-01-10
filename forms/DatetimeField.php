@@ -181,6 +181,20 @@ class DatetimeField extends FormField {
 		
 		return sprintf($this->getConfig('datetimeorder'), $valDate, $valTime);
 	}
+
+	function setDisabled($bool) {
+		parent::setDisabled($bool);
+		$this->dateField->setDisabled($bool);
+		$this->timeField->setDisabled($bool);
+		if($this->timezoneField) $this->timezoneField->setDisabled($bool);
+	}
+
+	function setReadonly($bool) {
+		parent::setReadonly($bool);
+		$this->dateField->setReadonly($bool);
+		$this->timeField->setReadonly($bool);
+		if($this->timezoneField) $this->timezoneField->setReadonly($bool);
+	}
 	
 	/**
 	 * @return DateField

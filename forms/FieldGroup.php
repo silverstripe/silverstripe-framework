@@ -136,9 +136,10 @@ class FieldGroup extends CompositeField {
 		$titleBlock = (!empty($Title)) ? "<label class=\"left\">$Title</label>" : "";
 		$messageBlock = (!empty($Message)) ? "<span class=\"message $MessageType\">$Message</span>" : "";
 		$rightTitleBlock = (!empty($RightTitle)) ? "<label class=\"right\">$RightTitle</label>" : "";
+		$id = $Name ? ' id="$Name"' : '';
 
 		return <<<HTML
-<div id="$Name" class="field $Type $extraClass">$titleBlock<div class="middleColumn">$Field</div>$rightTitleBlock$messageBlock</div>
+<div$id class="field $Type $extraClass">$titleBlock<div class="middleColumn">$Field</div>$rightTitleBlock$messageBlock</div>
 HTML;
 	}
 	

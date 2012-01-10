@@ -84,7 +84,7 @@ class Director {
 			(isset($_SERVER['X-HTTP-Method-Override'])) ? $_SERVER['X-HTTP-Method-Override'] : $_SERVER['REQUEST_METHOD'],
 			$url, 
 			$_GET, 
-			array_merge((array)$_POST, (array)$_FILES),
+			ArrayLib::array_merge_recursive((array)$_POST, (array)$_FILES),
 			@file_get_contents('php://input')
 		);
 
@@ -193,7 +193,7 @@ class Director {
 		}
 		
 		// Replace the superglobals with appropriate test values
-		$_REQUEST = array_merge((array)$getVars, (array)$postVars); 
+		$_REQUEST = ArrayLib::array_merge_recursive((array)$getVars, (array)$postVars); 
 		$_GET = (array)$getVars; 
 		$_POST = (array)$postVars; 
 		$_SESSION = $session ? $session->inst_getAll() : array();
@@ -773,9 +773,11 @@ class Director {
 	 * we recommend to set this mode via {@link Director::set_environment_type()}
 	 * or an _ss_environment.php instead.
 	 * 
+	 * @deprecated 3.0 Use Director::set_environment_type() or an _ss_environment.php instead.
 	 * @param $servers array An array of HTTP_HOST values that should be treated as development environments.
 	 */
 	static function set_dev_servers($servers) {
+		Deprecation::notice('3.0', 'Use Director::set_environment_type() or an _ss_environment.php instead.');
 		Director::$dev_servers = $servers;
 	}
 	
@@ -787,9 +789,11 @@ class Director {
 	 * we recommend to set this mode via {@link Director::set_environment_type()}
 	 * or an _ss_environment.php instead.
 	 * 
+	 * @deprecated 3.0 Use Director::set_environment_type() or an _ss_environment.php instead.
 	 * @param $servers array An array of HTTP_HOST values that should be treated as test environments.
 	 */
 	static function set_test_servers($servers) {
+		Deprecation::notice('3.0', 'Use Director::set_environment_type() or an _ss_environment.php instead.');
 		Director::$test_servers = $servers;
 	}
 

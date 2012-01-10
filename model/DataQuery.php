@@ -181,13 +181,13 @@ class DataQuery {
 
 				$columnParts = explode(' ', $col);
 				if (count($columnParts) == 2) {
-					$dir = $columnParts[1];
 					$col = $columnParts[0];
+					$dir = $columnParts[1];
 				} else {
-					$dir = '';
+					$dir = 'ASC';
 				}
 
-				$orderByFields[$ob] = $col;
+				$orderByFields[$ob] = $col . ' ' . $dir;
 				$col = str_replace('"', '', $col);
 				$parts = explode('.', $col);
 
@@ -332,6 +332,23 @@ class DataQuery {
 		if($filter) {
 			$clone = $this;
 			$clone->query->where($filter);
+			return $clone;
+		} else {
+			return $this;
+		}
+	}
+
+	/**
+	 * Set a WHERE with OR
+	 *
+	 * @param array $filter
+	 * @return DataQuery
+	 * @example $dataQuery->whereAny(array("Monkey = 'Chimp'", "Color = 'Brown'"));
+	 */
+	function whereAny($filter) {
+		if($filter) {
+			$clone = $this;
+			$clone->query->whereAny($filter);
 			return $clone;
 		} else {
 			return $this;

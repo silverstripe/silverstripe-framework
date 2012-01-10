@@ -326,8 +326,12 @@ class SSViewer {
 			);
 		}
 
-		if(!$this->chosenTemplates) user_error("None of these templates can be found in theme '"
+		if(!$this->chosenTemplates) {
+		  $templateList = (is_array($templateList)) ? $templateList : array($templateList);
+		  
+		  user_error("None of these templates can be found in theme '"
 			. self::current_theme() . "': ". implode(".ss, ", $templateList) . ".ss", E_USER_WARNING);
+		}
 	}
 	
 	/**

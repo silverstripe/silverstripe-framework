@@ -83,15 +83,25 @@ class CompositeField extends FormField {
 		$this->children = $children;
 	}
 
+	function extraClasses() {
+		$classes = array('field', 'CompositeField', parent::extraClasses());
+		if($this->columnCount) $classes[] = 'multicolumn';
+		return implode(' ', $classes);
+	}
+
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array('tabindex' => null, 'type' => null, 'value' => null, 'type' => null)
+		);
+	}
+
 	/**
 	 * Returns the fields nested inside another DIV
 	 */
 	function FieldHolder() {
+		$content = '';
 		$fs = $this->FieldList();
-		$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
-		$className = ($this->columnCount) ? "field CompositeField {$this->extraClass()} multicolumn" : "field CompositeField {$this->extraClass()}";
-		$content = "<div class=\"$className\"$idAtt>\n";
-		
 		foreach($fs as $subfield) {
 			if($this->columnCount) {
 				$className = "column{$this->columnCount}";
@@ -101,9 +111,8 @@ class CompositeField extends FormField {
 				$content .= "\n" . $subfield->FieldHolder() . "\n";
 			}
 		}
-		$content .= "</div>\n";
 				
-		return $content;
+		return $this->createTag('div', $this->getAttributes(), $content);
 	}
 		
 	/**

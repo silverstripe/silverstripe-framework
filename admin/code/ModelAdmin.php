@@ -961,7 +961,7 @@ class ModelAdmin_RecordController extends Controller {
 		
 		if($this->currentRecord->canDelete(Member::currentUser())) {
 			if(!$actions->fieldByName('action_doDelete')) {
-				$actions->insertFirst($deleteAction = new FormAction('doDelete', _t('ModelAdmin.DELETE', 'Delete')));
+				$actions->unshift($deleteAction = new FormAction('doDelete', _t('ModelAdmin.DELETE', 'Delete')));
 			}
 			$deleteAction->addExtraClass('delete ss-ui-action-destructive');
 		}

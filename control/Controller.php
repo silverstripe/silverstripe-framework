@@ -85,6 +85,13 @@ class Controller extends RequestHandler {
 	}
 	
 	/**
+	 * Returns a link to this controller.  Overload with your own Link rules if they exist.
+	 */
+	function Link() {
+		return get_class($this) .'/';
+	}
+	
+	/**
 	 * Executes this controller, and return an {@link SS_HTTPResponse} object with the result.
 	 * 
 	 * This method first does a few set-up activities:
@@ -115,7 +122,7 @@ class Controller extends RequestHandler {
 	 * @return SS_HTTPResponse The response that this controller produces, 
 	 *  including HTTP headers such as redirection info
 	 */
-	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
 		if(!$request) user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
 		
 		$this->pushCurrent();

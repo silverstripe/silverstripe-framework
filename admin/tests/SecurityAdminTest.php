@@ -13,8 +13,10 @@ class SecurityAdminTest extends FunctionalTest {
 		$this->session()->inst_set('loggedInAs', $this->idFromFixture('Member', 'admin'));
 		
 		/* First, open the applicable group */
-		$this->get('admin/security/show/' . $this->idFromFixture('Group','admin'));
-		$this->assertRegExp('/<input[^>]+id="Form_EditForm_Title"[^>]+value="Administrators"[^>]*>/',$this->content());
+		$response = $this->get('admin/security/show/' . $this->idFromFixture('Group','admin'));
+		$inputs = $this->cssParser()->getBySelector('input#Form_EditForm_Title');
+		$this->assertNotNull($inputs);
+		$this->assertEquals('Administrators', (string)$inputs[0]['value']);
 		
 		/* Then load the export page */
 		$this->get('admin/security/EditForm/field/Members/export');
@@ -29,7 +31,9 @@ class SecurityAdminTest extends FunctionalTest {
 		
 		/* First, open the applicable group */
 		$this->get('admin/security/show/' . $this->idFromFixture('Group','empty'));
-		$this->assertRegExp('/<input[^>]+id="Form_EditForm_Title"[^>]+value="Empty Group"[^>]*>/',$this->content());
+		$inputs = $this->cssParser()->getBySelector('input#Form_EditForm_Title');
+		$this->assertNotNull($inputs);
+		$this->assertEquals('Empty Group', (string)$inputs[0]['value']);
 		
 		/* Then load the export page */
 		$this->get('admin/security/EditForm/field/Members/export');

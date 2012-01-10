@@ -13,7 +13,7 @@ class FileTest extends SapphireTest {
 		// Note: We can't use fixtures/setUp() for this, as we want to create the db record manually.
 		// Creating the folder is necessary to avoid having "Filename" overwritten by setName()/setRelativePath(),
 		// because the parent folders don't exist in the database
-		$folder = Folder::findOrMake('/FileTest/');
+		$folder = Folder::find_or_make('/FileTest/');
 		$testfilePath = 'assets/FileTest/CreateWithFilenameHasCorrectPath.txt'; // Important: No leading slash
 		$fh = fopen(BASE_PATH . '/' . $testfilePath, "w");
 		fwrite($fh, str_repeat('x',1000000));

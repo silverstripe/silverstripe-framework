@@ -1,4 +1,4 @@
-<div class="cms-menu cms-panel cms-panel-layout west" data-layout="{type: 'border'}">
+<div class="cms-menu cms-panel cms-panel-layout west" id="cms-menu" data-layout="{type: 'border'}">
 	<div class="cms-panel-header cms-logo-header north">
 		<div class="cms-logo">
 			<a href="http://www.silverstripe.org/" target="_blank">
@@ -31,15 +31,51 @@
 			
 				<% if Code == 'CMSMain' %>
 					<ul>
-						<li class="first <% if Top.class == 'CMSPageEditController' || Top.class == 'CMSMain' %>current<% end_if %>" id="Menu-CMSPageEditController"><a href="admin/page/edit/show/$Top.CurrentPageID">
-							<span class="text">Content</span>
-						</a></li>
-						<li <% if Top.class == 'CMSPageSettingsController' %>class="current"<% end_if %> id="Menu-CMSPageSettingsController"><a href="admin/page/settings/show/$Top.CurrentPageID">
-							<span class="text">Settings</span>
-						</a></li>
-						<li <% if Top.class == 'CMSPageHistoryController' %>class="current"<% end_if %> id="Menu-CMSPageHistoryController"><a href="admin/page/history/show/$Top.CurrentPageID">
-							<span class="text">History</span>
-						</a></li>
+						<li class="first <% if Top.class == 'CMSPageEditController' || Top.class == 'CMSMain' %>current<% end_if %>" id="Menu-CMSPageEditController">
+							<a href="admin/page/edit/show/$Top.CurrentPageID">
+								<span class="text">Content</span>
+							</a>
+						</li>
+						<li <% if Top.class == 'CMSPageSettingsController' %>class="current"<% end_if %> id="Menu-CMSPageSettingsController">
+							<a href="admin/page/settings/show/$Top.CurrentPageID">
+								<span class="text">Settings</span>
+							</a>
+						</li>
+						<li <% if Top.class == 'CMSPageHistoryController' %>class="current"<% end_if %> id="Menu-CMSPageHistoryController">
+							<a href="admin/page/history/show/$Top.CurrentPageID">
+								<span class="text">History</span>
+							</a>
+						</li>
+					</ul>
+				<% end_if %>
+
+				<% if Code == 'CMSPagesController' %>
+					<ul>
+						<li class="last <% if Top.class == 'CMSPagesController' %>current<% end_if %>" id="Menu-CMSPagesController">
+							<a href="admin/pages/">
+								<span class="text">Edit &amp; organize</span>
+							</a>
+						</li>
+						<li class="first <% if Top.class == 'CMSPageAddController' %>current<% end_if %>" id="Menu-CMSPageAddController">
+							<a href="admin/page/add/?ParentID=$Top.CurrentPageID">
+								<span class="text">Add pages</span>
+							</a>
+						</li>
+					</ul>
+				<% end_if %>
+
+				<% if Code == 'AssetAdmin' %>
+					<ul>
+						<li class="last <% if Top.class == 'AssetAdmin' %>current<% end_if %>" id="Menu-AssetAdmin">
+							<a href="admin/assets/">
+								<span class="text">Edit &amp; organize</span>
+							</a>
+						</li>
+						<li class="first <% if Top.class == 'CMSFileAddController' %>current<% end_if %>" id="Menu-CMSFileAddController">
+							<a href="admin/assets/add">
+								<span class="text">Add files</span>
+							</a>
+						</li>
 					</ul>
 				<% end_if %>
 			</li>

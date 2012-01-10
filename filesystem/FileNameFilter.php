@@ -23,6 +23,8 @@
  * FileNameFilter::$default_use_transliterator = false;
  * FileNameFilter::$default_replacements = array();
  * </code>
+ * 
+ * See {@link URLSegmentFilter} for a more generic implementation.
  */
 class FileNameFilter {
 	

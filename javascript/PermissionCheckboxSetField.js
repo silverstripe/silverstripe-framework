@@ -42,7 +42,8 @@
 		$('.permissioncheckboxset .valCMS_ACCESS_LeftAndMain input').entwine({
 			getCheckboxesExceptThisOne: function() {
 				return $(this).parents('.field:eq(0)').find('li').filter(function(i) {
-					return ($(this).attr('class').match(/CMS_ACCESS_/));
+					var klass = $(this).attr('class');
+					return (klass ? klass.match(/CMS_ACCESS_/) : false);
 				}).find('.checkbox').not(this);
 			},
 			onmatch: function() {

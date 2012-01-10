@@ -16,3 +16,5 @@ relative_assets = true
 # disable comments in the output. We want admin comments
 # to be verbose 
 line_comments = false
+
+asset_cache_buster :none

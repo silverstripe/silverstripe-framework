@@ -13,7 +13,12 @@
 			'fieldTitle': '(choose)',
 			'searchFieldTitle': '(choose or search)'
 		};
-		
+
+		var _clickTestFn = function(e) {
+			// If the click target is not a child of the current field, close the panel automatically.
+			if(!$(e.target).parents('.TreeDropdownField').length) jQuery('.TreeDropdownField').entwine('ss').closePanel();
+		};
+
 		/**
 		 * @todo Error display
 		 * @todo No results display for search
@@ -45,6 +50,9 @@
 			openPanel: function() {
 				// close all other panels
 				$('.TreeDropdownField').closePanel();
+
+				// Listen for clicks outside of the field to auto-close it
+				$('body').bind('click', _clickTestFn);
 				
 				var panel = this.getPanel(), tree = this.find('.tree-holder');
 				
@@ -80,6 +88,8 @@
 				
 			},
 			closePanel: function() {
+				jQuery('body').unbind('click', _clickTestFn);
+
 				// swap the up arrow with a down arrow
 				var toggle = this.find(".treedropdownfield-toggle-panel-link");
 				toggle.removeClass('treedropdownfield-open-tree');
@@ -104,9 +114,29 @@
 			getTitle: function() {
 				return this.find('.treedropdownfield-title').text();
 			},
+			/**
+			 * Update title from tree node value
+			 */
+			updateTitle: function() {
+				var self = this, tree = self.find('.tree-holder');
+				var updateFn = function() {
+					var val = self.getValue();
+					if(val) {
+						var node = tree.find('*[data-id="' + val + '"]'),
+							title = (node) ? tree.jstree('get_text', node[0]) : null;
+
+						if(title) self.setTitle(title);
+						if(node) tree.jstree('select_node', node);
+					}
+				};
+
+				// Load the tree if its not already present
+				if(jQuery.jstree._reference(tree)) updateFn();
+				else this.loadTree(null, updateFn);
+			},
 			setValue: function(val) {
 				this.find(':input:hidden').val(val);
-				
+				this.updateTitle();
 				this.trigger('change');
 			},
 			getValue: function() {
@@ -114,33 +144,39 @@
 			},
 			loadTree: function(params, callback) {
 				var self = this, panel = this.getPanel(), treeHolder = $(panel).find('.tree-holder');
-				var params = (params) ? this.getRequestParams().concat(params) : this.getRequestParams();
+				var params = (params) ? $.extend({}, this.getRequestParams(), params) : this.getRequestParams();
 				panel.addClass('loading');
 				treeHolder.load(this.data('url-tree'), params, function(html, status, xhr) {
 					var firstLoad = true;
 					if(status == 'success') {
 						$(this)
+							.jstree('destroy')
 							.bind('loaded.jstree', function(e, data) {
-								var val = self.getValue();
-								if(val) data.inst.select_node(treeHolder.find('*[data-id=' + val + ']'));
+								var val = self.getValue(), selectNode = treeHolder.find('*[data-id="' + val + '"]'), 
+									currentNode = data.inst.get_selected();
+								if(val && selectNode != currentNode) data.inst.select_node(selectNode);
+								data.inst.open_all();
 								firstLoad = false;
 								if(callback) callback.apply(self);
 							})
 							.jstree(self.getTreeConfig())
 							.bind('select_node.jstree', function(e, data) {
 								var node = data.rslt.obj, id = $(node).data('id');
-								if(self.getValue() == id) {
+								if(!firstLoad && !self.getValue() == id) {
+									// Value is already selected, unselect it (for lack of a better UI to do this)
 									self.data('metadata', null);
 									self.setTitle(null);
 									self.setValue(null);
+									data.inst.deselect_node(node);
 								} else {
-									self.data('metadata', [$.extend({id: id}, $(node).getMetaData())]);
+									self.data('metadata', $.extend({id: id}, $(node).getMetaData()));
 									self.setTitle(data.inst.get_text(node));
 									self.setValue(id);
 								}
 								
 								// Avoid auto-closing panel on first load
 								if(!firstLoad) self.closePanel();
+								firstLoad=false
 							});
 					}
 					
@@ -151,7 +187,7 @@
 				var self = this;
 				return {
 					'core': {
-						'initially_open': ['record-0'],
+						// 'initially_open': ['record-0'],
 						'animation': 0
 					},
 					'html_data': {
@@ -161,7 +197,7 @@
 							'url': this.data('url-tree'),
 							'data': function(node) {
 								var id = $(node).data("id") ? $(node).data("id") : 0, params = self.getRequestParams();
-								params = params.concat([{name: 'ID', value: id}, {name: 'ajax', value: 1}]);
+								params = $.extend({}, params, {ID: id, ajax: 1});
 								return params;
 							}
 						}
@@ -181,10 +217,10 @@
 			 * This is useful to keep state like locale values which are typically
 			 * encoded in hidden fields through the form.
 			 * 
-			 * @return {array}
+			 * @return {object}
 			 */
 			getRequestParams: function() {
-				return [];
+				return {};
 			}
 		});
 		
@@ -220,14 +256,14 @@
 				this._super();
 				
 				var title = this.data('title');
-				this.find('.title').replaceWith(
+				this.find('.treedropdownfield-title').replaceWith(
 					$('<input type="text" class="treedropdownfield-title search" />')
 				);
 				
 				this.setTitle(title ? title : strings.searchFieldTitle);
 			},
 			setTitle: function(title) {
-				if(!title) title = strings.fieldTitle;
+				if(!title && title !== '') title = strings.fieldTitle;
 				
 				this.find('.treedropdownfield-title').val(title);
 			},
@@ -246,6 +282,14 @@
 		});
 		
 		$('.TreeDropdownField.searchable input.search').entwine({
+			onfocusin: function(e) {
+				var field = this.getField();
+				field.setTitle('');
+			},
+			onfocusout: function(e) {
+				var field = this.getField();
+				if(!field.getTitle()) field.setTitle(false);
+			},
 			onkeydown: function(e) {
 				var field = this.getField();
 				if(e.keyCode == 13) {
@@ -269,12 +313,13 @@
 			},
 			loadTree: function(params, callback) {
 				var self = this, panel = this.getPanel(), treeHolder = $(panel).find('.tree-holder');
-				var params = (params) ? this.getRequestParams().concat(params) : this.getRequestParams();
+				var params = (params) ? $.extend({}, this.getRequestParams(), params) : this.getRequestParams();
 				panel.addClass('loading');
 				treeHolder.load(this.data('url-tree'), params, function(html, status, xhr) {
 					var firstLoad = true;
 					if(status == 'success') {
 						$(this)
+							.jstree('destroy')
 							.bind('loaded.jstree', function(e, data) {
 								$.each(self.getValue(), function(i, val) {
 									data.inst.check_node(treeHolder.find('*[data-id=' + val + ']'));
@@ -309,6 +354,15 @@
 			},
 			setTitle: function(title) {
 				this._super($.isArray(title) ? title.join(', ') : title);
+			},
+			updateTitle: function() {
+				// TODO Not supported due to multiple values/titles yet
+			}
+		});
+
+		$('.TreeDropdownField input[type=hidden]').entwine({
+			onchange: function() {
+				this.getField().updateTitle();
 			}
 		});
 	});

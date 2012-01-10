@@ -13,7 +13,7 @@ CMSMenu::add_director_rules();
 HtmlEditorConfig::get('cms')->setOptions(array(
 	'friendly_name' => 'Default CMS',
 	'priority' => '50',
-	'mode' => 'none',
+	'mode' => 'none', // initialized through LeftAndMain.EditFor.js logic
 
 	'body_class' => 'typography',
 	'document_base_url' => Director::absoluteBaseURL(),

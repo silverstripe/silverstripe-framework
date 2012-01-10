@@ -155,9 +155,7 @@ Readonly on a FormField
 	$myReadonlyField = $myField->performReadonlyTransformation();
 
 
-## Using a custom template
-
-*Required Silverstripe 2.3 for some displayed functionality*
+## Custom form templates
 
 You can use a custom form template to render with, instead of *Form.ss*
 
@@ -238,6 +236,27 @@ template.
 To find more methods, have a look at the `[api:Form]` class, as there is a lot of different methods of customising the form
 templates, for example, you could use `<% control Fields %>` instead of specifying each field manually, as we've done
 above.
+
+### Custom form field templates
+
+The easiest way to customize form fields is adding CSS classes and additional attributes.
+
+	:::php
+	$field = new TextField('MyText');
+	$field->addExtraClass('largeText');
+	$field->setAttribute('data-validation-regex', '[\d]*');
+
+	// Field() renders as:
+	// <input type="text" class="largeText" id="Form_Form_TextField" name="TextField" data-validation-regex="[\d]*">
+
+Each form field is rendered into a form via the `[FieldHolder()](api:FormField->FieldHolder())` method,
+which includes a container `<div>` as well as a `<label>` element (if applicable).
+You can also render each field without these structural elements through the `[Field()](api:FormField->Field())` method.
+In order to influence the form rendering, overloading these two methods is a good start.
+
+In addition, most form fields are rendered through SilverStripe templates, e.g. `TextareaField` is rendered via `sapphire/templates/forms/TextareaField.ss`.
+These templates can be overwritten globally by placing a template with the same name in your `mysite` directory,
+or set on a form field instance via `[setTemplate()](api:FormField->setTemplate())` and `[setFieldHolderTemplate()](api:FormField->setFieldHolderTemplate())`.
 
 ### Securing forms against Cross-Site Request Forgery (CSRF)
 

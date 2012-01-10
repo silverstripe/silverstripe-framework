@@ -5,14 +5,6 @@
  */
 class DropdownFieldTest extends SapphireTest {
 	
-	function testAddExtraClass() {
-		/* DropdownField has an extra class name and is in the HTML the field returns */
-		$dropdownField = new DropdownField('FeelingOk', 'Are you feeling ok?', array(0 => 'No', 1 => 'Yes'), '', null, '(Select one)');
-		$dropdownField->addExtraClass('thisIsMyExtraClassForDropdownField');
-		preg_match('/thisIsMyExtraClassForDropdownField/', $dropdownField->Field(), $matches);
-		$this->assertEquals($matches[0], 'thisIsMyExtraClassForDropdownField');
-	}
-	
 	function testGetSource() {
 		$source = array(1=>'one');
 		$field = new DropdownField('Field', null, $source);
