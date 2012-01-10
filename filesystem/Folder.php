@@ -402,7 +402,7 @@ class Folder extends File {
 		$config->addComponent(new GridFieldFilter());
 		$config->addComponent(new GridFieldDefaultColumns());
 		$config->addComponent(new GridFieldSortableHeader());
-		$config->addComponent(new GridFieldPaginator(2));
+		$config->addComponent(new GridFieldPaginator(10));
 		$config->addComponent(new GridFieldAction_Delete());
 		$config->addComponent(new GridFieldAction_Edit());
 		$config->addComponent($gridFieldForm = new GridFieldPopupForms());
@@ -417,7 +417,7 @@ class Folder extends File {
 		));
 
 		$titleField = ($this->ID && $this->ID != "root") ? new TextField("Title", _t('Folder.TITLE')) : new HiddenField("Title");
-
+		
 		$fields = new FieldList(
 			new TabSet('Root',
 				new Tab('Main',
