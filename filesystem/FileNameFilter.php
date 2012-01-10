@@ -48,6 +48,13 @@ class FileNameFilter {
 	public $replacements = array();
 	
 	/**
+	 * Dummy contructor to be compatible with Reflector class in 5.1.3 < PHP < 5.3.4
+	 * @see https://bugs.php.net/bug.php?id=52854
+	 * 
+	 */
+	public function __construct(){}
+	
+	/**
 	 * Depending on the applied replacement rules, this method
 	 * might result in an empty string. In this case, {@link getDefaultName()}
 	 * will be used to return a randomly generated file name, while retaining its extension.
