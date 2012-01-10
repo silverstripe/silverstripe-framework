@@ -627,7 +627,7 @@ class SSTemplateParser extends Parser {
 	function ClosedBlock__finalise(&$res) {
 		$blockname = $res['BlockName']['text'];
 		
-		$method = 'ClosedBlock_Handle_'.ucfirst(strtolower($blockname));
+		$method = 'ClosedBlock_Handle_'.$blockname;
 		if (method_exists($this, $method)) $res['php'] = $this->$method($res);
 		else {
 			throw new SSTemplateParseException('Unknown closed block "'.$blockname.'" encountered. Perhaps you are not supposed to close this block, or have mis-spelled it?', $this);
@@ -708,7 +708,7 @@ class SSTemplateParser extends Parser {
 	function OpenBlock__finalise(&$res) {
 		$blockname = $res['BlockName']['text'];
 	
-		$method = 'OpenBlock_Handle_'.ucfirst(strtolower($blockname));
+		$method = 'OpenBlock_Handle_'.$blockname;
 		if (method_exists($this, $method)) $res['php'] = $this->$method($res);
 		else {
 			throw new SSTemplateParseException('Unknown open block "'.$blockname.'" encountered. Perhaps you missed the closing tag or have mis-spelled it?', $this);
@@ -726,9 +726,9 @@ class SSTemplateParser extends Parser {
 		
 		if($this->includeDebuggingComments) { // Add include filename comments on dev sites
 			return 
-				'$val .= \'<!-- include '.$php.' -->\';'. "\n".
-				'$val .= SSViewer::parse_template('.$php.', $scope->getItem());'. "\n".
-				'$val .= \'<!-- end include '.$php.' -->\';'. "\n";
+				'$val .= \'<!-- include '.addslashes($php).' -->\';'. "\n".
+				'$val .= SSViewer::execute_template('.$php.', $scope->getItem());'. "\n".
+				'$val .= \'<!-- end include '.addslashes($php).' -->\';'. "\n";
 		}
 		else {
 			return 
@@ -920,7 +920,8 @@ class SSTemplateParser extends Parser {
 				$code = preg_replace('/(<html[^>]*>)/i', "\\1<!-- template $templateName -->", $code);
 				$code = preg_replace('/(<\/html[^>]*>)/i', "<!-- end template $templateName -->\\1", $code);
 			} else {
-				$code = "<!-- template $templateName -->\n" . $code . "\n<!-- end template $templateName -->";
+				$code = str_replace('<?php' . PHP_EOL, '<?php' . PHP_EOL . '$val .= \'<!-- template ' . $templateName . ' -->\';' . "\n", $code);
+				$code .= "\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
 			}
 		}	
 		
