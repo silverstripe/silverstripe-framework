@@ -123,7 +123,10 @@ class GridField extends FormField {
 	 */
 	public function getModelClass() {
 		if ($this->modelClassName) return $this->modelClassName;
-		if ($this->list && $this->list->dataClass) return $this->list->dataClass;
+		if ($this->list && method_exists($this->list, 'dataClass')) {
+			$class = $this->list->dataClass();
+			if($class) return $class;
+		}
 
 		throw new LogicException('GridField doesn\'t have a modelClassName, so it doesn\'t know the columns of this grid.');
 	}
