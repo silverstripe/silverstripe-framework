@@ -471,4 +471,15 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals('Joe', $list->first()->Name, 'First comment should be from Joe');
 		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
 	}
+
+	/**
+	 * 
+	 */
+	public function testSortByRelation() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list = $list->sort(array('Team.Title' => 'DESC'));
+		$this->assertEquals(3, $list->count());
+		$this->assertEquals(2, $list->first()->TeamID, 'First comment should be for Team 2');
+		$this->assertEquals(1, $list->last()->TeamID, 'Last comment should be for Team 1');
+	}
 }

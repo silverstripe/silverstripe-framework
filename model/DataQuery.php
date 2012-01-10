@@ -181,13 +181,13 @@ class DataQuery {
 
 				$columnParts = explode(' ', $col);
 				if (count($columnParts) == 2) {
-					$dir = $columnParts[1];
 					$col = $columnParts[0];
+					$dir = $columnParts[1];
 				} else {
-					$dir = '';
+					$dir = 'ASC';
 				}
 
-				$orderByFields[$ob] = $col;
+				$orderByFields[$ob] = $col . ' ' . $dir;
 				$col = str_replace('"', '', $col);
 				$parts = explode('.', $col);
 
