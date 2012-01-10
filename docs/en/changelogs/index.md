@@ -43,7 +43,9 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
 
 ## Alpha/beta/release candidate ##
 
- * [3.0.0-pr1](pr/0.0-pr1) - unreleased
+ * [3.0.0-alpha2](alpha/3.0.0-alpha2) - 12 January 2012
+ * [3.0.0-alpha1](alpha/3.0.0-alpha1) - 1 November 2011
+ * [3.0.0-pr1](pr/3.0.0-pr1) - unreleased
  * [2.4.5-rc1](rc/2.4.5-rc1) - 31 January 2011
  * [2.4.4-rc2](rc/2.4.4-rc2) - 20 December 2010
  * [2.4.4-rc1](rc/2.4.4-rc1) - 10 December 2010
