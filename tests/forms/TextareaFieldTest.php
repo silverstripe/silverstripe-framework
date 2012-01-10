@@ -7,7 +7,7 @@ class TextareaFieldTest extends SapphireTest {
 	 */
 	function testTextEncoding() {
 		$inputText = "This is my <text>These are some unicodes: äöü&<>";
-		$field = new TextareaField("Test", "Test", 5, 20);
+		$field = new TextareaField("Test", "Test");
 		$field->setValue($inputText);
 		$this->assertContains('This is my &lt;text&gt;These are some unicodes: &auml;&ouml;&uuml;&amp;&lt;&gt;', $field->Field());
 	}
@@ -17,7 +17,7 @@ class TextareaFieldTest extends SapphireTest {
 	 */
 	function testReadonlyTextEncoding() {
 		$inputText = "This is my <text>These are some unicodes: äöü&<>";
-		$field = new TextareaField("Test", "Test", 5, 20);
+		$field = new TextareaField("Test", "Test");
 		$field = $field->performReadonlyTransformation();
 		$field->setValue($inputText);
 		$this->assertContains('This is my &lt;text&gt;These are some unicodes: &auml;&ouml;&uuml;&amp;&lt;&gt;', $field->Field());

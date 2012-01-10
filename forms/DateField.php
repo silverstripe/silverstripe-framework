@@ -107,7 +107,7 @@ class DateField extends TextField {
 			}
 		}
 
-		parent::__construct($name, $title, $value, $form, $rightTitle);
+		parent::__construct($name, $title, $value);
 	}
 
 	function FieldHolder() {
