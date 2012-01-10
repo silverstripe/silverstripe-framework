@@ -31,15 +31,12 @@ class TextareaField extends FormField {
 	 * 
 	 * @param $name Field name
 	 * @param $title Field title
-	 * @param $rows The number of rows
-	 * @param $cols The number of columns
 	 * @param $value The current value
-	 * @param $form The parent form.  Auto-set when the field is placed in a form.
 	 */
-	function __construct($name, $title = null, $rows = 5, $cols = 20, $value = "", $form = null) {
-		$this->rows = $rows;
-		$this->cols = $cols;
-		parent::__construct($name, $title, $value, $form);
+	function __construct($name, $title = null, $value = '') {
+		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRows() and setCols() instead of constructor arguments');
+
+		parent::__construct($name, $title, $value);
 	}
 
 	function getAttributes() {

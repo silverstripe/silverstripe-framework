@@ -51,10 +51,10 @@ class ListboxField extends DropdownField {
 	 * @param int $size Optional size of the select element
 	 * @param form The parent form
 	 */
-	function __construct($name, $title = '', $source = array(), $value = '', $size = null, $multiple = false, $form = null) {
+	function __construct($name, $title = '', $source = array(), $value = '', $size = null, $multiple = false) {
 		if($size) $this->size = $size;
 		if($multiple) $this->multiple = $multiple;
-		parent::__construct($name, $title, $source, $value, $form);
+		parent::__construct($name, $title, $source, $value);
 	}
 	
 	/**

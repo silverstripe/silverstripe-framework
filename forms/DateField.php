@@ -87,7 +87,7 @@ class DateField extends TextField {
 	 */
 	protected $valueObj = null;
 	
-	function __construct($name, $title = null, $value = null, $form = null, $rightTitle = null) {
+	function __construct($name, $title = null, $value = null) {
 		if(!$this->locale) {
 			$this->locale = i18n::get_locale();
 		}
