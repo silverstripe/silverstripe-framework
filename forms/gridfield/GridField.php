@@ -334,7 +334,9 @@ class GridField extends FormField {
 
 		$attrs = array(
 			'id' => isset($this->id) ? $this->id : null,
-			'class' => "field CompositeField {$this->extraClass()}"
+			'class' => "field CompositeField {$this->extraClass()}",
+			'cellpadding' => '0',
+			'cellspacing' => '0'	
 		);
 		return
 			$this->createTag('fieldset', array('id'=>$this->ID(),'class'=>'ss-gridfield'), 
