@@ -85,6 +85,13 @@ class Controller extends RequestHandler {
 	}
 	
 	/**
+	 * Returns a link to this controller.  Overload with your own Link rules if they exist.
+	 */
+	function Link() {
+		return get_class($this) .'/';
+	}
+	
+	/**
 	 * Executes this controller, and return an {@link SS_HTTPResponse} object with the result.
 	 * 
 	 * This method first does a few set-up activities:

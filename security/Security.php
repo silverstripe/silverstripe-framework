@@ -297,7 +297,7 @@ class Security extends Controller {
 	 * @param string $action Name of the action
 	 * @return string Returns the link to the given action
 	 */
-	public static function Link($action = null) {
+	public function Link($action = null) {
 		return "Security/$action";
 	}
 
