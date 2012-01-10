@@ -399,8 +399,8 @@ class GridField extends FormField {
 			$this->buildColumnDispatch();
 		}
 		
-		$handler = $this->columnDispatch[$column];
-		if($handler) {
+		if(!empty($this->columnDispatch[$column])) {
+			$handler = $this->columnDispatch[$column];
 			return $handler->getColumnContent($this, $record, $column);
 		} else {
 			throw new InvalidArgumentException("Bad column '$column'");
@@ -422,8 +422,8 @@ class GridField extends FormField {
 			$this->buildColumnDispatch();
 		}
 		
-		$handler = $this->columnDispatch[$column];
-		if($handler) {
+		if(!empty($this->columnDispatch[$column])) {
+			$handler = $this->columnDispatch[$column];
 			$attrs =  $handler->getColumnAttributes($this, $record, $column);
 			if(is_array($attrs)) {
 				return $attrs;
@@ -451,8 +451,8 @@ class GridField extends FormField {
 			$this->buildColumnDispatch();
 		}
 		
-		$handler = $this->columnDispatch[$column];
-		if($handler) {
+		if(!empty($this->columnDispatch[$column])) {
+			$handler = $this->columnDispatch[$column];
 			$metadata = $handler->getColumnMetadata($this, $column);
 			if(is_array($metadata)) {
 				return $metadata;
@@ -502,13 +502,12 @@ class GridField extends FormField {
 		$stateChange = Session::get($id);
 		$gridName = $stateChange['grid'];
 		$grid = $form->Fields()->dataFieldByName($gridName);
-
+		
 		$state = $grid->getState(false);
-		$state->setValue($data['GridState']);
+		if(isset($data['GridState'])) $state->setValue($data['GridState']);
 		
 		$actionName = $stateChange['actionName'];
-		
-		$args = $stateChange['args'];
+		$args = isset($stateChange['args']) ? $stateChange['args'] : array();
 		$grid->handleAction($actionName, $args, $data);
 		
 		switch($request->getHeader('X-Get-Fragment')) {
