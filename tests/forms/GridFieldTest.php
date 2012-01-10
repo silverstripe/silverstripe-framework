@@ -164,9 +164,11 @@ class GridFieldtest extends SapphireTest {
 	 * @covers GridField::getColumnContent
 	 */
 	public function testGetColumnContent() {
-		$list = DataList::create('Member');
+		$list = new ArrayList(array(
+			new Member(array("ID" => 1, "Email" => "test@example.org" ))
+		));
 		$obj = new GridField('testfield', 'testfield', $list);
-		$this->assertEquals('ADMIN@example.org', $obj->getColumnContent($list->first(), 'Email'));
+		$this->assertEquals('test@example.org', $obj->getColumnContent($list->first(), 'Email'));
 	}
 
 	/**
@@ -174,7 +176,9 @@ class GridFieldtest extends SapphireTest {
 	 */
 	public function testGetColumnContentBadArguments() {
 		$this->setExpectedException('InvalidArgumentException');
-		$list = DataList::create('Member');
+		$list = new ArrayList(array(
+			new Member(array("ID" => 1, "Email" => "test@example.org" ))
+		));
 		$obj = new GridField('testfield', 'testfield', $list);
 		$obj->getColumnContent($list->first(), 'non-existing');
 	}
@@ -183,7 +187,9 @@ class GridFieldtest extends SapphireTest {
 	 * @covers GridField::getColumnAttributes
 	 */
 	public function testGetColumnAttributesEmptyArray() {
-		$list = DataList::create('Member');
+		$list = new ArrayList(array(
+			new Member(array("ID" => 1, "Email" => "test@example.org" ))
+		));
 		$obj = new GridField('testfield', 'testfield', $list);
 		$this->assertEquals(array(), $obj->getColumnAttributes($list->first(), 'Email'));
 	}
@@ -192,7 +198,9 @@ class GridFieldtest extends SapphireTest {
 	 * @covers GridField::getColumnAttributes
 	 */
 	public function testGetColumnAttributes() {
-		$list = DataList::create('Member');
+		$list = new ArrayList(array(
+			new Member(array("ID" => 1, "Email" => "test@example.org" ))
+		));
 		$config = GridFieldConfig::create()->addComponent(new GridFieldTest_Component);
 		$obj = new GridField('testfield', 'testfield', $list, $config);
 		$this->assertEquals(array('class'=>'css-class'), $obj->getColumnAttributes($list->first(), 'Email'));
@@ -203,7 +211,9 @@ class GridFieldtest extends SapphireTest {
 	 */
 	public function testGetColumnAttributesBadArguments() {
 		$this->setExpectedException('InvalidArgumentException');
-		$list = DataList::create('Member');
+		$list = new ArrayList(array(
+			new Member(array("ID" => 1, "Email" => "test@example.org" ))
+		));
 		$config = GridFieldConfig::create()->addComponent(new GridFieldTest_Component);
 		$obj = new GridField('testfield', 'testfield', $list, $config);
 		$obj->getColumnAttributes($list->first(), 'Non-existing');
@@ -211,7 +221,9 @@ class GridFieldtest extends SapphireTest {
 
 	public function testGetColumnAttributesBadResponseFromComponent() {
 		$this->setExpectedException('LogicException');
-		$list = DataList::create('Member');
+		$list = new ArrayList(array(
+			new Member(array("ID" => 1, "Email" => "test@example.org" ))
+		));
 		$config = GridFieldConfig::create()->addComponent(new GridFieldTest_Component);
 		$obj = new GridField('testfield', 'testfield', $list, $config);
 		$obj->getColumnAttributes($list->first(), 'Surname');
@@ -221,7 +233,9 @@ class GridFieldtest extends SapphireTest {
 	 * @covers GridField::getColumnMetadata
 	 */
 	public function testGetColumnMetadata() {
-		$list = DataList::create('Member');
+		$list = new ArrayList(array(
+			new Member(array("ID" => 1, "Email" => "test@example.org" ))
+		));
 		$config = GridFieldConfig::create()->addComponent(new GridFieldTest_Component);
 		$obj = new GridField('testfield', 'testfield', $list, $config);
 		$this->assertEquals(array('metadata'=>'istrue'), $obj->getColumnMetadata('Email'));
@@ -232,7 +246,9 @@ class GridFieldtest extends SapphireTest {
 	 */
 	public function testGetColumnMetadataBadResponseFromComponent() {
 		$this->setExpectedException('LogicException');
-		$list = DataList::create('Member');
+		$list = new ArrayList(array(
+			new Member(array("ID" => 1, "Email" => "test@example.org" ))
+		));
 		$config = GridFieldConfig::create()->addComponent(new GridFieldTest_Component);
 		$obj = new GridField('testfield', 'testfield', $list, $config);
 		$obj->getColumnMetadata('Surname');
