@@ -194,7 +194,7 @@ class DataList extends ViewableData implements SS_List {
 		if(is_array($argumentArray)){
 			$sort = array();
 			foreach($argumentArray as $column => $direction) {
-				$sort []= '"'.$column.'" '.$direction;
+				$sort[]= ''.$this->getRelationName($column).' '.$direction;
 			}
 			$this->dataQuery->sort(implode(',', $sort));
 			return $this;
@@ -251,6 +251,23 @@ class DataList extends ViewableData implements SS_List {
 			}
 		}
 		return $this;
+	}
+
+	/**
+	 * Translates a Object relation name to a Database name and apply the relation join to 
+	 * the query
+	 *
+	 * @param string $field
+	 * @return string
+	 */
+	public function getRelationName($field) {
+		if(strpos($field,'.') === false) {
+			return '"'.$field.'"';
+		}
+		$relations = explode('.', $field);
+		$fieldName = array_pop($relations);
+		$relationModelName = $this->dataQuery->applyRelation($field);
+		return '"'.$relationModelName.'"."'.$fieldName.'"';
 	}
 
 	/**
