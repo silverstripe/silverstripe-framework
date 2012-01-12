@@ -1495,6 +1495,22 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 				);
 			}
 		}
+
+		// "Can be root" validation
+		if(!$this->stat('can_be_root') && !$this->ParentID) {
+			$result->error(
+				sprintf(
+					_t(
+						'SiteTree.PageTypNotAllowedOnRoot', 
+						'Page type "%s" is not allowed on the root level', 
+						PR_MEDIUM,
+						'First argument is a class name'
+					),
+					$this->i18n_singular_name()
+				),
+				'CAN_BE_ROOT'
+			);
+		}
 		
 		return $result;
 	}

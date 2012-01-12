@@ -242,6 +242,29 @@ class VirtualPage extends Page {
 		
 		FormResponse::add("$('Form_EditForm').reloadIfSetTo($this->ID);", $this->ID."_VirtualPage_onAfterWrite");
 	}
+
+	function validate() {
+		$result = parent::validate();
+
+		// "Can be root" validation
+		$orig = $this->CopyContentFrom();
+		if(!$orig->stat('can_be_root') && !$this->ParentID) {
+			$result->error(
+				sprintf(
+					_t(
+						'VirtualPage.PageTypNotAllowedOnRoot', 
+						'Original page type "%s" is not allowed on the root level for this virtual page', 
+						PR_MEDIUM,
+						'First argument is a class name'
+					),
+					$orig->i18n_singular_name()
+				),
+				'CAN_BE_ROOT_VIRTUAL'
+			);
+		}
+
+		return $result;
+	}
 	
 	/**
 	 * Ensure we have an up-to-date version of everything.

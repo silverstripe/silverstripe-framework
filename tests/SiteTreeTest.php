@@ -15,7 +15,8 @@ class SiteTreeTest extends SapphireTest {
 		'SiteTreeTest_ClassB',
 		'SiteTreeTest_ClassC',
 		'SiteTreeTest_ClassD',
-		'SiteTreeTest_ClassCext'
+		'SiteTreeTest_ClassCext',
+		'SiteTreeTest_NotRoot',
 	);
 	
 	/**
@@ -819,6 +820,24 @@ class SiteTreeTest extends SapphireTest {
 		Session::set("loggedInAs", null);
 	}
 
+	function testCanBeRoot() {
+		$page = new SiteTree();
+		$page->ParentID = 0;
+		$page->write();
+
+		$notRootPage = new SiteTreeTest_NotRoot();
+		$notRootPage->ParentID = 0;
+		$isDetected = false;
+		try {
+			$notRootPage->write();	
+		} catch(ValidationException $e) {
+			$this->assertContains('is not allowed on the root level', $e->getMessage());
+			$isDetected = true;
+		} 
+
+		if(!$isDetected) $this->fail('Fails validation with $can_be_root=false');
+	}
+
 }
 
 /**#@+
@@ -870,6 +889,10 @@ class SiteTreeTest_ClassD extends Page implements TestOnly {
 class SiteTreeTest_ClassCext extends SiteTreeTest_ClassC implements TestOnly {
 	// Override SiteTreeTest_ClassC definitions
 	static $allowed_children = array('SiteTreeTest_ClassB');
+}
+
+class SiteTreeTest_NotRoot extends Page implements TestOnly {
+	static $can_be_root = false;
 }
 
 /**#@-*/
