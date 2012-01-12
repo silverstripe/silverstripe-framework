@@ -1432,7 +1432,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			// The only way after a write() call to determine if it was triggered by a writeWithoutVersion(),
 			// which we have to pass on to the virtual page writes as well.
 			$previous = ($this->Version > 1) ? Versioned::get_version($this->class, $this->ID, $this->Version-1) : null;
-			$withoutVersion = (!$previous || $previous->Version == $this->Version);
+			$withoutVersion = $this->getExtensionInstance('Versioned')->_nextWriteWithoutVersion;
 			foreach($linkedPages as $page) {
 				$page->copyFrom($page->CopyContentFrom());
 				if($withoutVersion) $page->writeWithoutVersion();

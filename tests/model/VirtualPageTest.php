@@ -418,28 +418,48 @@ class VirtualPageTest extends SapphireTest {
 	function testWriteWithoutVersion() {
 		$original = new SiteTree();
 		$original->write();
+		// Create a second version (different behaviour),
+		// as SiteTree->onAfterWrite() checks for Version == 1
+		$original->Title = 'prepare';
+		$original->write();
 		$originalVersion = $original->Version;
 
 		$virtual = new VirtualPage();
 		$virtual->CopyContentFromID = $original->ID;
 		$virtual->write();
+		// Create a second version, see above.
+		$virtual->Title = 'prepare';
+		$virtual->write();
 		$virtualVersion = $virtual->Version;
 		
 		$virtual->Title = 'changed 1';
 		$virtual->writeWithoutVersion();
-		$this->assertEquals($virtual->Version, $virtualVersion, 'Explicit write');
+		$this->assertEquals(
+			$virtual->Version, 
+			$virtualVersion, 
+			'writeWithoutVersion() on VirtualPage doesnt increment version'
+		);
 
 		$original->Title = 'changed 2';
 		$original->writeWithoutVersion();
+
 		DataObject::flush_and_destroy_cache();
 		$virtual = DataObject::get_by_id('VirtualPage', $virtual->ID, false);
-		$this->assertEquals($virtual->Version, $virtualVersion, 'Implicit write through original');
+		$this->assertEquals(
+			$virtual->Version, 
+			$virtualVersion, 
+			'writeWithoutVersion() on original page doesnt increment version on related VirtualPage'
+		);
 		
 		$original->Title = 'changed 3';
 		$original->write();
 		DataObject::flush_and_destroy_cache();
 		$virtual = DataObject::get_by_id('VirtualPage', $virtual->ID, false);
-		$this->assertGreaterThan($virtualVersion, $virtual->Version, 'Implicit write through original');
+		$this->assertGreaterThan(
+			$virtualVersion, 
+			$virtual->Version, 
+			'write() on original page does increment version on related VirtualPage'
+		);
 	}
 	
 }

@@ -1100,20 +1100,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
-	 * Perform a write without affecting the version table.
-	 * On objects without versioning.
-	 *
-	 * @return int The ID of the record
-	 */
-	public function writeWithoutVersion() {
-		$this->changed['Version'] = 1;
-		if(!isset($this->record['Version'])) {
-			$this->record['Version'] = -1;
-		}
-		return $this->write();
-	}
-
-	/**
 	 * Delete this data object.
 	 * $this->onBeforeDelete() gets called.
 	 * Note that in Versioned objects, both Stage and Live will be deleted.
