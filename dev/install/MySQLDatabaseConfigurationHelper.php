@@ -1,10 +1,10 @@
 <?php
 /**
  * This is a helper class for the SS installer.
- * 
+ *
  * It does all the specific checking for MySQLDatabase
  * to ensure that the configuration is setup correctly.
- * 
+ *
  * @package sappire
  * @subpackage model
  */
@@ -13,7 +13,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	/**
 	 * Ensure that the database function for connectivity is available.
 	 * If it is, we assume the PHP module for this database has been setup correctly.
-	 * 
+	 *
 	 * @param array $databaseConfig Associative array of db configuration, e.g. "server", "username" etc
 	 * @return boolean
 	 */
@@ -29,7 +29,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	public function requireDatabaseServer($databaseConfig) {
 		$success = false;
 		$error = '';
-		$conn = @mysql_connect($databaseConfig['server'], null, null);
+		$conn = @mysql_connect($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
 		if($conn || mysql_errno() < 2000) {
 			$success = true;
 		} else {
@@ -109,7 +109,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	/**
 	 * Ensure that the database connection is able to use an existing database,
 	 * or be able to create one if it doesn't exist.
-	 * 
+	 *
 	 * @param array $databaseConfig Associative array of db configuration, e.g. "server", "username" etc
 	 * @return array Result - e.g. array('success' => true, 'alreadyExists' => 'true')
 	 */
