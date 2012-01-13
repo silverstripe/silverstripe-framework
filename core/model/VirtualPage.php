@@ -192,29 +192,30 @@ class VirtualPage extends Page {
 	 * We have to change it to copy all the content from the original page first.
 	 */
 	function onBeforeWrite() {
-		// On regular write, this will copy from published source.  This happens on every publish
-		if($this->extension_instances['Versioned']->migratingVersion
-			&& Versioned::current_stage() == 'Live') {
-			if($this->CopyContentFromID) {
-				$performCopyFrom = true;
-			
+		$performCopyFrom = null;
+
+		// Determine if we need to copy values.
+		if(
+			$this->extension_instances['Versioned']->migratingVersion
+			&& Versioned::current_stage() == 'Live'
+			&& $this->CopyContentFromID
+		) {
+			// On publication to live, copy from published source.
+			$performCopyFrom = true;
+		
 			$stageSourceVersion = DB::query("SELECT \"Version\" FROM \"SiteTree\" WHERE \"ID\" = $this->CopyContentFromID")->value();
 			$liveSourceVersion = DB::query("SELECT \"Version\" FROM \"SiteTree_Live\" WHERE \"ID\" = $this->CopyContentFromID")->value();
-			
-				// We're going to create a new VP record in SiteTree_versions because the published
-				// version might not exist, unless we're publishing the latest version
-				if($stageSourceVersion != $liveSourceVersion) {
-					$this->extension_instances['Versioned']->migratingVersion = null;
-				}
+		
+			// We're going to create a new VP record in SiteTree_versions because the published
+			// version might not exist, unless we're publishing the latest version
+			if($stageSourceVersion != $liveSourceVersion) {
+				$this->extension_instances['Versioned']->migratingVersion = null;
 			}
-
-		// On regular write, this will copy from draft source.  This is only executed when the source
-		// page changeds
 		} else {
+			// On regular write, copy from draft source. This is only executed when the source page changes.
 			$performCopyFrom = $this->isChanged('CopyContentFromID', 2) && $this->CopyContentFromID != 0;
 		}
 		
-		// On publish, this will copy from published source
  		if($performCopyFrom && $this instanceof VirtualPage) {
 			// This flush is needed because the get_one cache doesn't respect site version :-(
 			singleton('SiteTree')->flushCache();
