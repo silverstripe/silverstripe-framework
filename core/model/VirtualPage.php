@@ -240,6 +240,38 @@ class VirtualPage extends Page {
 				$this->updateImageTracking();
 			}
 		}
+
+		// Check if page type has changed to a non-virtual page.
+		// Caution: Relies on the fact that the current instance is still of the old page type.
+		if($this->isChanged('ClassName', 2)) {
+			$changed = $this->getChangedFields();
+			$classBefore = $changed['ClassName']['before'];
+			$classAfter = $changed['ClassName']['after'];
+			if($classBefore != $classAfter) {
+				// Remove all database rows for the old page type to avoid inconsistent data retrieval.
+				// TODO This should apply to all page type changes, not only on VirtualPage - but needs
+				// more comprehensive testing as its a destructive operation
+				$removedTables = array_diff(ClassInfo::dataClassesFor($classBefore), ClassInfo::dataClassesFor($classAfter));
+				if($removedTables) foreach($removedTables as $removedTable) {
+					// Note: *_versions records are left intact
+					foreach(array('', 'Live') as $stage) {
+						if($stage) $removedTable = "{$removedTable}_{$stage}";
+						DB::query(sprintf('DELETE FROM "%s" WHERE "ID" = %d', $removedTable, $this->ID));					
+					}
+				}	
+
+				// Also publish the change immediately to avoid inconsistent behaviour between
+				// a non-virtual draft and a virtual live record (e.g. republishing the original record
+				// shouldn't republish the - now unrelated - changes on the ex-VirtualPage draft).
+				// Copies all stage fields to live as well.
+				$source = DataObject::get_one("SiteTree",sprintf('"SiteTree"."ID" = %d', $this->CopyContentFromID));
+				$this->copyFrom($source);
+				$this->publish('Stage', 'Live');
+
+				// Change reference on instance (as well as removing the underlying database tables)
+				$this->CopyContentFromID = 0;
+			}
+		}
 		
 		FormResponse::add("$('Form_EditForm').reloadIfSetTo($this->ID);", $this->ID."_VirtualPage_onAfterWrite");
 	}

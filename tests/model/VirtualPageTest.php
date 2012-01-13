@@ -8,7 +8,29 @@ class VirtualPageTest extends SapphireTest {
 		'VirtualPageTest_ClassA',
 		'VirtualPageTest_ClassB',
 		'VirtualPageTest_NotRoot',
+		'VirtualPageTest_VirtualPageSub',
 	);
+
+	protected $requiredExtensions = array(
+		'Page' => array('VirtualPageTest_PageExtension')
+	);
+
+	function setUp() {
+		parent::setUp();
+
+		$this->origInitiallyCopiedFields = VirtualPage::$initially_copied_fields;
+		VirtualPage::$initially_copied_fields[] = 'MyInitiallyCopiedField';
+		$this->origNonVirtualField = VirtualPage::$non_virtual_fields;
+		VirtualPage::$non_virtual_fields[] = 'MyNonVirtualField';
+		VirtualPage::$non_virtual_fields[] = 'MySharedNonVirtualField';
+	}
+
+	function tearDown() {
+		parent::tearDown();
+
+		VirtualPage::$initially_copied_fields = $this->origInitiallyCopiedFields;
+		VirtualPage::$non_virtual_fields = $this->origNonVirtualField;
+	}
 	
 	/**
 	 * Test that, after you update the source page of a virtual page, all the virtual pages
@@ -350,11 +372,6 @@ class VirtualPageTest extends SapphireTest {
 	}
 	
 	function testGetVirtualFields() {
-		$origInitiallyCopiedFields = VirtualPage::$initially_copied_fields;
-		VirtualPage::$initially_copied_fields[] = 'MyInitiallyCopiedField';
-		$origNonVirtualField = VirtualPage::$non_virtual_fields;
-		VirtualPage::$non_virtual_fields[] = 'MyNonVirtualField';
-
 		// Needs association with an original, otherwise will just return the "base" virtual fields
 		$page = new VirtualPageTest_ClassA();
 		$page->write();
@@ -365,17 +382,9 @@ class VirtualPageTest extends SapphireTest {
 		$this->assertContains('MyVirtualField', $virtual->getVirtualFields());
 		$this->assertNotContains('MyNonVirtualField', $virtual->getVirtualFields());
 		$this->assertNotContains('MyInitiallyCopiedField', $virtual->getVirtualFields());
-		
-		VirtualPage::$initially_copied_fields = $origInitiallyCopiedFields;
-		VirtualPage::$non_virtual_fields = $origNonVirtualField;
 	}
 	
 	function testCopyFrom() {
-		$origInitiallyCopiedFields = VirtualPage::$initially_copied_fields;
-		VirtualPage::$initially_copied_fields[] = 'MyInitiallyCopiedField';
-		$origNonVirtualField = VirtualPage::$non_virtual_fields;
-		VirtualPage::$non_virtual_fields[] = 'MyNonVirtualField';
-		
 		$original = new VirtualPageTest_ClassA();
 		$original->MyInitiallyCopiedField = 'original';
 		$original->MyVirtualField = 'original';
@@ -411,9 +420,6 @@ class VirtualPageTest extends SapphireTest {
 			$virtual->MyInitiallyCopiedField,
 			'Fields listed in $initially_copied_fields are not copied on subsequent copyFrom() invocations'
 		);
-		
-		VirtualPage::$initially_copied_fields = $origInitiallyCopiedFields;
-		VirtualPage::$non_virtual_fields = $origNonVirtualField;
 	}
 	
 	function testWriteWithoutVersion() {
@@ -489,6 +495,82 @@ class VirtualPageTest extends SapphireTest {
 
 		if(!$isDetected) $this->fail('Fails validation with $can_be_root=false');
 	}
+
+	function testPageTypeChangeDoesntKeepOrphanedVirtualPageRecord() {
+		$page = new SiteTree();
+		$page->write();
+		$page->publish('Stage', 'Live');
+
+		$virtual = new VirtualPageTest_VirtualPageSub();
+		$virtual->CopyContentFromID = $page->ID;
+		$virtual->write();
+		$virtual->publish('Stage', 'Live');
+
+		$nonVirtual = $virtual;
+		$nonVirtual->ClassName = 'VirtualPageTest_ClassA';
+		$nonVirtual->write(); // not publishing
+
+		$this->assertNotNull(
+			DB::query(sprintf('SELECT "ID" FROM "SiteTree" WHERE "ID" = %d', $nonVirtual->ID))->value(),
+			"Shared base database table entry exists after type change"
+		);
+		$this->assertNull(
+			DB::query(sprintf('SELECT "ID" FROM "VirtualPage" WHERE "ID" = %d', $nonVirtual->ID))->value(),
+			"Base database table entry no longer exists after type change"
+		);
+		$this->assertNull(
+			DB::query(sprintf('SELECT "ID" FROM "VirtualPageTest_VirtualPageSub" WHERE "ID" = %d', $nonVirtual->ID))->value(),
+			"Sub database table entry no longer exists after type change"
+		);
+		$this->assertNull(
+			DB::query(sprintf('SELECT "ID" FROM "VirtualPage_Live" WHERE "ID" = %d', $nonVirtual->ID))->value(),
+			"Base live database table entry no longer exists after type change"
+		);
+		$this->assertNull(
+			DB::query(sprintf('SELECT "ID" FROM "VirtualPageTest_VirtualPageSub_Live" WHERE "ID" = %d', $nonVirtual->ID))->value(),
+			"Sub live database table entry no longer exists after type change"
+		);
+	}
+
+	function testPageTypeChangePropagatesToLive() {
+		$page = new SiteTree();
+		$page->MySharedNonVirtualField = 'original';
+		$page->write();
+		$page->publish('Stage', 'Live');
+
+		$virtual = new VirtualPageTest_VirtualPageSub();
+		$virtual->CopyContentFromID = $page->ID;
+		$virtual->write();
+		$virtual->publish('Stage', 'Live');
+
+		$page->Title = 'original'; // 'Title' is a virtual field
+		// Publication would causes the virtual field to copy through onBeforeWrite(),
+		// but we want to test that it gets copied on class name change instead
+		$page->write();
+
+		$nonVirtual = $virtual;
+		$nonVirtual->ClassName = 'VirtualPageTest_ClassA';
+		$nonVirtual->MySharedNonVirtualField = 'changed on new type';
+		$nonVirtual->write(); // not publishing the page type change here
+
+		$this->assertEquals('original', $nonVirtual->Title,
+			'Copies virtual fields from original draft into new instance on type change '
+		);
+
+		$nonVirtualLive = Versioned::get_one_by_stage('SiteTree', 'Live', '"SiteTree_Live"."ID" = ' . $nonVirtual->ID);
+		$this->assertNotNull($nonVirtualLive);
+		$this->assertEquals('VirtualPageTest_ClassA', $nonVirtualLive->ClassName);
+		$this->assertEquals('changed on new type', $nonVirtualLive->MySharedNonVirtualField);
+
+		$page->MySharedNonVirtualField = 'changed only on original';
+		$page->write();
+		$page->publish('Stage', 'Live');
+
+		$nonVirtualLive = Versioned::get_one_by_stage('SiteTree', 'Live', '"SiteTree_Live"."ID" = ' . $nonVirtual->ID, false);
+		$this->assertEquals('changed on new type', $nonVirtualLive->MySharedNonVirtualField,
+			'No field copying from previous original after page type changed'
+		);
+	}
 	
 }
 
@@ -513,4 +595,23 @@ class VirtualPageTest_ClassC extends Page implements TestOnly {
 
 class VirtualPageTest_NotRoot extends Page implements TestOnly {
 	static $can_be_root = false;
+}
+
+class VirtualPageTest_VirtualPageSub extends VirtualPage implements TestOnly {
+	static $db = array(
+		'MyProperty' => 'Varchar',
+	);
+}
+
+class VirtualPageTest_PageExtension extends DataObjectDecorator implements TestOnly {
+	function extraStatics() {
+		return array(
+			'db' => array(
+				// These fields are just on an extension to simulate shared properties between Page and VirtualPage.
+				// Not possible through direct $db definitions due to VirtualPage inheriting from Page, and Page being defined elsewhere.
+				'MySharedVirtualField' => 'Text',
+				'MySharedNonVirtualField' => 'Text',
+			)
+		);
+	}
 }
