@@ -432,6 +432,7 @@ class Versioned extends DataObjectDecorator {
 			// Putting a Version of -1 is a signal to leave the version table alone, despite their being no version
 			if($manipulation[$table]['fields']['Version'] < 0 || $this->_nextWriteWithoutVersion) {
 				unset($manipulation[$table]['fields']['Version']);
+				unset($manipulation["{$table}_versions"]);
 			}
 
 			if(!$this->hasVersionField($table)) unset($manipulation[$table]['fields']['Version']);
@@ -460,8 +461,10 @@ class Versioned extends DataObjectDecorator {
 	}
 
 	/**
-	 * Perform a write without affecting the version table.
-	 * On objects without versioning.
+	 * Perform a write without incrementing the "Version" property or inserting
+	 * a new row into the *_versions database tables. 
+	 *
+	 * @todo Will cause inconsistent data between the record rows and its latest entry in the *_versions table.
 	 *
 	 * @return int The ID of the record
 	 */

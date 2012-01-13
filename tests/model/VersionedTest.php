@@ -131,7 +131,7 @@ class VersionedTest extends SapphireTest {
 		$page1->doRollbackTo($origVersion);
 		$page1 = Versioned::get_one_by_stage('Page', 'Stage', sprintf('"SiteTree"."ID" = %d', $page1->ID));
 		
-		$this->assertTrue($page1->Version > $changedVersion, 'Create a new higher version number');
+		$this->assertEquals($page1->Version, $origVersion, 'Goes back to the original version');
 		$this->assertEquals('orig', $page1->Content, 'Copies the content from the old version');
 	}
 	
@@ -229,6 +229,46 @@ class VersionedTest extends SapphireTest {
 			'Varchar', $versionField->hasOwnTableDatabaseField('Version'),
 			'Models w/o Versioned can have their own Version field.'
 		);
+	}
+
+	function testWriteWithoutVersion() {
+		$obj = new VersionedTest_Subclass();
+		$obj->Name = 'one';
+		$obj->ExtraField = 'one';
+		$obj->write();
+
+		$sqlBase = sprintf('SELECT COUNT(*) FROM "VersionedTest_DataObject_versions" WHERE "RecordID" = %d', $obj->ID);
+		$sqlSub = sprintf('SELECT COUNT(*) FROM "VersionedTest_Subclass_versions" WHERE "RecordID" = %d', $obj->ID);
+		$this->assertEquals(1, DB::query($sqlBase)->value());
+		$this->assertEquals(1, $obj->Version, 'Increases version number on write()');
+
+		$obj->Name = 'two';
+		$obj->ExtraField = 'two';
+		$obj->write();
+		$this->assertEquals(2, DB::query($sqlBase)->value(), 'Writes version record on write()');
+		$this->assertEquals(2, DB::query($sqlSub)->value(), 'Writes version record subclass on write()');
+		$this->assertEquals(2, $obj->Version, 'Increases version number on write()');
+
+		$obj->Name = 'three';
+		$obj->ExtraField = 'three';
+		$obj->writeWithoutVersion();
+		$this->assertEquals(2, DB::query($sqlBase)->value(), 'Doesnt write version record on writeWithoutVersion');	
+		$this->assertEquals(2, DB::query($sqlSub)->value(), 'Doesnt write version record subclass on writeWithoutVersion');	
+		$this->assertEquals(2, $obj->Version, 'Doesnt increase version number on writeWithoutVersion()');
+		// TODO Fix inconsistent state between version row data and record data
+		// $this->assertEquals(
+		// 	'three', 
+		// 	DB::query(sprintf(
+		// 		'SELECT "Name" FROM "VersionedTest_DataObject_versions" WHERE "RecordID" = %d AND "Version" = %d',
+		// 		$obj->ID,
+		// 		2
+		// 	))->value(),
+		// 	'Original version record is changed (rather than creating a new one'
+		// );
+
+		$this->assertEquals(2, DB::query($sqlBase)->value(), 'Doesnt write version record on writeWithoutVersion');	
+		$this->assertEquals(2, DB::query($sqlSub)->value(), 'Doesnt write version record subclass on writeWithoutVersion');	
+		$this->assertEquals(2, $obj->Version, 'Doesnt increase version number on writeWithoutVersion()');
 	}
 }
 
