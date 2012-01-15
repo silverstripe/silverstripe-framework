@@ -266,35 +266,44 @@ class Controller extends RequestHandler {
 	 */
 	function getViewer($action) {
 		// Hard-coded templates
-		if($this->templates[$action]) {
+		if ($this->templates[$action]) {
 			$templates = $this->templates[$action];
-		}	else if($this->templates['index']) {
+		} elseif ($this->templates['index']) {
 			$templates = $this->templates['index'];
-		}	else if($this->template) {
+		} elseif ($this->template) {
 			$templates = $this->template;
 		} else {
 			// Add action-specific templates for inheritance chain
 			$parentClass = $this->class;
-			if($action && $action != 'index') {
+
+			if ($action && $action != 'index') {
 				$parentClass = $this->class;
-				while($parentClass != "Controller") {
-					$templates[] = strtok($parentClass,'_') . '_' . $action;
+
+				while ($parentClass != 'Controller') {
+					$token = strtok($parentClass,'_');
+					$templates[] = str_replace('\\', '.', $token) . '_' . $action;
+					$templates[] = str_replace('\\', DIRECTORY_SEPARATOR, $token) . '_' . $action;
 					$parentClass = get_parent_class($parentClass);
 				}
 			}
+
 			// Add controller templates for inheritance chain
 			$parentClass = $this->class;
-			while($parentClass != "Controller") {
-				$templates[] = strtok($parentClass,'_');
+
+			while ($parentClass != 'Controller') {
+				$token = strtok($parentClass,'_');
+				$templates[] = str_replace('\\', '.', $token);
+				$templates[] = str_replace('\\', DIRECTORY_SEPARATOR, $token);
 				$parentClass = get_parent_class($parentClass);
 			}
 
 			// remove duplicates
 			$templates = array_unique($templates);
 		}
+
 		return new SSViewer($templates);
 	}
-	
+
 	public function hasAction($action) {
 		return parent::hasAction($action) || $this->hasActionTemplate($action);
 	}
