@@ -50,8 +50,8 @@ class SSViewer_Scope {
 		array_splice($this->itemStack, $this->localIndex+1);
 	}
 	
-	function obj($name){
-		
+	function obj($name, $arguments = array()) {
+
 		switch ($name) {
 			case 'Up':
 				list($this->item, $this->itemIterator, $unused2, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->upIndex];
@@ -63,10 +63,9 @@ class SSViewer_Scope {
 			
 			default:
 				$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
-				
-				$arguments = func_get_args();
-				$this->item = call_user_func_array(array($on, 'obj'), $arguments);
-				
+
+				$this->item = call_user_func_array(array($on, 'obj'), (array) $arguments);
+
 				$this->itemIterator = null;
 				$this->upIndex = $this->currentIndex ? $this->currentIndex : count($this->itemStack)-1;
 				$this->currentIndex = count($this->itemStack);
