@@ -70,7 +70,9 @@
 					setTimeout(function() {form.clickedButton = null;}, 10);
 				}
 			});
-		
+			
+			/* Generate buttonsets from data (<div buttonset="..."></div>)	*/
+			
 			var res = new Array();
 			var parent = this;
 			
@@ -88,17 +90,7 @@
 			
 		}
 	});
-	/*$('.cms-content-actions .Actions').entwine({
-		onmatch: function() {
-			this.generateButtonSets()
-			this._super();
-		},
-		generateButtonSets: function() {
-			this.find('.ss-ui-buttonset-minoractions').removeClass('ui-corner-all');
-			this.find('.ss-ui-buttonset-minoractions').first().addClass('ui-corner-left');
-			this.find('.ss-ui-buttonset-minoractions').last().addClass('ui-corner-right');
-		}
-	});*/
+
 	/**
 	 * Creates a jQuery UI tab navigation bar, detached from the container DOM structure.
 	 */
