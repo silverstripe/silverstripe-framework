@@ -426,4 +426,3 @@ class BulkLoader_Result extends Object {
 	}
    
 }
-?>
