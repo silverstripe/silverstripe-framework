@@ -1,19 +1,16 @@
 (function($) {
 	
-	$('.ss-ui-button').entwine({
+	//$('.ss-ui-button').entwine({
 		/**
 		 * Constructor: onmatch
 		 */
-		onmatch: function() {
-			this.redraw();
-
+	/*	onmatch: function() {
+			this.redraw()
 			this._super();
 		},
-
 		redraw: function() {
 			this.addClass(
-				'ui-state-default ' +
-				'ui-corner-all'
+				'ui-state-default ui-corner-all'
 			)
 			.hover(
 				function() {
@@ -39,9 +36,69 @@
 					setTimeout(function() {form.clickedButton = null;}, 10);
 				}
 			});
+	});*/
+	$('.cms-content-actions .Actions').entwine({
+		onmatch: function() {
+			this.redraw()
+			this._super();
+		},
+		redraw: function() {
+			this.find('.ss-ui-button').addClass(
+				'ui-state-default ui-corner-all'
+			)
+			.hover(
+				function() {
+					$(this).addClass('ui-state-hover');
+				},
+				function() {
+					$(this).removeClass('ui-state-hover');
+				}
+			)
+			.focus(function() {
+				$(this).addClass('ui-state-focus');
+			})
+			.blur(function() {
+				$(this).removeClass('ui-state-focus');
+			})
+			.click(function() {
+				var form = this.form;
+				// forms don't natively store the button they've been triggered with
+				if(form) {
+					form.clickedButton = this;
+					// Reset the clicked button shortly after the onsubmit handlers
+					// have fired on the form
+					setTimeout(function() {form.clickedButton = null;}, 10);
+				}
+			});
+		
+			var res = new Array();
+			var parent = this;
+			
+			this.find('.action[buttonset]').each(function() {
+				cl = $(this).attr('buttonset');
+				if(jQuery.inArray(cl, res) == -1) res.push(cl);
+			});
+			$(res).each(function() {
+				console.log(this);
+				parent.find('.action[buttonset="'+this+'"]').removeClass('ui-corner-all').addClass('buttonset')
+					.first().addClass('ui-corner-left').end()
+					.last().addClass('ui-corner-right');
+				console.log()
+			});
+			
 		}
 	});
-	
+	/*$('.cms-content-actions .Actions').entwine({
+		onmatch: function() {
+			this.generateButtonSets()
+			this._super();
+		},
+		generateButtonSets: function() {
+			this.find('.ss-ui-buttonset-minoractions').removeClass('ui-corner-all');
+			this.find('.ss-ui-buttonset-minoractions').first().addClass('ui-corner-left');
+			this.find('.ss-ui-buttonset-minoractions').last().addClass('ui-corner-right');
+		}
+	});*/
 	/**
 	 * Creates a jQuery UI tab navigation bar, detached from the container DOM structure.
 	 */
