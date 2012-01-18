@@ -81,11 +81,9 @@
 				if(jQuery.inArray(cl, res) == -1) res.push(cl);
 			});
 			$(res).each(function() {
-				console.log(this);
 				parent.find('.action[buttonset="'+this+'"]').removeClass('ui-corner-all').addClass('buttonset')
 					.first().addClass('ui-corner-left').end()
 					.last().addClass('ui-corner-right');
-				console.log()
 			});
 			
 		}
