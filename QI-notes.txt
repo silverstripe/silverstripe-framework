@@ -1,0 +1,11 @@
+Gitflow stanzas for git config:
+
+[gitflow "branch"]
+	master = qi-production
+	develop = post-2.4
+[gitflow "prefix"]
+	feature = feature/
+	release = release/
+	hotfix = hotfix/
+	support = support/
+	versiontag = 

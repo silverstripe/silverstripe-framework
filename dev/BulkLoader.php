@@ -142,11 +142,9 @@ abstract class BulkLoader extends ViewableData {
 		if ($this->deleteExistingRecords) {
 			$q = singleton($this->objectClass)->buildSQL();
 			if (!empty($this->objectClass)) {
-
 				$idSelector = $this->objectClass . '."ID"';
 			}
 			else {
-
 				$idSelector = '"ID"';
 			}
 			$q->select = array($idSelector);
