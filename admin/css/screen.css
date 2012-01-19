@@ -108,10 +108,12 @@ form.stacked .field .middleColumn, .field.stacked .middleColumn { margin-left: 0
 .field .dropdown select { margin-top: 8px; }
 .field .chzn-container .chzn-results li { font-size: 11px; line-height: 16px; padding: 4px 4px; }
 .field .chzn-container-active .chzn-single { border: 1px solid #9a9a9a; }
-.field .chzn-container-single .chzn-single { height: 30px; line-height: 32px; /* not relative, as then we'd had to redo most of chzn */ font-size: 12px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -ms-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); }
+.field .chzn-container-single .chzn-single { height: 25px; line-height: 27px; /* not relative, as then we'd had to redo most of chzn */ font-size: 12px; font-weight: bold; text-shadow: 0 1px 0px white; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #e6e6e6)); background-image: -webkit-linear-gradient(#ffffff, #e6e6e6); background-image: -moz-linear-gradient(#ffffff, #e6e6e6); background-image: -o-linear-gradient(#ffffff, #e6e6e6); background-image: -ms-linear-gradient(#ffffff, #e6e6e6); background-image: linear-gradient(#ffffff, #e6e6e6); }
 .field .chzn-container-single .chzn-single:hover, .field .chzn-container-single .chzn-single:focus, .field .chzn-container-single .chzn-single:active { text-decoration: none; outline: none; }
-.field .chzn-container-single .chzn-single div { width: 24px; }
-.field .chzn-container-single .chzn-single div b { background-position: 1px 4px; }
+.field .chzn-container-single .chzn-single div { width: 24px; border-left: none; background: none; }
+.field .chzn-container-single .chzn-single div b { background-position: 1px 1px; }
+.field .chzn-drop { background: #e6e6e6; }
+.field .chzn-drop li { -moz-border-radius: 3px; -webkit-border-radius: 3px; -o-border-radius: 3px; -ms-border-radius: 3px; -khtml-border-radius: 3px; border-radius: 3px; }
 .field input.hasDatepicker { width: 50%; max-width: 96px; }
 
 /** ---------------------------------------------------- Buttons ---------------------------------------------------- */

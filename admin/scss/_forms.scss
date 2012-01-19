@@ -246,13 +246,16 @@ form.stacked .field, .field.stacked {
 	  		border: 1px solid lighten($color-medium-separator, 10%);
 		}
 	}
-	
+
 	.chzn-container-single .chzn-single  {
-		height: 30px;
-		line-height: 32px; /* not relative, as then we'd had to redo most of chzn */
+		height: 25px;
+		line-height: 27px; /* not relative, as then we'd had to redo most of chzn */
 		font-size: $font-base-size;
-		
-		@include background-image(linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef));
+		font-weight: bold;
+		@include text-shadow(0 1px 0px #FFF);
+		@include background-image(
+			linear-gradient(lighten($color-button-generic, 20%),$color-button-generic)
+		);
 		
 		
 		&:hover, &:focus, &:active {
@@ -262,13 +265,19 @@ form.stacked .field, .field.stacked {
 	
 		div {
 			width: 24px;
-	
+			border-left: none;
+			background: none;
 			b {
-				background-position: 1px 4px;
+				background-position: 1px 1px;
 			}
 		}
 	}
-	
+	.chzn-drop {
+		background: $color-button-generic;
+		li {
+			@include border-radius(3px);
+		}
+	}
 	/* Date Fields */
 	input.hasDatepicker {
 		width: 50%;
