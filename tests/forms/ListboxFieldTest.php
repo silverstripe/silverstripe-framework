@@ -90,18 +90,6 @@ class ListboxFieldTest extends SapphireTest {
 		$field->setValue('invalid');
 	}
 	
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	function testSetValueFailsOnInvalidArrayKeyIfChoiceInvalidAndMultipleIsOn() {
-		$choices = array('a' => 'a value', 'b' => 'b value','c' => 'c value');
-		$field = new ListboxField('Choices', 'Choices', $choices);
-		$field->multiple = true;
-		
-		$obj = new ListboxFieldTest_DataObject();
-		$field->setValue(array('a', 'invalid'));
-	}
-	
 	function testFieldRenderingMultipleOff() {
 		$choices = array('a' => 'a value', 'b' => 'b value','c' => 'c value');
 		$field = new ListboxField('Choices', 'Choices', $choices);
