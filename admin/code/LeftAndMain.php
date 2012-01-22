@@ -549,8 +549,8 @@ class LeftAndMain extends Controller {
 			"<ins class=\"jstree-icon\">&nbsp;</ins>" .
 			"<a href=\"" . Controller::join_links($extraArg->Link("show"), $child->ID) . "\" title=\"' 
 			. _t('LeftAndMain.PAGETYPE','Page type: ') 
-			. '".$child->class."\" ><ins class=\"jstree-icon\">&nbsp;</ins>" . ($child->TreeTitle) . 
-			"</a>"
+			. '".$child->class."\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($child->TreeTitle) . 
+			"</span></a>"
 		';
 
 		$html = $obj->getChildrenAsUL(
