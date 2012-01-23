@@ -429,6 +429,45 @@
 				}
 			}
 		});
+
+		/**
+		 * Add styling to all contained buttons, and create buttonsets if required.
+		 */
+		$('.cms-container .Actions').entwine({
+		onmatch: function() {
+			this.find('.ss-ui-button').click(function() {
+					var form = this.form;
+					// forms don't natively store the button they've been triggered with
+					if(form) {
+						form.clickedButton = this;
+						// Reset the clicked button shortly after the onsubmit handlers
+						// have fired on the form
+						setTimeout(function() {form.clickedButton = null;}, 10);
+					}
+				});
+
+			this.redraw();
+			this._super();
+		},
+		redraw: function() {
+			// Needs to be in the same execution frame as the buttonset logic below,
+			// to avoid re-adding rounded corners (default button styling) after removing them
+			this.find('.ss-ui-button').button()
+			
+			// Emulate jQuery UI buttonsets based on HTML5 data attributes
+			var sets = [], self = this;
+			this.find('.action[buttonset]').each(function() {
+				cl = $(this).attr('buttonset');
+				if($.inArray(cl, sets) == -1) sets.push(cl);
+			});
+			$.each(sets, function(i, set) {
+				self.find('.action[buttonset="' + set + '"]').removeClass('ui-corner-all').addClass('buttonset')
+					.first().addClass('ui-corner-left').end()
+					.last().addClass('ui-corner-right');
+			});
+			
+		}
+	});
 		
 		/**
 		 * Duplicates functionality in DateField.js, but due to using entwine we can match

@@ -1,47 +1,5 @@
 (function($) {
-	
-	$('.ss-ui-button').entwine({
-		/**
-		 * Constructor: onmatch
-		 */
-		onmatch: function() {
-			this.redraw();
 
-			this._super();
-		},
-
-		redraw: function() {
-			this.addClass(
-				'ui-state-default ' +
-				'ui-corner-all'
-			)
-			.hover(
-				function() {
-					$(this).addClass('ui-state-hover');
-				},
-				function() {
-					$(this).removeClass('ui-state-hover');
-				}
-			)
-			.focus(function() {
-				$(this).addClass('ui-state-focus');
-			})
-			.blur(function() {
-				$(this).removeClass('ui-state-focus');
-			})
-			.click(function() {
-				var form = this.form;
-				// forms don't natively store the button they've been triggered with
-				if(form) {
-					form.clickedButton = this;
-					// Reset the clicked button shortly after the onsubmit handlers
-					// have fired on the form
-					setTimeout(function() {form.clickedButton = null;}, 10);
-				}
-			});
-		}
-	});
-	
 	/**
 	 * Creates a jQuery UI tab navigation bar, detached from the container DOM structure.
 	 */

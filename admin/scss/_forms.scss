@@ -16,25 +16,37 @@
 	padding-right: 6px;
 
 	@include background($color-button-generic sprite($btn_icons, $name, 5px, 6px) no-repeat);
-	@include background(sprite($btn_icons, $name, 5px, 6px) no-repeat,
+	@include background(sprite($btn_icons, $name, 5px, 5px) no-repeat,
 		linear-gradient(color-stops(
 			lighten($color-button-generic, 10%),
 			darken($color-button-generic, 5%)
 		))
 	);
-	&.ui-state-hover {
+	&.ui-state-hover, &:hover {
 		@include background(lighten($color-button-generic, 10%) sprite($btn_icons, $name, 5px, 6px) no-repeat);
-		@include background(sprite($btn_icons, $name, 5px, 6px) no-repeat,
+		@include background(sprite($btn_icons, $name, 5px, 5px) no-repeat,
 			linear-gradient(color-stops(
 				lighten($color-button-generic, 20%),
 				$color-button-generic
 			))
 		);
+		@include box-shadow(0 0 5px darken($color-button-generic, 20%));
+	}
+	&:active, &:focus, &.ui-state-active, &.ui-state-focus {
+		border: 1px solid darken($color-button-generic, 20%);
+		@include background(lighten($color-button-generic, 10%) sprite($btn_icons, $name, 5px, 6px) no-repeat);
+		@include background(sprite($btn_icons, $name, 5px, 5px) no-repeat,
+			linear-gradient(color-stops(
+				lighten($color-button-generic, 20%),
+				$color-button-generic
+			))
+		);
+		@include box-shadow(0 0 5px darken($color-button-generic, 30%) inset);
 	}
 	&.ui-state-disabled {
-	    background-image: none;
-	    @include background(lighten($color-button-generic, 20%) sprite($btn_icons, $name+_disabled, 5px, 6px) no-repeat);
-		@include background(sprite($btn_icons, $name+_disabled, 5px, 6px) no-repeat,
+    background-image: none;
+  	@include background(lighten($color-button-generic, 20%) sprite($btn_icons, $name+_disabled, 5px, 6px) no-repeat);
+		@include background(sprite($btn_icons, $name+_disabled, 5px, 5px) no-repeat,
 			linear-gradient(color-stops(
 				lighten($color-button-generic, 20%),
 				$color-button-generic
@@ -45,16 +57,15 @@
 
 @mixin actionButtonSpriteConstructive($name) {
   background-image: none;
-	padding-left: 25px;
-	padding-right: 7px;
+  padding-left: 24px;
+	padding-right: 6px;
 	font-weight: bold;
 	margin-left: $grid-horizontal;
 	color: $color-text-light;
 	border-color: $color-button-constructive-border;
 	border-bottom-color: darken($color-button-constructive-border, 10%);			
-	@include background($color-button-constructive sprite($btn_icons, $name, 6, 6) no-repeat);
-	@include background(sprite($btn_icons, $name
-	, 6, 6) no-repeat,
+	@include background($color-button-constructive sprite($btn_icons, $name, 5, 5) no-repeat);
+	@include background(sprite($btn_icons, $name, 5, 5) no-repeat,
 		linear-gradient(color-stops(
 			lighten($color-button-constructive, 10%),
 			darken($color-button-constructive, 5%)
@@ -63,20 +74,19 @@
 
 	@include text-shadow(darken($color-button-constructive, 10%) 0 1px 1px);
 
-	&.ui-state-hover {
+	&.ui-state-hover, &:hover {
 		border-color: darken($color-button-constructive-border, 10%);
 		@include background(lighten($color-button-constructive, 10%) sprite($btn_icons, $name, 6, 6) no-repeat);
-		@include background(sprite($btn_icons, $name, 6, 6) no-repeat,
+		@include background(sprite($btn_icons, $name, 5, 5) no-repeat,
 			linear-gradient(color-stops(
 				lighten($color-button-constructive, 15%),
 				$color-button-constructive
 			))
 		);
 	}
-	&:active, &:focus {
-		padding: $grid-vertical 8px $grid_vertical 26px;
-		border: none;
-		@include background(darken($color-button-constructive, 2%) sprite($btn_icons, $name, 7, 7) no-repeat);
+	&:active, &:focus, &.ui-state-active, &.ui-state-focus {
+
+		@include background(darken($color-button-constructive, 2%) sprite($btn_icons, $name, 5, 5) no-repeat);
 		@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
 	}
 }
@@ -301,8 +311,15 @@ form.stacked .field, .field.stacked {
 	}
 
 	.ss-ui-button {
+		
+		&.buttonset {
+			margin: 0 -2px;
+		}
+		
+
+		
 		/* all buttons */
-		padding: ($grid-vertical - 1) ($grid-horizontal + 4);
+		padding: ($grid-vertical - 3) ($grid-horizontal + 4);
 		font-weight: bold;
 		text-decoration: none;
 		margin: 0;
@@ -311,6 +328,8 @@ form.stacked .field, .field.stacked {
 		background-color: $color-button-generic;
 		border: 1px solid $color-button-generic-border;
 		border-bottom: 1px solid darken($color-button-generic-border, 10%);
+		cursor: pointer;
+		
 		@include text-shadow(lighten($color-button-generic, 20%) 0 1px 1px);
 		
 		@include background($color-button-generic);
@@ -320,28 +339,26 @@ form.stacked .field, .field.stacked {
 				darken($color-button-generic, 5%)
 			))
 		);
-		&.ui-state-hover {
-			border: 1px solid darken($color-button-generic-border, 10%);
-			@include text-shadow(lighten($color-button-generic, 30%) 0 1px 1px);
+		&.ui-state-hover, &:hover {
 			@include background(lighten($color-button-generic, 10%));
 			@include background(
 				linear-gradient(color-stops(
 					lighten($color-button-generic, 20%),
-					darken($color-button-generic, 5%)
+					$color-button-generic
 				))
 			);
+			@include box-shadow(0 0 5px darken($color-button-generic, 20%));
 		}
-		&:focus,
-		&:active {
-			border: 1px solid lighten($color-button-generic, 40%);
-			@include box-shadow(0 3px 3px darken($color-button-generic, 40%) inset);
-			@include background(darken($color-button-generic, 30%));
+		&:active, &:focus, &.ui-state-active, &.ui-state-focus {
+			border: 1px solid darken($color-button-generic, 20%);
+			@include background(lighten($color-button-generic, 10%) no-repeat);
 			@include background(
 				linear-gradient(color-stops(
-					$color-button-generic,
-					darken($color-button-generic, 30%)
+					lighten($color-button-generic, 20%),
+					$color-button-generic
 				))
-			);			
+			);
+			@include box-shadow(0 0 5px darken($color-button-generic, 20%) inset);
 		}
 
 		/* constructive */
@@ -372,7 +389,7 @@ form.stacked .field, .field.stacked {
 		}
 
 		&.cms-preview-toggle-link {
-		    padding-left: 24px !important;
+		  padding-left: 24px !important;
 			margin-left: 4px !important;
 			text-decoration: none;
 			@include actionButtonSprite('preview');
