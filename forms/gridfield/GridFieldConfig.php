@@ -20,24 +20,6 @@ class GridFieldConfig {
 	protected $components = null;
 	
 	/**
-	 *
-	 * @var int
-	 */
-	protected $checkboxes = null;
-
-	/**
-	 *
-	 * @var array
-	 */
-	protected $affectors = array();
-
-	/**
-	 *
-	 * @var array
-	 */
-	protected $decorators = array();
-	
-	/**
 	 * 
 	 */
 	public function __construct() {
@@ -59,30 +41,68 @@ class GridFieldConfig {
 		}
 		return $this->components;
 	}
-	
-	public function setCheckboxes($row=0){
-		$this->checkboxes = $row;
-		return $this;
+}
+
+class GridFieldConfig_Base extends GridFieldConfig {
+
+	/**
+	 *
+	 * @param int $itemsPerPage - How many items per page should show up per page
+	 * @return GridFieldConfig_Base
+	 */
+	public static function create($itemsPerPage=25){
+		return new GridFieldConfig_Base($itemsPerPage=25);
 	}
-	
-	public function getCheckboxes() {
-		return $this->checkboxes;
+
+	/**
+	 *
+	 * @param int $itemsPerPage - How many items per page should show up
+	 */
+	public function __construct($itemsPerPage=25) {
+		$this->addComponent(new GridFieldSortableHeader());
+		$this->addComponent(new GridFieldDefaultColumns());
+		$this->addComponent(new GridFieldAction_Edit());
+		$this->addComponent(new GridFieldPaginator($itemsPerPage));
 	}
-	
-	public function addAffector(GridState_Affector $affector) {
-		$this->affectors[] = $affector;
-		return $this;
+}
+
+/**
+ * This GridFieldConfig bundles a common set of componentes  used for displaying
+ * a gridfield with:
+ * 
+ * - Relation adding
+ * - Sortable header
+ * - Default columns
+ * - Edit links on every item
+ * - Action for removing relationship
+ * - Paginator
+ * 
+ */
+class GridFieldConfig_ManyManyEditor extends GridFieldConfig {
+
+	/**
+	 *
+	 * @param string $fieldToSearch - Which field on the object should be searched for
+	 * @param bool $autoSuggest - Show a jquery.ui.autosuggest dropdown field
+	 * @param int $itemsPerPage - How many items per page should show up
+	 * @return GridFieldConfig_ManyManyEditor
+	 */
+	public static function create($fieldToSearch, $autoSuggest=true, $itemsPerPage=25){
+		return new GridFieldConfig_ManyManyEditor($fieldToSearch, $autoSuggest=true, $itemsPerPage=25);
 	}
-	
-	public function getAffectors() {
-		return $this->affectors;
-	}
-	
-	public function addDecorator($decorator) {
-		$this->decorators[] = $decorator;
-	}
-	
-	public function getDecorators() {
-		return $this->decorators;
+
+	/**
+	 *
+	 * @param string $fieldToSearch - Which field on the object should be searched for
+	 * @param bool $autoSuggest - Show a jquery.ui.autosuggest dropdown field
+	 * @param int $itemsPerPage - How many items per page should show up
+	 */
+	public function __construct($fieldToSearch, $autoSuggest=true, $itemsPerPage=25) {
+		$this->addComponent(new GridFieldRelationAdd($fieldToSearch, $autoSuggest));
+		$this->addComponent(new GridFieldSortableHeader());
+		$this->addComponent(new GridFieldDefaultColumns());
+		$this->addComponent(new GridFieldAction_Edit());
+		$this->addComponent(new GridFieldRelationDelete());
+		$this->addComponent(new GridFieldPaginator($itemsPerPage));
 	}
 }

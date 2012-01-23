@@ -35,7 +35,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function init() {
 		parent::init();
-
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/SecurityAdmin.js');
 	}
 	
@@ -107,12 +106,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	 * @return FieldList
 	 */
 	function RootForm() {
-		$config = new GridFieldConfig();
-		$config->addComponent(new GridFieldRelationAdd('Name'));
-		$config->addComponent(new GridFieldDefaultColumns());
-		$config->addComponent(new GridFieldSortableHeader());
-		$config->addComponent(new GridFieldPaginator());
-		$config->addComponent(new GridFieldAction_Edit());
+		$config = new GridFieldConfig_Base(25);
 		$config->addComponent(new GridFieldPopupForms($this, 'RootForm'));
 		$memberList = new GridField('Members', 'All members', DataList::create('Member'), $config);
 		
@@ -134,7 +128,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 					new LiteralField(
 						'GroupImportFormIframe', 
 						sprintf(
-							'<iframe src="%s" id="GroupImportFormIframe" width="100%%" height="400px" border="0"></iframe>',
+							'<iframe src="%s" id="GroupImportFormIframe" width="100%" height="400px" border="0"></iframe>',
 							$this->Link('groupimport')
 						)
 					)
