@@ -452,7 +452,12 @@
 		redraw: function() {
 			// Needs to be in the same execution frame as the buttonset logic below,
 			// to avoid re-adding rounded corners (default button styling) after removing them
-			this.find('.ss-ui-button').button()
+			this.find('.ss-ui-button').button();
+
+			// Remove whitespace to avoid gaps with inline elements
+			this.contents().filter(function() { 
+				return (this.nodeType == 3 && !/\S/.test(this.nodeValue)); 
+			}).remove();
 			
 			// Emulate jQuery UI buttonsets based on HTML5 data attributes
 			var sets = [], self = this;
@@ -461,7 +466,11 @@
 				if($.inArray(cl, sets) == -1) sets.push(cl);
 			});
 			$.each(sets, function(i, set) {
-				self.find('.action[buttonset="' + set + '"]').removeClass('ui-corner-all').addClass('buttonset')
+				// Gather buttons in set until no siblings are matched.
+				// This avoids "split" sets where a new button without a buttonset is inserted somewhere in the middle.
+				self.find('.action[buttonset="' + set + '"]:first')
+					.nextUntil('.action[buttonset!="' + set + '"]').andSelf()
+					.removeClass('ui-corner-all').addClass('buttonset')
 					.first().addClass('ui-corner-left').end()
 					.last().addClass('ui-corner-right');
 			});

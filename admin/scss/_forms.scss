@@ -313,10 +313,8 @@ form.stacked .field, .field.stacked {
 	.ss-ui-button {
 		
 		&.buttonset {
-			margin: 0 -2px;
+			margin: 0 -1px; // hack to avoid double borders
 		}
-		
-
 		
 		/* all buttons */
 		padding: ($grid-vertical - 3) ($grid-horizontal + 4);
