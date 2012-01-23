@@ -38,7 +38,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/SecurityAdmin.js');
 	}
 	
-	function getEditForm($id = null) {
+	public function getEditForm($id = null, $fields = null) {
 		// TODO Duplicate record fetching (see parent implementation)
 		if(!$id) $id = $this->currentPageID();
 		$form = parent::getEditForm($id);
