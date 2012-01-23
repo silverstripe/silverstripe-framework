@@ -540,7 +540,7 @@ class LeftAndMain extends Controller {
 		
 		// NOTE: SiteTree/CMSMain coupling :-(
 		if(class_exists('SiteTree')) {
-			SiteTree::prepopuplate_permission_cache('CanEditType', $obj->markedNodeIDs(), 'SiteTree::can_edit_multiple');
+			SiteTree::prepopulate_permission_cache('CanEditType', $obj->markedNodeIDs(), 'SiteTree::can_edit_multiple');
 		}
 
 		// getChildrenAsUL is a flexible and complex way of traversing the tree
