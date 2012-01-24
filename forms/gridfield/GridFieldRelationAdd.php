@@ -65,13 +65,12 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 		$forTemplate->Fields = new ArrayList();
 		
 		$value = $this->findSingleEntry($gridField, $this->fieldToSearch, $searchState, $gridField->getList()->dataClass);
-		$searchField = new TextField('gridfield_relationsearch', 'Auto Suggest Search field', $value);
+		$searchField = new TextField('gridfield_relationsearch', _t('GridField.RelationSearch', "Relation search"), $value);
 		// Apparently the data-* needs to be double qouted for the jQuery.meta data plugin
-		// 
 		$searchField->setAttribute('data-search-url', '\''.Controller::join_links($gridField->Link('search').'\''));
 		
-		$findAction = new GridField_Action($gridField, 'gridfield_relationfind', 'Find', 'find', 'find');
-		$addAction = new GridField_Action($gridField, 'gridfield_relationadd', 'Add Relation', 'addto', 'addto');
+		$findAction = new GridField_Action($gridField, 'gridfield_relationfind', _t('GridField.Find', "Find"), 'find', 'find');
+		$addAction = new GridField_Action($gridField, 'gridfield_relationadd', _t('GridField.Add', "Add"), 'addto', 'addto');
 
 		// If an object is not found, disable the action
 		if(!is_int($gridField->State->GridFieldAddRelation)) {
