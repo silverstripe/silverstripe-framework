@@ -11,12 +11,6 @@ class GridFieldFilter implements GridField_HTMLProvider, GridField_DataManipulat
 	
 	/**
 	 *
-	 * @var string
-	 */
-	public static $location = 'head';
-	
-	/**
-	 *
 	 * @param GridField $gridField
 	 * @return array
 	 */
