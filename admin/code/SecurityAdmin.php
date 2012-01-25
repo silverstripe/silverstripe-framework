@@ -107,12 +107,14 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	 * @return FieldList
 	 */
 	function RootForm() {
-		$memberList = new MemberTableField(
-			$this,
-			"Members"
-		);
-		// unset 'inlineadd' permission, we don't want inline addition
-		$memberList->setPermissions(array('edit', 'delete', 'add'));
+		$config = new GridFieldConfig();
+		$config->addComponent(new GridFieldRelationAdd('Name'));
+		$config->addComponent(new GridFieldDefaultColumns());
+		$config->addComponent(new GridFieldSortableHeader());
+		$config->addComponent(new GridFieldPaginator());
+		$config->addComponent(new GridFieldAction_Edit());
+		$config->addComponent(new GridFieldPopupForms($this, 'RootForm'));
+		$memberList = new GridField('Members', 'All members', DataList::create('Member'), $config);
 		
 		$fields = new FieldList(
 			$root = new TabSet(
