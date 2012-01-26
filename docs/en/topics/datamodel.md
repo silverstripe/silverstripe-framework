@@ -219,6 +219,23 @@ members whose first name is either Sam or Ingo.
 		'FirstName' => array('sam', 'ingo'),
 	));
 
+### Subtract
+
+You can subtract entries from a DataList by passing in another DataList to `subtract()`
+
+	:::php
+	$allSams = DataList::create('Member')->filter('FirstName', 'Sam');
+	$allMembers = DataList::create('Member');
+	$noSams = $allMembers->subtract($allSams);
+
+Though for the above example it would probably be easier to use `filter()` and `exclude()`. A better
+use case could be when you want to find all the members that does not exist in a Group. 
+
+	:::php
+	// ... Finding all members that does not belong to $group.
+	$otherMembers = DataList::create('Member')->subtract($group->Members());
+
+
 ### Relation filters
 
 So far we have only filtered a data list by fields on the object that you're requesting.  For simple cases, this might 

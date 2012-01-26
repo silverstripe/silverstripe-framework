@@ -1,6 +1,7 @@
 <?php
 
 class DataListTest extends SapphireTest {
+	
 	// Borrow the model from DataObjectTest
 	static $fixture_file = 'DataObjectTest.yml';
 
@@ -15,6 +16,20 @@ class DataListTest extends SapphireTest {
 		'DataObjectTest_Player',
 		'DataObjectTest_TeamComment'
 	);
+	
+	public function testSubtract(){
+		$subtractList = DataList::create("DataObjectTest_TeamComment")->filter('ID',1);
+		$fullList = DataList::create("DataObjectTest_TeamComment");
+		$newList = $fullList->subtract($subtractList);
+		$this->assertEquals(2, $newList->Count(), 'List should only contain two objects after subtraction');
+	}
+	
+	public function testSubtractBadDataclassThrowsException(){
+		$this->setExpectedException('InvalidArgumentException');
+		$teamsComments = DataList::create("DataObjectTest_TeamComment");
+		$teams = DataList::create("DataObjectTest_Team");
+		$teamsComments->subtract($teams);
+	}
 
 	function testListCreationSortAndLimit() {
 		// By default, a DataList will contain all items of that class
