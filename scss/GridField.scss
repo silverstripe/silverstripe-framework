@@ -45,6 +45,9 @@ $gf_border_radius:	7px;
 }
 
 .cms {
+	fieldset.ss-gridfield>div {
+		margin-bottom: 35px;
+	}
 	table.ss-gridfield.field {
 		box-shadow: none;		
 		padding: 0;
@@ -108,6 +111,7 @@ $gf_border_radius:	7px;
 				padding: 0;	
 				border-right: 1px solid #85959C;
 				height: 20px;
+				white-space: nowrap;
 				
 				/* Makes it appear as though the text sits over the boundary of the two <tr>'s in <thead> */
 				span {
@@ -164,7 +168,7 @@ $gf_border_radius:	7px;
 						text-align: left;
 						padding: 0;
 						color: #FFF;
-						width: 95%;
+						min-width: 100px;
 						background: transparent;
 						border: 0 none;
 						@include box-shadow-none;

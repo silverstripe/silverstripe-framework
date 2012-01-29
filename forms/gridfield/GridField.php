@@ -511,7 +511,11 @@ class GridField extends FormField {
 		
 		$actionName = $stateChange['actionName'];
 		$args = isset($stateChange['args']) ? $stateChange['args'] : array();
-		$grid->handleAction($actionName, $args, $data);
+		$html = $grid->handleAction($actionName, $args, $data);
+		
+		if($html) {
+			return $html;
+		}
 		
 		switch($request->getHeader('X-Get-Fragment')) {
 			case 'CurrentField':
@@ -539,13 +543,13 @@ class GridField extends FormField {
 	 */
 	public function handleAction($actionName, $args, $data) {
 		$actionName = strtolower($actionName);
-		foreach($this->components as $item) {
-			if(!($item instanceof GridField_ActionProvider)) {
+		foreach($this->components as $component) {
+			if(!($component instanceof GridField_ActionProvider)) {
 				continue;
 			}
 			
-			if(in_array($actionName, array_map('strtolower', $item->getActions($this)))) {
-				return $item->handleAction($this, $actionName, $args, $data);
+			if(in_array($actionName, array_map('strtolower', $component->getActions($this)))) {
+				return $component->handleAction($this, $actionName, $args, $data);
 			}
 		}
 		throw new InvalidArgumentException("Can't handle action '$actionName'");
@@ -564,8 +568,6 @@ class GridField extends FormField {
 		$this->request = $request;
 		$this->setModel($model);
 		
-		///
-
 		foreach($this->components as $component) {
 			if(!($component instanceof GridField_URLHandler)) {
 				continue;
