@@ -87,7 +87,7 @@ class GridField extends FormField {
 		}
 		
 		if(!$config) {
-			$this->config = $this->getDefaultConfig();
+			$this->config = GridFieldConfig_Base::create();
 		} else {
 			$this->config = $config;
 		}
@@ -140,20 +140,6 @@ class GridField extends FormField {
 	protected function setComponents(GridFieldConfig $config) {
 		$this->components = $config->getComponents();
 		return $this;
-	}
-	
-	/**
-	 * Get a default configuration for this GridField
-	 * 
-	 * @return GridFieldConfig
-	 */
-	protected function getDefaultConfig() {
-		$config = GridFieldConfig::create();
-		$config->addComponent(new GridFieldSortableHeader());
-		$config->addComponent(new GridFieldFilter());
-		$config->addComponent(new GridFieldDefaultColumns());
-		$config->addComponent(new GridFieldPaginator());
-		return $config;
 	}
 	
 	/**

@@ -85,8 +85,8 @@ class GridFieldConfig_Base extends GridFieldConfig {
 	 */
 	public function __construct($itemsPerPage=25) {
 		$this->addComponent(new GridFieldSortableHeader());
+		$this->addComponent(new GridFieldFilter());
 		$this->addComponent(new GridFieldDefaultColumns());
-		$this->addComponent(new GridFieldAction_Edit());
 		$this->addComponent(new GridFieldPaginator($itemsPerPage));
 	}
 }
