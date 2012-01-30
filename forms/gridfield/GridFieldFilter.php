@@ -83,8 +83,8 @@ class GridFieldFilter implements GridField_HTMLProvider, GridField_DataManipulat
 			if($currentColumn == count($columns)) {
 				$field = new FieldGroup(
 					$field,
-					new GridField_Action($gridField, 'filter', 'filter', 'filter', null),
-					new GridField_Action($gridField, 'reset', 'reset', 'reset', null)
+					new GridField_Action($gridField, 'filter', _t('GridField.Filter', "Filter"), 'filter', null),
+					new GridField_Action($gridField, 'reset', _t('GridField.ResetFilter', "Reset"), 'reset', null)
 					);
 				
 			}

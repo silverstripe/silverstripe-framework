@@ -1,3 +1,3 @@
-<a href="$Backlink"> Go back the way you came!</a>
+<a href="$Backlink"><% _t('Go back', 'Go back' ) </a>
 
 $ItemEditForm
