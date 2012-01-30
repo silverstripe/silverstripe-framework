@@ -31,7 +31,7 @@ publisher to generate folders and HTML-files.
 	
 	   * Return a list of all the pages to cache
 	   */
-	  function allPagesToCache() {
+	  public function allPagesToCache() {
 	    // Get each page type to define its sub-urls
 	    $urls = array();
 	
@@ -52,7 +52,7 @@ publisher to generate folders and HTML-files.
 	
 	   * Get a list of URLs to cache related to this page
 	   */
-	  function subPagesToCache() {
+	  public function subPagesToCache() {
 	    $urls = array();
 	
 	    // add current page
@@ -66,7 +66,7 @@ publisher to generate folders and HTML-files.
 	    return $urls;
 	  }
 	  
-	  function pagesAffectedByChanges() {
+	  public function pagesAffectedByChanges() {
 	    $urls = $this->subPagesToCache();
 	    if($p = $this->Parent) $urls = array_merge((array)$urls, (array)$p->subPagesToCache());
 	    return $urls;
@@ -80,7 +80,7 @@ cache then you unset these URLs from the returned array. If you do not want to c
 you can also add an exclusion
 
 	:::php
-	function allPagesToCache() {
+	public function allPagesToCache() {
 		$urls = array();
 		$pages = DataObject::get("SiteTree");
 		
@@ -100,7 +100,7 @@ you can also add an exclusion
 You can also pass the filtering to the original DataObject::get("SiteTree");
 
 	:::php
-	function allPagesToCache() {
+	public function allPagesToCache() {
 		$urls = array();
 		$pages = DataObject::get("SiteTree", "ClassName != 'UserDefinedForm'");
 		...
@@ -150,7 +150,7 @@ Instead of the above code snippet for Page.php, use the following code:
 	
 	        // ...
 	
-		function allPagesToCache() {
+		public function allPagesToCache() {
 	            // Get each page type to define its sub-urls
 		    $urls = array();
 	
@@ -164,13 +164,13 @@ Instead of the above code snippet for Page.php, use the following code:
 		    return $urls;
 		}
 	
-		function subPagesToCache() {
+		public function subPagesToCache() {
 			$urls = array();
 			$urls[] = $this->AbsoluteLink();
 			return $urls;
 		}
 	
-		function pagesAffectedByChanges() {
+		public function pagesAffectedByChanges() {
 			$urls = $this->subPagesToCache();
 			if($p = $this->Parent) $urls = array_merge((array)$urls, (array)$p->subPagesToCache());
 			return $urls;

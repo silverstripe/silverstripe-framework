@@ -12,7 +12,7 @@ class.
 
 
 	:::php
-	function Form() {
+	public function Form() {
 		$form = new Form($this, 'Form',
 			new FieldList(
 				new TextField('MyRequiredField'),

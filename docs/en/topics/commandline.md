@@ -98,7 +98,7 @@ This code provides a good template:
 
 	:::php
 	class MyProcess extends Controller {
-	  function index() {
+	  public function index() {
 	    set_time_limit(0);
 	    while(memory_get_usage() < 32*1024*1024) {
 	      if($this->somethingToDo()) {

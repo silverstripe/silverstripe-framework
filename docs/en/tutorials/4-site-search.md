@@ -117,7 +117,7 @@ Next we need to create the *results* function.
 	class Page_Controller extends ContentController {
 		...	
 	
-		function results($data, $form){
+		public function results($data, $form){
 			$data = array(
 				'Results' => $form->getResults(),
 				'Query' => $form->getSearchQuery(),

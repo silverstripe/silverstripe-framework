@@ -70,11 +70,11 @@ You can have more customized logic and interface feedback through a custom contr
 	class MyController extends Controller {
 		protected $template = "BlankPage";
 		
-		function Link($action = null) {
+		public function Link($action = null) {
 			return Controller::join_links('MyController', $action);
 		}
 		
-		function Form() {
+		public function Form() {
 			$form = new Form(
 				$this,
 				'Form',
@@ -89,7 +89,7 @@ You can have more customized logic and interface feedback through a custom contr
 			return $form;
 		}
 		
-		function doUpload($data, $form) {
+		public function doUpload($data, $form) {
 			$loader = new CsvBulkLoader('MyDataObject');
 			$results = $loader->load($_FILES['CsvFile']['tmp_name']);
 			$messages = array();
@@ -177,13 +177,13 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 	         'callback' => 'getTeamByTitle'
 	      )
 	   );
-	   static function importFirstAndLastName(&$obj, $val, $record) {
+	   public static function importFirstAndLastName(&$obj, $val, $record) {
 	      $parts = explode(' ', $val);
 	      if(count($parts) != 2) return false;
 	      $obj->FirstName = $parts[0];
 	      $obj->LastName = $parts[1];
 	   }
-	   static function getTeamByTitle(&$obj, $val, $record) {
+	   public static function getTeamByTitle(&$obj, $val, $record) {
 	      $SQL_val = Convert::raw2sql($val);
 	      return DataObject::get_one(
 	         'FootballTeam', "Title = '{$SQL_val}'"

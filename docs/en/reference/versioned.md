@@ -12,7 +12,7 @@ whenever a blog entry has been published.
 	:::php
 	class Page extends SiteTree {
 	  // ...
-	  function publish($fromStage, $toStage, $createNewVersion = false) {
+	  public function publish($fromStage, $toStage, $createNewVersion = false) {
 	    mail("sam@silverstripe.com", "Blog published", "The blog has been published");
 	    return $this->extension_instances['Versioned']->publish($fromStage, $toStage, $createNewVersion);
 	  }
@@ -24,7 +24,7 @@ whenever a blog entry has been published.
 	:::php
 	class Page extends SiteTree {
 	  // ...
-	  function onAfterPublish() {
+	  public function onAfterPublish() {
 	    mail("sam@silverstripe.com", "Blog published", "The blog has been published");
 	    parent::onAfterPublish();
 	  }

@@ -59,7 +59,7 @@ You can also create your own functions by extending the image class, for example
 			return $this->getWidth() < $this->getHeight();
 		}
 		
-		function generatePaddedImageByWidth(GD $gd,$width=600,$color="fff"){
+		public function generatePaddedImageByWidth(GD $gd,$width=600,$color="fff"){
 			return $gd->paddedResize($width, round($gd->getHeight()/($gd->getWidth()/$width),0),$color);
 		}
 		
