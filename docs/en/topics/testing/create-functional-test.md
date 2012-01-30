@@ -17,7 +17,7 @@ URLs.  Here is an example from the subsites module:
 		/**
 		 * Return a session that has a user logged in as an administrator
 		 */
-		function adminLoggedInSession() {
+		public function adminLoggedInSession() {
 			return new Session(array(
 				'loggedInAs' => $this->idFromFixture('Member', 'admin')
 			));
@@ -26,7 +26,7 @@ URLs.  Here is an example from the subsites module:
 		/**
 		 * Test generation of the view
 		 */
-		function testBasicView() {
+		public function testBasicView() {
 			// Open the admin area logged in as admin
 			$response1 = Director::test('admin/subsites/', null, $this->adminLoggedInSession());
 	

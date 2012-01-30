@@ -91,7 +91,7 @@ want the MenuTitle field to show on your page, which is inherited from `[api:Sit
 	:::php
 	class StaffPage extends Page {
 	
-	   function getCMSFields() {
+	   public function getCMSFields() {
 	      $fields = parent::getCMSFields();
 	      $fields->removeFieldFromTab('Root.Content', 'MenuTitle');
 	      return $fields;
@@ -111,7 +111,7 @@ required on a certain page-type.
 	:::php
 	class MyForm extends Form {
 	
-	   function __construct($controller, $name) {
+	   public function __construct($controller, $name) {
 	      // add a default FieldList of form fields
 	      $member = singleton('Member');
 	

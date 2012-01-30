@@ -51,7 +51,7 @@ Widget Form to manage the widgets. An example of this is below
 		"Sidebar" => "WidgetArea",
 	    );
 		
-	    function getCMSFields() {
+	    public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->addFieldToTab("Root.Content.Widgets", new WidgetAreaEditor("Sidebar"));
 		return $fields;
@@ -113,7 +113,7 @@ An example widget is below:
 		static $cmsTitle = "Flickr Photos";
 		static $description = "Shows flickr photos.";
 		
-		function Photos() {
+		public function Photos() {
 			Requirements::javascript("sapphire/thirdparty/prototype/prototype.js");
 			Requirements::javascript("sapphire/thirdparty/scriptaculous/effects.js");
 			Requirements::javascript("mashups/javascript/lightbox.js");
@@ -138,7 +138,7 @@ An example widget is below:
 			return $output;
 		}
 	
-		function getCMSFields() {
+		public function getCMSFields() {
 			return new FieldList(
 				new TextField("User", "User"),
 				new TextField("PhotoSet", "Photo Set"),
@@ -170,7 +170,7 @@ This example creates an RSSWidget with the SilverStripe blog feed.
 
 	:::php
 	<?php
-		function SilverStripeFeed() {
+		public function SilverStripeFeed() {
 			$widget = new RSSWidget();
 			$widget->RssUrl = "http://feeds.feedburner.com/silverstripe-blog";
 			return $widget->renderWith("WidgetHolder");
@@ -205,7 +205,7 @@ variable. For example, to set your widgets title to 'Hello World!', you could us
 **widgets_yourWidget/YourWidgetWidget.php**
 
 	:::php
-	function Title() {
+	public function Title() {
 		return "Hello World!";
 	}
 
@@ -217,7 +217,7 @@ widget called WidgetTitle, that you wish to use as your title. If nothing is set
 This is similar to the RSS Widget in the blog module.
 
 	:::php
-	function Title() {
+	public function Title() {
 		return $this->WidgetTitle ? $this->WidgetTitle : self::$title;
 	}
 
@@ -242,7 +242,7 @@ sure that your controller follows the usual naming conventions, and it will be a
 	}
 	
 	class MyWidget_Controller extends Widget_Controller {
-	  function MyFormName() {
+	  public function MyFormName() {
 	    return new Form(
 	      $this, 
 	      'MyFormName', 
@@ -255,7 +255,7 @@ sure that your controller follows the usual naming conventions, and it will be a
 	    );
 	  }
 	  
-	  function doAction($data, $form) {
+	  public function doAction($data, $form) {
 	    // $this->widget points to the widget
 	  }
 	}
@@ -295,7 +295,7 @@ Page class). One way to fix this is to comment out line 30 in BlogHolder.php and
 		//	"SideBar" => "WidgetArea", COMMENT OUT
 			'Newsletter' => 'NewsletterType'
 	      .......
-		function getCMSFields() {
+		public function getCMSFields() {
 			$fields = parent::getCMSFields();
 			$fields->removeFieldFromTab("Root.Content","Content");
 		//	$fields->addFieldToTab("Root.Content.Widgets", new WidgetAreaEditor("SideBar")); COMMENT OUT

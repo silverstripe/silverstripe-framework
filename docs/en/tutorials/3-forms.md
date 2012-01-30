@@ -31,7 +31,7 @@ the form in a method on *HomePage_Controller*.
 	class HomePage_Controller extends Page_Controller {
 		// ...
 	
-		function BrowserPollForm() {
+		public function BrowserPollForm() {
 			// Create fields
 			$fields = new FieldList(
 				new TextField('Name'),
@@ -203,7 +203,7 @@ that the *BrowserPollSubmission* table is created. Now we just need to define 'd
 	:::php	
 	class HomePage_Controller extends Page_Controller {
 		// ...
-		function doBrowserPoll($data, $form) {
+		public function doBrowserPoll($data, $form) {
 			$submission = new BrowserPollSubmission();
 			$form->saveInto($submission);
 			$submission->write();
@@ -236,7 +236,7 @@ Change the end of the 'BrowserPollForm' function so it looks like this:
 ** mysite/code/HomePage.php **
 
 	:::php
-	function BrowserPollForm() {
+	public function BrowserPollForm() {
 		...
 	
 		// Create validator
@@ -271,7 +271,7 @@ First modify the 'doBrowserPoll' to set the session variable 'BrowserPollVoted' 
 	HomePage_Controller extends Page_Controller {
 		...
 		
-		function doBrowserPoll($data, $form) {
+		public function doBrowserPoll($data, $form) {
 			$submission = new BrowserPollSubmission();
 			$form->saveInto($submission);
 			$submission->write();
@@ -289,7 +289,7 @@ Then we simply need to check if the session variable has been set in 'BrowserPol
 it is.
 
 	:::php
-	function BrowserPollForm() {
+	public function BrowserPollForm() {
 		if(Session::get('BrowserPollVoted')) {
 			return false;
 		}
@@ -320,7 +320,7 @@ then create our graph using a page control in the template. Create the function 
 ** mysite/code/HomePage.php **
 
 	:::php
-	function BrowserPollResults() {
+	public function BrowserPollResults() {
 		$submissions = DataObject::get('BrowserPollSubmission');
 		$total = $submissions->Count();
 		

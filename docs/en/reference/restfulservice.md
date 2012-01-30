@@ -30,7 +30,7 @@ RestfulService (see [flickrservice](http://silverstripe.org/flickr-module/) and
 	//example for extending RestfulService
 	class FlickrService extends RestfulService {
 		
-		function __construct($expiry=NULL){
+		public function __construct($expiry=NULL){
 			parent::__construct('http://www.flickr.com/services/rest/', $expiry);
 			$this->checkErrors = true;
 		}
@@ -121,7 +121,7 @@ could delgate the error handling to it's descendant class. To handle the errors 
 		This will raise Youtube API specific error messages (if any).
 	
 		*/
-		function errorCatch($response){
+		public function errorCatch($response){
 			$err_msg = $response;
 		 if(strpos($err_msg, '<') === false)
 			//user_error("YouTube Service Error : $err_msg", E_USER_ERROR);
@@ -135,7 +135,7 @@ could delgate the error handling to it's descendant class. To handle the errors 
 If you want to bypass error handling on your sub-classes you could define that in the constructor.
 
 	:::php
-	  function __construct($expiry=NULL){
+	  public function __construct($expiry=NULL){
 			parent::__construct('http://www.flickr.com/services/rest/', $expiry);
 			$this->checkErrors = false; //Set checkErrors to false to bypass error checking
 		}
@@ -152,7 +152,7 @@ Put something like this code in mysite/code/Page.php inside class Page_Controlle
 
 	:::php
 		// Accepts an RSS feed URL and outputs a list of links from it
-		function RestfulLinks($url){
+		public function RestfulLinks($url){
 			$delicious = new RestfulService($url);
 			
 			$conn = $delicious->connect();

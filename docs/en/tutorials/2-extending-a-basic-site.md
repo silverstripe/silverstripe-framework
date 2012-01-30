@@ -171,7 +171,7 @@ method to the *ArticlePage* class.
 	class ArticlePage extends Page {
 		// ...
 		
-		function getCMSFields() {
+		public function getCMSFields() {
 			$fields = parent::getCMSFields();
 			
 			$fields->addFieldToTab('Root.Content', new DateField('Date'), 'Content');
@@ -229,7 +229,7 @@ To make the date field a bit more user friendly, you can add a dropdown calendar
 	
 	// .....
 	
-	function getCMSFields() {
+	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		
 		$fields->addFieldToTab('Root.Content', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
@@ -472,7 +472,7 @@ control. We can get the data for the news articles by implementing our own funct
 
 	:::php
 	...
-	function LatestNews($num=5) {
+	public function LatestNews($num=5) {
 		$news = DataObject::get_one("ArticleHolder");
 		return ($news) ? DataObject::get("ArticlePage", "ParentID = $news->ID", "Date DESC", "", $num) : false;
 	}
@@ -518,7 +518,7 @@ providing an `[api:RSSFeed]` class to do all the hard work for you. Create the f
 *ArticleHolder_Controller*:
 
 	:::php
-	function rss() {
+	public function rss() {
 		$rss = new RSSFeed($this->Children(), $this->Link(), "The coolest news around");
 		$rss->outputToBrowser();
 	}
@@ -538,7 +538,7 @@ Now all we need is to let the user know that our RSS feed exists. The `[api:RSSF
 called when the page is requested. Add this function to *ArticleHolder_Controller*:
 
 	:::php
-	function init() {
+	public function init() {
 		RSSFeed::linkToFeed($this->Link() . "rss");	
 		parent::init();
 	}
@@ -591,7 +591,7 @@ insert an image in the *$Content* field).
 			'Photo' => 'Image'
 		);
 		
-		function getCMSFields() {
+		public function getCMSFields() {
 			$fields = parent::getCMSFields();
 			
 			$fields->addFieldToTab("Root.Content.Images", new ImageField('Photo'));

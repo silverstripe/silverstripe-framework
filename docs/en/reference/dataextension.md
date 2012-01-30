@@ -52,7 +52,7 @@ The function should return a map where the keys are the names of the static vari
 	:::php
 	class CustomMember extends DataExtension {
 	
-		function extraStatics() {
+		public function extraStatics() {
 			return array(
 				'db' => array(
 					'AvatarURL' => 'Varchar',
@@ -161,7 +161,7 @@ extended by.
 	
 	class CustomerWorkflow extends DataExtension {
 	
-	 function IsMarkedForDeletion() {
+	 public function IsMarkedForDeletion() {
 	     return ($this->owner->Account()->IsMarkedForDeletion == 1) ? true : false;
 	 }
 	
