@@ -107,7 +107,7 @@ Here's an example for replacing `Director::isDev()` with a (theoretical) `Env::i
 	 * Returns true if your are in development mode
 	 * @deprecated (since 2.2.2) Use {@link Env::is_dev()} instead.
 	 */
-	function isDev() {
+	public function isDev() {
 		user_error("DEPRECATED: Use Env::is_dev() instead.", E_USER_NOTICE);
 		return Env::is_dev();
 	}

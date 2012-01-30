@@ -85,10 +85,10 @@ Create a new file called `zzz_admin/code/BookmarkedPageExtension.php` and insert
 	:::php
 	<?php
 	class BookmarkedPageExtension extends DataExtension {
-		function extraStatics() {
+		public function extraStatics() {
 			return array('db' => array('IsBookmarked' => 'Boolean'));
 		}
-		function updateCMSFields(&$fields) {
+		public function updateCMSFields(&$fields) {
 			$fields->addFieldToTab('Root.Main',
 				new CheckboxField('IsBookmarked', "Show in CMS bookmarks?")
 			);
@@ -114,7 +114,7 @@ Add the following code to a new file `zzz_admin/code/BookmarkedLeftAndMainExtens
 	:::php
 	<?php
 	class BookmarkedPagesLeftAndMainExtension extends LeftAndMainExtension {
-		function BookmarkedPages() {
+		public function BookmarkedPages() {
 			return DataList::create('Page')->where('"IsBookmarked" = 1');
 		}
 	}

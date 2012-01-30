@@ -340,7 +340,7 @@ default behaviour by making a function called "get`<fieldname>`" or "set`<fieldn
 	  );
 	
 	  // access through $myPlayer->Status
-	  function getStatus() {
+	  public function getStatus() {
 	      // check if the Player is actually... born already!
 	      return (!$this->obj("Birthday")->InPast()) ? "Unborn" : $this->Status;
 	  }
@@ -353,13 +353,13 @@ Here we combined a Player's first name and surname, accessible through $myPlayer
 
 	:::php
 	class Player extends DataObject {
-	  function getTitle() {
+	  public function getTitle() {
 	    return "{$this->FirstName} {$this->Surname}";
 	  }
 	
 	  // access through $myPlayer->Title = "John Doe";
 	  // just saves data on the object, please use $myPlayer->write() to save the database-row
-	  function setTitle($title) {
+	  public function setTitle($title) {
 	    list($firstName, $surName) = explode(' ', $title);
 	    $this->FirstName = $firstName;
 	    $this->Surname = $surName;
@@ -409,7 +409,7 @@ but using the *obj()*-method or accessing through a template will cast the value
 	  // $myPlayer->MembershipFee() returns a float (e.g. 123.45)
 	  // $myPlayer->obj('MembershipFee') returns a object of type Currency
 	  // In a template: <% control MyPlayer %>MembershipFee.Nice<% end_control %> returns a casted string (e.g. "$123.45")
-	  function getMembershipFee() {
+	  public function getMembershipFee() {
 	    return $this->Team()->BaseFee * $this->MembershipYears;
 	  }
 	}
@@ -542,7 +542,7 @@ Inside sapphire it doesn't matter if you're editing a *has_many*- or a *many_man
 	
 	   * @param DataObjectSet
 	   */
-	  function addCategories($additionalCategories) {
+	  public function addCategories($additionalCategories) {
 	    $existingCategories = $this->Categories();
 	    
 	    // method 1: Add many by iteration
@@ -569,7 +569,7 @@ the described relations).
 	  );
 	
 	  // can be accessed by $myTeam->ActivePlayers()
-	  function ActivePlayers() {
+	  public function ActivePlayers() {
 	    return $this->Players("Status='Active'");
 	  }
 	}
@@ -655,7 +655,7 @@ Example: Disallow creation of new players if the currently logged-in player is n
 	    "Teams"=>"Team"
 	  );
 	
-	  function onBeforeWrite() {
+	  public function onBeforeWrite() {
 	    // check on first write action, aka "database row creation" (ID-property is not set)
 	    if(!$this->ID) {
 	      $currentPlayer = Member::currentUser();
@@ -695,7 +695,7 @@ It checks if a member is logged in who belongs to a group containing the permiss
 	    "Teams"=>"Team"
 	  );
 	
-	  function onBeforeDelete() {
+	  public function onBeforeDelete() {
 	    if(!Permission::check('PLAYER_DELETE')) {
 	      Security::permissionFailure($this);
 	      exit();

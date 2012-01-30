@@ -326,7 +326,7 @@ There are two ways you can extend the template variables you have available. You
 	
 	**mysite/code/Page.php**
 	...
-	function MyCustomValue() {
+	public function MyCustomValue() {
 	    return "Hi, this is my site";
 	}
 
@@ -344,7 +344,7 @@ Your function could return a single value as above or it could be a subclass of 
 
 	:::php
 	..
-	function MyCustomValues() {
+	public function MyCustomValues() {
 	    return new ArrayData(array("Hi" => "Kia Ora", "Name" => "John Smith"));
 	}
 
@@ -376,7 +376,7 @@ For example, this Controller method
 	:::php
 	private $counter = 0;
 	
-	function Counter() {
+	public function Counter() {
 	    $this->counter += 1;
 	    return $this->counter;
 	}
@@ -451,11 +451,11 @@ default if it exists and there is no action in the url parameters.
 	:::php
 	class MyPage_Controller extends Page_Controller {
 	
-		function init(){
+		public function init(){
 			parent::init();  
 		}
 	 
-		function index() {
+		public function index() {
 			if(Director::is_ajax()) {
 				return $this->renderWith("myAjaxTemplate");
 			}
