@@ -135,47 +135,39 @@ class Text extends StringField {
 	 * Caution: Not XML/HTML-safe - does not respect closing tags.
 	 */
 	function Summary($maxWords = 50) {
-		
 		// get first sentence?
 		// this needs to be more robust
-		$data = Convert::xml2raw( $this->value /*, true*/ );
-		
-	
-		if( !$data )
-			return "";
+		$value = Convert::xml2raw( $this->value /*, true*/ );
+		if(!$value) return '';
 		
 		// grab the first paragraph, or, failing that, the whole content
-		$pos = strpos( $data, "\n\n" );
-		if( $pos )
-			$data = substr( $data, 0, $pos );
-		
-		$sentences = explode( '.', $data );	
-		
-		$count = count( explode( ' ', $sentences[0] ) );
+		if(strpos($value, "\n\n")) $value = substr($value, 0, strpos($value, "\n\n"));
+		$sentences = explode('.', $value);	
+		$count = count(explode(' ', $sentences[0]));
 		
 		// if the first sentence is too long, show only the first $maxWords words
-		if( $count > $maxWords ) {
-			return implode( ' ', array_slice( explode( ' ', $sentences[0] ), 0, $maxWords ) ).'...';
+		if($count > $maxWords) {
+			return implode( ' ', array_slice(explode( ' ', $sentences[0] ), 0, $maxWords)) . '...';
 		}
+
 		// add each sentence while there are enough words to do so
 		$result = '';
 		do {
 			$result .= trim(array_shift( $sentences )).'.';
 			if(count($sentences) > 0) {
-				$count += count( explode( ' ', $sentences[0] ) );
+				$count += count(explode(' ', $sentences[0]));
 			}
 			
 			// Ensure that we don't trim half way through a tag or a link
-			$brokenLink = (substr_count($result,'<') != substr_count($result,'>')) ||
-				(substr_count($result,'<a') != substr_count($result,'</a'));
-			
-		} while( ($count < $maxWords || $brokenLink) && $sentences && trim( $sentences[0] ) );
+			$brokenLink = (
+				substr_count($result,'<') != substr_count($result,'>')) ||
+				(substr_count($result,'<a') != substr_count($result,'</a')
+			);
+		} while(($count < $maxWords || $brokenLink) && $sentences && trim( $sentences[0]));
 		
-		if( preg_match( '/<a[^>]*>/', $result ) && !preg_match( '/<\/a>/', $result ) )
-			$result .= '</a>';
+		if(preg_match('/<a[^>]*>/', $result) && !preg_match( '/<\/a>/', $result)) $result .= '</a>';
 		
-		$result = Convert::raw2xml( $result );
-		return $result;
+		return Convert::raw2xml($result);
 	}
 	
 	/**
@@ -184,20 +176,21 @@ class Text extends StringField {
 	*/
 	function BigSummary($maxWords = 50, $plain = 1) {
 		$result = "";
+		
 		// get first sentence?
 		// this needs to be more robust
-		if($plain) $data = Convert::xml2raw( $this->value, true );
+		if($plain) $data = Convert::xml2raw($this->value, true);
 		
-		if( !$data )
-			return "";
+		if(!$data) return "";
 			
-		$sentences = explode( '.', $data );	
-		$count = count( explode( ' ', $sentences[0] ) );
+		$sentences = explode('.', $data);	
+		$count = count(explode(' ', $sentences[0]));
 		
 		// if the first sentence is too long, show only the first $maxWords words
-		if( $count > $maxWords ) {
-			return implode( ' ', array_slice( explode( ' ', $sentences[0] ), 0, $maxWords ) ).'...';
+		if($count > $maxWords) {
+			return implode(' ', array_slice(explode( ' ', $sentences[0] ), 0, $maxWords)) . '...';
 		}
+
 		// add each sentence while there are enough words to do so
 		do {
 			$result .= trim(array_shift($sentences));
@@ -207,12 +200,15 @@ class Text extends StringField {
 			}
 			
 			// Ensure that we don't trim half way through a tag or a link
-			$brokenLink = (substr_count($result,'<') != substr_count($result,'>')) ||
-				(substr_count($result,'<a') != substr_count($result,'</a'));
-		} while( ($count < $maxWords || $brokenLink) && $sentences && trim( $sentences[0] ) );
+			$brokenLink = (
+				substr_count($result,'<') != substr_count($result,'>')) ||
+				(substr_count($result,'<a') != substr_count($result,'</a')
+			);
+		} while(($count < $maxWords || $brokenLink) && $sentences && trim($sentences[0]));
 		
-		if( preg_match( '/<a[^>]*>/', $result ) && !preg_match( '/<\/a>/', $result ) )
+		if(preg_match( '/<a[^>]*>/', $result) && !preg_match( '/<\/a>/', $result)) {
 			$result .= '</a>';
+		}
 		
 		return $result;
 	}
@@ -224,23 +220,22 @@ class Text extends StringField {
 		// get first sentence?
 		// this needs to be more robust
 		if($plain && $plain != 'html') {
-			$data = Convert::xml2raw( $this->value, true );
-			if( !$data ) return "";
+			$data = Convert::xml2raw($this->value, true);
+			if(!$data) return "";
 		
 			// grab the first paragraph, or, failing that, the whole content
-			$pos = strpos( $data, "\n\n" );
-			if( $pos )
-				$data = substr( $data, 0, $pos );
+			$pos = strpos($data, "\n\n");
+			if($pos) $data = substr($data, 0, $pos);
 
 			return $data;
-		
 		} else {
-			if(strpos( $this->value, "</p>" ) === false) return $this->value;
+			if(strpos($this->value, "</p>") === false) return $this->value;
 			
-			$data = substr( $this->value, 0, strpos( $this->value, "</p>" ) + 4 );
+			$data = substr($this->value, 0, strpos($this->value, "</p>") + 4);
 
-
-			if(strlen($data) < 20 && strpos( $this->value, "</p>", strlen($data) )) $data = substr( $this->value, 0, strpos( $this->value, "</p>", strlen($data) ) + 4 );
+			if(strlen($data) < 20 && strpos($this->value, "</p>", strlen($data))) {
+				$data = substr($this->value, 0, strpos( $this->value, "</p>", strlen($data)) + 4 );
+			}
 			
 			return $data;			
 		}
