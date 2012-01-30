@@ -128,7 +128,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 					new LiteralField(
 						'GroupImportFormIframe', 
 						sprintf(
-							'<iframe src="%s" id="GroupImportFormIframe" width="100%" height="400px" border="0"></iframe>',
+							'<iframe src="%s" id="GroupImportFormIframe" width="100%%" height="400px" border="0"></iframe>',
 							$this->Link('groupimport')
 						)
 					)
