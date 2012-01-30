@@ -1,6 +1,6 @@
 jQuery(function($){
 	
-	$(document).delegate("#gridfield_relationsearch", "focus", function (event) {
+	$(document).delegate(".ss-gridfield .relation-search", "focus", function (event) {
 		$(this).autocomplete({
 			source: function(request, response){
 				var searchField = $(this.element);
