@@ -64,6 +64,7 @@ class Group extends DataObject {
 		
 		$config = new GridFieldConfig_ManyManyEditor('FirstName', false, 20);
 		$config->addComponent(new GridFieldPopupForms(Controller::curr(), 'EditForm'));
+		$config->addComponent(new GridFieldExporter());
 		$memberList = new GridField('Members','Members', $this->Members(), $config);
 
 		// @todo Implement permission checking on GridField
