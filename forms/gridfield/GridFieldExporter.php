@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package sapphire
+ * @subpackage gridfield
+ */
 
 /**
  * Adds an "Export list" button to the bottom of a GridField.
@@ -6,12 +10,27 @@
  * WARNING: This is experimental and its API is subject to change.  Feel free to use it as long as you are happy of
  * refactoring your code in the future.
  */
-
 class GridFieldExporter implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler {
+
+	/**
+	 * @var array Map of a property name on the exported objects, with values being the column title in the CSV file.
+	 * Note that titles are only used when {@link $csvHasHeader} is set to TRUE.
+	 */
 	protected $exportColumns;
+
+	/**
+	 * @var string
+	 */
 	protected $csvSeparator = ",";
+
+	/**
+	 * @var boolean
+	 */
 	protected $csvHasHeader = true;
 
+	/**
+	 * @param array
+	 */
 	public function __construct($exportColumns = null) {
 		$this->exportColumns = $exportColumns;
 	}
@@ -20,7 +39,13 @@ class GridFieldExporter implements GridField_HTMLProvider, GridField_ActionProvi
 	 * Place the export button in a <p> tag below the field
 	 */
 	public function getHTMLFragments($gridField) {
-		$button = new GridField_Action($gridField, 'export', 'Export to CSV', 'export', null);
+		$button = new GridField_Action(
+			$gridField, 
+			'export', 
+			_t('TableListField.CSVEXPORT', 'Export to CSV'),
+			'export', 
+			null
+		);
 		return array(
 			'after' => '<p>' . htmlentities($button->Field()) . '</p>',
 		);
@@ -65,7 +90,7 @@ class GridFieldExporter implements GridField_HTMLProvider, GridField_ActionProvi
  	 */
 	function generateExportFileData($gridField) {
 		$separator = $this->csvSeparator;
-		$csvColumns = ($this->exportColumns) ? $this->exportColumns : $gridField->getDisplayFields();
+		$csvColumns = $this->getExportColumns();
 		$fileData = '';
 		$columnData = array();
 		$fieldItems = new ArrayList();
@@ -91,5 +116,50 @@ class GridFieldExporter implements GridField_HTMLProvider, GridField_ActionProvi
 			
 		return $fileData;
 	}
+
+	/**
+	 * Returns exported columns, defaults to {@link GridField->getDisplayFields()}.
+	 * 
+	 * @return array
+	 */
+	function getExportColumns() {
+		return ($this->exportColumns) ? $this->exportColumns : $gridField->getDisplayFields();
+	}
+
+	/**
+	 * @param array
+	 */
+	function setExportColumns($cols) {
+		$this->exportColumns = $cols;
+	}
 	
+	/**
+	 * @return string
+	 */
+	function getCsvSeparator() {
+		return $this->csvSeparator;
+	}
+
+	/**
+	 * @param string
+	 */
+	function setCsvSeparator($separator) {
+		$this->csvSeparator = $separator;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	function getCsvHasHeader() {
+		return $this->csvHasHeader;
+	}
+
+	/**
+	 * @param boolean
+	 */
+	function setCsvHasHeader($bool) {
+		$this->csvHasHeader = $bool;
+	}
+
+
 }
