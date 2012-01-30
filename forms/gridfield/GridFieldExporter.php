@@ -90,7 +90,7 @@ class GridFieldExporter implements GridField_HTMLProvider, GridField_ActionProvi
  	 */
 	function generateExportFileData($gridField) {
 		$separator = $this->csvSeparator;
-		$csvColumns = $this->getExportColumns();
+		$csvColumns = ($this->exportColumns) ? $this->exportColumns : $gridField->getDisplayFields();
 		$fileData = '';
 		$columnData = array();
 		$fieldItems = new ArrayList();
@@ -118,12 +118,10 @@ class GridFieldExporter implements GridField_HTMLProvider, GridField_ActionProvi
 	}
 
 	/**
-	 * Returns exported columns, defaults to {@link GridField->getDisplayFields()}.
-	 * 
 	 * @return array
 	 */
 	function getExportColumns() {
-		return ($this->exportColumns) ? $this->exportColumns : $gridField->getDisplayFields();
+		return $this->exportColumns;
 	}
 
 	/**
