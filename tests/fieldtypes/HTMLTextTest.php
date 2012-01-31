@@ -102,5 +102,33 @@ class HTMLTextTest extends SapphireTest {
 			$this->assertEquals($match, $textObj->FirstSentence());
 		}
 	}	
+
+	public function testRAW() {
+		$data = DBField::create('HTMLText', 'This &amp; This');
+		$this->assertEquals($data->RAW(), 'This &amp; This');
+
+		$data = DBField::create('HTMLText', 'This & This');
+		$this->assertEquals($data->RAW(), 'This & This');
+	}
+	
+	public function testXML() {
+		$data = DBField::create('HTMLText', 'This & This');
+		$this->assertEquals($data->XML(), 'This &amp; This');
+	}
+
+	public function testHTML() {
+		$data = DBField::create('HTMLText', 'This & This');
+		$this->assertEquals($data->HTML(), 'This &amp; This');
+	}
+
+	public function testJS() {
+		$data = DBField::create('HTMLText', '"this is a test"');
+		$this->assertEquals($data->JS(), '\"this is a test\"');
+	}
+
+	public function testATT() {
+		$data = DBField::create('HTMLText', '"this is a test"');
+		$this->assertEquals($data->ATT(), '&quot;this is a test&quot;');
+	}
 }
 ?>

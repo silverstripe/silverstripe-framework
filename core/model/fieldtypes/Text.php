@@ -17,8 +17,20 @@
  * @subpackage model
  */
 class Text extends StringField {
+
 	static $casting = array(
-		"AbsoluteLinks" => "HTMLText",
+		"AbsoluteLinks" => "Text",
+		"BigSummary" => "Text",
+		"ContextSummary" => "Text",
+		"FirstParagraph" => "Text",
+		"FirstSentence" => "Text",
+		"LimitCharacters" => "Text",
+		"LimitSentences" => "Text",
+		"Summary" => "Text",
+		'EscapeXML' => 'Text',
+		'LimitWordCount' => 'Text',
+		'LimitWordCountXML' => 'HTMLText',
+		'NoHTML' => 'Text',
 	);
 	
  	/**
