@@ -84,7 +84,30 @@ class TextTest extends SapphireTest {
 			'This is <span class="highlight">some</span> <span class="highlight">test</span> text. <span class="highlight">test</span> <span class="highlight">test</span> what if you have',
 			$textObj->ContextSummary(50, $testKeywords2)
 		);
+	}	
+
+	public function testRAW() {
+		$data = DBField::create('Text', 'This &amp; This');
+		$this->assertEquals($data->RAW(), 'This &amp; This');
 	}
 	
+	public function testXML() {
+		$data = DBField::create('Text', 'This & This');
+		$this->assertEquals($data->XML(), 'This &amp; This');
+	}
+
+	public function testHTML() {
+		$data = DBField::create('Text', 'This & This');
+		$this->assertEquals($data->HTML(), 'This &amp; This');
+	}
+
+	public function testJS() {
+		$data = DBField::create('Text', '"this is a test"');
+		$this->assertEquals($data->JS(), '\"this is a test\"');
+	}
+
+	public function testATT() {
+		$data = DBField::create('Text', '"this is a test"');
+		$this->assertEquals($data->ATT(), '&quot;this is a test&quot;');
+	}
 }
-?>

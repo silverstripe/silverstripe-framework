@@ -5,6 +5,12 @@
  * @subpackage model
  */
 class Varchar extends DBField {
+
+	static $casting = array(
+		"Initial" => "Text",
+		"URL" => "Text",
+		"LimitCharacters" => "Text",
+	);
 	
 	protected $size;
 	

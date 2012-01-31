@@ -6,7 +6,21 @@
  */
 class Text extends DBField {
 	static $casting = array(
-		"AbsoluteLinks" => "HTMLText",
+		"AbsoluteLinks" => "Text",
+		"BigSummary" => "Text",
+		"ContextSummary" => "Text",
+		"FirstParagraph" => "Text",
+		"FirstSentence" => "Text",
+		"LimitCharacters" => "Text",
+		"LimitSentences" => "Text",
+		"LimitWordCount" => "Text",
+		"LimitWordCountXML" => "Text",
+		"LimitWordCountPlainText" => "Text",
+		"Summary" => "Text",
+		'EscapeXML' => 'Text',
+		'LimitWordCount' => 'Text',
+		'LimitWordCountXML' => 'HTMLText',
+		'NoHTML' => 'Text',
 	);
 	
 	function requireField() {
