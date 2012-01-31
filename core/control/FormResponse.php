@@ -148,8 +148,8 @@ class FormResponse {
 	 * @param $status string
 	 */
 	static function status_message($message = "", $status = null) {
-		$JS_message = Convert::raw2js($message);
-		$JS_status = Convert::raw2js($status);
+		$JS_message = Convert::raw2js(Convert::raw2xml($message));
+		$JS_status = Convert::raw2js(Convert::raw2xml($status));
 		if(isset($JS_status)) {
 			self::$status_messages[$JS_status] = "statusMessage('{$JS_message}', '{$JS_status}');";
 		} else {
