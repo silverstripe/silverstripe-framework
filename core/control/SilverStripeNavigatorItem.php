@@ -67,7 +67,7 @@ class SilverStripeNavigatorItem_CMSLink extends SilverStripeNavigatorItem {
 		if(is_a(Controller::curr(), 'CMSMain')) {
 			return '<a class="current">CMS</a>';
 		} else {
-			$cmsLink = 'admin/show/' . $page->ID;
+			$cmsLink = Convert::raw2att('admin/show/' . $page->ID);
 			$cmsLink = "<a href=\"$cmsLink\" class=\"newWindow\" target=\"cms\">". _t('ContentController.CMS', 'CMS') ."</a>";
 	
 			return $cmsLink;
@@ -96,7 +96,7 @@ class SilverStripeNavigatorItem_StageLink extends SilverStripeNavigatorItem {
 		} else {
 			$draftPage = Versioned::get_one_by_stage('SiteTree', 'Stage', '"SiteTree"."ID" = ' . $page->ID);
 			if($draftPage) {
-				$pageLink = Controller::join_links($draftPage->AbsoluteLink(), "?stage=Stage");
+				$pageLink = Convert::raw2att(Controller::join_links($draftPage->AbsoluteLink(), "?stage=Stage"));
 				return "<a href=\"$pageLink\" class=\"newWindow\" target=\"site\" style=\"left : -1px;\">". _t('ContentController.DRAFTSITE', 'Draft Site') ."</a>";
 			}
 		}
@@ -128,7 +128,7 @@ class SilverStripeNavigatorItem_LiveLink extends SilverStripeNavigatorItem {
 		} else {
 			$livePage = Versioned::get_one_by_stage('SiteTree', 'Live', '"SiteTree"."ID" = ' . $page->ID);
 			if($livePage) {
-				$pageLink = Controller::join_links($livePage->AbsoluteLink(), "?stage=Live");
+				$pageLink = Convert::raw2att(Controller::join_links($livePage->AbsoluteLink(), "?stage=Live"));
 				return "<a href=\"$pageLink\" class=\"newWindow\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.PUBLISHEDSITE', 'Published Site') ."</a>";
 			}
 		}
@@ -165,7 +165,7 @@ class SilverStripeNavigatorItem_ArchiveLink extends SilverStripeNavigatorItem {
 				(!$currentDraft || ($currentDraft && $page->Version != $currentDraft->Version)) 
 				&& (!$currentLive || ($currentLive && $page->Version != $currentLive->Version))
 			) {
-				$pageLink = $page->AbsoluteLink();
+				$pageLink = Convert::raw2att($page->AbsoluteLink());
 				return "<a href=\"$pageLink?archiveDate={$page->LastEdited}\" class=\"newWindow\" target=\"site\" style=\"left : -3px;\">". _t('ContentController.ARCHIVEDSITE', 'Archived Site') ."</a>";
 			}
 		}
