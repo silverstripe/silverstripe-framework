@@ -9,6 +9,12 @@
 abstract class StringField extends DBField {
 	protected $nullifyEmpty = true;
 
+	static $casting = array(
+		"LimitCharacters" => "Text",
+		"Lower" => "Text",
+		"Upper" => "Text",
+	);
+
 	/**
 	 * Construct a string type field with a set of optional parameters
 	 * @param $name string The name of the field
