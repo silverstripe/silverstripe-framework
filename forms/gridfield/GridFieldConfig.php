@@ -23,7 +23,7 @@ class GridFieldConfig {
 	 * 
 	 */
 	public function __construct() {
-		;
+		$this->components = new ArrayList();
 	}
 	
 	public function addComponent(GridFieldComponent $component) {
@@ -32,14 +32,39 @@ class GridFieldConfig {
 	}
 	
 	/**
-	 *
-	 * @return ArrayList
+	 * @return ArrayList Of GridFieldComponent
 	 */
 	public function getComponents() {
 		if(!$this->components) {
 			$this->components = new ArrayList();
 		}
 		return $this->components;
+	}
+
+	/**
+	 * Returns all components extending a certain class, or implementing a certain interface.
+	 * 
+	 * @param String Class name or interface
+	 * @return ArrayList Of GridFieldComponent
+	 */
+	public function getComponentsByType($type) {
+		$components = new ArrayList();
+		foreach($this->components as $component) {
+			if($component instanceof $type) $components->push($component);
+		}
+		return $components;
+	}
+
+	/**
+	 * Returns the first available component with the given class or interface.
+	 * 
+	 * @param String ClassName
+	 * @return GridFieldComponent
+	 */
+	public function getComponentByType($type) {
+		foreach($this->components as $component) {
+			if($component instanceof $type) return $component;
+		}
 	}
 }
 
@@ -60,8 +85,8 @@ class GridFieldConfig_Base extends GridFieldConfig {
 	 */
 	public function __construct($itemsPerPage=25) {
 		$this->addComponent(new GridFieldSortableHeader());
+		$this->addComponent(new GridFieldFilter());
 		$this->addComponent(new GridFieldDefaultColumns());
-		$this->addComponent(new GridFieldAction_Edit());
 		$this->addComponent(new GridFieldPaginator($itemsPerPage));
 	}
 }
