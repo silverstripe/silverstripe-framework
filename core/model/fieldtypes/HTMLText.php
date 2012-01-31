@@ -28,6 +28,25 @@ class HTMLText extends Text {
 		return (strlen($value) > $limit) ? substr($value, 0, $limit) . $add : $value;
 	}
 
+	static $casting = array(
+		"AbsoluteLinks" => "HTMLText",
+		"BigSummary" => "HTMLText",
+		"ContextSummary" => "HTMLText",
+		"FirstParagraph" => "HTMLText",
+		"FirstSentence" => "HTMLText",
+		"LimitCharacters" => "HTMLText",
+		"LimitSentences" => "HTMLText",
+		"Lower" => "HTMLText",
+		"LowerCase" => "HTMLText",
+		"Summary" => "HTMLText",
+		"Upper" => "HTMLText",
+		"UpperCase" => "HTMLText",
+		'EscapeXML' => 'HTMLText',
+		'LimitWordCount' => 'HTMLText',
+		'LimitWordCountXML' => 'HTMLText',
+		'NoHTML' => 'Text',
+	);
+
 	/**
 	 * Create a summary of the content. This will be some section of the first paragraph, limited by
 	 * $maxWords. All internal tags are stripped out - the return value is a string
