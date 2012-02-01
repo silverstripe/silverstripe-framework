@@ -197,16 +197,17 @@ class UploadField extends FileField {
 	 * @return SS_List
 	 */
 	public function getItems() {
+		$name = $this->getName();
 		if (!$this->items || !$this->items->exists()) {
 			$record = $this->getRecord();
 			$this->items = array();
 			if ($record && $record->exists()) {
-				if ($record->has_many($this->getName()) || $record->many_many($this->getName())) {
-					$this->items = $record->{$this->getName()}()->toArray();
-				} elseif($record->has_one($this->getName())) {
-					$item = $record->{$this->getName()}();
+				if ($record->has_many($name) || $record->many_many($name)) {
+					$this->items = $record->{$name}()->toArray();
+				} elseif($record->has_one($name)) {
+					$item = $record->{$name}();
 					if ($item && $item->exists())
-						$this->items = array($record->{$this->getName()}());
+						$this->items = array($record->{$name}());
 				}
 			}
 			$this->items = new ArrayList($this->items);
@@ -278,9 +279,10 @@ class UploadField extends FileField {
 
 	public function Field() {
 		$record = $this->getRecord();
+		$name = $this->getName();
 		if ($record && $record->exists()) {
-			if (!$record->has_many($this->getName()) && !$record->many_many($this->getName()) && !$this->getConfig('allowedMaxFileNumber') && 
-					((substr($this->getName(), -2) === 'ID' && $record->has_one(substr($this->getName(), 0, -2))) || $record->has_one($this->getName()))) {
+			if (!$record->has_many($name) && !$record->many_many($name) && !$this->getConfig('allowedMaxFileNumber') && 
+					((substr($name, -2) === 'ID' && $record->has_one(substr($name, 0, -2))) || $record->has_one($name))) {
 				// if there is a has_one relation with that name on the record and allowedMaxFileNumber has not been set, its wanted to be 1
 				$this->setConfig('allowedMaxFileNumber', 1);
 			}
@@ -376,7 +378,8 @@ class UploadField extends FileField {
 	 * @return string json
 	 */
 	public function upload(SS_HTTPRequest $request) {
-		$tmpfile = $request->postVar($this->getName());
+		$name = $this->getName();
+		$tmpfile = $request->postVar($name);
 		$record = $this->getRecord();
 		if (!$tmpfile) {
 			$return = array('error' => _t('UploadField.FIELDNOTSET', 'file infotmation not found'));
@@ -390,13 +393,13 @@ class UploadField extends FileField {
 		}
 		if (!$return['error'] && $record && $record->exists()) {
 			$toManyFiles = false;
-			if ($this->getConfig('allowedMaxFileNumber') && ($record->has_many($this->getName()) || $record->many_many($this->getName()))) {
+			if ($this->getConfig('allowedMaxFileNumber') && ($record->has_many($name) || $record->many_many($name))) {
 				if(!$record->isInDB()) $record->write();
-				$toManyFiles = $record->{$this->getName()}()->count() >= $this->getConfig('allowedMaxFileNumber');
-			} elseif(substr($this->getName(), -2) === 'ID' && $record->has_one(substr($this->getName(), 0, -2))) {
-				$toManyFiles = $record->{substr($this->getName(), 0, -2)}() && $record->{substr($this->getName(), 0, -2)}()->exists();
-			} elseif($record->has_one($this->getName())) {
-				$toManyFiles = $record->{$this->getName()}() && $record->{$this->getName()}()->exists();
+				$toManyFiles = $record->{$name}()->count() >= $this->getConfig('allowedMaxFileNumber');
+			} elseif(substr($name, -2) === 'ID' && $record->has_one(substr($name, 0, -2))) {
+				$toManyFiles = $record->{substr($name, 0, -2)}() && $record->{substr($name, 0, -2)}()->exists();
+			} elseif($record->has_one($name)) {
+				$toManyFiles = $record->{$name}() && $record->{$name}()->exists();
 			}
 			if ($toManyFiles) {
 				if (!$this->getConfig('allowedMaxFileNumber'))
@@ -423,16 +426,16 @@ class UploadField extends FileField {
 					$file->write();
 					$hasRelation = false;
 					if ($record && $record->exists()) {
-						if ($record->has_many($this->getName()) || $record->many_many($this->getName())) {
+						if ($record->has_many($name) || $record->many_many($name)) {
 							if(!$record->isInDB()) $record->write();
-							$record->{$this->getName()}()->add($file);
+							$record->{$name}()->add($file);
 							$hasRelation = true;
-						} elseif(substr($this->getName(), -2) === 'ID' && $record->has_one(substr($this->getName(), 0, -2))) {
-							$record->{$this->getName()} = $file->ID;
+						} elseif(substr($name, -2) === 'ID' && $record->has_one(substr($name, 0, -2))) {
+							$record->{$name} = $file->ID;
 							$record->write();
 							$hasRelation = true;
-						} elseif($record->has_one($this->getName())) {
-							$record->{$this->getName() . 'ID'} = $file->ID;
+						} elseif($record->has_one($name)) {
+							$record->{$name . 'ID'} = $file->ID;
 							$record->write();
 							$hasRelation = true;
 						}
