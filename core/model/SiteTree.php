@@ -618,18 +618,29 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
  			&& (!$maxDepth || sizeof($parts) < $maxDepth) 
  			&& (!$stopAtPageType || $page->ClassName != $stopAtPageType)
  		) {
-			if($showHidden || $page->ShowInMenus || ($page->ID == $this->ID)) { 
+			if($showHidden || $page->ShowInMenus || ($page->ID == $this->ID)) {
 				if($page->URLSegment == 'home') $hasHome = true;
+				$title = $this->getBreadcrumbTitle($page);
 				if(($page->ID == $this->ID) || $unlinked) {
-				 	$parts[] = Convert::raw2xml($page->Title);
+					$parts[] = $title;
 				} else {
-					$parts[] = ("<a href=\"" . $page->Link() . "\">" . Convert::raw2xml($page->Title) . "</a>"); 
+					$parts[] = ("<a href=\"" . $page->Link() . "\">" . $title . "</a>");
 				}
 			}
 			$page = $page->Parent;
 		}
 
 		return implode(self::$breadcrumbs_delimiter, array_reverse($parts));
+	}
+
+	/**
+	 * Get the default breadcrumb title for a page.  This can be overridden as needed by
+	 * subclasses of SiteTree.  Defaults to the escaped page title.
+	 *
+	 * @param SiteTree $page the page to get the title for
+	 */
+	public function getBreadcrumbTitle(&$page) {
+		return Convert::raw2xml($page->Title);
 	}
 
 	/**
