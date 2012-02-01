@@ -83,9 +83,7 @@ merged back to trunk regularly).
 micro release.
 *  Security fixes will be applied to the current trunk and the previous two minor releases (e.g. *2.3.8* and *2.4.1*).
 
-This page details the processes by which we (should) make APIs deprecated.
-
-## Deprecation ##
+## Deprecation
 
 Needs of developers (both on core framework and custom projects) might outgrow the capabilities
 of a certain API. Existing APIs might turn out to be hard to understand, maintain, test or stabilize.
@@ -116,3 +114,14 @@ Here's an example for replacing `Director::isDev()` with a (theoretical) `Env::i
    * Still deprecated in 2.2.3
    * Still deprecated in 2.2.4
    * Removed from 2.3.0
+
+## Severity rating
+
+Each [security release](http://www.silverstripe.org/security-releases/) includes an overall severity rating and one for each vulnerability. The rating indicates how important an update is:
+
+| Severity      | Description |
+|---------------|-------------|
+| **Critical**  | Critical releases require immediate actions. Such vulnerabilities allow attackers to take control of your site and you should upgrade on the day of release. |
+| **Important** | Important releases should be evaluated immediately. These issues allow an attacker to compromise a site's data (for example via a limited SQL injection) and should be fixed within days, depending on their impact. |
+| **Moderate**  | Releases of moderate severity should be applied as soon as possible. They allow the unauthorized editing or creation of content, for example via XSS or ACL violations. |
+| **Low**       | Low risk releases fix information disclosure and read-only privilege escalation vulnerabilities. These updates should also be applied as soon as possible, but with an impact-dependent priority. |
