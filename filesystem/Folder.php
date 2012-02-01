@@ -399,9 +399,9 @@ class Folder extends File {
 	 */
 	function getCMSFields() {
 		$config = GridFieldConfig::create();
+		$config->addComponent(new GridFieldSortableHeader());
 		$config->addComponent(new GridFieldFilter());
 		$config->addComponent(new GridFieldDefaultColumns());
-		$config->addComponent(new GridFieldSortableHeader());
 		$config->addComponent(new GridFieldPaginator(10));
 		$config->addComponent(new GridFieldAction_Delete());
 		$config->addComponent(new GridFieldAction_Edit());

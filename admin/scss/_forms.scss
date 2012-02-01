@@ -171,7 +171,7 @@ form.nostyle {
 		@include transition(0.2s box-shadow ease-in);
 		@include transition(0.2s border ease-in);
 		@include border-radius(4px);
-		@include background-image(linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef));
+		@include background-image(linear-gradient(#EAEAEA, #fff 10%));
 	
 		&:focus {
 			border: 1px solid lighten($color-medium-separator, 10%);
@@ -267,8 +267,8 @@ form.small .field, .field.small {
 	}
 	
 	.chzn-container-single .chzn-single  {
-		height: 30px;
-		line-height: 32px; /* not relative, as then we'd had to redo most of chzn */
+		height: 26px;
+		line-height: 26px; /* not relative, as then we'd had to redo most of chzn */
 		font-size: $font-base-size;
 		
 		@include background-image(linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef));
@@ -283,7 +283,7 @@ form.small .field, .field.small {
 			width: 24px;
 	
 			b {
-				background-position: 1px 4px;
+				background-position: 4px 0px;
 			}
 		}
 	}
@@ -312,6 +312,9 @@ form.small .field, .field.small {
 	float: right;
 	font-size: 12px;
 	text-decoration: none;
+	span.ui-button-text{
+		padding:0;
+	}
 }
 
 .cms {
@@ -385,6 +388,8 @@ form.small .field, .field.small {
 		
 		&.cms-page-add-button {
 			@include actionButtonSpriteConstructive('add');
+			@include border-radius(4px);
+
 		}
 		/* destructive */
 		&.ss-ui-action-destructive {

@@ -1,5 +1,5 @@
 <tr>
 	<% control Fields %>
-	<th class="extra $FirstLast"><span>$Field</span></th>
+	<th class="extra"><span>$Field</span></th>
 	<% end_control %>
 </tr>
