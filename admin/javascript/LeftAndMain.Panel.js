@@ -6,7 +6,7 @@
 		$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 
 		/**
-		 * Vertically collapsible panel. Generic enough to work with CMS menu as well as various "filter" panels.
+		 * Hoizontal collapsible panel. Generic enough to work with CMS menu as well as various "filter" panels.
 		 * 
 		 * A panel consists of the following parts:
 		 * - Container div: The outer element, with class ".cms-panel"
@@ -53,7 +53,7 @@
 				var collapsed, cookieCollapsed;
 				if($.cookie && this.attr('id')) {
 					cookieCollapsed = $.cookie('cms-panel-collapsed-' + this.attr('id'));
-					if(typeof cookieCollapsed != 'undefined') collapsed = (cookieCollapsed == 'true');
+					if(typeof cookieCollapsed != 'undefined' && cookieCollapsed != null) collapsed = (cookieCollapsed == 'true');
 				} 
 				if(typeof collapsed == 'undefined') collapsed = jQuery(this).hasClass('collapsed');
 				this.togglePanel(!collapsed);
