@@ -83,9 +83,7 @@ merged back to trunk regularly).
 micro release.
 *  Security fixes will be applied to the current trunk and the previous two minor releases (e.g. *2.3.8* and *2.4.1*).
 
-This page details the processes by which we (should) make APIs deprecated.
-
-## Deprecation ##
+## Deprecation
 
 Needs of developers (both on core framework and custom projects) might outgrow the capabilities
 of a certain API. Existing APIs might turn out to be hard to understand, maintain, test or stabilize.
@@ -116,3 +114,36 @@ Here's an example for replacing `Director::isDev()` with a (theoretical) `Env::i
    * Still deprecated in 2.2.3
    * Still deprecated in 2.2.4
    * Removed from 2.3.0
+
+## Security Releases
+
+### Reporting an issue
+
+Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). Please don't file security
+issues in our [bugtracker](http://open.silverstripe.org). 
+
+### Acknowledgement and disclosure
+
+In the event of a confirmed vulnerability in SilverStripe core, we will take the following actions:
+
+*  Acknowledge to the reporter that we’ve received the report and that a fix is forthcoming. We’ll give a rough
+timeline and ask the reporter to keep the issue confidential until we announce it.
+*  Halt all other development as long as is needed to develop a fix, including patches against the current and one
+previous major release (if applicable).
+*  We will inform you about resolution and [announce](http://groups.google.com/group/silverstripe-announce) a 
+[new release](http://silverstripe.org/security-releases/) publically.
+
+You can help us determine the problem and speed up responses by providing us with more information on how to reproduce
+the issue: SilverStripe version (incl. any installed modules), PHP/webserver version and configuration, anonymized
+webserver access logs (if a hack is suspected), any other services and web packages running on the same server.
+
+### Severity rating
+
+Each [security release](http://www.silverstripe.org/security-releases/) includes an overall severity rating and one for each vulnerability. The rating indicates how important an update is:
+
+| Severity      | Description |
+|---------------|-------------|
+| **Critical**  | Critical releases require immediate actions. Such vulnerabilities allow attackers to take control of your site and you should upgrade on the day of release. *Example: Directory traversal, privilege escalation* |
+| **Important** | Important releases should be evaluated immediately. These issues allow an attacker to compromise a site's data and should be fixed within days. *Example: SQL injection.* |
+| **Moderate**  | Releases of moderate severity should be applied as soon as possible. They allow the unauthorized editing or creation of content. *Examples: Cross Site Scripting (XSS) in template helpers.* |
+| **Low**       | Low risk releases fix information disclosure and read-only privilege escalation vulnerabilities. These updates should also be applied as soon as possible, but with an impact-dependent priority. *Example: Exposure of the core version number, Cross Site Scripting (XSS) limited to the admin interface.* |
