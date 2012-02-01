@@ -9,11 +9,48 @@
  * @subpackage forms
  */
 class UploadField extends FileField {
+
+	/**
+	 * @var array
+	 */
+	public static $allowed_actions = array(
+		'upload',
+		'handleItem'
+	);
+
+	/**
+	 * @var array
+	 */
+	public static $url_handlers = array(
+		'item/$ID' => 'handleItem',
+		'$Action!' => '$Action',
+	);
+
+	/**
+	 * @var String
+	 */
 	protected $template = 'UploadField';
+
+	/**
+	 * @var String
+	 */
 	protected $templateFileButtons = 'UploadField_FileButtons';
+
+	/**
+	 * @var String
+	 */
 	protected $templateFileEdit = 'UploadField_FileEdit';
+
+	/**
+	 * @var DataObject
+	 */
 	protected $record;
+
+	/**
+	 * @var SS_List
+	 */
 	protected $items;
+
 	/**
 	 * Config for this field used in both, php and javascript (will be merged into the config of the javascript file upload plugin)
 	 * @var array
@@ -68,6 +105,29 @@ class UploadField extends FileField {
 		 */
 		'fileEditValidator' => null
 	);
+
+	/**
+	 * Field for uploading single or multiple files of all types, including images.<br><b>NOTE: this Field will call write() on the supplied record</b><br><b>Features (some might not be avaliable to old browsers):</b><ul><li>File Drag&Drop support<li>Progressbar<li>Image thumbnail/file icons even before upload finished<li>Saving into relations<li>Edit file<li>allowedExtensions is by default File::$allowed_extensions<li>maxFileSize the vaule of min(upload_max_filesize, post_max_size) from php.ini</ul>
+	 * 
+	 * @example <code>$UploadField = new UploadField('myFiles', 'please upload some images <span>max 5 files</span>');<br>$UploadField->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));<br>$UploadField->setConfig('allowedMaxFileNumber', 5);</code>
+	 * @param string $name The internal field name, passed to forms.
+	 * @param string $title The field label.
+	 * @param SS_List $items
+	 * @param Form $form Reference to the container form
+	 * @param string $rightTitle Used in SmallFieldHolder() to force a right-aligned label
+	 */
+	public function __construct($name, $title = null, SS_List $items = null, Form $form = null, $rightTitle = null) {
+		// TODO thats the first thing that came to my head, feel free to change it
+		$this->addExtraClass('ss-upload'); // class, used by js
+		$this->addExtraClass('ss-uploadfield'); // class, used by css for uploadfield only
+
+		parent::__construct($name, $title, null, $form, $rightTitle);
+
+		if($items) $this->setItems($items);
+		$this->getValidator()->setAllowedExtensions(array_filter(File::$allowed_extensions)); // filter out '' since this would be a regex problem on JS end
+		$this->getValidator()->setAllowedMaxFileSize(min(File::ini2bytes(ini_get('upload_max_filesize')), File::ini2bytes(ini_get('post_max_size')))); // get the lower max size
+	}
+
 	/**
 	 * Set name of template used for Buttons on each file (replace, edit, remove, delete) (without path or extension)
 	 * 
@@ -77,12 +137,14 @@ class UploadField extends FileField {
 		$this->templateFileButtons = $template;
 		return $this;
 	}
+
 	/**
 	 * @return String
 	 */
 	public function getTemplateFileButtons() {
 		return $this->templateFileButtons;
 	}
+
 	/**
 	 * Set name of template used for the edit (inline & popup) of a file file (without path or extension)
 	 * 
@@ -92,12 +154,14 @@ class UploadField extends FileField {
 		$this->templateFileEdit = $template;
 		return $this;
 	}
+
 	/**
 	 * @return String
 	 */
 	public function getTemplateFileEdit() {
 		return $this->templateFileEdit;
 	}
+
 	/**
 	 * Force a record to be used as "Parent" for uploaded Files (eg a Page with a has_one to File)
 	 * @param DataOjbect $record
@@ -121,6 +185,7 @@ class UploadField extends FileField {
 		}
 		return $this->record;
 	}
+
 	/**
 	 * @param SS_List $items
 	 */
@@ -128,6 +193,7 @@ class UploadField extends FileField {
 		$this->items = $items; 
 		return $this;
 	}
+
 	/**
 	 * @return SS_List
 	 */
@@ -154,6 +220,7 @@ class UploadField extends FileField {
 		}
 		return $this->items;
 	}
+
 	/**
 	 * Hack to add some Variables and a dynamic template to a File
 	 * @param File $file
@@ -173,6 +240,7 @@ class UploadField extends FileField {
 			'UploadFieldFileButtons' => $file->renderWith($this->getTemplateFileButtons())
 		));
 	}
+
 	/**
 	 * @param string $key
 	 * @param mixed $val
@@ -181,6 +249,7 @@ class UploadField extends FileField {
 		$this->config[$key] = $val;
 		return $this;
 	}
+
 	/**
 	 * @param string $key
 	 * @return mixed
@@ -188,6 +257,7 @@ class UploadField extends FileField {
 	public function getConfig($key) {
 		return $this->config[$key];
 	}
+
 	/**
 	 * @param File $file
 	 * @return string
@@ -206,26 +276,7 @@ class UploadField extends FileField {
 		}
 		return false;
 	}
-	/**
-	 * Field for uploading single or multiple files of all types, including images.<br><b>NOTE: this Field will call write() on the supplied record</b><br><b>Features (some might not be avaliable to old browsers):</b><ul><li>File Drag&Drop support<li>Progressbar<li>Image thumbnail/file icons even before upload finished<li>Saving into relations<li>Edit file<li>allowedExtensions is by default File::$allowed_extensions<li>maxFileSize the vaule of min(upload_max_filesize, post_max_size) from php.ini</ul>
-	 * 
-	 * @example <code>$UploadField = new UploadField('myFiles', 'please upload some images <span>max 5 files</span>');<br>$UploadField->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));<br>$UploadField->setConfig('allowedMaxFileNumber', 5);</code>
-	 * @param string $name The internal field name, passed to forms.
-	 * @param string $title The field label.
-	 * @param SS_List $items
-	 * @param Form $form Reference to the container form
-	 * @param string $rightTitle Used in SmallFieldHolder() to force a right-aligned label
-	 */
-	public function __construct($name, $title = null, SS_List $items = null, Form $form = null, $rightTitle = null) {
-		// TODO thats the first thing that came to my head, feel free to change it
-		$this->addExtraClass('ss-upload'); // class, used by js
-		$this->addExtraClass('ss-uploadfield'); // class, used by css for uploadfield only
-		parent::__construct($name, $title, null, $form, $rightTitle);
-		if ($items)
-			$this->setItems($items);
-		$this->getValidator()->setAllowedExtensions(array_filter(File::$allowed_extensions)); // filter out '' since this would be a regex problem on JS end
-		$this->getValidator()->setAllowedMaxFileSize(min(File::ini2bytes(ini_get('upload_max_filesize')), File::ini2bytes(ini_get('post_max_size')))); // get the lower max size
-	}
+
 	/**
 	 * Set configs to AssetUploadField
 	 * return UploadField $this
@@ -239,6 +290,7 @@ class UploadField extends FileField {
 		Requirements::css(SAPPHIRE_DIR . '/css/AssetUploadField.css');
 		return $this;
 	}
+
 	public function Field() {
 		$record = $this->getRecord();
 		if ($record && $record->exists()) {
@@ -305,6 +357,7 @@ class UploadField extends FileField {
 			'displayInput' => (!isset($configOverwrite['maxNumberOfFiles']) || $configOverwrite['maxNumberOfFiles'])
 		))->renderWith($this->getTemplate());
 	}
+
 	/**
 	 * Validation method for this field, called when the entire form is validated
 	 * 
@@ -314,20 +367,7 @@ class UploadField extends FileField {
 	public function validate($validator) {
 		return true;
 	}
-	/**
-	 * @var array
-	 */
-	public static $allowed_actions = array(
-		'upload',
-		'handleItem'
-	);
-	/**
-	 * @var array
-	 */
-	public static $url_handlers = array(
-		'item/$ID' => 'handleItem',
-		'$Action!' => '$Action',
-	);
+	
 	/**
 	 * @param SS_HTTPRequest $request
 	 * @return UploadField_ItemHandler
@@ -335,6 +375,7 @@ class UploadField extends FileField {
 	public function handleItem(SS_HTTPRequest $request) {
 		return $this->getItemHandler($request->param('ID'));
 	}
+
 	/**
 	 * @param int $itemID
 	 * @return UploadField_ItemHandler
@@ -342,6 +383,7 @@ class UploadField extends FileField {
 	public function getItemHandler($itemID) {
 		return Object::create('UploadField_ItemHandler', $this, $itemID);
 	}
+
 	/**
 	 * Action to handle upload of a single file
 	 * 
@@ -428,31 +470,31 @@ class UploadField extends FileField {
 		return $response;
 	}
 }
+
 /**
  * RequestHandler for actions (edit, remove, delete) on a single item (File) of the UploadField
+ * 
  * @author Zauberfisch
  * @package sapphire
  * @subpackage forms
  */
 class UploadField_ItemHandler extends RequestHandler {
+
 	/**
 	 * @var UploadFIeld
 	 */
 	protected $parent;
+
 	/**
 	 * @var int FileID
 	 */
 	protected $itemID;
+
 	public static $url_handlers = array(
 		'$Action!' => '$Action',
 		'' => 'index',
 	);
-	/**
-	 * @return File
-	 */
-	function getItem() {
-		return DataObject::get_by_id('File', $this->itemID);
-	}
+
 	/**
 	 * @param UploadFIeld $parent
 	 * @param int $item
@@ -460,8 +502,17 @@ class UploadField_ItemHandler extends RequestHandler {
 	public function __construct($parent, $itemID) {
 		$this->parent = $parent;
 		$this->itemID = $itemID;
+
 		parent::__construct();
 	}
+
+	/**
+	 * @return File
+	 */
+	function getItem() {
+		return DataObject::get_by_id('File', $this->itemID);
+	}
+
 	/**
 	 * @param string $action
 	 * @return string
@@ -469,24 +520,28 @@ class UploadField_ItemHandler extends RequestHandler {
 	public function Link($action = null) {
 		return Controller::join_links($this->parent->Link(), '/item/', $this->itemID, $action);
 	}
+
 	/**
 	 * @return string
 	 */
 	public function RemoveLink() {
 		return $this->Link('remove');
 	}
+
 	/**
 	 * @return string
 	 */
 	public function DeleteLink() {
 		return $this->Link('delete');
 	}
+
 	/**
 	 * @return string
 	 */
 	public function EditLink() {
 		return $this->Link('edit');
 	}
+
 	/**
 	 * Action to handle removeing a single file from the db relation
 	 * 
@@ -517,6 +572,7 @@ class UploadField_ItemHandler extends RequestHandler {
 			$response->setStatusDescription(_t('UploadField.REMOVEERROR', 'Error removing file'));
 		return $response;
 	}
+
 	/**
 	 * Action to handle deleting of a single file
 	 * 
@@ -536,6 +592,7 @@ class UploadField_ItemHandler extends RequestHandler {
 		}
 		return $response;
 	}
+
 	/**
 	 * Action to handle editing of a single file
 	 * 
@@ -549,10 +606,11 @@ class UploadField_ItemHandler extends RequestHandler {
 			'Form' => $this->EditForm()
 		))->renderWith($this->parent->getTemplateFileEdit());
 	}
+
 	/**
 	 * @return Form
 	 */
-	function EditForm() {
+	public function EditForm() {
 		$file = $this->getItem();
 		if (is_a($this->parent->getConfig('fileEditFields'), 'FieldList')) {
 			$fields = $this->parent->getConfig('fileEditFields');
@@ -585,6 +643,7 @@ class UploadField_ItemHandler extends RequestHandler {
 		$form->loadDataFrom($file);
 		return $form;
 	}
+
 	/**
 	 * @param array $data
 	 * @param Form $form
@@ -598,7 +657,3 @@ class UploadField_ItemHandler extends RequestHandler {
 	}
 
 }
-
-
-
-
