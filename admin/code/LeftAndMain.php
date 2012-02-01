@@ -1131,27 +1131,17 @@ class LeftAndMain extends Controller {
 	/**
 	 * Return the version number of this application.
 	 * Uses the subversion path information in <mymodule>/silverstripe_version
-	 * (automacially replaced $URL$ placeholder).
+	 * (automacially replaced by build scripts).
 	 * 
 	 * @return string
 	 */
 	public function CMSVersion() {
-		$sapphireVersionFile = file_get_contents(BASE_PATH . '/sapphire/silverstripe_version');		
-		$sapphireVersion = $this->versionFromVersionFile($sapphireVersionFile);
-
-		return "sapphire: $sapphireVersion";
-	}
-	
-	/**
-	 * Return the version from the content of a silverstripe_version file
-	 */
-	public function versionFromVersionFile($fileContent) {
-		if(preg_match('/\/trunk\/silverstripe_version/', $fileContent)) {
-			return "trunk";
-		} else {
-			preg_match("/\/(?:branches|tags\/rc|tags\/beta|tags\/alpha|tags)\/([A-Za-z0-9._-]+)\/silverstripe_version/", $fileContent, $matches);
-			return ($matches) ? $matches[1] : null;
-		}
+		$sapphireVersion = file_get_contents(BASE_PATH . '/cms/silverstripe_version');
+		if(!$sapphireVersion) $sapphireVersion = _t('LeftAndMain.VersionUnknown', 'unknown');
+		return sprintf(
+			"sapphire: %s",
+			$sapphireVersion
+		);
 	}
 	
 	/**
