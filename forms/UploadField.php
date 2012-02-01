@@ -277,20 +277,6 @@ class UploadField extends FileField {
 		return false;
 	}
 
-	/**
-	 * Set configs to AssetUploadField
-	 * return UploadField $this
-	 */
-	public function performAssetUploadFieldTransformation() {
-		$this->setConfig('previewMaxWidth', 40);
-		$this->setConfig('previewMaxHeight', 30);
-		$this->addExtraClass('ss-assetuploadfield');
-		$this->removeExtraClass('ss-uploadfield');
-		$this->setTemplate('AssetUploadField');
-		Requirements::css(SAPPHIRE_DIR . '/css/AssetUploadField.css');
-		return $this;
-	}
-
 	public function Field() {
 		$record = $this->getRecord();
 		if ($record && $record->exists()) {
