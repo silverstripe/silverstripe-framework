@@ -1149,10 +1149,12 @@ class LeftAndMain extends Controller {
 		if (preg_match('/\/trunk\/silverstripe_version/', $fileContent)) {
 			return "trunk";
 		}
-		else {
-			preg_match("/\/(?:branches|tags\/rc|tags\/beta|tags\/alpha|tags)\/([A-Za-z0-9._-]+)\/silverstripe_version/",
-			  $fileContent, $matches);
+		elseif (preg_match("/\/(?:branches|tags\/rc|tags\/beta|tags\/alpha|tags)\/([A-Za-z0-9._-]+)\/silverstripe_version/",
+					 $fileContent, $matches)) {
 			return ($matches) ? $matches[1] : null;
+		}
+		else {
+			return $fileContent;
 		}
 	}
 
