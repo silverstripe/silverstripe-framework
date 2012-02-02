@@ -22,9 +22,24 @@ File:
 		Title: File5
 		Filename: assets/UploadFieldTest/file5.txt
 		ParentID: =>Folder.folder1
+	file-noview:
+		Title: noview.txt
+		Name: noview.txt
+		Filename: assets/UploadFieldTest/noview.txt
+		ParentID: =>Folder.folder1
+	file-noedit:
+		Title: noedit.txt
+		Name: noedit.txt
+		Filename: assets/UploadFieldTest/noedit.txt
+		ParentID: =>Folder.folder1
+	file-nodelete:
+		Title: nodelete.txt
+		Name: nodelete.txt
+		Filename: assets/UploadFieldTest/nodelete.txt
+		ParentID: =>Folder.folder1
 UploadFieldTest_Record:
 	record1:
 		Title: Record 1
 		HasOneFileID: =>File.file1
 		HasManyFiles: =>File.file2,=>File.file3
-		ManyManyFiles: =>File.file4,=>File.file5
+		ManyManyFiles: =>File.file4,=>File.file5,=>File.file-noview,=>File.file-noedit,=>File.file-nodelete

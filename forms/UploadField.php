@@ -215,6 +215,9 @@ class UploadField extends FileField {
 			if ($this->items->exists()) {
 				foreach ($this->items as $i=>$file) {
 					$this->items[$i] = $this->customiseFile($file);	
+
+					// Respect model permissions
+					if(!$file->canView()) unset($this->items[$i]);
 				}
 			}
 		}
@@ -568,21 +571,19 @@ class UploadField_ItemHandler extends RequestHandler {
 	 * @return SS_HTTPResponse
 	 */
 	public function delete(SS_HTTPRequest $request) {
+		$item = $this->getItem();
+		if(!$item) return $this->httpError(404);
+		if(!$item->canDelete()) return $this->httpError(403);
+
+		// Only allow actions on files in the managed relation (if one exists)
+		$items = $this->parent->getItems();
+		if($this->managesRelation() && !$items->byID($item->ID)) return $this->httpError(403);
+
 		// First remove the file from the current relationship
 		$this->remove($request);
 
-		$response = new SS_HTTPResponse();
-		$file = $this->getItem();
-		if (!$file) {
-			$response->setStatusCode(500);
-			$response->setStatusDescription(_t('UploadField.DELETEERROR', 'Error deleting file'));
-		} else if(!$file->canDelete()) {
-			$response->setStatusCode(403);
-		} else {
-			$file->delete();
-			$response->setStatusCode(200);
-		}
-		return $response;
+		// Then delete the file from the filesystem
+		$item->delete();
 	}
 
 	/**
@@ -592,6 +593,14 @@ class UploadField_ItemHandler extends RequestHandler {
 	 * @return ViewableData_Customised
 	 */
 	public function edit(SS_HTTPRequest $request) {
+		$item = $this->getItem();
+		if(!$item) return $this->httpError(404);
+		if(!$item->canEdit()) return $this->httpError(403);
+
+		// Only allow actions on files in the managed relation (if one exists)
+		$items = $this->parent->getItems();
+		if($this->managesRelation() && !$items->byID($item->ID)) return $this->httpError(403);
+
 		Requirements::clear();
 		Requirements::unblock_all();
 		return $this->customise(array(
@@ -642,11 +651,37 @@ class UploadField_ItemHandler extends RequestHandler {
 	 * @param SS_HTTPRequest $request
 	 */
 	public function doEdit(array $data, Form $form, SS_HTTPRequest $request) {
-		$file = $this->getItem();
-		$form->saveInto($file);
-		$file->write();
+		$item = $this->getItem();
+		if(!$item) return $this->httpError(404);
+		if(!$item->canEdit()) return $this->httpError(403);
+
+		// Only allow actions on files in the managed relation (if one exists)
+		$items = $this->parent->getItems();
+		if($this->managesRelation() && !$items->byID($item->ID)) return $this->httpError(403);
+
+		$form->saveInto($item);
+		$item->write();
+
+		$form->sessionMessage(_t('UploadField.Saved', 'Saved'), 'good');
 
 		return $this->parent->getForm()->Controller()->redirectBack();
 	}
 
+	/**
+	 * Determines if the underlying record (if any) has a relationship
+	 * matching the field name. Important for permission control.
+	 * 
+	 * @return boolean
+	 */
+	protected function managesRelation() {
+		$record = $this->parent->getRecord();
+		$fieldName = $this->parent->getName();
+		if(!$record) return false;
+
+		return (
+			(substr($fieldName, -2) === 'ID' && $record->has_one(substr($fieldName, 0, -2)))
+			|| $record->has_many($fieldName)
+			|| $record->many_many($fieldName)
+		);
+	}
 }

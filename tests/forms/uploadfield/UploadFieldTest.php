@@ -80,6 +80,7 @@
 		$this->loginWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$relationCount = $record->ManyManyFiles()->Count();
 
 		$tmpFileName = 'testUploadManyManyRelation.txt';
 		$_FILES = array('ManyManyFiles' => $this->getUploadFile($tmpFileName));
@@ -93,7 +94,7 @@
 		$this->assertNotNull($uploadedFile);
 
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
-		$this->assertEquals(3, $record->ManyManyFiles()->Count());
+		$this->assertEquals($relationCount+1, $record->ManyManyFiles()->Count());
 		$this->assertEquals($record->ManyManyFiles()->Last()->Name, $tmpFileName);
 	}
 
@@ -137,14 +138,16 @@
 		$file4 = $this->objFromFixture('File', 'file4');
 		$file5 = $this->objFromFixture('File', 'file5');
 
-		$this->assertEquals(array('File4', 'File5'), $record->ManyManyFiles()->column('Title'));
+		$this->assertContains('File4', $record->ManyManyFiles()->column('Title'));
+		$this->assertContains('File5', $record->ManyManyFiles()->column('Title'));
 		$response = $this->post(
 			'UploadFieldTest_Controller/Form/field/ManyManyFiles/item/' . $file4->ID . '/remove',
 			array()
 		);
 		$this->assertFalse($response->isError());
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
-		$this->assertEquals(array('File5'), $record->ManyManyFiles()->column('Title'));
+		$this->assertNotContains('File4', $record->ManyManyFiles()->column('Title'));
+		$this->assertContains('File5', $record->ManyManyFiles()->column('Title'));
 		$this->assertFileExists($file4->FullPath, 'File is only detached, not deleted from filesystem');
 	}
 
@@ -181,6 +184,13 @@
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
 		$this->assertEquals(array('File3'), $record->HasManyFiles()->column('Title'));
 		$this->assertFileNotExists($file2->FullPath, 'File is also removed from filesystem');
+
+		$fileNotOnRelationship = $this->objFromFixture('File', 'file1');
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/HasManyFiles/item/' . $fileNotOnRelationship->ID . '/delete',
+			array()
+		);
+		$this->assertEquals(403, $response->getStatusCode(), "Denies deleting files if they're not on the current relationship");
 	}
 
 	function testDeleteFromManyMany() {
@@ -189,16 +199,51 @@
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file4 = $this->objFromFixture('File', 'file4');
 		$file5 = $this->objFromFixture('File', 'file5');
+		$fileNoDelete = $this->objFromFixture('File', 'file-nodelete');
 
-		$this->assertEquals(array('File4', 'File5'), $record->ManyManyFiles()->column('Title'));
+		$this->assertContains('File4', $record->ManyManyFiles()->column('Title'));
+		$this->assertContains('File5', $record->ManyManyFiles()->column('Title'));
 		$response = $this->post(
 			'UploadFieldTest_Controller/Form/field/ManyManyFiles/item/' . $file4->ID . '/delete',
 			array()
 		);
 		$this->assertFalse($response->isError());
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
-		$this->assertEquals(array('File5'), $record->ManyManyFiles()->column('Title'));
+		$this->assertNotContains('File4', $record->ManyManyFiles()->column('Title'));
+		$this->assertContains('File5', $record->ManyManyFiles()->column('Title'));
 		$this->assertFileNotExists($file4->FullPath, 'File is also removed from filesystem');
+
+		// Test record-based permissions
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/ManyManyFiles/item/' . $fileNoDelete->ID . '/delete',
+			array()
+		);
+		$this->assertEquals(403, $response->getStatusCode());
+	}
+
+	function testView() {
+		$this->loginWithPermission('ADMIN');
+
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$file4 = $this->objFromFixture('File', 'file4');
+		$file5 = $this->objFromFixture('File', 'file5');
+		$fileNoView = $this->objFromFixture('File', 'file-noview');
+		$fileNoEdit = $this->objFromFixture('File', 'file-noedit');
+		$fileNoDelete = $this->objFromFixture('File', 'file-nodelete');
+		
+		$response = $this->get('UploadFieldTest_Controller');
+		$this->assertFalse($response->isError());
+
+		$parser = new CSSContentParser($response->getBody());
+		$items = $parser->getBySelector('#ManyManyFiles .ss-uploadfield-files .ss-uploadfield-item');
+		$ids = array();
+		foreach($items as $item) $ids[] = (int)$item['data-fileid'];
+		
+		$this->assertContains($file4->ID, $ids, 'Views related file');
+		$this->assertContains($file5->ID, $ids, 'Views related file');
+		$this->assertNotContains($fileNoView->ID, $ids, "Doesn't view files without view permissions");
+		$this->assertContains($fileNoEdit->ID, $ids, "Views files without edit permissions");
+		$this->assertContains($fileNoDelete->ID, $ids, "Views files without delete permissions");
 	}
 
 	function testEdit() {
@@ -207,6 +252,7 @@
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file4 = $this->objFromFixture('File', 'file4');
 		$file5 = $this->objFromFixture('File', 'file5');
+		$fileNoEdit = $this->objFromFixture('File', 'file-noedit');
 		$baseUrl = 'UploadFieldTest_Controller/Form/field/ManyManyFiles/item/' . $file4->ID;
 
 		$response = $this->get($baseUrl . '/edit');
@@ -218,6 +264,13 @@
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
 		$file4 = DataObject::get_by_id($file4->class, $file4->ID, false);
 		$this->assertEquals('File 4 modified', $file4->Title);
+
+		// Test record-based permissions
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/ManyManyFiles/item/' . $fileNoEdit->ID . '/edit',
+			array()
+		);
+		$this->assertEquals(403, $response->getStatusCode());
 	}
 
 	function testGetRecord() {
@@ -290,7 +343,11 @@
 		$field = new UploadField('ManyManyFiles');
 		$field->setForm($form);
 		$field->setRecord($record);
-		$this->assertEquals(array('File4', 'File5'), $field->getItems()->column('Title'));
+		$this->assertNotContains('File1',$field->getItems()->column('Title'));
+		$this->assertNotContains('File2',$field->getItems()->column('Title'));
+		$this->assertNotContains('File3',$field->getItems()->column('Title'));
+		$this->assertContains('File4',$field->getItems()->column('Title'));
+		$this->assertContains('File5',$field->getItems()->column('Title'));
 	}
 
 	protected function getMockForm() {
@@ -383,10 +440,23 @@ static $many_many = array(
 }
 
 class UploadFieldTest_FileExtension extends DataExtension implements TestOnly {
+
 	function extraStatics() {
 		return array(
 			'has_one' => array('Record' => 'UploadFieldTest_Record')
- 	);
+ 		);
+	}
+
+	function canDelete() {
+		if($this->owner->Name == 'nodelete.txt') return false;
+	}
+
+	function canEdit() {
+		if($this->owner->Name == 'noedit.txt') return false;
+	}
+
+	function canView() {
+		if($this->owner->Name == 'noview.txt') return false;
 	}
 }
 
