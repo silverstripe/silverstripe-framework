@@ -81,7 +81,7 @@
 				this._super();
 			}
 		});
-		$('.ss-uploadfield-files .ss-uploadfield-item').entwine({
+		$('div.ss-upload .ss-uploadfield-files .ss-uploadfield-item').entwine({
 			onmatch: function() {
 				this.closest('.ss-upload').find('.ss-uploadfield-addfile').addClass('borderTop');
 			},
@@ -89,19 +89,19 @@
 				$('.ss-uploadfield-files:not(:has(.ss-uploadfield-item))').closest('.ss-upload').find('.ss-uploadfield-addfile').removeClass('borderTop');
 			}
 		});
-		$('.ss-uploadfield-startall').entwine({
+		$('div.ss-upload .ss-uploadfield-startall').entwine({
 			onclick: function(e) {
 				this.closest('.ss-upload').find('.ss-uploadfield-item-start button').click();
 				return false;
 			}
 		});
-		$('.ss-uploadfield-item-cancelfailed').entwine({
+		$('div.ss-upload .ss-uploadfield-item-cancelfailed').entwine({
 			onclick: function(e) {
 				this.closest('.ss-uploadfield-item').remove();
 				return false;
 			}
 		});
-		$('.ss-uploadfield-item-remove:not(.ui-state-disabled), .ss-uploadfield-item-delete:not(.ui-state-disabled)').entwine({
+		$('div.ss-upload .ss-uploadfield-item-remove:not(.ui-state-disabled), .ss-uploadfield-item-delete:not(.ui-state-disabled)').entwine({
 			onclick: function(e) {
 				var fileupload = this.closest('div.ss-upload').data('fileupload');
 				var item = this.closest('.ss-uploadfield-item');
@@ -114,7 +114,7 @@
 				return false;
 			}
 		});
-		$('.ss-uploadfield-item-edit').entwine({
+		$('div.ss-upload .ss-uploadfield-item-edit').entwine({
 			onclick: function(e) {
 				var editform = this.closest('.ss-uploadfield-item').find('.ss-uploadfield-item-editform');
 				if (editform.hasClass('loading')) {
@@ -125,7 +125,7 @@
 				}
 			}
 		});
-		$('.ss-uploadfield-item-editform').entwine({
+		$('div.ss-upload .ss-uploadfield-item-editform').entwine({
 			EditFormVisible: false,
 			fitHeight: function() {
 				var iframe = this.find('iframe'),
@@ -147,7 +147,7 @@
 				this.setEditFormVisible(!this.getEditFormVisible());
 			}
 		});
-		$('.ss-uploadfield-item-editform iframe').entwine({
+		$('div.ss-upload .ss-uploadfield-item-editform iframe').entwine({
 			onmatch: function() {
 				this.load(function() {
 					$(this).parent().removeClass('loading');
