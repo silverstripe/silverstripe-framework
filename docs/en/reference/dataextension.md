@@ -90,7 +90,7 @@ The $fields parameter is passed by reference, as it is an object.
 	:::php
 	public function updateCMSFields(FieldList $fields) {
 	   $fields->push(new TextField('Position', 'Position Title'));
-	   $fields->push(new ImageField('Image', 'Profile Image'));
+	   $fields->push(new UploadField('Image', 'Profile Image'));
 	}
 
 

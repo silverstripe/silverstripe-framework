@@ -510,7 +510,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 
 .cms-logo { border-bottom: 1px solid #03090c; height: 31px; overflow: hidden; padding: 0 0 0 4px; vertical-align: middle; font-size: 12px; }
 .cms-logo .version { display: none; }
-.cms-logo a { display: inline-block; height: 24px; width: 24px; float: left; margin-right: 8px; background: url('../images/logo_small.png') no-repeat; text-indent: -9999em; padding-right: 7px; border-right: 1px solid #19435c; }
+.cms-logo a { display: inline-block; height: 24px; width: 24px; float: left; margin-right: 8px; background: url("../images/logo_small.png") no-repeat; text-indent: -9999em; padding-right: 7px; border-right: 1px solid #19435c; }
 .cms-logo span { font-weight: bold; font-size: 14px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
 
 .cms-login-status { border-top: 1px solid #19435c; height: 24px; padding: 7px 4px 0 4px; overflow: hidden; line-height: 16px; font-size: 11px; }

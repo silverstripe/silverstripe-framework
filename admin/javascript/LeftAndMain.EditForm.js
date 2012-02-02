@@ -31,7 +31,9 @@
 			 * Variable: ChangeTrackerOptions
 			 * (Object)
 			 */
-			ChangeTrackerOptions: {},
+			ChangeTrackerOptions: {
+				ignoreFieldSelector: '.ss-upload :input'
+			},
 		
 			/**
 			 * Constructor: onmatch
