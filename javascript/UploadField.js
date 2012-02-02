@@ -32,6 +32,9 @@
 				var config = $.parseJSON(fileInput.data('config').replace(/'/g,'"'));
 				this.fileupload($.extend(true, 
 					{
+						formData: function(form) {
+							return [{name: 'SecurityID', value: $(form).find(':input[name=SecurityID]').val()}];
+						},
 						errorMessages: {
 							// errorMessages for all error codes suggested from the plugin author, some will be overwritten by the config comming from php
 							1: ss.i18n._t('UploadField.PHP_MAXFILESIZE', 'File exceeds upload_max_filesize (php.ini directive)'),

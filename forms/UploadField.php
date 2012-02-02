@@ -397,6 +397,10 @@ class UploadField extends FileField {
 	public function upload(SS_HTTPRequest $request) {
 		if($this->isDisabled() || $this->isReadonly()) return $this->httpError(403);
 
+		// Protect against CSRF on destructive action
+		$token = $this->getForm()->getSecurityToken();
+		if(!$token->checkRequest($request)) return $this->httpError(400);
+
 		$name = $this->getName();
 		$tmpfile = $request->postVar($name);
 		$record = $this->getRecord();
@@ -539,14 +543,16 @@ class UploadField_ItemHandler extends RequestHandler {
 	 * @return string
 	 */
 	public function RemoveLink() {
-		return $this->Link('remove');
+		$token = $this->parent->getForm()->getSecurityToken();
+		return $token->addToUrl($this->Link('remove'));
 	}
 
 	/**
 	 * @return string
 	 */
 	public function DeleteLink() {
-		return $this->Link('delete');
+		$token = $this->parent->getForm()->getSecurityToken();
+		return $token->addToUrl($this->Link('delete'));
 	}
 
 	/**
@@ -563,7 +569,12 @@ class UploadField_ItemHandler extends RequestHandler {
 	 * @return SS_HTTPResponse
 	 */
 	public function remove(SS_HTTPRequest $request) {
+		// Check form field state
 		if($this->parent->isDisabled() || $this->parent->isReadonly()) return $this->httpError(403);
+
+		// Protect against CSRF on destructive action
+		$token = $this->parent->getForm()->getSecurityToken();
+		if(!$token->checkRequest($request)) return $this->httpError(400);
 
 		$response = new SS_HTTPResponse();
 		$response->setStatusCode(500);
@@ -596,8 +607,14 @@ class UploadField_ItemHandler extends RequestHandler {
 	 * @return SS_HTTPResponse
 	 */
 	public function delete(SS_HTTPRequest $request) {
+		// Check form field state
 		if($this->parent->isDisabled() || $this->parent->isReadonly()) return $this->httpError(403);
 
+		// Protect against CSRF on destructive action
+		$token = $this->parent->getForm()->getSecurityToken();
+		if(!$token->checkRequest($request)) return $this->httpError(400);
+
+		// Check item permissions
 		$item = $this->getItem();
 		if(!$item) return $this->httpError(404);
 		if(!$item->canDelete()) return $this->httpError(403);
@@ -620,8 +637,10 @@ class UploadField_ItemHandler extends RequestHandler {
 	 * @return ViewableData_Customised
 	 */
 	public function edit(SS_HTTPRequest $request) {
+		// Check form field state
 		if($this->parent->isDisabled() || $this->parent->isReadonly()) return $this->httpError(403);
 
+		// Check item permissions
 		$item = $this->getItem();
 		if(!$item) return $this->httpError(404);
 		if(!$item->canEdit()) return $this->httpError(403);
@@ -680,8 +699,10 @@ class UploadField_ItemHandler extends RequestHandler {
 	 * @param SS_HTTPRequest $request
 	 */
 	public function doEdit(array $data, Form $form, SS_HTTPRequest $request) {
+		// Check form field state
 		if($this->parent->isDisabled() || $this->parent->isReadonly()) return $this->httpError(403);
-		
+
+		// Check item permissions
 		$item = $this->getItem();
 		if(!$item) return $this->httpError(404);
 		if(!$item->canEdit()) return $this->httpError(403);
