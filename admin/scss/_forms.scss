@@ -204,6 +204,25 @@ form.stacked .field, .field.stacked {
 	}
 }
 
+form.small .field, .field.small {
+	label {
+		&.left {
+			width: $grid-horizontal * 14;
+		}
+	}
+	
+	.middleColumn {
+		margin-left: $grid-horizontal * 15;
+	}
+
+	input.text,
+	textarea,
+	select,
+	.TreeDropdownField {
+		width: auto;
+	}
+}
+
 .field {	
 	/* TreeDropdowns */
 	.TreeDropdownField {
