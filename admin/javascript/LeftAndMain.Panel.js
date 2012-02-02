@@ -92,28 +92,29 @@
 			
 			togglePanel: function(bool) {
 
-				//apply or unapply the flyout formatting
-				$('.cms-menu-list').children('li').each(function(){
-					if (bool) { //expand
-						$(this).children('ul').each(function() {
-							$(this).removeClass('collapsed-flyout');
-							if ($(this).data('collapse')) {
-								$(this).removeData('collapse');
-								$(this).addClass('collapse');
-							}
-						});
-					} else {    //collapse
-						$(this).children('ul').each(function() {
-							$(this).addClass('collapsed-flyout');
-							$(this).hasClass('collapse');
-							$(this).removeClass('collapse');
-							$(this).data('collapse', true);
-						});
-					}
-				});
+				//apply or unapply the flyout formatting, should only apply to cms-menu-list when the current collapsed panal is the cms menu.
+				if($(this).attr('id') == 'cms-menu'){
+					$('.cms-menu-list').children('li').each(function(){
+						if (bool) { //expand
+							$(this).children('ul').each(function() {
+								$(this).removeClass('collapsed-flyout');
+								if ($(this).data('collapse')) {
+									$(this).removeData('collapse');
+									$(this).addClass('collapse');
+								}
+							});
+						} else {    //collapse
+							$(this).children('ul').each(function() {
+								$(this).addClass('collapsed-flyout');
+								$(this).hasClass('collapse');
+								$(this).removeClass('collapse');
+								$(this).data('collapse', true);
+							});
+						}
+					});
 
-				this.toggleFlyoutState(bool);
-
+					this.toggleFlyoutState(bool);					
+				}
 				this.toggleClass('collapsed', !bool);
 				var newWidth = bool ? this.getWidthExpanded() : this.getWidthCollapsed();
 				
