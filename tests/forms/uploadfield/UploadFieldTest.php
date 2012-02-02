@@ -14,6 +14,89 @@
 		'File' => array('UploadFieldTest_FileExtension')
 	);
 
+	function testUploadNoRelation() {
+		$this->loginWithPermission('ADMIN');
+
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+
+		$tmpFileName = 'testUploadBasic.txt';
+		$_FILES = array('NoRelationField' => $this->getUploadFile($tmpFileName));
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/NoRelationField/upload',
+			array('NoRelationField' => $this->getUploadFile($tmpFileName))
+		);
+		$this->assertFalse($response->isError());
+		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
+		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
+		$this->assertNotNull($uploadedFile);
+	}
+
+	function testUploadHasOneRelation() {
+		$this->loginWithPermission('ADMIN');
+
+		// Unset existing has_one relation before re-uploading
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$record->HasOneFileID = null;
+		$record->write();
+
+		$tmpFileName = 'testUploadHasOneRelation.txt';
+		$_FILES = array('HasOneFile' => $this->getUploadFile($tmpFileName));
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/HasOneFile/upload',
+			array('HasOneFile' => $this->getUploadFile($tmpFileName))
+		);
+		$this->assertFalse($response->isError());
+		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
+		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
+		$this->assertNotNull($uploadedFile);
+
+		$record = DataObject::get_by_id($record->class, $record->ID, false);
+		$this->assertTrue($record->HasOneFile()->exists());
+		$this->assertEquals($record->HasOneFile()->Name, $tmpFileName);
+	}
+
+	function testUploadHasManyRelation() {
+		$this->loginWithPermission('ADMIN');
+
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+
+		$tmpFileName = 'testUploadHasManyRelation.txt';
+		$_FILES = array('HasManyFiles' => $this->getUploadFile($tmpFileName));
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/HasManyFiles/upload',
+			array('HasManyFiles' => $this->getUploadFile($tmpFileName))
+		);
+		$this->assertFalse($response->isError());
+		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
+		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
+		$this->assertNotNull($uploadedFile);
+
+		$record = DataObject::get_by_id($record->class, $record->ID, false);
+		$this->assertEquals(3, $record->HasManyFiles()->Count());
+		$this->assertEquals($record->HasManyFiles()->Last()->Name, $tmpFileName);
+	}
+
+	function testUploadManyManyRelation() {
+		$this->loginWithPermission('ADMIN');
+
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+
+		$tmpFileName = 'testUploadManyManyRelation.txt';
+		$_FILES = array('ManyManyFiles' => $this->getUploadFile($tmpFileName));
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/ManyManyFiles/upload',
+			array('ManyManyFiles' => $this->getUploadFile($tmpFileName))
+		);
+		$this->assertFalse($response->isError());
+		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
+		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
+		$this->assertNotNull($uploadedFile);
+
+		$record = DataObject::get_by_id($record->class, $record->ID, false);
+		$this->assertEquals(3, $record->ManyManyFiles()->Count());
+		$this->assertEquals($record->ManyManyFiles()->Last()->Name, $tmpFileName);
+	}
+
 	function testAllowedMaxFileNumber() {
 		$this->markTestIncomplete();
 	}
@@ -21,13 +104,120 @@
 	function testRemoveFromHasOne() {
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file1 = $this->objFromFixture('File', 'file1');
+
+		$this->assertTrue($record->HasOneFile()->exists());
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/HasOneFile/item/' . $file1->ID . '/remove',
+			array()
+		);
+		$this->assertFalse($response->isError());
+		$record = DataObject::get_by_id($record->class, $record->ID, false);
+		$this->assertFalse($record->HasOneFile()->exists());
+		$this->assertFileExists($file1->FullPath, 'File is only detached, not deleted from filesystem');
+	}
+
+	function testRemoveFromHasMany() {
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$file2 = $this->objFromFixture('File', 'file2');
+		$file3 = $this->objFromFixture('File', 'file3');
+
+		$this->assertEquals(array('File2', 'File3'), $record->HasManyFiles()->column('Title'));
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/HasManyFiles/item/' . $file2->ID . '/remove',
+			array()
+		);
+		$this->assertFalse($response->isError());
+		$record = DataObject::get_by_id($record->class, $record->ID, false);
+		$this->assertEquals(array('File3'), $record->HasManyFiles()->column('Title'));
+		$this->assertFileExists($file3->FullPath, 'File is only detached, not deleted from filesystem');
+	}
+
+	function testRemoveFromManyMany() {
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$file4 = $this->objFromFixture('File', 'file4');
+		$file5 = $this->objFromFixture('File', 'file5');
+
+		$this->assertEquals(array('File4', 'File5'), $record->ManyManyFiles()->column('Title'));
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/ManyManyFiles/item/' . $file4->ID . '/remove',
+			array()
+		);
+		$this->assertFalse($response->isError());
+		$record = DataObject::get_by_id($record->class, $record->ID, false);
+		$this->assertEquals(array('File5'), $record->ManyManyFiles()->column('Title'));
+		$this->assertFileExists($file4->FullPath, 'File is only detached, not deleted from filesystem');
+	}
+
+	function testDeleteFromHasOne() {
+		$this->loginWithPermission('ADMIN');
+
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 		$file1 = $this->objFromFixture('File', 'file1');
 
-		// TODO
-		// $response = $this->post(
-		// 	'UploadFieldTest_Controller/ManyManyForm/fields/MyUploadField/item/' . $file1 . '/remove',
-		// 	array()
-		// );
+		$this->assertTrue($record->HasOneFile()->exists());
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/HasOneFile/item/' . $file1->ID . '/delete',
+			array()
+		);
+		$this->assertFalse($response->isError());
+		$record = DataObject::get_by_id($record->class, $record->ID, false);
+		$this->assertFalse($record->HasOneFile()->exists());
+		$this->assertFileNotExists($file1->FullPath, 'File is also removed from filesystem');
+	}
+
+	function testDeleteFromHasMany() {
+		$this->loginWithPermission('ADMIN');
+
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$file2 = $this->objFromFixture('File', 'file2');
+		$file3 = $this->objFromFixture('File', 'file3');
+
+		$this->assertEquals(array('File2', 'File3'), $record->HasManyFiles()->column('Title'));
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/HasManyFiles/item/' . $file2->ID . '/delete',
+			array()
+		);
+		$this->assertFalse($response->isError());
+		$record = DataObject::get_by_id($record->class, $record->ID, false);
+		$this->assertEquals(array('File3'), $record->HasManyFiles()->column('Title'));
+		$this->assertFileNotExists($file2->FullPath, 'File is also removed from filesystem');
+	}
+
+	function testDeleteFromManyMany() {
+		$this->loginWithPermission('ADMIN');
+
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$file4 = $this->objFromFixture('File', 'file4');
+		$file5 = $this->objFromFixture('File', 'file5');
+
+		$this->assertEquals(array('File4', 'File5'), $record->ManyManyFiles()->column('Title'));
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/ManyManyFiles/item/' . $file4->ID . '/delete',
+			array()
+		);
+		$this->assertFalse($response->isError());
+		$record = DataObject::get_by_id($record->class, $record->ID, false);
+		$this->assertEquals(array('File5'), $record->ManyManyFiles()->column('Title'));
+		$this->assertFileNotExists($file4->FullPath, 'File is also removed from filesystem');
+	}
+
+	function testEdit() {
+		$this->loginWithPermission('ADMIN');
+
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$file4 = $this->objFromFixture('File', 'file4');
+		$file5 = $this->objFromFixture('File', 'file5');
+		$baseUrl = 'UploadFieldTest_Controller/Form/field/ManyManyFiles/item/' . $file4->ID;
+
+		$response = $this->get($baseUrl . '/edit');
+		$this->assertFalse($response->isError());
+
+		$response = $this->post($baseUrl . '/EditForm', array('Title' => 'File 4 modified'));
+		$this->assertFalse($response->isError());
+
+		$record = DataObject::get_by_id($record->class, $record->ID, false);
+		$file4 = DataObject::get_by_id($file4->class, $file4->ID, false);
+		$this->assertEquals('File 4 modified', $file4->Title);
 	}
 
 	function testGetRecord() {
@@ -107,6 +297,69 @@
 		return new Form(new Controller(), 'Form', new FieldList(), new FieldList());
 	}
 
+	/**
+	 * @return Array Emulating an entry in the $_FILES superglobal
+	 */
+	protected function getUploadFile($tmpFileName = 'UploadFieldTest-testUpload.txt') {
+		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+		$tmpFileContent = '';
+		for($i=0; $i<10000; $i++) $tmpFileContent .= '0';
+		file_put_contents($tmpFilePath, $tmpFileContent);
+		
+		// emulates the $_FILES array
+		return array(
+			'name' => $tmpFileName,
+			'type' => 'text/plaintext',
+			'size' => filesize($tmpFilePath),
+			'tmp_name' => $tmpFilePath,
+			'extension' => 'txt',
+			'error' => UPLOAD_ERR_OK,
+		);
+	}
+
+	function setUp() {
+		parent::setUp();
+		
+		if(!file_exists(ASSETS_PATH)) mkdir(ASSETS_PATH);
+
+		/* Create a test folders for each of the fixture references */
+		$folderIDs = $this->allFixtureIDs('Folder');
+		foreach($folderIDs as $folderID) {
+			$folder = DataObject::get_by_id('Folder', $folderID);
+			if(!file_exists(BASE_PATH."/$folder->Filename")) mkdir(BASE_PATH."/$folder->Filename");
+		}
+		
+		/* Create a test files for each of the fixture references */
+		$fileIDs = $this->allFixtureIDs('File');
+		foreach($fileIDs as $fileID) {
+			$file = DataObject::get_by_id('File', $fileID);
+			$fh = fopen(BASE_PATH."/$file->Filename", "w");
+			fwrite($fh, str_repeat('x',1000000));
+			fclose($fh);
+		}
+	}
+	
+	function tearDown() {
+		parent::tearDown();
+
+		/* Remove the test files that we've created */
+		$fileIDs = $this->allFixtureIDs('File');
+		foreach($fileIDs as $fileID) {
+			$file = DataObject::get_by_id('File', $fileID);
+			if($file && file_exists(BASE_PATH."/$file->Filename")) unlink(BASE_PATH."/$file->Filename");
+		}
+
+		/* Remove the test folders that we've crated */
+		$folderIDs = $this->allFixtureIDs('Folder');
+		foreach($folderIDs as $folderID) {
+			$folder = DataObject::get_by_id('Folder', $folderID);
+			if($folder && file_exists(BASE_PATH."/$folder->Filename")) Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
+		}
+
+		// Remove left over folders and any files that may exist
+		if(file_exists('../assets/UploadFieldTest')) Filesystem::removeFolder('../assets/FileTest');
+	}
+
 }
 
 class UploadFieldTest_Record extends DataObject implements TestOnly {
@@ -141,28 +394,45 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 
 	protected $template = 'BlankPage';
 
-	function HasOneForm() {
-		return $this->getMockForm('HasOneForm', 'HasOneFile');
-	}
+	function Form() {
+		$record = DataObject::get_one('UploadFieldTest_Record', '"Title" = \'Record 1\'');
 
-	function HasManyForm() {
-		return $this->getMockForm('HasManyForm', 'HasManyFiles');
-	}
+		$fieldNoRelation = new UploadField('NoRelationField');
+		$fieldNoRelation->setFolderName('UploadFieldTest');
+		$fieldNoRelation->setRecord($record);
+		$fieldHasOne = new UploadField('HasOneFile');
+		$fieldHasOne->setFolderName('UploadFieldTest');
+		$fieldHasOne->setRecord($record);
+		$fieldHasMany = new UploadField('HasManyFiles');
+		$fieldHasMany->setFolderName('UploadFieldTest');
+		$fieldHasMany->setRecord($record);
+		$fieldManyMany = new UploadField('ManyManyFiles');
+		$fieldManyMany->setFolderName('UploadFieldTest');
+		$fieldManyMany->setRecord($record);
 
-	function ManyManyForm() {
-		return $this->getMockForm('ManyManyForm', 'ManyManyFiles');
-	}
-
-	protected function getMockForm($formName, $uploadFieldName) {
-		$uploadField = new UploadField($uploadFieldName);
-		$uploadField->setRecord(DataObject::get_one('UploadFieldTest_Record', '"Title" = \'Record 1\''));
 		$form = new Form(
 			$this,
-			$formName,
-			new FieldList($uploadField),
-			new FieldList(new FormAction('submit')),
-			new RequiredFields($uploadFieldName)
+			'Form',
+			new FieldList(
+				$fieldNoRelation,
+				$fieldHasOne,
+				$fieldHasMany,
+				$fieldManyMany
+			),
+			new FieldList(
+				new FormAction('submit')
+			),
+			new RequiredFields(
+				'NoRelationField',
+				'HasOneFile',
+				'HasManyFiles',
+				'ManyManyFiles'
+			)
 		);
 		return $form;
 	}
+	function submit($data, $form) {
+		
+	}
+
 }
