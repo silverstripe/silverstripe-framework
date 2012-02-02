@@ -48,7 +48,7 @@
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-cancel button, .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-start button { display: block; overflow: hidden; text-indent: -9999px; padding: 0; margin: 0; border: 0; width: 16px; height: 16px; cursor: pointer; -moz-box-shadow: none; -webkit-box-shadow: none; -o-box-shadow: none; box-shadow: none; background: url('../images/sprites_16x16-scf81c570f3.png') 0 0 no-repeat; }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-start { right: 20px; }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-start button { background: url('../images/sprites_16x16-scf81c570f3.png') 0 -156px no-repeat; }
-.ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-editform { /* don't use display none, for it will break jQuery('iframe').contents().height() */ height: 0; overflow: hidden; clear: both; }
+.ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-editform { /* don't use display none, for it will break jQuery('iframe').contents().height() */ height: 0; overflow: hidden; clear: both; margin-top: 8px; }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-editform iframe { width: 100%; }
 .ss-uploadfield .ss-uploadfield-addfile.borderTop { border-top: 1px solid #b3b3b3; }
 

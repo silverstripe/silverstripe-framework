@@ -5,7 +5,7 @@
 		<title></title>
 	</head>
 
-	<body>
+	<body class="cms">
 		$Form
 	</body>
 </html>

@@ -651,8 +651,6 @@ class UploadField_ItemHandler extends RequestHandler {
 		$items = $this->parent->getItems();
 		if($this->managesRelation() && !$items->byID($item->ID)) return $this->httpError(403);
 
-		Requirements::clear();
-		Requirements::unblock_all();
 		return $this->customise(array(
 			'Form' => $this->EditForm()
 		))->renderWith($this->parent->getTemplateFileEdit());
@@ -668,14 +666,17 @@ class UploadField_ItemHandler extends RequestHandler {
 		} elseif ($file->hasMethod($this->parent->getConfig('fileEditFields'))) {
 			$fields = $file->{$this->parent->getConfig('fileEditFields')}();
 		} else {
-			$fields = $file->uploadMetadataFields(); // TODO use getCMSFields
+			$fields = $file->getCMSFields();
+			// Only display main tab, to avoid overly complex interface
+			if($fields->hasTabSet() && $mainTab = $fields->findOrMakeTab('Root.Main')) $fields = $mainTab->Fields();
 		}
 		if (is_a($this->parent->getConfig('fileEditActions'), 'FieldList')) {
 			$actions = $this->parent->getConfig('fileEditActions');
 		} elseif ($file->hasMethod($this->parent->getConfig('fileEditActions'))) {
 			$actions = $file->{$this->parent->getConfig('fileEditActions')}();
 		} else {
-			$actions = new FieldList(new FormAction('doEdit', _t('UploadField.DOEDIT', 'save')));
+			$actions = new FieldList($saveAction = new FormAction('doEdit', _t('UploadField.DOEDIT', 'Save')));
+			$saveAction->addExtraClass('ss-ui-action-constructive');
 		}
 		if (is_a($this->parent->getConfig('fileEditValidator'), 'Validator')) {
 			$validator = $this->parent->getConfig('fileEditValidator');
