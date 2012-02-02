@@ -215,8 +215,10 @@ class UploadField extends FileField {
 		if (!$this->items || !$this->items->exists()) {
 			$record = $this->getRecord();
 			$this->items = array();
+			// Try to auto-detect relationship
 			if ($record && $record->exists()) {
 				if ($record->has_many($name) || $record->many_many($name)) {
+					// Ensure relationship is cast to an array, as we can't alter the items of a DataList/RelationList (see below)
 					$this->items = $record->{$name}()->toArray();
 				} elseif($record->has_one($name)) {
 					$item = $record->{$name}();
@@ -229,9 +231,7 @@ class UploadField extends FileField {
 			if ($this->items->exists()) {
 				foreach ($this->items as $i=>$file) {
 					$this->items[$i] = $this->customiseFile($file);	
-
-					// Respect model permissions
-					if(!$file->canView()) unset($this->items[$i]);
+					if(!$file->canView()) unset($this->items[$i]); // Respect model permissions
 				}
 			}
 		}
