@@ -568,12 +568,16 @@ class UploadField_ItemHandler extends RequestHandler {
 	 * @return SS_HTTPResponse
 	 */
 	public function delete(SS_HTTPRequest $request) {
+		// First remove the file from the current relationship
 		$this->remove($request);
+
 		$response = new SS_HTTPResponse();
 		$file = $this->getItem();
 		if (!$file) {
 			$response->setStatusCode(500);
 			$response->setStatusDescription(_t('UploadField.DELETEERROR', 'Error deleting file'));
+		} else if(!$file->canDelete()) {
+			$response->setStatusCode(403);
 		} else {
 			$file->delete();
 			$response->setStatusCode(200);
