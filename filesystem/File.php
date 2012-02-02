@@ -680,6 +680,11 @@ class File extends DataObject {
 		return ($size) ? self::format_size($size) : false;
 	}
 	
+	/**
+	 * Formats a file size (eg: (int)42 becomes string '42 bytes')
+	 * @param int $size
+	 * @return string
+	 */
 	public static function format_size($size) {
 		if($size < 1024) return $size . ' bytes';
 		if($size < 1024*10) return (round($size/1024*10)/10). ' KB';
@@ -687,6 +692,24 @@ class File extends DataObject {
 		if($size < 1024*1024*10) return (round(($size/1024)/1024*10)/10) . ' MB';
 		if($size < 1024*1024*1024) return round(($size/1024)/1024) . ' MB';
 		return round($size/(1024*1024*1024)*10)/10 . ' GB';
+	}
+	
+	/**
+	 * Convert a php.ini value (eg: 512M) to bytes
+	 * 
+	 * @param string $phpIniValue
+	 * @return int
+	 */
+	public function ini2bytes($PHPiniValue) {
+		switch(strtolower(substr(trim($PHPiniValue), -1))) {
+			case 'g':
+				$PHPiniValue *= 1024;
+			case 'm':
+				$PHPiniValue *= 1024;
+			case 'k':
+				$PHPiniValue *= 1024;
+		}
+		return $PHPiniValue;
 	}
 
 	/**
