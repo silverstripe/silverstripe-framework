@@ -180,9 +180,9 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	
 	/**
 	 * @see SiteTree::set_create_defaultpages()
-	*/
+	 */
 	private static $create_default_pages = true;
-	
+
 	/**
 	 * This controls whether of not extendCMSFields() is called by getCMSFields.
 	 */
@@ -231,7 +231,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 	public static function set_create_default_pages($option = true) {
 		self::$create_default_pages = $option;
 	}
-	
+
 	/**
 	 * Fetches the {@link SiteTree} object that maps to a link.
 	 *
@@ -618,8 +618,8 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
  			&& (!$maxDepth || sizeof($parts) < $maxDepth) 
  			&& (!$stopAtPageType || $page->ClassName != $stopAtPageType)
  		) {
-			if($showHidden || $page->ShowInMenus || ($page->ID == $this->ID)) { 
-				if($page->URLSegment == 'home') $hasHome = true;
+			if($showHidden || $page->ShowInMenus || ($page->ID == $this->ID)) {
+				$title = $this->getBreadcrumbTitle($page);
 				if(($page->ID == $this->ID) || $unlinked) {
 				 	$parts[] = Convert::raw2xml($page->Title);
 				} else {
@@ -1287,11 +1287,11 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 		
 		// default pages
 		if($this->class == 'SiteTree' && self::$create_default_pages) {
-			if(!SiteTree::get_by_link('home')) {
+			if(!SiteTree::get_by_link(RootURLController::get_default_homepage_link())) {
 				$homepage = new Page();
 				$homepage->Title = _t('SiteTree.DEFAULTHOMETITLE', 'Home');
 				$homepage->Content = _t('SiteTree.DEFAULTHOMECONTENT', '<p>Welcome to SilverStripe! This is the default homepage. You can edit this page by opening <a href="admin/">the CMS</a>. You can now access the <a href="http://doc.silverstripe.org">developer documentation</a>, or begin <a href="http://doc.silverstripe.org/doku.php?id=tutorials">the tutorials.</a></p>');
-				$homepage->URLSegment = 'home';
+				$homepage->URLSegment = RootURLController::get_default_homepage_link();
 				$homepage->Status = 'Published';
 				$homepage->Sort = 1;
 				$homepage->write();

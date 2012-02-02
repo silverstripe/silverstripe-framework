@@ -54,6 +54,16 @@ class RootURLController extends Controller {
 	}
 	
 	/**
+	 * Set the URL Segment used for your homepage when it is created by dev/build.
+	 * This allows you to use home page URLs other than the default "home".
+	 *
+	 * @param string $urlsegment the URL segment for your home page
+	 */
+	public static function set_default_homepage_link($urlsegment = "home") {
+		self::$default_homepage_link = $urlsegment;
+	}
+
+	/**
 	 * Gets the link that denotes the homepage if there is not one explicitly defined for this HTTP_HOST value.
 	 *
 	 * @return string
