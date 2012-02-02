@@ -350,6 +350,31 @@
 		$this->assertContains('File5',$field->getItems()->column('Title'));
 	}
 
+	function testReadonly() {
+		$this->loginWithPermission('ADMIN');
+		
+		$response = $this->get('UploadFieldTest_Controller');
+		$this->assertFalse($response->isError());
+
+		$parser = new CSSContentParser($response->getBody());
+		$this->assertFalse((bool)$parser->getBySelector('#ReadonlyField .ss-uploadfield-files .ss-uploadfield-item .ss-ui-button'), 'Removes all buttons on items');
+		$this->assertFalse((bool)$parser->getBySelector('#ReadonlyField .ss-uploadfield-dropzone'), 'Removes dropzone');
+		$this->assertFalse((bool)$parser->getBySelector('#ReadonlyField .ss-uploadfield-addfile .ss-ui-button'), 'Removes all buttons from "add" area');
+	}
+
+	function testDisabled() {
+		$this->loginWithPermission('ADMIN');
+		
+		$response = $this->get('UploadFieldTest_Controller');
+		$this->assertFalse($response->isError());
+
+		$parser = new CSSContentParser($response->getBody());
+		$this->assertFalse((bool)$parser->getBySelector('#DisabledField .ss-uploadfield-files .ss-uploadfield-item .ss-ui-button'), 'Removes all buttons on items');
+		$this->assertFalse((bool)$parser->getBySelector('#DisabledField .ss-uploadfield-dropzone'), 'Removes dropzone');
+		$this->assertFalse((bool)$parser->getBySelector('#DisabledField .ss-uploadfield-addfile .ss-ui-button'), 'Removes all buttons from "add" area');
+		
+	}
+
 	protected function getMockForm() {
 		return new Form(new Controller(), 'Form', new FieldList(), new FieldList());
 	}
@@ -470,15 +495,28 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 		$fieldNoRelation = new UploadField('NoRelationField');
 		$fieldNoRelation->setFolderName('UploadFieldTest');
 		$fieldNoRelation->setRecord($record);
+		
 		$fieldHasOne = new UploadField('HasOneFile');
 		$fieldHasOne->setFolderName('UploadFieldTest');
 		$fieldHasOne->setRecord($record);
+		
 		$fieldHasMany = new UploadField('HasManyFiles');
 		$fieldHasMany->setFolderName('UploadFieldTest');
 		$fieldHasMany->setRecord($record);
+		
 		$fieldManyMany = new UploadField('ManyManyFiles');
 		$fieldManyMany->setFolderName('UploadFieldTest');
 		$fieldManyMany->setRecord($record);
+		
+		$fieldReadonly = new UploadField('ReadonlyField');
+		$fieldReadonly->setFolderName('UploadFieldTest');
+		$fieldReadonly->setRecord($record);
+		$fieldReadonly = $fieldReadonly->performReadonlyTransformation();
+
+		$fieldDisabled = new UploadField('DisabledField');
+		$fieldDisabled->setFolderName('UploadFieldTest');
+		$fieldDisabled->setRecord($record);
+		$fieldDisabled = $fieldDisabled->performDisabledTransformation();
 
 		$form = new Form(
 			$this,
@@ -487,7 +525,9 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 				$fieldNoRelation,
 				$fieldHasOne,
 				$fieldHasMany,
-				$fieldManyMany
+				$fieldManyMany,
+				$fieldReadonly,
+				$fieldDisabled
 			),
 			new FieldList(
 				new FormAction('submit')
@@ -496,11 +536,14 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 				'NoRelationField',
 				'HasOneFile',
 				'HasManyFiles',
-				'ManyManyFiles'
+				'ManyManyFiles',
+				'ReadonlyField',
+				'DisabledField'
 			)
 		);
 		return $form;
 	}
+
 	function submit($data, $form) {
 		
 	}

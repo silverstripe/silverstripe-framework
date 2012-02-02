@@ -395,6 +395,8 @@ class UploadField extends FileField {
 	 * @return string json
 	 */
 	public function upload(SS_HTTPRequest $request) {
+		if($this->isDisabled() || $this->isReadonly()) return $this->httpError(403);
+
 		$name = $this->getName();
 		$tmpfile = $request->postVar($name);
 		$record = $this->getRecord();
@@ -473,6 +475,13 @@ class UploadField extends FileField {
 		$response = new SS_HTTPResponse(Convert::raw2json(array($return)));
 		$response->addHeader('Content-Type', 'text/plain');
 		return $response;
+	}
+
+	function performReadonlyTransformation() {
+		$clone = clone $this;
+		$clone->addExtraClass('readonly');
+		$clone->setReadonly(true);
+		return $clone;
 	}
 }
 
@@ -554,6 +563,8 @@ class UploadField_ItemHandler extends RequestHandler {
 	 * @return SS_HTTPResponse
 	 */
 	public function remove(SS_HTTPRequest $request) {
+		if($this->parent->isDisabled() || $this->parent->isReadonly()) return $this->httpError(403);
+
 		$response = new SS_HTTPResponse();
 		$response->setStatusCode(500);
 		$fieldName = $this->parent->getName();
@@ -585,6 +596,8 @@ class UploadField_ItemHandler extends RequestHandler {
 	 * @return SS_HTTPResponse
 	 */
 	public function delete(SS_HTTPRequest $request) {
+		if($this->parent->isDisabled() || $this->parent->isReadonly()) return $this->httpError(403);
+
 		$item = $this->getItem();
 		if(!$item) return $this->httpError(404);
 		if(!$item->canDelete()) return $this->httpError(403);
@@ -607,6 +620,8 @@ class UploadField_ItemHandler extends RequestHandler {
 	 * @return ViewableData_Customised
 	 */
 	public function edit(SS_HTTPRequest $request) {
+		if($this->parent->isDisabled() || $this->parent->isReadonly()) return $this->httpError(403);
+
 		$item = $this->getItem();
 		if(!$item) return $this->httpError(404);
 		if(!$item->canEdit()) return $this->httpError(403);
@@ -665,6 +680,8 @@ class UploadField_ItemHandler extends RequestHandler {
 	 * @param SS_HTTPRequest $request
 	 */
 	public function doEdit(array $data, Form $form, SS_HTTPRequest $request) {
+		if($this->parent->isDisabled() || $this->parent->isReadonly()) return $this->httpError(403);
+		
 		$item = $this->getItem();
 		if(!$item) return $this->httpError(404);
 		if(!$item->canEdit()) return $this->httpError(403);
