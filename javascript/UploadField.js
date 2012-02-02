@@ -103,14 +103,19 @@
 		});
 		$('div.ss-upload .ss-uploadfield-item-remove:not(.ui-state-disabled), .ss-uploadfield-item-delete:not(.ui-state-disabled)').entwine({
 			onclick: function(e) {
-				var fileupload = this.closest('div.ss-upload').data('fileupload');
-				var item = this.closest('.ss-uploadfield-item');
-				fileupload._trigger('destroy', e, {
-					context: item,
-					url: this.data('href'),
-	                type: 'get',
-	                dataType: fileupload.options.dataType
-				});
+				var fileupload = this.closest('div.ss-upload').data('fileupload'), 
+					item = this.closest('.ss-uploadfield-item'), msg = '';
+				
+				if(this.is('.ss-uploadfield-item-delete')) msg = ss.i18n._t('UploadField.ConfirmDelete');
+				if(!msg || confirm(msg)) {
+					fileupload._trigger('destroy', e, {
+						context: item,
+						url: this.data('href'),
+						type: 'get',
+						dataType: fileupload.options.dataType
+					});	
+				}
+				
 				return false;
 			}
 		});
