@@ -1,9 +1,24 @@
 <?php
 
 /**
- * Field for uploading single or multiple files of all types, including images.<br><b>NOTE: this Field will call write() on the supplied record</b><br><b>Features (some might not be avaliable to old browsers):</b><ul><li>File Drag&Drop support<li>Progressbar<li>Image thumbnail/file icons even before upload finished<li>Saving into relations<li>Edit file<li>allowedExtensions is by default File::$allowed_extensions<li>maxFileSize the vaule of min(upload_max_filesize, post_max_size) from php.ini</ul>
+ * Field for uploading single or multiple files of all types, including images.
+ * <b>NOTE: this Field will call write() on the supplied record</b>
  * 
- * @example <code>$UploadField = new UploadField('myFiles', 'please upload some images <span>max 5 files</span>');<br>$UploadField->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));<br>$UploadField->setConfig('allowedMaxFileNumber', 5);</code>
+ * <b>Features (some might not be avaliable to old browsers):</b>
+ * 
+ * - File Drag&Drop support
+ * - Progressbar
+ * - Image thumbnail/file icons even before upload finished
+ * - Saving into relations
+ * - Edit file
+ * - allowedExtensions is by default File::$allowed_extensions<li>maxFileSize the vaule of min(upload_max_filesize, post_max_size) from php.ini
+ * 
+ * @example <code>
+ * $UploadField = new UploadField('myFiles', 'Please upload some images <span>(max. 5 files)</span>');
+ * $UploadField->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
+ * $UploadField->setConfig('allowedMaxFileNumber', 5);
+ * </code>
+ * 
  * @author Zauberfisch
  * @package sapphire
  * @subpackage forms
@@ -107,12 +122,10 @@ class UploadField extends FileField {
 	);
 
 	/**
-	 * Field for uploading single or multiple files of all types, including images.<br><b>NOTE: this Field will call write() on the supplied record</b><br><b>Features (some might not be avaliable to old browsers):</b><ul><li>File Drag&Drop support<li>Progressbar<li>Image thumbnail/file icons even before upload finished<li>Saving into relations<li>Edit file<li>allowedExtensions is by default File::$allowed_extensions<li>maxFileSize the vaule of min(upload_max_filesize, post_max_size) from php.ini</ul>
-	 * 
-	 * @example <code>$UploadField = new UploadField('myFiles', 'please upload some images <span>max 5 files</span>');<br>$UploadField->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));<br>$UploadField->setConfig('allowedMaxFileNumber', 5);</code>
 	 * @param string $name The internal field name, passed to forms.
 	 * @param string $title The field label.
-	 * @param SS_List $items
+	 * @param SS_List $items If no items are defined, the field will try to auto-detect an existion relation on {@link $record}, 
+	 *                       with the same name as the field name.
 	 * @param Form $form Reference to the container form
 	 */
 	public function __construct($name, $title = null, SS_List $items = null) {
@@ -123,6 +136,7 @@ class UploadField extends FileField {
 		parent::__construct($name, $title);
 
 		if($items) $this->setItems($items);
+
 		$this->getValidator()->setAllowedExtensions(array_filter(File::$allowed_extensions)); // filter out '' since this would be a regex problem on JS end
 		$this->getValidator()->setAllowedMaxFileSize(min(File::ini2bytes(ini_get('upload_max_filesize')), File::ini2bytes(ini_get('post_max_size')))); // get the lower max size
 	}
