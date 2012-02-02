@@ -381,8 +381,9 @@ class UploadField extends FileField {
 		$name = $this->getName();
 		$tmpfile = $request->postVar($name);
 		$record = $this->getRecord();
+		
 		if (!$tmpfile) {
-			$return = array('error' => _t('UploadField.FIELDNOTSET', 'file infotmation not found'));
+			$return = array('error' => _t('UploadField.FIELDNOTSET', 'File information not found'));
 		} else {
 			$return = array(
 				'name' => $tmpfile['name'],
@@ -392,18 +393,17 @@ class UploadField extends FileField {
 			);
 		}
 		if (!$return['error'] && $record && $record->exists()) {
-			$toManyFiles = false;
+			$tooManyFiles = false;
 			if ($this->getConfig('allowedMaxFileNumber') && ($record->has_many($name) || $record->many_many($name))) {
 				if(!$record->isInDB()) $record->write();
-				$toManyFiles = $record->{$name}()->count() >= $this->getConfig('allowedMaxFileNumber');
+				$tooManyFiles = $record->{$name}()->count() >= $this->getConfig('allowedMaxFileNumber');
 			} elseif(substr($name, -2) === 'ID' && $record->has_one(substr($name, 0, -2))) {
-				$toManyFiles = $record->{substr($name, 0, -2)}() && $record->{substr($name, 0, -2)}()->exists();
+				$tooManyFiles = $record->{substr($name, 0, -2)}() && $record->{substr($name, 0, -2)}()->exists();
 			} elseif($record->has_one($name)) {
-				$toManyFiles = $record->{$name}() && $record->{$name}()->exists();
+				$tooManyFiles = $record->{$name}() && $record->{$name}()->exists();
 			}
-			if ($toManyFiles) {
-				if (!$this->getConfig('allowedMaxFileNumber'))
-					$this->setConfig('allowedMaxFileNumber', 1);
+			if ($tooManyFiles) {
+				if(!$this->getConfig('allowedMaxFileNumber')) $this->setConfig('allowedMaxFileNumber', 1);
 				$return['error'] = sprintf(_t(
 					'UploadField.MAXNUMBEROFFILES', 
 					'Max number of %s file(s) exceeded.'
