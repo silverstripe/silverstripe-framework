@@ -115,12 +115,12 @@ class UploadField extends FileField {
 	 * @param SS_List $items
 	 * @param Form $form Reference to the container form
 	 */
-	public function __construct($name, $title = null, SS_List $items = null, Form $form = null) {
+	public function __construct($name, $title = null, SS_List $items = null) {
 		// TODO thats the first thing that came to my head, feel free to change it
 		$this->addExtraClass('ss-upload'); // class, used by js
 		$this->addExtraClass('ss-uploadfield'); // class, used by css for uploadfield only
 
-		parent::__construct($name, $title, null, $form);
+		parent::__construct($name, $title);
 
 		if($items) $this->setItems($items);
 		$this->getValidator()->setAllowedExtensions(array_filter(File::$allowed_extensions)); // filter out '' since this would be a regex problem on JS end

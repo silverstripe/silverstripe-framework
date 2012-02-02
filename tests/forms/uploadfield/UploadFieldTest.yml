@@ -1,0 +1,22 @@
+File:
+	file1:
+		Title: File1
+		Filename: assets/UploadFieldTest_file1.txt
+	file2:
+		Title: File2
+		Filename: assets/UploadFieldTest_file2.txt
+	file3:
+		Title: File3
+		Filename: assets/UploadFieldTest_file3.txt
+	file4:
+		Title: File4
+		Filename: assets/UploadFieldTest_file4.txt
+	file5:
+		Title: File5
+		Filename: assets/UploadFieldTest_file5.txt
+UploadFieldTest_Record:
+	record1:
+		Title: Record 1
+		HasOneFileID: =>File.file1
+		HasManyFiles: =>File.file2,=>File.file3
+		ManyManyFiles: =>File.file4,=>File.file5
