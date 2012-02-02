@@ -7,7 +7,8 @@
  * Please set a validator on the form-object to get feedback
  * about imposed filesize/extension restrictions.
  * 
- * CAUTION: Doesn't work in the CMS due to ajax submission, please use {@link FileIFrameField} instead.
+ * See {@link UploadField} For a more full-featured field 
+ * (incl. ajax-friendly uploads, previews and relationship management).
  * 
  * <b>Usage</p>
  * 

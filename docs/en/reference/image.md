@@ -10,7 +10,7 @@ including resizing.
 ### Form Fields
 
 *  `[api:Image]`. Designed to provide a complex image uploader for the CMS.
-*  `[api:SimpleImageField]`. A Simple Image Upload Form
+*  `[api:FileField]` and `[api:UploadField]`. Allows upload of images (through limiting file extensions with `setAllowedExtensions()`).
 
 ### Resizing Images in PHP
 
@@ -100,8 +100,8 @@ For output of an image tag with the image automatically resized to 80px width, y
 
 ### Form Upload
 
-For usage on a website form, see `[api:SimpleImageField]`.
-If you want to upload images within the CMS, see `[api:ImageField]`.
+For usage on a website form, see `[api:FileField]`.
+If you want to upload images within the CMS, see `[api:UploadField]`.
 
 ### Clearing Thumbnail Cache
 

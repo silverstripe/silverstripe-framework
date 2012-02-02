@@ -594,7 +594,7 @@ insert an image in the *$Content* field).
 		public function getCMSFields() {
 			$fields = parent::getCMSFields();
 			
-			$fields->addFieldToTab("Root.Content.Images", new ImageField('Photo'));
+			$fields->addFieldToTab("Root.Content.Images", new UploadField('Photo'));
 			
 			return $fields;
 		}
@@ -610,7 +610,7 @@ a simple database field like all the fields we have seen so far, but has its own
 array, we create a relationship between the *StaffPage* table and the *Image* table by storing the id of the respective
 *Image* in the *StaffPage* table.
 
-We then add an *ImageField* in the *getCMSFields* function to the tab "Root.Content.Images". Since this tab doesn't exist,
+We then add an `[api:UploadField]` in the *getCMSFields* function to the tab "Root.Content.Images". Since this tab doesn't exist,
 the *addFieldToTab* function will create it for us. The *ImageField* allows us to select an image or upload a new one in
 the CMS.
 
