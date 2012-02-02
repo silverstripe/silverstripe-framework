@@ -641,7 +641,8 @@ class UploadField_ItemHandler extends RequestHandler {
 		$file = $this->getItem();
 		$form->saveInto($file);
 		$file->write();
-		Director::redirectBack();
+
+		return $this->parent->getForm()->Controller()->redirectBack();
 	}
 
 }
