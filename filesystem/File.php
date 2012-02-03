@@ -258,7 +258,7 @@ class File extends DataObject {
 	function getCMSFields() {
 		$urlLink = "<div class='field readonly'>";
 		$urlLink .= "<label class='left'>"._t('AssetTableField.URL','URL')."</label>";
-		$urlLink .= "<span class='readonly'><a href='{$this->Link()}'>{$this->RelativeLink()}</a></span>";
+		$urlLink .= "<span class='readonly'><a href='{$this->Link()}' target='_blank'>{$this->RelativeLink()}</a></span>";
 		$urlLink .= "</div>";
 
 		return new FieldList(
