@@ -213,7 +213,7 @@ class SSHTMLBBCodeParser
         $filter = ucfirst($filter);
         if (!array_key_exists($filter, $this->_filters)) {
             $class = 'SSHTMLBBCodeParser_Filter_'.$filter;
-            if (fopen('BBCodeParser/Filter/'.$filter.'.php','r',true)) { 
+            if (@fopen('BBCodeParser/Filter/'.$filter.'.php','r',true)) { 
 		 		include_once 'BBCodeParser/Filter/'.$filter.'.php'; 
 		 	}
             if (!class_exists($class)) {
