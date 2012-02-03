@@ -7,10 +7,17 @@ require_once 'Zend/Log.php';
  * sends it to one or more {@link Zend_Log_Writer_Abstract}
  * subclasses for output.
  * 
- * These priorities are currently supported:
- *  - SS_Log::ERR
- *  - SS_Log::WARN
- *  - SS_Log::NOTICE
+ * <h1>Logging</h1>
+ * 
+ * <code>
+ * SS_Log::log('My notice event'); // as string, no priority (defaults to SS_Log::NOTICE)
+ * SS_log::log('My error event', SS_Log::ERR); // as string, with priority
+ * SS_log::log(new Exception('My error event'), SS_Log::ERR); // as exception (includes backtrace)
+ * </code>
+ * 
+ * Some of the more common priorities are SS_Log::ERR, SS_Log::WARN and SS_Log::NOTICE.
+ * 
+ * <h1>Writers</h1>
  * 
  * You can add an error writer by calling {@link SS_Log::add_writer()}
  * 
@@ -46,9 +53,14 @@ require_once 'Zend/Log.php';
  */
 class SS_Log {
 
-	const ERR = Zend_Log::ERR;
-	const WARN = Zend_Log::WARN;
-	const NOTICE = Zend_Log::NOTICE;
+	const EMERG   = Zend_Log::EMERG;  // Emergency: system is unusable
+	const ALERT   = Zend_Log::ALERT;  // Alert: action must be taken immediately
+	const CRIT    = Zend_Log::CRIT;  // Critical: critical conditions
+	const ERR     = Zend_Log::ERR;  // Error: error conditions
+	const WARN    = Zend_Log::WARN;  // Warning: warning conditions
+	const NOTICE  = Zend_Log::NOTICE;  // Notice: normal but significant condition
+	const INFO    = Zend_Log::INFO;  // Informational: informational messages
+	const DEBUG   = Zend_Log::DEBUG;  // Debug: debug messages
 
 	/**
 	 * Logger class to use.
@@ -120,11 +132,24 @@ class SS_Log {
 	 * message), or an array of variables. The latter is useful for passing
 	 * along a list of debug information for the writer to handle, such as
 	 * error code, error line, error context (backtrace).
+	 *
+	 * If the $message paramter is passed as an array, the following keys are supported:
+	 * - 'errno': Custom error number (optional)
+	 * - 'errstr': Error message (required)
+	 * - 'errfile': File where the event occurred (optional)
+	 * - 'errline' => Line where the event occurred (optional)
+	 * - 'errcontext': Backtrace information (optional)
+	 *
+	 * When passing $message as an exception object, event data like backtrace or file will be auto-populated.
+	 * When passing as a string, only the 'errstr' event data will be filled out.
 	 * 
-	 * @param mixed $message Exception object or array of error context variables
-	 * @param const $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN or SS_Log::NOTICE
+	 * @param mixed $message Exception object, array of error context variables, or a string.
+	 * @param const $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN, SS_Log::NOTICE 
+	 *  (see class constats for full list). Defaults to SS_Log::NOTICE
 	 */
-	public static function log($message, $priority) {
+	public static function log($message, $priority = null) {
+		if(!$priority) $priority = SS_Log::NOTICE;
+
 		if($message instanceof Exception) {
 			$message = array(
 				'errno' => '',
@@ -132,6 +157,16 @@ class SS_Log {
 				'errfile' => $message->getFile(),
 				'errline' => $message->getLine(),
 				'errcontext' => $message->getTrace()
+			);
+		} elseif(is_string($message)) {
+			$trace = debug_backtrace();
+			array_pop($trace); // remove the log() call itself
+			$message = array(
+				'errno' => '',
+				'errstr' => $message,
+				'errfile' => $trace[0]['file'],
+				'errline' => $trace[0]['line'],
+				'errcontext' => $trace
 			);
 		}
 		try {

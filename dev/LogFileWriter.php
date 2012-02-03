@@ -38,10 +38,23 @@ class SS_LogFileWriter extends Zend_Log_Writer_Abstract {
 	 */
 	protected $extraHeaders;
 
-	public function __construct($path, $messageType = 3, $extraHeaders = '') {
+	/**
+	 * @param String Absolute file path (file is created if it doesn't exist). 
+	 * 	Optional if $messageType=0 (writing to PHP syslog).
+	 * @param Int See http://us3.php.net/manual/en/function.error-log.php
+	 * @param String
+	 */
+	public function __construct($path = null, $messageType = 3, $extraHeaders = '') {
 		$this->path = $path;
 		$this->messageType = $messageType;
 		$this->extraHeaders = $extraHeaders;
+
+		// Create log file if necessary
+		if($this->path && !file_exists($this->path)) {
+			if(!touch($this->path)) {
+				throw new InvalidArgumentException(sprintf('Path "%s" could not be created', $this->path));
+			}
+		}
 	}
 
 	/**
