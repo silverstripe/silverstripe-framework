@@ -180,7 +180,7 @@ $gf_border_radius:	7px;
 						padding: 4px 0;
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 						color: #fff;
-						@include border-bradius(0);
+						@include border-radius(0);
 					}		
 				}
 				input {
