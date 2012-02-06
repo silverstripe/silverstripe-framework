@@ -62,7 +62,7 @@ class URLSegmentFilter extends Object {
 			if($transliterator) $name = $transliterator->toASCII($name);
 		}
 		
-		$name = (function_exists('mb_strtolower')) ? mb_strtolower($name) : strtolower($name);
+		$name = mb_strtolower($name);
 		$replacements = $this->getReplacements();
 		if($this->getAllowMultibyte()) {
 			// unset automated removal of non-ASCII characters, and don't try to transliterate
