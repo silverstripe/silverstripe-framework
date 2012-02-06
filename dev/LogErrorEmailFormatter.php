@@ -46,6 +46,20 @@ class SS_LogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 			'SS_LogEmailWriter->_write'
 		));
 
+		// Compile extra data
+		$blacklist = array('message', 'timestamp', 'priority', 'priorityName');
+		$extras = array_diff_key($event, array_combine($blacklist, $blacklist));
+		if($extras) {
+			$data .= "<h3>Details</h3>\n";
+			$data .= "<table class=\"extras\">\n";
+			foreach($extras as $k => $v) {
+				if(is_array($v)) $v = var_export($v, true);
+				$data .= sprintf(
+					"<tr><td><strong>%s</strong></td><td><pre>%s</pre></td></tr>\n", $k, $v);
+			}
+			$data .= "</table>\n";			
+		}
+
 		$data .= "</div>\n";
 
 		$relfile = Director::makeRelative($errfile);

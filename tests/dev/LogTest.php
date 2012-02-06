@@ -13,43 +13,33 @@ class SS_LogTest extends SapphireTest {
 
 	function setUp() {
 		parent::setUp();
-	
-		SS_Log::clear_writers(); // this test will break if existing writers are available!
 
-		$this->testLogPath = BASE_PATH . '/SS_LogTest.log';
-		$this->testEmailWriter = new SS_LogEmailWriter('sean@silverstripe.com');
-		$this->testFileWriter = new SS_LogFileWriter($this->testLogPath);
-		SS_Log::add_writer($this->testEmailWriter, SS_Log::ERR);
-		SS_Log::add_writer($this->testFileWriter, SS_Log::WARN);
+		SS_Log::clear_writers();
 	}
 
 	function tearDown() {
 		parent::tearDown();
 
-		unlink($this->testLogPath);
-
-		// TODO Reinstate original writers
-	}
-
-	function testCreatesLogFileInFileWriter() {
-		// Filewriter is constructed in setUp()
-		$this->assertFileExists($this->testLogPath);
+		SS_Log::clear_writers();
 	}
 
 	function testLogFormats() {
-		// Testing on file writer, but the writer implementation shouldn't matter here
+		// TODO Use dummy logger
+		$logPath = '../test.log';
+		$testFileWriter = new SS_LogFileWriter($logPath);
+		SS_Log::add_writer($testFileWriter, SS_Log::WARN);
 
 		SS_Log::log('As string', SS_Log::WARN);
 		$this->assertContains(
 			'As string', 
-			file_get_contents($this->testLogPath),
+			file_get_contents($logPath),
 			'Correctly logs messages as strings'
 		);
 
 		SS_Log::log(new Exception('As exception'), SS_Log::WARN);
 		$this->assertContains(
 			'As exception', 
-			file_get_contents($this->testLogPath),
+			file_get_contents($logPath),
 			'Correctly logs messages as exceptions'
 		);
 
@@ -63,26 +53,57 @@ class SS_LogTest extends SapphireTest {
 		SS_Log::log($message, SS_Log::WARN);
 		$this->assertContains(
 			'As array', 
-			file_get_contents($this->testLogPath),
+			file_get_contents($logPath),
 			'Correctly logs messages as array data'
 		);
 	}
 
 	function testExistingWriter() {
+		$testEmailWriter = new SS_LogEmailWriter('test@test.com');
+		$testFileWriter = new SS_LogFileWriter('../test.log');
+		SS_Log::add_writer($testEmailWriter, SS_Log::ERR);
+		SS_Log::add_writer($testFileWriter, SS_Log::WARN);
+
 		$writers = SS_Log::get_writers();
 		$this->assertType('array', $writers);
 		$this->assertEquals(2, count($writers));
 	}
 
 	function testRemoveWriter() {
-		SS_Log::remove_writer($this->testEmailWriter);
+		$testEmailWriter = new SS_LogEmailWriter('test@test.com');
+		$testFileWriter = new SS_LogFileWriter('../test.log');
+		SS_Log::add_writer($testEmailWriter, SS_Log::ERR);
+		SS_Log::add_writer($testFileWriter, SS_Log::WARN);
+
+		SS_Log::remove_writer($testEmailWriter);
 		$writers = SS_Log::get_writers();
 		$this->assertType('array', $writers);
 		$this->assertEquals(1, count($writers));
-		SS_Log::remove_writer($this->testFileWriter);
+
+		SS_Log::remove_writer($testFileWriter);
 		$writers = SS_Log::get_writers();
 		$this->assertType('array', $writers);
 		$this->assertEquals(0, count($writers));
+	}
+
+	function testEmailWriter() {
+		$testEmailWriter = new SS_LogEmailWriter('test@test.com');
+		SS_Log::add_writer($testEmailWriter, SS_Log::ERR);
+
+		SS_Log::log('Email test', SS_LOG::ERR, array('my-string' => 'test', 'my-array' => array('one' => 1)));
+		$this->assertEmailSent('test@test.com');
+		$email = $this->findEmail('test@test.com');
+		$parser = new CSSContentParser($email['htmlContent']);
+		$extras = $parser->getBySelector('table.extras');
+		$extraRows = $extras[0]->tr;
+		$this->assertContains('my-string', $extraRows[count($extraRows)-2]->td[0]->asXML(), 'Contains extra data key');
+		$this->assertContains('test', $extraRows[count($extraRows)-2]->td[1]->asXML(), 'Contains extra data value');
+		$this->assertContains('my-array', $extraRows[count($extraRows)-1]->td[0]->asXML(), 'Contains extra data key');
+		$this->assertContains(
+			"array('one'=&gt;1,)", 
+			str_replace(array("\r", "\n", " "), '', $extraRows[count($extraRows)-1]->td[1]->asXML()), 
+			'Serializes arrays correctly'
+		);
 	}
 
 }
