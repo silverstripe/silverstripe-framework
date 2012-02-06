@@ -52,16 +52,30 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 		$subject = $formattedData['subject'];
 		$data = $formattedData['data'];
 
-		$originalSMTP = ini_get('SMTP');
 		// override the SMTP server with a custom one if required
+		$originalSMTP = ini_get('SMTP');
 		if($this->customSmtpServer) ini_set('SMTP', $this->customSmtpServer);
 
-		mail(
-			$this->emailAddress,
-			$subject,
-			$data,
-			"Content-type: text/html\nFrom: " . self::$send_from
-		);
+		// Use plain mail() implementation to avoid complexity of Mailer implementation.
+		// Only use built-in mailer when we're in test mode (to allow introspection)
+		$mailer = Email::mailer();
+		if($mailer instanceof TestMailer) {
+			$mailer->sendHTML(
+				$this->emailAddress,
+				null,
+				$subject,
+				$data,
+				null,
+				"Content-type: text/html\nFrom: " . self::$send_from
+			);
+		} else {
+			mail(
+				$this->emailAddress,
+				$subject,
+				$data,
+				"Content-type: text/html\nFrom: " . self::$send_from
+			);			
+		}
 
 		// reset the SMTP server to the original
 		if($this->customSmtpServer) ini_set('SMTP', $originalSMTP);
