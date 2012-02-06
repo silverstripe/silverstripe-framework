@@ -36,7 +36,7 @@ class SS_LogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 		$errcontext = $event['message']['errcontext'];
 
 		$data = "<div style=\"border: 5px $colour solid\">\n";
-		$data .= "<p style=\"color: white; background-color: $colour; margin: 0\">$errorType: $errstr<br /> At line $errline in $errfile\n<br />\n<br />\n</p>\n";
+		$data .= "<p style=\"color: white; background-color: $colour; margin: 0\">[$errorType] $errstr<br />$errfile:$errline\n<br />\n<br />\n</p>\n";
 
 		// Get a backtrace, filtering out debug method calls
 		$data .= SS_Backtrace::backtrace(true, false, array(
@@ -52,7 +52,7 @@ class SS_LogErrorEmailFormatter implements Zend_Log_Formatter_Interface {
 		$host = @$_SERVER['HTTP_HOST'];
 		$uri = @$_SERVER['REQUEST_URI'];
 
-		$subject = "$errorType at $relfile line {$errline} (http://{$host}{$uri})";
+		$subject = "[$errorType] in $relfile:{$errline} (http://{$host}{$uri})";
 
 		return array(
 			'subject' => $subject,

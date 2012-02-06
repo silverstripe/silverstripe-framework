@@ -67,9 +67,9 @@ class Debug {
 			if($showHeader) {
 				$caller = Debug::caller();
 				if(Director::is_ajax() || Director::is_cli())
-					echo "Debug ($caller[class]$caller[type]$caller[function]() in line $caller[line] of " . basename($caller['file']) . ")\n";
+					echo "Debug ($caller[class]$caller[type]$caller[function]() in " . basename($caller['file']) . ":$caller[line])\n";
 				else 
-					echo "<div style=\"background-color: white; text-align: left;\">\n<hr>\n<h3>Debug <span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]() \n<span style=\"font-weight:normal\">in line</span> $caller[line] \n<span style=\"font-weight:normal\">of</span> " . basename($caller['file']) . ")</span>\n</h3>\n";
+					echo "<div style=\"background-color: white; text-align: left;\">\n<hr>\n<h3>Debug <span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]() \nin " . basename($caller['file']) . ":$caller[line])</span>\n</h3>\n";
 			}
 			
 			echo Debug::text($val);
@@ -88,7 +88,7 @@ class Debug {
 	static function endshow($val) {
 		if(!Director::isLive()) {
 			$caller = Debug::caller();
-			echo "<hr>\n<h3>Debug \n<span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]() \n<span style=\"font-weight:normal\">in line</span> $caller[line] \n<span style=\"font-weight:normal\">of</span> " . basename($caller['file']) . ")</span>\n</h3>\n";
+			echo "<hr>\n<h3>Debug \n<span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]() \nin " . basename($caller['file']) . ":$caller[line])</span>\n</h3>\n";
 			echo Debug::text($val);
 			die();
 		}
@@ -102,7 +102,7 @@ class Debug {
 	static function dump($val) {
 		echo '<pre style="background-color:#ccc;padding:5px;font-size:14px;line-height:18px;">';
 		$caller = Debug::caller();
-		echo "<span style=\"font-size: 12px;color:#666;\">Line $caller[line] of " . basename($caller['file']) . ":</span>\n";
+		echo "<span style=\"font-size: 12px;color:#666;\">" . basename($caller['file']) . ":$caller[line] - </span>\n";
 		if (is_string($val)) print_r(wordwrap($val, 100));
 		else print_r($val);
 		echo '</pre>';
