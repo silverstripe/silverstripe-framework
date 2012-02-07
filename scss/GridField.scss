@@ -31,9 +31,22 @@ $gf_border_radius:	7px;
 }
 
 .cms {
-	fieldset.ss-gridfield>div {
-		margin-bottom: 35px;
+	fieldset.ss-gridfield {
+		& > div {
+			margin-bottom: 35px;
+		}
+
+		&[data-selectable] {
+			tr.ui-selected, tr.ui-selecting {
+				background: #FFFAD6 !important;
+			}
+
+			td {
+				cursor: pointer;
+			}
+		}
 	}
+
 	table.ss-gridfield.field {
 		box-shadow: none;		
 		padding: 0;
