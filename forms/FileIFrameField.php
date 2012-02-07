@@ -200,7 +200,6 @@ class FileIFrameField extends FileField {
 			
 			$this->form->getRecord()->{$this->getName() . 'ID'} = $fileObject->ID;
 			
-			$fileObject->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
 			$fileObject->write();
 		}
 		

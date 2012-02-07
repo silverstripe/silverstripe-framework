@@ -295,6 +295,28 @@ class FileTest extends SapphireTest {
 		
 		File::$class_for_file_extension = $orig;
 	}
+
+	function testSetsOwnerOnFirstWrite() {
+		Session::set('loggedInAs', null);
+		$member1 = new Member();
+		$member1->write();
+		$member2 = new Member();
+		$member2->write();
+
+		$file1 = new File();
+		$file1->write();
+		$this->assertEquals(0, $file1->OwnerID, 'Owner not written when no user is logged in');
+
+		$member1->logIn();
+		$file2 = new File();
+		$file2->write();
+		$this->assertEquals($member1->ID, $file2->OwnerID, 'Owner written when user is logged in');
+
+		$member2->logIn();
+		$file2->forceChange();
+		$file2->write();
+		$this->assertEquals($member1->ID, $file2->OwnerID, 'Owner not overwritten on existing files');
+	}
 		
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	

@@ -447,7 +447,6 @@ class UploadField extends FileField {
 					$return['error'] = implode(' '.PHP_EOL, $this->upload->getErrors());
 				} else {
 					$file = $this->upload->getFile();
-					$file->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
 					$file->write();
 					$this->attachFile($file);
 					$file =  $this->customiseFile($file);
