@@ -1,4 +1,4 @@
-/**
+ /**
  * This file defines most styles of the CMS: Colors, fonts, backgrounds, 
  * alignments, dimensions.
  * 
@@ -53,6 +53,16 @@ body.cms {
 	strong {
 		font-weight: bold;
 	}
+
+	.ss-ui-button.cms-page-add-button {
+		margin-left:0px;
+		font-size:13px;
+		@include border-radius(4px);
+	}
+
+	.ss-ui-button.cms-page-add-button:hover {
+		text-decoration:none;
+	}
 }
 
 /** --------------------------------------------
@@ -89,17 +99,14 @@ body.cms {
 
 
 .cms-content-header {
-	background-color: darken($color-widget-bg, 20%);
-	padding: $grid-vertical $grid-horizontal ($grid-vertical - 2);	
+	padding: ($grid-vertical - 8) $grid-horizontal $grid-vertical;	
 	height: $grid-vertical * 4;
 	z-index: 60;
-	border-bottom: 2px solid darken($color-widget-bg, 35%);
 
-	@include box-shadow($color-widget-bg 0 $grid-vertical $grid-vertical*2);
-	
-	@include background-image(
-		linear-gradient(darken($color-widget-bg, 10%), darken($color-widget-bg, 30%))
-	);
+	background: {
+		image:url(../images/textures/cms_content_header.png);
+		repeat:repeat;
+	} 
 	
 	h2 {
 		float: left;
@@ -119,29 +126,47 @@ body.cms {
 	}
 	
 	.cms-content-header-tabs {
-		float: left;
+		position:fixed;
+		right:40px;
 	}
 }
 
 .ui-tabs .cms-content-header, .cms-dialog .ui-tabs-nav {
 	.ui-tabs-nav li {
+		margin:0;
 		a {
 			font-weight: bold;
 			line-height: $grid-vertical * 2;
-			padding: ($grid-vertical * 2 - 5) $grid-horizontal + 4 $grid-vertical + 1;
-			border-bottom: 2px solid darken($color-tab, 15%);
+			padding: ($grid-vertical * 2 - 4) ($grid-horizontal * 2 + 4) $grid-vertical + 3;
+			text-indent: -9999em;
+
+			&.content-treeview {
+				background:url(../images/content-header-tabs-sprite.png) no-repeat 2px 0px;
+			}
+			&.content-galleryview {
+				background:url(../images/content-header-tabs-sprite.png) no-repeat -87px 0px;
+			}
+			&.content-listview {
+				background:url(../images/content-header-tabs-sprite.png) no-repeat -38px 0px;
+			}
 		}
 	}
 	
 	.ui-state-default, 
 	.ui-widget-content .ui-state-default, 
 	.ui-widget-header .ui-state-default {
-		background-color: $color-tab;
+		background-color: $color-base;
 		@include background-image(
-			linear-gradient($color-tab, darken($color-tab, 10%)
-		));
+			linear-gradient($color-base, darken($color-base, 12%))
+			);
 		
-		border-color: darken($color-tab, 20%);
+		border: {
+			right-color: darken($color-tab, 20%);
+			left-color: $color-tab;
+			top:none;
+			bottom:none;
+		}
+
 		text-shadow: lighten($color-tab, 60%) 0 1px 0;
 	}
 	
@@ -149,10 +174,36 @@ body.cms {
 	.ui-widget-content .ui-state-active, 
 	.ui-widget-header .ui-state-active {
 		background: $color-widget-bg;
+		border: {
+			right-color: darken($color-tab, 20%);
+			left-color: darken($color-tab, 20%);
+			top:none;
+		}
+		margin-right:-1px;
+		margin-left:-1px;
+		z-index:2;
 		
 		a {
-			border-bottom: 2px solid $color-widget-bg;
+			border-bottom:none;
+			
+			&.content-treeview {
+				background:url(../images/content-header-tabs-sprite.png) no-repeat 2px -40px;
+			}
+			&.content-galleryview {
+				background:url(../images/content-header-tabs-sprite.png) no-repeat -87px -40px;
+			}
+			&.content-listview {
+				background:url(../images/content-header-tabs-sprite.png) no-repeat -38px -40px;
+			}
 		}
+	}
+
+	.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+		border-radius:0;
+	}
+
+	.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+		border-radius:0;
 	}
 }
 
@@ -385,11 +436,57 @@ body.cms {
 	@include legacy-pie-clearfix();
 		
 	& > * {
-		float: left;
+		float: right;
 	}
 	
 	.cms-tree-view-modes * {
 		display: inline-block;
+		label {
+			color:$color-text-blue-link;
+		}
+	}
+
+/* smaller treedropdown */
+	.chzn-container-single .chzn-single  {
+		height: 26px;
+		line-height: 26px;
+		padding-left:25px;
+		color: darken($color-dark-grey, 15%);
+		@include background-image(
+			linear-gradient($color-button-generic, darken($color-button-generic, 10%))
+		);
+		font: {
+			size:13px;
+			weight:bold;
+		}
+		text-shadow:darken($color-text-shadow, 10%) 0 -1px 1px;
+		box-shadow:none;
+		&:hover {
+			@include box-shadow(0 0 5px darken($color-button-generic, 20%));
+			@include background-image(
+				linear-gradient(lighten($color-button-generic, 2%), darken($color-button-generic, 8%))
+			);
+		}
+
+		&:active {
+			@include box-shadow(inset 0 1px 3px darken($color-button-generic, 60%));
+		}
+ 		
+ 		span {
+ 			padding-top:1px;
+ 		}
+
+		div {
+			background:url(../images/btn_icons/settings.png) 5px 4px no-repeat;
+			border-left:none;
+			width:100%;
+		}
+
+		div b {
+			background: url(../images/sprites_32x32/menu-arrow-deselected-down.png) no-repeat 9px 11px;
+			float:right;
+			width:24px;
+		}	
 	}
 }
 
@@ -405,8 +502,7 @@ body.cms {
 	overflow-y: auto;	
 	overflow-x: hidden;
 	z-index: 70;
-	float: left;
-	position: relative;
+	@include box-shadow($color-shadow-dark 0 0 ($grid-horizontal / 2));
 	
 	.cms-panel-header {
 		padding: 0;
@@ -484,18 +580,9 @@ body.cms {
 				margin: 2px 0; 
 			}
 		}
-		
-		/* smaller treedropdown */
-		.chzn-container-single .chzn-single  {
-			height: 24px;
-			line-height: 24px;
-			font-size: 11px;
-	 		
-			div b {
-				background-position: 4px 0;
-			}
-		}
 	}
+
+
 		
 	/* buttons now need to line with with reduced input sizes */
 	.ss-ui-button {
@@ -562,10 +649,10 @@ body.cms {
 }
 
 .cms-content-batchactions {
-	float: right;
+	float: left;
 	position:  relative;
 	display: block;
-	margin-right: 8px;
+	margin-left: 8px;
 	
 	form > * {
 		display: block;
@@ -574,6 +661,9 @@ body.cms {
 	
 	form.cms-batch-actions {
 		float:  left;
+	}
+	.Actions {
+		display:none;
 	}
 }
 
@@ -757,6 +847,7 @@ form.member-profile-form {
 		overflow-y: auto;
 		overflow-x: auto;
 		background: none;
+		@include box-shadow($color-shadow-dark 0 0 ($grid-horizontal / 2));
 	}
 }
 
@@ -896,8 +987,6 @@ form.member-profile-form {
 		background-color: #92a5b2;
 		padding: $grid-vertical/2 $grid-horizontal/2 $grid-vertical/2 $grid-horizontal*2;
 		border-bottom: 2px solid #8399a7;
-		// @include border-radius-top(4px);
-		// @include border-radius-bottom(0px);
 		@include background-image(linear-gradient(#ced7dc, #92a5b2));
 	}
 
