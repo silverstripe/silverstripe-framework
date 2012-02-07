@@ -30,7 +30,9 @@ class UploadField extends FileField {
 	 */
 	public static $allowed_actions = array(
 		'upload',
-		'handleItem'
+		'attach',
+		'handleItem',
+		'handleSelect',
 	);
 
 	/**
@@ -38,6 +40,7 @@ class UploadField extends FileField {
 	 */
 	public static $url_handlers = array(
 		'item/$ID' => 'handleItem',
+		'select' => 'handleSelect',
 		'$Action!' => '$Action',
 	);
 
@@ -293,6 +296,13 @@ class UploadField extends FileField {
 		return false;
 	}
 
+	public function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array('data-selectdialog-url', $this->Link('select'))
+		);
+	}
+
 	public function Field() {
 		$record = $this->getRecord();
 		$name = $this->getName();
@@ -329,6 +339,8 @@ class UploadField extends FileField {
 
 		$config = array(
 			'url' => $this->Link('upload'),
+			'urlSelectDialog' => $this->Link('select'),
+			'urlAttach' => $this->Link('attach'),
 			'acceptFileTypes' => '.+$',
 			'maxNumberOfFiles' => $this->getConfig('allowedMaxFileNumber')
 		);
@@ -390,6 +402,14 @@ class UploadField extends FileField {
 	 */
 	public function getItemHandler($itemID) {
 		return Object::create('UploadField_ItemHandler', $this, $itemID);
+	}
+
+	/**
+	 * @param SS_HTTPRequest $request
+	 * @return UploadField_ItemHandler
+	 */
+	public function handleSelect(SS_HTTPRequest $request) {
+		return Object::create('UploadField_SelectHandler', $this, $this->folderName);
 	}
 
 	/**
@@ -464,6 +484,34 @@ class UploadField extends FileField {
 		}
 		$response = new SS_HTTPResponse(Convert::raw2json(array($return)));
 		$response->addHeader('Content-Type', 'text/plain');
+		return $response;
+	}
+
+	/**
+	 * Add existing {@link File} records to the relationship.
+	 */
+	public function attach($request) {
+		if(!$request->isPOST()) return $this->httpError(403);
+		if(!$this->managesRelation()) return $this->httpError(403);
+
+		$return = array();
+
+		$files = DataList::create('File')->byIDs($request->postVar('ids'));
+		foreach($files as $file) {
+			$this->attachFile($file);
+			$file =  $this->customiseFile($file);
+			$return[] = array(
+				'id' => $file->ID,
+				'name' => $file->getTitle() . '.' . $file->getExtension(),
+				'url' => $file->getURL(),
+				'thumbnail_url' => $file->UploadFieldThumbnailURL,
+				'edit_url' => $file->UploadFieldEditLink,
+				'size' => $file->getAbsoluteSize(),
+				'buttons' => $file->UploadFieldFileButtons
+			);
+		}
+		$response = new SS_HTTPResponse(Convert::raw2json($return));
+		$response->addHeader('Content-Type', 'application/json');
 		return $response;
 	}
 
@@ -742,3 +790,84 @@ class UploadField_ItemHandler extends RequestHandler {
 	
 }
 
+
+class UploadField_SelectHandler extends RequestHandler {
+
+	/**
+	 * @var UploadField
+	 */
+	protected $parent;
+
+	/**
+	 * @var String
+	 */
+	protected $folderName;
+
+	public static $url_handlers = array(
+		'$Action!' => '$Action',
+		'' => 'index',
+	);
+
+	function __construct($parent, $folderName = null) {
+		$this->parent = $parent;
+		$this->folderName = $folderName;
+
+		parent::__construct();
+	}
+
+	function index() {
+		return $this->renderWith('CMSDialog');
+	}
+
+	/**
+	 * @param string $action
+	 * @return string
+	 */
+	public function Link($action = null) {
+		return Controller::join_links($this->parent->Link(), '/select/', $action);
+	}
+
+	/**
+	 * @return Form
+	 */
+	function Form() {
+		$action = new FormAction('doAttach', _t('UploadField.AttachFile', 'Attach file(s)'));
+		$action->addExtraClass('ss-ui-action-constructive');
+		return new Form(
+			$this,
+			'Form',
+			new FieldList($this->getListField()),
+			new FieldList($action)
+		);
+	}
+
+	/**
+	 * @return FormField
+	 */
+	protected function getListField() {
+		$folder = $this->getFolder();
+		$config = GridFieldConfig::create();
+		$config->addComponent(new GridFieldSortableHeader());
+		$config->addComponent(new GridFieldFilter());
+		$config->addComponent(new GridFieldDefaultColumns());
+		$config->addComponent(new GridFieldPaginator(10));
+
+		$field = new GridField('Files', false, $folder->stageChildren(), $config);
+		$field->setAttribute('data-selectable', true);
+		if($this->parent->getConfig('allowedMaxFileNumber') > 1) $field->setAttribute('data-multiselect', true);
+
+		return $field;
+	}
+
+	/**
+	 * @return Folder
+	 */
+	function getFolder() {
+		return Folder::find_or_make($this->folderName);
+	}
+
+	function doAttach($data, $form) {
+		// TODO Only implemented via JS for now
+	}
+
+}

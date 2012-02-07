@@ -1,6 +1,9 @@
 Folder:
    folder1:
       Name: UploadFieldTest
+   folder1-subfolder1:
+   		Name: subfolder1
+   		ParentID: =>Folder.folder1
 File:
 	file1:
 		Title: File1
@@ -37,6 +40,11 @@ File:
 		Name: nodelete.txt
 		Filename: assets/UploadFieldTest/nodelete.txt
 		ParentID: =>Folder.folder1
+	file-subfolder:
+		Title: file-subfolder.txt
+		Name: file-subfolder.txt
+		Filename: assets/UploadFieldTest/subfolder1/file-subfolder.txt
+		ParentID: =>Folder.folder1-subfolder1
 UploadFieldTest_Record:
 	record1:
 		Title: Record 1
