@@ -1,4 +1,4 @@
-<tr class="ss-gridfield-{$EvenOdd} $FirstLast">
+<tr class="ss-gridfield-item ss-gridfield-{$EvenOdd} $FirstLast" data-id="$ID">
 	<% if $GridField.ExtraColumnsCount %>
 		<% control Fields %>
 			<td>$Value</td>

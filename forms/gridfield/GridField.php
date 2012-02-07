@@ -327,33 +327,45 @@ class GridField extends FormField {
 
 		foreach($list as $idx => $record) {
 			$record->iteratorProperties($idx, $list->count());
-			$row = "<tr class='".$record->FirstLast()." ".$record->EvenOdd()."'>";
+			$rowContent = '';
 			foreach($columns as $column) {
 				$colContent = $this->getColumnContent($record, $column);
 				// A return value of null means this columns should be skipped altogether.
 				if($colContent === null) continue;
 				$colAttributes = $this->getColumnAttributes($record, $column);
-				$row .= $this->createTag('td', $colAttributes, $colContent);
+				$rowContent .= $this->createTag('td', $colAttributes, $colContent);
 			}
-			$row .= "</tr>";
+			$row = $this->createTag(
+				'tr', 
+				array(
+					"class" => 'ss-gridfield-item ' . $record->FirstLast() . " " . $record->EvenOdd(),
+					'data-id' => $record->ID
+				),
+				$rowContent
+			);
 			$content['body'][] = $row;
 		}
 
 		// Turn into the relevant parts of a table
 		$head = $content['header'] ? $this->createTag('thead', array(), implode("\n", $content['header'])) : '';
-		$body = $content['body'] ? $this->createTag('tbody', array(), implode("\n", $content['body'])) : '';
+		$body = $content['body'] ? $this->createTag('tbody', array('class' => 'ss-gridfield-items'), implode("\n", $content['body'])) : '';
 		$foot = $content['footer'] ? $this->createTag('tfoot', array(), implode("\n", $content['footer'])) : '';
 
-		$attrs = array(
+		$this->addExtraClass('ss-gridfield');
+		$attrs = array_diff_key(
+			$this->getAttributes(), 
+			array('value' => false, 'type' => false, 'name' => false)
+		);
+		$tableAttrs = array(
 			'id' => isset($this->id) ? $this->id : null,
 			'class' => "field CompositeField {$this->extraClass()}",
 			'cellpadding' => '0',
 			'cellspacing' => '0'	
 		);
 		return
-			$this->createTag('fieldset', array('id'=>$this->ID(),'class'=>'ss-gridfield'), 
+			$this->createTag('fieldset', $attrs, 
 				implode("\n", $content['before']) .
-				$this->createTag('table', $attrs, $head."\n".$foot."\n".$body) .
+				$this->createTag('table', $tableAttrs, $head."\n".$foot."\n".$body) .
 				implode("\n", $content['after'])
 			);
 	}
