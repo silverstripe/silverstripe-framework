@@ -241,12 +241,11 @@ class UploadField extends FileField {
 	/**
 	 * Hack to add some Variables and a dynamic template to a File
 	 * @param File $file
-	 * @param bool [$hasRelation] has this file a relation to the record the file is on?
 	 * @return ViewableData_Customised
 	 */
-	protected function customiseFile(File $file, $hasRelation = true) {
+	protected function customiseFile(File $file) {
 		$file = $file->customise(array(
-			'UploadFieldHasRelation' => $hasRelation,
+			'UploadFieldHasRelation' => $this->managesRelation(),
 			'UploadFieldThumbnailURL' => $this->getThumbnailURLForFile($file),
 			'UploadFieldRemoveLink' => $this->getItemHandler($file->ID)->RemoveLink(),
 			'UploadFieldDeleteLink' => $this->getItemHandler($file->ID)->DeleteLink(),
@@ -297,13 +296,16 @@ class UploadField extends FileField {
 	public function Field() {
 		$record = $this->getRecord();
 		$name = $this->getName();
-		if ($record && $record->exists()) {
-			if (!$record->has_many($name) && !$record->many_many($name) && !$this->getConfig('allowedMaxFileNumber') && 
-					((substr($name, -2) === 'ID' && $record->has_one(substr($name, 0, -2))) || $record->has_one($name))) {
-				// if there is a has_one relation with that name on the record and allowedMaxFileNumber has not been set, its wanted to be 1
-				$this->setConfig('allowedMaxFileNumber', 1);
-			}
+
+		// if there is a has_one relation with that name on the record and 
+		// allowedMaxFileNumber has not been set, its wanted to be 1
+		if(
+			$record && $record->exists()
+			&& $record->has_one($name) && !$this->getConfig('allowedMaxFileNumber')
+		) {
+			$this->setConfig('allowedMaxFileNumber', 1);
 		}
+
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');
@@ -422,8 +424,6 @@ class UploadField extends FileField {
 			if ($this->getConfig('allowedMaxFileNumber') && ($record->has_many($name) || $record->many_many($name))) {
 				if(!$record->isInDB()) $record->write();
 				$tooManyFiles = $record->{$name}()->count() >= $this->getConfig('allowedMaxFileNumber');
-			} elseif(substr($name, -2) === 'ID' && $record->has_one(substr($name, 0, -2))) {
-				$tooManyFiles = $record->{substr($name, 0, -2)}() && $record->{substr($name, 0, -2)}()->exists();
 			} elseif($record->has_one($name)) {
 				$tooManyFiles = $record->{$name}() && $record->{$name}()->exists();
 			}
@@ -449,23 +449,8 @@ class UploadField extends FileField {
 					$file = $this->upload->getFile();
 					$file->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
 					$file->write();
-					$hasRelation = false;
-					if ($record && $record->exists()) {
-						if ($record->has_many($name) || $record->many_many($name)) {
-							if(!$record->isInDB()) $record->write();
-							$record->{$name}()->add($file);
-							$hasRelation = true;
-						} elseif(substr($name, -2) === 'ID' && $record->has_one(substr($name, 0, -2))) {
-							$record->{$name} = $file->ID;
-							$record->write();
-							$hasRelation = true;
-						} elseif($record->has_one($name)) {
-							$record->{$name . 'ID'} = $file->ID;
-							$record->write();
-							$hasRelation = true;
-						}
-					}
-					$file =  $this->customiseFile($file, $hasRelation);
+					$this->attachFile($file);
+					$file =  $this->customiseFile($file);
 					$return = array_merge($return, array(
 						'id' => $file->ID,
 						'name' => $file->getTitle() . '.' . $file->getExtension(),
@@ -483,12 +468,46 @@ class UploadField extends FileField {
 		return $response;
 	}
 
-	function performReadonlyTransformation() {
+	/**
+	 * @param File
+	 */
+	protected function attachFile($file) {
+		$record = $this->getRecord();
+		$name = $this->getName();
+		if ($record && $record->exists()) {
+			if ($record->has_many($name) || $record->many_many($name)) {
+				if(!$record->isInDB()) $record->write();
+				$record->{$name}()->add($file);
+			} elseif($record->has_one($name)) {
+				$record->{$name . 'ID'} = $file->ID;
+				$record->write();
+			}
+		}
+	}
+
+	public function performReadonlyTransformation() {
 		$clone = clone $this;
 		$clone->addExtraClass('readonly');
 		$clone->setReadonly(true);
 		return $clone;
 	}
+
+	/**
+	 * Determines if the underlying record (if any) has a relationship
+	 * matching the field name. Important for permission control.
+	 * 
+	 * @return boolean
+	 */
+	public function managesRelation() {
+		$record = $this->getRecord();
+		$fieldName = $this->getName();
+		return (
+			$record->has_one($fieldName)
+			|| $record->has_many($fieldName)
+			|| $record->many_many($fieldName)
+		);
+	}
+
 }
 
 /**
@@ -587,10 +606,6 @@ class UploadField_ItemHandler extends RequestHandler {
 			if (($record->has_many($fieldName) || $record->many_many($fieldName)) && $file = $record->{$fieldName}()->byID($id)) {
 				$record->{$fieldName}()->remove($file);
 				$response->setStatusCode(200);
-			} elseif(substr($fieldName, -2) === 'ID' && $record->has_one(substr($fieldName, 0, -2)) && $record->{$fieldName} == $id) {
-				$record->{$fieldName} = 0;
-				$record->write();
-				$response->setStatusCode(200);
 			} elseif($record->has_one($fieldName) && $record->{$fieldName . 'ID'} == $id) {
 				$record->{$fieldName . 'ID'} = 0;
 				$record->write();
@@ -623,7 +638,7 @@ class UploadField_ItemHandler extends RequestHandler {
 
 		// Only allow actions on files in the managed relation (if one exists)
 		$items = $this->parent->getItems();
-		if($this->managesRelation() && !$items->byID($item->ID)) return $this->httpError(403);
+		if($this->parent->managesRelation() && !$items->byID($item->ID)) return $this->httpError(403);
 
 		// First remove the file from the current relationship
 		$this->remove($request);
@@ -649,7 +664,7 @@ class UploadField_ItemHandler extends RequestHandler {
 
 		// Only allow actions on files in the managed relation (if one exists)
 		$items = $this->parent->getItems();
-		if($this->managesRelation() && !$items->byID($item->ID)) return $this->httpError(403);
+		if($this->parent->managesRelation() && !$items->byID($item->ID)) return $this->httpError(403);
 
 		Requirements::css(SAPPHIRE_DIR . '/css/UploadField.css');
 
@@ -716,7 +731,7 @@ class UploadField_ItemHandler extends RequestHandler {
 
 		// Only allow actions on files in the managed relation (if one exists)
 		$items = $this->parent->getItems();
-		if($this->managesRelation() && !$items->byID($item->ID)) return $this->httpError(403);
+		if($this->parent->managesRelation() && !$items->byID($item->ID)) return $this->httpError(403);
 
 		$form->saveInto($item);
 		$item->write();
@@ -725,22 +740,6 @@ class UploadField_ItemHandler extends RequestHandler {
 
 		return $this->parent->getForm()->Controller()->redirectBack();
 	}
-
-	/**
-	 * Determines if the underlying record (if any) has a relationship
-	 * matching the field name. Important for permission control.
-	 * 
-	 * @return boolean
-	 */
-	protected function managesRelation() {
-		$record = $this->parent->getRecord();
-		$fieldName = $this->parent->getName();
-		if(!$record) return false;
-
-		return (
-			(substr($fieldName, -2) === 'ID' && $record->has_one(substr($fieldName, 0, -2)))
-			|| $record->has_many($fieldName)
-			|| $record->many_many($fieldName)
-		);
-	}
+	
 }
+
