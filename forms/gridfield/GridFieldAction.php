@@ -12,7 +12,8 @@ class GridFieldAction_Edit implements GridField_ColumnProvider {
 	 * @param array $columns 
 	 */
 	public function augmentColumns($gridField, &$columns) {
-		$columns[] = 'EditAction';
+		if(!in_array('Actions', $columns))
+			$columns[] = 'Actions';
 	}
 	
 	/**
@@ -35,7 +36,7 @@ class GridFieldAction_Edit implements GridField_ColumnProvider {
 	 * @return array
 	 */
 	public function getColumnMetadata($gridField, $columnName) {
-		if($columnName == 'EditAction') {
+		if($columnName == 'Actions') {
 			return array('title' => '');
 		}
 	}
@@ -47,7 +48,7 @@ class GridFieldAction_Edit implements GridField_ColumnProvider {
 	 * @return type 
 	 */
 	public function getColumnsHandled($gridField) {
-		return array('EditAction');
+		return array('Actions');
 	}
 	
 	/**
@@ -98,7 +99,8 @@ class GridFieldAction_Delete implements GridField_ColumnProvider, GridField_Acti
 	 * @param array $columns 
 	 */
 	public function augmentColumns($gridField, &$columns) {
-		$columns[] = 'DeleteAction';
+		if(!in_array('Actions', $columns))
+			$columns[] = 'Actions';
 	}
 	
 	/**
@@ -121,7 +123,7 @@ class GridFieldAction_Delete implements GridField_ColumnProvider, GridField_Acti
 	 * @return array
 	 */
 	public function getColumnMetadata($gridField, $columnName) {
-		if($columnName == 'DeleteAction') {
+		if($columnName == 'Actions') {
 			return array('title' => '');
 		}
 	}
@@ -133,7 +135,7 @@ class GridFieldAction_Delete implements GridField_ColumnProvider, GridField_Acti
 	 * @return type 
 	 */
 	public function getColumnsHandled($gridField) {
-		return array('DeleteAction');
+		return array('Actions');
 	}
 	
 	/**

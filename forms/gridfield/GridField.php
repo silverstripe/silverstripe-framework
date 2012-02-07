@@ -371,6 +371,7 @@ class GridField extends FormField {
 				$item->augmentColumns($this, $columns);
 			}
 		}
+
 		return $columns;
 	}
 
@@ -389,8 +390,11 @@ class GridField extends FormField {
 		}
 		
 		if(!empty($this->columnDispatch[$column])) {
-			$handler = $this->columnDispatch[$column];
-			return $handler->getColumnContent($this, $record, $column);
+			$content = "";
+			foreach($this->columnDispatch[$column] as $handler) {
+				$content .= $handler->getColumnContent($this, $record, $column);
+			}
+			return $content;
 		} else {
 			throw new InvalidArgumentException("Bad column '$column'");
 		}
@@ -412,15 +416,18 @@ class GridField extends FormField {
 		}
 		
 		if(!empty($this->columnDispatch[$column])) {
-			$handler = $this->columnDispatch[$column];
-			$attrs =  $handler->getColumnAttributes($this, $record, $column);
-			if(is_array($attrs)) {
-				return $attrs;
-			}  elseif($attrs) {
-				throw new LogicException("Non-array response from " . get_class($handler) . "::getColumnAttributes()");
-			} else {
-				return array();
+			$attrs = array();
+
+			foreach($this->columnDispatch[$column] as $handler) {
+				$column_attrs = $handler->getColumnAttributes($this, $record, $column);
+
+				if(is_array($column_attrs))
+					$attrs = array_merge($attrs, $column_attrs);
+				elseif($column_attrs)
+					throw new LogicException("Non-array response from " . get_class($handler) . "::getColumnAttributes()");
 			}
+
+			return $attrs;
 		} else {
 			throw new InvalidArgumentException("Bad column '$column'");
 		}
@@ -441,13 +448,19 @@ class GridField extends FormField {
 		}
 		
 		if(!empty($this->columnDispatch[$column])) {
-			$handler = $this->columnDispatch[$column];
-			$metadata = $handler->getColumnMetadata($this, $column);
-			if(is_array($metadata)) {
-				return $metadata;
-			} elseif($metadata) {
-				throw new LogicException("Non-array response from " . get_class($handler) . "::getColumnMetadata()");
+			$metadata = array();
+
+			foreach($this->columnDispatch[$column] as $handler) {
+				$column_metadata = $handler->getColumnMetadata($this, $column);
+				
+				if(is_array($column_metadata))
+					$metadata = array_merge($metadata, $column_metadata);
+				else
+					throw new LogicException("Non-array response from " . get_class($handler) . "::getColumnMetadata()");
+				
 			}
+			
+			return $metadata;
 		}
 		throw new InvalidArgumentException("Bad column '$column'");
 	}
@@ -474,10 +487,10 @@ class GridField extends FormField {
 			if($item instanceof GridField_ColumnProvider) {
 				$columns = $item->getColumnsHandled($this);
 				foreach($columns as $column) {
-					$this->columnDispatch[$column] = $item;
+					$this->columnDispatch[$column][] = $item;
 				}
 			}
-		}			
+		}
 	}
 	
 	/**
