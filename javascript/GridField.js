@@ -1,4 +1,16 @@
 jQuery(function($){
+
+	$('fieldset.ss-gridfield').entwine({
+		getItems: function() {
+			return this.find('.ss-gridfield-item');
+		}
+	});
+
+	$('fieldset.ss-gridfield *').entwine({
+		getGridField: function() {
+			return this.parents('fieldset.ss-gridfield:first');
+		}
+	});
 		
 	$('fieldset.ss-gridfield .action').entwine({
 		onclick: function(e){
@@ -26,13 +38,6 @@ jQuery(function($){
 		}
 	});
 	
-	var removeFilterButtons = function() {
-		// Remove stuff
-		$('th').children('div').each(function(i,v) {
-			$(v).remove();
-		});	
-	}	
-	
 	/*
 	 * Upon focusing on a filter <input> element, move "filter" and "reset" buttons and display next to the current <input> element
 	 * ToDo ensure filter-button state is maintained after filtering (see resetState param)
@@ -46,8 +51,10 @@ jQuery(function($){
 				return false;
 			}
 			var eleInput = $(this);
+
 			// Remove existing <div> and <button> elements in-lieu of cloning
-			removeFilterButtons();		
+			this.getGridField().find('th > div').each(function(i,v) {$(v).remove();});	
+
 			var eleButtonSetFilter = $('#action_filter');
 			var eleButtonResetFilter = $('#action_reset');
 			// Retain current widths to ensure <th>'s don't shift widths
@@ -70,5 +77,44 @@ jQuery(function($){
 			}
 		}
 	});	
+
+	/**
+	 * Allows selection of one or more rows in the grid field.
+	 * Purely clientside at the moment.
+	 */
+	$('fieldset.ss-gridfield[data-selectable]').entwine({
+		/**
+		 * @return {jQuery} Collection
+		 */
+		getSelectedItems: function() {
+			return this.find('.ss-gridfield-item.ui-selected');
+		},
+		/**
+		 * @return {Array} Of record IDs
+		 */
+		getSelectedIDs: function() {
+			return $.map(this.getSelectedItems(), function(el) {return $(el).data('id');});
+		}
+	});
+	$('fieldset.ss-gridfield[data-selectable] .ss-gridfield-items').entwine({
+		onmatch: function() {
+			this._super();
+			
+			// TODO Limit to single selection
+			this.selectable();
+		},
+		onunmatch: function() {
+			this._super();
+			this.selectable('destroy');
+		}
+		 
+	});
+
+	$('fieldset.ss-gridfield[data-multiselect] .ss-gridfield-item').entwine({
+		onclick: function() {
+			// this.siblings('selected');
+			this._super();
+		}
+	});
 
 });

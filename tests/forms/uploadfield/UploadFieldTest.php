@@ -375,6 +375,84 @@
 		
 	}
 
+	function testSelect() {
+		$this->loginWithPermission('ADMIN');
+
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$file4 = $this->objFromFixture('File', 'file4');
+		$file5 = $this->objFromFixture('File', 'file5');
+		$fileSubfolder = $this->objFromFixture('File', 'file-subfolder');
+		$fileNoEdit = $this->objFromFixture('File', 'file-noedit');
+
+		$response = $this->get('UploadFieldTest_Controller/Form/field/ManyManyFiles/select/');
+		$this->assertFalse($response->isError());
+
+		// A bit too much coupling with GridField, but a full template overload would make things too complex
+		$parser = new CSSContentParser($response->getBody());
+		$items = $parser->getBySelector('.ss-gridfield-item');
+		$itemIDs = array_map(create_function('$el', 'return (int)$el["data-id"];'), $items);
+		$this->assertContains($file4->ID, $itemIDs, 'Contains file in assigned folder');
+		$this->assertNotContains($fileSubfolder->ID, $itemIDs, 'Does not contain file in subfolder');
+	}
+
+	function testAttachHasOne() {
+		$this->loginWithPermission('ADMIN');
+
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$file1 = $this->objFromFixture('File', 'file1');
+		$file2 = $this->objFromFixture('File', 'file2');
+		$file3AlreadyAttached = $this->objFromFixture('File', 'file3');
+
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/HasOneFile/attach', 
+			array('ids' => array($file1->ID/* first file should be ignored */, $file2->ID))
+		);
+		$this->assertFalse($response->isError());
+
+		$record = DataObject::get_by_id($record->class, $record->ID, false);
+		$this->assertEquals($file2->ID, $record->HasOneFileID, 'Attaches new relations');
+	}
+
+	function testAttachHasMany() {
+		$this->loginWithPermission('ADMIN');
+
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$file1 = $this->objFromFixture('File', 'file1');
+		$file2 = $this->objFromFixture('File', 'file2');
+		$file3AlreadyAttached = $this->objFromFixture('File', 'file3');
+
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/HasManyFiles/attach', 
+			array('ids' => array($file1->ID, $file2->ID))
+		);
+		$this->assertFalse($response->isError());
+
+		$record = DataObject::get_by_id($record->class, $record->ID, false);
+		$this->assertContains($file1->ID, $record->HasManyFiles()->column('ID'), 'Attaches new relations');
+		$this->assertContains($file2->ID, $record->HasManyFiles()->column('ID'), 'Attaches new relations');
+		$this->assertContains($file3AlreadyAttached->ID, $record->HasManyFiles()->column('ID'), 'Does not detach existing relations');
+	}
+
+	function testAttachManyMany() {
+		$this->loginWithPermission('ADMIN');
+
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$file1 = $this->objFromFixture('File', 'file1');
+		$file2 = $this->objFromFixture('File', 'file2');
+		$file5AlreadyAttached = $this->objFromFixture('File', 'file5');
+
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/ManyManyFiles/attach', 
+			array('ids' => array($file1->ID, $file2->ID))
+		);
+		$this->assertFalse($response->isError());
+
+		$record = DataObject::get_by_id($record->class, $record->ID, false);
+		$this->assertContains($file1->ID, $record->ManyManyFiles()->column('ID'), 'Attaches new relations');
+		$this->assertContains($file2->ID, $record->ManyManyFiles()->column('ID'), 'Attaches new relations');
+		$this->assertContains($file5AlreadyAttached->ID, $record->ManyManyFiles()->column('ID'), 'Does not detach existing relations');
+	}
+
 	function testManagesRelation() {
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
 
@@ -541,6 +619,10 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 		$fieldDisabled->setRecord($record);
 		$fieldDisabled = $fieldDisabled->performDisabledTransformation();
 
+		$fieldSubfolder = new UploadField('SubfolderField');
+		$fieldSubfolder->setFolderName('UploadFieldTest/subfolder1');
+		$fieldSubfolder->setRecord($record);
+
 		$form = new Form(
 			$this,
 			'Form',
@@ -550,7 +632,8 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 				$fieldHasMany,
 				$fieldManyMany,
 				$fieldReadonly,
-				$fieldDisabled
+				$fieldDisabled,
+				$fieldSubfolder
 			),
 			new FieldList(
 				new FormAction('submit')
@@ -561,7 +644,8 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 				'HasManyFiles',
 				'ManyManyFiles',
 				'ReadonlyField',
-				'DisabledField'
+				'DisabledField',
+				'SubfolderField'
 			)
 		);
 		return $form;

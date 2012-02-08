@@ -1,12 +1,12 @@
 (function($) {
 	$.widget('blueimpUIX.fileupload', $.blueimpUI.fileupload, {
 		_initTemplates: function() {
-	        this.options.templateContainer = document.createElement(
-	            this._files.prop('nodeName')
-	        );
-	        this.options.uploadTemplate = window.tmpl(this.options.uploadTemplateName);
-	        this.options.downloadTemplate = window.tmpl(this.options.downloadTemplateName);
-	    },
+					this.options.templateContainer = document.createElement(
+							this._files.prop('nodeName')
+					);
+					this.options.uploadTemplate = window.tmpl(this.options.uploadTemplateName);
+					this.options.downloadTemplate = window.tmpl(this.options.downloadTemplateName);
+			},
 		_enableFileInputButton: function() {
 			$.blueimpUI.fileupload.prototype._enableFileInputButton.call(this);
 			this.element.find('.ss-uploadfield-addfile').show();
@@ -26,10 +26,15 @@
 	});
 	$.entwine('ss', function($) {
 		$('div.ss-upload').entwine({
+
+			Config: null,
+
 			onmatch: function() {
 				var fileInput = this.find('input');
 				var dropZone = this.find('.ss-uploadfield-dropzone');
 				var config = $.parseJSON(fileInput.data('config').replace(/'/g,'"'));
+
+				this.setConfig(config);
 				this.fileupload($.extend(true, 
 					{
 						formData: function(form) {
@@ -52,22 +57,22 @@
 							emptyResult: ss.i18n._t('UploadField.EMPTYRESULT')
 						},
 						send: function(e, data) {
-						    if (data.context && data.dataType && data.dataType.substr(0, 6) === 'iframe') {
-						        // Iframe Transport does not support progress events.
-						        // In lack of an indeterminate progress bar, we set
-						        // the progress to 100%, showing the full animated bar:
-						        data.total = 1;
-						        data.loaded = 1;
-						        $(this).data('fileupload').options.progress(e, data);
-						    }
+								if (data.context && data.dataType && data.dataType.substr(0, 6) === 'iframe') {
+										// Iframe Transport does not support progress events.
+										// In lack of an indeterminate progress bar, we set
+										// the progress to 100%, showing the full animated bar:
+										data.total = 1;
+										data.loaded = 1;
+										$(this).data('fileupload').options.progress(e, data);
+								}
 						},
 						progress: function(e, data) {
-					        if (data.context) {
-					        	var value = parseInt(data.loaded / data.total * 100, 10) + '%';
-					        	data.context.find('.ss-uploadfield-item-status').html((data.total == 1)?ss.i18n._t('UploadField.LOADING'):value);
-					            data.context.find('.ss-uploadfield-item-progressbarvalue').css('width', value);
-					        }
-					    }
+									if (data.context) {
+										var value = parseInt(data.loaded / data.total * 100, 10) + '%';
+										data.context.find('.ss-uploadfield-item-status').html((data.total == 1)?ss.i18n._t('UploadField.LOADING'):value);
+											data.context.find('.ss-uploadfield-item-progressbarvalue').css('width', value);
+									}
+							}
 					}, 
 					config, 
 					{
@@ -82,6 +87,62 @@
 					dropZone.show(); // drag&drop avaliable
 				}
 				this._super();
+			},
+
+			openSelectDialog: function() {
+				// Create dialog and load iframe
+				var self = this, config = this.getConfig(), dialogId = 'ss-uploadfield-dialog-' + this.attr('id'), dialog = jQuery('#' + dialogId);
+				if(!dialog.length) dialog = jQuery('<div class="ss-uploadfield-dialog" id="' + dialogId + '" />');
+
+				// Show dialog
+				dialog.ssdialog({iframeUrl: config['urlSelectDialog']});
+
+				// TODO Allow single-select
+				dialog.find('iframe').bind('load', function(e) {
+					var contents = $(this).contents(), gridField = contents.find('fieldset.ss-gridfield');
+					// TODO Fix jQuery custom event bubbling across iframes on same domain
+					// gridField.find('.ss-gridfield-items')).bind('selectablestop', function() {
+					// });
+
+					// Remove top margin (easier than including new selectors)
+					contents.find('table.ss-gridfield').css('margin-top', 0);
+
+					// Can't use live() in iframes...
+					contents.find('input[name=action_doAttach]').unbind('click.openSelectDialog').bind('click.openSelectDialog', function() {
+						// TODO Fix entwine method calls across iframe/document boundaries
+						var ids = $.map(gridField.find('.ss-gridfield-item.ui-selected'), function(el) {return $(el).data('id');});
+						if(ids && ids.length) self.attachFiles(ids);
+
+						dialog.ssdialog('close');
+						return false;
+					});
+				});
+				dialog.ssdialog('open');
+			},
+			attachFiles: function(ids) {
+				var self = this, config = this.getConfig();
+				$.post(
+					config['urlAttach'], 
+					{'ids': ids},
+					function(data, status, xhr) {
+						var fn = self.fileupload('option', 'downloadTemplate');
+						self.find('.ss-uploadfield-files').append(fn({
+							files: data,
+							formatFileSize: function (bytes) {
+								if (typeof bytes !== 'number') return '';
+								if (bytes >= 1000000000) return (bytes / 1000000000).toFixed(2) + ' GB';
+								if (bytes >= 1000000) return (bytes / 1000000).toFixed(2) + ' MB';
+								return (bytes / 1000).toFixed(2) + ' KB';
+							},
+							options: self.fileupload('option')
+						}));
+					}
+				);
+			}
+		});
+		$('div.ss-upload *').entwine({
+			getUploadField: function() {
+				return this.parents('div.ss-upload:first');
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-files .ss-uploadfield-item').entwine({
@@ -158,6 +219,12 @@
 				this.load(function() {
 					$(this).parent().removeClass('loading');
 				});
+			}
+		});
+		$('div.ss-upload .ss-uploadfield-fromfiles').entwine({
+			onclick: function(e) {
+				e.preventDefault();
+				this.getUploadField().openSelectDialog();
 			}
 		});
 	});

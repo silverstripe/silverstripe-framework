@@ -261,172 +261,27 @@
 		});
 
 		/**
-		 * Class: a#profile-link
-		 * 
-		 * Link for editing the profile for a logged-in member through a modal dialog.
+		 * Trigger dialogs with iframe based on the links href attribute (see ssui-core.js).
 		 */
-		$('.cms-container .profile-link').entwine({
-			DialogPadding: 40,
-			MaxHeight: 800,
-			MaxWidth: 800,
-			MinHeight: 120,
-			MinWidth: 120,
-			
-			/**
-			 * Constructor: onmatch
-			 */
+		$('.cms-container .ss-ui-dialog-link').entwine({
+			UUID: null,
 			onmatch: function() {
-				this.bind('click', function(e) {
-					return self._openPopup();
-				});
-				
-				var self = this;
-
-				$('body').append(
-					'<div id="ss-ui-dialog">'
-					+ '<iframe id="ss-ui-dialog-iframe" '
-					+ 'marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto">'
-					+ '</iframe>'
-					+ '</div>'
-				);
-
-				$('#ss-ui-dialog-iframe').bind('load', function(e) {
-					self._resize();
-				});
-				
-				$(window).bind('resize', function() {
-					self._resize();
-				});
-				
-				self.redraw();
+				this._super();
+				this.setUUID(new Date().getTime());
 			},
-			
-			/**
-			 * Function: redraw
-			 *
-			 * Returns: void
-			 */
-			redraw: function() {
-				var self = this;
-				var useCookie = false;
-				var cookieVal = false;
-				
-				if(useCookie && jQuery.cookie && jQuery.cookie('ss-ui-dialog')) {
-					cookieVal = JSON.parse(jQuery.cookie('ss-ui-dialog'));
+			onclick: function() {
+				this._super();
+
+				var self = this, id = 'ss-ui-dialog-' + this.getUUID();
+
+				var dialog = $('#' + id);
+				if(!dialog.length) {
+					dialog = $('<div class="ss-ui-dialog" id="' + id + '" />');
+					$('body').append(dialog);
 				}
-
-				$("#ss-ui-dialog").dialog(jQuery.extend({
-					autoOpen: false,
-					bgiframe: true,
-					modal: true,
-					width: self._width(),
-					height: self._height(),
-					position: 'center',
-					
-					resizeStop: function(e, ui) {
-						self._resize();
-					},
-					
-					dragStop: function(e, ui) {
-						self._saveState();
-					},
-					// TODO i18n
-					title: 'Edit Profile'
-				}, cookieVal)).css('overflow', 'hidden');
-				
-			},
 			
-			/**
-			 * Function: _popupHeight
-			 * 
-			 * Returns a value > minHeight < max height
-			 * Returns: Int
-			 */
-			_height: function() {
-				var marginTop = parseInt($(this).css('margin-top').replace('px', ''));
-				var marginBottom = parseInt($(this).css('margin-bottom').replace('px', ''));
-				var body = $("body").height();
-
-				var height = body - (marginTop + marginBottom) - (this.getDialogPadding() * 2);
-				
-				if(height > this.getMaxHeight()) 
-					return this.getMaxHeight();
-				else if(height < this.getMinHeight())
-					return this.getMinHeight();
-				
-				return height;
-			},
-			
-			/**
-			 * Function: _popupWidth
-			 *
-			 * Returns: Int
-			 */
-			_width: function() {
-				var body = $("body").width();
-				var width = body - (this.getDialogPadding() * 2);	
-				
-				if(width > this.getMaxWidth()) 
-					return this.getMaxWidth();
-				else if(width < this.getMinWidth())
-					return this.getMinWidth();
-					
-				return width;
-			},
-
-			/**
-			 * Function: _openPopup
-			 */
-			_openPopup: function(e) {
-				$('#ss-ui-dialog-iframe').attr('src', this.attr('href'));
-
-				$("#ss-ui-dialog").dialog('open');
-
+				dialog.ssdialog({iframeUrl: this.attr('href'), autoOpen: true});
 				return false;
-			},
-
-			/**
-			 * Function: _resize
-			 */
-			_resize: function() {
-				var iframe = $('#ss-ui-dialog-iframe');
-				var container = $('#ss-ui-dialog');
-				
-				container.dialog("option", "width", this._width());
-				container.dialog("option", "height", this._height());
-				container.dialog('option', 'position', 'center');
-				
-				iframe.attr('width', 
-					container.innerWidth() 
-					- parseFloat(container.css('paddingLeft'))
-					- parseFloat(container.css('paddingRight'))
-				);
-				iframe.attr('height', 
-					container.innerHeight()
-					- parseFloat(container.css('paddingTop')) 
-					- parseFloat(container.css('paddingBottom'))
-				);
-				
-				this._saveState();
-			},
-
-			/**
-			 * Function: _saveState
-			 */
-			_saveState: function() {
-				var container = $('#ss-ui-dialog');
-
-				// save size in cookie (optional)
-				if(jQuery.cookie && container.width() && container.height()) {
-					jQuery.cookie(
-						'ss-ui-dialog',
-						JSON.stringify({
-							width: parseInt(container.width(), 10), 
-							height: parseInt(container.height(), 10)
-						}),
-						{ expires: 30, path: '/'}
-					);
-				}
 			}
 		});
 
