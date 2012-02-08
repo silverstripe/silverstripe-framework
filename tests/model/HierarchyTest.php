@@ -119,6 +119,37 @@ class HierarchyTest extends SapphireTest {
 		$this->assertEquals(2, count($obj2aIdList));
 	}
 
+	/**
+	 * The "only deleted from stage" argument to liveChildren() should exclude
+	 * any page that has been moved to another location on the stage site
+	 */
+	function testLiveChildrenOnlyDeletedFromStage() {
+		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
+		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
+		$obj2b = $this->objFromFixture('HierarchyTest_Object', 'obj2b');
+
+		// Get a published set of objects for our fixture
+		$obj1->publish("Stage", "Live");
+		$obj2->publish("Stage", "Live");
+		$obj2a->publish("Stage", "Live");
+		$obj2b->publish("Stage", "Live");
+		
+		// Then delete 2a from stage and move 2b to a sub-node of 1.
+		$obj2a->delete();
+		$obj2b->ParentID = $obj1->ID;
+		$obj2b->write();
+
+		// Get live children, excluding pages that have been moved on the stage site
+		$children = $obj2->liveChildren(true, true)->column("Title");
+		
+		// 2a has been deleted from stage and should be shown
+		$this->assertContains("Obj 2a", $children);
+		
+		// 2b has merely been moved to a different parent and so shouldn't be shown
+		$this->assertNotContains("Obj 2b", $children);
+	}
+
 }
 
 class HierarchyTest_Object extends DataObject implements TestOnly {
