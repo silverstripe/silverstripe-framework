@@ -28,6 +28,81 @@
 			this.addClass(cls).siblings().not(this).removeClass(cls);
 		}
 	});
+
+	/**
+	 * Extends jQueryUI dialog with iframe abilities (and related resizing logic),
+	 * and sets some CMS-wide defaults.
+	 */
+	$.widget("ssui.ssdialog", $.ui.dialog, {
+		options: {
+			// Custom properties
+			iframeUrl: '',
+			reloadOnOpen: true,
+
+			// Defaults
+			width: '80%',
+			height: 500,
+			position: 'center',
+			modal: true,
+			bgiframe: true,
+			autoOpen: false
+		},
+		_create: function() {
+			$.ui.dialog.prototype._create.call(this);
+
+			var self = this;
+
+			// Create iframe
+			var iframe = $('<iframe marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"></iframe>');
+			iframe.bind('load', function(e) {
+				if($(this).attr('src') == 'about:blank') return;
+				
+				$(this).show();
+				self._resizeIframe();
+				self.uiDialog.removeClass('loading');
+			}).hide();
+			this.element.append(iframe);
+
+			// Let the iframe handle its scrolling
+			this.element.css('overflow', 'hidden');
+		},
+		open: function() {
+			$.ui.dialog.prototype.open.call(this);
+			
+			var self = this, iframe = this.element.children('iframe');
+
+			// Load iframe
+			if(!iframe.attr('src') || this.options.reloadOnOpen) {
+				iframe.hide();
+				iframe.attr('src', this.options.iframeUrl);
+				this.uiDialog.addClass('loading');
+			}
+
+			// Resize events
+			this.uiDialog.bind('resize.ssdialog', function() {self._resizeIframe();});
+			$(window).bind('resize.ssdialog', function() {self._resizeIframe();});
+		},
+		close: function() {
+			$.ui.dialog.prototype.close.call(this);
+
+			this.uiDialog.unbind('resize.ssdialog');
+			$(window).unbind('resize.ssdialog');
+		},
+		_resizeIframe: function() {
+			var el = this.element, iframe = el.children('iframe');
+
+			iframe.attr('width', 
+				el.innerWidth() 
+				- parseFloat(el.css('paddingLeft'))
+				- parseFloat(el.css('paddingRight'))
+			);
+			iframe.attr('height', 
+				el.innerHeight()
+				- parseFloat(el.css('paddingTop')) 
+				- parseFloat(el.css('paddingBottom'))
+			);
+		}
+	});
 	
 	$.widget("ssui.titlebar", {
 		_create: function() {
