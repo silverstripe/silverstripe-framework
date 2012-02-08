@@ -83,9 +83,6 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 * @return array
 	 */
 	public function getHTMLFragments($gridField) {
-		Requirements::javascript(SAPPHIRE_DIR.'/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(SAPPHIRE_DIR.'/javascript/GridField.js');
-		
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList;
 		

@@ -713,6 +713,11 @@ class GridField_Action extends FormAction {
 	 * @return string HTML tag
 	 */
 	public function Field() {
+		Requirements::javascript(SAPPHIRE_DIR.'/thirdparty/jquery/jquery.js');
+		Requirements::javascript(SAPPHIRE_DIR.'/thirdparty/json-js/json2.js');
+		Requirements::javascript(SAPPHIRE_DIR.'/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript('sapphire/javascript/GridField.js');
+
 		// Store state in session, and pass ID to client side
 		$state = array(
 			'grid' => $this->getNameFromParent(),

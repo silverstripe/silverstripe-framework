@@ -3,6 +3,21 @@ jQuery(function($){
 	$('fieldset.ss-gridfield').entwine({
 		getItems: function() {
 			return this.find('.ss-gridfield-item');
+		},
+		/**
+		 * @param {String}
+		 * @param {Mixed}
+		 */
+		setState: function(k, v) {
+			var state = this.getState();
+			state[k] = v;
+			this.find(':input[name="' + this.data('name') + '[GridState]"]').val(JSON.stringify(state));
+		},
+		/**
+		 * @return {Object}
+		 */
+		getState: function() {
+			return JSON.parse(this.find(':input[name="' + this.data('name') + '[GridState]"]').val());
 		}
 	});
 
