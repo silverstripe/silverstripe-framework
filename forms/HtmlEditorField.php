@@ -230,15 +230,28 @@ class HtmlEditorField_Readonly extends ReadonlyField {
  * @subpackage fields-formattedinput
  */
 class HtmlEditorField_Toolbar extends RequestHandler {
+
+	static $allowed_actions = array(
+		'LinkForm',
+		'MediaForm',
+		'browse',
+	);
+
 	protected $controller, $name;
 	
 	function __construct($controller, $name) {
 		parent::__construct();
+
+		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/jquery/jquery.js");
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js');
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/tiny_mce_improvements.js");
-		
 		Requirements::javascript(SAPPHIRE_DIR ."/thirdparty/jquery-form/jquery.form.js");
 		Requirements::javascript(SAPPHIRE_DIR ."/javascript/HtmlEditorField.js");
+
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 		
 		$this->controller = $controller;
 		$this->name = $name;
@@ -319,15 +332,30 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 	/**
 	 * Return a {@link Form} instance allowing a user to
-	 * add images to the TinyMCE content editor.
+	 * add images and flash objects to the TinyMCE content editor.
 	 *  
 	 * @return Form
 	 */
-	function ImageForm() {
+	function MediaForm() {
 		if(!class_exists('ThumbnailStripField')) {
 			throw new Exception('ThumbnailStripField class required for HtmlEditorField->ImageForm()');
 		}
+
+		// TODO Handle through GridState within field - currently this state set too late to be useful here (during request handling)
+		$parentID = $this->controller->getRequest()->requestVar('ParentID');
+
+		$fileFieldConfig = GridFieldConfig::create();
+		$fileFieldConfig->addComponent(new GridFieldSortableHeader());
+		$fileFieldConfig->addComponent(new GridFieldFilter());
+		$fileFieldConfig->addComponent(new GridFieldDefaultColumns());
+		$fileFieldConfig->addComponent(new GridFieldPaginator(10));
+		$fileField = new GridField('Files', false, false, $fileFieldConfig);
+		$fileField->setList($this->getFiles($parentID));
+		$fileField->setAttribute('data-selectable', true);
+		$fileField->setAttribute('data-multiselect', true);
 		
+		
+		$numericLabelTmpl = '<span class="step-label"><span class="flyout">%d</span><span class="arrow"></span><strong class="title">%s</strong></span>';
 		$fields = new FieldList(
 			new LiteralField(
 				'Heading', 
@@ -335,32 +363,28 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			),
 			
 			$contentComposite = new CompositeField(
-				new TreeDropdownField('FolderID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder'),
-				new CompositeField(new FieldList(
-					new LiteralField('ShowUpload', '<p class="showUploadField"><a href="#">'. _t('HtmlEditorField.SHOWUPLOADFORM', 'Upload File') .'</a></p>'),
-					new FileField("Files[0]" , _t('AssetAdmin.CHOOSEFILE','Choose file: ')),
-						new LiteralField('Response', '<div id="UploadFormResponse"></div>'),
-						new HiddenField('UploadMode', 'Upload Mode', 'CMSEditor') // used as a hook for doUpload switching
-				)),
-				new TextField('getimagesSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
-				new ThumbnailStripField('FolderImages', 'FolderID', 'getimages'),
-				new TextField('AltText', _t('HtmlEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image cannot be displayed'), '', 80),
-				new TextField('ImageTitle', _t('HtmlEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')),
-				new TextField('CaptionText', _t('HtmlEditorField.CAPTIONTEXT', 'Caption text')),
-				new DropdownField(
-					'CSSClass',
-					_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
-					array(
-						'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
-						'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
-						'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
-						'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
-					)
-				),
-				new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
-					new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 100),
-					new TextField('Height', " x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), 100)
-				)
+				new LiteralField('header1', '<h4 class="field">' . sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.Find', 'Find')) . '</h4>'),
+				new TreeDropdownField('ParentID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder'),
+				$fileField,
+
+				new LiteralField('header2', '<h4 class="field edit-details">' . sprintf($numericLabelTmpl, '2', _t('HtmlEditorField.EditDetails', 'Edit details')) . '</h4>')
+				// new TextField('AltText', _t('HtmlEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image cannot be displayed'), '', 80),
+				// new TextField('ImageTitle', _t('HtmlEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')),
+				// new TextField('CaptionText', _t('HtmlEditorField.CAPTIONTEXT', 'Caption text')),
+				// new DropdownField(
+				// 	'CSSClass',
+				// 	_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
+				// 	array(
+				// 		'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
+				// 		'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
+				// 		'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
+				// 		'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
+				// 	)
+				// ),
+				// new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
+				// 	new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), 100),
+				// 	new TextField('Height', " x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), 100)
+				// )
 			)
 		);
 		
@@ -371,7 +395,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 		$form = new Form(
 			$this->controller,
-			"{$this->name}/ImageForm",
+			"{$this->name}/MediaForm",
 			$fields,
 			$actions
 		);
@@ -379,53 +403,35 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$contentComposite->addExtraClass('content');
 		
 		// Allow other people to extend the fields being added to the imageform 
-		$this->extend('updateImageForm', $form);
+		$this->extend('updateMediaForm', $form);
 		
 		$form->unsetValidator();
 		$form->disableSecurityToken();
 		$form->loadDataFrom($this);
-		$form->addExtraClass('htmleditorfield-form htmleditorfield-imageform cms-dialog-content');
+		$form->addExtraClass('htmleditorfield-form htmleditorfield-mediaform cms-dialog-content');
 		
 		return $form;
 	}
 
-	function FlashForm() {
-		if(!class_exists('ThumbnailStripField')) {
-			throw new Exception('ThumbnailStripField class required for HtmlEditorField->FlashForm()');
-		}
+	public function browse($request) {
 		
-		$form = new Form(
-			$this->controller,
-			"{$this->name}/FlashForm", 
-			new FieldList(
-				new LiteralField(
-					'Heading', 
-					sprintf('<h3>%s</h3>', _t('HtmlEditorField.FLASH', 'Flash'))
-				),
-				$contentComposite = new CompositeField(
-					new TreeDropdownField("FolderID", _t('HtmlEditorField.FOLDER'), "Folder"),
-					new TextField('getflashSearch', _t('HtmlEditorField.SEARCHFILENAME', 'Search by file name')),
-					new ThumbnailStripField("Flash", "FolderID", "getflash"),
-					new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', "Dimensions"),
-						new TextField("Width", _t('HtmlEditorField.IMAGEWIDTHPX', "Width"), 100),
-						new TextField("Height", "x " . _t('HtmlEditorField.IMAGEHEIGHTPX', "Height"), 100)
-					)
-				)
-			),
-			new FieldList(
-				$insertAction = new FormAction("insertflash", _t('HtmlEditorField.BUTTONINSERTFLASH', 'Insert Flash'))
-			)
-		);		
-		$insertAction->addExtraClass('ss-ui-action-constructive');
-		$contentComposite->addExtraClass('content');
+	}
+
+	/**
+	 * @param Int
+	 * @return DataList
+	 */
+	protected function getFiles($parentID = null) {
+		// TODO Use array('Filename:EndsWith' => $exts) once that's supported
+		$exts = array('jpg', 'gif', 'png', 'swf');
+		$wheres = array();
+		foreach($exts as $ext) $wheres[] = '"Filename" LIKE \'%.' . $ext . '\'';
+
+		$files = DataList::create('File')->where(implode(' OR ', $wheres));
 		
-		$this->extend('updateFlashForm', $form);
+		// Limit by folder (if required)
+		if($parentID) $files->filter('ParentID', $parentID);
 		
-		$form->unsetValidator();
-		$form->loadDataFrom($this);
-		$form->disableSecurityToken();
-		$form->addExtraClass('htmleditorfield-form htmleditorfield-flashform cms-dialog-content');
-		
-		return $form;
+		return $files;
 	}
 }

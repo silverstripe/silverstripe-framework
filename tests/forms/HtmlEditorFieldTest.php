@@ -10,7 +10,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
 	public static $use_draft_site = true;
 	
 	protected $requiredExtensions = array(
-		'HtmlEditorField_Toolbar' => array('HtmlEditorFieldTest_DummyImageFormFieldExtension')
+		'HtmlEditorField_Toolbar' => array('HtmlEditorFieldTest_DummyMediaFormFieldExtension')
 	);
 	
 	protected $extraDataObjects = array('HtmlEditorFieldTest_Object');
@@ -76,15 +76,15 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		);
 	}
 
-	public function testExtendImageFormFields() {
+	public function testExtendMediaFormFields() {
 		if(class_exists('ThumbnailStripField')) {
 			$controller = new Controller();
 
 			$toolbar = new HtmlEditorField_Toolbar($controller, 'DummyToolbar');
 
-			$imageForm = $toolbar->ImageForm();
-			$this->assertTrue(HtmlEditorFieldTest_DummyImageFormFieldExtension::$update_called);
-			$this->assertEquals($imageForm->Fields(), HtmlEditorFieldTest_DummyImageFormFieldExtension::$fields);
+			$form = $toolbar->MediaForm();
+			$this->assertTrue(HtmlEditorFieldTest_DummyMediaFormFieldExtension::$update_called);
+			$this->assertEquals($form->Fields(), HtmlEditorFieldTest_DummyMediaFormFieldExtension::$fields);
 		} else {
 			$this->markTestSkipped('Test requires cms module (ThumbnailStripfield class)');
 		}
@@ -96,7 +96,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
  * @package sapphire
  * @subpackage tests
  */
-class HtmlEditorFieldTest_DummyImageFormFieldExtension extends Extension implements TestOnly {
+class HtmlEditorFieldTest_DummyMediaFormFieldExtension extends Extension implements TestOnly {
 	public static $fields = null;
 	public static $update_called = false;
 

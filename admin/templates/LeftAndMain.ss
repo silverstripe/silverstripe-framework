@@ -26,9 +26,8 @@
 	<% cached %>
 	<div id="cms-editor-dialogs">
 		<% control EditorToolbar %>
-			$ImageForm
+			$MediaForm
 			$LinkForm
-			$FlashForm
 		<% end_control %>
 	</div>
 	<% end_cached %>

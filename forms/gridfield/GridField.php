@@ -739,6 +739,7 @@ class GridField_Action extends FormAction {
 			// will strip it from the requests 
 			'name' => 'action_gridFieldAlterAction'. '?' . http_build_query($actionData),
 			'tabindex' => $this->getTabIndex(),
+			'data-url' => $this->gridField->Link(),
 		);
 
 		if($this->isReadonly()) {

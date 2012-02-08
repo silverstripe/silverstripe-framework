@@ -134,11 +134,4 @@
 		 
 	});
 
-	$('fieldset.ss-gridfield[data-multiselect] .ss-gridfield-item').entwine({
-		onclick: function() {
-			// this.siblings('selected');
-			this._super();
-		}
-	});
-
 }(jQuery));

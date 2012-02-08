@@ -43,8 +43,8 @@ SideFormAction.prototype = {
 	}
 }
 
-ImageForm = Class.extend('ToolbarForm');
-ImageForm.prototype = {
+MediaForm = Class.extend('ToolbarForm');
+MediaForm.prototype = {
 	initialize: function() {
 		var __form = this;
 
@@ -153,8 +153,8 @@ ImageForm.prototype = {
 		
 		try {
 			var imgTag = image.getElementsByTagName('img')[0];
-			this.selectedImageWidth = $('Form_EditorToolbarImageForm_Width').value = imgTag.className.match(/destwidth=([0-9.\-]+)([, ]|$)/) ? RegExp.$1 : null;
-			this.selectedImageHeight = $('Form_EditorToolbarImageForm_Height').value = imgTag.className.match(/destheight=([0-9.\-]+)([, ]|$)/) ? RegExp.$1 : null;
+			this.selectedImageWidth = $('Form_EditorToolbarMediaForm_Width').value = imgTag.className.match(/destwidth=([0-9.\-]+)([, ]|$)/) ? RegExp.$1 : null;
+			this.selectedImageHeight = $('Form_EditorToolbarMediaForm_Height').value = imgTag.className.match(/destheight=([0-9.\-]+)([, ]|$)/) ? RegExp.$1 : null;
 		} catch(er) {
 		}
 	},
@@ -174,12 +174,12 @@ ImageThumbnail.prototype = {
 	},
 	
 	onclick: function(e) {
-		$('Form_EditorToolbarImageForm').selectImage(this);
+		$('Form_EditorToolbarMediaForm').selectImage(this);
 		return false;
 	},
 	
 	insert: function() {
-		var formObj = $('Form_EditorToolbarImageForm');
+		var formObj = $('Form_EditorToolbarMediaForm');
 		var altText = formObj.elements.AltText.value;
 		var titleText = formObj.elements.ImageTitle.value;
 		var cssClass = formObj.elements.CSSClass.value;
@@ -193,8 +193,8 @@ ImageThumbnail.prototype = {
 		var data = {
 			'src' : relativeHref,
 			'alt' : altText,
-			'width' : $('Form_EditorToolbarImageForm_Width').value,
-			'height' : $('Form_EditorToolbarImageForm_Height').value,
+			'width' : $('Form_EditorToolbarMediaForm_Width').value,
+			'height' : $('Form_EditorToolbarMediaForm_Height').value,
 			'title' : titleText,
 			'class' : cssClass
 		};
@@ -246,7 +246,7 @@ function reselectImage(transport) {
 				image = link.href.substring(0, quesmark);
 				if(image == selectedimage) {
 					link.className = 'selectedImage';
-					$('Form_EditorToolbarImageForm').selectedImage = link;
+					$('Form_EditorToolbarMediaForm').selectedImage = link;
 					break;
 				}
 			}
@@ -328,9 +328,9 @@ FlashThumbnail.prototype = {
 	}
 }
 
-ImageForm.applyTo('#Form_EditorToolbarImageForm');
-ImageThumbnail.applyTo('#Form_EditorToolbarImageForm div.thumbnailstrip a');
-SideFormAction.applyTo('#Form_EditorToolbarImageForm .Actions input');
+MediaForm.applyTo('#Form_EditorToolbarMediaForm');
+ImageThumbnail.applyTo('#Form_EditorToolbarMediaForm div.thumbnailstrip a');
+SideFormAction.applyTo('#Form_EditorToolbarMediaForm .Actions input');
 
 FlashForm.applyTo('#Form_EditorToolbarFlashForm');
 FlashThumbnail.applyTo('#Form_EditorToolbarFlashForm div.thumbnailstrip a');
@@ -345,7 +345,7 @@ MCEImageResizer.prototype = {
 		//TinyMCE.prototype.addEvent(this, 'click', this._onclick);
 	},
 	_onclick: function() {
-		var form = $('Form_EditorToolbarImageForm');
+		var form = $('Form_EditorToolbarMediaForm');
 		if(form) {
 			form.elements.AltText.value = this.alt;
 			form.elements.ImageTitle.value = this.title;
