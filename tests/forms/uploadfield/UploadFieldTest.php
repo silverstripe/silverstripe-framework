@@ -375,6 +375,29 @@
 		
 	}
 
+	function testManagesRelation() {
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+
+		$field = new UploadField('ManyManyFiles');
+		$this->assertFalse($field->managesRelation(), 'False if no record is set');
+
+		$field = new UploadField('NoRelationField');
+		$field->setRecord($record);
+		$this->assertFalse($field->managesRelation(), 'False if no relation found by name');
+
+		$field = new UploadField('HasOneFile');
+		$field->setRecord($record);
+		$this->assertTrue($field->managesRelation(), 'True for has_one');
+
+		$field = new UploadField('HasManyFiles');
+		$field->setRecord($record);
+		$this->assertTrue($field->managesRelation(), 'True for has_many');
+
+		$field = new UploadField('ManyManyFiles');
+		$field->setRecord($record);
+		$this->assertTrue($field->managesRelation(), 'True for many_many');
+	}
+
 	protected function getMockForm() {
 		return new Form(new Controller(), 'Form', new FieldList(), new FieldList());
 	}

@@ -501,9 +501,8 @@ class UploadField extends FileField {
 		$record = $this->getRecord();
 		$fieldName = $this->getName();
 		return (
-			$record->has_one($fieldName)
-			|| $record->has_many($fieldName)
-			|| $record->many_many($fieldName)
+			$record 
+			&& ($record->has_one($fieldName) || $record->has_many($fieldName) || $record->many_many($fieldName))
 		);
 	}
 
