@@ -424,8 +424,12 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$this->RememberLoginToken = null;
 		$this->LastLoggedOut = SS_Datetime::now()->Rfc2822();
 
+		// Clear the Remember Me cookie
 		Cookie::set('alc_enc', null);
 		Cookie::forceExpiry('alc_enc');
+
+		// Switch back to live in order to avoid infinite loops when redirecting to the login screen (if this login screen is versioned)
+		Session::clear('readingMode');
 
 		$this->write();
 		

@@ -242,6 +242,7 @@ class Security extends Controller {
 			// Audit logging hook
 			$controller->extend('permissionDenied', $member);
 
+			Session::clear('readingMode');
 			$controller->redirect("Security/login?BackURL=" . urlencode($_SERVER['REQUEST_URI']));
 		}
 		return;
