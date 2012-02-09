@@ -58,7 +58,7 @@ class GridFieldAction_Edit implements GridField_ColumnProvider {
 	 * @return array 
 	 */
 	public function getActions($gridField) {
-		return array('deleterecord');
+		return array();
 	}
 	
 	/**
@@ -69,7 +69,7 @@ class GridFieldAction_Edit implements GridField_ColumnProvider {
 	 * @return string - the HTML for the column 
 	 */
 	public function getColumnContent($gridField, $record, $columnName) {
-		return sprintf('<a class="action-edit" href="%s">%s</a>', Controller::join_links($gridField->Link('item'), $record->ID, 'edit'), _t('GridAction.Edit', 'edit'));
+		return sprintf('<a class="action-edit" href="%s">%s</a> ', Controller::join_links($gridField->Link('item'), $record->ID, 'edit'), _t('GridAction.Edit', 'edit'));
 	}
 	
 	/**
@@ -177,12 +177,11 @@ class GridFieldAction_Delete implements GridField_ColumnProvider, GridField_Acti
 	 * @return void
 	 */
 	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
-		$id = $arguments['RecordID'];
-		$item = $gridField->getList()->byID($id);
-		if(!$item) return;
-
 		if($actionName == 'deleterecord') {
-			$item->delete();
+			$id = $arguments['RecordID'];
+			$item = $gridField->getList()->byID($id);
+			if(!$item) return;
+				$item->delete();
 		}
 	}
 }
