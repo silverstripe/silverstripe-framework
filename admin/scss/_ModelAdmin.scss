@@ -53,9 +53,22 @@
 						margin-bottom:6px;
 					}
 					.Actions {
+						max-width:100%;
+						overflow:hidden;
 						button.ss-ui-action-minor {
 							//removing the "clear search" button
 							display:none;
+						}
+						input.action {
+							//experimenting with text-overlow:ellipsis on action buttons
+							//currently disabled as this ignores padding-left on the buttons in Firefox
+							//and makes the text appear in front of the icon in Firefox 10
+							//See a screenshot here: http://db.tt/iBi39rRt 
+						  
+						  //white-space: nowrap;
+							//overflow: hidden;
+							//text-overflow:ellipsis;
+							//max-width:100%;
 						}
 					}
 				}
