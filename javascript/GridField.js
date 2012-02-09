@@ -1,6 +1,34 @@
-jQuery(function($){
+(function($){
 
 	$('fieldset.ss-gridfield').entwine({
+		/**
+		 * @param {Object} Additional options for jQuery.ajax() call
+		 */
+		reload: function(ajaxOpts, successCallback) {
+			var self = this, form = this.closest('form'), data = form.find(':input').serializeArray();
+			if(!ajaxOpts) ajaxOpts = {};
+			if(!ajaxOpts.data) ajaxOpts.data = [];
+			ajaxOpts.data = ajaxOpts.data.concat(data);
+
+			form.addClass('loading');
+
+			$.ajax($.extend({}, {
+				headers: {"X-Get-Fragment" : 'CurrentField'},
+				type: "POST",
+				url: this.data('url'),
+				dataType: 'html',
+				success: function(data) {
+					// Replace the grid field with response, not the form.
+					self.replaceWith(data);
+					form.removeClass('loading');
+					if(successCallback) successCallback.apply(this, arguments);
+				},
+				error: function(e) {
+					alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION', 'An error occured while fetching data from the server\n Please try again later.'));
+					form.removeClass('loading');
+				}
+			}, ajaxOpts));
+		},
 		getItems: function() {
 			return this.find('.ss-gridfield-item');
 		},
@@ -29,27 +57,8 @@ jQuery(function($){
 		
 	$('fieldset.ss-gridfield .action').entwine({
 		onclick: function(e){
-			var button = this;
+			this.getGridField().reload({data: [{name: this.attr('name'), value: this.val()}]});
 			e.preventDefault();
-			var form = $(this).closest("form");
-			var field = $(this).closest("fieldset.ss-gridfield");
-			form.addClass('loading');
-			$.ajax({
-				headers: {"X-Get-Fragment" : 'CurrentField'},
-				type: "POST",
-				url: form.attr('action'),
-				data: form.serialize()+'&'+escape(button.attr('name'))+'='+escape(button.val()), 
-				dataType: 'html',
-				success: function(data) {
-					// Replace the grid field with response, not the form.
-					field.replaceWith(data);
-					form.removeClass('loading');
-				},
-				error: function(e) {
-					alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION', 'An error occured while fetching data from the server\n Please try again later.'));
-					form.removeClass('loading');
-				}
-			});
 		}
 	});
 	
@@ -132,4 +141,4 @@ jQuery(function($){
 		}
 	});
 
-});
+}(jQuery));
