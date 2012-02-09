@@ -144,13 +144,6 @@ class GridField extends FormField {
 		$this->components = $config->getComponents();
 		return $this;
 	}
-	
-	/**
-	 * Require the default css styling
-	 */
-	protected function requireDefaultCSS() {
-		Requirements::css('sapphire/css/GridField.css');
-	}
 
 	/**
 	 * Get the DisplayFields
@@ -713,6 +706,8 @@ class GridField_Action extends FormAction {
 	 * @return string HTML tag
 	 */
 	public function Field() {
+		Requirements::css('sapphire/css/GridField.css');
+
 		Requirements::javascript(SAPPHIRE_DIR.'/thirdparty/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR.'/thirdparty/json-js/json2.js');
 		Requirements::javascript(SAPPHIRE_DIR.'/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
