@@ -102,13 +102,6 @@ class ArrayData extends ViewableData {
 	}
 	
 	/**
-	 * This is pretty crude, but it helps diagnose error situations
-	 */
-	function forTemplate() {
-		return var_export($this->array, true);
-	}
-
-	/**
 	 * @deprecated 3.0 Use {@link ArrayData::toMap()}.
 	 */
 	public function getArray() {
