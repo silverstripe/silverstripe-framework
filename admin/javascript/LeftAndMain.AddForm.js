@@ -38,8 +38,6 @@
 			onmatch: function() {
 				var self = this, typeDropdown = this.find(':input[name=PageType]');
 		
-				Observable.applyTo(this[0]);
-		
 				var tree = $('.cms-tree');
 				this.setTree(tree);
 				

@@ -19,7 +19,10 @@
 				dataType: 'html',
 				success: function(data) {
 					// Replace the grid field with response, not the form.
-					self.replaceWith(data);
+					// TODO Only replaces all its children, to avoid replacing the current scope
+					// of the executing method. Means that it doesn't retrigger the onmatch() on the main container.
+					self.empty().append($(data).children());
+
 					form.removeClass('loading');
 					if(successCallback) successCallback.apply(this, arguments);
 				},

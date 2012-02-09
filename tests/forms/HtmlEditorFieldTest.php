@@ -76,19 +76,20 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		);
 	}
 
-	public function testExtendMediaFormFields() {
-		if(class_exists('ThumbnailStripField')) {
-			$controller = new Controller();
+	public function testHtmlEditorFieldFileLocal() {
+		$file = new HtmlEditorField_File('http://domain.com/folder/my_image.jpg?foo=bar');
+		$this->assertEquals('http://domain.com/folder/my_image.jpg?foo=bar', $file->URL);
+		$this->assertEquals('my_image.jpg', $file->Name);
+		$this->assertEquals('jpg', $file->Extension);
+		// TODO Can't easily test remote file dimensions
+	}
 
-			$toolbar = new HtmlEditorField_Toolbar($controller, 'DummyToolbar');
-
-			$form = $toolbar->MediaForm();
-			$this->assertTrue(HtmlEditorFieldTest_DummyMediaFormFieldExtension::$update_called);
-			$this->assertEquals($form->Fields(), HtmlEditorFieldTest_DummyMediaFormFieldExtension::$fields);
-		} else {
-			$this->markTestSkipped('Test requires cms module (ThumbnailStripfield class)');
-		}
-		
+	public function testHtmlEditorFieldFileRemote() {
+		$fileFixture = new File(array('Name' => 'my_local_image.jpg', 'Filename' => 'folder/my_local_image.jpg'));
+		$file = new HtmlEditorField_File('http://localdomain.com/folder/my_local_image.jpg', $fileFixture);
+		$this->assertEquals('http://localdomain.com/folder/my_local_image.jpg', $file->URL);
+		$this->assertEquals('my_local_image.jpg', $file->Name);
+		$this->assertEquals('jpg', $file->Extension);
 	}
 }
 

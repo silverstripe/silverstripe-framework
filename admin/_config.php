@@ -18,7 +18,6 @@ HtmlEditorConfig::get('cms')->setOptions(array(
 	'body_class' => 'typography',
 	'document_base_url' => Director::absoluteBaseURL(),
 
-	'setupcontent_callback' => "sapphiremce_setupcontent",
 	'cleanup_callback' => "sapphiremce_cleanup",
 
 	'use_native_selects' => true, // fancy selects are bug as of SS 2.3.0

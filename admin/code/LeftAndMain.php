@@ -230,8 +230,6 @@ class LeftAndMain extends Controller {
 		Requirements::combine_files(
 			'lib.js',
 			array(
-				THIRDPARTY_DIR . '/prototype/prototype.js',
-				THIRDPARTY_DIR . '/behaviour/behaviour.js',
 				SAPPHIRE_DIR . '/javascript/prototype_improvements.js',
 				THIRDPARTY_DIR . '/jquery/jquery.js',
 				SAPPHIRE_DIR . '/javascript/jquery_improvements.js',
@@ -255,15 +253,13 @@ class LeftAndMain extends Controller {
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js',
 				SAPPHIRE_DIR . '/javascript/TreeDropdownField.js',
-				SAPPHIRE_DIR ."/thirdparty/jquery-form/jquery.form.js",
 				SAPPHIRE_DIR . '/javascript/DateField.js',
 				SAPPHIRE_DIR . '/javascript/HtmlEditorField.js',
 				SAPPHIRE_DIR . '/javascript/TabSet.js',
 				SAPPHIRE_DIR . '/javascript/Validator.js',
 				SAPPHIRE_DIR . '/javascript/i18n.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js',
-				SAPPHIRE_DIR . '/javascript/tiny_mce_improvements.js',
-				CMS_DIR . '/javascript/ThumbnailStripField.js',
+				SAPPHIRE_DIR . '/javascript/GridField.js',
 			)
 		);
 		
@@ -294,6 +290,7 @@ class LeftAndMain extends Controller {
 		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
 		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/GridField.css');
 
 		// Browser-specific requirements
 		$ie = isset($_SERVER['HTTP_USER_AGENT']) ? strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') : false;

@@ -2,7 +2,7 @@
 .cms fieldset.ss-gridfield > div { margin-bottom: 35px; }
 .cms fieldset.ss-gridfield[data-selectable] tr.ui-selected, .cms fieldset.ss-gridfield[data-selectable] tr.ui-selecting { background: #FFFAD6 !important; }
 .cms fieldset.ss-gridfield[data-selectable] td { cursor: pointer; }
-.cms table.ss-gridfield.field { box-shadow: none; padding: 0; margin: 20px 0 0 0; border-collapse: separate; border-bottom: 0 none; }
+.cms table.ss-gridfield.field { display: table; box-shadow: none; padding: 0; margin: 20px 0 0 0; border-collapse: separate; border-bottom: 0 none; width: 100%; }
 .cms table.ss-gridfield.field thead { color: #1d2224; background: transparent; }
 .cms table.ss-gridfield.field tbody { background: #FFF; }
 .cms table.ss-gridfield.field tbody td { /* Emulate a link by default */ }

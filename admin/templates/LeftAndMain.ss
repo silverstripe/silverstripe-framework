@@ -23,14 +23,12 @@
 
 	</div>
 		
-	<% cached %>
 	<div id="cms-editor-dialogs">
 		<% control EditorToolbar %>
 			$MediaForm
 			$LinkForm
 		<% end_control %>
 	</div>
-	<% end_cached %>
 
 	<!-- <div class="ss-cms-bottom-bar">
 			<div class="holder">

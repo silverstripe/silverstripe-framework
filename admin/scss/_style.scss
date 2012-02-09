@@ -1065,6 +1065,66 @@ body.cms-dialog {
 	}
 }
 
+.htmleditorfield-mediaform {
+	.ss-gridfield {
+		// Set thumbnail size 
+		tbody td:first-child img {
+			max-height: 30px;
+		}
+	}
+
+	// TODO Consolidate with .assetuploadfield and .ss-uploadfield styles
+	.ss-htmleditorfield-file {
+		border: 1px solid lighten($color-medium-separator, 20%);
+		@include border-radius(5px);
+		@include background-clip(padding-box);
+		background: #E2E2E2;
+		margin-bottom: $grid-horizontal*2;
+
+		&.loading {
+			width: 100%;
+			height: 100px;
+			background-image: url(../images/spinner.gif);
+			background-position: 50% 50%;
+			background-repeat: no-repeat;
+		}
+
+		.overview {
+			background-color: #5db4df;
+			@include background-image(linear-gradient(top,  #5db4df 0%,#5db1dd 8%,#439bcb 50%,#3f99cd 54%,#207db6 96%,#1e7cba 100%));
+
+			.thumbnail {
+				display: inline-block;
+				vertical-align: middle;
+				padding: $grid-horizontal/2;
+
+				img {
+					max-height: $grid-horizontal*3;
+				}
+			}
+
+			.title {
+				display: inline-block;
+				vertical-align: middle;
+				background: #fff;
+				border: 1px solid lighten($color-medium-separator, 20%);
+				@include border-radius(5px);
+				margin-left: $grid-horizontal*2;
+				padding: $grid-horizontal/2;
+			}
+
+			.action-delete {
+				display: inline-block;
+			}
+		}
+
+		.details {
+			padding: $grid-horizontal*2;
+		}
+	}
+	
+}
+
 /** --------------------------------------------
  * Step labels
  * -------------------------------------------- */

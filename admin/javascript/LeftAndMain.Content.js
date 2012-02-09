@@ -220,7 +220,7 @@
 				if(status == 'success') {
 					var form = this.replaceForm(oldForm, data);
 				
-					Behaviour.apply(); // refreshes ComplexTableField
+					if(typeof(Behaviour) != 'undefined') Behaviour.apply(); // refreshes ComplexTableField
 
 					this.trigger('reloadeditform', {form: form, origData: origData, xmlhttp: xmlhttp});
 				}

@@ -352,7 +352,7 @@ class GridField extends FormField {
 			$this->getAttributes(), 
 			array('value' => false, 'type' => false, 'name' => false)
 		);
-		$attrs['data-name'] = $this->Name();
+		$attrs['data-name'] = $this->getName();
 		$tableAttrs = array(
 			'id' => isset($this->id) ? $this->id : null,
 			'class' => "field CompositeField {$this->extraClass()}",
@@ -502,7 +502,7 @@ class GridField extends FormField {
 	public function gridFieldAlterAction($data, $form, SS_HTTPRequest $request) {
 		$html = '';
 		$data = $request->requestVars();
-		$fieldData = @$data[$this->Name()];
+		$fieldData = @$data[$this->getName()];
 
 		// Update state from client
 		$state = $this->getState(false);
@@ -572,7 +572,7 @@ class GridField extends FormField {
 		$this->request = $request;
 		$this->setModel($model);
 
-		$fieldData = $this->request->requestVar($this->Name());
+		$fieldData = $this->request->requestVar($this->getName());
 		if($fieldData && $fieldData['GridState']) $this->getState(false)->setValue($fieldData['GridState']);
 		
 		foreach($this->components as $component) {
@@ -706,12 +706,12 @@ class GridField_Action extends FormAction {
 	 * @return string HTML tag
 	 */
 	public function Field() {
-		Requirements::css('sapphire/css/GridField.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/GridField.css');
 
-		Requirements::javascript(SAPPHIRE_DIR.'/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR.'/thirdparty/json-js/json2.js');
-		Requirements::javascript(SAPPHIRE_DIR.'/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript('sapphire/javascript/GridField.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/json-js/json2.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/GridField.js');
 
 		// Store state in session, and pass ID to client side
 		$state = array(
