@@ -951,7 +951,7 @@ class Security extends Controller {
 	 */
 	public static function set_login_url($loginUrl) {
 	    self::$login_url = $loginUrl;
-	}
+}
 	/**
 	 * Get the URL of the log-in page.
 	 * Defaults to Security/login but can be re-set with {@link set_login_url()}
