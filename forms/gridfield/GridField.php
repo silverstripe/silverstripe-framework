@@ -79,8 +79,6 @@ class GridField extends FormField {
 	 */
 	public function __construct($name, $title = null, SS_List $dataList = null, GridFieldConfig $config = null) {
 		parent::__construct($name, $title, null);
-		
-		FormField::__construct($name);
 
 		if($dataList) {
 			$this->setList($dataList);
