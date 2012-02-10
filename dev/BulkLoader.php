@@ -141,7 +141,7 @@ abstract class BulkLoader extends ViewableData {
 		//get all instances of the to be imported data object 
 		if($this->deleteExistingRecords) { 
 			$q = singleton($this->objectClass)->buildSQL();
-			$q->select = array('"ID"');
+			$q->select = array(sprintf('"%s"."ID"', ClassInfo::baseDataClass($this->objectClass)));
 			$ids = $q->execute()->column('ID');
 			foreach($ids as $id) { 
 				$obj = DataObject::get_by_id($this->objectClass, $id);
