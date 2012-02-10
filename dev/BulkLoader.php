@@ -139,17 +139,23 @@ abstract class BulkLoader extends ViewableData {
 		increase_memory_limit_to('512M');
 		
 		//get all instances of the to be imported data object 
-		if($this->deleteExistingRecords) { 
+		if ($this->deleteExistingRecords) {
 			$q = singleton($this->objectClass)->buildSQL();
-			$q->select = array('"ID"');
+			if (!empty($this->objectClass)) {
+				$idSelector = $this->objectClass . '."ID"';
+			}
+			else {
+				$idSelector = '"ID"';
+			}
+			$q->select = array($idSelector);
 			$ids = $q->execute()->column('ID');
-			foreach($ids as $id) { 
+			foreach ($ids as $id) {
 				$obj = DataObject::get_by_id($this->objectClass, $id);
-				$obj->delete(); 
+				$obj->delete();
 				$obj->destroy();
 				unset($obj);
-			} 
-		} 
+			}
+		}
 		
 		return $this->processAll($filepath);
 	}
@@ -418,4 +424,3 @@ class BulkLoader_Result extends Object {
 	}
    
 }
-?>
