@@ -18,7 +18,6 @@ HtmlEditorConfig::get('cms')->setOptions(array(
 	'body_class' => 'typography',
 	'document_base_url' => Director::absoluteBaseURL(),
 
-	'urlconverter_callback' => "nullConverter",
 	'setupcontent_callback' => "sapphiremce_setupcontent",
 	'cleanup_callback' => "sapphiremce_cleanup",
 

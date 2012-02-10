@@ -396,12 +396,3 @@ var errorMessage = function(text) {
 returnFalse = function() {
 	return false;
 };
-
-/**
- * Find and enable TinyMCE on all htmleditor fields
- * Pulled in from old tinymce.template.js
- */
-
-function nullConverter(url) {
-	return url;
-};
