@@ -64,14 +64,41 @@ class SS_Log {
 	protected static $logger;
 
 	/**
-	 * Get the logger currently in use, or create a new
-	 * one if it doesn't exist.
+	 * @var array Logs additional context from PHP's superglobals.
+	 * Caution: Depends on logger implementation (mainly targeted at {@link SS_LogEmailWriter}).
+	 * @see http://framework.zend.com/manual/en/zend.log.overview.html#zend.log.overview.understanding-fields
+	 */
+	static $log_globals = array(
+		'_SERVER' => array(
+			'HTTP_ACCEPT',
+			'HTTP_ACCEPT_CHARSET', 
+			'HTTP_ACCEPT_ENCODING', 
+			'HTTP_ACCEPT_LANGUAGE', 
+			'HTTP_REFERRER',
+			'HTTP_USER_AGENT',
+			'HTTPS',
+			'REMOTE_ADDR',
+		),
+	);
+
+	/**
+	 * Get the logger currently in use, or create a new one if it doesn't exist.
 	 * 
 	 * @return object
 	 */
 	public static function get_logger() {
 		if(!self::$logger) {
+			// Create default logger
 			self::$logger = new self::$logger_class;
+
+			// Add default context (shouldn't change until the actual log event happens)
+			foreach(self::$log_globals as $globalName => $keys) {
+				foreach($keys as $key) {
+					$val = @$GLOBALS[$globalName][$key];
+					self::$logger->setEventItem(sprintf('$%s[\'%s\']', $globalName, $key), $val);
+				}
+			}
+
 		}
 		return self::$logger;
 	}
@@ -123,8 +150,9 @@ class SS_Log {
 	 * 
 	 * @param mixed $message Exception object or array of error context variables
 	 * @param const $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN or SS_Log::NOTICE
+	 * @param  mixed    $extras    Extra information to log in event
 	 */
-	public static function log($message, $priority) {
+	public static function log($message, $priority, $extras = null) {
 		if($message instanceof Exception) {
 			$message = array(
 				'errno' => '',
@@ -133,9 +161,19 @@ class SS_Log {
 				'errline' => $message->getLine(),
 				'errcontext' => $message->getTrace()
 			);
+		} elseif(is_string($message)) {
+			$trace = SS_Backtrace::filtered_backtrace();
+			$lastTrace = $trace[0];
+			$message = array(
+				'errno' => '',
+				'errstr' => $message,
+				'errfile' => @$lastTrace['file'],
+				'errline' => @$lastTrace['line'],
+				'errcontext' => $trace
+			);
 		}
 		try {
-			self::get_logger()->log($message, $priority);
+			self::get_logger()->log($message, $priority, $extras);
 		} catch(Exception $e) {
 			// @todo How do we handle exceptions thrown from Zend_Log?
 			// For example, an exception is thrown if no writers are added
