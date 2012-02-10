@@ -17,7 +17,7 @@
  * @subpackage Data
  * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Data.php 23775 2011-03-01 17:25:24Z ralph $
+ * @version    $Id: Data.php 24140 2011-06-14 02:11:19Z adamlundrigan $
  */
 
 /**
@@ -1137,6 +1137,10 @@ class Zend_Locale_Data
                     $value = array("gregorian", $temp);
                 }
                 $temp = self::_getFile($locale, '/ldml/dates/calendars/calendar[@type=\'' . $value[0] . '\']/fields/field/relative[@type=\'' . $value[1] . '\']', '', $value[1]);
+                break;
+
+            case 'defaultnumberingsystem':
+                $temp = self::_getFile($locale, '/ldml/numbers/defaultNumberingSystem', '', 'default');
                 break;
 
             case 'decimalnumber':
