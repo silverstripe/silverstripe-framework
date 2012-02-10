@@ -570,6 +570,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .ModelAdmin .cms-content-tools #SearchForm_holder div.tab h3 { margin-top: 16px; margin-bottom: 10px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -moz-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -o-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); }
 .ModelAdmin .cms-content-tools #SearchForm_holder div.tab form input { margin: 0px; }
 .ModelAdmin .cms-content-tools #SearchForm_holder div.tab form .field { border-bottom: 0px; margin-bottom: 6px; }
+.ModelAdmin .cms-content-tools #SearchForm_holder div.tab form .Actions { max-width: 100%; overflow: hidden; }
 .ModelAdmin .cms-content-tools #SearchForm_holder div.tab form .Actions button.ss-ui-action-minor { display: none; }
 
 .SecurityAdmin .cms-edit-form .cms-content-header h2 { display: none; }
