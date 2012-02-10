@@ -47,7 +47,7 @@ class Tab extends CompositeField {
 	}
 	
 	public function id() {
-		return $this->tabSet->id() . '_' . $this->id;
+		return ($this->tabSet) ? $this->tabSet->id() . '_' . $this->id : $this->id;
 	}
 	
 	public function Fields() {
