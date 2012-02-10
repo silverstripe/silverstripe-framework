@@ -57,6 +57,26 @@ class SS_MapTest extends SapphireTest {
 			"Phil" => "Phil is a unique guy, and comments on team2"), $map->toArray());
 	}
 
+	function testKeys() {
+		$list = DataList::create('DataObjectTest_TeamComment');
+		$map = new SS_Map($list, 'Name', 'Comment');
+		$this->assertEquals(array(
+			'Joe',
+			'Bob',
+			'Phil'
+		), $map->keys());
+	}
+
+	function testValues() {
+		$list = DataList::create('DataObjectTest_TeamComment');
+		$map = new SS_Map($list, 'Name', 'Comment');
+		$this->assertEquals(array(
+			'This is a team comment by Joe',
+			'This is a team comment by Bob',
+			'Phil is a unique guy, and comments on team2'
+		), $map->values());
+	}
+
 	function testUnshift() {
 		$list = DataList::create("DataObjectTest_TeamComment");
 		$map = new SS_Map($list, 'Name', 'Comment');
