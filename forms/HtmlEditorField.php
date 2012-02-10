@@ -12,6 +12,8 @@ class HtmlEditorField extends TextareaField {
 	 * @var Boolean Use TinyMCE's GZIP compressor
 	 */
 	static $use_gzip = true;
+
+	protected $rows = 30;
 	
 	/**
 	 * Includes the JavaScript neccesary for this field to work using the {@link Requirements} system.
