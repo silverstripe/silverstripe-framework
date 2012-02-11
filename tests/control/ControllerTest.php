@@ -129,11 +129,13 @@ class ControllerTest extends FunctionalTest {
 			'Without an allowed_actions, any defined methods are recognised as actions'
 		);
 	}
-	
+
+	/* Controller::BaseURL no longer exists, but was just a direct call to Director::BaseURL, so not sure what this code was supposed to test
 	public function testBaseURL() {
 		Director::setBaseURL('/baseurl/');
 		$this->assertEquals(Controller::BaseURL(), Director::BaseURL());
 	}
+	*/
 }
 
 /**

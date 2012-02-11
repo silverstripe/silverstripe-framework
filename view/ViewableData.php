@@ -689,75 +689,7 @@ class ViewableData extends Object implements IteratorAggregate {
 		
 		return Convert::raw2att(implode(' ', $classes));
 	}
-	
-	/**
-	 * @see Member::currentUser()
-	 */
-	public function CurrentMember() {
-		return Member::currentUser();
-	}
-	
-	/**
-	 * Return a CSRF-preventing ID to insert into a form.
-	 *
-	 * @return string
-	 */
-	public function getSecurityID() {
-		$token = SecurityToken::inst();
-		return $token->getValue();
-	}
-	
-	/**
-	 * @see Permission::check()
-	 */
-	public function HasPerm($code) {
-		return Permission::check($code);
-	}
-	
-	/**
-	 * @see Director::absoluteBaseURL()
-	 *
-	 * @deprecated 3.0
-	 */
-	public function BaseHref() {
-		Deprecation::notice('3.0', 'Use AbsoluteBaseURL instead.');
-		
-		return $this->AbsoluteBaseURL();
-	}
-	
-	/**
-	 * Returns the absolute base url
-	 *
-	 * @return string
-	 */
-	public function AbsoluteBaseURL() {
-		return Director::absoluteBaseURL();
-	}
-	
-	/**
-	 * Access the BaseURL from template: proxy the value from the Director.
-	 * Needed for building hardcoded links.
-	 *
-	 * @return string base url
-	 */
-	function BaseURL() {
-		return Director::baseURL();
-	}
-	
-	/**
-	 * @see Director::is_ajax()
-	 */
-	public function IsAjax() {
-		return Director::is_ajax();
-	}
-	
-	/**
-	 * @see i18n::get_locale()
-	 */
-	public function i18nLocale() {
-		return i18n::get_locale();
-	}
-	
+
 	/**
 	 * Return debug information about this object that can be rendered into a template
 	 *
@@ -767,19 +699,6 @@ class ViewableData extends Object implements IteratorAggregate {
 		return new ViewableData_Debugger($this);
 	}
 	
-	/**
-	 * @see Controller::curr()
-	 */
-	public function CurrentPage() {
-		return Controller::curr();
-	}
-	
-	/**
-	 * @see SSViewer::topLevel()
-	 */
-	public function Top() {
-		return SSViewer::topLevel();
-	}
 }
 
 /**
