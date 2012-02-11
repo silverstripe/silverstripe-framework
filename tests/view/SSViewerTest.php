@@ -121,20 +121,57 @@ SS
 		));
 
 		//call method with lots of arguments
-		$result = $this->render('<% control Page %>$lotsOfArguments11("a","b","c","d","e","f","g","h","i","j","k")<% end_control %>',$data);
+		$result = $this->render('<% with Page %>$lotsOfArguments11("a","b","c","d","e","f","g","h","i","j","k")<% end_with %>',$data);
 		$this->assertEquals("abcdefghijk",$result, "Function can accept up to 11 arguments");
 
 		//call method that does not exist
-		$result = $this->render('<% control Page %><% if IDoNotExist %>hello<% end_if %><% end_control %>',$data);
+		$result = $this->render('<% with Page %><% if IDoNotExist %>hello<% end_if %><% end_with %>',$data);
 		$this->assertEquals("",$result, "Method does not exist - empty result");
 
 		//call if that does not exist
-		$result = $this->render('<% control Page %>$IDoNotExist("hello")<% end_control %>',$data);
+		$result = $this->render('<% with Page %>$IDoNotExist("hello")<% end_with %>',$data);
 		$this->assertEquals("",$result, "Method does not exist - empty result");
 
 		//call method with same name as a global method (local call should take priority)
-		$result = $this->render('<% control Page %>$absoluteBaseURL<% end_control %>',$data);
+		$result = $this->render('<% with Page %>$absoluteBaseURL<% end_with %>',$data);
 		$this->assertEquals("testLocalFunctionPriorityCalled",$result, "Local Object's function called. Did not return the actual baseURL of the current site");
+	}
+
+	function testCurrentScopeLoopWith() {
+		// Data to run the loop tests on - one sequence of three items, each with a subitem
+		$data = new ArrayData(array(
+			'Foo' => new DataObjectSet(array(
+				'Subocean' => new ArrayData(array(
+						'Name' => 'Higher'
+					)),
+				new ArrayData(array(
+					'Sub' => new ArrayData(array(
+						'Name' => 'SubKid1'
+					))
+				)),
+				new ArrayData(array(
+					'Sub' => new ArrayData(array(
+						'Name' => 'SubKid2'
+					))
+				)),
+				new SSViewerTest_Page('Number6')
+			))
+		));
+
+		$result = $this->render('<% loop Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %>',$data);
+		$this->assertEquals("SubKid1SubKid2Number6",$result, "Loop works");
+
+		$result = $this->render('<% loop Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %>',$data);
+		$this->assertEquals("SubKid1SubKid2Number6",$result, "Loop works");
+
+		$result = $this->render('<% with Foo %>$Count<% end_with %>',$data);
+		$this->assertEquals("4",$result, "4 items in the DataObjectSet");
+
+		$result = $this->render('<% with Foo %><% loop Up.Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %><% end_with %>',$data);
+		$this->assertEquals("SubKid1SubKid2Number6",$result, "Loop in with Up.Foo scope works");
+
+		$result = $this->render('<% with Foo %><% loop %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %><% end_with %>',$data);
+		$this->assertEquals("SubKid1SubKid2Number6",$result, "Loop in current scope works");
 	}
 	
 	function testObjectDotArguments() {
