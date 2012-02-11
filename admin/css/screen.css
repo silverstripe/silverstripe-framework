@@ -276,7 +276,7 @@ body.cms { overflow: hidden; }
 .cms-content-toolbar .cms-tree-view-modes * { display: inline-block; }
 
 /* -------------------------------------------------------- Content Tools is the sidebar on the left of the main content panel */
-.cms-content-tools { background-color: #dde3e7; width: 192px; border-right: 1px solid #bfcad2; overflow-y: auto; overflow-x: hidden; z-index: 70; /* buttons now need to line with with reduced input sizes */ }
+.cms-content-tools { background-color: #dde3e7; width: 192px; border-right: 1px solid #bfcad2; overflow-y: auto; overflow-x: hidden; z-index: 70; float: left; position: relative; /* buttons now need to line with with reduced input sizes */ }
 .cms-content-tools .cms-panel-header { padding: 0; margin: 0 0 7px; line-height: 24px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -moz-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -o-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); }
 .cms-content-tools .cms-panel-content { width: 176px; padding: 8px 8px; overflow-x: hidden; overflow-y: auto; }
 .cms-content-tools .cms-content-header { background-color: #748d9d; border-bottom: 2px solid #5c7382; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #748d9d)); background-image: -webkit-linear-gradient(#b0bec7, #748d9d); background-image: -moz-linear-gradient(#b0bec7, #748d9d); background-image: -o-linear-gradient(#b0bec7, #748d9d); background-image: -ms-linear-gradient(#b0bec7, #748d9d); background-image: linear-gradient(#b0bec7, #748d9d); }

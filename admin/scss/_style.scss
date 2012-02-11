@@ -405,6 +405,8 @@ body.cms {
 	overflow-y: auto;	
 	overflow-x: hidden;
 	z-index: 70;
+	float: left;
+	position: relative;
 	
 	.cms-panel-header {
 		padding: 0;
