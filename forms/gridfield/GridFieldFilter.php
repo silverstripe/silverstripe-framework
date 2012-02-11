@@ -85,7 +85,7 @@ class GridFieldFilter implements GridField_HTMLProvider, GridField_DataManipulat
 					);
 				
 			}
-			$field->iteratorProperties($currentColumn-1, count($columns));
+			
 			$forTemplate->Fields->push($field);
 		}
 		

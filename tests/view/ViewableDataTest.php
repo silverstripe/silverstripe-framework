@@ -111,23 +111,6 @@ class ViewableDataTest extends SapphireTest {
 			);
 		}
 	}
-
-	function testFirstLast() {
-		$vd = new ViewableData();
-		
-		$vd->iteratorProperties(0, 3);
-		$this->assertEquals('first', $vd->FirstLast());
-
-		$vd->iteratorProperties(1, 3);
-		$this->assertEquals(null, $vd->FirstLast());
-
-		$vd->iteratorProperties(2, 3);
-		$this->assertEquals('last', $vd->FirstLast());
-
-		$vd->iteratorProperties(0, 1);
-		$this->assertEquals('first last', $vd->FirstLast());
-	}
-
 }
 
 /**#@+
