@@ -11,7 +11,7 @@
  * @subpackage control
  * @see Director::direct(),Director::addRules(),Director::set_environment_type()
  */
-class Director {
+class Director implements TemplateGlobalProvider {
 	
 	static private $urlParams;
 
@@ -866,4 +866,21 @@ class Director {
 		return false;
 	}
 
+	/**
+	 * @return array Returns an array of strings of the method names of methods on the call that should be exposed
+	 * as global variables in the templates.
+	 */
+	public static function getExposedVariables() {
+		return array(
+			'absoluteBaseURL',
+			'baseURL',
+			'is_ajax',
+			'isAjax' => 'is_ajax',
+			'BaseHref' => 'absoluteBaseURL',    //@deprecated 3.0
+		);
+	}
+
 }
+
+
+

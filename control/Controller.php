@@ -9,7 +9,7 @@
  * @package sapphire
  * @subpackage control
  */
-class Controller extends RequestHandler {
+class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 	/**
 	 * @var array $urlParams An array of arguments extracted from the URL 
@@ -582,6 +582,12 @@ class Controller extends RequestHandler {
 		if($fragmentIdentifier) $result .= "#$fragmentIdentifier";
 		
 		return $result;
+	}
+
+	public static function getExposedVariables() {
+		return array(
+			'CurrentPage' => 'curr',
+		);
 	}
 }
 

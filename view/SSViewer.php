@@ -135,31 +135,58 @@ class SSViewer_Scope {
  */
 class SSViewer_DataPresenter extends SSViewer_Scope {
 	
-	private $extras;
-	
-	function __construct($item, $extras = null){
+	private static $extras = array();
+
+	function __construct($item){
 		parent::__construct($item);
-		$this->extras = $extras;
+
+		if (count(self::$extras) == 0) {   //build up extras array only once per request
+			//get all the exposed variables from all classes that implement the TemplateGlobalProvider interface
+			$implementers = ClassInfo::implementorsOf("TemplateGlobalProvider");
+			foreach($implementers as $implementer) {
+				$exposedVariables = $implementer::getExposedVariables();    //get the exposed variables
+
+				foreach($exposedVariables as $varName => $methodName) {
+					if (!$varName || is_numeric($varName)) $varName = $methodName;  //array has just a single value, use it for both key and value
+
+					//e.g. "array(Director, absoluteBaseURL)" means call "Director::absoluteBaseURL()"
+					self::$extras[$varName] = array($implementer, $methodName);
+					$firstCharacter = substr($varName, 0, 1);
+
+					if ((strtoupper($firstCharacter) === $firstCharacter)) {    //is uppercase, so save the lowercase version, too
+						self::$extras[lcfirst($varName)] = array($implementer, $methodName);    //callable array
+					} else {    //is lowercase, save a version so it also works uppercase
+						self::$extras[ucfirst($varName)] = array($implementer, $methodName);
+					}
+				}
+			}
+		}
 	}
 	
 	function __call($name, $arguments) {
+		//TODO: make local functions take priority over global functions
+
 		$property = $arguments[0];
-		
-		if ($this->extras && array_key_exists($property, $this->extras)) {
-			
-			$this->resetLocalScope();
-			
-			$value = $this->extras[$arguments[0]];
-			
+		if (array_key_exists($property, self::$extras)) {
+			$this->resetLocalScope();   //if we are inside a chain (e.g. $A.B.C.Up.E) break out to the beginning of it
+
+			$value = self::$extras[$property];  //get the method call
+
+			//only call callable functions
+			if (is_callable($value)) {
+				$value = call_user_func_array($value, array_slice($arguments, 1));
+			}
+
 			switch ($name) {
 				case 'hasValue':
 					return (bool)$value;
-				default:
+				default:    //XML_val
 					return $value;
 			}
 		}
-		
-		return parent::__call($name, $arguments);
+
+		$callResult = parent::__call($name, $arguments);
+		return $callResult;
 	}
 }
 

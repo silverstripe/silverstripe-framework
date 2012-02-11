@@ -227,6 +227,7 @@ set_include_path($includePath);
 require_once 'cache/Cache.php';
 require_once 'core/Object.php';
 require_once 'core/ClassInfo.php';
+require_once 'view/TemplateGlobalProvider.php';
 require_once 'control/Director.php';
 require_once 'dev/Debug.php';
 require_once 'filesystem/FileFinder.php';

@@ -1311,7 +1311,7 @@ class LeftAndMain extends Controller {
 	 * @return String
 	 */
 	function Locale() {
-		return DBField::create('DBLocale', $this->i18nLocale());
+		return DBField::create('DBLocale', i18n::get_locale());
 	}
 	
 	/**
