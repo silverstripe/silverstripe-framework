@@ -404,6 +404,7 @@ class DataListTest extends SapphireTest {
 	public function testSimpleExclude() {
 		$list = DataList::create("DataObjectTest_TeamComment");
 		$list->exclude('Name', 'Bob');
+		$list->sort('Name');
 		$this->assertEquals(2, $list->count());
 		$this->assertEquals('Joe', $list->first()->Name, 'First comment should be from Joe');
 		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
@@ -487,7 +488,8 @@ class DataListTest extends SapphireTest {
 	 */
 	public function testMultipleExcludeWithTwoArrayOneTeam() {
 		$list = DataList::create("DataObjectTest_TeamComment");
-		$list->exclude(array('Name'=>array('Bob','Phil'), 'TeamID' => array($this->idFromFixture('DataObjectTest_Team', 'team1'))));
+		$list->exclude(array('Name' => array('Bob', 'Phil'), 'TeamID' => array($this->idFromFixture('DataObjectTest_Team', 'team1'))));
+		$list->sort('Name');
 		$this->assertEquals(2, $list->count());
 		$this->assertEquals('Joe', $list->first()->Name, 'First comment should be from Joe');
 		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
