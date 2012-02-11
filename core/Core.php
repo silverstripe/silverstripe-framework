@@ -207,10 +207,20 @@ if(function_exists('mb_http_output')) {
 ///////////////////////////////////////////////////////////////////////////////
 // INCLUDES
 
-set_include_path(BASE_PATH . '/sapphire' . PATH_SEPARATOR
-	. BASE_PATH . '/sapphire/parsers' . PATH_SEPARATOR
-	. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
-	. get_include_path());
+if(defined('CUSTOM_INCLUDE_PATH')) {
+	$includePath = CUSTOM_INCLUDE_PATH . PATH_SEPARATOR
+		. BASE_PATH . '/sapphire' . PATH_SEPARATOR
+		. BASE_PATH . '/sapphire/parsers' . PATH_SEPARATOR
+		. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
+		. get_include_path();
+} else {
+	$includePath = BASE_PATH . '/sapphire' . PATH_SEPARATOR
+		. BASE_PATH . '/sapphire/parsers' . PATH_SEPARATOR
+		. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
+		. get_include_path();
+}
+
+set_include_path($includePath);
 
 // Include the files needed the initial manifest building, as well as any files
 // that are needed for the boostrap process on every request.
