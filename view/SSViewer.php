@@ -338,7 +338,8 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 	function __call($name, $arguments) {
 		//extract the method name and parameters
 		$property = $arguments[0];  //the name of the function being called
-		if ($arguments[1]) $params = $arguments[1]; //the function parameters in an array
+
+		if (isset($arguments[1]) && $arguments[1] != null) $params = $arguments[1]; //the function parameters in an array
 		else $params = array();
 
 		//check if the method to-be-called exists on the target object
