@@ -93,7 +93,6 @@ class HtmlEditorConfig {
 		'table' => null, 
 		'emotions' => null, 
 		'paste' => null, 
-		'advcode' => '../../../sapphire/thirdparty/tinymce-advcode/editor_plugin_src.js', 
 		'spellchecker' => null
 	);
 

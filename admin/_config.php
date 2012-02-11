@@ -31,8 +31,7 @@ HtmlEditorConfig::get('cms')->enablePlugins('media', 'fullscreen');
 HtmlEditorConfig::get('cms')->enablePlugins(array('ssbuttons' => '../../../cms/javascript/tinymce_ssbuttons/editor_plugin_src.js'));
 			
 HtmlEditorConfig::get('cms')->insertButtonsBefore('formatselect', 'styleselect');
-HtmlEditorConfig::get('cms')->insertButtonsBefore('advcode', 'ssimage', 'ssflash', 'sslink', 'unlink', 'anchor', 'separator' );
-HtmlEditorConfig::get('cms')->insertButtonsAfter ('advcode', 'fullscreen', 'separator');
+HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'ssimage', 'ssflash', 'sslink', 'unlink', 'anchor', 'separator','code', 'fullscreen', 'separator');
 			
 HtmlEditorConfig::get('cms')->removeButtons('tablecontrols');
 HtmlEditorConfig::get('cms')->addButtonsToLine(3, 'tablecontrols');
