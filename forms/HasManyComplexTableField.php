@@ -158,4 +158,4 @@ class HasManyComplexTableField_Item extends ComplexTableField_Item {
 	}
 }
 
-?>
+

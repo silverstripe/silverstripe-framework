@@ -368,4 +368,3 @@ class MemberTableField_Item extends ComplexTableField_Item {
 	}
 }
 
-?>

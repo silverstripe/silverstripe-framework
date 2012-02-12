@@ -143,4 +143,3 @@ class CurrencyField_Disabled extends CurrencyField{
 	}
 }
 
-?>

@@ -67,4 +67,3 @@ class InlineFormAction_ReadOnly extends FormField {
 		return false; 
 	}
 }
-?>

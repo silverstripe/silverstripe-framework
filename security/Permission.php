@@ -689,4 +689,4 @@ class Permission_Group {
 	}
 }
 
-?>
+

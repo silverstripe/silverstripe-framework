@@ -89,4 +89,4 @@ class SSHTMLBBCodeParser_Filter_EmailLinks extends SSHTMLBBCodeParser_Filter
 }
 
 
-?>
+

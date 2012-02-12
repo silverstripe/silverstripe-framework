@@ -305,4 +305,3 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	
 }
 
-?>

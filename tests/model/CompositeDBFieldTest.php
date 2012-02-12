@@ -50,4 +50,3 @@ class SubclassedDBFieldObject extends CompositeDBFieldTest_DataObject {
 		'OtherMoney' => 'Money', 
 	);
 }
-?>

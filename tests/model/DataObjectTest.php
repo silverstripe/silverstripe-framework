@@ -1177,4 +1177,4 @@ class DataObjectTest_TeamComment extends DataObject {
 
 DataObject::add_extension('DataObjectTest_Team', 'DataObjectTest_Team_Extension');
 
-?>
+

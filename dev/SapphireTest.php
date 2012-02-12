@@ -860,4 +860,4 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected $cache_generatedMembers = array();
 }
 
-?>
+

@@ -116,4 +116,3 @@ class SS_Datetime extends Date {
 	}
 }
 
-?>

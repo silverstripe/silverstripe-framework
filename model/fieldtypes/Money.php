@@ -292,4 +292,3 @@ class Money extends DBField implements CompositeDBField {
 		return (string)$this->getAmount();
 	}
 }
-?>

@@ -67,4 +67,4 @@ class Decimal extends DBField {
 	
 }
 
-?>
+

@@ -1087,4 +1087,4 @@ abstract class SS_Query implements Iterator {
 	abstract function seek($rowNum);
 }
 
-?>
+

@@ -47,7 +47,7 @@ interface InterfaceC extends InterfaceA, InterfaceB {
 }
 interface InterfaceD extends InterfaceA, InterfaceB, InterfaceC {
 }
-?>
+
 PHP
 );
 	}
@@ -86,7 +86,7 @@ class ClassG implements subtest\\InterfaceG {
 
 }
 
-?>
+
 PHP
 );
 	}

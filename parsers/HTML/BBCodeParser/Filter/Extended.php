@@ -107,4 +107,4 @@ class SSHTMLBBCodeParser_Filter_Extended extends SSHTMLBBCodeParser_Filter
 	}
 }
 
-?>
+

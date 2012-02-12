@@ -31,4 +31,3 @@ class PrimaryKey extends Int {
 	}
 }
 
-?>

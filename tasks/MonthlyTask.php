@@ -12,4 +12,3 @@
 class MonthlyTask extends ScheduledTask {
 
 }
-?>

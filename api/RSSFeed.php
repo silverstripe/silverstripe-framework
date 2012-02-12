@@ -317,4 +317,3 @@ class RSSFeed_Entry extends ViewableData {
 		else user_error($this->failover->class . " object has either an AbsoluteLink nor a Link method.  Can't put a link in the RSS feed", E_USER_WARNING);
 	}
 }
-?>

@@ -100,4 +100,4 @@ class SapphireSoapServer extends Controller {
 	}
 }
 
-?>
+

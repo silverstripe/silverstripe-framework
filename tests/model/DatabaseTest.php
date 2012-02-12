@@ -133,4 +133,3 @@ class DatabaseTest_MyObject extends DataObject implements TestOnly {
 		'MyField' => 'Varchar'
 	);
 }
-?>

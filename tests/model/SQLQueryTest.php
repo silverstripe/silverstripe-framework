@@ -252,4 +252,4 @@ class SQLQueryTest_DO extends DataObject implements TestOnly {
 	);
 }
 
-?>
+

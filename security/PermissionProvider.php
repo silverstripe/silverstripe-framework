@@ -15,4 +15,3 @@ interface PermissionProvider {
 	function providePermissions();	
 }
 
-?>

@@ -8,4 +8,3 @@ class i18nTestModuleExtension extends DataExtension {
 		);
 	}
 }
-?>

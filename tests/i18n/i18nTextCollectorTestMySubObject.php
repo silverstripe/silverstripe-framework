@@ -16,4 +16,3 @@ class i18nTextCollectorTestMySubObject extends i18nTextCollectorTestMyObject imp
 	
 	static $plural_name = "My Sub Objects";
 }
-?>
