@@ -88,14 +88,7 @@ class Director {
 			@file_get_contents('php://input')
 		);
 
-		// Load the request headers. If we're not running on Apache, then we
-		// need to manually extract the headers from the $_SERVER array.
-		if (function_exists('apache_request_headers')) {
-			$headers = apache_request_headers();
-		} else {
-			$headers = self::extract_request_headers($_SERVER);
-		}
-
+		$headers = self::extract_request_headers($_SERVER);
 		foreach ($headers as $header => $value) {
 			$req->addHeader($header, $value);
 		}
