@@ -511,21 +511,23 @@ input.radio {
 	li {
 		float: left;
 		display: block;
-		width: $grid-horizontal * 27;
+		width: $grid-horizontal * 30;
 		padding-bottom: $grid-horizontal;
 		line-height: $grid-vertical * 2;
 		list-style: none;
 
 		input {
 			display: inline-block;
+			float: left;
 			padding-right: 0;
 			margin-right: 0;
+			margin-top: 0;
 		}
 		
 		label {
-			display: inline;
+			display: block;
 			cursor: pointer;
-			padding-left: $grid-vertical;
+			margin-left: $grid-vertical * 2.5;
 		}
 
 	}
