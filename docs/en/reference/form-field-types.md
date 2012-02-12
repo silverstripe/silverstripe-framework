@@ -30,7 +30,7 @@ given set of fields in a given set of tables
 *  `[CompositeField](api:CompositeField)`: Base class for all fields that contain other fields. Uses `<div>` in template, but
 doesn't necessarily have any visible styling.
 *  `[FieldGroup](api:FieldGroup)`: Same as CompositeField, but has default styling (indentation) attached in CMS-context.
-*  `[api:FieldSet]`: Basic container for sequential fields, or nested fields through CompositeField. Does NOT render a
+*  `[api:FieldList]`: Basic container for sequential fields, or nested fields through CompositeField. Does NOT render a
 `<fieldgroup>`.
 *  `[TabSet](api:TabSet)`
 *  `[Tab](api:Tab)`
@@ -47,11 +47,7 @@ set {inlcudeDefaultJS} to false and work with behaviour.js.
 ## Files
 
 *  `[FileField](api:FileField)`: Simple file upload dialog.
-*  `[FileIFrameField](api:FileIFrameField)`: File uploads through an iframe
-*  `[api:ImageField]`: Image upload through an iframe, with thumbnails and file-selection from existing assets
-*  `[SimpleImageField](api:SimpleImageField)`:  SimpleImageField provides an easy way of uploading images to Image has_one
-relationships. Unlike ImageField, it doesn't use an iframe.
-
+*  `[UploadField](api:FileIFrameField)`: File uploads through HTML5 features, including upload progress, preview and relationship management.
 
 ## Relations
 
@@ -68,6 +64,7 @@ Tied into i18n.
 *  `[TreeMultiselectField](api:TreeMultiselectField)`: represents many-many joins using a tree selector shown in a
 dropdown-like element
 *  `[api:WidgetArea]`
+* `[GridField](/topics/grid-field)`
 
 
 

@@ -24,7 +24,7 @@ provides us the basics of creating unit tests.
 		 *  - Generates from Title by default, unless URLSegment is explicitly set
 		 *  - Resolves duplicates by appending a number
 		 */
-		function testURLGeneration() {
+		public function testURLGeneration() {
 			$expectedURLs = array(
 				'home' => 'home',
 				'staff' => 'my-staff',

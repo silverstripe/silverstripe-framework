@@ -60,12 +60,6 @@ if(version_compare(phpversion(), 5, '<')) {
  */
 require_once("core/Core.php");
 
-if (function_exists('mb_http_output')) {
-	mb_http_output('UTF-8');
-	mb_internal_encoding('UTF-8');
-	mb_regex_encoding('UTF-8');
-}
-
 Session::start();
 
 // IIS will sometimes generate this.
@@ -107,6 +101,9 @@ require_once("model/DB.php");
 
 // Redirect to the installer if no database is selected
 if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
+	if(!file_exists(BASE_PATH . '/install.php')) {
+		die('SilverStripe Framework requires a $databaseConfig defined.');
+	}
 	$s = (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 's' : '';
 	$installURL = "http$s://" . $_SERVER['HTTP_HOST'] . BASE_URL . '/install.php';
 	

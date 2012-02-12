@@ -73,6 +73,31 @@ class Image extends File {
 		parent::defineMethods();
 	}
 	
+	function getCMSFields() {
+		$fields = parent::getCMSFields();
+
+		$urlLink = "<div class='field readonly'>";
+		$urlLink .= "<label class='left'>"._t('AssetTableField.URL','URL')."</label>";
+		$urlLink .= "<span class='readonly'><a href='{$this->Link()}'>{$this->RelativeLink()}</a></span>";
+		$urlLink .= "</div>";
+		
+		$big = $this->URL;
+		$formattedImage = $this->getFormattedImage('AssetLibraryPreview');
+		$thumbnail = $formattedImage ? $formattedImage->URL : '';
+		
+		// Hmm this required the translated string to be appended to BottomRoot to add this to the Main tab
+		$fields->addFieldToTab('Root.Main',
+			new ReadonlyField("Dimensions", _t('AssetTableField.DIM','Dimensions'))
+		);
+		$fields->addFieldToTab('Root.Main',
+			new LiteralField("ImageFull",
+				"<img id='thumbnailImage' src='{$thumbnail}?r=" . rand(1,100000)  . "' alt='{$this->Name}' />"
+			)
+		);
+
+		return $fields;
+	}
+
 	/**
 	 * An image exists if it has a filename.
 	 * Does not do any filesystem checks.
@@ -339,7 +364,7 @@ class Image extends File {
 		if(!$this->Filename) return 0;
 		
 		$numDeleted = 0;
-		$methodNames = $this->allMethodNames();
+		$methodNames = $this->allMethodNames(true);
 		$cachedFiles = array();
 		
 		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . '/';
@@ -361,13 +386,13 @@ class Image extends File {
 		foreach($methodNames as $methodName) {
 			if(substr($methodName, 0, 8) == 'generate') {
 				$format = substr($methodName, 8);
-				$generateFuncs[] = $format;
+				$generateFuncs[] = preg_quote($format);
 			}
 		}
 		// All generate functions may appear any number of times in the image cache name.
 		$generateFuncs = implode('|', $generateFuncs);
-		$pattern = "/^(({$generateFuncs})\d+\-)+{$this->Name}$/i";
-		
+		$pattern = "/^(({$generateFuncs})\d+\-)+" . preg_quote($this->Name) . "$/i";
+
 		foreach($cachedFiles as $cfile) {
 			if(preg_match($pattern, $cfile)) {
 				if(Director::fileExists($cacheDir . $cfile)) {

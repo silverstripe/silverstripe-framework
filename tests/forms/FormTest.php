@@ -170,11 +170,11 @@ class FormTest extends FunctionalTest {
 	public function testFormMethodOverride() {
 		$form = $this->getStubForm();
 		$form->setFormMethod('GET');
-		$this->assertNull($form->dataFieldByName('_method'));
+		$this->assertNull($form->Fields()->dataFieldByName('_method'));
 		
 		$form = $this->getStubForm();
 		$form->setFormMethod('PUT');
-		$this->assertEquals($form->dataFieldByName('_method')->Value(), 'put',
+		$this->assertEquals($form->Fields()->dataFieldByName('_method')->Value(), 'put',
 			'PUT override in forms has PUT in hiddenfield'
 		);
 		$this->assertEquals($form->FormMethod(), 'post',
@@ -183,7 +183,7 @@ class FormTest extends FunctionalTest {
 		
 		$form = $this->getStubForm();
 		$form->setFormMethod('DELETE');
-		$this->assertEquals($form->dataFieldByName('_method')->Value(), 'delete',
+		$this->assertEquals($form->Fields()->dataFieldByName('_method')->Value(), 'delete',
 			'PUT override in forms has PUT in hiddenfield'
 		);
 		$this->assertEquals($form->FormMethod(), 'post',
@@ -324,10 +324,55 @@ class FormTest extends FunctionalTest {
 		
 		SecurityToken::disable(); // restore original
 	}
+
+	public function testEncType() {
+		$form = $this->getStubForm();
+		$this->assertEquals('application/x-www-form-urlencoded', $form->getEncType());
+
+		$form->setEncType(Form::ENC_TYPE_MULTIPART);
+		$this->assertEquals('multipart/form-data', $form->getEncType());
+
+		$form = $this->getStubForm();
+		$form->Fields()->push(new FileField(null));
+		$this->assertEquals('multipart/form-data', $form->getEncType());
+
+		$form->setEncType(Form::ENC_TYPE_URLENCODED);
+		$this->assertEquals('application/x-www-form-urlencoded', $form->getEncType());
+	}
+
+
+	function testAttributes() {
+		$form = $this->getStubForm();
+		$form->setAttribute('foo', 'bar');
+		$this->assertEquals('bar', $form->getAttribute('foo'));
+		$attrs = $form->getAttributes();
+		$this->assertArrayHasKey('foo', $attrs);
+		$this->assertEquals('bar', $attrs['foo']);
+	}
+
+	function testAttributesHTML() {
+		$form = $this->getStubForm();
+
+		$form->setAttribute('foo', 'bar');
+		$this->assertContains('foo="bar"', $form->getAttributesHTML());
+
+		$form->setAttribute('foo', null);
+		$this->assertNotContains('foo="bar"', $form->getAttributesHTML());
+
+		$form->setAttribute('foo', true);
+		$this->assertContains('foo="foo"', $form->getAttributesHTML());
+
+		$form->setAttribute('one', 1);
+		$form->setAttribute('two', 2);
+		$form->setAttribute('three', 3);
+		$this->assertNotContains('one="1"', $form->getAttributesHTML('one', 'two'));
+		$this->assertNotContains('two="2"', $form->getAttributesHTML('one', 'two'));
+		$this->assertContains('three="3"', $form->getAttributesHTML('one', 'two'));
+	}
 	
 	protected function getStubForm() {
 		return new Form(
-			new Controller(),
+			new FormTest_Controller(),
 			'Form',
 			new FieldList(new TextField('key1')),
 			new FieldList()

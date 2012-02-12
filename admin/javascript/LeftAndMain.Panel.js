@@ -6,7 +6,7 @@
 		$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 
 		/**
-		 * Vertically collapsible panel. Generic enough to work with CMS menu as well as various "filter" panels.
+		 * Hoizontal collapsible panel. Generic enough to work with CMS menu as well as various "filter" panels.
 		 * 
 		 * A panel consists of the following parts:
 		 * - Container div: The outer element, with class ".cms-panel"
@@ -18,8 +18,10 @@
 		 * <div class="cms-panel">
 		 *  <div class="cms-panel-header">your header</div>
 		 * 	<div class="cms-panel-content">your content here</div>
-		 * 	<a href="#" class="toggle-expande">your toggle text</a>
-		 * 	<a href="#" class="toggle-collapse">your toggle text</a>
+		 *	<div class="cms-panel-toggle">
+		 * 		<a href="#" class="toggle-expande">your toggle text</a>
+		 * 		<a href="#" class="toggle-collapse">your toggle text</a>
+		 *	</div>
 		 * </div>
 		 */
 		$('.cms-panel').entwine({
@@ -31,10 +33,15 @@
 			onmatch: function() {
 				if(!this.find('.cms-panel-content').length) throw new Exception('Content panel for ".cms-panel" not found');
 				
-				// Create default controls unless they already exist
-				if(!this.find('.toggle-expand').length) this.append('<a class="toggle-expand" href="#"><span>&raquo;</span></a>');
-				if(!this.find('.toggle-collapse').length) this.append('<a class="toggle-collapse" href="#"><span>&laquo;</span></a>');
-
+				// Create default controls unless they already exist.
+				if(!this.find('.cms-panel-toggle').length) {
+					var container = $("<div class='cms-panel-toggle south'></div>")
+						.append('<a class="toggle-expand" href="#"><span>&raquo;</span></a>')
+						.append('<a class="toggle-collapse" href="#"><span>&laquo;</span></a>');
+						
+					this.append(container);
+				}
+				
 				// Set panel width same as the content panel it contains. Assumes the panel has overflow: hidden.
 				this.setWidthExpanded(this.find('.cms-panel-content').innerWidth());
 				
@@ -42,7 +49,14 @@
 				var collapsedContent = this.find('.cms-panel-content-collapsed');
 				this.setWidthCollapsed(collapsedContent.length ? collapsedContent.innerWidth() : this.find('.toggle-expand').innerWidth());
 
-				this.togglePanel(!jQuery(this).hasClass('collapsed'));
+				// Set inital collapsed state, either from cookie or from default CSS classes
+				var collapsed, cookieCollapsed;
+				if($.cookie && this.attr('id')) {
+					cookieCollapsed = $.cookie('cms-panel-collapsed-' + this.attr('id'));
+					if(typeof cookieCollapsed != 'undefined' && cookieCollapsed != null) collapsed = (cookieCollapsed == 'true');
+				} 
+				if(typeof collapsed == 'undefined') collapsed = jQuery(this).hasClass('collapsed');
+				this.togglePanel(!collapsed);
 				
 				this._super();
 			},
@@ -77,30 +91,30 @@
 			},
 			
 			togglePanel: function(bool) {
-				// if((!bool && this.hasClass('collapsed')) || (bool && !this.hasClass('collapsed'))) return;
 
-				//apply or unapply the flyout formatting
-				$('.cms-menu-list').children('li').each(function(){
-					if (bool) { //expand
-						$(this).children('ul').each(function() {
-							$(this).removeClass('collapsed-flyout');
-							if ($(this).data('collapse')) {
-								$(this).removeData('collapse');
-								$(this).addClass('collapse');
-							}
-						});
-					} else {    //collapse
-						$(this).children('ul').each(function() {
-							$(this).addClass('collapsed-flyout');
-							$(this).hasClass('collapse');
-							$(this).removeClass('collapse');
-							$(this).data('collapse', true);
-						});
-					}
-				});
+				//apply or unapply the flyout formatting, should only apply to cms-menu-list when the current collapsed panal is the cms menu.
+				if($(this).attr('id') == 'cms-menu'){
+					$('.cms-menu-list').children('li').each(function(){
+						if (bool) { //expand
+							$(this).children('ul').each(function() {
+								$(this).removeClass('collapsed-flyout');
+								if ($(this).data('collapse')) {
+									$(this).removeData('collapse');
+									$(this).addClass('collapse');
+								}
+							});
+						} else {    //collapse
+							$(this).children('ul').each(function() {
+								$(this).addClass('collapsed-flyout');
+								$(this).hasClass('collapse');
+								$(this).removeClass('collapse');
+								$(this).data('collapse', true);
+							});
+						}
+					});
 
-				this.toggleFlyoutState(bool);
-
+					this.toggleFlyoutState(bool);					
+				}
 				this.toggleClass('collapsed', !bool);
 				var newWidth = bool ? this.getWidthExpanded() : this.getWidthCollapsed();
 				
@@ -115,15 +129,22 @@
 					this.find('.cms-panel-content')[bool ? 'show' : 'hide']();
 					this.find('.cms-panel-content-collapsed')[bool ? 'hide' : 'show']();
 				}
+
+				// Save collapsed state in cookie
+				if($.cookie && this.attr('id')) $.cookie('cms-panel-collapsed-' + this.attr('id'), !bool, {path: '/', expires: 31});
 				
 				this.trigger('toggle');
 			},
 			
-			expandPanel: function() {
+			expandPanel: function(force) {
+				if(!force && !this.hasClass('collapsed')) return;
+
 				this.togglePanel(true);
 			},
 			
-			collapsePanel: function() {
+			collapsePanel: function(force) {
+				if(!force && this.hasClass('collapsed')) return;
+
 				this.togglePanel(false);
 			}
 		});

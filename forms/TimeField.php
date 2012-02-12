@@ -72,6 +72,10 @@ class TimeField extends TextField {
 		return parent::Field();
 	}
 	
+	function Type() {
+		return 'time text';
+	}
+
 	/**
 	 * Sets the internal value to ISO date format.
 	 * 

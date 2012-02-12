@@ -84,7 +84,7 @@ class Director {
 			(isset($_SERVER['X-HTTP-Method-Override'])) ? $_SERVER['X-HTTP-Method-Override'] : $_SERVER['REQUEST_METHOD'],
 			$url, 
 			$_GET, 
-			array_merge((array)$_POST, (array)$_FILES),
+			ArrayLib::array_merge_recursive((array)$_POST, (array)$_FILES),
 			@file_get_contents('php://input')
 		);
 
@@ -208,7 +208,7 @@ class Director {
 		}
 		
 		// Replace the superglobals with appropriate test values
-		$_REQUEST = array_merge((array)$getVars, (array)$postVars); 
+		$_REQUEST = ArrayLib::array_merge_recursive((array)$getVars, (array)$postVars); 
 		$_GET = (array)$getVars; 
 		$_POST = (array)$postVars; 
 		$_SESSION = $session ? $session->inst_getAll() : array();
@@ -297,6 +297,7 @@ class Director {
 	 * @deprecated 3.0 Use SS_HTTPRequest->latestParam()
 	 */
 	static function urlParam($name) {
+		Deprecation::notice('3.0', 'Use SS_HTTPRequest->latestParam() instead.');
 		if(isset(Director::$urlParams[$name])) return Director::$urlParams[$name];
 	}
 	
@@ -306,6 +307,7 @@ class Director {
 	 * @deprecated 3.0 Use SS_HTTPRequest->latestParams()
 	 */
 	static function urlParams() {
+		Deprecation::notice('3.0', 'Use SS_HTTPRequest->latestParams() instead.');
 		return Director::$urlParams;
 	}
 
@@ -389,6 +391,7 @@ class Director {
 	 * @return String
 	 */
 	static function protocol() {
+		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https') return "https://";
 		return (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 'https://' : 'http://';
 	}
 
@@ -428,6 +431,7 @@ class Director {
 	 * @deprecated 2.5 Use Controller->redirectBack()
 	 */
 	static function redirectBack() {
+		Deprecation::notice('2.5', 'Use Controller->redirectBack() instead.');
 		Controller::curr()->redirectBack();
 	}
 
@@ -664,7 +668,7 @@ class Director {
 			$matched = true;
 		}
 
-		if($matched && (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off')) {
+		if($matched && (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') && !(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https')) {
 			$destURL = str_replace('http:', 'https:', Director::absoluteURL($_SERVER['REQUEST_URI']));
 
 			// This coupling to SapphireTest is necessary to test the destination URL and to not interfere with tests
@@ -785,9 +789,11 @@ class Director {
 	 * we recommend to set this mode via {@link Director::set_environment_type()}
 	 * or an _ss_environment.php instead.
 	 * 
+	 * @deprecated 3.0 Use Director::set_environment_type() or an _ss_environment.php instead.
 	 * @param $servers array An array of HTTP_HOST values that should be treated as development environments.
 	 */
 	static function set_dev_servers($servers) {
+		Deprecation::notice('3.0', 'Use Director::set_environment_type() or an _ss_environment.php instead.');
 		Director::$dev_servers = $servers;
 	}
 	
@@ -799,9 +805,11 @@ class Director {
 	 * we recommend to set this mode via {@link Director::set_environment_type()}
 	 * or an _ss_environment.php instead.
 	 * 
+	 * @deprecated 3.0 Use Director::set_environment_type() or an _ss_environment.php instead.
 	 * @param $servers array An array of HTTP_HOST values that should be treated as test environments.
 	 */
 	static function set_test_servers($servers) {
+		Deprecation::notice('3.0', 'Use Director::set_environment_type() or an _ss_environment.php instead.');
 		Director::$test_servers = $servers;
 	}
 

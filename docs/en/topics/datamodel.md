@@ -78,9 +78,31 @@ If you have constructed a query that you know should return a single record, you
 	$member = DataList::create('Member')->filter(array('FirstName' => 'Sam', 'Surname' => 'Minnee'))->First();
 
 
-### Filters
+### Sort
 
-**FUN FACT:** This isn't implemented in the code yet, but will be shortly.
+Quiet often you would like to sort a list. Doing this on a list could be done in a few ways.
+
+If would like to sort the list by FirstName in a ascending way (from A to Z).
+
+	:::php
+	$member = DataList::create('Member')->sort('FirstName');
+	// Or the more expressive way
+	$member = DataList::create('Member')->sort('FirstName', 'ASC');
+
+To reverse the sort
+
+	:::php
+	$member = DataList::create('Member')->sort('FirstName', 'DESC');
+
+However you might have several entries with the same FirstName and would like to sort them by FirstName and LastName
+
+	:::php
+	$member = DataList::create('Member')->sort(array(
+		'FirstName' => 'ASC',
+		'LastName'=>'ASC'
+	));
+
+### Filter
 
 As you might expect, the `filter()` method filters the list of objects that gets returned.  The previous example 
 included this filter, which returns all Members with a first name of "Sam".
@@ -105,9 +127,73 @@ So, this would return only those members called "Sam Minnée".
 		'Surname' => 'Minnée',
 	));
 
+There are also a short hand way of getting Members with the FirstName of Sam.
+
+	:::php
+	$members = DataList::create('Member')->filter('FirstName', 'Sam');
+
+Or if you want to find both Sam and Sig.
+
+	:::php
+	$members = DataList::create('Member')->filter(
+		'FirstName', array('Sam', 'Sig')
+	);
+
+
+Then there is the most complex task when you want to find Sam and Sig that has either Age 17 or 74.
+
+	:::php
+	$members = DataList::create('Member')->filter(array(
+		'FirstName' => array('Sam', 'Sig'),
+		'Age' => array(17, 74)
+	));
+
+This would be equivalent to a SQL query of
+
+	:::
+	... WHERE ("FirstName" IN ('Sam', 'Sig) AND "Age" IN ('17', '74));
+
+
+### Exclude
+
+The `exclude()` method is the opposite to the filter in that it removes entries from a list.
+
+If we would like to remove all members from the list with the FirstName of Sam.
+
+	:::php
+	$members = DataList::create('Member')->exclude('FirstName', 'Sam');
+
+Remove both Sam and Sig is as easy as.
+
+	:::php
+	$members = DataList::create('Member')->exclude('FirstName', array('Sam','Sig'));
+
+As you can see it follows the same pattern as filter, so for removing only Sam Minnée from the list
+
+	:::php
+	$members = DataList::create('Member')->exclude(array(
+		'FirstName' => 'Sam',
+		'Surname' => 'Minnée',
+	));
+
+And removing Sig and Sam with that are either age 17 or 74.
+
+	:::php
+	$members = DataList::create('Member')->exclude(array(
+		'FirstName' => array('Sam', 'Sig'),
+		'Age' => array(17, 43)
+	));
+
+This would be equivalent to a SQL query of
+
+	:::
+	... WHERE ("FirstName" NOT IN ('Sam','Sig) OR "Age" NOT IN ('17', '74));
+
+
+**FUN FACT:** The functionality below isn't implemented in the code yet.
+
 By default, these filters specify case-insensitive exact matches.  There are a number of suffixes that you can put on 
-field names to change this: `":StartsWith"`, `":EndsWith"`, `":Contains"`, `":GreaterThan"`, `":LessThan"`, `":Not"`, 
-and `":MatchCase"`. `":Not"` and `":MatchCase"` are special in that you can add it to any of the other filters.
+field names to change this: `":StartsWith"`, `":EndsWith"`, `":PartialMatch"`, `":GreaterThan"`, `":LessThan"`, `":Negation"`.
 
 This query will return everyone whose first name doesn't start with S, who have logged on since 1/1/2011.
 
@@ -132,6 +218,23 @@ members whose first name is either Sam or Ingo.
 	$members = DataList::create('Member')->filter(array(
 		'FirstName' => array('sam', 'ingo'),
 	));
+
+### Subtract
+
+You can subtract entries from a DataList by passing in another DataList to `subtract()`
+
+	:::php
+	$allSams = DataList::create('Member')->filter('FirstName', 'Sam');
+	$allMembers = DataList::create('Member');
+	$noSams = $allMembers->subtract($allSams);
+
+Though for the above example it would probably be easier to use `filter()` and `exclude()`. A better
+use case could be when you want to find all the members that does not exist in a Group. 
+
+	:::php
+	// ... Finding all members that does not belong to $group.
+	$otherMembers = DataList::create('Member')->subtract($group->Members());
+
 
 ### Relation filters
 
@@ -237,7 +340,7 @@ default behaviour by making a function called "get`<fieldname>`" or "set`<fieldn
 	  );
 	
 	  // access through $myPlayer->Status
-	  function getStatus() {
+	  public function getStatus() {
 	      // check if the Player is actually... born already!
 	      return (!$this->obj("Birthday")->InPast()) ? "Unborn" : $this->Status;
 	  }
@@ -250,13 +353,13 @@ Here we combined a Player's first name and surname, accessible through $myPlayer
 
 	:::php
 	class Player extends DataObject {
-	  function getTitle() {
+	  public function getTitle() {
 	    return "{$this->FirstName} {$this->Surname}";
 	  }
 	
 	  // access through $myPlayer->Title = "John Doe";
 	  // just saves data on the object, please use $myPlayer->write() to save the database-row
-	  function setTitle($title) {
+	  public function setTitle($title) {
 	    list($firstName, $surName) = explode(' ', $title);
 	    $this->FirstName = $firstName;
 	    $this->Surname = $surName;
@@ -306,7 +409,7 @@ but using the *obj()*-method or accessing through a template will cast the value
 	  // $myPlayer->MembershipFee() returns a float (e.g. 123.45)
 	  // $myPlayer->obj('MembershipFee') returns a object of type Currency
 	  // In a template: <% control MyPlayer %>MembershipFee.Nice<% end_control %> returns a casted string (e.g. "$123.45")
-	  function getMembershipFee() {
+	  public function getMembershipFee() {
 	    return $this->Team()->BaseFee * $this->MembershipYears;
 	  }
 	}
@@ -439,7 +542,7 @@ Inside sapphire it doesn't matter if you're editing a *has_many*- or a *many_man
 	
 	   * @param DataObjectSet
 	   */
-	  function addCategories($additionalCategories) {
+	  public function addCategories($additionalCategories) {
 	    $existingCategories = $this->Categories();
 	    
 	    // method 1: Add many by iteration
@@ -466,10 +569,32 @@ the described relations).
 	  );
 	
 	  // can be accessed by $myTeam->ActivePlayers()
-	  function ActivePlayers() {
+	  public function ActivePlayers() {
 	    return $this->Players("Status='Active'");
 	  }
 	}
+
+## Maps
+
+A map is an array where the array indexes contain data as well as the values.  You can build a map
+from any DataList like this:
+
+	:::php
+	$members = DataList::create('Member')->map('ID', 'FirstName');
+	
+This will return a map where the keys are Member IDs, and the values are the corresponding FirstName
+values.  Like everything else in the ORM, these maps are lazy loaded, so the following code will only
+query a single record from the database:
+
+	:::php
+	$members = DataList::create('Member')->map('ID', 'FirstName');
+	echo $member[5];
+	
+This functionality is provided by the `SS_Map` class, which can be used to build a map around any `SS_List`.
+
+	:::php
+	$members = DataList::create('Member');
+	$map = new SS_Map($members, 'ID', 'FirstName');
 
 ## Data Handling
 
@@ -530,7 +655,7 @@ Example: Disallow creation of new players if the currently logged-in player is n
 	    "Teams"=>"Team"
 	  );
 	
-	  function onBeforeWrite() {
+	  public function onBeforeWrite() {
 	    // check on first write action, aka "database row creation" (ID-property is not set)
 	    if(!$this->ID) {
 	      $currentPlayer = Member::currentUser();
@@ -570,7 +695,7 @@ It checks if a member is logged in who belongs to a group containing the permiss
 	    "Teams"=>"Team"
 	  );
 	
-	  function onBeforeDelete() {
+	  public function onBeforeDelete() {
 	    if(!Permission::check('PLAYER_DELETE')) {
 	      Security::permissionFailure($this);
 	      exit();

@@ -1,7 +1,7 @@
 <?php
 /**
  * A base class for decorators that wrap around a list to provide additional
- * functionality. It passes through list methods to the underlying list 
+ * functionality. It passes through list methods to the underlying list
  * implementation.
  *
  * @package    sapphire
@@ -109,8 +109,44 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List {
 		return $this->list->canSortBy($by);
 	}
 
-	public function sort($fieldname, $direction = "ASC") {
-		$this->list->sort($fieldname, $direction);
+	/**
+	 * Sorts this list by one or more fields. You can either pass in a single
+	 * field name and direction, or a map of field names to sort directions.
+	 *
+	 * @example $list->sort('Name'); // default ASC sorting
+	 * @example $list->sort('Name DESC'); // DESC sorting
+	 * @example $list->sort('Name', 'ASC');
+	 * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
+	 */
+	public function sort() {
+		$args = func_get_args();
+		return call_user_func_array(array($this->list, 'sort'), $args);
+	}
+
+	/**
+	 * Filter the list to include items with these charactaristics
+	 *
+	 * @example $list->filter('Name', 'bob'); // only bob in list
+	 * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
+	 * @example $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob or someone with Age 21
+	 * @example $list->filter(array('Name'=>'bob, 'Age'=>array(21, 43))); // bob or anyone with Age 21 or 43
+	 */
+	public function filter(){
+		$args = func_get_args();
+		return call_user_func_array(array($this->list, 'filter'), $args);
+	}
+
+	/**
+	 * Exclude the list to not contain items with these charactaristics
+	 *
+	 * @example $list->exclude('Name', 'bob'); // exclude bob from list
+	 * @example $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
+	 * @example $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob or someone with Age 21
+	 * @example $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob or anyone with Age 21 or 43
+	 */
+	public function exclude(){
+		$args = func_get_args();
+		return call_user_func_array(array($this->list, 'exclude'), $args);
 	}
 
 	public function debug() {

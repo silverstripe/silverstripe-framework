@@ -23,6 +23,8 @@
  * FileNameFilter::$default_use_transliterator = false;
  * FileNameFilter::$default_replacements = array();
  * </code>
+ * 
+ * See {@link URLSegmentFilter} for a more generic implementation.
  */
 class FileNameFilter {
 	
@@ -97,7 +99,7 @@ class FileNameFilter {
 	 * @return Transliterator|NULL
 	 */
 	function getTransliterator() {
-		if(!$this->transliterator === null && self::$default_use_transliterator) {
+		if($this->transliterator === null && self::$default_use_transliterator) {
 			$this->transliterator = Object::create('Transliterator');
 		} 
 		return $this->transliterator;

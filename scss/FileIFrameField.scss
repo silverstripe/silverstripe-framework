@@ -1,0 +1,175 @@
+/*
+typography.css has been removed from sapphire, why shall we still has this? a dynamic typographp.css should be used by
+server side call, like Requirements::css(); 
+@import url("typography.css");
+*/
+
+html,body {
+	padding: 0;
+	margin: 0;
+	border-style: none;
+	height: 100%;
+	overflow: hidden;
+}
+
+form {
+	margin: 0; padding: 0;
+}
+
+h2 {
+	margin: 0;
+	font-size: 1.4em;
+}
+
+/**
+ * Selection Groups
+ */
+.SelectionGroup {
+	padding: 0;
+	margin: 10px 0 0 0;
+}
+.SelectionGroup li {
+	list-style-type: none;
+	margin: 0 0 4px;
+}
+.SelectionGroup li label {
+	font-size: 11px;
+}
+.SelectionGroup li input.selector {
+	width: 20px;
+	margin-top: 0;
+}
+
+
+.SelectionGroup li div.field {
+	display: none;
+}
+.SelectionGroup li.selected div.field {
+	display: block;
+	margin-left: 30px;
+	margin-bottom: 1em;
+	margin-top: 4px;
+}
+.mainblock .SelectionGroup li.selected div.field {
+	margin-left: 27px;
+	margin-bottom: 4px;
+}
+
+.SelectionGroup li.selected label.selector {
+	font-weight: bold;
+}
+
+
+
+/**
+ * TreeDropdownField stying
+ */
+.SelectionGroup div.TreeDropdownField {
+	width: 241px;
+	padding: 0;
+}
+html>body div.TreeDropdownField {
+	position:relative;
+}
+
+.SelectionGroup div.TreeDropdownField span.items {
+	display: block;
+	height: 100%;
+	border: 1px #7f9db9 solid;
+	cursor: pointer;
+	width: 214px;
+	float: left;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	background-color: white;
+}
+
+.SelectionGroup div.TreeDropdownField div.tree_holder {
+	clear: left;
+	cursor: default;
+	border: 1px black solid;
+	margin: 0;
+	height: 180px;
+	overflow: auto;
+	background-color: white;
+	/**
+	 * HACK IE6, see http://www.hedgerwow.com/360/bugs/css-select-free.html
+	 */
+	position:absolute;
+	z-index:10;
+	width:238px;/*must have for any value*/
+}
+
+html>body div.TreeDropdownField div.tree_holder {
+	top: 20px;
+	left: 0px;
+	z-index: 1000;
+}
+
+/**
+ * HACK IE6, see http://www.hedgerwow.com/360/bugs/css-select-free.html
+ */
+.SelectionGroup div.TreeDropdownField div.tree_holder iframe {
+	display:none;/* IE5*/
+	display/**/:block;/* IE5*/
+	position:absolute;
+	top:0;
+	left:0;
+	z-index:-1;
+	filter:mask();
+	width:180px; /*must have for any big value*/
+	height:200px/*must have for any big value*/;
+	border: 0;
+}
+
+div.TreeDropdownField a.editLink {
+	border-width: 1px 1px 1px 0;
+	background: url(../../sapphire/images/TreeDropdownField_button.gif) left top no-repeat;
+	width: 19px;
+	height: 21px;
+	margin: 0;
+	padding: 0;
+	float: left;
+	clear: right;
+	z-index: 0;
+	overflow: hidden;
+}
+
+/* added block/width so tree values don't disappear in ie7 */
+.SelectionGroup div.TreeDropdownField ul.tree li {
+	display: block;
+	width: 100%;
+}
+
+.Actions {
+	text-align: right;
+	margin: 0;
+	position: absolute;
+	right: 5px;
+	bottom: 5px;
+}
+
+.mainblock {
+	float: left;
+	border: 1px solid #ccc; 
+	padding: 5px;
+	margin-right: 5px;
+	height: 140px;
+	position: relative;
+}
+	.mainblock.editform {
+		width: 275px;
+	}
+	.mainblock.attached {
+		position: absolute;
+		left: 270px;
+		width: 100px;
+	}
+
+.mainblock form fieldset {
+	border: none;
+}
+
+.mainblock form div.Actions input {
+	font-size: 11px;
+}

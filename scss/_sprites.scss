@@ -1,0 +1,80 @@
+/**
+ * Helper SCSS file for generating sprites for the interface.
+ */
+@import "compass/utilities/sprites/base";
+
+//$sprites32: sprite-map("sprites_32x32/*.png", $spacing: 10px);
+	
+$sprites16: sprite-map("sprites_16x16/*.png", $spacing: 10px);
+	
+/* CMS action button sprite mix-in for UploadField, copied from admin/scss/_forms.scss */
+@mixin actionButtonSprite($name) {
+  	padding-left: 24px;
+	padding-right: 6px;
+
+	@include background($color-button-generic sprite($sprites16, $name, 5px, 6px) no-repeat);
+	@include background(sprite($sprites16, $name, 5px, 6px) no-repeat,
+		linear-gradient(color-stops(
+			lighten($color-button-generic, 10%),
+			darken($color-button-generic, 5%)
+		))
+	);
+	&.ui-state-hover,
+	&:hover {
+		@include background(lighten($color-button-generic, 10%) sprite($sprites16, $name, 5px, 6px) no-repeat);
+		@include background(sprite($sprites16, $name, 5px, 6px) no-repeat,
+			linear-gradient(color-stops(
+				lighten($color-button-generic, 20%),
+				$color-button-generic
+			))
+		);
+	}
+	&.ui-state-disabled {
+	    background-image: none;
+	    color: $color-text;
+	    @include background(lighten($color-button-generic, 20%) sprite($sprites16, $name+_disabled, 5px, 6px) no-repeat);
+		@include background(sprite($sprites16, $name+_disabled, 5px, 6px) no-repeat,
+			linear-gradient(color-stops(
+				lighten($color-button-generic, 20%),
+				$color-button-generic
+			))
+		);
+	}
+}
+@mixin actionButtonSpriteConstructive($name) {
+  	background-image: none;
+	padding-left: 25px;
+	padding-right: 7px;
+	font-weight: bold;
+	margin-left: $grid-horizontal;
+	color: $color-text-light;
+	border-color: $color-button-constructive-border;
+	border-bottom-color: darken($color-button-constructive-border, 10%);			
+	@include background($color-button-constructive sprite($sprites16, $name, 6, 6) no-repeat);
+	@include background(sprite($sprites16, $name
+	, 6, 6) no-repeat,
+		linear-gradient(color-stops(
+			lighten($color-button-constructive, 10%),
+			darken($color-button-constructive, 5%)
+		))
+	);
+
+	@include text-shadow(darken($color-button-constructive, 10%) 0 1px 1px);
+
+	&.ui-state-hover {
+		border-color: darken($color-button-constructive-border, 10%);
+		@include background(lighten($color-button-constructive, 10%) sprite($sprites16, $name, 6, 6) no-repeat);
+		@include background(sprite($sprites16, $name, 6, 6) no-repeat,
+			linear-gradient(color-stops(
+				lighten($color-button-constructive, 15%),
+				$color-button-constructive
+			))
+		);
+	}
+	&:active, &:focus {
+		padding: $grid-vertical 8px $grid_vertical 26px;
+		border: none;
+		@include background(darken($color-button-constructive, 2%) sprite($sprites16, $name, 7, 7) no-repeat);
+		@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
+	}
+}

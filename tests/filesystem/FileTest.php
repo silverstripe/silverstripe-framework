@@ -13,7 +13,7 @@ class FileTest extends SapphireTest {
 		// Note: We can't use fixtures/setUp() for this, as we want to create the db record manually.
 		// Creating the folder is necessary to avoid having "Filename" overwritten by setName()/setRelativePath(),
 		// because the parent folders don't exist in the database
-		$folder = Folder::findOrMake('/FileTest/');
+		$folder = Folder::find_or_make('/FileTest/');
 		$testfilePath = 'assets/FileTest/CreateWithFilenameHasCorrectPath.txt'; // Important: No leading slash
 		$fh = fopen(BASE_PATH . '/' . $testfilePath, "w");
 		fwrite($fh, str_repeat('x',1000000));
@@ -294,6 +294,28 @@ class FileTest extends SapphireTest {
 		$this->assertEquals('FileTest_MyCustomFile', get_class($file));
 		
 		File::$class_for_file_extension = $orig;
+	}
+
+	function testSetsOwnerOnFirstWrite() {
+		Session::set('loggedInAs', null);
+		$member1 = new Member();
+		$member1->write();
+		$member2 = new Member();
+		$member2->write();
+
+		$file1 = new File();
+		$file1->write();
+		$this->assertEquals(0, $file1->OwnerID, 'Owner not written when no user is logged in');
+
+		$member1->logIn();
+		$file2 = new File();
+		$file2->write();
+		$this->assertEquals($member1->ID, $file2->OwnerID, 'Owner written when user is logged in');
+
+		$member2->logIn();
+		$file2->forceChange();
+		$file2->write();
+		$this->assertEquals($member1->ID, $file2->OwnerID, 'Owner not overwritten on existing files');
 	}
 		
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////

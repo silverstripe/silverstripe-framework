@@ -187,15 +187,15 @@ class ConfirmedPasswordField extends FormField {
 				$this->value = $value['_Password'];
 			}
 			if($this->showOnClick && isset($value['_PasswordFieldVisible'])){
-				$this->children->fieldByName($this->Name() . '[_PasswordFieldVisible]')->setValue($value['_PasswordFieldVisible']);
+				$this->children->fieldByName($this->getName() . '[_PasswordFieldVisible]')->setValue($value['_PasswordFieldVisible']);
 			}
 		} else {
 			if($value || (!$value && $this->canBeEmpty)) {
 				$this->value = $value;
 			}
 		}
-		$this->children->fieldByName($this->Name() . '[_Password]')->setValue($this->value);
-		$this->children->fieldByName($this->Name() . '[_ConfirmPassword]')->setValue($this->value);
+		$this->children->fieldByName($this->getName() . '[_Password]')->setValue($this->value);
+		$this->children->fieldByName($this->getName() . '[_ConfirmPassword]')->setValue($this->value);
 	}
 	
 	function jsValidation() {
@@ -297,7 +297,7 @@ JS;
 	 * @return bool
 	 */
 	function isSaveable() {
-		$isVisible = $this->children->fieldByName($this->Name() . '[_PasswordFieldVisible]');
+		$isVisible = $this->children->fieldByName($this->getName() . '[_PasswordFieldVisible]');
 		return (!$this->showOnClick || ($this->showOnClick && $isVisible && $isVisible->Value()));
 	}
 	

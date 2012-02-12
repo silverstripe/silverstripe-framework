@@ -17,7 +17,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 			'dd/MM/yyyy' => Zend_Date::now()->toString('dd/MM/yyyy'),
 		);
 		$dateFormatMap[$defaultDateFormat] = Zend_Date::now()->toString($defaultDateFormat) . ' (default)';
-		$field = new Member_DatetimeOptionsetField(
+		$field = new MemberDatetimeOptionsetField(
 			'DateFormat',
 			'Date format',
 			$dateFormatMap
@@ -34,7 +34,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 			'H:mm' => Zend_Date::now()->toString('H:mm'),
 		);
 		$timeFormatMap[$defaultTimeFormat] = Zend_Date::now()->toString($defaultTimeFormat) . ' (default)';
-		$field = new Member_DatetimeOptionsetField(
+		$field = new MemberDatetimeOptionsetField(
 			'TimeFormat',
 			'Time format',
 			$timeFormatMap
@@ -82,7 +82,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 	}
 
 	function testDateFormValid() {
-		$field = new Member_DatetimeOptionsetField('DateFormat', 'DateFormat');
+		$field = new MemberDatetimeOptionsetField('DateFormat', 'DateFormat');
 		$this->assertTrue($field->validate());
 		$_POST['DateFormat_custom'] = 'dd MM yyyy';
 		$this->assertTrue($field->validate());

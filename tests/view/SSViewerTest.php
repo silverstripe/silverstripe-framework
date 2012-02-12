@@ -1,6 +1,10 @@
 <?php
 
 class SSViewerTest extends SapphireTest {
+	function setUp() {
+		parent::setUp();
+		SSViewer::set_source_file_comments(false);
+	}
 	
 	/**
 	 * Tests for {@link SSViewer::current_theme()} for different behaviour
@@ -207,6 +211,10 @@ after')
 		// Basic test
 		$this->assertEquals('AC',
 			$this->render('A<% if NotSet %>B$NotSet<% end_if %>C'));
+
+		// Nested test
+		$this->assertEquals('AB1C',
+			$this->render('A<% if IsSet %>B$NotSet<% if IsSet %>1<% else %>2<% end_if %><% end_if %>C'));
 
 		// else_if
 		$this->assertEquals('ACD',
@@ -582,6 +590,38 @@ after')
 		unlink($tmplFile);
 		
 		SSViewer::setOption('rewriteHashlinks', $oldRewriteHashLinks);
+	}
+	
+	function testRenderWithSourceFileComments() {
+		SSViewer::set_source_file_comments(true);
+		
+		$view = new SSViewer(array('SSViewerTestCommentsFullSource'));
+		$data = new ArrayData(array());
+		
+		$result = $view->process($data);
+		$expected = '<!doctype html>
+<html><!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsFullSource.ss -->
+	<head></head>
+	<body></body>
+<!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsFullSource.ss --></html>
+';
+		$this->assertEquals($result, $expected);
+		
+		$view = new SSViewer(array('SSViewerTestCommentsPartialSource'));
+		$data = new ArrayData(array());
+		
+		$result = $view->process($data);
+		$expected = '<!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsPartialSource.ss --><div class=\'typography\'></div><!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsPartialSource.ss -->';
+		$this->assertEquals($result, $expected);
+		
+		$view = new SSViewer(array('SSViewerTestCommentsWithInclude'));
+		$data = new ArrayData(array());
+		
+		$result = $view->process($data);
+		$expected = '<!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsWithInclude.ss --><div class=\'typography\'><!-- include \'SSViewerTestCommentsInclude\' --><!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsInclude.ss -->Included<!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsInclude.ss --><!-- end include \'SSViewerTestCommentsInclude\' --></div><!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsWithInclude.ss -->';
+		$this->assertEquals($result, $expected);
+		
+		SSViewer::set_source_file_comments(false);
 	}
 
 }

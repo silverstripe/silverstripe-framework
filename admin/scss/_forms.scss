@@ -10,6 +10,87 @@
  * Basic form fields
  * ---------------------------------------------------- */	
 
+/* CMS action button sprite mix-in (used for all the buttons in the bottom row */
+@mixin actionButtonSprite($name) {
+  padding-left: 24px;
+	padding-right: 6px;
+
+	@include background($color-button-generic sprite($btn_icons, $name, 5px, 6px) no-repeat);
+	@include background(sprite($btn_icons, $name, 5px, 5px) no-repeat,
+		linear-gradient(color-stops(
+			lighten($color-button-generic, 10%),
+			darken($color-button-generic, 5%)
+		))
+	);
+	&.ui-state-hover, &:hover {
+		@include background(lighten($color-button-generic, 10%) sprite($btn_icons, $name, 5px, 6px) no-repeat);
+		@include background(sprite($btn_icons, $name, 5px, 5px) no-repeat,
+			linear-gradient(color-stops(
+				lighten($color-button-generic, 20%),
+				$color-button-generic
+			))
+		);
+		@include box-shadow(0 0 5px darken($color-button-generic, 20%));
+	}
+	&:active, &:focus, &.ui-state-active, &.ui-state-focus {
+		border: 1px solid darken($color-button-generic, 20%);
+		@include background(lighten($color-button-generic, 10%) sprite($btn_icons, $name, 5px, 6px) no-repeat);
+		@include background(sprite($btn_icons, $name, 5px, 5px) no-repeat,
+			linear-gradient(color-stops(
+				lighten($color-button-generic, 20%),
+				$color-button-generic
+			))
+		);
+		@include box-shadow(0 0 5px darken($color-button-generic, 30%) inset);
+	}
+	&.ui-state-disabled {
+    background-image: none;
+  	@include background(lighten($color-button-generic, 20%) sprite($btn_icons, $name+_disabled, 5px, 6px) no-repeat);
+		@include background(sprite($btn_icons, $name+_disabled, 5px, 5px) no-repeat,
+			linear-gradient(color-stops(
+				lighten($color-button-generic, 20%),
+				$color-button-generic
+			))
+		);
+	}
+}
+
+@mixin actionButtonSpriteConstructive($name) {
+  background-image: none;
+  padding-left: 24px;
+	padding-right: 6px;
+	font-weight: bold;
+	margin-left: $grid-horizontal;
+	color: $color-text-light;
+	border-color: $color-button-constructive-border;
+	border-bottom-color: darken($color-button-constructive-border, 10%);			
+	@include background($color-button-constructive sprite($btn_icons, $name, 5, 5) no-repeat);
+	@include background(sprite($btn_icons, $name, 5, 5) no-repeat,
+		linear-gradient(color-stops(
+			lighten($color-button-constructive, 10%),
+			darken($color-button-constructive, 5%)
+		))
+	);
+
+	@include text-shadow(darken($color-button-constructive, 10%) 0 1px 1px);
+
+	&.ui-state-hover, &:hover {
+		border-color: darken($color-button-constructive-border, 10%);
+		@include background(lighten($color-button-constructive, 10%) sprite($btn_icons, $name, 6, 6) no-repeat);
+		@include background(sprite($btn_icons, $name, 5, 5) no-repeat,
+			linear-gradient(color-stops(
+				lighten($color-button-constructive, 15%),
+				$color-button-constructive
+			))
+		);
+	}
+	&:active, &:focus, &.ui-state-active, &.ui-state-focus {
+
+		@include background(darken($color-button-constructive, 2%) sprite($btn_icons, $name, 5, 5) no-repeat);
+		@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
+	}
+}
+
 form.nostyle {
 	@include clear-form-field-styles();
 }
@@ -17,28 +98,26 @@ form.nostyle {
 .field {
 	display: block;
 	padding: 10px 0;
-	border-bottom-width: 2px;
-	border-bottom: 2px groove lighten($color-shadow-light, 95%);
-	-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
-	border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+	border-bottom: 1px solid $color-shadow-light;
+    @include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
+
 	//TODO: use single border line with shadow instead:: http://daverupert.com/2011/06/two-tone-borders-with-css3/
-	//@include border-image(url(../images/textures/bg_fieldset_elements_border.png), 2, stretch); //not yet supported
 	//overflow: hidden;
 
 	
 	// bottom padding accounts for the border and we have a negative
 	// margin with a postive padding to ensure the bottom border extends
 	// over the edges
-	padding: 0 $grid-horizontal $grid-vertical - 1 $grid-horizontal;
-	margin: 0 $grid-horizontal * -1 $grid-vertical $grid-horizontal * -1;
-	border-bottom: 1px solid $color-shadow-light;
+	padding: 0 0 $grid-vertical - 1 0;
+	margin: 0 0 $grid-vertical 0;
+
 	
 	// using the legacy version as some of the more complex form fields
 	// need to use relative positioning and overflow hidden will not expand
 	// the containing boxes
 	@include legacy-pie-clearfix();
 	
-	&.noLabel {
+	&.nolabel {
 		.middleColumn {
 			margin-left: 0;
 		}	
@@ -49,17 +128,11 @@ form.nostyle {
 		&.left {
 			float: left;
 			display: block;
-			width: $grid-horizontal * 21;
+			width: $grid-horizontal * 22;
 			padding: $grid-vertical $grid-horizontal $grid-vertical 0;
 			line-height: $grid-vertical * 2;
-		
-			span {
-				display: block;
-				font-size: $font-base-size - 1;
-				color: lighten($color-text, 25%);
-			
-				@include hide-text-overflow();
-			}
+			font-weight: bold;
+			@include text-shadow(1px 1px 0 $color-text-shadow);
 		}
 		
 		&.right {
@@ -81,8 +154,9 @@ form.nostyle {
 	textarea,
 	select,
 	.TreeDropdownField {
-		width: 90%;
+		width: 100%;
 		max-width: $grid-horizontal * 64;
+		@include box-sizing(border-box);
 	}
 	
 	input.text, 
@@ -94,31 +168,72 @@ form.nostyle {
 		line-height: $grid-vertical * 2;
 		margin: 0;
 		outline: none;
-		
+		@include transition(0.2s box-shadow ease-in);
+		@include transition(0.2s border ease-in);
 		@include border-radius(4px);
-		@include background-image(linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef));
+		@include background-image(linear-gradient(#EAEAEA, #fff 10%));
 	
 		&:focus {
-			border: 1px solid lighten($color-medium-separator, 20%);
-			
-			@include box-shadow(0 0 5px rgba(0,0,0,0.2));
+			border: 1px solid lighten($color-medium-separator, 10%);
+			border-top-color: $color-medium-separator;
+			@include box-shadow(0 1px 3px rgba(0,0,0,0.2) inset);
 		}
 	}
 	
+	input[disabled],
+	textarea[disabled],
+	select[disabled] {
+		color: lighten($color-text, 20%);
+		background: #efefef;
+		@include background-image(linear-gradient(darken(#efefef, 20%), #efefef 10%, #fff 90%, darken(#efefef, 20%)));
+		border: 1px solid lighten($color-medium-separator, 20%);
+	}
+
+}
+
+form.stacked .field, .field.stacked {
+	label {
+		display: block;
+		float: none;
+		padding-bottom: 10px;
+	}
+	
+	.middleColumn {
+		margin-left: 0px;
+		clear: left;
+	}
+}
+
+form.small .field, .field.small {
+	label {
+		&.left {
+			width: $grid-horizontal * 14;
+		}
+	}
+	
+	.middleColumn {
+		margin-left: $grid-horizontal * 15;
+	}
+
+	input.text,
+	textarea,
+	select,
+	.TreeDropdownField {
+		width: auto;
+	}
+}
+
+.field {	
 	/* TreeDropdowns */
 	.TreeDropdownField {
-		padding: 0 14px 0 0;
+		padding: 0;
 		
 		.treedropdownfield-panel {
 			border: 1px solid lighten($color-medium-separator, 20%);
 			border-top: none;
-			padding-right: 14px;
 			
 			@include border-bottom-left-radius(4px);
 			@include border-bottom-right-radius(4px);
-		}
-		.treedropdownfield-toggle-panel-link {
-			margin-right: -14px;
 		}
 		
 		&.treedropdownfield-open-tree {
@@ -152,8 +267,8 @@ form.nostyle {
 	}
 	
 	.chzn-container-single .chzn-single  {
-		height: 30px;
-		line-height: 32px; /* not relative, as then we'd had to redo most of chzn */
+		height: 26px;
+		line-height: 26px; /* not relative, as then we'd had to redo most of chzn */
 		font-size: $font-base-size;
 		
 		@include background-image(linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef));
@@ -168,7 +283,7 @@ form.nostyle {
 			width: 24px;
 	
 			b {
-				background-position: 1px 4px;
+				background-position: 4px 0px;
 			}
 		}
 	}
@@ -185,7 +300,6 @@ form.nostyle {
  * ---------------------------------------------------- */
 
 .Actions {
-	margin-right: 80px; // Accommodate preview button
 	min-height: 30px;
 
 	& > div {
@@ -196,10 +310,15 @@ form.nostyle {
 .cms-preview-toggle-link {
 	display: block;
 	float: right;
-	font-size: 11px;
+	font-size: 12px;
+	text-decoration: none;
+	span.ui-button-text{
+		padding:0;
+	}
 }
 
 .cms {
+
 	input.loading,
 	input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, 
 	.ui-widget-header input.ui-state-default.loading {
@@ -214,8 +333,13 @@ form.nostyle {
 	}
 
 	.ss-ui-button {
+		
+		&.buttonset {
+			margin: 0 -1px; // hack to avoid double borders
+		}
+		
 		/* all buttons */
-		padding: ($grid-vertical - 1) ($grid-horizontal + 4);
+		padding: ($grid-vertical - 3) ($grid-horizontal + 4);
 		font-weight: bold;
 		text-decoration: none;
 		margin: 0;
@@ -223,126 +347,74 @@ form.nostyle {
 		color: lighten($color-text-dark, 10%);
 		background-color: $color-button-generic;
 		border: 1px solid $color-button-generic-border;
+		border-bottom: 1px solid darken($color-button-generic-border, 10%);
+		cursor: pointer;
+		
 		@include text-shadow(lighten($color-button-generic, 20%) 0 1px 1px);
 		
-		@include box-shadow(lighten($color-base, 10%) 0 1px 2px);
-		@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+		@include background($color-button-generic);
+		@include background(
 			linear-gradient(color-stops(
 				lighten($color-button-generic, 10%),
 				darken($color-button-generic, 5%)
 			))
 		);
-		&.ui-state-hover {
-			border: 1px solid darken($color-button-generic-border, 10%);
-			@include text-shadow(lighten($color-button-generic, 30%) 0 1px 1px);
-			
-			@include box-shadow($color-base 0 1px 2px);
-			@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+		&.ui-state-hover, &:hover {
+			@include background(lighten($color-button-generic, 10%));
+			@include background(
 				linear-gradient(color-stops(
 					lighten($color-button-generic, 20%),
-					darken($color-button-generic, 5%)
+					$color-button-generic
 				))
 			);
+			@include box-shadow(0 0 5px darken($color-button-generic, 20%));
 		}
-		&:focus,
-		&:active {
-			border: 1px solid darken($color-button-generic-border, 5%);
-			
-			@include box-shadow($color-base 0 1px 2px);
-			@include background(image-url("../images/btn_icons_sprite.png") no-repeat 999px 999px,
+		&:active, &:focus, &.ui-state-active, &.ui-state-focus {
+			border: 1px solid darken($color-button-generic, 20%);
+			@include background(lighten($color-button-generic, 10%) no-repeat);
+			@include background(
 				linear-gradient(color-stops(
-					$color-button-generic,
-					lighten($color-button-generic, 20%)
-				))
-			);			
-		}
-
-		/* CMS action button sprite mix-in (used for all the buttons in the bottom row */
-		@mixin actionButtonSprite($horizontalOffset, $verticalOffset) {
-		    padding-left: 24px;
-			padding-right: 6px;
-			@include background(image-url("../images/btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
-				linear-gradient(color-stops(
-					lighten($color-button-generic, 10%),
-					darken($color-button-generic, 5%)
+					lighten($color-button-generic, 20%),
+					$color-button-generic
 				))
 			);
-			&.ui-state-hover {
-				@include background(image-url("../images/btn_icons_sprite.png") no-repeat $horizontalOffset $verticalOffset,
-					linear-gradient(color-stops(
-						lighten($color-button-generic, 20%),
-						$color-button-generic
-					))
-				);
-			}
-			&.ui-state-disabled {
-			    background-image: none;
-				@include background(image-url("../images/btn_icons_sprite_disabled.png") no-repeat $horizontalOffset $verticalOffset,
-					linear-gradient(color-stops(
-						lighten($color-button-generic, 20%),
-						$color-button-generic
-					))
-				);
-			}
+			@include box-shadow(0 0 5px darken($color-button-generic, 20%) inset);
 		}
 
 		/* constructive */
 		&.ss-ui-action-constructive {
-		    background-image: none;
-			padding-left: 24px;
-			padding-right: 6px;
-			font-weight: bold;
-			margin-left: $grid-horizontal;
-			color: $color-text-light;
-			border-color: $color-button-constructive-border;
-			@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 5px,
-				linear-gradient(color-stops(
-					lighten($color-button-constructive, 10%),
-					darken($color-button-constructive, 5%)
-				))
-			);
-		
-			background-color: $color-button-constructive;
-	
-			@include text-shadow(darken($color-button-constructive, 10%) 0 1px 1px);
-			@include box-shadow(darken($color-base, 20%) 1px 1px 2px);
-		
-			&.ui-state-hover {
-				border-color: darken($color-button-constructive-border, 10%);
-				@include background(image-url("../images/btn_icons_sprite.png") no-repeat 5px 5px,
-					linear-gradient(color-stops(
-						lighten($color-button-constructive, 15%),
-						$color-button-constructive
-					))
-				);
-			
-				background-color: darken($color-button-constructive, 10%);
-			}
+			@include actionButtonSpriteConstructive('accept');
 		}
-	
+		
+		&.cms-page-add-button {
+			@include actionButtonSpriteConstructive('add');
+			@include border-radius(4px);
+
+		}
 		/* destructive */
 		&.ss-ui-action-destructive {
 			color: $color-button-destructive;
 			background-color: $color-button-generic;
 		
 			&.delete {
-				@include actionButtonSprite(6px, -26px);
+				@include actionButtonSprite('decline');
 			}
 
 			&.unpublish {
-			    @include actionButtonSprite(6px, -58px);
+			    @include actionButtonSprite('unpublish');
 			}
 		}
 
 		/* generic action buttons */
 		&.save-draft {
-		    @include actionButtonSprite(6px, -90px);
+		    @include actionButtonSprite('addpage');
 		}
 
 		&.cms-preview-toggle-link {
-		    padding-left: 24px !important;
+		  padding-left: 24px !important;
 			margin-left: 4px !important;
-		    @include actionButtonSprite(6px, -124px);
+			text-decoration: none;
+			@include actionButtonSprite('preview');
 		}
 
 		&.ss-ui-button-small {
@@ -403,39 +475,57 @@ form.nostyle {
 /** ----------------------------------------------------
  * Checkbox Field
  * ---------------------------------------------------- */
-.field {
-	&.checkbox {
-		padding-left: $grid-horizontal * 24;
-		margin-bottom: $grid-vertical;
+.field.checkbox {
+	padding-left: $grid-horizontal * 23;
+	margin-bottom: $grid-vertical;
+
+	input {
+		margin-left: 0;
 	}
 }
+input.checkbox {
+	margin-left: 0
+}
+
+/** ----------------------------------------------------
+ * Radiobutton Field
+ * ---------------------------------------------------- */
+.field.radio {
+	padding-left: $grid-horizontal * 23;
+	margin-bottom: $grid-vertical;
+
+	input {
+		margin-left: 0;
+	}
+}
+input.radio {
+	margin-left: 0
+}
+
 /** ----------------------------------------------------
  * Optionsets and Checkboxsets
  * ---------------------------------------------------- */
 .optionset {
-	overflow: hidden;
 	padding-bottom: 8px;
 	
 	li {
 		float: left;
 		display: block;
 		width: $grid-horizontal * 27;
-		padding: $grid-vertical $grid-horizontal 0;
+		padding-bottom: $grid-horizontal;
 		line-height: $grid-vertical * 2;
 		list-style: none;
-		position: relative;
 
 		input {
-			position: absolute;
-			top: $grid-vertical + 1; // used to get the input off the edge, the overflow
-			left: 2px; // hidden crops the glow.
-			margin: 0;
+			display: inline-block;
+			padding-right: 0;
+			margin-right: 0;
 		}
 		
 		label {
-			display: block;
+			display: inline;
 			cursor: pointer;
-			padding: 0 0 0 $grid-vertical * 2;
+			padding-left: $grid-vertical;
 		}
 
 	}
@@ -447,16 +537,17 @@ form.nostyle {
  * ---------------------------------------------------- */
 
 .htmleditor {
-	label {
-		display: block;
-		float: none;
-		padding-bottom: 10px;
+	
+	textarea {
+		visibility: hidden; // enabled by JS
+	}
+
+	.mceEditor {
+		input, select {
+			width: auto;
+		}	
 	}
 	
-	.middleColumn {
-		margin-left: 0px;
-		clear: left;
-	}
 }
 
 

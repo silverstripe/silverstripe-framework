@@ -40,6 +40,14 @@ class Versioned extends DataExtension {
 	protected static $cache_versionnumber;
 	
 	/**
+	 * @var Boolean Flag which is temporarily changed during the write() process
+	 * to influence augmentWrite() behaviour. If set to TRUE, no new version will be created
+	 * for the following write. Needs to be public as other classes introspect this state
+	 * during the write process in order to adapt to this versioning behaviour.
+	 */
+	public $_nextWriteWithoutVersion = false;
+
+	/**
 	 * Additional database columns for the new
 	 * "_versions" table. Used in {@link augmentDatabase()}
 	 * and all Versioned calls extending or creating
@@ -95,13 +103,20 @@ class Versioned extends DataExtension {
 		$this->liveStage = array_pop($stages);
 	}
 	
-	function extraStatics($class) {
+	/**
+	 *
+	 * @param string $class
+	 * @param string $extension
+	 * @return array
+	 */
+	function extraStatics($class=null, $extension=null) {
 		return array(
 			'db' => array(
 				'Version' => 'Int',
 			),
 			'has_many' => array(
-				'Versions' => $class,
+				// TODO this method is called *both* statically and on an instance
+				'Versions' => ($class) ? $class : $this->owner->class,
 			)
 		);
 	}
@@ -504,7 +519,9 @@ class Versioned extends DataExtension {
 			}
 			
 			// Putting a Version of -1 is a signal to leave the version table alone, despite their being no version
-			if($manipulation[$table]['fields']['Version'] < 0) unset($manipulation[$table]['fields']['Version']);
+			if($manipulation[$table]['fields']['Version'] < 0 || $this->_nextWriteWithoutVersion) {
+				unset($manipulation[$table]['fields']['Version']);
+			}
 
 			if(!$this->hasVersionField($table)) unset($manipulation[$table]['fields']['Version']);
 			
@@ -529,6 +546,21 @@ class Versioned extends DataExtension {
 
 		// Add the new version # back into the data object, for accessing after this write
 		if(isset($thisVersion)) $this->owner->Version = str_replace("'","",$thisVersion);
+	}
+
+	/**
+	 * Perform a write without affecting the version table.
+	 * On objects without versioning.
+	 *
+	 * @return int The ID of the record
+	 */
+	public function writeWithoutVersion() {
+		$this->_nextWriteWithoutVersion = true;
+		return $this->owner->write();
+	}
+
+	function onAfterWrite() {
+		$this->_nextWriteWithoutVersion = false;
 	}
 
 	/**
@@ -683,8 +715,11 @@ class Versioned extends DataExtension {
 		// Make sure the table names are not postfixed (e.g. _Live)
 		$oldMode = self::get_reading_mode();
 		self::reading_stage('Stage');
-
-		$query = $this->owner->extendedSQL($filter, $sort, $limit, $join, $having);
+		
+		$list = DataObject::get(get_class($this->owner), $filter, $sort, $limit, $join);
+		if($having) $having = $list->having($having);
+		
+		$query = $list->dataQuery()->query();
 
 		foreach($query->from as $table => $tableJoin) {
 			if(is_string($tableJoin) && $tableJoin[0] == '"') {
@@ -908,8 +943,8 @@ class Versioned extends DataExtension {
 	 * @param string $sort A sort expression to be inserted into the ORDER BY clause.
 	 * @param string $join A join expression, such as LEFT JOIN or INNER JOIN
 	 * @param int $limit A limit on the number of records returned from the database.
-	 * @param string $containerClass The container class for the result set (default is DataObjectSet)
-	 * @return DataObjectSet
+	 * @param string $containerClass The container class for the result set (default is DataList)
+	 * @return SS_List
 	 */
 	static function get_by_stage($class, $stage, $filter = '', $sort = '', $join = '', $limit = '', $containerClass = 'DataList') {
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass);

@@ -24,7 +24,7 @@ class LeftAndMainTest extends FunctionalTest {
 	public function testSaveTreeNodeSorting() {	
 		$this->loginWithPermission('ADMIN');
 				
-		$rootPages = DataObject::get('LeftAndMainTest_Object', '"ParentID" = 0'); // implicitly sorted
+		$rootPages = DataObject::get('LeftAndMainTest_Object', '"ParentID" = 0', '"ID"'); // forcing sorting for non-MySQL
 		$siblingIDs = $rootPages->column('ID');
 		$page1 = $rootPages->offsetGet(0);
 		$page2 = $rootPages->offsetGet(1);
@@ -80,25 +80,6 @@ class LeftAndMainTest extends FunctionalTest {
 		$this->assertEquals(1, $page31->Sort, 'Children pages before insertaion are unaffected');
 		$this->assertEquals(2, $page2->Sort, 'Moved page is correctly sorted');
 		$this->assertEquals(3, $page32->Sort, 'Children pages after insertion are resorted');
-	}
-	
-	/**
-	 * Test that CMS versions can be interpreted appropriately
-	 */
-	public function testCMSVersion() {
-		$l = new LeftAndMain();
-		$this->assertEquals("2.4", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/sapphire/branches/2.4/silverstripe_version $'));
-		$this->assertEquals("2.2.0", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/sapphire/tags/2.2.0/silverstripe_version $'));
-		$this->assertEquals("trunk", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/sapphire/trunk/silverstripe_version $'));
-		$this->assertEquals("2.4.0-alpha1", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/sapphire/tags/alpha/2.4.0-alpha1/silverstripe_version $'));
-		$this->assertEquals("2.4.0-beta1", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/sapphire/tags/beta/2.4.0-beta1/silverstripe_version $'));
-		$this->assertEquals("2.4.0-rc1", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/sapphire/tags/rc/2.4.0-rc1/silverstripe_version $'));
 	}
 	
 	/**

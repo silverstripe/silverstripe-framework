@@ -5,6 +5,8 @@
  *
  * If all you need is a simple file upload, it is reccomended you use {@link FileField}
  *
+ * @deprecated 3.0 Use UploadField
+ *
  * @package forms
  * @subpackage fields-files
  */
@@ -48,7 +50,7 @@ class FileIFrameField extends FileField {
 	 */
 	public function dataClass() {
 		if($this->form && $this->form->getRecord()) {
-			$class = $this->form->getRecord()->has_one($this->Name());
+			$class = $this->form->getRecord()->has_one($this->getName());
 			return ($class) ? $class : 'File';
 		} else {
 			return 'File';
@@ -59,6 +61,8 @@ class FileIFrameField extends FileField {
 	 * @return string
 	 */
 	public function Field() {
+		Deprecation::notice('3.0', 'Use UploadField');
+
 		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
@@ -76,7 +80,7 @@ class FileIFrameField extends FileField {
 			return $this->createTag (
 				'iframe',
 				array (
-					'name'  => $this->Name() . '_iframe',
+					'name'  => $this->getName() . '_iframe',
 					'src'   => Controller::join_links($this->Link(), $iframe),
 					'style' => 'height: 152px; width: 100%; border: none;'
 				)
@@ -85,17 +89,15 @@ class FileIFrameField extends FileField {
 				array (
 					'type'  => 'hidden',
 					'id'    => $this->ID(),
-					'name'  => $this->Name() . 'ID',
+					'name'  => $this->getName() . 'ID',
 					'value' => $this->attrValue()
 				)
 			);
+		} else {
+			return sprintf(_t (
+				'FileIFrameField.ATTACHONCESAVED', '%ss can be attached once you have saved the record for the first time.'
+			), $this->FileTypeName());
 		}
-		
-		$this->setValue(sprintf(_t (
-			'FileIFrameField.ATTACHONCESAVED', '%ss can be attached once you have saved the record for the first time.'
-		), $this->FileTypeName()));
-		
-		return FormField::field();
 	}
 	
 	/**
@@ -104,7 +106,7 @@ class FileIFrameField extends FileField {
 	 * @return File|null
 	 */
 	public function AttachedFile() {
-		return $this->form->getRecord() ? $this->form->getRecord()->{$this->Name()}() : null;
+		return $this->form->getRecord() ? $this->form->getRecord()->{$this->getName()}() : null;
 	}
 	
 	/**
@@ -119,7 +121,7 @@ class FileIFrameField extends FileField {
 		
 		Requirements::css('sapphire/css/FileIFrameField.css');
 		
-		return $this->renderWith($this->template);
+		return $this->renderWith('FileIframeField_iframe');
 	}
 	
 	/**
@@ -196,9 +198,8 @@ class FileIFrameField extends FileField {
 				return;
 			}
 			
-			$this->form->getRecord()->{$this->Name() . 'ID'} = $fileObject->ID;
+			$this->form->getRecord()->{$this->getName() . 'ID'} = $fileObject->ID;
 			
-			$fileObject->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
 			$fileObject->write();
 		}
 		
@@ -212,7 +213,7 @@ class FileIFrameField extends FileField {
 				return;
 			}
 			
-			$this->form->getRecord()->{$this->Name() . 'ID'} = $fileObject->ID;
+			$this->form->getRecord()->{$this->getName() . 'ID'} = $fileObject->ID;
 			
 			if(!$fileObject instanceof $desiredClass) {
 				$fileObject->ClassName = $desiredClass;
@@ -248,7 +249,7 @@ class FileIFrameField extends FileField {
 	public function delete($data, $form) {
 		// delete the actual file, or just un-attach it?
 		if(isset($data['DeleteFile']) && $data['DeleteFile']) {
-			$file = DataObject::get_by_id('File', $this->form->getRecord()->{$this->Name() . 'ID'});
+			$file = DataObject::get_by_id('File', $this->form->getRecord()->{$this->getName() . 'ID'});
 			
 			if($file) {
 				$file->delete();
@@ -256,7 +257,7 @@ class FileIFrameField extends FileField {
 		}
 		
 		// then un-attach file from this record
-		$this->form->getRecord()->{$this->Name() . 'ID'} = 0;
+		$this->form->getRecord()->{$this->getName() . 'ID'} = 0;
 		$this->form->getRecord()->write();
 		
 		Director::redirectBack();

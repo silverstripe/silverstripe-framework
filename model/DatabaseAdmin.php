@@ -99,9 +99,6 @@ class DatabaseAdmin extends Controller {
 			echo "<p>Done!</p>";
 			Director::redirect($_GET['returnURL']);
 		} else {
-			if(!Director::is_cli() && Director::urlParam('Controller') == __CLASS__) {
-				echo '<p style="color: red;"><i>db/build</i> has been deprecated. Please use <b>dev/build</b> instead.</p>';
-			}
 			$this->doBuild(isset($_REQUEST['quiet']) || isset($_REQUEST['from_installer']), !isset($_REQUEST['dont_populate']));
 		}
 	}

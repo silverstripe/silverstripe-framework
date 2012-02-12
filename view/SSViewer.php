@@ -185,7 +185,6 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
  *
  * @see http://doc.silverstripe.org/themes
  * @see http://doc.silverstripe.org/themes:developing
-
  * 
  * @package sapphire
  * @subpackage view
@@ -319,7 +318,7 @@ class SSViewer {
 			}
 		}
 		
-		if(substr((string) $templateList,-3) == '.ss') {
+		if(!is_array($templateList) && substr((string) $templateList,-3) == '.ss') {
 			$this->chosenTemplates['main'] = $templateList;
 		} else {
 			$this->chosenTemplates = SS_TemplateLoader::instance()->findTemplates(
@@ -327,8 +326,12 @@ class SSViewer {
 			);
 		}
 
-		if(!$this->chosenTemplates) user_error("None of these templates can be found in theme '"
+		if(!$this->chosenTemplates) {
+		  $templateList = (is_array($templateList)) ? $templateList : array($templateList);
+		  
+		  user_error("None of these templates can be found in theme '"
 			. self::current_theme() . "': ". implode(".ss, ", $templateList) . ".ss", E_USER_WARNING);
+		}
 	}
 	
 	/**

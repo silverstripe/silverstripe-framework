@@ -218,8 +218,8 @@ class SQLQueryTest extends SapphireTest {
 		$query->leftJoin( 'MyLastTable', 'MyOtherTable.ID = MyLastTable.ID' );
 
 		$this->assertEquals( 'SELECT * FROM MyTable '.
-			'INNER JOIN "MyOtherTable" AS "MyOtherTable" ON MyOtherTable.ID = 2 '.
-			'LEFT JOIN "MyLastTable" AS "MyLastTable" ON MyOtherTable.ID = MyLastTable.ID',
+			'INNER JOIN "MyOtherTable" ON MyOtherTable.ID = 2 '.
+			'LEFT JOIN "MyLastTable" ON MyOtherTable.ID = MyLastTable.ID',
 			$query->sql()
 		);
 
@@ -233,6 +233,15 @@ class SQLQueryTest extends SapphireTest {
 			'LEFT JOIN "MyLastTable" AS "table2" ON MyOtherTable.ID = MyLastTable.ID',
 			$query->sql()
 		);
+	}
+
+
+	public function testWhereAny() {
+		$query = new SQLQuery();
+		$query->from( 'MyTable' );
+
+		$query->whereAny(array("Monkey = 'Chimp'", "Color = 'Brown'"));
+		$this->assertEquals("SELECT * FROM MyTable WHERE (Monkey = 'Chimp' OR Color = 'Brown')",$query->sql());
 	}
 }
 

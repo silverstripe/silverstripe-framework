@@ -21,7 +21,6 @@
 Director::addRules(10, array(
 	'Security//$Action/$ID/$OtherID' => 'Security',
 	//'Security/$Action/$ID' => 'Security',
-	'db//$Action' => 'DatabaseAdmin',
 	'$Controller//$Action/$ID/$OtherID' => '*',
 	'api/v1/live' => 'VersionedRestfulServer',
 	'api/v1' => 'RestfulServer',
@@ -42,6 +41,7 @@ Director::addRules(20, array(
  */
 Object::useCustomClass('SSDatetime', 'SS_Datetime', true);
 Object::useCustomClass('Datetime',   'SS_Datetime', true);
+
 
 
 /**
@@ -76,6 +76,9 @@ if (!is_dir($aggregatecachedir)) mkdir($aggregatecachedir);
 
 SS_Cache::add_backend('aggregatestore', 'File', array('cache_dir' => $aggregatecachedir));
 SS_Cache::pick_backend('aggregatestore', 'aggregate', 1000);
+
+// If you don't want to see deprecation errors for the new APIs, change this to 3.0.0-dev.
+Deprecation::notification_version('3.0.0');
 
 // TODO Remove once new ManifestBuilder with submodule support is in place
 require_once('admin/_config.php');

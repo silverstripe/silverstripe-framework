@@ -55,6 +55,20 @@ class AggregateTest extends SapphireTest {
 		'AggregateTest_Baz'
 	);
 	
+	protected $originalDeprecation;
+
+	function setUp() {
+		parent::setUp();
+		// This test tests code that was deprecated after 2.4
+		$this->originalDeprecation = Deprecation::dump_settings();
+		Deprecation::notification_version('2.4');
+	}
+
+	function tearDown() {
+		parent::tearDown();
+		Deprecation::restore_settings($this->originalDeprecation);
+	}
+	
 	/**
 	 * Test basic aggregation on a passed type
 	 */
@@ -94,12 +108,12 @@ class AggregateTest extends SapphireTest {
 	function testBaseFieldAggregate() {
 		$this->assertEquals(
 			$this->formatDate(DataObject::Aggregate('AggregateTest_Foo')->Max('LastEdited')),
-			$this->formatDate(DataObject::get_one('AggregateTest_Foo', '', '', 'LastEdited DESC')->LastEdited)
+			$this->formatDate(DataObject::get_one('AggregateTest_Foo', '', '', '"LastEdited" DESC')->LastEdited)
 		);
 		
 		$this->assertEquals(
 			$this->formatDate(DataObject::Aggregate('AggregateTest_Foo')->Max('Created')),
-			$this->formatDate(DataObject::get_one('AggregateTest_Foo', '', '', 'Created DESC')->Created)
+			$this->formatDate(DataObject::get_one('AggregateTest_Foo', '', '', '"Created" DESC')->Created)
 		);
 	}
 	/* */

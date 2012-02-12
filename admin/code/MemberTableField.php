@@ -54,7 +54,7 @@ class MemberTableField extends ComplexTableField {
   	 * @param Controller $controller Controller class which created this field
   	 * @param string $name Name of the field (e.g. "Members")
   	 * @param mixed $group Can be the ID of a Group instance, or a Group instance itself
-  	 * @param DataObjectSet $members Optional set of Members to set as the source items for this field
+  	 * @param SS_List $members Optional set of Members to set as the source items for this field
   	 * @param boolean $hidePassword Hide the password field or not in the summary?
   	 */
 	function __construct($controller, $name, $group = null, $members = null, $hidePassword = true) {
@@ -65,9 +65,9 @@ class MemberTableField extends ComplexTableField {
 			    $this->group = $group;
 			    $members = $group->Members();
 
-		    } elseif(isset($_REQUEST['ctf'][$this->Name()]["ID"]) && is_numeric($_REQUEST['ctf'][$this->Name()]["ID"])) {
+		    } elseif(isset($_REQUEST['ctf'][$this->getName()]["ID"]) && is_numeric($_REQUEST['ctf'][$this->getName()]["ID"])) {
 		        throw new Exception("Is this still being used?  It's a hack and we should remove it.");
-			    $group = DataObject::get_by_id('Group', $_REQUEST['ctf'][$this->Name()]["ID"]);
+			    $group = DataObject::get_by_id('Group', $_REQUEST['ctf'][$this->getName()]["ID"]);
 			    $this->group = $group;
 			    $members = $group->Members();
 		    } else {

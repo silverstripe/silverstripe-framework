@@ -192,6 +192,31 @@ class DBFieldTest extends SapphireTest {
 		$textField->setValue(null);
 		$this->assertFalse($textField->hasValue());
 	}
+	
+	function testStringFieldsWithMultibyteData() {
+		$plainFields = array('Varchar', 'Text');
+		$htmlFields = array('HTMLVarchar', 'HTMLText');
+		$allFields = array_merge($plainFields, $htmlFields);
+		
+		$value = 'üåäöÜÅÄÖ';
+		foreach ($allFields as $stringField) {
+			$stringField = DBField::create($stringField, $value);
+			for ($i = 1; $i < mb_strlen($value); $i++) {
+				$expected = mb_substr($value, 0, $i) . '...';
+				$this->assertEquals($expected, $stringField->LimitCharacters($i));
+			}
+		}
+		
+		$value = '<p>üåäö&amp;ÜÅÄÖ</p>';
+		foreach ($htmlFields as $stringField) {
+			$stringField = DBField::create($stringField, $value);
+			$this->assertEquals('üåäö&amp;ÜÅÄ...', $stringField->LimitCharacters(8));
+		}
+		
+		$this->assertEquals('ÅÄÖ', DBField::create('Text', 'åäö')->UpperCase());
+		$this->assertEquals('åäö', DBField::create('Text', 'ÅÄÖ')->LowerCase());
+	}
+	
 }
 
 ?>

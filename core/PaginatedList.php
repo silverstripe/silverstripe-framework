@@ -162,7 +162,7 @@ class PaginatedList extends SS_ListDecorator {
 	 * around the current page.
 	 *
 	 * @param  int $max
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function Pages($max = null) {
 		$result = new ArrayList();
@@ -229,7 +229,7 @@ class PaginatedList extends SS_ListDecorator {
 	 * @param  int $context The number of pages to display around the current
 	 *         page. The number should be event, as half the number of each pages
 	 *         are displayed on either side of the current one.
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function PaginationSummary($context = 4) {
 		$result  = new ArrayList();
@@ -388,6 +388,7 @@ class PaginatedList extends SS_ListDecorator {
 	 * @deprecated 3.0 Use individual getter methods.
 	 */
 	public function getPageLimits() {
+		Deprecation::notice('3.0', 'Use getPageStart, getPageLength, or getTotalItems instead.');
 		return array(
 			'pageStart'  => $this->getPageStart(),
 			'pageLength' => $this->pageLength,
@@ -399,6 +400,7 @@ class PaginatedList extends SS_ListDecorator {
 	 * @deprecated 3.0 Use individual setter methods.
 	 */
 	public function setPageLimits($pageStart, $pageLength, $totalSize) {
+		Deprecation::notice('3.0', 'Use setPageStart, setPageLength, or setTotalItems instead.');
 		$this->setPageStart($pageStart);
 		$this->setPageLength($pageLength);
 		$this->setTotalSize($totalSize);

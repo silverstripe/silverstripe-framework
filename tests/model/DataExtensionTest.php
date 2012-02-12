@@ -177,7 +177,7 @@ class DataExtensionTest_Player extends DataObject implements TestOnly {
 
 class DataExtensionTest_PlayerExtension extends DataExtension implements TestOnly {
 	
-	function extraStatics($class) {
+	function extraStatics($class=null, $extension=null) {
 		// Only add these extensions if the $class is set to DataExtensionTest_Player, to
 		// test that the argument works.
 		if($class == 'DataExtensionTest_Player') {
@@ -198,7 +198,7 @@ class DataExtensionTest_PlayerExtension extends DataExtension implements TestOnl
 
 class DataExtensionTest_ContactRole extends DataExtension implements TestOnly {
 	
-	function extraStatics() {
+	function extraStatics($class=null, $extension=null) {
 		return array(
 			'db' => array(
 				'Website' => 'Varchar',
@@ -293,7 +293,7 @@ class DataExtensionTest_Ext2 extends DataExtension implements TestOnly {
 }
 
 class DataExtensionTest_Faves extends DataExtension implements TestOnly {
-	public function extraStatics() {
+	public function extraStatics($class=null, $extension=null) {
 		return array(
 			'many_many' => array(
 				'Faves' => 'DataExtensionTest_RelatedObject'

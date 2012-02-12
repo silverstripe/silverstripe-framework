@@ -64,7 +64,7 @@ This will add an object with ID 12 to the cart.
 When you create a function, you can access the ID like this:
 
 	:::php
-	 function addToCart ($request) {
+	 public function addToCart ($request) {
 	  $param = $r->allParams();
 	  echo "my ID = ".$param["ID"];
 	  $obj = DataObject::get("myProduct", $param["ID"]);
@@ -83,7 +83,7 @@ You can access the following controller-method with /team/signup
 	class Team extends DataObject {}
 	
 	class Team_Controller extends Controller {
-	  function signup($id, $otherId) {
+	  public function signup($id, $otherId) {
 	    return $this->renderWith('MyTemplate');
 	  }
 	}

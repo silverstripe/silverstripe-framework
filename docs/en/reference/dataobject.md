@@ -13,11 +13,11 @@ A single database record & abstract class for the data-access-model.
 ## Basics
 
 The call to `DataObject->getCMSFields()` is the centerpiece of every data administration interface in SilverStripe,
-which returns a `[api:FieldSet]`''.
+which returns a `[api:FieldList]`''.
 
 	:::php
 	class MyPage extends Page {
-	  function getCMSFields() {
+	  public function getCMSFields() {
 	    $fields = parent::getCMSFields();
 	    $fields->addFieldToTab('Root.Content',new CheckboxField('CustomProperty'));
 	    return $fields;
@@ -27,7 +27,7 @@ which returns a `[api:FieldSet]`''.
 
 ## Scaffolding Formfields
 
-These calls retrieve a `[api:FieldSet]` for the area where you intend to work with the scaffolded form.
+These calls retrieve a `[api:FieldList]` for the area where you intend to work with the scaffolded form.
 
 ### For the CMS
 

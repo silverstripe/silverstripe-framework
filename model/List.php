@@ -67,7 +67,7 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 	 * @param  string $titlefield
 	 * @return array
 	 */
-	public function map($keyfield, $titlefield);
+	public function map($keyfield = 'ID', $titlefield = 'Title');
 
 	/**
 	 * Returns the first item in the list where the key field is equal to the
@@ -82,10 +82,10 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 	/**
 	 * Returns an array of a single field value for all items in the list.
 	 *
-	 * @param  string $field
+	 * @param  string $colName
 	 * @return array
 	 */
-	public function column($field);
+	public function column($colName = "ID");
 
 	/**
 	 * Returns TRUE if the list can be sorted by a field.
@@ -96,11 +96,36 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 	public function canSortBy($by);
 
 	/**
-	 * Sorts the list in place by a field on the items and direction.
+	 * Sorts this list by one or more fields. You can either pass in a single
+	 * field name and direction, or a map of field names to sort directions.
 	 *
-	 * @param  string $by  The field name to sort by.
-	 * @param  string $dir Either "ASC" or "DIR".
+	 * @example $list->sort('Name'); // default ASC sorting
+	 * @example $list->sort('Name DESC'); // DESC sorting
+	 * @example $list->sort('Name', 'ASC');
+	 * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
 	 */
-	public function sort($by, $dir = 'ASC');
+	public function sort();
+	
+	/**
+	 * Filter the list to include items with these charactaristics
+	 * 
+	 * @example $list->filter('Name', 'bob'); // only bob in the list
+	 * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
+	 * @example $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the age 21
+	 * @example $list->filter(array('Name'=>'bob, 'Age'=>array(21, 43))); // bob with the Age 21 or 43
+	 * @example $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43))); // aziz with the age 21 or 43 and bob with the Age 21 or 43
+	 */
+	public function filter();
+	
+	/**
+	 * Exclude the list to not contain items with these charactaristics
+	 *
+	 * @example $list->exclude('Name', 'bob'); // exclude bob from list
+	 * @example $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
+	 * @example $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob that has Age 21
+	 * @example $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob with Age 21 or 43
+	 * @example $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43))); // bob age 21 or 43, phil age 21 or 43 would be excluded
+	 */
+	public function exclude();
 
 }

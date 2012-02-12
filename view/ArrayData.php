@@ -112,6 +112,7 @@ class ArrayData extends ViewableData {
 	 * @deprecated 3.0 Use {@link ArrayData::toMap()}.
 	 */
 	public function getArray() {
+		Deprecation::notice('3.0', 'Use ArrayData::toMap() instead.');
 		return $this->toMap();
 	}
 

@@ -31,18 +31,36 @@
 			 * Variable: ChangeTrackerOptions
 			 * (Object)
 			 */
-			ChangeTrackerOptions: {},
+			ChangeTrackerOptions: {
+				ignoreFieldSelector: '.ss-upload :input'
+			},
 		
 			/**
 			 * Constructor: onmatch
 			 */
 			onmatch: function() {
 				var self = this;
+
+				// Turn off autocomplete to fix the access tab randomly switching radio buttons in Firefox
+				// when refresh the page with an anchor tag in the URL. E.g: /admin#Root_Access.
+				// Autocomplete in the CMS also causes strangeness in other browsers,
+				// filling out sections of the form that the user does not want to be filled out,
+				// so this turns it off for all browsers.
+				// See the following page for demo and explanation of the Firefox bug:
+				//  http://www.ryancramer.com/journal/entries/radio_buttons_firefox/
+				this.attr("autocomplete", "off");
 			
 				this._setupChangeTracker();
 
 				// Can't bind this through jQuery
-				window.onbeforeunload = function(e) {return self._checkChangeTracker(false);};
+				window.onbeforeunload = function(e) {
+					self.trigger('beforesave');
+					if(self.is('.changed')) return ss.i18n._t('LeftAndMain.CONFIRMUNSAVEDSHORT');
+				};
+
+				// Catch navigation events before they reach handleStateChange(),
+				// in order to avoid changing the menu state if the action is cancelled by the user
+				$('.cms-menu')
 				
 				// focus input on first form element
 				this.find(':input:visible:not(:submit):first').focus();
@@ -79,27 +97,13 @@
 			
 				this._super();
 			},
-			
-			onunmatch: function() {
-				// Prepare iframes for removal, otherwise we get loading bugs
-				this.find('iframe').each(function() {
-					this.contentWindow.location.href = 'about:blank';
-					$(this).remove();
-				});
-				
-				// Remove all TinyMCE instances
-				if((typeof tinymce != 'undefined') && tinymce.editors) {
-					$(tinymce.editors).each(function() {
-						if(typeof(this.remove) == 'function') this.remove();
-					});
-				}
-				
-				this._super();
-			},
-			
+						
 			redraw: function() {
-				// TODO Manually set container height before resizing - shouldn't be necessary'
-				this.find('.cms-content-actions').height(this.find('.cms-content-actions .Actions').height());
+				// Force initialization of tabsets to avoid layout glitches
+				this.add(this.find('.ss-tabset')).redrawTabs();
+
+				var approxWidth = $('.cms-container').width() - $('.cms-menu').width();
+				this.find('.cms-content-actions').width(approxWidth).height('auto');
 				
 				this.layout();
 			},
@@ -114,34 +118,20 @@
 			},
 		
 			/**
-			 * Function: _checkChangeTracker
+			 * Function: confirmUnsavedChanges
 			 * 
-			 * Checks the jquery.changetracker plugin status for this form.
-			 * Usually bound to window.onbeforeunload.
-			 * 
-			 * Parameters:
-			 *  {boolean} isUnloadEvent - ..
+			 * Checks the jquery.changetracker plugin status for this form,
+			 * and asks the user for confirmation via a browser dialog if changes are detected.
+			 * Doesn't cancel any unload or form removal events, you'll need to implement this based on the return
+			 * value of this message.
 			 * 
 			 * Returns:
-			 *  (String) Either a string with a confirmation message, or the result of a confirm() dialog,
-			 *  based on the isUnloadEvent parameter.
+			 *  (Boolean) FALSE if the user wants to abort with changes present, TRUE if no changes are detected 
+			 *  or the user wants to discard them.
 			 */
-			_checkChangeTracker: function(isUnloadEvent) {
-			  var self = this;
-		  
-				// @todo TinyMCE coupling
-				if(typeof tinyMCE != 'undefined') tinyMCE.triggerSave();
-			
-				// check for form changes
-				if(self.is('.changed')) {
-					// returned string will trigger a confirm() dialog, 
-					// but only if the method is triggered by an event
-					if(isUnloadEvent) {
-						return confirm(ss.i18n._t('LeftAndMain.CONFIRMUNSAVED'));
-					} else {
-						return ss.i18n._t('LeftAndMain.CONFIRMUNSAVEDSHORT');
-					}
-				}
+			confirmUnsavedChanges: function() {
+				this.trigger('beforesave');
+				return (this.is('.changed')) ? confirm(ss.i18n._t('LeftAndMain.CONFIRMUNSAVED')) : true;
 			},
 
 			/**
@@ -182,7 +172,7 @@
 		 * We need this onclick overloading because we can't get to the
 		 * clicked button from a form.onsubmit event.
 		 */
-		$('.cms-edit-form .Actions :submit').entwine({
+		$('.cms-edit-form .Actions input, .cms-edit-form .Actions button').entwine({
 			
 			/**
 			 * Function: onclick
@@ -196,7 +186,9 @@
 		/**
 		 * Class: .cms-edit-form textarea.htmleditor
 		 * 
-		 * Add tinymce to HtmlEditorFields within the CMS.
+		 * Add tinymce to HtmlEditorFields within the CMS. Works in combination
+		 * with a TinyMCE.init() call which is prepopulated with the used HTMLEditorConfig settings,
+		 * and included in the page as an inline <script> tag.
 		 */
 		$('.cms-edit-form textarea.htmleditor').entwine({
 			
@@ -204,15 +196,82 @@
 			 * Constructor: onmatch
 			 */
 			onmatch : function() {
-				tinyMCE.execCommand("mceAddControl", true, this.attr('id'));
-				this.isChanged = function() {
-					return tinyMCE.getInstanceById(this.attr('id')).isDirty();
-				};
-				this.resetChanged = function() {
-					var inst = tinyMCE.getInstanceById(this.attr('id'));
-					if (inst) inst.startContent = tinymce.trim(inst.getContent({format : 'raw', no_events : 1}));
-				};
+				var self = this;
+				this.closest('form').bind('beforesave', function() {
+					if(typeof tinyMCE == 'undefined') return;
+
+					// TinyMCE modifies input, so change tracking might get false
+					// positives when comparing string values - don't save if the editor doesn't think its dirty.
+					if(self.isChanged()) {
+						tinyMCE.triggerSave();
+						// TinyMCE assigns value attr directly, which doesn't trigger change event
+						self.trigger('change'); 	
+					}
+				});
+
+				// Only works after TinyMCE.init() has been invoked, see $(window).bind() call below for details.
+				this.redraw();
+
+				this._super();
+			},
+
+			redraw: function() {
+				// Using a global config (generated through HTMLEditorConfig PHP logic)
+				var config = ssTinyMceConfig, self = this;
+
+				// Avoid flicker (also set in CSS to apply as early as possible)
+				self.css('visibility', '');
+
+				// Create editor instance and render it.
+				// Similar logic to adapter/jquery/jquery.tinymce.js, but doesn't rely on monkey-patching
+				// jQuery methods, and avoids replicate the script lazyloading which is already in place with jQuery.ondemand.
+				var ed = new tinymce.Editor(this.attr('id'), config);
+				ed.onInit.add(function() {
+					self.css('visibility', 'visible');
+				});
+				ed.render();
+
+				// Handle editor de-registration by hooking into state changes.
+				// TODO Move to onunmatch for less coupling (once we figure out how to work with detached DOM nodes in TinyMCE)
+				$('.cms-container').bind('beforestatechange', function() {
+					self.css('visibility', 'hidden');
+					var ed = tinyMCE.get(self.attr('id'));
+					if(ed) ed.remove();
+				});
+
+				this._super();
+			},
+
+			isChanged: function() {
+				if(typeof tinyMCE == 'undefined') return;
+
+				var inst = tinyMCE.getInstanceById(this.attr('id'));
+				return inst ? inst.isDirty() : false;
+			},
+
+			resetChanged: function() {
+				if(typeof tinyMCE == 'undefined') return;
+
+				var inst = tinyMCE.getInstanceById(this.attr('id'));
+				if (inst) inst.startContent = tinymce.trim(inst.getContent({format : 'raw', no_events : 1}));
+			},
+
+			onunmatch: function() {
+				// TODO Throws exceptions in Firefox, most likely due to the element being removed from the DOM at this point
+				// var ed = tinyMCE.get(this.attr('id'));
+				// if(ed) ed.remove();
+
+				this._super();
 			}
 		});
+
+		$('.cms-edit-form .ss-gridfield .action-edit').entwine({
+			onclick: function(e) {
+				$('.cms-container').loadPanel(this.attr('href'), '', {selector: '.cms-edit-form'});
+				e.preventDefault();
+			}
+		});
+		
 	});
+
 }(jQuery));

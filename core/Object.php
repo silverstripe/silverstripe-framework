@@ -85,7 +85,10 @@ abstract class Object {
 		$args  = func_get_args();
 		$class = self::getCustomClass(array_shift($args));
 		$reflector = new ReflectionClass($class);
-		return $reflector->newInstanceArgs($args);
+		if($reflector->getConstructor()) {
+			return $reflector->newInstanceArgs($args);
+		}
+		return new $class;
 	}
 	
 	private static $_cache_inst_args = array();
@@ -597,7 +600,7 @@ abstract class Object {
 	 */
 	public static function remove_extension($class, $extension) {
 		// unload statics now for DataObject classes
-		if(ClassInfo::is_subclass_of($class, 'DataObject')) {
+		if(is_subclass_of($class, 'DataObject')) {
 			if(!preg_match('/^([^(]*)/', $extension, $matches)) {
 				user_error("Bad extension '$extension'", E_USER_WARNING);
 			} else {
@@ -893,9 +896,7 @@ abstract class Object {
 	 * @deprecated
 	 */
 	public function set_uninherited() {
-		user_error (
-			'Object->set_uninherited() is deprecated, please use a custom static on your object', E_USER_WARNING
-		);
+		Deprecation::notice('2.4', 'Use a custom static on your object instead.');
 	}
 	
 	// -----------------------------------------------------------------------------------------------------------------

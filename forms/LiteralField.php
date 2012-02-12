@@ -30,11 +30,11 @@ class LiteralField extends DatalessField {
 	function FieldHolder() {
 		return is_object($this->content) ? $this->content->forTemplate() : $this->content; 
 	}
-	
+
 	function Field() {
 		return $this->FieldHolder();
 	}
-  
+
 	/**
 	 * Sets the content of this field to a new value
 	 *
@@ -63,4 +63,5 @@ class LiteralField extends DatalessField {
 		$clone->setReadonly(true);
 		return $clone;
 	}
+
 }

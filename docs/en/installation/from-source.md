@@ -119,9 +119,6 @@ You can now run through the web-based installer for your operating system of cho
 
 
 
-
-
-
 ## Option 2: Installation for contributions ##
 
 This way of installing SilverStripe will allow you to commit back directly to version control for a module.
@@ -160,9 +157,9 @@ Now you need to add the original repository as `upstream`, so you can keep your 
 	(cd cms && git remote add upstream git://github.com/silverstripe/silverstripe-cms.git && git fetch upstream)
 	(cd themes/blackcandy && git remote add upstream git://github.com/silverstripe-themes/silverstripe-blackcandy.git)
 
-Now you can learn how to [update your fork](http://help.github.com/forking/) from the `upstream` repository. You should do this regularly, at least before submitting any pull requests.
-
-Please read ["Module installation"](/topics/modules) to find out how to install additional modules like `blog` or `forum`.
+Now that you're set up, please read our ["Collaboration on Git"](../misc/collaboration-on-git) guide,
+as well as our general ["Contributor guidelines"](../misc/contributing).
+Please read ["Module installation"](/topics/modules) to find out how to install additional modules like `blog` or `forum` from source.
 
 ### Step 3: Committing the modules ###
 
@@ -284,6 +281,7 @@ See [piston.rubyforge.org](http://piston.rubyforge.org/import.html).
 ## Related ##
 
  * [Contributing: Submitting patches](/misc/contributing)
+ * [Collaboration on Git](/misc/collaboration-on-git)
  * [Pro git - free online book](http://progit.org/book/)
  * [Git cheat sheet - github.com](https://github.com/guides/git-cheat-sheet)
  * [Git - SVN Crash Course - git.or.cz](http://git.or.cz/course/svn.html)

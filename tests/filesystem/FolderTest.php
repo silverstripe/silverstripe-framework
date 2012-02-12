@@ -33,7 +33,7 @@ class FolderTest extends SapphireTest {
 		
 	function testFindOrMake() {
 		$path = '/FolderTest/testFindOrMake/';
-		$folder = Folder::findOrMake($path);
+		$folder = Folder::find_or_make($path);
 		$this->assertEquals(ASSETS_DIR . $path,$folder->getRelativePath(),
 			'Nested path information is correctly saved to database (with trailing slash)'
 		);
@@ -44,13 +44,13 @@ class FolderTest extends SapphireTest {
 		$this->assertEquals($parentFolder->ID, $folder->ParentID);
 		
 		$path = '/FolderTest/testFindOrMake'; // no trailing slash
-		$folder = Folder::findOrMake($path);
+		$folder = Folder::find_or_make($path);
 		$this->assertEquals(ASSETS_DIR . $path . '/',$folder->getRelativePath(),
 			'Path information is correctly saved to database (without trailing slash)'
 		);
 		
 		$path = '/assets/'; // relative to "assets/" folder, should produce "assets/assets/"
-		$folder = Folder::findOrMake($path);
+		$folder = Folder::find_or_make($path);
 		$this->assertEquals(ASSETS_DIR . $path,$folder->getRelativePath(),
 			'A folder named "assets/" within "assets/" is allowed'
 		);
@@ -126,7 +126,7 @@ class FolderTest extends SapphireTest {
 	 */
 	function testFindOrMakeFolderThenMove() {
 		$folder1 = $this->objFromFixture('Folder', 'folder1');
-		Folder::findOrMake($folder1->Filename);
+		Folder::find_or_make($folder1->Filename);
 		$folder2 = $this->objFromFixture('Folder', 'folder2');
 		
 		// set ParentID
@@ -182,7 +182,7 @@ class FolderTest extends SapphireTest {
 		
 	function testDeleteAlsoRemovesFilesystem() {
 		$path = '/FolderTest/DeleteAlsoRemovesFilesystemAndChildren'; 
-		$folder = Folder::findOrMake($path);
+		$folder = Folder::find_or_make($path);
 		$this->assertFileExists(ASSETS_PATH . $path);
 		
 		$folder->delete();
@@ -193,8 +193,8 @@ class FolderTest extends SapphireTest {
 	function testDeleteAlsoRemovesSubfoldersInDatabaseAndFilesystem() {
 		$path = '/FolderTest/DeleteAlsoRemovesSubfoldersInDatabaseAndFilesystem'; 
 		$subfolderPath = $path . '/subfolder';
-		$folder = Folder::findOrMake($path);
-		$subfolder = Folder::findOrMake($subfolderPath);
+		$folder = Folder::find_or_make($path);
+		$subfolder = Folder::find_or_make($subfolderPath);
 		$subfolderID = $subfolder->ID;
 		
 		$folder->delete();
@@ -206,7 +206,7 @@ class FolderTest extends SapphireTest {
 	
 	function testDeleteAlsoRemovesContainedFilesInDatabaseAndFilesystem() {
 		$path = '/FolderTest/DeleteAlsoRemovesContainedFilesInDatabaseAndFilesystem'; 
-		$folder = Folder::findOrMake($path);
+		$folder = Folder::find_or_make($path);
 		
 		$file = $this->objFromFixture('File', 'gif');
 		$file->ParentID = $folder->ID;

@@ -1,0 +1,8 @@
+--- 
+repository_url: git://github.com/blueimp/jQuery-File-Upload.git
+lock: false
+repository_class: Piston::Git::Repository
+format: 1
+handler: 
+  commit: 57f986dad16bb0da500ca2b025a595da0a2b8719
+  branch: master

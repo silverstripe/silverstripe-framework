@@ -63,10 +63,17 @@
  * @subpackage fields-files
  */
 
+/**
+ * @deprecated 3.0 Use UploadField with $myField->allowedExtensions = array('jpg', 'gif', 'png')
+ */
 class SimpleImageField extends FileField {
 
-	function __construct($name, $title = null, $value = null, $form = null, $rightTitle = null, $folderName = null) {
-		parent::__construct($name, $title, $value, $form, $rightTitle, $folderName);
+	function __construct($name, $title = null, $value = null) {
+		Deprecation::notice('3.0', "Use UploadField with $myField->allowedExtensions = array('jpg', 'gif', 'png')");
+
+		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRightTitle() and setFolderName() instead of constructor arguments');
+
+		parent::__construct($name, $title, $value);
 
 		$this->getValidator()->setAllowedExtensions(array('jpg','gif','png'));
 	}

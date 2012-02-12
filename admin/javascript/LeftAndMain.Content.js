@@ -31,30 +31,30 @@
 
 					var url = $(node).find('a:first').attr('href');
 					if(url && url != '#') {
-						window.History.pushState({}, '', url);
+						if($(node).find('a:first').is(':internal')) url = $('base').attr('href') + url;
+						$('.cms-container').loadPanel(url);
 					} else {
 						self.removeForm();
 					}
 				});
 				
 				// Force initialization of tabsets to avoid layout glitches
-				this.find('.ss-tabset').redraw();
+				this.find('.ss-tabset').redrawTabs();
 				
 				this._super();
 			},
-			
-			onunmatch: function() {
-				this._super();
-			},
-			
+						
 			redraw: function() {
+				// Force initialization of tabsets to avoid layout glitches
+				this.add(this.find('.ss-tabset')).redrawTabs();
+
 				this.layout();
 			},
 			
 			/**
 			 * Function: loadForm
 			 * 
-			 * See $('.cms-container').handleStateChange() on a frequently used alternative
+			 * See $('.cms-container').loadPanel() on a frequently used alternative
 			 * to direct ajax loading of content, with support for the window.History object.
 			 * 
 			 * Parameters:
@@ -73,7 +73,7 @@
 				}
 
 				// Alert when unsaved changes are present
-				if(form._checkChangeTracker(true) == false) return false;
+				if(!form.confirmUnsavedChanges()) return false;
 			
 				// hide existing form - shown again through _loadResponse()
 				form.addClass('loading');
@@ -141,13 +141,11 @@
 				// default to first button if none given - simulates browser behaviour
 				if(!button) button = this.find('.Actions :submit:first');
 	
+				form.trigger('beforesave');
 				this.trigger('submitform', {form: form, button: button});
 	
 				// set button to "submitting" state
 				$(button).addClass('loading');
-	
-				// @todo TinyMCE coupling
-				if(typeof tinyMCE != 'undefined') tinyMCE.triggerSave();
 	
 				// validate if required
 				if(!form.validate()) {
@@ -255,7 +253,7 @@
 			removeForm: function(form, placeholderHtml) {
 				if(!placeholderHtml) placeholderHtml = this.getPlaceholderHtml();
 				// Alert when unsaved changes are present
-				if(form._checkChangeTracker(true) == false) return;
+				if(!form.confirmUnsavedChanges()) return;
 				this.trigger('removeform');
 				this.html(placeholderHtml);
 				// TODO This should be using the plugin API
@@ -264,12 +262,12 @@
 		});
 	});
 	
-	$('.cms-content.loading').entwine({
+	$('.cms-content.loading,.cms-edit-form.loading').entwine({
 		onmatch: function() {
-			this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div>');
+			this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>');
 		},
 		onunmatch: function() {
-			this.find('.cms-content-loading-overlay').remove();
+			this.find('.cms-content-loading-overlay,.cms-content-loading-spinner').remove();
 		}
 	});
 	

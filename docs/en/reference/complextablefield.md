@@ -43,7 +43,7 @@ You can override this behaviour in various ways:
 	  'MyName',
 	  'Product',
 	  array('Price','Code'),
-	  new FieldSet(
+	  new FieldList(
 	    new TextField('Price')
 	  )
 	)
@@ -75,11 +75,11 @@ popup as there is more real-estate for you to play with.
 
 `[api:ComplexTableField]` gives you several options to do this. You can either
 
-*  Pass a FieldSet in the constructor.
+*  Pass a FieldList in the constructor.
 *  Pass a String in the constructor. 
 
-The first will simply add the fieldset to the form, and populate it with the source class. 
-The second will call the String as a method on the source class (Which should return a FieldSet) of fields for the
+The first will simply add the fieldlist to the form, and populate it with the source class. 
+The second will call the String as a method on the source class (Which should return a FieldList) of fields for the
 Popup. 
 
 You can also customise Javascript which is loaded for the Lightbox. As Requirements::clear() is called when the popup is
@@ -108,7 +108,7 @@ You'll have to do something like this in your form:
 	
 	$tableField->setParentClass(false);
 			
-	$fields = new FieldSet(
+	$fields = new FieldList(
 	   new HiddenField('ID', ''),
 	   $tableField
 	);

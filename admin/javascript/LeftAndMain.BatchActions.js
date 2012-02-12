@@ -253,10 +253,6 @@
 						// Deselect all nodes
 						tree.find('li').removeClass('selected');
 					
-						// reset selection state
-						// TODO Should unselect all selected nodes as well
-						tree.removeClass('multiple');
-					
 						// TODO Fix up to work properly with jstree - unclear if state setting is still required in new design
 						// // Check if current page still exists, and refresh it.
 						// // Otherwise remove the current form

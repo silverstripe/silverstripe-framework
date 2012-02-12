@@ -218,7 +218,7 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
 	
 	public $session = null;
 	
-	public function request($subURL = '', $method = "GET", $data = null, $headers = null) {
+	public function request($subURL = '', $method = "GET", $data = null, $headers = null, $curlOptions = array()) {
 		
 		if(!$this->session) {
 			$this->session = new Session(array());
@@ -277,7 +277,7 @@ class RestfulServiceTest_MockRestfulService extends RestfulService {
  */
 class RestfulServiceTest_MockErrorService extends RestfulService {
 
-	public function curlRequest() {
+	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = array()) {
 		return new RestfulService_Response('<error>HTTP Error</error>', 400);
 	}
 

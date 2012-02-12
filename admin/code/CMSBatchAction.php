@@ -32,7 +32,7 @@ abstract class CMSBatchAction extends Object {
 	 * Helper method for processing batch actions.
 	 * Returns a set of status-updating JavaScript to return to the CMS.
 	 *
-	 * @param $objs The DataObjectSet of objects to perform this batch action
+	 * @param $objs The SS_List of objects to perform this batch action
 	 * on.
 	 * @param $helperMethod The method to call on each of those objects.
 	 * @return JSON encoded map in the following format:
@@ -135,7 +135,7 @@ abstract class CMSBatchAction extends Object {
 	}
 
 	
-	// if your batchaction has parameters, return a fieldset here
+	// if your batchaction has parameters, return a FieldList here
 	function getParameterFields() {
 		return false;
 	}

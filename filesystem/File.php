@@ -173,6 +173,7 @@ class File extends DataObject {
 	 * @deprecated 3.0 Use getTreeTitle()
 	 */
 	function TreeTitle() {
+		Deprecation::notice('3.0', 'Use getTreeTitle() instead.');
 		return $this->getTreeTitle();
 	}
 
@@ -253,6 +254,28 @@ class File extends DataObject {
 		
 		return $this->canEdit($member);
 	}
+
+	function getCMSFields() {
+		$urlLink = "<div class='field readonly'>";
+		$urlLink .= "<label class='left'>"._t('AssetTableField.URL','URL')."</label>";
+		$urlLink .= "<span class='readonly'><a href='{$this->Link()}' target='_blank'>{$this->RelativeLink()}</a></span>";
+		$urlLink .= "</div>";
+
+		return new FieldList(
+			new TabSet('Root',
+				new Tab('Main', 
+					new TextField("Title", _t('AssetTableField.TITLE','Title')),
+					new TextField("Name", _t('AssetTableField.FILENAME','Filename')),
+					new LiteralField("AbsoluteURL", $urlLink),
+					new ReadonlyField("FileType", _t('AssetTableField.TYPE','Type')),
+					new ReadonlyField("Size", _t('AssetTableField.SIZE','Size'), $this->getSize()),
+					new DropdownField("OwnerID", _t('AssetTableField.OWNER','Owner'), Member::mapInCMSGroups()),
+					new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded')),
+					new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed'))
+				)
+			)
+		);
+	}
 	
 	/**
 	 * Returns a category based on the file extension.
@@ -285,8 +308,7 @@ class File extends DataObject {
 	}
 
 	function CMSThumbnail() {
-		$filename = $this->Icon();
-		return "<div style=\"text-align:center;width: 100px;padding-top: 15px;\"><a target=\"_blank\" href=\"$this->URL\" title=\"Download: $this->URL\"><img src=\"$filename\" alt=\"$filename\" /></a><br /><br /><a style=\"color: #0074C6;\"target=\"_blank\" href=\"$this->URL\" title=\"Download: $this->URL\">Download</a><br /><em>$this->Size</em></div>";
+		return '<img src="' . $this->Icon() . '" />';
 	}
 
 	/**
@@ -328,6 +350,9 @@ class File extends DataObject {
 	 */
 	protected function onBeforeWrite() {
 		parent::onBeforeWrite();
+
+		// Set default owner
+		if(!$this->ID) $this->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
 
 		// Set default name
 		if(!$this->getField('Name')) $this->Name = "new-" . strtolower($this->class);
@@ -513,6 +538,7 @@ class File extends DataObject {
 	 * @deprecated 2.4
 	 */
 	function getLinkedURL() {
+		Deprecation::notice('2.4', 'Use getTreeTitle() instead.');
 		return "$this->Name";
 	}
 
@@ -657,6 +683,11 @@ class File extends DataObject {
 		return ($size) ? self::format_size($size) : false;
 	}
 	
+	/**
+	 * Formats a file size (eg: (int)42 becomes string '42 bytes')
+	 * @param int $size
+	 * @return string
+	 */
 	public static function format_size($size) {
 		if($size < 1024) return $size . ' bytes';
 		if($size < 1024*10) return (round($size/1024*10)/10). ' KB';
@@ -664,6 +695,24 @@ class File extends DataObject {
 		if($size < 1024*1024*10) return (round(($size/1024)/1024*10)/10) . ' MB';
 		if($size < 1024*1024*1024) return round(($size/1024)/1024) . ' MB';
 		return round($size/(1024*1024*1024)*10)/10 . ' GB';
+	}
+	
+	/**
+	 * Convert a php.ini value (eg: 512M) to bytes
+	 * 
+	 * @param string $phpIniValue
+	 * @return int
+	 */
+	public function ini2bytes($PHPiniValue) {
+		switch(strtolower(substr(trim($PHPiniValue), -1))) {
+			case 'g':
+				$PHPiniValue *= 1024;
+			case 'm':
+				$PHPiniValue *= 1024;
+			case 'k':
+				$PHPiniValue *= 1024;
+		}
+		return $PHPiniValue;
 	}
 
 	/**
@@ -689,6 +738,8 @@ class File extends DataObject {
 	 * @deprecated alternative_instance_get()
 	 */
 	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet", $having="") {
+		Deprecation::notice('2.5', 'Use alternative_instance_get() instead.');
+
 		$query = $this->extendedSQL($filter, $sort, $limit, $join, $having);
 		$baseTable = reset($query->from);
 
@@ -775,7 +826,7 @@ class File extends DataObject {
 	 * 
 	 * Needs to be enabled through {@link AssetAdmin::$metadata_upload_enabled}
 	 * 
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	function uploadMetadataFields() {
 		$fields = new FieldList();

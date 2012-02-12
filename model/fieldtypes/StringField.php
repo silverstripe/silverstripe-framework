@@ -9,6 +9,14 @@
 abstract class StringField extends DBField {
 	protected $nullifyEmpty = true;
 
+	static $casting = array(
+		"LimitCharacters" => "Text",
+		"Lower" => "Text",
+		"Upper" => "Text",
+		"LowerCase" => "Text",
+		"UpperCase" => "Text",
+	);
+
 	/**
 	 * Construct a string type field with a set of optional parameters
 	 * @param $name string The name of the field
@@ -73,20 +81,62 @@ abstract class StringField extends DBField {
 			return parent::prepValueForDB($value);
 		}
 	}
-
 	
 	/**
+	 * Limit this field's content by a number of characters.
+	 * This makes use of strip_tags() to avoid malforming the
+	 * HTML tags in the string of text.
+	 *
+	 * @param int $limit Number of characters to limit by
+	 * @param string $add Ellipsis to add to the end of truncated string
+	 * @return string
+	 */
+	function LimitCharacters($limit = 20, $add = '...') {
+		$value = trim($this->value);
+		if($this->stat('escape_type') == 'xml') {
+			$value = strip_tags($value);
+			$value = html_entity_decode($value, ENT_COMPAT, 'UTF-8');
+			$value = (mb_strlen($value) > $limit) ? mb_substr($value, 0, $limit) . $add : $value;
+			// Avoid encoding all multibyte characters as HTML entities by using htmlspecialchars().
+			$value = htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
+		} else {
+			$value = (mb_strlen($value) > $limit) ? mb_substr($value, 0, $limit) . $add : $value;
+		}
+		return $value;
+	}
+
+	/**
+	 * Converts the current value for this Enum DBField to lowercase.
+	 * @return string
+	 */
+	function LowerCase() {
+		return mb_strtolower($this->value);
+	}
+		
+	/**
 	 * Return another DBField object with this value in lowercase.
+	 * @deprecated 3.0 Use LowerCase() instead.
 	 */
 	function Lower() {
-		return DBField::create(get_class($this), strtolower($this->value), $this->name);
+		Deprecation::notice('3.0', 'Use LowerCase() instead.');
+		return $this->LowerCase();
+	}
+
+	/**
+	 * Converts the current value for this Enum DBField to uppercase.
+	 * @return string 
+	 */ 
+	function UpperCase() {
+		return mb_strtoupper($this->value);
 	}
 
 	/**
 	 * Return another DBField object with this value in uppercase.
+	 * @deprecated 3.0 Use UpperCase() instead.
 	 */
 	function Upper() {
-		return DBField::create(get_class($this), strtoupper($this->value), $this->name);
+		Deprecation::notice('3.0', 'Use UpperCase() instead.');
+		return $this->UpperCase();
 	}
 
 }

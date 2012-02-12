@@ -79,7 +79,7 @@ Raw SQL is handy for performance-optimized calls.
 
 	:::php
 	class Team extends DataObject {
-	  function getPlayerCount() {
+	  public function getPlayerCount() {
 	    $sqlQuery = new SQLQuery(
 	      "COUNT(Player.ID)",
 	      "Team LEFT JOIN Player ON Team.ID = Player.TeamID"

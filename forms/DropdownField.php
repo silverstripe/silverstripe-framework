@@ -77,6 +77,8 @@
  */
 class DropdownField extends FormField {
 	
+	protected $template = 'DropdownField';
+
 	/**
 	 * @var boolean $source Associative or numeric array of all dropdown items,
 	 * with array key as the submitted field value, and the array value as a
@@ -90,11 +92,6 @@ class DropdownField extends FormField {
 	 * values specified in {@link $source}
 	 */
 	protected $isSelected;
-	
-	/**
-	 * @var boolean $disabled
-	 */
-	protected $disabled;
 	
 	/**
 	 * @var boolean $hasEmptyDefault Show the first <option> element as
@@ -130,67 +127,52 @@ class DropdownField extends FormField {
 		parent::__construct($name, ($title===null) ? $name : $title, $value, $form);
 	}
 	
-	/**
-	 * Returns a <select> tag containing all the appropriate <option> tags.
-	 * Makes use of {@link FormField->createTag()} to generate the <select>
-	 * tag and option elements inside is as the content of the <select>.
-	 * 
-	 * @return string HTML tag for this dropdown field
-	 */
-	function Field() {
-		$options = '';
-
+	function Field($properties = array()) {
 		$source = $this->getSource();
+		$options = array();
 		if($source) {
-			// For SQLMap sources, the empty string needs to be added specially
+			// SQLMap needs this to add an empty value to the options
 			if(is_object($source) && $this->emptyString) {
-				$options .= $this->createTag('option', array('value' => ''), $this->emptyString);
+				$options[] = new ArrayData(array(
+					'Value' => $this->emptyString,
+					'Title' => '',
+				));
 			}
-			
+
 			foreach($source as $value => $title) {
-				
-				// Blank value of field and source (e.g. "" => "(Any)")
+				$selected = false;
 				if($value === '' && ($this->value === '' || $this->value === null)) {
-					$selected = 'selected';
+					$selected = true;
 				} else {
-					// Normal value from the source
-					if($value) {
-						$selected = ($value == $this->value) ? 'selected' : null;
-					} else {
-						// Do a type check comparison, we might have an array key of 0
-						$selected = ($value === $this->value) ? 'selected' : null;
-					}
-					
-					$this->isSelected = ($selected) ? true : false;
+					// check against value, fallback to a type check comparison when !value
+					$selected = ($value) ? $value == $this->value : $value === $this->value;
+					$this->isSelected = $selected;
 				}
-				
-				$options .= $this->createTag(
-					'option',
-					array(
-						'selected' => $selected,
-						'value' => $value
-					),
-					Convert::raw2xml($title)
-				);
+
+				$options[] = new ArrayData(array(
+					'Title' => $title,
+					'Value' => $value,
+					'Selected' => $selected,
+				));
 			}
 		}
-		
-		$attributes = array(
-			'class' => ($this->extraClass() ? $this->extraClass() : ''),
-			'id' => $this->id(),
-			'name' => $this->name,
-			'tabindex' => $this->getTabIndex()
-		);
-		
-		if($this->disabled) $attributes['disabled'] = 'disabled';
 
-		return $this->createTag('select', $attributes, $options);
+		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
+
+		return $this->customise($properties)->renderWith($this->getTemplate());
 	}
-	
+
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array('type' => null)
+		);
+	}
+
 	/**
 	 * @return boolean
 	 */
-	function isSelected(){
+	function isSelected() {
 		return $this->isSelected;
 	}
   
@@ -227,7 +209,7 @@ class DropdownField extends FormField {
 	function getHasEmptyDefault() {
 		return $this->hasEmptyDefault;
 	}
-	
+
 	/**
 	 * Set the default selection label, e.g. "select...".
 	 * Defaults to an empty string. Automatically sets
@@ -239,7 +221,7 @@ class DropdownField extends FormField {
 		$this->setHasEmptyDefault(true);
 		$this->emptyString = $str;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -254,13 +236,7 @@ class DropdownField extends FormField {
 		$field->setReadonly(true);
 		return $field;
 	}
-	
-	function extraClass(){
-		$ret = parent::extraClass();
-		if($this->extraClass) $ret .= " $this->extraClass";
-		return $ret;
-	}
-	
+
 	/**
 	 * Set form being disabled
 	 */

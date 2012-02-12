@@ -136,7 +136,8 @@ class SS_Backtrace {
 			$args = array();
 			foreach($item['args'] as $arg) {
 				if(!is_object($arg) || method_exists($arg, '__toString')) {
-					$args[] = (strlen((string)$arg) > $argCharLimit) ? substr((string)$arg, 0, $argCharLimit) . '...' : (string)$arg;
+					$sarg = is_array($arg) ? 'Array' : strval($arg);
+					$args[] = (strlen($sarg) > $argCharLimit) ? substr($sarg, 0, $argCharLimit) . '...' : $sarg;
 				} else {
 					$args[] = get_class($arg);
 				}
@@ -162,7 +163,7 @@ class SS_Backtrace {
 		foreach($bt as $item) {
 			if($plainText) {
 				$result .= self::full_func_name($item,true) . "\n";
-				if(isset($item['line']) && isset($item['file'])) $result .= "line $item[line] of " . basename($item['file']) . "\n";
+				if(isset($item['line']) && isset($item['file'])) $result .= basename($item['file']) . ":$item[line]\n";
 				$result .= "\n";
 			} else {
 				if ($item['function'] == 'user_error') {
@@ -171,8 +172,8 @@ class SS_Backtrace {
 					$name = self::full_func_name($item,true);
 				}
 				$result .= "<li><b>" . htmlentities($name, ENT_COMPAT, 'UTF-8') . "</b>\n<br />\n";
-				$result .= isset($item['line']) ? "Line $item[line] of " : '';
-				$result .=  isset($item['file']) ? htmlentities(basename($item['file'])) : ''; 
+				$result .=  isset($item['file']) ? htmlentities(basename($item['file']), ENT_COMPAT, 'UTF-8') : ''; 
+				$result .= isset($item['line']) ? ":$item[line]" : '';
 				$result .= "</li>\n";
 			}
 		}

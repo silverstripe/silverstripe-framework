@@ -141,6 +141,39 @@ class ArrayLib {
 		return false; // Never found $needle :(
 	}
 	
+	/**
+	 * Recursively merges two or more arrays.
+	 *
+	 * Behaves similar to array_merge_recursive(), however it only merges values when both are arrays
+	 * rather than creating a new array with both values, as the PHP version does. The same behaviour
+	 * also occurs with numeric keys, to match that of what PHP does to generate $_REQUEST.
+	 *
+	 * @param array $array, ...
+	 * @return array
+	 */
+	static function array_merge_recursive($array) {
+		$arrays = func_get_args();
+		$merged = array();
+		if(count($arrays) == 1) {
+			return $array;
+		}
+		while ($arrays) {
+			$array = array_shift($arrays);
+			if (!is_array($array)) {
+				trigger_error('ArrayLib::array_merge_recursive() encountered a non array argument', E_USER_WARNING);
+				return;
+			}
+			if (!$array) {
+				continue;
+			}
+			foreach ($array as $key => $value) {
+				if (is_array($value) && array_key_exists($key, $merged) && is_array($merged[$key])) {
+					$merged[$key] = ArrayLib::array_merge_recursive($merged[$key], $value);
+				} else {
+					$merged[$key] = $value;
+				}
+			}
+		}
+		return $merged;
+	}
 }
-
-?>

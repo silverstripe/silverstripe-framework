@@ -77,6 +77,9 @@ class ArrayDataTest extends SapphireTest {
 	}
 	
 	function testGetArray() {
+		$originalDeprecation = Deprecation::dump_settings();
+		Deprecation::notification_version('2.4');
+
 		$array = array(
 			'Foo' => 'Foo',
 			'Bar' => 'Bar',
@@ -86,6 +89,8 @@ class ArrayDataTest extends SapphireTest {
 		$arrayData = new ArrayData($array);
 		
 		$this->assertEquals($arrayData->getArray(), $array);
+
+		Deprecation::restore_settings($originalDeprecation);
 	}
 
 	function testArrayToObject() {

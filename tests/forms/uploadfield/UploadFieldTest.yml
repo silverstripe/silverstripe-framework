@@ -1,0 +1,53 @@
+Folder:
+   folder1:
+      Name: UploadFieldTest
+   folder1-subfolder1:
+   		Name: subfolder1
+   		ParentID: =>Folder.folder1
+File:
+	file1:
+		Title: File1
+		Filename: assets/UploadFieldTest/file1.txt
+		ParentID: =>Folder.folder1
+	file2:
+		Title: File2
+		Filename: assets/UploadFieldTest/file2.txt
+		ParentID: =>Folder.folder1
+	file3:
+		Title: File3
+		Filename: assets/UploadFieldTest/file3.txt
+		ParentID: =>Folder.folder1
+	file4:
+		Title: File4
+		Filename: assets/UploadFieldTest/file4.txt
+		ParentID: =>Folder.folder1
+	file5:
+		Title: File5
+		Filename: assets/UploadFieldTest/file5.txt
+		ParentID: =>Folder.folder1
+	file-noview:
+		Title: noview.txt
+		Name: noview.txt
+		Filename: assets/UploadFieldTest/noview.txt
+		ParentID: =>Folder.folder1
+	file-noedit:
+		Title: noedit.txt
+		Name: noedit.txt
+		Filename: assets/UploadFieldTest/noedit.txt
+		ParentID: =>Folder.folder1
+	file-nodelete:
+		Title: nodelete.txt
+		Name: nodelete.txt
+		Filename: assets/UploadFieldTest/nodelete.txt
+		ParentID: =>Folder.folder1
+	file-subfolder:
+		Title: file-subfolder.txt
+		Name: file-subfolder.txt
+		Filename: assets/UploadFieldTest/subfolder1/file-subfolder.txt
+		ParentID: =>Folder.folder1-subfolder1
+UploadFieldTest_Record:
+	record1:
+		Title: Record 1
+		HasOneFileID: =>File.file1
+		HasManyFiles: =>File.file2,=>File.file3
+		ManyManyFiles: =>File.file4,=>File.file5,=>File.file-noview,=>File.file-noedit,=>File.file-nodelete

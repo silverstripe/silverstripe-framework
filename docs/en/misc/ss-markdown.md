@@ -76,7 +76,7 @@ Example for PHP:
 
 	:::php
 	class Page extends SiteTree {
-		function myFunction() {
+		public function myFunction() {
 			// ...
 		}
 	}

@@ -120,7 +120,7 @@ class Upload extends Controller {
 		// @TODO This puts a HUGE limitation on files especially when lots
 		// have been uploaded.
 		$base = Director::baseFolder();
-		$parentFolder = Folder::findOrMake($folderPath);
+		$parentFolder = Folder::find_or_make($folderPath);
 
 		// Create a folder for uploading.
 		if(!file_exists(ASSETS_PATH)){
@@ -227,7 +227,7 @@ class Upload extends Controller {
 	 * @return int Filesize in bytes
 	 */
 	public function getAllowedMaxFileSize($ext = null) {
-		user_error('Upload::getAllowedMaxFileSize() is deprecated. Please use Upload_Validator::getAllowedMaxFileSize() instead', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use Upload_Validator::getAllowedMaxFileSize() instead.');
 		return $this->validator->getAllowedMaxFileSize($ext);
 	}
 	
@@ -246,7 +246,7 @@ class Upload extends Controller {
 	 * @param array|int $rules
 	 */
 	public function setAllowedMaxFileSize($rules) {
-		user_error('Upload::setAllowedMaxFileSize() is deprecated. Please use Upload_Validator::setAllowedMaxFileSize() instead', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use Upload_Validator::setAllowedMaxFileSize() instead.');
 		$this->validator->setAllowedMaxFileSize($rules);
 	}
 	
@@ -255,7 +255,7 @@ class Upload extends Controller {
 	 * @return array
 	 */
 	public function getAllowedExtensions() {
-		user_error('Upload::getAllowedExtensions() is deprecated. Please use Upload_Validator::getAllowedExtensions() instead', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use Upload_Validator::getAllowedExtensions() instead.');
 		return $this->validator->getAllowedExtensions();
 	}
 	
@@ -264,7 +264,7 @@ class Upload extends Controller {
 	 * @param array $rules
 	 */
 	public function setAllowedExtensions($rules) {
-		user_error('Upload::setAllowedExtensions() is deprecated. Please use Upload_Validator::setAllowedExtensions() instead', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use Upload_Validator::setAllowedExtensions() instead.');
 		$this->validator->setAllowedExtensions($rules);
 	}
 	
@@ -279,7 +279,7 @@ class Upload extends Controller {
 	 * @return boolean
 	 */
 	public function isValidSize($tmpFile) {
-		user_error('Upload::isValidSize() is deprecated. Please use Upload_Validator::isValidSize() instead', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use Upload_Validator::isValidSize() instead.');
 		$validator = new Upload_Validator();
 		$validator->setTmpFile($tmpFile);
 		return $validator->isValidSize();
@@ -294,7 +294,7 @@ class Upload extends Controller {
 	 * @return boolean
 	 */
 	public function isValidExtension($tmpFile) {
-		user_error('Upload::isValidExtension() is deprecated. Please use Upload_Validator::isValidExtension() instead', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use Upload_Validator::isValidExtension() instead.');
 		$validator = new Upload_Validator();
 		$validator->setTmpFile($tmpFile);
 		return $validator->isValidExtension();

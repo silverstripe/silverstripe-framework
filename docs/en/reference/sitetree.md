@@ -134,7 +134,7 @@ it is a good starting point, for choosing your customisation.
 			return false;
 		}
 	
-		function getCMSFields() {
+		public function getCMSFields() {
 			$fields = parent::getCMSFields();
 			return $fields;
 		}
@@ -187,16 +187,16 @@ Example:
 		static $many_many = array(
 			'MyProducts' => 'MyProduct'
 		);
-		function stageChildren($showAll = false) {
+		public function stageChildren($showAll = false) {
 			// @todo Implement $showAll
 			return $this->MyProducts();
 		}
 	
-		function liveChildren($showAll = false) {
+		public function liveChildren($showAll = false) {
 			// @todo Implement $showAll
 			return $this->MyProducts();
 		}
-		function numChildren() {
+		public function numChildren() {
 			return $this->MyProducts()->Count();
 		}
 	}	}
@@ -210,7 +210,7 @@ The `[api:LeftAndMain]` tree supports multiple parents.  We overload CMSTreeClas
 the class list.
 
 	:::php
-	function CMSTreeClasses($controller) {
+	public function CMSTreeClasses($controller) {
 		return parent::CMSTreeClasses($controller) . ' manyparents';
 	}
 
@@ -219,10 +219,10 @@ Don't forget to define a new Parent() method that also references your new many-
 up the hierarchy!
 
 	:::php
-	function getParent() {
+	public function getParent() {
 	  return $this->Parent();
 	}
-	function Parent() {
+	public function Parent() {
 	  $parents = $this->Parents();
 	  if($parents) return $parents->First();
 	}
@@ -245,7 +245,7 @@ saved into the database.  This will represent our dynamic groups.
 ### LeftAndMain::getSiteTreeFor()
 
 Currently LeftAndMain::getSiteTreeFor() Calls LeftAndMain::getRecord($id) to get a new record.  We need to instead
-create a new function getTreeRecord($id) which will be able to create BlogMonthTreeNode objects as well as look up
+create a new public function getTreeRecord($id) which will be able to create BlogMonthTreeNode objects as well as look up
 SiteTree records from the database.
 
 The IDs don't **need** be numeric; so we can set the system to allow for 2 $id formats.

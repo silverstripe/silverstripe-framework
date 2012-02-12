@@ -19,7 +19,7 @@ class PermissionCheckboxSetField extends FormField {
 	protected $hiddenPermissions = array();
 	
 	/**
-	 * @var DataObjectSet
+	 * @var SS_List
 	 */
 	protected $records = null;
 	
@@ -33,7 +33,7 @@ class PermissionCheckboxSetField extends FormField {
 	 * @param String $title
 	 * @param String $managedClass
 	 * @param String $filterField
-	 * @param Group|DataObjectSet $records One or more {@link Group} or {@link PermissionRole} records 
+	 * @param Group|SS_List $records One or more {@link Group} or {@link PermissionRole} records 
 	 *  used to determine permission checkboxes.
 	 *  Caution: saveInto() can only be used with a single record, all inherited permissions will be marked readonly.
 	 *  Setting multiple groups only makes sense in a readonly context. (Optional)
@@ -47,7 +47,7 @@ class PermissionCheckboxSetField extends FormField {
 		} elseif($records instanceof Group) {
 			$this->records = new ArrayList(array($records));
 		} elseif($records) {
-			throw new InvalidArgumentException('$record should be either a Group record, or a DataObjectSet of Group records');
+			throw new InvalidArgumentException('$record should be either a Group record, or a SS_List of Group records');
 		}
 		
 		// Get all available codes in the system as a categorized nested array

@@ -4,11 +4,32 @@
  * Subclass of {@link DataList} representing a many_many relation
  */
 class ManyManyList extends RelationList {
+	
 	protected $joinTable;
+	
 	protected $localKey;
+	
 	protected $foreignKey, $foreignID;
 
 	protected $extraFields;
+	
+	/**
+	 * Synonym of the constructor.  Can be chained with literate methods.
+	 * ManyManyList::create("Group","Member","ID", "GroupID")->sort("Title") is legal, but
+	 * new ManyManyList("Group","Member","ID", "GroupID")->sort("Title") is not.
+	 * 
+	 * @param string $dataClass The class of the DataObjects that this will list.
+	 * @param string $joinTable The name of the table whose entries define the content of this many_many relation.
+	 * @param string $localKey The key in the join table that maps to the dataClass' PK.
+	 * @param string $foreignKey The key in the join table that maps to joined class' PK.
+	 * @param string $extraFields A map of field => fieldtype of extra fields on the join table.
+	 * 
+	 * @see ManyManyList::__construct();
+	 * @example ManyManyList::create('Group','Group_Members', 'GroupID', 'MemberID');
+	 */
+	public static function create($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = array()) {
+		return new ManyManyList($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = array());
+	}
 
 	/**
 	 * Create a new ManyManyList object.
@@ -16,18 +37,17 @@ class ManyManyList extends RelationList {
 	 * A ManyManyList object represents a list of DataObject records that correspond to a many-many
 	 * relationship.  In addition to, 
 	 * 
-	 * 
-	 * 
 	 * Generation of the appropriate record set is left up to the caller, using the normal
 	 * {@link DataList} methods.  Addition arguments are used to support {@@link add()}
 	 * and {@link remove()} methods.
 	 * 
-	 * @param $dataClass The class of the DataObjects that this will list.
-	 * @param $joinTable The name of the table whose entries define the content of this
-	 * many_many relation.
-	 * @param $localKey The key in the join table that maps to the dataClass' PK.
-	 * @param $foreignKey The key in the join table that maps to joined class' PK.
-	 * @param $extraFields A map of field => fieldtype of extra fields on the join table.
+	 * @param string $dataClass The class of the DataObjects that this will list.
+	 * @param string $joinTable The name of the table whose entries define the content of this many_many relation.
+	 * @param string $localKey The key in the join table that maps to the dataClass' PK.
+	 * @param string $foreignKey The key in the join table that maps to joined class' PK.
+	 * @param string $extraFields A map of field => fieldtype of extra fields on the join table.
+	 * 
+	 * @example new ManyManyList('Group','Group_Members', 'GroupID', 'MemberID');
 	 */
 	function __construct($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = array()) {
 		parent::__construct($dataClass);
@@ -127,13 +147,14 @@ class ManyManyList extends RelationList {
 	}
 
     /**
-     * Remove all items from this many-many join that match the given filter
-     * @deprecated this is experimental and will change. Don't use it in your projects.
+     * Remove all items from this many-many join.  To remove a subset of items, filter it first.
      */
-    function removeByFilter($filter) {
-		$query = new SQLQuery("*", array("\"$this->joinTable\""));
+    function removeAll() {
+		$query = $this->dataQuery()->query();
 		$query->delete = true;
-		$query->where($filter);
+		$query->select = array('*');
+		$query->from = array("\"$this->joinTable\"");
+		$query->orderby = null;
 		$query->execute();
     }
 

@@ -13,7 +13,8 @@
 			onmatch: function() {
 				this._super();
 				
-				this.setHints($.parseJSON(this.attr('data-hints')));
+				var hints = this.attr('data-hints');
+				if(hints) this.setHints($.parseJSON(hints));
 				
 				/**
 				 * @todo Icon and page type hover support
@@ -56,14 +57,20 @@
 									// Check if a node is allowed to be moved.
 									// Caution: Runs on every drag over a new node
 									'check_move': function(data) {
-
 										var movedNode = $(data.o), newParent = $(data.np), 
 											isMovedOntoContainer = data.ot.get_container()[0] == data.np[0],
 											movedNodeClass = movedNode.getClassname(), 
 											newParentClass = newParent.getClassname(),
 											// Check allowedChildren of newParent or against root node rules
 											hints = self.getHints(),
-											disallowedChildren = hints[newParentClass ? newParentClass : 'Root'].disallowedChildren || [];
+											disallowedChildren = [],
+											hintKey = newParentClass ? newParentClass : 'Root',
+											hint = (typeof hints[hintKey] != 'undefined') ? hints[hintKey] : null;
+
+										// Special case for VirtualPage: Check that original page type is an allowed child
+										if(hint && movedNode.attr('class').match(/VirtualPage-([^\s]*)/)) movedNodeClass = RegExp.$1;
+										
+										if(hint) disallowedChildren = (typeof hint.disallowedChildren != 'undefined') ? hint.disallowedChildren : [];
 										var isAllowed = (
 											// Don't allow moving the root node
 											movedNode.data('id') != 0 
@@ -72,7 +79,7 @@
 											// Children are generally allowed on parent
 											&& !newParent.hasClass('nochildren')
 											// movedNode is allowed as a child
-											&& ($.inArray(movedNodeClass, disallowedChildren) == -1)
+											&& (!disallowedChildren.length || $.inArray(movedNodeClass, disallowedChildren) == -1)
 										);
 										
 										return isAllowed;
@@ -95,6 +102,7 @@
 							]
 						})
 						.bind('loaded.jstree', function(e, data) {
+							self.css('visibility', 'visible');
 							// Add ajax settings after init period to avoid unnecessary initial ajax load
 							// of existing tree in DOM - see load_node_html()
 							data.inst._set_settings({'html_data': {'ajax': {
@@ -257,6 +265,7 @@
 		onunmatch: function() {
 			this._super();
 			
+			this.jstree('uncheck_all');
 			this.jstree('hide_checkboxes');
 		},
 		/**
@@ -303,7 +312,7 @@
 		}
 	});
 	
-	$('.cms-tree-view-modes :input[name=view-mode]').entwine({
+	$('.cms-tree-view-modes input.view-mode').entwine({
 		onmatch: function() {
 			// set active by default
 			this.trigger('click');

@@ -59,7 +59,7 @@ class DatetimeField extends FormField {
 		
 		$this->dateField = Object::create('DateField', $name . '[date]', false);
 		$this->timeField = Object::create('TimeField', $name . '[time]', false);
-		$this->timezoneField = new HiddenField($this->Name() . '[timezone]');
+		$this->timezoneField = new HiddenField($this->getName() . '[timezone]');
 		
 		parent::__construct($name, $title, $value);
 	}
@@ -180,6 +180,20 @@ class DatetimeField extends FormField {
 		if(!$valTime) $valTime = '00:00:00';
 		
 		return sprintf($this->getConfig('datetimeorder'), $valDate, $valTime);
+	}
+
+	function setDisabled($bool) {
+		parent::setDisabled($bool);
+		$this->dateField->setDisabled($bool);
+		$this->timeField->setDisabled($bool);
+		if($this->timezoneField) $this->timezoneField->setDisabled($bool);
+	}
+
+	function setReadonly($bool) {
+		parent::setReadonly($bool);
+		$this->dateField->setReadonly($bool);
+		$this->timeField->setReadonly($bool);
+		if($this->timezoneField) $this->timezoneField->setReadonly($bool);
 	}
 	
 	/**

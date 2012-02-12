@@ -19,6 +19,8 @@ class SQLMap extends Object implements IteratorAggregate {
 	 * @param SQLQuery $query The query to generate this map. THis isn't executed until it's needed.
 	 */
 	public function __construct(SQLQuery $query, $keyField = "ID", $titleField = "Title") {
+		Deprecation::notice('3.0', 'Use SS_Map or DataList::map() instead.');
+		
 		if(!$query) {
 			user_error('SQLMap constructed with null query.', E_USER_ERROR);
 		}
@@ -52,12 +54,12 @@ class SQLMap extends Object implements IteratorAggregate {
 	
 	public function getIterator() {
 		$this->genItems();
-		return new SQLMap_Iterator($this->items->getIterator(), $this->keyField, $this->titleField);
+		return new SS_Map_Iterator($this->items->getIterator(), $this->keyField, $this->titleField);
 	}
 	
 	/**
 	 * Get the items in this class.
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function getItems() {
 		$this->genItems();
@@ -85,45 +87,3 @@ class SQLMap extends Object implements IteratorAggregate {
 		}
 	}
 }
-
-/**
- * @package sapphire
- * @subpackage model
- */
-class SQLMap_Iterator extends Object implements Iterator {
-	protected $items;
-	protected $keyField, $titleField;
-	
-	function __construct(Iterator $items, $keyField, $titleField) {
-		$this->items = $items;
-		$this->keyField = $keyField;
-		$this->titleField = $titleField;
-	}
-
-	
-	/*
-	 * Iterator functions - necessary for foreach to work
-	 */
-	public function rewind() {
-		return $this->items->rewind() ? $this->items->rewind()->{$this->titleField} : null;
-	}
-	
-	public function current() {
-		return $this->items->current()->{$this->titleField};
-	}
-	
-	public function key() {
-		return $this->items->current()->{$this->keyField};
-	}
-	
-	public function next() {
-		$next = $this->items->next();
-		return isset($next->{$this->titleField}) ? $next->{$this->titleField} : null;
-	}
-	
-	public function valid() {
-	 	return $this->items->valid();
-	}
-}
-
-?>
