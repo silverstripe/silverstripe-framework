@@ -105,4 +105,3 @@ class MemberImportForm extends Form {
 		return $this->group;
 	}
 }
-?>

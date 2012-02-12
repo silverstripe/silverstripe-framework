@@ -247,4 +247,3 @@ class SOAPModelAccess extends SapphireSoapServer {
 	}
 }
 
-?>

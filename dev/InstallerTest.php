@@ -15,4 +15,3 @@ class InstallerTest extends Controller {
 	}
 }
 
-?>

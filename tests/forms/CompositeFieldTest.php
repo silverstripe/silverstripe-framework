@@ -30,4 +30,3 @@ class CompositeFieldTest extends SapphireTest {
 	}
 	
 }
-?>

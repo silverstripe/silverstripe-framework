@@ -50,4 +50,3 @@ class ExactMatchMultiFilter extends SearchFilter {
 		return $this->getValue() == null || $this->getValue() == '';
 	}
 }
-?>

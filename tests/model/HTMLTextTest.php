@@ -135,4 +135,3 @@ class HTMLTextTest extends SapphireTest {
 		$this->assertEquals($data->ATT(), '&quot;this is a test&quot;');
 	}
 }
-?>

@@ -18,4 +18,3 @@ class NegationFilter extends SearchFilter {
 	
 }
 
-?>

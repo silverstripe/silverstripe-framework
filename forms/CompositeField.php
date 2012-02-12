@@ -330,4 +330,3 @@ class CompositeField extends FormField {
 	}
 }
 
-?>

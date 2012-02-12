@@ -602,4 +602,3 @@ $lang['nl_NL']['Widget']['SINGULARNAME'] = 'Widget';
 $lang['nl_NL']['WidgetArea']['PLURALNAME'] = 'Widget Gebieden';
 $lang['nl_NL']['WidgetArea']['SINGULARNAME'] = 'Widget Gebied';
 
-?>

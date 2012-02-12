@@ -90,4 +90,4 @@ class Varchar extends StringField {
 	}
 }
 
-?>
+

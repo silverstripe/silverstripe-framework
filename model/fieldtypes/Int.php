@@ -65,4 +65,3 @@ class Int extends DBField {
 	
 }
 
-?>

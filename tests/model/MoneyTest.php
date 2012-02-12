@@ -276,4 +276,3 @@ class MoneyTest_DataObject extends DataObject implements TestOnly {
 	);
 
 }
-?>

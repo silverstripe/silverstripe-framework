@@ -160,4 +160,3 @@ class SoapModelAccessTest_Page extends DataObject implements TestOnly {
 		'Content' => 'HTMLText',
 	);
 }
-?>

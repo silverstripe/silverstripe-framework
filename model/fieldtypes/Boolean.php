@@ -75,4 +75,4 @@ class Boolean extends DBField {
 	
 }
 
-?>
+

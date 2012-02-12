@@ -73,4 +73,3 @@ class SSHTMLBBCodeParser_Filter_Basic extends SSHTMLBBCodeParser_Filter
 }
 
 
-?>

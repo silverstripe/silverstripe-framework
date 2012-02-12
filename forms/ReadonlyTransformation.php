@@ -9,4 +9,3 @@ class ReadonlyTransformation extends FormTransformation {
 	// methods on the individual FormField objects.	
 }
 
-?>

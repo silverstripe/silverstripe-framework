@@ -109,4 +109,3 @@ class SSHTMLBBCodeParser_Filter_Lists extends SSHTMLBBCodeParser_Filter
 }
 
 
-?>

@@ -599,4 +599,3 @@ $lang['sv_SE']['Widget']['SINGULARNAME'] = 'Widget';
 $lang['sv_SE']['WidgetArea']['PLURALNAME'] = 'Widget-ytor';
 $lang['sv_SE']['WidgetArea']['SINGULARNAME'] = 'Widget-yta';
 
-?>

@@ -323,4 +323,3 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 		return $entities;
 	}
 }
-?>

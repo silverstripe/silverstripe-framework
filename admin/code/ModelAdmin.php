@@ -1054,4 +1054,3 @@ class ModelAdmin_RecordController extends Controller {
 	
 }
 
-?>

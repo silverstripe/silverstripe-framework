@@ -612,4 +612,3 @@ $lang['it_IT']['Widget']['SINGULARNAME'] = 'Widget';
 $lang['it_IT']['WidgetArea']['PLURALNAME'] = 'Aree Widget';
 $lang['it_IT']['WidgetArea']['SINGULARNAME'] = 'Area widget';
 
-?>

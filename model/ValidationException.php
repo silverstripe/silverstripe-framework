@@ -29,4 +29,3 @@ class ValidationException extends Exception {
 		return $this->result;	
 	}
 }
-?>

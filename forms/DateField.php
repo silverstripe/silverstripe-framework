@@ -704,4 +704,4 @@ class DateField_View_JQuery {
 		return preg_replace($patterns, $replacements, $format);
 	}
 }
-?>
+

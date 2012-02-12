@@ -188,4 +188,3 @@ class SearchFilterApplyRelationTest_ManyManyGrantChild extends SearchFilterApply
 	);
 }
 
-?>

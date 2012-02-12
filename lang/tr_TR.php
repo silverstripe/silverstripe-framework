@@ -551,4 +551,3 @@ $lang['tr_TR']['Widget']['SINGULARNAME'] = 'Zımbırtı';
 $lang['tr_TR']['WidgetArea']['PLURALNAME'] = 'Zımbırtı Bölümleri';
 $lang['tr_TR']['WidgetArea']['SINGULARNAME'] = 'Zımbırtı Bölümü';
 
-?>

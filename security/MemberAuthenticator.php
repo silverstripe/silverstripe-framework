@@ -146,4 +146,3 @@ class MemberAuthenticator extends Authenticator {
 	}
 }
 
-?>

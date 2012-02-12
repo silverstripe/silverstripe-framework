@@ -60,4 +60,4 @@ class DBLocale extends Varchar {
 		return (isset($common_names[$this->value])) ? $common_names[$this->value] : false;
 	}
 }
-?>
+

@@ -41,4 +41,3 @@ class PasswordField extends TextField {
 	}
 }
 
-?>

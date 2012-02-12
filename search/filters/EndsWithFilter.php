@@ -32,4 +32,3 @@ class EndsWithFilter extends SearchFilter {
 		return $this->getValue() == null || $this->getValue() == '';
 	}
 }
-?>
