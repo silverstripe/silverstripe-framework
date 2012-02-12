@@ -177,9 +177,9 @@ input.radio { margin-left: 0; }
 
 /** ---------------------------------------------------- Optionsets and Checkboxsets ---------------------------------------------------- */
 .optionset { padding-bottom: 8px; }
-.optionset li { float: left; display: block; width: 216px; padding-bottom: 8px; line-height: 16px; list-style: none; }
-.optionset li input { display: inline-block; padding-right: 0; margin-right: 0; }
-.optionset li label { display: inline; cursor: pointer; padding-left: 8px; }
+.optionset li { float: left; display: block; width: 240px; padding-bottom: 8px; line-height: 16px; list-style: none; }
+.optionset li input { display: inline-block; float: left; padding-right: 0; margin-right: 0; margin-top: 0; }
+.optionset li label { display: block; cursor: pointer; margin-left: 20px; }
 
 /** ---------------------------------------------------- HTML Text  ---------------------------------------------------- */
 .htmleditor textarea { visibility: hidden; }
@@ -273,7 +273,7 @@ body.cms { overflow: hidden; }
 .cms-content-toolbar { display: block; margin: 0 0 15px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); *zoom: 1; }
 .cms-content-toolbar:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
 .cms-content-toolbar > * { float: left; }
-.cms-content-toolbar .cms-tree-view-modes * { display: inline-block; }
+.cms-content-toolbar .cms-tree-view-modes * { display: inline-block; padding-top: 4px; }
 
 /* -------------------------------------------------------- Content Tools is the sidebar on the left of the main content panel */
 .cms-content-tools { background-color: #dde3e7; width: 192px; border-right: 1px solid #bfcad2; overflow-y: auto; overflow-x: hidden; z-index: 70; float: left; position: relative; /* buttons now need to line with with reduced input sizes */ }
@@ -365,7 +365,7 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 */ }
 .cms-panel.collapsed .cms-panel-content { display: none; }
 .cms-panel .cms-panel-content-collapsed { width: 40px; }
-.cms-panel .cms-panel-content-collapsed h2, .cms-panel .cms-panel-content-collapsed h3 { border-bottom: 0; margin-left: 8px; -moz-transform-origin: bottom left; -webkit-transform-origin: bottom left; -o-transform-origin: bottom left; -ms-transform-origin: bottom left; transform-origin: bottom left; -moz-transform: rotate(90deg); -webkit-transform: rotate(90deg); -o-transform: rotate(90deg); -ms-transform: rotate(90deg); transform: rotate(90deg); }
+.cms-panel .cms-panel-content-collapsed h2, .cms-panel .cms-panel-content-collapsed h3 { border-bottom: 0; margin-left: 8px; -moz-transform-origin: bottom left; -webkit-transform-origin: bottom left; -o-transform-origin: bottom left; -ms-transform-origin: bottom left; transform-origin: bottom left; -moz-transform: rotate(90deg); -webkit-transform: rotate(90deg); -o-transform: rotate(90deg); -ms-transform: rotate(90deg); transform: rotate(90deg); width: 470px; }
 .cms-panel .child-flyout-indicator { width: 0; height: 0; border-right: 3px dashed #1f1f1f; border-top: 3px solid transparent; border-left: 3px solid transparent; border-bottom: 3px dashed #1f1f1f; position: absolute; right: 1px; margin-top: -8px; display: none; /* To be shown by javascript, see LeftAndMain.Panel.js */ }
 .cms-panel .collapsed-flyout { display: block !important; left: 41px; margin-top: -40px; position: fixed; width: 191px; }
 .cms-panel .collapsed-flyout li a span { display: block !important; }

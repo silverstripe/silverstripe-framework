@@ -390,6 +390,7 @@ body.cms {
 	
 	.cms-tree-view-modes * {
 		display: inline-block;
+		padding-top: 4px;
 	}
 }
 
@@ -821,6 +822,7 @@ form.member-profile-form {
 			margin-left: $grid-vertical;
 			@include transform-origin(bottom, left);
 			@include rotate(90deg);
+			width: 470px;
 		}
 	}
 
