@@ -660,4 +660,3 @@ $lang['sk_SK']['Widget']['SINGULARNAME'] = 'Pomôcka';
 $lang['sk_SK']['WidgetArea']['PLURALNAME'] = 'oblasti pomôcky';
 $lang['sk_SK']['WidgetArea']['SINGULARNAME'] = 'oblast pomôcky';
 
-?>

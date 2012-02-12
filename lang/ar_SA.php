@@ -606,4 +606,3 @@ $lang['ar_SA']['Widget']['SINGULARNAME'] = 'الملحق';
 $lang['ar_SA']['WidgetArea']['PLURALNAME'] = 'مناطق الملحقات';
 $lang['ar_SA']['WidgetArea']['SINGULARNAME'] = 'مساحة الإضافات';
 
-?>

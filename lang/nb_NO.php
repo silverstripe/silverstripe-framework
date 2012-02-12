@@ -539,4 +539,3 @@ $lang['nb_NO']['Widget']['SINGULARNAME'] = 'Widget';
 $lang['nb_NO']['WidgetArea']['PLURALNAME'] = 'Widget områder';
 $lang['nb_NO']['WidgetArea']['SINGULARNAME'] = 'Widget område';
 
-?>

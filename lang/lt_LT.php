@@ -605,4 +605,3 @@ $lang['lt_LT']['Widget']['SINGULARNAME'] = 'Modulis';
 $lang['lt_LT']['WidgetArea']['PLURALNAME'] = 'Modulių sritis';
 $lang['lt_LT']['WidgetArea']['SINGULARNAME'] = 'Modulio sritis';
 
-?>

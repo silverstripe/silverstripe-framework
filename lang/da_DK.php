@@ -641,4 +641,3 @@ $lang['da_DK']['Widget']['SINGULARNAME'] = 'Widget';
 $lang['da_DK']['WidgetArea']['PLURALNAME'] = 'Widget områder';
 $lang['da_DK']['WidgetArea']['SINGULARNAME'] = 'Widget område';
 
-?>

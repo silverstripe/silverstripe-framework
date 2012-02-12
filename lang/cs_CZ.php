@@ -649,4 +649,3 @@ $lang['cs_CZ']['Widget']['SINGULARNAME'] = 'Widget';
 $lang['cs_CZ']['WidgetArea']['PLURALNAME'] = 'Oblasti widgetů';
 $lang['cs_CZ']['WidgetArea']['SINGULARNAME'] = 'Oblast widgetů';
 
-?>
