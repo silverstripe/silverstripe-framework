@@ -664,4 +664,3 @@ $lang['eo_XX']['Widget']['SINGULARNAME'] = 'Fenestraĵo';
 $lang['eo_XX']['WidgetArea']['PLURALNAME'] = 'Fenestraĵaj Zonoj';
 $lang['eo_XX']['WidgetArea']['SINGULARNAME'] = 'Fenestraĵa Zono';
 
-?>

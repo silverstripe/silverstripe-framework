@@ -541,4 +541,3 @@ $lang['es_MX']['Widget']['SINGULARNAME'] = 'Widget';
 $lang['es_MX']['WidgetArea']['PLURALNAME'] = 'Área de Widgets';
 $lang['es_MX']['WidgetArea']['SINGULARNAME'] = 'Área del Widget';
 
-?>

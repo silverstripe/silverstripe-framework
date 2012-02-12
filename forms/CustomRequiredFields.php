@@ -146,4 +146,3 @@ class CustomRequiredFields extends RequiredFields{
 	}
 }
 
-?>

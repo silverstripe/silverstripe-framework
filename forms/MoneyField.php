@@ -165,4 +165,3 @@ class MoneyField extends FormField {
 		return $this->_locale;
 	}
 }
-?>

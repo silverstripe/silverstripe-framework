@@ -234,4 +234,3 @@ class CSVParser extends Object implements Iterator {
 
 }
 
-?>

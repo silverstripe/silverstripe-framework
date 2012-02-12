@@ -491,4 +491,4 @@ class Group extends DataObject {
 	}
 }
 	
-?>
+

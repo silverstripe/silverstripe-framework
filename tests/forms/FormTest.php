@@ -513,4 +513,3 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 Director::addRules(50, array(
 	'FormTest_Controller' => "FormTest_Controller",
 ));
-?>

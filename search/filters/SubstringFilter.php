@@ -31,4 +31,3 @@ class SubstringFilter extends PartialMatchFilter {
 	}
 }
 
-?>

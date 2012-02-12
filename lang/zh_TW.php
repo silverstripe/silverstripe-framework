@@ -256,4 +256,3 @@ $lang['zh_TW']['VirtualPage']['CHOOSE'] = '請選擇一個網頁來連結至';
 $lang['zh_TW']['VirtualPage']['EDITCONTENT'] = '點擊即可更改內容';
 $lang['zh_TW']['VirtualPage']['HEADER'] = '這是一個虛擬網頁';
 
-?>

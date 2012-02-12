@@ -540,4 +540,3 @@ $lang['ca_AD']['Widget']['SINGULARNAME'] = 'Giny';
 $lang['ca_AD']['WidgetArea']['PLURALNAME'] = 'Àrees de ginys';
 $lang['ca_AD']['WidgetArea']['SINGULARNAME'] = 'Àrea de giny';
 
-?>

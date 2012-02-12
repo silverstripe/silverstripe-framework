@@ -67,4 +67,3 @@ interface i18nEntityProvider {
 	 */
 	function provideI18nEntities();
 }
-?>

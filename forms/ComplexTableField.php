@@ -876,4 +876,4 @@ class ComplexTableField_Popup extends Form {
 	}
 }
 
-?>
+

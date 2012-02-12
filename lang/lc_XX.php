@@ -263,4 +263,3 @@ $lang['lc_XX']['VirtualPage']['CHOOSE'] = 'CHOOSE PAEG 2 LINK 2';
 $lang['lc_XX']['VirtualPage']['EDITCONTENT'] = 'kLICK HEER 2 EDIT TEH CONTENT';
 $lang['lc_XX']['VirtualPage']['HEADER'] = 'DIS R A VIRTUAL PAEG';
 
-?>

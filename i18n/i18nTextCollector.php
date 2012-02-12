@@ -442,4 +442,3 @@ class i18nTextCollector extends Object {
 		$this->defaultLocale = $locale;
 	}
 }
-?>

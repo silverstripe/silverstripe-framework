@@ -542,4 +542,3 @@ $lang['ru_RU']['Widget']['SINGULARNAME'] = 'Виджет';
 $lang['ru_RU']['WidgetArea']['PLURALNAME'] = 'Места для виджетов';
 $lang['ru_RU']['WidgetArea']['SINGULARNAME'] = 'Место для виджета';
 
-?>

@@ -183,4 +183,3 @@ class ListboxField extends DropdownField {
 	}
 	
 }
-?>

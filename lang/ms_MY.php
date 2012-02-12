@@ -391,4 +391,3 @@ $lang['ms_MY']['Widget']['SINGULARNAME'] = 'Widjet';
 $lang['ms_MY']['WidgetArea']['PLURALNAME'] = 'Kawasan-kawasan Widjet';
 $lang['ms_MY']['WidgetArea']['SINGULARNAME'] = 'Kawasan Widjet';
 
-?>

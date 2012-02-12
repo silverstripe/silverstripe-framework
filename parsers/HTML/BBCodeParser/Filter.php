@@ -9,4 +9,3 @@ require_once 'HTML/HTMLBBCodeParser.php';
 class SSHTMLBBCodeParser_Filter extends SSHTMLBBCodeParser
 {
 }
-?>

@@ -20,4 +20,4 @@ class VersionedRestfulServer extends Controller {
 	}
 }
 
-?>
+

@@ -350,4 +350,4 @@ class Text extends StringField {
 	}
 }
 
-?>
+

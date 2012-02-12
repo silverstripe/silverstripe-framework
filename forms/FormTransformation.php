@@ -51,4 +51,3 @@ class FormTransformation extends Object {
 	}
 }
 
-?>

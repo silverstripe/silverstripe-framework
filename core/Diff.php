@@ -879,4 +879,4 @@ extends Diff
     }
 }
 
-?>
+

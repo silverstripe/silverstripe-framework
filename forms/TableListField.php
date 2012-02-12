@@ -1574,4 +1574,4 @@ class TableListField_ItemRequest extends RequestHandler {
 		return $this->ctf;
 	}
 }
-?>
+

@@ -1345,4 +1345,4 @@ class LeftAndMainMarkingFilter {
 		return array_key_exists((int) $id, $this->ids) ? $this->ids[$id] : false;
 	}
 }
-?>
+

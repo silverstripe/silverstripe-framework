@@ -17,4 +17,3 @@ if(array_key_exists('es_', $lang) && is_array($lang['es_'])) {
 }
 
 
-?>

@@ -126,4 +126,3 @@ class CheckboxFieldTest_Article extends DataObject implements TestOnly {
 	);
 	
 }
-?>

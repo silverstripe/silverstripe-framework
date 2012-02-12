@@ -1958,4 +1958,4 @@ class i18n extends Object {
 	}
 }
 
-?>
+

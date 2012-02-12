@@ -91,4 +91,3 @@ class ScaffoldingComplexTableField_Popup extends ComplexTableField_Popup {
 	}
 
 }
-?>

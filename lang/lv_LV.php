@@ -662,4 +662,3 @@ $lang['lv_LV']['Widget']['SINGULARNAME'] = 'Logdaļa';
 $lang['lv_LV']['WidgetArea']['PLURALNAME'] = 'Logdaļu apgabali';
 $lang['lv_LV']['WidgetArea']['SINGULARNAME'] = 'Logdaļas apgabals';
 
-?>
