@@ -181,3 +181,4 @@ and `[api:CMSMenu::remove_menu_item()]`.
 
  * [Howto: Extend the CMS Interface](../howto/extend-cms-interface)
  * [Reference: ModelAdmin](../reference/modeladmin)
+ * [Topics: Rich Text Editing](../topics/rich-text-editing)
