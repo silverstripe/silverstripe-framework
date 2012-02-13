@@ -503,6 +503,8 @@ body.cms {
 	overflow-x: hidden;
 	z-index: 70;
 	@include box-shadow($color-shadow-dark 0 0 ($grid-horizontal / 2));
+	float: left;
+	position: relative;
 	
 	.cms-panel-header {
 		padding: 0;
