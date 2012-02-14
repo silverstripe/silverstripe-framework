@@ -532,6 +532,7 @@ input.radio {
 	
 }
 
+
 /** ----------------------------------------------------
  * HTML Text 
  * ---------------------------------------------------- */
@@ -553,4 +554,10 @@ input.radio {
 
 .action-hidden {
 	display:  none;
+}
+
+.secondary-info {
+	color:#999999;
+	font-style: italic;
+	padding-top: 1em;
 }
