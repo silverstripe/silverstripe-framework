@@ -3,8 +3,10 @@
 <% end_if %>
 	<div class="cms-content-header north">
 		<div>
-			<h2 id="page-title-heading" title="$Record.Breadcrumbs(20, true)">
-				$Record.Title
+			<h2 id="page-title-heading">
+			<% control Controller %>
+				<% include CMSBreadcrumbs %>
+			<% end_control %>
 			</h2>
 			<% if Fields.hasTabset %>
 				<% with Fields.fieldByName('Root') %>

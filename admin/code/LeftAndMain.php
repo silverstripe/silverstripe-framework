@@ -500,6 +500,42 @@ class LeftAndMain extends Controller {
 			return false;
 		}
 	}
+
+	/**
+	 * @return ArrayList
+	 */
+	public function Breadcrumbs($unlinked = false) {
+		$title = self::menu_title_for_class($this->class);
+		$items = new ArrayList(array(
+			new ArrayData(array(
+				'Title' => $title,
+				'Link' => ($unlinked) ? false : $this->Link()
+			))
+		));
+		$record = $this->currentPage();
+		if($record) {
+			if($record->hasExtension('Hierarchy')) {
+				$ancestors = $record->getAncestors();
+				$ancestors->push($record);
+				foreach($ancestors as $ancestor) {
+					$items->push(new ArrayData(array(
+						'Title' => $ancestor->Title,
+						'Link' => ($unlinked) ? false : Controller::join_links($this->Link('show'), $ancestor->ID)
+					)));		
+				}
+			} else {
+				$items->push(new ArrayData(array(
+					'Title' => $record->Title,
+					'Link' => ($unlinked) ? false : Controller::join_links($this->Link('show'), $record->ID)
+				)));	
+			}
+		}
+
+		// TODO Remove once ViewableData->First()/Last() is fixed
+		foreach($items as $i => $item) $item->iteratorProperties($i, $items->Count());
+
+		return $items;
+	}
 	
 	/**
 	 * @return String HTML

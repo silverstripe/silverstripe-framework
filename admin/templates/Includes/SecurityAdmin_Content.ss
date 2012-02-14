@@ -2,7 +2,9 @@
 	<div class="cms-content-tools west">
 		<div class="cms-content-header north">
 			<div>
-				<h2><% _t('SECGROUPS','Security Groups') %></h2>
+				<h2>
+					<% include CMSBreadcrumbs %>
+				</h2>
 			</div>
 		</div>
 

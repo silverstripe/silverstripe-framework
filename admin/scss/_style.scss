@@ -107,6 +107,10 @@ body.cms {
 		image:url(../images/textures/cms_content_header.png);
 		repeat:repeat;
 	} 
+
+	a {
+		color: $color-text-blue-link;
+	}
 	
 	h2 {
 		float: left;
@@ -115,7 +119,7 @@ body.cms {
 		line-height: $grid-x * 3;
 		font-weight: bold;
 		text-shadow: darken($color-widget-bg, 15%) 1px 1px 0;
-		width: $grid-x * 22 /* 24 - (padding on each side + margin) */;
+		max-width: $grid-x*50;
 		margin: 0;
 		@include hide-text-overflow();
 	}
