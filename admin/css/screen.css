@@ -22,7 +22,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 /** ----------------------------------------------- Colours ------------------------------------------------ */
 /** ----------------------------------------------- Textures ----------------------------------------------- */
 /** ----------------------------------------------- Typography.  ------------------------------------------------ */
-/** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both vertical and horizontal. All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
+/** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
 /** ----------------------------- Custom mixins ------------------------------ */
 /** This file contains generic mixins which we use throughout the admin panels.  Mixins should be stored here rather than individual files so that we can keep. */
@@ -383,15 +383,6 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 .cms-panel .cms-panel-toggle a { display: block; text-align: right; padding: 4px 0; width: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#b0bec7, #92a5b2); background-image: -moz-linear-gradient(#b0bec7, #92a5b2); background-image: -o-linear-gradient(#b0bec7, #92a5b2); background-image: -ms-linear-gradient(#b0bec7, #92a5b2); background-image: linear-gradient(#b0bec7, #92a5b2); text-decoration: none; }
 .cms-panel .cms-panel-toggle a span { display: inline-block; margin: 0 5px; color: #1f1f1f; font-size: 16px; }
 .cms-panel .cms-panel-toggle a.toggle-expand { width: 40px; }
-.cms-panel.collapsed { /*
-.cms-panel-header {
-	@include rotate(-90deg);
-	position: relative;
-	top: $grid-vertical * 10;
-	border: none;
-	padding: 0;
-}
-*/ }
 .cms-panel.collapsed .cms-panel-content { display: none; }
 .cms-panel .cms-panel-content-collapsed { width: 40px; }
 .cms-panel .cms-panel-content-collapsed h2, .cms-panel .cms-panel-content-collapsed h3 { border-bottom: 0; margin-left: 8px; -moz-transform-origin: bottom left; -webkit-transform-origin: bottom left; -o-transform-origin: bottom left; -ms-transform-origin: bottom left; transform-origin: bottom left; -moz-transform: rotate(90deg); -webkit-transform: rotate(90deg); -o-transform: rotate(90deg); -ms-transform: rotate(90deg); transform: rotate(90deg); }

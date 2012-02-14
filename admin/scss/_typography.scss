@@ -7,13 +7,13 @@
 .cms {
 	h2, h3, h4, h5 {
 		font-weight: bold;
-		margin: $grid-vertical * 2 0 $grid-vertical * 2 0;
-		line-height: $grid-vertical * 2;
+		margin: $grid-y * 2 0 $grid-y * 2 0;
+		line-height: $grid-y * 2;
 	}
 
 	h2 {
 		font-size: $font-base-size + 6;
-		line-height: $grid-vertical * 3;
+		line-height: $grid-y * 3;
 	}
 
 	h3 {
@@ -29,8 +29,8 @@
 	}
 
 	p {
-		line-height: $grid-vertical * 2;
-		margin-bottom: $grid-vertical * 2;
+		line-height: $grid-y * 2;
+		margin-bottom: $grid-y * 2;
 	}
 	
 	code {

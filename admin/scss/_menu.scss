@@ -10,7 +10,7 @@
 .cms-logo-header {
 	background-color: darken($color-dark-bg, 10%);
 	position: relative;
-	padding: $grid-vertical * 2 8px 0 4px;
+	padding: $grid-y * 2 8px 0 4px;
 	line-height: 24px;
 
 	@include background-image(
@@ -84,16 +84,16 @@
 	z-index: 80;
 	background: $color-menu-background;
 	border-right: 1px solid $color-menu-border;
-	width: ($grid-horizontal * 24) - 1; /* 8x24 - 1 */
+	width: ($grid-x * 24) - 1; /* 8x24 - 1 */
 	
-	@include box-shadow($color-shadow-dark 0 0 $grid-horizontal);
+	@include box-shadow($color-shadow-dark 0 0 $grid-x);
 
 	a {
 		text-decoration: none;
 	}
 	
 	.cms-panel-content {
-		width: ($grid-horizontal * 24) - 1; /* 8x24 - 1 */
+		width: ($grid-x * 24) - 1; /* 8x24 - 1 */
 		overflow-x: hidden;
 		overflow-y: auto;
 	}
@@ -133,15 +133,15 @@
 	li {
 		a {
 			display: block;
-			height: $grid-vertical * 3;
-			line-height: $grid-vertical * 3;
+			height: $grid-y * 3;
+			line-height: $grid-y * 3;
 			font-size: $font-base-size;
 			overflow: hidden;
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			text-shadow: lighten($color-base, 5%) 1px 1px 0;
 			color: $color-text-dark;
-			padding: ($grid-vertical - 1) 5px ($grid-vertical - 1) 8px;
+			padding: ($grid-y - 1) 5px ($grid-y - 1) 8px;
 			background-color: $color-base;
 			cursor: pointer;
 			

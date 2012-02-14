@@ -174,7 +174,7 @@
 			height: 0;
 			overflow: hidden;
 			clear: both;
-			margin-top: $grid-vertical;
+			margin-top: $grid-y;
 			iframe {
 				width: 100%;
 			}
@@ -188,7 +188,7 @@
 }
 
 body.ss-uploadfield-edit-iframe {
-	padding: $grid-vertical*2 $grid-horizontal*2;
+	padding: $grid-y*2 $grid-x*2;
 }
 
 .ss-upload {

@@ -25,7 +25,7 @@ html,body {
 	@include global-reset;
 
 	font-size: $font-base-size;
-	line-height: $grid-vertical * 2;
+	line-height: $grid-y * 2;
 	font-family: $font-family;
 	color: $color-text;
 }
@@ -99,8 +99,8 @@ body.cms {
 
 
 .cms-content-header {
-	padding: ($grid-vertical - 8) $grid-horizontal $grid-vertical;	
-	height: $grid-vertical * 4;
+	padding: ($grid-y - 8) $grid-x $grid-y;	
+	height: $grid-y * 4;
 	z-index: 60;
 
 	background: {
@@ -110,12 +110,12 @@ body.cms {
 	
 	h2 {
 		float: left;
-		padding: $grid-vertical $grid-horizontal 0 0;
+		padding: $grid-y $grid-x 0 0;
 		font-size: $font-base-size + 2;
-		line-height: $grid-horizontal * 3;
+		line-height: $grid-x * 3;
 		font-weight: bold;
 		text-shadow: darken($color-widget-bg, 15%) 1px 1px 0;
-		width: $grid-horizontal * 22 /* 24 - (padding on each side + margin) */;
+		width: $grid-x * 22 /* 24 - (padding on each side + margin) */;
 		margin: 0;
 		@include hide-text-overflow();
 	}
@@ -136,8 +136,8 @@ body.cms {
 		margin:0;
 		a {
 			font-weight: bold;
-			line-height: $grid-vertical * 2;
-			padding: ($grid-vertical * 2 - 4) ($grid-horizontal * 2 + 4) $grid-vertical + 3;
+			line-height: $grid-y * 2;
+			padding: ($grid-y * 2 - 4) ($grid-x * 2 + 4) $grid-y + 3;
 			text-indent: -9999em;
 
 			&.content-treeview {
@@ -287,11 +287,11 @@ body.cms {
  * -------------------------------------------- */
 
 .cms-content-actions {
-	margin: $grid-vertical $grid-horizontal*2 $grid-vertical*2 $grid-horizontal*2;
-	height: $grid-vertical*4;
+	margin: $grid-y $grid-x*2 $grid-y*2 $grid-x*2;
+	height: $grid-y*4;
 	z-index: 70;
 	
-	@include box-shadow($tab-panel-texture-color 0 $grid-vertical*-2 $grid-vertical*2);
+	@include box-shadow($tab-panel-texture-color 0 $grid-y*-2 $grid-y*2);
 }
 
 
@@ -300,8 +300,8 @@ body.cms {
  * -------------------------------------------- */
 
 .message {
-	margin: 0 0 $grid_vertical 0;
-	padding: $grid_vertical - 1 $grid_horizontal - 1;
+	margin: 0 0 $grid-y 0;
+	padding: $grid-y - 1 $grid-x - 1;
 	font-weight: bold;
 	
 	border: 1px black solid;
@@ -497,26 +497,26 @@ body.cms {
  */
 .cms-content-tools {
 	background-color: darken($color-widget-bg, 5%);
-	width: $grid-horizontal * 24;
+	width: $grid-x * 24;
 	border-right: 1px solid darken($color-widget-bg, 15%);
 	overflow-y: auto;	
 	overflow-x: hidden;
 	z-index: 70;
-	@include box-shadow($color-shadow-dark 0 0 ($grid-horizontal / 2));
+	@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2));
 	float: left;
 	position: relative;
 	
 	.cms-panel-header {
 		padding: 0;
-		margin: 0 0 $grid-vertical - 1;
-		line-height: $grid-vertical * 3;
+		margin: 0 0 $grid-y - 1;
+		line-height: $grid-y * 3;
 		
 		@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 10%))
 	}
 	
 	.cms-panel-content {
-		width: ($grid-horizontal * 22);
-		padding: $grid-vertical $grid-horizontal;
+		width: ($grid-x * 22);
+		padding: $grid-y $grid-x;
 		overflow-x: hidden;
 		overflow-y: auto;
 	}
@@ -531,7 +531,7 @@ body.cms {
 
 		h2 {
 			text-shadow: darken($color-widget-bg, 50%) -1px -1px 0;
-			width: $grid-horizontal * 22 /* 24 - (padding on each side + margin) */;
+			width: $grid-x * 22 /* 24 - (padding on each side + margin) */;
 			color: lighten($color-widget-bg, 60%);
 			
 			@include hide-text-overflow();
@@ -540,7 +540,7 @@ body.cms {
 
 	h3,h4,h5 {
 		font-weight: bold;
-		line-height: $grid-vertical * 2;
+		line-height: $grid-y * 2;
 	}
 	h3 {
 		font-size: $font-base-size + 1;
@@ -561,7 +561,7 @@ body.cms {
 			float: none;
 			width: auto;
 			font-size: 11px;
-			padding: 0 $grid-horizontal 4px 0;
+			padding: 0 $grid-x 4px 0;
 		}
 		
 		.middleColumn {
@@ -588,7 +588,7 @@ body.cms {
 		
 	/* buttons now need to line with with reduced input sizes */
 	.ss-ui-button {
-		padding: 5px $grid-horizontal;
+		padding: 5px $grid-x;
 	}
 		
 	.fieldgroup {
@@ -638,7 +638,7 @@ body.cms {
 	
 	td {
 		border-bottom: 1px solid darken($color-widget-bg, 10%);
-		padding: $grid-vertical - 1 2px;
+		padding: $grid-y - 1 2px;
 		font-size: 11px;
 	}
 }
@@ -786,7 +786,7 @@ form.member-profile-form {
 	}
 	
 	input.customFormat {
-		width: $grid-horizontal * 10;
+		width: $grid-x * 10;
 		border: 1px solid #ccc !important;
 		padding: 3px;
 		display: inline-block;
@@ -849,7 +849,7 @@ form.member-profile-form {
 		overflow-y: auto;
 		overflow-x: auto;
 		background: none;
-		@include box-shadow($color-shadow-dark 0 0 ($grid-horizontal / 2));
+		@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2));
 	}
 }
 
@@ -866,7 +866,7 @@ form.member-profile-form {
 		a { 
 			display: block;
 			text-align: right;
-			padding: $grid-vertical/2 0;
+			padding: $grid-y/2 0;
 			width: 100%;
 		
 			@include background-image(
@@ -894,15 +894,13 @@ form.member-profile-form {
 			display: none;
 		}
 		
-		/*
-		.cms-panel-header {
-			@include rotate(-90deg);
-			position: relative;
-			top: $grid-vertical * 10;
-			border: none;
-			padding: 0;
-		}
-		*/
+		//.cms-panel-header {
+		//	@include rotate(-90deg);
+		//	position: relative;
+		//	top: $grid-y * 10;
+		//	border: none;
+		//	padding: 0;
+		//}
 
 	}
 
@@ -911,7 +909,7 @@ form.member-profile-form {
 
 		h2, h3 {
 			border-bottom: 0;
-			margin-left: $grid-vertical;
+			margin-left: $grid-y;
 			@include transform-origin(bottom, left);
 			@include rotate(90deg);
 		}
@@ -945,8 +943,8 @@ form.member-profile-form {
 }
 
 .cms-panel-padded {
-	width: ($grid-horizontal * 22);
-	padding: $grid-vertical*2 $grid-horizontal*2;
+	width: ($grid-x * 22);
+	padding: $grid-y*2 $grid-x*2;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
@@ -979,7 +977,7 @@ form.member-profile-form {
 .ui-dialog {
   background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
   border: 3px solid #000 !important;
-	border-radius: $grid-vertical;
+	border-radius: $grid-y;
   overflow: visible;
   padding: 0;
 
@@ -987,7 +985,7 @@ form.member-profile-form {
 	.ui-dialog-titlebar.ui-widget-header {
 	  font-size: $font-base-size+2;
 		background-color: #92a5b2;
-		padding: $grid-vertical/2 $grid-horizontal/2 $grid-vertical/2 $grid-horizontal*2;
+		padding: $grid-y/2 $grid-x/2 $grid-y/2 $grid-x*2;
 		border-bottom: 2px solid #8399a7;
 		@include background-image(linear-gradient(#ced7dc, #92a5b2));
 	}
@@ -1006,12 +1004,12 @@ body.cms-dialog {
 
 .cms-dialog-content {
 	background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
-	padding-bottom: $grid-vertical;
+	padding-bottom: $grid-y;
 
 	.Actions {
 		overflow: auto;
-		margin: $grid-vertical 0;
-		padding-bottom: $grid-vertical;
+		margin: $grid-y 0;
+		padding-bottom: $grid-y;
 		float: right;
 	}
 
@@ -1028,7 +1026,7 @@ body.cms-dialog {
 			background: none;
 
 			.ui-tabs-nav {
-				padding: $grid-horizontal 0 0 0;
+				padding: $grid-x 0 0 0;
 				border: none;
 
 				li {	
@@ -1063,7 +1061,7 @@ body.cms-dialog {
  * -------------------------------------------- */
 .htmleditorfield-linkform {
 	.step2 {
-		margin-bottom: $grid-horizontal*2;
+		margin-bottom: $grid-x*2;
 	}
 }
 

@@ -46,7 +46,7 @@ $sprites16: sprite-map("sprites_16x16/*.png", $spacing: 10px);
 	padding-left: 25px;
 	padding-right: 7px;
 	font-weight: bold;
-	margin-left: $grid-horizontal;
+	margin-left: $grid-x;
 	color: $color-text-light;
 	border-color: $color-button-constructive-border;
 	border-bottom-color: darken($color-button-constructive-border, 10%);			
@@ -72,7 +72,7 @@ $sprites16: sprite-map("sprites_16x16/*.png", $spacing: 10px);
 		);
 	}
 	&:active, &:focus {
-		padding: $grid-vertical 8px $grid_vertical 26px;
+		padding: $grid-y 8px $grid-y 26px;
 		border: none;
 		@include background(darken($color-button-constructive, 2%) sprite($sprites16, $name, 7, 7) no-repeat);
 		@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));

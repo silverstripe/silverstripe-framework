@@ -60,7 +60,7 @@
   padding-left: 24px;
 	padding-right: 6px;
 	font-weight: bold;
-	margin-left: $grid-horizontal;
+	margin-left: $grid-x;
 	color: $color-text-light;
 	border-color: $color-button-constructive-border;
 	border-bottom-color: darken($color-button-constructive-border, 10%);			
@@ -108,8 +108,8 @@ form.nostyle {
 	// bottom padding accounts for the border and we have a negative
 	// margin with a postive padding to ensure the bottom border extends
 	// over the edges
-	padding: 0 0 $grid-vertical - 1 0;
-	margin: 0 0 $grid-vertical 0;
+	padding: 0 0 $grid-y - 1 0;
+	margin: 0 0 $grid-y 0;
 
 	
 	// using the legacy version as some of the more complex form fields
@@ -128,9 +128,9 @@ form.nostyle {
 		&.left {
 			float: left;
 			display: block;
-			width: $grid-horizontal * 22;
-			padding: $grid-vertical $grid-horizontal $grid-vertical 0;
-			line-height: $grid-vertical * 2;
+			width: $grid-x * 22;
+			padding: $grid-y $grid-x $grid-y 0;
+			line-height: $grid-y * 2;
 			font-weight: bold;
 			@include text-shadow(1px 1px 0 $color-text-shadow);
 		}
@@ -141,12 +141,12 @@ form.nostyle {
 	}
 	
 	.middleColumn {
-		margin-left: $grid-horizontal * 23;
+		margin-left: $grid-x * 23;
 	}
 	
 	span.readonly {
-		padding-top: $grid-vertical;
-		line-height: $grid-vertical * 2;
+		padding-top: $grid-y;
+		line-height: $grid-y * 2;
 		display: block;
 	}
 
@@ -163,7 +163,7 @@ form.nostyle {
 	select,
 	.TreeDropdownField {
 		width: 100%;
-		max-width: $grid-horizontal * 64;
+		max-width: $grid-x * 64;
 		@include box-sizing(border-box);
 	}
 	
@@ -172,8 +172,8 @@ form.nostyle {
 	.TreeDropdownField {
 		background: #fff;
 		border: 1px solid lighten($color-medium-separator, 20%);
-		padding: ($grid-vertical - 1) ($grid-horizontal - 1);
-		line-height: $grid-vertical * 2;
+		padding: ($grid-y - 1) ($grid-x - 1);
+		line-height: $grid-y * 2;
 		margin: 0;
 		outline: none;
 		@include transition(0.2s box-shadow ease-in);
@@ -215,12 +215,12 @@ form.stacked .field, .field.stacked {
 form.small .field, .field.small {
 	label {
 		&.left {
-			width: $grid-horizontal * 14;
+			width: $grid-x * 14;
 		}
 	}
 	
 	.middleColumn {
-		margin-left: $grid-horizontal * 15;
+		margin-left: $grid-x * 15;
 	}
 
 	input.text,
@@ -253,7 +253,7 @@ form.small .field, .field.small {
 	/* dropdowns */
 	.dropdown {
 		select {
-			margin-top: $grid-vertical;
+			margin-top: $grid-y;
 		}
 	}
 	
@@ -263,8 +263,8 @@ form.small .field, .field.small {
 			
 			li {
 				font-size: 11px;
-				line-height: $grid-vertical * 2;
-				padding: $grid-vertical / 2 $grid-horizontal / 2;
+				line-height: $grid-y * 2;
+				padding: $grid-y / 2 $grid-x / 2;
 			}
 		}
 	}
@@ -299,7 +299,7 @@ form.small .field, .field.small {
 	/* Date Fields */
 	input.hasDatepicker {
 		width: 50%;
-		max-width: ($grid-horizontal * 12);
+		max-width: ($grid-x * 12);
 	}
 }
 
@@ -347,11 +347,11 @@ form.small .field, .field.small {
 		}
 		
 		/* all buttons */
-		padding: ($grid-vertical - 3) ($grid-horizontal + 4);
+		padding: ($grid-y - 3) ($grid-x + 4);
 		font-weight: bold;
 		text-decoration: none;
 		margin: 0;
-		line-height: $grid-vertical * 2;
+		line-height: $grid-y * 2;
 		color: lighten($color-text-dark, 10%);
 		background-color: $color-button-generic;
 		border: 1px solid $color-button-generic-border;
@@ -426,7 +426,7 @@ form.small .field, .field.small {
 		}
 
 		&.ss-ui-button-small {
-			padding: ($grid-vertical/2) ($grid-horizontal/2);
+			padding: ($grid-y/2) ($grid-x/2);
 		}
 			
 		&.ui-state-highlight {
@@ -463,8 +463,8 @@ form.small .field, .field.small {
 	.fieldgroup-field {
 		float: left;
 		display: block;
-		width: $grid-horizontal * 23;
-		padding-right: $grid-horizontal;
+		width: $grid-x * 23;
+		padding-right: $grid-x;
 
 		&.odd {
 			
@@ -484,8 +484,8 @@ form.small .field, .field.small {
  * Checkbox Field
  * ---------------------------------------------------- */
 .field.checkbox {
-	padding-left: $grid-horizontal * 23;
-	margin-bottom: $grid-vertical;
+	padding-left: $grid-x * 23;
+	margin-bottom: $grid-y;
 
 	input {
 		margin-left: 0;
@@ -499,8 +499,8 @@ input.checkbox {
  * Radiobutton Field
  * ---------------------------------------------------- */
 .field.radio {
-	padding-left: $grid-horizontal * 23;
-	margin-bottom: $grid-vertical;
+	padding-left: $grid-x * 23;
+	margin-bottom: $grid-y;
 
 	input {
 		margin-left: 0;
@@ -519,9 +519,9 @@ input.radio {
 	li {
 		float: left;
 		display: block;
-		width: $grid-horizontal * 27;
-		padding-bottom: $grid-horizontal;
-		line-height: $grid-vertical * 2;
+		width: $grid-x * 27;
+		padding-bottom: $grid-x;
+		line-height: $grid-y * 2;
 		list-style: none;
 
 		input {
@@ -533,7 +533,7 @@ input.radio {
 		label {
 			display: inline;
 			cursor: pointer;
-			padding-left: $grid-vertical;
+			padding-left: $grid-y;
 		}
 
 	}
