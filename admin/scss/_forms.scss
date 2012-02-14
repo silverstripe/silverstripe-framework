@@ -149,6 +149,14 @@ form.nostyle {
 		line-height: $grid-vertical * 2;
 		display: block;
 	}
+
+	// Additional help text to clarify the field intent,
+	// displayed alongside the field (rather than in a tooltip)
+	.help {
+		color: lighten($color-text, 20%);
+		font-style: italic;
+		padding-top: 1em;
+	}
 	
 	input.text,
 	textarea,
@@ -531,6 +539,7 @@ input.radio {
 	}
 	
 }
+
 
 /** ----------------------------------------------------
  * HTML Text 
