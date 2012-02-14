@@ -187,6 +187,8 @@ input.radio { margin-left: 0; }
 
 .action-hidden { display: none; }
 
+.secondary-info { color: #999999; font-style: italic; padding-top: 1em; }
+
 /**
 * This file defines most styles of the CMS: Colors, fonts, backgrounds, 
 * alignments, dimensions.
