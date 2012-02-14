@@ -2,7 +2,7 @@
 /** ----------------------------------------------- Colours ------------------------------------------------ */
 /** ----------------------------------------------- Textures ----------------------------------------------- */
 /** ----------------------------------------------- Typography.  ------------------------------------------------ */
-/** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both vertical and horizontal. All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
+/** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
 /** Helper SCSS file for generating sprites for the interface. */
 /* CMS action button sprite mix-in for UploadField, copied from admin/scss/_forms.scss */

@@ -1079,7 +1079,7 @@ body.cms-dialog {
 		@include border-radius(5px);
 		@include background-clip(padding-box);
 		background: #E2E2E2;
-		margin-bottom: $grid-horizontal*2;
+		margin-bottom: $grid-x*2;
 
 		&.loading {
 			width: 100%;
@@ -1096,10 +1096,10 @@ body.cms-dialog {
 			.thumbnail {
 				display: inline-block;
 				vertical-align: middle;
-				padding: $grid-horizontal/2;
+				padding: $grid-x/2;
 
 				img {
-					max-height: $grid-horizontal*3;
+					max-height: $grid-x*3;
 				}
 			}
 
@@ -1109,8 +1109,8 @@ body.cms-dialog {
 				background: #fff;
 				border: 1px solid lighten($color-medium-separator, 20%);
 				@include border-radius(5px);
-				margin-left: $grid-horizontal*2;
-				padding: $grid-horizontal/2;
+				margin-left: $grid-x*2;
+				padding: $grid-x/2;
 			}
 
 			.action-delete {
@@ -1119,7 +1119,7 @@ body.cms-dialog {
 		}
 
 		.details {
-			padding: $grid-horizontal*2;
+			padding: $grid-x*2;
 		}
 	}
 	
