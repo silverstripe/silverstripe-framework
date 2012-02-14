@@ -103,6 +103,13 @@
 				this.togglePanel(false);
 			}
 		});
+
+		$('.cms-panel.collapsed').entwine({
+			onclick: function(e) {
+				this.expandPanel();
+				e.preventDefault();
+			}
+		});
 		
 		$('.cms-panel *').entwine({
 			getPanel: function() {
