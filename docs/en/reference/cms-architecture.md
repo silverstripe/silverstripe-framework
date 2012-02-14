@@ -72,6 +72,14 @@ Depending on the complexity of your layout, you'll also need to overload the
 a tabbed form which only scrolls the main tab areas, while keeping the buttons at the bottom of the frame.
 This requires manual assignment of the template to your form instance, see `[api:CMSMain->getEditForm()]` for details.
 
+Often its useful to have a "tools" panel in between the menu and your content,
+usually occupied by a search form or navigational helper.
+In this case, you can either overload the template as described above,
+or use the special `$Tools` placeholder on `LeftAndMain->getEditForm()`.
+See `CMSPageEditController->getEditForm()` for sample usage.
+As the base template is aware of this placeholder, it saves you from
+overloading a complex template.
+
 ## Layout and Panels
 
 The CMS markup is structured into "panels", which are the base units containing

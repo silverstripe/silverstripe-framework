@@ -24,9 +24,9 @@
 		</div>
 	</div>
 	
-	<% if Left %>
+	<% if Tools %>
 		<div class="cms-content-tools west cms-panel cms-panel-layout collapsed" id="cms-content-tools" data-expandOnClick="true" data-layout="{type: 'border'}">
-			$Left
+			$Tools
 		</div>
 	<% end_if %>
 	
