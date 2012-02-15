@@ -447,6 +447,7 @@ class DataListTest extends SapphireTest {
 			$this->idFromFixture('DataObjectTest_Team', 'team1'),
 			$this->idFromFixture('DataObjectTest_Team', 'team2')
 		)));
+		$list->sort('Name');
 		$this->assertEquals(2, $list->count());
 		$this->assertEquals('Joe', $list->first()->Name, 'First comment should be from Phil');
 		$this->assertEquals('Phil', $list->last()->Name, 'First comment should be from Phil');
