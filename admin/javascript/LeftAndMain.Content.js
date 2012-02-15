@@ -294,5 +294,18 @@
 			this.find('.cms-content-loading-overlay,.cms-content-loading-spinner').remove();
 		}
 	});
+
+	/**
+	 * Loads
+	 */
+	$('.cms-content .cms-panel-link').entwine({
+		onclick: function(e) {
+			var href = this.attr('href'), url = href ? href : this.data('href'),
+				data = (this.data('target-panel')) ? {selector: this.data('target-panel')} : null;
+			
+			$('.cms-container').entwine('ss').loadPanel(url, null, data);
+			e.preventDefault();
+		}
+	});
 	
 })(jQuery);
