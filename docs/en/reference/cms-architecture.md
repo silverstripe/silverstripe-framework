@@ -74,11 +74,12 @@ This requires manual assignment of the template to your form instance, see `[api
 
 Often its useful to have a "tools" panel in between the menu and your content,
 usually occupied by a search form or navigational helper.
-In this case, you can either overload the template as described above,
-or use the special `$Tools` placeholder on `LeftAndMain->getEditForm()`.
-See `CMSPageEditController->getEditForm()` for sample usage.
-As the base template is aware of this placeholder, it saves you from
-overloading a complex template.
+In this case, you can either overload the full base template as described above.
+To avoid duplicating all this template code, you can also use the special `[api:LeftAndMain->Tools()]` and 
+`[api:LeftAndMain->EditFormTools()]` methods available in `LeftAndMain`.
+These placeholders are populated by auto-detected templates, 
+with the naming convention of "<controller classname>_Tools.ss" and "<controller classname>_EditFormTools.ss".
+So to add or "subclass" a tools panel, simply create this file and it's automatically picked up.
 
 ## Layout and Panels
 

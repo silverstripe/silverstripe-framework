@@ -95,8 +95,13 @@
 			redraw: function() {
 				// Move from inner to outer layouts. Some of the elements might not exist.
 				// Not all edit forms are layouted, so qualify by their data value.
+				
 				this.find('.cms-edit-form[data-layout]').redraw(); 
-				this.find('.cms-preview').redraw();
+				
+				// Only redraw preview if its visible
+				var preview = this.find('.cms-preview');
+				if(preview.is(':visible')) preview.redraw();
+
 				// Only redraw the content area if its not the same as the edit form
 				var contentEl = this.find('.cms-content');
 				if(!contentEl.is('.cms-edit-form')) contentEl.redraw();

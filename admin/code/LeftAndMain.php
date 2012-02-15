@@ -476,9 +476,11 @@ class LeftAndMain extends Controller {
 	 * Return a list of appropriate templates for this class, with the given suffix
 	 */
 	protected function getTemplatesWithSuffix($suffix) {
+		$templates = array();
 		$classes = array_reverse(ClassInfo::ancestry($this->class));
 		foreach($classes as $class) {
-			$templates[] = $class . $suffix;
+			$template = $class . $suffix;
+			if(SSViewer::hasTemplate($template)) $templates[] = $template;
 			if($class == 'LeftAndMain') break;
 		}
 		return $templates;
@@ -1016,6 +1018,46 @@ class LeftAndMain extends Controller {
 	 */
 	public function EditorToolbar() {
 		return Object::create('HtmlEditorField_Toolbar', $this, "EditorToolbar");
+	}
+
+	/**
+	 * Renders a panel containing tools which apply to all displayed
+	 * "content" (mostly through {@link EditForm()}), for example a tree navigation or a filter panel.
+	 * Auto-detects applicable templates by naming convention: "<controller classname>_Tools.ss",
+	 * and takes the most specific template (see {@link getTemplatesWithSuffix()}).
+	 * To explicitly disable the panel in the subclass, simply create a more specific, empty template.
+	 * 
+	 * @return String HTML
+	 */
+	public function Tools() {
+		$templates = $this->getTemplatesWithSuffix('_Tools');
+		if($templates) {
+			$viewer = new SSViewer($templates);
+			return $viewer->process($this);	
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Renders a panel containing tools which apply to the currently displayed edit form.
+	 * The main difference to {@link Tools()} is that the panel is displayed within
+	 * the element structure of the form panel (rendered through {@link EditForm}).
+	 * This means the panel will be loaded alongside new forms, and refreshed upon save,
+	 * which can mean a performance hit, depending on how complex your panel logic gets.
+	 * Any form fields contained in the returned markup will also be submitted with the main form,
+	 * which might be desired depending on the implementation details.
+	 * 
+	 * @return String HTML
+	 */
+	public function EditFormTools() {
+		$templates = $this->getTemplatesWithSuffix('_EditFormTools');
+		if($templates) {
+			$viewer = new SSViewer($templates);
+			return $viewer->process($this);	
+		} else {
+			return false;
+		}
 	}
 	
 	/**
