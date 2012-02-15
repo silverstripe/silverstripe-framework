@@ -309,7 +309,7 @@ body.cms { overflow: hidden; }
 /* -------------------------------------------------------- Content Tools is the sidebar on the left of the main content panel */
 .cms-content-tools { background-color: #dde3e7; width: 192px; border-right: 1px solid #bfcad2; overflow-y: auto; overflow-x: hidden; z-index: 70; -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; -o-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; float: left; position: relative; /* buttons now need to line with with reduced input sizes */ }
 .cms-content-tools .cms-panel-header { padding: 0; margin: 0 0 7px; line-height: 24px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -moz-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -o-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); }
-.cms-content-tools .cms-panel-content { width: 176px; padding: 8px 8px; overflow-x: hidden; overflow-y: auto; }
+.cms-content-tools .cms-panel-content { width: 176px; padding: 8px 8px; overflow: auto; }
 .cms-content-tools .cms-content-header { background-color: #748d9d; border-bottom: 2px solid #5c7382; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #748d9d)); background-image: -webkit-linear-gradient(#b0bec7, #748d9d); background-image: -moz-linear-gradient(#b0bec7, #748d9d); background-image: -o-linear-gradient(#b0bec7, #748d9d); background-image: -ms-linear-gradient(#b0bec7, #748d9d); background-image: linear-gradient(#b0bec7, #748d9d); }
 .cms-content-tools .cms-content-header h2 { text-shadow: #5c7382 -1px -1px 0; width: 176px; color: white; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
 .cms-content-tools h3, .cms-content-tools h4, .cms-content-tools h5 { font-weight: bold; line-height: 16px; }
@@ -384,7 +384,10 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 .cms-panel .cms-panel-toggle a { display: block; text-align: right; padding: 4px 0; width: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#b0bec7, #92a5b2); background-image: -moz-linear-gradient(#b0bec7, #92a5b2); background-image: -o-linear-gradient(#b0bec7, #92a5b2); background-image: -ms-linear-gradient(#b0bec7, #92a5b2); background-image: linear-gradient(#b0bec7, #92a5b2); text-decoration: none; }
 .cms-panel .cms-panel-toggle a span { display: inline-block; margin: 0 5px; color: #1f1f1f; font-size: 16px; }
 .cms-panel .cms-panel-toggle a.toggle-expand { width: 40px; }
+.cms-panel.collapsed { cursor: pointer; }
+.cms-panel.collapsed .cms-panel-header * { display: none; }
 .cms-panel.collapsed .cms-panel-content { display: none; }
+.cms-panel .cms-panel-header { width: 100%; }
 .cms-panel .cms-panel-content-collapsed { width: 40px; }
 .cms-panel .cms-panel-content-collapsed h2, .cms-panel .cms-panel-content-collapsed h3 { border-bottom: 0; margin-left: 8px; -moz-transform-origin: bottom left; -webkit-transform-origin: bottom left; -o-transform-origin: bottom left; -ms-transform-origin: bottom left; transform-origin: bottom left; -moz-transform: rotate(90deg); -webkit-transform: rotate(90deg); -o-transform: rotate(90deg); -ms-transform: rotate(90deg); transform: rotate(90deg); }
 .cms-panel .child-flyout-indicator { width: 0; height: 0; border-right: 3px dashed #1f1f1f; border-top: 3px solid transparent; border-left: 3px solid transparent; border-bottom: 3px dashed #1f1f1f; position: absolute; right: 1px; margin-top: -8px; display: none; /* To be shown by javascript, see LeftAndMain.Panel.js */ }
@@ -392,8 +395,6 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 .cms-panel .collapsed-flyout li a span { display: block !important; }
 
 .cms-panel-padded { width: 176px; padding: 16px 16px; overflow-x: hidden; overflow-y: auto; }
-
-.cms-content .cms-panel.collapsed { cursor: pointer; }
 
 /** ------------------------------------------------------------------
 * Dialog

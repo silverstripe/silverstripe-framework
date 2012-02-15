@@ -520,8 +520,7 @@ body.cms {
 	.cms-panel-content {
 		width: ($grid-x * 22);
 		padding: $grid-y $grid-x;
-		overflow-x: hidden;
-		overflow-y: auto;
+		overflow: auto;
 	}
 	
 	.cms-content-header {
@@ -892,6 +891,12 @@ form.member-profile-form {
 	}
 	
 	&.collapsed {
+
+		cursor: pointer;
+
+		.cms-panel-header * {
+			display: none;
+		}
 		
 		.cms-panel-content {
 			display: none;
@@ -905,6 +910,10 @@ form.member-profile-form {
 		//	padding: 0;
 		//}
 
+	}
+
+	.cms-panel-header {
+		width: 100%;
 	}
 
 	.cms-panel-content-collapsed {
@@ -950,10 +959,6 @@ form.member-profile-form {
 	padding: $grid-y*2 $grid-x*2;
 	overflow-x: hidden;
 	overflow-y: auto;
-}
-
-.cms-content .cms-panel.collapsed {
-	cursor: pointer;
 }
 
 /** ------------------------------------------------------------------
