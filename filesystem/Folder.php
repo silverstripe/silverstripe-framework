@@ -331,6 +331,15 @@ class Folder extends File {
 		$this->setField('Title',pathinfo($filename, PATHINFO_BASENAME));
 		parent::setFilename($filename);
 	}
+
+	/**
+	 * A folder doesn't have a (meaningful) file size.
+	 * 
+	 * @return Null
+	 */
+	function getSize() {
+		return null;
+	}
 	
 	/**
 	 * Delete the database record (recursively for folders) without touching the filesystem
