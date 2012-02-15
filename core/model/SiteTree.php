@@ -2007,7 +2007,7 @@ class SiteTree extends DataObject implements PermissionProvider,i18nEntityProvid
 			return $actions;
 		}
 
-		if($this->isPublished() && $this->canPublish() && !$this->IsDeletedFromStage) {
+		if($this->isPublished() && $this->canDeleteFromLive() && !$this->IsDeletedFromStage) {
 			// "unpublish"
 			$unpublish = FormAction::create('unpublish', _t('SiteTree.BUTTONUNPUBLISH', 'Unpublish'), 'delete');
 			$unpublish->describe(_t('SiteTree.BUTTONUNPUBLISHDESC', 'Remove this page from the published site'));
