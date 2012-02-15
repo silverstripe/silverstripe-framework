@@ -13,42 +13,6 @@
 			onmatch: function() {
 				var self = this;
 				
-				// Listen to tree selection events
-				this.find('.cms-tree').bind('select_node.jstree', function(e, data) {
-					var node = data.rslt.obj, loadedNodeID = self.find(':input[name=ID]').val(), origEvent = data.args[2];
-					
-					// Don't trigger unless coming from a click event.
-					// Avoids problems with automated section switches from tree to detail view
-					// when JSTree auto-selects elements on first load.
-					if(!origEvent) {
-						return false;
-					}else if($(origEvent.target).hasClass('jstree-icon') || $(origEvent.target).hasClass('jstree-pageicon')){
-						// in case the click is not on the node title, ie on pageicon or dragicon, 
-						return false;
-					}
-					
-					// Don't allow checking disabled nodes
-					if($(node).hasClass('disabled')) return false;
-
-					// Don't allow reloading of currently selected node,
-					// mainly to avoid doing an ajax request on initial page load
-					if($(node).data('id') == loadedNodeID) return;
-
-					var url = $(node).find('a:first').attr('href');
-					if(url && url != '#') {
-						if($(node).find('a:first').is(':internal')) url = $('base').attr('href') + url;
-						// Reload only edit form if it exists (side-by-side view of tree and edit view), otherwise reload whole panel
-						if(self.find('.cms-edit-form').length) {
-							url += '?cms-view-form=1';
-							$('.cms-container').loadPanel(url, null, {selector: '.cms-edit-form'});
-						} else {
-							$('.cms-container').loadPanel(url);	
-						}
-					} else {
-						self.removeForm();
-					}
-				});
-				
 				// Force initialization of tabsets to avoid layout glitches
 				this.find('.ss-tabset').redrawTabs();
 				
@@ -274,6 +238,52 @@
 				this.removeClass('changed');
 			}
 		});
+	});
+
+	/**
+	 * Load edit form for the selected node when its clicked.
+	 */
+	$('.cms-content .cms-tree').entwine({
+		onmatch: function() {
+			var self = this;
+
+			this._super();
+
+			this.bind('select_node.jstree', function(e, data) {
+				var node = data.rslt.obj, loadedNodeID = self.find(':input[name=ID]').val(), origEvent = data.args[2], container = $('.cms-container');
+				
+				// Don't trigger unless coming from a click event.
+				// Avoids problems with automated section switches from tree to detail view
+				// when JSTree auto-selects elements on first load.
+				if(!origEvent) {
+					return false;
+				}else if($(origEvent.target).hasClass('jstree-icon') || $(origEvent.target).hasClass('jstree-pageicon')){
+					// in case the click is not on the node title, ie on pageicon or dragicon, 
+					return false;
+				}
+				
+				// Don't allow checking disabled nodes
+				if($(node).hasClass('disabled')) return false;
+
+				// Don't allow reloading of currently selected node,
+				// mainly to avoid doing an ajax request on initial page load
+				if($(node).data('id') == loadedNodeID) return;
+
+				var url = $(node).find('a:first').attr('href');
+				if(url && url != '#') {
+					if($(node).find('a:first').is(':internal')) url = $('base').attr('href') + url;
+					// Reload only edit form if it exists (side-by-side view of tree and edit view), otherwise reload whole panel
+					if(container.find('.cms-edit-form').length) {
+						url += '?cms-view-form=1';
+						container.entwine('ss').loadPanel(url, null, {selector: '.cms-edit-form'});
+					} else {
+						container.entwine('ss').loadPanel(url);	
+					}
+				} else {
+					self.removeForm();
+				}
+			});
+		}
 	});
 	
 	$('.cms-content.loading,.cms-edit-form.loading').entwine({
