@@ -1,4 +1,3 @@
-<h3 class="ss-uploadfield-choosefiles"><% _t('AssetUploadField.CHOOSEFILES', 'Choose files') %></h3>
 <div class="ss-uploadfield-item ss-uploadfield-addfile">
 	<div class="ss-uploadfield-item-info">
 		<label class="ss-uploadfield-fromcomputer ss-ui-button ui-corner-all" title="<% _t('AssetUploadField.FROMCOMPUTERINFO', 'Upload from your computer') %>" for="$id">

@@ -416,13 +416,30 @@ class Folder extends File {
 		$config->addComponent(new GridFieldAction_Edit());
 		$config->addComponent($gridFieldForm = new GridFieldPopupForms(Controller::curr(), 'EditForm'));
 		$gridFieldForm->setTemplate('CMSGridFieldPopupForms');
-		$files = DataList::create('File')->filter('ParentID', $this->ID)->exclude('ClassName', 'Folder');
+		
+		if($this->ID) {
+			// When a specific folder is selected, show only children files,
+			// and include children folders to allow navigating into them.
+			$files = DataList::create('File')
+				->filter('ParentID', $this->ID)
+				->sort('(CASE WHEN "ClassName" = \'Folder\' THEN 0 ELSE 1 END)');	
+		} else {
+			// On the root folder, show all files but exclude folders - newest first.
+			$files = DataList::create('File')
+				->exclude('ClassName', 'Folder')
+				->sort('Created', 'Desc');
+		}
+		
 		$gridField = new GridField('File','Files', $files, $config);
 		$gridField->setDisplayFields(array(
 			'StripThumbnail' => '',
-			'Parent.FileName' => 'Folder',
+			// 'Parent.FileName' => 'Folder',
 			'Title'=>'Title',
+			'Date'=>'Created',
 			'Size'=>'Size',
+		));
+		$gridField->setFieldFormatting(array(
+			'Date' => 'Nice'
 		));
 
 		$titleField = ($this->ID && $this->ID != "root") ? new TextField("Title", _t('Folder.TITLE')) : new HiddenField("Title");
@@ -432,23 +449,33 @@ class Folder extends File {
 			new TabSet('Root',
 				new Tab('listview', _t('AssetAdmin.ListView', 'List View'),
 					$titleField,
+					new LiteralField(
+						'UploadButton', 
+						sprintf(
+							'<div class="cms-content-constructive-actions">' .
+							'<a class="ss-ui-button ss-ui-action-constructive cms-panel-link" data-target-panel=".cms-content" href="%s">%s</a>' . 
+							'</div>',
+							Controller::join_links(singleton('CMSFileAddController')->Link(), '?ID=' . $this->ID),
+							_t('Folder.UploadFilesButton', 'Upload')
+						)
+					),
+					new LiteralField(
+						'AddFolderButton', 
+						sprintf(
+							'<div class="cms-content-constructive-actions">' .
+							'<a class="ss-ui-button ss-ui-action-constructive cms-page-add-button" href="%s">%s</a>' . 
+							'</div>',
+							singleton('CMSFileAddController')->Link(),
+							_t('Folder.AddFolderButton', 'Add folder')
+						)
+					),
 					$gridField,
 					new HiddenField("ID"),
 					new HiddenField("DestFolderID")
-				),
-				new Tab('galleryview', _t('AssetAdmin.GalleryView', 'Gallery View'),
-					new LiteralField("", "<em>Not implemented yet</em>")
-				),
-				new Tab('treeview', _t('AssetAdmin.TreeView', 'Tree View'),
-					new LiteralField("", "<em>Not implemented yet</em>")
 				)
 			)			
 		);
 		
-		if(!$this->canEdit()) {
-			$fields->removeByName("Upload");
-		}
-
 		$this->extend('updateCMSFields', $fields);
 		
 		return $fields;
