@@ -69,11 +69,16 @@
 				}
 			},
 
+			/**
+			 * @param Boolean TRUE to expand, FALSE to collapse.
+			 */
 			togglePanel: function(bool) {
+				this.trigger('beforetoggle.sspanel', bool);
+				this.trigger(bool ? 'beforeexpand' : 'beforecollapse');
+
 				this.toggleClass('collapsed', !bool);
 				var newWidth = bool ? this.getWidthExpanded() : this.getWidthCollapsed();
 				
-				this.trigger('beforetoggle');
 				this.width(newWidth); // the content panel width always stays in "expanded state" to avoid floating elements
 				this.find('.toggle-collapse')[bool ? 'show' : 'hide']();
 				this.find('.toggle-expand')[bool ? 'hide' : 'show']();
@@ -88,7 +93,8 @@
 				// Save collapsed state in cookie
 				if($.cookie && this.attr('id')) $.cookie('cms-panel-collapsed-' + this.attr('id'), !bool, {path: '/', expires: 31});
 				
-				this.trigger('toggle');
+				this.trigger('toggle', bool);
+				this.trigger(bool ? 'expand' : 'collapse');
 			},
 			
 			expandPanel: function(force) {
