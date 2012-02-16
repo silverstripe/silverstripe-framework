@@ -140,7 +140,7 @@ SS
 	function testCurrentScopeLoopWith() {
 		// Data to run the loop tests on - one sequence of three items, each with a subitem
 		$data = new ArrayData(array(
-			'Foo' => new DataObjectSet(array(
+			'Foo' => new ArrayList(array(
 				'Subocean' => new ArrayData(array(
 						'Name' => 'Higher'
 					)),
@@ -514,7 +514,7 @@ after')
 	
 	function testSSViewerBasicIteratorSupport() {
 		$data = new ArrayData(array(
-			'Set' => new DataObjectSet(array(
+			'Set' => new ArrayList(array(
 				new SSViewerTest_Page("1"),
 				new SSViewerTest_Page("2"),
 				new SSViewerTest_Page("3"),
