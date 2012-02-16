@@ -105,6 +105,21 @@ class FormAction extends FormField {
 		return $this->buttonContent;
 	}
 
+	/**
+	 * @param Boolean
+	 */
+	public function setUseButtonTag($bool) {
+		$this->useButtonTag = $bool;
+		return $this;
+	}
+
+	/**
+	 * @return Boolean
+	 */
+	public function getUseButtonTag() {
+		return $this->useButtonTag;
+	}
+
 	function extraClass() {
 		return 'action ' . parent::extraClass();
 	}
