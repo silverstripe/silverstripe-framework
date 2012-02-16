@@ -41,4 +41,25 @@ class CompositeFieldTest extends SapphireTest {
 		$this->assertStringStartsWith('<fieldset', trim($composite->FieldHolder()));
 		$this->assertStringEndsWith('/fieldset>', trim($composite->FieldHolder()));		
 	}
+
+	function testLegend() {
+		$composite = new CompositeField(
+			new TextField('A'),
+			new TextField('B')
+		);
+		$composite->setLegend('My legend');
+		$parser = new CSSContentParser($composite->Field());
+		$root = $parser->getBySelector('div.composite');
+		$this->assertObjectHasAttribute('title', $root[0]->attributes());
+		$this->assertEquals('My legend', (string)$root[0]['title']);
+
+		$composite->setTag('fieldset');
+		$composite->setLegend('My legend');
+		$parser = new CSSContentParser($composite->Field());
+		$root = $parser->getBySelector('fieldset.composite');
+		$this->assertObjectNotHasAttribute('title', $root[0]->attributes());
+		$legend = $parser->getBySelector('fieldset.composite legend');
+		$this->assertNotNull($legend);
+		$this->assertEquals('My legend', (string)$legend[0]);
+	}
 }
