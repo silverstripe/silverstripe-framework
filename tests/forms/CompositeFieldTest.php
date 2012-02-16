@@ -29,4 +29,16 @@ class CompositeFieldTest extends SapphireTest {
 		$this->assertEquals(2, $compositeOuter->fieldPosition('B'));
 	}
 	
+	function testTag() {
+		$composite = new CompositeField(
+			new TextField('A'),
+			new TextField('B')
+		);
+		$this->assertStringStartsWith('<div', trim($composite->FieldHolder()));
+		$this->assertStringEndsWith('/div>', trim($composite->FieldHolder()));
+
+		$composite->setTag('fieldset');
+		$this->assertStringStartsWith('<fieldset', trim($composite->FieldHolder()));
+		$this->assertStringEndsWith('/fieldset>', trim($composite->FieldHolder()));		
+	}
 }

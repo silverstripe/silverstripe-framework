@@ -27,6 +27,11 @@ class CompositeField extends FormField {
 	 * count of your $children.
 	 */
 	protected $columnCount = null;
+
+	/**
+	 * @var String custom HTML tag to render with, e.g. to produce a <fieldset>.
+	 */
+	protected $tag = 'div';
 	
 	public function __construct($children = null) {
 		if($children instanceof FieldList) {
@@ -85,6 +90,17 @@ class CompositeField extends FormField {
 		return $this;
 	}
 
+	/** @param String */
+	public function setTag($tag) {
+		$this->tag = $tag;
+		return $this;
+	}
+
+	/** @return String */
+	public function getTag() {
+		return $this->tag;
+	}
+
 	function extraClasses() {
 		$classes = array('field', 'CompositeField', parent::extraClasses());
 		if($this->columnCount) $classes[] = 'multicolumn';
@@ -114,7 +130,7 @@ class CompositeField extends FormField {
 			}
 		}
 				
-		return $this->createTag('div', $this->getAttributes(), $content);
+		return $this->createTag($this->getTag(), $this->getAttributes(), $content);
 	}
 		
 	/**
@@ -122,9 +138,10 @@ class CompositeField extends FormField {
 	 */
 	function SmallFieldHolder() {//return $this->FieldHolder();
 		$fs = $this->FieldList();
+		$tag = $this->getTag();
 		$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
 		$className = ($this->columnCount) ? "field CompositeField {$this->extraClass()} multicolumn" : "field CompositeField {$this->extraClass()}";
-		$content = "<div class=\"$className\"$idAtt>";
+		$content = "<$tag class=\"$className\"$idAtt>";
 		
 		foreach($fs as $subfield) {//echo ' subf'.$subfield->getName();
 			if($this->columnCount) {
@@ -135,7 +152,7 @@ class CompositeField extends FormField {
 				$content .= $subfield->SmallFieldHolder() . " ";
 			}
 		}	
-		$content .= "</div>";
+		$content .= "</$tag>";
 	
 		return $content;
 	}	
