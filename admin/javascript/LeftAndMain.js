@@ -4,8 +4,6 @@ jQuery.noConflict();
  * File: LeftAndMain.js
  */
 (function($) {
-	$.metadata.setType('html5');
-	
 	// setup jquery.entwine
 	$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 	$.entwine('ss', function($) {
@@ -347,7 +345,7 @@ jQuery.noConflict();
 		 */
 		$('.cms-container .field.date input.text').entwine({
 			onmatch: function() {
-				var holder = $(this).parents('.field.date:first'), config = holder.metadata({type: 'class'});
+				var holder = $(this).parents('.field.date:first'), config = holder.data();
 				if(!config.showcalendar) return;
 
 				config.showOn = 'button';
