@@ -30,6 +30,21 @@
 	});
 
 	/**
+	 * Allows icon definition via HTML5 data attrs for easier handling in PHP
+	 */
+	$.widget('ssui.button', $.ui.button, {
+		_resetButton: function() {
+			var iconPrimary = this.element.data('iconPrimary') ? this.element.data('iconPrimary') : this.element.data('icon'),
+				iconSecondary = this.element.data('iconSecondary');
+			// TODO Move prefix out of this method, without requriing it for every icon definition in a data attr
+			if(iconPrimary) this.options.icons.primary = 'btn-icon-' + iconPrimary;
+			if(iconSecondary) this.options.icons.secondary = 'btn-icon-' + iconSecondary;
+
+			$.ui.button.prototype._resetButton.call(this);
+		}
+	});
+
+	/**
 	 * Extends jQueryUI dialog with iframe abilities (and related resizing logic),
 	 * and sets some CMS-wide defaults.
 	 */

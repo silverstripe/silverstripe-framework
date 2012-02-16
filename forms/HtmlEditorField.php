@@ -315,13 +315,17 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				)
 			),
 			new FieldList(
-				$removeAction = new ResetFormAction('remove', _t('HtmlEditorField.BUTTONREMOVELINK', 'Remove link')),
-				$insertAction = new FormAction('insert', _t('HtmlEditorField.BUTTONINSERTLINK', 'Insert link'))
+				Object::create('ResetFormAction', 'remove', _t('HtmlEditorField.BUTTONREMOVELINK', 'Remove link'))
+					->addExtraClass('ss-ui-action-destructive')
+					->setUseButtonTag(true)
+				,
+				FormAction::create('insert', _t('HtmlEditorField.BUTTONINSERTLINK', 'Insert link'))
+					->addExtraClass('ss-ui-action-constructive')
+					->setAttribute('data-icon', 'accept')
+					->setUseButtonTag(true)
 			)
 		);
 		
-		$insertAction->addExtraClass('ss-ui-action-constructive');
-		$removeAction->addExtraClass('ss-ui-action-destructive');
 		$contentComposite->addExtraClass('content');
 		
 		$form->unsetValidator();
@@ -380,9 +384,11 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		);
 		
 		$actions = new FieldList(
-			$insertAction = new FormAction('insertimage', _t('HtmlEditorField.BUTTONINSERT', 'Insert'))
+			FormAction::create('insertimage', _t('HtmlEditorField.BUTTONINSERT', 'Insert'))
+				->addExtraClass('ss-ui-action-constructive')
+				->setAttribute('data-icon', 'accept')
+				->setUseButtonTag(true)
 		);
-		$insertAction->addExtraClass('ss-ui-action-constructive');
 
 		$form = new Form(
 			$this->controller,

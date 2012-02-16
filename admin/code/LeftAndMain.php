@@ -863,15 +863,23 @@ class LeftAndMain extends Controller {
 				// add default actions if none are defined
 				if(!$actions || !$actions->Count()) {
 					if($record->hasMethod('canDelete') && $record->canDelete()) {
-						$actions->push($deleteAction = new FormAction('delete',_t('ModelAdmin.DELETE','Delete')));
-						$deleteAction->addExtraClass('ss-ui-action-destructive');
+						$actions->push(
+							FormAction::create('delete',_t('ModelAdmin.DELETE','Delete'))
+								->addExtraClass('ss-ui-action-destructive')
+						);
 					}
 					if($record->hasMethod('canEdit') && $record->canEdit()) {
-						$actions->push($saveAction = new FormAction('save',_t('CMSMain.SAVE','Save')));
-						$saveAction->addExtraClass('ss-ui-action-constructive');
+						$actions->push(
+							FormAction::create('save',_t('CMSMain.SAVE','Save'))
+								->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
+						);
 					}
 				}
 			}
+
+			// Use <button> to allow full jQuery UI styling
+			$actionsFlattened = $actions->dataFields();
+			if($actionsFlattened) foreach($actionsFlattened as $action) $action->setUseButtonTag(true);
 			
 			$form = new Form($this, "EditForm", $fields, $actions);
 			$form->addExtraClass('cms-edit-form');
@@ -964,10 +972,10 @@ class LeftAndMain extends Controller {
 				new HiddenField('ParentID')
 			),
 			new FieldList(
-				$addAction = new FormAction('doAdd', _t('AssetAdmin_left.ss.GO','Go'))
+				FormAction::create('doAdd', _t('AssetAdmin_left.ss.GO','Go'))
+					->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
 			)
 		);
-		$addAction->addExtraClass('ss-ui-action-constructive');
 		$form->addExtraClass('add-form');
 		
 		return $form;

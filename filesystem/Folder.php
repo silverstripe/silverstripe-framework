@@ -443,31 +443,42 @@ class Folder extends File {
 		));
 
 		$titleField = ($this->ID && $this->ID != "root") ? new TextField("Title", _t('Folder.TITLE')) : new HiddenField("Title");
+
+		if($this->canCreate()) {
+			$uploadBtn = new LiteralField(
+				'UploadButton', 
+				sprintf(
+					'<a class="ss-ui-button ss-ui-action-constructive icon-accept cms-panel-link" data-target-panel=".cms-content" href="%s">%s</a>',
+					Controller::join_links(singleton('CMSFileAddController')->Link(), '?ID=' . $this->ID),
+					_t('Folder.UploadFilesButton', 'Upload')
+				)
+			);	
+		} else {
+			$uploadBtn = null;
+		}
+
+		if(!$this->hasMethod('canAddChildren') || ($this->hasMethod('canAddChildren') && $this->canAddChildren())) {
+			$addFolderBtn = new LiteralField(
+				'AddFolderButton', 
+				sprintf(
+					'<a class="ss-ui-button ss-ui-action-constructive icon-accept cms-page-add-button" href="%s">%s</a>',
+					singleton('CMSFileAddController')->Link(),
+					_t('Folder.AddFolderButton', 'Add folder')
+				)
+			);
+		} else {
+			$addFolderBtn = '';
+		}
+		
 		
 		$fields = new FieldList(
 			// The tabs of Root are used to generate the top tabs 
 			new TabSet('Root',
 				new Tab('listview', _t('AssetAdmin.ListView', 'List View'),
 					$titleField,
-					new LiteralField(
-						'UploadButton', 
-						sprintf(
-							'<div class="cms-content-constructive-actions">' .
-							'<a class="ss-ui-button ss-ui-action-constructive cms-panel-link" data-target-panel=".cms-content" href="%s">%s</a>' . 
-							'</div>',
-							Controller::join_links(singleton('CMSFileAddController')->Link(), '?ID=' . $this->ID),
-							_t('Folder.UploadFilesButton', 'Upload')
-						)
-					),
-					new LiteralField(
-						'AddFolderButton', 
-						sprintf(
-							'<div class="cms-content-constructive-actions">' .
-							'<a class="ss-ui-button ss-ui-action-constructive cms-page-add-button" href="%s">%s</a>' . 
-							'</div>',
-							singleton('CMSFileAddController')->Link(),
-							_t('Folder.AddFolderButton', 'Add folder')
-						)
+					$actionsComposite = new CompositeField(
+						$uploadBtn,
+						$addFolderBtn
 					),
 					$gridField,
 					new HiddenField("ID"),
@@ -476,6 +487,8 @@ class Folder extends File {
 			)			
 		);
 		
+		$actionsComposite->addExtraClass('cms-actions-row');
+
 		$this->extend('updateCMSFields', $fields);
 		
 		return $fields;

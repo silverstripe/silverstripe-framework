@@ -257,9 +257,16 @@ jQuery.noConflict();
 		 */
 		$('.cms input[type="submit"], .cms button, .cms input[type="reset"]').entwine({
 			onmatch: function() {
-				this.addClass('ss-ui-button');
-				this.redraw();
+				if(!this.hasClass('ss-ui-button')) this.addClass('ss-ui-button');
 				
+				this._super();
+			}
+		});
+
+		$('.cms .ss-ui-button').entwine({
+			onmatch: function() {
+				if(!this.data('button')) this.button();
+
 				this._super();
 			}
 		});
@@ -292,7 +299,7 @@ jQuery.noConflict();
 		/**
 		 * Add styling to all contained buttons, and create buttonsets if required.
 		 */
-		$('.cms-container .Actions').entwine({
+		$('.cms .Actions').entwine({
 		onmatch: function() {
 			this.find('.ss-ui-button').click(function() {
 					var form = this.form;
@@ -309,31 +316,21 @@ jQuery.noConflict();
 			this._super();
 		},
 		redraw: function() {
-			// Needs to be in the same execution frame as the buttonset logic below,
-			// to avoid re-adding rounded corners (default button styling) after removing them
-			this.find('.ss-ui-button').button();
-
 			// Remove whitespace to avoid gaps with inline elements
 			this.contents().filter(function() { 
 				return (this.nodeType == 3 && !/\S/.test(this.nodeValue)); 
 			}).remove();
-			
-			// Emulate jQuery UI buttonsets based on HTML5 data attributes
-			var sets = [], self = this;
-			this.find('.action[buttonset]').each(function() {
-				cl = $(this).attr('buttonset');
-				if($.inArray(cl, sets) == -1) sets.push(cl);
-			});
-			$.each(sets, function(i, set) {
-				// Gather buttons in set until no siblings are matched.
-				// This avoids "split" sets where a new button without a buttonset is inserted somewhere in the middle.
-				self.find('.action[buttonset="' + set + '"]:first')
-					.nextUntil('.action[buttonset!="' + set + '"]').andSelf()
-					.removeClass('ui-corner-all').addClass('buttonset')
-					.first().addClass('ui-corner-left').end()
-					.last().addClass('ui-corner-right');
+
+			// Init buttons if required
+			this.find('.ss-ui-button').each(function() {
+				if(!$(this).data('button')) $(this).button();
 			});
 			
+			// Mark up buttonsets
+			this.find('.ss-ui-buttonset').buttonset();
+				// .children().removeClass('ui-corner-all').addClass('buttonset')
+				// 	.first().addClass('ui-corner-left').end()
+				// 	.last().addClass('ui-corner-right');;
 		}
 	});
 		
