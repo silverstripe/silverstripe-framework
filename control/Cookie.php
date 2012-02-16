@@ -36,7 +36,7 @@ class Cookie {
 			}
 		} else {
 			if(self::$report_errors) 
-				suser_error("Cookie '$name' can't be set. The site started outputting was content at line $line in $file", E_USER_WARNING);
+				user_error("Cookie '$name' can't be set. The site started outputting was content at line $line in $file", E_USER_WARNING);
 		}
 	}
 	
