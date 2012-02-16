@@ -56,7 +56,7 @@
 					if(typeof cookieCollapsed != 'undefined' && cookieCollapsed != null) collapsed = (cookieCollapsed == 'true');
 				} 
 				if(typeof collapsed == 'undefined') collapsed = jQuery(this).hasClass('collapsed');
-				this.togglePanel(!collapsed);
+				this.togglePanel(!collapsed, true);
 				
 				this._super();
 			},
@@ -70,11 +70,14 @@
 			},
 
 			/**
-			 * @param Boolean TRUE to expand, FALSE to collapse.
+			 * @param {Boolean} TRUE to expand, FALSE to collapse.
+			 * @param {Boolean} TRUE means that events won't be fired, which is useful for the component initialization phase.
 			 */
-			togglePanel: function(bool) {
-				this.trigger('beforetoggle.sspanel', bool);
-				this.trigger(bool ? 'beforeexpand' : 'beforecollapse');
+			togglePanel: function(bool, silent) {
+				if(!silent) {
+					this.trigger('beforetoggle.sspanel', bool);
+					this.trigger(bool ? 'beforeexpand' : 'beforecollapse');
+				}
 
 				this.toggleClass('collapsed', !bool);
 				var newWidth = bool ? this.getWidthExpanded() : this.getWidthCollapsed();
@@ -93,8 +96,10 @@
 				// Save collapsed state in cookie
 				if($.cookie && this.attr('id')) $.cookie('cms-panel-collapsed-' + this.attr('id'), !bool, {path: '/', expires: 31});
 				
-				this.trigger('toggle', bool);
-				this.trigger(bool ? 'expand' : 'collapse');
+				if(!silent) {
+					this.trigger('toggle', bool);
+					this.trigger(bool ? 'expand' : 'collapse');
+				}
 			},
 			
 			expandPanel: function(force) {

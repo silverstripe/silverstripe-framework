@@ -918,6 +918,7 @@ form.member-profile-form {
 
 	.cms-panel-content-collapsed {
 		width: 40px;
+		display: none; // Avoids FOUC
 
 		h2, h3 {
 			border-bottom: 0;
