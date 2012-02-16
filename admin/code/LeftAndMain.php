@@ -230,9 +230,7 @@ class LeftAndMain extends Controller {
 		Requirements::combine_files(
 			'lib.js',
 			array(
-				SAPPHIRE_DIR . '/javascript/prototype_improvements.js',
 				THIRDPARTY_DIR . '/jquery/jquery.js',
-				SAPPHIRE_DIR . '/javascript/jquery_improvements.js',
 				THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js',
 				SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js',
 				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',

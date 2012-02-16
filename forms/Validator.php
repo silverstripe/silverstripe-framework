@@ -182,7 +182,6 @@ abstract class Validator extends Object {
 		if($this->getJavascriptValidationHandler() == 'prototype') {
 			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
 			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-			Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
 			Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 			Requirements::javascript(SAPPHIRE_DIR . "/javascript/Validator.js");
 		

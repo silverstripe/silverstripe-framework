@@ -1,9 +1,9 @@
 
 
 Event.observe( window, 'load', function() {
-	if($('sitetree')){
-		if(typeof $('sitetree').observeMethod != 'undefined') {
-			$('sitetree').observeMethod( 'NodeClicked' , function() {
+	if(document.getElementById('sitetree')){
+		if(typeof document.getElementById('sitetree').observeMethod != 'undefined') {
+			document.getElementById('sitetree').observeMethod( 'NodeClicked' , function() {
 				checkedListNameArray = null;
 				checkedArray = null;
 			} );

@@ -1,3 +1,5 @@
+jQuery.noConflict();
+
 /**
  * File: LeftAndMain.js
  */

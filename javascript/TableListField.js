@@ -1,3 +1,6 @@
+// Shortcut-function (until we update to Prototye v1.5)
+if(typeof $$ != "Function") $$ = document.getElementsBySelector;
+
 TableListField = Class.create();
 TableListField.prototype = {
 	
@@ -116,7 +119,7 @@ TableListField.prototype = {
 	},
 	
 	removeById: function(id) {
-		var el =$('record-' + this.id + '-' + id);
+		var el = jQuery('#record-' + this.id + '-' + id)[0];
 		if(el) el.parentNode.removeChild(el);
 		this._summarise();
 	},
@@ -134,7 +137,7 @@ TableListField.prototype = {
 			this.unmarkAll();
 		}else{
 			this.unmarkAll();
-			var records = $$('#' + this.id + ' td.' + el.rel + ' input.checkbox');
+			var records = jQuery('#' + this.id + ' td.' + el.rel + ' input.checkbox');
 			var i=0;
 			for(i; i<records.length; i++){
 				records[i].checked = 'checked';
@@ -172,7 +175,7 @@ TableListField.prototype = {
 			var el = Event.element(e);
 			if(el.nodeName != "a") el = Event.findElement(e,"a");
 		} else {
-			var el = $(this.id);
+			var el = jQuery('#' + this.id)[0];
 		}
 		
 		if(el.getAttribute('href')) {
@@ -183,7 +186,7 @@ TableListField.prototype = {
 						jQuery('#' + self.id).replaceWith(response)
 					// reapply behaviour and reattach methods to TF container node
 					// e.g. <div class="TableListField">
-  					Behaviour.apply($(self.id), true);
+  					Behaviour.apply(jQuery('#' + self.id)[0], true);
   				}
 				});
 		}
@@ -323,7 +326,7 @@ TableListRecord.prototype = {
 		this.parentNode.selectedRow = this;
 		Element.addClassName(this,'current');
 		
-		this.subform = $(subform);
+		this.subform = document.getElementById(subform);
 		Element.addClassName(this, 'loading');
 		statusMessage('loading');
 		jQuery.ajax({
@@ -353,3 +356,22 @@ TableListRecord.prototype = {
 
 TableListRecord.applyTo('div.TableListField tr');
 TableListField.applyTo('div.TableListField');
+
+Number.prototype.CURRENCIES = {
+	en_GB: '$ ###,###.##'
+};
+
+/**
+ * Caution: Not finished!
+ * @param iso string (Not used) Please use in combination with Number.CURRENCIES to achieve i18n
+ * @return string
+ * 
+ * @see http://www.jibbering.com/faq/faq_notes/type_convert.html
+ * @see http://www.rgagnon.com/jsdetails/js-0063.html
+ * @see http://www.mredkj.com/javascript/nfdocs.html 
+ */
+Number.prototype.toCurrency = function(iso) {
+	if(!iso) iso = SS_DEFAULT_ISO;
+	// TODO stub, please implement properly
+	return "$" + this.toFixed(2);
+}

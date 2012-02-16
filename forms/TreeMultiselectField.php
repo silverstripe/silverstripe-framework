@@ -82,7 +82,6 @@ class TreeMultiselectField extends TreeDropdownField {
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jstree/jquery.jstree.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TreeDropdownField.js');

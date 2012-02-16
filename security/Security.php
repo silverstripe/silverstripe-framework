@@ -371,7 +371,6 @@ class Security extends Controller {
 			$link_base = Director::absoluteURL($this->Link("login"));
 			
 			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-			Requirements::javascript(SAPPHIRE_DIR . "/javascript/jquery_improvements.js");
 			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 			
 			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
