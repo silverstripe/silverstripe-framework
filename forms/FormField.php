@@ -700,6 +700,13 @@ class FormField extends RequestHandler {
 		$this->description = $description;
 		return $this;
 	}
+
+	/**
+	 * @return String
+	 */
+	function getDescription() {
+		return $this->description;
+	}
 	
 	function debug() {
 		return "$this->class ($this->name: $this->title : <font style='color:red;'>$this->message</font>) = $this->value";
