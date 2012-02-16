@@ -1,5 +1,5 @@
 <% if IncludeFormTag %>
-<form $FormAttributes data-layout="{type: 'border'}">
+<form $FormAttributes data-layout-type="border">
 <% end_if %>
 	<div class="cms-content-header north">
 		<div>

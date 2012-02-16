@@ -1,4 +1,4 @@
-<div class="cms-content center $BaseCSSClasses" data-layout="{type: 'border'}">
+<div class="cms-content center $BaseCSSClasses" data-layout-type="border">
 	<div class="cms-content-tools west">
 		<div class="cms-content-header north">
 			<div>

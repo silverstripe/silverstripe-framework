@@ -96,7 +96,7 @@ jQuery.noConflict();
 				// Move from inner to outer layouts. Some of the elements might not exist.
 				// Not all edit forms are layouted, so qualify by their data value.
 				
-				this.find('.cms-edit-form[data-layout]').redraw(); 
+				this.find('.cms-edit-form[data-layout-type]').redraw(); 
 				
 				// Only redraw preview if its visible
 				var preview = this.find('.cms-preview');
