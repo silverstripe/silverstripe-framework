@@ -197,6 +197,9 @@
 						
 						// Re-init tabs (in case the form tag itself is a tabset)
 						if(self.hasClass('ss-tabset')) self.removeClass('ss-tabset').addClass('ss-tabset');
+
+						// Redraw the layout
+						jQuery('.cms-container').entwine('ss').redraw();
 						
 						// re-select previously saved tabs
 						$.each(selectedTabs, function(i, selectedTab) {
