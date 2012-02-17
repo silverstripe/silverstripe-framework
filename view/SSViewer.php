@@ -295,20 +295,29 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider {
  */
 class SSViewer_DataPresenter extends SSViewer_Scope {
 	
-	private static $extras = array();
-	private static $iteratorSupport = array();
+	private static $globalProperties = null;
+	private static $iteratorProperties = null;
 
-	function __construct($item){
+	protected $extras;
+
+	function __construct($item, $extras = array()){
 		parent::__construct($item);
 
-		if (count(self::$iteratorSupport) == 0) {   //build up extras array only once per request
-			$this->createCallableArray(self::$iteratorSupport, "TemplateIteratorProvider", true);   //call non-statically
+		// Build up global property providers array only once per request
+		if (self::$globalProperties === null) {
+			self::$globalProperties = array();
+			// Get all the exposed variables from all classes that implement the TemplateGlobalProvider interface
+			$this->createCallableArray(self::$globalProperties, "TemplateGlobalProvider");
 		}
 
-		if (count(self::$extras) == 0) {   //build up extras array only once per request
-			//get all the exposed variables from all classes that implement the TemplateGlobalProvider interface
-			$this->createCallableArray(self::$extras, "TemplateGlobalProvider");
+		// Build up iterator property providers array only once per request
+		if (self::$iteratorProperties === null) {
+			self::$iteratorProperties = array();
+			// Get all the exposed variables from all classes that implement the TemplateIteratorProvider interface
+			$this->createCallableArray(self::$iteratorProperties, "TemplateIteratorProvider", true);   //call non-statically
 		}
+
+		$this->extras = $extras;
 	}
 
 	protected function createCallableArray(&$extraArray, $interfaceToQuery, $createObject = false) {
@@ -348,24 +357,36 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 			return parent::__call($name, $arguments);
 		}
 
-		//attempt to call a "global" functions
-		if (array_key_exists($property, self::$extras) || array_key_exists($property, self::$iteratorSupport)) {
-			$this->resetLocalScope();   //if we are inside a chain (e.g. $A.B.C.Up.E) break out to the beginning of it
+		// We create a specific object instance, so that we can determine "unset" from "null" and "false"
+		static $nomatch = null;
+		if ($nomatch === null) $nomatch = new stdClass();
 
-			//special case for the iterator, which need current index and total number of items
-			if (array_key_exists($property, self::$iteratorSupport)) {
-				$value = self::$iteratorSupport[$property];
+		// Start off with no match
+		$value = $nomatch;
 
-				if ($this->itemIterator) {
-					// Set the current iterator position and total (the object instance is the first item in the callable array)
-					$value[0]->iteratorProperties($this->itemIterator->key(), $this->itemIteratorTotal);
-				} else {
-					// If we don't actually have an iterator at the moment, act like a list of length 1
-					$value[0]->iteratorProperties(0, 1);
-				}
-			} else {    //normal case of extras call
-				$value = self::$extras[$property];  //get the method call
+		// Check for a presenter-specific override
+		if (array_key_exists($property, $this->extras)) {
+			$value = $this->extras[$property];
+		}
+		// Then for iterator-specific overrides
+		else if (array_key_exists($property, self::$iteratorProperties)) {
+			$value = self::$iteratorProperties[$property];
+
+			if ($this->itemIterator) {
+				// Set the current iterator position and total (the object instance is the first item in the callable array)
+				$value[0]->iteratorProperties($this->itemIterator->key(), $this->itemIteratorTotal);
+			} else {
+				// If we don't actually have an iterator at the moment, act like a list of length 1
+				$value[0]->iteratorProperties(0, 1);
 			}
+		}
+		// And finally for global overrides
+		else if (array_key_exists($property, self::$globalProperties)) {
+			$value = self::$globalProperties[$property];  //get the method call
+		}
+
+		if ($value !== $nomatch) {
+			$this->resetLocalScope();   //if we are inside a chain (e.g. $A.B.C.Up.E) break out to the beginning of it
 
 			//only call callable functions
 			if (is_callable($value)) {
@@ -713,7 +734,7 @@ class SSViewer {
 				));
 			}
 		}
-		
+
 		$scope = new SSViewer_DataPresenter($item, array('I18NNamespace' => basename($template)));
 		$val = "";
 		
