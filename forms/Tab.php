@@ -56,6 +56,7 @@ class Tab extends CompositeField {
 	
 	public function setTabSet($val) {
 		$this->tabSet = $val;
+		return $this;
 	}
 
 	/**

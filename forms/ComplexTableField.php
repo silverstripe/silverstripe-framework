@@ -340,10 +340,12 @@ JS;
 
 	function setController($controller) {
 		$this->controller = $controller;
+		return $this;
 	}
 
 	function setTemplatePopup($template) {
 		$this->templatePopup = $template;
+		return $this;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -448,6 +450,7 @@ JS;
 	 */
 	function setRelationAutoSetting($value) {
 		Deprecation::notice('3.0', 'Manipulate the DataList instead.');
+		return $this;
 	}
 	
 	/**

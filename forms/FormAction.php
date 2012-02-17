@@ -39,6 +39,7 @@ class FormAction extends FormField {
 	 */
 	function setButtonContent($content) {
 		$this->buttonContent = (string) $content;
+		return $this;
 	}
 	
 	
@@ -67,6 +68,7 @@ class FormAction extends FormField {
 	 */
 	function setFullAction($fullAction) {
 		$this->action = $fullAction;
+		return $this;
 	}
 
 	function Field($properties = array()) {

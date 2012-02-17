@@ -62,6 +62,7 @@ class CompositeField extends FormField {
 
 	public function setID($id) {
 		$this->id = $id;
+		return $this;
 	}
 	
 	public function Field() {
@@ -81,6 +82,7 @@ class CompositeField extends FormField {
 	 */
 	public function setChildren($children) {
 		$this->children = $children;
+		return $this;
 	}
 
 	function extraClasses() {
@@ -165,14 +167,21 @@ class CompositeField extends FormField {
 	function setForm($form) {
 		foreach($this->children as $f) if(is_object($f)) $f->setForm($form);
 		parent::setForm($form);
+		return $this;
 	}
 	
 	function setColumnCount($columnCount) {
 		$this->columnCount = $columnCount;
+		return $this;
 	}
 	
-	function isComposite() { return true; }
-	function hasData() { return false; }
+	function isComposite() { 
+		return true; 
+	}
+
+	function hasData() { 
+		return false; 
+	}
 
 	public function fieldByName($name) {
 		return $this->children->fieldByName($name);

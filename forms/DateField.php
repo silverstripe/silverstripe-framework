@@ -229,6 +229,8 @@ class DateField extends TextField {
 				}
 			}
 		}
+
+		return $this;
 	}
 	
 	/**
@@ -470,6 +472,7 @@ JS;
 	 */
 	function setLocale($locale) {
 		$this->locale = $locale;
+		return $this;
 	}
 	
 	/**
@@ -493,6 +496,7 @@ JS;
 		}
 		
 		$this->config[$name] = $val;
+		return $this;
 	}
 	
 	/**

@@ -121,7 +121,8 @@ class HtmlEditorConfig {
 	 * @return mixed - $v returned for chaining
 	 */
 	function setOption($k,$v) {
-		return $this->settings[$k] = $v;
+		$this->settings[$k] = $v;
+		return $this;
 	}
 	
 	/**
@@ -133,6 +134,7 @@ class HtmlEditorConfig {
 		foreach ($a as $k=>$v) {
 			$this->settings[$k] = $v;
 		}
+		return $this;
 	}
 	
 	/**
@@ -173,6 +175,7 @@ class HtmlEditorConfig {
 				unset($this->plugins[$plugin]);
 			}
 		}
+		return $this;
 	}
 	
 	/**
@@ -198,6 +201,7 @@ class HtmlEditorConfig {
 			$line = array_shift($buttons);
 		}
 		$this->buttons[$line] = is_array($buttons) ? $buttons : array($buttons);
+		return $this;
 	}
 	
 	/**
@@ -214,6 +218,7 @@ class HtmlEditorConfig {
 		foreach ($inserts as $button) {
 			$this->buttons[$line][] = $button;
 		}
+		return $this;
 	}
 	
 	/**

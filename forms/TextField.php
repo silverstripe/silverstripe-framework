@@ -27,6 +27,7 @@ class TextField extends FormField {
 	 */
 	function setMaxLength($length) {
 		$this->maxLength = $length;
+		return $this;
 	}
 	
 	/**

@@ -98,6 +98,7 @@ class TreeDropdownField extends FormField {
 	 */
 	public function setTreeBaseID($ID) {
 		$this->baseID = (int) $ID;
+		return $this;
 	}
 	
 	/**
@@ -112,6 +113,7 @@ class TreeDropdownField extends FormField {
 		}
 		
 		$this->filterCallback = $callback;
+		return $this;
 	}
 	
 	/**
@@ -126,6 +128,7 @@ class TreeDropdownField extends FormField {
 		}
 		
 		$this->searchCallback = $callback;
+		return $this;
 	}
 
 	public function getShowSearch() {
@@ -137,6 +140,7 @@ class TreeDropdownField extends FormField {
 	 */
 	public function setShowSearch($bool) {
 		$this->showSearch = $bool;
+		return $this;
 	}
 
 	/**
