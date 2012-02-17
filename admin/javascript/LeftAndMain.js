@@ -99,8 +99,7 @@ jQuery.noConflict();
 				this.find('.cms-edit-form[data-layout-type]').redraw(); 
 				
 				// Only redraw preview if its visible
-				var preview = this.find('.cms-preview');
-				if(preview.is(':visible')) preview.redraw();
+				this.find('.cms-preview').redraw();
 
 				// Only redraw the content area if its not the same as the edit form
 				var contentEl = this.find('.cms-content');
