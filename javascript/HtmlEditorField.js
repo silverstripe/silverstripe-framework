@@ -783,7 +783,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				return {
 					'src' : this.find(':input[name=URL]').val(),
 					'width' : width ? parseInt(width, 10) : null,
-					'height' : height ? parseInt(height, 10) : null,
+					'height' : height ? parseInt(height, 10) : null
 				};
 			},
 			getExtraData: function() {

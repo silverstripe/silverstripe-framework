@@ -71,7 +71,7 @@
 					if (par.children('.child-flyout-indicator').length == 0) par.append('<span class="child-flyout-indicator"></span>').fadeIn();
 					par.children('.child-flyout-indicator').fadeIn();
 				}
-			},
+			}
 		});
 
 		$('.cms-menu-list').entwine({
