@@ -12,3 +12,5 @@ html { overflow: hidden; }
 .cms-content-toolbar { border-bottom: 1px solid #c9cdce; padding-bottom: 5px; }
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { background-image: none; }
+
+.jstree li a .ui-icon { text-indent: 0px !important; }

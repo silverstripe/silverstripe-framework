@@ -179,6 +179,13 @@ body.cms {
 					}
 				}
 			}
+			.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+				border-radius:0;
+			}
+
+			.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+				border-radius:0;
+			}
 		}
 	}
 }
@@ -237,14 +244,6 @@ body.cms {
 		a {
 			border-bottom:none;
 		}
-	}
-
-	.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
-		border-radius:0;
-	}
-
-	.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
-		border-radius:0;
 	}
 }
 
@@ -480,10 +479,13 @@ body.cms {
 		float: right;
 	}
 	
-	.cms-tree-view-modes * {
-		display: inline-block;
-		label {
-			color:$color-text-blue-link;
+	.cms-tree-view-modes {
+		padding-top:5px;
+		* {
+			display: inline-block;
+			label {
+				color:$color-text-blue-link;
+			}
 		}
 	}
 
@@ -518,7 +520,7 @@ body.cms {
  		}
 
 		div {
-			background:url(../images/btn_icons/settings.png) 5px 4px no-repeat;
+			background:url(../images/btn_icons/settings.png) 5px 6px no-repeat;
 			border-left:none;
 			width:100%;
 		}
@@ -548,7 +550,6 @@ body.cms {
 	position: relative;
 	
 	.cms-panel-header {
-		padding: 0;
 		margin: 0 0 $grid-y - 1;
 		line-height: $grid-y * 3;
 		
@@ -559,12 +560,11 @@ body.cms {
 		width: ($grid-x * 22);
 		padding: $grid-y $grid-x;
 		overflow: auto;
+		height:100%;
 	}
 	
 	.cms-content-header {
 		background-color: darken($color-widget-bg, 40%);	
-		border-bottom: 2px solid darken($color-widget-bg, 50%);
-
 		@include background-image(
 			linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 40%))
 		);
@@ -878,6 +878,13 @@ form.member-profile-form {
 			margin:0 0 -1px 0;
 		}
 	}
+	.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+		border-radius:0;
+	}
+
+	.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+		border-radius:0;
+	}
 }
 
 .cms {
@@ -960,6 +967,27 @@ form.member-profile-form {
 		width: 100%;
 	}
 
+	&#cms-content-tools-CMSPageEditController {
+		.cms-panel-content-collapsed {
+			width: 40px;
+			display: none; // Avoids FOUC
+
+			h2, h3 {
+				border-bottom: 0;
+				margin-left: $grid-y;
+				@include transform-origin(bottom, right);
+				@include rotate(270deg);
+			}
+			.cms-panel-header {
+			width: 600px;
+			position:relative;
+			top:24px;
+			right:577px;
+			text-align:right;
+			}
+		}
+	}
+
 	.cms-panel-content-collapsed {
 		width: 40px;
 		display: none; // Avoids FOUC
@@ -967,8 +995,14 @@ form.member-profile-form {
 		h2, h3 {
 			border-bottom: 0;
 			margin-left: $grid-y;
-			@include transform-origin(bottom, left);
-			@include rotate(90deg);
+			@include transform-origin(bottom, right);
+			@include rotate(270deg);
+		}
+		.cms-panel-header {
+			width: 600px;
+			position:relative;
+			right:577px;
+			text-align:right;
 		}
 	}
 
