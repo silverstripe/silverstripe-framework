@@ -40,3 +40,49 @@ Within a tag, a single space is equivalent to multiple consequetive spaces. e.g.
 is equivalent to
 
     <%   if   $Foo  %>
+
+
+## Removed view-specific accessors
+
+Several methods in ViewableData that were originally added to expose values to the template language were moved,
+in order to stop polluting the namespace. These were sometimes called by project-specific PHP code too, and that code
+will need re-working.
+
+#### Globals
+
+Some of these methods were wrappers which simply called other static methods. These can simply be replaced with a call
+to the wrapped method. The list of these methods is:
+
+ - CurrentMember() -> Member::currentUser()
+ - getSecurityID() -> SecurityToken::inst()->getValue()
+ - HasPerm($code) -> Permission::check($code)
+ - BaseHref() -> Director::absoluteBaseURL()
+ - AbsoluteBaseURL() -> Director::absoluteBaseURL()
+ - IsAjax() -> Director::is_ajax()
+ - i18nLocale() -> i18n::get_locale()
+ - CurrentPage() -> Controller::curr()
+
+#### Iterator-specific
+
+Some of the removed methods were utilities that exposed the current state of the current scope's iteration. These
+currently have no replacement. The list of these methods is:
+
+ - First
+ - Last
+ - FirstLast
+ - Middle
+ - MiddleString
+ - Even
+ - Odd
+ - EvenOdd
+ - Pos
+ - TotalItems
+ - Modulus
+ - MultipleOf
+
+#### Scope-exposing
+
+Some of the removed methods exposed access to the various scopes. These currently have no replacement. The list of
+these methods is:
+
+ - Top
