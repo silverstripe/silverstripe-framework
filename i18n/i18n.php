@@ -1957,7 +1957,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		}
 	}
 
-	public static function getExposedVariables() {
+	public static function get_exposed_variables() {
 		return array(
 			'i18nLocale' => 'get_locale',
 			'get_locale',

@@ -15,7 +15,7 @@ interface TemplateIteratorProvider {
 	 * correspond to the actual method name in the relevant class.
 	 * Note that the template renderer must be able to call these methods statically.
 	 */
-	public static function getExposedVariables();
+	public static function get_exposed_variables();
 
 	/**
 	 * Set the current iterator properties - where we are on the iterator.

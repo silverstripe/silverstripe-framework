@@ -622,7 +622,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 		Permission::flush_permission_cache();
 	}
 
-	public static function getExposedVariables() {
+	public static function get_exposed_variables() {
 		return array(
 			'HasPerm' => 'check'
 		);

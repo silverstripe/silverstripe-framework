@@ -584,7 +584,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		return $result;
 	}
 
-	public static function getExposedVariables() {
+	public static function get_exposed_variables() {
 		return array(
 			'CurrentPage' => 'curr',
 		);

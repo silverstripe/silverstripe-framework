@@ -218,7 +218,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 		return $generator->generateHash('sha1');
 	}
 
-	public static function getExposedVariables() {
+	public static function get_exposed_variables() {
 		return array(
 			'getSecurityID',
 			'SecurityID' => 'getSecurityID'

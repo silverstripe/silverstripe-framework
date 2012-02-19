@@ -870,7 +870,7 @@ class Director implements TemplateGlobalProvider {
 	 * @return array Returns an array of strings of the method names of methods on the call that should be exposed
 	 * as global variables in the templates.
 	 */
-	public static function getExposedVariables() {
+	public static function get_exposed_variables() {
 		return array(
 			'absoluteBaseURL',
 			'baseURL',

@@ -134,7 +134,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider {
 	protected $iteratorPos;
 	protected $iteratorTotalItems;
 
-	public static function getExposedVariables() {
+	public static function get_exposed_variables() {
 		return array(
 			'First',
 			'Last',
@@ -325,7 +325,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 		if ($implementers && count($implementers) > 0) {
 			foreach($implementers as $implementer) {
 				if ($createObject) $implementer = new $implementer();   //create a new instance of the object for method calls
-				$exposedVariables = $implementer::getExposedVariables();    //get the exposed variables
+				$exposedVariables = $implementer::get_exposed_variables();    //get the exposed variables
 
 				foreach($exposedVariables as $varName => $methodName) {
 					if (!$varName || is_numeric($varName)) $varName = $methodName;  //array has just a single value, use it for both key and value

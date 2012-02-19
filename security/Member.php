@@ -1379,7 +1379,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		return $currentName ? $currentName : 'cms';
 	}
 
-	public static function getExposedVariables() {
+	public static function get_exposed_variables() {
 		return array(
 			'CurrentMember' => 'currentUser',
 			'currentUser'
