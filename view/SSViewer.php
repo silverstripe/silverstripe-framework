@@ -322,28 +322,87 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 
 	protected function createCallableArray(&$extraArray, $interfaceToQuery, $createObject = false) {
 		$implementers = ClassInfo::implementorsOf($interfaceToQuery);
-		if ($implementers && count($implementers) > 0) {
-			foreach($implementers as $implementer) {
-				if ($createObject) $implementer = new $implementer();   //create a new instance of the object for method calls
-				$exposedVariables = $implementer::get_exposed_variables();    //get the exposed variables
+		if($implementers) foreach($implementers as $implementer) {
 
-				foreach($exposedVariables as $varName => $methodName) {
-					if (!$varName || is_numeric($varName)) $varName = $methodName;  //array has just a single value, use it for both key and value
+			// Create a new instance of the object for method calls
+			if ($createObject) $implementer = new $implementer();
 
-					//e.g. "array(Director, absoluteBaseURL)" means call "Director::absoluteBaseURL()"
-					$extraArray[$varName] = array($implementer, $methodName);
-					$firstCharacter = substr($varName, 0, 1);
+			// Get the exposed variables
+			$exposedVariables = $implementer::get_exposed_variables();
 
-					if ((strtoupper($firstCharacter) === $firstCharacter)) {    //is uppercase, so save the lowercase version, too
-						$extraArray[lcfirst($varName)] = array($implementer, $methodName);    //callable array
-					} else {    //is lowercase, save a version so it also works uppercase
-						$extraArray[ucfirst($varName)] = array($implementer, $methodName);
-					}
-				}
+			foreach($exposedVariables as $varName => $details) {
+				if (!is_array($details)) $details = array('method' => $details, 'casting' => Object::get_static('ViewableData', 'default_cast'));
+
+				// If just a value (and not a key => value pair), use it for both key and value
+				if (is_numeric($varName)) $varName = $details['method'];
+
+				// Add in a reference to the implementing class (might be a string class name or an instance)
+				$details['implementer'] = $implementer;
+
+				// And a callable array
+				if (isset($details['method'])) $details['callable'] = array($implementer, $details['method']);
+
+				// Save with both uppercase & lowercase first letter, so either works
+				$extraArray[lcfirst($varName)] = $details;
+				$extraArray[ucfirst($varName)] = $details;
 			}
 		}
 	}
-	
+
+	function getInjectedValue($property, $params, $cast = true) {
+		// Check if the method to-be-called exists on the target object, and if so don't check global objects
+		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
+		if (isset($on->$property) || method_exists($on, $property)) return null;
+
+		// Find the source of the value
+		$source = null;
+
+		// Check for a presenter-specific override
+		if (array_key_exists($property, $this->extras)) {
+			$source = array('value' => $this->extras[$property]);
+		}
+		// Then for iterator-specific overrides
+		else if (array_key_exists($property, self::$iteratorProperties)) {
+			$source = self::$iteratorProperties[$property];
+
+			if ($this->itemIterator) {
+				// Set the current iterator position and total (the object instance is the first item in the callable array)
+				$source['implementer']->iteratorProperties($this->itemIterator->key(), $this->itemIteratorTotal);
+			} else {
+				// If we don't actually have an iterator at the moment, act like a list of length 1
+				$source['implementer']->iteratorProperties(0, 1);
+			}
+		}
+		// And finally for global overrides
+		else if (array_key_exists($property, self::$globalProperties)) {
+			$source = self::$globalProperties[$property];  //get the method call
+		}
+
+		if ($source) {
+			$res = array();
+
+			// Look up the value - either from a callable, or from a directly provided value
+			if (isset($source['callable'])) $res['value'] = call_user_func_array($source['callable'], $params);
+			elseif (isset($source['value'])) $res['value'] = $source['value'];
+			else throw new InvalidArgumentException("Injected property $property does't have a value or callable value source provided");
+
+			// If we want to provide a casted object, look up what type object to use
+			if ($cast) {
+				// Get the object to cast as
+				$casting = isset($source['casting']) ? $source['casting'] : null;
+				// If not provided, use default
+				if (!$casting) $casting = Object::get_static('ViewableData', 'default_cast');
+
+				$obj = new $casting($property);
+				$obj->setValue($res['value']);
+
+				$res['obj'] = $obj;
+			}
+
+			return $res;
+		}
+	}
+
 	function __call($name, $arguments) {
 		//extract the method name and parameters
 		$property = $arguments[0];  //the name of the function being called
@@ -351,59 +410,26 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 		if (isset($arguments[1]) && $arguments[1] != null) $params = $arguments[1]; //the function parameters in an array
 		else $params = array();
 
-		//check if the method to-be-called exists on the target object
-		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
-		if (method_exists($on, $property)) {    //return the result immediately without trying global functions
+		$hasInjected = $res = null;
+
+		if ($name == 'hasValue') {
+			if ($val = $this->getInjectedValue($property, $params, false)) {
+				$hasInjected = true; $res = (bool)$val['value'];
+			}
+		}
+		else { // XML_val
+			if ($val = $this->getInjectedValue($property, $params)) {
+				$hasInjected = true; $obj = $val['obj']; $res = $obj->forTemplate();
+			}
+		}
+
+		if ($hasInjected) {
+			$this->resetLocalScope();
+			return $res;
+		}
+		else {
 			return parent::__call($name, $arguments);
 		}
-
-		// We create a specific object instance, so that we can determine "unset" from "null" and "false"
-		static $nomatch = null;
-		if ($nomatch === null) $nomatch = new stdClass();
-
-		// Start off with no match
-		$value = $nomatch;
-
-		// Check for a presenter-specific override
-		if (array_key_exists($property, $this->extras)) {
-			$value = $this->extras[$property];
-		}
-		// Then for iterator-specific overrides
-		else if (array_key_exists($property, self::$iteratorProperties)) {
-			$value = self::$iteratorProperties[$property];
-
-			if ($this->itemIterator) {
-				// Set the current iterator position and total (the object instance is the first item in the callable array)
-				$value[0]->iteratorProperties($this->itemIterator->key(), $this->itemIteratorTotal);
-			} else {
-				// If we don't actually have an iterator at the moment, act like a list of length 1
-				$value[0]->iteratorProperties(0, 1);
-			}
-		}
-		// And finally for global overrides
-		else if (array_key_exists($property, self::$globalProperties)) {
-			$value = self::$globalProperties[$property];  //get the method call
-		}
-
-		if ($value !== $nomatch) {
-			$this->resetLocalScope();   //if we are inside a chain (e.g. $A.B.C.Up.E) break out to the beginning of it
-
-			//only call callable functions
-			if (is_callable($value)) {
-				//$value = call_user_func_array($value, array_slice($arguments, 1));
-				$value = call_user_func_array($value, $params);
-			}
-
-			switch ($name) {
-				case 'hasValue':
-					return (bool)$value;
-				default:    //XML_val
-					return $value;
-			}
-		}
-
-		$callResult = parent::__call($name, $arguments);
-		return $callResult;
 	}
 }
 

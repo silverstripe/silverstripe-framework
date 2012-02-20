@@ -85,7 +85,29 @@ SS
 		$this->assertEquals('{\\[out:Test]}', $this->render('{\\\\$Test}'), 'Escapes before injections are correctly unescaped');
 	}
 
+
 	function testGlobalVariableCalls() {
+		$this->assertEquals('automatic', $this->render('$SSViewerTest_GlobalAutomatic'));
+		$this->assertEquals('reference', $this->render('$SSViewerTest_GlobalReferencedByString'));
+		$this->assertEquals('reference', $this->render('$SSViewerTest_GlobalReferencedInArray'));
+	}
+
+	function testGlobalVariableCallsWithArguments() {
+		$this->assertEquals('zz', $this->render('$SSViewerTest_GlobalThatTakesArguments'));
+		$this->assertEquals('zFooz', $this->render('$SSViewerTest_GlobalThatTakesArguments("Foo")'));
+		$this->assertEquals('zFoo:Bar:Bazz', $this->render('$SSViewerTest_GlobalThatTakesArguments("Foo", "Bar", "Baz")'));
+		$this->assertEquals('zreferencez', $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalReferencedByString)'));
+	}
+
+	function testGlobalVariablesAreEscaped() {
+		$this->assertEquals('<div></div>', $this->render('$SSViewerTest_GlobalHTMLFragment'));
+		$this->assertEquals('&lt;div&gt;&lt;/div&gt;', $this->render('$SSViewerTest_GlobalHTMLEscaped'));
+
+		$this->assertEquals('z<div></div>z', $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalHTMLFragment)'));
+		$this->assertEquals('z&lt;div&gt;&lt;/div&gt;z', $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalHTMLEscaped)'));
+	}
+
+	function testCoreGlobalVariableCalls() {
 		$this->assertEquals(Director::absoluteBaseURL(), $this->render('{$absoluteBaseURL}'), 'Director::absoluteBaseURL can be called from within template');
 		$this->assertEquals(Director::absoluteBaseURL(), $this->render('{$AbsoluteBaseURL}'), 'Upper-case %AbsoluteBaseURL can be called from within template');
 
@@ -108,9 +130,7 @@ SS
 
 		$this->assertEquals(SecurityToken::getSecurityID(), $this->render('{$getSecurityID}'), 'SecurityToken template functions result correct result');
 		$this->assertEquals(SecurityToken::getSecurityID(), $this->render('{$SecurityID}'), 'SecurityToken template functions result correct result');
-	}
 
-	function testGlobalVariableCallsWithArguments() {
 		$this->assertEquals(Permission::check("ADMIN"), (bool)$this->render('{$HasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
 		$this->assertEquals(Permission::check("ADMIN"), (bool)$this->render('{$hasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
 	}
@@ -966,4 +986,38 @@ class SSViewerTest_Page extends SiteTree {
 	function lotsOfArguments11($a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k) {
 		return $a. $b. $c. $d. $e. $f. $g. $h. $i. $j. $k;
 	}
+}
+
+class SSViewerTest_GlobalProvider implements TemplateGlobalProvider, TestOnly {
+
+	public static function get_exposed_variables() {
+		return array(
+			'SSViewerTest_GlobalHTMLFragment' => array('method' => 'get_html'),
+			'SSViewerTest_GlobalHTMLEscaped' => array('method' => 'get_html', 'casting' => 'Varchar'),
+
+			'SSViewerTest_GlobalAutomatic',
+			'SSViewerTest_GlobalReferencedByString' => 'get_reference',
+			'SSViewerTest_GlobalReferencedInArray' => array('method' => 'get_reference'),
+
+			'SSViewerTest_GlobalThatTakesArguments' => array('method' => 'get_argmix')
+
+		);
+	}
+
+	static function get_html() {
+		return '<div></div>';
+	}
+
+	static function SSViewerTest_GlobalAutomatic() {
+		return 'automatic';
+	}
+
+	static function get_reference() {
+		return 'reference';
+	}
+
+	static function get_argmix() {
+		return 'z' . implode(':', func_get_args()) . 'z';
+	}
+
 }
