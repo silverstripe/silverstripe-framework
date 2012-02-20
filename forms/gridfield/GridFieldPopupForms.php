@@ -56,10 +56,16 @@ class GridFieldPopupForms implements GridField_URLHandler {
 	 * @return GridFieldPopupForm_ItemRequest 
 	 */
 	public function handleItem($gridField, $request) {
-		$record = $gridField->getList()->byId($request->param("ID"));
+		if(is_numeric($request->param('ID'))) {
+			$record = $gridField->getList()->byId($request->param("ID"));
+		} else {
+			$record = Object::create($gridField->getModelClass());	
+		}
+
 		$handler = new GridFieldPopupForm_ItemRequest($gridField, $this, $record, $this->popupController, $this->popupFormName);
 		$handler->setTemplate($this->template);
-		return $handler;
+
+		return $handler->handleRequest($request, $gridField);
 	}
 
 	/**
@@ -137,7 +143,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	}
 
 	public function Link($action = null) {
-		return Controller::join_links($this->gridField->Link('item'), $this->record->ID, $action);
+		return Controller::join_links($this->gridField->Link('item'), $this->record->ID ? $this->record->ID : 'new', $action);
 	}
 	
 	function edit($request) {
@@ -186,9 +192,13 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	}
 
 	function doSave($data, $form) {
+		$new_record = $this->record->ID == 0;
+
 		try {
 			$form->saveInto($this->record);
 			$this->record->write();
+			if($new_record)
+				$this->gridField->getList()->add($this->record);
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
 			return Director::redirectBack();
