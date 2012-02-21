@@ -317,7 +317,6 @@ class UploadField extends FileField {
 		}
 
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/i18n.js');
@@ -739,7 +738,7 @@ class UploadField_ItemHandler extends RequestHandler {
 			$actions = $file->{$this->parent->getConfig('fileEditActions')}();
 		} else {
 			$actions = new FieldList($saveAction = new FormAction('doEdit', _t('UploadField.DOEDIT', 'Save')));
-			$saveAction->addExtraClass('ss-ui-action-constructive');
+			$saveAction->addExtraClass('ss-ui-action-constructive icon-accept');
 		}
 		if (is_a($this->parent->getConfig('fileEditValidator'), 'Validator')) {
 			$validator = $this->parent->getConfig('fileEditValidator');
@@ -831,7 +830,7 @@ class UploadField_SelectHandler extends RequestHandler {
 	 */
 	function Form() {
 		$action = new FormAction('doAttach', _t('UploadField.AttachFile', 'Attach file(s)'));
-		$action->addExtraClass('ss-ui-action-constructive');
+		$action->addExtraClass('ss-ui-action-constructive icon-accept');
 		return new Form(
 			$this,
 			'Form',

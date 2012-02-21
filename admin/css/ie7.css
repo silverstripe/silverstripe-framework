@@ -1,3 +1,16 @@
 html { overflow: hidden; }
 
 .field input.text, .field textarea, .field .TreeDropdownField { padding-left: 0; padding-right: 0; }
+
+.ss-ui-button.cms-page-add-button { float: left; }
+
+.ss-ui-button.cms-page-add-button.ui-state-hover, .cms .ss-ui-button.cms-page-add-button:hover { background: #80bf40 url("../images/btn-icon-saaa1989272.png") 5px -49px no-repeat; }
+
+.cms-tree-view-modes div { float: left; }
+.cms-tree-view-modes span { float: left; padding-top: 5px; }
+
+.cms-content-toolbar { border-bottom: 1px solid #c9cdce; padding-bottom: 5px; }
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { background-image: none; }
+
+.jstree li a .ui-icon { text-indent: 0px !important; }

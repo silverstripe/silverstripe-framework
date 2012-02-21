@@ -130,6 +130,7 @@
 							}
 							
 							if($.inArray(data.func, ['check_node', 'uncheck_node'])) {
+								//Don't allow check and uncheck if parent is disabled
 								var node = $(data.args[0]).parents('li:first');
 								if(node.hasClass('disabled')) {
 									e.stopImmediatePropagation();

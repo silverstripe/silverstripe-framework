@@ -25,6 +25,7 @@ class GridField extends FormField {
 	 * @var array
 	 */
 	public static $allowed_actions = array(
+		'index',
 		'gridFieldAlterAction'
 	);
 	
@@ -98,8 +99,10 @@ class GridField extends FormField {
 		
 		
 		$this->addExtraClass('ss-gridfield');
-		$this->requireDefaultCSS();
-		
+	}
+
+	function index($request) {
+		return $this->gridFieldAlterAction(array(), $this->getForm(), $request);
 	}
 	
 	/**
@@ -140,13 +143,6 @@ class GridField extends FormField {
 	protected function setComponents(GridFieldConfig $config) {
 		$this->components = $config->getComponents();
 		return $this;
-	}
-	
-	/**
-	 * Require the default css styling
-	 */
-	protected function requireDefaultCSS() {
-		Requirements::css('sapphire/css/GridField.css');
 	}
 
 	/**
@@ -356,6 +352,7 @@ class GridField extends FormField {
 			$this->getAttributes(), 
 			array('value' => false, 'type' => false, 'name' => false)
 		);
+		$attrs['data-name'] = $this->getName();
 		$tableAttrs = array(
 			'id' => isset($this->id) ? $this->id : null,
 			'class' => "field CompositeField {$this->extraClass()}",
@@ -368,6 +365,10 @@ class GridField extends FormField {
 				$this->createTag('table', $tableAttrs, $head."\n".$foot."\n".$body) .
 				implode("\n", $content['after'])
 			);
+	}
+
+	public function getAttributes() {
+		return array_merge(parent::getAttributes(), array('data-url' => $this->Link()));
 	}
 
 	/**
@@ -491,7 +492,7 @@ class GridField extends FormField {
 			}
 		}			
 	}
-	
+
 	/**
 	 * This is the action that gets executed when a GridField_AlterAction gets clicked.
 	 *
@@ -499,25 +500,30 @@ class GridField extends FormField {
 	 * @return string 
 	 */
 	public function gridFieldAlterAction($data, $form, SS_HTTPRequest $request) {
-		$id = $data['StateID'];
-		$stateChange = Session::get($id);
-		$gridName = $stateChange['grid'];
-		$grid = $form->Fields()->dataFieldByName($gridName);
-		
-		$state = $grid->getState(false);
-		if(isset($data['GridState'])) $state->setValue($data['GridState']);
-		
-		$actionName = $stateChange['actionName'];
-		$args = isset($stateChange['args']) ? $stateChange['args'] : array();
-		$html = $grid->handleAction($actionName, $args, $data);
-		
-		if($html) {
-			return $html;
+		$html = '';
+		$data = $request->requestVars();
+		$fieldData = @$data[$this->getName()];
+
+		// Update state from client
+		$state = $this->getState(false);
+		if(isset($fieldData['GridState'])) $state->setValue($fieldData['GridState']);
+
+		// Try to execute alter action
+		foreach($data as $k => $v) {
+			if(preg_match('/^action_gridFieldAlterAction\?StateID=(.*)/', $k, $matches)) {
+				$id = $matches[1];
+				$stateChange = Session::get($id);
+				$actionName = $stateChange['actionName'];
+				$args = isset($stateChange['args']) ? $stateChange['args'] : array();
+				$html = $this->handleAction($actionName, $args, $data);
+				// A field can optionally return its own HTML
+				if($html) return $html;
+			}
 		}
 		
 		switch($request->getHeader('X-Get-Fragment')) {
 			case 'CurrentField':
-				return $grid->FieldHolder();
+				return $this->FieldHolder();
 				break;
 
 			case 'CurrentForm':
@@ -565,6 +571,9 @@ class GridField extends FormField {
 
 		$this->request = $request;
 		$this->setModel($model);
+
+		$fieldData = $this->request->requestVar($this->getName());
+		if($fieldData && $fieldData['GridState']) $this->getState(false)->setValue($fieldData['GridState']);
 		
 		foreach($this->components as $component) {
 			if(!($component instanceof GridField_URLHandler)) {
@@ -697,6 +706,13 @@ class GridField_Action extends FormAction {
 	 * @return string HTML tag
 	 */
 	public function Field() {
+		Requirements::css(SAPPHIRE_DIR . '/css/GridField.css');
+
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/json-js/json2.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/GridField.js');
+
 		// Store state in session, and pass ID to client side
 		$state = array(
 			'grid' => $this->getNameFromParent(),
@@ -718,6 +734,7 @@ class GridField_Action extends FormAction {
 			// will strip it from the requests 
 			'name' => 'action_gridFieldAlterAction'. '?' . http_build_query($actionData),
 			'tabindex' => $this->getTabIndex(),
+			'data-url' => $this->gridField->Link(),
 		);
 
 		if($this->isReadonly()) {

@@ -100,6 +100,7 @@ class TextareaField extends FormField {
 	 */
 	function setRows($rows) {
 		$this->rows = $rows;
+		return $this;
 	}
 	
 	/**
@@ -109,6 +110,7 @@ class TextareaField extends FormField {
 	 */
 	function setColumns($cols) {
 		$this->cols = $cols;
+		return $this;
 	}
 
 	function Value() {

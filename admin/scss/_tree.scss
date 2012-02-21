@@ -63,7 +63,6 @@
 				.jstree-icon {
 					margin-right: 3px;
 				}
-
 			}
 
 		}
@@ -241,6 +240,10 @@
 	}
 	li.jstree-open > ul {
 		display: block;
+		margin-left:-13px;
+		li ul {
+			margin-left:2px;
+		}
 	}
 	li.jstree-closed > ul {
 		display: none;
@@ -379,6 +382,21 @@
 	}
 }
 
+.jstree-apple {
+	li, .jstree-apple ins {
+		background:none;
+	}
+	.jstree-unchecked > a > .jstree-checkbox {
+		margin-right:3px;
+	}
+	.jstree-checked > a > .jstree-checkbox {
+		margin-right:3px;
+	}
+	.jstree-undetermined > a > .jstree-checkbox {
+		margin-right:3px;
+	}
+}
+
 .cms-tree.jstree-apple {
 	
 	& li.Root {
@@ -500,9 +518,17 @@
 		background-color: transparent;
 		background-image: url(../images/sitetree_ss_default_icons.png);
 	}
-	
+
 	& li.jstree-checked a, li.jstree-checked a:link  {
 		background-color: $color-cms-batchactions-menu-selected-background;
+	}
+
+	& .jstree-closed > ins { 
+		background-position:0 0; 
+	}
+
+	& .jstree-open > ins { 
+		background-position:-20px 0; 
 	}
 }
 

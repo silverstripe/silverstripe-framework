@@ -118,6 +118,7 @@ class ListboxField extends DropdownField {
 	 */
 	function setSize($size) {
 		$this->size = $size;
+		return $this;
 	}
 	
 	/** 
@@ -126,6 +127,7 @@ class ListboxField extends DropdownField {
 	 */
 	function setMultiple($bool) {
 		$this->multiple = $bool;
+		return $this;
 	}
 	
 	function setSource($source) {
@@ -137,6 +139,8 @@ class ListboxField extends DropdownField {
 		}
 		
 		parent::setSource($source);
+
+		return $this;
 	}
 	
 	/**
@@ -180,7 +184,7 @@ class ListboxField extends DropdownField {
 			parent::setValue($val);
 		}
 		
+		return $this;
 	}
 	
 }
-?>

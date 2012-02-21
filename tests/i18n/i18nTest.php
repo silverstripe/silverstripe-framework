@@ -300,4 +300,4 @@ class i18nTest_Object extends Object implements TestOnly, i18nEntityProvider {
 		);
 	}
 }
-?>
+

@@ -187,7 +187,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/MemberImportForm.css');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/MemberImportForm.js');
@@ -219,7 +218,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/MemberImportForm.css');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/MemberImportForm.js');
@@ -379,4 +377,4 @@ class SecurityAdmin_DeleteBatchAction extends CMSBatchAction {
 		return Convert::raw2json($status);
 	}
 }
-?>
+

@@ -1,3 +1,6 @@
+// Shortcut-function (until we update to Prototye v1.5)
+if(typeof $$ != "Function") $$ = document.getElementsBySelector;
+
 var ToggleCompositeField = Class.create();
 ToggleCompositeField.prototype = {
 	initialize: function() {

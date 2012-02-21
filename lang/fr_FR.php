@@ -538,4 +538,3 @@ $lang['fr_FR']['Widget']['SINGULARNAME'] = 'Gadget';
 $lang['fr_FR']['WidgetArea']['PLURALNAME'] = 'Zones de gadget';
 $lang['fr_FR']['WidgetArea']['SINGULARNAME'] = 'Zone de gadget';
 
-?>

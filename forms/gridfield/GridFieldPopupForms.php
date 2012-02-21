@@ -180,7 +180,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 				$saveAction = new FormAction('doSave', _t('GridFieldDetailsForm.Save', 'Save'))
 			)
 		);
-		$saveAction->addExtraClass('ss-ui-action-constructive');
+		$saveAction->addExtraClass('ss-ui-action-constructive icon-accept');
 		$form->loadDataFrom($this->record);
 		return $form;
 	}

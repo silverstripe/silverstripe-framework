@@ -73,4 +73,3 @@ JS;
 		return (is_numeric($this->value)) ? $this->value : 0;
 	}
 }
-?>

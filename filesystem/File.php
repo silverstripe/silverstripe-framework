@@ -304,6 +304,9 @@ class File extends DataObject {
 			case "bmp": case "gif": case "jpg": case "jpeg": case "pcx": case "tif": case "png": case "alpha":
 			case "als": case "cel": case "icon": case "ico": case "ps":
 				return "image";
+
+			case "swf": 
+				return "flash";
 		}
 	}
 

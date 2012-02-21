@@ -98,6 +98,7 @@ class TreeDropdownField extends FormField {
 	 */
 	public function setTreeBaseID($ID) {
 		$this->baseID = (int) $ID;
+		return $this;
 	}
 	
 	/**
@@ -112,6 +113,7 @@ class TreeDropdownField extends FormField {
 		}
 		
 		$this->filterCallback = $callback;
+		return $this;
 	}
 	
 	/**
@@ -126,6 +128,7 @@ class TreeDropdownField extends FormField {
 		}
 		
 		$this->searchCallback = $callback;
+		return $this;
 	}
 
 	public function getShowSearch() {
@@ -137,6 +140,7 @@ class TreeDropdownField extends FormField {
 	 */
 	public function setShowSearch($bool) {
 		$this->showSearch = $bool;
+		return $this;
 	}
 
 	/**
@@ -146,7 +150,6 @@ class TreeDropdownField extends FormField {
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jstree/jquery.jstree.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TreeDropdownField.js');
@@ -203,12 +206,11 @@ class TreeDropdownField extends FormField {
 		$isSubTree = false;
 
 		$this->search = Convert::Raw2SQL($request->requestVar('search'));
-
 		$ID = (is_numeric($request->latestparam('ID'))) ? (int)$request->latestparam('ID') : (int)$request->requestVar('ID');
-		if($ID) {
+		$forceFullTree = $request->requestVar('forceFullTree')?$request->requestVar('forceFullTree'):false;
+		if($ID && !$forceFullTree) {
 			$obj       = DataObject::get_by_id($this->sourceObject, $ID);
 			$isSubTree = true;
-			
 			if(!$obj) {
 				throw new Exception (
 					"TreeDropdownField->tree(): the object #$ID of type $this->sourceObject could not be found"
@@ -240,7 +242,6 @@ class TreeDropdownField extends FormField {
 				$obj->markToExpose($this->objectForKey($value));
 			}
 		}
-
 		$eval = '"<li id=\"selector-' . $this->getName() . '-{$child->' . $this->keyField . '}\" data-id=\"$child->' . $this->keyField . '\" class=\"class-$child->class"' .
 				' . $child->markingClasses() . "\"><a rel=\"$child->ID\">" . $child->' . $this->labelField . ' . "</a>"';
 		

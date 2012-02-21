@@ -70,6 +70,8 @@ class DatetimeField extends FormField {
 		$this->dateField->setForm($form);
 		$this->timeField->setForm($form);
 		$this->timezoneField->setForm($form);
+
+		return $this;
 	}
 	
 	function FieldHolder() {
@@ -172,6 +174,8 @@ class DatetimeField extends FormField {
 				$this->timeField->setValue($valueObj->get($this->timeField->getConfig('timeformat'), $this->locale));
 			}
 		}
+
+		return $this;
 	}
 	
 	function Value() {
@@ -187,6 +191,7 @@ class DatetimeField extends FormField {
 		$this->dateField->setDisabled($bool);
 		$this->timeField->setDisabled($bool);
 		if($this->timezoneField) $this->timezoneField->setDisabled($bool);
+		return $this;
 	}
 
 	function setReadonly($bool) {
@@ -194,6 +199,7 @@ class DatetimeField extends FormField {
 		$this->dateField->setReadonly($bool);
 		$this->timeField->setReadonly($bool);
 		if($this->timezoneField) $this->timezoneField->setReadonly($bool);
+		return $this;
 	}
 	
 	/**
@@ -220,6 +226,7 @@ class DatetimeField extends FormField {
 	function setLocale($locale) {
 		$this->dateField->setLocale($locale);
 		$this->timeField->setLocale($locale);
+		return $this;
 	}
 	
 	function getLocale() {
@@ -240,6 +247,8 @@ class DatetimeField extends FormField {
 			$this->timezoneField->setValue($val);
 			$this->setValue($this->dataValue());
 		}
+
+		return $this;
 	}
 	
 	/**
@@ -313,4 +322,3 @@ class DatetimeField_Readonly extends DatetimeField {
 		return true;	
 	}
 }
-?>

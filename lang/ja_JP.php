@@ -564,4 +564,3 @@ $lang['ja_JP']['Widget']['SINGULARNAME'] = 'ウィジェット';
 $lang['ja_JP']['WidgetArea']['PLURALNAME'] = 'ウィジェットエリア';
 $lang['ja_JP']['WidgetArea']['SINGULARNAME'] = 'ウィジェットエリア';
 
-?>

@@ -331,6 +331,15 @@ class Folder extends File {
 		$this->setField('Title',pathinfo($filename, PATHINFO_BASENAME));
 		parent::setFilename($filename);
 	}
+
+	/**
+	 * A folder doesn't have a (meaningful) file size.
+	 * 
+	 * @return Null
+	 */
+	function getSize() {
+		return null;
+	}
 	
 	/**
 	 * Delete the database record (recursively for folders) without touching the filesystem
@@ -407,31 +416,78 @@ class Folder extends File {
 		$config->addComponent(new GridFieldAction_Edit());
 		$config->addComponent($gridFieldForm = new GridFieldPopupForms(Controller::curr(), 'EditForm'));
 		$gridFieldForm->setTemplate('CMSGridFieldPopupForms');
-		$files = DataList::create('File')->filter('ParentID', $this->ID)->exclude('ClassName', 'Folder');
+		
+		if($this->ID) {
+			// When a specific folder is selected, show only children files,
+			// and include children folders to allow navigating into them.
+			$files = DataList::create('File')
+				->filter('ParentID', $this->ID)
+				->sort('(CASE WHEN "ClassName" = \'Folder\' THEN 0 ELSE 1 END)');	
+		} else {
+			// On the root folder, show all files but exclude folders - newest first.
+			$files = DataList::create('File')
+				->exclude('ClassName', 'Folder')
+				->sort('Created', 'Desc');
+		}
+		
 		$gridField = new GridField('File','Files', $files, $config);
 		$gridField->setDisplayFields(array(
 			'StripThumbnail' => '',
-			'Parent.FileName' => 'Folder',
+			// 'Parent.FileName' => 'Folder',
 			'Title'=>'Title',
+			'Date'=>'Created',
 			'Size'=>'Size',
+		));
+		$gridField->setFieldFormatting(array(
+			'Date' => 'Nice'
 		));
 
 		$titleField = ($this->ID && $this->ID != "root") ? new TextField("Title", _t('Folder.TITLE')) : new HiddenField("Title");
+
+		if($this->canCreate()) {
+			$uploadBtn = new LiteralField(
+				'UploadButton', 
+				sprintf(
+					'<a class="ss-ui-button ss-ui-action-constructive icon-accept cms-panel-link" data-target-panel=".cms-content" href="%s">%s</a>',
+					Controller::join_links(singleton('CMSFileAddController')->Link(), '?ID=' . $this->ID),
+					_t('Folder.UploadFilesButton', 'Upload')
+				)
+			);	
+		} else {
+			$uploadBtn = null;
+		}
+
+		if(!$this->hasMethod('canAddChildren') || ($this->hasMethod('canAddChildren') && $this->canAddChildren())) {
+			$addFolderBtn = new LiteralField(
+				'AddFolderButton', 
+				sprintf(
+					'<a class="ss-ui-button ss-ui-action-constructive icon-accept cms-page-add-button" href="%s">%s</a>',
+					singleton('CMSFileAddController')->Link(),
+					_t('Folder.AddFolderButton', 'Add folder')
+				)
+			);
+		} else {
+			$addFolderBtn = '';
+		}
+		
 		
 		$fields = new FieldList(
+			// The tabs of Root are used to generate the top tabs 
 			new TabSet('Root',
-				new Tab('Main',
+				new Tab('listview', _t('AssetAdmin.ListView', 'List View'),
 					$titleField,
+					$actionsComposite = new CompositeField(
+						$uploadBtn,
+						$addFolderBtn
+					),
 					$gridField,
 					new HiddenField("ID"),
 					new HiddenField("DestFolderID")
 				)
-			)
+			)			
 		);
 		
-		if(!$this->canEdit()) {
-			$fields->removeByName("Upload");
-		}
+		$actionsComposite->addExtraClass('cms-actions-row');
 
 		$this->extend('updateCMSFields', $fields);
 		

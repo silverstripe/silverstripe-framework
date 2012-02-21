@@ -424,6 +424,7 @@ class Form extends RequestHandler {
 	 */
 	public function setRedirectToFormOnValidationError($bool) {
 		$this->redirectToFormOnValidationError = $bool;
+		return $this;
 	}
 	
 	/**
@@ -483,6 +484,7 @@ class Form extends RequestHandler {
 			$this->validator = $validator;
 			$this->validator->setForm($this);
 		}
+		return $this;
 	}
 
 	/**
@@ -562,6 +564,7 @@ class Form extends RequestHandler {
 	 */
 	function setFields($fields) {
 		$this->fields = $fields;
+		return $this;
 	}
 	
 	/**
@@ -598,6 +601,7 @@ class Form extends RequestHandler {
 	 */
 	function setActions($actions) {
 		$this->actions = $actions;
+		return $this;
 	}
 	
 	/**
@@ -605,6 +609,7 @@ class Form extends RequestHandler {
 	 */
 	function unsetAllActions(){
 		$this->actions = new FieldList();
+		return $this;
 	}
 
 	/**
@@ -625,6 +630,7 @@ class Form extends RequestHandler {
 	 */
 	function setAttribute($name, $value) {
 		$this->attributes[$name] = $value;
+		return $this;
 	}
 
 	/**
@@ -723,6 +729,7 @@ class Form extends RequestHandler {
 	*/
 	function setTarget($target) {
 		$this->target = $target;
+		return $this;
 	}
 	
 	/**
@@ -731,6 +738,7 @@ class Form extends RequestHandler {
 	 */
 	function setLegend($legend) {
 		$this->legend = $legend;
+		return $this;
 	}
 	
 	/**
@@ -741,6 +749,7 @@ class Form extends RequestHandler {
 	 */
 	function setTemplate($template) {
 		$this->template = $template;
+		return $this;
 	}
 	
 	/**
@@ -784,6 +793,7 @@ class Form extends RequestHandler {
 	 */
 	public function setEncType($encType) {
 		$this->encType = $encType;
+		return $this;
 	}
 
 	/**
@@ -831,6 +841,7 @@ class Form extends RequestHandler {
 	 */
 	function setFormMethod($method) {
 		$this->formMethod = strtolower($method);
+		return $this;
 	}
 	
 	/**
@@ -860,6 +871,7 @@ class Form extends RequestHandler {
 	 */
 	function setFormAction($path) {
 		$this->formActionPath = $path;
+		return $this;
 	}
 
 	/**
@@ -947,6 +959,7 @@ class Form extends RequestHandler {
 	function setMessage($message, $type) {
 		$this->message = $message;
 		$this->messageType = $type;
+		return $this;
 	}
 
 	/**
@@ -1283,6 +1296,7 @@ class Form extends RequestHandler {
 	 */
 	function setButtonClicked($funcName) {
 		$this->buttonClickedFunc = $funcName;
+		return $this;
 	}
 
 	function buttonClicked() {
@@ -1306,6 +1320,7 @@ class Form extends RequestHandler {
 	 */
 	function disableDefaultAction() {
 		$this->hasDefaultAction = false;
+		return $this;
 	}
 	
 	/**
@@ -1317,6 +1332,7 @@ class Form extends RequestHandler {
 	 */
 	function disableSecurityToken() {
 		$this->securityToken = new NullSecurityToken();
+		return $this;
 	}
 	
 	/**
@@ -1326,6 +1342,7 @@ class Form extends RequestHandler {
 	 */
 	function enableSecurityToken() {
 		$this->securityToken = new SecurityToken();
+		return $this;
 	}
 	
 	/**
@@ -1417,6 +1434,8 @@ class Form extends RequestHandler {
 			
 			$this->extraClasses[] = $value;
 		}
+
+		return $this;
 	}
 
 	/**
@@ -1428,6 +1447,7 @@ class Form extends RequestHandler {
 	function removeExtraClass($class) {
 		$classes = explode(' ', $class);
 		$this->extraClasses = array_diff($this->extraClasses, $classes);
+		return $this;
 	}
 	
 	function debug() {

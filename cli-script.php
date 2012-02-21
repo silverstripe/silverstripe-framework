@@ -83,4 +83,4 @@ $_SERVER['REQUEST_URI'] = BASE_URL . '/' . $url;
 DataModel::set_inst(new DataModel());
 Director::direct($url, DataModel::inst());
 
-?>
+

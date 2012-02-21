@@ -766,4 +766,4 @@ class Email_BounceRecord extends DataObject {
 	}
 }
 
-?>
+

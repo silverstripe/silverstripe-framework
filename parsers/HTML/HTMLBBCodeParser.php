@@ -871,4 +871,3 @@ class SSHTMLBBCodeParser
         return $str;
     }
 }
-?>

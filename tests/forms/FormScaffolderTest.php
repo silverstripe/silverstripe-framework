@@ -136,4 +136,3 @@ class FormScaffolderTest_ArticleExtension extends DataExtension implements TestO
 }
 
 DataObject::add_extension('FormScaffolderTest_Article', 'FormScaffolderTest_ArticleExtension');
-?>

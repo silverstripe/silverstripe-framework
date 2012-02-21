@@ -41,4 +41,4 @@ class Percentage extends Decimal {
 	}
 }
 
-?>
+

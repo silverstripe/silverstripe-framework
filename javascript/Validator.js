@@ -1,3 +1,6 @@
+// Shortcut-function (until we update to Prototye v1.5)
+if(typeof $$ != "Function") $$ = document.getElementsBySelector;
+
 var _CURRENT_FORM;
 var _FIRST_ERRORED_FIELD = null;
 var _VALIDATIONS_REF = new Array();
@@ -74,7 +77,7 @@ function require(fieldName,cachedError) {
 
 		var descendants = _CURRENT_FORM.getElementsByTagName('*');
 
-		el = $(fieldName);
+		el = document.getElementById(fieldName);
 
 		if(el == null)
 			return true;
@@ -226,7 +229,7 @@ function findParentLabel(el) {
  */
 function validationError(field,message, messageClass, cacheError) {
 	if(typeof(field) == 'string') {
-		field = $(field);
+		field = document.getElementById(field);
 	}
 
 	if(cacheError) {

@@ -270,4 +270,4 @@ class FormResponse {
 		return $js;
 	}
 }
-?>
+

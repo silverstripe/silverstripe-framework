@@ -3,13 +3,10 @@ class GridFieldtest extends SapphireTest {
 
 	/**
 	 * @covers GridField::__construct
-	 * @covers GridFIeld::requireDefaultCSS
 	 */
 	public function testGridField() {
 		$obj = new GridField('testfield', 'testfield');
 		$this->assertTrue($obj instanceof GridField, 'Test that the constructor arguments are valid');
-		$css = Requirements::backend()->get_css();
-		$this->assertTrue(isset($css['sapphire/css/GridField.css']), 'GridField.css should have been aquired');
 	}
 	
 	/**

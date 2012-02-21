@@ -282,4 +282,3 @@ $lang['hu_HU']['VirtualPage']['EDITCONTENT'] = 'kattints ide a tartalom szerkesz
 $lang['hu_HU']['VirtualPage']['HEADER'] = 'Ez egy virtuális oldal';
 $lang['hu_HU']['VirtualPage']['SINGULARNAME'] = 'Virtuális Oldal';
 
-?>

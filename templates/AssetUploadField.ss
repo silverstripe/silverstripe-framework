@@ -1,10 +1,10 @@
-<h3 class="ss-uploadfield-choosefiles"><% _t('AssetUploadField.CHOOSEFILES', 'Choose files') %></h3>
 <div class="ss-uploadfield-item ss-uploadfield-addfile">
 	<div class="ss-uploadfield-item-info">
-		<label class="ss-uploadfield-fromcomputer ss-ui-button ui-corner-all" title="<% _t('AssetUploadField.FROMCOMPUTERINFO', 'Upload from your computer') %>" for="$id">
-			<input id="$id" name="$getName" class="$extraClass" data-config="$configString" type="file"<% if $multiple %> multiple="multiple"<% end_if %><% if $TabIndex %> tabindex="$TabIndex"<% end_if %> />
-			<span><% _t('AssetUploadField.FROMCOMPUTER', 'Choose files from your computer') %></span>
+		<label class="ss-uploadfield-fromcomputer ss-ui-button ss-ui-action-constructive" title="<% _t('AssetUploadField.FROMCOMPUTERINFO', 'Upload from your computer') %>" data-icon="drive-upload">
+			<% _t('AssetUploadField.FROMCOMPUTER', 'Choose files from your computer') %>
+			<input id="$id" name="$getName" class="$extraClass ss-uploadfield-fromcomputer-fileinput" data-config="$configString" type="file"<% if $multiple %> multiple="multiple"<% end_if %><% if $TabIndex %> tabindex="$TabIndex"<% end_if %> title="<% _t('AssetUploadField.FROMCOMPUTER', 'Choose files from your computer') %>" />
 		</label>
+		
 		<div class="clear"><!-- --></div>
 	</div>
 	<div class="ss-uploadfield-item-uploador">

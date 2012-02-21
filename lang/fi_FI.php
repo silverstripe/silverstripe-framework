@@ -465,4 +465,3 @@ $lang['fi_FI']['Widget']['SINGULARNAME'] = 'Widgetti';
 $lang['fi_FI']['WidgetArea']['PLURALNAME'] = 'Widget-alueet';
 $lang['fi_FI']['WidgetArea']['SINGULARNAME'] = 'Widget-alue';
 
-?>

@@ -54,9 +54,6 @@ class GridFieldFilter implements GridField_HTMLProvider, GridField_DataManipulat
 	}
 
 	public function getHTMLFragments($gridField) {
-		Requirements::javascript(SAPPHIRE_DIR.'/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript('sapphire/javascript/GridField.js');
-
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList;
 

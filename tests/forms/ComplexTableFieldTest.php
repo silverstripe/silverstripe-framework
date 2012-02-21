@@ -198,4 +198,3 @@ class ComplexTableFieldTest_Sponsor extends DataObject implements TestOnly {
 	);
 
 }
-?>

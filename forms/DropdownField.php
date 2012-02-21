@@ -194,6 +194,7 @@ class DropdownField extends FormField {
 	 */
 	function setSource($source) {
 		$this->source = $source;
+		return $this;
 	}
 	
 	/**
@@ -201,6 +202,7 @@ class DropdownField extends FormField {
 	 */
 	function setHasEmptyDefault($bool) {
 		$this->hasEmptyDefault = $bool;
+		return $this;
 	}
 	
 	/**
@@ -220,6 +222,7 @@ class DropdownField extends FormField {
 	function setEmptyString($str) {
 		$this->setHasEmptyDefault(true);
 		$this->emptyString = $str;
+		return $this;
 	}
 
 	/**
@@ -242,5 +245,6 @@ class DropdownField extends FormField {
 	 */
 	function setDisabled($disabled = true) {
 		$this->disabled = $disabled;
+		return $this;
 	}
 }

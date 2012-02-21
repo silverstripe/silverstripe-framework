@@ -11,3 +11,44 @@ html {
 		padding-right: 0;
 	}
 }
+
+//fix for add one button not positioning properly
+
+.ss-ui-button.cms-page-add-button {
+	float:left;
+}
+
+.ss-ui-button.cms-page-add-button.ui-state-hover, .cms .ss-ui-button.cms-page-add-button:hover { 
+	background: #80bf40 url('../images/btn-icon-saaa1989272.png') 5px -49px no-repeat; 
+}
+
+//fix for the tree view modes not displaying inline
+
+.cms-tree-view-modes {
+	div {
+		float:left;
+	}
+	span {
+		float:left;
+		padding-top:5px;
+	}
+}
+
+//add line below the cms-content-toolbar
+
+.cms-content-toolbar {
+	border-bottom:1px solid rgb(201, 205, 206);
+	padding-bottom:5px;
+}
+
+//fix for background color on default tabs
+.ui-state-default, 
+.ui-widget-content .ui-state-default, 
+.ui-widget-header .ui-state-default {
+	background-image:none;
+}
+
+// fix jstree themeroller plugin bug: tree disappear in IE7
+.jstree li a .ui-icon {
+	text-indent: 0px !important;
+}

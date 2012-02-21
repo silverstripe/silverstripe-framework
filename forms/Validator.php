@@ -79,6 +79,7 @@ abstract class Validator extends Object {
 		} else {
 			user_error("Validator::setJavascriptValidationHandler() passed bad handler '$handler'", E_USER_WARNING);
 		}
+		return $this;
 	}
 
 	/**
@@ -96,6 +97,7 @@ abstract class Validator extends Object {
 	 */
 	function setForm($form) {
 		$this->form = $form;
+		return $this;
 	}
 	
 	/**
@@ -182,7 +184,6 @@ abstract class Validator extends Object {
 		if($this->getJavascriptValidationHandler() == 'prototype') {
 			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
 			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-			Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
 			Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 			Requirements::javascript(SAPPHIRE_DIR . "/javascript/Validator.js");
 		
@@ -264,4 +265,4 @@ JS;
 	
 	abstract function php($data);
 }
-?>
+

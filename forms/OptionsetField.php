@@ -108,6 +108,7 @@ class OptionsetField extends DropdownField {
 	 */
 	function setDisabledItems($items) {
 		$this->disabledItems = $items;
+		return $this;
 	}
 	
 	/**

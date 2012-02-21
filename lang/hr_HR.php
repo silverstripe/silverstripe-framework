@@ -340,4 +340,3 @@ $lang['hr_HR']['Widget']['SINGULARNAME'] = 'Widget';
 $lang['hr_HR']['WidgetArea']['PLURALNAME'] = 'Prostori za Widgete';
 $lang['hr_HR']['WidgetArea']['SINGULARNAME'] = 'Prostor za Widget';
 
-?>

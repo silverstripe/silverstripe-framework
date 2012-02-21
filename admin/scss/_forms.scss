@@ -10,87 +10,6 @@
  * Basic form fields
  * ---------------------------------------------------- */	
 
-/* CMS action button sprite mix-in (used for all the buttons in the bottom row */
-@mixin actionButtonSprite($name) {
-  padding-left: 24px;
-	padding-right: 6px;
-
-	@include background($color-button-generic sprite($btn_icons, $name, 5px, 6px) no-repeat);
-	@include background(sprite($btn_icons, $name, 5px, 5px) no-repeat,
-		linear-gradient(color-stops(
-			lighten($color-button-generic, 10%),
-			darken($color-button-generic, 5%)
-		))
-	);
-	&.ui-state-hover, &:hover {
-		@include background(lighten($color-button-generic, 10%) sprite($btn_icons, $name, 5px, 6px) no-repeat);
-		@include background(sprite($btn_icons, $name, 5px, 5px) no-repeat,
-			linear-gradient(color-stops(
-				lighten($color-button-generic, 20%),
-				$color-button-generic
-			))
-		);
-		@include box-shadow(0 0 5px darken($color-button-generic, 20%));
-	}
-	&:active, &:focus, &.ui-state-active, &.ui-state-focus {
-		border: 1px solid darken($color-button-generic, 20%);
-		@include background(lighten($color-button-generic, 10%) sprite($btn_icons, $name, 5px, 6px) no-repeat);
-		@include background(sprite($btn_icons, $name, 5px, 5px) no-repeat,
-			linear-gradient(color-stops(
-				lighten($color-button-generic, 20%),
-				$color-button-generic
-			))
-		);
-		@include box-shadow(0 0 5px darken($color-button-generic, 30%) inset);
-	}
-	&.ui-state-disabled {
-    background-image: none;
-  	@include background(lighten($color-button-generic, 20%) sprite($btn_icons, $name+_disabled, 5px, 6px) no-repeat);
-		@include background(sprite($btn_icons, $name+_disabled, 5px, 5px) no-repeat,
-			linear-gradient(color-stops(
-				lighten($color-button-generic, 20%),
-				$color-button-generic
-			))
-		);
-	}
-}
-
-@mixin actionButtonSpriteConstructive($name) {
-  background-image: none;
-  padding-left: 24px;
-	padding-right: 6px;
-	font-weight: bold;
-	margin-left: $grid-horizontal;
-	color: $color-text-light;
-	border-color: $color-button-constructive-border;
-	border-bottom-color: darken($color-button-constructive-border, 10%);			
-	@include background($color-button-constructive sprite($btn_icons, $name, 5, 5) no-repeat);
-	@include background(sprite($btn_icons, $name, 5, 5) no-repeat,
-		linear-gradient(color-stops(
-			lighten($color-button-constructive, 10%),
-			darken($color-button-constructive, 5%)
-		))
-	);
-
-	@include text-shadow(darken($color-button-constructive, 10%) 0 1px 1px);
-
-	&.ui-state-hover, &:hover {
-		border-color: darken($color-button-constructive-border, 10%);
-		@include background(lighten($color-button-constructive, 10%) sprite($btn_icons, $name, 6, 6) no-repeat);
-		@include background(sprite($btn_icons, $name, 5, 5) no-repeat,
-			linear-gradient(color-stops(
-				lighten($color-button-constructive, 15%),
-				$color-button-constructive
-			))
-		);
-	}
-	&:active, &:focus, &.ui-state-active, &.ui-state-focus {
-
-		@include background(darken($color-button-constructive, 2%) sprite($btn_icons, $name, 5, 5) no-repeat);
-		@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
-	}
-}
-
 form.nostyle {
 	@include clear-form-field-styles();
 }
@@ -108,8 +27,8 @@ form.nostyle {
 	// bottom padding accounts for the border and we have a negative
 	// margin with a postive padding to ensure the bottom border extends
 	// over the edges
-	padding: 0 0 $grid-vertical - 1 0;
-	margin: 0 0 $grid-vertical 0;
+	padding: 0 0 $grid-y - 1 0;
+	margin: 0 0 $grid-y 0;
 
 	
 	// using the legacy version as some of the more complex form fields
@@ -128,9 +47,9 @@ form.nostyle {
 		&.left {
 			float: left;
 			display: block;
-			width: $grid-horizontal * 22;
-			padding: $grid-vertical $grid-horizontal $grid-vertical 0;
-			line-height: $grid-vertical * 2;
+			width: $grid-x * 22;
+			padding: $grid-y $grid-x $grid-y 0;
+			line-height: $grid-y * 2;
 			font-weight: bold;
 			@include text-shadow(1px 1px 0 $color-text-shadow);
 		}
@@ -141,13 +60,21 @@ form.nostyle {
 	}
 	
 	.middleColumn {
-		margin-left: $grid-horizontal * 23;
+		margin-left: $grid-x * 23;
 	}
 	
 	span.readonly {
-		padding-top: $grid-vertical;
-		line-height: $grid-vertical * 2;
+		padding-top: $grid-y;
+		line-height: $grid-y * 2;
 		display: block;
+	}
+
+	// Additional help text to clarify the field intent,
+	// displayed alongside the field (rather than in a tooltip)
+	.help {
+		color: lighten($color-text, 20%);
+		font-style: italic;
+		padding-top: 1em;
 	}
 	
 	input.text,
@@ -155,7 +82,7 @@ form.nostyle {
 	select,
 	.TreeDropdownField {
 		width: 100%;
-		max-width: $grid-horizontal * 64;
+		max-width: $grid-x * 64;
 		@include box-sizing(border-box);
 	}
 	
@@ -164,8 +91,8 @@ form.nostyle {
 	.TreeDropdownField {
 		background: #fff;
 		border: 1px solid lighten($color-medium-separator, 20%);
-		padding: ($grid-vertical - 1) ($grid-horizontal - 1);
-		line-height: $grid-vertical * 2;
+		padding: ($grid-y - 1) ($grid-x - 1);
+		line-height: $grid-y * 2;
 		margin: 0;
 		outline: none;
 		@include transition(0.2s box-shadow ease-in);
@@ -207,12 +134,12 @@ form.stacked .field, .field.stacked {
 form.small .field, .field.small {
 	label {
 		&.left {
-			width: $grid-horizontal * 14;
+			width: $grid-x * 14;
 		}
 	}
 	
 	.middleColumn {
-		margin-left: $grid-horizontal * 15;
+		margin-left: $grid-x * 15;
 	}
 
 	input.text,
@@ -245,7 +172,7 @@ form.small .field, .field.small {
 	/* dropdowns */
 	.dropdown {
 		select {
-			margin-top: $grid-vertical;
+			margin-top: $grid-y;
 		}
 	}
 	
@@ -255,8 +182,8 @@ form.small .field, .field.small {
 			
 			li {
 				font-size: 11px;
-				line-height: $grid-vertical * 2;
-				padding: $grid-vertical / 2 $grid-horizontal / 2;
+				line-height: $grid-y * 2;
+				padding: $grid-y / 2 $grid-x / 2;
 			}
 		}
 	}
@@ -291,7 +218,7 @@ form.small .field, .field.small {
 	/* Date Fields */
 	input.hasDatepicker {
 		width: 50%;
-		max-width: ($grid-horizontal * 12);
+		max-width: ($grid-x * 12);
 	}
 }
 
@@ -299,25 +226,27 @@ form.small .field, .field.small {
  * Buttons
  * ---------------------------------------------------- */
 
-.Actions {
-	min-height: 30px;
-
-	& > div {
-		overflow: auto;
-	}
-}
-
-.cms-preview-toggle-link {
-	display: block;
-	float: right;
-	font-size: 12px;
-	text-decoration: none;
-	span.ui-button-text{
-		padding:0;
-	}
-}
-
 .cms {
+
+	.Actions, .cms-actions-row {
+		> * {
+			display: block;
+			float: left;
+			margin-right: $grid-x;
+		}
+
+		> *:last-child {
+			margin-right: 0;
+		}
+	}
+
+	.Actions {
+		min-height: 30px;
+
+		& > div {
+			overflow: auto;
+		}
+	}
 
 	input.loading,
 	input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, 
@@ -333,34 +262,30 @@ form.small .field, .field.small {
 	}
 
 	.ss-ui-button {
-		
+
 		&.buttonset {
 			margin: 0 -1px; // hack to avoid double borders
 		}
 		
-		/* all buttons */
-		padding: ($grid-vertical - 3) ($grid-horizontal + 4);
 		font-weight: bold;
 		text-decoration: none;
-		margin: 0;
-		line-height: $grid-vertical * 2;
+		line-height: $grid-y * 2;
 		color: lighten($color-text-dark, 10%);
-		background-color: $color-button-generic;
 		border: 1px solid $color-button-generic-border;
 		border-bottom: 1px solid darken($color-button-generic-border, 10%);
 		cursor: pointer;
-		
 		@include text-shadow(lighten($color-button-generic, 20%) 0 1px 1px);
-		
-		@include background($color-button-generic);
+		background-color: $color-button-generic;
 		@include background(
 			linear-gradient(color-stops(
 				lighten($color-button-generic, 10%),
 				darken($color-button-generic, 5%)
 			))
 		);
+
 		&.ui-state-hover, &:hover {
-			@include background(lighten($color-button-generic, 10%));
+			text-decoration: none;
+			background-color: lighten($color-button-generic, 10%);
 			@include background(
 				linear-gradient(color-stops(
 					lighten($color-button-generic, 20%),
@@ -369,9 +294,10 @@ form.small .field, .field.small {
 			);
 			@include box-shadow(0 0 5px darken($color-button-generic, 20%));
 		}
+
 		&:active, &:focus, &.ui-state-active, &.ui-state-focus {
 			border: 1px solid darken($color-button-generic, 20%);
-			@include background(lighten($color-button-generic, 10%) no-repeat);
+			background-color: lighten($color-button-generic, 10%);
 			@include background(
 				linear-gradient(color-stops(
 					lighten($color-button-generic, 20%),
@@ -383,42 +309,43 @@ form.small .field, .field.small {
 
 		/* constructive */
 		&.ss-ui-action-constructive {
-			@include actionButtonSpriteConstructive('accept');
+			font-weight: bold;
+			color: $color-text-light;
+			border-color: $color-button-constructive-border;
+			border-bottom-color: darken($color-button-constructive-border, 10%);			
+			background-color: $color-button-constructive;
+			@include background(
+				linear-gradient(color-stops(
+					lighten($color-button-constructive, 10%),
+					darken($color-button-constructive, 5%)
+				))
+			);
+			@include text-shadow(darken($color-button-constructive, 10%) 0 1px 1px);
+
+			&.ui-state-hover, &:hover {
+				border-color: darken($color-button-constructive-border, 10%);
+				background-color: lighten($color-button-constructive, 10%);
+				@include background(
+					linear-gradient(color-stops(
+						lighten($color-button-constructive, 15%),
+						$color-button-constructive
+					))
+				);
+			}
+			&:active, &:focus, &.ui-state-active, &.ui-state-focus {
+				background-color: darken($color-button-constructive, 2%);
+				@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
+			}
 		}
 		
-		&.cms-page-add-button {
-			@include actionButtonSpriteConstructive('add');
-			@include border-radius(4px);
-
-		}
 		/* destructive */
 		&.ss-ui-action-destructive {
 			color: $color-button-destructive;
 			background-color: $color-button-generic;
-		
-			&.delete {
-				@include actionButtonSprite('decline');
-			}
-
-			&.unpublish {
-			    @include actionButtonSprite('unpublish');
-			}
-		}
-
-		/* generic action buttons */
-		&.save-draft {
-		    @include actionButtonSprite('addpage');
-		}
-
-		&.cms-preview-toggle-link {
-		  padding-left: 24px !important;
-			margin-left: 4px !important;
-			text-decoration: none;
-			@include actionButtonSprite('preview');
 		}
 
 		&.ss-ui-button-small {
-			padding: ($grid-vertical/2) ($grid-horizontal/2);
+			padding: ($grid-y/2) ($grid-x/2);
 		}
 			
 		&.ui-state-highlight {
@@ -428,7 +355,6 @@ form.small .field, .field.small {
 
 		&.ss-ui-action-minor {
 			background: none;
-			padding: 0;
 			border: 0;
 			color: lighten($color-text-dark, 10%);
 			text-decoration: underline;
@@ -455,8 +381,8 @@ form.small .field, .field.small {
 	.fieldgroup-field {
 		float: left;
 		display: block;
-		width: $grid-horizontal * 23;
-		padding-right: $grid-horizontal;
+		width: $grid-x * 23;
+		padding-right: $grid-x;
 
 		&.odd {
 			
@@ -476,8 +402,8 @@ form.small .field, .field.small {
  * Checkbox Field
  * ---------------------------------------------------- */
 .field.checkbox {
-	padding-left: $grid-horizontal * 23;
-	margin-bottom: $grid-vertical;
+	padding-left: $grid-x * 23;
+	margin-bottom: $grid-y;
 
 	input {
 		margin-left: 0;
@@ -491,8 +417,8 @@ input.checkbox {
  * Radiobutton Field
  * ---------------------------------------------------- */
 .field.radio {
-	padding-left: $grid-horizontal * 23;
-	margin-bottom: $grid-vertical;
+	padding-left: $grid-x * 23;
+	margin-bottom: $grid-y;
 
 	input {
 		margin-left: 0;
@@ -511,9 +437,9 @@ input.radio {
 	li {
 		float: left;
 		display: block;
-		width: $grid-horizontal * 27;
-		padding-bottom: $grid-horizontal;
-		line-height: $grid-vertical * 2;
+		width: $grid-x * 27;
+		padding-bottom: $grid-x;
+		line-height: $grid-y * 2;
 		list-style: none;
 
 		input {
@@ -525,12 +451,13 @@ input.radio {
 		label {
 			display: inline;
 			cursor: pointer;
-			padding-left: $grid-vertical;
+			padding-left: $grid-y;
 		}
 
 	}
 	
 }
+
 
 /** ----------------------------------------------------
  * HTML Text 

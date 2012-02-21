@@ -12,6 +12,7 @@ class CheckboxField extends FormField {
 
 	function setValue($value) {
 		$this->value = ($value) ? 1 : 0;
+		return $this;
 	}
 
 	function dataValue() {

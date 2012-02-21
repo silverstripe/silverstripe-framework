@@ -68,4 +68,3 @@ class LookupField extends DropdownField {
 	}
 }
 
-?>

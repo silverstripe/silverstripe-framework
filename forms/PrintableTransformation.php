@@ -40,4 +40,3 @@ class PrintableTransformation_TabSet extends TabSet {
 	
 }
 
-?>

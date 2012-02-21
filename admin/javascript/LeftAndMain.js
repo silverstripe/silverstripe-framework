@@ -1,9 +1,9 @@
+jQuery.noConflict();
+
 /**
  * File: LeftAndMain.js
  */
 (function($) {
-	$.metadata.setType('html5');
-	
 	// setup jquery.entwine
 	$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 	$.entwine('ss', function($) {
@@ -95,8 +95,12 @@
 			redraw: function() {
 				// Move from inner to outer layouts. Some of the elements might not exist.
 				// Not all edit forms are layouted, so qualify by their data value.
-				this.find('.cms-edit-form[data-layout]').redraw(); 
+				
+				this.find('.cms-edit-form[data-layout-type]').redraw(); 
+				
+				// Only redraw preview if its visible
 				this.find('.cms-preview').redraw();
+
 				// Only redraw the content area if its not the same as the edit form
 				var contentEl = this.find('.cms-content');
 				if(!contentEl.is('.cms-edit-form')) contentEl.redraw();
@@ -253,9 +257,16 @@
 		 */
 		$('.cms input[type="submit"], .cms button, .cms input[type="reset"]').entwine({
 			onmatch: function() {
-				this.addClass('ss-ui-button');
-				this.redraw();
+				if(!this.hasClass('ss-ui-button')) this.addClass('ss-ui-button');
 				
+				this._super();
+			}
+		});
+
+		$('.cms .ss-ui-button').entwine({
+			onmatch: function() {
+				if(!this.data('button')) this.button();
+
 				this._super();
 			}
 		});
@@ -288,7 +299,7 @@
 		/**
 		 * Add styling to all contained buttons, and create buttonsets if required.
 		 */
-		$('.cms-container .Actions').entwine({
+		$('.cms .Actions').entwine({
 		onmatch: function() {
 			this.find('.ss-ui-button').click(function() {
 					var form = this.form;
@@ -305,31 +316,21 @@
 			this._super();
 		},
 		redraw: function() {
-			// Needs to be in the same execution frame as the buttonset logic below,
-			// to avoid re-adding rounded corners (default button styling) after removing them
-			this.find('.ss-ui-button').button();
-
 			// Remove whitespace to avoid gaps with inline elements
 			this.contents().filter(function() { 
 				return (this.nodeType == 3 && !/\S/.test(this.nodeValue)); 
 			}).remove();
-			
-			// Emulate jQuery UI buttonsets based on HTML5 data attributes
-			var sets = [], self = this;
-			this.find('.action[buttonset]').each(function() {
-				cl = $(this).attr('buttonset');
-				if($.inArray(cl, sets) == -1) sets.push(cl);
-			});
-			$.each(sets, function(i, set) {
-				// Gather buttons in set until no siblings are matched.
-				// This avoids "split" sets where a new button without a buttonset is inserted somewhere in the middle.
-				self.find('.action[buttonset="' + set + '"]:first')
-					.nextUntil('.action[buttonset!="' + set + '"]').andSelf()
-					.removeClass('ui-corner-all').addClass('buttonset')
-					.first().addClass('ui-corner-left').end()
-					.last().addClass('ui-corner-right');
+
+			// Init buttons if required
+			this.find('.ss-ui-button').each(function() {
+				if(!$(this).data('button')) $(this).button();
 			});
 			
+			// Mark up buttonsets
+			this.find('.ss-ui-buttonset').buttonset();
+				// .children().removeClass('ui-corner-all').addClass('buttonset')
+				// 	.first().addClass('ui-corner-left').end()
+				// 	.last().addClass('ui-corner-right');;
 		}
 	});
 		
@@ -340,7 +341,7 @@
 		 */
 		$('.cms-container .field.date input.text').entwine({
 			onmatch: function() {
-				var holder = $(this).parents('.field.date:first'), config = holder.metadata({type: 'class'});
+				var holder = $(this).parents('.field.date:first'), config = holder.data();
 				if(!config.showcalendar) return;
 
 				config.showOn = 'button';
@@ -395,13 +396,4 @@ var errorMessage = function(text) {
 
 returnFalse = function() {
 	return false;
-};
-
-/**
- * Find and enable TinyMCE on all htmleditor fields
- * Pulled in from old tinymce.template.js
- */
-
-function nullConverter(url) {
-	return url;
 };

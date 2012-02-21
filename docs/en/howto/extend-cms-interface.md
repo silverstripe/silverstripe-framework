@@ -144,3 +144,4 @@ blocks and concepts for more complex extensions as well.
 ## Related
 
  * [CMS Architecture](../reference/cms-architecture)
+ * [Topics: Rich Text Editing](../topics/rich-text-editing)

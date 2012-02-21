@@ -6,182 +6,248 @@
  * ajax / iframe submissions
  */
 
+ var ss = ss || {};
+/**
+ * Wrapper for HTML WYSIWYG libraries, which abstracts library internals
+ * from interface concerns like inserting and editing links.
+ * Caution: Incomplete and unstable API.
+ */
+ ss.editorWrappers = {};
+ ss.editorWrappers.tinyMCE = (function() {
+	var bookmark;
+
+	return {
+		/**
+		 * @return Mixed Implementation specific object
+		 */
+		getInstance: function() {
+			return tinyMCE.activeEditor;
+		},
+		/**
+		 * Invoked when a content-modifying UI is opened.
+		 */
+		onopen: function() {
+			bookmark = this.getInstance().selection.getBookmark();
+		},
+		/**
+		 * Invoked when a content-modifying UI is closed.
+		 */
+		onclose: function() {
+			bookmark = null;
+		},
+		/**
+		 * Write the HTML back to the original text area field.
+		 */
+		save: function() {
+			tinyMCE.triggerSave();
+		},
+		/**
+		 * Create a new instance based on a textarea field.
+		 *
+		 * @param String
+		 * @param Object Implementation specific configuration
+		 * @param Function
+		 */
+		create: function(domID, config, onSuccess) {
+			var ed = new tinymce.Editor(domID, config);
+			ed.onInit.add(onSuccess);
+			ed.render();
+		},
+		/**
+		 * Redraw the editor contents
+		 */
+		repaint: function() {
+			tinyMCE.execCommand("mceRepaint");
+		},
+		/**
+		 * @return boolean
+		 */
+		isDirty: function() {
+			return this.getInstance().isDirty();
+		},
+		/**
+		 * HTML representation of the edited content.
+		 * 
+		 * Returns: {String}
+		 */
+		getContent: function() {
+			return this.getInstance().getContent();
+		},
+		/**
+		 * DOM tree of the edited content
+		 * 
+		 * Returns: DOMElement
+		 */
+		getDOM: function() {
+			return this.getInstance().dom;
+		},
+		/**
+		 * Returns: DOMElement
+		 */
+		getContainer: function() {
+			return this.getInstance().getContainer();
+		},
+		/**
+		 * Get the closest node matching the current selection.
+		 * 
+		 * Returns: {jQuery} DOMElement
+		 */
+		getSelectedNode: function() {
+			return this.getInstance().selection.getNode();
+		},
+		/**
+		 * Select the given node within the editor DOM
+		 * 
+		 * Parameters: {DOMElement}
+		 */
+		selectNode: function(node) {
+			this.getInstance().selection.select(node)
+		},
+		/**
+		 * @param String HTML
+		 */
+		insertContent: function(html) {
+			// Workaround for IE losing focus
+			this.getInstance().selection.moveToBookmark(bookmark);
+			this.getInstance().execCommand('mceInsertContent', false, html);
+		},
+		/**
+		 * Insert or update a link in the content area (based on current editor selection)
+		 * 
+		 * Parameters: {Object} attrs
+		 */
+		insertLink: function(attrs) {
+			// Workaround for IE losing focus
+			this.getInstance().selection.moveToBookmark(bookmark);
+			this.getInstance().execCommand("mceInsertLink", false, attrs);
+		},
+		/**
+		 * Remove the link from the currently selected node (if any).
+		 */
+		removeLink: function() {
+			this.getInstance().execCommand('unlink', false);
+		},
+		/**
+		 * Strip any editor-specific notation from link in order to make it presentable in the UI.
+		 * 
+		 * Parameters: 
+		 *  {Object} 
+		 *  {DOMElement}
+		 */
+		cleanLink: function(href, node) {
+			var cb = tinyMCE.settings['urlconverter_callback'];
+			if(cb) href = eval(cb + "(href, node, true);");
+
+			// Turn into relative
+			if(href.match(new RegExp('^' + tinyMCE.settings['document_base_url'] + '(.*)$'))) {
+				href = RegExp.$1;
+			}
+			
+			// Get rid of TinyMCE's temporary URLs
+			if(href.match(/^javascript:\s*mctmp/)) href = '';
+
+			return href;
+		}
+	}
+});
+// Override this to switch editor wrappers
+ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
+
+
 (function($) {
-		
-	$(document).ready(function() {
-		
-		// jQuery('#Form_EditorToolbarLinkForm').dialog('open')
-		
-		/**
-		 * On page refresh load the initial images (in root)
-		 */
-		if($("#FolderImages").length > 0 && $("body.CMSMain").length > 0) loadImages(false);
-		
-		/**
-		 * Show / Hide the Upload Form 
-		 */
-		$("#Form_EditorToolbarImageForm .showUploadField a").click(function() {
-			if($(this).hasClass("showing")) {
-				$("#Form_EditorToolbarImageForm_Files-0").parents('.file').hide();
-				$(this).text(ss.i18n._t('HtmlEditorField.ShowUploadForm', 'Upload File')).removeClass("showing");	
-			}
-			else {
-				$("#Form_EditorToolbarImageForm_Files-0").parents('.file').show();
-				$(this).text(ss.i18n._t('HtmlEditorField.HideUploadForm', 'Hide Upload Form')).addClass("showing");
-			}
-			return false;
-		}).show();
-		
-		/**
-		 * On folder change - lookup the new images
-		 */
-		$("#Form_EditorToolbarImageForm_Files-0").change(function() {
-			$(".cms-editor-dialogs #Form_EditorToolbarImageForm").ajaxForm({
-				url: 'admin/assets/UploadForm?action_doUpload=1',
-				iframe: true,
-				dataType: 'json',
-				beforeSubmit: function(data) {
-					$("#UploadFormResponse").text("Uploading File...").addClass("loading").show();
-					$("#Form_EditorToolbarImageForm_Files-0").parents('.file').hide();
-				},
-				success: function(data) {
-					$("#UploadFormResponse").text("").removeClass("loading");
-					$("#Form_EditorToolbarImageForm_Files-0").val("").parents('.file').show();
-					
-		 			$("#FolderImages").html('<h2>'+ ss.i18n._t('HtmlEditorField.Loading', 'Loading') + '</h2>');
-					
-					loadImages(data);
-				}
-			}).submit();
-		});
-		
-		/**
-		 * Loads images from getimages() to the thumbnail view. It's called on
-		 */
-		function loadImages(params) {
-			$.get('admin/EditorToolbar/ImageForm', {
-				action_callfieldmethod: "1",
-				fieldName: "FolderImages",
-				ajax: "1",
-				methodName: "getimages",
-				folderID: $("#Form_EditorToolbarImageForm_FolderID").val(),
-				searchText: $("#Form_EditorToolbarImageForm_getimagesSearch").val(),
-				cacheKillerDate: parseInt((new Date()).getTime()),
-				cacheKillerRand: parseInt(10000 * Math.random())
-			},
-			function(data) {
-				$("#FolderImages").html(data);
-				
-				$("#FolderImages").each(function() {
-					Behaviour.apply(this);
-				});
-				
-				if(params) {
-					$("#FolderImages a[href*="+ params.Filename +"]").click();
-				}
-			});	
-		}
-	});
-
-	/**
-	 * Wrapper for HTML WYSIWYG libraries, which abstracts library internals
-	 * from interface concerns like inserting and editing links.
-	 */
-	var editorWrapper_TinyMCE = (function() {
-		var bookmark;
-
-		return {
-			getInstance: function() {
-				return tinyMCE.activeEditor;
-			},
-			/**
-			 * Invoked when a content-modifying UI is opened.
-			 */
-			onopen: function() {
-				bookmark = this.getInstance().selection.getBookmark();
-			},
-			/**
-			 * Invoked when a content-modifying UI is closed.
-			 */
-			onclose: function() {
-				bookmark = null;
-			},
-			/**
-			 * HTML representation of the edited content.
-			 * 
-			 * Returns: {String}
-			 */
-			getContent: function() {
-				return this.getInstance().getContent();
-			},
-			/**
-			 * DOM tree of the edited content
-			 * 
-			 * Returns: DOMElement
-			 */
-			getDOM: function() {
-				return this.getInstance().dom;
-			},
-			/**
-			 * Get the closest node matching the current selection.
-			 * 
-			 * Returns: {jQuery} DOMElement
-			 */
-			getSelectedNode: function() {
-				return this.getInstance().selection.getNode();
-			},
-			/**
-			 * Select the given node within the editor DOM
-			 * 
-			 * Parameters: {DOMElement}
-			 */
-			selectNode: function(node) {
-				this.getInstance().selection.select(node)
-			},
-			/**
-			 * Insert or update a link in the content area (based on current editor selection)
-			 * 
-			 * Parameters: {Object} attrs
-			 */
-			insertLink: function(attrs) {
-				// Workaround for IE losing focus
-				this.getInstance().selection.moveToBookmark(bookmark);
-				this.getInstance().execCommand("mceInsertLink", false, attrs);
-			},
-			/**
-			 * Remove the link from the currently selected node (if any).
-			 */
-			removeLink: function() {
-				this.getInstance().execCommand('unlink', false);
-			},
-			/**
-			 * Strip any editor-specific notation from link in order to make it presentable in the UI.
-			 * 
-			 * Parameters: 
-			 *  {Object} 
-			 *  {DOMElement}
-			 */
-			cleanLink: function(href, node) {
-				href = eval(tinyMCE.settings['urlconverter_callback'] + "(href, node, true);");
-
-				// Turn into relative
-				if(href.match(new RegExp('^' + tinyMCE.settings['document_base_url'] + '(.*)$'))) {
-					href = RegExp.$1;
-				}
-				
-				// Get rid of TinyMCE's temporary URLs
-				if(href.match(/^javascript:\s*mctmp/)) href = '';
-
-				return href;
-			}
-		}
-	});
 
 	$.entwine('ss', function($) {
 
+		/**
+		 * Class: textarea.htmleditor
+		 * 
+		 * Add tinymce to HtmlEditorFields within the CMS. Works in combination
+		 * with a TinyMCE.init() call which is prepopulated with the used HTMLEditorConfig settings,
+		 * and included in the page as an inline <script> tag.
+		 */
+		$('textarea.htmleditor').entwine({
+
+			Editor: null,
+			
+			/**
+			 * Constructor: onmatch
+			 */
+			onmatch : function() {
+				var self = this, ed = ss.editorWrappers['default']();
+				this.setEditor(ed);
+				this.closest('form').bind('beforesave', function() {
+					// TinyMCE modifies input, so change tracking might get false
+					// positives when comparing string values - don't save if the editor doesn't think its dirty.
+					if(self.isChanged()) {
+						ed.save();
+
+						// TinyMCE assigns value attr directly, which doesn't trigger change event
+						self.trigger('change'); 	
+					}
+				});
+
+				// Only works after TinyMCE.init() has been invoked, see $(window).bind() call below for details.
+				this.redraw();
+
+				this._super();
+			},
+
+			redraw: function() {
+				// Using a global config (generated through HTMLEditorConfig PHP logic)
+				var config = ssTinyMceConfig, self = this, ed = this.getEditor();
+
+				// Avoid flicker (also set in CSS to apply as early as possible)
+				self.css('visibility', '');
+
+				// Create editor instance and render it.
+				// Similar logic to adapter/jquery/jquery.tinymce.js, but doesn't rely on monkey-patching
+				// jQuery methods, and avoids replicate the script lazyloading which is already in place with jQuery.ondemand.
+
+				ed.create(this.attr('id'), config, function() {
+					self.css('visibility', 'visible');
+				});
+				
+				// Handle editor de-registration by hooking into state changes.
+				// TODO Move to onunmatch for less coupling (once we figure out how to work with detached DOM nodes in TinyMCE)
+				$('.cms-container').bind('beforestatechange', function() {
+					self.css('visibility', 'hidden');
+					ed.getContainer();
+					if(ed) $(ed).remove();
+				});
+
+				this._super();
+			},
+
+			isChanged: function() {
+				var ed = this.getEditor();
+				return (ed && ed.isDirty());
+			},
+
+			resetChanged: function() {
+				var ed = this.getEditor();
+				if(typeof tinyMCE == 'undefined') return;
+
+				// TODO Abstraction layer
+				var inst = tinyMCE.getInstanceById(this.attr('id'));
+				if (inst) inst.startContent = tinymce.trim(inst.getContent({format : 'raw', no_events : 1}));
+			},
+
+			onunmatch: function() {
+				// TODO Throws exceptions in Firefox, most likely due to the element being removed from the DOM at this point
+				// var ed = tinyMCE.get(this.attr('id'));
+				// if(ed) ed.remove();
+
+				this._super();
+			}
+		});
+
+		/**
+		 * Base form implementation for interactions with an editor instance,
+		 * mostly geared towards modification and insertion of content.
+		 */
 		$('form.htmleditorfield-form').entwine({
 
-			// Wrapper for various HTML editors, defaults to editorWrapper_TinyMCE
+			// Wrapper for various HTML editors
 			Editor: null,
 
 			onmatch: function() {
@@ -191,9 +257,9 @@
 				titleEl.remove();
 
 				// Create jQuery dialog
-				this.dialog({autoOpen: false, bgiframe: true, modal: true, height: 500, width: 500, ghost: true});
+				this.dialog({autoOpen: false, bgiframe: true, modal: true, height: 500, width: '80%', ghost: true});
 
-				this.setEditor(editorWrapper_TinyMCE());
+				this.setEditor(ss.editorWrappers['default']());
 			},
 			redraw: function() {
 			},
@@ -206,20 +272,25 @@
 				this.getEditor().onclose();
 			},
 			open: function() {
-				this.dialog('open');
-				this.redraw();
-				this.getEditor().onopen();
-			}
-		});
-
-		$('form.htmleditorfield-linkform').entwine({
-
-			open: function() {
-				this.respondToNodeChange();
+				this.updateFromEditor();
 				this.dialog('open');
 				this.redraw();
 				this.getEditor().onopen();
 			},
+			/**
+			 * Update the view state based on the current editor selection.
+			 */
+			updateFromEditor: function() {
+			}
+		});
+
+		/**
+		 * Inserts and edits links in an html editor, including internal/external web links,
+		 * links to files on the webserver, email addresses, and anchors in the existing html content.
+		 * Every variation has its own fields (e.g. a "target" attribute doesn't make sense for an email link),
+		 * which are toggled through a type dropdown. Variations share fields, so there's only one "title" field in the form.
+		 */
+		$('form.htmleditorfield-linkform').entwine({
 
 			close: function() {
 				this._super();
@@ -306,7 +377,7 @@
 				// Add the new link
 				ed.insertLink(attributes);
 				this.trigger('onafterinsert', attributes);
-				this.respondToNodeChange();
+				this.updateFromEditor();
 			},
 
 			removeLink: function() {
@@ -366,7 +437,7 @@
 				}
 			},
 
-			respondToNodeChange: function() {
+			updateFromEditor: function() {
 				var htmlTagPattern = /<\S[^><]*>/g, fieldName, data = this.getCurrentLink();
 				
 				if(data) {
@@ -480,5 +551,345 @@
 				return false;
 			}
 		});
+
+		/**
+		 * Responsible for inserting media files, although only images are supported so far.
+		 * Allows to select one or more files, and load form fields for each file via ajax.
+		 * This allows us to tailor the form fields to the file type (e.g. different ones for images and flash),
+		 * as well as add new form fields via framework extensions.
+		 * The inputs on each of those files are used for constructing the HTML to insert into
+		 * the rich text editor. Also allows editing the properties of existing files if any are selected in the editor.
+		 * Note: Not each file has a representation on the webserver filesystem, supports insertion and editing
+		 * of remove files as well.
+		 */
+		$('form.htmleditorfield-mediaform').entwine({
+			onsubmit: function() {
+				var self = this, ed = this.getEditor();
+
+				// HACK: See ondialogopen()
+				// if($.browser.msie) jQuery(ed.getContainer()).show();
+
+
+				this.find('.ss-htmleditorfield-file').each(function(el) {
+					ed.insertContent($(this).getHTML());
+				});
+				ed.repaint();
+				this.close();
+
+				return false;
+			},
+			ondialogopen: function() {
+				this.redraw();
+
+				var self = this, ed = this.getEditor(), node = $(ed.getSelectedNode());
+				// TODO Depends on managed mime type
+				if(node.is('img')) {
+					this.showFileView(node.attr('src'), function() {
+						$(this).updateFromNode(node);
+						self.redraw();
+					});
+				}
+
+				this.redraw();
+
+				// HACK: Hide selected node in IE because its drag handles on potentially selected elements
+				// don't respect the z-index of the dialog overlay.
+				// if($.browser.msie) jQuery(ed.getContainer()).hide();
+			},
+			ondialogclose: function() {
+				var ed = this.getEditor(), node = $(ed.getSelectedNode());
+
+				// HACK: See ondialogopen()
+				// if($.browser.msie) jQuery(ed.getContainer()).show();
+
+				this.find('.ss-htmleditorfield-file').remove(); // Remove any existing views
+				this.find('.ss-gridfield-items .ui-selected').removeClass('ui-selected'); // Unselect all items
+				this.redraw();
+			},
+			redraw: function() {
+				this._super();
+
+				var ed = this.getEditor(), node = $(ed.getSelectedNode()),
+					hasItems = Boolean(this.find('.ss-htmleditorfield-file').length),
+					editingSelected = node.is('img');
+
+				// Only show second step if files are selected
+				this.find('.header-edit')[(hasItems) ? 'show' : 'hide']();
+
+				// Disable "insert" button if no files are selected
+				this.find('.Actions :submit')
+					.button(hasItems ? 'enable' : 'disable')
+					.toggleClass('ui-state-disabled', !hasItems);
+
+				// Hide file selection and step labels when editing an existing file
+				this.find('.header-select,.content-select,.header-edit')[editingSelected ? 'hide' : 'show']();
+			},
+			getFileView: function(idOrUrl) {
+				return this.find('.ss-htmleditorfield-file[data-id=' + idOrUrl + ']');
+			},
+			showFileView: function(idOrUrl, successCallback) {
+				var self = this, params = (Number(idOrUrl) == idOrUrl) ? '?ID=' + idOrUrl : '?FileURL=' + idOrUrl,
+					item = $('<div class="ss-htmleditorfield-file" />');
+
+				item.addClass('loading');
+				this.find('.content-edit').append(item)
+				$.ajax({
+					// url: this.data('urlViewfile') + '?ID=' + id,
+					url: this.attr('action').replace(/MediaForm/, 'viewfile') + params,
+					success: function(html, status, xhr) {
+						var newItem = $(html);
+						item.replaceWith(newItem);
+						self.redraw();
+						if(successCallback) successCallback.call(newItem, html, status, xhr);
+					},
+					error: function() {
+						item.remove();
+					}
+				});
+			}
+		});
+
+		$('form.htmleditorfield-mediaform .ss-gridfield-items').entwine({
+			onselectableselected: function(e, ui) {
+				var form = this.closest('form'), item = $(ui.selected);
+				if(!item.is('.ss-gridfield-item')) return;
+				form.closest('form').showFileView(item.data('id'));
+				form.redraw();
+			},
+			onselectableunselected: function(e, ui) {
+				var form = this.closest('form'), item = $(ui.unselected);
+				if(!item.is('.ss-gridfield-item')) return;
+				form.getFileView(item.data('id')).remove();
+				form.redraw();
+			}
+		});
+
+		/**
+		 * Represents a single selected file, together with a set of form fields to edit its properties.
+		 * Overload this based on the media type to determine how the HTML should be created.
+		 */
+		$('form.htmleditorfield-mediaform .ss-htmleditorfield-file').entwine({
+			/**
+			 * @return {Object} Map of HTML attributes which can be set on the created DOM node.
+			 */
+			getAttributes: function() {
+			},
+			/**
+			 * @return {Object} Map of additional properties which can be evaluated
+			 * by the specific media type.
+			 */
+			getExtraData: function() {
+			},
+			/**
+			 * @return {String} HTML suitable for insertion into the rich text editor
+			 */
+			getHTML: function() {
+			},
+			/**
+			 * Updates the form values from an existing node in the editor.
+			 * 
+			 * @param {DOMElement}
+			 */
+			updateFromNode: function(node) {
+			},
+			/**
+			 * Transforms values set on the dimensions form fields based on two constraints:
+			 * An aspect ration, and max width/height values. Writes back to the field properties as required.
+			 * 
+			 * @param {String} The dimension to constrain the other value by, if any ("Width" or "Height")
+			 * @param {Int} Optional max width
+			 * @param {Int} Optional max height
+			 */
+			updateDimensions: function(constrainBy, maxW, maxH) {
+				var widthEl = this.find(':input[name=Width]'),
+					heightEl = this.find(':input[name=Height]'),
+					w = widthEl.val(),
+					h = heightEl.val(),
+					aspect;
+
+				// Proportionate updating of heights, using the original values
+				if(w && h) {
+					if(constrainBy) {
+						aspect = heightEl.getOrigVal() / widthEl.getOrigVal();
+						// Uses floor() and ceil() to avoid both fields constantly lowering each other's values in rounding situations
+						if(constrainBy == 'Width') {
+							if(maxW && w > maxW) w = maxW;
+							h = Math.floor(w * aspect);
+						} else if(constrainBy == 'Height') {
+							if(maxH && h > maxH) h = maxH;
+							w = Math.ceil(h / aspect);
+						}
+					} else {
+						if(maxW && w > maxW) w = maxW;
+						if(maxH && h > maxH) h = maxH;
+					}
+
+					widthEl.val(w);
+					heightEl.val(h);
+				}
+			}
+		});
+
+		$('form.htmleditorfield-mediaform .ss-htmleditorfield-file.image').entwine({
+			getAttributes: function() {
+				var width = this.find(':input[name=Width]').val(),
+					height = this.find(':input[name=Height]').val();
+				return {
+					'src' : this.find(':input[name=URL]').val(),
+					'alt' : this.find(':input[name=AltText]').val(),
+					'width' : width ? parseInt(width, 10) : null,
+					'height' : height ? parseInt(height, 10) : null,
+					'title' : this.find(':input[name=Title]').val(),
+					'class' : this.find(':input[name=CSSClass]').val()
+				};
+			},
+			getExtraData: function() {
+				return {
+					'CaptionText': this.find(':input[name=CaptionText]').val()
+				};
+			},
+			getHTML: function() {
+				var el,
+					attrs = this.getAttributes(),
+					extraData = this.getExtraData(),
+					imgEl = $('<img id="__mce_tmp" />').attr(attrs);
+				
+				if(extraData.CaptionText) {
+					el = $('<div style="width: ' + attrs['width'] + 'px;" class="captionImage ' + attrs['class'] + '"><p class="caption">' + extraData.CaptionText + '</p></div>').prepend(imgEl);
+				} else {
+					el = imgEl;
+				}
+				return $('<div />').append(el).html(); // Little hack to get outerHTML string
+			},
+			updateFromNode: function(node) {
+				this.find(':input[name=AltText]').val(node.attr('alt'));
+				this.find(':input[name=Title]').val(node.attr('title'));
+				this.find(':input[name=CSSClass]').val(node.attr('class')).attr('disabled', 'disabled');
+				this.find(':input[name=Width]').val(node.width());
+				this.find(':input[name=Height]').val(node.height());
+				this.find(':input[name=CaptionText]').val(node.siblings('.caption:first').text());
+			}
+		});
+
+
+		/**
+		 * Insert a flash object tag into the content.
+		 * Requires the 'media' plugin for serialization of tags into <img> placeholders.
+		 */
+		$('form.htmleditorfield-mediaform .ss-htmleditorfield-file.flash').entwine({
+			getAttributes: function() {
+				var width = this.find(':input[name=Width]').val(),
+					height = this.find(':input[name=Height]').val();
+				return {
+					'src' : this.find(':input[name=URL]').val(),
+					'width' : width ? parseInt(width, 10) : null,
+					'height' : height ? parseInt(height, 10) : null
+				};
+			},
+			getExtraData: function() {
+				return {
+					'CaptionText': this.find(':input[name=CaptionText]').val()
+				};
+			},
+			getHTML: function() {
+				var attrs = this.getAttributes();
+
+				// Emulate serialization from 'media' plugin
+				var el = tinyMCE.activeEditor.plugins.media.dataToImg({
+					'type': 'flash',
+					'width': attrs.width,
+					'height': attrs.height,
+					'params': {'src': attrs.src},
+					'video': {'sources': []}
+				});
+				
+				return $('<div />').append(el).html(); // Little hack to get outerHTML string
+			},
+			updateFromNode: function(node) {
+				// TODO Not implemented
+			}
+		});
+
+		$('form.htmleditorfield-mediaform .ss-htmleditorfield-file .dimensions :input').entwine({
+			OrigVal: null,
+			onmatch: function () {
+				this._super();
+
+				this.setOrigVal(parseInt(this.val(), 10));
+
+				// Default to a managable size for the HTML view. Can be overwritten by user after initialization
+				if(this.attr('name') == 'Width') this.closest('.ss-htmleditorfield-file').updateDimensions('Width', 600);
+
+			},
+			onfocusout: function(e) {
+				this.closest('.ss-htmleditorfield-file').updateDimensions(this.attr('name'));
+			}
+		});
+
+		/**
+		 * Deselect item and remove the 'edit' view
+		 */
+		$('form.htmleditorfield-mediaform .ss-htmleditorfield-file .action-delete').entwine({
+			onclick: function(e) {
+				var form = this.closest('form'), file = this.closest('.ss-htmleditorfield-file');
+				form.find('.ss-gridfield-item[data-id=' + file.data('id') + ']').removeClass('ui-selected');
+				this.closest('.ss-htmleditorfield-file').remove();
+				form.redraw();
+				e.preventDefault();
+			}
+		});
+
+		$('form.htmleditorfield-mediaform #ParentID .TreeDropdownField').entwine({
+			onmatch: function() {
+				this._super();
+
+				// TODO Custom event doesn't fire in IE if registered through object literal
+				var self = this;
+				this.bind('change', function() {
+					var fileList = self.closest('form').find('fieldset.ss-gridfield');
+					fileList.setState('ParentID', self.getValue());
+					fileList.reload();
+				});
+			}
+		});
+		
 	});
 })(jQuery);
+
+
+/**
+ * These callback globals hook it into tinymce.  They need to be referenced in the TinyMCE config.
+ */
+function sapphiremce_cleanup(type, value) {
+	if(type == 'get_from_editor') {
+		// replace indented text with a <blockquote>
+		value = value.replace(/<p [^>]*margin-left[^>]*>([^\n|\n\015|\015\n]*)<\/p>/ig,"<blockquote><p>$1</p></blockquote>");
+	
+		// replace VML pixel image references with image tags - experimental
+		value = value.replace(/<[a-z0-9]+:imagedata[^>]+src="?([^> "]+)"?[^>]*>/ig,"<img src=\"$1\">");
+		
+		// Word comments
+		value = value.replace(new RegExp('<(!--)([^>]*)(--)>', 'g'), ""); 
+			
+		// kill class=mso??? and on mouse* tags  
+		value = value.replace(/([ \f\r\t\n\'\"])class=mso[a-z0-9]+[^ >]+/ig, "$1"); 
+		value = value.replace(/([ \f\r\t\n\'\"]class=")mso[a-z0-9]+[^ ">]+ /ig, "$1"); 
+		value = value.replace(/([ \f\r\t\n\'\"])class="mso[a-z0-9]+[^">]+"/ig, "$1"); 
+		value = value.replace(/([ \f\r\t\n\'\"])on[a-z]+=[^ >]+/ig, "$1");
+		value = value.replace(/ >/ig, ">"); 
+	
+		// remove everything that's in a closing tag
+		value = value.replace(/<(\/[A-Za-z0-9]+)[ \f\r\t\n]+[^>]*>/ig,"<$1>");		
+	}
+
+	if(type == 'get_from_editor_dom') {
+		jQuery(value).find('img').each(function() {
+			this.onresizestart = null;
+			this.onresizeend = null;
+			this.removeAttribute('onresizestart');
+			this.removeAttribute('onresizeend');
+		});
+	}
+
+	return value;
+}

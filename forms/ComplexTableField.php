@@ -211,7 +211,7 @@ class ComplexTableField extends TableListField {
 	 */
 	function FieldHolder() {
 		Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/behaviour/behaviour.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/greybox/AmiJS.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/greybox/greybox.js");
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
@@ -340,10 +340,12 @@ JS;
 
 	function setController($controller) {
 		$this->controller = $controller;
+		return $this;
 	}
 
 	function setTemplatePopup($template) {
 		$this->templatePopup = $template;
+		return $this;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -448,6 +450,7 @@ JS;
 	 */
 	function setRelationAutoSetting($value) {
 		Deprecation::notice('3.0', 'Manipulate the DataList instead.');
+		return $this;
 	}
 	
 	/**
@@ -844,7 +847,6 @@ class ComplexTableField_Popup extends Form {
 		Requirements::css(CMS_DIR . '/css/cms_right.css');
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous/controls.js");
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
@@ -876,4 +878,4 @@ class ComplexTableField_Popup extends Form {
 	}
 }
 
-?>
+

@@ -1557,9 +1557,11 @@ class Member_ProfileForm extends Form {
 		$fields->push(new HiddenField('ID','ID',$member->ID));
 
 		$actions = new FieldList(
- 			$saveAction = new FormAction('dosave',_t('CMSMain.SAVE', 'Save'), null, null, "ss-ui-button ss-ui-action-constructive")
+ 			FormAction::create('dosave',_t('CMSMain.SAVE', 'Save'))
+ 				->addExtraClass('ss-ui-button ss-ui-action-constructive')
+ 				->setAttribute('data-icon', 'accept')
+ 				->setUseButtonTag(true)
 		);
-		$saveAction->addExtraClass('ss-ui-action-constructive');
 		
 		$validator = new Member_Validator();
 		

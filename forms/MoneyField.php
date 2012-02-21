@@ -87,6 +87,8 @@ class MoneyField extends FormField {
 		//  decimal and thousands signs, while respecting the stored
 		//  precision in the database without truncating it during display
 		//  and subsequent save operations
+
+		return $this;
 	}
 	
 	/**
@@ -129,6 +131,8 @@ class MoneyField extends FormField {
 		
 		$this->fieldAmount->setReadonly($bool);
 		$this->fieldCurrency->setReadonly($bool);
+
+		return $this;
 	}
 
 	function setDisabled($bool) {
@@ -136,6 +140,8 @@ class MoneyField extends FormField {
 		
 		$this->fieldAmount->setDisabled($bool);
 		$this->fieldCurrency->setDisabled($bool);
+
+		return $this;
 	}
 	
 	/**
@@ -148,6 +154,8 @@ class MoneyField extends FormField {
 		$oldVal = $this->fieldCurrency->Value();
 		$this->fieldCurrency = $this->FieldCurrency($this->name);
 		$this->fieldCurrency->setValue($oldVal);
+
+		return $this;
 	}
 	
 	/**
@@ -159,10 +167,10 @@ class MoneyField extends FormField {
 	
 	function setLocale($locale) {
 		$this->_locale = $locale;
+		return $this;
 	}
 	
 	function getLocale() {
 		return $this->_locale;
 	}
 }
-?>

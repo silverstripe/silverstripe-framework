@@ -454,6 +454,7 @@ class TableField extends TableListField {
 	 */
 	function setExtraData($extraData) {
 		$this->extraData = $extraData;
+		return $this;
 	}
 	
 	/**
@@ -468,8 +469,8 @@ class TableField extends TableListField {
 	 */
 	function FieldHolder() {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableField.js');
@@ -480,6 +481,7 @@ class TableField extends TableListField {
 		
 	function setTransformationConditions($conditions) {
 		$this->transformationConditions = $conditions;
+		return $this;
 	}
 	
 	function jsValidation() {
@@ -580,6 +582,7 @@ JS;
 	
 	function setRequiredFields($fields) {
 		$this->requiredFields = $fields;
+		return $this;
 	}
 }
 
@@ -753,4 +756,3 @@ class TableField_Item extends TableListField_Item {
 	
 }
 
-?>

@@ -2,7 +2,6 @@
 
 // TODO we need a seperated file for styles that are used in both cms and front end (such as buttons)
 @import "../admin/scss/themes/default.scss";
-@import "sprites.scss";
 
 
 .ss-uploadfield {
@@ -67,7 +66,7 @@
 			font-weight: bold;
 		}
 	}
-	label.ss-ui-button {
+	.ss-ui-button {
 		display: block;
 		float: left;
 		margin: 0 10px 0 0;
@@ -75,23 +74,6 @@
 		&.ss-uploadfield-fromcomputer {
 			position: relative;
 			overflow: hidden;
-			@include actionButtonSprite('drive-upload');
-		}
-		&.ss-uploadfield-fromfiles {
-			@include actionButtonSprite('network-cloud');
-		}
-		&.ss-uploadfield-startall {
-			@include actionButtonSprite('navigation');
-		}
-		&.ss-uploadfield-item-delete {
-			color: $color-button-destructive;
-			@include actionButtonSprite('minus-circle');
-		}
-		&.ss-uploadfield-item-remove {
-			@include actionButtonSprite('plug-disconnect-prohibition');
-		}
-		&.ss-uploadfield-item-edit {
-			@include actionButtonSprite('pencil');
 		}
 	}
 	.ss-uploadfield-files {
@@ -160,13 +142,13 @@
 				height: 16px;
 				cursor: pointer;
 				@include single-box-shadow(none);
-				background: sprite($sprites16, cross-circle) no-repeat;
+				// background: sprite($sprites16, cross-circle) no-repeat;
 			}
 		}
 		.ss-uploadfield-item-start {
 			right: 20px;
 			button {
-				background: sprite($sprites16, navigation) no-repeat;
+				// background: sprite($sprites16, navigation) no-repeat;
 			}
 		}
 		.ss-uploadfield-item-editform {
@@ -174,7 +156,7 @@
 			height: 0;
 			overflow: hidden;
 			clear: both;
-			margin-top: $grid-vertical;
+			margin-top: $grid-y;
 			iframe {
 				width: 100%;
 			}
@@ -188,7 +170,7 @@
 }
 
 body.ss-uploadfield-edit-iframe {
-	padding: $grid-vertical*2 $grid-horizontal*2;
+	padding: $grid-y*2 $grid-x*2;
 }
 
 .ss-upload {

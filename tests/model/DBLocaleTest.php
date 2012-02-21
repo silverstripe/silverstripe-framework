@@ -19,4 +19,3 @@ class DBLocaleTest extends SapphireTest {
 		$this->assertEquals($l->getNativeName(), 'Deutsch');
 	}
 }
-?>

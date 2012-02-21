@@ -124,4 +124,3 @@ JS;
 		return true; 
 	}
 }
-?>

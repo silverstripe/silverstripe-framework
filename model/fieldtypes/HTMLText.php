@@ -142,4 +142,4 @@ class HTMLText extends Text {
 
 }
 
-?>
+
