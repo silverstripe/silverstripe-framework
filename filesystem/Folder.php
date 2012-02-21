@@ -481,11 +481,14 @@ class Folder extends File {
 						$addFolderBtn
 					),
 					$gridField,
-					new HiddenField("ID"),
 					new HiddenField("DestFolderID")
 				)
 			)			
 		);
+		// If we running in singleton mode, don't add ID with value 0, it borks ORM queries
+		if($this->ID) {
+			$fields->addFieldToTab('Root.listview', new HiddenField("ID"));
+		}
 		
 		$actionsComposite->addExtraClass('cms-actions-row');
 
