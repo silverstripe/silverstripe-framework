@@ -16,7 +16,7 @@ jQuery.noConflict();
 			var top = ($(window).height() - spinner.height()) / 2;
 			spinner.css('top', top + offset);
 			spinner.show();
-		}
+		};
 		
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
 
@@ -77,7 +77,7 @@ jQuery.noConflict();
 						if(url) window.history.replaceState({}, '', url);
 					}
 					
-					self.redraw()
+					self.redraw();
 				});
 				
 				// Remove loading screen
@@ -123,9 +123,8 @@ jQuery.noConflict();
 			 *  - {Object} data Any additional data passed through to History.pushState()
 			 */
 			loadPanel: function(url, title, data) {
-				var data = data || {};
-				var selector = data.selector || '.cms-content'
-				var contentEl = $(selector);
+				if(!data) data = {};
+				var selector = data.selector || '.cms-content', contentEl = $(selector);
 				
 				// Check change tracking (can't use events as we need a way to cancel the current state change)
 				var trackedEls = contentEl.find(':data(changetracker)').add(contentEl.filter(':data(changetracker)'));
@@ -217,7 +216,7 @@ jQuery.noConflict();
 						newContentEl
 							.removeClass(layoutClasses.join(' '))
 							.addClass(origLayoutClasses.join(' '));
-						if(origStyle) newContentEl.attr('style', origStyle)
+						if(origStyle) newContentEl.attr('style', origStyle);
 						newContentEl.css('visibility', 'hidden');
 
 						// Allow injection of inline styles, as they're not allowed in the document body.
@@ -328,9 +327,6 @@ jQuery.noConflict();
 			
 			// Mark up buttonsets
 			this.find('.ss-ui-buttonset').buttonset();
-				// .children().removeClass('ui-corner-all').addClass('buttonset')
-				// 	.first().addClass('ui-corner-left').end()
-				// 	.last().addClass('ui-corner-right');;
 		}
 	});
 		

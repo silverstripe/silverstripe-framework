@@ -68,7 +68,7 @@
 
 					//show all the flyout-indicators
 					var par = $('.cms-menu-list ul.collapsed-flyout').parent();
-					if (par.children('.child-flyout-indicator').length == 0) par.append('<span class="child-flyout-indicator"></span>').fadeIn();
+					if (par.children('.child-flyout-indicator').length === 0) par.append('<span class="child-flyout-indicator"></span>').fadeIn();
 					par.children('.child-flyout-indicator').fadeIn();
 				}
 			}
@@ -242,12 +242,12 @@
 				// Only applies to edit forms relating to page elements
 				if(!$('.cms-content').is('.CMSMain')) return;
 
-				var link = this.find('a:first'), href = link.attr("href").split('/')
+				var link = this.find('a:first'), href = link.attr("href").split('/');
 				// Assumes that current ID will always be the last URL segment (and not a query parameter)
 				href[href.length -1] = id;
 				link.attr('href', href.join('/'));
 			}
-		})
+		});
 
 		$('.cms-menu-list #Menu-CMSPageAddController').entwine({
 			setRecordID: function(id) {
@@ -264,5 +264,5 @@
 
 	// Internal Helper
 	$.expr[':'].internal = function(obj){return obj.href.match(/^mailto\:/) || (obj.hostname == location.hostname);};
-	$.expr[':'].external = function(obj){return !$(obj).is(':internal')};
+	$.expr[':'].external = function(obj){return !$(obj).is(':internal');};
 }(jQuery));
