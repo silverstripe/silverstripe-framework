@@ -134,7 +134,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider {
 	protected $iteratorPos;
 	protected $iteratorTotalItems;
 
-	public static function get_exposed_variables() {
+	public static function get_template_iterator_variables() {
 		return array(
 			'First',
 			'Last',
@@ -307,20 +307,20 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 		if (self::$globalProperties === null) {
 			self::$globalProperties = array();
 			// Get all the exposed variables from all classes that implement the TemplateGlobalProvider interface
-			$this->createCallableArray(self::$globalProperties, "TemplateGlobalProvider");
+			$this->createCallableArray(self::$globalProperties, "TemplateGlobalProvider", "get_template_global_variables");
 		}
 
 		// Build up iterator property providers array only once per request
 		if (self::$iteratorProperties === null) {
 			self::$iteratorProperties = array();
 			// Get all the exposed variables from all classes that implement the TemplateIteratorProvider interface
-			$this->createCallableArray(self::$iteratorProperties, "TemplateIteratorProvider", true);   //call non-statically
+			$this->createCallableArray(self::$iteratorProperties, "TemplateIteratorProvider", "get_template_iterator_variables", true);   //call non-statically
 		}
 
 		$this->extras = $extras;
 	}
 
-	protected function createCallableArray(&$extraArray, $interfaceToQuery, $createObject = false) {
+	protected function createCallableArray(&$extraArray, $interfaceToQuery, $variableMethod, $createObject = false) {
 		$implementers = ClassInfo::implementorsOf($interfaceToQuery);
 		if($implementers) foreach($implementers as $implementer) {
 
@@ -328,7 +328,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 			if ($createObject) $implementer = new $implementer();
 
 			// Get the exposed variables
-			$exposedVariables = $implementer::get_exposed_variables();
+			$exposedVariables = $implementer::$variableMethod();
 
 			foreach($exposedVariables as $varName => $details) {
 				if (!is_array($details)) $details = array('method' => $details, 'casting' => Object::get_static('ViewableData', 'default_cast'));

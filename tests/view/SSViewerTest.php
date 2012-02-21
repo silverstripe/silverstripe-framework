@@ -990,7 +990,7 @@ class SSViewerTest_Page extends SiteTree {
 
 class SSViewerTest_GlobalProvider implements TemplateGlobalProvider, TestOnly {
 
-	public static function get_exposed_variables() {
+	public static function get_template_global_variables() {
 		return array(
 			'SSViewerTest_GlobalHTMLFragment' => array('method' => 'get_html'),
 			'SSViewerTest_GlobalHTMLEscaped' => array('method' => 'get_html', 'casting' => 'Varchar'),
