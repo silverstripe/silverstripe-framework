@@ -335,7 +335,9 @@ class GridField extends FormField {
 				'tr', 
 				array(
 					"class" => 'ss-gridfield-item ' . $record->FirstLast() . " " . $record->EvenOdd(),
-					'data-id' => $record->ID
+					'data-id' => $record->ID,
+					// TODO Allow per-row customization similar to GridFieldDefaultColumns
+					'data-class' => $record->ClassName,
 				),
 				$rowContent
 			);

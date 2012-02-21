@@ -441,6 +441,10 @@ class Folder extends File {
 		$gridField->setFieldFormatting(array(
 			'Date' => 'Nice'
 		));
+		$gridField->setAttribute(
+			'data-url-folder-template', 
+			Controller::join_links(singleton('AssetAdmin')->Link('show'), '%s')
+		);
 
 		$titleField = ($this->ID && $this->ID != "root") ? new TextField("Title", _t('Folder.TITLE')) : new HiddenField("Title");
 
