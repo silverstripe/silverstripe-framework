@@ -26,8 +26,20 @@ class GridFieldConfig {
 		$this->components = new ArrayList();
 	}
 	
+	/**
+	 * @param GridFieldComponent $component 
+	 */
 	public function addComponent(GridFieldComponent $component) {
 		$this->getComponents()->push($component);
+		return $this;
+	}
+
+	/**
+	 * @param GridFieldComponent One or more components
+	 */
+	public function addComponents() {
+		$components = func_get_args();
+		foreach($components as $component) $this->addComponent($component);
 		return $this;
 	}
 	

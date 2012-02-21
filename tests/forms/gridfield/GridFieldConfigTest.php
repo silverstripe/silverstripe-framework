@@ -64,6 +64,23 @@ class GridFieldConfigTest extends SapphireTest {
 			$config->getComponentByType('GridFieldConfigTest_UnknownComponent')
 		);
 	}
+
+	public function testAddComponents() {
+		$config = GridFieldConfig::create()
+			->addComponents(
+				$c1 = new GridFieldConfigTest_MyComponent(),
+				$c2 = new GridFieldConfigTest_MyOtherComponent()
+			);
+
+		$this->assertEquals(
+			$c1, 
+			$config->getComponentByType('GridFieldConfigTest_MyComponent')
+		);
+		$this->assertEquals(
+			$c2,
+			$config->getComponentByType('GridFieldConfigTest_MyOtherComponent')
+		);
+	}
 	
 }
 
