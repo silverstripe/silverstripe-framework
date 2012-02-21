@@ -296,9 +296,13 @@
 	});
 
 	/**
-	 * Loads
+	 * Loads the link's 'href' attribute into a panel via ajax,
+	 * as opposed to triggering a full page reload.
+	 * Little helper to avoid repetition, and make it easy to
+	 * "opt in" to panel loading, while by default links still exhibit their default behaviour.
+	 * Same goes for breadcrumbs in the CMS.
 	 */
-	$('.cms-content .cms-panel-link').entwine({
+	$('.cms-content .cms-panel-link, .cms-content a.crumb').entwine({
 		onclick: function(e) {
 			var href = this.attr('href'), url = href ? href : this.data('href'),
 				data = (this.data('target-panel')) ? {selector: this.data('target-panel')} : null;
@@ -307,5 +311,5 @@
 			e.preventDefault();
 		}
 	});
-	
+
 })(jQuery);
