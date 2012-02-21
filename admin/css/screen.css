@@ -101,7 +101,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 .cms .ui-tabs .ui-tabs-nav li { top: 0; }
 .cms .ui-tabs .ui-tabs-nav li a { padding: 0 15px; }
 .cms .ui-tabs .ui-tabs-nav.ui-state-active { border-color: gray; }
-.cms .ui-tabs .ui-tabs-panel { background: transparent; padding: 16px 40px 16px 25px; }
+.cms .ui-tabs .ui-tabs-panel { background: transparent; padding: 0; }
 .cms .ui-widget-content, .cms .ui-widget { color: #444444; font-size: 12px; font-family: Arial, sans-serif; border: 0; }
 .cms .ui-widget-header { background-color: #b0bec7; padding: 8px 8px 6px 8px; border-bottom: 2px solid #8399a7; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #dde3e7), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(top, #dde3e7, #92a5b2); background-image: -moz-linear-gradient(top, #dde3e7, #92a5b2); background-image: -o-linear-gradient(top, #dde3e7, #92a5b2); background-image: -ms-linear-gradient(top, #dde3e7, #92a5b2); background-image: linear-gradient(top, #dde3e7, #92a5b2); border-bottom: 3px solid #5c7382; padding: 8px; -moz-border-radius: 0; -webkit-border-radius: 0; -o-border-radius: 0; -ms-border-radius: 0; -khtml-border-radius: 0; border-radius: 0; }
 .cms .ui-widget-header .ui-dialog-title { padding: 6px 0; text-shadow: #ced7dc 1px 1px 0; }

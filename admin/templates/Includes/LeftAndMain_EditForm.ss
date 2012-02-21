@@ -28,7 +28,7 @@
 		$EditFormTools	
 	<% end_control %>
 	
-	<div class="cms-content-fields center">
+	<div class="cms-content-fields center cms-panel-padded">
 		<% if Message %>
 		<p id="{$FormName}_error" class="message $MessageType">$Message</p>
 		<% else %>
