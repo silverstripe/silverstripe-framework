@@ -712,6 +712,7 @@ class GridField_Action extends FormAction {
 
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/json-js/json2.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/i18n.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/GridField.js');
 
@@ -729,7 +730,7 @@ class GridField_Action extends FormAction {
 		
 		// And generate field
 		$attributes = array(
-			'class' => 'action' . ($this->extraClass() ? $this->extraClass() : ''),
+			'class' => ($this->extraClass() ? $this->extraClass() : '') . ' action-' . $this->actionName,
 			'id' => $this->id(),
 			'type' => 'submit',
 			// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch 

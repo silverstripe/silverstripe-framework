@@ -27,7 +27,7 @@
 					if(successCallback) successCallback.apply(this, arguments);
 				},
 				error: function(e) {
-					alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION', 'An error occured while fetching data from the server\n Please try again later.'));
+					alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION'));
 					form.removeClass('loading');
 				}
 			}, ajaxOpts));
@@ -62,6 +62,13 @@
 		onclick: function(e){
 			this.getGridField().reload({data: [{name: this.attr('name'), value: this.val()}]});
 			e.preventDefault();
+		}
+	});
+
+	$('fieldset.ss-gridfield .action-deleterecord').entwine({
+		onclick: function(e){
+			if(!confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) return false;
+			else this._super(e);
 		}
 	});
 	
