@@ -88,14 +88,7 @@ class Director {
 			@file_get_contents('php://input')
 		);
 
-		// Load the request headers. If we're not running on Apache, then we
-		// need to manually extract the headers from the $_SERVER array.
-		if (function_exists('apache_request_headers')) {
-			$headers = apache_request_headers();
-		} else {
-			$headers = self::extract_request_headers($_SERVER);
-		}
-
+		$headers = self::extract_request_headers($_SERVER);
 		foreach ($headers as $header => $value) {
 			$req->addHeader($header, $value);
 		}
@@ -376,6 +369,7 @@ class Director {
 	 * @return String
 	 */
 	static function protocol() {
+		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https') return "https://";
 		return (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 'https://' : 'http://';
 	}
 
@@ -652,7 +646,7 @@ class Director {
 			$matched = true;
 		}
 
-		if($matched && (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off')) {
+		if($matched && (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') && !(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https')) {
 			$destURL = str_replace('http:', 'https:', Director::absoluteURL($_SERVER['REQUEST_URI']));
 
 			// This coupling to SapphireTest is necessary to test the destination URL and to not interfere with tests

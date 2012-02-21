@@ -26,6 +26,54 @@
 		 * Custom Events:
 		 * - 'select': Fires when a menu item is selected (on any level).
 		 */
+		$('.cms-panel.cms-menu').entwine({
+			togglePanel: function(bool) {
+				//apply or unapply the flyout formatting, should only apply to cms-menu-list when the current collapsed panal is the cms menu.
+				$('.cms-menu-list').children('li').each(function(){
+					if (bool) { //expand
+						$(this).children('ul').each(function() {
+							$(this).removeClass('collapsed-flyout');
+							if ($(this).data('collapse')) {
+								$(this).removeData('collapse');
+								$(this).addClass('collapse');
+							}
+						});
+					} else {    //collapse
+						$(this).children('ul').each(function() {
+							$(this).addClass('collapsed-flyout');
+							$(this).hasClass('collapse');
+							$(this).removeClass('collapse');
+							$(this).data('collapse', true);
+						});
+					}
+				});
+
+				this.toggleFlyoutState(bool);					
+
+				this._super(bool);
+			},
+			toggleFlyoutState: function(bool) {
+				if (bool) { //expand
+					//show the flyout
+					$('.collapsed').find('li').show();
+
+					//hide all the flyout-indicator
+					$('.cms-menu-list').find('.child-flyout-indicator').hide();
+				} else {    //collapse
+					//hide the flyout only if it is not the current section
+					$('.collapsed-flyout').find('li').each(function() {
+						//if (!$(this).hasClass('current'))
+						$(this).hide();
+					});
+
+					//show all the flyout-indicators
+					var par = $('.cms-menu-list ul.collapsed-flyout').parent();
+					if (par.children('.child-flyout-indicator').length == 0) par.append('<span class="child-flyout-indicator"></span>').fadeIn();
+					par.children('.child-flyout-indicator').fadeIn();
+				}
+			}
+		});
+
 		$('.cms-menu-list').entwine({
 			onmatch: function() {
 				var self = this;
@@ -73,6 +121,22 @@
 				}
 			}
 		});
+
+		/** Toggle the flyout panel to appear/disappear when mouse over */
+		$('.cms-menu-list li').entwine({
+			toggleFlyout: function(bool) {
+				fly = $(this);
+				if (fly.children('ul').first().hasClass('collapsed-flyout')) {
+					if (bool) { //expand
+						fly.children('ul').find('li').fadeIn('fast');
+					} else {    //collapse
+						fly.children('ul').find('li').hide();
+					}
+				}
+			}
+		});
+		//slight delay to prevent flyout closing from "sloppy mouse movement"
+		$('.cms-menu-list li').hoverIntent(function(){$(this).toggleFlyout(true);},function(){$(this).toggleFlyout(false);});
 		
 		$('.cms-menu-list .toggle').entwine({
 			onclick: function(e) {

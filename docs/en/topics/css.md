@@ -17,7 +17,7 @@ In your controller (e.g. `mysite/code/Page.php`):
 
 	:::php
 	class Page_Controller {
-		function init() {
+		public function init() {
 			// either specify the css file manually
 			Requirements::css("mymodule/css/my.css", "screen,projection");
 			// or mention the css filename and SilverStripe will get the file from the current theme and add it to the template

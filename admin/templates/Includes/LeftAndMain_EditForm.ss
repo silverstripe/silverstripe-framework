@@ -1,11 +1,12 @@
 <% if IncludeFormTag %>
-<form $FormAttributes data-layout="{type: 'border'}">
+<form $FormAttributes data-layout-type="border">
 <% end_if %>
-
 	<div class="cms-content-header north">
 		<div>
-			<h2 id="page-title-heading" title="$Record.Breadcrumbs(20, true)">
-				$Record.Title
+			<h2 id="page-title-heading">
+			<% control Controller %>
+				<% include CMSBreadcrumbs %>
+			<% end_control %>
 			</h2>
 			<% if Fields.hasTabset %>
 				<% with Fields.fieldByName('Root') %>
@@ -23,12 +24,11 @@
 		</div>
 	</div>
 
+	<% control Controller %>
+		$EditFormTools	
+	<% end_control %>
+	
 	<div class="cms-content-fields center">
-
-		<!-- <div class="cms-content-tools west">
-			$Left
-		</div> -->
-
 		<% if Message %>
 		<p id="{$FormName}_error" class="message $MessageType">$Message</p>
 		<% else %>
@@ -51,14 +51,13 @@
 				$Field
 			<% end_control %>
 			<% if CurrentPage.PreviewLink %>
-			<a href="$CurrentPage.PreviewLink" class="cms-preview-toggle-link ss-ui-button">
+			<a href="$CurrentPage.PreviewLink" class="cms-preview-toggle-link ss-ui-button" data-icon="preview">
 				<% _t('LeftAndMain.PreviewButton', 'Preview') %> &raquo;
 			</a>
 			<% end_if %>
 		</div>
 		<% end_if %>
 	</div>
-
 <% if IncludeFormTag %>
 </form>
 <% end_if %>

@@ -408,4 +408,3 @@ class GD extends Object {
 	
 }
 
-?>

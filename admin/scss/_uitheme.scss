@@ -39,7 +39,7 @@
 		
 		.ui-tabs-panel {
 			background: transparent; // default it's white
-			padding: $grid-vertical * 2 $grid-horizontal * 2;
+			padding: $grid-y * 2 $grid-x * 5 $grid-y * 2 ($grid-x * 3 + 1);
 		}
 	}
 

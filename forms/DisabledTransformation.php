@@ -10,4 +10,3 @@ class DisabledTransformation extends FormTransformation {
 	}
 }
 
-?>

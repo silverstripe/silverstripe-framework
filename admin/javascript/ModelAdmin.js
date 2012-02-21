@@ -210,8 +210,7 @@
 			closeRightPanel: function(){
 				if($('.cms-editor-dialogs').is(':visible')) {
 					$('.cms-editor-dialogs').hide();
-					$('#Form_EditorToolbarImageForm').hide();
-					$('#Form_EditorToolbarFlashForm').hide();
+					$('#Form_EditorToolbarMediaForm').hide();
 					$('#Form_EditorToolbarLinkForm').hide();
 				}
 			}

@@ -232,4 +232,3 @@ class Profiler {
             $this->running[$name] += $this->elapsedTime($name);
     }
 }
-?>

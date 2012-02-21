@@ -87,4 +87,3 @@ class GroupImportForm extends Form {
 	}
 	
 }
-?>

@@ -59,4 +59,3 @@ class GroupedDropdownField extends DropdownField {
 	}
 }
 
-?>

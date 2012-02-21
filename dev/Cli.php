@@ -81,4 +81,3 @@ class SS_Cli extends Object {
 	}
 }
 
-?>

@@ -25,6 +25,7 @@ class GridField extends FormField {
 	 * @var array
 	 */
 	public static $allowed_actions = array(
+		'index',
 		'gridFieldAlterAction'
 	);
 	
@@ -87,7 +88,7 @@ class GridField extends FormField {
 		}
 		
 		if(!$config) {
-			$this->config = $this->getDefaultConfig();
+			$this->config = GridFieldConfig_Base::create();
 		} else {
 			$this->config = $config;
 		}
@@ -98,8 +99,10 @@ class GridField extends FormField {
 		
 		
 		$this->addExtraClass('ss-gridfield');
-		$this->requireDefaultCSS();
-		
+	}
+
+	function index($request) {
+		return $this->gridFieldAlterAction(array(), $this->getForm(), $request);
 	}
 	
 	/**
@@ -140,27 +143,6 @@ class GridField extends FormField {
 	protected function setComponents(GridFieldConfig $config) {
 		$this->components = $config->getComponents();
 		return $this;
-	}
-	
-	/**
-	 * Get a default configuration for this GridField
-	 * 
-	 * @return GridFieldConfig
-	 */
-	protected function getDefaultConfig() {
-		$config = GridFieldConfig::create();
-		$config->addComponent(new GridFieldSortableHeader());
-		$config->addComponent(new GridFieldFilter());
-		$config->addComponent(new GridFieldDefaultColumns());
-		$config->addComponent(new GridFieldPaginator());
-		return $config;
-	}
-	
-	/**
-	 * Require the default css styling
-	 */
-	protected function requireDefaultCSS() {
-		Requirements::css('sapphire/css/GridField.css');
 	}
 
 	/**
@@ -341,35 +323,52 @@ class GridField extends FormField {
 
 		foreach($list as $idx => $record) {
 			$record->iteratorProperties($idx, $list->count());
-			$row = "<tr class='".$record->FirstLast()." ".$record->EvenOdd()."'>";
+			$rowContent = '';
 			foreach($columns as $column) {
 				$colContent = $this->getColumnContent($record, $column);
 				// A return value of null means this columns should be skipped altogether.
 				if($colContent === null) continue;
 				$colAttributes = $this->getColumnAttributes($record, $column);
-				$row .= $this->createTag('td', $colAttributes, $colContent);
+				$rowContent .= $this->createTag('td', $colAttributes, $colContent);
 			}
-			$row .= "</tr>";
+			$row = $this->createTag(
+				'tr', 
+				array(
+					"class" => 'ss-gridfield-item ' . $record->FirstLast() . " " . $record->EvenOdd(),
+					'data-id' => $record->ID
+				),
+				$rowContent
+			);
 			$content['body'][] = $row;
 		}
 
 		// Turn into the relevant parts of a table
 		$head = $content['header'] ? $this->createTag('thead', array(), implode("\n", $content['header'])) : '';
-		$body = $content['body'] ? $this->createTag('tbody', array(), implode("\n", $content['body'])) : '';
+		$body = $content['body'] ? $this->createTag('tbody', array('class' => 'ss-gridfield-items'), implode("\n", $content['body'])) : '';
 		$foot = $content['footer'] ? $this->createTag('tfoot', array(), implode("\n", $content['footer'])) : '';
 
-		$attrs = array(
+		$this->addExtraClass('ss-gridfield');
+		$attrs = array_diff_key(
+			$this->getAttributes(), 
+			array('value' => false, 'type' => false, 'name' => false)
+		);
+		$attrs['data-name'] = $this->getName();
+		$tableAttrs = array(
 			'id' => isset($this->id) ? $this->id : null,
 			'class' => "field CompositeField {$this->extraClass()}",
 			'cellpadding' => '0',
 			'cellspacing' => '0'	
 		);
 		return
-			$this->createTag('fieldset', array('id'=>$this->ID(),'class'=>'ss-gridfield'), 
+			$this->createTag('fieldset', $attrs, 
 				implode("\n", $content['before']) .
-				$this->createTag('table', $attrs, $head."\n".$foot."\n".$body) .
+				$this->createTag('table', $tableAttrs, $head."\n".$foot."\n".$body) .
 				implode("\n", $content['after'])
 			);
+	}
+
+	public function getAttributes() {
+		return array_merge(parent::getAttributes(), array('data-url' => $this->Link()));
 	}
 
 	/**
@@ -493,7 +492,7 @@ class GridField extends FormField {
 			}
 		}			
 	}
-	
+
 	/**
 	 * This is the action that gets executed when a GridField_AlterAction gets clicked.
 	 *
@@ -501,21 +500,30 @@ class GridField extends FormField {
 	 * @return string 
 	 */
 	public function gridFieldAlterAction($data, $form, SS_HTTPRequest $request) {
-		$id = $data['StateID'];
-		$stateChange = Session::get($id);
-		$gridName = $stateChange['grid'];
-		$grid = $form->Fields()->dataFieldByName($gridName);
-		
-		$state = $grid->getState(false);
-		if(isset($data['GridState'])) $state->setValue($data['GridState']);
-		
-		$actionName = $stateChange['actionName'];
-		$args = isset($stateChange['args']) ? $stateChange['args'] : array();
-		$grid->handleAction($actionName, $args, $data);
+		$html = '';
+		$data = $request->requestVars();
+		$fieldData = @$data[$this->getName()];
+
+		// Update state from client
+		$state = $this->getState(false);
+		if(isset($fieldData['GridState'])) $state->setValue($fieldData['GridState']);
+
+		// Try to execute alter action
+		foreach($data as $k => $v) {
+			if(preg_match('/^action_gridFieldAlterAction\?StateID=(.*)/', $k, $matches)) {
+				$id = $matches[1];
+				$stateChange = Session::get($id);
+				$actionName = $stateChange['actionName'];
+				$args = isset($stateChange['args']) ? $stateChange['args'] : array();
+				$html = $this->handleAction($actionName, $args, $data);
+				// A field can optionally return its own HTML
+				if($html) return $html;
+			}
+		}
 		
 		switch($request->getHeader('X-Get-Fragment')) {
 			case 'CurrentField':
-				return $grid->FieldHolder();
+				return $this->FieldHolder();
 				break;
 
 			case 'CurrentForm':
@@ -539,13 +547,13 @@ class GridField extends FormField {
 	 */
 	public function handleAction($actionName, $args, $data) {
 		$actionName = strtolower($actionName);
-		foreach($this->components as $item) {
-			if(!($item instanceof GridField_ActionProvider)) {
+		foreach($this->components as $component) {
+			if(!($component instanceof GridField_ActionProvider)) {
 				continue;
 			}
 			
-			if(in_array($actionName, array_map('strtolower', $item->getActions($this)))) {
-				return $item->handleAction($this, $actionName, $args, $data);
+			if(in_array($actionName, array_map('strtolower', $component->getActions($this)))) {
+				return $component->handleAction($this, $actionName, $args, $data);
 			}
 		}
 		throw new InvalidArgumentException("Can't handle action '$actionName'");
@@ -563,9 +571,10 @@ class GridField extends FormField {
 
 		$this->request = $request;
 		$this->setModel($model);
-		
-		///
 
+		$fieldData = $this->request->requestVar($this->getName());
+		if($fieldData && $fieldData['GridState']) $this->getState(false)->setValue($fieldData['GridState']);
+		
 		foreach($this->components as $component) {
 			if(!($component instanceof GridField_URLHandler)) {
 				continue;
@@ -697,6 +706,13 @@ class GridField_Action extends FormAction {
 	 * @return string HTML tag
 	 */
 	public function Field() {
+		Requirements::css(SAPPHIRE_DIR . '/css/GridField.css');
+
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/json-js/json2.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/GridField.js');
+
 		// Store state in session, and pass ID to client side
 		$state = array(
 			'grid' => $this->getNameFromParent(),
@@ -718,6 +734,7 @@ class GridField_Action extends FormAction {
 			// will strip it from the requests 
 			'name' => 'action_gridFieldAlterAction'. '?' . http_build_query($actionData),
 			'tabindex' => $this->getTabIndex(),
+			'data-url' => $this->gridField->Link(),
 		);
 
 		if($this->isReadonly()) {

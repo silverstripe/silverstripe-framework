@@ -165,4 +165,3 @@ class BBCodeParser extends TextParser {
 	}
 	
 }
-?>

@@ -106,20 +106,7 @@ you agree that is can be used in distributions and derivative works of SilverStr
 
 ## Reporting Security Issues
 
-Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). Please don't file security
-issues in our [bugtracker](http://open.silverstripe.org). In the event of a confirmed vulnerability in SilverStripe
-core, we will take the following actions:
-
-*  Acknowledge to the reporter that we’ve received the report and that a fix is forthcoming. We’ll give a rough
-timeline and ask the reporter to keep the issue confidential until we announce it.
-*  Halt all other development as long as is needed to develop a fix, including patches against the current and one
-previous major release (if applicable).
-*  We will inform you about resolution and [announce](http://groups.google.com/group/silverstripe-announce) a [new
-release](http://silverstripe.org/security-releases/) publically.
-
-You can help us determine the problem and speed up responses by providing us with more information on how to reproduce
-the issue: SilverStripe version (incl. any installed modules), PHP/webserver version and configuration, anonymized
-webserver access logs (if a hack is suspected), any other services and web packages running on the same server.
+Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). See our "[Release Process](release-process)" documentation for more info, and read our guide on [how to write secure code](/topics/security).
 
 ## Writing Documentation
 

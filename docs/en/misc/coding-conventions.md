@@ -48,7 +48,7 @@ Successive capitalized letters are not allowed, e.g. a class `XMLImporter` is no
 Static methods should be in `lowercase_with_underscores()` format:
 
 	:::php
-	static function my_static_method() {}
+	public static function my_static_method() {}
 
 Action handlers on controllers should be in `completelylowercase()` format.
 This is because they go into the controller URL in the same format (eg, `home/successfullyinstalled`).
@@ -56,7 +56,7 @@ Method names are allowed to contain underscores here, in order to allow URL part
 (`mypage\my-action` gets translated to `my_action()` automatically).
 
 	:::php
-	function mycontrolleraction() {}
+	public function mycontrolleraction() {}
 
 Object methods that will be callable from templates should be in `$this->UpperCamelCase()` format.  
 Alternatively, `$this->getUpperCamelCase()` will work the same way in templates -
@@ -65,7 +65,9 @@ you can access both coding styles as `$UpperCamelCase`.
 Other instance methods should be in `$this->lowerCamelCase()` format:
 
 	:::php
-	function myInstanceMethod() {}
+	public function myInstanceMethod() {}
+
+Methods inside classes must always declare their visibility by using one of the private, protected, or public modifiers.
 
 ### Variables
 
@@ -74,10 +76,12 @@ Static variables should be `self::$lowercase_with_underscores`
 	:::php
 	self::$my_static_variable = 'foo';
 
-Object variables should be `$this->lowerCamelCase`
+Member variables should be `$this->lowerCamelCase`
 
 	:::php
-	$this->myObjectVariable = 'foo';
+	$this->myMemberVariable = 'foo';
+
+Member variables always declare their visibility by using one of the private, protected, or public modifiers
 
 ### Constants
 
@@ -232,20 +236,20 @@ No method or function invocation is allowed to have spaces directly
 before or after the opening parathesis, as well as no space before the closing parenthesis.
 
 	:::php
-	function foo($arg1, $arg2) {} // good
-	function foo ( $arg1, $arg2 ) {} // bad
+	public function foo($arg1, $arg2) {} // good
+	public function foo ( $arg1, $arg2 ) {} // bad
 
 Keep the opening brace on the same line as the statement. 
 
 	:::php
 	// good
-	function foo() {
+	public function foo() {
 		// ...
 	}
 
 	:::php
 	// bad
-	function bar() 
+	public function bar() 
 	{
 		// ...
 	}
@@ -346,7 +350,7 @@ Try to avoid using PHP's ability to mix HTML into the code.
 
 	:::php
 	// PHP code
-	function getTitle() {
+	public function getTitle() {
 		return "<h2>Bad Example</h2>"; 
 	}
 	
@@ -357,7 +361,7 @@ Better: Keep HTML in template files:
 
 	:::php
 	// PHP code
-	function getTitle() {
+	public function getTitle() {
 		return "Better Example";
 	}
 	
@@ -410,7 +414,7 @@ Example:
 Put code into the classes in the following order (where applicable).
 
  *  Static variables
- *  Object variables
+ *  Member variables
  *  Static methods
  *  Data-model definition static variables.  (`$db`, `$has_one`, `$many_many`, etc)
  *  Commonly used methods like `getCMSFields()`

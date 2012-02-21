@@ -192,12 +192,15 @@ abstract class DBField extends ViewableData {
 	function HTMLATT() {
 		return Convert::raw2htmlatt($this->value);
 	}
+		
 	function URLATT() {
 		return urlencode($this->value);
 	}
+
 	function RAWURLATT() {
 		return rawurlencode($this->value);
 	}
+
 	function ATT() {
 		return Convert::raw2att($this->value);
 	}
@@ -217,23 +220,6 @@ abstract class DBField extends ViewableData {
 	function XML(){
 		return Convert::raw2xml($this->value);
 	}
-	
-	/**
-	 * Converts the current value for this Enum DBField to lowercase.
-	 * @return string
-	 */
-	function LowerCase() {
-		return Convert::raw2xml(strtolower($this->value));
-	}
-		
-	/**
-	 * Converts the current value for this Enum DBField to uppercase.
-	 * @return string 
-	 */ 
-	function UpperCase() {
-		return Convert::raw2xml(strtoupper($this->value));
-	}
-	    
 	
 	/**
 	 * Returns the value to be set in the database to blank this field.
@@ -313,4 +299,3 @@ DBG;
 	}
 	
 }
-?>

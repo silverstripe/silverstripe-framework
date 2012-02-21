@@ -1,0 +1,197 @@
+@import "compass/css3";
+
+// TODO we need a seperated file for styles that are used in both cms and front end (such as buttons)
+@import "../admin/scss/themes/default.scss";
+
+
+.ss-uploadfield {
+	.clear {
+		clear: both;
+	}
+	.middleColumn {
+		// TODO .middleColumn styling should probably be theme specific (eg cms ui will look different than blackcandy)
+		// so we should move this style into the cms and black candy files
+		width: 526px;
+		padding: 0;
+		background: #fff;
+		border: 1px solid lighten($color-medium-separator, 20%);
+		@include border-radius(4px);
+		@include background-image(linear-gradient(#efefef, #fff 10%, #fff 90%, #efefef));
+	}
+	.ss-uploadfield-item {
+		margin: 0;
+		padding: 15px;
+		overflow: auto;
+	}
+	.ss-uploadfield-item-preview {
+		height: 60px;
+		line-height: 60px;
+		width: 80px;
+		text-align: center;
+		font-weight: bold;
+		float: left;
+		overflow: hidden;
+		&.ss-uploadfield-dropzone { 
+			@include box-shadow(lighten($color-medium-separator, 10%) 0 0 3px 3px inset);
+			border: 2px dashed $color-medium-separator;
+			background: $color-light-separator;
+			display: none;
+		}
+	}
+	.ss-uploadfield-item-info {
+		margin: 0 0 0 100px;
+	}
+	.ss-uploadfield-item-name {
+		display: block;
+		line-height: 13px;
+		height: 26px;
+		margin: 0;
+		text-align: left;
+		
+		b { 
+			font-weight: bold; 
+			padding: 0 5px 0 0;
+		}
+		span {
+			font-size: $font-base-size - 1;
+			color: lighten($color-text, 25%);
+		}
+	}
+	.ss-uploadfield-item-status {
+		float: right;
+		padding: 0 0 0 5px;
+		
+		&.ui-state-error-text {
+			color: $color-button-destructive;
+			font-weight: bold;
+		}
+	}
+	.ss-ui-button {
+		display: block;
+		float: left;
+		margin: 0 10px 0 0;
+	
+		&.ss-uploadfield-fromcomputer {
+			position: relative;
+			overflow: hidden;
+		}
+	}
+	.ss-uploadfield-files {
+		margin: 0;
+		padding: 0;
+		max-height: 272px;
+		overflow: auto;
+		position: relative;
+		
+		.ss-uploadfield-item,
+		.ss-uploadfield-item.ui-state-error {
+			border: 0;
+			border-bottom: 1px solid lighten($color-medium-separator, 20%);
+			background: none;
+			color: $color-text;
+			
+			&:last-child {
+				border-bottom: 0;
+			}
+		}
+		.ss-uploadfield-item-actions {
+			height: 28px;
+			margin: 6px 0 0;
+			position: relative;
+		}
+		.ss-uploadfield-item-progress {
+			position: absolute;
+			left: 0;
+			right: 42px;
+			width: auto;
+			margin: 11px 0 0;
+			height: 15px;
+			
+			div {
+				@include border-radius(25px);
+				height: 13px;
+				padding: 0;
+				margin: 0;
+				overflow: hidden;
+			}
+		}
+		.ss-uploadfield-item-progressbar {
+			border: 1px solid $color-medium-separator;
+			background-color: #92a6b3;
+			@include background-image(linear-gradient(top, #92a6b3 0%,#90aab8 11%,#96b1bf 22%,#9eb4c1 33%,#a7bac7 44%,#c1d5dc 100%));
+		}
+		.ss-uploadfield-item-progressbarvalue {
+			border: 0;
+			width: 0%;
+			background: #60b3dd url(../images/progressbar_blue.gif) repeat-x left center;
+		}
+		.ss-uploadfield-item-cancel, 
+		.ss-uploadfield-item-start {
+			position: absolute;
+			top: 10px;
+			right: 0;
+			
+			button {
+				display: block;
+				overflow: hidden;
+				text-indent: -9999px;
+				padding: 0;
+				margin: 0;
+				border: 0;
+				width: 16px;
+				height: 16px;
+				cursor: pointer;
+				@include single-box-shadow(none);
+				// background: sprite($sprites16, cross-circle) no-repeat;
+			}
+		}
+		.ss-uploadfield-item-start {
+			right: 20px;
+			button {
+				// background: sprite($sprites16, navigation) no-repeat;
+			}
+		}
+		.ss-uploadfield-item-editform {
+			/* don't use display none, for it will break jQuery('iframe').contents().height() */
+			height: 0;
+			overflow: hidden;
+			clear: both;
+			margin-top: $grid-y;
+			iframe {
+				width: 100%;
+			}
+		}		
+	}
+	.ss-uploadfield-addfile {
+		&.borderTop {
+			border-top: 1px solid lighten($color-medium-separator, 20%);
+		}
+	}
+}
+
+body.ss-uploadfield-edit-iframe {
+	padding: $grid-y*2 $grid-x*2;
+}
+
+.ss-upload {
+	.clear {
+		clear: both;
+	}
+	.ss-uploadfield-fromcomputer {
+		input {
+			/* since we can't really style the file input, we use this hack to make it as big as the button and hide it */
+			position: absolute;
+			top: 0;
+			right: 0;
+			margin: 0;
+			border: solid #000;
+			border-width: 0 0 100px 200px;
+			opacity: 0;
+			filter: alpha(opacity=0);
+			-o-transform: translate(250px, -50px) scale(1);
+			-moz-transform: translate(-300px, 0) scale(4);
+			direction: ltr;
+			cursor: pointer;
+		}
+	}
+}

@@ -75,13 +75,13 @@ $font-base-size: 12px;
  * Grid Units (px)
  * 
  * We have a vertical rhythm that the grid is based off
- * both vertical and horizontal. All internal padding and
+ * both x (=horizontal) and y (=vertical). All internal padding and
  * margins are scaled to this and accounting for paragraphs
  * ------------------------------------------------ */
-$grid-vertical: 8px;
-$grid-horizontal: 8px;
+$grid-y: 8px;
+$grid-x: 8px;
 
 /** -----------------------------------------------
  * Application Logo (CMS Logo) Must be 24px x 24px
  * ------------------------------------------------ */
-$application-logo-small: image-url("logo_small.png");
+$application-logo-small: url("../images/logo_small.png");

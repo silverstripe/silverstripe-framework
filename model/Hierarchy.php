@@ -562,9 +562,9 @@ class Hierarchy extends DataExtension {
 		$children->dataQuery()->setQueryParam('Versioned.stage', 'Live');
 		
 		if($onlyDeletedFromStage) {
-			// Note that this makes a second query, and could be optimised to be a joi;
+			// Note that this makes a second query, and could be optimised to be a join
 			$stageChildren = DataObject::get($baseClass)
-				->where("\"{$baseClass}\".\"ParentID\" = $id AND \"{$baseClass}\".\"ID\" != $id");
+				->where("\"{$baseClass}\".\"ID\" != $id");
 			$stageChildren->dataQuery()->setQueryParam('Versioned.mode', 'stage');
 			$stageChildren->dataQuery()->setQueryParam('Versioned.stage', '');
 			
@@ -677,4 +677,4 @@ class Hierarchy extends DataExtension {
 	}
 }
 
-?>
+

@@ -31,7 +31,9 @@
 			 * Variable: ChangeTrackerOptions
 			 * (Object)
 			 */
-			ChangeTrackerOptions: {},
+			ChangeTrackerOptions: {
+				ignoreFieldSelector: '.ss-upload :input'
+			},
 		
 			/**
 			 * Constructor: onmatch
@@ -178,88 +180,6 @@
 			onclick: function(e) {
 				$('.cms-content').submitForm(this.parents('form'), this);
 				return false;
-			}
-		});
-	
-		/**
-		 * Class: .cms-edit-form textarea.htmleditor
-		 * 
-		 * Add tinymce to HtmlEditorFields within the CMS. Works in combination
-		 * with a TinyMCE.init() call which is prepopulated with the used HTMLEditorConfig settings,
-		 * and included in the page as an inline <script> tag.
-		 */
-		$('.cms-edit-form textarea.htmleditor').entwine({
-			
-			/**
-			 * Constructor: onmatch
-			 */
-			onmatch : function() {
-				var self = this;
-				this.closest('form').bind('beforesave', function() {
-					if(typeof tinyMCE == 'undefined') return;
-
-					// TinyMCE modifies input, so change tracking might get false
-					// positives when comparing string values - don't save if the editor doesn't think its dirty.
-					if(self.isChanged()) {
-						tinyMCE.triggerSave();
-						// TinyMCE assigns value attr directly, which doesn't trigger change event
-						self.trigger('change'); 	
-					}
-				});
-
-				// Only works after TinyMCE.init() has been invoked, see $(window).bind() call below for details.
-				this.redraw();
-
-				this._super();
-			},
-
-			redraw: function() {
-				// Using a global config (generated through HTMLEditorConfig PHP logic)
-				var config = ssTinyMceConfig, self = this;
-
-				// Avoid flicker (also set in CSS to apply as early as possible)
-				self.css('visibility', '');
-
-				// Create editor instance and render it.
-				// Similar logic to adapter/jquery/jquery.tinymce.js, but doesn't rely on monkey-patching
-				// jQuery methods, and avoids replicate the script lazyloading which is already in place with jQuery.ondemand.
-				var ed = new tinymce.Editor(this.attr('id'), config);
-				ed.onInit.add(function() {
-					self.css('visibility', 'visible');
-				});
-				ed.render();
-
-				// Handle editor de-registration by hooking into state changes.
-				// TODO Move to onunmatch for less coupling (once we figure out how to work with detached DOM nodes in TinyMCE)
-				$('.cms-container').bind('beforestatechange', function() {
-					self.css('visibility', 'hidden');
-					var ed = tinyMCE.get(self.attr('id'));
-					if(ed) ed.remove();
-				});
-
-				this._super();
-			},
-
-			isChanged: function() {
-				if(typeof tinyMCE == 'undefined') return;
-
-				var inst = tinyMCE.getInstanceById(this.attr('id'));
-				return inst ? inst.isDirty() : false;
-			},
-
-			resetChanged: function() {
-				if(typeof tinyMCE == 'undefined') return;
-
-				var inst = tinyMCE.getInstanceById(this.attr('id'));
-				if (inst) inst.startContent = tinymce.trim(inst.getContent({format : 'raw', no_events : 1}));
-			},
-
-			onunmatch: function() {
-				// TODO Throws exceptions in Firefox, most likely due to the element being removed from the DOM at this point
-				// var ed = tinyMCE.get(this.attr('id'));
-				// if(ed) ed.remove();
-
-				this._super();
 			}
 		});
 

@@ -1,4 +1,4 @@
-/**
+ /**
  * This file defines most styles of the CMS: Colors, fonts, backgrounds, 
  * alignments, dimensions.
  * 
@@ -25,7 +25,7 @@ html,body {
 	@include global-reset;
 
 	font-size: $font-base-size;
-	line-height: $grid-vertical * 2;
+	line-height: $grid-y * 2;
 	font-family: $font-family;
 	color: $color-text;
 }
@@ -89,26 +89,27 @@ body.cms {
 
 
 .cms-content-header {
-	background-color: darken($color-widget-bg, 20%);
-	padding: $grid-vertical $grid-horizontal ($grid-vertical - 2);	
-	height: $grid-vertical * 4;
+	padding: ($grid-y - 8) $grid-x $grid-y;	
+	height: $grid-y * 4;
 	z-index: 60;
-	border-bottom: 2px solid darken($color-widget-bg, 35%);
 
-	@include box-shadow($color-widget-bg 0 $grid-vertical $grid-vertical*2);
-	
-	@include background-image(
-		linear-gradient(darken($color-widget-bg, 10%), darken($color-widget-bg, 30%))
-	);
+	background: {
+		image:url(../images/textures/cms_content_header.png);
+		repeat:repeat;
+	} 
+
+	a {
+		color: $color-text-blue-link;
+	}
 	
 	h2 {
 		float: left;
-		padding: $grid-vertical $grid-horizontal 0 0;
+		padding: $grid-y $grid-x 0 0;
 		font-size: $font-base-size + 2;
-		line-height: $grid-horizontal * 3;
+		line-height: $grid-x * 3;
 		font-weight: bold;
 		text-shadow: darken($color-widget-bg, 15%) 1px 1px 0;
-		width: $grid-horizontal * 22 /* 24 - (padding on each side + margin) */;
+		max-width: $grid-x*50;
 		margin: 0;
 		@include hide-text-overflow();
 	}
@@ -119,29 +120,46 @@ body.cms {
 	}
 	
 	.cms-content-header-tabs {
-		float: left;
+		position:fixed;
+		right:40px;
 	}
 }
 
 .ui-tabs .cms-content-header, .cms-dialog .ui-tabs-nav {
 	.ui-tabs-nav li {
+		margin:0;
 		a {
 			font-weight: bold;
-			line-height: $grid-vertical * 2;
-			padding: ($grid-vertical * 2 - 5) $grid-horizontal + 4 $grid-vertical + 1;
-			border-bottom: 2px solid darken($color-tab, 15%);
+			line-height: $grid-y * 2;
+			padding: ($grid-y * 2 - 4) ($grid-x * 2 + 4) $grid-y + 3;
+
+			&.content-treeview {
+				background:url(../images/content-header-tabs-sprite.png) no-repeat 2px 0px;
+			}
+			&.content-galleryview {
+				background:url(../images/content-header-tabs-sprite.png) no-repeat -87px 0px;
+			}
+			&.content-listview {
+				background:url(../images/content-header-tabs-sprite.png) no-repeat -38px 0px;
+			}
 		}
 	}
 	
 	.ui-state-default, 
 	.ui-widget-content .ui-state-default, 
 	.ui-widget-header .ui-state-default {
-		background-color: $color-tab;
+		background-color: $color-base;
 		@include background-image(
-			linear-gradient($color-tab, darken($color-tab, 10%)
-		));
+			linear-gradient($color-base, darken($color-base, 12%))
+			);
 		
-		border-color: darken($color-tab, 20%);
+		border: {
+			right-color: darken($color-tab, 20%);
+			left-color: $color-tab;
+			top:none;
+			bottom:none;
+		}
+
 		text-shadow: lighten($color-tab, 60%) 0 1px 0;
 	}
 	
@@ -149,10 +167,36 @@ body.cms {
 	.ui-widget-content .ui-state-active, 
 	.ui-widget-header .ui-state-active {
 		background: $color-widget-bg;
+		border: {
+			right-color: darken($color-tab, 20%);
+			left-color: darken($color-tab, 20%);
+			top:none;
+		}
+		margin-right:-1px;
+		margin-left:-1px;
+		z-index:2;
 		
 		a {
-			border-bottom: 2px solid $color-widget-bg;
+			border-bottom:none;
+			
+			&.content-treeview {
+				background:url(../images/content-header-tabs-sprite.png) no-repeat 2px -40px;
+			}
+			&.content-galleryview {
+				background:url(../images/content-header-tabs-sprite.png) no-repeat -87px -40px;
+			}
+			&.content-listview {
+				background:url(../images/content-header-tabs-sprite.png) no-repeat -38px -40px;
+			}
 		}
+	}
+
+	.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+		border-radius:0;
+	}
+
+	.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+		border-radius:0;
 	}
 }
 
@@ -236,22 +280,20 @@ body.cms {
  * -------------------------------------------- */
 
 .cms-content-actions {
-	margin: $grid-vertical $grid-horizontal*2 $grid-vertical*2 $grid-horizontal*2;
-	text-align: right;
-	height: $grid-vertical*4;
+	margin: $grid-y $grid-x*2 $grid-y*2 $grid-x*2;
+	height: $grid-y*4;
 	z-index: 70;
 	
-	@include box-shadow($tab-panel-texture-color 0 $grid-vertical*-2 $grid-vertical*2);
+	@include box-shadow($tab-panel-texture-color 0 $grid-y*-2 $grid-y*2);
 }
-
 
 /** --------------------------------------------
  * Messages
  * -------------------------------------------- */
 
 .message {
-	margin: 0 0 $grid_vertical 0;
-	padding: $grid_vertical - 1 $grid_horizontal - 1;
+	margin: 0 0 $grid-y 0;
+	padding: $grid-y - 1 $grid-x - 1;
 	font-weight: bold;
 	
 	border: 1px black solid;
@@ -386,11 +428,57 @@ body.cms {
 	@include legacy-pie-clearfix();
 		
 	& > * {
-		float: left;
+		float: right;
 	}
 	
 	.cms-tree-view-modes * {
 		display: inline-block;
+		label {
+			color:$color-text-blue-link;
+		}
+	}
+
+/* smaller treedropdown */
+	.chzn-container-single .chzn-single  {
+		height: 26px;
+		line-height: 26px;
+		padding-left:25px;
+		color: darken($color-dark-grey, 15%);
+		@include background-image(
+			linear-gradient($color-button-generic, darken($color-button-generic, 10%))
+		);
+		font: {
+			size:13px;
+			weight:bold;
+		}
+		text-shadow:darken($color-text-shadow, 10%) 0 -1px 1px;
+		box-shadow:none;
+		&:hover {
+			@include box-shadow(0 0 5px darken($color-button-generic, 20%));
+			@include background-image(
+				linear-gradient(lighten($color-button-generic, 2%), darken($color-button-generic, 8%))
+			);
+		}
+
+		&:active {
+			@include box-shadow(inset 0 1px 3px darken($color-button-generic, 60%));
+		}
+ 		
+ 		span {
+ 			padding-top:1px;
+ 		}
+
+		div {
+			background:url(../images/btn-icon/settings.png) 5px 4px no-repeat;
+			border-left:none;
+			width:100%;
+		}
+
+		div b {
+			background: url(../images/sprites-32x32/menu-arrow-deselected-down.png) no-repeat 9px 11px;
+			float:right;
+			width:24px;
+		}	
 	}
 }
 
@@ -401,25 +489,27 @@ body.cms {
  */
 .cms-content-tools {
 	background-color: darken($color-widget-bg, 5%);
-	width: $grid-horizontal * 24;
+	width: $grid-x * 24;
 	border-right: 1px solid darken($color-widget-bg, 15%);
 	overflow-y: auto;	
 	overflow-x: hidden;
 	z-index: 70;
+	@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2));
+	float: left;
+	position: relative;
 	
 	.cms-panel-header {
 		padding: 0;
-		margin: 0 0 $grid-vertical - 1;
-		line-height: $grid-vertical * 3;
+		margin: 0 0 $grid-y - 1;
+		line-height: $grid-y * 3;
 		
 		@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 10%))
 	}
 	
 	.cms-panel-content {
-		width: ($grid-horizontal * 22);
-		padding: $grid-vertical $grid-horizontal;
-		overflow-x: hidden;
-		overflow-y: auto;
+		width: ($grid-x * 22);
+		padding: $grid-y $grid-x;
+		overflow: auto;
 	}
 	
 	.cms-content-header {
@@ -432,7 +522,7 @@ body.cms {
 
 		h2 {
 			text-shadow: darken($color-widget-bg, 50%) -1px -1px 0;
-			width: $grid-horizontal * 22 /* 24 - (padding on each side + margin) */;
+			width: $grid-x * 22 /* 24 - (padding on each side + margin) */;
 			color: lighten($color-widget-bg, 60%);
 			
 			@include hide-text-overflow();
@@ -441,7 +531,7 @@ body.cms {
 
 	h3,h4,h5 {
 		font-weight: bold;
-		line-height: $grid-vertical * 2;
+		line-height: $grid-y * 2;
 	}
 	h3 {
 		font-size: $font-base-size + 1;
@@ -462,7 +552,7 @@ body.cms {
 			float: none;
 			width: auto;
 			font-size: 11px;
-			padding: 0 $grid-horizontal 4px 0;
+			padding: 0 $grid-x 4px 0;
 		}
 		
 		.middleColumn {
@@ -483,24 +573,8 @@ body.cms {
 				margin: 2px 0; 
 			}
 		}
-		
-		/* smaller treedropdown */
-		.chzn-container-single .chzn-single  {
-			height: 24px;
-			line-height: 24px;
-			font-size: 11px;
-	 		
-			div b {
-				background-position: 4px 0;
-			}
-		}
 	}
-		
-	/* buttons now need to line with with reduced input sizes */
-	.ss-ui-button {
-		padding: 5px $grid-horizontal;
-	}
-		
+
 	.fieldgroup {
 		.fieldgroup-field {
 			width: auto;
@@ -548,7 +622,7 @@ body.cms {
 	
 	td {
 		border-bottom: 1px solid darken($color-widget-bg, 10%);
-		padding: $grid-vertical - 1 2px;
+		padding: $grid-y - 1 2px;
 		font-size: 11px;
 	}
 }
@@ -556,15 +630,12 @@ body.cms {
 /** 
  * CMS Batch actions
  */
-.cms-content-batchactions, .cms-content-constructive-actions {
-	float: right;
-}
 
 .cms-content-batchactions {
-	float: right;
+	float: left;
 	position:  relative;
 	display: block;
-	margin-right: 8px;
+	margin-left: 8px;
 	
 	form > * {
 		display: block;
@@ -574,11 +645,9 @@ body.cms {
 	form.cms-batch-actions {
 		float:  left;
 	}
-}
-
-.cms-content-constructive-actions a {
-	display: block;
-	float: right;
+	.Actions {
+		display:none;
+	}
 }
 
 #Form_BatchActionsForm select {
@@ -663,6 +732,13 @@ body.cms {
 	
 }
 
+.cms-preview-toggle-link {
+	display: block;
+	float: right;
+	font-size: 12px;
+	text-decoration: none;
+}
+
 .cms-preview-header {
 	background-color: #FFBE66;
 	padding: 10px;
@@ -689,7 +765,7 @@ form.member-profile-form {
 	}
 	
 	input.customFormat {
-		width: $grid-horizontal * 10;
+		width: $grid-x * 10;
 		border: 1px solid #ccc !important;
 		padding: 3px;
 		display: inline-block;
@@ -752,6 +828,7 @@ form.member-profile-form {
 		overflow-y: auto;
 		overflow-x: auto;
 		background: none;
+		@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2));
 	}
 }
 
@@ -768,7 +845,7 @@ form.member-profile-form {
 		a { 
 			display: block;
 			text-align: right;
-			padding: $grid-vertical/2 0;
+			padding: $grid-y/2 0;
 			width: 100%;
 		
 			@include background-image(
@@ -791,29 +868,38 @@ form.member-profile-form {
 	}
 	
 	&.collapsed {
+
+		cursor: pointer;
+
+		.cms-panel-header * {
+			display: none;
+		}
 		
 		.cms-panel-content {
 			display: none;
 		}
 		
-		/*
-		.cms-panel-header {
-			@include rotate(-90deg);
-			position: relative;
-			top: $grid-vertical * 10;
-			border: none;
-			padding: 0;
-		}
-		*/
+		//.cms-panel-header {
+		//	@include rotate(-90deg);
+		//	position: relative;
+		//	top: $grid-y * 10;
+		//	border: none;
+		//	padding: 0;
+		//}
 
+	}
+
+	.cms-panel-header {
+		width: 100%;
 	}
 
 	.cms-panel-content-collapsed {
 		width: 40px;
+		display: none; // Avoids FOUC
 
 		h2, h3 {
 			border-bottom: 0;
-			margin-left: $grid-vertical;
+			margin-left: $grid-y;
 			@include transform-origin(bottom, left);
 			@include rotate(90deg);
 		}
@@ -847,14 +933,10 @@ form.member-profile-form {
 }
 
 .cms-panel-padded {
-	width: ($grid-horizontal * 22);
-	padding: $grid-vertical*2 $grid-horizontal*2;
+	width: ($grid-x * 22);
+	padding: $grid-y*2 $grid-x*2;
 	overflow-x: hidden;
 	overflow-y: auto;
-}
-
-.cms-content .cms-panel.collapsed {
-	cursor: pointer;
 }
 
 /** ------------------------------------------------------------------
@@ -881,7 +963,7 @@ form.member-profile-form {
 .ui-dialog {
   background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
   border: 3px solid #000 !important;
-	border-radius: $grid-vertical;
+	border-radius: $grid-y;
   overflow: visible;
   padding: 0;
 
@@ -889,10 +971,15 @@ form.member-profile-form {
 	.ui-dialog-titlebar.ui-widget-header {
 	  font-size: $font-base-size+2;
 		background-color: #92a5b2;
-		padding: $grid-vertical/2 $grid-horizontal/2 $grid-vertical/2 $grid-horizontal*2;
+		padding: $grid-y/2 $grid-x/2 $grid-y/2 $grid-x*2;
 		border-bottom: 2px solid #8399a7;
-		@include border-radius(0);
 		@include background-image(linear-gradient(#ced7dc, #92a5b2));
+	}
+
+	&.loading {
+		background-image: url(../images/spinner.gif);
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
 	}
 }
 
@@ -903,12 +990,12 @@ body.cms-dialog {
 
 .cms-dialog-content {
 	background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
-	padding-bottom: $grid-vertical;
+	padding-bottom: $grid-y;
 
 	.Actions {
 		overflow: auto;
-		margin: $grid-vertical 0;
-		padding-bottom: $grid-vertical;
+		margin: $grid-y 0;
+		padding-bottom: $grid-y;
 		float: right;
 	}
 
@@ -925,7 +1012,7 @@ body.cms-dialog {
 			background: none;
 
 			.ui-tabs-nav {
-				padding: $grid-horizontal 0 0 0;
+				padding: $grid-x 0 0 0;
 				border: none;
 
 				li {	
@@ -960,8 +1047,68 @@ body.cms-dialog {
  * -------------------------------------------- */
 .htmleditorfield-linkform {
 	.step2 {
-		margin-bottom: $grid-horizontal*2;
+		margin-bottom: $grid-x*2;
 	}
+}
+
+.htmleditorfield-mediaform {
+	.ss-gridfield {
+		// Set thumbnail size 
+		tbody td:first-child img {
+			max-height: 30px;
+		}
+	}
+
+	// TODO Consolidate with .assetuploadfield and .ss-uploadfield styles
+	.ss-htmleditorfield-file {
+		border: 1px solid lighten($color-medium-separator, 20%);
+		@include border-radius(5px);
+		@include background-clip(padding-box);
+		background: #E2E2E2;
+		margin-bottom: $grid-x*2;
+
+		&.loading {
+			width: 100%;
+			height: 100px;
+			background-image: url(../images/spinner.gif);
+			background-position: 50% 50%;
+			background-repeat: no-repeat;
+		}
+
+		.overview {
+			background-color: #5db4df;
+			@include background-image(linear-gradient(top,  #5db4df 0%,#5db1dd 8%,#439bcb 50%,#3f99cd 54%,#207db6 96%,#1e7cba 100%));
+
+			.thumbnail {
+				display: inline-block;
+				vertical-align: middle;
+				padding: $grid-x/2;
+
+				img {
+					max-height: $grid-x*3;
+				}
+			}
+
+			.title {
+				display: inline-block;
+				vertical-align: middle;
+				background: #fff;
+				border: 1px solid lighten($color-medium-separator, 20%);
+				@include border-radius(5px);
+				margin-left: $grid-x*2;
+				padding: $grid-x/2;
+			}
+
+			.action-delete {
+				display: inline-block;
+			}
+		}
+
+		.details {
+			padding: $grid-x*2;
+		}
+	}
+	
 }
 
 /** --------------------------------------------

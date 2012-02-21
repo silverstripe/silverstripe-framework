@@ -33,4 +33,3 @@ class i18nTextCollectorTask extends BuildTask {
 		return $c->run($restrictModules);
 	}
 }
-?>

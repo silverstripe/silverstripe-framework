@@ -71,7 +71,6 @@ class TabSet extends CompositeField {
 	 */
 	public function FieldHolder() {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/jquery_improvements.js");
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-cookie/jquery.cookie.js');
 		
@@ -96,7 +95,9 @@ class TabSet extends CompositeField {
 
 	public function setTabSet($val) {
 		$this->tabSet = $val;
+		return $this;
 	}
+	
 	public function getTabSet() {
 		if(isset($this->tabSet)) return $this->tabSet;
 	}

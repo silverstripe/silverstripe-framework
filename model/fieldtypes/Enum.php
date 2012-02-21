@@ -94,4 +94,4 @@ class Enum extends DBField {
 	}
 }
 
-?>
+

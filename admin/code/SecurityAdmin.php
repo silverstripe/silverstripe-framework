@@ -35,11 +35,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function init() {
 		parent::init();
-
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/SecurityAdmin.js');
 	}
 	
-	function getEditForm($id = null) {
+	public function getEditForm($id = null, $fields = null) {
 		// TODO Duplicate record fetching (see parent implementation)
 		if(!$id) $id = $this->currentPageID();
 		$form = parent::getEditForm($id);
@@ -107,12 +106,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	 * @return FieldList
 	 */
 	function RootForm() {
-		$memberList = new MemberTableField(
-			$this,
-			"Members"
-		);
-		// unset 'inlineadd' permission, we don't want inline addition
-		$memberList->setPermissions(array('edit', 'delete', 'add'));
+		$config = new GridFieldConfig_Base(25);
+		$config->addComponent(new GridFieldPopupForms($this, 'RootForm'));
+		$config->addComponent(new GridFieldExporter());
+		$memberList = new GridField('Members', 'All members', DataList::create('Member'), $config);
 		
 		$fields = new FieldList(
 			$root = new TabSet(
@@ -190,7 +187,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/MemberImportForm.css');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/MemberImportForm.js');
@@ -222,7 +218,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/MemberImportForm.css');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/MemberImportForm.js');
@@ -382,4 +377,4 @@ class SecurityAdmin_DeleteBatchAction extends CMSBatchAction {
 		return Convert::raw2json($status);
 	}
 }
-?>
+

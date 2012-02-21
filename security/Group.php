@@ -62,17 +62,19 @@ class Group extends DataObject {
 	public function getCMSFields() {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');
 		
+		$config = new GridFieldConfig_ManyManyEditor('FirstName', true, 20);
+		$config->addComponent(new GridFieldPopupForms(Controller::curr(), 'EditForm'));
+		$config->addComponent(new GridFieldExporter());
+		$memberList = new GridField('Members','Members', $this->Members(), $config);
+
+		// @todo Implement permission checking on GridField
+		//$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));
+		//$memberList->setPopupCaption(_t('SecurityAdmin.VIEWUSER', 'View User'));
 		$fields = new FieldList(
 			new TabSet("Root",
 				new Tab('Members', _t('SecurityAdmin.MEMBERS', 'Members'),
 					new TextField("Title", $this->fieldLabel('Title')),
-					$memberList = new MemberTableField(
-						(Controller::has_curr()) ? Controller::curr() : new Controller(),
-						"Members",
-						$this,
-						null,
-						false
-					)
+					$memberList
 				),
 
 				$permissionsTab = new Tab('Permissions', _t('SecurityAdmin.PERMISSIONS', 'Permissions'),
@@ -152,9 +154,6 @@ class Group extends DataObject {
 			$rolesField->setDisabledItems($inheritedRoles->column('ID'));
 		} 
 		
-		$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));
-		$memberList->setPopupCaption(_t('SecurityAdmin.VIEWUSER', 'View User'));
-
 		$fields->push($idField = new HiddenField("ID"));
 		
 		$this->extend('updateCMSFields', $fields);
@@ -492,4 +491,4 @@ class Group extends DataObject {
 	}
 }
 	
-?>
+

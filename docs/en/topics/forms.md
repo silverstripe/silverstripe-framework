@@ -21,7 +21,7 @@ have problems with form action handler not working, check that these values are 
 Example: 
 
 	:::php
-	function MyCustomForm() {
+	public function MyCustomForm() {
 		$fields = new FieldList(
 			new EmailField("Email"),
 			new EncryptField("Password")
@@ -43,7 +43,7 @@ $name must be passed - their values depend on where the form is instantiated.
 
 	:::php
 	class MyForm extends Form {
-		function __construct($controller, $name) {
+		public function __construct($controller, $name) {
 			$fields = new FieldList(
 				new EmailField("Email"),
 				new EncryptedField("Password")
@@ -167,7 +167,7 @@ First of all, you need to create your form on it's own class, that way you can d
 	:::php
 	class MyForm extends Form {
 	
-	   function __construct($controller, $name) {
+	   public function __construct($controller, $name) {
 	      $fields = new FieldList(
 	         new TextField('FirstName', 'First name'),
 	         new EmailField('Email', 'Email address')
@@ -180,14 +180,14 @@ First of all, you need to create your form on it's own class, that way you can d
 	      parent::__construct($controller, $name, $fields, $actions);
 	   }
 	
-	   function forTemplate() {
+	   public function forTemplate() {
 	      return $this->renderWith(array(
 	         $this->class,
 	         'Form'
 	      ));
 	   }
 	
-	   function submit($data, $form) {
+	   public function submit($data, $form) {
 	      // do stuff here
 	   }
 	
@@ -269,7 +269,7 @@ If you want to remove certain fields from your subclass:
 
 	:::php
 	class MyCustomForm extends MyForm {
-		function __construct($controller, $name) {
+		public function __construct($controller, $name) {
 			parent::__construct($controller, $name);
 			
 			// remove a normal field

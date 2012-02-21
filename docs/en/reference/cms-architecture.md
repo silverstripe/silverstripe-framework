@@ -72,6 +72,15 @@ Depending on the complexity of your layout, you'll also need to overload the
 a tabbed form which only scrolls the main tab areas, while keeping the buttons at the bottom of the frame.
 This requires manual assignment of the template to your form instance, see `[api:CMSMain->getEditForm()]` for details.
 
+Often its useful to have a "tools" panel in between the menu and your content,
+usually occupied by a search form or navigational helper.
+In this case, you can either overload the full base template as described above.
+To avoid duplicating all this template code, you can also use the special `[api:LeftAndMain->Tools()]` and 
+`[api:LeftAndMain->EditFormTools()]` methods available in `LeftAndMain`.
+These placeholders are populated by auto-detected templates, 
+with the naming convention of "<controller classname>_Tools.ss" and "<controller classname>_EditFormTools.ss".
+So to add or "subclass" a tools panel, simply create this file and it's automatically picked up.
+
 ## Layout and Panels
 
 The CMS markup is structured into "panels", which are the base units containing
@@ -181,3 +190,4 @@ and `[api:CMSMenu::remove_menu_item()]`.
 
  * [Howto: Extend the CMS Interface](../howto/extend-cms-interface)
  * [Reference: ModelAdmin](../reference/modeladmin)
+ * [Topics: Rich Text Editing](../topics/rich-text-editing)

@@ -103,4 +103,3 @@ if (
 	include 'main.php';
 }
 
-?>

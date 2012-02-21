@@ -16,7 +16,7 @@
  * @package   Zend_Date
  * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd     New BSD License
- * @version   $Id: Date.php 23775 2011-03-01 17:25:24Z ralph $
+ * @version   $Id: Date.php 24108 2011-06-04 00:09:27Z freak $
  */
 
 /**
@@ -2107,7 +2107,10 @@ class Zend_Date extends Zend_Date_DateObject
                 break;
 
             case self::RFC_2822:
-                $result = preg_match('/^\w{3},\s(\d{1,2})\s(\w{3})\s(\d{4})\s(\d{2}):(\d{2}):{0,1}(\d{0,2})\s([+-]{1}\d{4})$/', $date, $match);
+                 $result = preg_match('/^\w{3},\s(\d{1,2})\s(\w{3})\s(\d{4})\s'
+                                    . '(\d{2}):(\d{2}):{0,1}(\d{0,2})\s([+-]'
+                                    . '{1}\d{4}|\w{1,20})$/', $date, $match);
+
                 if (!$result) {
                     require_once 'Zend/Date/Exception.php';
                     throw new Zend_Date_Exception("no RFC 2822 format ($date)", 0, null, $date);

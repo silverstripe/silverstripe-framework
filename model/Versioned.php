@@ -40,6 +40,14 @@ class Versioned extends DataExtension {
 	protected static $cache_versionnumber;
 	
 	/**
+	 * @var Boolean Flag which is temporarily changed during the write() process
+	 * to influence augmentWrite() behaviour. If set to TRUE, no new version will be created
+	 * for the following write. Needs to be public as other classes introspect this state
+	 * during the write process in order to adapt to this versioning behaviour.
+	 */
+	public $_nextWriteWithoutVersion = false;
+
+	/**
 	 * Additional database columns for the new
 	 * "_versions" table. Used in {@link augmentDatabase()}
 	 * and all Versioned calls extending or creating
@@ -511,7 +519,9 @@ class Versioned extends DataExtension {
 			}
 			
 			// Putting a Version of -1 is a signal to leave the version table alone, despite their being no version
-			if($manipulation[$table]['fields']['Version'] < 0) unset($manipulation[$table]['fields']['Version']);
+			if($manipulation[$table]['fields']['Version'] < 0 || $this->_nextWriteWithoutVersion) {
+				unset($manipulation[$table]['fields']['Version']);
+			}
 
 			if(!$this->hasVersionField($table)) unset($manipulation[$table]['fields']['Version']);
 			
@@ -536,6 +546,21 @@ class Versioned extends DataExtension {
 
 		// Add the new version # back into the data object, for accessing after this write
 		if(isset($thisVersion)) $this->owner->Version = str_replace("'","",$thisVersion);
+	}
+
+	/**
+	 * Perform a write without affecting the version table.
+	 * On objects without versioning.
+	 *
+	 * @return int The ID of the record
+	 */
+	public function writeWithoutVersion() {
+		$this->_nextWriteWithoutVersion = true;
+		return $this->owner->write();
+	}
+
+	function onAfterWrite() {
+		$this->_nextWriteWithoutVersion = false;
 	}
 
 	/**

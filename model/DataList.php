@@ -326,6 +326,27 @@ class DataList extends ViewableData implements SS_List {
 	}
 	
 	/**
+	 * This method returns a list does not contain any DataObjects that exists in $list
+	 * 
+	 * It does not return the resulting list, it only adds the constraints on the database to exclude
+	 * objects from $list.
+	 * The $list passed needs to contain the same dataclass as $this
+	 *
+	 * @param SS_List $list
+	 * @return DataList 
+	 * @throws BadMethodCallException
+	 */
+	public function subtract(SS_List $list) {
+		if($this->dataclass() != $list->dataclass()) {
+			throw new InvalidArgumentException('The list passed must have the same dataclass as this class');
+		}
+		
+		$newlist = clone $this;
+		$newlist->dataQuery->subtract($list->dataQuery());
+		return $newlist;
+	}
+	
+	/**
 	 * Add an inner join clause to this data list's query.
 	 *
 	 * @param string $table

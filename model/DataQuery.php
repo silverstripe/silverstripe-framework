@@ -503,7 +503,19 @@ class DataQuery {
 		}
 		
 		return $modelClass;
-	}	
+	}
+	
+	/**
+	 * Removes the result of query from this query.
+	 * 
+	 * @param DataQuery $subtractQuery
+	 * @param string $field 
+	 */
+	public function subtract(DataQuery $subtractQuery, $field='ID') {
+		$subSelect= $subtractQuery->getFinalisedQuery();
+		$subSelect->select($this->expressionForField($field, $subSelect));
+		$this->where($this->expressionForField($field, $this).' NOT IN ('.$subSelect->sql().')');
+	}
 
 	/**
 	 * Select the given fields from the given table

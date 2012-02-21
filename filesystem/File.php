@@ -258,7 +258,7 @@ class File extends DataObject {
 	function getCMSFields() {
 		$urlLink = "<div class='field readonly'>";
 		$urlLink .= "<label class='left'>"._t('AssetTableField.URL','URL')."</label>";
-		$urlLink .= "<span class='readonly'><a href='{$this->Link()}'>{$this->RelativeLink()}</a></span>";
+		$urlLink .= "<span class='readonly'><a href='{$this->Link()}' target='_blank'>{$this->RelativeLink()}</a></span>";
 		$urlLink .= "</div>";
 
 		return new FieldList(
@@ -304,6 +304,9 @@ class File extends DataObject {
 			case "bmp": case "gif": case "jpg": case "jpeg": case "pcx": case "tif": case "png": case "alpha":
 			case "als": case "cel": case "icon": case "ico": case "ps":
 				return "image";
+
+			case "swf": 
+				return "flash";
 		}
 	}
 
@@ -350,6 +353,9 @@ class File extends DataObject {
 	 */
 	protected function onBeforeWrite() {
 		parent::onBeforeWrite();
+
+		// Set default owner
+		if(!$this->ID) $this->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
 
 		// Set default name
 		if(!$this->getField('Name')) $this->Name = "new-" . strtolower($this->class);
@@ -680,6 +686,11 @@ class File extends DataObject {
 		return ($size) ? self::format_size($size) : false;
 	}
 	
+	/**
+	 * Formats a file size (eg: (int)42 becomes string '42 bytes')
+	 * @param int $size
+	 * @return string
+	 */
 	public static function format_size($size) {
 		if($size < 1024) return $size . ' bytes';
 		if($size < 1024*10) return (round($size/1024*10)/10). ' KB';
@@ -687,6 +698,24 @@ class File extends DataObject {
 		if($size < 1024*1024*10) return (round(($size/1024)/1024*10)/10) . ' MB';
 		if($size < 1024*1024*1024) return round(($size/1024)/1024) . ' MB';
 		return round($size/(1024*1024*1024)*10)/10 . ' GB';
+	}
+	
+	/**
+	 * Convert a php.ini value (eg: 512M) to bytes
+	 * 
+	 * @param string $phpIniValue
+	 * @return int
+	 */
+	public function ini2bytes($PHPiniValue) {
+		switch(strtolower(substr(trim($PHPiniValue), -1))) {
+			case 'g':
+				$PHPiniValue *= 1024;
+			case 'm':
+				$PHPiniValue *= 1024;
+			case 'k':
+				$PHPiniValue *= 1024;
+		}
+		return $PHPiniValue;
 	}
 
 	/**

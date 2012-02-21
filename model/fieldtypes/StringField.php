@@ -9,6 +9,14 @@
 abstract class StringField extends DBField {
 	protected $nullifyEmpty = true;
 
+	static $casting = array(
+		"LimitCharacters" => "Text",
+		"Lower" => "Text",
+		"Upper" => "Text",
+		"LowerCase" => "Text",
+		"UpperCase" => "Text",
+	);
+
 	/**
 	 * Construct a string type field with a set of optional parameters
 	 * @param $name string The name of the field
@@ -96,19 +104,39 @@ abstract class StringField extends DBField {
 		}
 		return $value;
 	}
-	
+
+	/**
+	 * Converts the current value for this Enum DBField to lowercase.
+	 * @return string
+	 */
+	function LowerCase() {
+		return mb_strtolower($this->value);
+	}
+		
 	/**
 	 * Return another DBField object with this value in lowercase.
+	 * @deprecated 3.0 Use LowerCase() instead.
 	 */
 	function Lower() {
-		return DBField::create(get_class($this), mb_strtolower($this->value), $this->name);
+		Deprecation::notice('3.0', 'Use LowerCase() instead.');
+		return $this->LowerCase();
+	}
+
+	/**
+	 * Converts the current value for this Enum DBField to uppercase.
+	 * @return string 
+	 */ 
+	function UpperCase() {
+		return mb_strtoupper($this->value);
 	}
 
 	/**
 	 * Return another DBField object with this value in uppercase.
+	 * @deprecated 3.0 Use UpperCase() instead.
 	 */
 	function Upper() {
-		return DBField::create(get_class($this), mb_strtoupper($this->value), $this->name);
+		Deprecation::notice('3.0', 'Use UpperCase() instead.');
+		return $this->UpperCase();
 	}
 
 }

@@ -311,4 +311,4 @@ class DataExtensionTest_AppliedToDO extends DataExtension implements TestOnly {
 DataObject::add_extension('DataExtensionTest_MyObject', 'DataExtensionTest_Ext1');
 DataObject::add_extension('DataExtensionTest_MyObject', 'DataExtensionTest_Ext2');
 DataObject::add_extension('DataExtensionTest_MyObject', 'DataExtensionTest_Faves');
-?>
+

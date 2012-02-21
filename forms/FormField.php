@@ -200,6 +200,7 @@ class FormField extends RequestHandler {
 	
 	function setTitle($val) { 
 		$this->title = $val;
+		return $this;
 	}
 
 	function RightTitle() {
@@ -208,6 +209,7 @@ class FormField extends RequestHandler {
 
 	function setRightTitle($val) { 
 		$this->rightTitle = $val;
+		return $this;
 	}
 
 	function LeftTitle() {
@@ -216,6 +218,7 @@ class FormField extends RequestHandler {
 
 	function setLeftTitle($val) {
 		$this->leftTitle = $val;
+		return $this;
 	}
 
 	/**
@@ -226,6 +229,7 @@ class FormField extends RequestHandler {
 	 */
 	public function setTabIndex($index) {
 		$this->tabIndex = $index;
+		return $this;
 	}
 
 	/**
@@ -281,6 +285,7 @@ class FormField extends RequestHandler {
 	 */
 	function addExtraClass($class) {
 		$this->extraClasses[$class] = $class;
+		return $this;
 	}
 
 	/**
@@ -290,6 +295,7 @@ class FormField extends RequestHandler {
 	 */
 	function removeExtraClass($class) {
 		if(isset($this->extraClasses) && array_key_exists($class, $this->extraClasses)) unset($this->extraClasses[$class]);
+		return $this;
 	}
 
 	/**
@@ -305,6 +311,7 @@ class FormField extends RequestHandler {
 	 */
 	function setAttribute($name, $value) {
 		$this->attributes[$name] = $value;
+		return $this;
 	}
 
 	/**
@@ -378,6 +385,7 @@ class FormField extends RequestHandler {
 	 */
 	function setValue($value) {
 		$this->value = $value; return $this;
+		return $this;
 	}
 	
 	/**
@@ -385,6 +393,7 @@ class FormField extends RequestHandler {
 	 */
 	function setName($name) {
 		$this->name = $name;
+		return $this;
 	}
 	
 	/**
@@ -394,6 +403,7 @@ class FormField extends RequestHandler {
 	 */
 	function setForm($form) {
 		$this->form = $form; 
+		return $this;
 	}
 	
 	/**
@@ -423,6 +433,7 @@ class FormField extends RequestHandler {
 	 */
 	public function setFieldHolderTemplate($template) {
 		$this->fieldHolderTemplate = $template;
+		return $this;
 	}
 
 	/**
@@ -443,6 +454,7 @@ class FormField extends RequestHandler {
 	function setError($message, $messageType) {
 		$this->message = $message; 
 		$this->messageType = $messageType; 
+		return $this;
 	}
 	
 	/**
@@ -454,6 +466,7 @@ class FormField extends RequestHandler {
 	 */
 	public function setCustomValidationMessage($msg) {
 		$this->customValidationMessage = $msg;
+		return $this;
 	}
 	
 	/**
@@ -477,6 +490,7 @@ class FormField extends RequestHandler {
 	 */
 	function setTemplate($template) {
 		$this->template = $template;
+		return $this;
 	}
 	
 	/**
@@ -569,6 +583,7 @@ class FormField extends RequestHandler {
 	 */
 	function setReadonly($bool) { 
 		$this->readonly = $bool; 
+		return $this;
 	}
 	
 	/**
@@ -585,6 +600,7 @@ class FormField extends RequestHandler {
 	 */
 	function setDisabled($bool) { 
 		$this->disabled = $bool; 
+		return $this;
 	}
 	
 	/**
@@ -684,6 +700,13 @@ class FormField extends RequestHandler {
 		$this->description = $description;
 		return $this;
 	}
+
+	/**
+	 * @return String
+	 */
+	function getDescription() {
+		return $this->description;
+	}
 	
 	function debug() {
 		return "$this->class ($this->name: $this->title : <font style='color:red;'>$this->message</font>) = $this->value";
@@ -738,6 +761,7 @@ class FormField extends RequestHandler {
 	 */ 
 	function setContainerFieldSet($containerFieldSet) {
 		$this->containerFieldSet = $containerFieldSet;
+		return $this;
 	}
 	
 	function rootFieldSet() {

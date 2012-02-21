@@ -278,7 +278,6 @@ class TableListField extends FormField {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/TableListField.css');
@@ -386,10 +385,12 @@ JS
 	 */
 	function setCustomQuery(DataList $dataList) {
 		$this->dataList = $dataList;
+		return $this;
 	}
 
 	function setCustomCsvQuery(DataList $dataList) {
 		$this->customCsvQuery = $query;
+		return $this;
 	}
 	
 	function setCustomSourceItems(SS_List $items) {
@@ -401,6 +402,8 @@ JS
 		} else {
 			user_error('TableList::setCustomSourceItems() should be passed a SS_List', E_USER_WARNING);
 		}
+
+		return $this;
 	}
 	
 	/**
@@ -500,6 +503,7 @@ JS
 	 */
 	function setClick_AjaxLoad($urlBase, $formID) {
 		$this->clickAction = "this.ajaxRequest('" . addslashes($urlBase) . "', '" . addslashes($formID) . "')";
+		return $this;
 	}
 
 	/**
@@ -507,6 +511,7 @@ JS
 	 */
 	function setClick_PopupLoad($urlBase) {
 		$this->clickAction = "var w = window.open(baseHref() + '$urlBase' + this.id.replace(/.*-(\d*)$/,'$1'), 'popup'); w.focus();";
+		return $this;
 	}
 	
 	function performReadonlyTransformation() {
@@ -702,6 +707,7 @@ JS
 	
 	function setPermissions($arr) {
 		$this->permissions = $arr;
+		return $this;
 	}
 
 	/**
@@ -718,6 +724,7 @@ JS
 	 */
 	function setShowPagination($bool) {
 		$this->showPagination = (bool)$bool;
+		return $this;
 	}
 
 	/**
@@ -732,6 +739,7 @@ JS
 	
 	function setPageSize($pageSize) {
 	 	$this->pageSize = $pageSize;
+	 	return $this;
 	}
 	 
 	 function PageSize() {
@@ -749,6 +757,7 @@ JS
 	function setExtraLinkParams($params){
 		Deprecation::notice('2.4', 'Put the query string onto your FormAction instead().');
 		$this->extraLinkParams = $params;
+		return $this;
 	}
 	
 	/**
@@ -908,6 +917,7 @@ JS
 	 */
 	 function setFieldListCsv($fields) {
 	 	$this->fieldListCsv = $fields;
+	 	return $this;
 	 }
 	
 	/**
@@ -915,6 +925,7 @@ JS
 	 */
 	function setCsvSeparator($csvSeparator) {
 		$this->csvSeparator = $csvSeparator;
+		return $this;
 	}
 	
 	/**
@@ -929,6 +940,7 @@ JS
 	 */
 	function removeCsvHeader() {
 		$this->csvHasHeader = false;
+		return $this;
 	}
 	 
 	/**
@@ -1100,14 +1112,17 @@ JS
 	
 	function setFieldCasting($casting) {
 		$this->fieldCasting = $casting;
+		return $this;
 	}
 
 	function setFieldFormatting($formatting) {
 		$this->fieldFormatting = $formatting;
+		return $this;
 	}
 	
 	function setCSVFieldFormatting($formatting) {
 		$this->csvFieldFormatting = $formatting;
+		return $this;
 	}
 	
 	/**
@@ -1115,6 +1130,7 @@ JS
 	 */
 	function setFieldList($fieldList) {
 		$this->fieldList = $fieldList;
+		return $this;
 	}
 	
 	/**
@@ -1148,6 +1164,7 @@ JS
 	
 	function setTemplate($template) {
 		$this->template = $template;
+		return $this;
 	}
 	
 	function CurrentLink() {
@@ -1242,6 +1259,7 @@ JS
 	 
 	function setHighlightConditions($conditions) {
 		$this->highlightConditions = $conditions;
+		return $this;
 	}
 	
 	/**
@@ -1574,4 +1592,4 @@ class TableListField_ItemRequest extends RequestHandler {
 		return $this->ctf;
 	}
 }
-?>
+

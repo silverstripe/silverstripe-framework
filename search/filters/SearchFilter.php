@@ -172,4 +172,3 @@ abstract class SearchFilter extends Object {
 	}
 	
 }
-?>

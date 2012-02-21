@@ -213,10 +213,10 @@ class DBFieldTest extends SapphireTest {
 			$this->assertEquals('üåäö&amp;ÜÅÄ...', $stringField->LimitCharacters(8));
 		}
 		
-		$this->assertEquals('ÅÄÖ', DBField::create('Text', 'åäö')->Upper()->getValue());
-		$this->assertEquals('åäö', DBField::create('Text', 'ÅÄÖ')->Lower()->getValue());
+		$this->assertEquals('ÅÄÖ', DBField::create('Text', 'åäö')->UpperCase());
+		$this->assertEquals('åäö', DBField::create('Text', 'ÅÄÖ')->LowerCase());
 	}
 	
 }
 
-?>
+

@@ -1,9 +1,9 @@
+jQuery.noConflict();
+
 /**
  * File: LeftAndMain.js
  */
 (function($) {
-	$.metadata.setType('html5');
-	
 	// setup jquery.entwine
 	$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 	$.entwine('ss', function($) {
@@ -95,8 +95,12 @@
 			redraw: function() {
 				// Move from inner to outer layouts. Some of the elements might not exist.
 				// Not all edit forms are layouted, so qualify by their data value.
-				this.find('.cms-edit-form[data-layout]').redraw(); 
+				
+				this.find('.cms-edit-form[data-layout-type]').redraw(); 
+				
+				// Only redraw preview if its visible
 				this.find('.cms-preview').redraw();
+
 				// Only redraw the content area if its not the same as the edit form
 				var contentEl = this.find('.cms-content');
 				if(!contentEl.is('.cms-edit-form')) contentEl.redraw();
@@ -253,182 +257,82 @@
 		 */
 		$('.cms input[type="submit"], .cms button, .cms input[type="reset"]').entwine({
 			onmatch: function() {
-				this.addClass('ss-ui-button');
-				this.redraw();
+				if(!this.hasClass('ss-ui-button')) this.addClass('ss-ui-button');
 				
 				this._super();
 			}
 		});
 
-		/**
-		 * Class: a#profile-link
-		 * 
-		 * Link for editing the profile for a logged-in member through a modal dialog.
-		 */
-		$('.cms-container .profile-link').entwine({
-			DialogPadding: 40,
-			MaxHeight: 800,
-			MaxWidth: 800,
-			MinHeight: 120,
-			MinWidth: 120,
-			
-			/**
-			 * Constructor: onmatch
-			 */
+		$('.cms .ss-ui-button').entwine({
 			onmatch: function() {
-				this.bind('click', function(e) {
-					return self._openPopup();
-				});
-				
-				var self = this;
+				if(!this.data('button')) this.button();
 
-				$('body').append(
-					'<div id="ss-ui-dialog">'
-					+ '<iframe id="ss-ui-dialog-iframe" '
-					+ 'marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto">'
-					+ '</iframe>'
-					+ '</div>'
-				);
-
-				$('#ss-ui-dialog-iframe').bind('load', function(e) {
-					self._resize();
-				});
-				
-				$(window).bind('resize', function() {
-					self._resize();
-				});
-				
-				self.redraw();
-			},
-			
-			/**
-			 * Function: redraw
-			 *
-			 * Returns: void
-			 */
-			redraw: function() {
-				var self = this;
-				var useCookie = false;
-				var cookieVal = false;
-				
-				if(useCookie && jQuery.cookie && jQuery.cookie('ss-ui-dialog')) {
-					cookieVal = JSON.parse(jQuery.cookie('ss-ui-dialog'));
-				}
-
-				$("#ss-ui-dialog").dialog(jQuery.extend({
-					autoOpen: false,
-					bgiframe: true,
-					modal: true,
-					width: self._width(),
-					height: self._height(),
-					position: 'center',
-					
-					resizeStop: function(e, ui) {
-						self._resize();
-					},
-					
-					dragStop: function(e, ui) {
-						self._saveState();
-					},
-					// TODO i18n
-					title: 'Edit Profile'
-				}, cookieVal)).css('overflow', 'hidden');
-				
-			},
-			
-			/**
-			 * Function: _popupHeight
-			 * 
-			 * Returns a value > minHeight < max height
-			 * Returns: Int
-			 */
-			_height: function() {
-				var marginTop = parseInt($(this).css('margin-top').replace('px', ''));
-				var marginBottom = parseInt($(this).css('margin-bottom').replace('px', ''));
-				var body = $("body").height();
-
-				var height = body - (marginTop + marginBottom) - (this.getDialogPadding() * 2);
-				
-				if(height > this.getMaxHeight()) 
-					return this.getMaxHeight();
-				else if(height < this.getMinHeight())
-					return this.getMinHeight();
-				
-				return height;
-			},
-			
-			/**
-			 * Function: _popupWidth
-			 *
-			 * Returns: Int
-			 */
-			_width: function() {
-				var body = $("body").width();
-				var width = body - (this.getDialogPadding() * 2);	
-				
-				if(width > this.getMaxWidth()) 
-					return this.getMaxWidth();
-				else if(width < this.getMinWidth())
-					return this.getMinWidth();
-					
-				return width;
-			},
-
-			/**
-			 * Function: _openPopup
-			 */
-			_openPopup: function(e) {
-				$('#ss-ui-dialog-iframe').attr('src', this.attr('href'));
-
-				$("#ss-ui-dialog").dialog('open');
-
-				return false;
-			},
-
-			/**
-			 * Function: _resize
-			 */
-			_resize: function() {
-				var iframe = $('#ss-ui-dialog-iframe');
-				var container = $('#ss-ui-dialog');
-				
-				container.dialog("option", "width", this._width());
-				container.dialog("option", "height", this._height());
-				container.dialog('option', 'position', 'center');
-				
-				iframe.attr('width', 
-					container.innerWidth() 
-					- parseFloat(container.css('paddingLeft'))
-					- parseFloat(container.css('paddingRight'))
-				);
-				iframe.attr('height', 
-					container.innerHeight()
-					- parseFloat(container.css('paddingTop')) 
-					- parseFloat(container.css('paddingBottom'))
-				);
-				
-				this._saveState();
-			},
-
-			/**
-			 * Function: _saveState
-			 */
-			_saveState: function() {
-				var container = $('#ss-ui-dialog');
-
-				// save size in cookie (optional)
-				if(jQuery.cookie && container.width() && container.height()) {
-					jQuery.cookie(
-						'ss-ui-dialog',
-						JSON.stringify({
-							width: parseInt(container.width(), 10), 
-							height: parseInt(container.height(), 10)
-						}),
-						{ expires: 30, path: '/'}
-					);
-				}
+				this._super();
 			}
 		});
+
+		/**
+		 * Trigger dialogs with iframe based on the links href attribute (see ssui-core.js).
+		 */
+		$('.cms-container .ss-ui-dialog-link').entwine({
+			UUID: null,
+			onmatch: function() {
+				this._super();
+				this.setUUID(new Date().getTime());
+			},
+			onclick: function() {
+				this._super();
+
+				var self = this, id = 'ss-ui-dialog-' + this.getUUID();
+
+				var dialog = $('#' + id);
+				if(!dialog.length) {
+					dialog = $('<div class="ss-ui-dialog" id="' + id + '" />');
+					$('body').append(dialog);
+				}
+			
+				dialog.ssdialog({iframeUrl: this.attr('href'), autoOpen: true});
+				return false;
+			}
+		});
+
+		/**
+		 * Add styling to all contained buttons, and create buttonsets if required.
+		 */
+		$('.cms .Actions').entwine({
+		onmatch: function() {
+			this.find('.ss-ui-button').click(function() {
+					var form = this.form;
+					// forms don't natively store the button they've been triggered with
+					if(form) {
+						form.clickedButton = this;
+						// Reset the clicked button shortly after the onsubmit handlers
+						// have fired on the form
+						setTimeout(function() {form.clickedButton = null;}, 10);
+					}
+				});
+
+			this.redraw();
+			this._super();
+		},
+		redraw: function() {
+			// Remove whitespace to avoid gaps with inline elements
+			this.contents().filter(function() { 
+				return (this.nodeType == 3 && !/\S/.test(this.nodeValue)); 
+			}).remove();
+
+			// Init buttons if required
+			this.find('.ss-ui-button').each(function() {
+				if(!$(this).data('button')) $(this).button();
+			});
+			
+			// Mark up buttonsets
+			this.find('.ss-ui-buttonset').buttonset();
+				// .children().removeClass('ui-corner-all').addClass('buttonset')
+				// 	.first().addClass('ui-corner-left').end()
+				// 	.last().addClass('ui-corner-right');;
+		}
+	});
 		
 		/**
 		 * Duplicates functionality in DateField.js, but due to using entwine we can match
@@ -437,7 +341,7 @@
 		 */
 		$('.cms-container .field.date input.text').entwine({
 			onmatch: function() {
-				var holder = $(this).parents('.field.date:first'), config = holder.metadata({type: 'class'});
+				var holder = $(this).parents('.field.date:first'), config = holder.data();
 				if(!config.showcalendar) return;
 
 				config.showOn = 'button';
@@ -492,13 +396,4 @@ var errorMessage = function(text) {
 
 returnFalse = function() {
 	return false;
-};
-
-/**
- * Find and enable TinyMCE on all htmleditor fields
- * Pulled in from old tinymce.template.js
- */
-
-function nullConverter(url) {
-	return url;
 };

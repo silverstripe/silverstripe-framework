@@ -50,4 +50,3 @@ abstract class TextParser extends Object {
 	 */
 	abstract function parse();
 }
-?>

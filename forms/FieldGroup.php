@@ -121,6 +121,7 @@ class FieldGroup extends CompositeField {
   	function setZebra($zebra) {
 	    if($zebra == 'odd' || $zebra == 'even') $this->zebra = $zebra;
 	    else user_error("setZebra passed '$zebra'.  It should be passed 'odd' or 'even'", E_USER_WARNING);
+	    return $this;
  	}
   
 	function FieldHolder() {
@@ -182,4 +183,3 @@ HTML;
 	
 }
 
-?>

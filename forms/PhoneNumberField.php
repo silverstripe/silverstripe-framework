@@ -191,4 +191,3 @@ JS;
 		return true;
 	}
 }
-?>

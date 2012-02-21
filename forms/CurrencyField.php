@@ -15,6 +15,7 @@ class CurrencyField extends TextField {
 	function setValue($val) {
 		if(!$val) $val = 0.00;
 		$this->value = '$' . number_format((double)preg_replace('/[^0-9.\-]/', '', $val), 2);
+		return $this;
 	}
 	/**
 	 * Overwrite the datavalue before saving to the db ;-)
@@ -143,4 +144,3 @@ class CurrencyField_Disabled extends CurrencyField{
 	}
 }
 
-?>

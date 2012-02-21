@@ -20,28 +20,10 @@ class GridFieldConfig {
 	protected $components = null;
 	
 	/**
-	 *
-	 * @var int
-	 */
-	protected $checkboxes = null;
-
-	/**
-	 *
-	 * @var array
-	 */
-	protected $affectors = array();
-
-	/**
-	 *
-	 * @var array
-	 */
-	protected $decorators = array();
-	
-	/**
 	 * 
 	 */
 	public function __construct() {
-		;
+		$this->components = new ArrayList();
 	}
 	
 	public function addComponent(GridFieldComponent $component) {
@@ -50,8 +32,7 @@ class GridFieldConfig {
 	}
 	
 	/**
-	 *
-	 * @return ArrayList
+	 * @return ArrayList Of GridFieldComponent
 	 */
 	public function getComponents() {
 		if(!$this->components) {
@@ -59,30 +40,95 @@ class GridFieldConfig {
 		}
 		return $this->components;
 	}
-	
-	public function setCheckboxes($row=0){
-		$this->checkboxes = $row;
-		return $this;
+
+	/**
+	 * Returns all components extending a certain class, or implementing a certain interface.
+	 * 
+	 * @param String Class name or interface
+	 * @return ArrayList Of GridFieldComponent
+	 */
+	public function getComponentsByType($type) {
+		$components = new ArrayList();
+		foreach($this->components as $component) {
+			if($component instanceof $type) $components->push($component);
+		}
+		return $components;
 	}
-	
-	public function getCheckboxes() {
-		return $this->checkboxes;
+
+	/**
+	 * Returns the first available component with the given class or interface.
+	 * 
+	 * @param String ClassName
+	 * @return GridFieldComponent
+	 */
+	public function getComponentByType($type) {
+		foreach($this->components as $component) {
+			if($component instanceof $type) return $component;
+		}
 	}
-	
-	public function addAffector(GridState_Affector $affector) {
-		$this->affectors[] = $affector;
-		return $this;
+}
+
+class GridFieldConfig_Base extends GridFieldConfig {
+
+	/**
+	 *
+	 * @param int $itemsPerPage - How many items per page should show up per page
+	 * @return GridFieldConfig_Base
+	 */
+	public static function create($itemsPerPage=25){
+		return new GridFieldConfig_Base($itemsPerPage=25);
 	}
-	
-	public function getAffectors() {
-		return $this->affectors;
+
+	/**
+	 *
+	 * @param int $itemsPerPage - How many items per page should show up
+	 */
+	public function __construct($itemsPerPage=25) {
+		$this->addComponent(new GridFieldSortableHeader());
+		$this->addComponent(new GridFieldFilter());
+		$this->addComponent(new GridFieldDefaultColumns());
+		$this->addComponent(new GridFieldPaginator($itemsPerPage));
 	}
-	
-	public function addDecorator($decorator) {
-		$this->decorators[] = $decorator;
+}
+
+/**
+ * This GridFieldConfig bundles a common set of componentes  used for displaying
+ * a gridfield with:
+ * 
+ * - Relation adding
+ * - Sortable header
+ * - Default columns
+ * - Edit links on every item
+ * - Action for removing relationship
+ * - Paginator
+ * 
+ */
+class GridFieldConfig_ManyManyEditor extends GridFieldConfig {
+
+	/**
+	 *
+	 * @param string $fieldToSearch - Which field on the object should be searched for
+	 * @param bool $autoSuggest - Show a jquery.ui.autosuggest dropdown field
+	 * @param int $itemsPerPage - How many items per page should show up
+	 * @return GridFieldConfig_ManyManyEditor
+	 */
+	public static function create($fieldToSearch, $autoSuggest=true, $itemsPerPage=25){
+		return new GridFieldConfig_ManyManyEditor($fieldToSearch, $autoSuggest=true, $itemsPerPage=25);
 	}
-	
-	public function getDecorators() {
-		return $this->decorators;
+
+	/**
+	 *
+	 * @param string $fieldToSearch - Which field on the object should be searched for
+	 * @param bool $autoSuggest - Show a jquery.ui.autosuggest dropdown field
+	 * @param int $itemsPerPage - How many items per page should show up
+	 */
+	public function __construct($fieldToSearch, $autoSuggest=true, $itemsPerPage=25) {
+		$this->addComponent(new GridFieldFilter());
+		$this->addComponent(new GridFieldRelationAdd($fieldToSearch, $autoSuggest));
+		$this->addComponent(new GridFieldSortableHeader());
+		$this->addComponent(new GridFieldDefaultColumns());
+		$this->addComponent(new GridFieldAction_Edit());
+		$this->addComponent(new GridFieldRelationDelete());
+		$this->addComponent(new GridFieldPaginator($itemsPerPage));
 	}
 }

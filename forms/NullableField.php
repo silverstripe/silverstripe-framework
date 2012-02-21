@@ -61,6 +61,7 @@ class NullableField extends FormField {
 	 */
 	function setIsNullLabel(string $isNulLabel){
 		$this->isNullLabel = $isNulLabel;
+		return $this;
 	}
 	
 	/**
@@ -95,6 +96,8 @@ class NullableField extends FormField {
 		}
 		$this->valueField->setValue($value);
 		parent::setValue($value);
+
+		return $this;
 	}
 	
 	/**
@@ -105,6 +108,8 @@ class NullableField extends FormField {
 		// We need to pass through the name change to the underlying value field.
 		$this->valueField->setName($name);
 		parent::setName($name);
+
+		return $this;
 	}
 
 	/**

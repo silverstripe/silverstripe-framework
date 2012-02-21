@@ -47,28 +47,29 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 		}
 		return $array;
 	}
-	
+
 	/**
 	 * Return all the keys of this map
 	 */
 	function keys() {
-		$array = array();
+		$output = array();
 		foreach($this as $k => $v) {
-			$array[] = $v;
+			$output[] = $k;
 		}
-		return $array;
+		return $output;
 	}
+
 	/**
 	 * Return all the values of this map
 	 */
 	function values() {
-		$array = array();
+		$output = array();
 		foreach($this as $k => $v) {
-			$array[] = $v;
+			$output[] = $v;
 		}
-		return $array;
+		return $output;
 	}
-	
+
 	/**
 	 * Unshift an item onto the start of the map
 	 */

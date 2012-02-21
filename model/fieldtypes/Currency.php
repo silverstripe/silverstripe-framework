@@ -59,4 +59,3 @@ class Currency extends Decimal {
 	}
 }
 
-?>

@@ -564,4 +564,4 @@ class RestfulServerTest_AuthorRating extends DataObject implements TestOnly {
 		return true;
 	}
 }
-?>
+

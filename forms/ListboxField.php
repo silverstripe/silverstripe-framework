@@ -118,6 +118,7 @@ class ListboxField extends DropdownField {
 	 */
 	function setSize($size) {
 		$this->size = $size;
+		return $this;
 	}
 	
 	/** 
@@ -126,6 +127,7 @@ class ListboxField extends DropdownField {
 	 */
 	function setMultiple($bool) {
 		$this->multiple = $bool;
+		return $this;
 	}
 	
 	function setSource($source) {
@@ -137,6 +139,8 @@ class ListboxField extends DropdownField {
 		}
 		
 		parent::setSource($source);
+
+		return $this;
 	}
 	
 	/**
@@ -162,18 +166,14 @@ class ListboxField extends DropdownField {
 					throw new InvalidArgumentException('No associative arrays allowed multiple=true');
 				}
 
-				if($diff = array_diff($parts, array_keys($this->source))) {
-					throw new InvalidArgumentException(sprintf(
-						'Invalid keys "%s" in value array for multiple=true', 
-						Convert::raw2xml(implode(',', $diff))
-					));
-				}
+				// Doesn't check against unknown values in order to allow for less rigid data handling.
+				// They're silently ignored and overwritten the next time the field is saved.
 
 				parent::setValue($parts);
 			} else {
 				if(!in_array($val, array_keys($this->source))) {
 					throw new InvalidArgumentException(sprintf(
-						'Invalid value "%s" for multiple=true', 
+						'Invalid value "%s" for multiple=false', 
 						Convert::raw2xml($val)
 					));
 				}
@@ -184,7 +184,7 @@ class ListboxField extends DropdownField {
 			parent::setValue($val);
 		}
 		
+		return $this;
 	}
 	
 }
-?>

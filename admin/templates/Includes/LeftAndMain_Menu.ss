@@ -1,7 +1,7 @@
-<div class="cms-menu cms-panel cms-panel-layout west" id="cms-menu" data-layout="{type: 'border'}">
-	<div class="cms-panel-header cms-logo-header north">
+<div class="cms-menu cms-panel cms-panel-layout west" id="cms-menu" data-layout-type="border">
+	<div class="cms-logo-header north">
 		<div class="cms-logo">
-			<a href="http://www.silverstripe.org/" target="_blank">
+			<a href="http://www.silverstripe.org/" target="_blank" title="SilverStripe (Version - $CMSVersion)">
 				SilverStripe <% if CMSVersion %><abbr class="version">$CMSVersion</abbr><% end_if %>
 			</a>
 			<span>$SiteConfig.Title</span>
@@ -12,7 +12,7 @@
 			<% control CurrentMember %>
 				<span>
 					<% _t('Hello','Hi') %>
-					<a href="{$AbsoluteBaseURL}admin/myprofile" class="profile-link">
+					<a href="{$AbsoluteBaseURL}admin/settings/myprofile" class="profile-link ss-ui-dialog-link">
 						<% if FirstName && Surname %>$FirstName $Surname<% else_if FirstName %>$FirstName<% else %>$Email<% end_if %>
 					</a>
 				</span>

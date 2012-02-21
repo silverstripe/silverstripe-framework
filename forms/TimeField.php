@@ -116,6 +116,8 @@ class TimeField extends TextField {
 			$this->value = null;
 			$this->valueObj = null;
 		}
+
+		return $this;
 	}
 	
 	/**
@@ -165,6 +167,7 @@ class TimeField extends TextField {
 	 */
 	function setLocale($locale) {
 		$this->locale = $locale;
+		return $this;
 	}
 	
 	/**
@@ -173,6 +176,7 @@ class TimeField extends TextField {
 	 */
 	function setConfig($name, $val) {		
 		$this->config[$name] = $val;
+		return $this;
 	}
 	
 	/**
@@ -221,4 +225,3 @@ class TimeField_Readonly extends TimeField {
 		return true;	
 	}
 }
-?>

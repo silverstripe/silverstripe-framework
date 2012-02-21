@@ -24,7 +24,15 @@ class TextareaField extends FormField {
 
 	protected $template = 'TextareaField';
 
-	protected $rows, $cols;
+	/**
+	 * @var Int Visible number of text lines.
+	 */
+	protected $rows = 5;
+
+	/**
+	 * @var Int Width of the text area (in average character widths)
+	 */
+	protected $cols = 20;
 
 	/**
 	 * Create a new textarea field.
@@ -92,6 +100,7 @@ class TextareaField extends FormField {
 	 */
 	function setRows($rows) {
 		$this->rows = $rows;
+		return $this;
 	}
 	
 	/**
@@ -101,6 +110,7 @@ class TextareaField extends FormField {
 	 */
 	function setColumns($cols) {
 		$this->cols = $cols;
+		return $this;
 	}
 
 	function Value() {

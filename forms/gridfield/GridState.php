@@ -39,7 +39,7 @@ class GridState extends HiddenField {
 
 		if ($value) $this->setValue($value);
 
-		parent::__construct('GridState');
+		parent::__construct($grid->getName() . '[GridState]');
 	}
 	
 	/**

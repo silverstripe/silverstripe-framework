@@ -24,7 +24,7 @@ init() function on your module controller classes:
 	:::php
 	class Forum_Controller extends Page_Controller {
 	
-	   function init() {
+	   public function init() {
 	      if(Director::fileExists(project() . "/css/forum.css")) {
 	         Requirements::css(project() . "/css/forum.css");
 	      }else{

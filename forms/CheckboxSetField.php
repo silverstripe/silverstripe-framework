@@ -135,6 +135,7 @@ class CheckboxSetField extends OptionsetField {
 	
 	function setDisabled($val) {
 		$this->disabled = $val;
+		return $this;
 	}
 	
 	/**
@@ -146,6 +147,7 @@ class CheckboxSetField extends OptionsetField {
 	 */
 	function setDefaultItems($items) {
 		$this->defaultItems = $items;
+		return $this;
 	}
 	
 	/**
@@ -166,6 +168,8 @@ class CheckboxSetField extends OptionsetField {
 		}
 
 		parent::setValue($value, $obj);
+
+		return $this;
 	}
 	
 	/**

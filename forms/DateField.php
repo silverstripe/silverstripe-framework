@@ -136,7 +136,7 @@ class DateField extends TextField {
 		}
 		
 		$config = array_filter($config);
-		$this->addExtraClass(Convert::raw2json($config));
+		foreach($config as $k => $v) $this->setAttribute('data-' . $k, $v);
 		
 		// Three separate fields for day, month and year
 		if($this->getConfig('dmyfields')) {
@@ -229,6 +229,8 @@ class DateField extends TextField {
 				}
 			}
 		}
+
+		return $this;
 	}
 	
 	/**
@@ -470,6 +472,7 @@ JS;
 	 */
 	function setLocale($locale) {
 		$this->locale = $locale;
+		return $this;
 	}
 	
 	/**
@@ -493,6 +496,7 @@ JS;
 		}
 		
 		$this->config[$name] = $val;
+		return $this;
 	}
 	
 	/**
@@ -596,7 +600,6 @@ class DateField_View_JQuery {
 	function onAfterRender($html) {
 		if($this->getField()->getConfig('showcalendar')) {
 			Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-			Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');	
 			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 			
@@ -612,7 +615,6 @@ class DateField_View_JQuery {
 					));
 			}
 			
-			Requirements::javascript(THIRDPARTY_DIR . "/jquery-metadata/jquery.metadata.js");
 			Requirements::javascript(SAPPHIRE_DIR . "/javascript/DateField.js");
 		}
 		
@@ -704,4 +706,4 @@ class DateField_View_JQuery {
 		return preg_replace($patterns, $replacements, $format);
 	}
 }
-?>
+

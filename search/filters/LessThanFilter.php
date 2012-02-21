@@ -26,4 +26,3 @@ class LessThanFilter extends SearchFilter {
 		return $this->getValue() == null || $this->getValue() == '';
 	}
 }
-?>

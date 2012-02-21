@@ -66,6 +66,9 @@
 											disallowedChildren = [],
 											hintKey = newParentClass ? newParentClass : 'Root',
 											hint = (typeof hints[hintKey] != 'undefined') ? hints[hintKey] : null;
+
+										// Special case for VirtualPage: Check that original page type is an allowed child
+										if(hint && movedNode.attr('class').match(/VirtualPage-([^\s]*)/)) movedNodeClass = RegExp.$1;
 										
 										if(hint) disallowedChildren = (typeof hint.disallowedChildren != 'undefined') ? hint.disallowedChildren : [];
 										var isAllowed = (
@@ -127,6 +130,7 @@
 							}
 							
 							if($.inArray(data.func, ['check_node', 'uncheck_node'])) {
+								//Don't allow check and uncheck if parent is disabled
 								var node = $(data.args[0]).parents('li:first');
 								if(node.hasClass('disabled')) {
 									e.stopImmediatePropagation();

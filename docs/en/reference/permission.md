@@ -28,11 +28,11 @@ map of permission code names with a human readable explanation of its purpose (s
 
 	:::php
 	class Page_Controller implements PermissionProvider {
-	  function init() {
+	  public function init() {
 	    if(!Permission::check("VIEW_SITE")) Security::permissionFailure();
 	  }
 	
-	  function providePermissions() {
+	  public function providePermissions() {
 	    return array(
 	      "VIEW_SITE" => "Access the site",
 	    );

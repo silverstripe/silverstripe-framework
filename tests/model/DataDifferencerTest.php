@@ -25,7 +25,7 @@ class DataDifferencerTest extends SapphireTest {
 		$obj1Diff = $differ->diffedData();
 		// TODO Using getter would split up field again, bug only caused by simulating
 		// an array-based value in the first place.
-		$this->assertContains('<ins>a</ins><del>a,b</del>', $obj1Diff->getField('Choices'));
+		$this->assertContains('<ins>a</ins><del>a,b</del>', str_replace(' ','',$obj1Diff->getField('Choices')));
 	}
 	
 	function testHasOnes() {
@@ -45,7 +45,7 @@ class DataDifferencerTest extends SapphireTest {
 		$obj1Diff = $differ->diffedData();
 		$this->assertContains($image1->Filename, $obj1Diff->getField('Image'));
 		$this->assertContains($image2->Filename, $obj1Diff->getField('Image'));
-		$this->assertContains('<ins>obj2</ins><del>obj1</del>', $obj1Diff->getField('HasOneRelationID'));
+		$this->assertContains('<ins>obj2</ins><del>obj1</del>', str_replace(' ','',$obj1Diff->getField('HasOneRelationID')));
 	}
 }
 

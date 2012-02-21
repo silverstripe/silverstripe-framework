@@ -12,7 +12,7 @@ This example might come from a Controller designed to manage the members of a gr
 	/**
 	 * Form to display all members in a group
 	 */
-	function MemberForm() {
+	public function MemberForm() {
 		$field = new GridField("Members", "Members of this group", $this->group->Members());
 		return new Form("MemberForm", $this, new FieldSet($field), new FieldSet());
 	}
@@ -134,7 +134,7 @@ For example, this components will add a footer row to the grid field, thanking t
 
 	:::php
 	class ThankYouForUsingSilverStripe implements GridField_HTMLProvider {
-		function getHTMLFragments($gridField) {
+		public function getHTMLFragments($gridField) {
 			$colSpan = $gridField->getColumnCount();
 			return array(
 				'footer' => '<tr><td colspan="' . $colSpan . '">Thank you for using SilverStripe!</td></tr>',
@@ -211,13 +211,13 @@ Here is an example in full.  The actual implementation of the view and edit form
 	 *  - <FormURL>/field/<GridFieldName>/item/<RecordID>/edit
 	 */
 	class GridFieldPopupForms implements GridField_URLHandler {
-		function getURLHandlers($gridField) {
+		public function getURLHandlers($gridField) {
 			return array(
 				'item/$ID' => 'handleItem',
 			);
 		}
 
-		function handleItem($gridField, $request) {
+		public function handleItem($gridField, $request) {
 			$record = $gridField->getList()->byId($request->param("ID"));
 			return new GridFieldPopupForm_ItemRequest($gridField, $this, $record);
 		}
@@ -228,18 +228,18 @@ Here is an example in full.  The actual implementation of the view and edit form
 		protected $component;
 		protected $record;
 
-		function __construct($gridField, $component, $record) {
+		public function __construct($gridField, $component, $record) {
 			$this->gridField = $gridField;
 			$this->component = $gridField;
 			$this->record = $record;
 			parent::__construct();
 		}
 
-		function index() {
+		public function index() {
 			echo "view form for record #" . $record->ID;
 		}
 
-		function edit() {
+		public function edit() {
 			echo "edit form for record #" . $record->ID;
 		}
 	}

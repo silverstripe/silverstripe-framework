@@ -10,6 +10,11 @@
  * @subpackage model
  */
 class Varchar extends StringField {
+
+	static $casting = array(
+		"Initial" => "Text",
+		"URL" => "Text",
+	);
 	
 	protected $size;
 	 
@@ -85,4 +90,4 @@ class Varchar extends StringField {
 	}
 }
 
-?>
+

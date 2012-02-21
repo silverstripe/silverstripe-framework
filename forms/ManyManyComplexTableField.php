@@ -103,4 +103,4 @@ class ManyManyComplexTableField_Item extends ComplexTableField_Item {
 	}
 }
 
-?>
+

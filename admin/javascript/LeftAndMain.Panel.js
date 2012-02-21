@@ -6,7 +6,7 @@
 		$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 
 		/**
-		 * Vertically collapsible panel. Generic enough to work with CMS menu as well as various "filter" panels.
+		 * Hoizontal collapsible panel. Generic enough to work with CMS menu as well as various "filter" panels.
 		 * 
 		 * A panel consists of the following parts:
 		 * - Container div: The outer element, with class ".cms-panel"
@@ -53,10 +53,10 @@
 				var collapsed, cookieCollapsed;
 				if($.cookie && this.attr('id')) {
 					cookieCollapsed = $.cookie('cms-panel-collapsed-' + this.attr('id'));
-					if(typeof cookieCollapsed != 'undefined') collapsed = (cookieCollapsed == 'true');
+					if(typeof cookieCollapsed != 'undefined' && cookieCollapsed != null) collapsed = (cookieCollapsed == 'true');
 				} 
 				if(typeof collapsed == 'undefined') collapsed = jQuery(this).hasClass('collapsed');
-				this.togglePanel(!collapsed);
+				this.togglePanel(!collapsed, true);
 				
 				this._super();
 			},
@@ -69,55 +69,19 @@
 				}
 			},
 
-			toggleFlyoutState: function(bool) {
-				if (bool) { //expand
-					//show the flyout
-					$('.collapsed').find('li').show();
-
-					//hide all the flyout-indicator
-					$('.cms-menu-list').find('.child-flyout-indicator').hide();
-				} else {    //collapse
-					//hide the flyout only if it is not the current section
-					$('.collapsed-flyout').find('li').each(function() {
-						//if (!$(this).hasClass('current'))
-						$(this).hide();
-					});
-
-					//show all the flyout-indicators
-					var par = $('.cms-menu-list ul.collapsed-flyout').parent();
-					if (par.children('.child-flyout-indicator').length == 0) par.append('<span class="child-flyout-indicator"></span>').fadeIn();
-					par.children('.child-flyout-indicator').fadeIn();
+			/**
+			 * @param {Boolean} TRUE to expand, FALSE to collapse.
+			 * @param {Boolean} TRUE means that events won't be fired, which is useful for the component initialization phase.
+			 */
+			togglePanel: function(bool, silent) {
+				if(!silent) {
+					this.trigger('beforetoggle.sspanel', bool);
+					this.trigger(bool ? 'beforeexpand' : 'beforecollapse');
 				}
-			},
-			
-			togglePanel: function(bool) {
-
-				//apply or unapply the flyout formatting
-				$('.cms-menu-list').children('li').each(function(){
-					if (bool) { //expand
-						$(this).children('ul').each(function() {
-							$(this).removeClass('collapsed-flyout');
-							if ($(this).data('collapse')) {
-								$(this).removeData('collapse');
-								$(this).addClass('collapse');
-							}
-						});
-					} else {    //collapse
-						$(this).children('ul').each(function() {
-							$(this).addClass('collapsed-flyout');
-							$(this).hasClass('collapse');
-							$(this).removeClass('collapse');
-							$(this).data('collapse', true);
-						});
-					}
-				});
-
-				this.toggleFlyoutState(bool);
 
 				this.toggleClass('collapsed', !bool);
 				var newWidth = bool ? this.getWidthExpanded() : this.getWidthCollapsed();
 				
-				this.trigger('beforetoggle');
 				this.width(newWidth); // the content panel width always stays in "expanded state" to avoid floating elements
 				this.find('.toggle-collapse')[bool ? 'show' : 'hide']();
 				this.find('.toggle-expand')[bool ? 'hide' : 'show']();
@@ -132,7 +96,10 @@
 				// Save collapsed state in cookie
 				if($.cookie && this.attr('id')) $.cookie('cms-panel-collapsed-' + this.attr('id'), !bool, {path: '/', expires: 31});
 				
-				this.trigger('toggle');
+				if(!silent) {
+					this.trigger('toggle', bool);
+					this.trigger(bool ? 'expand' : 'collapse');
+				}
 			},
 			
 			expandPanel: function(force) {
@@ -148,22 +115,12 @@
 			}
 		});
 
-		/** Toggle the flyout panel to appear/disappear when mouse over */
-		$('.cms-menu-list li').entwine({
-			toggleFlyout: function(bool) {
-				fly = $(this);
-				if (fly.children('ul').first().hasClass('collapsed-flyout')) {
-					if (bool) { //expand
-						fly.children('ul').find('li').fadeIn('fast');
-					} else {    //collapse
-						fly.children('ul').find('li').hide();
-					}
-				}
+		$('.cms-panel.collapsed').entwine({
+			onclick: function(e) {
+				this.expandPanel();
+				e.preventDefault();
 			}
 		});
-		//slight delay to prevent flyout closing from "sloppy mouse movement"
-		$('.cms-menu-list li').hoverIntent(function(){$(this).toggleFlyout(true);},function(){$(this).toggleFlyout(false);});
-
 		
 		$('.cms-panel *').entwine({
 			getPanel: function() {

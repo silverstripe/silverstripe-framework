@@ -1,37 +1,69 @@
-jQuery(function($){
-		
-	$('fieldset.ss-gridfield .action').entwine({
-		onclick: function(e){
-			var button = this;
-			e.preventDefault();
-			var form = $(this).closest("form");
-			var field = $(this).closest("fieldset.ss-gridfield");
+(function($){
+
+	$('fieldset.ss-gridfield').entwine({
+		/**
+		 * @param {Object} Additional options for jQuery.ajax() call
+		 */
+		reload: function(ajaxOpts, successCallback) {
+			var self = this, form = this.closest('form'), data = form.find(':input').serializeArray();
+			if(!ajaxOpts) ajaxOpts = {};
+			if(!ajaxOpts.data) ajaxOpts.data = [];
+			ajaxOpts.data = ajaxOpts.data.concat(data);
+
 			form.addClass('loading');
-			$.ajax({
+
+			$.ajax($.extend({}, {
 				headers: {"X-Get-Fragment" : 'CurrentField'},
 				type: "POST",
-				url: form.attr('action'),
-				data: form.serialize()+'&'+escape(button.attr('name'))+'='+escape(button.val()), 
+				url: this.data('url'),
 				dataType: 'html',
 				success: function(data) {
 					// Replace the grid field with response, not the form.
-					field.replaceWith(data);
+					// TODO Only replaces all its children, to avoid replacing the current scope
+					// of the executing method. Means that it doesn't retrigger the onmatch() on the main container.
+					self.empty().append($(data).children());
+
 					form.removeClass('loading');
+					if(successCallback) successCallback.apply(this, arguments);
 				},
 				error: function(e) {
 					alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION', 'An error occured while fetching data from the server\n Please try again later.'));
 					form.removeClass('loading');
 				}
-			});
+			}, ajaxOpts));
+		},
+		getItems: function() {
+			return this.find('.ss-gridfield-item');
+		},
+		/**
+		 * @param {String}
+		 * @param {Mixed}
+		 */
+		setState: function(k, v) {
+			var state = this.getState();
+			state[k] = v;
+			this.find(':input[name="' + this.data('name') + '[GridState]"]').val(JSON.stringify(state));
+		},
+		/**
+		 * @return {Object}
+		 */
+		getState: function() {
+			return JSON.parse(this.find(':input[name="' + this.data('name') + '[GridState]"]').val());
 		}
 	});
-	
-	var removeFilterButtons = function() {
-		// Remove stuff
-		$('th').children('div').each(function(i,v) {
-			$(v).remove();
-		});	
-	}	
+
+	$('fieldset.ss-gridfield *').entwine({
+		getGridField: function() {
+			return this.parents('fieldset.ss-gridfield:first');
+		}
+	});
+		
+	$('fieldset.ss-gridfield .action').entwine({
+		onclick: function(e){
+			this.getGridField().reload({data: [{name: this.attr('name'), value: this.val()}]});
+			e.preventDefault();
+		}
+	});
 	
 	/*
 	 * Upon focusing on a filter <input> element, move "filter" and "reset" buttons and display next to the current <input> element
@@ -46,8 +78,10 @@ jQuery(function($){
 				return false;
 			}
 			var eleInput = $(this);
+
 			// Remove existing <div> and <button> elements in-lieu of cloning
-			removeFilterButtons();		
+			this.getGridField().find('th > div').each(function(i,v) {$(v).remove();});	
+
 			var eleButtonSetFilter = $('#action_filter');
 			var eleButtonResetFilter = $('#action_reset');
 			// Retain current widths to ensure <th>'s don't shift widths
@@ -71,4 +105,36 @@ jQuery(function($){
 		}
 	});	
 
-});
+	/**
+	 * Allows selection of one or more rows in the grid field.
+	 * Purely clientside at the moment.
+	 */
+	$('fieldset.ss-gridfield[data-selectable]').entwine({
+		/**
+		 * @return {jQuery} Collection
+		 */
+		getSelectedItems: function() {
+			return this.find('.ss-gridfield-item.ui-selected');
+		},
+		/**
+		 * @return {Array} Of record IDs
+		 */
+		getSelectedIDs: function() {
+			return $.map(this.getSelectedItems(), function(el) {return $(el).data('id');});
+		}
+	});
+	$('fieldset.ss-gridfield[data-selectable] .ss-gridfield-items').entwine({
+		onmatch: function() {
+			this._super();
+			
+			// TODO Limit to single selection
+			this.selectable();
+		},
+		onunmatch: function() {
+			this._super();
+			this.selectable('destroy');
+		}
+		 
+	});
+
+}(jQuery));

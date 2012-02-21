@@ -5,6 +5,8 @@
  *
  * If all you need is a simple file upload, it is reccomended you use {@link FileField}
  *
+ * @deprecated 3.0 Use UploadField
+ *
  * @package forms
  * @subpackage fields-files
  */
@@ -59,6 +61,8 @@ class FileIFrameField extends FileField {
 	 * @return string
 	 */
 	public function Field() {
+		Deprecation::notice('3.0', 'Use UploadField');
+
 		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
@@ -196,7 +200,6 @@ class FileIFrameField extends FileField {
 			
 			$this->form->getRecord()->{$this->getName() . 'ID'} = $fileObject->ID;
 			
-			$fileObject->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
 			$fileObject->write();
 		}
 		

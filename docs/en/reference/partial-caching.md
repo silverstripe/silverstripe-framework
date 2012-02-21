@@ -84,7 +84,7 @@ That last example is a bit large, and is complicating our template up with icky 
 logic into the controller
 
 	:::php
-	function FavouriteCacheKey() {
+	public function FavouriteCacheKey() {
 	    $member = Member::currentUser();
 	    return implode('_', array(
 	        'favourites',
@@ -122,7 +122,7 @@ which will invalidate after the cache lifetime expires. If you need more control
 configurable only on a site-wide basis), you could add a special function to your controller:
 
 	:::php
-	function BlogStatisticsCounter() {
+	public function BlogStatisticsCounter() {
 	    return (int)(time() / 60 / 5); // Returns a new number every five minutes
 	}
 

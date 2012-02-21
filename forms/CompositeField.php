@@ -27,7 +27,19 @@ class CompositeField extends FormField {
 	 * count of your $children.
 	 */
 	protected $columnCount = null;
+
+	/**
+	 * @var String custom HTML tag to render with, e.g. to produce a <fieldset>.
+	 */
+	protected $tag = 'div';
 	
+	/**
+	 * @var String Optional description for this set of fields.
+	 * If the {@link $tag} property is set to use a 'fieldset', this will be
+	 * rendered as a <legend> tag, otherwise its a 'title' attribute.
+	 */
+	protected $legend;
+
 	public function __construct($children = null) {
 		if($children instanceof FieldList) {
 			$this->children = $children;
@@ -62,10 +74,7 @@ class CompositeField extends FormField {
 
 	public function setID($id) {
 		$this->id = $id;
-	}
-	
-	public function Field() {
-		return $this->FieldHolder();
+		return $this;
 	}
 	
 	/**
@@ -81,6 +90,29 @@ class CompositeField extends FormField {
 	 */
 	public function setChildren($children) {
 		$this->children = $children;
+		return $this;
+	}
+
+	/** @param String */
+	public function setTag($tag) {
+		$this->tag = $tag;
+		return $this;
+	}
+
+	/** @return String */
+	public function getTag() {
+		return $this->tag;
+	}
+
+	/** @param String */
+	public function setLegend($legend) {
+		$this->legend = $legend;
+		return $this;
+	}
+
+	/** @return String */
+	public function getLegend() {
+		return $this->legend;
 	}
 
 	function extraClasses() {
@@ -92,8 +124,35 @@ class CompositeField extends FormField {
 	function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array('tabindex' => null, 'type' => null, 'value' => null, 'type' => null)
+			array(
+				'tabindex' => null, 
+				'type' => null, 
+				'value' => null, 
+				'type' => null,
+				'title' => ($this->tag == 'fieldset') ? null : $this->legend
+			)
 		);
+	}
+
+	public function Field() {
+		$content = '';
+
+		if($this->tag == 'fieldset' && $this->legend) {
+			$content .= '<legend>' . $this->legend . '<legend>';
+		}
+
+		$fs = $this->FieldList();
+		foreach($fs as $subfield) {
+			if($this->columnCount) {
+				$className = "column{$this->columnCount}";
+				if(!next($fs)) $className .= " lastcolumn";
+				$content .= "\n<div class=\"{$className}\">\n" . $subfield->Field() . "\n</div>\n";
+			} else if($subfield){
+				$content .= "\n" . $subfield->Field() . "\n";
+			}
+		}
+				
+		return $this->createTag($this->getTag(), $this->getAttributes(), $content);
 	}
 
 	/**
@@ -101,6 +160,11 @@ class CompositeField extends FormField {
 	 */
 	function FieldHolder() {
 		$content = '';
+
+		if($this->tag == 'fieldset' && $this->legend) {
+			$content .= '<legend>' . $this->legend . '<legend>';
+		}
+
 		$fs = $this->FieldList();
 		foreach($fs as $subfield) {
 			if($this->columnCount) {
@@ -112,19 +176,24 @@ class CompositeField extends FormField {
 			}
 		}
 				
-		return $this->createTag('div', $this->getAttributes(), $content);
+		return $this->createTag($this->getTag(), $this->getAttributes(), $content);
 	}
 		
 	/**
 	 * Returns the fields in the restricted field holder inside a DIV.
 	 */
-	function SmallFieldHolder() {//return $this->FieldHolder();
+	function SmallFieldHolder() {
 		$fs = $this->FieldList();
+		$tag = $this->getTag();
 		$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
 		$className = ($this->columnCount) ? "field CompositeField {$this->extraClass()} multicolumn" : "field CompositeField {$this->extraClass()}";
-		$content = "<div class=\"$className\"$idAtt>";
+		$content = "<$tag class=\"$className\"$idAtt>";
+
+		if($this->tag == 'fieldset' && $this->legend) {
+			$content .= '<legend>' . $this->legend . '<legend>';
+		}
 		
-		foreach($fs as $subfield) {//echo ' subf'.$subfield->getName();
+		foreach($fs as $subfield) {
 			if($this->columnCount) {
 				$className = "column{$this->columnCount}";
 				if(!next($fs)) $className .= " lastcolumn";
@@ -133,7 +202,7 @@ class CompositeField extends FormField {
 				$content .= $subfield->SmallFieldHolder() . " ";
 			}
 		}	
-		$content .= "</div>";
+		$content .= "</$tag>";
 	
 		return $content;
 	}	
@@ -165,14 +234,21 @@ class CompositeField extends FormField {
 	function setForm($form) {
 		foreach($this->children as $f) if(is_object($f)) $f->setForm($form);
 		parent::setForm($form);
+		return $this;
 	}
 	
 	function setColumnCount($columnCount) {
 		$this->columnCount = $columnCount;
+		return $this;
 	}
 	
-	function isComposite() { return true; }
-	function hasData() { return false; }
+	function isComposite() { 
+		return true; 
+	}
+
+	function hasData() { 
+		return false; 
+	}
 
 	public function fieldByName($name) {
 		return $this->children->fieldByName($name);
@@ -330,4 +406,3 @@ class CompositeField extends FormField {
 	}
 }
 
-?>

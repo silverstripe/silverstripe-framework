@@ -152,7 +152,6 @@ abstract class ModelAdmin extends LeftAndMain {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-livequery/jquery.livequery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery/jquery_improvements.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ModelAdmin.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ModelAdmin.History.js');
 	}
@@ -412,7 +411,7 @@ class ModelAdmin_CollectionController extends Controller {
 		$form->setFormMethod('get');
 		$form->setHTMLID("Form_SearchForm_" . $this->modelClass);
 		$form->disableSecurityToken();
-		$clearAction->useButtonTag = true;
+		$clearAction->setUseButtonTag(true);
 		$clearAction->addExtraClass('ss-ui-action-minor');
 
 		return $form;
@@ -435,10 +434,12 @@ class ModelAdmin_CollectionController extends Controller {
 
 		$form = new Form($this, "CreateForm",
 						new FieldList(),
-						new FieldList($createButton = new FormAction('add', $buttonLabel)),
+						new FieldList(
+							$createButton = FormAction::create('add', $buttonLabel)
+								->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
+						),
 						$validator = new RequiredFields()
 				);
-		$createButton->addExtraClass('ss-ui-action-constructive');
 		$createButton->dontEscape = true;
 		$validator->setJavascriptValidationHandler('none');
 		$form->setHTMLID("Form_CreateForm_" . $this->modelClass);
@@ -840,7 +841,8 @@ class ModelAdmin_CollectionController extends Controller {
 			$validator->setJavascriptValidationHandler('none');
 			
 			$actions = new FieldList (
-				new FormAction("doCreate", _t('ModelAdmin.ADDBUTTON', "Add"))
+				FormAction::create("doCreate", _t('ModelAdmin.ADDBUTTON', "Add"))
+					->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
 			);
 
 			$form = new Form($this, "AddForm", $fields, $actions, $validator);
@@ -952,8 +954,10 @@ class ModelAdmin_RecordController extends Controller {
 		$actions = $this->currentRecord->getCMSActions();
 		if($this->currentRecord->canEdit(Member::currentUser())){
 			if(!$actions->fieldByName('action_doSave') && !$actions->fieldByName('action_save')) {
-				$actions->push($saveAction = new FormAction("doSave", _t('ModelAdmin.SAVE', "Save")));
-				$saveAction->addExtraClass('ss-ui-action-constructive');
+				$actions->push(
+					FormAction::create("doSave", _t('ModelAdmin.SAVE', "Save"))
+						->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
+				);
 			}
 		}else{
 			$fields = $fields->makeReadonly();
@@ -961,9 +965,11 @@ class ModelAdmin_RecordController extends Controller {
 		
 		if($this->currentRecord->canDelete(Member::currentUser())) {
 			if(!$actions->fieldByName('action_doDelete')) {
-				$actions->unshift($deleteAction = new FormAction('doDelete', _t('ModelAdmin.DELETE', 'Delete')));
+				$actions->unshift(
+					FormAction::create('doDelete', _t('ModelAdmin.DELETE', 'Delete'))
+						->addExtraClass('ss-ui-action-destructive')->setAttribute('data-icon', 'delete')
+				);
 			}
-			$deleteAction->addExtraClass('delete ss-ui-action-destructive');
 		}
 
 		$form = new Form($this, "EditForm", $fields, $actions, $validator);
@@ -1054,4 +1060,3 @@ class ModelAdmin_RecordController extends Controller {
 	
 }
 
-?>

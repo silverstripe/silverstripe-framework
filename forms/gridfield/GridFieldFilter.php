@@ -11,12 +11,6 @@ class GridFieldFilter implements GridField_HTMLProvider, GridField_DataManipulat
 	
 	/**
 	 *
-	 * @var string
-	 */
-	public static $location = 'head';
-	
-	/**
-	 *
 	 * @param GridField $gridField
 	 * @return array
 	 */
@@ -60,9 +54,6 @@ class GridFieldFilter implements GridField_HTMLProvider, GridField_DataManipulat
 	}
 
 	public function getHTMLFragments($gridField) {
-		Requirements::javascript(SAPPHIRE_DIR.'/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript('sapphire/javascript/GridField.js');
-
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList;
 
@@ -89,8 +80,8 @@ class GridFieldFilter implements GridField_HTMLProvider, GridField_DataManipulat
 			if($currentColumn == count($columns)) {
 				$field = new FieldGroup(
 					$field,
-					new GridField_Action($gridField, 'filter', 'filter', 'filter', null),
-					new GridField_Action($gridField, 'reset', 'reset', 'reset', null)
+					new GridField_Action($gridField, 'filter', _t('GridField.Filter', "Filter"), 'filter', null),
+					new GridField_Action($gridField, 'reset', _t('GridField.ResetFilter', "Reset"), 'reset', null)
 					);
 				
 			}
