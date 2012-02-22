@@ -530,9 +530,6 @@ class LeftAndMain extends Controller {
 			}
 		}
 
-		// TODO Remove once ViewableData->First()/Last() is fixed
-		foreach($items as $i => $item) $item->iteratorProperties($i, $items->Count());
-
 		return $items;
 	}
 	
@@ -1317,7 +1314,7 @@ class LeftAndMain extends Controller {
 	 * @return String
 	 */
 	function Locale() {
-		return DBField::create('DBLocale', $this->i18nLocale());
+		return DBField::create('DBLocale', i18n::get_locale());
 	}
 	
 	/**

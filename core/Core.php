@@ -196,6 +196,11 @@ define('PR_LOW',10);
 increase_memory_limit_to('64M');
 
 /**
+ * Ensure we don't run into xdebug's fairly conservative infinite recursion protection limit
+ */
+increase_xdebug_nesting_level_to(200);
+
+/**
  * Set default encoding
  */
 if(function_exists('mb_http_output')) {
@@ -227,6 +232,7 @@ set_include_path($includePath);
 require_once 'cache/Cache.php';
 require_once 'core/Object.php';
 require_once 'core/ClassInfo.php';
+require_once 'view/TemplateGlobalProvider.php';
 require_once 'control/Director.php';
 require_once 'dev/Debug.php';
 require_once 'filesystem/FileFinder.php';
@@ -430,6 +436,19 @@ function set_increase_memory_limit_max($memoryLimit) {
 function get_increase_memory_limit_max() {
 	global $_increase_memory_limit_max;
 	return $_increase_memory_limit_max;
+}
+
+/**
+ * Increases the XDebug parameter max_nesting_level, which limits how deep recursion can go.
+ * Only does anything if (a) xdebug is installed and (b) the new limit is higher than the existing limit
+ *
+ * @param int $limit - The new limit to increase to
+ */
+function increase_xdebug_nesting_level_to($limit) {
+	if (function_exists('xdebug_enable')) {
+		$current = ini_get('xdebug.max_nesting_level');
+		if ((int)$current < $limit) ini_set('xdebug.max_nesting_level', $limit);
+	}
 }
 
 /**

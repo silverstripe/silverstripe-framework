@@ -40,12 +40,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	private static $casting_cache = array();
 	
 	// -----------------------------------------------------------------------------------------------------------------
-	
-	/**
-	 * @var int
-	 */
-	protected $iteratorPos, $iteratorTotalItems;
-	
+
 	/**
 	 * A failover object to attempt to get data from if it is not present on this object.
 	 *
@@ -510,126 +505,6 @@ class ViewableData extends Object implements IteratorAggregate {
 		return new ArrayIterator(array($this));
 	}
 	
-	/** 
-	 * Set the current iterator properties - where we are on the iterator.
-	 *
-	 * @param int $pos position in iterator
-	 * @param int $totalItems total number of items
-	 */
-	public function iteratorProperties($pos, $totalItems) {
-		$this->iteratorPos        = $pos;
-		$this->iteratorTotalItems = $totalItems;
-	}
-	
-	/**
-	 * Returns true if this object is the first in a set.
-	 *
-	 * @return bool
-	 */
-	public function First() {
-		return $this->iteratorPos == 0;
-	}
-	
-	/**
-	 * Returns true if this object is the last in a set.
-	 *
-	 * @return bool
-	 */
-	public function Last() {
-		return $this->iteratorPos == $this->iteratorTotalItems - 1;
-	}
-	
-	/**
-	 * Returns 'first' or 'last' if this is the first or last object in the set.
-	 *
-	 * @return string|null
-	 */
-	public function FirstLast() {
-		if($this->First() && $this->Last()) return 'first last';
-		if($this->First()) return 'first';
-		if($this->Last())  return 'last';
-	}
-	
-	/**
-	 * Return true if this object is between the first & last objects.
-	 *
-	 * @return bool
-	 */
-	public function Middle() {
-		return !$this->First() && !$this->Last();
-	}
-	
-	/**
-	 * Return 'middle' if this object is between the first & last objects.
-	 *
-	 * @return string|null
-	 */
-	public function MiddleString() {
-		if($this->Middle()) return 'middle';
-	}
-	
-	/**
-	 * Return true if this object is an even item in the set.
-	 *
-	 * @return bool
-	 */
-	public function Even() {
-		return (bool) ($this->iteratorPos % 2);
-	}
-	
-	/**
-	 * Return true if this is an odd item in the set.
-	 *
-	 * @return bool
-	 */
-	public function Odd() {
-		return !$this->Even();
-	}
-	
-	/**
-	 * Return 'even' or 'odd' if this object is in an even or odd position in the set respectively.
-	 *
-	 * @return string
-	 */
-	public function EvenOdd() {
-		return ($this->Even()) ? 'even' : 'odd';
-	}
-	
-	/**
-	 * Return the numerical position of this object in the container set. The count starts at $startIndex.
-	 *
-	 * @param int $startIndex Number to start count from.
-	 * @return int
-	 */
-	public function Pos($startIndex = 1) {
-		return $this->iteratorPos + $startIndex;
-	}
-	
-	/**
-	 * Return the total number of "sibling" items in the dataset.
-	 *
-	 * @return int
-	 */
-	public function TotalItems() {
-		return $this->iteratorTotalItems;
-	}
-
-	/**
-	 * Returns the modulus of the numerical position of the item in the data set.
-	 * The count starts from $startIndex, which defaults to 1.
-	 * @param int $Mod The number to perform Mod operation to.
-	 * @param int $startIndex Number to start count from.
-	 * @return int
-	 */
-	public function Modulus($mod, $startIndex = 1) {
-		return ($this->iteratorPos + $startIndex) % $mod;
-	}
-	
-	public function MultipleOf($factor, $offset = 1) {
-		return ($this->Modulus($factor, $offset) == 0);
-	}
-
-
 	// UTILITY METHODS -------------------------------------------------------------------------------------------------
 	
 	/**
@@ -689,75 +564,7 @@ class ViewableData extends Object implements IteratorAggregate {
 		
 		return Convert::raw2att(implode(' ', $classes));
 	}
-	
-	/**
-	 * @see Member::currentUser()
-	 */
-	public function CurrentMember() {
-		return Member::currentUser();
-	}
-	
-	/**
-	 * Return a CSRF-preventing ID to insert into a form.
-	 *
-	 * @return string
-	 */
-	public function getSecurityID() {
-		$token = SecurityToken::inst();
-		return $token->getValue();
-	}
-	
-	/**
-	 * @see Permission::check()
-	 */
-	public function HasPerm($code) {
-		return Permission::check($code);
-	}
-	
-	/**
-	 * @see Director::absoluteBaseURL()
-	 *
-	 * @deprecated 3.0
-	 */
-	public function BaseHref() {
-		Deprecation::notice('3.0', 'Use AbsoluteBaseURL instead.');
-		
-		return $this->AbsoluteBaseURL();
-	}
-	
-	/**
-	 * Returns the absolute base url
-	 *
-	 * @return string
-	 */
-	public function AbsoluteBaseURL() {
-		return Director::absoluteBaseURL();
-	}
-	
-	/**
-	 * Access the BaseURL from template: proxy the value from the Director.
-	 * Needed for building hardcoded links.
-	 *
-	 * @return string base url
-	 */
-	function BaseURL() {
-		return Director::baseURL();
-	}
-	
-	/**
-	 * @see Director::is_ajax()
-	 */
-	public function IsAjax() {
-		return Director::is_ajax();
-	}
-	
-	/**
-	 * @see i18n::get_locale()
-	 */
-	public function i18nLocale() {
-		return i18n::get_locale();
-	}
-	
+
 	/**
 	 * Return debug information about this object that can be rendered into a template
 	 *
@@ -767,19 +574,6 @@ class ViewableData extends Object implements IteratorAggregate {
 		return new ViewableData_Debugger($this);
 	}
 	
-	/**
-	 * @see Controller::curr()
-	 */
-	public function CurrentPage() {
-		return Controller::curr();
-	}
-	
-	/**
-	 * @see SSViewer::topLevel()
-	 */
-	public function Top() {
-		return SSViewer::topLevel();
-	}
 }
 
 /**
