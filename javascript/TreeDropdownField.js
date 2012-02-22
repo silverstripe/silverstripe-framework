@@ -118,7 +118,7 @@
 			 * Update title from tree node value
 			 */
 			updateTitle: function() {
-				var self = this, tree = self.find('.tree-holder');
+				var self = this, tree = self.find('.tree-holder'), val = this.getValue();
 				var updateFn = function() {
 					var val = self.getValue();
 					if(val) {
@@ -131,7 +131,7 @@
 				};
 
 				// Load the tree if its not already present
-				if(jQuery.jstree._reference(tree)) updateFn();
+				if(jQuery.jstree._reference(tree) || !val) updateFn();
 				else this.loadTree(null, updateFn);
 			},
 			setValue: function(val) {
