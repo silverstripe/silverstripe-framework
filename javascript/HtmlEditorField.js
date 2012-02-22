@@ -14,8 +14,6 @@
  */
  ss.editorWrappers = {};
  ss.editorWrappers.tinyMCE = (function() {
-	var bookmark;
-
 	return {
 		/**
 		 * @return Mixed Implementation specific object
@@ -27,13 +25,11 @@
 		 * Invoked when a content-modifying UI is opened.
 		 */
 		onopen: function() {
-			bookmark = this.getInstance().selection.getBookmark();
 		},
 		/**
 		 * Invoked when a content-modifying UI is closed.
 		 */
 		onclose: function() {
-			bookmark = null;
 		},
 		/**
 		 * Write the HTML back to the original text area field.
@@ -104,22 +100,28 @@
 			this.getInstance().selection.select(node);
 		},
 		/**
+		 * Insert content at the current caret position
+		 * 
 		 * @param String HTML
 		 */
-		insertContent: function(html) {
-			// Workaround for IE losing focus
-			this.getInstance().selection.moveToBookmark(bookmark);
-			this.getInstance().execCommand('mceInsertContent', false, html);
+		insertContent: function(html, opts) {
+			this.getInstance().execCommand('mceInsertContent', false, html, opts);
+		},
+		/**
+		 * Replace currently selected content
+		 * 
+		 * @param {String} html
+		 */
+		replaceContent: function(html, opts) {
+			this.getInstance().execCommand('mceReplaceContent', false, html, opts);
 		},
 		/**
 		 * Insert or update a link in the content area (based on current editor selection)
 		 * 
 		 * Parameters: {Object} attrs
 		 */
-		insertLink: function(attrs) {
-			// Workaround for IE losing focus
-			this.getInstance().selection.moveToBookmark(bookmark);
-			this.getInstance().execCommand("mceInsertLink", false, attrs);
+		insertLink: function(attrs, opts) {
+			this.getInstance().execCommand("mceInsertLink", false, attrs, opts);
 		},
 		/**
 		 * Remove the link from the currently selected node (if any).
@@ -147,6 +149,27 @@
 			if(href.match(/^javascript:\s*mctmp/)) href = '';
 
 			return href;
+		},
+		/**
+		 * Creates a bookmark for the currently selected range,
+		 * which can be used to reselect this range at a later point.
+		 * @return {mixed}
+		 */
+		createBookmark: function() {
+			return this.getInstance().selection.getBookmark();
+		},
+		/**
+		 * Selects a bookmarked range previously saved through createBookmark().
+		 * @param  {mixed} bookmark
+		 */
+		moveToBookmark: function(bookmark) {
+			this.getInstance().selection.moveToBookmark(bookmark);
+		},
+		/**
+		 * Add new undo point with the current DOM content.
+		 */
+		addUndo: function() {
+			this.getInstance().undoManager.add();
 		}
 	};
 });
@@ -220,7 +243,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 			isChanged: function() {
 				var ed = this.getEditor();
-				return (ed && ed.isDirty());
+				return (ed && ed.getInstance() && ed.isDirty());
 			},
 
 			resetChanged: function() {
@@ -250,6 +273,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			// Wrapper for various HTML editors
 			Editor: null,
 
+			// TODO Figure out how to keep bookmark reference in entwine, and still be allowed to delete the JS object
+			// Bookmark: null,
+
 			onmatch: function() {
 				// Move title from headline to (jQuery compatible) title attribute
 				var titleEl = this.find(':header:first');
@@ -270,12 +296,14 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			close: function() {
 				this.dialog('close');
 				this.getEditor().onclose();
+				if(typeof window._ss_htmleditorfield_bookmark != 'undefined') window._ss_htmleditorfield_bookmark = null;
 			},
 			open: function() {
 				this.updateFromEditor();
 				this.dialog('open');
 				this.redraw();
 				this.getEditor().onopen();
+				window._ss_htmleditorfield_bookmark = this.getEditor().createBookmark();
 			},
 			/**
 			 * Update the view state based on the current editor selection.
@@ -373,6 +401,10 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					target : target, 
 					title : this.find(':input[name=Description]').val()
 				};
+
+				// Workaround for browsers losing focus, similar to tinyMCEPopup.restoreSelection
+				ed.moveToBookmark(window._ss_htmleditorfield_bookmark);
+				window._ss_htmleditorfield_bookmark = null;
 
 				// Add the new link
 				ed.insertLink(attributes);
@@ -567,11 +599,11 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var self = this, ed = this.getEditor();
 
 				// HACK: See ondialogopen()
-				// if($.browser.msie) jQuery(ed.getContainer()).show();
+				// jQuery(ed.getContainer()).show();
 
 
 				this.find('.ss-htmleditorfield-file').each(function(el) {
-					ed.insertContent($(this).getHTML());
+					$(this).insertHTML();
 				});
 				ed.repaint();
 				this.close();
@@ -594,13 +626,13 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				// HACK: Hide selected node in IE because its drag handles on potentially selected elements
 				// don't respect the z-index of the dialog overlay.
-				// if($.browser.msie) jQuery(ed.getContainer()).hide();
+				// jQuery(ed.getContainer()).hide();
 			},
 			ondialogclose: function() {
 				var ed = this.getEditor(), node = $(ed.getSelectedNode());
 
 				// HACK: See ondialogopen()
-				// if($.browser.msie) jQuery(ed.getContainer()).show();
+				// jQuery(ed.getContainer()).show();
 
 				this.find('.ss-htmleditorfield-file').remove(); // Remove any existing views
 				this.find('.ss-gridfield-items .ui-selected').removeClass('ui-selected'); // Unselect all items
@@ -686,6 +718,19 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			getHTML: function() {
 			},
 			/**
+			 * Insert updated HTML content into the rich text editor
+			 */
+			insertHTML: function() {
+				var form = this.closest('form'), ed = form.getEditor();
+
+				// Workaround for browsers losing focus, similar to tinyMCEPopup.restoreSelection
+				ed.moveToBookmark(window._ss_htmleditorfield_bookmark);
+				window._ss_htmleditorfield_bookmark = null;
+
+				// Insert content
+				ed.replaceContent(this.getHTML());
+			},
+			/**
 			 * Updates the form values from an existing node in the editor.
 			 * 
 			 * @param {DOMElement}
@@ -737,8 +782,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				return {
 					'src' : this.find(':input[name=URL]').val(),
 					'alt' : this.find(':input[name=AltText]').val(),
-					'width' : width ? parseInt(width, 10) : null,
-					'height' : height ? parseInt(height, 10) : null,
+					'width' : width ? parseInt(width, 10) + "px" : null,
+					'height' : height ? parseInt(height, 10) + "px" : null,
 					'title' : this.find(':input[name=Title]').val(),
 					'class' : this.find(':input[name=CSSClass]').val()
 				};
@@ -752,7 +797,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var el,
 					attrs = this.getAttributes(),
 					extraData = this.getExtraData(),
-					imgEl = $('<img id="__mce_tmp" />').attr(attrs);
+					// imgEl = $('<img id="_ss_tmp_img" />');
+					imgEl = $('<img />').attr(attrs);
 				
 				if(extraData.CaptionText) {
 					el = $('<div style="width: ' + attrs['width'] + 'px;" class="captionImage ' + attrs['class'] + '"><p class="caption">' + extraData.CaptionText + '</p></div>').prepend(imgEl);
@@ -760,6 +806,40 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					el = imgEl;
 				}
 				return $('<div />').append(el).html(); // Little hack to get outerHTML string
+			},
+			/**
+			 * Logic similar to TinyMCE 'advimage' plugin, insertAndClose() method.
+			 */
+			insertHTML: function() {
+				var form = this.closest('form'), ed = form.getEditor(), 
+					node = $(ed.getSelectedNode()), captionNode = node.closest('.captionImage');
+
+				// Workaround for browsers losing focus, similar to tinyMCEPopup.restoreSelection.
+				// TODO In TinyMCE core this is restricted to IE, but leaving it our also
+				// breaks Firefox: It doesn't save the selection because it inserts into a temporary TinyMCE
+				// marker element rather than the content DOM nodes
+				ed.moveToBookmark(window._ss_htmleditorfield_bookmark);
+				window._ss_htmleditorfield_bookmark = null;
+
+				if(node && node.is('img')) {
+					// If the image exists, update it to avoid complications with inserting TinyMCE HTML content
+					var attrs = this.getAttributes(), extraData = this.getExtraData();
+					node.attr(attrs);
+					// TODO Doesn't allow adding a caption to image after it was first added
+					if(captionNode.length) {
+						captionNode.find('.caption').text(extraData.CaptionText);
+						captionNode.css({width: attrs.width, height: attrs.height}).attr('class', attrs['class']);
+					}
+					// Undo needs to be added manually as we're doing direct DOM changes
+					ed.addUndo();
+				} else {
+					// Otherwise insert the whole HTML content
+					ed.repaint();
+					ed.insertContent(this.getHTML(), {skip_undo : 1});	
+					ed.addUndo(); // Not sure why undo is separate here, replicating TinyMCE logic
+				}
+
+				ed.repaint();
 			},
 			updateFromNode: function(node) {
 				this.find(':input[name=AltText]').val(node.attr('alt'));
@@ -784,11 +864,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					'src' : this.find(':input[name=URL]').val(),
 					'width' : width ? parseInt(width, 10) : null,
 					'height' : height ? parseInt(height, 10) : null
-				};
-			},
-			getExtraData: function() {
-				return {
-					'CaptionText': this.find(':input[name=CaptionText]').val()
 				};
 			},
 			getHTML: function() {
