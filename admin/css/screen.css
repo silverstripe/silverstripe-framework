@@ -115,7 +115,7 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .field .chzn-container-single .chzn-single { height: 26px; line-height: 26px; /* not relative, as then we'd had to redo most of chzn */ font-size: 12px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -ms-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); }
 .field .chzn-container-single .chzn-single:hover, .field .chzn-container-single .chzn-single:focus, .field .chzn-container-single .chzn-single:active { text-decoration: none; outline: none; }
 .field .chzn-container-single .chzn-single div { width: 24px; }
-.field .chzn-container-single .chzn-single div b { background-position: 1px 4px; }
+.field .chzn-container-single .chzn-single div b { background-position: 4px 0px; }
 .field input.hasDatepicker { width: 50%; max-width: 96px; }
 
 /** ---------------------------------------------------- Buttons ---------------------------------------------------- */
@@ -304,7 +304,7 @@ body.cms { overflow: hidden; }
 .cms-content-tools td { border-bottom: 1px solid #ced7dc; padding: 7px 2px; font-size: 11px; }
 
 /**  CMS Batch actions */
-.cms-content-batchactions, .cms-content-constructive-actions { float: right; }
+.cms-content-constructive-actions { float: left; }
 
 .cms-content-batchactions { float: right; position: relative; display: block; margin-right: 8px; }
 .cms-content-batchactions form > * { display: block; float: left; }
@@ -385,7 +385,7 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 .cms .ui-widget-overlay { background-color: #000; background-image: none; }
 
 .ui-dialog { background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; border: 3px solid #000 !important; border-radius: 8px; overflow: visible; padding: 0; }
-.ui-dialog .ui-dialog-titlebar.ui-widget-header { font-size: 14px; background-color: #92a5b2; padding: 4px 4px 4px 16px; border-bottom: 2px solid #8399a7; -moz-border-radius: 0; -webkit-border-radius: 0; -o-border-radius: 0; -ms-border-radius: 0; -khtml-border-radius: 0; border-radius: 0; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ced7dc), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#ced7dc, #92a5b2); background-image: -moz-linear-gradient(#ced7dc, #92a5b2); background-image: -o-linear-gradient(#ced7dc, #92a5b2); background-image: -ms-linear-gradient(#ced7dc, #92a5b2); background-image: linear-gradient(#ced7dc, #92a5b2); }
+.ui-dialog .ui-dialog-titlebar.ui-widget-header { font-size: 14px; background-color: #92a5b2; padding: 4px 4px 4px 16px; border-bottom: 2px solid #8399a7; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ced7dc), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#ced7dc, #92a5b2); background-image: -moz-linear-gradient(#ced7dc, #92a5b2); background-image: -o-linear-gradient(#ced7dc, #92a5b2); background-image: -ms-linear-gradient(#ced7dc, #92a5b2); background-image: linear-gradient(#ced7dc, #92a5b2); }
 
 body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; }
 

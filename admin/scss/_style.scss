@@ -894,8 +894,7 @@ form.member-profile-form {
 		background-color: #92a5b2;
 		padding: $grid-vertical/2 $grid-horizontal/2 $grid-vertical/2 $grid-horizontal*2;
 		border-bottom: 2px solid #8399a7;
-		@include border-radius-top(4px);
-		@include border-radius-bottom(0px);
+
 		@include background-image(linear-gradient(#ced7dc, #92a5b2));
 	}
 }

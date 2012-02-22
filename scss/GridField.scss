@@ -72,11 +72,32 @@ $gf_border_radius:	7px;
 			}
 		}
 		
-		tr {			
-			&.sortable-header {
+		tr {	
+			&.title {
+				@include border-top-radius($gf_border_radius);
 				th {
+					position: relative;
 					background: $gf_colour_gradient_dark;
+					border-top: 1px solid $gf_colour_border;
+					color:#fff;
+					padding: 10px;
+					font-size: 18px;
+					min-height: 40px;
+					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
+					@include border-top-radius($gf_border_radius);
+					@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
+					
+					.new{
+						font-size: 14px; 
+						border-color: $gf_colour_border;
+						position: absolute;
+						right: 10px;
+						top: 5px; 
+					}
 				}
+			}	
+			&.sortable-header {
+				background: $gf_colour_subheader;	
 			}			
 			&:hover {
 				background: #FFFAD6 !important;
@@ -102,10 +123,10 @@ $gf_border_radius:	7px;
 				padding: 5px;
 				border-right: 1px solid $gf_colour_border;
 				&.main:first-child{
-					@include border-top-left-radius($gf_border_radius);
+					//@include border-top-left-radius($gf_border_radius);
 				}
 				&.main:last-child{
-					@include border-top-right-radius($gf_border_radius);
+					//@include border-top-right-radius($gf_border_radius);
 				}
 				div {
 					&.fieldgroup,&.fieldgroup-field {
@@ -117,7 +138,6 @@ $gf_border_radius:	7px;
 					}
 				}
 				&.extra,&.action {
-					background: $gf_colour_gradient_dark;
 					padding: 0;
 					cursor: default;
 					button,button:hover {
@@ -130,7 +150,8 @@ $gf_border_radius:	7px;
 				&.main{
 					border-top: 1px solid $gf_colour_border;
 					color:#fff;
-					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
+					background: darken($gf_colour_subheader,10%);
+					border-bottom: 1px solid $gf_colour_border;
 					span{
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 					}

@@ -75,15 +75,15 @@ class GridFieldConfig_Base extends GridFieldConfig {
 	 * @param int $itemsPerPage - How many items per page should show up per page
 	 * @return GridFieldConfig_Base
 	 */
-	public static function create($itemsPerPage=25){
-		return new GridFieldConfig_Base($itemsPerPage=25);
+	public static function create($itemsPerPage=15){
+		return new GridFieldConfig_Base($itemsPerPage=15);
 	}
 
 	/**
 	 *
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
-	public function __construct($itemsPerPage=25) {
+	public function __construct($itemsPerPage=15) {
 		$this->addComponent(new GridFieldTitle());
 		$this->addComponent(new GridFieldSortableHeader());
 		$this->addComponent(new GridFieldFilter());
