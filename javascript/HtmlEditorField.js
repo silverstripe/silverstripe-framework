@@ -101,7 +101,7 @@
 		 * Parameters: {DOMElement}
 		 */
 		selectNode: function(node) {
-			this.getInstance().selection.select(node)
+			this.getInstance().selection.select(node);
 		},
 		/**
 		 * @param String HTML
@@ -148,7 +148,7 @@
 
 			return href;
 		}
-	}
+	};
 });
 // Override this to switch editor wrappers
 ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
@@ -182,7 +182,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						ed.save();
 
 						// TinyMCE assigns value attr directly, which doesn't trigger change event
-						self.trigger('change'); 	
+						self.trigger('change');
 					}
 				});
 
@@ -323,7 +323,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.addAnchorSelector();
 
 				// Toggle field visibility and state based on type selection
-				for(i=0;item=list[i];i++) jQuery(this.find('.field#' + item)).toggle(item == linkType);
+				for(i=0;item==list[i];i++) jQuery(this.find('.field#' + item)).toggle(item == linkType);
 				jQuery(this.find('.field#Anchor')).toggle(linkType == 'internal' || linkType == 'anchor');
 				jQuery(this.find('.field#AnchorSelector')).toggle(linkType=='anchor');
 				jQuery(this.find('.field#AnchorRefresh')).toggle(linkType=='anchor');
@@ -360,7 +360,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						target = null;
 						break;
 
-					case 'external':
+					// case 'external':
 					default:
 						href = this.find(':input[name=external]').val();
 						// Prefix the URL with "http://" if no prefix is found
@@ -389,11 +389,11 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				// Avoid adding twice
 				if(this.find(':input[name=AnchorSelector]').length) return;
 
-				var self = this;
+				var self = this, anchorSelector;
 
 				// refresh the anchor selector on click, or in case of IE - button click
 				if( !$.browser.ie ) {
-					var anchorSelector = $('<select id="Form_EditorToolbarLinkForm_AnchorSelector" name="AnchorSelector"></select>');
+					anchorSelector = $('<select id="Form_EditorToolbarLinkForm_AnchorSelector" name="AnchorSelector"></select>');
 					this.find(':input[name=Anchor]').parent().append(anchorSelector);
 
 					anchorSelector.focus(function(e) {
@@ -401,7 +401,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					});
 				} else {
 					var buttonRefresh = $('<a id="Form_EditorToolbarLinkForm_AnchorRefresh" title="Refresh the anchor list" alt="Refresh the anchor list" class="buttonRefresh"><span></span></a>');
-					var anchorSelector = $('<select id="Form_EditorToolbarLinkForm_AnchorSelector" class="hasRefreshButton" name="AnchorSelector"></select>');
+					anchorSelector = $('<select id="Form_EditorToolbarLinkForm_AnchorSelector" class="hasRefreshButton" name="AnchorSelector"></select>');
 					this.find(':input[name=Anchor]').parent().append(buttonRefresh).append(anchorSelector);
 
 					buttonRefresh.click(function(e) {
@@ -420,7 +420,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 			// this function collects the anchors in the currently active editor and regenerates the dropdown
 			refreshAnchors: function() {
-				var selector = this.find(':input[name=AnchorSelector]'), anchors = new Array();
+				var selector = this.find(':input[name=AnchorSelector]'), anchors = [];
 				// name attribute is defined as CDATA, should accept all characters and entities
 				// http://www.w3.org/TR/1999/REC-html401-19991224/struct/links.html#h-12.2
 				var raw = this.getEditor().getContent().match(/name="([^"]+?)"|name='([^']+?)'/gim);
@@ -432,8 +432,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				selector.empty();
 				selector.append($('<option value="" selected="1">Select an anchor</option>'));
-				for (var i = 0; i < anchors.length; i++) {
-					selector.append($('<option value="'+anchors[i]+'">'+anchors[i]+'</option>'));
+				for (var j = 0; j < anchors.length; j++) {
+					selector.append($('<option value="'+anchors[j]+'">'+anchors[j]+'</option>'));
 				}
 			},
 
@@ -490,7 +490,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				target = linkDataSource.attr('target');
 				title = linkDataSource.attr('title');
 				style_class = linkDataSource.attr('class');
-				href = ed.cleanLink(href, linkDataSource),
+				href = ed.cleanLink(href, linkDataSource);
 				action = "update";
 			}
 			
@@ -499,20 +499,20 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					LinkType: 'email',
 					email: RegExp.$1,
 					Description: title
-				}
+				};
 			} else if(href.match(/^(assets\/.*)$/)) {
 				return {
 					LinkType: 'file',
 					file: RegExp.$1,
 					Description: title
-				}
+				};
 			} else if(href.match(/^#(.*)$/)) {
 				return {
 					LinkType: 'anchor',
 					Anchor: RegExp.$1,
 					Description: title,
 					TargetBlank: target ? true : false
-				}
+				};
 			} else if(href.match(/^\[sitetree_link\s*(?:%20)?id=([0-9]+)\]?(#.*)?$/)) {
 				return {
 					LinkType: 'internal',
@@ -520,18 +520,18 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					Anchor: RegExp.$2 ? RegExp.$2.substr(1) : '',
 					Description: title,
 					TargetBlank: target ? true : false
-				}
+				};
 			} else if(href) {
 				return {
 					LinkType: 'external',
 					external: href,
 					Description: title,
 					TargetBlank: target ? true : false
-				}
+				};
 			} else {
 				return {
 					LinkType: 'internal'
-				}
+				};
 			}
 		}	
 		});
@@ -632,7 +632,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					item = $('<div class="ss-htmleditorfield-file" />');
 
 				item.addClass('loading');
-				this.find('.content-edit').append(item)
+				this.find('.content-edit').append(item);
 				$.ajax({
 					// url: this.data('urlViewfile') + '?ID=' + id,
 					url: this.attr('action').replace(/MediaForm/, 'viewfile') + params,
