@@ -1,0 +1,1 @@
+<button id="$ID" class="$Class" name="$Name" type="submit"<% if Disabled %> disabled="disabled"<% end_if %>>$Label</button>

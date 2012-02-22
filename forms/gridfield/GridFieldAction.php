@@ -69,7 +69,11 @@ class GridFieldAction_Edit implements GridField_ColumnProvider {
 	 * @return string - the HTML for the column 
 	 */
 	public function getColumnContent($gridField, $record, $columnName) {
-		return sprintf('<a class="action-edit" href="%s">%s</a> ', Controller::join_links($gridField->Link('item'), $record->ID, 'edit'), _t('GridAction.Edit', 'edit'));
+		$data = new ArrayData(array(
+			'Link' => Controller::join_links($gridField->Link('item'), $record->ID, 'edit')
+		));
+
+		return $data->renderWith('GridFieldAction_Edit');
 	}
 	
 	/**

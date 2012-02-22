@@ -709,22 +709,17 @@ class GridField_Action extends FormAction {
 		$actionData['StateID'] = $id;
 		
 		// And generate field
-		$attributes = array(
-			'class' => 'action' . ($this->extraClass() ? $this->extraClass() : ''),
-			'id' => $this->id(),
-			'type' => 'submit',
+		$data = new ArrayData(array(
+			'Class' => 'action' . ($this->extraClass() ? $this->extraClass() : '') . ($this->isReadonly() ? ' disabled' : ''),
+			'ID' => $this->id(),
 			// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch 
 			// will strip it from the requests 
-			'name' => 'action_gridFieldAlterAction'. '?' . http_build_query($actionData),
-			'tabindex' => $this->getTabIndex(),
-		);
+			'Name' => 'action_gridFieldAlterAction'. '?' . http_build_query($actionData),
+			'Disabled' => $this->isReadonly(),
+			'Label' => $this->buttonLabel
+		));
 
-		if($this->isReadonly()) {
-			$attributes['disabled'] = 'disabled';
-			$attributes['class'] = $attributes['class'] . ' disabled';
-		}
-		
-		return $this->createTag('button', $attributes, $this->buttonLabel);
+		return $data->renderWith('GridField_Action');
 	}
 
 	/**
