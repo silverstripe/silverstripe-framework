@@ -3,6 +3,7 @@
 	$('.ss-gridfield').entwine({
 		/**
 		 * @param {Object} Additional options for jQuery.ajax() call
+		 * @param {successCallback} callback to call after reloading succeeded.
 		 */
 		reload: function(ajaxOpts, successCallback) {
 			var self = this, form = this.closest('form'), data = form.find(':input').serializeArray();
@@ -25,6 +26,7 @@
 
 					form.removeClass('loading');
 					if(successCallback) successCallback.apply(this, arguments);
+					self.trigger('reload', self);
 				},
 				error: function(e) {
 					alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION'));
