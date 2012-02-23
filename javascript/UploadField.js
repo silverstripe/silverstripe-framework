@@ -99,7 +99,7 @@
 
 				// TODO Allow single-select
 				dialog.find('iframe').bind('load', function(e) {
-					var contents = $(this).contents(), gridField = contents.find('fieldset.ss-gridfield');
+					var contents = $(this).contents(), gridField = contents.find('.ss-gridfield');
 					// TODO Fix jQuery custom event bubbling across iframes on same domain
 					// gridField.find('.ss-gridfield-items')).bind('selectablestop', function() {
 					// });

@@ -1,6 +1,6 @@
 (function($){
 
-	$('fieldset.ss-gridfield').entwine({
+	$('.ss-gridfield').entwine({
 		/**
 		 * @param {Object} Additional options for jQuery.ajax() call
 		 */
@@ -52,20 +52,20 @@
 		}
 	});
 
-	$('fieldset.ss-gridfield *').entwine({
+	$('.ss-gridfield *').entwine({
 		getGridField: function() {
-			return this.parents('fieldset.ss-gridfield:first');
+			return this.closest('.ss-gridfield');
 		}
 	});
 		
-	$('fieldset.ss-gridfield .action').entwine({
+	$('.ss-gridfield .action').entwine({
 		onclick: function(e){
 			this.getGridField().reload({data: [{name: this.attr('name'), value: this.val()}]});
 			e.preventDefault();
 		}
 	});
 
-	$('fieldset.ss-gridfield .action-deleterecord').entwine({
+	$('.ss-gridfield .action-deleterecord').entwine({
 		onclick: function(e){
 			if(!confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) return false;
 			else this._super(e);
@@ -77,10 +77,10 @@
 	 * ToDo ensure filter-button state is maintained after filtering (see resetState param)
 	 * ToDo get working in IE 6-7
 	 */
-	$('fieldset.ss-gridfield input.ss-gridfield-sort').entwine({
+	$('.ss-gridfield input.ss-gridfield-sort').entwine({
 		onfocusin: function(e) {
 			// Dodgy results in IE <=7 & ignore if only one filter-field
-			countfields = $('fieldset.ss-gridfield input.ss-gridfield-sort').length;
+			countfields = $('.ss-gridfield input.ss-gridfield-sort').length;
 			if(($.browser.msie && $.browser.version <= 7) || countfields == 1) {
 				return false;
 			}
@@ -116,7 +116,7 @@
 	 * Allows selection of one or more rows in the grid field.
 	 * Purely clientside at the moment.
 	 */
-	$('fieldset.ss-gridfield[data-selectable]').entwine({
+	$('.ss-gridfield[data-selectable]').entwine({
 		/**
 		 * @return {jQuery} Collection
 		 */
@@ -130,7 +130,7 @@
 			return $.map(this.getSelectedItems(), function(el) {return $(el).data('id');});
 		}
 	});
-	$('fieldset.ss-gridfield[data-selectable] .ss-gridfield-items').entwine({
+	$('.ss-gridfield[data-selectable] .ss-gridfield-items').entwine({
 		onmatch: function() {
 			this._super();
 			

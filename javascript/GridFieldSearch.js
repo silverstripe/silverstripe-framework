@@ -25,10 +25,10 @@ jQuery(function($){
 				});
 			},
 			select: function(event, ui) {
-				$(this).closest("fieldset.ss-gridfield").find("#action_gridfield_relationfind").replaceWith(
+				$(this).closest(".ss-gridfield").find("#action_gridfield_relationfind").replaceWith(
 					'<input type="hidden" name="relationID" value="'+ui.item.id+'" id="relationID"/>'
 				);
-				$(this).closest("fieldset.ss-gridfield").find("#action_gridfield_relationadd").removeAttr('disabled');
+				$(this).closest(".ss-gridfield").find("#action_gridfield_relationadd").removeAttr('disabled');
 			}
 		});
 	});

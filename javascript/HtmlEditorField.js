@@ -921,7 +921,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				// TODO Custom event doesn't fire in IE if registered through object literal
 				var self = this;
 				this.bind('change', function() {
-					var fileList = self.closest('form').find('fieldset.ss-gridfield');
+					var fileList = self.closest('form').find('.ss-gridfield');
 					fileList.setState('ParentID', self.getValue());
 					fileList.reload();
 				});
