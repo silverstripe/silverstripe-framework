@@ -188,7 +188,7 @@ class GridFieldtest extends SapphireTest {
 			new Member(array("ID" => 1, "Email" => "test@example.org" ))
 		));
 		$obj = new GridField('testfield', 'testfield', $list);
-		$this->assertEquals(array(), $obj->getColumnAttributes($list->first(), 'Email'));
+		$this->assertEquals(array('class' => 'col-Email'), $obj->getColumnAttributes($list->first(), 'Email'));
 	}
 
 	/**
