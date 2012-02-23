@@ -109,8 +109,8 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 .cms .ui-widget-header .ui-dialog-title { padding: 6px 0; text-shadow: #ced7dc 1px 1px 0; }
 .cms .ui-widget-header a.ui-dialog-titlebar-close { position: absolute; top: -8px; right: -15px; width: 30px; height: 30px; z-index: 100000; }
 .cms .ui-widget-header a.ui-state-hover { border-color: transparent; background: transparent; }
-.cms .ui-widget-header a.ui-state-hover .ui-icon-closethick { background: url('../images/sprites-32x32-s5fb04c068a.png') 0 0 no-repeat; }
-.cms .ui-widget-header .ui-icon-closethick { background: url('../images/sprites-32x32-s5fb04c068a.png') 0 -40px no-repeat; width: 30px; height: 30px; }
+.cms .ui-widget-header a.ui-state-hover .ui-icon-closethick { background: url('../images/sprites-32x32-s9a54b65fa5.png') 0 -42px no-repeat; }
+.cms .ui-widget-header .ui-icon-closethick { background: url('../images/sprites-32x32-s9a54b65fa5.png') 0 -82px no-repeat; width: 30px; height: 30px; }
 .cms .ui-state-hover { cursor: pointer; }
 .cms .ui-widget input, .cms .ui-widget select, .cms .ui-widget textarea, .cms .ui-widget button { color: #444444; font-size: 12px; font-family: Arial, sans-serif; }
 
@@ -447,7 +447,7 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 /** -------------------------------------------- Step labels -------------------------------------------- */
 .step-label > * { display: inline-block; vertical-align: top; }
 .step-label .flyout { height: 18px; font-size: 14px; font-weight: bold; -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; -o-border-top-left-radius: 3px; -ms-border-top-left-radius: 3px; -khtml-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-bottomleft: 3px; -webkit-border-bottom-left-radius: 3px; -o-border-bottom-left-radius: 3px; -ms-border-bottom-left-radius: 3px; -khtml-border-bottom-left-radius: 3px; border-bottom-left-radius: 3px; background-color: #667980; padding: 4px 3px 4px 6px; text-align: center; text-shadow: none; color: #fff; }
-.step-label .arrow { height: 26px; width: 10px; background: url('../images/sprites-32x32-s5fb04c068a.png') 0 -171px no-repeat; margin-right: 4px; }
+.step-label .arrow { height: 26px; width: 10px; background: url('../images/sprites-32x32-s9a54b65fa5.png') 0 -213px no-repeat; margin-right: 4px; }
 .step-label .title { height: 18px; padding: 4px; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
@@ -564,7 +564,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-logo span { font-weight: bold; font-size: 14px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
 
 .cms-login-status { border-top: 1px solid #19435c; height: 24px; padding: 7px 4px 0 4px; overflow: hidden; line-height: 16px; font-size: 11px; }
-.cms-login-status .logout-link { display: inline-block; height: 16px; width: 16px; float: left; margin: 0 8px 0 3px; background: url('../images/sprites-32x32-s5fb04c068a.png') 0 -81px no-repeat; text-indent: -9999em; }
+.cms-login-status .logout-link { display: inline-block; height: 16px; width: 16px; float: left; margin: 0 8px 0 3px; background: url('../images/sprites-32x32-s9a54b65fa5.png') 0 -123px no-repeat; text-indent: -9999em; }
 
 .cms-menu { z-index: 80; background: #c6d7df; border-right: 1px solid #8c99a1; width: 191px; /* 8x24 - 1 */ -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; -o-box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; }
 .cms-menu a { text-decoration: none; }
@@ -584,12 +584,12 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-menu-list li a .icon { display: inline-block; float: left; margin: 4px 10px 0 4px; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70); opacity: 0.7; }
 .cms-menu-list li a .text { display: inline-block; float: left; }
 .cms-menu-list li a .toggle-children { display: inline-block; float: right; width: 20px; height: 100%; cursor: pointer; }
-.cms-menu-list li a .toggle-children .toggle-children-icon { display: inline-block; width: 8px; height: 8px; background: url('../images/sprites-32x32-s5fb04c068a.png') 0 -107px no-repeat; vertical-align: middle; }
-.cms-menu-list li a .toggle-children.opened .toggle-children-icon { background: url('../images/sprites-32x32-s5fb04c068a.png') 0 -123px no-repeat; }
+.cms-menu-list li a .toggle-children .toggle-children-icon { display: inline-block; width: 8px; height: 8px; background: url('../images/sprites-32x32-s9a54b65fa5.png') 0 -149px no-repeat; vertical-align: middle; }
+.cms-menu-list li a .toggle-children.opened .toggle-children-icon { background: url('../images/sprites-32x32-s9a54b65fa5.png') 0 -165px no-repeat; }
 .cms-menu-list li ul { display: none; }
 .cms-menu-list li.current a { color: white; text-shadow: #1e5270 0 -1px 0; border-top: 1px solid #55a4d2; border-bottom: 1px solid #1e5270; background-color: #338dc1; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #338dc1), color-stop(100%, #287099)); background-image: -webkit-linear-gradient(#338dc1, #287099); background-image: -moz-linear-gradient(#338dc1, #287099); background-image: -o-linear-gradient(#338dc1, #287099); background-image: -ms-linear-gradient(#338dc1, #287099); background-image: linear-gradient(#338dc1, #287099); }
-.cms-menu-list li.current a .toggle-children .toggle-children-icon { background: url('../images/sprites-32x32-s5fb04c068a.png') 0 -139px no-repeat; }
-.cms-menu-list li.current a .toggle-children.opened .toggle-children-icon { background: url('../images/sprites-32x32-s5fb04c068a.png') 0 -155px no-repeat; }
+.cms-menu-list li.current a .toggle-children .toggle-children-icon { background: url('../images/sprites-32x32-s9a54b65fa5.png') 0 -181px no-repeat; }
+.cms-menu-list li.current a .toggle-children.opened .toggle-children-icon { background: url('../images/sprites-32x32-s9a54b65fa5.png') 0 -197px no-repeat; }
 .cms-menu-list li.current ul { border-top: none; display: block; }
 .cms-menu-list li.current li { background-color: #287099; }
 .cms-menu-list li.current li a { font-size: 11px; padding: 0 10px 0 40px; height: 32px; line-height: 32px; color: #e2f0f7; background: none; border-top: 1px solid #338dc1; border-bottom: 1px solid #1e5270; }
