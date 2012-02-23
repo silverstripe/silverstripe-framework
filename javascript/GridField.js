@@ -69,6 +69,20 @@ jQuery(function($){
 				).css({'position':'relative','margin':'0 auto','width':'65%'}).appendTo(eleInput.closest('th'));
 			}
 		}
-	});	
+	});
+
+	$('fieldset.ss-gridfield .new-link').entwine({
+		onclick: function(e) {
+			$(this).trigger('opennewview', $(this).prop('href'));
+			return false;
+		}
+	});
+
+	$('fieldset.ss-gridfield .edit-link').entwine({
+		onclick: function(e) {
+			$(this).trigger('openeditview', $(this).prop('href'));
+			return false;
+		}
+	});
 
 });
