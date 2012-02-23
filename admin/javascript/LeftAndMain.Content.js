@@ -305,7 +305,7 @@
 	$('.cms-content .cms-panel-link, .cms-content a.crumb').entwine({
 		onclick: function(e) {
 			var href = this.attr('href'), url = href ? href : this.data('href'),
-				data = (this.data('target-panel')) ? {selector: this.data('target-panel')} : null;
+				data = (this.data('targetPanel')) ? {selector: this.data('targetPanel')} : null;
 			
 			$('.cms-container').entwine('ss').loadPanel(url, null, data);
 			e.preventDefault();
