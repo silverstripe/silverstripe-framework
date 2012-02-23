@@ -577,7 +577,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			}
 		});
 
-		$('form.htmleditorfield-linkform input[name=action_remove]').entwine({
+		$('form.htmleditorfield-linkform :submit[name=action_remove]').entwine({
 			onclick: function(e) {
 				this.parents('form:first').removeLink();
 				return false;
