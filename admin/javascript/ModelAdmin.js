@@ -175,7 +175,7 @@
 		 * 
 		 * RHS panel Delete button
 		 */
-		$('.cms-edit-form input[name=action_doDelete]').entwine({
+		$('.cms-edit-form :submit[name=action_doDelete]').entwine({
 			// Function: onclick
 			onclick: function(e) {
 				if(!confirm(ss.i18n._t('ModelAdmin.REALLYDELETE', 'Really delete?'))) {

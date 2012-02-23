@@ -1,5 +1,5 @@
 <% if IncludeFormTag %>
-<form $FormAttributes data-layout="{type: 'border'}">
+<form $FormAttributes data-layout-type="border">
 <% end_if %>
 	<div class="cms-content-header north">
 		<div>
@@ -28,7 +28,7 @@
 		$EditFormTools	
 	<% end_control %>
 	
-	<div class="cms-content-fields center">
+	<div class="cms-content-fields center cms-panel-padded">
 		<% if Message %>
 		<p id="{$FormName}_error" class="message $MessageType">$Message</p>
 		<% else %>
@@ -51,7 +51,7 @@
 				$Field
 			<% end_control %>
 			<% if CurrentPage.PreviewLink %>
-			<a href="$CurrentPage.PreviewLink" class="cms-preview-toggle-link ss-ui-button">
+			<a href="$CurrentPage.PreviewLink" class="cms-preview-toggle-link ss-ui-button" data-icon="preview">
 				<% _t('LeftAndMain.PreviewButton', 'Preview') %> &raquo;
 			</a>
 			<% end_if %>

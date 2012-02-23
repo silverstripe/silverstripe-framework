@@ -60,7 +60,7 @@
 
 				// Catch navigation events before they reach handleStateChange(),
 				// in order to avoid changing the menu state if the action is cancelled by the user
-				$('.cms-menu')
+				// $('.cms-menu')
 				
 				// focus input on first form element
 				this.find(':input:visible:not(:submit):first').focus();
@@ -172,7 +172,7 @@
 		 * We need this onclick overloading because we can't get to the
 		 * clicked button from a form.onsubmit event.
 		 */
-		$('.cms-edit-form .Actions input, .cms-edit-form .Actions button').entwine({
+		$('.cms-edit-form .Actions :button').entwine({
 			
 			/**
 			 * Function: onclick

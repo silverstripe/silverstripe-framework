@@ -233,13 +233,13 @@ class LeftAndMain extends Controller {
 				THIRDPARTY_DIR . '/jquery/jquery.js',
 				THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js',
 				SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js',
+				SAPPHIRE_DIR . '/admin/javascript/lib.js',
 				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
 				THIRDPARTY_DIR . '/json-js/json2.js',
 				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
 				THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js',
 				THIRDPARTY_DIR . '/jquery-query/jquery.query.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js',
-				THIRDPARTY_DIR . '/jquery-metadata/jquery.metadata.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
@@ -864,15 +864,23 @@ class LeftAndMain extends Controller {
 				// add default actions if none are defined
 				if(!$actions || !$actions->Count()) {
 					if($record->hasMethod('canDelete') && $record->canDelete()) {
-						$actions->push($deleteAction = new FormAction('delete',_t('ModelAdmin.DELETE','Delete')));
-						$deleteAction->addExtraClass('ss-ui-action-destructive');
+						$actions->push(
+							FormAction::create('delete',_t('ModelAdmin.DELETE','Delete'))
+								->addExtraClass('ss-ui-action-destructive')
+						);
 					}
 					if($record->hasMethod('canEdit') && $record->canEdit()) {
-						$actions->push($saveAction = new FormAction('save',_t('CMSMain.SAVE','Save')));
-						$saveAction->addExtraClass('ss-ui-action-constructive');
+						$actions->push(
+							FormAction::create('save',_t('CMSMain.SAVE','Save'))
+								->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
+						);
 					}
 				}
 			}
+
+			// Use <button> to allow full jQuery UI styling
+			$actionsFlattened = $actions->dataFields();
+			if($actionsFlattened) foreach($actionsFlattened as $action) $action->setUseButtonTag(true);
 			
 			$form = new Form($this, "EditForm", $fields, $actions);
 			$form->addExtraClass('cms-edit-form');
@@ -965,10 +973,10 @@ class LeftAndMain extends Controller {
 				new HiddenField('ParentID')
 			),
 			new FieldList(
-				$addAction = new FormAction('doAdd', _t('AssetAdmin_left.ss.GO','Go'))
+				FormAction::create('doAdd', _t('AssetAdmin_left.ss.GO','Go'))
+					->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
 			)
 		);
-		$addAction->addExtraClass('ss-ui-action-constructive');
 		$form->addExtraClass('add-form');
 		
 		return $form;

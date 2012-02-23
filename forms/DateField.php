@@ -136,7 +136,7 @@ class DateField extends TextField {
 		}
 		
 		$config = array_filter($config);
-		$this->addExtraClass(Convert::raw2json($config));
+		foreach($config as $k => $v) $this->setAttribute('data-' . $k, $v);
 		
 		// Three separate fields for day, month and year
 		if($this->getConfig('dmyfields')) {
@@ -229,6 +229,8 @@ class DateField extends TextField {
 				}
 			}
 		}
+
+		return $this;
 	}
 	
 	/**
@@ -470,6 +472,7 @@ JS;
 	 */
 	function setLocale($locale) {
 		$this->locale = $locale;
+		return $this;
 	}
 	
 	/**
@@ -493,6 +496,7 @@ JS;
 		}
 		
 		$this->config[$name] = $val;
+		return $this;
 	}
 	
 	/**
@@ -611,7 +615,6 @@ class DateField_View_JQuery {
 					));
 			}
 			
-			Requirements::javascript(THIRDPARTY_DIR . "/jquery-metadata/jquery.metadata.js");
 			Requirements::javascript(SAPPHIRE_DIR . "/javascript/DateField.js");
 		}
 		

@@ -53,16 +53,6 @@ body.cms {
 	strong {
 		font-weight: bold;
 	}
-
-	.ss-ui-button.cms-page-add-button {
-		margin-left:0px;
-		font-size:13px;
-		@include border-radius(4px);
-	}
-
-	.ss-ui-button.cms-page-add-button:hover {
-		text-decoration:none;
-	}
 }
 
 /** --------------------------------------------
@@ -334,7 +324,6 @@ body.cms {
 	@include box-shadow($tab-panel-texture-color 0 $grid-y*-2 $grid-y*2);
 }
 
-
 /** --------------------------------------------
  * Messages
  * -------------------------------------------- */
@@ -520,13 +509,13 @@ body.cms {
  		}
 
 		div {
-			background:url(../images/btn_icons/settings.png) 5px 6px no-repeat;
+			background:url(../images/btn-icon/settings.png) 5px 4px no-repeat;
 			border-left:none;
 			width:100%;
 		}
 
 		div b {
-			background: url(../images/sprites_32x32/menu-arrow-deselected-down.png) no-repeat 9px 11px;
+			background: url(../images/sprites-32x32/menu-arrow-deselected-down.png) no-repeat 9px 11px;
 			float:right;
 			width:24px;
 		}	
@@ -624,13 +613,6 @@ body.cms {
 		}
 	}
 
-
-		
-	/* buttons now need to line with with reduced input sizes */
-	.ss-ui-button {
-		padding: 5px $grid-x;
-	}
-		
 	.fieldgroup {
 		.fieldgroup-field {
 			width: auto;
@@ -686,9 +668,6 @@ body.cms {
 /** 
  * CMS Batch actions
  */
-.cms-content-constructive-actions {
-	float: left;
-}
 
 .cms-content-batchactions {
 	float: left;
@@ -707,11 +686,6 @@ body.cms {
 	.Actions {
 		display:none;
 	}
-}
-
-.cms-content-constructive-actions a {
-	display: block;
-	float: right;
 }
 
 #Form_BatchActionsForm select {
@@ -791,13 +765,16 @@ body.cms {
 
 		.cms-preview-toggle-link {
 			float: right;
-			.ui-button-text{
-				padding:0;
-			}
-
 		}
 	}
 	
+}
+
+.cms-preview-toggle-link {
+	display: block;
+	float: right;
+	font-size: 12px;
+	text-decoration: none;
 }
 
 .cms-preview-header {

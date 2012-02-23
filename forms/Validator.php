@@ -79,6 +79,7 @@ abstract class Validator extends Object {
 		} else {
 			user_error("Validator::setJavascriptValidationHandler() passed bad handler '$handler'", E_USER_WARNING);
 		}
+		return $this;
 	}
 
 	/**
@@ -96,6 +97,7 @@ abstract class Validator extends Object {
 	 */
 	function setForm($form) {
 		$this->form = $form;
+		return $this;
 	}
 	
 	/**

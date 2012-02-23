@@ -4,8 +4,6 @@ jQuery.noConflict();
  * File: LeftAndMain.js
  */
 (function($) {
-	$.metadata.setType('html5');
-	
 	// setup jquery.entwine
 	$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
 	$.entwine('ss', function($) {
@@ -18,7 +16,7 @@ jQuery.noConflict();
 			var top = ($(window).height() - spinner.height()) / 2;
 			spinner.css('top', top + offset);
 			spinner.show();
-		}
+		};
 		
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
 
@@ -79,7 +77,7 @@ jQuery.noConflict();
 						if(url) window.history.replaceState({}, '', url);
 					}
 					
-					self.redraw()
+					self.redraw();
 				});
 				
 				// Remove loading screen
@@ -98,11 +96,10 @@ jQuery.noConflict();
 				// Move from inner to outer layouts. Some of the elements might not exist.
 				// Not all edit forms are layouted, so qualify by their data value.
 				
-				this.find('.cms-edit-form[data-layout]').redraw(); 
+				this.find('.cms-edit-form[data-layout-type]').redraw(); 
 				
 				// Only redraw preview if its visible
-				var preview = this.find('.cms-preview');
-				if(preview.is(':visible')) preview.redraw();
+				this.find('.cms-preview').redraw();
 
 				// Only redraw the content area if its not the same as the edit form
 				var contentEl = this.find('.cms-content');
@@ -126,9 +123,8 @@ jQuery.noConflict();
 			 *  - {Object} data Any additional data passed through to History.pushState()
 			 */
 			loadPanel: function(url, title, data) {
-				var data = data || {};
-				var selector = data.selector || '.cms-content'
-				var contentEl = $(selector);
+				if(!data) data = {};
+				var selector = data.selector || '.cms-content', contentEl = $(selector);
 				
 				// Check change tracking (can't use events as we need a way to cancel the current state change)
 				var trackedEls = contentEl.find(':data(changetracker)').add(contentEl.filter(':data(changetracker)'));
@@ -148,7 +144,7 @@ jQuery.noConflict();
 					// which matches one class on the menu
 					window.History.pushState(data, title, url);
 				} else {
-					window.location = url;
+					window.location = $.path.makeUrlAbsolute(url, $('base').attr('href'));
 				}
 			},
 			
@@ -220,7 +216,7 @@ jQuery.noConflict();
 						newContentEl
 							.removeClass(layoutClasses.join(' '))
 							.addClass(origLayoutClasses.join(' '));
-						if(origStyle) newContentEl.attr('style', origStyle)
+						if(origStyle) newContentEl.attr('style', origStyle);
 						newContentEl.css('visibility', 'hidden');
 
 						// Allow injection of inline styles, as they're not allowed in the document body.
@@ -260,9 +256,16 @@ jQuery.noConflict();
 		 */
 		$('.cms input[type="submit"], .cms button, .cms input[type="reset"]').entwine({
 			onmatch: function() {
-				this.addClass('ss-ui-button');
-				this.redraw();
+				if(!this.hasClass('ss-ui-button')) this.addClass('ss-ui-button');
 				
+				this._super();
+			}
+		});
+
+		$('.cms .ss-ui-button').entwine({
+			onmatch: function() {
+				if(!this.data('button')) this.button();
+
 				this._super();
 			}
 		});
@@ -295,7 +298,7 @@ jQuery.noConflict();
 		/**
 		 * Add styling to all contained buttons, and create buttonsets if required.
 		 */
-		$('.cms-container .Actions').entwine({
+		$('.cms .Actions').entwine({
 		onmatch: function() {
 			this.find('.ss-ui-button').click(function() {
 					var form = this.form;
@@ -312,31 +315,18 @@ jQuery.noConflict();
 			this._super();
 		},
 		redraw: function() {
-			// Needs to be in the same execution frame as the buttonset logic below,
-			// to avoid re-adding rounded corners (default button styling) after removing them
-			this.find('.ss-ui-button').button();
-
 			// Remove whitespace to avoid gaps with inline elements
 			this.contents().filter(function() { 
 				return (this.nodeType == 3 && !/\S/.test(this.nodeValue)); 
 			}).remove();
-			
-			// Emulate jQuery UI buttonsets based on HTML5 data attributes
-			var sets = [], self = this;
-			this.find('.action[buttonset]').each(function() {
-				cl = $(this).attr('buttonset');
-				if($.inArray(cl, sets) == -1) sets.push(cl);
-			});
-			$.each(sets, function(i, set) {
-				// Gather buttons in set until no siblings are matched.
-				// This avoids "split" sets where a new button without a buttonset is inserted somewhere in the middle.
-				self.find('.action[buttonset="' + set + '"]:first')
-					.nextUntil('.action[buttonset!="' + set + '"]').andSelf()
-					.removeClass('ui-corner-all').addClass('buttonset')
-					.first().addClass('ui-corner-left').end()
-					.last().addClass('ui-corner-right');
+
+			// Init buttons if required
+			this.find('.ss-ui-button').each(function() {
+				if(!$(this).data('button')) $(this).button();
 			});
 			
+			// Mark up buttonsets
+			this.find('.ss-ui-buttonset').buttonset();
 		}
 	});
 		
@@ -347,7 +337,7 @@ jQuery.noConflict();
 		 */
 		$('.cms-container .field.date input.text').entwine({
 			onmatch: function() {
-				var holder = $(this).parents('.field.date:first'), config = holder.metadata({type: 'class'});
+				var holder = $(this).parents('.field.date:first'), config = holder.data();
 				if(!config.showcalendar) return;
 
 				config.showOn = 'button';
@@ -388,7 +378,130 @@ jQuery.noConflict();
 				});
 			}
 		});
-	});	 
+	});
+	
+	$('.cms-filter-form').entwine({
+		
+		GridField: null,
+
+		/**
+		 * Function onmatch
+		 *
+		 * Try to find the related gridfield by looking up the data-gridfield attribute on this
+		 * filter form
+		 */
+		onmatch: function() {
+			var gridfieldName = this.attr('data-gridfield');
+			this.setGridField($('.grid[data-name='+gridfieldName+']'));
+			var self = this;
+			this.getGridField().bind('reload', function(e, gridfield){
+				self.setFilterValues($(gridfield).getState());
+			});
+		},
+
+		/**
+		 * Function: onsubmit
+		 * 
+		 * Parameters:
+		 *  (Event) e
+		 */
+		onsubmit: function(e) {
+			this.changeState(jQuery(this).find(':submit:first'));
+			return false;
+		},
+
+
+		/**
+		 * Function: setFilterValues
+		 * 
+		 * Parameters:
+		 *  (JSON) state
+		 *
+		 */
+		setFilterValues: function(state){
+			var filterValues = state.GridFieldFilter.Columns;
+			if(jQuery.isEmptyObject(filterValues)){
+				this.resetFilterForm();
+				return;
+			}
+			this.filterFields().each(function(idx, element) {
+				if(typeof filterValues[element.name] !== "undefined") {
+					$(element).val(filterValues[element.name]);
+				}
+			});
+		},
+
+		/**
+		 * Function: onreset
+		 * 
+		 * Parameters:
+		 *  (Event) e
+		 */
+		onreset: function(e) {
+			if(this.resetFilterForm()) {
+				this.changeState(jQuery(this));
+			}
+			return false;
+		},
+
+		/**
+		 * Function resetFilterForm
+		 * 
+		 **/
+		resetFilterForm: function() {
+			var needUpdate = false;
+			this.filterFields().each(function(idx, element) {
+				if($(element).val()) {
+					needUpdate = true; 
+					$(element).val('');
+				}
+				if($(element).hasClass('chzn-done')){
+					$(element).trigger("liszt:updated");
+				}
+			});
+			return needUpdate;
+		},
+
+		/**
+		 * Function: changeState
+		 * 
+		 * Change the state of the gridfield, reloads it's and set loading classes on elements
+		 * 
+		 * Parameters:
+		 *  (Element) element - the element that will get a loading class added / removed
+		 *
+		 */
+		changeState: function(element) {
+			element.addClass('loading');
+			this.getGridField().setState('GridFieldFilter', {'Columns': this.filterValues()});
+			this.getGridField().reload(null, function(){
+				element.removeClass('loading');
+			});
+		},
+
+		/**
+		 * Function filterFields
+		 * Get all fields that contains filter values
+		 *
+		 */
+		filterFields: function() {
+			return this.find(':input').not(".action, .hidden");
+		},
+
+		/**
+		 * Function: filterValues
+		 * 
+		 * Returns an key-value array for the filter values set in the filter form
+		 *
+		 */
+		filterValues: function() {
+			var filterColumns = {};
+			this.filterFields().each(function(idx,elm){
+				filterColumns[$(elm).attr('name')] = $(elm).val();
+			});
+			return filterColumns;
+		}
+	});
 }(jQuery));
 
 // Backwards compatibility

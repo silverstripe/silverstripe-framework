@@ -335,7 +335,9 @@ class GridField extends FormField {
 				'tr', 
 				array(
 					"class" => 'ss-gridfield-item ' . $record->FirstLast() . " " . $record->EvenOdd(),
-					'data-id' => $record->ID
+					'data-id' => $record->ID,
+					// TODO Allow per-row customization similar to GridFieldDefaultColumns
+					'data-class' => $record->ClassName,
 				),
 				$rowContent
 			);
@@ -347,7 +349,7 @@ class GridField extends FormField {
 		$body = $content['body'] ? $this->createTag('tbody', array('class' => 'ss-gridfield-items'), implode("\n", $content['body'])) : '';
 		$foot = $content['footer'] ? $this->createTag('tfoot', array(), implode("\n", $content['footer'])) : '';
 
-		$this->addExtraClass('ss-gridfield');
+		$this->addExtraClass('ss-gridfield field');
 		$attrs = array_diff_key(
 			$this->getAttributes(), 
 			array('value' => false, 'type' => false, 'name' => false)
@@ -355,7 +357,7 @@ class GridField extends FormField {
 		$attrs['data-name'] = $this->getName();
 		$tableAttrs = array(
 			'id' => isset($this->id) ? $this->id : null,
-			'class' => "field CompositeField {$this->extraClass()}",
+			'class' => 'ss-gridfield-table',
 			'cellpadding' => '0',
 			'cellspacing' => '0'	
 		);
@@ -710,6 +712,7 @@ class GridField_Action extends FormAction {
 
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/json-js/json2.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/i18n.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/GridField.js');
 
@@ -727,7 +730,7 @@ class GridField_Action extends FormAction {
 		
 		// And generate field
 		$attributes = array(
-			'class' => 'action' . ($this->extraClass() ? $this->extraClass() : ''),
+			'class' => ($this->extraClass() ? $this->extraClass() : '') . ' action-' . $this->actionName,
 			'id' => $this->id(),
 			'type' => 'submit',
 			// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch 

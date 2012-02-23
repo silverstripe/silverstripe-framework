@@ -10,87 +10,6 @@
  * Basic form fields
  * ---------------------------------------------------- */	
 
-/* CMS action button sprite mix-in (used for all the buttons in the bottom row */
-@mixin actionButtonSprite($name) {
-  padding-left: 24px;
-	padding-right: 6px;
-
-	@include background($color-button-generic sprite($btn_icons, $name, 5px, 6px) no-repeat);
-	@include background(sprite($btn_icons, $name, 5px, 5px) no-repeat,
-		linear-gradient(color-stops(
-			lighten($color-button-generic, 10%),
-			darken($color-button-generic, 5%)
-		))
-	);
-	&.ui-state-hover, &:hover {
-		@include background(lighten($color-button-generic, 10%) sprite($btn_icons, $name, 5px, 6px) no-repeat);
-		@include background(sprite($btn_icons, $name, 5px, 5px) no-repeat,
-			linear-gradient(color-stops(
-				lighten($color-button-generic, 20%),
-				$color-button-generic
-			))
-		);
-		@include box-shadow(0 0 5px darken($color-button-generic, 20%));
-	}
-	&:active, &:focus, &.ui-state-active, &.ui-state-focus {
-		border: 1px solid darken($color-button-generic, 20%);
-		@include background(lighten($color-button-generic, 10%) sprite($btn_icons, $name, 5px, 6px) no-repeat);
-		@include background(sprite($btn_icons, $name, 5px, 5px) no-repeat,
-			linear-gradient(color-stops(
-				lighten($color-button-generic, 20%),
-				$color-button-generic
-			))
-		);
-		@include box-shadow(0 0 5px darken($color-button-generic, 30%) inset);
-	}
-	&.ui-state-disabled {
-    background-image: none;
-  	@include background(lighten($color-button-generic, 20%) sprite($btn_icons, $name+_disabled, 5px, 6px) no-repeat);
-		@include background(sprite($btn_icons, $name+_disabled, 5px, 5px) no-repeat,
-			linear-gradient(color-stops(
-				lighten($color-button-generic, 20%),
-				$color-button-generic
-			))
-		);
-	}
-}
-
-@mixin actionButtonSpriteConstructive($name) {
-  background-image: none;
-  padding-left: 24px;
-	padding-right: 6px;
-	font-weight: bold;
-	margin-left: $grid-x;
-	color: $color-text-light;
-	border-color: $color-button-constructive-border;
-	border-bottom-color: darken($color-button-constructive-border, 10%);			
-	@include background($color-button-constructive sprite($btn_icons, $name, 5, 5) no-repeat);
-	@include background(sprite($btn_icons, $name, 5, 5) no-repeat,
-		linear-gradient(color-stops(
-			lighten($color-button-constructive, 10%),
-			darken($color-button-constructive, 5%)
-		))
-	);
-
-	@include text-shadow(darken($color-button-constructive, 10%) 0 1px 1px);
-
-	&.ui-state-hover, &:hover {
-		border-color: darken($color-button-constructive-border, 10%);
-		@include background(lighten($color-button-constructive, 10%) sprite($btn_icons, $name, 6, 6) no-repeat);
-		@include background(sprite($btn_icons, $name, 5, 5) no-repeat,
-			linear-gradient(color-stops(
-				lighten($color-button-constructive, 15%),
-				$color-button-constructive
-			))
-		);
-	}
-	&:active, &:focus, &.ui-state-active, &.ui-state-focus {
-
-		@include background(darken($color-button-constructive, 2%) sprite($btn_icons, $name, 5, 5) no-repeat);
-		@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
-	}
-}
-
 form.nostyle {
 	@include clear-form-field-styles();
 }
@@ -307,25 +226,27 @@ form.small .field, .field.small {
  * Buttons
  * ---------------------------------------------------- */
 
-.Actions {
-	min-height: 30px;
-
-	& > div {
-		overflow: auto;
-	}
-}
-
-.cms-preview-toggle-link {
-	display: block;
-	float: right;
-	font-size: 12px;
-	text-decoration: none;
-	span.ui-button-text{
-		padding:0;
-	}
-}
-
 .cms {
+
+	.Actions, .cms-actions-row {
+		> * {
+			display: block;
+			float: left;
+			margin-right: $grid-x;
+		}
+
+		> *:last-child {
+			margin-right: 0;
+		}
+	}
+
+	.Actions {
+		min-height: 30px;
+
+		& > div {
+			overflow: auto;
+		}
+	}
 
 	input.loading,
 	input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, 
@@ -341,34 +262,30 @@ form.small .field, .field.small {
 	}
 
 	.ss-ui-button {
-		
+
 		&.buttonset {
 			margin: 0 -1px; // hack to avoid double borders
 		}
 		
-		/* all buttons */
-		padding: ($grid-y - 3) ($grid-x + 4);
 		font-weight: bold;
 		text-decoration: none;
-		margin: 0;
 		line-height: $grid-y * 2;
 		color: lighten($color-text-dark, 10%);
-		background-color: $color-button-generic;
 		border: 1px solid $color-button-generic-border;
 		border-bottom: 1px solid darken($color-button-generic-border, 10%);
 		cursor: pointer;
-		
 		@include text-shadow(lighten($color-button-generic, 20%) 0 1px 1px);
-		
-		@include background($color-button-generic);
+		background-color: $color-button-generic;
 		@include background(
 			linear-gradient(color-stops(
 				lighten($color-button-generic, 10%),
 				darken($color-button-generic, 5%)
 			))
 		);
+
 		&.ui-state-hover, &:hover {
-			@include background(lighten($color-button-generic, 10%));
+			text-decoration: none;
+			background-color: lighten($color-button-generic, 10%);
 			@include background(
 				linear-gradient(color-stops(
 					lighten($color-button-generic, 20%),
@@ -377,9 +294,10 @@ form.small .field, .field.small {
 			);
 			@include box-shadow(0 0 5px darken($color-button-generic, 20%));
 		}
+
 		&:active, &:focus, &.ui-state-active, &.ui-state-focus {
 			border: 1px solid darken($color-button-generic, 20%);
-			@include background(lighten($color-button-generic, 10%) no-repeat);
+			background-color: lighten($color-button-generic, 10%);
 			@include background(
 				linear-gradient(color-stops(
 					lighten($color-button-generic, 20%),
@@ -391,38 +309,39 @@ form.small .field, .field.small {
 
 		/* constructive */
 		&.ss-ui-action-constructive {
-			@include actionButtonSpriteConstructive('accept');
+			font-weight: bold;
+			color: $color-text-light;
+			border-color: $color-button-constructive-border;
+			border-bottom-color: darken($color-button-constructive-border, 10%);			
+			background-color: $color-button-constructive;
+			@include background(
+				linear-gradient(color-stops(
+					lighten($color-button-constructive, 10%),
+					darken($color-button-constructive, 5%)
+				))
+			);
+			@include text-shadow(darken($color-button-constructive, 10%) 0 1px 1px);
+
+			&.ui-state-hover, &:hover {
+				border-color: darken($color-button-constructive-border, 10%);
+				background-color: lighten($color-button-constructive, 10%);
+				@include background(
+					linear-gradient(color-stops(
+						lighten($color-button-constructive, 15%),
+						$color-button-constructive
+					))
+				);
+			}
+			&:active, &:focus, &.ui-state-active, &.ui-state-focus {
+				background-color: darken($color-button-constructive, 2%);
+				@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
+			}
 		}
 		
-		&.cms-page-add-button {
-			@include actionButtonSpriteConstructive('add');
-			@include border-radius(4px);
-
-		}
 		/* destructive */
 		&.ss-ui-action-destructive {
 			color: $color-button-destructive;
 			background-color: $color-button-generic;
-		
-			&.delete {
-				@include actionButtonSprite('decline');
-			}
-
-			&.unpublish {
-			    @include actionButtonSprite('unpublish');
-			}
-		}
-
-		/* generic action buttons */
-		&.save-draft {
-		    @include actionButtonSprite('addpage');
-		}
-
-		&.cms-preview-toggle-link {
-		  padding-left: 24px !important;
-			margin-left: 4px !important;
-			text-decoration: none;
-			@include actionButtonSprite('preview');
 		}
 
 		&.ss-ui-button-small {
@@ -436,7 +355,6 @@ form.small .field, .field.small {
 
 		&.ss-ui-action-minor {
 			background: none;
-			padding: 0;
 			border: 0;
 			color: lighten($color-text-dark, 10%);
 			text-decoration: underline;

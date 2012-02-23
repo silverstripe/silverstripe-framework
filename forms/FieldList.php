@@ -401,6 +401,7 @@ class FieldList extends ArrayList {
 	 */
 	public function setForm($form) {
 		foreach($this as $field) $field->setForm($form);
+		return $this;
 	}
 	
 	/**
@@ -413,6 +414,7 @@ class FieldList extends ArrayList {
 			$fieldName = $field->getName();
 			if(isset($data[$fieldName])) $field->setValue($data[$fieldName]);
 		}
+		return $this;
 	}
 	
 	/**
@@ -458,6 +460,7 @@ class FieldList extends ArrayList {
 	
 	function setContainerField($field) {
 		$this->containerField = $field;
+		return $this;
 	}
 	
 	/**

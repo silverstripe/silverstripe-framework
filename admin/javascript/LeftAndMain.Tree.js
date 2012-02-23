@@ -106,7 +106,7 @@
 							// Add ajax settings after init period to avoid unnecessary initial ajax load
 							// of existing tree in DOM - see load_node_html()
 							data.inst._set_settings({'html_data': {'ajax': {
-								'url': self.data('url-tree'),
+								'url': self.data('urlTree'),
 								'data': function(node) {
 									var params = self.data('searchparams') || [];
 									// Avoid duplication of parameters
@@ -145,7 +145,7 @@
 							});
 
 							$.ajax({
-								'url': self.data('url-savetreenode'),
+								'url': self.data('urlSavetreenode'),
 								'data': {
 									ID: $(movedNode).data('id'), 
 									ParentID: $(newParentNode).data('id') || 0,

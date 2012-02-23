@@ -16,7 +16,7 @@ jQuery(function($){
 					data: form.serialize()+'&'+escape(searchField.attr('name'))+'='+escape(searchField.val()), 
 					success: function(data) {
 						response( $.map(JSON.parse(data), function( name, id ) {
-							return { label: name, value: name, id: id }
+							return { label: name, value: name, id: id };
 						}));
 					},
 					error: function(e) {
@@ -25,10 +25,10 @@ jQuery(function($){
 				});
 			},
 			select: function(event, ui) {
-				$(this).closest("fieldset.ss-gridfield").find("#action_gridfield_relationfind").replaceWith(
+				$(this).closest(".ss-gridfield").find("#action_gridfield_relationfind").replaceWith(
 					'<input type="hidden" name="relationID" value="'+ui.item.id+'" id="relationID"/>'
 				);
-				$(this).closest("fieldset.ss-gridfield").find("#action_gridfield_relationadd").removeAttr('disabled');
+				$(this).closest(".ss-gridfield").find("#action_gridfield_relationadd").removeAttr('disabled');
 			}
 		});
 	});

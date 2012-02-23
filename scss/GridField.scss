@@ -31,7 +31,7 @@ $gf_border_radius:	7px;
 }
 
 .cms {
-	fieldset.ss-gridfield {
+	.ss-gridfield {
 		& > div {
 			margin-bottom: 35px;
 		}
@@ -47,11 +47,10 @@ $gf_border_radius:	7px;
 		}
 	}
 
-	table.ss-gridfield.field {
+	table.ss-gridfield-table {
 		display: table; 
 		box-shadow: none;		
 		padding: 0;
-		margin: 20px 0 0 0;
 		border-collapse: separate;	
 		border-bottom: 0 none;				
 		width: 100%;

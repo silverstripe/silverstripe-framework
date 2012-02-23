@@ -331,6 +331,15 @@ class Folder extends File {
 		$this->setField('Title',pathinfo($filename, PATHINFO_BASENAME));
 		parent::setFilename($filename);
 	}
+
+	/**
+	 * A folder doesn't have a (meaningful) file size.
+	 * 
+	 * @return Null
+	 */
+	function getSize() {
+		return null;
+	}
 	
 	/**
 	 * Delete the database record (recursively for folders) without touching the filesystem
@@ -398,48 +407,12 @@ class Folder extends File {
 	 * and implemeting updateCMSFields(FieldList $fields) on that extension.
 	 */
 	function getCMSFields() {
-		$config = GridFieldConfig::create();
-		$config->addComponent(new GridFieldSortableHeader());
-		$config->addComponent(new GridFieldFilter());
-		$config->addComponent(new GridFieldDefaultColumns());
-		$config->addComponent(new GridFieldPaginator(10));
-		$config->addComponent(new GridFieldAction_Delete());
-		$config->addComponent(new GridFieldAction_Edit());
-		$config->addComponent($gridFieldForm = new GridFieldPopupForms(Controller::curr(), 'EditForm'));
-		$gridFieldForm->setTemplate('CMSGridFieldPopupForms');
-		$files = DataList::create('File')->filter('ParentID', $this->ID)->exclude('ClassName', 'Folder');
-		$gridField = new GridField('File','Files', $files, $config);
-		$gridField->setDisplayFields(array(
-			'StripThumbnail' => '',
-			'Parent.FileName' => 'Folder',
-			'Title'=>'Title',
-			'Size'=>'Size',
-		));
-
-		$titleField = ($this->ID && $this->ID != "root") ? new TextField("Title", _t('Folder.TITLE')) : new HiddenField("Title");
-		
+		// Hide field on root level, which can't be renamed
+		$titleField = (!$this->ID || $this->ID === "root") ? new HiddenField("Name") : new TextField("Name", _t('Folder.NAME'));
 		$fields = new FieldList(
-			// The tabs of Root are used to generate the top tabs 
-			new TabSet('Root',
-				new Tab('listview', _t('AssetAdmin.ListView', 'List View'),
-					$titleField,
-					$gridField,
-					new HiddenField("ID"),
-					new HiddenField("DestFolderID")
-				),
-				new Tab('galleryview', _t('AssetAdmin.GalleryView', 'Gallery View'),
-					new LiteralField("", "<em>Not implemented yet</em>")
-				),
-				new Tab('treeview', _t('AssetAdmin.TreeView', 'Tree View'),
-					new LiteralField("", "<em>Not implemented yet</em>")
-				)
-			)			
+			$titleField,
+			new HiddenField('ParentID')
 		);
-		
-		if(!$this->canEdit()) {
-			$fields->removeByName("Upload");
-		}
-
 		$this->extend('updateCMSFields', $fields);
 		
 		return $fields;

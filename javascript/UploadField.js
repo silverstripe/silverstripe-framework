@@ -99,7 +99,7 @@
 
 				// TODO Allow single-select
 				dialog.find('iframe').bind('load', function(e) {
-					var contents = $(this).contents(), gridField = contents.find('fieldset.ss-gridfield');
+					var contents = $(this).contents(), gridField = contents.find('.ss-gridfield');
 					// TODO Fix jQuery custom event bubbling across iframes on same domain
 					// gridField.find('.ss-gridfield-items')).bind('selectablestop', function() {
 					// });
@@ -192,32 +192,22 @@
 					this.siblings().toggleClass('ui-state-disabled');
 					editform.toggleEditForm();
 				}
+				e.preventDefault(); // Avoid a form submit
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-item-editform').entwine({
-			EditFormVisible: false,
-			fitHeight: function() {
-				var iframe = this.find('iframe'),
-					h = iframe.contents().height() + 'px';
-				iframe.css('height', h);
-				return h;
-			},
-			showEditForm: function() {
-				return this.stop().animate({height: this.fitHeight()});
-			},
-			hideEditFormShow: function() {
-				return this.stop().animate({height: 0});
-			},
 			toggleEditForm: function() {
-				if (this.getEditFormVisible()) this.hideEditFormShow();
-				else this.showEditForm();
-				this.setEditFormVisible(!this.getEditFormVisible());
+				jQuery(this).toggle();
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-item-editform iframe').entwine({
 			onmatch: function() {
 				this.load(function() {
-					$(this).parent().removeClass('loading');
+					var iframe = $(this), h = iframe.contents().height();
+					// Set iframe to match its contents height
+					iframe.height(h); 
+					// set container to match the same height
+					iframe.parent().removeClass('loading').height(h);
 				});
 			}
 		});

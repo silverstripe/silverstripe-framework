@@ -138,6 +138,7 @@ class ConfirmedPasswordField extends FormField {
 	 */
 	function setCanBeEmpty($value) {
 		$this->canBeEmpty = (bool)$value;
+		return $this;
 	}
 	
 	/**
@@ -149,6 +150,7 @@ class ConfirmedPasswordField extends FormField {
 	 */
 	public function setShowOnClickTitle($title) {
 		$this->showOnClickTitle = $title;
+		return $this;
 	}
 	
 	/**
@@ -162,6 +164,7 @@ class ConfirmedPasswordField extends FormField {
 		foreach($this->children as $field) {
 			$field->setRightTitle($title);
 		}
+		return $this;
 	}
 	
 	/**
@@ -176,6 +179,7 @@ class ConfirmedPasswordField extends FormField {
 				}
 			}
 		}
+		return $this;
 	}
 	
 	/**
@@ -196,6 +200,8 @@ class ConfirmedPasswordField extends FormField {
 		}
 		$this->children->fieldByName($this->getName() . '[_Password]')->setValue($this->value);
 		$this->children->fieldByName($this->getName() . '[_ConfirmPassword]')->setValue($this->value);
+
+		return $this;
 	}
 	
 	function jsValidation() {

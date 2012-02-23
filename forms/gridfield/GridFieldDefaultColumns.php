@@ -59,7 +59,7 @@ class GridFieldDefaultColumns implements GridField_ColumnProvider {
 	}
 	
 	public function getColumnAttributes($gridField, $item, $column) {
-		return null;
+		return array('class' => 'col-' . $column);
 	}
 	
 	public function getColumnMetadata($gridField, $column) {

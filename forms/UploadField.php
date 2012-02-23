@@ -738,7 +738,7 @@ class UploadField_ItemHandler extends RequestHandler {
 			$actions = $file->{$this->parent->getConfig('fileEditActions')}();
 		} else {
 			$actions = new FieldList($saveAction = new FormAction('doEdit', _t('UploadField.DOEDIT', 'Save')));
-			$saveAction->addExtraClass('ss-ui-action-constructive');
+			$saveAction->addExtraClass('ss-ui-action-constructive icon-accept');
 		}
 		if (is_a($this->parent->getConfig('fileEditValidator'), 'Validator')) {
 			$validator = $this->parent->getConfig('fileEditValidator');
@@ -830,7 +830,7 @@ class UploadField_SelectHandler extends RequestHandler {
 	 */
 	function Form() {
 		$action = new FormAction('doAttach', _t('UploadField.AttachFile', 'Attach file(s)'));
-		$action->addExtraClass('ss-ui-action-constructive');
+		$action->addExtraClass('ss-ui-action-constructive icon-accept');
 		return new Form(
 			$this,
 			'Form',

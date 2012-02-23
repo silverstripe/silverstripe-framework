@@ -95,7 +95,9 @@ class TabSet extends CompositeField {
 
 	public function setTabSet($val) {
 		$this->tabSet = $val;
+		return $this;
 	}
+	
 	public function getTabSet() {
 		if(isset($this->tabSet)) return $this->tabSet;
 	}

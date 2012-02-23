@@ -454,6 +454,7 @@ class TableField extends TableListField {
 	 */
 	function setExtraData($extraData) {
 		$this->extraData = $extraData;
+		return $this;
 	}
 	
 	/**
@@ -480,6 +481,7 @@ class TableField extends TableListField {
 		
 	function setTransformationConditions($conditions) {
 		$this->transformationConditions = $conditions;
+		return $this;
 	}
 	
 	function jsValidation() {
@@ -580,6 +582,7 @@ JS;
 	
 	function setRequiredFields($fields) {
 		$this->requiredFields = $fields;
+		return $this;
 	}
 }
 
