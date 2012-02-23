@@ -346,7 +346,7 @@ form.member-profile-form #Groups .middleColumn .TreeDropdownField { width: 90%; 
 form.member-profile-form #Permissions .optionset li { float: none; width: auto; }
 
 .cms .cms-content { border-right: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -webkit-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -o-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -moz-border-radius: 0; -webkit-border-radius: 0; -o-border-radius: 0; -ms-border-radius: 0; -khtml-border-radius: 0; border-radius: 0; }
-.cms .cms-content-fields { /* always show a y scroll bar as popups like TreeDropdowns  can trigger longer pages and the extra scroll bar doesn't  fire our sizing bar */ overflow-y: auto; overflow-x: auto; background: none; }
+.cms .cms-content-fields { /* always show a y scroll bar as popups like TreeDropdowns  can trigger longer pages and the extra scroll bar doesn't  fire our sizing bar */ overflow-y: auto; overflow-x: auto; background: none; width: 100%; }
 
 /** -------------------------------------------- Panels -------------------------------------------- */
 .cms-panel { overflow: hidden; }
@@ -409,6 +409,15 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .step-label .flyout { height: 18px; font-size: 14px; font-weight: bold; -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; -o-border-top-left-radius: 3px; -ms-border-top-left-radius: 3px; -khtml-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-bottomleft: 3px; -webkit-border-bottom-left-radius: 3px; -o-border-bottom-left-radius: 3px; -ms-border-bottom-left-radius: 3px; -khtml-border-bottom-left-radius: 3px; border-bottom-left-radius: 3px; background-color: #667980; padding: 4px 3px 4px 6px; text-align: center; text-shadow: none; color: #fff; }
 .step-label .arrow { height: 26px; width: 10px; background: url('../images/sprites_32x32-s98eda4974b.png') 0 -171px no-repeat; margin-right: 4px; }
 .step-label .title { height: 18px; padding: 4px; }
+
+/** -------------------------------------------- Item Edit Form -------------------------------------------- */
+#Form_ItemEditForm .field { width: 100%; }
+#Form_ItemEditForm .field .fieldgroup { height: 230px; float: left; }
+#Form_ItemEditForm .field .fieldgroup .fieldgroup-field.first { position: relative; margin-left: 0px; }
+#Form_ItemEditForm .field .fieldgroup .fieldgroup-field { clear: both; width: 500px; margin-left: 420px; }
+#Form_ItemEditForm .field .fieldgroup .fieldgroup-field img { -moz-border-radius: 8px; -webkit-border-radius: 8px; -o-border-radius: 8px; -ms-border-radius: 8px; -khtml-border-radius: 8px; border-radius: 8px; border-width: 3px; border-style: dashed; border-color: #8c99a1; position: absolute; top: 8px; }
+#Form_ItemEditForm .field .fieldgroup .fieldgroup-field label { font-weight: bold; float: left; padding-top: 8px; line-height: 16px; text-shadow: white 1px 1px 0; }
+#Form_ItemEditForm .field .fieldgroup .fieldgroup-field span { float: left; padding-left: 8px; font-style: italic; color: #777777; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .cms .jstree ul { display: block; margin: 0; padding: 0; background: none; list-style-type: none; }

@@ -755,6 +755,7 @@ form.member-profile-form {
 		overflow-y: auto;
 		overflow-x: auto;
 		background: none;
+		width:100%;
 	}
 }
 
@@ -1002,4 +1003,50 @@ body.cms-dialog {
 		padding: 4px;
 	}
 	
+}
+
+/** --------------------------------------------
+ * Item Edit Form
+ * -------------------------------------------- */
+
+#Form_ItemEditForm {
+	.field {
+		width:100%;
+		.fieldgroup { 
+			height:230px;
+			float:left;
+		 	.fieldgroup-field.first {
+		 		position:relative;
+		 		margin-left:0px;
+		 	}
+		 	.fieldgroup-field {
+		 		clear:both;
+		 		width:500px;
+		 		margin-left:420px;
+		 		img {
+		 			@include border-radius (8px);
+		 			border: {
+		 				width:3px; 
+		 				style:dashed; 
+		 				color:$color-menu-border;
+		 			}
+		 			position:absolute;
+		 			top:8px;
+		 		}
+				label {
+					font-weight:bold;
+					float:left;
+					padding-top:8px;
+					line-height:16px;
+					text-shadow: $color-text-light 1px 1px 0;
+				}
+				span {
+					float:left;
+					padding-left:8px;
+					font-style:italic;
+					color:lighten($color-text, 20%);
+				}
+		 	}
+		}
+	}	
 }
