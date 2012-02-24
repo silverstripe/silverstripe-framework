@@ -26,6 +26,12 @@
 class SS_Datetime extends Date {
 	
 	function setValue($value) {
+		if($value === false || $value === null || (is_string($value) && !strlen($value))) {
+			// don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be saved as NULL in database
+			$this->value = null;
+			return;
+		}
+
 		// Default to NZ date format - strtotime expects a US date
 		if(ereg('^([0-9]+)/([0-9]+)/([0-9]+)$', $value, $parts)) {
 			$value = "$parts[2]/$parts[1]/$parts[3]";
@@ -42,19 +48,23 @@ class SS_Datetime extends Date {
 	 * Returns the date in the raw SQL-format, e.g. “2006-01-18 16:32:04”
 	 */
 	function Nice() {
-		return date('d/m/Y g:ia', strtotime($this->value));
+		if($this->value) return date('d/m/Y g:ia', strtotime($this->value));
 	}
+
 	function Nice24() {
-		return date('d/m/Y H:i', strtotime($this->value));
+		if($this->value) return date('d/m/Y H:i', strtotime($this->value));
 	}
+
 	function Date() {
-		return date('d/m/Y', strtotime($this->value));
+		if($this->value) return date('d/m/Y', strtotime($this->value));
 	}
+
 	function Time() {
-		return date('g:ia', strtotime($this->value));
+		if($this->value) return date('g:ia', strtotime($this->value));
 	}
+
 	function Time24() {
-		return date('H:i', strtotime($this->value));
+		if($this->value) return date('H:i', strtotime($this->value));
 	}
 
 	function requireField() {
@@ -64,7 +74,7 @@ class SS_Datetime extends Date {
 	}
 	
 	function URLDatetime() {
-		return date('Y-m-d%20H:i:s', strtotime($this->value));
+		if($this->value) return date('Y-m-d%20H:i:s', strtotime($this->value));
 	}
 	
 	public function scaffoldFormField($title = null, $params = null) {

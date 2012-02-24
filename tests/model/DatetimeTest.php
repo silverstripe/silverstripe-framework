@@ -33,4 +33,22 @@ class SS_DatetimeTest extends SapphireTest {
 		$nowDatetime = SS_Datetime::now();
 		$this->assertEquals($systemDatetime->Date(), $nowDatetime->Date());
 	}
+
+	function testSetNullAndZeroValues() {
+		$date = DBField::create('SS_Datetime', '');
+		$this->assertNull($date->getValue(), 'Empty string evaluates to NULL');
+
+		$date = DBField::create('SS_Datetime', null);
+		$this->assertNull($date->getValue(), 'NULL is set as NULL');
+
+		$date = DBField::create('SS_Datetime', false);
+		$this->assertNull($date->getValue(), 'Boolean FALSE evaluates to NULL');
+
+		$date = DBField::create('SS_Datetime', '0');
+		$this->assertEquals('1970-01-01 12:00:00', $date->getValue(), 'Zero is UNIX epoch time');
+
+		$date = DBField::create('SS_Datetime', 0);
+		$this->assertEquals('1970-01-01 12:00:00', $date->getValue(), 'Zero is UNIX epoch time');
+	}
+
 }

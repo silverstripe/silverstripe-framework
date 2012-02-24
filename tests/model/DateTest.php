@@ -93,5 +93,25 @@ class DateTest extends SapphireTest {
 			"Date->Long() works with D/M/YYYY"
 		);
 	}
-	
+
+	function testSetNullAndZeroValues() {
+		$date = DBField::create('Date', '');
+		$this->assertNull($date->getValue(), 'Empty string evaluates to NULL');
+
+		$date = DBField::create('Date', null);
+		$this->assertNull($date->getValue(), 'NULL is set as NULL');
+
+		$date = DBField::create('Date', false);
+		$this->assertNull($date->getValue(), 'Boolean FALSE evaluates to NULL');
+
+		$date = DBField::create('Date', array());
+		$this->assertNull($date->getValue(), 'Empty array evaluates to NULL');
+
+		$date = DBField::create('Date', '0');
+		$this->assertEquals('1970-01-01', $date->getValue(), 'Zero is UNIX epoch date');
+
+		$date = DBField::create('Date', 0);
+		$this->assertEquals('1970-01-01', $date->getValue(), 'Zero is UNIX epoch date');
+	}
+
 }

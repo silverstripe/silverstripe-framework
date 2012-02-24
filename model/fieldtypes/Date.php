@@ -21,17 +21,26 @@
 class Date extends DBField {
 	
 	function setValue($value) {
+		if($value === false || $value === null || (is_string($value) && !strlen($value))) {
+			// don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be saved as NULL in database
+			$this->value = null;
+			return;
+		}
+
 		// @todo This needs tidy up (what if you only specify a month and a year, for example?)
 		if(is_array($value)) {
 			if(!empty($value['Day']) && !empty($value['Month']) && !empty($value['Year'])) {
 				$this->value = $value['Year'] . '-' . $value['Month'] . '-' . $value['Day'];
 				return;
+			} else {
+				// return nothing (so ereg() doesn't fail on an empty array below)
+				return null;
 			}
 		}
 		
 		// Default to NZ date format - strtotime expects a US date
 		if(ereg('^([0-9]+)/([0-9]+)/([0-9]+)$', $value, $parts)) {
-			$value = "$parts[2]/$parts[1]/$parts[3]";			
+			$value = "$parts[2]/$parts[1]/$parts[3]";
 		}
 		
 		if(is_numeric($value)) {
