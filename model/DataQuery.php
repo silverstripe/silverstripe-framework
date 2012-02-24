@@ -3,14 +3,31 @@
 /**
  * An object representing a query of data from the DataObject's supporting database.
  * Acts as a wrapper over {@link SQLQuery} and performs all of the query generation.
- * Used extensively by DataList.
+ * Used extensively by {@link DataList}.
+ *
+ * @subpackage model
+ * @package sapphire
  */
 class DataQuery {
+	
+	/**
+	 * @var String
+	 */
 	protected $dataClass;
+	
+	/**
+	 * @var SQLQuery
+	 */
 	protected $query;
 	
+	/**
+	 * @var array
+	 */
 	protected $collidingFields = array();
 	
+	/**
+	 * @var Boolean
+	 */
 	private $queryFinalised = false;
 	
 	// TODO: replace subclass_access with this
@@ -20,7 +37,8 @@ class DataQuery {
 	
 	/**
 	 * Create a new DataQuery.
-	 * @param $dataClass The name of the DataObject class that you wish to query
+	 *
+	 * @param String The name of the DataObject class that you wish to query
 	 */
 	function __construct($dataClass) {
 		$this->dataClass = $dataClass;
@@ -173,12 +191,13 @@ class DataQuery {
 
 		if($query->orderby) {
 			$orderByFields = explode(',', $query->orderby);
+			
 			foreach($orderByFields as $ob => $col) {
 				$col = trim($col);
-
+				
 				// don't touch functions in the ORDER BY or function calls selected as fields
 				if(strpos($col, '(') !== false || preg_match('/_SortColumn/', $col)) continue;
-
+				
 				$columnParts = explode(' ', $col);
 				if (count($columnParts) == 2) {
 					$col = $columnParts[0];
@@ -186,7 +205,7 @@ class DataQuery {
 				} else {
 					$dir = 'ASC';
 				}
-
+				
 				$orderByFields[$ob] = $col . ' ' . $dir;
 				$col = str_replace('"', '', $col);
 				$parts = explode('.', $col);
@@ -213,8 +232,8 @@ class DataQuery {
 					}
 				}
 			}
-
-			$query->orderby = implode(',', $orderByFields);
+			
+			$query->orderby = implode(', ', $orderByFields);
 		}
 	}
 
@@ -357,17 +376,35 @@ class DataQuery {
 	
 	/**
 	 * Set the ORDER BY clause of this query
+	 *
+	 * @see SQLQuery::orderby()
+	 *
+	 * @return DataQuery
 	 */
 	function sort($sort) {
 		if($sort) {
 			$clone = $this;
 			// Add quoting to sort expression if it's a simple column name
 			if(!is_array($sort) && preg_match('/^[A-Z][A-Z0-9_]*$/i', $sort)) $sort = "\"$sort\"";
+			
 			$clone->query->orderby($sort);
+			
 			return $clone;
 		} else {
 			return $this;
 		}
+	}
+	
+	/**
+	 * Reverse order by clause
+	 *
+	 * @return DataQuery
+	 */
+	function reverseSort() {
+		$clone = $this;
+		
+		$clone->query->reverseOrderBy();
+		return $clone;
 	}
 	
 	/**

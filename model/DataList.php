@@ -48,6 +48,7 @@ class DataList extends ViewableData implements SS_List {
 	public function __construct($dataClass) {
 		$this->dataClass = $dataClass;
 		$this->dataQuery = new DataQuery($this->dataClass);
+		
 		parent::__construct();
 	}
 
@@ -153,51 +154,50 @@ class DataList extends ViewableData implements SS_List {
 	/**
 	 * Set the sort order of this data list
 	 *
-	 * @return DataList
 	 * @see SS_List::sort()
+	 * @see SQLQuery::orderby
+	 *
 	 * @example $list->sort('Name'); // default ASC sorting
 	 * @example $list->sort('Name DESC'); // DESC sorting
 	 * @example $list->sort('Name', 'ASC');
 	 * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
+	 *
+	 * @return DataList
 	 */
 	public function sort() {
-		if(count(func_get_args())==0){
-			return $this;
-		}
-		if(count(func_get_args())>2){
-			throw new InvalidArgumentException('This method takes zero, one or two arguments');
-		}
-
-		// sort('Name','Desc')
-		if(count(func_get_args())==2){
-			if(!in_array(strtolower(func_get_arg(1)),array('desc','asc'))){
-				user_error('Second argument to sort must be either ASC or DESC');
-			}
-			$this->dataQuery->sort(func_get_arg(0).' '.func_get_arg(1));
+		if(count(func_get_args()) == 0) {
 			return $this;
 		}
 		
-		// sort('Name') - default to ASC sorting if not specified
-		if(is_string(func_get_arg(0)) && func_get_arg(0)){
+		if(count(func_get_args()) > 2) {
+			throw new InvalidArgumentException('This method takes zero, one or two arguments');
+		}
+
+		if(count(func_get_args()) == 2) {
+			// sort('Name','Desc')
+			if(!in_array(strtolower(func_get_arg(1)),array('desc','asc'))){
+				user_error('Second argument to sort must be either ASC or DESC');
+			}
+			
+			$this->dataQuery->sort(func_get_arg(0).' '.func_get_arg(1));
+		}
+		else if(is_string(func_get_arg(0)) && func_get_arg(0)){
 			// sort('Name ASC')
-			if(stristr(func_get_arg(0), ' asc') || stristr(func_get_arg(0), ' desc')){
+			if(stristr(func_get_arg(0), ' asc') || stristr(func_get_arg(0), ' desc')) {
 				$this->dataQuery->sort(func_get_arg(0));
 			} else {
 				$this->dataQuery->sort(func_get_arg(0).' ASC');
 			}
-			
-			return $this;
 		}
-		
-		// sort(array('Name'=>'desc'));
-		$argumentArray = func_get_arg(0);
-		if(is_array($argumentArray)){
+		else if(is_array(func_get_arg(0))) {
+			// sort(array('Name'=>'desc'));
 			$sort = array();
-			foreach($argumentArray as $column => $direction) {
+			
+			foreach(func_get_arg(0) as $column => $direction) {
 				$sort[]= ''.$this->getRelationName($column).' '.$direction;
 			}
-			$this->dataQuery->sort(implode(',', $sort));
-			return $this;
+			
+			$this->dataQuery->sort(implode(', ', $sort));
 		}
 		
 		return $this;
@@ -206,8 +206,8 @@ class DataList extends ViewableData implements SS_List {
 	/**
 	 * Filter the list to include items with these charactaristics
 	 *
-	 * @return DataList
 	 * @see SS_List::filter()
+	 *
 	 * @example $list->filter('Name', 'bob'); // only bob in the list
 	 * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
 	 * @example $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the age 21
@@ -215,6 +215,8 @@ class DataList extends ViewableData implements SS_List {
 	 * @example $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43))); // aziz with the age 21 or 43 and bob with the Age 21 or 43
 	 *
 	 * @todo extract the sql from $customQuery into a SQLGenerator class
+	 *
+	 * @return DataList
 	 */
 	public function filter() {
 		$numberFuncArgs = count(func_get_args());
@@ -289,9 +291,8 @@ class DataList extends ViewableData implements SS_List {
 	}
 	
 	/**
-	 * Exclude the list to not contain items with these charactaristics
+	 * Exclude the list to not contain items with these characteristics
 	 *
-	 * @return DataList
 	 * @see SS_List::exclude()
 	 * @example $list->exclude('Name', 'bob'); // exclude bob from list
 	 * @example $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
@@ -300,6 +301,8 @@ class DataList extends ViewableData implements SS_List {
 	 * @example $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43))); // bob age 21 or 43, phil age 21 or 43 would be excluded
 	 *
 	 * @todo extract the sql from this method into a SQLGenerator class
+	 *
+	 * @return DataList
 	 */
 	public function exclude(){
 		$numberFuncArgs = count(func_get_args());
@@ -343,6 +346,7 @@ class DataList extends ViewableData implements SS_List {
 		
 		$newlist = clone $this;
 		$newlist->dataQuery->subtract($list->dataQuery());
+		
 		return $newlist;
 	}
 	
@@ -356,6 +360,7 @@ class DataList extends ViewableData implements SS_List {
 	 */
 	public function innerJoin($table, $onClause, $alias = null) {
 		$this->dataQuery->innerJoin($table, $onClause, $alias);
+		
 		return $this;
 	}
 
@@ -369,6 +374,7 @@ class DataList extends ViewableData implements SS_List {
 	 */
 	public function leftJoin($table, $onClause, $alias = null) {
 		$this->dataQuery->leftJoin($table, $onClause, $alias);
+		
 		return $this;
 	}
 
@@ -382,9 +388,11 @@ class DataList extends ViewableData implements SS_List {
 		$query = $this->dataQuery->query();
 		$rows = $query->execute();
 		$results = array();
+		
 		foreach($rows as $row) {
 			$results[] = $this->createDataObject($row);
 		}
+		
 		return $results;
 	}
 
@@ -395,6 +403,7 @@ class DataList extends ViewableData implements SS_List {
 	 */
 	public function toNestedArray() {
 		$result = array();
+		
 		foreach($this as $item) {
 			$result[] = $item->toMap();
 		}
@@ -404,6 +413,7 @@ class DataList extends ViewableData implements SS_List {
 
 	public function debug() {
 		$val = "<h2>" . $this->class . "</h2><ul>";
+		
 		foreach($this->toNestedArray() as $item) {
 			$val .= "<li style=\"list-style-type: disc; margin-left: 20px\">" . Debug::text($item) . "</li>";
 		}
@@ -578,6 +588,7 @@ class DataList extends ViewableData implements SS_List {
 	public function byIDs(array $ids) {
 		$baseClass = ClassInfo::baseDataClass($this->dataClass);
 		$this->where("\"$baseClass\".\"ID\" IN (" . implode(',', $ids) .")");
+		
 		return $this;
 	}
 
@@ -590,6 +601,7 @@ class DataList extends ViewableData implements SS_List {
 	public function byID($id) {
 		$baseClass = ClassInfo::baseDataClass($this->dataClass);
 		$clone = clone $this;
+		
 		return $clone->where("\"$baseClass\".\"ID\" = " . (int)$id)->First();
 	}
 	
@@ -755,7 +767,18 @@ class DataList extends ViewableData implements SS_List {
 	    $item = $this->byID($itemID);
 	    if($item) return $item->delete();
 	}
-
+	
+	/**
+	 * Reverses a list of items.
+	 *
+	 * @return DataList
+	 */
+	public function reverse() {
+		$this->dataQuery->reverseSort();
+		
+		return $this;
+	}
+	
 	/**
 	 * This method won't function on DataLists due to the specific query that it represent
 	 * 

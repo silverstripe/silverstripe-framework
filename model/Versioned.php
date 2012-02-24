@@ -735,8 +735,8 @@ class Versioned extends DataExtension {
 			$query->select[] = sprintf('"%s_versions"."%s"', $baseTable, $name);
 		}
 		
-		$query->where[] = "\"{$baseTable}_versions\".\"RecordID\" = '{$this->owner->ID}'";
-		$query->orderby = ($sort) ? $sort : "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC";
+		$query->where("\"{$baseTable}_versions\".\"RecordID\" = '{$this->owner->ID}'");
+		$query->orderby(($sort) ? $sort : "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC");
 		
 		$records = $query->execute();
 		$versions = new ArrayList();
