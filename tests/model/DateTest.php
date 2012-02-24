@@ -114,4 +114,14 @@ class DateTest extends SapphireTest {
 		$this->assertEquals('1970-01-01', $date->getValue(), 'Zero is UNIX epoch date');
 	}
 
+	function testDayOfMonth() {
+		$date = DBField::create('Date', '2000-10-10');
+		$this->assertEquals('10', $date->DayOfMonth());
+		$this->assertEquals('10th', $date->DayOfMonth(true));
+
+		$range = $date->RangeString(DBField::create('Date', '2000-10-20'));
+		$this->assertEquals('10 - 20 Oct 2000', $range);
+		$range = $date->RangeString(DBField::create('Date', '2000-10-20'), true);
+		$this->assertEquals('10th - 20th Oct 2000', $range);
+	}
 }

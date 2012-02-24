@@ -95,8 +95,10 @@ class Date extends DBField {
 	/**
 	 * Returns the date of the month
 	 */
-	function DayOfMonth() {
-		if($this->value) return date('j', strtotime($this->value));
+	function DayOfMonth($includeOrdinal = false) {
+		$format = 'j';
+		if ($includeOrdinal) $format .= 'S';
+		if($this->value) return date($format, strtotime($this->value));
 	}
 	
 	
@@ -140,9 +142,9 @@ class Date extends DBField {
 	/*
 	 * Return a string in the form "12 - 16 Sept" or "12 Aug - 16 Sept"
 	 */
-	function RangeString($otherDateObj) {
-		$d1 = $this->DayOfMonth();
-		$d2 = $otherDateObj->DayOfMonth();
+	function RangeString($otherDateObj, $includeOrdinals = false) {
+		$d1 = $this->DayOfMonth($includeOrdinals);
+		$d2 = $otherDateObj->DayOfMonth($includeOrdinals);
 		$m1 = $this->ShortMonth();
 		$m2 = $otherDateObj->ShortMonth();
 		$y1 = $this->Year();
