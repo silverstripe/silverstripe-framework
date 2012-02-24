@@ -194,8 +194,12 @@
 					var form = this.replaceForm(oldForm, data);
 				
 					if(typeof(Behaviour) != 'undefined') Behaviour.apply(); // refreshes ComplexTableField
-
-					this.trigger('reloadeditform', {form: form, origData: origData, xmlhttp: xmlhttp});
+					
+					if(this.hasClass('cms-content')){
+						this.find('form.cms-edit-form').trigger('reloadeditform', {form: form, origData: origData, xmlhttp: xmlhttp});
+					}else{
+						this.trigger('reloadeditform', {form: form, origData: origData, xmlhttp: xmlhttp});
+					}
 				}
 
 				// set status message based on response
