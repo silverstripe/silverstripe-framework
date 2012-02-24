@@ -849,7 +849,10 @@ class ViewableData_Customised extends ViewableData {
 		
 		return $this->original->obj($fieldName, $arguments, $forceReturnedObject, $cache, $cacheName);
 	}
-	
+
+	public function forTemplate() {
+		return $this->customised instanceof ArrayData ? $this->original->forTemplate() : $this->customised->forTemplate();
+	}
 }
 
 /**
