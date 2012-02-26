@@ -195,11 +195,7 @@
 				
 					if(typeof(Behaviour) != 'undefined') Behaviour.apply(); // refreshes ComplexTableField
 					
-					if(this.hasClass('cms-content')){
-						this.find('form.cms-edit-form').trigger('reloadeditform', {form: form, origData: origData, xmlhttp: xmlhttp});
-					}else{
-						this.trigger('reloadeditform', {form: form, origData: origData, xmlhttp: xmlhttp});
-					}
+					this.trigger('reloadeditform', {form: form, origData: origData, xmlhttp: xmlhttp});
 				}
 
 				// set status message based on response
