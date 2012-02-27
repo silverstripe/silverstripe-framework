@@ -183,10 +183,12 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 			// WARNING: The arguments passed here are a little arbitrary.  This API will need cleanup
 			$this->record->getCMSFields($this->popupController, $this->popupFormName),
 			new FieldList(
-				$saveAction = new FormAction('doSave', _t('GridFieldDetailsForm.Save', 'Save'))
+				$saveAction = new FormAction('doSave', _t('GridFieldDetailsForm.Save', 'Save')),
+				$deleteAction = new FormAction('doDelete', _t('GridFieldDetailsForm.Delete', 'Delete'))
 			)
 		);
 		$saveAction->addExtraClass('ss-ui-action-constructive');
+		$deleteAction->addExtraClass('ss-ui-action-destructive');
 		$form->loadDataFrom($this->record);
 		return $form;
 	}
@@ -201,7 +203,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 				$this->gridField->getList()->add($this->record);
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
-			return Director::redirectBack();
+			return Controller::curr()->redirectBack();
 		}
 
 		// TODO Save this item into the given relationship
@@ -215,6 +217,34 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 		$form->sessionMessage($message, 'good');
 
 		return $this->popupController->redirectBack();
+	}
+
+	function doDelete($data, $form) {
+		try {
+			$toDelete = $this->record;
+			if (!$toDelete->canDelete()) {
+				throw new ValidationException(_t('GridFieldDetailsForm.DeletePermissionsFailure',"No delete permissions"),0);
+			}
+
+			$toDelete->delete();
+		} catch(ValidationException $e) {
+			$form->sessionMessage($e->getResult()->message(), 'bad');
+			return Director::redirectBack();
+		}
+
+		$message = sprintf(
+			_t('ComplexTableField.SUCCESSEDIT2', 'Deleted %s %s'),
+			$this->record->singular_name(),
+			'<a href="' . $this->Link('edit') . '">"' . htmlspecialchars($this->record->Title, ENT_QUOTES) . '"</a>'
+		);
+
+		$form->sessionMessage($message, 'good');
+
+		//when an item is deleted, redirect to the revelant admin section without the action parameter
+		$controller = Controller::curr();
+		$noActionURL = $controller->removeAction($data['url']);
+
+		return Director::redirect($noActionURL, 302); //redirect back to admin section
 	}
 
 	/**
