@@ -1,7 +1,10 @@
 <?php
 /**
- * This class is an GridField Component that add Delete action for Objects in the GridField
- * 
+ * Provides the entry point to editing a single record presented by the grid.
+ * Doesn't show an edit view on its own or modifies the record, but rather relies on routing conventions
+ * established in {@link getColumnContent()}. The default routing applies to
+ * the {@link GridFieldPopupForms} component, which has to be added separately
+ * to the grid field configuration.
  */
 class GridFieldAction_Edit implements GridField_ColumnProvider {
 	
