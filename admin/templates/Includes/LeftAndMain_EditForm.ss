@@ -21,6 +21,13 @@
 			<% end_if %>
 	
 			<!-- <div class="cms-content-search">...</div> -->
+
+			<% if Backlink %>
+				<a class="backlink ss-ui-button" href="$Backlink">
+					<% _t('Back', 'Back') %>
+				</a>
+			<% end_if %>
+			
 		</div>
 	</div>
 
@@ -28,7 +35,7 @@
 		$EditFormTools	
 	<% end_control %>
 	
-	<div class="cms-content-fields center cms-panel-padded">
+	<div class="cms-content-fields center <% if not Fields.hasTabset %>cms-panel-padded<% end_if %>">
 		<% if Message %>
 		<p id="{$FormName}_error" class="message $MessageType">$Message</p>
 		<% else %>

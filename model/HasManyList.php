@@ -63,7 +63,7 @@ class HasManyList extends RelationList {
 	 * @param $itemID The ID of the item to be removed
 	 */
 	function removeByID($itemID) {
-        $item = $this->byID($item);
+        $item = $this->byID($itemID);
         return $this->remove($item);
     }
     

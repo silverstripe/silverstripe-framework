@@ -379,10 +379,9 @@ class Form extends RequestHandler {
 				if($field = $this->checkFieldsForAction($field->FieldList(), $funcName)) {
 					return $field;
 				}
-			} elseif (!$field->hasMethod($funcName)) {
-				continue;
+			} elseif ($field->hasMethod($funcName)) {
+				return $field;
 			}
-			return $field;
 		}
 	}
 

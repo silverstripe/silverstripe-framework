@@ -298,6 +298,23 @@ class Controller extends RequestHandler {
 	public function hasAction($action) {
 		return parent::hasAction($action) || $this->hasActionTemplate($action);
 	}
+
+	/**
+	 * Removes all the "action" part of the current URL and returns the result.
+	 * If no action parameter is present, returns the full URL
+	 * @static
+	 * @return String
+	 */
+	public function removeAction($fullURL, $action = null) {
+		if (!$action) $action = $this->getAction();    //default to current action
+		$returnURL = $fullURL;
+
+		if (($pos = strpos($fullURL, $action)) !== false) {
+			$returnURL = substr($fullURL,0,$pos);
+		}
+
+		return $returnURL;
+	}
 	
 	/**
 	 * Returns TRUE if this controller has a template that is specifically designed to handle a specific action.
