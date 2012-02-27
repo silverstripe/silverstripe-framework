@@ -20,6 +20,13 @@
 			<% end_if %>
 	
 			<!-- <div class="cms-content-search">...</div> -->
+
+			<% if Backlink %>
+				<a class="backlink ss-ui-button" href="$Backlink">
+					<% _t('Back', 'Back') %>
+				</a>
+			<% end_if %>
+			
 		</div>
 	</div>
 

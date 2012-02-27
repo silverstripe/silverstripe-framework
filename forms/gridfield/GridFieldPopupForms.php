@@ -173,6 +173,11 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 			$form->setTemplate($controller->getTemplatesWithSuffix('_EditForm'));
 			$form->addExtraClass('cms-content center ss-tabset ' . $controller->BaseCSSClasses());
 			if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+			// TODO Link back to controller action (and edited root record) rather than index,
+			// which requires more URL knowledge than the current link to this field gives us.
+			// The current root record is held in session only, 
+			// e.g. page/edit/show/6/ vs. page/edit/EditForm/field/MyGridField/....
+			$form->Backlink = $controller->Link();
 		}
 
 		$return = $this->customise(array(
