@@ -79,12 +79,12 @@ class FieldGroup extends CompositeField {
 				if($subfield->getName()) $count++;
 			}
 			if($count == 1) $compositeTitle .= 'Group';
-			return ereg_replace("[^a-zA-Z0-9]+","",$compositeTitle);
+			return preg_replace("/[^a-zA-Z0-9]+/", "", $compositeTitle);
 		}
 
-		return ereg_replace("[^a-zA-Z0-9]+","",$this->title);	
+		return preg_replace("/[^a-zA-Z0-9]+/", "", $this->title);
 	}
-	
+
 	/**
 	 * Returns a set of <span class="subfield"> tags, each containing a sub-field.
 	 * You can also use <% control FieldSet %>, if you'd like more control over the generated HTML

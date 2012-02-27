@@ -38,7 +38,7 @@ class HTTP {
 	 */
 	static function absoluteURLs($html) {
 		$html = str_replace('$CurrentPageURL', $_SERVER['REQUEST_URI'], $html);
-		return HTTP::urlRewriter($html, '(substr($URL,0,1) == "/") ? ( Director::protocolAndHost() . $URL ) : ( (ereg("^[A-Za-z]+:", $URL)) ? $URL : Director::absoluteBaseURL() . $URL )' );
+		return HTTP::urlRewriter($html, '(substr($URL,0,1) == "/") ? ( Director::protocolAndHost() . $URL ) : ( (preg_match("/^[A-Za-z]+:/", $URL)) ? $URL : Director::absoluteBaseURL() . $URL )' );
 	}
 
 	/*

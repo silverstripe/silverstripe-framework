@@ -191,15 +191,15 @@ class i18nTextCollector extends Object {
 	public function collectFromCode($content, $module) {
 		$entitiesArr = array();
 		
-		$regexRule = '_t[[:space:]]*\(' .
+		$regexRule = '#_t[[:space:]]*\(' .
 			'[[:space:]]*("[^"]*"|\\\'[^\']*\\\')[[:space:]]*,' . // namespace.entity
 			'[[:space:]]*(("([^"]|\\\")*"|\'([^\']|\\\\\')*\')' .  // value
 			'([[:space:]]*\\.[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))*)' . // concatenations
 			'([[:space:]]*,[[:space:]]*[^,)]*)?([[:space:]]*,' . // priority (optional)
 			'[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))?[[:space:]]*' . // comment (optional)
-		'\)';
-		
-		while (ereg($regexRule, $content, $regs)) {
+		'\)#';
+
+		while (preg_match($regexRule, $content, $regs)) {
 			$entitiesArr = array_merge($entitiesArr, (array)$this->entitySpecFromRegexMatches($regs));
 			
 			// remove parsed content to continue while() loop
@@ -229,14 +229,15 @@ class i18nTextCollector extends Object {
 		}
 
 		// @todo respect template tags (< % _t() % > instead of _t())
-		$regexRule = '_t[[:space:]]*\(' .
+		$regexRule = '#_t[[:space:]]*\(' .
 			'[[:space:]]*("[^"]*"|\\\'[^\']*\\\')[[:space:]]*,' . // namespace.entity
 			'[[:space:]]*(("([^"]|\\\")*"|\'([^\']|\\\\\')*\')' .  // value
 			'([[:space:]]*\\.[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))*)' . // concatenations
 			'([[:space:]]*,[[:space:]]*[^,)]*)?([[:space:]]*,' . // priority (optional)
 			'[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))?[[:space:]]*' . // comment (optional)
-		'\)';
-		while(ereg($regexRule,$content,$regs)) {
+		'\)#';
+
+		while (preg_match($regexRule,$content,$regs)) {
 			$entitiesArr = array_merge($entitiesArr,(array)$this->entitySpecFromRegexMatches($regs, $fileName));
 			// remove parsed content to continue while() loop
 			$content = str_replace($regs[0],"",$content);
@@ -301,7 +302,7 @@ class i18nTextCollector extends Object {
 		// remove wrapping quotes
 		$value = ($regs[2]) ? substr($regs[2],1,-1) : null;
 
-		$value = ereg_replace("([^\\])['\"][[:space:]]*\.[[:space:]]*['\"]",'\\1',$value);
+		$value = preg_replace("/([^\\])['\"][[:space:]]*\.[[:space:]]*['\"]/", '\\1', $value);
 
 		// only escape quotes when wrapped in double quotes, to make them safe for insertion
 		// into single-quoted PHP code. If they're wrapped in single quotes, the string should

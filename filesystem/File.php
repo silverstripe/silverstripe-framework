@@ -144,7 +144,7 @@ class File extends DataObject {
 	 */
 	static function find($filename) {
 		// Get the base file if $filename points to a resampled file
-		$filename = ereg_replace('_resampled/[^-]+-','',$filename);
+		$filename = preg_replace('/_resampled/[^-]+-/', '', $filename);
 
 		// Split to folders and the actual filename, and traverse the structure.
 		$parts = explode("/", $filename);
@@ -483,7 +483,7 @@ class File extends DataObject {
 		}
 
 		// Update title
-		if(!$this->getField('Title')) $this->__set('Title', str_replace(array('-','_'),' ',ereg_replace('\.[^.]+$','',$name)));
+		if(!$this->getField('Title')) $this->__set('Title', str_replace(array('-','_'),' ', preg_replace('/\.[^.]+$/', '', $name)));
 		
 		// Update actual field value
 		$this->setField('Name', $name);
