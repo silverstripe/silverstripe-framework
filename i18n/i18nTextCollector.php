@@ -300,9 +300,9 @@ class i18nTextCollector extends Object {
 		if(strpos('$', $entity) !== FALSE) return false;
 		
 		// remove wrapping quotes
-		$value = ($regs[2]) ? substr($regs[2],1,-1) : null;
+		$value = !empty($regs[2]) ? substr($regs[2],1,-1) : null;
 
-		$value = preg_replace("/([^\\])['\"][[:space:]]*\.[[:space:]]*['\"]/", '\\1', $value);
+		$value = preg_replace("#([^\\\\])['\"][[:space:]]*\.[[:space:]]*['\"]#", '\\1', $value);
 
 		// only escape quotes when wrapped in double quotes, to make them safe for insertion
 		// into single-quoted PHP code. If they're wrapped in single quotes, the string should
@@ -314,13 +314,12 @@ class i18nTextCollector extends Object {
 			$value = str_replace("'","\\'", $value);
 		}
 
-		
 		// remove starting comma and any newlines
 		$eol = PHP_EOL;
-		$prio = ($regs[10]) ? trim(preg_replace("/$eol/", '', substr($regs[10],1))) : null;
-		
+		$prio = !empty($regs[10]) ? trim(preg_replace("/$eol/", '', substr($regs[10],1))) : null;
+
 		// remove wrapping quotes
-		$comment = ($regs[12]) ? substr($regs[12],1,-1) : null;
+		$comment = !empty($regs[12]) ? substr($regs[12],1,-1) : null;
 
 		return array(
 			"{$namespace}.{$entity}" => array(
