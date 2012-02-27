@@ -1,7 +1,10 @@
 <?php
 /**
- * This class is an GridField Component that add Delete action for Objects in the GridField
- * 
+ * Provides the entry point to editing a single record presented by the grid.
+ * Doesn't show an edit view on its own or modifies the record, but rather relies on routing conventions
+ * established in {@link getColumnContent()}. The default routing applies to
+ * the {@link GridFieldPopupForms} component, which has to be added separately
+ * to the grid field configuration.
  */
 class GridFieldAction_Edit implements GridField_ColumnProvider {
 	
@@ -12,7 +15,8 @@ class GridFieldAction_Edit implements GridField_ColumnProvider {
 	 * @param array $columns 
 	 */
 	public function augmentColumns($gridField, &$columns) {
-		$columns[] = 'EditAction';
+		if(!in_array('Actions', $columns))
+			$columns[] = 'Actions';
 	}
 	
 	/**
@@ -35,7 +39,7 @@ class GridFieldAction_Edit implements GridField_ColumnProvider {
 	 * @return array
 	 */
 	public function getColumnMetadata($gridField, $columnName) {
-		if($columnName == 'EditAction') {
+		if($columnName == 'Actions') {
 			return array('title' => '');
 		}
 	}
@@ -47,7 +51,7 @@ class GridFieldAction_Edit implements GridField_ColumnProvider {
 	 * @return type 
 	 */
 	public function getColumnsHandled($gridField) {
-		return array('EditAction');
+		return array('Actions');
 	}
 	
 	/**
@@ -57,7 +61,7 @@ class GridFieldAction_Edit implements GridField_ColumnProvider {
 	 * @return array 
 	 */
 	public function getActions($gridField) {
-		return array('deleterecord');
+		return array();
 	}
 	
 	/**
@@ -68,7 +72,11 @@ class GridFieldAction_Edit implements GridField_ColumnProvider {
 	 * @return string - the HTML for the column 
 	 */
 	public function getColumnContent($gridField, $record, $columnName) {
-		return sprintf('<a class="action-edit" href="%s">%s</a>', Controller::join_links($gridField->Link('item'), $record->ID, 'edit'), _t('GridAction.Edit', 'edit'));
+		$data = new ArrayData(array(
+			'Link' => Controller::join_links($gridField->Link('item'), $record->ID, 'edit')
+		));
+
+		return $data->renderWith('GridFieldAction_Edit');
 	}
 	
 	/**
@@ -98,7 +106,8 @@ class GridFieldAction_Delete implements GridField_ColumnProvider, GridField_Acti
 	 * @param array $columns 
 	 */
 	public function augmentColumns($gridField, &$columns) {
-		$columns[] = 'DeleteAction';
+		if(!in_array('Actions', $columns))
+			$columns[] = 'Actions';
 	}
 	
 	/**
@@ -121,7 +130,7 @@ class GridFieldAction_Delete implements GridField_ColumnProvider, GridField_Acti
 	 * @return array
 	 */
 	public function getColumnMetadata($gridField, $columnName) {
-		if($columnName == 'DeleteAction') {
+		if($columnName == 'Actions') {
 			return array('title' => '');
 		}
 	}
@@ -133,7 +142,7 @@ class GridFieldAction_Delete implements GridField_ColumnProvider, GridField_Acti
 	 * @return type 
 	 */
 	public function getColumnsHandled($gridField) {
-		return array('DeleteAction');
+		return array('Actions');
 	}
 	
 	/**
@@ -175,12 +184,11 @@ class GridFieldAction_Delete implements GridField_ColumnProvider, GridField_Acti
 	 * @return void
 	 */
 	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
-		$id = $arguments['RecordID'];
-		$item = $gridField->getList()->byID($id);
-		if(!$item) return;
-
 		if($actionName == 'deleterecord') {
-			$item->delete();
+			$id = $arguments['RecordID'];
+			$item = $gridField->getList()->byID($id);
+			if(!$item) return;
+				$item->delete();
 		}
 	}
 }

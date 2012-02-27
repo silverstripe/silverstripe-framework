@@ -62,11 +62,6 @@ class ArrayDataTest extends SapphireTest {
 		// $arrayData = new ArrayData($array);
 	}
 
-	function testForTemplateWorks() {
-		$arrayData = new ArrayData(array('b' => 'bunny'));
-		$this->assertEquals("array (\n  'b' => 'bunny',\n)", $arrayData->forTemplate());
-	}
-
 	function testSetField() {
 		$arrayData = new ArrayData(array());
 		

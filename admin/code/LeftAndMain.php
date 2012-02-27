@@ -473,7 +473,7 @@ class LeftAndMain extends Controller {
 	/**
 	 * Return a list of appropriate templates for this class, with the given suffix
 	 */
-	protected function getTemplatesWithSuffix($suffix) {
+	public function getTemplatesWithSuffix($suffix) {
 		$templates = array();
 		$classes = array_reverse(ClassInfo::ancestry($this->class));
 		foreach($classes as $class) {
@@ -1217,7 +1217,11 @@ class LeftAndMain extends Controller {
 	 * @return string
 	 */
 	public function CMSVersion() {
-		$sapphireVersion = file_get_contents(BASE_PATH . '/cms/silverstripe_version');
+		if(file_exists(CMS_PATH . '/silverstripe_version')) {
+			$sapphireVersion = file_get_contents(CMS_PATH . '/silverstripe_version');
+		} else {
+			$sapphireVersion = file_get_contents(SAPPHIRE_PATH . '/silverstripe_version');
+		}
 		if(!$sapphireVersion) $sapphireVersion = _t('LeftAndMain.VersionUnknown', 'unknown');
 		return sprintf(
 			"sapphire: %s",

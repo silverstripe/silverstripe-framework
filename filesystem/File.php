@@ -119,6 +119,8 @@ class File extends DataObject {
 		'cab','arj','tar','zip','zipx','sit','sitx','gz','tgz','bz2','ace','arc','pkg','dmg','hqx','jar',
 		'xml','pdf',
 	);
+
+	protected static $labelSeparator = ':';
 	
 	/**
 	 * @var If this is true, then restrictions set in {@link $allowed_max_file_size} and
@@ -255,23 +257,58 @@ class File extends DataObject {
 		return $this->canEdit($member);
 	}
 
+	/*
+	 * Generate and return the preview image / file upload / replace field for this File
+	 * @return FormField
+	 */
+	protected function getFilePreview() {
+		//file upload
+		$uploadField = new UploadField('UploadField','Upload Field');
+		$uploadField->setConfig('previewMaxWidth', 40);
+		$uploadField->setConfig('previewMaxHeight', 30);
+		//$uploadField->setTemplate('FileEditUploadField');
+		if ($this->ParentID) {
+			$parent = $this->Parent();
+			if ($parent) {  //set the parent that the Upload field should use for uploads
+				$uploadField->setFolderName($parent->getFilename());
+				$uploadField->setRecord($parent);
+				//TODO: make the uploadField replace the existing file
+			}
+		}
+
+		return $uploadField;
+	}
+
+	/**
+	 * Returns the fields to power the edit screen of files in the CMS
+	 * @return FieldList
+	 */
 	function getCMSFields() {
 		$urlLink = "<div class='field readonly'>";
 		$urlLink .= "<label class='left'>"._t('AssetTableField.URL','URL')."</label>";
 		$urlLink .= "<span class='readonly'><a href='{$this->Link()}' target='_blank'>{$this->RelativeLink()}</a></span>";
 		$urlLink .= "</div>";
 
+		//create the file attributes in a FieldGroup
+		$filePreview = new FieldGroup(
+			$this->getFilePreview(),
+			new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type').self::$labelSeparator),
+			new ReadonlyField("Filename", _t('AssetTableField.FILENAME','File name').self::$labelSeparator),
+			new ReadonlyField("Size", _t('AssetTableField.SIZE','File size').self::$labelSeparator, $this->getSize()),
+			new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded').self::$labelSeparator),
+			new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed').self::$labelSeparator)
+		);
+		$filePreview->setTitle("File preview");
+		$filePreview->setName("FilePreview");
+
 		return new FieldList(
 			new TabSet('Root',
-				new Tab('Main', 
+				new Tab('Main',
+					$filePreview,
 					new TextField("Title", _t('AssetTableField.TITLE','Title')),
 					new TextField("Name", _t('AssetTableField.FILENAME','Filename')),
-					new LiteralField("AbsoluteURL", $urlLink),
-					new ReadonlyField("FileType", _t('AssetTableField.TYPE','Type')),
-					new ReadonlyField("Size", _t('AssetTableField.SIZE','Size'), $this->getSize()),
-					new DropdownField("OwnerID", _t('AssetTableField.OWNER','Owner'), Member::mapInCMSGroups()),
-					new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded')),
-					new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed'))
+					new LiteralField("AbsoluteURL", $urlLink),  //TODO: replace this is a proper preview
+					new DropdownField("OwnerID", _t('AssetTableField.OWNER','Owner'), Member::mapInCMSGroups())
 				)
 			)
 		);
