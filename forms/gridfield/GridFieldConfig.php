@@ -131,5 +131,6 @@ class GridFieldConfig_ManyManyEditor extends GridFieldConfig {
 		$this->addComponent(new GridFieldAction_Edit());
 		$this->addComponent(new GridFieldRelationDelete());
 		$this->addComponent(new GridFieldPaginator($itemsPerPage));
+		$this->addComponent(new GridFieldPopupForms());
 	}
 }
