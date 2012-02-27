@@ -308,7 +308,7 @@ class Convert {
 
 		$data = preg_replace("/<[Bb][Rr]([^A-Za-z0-9>][^>]*)?> */", "\n", $data);
 		$data = preg_replace("/<[Tt][Rr]([^A-Za-z0-9>][^>]*)?> */", "\n", $data);
-		$data = preg_replace("/</[Tt][Dd]([^A-Za-z0-9>][^>]*)?> */", "    ", $data);
+		$data = preg_replace("/<\/[Tt][Dd]([^A-Za-z0-9>][^>]*)?> */", "    ", $data);
 		$data = preg_replace('/<\/p>/i', "\n\n", $data );
 	
 		// Replace HTML entities
