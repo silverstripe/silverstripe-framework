@@ -107,7 +107,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	 */
 	function RootForm() {
 		$config = new GridFieldConfig_Base(25);
-		$config->addComponent(new GridFieldPopupForms($this, 'RootForm'));
+		$config->addComponent(new GridFieldPopupForms());
 		$config->addComponent(new GridFieldExporter());
 		$memberList = new GridField('Members', 'All members', DataList::create('Member'), $config);
 		

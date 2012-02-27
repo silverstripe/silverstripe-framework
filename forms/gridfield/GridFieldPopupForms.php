@@ -9,6 +9,8 @@
  */
 class GridFieldPopupForms implements GridField_URLHandler {
 
+
+
 	/**
 	 * @var String
 	 */
@@ -16,15 +18,9 @@ class GridFieldPopupForms implements GridField_URLHandler {
 
 	/**
 	 *
-	 * @var Controller
-	 */
-	protected $popupController;
-	
-	/**
-	 *
 	 * @var string
 	 */
-	protected $popupFormName;
+	protected $name;
 
 	function getURLHandlers($gridField) {
 		return array(
@@ -41,12 +37,10 @@ class GridFieldPopupForms implements GridField_URLHandler {
 	 * The arguments are experimental API's to support partial content to be passed back to whatever
 	 * controller who wants to display the getCMSFields
 	 * 
-	 * @param Controller $popupController The controller object that will be used to render the pop-up forms
-	 * @param string $popupFormName The name of the edit form to place into the pop-up form
+	 * @param string $name The name of the edit form to place into the pop-up form
 	 */
-	public function __construct($popupController, $popupFormName) {
-		$this->popupController = $popupController;
-		$this->popupFormName = $popupFormName;
+	public function __construct($name = 'DetailForm') {
+		$this->name = $name;
 	}
 	
 	/**
@@ -56,13 +50,18 @@ class GridFieldPopupForms implements GridField_URLHandler {
 	 * @return GridFieldPopupForm_ItemRequest 
 	 */
 	public function handleItem($gridField, $request) {
+		$controller = $gridField->getForm()->Controller();
 		if(is_numeric($request->param('ID'))) {
 			$record = $gridField->getList()->byId($request->param("ID"));
 		} else {
 			$record = Object::create($gridField->getModelClass());	
 		}
 
-		$handler = new GridFieldPopupForm_ItemRequest($gridField, $this, $record, $this->popupController, $this->popupFormName);
+		if(!$class = ClassInfo::exists(get_class($this) . "_ItemRequest")) {
+			$class = 'GridFieldPopupForm_ItemRequest';
+		}
+
+		$handler = Object::create($class, $gridField, $this, $record, $controller, $this->name);
 		$handler->setTemplate($this->template);
 
 		return $handler->handleRequest($request, $gridField);
@@ -80,6 +79,20 @@ class GridFieldPopupForms implements GridField_URLHandler {
 	 */
 	function getTemplate() {
 		return $this->template;
+	}
+
+	/**
+	 * @param String
+	 */
+	function setName($name) {
+		$this->name = $name;
+	}
+
+	/**
+	 * @return String
+	 */
+	function getName() {
+		return $this->name;
 	}
 }
 
@@ -150,8 +163,8 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 		$controller = $this->popupController;
 		
 		$return = $this->customise(array(
-				'Backlink' => $this->gridField->getForm()->Controller()->Link(),
-				'ItemEditForm' => $this->ItemEditForm($this->gridField, $request),
+				'Backlink' => $controller->Link(),
+				'ItemEditForm' => $form,
 			))->renderWith($this->template);
 
 		if($controller->isAjax()) {
@@ -176,7 +189,6 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	 * @return Form 
 	 */
 	function ItemEditForm() {
-		$request = $this->popupController->getRequest();
 		$form = new Form(
 			$this,
 			'ItemEditForm',

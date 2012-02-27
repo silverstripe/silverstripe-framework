@@ -405,7 +405,7 @@ class Folder extends File {
 		$config->addComponent(new GridFieldPaginator(10));
 		$config->addComponent(new GridFieldAction_Delete());
 		$config->addComponent(new GridFieldAction_Edit());
-		$config->addComponent($gridFieldForm = new GridFieldPopupForms(Controller::curr(), 'EditForm'));
+		$config->addComponent($gridFieldForm = new GridFieldPopupForms();
 		$gridFieldForm->setTemplate('CMSGridFieldPopupForms');
 		$files = DataList::create('File')->filter('ParentID', $this->ID)->exclude('ClassName', 'Folder');
 		$gridField = new GridField('File','Files', $files, $config);

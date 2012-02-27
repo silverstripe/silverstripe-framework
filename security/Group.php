@@ -63,7 +63,7 @@ class Group extends DataObject {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');
 		
 		$config = new GridFieldConfig_ManyManyEditor('FirstName', true, 20);
-		$config->addComponent(new GridFieldPopupForms(Controller::curr(), 'EditForm'));
+		$config->addComponent(new GridFieldPopupForms());
 		$config->addComponent(new GridFieldExporter());
 		$memberList = new GridField('Members','Members', $this->Members(), $config);
 
