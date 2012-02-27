@@ -14,7 +14,7 @@ class GridFieldPopupForms implements GridField_URLHandler {
 	/**
 	 * @var String
 	 */
-	protected $template = 'GridFieldItemEditView';
+	protected $template = 'GridFieldPopupForms';
 
 	/**
 	 *
@@ -51,6 +51,7 @@ class GridFieldPopupForms implements GridField_URLHandler {
 	 */
 	public function handleItem($gridField, $request) {
 		$controller = $gridField->getForm()->Controller();
+
 		if(is_numeric($request->param('ID'))) {
 			$record = $gridField->getList()->byId($request->param("ID"));
 		} else {
@@ -161,7 +162,16 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	
 	function edit($request) {
 		$controller = $this->popupController;
-		
+		$form = $this->ItemEditForm($this->gridField, $request);
+
+		// TODO Coupling with CMS
+		if($controller instanceof LeftAndMain) {
+			$form->addExtraClass('cms-edit-form');
+			$form->setTemplate($controller->getTemplatesWithSuffix('_EditForm'));
+			$form->addExtraClass('cms-content center ss-tabset ' . $controller->BaseCSSClasses());
+			if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+		}
+
 		$return = $this->customise(array(
 				'Backlink' => $controller->Link(),
 				'ItemEditForm' => $form,
@@ -173,7 +183,8 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 			
 			// If not requested by ajax, we need to render it within the controller context+template
 			return $controller->customise(array(
-				$this->popupFormName => $return,
+				// TODO Allow customization
+				'Content' => $return,
 			));	
 		}
 	}
