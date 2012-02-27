@@ -474,6 +474,7 @@ class LeftAndMain extends Controller {
 	 * Return a list of appropriate templates for this class, with the given suffix
 	 */
 	public function getTemplatesWithSuffix($suffix) {
+		$templates = array();
 		$classes = array_reverse(ClassInfo::ancestry($this->class));
 		foreach($classes as $class) {
 			$template = $class . $suffix;
