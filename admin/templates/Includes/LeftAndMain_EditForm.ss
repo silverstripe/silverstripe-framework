@@ -23,7 +23,7 @@
 		</div>
 	</div>
 
-	<div class="cms-content-fields center">
+	<div class="cms-content-fields center <% if not Fields.hasTabset %>cms-panel-padded<% end_if %>">
 
 		<!-- <div class="cms-content-tools west">
 			$Left
