@@ -35,7 +35,7 @@
 		$EditFormTools	
 	<% end_control %>
 	
-	<div class="cms-content-fields center <% if not Fields.hasTabset %>cms-panel-padded<% end_if %>">
+	<div class="cms-content-fields center cms-panel-padded">
 		<% if Message %>
 		<p id="{$FormName}_error" class="message $MessageType">$Message</p>
 		<% else %>

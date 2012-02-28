@@ -172,7 +172,7 @@
 		 * We need this onclick overloading because we can't get to the
 		 * clicked button from a form.onsubmit event.
 		 */
-		$('.cms-edit-form .Actions :button').entwine({
+		$('.cms-edit-form .Actions :submit').entwine({
 			
 			/**
 			 * Function: onclick
@@ -183,13 +183,6 @@
 			}
 		});
 
-		$('.cms-edit-form .ss-gridfield .action-edit').entwine({
-			onclick: function(e) {
-				$('.cms-container').loadPanel(this.attr('href'), '', {selector: '.cms-edit-form'});
-				e.preventDefault();
-			}
-		});
-		
 	});
 
 }(jQuery));

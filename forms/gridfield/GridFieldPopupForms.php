@@ -214,12 +214,12 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 			// WARNING: The arguments passed here are a little arbitrary.  This API will need cleanup
 			$this->record->getCMSFields($this->popupController, $this->popupFormName),
 			new FieldList(
-				$saveAction = new FormAction('doSave', _t('GridFieldDetailsForm.Save', 'Save')),
-				$deleteAction = new FormAction('doDelete', _t('GridFieldDetailsForm.Delete', 'Delete'))
+				FormAction::create('doSave', _t('GridFieldDetailsForm.Save', 'Save'))
+					->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'),
+				FormAction::create('doDelete', _t('GridFieldDetailsForm.Delete', 'Delete'))
+					->setUseButtonTag(true)->addExtraClass('ss-ui-action-destructive')
 			)
 		);
-		$saveAction->addExtraClass('ss-ui-action-constructive');
-		$deleteAction->addExtraClass('ss-ui-action-destructive');
 		$form->loadDataFrom($this->record);
 		return $form;
 	}
@@ -290,5 +290,30 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	 */
 	function getTemplate() {
 		return $this->template;
+	}
+
+	/**
+	 * CMS-specific functionality: Passes through navigation breadcrumbs
+	 * to the template, and includes the currently edited record (if any).
+	 * see {@link LeftAndMain->Breadcrumbs()} for details.
+	 * 
+	 * @param boolean $unlinked 
+	 * @return ArrayData
+	 */
+	function Breadcrumbs($unlinked = false) {
+		if(!($this->popupController instanceof LeftAndMain)) return false;
+
+		$items = $this->popupController->Breadcrumbs($unlinked);
+		if($this->record) {
+			$items->push(new ArrayData(array(
+				'Title' => $this->record->Title,
+				'Link' => false
+			)));	
+		}
+		
+		// TODO Remove once ViewableData->First()/Last() is fixed
+		foreach($items as $i => $item) $item->iteratorProperties($i, $items->Count());
+
+		return $items;
 	}
 }
