@@ -466,7 +466,7 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 
 /** -------------------------------------------- Item Edit Form -------------------------------------------- */
 #Form_ItemEditForm .field { width: 100%; }
-#Form_ItemEditForm .field .fieldgroup { height: 230px; float: left; }
+#Form_ItemEditForm .field .fieldgroup { height: 240px; float: left; }
 #Form_ItemEditForm .field .fieldgroup .fieldgroup-field.first { position: relative; margin-left: 0px; }
 #Form_ItemEditForm .field .fieldgroup .fieldgroup-field { clear: both; width: 500px; margin-left: 420px; }
 #Form_ItemEditForm .field .fieldgroup .fieldgroup-field img { -moz-border-radius: 8px; -webkit-border-radius: 8px; -o-border-radius: 8px; -ms-border-radius: 8px; -khtml-border-radius: 8px; border-radius: 8px; border-width: 3px; border-style: dashed; border-color: #8c99a1; position: absolute; top: 8px; }

@@ -1238,7 +1238,7 @@ body.cms-dialog {
 	.field {
 		width:100%;
 		.fieldgroup { 
-			height:230px;
+			height:$grid-y * 30;
 			float:left;
 		 	.fieldgroup-field.first {
 		 		position:relative;
@@ -1246,28 +1246,28 @@ body.cms-dialog {
 		 	}
 		 	.fieldgroup-field {
 		 		clear:both;
-		 		width:500px;
-		 		margin-left:420px;
+		 		width:$grid-x * 62.5;
+		 		margin-left:$grid-x * 52.5;
 		 		img {
 		 			@include border-radius (8px);
 		 			border: {
-		 				width:3px; 
+		 				width:$grid-x - 5; 
 		 				style:dashed; 
 		 				color:$color-menu-border;
 		 			}
 		 			position:absolute;
-		 			top:8px;
+		 			top:$grid-y;
 		 		}
 				label {
 					font-weight:bold;
 					float:left;
-					padding-top:8px;
-					line-height:16px;
+					padding-top:$grid-y;
+					line-height:$grid-y * 2;
 					text-shadow: $color-text-light 1px 1px 0;
 				}
 				span {
 					float:left;
-					padding-left:8px;
+					padding-left:$grid-x;
 					font-style:italic;
 					color:lighten($color-text, 20%);
 				}
