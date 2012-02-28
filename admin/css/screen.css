@@ -313,8 +313,7 @@ body.cms { overflow: hidden; }
 /** -------------------------------------------- Content toolbar -------------------------------------------- */
 .cms-content-toolbar { display: block; margin: 0 0 15px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); *zoom: 1; /* smaller treedropdown */ }
 .cms-content-toolbar:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
-.cms-content-toolbar > * { float: right; }
-.cms-content-toolbar .cms-tree-view-modes { padding-top: 5px; }
+.cms-content-toolbar .cms-tree-view-modes { float: right; padding-top: 5px; }
 .cms-content-toolbar .cms-tree-view-modes * { display: inline-block; }
 .cms-content-toolbar .cms-tree-view-modes * label { color: #1556b2; }
 .cms-content-toolbar .chzn-container-single .chzn-single { height: 26px; line-height: 26px; padding-left: 25px; color: #576468; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e6e6e6), color-stop(100%, #cdcdcd)); background-image: -webkit-linear-gradient(#e6e6e6, #cdcdcd); background-image: -moz-linear-gradient(#e6e6e6, #cdcdcd); background-image: -o-linear-gradient(#e6e6e6, #cdcdcd); background-image: -ms-linear-gradient(#e6e6e6, #cdcdcd); background-image: linear-gradient(#e6e6e6, #cdcdcd); font-size: 13px; font-weight: bold; text-shadow: #e6e6e6 0 -1px 1px; box-shadow: none; }

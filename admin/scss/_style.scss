@@ -466,13 +466,10 @@ body.cms {
 	
 	@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 50%));
 	@include legacy-pie-clearfix();
-		
-	& > * {
-		float: right;
-	}
 	
 	.cms-tree-view-modes {
-		padding-top:5px;
+		float:right;
+		padding-top:$grid-y - 3;
 		* {
 			display: inline-block;
 			label {
