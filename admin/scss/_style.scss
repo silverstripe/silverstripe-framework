@@ -125,8 +125,11 @@ body.cms {
 	}
 }
 
-.ui-tabs .cms-content-header, .cms-dialog .ui-tabs-nav {
-	.ui-tabs-nav li {
+/** --------------------------------------------
+ * Tabs
+ * -------------------------------------------- */
+.ui-tabs .cms-content-header .ui-tabs-nav, .cms-dialog .ui-tabs-nav {
+	li {
 		margin:0;
 		a {
 			font-weight: bold;
