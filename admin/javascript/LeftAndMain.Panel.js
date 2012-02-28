@@ -96,10 +96,12 @@
 				// Save collapsed state in cookie
 				if($.cookie && this.attr('id')) $.cookie('cms-panel-collapsed-' + this.attr('id'), !bool, {path: '/', expires: 31});
 				
-				if(!silent) {
+				// TODO Fix redraw order (inner to outer), and re-enable silent flag
+				// to avoid multiple expensive redraws on a single load.
+				// if(!silent) {
 					this.trigger('toggle', bool);
 					this.trigger(bool ? 'expand' : 'collapse');
-				}
+				// }
 			},
 			
 			expandPanel: function(force) {
