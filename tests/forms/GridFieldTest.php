@@ -29,11 +29,12 @@ class GridFieldtest extends SapphireTest {
 		$obj = new GridField('testfield', 'testfield');
 
 		$expectedComponents = new ArrayList(array(
-			0 => new GridFieldSortableHeader,
-			1 => new GridFieldFilter,
-			2 => new GridFieldDefaultColumns,
-			3 => new GridFieldPaginator,
-			4 => new GridState_Component,
+			new GridFieldTitle(),
+			new GridFieldSortableHeader,
+			new GridFieldFilter,
+			new GridFieldDefaultColumns,
+			new GridFieldPaginator,
+			new GridState_Component,
 		));
 		
 		$this->assertEquals($expectedComponents, $obj->getConfig()->getComponents(), 'Testing default Config');
