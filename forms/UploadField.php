@@ -755,7 +755,6 @@ class UploadField_ItemHandler extends RequestHandler {
 			$validator
 		);
 		$form->loadDataFrom($file);
-		$form->addExtraClass('small');
 		
 		return $form;
 	}

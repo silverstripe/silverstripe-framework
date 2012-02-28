@@ -88,6 +88,8 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 
 /** ----------------------------- CMS Components ------------------------------ */
 /** File: typography.scss  Contains the basic typography related styles for the admin interface. */
+body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif; color: #444444; }
+
 .cms h2, .cms h3, .cms h4, .cms h5 { font-weight: bold; margin: 16px 0 16px 0; line-height: 16px; }
 .cms h2 { font-size: 18px; line-height: 24px; }
 .cms h3 { font-size: 16px; }
@@ -214,16 +216,7 @@ input.radio { margin-left: 0; }
 * (see _tree.scss and _menu.scss).
 */
 /** ---------------------------------------------------- Core Styles. ---------------------------------------------------- */
-html, body { width: 100%; height: 100%; font-size: 12px; line-height: 16px; font-family: Arial, sans-serif; color: #444444; }
-html html, html body, html div, html span, html applet, html object, html iframe, html h1, html h2, html h3, html h4, html h5, html h6, html p, html blockquote, html pre, html a, html abbr, html acronym, html address, html big, html cite, html code, html del, html dfn, html em, html img, html ins, html kbd, html q, html s, html samp, html small, html strike, html strong, html sub, html sup, html tt, html var, html b, html u, html i, html center, html dl, html dt, html dd, html ol, html ul, html li, html fieldset, html form, html label, html legend, html table, html caption, html tbody, html tfoot, html thead, html tr, html th, html td, html article, html aside, html canvas, html details, html embed, html figure, html figcaption, html footer, html header, html hgroup, html menu, html nav, html output, html ruby, html section, html summary, html time, html mark, html audio, html video, body html, body body, body div, body span, body applet, body object, body iframe, body h1, body h2, body h3, body h4, body h5, body h6, body p, body blockquote, body pre, body a, body abbr, body acronym, body address, body big, body cite, body code, body del, body dfn, body em, body img, body ins, body kbd, body q, body s, body samp, body small, body strike, body strong, body sub, body sup, body tt, body var, body b, body u, body i, body center, body dl, body dt, body dd, body ol, body ul, body li, body fieldset, body form, body label, body legend, body table, body caption, body tbody, body tfoot, body thead, body tr, body th, body td, body article, body aside, body canvas, body details, body embed, body figure, body figcaption, body footer, body header, body hgroup, body menu, body nav, body output, body ruby, body section, body summary, body time, body mark, body audio, body video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; }
-html body, body body { line-height: 1; }
-html ol, html ul, body ol, body ul { list-style: none; }
-html table, body table { border-collapse: collapse; border-spacing: 0; }
-html caption, html th, html td, body caption, body th, body td { text-align: left; font-weight: normal; vertical-align: middle; }
-html q, html blockquote, body q, body blockquote { quotes: none; }
-html q:before, html q:after, html blockquote:before, html blockquote:after, body q:before, body q:after, body blockquote:before, body blockquote:after { content: ""; content: none; }
-html a img, body a img { border: none; }
-html article, html aside, html details, html figcaption, html figure, html footer, html header, html hgroup, html menu, html nav, html section, html summary, body article, body aside, body details, body figcaption, body figure, body footer, body header, body hgroup, body menu, body nav, body section, body summary { display: block; }
+html, body { width: 100%; height: 100%; }
 
 body.cms { overflow: hidden; }
 
@@ -458,6 +451,9 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .htmleditorfield-mediaform .ss-htmleditorfield-file .overview .title { display: inline-block; vertical-align: middle; background: #fff; border: 1px solid #b3b3b3; -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; -ms-border-radius: 5px; -khtml-border-radius: 5px; border-radius: 5px; margin-left: 16px; padding: 4px; }
 .htmleditorfield-mediaform .ss-htmleditorfield-file .overview .action-delete { display: inline-block; }
 .htmleditorfield-mediaform .ss-htmleditorfield-file .details { padding: 16px; }
+.htmleditorfield-mediaform .cms-file-info-data { max-width: 350px; }
+.htmleditorfield-mediaform .cms-file-info-data .field label { width: 104px; }
+.htmleditorfield-mediaform .cms-file-info-data .field .middleColumn { margin-left: 112px; }
 
 /** -------------------------------------------- Step labels -------------------------------------------- */
 .step-label > * { display: inline-block; vertical-align: top; }
@@ -466,22 +462,12 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .step-label .title { height: 18px; padding: 4px; }
 
 /** -------------------------------------------- Item Edit Form -------------------------------------------- */
-#Form_ItemEditForm .field { width: 100%; }
-#Form_ItemEditForm .field .fieldgroup { height: 320px; float: left; }
-#Form_ItemEditForm .field .fieldgroup .fieldgroup-field.first { position: relative; margin-left: 0px; }
-#Form_ItemEditForm .field .fieldgroup .fieldgroup-field.first .ss-uploadfield-item { margin: 0; padding: 16px; overflow: auto; }
-#Form_ItemEditForm .field .fieldgroup .fieldgroup-field.first .ss-uploadfield-item .ss-uploadfield-item-preview { height: 96px; line-height: 96px; width: 264px; text-align: center; font-weight: bold; font-size: 21.6px; float: left; overflow: hidden; }
-#Form_ItemEditForm .field .fieldgroup .fieldgroup-field.first .ss-uploadfield-item .ss-uploadfield-item-preview.ss-uploadfield-dropzone { -moz-box-shadow: #9a9a9a 0 0 3px 3px inset; -webkit-box-shadow: #9a9a9a 0 0 3px 3px inset; -o-box-shadow: #9a9a9a 0 0 3px 3px inset; box-shadow: #9a9a9a 0 0 3px 3px inset; border: 2px dashed gray; background: rgba(201, 205, 206, 0.8); }
-#Form_ItemEditForm .field .fieldgroup .fieldgroup-field.first .ss-uploadfield-item .ss-uploadfield-item-name { float: none; display: block; clear: both; padding: 8px 0; }
-#Form_ItemEditForm .field .fieldgroup .fieldgroup-field.first .ss-uploadfield-item .ss-uploadfield-fromcomputer { padding-top: 0px; margin-right: 8px; }
-#Form_ItemEditForm .field .fieldgroup .fieldgroup-field.first .ss-uploadfield-item .ss-uploadfield-fromcomputer span.ui-button-text { padding-left: 28px; }
-#Form_ItemEditForm .field .fieldgroup .fieldgroup-field.first .ss-uploadfield-item .ss-uploadfield-fromcomputer .ss-uploadfield { position: absolute; left: -9999em; }
-#Form_ItemEditForm .field .fieldgroup .fieldgroup-field.first .ss-uploadfield-item .ss-uploadfield-fromfiles { padding-top: 0px; margin: 0; }
-#Form_ItemEditForm .field .fieldgroup .fieldgroup-field.first .ss-uploadfield-item .ss-uploadfield-fromfiles span.ui-button-text { padding-left: 28px; }
-#Form_ItemEditForm .field .fieldgroup .fieldgroup-field { clear: both; width: 500px; margin-left: 420px; }
-#Form_ItemEditForm .field .fieldgroup .fieldgroup-field img { -moz-border-radius: 8px; -webkit-border-radius: 8px; -o-border-radius: 8px; -ms-border-radius: 8px; -khtml-border-radius: 8px; border-radius: 8px; border-width: 3px; border-style: dashed; border-color: #8c99a1; position: absolute; top: 8px; }
-#Form_ItemEditForm .field .fieldgroup .fieldgroup-field label { font-weight: bold; float: left; padding-top: 8px; line-height: 16px; text-shadow: white 1px 1px 0; }
-#Form_ItemEditForm .field .fieldgroup .fieldgroup-field span { float: left; padding-left: 8px; font-style: italic; color: #777777; }
+.cms-file-info { overflow: auto; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); margin-bottom: 8px; }
+.cms-file-info .cms-file-info-preview { float: left; width: 176px; margin-right: 8px; }
+.cms-file-info .cms-file-info-preview img { max-width: 176px; }
+.cms-file-info .cms-file-info-data { float: left; }
+.cms-file-info .cms-file-info-data .field { margin-bottom: 0; padding-bottom: 8px; border: none; box-shadow: none; }
+.cms-file-info .cms-file-info-data .field label, .cms-file-info .cms-file-info-data .field span { padding: 0; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .cms .jstree ul, .TreeDropdownField .treedropdownfield-panel .jstree ul { display: block; margin: 0; padding: 0; background: none; list-style-type: none; }

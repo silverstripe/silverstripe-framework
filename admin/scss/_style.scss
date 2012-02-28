@@ -18,16 +18,9 @@
  * Core Styles.
  * ---------------------------------------------------- */
 
-html,body {	
+html,body {
 	width: 100%;
 	height: 100%;
-	
-	@include global-reset;
-
-	font-size: $font-base-size;
-	line-height: $grid-y * 2;
-	font-family: $font-family;
-	color: $color-text;
 }
 
 body.cms {
@@ -1199,6 +1192,21 @@ body.cms-dialog {
 			padding: $grid-x*2;
 		}
 	}
+
+	.cms-file-info-data {
+		// Ensure it fits beside the image preview
+		max-width: 350px;
+
+		// Reduced label widths to fit everything in smaller space
+		.field {
+			label {
+				width: $grid-x*13;
+			}
+			.middleColumn {
+				margin-left: $grid-x*14;
+			}
+		}
+	}
 	
 }
 
@@ -1243,90 +1251,36 @@ body.cms-dialog {
  * Item Edit Form
  * -------------------------------------------- */
 
-#Form_ItemEditForm {
-	.field {
-		width:100%;
-		.fieldgroup { 
-			height:$grid-y * 40;
-			float:left;
-		 	.fieldgroup-field.first {
-		 		.ss-uploadfield-item {
-					margin: 0;
-					padding: $grid-x * 2;
-					overflow: auto;
-					.ss-uploadfield-item-preview {
-						height: $grid-y * 12;
-						line-height: $grid-y * 12;
-						width: $grid-x * 33;
-						text-align: center;
-						font: {
-							weight:bold;
-							size:$font-base-size * 1.8;
-						}	
-						float: left;
-						overflow: hidden;
-						&.ss-uploadfield-dropzone { 
-							@include box-shadow(lighten($color-medium-separator, 10%) 0 0 3px 3px inset);
-							border: 2px dashed $color-medium-separator;
-							background: $color-light-separator;
-						}
-					}	
-					.ss-uploadfield-item-name {
-						float:none;
-						display:block;
-						clear:both;
-						padding:$grid-y 0;
-					}
-					.ss-uploadfield-fromcomputer {
-						padding-top:0px;
-						margin-right:$grid-x;
-						span.ui-button-text {
-							padding-left:$grid-x * 3.5;
-						}
-						.ss-uploadfield {
-							position:absolute;
-							left:-9999em;
-						}
-					}
-					.ss-uploadfield-fromfiles {
-						padding-top:0px;
-						margin:0;
-						span.ui-button-text {
-							padding-left:$grid-x * 3.5;
-						}
-					}
-				}
-		 		position:relative;
-		 		margin-left:0px;
-		 	}
-		 	.fieldgroup-field {
-		 		clear:both;
-		 		width:$grid-x * 62.5;
-		 		margin-left:$grid-x * 52.5;
-		 		img {
-		 			@include border-radius (8px);
-		 			border: {
-		 				width:$grid-x - 5; 
-		 				style:dashed; 
-		 				color:$color-menu-border;
-		 			}
-		 			position:absolute;
-		 			top:$grid-y;
-		 		}
-				label {
-					font-weight:bold;
-					float:left;
-					padding-top:$grid-y;
-					line-height:$grid-y * 2;
-					text-shadow: $color-text-light 1px 1px 0;
-				}
-				span {
-					float:left;
-					padding-left:$grid-x;
-					font-style:italic;
-					color:lighten($color-text, 20%);
-				}
-		 	}
+.cms-file-info {
+	overflow: auto;
+	// Emulate .field bottom border styling without applying .field class,
+	// as it messes up the nested .field element styling (blocklevel labels)
+	border-bottom: 1px solid $color-shadow-light;
+  @include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
+  margin-bottom: $grid-x;
+
+	// Preview might not always be available
+	.cms-file-info-preview {
+		float: left;
+		width: $grid-x * 22; // Same as ".field label"
+		margin-right: $grid-x;
+
+		img {
+			max-width: $grid-x * 22; // Same as ".field label"
 		}
-	}	
+	}
+	.cms-file-info-data {
+		float: left;
+
+		.field {
+			// Unsetting styles from .field, make it more compact visually
+			margin-bottom: 0;
+			padding-bottom: $grid-x;
+			border: none;
+			box-shadow: none;
+			label, span {
+				padding: 0;
+			}
+		}
+	}
 }
