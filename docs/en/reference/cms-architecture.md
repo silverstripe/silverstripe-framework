@@ -186,6 +186,25 @@ which auto-detects all subclasses of `LeftAndMain`. This means that your custom
 To modify existing menu entries or create new ones, see `[api:CMSMenu::add_menu_item()]`
 and `[api:CMSMenu::remove_menu_item()]`.
 
+New content panels are typically loaded via Ajax, which might change
+the current menu context. For example, a link to edit a file might be clicked
+within a page edit form, which should change the currently active menu entry
+from "Page" to "Files & Images". To communicate this state change, a controller
+response has the option to pass along a special HTTP response header,
+which is picked up by the menu:
+
+	:::php
+	public function mycontrollermethod() {
+		// .. logic here
+		$this->getResponse()->addHeader('X-Controller', 'AssetAdmin');
+		return 'my response';
+	}
+
+This is usually handled by the existing `[api:LeftAndMain]` logic,
+so you don't need to worry about it. The same concept applies for
+'X-Title' (change the window title) and 'X-ControllerURL' (change the URL recorded in browser history).
+Note: You can see any additional HTTP headers through the web developer tools in your browser of choice.
+
 ## Related
 
  * [Howto: Extend the CMS Interface](../howto/extend-cms-interface)
