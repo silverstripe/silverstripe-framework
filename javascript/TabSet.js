@@ -17,11 +17,12 @@
 			redrawTabs: function() {
 				this.rewriteHashlinks();
 
-				// Initialize jQuery UI tabs
-				var id = this.attr('id');
-				this.tabs({
-					cookie: ($.cookie && id) ? { expires: 30, path: '/', name: 'ui-tabs-' + id } : false
-			});
+				var id = this.attr('id'), cookieId = 'ui-tabs-' + id;
+
+				// Fix for wrong cookie storage of deselected tabs
+				if($.cookie && id && $.cookie(cookieId) == -1) $.cookie(cookieId, 0);
+
+				this.tabs({cookie: ($.cookie && id) ? { expires: 30, path: '/', name: cookieId } : false});
 			},
 		
 			/**
