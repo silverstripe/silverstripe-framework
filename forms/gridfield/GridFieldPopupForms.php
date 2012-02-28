@@ -291,4 +291,29 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	function getTemplate() {
 		return $this->template;
 	}
+
+	/**
+	 * CMS-specific functionality: Passes through navigation breadcrumbs
+	 * to the template, and includes the currently edited record (if any).
+	 * see {@link LeftAndMain->Breadcrumbs()} for details.
+	 * 
+	 * @param boolean $unlinked 
+	 * @return ArrayData
+	 */
+	function Breadcrumbs($unlinked = false) {
+		if(!($this->popupController instanceof LeftAndMain)) return false;
+
+		$items = $this->popupController->Breadcrumbs($unlinked);
+		if($this->record) {
+			$items->push(new ArrayData(array(
+				'Title' => $this->record->Title,
+				'Link' => false
+			)));	
+		}
+		
+		// TODO Remove once ViewableData->First()/Last() is fixed
+		foreach($items as $i => $item) $item->iteratorProperties($i, $items->Count());
+
+		return $items;
+	}
 }
