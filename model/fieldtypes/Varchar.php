@@ -63,7 +63,7 @@ class Varchar extends StringField {
 	 * Ensure that the given value is an absolute URL.
 	 */
 	function URL() {
-		if(ereg('^[a-zA-Z]+://', $this->value)) return $this->value;
+		if(preg_match('#^[a-zA-Z]+://#', $this->value)) return $this->value;
 		else return "http://" . $this->value;
 	}
 

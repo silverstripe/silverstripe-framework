@@ -123,7 +123,7 @@ class FormField extends RequestHandler {
 	 * that this ID is included in the field.
 	 */
 	function ID() { 
-		$name = ereg_replace('(^-)|(-$)','',ereg_replace('[^A-Za-z0-9_-]+','-',$this->name));
+		$name = preg_replace('/(^-)|(-$)/', '', preg_replace('/[^A-Za-z0-9_-]+/', '-', $this->name));
 		if($this->form) return $this->form->FormName() . '_' . $name;
 		else return $name;
 	}
@@ -648,7 +648,7 @@ class FormField extends RequestHandler {
 	 * @return string
 	 */
 	function Type() {
-		return strtolower(ereg_replace('Field$', '', $this->class));	
+		return strtolower(preg_replace('/Field$/', '', $this->class));	
 	}
 
 	/**

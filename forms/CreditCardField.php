@@ -86,7 +86,7 @@ JS;
 		
 		$i=0;
 		if($this->value) foreach($this->value as $part){
-			if(!$part || !(strlen($part) == 4) || !ereg("([0-9]{4})",$part)){
+			if(!$part || !(strlen($part) == 4) || !preg_match("/([0-9]{4})/", $part)){
 				switch($i){
 				        case 0: $number = _t('CreditCardField.FIRST', 'first'); break;
 					case 1: $number = _t('CreditCardField.SECOND', 'second'); break;

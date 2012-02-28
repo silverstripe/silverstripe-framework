@@ -465,7 +465,7 @@ class Director {
 	 */
 	static function makeRelative($url) {
 		// Allow for the accidental inclusion of a // in the URL
-		$url = ereg_replace('([^:])//','\\1/',$url);
+		$url = preg_replace('#([^:])//#', '\\1/', $url);
 		$url = trim($url);
 
 		// Only bother comparing the URL to the absolute version if $url looks like a URL.

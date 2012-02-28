@@ -143,7 +143,7 @@ class ContentNegotiator {
 			
 			$content = str_replace('&nbsp;','&#160;', $content);
 			$content = str_replace('<br>','<br />', $content);
-			$content = eregi_replace('(<img[^>]*[^/>])>','\\1/>', $content);
+			$content = preg_replace('#(<img[^>]*[^/>])>#i', '\\1/>', $content);
 			
 			$response->setBody($content);
 
@@ -170,14 +170,14 @@ class ContentNegotiator {
 		$content = preg_replace('/<base href="([^"]*)" \/>/', 
 			'<base href="$1"><!--[if lte IE 6]></base><![endif]-->', $content);
 
-		$content = ereg_replace("<\\?xml[^>]+\\?>\n?",'',$content);
+		$content = preg_replace("#<\\?xml[^>]+\\?>\n?#", '', $content);
 		$content = str_replace(array('/>','xml:lang','application/xhtml+xml'),array('>','lang','text/html'), $content);
 		
 		// Only replace the doctype in templates with the xml header
 		if($hasXMLHeader) {
-			$content = ereg_replace('<!DOCTYPE[^>]+>', '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', $content);
+			$content = preg_replace('/<!DOCTYPE[^>]+>/', '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', $content);
 		}
-		$content = ereg_replace('<html xmlns="[^"]+"','<html ', $content);
+		$content = preg_replace('/<html xmlns="[^"]+"/','<html ', $content);
 		
 		$response->setBody($content);
 	}
