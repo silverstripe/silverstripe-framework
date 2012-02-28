@@ -516,6 +516,7 @@ class LeftAndMain extends Controller {
 		if($record) {
 			if($record->hasExtension('Hierarchy')) {
 				$ancestors = $record->getAncestors();
+				$ancestors = new ArrayList(array_reverse($ancestors->toArray()));
 				$ancestors->push($record);
 				foreach($ancestors as $ancestor) {
 					$items->push(new ArrayData(array(
