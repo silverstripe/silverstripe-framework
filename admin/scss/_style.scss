@@ -102,9 +102,14 @@ body.cms {
 		color: $color-text-blue-link;
 	}
 	
+	.backlink {
+		float:left;
+		margin-top:$grid-x - 1;
+	}
+
 	h2 {
 		float: left;
-		padding: $grid-y $grid-x 0 0;
+		padding: $grid-y $grid-x 0 $grid-x;
 		font-size: $font-base-size + 2;
 		line-height: $grid-x * 3;
 		font-weight: bold;

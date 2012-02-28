@@ -243,7 +243,8 @@ body.cms { overflow: hidden; }
 
 .cms-content-header { padding: 0px 8px 8px; height: 32px; z-index: 60; background-image: url(../images/textures/cms_content_header.png); background-repeat: repeat; }
 .cms-content-header a { color: #1556b2; }
-.cms-content-header h2 { float: left; padding: 8px 8px 0 0; font-size: 14px; line-height: 24px; font-weight: bold; text-shadow: #bfcad2 1px 1px 0; max-width: 400px; margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
+.cms-content-header .backlink { float: left; margin-top: 7px; }
+.cms-content-header h2 { float: left; padding: 8px 8px 0 8px; font-size: 14px; line-height: 24px; font-weight: bold; text-shadow: #bfcad2 1px 1px 0; max-width: 400px; margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
 .cms-content-header > div { width: 9999em; overflow: hidden; }
 .cms-content-header .cms-content-header-tabs { position: fixed; right: 40px; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav li a { font-weight: bold; line-height: 16px; padding: 12px 20px 11px; text-indent: -9999em; }
