@@ -73,6 +73,25 @@ $gf_grid_x:	16px;
 					padding: 0;
 					width: auto;
 					text-shadow: none;
+					&.ui-state-hover {
+						background:none;
+						border:none;
+						@include box-shadow-none;
+					}
+					span.ui-button-text {
+						text-indent:-9999em;
+						background: url(../images/icons/decline.png) no-repeat 0 2px;
+						padding:0;
+						width:20px;
+						height:20px;
+					}
+				}
+				a.edit-link {
+					display:inline-block;
+					height:20px;
+					width:20px;
+					text-indent:-9999em;
+					background: url(../images/icons/document--pencil.png) no-repeat 0 1px;
 				}				
 			}			
 		}
