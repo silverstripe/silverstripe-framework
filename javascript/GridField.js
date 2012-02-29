@@ -34,6 +34,9 @@
 				}
 			}, ajaxOpts));
 		},
+		showDetailView: function(url) {
+			window.location.href = url;
+		},
 		getItems: function() {
 			return this.find('.ss-gridfield-item');
 		},
@@ -59,6 +62,24 @@
 			return this.closest('.ss-gridfield');
 		}
 	});
+
+	$('.ss-gridfield .ss-gridfield-item').entwine({
+		onclick: function(e) {
+			if($(e.target).is('.action')) {
+				this._super(e);
+				return;
+			}
+
+			var editLink = this.find('.edit-link');
+			if(editLink.length) this.getGridField().showDetailView(editLink.prop('href'));
+		},
+		onmouseover: function() {
+			if(this.find('.edit-link').length) this.css('cursor', 'pointer');
+		},
+		onmouseout: function() {
+			this.css('cursor', 'default');
+		}
+	});
 		
 	$('.ss-gridfield .action').entwine({
 		onclick: function(e){
@@ -67,7 +88,7 @@
 		}
 	});
 
-	$('.ss-gridfield .action-deleterecord').entwine({
+	$('.ss-gridfield .gridfield-button-delete').entwine({
 		onclick: function(e){
 			if(!confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) return false;
 			else this._super(e);
@@ -76,14 +97,14 @@
 
 	$('fieldset.ss-gridfield .new-link').entwine({
 		onclick: function(e) {
-			$(this).trigger('opennewview', $(this).prop('href'));
+			this.getGridField().showDetailView($(this).prop('href'));
 			return false;
 		}
 	});
 
 	$('fieldset.ss-gridfield .edit-link').entwine({
 		onclick: function(e) {
-			$(this).trigger('openeditview', $(this).prop('href'));
+			this.getGridField().showDetailView($(this).prop('href'));
 			return false;
 		}
 	});

@@ -381,6 +381,16 @@ jQuery.noConflict();
 		});
 	});
 	
+	/**
+	 * Overload the default GridField behaviour (open a new URL in the browser)
+	 * with the CMS-specific ajax loading.
+	 */
+	$('.cms .ss-gridfield').entwine({
+		showDetailView: function(url) {
+			$('.cms-container').entwine('ss').loadPanel(url);
+		}
+	});
+	
 	$('.cms-filter-form').entwine({
 		
 		GridField: null,
