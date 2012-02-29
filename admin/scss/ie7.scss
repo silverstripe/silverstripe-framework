@@ -52,3 +52,17 @@ html {
 .jstree li a .ui-icon {
 	text-indent: 0px !important;
 }
+
+.cms {
+	table.ss-gridfield-table {
+		tbody {
+			td {
+				button {
+					span.ui-button-text {
+						zoom:1;
+					}
+				}
+			}
+		}
+	}
+}
