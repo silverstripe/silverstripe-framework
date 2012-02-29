@@ -76,8 +76,7 @@ class GridFieldFilter implements GridField_HTMLProvider, GridField_DataManipulat
 				$field = new LiteralField('', '');
 			}
 			
-			// Last column, inject action buttons
-			if($currentColumn == count($columns)) {
+			if($columnField != 'Actions') {
 				$field = new FieldGroup(
 					$field,
 					$filterbutton = new GridField_Action($gridField, 'filter', _t('GridField.Filter', "Filter"), 'filter', null),
@@ -85,9 +84,9 @@ class GridFieldFilter implements GridField_HTMLProvider, GridField_DataManipulat
 					);
 
 				$filterbutton->addExtraClass('ss-gridfield-button-filter');
-				$resetbutton->addExtraClass('ss-gridfield-button-reset');
-				
+				$resetbutton->addExtraClass('ss-gridfield-button-reset');	
 			}
+
 			$field->iteratorProperties($currentColumn-1, count($columns));
 			$forTemplate->Fields->push($field);
 		}

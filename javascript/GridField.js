@@ -79,7 +79,7 @@
 	 * ToDo ensure filter-button state is maintained after filtering (see resetState param)
 	 * ToDo get working in IE 6-7
 	 */
-	$('.ss-gridfield input.ss-gridfield-sort').entwine({
+	/*$('.ss-gridfield input.ss-gridfield-sort').entwine({
 		onfocusin: function(e) {
 			// Dodgy results in IE <=7 & ignore if only one filter-field
 			countfields = $('.ss-gridfield input.ss-gridfield-sort').length;
@@ -112,7 +112,7 @@
 				).css({'position':'relative','margin':'0 auto','width':'65%'}).appendTo(eleInput.closest('th'));
 			}
 		}
-	});
+	});*/
 
 	$('fieldset.ss-gridfield .new-link').entwine({
 		onclick: function(e) {
