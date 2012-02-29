@@ -514,7 +514,7 @@ class LeftAndMain extends Controller {
 			))
 		));
 		$record = $this->currentPage();
-		if($record) {
+		if($record && $record->exists()) {
 			if($record->hasExtension('Hierarchy')) {
 				$ancestors = $record->getAncestors();
 				$ancestors = new ArrayList(array_reverse($ancestors->toArray()));
