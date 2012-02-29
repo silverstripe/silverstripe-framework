@@ -227,9 +227,15 @@ $gf_grid_x:	16px;
 						&:hover {
 							background-position: right -34px;
 						}
-						&.ss-gridfield-sorted {
+						&.ss-gridfield-sorted-desc {
+							background-position: right -72px;
+						}
+						&.ss-gridfield-sorted-asc {
 							background-position: right -116px;
 						}
+					}
+					&.ss-gridfield-button-filter{
+						background: transparent url(../images/icons/filter-icons.png) no-repeat right 6px;
 					}		
 				}
 				input {
