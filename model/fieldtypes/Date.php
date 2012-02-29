@@ -33,7 +33,7 @@ class Date extends DBField {
 				$this->value = $value['Year'] . '-' . $value['Month'] . '-' . $value['Day'];
 				return;
 			} else {
-				// return nothing (so ereg() doesn't fail on an empty array below)
+				// return nothing (so checks below don't fail on an empty array)
 				return null;
 			}
 		}
@@ -93,14 +93,17 @@ class Date extends DBField {
 	}
 
 	/**
-	 * Returns the date of the month
+	 * Returns the day of the month.
+	 * @param boolean $includeOrdinals Include ordinal suffix to day, e.g. "th" or "rd"
+	 * @return string
 	 */
 	function DayOfMonth($includeOrdinal = false) {
-		$format = 'j';
-		if ($includeOrdinal) $format .= 'S';
-		if($this->value) return date($format, strtotime($this->value));
+		if($this->value) {
+			$format = 'j';
+			if ($includeOrdinal) $format .= 'S';
+			return date($format, strtotime($this->value));
+		}
 	}
-	
 	
 	/**
 	 * Returns the date in the format 24 December 2006
@@ -132,7 +135,7 @@ class Date extends DBField {
 	 * strftime obeys the current LC_TIME/LC_ALL when printing lexical values
 	 * like day- and month-names
 	 */
-	function FormatI18N($formattingString) {		
+	function FormatI18N($formattingString) {
 		if($this->value) {
 			$fecfrm = strftime($formattingString, strtotime($this->value));
 			return utf8_encode($fecfrm);
@@ -141,6 +144,9 @@ class Date extends DBField {
 	
 	/*
 	 * Return a string in the form "12 - 16 Sept" or "12 Aug - 16 Sept"
+	 * @param Date $otherDateObj Another date object specifying the end of the range
+	 * @param boolean $includeOrdinals Include ordinal suffix to day, e.g. "th" or "rd"
+	 * @return string
 	 */
 	function RangeString($otherDateObj, $includeOrdinals = false) {
 		$d1 = $this->DayOfMonth($includeOrdinals);
