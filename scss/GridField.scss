@@ -80,7 +80,10 @@ $gf_grid_x:	16px;
 					}
 					span.ui-button-text {
 						text-indent:-9999em;
-						background: url(../images/icons/decline.png) no-repeat 0px 6px;
+						background: url(../images/icons/decline.png) no-repeat 0 2px;
+						padding:0;
+						width:20px;
+						height:20px;
 					}
 				}
 				a.edit-link {
@@ -88,7 +91,7 @@ $gf_grid_x:	16px;
 					height:20px;
 					width:20px;
 					text-indent:-9999em;
-					background: url(../images/icons/document--pencil.png) no-repeat 0 0;
+					background: url(../images/icons/document--pencil.png) no-repeat 0 1px;
 				}				
 			}			
 		}
