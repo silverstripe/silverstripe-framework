@@ -33,6 +33,11 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 				$field->addExtraClass('ss-gridfield-sort');
 				if($state->SortColumn == $columnField){
 					$field->addExtraClass('ss-gridfield-sorted');
+
+					if($state->SortDirection == 'asc')
+						$field->addExtraClass('ss-gridfield-sorted-asc');
+					else
+						$field->addExtraClass('ss-gridfield-sorted-desc');
 				}
 			} else {
 				$field = new LiteralField($columnField, $title);
