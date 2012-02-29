@@ -260,6 +260,7 @@ body.cms { overflow: hidden; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-all, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-top, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-left, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-tl { border-radius: 0; }
 
 .cms-edit-form .cms-content-header-tabs .ui-tabs-nav li a { text-indent: 0; }
+.cms-edit-form .cms-content-header-tabs .ui-tabs-nav .ui-state-default a, .cms-edit-form .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-default a, .cms-edit-form .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-default a { color: #1f1f1f; }
 
 /** -------------------------------------------- Tabs -------------------------------------------- */
 .ui-tabs .cms-content-header .ui-tabs-nav li, .cms-dialog .ui-tabs-nav li { margin: 0; }
