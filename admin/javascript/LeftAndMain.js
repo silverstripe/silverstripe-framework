@@ -242,6 +242,7 @@ jQuery.noConflict();
 					},
 					error: function(xhr, status, e) {
 						contentEl.removeClass('loading');
+						errorMessage(e);
 					}
 				});
 				
@@ -504,15 +505,10 @@ jQuery.noConflict();
 	});
 }(jQuery));
 
-// Backwards compatibility
 var statusMessage = function(text, type) {
 	jQuery.noticeAdd({text: text, type: type});
 };
 
 var errorMessage = function(text) {
 	jQuery.noticeAdd({text: text, type: 'error'});
-};
-
-returnFalse = function() {
-	return false;
 };
