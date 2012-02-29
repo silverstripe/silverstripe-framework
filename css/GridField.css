@@ -11,9 +11,10 @@
 .cms table.ss-gridfield-table tfoot tr td { background: #95a5ab; padding: .7em; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
 .cms table.ss-gridfield-table tr.title { -moz-border-radius-topleft: 7px; -webkit-border-top-left-radius: 7px; -o-border-top-left-radius: 7px; -ms-border-top-left-radius: 7px; -khtml-border-top-left-radius: 7px; border-top-left-radius: 7px; -moz-border-radius-topright: 7px; -webkit-border-top-right-radius: 7px; -o-border-top-right-radius: 7px; -ms-border-top-right-radius: 7px; -khtml-border-top-right-radius: 7px; border-top-right-radius: 7px; }
 .cms table.ss-gridfield-table tr.title th { position: relative; background: #7f9198; border-top: 1px solid rgba(0, 0, 0, 0.1); padding: 5px; min-height: 40px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b1c0c5), color-stop(100%, #7f9198)); background-image: -webkit-linear-gradient(#b1c0c5, #7f9198); background-image: -moz-linear-gradient(#b1c0c5, #7f9198); background-image: -o-linear-gradient(#b1c0c5, #7f9198); background-image: -ms-linear-gradient(#b1c0c5, #7f9198); background-image: linear-gradient(#b1c0c5, #7f9198); -moz-border-radius-topleft: 7px; -webkit-border-top-left-radius: 7px; -o-border-top-left-radius: 7px; -ms-border-top-left-radius: 7px; -khtml-border-top-left-radius: 7px; border-top-left-radius: 7px; -moz-border-radius-topright: 7px; -webkit-border-top-right-radius: 7px; -o-border-top-right-radius: 7px; -ms-border-top-right-radius: 7px; -khtml-border-top-right-radius: 7px; border-top-right-radius: 7px; text-shadow: rgba(0, 0, 0, 0.3) 0px -1px 0; }
-.cms table.ss-gridfield-table tr.title th h2 { padding: 0px; font-size: 16px; color: #fff; margin: 0; display: inline; }
-.cms table.ss-gridfield-table tr.title th .new { font-size: 14px; border-color: rgba(0, 0, 0, 0.1); float: right; }
+.cms table.ss-gridfield-table tr.title th h2 { padding: 0px; font-size: 16.8px; color: #fff; margin: 3px 8px 0; display: inline-block; }
+.cms table.ss-gridfield-table tr.title th .new { font-size: 14.4px; border-color: rgba(0, 0, 0, 0.1); float: right; }
 .cms table.ss-gridfield-table tr.sortable-header { background: #bac8ce; }
+.cms table.ss-gridfield-table tr.sortable-header th { padding: 0px; }
 .cms table.ss-gridfield-table tr:hover { background: #FFFAD6 !important; }
 .cms table.ss-gridfield-table tr:first-child { background: transparent; }
 .cms table.ss-gridfield-table tr.ss-gridfield-even { background: #f0f4f7; }
@@ -34,7 +35,9 @@
 .cms table.ss-gridfield-table tr th.last { -moz-border-radius-topright: 7px; -webkit-border-top-right-radius: 7px; -o-border-top-right-radius: 7px; -ms-border-top-right-radius: 7px; -khtml-border-top-right-radius: 7px; border-top-right-radius: 7px; }
 .cms table.ss-gridfield-table tr th button:hover { color: #ccc !important; /* Not sure why IE think it needs this */ }
 .cms table.ss-gridfield-table tr th button.ss-gridfield-sort:hover { color: #fff !important; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
-.cms table.ss-gridfield-table tr th button.ss-gridfield-sort { background: transparent url(../images/arrows-01.png) no-repeat right 2px; border: none; width: 100%; text-align: left; padding: 4px 0; text-shadow: rgba(0, 0, 0, 0.3) 0px -1px 0; color: #fff; -moz-border-radius: 0; -webkit-border-radius: 0; -o-border-radius: 0; -ms-border-radius: 0; -khtml-border-radius: 0; border-radius: 0; }
+.cms table.ss-gridfield-table tr th button.ss-gridfield-sort { background: transparent url(../images/arrows.png) no-repeat right 6px; border: none; width: 100%; text-align: left; padding: 4px 0; text-shadow: rgba(0, 0, 0, 0.3) 0px -1px 0; color: #fff; -moz-border-radius: 0; -webkit-border-radius: 0; -o-border-radius: 0; -ms-border-radius: 0; -khtml-border-radius: 0; border-radius: 0; }
+.cms table.ss-gridfield-table tr th button.ss-gridfield-sort:hover { background-position: right -34px; }
+.cms table.ss-gridfield-table tr th button.ss-gridfield-sort.ss-gridfield-sorted { background-position: right -116px; }
 .cms table.ss-gridfield-table tr th input.ss-gridfield-sort { padding: 2px; }
 .cms table.ss-gridfield-table tr th input.ss-gridfield-sort:focus { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .cms table.ss-gridfield-table tr td { border-right: 1px solid rgba(0, 0, 0, 0.1); padding: 7px 12px; color: #666666; }

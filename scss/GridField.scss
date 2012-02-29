@@ -23,6 +23,8 @@ $gf_colour_font: #666;
 $gf_colour_text_shadow: rgba(0,0,0,.3);
 $gf_border_radius:	7px;
 
+$gf_grid_y:	12px;
+$gf_grid_x:	16px;
 
 @mixin box-shadow-none {
 	-moz-box-shadow: none;
@@ -100,13 +102,13 @@ $gf_border_radius:	7px;
 					@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 					h2{
 						padding: 0px;
-						font-size: 16px;
+						font-size: $gf_grid_y*1.4;
 						color:#fff;
-						margin:0;
-						display:inline;
+						margin:3px $gf_grid_x/2 0;
+						display:inline-block;
 					}
 					.new{
-						font-size: 14px; 
+						font-size: $gf_grid_y*1.2; 
 						border-color: $gf_colour_border;
 						float: right;
 					}
@@ -114,6 +116,10 @@ $gf_border_radius:	7px;
 			}	
 			&.sortable-header {
 				background: $gf_colour_subheader;	
+				th{
+					padding: 0px;
+				}
+				
 			}			
 			&:hover {
 				background: #FFFAD6 !important;
@@ -134,7 +140,7 @@ $gf_border_radius:	7px;
 			
 			th {
 				font-weight: bold;
-				font-size: 12px;
+				font-size: $gf_grid_y;
 				color: #FFF;
 				padding: 5px;
 				border-right: 1px solid $gf_colour_border;
@@ -210,7 +216,7 @@ $gf_border_radius:	7px;
 						@include box-shadow-none; 
 					}
 					&.ss-gridfield-sort {
-						background: transparent url(../images/arrows-01.png) no-repeat right 2px;
+						background: transparent url(../images/arrows.png) no-repeat right 6px;
 						border:none;	
 						width:100%;
 						text-align: left;
@@ -218,6 +224,12 @@ $gf_border_radius:	7px;
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 						color: #fff;
 						@include border-radius(0);
+						&:hover {
+							background-position: right -34px;
+						}
+						&.ss-gridfield-sorted {
+							background-position: right -116px;
+						}
 					}		
 				}
 				input {
@@ -226,6 +238,7 @@ $gf_border_radius:	7px;
 						&:focus {
 							@include box-shadow-none;
 						}
+
 					}
 				}
 			}
