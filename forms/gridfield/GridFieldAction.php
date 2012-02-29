@@ -170,6 +170,7 @@ class GridFieldAction_Delete implements GridField_ColumnProvider, GridField_Acti
 			"deleterecord", 
 			array('RecordID' => $record->ID)
 		);
+		$field->addExtraClass('gridfield-button-delete');
 		$output = $field->Field();
 		return $output;
 	}
