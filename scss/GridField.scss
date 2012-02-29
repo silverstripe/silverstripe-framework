@@ -244,7 +244,7 @@ $gf_grid_x:	16px;
 			}
 			td {
 				border-right: 1px solid $gf_colour_border;
-				padding: 7px 12px;
+				padding: $gf_grid_x/2.5 $gf_grid_y;
 				color: $gf_colour_font;
 				&.bottom-all {
 					@include border-bottom-radius($gf_border_radius);

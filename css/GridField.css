@@ -40,7 +40,7 @@
 .cms table.ss-gridfield-table tr th button.ss-gridfield-sort.ss-gridfield-sorted { background-position: right -116px; }
 .cms table.ss-gridfield-table tr th input.ss-gridfield-sort { padding: 2px; }
 .cms table.ss-gridfield-table tr th input.ss-gridfield-sort:focus { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
-.cms table.ss-gridfield-table tr td { border-right: 1px solid rgba(0, 0, 0, 0.1); padding: 7px 12px; color: #666666; }
+.cms table.ss-gridfield-table tr td { border-right: 1px solid rgba(0, 0, 0, 0.1); padding: 6.4px 12px; color: #666666; }
 .cms table.ss-gridfield-table tr td.bottom-all { -moz-border-radius-bottomleft: 7px; -webkit-border-bottom-left-radius: 7px; -o-border-bottom-left-radius: 7px; -ms-border-bottom-left-radius: 7px; -khtml-border-bottom-left-radius: 7px; border-bottom-left-radius: 7px; -moz-border-radius-bottomright: 7px; -webkit-border-bottom-right-radius: 7px; -o-border-bottom-right-radius: 7px; -ms-border-bottom-right-radius: 7px; -khtml-border-bottom-right-radius: 7px; border-bottom-right-radius: 7px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b1c0c5), color-stop(100%, #7f9198)); background-image: -webkit-linear-gradient(#b1c0c5, #7f9198); background-image: -moz-linear-gradient(#b1c0c5, #7f9198); background-image: -o-linear-gradient(#b1c0c5, #7f9198); background-image: -ms-linear-gradient(#b1c0c5, #7f9198); background-image: linear-gradient(#b1c0c5, #7f9198); }
 .cms table.ss-gridfield-table tr.last td { border-bottom: 0 none; }
 .cms table.ss-gridfield-table td:first-child, .cms table.ss-gridfield-table th:first-child { border-left: 1px solid rgba(0, 0, 0, 0.1); }
