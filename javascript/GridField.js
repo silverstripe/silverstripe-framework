@@ -141,4 +141,18 @@
 		 
 	});
 
+	/**
+	 * Catch submission event in filter input fields, and submit the correct button
+	 * rather than the whole form.
+	 */
+	$('.ss-gridfield .filter-header :input').entwine({
+		onkeydown: function(e) {
+			if(e.keyCode == '13') {
+				btn = this.closest('.filter-header').find('.ss-gridfield-button-filter');
+				this.getGridField().reload({data: [{name: btn.attr('name'), value: btn.val()}]});
+				return false;
+			}
+		}
+	});
+
 }(jQuery));
