@@ -15,19 +15,24 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 	protected $itemClass = 'GridFieldRelationAdd';
 	
 	/**
-	 * Which column that should be used for doing a StartsWith search
+	 * Which columns that should be used for doing a "StartsWith" search.
+	 * If multiple fields are provided, the filtering is performed non-exclusive.
 	 *
-	 * @var string
+	 * @var Array
 	 */
-	protected $fieldToSearch = '';
-	
+	protected $searchFields = array();
+
+	/**
+	 * @var string SSViewer template to render the results presentation
+	 */
+	protected $resultsFormat = '$Title';
 	
 	/**
 	 *
-	 * @param string $fieldToSearch which field on the object in the list should be search
+	 * @param array $searchFields Which fields on the object in the list should be searched
 	 */
-	public function __construct($fieldToSearch, $autoSuggestion=true) {
-		$this->fieldToSearch = $fieldToSearch;
+	public function __construct($searchFields) {
+		$this->searchFields = (array)$searchFields;
 	}
 	
 	/**
@@ -48,7 +53,7 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList();
 		
-		$value = $this->findSingleEntry($gridField, $this->fieldToSearch, $searchState, $gridField->getList()->dataClass);
+		$value = $this->findSingleEntry($gridField, $this->searchFields, $searchState, $gridField->getList()->dataClass);
 		$searchField = new TextField('gridfield_relationsearch', _t('GridField.RelationSearch', "Relation search"), $value);
 		// Apparently the data-* needs to be double qouted for the jQuery.meta data plugin
 		$searchField->setAttribute('data-search-url', '\''.Controller::join_links($gridField->Link('search').'\''));
@@ -141,14 +146,50 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 	 */
 	public function doSearch($gridField, $request) {
 		$allList = DataList::create($gridField->getList()->dataClass());
-		$results = $allList->subtract($gridField->getList())->filter($this->fieldToSearch.':StartsWith',$request->param('ID'));
-		$results->sort($this->fieldToSearch, 'ASC');
+		$filters = array();
+		$stmts = array();
+		// TODO Replace with DataList->filterAny() once it correctly supports OR connectives
+		foreach($this->searchFields as $searchField) {
+			$stmts[] .= sprintf('"%s" LIKE \'%s%%\'', $searchField, $request->param('ID'));
+		}
+		$results = $allList->where(implode(' OR ', $stmts))->subtract($gridField->getList());
+		$results->sort($this->searchFields[0], 'ASC');
 		
 		$json = array();
 		foreach($results as $result) {
-			$json[$result->ID] = $result->{$this->fieldToSearch};
+			$json[$result->ID] = SSViewer::fromString($this->resultsFormat)->process($result);
 		}
 		return Convert::array2json($json);
+	}
+
+	/**
+	 * @param String
+	 */
+	public function setResultsFormat($format) {
+		$this->resultsFormat = $format;
+		return $this;
+	}
+
+	/**
+	 * @return String
+	 */
+	public function getResultsFormat() {
+		return $this->resultsFormat;
+	}
+
+	/**
+	 * @param Array
+	 */
+	public function setSearchFields($fields) {
+		$this->searchFields = $fields;
+		return $this;
+	}
+
+	/**
+	 * @return Array
+	 */
+	public function getSearchFields() {
+		return $this->searchFields;
 	}
 	
 	/**
