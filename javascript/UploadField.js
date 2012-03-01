@@ -30,6 +30,8 @@
 			Config: null,
 
 			onmatch: function() {
+				if(this.is('.readonly,.disabled')) return;
+
 				var fileInput = this.find('input');
 				var dropZone = this.find('.ss-uploadfield-dropzone');
 				var config = $.parseJSON(fileInput.data('config').replace(/'/g,'"'));
