@@ -948,14 +948,7 @@ class Member extends DataObject {
 		$groups = new Member_GroupSet('Group', 'Group_Members', 'GroupID', 'MemberID');
 		if($this->ID) $groups->setForeignID($this->ID);
 		
-		// Filter out groups that aren't allowed from this IP
-		$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
-		$disallowedGroups = array();
-		foreach($groups as $group) {
-			if(!$group->allowedIPAddress($ip)) $disallowedGroups[] = $groupID;
-		}
-		if($disallowedGroups) $group->where("\"Group\".\"ID\" NOT IN (" .
-			implode(',',$disallowedGroups) . ")");
+		$this->extend('updateGroups', $groups);
 
 		return $groups;
 	}
