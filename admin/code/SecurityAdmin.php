@@ -79,12 +79,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 					);
 				}
 		
-				$form->Actions()->insertBefore(
-					$actionAddMember = new FormAction('addmember',_t('SecurityAdmin.ADDMEMBER','Add Member')),
-					'action_save'
-				);
-				$actionAddMember->setForm($form);
-			
 				// Filter permissions
 				$permissionField = $form->Fields()->dataFieldByName('Permissions');
 				if($permissionField) $permissionField->setHiddenPermissions(self::$hidden_permissions);
@@ -160,9 +154,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			$rolesTab->push($rolesCTF);
 		}
 
-		$actions = new FieldList(
-			new FormAction('addmember',_t('SecurityAdmin.ADDMEMBER','Add Member'))
-		);
+		$actions = new FieldList();
 		
 		$this->extend('updateRootFormFields', $fields, $actions);
 		
