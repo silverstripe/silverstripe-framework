@@ -69,8 +69,15 @@ class HtmlEditorField extends TextareaField {
 					$link->setAttribute('class', ($class ? "$class ss-broken" : 'ss-broken'));
 				}
 			}
+
+			if(preg_match('/\[file_link id=([0-9]+)\]/i', $link->getAttribute('href'), $matches)) {
+				if(!DataObject::get_by_id('File', $matches[1])) {
+					$class = $link->getAttribute('class');
+					$link->setAttribute('class', ($class ? "$class ss-broken" : 'ss-broken'));
+				}
+			}
 		}
-		
+
 		return $this->createTag (
 			'textarea',
 			$this->getAttributes(),
