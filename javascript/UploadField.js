@@ -196,18 +196,26 @@
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-item-editform').entwine({
+			fitHeight: function() {
+				var iframe = this.find('iframe'), h = iframe.contents().height();
+				// Set iframe to match its contents height
+				iframe.height(h); 
+				// set container to match the same height
+				iframe.parent().height(h);
+			},
 			toggleEditForm: function() {
-				jQuery(this).toggle();
+				if(this.height() === 0) {
+					this.fitHeight();	
+				} else {
+					this.height(0);
+				}
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-item-editform iframe').entwine({
 			onmatch: function() {
+				// TODO entwine event binding doesn't work for iframes
 				this.load(function() {
-					var iframe = $(this), h = iframe.contents().height();
-					// Set iframe to match its contents height
-					iframe.height(h); 
-					// set container to match the same height
-					iframe.parent().removeClass('loading').height(h);
+					$(this).parent().removeClass('loading');	
 				});
 			}
 		});
