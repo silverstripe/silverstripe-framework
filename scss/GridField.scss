@@ -22,6 +22,10 @@ $gf_colour_zebra: #F0F4F7;
 $gf_colour_font: #666;
 $gf_colour_text_shadow: rgba(0,0,0,.3);
 $gf_border_radius:	7px;
+$gf_color_border_filter_button: #9A9A9A;
+$gf_color_button: #e6e6e6;
+$gf_color_button_filter_hover: #338DC1;
+$gf_color_button_reset_hover: #FF0000;
 
 $gf_grid_y:	12px;
 $gf_grid_x:	16px;
@@ -171,7 +175,8 @@ $gf_grid_x:	16px;
 				}
 				div {
 					&.fieldgroup,&.fieldgroup-field {
-						width: auto;
+						width: 100%;
+						position:relative;
 					}
 					&.fieldgroup {
 						min-width: 200px;
@@ -206,6 +211,9 @@ $gf_grid_x:	16px;
 						width: auto;
 						display: inline;
 						position: static;
+						input {
+							height:28px;
+						}
 					}
 					button.ss-ui-button {
 						padding: .3em;
@@ -253,10 +261,81 @@ $gf_grid_x:	16px;
 							background-position: right -116px;
 						}
 					}
-					&.ss-gridfield-button-filter{
-						background: transparent url(../images/icons/filter-icons.png) no-repeat right 6px;
+					&.ss-gridfield-button-filter.ss-ui-button{
+						position:absolute;
+						right:$gf_grid_x/2 - 1;
+						top:$gf_grid_y*-2 - 4;
+						display:block;
+						text-indent:-9999em;
+						width:$gf_grid_x*2 - 2;
+						height:$gf_grid_y*2 + 4;
+						border: {
+							top-left-radius:0px;
+							bottom-left-radius:0px;
+							top-right-radius:4px;
+							bottom-right-radius:4px;
+							bottom-width:1px;
+							color:$gf_color_border_filter_button;
+						}
+						@include background (url(../images/icons/filter-icons.png) no-repeat -40px 6px,
+							linear-gradient(
+								lighten($gf_color_button, 10%),
+								darken($gf_color_button, 5%)
+							));
+						&:hover {
+							@include background (url(../images/icons/filter-icons.png) no-repeat -16px 6px,
+							linear-gradient(
+								lighten($gf_color_button_filter_hover, 5%), 
+								darken($gf_color_button_filter_hover, 5%)
+							));
+						}
+						&:active {
+							@include background (url(../images/icons/filter-icons.png) no-repeat -16px -17px,
+							linear-gradient(
+								lighten($gf_color_button_filter_hover, 5%), 
+								darken($gf_color_button_filter_hover, 5%)
+							));
+							@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
+						}
+					}
+					&.ss-gridfield-button-reset.ss-ui-button{
+						position:absolute;
+						right:$gf_grid_x*2 + 4;
+						top:$gf_grid_y*-2 - 4;
+						display:block;
+						text-indent:-9999em;
+						width:$gf_grid_x*2 - 2;
+						height:$gf_grid_y*2 + 4;
+						float:right;
+						border: {
+							radius:0px;
+							bottom-width:1px;
+							color:$gf_color_border_filter_button;
+						}
+						@include background (url(../images/icons/filter-icons.png) no-repeat 8px 5px,
+							linear-gradient(color-stops(
+								lighten($gf_color_button, 10%),
+								darken($gf_color_button, 5%)
+							))
+						);
+						&:hover {
+							@include background (url(../images/icons/filter-icons.png) no-repeat 8px -17px,
+							linear-gradient(
+								$gf_color_button_reset_hover, 
+								darken($gf_color_button_reset_hover, 10%)
+							));
+						}
+						&:active {
+							@include background (url(../images/icons/filter-icons.png) no-repeat 8px -17px,
+							linear-gradient(
+								$gf_color_button_reset_hover, 
+								darken($gf_color_button_reset_hover, 10%)
+							));
+							@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
+						}
 					}		
 				}
+
 				input {
 					&.ss-gridfield-sort {
 						padding: 2px;
@@ -267,6 +346,7 @@ $gf_grid_x:	16px;
 					}
 				}
 			}
+
 			td {
 				border-right: 1px solid $gf_colour_border;
 				padding: $gf_grid_x/2.5 $gf_grid_y;
