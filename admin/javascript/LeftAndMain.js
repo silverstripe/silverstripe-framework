@@ -274,7 +274,7 @@ jQuery.noConflict();
 		/**
 		 * Trigger dialogs with iframe based on the links href attribute (see ssui-core.js).
 		 */
-		$('.cms-container .ss-ui-dialog-link').entwine({
+		$('.cms .ss-ui-dialog-link').entwine({
 			UUID: null,
 			onmatch: function() {
 				this._super();
@@ -336,7 +336,7 @@ jQuery.noConflict();
 		 * the DOM element on creation, rather than onclick - which allows us to decorate
 		 * the field with a calendar icon
 		 */
-		$('.cms-container .field.date input.text').entwine({
+		$('.cms .field.date input.text').entwine({
 			onmatch: function() {
 				var holder = $(this).parents('.field.date:first'), config = holder.data();
 				if(!config.showcalendar) return;
@@ -363,7 +363,7 @@ jQuery.noConflict();
 		 * we can fix the height cropping.
 		 */
 		
-		$('.cms-container .field.dropdown').entwine({
+		$('.cms .field.dropdown').entwine({
 			onmatch: function() {
 				$(this).find("select:not(.no-chzn)").chosen();
 				$(this).addClass("has-chzn");
