@@ -29,6 +29,8 @@ class AjaxUniqueTextField extends TextField {
 	}
 	 
 	function Field() {
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/behaviour/behaviour.js");
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/UniqueFields.js");
 		
@@ -87,7 +89,7 @@ Behaviour.register({
 						else {
 							Element.addClassName(self, 'inuse');	
 						}
-					}
+					},
 					error: function(response) {
 					
 					}	
