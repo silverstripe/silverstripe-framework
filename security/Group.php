@@ -62,8 +62,10 @@ class Group extends DataObject {
 	public function getCMSFields() {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');
 		
-		$config = new GridFieldConfig_ManyManyEditor('FirstName', true, 20);
-		$config->addComponent(new GridFieldExporter());
+		$config = new GridFieldConfig_ManyManyEditor('FirstName', 20);
+		$config->addComponents(new GridFieldExporter());
+		$config->getComponentByType('GridFieldRelationAdd')
+			->setResultsFormat('$Title ($Email)')->setSearchFields(array('FirstName', 'Surname', 'Email'));
 		$memberList = new GridField('Members','Members', $this->Members(), $config);
 
 		// @todo Implement permission checking on GridField
