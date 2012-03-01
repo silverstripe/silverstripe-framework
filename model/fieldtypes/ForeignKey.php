@@ -31,17 +31,10 @@ class ForeignKey extends Int {
 		$hasOneClass = $this->object->has_one($relationName);
 
 		if($hasOneClass && singleton($hasOneClass) instanceof Image) {
-			if(isset($params['ajaxSafe']) && $params['ajaxSafe']) {
-				$field = new ImageField($relationName, $title, $this->value);
-			} else {
-				$field = new SimpleImageField($relationName, $title, $this->value);
-			}
+			$field = new UploadField($relationName, $title);
+			$field->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
 		} elseif($hasOneClass && singleton($hasOneClass) instanceof File) {
-			if(isset($params['ajaxSafe']) && $params['ajaxSafe']) {
-				$field = new FileIFrameField($relationName, $title, $this->value);
-			} else {
-				$field = new FileField($relationName, $title, $this->value);
-			}
+			$field = new UploadField($relationName, $title);
 		} else {
 			$titleField = (singleton($hasOneClass)->hasField('Title')) ? "Title" : "Name";
 			$map = DataList::create($hasOneClass)->map("ID", $titleField);
