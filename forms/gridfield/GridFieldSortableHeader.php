@@ -40,7 +40,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 						$field->addExtraClass('ss-gridfield-sorted-desc');
 				}
 			} else {
-				$field = new LiteralField($columnField, $title);
+				$field = new LiteralField($columnField, '<span class="non-sortable">' . $title . '</span>');
 			}
 			$forTemplate->Fields->push($field);
 		}
