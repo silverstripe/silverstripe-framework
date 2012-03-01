@@ -1192,21 +1192,6 @@ body.cms-dialog {
 			padding: $grid-x*2;
 		}
 	}
-
-	.cms-file-info-data {
-		// Ensure it fits beside the image preview
-		max-width: 350px;
-
-		// Reduced label widths to fit everything in smaller space
-		.field {
-			label {
-				width: $grid-x*13;
-			}
-			.middleColumn {
-				margin-left: $grid-x*14;
-			}
-		}
-	}
 	
 }
 
@@ -1280,6 +1265,33 @@ body.cms-dialog {
 			box-shadow: none;
 			label, span {
 				padding: 0;
+			}
+		}
+	}
+}
+
+form.small {
+	.cms-file-info-preview {
+		width: $grid-x*14;
+
+		img {
+			max-width: $grid-x*14;
+		}
+	}
+
+	.cms-file-info-data {
+		// Ensure it fits beside the image preview
+		max-width: 350px;
+
+		// Reduced label widths to fit everything in smaller space
+		.field {
+			padding-bottom: 0;
+
+			label {
+				width: $grid-x*14;
+			}
+			.middleColumn {
+				margin-left: $grid-x*15;
 			}
 		}
 	}

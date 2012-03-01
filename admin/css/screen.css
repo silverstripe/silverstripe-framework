@@ -451,9 +451,6 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .htmleditorfield-mediaform .ss-htmleditorfield-file .overview .title { display: inline-block; vertical-align: middle; background: #fff; border: 1px solid #b3b3b3; -moz-border-radius: 5px; -webkit-border-radius: 5px; -o-border-radius: 5px; -ms-border-radius: 5px; -khtml-border-radius: 5px; border-radius: 5px; margin-left: 16px; padding: 4px; }
 .htmleditorfield-mediaform .ss-htmleditorfield-file .overview .action-delete { display: inline-block; }
 .htmleditorfield-mediaform .ss-htmleditorfield-file .details { padding: 16px; }
-.htmleditorfield-mediaform .cms-file-info-data { max-width: 350px; }
-.htmleditorfield-mediaform .cms-file-info-data .field label { width: 104px; }
-.htmleditorfield-mediaform .cms-file-info-data .field .middleColumn { margin-left: 112px; }
 
 /** -------------------------------------------- Step labels -------------------------------------------- */
 .step-label > * { display: inline-block; vertical-align: top; }
@@ -468,6 +465,13 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .cms-file-info .cms-file-info-data { float: left; }
 .cms-file-info .cms-file-info-data .field { margin-bottom: 0; padding-bottom: 8px; border: none; box-shadow: none; }
 .cms-file-info .cms-file-info-data .field label, .cms-file-info .cms-file-info-data .field span { padding: 0; }
+
+form.small .cms-file-info-preview { width: 112px; }
+form.small .cms-file-info-preview img { max-width: 112px; }
+form.small .cms-file-info-data { max-width: 350px; }
+form.small .cms-file-info-data .field { padding-bottom: 0; }
+form.small .cms-file-info-data .field label { width: 112px; }
+form.small .cms-file-info-data .field .middleColumn { margin-left: 120px; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .cms .jstree ul, .TreeDropdownField .treedropdownfield-panel .jstree ul { display: block; margin: 0; padding: 0; background: none; list-style-type: none; }

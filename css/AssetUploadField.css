@@ -30,7 +30,7 @@
 .ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-cancel { position: absolute; top: 7px; right: 7px; }
 .ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-cancel button { display: block; overflow: hidden; text-indent: -9999px; padding: 0; margin: 0; border: 0; width: 16px; height: 16px; cursor: pointer; -moz-box-shadow: none; -webkit-box-shadow: none; -o-box-shadow: none; box-shadow: none; }
 .ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-editform { /* don't use display none, for it will break jQuery('iframe').contents().height() */ height: 0; overflow: hidden; clear: both; }
-.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-editform iframe { width: 100%; }
+.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-editform iframe { margin: 16px; width: 100%; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info { float: left; margin: 19px 0 0; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-fromcomputer { position: relative; overflow: hidden; display: block; margin: 0 10px 0 0; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-uploador { float: left; font-weight: bold; font-size: 22px; padding: 0 20px; line-height: 70px; display: none; }

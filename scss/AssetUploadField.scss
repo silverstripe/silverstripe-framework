@@ -160,11 +160,14 @@
 			height: 0;
 			overflow: hidden;
 			clear: both;
+
 			iframe {
+				margin: $grid-x*2;
 				width: 100%;
 			}
 		}
 	}
+
 	.ss-uploadfield-addfile {
 	
 		.ss-uploadfield-item-info {
