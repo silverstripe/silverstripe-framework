@@ -26,6 +26,11 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 	 * @var string SSViewer template to render the results presentation
 	 */
 	protected $resultsFormat = '$Title';
+
+	/**
+	 * @var String Text shown on the search field, instructing what to search for.
+	 */
+	protected $placeholderText;
 	
 	/**
 	 *
@@ -57,6 +62,7 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 		$searchField = new TextField('gridfield_relationsearch', _t('GridField.RelationSearch', "Relation search"), $value);
 		// Apparently the data-* needs to be double qouted for the jQuery.meta data plugin
 		$searchField->setAttribute('data-search-url', '\''.Controller::join_links($gridField->Link('search').'\''));
+		$searchField->setAttribute('placeholder', $this->getPlaceholderText($gridField->getList()->dataClass()));
 		$searchField->addExtraClass('relation-search');
 		
 		$findAction = new GridField_Action($gridField, 'gridfield_relationfind', _t('GridField.Find', "Find"), 'find', 'find');
@@ -190,6 +196,41 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 	 */
 	public function getSearchFields() {
 		return $this->searchFields;
+	}
+
+	/**
+	 * @param String The class of the object being searched for
+	 * @return String
+	 */
+	public function getPlaceholderText($dataClass) {
+		if($this->placeholderText) {
+			return $this->placeholderText;
+		} else {
+			$labels = array();
+			foreach($this->searchFields as $searchField) {
+				$label = singleton($dataClass)->fieldLabel($searchField);
+				if($label) $labels[] = $label;
+			}
+			if($labels) {
+				return sprintf(
+					_t('GridField.PlaceHolderWithLabels', 'Find %s by %s', PR_MEDIUM, 'Find <object type> by <field names>'), 
+					singleton($dataClass)->plural_name(),
+					implode(', ', $labels)
+				);
+			} else {
+				return sprintf(
+					_t('GridField.PlaceHolder', 'Find %s', PR_MEDIUM, 'Find <object type>'), 
+					singleton($dataClass)->plural_name()
+				);
+			}
+		}
+	}
+
+	/**
+	 * @param String
+	 */
+	public function setPlaceholderText($text) {
+		$this->placeholderText = $text;
 	}
 	
 	/**
