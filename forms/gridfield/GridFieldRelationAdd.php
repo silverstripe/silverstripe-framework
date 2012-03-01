@@ -1,14 +1,9 @@
 <?php
 /**
- * A GridFieldRelationAdd is responsible for adding objects to another objects
- * has_many and many_many relation. It will not attach duplicate objects.
- *
- * It augments a GridField with fields above the gridfield to search and add
- * objects to whatever the SS_List passed into the gridfield.
- *
- * If the object is set to use autosuggestion it will include jQuery UI
- * autosuggestion field that searches for current objects that isn't already
- * attached to the list.
+ * A GridFieldRelationAdd is responsible for adding objects to another object's has_many and many_many relation,
+ * as defined by the RelationList passed to the GridField constructor.
+ * Objects can be searched through an input field (partially matching one or more fields).
+ * Selecting from the results will add the object to the relation.
  */
 class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
 	
@@ -26,21 +21,13 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 	 */
 	protected $fieldToSearch = '';
 	
-	/**
-	 * Use the jQuery.ui.autosuggestion plugin
-	 *
-	 * @var bool
-	 */
-	protected $useAutoSuggestion = true;
 	
 	/**
 	 *
 	 * @param string $fieldToSearch which field on the object in the list should be search
-	 * @param bool $autoSuggestion - if you would like to use the javascript autosuggest feature
 	 */
 	public function __construct($fieldToSearch, $autoSuggestion=true) {
 		$this->fieldToSearch = $fieldToSearch;
-		$this->useAutoSuggestion = $autoSuggestion;
 	}
 	
 	/**
@@ -52,13 +39,11 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 		$searchState = $gridField->State->GridFieldSearchRelation;
 		
 		
-		if($this->useAutoSuggestion){
-			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-			Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-			Requirements::javascript(SAPPHIRE_DIR . "/javascript/GridFieldSearch.js");
-		}
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/GridFieldSearch.js");
 		
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList();

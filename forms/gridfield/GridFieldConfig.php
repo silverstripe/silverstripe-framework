@@ -121,23 +121,21 @@ class GridFieldConfig_ManyManyEditor extends GridFieldConfig {
 	/**
 	 *
 	 * @param string $fieldToSearch - Which field on the object should be searched for
-	 * @param bool $autoSuggest - Show a jquery.ui.autosuggest dropdown field
 	 * @param int $itemsPerPage - How many items per page should show up
 	 * @return GridFieldConfig_ManyManyEditor
 	 */
-	public static function create($fieldToSearch, $autoSuggest=true, $itemsPerPage=25){
-		return new GridFieldConfig_ManyManyEditor($fieldToSearch, $autoSuggest=true, $itemsPerPage=25);
+	public static function create($fieldToSearch, $itemsPerPage=15){
+		return new GridFieldConfig_ManyManyEditor($fieldToSearch, $itemsPerPage=15);
 	}
 
 	/**
 	 *
 	 * @param string $fieldToSearch - Which field on the object should be searched for
-	 * @param bool $autoSuggest - Show a jquery.ui.autosuggest dropdown field
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
-	public function __construct($fieldToSearch, $autoSuggest=true, $itemsPerPage=25) {
+	public function __construct($fieldToSearch, $itemsPerPage=15) {
 		$this->addComponent(new GridFieldFilter());
-		$this->addComponent(new GridFieldRelationAdd($fieldToSearch, $autoSuggest));
+		$this->addComponent(new GridFieldRelationAdd($fieldToSearch));
 		$this->addComponent(new GridFieldSortableHeader());
 		$this->addComponent(new GridFieldDefaultColumns());
 		$this->addComponent(new GridFieldAction_Edit());
