@@ -137,7 +137,44 @@ class File extends DataObject {
 	 * @var array
 	 */
 	protected static $cache_file_fields = null;
-	
+
+	/**
+	 * Replace "[file_link id=n]" shortcode with an anchor tag or link to the file.
+	 * @param $arguments array Arguments to the shortcode
+	 * @param $content string Content of the returned link (optional)
+	 * @param $parser object Specify a parser to parse the content (see {@link ShortCodeParser})
+	 * @return string anchor HTML tag if content argument given, otherwise file path link
+	 */
+	public static function link_shortcode_handler($arguments, $content = null, $parser = null) {
+		if(!isset($arguments['id']) || !is_numeric($arguments['id'])) return;
+
+		if (
+			   !($record = DataObject::get_by_id('File', $arguments['id']))             // Get the file by ID.
+			&& !($record = DataObject::get_one('ErrorPage', '"ErrorCode" = \'404\''))   // Link to 404 page directly.
+		) {
+			return; // There were no suitable matches at all.
+		}
+
+		// build the HTML tag
+		if($content) {
+			// build some useful meta-data (file type and size) as data attributes
+			$attrs = ' ';
+			if($record instanceof File) {
+				foreach(array(
+					'class' => 'file',
+					'data-type' => $record->getExtension(),
+					'data-size' => $record->getSize()
+				) as $name => $value) {
+					$attrs .= sprintf('%s="%s" ', $name, $value);
+				}
+			}
+
+			return sprintf('<a href="%s"%s>%s</a>', $record->Link(), rtrim($attrs), $parser->parse($content));
+		} else {
+			return $record->Link();
+		}
+	}
+
 	/**
 	 * Find a File object by the given filename.
 	 * 
@@ -167,10 +204,10 @@ class File extends DataObject {
 		return Director::baseURL() . $this->RelativeLink();
 	}
 
-	function RelativeLink(){
+	function RelativeLink() {
 		return $this->Filename;
 	}
-	
+
 	/**
 	 * @deprecated 3.0 Use getTreeTitle()
 	 */

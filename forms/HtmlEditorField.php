@@ -307,7 +307,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					$siteTree,
 					new TextField('external', _t('HtmlEditorField.URL', 'URL'), 'http://'),
 					new EmailField('email', _t('HtmlEditorField.EMAIL', 'Email address')),
-					new TreeDropdownField('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'Filename', 'Title', true),
+					new TreeDropdownField('file', _t('HtmlEditorField.FILE', 'File'), 'File', 'ID', 'Title', true),
 					new TextField('Anchor', _t('HtmlEditorField.ANCHORVALUE', 'Anchor')),
 					new TextField('Description', _t('HtmlEditorField.LINKDESCR', 'Link description')),
 					new CheckboxField('TargetBlank', _t('HtmlEditorField.LINKOPENNEWWIN', 'Open link in a new window?')),
