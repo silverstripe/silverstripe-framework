@@ -179,7 +179,7 @@ class MemberTest extends FunctionalTest {
 		$member = $this->objFromFixture('Member', 'test');
 		$this->assertNotNull($member);
 		
-		Member::set_password_validator(new NZGovtPasswordValidator());
+		Member::set_password_validator(new MemberTest_PasswordValidator());
 	
 		// BAD PASSWORDS
 		
@@ -617,4 +617,14 @@ class MemberTest_EditingAllowedDeletingDeniedExtension extends DataExtension imp
 		return false;
 	}
 
+}
+
+class MemberTest_PasswordValidator extends PasswordValidator {
+	function __construct() {
+		parent::__construct();
+		$this->minLength(7);
+		$this->checkHistoricalPasswords(6);
+		$this->characterStrength(3, array('lowercase','uppercase','digits','punctuation'));
+	}
+	
 }
