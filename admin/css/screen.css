@@ -648,4 +648,4 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .ModelAdmin .cms-content-tools #SearchForm_holder div.tab form .Actions button.ss-ui-action-minor { display: none; }
 
 .SecurityAdmin .cms-edit-form .cms-content-header h2 { display: none; }
-.SecurityAdmin .permissioncheckboxset .optionset li { float: none; width: auto; }
+.SecurityAdmin .permissioncheckboxset .optionset li, .SecurityAdmin .permissioncheckboxsetfield_readonly .optionset li { float: none; width: auto; }
