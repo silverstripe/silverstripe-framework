@@ -408,7 +408,12 @@ class Folder extends File {
 	 */
 	function getCMSFields() {
 		// Hide field on root level, which can't be renamed
-		$titleField = (!$this->ID || $this->ID === "root") ? new HiddenField("Name") : new TextField("Name", _t('Folder.NAME'));
+		if(!$this->ID || $this->ID === "root") {
+			$titleField = new HiddenField("Name");	
+		} else {
+			$titleField = new TextField("Name", $this->fieldLabel('Name'));
+		}
+		
 		$fields = new FieldList(
 			$titleField,
 			new HiddenField('ParentID')
