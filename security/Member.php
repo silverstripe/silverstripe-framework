@@ -1133,12 +1133,16 @@ class Member extends DataObject {
 		// Groups relation will get us into logical conflicts because
 		// Members are displayed within  group edit form in SecurityAdmin
 		$fields->removeByName('Groups');
-		
+
 		if(Permission::check('EDIT_PERMISSIONS')) {
-			$groupsField = new TreeMultiselectField('Groups', false, 'Group');
-			$fields->findOrMakeTab('Root.Groups', singleton('Group')->i18n_plural_name());
-			$fields->addFieldToTab('Root.Groups', $groupsField);
-			
+			$groupsMap = DataList::create('Group')->map('ID', 'Breadcrumbs')->toArray();
+			asort($groupsMap);
+			$fields->addFieldToTab('Root.Main',
+				Object::create('CheckboxSetField', 'Groups', singleton('Group')->i18n_plural_name())
+					->setTemplate('CheckboxSetField_Select')
+					->setSource($groupsMap)
+			);
+
 			// Add permission field (readonly to avoid complicated group assignment logic).
 			// This should only be available for existing records, as new records start
 			// with no permissions until they have a group assignment anyway.
