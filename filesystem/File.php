@@ -862,23 +862,6 @@ class File extends DataObject {
 		
 		return new ValidationResult(true);
 	}
-
-	/**
-	 * Allow custom fields for uploads in {@link AssetAdmin}.
-	 * Similar to {@link getCMSFields()}, but a more restricted
-	 * set of fields which can be reliably set on any file type.
-	 * 
-	 * Needs to be enabled through {@link AssetAdmin::$metadata_upload_enabled}
-	 * 
-	 * @return FieldList
-	 */
-	function uploadMetadataFields() {
-		$fields = new FieldList();
-		$fields->push(new TextField('Title', $this->fieldLabel('Title')));
-		$this->extend('updateUploadMetadataFields', $fields);
-		
-		return $fields;
-	}
 	
 	/**
 	 * @var Array Only use lowercase extensions in here.
