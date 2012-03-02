@@ -61,8 +61,13 @@ class Group extends DataObject {
 	public function getCMSFields() {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');
 		
-		$config = new GridFieldConfig_ManyManyEditor('FirstName', 20);
-		$config->addComponents(new GridFieldExporter(), new GridFieldTitle());
+		$config = new GridFieldConfig();
+		$config->addComponent(new GridFieldTitle());
+		$configs = new GridFieldConfig_ManyManyEditor('FirstName', 20);
+		$components = $configs->getComponents();
+		foreach($components as $component) $config->addComponent($component);		
+		$config->addComponents(new GridFieldExporter());
+		
 		$config->getComponentByType('GridFieldRelationAdd')
 			->setResultsFormat('$Title ($Email)')->setSearchFields(array('FirstName', 'Surname', 'Email'));
 		$memberList = new GridField('Members','Members', $this->Members(), $config);

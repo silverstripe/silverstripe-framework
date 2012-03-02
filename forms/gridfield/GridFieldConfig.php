@@ -134,9 +134,9 @@ class GridFieldConfig_ManyManyEditor extends GridFieldConfig {
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
 	public function __construct($fieldToSearch, $itemsPerPage=15) {
-		$this->addComponent(new GridFieldFilter());
 		$this->addComponent(new GridFieldRelationAdd($fieldToSearch));
 		$this->addComponent(new GridFieldSortableHeader());
+		$this->addComponent(new GridFieldFilter());
 		$this->addComponent(new GridFieldDefaultColumns());
 		$this->addComponent(new GridFieldAction_Edit());
 		$this->addComponent(new GridFieldRelationDelete());
