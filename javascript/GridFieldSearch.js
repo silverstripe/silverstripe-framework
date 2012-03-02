@@ -28,7 +28,12 @@ jQuery(function($){
 				$(this).closest(".ss-gridfield").find("#action_gridfield_relationfind").replaceWith(
 					'<input type="hidden" name="relationID" value="'+ui.item.id+'" id="relationID"/>'
 				);
-				$(this).closest(".ss-gridfield").find("#action_gridfield_relationadd").button('enable');
+				var addbutton = $(this).closest(".ss-gridfield").find("#action_gridfield_relationadd");
+				if(addbutton.data('button')){
+					addbutton.button('enable');
+				}else{
+					addbutton.removeAttr('disabled');
+				}
 			}
 		});
 	});
