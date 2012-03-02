@@ -1,7 +1,9 @@
 <?php
 /**
- * GridFieldRelationDelete
- *
+ * Allows to detach an item from an existing has_many or many_many relationship.
+ * Similar to {@link GridFieldAction_Delete}, but allows to distinguish between 
+ * a "delete" and "detach" action in the UI - and to use both in parallel, if required.
+ * Requires the GridField to be populated with a RelationList rather than a plain DataList.
  */
 class GridFieldRelationDelete implements GridField_ColumnProvider, GridField_ActionProvider {
 	

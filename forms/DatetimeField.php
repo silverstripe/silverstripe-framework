@@ -298,7 +298,7 @@ class DatetimeField_Readonly extends DatetimeField {
 			$format = sprintf(
 				$this->getConfig('datetimeorder'), 
 				$this->dateField->getConfig('dateformat'), 
-				$this->dateField->getConfig('timeformat')
+				$this->timeField->getConfig('timeformat')
 			);
 			$valueObj = new Zend_Date(
 				sprintf($this->getConfig('datetimeorder'), $valDate, $valTime),

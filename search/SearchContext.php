@@ -162,7 +162,7 @@ class SearchContext extends Object {
 	 * @return SS_List
 	 */
 	public function getResults($searchParams, $sort = false, $limit = false) {
-		$searchParams = array_filter($searchParams, array($this,'clearEmptySearchFields'));
+		$searchParams = array_filter((array)$searchParams, array($this,'clearEmptySearchFields'));
 
 		// getQuery actually returns a DataList
 		return $this->getQuery($searchParams, $sort, $limit);

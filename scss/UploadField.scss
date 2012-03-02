@@ -156,8 +156,11 @@
 			height: 0;
 			overflow: hidden;
 			clear: both;
-			margin-top: $grid-y;
+			
 			iframe {
+				margin-top: $grid-y;
+				padding-top: $grid-y;
+				border-top: 1px solid $color-light-separator;
 				width: 100%;
 			}
 		}		
@@ -167,10 +170,6 @@
 			border-top: 1px solid lighten($color-medium-separator, 20%);
 		}
 	}
-}
-
-body.ss-uploadfield-edit-iframe {
-	padding: $grid-y*2 $grid-x*2;
 }
 
 .ss-upload {

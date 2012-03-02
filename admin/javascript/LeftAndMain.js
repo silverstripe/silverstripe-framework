@@ -242,6 +242,7 @@ jQuery.noConflict();
 					},
 					error: function(xhr, status, e) {
 						contentEl.removeClass('loading');
+						errorMessage(e);
 					}
 				});
 				
@@ -273,7 +274,7 @@ jQuery.noConflict();
 		/**
 		 * Trigger dialogs with iframe based on the links href attribute (see ssui-core.js).
 		 */
-		$('.cms-container .ss-ui-dialog-link').entwine({
+		$('.cms .ss-ui-dialog-link').entwine({
 			UUID: null,
 			onmatch: function() {
 				this._super();
@@ -335,7 +336,7 @@ jQuery.noConflict();
 		 * the DOM element on creation, rather than onclick - which allows us to decorate
 		 * the field with a calendar icon
 		 */
-		$('.cms-container .field.date input.text').entwine({
+		$('.cms .field.date input.text').entwine({
 			onmatch: function() {
 				var holder = $(this).parents('.field.date:first'), config = holder.data();
 				if(!config.showcalendar) return;
@@ -362,9 +363,9 @@ jQuery.noConflict();
 		 * we can fix the height cropping.
 		 */
 		
-		$('.cms-container .field.dropdown').entwine({
+		$('.cms .field.dropdown, .cms .field.checkboxset').entwine({
 			onmatch: function() {
-				$(this).find("select:not(.no-chzn)").chosen();
+				$(this).find("select:not(.no-chzn)").data('placeholder', ' ').chosen();
 				$(this).addClass("has-chzn");
 				
 				this._super();
@@ -380,139 +381,54 @@ jQuery.noConflict();
 		});
 	});
 	
-	$('.cms-filter-form').entwine({
-		
-		GridField: null,
+	/**
+	 * Overload the default GridField behaviour (open a new URL in the browser)
+	 * with the CMS-specific ajax loading.
+	 */
+	$('.cms .ss-gridfield').entwine({
+		showDetailView: function(url) {
+			// Include any GET parameters from the current URL, as the view state might depend on it.
+			// For example, a list prefiltered through external search criteria might be passed to GridField.
+			if(window.location.search) url += window.location.search;
+			$('.cms-container').entwine('ss').loadPanel(url);
+		}
+	});
 
-		/**
-		 * Function onmatch
-		 *
-		 * Try to find the related gridfield by looking up the data-gridfield attribute on this
-		 * filter form
-		 */
-		onmatch: function() {
-			var gridfieldName = this.attr('data-gridfield');
-			this.setGridField($('.grid[data-name='+gridfieldName+']'));
-			var self = this;
-			this.getGridField().bind('reload', function(e, gridfield){
-				self.setFilterValues($(gridfield).getState());
+
+	/**
+	 * Generic search form in the CMS, often hooked up to a GridField results display.
+	 */	
+	$('.cms-search-form').entwine({
+
+		onsubmit: function() {
+			// Remove empty elements and make the URL prettier
+			var nonEmptyInputs = this.find(':input:not(:submit)').filter(function() {
+				// Use fieldValue() from jQuery.form plugin rather than jQuery.val(),
+				// as it handles checkbox values more consistently
+				var vals = $.grep($(this).fieldValue(), function(val) { return (val);});
+				return (vals.length);
 			});
-		},
-
-		/**
-		 * Function: onsubmit
-		 * 
-		 * Parameters:
-		 *  (Event) e
-		 */
-		onsubmit: function(e) {
-			this.changeState(jQuery(this).find(':submit:first'));
+			var url = this.attr('action');
+			if(nonEmptyInputs.length) url += '?' + nonEmptyInputs.serialize();
+			this.closest('.cms-container').entwine('ss').loadPanel(url);
 			return false;
 		},
 
-
 		/**
-		 * Function: setFilterValues
-		 * 
-		 * Parameters:
-		 *  (JSON) state
-		 *
-		 */
-		setFilterValues: function(state){
-			var filterValues = state.GridFieldFilter.Columns;
-			if(jQuery.isEmptyObject(filterValues)){
-				this.resetFilterForm();
-				return;
-			}
-			this.filterFields().each(function(idx, element) {
-				if(typeof filterValues[element.name] !== "undefined") {
-					$(element).val(filterValues[element.name]);
-				}
-			});
-		},
-
-		/**
-		 * Function: onreset
-		 * 
-		 * Parameters:
-		 *  (Event) e
+		 * Resets are processed on the serverside, so need to trigger a submit.
 		 */
 		onreset: function(e) {
-			if(this.resetFilterForm()) {
-				this.changeState(jQuery(this));
-			}
-			return false;
-		},
-
-		/**
-		 * Function resetFilterForm
-		 * 
-		 **/
-		resetFilterForm: function() {
-			var needUpdate = false;
-			this.filterFields().each(function(idx, element) {
-				if($(element).val()) {
-					needUpdate = true; 
-					$(element).val('');
-				}
-				if($(element).hasClass('chzn-done')){
-					$(element).trigger("liszt:updated");
-				}
-			});
-			return needUpdate;
-		},
-
-		/**
-		 * Function: changeState
-		 * 
-		 * Change the state of the gridfield, reloads it's and set loading classes on elements
-		 * 
-		 * Parameters:
-		 *  (Element) element - the element that will get a loading class added / removed
-		 *
-		 */
-		changeState: function(element) {
-			element.addClass('loading');
-			this.getGridField().setState('GridFieldFilter', {'Columns': this.filterValues()});
-			this.getGridField().reload(null, function(){
-				element.removeClass('loading');
-			});
-		},
-
-		/**
-		 * Function filterFields
-		 * Get all fields that contains filter values
-		 *
-		 */
-		filterFields: function() {
-			return this.find(':input').not(".action, .hidden");
-		},
-
-		/**
-		 * Function: filterValues
-		 * 
-		 * Returns an key-value array for the filter values set in the filter form
-		 *
-		 */
-		filterValues: function() {
-			var filterColumns = {};
-			this.filterFields().each(function(idx,elm){
-				filterColumns[$(elm).attr('name')] = $(elm).val();
-			});
-			return filterColumns;
+			this.clearForm();
+			this.submit();
 		}
+
 	});
 }(jQuery));
 
-// Backwards compatibility
 var statusMessage = function(text, type) {
 	jQuery.noticeAdd({text: text, type: type});
 };
 
 var errorMessage = function(text) {
 	jQuery.noticeAdd({text: text, type: 'error'});
-};
-
-returnFalse = function() {
-	return false;
 };

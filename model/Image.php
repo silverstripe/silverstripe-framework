@@ -73,21 +73,6 @@ class Image extends File {
 		parent::defineMethods();
 	}
 
-	/*
-	 * Generate and return the preview image / file upload / replace field for this File
-	 * @return FormField
-	 */
-	protected function getFilePreview() {
-		$formattedImage = $this->getFormattedImage('AssetLibraryPreview');
-		$thumbnail = $formattedImage ? $formattedImage->URL : '';
-
-		$previewField = new LiteralField("ImageFull",
-			"<img id='thumbnailImage' class='thumbnail-preview' src='{$thumbnail}?r=" . rand(1,100000)  . "' alt='{$this->Name}' />\n"
-		);
-
-		return $previewField;
-	}
-	
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
 
@@ -97,8 +82,8 @@ class Image extends File {
 		$urlLink .= "</div>";
 		
 		//attach the addition file information for an image to the existing FieldGroup create in the parent class
-		$fileAttributes = $fields->FieldByName('Root.Main.FilePreview');
-		$fileAttributes->push(new ReadonlyField("Dimensions", _t('AssetTableField.DIM','Dimensions').self::$labelSeparator));
+		$fileAttributes = $fields->fieldByName('Root.Main.FilePreview')->fieldByName('FilePreviewData');
+		$fileAttributes->push(new ReadonlyField("Dimensions", _t('AssetTableField.DIM','Dimensions') . ':'));
 
 		return $fields;
 	}

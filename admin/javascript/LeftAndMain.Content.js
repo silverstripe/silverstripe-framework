@@ -194,7 +194,7 @@
 					var form = this.replaceForm(oldForm, data);
 				
 					if(typeof(Behaviour) != 'undefined') Behaviour.apply(); // refreshes ComplexTableField
-
+					
 					this.trigger('reloadeditform', {form: form, origData: origData, xmlhttp: xmlhttp});
 				}
 

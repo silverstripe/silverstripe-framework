@@ -1,14 +1,9 @@
 <?php
 /**
- * A GridFieldRelationAdd is responsible for adding objects to another objects
- * has_many and many_many relation. It will not attach duplicate objects.
- *
- * It augments a GridField with fields above the gridfield to search and add
- * objects to whatever the SS_List passed into the gridfield.
- *
- * If the object is set to use autosuggestion it will include jQuery UI
- * autosuggestion field that searches for current objects that isn't already
- * attached to the list.
+ * A GridFieldRelationAdd is responsible for adding objects to another object's has_many and many_many relation,
+ * as defined by the RelationList passed to the GridField constructor.
+ * Objects can be searched through an input field (partially matching one or more fields).
+ * Selecting from the results will add the object to the relation.
  */
 class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
 	
@@ -20,27 +15,29 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 	protected $itemClass = 'GridFieldRelationAdd';
 	
 	/**
-	 * Which column that should be used for doing a StartsWith search
+	 * Which columns that should be used for doing a "StartsWith" search.
+	 * If multiple fields are provided, the filtering is performed non-exclusive.
 	 *
-	 * @var string
+	 * @var Array
 	 */
-	protected $fieldToSearch = '';
+	protected $searchFields = array();
+
+	/**
+	 * @var string SSViewer template to render the results presentation
+	 */
+	protected $resultsFormat = '$Title';
+
+	/**
+	 * @var String Text shown on the search field, instructing what to search for.
+	 */
+	protected $placeholderText;
 	
 	/**
-	 * Use the jQuery.ui.autosuggestion plugin
 	 *
-	 * @var bool
+	 * @param array $searchFields Which fields on the object in the list should be searched
 	 */
-	protected $useAutoSuggestion = true;
-	
-	/**
-	 *
-	 * @param string $fieldToSearch which field on the object in the list should be search
-	 * @param bool $autoSuggestion - if you would like to use the javascript autosuggest feature
-	 */
-	public function __construct($fieldToSearch, $autoSuggestion=true) {
-		$this->fieldToSearch = $fieldToSearch;
-		$this->useAutoSuggestion = $autoSuggestion;
+	public function __construct($searchFields) {
+		$this->searchFields = (array)$searchFields;
 	}
 	
 	/**
@@ -52,25 +49,24 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 		$searchState = $gridField->State->GridFieldSearchRelation;
 		
 		
-		if($this->useAutoSuggestion){
-			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-			Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-			Requirements::javascript(SAPPHIRE_DIR . "/javascript/GridFieldSearch.js");
-		}
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/GridFieldSearch.js");
 		
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList();
 		
-		$value = $this->findSingleEntry($gridField, $this->fieldToSearch, $searchState, $gridField->getList()->dataClass);
+		$value = $this->findSingleEntry($gridField, $this->searchFields, $searchState, $gridField->getList()->dataClass);
 		$searchField = new TextField('gridfield_relationsearch', _t('GridField.RelationSearch', "Relation search"), $value);
 		// Apparently the data-* needs to be double qouted for the jQuery.meta data plugin
 		$searchField->setAttribute('data-search-url', '\''.Controller::join_links($gridField->Link('search').'\''));
+		$searchField->setAttribute('placeholder', $this->getPlaceholderText($gridField->getList()->dataClass()));
 		$searchField->addExtraClass('relation-search');
 		
 		$findAction = new GridField_Action($gridField, 'gridfield_relationfind', _t('GridField.Find', "Find"), 'find', 'find');
-		$addAction = new GridField_Action($gridField, 'gridfield_relationadd', _t('GridField.Add', "Add"), 'addto', 'addto');
+		$addAction = new GridField_Action($gridField, 'gridfield_relationadd', _t('GridField.LinkExisting', "Link Exisiting"), 'addto', 'addto');
 
 		// If an object is not found, disable the action
 		if(!is_int($gridField->State->GridFieldAddRelation)) {
@@ -156,14 +152,85 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 	 */
 	public function doSearch($gridField, $request) {
 		$allList = DataList::create($gridField->getList()->dataClass());
-		$results = $allList->subtract($gridField->getList())->filter($this->fieldToSearch.':StartsWith',$request->param('ID'));
-		$results->sort($this->fieldToSearch, 'ASC');
+		$filters = array();
+		$stmts = array();
+		// TODO Replace with DataList->filterAny() once it correctly supports OR connectives
+		foreach($this->searchFields as $searchField) {
+			$stmts[] .= sprintf('"%s" LIKE \'%s%%\'', $searchField, $request->param('ID'));
+		}
+		$results = $allList->where(implode(' OR ', $stmts))->subtract($gridField->getList());
+		$results->sort($this->searchFields[0], 'ASC');
 		
 		$json = array();
 		foreach($results as $result) {
-			$json[$result->ID] = $result->{$this->fieldToSearch};
+			$json[$result->ID] = SSViewer::fromString($this->resultsFormat)->process($result);
 		}
 		return Convert::array2json($json);
+	}
+
+	/**
+	 * @param String
+	 */
+	public function setResultsFormat($format) {
+		$this->resultsFormat = $format;
+		return $this;
+	}
+
+	/**
+	 * @return String
+	 */
+	public function getResultsFormat() {
+		return $this->resultsFormat;
+	}
+
+	/**
+	 * @param Array
+	 */
+	public function setSearchFields($fields) {
+		$this->searchFields = $fields;
+		return $this;
+	}
+
+	/**
+	 * @return Array
+	 */
+	public function getSearchFields() {
+		return $this->searchFields;
+	}
+
+	/**
+	 * @param String The class of the object being searched for
+	 * @return String
+	 */
+	public function getPlaceholderText($dataClass) {
+		if($this->placeholderText) {
+			return $this->placeholderText;
+		} else {
+			$labels = array();
+			foreach($this->searchFields as $searchField) {
+				$label = singleton($dataClass)->fieldLabel($searchField);
+				if($label) $labels[] = $label;
+			}
+			if($labels) {
+				return sprintf(
+					_t('GridField.PlaceHolderWithLabels', 'Find %s by %s', PR_MEDIUM, 'Find <object type> by <field names>'), 
+					singleton($dataClass)->plural_name(),
+					implode(', ', $labels)
+				);
+			} else {
+				return sprintf(
+					_t('GridField.PlaceHolder', 'Find %s', PR_MEDIUM, 'Find <object type>'), 
+					singleton($dataClass)->plural_name()
+				);
+			}
+		}
+	}
+
+	/**
+	 * @param String
+	 */
+	public function setPlaceholderText($text) {
+		$this->placeholderText = $text;
 	}
 	
 	/**

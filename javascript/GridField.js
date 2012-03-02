@@ -11,6 +11,12 @@
 			if(!ajaxOpts.data) ajaxOpts.data = [];
 			ajaxOpts.data = ajaxOpts.data.concat(data);
 
+			// Include any GET parameters from the current URL, as the view state might depend on it.
+			// For example, a list prefiltered through external search criteria might be passed to GridField.
+			if(window.location.search) {
+				ajaxOpts.data = window.location.search.replace(/^\?/, '') + '&' + $.param(ajaxOpts.data);
+			}
+
 			form.addClass('loading');
 
 			$.ajax($.extend({}, {
@@ -33,6 +39,9 @@
 					form.removeClass('loading');
 				}
 			}, ajaxOpts));
+		},
+		showDetailView: function(url) {
+			window.location.href = url;
 		},
 		getItems: function() {
 			return this.find('.ss-gridfield-item');
@@ -59,6 +68,24 @@
 			return this.closest('.ss-gridfield');
 		}
 	});
+
+	$('.ss-gridfield .ss-gridfield-item').entwine({
+		onclick: function(e) {
+			if($(e.target).is('.action')) {
+				this._super(e);
+				return;
+			}
+
+			var editLink = this.find('.edit-link');
+			if(editLink.length) this.getGridField().showDetailView(editLink.prop('href'));
+		},
+		onmouseover: function() {
+			if(this.find('.edit-link').length) this.css('cursor', 'pointer');
+		},
+		onmouseout: function() {
+			this.css('cursor', 'default');
+		}
+	});
 		
 	$('.ss-gridfield .action').entwine({
 		onclick: function(e){
@@ -67,63 +94,23 @@
 		}
 	});
 
-	$('.ss-gridfield .action-deleterecord').entwine({
+	$('.ss-gridfield .gridfield-button-delete').entwine({
 		onclick: function(e){
 			if(!confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) return false;
 			else this._super(e);
 		}
 	});
-	
-	/*
-	 * Upon focusing on a filter <input> element, move "filter" and "reset" buttons and display next to the current <input> element
-	 * ToDo ensure filter-button state is maintained after filtering (see resetState param)
-	 * ToDo get working in IE 6-7
-	 */
-	$('.ss-gridfield input.ss-gridfield-sort').entwine({
-		onfocusin: function(e) {
-			// Dodgy results in IE <=7 & ignore if only one filter-field
-			countfields = $('.ss-gridfield input.ss-gridfield-sort').length;
-			if(($.browser.msie && $.browser.version <= 7) || countfields == 1) {
-				return false;
-			}
-			var eleInput = $(this);
-
-			// Remove existing <div> and <button> elements in-lieu of cloning
-			this.getGridField().find('th > div').each(function(i,v) {$(v).remove();});	
-
-			var eleButtonSetFilter = $('#action_filter');
-			var eleButtonResetFilter = $('#action_reset');
-			// Retain current widths to ensure <th>'s don't shift widths
-			var eleButtonWidth = eleButtonSetFilter.width();					
-			// Check <th> doesn't already have an (extra) cloned <button> appended, otherwise clone
-			if(eleInput.closest('th').children().length == 1) {
-				var newButtonCss = {
-					'position':'absolute',
-					'top':'-23px',
-					'left':'0',
-					'border':'#EEE solid 1px',
-					'padding':'0',
-					'margin-left':'0'
-				};	
-				// Append a <div> element used purely for CSS positioning - table elements on their own are untrustworthy to style in this manner
-				$('<div/>').append(
-					eleButtonSetFilter.clone().css(newButtonCss),
-					eleButtonResetFilter.clone().css(newButtonCss).css('left',(eleButtonWidth+4)+'px')
-				).css({'position':'relative','margin':'0 auto','width':'65%'}).appendTo(eleInput.closest('th'));
-			}
-		}
-	});
 
 	$('fieldset.ss-gridfield .new-link').entwine({
 		onclick: function(e) {
-			$(this).trigger('opennewview', $(this).prop('href'));
+			this.getGridField().showDetailView($(this).prop('href'));
 			return false;
 		}
 	});
 
 	$('fieldset.ss-gridfield .edit-link').entwine({
 		onclick: function(e) {
-			$(this).trigger('openeditview', $(this).prop('href'));
+			this.getGridField().showDetailView($(this).prop('href'));
 			return false;
 		}
 	});
@@ -158,6 +145,20 @@
 			this.selectable('destroy');
 		}
 		 
+	});
+
+	/**
+	 * Catch submission event in filter input fields, and submit the correct button
+	 * rather than the whole form.
+	 */
+	$('.ss-gridfield .filter-header :input').entwine({
+		onkeydown: function(e) {
+			if(e.keyCode == '13') {
+				btn = this.closest('.filter-header').find('.ss-gridfield-button-filter');
+				this.getGridField().reload({data: [{name: btn.attr('name'), value: btn.val()}]});
+				return false;
+			}
+		}
 	});
 
 }(jQuery));

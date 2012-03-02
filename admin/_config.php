@@ -34,3 +34,4 @@ HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'ssimage', 'ssflash', 'sslink'
 HtmlEditorConfig::get('cms')->removeButtons('tablecontrols');
 HtmlEditorConfig::get('cms')->addButtonsToLine(3, 'tablecontrols');
 
+CMSMenu::remove_menu_item('CMSProfileController');

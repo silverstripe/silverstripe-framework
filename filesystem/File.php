@@ -120,8 +120,28 @@ class File extends DataObject {
 		'xml','pdf',
 	);
 
-	protected static $labelSeparator = ':';
-	
+	/**
+	 * @var array Category identifiers mapped to commonly used extensions.
+	 */
+	static $app_categories = array(
+		'audio' => array(
+			"aif" ,"au" ,"mid" ,"midi" ,"mp3" ,"ra" ,"ram" ,"rm","mp3" ,"wav" ,"m4a" ,"snd" ,"aifc" ,"aiff" ,"wma" ,"apl",
+			"avr" ,"cda" ,"mp4" ,"ogg"
+		),
+		'mov' => array(
+			"mpeg" ,"mpg" ,"m1v" ,"mp2" ,"mpa" ,"mpe" ,"ifo" ,"vob","avi" ,"wmv" ,"asf" ,"m2v" ,"qt"
+		),
+		'zip' => array(
+			"arc" ,"rar" ,"tar" ,"gz" ,"tgz" ,"bz2" ,"dmg" ,"jar","ace" ,"arj" ,"bz" ,"cab"
+		),
+		'image' => array(
+			"bmp" ,"gif" ,"jpg" ,"jpeg" ,"pcx" ,"tif" ,"png" ,"alpha","als" ,"cel" ,"icon" ,"ico" ,"ps"
+		),
+		'flash' => array(
+			'swf', 'fla'
+		)
+	);
+
 	/**
 	 * @var If this is true, then restrictions set in {@link $allowed_max_file_size} and
 	 * {@link $allowed_extensions} will be applied to users with admin privileges as
@@ -294,57 +314,63 @@ class File extends DataObject {
 		return $this->canEdit($member);
 	}
 
-	/*
-	 * Generate and return the preview image / file upload / replace field for this File
-	 * @return FormField
+	/**
+	 * Returns the fields to power the edit screen of files in the CMS
+	 * @return FieldList
 	 */
-	protected function getFilePreview() {
-		//file upload
+	function getCMSFields() {
+		// Preview
+		if($this instanceof Image) {
+			$formattedImage = $this->getFormattedImage('SetWidth', Image::$asset_preview_width);
+			$thumbnail = $formattedImage ? $formattedImage->URL : '';
+			$previewField = new LiteralField("ImageFull",
+				"<img id='thumbnailImage' class='thumbnail-preview' src='{$thumbnail}?r=" . rand(1,100000)  . "' alt='{$this->Name}' />\n"
+			);
+		} else {
+			$previewField = new LiteralField("ImageFull", $this->CMSThumbnail());
+		}
+
+		// Upload
 		$uploadField = new UploadField('UploadField','Upload Field');
 		$uploadField->setConfig('previewMaxWidth', 40);
 		$uploadField->setConfig('previewMaxHeight', 30);
+		$uploadField->setConfig('allowedMaxFileNumber', 1);
 		//$uploadField->setTemplate('FileEditUploadField');
 		if ($this->ParentID) {
 			$parent = $this->Parent();
 			if ($parent) {  //set the parent that the Upload field should use for uploads
 				$uploadField->setFolderName($parent->getFilename());
 				$uploadField->setRecord($parent);
-				//TODO: make the uploadField replace the existing file
 			}
 		}
 
-		return $uploadField;
-	}
-
-	/**
-	 * Returns the fields to power the edit screen of files in the CMS
-	 * @return FieldList
-	 */
-	function getCMSFields() {
-		$urlLink = "<div class='field readonly'>";
-		$urlLink .= "<label class='left'>"._t('AssetTableField.URL','URL')."</label>";
-		$urlLink .= "<span class='readonly'><a href='{$this->Link()}' target='_blank'>{$this->RelativeLink()}</a></span>";
-		$urlLink .= "</div>";
-
 		//create the file attributes in a FieldGroup
-		$filePreview = new FieldGroup(
-			$this->getFilePreview(),
-			new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type').self::$labelSeparator),
-			new ReadonlyField("Filename", _t('AssetTableField.FILENAME','File name').self::$labelSeparator),
-			new ReadonlyField("Size", _t('AssetTableField.SIZE','File size').self::$labelSeparator, $this->getSize()),
-			new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded').self::$labelSeparator),
-			new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed').self::$labelSeparator)
-		);
-		$filePreview->setTitle("File preview");
-		$filePreview->setName("FilePreview");
+		$filePreview = FormField::create('CompositeField', 
+			FormField::create('CompositeField',
+				$previewField
+			)->setName("FilePreviewImage")->addExtraClass('cms-file-info-preview'),
+			FormField::create('CompositeField',
+				FormField::create('CompositeField', 
+					new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':'),
+					new ReadonlyField("Size", _t('AssetTableField.SIZE','File size') . ':', $this->getSize()),
+					$urlField = new ReadonlyField('ClickableURL', _t('AssetTableField.URL','URL'),
+						sprintf('<a href="%s" target="_blank">%s</a>', $this->Link(), $this->RelativeLink())
+					),
+					new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded') . ':'),
+					new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed') . ':')
+				)
+			)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')
+		)->setName("FilePreview")->addExtraClass('cms-file-info');
+		$urlField->dontEscape = true;
 
 		return new FieldList(
 			new TabSet('Root',
 				new Tab('Main',
 					$filePreview,
+					//TODO: make the uploadField replace the existing file
+					// $uploadField,
 					new TextField("Title", _t('AssetTableField.TITLE','Title')),
 					new TextField("Name", _t('AssetTableField.FILENAME','Filename')),
-					new LiteralField("AbsoluteURL", $urlLink),  //TODO: replace this is a proper preview
 					new DropdownField("OwnerID", _t('AssetTableField.OWNER','Owner'), Member::mapInCMSGroups())
 				)
 			)
@@ -361,27 +387,10 @@ class File extends DataObject {
 	 */
 	public function appCategory() {
 		$ext = strtolower($this->Extension);
-		switch($ext) {
-			case "aif": case "au": case "mid": case "midi": case "mp3": case "ra": case "ram": case "rm":
-			case "mp3": case "wav": case "m4a": case "snd": case "aifc": case "aiff": case "wma": case "apl":
-			case "avr": case "cda": case "mp4": case "ogg":
-				return "audio";
-			
-			case "mpeg": case "mpg": case "m1v": case "mp2": case "mpa": case "mpe": case "ifo": case "vob":
-			case "avi": case "wmv": case "asf": case "m2v": case "qt":
-				return "mov";
-			
-			case "arc": case "rar": case "tar": case "gz": case "tgz": case "bz2": case "dmg": case "jar":
-			case "ace": case "arj": case "bz": case "cab":
-				return "zip";
-				
-			case "bmp": case "gif": case "jpg": case "jpeg": case "pcx": case "tif": case "png": case "alpha":
-			case "als": case "cel": case "icon": case "ico": case "ps":
-				return "image";
-
-			case "swf": 
-				return "flash";
+		foreach(self::$app_categories as $category => $exts) {
+			if(in_array($ext, $exts)) return $category;
 		}
+		return false;
 	}
 
 	function CMSThumbnail() {
@@ -804,46 +813,6 @@ class File extends DataObject {
 			return 0;
 		}
 	}
-
-	/**
-	 * We've overridden the DataObject::get function for File so that the very large content field
-	 * is excluded!
-	 *
-	 * @todo Admittedly this is a bit of a hack; but we need a way of ensuring that large
-	 * TEXT fields don't stuff things up for the rest of us.  Perhaps a separate search table would
-	 * be a better way of approaching this?
-	 * @deprecated alternative_instance_get()
-	 */
-	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet", $having="") {
-		Deprecation::notice('2.5', 'Use alternative_instance_get() instead.');
-
-		$query = $this->extendedSQL($filter, $sort, $limit, $join, $having);
-		$baseTable = reset($query->from);
-
-		$excludeDbColumns = array('Content');
-		
-		// Work out which columns we're actually going to select
-		// In short, we select everything except File.Content
-		$dataobject_select = array();
-		foreach($query->select as $item) {
-			/*
-			if($item == "\"File\".*") {
-				$fileColumns = DB::query("SHOW FIELDS IN \"File\"")->column();
-				$columnsToAdd = array_diff($fileColumns, $excludeDbColumns);
-				foreach($columnsToAdd as $otherItem) $dataobject_select[] = '"File".' . $otherItem;
-			} else {
-			*/
-				$dataobject_select[] = $item;
-			//}
-		}
-
-		$query->select = $dataobject_select;
-
-		$records = $query->execute();
-		$ret = $this->buildDataObjectSet($records, $containerClass);
-	
-		return $ret;
-	}
 	
 	public function flushCache() {
 		parent::flushCache();
@@ -894,23 +863,6 @@ class File extends DataObject {
 		// A record should still be saveable even if the underlying record has been removed.
 		
 		return new ValidationResult(true);
-	}
-
-	/**
-	 * Allow custom fields for uploads in {@link AssetAdmin}.
-	 * Similar to {@link getCMSFields()}, but a more restricted
-	 * set of fields which can be reliably set on any file type.
-	 * 
-	 * Needs to be enabled through {@link AssetAdmin::$metadata_upload_enabled}
-	 * 
-	 * @return FieldList
-	 */
-	function uploadMetadataFields() {
-		$fields = new FieldList();
-		$fields->push(new TextField('Title', $this->fieldLabel('Title')));
-		$this->extend('updateUploadMetadataFields', $fields);
-		
-		return $fields;
 	}
 	
 	/**

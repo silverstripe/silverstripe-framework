@@ -150,6 +150,17 @@ class HierarchyTest extends SapphireTest {
 		$this->assertNotContains("Obj 2b", $children);
 	}
 
+	function testBreadcrumbs() {
+		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
+		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
+		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+
+		$this->assertEquals('Obj 1', $obj1->getBreadcrumbs());
+		$this->assertEquals('Obj 2 &raquo; Obj 2a', $obj2a->getBreadcrumbs());
+		$this->assertEquals('Obj 2 &raquo; Obj 2a &raquo; Obj 2aa', $obj2aa->getBreadcrumbs());
+	}
+
 }
 
 class HierarchyTest_Object extends DataObject implements TestOnly {

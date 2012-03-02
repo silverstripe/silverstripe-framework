@@ -65,7 +65,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 		);	
 	}
 	
-	function testSaveWithArrayValueSet() {
+	function testSaveWithAssociativeArrayValueSet() {
 		$article = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
 		$articleWithTags = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithtags');
 		$tag1 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
@@ -76,6 +76,40 @@ class CheckboxSetFieldTest extends SapphireTest {
 		$field->setValue(array(
 			$tag1->ID => true,
 			$tag2->ID => true
+		));
+		
+		/* Saving should work */
+		$field->saveInto($article);
+		
+		$this->assertEquals(
+			array($tag1->ID,$tag2->ID), 
+			DB::query("SELECT \"CheckboxSetFieldTest_TagID\"
+				FROM \"CheckboxSetFieldTest_Article_Tags\"
+				WHERE \"CheckboxSetFieldTest_Article_Tags\".\"CheckboxSetFieldTest_ArticleID\" = $article->ID
+			")->column(),
+			'Data shold be saved into CheckboxSetField manymany relation table on the "right end"'
+		);	
+		$this->assertEquals(
+			array($articleWithTags->ID,$article->ID), 
+			DB::query("SELECT \"CheckboxSetFieldTest_ArticleID\"
+				FROM \"CheckboxSetFieldTest_Article_Tags\"
+				WHERE \"CheckboxSetFieldTest_Article_Tags\".\"CheckboxSetFieldTest_TagID\" = $tag1->ID
+			")->column(),
+			'Data shold be saved into CheckboxSetField manymany relation table on the "left end"'
+		);	
+	}
+
+	function testSaveWithNumericArrayValueSet() {
+		$article = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
+		$articleWithTags = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithtags');
+		$tag1 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
+		$tag2 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
+		
+		/* Create a CheckboxSetField with 2 items selected.  Note that the array is in the format (key) => (selected) */
+		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map());
+		$field->setValue(array(
+			$tag1->ID,
+			$tag2->ID
 		));
 		
 		/* Saving should work */

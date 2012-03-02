@@ -6,7 +6,7 @@
  * but we need it earlier in order to correctly display the uninitialized tree.
  */
 
-.cms {
+.cms, .TreeDropdownField .treedropdownfield-panel {
 	.jstree {
 		ul {
 			display: block;
@@ -397,7 +397,7 @@
 	}
 }
 
-.cms-tree.jstree-apple {
+.tree-holder.jstree-apple, .cms-tree.jstree-apple {
 	
 	& li.Root {
 		& strong {

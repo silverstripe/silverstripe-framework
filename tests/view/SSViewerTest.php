@@ -363,6 +363,65 @@ after')
 	function assertEqualIgnoringWhitespace($a, $b) {
 		$this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b));
 	}
+
+	/**
+	 * See {@link ViewableDataTest} for more extensive casting tests,
+	 * this test just ensures that basic casting is correctly applied during template parsing.
+	 */
+	function testCastingHelpers() {
+		$vd = new SSViewerTest_ViewableData();
+		$vd->TextValue = '<b>html</b>';
+		$vd->HTMLValue = '<b>html</b>';
+		$vd->UncastedValue = '<b>html</b>';
+
+		// Value casted as "Text"
+		$this->assertEquals(
+			'&lt;b&gt;html&lt;/b&gt;',
+			$t = SSViewer::fromString('$TextValue')->process($vd)
+		);
+		$this->assertEquals(
+			'<b>html</b>',
+			$t = SSViewer::fromString('$TextValue.RAW')->process($vd)
+		);
+		$this->assertEquals(
+			'&lt;b&gt;html&lt;/b&gt;',
+			$t = SSViewer::fromString('$TextValue.XML')->process($vd)
+		);
+
+		// Value casted as "HTMLText"
+		$this->assertEquals(
+			'<b>html</b>',
+			$t = SSViewer::fromString('$HTMLValue')->process($vd)
+		);
+		$this->assertEquals(
+			'<b>html</b>',
+			$t = SSViewer::fromString('$HTMLValue.RAW')->process($vd)
+		);
+		$this->assertEquals(
+			'&lt;b&gt;html&lt;/b&gt;',
+			$t = SSViewer::fromString('$HTMLValue.XML')->process($vd)
+		);
+
+		// Uncasted value (falls back to ViewableData::$default_cast="HTMLText")
+		$vd = new SSViewerTest_ViewableData(); // TODO Fix caching
+		$vd->UncastedValue = '<b>html</b>';
+		$this->assertEquals(
+			'<b>html</b>',
+			$t = SSViewer::fromString('$UncastedValue')->process($vd)
+		);
+		$vd = new SSViewerTest_ViewableData(); // TODO Fix caching
+		$vd->UncastedValue = '<b>html</b>';
+		$this->assertEquals(
+			'<b>html</b>',
+			$t = SSViewer::fromString('$UncastedValue.RAW')->process($vd)
+		);
+		$vd = new SSViewerTest_ViewableData(); // TODO Fix caching
+		$vd->UncastedValue = '<b>html</b>';
+		$this->assertEquals(
+			'&lt;b&gt;html&lt;/b&gt;',
+			$t = SSViewer::fromString('$UncastedValue.XML')->process($vd)
+		);
+	}
 	
 	/**
 	 * Test $Up works when the scope $Up refers to was entered with a "with" block
@@ -677,6 +736,12 @@ class SSViewerTestFixture extends ViewableData {
 }
 
 class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
+
+	public static $casting = array(
+		'TextValue' => 'Text',
+		'HTMLValue' => 'HTMLText'
+	);
+
 	function methodWithOneArgument($arg1) {
 		return "arg1:{$arg1}";
 	}
