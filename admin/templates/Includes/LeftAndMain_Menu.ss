@@ -12,7 +12,7 @@
 			<% control CurrentMember %>
 				<span>
 					<% _t('Hello','Hi') %>
-					<a href="{$AbsoluteBaseURL}admin/settings/myprofile" class="profile-link ss-ui-dialog-link">
+					<a href="{$AbsoluteBaseURL}admin/myprofile" class="profile-link ss-ui-dialog-link">
 						<% if FirstName && Surname %>$FirstName $Surname<% else_if FirstName %>$FirstName<% else %>$Email<% end_if %>
 					</a>
 				</span>

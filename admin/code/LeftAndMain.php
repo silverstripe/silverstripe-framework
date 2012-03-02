@@ -73,10 +73,8 @@ class LeftAndMain extends Controller {
 		'savetreenode',
 		'getitem',
 		'getsubtree',
-		'myprofile',
 		'printable',
 		'show',
-		'Member_ProfileForm',
 		'EditorToolbar',
 		'EditForm',
 		'RootForm',
@@ -1106,18 +1104,6 @@ class LeftAndMain extends Controller {
 		return $form;
 	}
 	
-	public function myprofile() {
-		$form = $this->Member_ProfileForm();
-		return $this->customise(array(
-			'Content' => ' ',
-			'Form' => $form
-		))->renderWith('CMSDialog');
-	}
-	
-	public function Member_ProfileForm() {
-		return new Member_ProfileForm($this, 'Member_ProfileForm', Member::currentUser());
-	}
-
 	public function printable() {
 		$form = $this->getEditForm($this->currentPageID());
 		if(!$form) return false;
