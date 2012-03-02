@@ -355,7 +355,7 @@ class GridField extends FormField {
 		$attrs['data-name'] = $this->getName();
 		$tableAttrs = array(
 			'id' => isset($this->id) ? $this->id : null,
-			'class' => ($extras = $this->extraClass())?'ss-gridfield-table '.$extras:'ss-gridfield-table',
+			'class' => 'ss-gridfield-table',
 			'cellpadding' => '0',
 			'cellspacing' => '0'	
 		);
