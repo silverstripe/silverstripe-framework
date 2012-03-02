@@ -30,6 +30,8 @@
 			Config: null,
 
 			onmatch: function() {
+				if(this.is('.readonly,.disabled')) return;
+
 				var fileInput = this.find('input');
 				var dropZone = this.find('.ss-uploadfield-dropzone');
 				var config = $.parseJSON(fileInput.data('config').replace(/'/g,'"'));
@@ -38,7 +40,10 @@
 				this.fileupload($.extend(true, 
 					{
 						formData: function(form) {
-							return [{name: 'SecurityID', value: $(form).find(':input[name=SecurityID]').val()}];
+							return [
+								{name: 'SecurityID', value: $(form).find(':input[name=SecurityID]').val()},
+								{name: 'ID', value: $(form).find(':input[name=ID]').val()}
+							];
 						},
 						errorMessages: {
 							// errorMessages for all error codes suggested from the plugin author, some will be overwritten by the config comming from php
@@ -196,18 +201,26 @@
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-item-editform').entwine({
+			fitHeight: function() {
+				var iframe = this.find('iframe'), h = iframe.contents().height();
+				// Set iframe to match its contents height
+				iframe.height(h); 
+				// set container to match the same height
+				iframe.parent().height(h);
+			},
 			toggleEditForm: function() {
-				jQuery(this).toggle();
+				if(this.height() === 0) {
+					this.fitHeight();	
+				} else {
+					this.height(0);
+				}
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-item-editform iframe').entwine({
 			onmatch: function() {
+				// TODO entwine event binding doesn't work for iframes
 				this.load(function() {
-					var iframe = $(this), h = iframe.contents().height();
-					// Set iframe to match its contents height
-					iframe.height(h); 
-					// set container to match the same height
-					iframe.parent().removeClass('loading').height(h);
+					$(this).parent().removeClass('loading');	
 				});
 			}
 		});

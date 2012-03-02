@@ -104,6 +104,13 @@ abstract class SearchFilter extends Object {
 	public function getName() {
 		return $this->name;
 	}
+
+	/**
+	 * @param String
+	 */
+	public function setName($name) {
+		$this->name = $name;
+	}
 	
 	/**
 	 * The full name passed to the constructor,
@@ -113,6 +120,13 @@ abstract class SearchFilter extends Object {
 	 */
 	public function getFullName() {
 		return $this->fullName;
+	}
+
+	/**
+	 * @param String
+	 */
+	public function setFullName($name) {
+		$this->fullName = $name;
 	}
 	
 	/**

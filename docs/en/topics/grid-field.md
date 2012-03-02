@@ -51,7 +51,7 @@ If we wanted to make a simpler grid without pagination or filtering, we could do
 
 A `GridFieldConfig` is made up of a new of `GridFieldComponent` objects.  `GridFieldComponent` is a family of interfaces.
 
-## Build-in components
+## Built-in components
 
 SilverStripe Framework comes with the following components that you can use out of the box.
 
@@ -116,6 +116,18 @@ It's common for a component to implement several of these interfaces in order to
  * `GridField_HTMLProvider`, to generate the header row including the GridField_Action buttons
  * `GridField_ActionProvider`, to define the sortasc and sortdesc actions that add sort column and direction to the state.
  * `GridField_DataManipulator`, to alter the sorting of the data list based on the sort column and direction values in the state.
+
+ ### GridFieldRelationAdd
+
+A GridFieldRelationAdd is responsible for adding objects to another object's `has_many` and `many_many` relation,
+as defined by the `[api:RelationList]` passed to the GridField constructor.
+Objects can be searched through an input field (partially matching one or more fields).
+Selecting from the results will add the object to the relation.
+
+ 	:::php
+ 	$group = DataObject::get_one('Group');
+ 	$config = GridFieldConfig::create()->addComponent(new GridFieldRelationAdd(array('FirstName', 'Surname', 'Email'));
+ 	$gridField = new GridField('Members', 'Members', $group->Members(), $config);
 
 ## Component interfaces
 

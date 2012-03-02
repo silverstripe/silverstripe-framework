@@ -73,10 +73,8 @@ class LeftAndMain extends Controller {
 		'savetreenode',
 		'getitem',
 		'getsubtree',
-		'myprofile',
 		'printable',
 		'show',
-		'Member_ProfileForm',
 		'EditorToolbar',
 		'EditForm',
 		'RootForm',
@@ -239,6 +237,7 @@ class LeftAndMain extends Controller {
 				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
 				THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js',
 				THIRDPARTY_DIR . '/jquery-query/jquery.query.js',
+				THIRDPARTY_DIR . '/jquery-form/jquery.form.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
@@ -283,6 +282,7 @@ class LeftAndMain extends Controller {
 			))
 		);
 
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.css');
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::css(SAPPHIRE_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css');
 		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
@@ -513,7 +513,7 @@ class LeftAndMain extends Controller {
 			))
 		));
 		$record = $this->currentPage();
-		if($record) {
+		if($record && $record->exists()) {
 			if($record->hasExtension('Hierarchy')) {
 				$ancestors = $record->getAncestors();
 				$ancestors = new ArrayList(array_reverse($ancestors->toArray()));
@@ -1104,18 +1104,6 @@ class LeftAndMain extends Controller {
 		return $form;
 	}
 	
-	public function myprofile() {
-		$form = $this->Member_ProfileForm();
-		return $this->customise(array(
-			'Content' => ' ',
-			'Form' => $form
-		))->renderWith('CMSDialog');
-	}
-	
-	public function Member_ProfileForm() {
-		return new Member_ProfileForm($this, 'Member_ProfileForm', Member::currentUser());
-	}
-
 	public function printable() {
 		$form = $this->getEditForm($this->currentPageID());
 		if(!$form) return false;

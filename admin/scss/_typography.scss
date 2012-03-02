@@ -3,6 +3,12 @@
  *
  * Contains the basic typography related styles for the admin interface.
  */
+body, html {
+	font-size: $font-base-size;
+	line-height: $grid-y * 2;
+	font-family: $font-family;
+	color: $color-text;
+}
 
 .cms {
 	h2, h3, h4, h5 {

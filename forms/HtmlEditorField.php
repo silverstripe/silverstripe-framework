@@ -497,7 +497,29 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return FieldList
 	 */
 	protected function getFieldsForImage($url, $file) {
+		$formattedImage = $file->getFormattedImage('SetWidth', Image::$asset_preview_width);
+		$thumbnail = $formattedImage ? $formattedImage->URL : '';
+		$previewField = new LiteralField("ImageFull",
+			"<img id='thumbnailImage' class='thumbnail-preview' src='{$thumbnail}?r=" . rand(1,100000)  . "' alt='{$file->Name}' />\n"
+		);
+
 		$fields = new FieldList(
+			$filePreview = FormField::create('CompositeField', 
+				FormField::create('CompositeField',
+					$previewField
+				)->setName("FilePreviewImage")->addExtraClass('cms-file-info-preview'),
+				FormField::create('CompositeField',
+					FormField::create('CompositeField', 
+						new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':', $file->FileType),
+						new ReadonlyField("Size", _t('AssetTableField.SIZE','File size') . ':', $file->getSize()),
+						$urlField = new ReadonlyField('ClickableURL', _t('AssetTableField.URL','URL'),
+							sprintf('<a href="%s" target="_blank">%s</a>', $file->Link(), $file->RelativeLink())
+						),
+						new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded') . ':', $file->Created),
+						new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed') . ':', $file->LastEdited)
+					)
+				)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')
+			)->setName("FilePreview")->addExtraClass('cms-file-info'),
 			new TextField(
 				'AltText', 
 				_t('HtmlEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image cannot be displayed'), 
@@ -524,6 +546,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				$heightField = new TextField('Height', " x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), $file->Height)
 			)
 		);
+		$urlField->dontEscape = true;
 		$dimensionsField->addExtraClass('dimensions');
 		$widthField->setMaxLength(5);
 		$heightField->setMaxLength(5);
@@ -583,6 +606,7 @@ class HtmlEditorField_File extends ViewableData {
 	function __construct($url, $file = null) {
 		$this->url = $url;
 		$this->file = $file;
+		$this->failover = $file;
 
 		parent::__construct();
 	}

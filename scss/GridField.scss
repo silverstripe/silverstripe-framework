@@ -22,7 +22,13 @@ $gf_colour_zebra: #F0F4F7;
 $gf_colour_font: #666;
 $gf_colour_text_shadow: rgba(0,0,0,.3);
 $gf_border_radius:	7px;
+$gf_color_border_filter_button: #9A9A9A;
+$gf_color_button: #e6e6e6;
+$gf_color_button_filter_hover: #338DC1;
+$gf_color_button_reset_hover: #FF0000;
 
+$gf_grid_y:	12px;
+$gf_grid_x:	16px;
 
 @mixin box-shadow-none {
 	-moz-box-shadow: none;
@@ -71,6 +77,25 @@ $gf_border_radius:	7px;
 					padding: 0;
 					width: auto;
 					text-shadow: none;
+					&.ui-state-hover {
+						background:none;
+						border:none;
+						@include box-shadow-none;
+					}
+					span.ui-button-text {
+						text-indent:-9999em;
+						background: url(../images/icons/decline.png) no-repeat 0 2px;
+						padding:0;
+						width:20px;
+						height:20px;
+					}
+				}
+				a.edit-link {
+					display:inline-block;
+					height:20px;
+					width:20px;
+					text-indent:-9999em;
+					background: url(../images/icons/document--pencil.png) no-repeat 0 1px;
 				}				
 			}			
 		}
@@ -100,13 +125,13 @@ $gf_border_radius:	7px;
 					@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 					h2{
 						padding: 0px;
-						font-size: 16px;
+						font-size: $gf_grid_y*1.4;
 						color:#fff;
-						margin:0;
-						display:inline;
+						margin:3px $gf_grid_x/2 0;
+						display:inline-block;
 					}
 					.new{
-						font-size: 14px; 
+						font-size: $gf_grid_y*1.2; 
 						border-color: $gf_colour_border;
 						float: right;
 					}
@@ -114,6 +139,10 @@ $gf_border_radius:	7px;
 			}	
 			&.sortable-header {
 				background: $gf_colour_subheader;	
+				th{
+					padding: 0px;
+				}
+				
 			}			
 			&:hover {
 				background: #FFFAD6 !important;
@@ -134,7 +163,7 @@ $gf_border_radius:	7px;
 			
 			th {
 				font-weight: bold;
-				font-size: 12px;
+				font-size: $gf_grid_y;
 				color: #FFF;
 				padding: 5px;
 				border-right: 1px solid $gf_colour_border;
@@ -146,7 +175,8 @@ $gf_border_radius:	7px;
 				}
 				div {
 					&.fieldgroup,&.fieldgroup-field {
-						width: auto;
+						width: 100%;
+						position:relative;
 					}
 					&.fieldgroup {
 						min-width: 200px;
@@ -181,6 +211,9 @@ $gf_border_radius:	7px;
 						width: auto;
 						display: inline;
 						position: static;
+						input {
+							height:28px;
+						}
 					}
 					button.ss-ui-button {
 						padding: .3em;
@@ -210,7 +243,7 @@ $gf_border_radius:	7px;
 						@include box-shadow-none; 
 					}
 					&.ss-gridfield-sort {
-						background: transparent url(../images/arrows-01.png) no-repeat right 2px;
+						background: transparent url(../images/arrows.png) no-repeat right 6px;
 						border:none;	
 						width:100%;
 						text-align: left;
@@ -218,20 +251,109 @@ $gf_border_radius:	7px;
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 						color: #fff;
 						@include border-radius(0);
+						&:hover {
+							background-position: right -34px;
+						}
+						&.ss-gridfield-sorted-desc {
+							background-position: right -72px;
+						}
+						&.ss-gridfield-sorted-asc {
+							background-position: right -116px;
+						}
+					}
+					&.ss-gridfield-button-filter.ss-ui-button{
+						position:absolute;
+						right:$gf_grid_x/2 - 1;
+						top:$gf_grid_y*-2 - 4;
+						display:block;
+						text-indent:-9999em;
+						width:$gf_grid_x*2 - 2;
+						height:$gf_grid_y*2 + 4;
+						border: {
+							top-left-radius:0px;
+							bottom-left-radius:0px;
+							top-right-radius:4px;
+							bottom-right-radius:4px;
+							bottom-width:1px;
+							color:$gf_color_border_filter_button;
+						}
+						@include background (url(../images/icons/filter-icons.png) no-repeat -40px 6px,
+							linear-gradient(
+								lighten($gf_color_button, 10%),
+								darken($gf_color_button, 5%)
+							));
+						&:hover {
+							@include background (url(../images/icons/filter-icons.png) no-repeat -16px 6px,
+							linear-gradient(
+								lighten($gf_color_button_filter_hover, 5%), 
+								darken($gf_color_button_filter_hover, 5%)
+							));
+						}
+						&:active {
+							@include background (url(../images/icons/filter-icons.png) no-repeat -16px -17px,
+							linear-gradient(
+								lighten($gf_color_button_filter_hover, 5%), 
+								darken($gf_color_button_filter_hover, 5%)
+							));
+							@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
+						}
+					}
+					&.ss-gridfield-button-reset.ss-ui-button{
+						position:absolute;
+						right:$gf_grid_x*2 + 4;
+						top:$gf_grid_y*-2 - 4;
+						display:block;
+						text-indent:-9999em;
+						width:$gf_grid_x*2 - 2;
+						height:$gf_grid_y*2 + 4;
+						float:right;
+						border: {
+							radius:0px;
+							bottom-width:1px;
+							color:$gf_color_border_filter_button;
+						}
+						@include background (url(../images/icons/filter-icons.png) no-repeat 8px 5px,
+							linear-gradient(color-stops(
+								lighten($gf_color_button, 10%),
+								darken($gf_color_button, 5%)
+							))
+						);
+						&:hover {
+							@include background (url(../images/icons/filter-icons.png) no-repeat 8px -17px,
+							linear-gradient(
+								$gf_color_button_reset_hover, 
+								darken($gf_color_button_reset_hover, 10%)
+							));
+						}
+						&:active {
+							@include background (url(../images/icons/filter-icons.png) no-repeat 8px -17px,
+							linear-gradient(
+								$gf_color_button_reset_hover, 
+								darken($gf_color_button_reset_hover, 10%)
+							));
+							@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
+						}
 					}		
 				}
+
 				input {
 					&.ss-gridfield-sort {
 						padding: 2px;
 						&:focus {
 							@include box-shadow-none;
 						}
+
 					}
 				}
+
+				span.non-sortable {
+					padding:.4em 1em;
+				}
 			}
+
 			td {
 				border-right: 1px solid $gf_colour_border;
-				padding: 7px 12px;
+				padding: $gf_grid_x/2.5 $gf_grid_y;
 				color: $gf_colour_font;
 				&.bottom-all {
 					@include border-bottom-radius($gf_border_radius);

@@ -79,12 +79,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 					);
 				}
 		
-				$form->Actions()->insertBefore(
-					$actionAddMember = new FormAction('addmember',_t('SecurityAdmin.ADDMEMBER','Add Member')),
-					'action_save'
-				);
-				$actionAddMember->setForm($form);
-			
 				// Filter permissions
 				$permissionField = $form->Fields()->dataFieldByName('Permissions');
 				if($permissionField) $permissionField->setHiddenPermissions(self::$hidden_permissions);
@@ -107,9 +101,12 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	 */
 	function RootForm() {
 		$config = new GridFieldConfig_Base(25);
+		$config->addComponent(new GridFieldAction_Edit());
+		$config->addComponent(new GridFieldAction_Delete());
 		$config->addComponent(new GridFieldPopupForms());
 		$config->addComponent(new GridFieldExporter());
 		$memberList = new GridField('Members', 'All members', DataList::create('Member'), $config);
+		$memberList->addExtraClass("members_grid");
 		
 		$fields = new FieldList(
 			$root = new TabSet(
@@ -158,9 +155,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			$rolesTab->push($rolesCTF);
 		}
 
-		$actions = new FieldList(
-			new FormAction('addmember',_t('SecurityAdmin.ADDMEMBER','Add Member'))
-		);
+		$actions = new FieldList();
 		
 		$this->extend('updateRootFormFields', $fields, $actions);
 		

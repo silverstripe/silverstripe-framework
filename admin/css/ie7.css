@@ -14,3 +14,5 @@ html { overflow: hidden; }
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { background-image: none; }
 
 .jstree li a .ui-icon { text-indent: 0px !important; }
+
+.cms table.ss-gridfield-table tbody td button span.ui-button-text { zoom: 1; }

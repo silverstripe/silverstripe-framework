@@ -605,6 +605,21 @@ class Hierarchy extends DataExtension {
 		
 		return $ancestors;
 	}
+
+	/**
+	 * Returns a human-readable, flattened representation of the path to the object,
+	 * using its {@link Title()} attribute.
+	 * 
+	 * @param String
+	 * @return String
+	 */
+	public function getBreadcrumbs($separator = ' &raquo; ') {
+		$crumbs = array();
+		$ancestors = array_reverse($this->owner->getAncestors()->toArray());
+		foreach($ancestors as $ancestor) $crumbs[] = $ancestor->Title;
+		$crumbs[] = $this->owner->Title;
+		return implode($separator, $crumbs);
+	}
 	
 	/**
 	 * Get the next node in the tree of the type. If there is no instance of the className descended from this node,

@@ -371,3 +371,21 @@ class GridFieldTest_Component implements GridField_ColumnProvider, GridField_Act
 
 	
 }
+
+class GridFieldTest_Team extends DataObject implements TestOnly {
+	static $db = array(
+		'Name' => 'Varchar',
+		'City' => 'Varchar'
+	);
+
+	static $many_many = array('Players' => 'GridFieldTest_Player');
+}
+
+class GridFieldTest_Player extends DataObject implements TestOnly {
+	static $db = array(
+		'Name' => 'Varchar',
+		'Email' => 'Varchar',
+	);
+
+	static $belongs_many_many = array('Teams' => 'GridFieldTest_Team');
+}

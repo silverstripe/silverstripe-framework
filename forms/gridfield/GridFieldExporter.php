@@ -47,7 +47,7 @@ class GridFieldExporter implements GridField_HTMLProvider, GridField_ActionProvi
 			null
 		);
 		return array(
-			'after' => '<p>' . htmlentities($button->Field()) . '</p>',
+			'after' => '<p>' . $button->Field() . '</p>',
 		);
 	}
 
