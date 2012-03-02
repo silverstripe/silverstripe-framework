@@ -40,7 +40,10 @@
 				this.fileupload($.extend(true, 
 					{
 						formData: function(form) {
-							return [{name: 'SecurityID', value: $(form).find(':input[name=SecurityID]').val()}];
+							return [
+								{name: 'SecurityID', value: $(form).find(':input[name=SecurityID]').val()},
+								{name: 'ID', value: $(form).find(':input[name=ID]').val()}
+							];
 						},
 						errorMessages: {
 							// errorMessages for all error codes suggested from the plugin author, some will be overwritten by the config comming from php
