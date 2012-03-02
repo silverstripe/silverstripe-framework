@@ -771,46 +771,6 @@ class File extends DataObject {
 			return 0;
 		}
 	}
-
-	/**
-	 * We've overridden the DataObject::get function for File so that the very large content field
-	 * is excluded!
-	 *
-	 * @todo Admittedly this is a bit of a hack; but we need a way of ensuring that large
-	 * TEXT fields don't stuff things up for the rest of us.  Perhaps a separate search table would
-	 * be a better way of approaching this?
-	 * @deprecated alternative_instance_get()
-	 */
-	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet", $having="") {
-		Deprecation::notice('2.5', 'Use alternative_instance_get() instead.');
-
-		$query = $this->extendedSQL($filter, $sort, $limit, $join, $having);
-		$baseTable = reset($query->from);
-
-		$excludeDbColumns = array('Content');
-		
-		// Work out which columns we're actually going to select
-		// In short, we select everything except File.Content
-		$dataobject_select = array();
-		foreach($query->select as $item) {
-			/*
-			if($item == "\"File\".*") {
-				$fileColumns = DB::query("SHOW FIELDS IN \"File\"")->column();
-				$columnsToAdd = array_diff($fileColumns, $excludeDbColumns);
-				foreach($columnsToAdd as $otherItem) $dataobject_select[] = '"File".' . $otherItem;
-			} else {
-			*/
-				$dataobject_select[] = $item;
-			//}
-		}
-
-		$query->select = $dataobject_select;
-
-		$records = $query->execute();
-		$ret = $this->buildDataObjectSet($records, $containerClass);
-	
-		return $ret;
-	}
 	
 	public function flushCache() {
 		parent::flushCache();
