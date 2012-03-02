@@ -88,7 +88,7 @@ class GridFieldConfig_Base extends GridFieldConfig {
 	 * @return GridFieldConfig_Base
 	 */
 	public static function create($itemsPerPage=15){
-		return new GridFieldConfig_Base($itemsPerPage=15);
+		return new GridFieldConfig_Base($itemsPerPage);
 	}
 
 	/**
