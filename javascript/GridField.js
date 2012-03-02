@@ -11,6 +11,12 @@
 			if(!ajaxOpts.data) ajaxOpts.data = [];
 			ajaxOpts.data = ajaxOpts.data.concat(data);
 
+			// Include any GET parameters from the current URL, as the view state might depend on it.
+			// For example, a list prefiltered through external search criteria might be passed to GridField.
+			if(window.location.search) {
+				ajaxOpts.data = window.location.search.replace(/^\?/, '') + '&' + $.param(ajaxOpts.data);
+			}
+
 			form.addClass('loading');
 
 			$.ajax($.extend({}, {
