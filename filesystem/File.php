@@ -121,6 +121,28 @@ class File extends DataObject {
 	);
 
 	/**
+	 * @var array Category identifiers mapped to commonly used extensions.
+	 */
+	static $app_categories = array(
+		'audio' => array(
+			"aif" ,"au" ,"mid" ,"midi" ,"mp3" ,"ra" ,"ram" ,"rm","mp3" ,"wav" ,"m4a" ,"snd" ,"aifc" ,"aiff" ,"wma" ,"apl",
+			"avr" ,"cda" ,"mp4" ,"ogg"
+		),
+		'mov' => array(
+			"mpeg" ,"mpg" ,"m1v" ,"mp2" ,"mpa" ,"mpe" ,"ifo" ,"vob","avi" ,"wmv" ,"asf" ,"m2v" ,"qt"
+		),
+		'zip' => array(
+			"arc" ,"rar" ,"tar" ,"gz" ,"tgz" ,"bz2" ,"dmg" ,"jar","ace" ,"arj" ,"bz" ,"cab"
+		),
+		'image' => array(
+			"bmp" ,"gif" ,"jpg" ,"jpeg" ,"pcx" ,"tif" ,"png" ,"alpha","als" ,"cel" ,"icon" ,"ico" ,"ps"
+		),
+		'flash' => array(
+			'swf', 'fla'
+		)
+	);
+
+	/**
 	 * @var If this is true, then restrictions set in {@link $allowed_max_file_size} and
 	 * {@link $allowed_extensions} will be applied to users with admin privileges as
 	 * well.
@@ -328,27 +350,10 @@ class File extends DataObject {
 	 */
 	public function appCategory() {
 		$ext = strtolower($this->Extension);
-		switch($ext) {
-			case "aif": case "au": case "mid": case "midi": case "mp3": case "ra": case "ram": case "rm":
-			case "mp3": case "wav": case "m4a": case "snd": case "aifc": case "aiff": case "wma": case "apl":
-			case "avr": case "cda": case "mp4": case "ogg":
-				return "audio";
-			
-			case "mpeg": case "mpg": case "m1v": case "mp2": case "mpa": case "mpe": case "ifo": case "vob":
-			case "avi": case "wmv": case "asf": case "m2v": case "qt":
-				return "mov";
-			
-			case "arc": case "rar": case "tar": case "gz": case "tgz": case "bz2": case "dmg": case "jar":
-			case "ace": case "arj": case "bz": case "cab":
-				return "zip";
-				
-			case "bmp": case "gif": case "jpg": case "jpeg": case "pcx": case "tif": case "png": case "alpha":
-			case "als": case "cel": case "icon": case "ico": case "ps":
-				return "image";
-
-			case "swf": 
-				return "flash";
+		foreach(self::$app_categories as $category => $exts) {
+			if(in_array($ext, $exts)) return $category;
 		}
+		return false;
 	}
 
 	function CMSThumbnail() {
