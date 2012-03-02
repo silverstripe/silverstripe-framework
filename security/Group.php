@@ -71,7 +71,8 @@ class Group extends DataObject {
 		$config->getComponentByType('GridFieldRelationAdd')
 			->setResultsFormat('$Title ($Email)')->setSearchFields(array('FirstName', 'Surname', 'Email'));
 		$memberList = new GridField('Members','Members', $this->Members(), $config);
-
+		$memberList->addExtraClass('members_grid');
+		
 		// @todo Implement permission checking on GridField
 		//$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));
 		//$memberList->setPopupCaption(_t('SecurityAdmin.VIEWUSER', 'View User'));
