@@ -276,7 +276,7 @@ class SS_ClassManifest {
 
 		$finder = new ManifestFileFinder();
 		$finder->setOptions(array(
-			'name_regex'    => '/\.php$/',
+			'name_regex'    => '/^[^_].*\.php$/',
 			'ignore_files'  => array('index.php', 'main.php', 'cli-script.php'),
 			'ignore_tests'  => !$this->tests,
 			'file_callback' => array($this, 'handleFile')
