@@ -14,7 +14,8 @@ class GridFieldRelationDelete implements GridField_ColumnProvider, GridField_Act
 	 * @param array $columns 
 	 */
 	public function augmentColumns($gridField, &$columns) {
-		$columns[] = 'UnlinkRelation';
+		if(!in_array('Actions', $columns))
+			$columns[] = 'Actions';
 	}
 	
 	/**
@@ -37,7 +38,7 @@ class GridFieldRelationDelete implements GridField_ColumnProvider, GridField_Act
 	 * @return array
 	 */
 	public function getColumnMetadata($gridField, $columnName) {
-		if($columnName == 'UnlinkRelation') {
+		if($columnName == 'Actions') {
 			return array('title' => '');
 		}
 	}
@@ -49,7 +50,7 @@ class GridFieldRelationDelete implements GridField_ColumnProvider, GridField_Act
 	 * @return type 
 	 */
 	public function getColumnsHandled($gridField) {
-		return array('UnlinkRelation');
+		return array('Actions');
 	}
 	
 	/**
