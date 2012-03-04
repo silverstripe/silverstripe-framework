@@ -889,6 +889,17 @@ form.member-profile-form {
 }
 
 /** --------------------------------------------
+ * "Settings" Form
+ * -------------------------------------------- */
+#CanViewType, #CanEditType, #CanCreateTopLevelType {
+	.optionset li {
+		// All options on their own line
+		float: none;
+		width: auto;
+	}
+}
+
+/** --------------------------------------------
  * Panels
  * -------------------------------------------- */
 

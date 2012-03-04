@@ -389,6 +389,9 @@ form.member-profile-form .ui-corner-all, form.member-profile-form .ui-corner-top
 .cms .cms-content { border-right: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -webkit-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -o-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -moz-border-radius: 0; -webkit-border-radius: 0; -o-border-radius: 0; -ms-border-radius: 0; -khtml-border-radius: 0; border-radius: 0; }
 .cms .cms-content-fields { /* always show a y scroll bar as popups like TreeDropdowns  can trigger longer pages and the extra scroll bar doesn't  fire our sizing bar */ overflow-y: auto; overflow-x: auto; background: none; width: 100%; }
 
+/** -------------------------------------------- "Settings" Form -------------------------------------------- */
+#CanViewType .optionset li, #CanEditType .optionset li, #CanCreateTopLevelType .optionset li { float: none; width: auto; }
+
 /** -------------------------------------------- Panels -------------------------------------------- */
 .cms-panel { overflow: hidden; }
 .cms-panel .cms-panel-toggle { -moz-box-shadow: 0 0 5px rgba(107, 120, 123, 0.5); -webkit-box-shadow: 0 0 5px rgba(107, 120, 123, 0.5); -o-box-shadow: 0 0 5px rgba(107, 120, 123, 0.5); box-shadow: 0 0 5px rgba(107, 120, 123, 0.5); }
