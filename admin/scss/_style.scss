@@ -898,6 +898,13 @@ form.member-profile-form {
 		width: auto;
 	}
 }
+#ViewerGroups, #EditorGroups, #CreateTopLevelGroups {
+	select {
+		// Fix for chosen.js width detection on hidden elements.
+		// TODO Remove once .field styling in _form.scss is refactored to allow flexible field widths
+		width: $grid-x * 64;
+	}
+}
 
 /** --------------------------------------------
  * Panels
