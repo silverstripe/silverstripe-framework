@@ -152,7 +152,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	 */
 	public function __construct($gridField, $component, $record, $popupController, $popupFormName) {
 		$this->gridField = $gridField;
-		$this->component = $gridField;
+		$this->component = $component;
 		$this->record = $record;
 		$this->popupController = $popupController;
 		$this->popupFormName = $popupFormName;
@@ -166,19 +166,6 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	function edit($request) {
 		$controller = $this->popupController;
 		$form = $this->ItemEditForm($this->gridField, $request);
-
-		// TODO Coupling with CMS
-		if($controller instanceof LeftAndMain) {
-			$form->addExtraClass('cms-edit-form');
-			$form->setTemplate($controller->getTemplatesWithSuffix('_EditForm'));
-			$form->addExtraClass('cms-content center ss-tabset ' . $controller->BaseCSSClasses());
-			if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
-			// TODO Link back to controller action (and edited root record) rather than index,
-			// which requires more URL knowledge than the current link to this field gives us.
-			// The current root record is held in session only, 
-			// e.g. page/edit/show/6/ vs. page/edit/EditForm/field/MyGridField/....
-			$form->Backlink = $controller->Link();
-		}
 
 		$return = $this->customise(array(
 				'Backlink' => $controller->Link(),
@@ -221,6 +208,20 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 			)
 		);
 		$form->loadDataFrom($this->record);
+
+		// TODO Coupling with CMS
+		if($this->popupController instanceof LeftAndMain) {
+			$form->addExtraClass('cms-edit-form');
+			$form->setTemplate($this->popupController->getTemplatesWithSuffix('_EditForm'));
+			$form->addExtraClass('cms-content center ss-tabset ' . $this->popupController->BaseCSSClasses());
+			if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+			// TODO Link back to controller action (and edited root record) rather than index,
+			// which requires more URL knowledge than the current link to this field gives us.
+			// The current root record is held in session only, 
+			// e.g. page/edit/show/6/ vs. page/edit/EditForm/field/MyGridField/....
+			$form->Backlink = $this->popupController->Link();
+		}
+
 		return $form;
 	}
 
