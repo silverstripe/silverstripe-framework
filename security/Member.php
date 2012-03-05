@@ -1138,9 +1138,8 @@ class Member extends DataObject {
 			$groupsMap = DataList::create('Group')->map('ID', 'Breadcrumbs')->toArray();
 			asort($groupsMap);
 			$fields->addFieldToTab('Root.Main',
-				Object::create('CheckboxSetField', 'Groups', singleton('Group')->i18n_plural_name())
-					->setTemplate('CheckboxSetField_Select')
-					->setSource($groupsMap)
+				Object::create('ListboxField', 'Groups', singleton('Group')->i18n_plural_name())
+					->setMultiple(true)->setSource($groupsMap)
 			);
 
 			// Add permission field (readonly to avoid complicated group assignment logic).
