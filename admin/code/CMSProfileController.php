@@ -2,6 +2,7 @@
 class CMSProfileController extends LeftAndMain {
 
 	static $url_segment = 'myprofile';
+	static $required_permission_codes = false;
 
 	public function index($request) {
 		$form = $this->Member_ProfileForm();

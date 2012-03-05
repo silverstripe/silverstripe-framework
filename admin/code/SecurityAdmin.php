@@ -277,7 +277,16 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	}
 
 	function providePermissions() {
+		$title = _t("SecurityAdmin.MENUTITLE", LeftAndMain::menu_title_for_class($this->class));
 		return array(
+			"CMS_ACCESS_SecurityAdmin" => array(
+				'name' => sprintf(_t('CMSMain.ACCESS', "Access to '%s' section"), $title),
+				'category' => _t('Permission.CMS_ACCESS_CATEGORY', 'CMS Access'),
+				'help' => _t(
+					'SecurityAdmin.ACCESS_HELP',
+					'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
+				)
+			),
 			'EDIT_PERMISSIONS' => array(
 				'name' => _t('SecurityAdmin.EDITPERMISSIONS', 'Manage permissions for groups'),
 				'category' => _t('Permissions.PERMISSIONS_CATEGORY', 'Roles and access permissions'),
@@ -287,7 +296,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			'APPLY_ROLES' => array(
 				'name' => _t('SecurityAdmin.APPLY_ROLES', 'Apply roles to groups'),
 				'category' => _t('Permissions.PERMISSIONS_CATEGORY', 'Roles and access permissions'),
-				'help' => _t('SecurityAdmin.APPLY_ROLES_HELP', 'Ability to edit the roles assigned to a group. Requires the "Access to \'Security\' section" permission.'),
+				'help' => _t('SecurityAdmin.APPLY_ROLES_HELP', 'Ability to edit the roles assigned to a group. Requires the "Access to \'Users\' section" permission.'),
 				'sort' => 0
 			)
 		);

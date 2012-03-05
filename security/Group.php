@@ -431,7 +431,6 @@ class Group extends DataObject {
 			$authorGroup->write();
 			Permission::grant($authorGroup->ID, 'CMS_ACCESS_CMSMain');
 			Permission::grant($authorGroup->ID, 'CMS_ACCESS_AssetAdmin');
-			Permission::grant($authorGroup->ID, 'CMS_ACCESS_CommentAdmin');
 			Permission::grant($authorGroup->ID, 'CMS_ACCESS_ReportAdmin');
 			Permission::grant($authorGroup->ID, 'SITETREE_REORGANISE');
 		}
