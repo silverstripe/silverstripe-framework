@@ -44,46 +44,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		$record = $this->getRecord($id);
 		if($record && !$record->canView()) return Security::permissionFailure($this);
 		
-		if($id && is_numeric($id)) {
-			$form = parent::getEditForm($id);
-			if(!$form) return false;
-		
-			$fields = $form->Fields();
-			if($fields->hasTabSet() && $record->canEdit()) {
-				$fields->findOrMakeTab('Root.Import',_t('Group.IMPORTTABTITLE', 'Import'));
-				$fields->addFieldToTab('Root.Import', 
-					new LiteralField(
-						'MemberImportFormIframe', 
-						sprintf(
-							'<iframe src="%s" id="MemberImportFormIframe" width="100%%" height="400px" border="0"></iframe>',
-							$this->Link('memberimport')
-						)
-					)
-				);
-		
-				// Filter permissions
-				$permissionField = $form->Fields()->dataFieldByName('Permissions');
-				if($permissionField) $permissionField->setHiddenPermissions(self::$hidden_permissions);
-			}	
-			
-			$this->extend('updateEditForm', $form);
-		} else {
-			$form = $this->RootForm();
-		}
-
-		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
-		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
-		$form->addExtraClass('center ss-tabset ' . $this->BaseCSSClasses());
-					
-		return $form;
-	}
-
-	/**
-	 * The fields for individual groups will be created through {@link Group->getCMSFields()}.
-	 * 
-	 * @return FieldList
-	 */
-	function RootForm() {
 		$memberList = Object::create('GridField',
 			'Members', 
 			false, 
@@ -167,14 +127,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			$actions
 		);
 		$form->addExtraClass('cms-edit-form');
-		
-		return $form;
-	}
-	
-	function AddForm() {
-		$form = parent::AddForm();
-		$form->Actions()->fieldByName('action_doAdd')->setTitle(_t('SecurityAdmin.ActionAdd', 'Add group'));
-		
+		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
+		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+		$form->addExtraClass('center ss-tabset ' . $this->BaseCSSClasses());
+					
 		return $form;
 	}
 	
