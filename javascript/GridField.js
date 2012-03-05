@@ -153,10 +153,14 @@
 	 */
 	$('.ss-gridfield .filter-header :input').entwine({
 		onkeydown: function(e) {
+			btn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter');
 			if(e.keyCode == '13') {
-				btn = this.closest('.filter-header').find('.ss-gridfield-button-filter');
-				this.getGridField().reload({data: [{name: btn.attr('name'), value: btn.val()}]});
+				btns = this.closest('.filter-header').find('.ss-gridfield-button-filter');
+				this.getGridField().reload({data: [{name: btns.attr('name'), value: btns.val()}]});
+				btn.removeClass('hover-alike');
 				return false;
+			}else{
+				btn.addClass('hover-alike');
 			}
 		}
 	});
