@@ -329,9 +329,14 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 		if(!($this->popupController instanceof LeftAndMain)) return false;
 
 		$items = $this->popupController->Breadcrumbs($unlinked);
-		if($this->record) {
+		if($this->record && $this->record->ID) {
 			$items->push(new ArrayData(array(
 				'Title' => $this->record->Title,
+				'Link' => false
+			)));	
+		} else {
+			$items->push(new ArrayData(array(
+				'Title' => sprintf(_t('GridField.NewRecord', 'New %s'), $this->record->singular_name()),
 				'Link' => false
 			)));	
 		}
