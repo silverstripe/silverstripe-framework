@@ -363,10 +363,11 @@ jQuery.noConflict();
 		 * we can fix the height cropping.
 		 */
 		
-		$('.cms .field.dropdown, .cms .field.checkboxset').entwine({
+		$('.cms .field.dropdown select, .cms .field select[multiple]').entwine({
 			onmatch: function() {
-				$(this).find("select:not(.no-chzn)").data('placeholder', ' ').chosen();
-				$(this).addClass("has-chzn");
+				if(this.is('.no-chzn')) return;
+
+				this.data('placeholder', ' ').chosen().addClass("has-chzn");
 				
 				this._super();
 			}
