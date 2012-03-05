@@ -335,11 +335,11 @@ class TestRunner extends Controller {
 	function startsession() {
 		if(!Director::isLive()) {
 			if(SapphireTest::using_temp_db()) {
-				$endLink = Director::baseURL() . "/dev/tests/endsession";
+				$endLink = Director::baseURL() . "dev/tests/endsession";
 				return "<p><a id=\"end-session\" href=\"$endLink\">You're in the middle of a test session; click here to end it.</a></p>";
 			
 			} else if(!isset($_GET['fixture'])) {
-				$me = Director::baseURL() . "/dev/tests/startsession";
+				$me = Director::baseURL() . "dev/tests/startsession";
 				return <<<HTML
 <form action="$me">				
 	<p>Enter a fixture file name to start a new test session.  Don't forget to visit dev/tests/endsession when you're done!</p>
