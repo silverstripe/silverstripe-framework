@@ -63,9 +63,10 @@ class Group extends DataObject {
 		
 		$config = new GridFieldConfig();
 		$config->addComponent(new GridFieldTitle());
-		$configs = new GridFieldConfig_ManyManyEditor('FirstName', 20);
 		$components = $configs->getComponents();
 		foreach($components as $component) $config->addComponent($component);		
+		$config = new GridFieldConfig_RelationEditor('FirstName', 20);
+		$config = new GridFieldConfig_RelationEditor(20);
 		$config->addComponents(new GridFieldExporter());
 		
 		$config->getComponentByType('GridFieldRelationAdd')
