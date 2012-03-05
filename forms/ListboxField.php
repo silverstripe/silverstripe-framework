@@ -142,19 +142,65 @@ class ListboxField extends DropdownField {
 
 		return $this;
 	}
-	
+
 	/**
-	 * @return String
+	 * Return the CheckboxSetField value as a string 
+	 * selected item keys.
+	 * 
+	 * @return string
 	 */
 	function dataValue() {
-		if($this->value && $this->multiple && is_array($this->value)) {
-			return implode(',', $this->value);
+		if($this->value && is_array($this->value) && $this->multiple) {
+			$filtered = array();
+			foreach($this->value as $item) {
+				if($item) {
+					$filtered[] = str_replace(",", "{comma}", $item);
+				}
+			}
+			return implode(',', $filtered);
 		} else {
 			return parent::dataValue();
 		}
 	}
 	
-	function setValue($val) {
+	/**
+	 * Save the current value of this field into a DataObject.
+	 * If the field it is saving to is a has_many or many_many relationship,
+	 * it is saved by setByIDList(), otherwise it creates a comma separated
+	 * list for a standard DB text/varchar field.
+	 *
+	 * @param DataObject $record The record to save into
+	 */
+	function saveInto(DataObject $record) {
+		if($this->multiple) {
+			$fieldname = $this->name;
+			if($fieldname && $record && ($record->has_many($fieldname) || $record->many_many($fieldname))) {
+				$idList = (is_array($this->value)) ? array_values($this->value) : array();
+				$record->$fieldname()->setByIDList($idList);
+			} elseif($fieldname && $record) {
+				if($this->value) {
+					$this->value = str_replace(',', '{comma}', $this->value);
+					$record->$fieldname = implode(",", $this->value);
+				} else {
+					$record->$fieldname = null;
+				}
+			}	
+		} else {
+			parent::saveInto($record);
+		}
+	}
+
+	/**
+	 * Load a value into this CheckboxSetField
+	 */
+	function setValue($val, $obj = null) {
+		// If we're not passed a value directly, 
+		// we can look for it in a relation method on the object passed as a second arg
+		if(!$val && $obj && $obj instanceof DataObject && $obj->hasMethod($this->name)) {
+			$funcName = $this->name;
+			$val = array_values($obj->$funcName()->getIDList());
+		}
+
 		if($val) {
 			if(!$this->multiple && is_array($val)) {
 				throw new InvalidArgumentException('No array values allowed with multiple=false');
