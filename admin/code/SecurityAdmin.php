@@ -84,16 +84,29 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	 * @return FieldList
 	 */
 	function RootForm() {
-		$config = new GridFieldConfig_RecordEditor();
-		$config->addComponent(new GridFieldExporter());
-		$config->getComponentByType('GridFieldPopupForms')->setValidator(new Member_Validator());
-		$memberList = new GridField('Members', 'All members', DataList::create('Member'), $config);
-		$memberList->addExtraClass("members_grid");
+		$memberList = Object::create('GridField',
+			'Members', 
+			false, 
+			DataList::create('Member'), 
+			$memberListConfig = GridFieldConfig_RecordEditor::create()
+				->addComponent(new GridFieldExporter())
+		)->addExtraClass("members_grid");
+		$memberListConfig->getComponentByType('GridFieldPopupForms')->setValidator(new Member_Validator());
+
+		$groupList = Object::create('GridField',
+			'Groups', 
+			false, 
+			DataList::create('Group'), 
+			GridFieldConfig_RecordEditor::create()
+		)->setDisplayFields(array(
+			'Breadcrumbs' => singleton('Group')->fieldLabel('Title')
+		));
+
 		
 		$fields = new FieldList(
 			$root = new TabSet(
 				'Root',
-				new Tab('Members', singleton('Member')->i18n_plural_name(),
+				new Tab('Users', _t('SecurityAdmin.Users', 'Users'),
 					$memberList,
 					new LiteralField('MembersCautionText', 
 						sprintf('<p class="caution-remove"><strong>%s</strong></p>',
@@ -104,14 +117,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 						)
 					)
 				),
-				new Tab('Import', _t('SecurityAdmin.TABIMPORT', 'Import'),
-					new LiteralField(
-						'GroupImportFormIframe', 
-						sprintf(
-							'<iframe src="%s" id="GroupImportFormIframe" width="100%%" height="400px" border="0"></iframe>',
-							$this->Link('groupimport')
-						)
-					)
+				new Tab('Groups', singleton('Group')->plural_name(),
+					$groupList
 				)
 			),
 			// necessary for tree node selection in LeftAndMain.EditForm.js
@@ -137,6 +144,17 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			));
 			$rolesTab->push($rolesField);
 		}
+
+		$fields->findOrMakeTab('Root.Import', _t('SecurityAdmin.TABIMPORT', 'Import'));
+		$fields->addFieldToTab('Root.Import', 
+			new LiteralField(
+				'GroupImportFormIframe', 
+				sprintf(
+					'<iframe src="%s" id="GroupImportFormIframe" width="100%%" height="400px" border="0"></iframe>',
+					$this->Link('groupimport')
+				)
+			)
+		);
 
 		$actions = new FieldList();
 		
@@ -220,12 +238,28 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		return $form;
 	}
 
-	function getCMSTreeTitle() {
-		return _t('SecurityAdmin.SGROUPS', 'Security Groups');
-	}
+	public function Breadcrumbs($unlinked = false) {
+		$crumbs = parent::Breadcrumbs($unlinked);
 
-	public function EditedMember() {
-		if(Session::get('currentMember')) return DataObject::get_by_id('Member', (int) Session::get('currentMember'));
+		// Name root breadcrumb based on which record is edited,
+		// which can only be determined by looking for the fieldname of the GridField.
+		// Note: Titles should be same titles as tabs in RootForm().
+		$params = $this->request->allParams();
+		if(isset($params['FieldName'])) {
+			if($params['FieldName'] == 'Groups') {
+				$crumbs->First()->Title = singleton('Group')->plural_name();
+			} elseif($params['FieldName'] == 'Users') {
+				$crumbs->First()->Title = _t('SecurityAdmin.Users', 'Users');
+			} elseif($params['FieldName'] == 'Roles') {
+				$crumbs->First()->Title = _t('SecurityAdmin.TABROLES', 'Roles');
+			}
+		} else {
+			// Avoid writing "Users" (the controller menu title) as a breadcrumb
+			// because its confusing and inaccurate.
+			$crumbs = new ArrayList();
+		}
+
+		return $crumbs;
 	}
 
 	function providePermissions() {
@@ -287,36 +321,3 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		self::$hidden_permissions = array();
 	}
 }
-
-/**
- * Delete multiple {@link Group} records. Usually used through the {@link SecurityAdmin} interface.
- * 
- * @package cms
- * @subpackage batchactions
- */
-class SecurityAdmin_DeleteBatchAction extends CMSBatchAction {
-	function getActionTitle() {
-		return _t('AssetAdmin_DeleteBatchAction.TITLE', 'Delete groups');
-	}
-
-	function run(SS_List $records) {
-		$status = array(
-			'modified'=>array(),
-			'deleted'=>array()
-		);
-		
-		foreach($records as $record) {
-			// TODO Provide better feedback if permission was denied
-			if(!$record->canDelete()) continue;
-			
-			$id = $record->ID;
-			$record->delete();
-			$status['deleted'][$id] = array();
-			$record->destroy();
-			unset($record);
-		}
-
-		return Convert::raw2json($status);
-	}
-}
-

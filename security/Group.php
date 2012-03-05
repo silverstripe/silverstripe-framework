@@ -62,23 +62,19 @@ class Group extends DataObject {
 	public function getCMSFields() {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');
 		
-		$config = new GridFieldConfig_RelationEditor();
-		$config->addComponents(new GridFieldExporter());
-		$config->getComponentByType('GridFieldRelationAdd')
-			->setResultsFormat('$Title ($Email)')->setSearchFields(array('FirstName', 'Surname', 'Email'));
-		$config->getComponentByType('GridFieldPopupForms')->setValidator(new Member_Validator());
-
-		$memberList = new GridField('Members','Members', $this->Members(), $config);
-		$memberList->addExtraClass('members_grid');
-		
-		// @todo Implement permission checking on GridField
-		//$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));
-		//$memberList->setPopupCaption(_t('SecurityAdmin.VIEWUSER', 'View User'));
 		$fields = new FieldList(
 			new TabSet("Root",
 				new Tab('Members', _t('SecurityAdmin.MEMBERS', 'Members'),
 					new TextField("Title", $this->fieldLabel('Title')),
-					$memberList
+					Object::create('DropdownField',
+						'ParentID', 
+						$this->fieldLabel('Parent'), 
+						DataList::create('Group')->exclude('ID', $this->ID)->map('ID', 'Breadcrumbs')
+					)->setEmptyString(' '),
+					new LiteralField(
+						'ParentIDDescription',
+						'<p><em>' . _t('Group.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles') . '</em></p>'
+					)
 				),
 
 				$permissionsTab = new Tab('Permissions', _t('SecurityAdmin.PERMISSIONS', 'Permissions'),
@@ -92,6 +88,18 @@ class Group extends DataObject {
 				)
 			)
 		);
+
+		if($this->ID) {
+			$config = new GridFieldConfig_RelationEditor();
+			$config->addComponents(new GridFieldExporter());
+			$config->getComponentByType('GridFieldRelationAdd')
+				->setResultsFormat('$Title ($Email)')->setSearchFields(array('FirstName', 'Surname', 'Email'));
+			$config->getComponentByType('GridFieldPopupForms')->setValidator(new Member_Validator());
+			$memberList = Object::create('GridField', 'Members',false, $this->Members(), $config)->addExtraClass('members_grid');
+			// @todo Implement permission checking on GridField
+			//$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));
+			$fields->addFieldToTab('Root.Members', $memberList);
+		}
 		
 		// Only add a dropdown for HTML editor configurations if more than one is available.
 		// Otherwise Member->getHtmlEditorConfigForCMS() will default to the 'cms' configuration.
@@ -109,7 +117,6 @@ class Group extends DataObject {
 
 		if(!Permission::check('EDIT_PERMISSIONS')) {
 			$fields->removeFieldFromTab('Root', 'Permissions');
-			$fields->removeFieldFromTab('Root', 'IP Addresses');
 		}
 
 		// Only show the "Roles" tab if permissions are granted to edit them,
@@ -137,19 +144,26 @@ class Group extends DataObject {
 			
 			// Add roles (and disable all checkboxes for inherited roles)
 			$allRoles = Permission::check('ADMIN') ? DataObject::get('PermissionRole') : DataObject::get('PermissionRole', 'OnlyAdminCanApply = 0');
-			$groupRoles = $this->Roles();
-			$inheritedRoles = new ArrayList();
-			$ancestors = $this->getAncestors();
-			foreach($ancestors as $ancestor) {
-				$ancestorRoles = $ancestor->Roles();
-				if($ancestorRoles) $inheritedRoles->merge($ancestorRoles);
+			if($this->ID) {
+				$groupRoles = $this->Roles();
+				$inheritedRoles = new ArrayList();
+				$ancestors = $this->getAncestors();
+				foreach($ancestors as $ancestor) {
+					$ancestorRoles = $ancestor->Roles();
+					if($ancestorRoles) $inheritedRoles->merge($ancestorRoles);
+				}
+				$groupRoleIDs = $groupRoles->column('ID') + $inheritedRoles->column('ID');
+				$inheritedRoleIDs = $inheritedRoles->column('ID');
+			} else {
+				$groupRoleIDs = array();
+				$inheritedRoleIDs = array();
 			}
-			$groupRoleIDs = $groupRoles->column('ID') + $inheritedRoles->column('ID');
+
 			$rolesField = Object::create('ListboxField', 'Roles', false, $allRoles->map()->toArray())
 					->setMultiple(true)
 					->setDefaultItems($groupRoleIDs)
 					->setAttribute('data-placeholder', _t('Group.AddRole', 'Add a role for this group'))
-					->setDisabledItems($inheritedRoles->column('ID'));	
+					->setDisabledItems($inheritedRoleIDs);	
 			if(!$allRoles->Count()) $rolesField->setAttribute('data-placeholder', _t('Group.NoRoles', 'No roles found'));
 			$fields->addFieldToTab('Root.Roles', $rolesField);
 		} 
