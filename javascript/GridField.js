@@ -6,7 +6,7 @@
 		 * @param {successCallback} callback to call after reloading succeeded.
 		 */
 		reload: function(ajaxOpts, successCallback) {
-			var self = this, form = this.closest('form'), data = form.find(':input').serializeArray();
+				var self = this, form = this.closest('form'), data = form.find(':input').serializeArray();
 			if(!ajaxOpts) ajaxOpts = {};
 			if(!ajaxOpts.data) ajaxOpts.data = [];
 			ajaxOpts.data = ajaxOpts.data.concat(data);
@@ -146,19 +146,26 @@
 		}
 		 
 	});
-
+	
 	/**
 	 * Catch submission event in filter input fields, and submit the correct button
 	 * rather than the whole form.
 	 */
 	$('.ss-gridfield .filter-header :input').entwine({
+		onmatch: function(){
+			filterbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter');
+			resetbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-reset');
+			if(this.val()) {
+				filterbtn.addClass('filtered');
+				resetbtn.addClass('filtered');
+			}
+		},
 		onkeydown: function(e) {
 			filterbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter');
 			resetbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-reset');
 			if(e.keyCode == '13') {
 				btns = this.closest('.filter-header').find('.ss-gridfield-button-filter');
 				this.getGridField().reload({data: [{name: btns.attr('name'), value: btns.val()}]});
-				filterbtn.removeClass('hover-alike');
 				return false;
 			}else{
 				filterbtn.addClass('hover-alike');
