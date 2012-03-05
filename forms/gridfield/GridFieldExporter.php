@@ -46,6 +46,7 @@ class GridFieldExporter implements GridField_HTMLProvider, GridField_ActionProvi
 			'export', 
 			null
 		);
+		$button->setButtonIcon('exportlist');
 		return array(
 			'after' => '<p>' . $button->Field() . '</p>',
 		);
