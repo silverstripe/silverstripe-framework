@@ -17,6 +17,8 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 	/**
 	 * Which columns that should be used for doing a "StartsWith" search.
 	 * If multiple fields are provided, the filtering is performed non-exclusive.
+	 * If no fields are provided, tries to auto-detect a "Title" or "Name" field,
+	 * and falls back to the first textual field defined on the object.
 	 *
 	 * @var Array
 	 */
@@ -36,7 +38,7 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 	 *
 	 * @param array $searchFields Which fields on the object in the list should be searched
 	 */
-	public function __construct($searchFields) {
+	public function __construct($searchFields = null) {
 		$this->searchFields = (array)$searchFields;
 	}
 	
@@ -47,7 +49,7 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 	 */
 	public function getHTMLFragments($gridField) {
 		$searchState = $gridField->State->GridFieldSearchRelation;
-		
+		$dataClass = $gridField->getList()->dataClass();
 		
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
@@ -57,12 +59,14 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 		
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList();
+
+		$searchFields = ($this->getSearchFields()) ? $this->getSearchFields() : $this->scaffoldSearchFields($dataClass);
 		
-		$value = $this->findSingleEntry($gridField, $this->searchFields, $searchState, $gridField->getList()->dataClass);
+		$value = $this->findSingleEntry($gridField, $searchFields, $searchState, $dataClass);
 		$searchField = new TextField('gridfield_relationsearch', _t('GridField.RelationSearch', "Relation search"), $value);
 		// Apparently the data-* needs to be double qouted for the jQuery.meta data plugin
 		$searchField->setAttribute('data-search-url', '\''.Controller::join_links($gridField->Link('search').'\''));
-		$searchField->setAttribute('placeholder', $this->getPlaceholderText($gridField->getList()->dataClass()));
+		$searchField->setAttribute('placeholder', $this->getPlaceholderText($dataClass));
 		$searchField->addExtraClass('relation-search');
 		
 		$findAction = new GridField_Action($gridField, 'gridfield_relationfind', _t('GridField.Find', "Find"), 'find', 'find');
@@ -153,15 +157,24 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 	 * @param SS_HTTPRequest $request 
 	 */
 	public function doSearch($gridField, $request) {
-		$allList = DataList::create($gridField->getList()->dataClass());
+		$dataClass = $gridField->getList()->dataClass();
+		$allList = DataList::create($dataClass);
 		$filters = array();
 		$stmts = array();
+		
+		$searchFields = ($this->getSearchFields()) ? $this->getSearchFields() : $this->scaffoldSearchFields($dataClass);
+		if(!$searchFields) {
+			throw new LogicException(
+				sprintf('GridFieldRelationAdd: No searchable fields could be found for class "%s"', $dataClass)
+			);
+		}
+
 		// TODO Replace with DataList->filterAny() once it correctly supports OR connectives
-		foreach($this->searchFields as $searchField) {
+		foreach($searchFields as $searchField) {
 			$stmts[] .= sprintf('"%s" LIKE \'%s%%\'', $searchField, $request->param('ID'));
 		}
 		$results = $allList->where(implode(' OR ', $stmts))->subtract($gridField->getList());
-		$results->sort($this->searchFields[0], 'ASC');
+		$results->sort($searchFields[0], 'ASC');
 		
 		$json = array();
 		foreach($results as $result) {
@@ -201,15 +214,34 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 	}
 
 	/**
+	 * Detect searchable 
+	 * 
+	 * @param  String
+	 * @return Array
+	 */
+	protected function scaffoldSearchFields($dataClass) {
+		$obj = singleton($dataClass);
+		if($obj->hasDatabaseField('Title')) {
+			return array('Title');
+		} else if($obj->hasDatabaseField('Name')) {
+			return array('Name');
+		} else {
+			return null;
+		}
+	}
+
+	/**
 	 * @param String The class of the object being searched for
 	 * @return String
 	 */
 	public function getPlaceholderText($dataClass) {
+		$searchFields = ($this->getSearchFields()) ? $this->getSearchFields() : $this->scaffoldSearchFields($dataClass);
+
 		if($this->placeholderText) {
 			return $this->placeholderText;
 		} else {
 			$labels = array();
-			foreach($this->searchFields as $searchField) {
+			foreach($searchFields as $searchField) {
 				$label = singleton($dataClass)->fieldLabel($searchField);
 				if($label) $labels[] = $label;
 			}
