@@ -125,19 +125,20 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		
 		// Add roles editing interface
 		if(Permission::check('APPLY_ROLES')) {
-			$rolesCTF = new ComplexTableField(
-				$this,
+			$rolesField = new GridField(
 				'Roles',
-				'PermissionRole'
+				false,
+				DataList::create('PermissionRole'),
+				GridFieldConfig_RecordEditor::create()
 			);
-			$rolesCTF->setPermissions(array('add', 'edit', 'delete'));
+			// $rolesCTF->setPermissions(array('add', 'edit', 'delete'));
 
 			$rolesTab = $fields->findOrMakeTab('Root.Roles', _t('SecurityAdmin.TABROLES', 'Roles'));
 			$rolesTab->push(new LiteralField(
 				'RolesDescription', 
 				''
 			));
-			$rolesTab->push($rolesCTF);
+			$rolesTab->push($rolesField);
 		}
 
 		$actions = new FieldList();
