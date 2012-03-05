@@ -162,7 +162,7 @@ class Image extends File {
 		while(file_exists(BASE_PATH . "/$file")) {
 			$i = $i ? ($i+1) : 2;
 			$oldFile = $file;
-			$file = ereg_replace('[0-9]*(\.[^.]+$)',$i . '\\1', $file);
+			$file = preg_replace('/[0-9]*(\.[^.]+$)/', $i . '\\1', $file);
 			if($oldFile == $file && $i > 2) user_error("Couldn't fix $file with $i", E_USER_ERROR);
 		}
 		

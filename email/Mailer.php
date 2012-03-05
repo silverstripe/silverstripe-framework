@@ -134,8 +134,8 @@ function htmlEmail($to, $from, $subject, $htmlContent, $attachedFiles = false, $
     }
 
     // Strip the human name from the bounce address
-    if(ereg('^([^<>]*)<([^<>]+)> *$', $bounceAddress, $parts)) $bounceAddress = $parts[2];	
-	
+    if(preg_match('/^([^<>]*)<([^<>]+)> *$/', $bounceAddress, $parts)) $bounceAddress = $parts[2];	
+
 	// $headers["Sender"] 		= $from;
 	$headers["X-Mailer"]	= X_MAILER;
 	if (!isset($customheaders["X-Priority"])) $headers["X-Priority"]	= 3;
@@ -215,7 +215,7 @@ function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $cu
 	if(isset($customheaders["X-SilverStripeMessageID"]) && defined('BOUNCE_EMAIL')) {		
 		$bounceAddress = BOUNCE_EMAIL;
 		// Get the human name from the from address, if there is one
-		if(ereg('^([^<>]+)<([^<>])> *$', $from, $parts))
+		if(preg_match('/^([^<>]+)<([^<>])> *$/', $from, $parts))
 			$bounceAddress = "$parts[1]<$bounceAddress>";
 	} else {
 		$bounceAddress = $from;
@@ -249,8 +249,7 @@ function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $cu
 
 
 function encodeMultipart($parts, $contentType, $headers = false) {
-	$separator = "----=_NextPart_" . ereg_replace('[^0-9]','',rand() * 10000000000);
-
+	$separator = "----=_NextPart_" . preg_replace('/[^0-9]/', '', rand() * 10000000000);
 
 	$headers["MIME-Version"] = "1.0";
 	$headers["Content-Type"] = "$contentType; boundary=\"$separator\"";

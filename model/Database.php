@@ -395,8 +395,9 @@ abstract class SS_Database {
 		}
 		
 		//Indexes specified as arrays cannot be checked with this line: (it flattens out the array)
-		if(!is_array($spec))
-			$spec = ereg_replace(" *, *",",",$spec);
+		if(!is_array($spec)) {
+			$spec = preg_replace('/\s*,\s*/', ',', $spec);
+        }
 
 		if(!isset($this->tableList[strtolower($table)])) $newTable = true;
 
@@ -470,7 +471,7 @@ abstract class SS_Database {
 		// collations.
 		// TODO: move this to the MySQLDatabase file, or drop it altogether?
 		if(!$this->supportsCollations()) {
-			$spec = eregi_replace(' *character set [^ ]+( collate [^ ]+)?( |$)','\\2',$spec);
+			$spec = preg_replace('/ *character set [^ ]+( collate [^ ]+)?( |$)/', '\\2', $spec);
 		}
 		
 		if(!isset($this->tableList[strtolower($table)])) $newTable = true;
@@ -632,8 +633,8 @@ abstract class SS_Database {
 	 * @param string $array Array where the replacement should happen
 	 */
 	static function replace_with_null(&$array) {
-		$array = ereg_replace('= *\'\'', "= null", $array);
-		
+		$array = preg_replace('/= *\'\'/', '= null', $array);
+
 		if(is_array($array)) {
 			foreach($array as $key => $value) {
 				if(is_array($value)) {
