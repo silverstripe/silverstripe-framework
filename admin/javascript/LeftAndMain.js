@@ -367,7 +367,11 @@ jQuery.noConflict();
 			onmatch: function() {
 				if(this.is('.no-chzn')) return;
 
-				this.data('placeholder', ' ').chosen().addClass("has-chzn");
+				// Explicitly disable default placeholder if no custom one is defined
+				if(!this.data('placeholder')) this.data('placeholder', ' ');
+
+				// Apply chosen
+				this.chosen().addClass("has-chzn");
 				
 				this._super();
 			}
