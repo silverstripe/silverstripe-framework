@@ -26,15 +26,17 @@ class SSViewer_Scope {
 	// And array of item, itemIterator, pop_index, up_index, current_index
 	private $itemStack = array(); 
 	
-	private $item; // The current "global" item (the one any lookup starts from)
-	private $itemIterator; // If we're looping over the current "global" item, here's the iterator that tracks with item we're up to
+	protected $item; // The current "global" item (the one any lookup starts from)
+	protected $itemIterator; // If we're looping over the current "global" item, here's the iterator that tracks with item we're up to
+	protected $itemIteratorTotal;   //Total number of items in the iterator
 	
 	private $popIndex; // A pointer into the item stack for which item should be scope on the next pop call
 	private $upIndex; // A pointer into the item stack for which item is "up" from this one
 	private $currentIndex; // A pointer into the item stack for which item is this one (or null if not in stack yet)
 	
 	private $localIndex;
-	
+
+
 	function __construct($item){
 		$this->item = $item;
 		$this->localIndex=0;
@@ -100,11 +102,12 @@ class SSViewer_Scope {
 	function next(){
 		if (!$this->item) return false;
 		
-		if (!$this->itemIterator) { 
+		if (!$this->itemIterator) {
 			if (is_array($this->item)) $this->itemIterator = new ArrayIterator($this->item);
 			else $this->itemIterator = $this->item->getIterator();
 			
 			$this->itemStack[$this->localIndex][1] = $this->itemIterator;
+			$this->itemIteratorTotal = iterator_count($this->itemIterator); //count the total number of items
 			$this->itemIterator->rewind();
 		}
 		else {
@@ -112,7 +115,7 @@ class SSViewer_Scope {
 		}
 		
 		$this->resetLocalScope();
-		
+
 		if (!$this->itemIterator->valid()) return false;
 		return $this->itemIterator->key();
 	}
@@ -126,6 +129,163 @@ class SSViewer_Scope {
 	}
 }
 
+class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider {
+
+	protected $iteratorPos;
+	protected $iteratorTotalItems;
+
+	public static function get_template_iterator_variables() {
+		return array(
+			'First',
+			'Last',
+			'FirstLast',
+			'Middle',
+			'MiddleString',
+			'Even',
+			'Odd',
+			'EvenOdd',
+			'Pos',
+			'TotalItems',
+			'Modulus',
+			'MultipleOf',
+		);
+	}
+
+	/**
+	 * Set the current iterator properties - where we are on the iterator.
+	 *
+	 * @param int $pos position in iterator
+	 * @param int $totalItems total number of items
+	 */
+	public function iteratorProperties($pos, $totalItems) {
+		$this->iteratorPos        = $pos;
+		$this->iteratorTotalItems = $totalItems;
+	}
+
+	/**
+	 * Returns true if this object is the first in a set.
+	 *
+	 * @return bool
+	 */
+	public function First() {
+		return $this->iteratorPos == 0;
+	}
+
+	/**
+	 * Returns true if this object is the last in a set.
+	 *
+	 * @return bool
+	 */
+	public function Last() {
+		return $this->iteratorPos == $this->iteratorTotalItems - 1;
+	}
+
+	/**
+	 * Returns 'first' or 'last' if this is the first or last object in the set.
+	 *
+	 * @return string|null
+	 */
+	public function FirstLast() {
+		if($this->First() && $this->Last()) return 'first last';
+		if($this->First()) return 'first';
+		if($this->Last())  return 'last';
+	}
+
+	/**
+	 * Return true if this object is between the first & last objects.
+	 *
+	 * @return bool
+	 */
+	public function Middle() {
+		return !$this->First() && !$this->Last();
+	}
+
+	/**
+	 * Return 'middle' if this object is between the first & last objects.
+	 *
+	 * @return string|null
+	 */
+	public function MiddleString() {
+		if($this->Middle()) return 'middle';
+	}
+
+	/**
+	 * Return true if this object is an even item in the set.
+	 * The count starts from $startIndex, which defaults to 1.
+	 *
+	 * @param int $startIndex Number to start count from.
+	 * @return bool
+	 */
+	public function Even($startIndex = 1) {
+		return !$this->Odd($startIndex);
+	}
+
+	/**
+	 * Return true if this is an odd item in the set.
+	 *
+	 * @param int $startIndex Number to start count from.
+	 * @return bool
+	 */
+	public function Odd($startIndex = 1) {
+		return (bool) (($this->iteratorPos+$startIndex) % 2);
+	}
+
+	/**
+	 * Return 'even' or 'odd' if this object is in an even or odd position in the set respectively.
+	 *
+	 * @param int $startIndex Number to start count from.
+	 * @return string
+	 */
+	public function EvenOdd($startIndex = 1) {
+		return ($this->Even($startIndex)) ? 'even' : 'odd';
+	}
+
+	/**
+	 * Return the numerical position of this object in the container set. The count starts at $startIndex.
+	 * The default is the give the position using a 1-based index.
+	 *
+	 * @param int $startIndex Number to start count from.
+	 * @return int
+	 */
+	public function Pos($startIndex = 1) {
+		return $this->iteratorPos + $startIndex;
+	}
+
+	/**
+	 * Return the total number of "sibling" items in the dataset.
+	 *
+	 * @return int
+	 */
+	public function TotalItems() {
+		return $this->iteratorTotalItems;
+	}
+
+	/**
+	 * Returns the modulus of the numerical position of the item in the data set.
+	 * The count starts from $startIndex, which defaults to 1.
+	 * @param int $Mod The number to perform Mod operation to.
+	 * @param int $startIndex Number to start count from.
+	 * @return int
+	 */
+	public function Modulus($mod, $startIndex = 1) {
+		return ($this->iteratorPos + $startIndex) % $mod;
+	}
+
+	/**
+	 * Returns true or false depending on if the pos of the iterator is a multiple of a specific number.
+	 * So, <% if MultipleOf(3) %> would return true on indexes: 3,6,9,12,15, etc. 
+	 * The count starts from $offset, which defaults to 1.
+	 * @param int $factor The multiple of which to return
+	 * @param int $offset Number to start count from.
+	 * @return bool
+	 */
+	public function MultipleOf($factor, $offset = 1) {
+		return (bool) ($this->Modulus($factor, $offset) == 0);
+	}
+
+
+
+}
 /**
  * This extends SSViewer_Scope to mix in data on top of what the item provides. This can be "global"
  * data that is scope-independant (like BaseURL), or type-specific data that is layered on top cross-cut like
@@ -135,31 +295,141 @@ class SSViewer_Scope {
  */
 class SSViewer_DataPresenter extends SSViewer_Scope {
 	
-	private $extras;
-	
-	function __construct($item, $extras = null){
+	private static $globalProperties = null;
+	private static $iteratorProperties = null;
+
+	protected $extras;
+
+	function __construct($item, $extras = array()){
 		parent::__construct($item);
+
+		// Build up global property providers array only once per request
+		if (self::$globalProperties === null) {
+			self::$globalProperties = array();
+			// Get all the exposed variables from all classes that implement the TemplateGlobalProvider interface
+			$this->createCallableArray(self::$globalProperties, "TemplateGlobalProvider", "get_template_global_variables");
+		}
+
+		// Build up iterator property providers array only once per request
+		if (self::$iteratorProperties === null) {
+			self::$iteratorProperties = array();
+			// Get all the exposed variables from all classes that implement the TemplateIteratorProvider interface
+			$this->createCallableArray(self::$iteratorProperties, "TemplateIteratorProvider", "get_template_iterator_variables", true);   //call non-statically
+		}
+
 		$this->extras = $extras;
 	}
-	
-	function __call($name, $arguments) {
-		$property = $arguments[0];
-		
-		if ($this->extras && array_key_exists($property, $this->extras)) {
-			
-			$this->resetLocalScope();
-			
-			$value = $this->extras[$arguments[0]];
-			
-			switch ($name) {
-				case 'hasValue':
-					return (bool)$value;
-				default:
-					return $value;
+
+	protected function createCallableArray(&$extraArray, $interfaceToQuery, $variableMethod, $createObject = false) {
+		$implementers = ClassInfo::implementorsOf($interfaceToQuery);
+		if($implementers) foreach($implementers as $implementer) {
+
+			// Create a new instance of the object for method calls
+			if ($createObject) $implementer = new $implementer();
+
+			// Get the exposed variables
+			$exposedVariables = $implementer::$variableMethod();
+
+			foreach($exposedVariables as $varName => $details) {
+				if (!is_array($details)) $details = array('method' => $details, 'casting' => Object::get_static('ViewableData', 'default_cast'));
+
+				// If just a value (and not a key => value pair), use it for both key and value
+				if (is_numeric($varName)) $varName = $details['method'];
+
+				// Add in a reference to the implementing class (might be a string class name or an instance)
+				$details['implementer'] = $implementer;
+
+				// And a callable array
+				if (isset($details['method'])) $details['callable'] = array($implementer, $details['method']);
+
+				// Save with both uppercase & lowercase first letter, so either works
+				$extraArray[lcfirst($varName)] = $details;
+				$extraArray[ucfirst($varName)] = $details;
 			}
 		}
-		
-		return parent::__call($name, $arguments);
+	}
+
+	function getInjectedValue($property, $params, $cast = true) {
+		// Check if the method to-be-called exists on the target object, and if so don't check global objects
+		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
+		if (isset($on->$property) || method_exists($on, $property)) return null;
+
+		// Find the source of the value
+		$source = null;
+
+		// Check for a presenter-specific override
+		if (array_key_exists($property, $this->extras)) {
+			$source = array('value' => $this->extras[$property]);
+		}
+		// Then for iterator-specific overrides
+		else if (array_key_exists($property, self::$iteratorProperties)) {
+			$source = self::$iteratorProperties[$property];
+
+			if ($this->itemIterator) {
+				// Set the current iterator position and total (the object instance is the first item in the callable array)
+				$source['implementer']->iteratorProperties($this->itemIterator->key(), $this->itemIteratorTotal);
+			} else {
+				// If we don't actually have an iterator at the moment, act like a list of length 1
+				$source['implementer']->iteratorProperties(0, 1);
+			}
+		}
+		// And finally for global overrides
+		else if (array_key_exists($property, self::$globalProperties)) {
+			$source = self::$globalProperties[$property];  //get the method call
+		}
+
+		if ($source) {
+			$res = array();
+
+			// Look up the value - either from a callable, or from a directly provided value
+			if (isset($source['callable'])) $res['value'] = call_user_func_array($source['callable'], $params);
+			elseif (isset($source['value'])) $res['value'] = $source['value'];
+			else throw new InvalidArgumentException("Injected property $property does't have a value or callable value source provided");
+
+			// If we want to provide a casted object, look up what type object to use
+			if ($cast) {
+				// Get the object to cast as
+				$casting = isset($source['casting']) ? $source['casting'] : null;
+				// If not provided, use default
+				if (!$casting) $casting = Object::get_static('ViewableData', 'default_cast');
+
+				$obj = new $casting($property);
+				$obj->setValue($res['value']);
+
+				$res['obj'] = $obj;
+			}
+
+			return $res;
+		}
+	}
+
+	function __call($name, $arguments) {
+		//extract the method name and parameters
+		$property = $arguments[0];  //the name of the function being called
+
+		if (isset($arguments[1]) && $arguments[1] != null) $params = $arguments[1]; //the function parameters in an array
+		else $params = array();
+
+		$hasInjected = $res = null;
+
+		if ($name == 'hasValue') {
+			if ($val = $this->getInjectedValue($property, $params, false)) {
+				$hasInjected = true; $res = (bool)$val['value'];
+			}
+		}
+		else { // XML_val
+			if ($val = $this->getInjectedValue($property, $params)) {
+				$hasInjected = true; $obj = $val['obj']; $res = $obj->forTemplate();
+			}
+		}
+
+		if ($hasInjected) {
+			$this->resetLocalScope();
+			return $res;
+		}
+		else {
+			return parent::__call($name, $arguments);
+		}
 	}
 }
 
@@ -490,7 +760,7 @@ class SSViewer {
 				));
 			}
 		}
-		
+
 		$scope = new SSViewer_DataPresenter($item, array('I18NNamespace' => basename($template)));
 		$val = "";
 		

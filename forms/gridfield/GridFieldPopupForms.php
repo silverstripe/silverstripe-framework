@@ -311,9 +311,6 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 			)));	
 		}
 		
-		// TODO Remove once ViewableData->First()/Last() is fixed
-		foreach($items as $i => $item) $item->iteratorProperties($i, $items->Count());
-
 		return $items;
 	}
 }

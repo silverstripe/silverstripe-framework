@@ -5,7 +5,7 @@
  * @package sapphire
  * @subpackage security
  */
-class Member extends DataObject {
+class Member extends DataObject implements TemplateGlobalProvider {
 
 	static $db = array(
 		'FirstName' => 'Varchar',
@@ -1377,6 +1377,13 @@ class Member extends DataObject {
 		
 		// If can't find a suitable editor, just default to cms
 		return $currentName ? $currentName : 'cms';
+	}
+
+	public static function get_template_global_variables() {
+		return array(
+			'CurrentMember' => 'currentUser',
+			'currentUser'
+		);
 	}
 }
 

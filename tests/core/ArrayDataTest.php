@@ -23,15 +23,6 @@ class ArrayDataTest extends SapphireTest {
 		$this->assertFalse($arrayData->hasField('c'));
 	}
 
-	function testWrappingAnEmptyObjectWorks() {
-		$object = (object) array();
-		$this->assertTrue(is_object($object));
-
-		$arrayData = new ArrayData($object);
-
-		$this->assertEquals(null, $arrayData->TotalItems()); // (tobych) Shouldn't we get 0?
-	}
-
 	function testWrappingAnAssociativeArrayWorks() {
 		$array = array("A" => "Alpha", "B" => "Beta");
 		$this->assertTrue(ArrayLib::is_associative($array));
@@ -41,12 +32,6 @@ class ArrayDataTest extends SapphireTest {
 		$this->assertTrue($arrayData->hasField("A"));
 		$this->assertEquals("Alpha", $arrayData->getField("A"));
 		$this->assertEquals("Beta", $arrayData->getField("B"));
-	}
-
-	function testWrappingAnEmptyArrayWorks() {
-		$arrayData = new ArrayData(array());
-
-		$this->assertEquals(null, $arrayData->TotalItems()); // (tobych) Shouldn't we get 0?
 	}
 
 	function testRefusesToWrapAnIndexedArray() {

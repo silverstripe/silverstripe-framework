@@ -145,7 +145,7 @@ class RequestHandlingTest extends FunctionalTest {
 	}
 	
 	function testMethodsOnParentClassesOfRequestHandlerDeclined() {
-		$response = Director::test('testGoodBase1/getSecurityID');
+		$response = Director::test('testGoodBase1/getIterator');
 		$this->assertEquals(403, $response->getStatusCode());
 	}
 	

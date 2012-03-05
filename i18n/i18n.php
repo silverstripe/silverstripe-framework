@@ -57,7 +57,7 @@
  * @package sapphire
  * @subpackage misc
  */
-class i18n extends Object {
+class i18n extends Object implements TemplateGlobalProvider {
 	
 	/**
 	 * This static variable is used to store the current defined locale.
@@ -1955,6 +1955,13 @@ class i18n extends Object {
 				$lang[$locale][$class][$entity] = $translation;
 			}
 		}
+	}
+
+	public static function get_template_global_variables() {
+		return array(
+			'i18nLocale' => 'get_locale',
+			'get_locale',
+		);
 	}
 }
 
