@@ -101,7 +101,7 @@ class GridFieldConfig_Base extends GridFieldConfig {
 	 * @param int $itemsPerPage - How many items per page should show up per page
 	 * @return GridFieldConfig_Base
 	 */
-	public static function create($itemsPerPage=15){
+	public static function create($itemsPerPage=null){
 		return new GridFieldConfig_Base($itemsPerPage);
 	}
 
@@ -109,7 +109,7 @@ class GridFieldConfig_Base extends GridFieldConfig {
 	 *
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
-	public function __construct($itemsPerPage=15) {
+	public function __construct($itemsPerPage=null) {
 		$this->addComponent(new GridFieldTitle());
 		$this->addComponent(new GridFieldSortableHeader());
 		$this->addComponent(new GridFieldFilter());
@@ -128,7 +128,7 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
 	 * @param int $itemsPerPage - How many items per page should show up
 	 * @return GridFieldConfig_RecordEditor
 	 */
-	public static function create($itemsPerPage=15){
+	public static function create($itemsPerPage=null){
 		return new GridFieldConfig_RecordEditor($itemsPerPage);
 	}
 
@@ -136,7 +136,8 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
 	 *
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
-	public function __construct($itemsPerPage=15) {
+	public function __construct($itemsPerPage=null) {
+		$this->addComponent(new GridFieldTitle());
 		$this->addComponent(new GridFieldSortableHeader());
 		$this->addComponent(new GridFieldFilter());
 		$this->addComponent(new GridFieldDefaultColumns());
@@ -169,15 +170,16 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig {
 	 * @param int $itemsPerPage - How many items per page should show up
 	 * @return GridFieldConfig_RelationEditor
 	 */
-	public static function create($itemsPerPage=15){
-		return new GridFieldConfig_RelationEditor($itemsPerPage=15);
+	public static function create($itemsPerPage=null){
+		return new GridFieldConfig_RelationEditor($itemsPerPage);
 	}
 
 	/**
 	 *
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
-	public function __construct($itemsPerPage=15) {
+	public function __construct($itemsPerPage=null) {
+		$this->addComponent(new GridFieldTitle());
 		$this->addComponent(new GridFieldRelationAdd());
 		$this->addComponent(new GridFieldSortableHeader());
 		$this->addComponent(new GridFieldFilter());

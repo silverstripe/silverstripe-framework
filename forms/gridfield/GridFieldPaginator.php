@@ -31,8 +31,8 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 *
 	 * @param int $itemsPerPage - How many items should be displayed per page
 	 */
-	public function __construct($itemsPerPage=15) {
-		$this->itemsPerPage = $itemsPerPage;
+	public function __construct($itemsPerPage=null) {
+		if($itemsPerPage) $this->itemsPerPage = $itemsPerPage;
 	}
 
 	/**
