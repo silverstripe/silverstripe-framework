@@ -55,22 +55,19 @@ class Group extends DataObject {
 	
 	/**
 	 * Caution: Only call on instances, not through a singleton.
+	 * The "root group" fields will be created through {@link SecurityAdmin->RootForm()}.
 	 *
 	 * @return FieldList
 	 */
 	public function getCMSFields() {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');
 		
-		$config = new GridFieldConfig();
-		$config->addComponent(new GridFieldTitle());
-		$components = $configs->getComponents();
-		foreach($components as $component) $config->addComponent($component);		
-		$config = new GridFieldConfig_RelationEditor('FirstName', 20);
-		$config = new GridFieldConfig_RelationEditor(20);
+		$config = new GridFieldConfig_RelationEditor();
 		$config->addComponents(new GridFieldExporter());
-		
 		$config->getComponentByType('GridFieldRelationAdd')
 			->setResultsFormat('$Title ($Email)')->setSearchFields(array('FirstName', 'Surname', 'Email'));
+		$config->getComponentByType('GridFieldPopupForms')->setValidator(new Member_Validator());
+
 		$memberList = new GridField('Members','Members', $this->Members(), $config);
 		$memberList->addExtraClass('members_grid');
 		

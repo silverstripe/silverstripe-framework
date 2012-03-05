@@ -82,14 +82,14 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	}
 
 	/**
+	 * The fields for individual groups will be created through {@link Group->getCMSFields()}.
+	 * 
 	 * @return FieldList
 	 */
 	function RootForm() {
-		$config = new GridFieldConfig_Base(25);
-		$config->addComponent(new GridFieldAction_Edit());
-		$config->addComponent(new GridFieldAction_Delete());
-		$config->addComponent(new GridFieldPopupForms());
+		$config = new GridFieldConfig_RecordEditor();
 		$config->addComponent(new GridFieldExporter());
+		$config->getComponentByType('GridFieldPopupForms')->setValidator(new Member_Validator());
 		$memberList = new GridField('Members', 'All members', DataList::create('Member'), $config);
 		$memberList->addExtraClass("members_grid");
 		
