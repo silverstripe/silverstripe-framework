@@ -15,6 +15,12 @@ class ManyManyListTest extends SapphireTest {
 		$list = ManyManyList::create('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID', 'DataObjectTest_PlayerID');
 		$this->assertEquals(2, $list->count());
 	}
+
+	public function testRelationshipEmptyOnNewRecords() {
+		// Relies on the fact that (unrelated) teams exist in the fixture file already
+		$newPlayer = new DataObjectTest_Player(); // many_many Teams
+		$this->assertEquals(array(), $newPlayer->Teams()->column('ID'));
+	}
 	
 	public function testAddingSingleDataObjectByReference() {
 		$player1 = $this->objFromFixture('DataObjectTest_Player', 'player1');

@@ -946,7 +946,7 @@ class Member extends DataObject {
 	 */
 	public function Groups() {
 		$groups = new Member_GroupSet('Group', 'Group_Members', 'GroupID', 'MemberID');
-		if($this->ID) $groups->setForeignID($this->ID);
+		$groups->setForeignID($this->ID);
 		
 		$this->extend('updateGroups', $groups);
 

@@ -73,7 +73,7 @@ class ManyManyList extends RelationList {
 		if(is_array($this->foreignID)) {
 			return "\"$this->joinTable\".\"$this->foreignKey\" IN ('" . 
 				implode("', '", array_map('Convert::raw2sql', $this->foreignID)) . "')";
-		} else if($this->foreignID){
+		} else if($this->foreignID !== null){
 			return "\"$this->joinTable\".\"$this->foreignKey\" = '" . 
 				Convert::raw2sql($this->foreignID) . "'";
 		}
