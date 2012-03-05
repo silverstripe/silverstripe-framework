@@ -428,6 +428,23 @@ jQuery.noConflict();
 		}
 
 	});
+
+	/**
+	 * Simple toggle link, which points to a DOm element by its ID selector
+	 * in the href attribute (which doubles as an anchor link to that element).
+	 */
+	$('.cms .cms-help-toggle').entwine({
+		onmatch: function() {
+			this._super();
+
+			$(this.attr('href')).hide();
+		},
+		onclick: function(e) {
+			$(this.attr('href')).toggle();
+			e.preventDefault();
+		}
+	});
+	
 }(jQuery));
 
 var statusMessage = function(text, type) {
