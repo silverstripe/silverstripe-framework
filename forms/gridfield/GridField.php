@@ -319,25 +319,35 @@ class GridField extends FormField {
 			}
 		}
 
-		foreach($list as $idx => $record) {
-			$record->iteratorProperties($idx, $list->count());
-			$rowContent = '';
-			foreach($columns as $column) {
-				$colContent = $this->getColumnContent($record, $column);
-				// A return value of null means this columns should be skipped altogether.
-				if($colContent === null) continue;
-				$colAttributes = $this->getColumnAttributes($record, $column);
-				$rowContent .= $this->createTag('td', $colAttributes, $colContent);
+
+		if ($list->Count() > 0) {
+			foreach($list as $idx => $record) {
+				$record->iteratorProperties($idx, $list->count());
+				$rowContent = '';
+				foreach($columns as $column) {
+					$colContent = $this->getColumnContent($record, $column);
+					// A return value of null means this columns should be skipped altogether.
+					if($colContent === null) continue;
+					$colAttributes = $this->getColumnAttributes($record, $column);
+					$rowContent .= $this->createTag('td', $colAttributes, $colContent);
+				}
+				$row = $this->createTag(
+					'tr',
+					array(
+						"class" => 'ss-gridfield-item ' . $record->FirstLast() . " " . $record->EvenOdd(),
+						'data-id' => $record->ID,
+						// TODO Allow per-row customization similar to GridFieldDefaultColumns
+						'data-class' => $record->ClassName,
+					),
+					$rowContent
+				);
+				$content['body'][] = $row;
 			}
+		} else {    //display a message when the grid field is empty
 			$row = $this->createTag(
-				'tr', 
-				array(
-					"class" => 'ss-gridfield-item ' . $record->FirstLast() . " " . $record->EvenOdd(),
-					'data-id' => $record->ID,
-					// TODO Allow per-row customization similar to GridFieldDefaultColumns
-					'data-class' => $record->ClassName,
-				),
-				$rowContent
+				'tr',
+				array("class" => 'ss-gridfield-item ss-gridfield-no-items'),
+				$this->createTag('td', array(), _t('GridField.NoItemsFound', 'No items found'))
 			);
 			$content['body'][] = $row;
 		}
