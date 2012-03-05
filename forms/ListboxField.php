@@ -40,6 +40,16 @@ class ListboxField extends DropdownField {
 	 * @var boolean
 	 */
 	protected $multiple = false;
+
+	/**
+	 * @var Array
+	 */
+	protected $disabledItems = array();
+
+	/**
+	 * @var Array
+	 */
+	protected $defaultItems = array();
 	
 	/**
 	 * Creates a new dropdown field.
@@ -61,43 +71,31 @@ class ListboxField extends DropdownField {
 	 * Returns a <select> tag containing all the appropriate <option> tags
 	 */
 	function Field($properties = array()) {
-		if($this->multiple) {
-			$this->name .= '[]';
-		}
-		
+		if($this->multiple) $this->name .= '[]';
 		$options = array();
 		
 		// We have an array of values
 		if(is_array($this->value)){
 			// Loop through and figure out which values were selected.
-					
 			foreach($this->getSource() as $value => $title) {
-				// Loop through the array of values to find out if this value is selected.
-				$selected = "";
-				foreach($this->value as $v){
-					if($value == $v) {
-						$selected = " selected=\"selected\"";
-						break;
-					}
-				}
 				$options[] = new ArrayData(array(
 					'Title' => $title,
 					'Value' => $value,
-					'Selected' => $selected,
+					'Selected' => (in_array($value, $this->value) || in_array($value, $this->defaultItems)),
+					'Disabled' => $this->disabled || in_array($value, $this->disabledItems),
 				));
 			}
 		} else {
 			// Listbox was based a singlular value, so treat it like a dropdown.
 			foreach($this->getSource() as $value => $title) {
-				$selected = $value == $this->value ? " selected=\"selected\"" : ""; 
 				$options[] = new ArrayData(array(
 					'Title' => $title,
 					'Value' => $value,
-					'Selected' => $selected,
+					'Selected' => ($value == $this->value || in_array($value, $this->defaultItems)),
+					'Disabled' => $this->disabled || in_array($value, $this->disabledItems),
 				));
 			}
 		}
-		
 		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
 		return $this->customise($properties)->renderWith($this->getTemplate());
 	}
@@ -214,7 +212,6 @@ class ListboxField extends DropdownField {
 
 				// Doesn't check against unknown values in order to allow for less rigid data handling.
 				// They're silently ignored and overwritten the next time the field is saved.
-
 				parent::setValue($parts);
 			} else {
 				if(!in_array($val, array_keys($this->source))) {
@@ -231,6 +228,43 @@ class ListboxField extends DropdownField {
 		}
 		
 		return $this;
+	}
+
+	/**
+	 * Mark certain elements as disabled,
+	 * regardless of the {@link setDisabled()} settings.
+	 * 
+	 * @param array $items Collection of array keys, as defined in the $source array
+	 */
+	function setDisabledItems($items) {
+		$this->disabledItems = $items;
+		return $this;
+	}
+	
+	/**
+	 * @return Array
+	 */
+	function getDisabledItems() {
+		return $this->disabledItems;
+	}
+
+	/**
+	 * Default selections, regardless of the {@link setValue()} settings.
+	 * Note: Items marked as disabled through {@link setDisabledItems()} can still be
+	 * selected by default through this method.
+	 * 
+	 * @param Array $items Collection of array keys, as defined in the $source array
+	 */
+	function setDefaultItems($items) {
+		$this->defaultItems = $items;
+		return $this;
+	}
+	
+	/**
+	 * @return Array
+	 */
+	function getDefaultItems() {
+		return $this->defaultItems;
 	}
 	
 }

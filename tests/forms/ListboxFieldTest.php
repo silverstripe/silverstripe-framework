@@ -27,6 +27,28 @@ class ListboxFieldTest extends SapphireTest {
 		$this->assertEquals('selected', (string)$tag2xml[0]['selected']);
 		$this->assertNull($tag3xml[0]['selected']);
 	}
+
+	function testFieldWithDisabledItems() {
+		$articleWithTags = $this->objFromFixture('ListboxFieldTest_Article', 'articlewithtags');
+		$tag1 = $this->objFromFixture('ListboxFieldTest_Tag', 'tag1');
+		$tag2 = $this->objFromFixture('ListboxFieldTest_Tag', 'tag2');
+		$tag3 = $this->objFromFixture('ListboxFieldTest_Tag', 'tag3');
+		$field = new ListboxField("Tags", "Test field", DataObject::get("ListboxFieldTest_Tag")->map()->toArray());
+		$field->setMultiple(true);
+		$field->setValue(null, $articleWithTags);
+		$field->setDisabledItems(array($tag1->ID, $tag3->ID));
+
+		$p = new CSSContentParser($field->Field());
+		$tag1xml = $p->getByXpath('//option[@value=' . $tag1->ID . ']');
+		$tag2xml = $p->getByXpath('//option[@value=' . $tag2->ID . ']');
+		$tag3xml = $p->getByXpath('//option[@value=' . $tag3->ID . ']');
+		$this->assertEquals('selected', (string)$tag1xml[0]['selected']);
+		$this->assertEquals('disabled', (string)$tag1xml[0]['disabled']);
+		$this->assertEquals('selected', (string)$tag2xml[0]['selected']);
+		$this->assertNull($tag2xml[0]['disabled']);
+		$this->assertNull($tag3xml[0]['selected']);
+		$this->assertEquals('disabled', (string)$tag3xml[0]['disabled']);
+	}
 	
 	function testSaveIntoNullValueWithMultipleOff() {
 		$choices = array('a' => 'a value', 'b' => 'b value','c' => 'c value');
