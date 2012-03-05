@@ -139,6 +139,21 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		);
 	}
 
+	/**
+	 * @param Int
+	 */
+	public function setItemsPerPage($num) {
+		$this->itemsPerPage = $num;
+		return $this;
+	}
+
+	/**
+	 * @return Int
+	 */
+	public function getItemsPerPage() {
+		return $this->itemsPerPage;
+	}
+
 	/** Duck check to see if list support methods we need to paginate */
 	protected function getListPaginatable(SS_List $list) {
 		// If no list yet, not paginatable
