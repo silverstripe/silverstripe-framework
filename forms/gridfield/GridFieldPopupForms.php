@@ -25,6 +25,11 @@ class GridFieldPopupForms implements GridField_URLHandler {
 	 */
 	protected $name;
 
+	/**
+	 * @var Validator The form validator used for both add and edit fields.
+	 */
+	protected $validator;
+
 	function getURLHandlers($gridField) {
 		return array(
 			'item/$ID' => 'handleItem',
@@ -76,6 +81,7 @@ class GridFieldPopupForms implements GridField_URLHandler {
 	 */
 	function setTemplate($template) {
 		$this->template = $template;
+		return $this;
 	}
 
 	/**
@@ -90,6 +96,7 @@ class GridFieldPopupForms implements GridField_URLHandler {
 	 */
 	function setName($name) {
 		$this->name = $name;
+		return $this;
 	}
 
 	/**
@@ -97,6 +104,21 @@ class GridFieldPopupForms implements GridField_URLHandler {
 	 */
 	function getName() {
 		return $this->name;
+	}
+
+	/**
+	 * @param Validator $validator
+	 */
+	public function setValidator(Validator $validator) {
+		$this->validator = $validator;
+		return $this;
+	}
+
+	/**
+	 * @return Validator
+	 */
+	public function getValidator() {
+		return $this->validator;
 	}
 }
 
@@ -205,7 +227,8 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 					->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'),
 				FormAction::create('doDelete', _t('GridFieldDetailsForm.Delete', 'Delete'))
 					->setUseButtonTag(true)->addExtraClass('ss-ui-action-destructive')
-			)
+			),
+			$this->component->getValidator()
 		);
 		$form->loadDataFrom($this->record);
 
@@ -284,6 +307,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	 */
 	function setTemplate($template) {
 		$this->template = $template;
+		return $this;
 	}
 
 	/**
