@@ -63,21 +63,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 						)
 					)
 				);
-				if(Permission::check('APPLY_ROLES')) { 
-					$fields->addFieldToTab(
-						'Root.Roles',
-						new LiteralField(
-							'RolesAddEditLink', 
-							sprintf(
-								'<p class="add-role"><a href="%s">%s</a></p>',
-								$this->Link('show/root'),
-								// TODO This should include #Root_Roles to switch directly to the tab,
-								// but tabstrip.js doesn't display tabs when directly adressed through a URL pragma
-								_t('Group.RolesAddEditLink', 'Add/edit roles')
-							)
-						)
-					);
-				}
 		
 				// Filter permissions
 				$permissionField = $form->Fields()->dataFieldByName('Permissions');

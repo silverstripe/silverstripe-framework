@@ -123,9 +123,17 @@ class Group extends DataObject {
 				new LiteralField( 
 					"",  
 					"<p>" .  
-					_t('SecurityAdmin.ROLESDESCRIPTION', 
-						"This section allows you to add roles to this group. Roles are logical groupings of permissions, which can be editied in the Roles tab" 
-					) .  
+					_t(
+						'SecurityAdmin.ROLESDESCRIPTION', 
+						"Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required."
+					) . '<br />' . 
+					sprintf(
+						'<a href="%s" class="add-role">%s</a>',
+						singleton('SecurityAdmin')->Link('show/root#Root_Roles'),
+						// TODO This should include #Root_Roles to switch directly to the tab,
+						// but tabstrip.js doesn't display tabs when directly adressed through a URL pragma
+						_t('Group.RolesAddEditLink', 'Manage roles')
+					) .
 					 "</p>" 
 				) 
 			);
@@ -139,13 +147,14 @@ class Group extends DataObject {
 				$ancestorRoles = $ancestor->Roles();
 				if($ancestorRoles) $inheritedRoles->merge($ancestorRoles);
 			}
-			$fields->findOrMakeTab('Root.Roles', 'Root.' . _t('SecurityAdmin.ROLES', 'Roles'));
-			$fields->addFieldToTab(
-				'Root.Roles',
-				$rolesField = new CheckboxSetField('Roles', 'Roles', $allRoles)
-			);
-			$rolesField->setDefaultItems($inheritedRoles->column('ID'));
-			$rolesField->setDisabledItems($inheritedRoles->column('ID'));
+			$groupRoleIDs = $groupRoles->column('ID') + $inheritedRoles->column('ID');
+			$rolesField = Object::create('ListboxField', 'Roles', false, $allRoles->map()->toArray())
+					->setMultiple(true)
+					->setDefaultItems($groupRoleIDs)
+					->setAttribute('data-placeholder', _t('Group.AddRole', 'Add a role for this group'))
+					->setDisabledItems($inheritedRoles->column('ID'));	
+			if(!$allRoles->Count()) $rolesField->setAttribute('data-placeholder', _t('Group.NoRoles', 'No roles found'));
+			$fields->addFieldToTab('Root.Roles', $rolesField);
 		} 
 		
 		$fields->push($idField = new HiddenField("ID"));

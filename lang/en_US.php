@@ -281,7 +281,7 @@ $lang['en_US']['Group']['Parent'] = array(
 	PR_MEDIUM,
 	'One group has one parent group'
 );
-$lang['en_US']['Group']['RolesAddEditLink'] = 'Add/edit roles';
+$lang['en_US']['Group']['RolesAddEditLink'] = 'Manage roles';
 $lang['en_US']['Group']['SINGULARNAME'] = array(
 	'Group',
 	50,
@@ -730,7 +730,7 @@ $lang['en_US']['SecurityAdmin']['MemberListCaution'] = 'Caution: Removing member
 $lang['en_US']['SecurityAdmin']['NEWGROUP'] = 'New Group';
 $lang['en_US']['SecurityAdmin']['PERMISSIONS'] = 'Permissions';
 $lang['en_US']['SecurityAdmin']['ROLES'] = 'Roles';
-$lang['en_US']['SecurityAdmin']['ROLESDESCRIPTION'] = 'This section allows you to add roles to this group. Roles are logical groupings of permissions, which can be editied in the Roles tab';
+$lang['en_US']['SecurityAdmin']['ROLESDESCRIPTION'] = 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.';
 $lang['en_US']['SecurityAdmin']['SGROUPS'] = 'Security Groups';
 $lang['en_US']['SecurityAdmin']['TABIMPORT'] = 'Import';
 $lang['en_US']['SecurityAdmin']['TABROLES'] = 'Roles';
