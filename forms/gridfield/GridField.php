@@ -319,8 +319,9 @@ class GridField extends FormField {
 			}
 		}
 
+		$total = $list->count();
+
 		foreach($list as $idx => $record) {
-			$record->iteratorProperties($idx, $list->count());
 			$rowContent = '';
 			foreach($columns as $column) {
 				$colContent = $this->getColumnContent($record, $column);
@@ -329,10 +330,16 @@ class GridField extends FormField {
 				$colAttributes = $this->getColumnAttributes($record, $column);
 				$rowContent .= $this->createTag('td', $colAttributes, $colContent);
 			}
+
+			$classes = array('ss-gridfield-item');
+			if ($idx == 0) $classes[] = 'first';
+			if ($idx == $total-1) $classes[] = 'last';
+			$classes[] = ($idx % 2) ? 'even' : 'odd';
+
 			$row = $this->createTag(
 				'tr', 
 				array(
-					"class" => 'ss-gridfield-item ' . $record->FirstLast() . " " . $record->EvenOdd(),
+					"class" => implode(' ', $classes),
 					'data-id' => $record->ID,
 					// TODO Allow per-row customization similar to GridFieldDefaultColumns
 					'data-class' => $record->ClassName,

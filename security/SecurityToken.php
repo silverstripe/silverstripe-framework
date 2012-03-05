@@ -28,7 +28,7 @@
  * 
  * @todo Make token name form specific for additional forgery protection.
  */
-class SecurityToken extends Object {
+class SecurityToken extends Object implements TemplateGlobalProvider {
 	
 	/**
 	 * @var String
@@ -101,6 +101,15 @@ class SecurityToken extends Object {
 	 */
 	static function get_default_name() {
 		return self::$default_name;
+	}
+
+	/**
+	 * Returns the value of an the global SecurityToken in the current session
+	 * @return int
+	 */
+	static function getSecurityID() {
+		$token = SecurityToken::inst();
+		return $token->getValue();
 	}
 	
 	/**
@@ -208,7 +217,13 @@ class SecurityToken extends Object {
 		$generator = new RandomGenerator();
 		return $generator->generateHash('sha1');
 	}
-	
+
+	public static function get_template_global_variables() {
+		return array(
+			'getSecurityID',
+			'SecurityID' => 'getSecurityID'
+		);
+	}
 }
 
 /**
