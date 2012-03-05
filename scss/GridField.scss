@@ -290,7 +290,7 @@ $gf_grid_x:	16px;
 							));
 						}
 						&:active {
-							@include background (url(../images/icons/filter-icons.png) no-repeat -16px -17px,
+							@include background (url(../images/icons/filter-icons.png) no-repeat -16px 6px,
 							linear-gradient(
 								lighten($gf_color_button_filter_hover, 5%), 
 								darken($gf_color_button_filter_hover, 5%)
