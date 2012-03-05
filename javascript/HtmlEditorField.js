@@ -379,7 +379,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						break;
 					
 					case 'file':
-						href = this.find(':input[name=file]').val();
+						href = '[file_link id=' + this.find(':input[name=file]').val() + ']';
 						target = '_blank';
 						break;
 					
@@ -532,7 +532,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					email: RegExp.$1,
 					Description: title
 				};
-			} else if(href.match(/^(assets\/.*)$/)) {
+			} else if(href.match(/^(assets\/.*)$/) || href.match(/^\[file_link\s*(?:%20)?id=([0-9]+)\]?(#.*)?$/)) {
 				return {
 					LinkType: 'file',
 					file: RegExp.$1,
@@ -565,7 +565,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					LinkType: 'internal'
 				};
 			}
-		}	
+		}
 		});
 
 		$('form.htmleditorfield-linkform input[name=LinkType]').entwine({

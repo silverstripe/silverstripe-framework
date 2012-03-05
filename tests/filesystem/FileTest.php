@@ -8,7 +8,39 @@ class FileTest extends SapphireTest {
 	static $fixture_file = 'FileTest.yml';
 	
 	protected $extraDataObjects = array('FileTest_MyCustomFile');
-	
+
+	public function testLinkShortcodeHandler() {
+		$testFile = $this->objFromFixture('File', 'asdf');
+		$errorPage = $this->objFromFixture('ErrorPage', '404');
+
+		$parser = new ShortcodeParser();
+		$parser->register('file_link', array('File', 'link_shortcode_handler'));
+
+		$fileShortcode = sprintf('[file_link id=%d]', $testFile->ID);
+		$fileEnclosed  = sprintf('[file_link id=%d]Example Content[/file_link]', $testFile->ID);
+
+		$fileShortcodeExpected = $testFile->Link();
+		$fileEnclosedExpected  = sprintf('<a href="%s" class="file" data-type="txt" data-size="977 KB">Example Content</a>', $testFile->Link());
+
+		$this->assertEquals($fileShortcodeExpected, $parser->parse($fileShortcode), 'Test that simple linking works.');
+		$this->assertEquals($fileEnclosedExpected, $parser->parse($fileEnclosed), 'Test enclosed content is linked.');
+
+		$testFile->delete();
+
+		$fileShortcode = '[file_link id="-1"]';
+		$fileEnclosed  = '[file_link id="-1"]Example Content[/file_link]';
+
+		$fileShortcodeExpected = $errorPage->Link();
+		$fileEnclosedExpected  = sprintf('<a href="%s">Example Content</a>', $errorPage->Link());
+
+		$this->assertEquals($fileShortcodeExpected, $parser->parse($fileShortcode), 'Test link to 404 page if no suitable matches.');
+		$this->assertEquals($fileEnclosedExpected, $parser->parse($fileEnclosed));
+
+		$this->assertEquals('', $parser->parse('[file_link]'), 'Test that invalid ID attributes are not parsed.');
+		$this->assertEquals('', $parser->parse('[file_link id="text"]'));
+		$this->assertEquals('', $parser->parse('[file_link]Example Content[/file_link]'));
+	}
+
 	function testCreateWithFilenameWithSubfolder() {
 		// Note: We can't use fixtures/setUp() for this, as we want to create the db record manually.
 		// Creating the folder is necessary to avoid having "Filename" overwritten by setName()/setRelativePath(),
