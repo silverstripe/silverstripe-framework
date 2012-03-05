@@ -344,7 +344,7 @@ class MemberTest extends FunctionalTest {
 	
 		$grouplessMember->addToGroupByCode('memberless');
 	
-		$this->assertEquals($memberlessGroup->Members()->Count(), 1);
+		$this->assertEquals($memberlessGroup->Members()->Count(), 0);
 		$this->assertEquals($grouplessMember->Groups()->Count(), 1);
 		
 		$grouplessMember->addToGroupByCode('somegroupthatwouldneverexist', 'New Group');
