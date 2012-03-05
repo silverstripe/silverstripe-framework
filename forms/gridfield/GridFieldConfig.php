@@ -1,7 +1,17 @@
 <?php
 /**
- * Description of GridFieldConfig
- *
+ * Encapsulates a collection of components following the {@link GridFieldComponent} interface.
+ * While the {@link GridField} itself has some configuration in the form of setters,
+ * most of the details are dealt with through components.
+ * 
+ * For example, you would add a {@link GridFieldPaginator} component to enable
+ * pagination on the listed records, and configure it through {@link GridFieldPaginator->setItemsPerPage()}.
+ * 
+ * In order to reduce the amount of custom code required, the framework provides
+ * some default configurations for common use cases:
+ * - {@link GridFieldConfig_Base} (added by default to GridField)
+ * - {@link GridFieldConfig_RecordEditor}
+ * - {@link GridFieldConfig_RelationEditor}
  */
 class GridFieldConfig {
 	
@@ -80,6 +90,10 @@ class GridFieldConfig {
 	}
 }
 
+/**
+ * A simple readonly, paginated view of records,
+ * with sortable and searchable headers.
+ */
 class GridFieldConfig_Base extends GridFieldConfig {
 
 	/**
