@@ -184,16 +184,10 @@ class CheckboxSetField extends OptionsetField {
 		$fieldname = $this->name ;
 		if($fieldname && $record && ($record->has_many($fieldname) || $record->many_many($fieldname))) {
 			$idList = array();
-			// Works for both <select multiple> style - array(0 => 'val1', 1 => 'val2') 
-			// and <input type="checkbox"> style - array('val1' => true, 'val2' => true).
-			// The <select multiple> element doesn't allow for individual keys in parameter names.
-			$valuesInKeys = (ArrayLib::is_associative($this->value));
-			if($this->value) foreach($this->value as $k => $v) {
-			   if($valuesInKeys) {
-			   	if($v) $idList[] = $k;
-			   } else {
-			   	$idList[] = $v;
-			   }
+			if($this->value) foreach($this->value as $id => $bool) {
+			   if($bool) {
+					$idList[] = $id;
+				}
 			}
 			$record->$fieldname()->setByIDList($idList);
 		} elseif($fieldname && $record) {
@@ -220,6 +214,7 @@ class CheckboxSetField extends OptionsetField {
 					$filtered[] = str_replace(",", "{comma}", $item);
 				}
 			}
+			
 			return implode(',', $filtered);
 		}
 		
