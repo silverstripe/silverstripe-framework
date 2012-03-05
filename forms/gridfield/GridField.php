@@ -663,6 +663,7 @@ class GridField_Action extends FormAction {
 	 * @var string
 	 */
 	protected $buttonLabel;
+	protected $buttonIcon;
 	
 	/**
 	 *
@@ -712,6 +713,20 @@ class GridField_Action extends FormAction {
 	public function _nameEncode($match) {
 		return '%'.dechex(ord($match[0]));
 	}
+	
+	/**
+	 * buttonIcon setter
+	 */
+	public function setButtonIcon($iconName) {
+		$this->buttonIcon = $iconName;
+	}
+	
+	/**
+	 * buttonIcon getter
+	 */
+	public function getButtonIcon(){
+		return $this->buttonIcon;
+	}
 
 	/**
 	 * Default method used by Templates to render the form
@@ -748,6 +763,7 @@ class GridField_Action extends FormAction {
 			'Name' => 'action_gridFieldAlterAction'. '?' . http_build_query($actionData),
 			'Disabled' => $this->isReadonly(),
 			'Label' => $this->buttonLabel,
+			'Icon' => $this->buttonIcon,
 			'DataURL' => $this->gridField->Link(),
 		));
 
