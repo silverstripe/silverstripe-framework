@@ -220,7 +220,7 @@ html, body { width: 100%; height: 100%; }
 
 body.cms { overflow: hidden; }
 
-.cms a { color: #3ebae0; text-decoration: none; }
+.cms a { color: #1556b2; text-decoration: none; }
 .cms a:hover, .cms a:focus { text-decoration: underline; }
 .cms body .ui-widget { font-family: Arial, sans-serif; font-size: 12px; }
 .cms strong { font-weight: bold; }
