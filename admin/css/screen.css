@@ -282,7 +282,7 @@ body.cms { overflow: hidden; }
 .message.notice { background-color: #ffbe66; border-color: #ff9300; }
 .message.notice a { color: #999; }
 .message.warning { background-color: #ffbe66; border-color: #ff9300; }
-.message.error { background-color: #ffbe66; border-color: #ff9300; }
+.message.error, .message.bad, .message.required { background-color: #ffbe66; border-color: #ff9300; }
 .message.good { background-color: #99cc66; border-color: #669933; }
 .message p { margin: 0; }
 

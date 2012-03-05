@@ -356,7 +356,7 @@ body.cms {
 		background-color: lighten($color-warning, 20%);
 		border-color: $color-warning;
 	}
-	&.error {
+	&.error, &.bad, &.required {
 		background-color: lighten($color-error, 20%);
 		border-color: $color-error;
 	}
