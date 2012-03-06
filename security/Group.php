@@ -210,27 +210,26 @@ class Group extends DataObject {
 	}
 	
 	/**
-	 * Overloaded getter.
-	 *
-	 * @TODO Where is this used, why is this overloaded?
+	 * Get many-many relation to {@link Member},
+	 * including all members which are "inherited" from children groups of this record.
+	 * See {@link DirectMembers()} for retrieving members without any inheritance.
 	 * 
-	 * @param $limit string SQL
-	 * @param $offset int
-	 * @param $filter string SQL
-	 * @param $sort string SQL
-	 * @param $join string SQL
-	 * @return ComponentSet
+	 * @param String
+	 * @return ManyManyList
 	 */
 	public function Members($filter = "", $sort = "", $join = "", $limit = "") {
-		// Get a DataList of the relevant groups
-		$groups = DataList::create("Group")->byIDs($this->collateFamilyIDs());
-		
 		if($sort || $join || $limit) {
 			Deprecation::notice('3.0', "The sort, join, and limit arguments are deprcated, use sort(), join() and limit() on the resulting DataList instead.");
 		}
 
-		// Call the relation method on the DataList to get the members from all the groups
-		$result = $groups->relation('DirectMembers')->where($filter)->sort($sort)->limit($limit);
+		// First get direct members as a base result
+		$result = $this->DirectMembers();
+		// Remove the default foreign key filter in prep for re-applying a filter containing all children groups.
+		// Filters are conjunctive in DataQuery by default, so this filter would otherwise overrule any less specific ones.
+		$result->dataQuery()->removeFilterOn('Group_Members');
+		// Now set all children groups as a new foreign key
+		$groups = DataList::create("Group")->byIDs($this->collateFamilyIDs());
+		$result = $result->forForeignID($groups->column('ID'))->where($filter)->sort($sort)->limit($limit);
 		if($join) $result = $result->join($join);
 
 		return $result;
