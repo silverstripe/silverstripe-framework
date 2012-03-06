@@ -73,15 +73,15 @@ class GridFieldRelationDelete implements GridField_ColumnProvider, GridField_Act
 	 * @return string - the HTML for the column 
 	 */
 	public function getColumnContent($gridField, $record, $columnName) {
-		$field = new GridField_Action(
+		$field = Object::create('GridField_Action',
 			$gridField, 
 			'UnlinkRelation'.$record->ID, 
-			_t('GridAction.UnlinkRelation', "Unlink"), 
+			false, 
 			"unlinkrelation", 
 			array('RecordID' => $record->ID)
-		);
-		$output = $field->Field();
-		return $output;
+		)
+			->setAttribute('title', _t('GridAction.UnlinkRelation', "Unlink"));
+		return $field->Field();
 	}
 	
 	/**

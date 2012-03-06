@@ -290,6 +290,17 @@ class GridField extends FormField {
 	 * @return string
 	 */
 	public function FieldHolder() {
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/GridField.css');
+
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/json-js/json2.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/i18n.js');
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/GridField.js');
+
 		// Get columns
 		$columns = $this->getColumns();
 
@@ -670,13 +681,6 @@ class GridField_Action extends FormAction {
 	
 	/**
 	 *
-	 * @var string
-	 */
-	protected $buttonLabel;
-	protected $buttonIcon;
-	
-	/**
-	 *
 	 * @var array 
 	 */
 	protected $stateValues;
@@ -688,7 +692,10 @@ class GridField_Action extends FormAction {
 	//protected $stateFields = array();
 	
 	protected $actionName;
+
 	protected $args = array();
+
+	public $useButtonTag = true;
 
 	/**
 	 *
@@ -698,12 +705,11 @@ class GridField_Action extends FormAction {
 	 * @param type $actionName
 	 * @param type $args 
 	 */
-	public function __construct(GridField $gridField, $name, $label, $actionName, $args) {
+	public function __construct(GridField $gridField, $name, $title, $actionName, $args) {
 		$this->gridField = $gridField;
-		$this->buttonLabel = $label;
 		$this->actionName = $actionName;
 		$this->args = $args;
-		parent::__construct($name);
+		parent::__construct($name, $title);
 	}
 
 	/**
@@ -723,64 +729,27 @@ class GridField_Action extends FormAction {
 	public function _nameEncode($match) {
 		return '%'.dechex(ord($match[0]));
 	}
-	
-	/**
-	 * buttonIcon setter
-	 */
-	public function setButtonIcon($iconName) {
-		$this->buttonIcon = $iconName;
-	}
-	
-	/**
-	 * buttonIcon getter
-	 */
-	public function getButtonIcon(){
-		return $this->buttonIcon;
-	}
 
-	/**
-	 * Default method used by Templates to render the form
-	 *
-	 * @return string HTML tag
-	 */
-	public function Field() {
-		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-		Requirements::css(SAPPHIRE_DIR . '/css/GridField.css');
-
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/json-js/json2.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/i18n.js');
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/GridField.js');
-
+	public function getAttributes() {
 		// Store state in session, and pass ID to client side
 		$state = array(
 			'grid' => $this->getNameFromParent(),
 			'actionName' => $this->actionName,
 			'args' => $this->args,
 		);
-		
 		$id = preg_replace('/[^\w]+/', '_', uniqid('', true));
 		Session::set($id, $state);
-		
 		$actionData['StateID'] = $id;
 		
-		// And generate field
-		$data = new ArrayData(array(
-			'Class' => ($this->extraClass() ? $this->extraClass() : '') . ($this->isReadonly() ? ' disabled' : ''),
-			'ID' => $this->id(),
-			// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch 
-			// will strip it from the requests 
-			'Name' => 'action_gridFieldAlterAction'. '?' . http_build_query($actionData),
-			'Disabled' => $this->isReadonly(),
-			'Label' => $this->buttonLabel,
-			'Icon' => $this->buttonIcon,
-			'DataURL' => $this->gridField->Link(),
-		));
-
-		return $data->renderWith('GridField_Action');
+		return array_merge(
+			parent::getAttributes(),
+			array(
+				// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch 
+				// will strip it from the requests 
+				'name' => 'action_gridFieldAlterAction'. '?' . http_build_query($actionData),
+				'data-url' => $this->gridField->Link(),
+			)
+		);
 	}
 
 	/**

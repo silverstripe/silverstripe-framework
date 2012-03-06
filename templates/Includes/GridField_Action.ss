@@ -1,3 +1,3 @@
-<button id="$ID" class="$Class" name="$Name" type="submit" data-url="$DataURL"<% if Disabled %> disabled="disabled"<% end_if %><% if Icon %> data-icon="$Icon"<% end_if %>>
-	$Label
+<button $AttributesHTML>
+	<% if ButtonContent %>$ButtonContent<% else %>$Title<% end_if %>
 </button>

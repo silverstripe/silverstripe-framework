@@ -224,9 +224,9 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 			$this->record->getCMSFields($this->popupController, $this->popupFormName),
 			new FieldList(
 				FormAction::create('doSave', _t('GridFieldDetailsForm.Save', 'Save'))
-					->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'),
+					->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'),
 				FormAction::create('doDelete', _t('GridFieldDetailsForm.Delete', 'Delete'))
-					->setUseButtonTag(true)->addExtraClass('ss-ui-action-destructive')
+					->addExtraClass('ss-ui-action-destructive')
 			),
 			$this->component->getValidator()
 		);
