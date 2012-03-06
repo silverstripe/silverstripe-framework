@@ -348,7 +348,6 @@ body.cms { overflow: hidden; }
 .cms-content-batchactions { float: left; position: relative; display: block; margin-left: 8px; }
 .cms-content-batchactions form > * { display: block; float: left; }
 .cms-content-batchactions form.cms-batch-actions { float: left; }
-.cms-content-batchactions .Actions { display: none; }
 
 #Form_BatchActionsForm select { width: 200px; }
 
