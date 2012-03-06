@@ -254,8 +254,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 		try {
 			$form->saveInto($this->record);
 			$this->record->write();
-			if($new_record)
-				$this->gridField->getList()->add($this->record);
+			$this->gridField->getList()->add($this->record);
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
 			return Controller::curr()->redirectBack();

@@ -1,4 +1,4 @@
-	<?php
+<?php
 
 /**
  * Test the API for creating GridField_URLHandler compeonnts
