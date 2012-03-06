@@ -6,7 +6,7 @@
 		 * @param {successCallback} callback to call after reloading succeeded.
 		 */
 		reload: function(ajaxOpts, successCallback) {
-				var self = this, form = this.closest('form'), data = form.find(':input').serializeArray();
+			var self = this, form = this.closest('form'), data = form.find(':input').serializeArray();
 			if(!ajaxOpts) ajaxOpts = {};
 			if(!ajaxOpts.data) ajaxOpts.data = [];
 			ajaxOpts.data = ajaxOpts.data.concat(data);
@@ -102,6 +102,28 @@
 			} else {
 				this._super(e);
 			}
+		}
+	});
+
+	/**
+	 * Prevents actions from causing an ajax reload of the field.
+	 * Useful e.g. for actions which rely on HTTP response headers being interpreted nativel
+	 * by the browser, like file download triggers.
+	 */
+	$('.ss-gridfield .action.no-ajax').entwine({
+		onclick: function(e){
+			var self = this, btn = this.closest(':button'), grid = this.getGridField(), 
+				form = this.closest('form'), data = form.find(':input').serialize();
+
+			// Add current button
+			data += '&' + encodeURIComponent(btn.attr('name')) + '=' + encodeURIComponent(btn.val());
+
+			// Include any GET parameters from the current URL, as the view state might depend on it.
+			// For example, a list prefiltered through external search criteria might be passed to GridField.
+			if(window.location.search) data = window.location.search.replace(/^\?/, '') + '&' + data;
+
+			window.location.href = $.path.makeUrlAbsolute(grid.data('url') + '?' + data, $('base').attr('href'));
+			return false;
 		}
 	});
 

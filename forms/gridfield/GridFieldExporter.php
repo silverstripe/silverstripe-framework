@@ -47,6 +47,7 @@ class GridFieldExporter implements GridField_HTMLProvider, GridField_ActionProvi
 			null
 		);
 		$button->setButtonIcon('exportlist');
+		$button->addExtraClass('no-ajax');
 		return array(
 			'after' => '<p>' . $button->Field() . '</p>',
 		);
