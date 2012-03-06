@@ -744,11 +744,14 @@ class GridField_Action extends FormAction {
 	 * @return string HTML tag
 	 */
 	public function Field() {
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::css(SAPPHIRE_DIR . '/css/GridField.css');
 
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/json-js/json2.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/i18n.js');
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/GridField.js');
 

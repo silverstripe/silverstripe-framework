@@ -53,12 +53,6 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 		$searchState = $gridField->State->GridFieldSearchRelation;
 		$dataClass = $gridField->getList()->dataClass();
 		
-		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/GridFieldSearch.js");
-		
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList();
 
