@@ -73,7 +73,7 @@ class GridFieldPopupForms implements GridField_URLHandler {
 		$handler = Object::create($class, $gridField, $this, $record, $controller, $this->name);
 		$handler->setTemplate($this->template);
 
-		return $handler->handleRequest($request, $gridField);
+		return $handler->handleRequest($request, DataModel::inst());
 	}
 
 	/**
