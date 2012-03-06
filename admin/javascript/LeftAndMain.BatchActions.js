@@ -224,8 +224,8 @@
 						button.removeClass('loading');
 					
 						// status message
-						var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.statusText;
-						statusMessage(msg, (status == 'success') ? 'good' : 'bad');
+						var msg = xmlhttp.getResponseHeader('X-Status');
+						if(msg) statusMessage(msg, (status == 'success') ? 'good' : 'bad');
 					},
 					success: function(data, status) {
 						var id;
