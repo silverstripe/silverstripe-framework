@@ -313,4 +313,26 @@
 		}
 	});
 
+	/**
+	 * Does an ajax loads of the link's 'href' attribute via ajax and displays any FormResponse messages from the CMS.
+	 * Little helper to avoid repetition, and make it easy to trigger actions via a link,
+	 * without reloading the page, changing the URL, or loading in any new panel content.
+	 */
+	$('.cms-content .cms-link-ajax').entwine({
+		onclick: function(e) {
+			var href = this.attr('href'), url = href ? href : this.data('href');
+
+			jQuery.ajax({
+				url: url,
+				// Ensure that form view is loaded (rather than whole "Content" template)
+				complete: function(xmlhttp, status) {
+					var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.responseText;
+					if (typeof msg != "undefined" && msg != null) eval(msg);
+				},
+				dataType: 'html'
+			});
+			e.preventDefault();
+		}
+	});
+
 })(jQuery);
