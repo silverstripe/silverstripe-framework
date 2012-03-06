@@ -189,7 +189,7 @@
 			 *  DOMElement
 			 */
 			getNodeByID: function(id) {
-				return this.jstree('get_node', this.find('*[data-id='+id+']'));
+				return this.find('*[data-id='+id+']');
 			},
 			
 			/**
