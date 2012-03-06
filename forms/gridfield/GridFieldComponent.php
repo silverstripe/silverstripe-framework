@@ -77,7 +77,7 @@ interface GridField_ColumnProvider extends GridFieldComponent {
  * An action is defined by two things: an action name, and zero or more named arguments.  
  * There is no built-in notion of a record-specific or column-specific action, 
  * but you may choose to define an argument such as ColumnName or RecordID in order to implement these.
- * Does not provide interface elements to call those actions, see {@link GridField_Action}.
+ * Does not provide interface elements to call those actions, see {@link GridField_FormAction}.
  */
 interface GridField_ActionProvider extends GridFieldComponent {
 	/**

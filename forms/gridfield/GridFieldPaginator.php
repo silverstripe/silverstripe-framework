@@ -99,27 +99,27 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 
 
 		// First page button
-		$firstPage = new GridField_Action($gridField, 'pagination_first', 'First', 'paginate', 1);
+		$firstPage = new GridField_FormAction($gridField, 'pagination_first', 'First', 'paginate', 1);
 		$firstPage->addExtraClass('ss-gridfield-firstpage');
 		if($state->currentPage == 1)
 			$firstPage = $firstPage->performDisabledTransformation();
 
 		// Previous page button
 		$previousPageNum = $state->currentPage <= 1 ? 1 : $state->currentPage - 1;
-		$previousPage = new GridField_Action($gridField, 'pagination_prev', 'Previous', 'paginate', $previousPageNum);
+		$previousPage = new GridField_FormAction($gridField, 'pagination_prev', 'Previous', 'paginate', $previousPageNum);
 		$previousPage->addExtraClass('ss-gridfield-previouspage');
 		if($state->currentPage == 1)
 			$previousPage = $previousPage->performDisabledTransformation();
 
 		// Next page button
 		$nextPageNum = $state->currentPage >= $totalPages ? $totalPages : $state->currentPage + 1;
-		$nextPage = new GridField_Action($gridField, 'pagination_next', 'Next', 'paginate', $nextPageNum);
+		$nextPage = new GridField_FormAction($gridField, 'pagination_next', 'Next', 'paginate', $nextPageNum);
 		$nextPage->addExtraClass('ss-gridfield-nextpage');
 		if($state->currentPage == $totalPages)
 			$nextPage = $nextPage->performDisabledTransformation();
 
 		// Last page button
-		$lastPage = new GridField_Action($gridField, 'pagination_last', 'Last', 'paginate', $totalPages);
+		$lastPage = new GridField_FormAction($gridField, 'pagination_last', 'Last', 'paginate', $totalPages);
 		$lastPage->addExtraClass('ss-gridfield-lastpage');
 		if($state->currentPage == $totalPages)
 			$lastPage = $lastPage->performDisabledTransformation();

@@ -65,9 +65,9 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 		$searchField->setAttribute('placeholder', $this->getPlaceholderText($dataClass));
 		$searchField->addExtraClass('relation-search');
 		
-		$findAction = new GridField_Action($gridField, 'gridfield_relationfind', _t('GridField.Find', "Find"), 'find', 'find');
+		$findAction = new GridField_FormAction($gridField, 'gridfield_relationfind', _t('GridField.Find', "Find"), 'find', 'find');
 		$findAction->setAttribute('data-icon', 'relationfind');
-		$addAction = new GridField_Action($gridField, 'gridfield_relationadd', _t('GridField.LinkExisting', "Link Exisiting"), 'addto', 'addto');
+		$addAction = new GridField_FormAction($gridField, 'gridfield_relationadd', _t('GridField.LinkExisting', "Link Exisiting"), 'addto', 'addto');
 		$addAction->setAttribute('data-icon', 'chain--plus');
 
 		// If an object is not found, disable the action

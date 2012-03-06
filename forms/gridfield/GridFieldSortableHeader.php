@@ -29,7 +29,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 				}
 				
 				$field = Object::create(
-					'GridField_Action', $gridField, 'SetOrder'.$columnField, $title, 
+					'GridField_FormAction', $gridField, 'SetOrder'.$columnField, $title, 
 					"sort$dir", array('SortColumn' => $columnField)
 				)->addExtraClass('ss-gridfield-sort');
 
