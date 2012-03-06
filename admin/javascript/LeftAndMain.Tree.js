@@ -93,6 +93,9 @@
 								"drop_target" : false,
 								"drag_target" : false
 							},
+							'checkbox': {
+								'two_state': true
+							},
 							'themes': {
 								'theme': 'apple',
 								'url': 'sapphire/thirdparty/jstree/themes/apple/style.css'
