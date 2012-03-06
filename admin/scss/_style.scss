@@ -1321,8 +1321,8 @@ form.small {
  		button#action_export {
  			margin-top:$grid-y*2;
  			span.btn-icon-exportlist {
- 				@include background (url(../images/btn-icon/download-csv.png) no-repeat 0px 0px);
- 				height:$grid-y*2 + 4;
+ 				@include background (url(../images/btn-icon-se62d8b345b.png) no-repeat 0px -216px);
+ 				height:$grid-y*2 + 1;
  			}
  			span.ui-button-text {
  				padding-left:$grid-x*3 + 3;

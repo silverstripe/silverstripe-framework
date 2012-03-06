@@ -488,7 +488,7 @@ form.small .cms-file-info-data .field .middleColumn { margin-left: 120px; }
 
 /** -------------------------------------------- Users Members Admin -------------------------------------------- */
 .members_grid p button#action_export { margin-top: 16px; }
-.members_grid p button#action_export span.btn-icon-exportlist { background: url(../images/btn-icon/download-csv.png) no-repeat 0px 0px; height: 20px; }
+.members_grid p button#action_export span.btn-icon-exportlist { background: url(../images/btn-icon-se62d8b345b.png) no-repeat 0px -216px; height: 17px; }
 .members_grid p button#action_export span.ui-button-text { padding-left: 27px; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
