@@ -939,8 +939,9 @@ class Member extends DataObject {
 
 
 	/**
-	 * Get a "many-to-many" map that holds for all members their group
-	 * memberships
+	 * Get a "many-to-many" map that holds for all members their group memberships,
+	 * including any parent groups where membership is implied.
+	 * Use {@link DirectGroups()} to only retrieve the group relations without inheritance.
 	 *
 	 * @todo Push all this logic into Member_GroupSet's getIterator()?
 	 */
@@ -951,6 +952,13 @@ class Member extends DataObject {
 		$this->extend('updateGroups', $groups);
 
 		return $groups;
+	}
+
+	/**
+	 * @return ManyManyList
+	 */
+	public function DirectGroups() {
+		return $this->getManyManyComponents('Groups');
 	}
 
 
@@ -1138,7 +1146,7 @@ class Member extends DataObject {
 			$groupsMap = DataList::create('Group')->map('ID', 'Breadcrumbs')->toArray();
 			asort($groupsMap);
 			$fields->addFieldToTab('Root.Main',
-				Object::create('ListboxField', 'Groups', singleton('Group')->i18n_plural_name())
+				Object::create('ListboxField', 'DirectGroups', singleton('Group')->i18n_plural_name())
 					->setMultiple(true)->setSource($groupsMap)
 			);
 
