@@ -432,7 +432,9 @@ SideFormAction.prototype = {
 			try {
 				this.parentForm['handle' + this.name]();
 			} catch(er) {
-				alert("An error occurred.  Please try again, or reload the CMS if the problem persists.\n\nError details: " + er.message);
+				if(er.message != 'Unknown runtime error') {
+					alert("An error occurred.  Please try again, or reload the CMS if the problem persists.\n\nError details: " + er.message);
+				}
 			}
 		} else {
 			alert("Couldn't find form method handle" + this.name);
