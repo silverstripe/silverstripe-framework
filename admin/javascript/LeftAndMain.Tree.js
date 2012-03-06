@@ -12,6 +12,9 @@
 			
 			onmatch: function() {
 				this._super();
+
+				// Don't reapply (expensive) tree behaviour if already present
+				if(!$.isNaN(this.data('jstree_instance_id'))) return;
 				
 				var hints = this.attr('data-hints');
 				if(hints) this.setHints($.parseJSON(hints));
