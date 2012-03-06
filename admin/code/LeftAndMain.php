@@ -876,16 +876,16 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$actions = $record->getCMSActions();
 				// add default actions if none are defined
 				if(!$actions || !$actions->Count()) {
-					if($record->hasMethod('canDelete') && $record->canDelete()) {
-						$actions->push(
-							FormAction::create('delete',_t('ModelAdmin.DELETE','Delete'))
-								->addExtraClass('ss-ui-action-destructive')
-						);
-					}
 					if($record->hasMethod('canEdit') && $record->canEdit()) {
 						$actions->push(
 							FormAction::create('save',_t('CMSMain.SAVE','Save'))
 								->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
+						);
+					}
+					if($record->hasMethod('canDelete') && $record->canDelete()) {
+						$actions->push(
+							FormAction::create('delete',_t('ModelAdmin.DELETE','Delete'))
+								->addExtraClass('ss-ui-action-destructive')
 						);
 					}
 				}
