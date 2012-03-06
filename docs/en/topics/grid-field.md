@@ -231,7 +231,7 @@ To provide your actions, define the following two functions:
  * **`function getActions($gridField)`:** Return a list of actions that this component provides.  There is no namespacing on these actions, so you need to ensure that they don't conflict with other components.
  * **`function handleAction(GridField $gridField, $actionName, $arguments, $data)`:** Handle the action defined by `$actionName` and `$arguments`.  `$data` will contain the full data from the form, if you need to access that.
 
-To call your actions, you need to create `GridField_Action` elsewhere in your component.  Read more about them below.
+To call your actions, you need to create `GridField_FormAction` elsewhere in your component.  Read more about them below.
 
 **EXPERIMENTAL API WARNING:** handleAction implementations often contain a big switch statement and this interface might be amended on, such that each action is defined in a separate method.  If we do this, it will be done before 3.0 stable so that we can lock down the API, but early adopters should be aware of this potential for change!
 
