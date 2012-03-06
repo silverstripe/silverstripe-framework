@@ -80,7 +80,8 @@ class GridFieldRelationDelete implements GridField_ColumnProvider, GridField_Act
 			"unlinkrelation", 
 			array('RecordID' => $record->ID)
 		)
-			->setAttribute('title', _t('GridAction.UnlinkRelation', "Unlink"));
+			->setAttribute('title', _t('GridAction.UnlinkRelation', "Unlink"))
+			->setAttribute('data-icon', 'chain--minus');
 		return $field->Field();
 	}
 	

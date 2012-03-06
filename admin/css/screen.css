@@ -31,7 +31,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 /** ---------------------------------------------------- Double tone borders  http://daverupert.com/2011/06/two-tone-borders-with-css3/ ----------------------------------------------------- */
 /** ----------------------------- Sprite images ----------------------------- */
 /** Helper SCSS file for generating sprites for the interface. */
-.btn-icon-sprite, .ui-state-default .btn-icon-accept, .ui-state-default .btn-icon-accept_disabled, .ui-state-default .btn-icon-add, .ui-state-default .btn-icon-add_disabled, .ui-state-default .btn-icon-addpage, .ui-state-default .btn-icon-addpage_disabled, .ui-state-default .btn-icon-arrow-circle-135-left, .ui-state-default .btn-icon-back, .ui-state-default .btn-icon-back_disabled, .ui-state-default .btn-icon-cross-circle, .ui-state-default .btn-icon-cross-circle_disabled, .ui-state-default .btn-icon-decline, .ui-state-default .btn-icon-decline_disabled, .ui-state-default .btn-icon-download-csv, .ui-state-default .btn-icon-drive-upload, .ui-state-default .btn-icon-drive-upload_disabled, .ui-state-default .btn-icon-magnifier, .ui-state-default .btn-icon-minus-circle, .ui-state-default .btn-icon-minus-circle_disabled, .ui-state-default .btn-icon-navigation, .ui-state-default .btn-icon-navigation_disabled, .ui-state-default .btn-icon-network-cloud, .ui-state-default .btn-icon-network-cloud_disabled, .ui-state-default .btn-icon-pencil, .ui-state-default .btn-icon-pencil_disabled, .ui-state-default .btn-icon-plug-disconnect-prohibition, .ui-state-default .btn-icon-plug-disconnect-prohibition_disabled, .ui-state-default .btn-icon-preview, .ui-state-default .btn-icon-preview_disabled, .ui-state-default .btn-icon-settings, .ui-state-default .btn-icon-settings_disabled, .ui-state-default .btn-icon-unpublish, .ui-state-default .btn-icon-unpublish_disabled { background: url('../images/btn-icon-se62d8b345b.png') no-repeat; }
+.btn-icon-sprite, .ui-state-default .btn-icon-accept, .ui-state-default .btn-icon-accept_disabled, .ui-state-default .btn-icon-add, .ui-state-default .btn-icon-add_disabled, .ui-state-default .btn-icon-addpage, .ui-state-default .btn-icon-addpage_disabled, .ui-state-default .btn-icon-arrow-circle-135-left, .ui-state-default .btn-icon-back, .ui-state-default .btn-icon-back_disabled, .ui-state-default .btn-icon-chain--arrow, .ui-state-default .btn-icon-chain--exclamation, .ui-state-default .btn-icon-chain--minus, .ui-state-default .btn-icon-chain--pencil, .ui-state-default .btn-icon-chain--plus, .ui-state-default .btn-icon-chain-small, .ui-state-default .btn-icon-chain-unchain, .ui-state-default .btn-icon-chain, .ui-state-default .btn-icon-cross-circle, .ui-state-default .btn-icon-cross-circle_disabled, .ui-state-default .btn-icon-decline, .ui-state-default .btn-icon-decline_disabled, .ui-state-default .btn-icon-download-csv, .ui-state-default .btn-icon-drive-upload, .ui-state-default .btn-icon-drive-upload_disabled, .ui-state-default .btn-icon-magnifier, .ui-state-default .btn-icon-minus-circle, .ui-state-default .btn-icon-minus-circle_disabled, .ui-state-default .btn-icon-navigation, .ui-state-default .btn-icon-navigation_disabled, .ui-state-default .btn-icon-network-cloud, .ui-state-default .btn-icon-network-cloud_disabled, .ui-state-default .btn-icon-pencil, .ui-state-default .btn-icon-pencil_disabled, .ui-state-default .btn-icon-plug-disconnect-prohibition, .ui-state-default .btn-icon-plug-disconnect-prohibition_disabled, .ui-state-default .btn-icon-preview, .ui-state-default .btn-icon-preview_disabled, .ui-state-default .btn-icon-settings, .ui-state-default .btn-icon-settings_disabled, .ui-state-default .btn-icon-unpublish, .ui-state-default .btn-icon-unpublish_disabled { background: url('../images/btn-icon-sb5d07676ff.png') no-repeat; }
 
 .ui-state-default .btn-icon-accept { background-position: 0 0; }
 .ui-state-default .btn-icon-accept_disabled { background-position: 0 -17px; }
@@ -42,30 +42,38 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 .ui-state-default .btn-icon-arrow-circle-135-left { background-position: 0 -104px; }
 .ui-state-default .btn-icon-back { background-position: 0 -120px; }
 .ui-state-default .btn-icon-back_disabled { background-position: 0 -135px; }
-.ui-state-default .btn-icon-cross-circle { background-position: 0 -150px; }
-.ui-state-default .btn-icon-cross-circle_disabled { background-position: 0 -166px; }
-.ui-state-default .btn-icon-decline { background-position: 0 -182px; }
-.ui-state-default .btn-icon-decline_disabled { background-position: 0 -199px; }
-.ui-state-default .btn-icon-download-csv { background-position: 0 -216px; }
-.ui-state-default .btn-icon-drive-upload { background-position: 0 -234px; }
-.ui-state-default .btn-icon-drive-upload_disabled { background-position: 0 -250px; }
-.ui-state-default .btn-icon-magnifier { background-position: 0 -266px; }
-.ui-state-default .btn-icon-minus-circle { background-position: 0 -282px; }
-.ui-state-default .btn-icon-minus-circle_disabled { background-position: 0 -298px; }
-.ui-state-default .btn-icon-navigation { background-position: 0 -314px; }
-.ui-state-default .btn-icon-navigation_disabled { background-position: 0 -330px; }
-.ui-state-default .btn-icon-network-cloud { background-position: 0 -346px; }
-.ui-state-default .btn-icon-network-cloud_disabled { background-position: 0 -362px; }
-.ui-state-default .btn-icon-pencil { background-position: 0 -378px; }
-.ui-state-default .btn-icon-pencil_disabled { background-position: 0 -394px; }
-.ui-state-default .btn-icon-plug-disconnect-prohibition { background-position: 0 -410px; }
-.ui-state-default .btn-icon-plug-disconnect-prohibition_disabled { background-position: 0 -426px; }
-.ui-state-default .btn-icon-preview { background-position: 0 -442px; }
-.ui-state-default .btn-icon-preview_disabled { background-position: 0 -459px; }
-.ui-state-default .btn-icon-settings { background-position: 0 -476px; }
-.ui-state-default .btn-icon-settings_disabled { background-position: 0 -492px; }
-.ui-state-default .btn-icon-unpublish { background-position: 0 -508px; }
-.ui-state-default .btn-icon-unpublish_disabled { background-position: 0 -526px; }
+.ui-state-default .btn-icon-chain--arrow { background-position: 0 -150px; }
+.ui-state-default .btn-icon-chain--exclamation { background-position: 0 -166px; }
+.ui-state-default .btn-icon-chain--minus { background-position: 0 -182px; }
+.ui-state-default .btn-icon-chain--pencil { background-position: 0 -198px; }
+.ui-state-default .btn-icon-chain--plus { background-position: 0 -214px; }
+.ui-state-default .btn-icon-chain-small { background-position: 0 -230px; }
+.ui-state-default .btn-icon-chain-unchain { background-position: 0 -246px; }
+.ui-state-default .btn-icon-chain { background-position: 0 -262px; }
+.ui-state-default .btn-icon-cross-circle { background-position: 0 -278px; }
+.ui-state-default .btn-icon-cross-circle_disabled { background-position: 0 -294px; }
+.ui-state-default .btn-icon-decline { background-position: 0 -310px; }
+.ui-state-default .btn-icon-decline_disabled { background-position: 0 -327px; }
+.ui-state-default .btn-icon-download-csv { background-position: 0 -344px; }
+.ui-state-default .btn-icon-drive-upload { background-position: 0 -362px; }
+.ui-state-default .btn-icon-drive-upload_disabled { background-position: 0 -378px; }
+.ui-state-default .btn-icon-magnifier { background-position: 0 -394px; }
+.ui-state-default .btn-icon-minus-circle { background-position: 0 -410px; }
+.ui-state-default .btn-icon-minus-circle_disabled { background-position: 0 -426px; }
+.ui-state-default .btn-icon-navigation { background-position: 0 -442px; }
+.ui-state-default .btn-icon-navigation_disabled { background-position: 0 -458px; }
+.ui-state-default .btn-icon-network-cloud { background-position: 0 -474px; }
+.ui-state-default .btn-icon-network-cloud_disabled { background-position: 0 -490px; }
+.ui-state-default .btn-icon-pencil { background-position: 0 -506px; }
+.ui-state-default .btn-icon-pencil_disabled { background-position: 0 -522px; }
+.ui-state-default .btn-icon-plug-disconnect-prohibition { background-position: 0 -538px; }
+.ui-state-default .btn-icon-plug-disconnect-prohibition_disabled { background-position: 0 -554px; }
+.ui-state-default .btn-icon-preview { background-position: 0 -570px; }
+.ui-state-default .btn-icon-preview_disabled { background-position: 0 -587px; }
+.ui-state-default .btn-icon-settings { background-position: 0 -604px; }
+.ui-state-default .btn-icon-settings_disabled { background-position: 0 -620px; }
+.ui-state-default .btn-icon-unpublish { background-position: 0 -636px; }
+.ui-state-default .btn-icon-unpublish_disabled { background-position: 0 -654px; }
 
 .icon { text-indent: -9999px; border: none; outline: none; }
 .icon.icon-24 { width: 24px; height: 24px; background: url('../images/menu-icons/24x24-s546fcae8fd.png'); }
