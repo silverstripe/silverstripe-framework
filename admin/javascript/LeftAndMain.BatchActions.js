@@ -307,7 +307,7 @@
 				btn.attr('disabled', 'disabled');
 			} else {
 				btn.removeAttr('disabled');
-				form.entwine('ss').refreshSelected();
+				form.submit();
 			} 
 		}
 	});
