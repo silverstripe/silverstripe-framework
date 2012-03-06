@@ -415,7 +415,10 @@ jQuery.noConflict();
 			});
 			var url = this.attr('action');
 			if(nonEmptyInputs.length) url += '?' + nonEmptyInputs.serialize();
-			this.closest('.cms-container').entwine('ss').loadPanel(url);
+
+			var container = this.closest('.cms-container');
+			container.find('.cms-edit-form').tabs('select',0);  //always switch to the first tab (list view) when searching
+			container .entwine('ss').loadPanel(url);
 			return false;
 		},
 
