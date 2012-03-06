@@ -78,7 +78,7 @@ class Group extends DataObject {
 				),
 
 				$permissionsTab = new Tab('Permissions', _t('SecurityAdmin.PERMISSIONS', 'Permissions'),
-					new PermissionCheckboxSetField(
+					$permissionsField = new PermissionCheckboxSetField(
 						'Permissions',
 						false,
 						'Permission',
@@ -88,6 +88,10 @@ class Group extends DataObject {
 				)
 			)
 		);
+
+		// Filter permissions
+		// TODO SecurityAdmin coupling, not easy to get to the form fields through GridFieldPopupForms
+		$permissionsField->setHiddenPermissions(SecurityAdmin::$hidden_permissions);
 
 		if($this->ID) {
 			$config = new GridFieldConfig_RelationEditor();
