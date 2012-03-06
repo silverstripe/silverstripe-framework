@@ -233,7 +233,10 @@
 						// TODO This should use a more common serialization in a new tree library
 						if(data.modified) {
 							for(id in data.modified) {
-								tree.jstree('set_title', tree.getNodeByID(id), data.modified[id]['TreeTitle']);
+								var node = tree.getNodeByID(id);
+								// Can't use built-in set_title() as it sanitized the HTML (removing tags)
+								// $(node).find('.text').html(data.modified[id]['TreeTitle']);
+								tree.jstree('set_text', node, data.modified[id]['TreeTitle']);
 							}
 						}
 						if(data.deleted) {
