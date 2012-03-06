@@ -6,7 +6,10 @@
 		 * @param {successCallback} callback to call after reloading succeeded.
 		 */
 		reload: function(ajaxOpts, successCallback) {
-			var self = this, form = this.closest('form'), data = form.find(':input').serializeArray();
+			var self = this, form = this.closest('form'), 
+				focusedElName = this.find(':input:focus').attr('name'), // Save focused element for restoring after refresh
+				data = form.find(':input').serializeArray();
+
 			if(!ajaxOpts) ajaxOpts = {};
 			if(!ajaxOpts.data) ajaxOpts.data = [];
 			ajaxOpts.data = ajaxOpts.data.concat(data);
@@ -29,6 +32,10 @@
 					// TODO Only replaces all its children, to avoid replacing the current scope
 					// of the executing method. Means that it doesn't retrigger the onmatch() on the main container.
 					self.empty().append($(data).children());
+
+					// Refocus previously focused element. Useful e.g. for finding+adding
+					// multiple relationships via keyboard.
+					if(focusedElName) self.find(':input[name="' + focusedElName + '"]').focus();
 
 					form.removeClass('loading');
 					if(successCallback) successCallback.apply(this, arguments);
