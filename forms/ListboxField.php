@@ -172,10 +172,11 @@ class ListboxField extends DropdownField {
 	function saveInto(DataObject $record) {
 		if($this->multiple) {
 			$fieldname = $this->name;
-			if($fieldname && $record && ($record->has_many($fieldname) || $record->many_many($fieldname))) {
+			$relation = ($fieldname && $record && $record->hasMethod($fieldname)) ? $record->$fieldname() : null;
+			if($fieldname && $record && $relation && $relation instanceof RelationList) {
 				$idList = (is_array($this->value)) ? array_values($this->value) : array();
 				if(!$record->ID) $record->write(); // record needs to have an ID in order to set relationships
-				$record->$fieldname()->setByIDList($idList);
+				$relation->setByIDList($idList);
 			} elseif($fieldname && $record) {
 				if($this->value) {
 					$this->value = str_replace(',', '{comma}', $this->value);
