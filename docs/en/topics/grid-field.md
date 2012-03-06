@@ -109,7 +109,7 @@ This component will limit output to a fixed number of items per page add a foote
 
 ### GridFieldAction
 
-TODO Describe component, including GridFieldAction_Edit/GridFieldAction_Delete
+TODO Describe component, including GridFieldEditAction/GridFieldDeleteAction
 
 ### GridFieldRelationAdd
 
@@ -123,14 +123,14 @@ For easier setup, have a look at a sample configuration in `[api:GridFieldConfig
 ### GridFieldRelationDelete
 
 Allows to detach an item from an existing has_many or many_many relationship.
-Similar to {@link GridFieldAction_Delete}, but allows to distinguish between 
+Similar to {@link GridFieldDeleteAction}, but allows to distinguish between 
 a "delete" and "detach" action in the UI - and to use both in parallel, if required.
 Requires the GridField to be populated with a `[api:RelationList]` rather than a plain DataList.
 Often used alongside `[api:GridFieldRelationAdd]` to add existing records to the relationship.
 
 ### GridFieldPopupForms
 
-TODO Describe component, including how it relates to GridFieldAction_Edit. Point to GridFieldConfig_RelationEditor for easier defaults.
+TODO Describe component, including how it relates to GridFieldEditAction. Point to GridFieldConfig_RelationEditor for easier defaults.
 
 ### GridFieldTitle
 

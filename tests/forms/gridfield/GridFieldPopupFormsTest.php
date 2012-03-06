@@ -113,7 +113,7 @@ class GridFieldPopupFormsTest_Controller extends Controller implements TestOnly 
 
 		$field = new GridField('testfield', 'testfield', $group->People());
 		$field->getConfig()->addComponent($gridFieldForm = new GridFieldPopupForms($this, 'Form'));
-		$field->getConfig()->addComponent(new GridFieldAction_Edit());
+		$field->getConfig()->addComponent(new GridFieldEditAction());
 		return new Form($this, 'Form', new FieldList($field), new FieldList());
 	}
 }
