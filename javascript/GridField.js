@@ -71,9 +71,9 @@
 
 	$('.ss-gridfield .ss-gridfield-item').entwine({
 		onclick: function(e) {
-			if($(e.target).is('.action')) {
+			if($(e.target).closest('.action').length) {
 				this._super(e);
-				return;
+				return false;
 			}
 
 			var editLink = this.find('.edit-link');
@@ -94,10 +94,14 @@
 		}
 	});
 
-	$('.ss-gridfield .gridfield-button-delete').entwine({
+	$('.ss-gridfield .action.gridfield-button-delete').entwine({
 		onclick: function(e){
-			if(!confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) return false;
-			else this._super(e);
+			if(!confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) {
+				e.preventDefault();
+				return false;
+			} else {
+				this._super(e);
+			}
 		}
 	});
 
