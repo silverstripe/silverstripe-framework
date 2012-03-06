@@ -519,7 +519,7 @@
 		background-image: url(../images/sitetree_ss_default_icons.png);
 	}
 
-	& li.jstree-checked a, li.jstree-checked a:link  {
+	& li.jstree-checked > a, li.jstree-checked > a:link  {
 		background-color: $color-cms-batchactions-menu-selected-background;
 	}
 

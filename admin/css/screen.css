@@ -576,7 +576,7 @@ form.small .cms-file-info-data .field .middleColumn { margin-left: 120px; }
 .tree-holder.jstree-apple .jstree-hovered, .cms-tree.jstree-apple .jstree-hovered { text-shadow: none; text-decoration: none; }
 .tree-holder.jstree-apple li, .cms-tree.jstree-apple li { padding: 0px; clear: left; }
 .tree-holder.jstree-apple ins, .cms-tree.jstree-apple ins { background-color: transparent; background-image: url(../images/sitetree_ss_default_icons.png); }
-.tree-holder.jstree-apple li.jstree-checked a, .tree-holder.jstree-apple li.jstree-checked a:link, .cms-tree.jstree-apple li.jstree-checked a, .cms-tree.jstree-apple li.jstree-checked a:link { background-color: #efe999; }
+.tree-holder.jstree-apple li.jstree-checked > a, .tree-holder.jstree-apple li.jstree-checked > a:link, .cms-tree.jstree-apple li.jstree-checked > a, .cms-tree.jstree-apple li.jstree-checked > a:link { background-color: #efe999; }
 .tree-holder.jstree-apple .jstree-closed > ins, .cms-tree.jstree-apple .jstree-closed > ins { background-position: 0 0; }
 .tree-holder.jstree-apple .jstree-open > ins, .cms-tree.jstree-apple .jstree-open > ins { background-position: -20px 0; }
 
