@@ -26,6 +26,7 @@ $gf_color_border_filter_button: #9A9A9A;
 $gf_color_button: #e6e6e6;
 $gf_color_button_filter_hover: #338DC1;
 $gf_color_button_reset_hover: #FF0000;
+$color-text-light: white;
 
 $gf_grid_y:	12px;
 $gf_grid_x:	16px;
@@ -39,7 +40,7 @@ $gf_grid_x:	16px;
 .cms {
 	.ss-gridfield {
 		& > div {
-			margin-bottom: 35px;
+			margin-bottom: $gf_grid_y*3 - 1;
 		}
 
 		&[data-selectable] {
@@ -86,14 +87,14 @@ $gf_grid_x:	16px;
 						text-indent:-9999em;
 						background: url(../images/icons/decline.png) no-repeat 0 2px;
 						padding:0;
-						width:20px;
-						height:20px;
+						width:$gf_grid_x + 4;
+						height:$gf_grid_y*2 - 4;
 					}
 				}
 				a.edit-link {
 					display:inline-block;
-					height:20px;
-					width:20px;
+					width:$gf_grid_x + 4;
+					height:$gf_grid_y*2 - 4;
 					text-indent:-9999em;
 					background: url(../images/icons/document--pencil.png) no-repeat 0 1px;
 				}				
@@ -132,7 +133,6 @@ $gf_grid_x:	16px;
 					}
 					.new{
 						font-size: $gf_grid_y*1.2; 
-						border-color: $gf_colour_border;
 						float: right;
 					}
 				}
@@ -179,7 +179,7 @@ $gf_grid_x:	16px;
 						position:relative;
 					}
 					&.fieldgroup {
-						min-width: 200px;
+						min-width: $gf_grid_x*12.5;
 						padding-right:0;
 					}
 				}
@@ -212,7 +212,7 @@ $gf_grid_x:	16px;
 						display: inline;
 						position: static;
 						input {
-							height:28px;
+							height:$gf_grid_y*2 + 4;
 						}
 					}
 					button.ss-ui-button {
@@ -282,20 +282,20 @@ $gf_grid_x:	16px;
 								lighten($gf_color_button, 10%),
 								darken($gf_color_button, 5%)
 							));
-						&:hover {
-							@include background (url(../images/icons/filter-icons.png) no-repeat -16px 6px,
-							linear-gradient(
-								lighten($gf_color_button_filter_hover, 5%), 
-								darken($gf_color_button_filter_hover, 5%)
-							));
-						}
-						&:active {
+						&.hover-alike:active {
 							@include background (url(../images/icons/filter-icons.png) no-repeat -16px 6px,
 							linear-gradient(
 								lighten($gf_color_button_filter_hover, 5%), 
 								darken($gf_color_button_filter_hover, 5%)
 							));
 							@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
+						}
+						&.hover-alike {
+							@include background (url(../images/icons/filter-icons.png) no-repeat -16px 6px,
+							linear-gradient(
+								lighten($gf_color_button_filter_hover, 5%), 
+								darken($gf_color_button_filter_hover, 5%)
+							));
 						}
 					}
 					&.ss-gridfield-button-reset.ss-ui-button{
@@ -318,14 +318,14 @@ $gf_grid_x:	16px;
 								darken($gf_color_button, 5%)
 							))
 						);
-						&:hover {
+						&.filtered:hover {
 							@include background (url(../images/icons/filter-icons.png) no-repeat 8px -17px,
 							linear-gradient(
 								$gf_color_button_reset_hover, 
 								darken($gf_color_button_reset_hover, 10%)
 							));
 						}
-						&:active {
+						&.filtered:active {
 							@include background (url(../images/icons/filter-icons.png) no-repeat 8px -17px,
 							linear-gradient(
 								$gf_color_button_reset_hover, 
@@ -357,7 +357,40 @@ $gf_grid_x:	16px;
 				color: $gf_colour_font;
 				&.bottom-all {
 					@include border-bottom-radius($gf_border_radius);
-					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));	
+					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
+					.datagrid-pagination {
+						position:absolute;
+						left:50%;
+						margin-left:-$gf_grid_x*10;
+						.pagination-page-number {
+							color:$color-text-light;
+						}
+						button.ss-gridfield-previouspage {
+							@include background (url(../images/icons/pagination-arrows.png) no-repeat -23px 7px);
+							@include box-shadow-none;
+							border:none;
+							width:10px;
+							margin:0 10px;
+							span {
+								text-indent:-9999em;
+							}
+						}
+						button.ss-gridfield-nextpage {
+							@include background (url(../images/icons/pagination-arrows.png) no-repeat -47px 7px);
+							@include box-shadow-none;
+							border:none;
+							width:10px;
+							margin:0 10px;
+							span {
+								text-indent:-9999em;
+							}
+						}
+					}
+					.pagination-records-number {
+						float:right;
+						padding:($gf_grid_y/2) 0;
+						color:$color-text-light;
+					}
 				}
 			}
 			&.last td {

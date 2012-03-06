@@ -1,7 +1,9 @@
 <tr>
 	<td class="bottom-all" colspan="$Colspan">
-		$Previous10Page $PreviousPage Page $CurrentPageNum of $NumPages $NextPage $Next10Page 
-
-		View $FirstShownRecord - $LastShownRecord of $NumRecords
+		<div class="datagrid-pagination">
+			$Previous10Page $PreviousPage <span class="pagination-page-number">Page $CurrentPageNum of $NumPages</span> $NextPage $Next10Page 
+		</div>
+		
+		<span class="pagination-records-number">View $FirstShownRecord - $LastShownRecord of $NumRecords</span>	
 	</td>
 </tr>

@@ -1314,3 +1314,22 @@ form.small {
 		}
 	}
 }
+
+/** --------------------------------------------
+ * Users Members Admin
+ * -------------------------------------------- */
+
+ .members_grid {
+ 	p {
+ 		button#action_export {
+ 			margin-top:$grid-y*2;
+ 			span.btn-icon-exportlist {
+ 				@include background (url(../images/btn-icon/download-csv.png) no-repeat 0px 0px);
+ 				height:$grid-y*2 + 4;
+ 			}
+ 			span.ui-button-text {
+ 				padding-left:$grid-x*3 + 3;
+ 			} 
+ 		}
+ 	}
+ }
