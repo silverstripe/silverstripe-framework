@@ -66,15 +66,11 @@ class Group extends DataObject {
 			new TabSet("Root",
 				new Tab('Members', _t('SecurityAdmin.MEMBERS', 'Members'),
 					new TextField("Title", $this->fieldLabel('Title')),
-					Object::create('DropdownField',
+					$parentidfield = Object::create('DropdownField',
 						'ParentID', 
 						$this->fieldLabel('Parent'), 
 						DataList::create('Group')->exclude('ID', $this->ID)->map('ID', 'Breadcrumbs')
-					)->setEmptyString(' '),
-					new LiteralField(
-						'ParentIDDescription',
-						'<p><em>' . _t('Group.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles') . '</em></p>'
-					)
+					)->setEmptyString(' ')
 				),
 
 				$permissionsTab = new Tab('Permissions', _t('SecurityAdmin.PERMISSIONS', 'Permissions'),
@@ -88,6 +84,8 @@ class Group extends DataObject {
 				)
 			)
 		);
+		
+		$parentidfield->setRightTitle('<span class="aligned_right_label">' . _t('Group.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles') . '</span>');
 
 		// Filter permissions
 		// TODO SecurityAdmin coupling, not easy to get to the form fields through GridFieldPopupForms
