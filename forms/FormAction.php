@@ -73,6 +73,10 @@ class FormAction extends FormField {
 		);
 		return $this->customise($properties)->renderWith($this->getTemplate());
 	}
+	
+	function FieldHolder() {
+		return $this->Field();
+	}
 
 	public function Type() {
 		return 'action';

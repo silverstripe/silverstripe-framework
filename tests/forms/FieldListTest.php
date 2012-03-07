@@ -725,7 +725,20 @@ class FieldListTest extends SapphireTest {
 		);
 		
 		$this->assertEquals($a->FieldHolder() . $b->FieldHolder(), $set->forTempalte());
+	}
+
+	/**
+	 * FieldList::forTemplate() for an action list returns a concatenation of Field values.
+	 * Internally, this works by having FormAction::FieldHolder return just the field, but it's an important
+	 * use-case to test.
+	 */
+	function testForTemplateForActionList() {
+		$set = new FieldList(
+			$a = new FormAction('A'),
+			$b = new FormAction('B')
+		);
 		
+		$this->assertEquals($a->Field() . $b->Field(), $set->forTempalte());
 	}
 	
 	function testMakeFieldReadonly() {
