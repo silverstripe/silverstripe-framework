@@ -6,6 +6,7 @@
 .cms table.ss-gridfield-table thead { color: #1d2224; background: transparent; }
 .cms table.ss-gridfield-table tbody { background: #FFF; }
 .cms table.ss-gridfield-table tbody td button { border: none; background: none; margin: 0 0 0 2px; padding: 0; width: auto; text-shadow: none; }
+.cms table.ss-gridfield-table tbody td button.gridfield-button-delete:hover { background: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .cms table.ss-gridfield-table tbody td a.edit-link { display: inline-block; width: 20px; height: 20px; text-indent: -9999em; background: url(../images/icons/document--pencil.png) no-repeat 0 1px; }
 .cms table.ss-gridfield-table tfoot { color: #1d2224; }
 .cms table.ss-gridfield-table tfoot tr td { background: #95a5ab; padding: .7em; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }

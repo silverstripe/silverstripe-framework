@@ -77,6 +77,10 @@ $gf_grid_x:	16px;
 					padding: 0;
 					width: auto;
 					text-shadow: none;
+					&.gridfield-button-delete:hover {
+						background:none;
+						@include box-shadow-none;
+					}
 				}
 				a.edit-link {
 					display:inline-block;
