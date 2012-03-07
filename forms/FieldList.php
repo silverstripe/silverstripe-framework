@@ -434,6 +434,20 @@ class FieldList extends ArrayList {
 		
 		return $hiddenFields;
 	}
+	
+	/**
+	 * Return all fields except for the hidden fields.
+	 * Useful when making your own simplified form layouts.
+	 */
+	function VisibleFields() {
+		$visibleFields = new FieldList();
+		
+		foreach($this as $field) {
+			if(!($field instanceof HiddenField)) $visibleFields->push($field);
+		}
+		
+		return $visibleFields;
+	}
 
 	/**
 	 * Transform this FieldList with a given tranform method,

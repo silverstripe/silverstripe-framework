@@ -543,6 +543,14 @@ class Form extends RequestHandler {
 	function HiddenFields() {
 		return $this->fields->HiddenFields();
 	}
+
+	/**
+	 * Return all fields except for the hidden fields.
+	 * Useful when making your own simplified form layouts.
+	 */
+	function VisibleFields() {
+		return $this->fields->VisibleFields();
+	}
 	
 	/**
 	 * Setter for the form fields.
