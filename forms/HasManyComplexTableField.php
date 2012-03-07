@@ -27,6 +27,8 @@
  * 
  * @see http://doc.silverstripe.org/tutorial/5-dataobject-relationship-management
  * 
+ * @deprecated 3.0 Use GridField with GridFieldConfig_RelationEditor
+ * 
  * @package forms
  * @subpackage fields-relational
  */
@@ -48,6 +50,8 @@ class HasManyComplexTableField extends ComplexTableField {
 	
 	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
+
+		Deprecation::notice('3.0', 'Use GridField with GridFieldConfig_RelationEditor');
 		
 		$this->Markable = true;
 
