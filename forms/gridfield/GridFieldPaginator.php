@@ -7,13 +7,6 @@
  * @subpackage fields-relational
  */
 class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {
-
-	/**
-	 *
-	 * @var int
-	 */
-	protected $currentPage = 1;
-
 	/**
 	 *
 	 * @var int
@@ -57,7 +50,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 			return;
 		}
 		$state = $gridField->State->GridFieldPaginator;
-		$this->currentPage = $state->currentPage = (int)$arguments;
+		$state->currentPage = (int)$arguments;
 	}
 
 	/**
@@ -67,13 +60,17 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 * @return SS_List 
 	 */
 	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
+		$state = $gridField->State->GridFieldPaginator;
+		if(!is_int($state->currentPage))
+			$state->currentPage = 1;
+
 		if(!$this->getListPaginatable($dataList)) {
 			return $dataList;
 		}
-		if(!$this->currentPage) {
+		if(!$state->currentPage) {
 			return $dataList->getRange(0, (int)$this->itemsPerPage);
 		}
-		$startRow = $this->itemsPerPage*($this->currentPage-1);
+		$startRow = $this->itemsPerPage * ($state->currentPage - 1);
 		return $dataList->getRange((int)$startRow, (int)$this->itemsPerPage);
 	}
 
@@ -83,16 +80,20 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 * @return array
 	 */
 	public function getHTMLFragments($gridField) {
+		$state = $gridField->State->GridFieldPaginator;
+		if(!is_int($state->currentPage))
+			$state->currentPage = 1;
+
 		// Figure out which page and record range we're on
 		$countList = clone $gridField->List;
 		$totalRows = $countList->limit(null)->count();
 		$totalPages = ceil($totalRows/$this->itemsPerPage);
 		if($totalPages == 0)
 			$totalPages = 1;
-		$firstShownRecord = ($this->currentPage - 1) * $this->itemsPerPage + 1;
+		$firstShownRecord = ($state->currentPage - 1) * $this->itemsPerPage + 1;
 		if($firstShownRecord > $totalRows)
 			$firstShownRecord = $totalRows;
-		$lastShownRecord = $this->currentPage * $this->itemsPerPage;
+		$lastShownRecord = $state->currentPage * $this->itemsPerPage;
 		if($lastShownRecord > $totalRows)
 			$lastShownRecord = $totalRows;
 
@@ -100,27 +101,27 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		// First page button
 		$firstPage = new GridField_Action($gridField, 'pagination_first', 'First', 'paginate', 1);
 		$firstPage->addExtraClass('ss-gridfield-firstpage');
-		if($this->currentPage == 1)
+		if($state->currentPage == 1)
 			$firstPage = $firstPage->performDisabledTransformation();
 
 		// Previous page button
-		$previousPageNum = $this->currentPage <= 1 ? 1 : $this->currentPage - 1;
+		$previousPageNum = $state->currentPage <= 1 ? 1 : $state->currentPage - 1;
 		$previousPage = new GridField_Action($gridField, 'pagination_prev', 'Previous', 'paginate', $previousPageNum);
 		$previousPage->addExtraClass('ss-gridfield-previouspage');
-		if($this->currentPage == 1)
+		if($state->currentPage == 1)
 			$previousPage = $previousPage->performDisabledTransformation();
 
 		// Next page button
-		$nextPageNum = $this->currentPage >= $totalPages ? $totalPages : $this->currentPage + 1;
+		$nextPageNum = $state->currentPage >= $totalPages ? $totalPages : $state->currentPage + 1;
 		$nextPage = new GridField_Action($gridField, 'pagination_next', 'Next', 'paginate', $nextPageNum);
 		$nextPage->addExtraClass('ss-gridfield-nextpage');
-		if($this->currentPage == $totalPages)
+		if($state->currentPage == $totalPages)
 			$nextPage = $nextPage->performDisabledTransformation();
 
-		// Ten pages forward button
+		// Last page button
 		$lastPage = new GridField_Action($gridField, 'pagination_last', 'Last', 'paginate', $totalPages);
 		$lastPage->addExtraClass('ss-gridfield-lastpage');
-		if($this->currentPage == $totalPages)
+		if($state->currentPage == $totalPages)
 			$lastPage = $lastPage->performDisabledTransformation();
 
 
@@ -128,7 +129,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		$forTemplate = new ArrayData(array(
 			'FirstPage' => $firstPage,
 			'PreviousPage' => $previousPage,
-			'CurrentPageNum' => $this->currentPage,
+			'CurrentPageNum' => $state->currentPage,
 			'NumPages' => $totalPages,
 			'NextPage' => $nextPage,
 			'LastPage' => $lastPage,
