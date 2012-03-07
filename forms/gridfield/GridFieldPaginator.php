@@ -87,7 +87,11 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		$countList = clone $gridField->List;
 		$totalRows = $countList->limit(null)->count();
 		$totalPages = ceil($totalRows/$this->itemsPerPage);
+		if($totalPages == 0)
+			$totalPages = 1;
 		$firstShownRecord = ($this->currentPage - 1) * $this->itemsPerPage + 1;
+		if($firstShownRecord > $totalRows)
+			$firstShownRecord = $totalRows;
 		$lastShownRecord = $this->currentPage * $this->itemsPerPage;
 		if($lastShownRecord > $totalRows)
 			$lastShownRecord = $totalRows;
