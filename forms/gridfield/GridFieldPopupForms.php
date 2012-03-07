@@ -186,21 +186,20 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	}
 	
 	function edit($request) {
-		$controller = $this->popupController;
+		$controller = $this->getToplevelController();
 		$form = $this->ItemEditForm($this->gridField, $request);
 
 		$return = $this->customise(array(
-				'Backlink' => $controller->Link(),
-				'ItemEditForm' => $form,
-			))->renderWith($this->template);
+			'Backlink' => $controller->Link(),
+			'ItemEditForm' => $form,
+		))->renderWith($this->template);
 
 		if($controller->isAjax()) {
 			return $return;	
 		} else {
-			
 			// If not requested by ajax, we need to render it within the controller context+template
 			return $controller->customise(array(
-				// TODO Allow customization
+				// TODO CMS coupling
 				'Content' => $return,
 			));	
 		}
@@ -220,8 +219,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 		$form = new Form(
 			$this,
 			'ItemEditForm',
-			// WARNING: The arguments passed here are a little arbitrary.  This API will need cleanup
-			$this->record->getCMSFields($this->popupController, $this->popupFormName),
+			$this->record->getCMSFields(),
 			new FieldList(
 				FormAction::create('doSave', _t('GridFieldDetailsForm.Save', 'Save'))
 					->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'),
@@ -233,19 +231,34 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 		$form->loadDataFrom($this->record);
 
 		// TODO Coupling with CMS
-		if($this->popupController instanceof LeftAndMain) {
+		$toplevelController = $this->getToplevelController();
+		if($toplevelController && $toplevelController instanceof LeftAndMain) {
 			$form->addExtraClass('cms-edit-form');
-			$form->setTemplate($this->popupController->getTemplatesWithSuffix('_EditForm'));
-			$form->addExtraClass('cms-content center ss-tabset ' . $this->popupController->BaseCSSClasses());
+			$form->setTemplate($toplevelController->getTemplatesWithSuffix('_EditForm'));
+			$form->addExtraClass('cms-content center ss-tabset ' . $toplevelController->BaseCSSClasses());
 			if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
 			// TODO Link back to controller action (and edited root record) rather than index,
 			// which requires more URL knowledge than the current link to this field gives us.
 			// The current root record is held in session only, 
 			// e.g. page/edit/show/6/ vs. page/edit/EditForm/field/MyGridField/....
-			$form->Backlink = $this->popupController->Link();
+			$form->Backlink = $toplevelController->Link();
 		}
-
 		return $form;
+	}
+
+	/**
+	 * Traverse up nested requests until we reach the first that's not a GridFieldPopupForm_ItemRequest.
+	 * The opposite of {@link Controller::curr()}, required because
+	 * Controller::$controller_stack is not directly accessible.
+	 * 
+	 * @return Controller
+	 */
+	protected function getToplevelController() {
+		$c = $this->popupController;
+		while($c && $c instanceof GridFieldPopupForm_ItemRequest) {
+			$c = $c->getController();
+		}
+		return $c;
 	}
 
 	function doSave($data, $form) {
@@ -270,7 +283,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 		
 		$form->sessionMessage($message, 'good');
 
-		return $this->popupController->redirectBack();
+		return Controller::curr()->redirectBack();
 	}
 
 	function doDelete($data, $form) {
@@ -283,7 +296,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 			$toDelete->delete();
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
-			return Director::redirectBack();
+			return Controller::curr()->redirectBack();
 		}
 
 		$message = sprintf(
@@ -317,6 +330,20 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	}
 
 	/**
+	 * @return Controller
+	 */
+	function getController() {
+		return $this->popupController;
+	}
+
+	/**
+	 * @return GridField
+	 */
+	function getGridField() {
+		return $this->gridField;
+	}
+
+	/**
 	 * CMS-specific functionality: Passes through navigation breadcrumbs
 	 * to the template, and includes the currently edited record (if any).
 	 * see {@link LeftAndMain->Breadcrumbs()} for details.
@@ -325,13 +352,11 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	 * @return ArrayData
 	 */
 	function Breadcrumbs($unlinked = false) {
-		if(!($this->popupController instanceof LeftAndMain)) return false;
-
 		$items = $this->popupController->Breadcrumbs($unlinked);
 		if($this->record && $this->record->ID) {
 			$items->push(new ArrayData(array(
 				'Title' => $this->record->Title,
-				'Link' => false
+				'Link' => $this->Link()
 			)));	
 		} else {
 			$items->push(new ArrayData(array(
