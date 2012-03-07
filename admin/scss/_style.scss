@@ -80,6 +80,24 @@ body.cms {
 	@include inline-block;
 }
 
+.cms-edit-form {
+	.cms-content-header-tabs {
+		.ui-tabs-nav {
+			li {
+				a {
+					text-indent:0;
+				}
+			}
+			.ui-state-default, 
+			.ui-widget-content .ui-state-default, 
+			.ui-widget-header .ui-state-default {
+				a {
+					color:$color-text-dark;
+				}
+			}
+		}
+	}		
+}
 
 .cms-content-header {
 	padding: ($grid-y - 8) $grid-x $grid-y;	
@@ -176,25 +194,6 @@ body.cms {
 			}
 		}
 	}
-}
-
-.cms-edit-form {
-	.cms-content-header-tabs {
-		.ui-tabs-nav {
-			li {
-				a {
-					text-indent:0;
-				}
-			}
-			.ui-state-default, 
-			.ui-widget-content .ui-state-default, 
-			.ui-widget-header .ui-state-default {
-				a {
-					color:$color-text-dark;
-				}
-			}
-		}
-	}		
 }
 
 /** --------------------------------------------

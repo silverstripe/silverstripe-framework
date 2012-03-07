@@ -243,6 +243,9 @@ body.cms { overflow: hidden; }
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form, .cms-preview, .cms-preview iframe, .cms-preview-controls { display: -moz-inline-box; -moz-box-orient: vertical; display: inline-block; vertical-align: middle; *vertical-align: auto; }
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form, .cms-preview, .cms-preview iframe, .cms-preview-controls { *display: inline; }
 
+.cms-edit-form .cms-content-header-tabs .ui-tabs-nav li a { text-indent: 0; }
+.cms-edit-form .cms-content-header-tabs .ui-tabs-nav .ui-state-default a, .cms-edit-form .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-default a, .cms-edit-form .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-default a { color: #1f1f1f; }
+
 .cms-content-header { padding: 0px 8px 8px; height: 32px; z-index: 60; background-image: url(../images/textures/cms_content_header.png); background-repeat: repeat; }
 .cms-content-header a { color: #1556b2; }
 .cms-content-header .backlink { float: left; margin-top: 7px; }
@@ -260,9 +263,6 @@ body.cms { overflow: hidden; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-state-active a.content-listview, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active a.content-listview, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active a.content-listview { background: url(../images/content-header-tabs-sprite.png) no-repeat -38px -40px; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-all, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-top, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-right, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-tr { border-radius: 0; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-all, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-top, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-left, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-tl { border-radius: 0; }
-
-.cms-edit-form .cms-content-header-tabs .ui-tabs-nav li a { text-indent: 0; }
-.cms-edit-form .cms-content-header-tabs .ui-tabs-nav .ui-state-default a, .cms-edit-form .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-default a, .cms-edit-form .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-default a { color: #1f1f1f; }
 
 /** -------------------------------------------- Tabs -------------------------------------------- */
 .ui-tabs .cms-content-header .ui-tabs-nav li, .cms-dialog .ui-tabs-nav li { margin: 0; }
