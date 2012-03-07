@@ -82,8 +82,20 @@ $gf_grid_x:	16px;
 					padding: 0;
 					width: auto;
 					text-shadow: none;
-					&.gridfield-button-delete:hover {
+					&.gridfield-button-delete.ui-state-hover {
 						background:none;
+						@include box-shadow-none;
+					}
+					&.gridfield-button-delete.ui-state-active {
+						border:none;
+						@include box-shadow-none;
+					}
+					&.gridfield-button-unlink.ui-state-hover {
+						background:none;
+						@include box-shadow-none;
+					}
+					&.gridfield-button-unlink.ui-state-active {
+						border:none;
 						@include box-shadow-none;
 					}
 				}
