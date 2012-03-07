@@ -274,15 +274,6 @@ body.cms { overflow: hidden; }
 .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-state-active a.content-galleryview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active a.content-galleryview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active a.content-galleryview { background: url(../images/content-header-tabs-sprite.png) no-repeat -87px -40px; }
 .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-state-active a.content-listview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active a.content-listview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active a.content-listview { background: url(../images/content-header-tabs-sprite.png) no-repeat -38px -40px; }
 
-.AssetAdmin .cms-content-header-tabs .ui-tabs-nav li a { font-weight: bold; line-height: 16px; padding: 12px 20px 11px; text-indent: -9999em; }
-.AssetAdmin .cms-content-header-tabs .ui-tabs-nav li a.content-treeview { background: url(../images/content-header-tabs-sprite.png) no-repeat 2px 0px; }
-.AssetAdmin .cms-content-header-tabs .ui-tabs-nav li a.content-galleryview { background: url(../images/content-header-tabs-sprite.png) no-repeat -87px 0px; }
-.AssetAdmin .cms-content-header-tabs .ui-tabs-nav li a.content-listview { background: url(../images/content-header-tabs-sprite.png) no-repeat -38px 0px; }
-.AssetAdmin .cms-content-header-tabs .ui-tabs-nav .ui-state-active, .AssetAdmin .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active, .AssetAdmin .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active { border-top: none; }
-.AssetAdmin .cms-content-header-tabs .ui-tabs-nav .ui-state-active a.content-treeview, .AssetAdmin .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active a.content-treeview, .AssetAdmin .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active a.content-treeview { background: url(../images/content-header-tabs-sprite.png) no-repeat 2px -40px; }
-.AssetAdmin .cms-content-header-tabs .ui-tabs-nav .ui-state-active a.content-galleryview, .AssetAdmin .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active a.content-galleryview, .AssetAdmin .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active a.content-galleryview { background: url(../images/content-header-tabs-sprite.png) no-repeat -87px -40px; }
-.AssetAdmin .cms-content-header-tabs .ui-tabs-nav .ui-state-active a.content-listview, .AssetAdmin .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active a.content-listview, .AssetAdmin .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active a.content-listview { background: url(../images/content-header-tabs-sprite.png) no-repeat -38px -40px; }
-
 /** ------------------------------------------------------- Loading Interface ------------------------------------------------------- */
 .cms-content-loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 9998; }
 

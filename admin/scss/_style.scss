@@ -266,51 +266,6 @@ body.cms {
 	}
 }
 
-.AssetAdmin {
-	.cms-content-header-tabs {
-		.ui-tabs-nav {
-			li {
-				a {
-					font-weight: bold;
-					line-height: $grid-y * 2;
-					padding: ($grid-y * 2 - 4) ($grid-x * 2 + 4) $grid-y + 3;
-					text-indent:-9999em;
-
-					&.content-treeview {
-						background:url(../images/content-header-tabs-sprite.png) no-repeat 2px 0px;
-					}
-					&.content-galleryview {
-						background:url(../images/content-header-tabs-sprite.png) no-repeat -87px 0px;
-					}
-					&.content-listview {
-						background:url(../images/content-header-tabs-sprite.png) no-repeat -38px 0px;
-					}
-				}
-			}
-			
-			.ui-state-active, 
-			.ui-widget-content .ui-state-active, 
-			.ui-widget-header .ui-state-active {
-				border: {
-					top:none;
-				}
-		
-				a {
-					&.content-treeview {
-						background:url(../images/content-header-tabs-sprite.png) no-repeat 2px -40px;
-					}
-					&.content-galleryview {
-						background:url(../images/content-header-tabs-sprite.png) no-repeat -87px -40px;
-					}
-					&.content-listview {
-						background:url(../images/content-header-tabs-sprite.png) no-repeat -38px -40px;
-					}
-				}
-			}
-		}
-	}
-}
-
 /** -------------------------------------------------------
  * Loading Interface
  * ------------------------------------------------------- */
