@@ -223,16 +223,33 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 			return Director::redirect($noActionURL, 302);
 		}
 
+		$actions = new FieldList();
+		if($this->record->ID !== 0) {
+			$actions->push(FormAction::create('doSave', _t('GridFieldDetailsForm.Save', 'Save'))
+				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'));
+			$actions->push(FormAction::create('doDelete', _t('GridFieldDetailsForm.Delete', 'Delete'))
+				->addExtraClass('ss-ui-action-destructive'));
+		}else{ // adding new record
+			//Change the Save label to 'Create'
+			$actions->push(FormAction::create('doSave', _t('GridFieldDetailsForm.Create', 'Create'))
+				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'add'));
+				
+			// Add a Cancel link which is a button-like link and link back to one level up.
+			$curmbs = $this->Breadcrumbs();
+			if($curmbs->count()>=2){
+				$one_level_up = $curmbs->offsetGet($curmbs->count()-2);
+				$text = "
+				<a class=\"crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all\" href=\"".$one_level_up->Link."\">
+					Cancel
+				</a>";
+				$actions->push(new LiteralField('cancelbutton', $text));
+			}
+		}
 		$form = new Form(
 			$this,
 			'ItemEditForm',
 			$this->record->getCMSFields(),
-			new FieldList(
-				FormAction::create('doSave', _t('GridFieldDetailsForm.Save', 'Save'))
-					->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'),
-				FormAction::create('doDelete', _t('GridFieldDetailsForm.Delete', 'Delete'))
-					->addExtraClass('ss-ui-action-destructive')
-			),
+			$actions,
 			$this->component->getValidator()
 		);
 		$form->loadDataFrom($this->record);
