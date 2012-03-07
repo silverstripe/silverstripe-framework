@@ -1096,11 +1096,13 @@ form.member-profile-form {
 
 }
 
-.cms-panel-padded {
-	width: ($grid-x * 22);
-	padding: $grid-y*2 $grid-x*2;
-	overflow-x: hidden;
-	overflow-y: auto;
+.cms {
+	.cms-panel-padded {
+		width: ($grid-x * 22);
+		padding: $grid-y*2 $grid-x*2;
+		overflow-x: hidden;
+		overflow-y: auto;
+	}
 }
 
 /** ------------------------------------------------------------------
