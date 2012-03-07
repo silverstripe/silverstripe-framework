@@ -54,6 +54,7 @@ class TreeDropdownField extends FormField {
 	 * @ignore
 	 */
 	protected $sourceObject, $keyField, $labelField, $filterCallback, $searchCallback, $baseID = 0;
+	protected $childrenMethod = 'AllChildrenIncludingDeleted'; //default child method in Hierarcy->getChildrenAsUL
 	
 	/**
 	 * Used by field search to leave only the relevant entries
@@ -141,6 +142,16 @@ class TreeDropdownField extends FormField {
 	public function setShowSearch($bool) {
 		$this->showSearch = $bool;
 		return $this;
+	}
+
+	/**
+	 * @param $method The parameter to ChildrenMethod to use when calling Hierarchy->getChildrenAsUL in {@link Hierarchy}.
+	 * The method specified determined the structure of the returned list. Use "ChildFolders" in place of the default
+	 * to get a drop-down listing with only folders, i.e. not including the child elements  in the currently selected folder.
+	 * See {@link Hierarchy} for a complete list of possible methods.
+	 */
+	public function setChildrenMethod($method) {
+		$this->childrenMethod = $method;
 	}
 
 	/**
@@ -244,11 +255,11 @@ class TreeDropdownField extends FormField {
 		}
 		$eval = '"<li id=\"selector-' . $this->getName() . '-{$child->' . $this->keyField . '}\" data-id=\"$child->' . $this->keyField . '\" class=\"class-$child->class"' .
 				' . $child->markingClasses() . "\"><a rel=\"$child->ID\">" . $child->' . $this->labelField . ' . "</a>"';
-		
+
 		if($isSubTree) {
-			return substr(trim($obj->getChildrenAsUL('', $eval, null, true)), 4, -5);
+			return substr(trim($obj->getChildrenAsUL('', $eval, null, true, $this->childrenMethod)), 4, -5);
 		} else {
-			return $obj->getChildrenAsUL('class="tree"', $eval, null, true);
+			return $obj->getChildrenAsUL('class="tree"', $eval, null, true, $this->childrenMethod);
 		}
 	}
 
