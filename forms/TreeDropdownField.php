@@ -54,7 +54,10 @@ class TreeDropdownField extends FormField {
 	 * @ignore
 	 */
 	protected $sourceObject, $keyField, $labelField, $filterCallback, $searchCallback, $baseID = 0;
-	protected $childrenMethod = 'AllChildrenIncludingDeleted'; //default child method in Hierarcy->getChildrenAsUL
+	/**
+	 * @var string default child method in Hierarcy->getChildrenAsUL
+	 */
+	protected $childrenMethod = 'AllChildrenIncludingDeleted';
 	
 	/**
 	 * Used by field search to leave only the relevant entries
