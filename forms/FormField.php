@@ -337,6 +337,7 @@ class FormField extends RequestHandler {
 			'id' => $this->ID(),
 			'tabindex' => $this->getTabIndex(),
 			'disabled' => $this->isDisabled(),
+			'title' => $this->getDescription(),
 		);
 		return array_merge($attrs, $this->attributes);
 	}
@@ -690,15 +691,23 @@ class FormField extends RequestHandler {
 	}
 
 	/**
+	 * @deprecated 3.0 Use setDescription()
+	 */
+	function describe($description) {
+		Deprecation::notice('3.0', 'Use setDescription()');
+		$this->setDescription($description);
+		return $this;
+	}
+
+	/**
 	 * Describe this field, provide help text for it.
-	 * The function returns this so it can be used like this:
-	 * $action = FormAction::create('submit', 'Submit')->describe("Send your changes to be approved")
+	 * By default, renders as a "title" attribute on the form field.
 	 * 
 	 * @return string Description
 	 */
-	function describe($description) {
+	function setDescription($description) {
 		$this->description = $description;
-		return $this;
+		return $this;	
 	}
 
 	/**
