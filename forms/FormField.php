@@ -51,13 +51,6 @@ class FormField extends RequestHandler {
 	protected $leftTitle;
 	
 	/**
-	 * Set the "tabindex" HTML attribute on the field.
-	 *
-	 * @var int
-	 */
-	protected $tabIndex;
-
-	/**
 	 * Stores a reference to the FieldList that contains this object.
 	 * @var FieldList
 	 */ 
@@ -225,32 +218,26 @@ class FormField extends RequestHandler {
 	 * Set tabindex HTML attribute
 	 * (defaults to none).
 	 *
+	 * @deprecated 3.0 Use setAttribute("tabindex") instead
 	 * @param int $index
 	 */
 	public function setTabIndex($index) {
-		$this->tabIndex = $index;
+		Deprecation::notice('3.0', 'Use setAttribute("tabindex") instead');
+		$this->setAttribute($index);
 		return $this;
 	}
 
 	/**
 	 * Get tabindex (if previously set)
+	 * 
+	 * @deprecated 3.0 Use getAttribute("tabindex") instead
 	 * @return int
 	 */
 	public function getTabIndex() {
-		return $this->tabIndex;
+		Deprecation::notice('3.0', 'Use getAttribute("tabindex") instead');
+		return $this->getAttribute('tabindex');
 	}
 
-	/**
-	 * Get tabindex HTML string
-	 *
-	 * @param int $increment Increase current tabindex by this value
-	 * @return string
-	 */
-	protected function getTabIndexHTML($increment = 0) {
-		$tabIndex = (int)$this->getTabIndex() + (int)$increment;
-		return (is_numeric($tabIndex)) ? ' tabindex = "' . $tabIndex . '"' : '';
-	}
-	
 	/**
 	 * Compiles all CSS-classes. Optionally includes a "nolabel"-class
 	 * if no title was set on the formfield.
@@ -301,6 +288,12 @@ class FormField extends RequestHandler {
 	/**
 	 * Set an HTML attribute on the field element, mostly an <input> tag.
 	 * 
+	 * Some attributes are best set through more specialized methods, to avoid interfereing with built-in behaviour:
+	 * - 'class': {@link addExtraClass()}
+	 * - 'title': {@link setDescription()}
+	 * - 'value': {@link setValue}
+	 * - 'name': {@link setName}
+	 * 
 	 * CAUTION Doesn't work on most fields which are composed of more than one HTML form field:
 	 * AjaxUniqueTextField, CheckboxSetField, ComplexTableField, CompositeField, ConfirmedPasswordField, CountryDropdownField,
 	 * CreditCardField, CurrencyField, DateField, DatetimeField, FieldGroup, GridField, HtmlEditorField,
@@ -335,7 +328,6 @@ class FormField extends RequestHandler {
 			'value' => $this->Value(),			
 			'class' => $this->extraClass(),
 			'id' => $this->ID(),
-			'tabindex' => $this->getTabIndex(),
 			'disabled' => $this->isDisabled(),
 			'title' => $this->getDescription(),
 		);

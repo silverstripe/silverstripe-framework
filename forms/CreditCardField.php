@@ -18,6 +18,17 @@ class CreditCardField extends TextField {
 				"<input autocomplete=\"off\" name=\"{$this->name}[3]\" value=\"$parts[3]\" maxlength=\"4\"" . $this->getTabIndexHTML(3) . " /></span>";
 		return $field;
 	}
+
+	/**
+	 * Get tabindex HTML string
+	 *
+	 * @param int $increment Increase current tabindex by this value
+	 * @return string
+	 */
+	protected function getTabIndexHTML($increment = 0) {
+		$tabIndex = (int)$this->getTabIndex() + (int)$increment;
+		return (is_numeric($tabIndex)) ? ' tabindex = "' . $tabIndex . '"' : '';
+	}
 	
 	function dataValue() {
 		if(is_array($this->value)) return implode("", $this->value);
