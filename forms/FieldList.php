@@ -538,21 +538,14 @@ class FieldList extends ArrayList {
 		
 		return false;
 	}
-	
-}
 
-/**
- * A field list designed to store a list of hidden fields.  When inserted into a template, only the
- * input tags will be included
- * 
- * @package    forms
- * @subpackage fields-structural
- */
-class HiddenFieldList extends FieldList {
+	/**
+	 * Default template rendering of a FieldList will concatenate all FieldHolder values.
+	 */
 	function forTemplate() {
 		$output = "";
 		foreach($this as $field) {
-			$output .= $field->Field();
+			$output .= $field->FieldHolder();
 		}
 		return $output;
 	}

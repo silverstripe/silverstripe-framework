@@ -715,6 +715,19 @@ class FieldListTest extends SapphireTest {
 		unset($set);
 	}
 	
+	/**
+	 * FieldList::forTemplate() returns a concatenation of FieldHolder values.
+	 */
+	function testForTemplate() {
+		$set = new FieldList(
+			$a = new TextField('A'),
+			$b = new TextField('B')
+		);
+		
+		$this->assertEquals($a->FieldHolder() . $b->FieldHolder(), $set->forTempalte());
+		
+	}
+	
 	function testMakeFieldReadonly() {
 		$FieldList = new FieldList(
 			new TabSet('Root', new Tab('Main',
