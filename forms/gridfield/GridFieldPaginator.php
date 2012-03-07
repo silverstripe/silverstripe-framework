@@ -93,12 +93,11 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 			$lastShownRecord = $totalRows;
 
 
-		// Ten pages back button
-		$prev10PageNum = $this->currentPage - 10 <= 1 ? 1 : $this->currentPage - 10;
-		$prev10Page = new GridField_Action($gridField, 'pagination_prev10', '-10', 'paginate', 1);
-		$prev10Page->addExtraClass('ss-gridfield-prev10page');
+		// First page button
+		$firstPage = new GridField_Action($gridField, 'pagination_first', 'First', 'paginate', 1);
+		$firstPage->addExtraClass('ss-gridfield-firstpage');
 		if($this->currentPage == 1)
-			$prev10Page = $prev10Page->performDisabledTransformation();
+			$firstPage = $firstPage->performDisabledTransformation();
 
 		// Previous page button
 		$previousPageNum = $this->currentPage <= 1 ? 1 : $this->currentPage - 1;
@@ -115,21 +114,20 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 			$nextPage = $nextPage->performDisabledTransformation();
 
 		// Ten pages forward button
-		$next10PageNum = $this->currentPage + 10 >= $totalPages ? $totalPages : $this->currentPage + 10;
-		$next10Page = new GridField_Action($gridField, 'pagination_next10', '+10', 'paginate', $next10PageNum);
-		$next10Page->addExtraClass('ss-gridfield-next10page');
+		$lastPage = new GridField_Action($gridField, 'pagination_last', 'Last', 'paginate', $totalPages);
+		$lastPage->addExtraClass('ss-gridfield-lastpage');
 		if($this->currentPage == $totalPages)
-			$next10Page = $next10Page->performDisabledTransformation();
+			$lastPage = $lastPage->performDisabledTransformation();
 
 
 		// Render in template
 		$forTemplate = new ArrayData(array(
-			'Previous10Page' => $prev10Page,
+			'FirstPage' => $firstPage,
 			'PreviousPage' => $previousPage,
 			'CurrentPageNum' => $this->currentPage,
 			'NumPages' => $totalPages,
 			'NextPage' => $nextPage,
-			'Next10Page' => $next10Page,
+			'LastPage' => $lastPage,
 			'FirstShownRecord' => $firstShownRecord,
 			'LastShownRecord' => $lastShownRecord,
 			'NumRecords' => $totalRows
