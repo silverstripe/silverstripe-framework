@@ -216,7 +216,12 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	 * @return Form 
 	 */
 	function ItemEditForm() {
-		if (empty($this->record)) return null;
+		if (empty($this->record)) {
+			$controller = Controller::curr();
+			$noActionURL = $controller->removeAction($_REQUEST['url']);
+			$controller->getResponse()->removeHeader('Location');   //clear the existing redirect
+			return Director::redirect($noActionURL, 302);
+		}
 
 		$form = new Form(
 			$this,
