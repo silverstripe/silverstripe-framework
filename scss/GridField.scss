@@ -376,6 +376,26 @@ $gf_grid_x:	16px;
 								text-indent:-9999em;
 							}
 						}
+						button.ss-gridfield-firstpage {
+							@include background (url(../images/icons/pagination-arrows.png) no-repeat 0px 7px);
+							@include box-shadow-none;
+							border:none;
+							width:10px;
+							margin:0 10px;
+							span {
+								text-indent:-9999em;
+							}
+						}
+						button.ss-gridfield-lastpage {
+							@include background (url(../images/icons/pagination-arrows.png) no-repeat -73px 7px);
+							@include box-shadow-none;
+							border:none;
+							width:10px;
+							margin:0 10px;
+							span {
+								text-indent:-9999em;
+							}
+						}
 					}
 					.pagination-records-number {
 						float:right;

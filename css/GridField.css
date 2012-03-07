@@ -58,6 +58,10 @@
 .cms table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ss-gridfield-previouspage span { text-indent: -9999em; }
 .cms table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ss-gridfield-nextpage { background: url(../images/icons/pagination-arrows.png) no-repeat -47px 7px; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; border: none; width: 10px; margin: 0 10px; }
 .cms table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ss-gridfield-nextpage span { text-indent: -9999em; }
+.cms table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ss-gridfield-firstpage { background: url(../images/icons/pagination-arrows.png) no-repeat 0px 7px; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; border: none; width: 10px; margin: 0 10px; }
+.cms table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ss-gridfield-firstpage span { text-indent: -9999em; }
+.cms table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ss-gridfield-lastpage { background: url(../images/icons/pagination-arrows.png) no-repeat -73px 7px; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; border: none; width: 10px; margin: 0 10px; }
+.cms table.ss-gridfield-table tr td.bottom-all .datagrid-pagination button.ss-gridfield-lastpage span { text-indent: -9999em; }
 .cms table.ss-gridfield-table tr td.bottom-all .pagination-records-number { float: right; padding: 6px 0; color: white; }
 .cms table.ss-gridfield-table tr.last td { border-bottom: 0 none; }
 .cms table.ss-gridfield-table td:first-child, .cms table.ss-gridfield-table th:first-child { border-left: 1px solid rgba(0, 0, 0, 0.1); }
