@@ -95,7 +95,7 @@ jQuery.noConflict();
 			redraw: function() {
 				// Move from inner to outer layouts. Some of the elements might not exist.
 				// Not all edit forms are layouted, so qualify by their data value.
-				
+				this.find('.cms-content-fields[data-layout-type]').redraw(); 
 				this.find('.cms-edit-form[data-layout-type]').redraw(); 
 				
 				// Only redraw preview if its visible
@@ -247,6 +247,12 @@ jQuery.noConflict();
 				});
 				
 				this.setCurrentXHR(xhr);
+			}
+		});
+
+		$('.cms-content-fields').entwine({
+			redraw: function() {
+				this.layout();
 			}
 		});
 
