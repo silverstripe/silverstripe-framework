@@ -278,6 +278,45 @@ jQuery.noConflict();
 		});
 
 		/**
+		 * Loads the link's 'href' attribute into a panel via ajax,
+		 * as opposed to triggering a full page reload.
+		 * Little helper to avoid repetition, and make it easy to
+		 * "opt in" to panel loading, while by default links still exhibit their default behaviour.
+		 * Same goes for breadcrumbs in the CMS.
+		 */
+		$('.cms .cms-panel-link, .cms a.crumb').entwine({
+			onclick: function(e) {
+				var href = this.attr('href'), url = href ? href : this.data('href'),
+					data = (this.data('targetPanel')) ? {selector: this.data('targetPanel')} : null;
+				
+				$('.cms-container').loadPanel(url, null, data);
+				e.preventDefault();
+			}
+		});
+
+		/**
+		 * Does an ajax loads of the link's 'href' attribute via ajax and displays any FormResponse messages from the CMS.
+		 * Little helper to avoid repetition, and make it easy to trigger actions via a link,
+		 * without reloading the page, changing the URL, or loading in any new panel content.
+		 */
+		$('.cms .cms-link-ajax').entwine({
+			onclick: function(e) {
+				var href = this.attr('href'), url = href ? href : this.data('href');
+
+				jQuery.ajax({
+					url: url,
+					// Ensure that form view is loaded (rather than whole "Content" template)
+					complete: function(xmlhttp, status) {
+						var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.responseText;
+						if (typeof msg != "undefined" && msg != null) eval(msg);
+					},
+					dataType: 'html'
+				});
+				e.preventDefault();
+			}
+		});
+
+		/**
 		 * Trigger dialogs with iframe based on the links href attribute (see ssui-core.js).
 		 */
 		$('.cms .ss-ui-dialog-link').entwine({
