@@ -216,6 +216,8 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	 * @return Form 
 	 */
 	function ItemEditForm() {
+		if (empty($this->record)) return null;
+
 		$form = new Form(
 			$this,
 			'ItemEditForm',
