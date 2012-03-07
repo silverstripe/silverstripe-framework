@@ -4,6 +4,7 @@
 .cms .ss-gridfield[data-selectable] td { cursor: pointer; }
 .cms table.ss-gridfield-table { display: table; box-shadow: none; padding: 0; border-collapse: separate; border-bottom: 0 none; width: 100%; }
 .cms table.ss-gridfield-table thead { color: #1d2224; background: transparent; }
+.cms table.ss-gridfield-table thead tr.filter-header .fieldgroup { max-width: 512px; }
 .cms table.ss-gridfield-table tbody { background: #FFF; }
 .cms table.ss-gridfield-table tbody td button { border: none; background: none; margin: 0 0 0 2px; padding: 0; width: auto; text-shadow: none; }
 .cms table.ss-gridfield-table tbody td button.gridfield-button-delete:hover { background: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }

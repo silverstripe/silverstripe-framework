@@ -65,6 +65,11 @@ $gf_grid_x:	16px;
 		thead {
 			color: darken($gf_colour_base, 50%);	
 			background: transparent;
+			tr.filter-header {
+				.fieldgroup {
+					max-width:512px;
+				}
+			}
 		}
 		
 		tbody {
