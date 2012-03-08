@@ -1099,11 +1099,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			'BatchActionsForm',
 			new FieldList(
 				new HiddenField('csvIDs'),
-				new DropdownField(
+				Object::create('DropdownField',
 					'Action',
 					false,
 					$actionsMap
-				)
+				)->setAttribute('autocomplete', 'off')
 			),
 			new FieldList(
 				// TODO i18n
