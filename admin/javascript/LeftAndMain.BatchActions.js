@@ -45,12 +45,17 @@
 				});
 						
 				$('.cms-tree-view-modes :input[name=view-mode]').bind('click', function(e) {
-					if($(e.target).val() == 'multiselect') {
+					var val = $(e.target).val(), dropdown = self.find(':input[name=Action]');
+					if(val == 'multiselect') {
 						tree.addClass('multiple');
 						self.serializeFromTree();
 					} else {
 						tree.removeClass('multiple');	
 					}
+
+					// Batch actions only make sense when multiselect is enabled
+					if(val == 'multiselect') dropdown.removeAttr('disabled').change();
+					else dropdown.attr('disabled', 'disabled').change();
 				});
 				
 				this._super();
@@ -304,11 +309,16 @@
 		onchange: function(e) {
 			var form = $(e.target.form), btn = form.find(':submit');
 			if($(e.target).val() == -1) {
-				btn.attr('disabled', 'disabled');
+				btn.attr('disabled', 'disabled').button('refresh');
 			} else {
-				btn.removeAttr('disabled');
-				form.submit();
+				btn.removeAttr('disabled').button('refresh');
+				// form.submit();
 			} 
+
+			// TODO Should work by triggering change() along, but doesn't - entwine event bubbling?
+			this.trigger("liszt:updated");
+
+			this._super(e);
 		}
 	});
 	
