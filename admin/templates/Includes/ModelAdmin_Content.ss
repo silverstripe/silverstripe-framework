@@ -1,9 +1,13 @@
 <div class="cms-content center $BaseCSSClasses" data-layout-type="border">
 
 	<div class="cms-content-header north">
-		<div>
-			<h2><% _t('ModelAdmin.Title', 'My Model') %></h2>
-		</div>
+		<div><h2>
+			<% if SectionTitle %>
+				$SectionTitle
+			<% else %>
+				<% _t('ModelAdmin.Title', 'Data Models') %>
+			<% end_if %>
+		</h2></div>
 	</div>
 
 	$Tools

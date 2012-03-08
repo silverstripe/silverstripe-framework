@@ -6,9 +6,6 @@
 class MemberDatetimeOptionsetField extends OptionsetField {
 
 	function Field() {
-		Requirements::javascript(THIRDPARTY_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/MemberDatetimeOptionsetField.js');
-
 		$options = '';
 		$odd = 0;
 		$source = $this->getSource();
@@ -45,8 +42,12 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 			_t('MemberDatetimeOptionsetField.Preview', 'Preview'),
 			Zend_Date::now()->toString($value)
 		) : '';
-		$options .= "<a class=\"formattingHelpToggle\" href=\"#\">" . _t('MemberDatetimeOptionsetField.TOGGLEHELP', 'Toggle formatting help') . "</a>";
-		$options .= "<div class=\"formattingHelpText\">";
+		$options .= sprintf(
+			'<a class="cms-help-toggle" href="#%s">%s</a>',
+			$this->id() . '_Help',
+			_t('MemberDatetimeOptionsetField.TOGGLEHELP', 'Toggle formatting help')
+		);
+		$options .= "<div id=\"" . $this->id() . "_Help\">";
 		$options .= $this->getFormattingHelpText();
 		$options .= "</div>";
 		$options .= "</li>\n";

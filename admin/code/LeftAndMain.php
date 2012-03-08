@@ -9,7 +9,7 @@
  * @package cms
  * @subpackage core
  */
-class LeftAndMain extends Controller {
+class LeftAndMain extends Controller implements PermissionProvider {
 	
 	/**
 	 * The 'base' url for CMS administration areas.
@@ -77,12 +77,20 @@ class LeftAndMain extends Controller {
 		'show',
 		'EditorToolbar',
 		'EditForm',
-		'RootForm',
 		'AddForm',
 		'batchactions',
 		'BatchActionsForm',
 		'Member_ProfileForm',
 	);
+
+	/**
+	 * @var Array Codes which are required from the current user to view this controller.
+	 * If multiple codes are provided, all of them are required.
+	 * All CMS controllers require "CMS_ACCESS_LeftAndMain" as a baseline check,
+	 * and fall back to "CMS_ACCESS_<class>" if no permissions are defined here.
+	 * See {@link canView()} for more details on permission checks.
+	 */
+	static $required_permission_codes;
 	
 	/**
 	 * Register additional requirements through the {@link Requirements} class.
@@ -99,13 +107,10 @@ class LeftAndMain extends Controller {
 	
 	/**
 	 * @param Member $member
-	 *
 	 * @return boolean
 	 */
 	function canView($member = null) {
-		if(!$member && $member !== FALSE) {
-			$member = Member::currentUser();
-		}
+		if(!$member && $member !== FALSE) $member = Member::currentUser();
 		
 		// cms menus only for logged-in members
 		if(!$member) return false;
@@ -115,12 +120,18 @@ class LeftAndMain extends Controller {
 			$alternateAllowed = $this->alternateAccessCheck();
 			if($alternateAllowed === FALSE) return false;
 		}
-			
-		// Default security check for LeftAndMain sub-class permissions
-		if(!Permission::checkMember($member, "CMS_ACCESS_$this->class") && 
-		   !Permission::checkMember($member, "CMS_ACCESS_LeftAndMain")) {
-			return false;
+
+		// Check for "CMS admin" permission
+		if(Permission::checkMember($member, "CMS_ACCESS_LeftAndMain")) return true;
+
+		// Check for LeftAndMain sub-class permissions			
+		$codes = array();
+		$extraCodes = $this->stat('required_permission_codes');
+		if($extraCodes !== false) { // allow explicit FALSE to disable subclass check
+			if($extraCodes) $codes = array_merge($codes, (array)$extraCodes);
+			else $codes[] = "CMS_ACCESS_$this->class";	
 		}
+		foreach($codes as $code) if(!Permission::checkMember($member, $code)) return false;
 		
 		return true;
 	}
@@ -861,16 +872,16 @@ class LeftAndMain extends Controller {
 				$actions = $record->getCMSActions();
 				// add default actions if none are defined
 				if(!$actions || !$actions->Count()) {
-					if($record->hasMethod('canDelete') && $record->canDelete()) {
-						$actions->push(
-							FormAction::create('delete',_t('ModelAdmin.DELETE','Delete'))
-								->addExtraClass('ss-ui-action-destructive')
-						);
-					}
 					if($record->hasMethod('canEdit') && $record->canEdit()) {
 						$actions->push(
 							FormAction::create('save',_t('CMSMain.SAVE','Save'))
 								->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
+						);
+					}
+					if($record->hasMethod('canDelete') && $record->canDelete()) {
+						$actions->push(
+							FormAction::create('delete',_t('ModelAdmin.DELETE','Delete'))
+								->addExtraClass('ss-ui-action-destructive')
 						);
 					}
 				}
@@ -913,15 +924,11 @@ class LeftAndMain extends Controller {
 				$form->setFields($readonlyFields);
 			}
 		} else {
-			$form = $this->RootForm();
+			$form = $this->EmptyForm();
 		}
 		
 		return $form;
 	}	
-	
-	function RootForm() {
-		return $this->EmptyForm();
-	}
 	
 	/**
 	 * Returns a placeholder form, used by {@link getEditForm()} if no record is selected.
@@ -1006,10 +1013,7 @@ class LeftAndMain extends Controller {
 		$form->saveInto($record);
 		$record->write();
 
-		// Used in TinyMCE inline folder creation
-		if(isset($data['returnID'])) {
-			return $record->ID;
-		} else if($this->isAjax()) {
+		if($this->isAjax()) {
 			$form = $this->getEditForm($record->ID);
 			return $form->forTemplate();
 		} else {
@@ -1084,11 +1088,11 @@ class LeftAndMain extends Controller {
 			'BatchActionsForm',
 			new FieldList(
 				new HiddenField('csvIDs'),
-				new DropdownField(
+				Object::create('DropdownField',
 					'Action',
 					false,
 					$actionsMap
-				)
+				)->setAttribute('autocomplete', 'off')
 			),
 			new FieldList(
 				// TODO i18n
@@ -1309,6 +1313,37 @@ class LeftAndMain extends Controller {
 	 */
 	function Locale() {
 		return DBField::create('DBLocale', i18n::get_locale());
+	}
+
+	function providePermissions() {
+		$perms = array(
+			"CMS_ACCESS_LeftAndMain" => array(
+				'name' => _t('CMSMain.ACCESSALLINTERFACES', 'Access to all CMS sections'),
+				'category' => _t('Permission.CMS_ACCESS_CATEGORY', 'CMS Access'),
+				'help' => _t('CMSMain.ACCESSALLINTERFACESHELP', 'Overrules more specific access settings.'),
+				'sort' => -100
+			)
+		);
+
+		// Add any custom ModelAdmin subclasses. Can't put this on ModelAdmin itself
+		// since its marked abstract, and needs to be singleton instanciated.
+		foreach(ClassInfo::subclassesFor('ModelAdmin') as $i => $class) {
+			if($class == 'ModelAdmin') continue;
+			if(ClassInfo::classImplements($class, 'TestOnly')) continue;
+
+			$title = _t("{$class}.MENUTITLE", LeftAndMain::menu_title_for_class($class));
+			$perms["CMS_ACCESS_" . $class] = array(
+				'name' => sprintf(_t(
+					'CMSMain.ACCESS', 
+					"Access to '%s' section",
+					PR_MEDIUM,
+					"Item in permission selection identifying the admin section. Example: Access to 'Files & Images'"
+				), $title, null),
+				'category' => _t('Permission.CMS_ACCESS_CATEGORY', 'CMS Access')
+			);
+		}
+
+		return $perms;
 	}
 	
 	/**

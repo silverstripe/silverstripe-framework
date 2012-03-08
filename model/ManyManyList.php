@@ -73,7 +73,7 @@ class ManyManyList extends RelationList {
 		if(is_array($this->foreignID)) {
 			return "\"$this->joinTable\".\"$this->foreignKey\" IN ('" . 
 				implode("', '", array_map('Convert::raw2sql', $this->foreignID)) . "')";
-		} else if($this->foreignID){
+		} else if($this->foreignID !== null){
 			return "\"$this->joinTable\".\"$this->foreignKey\" = '" . 
 				Convert::raw2sql($this->foreignID) . "'";
 		}
@@ -93,25 +93,24 @@ class ManyManyList extends RelationList {
 		if(!$this->foreignID) {
 			throw new Exception("ManyManyList::add() can't be called until a foreign ID is set", E_USER_WARNING);
 		}
-		if(is_array($this->foreignID)) {
-			throw new Exception("ManyManyList::add() can't be called on a list linked to mulitple foreign IDs", E_USER_WARNING);
-		}
-
+		
 		// Delete old entries, to prevent duplication
 		$this->removeById($itemID);
 
-		// Insert new entry
-		$manipulation = array();
-		$manipulation[$this->joinTable]['command'] = 'insert';
+		// Insert new entry/entries
+		foreach((array)$this->foreignID as $foreignID) {
+			$manipulation = array();
+			$manipulation[$this->joinTable]['command'] = 'insert';
 
-		if($extraFields) foreach($extraFields as $k => $v) {
-			$manipulation[$this->joinTable]['fields'][$k] = "'" . Convert::raw2sql($v) . "'";
+			if($extraFields) foreach($extraFields as $k => $v) {
+				$manipulation[$this->joinTable]['fields'][$k] = "'" . Convert::raw2sql($v) . "'";
+			}
+
+			$manipulation[$this->joinTable]['fields'][$this->localKey] = $itemID;
+			$manipulation[$this->joinTable]['fields'][$this->foreignKey] = $foreignID;
+
+			DB::manipulate($manipulation);
 		}
-
-		$manipulation[$this->joinTable]['fields'][$this->localKey] = $itemID;
-		$manipulation[$this->joinTable]['fields'][$this->foreignKey] = $this->foreignID;
-
-		DB::manipulate($manipulation);
 	}
 
 	/**

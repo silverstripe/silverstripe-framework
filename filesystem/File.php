@@ -363,7 +363,11 @@ class File extends DataObject {
 		)->setName("FilePreview")->addExtraClass('cms-file-info');
 		$urlField->dontEscape = true;
 
-		return new FieldList(
+		//get a tree listing with only folder, no files
+		$folderTree = new TreeDropdownField("ParentID", _t('AssetTableField.FOLDER','Folder'), 'Folder');
+		$folderTree->setChildrenMethod('ChildFolders');
+
+		$fields = new FieldList(
 			new TabSet('Root',
 				new Tab('Main',
 					$filePreview,
@@ -371,11 +375,15 @@ class File extends DataObject {
 					// $uploadField,
 					new TextField("Title", _t('AssetTableField.TITLE','Title')),
 					new TextField("Name", _t('AssetTableField.FILENAME','Filename')),
-					new DropdownField("OwnerID", _t('AssetTableField.OWNER','Owner'), Member::mapInCMSGroups())
+					new DropdownField("OwnerID", _t('AssetTableField.OWNER','Owner'), Member::mapInCMSGroups()),
+					$folderTree
 				)
 			)
 		);
+
+		return $fields;
 	}
+
 	
 	/**
 	 * Returns a category based on the file extension.

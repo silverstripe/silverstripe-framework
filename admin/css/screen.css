@@ -31,7 +31,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 /** ---------------------------------------------------- Double tone borders  http://daverupert.com/2011/06/two-tone-borders-with-css3/ ----------------------------------------------------- */
 /** ----------------------------- Sprite images ----------------------------- */
 /** Helper SCSS file for generating sprites for the interface. */
-.btn-icon-sprite, .ui-state-default .btn-icon-accept, .ui-state-default .btn-icon-accept_disabled, .ui-state-default .btn-icon-add, .ui-state-default .btn-icon-add_disabled, .ui-state-default .btn-icon-addpage, .ui-state-default .btn-icon-addpage_disabled, .ui-state-default .btn-icon-arrow-circle-135-left, .ui-state-default .btn-icon-back, .ui-state-default .btn-icon-back_disabled, .ui-state-default .btn-icon-cross-circle, .ui-state-default .btn-icon-cross-circle_disabled, .ui-state-default .btn-icon-decline, .ui-state-default .btn-icon-decline_disabled, .ui-state-default .btn-icon-drive-upload, .ui-state-default .btn-icon-drive-upload_disabled, .ui-state-default .btn-icon-magnifier, .ui-state-default .btn-icon-minus-circle, .ui-state-default .btn-icon-minus-circle_disabled, .ui-state-default .btn-icon-navigation, .ui-state-default .btn-icon-navigation_disabled, .ui-state-default .btn-icon-network-cloud, .ui-state-default .btn-icon-network-cloud_disabled, .ui-state-default .btn-icon-pencil, .ui-state-default .btn-icon-pencil_disabled, .ui-state-default .btn-icon-plug-disconnect-prohibition, .ui-state-default .btn-icon-plug-disconnect-prohibition_disabled, .ui-state-default .btn-icon-preview, .ui-state-default .btn-icon-preview_disabled, .ui-state-default .btn-icon-settings, .ui-state-default .btn-icon-settings_disabled, .ui-state-default .btn-icon-unpublish, .ui-state-default .btn-icon-unpublish_disabled { background: url('../images/btn-icon-s4a0551bc3f.png') no-repeat; }
+.btn-icon-sprite, .ui-state-default .btn-icon-accept, .ui-state-default .btn-icon-accept_disabled, .ui-state-default .btn-icon-add, .ui-state-default .btn-icon-add_disabled, .ui-state-default .btn-icon-addpage, .ui-state-default .btn-icon-addpage_disabled, .ui-state-default .btn-icon-arrow-circle-135-left, .ui-state-default .btn-icon-back, .ui-state-default .btn-icon-back_disabled, .ui-state-default .btn-icon-chain--arrow, .ui-state-default .btn-icon-chain--exclamation, .ui-state-default .btn-icon-chain--minus, .ui-state-default .btn-icon-chain--pencil, .ui-state-default .btn-icon-chain--plus, .ui-state-default .btn-icon-chain-small, .ui-state-default .btn-icon-chain-unchain, .ui-state-default .btn-icon-chain, .ui-state-default .btn-icon-cross-circle, .ui-state-default .btn-icon-cross-circle_disabled, .ui-state-default .btn-icon-decline, .ui-state-default .btn-icon-decline_disabled, .ui-state-default .btn-icon-download-csv, .ui-state-default .btn-icon-drive-upload, .ui-state-default .btn-icon-drive-upload_disabled, .ui-state-default .btn-icon-magnifier, .ui-state-default .btn-icon-minus-circle, .ui-state-default .btn-icon-minus-circle_disabled, .ui-state-default .btn-icon-navigation, .ui-state-default .btn-icon-navigation_disabled, .ui-state-default .btn-icon-network-cloud, .ui-state-default .btn-icon-network-cloud_disabled, .ui-state-default .btn-icon-pencil, .ui-state-default .btn-icon-pencil_disabled, .ui-state-default .btn-icon-plug-disconnect-prohibition, .ui-state-default .btn-icon-plug-disconnect-prohibition_disabled, .ui-state-default .btn-icon-preview, .ui-state-default .btn-icon-preview_disabled, .ui-state-default .btn-icon-settings, .ui-state-default .btn-icon-settings_disabled, .ui-state-default .btn-icon-unpublish, .ui-state-default .btn-icon-unpublish_disabled { background: url('../images/btn-icon-sb5d07676ff.png') no-repeat; }
 
 .ui-state-default .btn-icon-accept { background-position: 0 0; }
 .ui-state-default .btn-icon-accept_disabled { background-position: 0 -17px; }
@@ -41,30 +41,39 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 .ui-state-default .btn-icon-addpage_disabled { background-position: 0 -88px; }
 .ui-state-default .btn-icon-arrow-circle-135-left { background-position: 0 -104px; }
 .ui-state-default .btn-icon-back { background-position: 0 -120px; }
-.ui-state-default .btn-icon-back_disabled { background-position: 0 -136px; }
-.ui-state-default .btn-icon-cross-circle { background-position: 0 -152px; }
-.ui-state-default .btn-icon-cross-circle_disabled { background-position: 0 -168px; }
-.ui-state-default .btn-icon-decline { background-position: 0 -184px; }
-.ui-state-default .btn-icon-decline_disabled { background-position: 0 -201px; }
-.ui-state-default .btn-icon-drive-upload { background-position: 0 -218px; }
-.ui-state-default .btn-icon-drive-upload_disabled { background-position: 0 -234px; }
-.ui-state-default .btn-icon-magnifier { background-position: 0 -250px; }
-.ui-state-default .btn-icon-minus-circle { background-position: 0 -266px; }
-.ui-state-default .btn-icon-minus-circle_disabled { background-position: 0 -282px; }
-.ui-state-default .btn-icon-navigation { background-position: 0 -298px; }
-.ui-state-default .btn-icon-navigation_disabled { background-position: 0 -314px; }
-.ui-state-default .btn-icon-network-cloud { background-position: 0 -330px; }
-.ui-state-default .btn-icon-network-cloud_disabled { background-position: 0 -346px; }
-.ui-state-default .btn-icon-pencil { background-position: 0 -362px; }
-.ui-state-default .btn-icon-pencil_disabled { background-position: 0 -378px; }
-.ui-state-default .btn-icon-plug-disconnect-prohibition { background-position: 0 -394px; }
-.ui-state-default .btn-icon-plug-disconnect-prohibition_disabled { background-position: 0 -410px; }
-.ui-state-default .btn-icon-preview { background-position: 0 -426px; }
-.ui-state-default .btn-icon-preview_disabled { background-position: 0 -443px; }
-.ui-state-default .btn-icon-settings { background-position: 0 -460px; }
-.ui-state-default .btn-icon-settings_disabled { background-position: 0 -476px; }
-.ui-state-default .btn-icon-unpublish { background-position: 0 -492px; }
-.ui-state-default .btn-icon-unpublish_disabled { background-position: 0 -510px; }
+.ui-state-default .btn-icon-back_disabled { background-position: 0 -135px; }
+.ui-state-default .btn-icon-chain--arrow { background-position: 0 -150px; }
+.ui-state-default .btn-icon-chain--exclamation { background-position: 0 -166px; }
+.ui-state-default .btn-icon-chain--minus { background-position: 0 -182px; }
+.ui-state-default .btn-icon-chain--pencil { background-position: 0 -198px; }
+.ui-state-default .btn-icon-chain--plus { background-position: 0 -214px; }
+.ui-state-default .btn-icon-chain-small { background-position: 0 -230px; }
+.ui-state-default .btn-icon-chain-unchain { background-position: 0 -246px; }
+.ui-state-default .btn-icon-chain { background-position: 0 -262px; }
+.ui-state-default .btn-icon-cross-circle { background-position: 0 -278px; }
+.ui-state-default .btn-icon-cross-circle_disabled { background-position: 0 -294px; }
+.ui-state-default .btn-icon-decline { background-position: 0 -310px; }
+.ui-state-default .btn-icon-decline_disabled { background-position: 0 -327px; }
+.ui-state-default .btn-icon-download-csv { background-position: 0 -344px; }
+.ui-state-default .btn-icon-drive-upload { background-position: 0 -362px; }
+.ui-state-default .btn-icon-drive-upload_disabled { background-position: 0 -378px; }
+.ui-state-default .btn-icon-magnifier { background-position: 0 -394px; }
+.ui-state-default .btn-icon-minus-circle { background-position: 0 -410px; }
+.ui-state-default .btn-icon-minus-circle_disabled { background-position: 0 -426px; }
+.ui-state-default .btn-icon-navigation { background-position: 0 -442px; }
+.ui-state-default .btn-icon-navigation_disabled { background-position: 0 -458px; }
+.ui-state-default .btn-icon-network-cloud { background-position: 0 -474px; }
+.ui-state-default .btn-icon-network-cloud_disabled { background-position: 0 -490px; }
+.ui-state-default .btn-icon-pencil { background-position: 0 -506px; }
+.ui-state-default .btn-icon-pencil_disabled { background-position: 0 -522px; }
+.ui-state-default .btn-icon-plug-disconnect-prohibition { background-position: 0 -538px; }
+.ui-state-default .btn-icon-plug-disconnect-prohibition_disabled { background-position: 0 -554px; }
+.ui-state-default .btn-icon-preview { background-position: 0 -570px; }
+.ui-state-default .btn-icon-preview_disabled { background-position: 0 -587px; }
+.ui-state-default .btn-icon-settings { background-position: 0 -604px; }
+.ui-state-default .btn-icon-settings_disabled { background-position: 0 -620px; }
+.ui-state-default .btn-icon-unpublish { background-position: 0 -636px; }
+.ui-state-default .btn-icon-unpublish_disabled { background-position: 0 -654px; }
 
 .icon { text-indent: -9999px; border: none; outline: none; }
 .icon.icon-24 { width: 24px; height: 24px; background: url('../images/menu-icons/24x24-s546fcae8fd.png'); }
@@ -220,7 +229,7 @@ html, body { width: 100%; height: 100%; }
 
 body.cms { overflow: hidden; }
 
-.cms a { color: #3ebae0; text-decoration: none; }
+.cms a { color: #1556b2; text-decoration: none; }
 .cms a:hover, .cms a:focus { text-decoration: underline; }
 .cms body .ui-widget { font-family: Arial, sans-serif; font-size: 12px; }
 .cms strong { font-weight: bold; }
@@ -237,18 +246,13 @@ body.cms { overflow: hidden; }
 .cms-content-header { padding: 0px 8px 8px; height: 32px; z-index: 60; background-image: url(../images/textures/cms_content_header.png); background-repeat: repeat; }
 .cms-content-header a { color: #1556b2; }
 .cms-content-header .backlink { float: left; margin-top: 7px; }
+.cms-content-header .backlink span.btn-icon-back { height: 15px; }
 .cms-content-header h2 { float: left; padding: 8px 8px 0 8px; font-size: 14px; line-height: 24px; font-weight: bold; text-shadow: #bfcad2 1px 1px 0; max-width: 400px; margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
 .cms-content-header > div { width: 9999em; overflow: hidden; }
 .cms-content-header .cms-content-header-tabs { position: fixed; right: 40px; }
-.cms-content-header .cms-content-header-tabs .ui-tabs-nav li a { font-weight: bold; line-height: 16px; padding: 12px 20px 11px; text-indent: -9999em; }
-.cms-content-header .cms-content-header-tabs .ui-tabs-nav li a.content-treeview { background: url(../images/content-header-tabs-sprite.png) no-repeat 2px 0px; }
-.cms-content-header .cms-content-header-tabs .ui-tabs-nav li a.content-galleryview { background: url(../images/content-header-tabs-sprite.png) no-repeat -87px 0px; }
-.cms-content-header .cms-content-header-tabs .ui-tabs-nav li a.content-listview { background: url(../images/content-header-tabs-sprite.png) no-repeat -38px 0px; }
+.cms-content-header .cms-content-header-tabs .ui-tabs-nav li a { font-weight: bold; line-height: 16px; padding: 12px 20px 11px; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-state-default, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-default, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-default { border-top: none; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-state-active, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active { border-top: none; }
-.cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-state-active a.content-treeview, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active a.content-treeview, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active a.content-treeview { background: url(../images/content-header-tabs-sprite.png) no-repeat 2px -40px; }
-.cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-state-active a.content-galleryview, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active a.content-galleryview, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active a.content-galleryview { background: url(../images/content-header-tabs-sprite.png) no-repeat -87px -40px; }
-.cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-state-active a.content-listview, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active a.content-listview, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active a.content-listview { background: url(../images/content-header-tabs-sprite.png) no-repeat -38px -40px; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-all, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-top, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-right, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-tr { border-radius: 0; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-all, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-top, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-left, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-tl { border-radius: 0; }
 
@@ -261,6 +265,15 @@ body.cms { overflow: hidden; }
 .ui-tabs .cms-content-header .ui-tabs-nav .ui-state-default, .ui-tabs .cms-content-header .ui-tabs-nav .ui-widget-content .ui-state-default, .ui-tabs .cms-content-header .ui-tabs-nav .ui-widget-header .ui-state-default, .cms-dialog .ui-tabs-nav .ui-state-default, .cms-dialog .ui-tabs-nav .ui-widget-content .ui-state-default, .cms-dialog .ui-tabs-nav .ui-widget-header .ui-state-default { background-color: #b0bec7; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #8ca1ae)); background-image: -webkit-linear-gradient(#b0bec7, #8ca1ae); background-image: -moz-linear-gradient(#b0bec7, #8ca1ae); background-image: -o-linear-gradient(#b0bec7, #8ca1ae); background-image: -ms-linear-gradient(#b0bec7, #8ca1ae); background-image: linear-gradient(#b0bec7, #8ca1ae); border-right-color: #a6a6a6; border-left-color: #d9d9d9; border-bottom: none; text-shadow: white 0 1px 0; }
 .ui-tabs .cms-content-header .ui-tabs-nav .ui-state-active, .ui-tabs .cms-content-header .ui-tabs-nav .ui-widget-content .ui-state-active, .ui-tabs .cms-content-header .ui-tabs-nav .ui-widget-header .ui-state-active, .cms-dialog .ui-tabs-nav .ui-state-active, .cms-dialog .ui-tabs-nav .ui-widget-content .ui-state-active, .cms-dialog .ui-tabs-nav .ui-widget-header .ui-state-active { background: #eceff1; border-right-color: #a6a6a6; border-left-color: #a6a6a6; margin-right: -1px; margin-left: -1px; z-index: 2; }
 .ui-tabs .cms-content-header .ui-tabs-nav .ui-state-active a, .ui-tabs .cms-content-header .ui-tabs-nav .ui-widget-content .ui-state-active a, .ui-tabs .cms-content-header .ui-tabs-nav .ui-widget-header .ui-state-active a, .cms-dialog .ui-tabs-nav .ui-state-active a, .cms-dialog .ui-tabs-nav .ui-widget-content .ui-state-active a, .cms-dialog .ui-tabs-nav .ui-widget-header .ui-state-active a { border-bottom: none; }
+
+.CMSPagesController .cms-content-header-tabs .ui-tabs-nav li a { font-weight: bold; line-height: 16px; padding: 12px 20px 11px; text-indent: -9999em; }
+.CMSPagesController .cms-content-header-tabs .ui-tabs-nav li a.content-treeview { background: url(../images/content-header-tabs-sprite.png) no-repeat 2px 0px; }
+.CMSPagesController .cms-content-header-tabs .ui-tabs-nav li a.content-galleryview { background: url(../images/content-header-tabs-sprite.png) no-repeat -87px 0px; }
+.CMSPagesController .cms-content-header-tabs .ui-tabs-nav li a.content-listview { background: url(../images/content-header-tabs-sprite.png) no-repeat -38px 0px; }
+.CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-state-active, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active { border-top: none; }
+.CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-state-active a.content-treeview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active a.content-treeview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active a.content-treeview { background: url(../images/content-header-tabs-sprite.png) no-repeat 2px -40px; }
+.CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-state-active a.content-galleryview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active a.content-galleryview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active a.content-galleryview { background: url(../images/content-header-tabs-sprite.png) no-repeat -87px -40px; }
+.CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-state-active a.content-listview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active a.content-listview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active a.content-listview { background: url(../images/content-header-tabs-sprite.png) no-repeat -38px -40px; }
 
 /** ------------------------------------------------------- Loading Interface ------------------------------------------------------- */
 .cms-content-loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 9998; }
@@ -282,7 +295,7 @@ body.cms { overflow: hidden; }
 .message.notice { background-color: #ffbe66; border-color: #ff9300; }
 .message.notice a { color: #999; }
 .message.warning { background-color: #ffbe66; border-color: #ff9300; }
-.message.error { background-color: #ffbe66; border-color: #ff9300; }
+.message.error, .message.bad, .message.required { background-color: #ffbe66; border-color: #ff9300; }
 .message.good { background-color: #99cc66; border-color: #669933; }
 .message p { margin: 0; }
 
@@ -347,7 +360,6 @@ body.cms { overflow: hidden; }
 .cms-content-batchactions { float: left; position: relative; display: block; margin-left: 8px; }
 .cms-content-batchactions form > * { display: block; float: left; }
 .cms-content-batchactions form.cms-batch-actions { float: left; }
-.cms-content-batchactions .Actions { display: none; }
 
 #Form_BatchActionsForm select { width: 200px; }
 
@@ -388,6 +400,12 @@ form.member-profile-form .ui-corner-all, form.member-profile-form .ui-corner-top
 
 .cms .cms-content { border-right: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -webkit-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -o-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -moz-border-radius: 0; -webkit-border-radius: 0; -o-border-radius: 0; -ms-border-radius: 0; -khtml-border-radius: 0; border-radius: 0; }
 .cms .cms-content-fields { /* always show a y scroll bar as popups like TreeDropdowns  can trigger longer pages and the extra scroll bar doesn't  fire our sizing bar */ overflow-y: auto; overflow-x: auto; background: none; width: 100%; }
+.cms .cms-content-fields .aligned_right_label { margin-left: 184px; padding: 8px 0; }
+
+/** -------------------------------------------- "Settings" Form -------------------------------------------- */
+#CanViewType .optionset li, #CanEditType .optionset li, #CanCreateTopLevelType .optionset li { float: none; width: auto; }
+
+#ViewerGroups select, #EditorGroups select, #CreateTopLevelGroups select { width: 512px; }
 
 /** -------------------------------------------- Panels -------------------------------------------- */
 .cms-panel { overflow: hidden; }
@@ -409,7 +427,7 @@ form.member-profile-form .ui-corner-all, form.member-profile-form .ui-corner-top
 .cms-panel .collapsed-flyout { display: block !important; left: 41px; margin-top: -40px; position: fixed; width: 191px; }
 .cms-panel .collapsed-flyout li a span { display: block !important; }
 
-.cms-panel-padded { width: 176px; padding: 16px 16px; overflow-x: hidden; overflow-y: auto; }
+.cms .cms-panel-padded { width: 176px; padding: 16px 16px; overflow-x: hidden; overflow-y: auto; }
 
 /** ------------------------------------------------------------------
 * Dialog
@@ -472,6 +490,12 @@ form.small .cms-file-info-data { max-width: 350px; }
 form.small .cms-file-info-data .field { padding-bottom: 0; }
 form.small .cms-file-info-data .field label { width: 112px; }
 form.small .cms-file-info-data .field .middleColumn { margin-left: 120px; }
+
+/** -------------------------------------------- Users Members Admin -------------------------------------------- */
+.members_grid span button#action_gridfield_relationfind { display: none; }
+.members_grid p button#action_export { margin-top: 16px; }
+.members_grid p button#action_export span.btn-icon-download-csv { height: 17px; }
+.members_grid p button#action_export span.ui-button-text { padding-left: 27px; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .cms .jstree ul, .TreeDropdownField .treedropdownfield-panel .jstree ul { display: block; margin: 0; padding: 0; background: none; list-style-type: none; }
@@ -536,6 +560,8 @@ form.small .cms-file-info-data .field .middleColumn { margin-left: 120px; }
 .cms .jstree-apple.jstree-focused, .TreeDropdownField .treedropdownfield-panel .jstree-apple.jstree-focused { background: none; }
 .cms .jstree-apple.jstree-focused .jstree-apple > ul, .TreeDropdownField .treedropdownfield-panel .jstree-apple.jstree-focused .jstree-apple > ul { background: none; }
 .cms .jstree li, .TreeDropdownField .treedropdownfield-panel .jstree li { line-height: 25px; }
+.cms a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel a > .jstree-icon { display: none; }
+.cms .draggable a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .draggable a > .jstree-icon { display: block; }
 
 .jstree-apple li, .jstree-apple .jstree-apple ins { background: none; }
 .jstree-apple .jstree-unchecked > a > .jstree-checkbox { margin-right: 3px; }
@@ -558,11 +584,9 @@ form.small .cms-file-info-data .field .middleColumn { margin-left: 120px; }
 .tree-holder.jstree-apple .jstree-hovered, .cms-tree.jstree-apple .jstree-hovered { text-shadow: none; text-decoration: none; }
 .tree-holder.jstree-apple li, .cms-tree.jstree-apple li { padding: 0px; clear: left; }
 .tree-holder.jstree-apple ins, .cms-tree.jstree-apple ins { background-color: transparent; background-image: url(../images/sitetree_ss_default_icons.png); }
-.tree-holder.jstree-apple li.jstree-checked a, .tree-holder.jstree-apple li.jstree-checked a:link, .cms-tree.jstree-apple li.jstree-checked a, .cms-tree.jstree-apple li.jstree-checked a:link { background-color: #efe999; }
+.tree-holder.jstree-apple li.jstree-checked > a, .tree-holder.jstree-apple li.jstree-checked > a:link, .cms-tree.jstree-apple li.jstree-checked > a, .cms-tree.jstree-apple li.jstree-checked > a:link { background-color: #efe999; }
 .tree-holder.jstree-apple .jstree-closed > ins, .cms-tree.jstree-apple .jstree-closed > ins { background-position: 0 0; }
 .tree-holder.jstree-apple .jstree-open > ins, .cms-tree.jstree-apple .jstree-open > ins { background-position: -20px 0; }
-
-.jstree-apple #record-0.jstree-open > ins { display: none; }
 
 a .jstree-pageicon { display: block; float: left; width: 16px; height: 16px; margin-right: 4px; background-color: transparent; background-image: url(../images/sitetree_ss_pageclass_icons_default.png); background-repeat: no-repeat; }
 
@@ -575,6 +599,8 @@ li.class-VirtualPage > a .jstree-pageicon { background-position: 0 -32px; }
 li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 
 .cms-tree { visibility: hidden; }
+.cms-tree.multiple li > a > .jstree-icon { display: none; }
+.cms-tree.multiple li#record-0 > a .jstree-checkbox { display: none; }
 
 /** Styles for the left hand side menu and header for the admin panels.  Take into consideration CSS selector performance.   @package sapphire @subpackage admin */
 .cms-logo-header { background-color: #00111d; position: relative; padding: 16px 8px 0 4px; line-height: 24px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #00111d), color-stop(50%, #003050), color-stop(100%, #00111d)); background-image: -webkit-linear-gradient(#00111d, #003050, #00111d); background-image: -moz-linear-gradient(#00111d, #003050, #00111d); background-image: -o-linear-gradient(#00111d, #003050, #00111d); background-image: -ms-linear-gradient(#00111d, #003050, #00111d); background-image: linear-gradient(#00111d, #003050, #00111d); }

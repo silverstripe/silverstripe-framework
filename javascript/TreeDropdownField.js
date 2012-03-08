@@ -306,7 +306,7 @@
 		$('.TreeDropdownField.multiple').entwine({
 			getTreeConfig: function() {
 				var cfg = this._super();
-				cfg.checkbox = {override_ui: true};
+				cfg.checkbox = {override_ui: true, two_state: true};
 				cfg.plugins.push('checkbox');
 				cfg.ui.select_limit = -1;
 				return cfg;

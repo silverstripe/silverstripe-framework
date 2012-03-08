@@ -158,17 +158,23 @@
 						if(loadResponse !== false) {
 						  self.submitForm_responseHandler(form, xmlhttp.responseText, status, xmlhttp, formData);
 						}
+
+						// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it
+						if(window.History.enabled) {
+							var url = xmlhttp.getResponseHeader('X-ControllerURL');
+							if(url) window.history.replaceState({}, '', url);
+						}
 						
 						// Re-init tabs (in case the form tag itself is a tabset)
 						if(self.hasClass('ss-tabset')) self.removeClass('ss-tabset').addClass('ss-tabset');
 
-						// Redraw the layout
-						jQuery('.cms-container').entwine('ss').redraw();
-						
 						// re-select previously saved tabs
 						$.each(selectedTabs, function(i, selectedTab) {
 							form.find('#' + selectedTab.id).tabs('select', selectedTab.selected);
 						});
+
+						// Redraw the layout
+						$('.cms-container').redraw();
 					}, 
 					dataType: 'html'
 				}, ajaxOptions));
@@ -293,23 +299,6 @@
 		},
 		onunmatch: function() {
 			this.find('.cms-content-loading-overlay,.cms-content-loading-spinner').remove();
-		}
-	});
-
-	/**
-	 * Loads the link's 'href' attribute into a panel via ajax,
-	 * as opposed to triggering a full page reload.
-	 * Little helper to avoid repetition, and make it easy to
-	 * "opt in" to panel loading, while by default links still exhibit their default behaviour.
-	 * Same goes for breadcrumbs in the CMS.
-	 */
-	$('.cms-content .cms-panel-link, .cms-content a.crumb').entwine({
-		onclick: function(e) {
-			var href = this.attr('href'), url = href ? href : this.data('href'),
-				data = (this.data('targetPanel')) ? {selector: this.data('targetPanel')} : null;
-			
-			$('.cms-container').entwine('ss').loadPanel(url, null, data);
-			e.preventDefault();
 		}
 	});
 

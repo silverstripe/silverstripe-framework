@@ -28,3 +28,53 @@
 .ui-widget-header .ui-state-default {
 	background-image:none;
 }
+
+//fix for filter and reset icons on datagrid
+
+.ss-gridfield-button-filter.ss-ui-button{
+	background: #e6e6e6 url(../images/filter-icons.png) no-repeat -40px 6px; filter:none;
+	&.hover-alike:active {
+		background: darken(#338DC1, 5%) url(../images/filter-icons.png) no-repeat -15px 7px; filter:none;
+	}
+	&.hover-alike {
+		background: #338DC1 url(../images/filter-icons.png) no-repeat -16px 6px; filter:none;
+	}
+}
+.ss-gridfield-button-reset.ss-ui-button{
+	background: #e6e6e6 url(../images/filter-icons.png) no-repeat 8px 5px; filter:none;
+	&.filtered:hover {
+		background: #FF0000 url(../images/filter-icons.png) no-repeat 8px -17px; filter:none;
+	}
+	&.filtered:active {
+		background: darken(#FF0000, 5%) url(../images/filter-icons.png) no-repeat 9px -16px; filter:none;
+	}
+}
+
+//fix for borders on gridfield table
+
+.cms table.ss-gridfield-table {
+	tr {
+		td {
+			border-right: 1px solid lighten(#808080, 10%);
+		}
+		th {
+			border-right: 1px solid lighten(#808080, 10%);
+			&.main {
+				border-top: 1px solid lighten(#808080, 10%);
+				border-bottom: none;
+			}
+			&.extra {
+				border-top: 1px solid lighten(#808080, 10%);
+			}
+		}
+	}
+	td:first-child, th:first-child {
+		border-left: 1px solid lighten(#808080, 10%);
+	}
+}
+
+//fix for wrong alignment of label on parent groups field in users groups
+
+.cms .cms-content .cms-content-fields .aligned_right_label {
+			margin-left:0;
+}

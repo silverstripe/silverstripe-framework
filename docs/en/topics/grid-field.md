@@ -2,7 +2,7 @@
 
 The `GridField` is a flexible form field for creating tables of data.  It's new in SilverStripe 3.0 and replaces `ComplexTableField`, `TableListField`, and `TableField`.  It's built as a lean core with a number of components that you plug into it.  By selecting from the components that we provide or writing your own, you can grid a wide variety of grid controls.
 
-# Using GridField
+## Using GridField
 
 A GridField is created like any other field: you create an instance of the GridField object and add it to the fields of a form. At its simplest, GridField takes 3 arguments: field name, field title, and an `SS_List` of records to display.
 
@@ -19,11 +19,11 @@ This example might come from a Controller designed to manage the members of a gr
 
 Note that the only way to specify the data that is listed in a grid field is with `SS_List` argument.  If you want to customise the data displayed, you can do so by customising this object.
 
-This will create a read-only grid field that will show the columns specified in the Member's `$summary_fields` setting, and will let you sort and/or filter by those columns, as well as show pagination controls with 25 records per page.
+This will create a read-only grid field that will show the columns specified in the Member's `$summary_fields` setting, and will let you sort and/or filter by those columns, as well as show pagination controls with a handful of records per page.
 
-## GridFieldConfig
+## GridFieldConfig: Portable configuration
 
-This grid create above a useful default case, but when developing applications you may need to control the behaviour of your grid more precisely than this.  To this end, the `GridField` constructor allows for 4th argument, `$config`, where you can pass a `GridFieldConfig` object.
+The example above a useful default case, but when developing applications you may need to control the behaviour of your grid more precisely than this.  To this end, the `GridField` constructor allows for fourth argument, `$config`, where you can pass a `GridFieldConfig` object.
 
 This example creates exactly the same kind of grid as the previous example, but it creates the configuration manually:
 
@@ -49,10 +49,12 @@ If we wanted to make a simpler grid without pagination or filtering, we could do
 	$config->addComponent(new GridFieldPaginator(25));
 	$field = new GridField("Members", "Members of this group", $this->group->Members(), $config);
 
-A `GridFieldConfig` is made up of a new of `GridFieldComponent` objects.  `GridFieldComponent` is a family of interfaces.
+A `GridFieldConfig` is made up of a new of `GridFieldComponent` objects, which are described in the next chapter.
 
-## Built-in components
 
+## GridFieldComponent: Modular features
+
+`GridFieldComponent` is a family of interfaces.
 SilverStripe Framework comes with the following components that you can use out of the box.
 
 ### GridFieldDefaultColumns
@@ -91,7 +93,7 @@ You can also specify formatting replacements, to replace column contents with HT
 		'Email' => '<strong>$Email</strong>',
 	));
 	
-**EXPERIMENTAL API WARNING:** We will most likely refactor this so that this configuration methods are called on the component rather than the grid field.  Whoever does this should also update this documentation page. :-)
+**EXPERIMENTAL API WARNING:** We will most likely refactor this so that this configuration methods are called on the component rather than the grid field. 
 
 ### GridFieldSortableHeader
 
@@ -105,7 +107,40 @@ This component will add a header row with a text field filter for each column, l
 
 This component will limit output to a fixed number of items per page add a footer row with pagination controls. The constructor takes 1 argument: the number of items per page.
 
-# Extending GridField with custom components
+### GridFieldAction
+
+TODO Describe component, including GridFieldEditAction/GridFieldDeleteAction
+
+### GridFieldRelationAdd
+
+This class is is responsible for adding objects to another object's has_many and many_many relation,
+as defined by the `[api:RelationList]` passed to the GridField constructor.
+Objects can be searched through an input field (partially matching one or more fields).
+Selecting from the results will add the object to the relation.
+Often used alongside `[api:GridFieldRelationDelete]` for detaching existing records from a relatinship.
+For easier setup, have a look at a sample configuration in `[api:GridFieldConfig_RelationEditor]`.
+
+### GridFieldRelationDelete
+
+Allows to detach an item from an existing has_many or many_many relationship.
+Similar to {@link GridFieldDeleteAction}, but allows to distinguish between 
+a "delete" and "detach" action in the UI - and to use both in parallel, if required.
+Requires the GridField to be populated with a `[api:RelationList]` rather than a plain DataList.
+Often used alongside `[api:GridFieldRelationAdd]` to add existing records to the relationship.
+
+### GridFieldPopupForms
+
+TODO Describe component, including how it relates to GridFieldEditAction. Point to GridFieldConfig_RelationEditor for easier defaults.
+
+### GridFieldTitle
+
+TODO
+
+### GridFieldExporter
+
+TODO
+
+## Extending GridField with custom components
 
 You can create a custom component by building a class that implements one or more of the following interfaces: `GridField_HTMLProvider`, `GridField_ColumnProvider`, `GridField_ActionProvider`, or `GridField_DataManipulator`.
 
@@ -196,7 +231,7 @@ To provide your actions, define the following two functions:
  * **`function getActions($gridField)`:** Return a list of actions that this component provides.  There is no namespacing on these actions, so you need to ensure that they don't conflict with other components.
  * **`function handleAction(GridField $gridField, $actionName, $arguments, $data)`:** Handle the action defined by `$actionName` and `$arguments`.  `$data` will contain the full data from the form, if you need to access that.
 
-To call your actions, you need to create `GridField_Action` elsewhere in your component.  Read more about them below.
+To call your actions, you need to create `GridField_FormAction` elsewhere in your component.  Read more about them below.
 
 **EXPERIMENTAL API WARNING:** handleAction implementations often contain a big switch statement and this interface might be amended on, such that each action is defined in a separate method.  If we do this, it will be done before 3.0 stable so that we can lock down the API, but early adopters should be aware of this potential for change!
 

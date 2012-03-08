@@ -1,7 +1,17 @@
 <?php
 /**
- * Description of GridFieldConfig
- *
+ * Encapsulates a collection of components following the {@link GridFieldComponent} interface.
+ * While the {@link GridField} itself has some configuration in the form of setters,
+ * most of the details are dealt with through components.
+ * 
+ * For example, you would add a {@link GridFieldPaginator} component to enable
+ * pagination on the listed records, and configure it through {@link GridFieldPaginator->setItemsPerPage()}.
+ * 
+ * In order to reduce the amount of custom code required, the framework provides
+ * some default configurations for common use cases:
+ * - {@link GridFieldConfig_Base} (added by default to GridField)
+ * - {@link GridFieldConfig_RecordEditor}
+ * - {@link GridFieldConfig_RelationEditor}
  */
 class GridFieldConfig {
 	
@@ -44,6 +54,27 @@ class GridFieldConfig {
 	}
 	
 	/**
+	 * @param GridFieldComponent $component 
+	 * @return GridFieldConfig $this
+	 */
+	public function removeComponent(GridFieldComponent $component) {
+		$this->getComponents()->remove($component);
+		return $this;	
+	}
+	
+	/**
+	 * @param String Class name or interface
+	 * @return GridFieldConfig $this
+	 */
+	public function removeComponentsByType($type) {
+		$components = $this->getComponentsByType($type);
+		foreach($components as $component) {
+			$this->removeComponent($component);
+		}
+		return $this;
+	}
+	
+	/**
 	 * @return ArrayList Of GridFieldComponent
 	 */
 	public function getComponents() {
@@ -80,6 +111,10 @@ class GridFieldConfig {
 	}
 }
 
+/**
+ * A simple readonly, paginated view of records,
+ * with sortable and searchable headers.
+ */
 class GridFieldConfig_Base extends GridFieldConfig {
 
 	/**
@@ -87,7 +122,7 @@ class GridFieldConfig_Base extends GridFieldConfig {
 	 * @param int $itemsPerPage - How many items per page should show up per page
 	 * @return GridFieldConfig_Base
 	 */
-	public static function create($itemsPerPage=15){
+	public static function create($itemsPerPage=null){
 		return new GridFieldConfig_Base($itemsPerPage);
 	}
 
@@ -95,7 +130,7 @@ class GridFieldConfig_Base extends GridFieldConfig {
 	 *
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
-	public function __construct($itemsPerPage=15) {
+	public function __construct($itemsPerPage=null) {
 		$this->addComponent(new GridFieldTitle());
 		$this->addComponent(new GridFieldSortableHeader());
 		$this->addComponent(new GridFieldFilter());
@@ -105,40 +140,72 @@ class GridFieldConfig_Base extends GridFieldConfig {
 }
 
 /**
- * This GridFieldConfig bundles a common set of componentes  used for displaying
- * a gridfield with:
- * 
- * - Relation adding
- * - Sortable header
- * - Default columns
- * - Edit links on every item
- * - Action for removing relationship
- * - Paginator
  * 
  */
-class GridFieldConfig_ManyManyEditor extends GridFieldConfig {
+class GridFieldConfig_RecordEditor extends GridFieldConfig {
 
 	/**
 	 *
-	 * @param string $fieldToSearch - Which field on the object should be searched for
 	 * @param int $itemsPerPage - How many items per page should show up
-	 * @return GridFieldConfig_ManyManyEditor
+	 * @return GridFieldConfig_RecordEditor
 	 */
-	public static function create($fieldToSearch, $itemsPerPage=15){
-		return new GridFieldConfig_ManyManyEditor($fieldToSearch, $itemsPerPage=15);
+	public static function create($itemsPerPage=null){
+		return new GridFieldConfig_RecordEditor($itemsPerPage);
 	}
 
 	/**
 	 *
-	 * @param string $fieldToSearch - Which field on the object should be searched for
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
-	public function __construct($fieldToSearch, $itemsPerPage=15) {
-		$this->addComponent(new GridFieldRelationAdd($fieldToSearch));
+	public function __construct($itemsPerPage=null) {
+		$this->addComponent(new GridFieldTitle());
 		$this->addComponent(new GridFieldSortableHeader());
 		$this->addComponent(new GridFieldFilter());
 		$this->addComponent(new GridFieldDefaultColumns());
-		$this->addComponent(new GridFieldAction_Edit());
+		$this->addComponent(new GridFieldEditAction());
+		$this->addComponent(new GridFieldDeleteAction());
+		$this->addComponent(new GridFieldPaginator($itemsPerPage));
+		$this->addComponent(new GridFieldPopupForms());
+	}
+}
+
+
+/**
+ * Similar to {@link GridFieldConfig_RecordEditor}, but adds features
+ * to work on has-many or many-many relationships. 
+ * Allows to search for existing records to add to the relationship,
+ * detach listed records from the relationship (rather than removing them from the database),
+ * and automatically add newly created records to it.
+ * 
+ * To further configure the field, use {@link getComponentByType()},
+ * for example to change the field to search.
+ * <code>
+ * GridFieldConfig_RelationEditor::create()
+ * 	->getComponentByType('GridFieldRelationAdd')->setSearchFields('MyField');
+ * </code>
+ */
+class GridFieldConfig_RelationEditor extends GridFieldConfig {
+
+	/**
+	 *
+	 * @param int $itemsPerPage - How many items per page should show up
+	 * @return GridFieldConfig_RelationEditor
+	 */
+	public static function create($itemsPerPage=null){
+		return new GridFieldConfig_RelationEditor($itemsPerPage);
+	}
+
+	/**
+	 *
+	 * @param int $itemsPerPage - How many items per page should show up
+	 */
+	public function __construct($itemsPerPage=null) {
+		$this->addComponent(new GridFieldTitle());
+		$this->addComponent(new GridFieldRelationAdd());
+		$this->addComponent(new GridFieldSortableHeader());
+		$this->addComponent(new GridFieldFilter());
+		$this->addComponent(new GridFieldDefaultColumns());
+		$this->addComponent(new GridFieldEditAction());
 		$this->addComponent(new GridFieldRelationDelete());
 		$this->addComponent(new GridFieldPaginator($itemsPerPage));
 		$this->addComponent(new GridFieldPopupForms());

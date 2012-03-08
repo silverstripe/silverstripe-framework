@@ -1,9 +1,11 @@
 <?php
 /**
  * Allows to detach an item from an existing has_many or many_many relationship.
- * Similar to {@link GridFieldAction_Delete}, but allows to distinguish between 
+ * Similar to {@link GridFieldDeleteAction}, but allows to distinguish between 
  * a "delete" and "detach" action in the UI - and to use both in parallel, if required.
- * Requires the GridField to be populated with a RelationList rather than a plain DataList.
+ * Requires the GridField to be populated with a {@link RelationList} rather than a plain {@link DataList}.
+ * Often used alongside {@link GridFieldRelationAdd} to add existing records to the relationship.
+ * For easier setup, have a look at a sample configuration in {@link GridFieldConfig_RelationEditor}.
  */
 class GridFieldRelationDelete implements GridField_ColumnProvider, GridField_ActionProvider {
 	
@@ -14,7 +16,8 @@ class GridFieldRelationDelete implements GridField_ColumnProvider, GridField_Act
 	 * @param array $columns 
 	 */
 	public function augmentColumns($gridField, &$columns) {
-		$columns[] = 'UnlinkRelation';
+		if(!in_array('Actions', $columns))
+			$columns[] = 'Actions';
 	}
 	
 	/**
@@ -37,7 +40,7 @@ class GridFieldRelationDelete implements GridField_ColumnProvider, GridField_Act
 	 * @return array
 	 */
 	public function getColumnMetadata($gridField, $columnName) {
-		if($columnName == 'UnlinkRelation') {
+		if($columnName == 'Actions') {
 			return array('title' => '');
 		}
 	}
@@ -49,7 +52,7 @@ class GridFieldRelationDelete implements GridField_ColumnProvider, GridField_Act
 	 * @return type 
 	 */
 	public function getColumnsHandled($gridField) {
-		return array('UnlinkRelation');
+		return array('Actions');
 	}
 	
 	/**
@@ -70,15 +73,17 @@ class GridFieldRelationDelete implements GridField_ColumnProvider, GridField_Act
 	 * @return string - the HTML for the column 
 	 */
 	public function getColumnContent($gridField, $record, $columnName) {
-		$field = new GridField_Action(
+		$field = Object::create('GridField_FormAction',
 			$gridField, 
 			'UnlinkRelation'.$record->ID, 
-			_t('GridAction.UnlinkRelation', "Unlink"), 
+			false, 
 			"unlinkrelation", 
 			array('RecordID' => $record->ID)
-		);
-		$output = $field->Field();
-		return $output;
+		)
+			->setAttribute('title', _t('GridAction.UnlinkRelation', "Unlink"))
+			->setAttribute('data-icon', 'chain--minus')
+			->addExtraClass('gridfield-button-unlink');
+		return $field->Field();
 	}
 	
 	/**

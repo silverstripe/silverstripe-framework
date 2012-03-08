@@ -1,5 +1,5 @@
 <?php
-class GridFieldtest extends SapphireTest {
+class GridFieldTest extends SapphireTest {
 
 	/**
 	 * @covers GridField::__construct

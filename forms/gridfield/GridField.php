@@ -290,6 +290,17 @@ class GridField extends FormField {
 	 * @return string
 	 */
 	public function FieldHolder() {
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/GridField.css');
+
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/json-js/json2.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/i18n.js');
+		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(SAPPHIRE_DIR . '/javascript/GridField.js');
+
 		// Get columns
 		$columns = $this->getColumns();
 
@@ -319,32 +330,39 @@ class GridField extends FormField {
 			}
 		}
 
+
 		$total = $list->count();
-
-		foreach($list as $idx => $record) {
-			$rowContent = '';
-			foreach($columns as $column) {
-				$colContent = $this->getColumnContent($record, $column);
-				// A return value of null means this columns should be skipped altogether.
-				if($colContent === null) continue;
-				$colAttributes = $this->getColumnAttributes($record, $column);
-				$rowContent .= $this->createTag('td', $colAttributes, $colContent);
+		if($total > 0) {
+			foreach($list as $idx => $record) {
+				$rowContent = '';
+				foreach($columns as $column) {
+					$colContent = $this->getColumnContent($record, $column);
+					// A return value of null means this columns should be skipped altogether.
+					if($colContent === null) continue;
+					$colAttributes = $this->getColumnAttributes($record, $column);
+					$rowContent .= $this->createTag('td', $colAttributes, $colContent);
+				}
+				$classes = array('ss-gridfield-item');
+				if ($idx == 0) $classes[] = 'first';
+				if ($idx == $total-1) $classes[] = 'last';
+				$classes[] = ($idx % 2) ? 'even' : 'odd';
+				$row = $this->createTag(
+					'tr',
+					array(
+						"class" => implode(' ', $classes),
+						'data-id' => $record->ID,
+						// TODO Allow per-row customization similar to GridFieldDefaultColumns
+						'data-class' => $record->ClassName,
+					),
+					$rowContent
+				);
+				$content['body'][] = $row;
 			}
-
-			$classes = array('ss-gridfield-item');
-			if ($idx == 0) $classes[] = 'first';
-			if ($idx == $total-1) $classes[] = 'last';
-			$classes[] = ($idx % 2) ? 'even' : 'odd';
-
+		} else {    //display a message when the grid field is empty
 			$row = $this->createTag(
-				'tr', 
-				array(
-					"class" => implode(' ', $classes),
-					'data-id' => $record->ID,
-					// TODO Allow per-row customization similar to GridFieldDefaultColumns
-					'data-class' => $record->ClassName,
-				),
-				$rowContent
+				'tr',
+				array("class" => 'ss-gridfield-item ss-gridfield-no-items'),
+				$this->createTag('td', array('colspan' => count($columns)), _t('GridField.NoItemsFound', 'No items found'))
 			);
 			$content['body'][] = $row;
 		}
@@ -651,25 +669,20 @@ class GridField extends FormField {
 
 
 /**
- * This class is the base class when you want to have an action that alters the state of the gridfield
+ * This class is the base class when you want to have an action that alters the state of the gridfield,
+ * rendered as a button element. 
  * 
  * @package sapphire
  * @subpackage forms
  * 
  */
-class GridField_Action extends FormAction {
+class GridField_FormAction extends FormAction {
 
 	/**
 	 *
 	 * @var GridField
 	 */
 	protected $gridField;
-	
-	/**
-	 *
-	 * @var string
-	 */
-	protected $buttonLabel;
 	
 	/**
 	 *
@@ -684,7 +697,10 @@ class GridField_Action extends FormAction {
 	//protected $stateFields = array();
 	
 	protected $actionName;
+
 	protected $args = array();
+
+	public $useButtonTag = true;
 
 	/**
 	 *
@@ -694,12 +710,11 @@ class GridField_Action extends FormAction {
 	 * @param type $actionName
 	 * @param type $args 
 	 */
-	public function __construct(GridField $gridField, $name, $label, $actionName, $args) {
+	public function __construct(GridField $gridField, $name, $title, $actionName, $args) {
 		$this->gridField = $gridField;
-		$this->buttonLabel = $label;
 		$this->actionName = $actionName;
 		$this->args = $args;
-		parent::__construct($name);
+		parent::__construct($name, $title);
 	}
 
 	/**
@@ -720,45 +735,26 @@ class GridField_Action extends FormAction {
 		return '%'.dechex(ord($match[0]));
 	}
 
-	/**
-	 * Default method used by Templates to render the form
-	 *
-	 * @return string HTML tag
-	 */
-	public function Field() {
-		Requirements::css(SAPPHIRE_DIR . '/css/GridField.css');
-
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/json-js/json2.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/i18n.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/GridField.js');
-
+	public function getAttributes() {
 		// Store state in session, and pass ID to client side
 		$state = array(
 			'grid' => $this->getNameFromParent(),
 			'actionName' => $this->actionName,
 			'args' => $this->args,
 		);
-		
 		$id = preg_replace('/[^\w]+/', '_', uniqid('', true));
 		Session::set($id, $state);
-		
 		$actionData['StateID'] = $id;
 		
-		// And generate field
-		$data = new ArrayData(array(
-			'Class' => ($this->extraClass() ? $this->extraClass() : '') . ($this->isReadonly() ? ' disabled' : ''),
-			'ID' => $this->id(),
-			// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch 
-			// will strip it from the requests 
-			'Name' => 'action_gridFieldAlterAction'. '?' . http_build_query($actionData),
-			'Disabled' => $this->isReadonly(),
-			'Label' => $this->buttonLabel,
-			'DataURL' => $this->gridField->Link(),
-		));
-
-		return $data->renderWith('GridField_Action');
+		return array_merge(
+			parent::getAttributes(),
+			array(
+				// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch 
+				// will strip it from the requests 
+				'name' => 'action_gridFieldAlterAction'. '?' . http_build_query($actionData),
+				'data-url' => $this->gridField->Link(),
+			)
+		);
 	}
 
 	/**

@@ -12,6 +12,9 @@
 			
 			onmatch: function() {
 				this._super();
+
+				// Don't reapply (expensive) tree behaviour if already present
+				if(!$.isNaN(this.data('jstree_instance_id'))) return;
 				
 				var hints = this.attr('data-hints');
 				if(hints) this.setHints($.parseJSON(hints));
@@ -89,6 +92,9 @@
 							'dnd': {
 								"drop_target" : false,
 								"drag_target" : false
+							},
+							'checkbox': {
+								'two_state': true
 							},
 							'themes': {
 								'theme': 'apple',
@@ -183,7 +189,7 @@
 			 *  DOMElement
 			 */
 			getNodeByID: function(id) {
-				return this.jstree('get_node', this.find('*[data-id='+id+']'));
+				return this.find('*[data-id='+id+']');
 			},
 			
 			/**
@@ -201,7 +207,7 @@
 		 			return false;
 		 		};
 
-				var handledform = $(e.target).children('.cms-edit-form:first')[0];
+				var handledform = $(e.target).is('.cms-edit-form') ? $(e.target)[0] : $(e.target).find('.cms-edit-form')[0];
 		 		var id = $(handledform.ID).val();
 
 		 		// check if a form with a valid ID exists
@@ -254,75 +260,77 @@
 		 			}
 		 		}
 
+		 	},
+		 	onunmatch: function() {
+
 		 	}
 		});
-	});
-	
-	$('.cms-tree.multiple').entwine({
-		onmatch: function() {
-			this._super();
+		
+		$('.cms-tree.multiple').entwine({
+			onmatch: function() {
+				this._super();
+				this.jstree('show_checkboxes');
+			},
+			onunmatch: function() {
+				this._super();
+				this.jstree('uncheck_all');
+				this.jstree('hide_checkboxes');
+			},
+			/**
+			 * Function: getSelectedIDs
+			 * 
+			 * Returns:
+			 * 	(Array)
+			 */
+			getSelectedIDs: function() {
+				return $.map($(this).jstree('get_checked'), function(el, i) {return $(el).data('id');});
+			}
+		});
+		
+		$('.cms-tree li').entwine({
 			
-			this.jstree('show_checkboxes');
-		},
-		onunmatch: function() {
-			this._super();
+			/**
+			 * Function: setEnabled
+			 * 
+			 * Parameters:
+			 * 	(bool)
+			 */
+			setEnabled: function(bool) {
+				this.toggleClass('disabled', !(bool));
+			},
 			
-			this.jstree('uncheck_all');
-			this.jstree('hide_checkboxes');
-		},
-		/**
-		 * Function: getSelectedIDs
-		 * 
-		 * Returns:
-		 * 	(Array)
-		 */
-		getSelectedIDs: function() {
-			return $.map($(this).jstree('get_checked'), function(el, i) {return $(el).data('id');});
-		}
-	});
-	
-	$('.cms-tree li').entwine({
+			/**
+			 * Function: getClassname
+			 * 
+			 * Returns PHP class for this element. Useful to check business rules like valid drag'n'drop targets.
+			 */
+			getClassname: function() {
+				var matches = this.attr('class').match(/class-([^\s]*)/i);
+				return matches ? matches[1] : '';
+			},
+			
+			/**
+			 * Function: getID
+			 * 
+			 * Returns:
+			 * 	(Number)
+			 */
+			getID: function() {
+				return this.data('id');
+			}
+		});
 		
-		/**
-		 * Function: setEnabled
-		 * 
-		 * Parameters:
-		 * 	(bool)
-		 */
-		setEnabled: function(bool) {
-			this.toggleClass('disabled', !(bool));
-		},
-		
-		/**
-		 * Function: getClassname
-		 * 
-		 * Returns PHP class for this element. Useful to check business rules like valid drag'n'drop targets.
-		 */
-		getClassname: function() {
-			var matches = this.attr('class').match(/class-([^\s]*)/i);
-			return matches ? matches[1] : '';
-		},
-		
-		/**
-		 * Function: getID
-		 * 
-		 * Returns:
-		 * 	(Number)
-		 */
-		getID: function() {
-			return this.data('id');
-		}
+		$('.cms-tree-view-modes input.view-mode').entwine({
+			onmatch: function() {
+				// set active by default
+				this.trigger('click');
+				this._super();
+			},
+			onclick: function(e) {
+				$('.cms-tree')
+					.toggleClass('draggable', $(e.target).val() == 'draggable')
+					.toggleClass('multiple', $(e.target).val() == 'multiselect');
+			}
+		});
 	});
-	
-	$('.cms-tree-view-modes input.view-mode').entwine({
-		onmatch: function() {
-			// set active by default
-			this.trigger('click');
-			this._super();
-		},
-		onclick: function(e) {
-			$('.cms-tree').toggleClass('draggable', $(e.target).val() == 'draggable');
-		}
-	});
-
 }(jQuery));

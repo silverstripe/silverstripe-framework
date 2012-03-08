@@ -5,8 +5,50 @@
  */
 
 class ListboxFieldTest extends SapphireTest {
+
+	static $fixture_file = 'ListboxFieldTest.yml';
 	
-	protected $extraDataObjects = array('ListboxFieldTest_DataObject');
+	protected $extraDataObjects = array('ListboxFieldTest_DataObject', 'ListboxFieldTest_Article', 'ListboxFieldTest_Tag');
+
+	function testFieldWithManyManyRelationship() {
+		$articleWithTags = $this->objFromFixture('ListboxFieldTest_Article', 'articlewithtags');
+		$tag1 = $this->objFromFixture('ListboxFieldTest_Tag', 'tag1');
+		$tag2 = $this->objFromFixture('ListboxFieldTest_Tag', 'tag2');
+		$tag3 = $this->objFromFixture('ListboxFieldTest_Tag', 'tag3');
+		$field = new ListboxField("Tags", "Test field", DataObject::get("ListboxFieldTest_Tag")->map()->toArray());
+		$field->setMultiple(true);
+		$field->setValue(null, $articleWithTags);
+
+		$p = new CSSContentParser($field->Field());
+		$tag1xml = $p->getByXpath('//option[@value=' . $tag1->ID . ']');
+		$tag2xml = $p->getByXpath('//option[@value=' . $tag2->ID . ']');
+		$tag3xml = $p->getByXpath('//option[@value=' . $tag3->ID . ']');
+		$this->assertEquals('selected', (string)$tag1xml[0]['selected']);
+		$this->assertEquals('selected', (string)$tag2xml[0]['selected']);
+		$this->assertNull($tag3xml[0]['selected']);
+	}
+
+	function testFieldWithDisabledItems() {
+		$articleWithTags = $this->objFromFixture('ListboxFieldTest_Article', 'articlewithtags');
+		$tag1 = $this->objFromFixture('ListboxFieldTest_Tag', 'tag1');
+		$tag2 = $this->objFromFixture('ListboxFieldTest_Tag', 'tag2');
+		$tag3 = $this->objFromFixture('ListboxFieldTest_Tag', 'tag3');
+		$field = new ListboxField("Tags", "Test field", DataObject::get("ListboxFieldTest_Tag")->map()->toArray());
+		$field->setMultiple(true);
+		$field->setValue(null, $articleWithTags);
+		$field->setDisabledItems(array($tag1->ID, $tag3->ID));
+
+		$p = new CSSContentParser($field->Field());
+		$tag1xml = $p->getByXpath('//option[@value=' . $tag1->ID . ']');
+		$tag2xml = $p->getByXpath('//option[@value=' . $tag2->ID . ']');
+		$tag3xml = $p->getByXpath('//option[@value=' . $tag3->ID . ']');
+		$this->assertEquals('selected', (string)$tag1xml[0]['selected']);
+		$this->assertEquals('disabled', (string)$tag1xml[0]['disabled']);
+		$this->assertEquals('selected', (string)$tag2xml[0]['selected']);
+		$this->assertNull($tag2xml[0]['disabled']);
+		$this->assertNull($tag3xml[0]['selected']);
+		$this->assertEquals('disabled', (string)$tag3xml[0]['disabled']);
+	}
 	
 	function testSaveIntoNullValueWithMultipleOff() {
 		$choices = array('a' => 'a value', 'b' => 'b value','c' => 'c value');
@@ -61,6 +103,33 @@ class ListboxFieldTest extends SapphireTest {
 		$field->setValue('a,c');
 		$field->saveInto($obj2);
 		$this->assertEquals('a,c', $obj2->Choices);
+	}
+
+	function testSaveIntoManyManyRelation() {
+		$article = $this->objFromFixture('ListboxFieldTest_Article', 'articlewithouttags');
+		$articleWithTags = $this->objFromFixture('ListboxFieldTest_Article', 'articlewithtags');
+		$tag1 = $this->objFromFixture('ListboxFieldTest_Tag', 'tag1');
+		$tag2 = $this->objFromFixture('ListboxFieldTest_Tag', 'tag2');
+		$field = new ListboxField("Tags", "Test field", DataObject::get("ListboxFieldTest_Tag")->map()->toArray());
+		$field->setMultiple(true);
+
+		// Save new relations
+		$field->setValue(array($tag1->ID,$tag2->ID));
+		$field->saveInto($article);
+		$article = Dataobject::get_by_id('ListboxFieldTest_Article', $article->ID, false);
+		$this->assertEquals(array($tag1->ID, $tag2->ID), $article->Tags()->column('ID'));
+
+		// Remove existing relation
+		$field->setValue(array($tag1->ID));
+		$field->saveInto($article);
+		$article = Dataobject::get_by_id('ListboxFieldTest_Article', $article->ID, false);
+		$this->assertEquals(array($tag1->ID), $article->Tags()->column('ID'));
+
+		// Set NULL value
+		$field->setValue(null);
+		$field->saveInto($article);
+		$article = Dataobject::get_by_id('ListboxFieldTest_Article', $article->ID, false);
+		$this->assertEquals(array(), $article->Tags()->column('ID'));
 	}
 	
 	/**
@@ -129,5 +198,22 @@ class ListboxFieldTest extends SapphireTest {
 class ListboxFieldTest_DataObject extends DataObject implements TestOnly {
 	static $db = array(
 		'Choices' => 'Text'
+	);
+}
+
+class ListboxFieldTest_Article extends DataObject implements TestOnly {
+	static $db = array(
+		"Content" => "Text",
+	);
+	
+	static $many_many = array(
+		"Tags" => "ListboxFieldTest_Tag",
+	);
+	
+}
+
+class ListboxFieldTest_Tag extends DataObject implements TestOnly {
+	static $belongs_many_many = array(
+		'Articles' => 'ListboxFieldTest_Article'
 	);
 }

@@ -95,7 +95,7 @@ jQuery.noConflict();
 			redraw: function() {
 				// Move from inner to outer layouts. Some of the elements might not exist.
 				// Not all edit forms are layouted, so qualify by their data value.
-				
+				this.find('.cms-content-fields[data-layout-type]').redraw(); 
 				this.find('.cms-edit-form[data-layout-type]').redraw(); 
 				
 				// Only redraw preview if its visible
@@ -250,6 +250,12 @@ jQuery.noConflict();
 			}
 		});
 
+		$('.cms-content-fields').entwine({
+			redraw: function() {
+				this.layout();
+			}
+		});
+
 		/**
 		 * Make all buttons "hoverable" with jQuery theming.
 		 * Also sets the clicked button on a form submission, making it available through
@@ -268,6 +274,45 @@ jQuery.noConflict();
 				if(!this.data('button')) this.button();
 
 				this._super();
+			}
+		});
+
+		/**
+		 * Loads the link's 'href' attribute into a panel via ajax,
+		 * as opposed to triggering a full page reload.
+		 * Little helper to avoid repetition, and make it easy to
+		 * "opt in" to panel loading, while by default links still exhibit their default behaviour.
+		 * Same goes for breadcrumbs in the CMS.
+		 */
+		$('.cms .cms-panel-link, .cms a.crumb').entwine({
+			onclick: function(e) {
+				var href = this.attr('href'), url = href ? href : this.data('href'),
+					data = (this.data('targetPanel')) ? {selector: this.data('targetPanel')} : null;
+				
+				$('.cms-container').loadPanel(url, null, data);
+				e.preventDefault();
+			}
+		});
+
+		/**
+		 * Does an ajax loads of the link's 'href' attribute via ajax and displays any FormResponse messages from the CMS.
+		 * Little helper to avoid repetition, and make it easy to trigger actions via a link,
+		 * without reloading the page, changing the URL, or loading in any new panel content.
+		 */
+		$('.cms .cms-link-ajax').entwine({
+			onclick: function(e) {
+				var href = this.attr('href'), url = href ? href : this.data('href');
+
+				jQuery.ajax({
+					url: url,
+					// Ensure that form view is loaded (rather than whole "Content" template)
+					complete: function(xmlhttp, status) {
+						var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.responseText;
+						if (typeof msg != "undefined" && msg != null) eval(msg);
+					},
+					dataType: 'html'
+				});
+				e.preventDefault();
 			}
 		});
 
@@ -363,10 +408,15 @@ jQuery.noConflict();
 		 * we can fix the height cropping.
 		 */
 		
-		$('.cms .field.dropdown, .cms .field.checkboxset').entwine({
+		$('.cms .field.dropdown select, .cms .field select[multiple]').entwine({
 			onmatch: function() {
-				$(this).find("select:not(.no-chzn)").data('placeholder', ' ').chosen();
-				$(this).addClass("has-chzn");
+				if(this.is('.no-chzn')) return;
+
+				// Explicitly disable default placeholder if no custom one is defined
+				if(!this.data('placeholder')) this.data('placeholder', ' ');
+
+				// Apply chosen
+				this.chosen().addClass("has-chzn");
 				
 				this._super();
 			}
@@ -410,7 +460,10 @@ jQuery.noConflict();
 			});
 			var url = this.attr('action');
 			if(nonEmptyInputs.length) url += '?' + nonEmptyInputs.serialize();
-			this.closest('.cms-container').entwine('ss').loadPanel(url);
+
+			var container = this.closest('.cms-container');
+			container.find('.cms-edit-form').tabs('select',0);  //always switch to the first tab (list view) when searching
+			container .entwine('ss').loadPanel(url);
 			return false;
 		},
 
@@ -423,6 +476,23 @@ jQuery.noConflict();
 		}
 
 	});
+
+	/**
+	 * Simple toggle link, which points to a DOm element by its ID selector
+	 * in the href attribute (which doubles as an anchor link to that element).
+	 */
+	$('.cms .cms-help-toggle').entwine({
+		onmatch: function() {
+			this._super();
+
+			$(this.attr('href')).hide();
+		},
+		onclick: function(e) {
+			$(this.attr('href')).toggle();
+			e.preventDefault();
+		}
+	});
+	
 }(jQuery));
 
 var statusMessage = function(text, type) {

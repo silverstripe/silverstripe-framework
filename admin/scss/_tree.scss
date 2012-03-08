@@ -380,6 +380,17 @@
 	.jstree li {
 		line-height:  25px;
 	}
+
+	// Hide drag icons by default. Actual page icons
+	// are in nested <span>, not handled directly through jstree lib
+	a > .jstree-icon {
+		display: none;
+	}
+
+	// Show drag icons when draggable class is applied
+	.draggable a > .jstree-icon {
+		display: block;
+	}
 }
 
 .jstree-apple {
@@ -519,7 +530,7 @@
 		background-image: url(../images/sitetree_ss_default_icons.png);
 	}
 
-	& li.jstree-checked a, li.jstree-checked a:link  {
+	& li.jstree-checked > a, li.jstree-checked > a:link  {
 		background-color: $color-cms-batchactions-menu-selected-background;
 	}
 
@@ -530,10 +541,6 @@
 	& .jstree-open > ins { 
 		background-position:-20px 0; 
 	}
-}
-
-.jstree-apple #record-0.jstree-open > ins {
-	display: none;
 }
 
 a .jstree-pageicon {
@@ -565,4 +572,18 @@ li.class-ErrorPage > a .jstree-pageicon {
 
 .cms-tree {
 	visibility: hidden; // enabled by JS to avoid layout glitches
+
+	&.multiple {
+		// Hide draggable icon when multiselect is enabled
+		li > a > .jstree-icon {
+			display: none;
+		}
+
+		li#record-0 {
+			// Hide checkbox on root node (shouldn't be selectable to avoid weird states when trying to e.g. remove it)
+			&> a .jstree-checkbox {
+				display: none;
+			}
+		}
+	}
 }

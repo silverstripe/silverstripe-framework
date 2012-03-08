@@ -113,7 +113,7 @@ class ConfirmedPasswordField extends FormField {
 			}
 			
 			$content .= "<div class=\"showOnClick\">\n";
-			$content .= "<a href=\"#\"" . $this->getTabIndexHTML() . ">{$title}</a>\n";
+			$content .= "<a href=\"#\">{$title}</a>\n";
 			$content .= "<div class=\"showOnClickContainer\">";
 		}
 

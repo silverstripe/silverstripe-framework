@@ -181,21 +181,16 @@ class CheckboxSetField extends OptionsetField {
 	 * @param DataObject $record The record to save into
 	 */
 	function saveInto(DataObject $record) {
-		$fieldname = $this->name ;
-		if($fieldname && $record && ($record->has_many($fieldname) || $record->many_many($fieldname))) {
+		$fieldname = $this->name;
+		$relation = ($fieldname && $record && $record->hasMethod($fieldname)) ? $record->$fieldname() : null;
+		if($fieldname && $record && $relation && $relation instanceof RelationList) {
 			$idList = array();
-			// Works for both <select multiple> style - array(0 => 'val1', 1 => 'val2') 
-			// and <input type="checkbox"> style - array('val1' => true, 'val2' => true).
-			// The <select multiple> element doesn't allow for individual keys in parameter names.
-			$valuesInKeys = (ArrayLib::is_associative($this->value));
-			if($this->value) foreach($this->value as $k => $v) {
-			   if($valuesInKeys) {
-			   	if($v) $idList[] = $k;
-			   } else {
-			   	$idList[] = $v;
-			   }
+			if($this->value) foreach($this->value as $id => $bool) {
+			   if($bool) {
+					$idList[] = $id;
+				}
 			}
-			$record->$fieldname()->setByIDList($idList);
+			$relation->setByIDList($idList);
 		} elseif($fieldname && $record) {
 			if($this->value) {
 				$this->value = str_replace(',', '{comma}', $this->value);
@@ -220,6 +215,7 @@ class CheckboxSetField extends OptionsetField {
 					$filtered[] = str_replace(",", "{comma}", $item);
 				}
 			}
+			
 			return implode(',', $filtered);
 		}
 		

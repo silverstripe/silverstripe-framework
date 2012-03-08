@@ -6,7 +6,7 @@
 			<% if SearchClassSelector = tabs %>
 				<ul>
 					<% control ModelForms %>
-						 <li class="$FirstLast"><a id="tab-ModelAdmin_$Title.HTMLATT" href="#{$Form.Name}_$ClassName">$Title</a></li>
+						 <li class="$FirstLast"><a id="tab-ModelAdmin_$Title.HTMLATT" href="#Form_$ClassName">$Title</a></li>
 					<% end_control %>
 				</ul>
 			<% end_if %>
@@ -16,14 +16,14 @@
 					Search for:
 					<select>
 						<% control ModelForms %>
-							<option value="{$Form.Name}_$ClassName">$Title</option>
+							<option value="Form_$ClassName">$Title</option>
 						<% end_control %>
 					</select>
 				</div>
 			<% end_if %>
 
 			<% control ModelForms %>
-				<div class="tab" id="{$Form.Name}_$ClassName">
+				<div class="tab" id="Form_$ClassName">
 					$Content
 				</div>
 			<% end_control %>

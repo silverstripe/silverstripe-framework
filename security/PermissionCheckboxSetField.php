@@ -226,6 +226,9 @@ class PermissionCheckboxSetField extends FormField {
 		}
 		
 		if($fieldname && $record && ($record->has_many($fieldname) || $record->many_many($fieldname))) {
+			
+			if(!$record->ID) $record->write(); // We need a record ID to write permissions
+			
 			$idList = array();
 			if($this->value) foreach($this->value as $id => $bool) {
 			   if($bool) {

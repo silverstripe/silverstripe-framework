@@ -3,7 +3,7 @@
 /**
  * Provides view and edit forms at GridField-specific URLs.  
  * These can be placed into pop-ups by an appropriate front-end.
- * Usually added to a grid field alongside of {@link GridFieldAction_Edit}
+ * Usually added to a grid field alongside of {@link GridFieldEditAction}
  * which takes care of linking the individual rows to their edit view.
  * 
  * The URLs provided will be off the following form:
@@ -24,6 +24,11 @@ class GridFieldPopupForms implements GridField_URLHandler {
 	 * @var string
 	 */
 	protected $name;
+
+	/**
+	 * @var Validator The form validator used for both add and edit fields.
+	 */
+	protected $validator;
 
 	function getURLHandlers($gridField) {
 		return array(
@@ -68,7 +73,7 @@ class GridFieldPopupForms implements GridField_URLHandler {
 		$handler = Object::create($class, $gridField, $this, $record, $controller, $this->name);
 		$handler->setTemplate($this->template);
 
-		return $handler->handleRequest($request, $gridField);
+		return $handler->handleRequest($request, DataModel::inst());
 	}
 
 	/**
@@ -76,6 +81,7 @@ class GridFieldPopupForms implements GridField_URLHandler {
 	 */
 	function setTemplate($template) {
 		$this->template = $template;
+		return $this;
 	}
 
 	/**
@@ -90,6 +96,7 @@ class GridFieldPopupForms implements GridField_URLHandler {
 	 */
 	function setName($name) {
 		$this->name = $name;
+		return $this;
 	}
 
 	/**
@@ -97,6 +104,21 @@ class GridFieldPopupForms implements GridField_URLHandler {
 	 */
 	function getName() {
 		return $this->name;
+	}
+
+	/**
+	 * @param Validator $validator
+	 */
+	public function setValidator(Validator $validator) {
+		$this->validator = $validator;
+		return $this;
+	}
+
+	/**
+	 * @return Validator
+	 */
+	public function getValidator() {
+		return $this->validator;
 	}
 }
 
@@ -152,7 +174,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	 */
 	public function __construct($gridField, $component, $record, $popupController, $popupFormName) {
 		$this->gridField = $gridField;
-		$this->component = $gridField;
+		$this->component = $component;
 		$this->record = $record;
 		$this->popupController = $popupController;
 		$this->popupFormName = $popupFormName;
@@ -164,34 +186,20 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	}
 	
 	function edit($request) {
-		$controller = $this->popupController;
+		$controller = $this->getToplevelController();
 		$form = $this->ItemEditForm($this->gridField, $request);
 
-		// TODO Coupling with CMS
-		if($controller instanceof LeftAndMain) {
-			$form->addExtraClass('cms-edit-form');
-			$form->setTemplate($controller->getTemplatesWithSuffix('_EditForm'));
-			$form->addExtraClass('cms-content center ss-tabset ' . $controller->BaseCSSClasses());
-			if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
-			// TODO Link back to controller action (and edited root record) rather than index,
-			// which requires more URL knowledge than the current link to this field gives us.
-			// The current root record is held in session only, 
-			// e.g. page/edit/show/6/ vs. page/edit/EditForm/field/MyGridField/....
-			$form->Backlink = $controller->Link();
-		}
-
 		$return = $this->customise(array(
-				'Backlink' => $controller->Link(),
-				'ItemEditForm' => $form,
-			))->renderWith($this->template);
+			'Backlink' => $controller->Link(),
+			'ItemEditForm' => $form,
+		))->renderWith($this->template);
 
 		if($controller->isAjax()) {
 			return $return;	
 		} else {
-			
 			// If not requested by ajax, we need to render it within the controller context+template
 			return $controller->customise(array(
-				// TODO Allow customization
+				// TODO CMS coupling
 				'Content' => $return,
 			));	
 		}
@@ -208,20 +216,75 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	 * @return Form 
 	 */
 	function ItemEditForm() {
+		if (empty($this->record)) {
+			$controller = Controller::curr();
+			$noActionURL = $controller->removeAction($_REQUEST['url']);
+			$controller->getResponse()->removeHeader('Location');   //clear the existing redirect
+			return Director::redirect($noActionURL, 302);
+		}
+
+		$actions = new FieldList();
+		if($this->record->ID !== 0) {
+			$actions->push(FormAction::create('doSave', _t('GridFieldDetailsForm.Save', 'Save'))
+				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'));
+			$actions->push(FormAction::create('doDelete', _t('GridFieldDetailsForm.Delete', 'Delete'))
+				->addExtraClass('ss-ui-action-destructive'));
+		}else{ // adding new record
+			//Change the Save label to 'Create'
+			$actions->push(FormAction::create('doSave', _t('GridFieldDetailsForm.Create', 'Create'))
+				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'add'));
+				
+			// Add a Cancel link which is a button-like link and link back to one level up.
+			$curmbs = $this->Breadcrumbs();
+			if($curmbs && $curmbs->count()>=2){
+				$one_level_up = $curmbs->offsetGet($curmbs->count()-2);
+				$text = "
+				<a class=\"crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all\" href=\"".$one_level_up->Link."\">
+					Cancel
+				</a>";
+				$actions->push(new LiteralField('cancelbutton', $text));
+			}
+		}
 		$form = new Form(
 			$this,
 			'ItemEditForm',
-			// WARNING: The arguments passed here are a little arbitrary.  This API will need cleanup
-			$this->record->getCMSFields($this->popupController, $this->popupFormName),
-			new FieldList(
-				FormAction::create('doSave', _t('GridFieldDetailsForm.Save', 'Save'))
-					->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'),
-				FormAction::create('doDelete', _t('GridFieldDetailsForm.Delete', 'Delete'))
-					->setUseButtonTag(true)->addExtraClass('ss-ui-action-destructive')
-			)
+			$this->record->getCMSFields(),
+			$actions,
+			$this->component->getValidator()
 		);
 		$form->loadDataFrom($this->record);
+
+		// TODO Coupling with CMS
+		$toplevelController = $this->getToplevelController();
+		if($toplevelController && $toplevelController instanceof LeftAndMain) {
+			// Always show with base template (full width, no other panels), 
+			// regardless of overloaded CMS controller templates.
+			// TODO Allow customization, e.g. to display an edit form alongside a search form from the CMS controller
+			$form->setTemplate('LeftAndMain_EditForm');
+			$form->addExtraClass('cms-content cms-edit-form center ss-tabset');
+			if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+			// TODO Link back to controller action (and edited root record) rather than index,
+			// which requires more URL knowledge than the current link to this field gives us.
+			// The current root record is held in session only, 
+			// e.g. page/edit/show/6/ vs. page/edit/EditForm/field/MyGridField/....
+			$form->Backlink = $toplevelController->Link();
+		}
 		return $form;
+	}
+
+	/**
+	 * Traverse up nested requests until we reach the first that's not a GridFieldPopupForm_ItemRequest.
+	 * The opposite of {@link Controller::curr()}, required because
+	 * Controller::$controller_stack is not directly accessible.
+	 * 
+	 * @return Controller
+	 */
+	protected function getToplevelController() {
+		$c = $this->popupController;
+		while($c && $c instanceof GridFieldPopupForm_ItemRequest) {
+			$c = $c->getController();
+		}
+		return $c;
 	}
 
 	function doSave($data, $form) {
@@ -230,8 +293,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 		try {
 			$form->saveInto($this->record);
 			$this->record->write();
-			if($new_record)
-				$this->gridField->getList()->add($this->record);
+			$this->gridField->getList()->add($this->record);
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
 			return Controller::curr()->redirectBack();
@@ -247,7 +309,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 		
 		$form->sessionMessage($message, 'good');
 
-		return $this->popupController->redirectBack();
+		return Controller::curr()->redirectBack();
 	}
 
 	function doDelete($data, $form) {
@@ -260,7 +322,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 			$toDelete->delete();
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
-			return Director::redirectBack();
+			return Controller::curr()->redirectBack();
 		}
 
 		$message = sprintf(
@@ -283,6 +345,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	 */
 	function setTemplate($template) {
 		$this->template = $template;
+		return $this;
 	}
 
 	/**
@@ -290,6 +353,20 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	 */
 	function getTemplate() {
 		return $this->template;
+	}
+
+	/**
+	 * @return Controller
+	 */
+	function getController() {
+		return $this->popupController;
+	}
+
+	/**
+	 * @return GridField
+	 */
+	function getGridField() {
+		return $this->gridField;
 	}
 
 	/**
@@ -301,12 +378,17 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	 * @return ArrayData
 	 */
 	function Breadcrumbs($unlinked = false) {
-		if(!($this->popupController instanceof LeftAndMain)) return false;
+		if(!$this->popupController->hasMethod('Breadcrumbs')) return;
 
 		$items = $this->popupController->Breadcrumbs($unlinked);
-		if($this->record) {
+		if($this->record && $this->record->ID) {
 			$items->push(new ArrayData(array(
 				'Title' => $this->record->Title,
+				'Link' => $this->Link()
+			)));	
+		} else {
+			$items->push(new ArrayData(array(
+				'Title' => sprintf(_t('GridField.NewRecord', 'New %s'), $this->record->singular_name()),
 				'Link' => false
 			)));	
 		}

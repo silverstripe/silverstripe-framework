@@ -6,7 +6,10 @@
 		 * @param {successCallback} callback to call after reloading succeeded.
 		 */
 		reload: function(ajaxOpts, successCallback) {
-			var self = this, form = this.closest('form'), data = form.find(':input').serializeArray();
+			var self = this, form = this.closest('form'), 
+				focusedElName = this.find(':input:focus').attr('name'), // Save focused element for restoring after refresh
+				data = form.find(':input').serializeArray();
+
 			if(!ajaxOpts) ajaxOpts = {};
 			if(!ajaxOpts.data) ajaxOpts.data = [];
 			ajaxOpts.data = ajaxOpts.data.concat(data);
@@ -29,6 +32,10 @@
 					// TODO Only replaces all its children, to avoid replacing the current scope
 					// of the executing method. Means that it doesn't retrigger the onmatch() on the main container.
 					self.empty().append($(data).children());
+
+					// Refocus previously focused element. Useful e.g. for finding+adding
+					// multiple relationships via keyboard.
+					if(focusedElName) self.find(':input[name="' + focusedElName + '"]').focus();
 
 					form.removeClass('loading');
 					if(successCallback) successCallback.apply(this, arguments);
@@ -71,9 +78,9 @@
 
 	$('.ss-gridfield .ss-gridfield-item').entwine({
 		onclick: function(e) {
-			if($(e.target).is('.action')) {
+			if($(e.target).closest('.action').length) {
 				this._super(e);
-				return;
+				return false;
 			}
 
 			var editLink = this.find('.edit-link');
@@ -94,10 +101,36 @@
 		}
 	});
 
-	$('.ss-gridfield .gridfield-button-delete').entwine({
+	$('.ss-gridfield .action.gridfield-button-delete').entwine({
 		onclick: function(e){
-			if(!confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) return false;
-			else this._super(e);
+			if(!confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) {
+				e.preventDefault();
+				return false;
+			} else {
+				this._super(e);
+			}
+		}
+	});
+
+	/**
+	 * Prevents actions from causing an ajax reload of the field.
+	 * Useful e.g. for actions which rely on HTTP response headers being interpreted nativel
+	 * by the browser, like file download triggers.
+	 */
+	$('.ss-gridfield .action.no-ajax').entwine({
+		onclick: function(e){
+			var self = this, btn = this.closest(':button'), grid = this.getGridField(), 
+				form = this.closest('form'), data = form.find(':input').serialize();
+
+			// Add current button
+			data += '&' + encodeURIComponent(btn.attr('name')) + '=' + encodeURIComponent(btn.val());
+
+			// Include any GET parameters from the current URL, as the view state might depend on it.
+			// For example, a list prefiltered through external search criteria might be passed to GridField.
+			if(window.location.search) data = window.location.search.replace(/^\?/, '') + '&' + data;
+
+			window.location.href = $.path.makeUrlAbsolute(grid.data('url') + '?' + data, $('base').attr('href'));
+			return false;
 		}
 	});
 
@@ -146,16 +179,83 @@
 		}
 		 
 	});
-
+	
 	/**
 	 * Catch submission event in filter input fields, and submit the correct button
 	 * rather than the whole form.
 	 */
 	$('.ss-gridfield .filter-header :input').entwine({
+		onmatch: function(){
+			filterbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter');
+			resetbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-reset');
+			if(this.val()) {
+				filterbtn.addClass('filtered');
+				resetbtn.addClass('filtered');
+			}
+		},
 		onkeydown: function(e) {
+			filterbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter');
+			resetbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-reset');
 			if(e.keyCode == '13') {
-				btn = this.closest('.filter-header').find('.ss-gridfield-button-filter');
-				this.getGridField().reload({data: [{name: btn.attr('name'), value: btn.val()}]});
+				btns = this.closest('.filter-header').find('.ss-gridfield-button-filter');
+				this.getGridField().reload({data: [{name: btns.attr('name'), value: btns.val()}]});
+				return false;
+			}else{
+				filterbtn.addClass('hover-alike');
+				resetbtn.addClass('hover-alike');
+			}
+		}
+	});
+
+	$(".ss-gridfield .relation-search").entwine({
+		onfocusin: function (event) {
+			this.autocomplete({
+				source: function(request, response){
+					var searchField = $(this.element);
+					var form = $(this.element).closest("form");
+					// Due to some very weird behaviout of jquery.metadata, the url have to be double quoted
+					var suggestionUrl = $(searchField).attr('data-search-url').substr(1,$(searchField).attr('data-search-url').length-2);
+					$.ajax({
+						headers: {
+							"X-Get-Fragment" : 'Partial'
+						},
+						type: "GET",
+						url: suggestionUrl+'/'+request.term,
+						data: form.serialize()+'&'+escape(searchField.attr('name'))+'='+escape(searchField.val()), 
+						success: function(data) {
+							response( $.map(JSON.parse(data), function( name, id ) {
+								return { label: name, value: name, id: id };
+							}));
+						},
+						error: function(e) {
+							alert(ss.i18n._t('GRIDFIELD.ERRORINTRANSACTION', 'An error occured while fetching data from the server\n Please try again later.'));
+						}
+					});
+				},
+				select: function(event, ui) {
+					$(this).closest(".ss-gridfield").find("#action_gridfield_relationfind").replaceWith(
+						'<input type="hidden" name="relationID" value="'+ui.item.id+'" id="relationID"/>'
+					);
+					var addbutton = $(this).closest(".ss-gridfield").find("#action_gridfield_relationadd");
+					if(addbutton.data('button')){
+						addbutton.button('enable');
+					}else{
+						addbutton.removeAttr('disabled');
+					}
+				}
+			});
+		}
+	});
+
+	$(".ss-gridfield .pagination-page-number input").entwine({
+		onkeydown: function(event) {
+			if(event.keyCode == 13) {
+				var newpage = parseInt($(this).val(), 10);
+
+				var gridfield = $(this).getGridField();
+				gridfield.setState('GridFieldPaginator', {currentPage: newpage});
+				gridfield.reload();
+
 				return false;
 			}
 		}

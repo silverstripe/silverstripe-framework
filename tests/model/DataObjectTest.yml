@@ -3,7 +3,8 @@ DataObjectTest_Team:
 		Title: Team 1
 	team2:
 		Title: Team 2
-      
+	team3:
+		Title: Team 3
 DataObjectTest_Player:
 	captain1:
 		FirstName: Captain

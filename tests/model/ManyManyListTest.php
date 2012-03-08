@@ -15,6 +15,12 @@ class ManyManyListTest extends SapphireTest {
 		$list = ManyManyList::create('DataObjectTest_Team','DataObjectTest_Team_Players', 'DataObjectTest_TeamID', 'DataObjectTest_PlayerID');
 		$this->assertEquals(2, $list->count());
 	}
+
+	public function testRelationshipEmptyOnNewRecords() {
+		// Relies on the fact that (unrelated) teams exist in the fixture file already
+		$newPlayer = new DataObjectTest_Player(); // many_many Teams
+		$this->assertEquals(array(), $newPlayer->Teams()->column('ID'));
+	}
 	
 	public function testAddingSingleDataObjectByReference() {
 		$player1 = $this->objFromFixture('DataObjectTest_Player', 'player1');
@@ -27,7 +33,7 @@ class ManyManyListTest extends SapphireTest {
 		$compareTeams->byID($team1->ID);
 		$this->assertEquals($player1->Teams()->column('ID'),$compareTeams->column('ID'),"Adding single record as DataObject to many_many");
 	}
-	
+
 	public function testRemovingSingleDataObjectByReference() {
 		$player1 = $this->objFromFixture('DataObjectTest_Player', 'player1');
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
@@ -71,6 +77,20 @@ class ManyManyListTest extends SapphireTest {
 		$this->assertEquals(array($team1->ID), $player1->Teams()->column());
 		$player1->Teams()->setByIdList(array($team2->ID));
 		$this->assertEquals(array($team2->ID), $player1->Teams()->column());
+	}
+
+	public function testAddingWithMultipleForeignKeys() {
+		$newPlayer = new DataObjectTest_Player();
+		$newPlayer->write();
+		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$team2 = $this->objFromFixture('DataObjectTest_Team', 'team2');
+
+		$playersTeam1Team2 = DataList::create('DataObjectTest_Team')->relation('Players')->setForeignID(array($team1->ID, $team2->ID));
+		$playersTeam1Team2->add($newPlayer);
+		$this->assertEquals(
+			array($team1->ID, $team2->ID),
+			$newPlayer->Teams()->column('ID')
+		);
 	}
 	
 	public function testSubtractOnAManyManyList() {

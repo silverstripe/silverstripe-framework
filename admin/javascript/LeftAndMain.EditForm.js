@@ -2,6 +2,14 @@
  * File: LeftAndMain.EditForm.js
  */
 (function($) {
+	
+	// Can't bind this through jQuery
+	window.onbeforeunload = function(e) {
+		var form = $('.cms-edit-form');
+		form.trigger('beforesave');
+		if(form.is('.changed')) return ss.i18n._t('LeftAndMain.CONFIRMUNSAVEDSHORT');
+	};
+
 	$.entwine('ss', function($){
 
 		/**
@@ -51,12 +59,6 @@
 				this.attr("autocomplete", "off");
 			
 				this._setupChangeTracker();
-
-				// Can't bind this through jQuery
-				window.onbeforeunload = function(e) {
-					self.trigger('beforesave');
-					if(self.is('.changed')) return ss.i18n._t('LeftAndMain.CONFIRMUNSAVEDSHORT');
-				};
 
 				// Catch navigation events before they reach handleStateChange(),
 				// in order to avoid changing the menu state if the action is cancelled by the user
@@ -179,6 +181,7 @@
 			 */
 			onclick: function(e) {
 				$('.cms-content').submitForm(this.parents('form'), this);
+				e.preventDefault();
 				return false;
 			}
 		});

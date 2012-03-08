@@ -62,7 +62,7 @@ class DataQuery {
 			}
 		}
 		
-		if(!$matched) user_error("Couldn't find $fieldExpression in the query filter.", E_USER_WARNING);
+		if(!$matched) throw new InvalidArgumentException("Couldn't find $fieldExpression in the query filter.");
 		
 		return $this;
 	}

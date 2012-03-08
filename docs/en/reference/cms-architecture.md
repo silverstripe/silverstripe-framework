@@ -36,6 +36,7 @@ Each file describes its purpose at the top of the declarations. Note that you ca
 plain CSS without SCSS for your custom CMS interfaces as well, we just mandate SCSS for core usage.
 
 As there's a whole lot of CSS driving the CMS, we have certain best practives around writing it:
+
  * Use the `id` attribute sparingly. Remember that it "closes off" the structure to code reuse, as HTML elements
    require unique `id` attributes. Code reuse can happen both in CSS and JavaScript behaviour.
  * Separate presentation from structure in class names, e.g. `left-menu` is encoding the component position
@@ -177,6 +178,56 @@ See `$('.cms-container').handleStateChange()` in `LeftAndMain.js` for details.
 Alternatively, form-related Ajax calls can be invoked through their own wrappers,
 which don't cause history events and hence allow callbacks: `$('.cms-content').loadForm()`
 and `$('.cms-content').submitForm()`.
+
+## State through HTTP response metadata
+
+By loading mostly HTML responses, we don't have an easy way to communicate
+information which can't be directly contained in the produced HTML.
+For example, the currently used controller class might've changed due to a "redirect", 
+which affects the currently active menu entry. We're using HTTP response headers to contain this data
+without affecting the response body.
+
+	:::php
+	class MyController extends LeftAndMain {
+		class myaction() {
+			// ...
+			$this->response->addHeader('X-Controller', 'MyOtherController');
+			return $html;
+		}
+	}
+
+Built-in headers are:
+
+	* `X-Controller`: PHP class name matching a menu entry, which is marked active
+	* `X-ControllerURL`: Alternative URL to record in the HTML5 browser history
+	* `X-Status`: Extended status information, used for an information popover.
+
+## Special Links
+
+Some links should do more than load a new page in the browser window.
+To avoid repetition, we've written some helpers for various use cases:
+
+ * Load into a panel: `<a href="..." class="cms-panel-link" data-target-panel=".cms-content">`
+ * Load via ajax, and show response status message: `<a href="..." class="cms-link-ajax">`
+ * Load URL as an iframe into a popup/dialog: `<a href="..." class="ss-ui-dialog-link">`
+
+## Buttons
+
+SilverStripe automatically applies a [jQuery UI button style](http://jqueryui.com/demos/button/)
+to all elements with the class `.ss-ui-button`. We've extended the jQuery UI widget a bit
+to support defining icons via HTML5 data attributes (see `ssui.core.js`).
+These icon identifiers relate to icon files in `sapphire/admin/images/btn-icons`,
+and are sprited into a single file through SCSS and the Compass framework 
+(see [tutorial](http://compass-style.org/help/tutorials/spriting/)).
+Compass also creates the correct CSS classes to show those sprites via background images
+(see `sapphire/admin/scss/_sprites.scss`).
+
+Input: `<a href="..." class="ss-ui-button" data-icon="add" />Button text</a>`
+
+Output: `<a href="..." data-icon="add" class="ss-ui-button ss-ui-action-constructive ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button"><span class="ui-button-icon-primary ui-icon btn-icon-add"></span><span class="ui-button-text">Button text</span></a>`
+
+Note that you can create buttons from pretty much any element, although
+when using an input of type button, submit or reset, support is limited to plain text labels with no icons.
 
 ## Menu
 

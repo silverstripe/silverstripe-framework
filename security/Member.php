@@ -939,18 +939,26 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 
 	/**
-	 * Get a "many-to-many" map that holds for all members their group
-	 * memberships
+	 * Get a "many-to-many" map that holds for all members their group memberships,
+	 * including any parent groups where membership is implied.
+	 * Use {@link DirectGroups()} to only retrieve the group relations without inheritance.
 	 *
 	 * @todo Push all this logic into Member_GroupSet's getIterator()?
 	 */
 	public function Groups() {
 		$groups = new Member_GroupSet('Group', 'Group_Members', 'GroupID', 'MemberID');
-		if($this->ID) $groups->setForeignID($this->ID);
+		$groups->setForeignID($this->ID);
 		
 		$this->extend('updateGroups', $groups);
 
 		return $groups;
+	}
+
+	/**
+	 * @return ManyManyList
+	 */
+	public function DirectGroups() {
+		return $this->getManyManyComponents('Groups');
 	}
 
 
@@ -1138,9 +1146,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$groupsMap = DataList::create('Group')->map('ID', 'Breadcrumbs')->toArray();
 			asort($groupsMap);
 			$fields->addFieldToTab('Root.Main',
-				Object::create('CheckboxSetField', 'Groups', singleton('Group')->i18n_plural_name())
-					->setTemplate('CheckboxSetField_Select')
-					->setSource($groupsMap)
+				Object::create('ListboxField', 'DirectGroups', singleton('Group')->i18n_plural_name())
+					->setMultiple(true)->setSource($groupsMap)
 			);
 
 			// Add permission field (readonly to avoid complicated group assignment logic).

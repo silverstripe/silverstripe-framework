@@ -53,16 +53,116 @@ html {
 	text-indent: 0px !important;
 }
 
-.cms {
-	table.ss-gridfield-table {
-		tbody {
-			td {
-				button {
-					span.ui-button-text {
-						zoom:1;
-					}
-				}
+//fix for filter and reset icons on datagrid 
+
+.cms table.ss-gridfield-table tr th.extra span input {
+	height:23px;
+}
+
+.ss-gridfield-button-filter.ss-ui-button {
+	margin: -1px -5px;
+	background: #e6e6e6 url(../images/filter-icons.png) no-repeat -40px 6px; filter:none;
+	&.hover-alike:active {
+		background: darken(#338DC1, 5%) url(../images/filter-icons.png) no-repeat -15px 7px; filter:none;
+	}
+	&.hover-alike {
+		background: #338DC1 url(../images/filter-icons.png) no-repeat -16px 6px; filter:none;
+	}
+}
+.ss-gridfield-button-reset.ss-ui-button {
+	margin: -1px -5px;
+	background: #e6e6e6 url(../images/filter-icons.png) no-repeat 8px 5px; filter:none;
+	&.filtered:hover {
+		background: #FF0000 url(../images/filter-icons.png) no-repeat 8px -17px; filter:none;
+	}
+	&.filtered:active {
+		background: darken(#FF0000, 5%) url(../images/filter-icons.png) no-repeat 9px -16px; filter:none;
+	}
+}
+
+//fix for borders on gridfield table
+
+.cms table.ss-gridfield-table {
+	tr {
+		td {
+			border-right: 1px solid lighten(#808080, 10%);
+		}
+		th {
+			border-right: 1px solid lighten(#808080, 10%);
+			&.main {
+				border-top: 1px solid lighten(#808080, 10%);
+				border-bottom: none;
+			}
+			&.extra {
+				border-top: 1px solid lighten(#808080, 10%);
+				padding-right:12px;
 			}
 		}
 	}
+	td:first-child, th:first-child {
+		border-left: 1px solid lighten(#808080, 10%);
+	}
 }
+
+//fix for edit and delete icons in IE7
+
+.cms .ss-gridfield table.ss-gridfield-table tbody {
+	td {
+		button {
+			&.gridfield-button-delete {
+				display:block;
+				float:left;
+			}
+			&.gridfield-button-unlink.ui-state-hover {
+				display:block;
+				float:left;
+			}
+		}
+		a.edit-link {
+			display:block;
+			float:left;
+		}
+	}
+}
+
+//fix for wrong alignment of label on parent groups field in users groups and fix for width of parent group dropdown field
+
+.cms .cms-content .cms-content-fields {
+	.aligned_right_label {
+		margin-left:0;
+	}
+	.field.dropdown .middleColumn {
+		max-width:512px;
+	}	
+}
+
+//fix for input on datagrid pagination
+
+.pagination-page-number {
+	position:relative;
+	bottom:10px;
+	right:10px;
+	input {
+		width:45px;
+		padding:0px;
+		position:relative;
+		bottom:2px;
+	}
+}
+
+//fix for wrong height on users groups gridfield table header
+
+table.ss-gridfield-table tr.title th h2 {
+	float:left;
+}
+
+//fix for alternate colors on rows in datagrid
+
+table.ss-gridfield-table tr {	
+	&.ss-gridfield-item.odd {
+		background: white;
+	}
+	&.ss-gridfield-item.even {
+		background: #F0F4F7;
+	}
+}	
