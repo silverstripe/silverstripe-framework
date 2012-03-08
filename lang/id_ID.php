@@ -530,4 +530,3 @@ $lang['id_ID']['Widget']['SINGULARNAME'] = 'Widget';
 $lang['id_ID']['WidgetArea']['PLURALNAME'] = 'Area-area Widget';
 $lang['id_ID']['WidgetArea']['SINGULARNAME'] = 'Area Widget';
 
-?>

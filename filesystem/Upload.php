@@ -88,6 +88,8 @@ class Upload extends Controller {
 	
 	/**
 	 * Save an file passed from a form post into this object.
+	 * File names are filtered through {@link FileNameFilter}, see class documentation
+	 * on how to influence this behaviour.
 	 * 
 	 * @param $tmpFile array Indexed array that PHP generated for every file it uploads.
 	 * @param $folderPath string Folder path relative to /assets
@@ -98,7 +100,10 @@ class Upload extends Controller {
 		
 		if(!$folderPath) $folderPath = self::$uploads_folder;
 		
-		if(!$this->file) $this->file = new File();
+		if(!$this->file) {
+			$fileClass = File::get_class_for_file_extension(pathinfo($tmpFile['name'], PATHINFO_EXTENSION));
+			$this->file = new $fileClass();
+		}
 		
 		if(!is_array($tmpFile)) {
 			user_error("Upload::load() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
@@ -115,7 +120,7 @@ class Upload extends Controller {
 		// @TODO This puts a HUGE limitation on files especially when lots
 		// have been uploaded.
 		$base = Director::baseFolder();
-		$parentFolder = Folder::findOrMake($folderPath);
+		$parentFolder = Folder::find_or_make($folderPath);
 
 		// Create a folder for uploading.
 		if(!file_exists(ASSETS_PATH)){
@@ -126,10 +131,9 @@ class Upload extends Controller {
 		}
 
 		// Generate default filename
-		$fileName = str_replace(' ', '-',$tmpFile['name']);
-		$fileName = ereg_replace('[^A-Za-z0-9+.-]+','',$fileName);
-		$fileName = ereg_replace('-+', '-',$fileName);
-		$fileName = basename($fileName);
+		$nameFilter = Object::create('FileNameFilter');
+		$file = $nameFilter->filter($tmpFile['name']);
+		$fileName = basename($file);
 
 		$relativeFilePath = ASSETS_DIR . "/" . $folderPath . "/$fileName";
 		
@@ -140,13 +144,13 @@ class Upload extends Controller {
 			// make sure archives retain valid extensions
 			if(substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.gz')) == '.tar.gz' ||
 				substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.bz2')) == '.tar.bz2') {
-					$relativeFilePath = ereg_replace('[0-9]*(\.tar\.[^.]+$)',$i . '\\1', $relativeFilePath);
+					$relativeFilePath = preg_replace('/[0-9]*(\.tar\.[^.]+$)/', $i . '\\1', $relativeFilePath);
 			} else if (strpos($relativeFilePath, '.') !== false) {
-				$relativeFilePath = ereg_replace('[0-9]*(\.[^.]+$)',$i . '\\1', $relativeFilePath);
+				$relativeFilePath = preg_replace('/[0-9]*(\.[^.]+$)/', $i . '\\1', $relativeFilePath);
 			} else if (strpos($relativeFilePath, '_') !== false) {
-				$relativeFilePath = ereg_replace('_([^_]+$)', '_'.$i, $relativeFilePath);
+				$relativeFilePath = preg_replace('/_([^_]+$)/', '_'.$i, $relativeFilePath);
 			} else {
-				$relativeFilePath .= "_$i";
+				$relativeFilePath .= '_'.$i;
 			}
 			if($oldFilePath == $relativeFilePath && $i > 2) user_error("Couldn't fix $relativeFilePath with $i tries", E_USER_ERROR);
 		}
@@ -223,7 +227,7 @@ class Upload extends Controller {
 	 * @return int Filesize in bytes
 	 */
 	public function getAllowedMaxFileSize($ext = null) {
-		user_error('Upload::getAllowedMaxFileSize() is deprecated. Please use Upload_Validator::getAllowedMaxFileSize() instead', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use Upload_Validator::getAllowedMaxFileSize() instead.');
 		return $this->validator->getAllowedMaxFileSize($ext);
 	}
 	
@@ -242,7 +246,7 @@ class Upload extends Controller {
 	 * @param array|int $rules
 	 */
 	public function setAllowedMaxFileSize($rules) {
-		user_error('Upload::setAllowedMaxFileSize() is deprecated. Please use Upload_Validator::setAllowedMaxFileSize() instead', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use Upload_Validator::setAllowedMaxFileSize() instead.');
 		$this->validator->setAllowedMaxFileSize($rules);
 	}
 	
@@ -251,7 +255,7 @@ class Upload extends Controller {
 	 * @return array
 	 */
 	public function getAllowedExtensions() {
-		user_error('Upload::getAllowedExtensions() is deprecated. Please use Upload_Validator::getAllowedExtensions() instead', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use Upload_Validator::getAllowedExtensions() instead.');
 		return $this->validator->getAllowedExtensions();
 	}
 	
@@ -260,7 +264,7 @@ class Upload extends Controller {
 	 * @param array $rules
 	 */
 	public function setAllowedExtensions($rules) {
-		user_error('Upload::setAllowedExtensions() is deprecated. Please use Upload_Validator::setAllowedExtensions() instead', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use Upload_Validator::setAllowedExtensions() instead.');
 		$this->validator->setAllowedExtensions($rules);
 	}
 	
@@ -275,7 +279,7 @@ class Upload extends Controller {
 	 * @return boolean
 	 */
 	public function isValidSize($tmpFile) {
-		user_error('Upload::isValidSize() is deprecated. Please use Upload_Validator::isValidSize() instead', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use Upload_Validator::isValidSize() instead.');
 		$validator = new Upload_Validator();
 		$validator->setTmpFile($tmpFile);
 		return $validator->isValidSize();
@@ -290,7 +294,7 @@ class Upload extends Controller {
 	 * @return boolean
 	 */
 	public function isValidExtension($tmpFile) {
-		user_error('Upload::isValidExtension() is deprecated. Please use Upload_Validator::isValidExtension() instead', E_USER_NOTICE);
+		Deprecation::notice('2.5', 'Use Upload_Validator::isValidExtension() instead.');
 		$validator = new Upload_Validator();
 		$validator->setTmpFile($tmpFile);
 		return $validator->isValidExtension();

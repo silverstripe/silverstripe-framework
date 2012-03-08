@@ -81,7 +81,7 @@ class SS_HTTPResponse {
 	 * @var array
 	 */
 	protected $headers = array(
-		"Content-Type" => "text/html; charset=\"utf-8\"",
+		"Content-Type" => "text/html; charset=utf-8",
 	);
 	
 	/**
@@ -98,7 +98,7 @@ class SS_HTTPResponse {
 	 *  See {@link setStatusCode()} for more information.
 	 */
 	function __construct($body = null, $statusCode = null, $statusDescription = null) {
-		$this->body = $body;
+		$this->setBody($body);
 		if($statusCode) $this->setStatusCode($statusCode, $statusDescription);
 	}
 	
@@ -150,6 +150,9 @@ class SS_HTTPResponse {
 	
 	function setBody($body) {
 		$this->body = $body;
+		
+		// Set content-length in bytes. Use mbstring to avoid problems with mb_internal_encoding() and mbstring.func_overload
+		$this->headers['Content-Length'] = (function_exists('mb_strlen') ? mb_strlen($this->body,'8bit') : strlen($this->body));
 	}
 	
 	function getBody() {
@@ -222,7 +225,7 @@ class SS_HTTPResponse {
 			if(!headers_sent()) {
 				header($_SERVER['SERVER_PROTOCOL'] . " $this->statusCode " . $this->getStatusDescription());
 				foreach($this->headers as $header => $value) {
-					header("$header: $value");
+					header("$header: $value", true, $this->statusCode);
 				}
 			}
 			
@@ -245,32 +248,6 @@ class SS_HTTPResponse {
 	function isFinished() {
 		return in_array($this->statusCode, array(301, 302, 401, 403));
 	}
-	
-	/**
-	 * @deprecated 2.4 Use {@link HTTP::getLinksIn()} on DOMDocument.
-	 */
-	public function getLinks() {
-		user_error (
-			'SS_HTTPResponse->getLinks() is deprecated, please use HTTP::getLinksIn() or DOMDocument.', E_USER_NOTICE
-		);
-		
-		$attributes = array('id', 'href', 'class');
-		$links      = array();
-		$results    = array();
-		
-		if(preg_match_all('/<a[^>]+>/i', $this->body, $links)) foreach($links[0] as $link) {
-			$processedLink = array();
-			foreach($attributes as $attribute) {
-				$matches = array();
-				if(preg_match('/' . $attribute  . '\s*=\s*"([^"]+)"/i', $link, $matches)) {
-					$processedLink[$attribute] = $matches[1];
-				}
-			}
-			$results[] = $processedLink;
-		}
-		
-		return $results;
-    }
 	
 }
 

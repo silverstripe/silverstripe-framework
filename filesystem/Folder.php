@@ -25,10 +25,24 @@ class Folder extends File {
 
 	static $default_sort = "\"Sort\"";
 	
-	function populateDefaults() {
+	/**
+	 * 
+	 */
+	public function populateDefaults() {
 		parent::populateDefaults();
 		
 		if(!$this->Name) $this->Name = _t('AssetAdmin.NEWFOLDER',"NewFolder");
+	}
+	
+	/**
+	 * @param $folderPath string Absolute or relative path to the file.
+	 *  If path is relative, its interpreted relative to the "assets/" directory.
+	 * @return Folder
+	 * @deprecated in favor of the correct name find_or_make
+	 */
+	public static function findOrMake($folderPath) {
+		Deprecation::notice('3.0', "Folder::findOrMake() is deprecated in favor of Folder::find_or_make()");
+		return self::find_or_make($folderPath);
 	}
 	
 	/**
@@ -39,7 +53,7 @@ class Folder extends File {
 	 *  If path is relative, its interpreted relative to the "assets/" directory.
 	 * @return Folder
 	 */
-	static function findOrMake($folderPath) {
+	public static function find_or_make($folderPath) {
 		// Create assets directory, if it is missing
 		if(!file_exists(ASSETS_PATH)) Filesystem::makeFolder(ASSETS_PATH);
 
@@ -87,7 +101,7 @@ class Folder extends File {
 		// First, merge any children that are duplicates
 		$duplicateChildrenNames = DB::query("SELECT \"Name\" FROM \"File\" WHERE \"ParentID\" = $parentID GROUP BY \"Name\" HAVING count(*) > 1")->column();
 		if($duplicateChildrenNames) foreach($duplicateChildrenNames as $childName) {
-			$childName = DB::getConn()->addslashes($childName);
+			$childName = Convert::raw2sql($childName);
 			// Note, we do this in the database rather than object-model; otherwise we get all sorts of problems about deleting files
 			$children = DB::query("SELECT \"ID\" FROM \"File\" WHERE \"Name\" = '$childName' AND \"ParentID\" = $parentID")->column();
 			if($children) {
@@ -183,21 +197,16 @@ class Folder extends File {
 		if(is_dir($baseDir . $name)) {
 			$className = "Folder";
 		} else {
-			// Could use getimagesize to get the type of the image
-			$ext = strtolower(substr($name,strrpos($name,'.')+1));
-			switch($ext) {
-				case "gif": case "jpg": case "jpeg": case "png": $className = "Image"; break;
-				default: $className = "File";
-			}
+			$className = File::get_class_for_file_extension(pathinfo($name, PATHINFO_EXTENSION));
 		}
 
 		if(Member::currentUser()) $ownerID = Member::currentUser()->ID;
 		else $ownerID = 0;
 		
-		$filename = DB::getConn()->addslashes($this->Filename . $name);
+		$filename = Convert::raw2sql($this->Filename . $name);
 		if($className == 'Folder' ) $filename .= '/';
 
-		$name = DB::getConn()->addslashes($name);
+		$name = Convert::raw2sql($name);
 		
 		DB::query("INSERT INTO \"File\" 
 			(\"ClassName\", \"ParentID\", \"OwnerID\", \"Name\", \"Filename\", \"Created\", \"LastEdited\", \"Title\")
@@ -208,6 +217,8 @@ class Folder extends File {
 
 	/**
 	 * Take a file uploaded via a POST form, and save it inside this folder.
+	 * File names are filtered through {@link FileNameFilter}, see class documentation
+	 * on how to influence this behaviour.
 	 */
 	function addUploadToFolder($tmpFile) {
 		if(!is_array($tmpFile)) {
@@ -221,10 +232,8 @@ class Folder extends File {
 		// $parentFolder = Folder::findOrMake("Uploads");
 
 		// Generate default filename
-		$file = str_replace(' ', '-',$tmpFile['name']);
-		$file = ereg_replace('[^A-Za-z0-9+.-]+','',$file);
-		$file = ereg_replace('-+', '-',$file);
-
+		$nameFilter = Object::create('FileNameFilter');
+		$file = $nameFilter->filter($tmpFile['name']);
 		while($file[0] == '_' || $file[0] == '.') {
 			$file = substr($file, 1);
 		}
@@ -252,13 +261,13 @@ class Folder extends File {
 			$oldFile = $file;
 			
 			if(strpos($file, '.') !== false) {
-				$file = ereg_replace('[0-9]*(\.[^.]+$)', $i . '\\1', $file);
+				$file = preg_replace('/[0-9]*(\.[^.]+$)/', $i . '\\1', $file);
 			} elseif(strpos($file, '_') !== false) {
-				$file = ereg_replace('_([^_]+$)', '_' . $i, $file);
+				$file = preg_replace('/_([^_]+$)/', '_' . $i, $file);
 			} else {
-				$file .= "_$i";
+				$file .= '_'.$i;
 			}
-			
+
 			if($oldFile == $file && $i > 2) user_error("Couldn't fix $file$ext with $i", E_USER_ERROR);
 		}
 		
@@ -322,6 +331,15 @@ class Folder extends File {
 		$this->setField('Title',pathinfo($filename, PATHINFO_BASENAME));
 		parent::setFilename($filename);
 	}
+
+	/**
+	 * A folder doesn't have a (meaningful) file size.
+	 * 
+	 * @return Null
+	 */
+	function getSize() {
+		return null;
+	}
 	
 	/**
 	 * Delete the database record (recursively for folders) without touching the filesystem
@@ -384,71 +402,27 @@ class Folder extends File {
 	}
 	
 	/**
-	 * Return the FieldSet used to edit this folder in the CMS.
-	 * You can modify this fieldset by subclassing folder, or by creating a {@link DataObjectDecorator}
-	 * and implemeting updateCMSFields(FieldSet $fields) on that decorator.	
+	 * Return the FieldList used to edit this folder in the CMS.
+	 * You can modify this FieldList by subclassing folder, or by creating a {@link DataExtension}
+	 * and implemeting updateCMSFields(FieldList $fields) on that extension.
 	 */
 	function getCMSFields() {
-		$fileList = new AssetTableField(
-			$this,
-			"Files",
-			"File", 
-			array("Title" => _t('Folder.TITLE', "Title"), "Filename" => _t('Folder.FILENAME', "Filename")),
-			""
-		);
-		$fileList->setFolder($this);
-		$fileList->setPopupCaption(_t('Folder.VIEWEDITASSET', "View/Edit Asset"));
-
-		$titleField = ($this->ID && $this->ID != "root") ? new TextField("Title", _t('Folder.TITLE')) : new HiddenField("Title");
-		if( $this->canEdit() ) {
-			$deleteButton = new InlineFormAction('deletemarked',_t('Folder.DELSELECTED','Delete selected files'), 'delete');
-			$deleteButton->includeDefaultJS(false);
+		// Hide field on root level, which can't be renamed
+		if(!$this->ID || $this->ID === "root") {
+			$titleField = new HiddenField("Name");	
 		} else {
-			$deleteButton = new HiddenField('deletemarked');
+			$titleField = new TextField("Name", $this->fieldLabel('Name'));
 		}
-
-		$fields = new FieldSet(
-			new HiddenField("Name"),
-			new TabSet("Root", 
-				new Tab("Files", _t('Folder.FILESTAB', "Files"),
-					$titleField,
-					$fileList,
-					new HiddenField("DestFolderID")
-				),
-				new Tab("Details", _t('Folder.DETAILSTAB', "Details"), 
-					new ReadonlyField("URL", _t('Folder.URL', 'URL')),
-					new ReadonlyField("ClassName", _t('Folder.TYPE','Type')),
-					new ReadonlyField("Created", _t('Folder.CREATED','First Uploaded')),
-					new ReadonlyField("LastEdited", _t('Folder.LASTEDITED','Last Updated'))
-				),
-				new Tab("Upload", _t('Folder.UPLOADTAB', "Upload"),
-					new LiteralField("UploadIframe",
-						$this->getUploadIframe()
-					)
-				)
-			),
-			new HiddenField("ID")
-		);
 		
-		if(!$this->canEdit()) {
-			$fields->removeFieldFromTab("Root", "Upload");
-		}
-
+		$fields = new FieldList(
+			$titleField,
+			new HiddenField('ParentID')
+		);
 		$this->extend('updateCMSFields', $fields);
 		
 		return $fields;
 	}
 
-	/**
-	 * Display the upload form.  Returns an iframe tag that will show admin/assets/uploadiframe.
-	 */
-	function getUploadIframe() {
-		return <<<HTML
-		<iframe name="AssetAdmin_upload" src="admin/assets/uploadiframe/{$this->ID}" id="AssetAdmin_upload" border="0" style="border-style none !important; width: 97%; min-height: 300px; height: 100%; height: expression(document.body.clientHeight) !important;">
-		</iframe>
-HTML;
-	}
-	
 	/**
 	 * Get the children of this folder that are also folders.
 	 */

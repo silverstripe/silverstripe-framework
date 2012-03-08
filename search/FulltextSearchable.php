@@ -6,12 +6,15 @@
  * (if the 'cms' module is available as well).
  * (this means you can use $SearchForm in your template without changing your own implementation).
  * 
+ * CAUTION: Will make all files in your /assets folder searchable by file name
+ * unless "File" is excluded from FulltextSearchable::enable().
+ * 
  * @see http://doc.silverstripe.org/tutorial:4-site-search
  *
  * @package sapphire
  * @subpackage search
  */
-class FulltextSearchable extends DataObjectDecorator {
+class FulltextSearchable extends DataExtension {
 
 	/**
 	 * @var String Comma-separated list of database column names
@@ -49,6 +52,9 @@ class FulltextSearchable extends DataObjectDecorator {
 			if(!class_exists($class)) continue;
 			
 			if(isset($defaultColumns[$class])) {
+				if(DB::getConn()->getDatabaseServer() == 'mysql') {
+					Object::add_static_var($class, 'create_table_options', array('MySQLDatabase' => 'ENGINE=MyISAM'), true);
+				}
 				Object::add_extension($class, "FulltextSearchable('{$defaultColumns[$class]}')");
 			} else {
 				throw new Exception("FulltextSearchable::enable() I don't know the default search columns for class '$class'");
@@ -71,7 +77,13 @@ class FulltextSearchable extends DataObjectDecorator {
 		parent::__construct();
 	}
 
-	function extraStatics($class = null, $extension = null) {
+	/**
+	 * 
+	 * @param string $class
+	 * @param string $extension
+	 * @return array
+	 */
+	function extraStatics($class=null, $extension=null) {
 		if($extension && preg_match('/\([\'"](.*)[\'"]\)/', $extension, $matches)) {
 			$searchFields = $matches[1];
 

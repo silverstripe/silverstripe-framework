@@ -106,18 +106,18 @@ class SecurityTokenTest extends SapphireTest {
 	}
 	
 	function testUpdateFieldSet() {
-		$fs = new FieldSet();
+		$fs = new FieldList();
 		$t = new SecurityToken();		
 		$t->updateFieldSet($fs);
 		$f = $fs->dataFieldByName($t->getName());
 		
 		$this->assertType('HiddenField', $f);
-		$this->assertEquals($f->Name(), $t->getName(), 'Name matches');
+		$this->assertEquals($f->getName(), $t->getName(), 'Name matches');
 		$this->assertEquals($f->Value(), $t->getValue(), 'Value matches');
 	}
 	
 	function testUpdateFieldSetDoesntAddTwice() {
-		$fs = new FieldSet();
+		$fs = new FieldList();
 		$t = new SecurityToken();		
 		$t->updateFieldSet($fs); // first
 		$t->updateFieldSet($fs); // second

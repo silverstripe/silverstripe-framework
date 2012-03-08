@@ -4,17 +4,40 @@
  * @subpackage tests
  */
 class GroupTest extends FunctionalTest {
+
 	static $fixture_file = 'GroupTest.yml';
+	
+	function testGroupCodeDefaultsToTitle() {
+		$g1 = new Group();
+		$g1->Title = "My Title";
+		$g1->write();
+		$this->assertEquals('my-title', $g1->Code, 'Custom title gets converted to code if none exists already');
+		
+		$g2 = new Group();
+		$g2->Title = "My Title";
+		$g2->Code = "my-code";
+		$g2->write();
+		$this->assertEquals('my-code', $g2->Code, 'Custom attributes are not overwritten by Title field');
+		
+		$g3 = new Group();
+		$g3->Title = _t('SecurityAdmin.NEWGROUP',"New Group");
+		$g3->write();
+		$this->assertNull($g3->Code, 'Default title doesnt trigger attribute setting');
+	}
 	
 	/**
 	 * Test the Group::map() function
 	 */
 	function testGroupMap() {
+		// 2.4 only
+		$originalDeprecation = Deprecation::dump_settings();
+		Deprecation::notification_version('2.4');
+		
 		/* Group::map() returns an SQLMap object implementing iterator.  You can use foreach to get ID-Title pairs. */
 		
 		// We will iterate over the map and build mapOuput to more easily call assertions on the result.
 		$map = Group::map();
-		$mapOutput = $map->getItems()->map('ID', 'Title');
+		$mapOutput = $map->toArray();
 		
 		$group1 = $this->objFromFixture('Group', 'group1');
 		$group2 = $this->objFromFixture('Group', 'group2');
@@ -22,6 +45,8 @@ class GroupTest extends FunctionalTest {
 		/* We have added 2 groups to our fixture.  They should both appear in $mapOutput. */
 		$this->assertEquals($mapOutput[$group1->ID], $group1->Title);
 		$this->assertEquals($mapOutput[$group2->ID], $group2->Title);
+
+		Deprecation::restore_settings($originalDeprecation);
 	}
 	
 	function testMemberGroupRelationForm() {
@@ -43,13 +68,9 @@ class GroupTest extends FunctionalTest {
 	      $form->saveInto($member);
 	      $updatedGroups = $member->Groups();
 
-	      $controlGroups = new Member_GroupSet(
-	         $adminGroup,
-	         $parentGroup
-	      );
 	      $this->assertEquals(
-	         $updatedGroups->Map('ID','ID'),
-	         $controlGroups->Map('ID','ID'),
+			array($adminGroup->ID, $parentGroup->ID),
+	         $updatedGroups->column(),
 	         "Adding a toplevel group works"
 	      );
 
@@ -63,12 +84,9 @@ class GroupTest extends FunctionalTest {
 	      $form->saveInto($member);
 	      $member->flushCache();
 	      $updatedGroups = $member->Groups();
-	      $controlGroups = new Member_GroupSet(
-	         $adminGroup
-	      );
 	      $this->assertEquals(
-	         $updatedGroups->Map('ID','ID'),
-	         $controlGroups->Map('ID','ID'),
+			array($adminGroup->ID),
+	         $updatedGroups->column(),
 	         "Removing a previously added toplevel group works"
 	      );
 
@@ -81,8 +99,8 @@ class GroupTest extends FunctionalTest {
 		
 		$adminGroup->delete();
 		
-		$this->assertNull(DataObject::get('Group', "\"ID\"={$adminGroup->ID}"), 'Group is removed');
-		$this->assertNull(DataObject::get('Permission',"\"GroupID\"={$adminGroup->ID}"), 'Permissions removed along with the group');
+		$this->assertEquals(0, DataObject::get('Group', "\"ID\"={$adminGroup->ID}")->count(), 'Group is removed');
+		$this->assertEquals(0, DataObject::get('Permission',"\"GroupID\"={$adminGroup->ID}")->count(), 'Permissions removed along with the group');
 	}
 	
 	function testCollateAncestorIDs() {
@@ -116,8 +134,8 @@ class GroupTest_Member extends Member implements TestOnly {
    
    function getCMSFields() {
       $groups = DataObject::get('Group');
-      $groupsMap = ($groups) ? $groups->toDropDownMap() : false;
-      $fields = new FieldSet(
+      $groupsMap = ($groups) ? $groups->map() : false;
+      $fields = new FieldList(
          new HiddenField('ID', 'ID'),
          new CheckboxSetField(
             'Groups',
@@ -135,7 +153,7 @@ class GroupTest_MemberForm extends Form {
    
    function __construct($controller, $name) {
       $fields = singleton('GroupTest_Member')->getCMSFields();
-      $actions = new FieldSet(
+      $actions = new FieldList(
          new FormAction('doSave','save')
       );
       
@@ -147,4 +165,3 @@ class GroupTest_MemberForm extends Form {
    }
    
 }
-?>

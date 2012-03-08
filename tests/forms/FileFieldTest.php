@@ -12,10 +12,10 @@ class FileFieldTest extends FunctionalTest {
 		$form = new Form(
 			new Controller(),
 			'Form',
-			new FieldSet(
+			new FieldList(
 				$fileField = new FileField('cv', 'Upload your CV')
 			),
-			new FieldSet()
+			new FieldList()
 		);
 		$fileFieldValue = array(
 		      'name' => 'aCV.txt',
@@ -38,10 +38,10 @@ class FileFieldTest extends FunctionalTest {
 		$form = new Form(
 			new Controller(),
 			'Form',
-			new FieldSet(
+			new FieldList(
 				$fileField = new FileField('cv', 'Upload your CV')
 			),
-			new FieldSet(),
+			new FieldList(),
 			new RequiredFields('cv')
 		);
 		// All fields are filled but for some reason an error occured when uploading the file => fails

@@ -23,8 +23,8 @@ class EndsWithFilter extends SearchFilter {
 	 *
 	 * @return unknown
 	 */
-	public function apply(SQLQuery $query) {
-		$query = $this->applyRelation($query);
+	public function apply(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
 		$query->where($this->getDbName() . " LIKE '%" . Convert::raw2sql($this->getValue()) . "'");
 	}
 	
@@ -32,4 +32,3 @@ class EndsWithFilter extends SearchFilter {
 		return $this->getValue() == null || $this->getValue() == '';
 	}
 }
-?>

@@ -5,7 +5,7 @@
 This page details notes on how to ensure that we develop secure SilverStripe applications. See [security](/topics/security)
 for the Silverstripe-class as a starting-point for most security-related functionality.
 
-See our [contributing guidelines](/misc/contributing#reporting-security-issues) on how to report security issues.
+See our "[Release Process](/misc/release-process#security-releases) on how to report security issues.
 
 ## SQL Injection
 
@@ -16,8 +16,10 @@ See [http://shiflett.org/articles/sql-injection](http://shiflett.org/articles/sq
 
 ### Automatic escaping
 
-SilverStripe automatically runs [addslashes()](http://php.net/addslashes) in DataObject::write() wherever possible. Data
-is escaped when saving back to the database, not when writing to object-properties.
+SilverStripe automatically escapes data in `[api:DataObject::write()]` wherever possible,
+through database-specific methods (see `[api:Database->addslashes()]`).
+For `[api:MySQLDatabase]`, this will be `[mysql_real_escape_string()](http://de3.php.net/mysql_real_escape_string)`.
+Data is escaped when saving back to the database, not when writing to object-properties.
 
 *  DataObject::get_by_id()
 *  DataObject::update()
@@ -50,7 +52,7 @@ Example:
 
 	:::php
 	class MyForm extends Form {
-	  function save($RAW_data, $form) {
+	  public function save($RAW_data, $form) {
 	    $SQL_data = Convert::raw2sql($RAW_data); // works recursively on an array
 	    $objs = DataObject::get('Player', "Name = '{$SQL_data[name]}'");
 	    // ...
@@ -65,7 +67,7 @@ Example:
 
 	:::php
 	class MyController extends Controller {
-	  function myurlaction($RAW_urlParams) {
+	  public function myurlaction($RAW_urlParams) {
 	    $SQL_urlParams = Convert::raw2sql($RAW_urlParams); // works recursively on an array
 	    $objs = DataObject::get('Player', "Name = '{$SQL_data[OtherID]}'");
 	    // ...
@@ -82,12 +84,12 @@ This means if you've got a chain of functions passing data through, escaping sho
 	
 	   * @param array $RAW_data All names in an indexed array (not SQL-safe)
 	   */
-	  function saveAllNames($RAW_data) {
+	  public function saveAllNames($RAW_data) {
 	    // $SQL_data = Convert::raw2sql($RAW_data); // premature escaping
 	    foreach($RAW_data as $item) $this->saveName($item);
 	  }
 	
-	  function saveName($RAW_name) {
+	  public function saveName($RAW_name) {
 	    $SQL_name = Convert::raw2sql($RAW_name);
 	    DB::query("UPDATE Player SET Name = '{$SQL_name}'");
 	  }
@@ -176,7 +178,7 @@ PHP:
 			'TitleWithHTMLSuffix' => 'HTMLText' // optional, as HTMLText is the default casting
 		);
 		
-		function TitleWithHTMLSuffix($suffix) {
+		public function TitleWithHTMLSuffix($suffix) {
 			// $this->Title is not casted in PHP
 			return $this->Title . '<small>(' . $suffix. ')</small>';
 		}
@@ -208,7 +210,7 @@ PHP:
 
 	:::php
 	class MyController extends Controller {
-		function search($request) {
+		public function search($request) {
 			$htmlTitle = '<p>Your results for:' . Convert::raw2xml($request->getVar('Query')) . '</p>';
 			return $this->customise(array(
 				'Query' => DBField::create('Text', $request->getVar('Query')),
@@ -237,7 +239,7 @@ PHP:
 
 	:::php
 	class MyController extends Controller {
-		function search($request) {
+		public function search($request) {
 			$rssRelativeLink = "/rss?Query=" . urlencode($_REQUEST['query']) . "&sortOrder=asc";
 			$rssLink = Controller::join_links($this->Link(), $rssRelativeLink);
 			return $this->customise(array(
@@ -292,7 +294,7 @@ passed, such as *mysite.com/home/add/dfsdfdsfd*, then it returns 0.
 Below is an example with different ways you would use this casting technique:
 
 	:::php
-	function CaseStudies() {
+	public function CaseStudies() {
 	
 	   // cast an ID from URL parameters e.g. (mysite.com/home/action/ID)
 	   $anotherID = (int)Director::urlParam['ID'];

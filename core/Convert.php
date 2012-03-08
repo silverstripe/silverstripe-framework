@@ -197,7 +197,7 @@ class Convert {
 	/**
 	 * Converts an XML string to a PHP array
 	 *
-	 * @uses {@link recursiveXMLToArray()}
+	 * @uses recursiveXMLToArray()
 	 * @param string
 	 *
 	 * @return array
@@ -273,8 +273,8 @@ class Convert {
 		/* $data = eregi_replace("<style(^A-Za-z0-9>][^>]*)?>.*</style[^>]*>","", $data);*/
 		/* $data = eregi_replace("<script(^A-Za-z0-9>][^>]*)?>.*</script[^>]*>","", $data);*/
 		
-		$data = preg_replace("/<style(^A-Za-z0-9>][^>]*)?>.*?<\/style[^>]*>/i","", $data);
-		$data = preg_replace("/<script(^A-Za-z0-9>][^>]*)?>.*?<\/script[^>]*>/i","", $data);
+		$data = preg_replace("/<style([^A-Za-z0-9>][^>]*)?>.*?<\/style[^>]*>/is","", $data);
+		$data = preg_replace("/<script([^A-Za-z0-9>][^>]*)?>.*?<\/script[^>]*>/is","", $data);
 
 		if($config['ReplaceBoldAsterisk']) {
 			$data = preg_replace('%<(strong|b)( [^>]*)?>|</(strong|b)>%i','*',$data);
@@ -291,26 +291,25 @@ class Convert {
 	
 		// Replace images with their alt tags
 		if($config['ReplaceImagesWithAlt']) {
-			$data = eregi_replace('<img[^>]*alt *= *"([^"]*)"[^>]*>', ' \\1 ', $data);
-			$data = eregi_replace('<img[^>]*alt *= *([^ ]*)[^>]*>', ' \\1 ', $data);
+			$data = preg_replace('/<img[^>]*alt *= *"([^"]*)"[^>]*>/i', ' \\1 ', $data);
+			$data = preg_replace('/<img[^>]*alt *= *([^ ]*)[^>]*>/i', ' \\1 ', $data);
 		}
 	
 		// Compress whitespace
 		if($config['CompressWhitespace']) {
-			$data = ereg_replace("[\n\r\t ]+", " ", $data);
+			$data = preg_replace("/\s+/", " ", $data);
 		}
 		
 		// Parse newline tags
-		$data = ereg_replace("[ \n\r\t]*<[Hh][1-6]([^A-Za-z0-9>][^>]*)?> *", "\n\n", $data);
-		$data = ereg_replace("[ \n\r\t]*<[Pp]([^A-Za-z0-9>][^>]*)?> *", "\n\n", $data);
-		$data = ereg_replace("[ \n\r\t]*<[Dd][Ii][Vv]([^A-Za-z0-9>][^>]*)?> *", "\n\n", $data);
-		$data = ereg_replace("\n\n\n+","\n\n", $data);
-		
-		$data = ereg_replace("<[Bb][Rr]([^A-Za-z0-9>][^>]*)?> *", "\n", $data);
-		$data = ereg_replace("<[Tt][Rr]([^A-Za-z0-9>][^>]*)?> *", "\n", $data);
-		$data = ereg_replace("</[Tt][Dd]([^A-Za-z0-9>][^>]*)?> *", "    ", $data);
+		$data = preg_replace("/\s*<[Hh][1-6]([^A-Za-z0-9>][^>]*)?> */", "\n\n", $data);
+		$data = preg_replace("/\s*<[Pp]([^A-Za-z0-9>][^>]*)?> */", "\n\n", $data);
+		$data = preg_replace("/\s*<[Dd][Ii][Vv]([^A-Za-z0-9>][^>]*)?> */", "\n\n", $data);
+		$data = preg_replace("/\n\n\n+/", "\n\n", $data);
+
+		$data = preg_replace("/<[Bb][Rr]([^A-Za-z0-9>][^>]*)?> */", "\n", $data);
+		$data = preg_replace("/<[Tt][Rr]([^A-Za-z0-9>][^>]*)?> */", "\n", $data);
+		$data = preg_replace("/<\/[Tt][Dd]([^A-Za-z0-9>][^>]*)?> */", "    ", $data);
 		$data = preg_replace('/<\/p>/i', "\n\n", $data );
-		
 	
 		// Replace HTML entities
 		//$data = preg_replace("/&#([0-9]+);/e", 'chr(\1)', $data);
@@ -327,7 +326,7 @@ class Convert {
 		}
 		return trim(wordwrap(trim($data), $wordWrap));
 	}
-	
+
 	/**
 	 * There are no real specifications on correctly encoding mailto-links,
 	 * but this seems to be compatible with most of the user-agents.
@@ -349,21 +348,13 @@ class Convert {
 	
 	/**
 	 * Convert a string (normally a title) to a string suitable for using in
-	 * urls and other html attributes 
+	 * urls and other html attributes. Uses {@link URLSegmentFilter}.
 	 *
 	 * @param string 
-	 *
 	 * @return string
 	 */
 	public static function raw2url($title) {
-		$t = (function_exists('mb_strtolower')) ? mb_strtolower($title) : strtolower($title);
-		$t = Object::create('Transliterator')->toASCII($t);
-		$t = str_replace('&amp;','-and-',$t);
-		$t = str_replace('&','-and-',$t);
-		$t = ereg_replace('[^A-Za-z0-9]+','-',$t);
-		$t = ereg_replace('-+','-',$t);
-		$t = trim($t, '-');
-		
-		return $t;
+		$f = Object::create('URLSegmentFilter');
+		return $f->filter($title);
 	}
 }

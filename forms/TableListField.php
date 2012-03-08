@@ -21,19 +21,10 @@
  * @subpackage fields-relational
  */
 class TableListField extends FormField {
-	
 	/**
-	 * @var $cachedSourceItems DataObjectSet Prevent {@sourceItems()} from being called multiple times.
+	 * The {@link DataList} object defining the source data for this view/
 	 */
-	protected $cachedSourceItems;
-
-	protected $sourceClass;
-
-	protected $sourceFilter = "";
-	
-	protected $sourceSort = "";
-	
-	protected $sourceJoin = array();
+	protected $dataList;
 	
 	protected $fieldList;
 	
@@ -137,27 +128,11 @@ class TableListField extends FormField {
 	 * Mostly needed in ComplexTableField-subclass.
 	 */
 	public $defaultAction = '';
-	
-	/**
-	 * @var $customQuery Specify custom query, e.g. for complicated having/groupby-constructs.
-	 * Caution: TableListField automatically selects the ID from the {@sourceClass}, because it relies
-	 * on this information e.g. in saving a TableField. Please use a custom select if you want to filter
-	 * for other IDs in joined tables: $query->select[] = "MyJoinedTable.ID AS MyJoinedTableID"
-	 */
-	protected $customQuery;
 
 	/**
 	 * @var $customCsvQuery Query for CSV-export (might need different fields or further filtering)
 	 */
 	protected $customCsvQuery;
-	
-	/**
-	 * @var $customSourceItems DataObjectSet Use the manual setting of a result-set only as a last-resort
-	 * for sets which can't be resolved in a single query.
-	 *
-	 * @todo Add pagination support for customSourceItems.
-	 */
-	protected $customSourceItems;
 	
 	/**
 	 * Character to seperate exported columns in the CSV file
@@ -182,12 +157,6 @@ class TableListField extends FormField {
 		"\r"=>"",
 		"\n"=>"",
 	);
-	
-	
-	/**
-	 * @var int Shows total count regardless or pagination
-	 */
-	protected $totalCount;
 	
 	/**
 	 * @var boolean Trigger pagination
@@ -257,24 +226,32 @@ class TableListField extends FormField {
 	
 	protected $__cachedQuery;
 	
-	function __construct($name, $sourceClass, $fieldList = null, $sourceFilter = null, 
+	/**
+	 * This is a flag that enables some backward-compatibility helpers.
+	 */
+	private $getDataListFromForm;
+	
+	function __construct($name, $sourceClass = null, $fieldList = null, $sourceFilter = null, 
 		$sourceSort = null, $sourceJoin = null) {
 
-		$this->fieldList = ($fieldList) ? $fieldList : singleton($sourceClass)->summaryFields();
-		$this->sourceClass = $sourceClass;
-		$this->sourceFilter = $sourceFilter;
-		$this->sourceSort = $sourceSort;
-		$this->sourceJoin = $sourceJoin;
+		if($sourceClass) {
+			// You can optionally pass a list
+			if($sourceClass instanceof SS_List) {
+				$this->dataList = $sourceClass;
+				
+			} else {
+				$this->dataList = DataObject::get($sourceClass)->where($sourceFilter)->sort($sourceSort);
+				if($sourceJoin) $this->dataList = $this->dataList->join($sourceJoin);
+				// Grab it from the form relation, if available.
+				$this->getDataListFromForm = true;
+			}
+		}
+
+		$this->fieldList = ($fieldList) ? $fieldList : singleton($this->sourceClass())->summaryFields();
+
 		$this->readOnly = false;
 
 		parent::__construct($name);
-	}
-	
-	/**
-	 * Get the filter
-	 */
-	function sourceFilter() {
-		return $this->sourceFilter;
 	}
 	
 	function index() {
@@ -287,7 +264,10 @@ class TableListField extends FormField {
 	);
 
 	function sourceClass() {
-		return $this->sourceClass;
+	    $list = $this->getDataList();
+	    if(method_exists($list, 'dataClass')) return $list->dataClass();
+	    // Failover for SS_List
+	    else return get_class($list->First());
 	}
 	
 	function handleItem($request) {
@@ -295,10 +275,9 @@ class TableListField extends FormField {
 	}
 	
 	function FieldHolder() {
+		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/TableListField.css');
@@ -322,27 +301,27 @@ JS
 	function Headings() {
 		$headings = array();
 		foreach($this->fieldList as $fieldName => $fieldTitle) {
-			$isSorted = (isset($_REQUEST['ctf'][$this->Name()]['sort']) && $fieldName == $_REQUEST['ctf'][$this->Name()]['sort']);
+			$isSorted = (isset($_REQUEST['ctf'][$this->getName()]['sort']) && $fieldName == $_REQUEST['ctf'][$this->getName()]['sort']);
 			// we can't allow sorting with partial summaries (groupByField)
 			$isSortable = ($this->form && $this->isFieldSortable($fieldName) && !$this->groupByField);
 
 			// sorting links (only if we have a form to refresh with)
 			if($this->form) {
 				$sortLink = $this->Link();
-				$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][sort]", $fieldName, $sortLink,'&');
+				$sortLink = HTTP::setGetVar("ctf[{$this->getName()}][sort]", $fieldName, $sortLink,'&');
 	
 				// Apply sort direction to the current sort field
-				if(!empty($_REQUEST['ctf'][$this->Name()]['sort']) && ($_REQUEST['ctf'][$this->Name()]['sort'] == $fieldName)) {
-					$dir = isset($_REQUEST['ctf'][$this->Name()]['dir']) ? $_REQUEST['ctf'][$this->Name()]['dir'] : null;
+				if(!empty($_REQUEST['ctf'][$this->getName()]['sort']) && ($_REQUEST['ctf'][$this->getName()]['sort'] == $fieldName)) {
+					$dir = isset($_REQUEST['ctf'][$this->getName()]['dir']) ? $_REQUEST['ctf'][$this->getName()]['dir'] : null;
 					$dir = trim(strtolower($dir));
 					$newDir = ($dir == 'desc') ? null : 'desc';
-					$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][dir]", Convert::raw2xml($newDir), $sortLink,'&');
+					$sortLink = HTTP::setGetVar("ctf[{$this->getName()}][dir]", Convert::raw2xml($newDir), $sortLink,'&');
 				}
 
-				if(isset($_REQUEST['ctf'][$this->Name()]['search']) && is_array($_REQUEST['ctf'][$this->Name()]['search'])) {
-					foreach($_REQUEST['ctf'][$this->Name()]['search'] as $parameter => $value) {
+				if(isset($_REQUEST['ctf'][$this->getName()]['search']) && is_array($_REQUEST['ctf'][$this->getName()]['search'])) {
+					foreach($_REQUEST['ctf'][$this->getName()]['search'] as $parameter => $value) {
 						$XML_search = Convert::raw2xml($value);
-						$sortLink = HTTP::setGetVar("ctf[{$this->Name()}][search][$parameter]", $XML_search, $sortLink,'&');
+						$sortLink = HTTP::setGetVar("ctf[{$this->getName()}][search][$parameter]", $XML_search, $sortLink,'&');
 					}
 				}
 			} else {
@@ -351,14 +330,14 @@ JS
 			
 			$headings[] = new ArrayData(array(
 				"Name" => $fieldName, 
-				"Title" => ($this->sourceClass) ? singleton($this->sourceClass)->fieldLabel($fieldTitle) : $fieldTitle,
+				"Title" => ($this->sourceClass()) ? singleton($this->sourceClass())->fieldLabel($fieldTitle) : $fieldTitle,
 				"IsSortable" => $isSortable,
 				"SortLink" => $sortLink,
 				"SortBy" => $isSorted,
-				"SortDirection" => (isset($_REQUEST['ctf'][$this->Name()]['dir'])) ? $_REQUEST['ctf'][$this->Name()]['dir'] : null 
+				"SortDirection" => (isset($_REQUEST['ctf'][$this->getName()]['dir'])) ? $_REQUEST['ctf'][$this->getName()]['dir'] : null 
 			));
 		}
-		return new DataObjectSet($headings);
+		return new ArrayList($headings);
 	}
 	
 	function disableSorting($to = true) {
@@ -374,23 +353,20 @@ JS
 	 * @return bool
 	 */	
 	function isFieldSortable($fieldName) {
-		if($this->customSourceItems || $this->disableSorting) {
-			return false;
-		}
-		
-		if(!$this->__cachedQuery) $this->__cachedQuery = $this->getQuery();
-
-		return $this->__cachedQuery->canSortBy($fieldName);
+		if($this->disableSorting) return false;
+		$list = $this->getDataList();
+		if(method_exists($list,'canSortBy')) return $list->canSortBy($fieldName);
+		else return false;
 	}
 	
 	/**
 	 * Dummy function to get number of actions originally generated in
 	 * TableListField_Item.
 	 * 
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	function Actions() {
-		$allowedActions = new DataObjectSet();
+		$allowedActions = new ArrayList();
 		foreach($this->actions as $actionName => $actionSettings) {
 			if($this->Can($actionName)) {
 				$allowedActions->push(new ViewableData());
@@ -403,80 +379,68 @@ JS
 	/**
 	 * Provide a custom query to compute sourceItems. This is the preferred way to using
 	 * {@setSourceItems}, because we can still paginate.
-	 * Caution: Other parameters such as {@sourceFilter} will be ignored.
 	 * Please use this only as a fallback for really complex queries (e.g. involving HAVING and GROUPBY).  
 	 * 
-	 * @param $query SS_Query
+	 * @param $query DataList
 	 */
-	function setCustomQuery(SQLQuery $query) {
-		// The type-hinting above doesn't seem to work consistently
-		if($query instanceof SQLQuery) {
-			$this->customQuery = $query;
-		} else {
-			user_error('TableList::setCustomQuery() should be passed a SQLQuery', E_USER_WARNING);
-		}
+	function setCustomQuery(DataList $dataList) {
+		$this->dataList = $dataList;
+		return $this;
 	}
 
-	function setCustomCsvQuery(SQLQuery $query) {
-		// The type-hinting above doesn't seem to work consistently
-		if($query instanceof SQLQuery) {
-			$this->customCsvQuery = $query;
-		} else {
-			user_error('TableList::setCustomCsvQuery() should be passed a SQLQuery', E_USER_WARNING);
-		}
+	function setCustomCsvQuery(DataList $dataList) {
+		$this->customCsvQuery = $query;
+		return $this;
 	}
 	
-	function setCustomSourceItems(DataObjectSet $items) {
+	function setCustomSourceItems(SS_List $items) {
+		user_error('TableList::setCustomSourceItems() deprecated, just pass the items into the constructor', E_USER_WARNING);
+
 		// The type-hinting above doesn't seem to work consistently
-		if($items instanceof DataObjectSet) {
-			$this->customSourceItems = $items;
+		if($items instanceof SS_List) {
+		    $this->dataList = $items;
 		} else {
-			user_error('TableList::setCustomSourceItems() should be passed a DataObjectSet', E_USER_WARNING);
+			user_error('TableList::setCustomSourceItems() should be passed a SS_List', E_USER_WARNING);
 		}
+
+		return $this;
 	}
 	
+	/**
+	 * Get items, with sort & limit applied
+	 */
 	function sourceItems() {
-		$SQL_limit = ($this->showPagination && $this->pageSize) ? "{$this->pageSize}" : null;
-		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
-			$SQL_start = (isset($_REQUEST['ctf'][$this->Name()]['start'])) ? intval($_REQUEST['ctf'][$this->Name()]['start']) : "0";
-		} else {
-			$SQL_start = 0;
-		}
-		if(isset($this->customSourceItems)) {
-			if($this->showPagination && $this->pageSize) {
-				$items = $this->customSourceItems->getRange($SQL_start, $SQL_limit);
-			} else {
-				$items = $this->customSourceItems;
-			}
-		} elseif(isset($this->cachedSourceItems)) {
-			$items = $this->cachedSourceItems;
-		} else {
-			// get query
-			$dataQuery = $this->getQuery();
-			
-			// we don't limit when doing certain actions        T
-			$methodName = isset($_REQUEST['url']) ? array_pop(explode('/', $_REQUEST['url'])) : null;
-			if(!$methodName || !in_array($methodName,array('printall','export'))) {
-				$dataQuery->limit(array(
-					'limit' => $SQL_limit,
-					'start' => (isset($SQL_start)) ? $SQL_start : null 
-				));
-			}
+		// get items (this may actually be a SS_List)
+		$items = clone $this->getDataList();
 
-			// get data
-			$records = $dataQuery->execute();
-			$sourceClass = $this->sourceClass;
-			$dataobject = new $sourceClass();
-			$items = $dataobject->buildDataObjectSet($records, 'DataObjectSet');
-			
-			$this->cachedSourceItems = $items;
+		// TODO: Sorting could be implemented on regular SS_Lists.
+		if(method_exists($items,'canSortBy') && isset($_REQUEST['ctf'][$this->getName()]['sort'])) {
+    		$sort = $_REQUEST['ctf'][$this->getName()]['sort'];
+		    // TODO: sort direction
+			if($items->canSortBy($sort)) $items = $items->sort($sort);
 		}
+
+		// Determine pagination limit, offset
+		// To disable pagination, set $this->showPagination to false.
+		if($this->showPagination && $this->pageSize) {
+		    $SQL_limit = (int)$this->pageSize;
+		    if(isset($_REQUEST['ctf'][$this->getName()]['start']) && is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) {
+			    $SQL_start = (isset($_REQUEST['ctf'][$this->getName()]['start'])) ? intval($_REQUEST['ctf'][$this->getName()]['start']) : "0";
+		    } else {
+			    $SQL_start = 0;
+		    }
+		
+		    $items = $items->getRange($SQL_start, $SQL_limit);
+	    }
 
 		return $items;
 	}
-	
+
+	/**
+	 * Return a SS_List of TableListField_Item objects, suitable for display in the template.
+	 */
 	function Items() {
-		$fieldItems = new DataObjectSet();
+		$fieldItems = new ArrayList();
 		if($items = $this->sourceItems()) foreach($items as $item) {
 			if($item) $fieldItems->push(new $this->itemClass($item, $this));
 		}
@@ -484,42 +448,52 @@ JS
 	}
 	
 	/**
-	 * Generates the query for sourceitems (without pagination/limit-clause)
-	 * 
-	 * @return string
+	 * Returns the DataList for this field.
 	 */
-	function getQuery() {
-		if($this->customQuery) {
-			$query = clone $this->customQuery;
-			$baseClass = ClassInfo::baseDataClass($this->sourceClass);
-		} else {
-			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter(), $this->sourceSort, null, $this->sourceJoin);
-		}
-		
-		if(!empty($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$column = $_REQUEST['ctf'][$this->Name()]['sort'];
-			$dir = 'ASC';
-			if(!empty($_REQUEST['ctf'][$this->Name()]['dir'])) {
-				$dir = $_REQUEST['ctf'][$this->Name()]['dir'];
-				if(strtoupper(trim($dir)) == 'DESC') $dir = 'DESC';
+	function getDataList() {
+		// If we weren't passed in a DataList to begin with, try and get the datalist from the form
+		if($this->form && $this->getDataListFromForm) {
+		    $this->getDataListFromForm = false;
+			$relation = $this->name;
+			if($record = $this->form->getRecord()) {
+				if($record->hasMethod($relation)) $this->dataList = $record->$relation();
 			}
-			if($query->canSortBy($column)) $query->orderby = $column.' '.$dir;
 		}
 		
-		return $query;
+		if(!$this->dataList) {
+			user_error(get_class($this). ' is missing a DataList', E_USER_ERROR);
+		}
+		
+		return $this->dataList;
 	}
 
-	function getCsvQuery() {
-		$baseClass = ClassInfo::baseDataClass($this->sourceClass);
-		if($this->customCsvQuery || $this->customQuery) {
-			$query = $this->customCsvQuery ? $this->customCsvQuery : $this->customQuery;
-		} else {
-			$query = singleton($this->sourceClass)->extendedSQL($this->sourceFilter(), $this->sourceSort, null, $this->sourceJoin);
-		}
-		
-		return clone $query;
+	function getCsvDataList() {
+		if($this->customCsvQuery) return $this->customCsvQuery;
+		else return $this->getDataList();
 	}
 	
+	/**
+	 * @deprecated Use getDataList() instead.
+	 */
+	function getQuery() {
+		Deprecation::notice('3.0', 'Use getDataList() instead.');
+	    $list = $this->getDataList();
+	    if(method_exists($list,'dataQuery')) {
+		    return $this->getDataList()->dataQuery()->query();
+	    }
+	}
+
+	/**
+	 * @deprecated Use getCsvDataList() instead.
+	 */
+	function getCsvQuery() {
+		Deprecation::notice('3.0', 'Use getCsvDataList() instead.');
+	    $list = $this->getCsvDataList();
+	    if(method_exists($list,'dataQuery')) {
+            return $list->dataQuery()->query();
+        }
+	}
+		
 	function FieldList() {
 		return $this->fieldList;
 	}
@@ -529,6 +503,7 @@ JS
 	 */
 	function setClick_AjaxLoad($urlBase, $formID) {
 		$this->clickAction = "this.ajaxRequest('" . addslashes($urlBase) . "', '" . addslashes($formID) . "')";
+		return $this;
 	}
 
 	/**
@@ -536,6 +511,7 @@ JS
 	 */
 	function setClick_PopupLoad($urlBase) {
 		$this->clickAction = "var w = window.open(baseHref() + '$urlBase' + this.id.replace(/.*-(\d*)$/,'$1'), 'popup'); w.focus();";
+		return $this;
 	}
 	
 	function performReadonlyTransformation() {
@@ -573,8 +549,7 @@ JS
 		$childId = Convert::raw2sql($_REQUEST['ctf']['childID']);
 
 		if (is_numeric($childId)) {
-			$childObject = DataObject::get_by_id($this->sourceClass, $childId);
-			if($childObject) $childObject->delete();
+		    $this->getDataList()->removeById($childId);
 		}
 
 		// TODO return status in JSON etc.
@@ -618,7 +593,7 @@ JS
 	}
 	
 	/**
-	 * @param DataObjectSet $items Only used to pass grouped sourceItems for creating
+	 * @param SS_List $items Only used to pass grouped sourceItems for creating
 	 * partial summaries.
 	 */
 	function SummaryFields($items = null) {
@@ -662,7 +637,7 @@ JS
 				'Title' => DBField::create('Varchar', $fieldTitle),
 			));
 		}
-		return new DataObjectSet($summaryFields);
+		return new ArrayList($summaryFields);
 	}
 	
 	function HasGroupedItems() {
@@ -680,9 +655,9 @@ JS
 		}
 		
 		$groupedItems = $items->groupBy($this->groupByField);
-		$groupedArrItems = new DataObjectSet();
+		$groupedArrItems = new ArrayList();
 		foreach($groupedItems as $key => $group) {
-			$fieldItems = new DataObjectSet();
+			$fieldItems = new ArrayList();
 			foreach($group as $item) {
 				if($item) $fieldItems->push(new $this->itemClass($item, $this));
 			}
@@ -732,6 +707,7 @@ JS
 	
 	function setPermissions($arr) {
 		$this->permissions = $arr;
+		return $this;
 	}
 
 	/**
@@ -748,6 +724,7 @@ JS
 	 */
 	function setShowPagination($bool) {
 		$this->showPagination = (bool)$bool;
+		return $this;
 	}
 
 	/**
@@ -762,6 +739,7 @@ JS
 	
 	function setPageSize($pageSize) {
 	 	$this->pageSize = $pageSize;
+	 	return $this;
 	}
 	 
 	 function PageSize() {
@@ -769,7 +747,7 @@ JS
 	}
 	 
 	function ListStart() {
-		return $_REQUEST['ctf'][$this->Name()]['start'];
+		return $_REQUEST['ctf'][$this->getName()]['start'];
 	}
 	
 	/**
@@ -777,8 +755,9 @@ JS
 	 * @deprecated Put the query string onto your form's link instead :-)
 	 */
 	function setExtraLinkParams($params){
-		user_error("TableListField::setExtraLinkParams() deprecated - put the query string onto your form's FormAction instead; it will be handed down to all field with special handlers", E_USER_NOTICE);
+		Deprecation::notice('2.4', 'Put the query string onto your FormAction instead().');
 		$this->extraLinkParams = $params;
+		return $this;
 	}
 	
 	/**
@@ -791,19 +770,19 @@ JS
 	function FirstLink() {
 		$start = 0;
 		
-		if(!isset($_REQUEST['ctf'][$this->Name()]['start']) || !is_numeric($_REQUEST['ctf'][$this->Name()]['start']) || $_REQUEST['ctf'][$this->Name()]['start'] == 0) {
+		if(!isset($_REQUEST['ctf'][$this->getName()]['start']) || !is_numeric($_REQUEST['ctf'][$this->getName()]['start']) || $_REQUEST['ctf'][$this->getName()]['start'] == 0) {
 			return null;
 		}
 		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
-		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
+		$link = Controller::join_links($baseLink, "?ctf[{$this->getName()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		
 		// preserve sort options
-		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$link .= "&ctf[{$this->Name()}][sort]=" . $_REQUEST['ctf'][$this->Name()]['sort'];
+		if(isset($_REQUEST['ctf'][$this->getName()]['sort'])) {
+			$link .= "&ctf[{$this->getName()}][sort]=" . $_REQUEST['ctf'][$this->getName()]['sort'];
 			// direction
-			if(isset($_REQUEST['ctf'][$this->Name()]['dir'])) {
-				$link .= "&ctf[{$this->Name()}][dir]=" . $_REQUEST['ctf'][$this->Name()]['dir'];
+			if(isset($_REQUEST['ctf'][$this->getName()]['dir'])) {
+				$link .= "&ctf[{$this->getName()}][dir]=" . $_REQUEST['ctf'][$this->getName()]['dir'];
 			}
 		}
 		
@@ -811,24 +790,24 @@ JS
 	}
 	
 	function PrevLink() {
-		$currentStart = isset($_REQUEST['ctf'][$this->Name()]['start']) ? $_REQUEST['ctf'][$this->Name()]['start'] : 0;
+		$currentStart = isset($_REQUEST['ctf'][$this->getName()]['start']) ? $_REQUEST['ctf'][$this->getName()]['start'] : 0;
 
 		if($currentStart == 0) {
 			return null;
 		}
 		
-		$start = ($_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize < 0)  ? 0 : $_REQUEST['ctf'][$this->Name()]['start'] - $this->pageSize;
+		$start = ($_REQUEST['ctf'][$this->getName()]['start'] - $this->pageSize < 0)  ? 0 : $_REQUEST['ctf'][$this->getName()]['start'] - $this->pageSize;
 		
 		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
-		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
+		$link = Controller::join_links($baseLink, "?ctf[{$this->getName()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		
 		// preserve sort options
-		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$link .= "&ctf[{$this->Name()}][sort]=" . $_REQUEST['ctf'][$this->Name()]['sort'];
+		if(isset($_REQUEST['ctf'][$this->getName()]['sort'])) {
+			$link .= "&ctf[{$this->getName()}][sort]=" . $_REQUEST['ctf'][$this->getName()]['sort'];
 			// direction
-			if(isset($_REQUEST['ctf'][$this->Name()]['dir'])) {
-				$link .= "&ctf[{$this->Name()}][dir]=" . $_REQUEST['ctf'][$this->Name()]['dir'];
+			if(isset($_REQUEST['ctf'][$this->getName()]['dir'])) {
+				$link .= "&ctf[{$this->getName()}][dir]=" . $_REQUEST['ctf'][$this->getName()]['dir'];
 			}
 		}
 		
@@ -837,21 +816,21 @@ JS
 	
 
 	function NextLink() {
-		$currentStart = isset($_REQUEST['ctf'][$this->Name()]['start']) ? $_REQUEST['ctf'][$this->Name()]['start'] : 0;
+		$currentStart = isset($_REQUEST['ctf'][$this->getName()]['start']) ? $_REQUEST['ctf'][$this->getName()]['start'] : 0;
 		$start = ($currentStart + $this->pageSize < $this->TotalCount()) ? $currentStart + $this->pageSize : $this->TotalCount() % $this->pageSize > 0;
 		if($currentStart >= $start-1) {
 			return null;
 		}
 		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
-		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
+		$link = Controller::join_links($baseLink, "?ctf[{$this->getName()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		
 		// preserve sort options
-		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$link .= "&ctf[{$this->Name()}][sort]=" . $_REQUEST['ctf'][$this->Name()]['sort'];
+		if(isset($_REQUEST['ctf'][$this->getName()]['sort'])) {
+			$link .= "&ctf[{$this->getName()}][sort]=" . $_REQUEST['ctf'][$this->getName()]['sort'];
 			// direction
-			if(isset($_REQUEST['ctf'][$this->Name()]['dir'])) {
-				$link .= "&ctf[{$this->Name()}][dir]=" . $_REQUEST['ctf'][$this->Name()]['dir'];
+			if(isset($_REQUEST['ctf'][$this->getName()]['dir'])) {
+				$link .= "&ctf[{$this->getName()}][dir]=" . $_REQUEST['ctf'][$this->getName()]['dir'];
 			}
 		}
 		
@@ -862,20 +841,20 @@ JS
 		$pageSize = ($this->TotalCount() % $this->pageSize > 0) ? $this->TotalCount() % $this->pageSize : $this->pageSize;
 		$start = $this->TotalCount() - $pageSize;
 		// Check if there is only one page, or if we are on last page
-		if($this->TotalCount() <= $pageSize || (isset($_REQUEST['ctf'][$this->Name()]['start']) &&  $_REQUEST['ctf'][$this->Name()]['start'] >= $start)) {
+		if($this->TotalCount() <= $pageSize || (isset($_REQUEST['ctf'][$this->getName()]['start']) &&  $_REQUEST['ctf'][$this->getName()]['start'] >= $start)) {
 			return null;
 		}
 		
 		$baseLink = ($this->paginationBaseLink) ? $this->paginationBaseLink : $this->Link();
-		$link = Controller::join_links($baseLink, "?ctf[{$this->Name()}][start]={$start}");
+		$link = Controller::join_links($baseLink, "?ctf[{$this->getName()}][start]={$start}");
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
 		
 		// preserve sort options
-		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$link .= "&ctf[{$this->Name()}][sort]=" . $_REQUEST['ctf'][$this->Name()]['sort'];
+		if(isset($_REQUEST['ctf'][$this->getName()]['sort'])) {
+			$link .= "&ctf[{$this->getName()}][sort]=" . $_REQUEST['ctf'][$this->getName()]['sort'];
 			// direction
-			if(isset($_REQUEST['ctf'][$this->Name()]['dir'])) {
-				$link .= "&ctf[{$this->Name()}][dir]=" . $_REQUEST['ctf'][$this->Name()]['dir'];
+			if(isset($_REQUEST['ctf'][$this->getName()]['dir'])) {
+				$link .= "&ctf[{$this->getName()}][dir]=" . $_REQUEST['ctf'][$this->getName()]['dir'];
 			}
 		}
 		
@@ -884,29 +863,31 @@ JS
 	
 	function FirstItem() {
 		if ($this->TotalCount() < 1) return 0;
-		return isset($_REQUEST['ctf'][$this->Name()]['start']) ? $_REQUEST['ctf'][$this->Name()]['start'] + 1 : 1;
+		return isset($_REQUEST['ctf'][$this->getName()]['start']) ? $_REQUEST['ctf'][$this->getName()]['start'] + 1 : 1;
 	}
 	
 	function LastItem() {
-		if(isset($_REQUEST['ctf'][$this->Name()]['start'])) {
-			return $_REQUEST['ctf'][$this->Name()]['start'] + min($this->pageSize, $this->TotalCount() - $_REQUEST['ctf'][$this->Name()]['start']);
+		if(isset($_REQUEST['ctf'][$this->getName()]['start'])) {
+			return $_REQUEST['ctf'][$this->getName()]['start'] + min($this->pageSize, $this->TotalCount() - $_REQUEST['ctf'][$this->getName()]['start']);
 		} else {
 			return min($this->pageSize, $this->TotalCount());
 		}
 	}
-	
-	function TotalCount() {
-		if($this->totalCount) {
-			return $this->totalCount;
-		}
-		if($this->customSourceItems) {
-			return $this->customSourceItems->Count();
-		}
 
-		$this->totalCount = $this->getQuery()->unlimitedRowCount();
-		return $this->totalCount;
+	/**
+	 * @ignore
+	 */
+	private $_cache_TotalCount;
+
+	/**
+	 * Return the total number of items in the source DataList
+	 */
+	function TotalCount() {
+	    if($this->_cache_TotalCount === null) {
+	        $this->_cache_TotalCount = $this->getDataList()->Count();
+	    }
+		return $this->_cache_TotalCount;
 	}
-	
 	
 	
 	/**
@@ -936,6 +917,7 @@ JS
 	 */
 	 function setFieldListCsv($fields) {
 	 	$this->fieldListCsv = $fields;
+	 	return $this;
 	 }
 	
 	/**
@@ -943,6 +925,7 @@ JS
 	 */
 	function setCsvSeparator($csvSeparator) {
 		$this->csvSeparator = $csvSeparator;
+		return $this;
 	}
 	
 	/**
@@ -957,6 +940,7 @@ JS
 	 */
 	function removeCsvHeader() {
 		$this->csvHasHeader = false;
+		return $this;
 	}
 	 
 	/**
@@ -970,6 +954,14 @@ JS
 	function export() {
 		$now = Date("d-m-Y-H-i");
 		$fileName = "export-$now.csv";
+
+        // No pagination for export
+		$oldShowPagination = $this->showPagination;
+		$this->showPagination = false;
+		
+		$result = $this->renderWith(array($this->template . '_printable', 'TableListField_printable'));
+		
+		$this->showPagination = $oldShowPagination;
 		
 		if($fileData = $this->generateExportFileData($numColumns, $numRows)){
 			return SS_HTTPRequest::send_file($fileData, $fileName);
@@ -983,7 +975,7 @@ JS
 		$csvColumns = ($this->fieldListCsv) ? $this->fieldListCsv : $this->fieldList;
 		$fileData = '';
 		$columnData = array();
-		$fieldItems = new DataObjectSet();
+		$fieldItems = new ArrayList();
 		
 		if($this->csvHasHeader) {
 			$fileData .= "\"" . implode("\"{$separator}\"", array_values($csvColumns)) . "\"";
@@ -993,8 +985,7 @@ JS
 		if(isset($this->customSourceItems)) {
 			$items = $this->customSourceItems;
 		} else {
-			$dataQuery = $this->getCsvQuery();
-			$items = $dataQuery->execute();
+			$items = $this->getCsvDataList();
 		}
 		
 		// temporary override to adjust TableListField_Item behaviour
@@ -1074,8 +1065,8 @@ JS
 
 	function PrintLink() {
 		$link = Controller::join_links($this->Link(), 'printall');
-		if(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
-			$link = HTTP::setGetVar("ctf[{$this->Name()}][sort]",Convert::raw2xml($_REQUEST['ctf'][$this->Name()]['sort']), $link);
+		if(isset($_REQUEST['ctf'][$this->getName()]['sort'])) {
+			$link = HTTP::setGetVar("ctf[{$this->getName()}][sort]",Convert::raw2xml($_REQUEST['ctf'][$this->getName()]['sort']), $link);
 		}
 		return $link;
 	}
@@ -1086,7 +1077,7 @@ JS
 	 * #################################
 	 */
 	function Utility() {
-		$links = new DataObjectSet();
+		$links = new ArrayList();
 		if($this->can('export')) {
 			$links->push(new ArrayData(array(
 				'Title' => _t('TableListField.CSVEXPORT', 'Export to CSV'),
@@ -1108,6 +1099,7 @@ JS
 	 * @deprecated Please use the standard URL through Link() which gives you the FieldHolder as an HTML fragment.
 	 */
 	function ajax_refresh() {
+		Deprecation::notice('2.4', 'Please use the standard URL through Link() which gives you the FieldHolder as an HTML fragment instead.');
 		// compute sourceItems here instead of Items() to ensure that
 		// pagination and filters are respected on template accessors
 		//$this->sourceItems();
@@ -1120,14 +1112,17 @@ JS
 	
 	function setFieldCasting($casting) {
 		$this->fieldCasting = $casting;
+		return $this;
 	}
 
 	function setFieldFormatting($formatting) {
 		$this->fieldFormatting = $formatting;
+		return $this;
 	}
 	
 	function setCSVFieldFormatting($formatting) {
 		$this->csvFieldFormatting = $formatting;
+		return $this;
 	}
 	
 	/**
@@ -1135,6 +1130,7 @@ JS
 	 */
 	function setFieldList($fieldList) {
 		$this->fieldList = $fieldList;
+		return $this;
 	}
 	
 	/**
@@ -1151,31 +1147,32 @@ JS
 	  // adding this to TODO probably add a method to the classes
 	  // to return they're translated string
 	  // added by ruibarreiros @ 27/11/2007
-		return $this->sourceClass ? singleton($this->sourceClass)->singular_name() : $this->Name();
+		return $this->sourceClass() ? singleton($this->sourceClass())->singular_name() : $this->getName();
 	}
 	
 	function NameSingular() {
 	  // same as Title()
 	  // added by ruibarreiros @ 27/11/2007
-	  return $this->sourceClass ? singleton($this->sourceClass)->singular_name() : $this->Name();
+	  return $this->sourceClass() ? singleton($this->sourceClass())->singular_name() : $this->getName();
 	}
 
 	function NamePlural() {
 	  // same as Title()
 	  // added by ruibarreiros @ 27/11/2007
-		return $this->sourceClass ? singleton($this->sourceClass)->plural_name() : $this->Name();
+		return $this->sourceClass() ? singleton($this->sourceClass())->plural_name() : $this->getName();
 	} 
 	
 	function setTemplate($template) {
 		$this->template = $template;
+		return $this;
 	}
 	
 	function CurrentLink() {
 		$link = $this->Link();
 		
-		if(isset($_REQUEST['ctf'][$this->Name()]['start']) && is_numeric($_REQUEST['ctf'][$this->Name()]['start'])) {
-			$start = ($_REQUEST['ctf'][$this->Name()]['start'] < 0)  ? 0 : $_REQUEST['ctf'][$this->Name()]['start'];
-			$link = Controller::join_links($link, "?ctf[{$this->Name()}][start]={$start}");
+		if(isset($_REQUEST['ctf'][$this->getName()]['start']) && is_numeric($_REQUEST['ctf'][$this->getName()]['start'])) {
+			$start = ($_REQUEST['ctf'][$this->getName()]['start'] < 0)  ? 0 : $_REQUEST['ctf'][$this->getName()]['start'];
+			$link = Controller::join_links($link, "?ctf[{$this->getName()}][start]={$start}");
 		}
 
 		if($this->extraLinkParams) $link .= "&" . http_build_query($this->extraLinkParams);
@@ -1196,7 +1193,7 @@ JS
 			$parentUrlParts = parse_url(parent::Link($action));
 			$queryPart = (isset($parentUrlParts['query'])) ? '?' . $parentUrlParts['query'] : null;
 			// Ensure that URL actions not routed through Form->httpSubmission() are protected against CSRF attacks.
-			if($form->securityTokenEnabled()) $queryPart = $token->addtoUrl($queryPart);
+			if($token->isEnabled()) $queryPart = $token->addtoUrl($queryPart);
 			return Controller::join_links($parentUrlParts['path'], $queryPart);
 		} else {
 			// allow for instanciation of this FormField outside of a controller/form
@@ -1208,17 +1205,6 @@ JS
 	function BaseLink() {
 		user_error("TableListField::BaseLink() deprecated, use Link() instead", E_USER_NOTICE);
 		return $this->Link();
-	}
-	
-	/**
-	 * @return Int
-	 */
-	function sourceID() {
-		$idField = $this->form->dataFieldByName('ID');
-		if(!isset($idField)) {
-			user_error("TableListField needs a formfield named 'ID' to be present", E_USER_ERROR);
-		}
-		return $idField->Value();
 	}
 	
 	/**
@@ -1273,6 +1259,7 @@ JS
 	 
 	function setHighlightConditions($conditions) {
 		$this->highlightConditions = $conditions;
+		return $this;
 	}
 	
 	/**
@@ -1308,12 +1295,12 @@ JS
 	 * Requires {@link Markable()} to return TRUE.
 	 * This is only functional with JavaScript enabled.
 	 * 
-	 * @return DataObjectSet of ArrayData objects
+	 * @return SS_List of ArrayData objects
 	 */
 	function SelectOptions(){
 		if(!$this->selectOptions) return;
 		
-		$selectOptionsSet = new DataObjectSet();
+		$selectOptionsSet = new ArrayList();
 		foreach($this->selectOptions as $k => $v) {
 			$selectOptionsSet->push(new ArrayData(array(
 				'Key' => $k,
@@ -1410,7 +1397,7 @@ class TableListField_Item extends ViewableData {
 				"CsvSeparator" => $this->parent->getCsvSeparator(),
 			));
 		}
-		return new DataObjectSet($fields);
+		return new ArrayList($fields);
 	}
 	
 	function Markable() {
@@ -1446,7 +1433,7 @@ class TableListField_Item extends ViewableData {
 			$parentUrlParts = parse_url($this->parent->Link());
 			$queryPart = (isset($parentUrlParts['query'])) ? '?' . $parentUrlParts['query'] : null;
 			// Ensure that URL actions not routed through Form->httpSubmission() are protected against CSRF attacks.
-			if($form->securityTokenEnabled()) $queryPart = $token->addtoUrl($queryPart);
+			if($token->isEnabled()) $queryPart = $token->addtoUrl($queryPart);
 			return Controller::join_links($parentUrlParts['path'], 'item', $this->item->ID, $action, $queryPart);
 		} else {
 			// allow for instanciation of this FormField outside of a controller/form
@@ -1460,10 +1447,10 @@ class TableListField_Item extends ViewableData {
 	 * See TableListField->Action for a similiar dummy-function to work
 	 * around template-inheritance issues.
 	 * 
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	function Actions() {
-		$allowedActions = new DataObjectSet();
+		$allowedActions = new ArrayList();
 		foreach($this->parent->actions as $actionName => $actionSettings) {
 			if($this->parent->Can($actionName)) {
 				$allowedActions->push(new ArrayData(array(
@@ -1492,7 +1479,7 @@ class TableListField_Item extends ViewableData {
 	}
 	
 	function MarkingCheckbox() {
-		$name = $this->parent->Name() . '[]';
+		$name = $this->parent->getName() . '[]';
 		
 		if($this->parent->isReadonly())
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\" />";
@@ -1593,42 +1580,11 @@ class TableListField_ItemRequest extends RequestHandler {
 		// used to discover fields if requested and for population of field
 		if(is_numeric($this->itemID)) {
  			// we have to use the basedataclass, otherwise we might exclude other subclasses 
- 			return DataObject::get_by_id(ClassInfo::baseDataClass(Object::getCustomClass($this->ctf->sourceClass())), $this->itemID); 
+ 			return $this->ctf->getDataList()->byId($this->itemID);
 		}
 		
 	}
 
-	/**
-	 * Returns the db-fieldname of the currently used has_one-relationship.
-	 */
-	function getParentIdName( $parentClass, $childClass ) {
-		return $this->getParentIdNameRelation( $childClass, $parentClass, 'has_one' );
-	}
-	
-	/**
-	 * Manually overwrites the parent-ID relations.
-	 * @see setParentClass()
-	 * 
-	 * @param String $str Example: FamilyID (when one Individual has_one Family)
-	 */
-	function setParentIdName($str) {
-		$this->parentIdName = $str;
-	}
-	
-	/**
-	 * Returns the db-fieldname of the currently used relationship.
-	 */
-	function getParentIdNameRelation($parentClass, $childClass, $relation) {
-		if($this->parentIdName) return $this->parentIdName; 
-		
-		$relations = singleton($parentClass)->$relation();
-		$classes = ClassInfo::ancestry($childClass);
-		foreach($relations as $k => $v) {
-			if(array_key_exists($v, $classes)) return $k . 'ID';
-		}
-		return false;
-	}
-	
 	/**
 	 * @return TableListField
 	 */
@@ -1636,4 +1592,4 @@ class TableListField_ItemRequest extends RequestHandler {
 		return $this->ctf;
 	}
 }
-?>
+

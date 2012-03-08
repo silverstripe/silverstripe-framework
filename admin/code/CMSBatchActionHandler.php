@@ -116,7 +116,7 @@ class CMSBatchActionHandler extends RequestHandler {
 				}
 			}
 		} else {
-			$pages = new DataObjectSet();
+			$pages = new ArrayList();
 		}
 		
 		return $actionHandler->run($pages);
@@ -166,14 +166,14 @@ class CMSBatchActionHandler extends RequestHandler {
 	}
 	
 	/**
-	 * Return a DataObjectSet of ArrayData objects containing the following pieces of info
+	 * Return a SS_List of ArrayData objects containing the following pieces of info
 	 * about each batch action:
 	 *  - Link
 	 *  - Title
 	 */
 	function batchActionList() {
 		$actions = $this->batchActions();
-		$actionList = new DataObjectSet();
+		$actionList = new ArrayList();
 		
 		foreach($actions as $urlSegment => $action) {
 			$actionClass = $action['class'];

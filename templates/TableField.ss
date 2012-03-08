@@ -59,11 +59,11 @@
 			<% end_if %>
 		</tbody>
 	</table>
-	<div class="utility">
-		<% if Can(export) %>
-			<a href="$ExportLink" target="_blank"><% _t('CSVEXPORT', 'Export to CSV' ) %></a>
-		<% end_if %>
-	</div>
+	<% if Print %><% else %><div class="utility">
+		<% control Utility %>
+			<span class="item"><a href="$Link">$Title</a></span>
+		<% end_control %>
+	</div><% end_if %>
 	<% if Message %>
 	<span class="message $MessageType">$Message</span>
 	<% end_if %>

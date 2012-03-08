@@ -110,7 +110,53 @@ describe( 'Entwine', function() {
         expect(data.cheese).toEqual( 'burger');
       });
     });
-    
+
+    describe( 'calls onchange on checkboxes properly', function() {
+      beforeEach(function() {
+        $('#dom_test').html('<input id="i" type="checkbox" name="test_input_i"  value="i" />');
+      });
+
+      it( 'calls onchange', function() {
+        var a = 0;
+
+        $('#i').entwine({onchange: function(){ a += 1; }});
+
+        // Can't just "click()" - it's not the same as an actual click event
+        $('#i').trigger('focusin'); $('#i')[0].click();
+        expect(a).toEqual(1);
+      });
+
+      it( 'calls onchange only once per change', function() {
+        var a = 0;
+
+        $('#i').entwine({onchange: function(){ a += 1; }});
+
+        $('#i').trigger('focusin'); $('#i')[0].click();
+        expect(a).toEqual(1);
+
+        $('#i').trigger('focusout'); $('#i').trigger('focusin'); $('#i').trigger('focusout');
+        expect(a).toEqual(1);
+
+        $('#i')[0].click();
+        expect(a).toEqual(2);
+
+      });
+
+      it( 'calls onchange even if checked attribute altered in mean time', function() {
+        var a = 0;
+
+        $('#i').entwine({onchange: function(){ a += 1; }});
+
+        $('#i').trigger('focusin'); $('#i')[0].click();
+        expect(a).toEqual(1);
+
+        $('#i').removeAttr('checked');
+
+        $('#i').trigger('focusin'); $('#i')[0].click();
+        expect(a).toEqual(2);
+      });
+    });
+
   });
   
 });

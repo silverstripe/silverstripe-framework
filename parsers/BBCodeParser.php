@@ -60,7 +60,7 @@ class BBCodeParser extends TextParser {
 	
 	
 	static function usable_tags() {
-		return new DataObjectSet(
+		return new ArrayList(
 			new ArrayData(array(
 				"Title" => _t('BBCodeParser.BOLD', 'Bold Text'),
 				"Example" => '[b]<b>'._t('BBCodeParser.BOLDEXAMPLE', 'Bold').'</b>[/b]'
@@ -165,4 +165,3 @@ class BBCodeParser extends TextParser {
 	}
 	
 }
-?>

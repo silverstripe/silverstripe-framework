@@ -15,6 +15,10 @@
  */
 (function($){
 
+	var decodePath = function(str) {
+		return str.replace(/%2C/g,',').replace(/\&amp;/g, '&');
+	};
+
 	$.extend({
 
 		// loaded files list - to protect against loading existed file again  (by PGA)
@@ -50,7 +54,7 @@
 				});
 			}
 			
-			return (this._ondemand_loaded_list[scriptUrl] != undefined);
+			return (this._ondemand_loaded_list[decodePath(scriptUrl)] != undefined);
 		},
 
 		requireCss : function(styleUrl, media){
@@ -84,26 +88,27 @@
 			var self = this, processDfd = new $.Deferred();
 			
 			// CSS
-			if(xhr.getResponseHeader('X-Include-CSS')) {
+			if(xhr.getResponseHeader && xhr.getResponseHeader('X-Include-CSS')) {
 				var cssIncludes = xhr.getResponseHeader('X-Include-CSS').split(',');
 				for(var i=0;i<cssIncludes.length;i++) {
 					// Syntax: "URL:##:media"
 					if(cssIncludes[i].match(/^(.*):##:(.*)$/)) {
-						$.requireCss(RegExp.$1, RegExp.$2);
+						$.requireCss(decodePath(RegExp.$1), RegExp.$2);
 					// Syntax: "URL"
 					} else {
-						$.requireCss(cssIncludes[i]);
+						$.requireCss(decodePath(cssIncludes[i]));
 					}
 				}
 			}
 
 			// JavaScript
 			var newJsIncludes = [];
-			if(xhr.getResponseHeader('X-Include-JS')) {
+			if(xhr.getResponseHeader && xhr.getResponseHeader('X-Include-JS')) {
 				var jsIncludes = xhr.getResponseHeader('X-Include-JS').split(',');
 				for(var i=0;i<jsIncludes.length;i++) {
-					if(!$.isItemLoaded(jsIncludes[i])) {
-						newJsIncludes.push(jsIncludes[i]);
+					var jsIncludePath = decodePath(jsIncludes[i]);
+					if(!$.isItemLoaded(jsIncludePath)) {
+						newJsIncludes.push(jsIncludePath);
 					}
 				}
 			}

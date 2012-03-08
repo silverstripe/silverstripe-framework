@@ -1,0 +1,12 @@
+GridFieldPopupFormsTest_Person:
+	joe:
+		FirstName: Joe
+		Surname: Bloggs
+	jane:
+		FirstName: Jane
+		Surname: Doe
+
+GridFieldPopupFormsTest_PeopleGroup:
+	group:
+		Name: My Group
+		People: =>GridFieldPopupFormsTest_Person.joe,=>GridFieldPopupFormsTest_Person.jane

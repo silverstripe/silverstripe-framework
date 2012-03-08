@@ -1,0 +1,156 @@
+<?php
+/**
+ * A base class for decorators that wrap around a list to provide additional
+ * functionality. It passes through list methods to the underlying list
+ * implementation.
+ *
+ * @package    sapphire
+ * @subpackage model
+ */
+abstract class SS_ListDecorator extends ViewableData implements SS_List {
+
+	protected $list;
+
+	public function __construct(SS_List $list) {
+		$this->list     = $list;
+		$this->failover = $this->list;
+
+		parent::__construct();
+	}
+
+	/**
+	 * Returns the list this decorator wraps around.
+	 *
+	 * @return SS_List
+	 */
+	public function getList() {
+		return $this->list;
+	}
+
+	// PROXIED METHODS ---------------------------------------------------------
+
+	public function offsetExists($key) {
+		return $this->list->offsetExists($key);
+	}
+
+	public function offsetGet($key) {
+		return $this->list->offsetGet($key);
+	}
+
+	public function offsetSet($key, $value) {
+		$this->list->offsetSet($key, $value);
+	}
+
+	public function offsetUnset($key) {
+		$this->list->offsetUnset($key);
+	}
+
+	public function toArray($index = null) {
+		return $this->list->toArray($index);
+	}
+
+	public function toNestedArray($index = null){
+		return $this->list->toNestedArray($index);
+	}
+
+	public function add($item) {
+		$this->list->add($item);
+	}
+
+	public function remove($itemObject) {
+		$this->list->remove($itemObject);
+	}
+
+	public function getRange($offset, $length) {
+		return $this->list->getRange($offset, $length);
+	}
+
+	public function getIterator() {
+		return $this->list->getIterator();
+	}
+
+	public function exists() {
+		return $this->list->exists();
+	}
+
+	public function First() {
+		return $this->list->First();
+	}
+
+	public function Last() {
+		return $this->list->Last();
+	}
+
+	public function TotalItems() {
+		return $this->list->TotalItems();
+	}
+
+	public function Count() {
+		return $this->list->Count();
+	}
+
+	public function forTemplate() {
+		return $this->list->forTemplate();
+	}
+
+	public function map($index = 'ID', $titleField = 'Title', $emptyString = null, $sort = false) {
+		return $this->list->map($index, $titleField, $emptyString, $sort);
+	}
+
+	public function find($key, $value) {
+		return $this->list->find($key, $value);
+	}
+
+	public function column($value = 'ID') {
+		return $this->list->column($value);
+	}
+
+	public function canSortBy($by) {
+		return $this->list->canSortBy($by);
+	}
+
+	/**
+	 * Sorts this list by one or more fields. You can either pass in a single
+	 * field name and direction, or a map of field names to sort directions.
+	 *
+	 * @example $list->sort('Name'); // default ASC sorting
+	 * @example $list->sort('Name DESC'); // DESC sorting
+	 * @example $list->sort('Name', 'ASC');
+	 * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
+	 */
+	public function sort() {
+		$args = func_get_args();
+		return call_user_func_array(array($this->list, 'sort'), $args);
+	}
+
+	/**
+	 * Filter the list to include items with these charactaristics
+	 *
+	 * @example $list->filter('Name', 'bob'); // only bob in list
+	 * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
+	 * @example $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob or someone with Age 21
+	 * @example $list->filter(array('Name'=>'bob, 'Age'=>array(21, 43))); // bob or anyone with Age 21 or 43
+	 */
+	public function filter(){
+		$args = func_get_args();
+		return call_user_func_array(array($this->list, 'filter'), $args);
+	}
+
+	/**
+	 * Exclude the list to not contain items with these charactaristics
+	 *
+	 * @example $list->exclude('Name', 'bob'); // exclude bob from list
+	 * @example $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
+	 * @example $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob or someone with Age 21
+	 * @example $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob or anyone with Age 21 or 43
+	 */
+	public function exclude(){
+		$args = func_get_args();
+		return call_user_func_array(array($this->list, 'exclude'), $args);
+	}
+
+	public function debug() {
+		return $this->list->debug();
+	}
+
+}

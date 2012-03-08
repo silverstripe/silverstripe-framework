@@ -54,7 +54,7 @@
  * You can also get all the values in the session at once. This is useful for debugging.
  * 
  * <code>
- * Session::getAll(); // returns an array of all the session values.
+ * Session::get_all(); // returns an array of all the session values.
  * </code>
  * 
  * <b>Clearing Data</b>
@@ -68,7 +68,7 @@
  * Or you can clear every single value in the session at once. Note SilverStripe stores some of its own session data including form and page comment information. None of this is vital but clear_all will clear everything.
  * 
  * <code>
- * 	Session::clearAll();
+ * 	Session::clear_all();
  * </code>
  * 
  * @see Cookie
@@ -212,15 +212,6 @@ class Session {
 	}
 	
 	/**
-	 * @deprecated 2.5 Use Session::add_to_array($name, $val) instead
-	 */
-	public static function addToArray($name, $val) {
-		user_error('Session::addToArray() is deprecated. Please use Session::add_to_array() instead.', E_USER_NOTICE); 
-		
-		return Session::add_to_array($name, $val);
-	}
-	
-	/**
 	 * Add a value to a specific key in the session array
 	 */
 	public static function add_to_array($name, $val) {
@@ -254,16 +245,7 @@ class Session {
 	public static function get_all() {
 		return self::current_session()->inst_getAll();
 	}
-	
-	/**
-	 * @deprecated 2.5 Use Session::get_all()
-	 */
-	public static function getAll() {
-		user_error('Session::getAll() is deprecated. Please use Session::get_all() instead.', E_USER_NOTICE); 
 		
-		return Session::get_all();
-	}
-	
 	/**
 	 * Clear a given session key, value pair.
 	 *
@@ -282,16 +264,7 @@ class Session {
 		
 		return $ret;
 	}
-	
-	/**
-	 * @deprecated 2.5 Use Session::clear_all()
-	 */
-	public static function clearAll() {
-		user_error('Session::clearAll() is deprecated. Please use Session::clear_all() instead.', E_USER_NOTICE); 
 		
-		return Session::clear_all();
-	}
-	
 	/**
 	 * Save all the values in our session to $_SESSION
 	 */
@@ -475,7 +448,17 @@ class Session {
 	public static function destroy($removeCookie = true) {
 		if(session_id()) {
 			if($removeCookie) {
-				setcookie(session_name(), '');
+				$path = self::get_cookie_path();
+				$domain = self::get_cookie_domain();
+				$secure = self::get_cookie_secure(); 
+				
+				if($domain) {
+					setcookie(session_name(), '', null, $path, $domain, $secure, true); 
+				}
+				else { 
+					setcookie(session_name(), '', null, $path, null, $secure, true); 
+				}
+				
 				unset($_COOKIE[session_name()]);
 			}
 			session_destroy();

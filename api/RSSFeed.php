@@ -20,7 +20,7 @@ class RSSFeed extends ViewableData {
 	/**
 	 * Holds the feed entries
 	 *
-	 * @var DataObjectSet
+	 * @var SS_List
 	 */
 	protected $entries;
 
@@ -83,7 +83,7 @@ class RSSFeed extends ViewableData {
 	/**
 	 * Constructor
 	 *
-	 * @param DataObjectSet $entries RSS feed entries
+	 * @param SS_List $entries RSS feed entries
 	 * @param string $link Link to the feed
 	 * @param string $title Title of the feed
 	 * @param string $description Description of the field
@@ -99,7 +99,7 @@ class RSSFeed extends ViewableData {
 	 * @param string $etag The ETag is an unique identifier that is changed
 	 *                         every time the representation does
 	 */
-	function __construct(DataObjectSet $entries, $link, $title,
+	function __construct(SS_List $entries, $link, $title,
 											 $description = null, $titleField = "Title",
 											 $descriptionField = "Content", $authorField = null,
 											 $lastModified = null, $etag = null) {
@@ -134,10 +134,10 @@ class RSSFeed extends ViewableData {
 	/**
 	 * Get the RSS feed entries
 	 *
-	 * @return DataObjectSet Returns the {@link RSSFeed_Entry} objects.
+	 * @return SS_List Returns the {@link RSSFeed_Entry} objects.
 	 */
 	function Entries() {
-		$output = new DataObjectSet();
+		$output = new ArrayList();
 		if(isset($this->entries)) {
 			foreach($this->entries as $entry) {
 				$output->push(new RSSFeed_Entry($entry, $this->titleField, $this->descriptionField, $this->authorField));
@@ -317,4 +317,3 @@ class RSSFeed_Entry extends ViewableData {
 		else user_error($this->failover->class . " object has either an AbsoluteLink nor a Link method.  Can't put a link in the RSS feed", E_USER_WARNING);
 	}
 }
-?>

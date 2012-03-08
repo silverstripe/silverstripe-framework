@@ -17,44 +17,46 @@ class PhoneNumberField extends FormField {
 	protected $countryCode;
 	protected $ext;
 	
-	public function __construct( $name, $title = null, $value = '', $extension = null, 
-		$areaCode = null, $countryCode = null, $form = null ) {
+	public function __construct( $name, $title = null, $value = '', $extension = null, $areaCode = null, $countryCode = null) {
 		
 		$this->areaCode = $areaCode;
 		$this->ext = $extension;
 		$this->countryCode = $countryCode;
 		
-		parent::__construct( $name, $title, $value, $form );
+		parent::__construct($name, $title, $value);
 	}
 	
 	public function Field() {
-		$field = new FieldGroup( $this->name );
-		$field->setID("{$this->name}_Holder");
-
-    
-		list( $countryCode, $areaCode, $phoneNumber, $extension ) = $this->parseValue();
-		
+		$fields = new FieldGroup( $this->name );
+		$fields->setID("{$this->name}_Holder");
+		list($countryCode, $areaCode, $phoneNumber, $extension) = $this->parseValue();
 		$hasTitle = false;
 
-        if ($this->value=="")
-        {
-            $countryCode=$this->countryCode;
-            $areaCode=$this->areaCode;
-            $extension=$this->ext;
-        }
+    if ($this->value=="") {
+      $countryCode=$this->countryCode;
+      $areaCode=$this->areaCode;
+      $extension=$this->ext;
+    }
 		
-		if( $this->countryCode !== null )
-			$field->push( new NumericField( $this->name.'[Country]', '+', $countryCode, 4 ) );
+		if($this->countryCode !== null) {
+			$fields->push(new NumericField($this->name.'[Country]', '+', $countryCode, 4));
+		}
 			
-		if( $this->areaCode !== null ){
-			$field->push( new NumericField( $this->name.'[Area]', '(', $areaCode, 4 ) );
-			$field->push( new NumericField( $this->name.'[Number]', ')', $phoneNumber, 10 ) );
-		}else{
-			$field->push( new NumericField( $this->name.'[Number]', '', $phoneNumber, 10 ) );
+		if($this->areaCode !== null) {
+			$fields->push(new NumericField($this->name.'[Area]', '(', $areaCode, 4));
+			$fields->push(new NumericField($this->name.'[Number]', ')', $phoneNumber, 10));
+		} else {
+			$fields->push(new NumericField($this->name.'[Number]', '', $phoneNumber, 10));
 		}
 		
-		if( $this->ext !== null )
-			$field->push( new NumericField( $this->name.'[Extension]', 'ext', $extension, 6 ) );
+		if($this->ext !== null) {
+			$field->push(new NumericField( $this->name.'[Extension]', 'ext', $extension, 6));
+		}
+
+		foreach($fields as $field) {
+			$field->setDisabled($this->isDisabled());
+			$field->setReadonly($this->isReadonly());
+		}
 			
 		return $field;
 	}
@@ -189,4 +191,3 @@ JS;
 		return true;
 	}
 }
-?>

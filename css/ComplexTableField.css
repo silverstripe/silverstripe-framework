@@ -1,35 +1,6 @@
-#GB_header {
-	position: absolute;
-	z-index: 151;
-	margin: 0;
- 	top: 0;
-	font-size : 14px;
-	font-weight : bold;
-	color: white;
-	background: #0075C9 url(../images/textures/obar.gif) 0px 0px repeat-x !important;
-	height : 22px !important;
-}
-
-#GB_window {
-	border: 0;
-}
-
-#GB_close {
-	padding: 2px 5px 0 0;
-	float: right;
-	color: #fff;
-	font-size: 11px;
-}
-
 /* table */
-.ComplexTableField {
-	margin-bottom: 10px;
-}
+.ComplexTableField { margin-bottom: 10px; }
+.ComplexTableField tbody td { cursor: pointer; }
+.ComplexTableField tbody td.markingcheckbox { cursor: default; }
 
-.ComplexTableField tbody td {
-	cursor: pointer;
-}
-
-.ComplexTableField tbody td.markingcheckbox {
-	cursor: default;
-}
+.ui-dialog .ctf-dialog.ui-dialog-content { padding-right: 0; /* scrollbars */ }

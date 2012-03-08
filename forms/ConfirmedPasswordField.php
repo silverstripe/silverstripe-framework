@@ -69,7 +69,7 @@ class ConfirmedPasswordField extends FormField {
 	 */
 	function __construct($name, $title = null, $value = "", $form = null, $showOnClick = false, $titleConfirmField = null) {
 		// naming with underscores to prevent values from actually being saved somewhere
-		$this->children = new FieldSet(
+		$this->children = new FieldList(
 			new PasswordField(
 				"{$name}[_Password]", 
 				(isset($title)) ? $title : _t('Member.PASSWORD', 'Password')
@@ -113,7 +113,7 @@ class ConfirmedPasswordField extends FormField {
 			}
 			
 			$content .= "<div class=\"showOnClick\">\n";
-			$content .= "<a href=\"#\"" . $this->getTabIndexHTML() . ">{$title}</a>\n";
+			$content .= "<a href=\"#\">{$title}</a>\n";
 			$content .= "<div class=\"showOnClickContainer\">";
 		}
 
@@ -138,6 +138,7 @@ class ConfirmedPasswordField extends FormField {
 	 */
 	function setCanBeEmpty($value) {
 		$this->canBeEmpty = (bool)$value;
+		return $this;
 	}
 	
 	/**
@@ -149,6 +150,7 @@ class ConfirmedPasswordField extends FormField {
 	 */
 	public function setShowOnClickTitle($title) {
 		$this->showOnClickTitle = $title;
+		return $this;
 	}
 	
 	/**
@@ -162,6 +164,7 @@ class ConfirmedPasswordField extends FormField {
 		foreach($this->children as $field) {
 			$field->setRightTitle($title);
 		}
+		return $this;
 	}
 	
 	/**
@@ -176,6 +179,7 @@ class ConfirmedPasswordField extends FormField {
 				}
 			}
 		}
+		return $this;
 	}
 	
 	/**
@@ -186,16 +190,18 @@ class ConfirmedPasswordField extends FormField {
 			if($value['_Password'] || (!$value['_Password'] && !$this->canBeEmpty)) {
 				$this->value = $value['_Password'];
 			}
-			if(isset($value['_PasswordFieldVisible'])){
-				$this->children->fieldByName($this->Name() . '[_PasswordFieldVisible]')->setValue($value['_PasswordFieldVisible']);
+			if($this->showOnClick && isset($value['_PasswordFieldVisible'])){
+				$this->children->fieldByName($this->getName() . '[_PasswordFieldVisible]')->setValue($value['_PasswordFieldVisible']);
 			}
 		} else {
-			if($value || (!$value && !$this->canBeEmpty)) {
+			if($value || (!$value && $this->canBeEmpty)) {
 				$this->value = $value;
 			}
 		}
-		$this->children->fieldByName($this->Name() . '[_Password]')->setValue($this->value);
-		$this->children->fieldByName($this->Name() . '[_ConfirmPassword]')->setValue($this->value);
+		$this->children->fieldByName($this->getName() . '[_Password]')->setValue($this->value);
+		$this->children->fieldByName($this->getName() . '[_ConfirmPassword]')->setValue($this->value);
+
+		return $this;
 	}
 	
 	function jsValidation() {
@@ -297,7 +303,7 @@ JS;
 	 * @return bool
 	 */
 	function isSaveable() {
-		$isVisible = $this->children->fieldByName($this->Name() . '[_PasswordFieldVisible]');
+		$isVisible = $this->children->fieldByName($this->getName() . '[_PasswordFieldVisible]');
 		return (!$this->showOnClick || ($this->showOnClick && $isVisible && $isVisible->Value()));
 	}
 	

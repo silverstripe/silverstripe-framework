@@ -79,6 +79,7 @@ abstract class Validator extends Object {
 		} else {
 			user_error("Validator::setJavascriptValidationHandler() passed bad handler '$handler'", E_USER_WARNING);
 		}
+		return $this;
 	}
 
 	/**
@@ -96,6 +97,7 @@ abstract class Validator extends Object {
 	 */
 	function setForm($form) {
 		$this->form = $form;
+		return $this;
 	}
 	
 	/**
@@ -127,6 +129,7 @@ abstract class Validator extends Object {
 	 * @deprecated 2.4 Use Validator->getErrors() and custom code
 	 */
 	function showError() {
+		Deprecation::notice('2.4', 'Use Validator->getErrors() and custom code instead.');
 		Debug::show($this->errors);
 	}
 	
@@ -134,6 +137,7 @@ abstract class Validator extends Object {
 	 * @deprecated 2.4 Use custom code
 	 */
 	function getCombinedError(){
+		Deprecation::notice('2.4', 'Use custom code instead.');
 		if($this->errors) {
 			foreach($this->errors as $error){
 				$ret['message'] .= $error['message']."<br />";
@@ -148,6 +152,7 @@ abstract class Validator extends Object {
 	 * @deprecated 2.4 Use getErrors()
 	 */
 	function getError(){
+		Deprecation::notice('2.4', 'Use getErrors() instead.');
 		return $this->getErrors();
 	}
 	
@@ -179,7 +184,6 @@ abstract class Validator extends Object {
 		if($this->getJavascriptValidationHandler() == 'prototype') {
 			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
 			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-			Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
 			Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 			Requirements::javascript(SAPPHIRE_DIR . "/javascript/Validator.js");
 		
@@ -261,4 +265,4 @@ JS;
 	
 	abstract function php($data);
 }
-?>
+

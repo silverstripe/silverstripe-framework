@@ -4,7 +4,7 @@
  * @package sapphire
  * @subpackage security
  */
-class Permission extends DataObject {
+class Permission extends DataObject implements TemplateGlobalProvider {
 
   // the (1) after Type specifies the DB default value which is needed for
 	// upgrades from older SilverStripe versions
@@ -93,7 +93,7 @@ class Permission extends DataObject {
 	/**
 	 * Check that the current member has the given permission.
 	 * 
-	 * @param string $code Code of the permission to check (case-sensitive)
+	 * @param string|array $code Code of the permission to check (case-sensitive)
 	 * @param string $arg Optional argument (e.g. a permissions for a specific page)
 	 * @param int|Member $member Optional member instance or ID. If set to NULL, the permssion
 	 *  will be checked for the current user
@@ -374,12 +374,12 @@ class Permission extends DataObject {
 	 * Returns all members for a specific permission.
 	 * 
 	 * @param $code String|array Either a single permission code, or a list of permission codes
-	 * @return DataObjectSet Returns a set of member that have the specified
+	 * @return SS_List Returns a set of member that have the specified
 	 *                       permission.
 	 */
 	public static function get_members_by_permission($code) {
 		$toplevelGroups = self::get_groups_by_permission($code);
-		if (!$toplevelGroups) return false;
+		if (!$toplevelGroups) return new ArrayList();
 
 		$groupIDs = array();
 		foreach($toplevelGroups as $group) {
@@ -389,16 +389,11 @@ class Permission extends DataObject {
 			}
 		}
 
-		if(!count($groupIDs))
-			return false;
+		if(!count($groupIDs)) return new ArrayList();
 			
-		$members = DataObject::get(
-			Object::getCustomClass('Member'),
-			$_filter = "\"Group\".\"ID\" IN (" . implode(",",$groupIDs) . ")",
-			$_sort = "",
-			$_join = "LEFT JOIN \"Group_Members\" ON \"Member\".\"ID\" = \"Group_Members\".\"MemberID\" " . 
-				"LEFT JOIN \"Group\" ON \"Group_Members\".\"GroupID\" = \"Group\".\"ID\" "
-		);
+		$members = DataObject::get('Member')->where("\"Group\".\"ID\" IN (" . implode(",",$groupIDs) . ")")
+			->leftJoin("Group_Members", "\"Member\".\"ID\" = \"Group_Members\".\"MemberID\"")
+			->leftJoin("Group", "\"Group_Members\".\"GroupID\" = \"Group\".\"ID\"");
 		
 		return $members;
 	}
@@ -406,7 +401,7 @@ class Permission extends DataObject {
 	/**
 	 * Return all of the groups that have one of the given permission codes
 	 * @param $codes array|string Either a single permission code, or an array of permission codes
-	 * @return DataObjectSet The matching group objects
+	 * @return SS_List The matching group objects
 	 */
 	static function get_groups_by_permission($codes) {
 		if(!is_array($codes)) $codes = array($codes);
@@ -415,13 +410,11 @@ class Permission extends DataObject {
 		$SQL_codes = join("','", $SQLa_codes);
 		
 		// Via Roles are groups that have the permission via a role
-		return DataObject::get('Group',
-			"\"PermissionRoleCode\".\"Code\" IN ('$SQL_codes') OR \"Permission\".\"Code\" IN ('$SQL_codes')",
-			"",
-			"LEFT JOIN \"Permission\" ON \"Permission\".\"GroupID\" = \"Group\".\"ID\"
-			LEFT JOIN \"Group_Roles\" ON \"Group_Roles\".\"GroupID\" = \"Group\".\"ID\"
-			LEFT JOIN \"PermissionRole\" ON \"Group_Roles\".\"PermissionRoleID\" = \"PermissionRole\".\"ID\"
-			LEFT JOIN \"PermissionRoleCode\" ON \"PermissionRoleCode\".\"RoleID\" = \"PermissionRole\".\"ID\"");
+		return DataObject::get('Group')->where("\"PermissionRoleCode\".\"Code\" IN ('$SQL_codes') OR \"Permission\".\"Code\" IN ('$SQL_codes')")
+			->leftJoin('Permission', "\"Permission\".\"GroupID\" = \"Group\".\"ID\"")
+			->leftJoin('Group_Roles', "\"Group_Roles\".\"GroupID\" = \"Group\".\"ID\"")
+			->leftJoin('PermissionRole', "\"Group_Roles\".\"PermissionRoleID\" = \"PermissionRole\".\"ID\"")
+			->leftJoin('PermissionRoleCode', "\"PermissionRoleCode\".\"RoleID\" = \"PermissionRole\".\"ID\"");
 	}
 
 
@@ -628,6 +621,12 @@ class Permission extends DataObject {
 		// Just in case we've altered someone's permissions
 		Permission::flush_permission_cache();
 	}
+
+	public static function get_template_global_variables() {
+		return array(
+			'HasPerm' => 'check'
+		);
+	}
 }
 
 
@@ -696,4 +695,4 @@ class Permission_Group {
 	}
 }
 
-?>
+

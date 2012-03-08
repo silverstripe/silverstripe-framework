@@ -18,6 +18,8 @@
  * $myField->setFolderName('myFolder');
  * </code>
  *
+ * @deprecated 3.0 Use UploadField with $myField->allowedExtensions = array('jpg', 'gif', 'png')
+ *
  * @package forms
  * @subpackage fields-files
  */
@@ -43,10 +45,12 @@ class ImageField extends FileIFrameField {
 	 * @return Form
 	 */
 	public function EditFileForm() {
+		Deprecation::notice('3.0', 'Use UploadField');
+
 		$filter = create_function('$item', 'return (in_array("Folder", ClassInfo::ancestry($item->ClassName)) || in_array("Image", ClassInfo::ancestry($item->ClassName)));');
 		
 		$form = parent::EditFileForm();
-		$form->dataFieldByName('ExistingFile')->setFilterFunction($filter);
+		$form->Fields()->dataFieldByName('ExistingFile')->setFilterFunction($filter);
 
 		return $form;
 	}

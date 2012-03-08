@@ -40,7 +40,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // ENVIRONMENT CONFIG
 
-if(defined('E_DEPRECATED')) error_reporting(E_ALL ^ E_DEPRECATED);
+if(defined('E_DEPRECATED')) error_reporting(E_ALL & ~(E_DEPRECATED | E_STRICT));
 else error_reporting(E_ALL);
 /*
  * This is for versions of PHP prior to version 5.2
@@ -195,19 +195,44 @@ define('PR_LOW',10);
  */
 increase_memory_limit_to('64M');
 
+/**
+ * Ensure we don't run into xdebug's fairly conservative infinite recursion protection limit
+ */
+increase_xdebug_nesting_level_to(200);
+
+/**
+ * Set default encoding
+ */
+if(function_exists('mb_http_output')) {
+	mb_http_output('UTF-8');
+	mb_internal_encoding('UTF-8');
+	mb_regex_encoding('UTF-8');
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // INCLUDES
 
-set_include_path(BASE_PATH . '/sapphire' . PATH_SEPARATOR
-	. BASE_PATH . '/sapphire/parsers' . PATH_SEPARATOR
-	. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
-	. get_include_path());
+if(defined('CUSTOM_INCLUDE_PATH')) {
+	$includePath = CUSTOM_INCLUDE_PATH . PATH_SEPARATOR
+		. BASE_PATH . '/sapphire' . PATH_SEPARATOR
+		. BASE_PATH . '/sapphire/parsers' . PATH_SEPARATOR
+		. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
+		. get_include_path();
+} else {
+	$includePath = BASE_PATH . '/sapphire' . PATH_SEPARATOR
+		. BASE_PATH . '/sapphire/parsers' . PATH_SEPARATOR
+		. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
+		. get_include_path();
+}
+
+set_include_path($includePath);
 
 // Include the files needed the initial manifest building, as well as any files
 // that are needed for the boostrap process on every request.
 require_once 'cache/Cache.php';
 require_once 'core/Object.php';
 require_once 'core/ClassInfo.php';
+require_once 'view/TemplateGlobalProvider.php';
 require_once 'control/Director.php';
 require_once 'dev/Debug.php';
 require_once 'filesystem/FileFinder.php';
@@ -241,8 +266,8 @@ SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
 // This is necessary to force developers to acknowledge and fix
 // notice level errors (you can override this directive in your _config.php)
 if (Director::isLive()) {
-	if(defined('E_DEPRECATED')) error_reporting((E_ALL ^ E_NOTICE) ^ E_DEPRECATED);
-	else error_reporting(E_ALL ^ E_NOTICE);
+	if(defined('E_DEPRECATED')) error_reporting(E_ALL & ~(E_DEPRECATED | E_STRICT | E_NOTICE));
+	else error_reporting(E_ALL & ~E_NOTICE);
 }
 ///////////////////////////////////////////////////////////////////////////////
 // POST-MANIFEST COMMANDS
@@ -318,6 +343,7 @@ function getTempFolder($base = null) {
  * @deprecated 3.0 Please use {@link SS_ClassManifest::getItemPath()}.
  */
 function getClassFile($className) {
+	Deprecation::notice('3.0', 'Use SS_ClassManifest::getItemPath() instead.');
 	return SS_ClassLoader::instance()->getManifest()->getItemPath($className);
 }
 
@@ -366,22 +392,68 @@ function _t($entity, $string = "", $priority = 40, $context = "") {
 
 /**
  * Increase the memory limit to the given level if it's currently too low.
+ * Only increases up to the maximum defined in {@link set_increase_memory_limit_max()},
+ * and defaults to the 'memory_limit' setting in the PHP configuration.
+ * 
  * @param A memory limit string, such as "64M".  If omitted, unlimited memory will be set.
+ * @return Boolean TRUE indicates a successful change, FALSE a denied change.
  */
 function increase_memory_limit_to($memoryLimit = -1) {
 	$curLimit = ini_get('memory_limit');
 	
 	// Can't go higher than infinite
-	if($curLimit == -1) return;
+	if($curLimit == -1 ) return true;
+	
+	// Check hard maximums
+	$max = get_increase_memory_limit_max();
+	if($max != -1 && translate_memstring($memoryLimit) > translate_memstring($max)) return false;
 	
 	// Increase the memory limit if it's too low
 	if($memoryLimit == -1 || translate_memstring($memoryLimit) > translate_memstring($curLimit)) {
 		ini_set('memory_limit', $memoryLimit);
+	} 
+
+	return true;
+}
+
+$_increase_memory_limit_max = ini_get('memory_limit');
+
+/**
+ * Set the maximum allowed value for {@link increase_memory_limit_to()}.
+ * The same result can also be achieved through 'suhosin.memory_limit'
+ * if PHP is running with the Suhosin system.
+ * 
+ * @param Memory limit string
+ */
+function set_increase_memory_limit_max($memoryLimit) {
+	global $_increase_memory_limit_max;
+	$_increase_memory_limit_max = $memoryLimit;
+}
+
+/**
+ * @return Memory limit string
+ */
+function get_increase_memory_limit_max() {
+	global $_increase_memory_limit_max;
+	return $_increase_memory_limit_max;
+}
+
+/**
+ * Increases the XDebug parameter max_nesting_level, which limits how deep recursion can go.
+ * Only does anything if (a) xdebug is installed and (b) the new limit is higher than the existing limit
+ *
+ * @param int $limit - The new limit to increase to
+ */
+function increase_xdebug_nesting_level_to($limit) {
+	if (function_exists('xdebug_enable')) {
+		$current = ini_get('xdebug.max_nesting_level');
+		if ((int)$current < $limit) ini_set('xdebug.max_nesting_level', $limit);
 	}
 }
 
 /**
  * Turn a memory string, such as 512M into an actual number of bytes.
+ * 
  * @param A memory limit string, such as "64M"
  */
 function translate_memstring($memString) {
@@ -394,18 +466,50 @@ function translate_memstring($memString) {
 }
 
 /**
- * Increase the time limit of this script.  By default, the time will be unlimited.
+ * Increase the time limit of this script. By default, the time will be unlimited.
+ * Only works if 'safe_mode' is off in the PHP configuration.
+ * Only values up to {@link get_increase_time_limit_max()} are allowed.
+ * 
  * @param $timeLimit The time limit in seconds.  If omitted, no time limit will be set.
+ * @return Boolean TRUE indicates a successful change, FALSE a denied change.
  */
 function increase_time_limit_to($timeLimit = null) {
+	$max = get_increase_time_limit_max();
+	if($max != -1 && $timeLimit > $max) return false;
+	
 	if(!ini_get('safe_mode')) {
 		if(!$timeLimit) {
 			set_time_limit(0);
+			return true;
 		} else {
 			$currTimeLimit = ini_get('max_execution_time');
+			// Only increase if its smaller
 			if($currTimeLimit && $currTimeLimit < $timeLimit) {
 				set_time_limit($timeLimit);
-			}
+			} 
+			return true;
 		}
+	} else {
+		return false;
 	}
+}
+
+$_increase_time_limit_max = -1;
+
+/**
+ * Set the maximum allowed value for {@link increase_timeLimit_to()};
+ * 
+ * @param Int Limit in seconds
+ */
+function set_increase_time_limit_max($timeLimit) {
+	global $_increase_time_limit_max;
+	$_increase_time_limit_max = $timeLimit;
+}
+
+/**
+ * @return Int Limit in seconds
+ */
+function get_increase_time_limit_max() {
+	global $_increase_time_limit_max;
+	return $_increase_time_limit_max;
 }

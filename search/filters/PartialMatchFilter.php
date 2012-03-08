@@ -12,17 +12,22 @@
  */
 class PartialMatchFilter extends SearchFilter {
 	
-	public function apply(SQLQuery $query) {
-		$query = $this->applyRelation($query);
-		return $query->where(sprintf(
-			"%s LIKE '%%%s%%'",
-			$this->getDbName(),
-			Convert::raw2sql($this->getValue())
-		));
+	public function apply(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
+		$where = array();
+		if(is_array($this->getValue())) {
+			foreach($this->getValue() as $value) {
+				$where[]= sprintf("%s LIKE '%%%s%%'", $this->getDbName(), Convert::raw2sql($value));
+			}
+
+		} else {
+			$where[] = sprintf("%s LIKE '%%%s%%'", $this->getDbName(), Convert::raw2sql($this->getValue()));
+		}
+
+		return $query->where(implode(' OR ', $where));
 	}
 	
 	public function isEmpty() {
 		return $this->getValue() == null || $this->getValue() == '';
 	}
 }
-?>

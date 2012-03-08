@@ -1,6 +1,4 @@
 <?php
-@require_once('sapphire/tests/bootstrap.php');
-
 /**
  * Alternative to letting PHPUnit handle class retrieval via
  * traversing the filesystem. Works around restrictions of PHPUnit
@@ -29,6 +27,8 @@ class FullTestSuite {
 	 * @return PHPUnit_Framework_TestSuite
 	 */
 	public static function suite() {
+		require_once('sapphire/tests/bootstrap.php');
+		
 		$suite = new PHPUnit_Framework_TestSuite();
 		if(isset($_GET['module'])) {
 			$classList = self::get_module_tests($_GET['module']);
@@ -47,6 +47,8 @@ class FullTestSuite {
 	 * @return Array
 	 */
 	public static function get_all_tests() {
+		require_once('sapphire/tests/bootstrap.php');
+		
 		TestRunner::use_test_manifest();
 		$tests = ClassInfo::subclassesFor('SapphireTest');
 		array_shift($tests);
@@ -62,6 +64,8 @@ class FullTestSuite {
 	 * @return Array
 	 */
 	protected static function get_module_tests($namesStr) {
+		require_once('sapphire/tests/bootstrap.php');
+		
 		$tests = array();
 		$names = explode(',', $namesStr);
 		foreach($names as $name) {

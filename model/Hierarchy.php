@@ -1,11 +1,11 @@
 <?php
 /**
- * DataObjects that use the Hierachy decorator can be be organised as a hierachy, with children and parents.
+ * DataObjects that use the Hierarchy extension can be be organised as a hierarchy, with children and parents.
  * The most obvious example of this is SiteTree.
  * @package sapphire
  * @subpackage model
  */
-class Hierarchy extends DataObjectDecorator {
+class Hierarchy extends DataExtension {
 	
 	protected $markedNodes;
 	
@@ -25,7 +25,13 @@ class Hierarchy extends DataObjectDecorator {
 	function augmentWrite(&$manipulation) {
 	}
 	
-	function extraStatics($class = null) {
+	/**
+	 *
+	 * @param string $class
+	 * @param string $extension
+	 * @return array
+	 */
+	function extraStatics($class=null, $extension=null) {
 		return array(
 			'has_one' => array(
 				// TODO this method is called *both* statically and on an instance
@@ -394,13 +400,13 @@ class Hierarchy extends DataObjectDecorator {
 	
 	/**
 	 * Get the children for this DataObject.
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function Children() {
 		if(!(isset($this->_cache_children) && $this->_cache_children)) { 
 			$result = $this->owner->stageChildren(false); 
 		 	if(isset($result)) { 
-		 		$this->_cache_children = new DataObjectSet(); 
+		 		$this->_cache_children = new ArrayList(); 
 		 		foreach($result as $child) { 
 		 			if($child->canView()) { 
 		 				$this->_cache_children->push($child); 
@@ -413,7 +419,7 @@ class Hierarchy extends DataObjectDecorator {
 
 	/**
 	 * Return all children, including those 'not in menus'.
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function AllChildren() {
 		return $this->owner->stageChildren(true);
@@ -425,7 +431,7 @@ class Hierarchy extends DataObjectDecorator {
 	 * Added children will be marked as "AddedToStage"
 	 * Modified children will be marked as "ModifiedOnStage"
 	 * Everything else has "SameOnStage" set, as an indicator that this information has been looked up.
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function AllChildrenIncludingDeleted($context = null) {
 		return $this->doAllChildrenIncludingDeleted($context);
@@ -435,7 +441,7 @@ class Hierarchy extends DataObjectDecorator {
 	 * @see AllChildrenIncludingDeleted
 	 *
 	 * @param unknown_type $context
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function doAllChildrenIncludingDeleted($context = null) {
 		if(!$this->owner) user_error('Hierarchy::doAllChildrenIncludingDeleted() called without $this->owner');
@@ -452,9 +458,10 @@ class Hierarchy extends DataObjectDecorator {
 				// Next, go through the live children.  Only some of these will be listed					
 				$liveChildren = $this->owner->liveChildren(true, true);
 				if($liveChildren) {
-					foreach($liveChildren as $child) {
-						$stageChildren->push($child);
-					}
+				    $merged = new ArrayList();
+				    $merged->merge($stageChildren);
+				    $merged->merge($liveChildren);
+				    $stageChildren = $merged;
 				}
 			}
 
@@ -484,11 +491,9 @@ class Hierarchy extends DataObjectDecorator {
 	 */
 	public function numHistoricalChildren() {
 		if(!$this->owner->hasExtension('Versioned')) throw new Exception('Hierarchy->AllHistoricalChildren() only works with Versioned extension applied');
-		
-		$query = Versioned::get_including_deleted_query(ClassInfo::baseDataClass($this->owner->class), 
-			"\"ParentID\" = " . (int)$this->owner->ID);
-			
-		return $query->unlimitedRowCount();
+
+	    return Versioned::get_including_deleted(ClassInfo::baseDataClass($this->owner->class), 
+			"\"ParentID\" = " . (int)$this->owner->ID)->count();
 	}
 
 	/**
@@ -500,20 +505,11 @@ class Hierarchy extends DataObjectDecorator {
 	 * @return int
 	 */
 	public function numChildren($cache = true) {
-		$baseClass = ClassInfo::baseDataClass($this->owner->class);
-		
 		// Build the cache for this class if it doesn't exist.
 		if(!$cache || !is_numeric($this->_cache_numChildren)) {
-			// We build the query in an extension-friendly way.
-			$query = new SQLQuery(
-				"COUNT(*)",
-				"\"$baseClass\"", 
-				sprintf('"ParentID" = %d', $this->owner->ID)
-			);
-			$this->owner->extend('augmentSQL', $query);
-			$this->owner->extend('augmentNumChildrenCountQuery', $query);
-			 
-			$this->_cache_numChildren = (int)$query->execute()->value();
+			// Hey, this is efficient now!
+			// We call stageChildren(), because Children() has canView() filtering
+			$this->_cache_numChildren = (int)$this->owner->stageChildren(true)->Count();
 		}
 
 		// If theres no value in the cache, it just means that it doesn't have any children.
@@ -525,7 +521,7 @@ class Hierarchy extends DataObjectDecorator {
 	 * 
 	 * @param showAll Inlcude all of the elements, even those not shown in the menus.
 	 *   (only applicable when extension is applied to {@link SiteTree}).
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function stageChildren($showAll = false) {
 		if($this->owner->db('ShowInMenus')) {
@@ -540,7 +536,6 @@ class Hierarchy extends DataObjectDecorator {
 			. (int)$this->owner->ID . " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID
 			. $extraFilter, "");
 			
-		if(!$staged) $staged = new DataObjectSet();
 		$this->owner->extend("augmentStageChildren", $staged, $showAll);
 		return $staged;
 	}
@@ -551,47 +546,35 @@ class Hierarchy extends DataObjectDecorator {
 	 * @param boolean $showAll Include all of the elements, even those not shown in the menus.
 	 *   (only applicable when extension is applied to {@link SiteTree}).
 	 * @param boolean $onlyDeletedFromStage Only return items that have been deleted from stage
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function liveChildren($showAll = false, $onlyDeletedFromStage = false) {
 		if(!$this->owner->hasExtension('Versioned')) throw new Exception('Hierarchy->liveChildren() only works with Versioned extension applied');
-		
-		if($this->owner->db('ShowInMenus')) {
-			$extraFilter = ($showAll) ? '' : " AND \"ShowInMenus\"=1";
-		} else {
-			$extraFilter = '';
-		}
-		$join = "";
 
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$id = $this->owner->ID;
+		
+		$children = DataObject::get($baseClass)->where("\"{$baseClass}\".\"ParentID\" = $id AND \"{$baseClass}\".\"ID\" != $id");
+		if(!$showAll) $children = $children->where('"ShowInMenus" = 1');
 
-		$filter = "\"{$baseClass}\".\"ParentID\" = " . (int)$this->owner->ID 
-			. " AND \"{$baseClass}\".\"ID\" != " . (int)$this->owner->ID;
+		// Query the live site
+		$children->dataQuery()->setQueryParam('Versioned.mode', 'stage');
+		$children->dataQuery()->setQueryParam('Versioned.stage', 'Live');
 		
 		if($onlyDeletedFromStage) {
-			// Note that the lack of double-quotes around $baseClass are the only thing preventing
-			// it from being rewritten to {$baseClass}_Live.  This is brittle and a little clumsy
-			$join = "LEFT JOIN {$baseClass} ON {$baseClass}.\"ID\" = \"{$baseClass}\".\"ID\"";
-			$filter .=  " AND {$baseClass}.\"ID\" IS NULL";
+			// Note that this makes a second query, and could be optimised to be a join
+			$stageChildren = DataObject::get($baseClass)
+				->where("\"{$baseClass}\".\"ID\" != $id");
+			$stageChildren->dataQuery()->setQueryParam('Versioned.mode', 'stage');
+			$stageChildren->dataQuery()->setQueryParam('Versioned.stage', '');
+			
+			$ids = $stageChildren->column("ID");
+			if($ids) {
+				$children->where("\"$baseClass\".\"ID\" NOT IN (" . implode(',',$ids) . ")");
+			}
 		}
-
-		$oldStage = Versioned::current_stage();
-		Versioned::reading_stage('Live');
 		
-		// Singleton is necessary and not $this->owner so as not to muck with Translatable's
-		// behaviour.
-		$query = singleton($baseClass)->extendedSQL($filter, null, null, $join);
-
-		// Since we didn't include double quotes in the join & filter, we need to add them into the
-		// SQL now, after Versioned has done is query rewriting
-		$correctedSQL = str_replace(array("LEFT JOIN {$baseClass}", "{$baseClass}.\"ID\""),
-			array("LEFT JOIN \"{$baseClass}\"", "\"{$baseClass}\".\"ID\""), $query->sql());
-
-		$result = $this->owner->buildDataObjectSet(DB::query($correctedSQL));
-		
-		Versioned::reading_stage($oldStage);
-		
-		return $result;
+		return $children;
 	}
 	
 	/**
@@ -610,10 +593,10 @@ class Hierarchy extends DataObjectDecorator {
 	/**
 	 * Return all the parents of this class in a set ordered from the lowest to highest parent.
 	 *
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function getAncestors() {
-		$ancestors = new DataObjectSet();
+		$ancestors = new ArrayList();
 		$object    = $this->owner;
 		
 		while($object = $object->getParent()) {
@@ -621,6 +604,21 @@ class Hierarchy extends DataObjectDecorator {
 		}
 		
 		return $ancestors;
+	}
+
+	/**
+	 * Returns a human-readable, flattened representation of the path to the object,
+	 * using its {@link Title()} attribute.
+	 * 
+	 * @param String
+	 * @return String
+	 */
+	public function getBreadcrumbs($separator = ' &raquo; ') {
+		$crumbs = array();
+		$ancestors = array_reverse($this->owner->getAncestors()->toArray());
+		foreach($ancestors as $ancestor) $crumbs[] = $ancestor->Title;
+		$crumbs[] = $this->owner->Title;
+		return implode($separator, $crumbs);
 	}
 	
 	/**
@@ -694,4 +692,4 @@ class Hierarchy extends DataObjectDecorator {
 	}
 }
 
-?>
+

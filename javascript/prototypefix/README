@@ -1,7 +1,0 @@
-Prototype replaces document.getElementsByClassName with it's own version. However many browsers
-now come with their own implementation, and prototype's is much slower.
-
-This fixes this by restoring the original after prototype is loaded.
-
-@todo: Safari 3 used to come with a broken document.getElementsByClassName. We should use
-the same checks jQuery does and not restore the function if it doesn't work the same as the spec. 

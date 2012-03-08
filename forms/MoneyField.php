@@ -32,12 +32,12 @@ class MoneyField extends FormField {
 	 */
 	protected $fieldCurrency = null;
 	
-	function __construct($name, $title = null, $value = "", $form = null) {
+	function __construct($name, $title = null, $value = "") {
 		// naming with underscores to prevent values from actually being saved somewhere
 		$this->fieldAmount = new NumericField("{$name}[Amount]", _t('MoneyField.FIELDLABELAMOUNT', 'Amount'));
 		$this->fieldCurrency = $this->FieldCurrency($name);
 		
-		parent::__construct($name, $title, $value, $form);
+		parent::__construct($name, $title, $value);
 	}
 	
 	/**
@@ -87,6 +87,8 @@ class MoneyField extends FormField {
 		//  decimal and thousands signs, while respecting the stored
 		//  precision in the database without truncating it during display
 		//  and subsequent save operations
+
+		return $this;
 	}
 	
 	/**
@@ -127,10 +129,19 @@ class MoneyField extends FormField {
 	function setReadonly($bool) {
 		parent::setReadonly($bool);
 		
-		if($bool) {
-			$this->fieldAmount = $this->fieldAmount->performReadonlyTransformation();
-			$this->fieldCurrency = $this->fieldCurrency->performReadonlyTransformation();
-		}
+		$this->fieldAmount->setReadonly($bool);
+		$this->fieldCurrency->setReadonly($bool);
+
+		return $this;
+	}
+
+	function setDisabled($bool) {
+		parent::setDisabled($bool);
+		
+		$this->fieldAmount->setDisabled($bool);
+		$this->fieldCurrency->setDisabled($bool);
+
+		return $this;
 	}
 	
 	/**
@@ -143,6 +154,8 @@ class MoneyField extends FormField {
 		$oldVal = $this->fieldCurrency->Value();
 		$this->fieldCurrency = $this->FieldCurrency($this->name);
 		$this->fieldCurrency->setValue($oldVal);
+
+		return $this;
 	}
 	
 	/**
@@ -154,10 +167,10 @@ class MoneyField extends FormField {
 	
 	function setLocale($locale) {
 		$this->_locale = $locale;
+		return $this;
 	}
 	
 	function getLocale() {
 		return $this->_locale;
 	}
 }
-?>

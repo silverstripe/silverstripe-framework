@@ -10,14 +10,23 @@ class DateTest extends SapphireTest {
 	function setUp() {
 		// Set timezone to support timestamp->date conversion.
 		// We can't use date_default_timezone_set() as its not supported prior to PHP 5.2
-		$this->originalTZ = ini_get('date.timezone');
-		ini_set('date.timezone','Pacific/Auckland');
 		
+		if (version_compare(PHP_VERSION, '5.2.0', '<')) {
+			$this->originalTZ = ini_get('date.timezone');
+			ini_set('date.timezone', 'Pacific/Auckland');
+		} else {
+			$this->originalTZ = date_default_timezone_get();
+			date_default_timezone_set('Pacific/Auckland');
+		}
 		parent::setUp();
 	}
 	
 	function tearDown() {
-		ini_set('date.timezone',$this->originalTZ);
+        if(version_compare(PHP_VERSION, '5.2.0', '<') ){
+			ini_set('date.timezone',$this->originalTZ);
+        } else {
+            date_default_timezone_set($this->originalTZ);
+        }
 		
 		parent::tearDown();
 	}
@@ -84,6 +93,35 @@ class DateTest extends SapphireTest {
 			"Date->Long() works with D/M/YYYY"
 		);
 	}
-	
+
+	function testSetNullAndZeroValues() {
+		$date = DBField::create('Date', '');
+		$this->assertNull($date->getValue(), 'Empty string evaluates to NULL');
+
+		$date = DBField::create('Date', null);
+		$this->assertNull($date->getValue(), 'NULL is set as NULL');
+
+		$date = DBField::create('Date', false);
+		$this->assertNull($date->getValue(), 'Boolean FALSE evaluates to NULL');
+
+		$date = DBField::create('Date', array());
+		$this->assertNull($date->getValue(), 'Empty array evaluates to NULL');
+
+		$date = DBField::create('Date', '0');
+		$this->assertEquals('1970-01-01', $date->getValue(), 'Zero is UNIX epoch date');
+
+		$date = DBField::create('Date', 0);
+		$this->assertEquals('1970-01-01', $date->getValue(), 'Zero is UNIX epoch date');
+	}
+
+	function testDayOfMonth() {
+		$date = DBField::create('Date', '2000-10-10');
+		$this->assertEquals('10', $date->DayOfMonth());
+		$this->assertEquals('10th', $date->DayOfMonth(true));
+
+		$range = $date->RangeString(DBField::create('Date', '2000-10-20'));
+		$this->assertEquals('10 - 20 Oct 2000', $range);
+		$range = $date->RangeString(DBField::create('Date', '2000-10-20'), true);
+		$this->assertEquals('10th - 20th Oct 2000', $range);
+	}
 }
-?>

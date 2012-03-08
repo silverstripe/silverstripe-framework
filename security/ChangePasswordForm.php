@@ -13,11 +13,11 @@ class ChangePasswordForm extends Form {
 	 *                               create the appropriate form action tag.
 	 * @param string $name The method on the controller that will return this
 	 *                     form object.
-	 * @param FieldSet|FormField $fields All of the fields in the form - a
-	 *                                   {@link FieldSet} of {@link FormField}
+	 * @param FieldList|FormField $fields All of the fields in the form - a
+	 *                                   {@link FieldList} of {@link FormField}
 	 *                                   objects.
-	 * @param FieldSet|FormAction $actions All of the action buttons in the
-	 *                                     form - a {@link FieldSet} of
+	 * @param FieldList|FormAction $actions All of the action buttons in the
+	 *                                     form - a {@link FieldList} of
 	 */
 	function __construct($controller, $name, $fields = null, $actions = null) {
 		if(isset($_REQUEST['BackURL'])) {
@@ -27,7 +27,7 @@ class ChangePasswordForm extends Form {
 		}
 		
 		if(!$fields) {
-			$fields = new FieldSet();
+			$fields = new FieldList();
 			
 			// Security/changepassword?h=XXX redirects to Security/changepassword
 			// without GET parameter to avoid potential HTTP referer leakage.
@@ -40,7 +40,7 @@ class ChangePasswordForm extends Form {
 			$fields->push(new PasswordField("NewPassword2", _t('Member.CONFIRMNEWPASSWORD', "Confirm New Password")));
 		}
 		if(!$actions) {
-			$actions = new FieldSet(
+			$actions = new FieldList(
 				new FormAction("doChangePassword", _t('Member.BUTTONCHANGEPASSWORD', "Change Password"))
 			);
 		}
@@ -134,4 +134,3 @@ class ChangePasswordForm extends Form {
 
 }
 
-?>

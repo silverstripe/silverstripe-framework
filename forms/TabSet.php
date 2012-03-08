@@ -27,6 +27,8 @@
  */
 class TabSet extends CompositeField {
 	
+	protected $template = "TabSetFieldHolder";
+	
 	/**
 	 * @param string $name Identifier
 	 * @param string $title (Optional) Natural language title of the tabset
@@ -69,18 +71,16 @@ class TabSet extends CompositeField {
 	 */
 	public function FieldHolder() {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/jquery_improvements.js");
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-cookie/jquery.cookie.js');
 		
-		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.all.css');
-		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.tabs.css');
+		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.css');
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
 		
-		return $this->renderWith("TabSetFieldHolder");
+		return $this->renderWith($this->template);
 	}
 	
 	/**
@@ -95,7 +95,9 @@ class TabSet extends CompositeField {
 
 	public function setTabSet($val) {
 		$this->tabSet = $val;
+		return $this;
 	}
+	
 	public function getTabSet() {
 		if(isset($this->tabSet)) return $this->tabSet;
 	}
@@ -132,7 +134,7 @@ class TabSet extends CompositeField {
 	}
 	
 	/**
-	 * Inserts a field before a particular field in a FieldSet.
+	 * Inserts a field before a particular field in a FieldList.
 	 *
 	 * @param FormField $item The form field to insert
 	 * @param string $name Name of the field to insert before
@@ -153,4 +155,3 @@ class TabSet extends CompositeField {
 		parent::removeByName( $tabName, $dataFieldOnly );
 	}
 }
-?>

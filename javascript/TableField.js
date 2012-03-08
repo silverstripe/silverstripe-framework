@@ -4,19 +4,6 @@
  * 
  * TODO relies on include-order at the moment to override actions :/
  */
-Effect.FadeOut = function(element,callback) {
-  element = $(element);
-  var oldOpacity = Element.getInlineOpacity(element);
-  var options = Object.extend({
-  from: Element.getOpacity(element) || 1.0,
-  to:   0.0,
-  afterFinishInternal: function(effect) {
-  	effect.element.parentNode.removeChild(effect.element);
-  }
-  }, arguments[1] || {});
-  return new Effect.Opacity(element,options);
-}
- 
 TableField = Class.create();
 TableField.prototype = {
 	
@@ -61,7 +48,7 @@ TableField.prototype = {
 			|| params["childID"] <= 0 || (recordID <= 0 || recordID == false)
 		){
 			if( row.parentNode.getElementsByTagName('tr').length > 1 ) {
-				Effect.FadeOut(row);
+				jQuery(row).fadeOut();
 			} else {
 				// clear all fields in the row
 				var fields = row.getElementsByTagName('input');
@@ -81,22 +68,17 @@ TableField.prototype = {
 			jQuery.ajax({
 				'url': link.getAttribute("href"),
 				'method': 'post', 
-				'data': {ajax: 1, 'SecurityID': $('SecurityID') ? $('SecurityID').value : null},
+				'data': {ajax: 1, 'SecurityID': document.getElementById('SecurityID') ? document.getElementById('SecurityID').value : null},
 				'success': function(response){
-					Effect.Fade(
-						row,
-						{
-							afterFinish: function(obj) {
-								// remove row from DOM
-								obj.element.parentNode.removeChild(obj.element);
-								// recalculate summary if needed (assumes that TableListField.js is present)
-								// TODO Proper inheritance
-								if(self._summarise) self._summarise();
-								// custom callback
-								if(self.callback_deleteRecord) self.callback_deleteRecord(e);
-							}
-						}
-					);
+					jQuery(row).fadeOut('fast', function() {
+						// remove row from DOM
+						this.element.parentNode.removeChild(obj.element);
+						// recalculate summary if needed (assumes that TableListField.js is present)
+						// TODO Proper inheritance
+						if(self._summarise) self._summarise();
+						// custom callback
+						if(self.callback_deleteRecord) self.callback_deleteRecord(e);
+					});
 				},
 				'error': ajaxErrorHandler
 			});

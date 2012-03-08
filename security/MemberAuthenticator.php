@@ -30,7 +30,12 @@ class MemberAuthenticator extends Authenticator {
    * @see Security::setDefaultAdmin()
    */
   public static function authenticate($RAW_data, Form $form = null) {
-    $SQL_user = Convert::raw2sql($RAW_data['Email']);
+	if(array_key_exists('Email', $RAW_data) && $RAW_data['Email']){
+		$SQL_user = Convert::raw2sql($RAW_data['Email']);
+	} else {
+		return false;
+	}
+    
 	$isLockedOut = false;
 	$result = null;
 
@@ -141,4 +146,3 @@ class MemberAuthenticator extends Authenticator {
 	}
 }
 
-?>

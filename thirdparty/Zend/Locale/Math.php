@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Locale
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Math.php 14041 2009-02-10 21:49:38Z thomas $
+ * @version    $Id: Math.php 23775 2011-03-01 17:25:24Z ralph $
  */
 
 
@@ -28,7 +28,7 @@
  *
  * @category   Zend
  * @package    Zend_Locale
- * @copyright  Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -65,9 +65,17 @@ class Zend_Locale_Math
     public static function round($op1, $precision = 0)
     {
         if (self::$_bcmathDisabled) {
-            return self::normalize(round($op1, $precision));
+            $op1 = round($op1, $precision);
+            if (strpos((string) $op1, 'E') === false) {
+                return self::normalize(round($op1, $precision));
+            }
         }
-        $op1 = trim(self::normalize($op1));
+
+        if (strpos($op1, 'E') !== false) {
+            $op1 = self::floatalize($op1);
+        }
+
+        $op1    = trim(self::normalize($op1));
         $length = strlen($op1);
         if (($decPos = strpos($op1, '.')) === false) {
             $op1 .= '.0';
@@ -77,10 +85,12 @@ class Zend_Locale_Math
         if ($precision < 0 && abs($precision) > $decPos) {
             return '0';
         }
+
         $digitsBeforeDot = $length - ($decPos + 1);
         if ($precision >= ($length - ($decPos + 1))) {
             return $op1;
         }
+
         if ($precision === 0) {
             $triggerPos = 1;
             $roundPos   = -1;
@@ -91,23 +101,67 @@ class Zend_Locale_Math
             $triggerPos = $precision;
             $roundPos   = $precision -1;
         }
+
         $triggerDigit = $op1[$triggerPos + $decPos];
         if ($precision < 0) {
             // zero fill digits to the left of the decimal place
             $op1 = substr($op1, 0, $decPos + $precision) . str_pad('', abs($precision), '0');
         }
+
         if ($triggerDigit >= '5') {
             if ($roundPos + $decPos == -1) {
                 return str_pad('1', $decPos + 1, '0');
             }
+
             $roundUp = str_pad('', $length, '0');
             $roundUp[$decPos] = '.';
             $roundUp[$roundPos + $decPos] = '1';
-            return bcadd($op1, $roundUp, $precision);
+
+            if ($op1 > 0) {
+                if (self::$_bcmathDisabled) {
+                    return Zend_Locale_Math_PhpMath::Add($op1, $roundUp, $precision);
+                }
+                return self::Add($op1, $roundUp, $precision);
+            } else {
+                if (self::$_bcmathDisabled) {
+                    return Zend_Locale_Math_PhpMath::Sub($op1, $roundUp, $precision);
+                }
+                return self::Sub($op1, $roundUp, $precision);
+            }
         } elseif ($precision >= 0) {
             return substr($op1, 0, $decPos + ($precision ? $precision + 1: 0));
         }
+
         return (string) $op1;
+    }
+
+    /**
+     * Convert a scientific notation to float
+     * Additionally fixed a problem with PHP <= 5.2.x with big integers
+     *
+     * @param string $value
+     */
+    public static function floatalize($value)
+    {
+        $value = strtoupper($value);
+        if (strpos($value, 'E') === false) {
+            return $value;
+        }
+
+        $number = substr($value, 0, strpos($value, 'E'));
+        if (strpos($number, '.') !== false) {
+            $post   = strlen(substr($number, strpos($number, '.') + 1));
+            $mantis = substr($value, strpos($value, 'E') + 1);
+            if ($mantis < 0) {
+                $post += abs((int) $mantis);
+            }
+
+            $value = number_format($value, $post, '.', '');
+        } else {
+            $value = number_format($value, 0, '.', '');
+        }
+
+        return $value;
     }
 
     /**
@@ -186,6 +240,7 @@ class Zend_Locale_Math
     {
         $op1 = self::exponent($op1, $scale);
         $op2 = self::exponent($op2, $scale);
+
         return bcadd($op1, $op2, $scale);
     }
 
@@ -292,8 +347,9 @@ class Zend_Locale_Math
     }
 }
 
-if ((defined('TESTS_ZEND_LOCALE_BCMATH_ENABLED') && !TESTS_ZEND_LOCALE_BCMATH_ENABLED)
-    || !extension_loaded('bcmath')) {
+if (!extension_loaded('bcmath')
+    || (defined('TESTS_ZEND_LOCALE_BCMATH_ENABLED') && !TESTS_ZEND_LOCALE_BCMATH_ENABLED)
+) {
     require_once 'Zend/Locale/Math/PhpMath.php';
     Zend_Locale_Math_PhpMath::disable();
 }

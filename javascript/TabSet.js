@@ -9,14 +9,20 @@
 		 */
 		$('.ss-tabset').entwine({
 			onmatch: function() {
+				// Can't name redraw() as it clashes with other CMS entwine classes
+				this.redrawTabs();
+				this._super();
+			},
+			
+			redrawTabs: function() {
 				this.rewriteHashlinks();
 
-				// Initialize jQuery UI tabs
-				this.tabs({
-					cookie: $.cookie ? { expires: 30, path: '/', name: 'ui-tabs-' + this.attr('id') } : false
-				});
-				
-				this._super();
+				var id = this.attr('id'), cookieId = 'ui-tabs-' + id;
+
+				// Fix for wrong cookie storage of deselected tabs
+				if($.cookie && id && $.cookie(cookieId) == -1) $.cookie(cookieId, 0);
+
+				this.tabs({cookie: ($.cookie && id) ? { expires: 30, path: '/', name: cookieId } : false});
 			},
 		
 			/**

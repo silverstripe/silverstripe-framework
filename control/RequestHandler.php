@@ -37,6 +37,11 @@ class RequestHandler extends ViewableData {
 	protected $request = null;
 	
 	/**
+	 * The DataModel for this request
+	 */
+	protected $model = null;
+	
+	/**
 	 * This variable records whether RequestHandler::__construct()
 	 * was called or not. Useful for checking if subclasses have
 	 * called parent::__construct()
@@ -86,7 +91,17 @@ class RequestHandler extends ViewableData {
 		// Check necessary to avoid class conflicts before manifest is rebuilt
 		if(class_exists('NullHTTPRequest')) $this->request = new NullHTTPRequest();
 		
+		// This will prevent bugs if setModel() isn't called.
+		$this->model = DataModel::inst();
+		
 		parent::__construct();
+	}
+	
+	/**
+	 * Set the DataModel for this request.
+	 */
+	public function setModel($model) {
+		$this->model = $model;
 	}
 	
 	/**
@@ -110,7 +125,7 @@ class RequestHandler extends ViewableData {
 	 * @uses SS_HTTPRequest->match()
 	 * @return SS_HTTPResponse|RequestHandler|string|array
 	 */
-	function handleRequest(SS_HTTPRequest $request) {
+	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
 		// $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
 		$handlerClass = ($this->class) ? $this->class : get_class($this);
 	
@@ -119,6 +134,7 @@ class RequestHandler extends ViewableData {
 		}
 	
 		$this->request = $request;
+		$this->setModel($model);
 		
 		// We stop after RequestHandler; in other words, at ViewableData
 		while($handlerClass && $handlerClass != 'ViewableData') {
@@ -164,7 +180,7 @@ class RequestHandler extends ViewableData {
 					// to prevent infinite loops. Also prevent further handling of controller actions which return themselves
 					// to avoid infinite loops.
 					if($this !== $result && !$request->isEmptyPattern($rule) && is_object($result) && $result instanceof RequestHandler) {
-						$returnValue = $result->handleRequest($request);
+						$returnValue = $result->handleRequest($request, $model);
 
 						// Array results can be used to handle 
 						if(is_array($returnValue)) $returnValue = $this->customise($returnValue);

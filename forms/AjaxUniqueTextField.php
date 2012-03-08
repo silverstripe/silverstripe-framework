@@ -29,6 +29,8 @@ class AjaxUniqueTextField extends TextField {
 	}
 	 
 	function Field() {
+		Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/behaviour/behaviour.js");
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/UniqueFields.js");
 		
@@ -43,9 +45,9 @@ class AjaxUniqueTextField extends TextField {
 			'type' => 'text',
 			'class' => 'text' . ($this->extraClass() ? $this->extraClass() : ''),
 			'id' => $this->id(),
-			'name' => $this->Name(),
+			'name' => $this->getName(),
 			'value' => $this->Value(),
-			'tabindex' => $this->getTabIndex(),
+			'tabindex' => $this->getAttribute('tabindex'),
 			'maxlength' => ($this->maxLength) ? $this->maxLength : null
 		);
 		
@@ -87,7 +89,7 @@ Behaviour.register({
 						else {
 							Element.addClassName(self, 'inuse');	
 						}
-					}
+					},
 					error: function(response) {
 					
 					}	
@@ -124,4 +126,3 @@ JS;
 		return true; 
 	}
 }
-?>

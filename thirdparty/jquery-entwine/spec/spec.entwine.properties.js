@@ -33,6 +33,16 @@ describe('Entwine', function() {
             });
             expect($('.a').getFoo()).toEqual(1);
         });
+        it('can override a default value with a true-ish value', function() {
+            $('#a').entwine({ Foo: 1 });
+            $('#a').setFoo(2);
+            expect($('.a').getFoo()).toEqual(2);
+        });
+        it('can override a default value with a false-ish value', function() {
+            $('#a').entwine({ Foo: 1 });
+            $('#a').setFoo(0);
+            expect($('.a').getFoo()).toEqual(0);
+        });
         it('should manage proprties in namespaces without clashing', function() {
             $('#a').entwine({
                 Foo: 1

@@ -43,7 +43,7 @@ class ArrayData extends ViewableData {
 	 *
 	 * @return array
 	 */
-	public function getArray() {
+	public function toMap() {
 		return $this->array;
 	}
 	
@@ -102,9 +102,11 @@ class ArrayData extends ViewableData {
 	}
 	
 	/**
-	 * This is pretty crude, but it helps diagnose error situations
+	 * @deprecated 3.0 Use {@link ArrayData::toMap()}.
 	 */
-	function forTemplate() {
-		return var_export($this->array, true);
+	public function getArray() {
+		Deprecation::notice('3.0', 'Use ArrayData::toMap() instead.');
+		return $this->toMap();
 	}
+
 }

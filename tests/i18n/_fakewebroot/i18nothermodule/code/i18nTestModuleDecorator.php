@@ -1,6 +1,6 @@
 <?php
-class i18nTestModuleDecorator extends DataObjectDecorator {
-	function extraStatics() {
+class i18nTestModuleExtension extends DataExtension {
+	function extraStatics($class=null, $extension=null) {
 		return array(
 			'db' => array(
 				'MyExtraField' => 'Varchar'
@@ -8,4 +8,3 @@ class i18nTestModuleDecorator extends DataObjectDecorator {
 		);
 	}
 }
-?>

@@ -13,32 +13,42 @@ class LookupField extends DropdownField {
 	 * Returns a readonly span containing the correct value.
 	 */
 	function Field() {
+		$source = $this->getSource();
 		
-		if(trim($this->value) || $this->value === '0') {
-			$this->value = trim($this->value);
-			$source = $this->getSource();
-			if(is_array($source)) {
-				$mappedValue = isset($source[$this->value]) ? $source[$this->value] : null;
-			} elseif($source instanceof SQLMap) {
-				$mappedValue = $source->getItem($this->value);
+		
+		// Normalize value to array to simplify further processing
+		$values = (is_array($this->value) || is_object($this->value)) ? $this->value : array(trim($this->value));
+
+		$mapped = array();
+		if($source instanceof SQLMap) {
+			foreach($values as $value) $mapped[] = $source->getItem($value);
+		} else if($source instanceof ArrayAccess || is_array($source)) {
+			foreach($values as $value) {
+				if(isset($source[$value])) $mapped[] = $source[$value];
 			}
+		} else {
+			$mapped = array();
+		}
+
+		// Don't check if string arguments are matching against the source,
+		// as they might be generated HTML diff views instead of the actual values
+		if($this->value && !$mapped) {
+			$mapped = array(trim($this->value));
+			$values = array();
 		}
 		
-		if(!isset($mappedValue)) $mappedValue = "<i>(none)</i>";
-
-		if($this->value) {
-			$val = $this->dontEscape
-				? ($this->reserveNL?Convert::raw2xml($this->value):$this->value)
-				: Convert::raw2xml($this->value);
+		if($mapped) {
+			$attrValue = implode(', ', array_values($mapped));
+			if(!$this->dontEscape) $attrValue = Convert::raw2xml($attrValue);
+			$inputValue = implode(', ', array_values($values)); 
 		} else {
-			$val = '<i>(none)</i>';
+			$attrValue = "<i>(none)</i>";
+			$inputValue = '';
 		}
-
-		$valforInput = $this->value ? Convert::raw2att($val) : "";
 
 		return "<span class=\"readonly\" id=\"" . $this->id() .
-			"\">$mappedValue</span><input type=\"hidden\" name=\"" . $this->name .
-			"\" value=\"" . $valforInput . "\" />";
+			"\">$attrValue</span><input type=\"hidden\" name=\"" . $this->name .
+			"\" value=\"" . $inputValue . "\" />";
 	}
 	
 	function performReadonlyTransformation() {
@@ -58,4 +68,3 @@ class LookupField extends DropdownField {
 	}
 }
 
-?>

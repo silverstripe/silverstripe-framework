@@ -42,8 +42,11 @@ class DataDifferencer extends ViewableData {
 	/**
 	 * Construct a DataDifferencer to show the changes between $fromRecord and $toRecord.
 	 * If $fromRecord is null, this will represent a "creation".
+	 * 
+	 * @param DataObject (Optional)
+	 * @param DataObject 
 	 */
-	function __construct($fromRecord, $toRecord) {
+	function __construct($fromRecord, DataObject $toRecord) {
 		if(!$toRecord) user_error("DataDifferencer constructed without a toRecord", E_USER_WARNING);
 		$this->fromRecord = $fromRecord;
 		$this->toRecord = $toRecord;
@@ -73,13 +76,54 @@ class DataDifferencer extends ViewableData {
 			$fields = array_keys($this->toRecord->getAllFields());
 		}
 		
+		$hasOnes = $this->fromRecord->has_one();
+		
+		// Loop through properties
 		foreach($fields as $field) {
 			if(in_array($field, $this->ignoredFields)) continue;
+			if(in_array($field, array_keys($hasOnes))) continue;
 			
 			if(!$this->fromRecord) {
-				$diffed->$field = "<ins>" . $this->toRecord->$field . "</ins>";
+				$diffed->setField($field, "<ins>" . $this->toRecord->$field . "</ins>");
 			} else if($this->fromRecord->$field != $this->toRecord->$field) {			
-				$diffed->$field = Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field);
+				$diffed->setField($field, Diff::compareHTML($this->fromRecord->$field, $this->toRecord->$field));
+			}
+		}
+		
+		// Loop through has_one
+		foreach($hasOnes as $relName => $relSpec) {
+			if(in_array($relName, $this->ignoredFields)) continue;
+			
+			$relField = "{$relName}ID";
+			$relObjTo = $this->toRecord->$relName();
+			
+			if(!$this->fromRecord) {
+				if($relObjTo) {
+					if($relObjTo instanceof Image) {
+						// Using relation name instead of database column name, because of FileField etc.
+						// TODO Use CMSThumbnail instead to limit max size, blocked by DataDifferencerTest and GC
+						// not playing nice with mocked images
+						$diffed->setField($relName, "<ins>" . $relObjTo->getTag() . "</ins>");
+					} else {
+						$diffed->setField($relField, "<ins>" . $relObjTo->Title() . "</ins>");
+					}
+				}
+			} else if($this->fromRecord->$relField != $this->toRecord->$relField) {
+				$relObjFrom = $this->fromRecord->$relName();
+				if($relObjFrom instanceof Image) {
+					// TODO Use CMSThumbnail (see above)
+					$diffed->setField(
+						// Using relation name instead of database column name, because of FileField etc.
+						$relName, 
+						Diff::compareHTML($relObjFrom->getTag(), $relObjTo->getTag())
+					);
+				} else {
+					$diffed->setField(
+						$relField, 
+						Diff::compareHTML($relObjFrom->getTitle(), $relObjTo->getTitle())
+					);
+				}
+				
 			}
 		}
 		
@@ -87,7 +131,7 @@ class DataDifferencer extends ViewableData {
 	}
 	
 	/**
-	 * Get a DataObjectSet of the changed fields.
+	 * Get a SS_List of the changed fields.
 	 * Each element is an array data containing
 	 *  - Name: The field name
 	 *  - Title: The human-readable field title
@@ -96,7 +140,7 @@ class DataDifferencer extends ViewableData {
 	 *  - To: The newer version of the field
 	 */
 	function ChangedFields() {
-		$changedFields = new DataObjectSet();
+		$changedFields = new ArrayList();
 
 		if($this->fromRecord) {
 			$base = $this->fromRecord;
@@ -109,7 +153,22 @@ class DataDifferencer extends ViewableData {
 		foreach($fields as $field) {
 			if(in_array($field, $this->ignoredFields)) continue;
 
-			if(!$this->fromRecord || $this->fromRecord->$field != $this->toRecord->$field) {			
+			if(!$this->fromRecord || $this->fromRecord->$field != $this->toRecord->$field) {
+				// Only show HTML diffs for fields which allow HTML values in the first place
+				$fieldObj = $this->toRecord->dbObject($field);
+				if($this->fromRecord) {
+					$fieldDiff = Diff::compareHTML(
+						$this->fromRecord->$field, 
+						$this->toRecord->$field, 
+						(!$fieldObj || $fieldObj->stat('escape_type') != 'xml')
+					);
+				} else {
+					if($fieldObj && $fieldObj->stat('escape_type') == 'xml') {
+						$fieldDiff = "<ins>" . $this->toRecord->$field . "</ins>";
+					} else {
+						$fieldDiff = "<ins>" . Convert::raw2xml($this->toRecord->$field) . "</ins>";
+					}
+				}
 				$changedFields->push(new ArrayData(array(
 					'Name' => $field,
 					'Title' => $base->fieldLabel($field),

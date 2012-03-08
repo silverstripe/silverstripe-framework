@@ -30,6 +30,8 @@
  * );
  * </code>
  * 
+ * @deprecated 3.0 Use GridField with GridFieldConfig_RelationEditor
+ * 
  * @package forms
  * @subpackage fields-relational
  */
@@ -40,6 +42,8 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 	public $itemClass = 'ManyManyComplexTableField_Item';
 		
 	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+
+		Deprecation::notice('3.0', 'Use GridField with GridFieldConfig_RelationEditor');
 
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 		
@@ -92,7 +96,7 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 class ManyManyComplexTableField_Item extends ComplexTableField_Item {
 	
 	function MarkingCheckbox() {
-		$name = $this->parent->Name() . '[]';
+		$name = $this->parent->getName() . '[]';
 		
 		if($this->parent->IsReadOnly)
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\"/>";
@@ -103,4 +107,4 @@ class ManyManyComplexTableField_Item extends ComplexTableField_Item {
 	}
 }
 
-?>
+

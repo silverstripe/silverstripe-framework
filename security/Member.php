@@ -5,12 +5,12 @@
  * @package sapphire
  * @subpackage security
  */
-class Member extends DataObject {
+class Member extends DataObject implements TemplateGlobalProvider {
 
 	static $db = array(
 		'FirstName' => 'Varchar',
 		'Surname' => 'Varchar',
-		'Email' => 'Varchar',
+		'Email' => 'Varchar(256)', // See RFC 5321, Section 4.5.3.1.3.
 		'Password' => 'Varchar(160)',
 		'RememberLoginToken' => 'Varchar(50)',
 		'NumVisit' => 'Int',
@@ -139,16 +139,15 @@ class Member extends DataObject {
 		// Default groups should've been built by Group->requireDefaultRecords() already
 		
 		// Find or create ADMIN group
-		$adminGroups = Permission::get_groups_by_permission('ADMIN');
-		if(!$adminGroups) {
+		$adminGroup = Permission::get_groups_by_permission('ADMIN')->First();
+		if(!$adminGroup) {
 			singleton('Group')->requireDefaultRecords();
-			$adminGroups = Permission::get_groups_by_permission('ADMIN');
+			$adminGroup = Permission::get_groups_by_permission('ADMIN')->First();
 		}
-		$adminGroup = $adminGroups->First();
 		
 		// Add a default administrator to the first ADMIN group found (most likely the default
 		// group created through Group->requireDefaultRecords()).
-		$admins = Permission::get_members_by_permission('ADMIN');
+		$admins = Permission::get_members_by_permission('ADMIN')->First();
 		if(!$admins) {
 			// Leave 'Email' and 'Password' are not set to avoid creating
 			// persistent logins in the database. See Security::setDefaultAdmin().
@@ -156,7 +155,7 @@ class Member extends DataObject {
 			$admin->FirstName = _t('Member.DefaultAdminFirstname', 'Default Admin');
 			$admin->write();
 			$admin->Groups()->add($adminGroup);
-		}		
+		}
 	}
 
 	/**
@@ -401,7 +400,7 @@ class Member extends DataObject {
 				
 				$generator = new RandomGenerator();
 				$member->RememberLoginToken = $generator->generateHash('sha1');
-				Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
+				Cookie::set('alc_enc', $member->ID . ':' . $member->RememberLoginToken, 90, null, null, false, true);
 
 				$member->NumVisit++;
 				$member->write();
@@ -505,7 +504,7 @@ class Member extends DataObject {
 	 * Returns the fields for the member form - used in the registration/profile module.
 	 * It should return fields that are editable by the admin and the logged-in user. 
 	 *
-	 * @return FieldSet Returns a {@link FieldSet} containing the fields for
+	 * @return FieldList Returns a {@link FieldList} containing the fields for
 	 *                  the member form.
 	 */
 	public function getMemberFormFields() {
@@ -718,7 +717,7 @@ class Member extends DataObject {
 	/**
 	 * Check if the member is in one of the given groups.
 	 *
-	 * @param array|DataObjectSet $groups Collection of {@link Group} DataObjects to check
+	 * @param array|SS_List $groups Collection of {@link Group} DataObjects to check
 	 * @param boolean $strict Only determine direct group membership if set to true (Default: false)
 	 * @return bool Returns TRUE if the member is in one of the given groups, otherwise FALSE.
 	 */
@@ -793,6 +792,7 @@ class Member extends DataObject {
 	 * @return Returns TRUE if this user is an administrator.
 	 */
 	function isAdmin() {
+		Deprecation::notice('2.4', 'Use Permission::check(\'ADMIN\') instead.');
 		return Permission::checkMember($this, 'ADMIN');
 	}
 	
@@ -939,43 +939,26 @@ class Member extends DataObject {
 
 
 	/**
-	 * Get a "many-to-many" map that holds for all members their group
-	 * memberships
+	 * Get a "many-to-many" map that holds for all members their group memberships,
+	 * including any parent groups where membership is implied.
+	 * Use {@link DirectGroups()} to only retrieve the group relations without inheritance.
 	 *
-	 * @return Member_GroupSet Returns a map holding for all members their
-	 *                         group memberships.
+	 * @todo Push all this logic into Member_GroupSet's getIterator()?
 	 */
 	public function Groups() {
-		$groups = $this->getManyManyComponents("Groups");
-		$groupIDs = $groups->column();
-		$collatedGroups = array();
+		$groups = new Member_GroupSet('Group', 'Group_Members', 'GroupID', 'MemberID');
+		$groups->setForeignID($this->ID);
+		
+		$this->extend('updateGroups', $groups);
 
-		if($groups) {
-			foreach($groups as $group) {
-				$collatedGroups = array_merge((array)$collatedGroups, $group->collateAncestorIDs());
-			}
-		}
+		return $groups;
+	}
 
-		$table = "Group_Members";
-
-		if(count($collatedGroups) > 0) {
-			$collatedGroups = implode(", ", array_unique($collatedGroups));
-
-			$unfilteredGroups = singleton('Group')->instance_get("\"Group\".\"ID\" IN ($collatedGroups)", "\"Group\".\"ID\"", "", "", "Member_GroupSet");
-			$result = new ComponentSet();
-			
-			// Only include groups where allowedIPAddress() returns true
-			$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
-			foreach($unfilteredGroups as $group) {
-				if($group->allowedIPAddress($ip)) $result->push($group);
-			}
-		} else {
-			$result = new Member_GroupSet();
-		}
-
-		$result->setComponentInfo("many-to-many", $this, "Member", $table, "Group");
-
-		return $result;
+	/**
+	 * @return ManyManyList
+	 */
+	public function DirectGroups() {
+		return $this->getManyManyComponents('Groups');
 	}
 
 
@@ -989,17 +972,15 @@ class Member extends DataObject {
 	 *
 	 * @todo Improve documentation of this function! (Markus)
 	 */
-	public function map($filter = "", $sort = "", $blank="") {
-		$ret = new SQLMap(singleton('Member')->extendedSQL($filter, $sort));
-		if($blank) {
-			$blankMember = Object::create('Member');
-			$blankMember->Surname = $blank;
-			$blankMember->ID = 0;
+	public static function map($filter = "", $sort = "", $blank="") {
+		Deprecation::notice('3.0', 'Use DataList::("Member")->map()');
 
-			$ret->getItems()->unshift($blankMember);
-		}
+		$list = DataList::create("Member")->where($filter)->sort($sort);
+		$map = $list->map();
+		
+		if($blank) $map->unshift(0, $blank);
 
-		return $ret;
+		return $map;
 	}
 
 
@@ -1020,7 +1001,7 @@ class Member extends DataObject {
 
 		$groupIDList = array();
 
-		if(is_a($groups, 'DataObjectSet')) {
+		if(is_a($groups, 'SS_List')) {
 			foreach( $groups as $group )
 				$groupIDList[] = $group->ID;
 		} elseif(is_array($groups)) {
@@ -1032,9 +1013,8 @@ class Member extends DataObject {
 		if(empty($groupIDList))
 			return Member::map();
 
-		return new SQLMap(singleton('Member')->extendedSQL(
-			"\"GroupID\" IN (" . implode( ',', $groupIDList ) .
-			")", "Surname, FirstName", "", "INNER JOIN \"Group_Members\" ON \"MemberID\"=\"Member\".\"ID\""));
+		return DataList::create("Member")->where("\"GroupID\" IN (" . implode( ',', $groupIDList ) . ")")
+			->sort("\"Surname\", \"FirstName\"")->map();
 	}
 
 
@@ -1060,13 +1040,12 @@ class Member extends DataObject {
 			
 			$SQL_perms = "'" . implode("', '", Convert::raw2sql($perms)) . "'";
 			
-			$groups = DataObject::get('Group', "", "",
-				"INNER JOIN \"Permission\" ON \"Permission\".\"GroupID\" = \"Group\".\"ID\" AND \"Permission\".\"Code\" IN ($SQL_perms)");
+			$groups = DataObject::get('Group')->innerJoin("Permission", "\"Permission\".\"GroupID\" = \"Group\".\"ID\" AND \"Permission\".\"Code\" IN ($SQL_perms)");
 		}
 
 		$groupIDList = array();
 
-		if(is_a($groups, 'DataObjectSet')) {
+		if(is_a($groups, 'SS_List')) {
 			foreach($groups as $group) {
 				$groupIDList[] = $group->ID;
 			}
@@ -1077,10 +1056,11 @@ class Member extends DataObject {
 		$filterClause = ($groupIDList)
 			? "\"GroupID\" IN (" . implode( ',', $groupIDList ) . ")"
 			: "";
-
-		return new SQLMap(singleton('Member')->extendedSQL($filterClause,
-			"Surname, FirstName", "",
-			"INNER JOIN \"Group_Members\" ON \"MemberID\"=\"Member\".\"ID\" INNER JOIN \"Group\" ON \"Group\".\"ID\"=\"GroupID\""));
+			
+		return DataList::create("Member")->where($filterClause)->sort("\"Surname\", \"FirstName\"")
+			->innerJoin("Group_Members", "\"MemberID\"=\"Member\".\"ID\"")
+			->innerJoin("Group", "\"Group\".\"ID\"=\"GroupID\"")
+			->map();
 	}
 
 
@@ -1110,10 +1090,10 @@ class Member extends DataObject {
 
 
 	/**
-	 * Return a {@link FieldSet} of fields that would appropriate for editing
+	 * Return a {@link FieldList} of fields that would appropriate for editing
 	 * this member.
 	 *
-	 * @return FieldSet Return a FieldSet of fields that would appropriate for
+	 * @return FieldList Return a FieldList of fields that would appropriate for
 	 *                  editing this member.
 	 */
 	public function getCMSFields() {
@@ -1133,17 +1113,7 @@ class Member extends DataObject {
 		$password->setCanBeEmpty(true);
 		if(!$this->ID) $password->showOnClick = false;
 		$mainFields->replaceField('Password', $password);
-		
-		$mainFields->insertBefore(
-			new HeaderField('MemberDetailsHeader',_t('Member.PERSONALDETAILS', "Personal Details", PR_MEDIUM, 'Headline for formfields')),
-			'FirstName'
-		);
-		
-		$mainFields->insertBefore(
-			new HeaderField('MemberUserDetailsHeader',_t('Member.USERDETAILS', "User Details", PR_MEDIUM, 'Headline for formfields')),
-			'Email'
-		);
-		
+				
 		$mainFields->replaceField('Locale', new DropdownField(
 			"Locale", 
 			_t('Member.INTERFACELANG', "Interface Language", PR_MEDIUM, 'Language of the CMS'), 
@@ -1171,19 +1141,22 @@ class Member extends DataObject {
 		// Groups relation will get us into logical conflicts because
 		// Members are displayed within  group edit form in SecurityAdmin
 		$fields->removeByName('Groups');
-		
+
 		if(Permission::check('EDIT_PERMISSIONS')) {
-			$groupsField = new TreeMultiselectField('Groups', false, 'Group');
-			$fields->findOrMakeTab('Root.Groups', singleton('Group')->i18n_plural_name());
-			$fields->addFieldToTab('Root.Groups', $groupsField);
-			
+			$groupsMap = DataList::create('Group')->map('ID', 'Breadcrumbs')->toArray();
+			asort($groupsMap);
+			$fields->addFieldToTab('Root.Main',
+				Object::create('ListboxField', 'DirectGroups', singleton('Group')->i18n_plural_name())
+					->setMultiple(true)->setSource($groupsMap)
+			);
+
 			// Add permission field (readonly to avoid complicated group assignment logic).
 			// This should only be available for existing records, as new records start
 			// with no permissions until they have a group assignment anyway.
 			if($this->ID) {
 				$permissionsField = new PermissionCheckboxSetField_Readonly(
 					'Permissions',
-					singleton('Permission')->i18n_plural_name(),
+					false,
 					'Permission',
 					'GroupID',
 					// we don't want parent relationships, they're automatically resolved in the field
@@ -1204,7 +1177,7 @@ class Member extends DataObject {
 		$dateFormatMap[$defaultDateFormat] = Zend_Date::now()->toString($defaultDateFormat)
 			. sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
 		$mainFields->push(
-			$dateFormatField = new Member_DatetimeOptionsetField(
+			$dateFormatField = new MemberDatetimeOptionsetField(
 				'DateFormat',
 				$this->fieldLabel('DateFormat'),
 				$dateFormatMap
@@ -1220,7 +1193,7 @@ class Member extends DataObject {
 		$timeFormatMap[$defaultTimeFormat] = Zend_Date::now()->toString($defaultTimeFormat)
 			. sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
 		$mainFields->push(
-			$timeFormatField = new Member_DatetimeOptionsetField(
+			$timeFormatField = new MemberDatetimeOptionsetField(
 				'TimeFormat',
 				$this->fieldLabel('TimeFormat'),
 				$timeFormatMap
@@ -1264,7 +1237,7 @@ class Member extends DataObject {
 	function canView($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		// decorated access checks
+		// extended access checks
 		$results = $this->extend('canView', $member);
 		if($results && is_array($results)) {
 			if(!min($results)) return false;
@@ -1291,7 +1264,7 @@ class Member extends DataObject {
 	function canEdit($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		// decorated access checks
+		// extended access checks
 		$results = $this->extend('canEdit', $member);
 		if($results && is_array($results)) {
 			if(!min($results)) return false;
@@ -1318,7 +1291,7 @@ class Member extends DataObject {
 	function canDelete($member = null) {
 		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
 		
-		// decorated access checks
+		// extended access checks
 		$results = $this->extend('canDelete', $member);
 		if($results && is_array($results)) {
 			if(!min($results)) return false;
@@ -1412,41 +1385,62 @@ class Member extends DataObject {
 		// If can't find a suitable editor, just default to cms
 		return $currentName ? $currentName : 'cms';
 	}
+
+	public static function get_template_global_variables() {
+		return array(
+			'CurrentMember' => 'currentUser',
+			'currentUser'
+		);
+	}
 }
 
 /**
- * Special kind of {@link ComponentSet} that has special methods for
- * manipulating a user's membership
+ * Represents a set of Groups attached to a member.
+ * Handles the hierarchy logic.
  * @package sapphire
  * @subpackage security
  */
-class Member_GroupSet extends ComponentSet {
+class Member_GroupSet extends ManyManyList {
+	function __construct($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = array()) {
+		// Bypass the many-many constructor
+		DataList::__construct($dataClass);
+
+		$this->joinTable = $joinTable;
+		$this->localKey = $localKey;
+		$this->foreignKey = $foreignKey;
+		$this->extraFields = $extraFields;
+	}
+	
 	/**
-	 * Control group membership with a number of checkboxes.
-	 *  - If the checkbox fields are present in $data, then the member will be
-	 *    added to the group with the same codename.
-	 *  - If the checkbox fields are *NOT* present in $data, then the member
-	 *    will be removed from the group with the same codename.
-	 *
-	 * @param array $checkboxes An array list of the checkbox fieldnames (only
-	 *               	          values are used). E.g. array(0, 1, 2)
-	 * @param array $data The form data. Uually in the format array(0 => 2)
-	 *                    (just pass the checkbox data from your form)
+	 * Link this group set to a specific member.
+	 */
+	public function setForeignID($id) {
+		// Turn a 1-element array into a simple value
+		if(is_array($id) && sizeof($id) == 1) $id = reset($id);
+		$this->foreignID = $id;
+		
+		// Find directly applied groups
+		$manymanyFilter = $this->foreignIDFilter();
+		$groupIDs = DB::query('SELECT "GroupID" FROM "Group_Members" WHERE ' . $manymanyFilter)->column();
+
+		// Get all ancestors
+		$allGroupIDs = array();
+		while($groupIDs) {
+			$allGroupIDs = array_merge($allGroupIDs, $groupIDs);
+			$groupIDs = DataObject::get("Group")->byIDs($groupIDs)->column("ParentID");
+			$groupIDs = array_filter($groupIDs);
+		}
+		
+		// Add a filter to this DataList
+		if($allGroupIDs) $this->byIDs($allGroupIDs);
+		else $this->byIDs(array(0));
+	}
+	
+	/**
+	 * @deprecated Use setByIdList() and/or a CheckboxSetField
 	 */
 	function setByCheckboxes(array $checkboxes, array $data) {
-		foreach($checkboxes as $checkbox) {
-			if($data[$checkbox]) {
-				$add[] = $checkbox;
-			} else {
-				$remove[] = $checkbox;
-			}
-		}
-
-		if($add)
-			$this->addManyByCodename($add);
-
-		if($remove)
-			$this->removeManyByCodename($remove);
+		Deprecation::notice('2.4', 'Use setByIdList() and/or a CheckboxSetField instead.');
 	}
 
 
@@ -1510,114 +1504,51 @@ class Member_GroupSet extends ComponentSet {
 
 		} else {
 			USER_ERROR("Member::setByCheckboxSetField() - No source items could be found for checkboxsetfield " .
-								 $checkboxsetfield->Name(), E_USER_WARNING);
+								 $checkboxsetfield->getName(), E_USER_WARNING);
 		}
 	}
 
 
 	/**
-	 * Adds this member to the groups based on the group IDs
-	 *
-	 * @param array $ids Group identifiers.
+	 * @deprecated Use DataList::addMany
 	 */
-	function addManyByGroupID($groupIds){
-		$groups = $this->getGroupsFromIDs($groupIds);
-		if($groups) {
-			foreach($groups as $group) {
-				$this->add($group);
-			}
-		}
+	function addManyByGroupID($ids){
+		Deprecation::notice('2.4', 'Use addMany() instead.');
+		return $this->addMany($ids);
 	}
 
 
 	/**
-	 * Removes the member from many groups based on the group IDs
-	 *
-	 * @param array $ids Group identifiers.
+	 * @deprecated Use DataList::removeMany
 	 */
 	function removeManyByGroupID($groupIds) {
-	 	$groups = $this->getGroupsFromIDs($groupIds);
-	 	if($groups) {
-			foreach($groups as $group) {
-				$this->remove($group);
-			}
-		}
+		Deprecation::notice('2.4', 'Use removeMany() instead.');
+		return $this->removeMany($ids);
 	}
 
 
 	/**
-	 * Returns the groups from an array of group IDs
-	 *
-	 * @param array $ids Group identifiers.
-	 * @return mixed Returns the groups from the array of Group IDs.
+	 * @deprecated Use DataObject::get("Group")->byIds()
 	 */
-	function getGroupsFromIDs($ids){
-		if($ids && count($ids) > 1) {
-			return DataObject::get("Group", "\"ID\" IN (" . implode(",", $ids) . ")");
-		} else {
-			return DataObject::get_by_id("Group", $ids[0]);
-		}
+	function getGroupsFromIDs($ids) {
+		Deprecation::notice('2.4', 'Use DataObject::get("Group")->byIds() instead.');
+		return DataObject::get("Group")->byIDs($ids);
 	}
 
 
 	/**
-	 * Adds this member to the groups based on the group codenames
-	 *
-	 * @param array $codenames Group codenames
+	 * @deprecated Group.Code is deprecated
 	 */
 	function addManyByCodename($codenames) {
-		$groups = $this->codenamesToGroups($codenames);
-		if($groups) {
-			foreach($groups as $group){
-				$this->add($group);
-			}
-		}
+		Deprecation::notice('2.4', 'Don\'t rely on codename');
 	}
 
 
 	/**
-	 * Removes this member from the groups based on the group codenames
-	 *
-	 * @param array $codenames Group codenames
+	 * @deprecated Group.Code is deprecated
 	 */
 	function removeManyByCodename($codenames) {
-		$groups = $this->codenamesToGroups($codenames);
-		if($groups) {
-			foreach($groups as $group) {
-				$this->remove($group);
-			}
-		}
-	}
-
-
-	/**
-	 * Helper function to return the appropriate groups via a codenames
-	 *
-	 * @param array $codenames Group codenames
-	 * @return array Returns the the appropriate groups.
-	 */
-	protected function codenamesToGroups($codenames) {
-		$list = "'" . implode("', '", $codenames) . "'";
-		$output = DataObject::get("Group", "\"Code\" IN ($list)");
-
-		// Some are missing - throw warnings
-		if(!$output || ($output->Count() != sizeof($list))) {
-			foreach($codenames as $codename)
-				$missing[$codename] = $codename;
-
-			if($output) {
-				foreach($output as $record)
-					unset($missing[$record->Code]);
-			}
-
-			if($missing)
-				user_error("The following group-codes aren't matched to any groups: " .
-									 implode(", ", $missing) .
-									 ".  You probably need to link up the correct group codes in phpMyAdmin",
-									 E_USER_WARNING);
-		}
-
-		return $output;
+		Deprecation::notice('2.4', 'Don\'t rely on codename');
 	}
 }
 
@@ -1631,30 +1562,23 @@ class Member_GroupSet extends ComponentSet {
 class Member_ProfileForm extends Form {
 	
 	function __construct($controller, $name, $member) {
-		Requirements::clear();
-		Requirements::css(CMS_DIR . '/css/typography.css');
-		Requirements::css(CMS_DIR . '/css/cms_right.css');
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/controls.js");
-		Requirements::css(SAPPHIRE_DIR . "/css/Form.css");
-		
-		Requirements::css(SAPPHIRE_DIR . "/css/MemberProfileForm.css");
-		
+		Requirements::block(SAPPHIRE_DIR . '/admin/css/layout.css');
 		
 		$fields = $member->getCMSFields();
 		$fields->push(new HiddenField('ID','ID',$member->ID));
 
-		$actions = new FieldSet(
-			new FormAction('dosave',_t('CMSMain.SAVE', 'Save'))
+		$actions = new FieldList(
+ 			FormAction::create('dosave',_t('CMSMain.SAVE', 'Save'))
+ 				->addExtraClass('ss-ui-button ss-ui-action-constructive')
+ 				->setAttribute('data-icon', 'accept')
+ 				->setUseButtonTag(true)
 		);
 		
 		$validator = new Member_Validator();
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		
+		$this->addExtraClass('member-profile-form');
 		$this->loadDataFrom($member);
 	}
 	
@@ -1871,113 +1795,4 @@ class Member_Validator extends RequiredFields {
 		return $js;
 	}
 
-}
-/**
- * @package sapphire
- * @subpackage security
- */
-class Member_DatetimeOptionsetField extends OptionsetField {
-
-	function Field() {
-		Requirements::css(SAPPHIRE_DIR . '/css/MemberDatetimeOptionsetField.css');
-		Requirements::javascript(THIRDPARTY_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/MemberDatetimeOptionsetField.js');
-
-		$options = '';
-		$odd = 0;
-		$source = $this->getSource();
-
-		foreach($source as $key => $value) {
-			// convert the ID to an HTML safe value (dots are not replaced, as they are valid in an ID attribute)
-			$itemID = $this->id() . '_' . preg_replace('/[^\.a-zA-Z0-9\-\_]/', '_', $key);
-			if($key == $this->value) {
-				$useValue = false;
-				$checked = " checked=\"checked\"";
-			} else {
-				$checked = "";
-			}
-
-			$odd = ($odd + 1) % 2;
-			$extraClass = $odd ? "odd" : "even";
-			$extraClass .= " val" . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $key);
-			$disabled = ($this->disabled || in_array($key, $this->disabledItems)) ? "disabled=\"disabled\"" : "";
-			$ATT_key = Convert::raw2att($key);
-
-			$options .= "<li class=\"".$extraClass."\"><input id=\"$itemID\" name=\"$this->name\" type=\"radio\" value=\"$key\"$checked $disabled class=\"radio\" /> <label title=\"$ATT_key\" for=\"$itemID\">$value</label></li>\n"; 
-		}
-
-		// Add "custom" input field
-		$value = ($this->value && !array_key_exists($this->value, $this->source)) ? $this->value : null;
-		$checked = ($value) ? " checked=\"checked\"" : '';
-		$options .= "<li class=\"valCustom\">"
-			. sprintf("<input id=\"%s_custom\" name=\"%s\" type=\"radio\" value=\"__custom__\" class=\"radio\" %s />", $itemID, $this->name, $checked)
-			. sprintf('<label for="%s_custom">%s:</label>', $itemID, _t('MemberDatetimeOptionsetField.Custom', 'Custom'))
-			. sprintf("<input class=\"customFormat\" name=\"%s_custom\" value=\"%s\" />\n", $this->name, $value)
-			. sprintf("<input type=\"hidden\" class=\"formatValidationURL\" value=\"%s\" />", $this->Link() . '/validate');
-		$options .= ($value) ? sprintf(
-			'<span class="preview">(%s: "%s")</span>',
-			_t('MemberDatetimeOptionsetField.Preview', 'Preview'),
-			Zend_Date::now()->toString($value)
-		) : '';
-		$options .= "<a class=\"formattingHelpToggle\" href=\"#\">" . _t('MemberDatetimeOptionsetField.TOGGLEHELP', 'Toggle formatting help') . "</a>";
-		$options .= "<div class=\"formattingHelpText\">";
-		$options .= $this->getFormattingHelpText();
-		$options .= "</div>";
-		$options .= "</li>\n";
-
-		$id = $this->id();
-		return "<ul id=\"$id\" class=\"optionset {$this->extraClass()}\">\n$options</ul>\n";
-	}
-
-	/**
-	 * @todo Put this text into a template?
-	 */
-	function getFormattingHelpText() {
-		$output = '<ul>';
-		$output .= '<li>YYYY = ' . _t('MemberDatetimeOptionsetField.FOURDIGITYEAR', 'Four-digit year', 40, 'Help text describing what "YYYY" means in ISO date formatting') . '</li>';
-		$output .= '<li>YY = ' . _t('MemberDatetimeOptionsetField.TWODIGITYEAR', 'Two-digit year', 40, 'Help text describing what "YY" means in ISO date formatting') . '</li>';
-		$output .= '<li>MMMM = ' . _t('MemberDatetimeOptionsetField.FULLNAMEMONTH', 'Full name of month (e.g. June)', 40, 'Help text describing what "MMMM" means in ISO date formatting') . '</li>';
-		$output .= '<li>MMM = ' . _t('MemberDatetimeOptionsetField.SHORTMONTH', 'Short name of month (e.g. Jun)', 40, 'Help text letting describing what "MMM" means in ISO date formatting') . '</li>';
-		$output .= '<li>MM = ' . _t('MemberDatetimeOptionsetField.TWODIGITMONTH', 'Two-digit month (01=January, etc.)', 40, 'Help text describing what "MM" means in ISO date formatting') . '</li>';
-		$output .= '<li>M = ' . _t('MemberDatetimeOptionsetField.MONTHNOLEADING', 'Month digit without leading zero', 40, 'Help text describing what "M" means in ISO date formatting') . '</li>';
-		$output .= '<li>dd = ' . _t('MemberDatetimeOptionsetField.TWODIGITDAY', 'Two-digit day of month', 40, 'Help text describing what "dd" means in ISO date formatting') . '</li>';
-		$output .= '<li>d = ' . _t('MemberDatetimeOptionsetField.DAYNOLEADING', 'Day of month without leading zero', 40, 'Help text describing what "d" means in ISO date formatting') . '</li>';
-		$output .= '<li>hh = ' . _t('MemberDatetimeOptionsetField.TWODIGITHOUR', 'Two digits of hour (00 through 23)', 40, 'Help text describing what "hh" means in ISO date formatting') . '</li>';
-		$output .= '<li>h = ' . _t('MemberDatetimeOptionsetField.HOURNOLEADING', 'Hour without leading zero', 40, 'Help text describing what "h" means in ISO date formatting') . '</li>';
-		$output .= '<li>mm = ' . _t('MemberDatetimeOptionsetField.TWODIGITMINUTE', 'Two digits of minute (00 through 59)', 40, 'Help text describing what "mm" means in ISO date formatting') . '</li>';
-		$output .= '<li>m = ' . _t('MemberDatetimeOptionsetField.MINUTENOLEADING', 'Minute without leading zero', 40, 'Help text describing what "m" means in ISO date formatting') . '</li>';
-		$output .= '<li>ss = ' . _t('MemberDatetimeOptionsetField.TWODIGITSECOND', 'Two digits of second (00 through 59)', 40, 'Help text describing what "ss" means in ISO date formatting') . '</li>';
-		$output .= '<li>s = ' . _t('MemberDatetimeOptionsetField.DIGITSDECFRACTIONSECOND', 'One or more digits representing a decimal fraction of a second', 40, 'Help text describing what "s" means in ISO date formatting') . '</li>';
-		$output .= '<li>a = ' . _t('MemberDatetimeOptionsetField.AMORPM', 'AM (Ante meridiem) or PM (Post meridiem)', 40, 'Help text describing what "a" means in ISO date formatting') . '</li>';
-		$output .= '</ul>';
-		return $output;
-	}
-
-	function setValue($value) {
-		if($value == '__custom__') {
-			$value = isset($_REQUEST[$this->name . '_custom']) ? $_REQUEST[$this->name . '_custom'] : null;
-		}
-		if($value) {
-			parent::setValue($value);
-		}
-	}
-
-	function validate() {
-		$value = isset($_POST[$this->name . '_custom']) ? $_POST[$this->name . '_custom'] : null;
-		if(!$value) return true; // no custom value, don't validate
-
-		// Check that the current date with the date format is valid or not
-		$validator = $this->form ? $this->form->getValidator() : null;
-		require_once 'Zend/Date.php';
-		$date = Zend_Date::now()->toString($value);
-		$valid = Zend_Date::isDate($date, $value);
-		if($valid) {
-			return true;
-		} else {
-			if($validator) {
-				$validator->validationError($this->name, _t('MemberDatetimeOptionsetField.DATEFORMATBAD',"Date format is invalid"), "validation", false);
-			}
-			return false;
-		}
-	}
 }

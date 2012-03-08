@@ -9,6 +9,8 @@ class CreditCardField extends TextField {
 	function Field() {
 		$parts = explode("\n", chunk_split($this->value,4,"\n"));
 		$parts = array_pad($parts, 4, "");
+
+		// TODO Mark as disabled/readonly
 		$field = "<span id=\"{$this->name}_Holder\" class=\"creditCardField\">" .
 				"<input autocomplete=\"off\" name=\"{$this->name}[0]\" value=\"$parts[0]\" maxlength=\"4\"" . $this->getTabIndexHTML(0) . " /> - " .
 				"<input autocomplete=\"off\" name=\"{$this->name}[1]\" value=\"$parts[1]\" maxlength=\"4\"" . $this->getTabIndexHTML(1) . " /> - " .
@@ -16,6 +18,18 @@ class CreditCardField extends TextField {
 				"<input autocomplete=\"off\" name=\"{$this->name}[3]\" value=\"$parts[3]\" maxlength=\"4\"" . $this->getTabIndexHTML(3) . " /></span>";
 		return $field;
 	}
+
+	/**
+	 * Get tabindex HTML string
+	 *
+	 * @param int $increment Increase current tabindex by this value
+	 * @return string
+	 */
+	protected function getTabIndexHTML($increment = 0) {
+		$tabIndex = (int)$this->getTabIndex() + (int)$increment;
+		return (is_numeric($tabIndex)) ? ' tabindex = "' . $tabIndex . '"' : '';
+	}
+	
 	function dataValue() {
 		if(is_array($this->value)) return implode("", $this->value);
 		else return $this->value;
@@ -83,7 +97,7 @@ JS;
 		
 		$i=0;
 		if($this->value) foreach($this->value as $part){
-			if(!$part || !(strlen($part) == 4) || !ereg("([0-9]{4})",$part)){
+			if(!$part || !(strlen($part) == 4) || !preg_match("/([0-9]{4})/", $part)){
 				switch($i){
 				        case 0: $number = _t('CreditCardField.FIRST', 'first'); break;
 					case 1: $number = _t('CreditCardField.SECOND', 'second'); break;

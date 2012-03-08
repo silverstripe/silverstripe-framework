@@ -292,4 +292,3 @@ $lang['he_IL']['Widget']['SINGULARNAME'] = 'Widget';
 $lang['he_IL']['WidgetArea']['PLURALNAME'] = 'אזורי widget';
 $lang['he_IL']['WidgetArea']['SINGULARNAME'] = 'אזור widget';
 
-?>

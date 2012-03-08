@@ -292,4 +292,3 @@ $lang['zh_CN']['VirtualPage']['CHOOSE'] = '选择一个网页进行链接';
 $lang['zh_CN']['VirtualPage']['EDITCONTENT'] = '点击这里以编辑内容';
 $lang['zh_CN']['VirtualPage']['HEADER'] = '这是一个虚拟页';
 
-?>

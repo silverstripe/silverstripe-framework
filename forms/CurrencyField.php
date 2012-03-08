@@ -15,6 +15,7 @@ class CurrencyField extends TextField {
 	function setValue($val) {
 		if(!$val) $val = 0.00;
 		$this->value = '$' . number_format((double)preg_replace('/[^0-9.\-]/', '', $val), 2);
+		return $this;
 	}
 	/**
 	 * Overwrite the datavalue before saving to the db ;-)
@@ -27,6 +28,11 @@ class CurrencyField extends TextField {
 			return 0.00;
 		}
 	}
+
+	function Type() {
+		return 'currency text';
+	}
+
 	/**
 	 * Create a new class for this field
 	 */
@@ -94,7 +100,7 @@ class CurrencyField_Readonly extends ReadonlyField{
 	 */
 	function Field() {
 		if($this->value){
-			$val = $this->dontEscape ? ($this->reserveNL?Convert::raw2xml($this->value):$this->value) : Convert::raw2xml($this->value);
+			$val = $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
 			$val = _t('CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/',"",$val), 2);
 			
 		}else {
@@ -103,6 +109,7 @@ class CurrencyField_Readonly extends ReadonlyField{
 		$valforInput = $this->value ? Convert::raw2att($val) : "";
 		return "<span class=\"readonly ".$this->extraClass()."\" id=\"" . $this->id() . "\">$val</span><input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
 	}
+	
 	/**
 	 * This already is a readonly field.
 	 */
@@ -126,7 +133,7 @@ class CurrencyField_Disabled extends CurrencyField{
 	 */
 	function Field() {
 		if($this->value){
-			$val = $this->dontEscape ? ($this->reserveNL?Convert::raw2xml($this->value):$this->value) : Convert::raw2xml($this->value);
+			$val = $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
 			$val = _t('CurrencyField.CURRENCYSYMBOL', '$') . number_format(preg_replace('/[^0-9.]/',"",$val), 2);
 			
 		}else {
@@ -137,4 +144,3 @@ class CurrencyField_Disabled extends CurrencyField{
 	}
 }
 
-?>

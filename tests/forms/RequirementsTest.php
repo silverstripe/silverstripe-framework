@@ -264,6 +264,24 @@ class RequirementsTest extends SapphireTest {
 		$backend->assertFileIncluded('css', array($basePath .'/RequirementsTest_b.css', $basePath .'/RequirementsTest_c.css'));
 		Requirements::set_backend($holder);
 	}
+
+	function testJsWriteToBody() {
+		$backend = new Requirements_Backend();
+		$backend->javascript('http://www.mydomain.com/test.js');
+
+		// Test matching with HTML5 <header> tags as well
+		$template = '<html><head></head><body><header>My header</header><p>Body</p></body></html>';
+		
+		$backend->set_write_js_to_body(false);
+		$html = $backend->includeInHTML(false, $template);
+		$this->assertContains('<head><script', $html);
+
+		$backend->set_write_js_to_body(true);
+		$html = $backend->includeInHTML(false, $template);
+		$this->assertNotContains('<head><script', $html);
+		$this->assertContains('</script></body>', $html);
+
+	}
 }
 
 class RequirementsTest_Backend extends Requirements_Backend implements TestOnly {

@@ -44,6 +44,7 @@ class TestRunner extends Controller {
         'index',
         'browse',
         'coverage',
+        'coverageOnly',
         'startsession',
         'endsession',
         'cleanupdb',
@@ -234,15 +235,19 @@ class TestRunner extends Controller {
 		self::use_test_manifest();
 		$classNames = array();
 		$moduleNames = explode(',', $request->param('ModuleName'));
+		
 		foreach($moduleNames as $moduleName) {
 			$classesForModule = ClassInfo::classes_for_folder($moduleName);
-			if($classesForModule) foreach($classesForModule as $class) {
-				if(class_exists($class) && is_subclass_of($class, 'SapphireTest')) {
-					$classNames[] = $class;
+			
+			if($classesForModule) {
+				foreach($classesForModule as $className) {
+					if(class_exists($className) && is_subclass_of($className, 'SapphireTest')) {
+						$classNames[] = $className;
+					}
 				}
 			}
 		}
-
+		
 		$this->runTests($classNames, $coverage);
 	}
 
@@ -330,11 +335,11 @@ class TestRunner extends Controller {
 	function startsession() {
 		if(!Director::isLive()) {
 			if(SapphireTest::using_temp_db()) {
-				$endLink = Director::baseURL() . "/dev/tests/endsession";
+				$endLink = Director::baseURL() . "dev/tests/endsession";
 				return "<p><a id=\"end-session\" href=\"$endLink\">You're in the middle of a test session; click here to end it.</a></p>";
 			
 			} else if(!isset($_GET['fixture'])) {
-				$me = Director::baseURL() . "/dev/tests/startsession";
+				$me = Director::baseURL() . "dev/tests/startsession";
 				return <<<HTML
 <form action="$me">				
 	<p>Enter a fixture file name to start a new test session.  Don't forget to visit dev/tests/endsession when you're done!</p>

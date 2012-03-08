@@ -75,7 +75,9 @@ class File extends DataObject {
 		"Title" => "Varchar(255)",
 		"Filename" => "Text",
 		"Content" => "Text",
-		"Sort" => "Int"
+		"Sort" => "Int",
+		// Only applies to files, doesn't inherit for folder
+		'ShowInSearch' => 'Boolean(1)',
 	);
 	
 	static $has_one = array(
@@ -87,7 +89,9 @@ class File extends DataObject {
 	
 	static $many_many = array();
 	
-	static $defaults = array();
+	static $defaults = array(
+		"ShowInSearch" => 1,
+	);
 	
 	static $extensions = array(
 		"Hierarchy",
@@ -115,7 +119,29 @@ class File extends DataObject {
 		'cab','arj','tar','zip','zipx','sit','sitx','gz','tgz','bz2','ace','arc','pkg','dmg','hqx','jar',
 		'xml','pdf',
 	);
-	
+
+	/**
+	 * @var array Category identifiers mapped to commonly used extensions.
+	 */
+	static $app_categories = array(
+		'audio' => array(
+			"aif" ,"au" ,"mid" ,"midi" ,"mp3" ,"ra" ,"ram" ,"rm","mp3" ,"wav" ,"m4a" ,"snd" ,"aifc" ,"aiff" ,"wma" ,"apl",
+			"avr" ,"cda" ,"mp4" ,"ogg"
+		),
+		'mov' => array(
+			"mpeg" ,"mpg" ,"m1v" ,"mp2" ,"mpa" ,"mpe" ,"ifo" ,"vob","avi" ,"wmv" ,"asf" ,"m2v" ,"qt"
+		),
+		'zip' => array(
+			"arc" ,"rar" ,"tar" ,"gz" ,"tgz" ,"bz2" ,"dmg" ,"jar","ace" ,"arj" ,"bz" ,"cab"
+		),
+		'image' => array(
+			"bmp" ,"gif" ,"jpg" ,"jpeg" ,"pcx" ,"tif" ,"png" ,"alpha","als" ,"cel" ,"icon" ,"ico" ,"ps"
+		),
+		'flash' => array(
+			'swf', 'fla'
+		)
+	);
+
 	/**
 	 * @var If this is true, then restrictions set in {@link $allowed_max_file_size} and
 	 * {@link $allowed_extensions} will be applied to users with admin privileges as
@@ -131,7 +157,44 @@ class File extends DataObject {
 	 * @var array
 	 */
 	protected static $cache_file_fields = null;
-	
+
+	/**
+	 * Replace "[file_link id=n]" shortcode with an anchor tag or link to the file.
+	 * @param $arguments array Arguments to the shortcode
+	 * @param $content string Content of the returned link (optional)
+	 * @param $parser object Specify a parser to parse the content (see {@link ShortCodeParser})
+	 * @return string anchor HTML tag if content argument given, otherwise file path link
+	 */
+	public static function link_shortcode_handler($arguments, $content = null, $parser = null) {
+		if(!isset($arguments['id']) || !is_numeric($arguments['id'])) return;
+
+		if (
+			   !($record = DataObject::get_by_id('File', $arguments['id']))             // Get the file by ID.
+			&& !($record = DataObject::get_one('ErrorPage', '"ErrorCode" = \'404\''))   // Link to 404 page directly.
+		) {
+			return; // There were no suitable matches at all.
+		}
+
+		// build the HTML tag
+		if($content) {
+			// build some useful meta-data (file type and size) as data attributes
+			$attrs = ' ';
+			if($record instanceof File) {
+				foreach(array(
+					'class' => 'file',
+					'data-type' => $record->getExtension(),
+					'data-size' => $record->getSize()
+				) as $name => $value) {
+					$attrs .= sprintf('%s="%s" ', $name, $value);
+				}
+			}
+
+			return sprintf('<a href="%s"%s>%s</a>', $record->Link(), rtrim($attrs), $parser->parse($content));
+		} else {
+			return $record->Link();
+		}
+	}
+
 	/**
 	 * Find a File object by the given filename.
 	 * 
@@ -140,7 +203,7 @@ class File extends DataObject {
 	 */
 	static function find($filename) {
 		// Get the base file if $filename points to a resampled file
-		$filename = ereg_replace('_resampled/[^-]+-','',$filename);
+		$filename = preg_replace('/_resampled\/[^-]+-/', '', $filename);
 
 		// Split to folders and the actual filename, and traverse the structure.
 		$parts = explode("/", $filename);
@@ -157,18 +220,19 @@ class File extends DataObject {
 		return $item;
 	}
 	
-	function Link($action = null) {
-		return Director::baseURL() . $this->RelativeLink($action);
+	function Link() {
+		return Director::baseURL() . $this->RelativeLink();
 	}
 
-	function RelativeLink($action = null){
+	function RelativeLink() {
 		return $this->Filename;
 	}
-	
+
 	/**
 	 * @deprecated 3.0 Use getTreeTitle()
 	 */
 	function TreeTitle() {
+		Deprecation::notice('3.0', 'Use getTreeTitle() instead.');
 		return $this->getTreeTitle();
 	}
 
@@ -249,6 +313,77 @@ class File extends DataObject {
 		
 		return $this->canEdit($member);
 	}
+
+	/**
+	 * Returns the fields to power the edit screen of files in the CMS
+	 * @return FieldList
+	 */
+	function getCMSFields() {
+		// Preview
+		if($this instanceof Image) {
+			$formattedImage = $this->getFormattedImage('SetWidth', Image::$asset_preview_width);
+			$thumbnail = $formattedImage ? $formattedImage->URL : '';
+			$previewField = new LiteralField("ImageFull",
+				"<img id='thumbnailImage' class='thumbnail-preview' src='{$thumbnail}?r=" . rand(1,100000)  . "' alt='{$this->Name}' />\n"
+			);
+		} else {
+			$previewField = new LiteralField("ImageFull", $this->CMSThumbnail());
+		}
+
+		// Upload
+		$uploadField = new UploadField('UploadField','Upload Field');
+		$uploadField->setConfig('previewMaxWidth', 40);
+		$uploadField->setConfig('previewMaxHeight', 30);
+		$uploadField->setConfig('allowedMaxFileNumber', 1);
+		//$uploadField->setTemplate('FileEditUploadField');
+		if ($this->ParentID) {
+			$parent = $this->Parent();
+			if ($parent) {  //set the parent that the Upload field should use for uploads
+				$uploadField->setFolderName($parent->getFilename());
+				$uploadField->setRecord($parent);
+			}
+		}
+
+		//create the file attributes in a FieldGroup
+		$filePreview = FormField::create('CompositeField', 
+			FormField::create('CompositeField',
+				$previewField
+			)->setName("FilePreviewImage")->addExtraClass('cms-file-info-preview'),
+			FormField::create('CompositeField',
+				FormField::create('CompositeField', 
+					new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':'),
+					new ReadonlyField("Size", _t('AssetTableField.SIZE','File size') . ':', $this->getSize()),
+					$urlField = new ReadonlyField('ClickableURL', _t('AssetTableField.URL','URL'),
+						sprintf('<a href="%s" target="_blank">%s</a>', $this->Link(), $this->RelativeLink())
+					),
+					new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded') . ':'),
+					new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed') . ':')
+				)
+			)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')
+		)->setName("FilePreview")->addExtraClass('cms-file-info');
+		$urlField->dontEscape = true;
+
+		//get a tree listing with only folder, no files
+		$folderTree = new TreeDropdownField("ParentID", _t('AssetTableField.FOLDER','Folder'), 'Folder');
+		$folderTree->setChildrenMethod('ChildFolders');
+
+		$fields = new FieldList(
+			new TabSet('Root',
+				new Tab('Main',
+					$filePreview,
+					//TODO: make the uploadField replace the existing file
+					// $uploadField,
+					new TextField("Title", _t('AssetTableField.TITLE','Title')),
+					new TextField("Name", _t('AssetTableField.FILENAME','Filename')),
+					new DropdownField("OwnerID", _t('AssetTableField.OWNER','Owner'), Member::mapInCMSGroups()),
+					$folderTree
+				)
+			)
+		);
+
+		return $fields;
+	}
+
 	
 	/**
 	 * Returns a category based on the file extension.
@@ -259,30 +394,15 @@ class File extends DataObject {
 	 * @return String
 	 */
 	public function appCategory() {
-		$ext = $this->Extension;
-		switch($ext) {
-			case "aif": case "au": case "mid": case "midi": case "mp3": case "ra": case "ram": case "rm":
-			case "mp3": case "wav": case "m4a": case "snd": case "aifc": case "aiff": case "wma": case "apl":
-			case "avr": case "cda": case "mp4": case "ogg":
-				return "audio";
-			
-			case "mpeg": case "mpg": case "m1v": case "mp2": case "mpa": case "mpe": case "ifo": case "vob":
-			case "avi": case "wmv": case "asf": case "m2v": case "qt":
-				return "mov";
-			
-			case "arc": case "rar": case "tar": case "gz": case "tgz": case "bz2": case "dmg": case "jar":
-			case "ace": case "arj": case "bz": case "cab":
-				return "zip";
-				
-			case "bmp": case "gif": case "jpg": case "jpeg": case "pcx": case "tif": case "png": case "alpha":
-			case "als": case "cel": case "icon": case "ico": case "ps":
-				return "image";
+		$ext = strtolower($this->Extension);
+		foreach(self::$app_categories as $category => $exts) {
+			if(in_array($ext, $exts)) return $category;
 		}
+		return false;
 	}
 
 	function CMSThumbnail() {
-		$filename = $this->Icon();
-		return "<div style=\"text-align:center;width: 100px;padding-top: 15px;\"><a target=\"_blank\" href=\"$this->URL\" title=\"Download: $this->URL\"><img src=\"$filename\" alt=\"$filename\" /></a><br /><br /><a style=\"color: #0074C6;\"target=\"_blank\" href=\"$this->URL\" title=\"Download: $this->URL\">Download</a><br /><em>$this->Size</em></div>";
+		return '<img src="' . $this->Icon() . '" />';
 	}
 
 	/**
@@ -324,6 +444,9 @@ class File extends DataObject {
 	 */
 	protected function onBeforeWrite() {
 		parent::onBeforeWrite();
+
+		// Set default owner
+		if(!$this->ID) $this->OwnerID = (Member::currentUser() ? Member::currentUser()->ID : 0);
 
 		// Set default name
 		if(!$this->getField('Name')) $this->Name = "new-" . strtolower($this->class);
@@ -433,13 +556,8 @@ class File extends DataObject {
 		if(!$name) $name = $this->Title;
 
 		// Fix illegal characters
-		$name = ereg_replace(' +','-',trim($name)); // Replace any spaces
-		$name = ereg_replace('[^A-Za-z0-9.+_\-]','',$name); // Replace non alphanumeric characters
-
-		// Remove all leading dots or underscores
-		while(!empty($name) && ($name[0] == '_' || $name[0] == '.')) {
-			$name = substr($name, 1);
-		}
+		$filter = Object::create('FileNameFilter');
+		$name = $filter->filter($name);
 
 		// We might have just turned it blank, so check again.
 		if(!$name) $name = 'new-folder';
@@ -456,7 +574,7 @@ class File extends DataObject {
 		}
 
 		// Update title
-		if(!$this->getField('Title')) $this->__set('Title', str_replace(array('-','_'),' ',ereg_replace('\.[^.]+$','',$name)));
+		if(!$this->getField('Title')) $this->__set('Title', str_replace(array('-','_'),' ', preg_replace('/\.[^.]+$/', '', $name)));
 		
 		// Update actual field value
 		$this->setField('Name', $name);
@@ -514,6 +632,7 @@ class File extends DataObject {
 	 * @deprecated 2.4
 	 */
 	function getLinkedURL() {
+		Deprecation::notice('2.4', 'Use getTreeTitle() instead.');
 		return "$this->Name";
 	}
 
@@ -658,6 +777,11 @@ class File extends DataObject {
 		return ($size) ? self::format_size($size) : false;
 	}
 	
+	/**
+	 * Formats a file size (eg: (int)42 becomes string '42 bytes')
+	 * @param int $size
+	 * @return string
+	 */
 	public static function format_size($size) {
 		if($size < 1024) return $size . ' bytes';
 		if($size < 1024*10) return (round($size/1024*10)/10). ' KB';
@@ -665,6 +789,24 @@ class File extends DataObject {
 		if($size < 1024*1024*10) return (round(($size/1024)/1024*10)/10) . ' MB';
 		if($size < 1024*1024*1024) return round(($size/1024)/1024) . ' MB';
 		return round($size/(1024*1024*1024)*10)/10 . ' GB';
+	}
+	
+	/**
+	 * Convert a php.ini value (eg: 512M) to bytes
+	 * 
+	 * @param string $phpIniValue
+	 * @return int
+	 */
+	public function ini2bytes($PHPiniValue) {
+		switch(strtolower(substr(trim($PHPiniValue), -1))) {
+			case 'g':
+				$PHPiniValue *= 1024;
+			case 'm':
+				$PHPiniValue *= 1024;
+			case 'k':
+				$PHPiniValue *= 1024;
+		}
+		return $PHPiniValue;
 	}
 
 	/**
@@ -678,45 +820,6 @@ class File extends DataObject {
 		} else {
 			return 0;
 		}
-	}
-
-	/**
-	 * We've overridden the DataObject::get function for File so that the very large content field
-	 * is excluded!
-	 *
-	 * @todo Admittedly this is a bit of a hack; but we need a way of ensuring that large
-	 * TEXT fields don't stuff things up for the rest of us.  Perhaps a separate search table would
-	 * be a better way of approaching this?
-	 * @deprecated alternative_instance_get()
-	 */
-	public function instance_get($filter = "", $sort = "", $join = "", $limit="", $containerClass = "DataObjectSet", $having="") {
-		$query = $this->extendedSQL($filter, $sort, $limit, $join, $having);
-		$baseTable = reset($query->from);
-
-		$excludeDbColumns = array('Content');
-		
-		// Work out which columns we're actually going to select
-		// In short, we select everything except File.Content
-		$dataobject_select = array();
-		foreach($query->select as $item) {
-			/*
-			if($item == "\"File\".*") {
-				$fileColumns = DB::query("SHOW FIELDS IN \"File\"")->column();
-				$columnsToAdd = array_diff($fileColumns, $excludeDbColumns);
-				foreach($columnsToAdd as $otherItem) $dataobject_select[] = '"File".' . $otherItem;
-			} else {
-			*/
-				$dataobject_select[] = $item;
-			//}
-		}
-
-		$query->select = $dataobject_select;
-
-		$records = $query->execute();
-		$ret = $this->buildDataObjectSet($records, $containerClass);
-		if($ret) $ret->parseQueryLimit($query);
-	
-		return $ret;
 	}
 	
 	public function flushCache() {
@@ -769,24 +872,54 @@ class File extends DataObject {
 		
 		return new ValidationResult(true);
 	}
+	
+	/**
+	 * @var Array Only use lowercase extensions in here.
+	 */
+	static $class_for_file_extension = array(
+		'*' => 'File',
+		'jpg' => 'Image',
+		'jpeg' => 'Image',
+		'png' => 'Image',
+		'gif' => 'Image',
+	);
 
 	/**
-	 * Allow custom fields for uploads in {@link AssetAdmin}.
-	 * Similar to {@link getCMSFields()}, but a more restricted
-	 * set of fields which can be reliably set on any file type.
+	 * Maps a {@link File} subclass to a specific extension.
+	 * By default, files with common image extensions will be created
+	 * as {@link Image} instead of {@link File} when using 
+	 * {@link Folder::constructChild}, {@link Folder::addUploadToFolder}),
+	 * and the {@link Upload} class (either directly or through {@link FileField}).
+	 * For manually instanciated files please use this mapping getter.
 	 * 
-	 * Needs to be enabled through {@link AssetAdmin::$metadata_upload_enabled}
+	 * Caution: Changes to mapping doesn't apply to existing file records in the database.
+	 * Also doesn't hook into {@link Object::getCustomClass()}.
 	 * 
-	 * @return FieldSet
+	 * @param String File extension, without dot prefix. Use an asterisk ('*')
+	 * to specify a generic fallback if no mapping is found for an extension.
+	 * @return String Classname for a subclass of {@link File}
 	 */
-	function uploadMetadataFields() {
-		$fields = new FieldSet();
-		$fields->push(new TextField('Title', $this->fieldLabel('Title')));
-		$this->extend('updateUploadMetadataFields', $fields);
-		
-		return $fields;
+	static function get_class_for_file_extension($ext) {
+		$map = array_change_key_case(self::$class_for_file_extension, CASE_LOWER);
+		return (array_key_exists(strtolower($ext), $map)) ? $map[strtolower($ext)] : $map['*'];
+	}
+	
+	/**
+	 * See {@link get_class_for_file_extension()}.
+	 * 
+	 * @param String|array
+	 * @param String
+	 */
+	static function set_class_for_file_extension($exts, $class) {
+		if(!is_array($exts)) $exts = array($exts);
+		foreach($exts as $ext) {
+			if(ClassInfo::is_subclass_of($ext, 'File')) {
+				throw new InvalidArgumentException(
+					sprintf('Class "%s" (for extension "%s") is not a valid subclass of File', $class, $ext)
+				);
+			}
+			self::$class_for_file_extension[$ext] = $class;
+		}
 	}
 	
 }
-
-?>

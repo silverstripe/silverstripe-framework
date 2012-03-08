@@ -13,14 +13,14 @@ require_once 'thirdparty/spyc/spyc.php';
  *   Each identifier you specify delimits a new database record. 
  *   This means that every record needs to have an identifier, whether you use it or not.
  * - Third level: fields - each field for the record is listed as a 3rd level entry. 
- *   In most cases, the fieldÕs raw content is provided. 
+ *   In most cases, the field's raw content is provided. 
  *   However, if you want to define a relationship, you can do so using "=>"
  * 
  * There are a couple of lines like this:
  * <code>
  * Parent: =>Page.about
  * </code>
- * This will tell the system to set the ParentID database field to the ID of the Page object with the identifier ÒaboutÓ. 
+ * This will tell the system to set the ParentID database field to the ID of the Page object with the identifier 'about'. 
  * This can be used on any has-one or many-many relationship. 
  * Note that we use the name of the relationship (Parent), and not the name of the database field (ParentID)
  *
@@ -154,7 +154,7 @@ class YamlFixture extends Object {
 	 * the record is written twice: first after populating all non-relational fields,
 	 * then again after populating all relations (has_one, has_many, many_many).
 	 */
-	public function saveIntoDatabase() {
+	public function saveIntoDatabase(DataModel $model) {
 		// We have to disable validation while we import the fixtures, as the order in
 		// which they are imported doesnt guarantee valid relations until after the
 		// import is complete.
@@ -167,7 +167,7 @@ class YamlFixture extends Object {
 		$this->fixtureDictionary = array();
 		foreach($fixtureContent as $dataClass => $items) {
 			if(ClassInfo::exists($dataClass)) {
-				$this->writeDataObject($dataClass, $items);
+				$this->writeDataObject($model, $dataClass, $items);
 			} else {
 				$this->writeSQL($dataClass, $items);
 			}
@@ -182,9 +182,9 @@ class YamlFixture extends Object {
 	 * @param string $dataClass
 	 * @param array $items
 	 */
-	protected function writeDataObject($dataClass, $items) {
+	protected function writeDataObject($model, $dataClass, $items) {
 		foreach($items as $identifier => $fields) {
-			$obj = new $dataClass();
+			$obj = $model->$dataClass->newObject();
 			
 			// If an ID is explicitly passed, then we'll sort out the initial write straight away
 			// This is just in case field setters triggered by the population code in the next block
@@ -228,6 +228,12 @@ class YamlFixture extends Object {
 				}
 			}
 			$obj->write();
+            //If LastEdited was set in the fixture, set it here
+            if (array_key_exists('LastEdited', $fields)) {
+                $manip = array($dataClass => array("command" => "update", "id" => $obj->id,
+                    "fields" => array("LastEdited" => "'".$this->parseFixtureVal($fields['LastEdited'])."'")));
+                DB::manipulate($manip);
+            }
 		}
 	}
 	

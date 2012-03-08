@@ -206,4 +206,3 @@ class SSHTMLBBCodeParser_Filter_Links extends SSHTMLBBCodeParser_Filter
         return $matches[6];
     }
 }
-?>

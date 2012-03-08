@@ -24,10 +24,11 @@ We're not perfect, and need your help - for example in the form of patches for o
 ### Setup your project for contributions
 
 In contrast to running a SilverStripe website, you can't use the standard download archive for this purpose.
-Our [module list on silverstripe.org](http://silverstripe.org/modules) lists the repository locations alongside
-the archive downloads, typically using a version control system like "git" or "[subversion](subversion)". 
+The ["Installing from source"](../installation/from-source) guide explains how to get started.
+For other modules, our [module list on silverstripe.org](http://silverstripe.org/modules) lists the repository locations, 
+typically using a version control system like "git" or "[subversion](subversion)". 
 
-General guidelines:
+### Check List
 
 *  Adhere to our [coding conventions](coding-conventions)
 *  If your patch is extensive, discuss it first on the [silverstripe forum](http///www.silverstripe.org/forums/) (ideally before doing any serious coding)
@@ -49,52 +50,22 @@ changes
 The core team is responsible for reviewing patches and deciding if they will make it into core.  If
 there are any problems they will follow up with you, so please ensure they have a way to contact you! 
 
-### Sending pull requests (for git)
+### Sending git pull requests
 
-The SilverStripe core (`sapphire` and `cms`), as well as some of the more popular modules are in
-git version control. SilverStripe hosts its modules on [github.com/silverstripe](http://github.com/silverstripe).
-
+The SilverStripe core modules (`sapphire` and `cms`), as well as some of the more popular modules are in
+git version control. SilverStripe hosts its modules on [github.com/silverstripe](http://github.com/silverstripe) and [github.com/silverstripe-labs](http://github.com/silverstripe-labs).
 After [installing git](http://help.github.com/git-installation-redirect) and creating a [free github.com account](https://github.com/signup/free), you can "fork" a module,
 which creates a copy that you can commit to (see github's [guide to "forking"](http://help.github.com/forking/)).
 
-Example: [Fork the blog module](https://github.com/silverstripe/silverstripe-blog)
-
 Now you have two choices: Smaller fixes (e.g. typos) can be edited directly in the github.com web interface
-(every file view has an "edit this file" link). More commonly, you will work on a working copy on your own computer. After committing your fix, you can send the module authors a so called ["pull request"](http://help.github.com/pull-requests/).
+(every file view has an "edit this file" link). More commonly, you will deal with a working copy on your own computer. After committing your fix, you can send the module authors a so called ["pull request"](http://help.github.com/pull-requests/).
 The module authors will get notified automatically, review your patch, and merge it back as appropriate.
 For new features, we recommend creating a ["feature branch"](http://progit.org/book/ch3-3.html) rather than a really big patch.
+Note that we no longer accept patch file attachments ("diffs") as commonly created through subversion.
 
-On github, you can review outstanding [sapphire pull requests](https://github.com/silverstripe/sapphire/pulls) and [cms pull requests](https://github.com/silverstripe/silverstripe-cms/pulls)).
-
+It is important that you use git branching properly in order to avoid messy and time-consuming merges
+later on, so please read our in-depth ["Collaboration on Git"](collaboration-on-git) guide.
 If you want to learn more about git, please have a look at the [free online git book](http://progit.org/book/) and the [git crash course](http://gitref.org/).
-
-### Submitting patches (for subversion)
-
-Some modules will be hosted on [subversion](http://subversion.tigris.org), in which case you have to
-package your changes as a "patch" file. Please read the [official Subversion book](http://svnbook.red-bean.com/) (available free online) for a general introduction to subversion. 
-
-Please don't submit patch files for modules on git, as they cause us more work.
-
-To submit a patch, [register](http://open.silverstripe.com/register) or [login](http://open.silverstripe.org/login) on open.silverstripe.org, and attach the patch to an appropriate ticket. 
-Please include in the comment the revision number that the patch is applicable for and a brief outline of what you fixed and how. 
-
-[Submit a patch (requires account on open.silverstripe.org)](http://open.silverstripe.com/newticket?field_type=patch&field_owner=ischommer&attachment=1)
-
-You can create a patch file through the svn diff-command on the command-line. 
-More info in the [svn redbook](http://svnbook.red-bean.com/en/1.1/ch03s05.html#svn-ch-3-sect-5.3.2). 
-Your code editor might have a GUI for creating patches.
-
-	# in a working copy folder (e.g /myproject)
-	svn diff sapphire/ > ~/patch.diff
-
-Some gotchas when using subversion and the patch format:
-
-*  Submit your patch in *diff -u* or *diff -c format*. 
-*  If your patch involves new files, create a compressed archive for them (including any required directory-structures)
-*  Create patches relative to the working copy (*sapphire/main.php* instead of */Users/myuser/sapphire/main.php*)
-*  Remember the shortcomingsof *svn diff*: Please document moved files and created/deleted directories separately
-
-The "[Patches: Core](http://open.silverstripe.com/report/101)" and "[Patches: Modules](http://open.silverstripe.com/report/102)" reports will let you see where all the patches are at.
 
 ### Commit Messages
 
@@ -135,20 +106,7 @@ you agree that is can be used in distributions and derivative works of SilverStr
 
 ## Reporting Security Issues
 
-Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). Please don't file security
-issues in our [bugtracker](http://open.silverstripe.org). In the event of a confirmed vulnerability in SilverStripe
-core, we will take the following actions:
-
-*  Acknowledge to the reporter that we’ve received the report and that a fix is forthcoming. We’ll give a rough
-timeline and ask the reporter to keep the issue confidential until we announce it.
-*  Halt all other development as long as is needed to develop a fix, including patches against the current and one
-previous major release (if applicable).
-*  We will inform you about resolution and [announce](http://groups.google.com/group/silverstripe-announce) a [new
-release](http://silverstripe.org/security-releases/) publically.
-
-You can help us determine the problem and speed up responses by providing us with more information on how to reproduce
-the issue: SilverStripe version (incl. any installed modules), PHP/webserver version and configuration, anonymized
-webserver access logs (if a hack is suspected), any other services and web packages running on the same server.
+Report security issues to [security@silverstripe.com](mailto:security@silverstripe.com). See our "[Release Process](release-process)" documentation for more info, and read our guide on [how to write secure code](/topics/security).
 
 ## Writing Documentation
 
@@ -166,15 +124,15 @@ and send us "[pull requests](http://help.github.com/pull-requests/)".
 Note: Smaller edits can be performed in the github.com web interface on your fork,
 every page view should have an "edit this file" button.
 
-The [doc.silverstripe.org](http://doc.silverstripe.org) website itself is powered by a
-SilverStripe project that uses the ["sapphiredocs" module](https://github.com/silverstripe/silverstripe-sapphiredocs)
-to convert Markdown formatted files into searchable HTML pages with index lists.
-
 ### Repositories
 
-*  End-user: [userhelp.silverstripe.org](http://userhelp.silverstripe.org)
-*  Developer Guides: [doc.silverstripe.org](http://doc.silverstripe.org)
-*  Developer API Docuumentation: [api.silverstripe.org](http://api.silverstripe.org)
+*  End-user: [userhelp.silverstripe.org](http://userhelp.silverstripe.org) - a custom SilverStripe project (not open sourced at the moment).
+*  Developer Guides: [doc.silverstripe.org](http://doc.silverstripe.org) - powered by a
+SilverStripe project that uses the ["sapphiredocs" module](https://github.com/silverstripe/silverstripe-sapphiredocs)
+to convert Markdown formatted files into searchable HTML pages with index lists.
+Its contents are fetched from different releases automatically every couple of minutes.
+*  Developer API Docuumentation: [api.silverstripe.org](http://api.silverstripe.org) - powered by a customized
+[phpDocumentor](http://www.phpdoc.org/) template, and is regenerated automatically every night.
 
 ### Source Control
 
@@ -295,3 +253,8 @@ the codebase from there, and released alongside other PHP code.
 SilverStripe is already translated in over 60 languages, and we're relying on native speakers
 to keep these up to date, and of course add new languages. Please [register](http://translate.silverstripe.org/apply)
 a free translator account to get started, even if you just feel like fixing up a few sentences.
+
+## Related
+
+ * [Installation: From Source](/installation/from-source)
+ * [Collaboration on Git](/misc/collaboration-on-git)

@@ -12,7 +12,7 @@ your SilverStripe site.
 	<?php
 	
 	class FastFood_Controller extends Controller {
-	    function order($arguments) {
+	    public function order($arguments) {
 	        print_r($arguments);
 	    }
 	}

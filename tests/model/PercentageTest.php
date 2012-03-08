@@ -44,4 +44,3 @@ class PercentageTest extends SapphireTest {
 	}
 	
 }
-?>

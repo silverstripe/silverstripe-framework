@@ -17,7 +17,7 @@ In your controller (e.g. `mysite/code/Page.php`):
 
 	:::php
 	class Page_Controller {
-		function init() {
+		public function init() {
 			// either specify the css file manually
 			Requirements::css("mymodule/css/my.css", "screen,projection");
 			// or mention the css filename and SilverStripe will get the file from the current theme and add it to the template
@@ -86,9 +86,9 @@ file. Then with this file you can define styles for the CMS or just import the s
 
 See [typography](/reference/typography) for more information.
 
-## Best Practices ##
-
 ## Related ##
 
  * [javascript](javascript)
  * ["Compass" module](http://silverstripe.org/compass-module/): Allows writing CSS in SASS/LESS syntax, with better code management through mixins, includes and variables
+ * [Reference: CMS Architecture](../reference/cms-architecture)
+ * [Howto: Extend the CMS Interface](../howto/extend-cms-interface)

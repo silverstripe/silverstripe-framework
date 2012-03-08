@@ -14,6 +14,8 @@ require_once 'Zend/Date.php';
  *    Only useful in combination with {@link DateField_View_JQuery}.
  * - 'dmyfields' (boolean): Show three input fields for day, month and year separately.
  *    CAUTION: Might not be useable in combination with 'showcalendar', depending on the used javascript library
+ * - 'dmyseparator' (string): HTML markup to separate day, month and year fields.
+ *    Only applicable with 'dmyfields'=TRUE. Use 'dateformat' to influence date representation with 'dmyfields'=FALSE.
  * - 'dateformat' (string): Date format compatible with Zend_Date.
  *    Usually set to default format for {@link locale} through {@link Zend_Locale_Format::getDateFormat()}.
  * - 'datavalueformat' (string): Internal ISO format string used by {@link dataValue()} to save the
@@ -23,11 +25,18 @@ require_once 'Zend/Date.php';
  * - 'max' (string): Maximum allowed date value (in ISO format, or strtotime() compatible).
  *    Example: '2010-03-31', or '1 year'
  * 
+ * Depending which UI helper is used, further namespaced configuration options are available.
+ * For the default jQuery UI, all options prefixed/namespaced with "jQueryUI." will be respected as well.
+ * Example: <code>$myDateField->setConfig('jQueryUI.showWeek', true);</code>
+ * See http://docs.jquery.com/UI/Datepicker for details.
+ * 
  * # Localization
  * 
  * The field will get its default locale from {@link i18n::get_locale()}, and set the `dateformat`
  * configuration accordingly. Changing the locale through {@link setLocale()} will not update the 
  * `dateformat` configuration automatically.
+ * 
+ * See http://doc.silverstripe.org/sapphire/en/topics/i18n for more information about localizing form fields.
  * 
  * # Usage
  * 
@@ -46,22 +55,11 @@ require_once 'Zend/Date.php';
  * @subpackage fields-datetime
  */
 class DateField extends TextField {
-
-	/**
-	 * @var array
-	 */
-	protected static $default_config = array(
-		'showcalendar' => false,
-		'dmyfields' => false,
-		'dmyseparator' => false,
-		'dateformat' => false,
-		'locale' => false
-	);
 	
 	/**
 	 * @var array
 	 */
-	protected $config = array(
+	static $default_config = array(
 		'showcalendar' => false,
 		'jslocale' => null,
 		'dmyfields' => false,
@@ -69,8 +67,13 @@ class DateField extends TextField {
 		'dateformat' => null,
 		'datavalueformat' => 'yyyy-MM-dd',
 		'min' => null,
-		'max' => null
+		'max' => null,
 	);
+	
+	/**
+	 * @var array
+	 */
+	protected $config;
 		
 	/**
 	 * @var String
@@ -84,10 +87,12 @@ class DateField extends TextField {
 	 */
 	protected $valueObj = null;
 	
-	function __construct($name, $title = null, $value = null, $form = null, $rightTitle = null) {
+	function __construct($name, $title = null, $value = null) {
 		if(!$this->locale) {
 			$this->locale = i18n::get_locale();
 		}
+		
+		$this->config = self::$default_config;
 		
 		if(!$this->getConfig('dateformat')) {
 			$this->setConfig('dateformat', i18n::get_date_format());
@@ -102,7 +107,7 @@ class DateField extends TextField {
 			}
 		}
 
-		parent::__construct($name, $title, $value, $form, $rightTitle);
+		parent::__construct($name, $title, $value);
 	}
 
 	function FieldHolder() {
@@ -116,6 +121,23 @@ class DateField extends TextField {
 	}
 
 	function Field() {
+		$config = array(
+			'showcalendar' => $this->getConfig('showcalendar'),
+			'isoDateformat' => $this->getConfig('dateformat'),
+			'jqueryDateformat' => DateField_View_JQuery::convert_iso_to_jquery_format($this->getConfig('dateformat')),
+			'min' => $this->getConfig('min'),
+			'max' => $this->getConfig('max')
+		);
+
+		// Add other jQuery UI specific, namespaced options (only serializable, no callbacks etc.)
+		// TODO Move to DateField_View_jQuery once we have a properly extensible HTML5 attribute system for FormField
+		foreach($this->getConfig() as $k => $v) {
+			if(preg_match('/^jQueryUI\.(.*)/', $k, $matches)) $config[$matches[1]] = $v;
+		}
+		
+		$config = array_filter($config);
+		foreach($config as $k => $v) $this->setAttribute('data-' . $k, $v);
+		
 		// Three separate fields for day, month and year
 		if($this->getConfig('dmyfields')) {
 			// values
@@ -141,6 +163,9 @@ class DateField extends TextField {
 			$fields[stripos($format, 'y')] = $fieldYear->Field();
 			ksort($fields);
 			$html = implode($sep, $fields);
+
+			// dmyfields doesn't work with showcalendar
+			$this->setConfig('showcalendar',false);
 		} 
 		// Default text input field
 		else {
@@ -148,6 +173,10 @@ class DateField extends TextField {
 		}
 		
 		return $html;
+	}
+
+	function Type() {
+		return 'date text';
 	}
 		
 	/**
@@ -200,6 +229,8 @@ class DateField extends TextField {
 				}
 			}
 		}
+
+		return $this;
 	}
 	
 	/**
@@ -441,6 +472,7 @@ JS;
 	 */
 	function setLocale($locale) {
 		$this->locale = $locale;
+		return $this;
 	}
 	
 	/**
@@ -464,14 +496,15 @@ JS;
 		}
 		
 		$this->config[$name] = $val;
+		return $this;
 	}
 	
 	/**
-	 * @param String $name
-	 * @return mixed
+	 * @param String $name Optional, returns the whole configuration array if empty
+	 * @return mixed|array
 	 */
-	function getConfig($name) {
-		return $this->config[$name];
+	function getConfig($name = null) {
+		return $name ? $this->config[$name] : $this->config;
 	}
 }
 
@@ -557,19 +590,7 @@ class DateField_View_JQuery {
 		return $this->field;
 	}
 	
-	/**
-	 * 
-	 */
 	function onBeforeRender() {
-		if($this->getField()->getConfig('showcalendar')) {
-			// Inject configuration into existing HTML
-			$format = self::convert_iso_to_jquery_format($this->getField()->getConfig('dateformat'));
-			$conf = array(
-				'showcalendar' => true,
-				'dateFormat' => $format
-			);
-			$this->getField()->addExtraClass(str_replace('"', '\'', Convert::raw2json($conf)));
-		}
 	}
 	
 	/**
@@ -579,7 +600,6 @@ class DateField_View_JQuery {
 	function onAfterRender($html) {
 		if($this->getField()->getConfig('showcalendar')) {
 			Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-			Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');	
 			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 			
@@ -595,7 +615,6 @@ class DateField_View_JQuery {
 					));
 			}
 			
-			Requirements::javascript(THIRDPARTY_DIR . "/jquery-metadata/jquery.metadata.js");
 			Requirements::javascript(SAPPHIRE_DIR . "/javascript/DateField.js");
 		}
 		
@@ -687,4 +706,4 @@ class DateField_View_JQuery {
 		return preg_replace($patterns, $replacements, $format);
 	}
 }
-?>
+

@@ -13,7 +13,7 @@ directly as a button on each record, as well as filtering, and sorting. It also 
 allowing export of data as a CSV.
 
 	:::php
-	function getReportField() {		
+	public function getReportField() {		
 		$resultSet = new DataObjectSet();
 		$filter = `;
 		$sort = "Member.ID ASC";
@@ -104,7 +104,7 @@ For more information on each of the features used in the example, you can read b
 	// Product.php Example
 	class Product extends DataObject {
 	  $has_one = array('Buyer'=>'Member');
-	  function getPriceWithShipping() {
+	  public function getPriceWithShipping() {
 	    return $this->Price + $this->Shipping;
 	  }
 	}
@@ -263,7 +263,7 @@ Please subclass `[api:TableListField]` to implement custom sorting, following th
 	:::php
 	class CustomTableListField extends TableListField {
 	  // referenced through "dateAverage"
-	  function colFunction_dateAverage($values) {
+	  public function colFunction_dateAverage($values) {
 	    // custom date summaries
 	  }  
 	}

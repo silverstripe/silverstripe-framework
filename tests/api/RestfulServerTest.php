@@ -121,7 +121,7 @@ class RestfulServerTest extends SapphireTest {
 		
 		$url = "/api/v1/RestfulServerTest_Author/" . $author4->ID . '/RelatedAuthors';
 		$response = Director::test($url, null, null, 'GET');
-		$this->assertEquals($response->getStatusCode(), 200);
+		$this->assertEquals(200, $response->getStatusCode());
 		$arr = Convert::xml2array($response->getBody());
 		$authorsArr = $arr['RestfulServerTest_Author'];
 		
@@ -305,6 +305,7 @@ class RestfulServerTest extends SapphireTest {
 	}
 	
 	public function testApiAccessFieldRestrictions() {
+		$author1 = $this->objFromFixture('RestfulServerTest_Author','author1');
 		$rating1 = $this->objFromFixture('RestfulServerTest_AuthorRating','rating1');
 		
 		$url = "/api/v1/RestfulServerTest_AuthorRating/" . $rating1->ID;
@@ -332,15 +333,40 @@ class RestfulServerTest extends SapphireTest {
 		$this->assertNotContains('<SecretRelation>', $response->getBody(),
 			'"fields" URL parameter filters out disallowed relations from $api_access'
 		);
+		
+		$url = "/api/v1/RestfulServerTest_Author/" . $author1->ID . '/Ratings';
+		$response = Director::test($url, null, null, 'GET');
+		$this->assertContains('<Rating>', $response->getBody(),
+			'Relation viewer shows fields allowed through $api_access'
+		);
+		$this->assertNotContains('<SecretField>', $response->getBody(),
+			'Relation viewer on has-many filters out disallowed fields from $api_access'
+		);
 	}
 	
-	public function testApiAccessRelationRestrictions() {
+	public function testApiAccessRelationRestrictionsInline() {
 		$author1 = $this->objFromFixture('RestfulServerTest_Author','author1');
 		
 		$url = "/api/v1/RestfulServerTest_Author/" . $author1->ID;
 		$response = Director::test($url, null, null, 'GET');
-		$this->assertNotContains('<RelatedPages', $response->getBody());
-		$this->assertNotContains('<PublishedPages', $response->getBody());
+		$this->assertNotContains('<RelatedPages', $response->getBody(), 'Restricts many-many with api_access=false');
+		$this->assertNotContains('<PublishedPages', $response->getBody(), 'Restricts has-many with api_access=false');
+	}
+	
+	public function testApiAccessRelationRestrictionsOnEndpoint() {
+		$author1 = $this->objFromFixture('RestfulServerTest_Author','author1');
+		
+		$url = "/api/v1/RestfulServerTest_Author/" . $author1->ID . "/ProfilePage";
+		$response = Director::test($url, null, null, 'GET');
+		$this->assertEquals(404, $response->getStatusCode(), 'Restricts has-one with api_access=false');
+		
+		$url = "/api/v1/RestfulServerTest_Author/" . $author1->ID . "/RelatedPages";
+		$response = Director::test($url, null, null, 'GET');
+		$this->assertEquals(404, $response->getStatusCode(), 'Restricts many-many with api_access=false');
+		
+		$url = "/api/v1/RestfulServerTest_Author/" . $author1->ID . "/PublishedPages";
+		$response = Director::test($url, null, null, 'GET');
+		$this->assertEquals(404, $response->getStatusCode(), 'Restricts has-many with api_access=false');
 	}
 	
 	public function testApiAccessWithPUT() {
@@ -360,17 +386,22 @@ class RestfulServerTest extends SapphireTest {
 
 	public function testJSONDataFormatter() {
 		$formatter = new JSONDataFormatter();
-		$single_do = $this->objFromFixture('Member', 'editor');
+		$editor = $this->objFromFixture('Member', 'editor');
+		$user = $this->objFromFixture('Member', 'user');
 
 		$this->assertEquals(
-			$formatter->convertDataObject($single_do, array("FirstName", "Email")),
+			$formatter->convertDataObject($editor, array("FirstName", "Email")),
 			'{"FirstName":"Editor","Email":"editor@test.com"}',
 			"Correct JSON formatting with field subset");
 
-		$set = DataObject::get("Member");
+		$set = DataObject::get(
+			"Member", 
+			sprintf('"Member"."ID" IN (%s)', implode(',', array($editor->ID, $user->ID))), 
+			'"Email" ASC' // for sorting for postgres
+		);
 		$this->assertEquals(
 			$formatter->convertDataObjectSet($set, array("FirstName", "Email")),
-			'{"totalSize":null,"items":[{"FirstName":"Editor","Email":"editor@test.com"},{"FirstName":"User","Email":"user@test.com"},{"FirstName":"ADMIN","Email":"ADMIN@example.org"}]}',
+			'{"totalSize":null,"items":[{"FirstName":"Editor","Email":"editor@test.com"},{"FirstName":"User","Email":"user@test.com"}]}',
 			"Correct JSON formatting on a dataobjectset with field filter");
 	}
 	
@@ -533,4 +564,4 @@ class RestfulServerTest_AuthorRating extends DataObject implements TestOnly {
 		return true;
 	}
 }
-?>
+

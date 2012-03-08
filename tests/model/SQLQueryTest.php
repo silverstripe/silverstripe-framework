@@ -65,6 +65,7 @@ class SQLQueryTest extends SapphireTest {
 	}
 	
 	function testSelectWithPredicateFilters() {
+	    /* this is no longer part of this
 		$query = new SQLQuery();
 		$query->select(array("Name"))->from("SQLQueryTest_DO");
 
@@ -77,6 +78,7 @@ class SQLQueryTest extends SapphireTest {
 		$match->apply($query);
 
 		$this->assertEquals("SELECT Name FROM SQLQueryTest_DO WHERE (\"SQLQueryTest_DO\".\"Name\" = 'Value') AND (\"SQLQueryTest_DO\".\"Meta\" LIKE '%Value%')", $query->sql());
+		*/
 	}
 	
 	function testSelectWithLimitClause() {
@@ -216,8 +218,8 @@ class SQLQueryTest extends SapphireTest {
 		$query->leftJoin( 'MyLastTable', 'MyOtherTable.ID = MyLastTable.ID' );
 
 		$this->assertEquals( 'SELECT * FROM MyTable '.
-			'INNER JOIN "MyOtherTable" AS "MyOtherTable" ON MyOtherTable.ID = 2 '.
-			'LEFT JOIN "MyLastTable" AS "MyLastTable" ON MyOtherTable.ID = MyLastTable.ID',
+			'INNER JOIN "MyOtherTable" ON MyOtherTable.ID = 2 '.
+			'LEFT JOIN "MyLastTable" ON MyOtherTable.ID = MyLastTable.ID',
 			$query->sql()
 		);
 
@@ -232,6 +234,15 @@ class SQLQueryTest extends SapphireTest {
 			$query->sql()
 		);
 	}
+
+
+	public function testWhereAny() {
+		$query = new SQLQuery();
+		$query->from( 'MyTable' );
+
+		$query->whereAny(array("Monkey = 'Chimp'", "Color = 'Brown'"));
+		$this->assertEquals("SELECT * FROM MyTable WHERE (Monkey = 'Chimp' OR Color = 'Brown')",$query->sql());
+	}
 }
 
 class SQLQueryTest_DO extends DataObject implements TestOnly {
@@ -241,4 +252,4 @@ class SQLQueryTest_DO extends DataObject implements TestOnly {
 	);
 }
 
-?>
+

@@ -1,3 +1,6 @@
+// Shortcut-function (until we update to Prototye v1.5)
+if(typeof $$ != "Function") $$ = document.getElementsBySelector;
+
 GB_OpenerObj = {};
 GB_RefreshLink = "";
 
@@ -45,8 +48,8 @@ ComplexTableField.prototype = {
 	
 	setPopupSize: function() {
 		try {
-			this.popupHeight = parseInt($(this.id + '_PopupHeight').value);
-			this.popupWidth = parseInt($(this.id + '_PopupWidth').value);
+			this.popupHeight = parseInt(document.getElementById(this.id + '_PopupHeight').value);
+			this.popupWidth = parseInt(document.getElementById(this.id + '_PopupWidth').value);
 		} catch (ex) {
 			this.popupHeight = this.defaultPopupHeight;
 			this.popupWidth = this.defaultPopupWidth;
@@ -143,3 +146,11 @@ ComplexTableField.prototype = {
 }
 
 ComplexTableField.applyTo('div.ComplexTableField');
+
+/**
+ * Get first letter as uppercase
+ */
+String.prototype.ucfirst = function () {
+   var firstLetter = this.substr(0,1).toUpperCase()
+   return this.substr(0,1).toUpperCase() + this.substr(1,this.length);
+}

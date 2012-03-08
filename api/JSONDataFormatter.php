@@ -116,12 +116,12 @@ class JSONDataFormatter extends DataFormatter {
 	}
 
 	/**
-	 * Generate a JSON representation of the given {@link DataObjectSet}.
+	 * Generate a JSON representation of the given {@link SS_List}.
 	 * 
-	 * @param DataObjectSet $set
+	 * @param SS_List $set
 	 * @return String XML
 	 */
-	public function convertDataObjectSet(DataObjectSet $set, $fields = null) {
+	public function convertDataObjectSet(SS_List $set, $fields = null) {
 		$items = array();
 		foreach ($set as $do) $items[] = $this->convertDataObjectToJSONObject($do, $fields);
 
@@ -138,4 +138,3 @@ class JSONDataFormatter extends DataFormatter {
 	}
 
 }
-?>

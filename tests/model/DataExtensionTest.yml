@@ -1,0 +1,24 @@
+DataExtensionTest_RelatedObject:
+   obj1:
+      FieldOne: Obj1
+   obj2:
+      FieldOne: Obj2
+Permission:
+   adminpermission:
+      Code: ADMIN
+Group:
+   admingroup:
+      Permissions: =>Permission.adminpermission
+Member:
+   admin:
+      Email: admin@test.com
+      Groups: =>Group.admingroup
+   websiteuser:
+      Email: websiteuser@test.com
+DataExtensionTest_Member:
+   member1:
+      Name: Sam
+      Website: http://www.example.org
+DataExtensionTest_MyObject:
+   object1:
+      Title: Object 1

@@ -372,4 +372,3 @@ $lang['si_LK']['Widget']['SINGULARNAME'] = 'Widget';
 $lang['si_LK']['WidgetArea']['PLURALNAME'] = 'Widget ප්රදේශ';
 $lang['si_LK']['WidgetArea']['SINGULARNAME'] = 'Widget ප්රදේශය';
 
-?>

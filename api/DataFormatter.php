@@ -288,7 +288,7 @@ abstract class DataFormatter extends Object {
 	/**
 	 * Convert a data object set to this format.  Return a string.
 	 */
-	abstract function convertDataObjectSet(DataObjectSet $set);
+	abstract function convertDataObjectSet(SS_List $set);
 	
 	/**
 	 * @param string $strData HTTP Payload as string

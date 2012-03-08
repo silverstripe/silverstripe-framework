@@ -43,7 +43,7 @@ class ModelViewer extends Controller {
 	function Models() {
 		$classes = ClassInfo::subclassesFor('DataObject');
 		array_shift($classes);
-		$output = new DataObjectSet();
+		$output = new ArrayList();
 		foreach($classes as $class) {
 			$output->push(new ModelViewer_Model($class));
 		}
@@ -60,7 +60,7 @@ class ModelViewer extends Controller {
 		$modules = array();
 		foreach($classes as $class) {
 			$model = new ModelViewer_Model($class);
-			if(!isset($modules[$model->Module])) $modules[$model->Module] = new DataObjectSet();
+			if(!isset($modules[$model->Module])) $modules[$model->Module] = new ArrayList();
 			$modules[$model->Module]->push($model);
 		}
 		ksort($modules);
@@ -70,7 +70,7 @@ class ModelViewer extends Controller {
 			$modules = array($this->module => $modules[$this->module]);
 		}
 
-		$output = new DataObjectSet();
+		$output = new ArrayList();
 		foreach($modules as $moduleName => $models) {
 			$output->push(new ArrayData(array(
 				'Link' => 'dev/viewmodel/' . $moduleName,
@@ -149,7 +149,7 @@ class ModelViewer_Model extends ViewableData {
 	}
 	
 	function Fields() {
-		$output = new DataObjectSet();
+		$output = new ArrayList();
 		
 		$output->push(new ModelViewer_Field($this,'ID', 'PrimaryKey'));
 		if(!$this->ParentModel) {
@@ -165,7 +165,7 @@ class ModelViewer_Model extends ViewableData {
 	}
 	
 	function Relations() {
-		$output = new DataObjectSet();
+		$output = new ArrayList();
 		
 		foreach(array('has_one','has_many','many_many') as $relType) {
 			$items = singleton($this->className)->uninherited($relType,true);
@@ -211,4 +211,3 @@ class ModelViewer_Relation extends ViewableData {
 	
 }
 
-?>

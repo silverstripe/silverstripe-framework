@@ -8,6 +8,11 @@
 		 * checking all boxes is purely presentational.
 		 */
 		$('.permissioncheckboxset .valADMIN input').entwine({
+			onmatch: function() {
+				this._super();
+
+				this.toggleCheckboxes();
+			},
 			onclick: function(e) {
 				this.toggleCheckboxes();
 			},
@@ -26,8 +31,8 @@
 						// only update attributes if previous values have been saved
 						var oldChecked = $(this).data('SecurityAdmin.oldChecked');
 						var oldDisabled = $(this).data('SecurityAdmin.oldDisabled');
-						if(oldChecked != null) $(this).attr('checked', oldChecked);
-						if(oldDisabled != null) $(this).attr('disabled', oldDisabled);
+						if(oldChecked !== null) $(this).attr('checked', oldChecked);
+						if(oldDisabled !== null) $(this).attr('disabled', oldDisabled);
 					});
 				}
 			}
@@ -42,7 +47,8 @@
 		$('.permissioncheckboxset .valCMS_ACCESS_LeftAndMain input').entwine({
 			getCheckboxesExceptThisOne: function() {
 				return $(this).parents('.field:eq(0)').find('li').filter(function(i) {
-					return ($(this).attr('class').match(/CMS_ACCESS_/));
+					var klass = $(this).attr('class');
+					return (klass ? klass.match(/CMS_ACCESS_/) : false);
 				}).find('.checkbox').not(this);
 			},
 			onmatch: function() {

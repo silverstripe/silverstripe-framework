@@ -17,7 +17,7 @@
  * You should run Covert::raw2xml or whatever is appropriate before using it. 
  * 
  * Optionally (but recommended), is creating a static usable_tags method, 
- * which will return a DataObjectSet of all the usable tags that can be parsed.
+ * which will return a SS_List of all the usable tags that can be parsed.
  * This will (mostly) be used to create helper blocks - telling users what things will be parsed.
  * Again, @see BBCodeParser for an example of the syntax
  * 
@@ -50,4 +50,3 @@ abstract class TextParser extends Object {
 	 */
 	abstract function parse();
 }
-?>

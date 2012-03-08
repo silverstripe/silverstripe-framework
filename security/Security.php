@@ -297,7 +297,7 @@ class Security extends Controller {
 	 * @param string $action Name of the action
 	 * @return string Returns the link to the given action
 	 */
-	public static function Link($action = null) {
+	public function Link($action = null) {
 		return "Security/$action";
 	}
 
@@ -314,7 +314,7 @@ class Security extends Controller {
 		$member = Member::currentUser();
 		if($member) $member->logOut();
 
-		if($redirect) Director::redirectBack();
+		if($redirect) $this->redirectBack();
 	}
 
 
@@ -349,6 +349,7 @@ class Security extends Controller {
 			$tmpPage->ID = -1 * rand(1,10000000);
 
 			$controller = new Page_Controller($tmpPage);
+			$controller->setModel($this->model);
 			$controller->init();
 			//Controller::$currentController = $controller;
 		} else {
@@ -365,24 +366,16 @@ class Security extends Controller {
 		// only display tabs when more than one authenticator is provided
 		// to save bandwidth and reduce the amount of custom styling needed 
 		if(count($forms) > 1) {
-			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
-			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-			Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
-			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/effects.js");
-			Requirements::css(SAPPHIRE_DIR . "/css/Form.css");
-			
 			// Needed because the <base href=".."> in the template makes problems
 			// with the tabstrip library otherwise
 			$link_base = Director::absoluteURL($this->Link("login"));
 			
 			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-			Requirements::javascript(SAPPHIRE_DIR . "/javascript/jquery_improvements.js");
 			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 			
 			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 			
-			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery.ui.all.css');
-			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery.ui.tabs.css');
+			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 			
 			Requirements::css(SAPPHIRE_DIR . '/css/Security_login.css');
 			
@@ -438,11 +431,6 @@ class Security extends Controller {
 	 * @return string Returns the "lost password" page as HTML code.
 	 */
 	public function lostpassword() {
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
-
 		if(class_exists('SiteTree')) {
 			$tmpPage = new Page();
 			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER', 'Lost Password');
@@ -479,10 +467,10 @@ class Security extends Controller {
 		return Object::create('MemberLoginForm',
 			$this,
 			'LostPasswordForm',
-			new FieldSet(
+			new FieldList(
 				new EmailField('Email', _t('Member.EMAIL', 'Email'))
 			),
-			new FieldSet(
+			new FieldList(
 				new FormAction(
 					'forgotPassword',
 					_t('Security.BUTTONSEND', 'Send me the password reset link')
@@ -501,11 +489,6 @@ class Security extends Controller {
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	public function passwordsent($request) {
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
-
 		if(class_exists('SiteTree')) {
 			$tmpPage = new Page();
 			$tmpPage->Title = _t('Security.LOSTPASSWORDHEADER');
@@ -634,34 +617,6 @@ class Security extends Controller {
 		return new ChangePasswordForm($this, 'ChangePasswordForm');
 	}
 
-
-	/**
-	 * Authenticate using the given email and password, returning the
-	 * appropriate member object if
-	 *
-	 * @return bool|Member Returns FALSE if authentication fails, otherwise
-	 *                     the member object
-	 * @see setDefaultAdmin()
-	 */
-	public static function authenticate($RAW_email, $RAW_password) {
-		$SQL_email = Convert::raw2sql($RAW_email);
-		$SQL_password = Convert::raw2sql($RAW_password);
-
-		// Default login (see {@setDetaultAdmin()})
-		if(($RAW_email == self::$default_username) && ($RAW_password == self::$default_password)
-				&& !empty(self::$default_username) && !empty(self::$default_password)) {
-			$member = self::findAnAdministrator();
-		} else {
-			$member = DataObject::get_one("Member", 	"\"" . Member::get_unique_identifier_field() . "\" = '$SQL_email' AND \"Password\" IS NOT NULL");
-			if($member && ($member->checkPassword($RAW_password) == false)) {
-				$member = null;
-			}
-		}
-
-		return $member;
-	}
-
-
 	/**
 	 * Return an existing member with administrator privileges, or create one of necessary.
 	 * 
@@ -683,32 +638,27 @@ class Security extends Controller {
 			Subsite::changeSubsite(0);
 		}
 
+		$member = null;
+
 		// find a group with ADMIN permission
-		$adminGroup = DataObject::get('Group', 
-								"\"Permission\".\"Code\" = 'ADMIN'", 
-								"\"Group\".\"ID\"", 
-								"JOIN \"Permission\" ON \"Group\".\"ID\"=\"Permission\".\"GroupID\"", 
-								'1');
+		$adminGroup = DataObject::get('Group')->where("\"Permission\".\"Code\" = 'ADMIN'")
+			->sort("\"Group\".\"ID\"")->innerJoin("Permission", "\"Group\".\"ID\"=\"Permission\".\"GroupID\"")->First();
 		
 		if(is_callable('Subsite::changeSubsite')) {
 			Subsite::changeSubsite($origSubsite);
 		}
+		
 		if ($adminGroup) {
-			$adminGroup = $adminGroup->First();
-
-			if($adminGroup->Members()->First()) {
-				$member = $adminGroup->Members()->First();
-			}
+		    $member = $adminGroup->Members()->First();
 		}
 
 		if(!$adminGroup) {
 			singleton('Group')->requireDefaultRecords();
 		}
 		
-		if(!isset($member)) {
+		if(!$member) {
 			singleton('Member')->requireDefaultRecords();
-			$members = Permission::get_members_by_permission('ADMIN');
-			$member = $members->First();
+			$member = Permission::get_members_by_permission('ADMIN')->First();
 		}
 
 		return $member;
@@ -793,6 +743,7 @@ class Security extends Controller {
 	 *                      store the passwords in clear text.
 	 */
 	public static function encrypt_passwords($encrypt) {
+		Deprecation::notice('2.4', 'Use PasswordEncryptor_None instead.');
 		self::$encryptPasswords = (bool)$encrypt;
 	}
 
@@ -806,6 +757,7 @@ class Security extends Controller {
 	 * @return array Returns an array of strings containing all supported encryption algorithms.
 	 */
 	public static function get_encryption_algorithms() {
+		Deprecation::notice('2.4', 'Use PasswordEncryptor::get_encryptors() instead.');
 		return array_keys(PasswordEncryptor::get_encryptors());
 	}
 

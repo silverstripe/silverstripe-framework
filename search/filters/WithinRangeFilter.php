@@ -25,7 +25,7 @@ class WithinRangeFilter extends SearchFilter {
 		$this->max = $max;
 	}
 	
-	function apply(SQLQuery $query) {
+	function apply(DataQuery $query) {
 		$query->where(sprintf(
 			"%s >= %s AND %s <= %s",
 			$this->getDbName(),
@@ -37,4 +37,3 @@ class WithinRangeFilter extends SearchFilter {
 	
 }
 
-?>

@@ -21,4 +21,3 @@ class SapphireTestSuite extends PHPUnit_Framework_TestSuite {
 		}
 	}
 }
-?>

@@ -125,7 +125,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * Class name of the form field used for the results list.  Overloading this in subclasses
 	 * can let you customise the results table field.
 	 */
-	protected $resultsTableClassName = 'TableListField';
+	protected $resultsTableClassName = 'GridField';
 
 	/**
 	 * Return {@link $this->resultsTableClassName}
@@ -147,13 +147,11 @@ abstract class ModelAdmin extends LeftAndMain {
 			//user_error('ModelAdmin::init(): Invalid Model class', E_USER_ERROR);
 		}
 		
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/ModelAdmin.css'); // standard layout formatting for management UI
 		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/silverstripe.tabs.css'); // follows the jQuery UI theme conventions
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-livequery/jquery.livequery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery/jquery_improvements.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ModelAdmin.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ModelAdmin.History.js');
 	}
@@ -245,11 +243,11 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * Returns managed models' create, search, and import forms
 	 * @uses SearchContext
 	 * @uses SearchFilter
-	 * @return DataObjectSet of forms 
+	 * @return SS_List of forms 
 	 */
 	protected function getModelForms() {
 		$models = $this->getManagedModels();
-		$forms  = new DataObjectSet();
+		$forms  = new ArrayList();
 		
 		foreach($models as $class => $options) { 
 			if(is_numeric($class)) $class = $options;
@@ -403,7 +401,7 @@ class ModelAdmin_CollectionController extends Controller {
 		
 		$form = new Form($this, "SearchForm",
 			$fields,
-			new FieldSet(
+			new FieldList(
 				new FormAction('search', _t('MemberTableField.SEARCH', 'Search')),
 				$clearAction = new ResetFormAction('clearsearch', _t('ModelAdmin.CLEAR_SEARCH','Clear Search'))
 			),
@@ -413,8 +411,8 @@ class ModelAdmin_CollectionController extends Controller {
 		$form->setFormMethod('get');
 		$form->setHTMLID("Form_SearchForm_" . $this->modelClass);
 		$form->disableSecurityToken();
-		$clearAction->useButtonTag = true;
-		$clearAction->addExtraClass('minorAction');
+		$clearAction->setUseButtonTag(true);
+		$clearAction->addExtraClass('ss-ui-action-minor');
 
 		return $form;
 	}
@@ -435,11 +433,13 @@ class ModelAdmin_CollectionController extends Controller {
 		$buttonLabel = sprintf(_t('ModelAdmin.CREATEBUTTON', "Create '%s'", PR_MEDIUM, "Create a new instance from a model class"), singleton($modelName)->i18n_singular_name());
 
 		$form = new Form($this, "CreateForm",
-						new FieldSet(),
-						new FieldSet($createButton = new FormAction('add', $buttonLabel)),
+						new FieldList(),
+						new FieldList(
+							$createButton = FormAction::create('add', $buttonLabel)
+								->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
+						),
 						$validator = new RequiredFields()
 				);
-	
 		$createButton->dontEscape = true;
 		$validator->setJavascriptValidationHandler('none');
 		$form->setHTMLID("Form_CreateForm_" . $this->modelClass);
@@ -468,7 +468,7 @@ class ModelAdmin_CollectionController extends Controller {
 		
 		if(!singleton($modelName)->canCreate(Member::currentUser())) return false;
 
-		$fields = new FieldSet(
+		$fields = new FieldList(
 			new HiddenField('ClassName', _t('ModelAdmin.CLASSTYPE'), $modelName),
 			new FileField('_CsvFile', false)
 		);
@@ -477,11 +477,11 @@ class ModelAdmin_CollectionController extends Controller {
 		$importerClass = $importers[$modelName];
 		$importer = new $importerClass($modelName);
 		$spec = $importer->getImportSpec();
-		$specFields = new DataObjectSet();
+		$specFields = new ArrayList();
 		foreach($spec['fields'] as $name => $desc) {
 			$specFields->push(new ArrayData(array('Name' => $name, 'Description' => $desc)));
 		}
-		$specRelations = new DataObjectSet();
+		$specRelations = new ArrayList();
 		foreach($spec['relations'] as $name => $desc) {
 			$specRelations->push(new ArrayData(array('Name' => $name, 'Description' => $desc)));
 		}
@@ -494,7 +494,7 @@ class ModelAdmin_CollectionController extends Controller {
 		$fields->push(new LiteralField("SpecFor{$modelName}", $specHTML));
 		$fields->push(new CheckboxField('EmptyBeforeImport', 'Clear Database before import', false)); 
 		
-		$actions = new FieldSet(
+		$actions = new FieldList(
 			new FormAction('import', _t('ModelAdmin.IMPORT', 'Import from CSV'))
 		);
 		
@@ -651,24 +651,7 @@ class ModelAdmin_CollectionController extends Controller {
 	function search($request, $form) {
 		// Get the results form to be rendered
 		$resultsForm = $this->ResultsForm(array_merge($form->getData(), $request));
-		// Before rendering, let's get the total number of results returned
-		$tableField = $resultsForm->Fields()->dataFieldByName($this->modelClass);
-		$tableField->addExtraClass('resultsTable');
-		$numResults = $tableField->TotalCount();
-		
-		if($numResults) {
-			$msg = sprintf(
-				_t('ModelAdmin.FOUNDRESULTS',"Your search found %s matching items"), 
-				$numResults
-			);
-		} else {
-			$msg = _t('ModelAdmin.NORESULTS',"Your search didn't return any matching items");
-		}
-		return new SS_HTTPResponse(
-			$resultsForm->formHtmlContent(), 
-			200, 
-			$msg
-		);
+		return $resultsForm->forTemplate();
 	}
 	
 	/**
@@ -715,37 +698,21 @@ class ModelAdmin_CollectionController extends Controller {
 	 *
 	 * @param array $searchCriteria passed through from ResultsForm 
 	 *
-	 * @return TableListField 
+	 * @return GridField 
 	 */
 	function getResultsTable($searchCriteria) {
 		
-		$summaryFields = $this->getResultColumns($searchCriteria);
-
 		$className = $this->parentController->resultsTableClassName();
-		$tf = new $className(
+		$datalist = $this->getSearchQuery($searchCriteria);
+		$numItemsPerPage = $this->parentController->stat('page_length');
+		$tf = Object::create($className,
 			$this->modelClass,
-			$this->modelClass,
-			$summaryFields
-		);
+			false,
+			$datalist,
+			$fieldConfig = GridFieldConfig_RecordEditor::create($numItemsPerPage)
+				->addComponent(new GridFieldExporter())->removeComponentsByType('GridFieldFilter')
+		)->setDisplayFields($this->getResultColumns($searchCriteria));
 
-		$tf->setCustomQuery($this->getSearchQuery($searchCriteria));
-		$tf->setPageSize($this->parentController->stat('page_length'));
-		$tf->setShowPagination(true);
-		// @todo Remove records that can't be viewed by the current user
-		$tf->setPermissions(array_merge(array('view','export'), TableListField::permissions_for_object($this->modelClass)));
-
-		// csv export settings (select all columns regardless of user checkbox settings in 'ResultsAssembly')
-		$exportFields = $this->getResultColumns($searchCriteria, false);
-		$tf->setFieldListCsv($exportFields);
-
-		$url = '<a href=\"' . $this->Link() . '/$ID/edit\">$value</a>';
-		if(count($summaryFields)) {
-			$tf->setFieldFormatting(array_combine(
-				array_keys($summaryFields), 
-				array_fill(0,count($summaryFields), $url)
-			));
-		}
-	
 		return $tf;
 	}
 	
@@ -757,7 +724,6 @@ class ModelAdmin_CollectionController extends Controller {
 	 * @return Form
 	 */
 	function ResultsForm($searchCriteria) {
-		
 		if($searchCriteria instanceof SS_HTTPRequest) $searchCriteria = $searchCriteria->getVars();
 		
 		$tf = $this->getResultsTable($searchCriteria);
@@ -767,15 +733,11 @@ class ModelAdmin_CollectionController extends Controller {
 		$form = new Form(
 			$this,
 			'ResultsForm',
-			new FieldSet(
-				new TabSet('Root',
-					new Tab('SearchResults',
-						_t('ModelAdmin.SEARCHRESULTS','Search Results'),
-						$tf
-					)
-				)
+			new FieldList(
+				new HeaderField('SearchResults', _t('ModelAdmin.SEARCHRESULTS','Search Results'), 2),
+				$tf
 			),
-			new FieldSet()
+			new FieldList()
 		);
 		
 		// Include the search criteria on the results form URL, but not dodgy variables like those below
@@ -799,7 +761,7 @@ class ModelAdmin_CollectionController extends Controller {
 	 */
 	function add($request) {
 		return new SS_HTTPResponse(
-			$this->AddForm()->formHtmlContent(), 
+			$this->AddForm()->forTemplate(), 
 			200, 
 			sprintf(
 				_t('ModelAdmin.ADDFORM', "Fill out this form to add a %s to the database."),
@@ -844,12 +806,14 @@ class ModelAdmin_CollectionController extends Controller {
 			if(!$validator) $validator = new RequiredFields();
 			$validator->setJavascriptValidationHandler('none');
 			
-			$actions = new FieldSet (
-				new FormAction("doCreate", _t('ModelAdmin.ADDBUTTON', "Add"))
+			$actions = new FieldList (
+				FormAction::create("doCreate", _t('ModelAdmin.ADDBUTTON', "Add"))
+					->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
 			);
-			
+
 			$form = new Form($this, "AddForm", $fields, $actions, $validator);
 			$form->loadDataFrom($newRecord);
+			$form->addExtraClass('cms-edit-form');
 			
 			return $form;
 		}
@@ -867,7 +831,7 @@ class ModelAdmin_CollectionController extends Controller {
 			$class = $this->parentController->getRecordControllerClass($this->getModelClass());
 			$recordController = new $class($this, $request, $model->ID);
 			return new SS_HTTPResponse(
-				$recordController->EditForm()->formHtmlContent(), 
+				$recordController->EditForm()->forTemplate(), 
 				200, 
 				sprintf(
 					_t('ModelAdmin.LOADEDFOREDITING', "Loaded '%s' for editing."),
@@ -877,6 +841,13 @@ class ModelAdmin_CollectionController extends Controller {
 		} else {
 			Director::redirect(Controller::join_links($this->Link(), $model->ID , 'edit'));
 		}
+	}
+	
+	/**
+	 * @return ArrayList
+	 */
+	public function Breadcrumbs(){
+		return new ArrayList();
 	}
 }
 
@@ -917,7 +888,7 @@ class ModelAdmin_RecordController extends Controller {
 	function edit($request) {
 		if ($this->currentRecord) {
 			if($this->isAjax()) {
-				$this->response->setBody($this->EditForm()->formHtmlContent());
+				$this->response->setBody($this->EditForm()->forTemplate());
 				$this->response->setStatusCode(
 					200, 
 					sprintf(
@@ -929,10 +900,10 @@ class ModelAdmin_RecordController extends Controller {
 			} else {
 				// This is really quite ugly; to fix will require a change in the way that customise() works. :-(
 				return $this->parentController->parentController->customise(array(
-					'Right' => $this->parentController->parentController->customise(array(
+					'Content' => $this->parentController->parentController->customise(array(
 						'EditForm' => $this->EditForm()
-					))->renderWith(array("{$this->class}_right",'LeftAndMain_right'))
-				))->renderWith(array('ModelAdmin','LeftAndMain'));
+					))->renderWith(array("{$this->class}_Content",'ModelAdmin_Content', 'LeftAndMain_Content'))
+				))->renderWith(array('ModelAdmin', 'LeftAndMain'));
 			}
 		} else {
 			return _t('ModelAdmin.ITEMNOTFOUND', "I can't find that item");
@@ -946,13 +917,20 @@ class ModelAdmin_RecordController extends Controller {
 		$fields = $this->currentRecord->getCMSFields();
 		$fields->push(new HiddenField("ID"));
 		
+		if($this->currentRecord->hasMethod('Link')) {
+			$fields->push(new LiteralField('SilverStripeNavigator', $this->getSilverStripeNavigator()));
+		}
+		
 		$validator = ($this->currentRecord->hasMethod('getCMSValidator')) ? $this->currentRecord->getCMSValidator() : new RequiredFields();
 		$validator->setJavascriptValidationHandler('none');
 		
 		$actions = $this->currentRecord->getCMSActions();
 		if($this->currentRecord->canEdit(Member::currentUser())){
 			if(!$actions->fieldByName('action_doSave') && !$actions->fieldByName('action_save')) {
-				$actions->push(new FormAction("doSave", _t('ModelAdmin.SAVE', "Save")));
+				$actions->push(
+					FormAction::create("doSave", _t('ModelAdmin.SAVE', "Save"))
+						->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
+				);
 			}
 		}else{
 			$fields = $fields->makeReadonly();
@@ -960,13 +938,16 @@ class ModelAdmin_RecordController extends Controller {
 		
 		if($this->currentRecord->canDelete(Member::currentUser())) {
 			if(!$actions->fieldByName('action_doDelete')) {
-				$actions->insertFirst($deleteAction = new FormAction('doDelete', _t('ModelAdmin.DELETE', 'Delete')));
+				$actions->unshift(
+					FormAction::create('doDelete', _t('ModelAdmin.DELETE', 'Delete'))
+						->addExtraClass('ss-ui-action-destructive')->setAttribute('data-icon', 'delete')
+				);
 			}
-			$deleteAction->addExtraClass('delete');
 		}
 
 		$form = new Form($this, "EditForm", $fields, $actions, $validator);
 		$form->loadDataFrom($this->currentRecord);
+		$form->addExtraClass('cms-edit-form');
 
 		return $form;
 	}
@@ -1021,7 +1002,7 @@ class ModelAdmin_RecordController extends Controller {
 	function view($request) {
 		if($this->currentRecord) {
 			$form = $this->ViewForm();
-			return $form->formHtmlContent();
+			return $form->forTemplate();
 		} else {
 			return _t('ModelAdmin.ITEMNOTFOUND');
 		}
@@ -1034,7 +1015,7 @@ class ModelAdmin_RecordController extends Controller {
 	 */
 	public function ViewForm() {
 		$fields = $this->currentRecord->getCMSFields();
-		$form = new Form($this, "EditForm", $fields, new FieldSet());
+		$form = new Form($this, "EditForm", $fields, new FieldList());
 		$form->loadDataFrom($this->currentRecord);
 		$form->makeReadonly();
 		return $form;
@@ -1052,4 +1033,3 @@ class ModelAdmin_RecordController extends Controller {
 	
 }
 
-?>

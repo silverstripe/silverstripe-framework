@@ -6,6 +6,8 @@
  */
 class ToggleCompositeField extends CompositeField {
 	
+	protected $template = "ToggleCompositeField";
+	
 	/**
 	 * @var $headingLevel int
 	 */
@@ -23,10 +25,9 @@ class ToggleCompositeField extends CompositeField {
 	public function FieldHolder() {
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ToggleCompositeField.js");
 		
-		return $this->renderWith("ToggleCompositeField");
+		return $this->renderWith($this->template);
 	}	
 	
 	/**
@@ -50,4 +51,3 @@ class ToggleCompositeField extends CompositeField {
 	}
 }
 
-?>

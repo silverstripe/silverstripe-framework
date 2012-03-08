@@ -44,7 +44,7 @@ class NullableField extends FormField {
 			// Set a default label if one is not provided.
 			$this->isNullLabel = _t('NullableField.IsNullLabel', 'Is Null', PR_HIGH);
 		}
-		parent::__construct($valueField->Name(), $valueField->Title(), $valueField->Value(), $valueField->getForm(), $valueField->RightTitle());
+		parent::__construct($valueField->getName(), $valueField->Title(), $valueField->Value(), $valueField->getForm(), $valueField->RightTitle());
 		$this->readonly = $valueField->isReadonly();
 	}
 	
@@ -61,6 +61,7 @@ class NullableField extends FormField {
 	 */
 	function setIsNullLabel(string $isNulLabel){
 		$this->isNullLabel = $isNulLabel;
+		return $this;
 	}
 	
 	/**
@@ -68,7 +69,7 @@ class NullableField extends FormField {
 	 * @return string
 	 */
 	function getIsNullId() {
-		return $this->Name() . "_IsNull";
+		return $this->getName() . "_IsNull";
 	}
 
 	/**
@@ -82,6 +83,7 @@ class NullableField extends FormField {
 			$nullableCheckbox = new CheckboxField($this->getIsNullId());
 		}
 		$nullableCheckbox->setValue(is_null($this->dataValue()));
+
 		return $this->valueField->Field() . ' ' . $nullableCheckbox->Field() . '&nbsp;<span>' . $this->getIsNullLabel().'</span>';
 	}
 
@@ -94,6 +96,8 @@ class NullableField extends FormField {
 		}
 		$this->valueField->setValue($value);
 		parent::setValue($value);
+
+		return $this;
 	}
 	
 	/**
@@ -104,6 +108,8 @@ class NullableField extends FormField {
 		// We need to pass through the name change to the underlying value field.
 		$this->valueField->setName($name);
 		parent::setName($name);
+
+		return $this;
 	}
 
 	/**

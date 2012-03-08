@@ -45,7 +45,7 @@ class SapphireSoapServer extends Controller {
 	}
 	
 	/**
-	 * @return DataObjectSet Collection of ArrayData elements describing
+	 * @return SS_List Collection of ArrayData elements describing
 	 *  the method (keys: 'Name', 'Arguments', 'ReturnType')
 	 */
 	function Methods() {
@@ -65,12 +65,12 @@ class SapphireSoapServer extends Controller {
 			}
 			$methods[] = new ArrayData(array(
 				"Name" => $methodName,
-				"Arguments" => new DataObjectSet($processedArguments),
+				"Arguments" => new ArrayList($processedArguments),
 				"ReturnType" => self::$xsd_types[$returnType],
 			));
 		}
 		
-		return new DataObjectSet($methods);
+		return new ArrayList($methods);
 	}
 	
 	/**
@@ -100,4 +100,4 @@ class SapphireSoapServer extends Controller {
 	}
 }
 
-?>
+

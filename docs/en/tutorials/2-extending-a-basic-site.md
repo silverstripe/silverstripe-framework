@@ -171,11 +171,11 @@ method to the *ArticlePage* class.
 	class ArticlePage extends Page {
 		// ...
 		
-		function getCMSFields() {
+		public function getCMSFields() {
 			$fields = parent::getCMSFields();
 			
-			$fields->addFieldToTab('Root.Content.Main', new DateField('Date'), 'Content');
-			$fields->addFieldToTab('Root.Content.Main', new TextField('Author'), 'Content');
+			$fields->addFieldToTab('Root.Content', new DateField('Date'), 'Content');
+			$fields->addFieldToTab('Root.Content', new TextField('Author'), 'Content');
 			
 			return $fields;
 		}
@@ -192,15 +192,15 @@ Let's walk through this method.
 
 
 Firstly, we get the fields from the parent class; we want to add fields, not replace them. The *$fields* variable
-returned is a `[api:FieldSet]` object.
+returned is a `[api:FieldList]` object.
 
 	:::php
-	$fields->addFieldToTab('Root.Content.Main', new DateField('Date'), 'Content');
-	$fields->addFieldToTab('Root.Content.Main', new TextField('Author'), 'Content');
+	$fields->addFieldToTab('Root.Content', new DateField('Date'), 'Content');
+	$fields->addFieldToTab('Root.Content', new TextField('Author'), 'Content');
 
 
 We can then add our new fields with *addFieldToTab*. The first argument is the tab on which we want to add the field to:
-"Root.Content.Main" is the tab which the content editor is on. The second argument is the field to add; this is not a
+"Root.Content" is the tab which the content editor is on. The second argument is the field to add; this is not a
 database field, but a `[api:FormField]` documentation for more details.
 
 	:::php
@@ -229,14 +229,14 @@ To make the date field a bit more user friendly, you can add a dropdown calendar
 	
 	// .....
 	
-	function getCMSFields() {
+	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		
-		$fields->addFieldToTab('Root.Content.Main', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
+		$fields->addFieldToTab('Root.Content', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
 		$dateField->setConfig('showcalendar', true);
 		$dateField->setConfig('dateformat', 'dd/MM/YYYY');
 		
-		$fields->addFieldToTab('Root.Content.Main', new TextField('Author','Author Name'), 'Content');
+		$fields->addFieldToTab('Root.Content', new TextField('Author','Author Name'), 'Content');
 		
 		return $fields;
 	}
@@ -244,7 +244,7 @@ To make the date field a bit more user friendly, you can add a dropdown calendar
 Let's walk through these changes.
 
 	:::php
-	$fields->addFieldToTab('Root.Content.Main', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
+	$fields->addFieldToTab('Root.Content', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
 
 *$dateField* is added only to the DateField in order to change the configuration.
 
@@ -259,7 +259,7 @@ Set *showCalendar* to true to have a calendar appear underneath the Date field w
 *dateFormat* allows you to specify how you wish the date to be entered and displayed in the CMS field.
 
 	:::php
-	$fields->addFieldToTab('Root.Content.Main', new TextField('Author','Author Name'), 'Content');
+	$fields->addFieldToTab('Root.Content', new TextField('Author','Author Name'), 'Content');
 
 By default the first argument *'Date'* or *'Author'* is shown as the title, however this might not be that helpful so to change the title,
 add the new title as the second argument. See the `[api:DateField]` documentation for more details.
@@ -472,7 +472,7 @@ control. We can get the data for the news articles by implementing our own funct
 
 	:::php
 	...
-	function LatestNews($num=5) {
+	public function LatestNews($num=5) {
 		$news = DataObject::get_one("ArticleHolder");
 		return ($news) ? DataObject::get("ArticlePage", "ParentID = $news->ID", "Date DESC", "", $num) : false;
 	}
@@ -518,7 +518,7 @@ providing an `[api:RSSFeed]` class to do all the hard work for you. Create the f
 *ArticleHolder_Controller*:
 
 	:::php
-	function rss() {
+	public function rss() {
 		$rss = new RSSFeed($this->Children(), $this->Link(), "The coolest news around");
 		$rss->outputToBrowser();
 	}
@@ -538,7 +538,7 @@ Now all we need is to let the user know that our RSS feed exists. The `[api:RSSF
 called when the page is requested. Add this function to *ArticleHolder_Controller*:
 
 	:::php
-	function init() {
+	public function init() {
 		RSSFeed::linkToFeed($this->Link() . "rss");	
 		parent::init();
 	}
@@ -591,10 +591,10 @@ insert an image in the *$Content* field).
 			'Photo' => 'Image'
 		);
 		
-		function getCMSFields() {
+		public function getCMSFields() {
 			$fields = parent::getCMSFields();
 			
-			$fields->addFieldToTab("Root.Content.Images", new ImageField('Photo'));
+			$fields->addFieldToTab("Root.Content.Images", new UploadField('Photo'));
 			
 			return $fields;
 		}
@@ -610,7 +610,7 @@ a simple database field like all the fields we have seen so far, but has its own
 array, we create a relationship between the *StaffPage* table and the *Image* table by storing the id of the respective
 *Image* in the *StaffPage* table.
 
-We then add an *ImageField* in the *getCMSFields* function to the tab "Root.Content.Images". Since this tab doesn't exist,
+We then add an `[api:UploadField]` in the *getCMSFields* function to the tab "Root.Content.Images". Since this tab doesn't exist,
 the *addFieldToTab* function will create it for us. The *ImageField* allows us to select an image or upload a new one in
 the CMS.
 

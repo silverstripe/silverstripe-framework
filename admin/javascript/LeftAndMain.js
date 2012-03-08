@@ -1,15 +1,12 @@
+jQuery.noConflict();
+
 /**
  * File: LeftAndMain.js
  */
-
-/**
- * Variable: ss_MainLayout
- * jquery.layout Global variable so layout state management can pick it up.
- */
-var ss_MainLayout;
-
 (function($) {
-	$.entwine('ss', function($){
+	// setup jquery.entwine
+	$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
+	$.entwine('ss', function($) {
 		/**
 		 * Position the loading spinner animation below the ss logo
 		 */ 
@@ -19,12 +16,10 @@ var ss_MainLayout;
 			var top = ($(window).height() - spinner.height()) / 2;
 			spinner.css('top', top + offset);
 			spinner.show();
-		}
+		};
+		
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
-	
-		// setup jquery.entwine
-		$.entwine.warningLevel = $.entwine.WARN_LEVEL_BESTPRACTISE;
-	
+
 		// global ajax error handlers
 		$.ajaxSetup({
 			error: function(xmlhttp, status, error) {
@@ -34,424 +29,476 @@ var ss_MainLayout;
 		});
 		
 		/**
-		 * Class: .LeftAndMain
-		 * 
 		 * Main LeftAndMain interface with some control panel and an edit form.
 		 * 
 		 * Events:
 		 *  ajaxsubmit - ...
 		 *  validate - ...
-		 *  loadnewpage - ...
+		 *  reloadeditform - ...
 		 */
-		$('.LeftAndMain').entwine({
-			/**
-			 * Variable: MainLayout
-			 * (Object) Reference to jQuery.layout element
-			 */
-			MainLayout: null,
-
-			/**
-			 * Variable: PingIntervalSeconds
-			 * (Number) Interval in which /Security/ping will be checked for a valid login session.
-			 */
-			PingIntervalSeconds: 5*60,
-
+		$('.cms-container').entwine({
+			
+			CurrentXHR: null,
+			
 			/**
 			 * Constructor: onmatch
 			 */
 			onmatch: function() {
 				var self = this;
 
+				// Browser detection
+				if($.browser.msie && parseInt($.browser.version, 10) < 7) {
+					$('.ss-loading-screen').append(
+						'<p class="ss-loading-incompat-warning"><span class="notice">' + 
+						'Your browser is not compatible with the CMS interface. Please use Internet Explorer 7+, Google Chrome 10+ or Mozilla Firefox 3.5+.' +
+						'</span></p>'
+					).css('z-index', $('.ss-loading-screen').css('z-index')+1);
+					$('.loading-animation').remove();
+					return;
+				}
+				
+				// Initialize layouts
+				this.redraw();
+
+				// Monitor window resizes, panel changes and edit form loads for layout changes.
+				// Also triggers redraw through handleStateChange()
+				$(window).resize(function() {
+					self.redraw();
+				});
+				
+				$('.cms-panel').live('toggle', function() {
+					self.redraw();
+				});
+				
+				$('.cms-edit-form').live('reloadeditform', function(e, data) {
+					// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it
+					if(window.History.enabled) {
+						var url = data.xmlhttp.getResponseHeader('X-ControllerURL');
+						if(url) window.history.replaceState({}, '', url);
+					}
+					
+					self.redraw();
+				});
+				
 				// Remove loading screen
 				$('.ss-loading-screen').hide();
-				$('body').removeClass('stillLoading');
+				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
-
-				// Layout
-				ss_MainLayout = this._setupLayout();
-				this.setMainLayout(ss_MainLayout);
-				layoutState.options.keys = "west.size,west.isClosed";
-				$(window).unload(function(){ layoutState.save('ss_MainLayout');});
 				
-				this._setupPinging();
-
-				// HACK Delay resizing to give jquery-ui tabs a change their dimensions
-				// through dynamically added css classes
-				$(window).resize(function () {
-					var timerID = "timerLeftAndMainResize";
-					if (window[timerID]) clearTimeout(window[timerID]);
-					window[timerID] = setTimeout(function() {
-						self._resizeChildren();
-					}, 200);
-				});
-				$(window).resize();
-
-				// If tab has no nested tabs, set overflow to auto
-				$(this).find('.tab').not(':has(.tab)').css('overflow', 'auto');
-
-				// @todo Doesn't resize properly if the response doesn't contain a tabset (see above)
-				$('#Form_EditForm').bind('loadnewpage', function() {
-					// HACK Delay resizing to give jquery-ui tabs a change their dimensions
-					// through dynamically added css classes
-					var timerID = "timerLeftAndMainResize";
-					if (window[timerID]) clearTimeout(window[timerID]);
-					window[timerID] = setTimeout(function() {
-						self._resizeChildren();
-					}, 200);
+				History.Adapter.bind(window,'statechange',function(){ 
+					self.handleStateChange();
 				});
 
 				this._super();
 			},
+			
+			redraw: function() {
+				// Move from inner to outer layouts. Some of the elements might not exist.
+				// Not all edit forms are layouted, so qualify by their data value.
+				this.find('.cms-content-fields[data-layout-type]').redraw(); 
+				this.find('.cms-edit-form[data-layout-type]').redraw(); 
+				
+				// Only redraw preview if its visible
+				this.find('.cms-preview').redraw();
+
+				// Only redraw the content area if its not the same as the edit form
+				var contentEl = this.find('.cms-content');
+				if(!contentEl.is('.cms-edit-form')) contentEl.redraw();
+				
+				this.layout({resize: false});
+		
+				this.find('.cms-panel-layout').redraw(); // sidebar panels.
+			},
 
 			/**
-			 * Function: _setupLayout
+			 * Proxy around History.pushState() which handles non-HTML5 fallbacks,
+			 * as well as global change tracking. Change tracking needs to be synchronous rather than event/callback
+			 * based because the user needs to be able to abort the action completely.
 			 * 
-			 * Initialize jQuery layout manager with the following panes:
-			 * - east: Tree, Page Version History, Site Reports
-			 * - center: Form
-			 * - west: "Insert Image", "Insert Link", "Insert Flash" panes
-			 * - north: CMS area menu bar
-			 * - south: "Page view", "profile" and "logout" links
+			 * See handleStateChange() for more details.
+			 * 
+			 * Parameters:
+			 *  - {String} url
+			 *  - {String} title New window title
+			 *  - {Object} data Any additional data passed through to History.pushState()
 			 */
-			_setupLayout: function() {
-				var self = this;
+			loadPanel: function(url, title, data) {
+				if(!data) data = {};
+				var selector = data.selector || '.cms-content', contentEl = $(selector);
+				
+				// Check change tracking (can't use events as we need a way to cancel the current state change)
+				var trackedEls = contentEl.find(':data(changetracker)').add(contentEl.filter(':data(changetracker)'));
+				
+				if(trackedEls.length) {
+					var abort = false;
+					
+					trackedEls.each(function() {
+						if(!$(this).confirmUnsavedChanges()) abort = true;
+					});
+					
+					if(abort) return;
+				}
 
-				var widthEast = this.find('.ui-layout-east').width();
-				var widthWest = this.find('.ui-layout-west').width();
-
-				// layout containing the tree, CMS menu, the main form etc.
-				var savedLayoutSettings = layoutState.load('ss_MainLayout');
-
-				var layoutSettings = jQuery.extend({
-					defaults: {
-						// TODO Reactivate once we have localized values
-						togglerTip_open: '',
-						togglerTip_closed: '',
-						resizerTip: '',
-						sliderTip: '',
-						onresize: function() {self._resizeChildren();},
-						onopen: function() {self._resizeChildren();}
-					},
-					north: {
-						slidable: false,
-						resizable: false,
-						size: this.find('.ui-layout-north').height(),
-						togglerLength_open: 0
-					},
-					south: {
-						slidable: false,
-						resizable: false,
-						size: this.find('.ui-layout-south').height(),
-						togglerLength_open: 0
-					},
-					west: {
-						size: (widthWest) ? widthWest : undefined,
-						fxName: "none"
-					},
-					east: {
-						initClosed: true,
-						// multiple panels which are triggered through tinymce buttons,
-						// so a user shouldn't be able to toggle this panel manually
-						initHidden: true,
-						spacing_closed: 0,
-						fxName: "none"
-					},
-					center: {}
-				}, savedLayoutSettings);
-				var layout = $('body').layout(layoutSettings);
-
-				// Adjust tree accordion etc. in left panel to work correctly
-				// with jQuery.layout (see http://layout.jquery-dev.net/tips.html#Widget_Accordion)
-				this.find("#treepanes").accordion({
-					fillSpace: true,
-					animated: false
+				if(window.History.enabled) {
+					// Active menu item is set based on X-Controller ajax header,
+					// which matches one class on the menu
+					window.History.pushState(data, title, url);
+				} else {
+					window.location = $.path.makeUrlAbsolute(url, $('base').attr('href'));
+				}
+			},
+			
+			/**
+			 * Handles ajax loading of new panels through the window.History object.
+			 * To trigger loading, pass a new URL to window.History.pushState().
+			 * Use loadPanel() as a pushState() wrapper as it provides some additional functionality
+			 * like global changetracking and user aborts.
+			 * 
+			 * Due to the nature of history management, no callbacks are allowed.
+			 * Use the 'beforestatechange' and 'afterstatechange' events instead,
+			 * or overwrite the beforeLoad() and afterLoad() methods on the 
+			 * DOM element you're loading the new content into.
+			 * Although you can pass data into pushState(), it shouldn't contain 
+			 * DOM elements or callback closures.
+			 * 
+			 * The passed URL should allow reconstructing important interface state
+			 * without additional parameters, in the following use cases:
+			 * - Explicit loading through History.pushState()
+			 * - Implicit loading through browser navigation event triggered by the user (forward or back)
+			 * - Full window refresh without ajax
+			 * For example, a ModelAdmin search event should contain the search terms
+			 * as URL parameters, and the result display should automatically appear 
+			 * if the URL is loaded without ajax.
+			 * 
+			 * Alternatively, you can load new content via $('.cms-content').loadForm(<url>).
+			 * In this case, the action won't be recorded in the browser history.
+			 */
+			handleStateChange: function() {
+				var self = this, h = window.History, state = h.getState(); 
+				
+				// Don't allow parallel loading to avoid edge cases
+				if(this.getCurrentXHR()) this.getCurrentXHR().abort();
+				
+				var selector = state.data.selector || '.cms-content', contentEl = $(selector);
+				
+				this.trigger('beforestatechange', {
+					state: state, element: contentEl
 				});
 
-				return layout;
-			},
-
-			/**
-			 * Function: _setupPinging
-			 * 
-			 * This function is called by prototype when it receives notification that the user was logged out.
-			 * It uses /Security/ping for this purpose, which should return '1' if a valid user session exists.
-			 * It redirects back to the login form if the URL is either unreachable, or returns '0'.
-			 */
-			_setupPinging: function() {
-				var onSessionLost = function(xmlhttp, status) {
-					if(xmlhttp.status > 400 || xmlhttp.responseText == 0) {
-						// TODO will pile up additional alerts when left unattended
-						if(window.open('Security/login')) {
-						    alert("Please log in and then try again");
-						} else {
-						    alert("Please enable pop-ups for this site");
+				contentEl.addClass('loading');
+				
+				var xhr = $.ajax({
+					url: state.url,
+					success: function(data, status, xhr) {
+						// Update title
+						var title = xhr.getResponseHeader('X-Title');
+						if(title) document.title = title;
+						
+						// Update panels
+						var newContentEl = $(data);
+						if(newContentEl.find('.cms-container').length) {
+							throw 'Content loaded via ajax is not allowed to contain tags matching the ".cms-container" selector to avoid infinite loops';
 						}
+						
+						// Set loading state and store element state
+						newContentEl.addClass('loading');
+						var origStyle = contentEl.attr('style');
+						var layoutClasses = ['east', 'west', 'center', 'north', 'south'];
+						var elemClasses = contentEl.attr('class');
+						
+						var origLayoutClasses = $.grep(
+							elemClasses.split(' '),
+							function(val) { 
+								return ($.inArray(val, layoutClasses) >= 0);
+							}
+						);
+						
+						newContentEl
+							.removeClass(layoutClasses.join(' '))
+							.addClass(origLayoutClasses.join(' '));
+						if(origStyle) newContentEl.attr('style', origStyle);
+						newContentEl.css('visibility', 'hidden');
+
+						// Allow injection of inline styles, as they're not allowed in the document body.
+						// Not handling this through jQuery.ondemand to avoid parsing the DOM twice.
+						var styles = newContentEl.find('style').detach();
+						if(styles.length) $(document).find('head').append(styles);
+
+						// Replace panel completely (we need to override the "layout" attribute, so can't replace the child instead)
+						contentEl.replaceWith(newContentEl);
+
+						// Unset loading and restore element state (to avoid breaking existing panel visibility, e.g. with preview expanded)
+						self.redraw();
+						newContentEl.css('visibility', 'visible');
+						newContentEl.removeClass('loading');
+
+						// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it
+						if(window.History.enabled) {
+							var url = xhr.getResponseHeader('X-ControllerURL');
+							if(url) window.history.replaceState({}, '', url);
+						}
+						
+						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: newContentEl});
+					},
+					error: function(xhr, status, e) {
+						contentEl.removeClass('loading');
+						errorMessage(e);
 					}
-				};
+				});
+				
+				this.setCurrentXHR(xhr);
+			}
+		});
 
-				// setup pinging for login expiry
-				setInterval(function() {
-					jQuery.ajax({
-						url: "Security/ping",
-						global: false,
-						complete: onSessionLost
-					});
-				}, this.getPingIntervalSeconds() * 1000);
-			},
-
-			/**
-			 * Function: _resizeChildren
-			 * 
-			 * Resize elements in center panel
-			 * to fit the boundary box provided by the layout manager.
-			 * 
-			 * Todo:
-			 *  Replace with automated less ugly parent/sibling traversal
-			 */
-			_resizeChildren: function() {
-				$("#treepanes", this).accordion("resize");
-				$('#sitetree_and_tools', this).fitHeightToParent();
-				$('#contentPanel form', this).fitHeightToParent();
-				$('#contentPanel form fieldset', this).fitHeightToParent();
-				$('#contentPanel form fieldset .content', this).fitHeightToParent();
-				$('#Form_EditForm').fitHeightToParent();
-				$('#Form_EditForm fieldset', this).fitHeightToParent();
-				// Order of resizing is important: Outer to inner
-				// TODO Only supports two levels of tabs at the moment
-				$('#Form_EditForm fieldset > .ss-tabset', this).fitHeightToParent();
-				$('#Form_EditForm fieldset > .ss-tabset > .tab', this).fitHeightToParent();
-				$('#Form_EditForm fieldset > .ss-tabset > .tab > .ss-tabset', this).fitHeightToParent();
-				$('#Form_EditForm fieldset > .ss-tabset > .tab > .ss-tabset > .tab', this).fitHeightToParent();
+		$('.cms-content-fields').entwine({
+			redraw: function() {
+				this.layout();
 			}
 		});
 
 		/**
-		 * Class: .LeftAndMain :submit, .LeftAndMain button, .LeftAndMain :reset
-		 * 
 		 * Make all buttons "hoverable" with jQuery theming.
 		 * Also sets the clicked button on a form submission, making it available through
 		 * a new 'clickedButton' property on the form DOM element.
 		 */
-		$('.LeftAndMain :submit, .LeftAndMain button, .LeftAndMain :reset').entwine({
-			
-			/**
-			 * Constructor: onmatch
-			 */
+		$('.cms input[type="submit"], .cms button, .cms input[type="reset"]').entwine({
 			onmatch: function() {
-				this.addClass(
-					'ui-state-default ' +
-					'ui-corner-all'
-				)
-				.hover(
-					function() {
-						$(this).addClass('ui-state-hover');
-					},
-					function() {
-						$(this).removeClass('ui-state-hover');
-					}
-				)
-				.focus(function() {
-					$(this).addClass('ui-state-focus');
-				})
-				.blur(function() {
-					$(this).removeClass('ui-state-focus');
-				})
-				.click(function() {
-					var form = this.form;
-					// forms don't natively store the button they've been triggered with
-					form.clickedButton = this;
-					// Reset the clicked button shortly after the onsubmit handlers
-					// have fired on the form
-					setTimeout(function() {form.clickedButton = null;}, 10);
-				});
+				if(!this.hasClass('ss-ui-button')) this.addClass('ss-ui-button');
+				
+				this._super();
+			}
+		});
+
+		$('.cms .ss-ui-button').entwine({
+			onmatch: function() {
+				if(!this.data('button')) this.button();
 
 				this._super();
 			}
 		});
 
 		/**
-		 * Class: #TreeActions
-		 * 
-		 * Container for tree actions like "create", "search", etc.
+		 * Loads the link's 'href' attribute into a panel via ajax,
+		 * as opposed to triggering a full page reload.
+		 * Little helper to avoid repetition, and make it easy to
+		 * "opt in" to panel loading, while by default links still exhibit their default behaviour.
+		 * Same goes for breadcrumbs in the CMS.
 		 */
-		$('#TreeActions').entwine({
-			/**
-			 * Constructor: onmatch
-			 * 
-			 * Setup "create", "search", "batch actions" layers above tree.
-			 * All tab contents are closed by default.
-			 */
-			onmatch: function() {
-				this.tabs({
-					collapsible: true,
-					selected: parseInt(jQuery.cookie('ui-tabs-TreeActions'), 10) || null,
-					cookie: { expires: 30, path: '/', name: 'ui-tabs-TreeActions' }
-				});
+		$('.cms .cms-panel-link, .cms a.crumb').entwine({
+			onclick: function(e) {
+				var href = this.attr('href'), url = href ? href : this.data('href'),
+					data = (this.data('targetPanel')) ? {selector: this.data('targetPanel')} : null;
+				
+				$('.cms-container').loadPanel(url, null, data);
+				e.preventDefault();
 			}
 		});
 
 		/**
-		 * Class: a#EditMemberProfile
-		 * 
-		 * Link for editing the profile for a logged-in member through a modal dialog.
+		 * Does an ajax loads of the link's 'href' attribute via ajax and displays any FormResponse messages from the CMS.
+		 * Little helper to avoid repetition, and make it easy to trigger actions via a link,
+		 * without reloading the page, changing the URL, or loading in any new panel content.
 		 */
-		$('a#EditMemberProfile').entwine({
-			
-			/**
-			 * Constructor: onmatch
-			 */
+		$('.cms .cms-link-ajax').entwine({
+			onclick: function(e) {
+				var href = this.attr('href'), url = href ? href : this.data('href');
+
+				jQuery.ajax({
+					url: url,
+					// Ensure that form view is loaded (rather than whole "Content" template)
+					complete: function(xmlhttp, status) {
+						var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.responseText;
+						if (typeof msg != "undefined" && msg != null) eval(msg);
+					},
+					dataType: 'html'
+				});
+				e.preventDefault();
+			}
+		});
+
+		/**
+		 * Trigger dialogs with iframe based on the links href attribute (see ssui-core.js).
+		 */
+		$('.cms .ss-ui-dialog-link').entwine({
+			UUID: null,
 			onmatch: function() {
-				var self = this;
-
-				this.bind('click', function(e) {return self._openPopup();});
-
-				$('body').append(
-					'<div id="ss-ui-dialog">'
-					+ '<iframe id="ss-ui-dialog-iframe" '
-					+ 'marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto">'
-					+ '</iframe>'
-					+ '</div>'
-				);
-
-				var cookieVal = (jQuery.cookie) ? JSON.parse(jQuery.cookie('ss-ui-dialog')) : false;
-				$("#ss-ui-dialog").dialog(jQuery.extend({
-					autoOpen: false,
-					bgiframe: true,
-					modal: true,
-					height: 300,
-					width: 500,
-					ghost: true,
-					resizeStop: function(e, ui) {
-						self._resize();
-						self._saveState();
-					},
-					dragStop: function(e, ui) {
-						self._saveState();
-					},
-					// TODO i18n
-					title: 'Edit Profile'
-				}, cookieVal)).css('overflow', 'hidden');
-
-				$('#ss-ui-dialog-iframe').bind('load', function(e) {self._resize();});
+				this._super();
+				this.setUUID(new Date().getTime());
 			},
+			onclick: function() {
+				this._super();
 
-			/**
-			 * Function: _openPopup
-			 */
-			_openPopup: function(e) {
-				$('#ss-ui-dialog-iframe').attr('src', this.attr('href'));
+				var self = this, id = 'ss-ui-dialog-' + this.getUUID();
 
-				$("#ss-ui-dialog").dialog('open');
-
-				return false;
-			},
-
-			/**
-			 * Function: _resize
-			 */
-			_resize: function() {
-				var iframe = $('#ss-ui-dialog-iframe');
-				var container = $('#ss-ui-dialog');
-
-				iframe.attr('width', 
-					container.innerWidth() 
-					- parseFloat(container.css('paddingLeft'))
-					- parseFloat(container.css('paddingRight'))
-				);
-				iframe.attr('height', 
-					container.innerHeight()
-					- parseFloat(container.css('paddingTop')) 
-					- parseFloat(container.css('paddingBottom'))
-				);
-
-				this._saveState();
-			},
-
-			/**
-			 * Function: _saveState
-			 */
-			_saveState: function() {
-				var container = $('#ss-ui-dialog');
-
-				// save size in cookie (optional)
-				if(jQuery.cookie && container.width() && container.height()) {
-					jQuery.cookie(
-						'ss-ui-dialog',
-						JSON.stringify({
-							width: parseInt(container.width(), 10), 
-							height: parseInt(container.height(), 10),
-							position: [
-								parseInt(container.offset().top, 10),
-								parseInt(container.offset().left, 10)
-							]
-						}),
-						{ expires: 30, path: '/'}
-					);
+				var dialog = $('#' + id);
+				if(!dialog.length) {
+					dialog = $('<div class="ss-ui-dialog" id="' + id + '" />');
+					$('body').append(dialog);
 				}
+			
+				dialog.ssdialog({iframeUrl: this.attr('href'), autoOpen: true});
+				return false;
+			}
+		});
+
+		/**
+		 * Add styling to all contained buttons, and create buttonsets if required.
+		 */
+		$('.cms .Actions').entwine({
+		onmatch: function() {
+			this.find('.ss-ui-button').click(function() {
+					var form = this.form;
+					// forms don't natively store the button they've been triggered with
+					if(form) {
+						form.clickedButton = this;
+						// Reset the clicked button shortly after the onsubmit handlers
+						// have fired on the form
+						setTimeout(function() {form.clickedButton = null;}, 10);
+					}
+				});
+
+			this.redraw();
+			this._super();
+		},
+		redraw: function() {
+			// Remove whitespace to avoid gaps with inline elements
+			this.contents().filter(function() { 
+				return (this.nodeType == 3 && !/\S/.test(this.nodeValue)); 
+			}).remove();
+
+			// Init buttons if required
+			this.find('.ss-ui-button').each(function() {
+				if(!$(this).data('button')) $(this).button();
+			});
+			
+			// Mark up buttonsets
+			this.find('.ss-ui-buttonset').buttonset();
+		}
+	});
+		
+		/**
+		 * Duplicates functionality in DateField.js, but due to using entwine we can match
+		 * the DOM element on creation, rather than onclick - which allows us to decorate
+		 * the field with a calendar icon
+		 */
+		$('.cms .field.date input.text').entwine({
+			onmatch: function() {
+				var holder = $(this).parents('.field.date:first'), config = holder.data();
+				if(!config.showcalendar) return;
+
+				config.showOn = 'button';
+				if(config.locale && $.datepicker.regional[config.locale]) {
+					config = $.extend(config, $.datepicker.regional[config.locale], {});
+				}
+
+				$(this).datepicker(config);
+				// // Unfortunately jQuery UI only allows configuration of icon images, not sprites
+				// this.next('button').button('option', 'icons', {primary : 'ui-icon-calendar'});
+				
+				this._super();
 			}
 		});
 		
 		/**
-		 * Class: #switchView a
-		 * 
-		 * Updates the different stage links which are generated through 
-		 * the SilverStripeNavigator class on the serverside each time a form record
-		 * is reloaded.
+		 * Styled dropdown select fields via chosen. Allows things like search and optgroup
+		 * selection support. Rather than manually adding classes to selects we want 
+		 * styled, we style everything but the ones we tell it not to.
+		 *
+		 * For the CMS we also need to tell the parent div that his has a select so
+		 * we can fix the height cropping.
 		 */
-		$('#switchView').entwine({
+		
+		$('.cms .field.dropdown select, .cms .field select[multiple]').entwine({
 			onmatch: function() {
-				this._super();
+				if(this.is('.no-chzn')) return;
+
+				// Explicitly disable default placeholder if no custom one is defined
+				if(!this.data('placeholder')) this.data('placeholder', ' ');
+
+				// Apply chosen
+				this.chosen().addClass("has-chzn");
 				
-				$('#Form_EditForm').bind('loadnewpage delete', function(e) {
-					var updatedSwitchView = $('#AjaxSwitchView');
-					if(updatedSwitchView.length) {
-						$('#SwitchView').html(updatedSwitchView.html());
-						updatedSwitchView.remove();
-					}
+				this._super();
+			}
+		});	
+	
+		$(".cms-panel-layout").entwine({
+			redraw: function() {
+				this.layout({
+					resize: false
 				});
 			}
 		});
+	});
+	
+	/**
+	 * Overload the default GridField behaviour (open a new URL in the browser)
+	 * with the CMS-specific ajax loading.
+	 */
+	$('.cms .ss-gridfield').entwine({
+		showDetailView: function(url) {
+			// Include any GET parameters from the current URL, as the view state might depend on it.
+			// For example, a list prefiltered through external search criteria might be passed to GridField.
+			if(window.location.search) url += window.location.search;
+			$('.cms-container').entwine('ss').loadPanel(url);
+		}
+	});
+
+
+	/**
+	 * Generic search form in the CMS, often hooked up to a GridField results display.
+	 */	
+	$('.cms-search-form').entwine({
+
+		onsubmit: function() {
+			// Remove empty elements and make the URL prettier
+			var nonEmptyInputs = this.find(':input:not(:submit)').filter(function() {
+				// Use fieldValue() from jQuery.form plugin rather than jQuery.val(),
+				// as it handles checkbox values more consistently
+				var vals = $.grep($(this).fieldValue(), function(val) { return (val);});
+				return (vals.length);
+			});
+			var url = this.attr('action');
+			if(nonEmptyInputs.length) url += '?' + nonEmptyInputs.serialize();
+
+			var container = this.closest('.cms-container');
+			container.find('.cms-edit-form').tabs('select',0);  //always switch to the first tab (list view) when searching
+			container .entwine('ss').loadPanel(url);
+			return false;
+		},
 
 		/**
-		 * Class: #switchView a
-		 * 
-		 * Links for viewing the currently loaded page
-		 * in different modes: 'live', 'stage' or 'archived'.
-		 * 
-		 * Requires:
-		 *  jquery.metadata
+		 * Resets are processed on the serverside, so need to trigger a submit.
 		 */
-		$('#switchView a').entwine({
-			/**
-			 * Function: onclick
-			 */
-			onclick: function(e) {
-				// Open in popup
-				window.open($(e.target).attr('href'));
-				return false;
-			}
-		});
+		onreset: function(e) {
+			this.clearForm();
+			this.submit();
+		}
+
 	});
+
+	/**
+	 * Simple toggle link, which points to a DOm element by its ID selector
+	 * in the href attribute (which doubles as an anchor link to that element).
+	 */
+	$('.cms .cms-help-toggle').entwine({
+		onmatch: function() {
+			this._super();
+
+			$(this.attr('href')).hide();
+		},
+		onclick: function(e) {
+			$(this.attr('href')).toggle();
+			e.preventDefault();
+		}
+	});
+	
 }(jQuery));
 
-// Backwards compatibility
 var statusMessage = function(text, type) {
 	jQuery.noticeAdd({text: text, type: type});
 };
 
 var errorMessage = function(text) {
 	jQuery.noticeAdd({text: text, type: 'error'});
-};
-
-returnFalse = function() {
-	return false;
-};
-
-/**
- * Find and enable TinyMCE on all htmleditor fields
- * Pulled in from old tinymce.template.js
- */
-
-function nullConverter(url) {
-	return url;
 };

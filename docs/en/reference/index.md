@@ -8,7 +8,7 @@ Reference articles complement our auto-generated [API docs](http://api.silverstr
 * [ComplexTableField](complextablefield): Manage records and their relations inside the CMS
 * [Database Structure](database-structure): Conventions and best practices for database tables and fields
 * [DataObject](dataobject): Base class for database records
-* [DataObjectDecorator](dataobjectdecorator): A "mixin" system allowing to extend core classes
+* [DataExtension](dataextension): A "mixin" system allowing to extend core classes
 * [DataObjectSet](dataobjectset): The base collection of database records in the ORM
 * [Director](director): Routes URLs and handles HTTP requests
 * [Execution Pipeline](execution-pipeline): Detailed look on the way an HTTP request takes through the system

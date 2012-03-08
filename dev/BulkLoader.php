@@ -140,15 +140,7 @@ abstract class BulkLoader extends ViewableData {
 		
 		//get all instances of the to be imported data object 
 		if($this->deleteExistingRecords) { 
-			$q = singleton($this->objectClass)->buildSQL();
-			$q->select = array('"ID"');
-			$ids = $q->execute()->column('ID');
-			foreach($ids as $id) { 
-				$obj = DataObject::get_by_id($this->objectClass, $id);
-				$obj->delete(); 
-				$obj->destroy();
-				unset($obj);
-			} 
+		    DataObject::get($this->objectClass)->removeAll();
 		} 
 		
 		return $this->processAll($filepath);
@@ -190,7 +182,7 @@ abstract class BulkLoader extends ViewableData {
 	abstract protected function processRecord($record, $columnMap, &$result, $preview = false);
 	
 	/**
-	 * Return a FieldSet containing all the options for this form; this
+	 * Return a FieldList containing all the options for this form; this
 	 * doesn't include the actual upload field itself
 	 */
 	public function getOptionFields() {}
@@ -334,24 +326,24 @@ class BulkLoader_Result extends Object {
 	 * Returns all created objects. Each object might
 	 * contain specific importer feedback in the "_BulkLoaderMessage" property.
 	 *
-	 * @return DataObjectSet
+	 * @return ArrayList
 	 */
 	public function Created() {
-		return $this->mapToDataObjectSet($this->created);
+		return $this->mapToArrayList($this->created);
 	}
 	
 	/**
-	 * @return DataObjectSet
+	 * @return ArrayList
 	 */
 	public function Updated() {
-		return $this->mapToDataObjectSet($this->updated);
+		return $this->mapToArrayList($this->updated);
 	}
 	
 	/**
-	 * @return DataObjectSet
+	 * @return ArrayList
 	 */
 	public function Deleted() {
-		return $this->mapToDataObjectSet($this->deleted);
+		return $this->mapToArrayList($this->deleted);
 	}
 	
 	/**
@@ -404,10 +396,10 @@ class BulkLoader_Result extends Object {
 	
 	/**
 	 * @param $arr Array containing ID and ClassName maps
-	 * @return DataObjectSet
+	 * @return ArrayList
 	 */
-	protected function mapToDataObjectSet($arr) {
-		$set = new DataObjectSet();
+	protected function mapToArrayList($arr) {
+		$set = new ArrayList();
 		foreach($arr as $arrItem) {
 			$obj = DataObject::get_by_id($arrItem['ClassName'], $arrItem['ID']);
 			$obj->_BulkLoaderMessage = $arrItem['Message'];
@@ -418,4 +410,3 @@ class BulkLoader_Result extends Object {
 	}
    
 }
-?>

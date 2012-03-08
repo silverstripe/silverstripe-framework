@@ -26,6 +26,11 @@ class ClassInfo {
 	 * Cache for {@link hasTable()}
 	 */
 	private static $_cache_all_tables = null;
+
+	/**
+	 * @var Array Cache for {@link ancestry()}.
+	 */
+	private static $_cache_ancestry = array();
 	
 	/**
 	 * @todo Move this to SS_Database or DB
@@ -46,6 +51,7 @@ class ClassInfo {
 	
 	static function reset_db_cache() {
 		self::$_cache_all_tables = null;
+		self::$_cache_ancestry = array();
 	}
 	
 	/**
@@ -92,8 +98,8 @@ class ClassInfo {
 	public static function baseDataClass($class) {
 		if (is_object($class)) $class = get_class($class);
 
-		if (!self::is_subclass_of($class, 'DataObject')) {
-			throw new Exception("$class is not a subclass of DataObject");
+		if (!is_subclass_of($class, 'DataObject')) {
+			throw new InvalidArgumentException("$class is not a subclass of DataObject");
 		}
 
 		while ($next = get_parent_class($class)) {
@@ -143,23 +149,21 @@ class ClassInfo {
 	 * @return array
 	 */
 	public static function ancestry($class, $tablesOnly = false) {
-		$ancestry = array();
+		if (!is_string($class)) $class = get_class($class);
 
-		if (is_object($class)) {
-			$class = get_class($class);
-		} elseif (!is_string($class)) {
-			throw new Exception(sprintf(
-				'Invalid class value %s, must be an object or string', var_export($class, true)
-			));
+		$cacheKey = $class . '_' . (string)$tablesOnly;
+		$parent = $class;
+		if(!isset(self::$_cache_ancestry[$cacheKey])) {
+			$ancestry = array();
+			do {
+				if (!$tablesOnly || DataObject::has_own_table($parent)) {
+					$ancestry[$parent] = $parent;
+				}
+			} while ($parent = get_parent_class($parent));
+			self::$_cache_ancestry[$cacheKey] = array_reverse($ancestry);	
 		}
 
-		do {
-			if (!$tablesOnly || DataObject::has_own_table($class)) {
-				$ancestry[$class] = $class;
-			}
-		} while ($class = get_parent_class($class));
-
-		return array_reverse($ancestry);
+		return self::$_cache_ancestry[$cacheKey];
 	}
 
 	/**
@@ -181,6 +185,7 @@ class ClassInfo {
 	 * @deprecated 3.0 Please use is_subclass_of.
 	 */
 	public static function is_subclass_of($class, $parent) {
+		Deprecation::notice('3.0', 'Use is_subclass_of() instead.');
 		return is_subclass_of($class, $parent);
 	}
 
@@ -228,4 +233,4 @@ class ClassInfo {
 	}
 	
 }
-?>
+

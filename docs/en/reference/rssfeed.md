@@ -17,12 +17,12 @@ your website, so its advisable to just create feeds from subclasses of `[api:Sit
 *  The second part sets up /this-page/rss to return the RSS feed.  This one returns the children of the current page.
 
 	:::php
-		function init() {
+		public function init() {
 			RSSFeed::linkToFeed($this->Link() . "rss", "RSS feed of this blog");
 			parent::init();
 		}
 		
-		function rss() {
+		public function rss() {
 			$rss = new RSSFeed($this->Children(), $this->Link(), "My feed", "This is an example feed.", "Title", "Content", "Author");
 			$rss->outputToBrowser();
 		}
@@ -45,17 +45,17 @@ something like this:
 	
 	class Page_Controller extends ContentController {
 		
-		function init() {
+		public function init() {
 			RSSFeed::linkToFeed($this->Link() . "rss", "10 Most Recently Updated Pages");
 			parent::init();
 		}
 		
-		function rss() {
+		public function rss() {
 			$rss = new RSSFeed($this->LatestUpdates(), $this->Link(), "10 Most Recently Updated Pages", "Shows a list of the 10 most recently updated pages.", "Title", "Content", "Author");
 			$rss->outputToBrowser();
 		}
 	
-		function LatestUpdates() {
+		public function LatestUpdates() {
 			// 10 is the number of pages
 			return DataObject::get("Page", "", "LastEdited DESC", "", 10);
 		} 

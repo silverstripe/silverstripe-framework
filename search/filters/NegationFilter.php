@@ -7,7 +7,8 @@
  */
 class NegationFilter extends SearchFilter {
 	
-	public function apply(SQLQuery $query) {
+	public function apply(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
 		return $query->where(sprintf(
 			"%s != '%s'",
 			$this->getDbName(),
@@ -17,4 +18,3 @@ class NegationFilter extends SearchFilter {
 	
 }
 
-?>

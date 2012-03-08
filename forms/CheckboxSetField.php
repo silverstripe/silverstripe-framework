@@ -25,19 +25,16 @@
  *   * If the field name matches a database field, a comma-separated list of values will be saved to that field.  The keys can be text or numbers.
  * 
  * @todo Document the different source data that can be used
- * with this form field - e.g ComponentSet, DataObjectSet,
+ * with this form field - e.g ComponentSet, ArrayList,
  * array. Is it also appropriate to accept so many different
  * types of data when just using an array would be appropriate?
- * 
- * @todo Make use of FormField->createTag() to generate the
- * HTML tag(s) for this field.
  * 
  * @package forms
  * @subpackage fields-basic
  */
 class CheckboxSetField extends OptionsetField {
-	
-	protected $disabled = false;
+
+	protected $template = 'CheckboxSetField';
 	
 	/**
 	 * @var Array
@@ -46,15 +43,14 @@ class CheckboxSetField extends OptionsetField {
 	
 	/**
 	 * @todo Explain different source data that can be used with this field,
-	 * e.g. SQLMap, DataObjectSet or an array.
-	 * 
-	 * @todo Should use CheckboxField FieldHolder rather than constructing own markup.
+	 * e.g. SQLMap, ArrayList or an array.
 	 */
-	function Field() {
+	function Field($properties = array()) {
 		Requirements::css(SAPPHIRE_DIR . '/css/CheckboxSetField.css');
 
 		$source = $this->source;
 		$values = $this->value;
+		$items = array();
 
 		// Get values from the join, if available
 		if(is_object($this->form)) {
@@ -76,7 +72,7 @@ class CheckboxSetField extends OptionsetField {
 				$items = $values;
 			} else {
 				// Source and values are DataObject sets.
-				if($values && is_a($values, 'DataObjectSet')) {
+				if($values && is_a($values, 'SS_List')) {
 					foreach($values as $object) {
 						if(is_a($object, 'DataObject')) {
 							$items[] = $object->ID;
@@ -88,8 +84,8 @@ class CheckboxSetField extends OptionsetField {
 				}
 			}
 		} else {
-			// Sometimes we pass a singluar default value thats ! an array && !DataObjectSet
-			if(is_a($values, 'DataObjectSet') || is_array($values)) {
+			// Sometimes we pass a singluar default value thats ! an array && !SS_List
+			if($values instanceof SS_List || is_array($values)) {
 				$items = $values;
 			} else {
 				$items = explode(',', $values);
@@ -102,41 +98,44 @@ class CheckboxSetField extends OptionsetField {
 		}
 		
 		$odd = 0;
-		$options = '';
+		$options = array();
 		
-		if ($source == null) {
-			$source = array();
-			$options = "<li>No options available</li>";
+		if ($source == null) $source = array();
+
+		if($source) {
+			foreach($source as $value => $item) {
+				if($item instanceof DataObject) {
+					$value = $item->ID;
+					$title = $item->Title;
+				} else {
+					$title = $item;
+				}
+
+				$itemID = $this->ID() . '_' . preg_replace('/[^a-zA-Z0-9]/', '', $value);
+				$odd = ($odd + 1) % 2;
+				$extraClass = $odd ? 'odd' : 'even';
+				$extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $value);
+
+				$options[] = new ArrayData(array(
+					'ID' => $itemID,
+					'Class' => $extraClass,
+					'Name' => "{$this->name}[{$value}]",
+					'Value' => $value,
+					'Title' => $title,
+					'isChecked' => in_array($value, $items) || in_array($value, $this->defaultItems),
+					'isDisabled' => $this->disabled || in_array($value, $this->disabledItems)
+				));
+			}
 		}
 
-		if($source) foreach($source as $index => $item) {
-			if(is_a($item, 'DataObject')) {
-				$key = $item->ID;
-				$value = $item->Title;
-			} else {
-				$key = $index;
-				$value = $item;
-			}
-			
-			$odd = ($odd + 1) % 2;
-			$extraClass = $odd ? 'odd' : 'even';
-			$extraClass .= ' val' . str_replace(' ', '', $key);
-			$itemID = $this->id() . '_' . ereg_replace('[^a-zA-Z0-9]+', '', $key);
-			$checked = '';
-			
-			if(isset($items)) {
-				$checked = (in_array($key, $items) || in_array($key, $this->defaultItems)) ? ' checked="checked"' : '';
-			}
+		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
 
-			$disabled = ($this->disabled || in_array($key, $this->disabledItems)) ? $disabled = ' disabled="disabled"' : '';
-			$options .= "<li class=\"$extraClass\"><input id=\"$itemID\" name=\"$this->name[$key]\" type=\"checkbox\" value=\"$key\"$checked $disabled class=\"checkbox\" /> <label for=\"$itemID\">$value</label></li>\n"; 
-		}
-		
-		return "<ul id=\"{$this->id()}\" class=\"optionset checkboxsetfield{$this->extraClass()}\">\n$options</ul>\n"; 
+		return $this->customise($properties)->renderWith($this->getTemplate());
 	}
 	
 	function setDisabled($val) {
 		$this->disabled = $val;
+		return $this;
 	}
 	
 	/**
@@ -148,6 +147,7 @@ class CheckboxSetField extends OptionsetField {
 	 */
 	function setDefaultItems($items) {
 		$this->defaultItems = $items;
+		return $this;
 	}
 	
 	/**
@@ -164,11 +164,12 @@ class CheckboxSetField extends OptionsetField {
 		// If we're not passed a value directly, we can look for it in a relation method on the object passed as a second arg
 		if(!$value && $obj && $obj instanceof DataObject && $obj->hasMethod($this->name)) {
 			$funcName = $this->name;
-			$selected = $obj->$funcName();
-			$value = $selected->toDropdownMap('ID', 'ID');
+			$value = $obj->$funcName()->getIDList();
 		}
 
 		parent::setValue($value, $obj);
+
+		return $this;
 	}
 	
 	/**
@@ -180,15 +181,16 @@ class CheckboxSetField extends OptionsetField {
 	 * @param DataObject $record The record to save into
 	 */
 	function saveInto(DataObject $record) {
-		$fieldname = $this->name ;
-		if($fieldname && $record && ($record->has_many($fieldname) || $record->many_many($fieldname))) {
+		$fieldname = $this->name;
+		$relation = ($fieldname && $record && $record->hasMethod($fieldname)) ? $record->$fieldname() : null;
+		if($fieldname && $record && $relation && $relation instanceof RelationList) {
 			$idList = array();
 			if($this->value) foreach($this->value as $id => $bool) {
 			   if($bool) {
 					$idList[] = $id;
 				}
 			}
-			$record->$fieldname()->setByIDList($idList);
+			$relation->setByIDList($idList);
 		} elseif($fieldname && $record) {
 			if($this->value) {
 				$this->value = str_replace(',', '{comma}', $this->value);
@@ -248,7 +250,7 @@ class CheckboxSetField extends OptionsetField {
 		
 		if($items) {
 			// Items is a DO Set
-			if(is_a($items, 'DataObjectSet')) {
+			if($items instanceof SS_List) {
 				foreach($items as $item) {
 					$data[] = $item->Title;
 				}
@@ -265,7 +267,7 @@ class CheckboxSetField extends OptionsetField {
 						$data[] = $item['Title'];
 					} elseif(is_array($this->source) && !empty($this->source[$item])) {
 						$data[] = $this->source[$item];
-					} elseif(is_a($this->source, 'DataObjectSet')) {
+					} elseif(is_a($this->source, 'SS_List')) {
 						$data[] = $sourceTitles[$item];
 					} else {
 						$data[] = $item;
@@ -283,10 +285,13 @@ class CheckboxSetField extends OptionsetField {
 		
 		return $field;
 	}
+
+	function Type() {
+		return 'optionset checkboxset';
+	}
 	
 	function ExtraOptions() {
 		return FormField::ExtraOptions();
 	}
 	
 }
-?>

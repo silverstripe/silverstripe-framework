@@ -172,14 +172,24 @@ class DirectorTest extends SapphireTest {
 	}
 	
 	function testURLParam() {
+		// 2.4 only
+		$originalDeprecation = Deprecation::dump_settings();
+		Deprecation::notification_version('2.4');
+
 		Director::test('DirectorTestRule/myaction/myid/myotherid');
 		// TODO Works on the assumption that urlParam() is not unset after a test run, which is dodgy
 		$this->assertEquals(Director::urlParam('Action'), 'myaction');
 		$this->assertEquals(Director::urlParam('ID'), 'myid');
 		$this->assertEquals(Director::urlParam('OtherID'), 'myotherid');
+
+		Deprecation::restore_settings($originalDeprecation);
 	}
 	
 	function testURLParams() {
+		// 2.4 only
+		$originalDeprecation = Deprecation::dump_settings();
+		Deprecation::notification_version('2.4');
+
 		Director::test('DirectorTestRule/myaction/myid/myotherid');
 		// TODO Works on the assumption that urlParam() is not unset after a test run, which is dodgy
 		$this->assertEquals(
@@ -191,6 +201,8 @@ class DirectorTest extends SapphireTest {
 				'OtherID' => 'myotherid'
 			)
 		);
+
+		Deprecation::restore_settings($originalDeprecation);
 	}
 
 	function testForceSSLProtectsEntireSite() {
@@ -223,6 +235,38 @@ class DirectorTest extends SapphireTest {
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'just-another-page/sub-url';
 		$output = Director::forceSSL(array('/^admin/', '/^Security/'));
 		$this->assertFalse($output);
+	}
+
+	/**
+	 * @covers Director::extract_request_headers()
+	 */
+	public function testExtractRequestHeaders() {
+		$request = array(
+			'REDIRECT_STATUS'      => '200',
+			'HTTP_HOST'            => 'host',
+			'HTTP_USER_AGENT'      => 'User Agent',
+			'HTTP_ACCEPT'          => 'text/html',
+			'HTTP_ACCEPT_LANGUAGE' => 'en-us',
+			'HTTP_COOKIE'          => 'PastMember=1',
+			'SERVER_PROTOCOL'      => 'HTTP/1.1',
+			'REQUEST_METHOD'       => 'GET',
+			'REQUEST_URI'          => '/',
+			'SCRIPT_NAME'          => '/sapphire/main.php',
+			'CONTENT_TYPE'         => 'text/xml',
+			'CONTENT_LENGTH'       => 10
+		);
+		
+		$headers = array(
+			'Host'            => 'host',
+			'User-Agent'      => 'User Agent',
+			'Accept'          => 'text/html',
+			'Accept-Language' => 'en-us',
+			'Cookie'          => 'PastMember=1',
+			'Content-Type'    => 'text/xml',
+			'Content-Length'  => '10'
+		);
+		
+		$this->assertEquals($headers, Director::extract_request_headers($request));
 	}
 
 }

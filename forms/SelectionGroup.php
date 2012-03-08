@@ -7,6 +7,9 @@
  * @subpackage fields-structural
  */
 class SelectionGroup extends CompositeField {
+	
+	protected $template = "SelectionGroup";
+	
 	/**
 	 * Create a new selection group.
 	 * @param name The field name of the selection group.
@@ -39,13 +42,17 @@ class SelectionGroup extends CompositeField {
 			$newChildren[$idx] = $child;
 		}
 
-		$clone->setChildren(new FieldSet($newChildren));
+		$clone->setChildren(new FieldList($newChildren));
 		$clone->setReadonly(true);
 		return $clone;
 	}
-	
+
 	function FieldSet() {
-		$items = parent::FieldSet()->toArray();
+		return $this->FieldList();
+	}
+	
+	function FieldList() {
+		$items = parent::FieldList()->toArray();
 
 		$count = 0;
 		$firstSelected = $checked ="";
@@ -71,7 +78,7 @@ class SelectionGroup extends CompositeField {
 
 			$firstSelected = $checked ="";			
 		}
-		return new DataObjectSet($newItems);
+		return new ArrayList($newItems);
 	}
 	
 	function hasData() {
@@ -83,8 +90,7 @@ class SelectionGroup extends CompositeField {
 		Requirements::javascript(SAPPHIRE_DIR   . '/javascript/SelectionGroup.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/SelectionGroup.css');
 		
-		return $this->renderWith("SelectionGroup");
+		return $this->renderWith($this->template);
 	}
 }
 
-?>

@@ -18,6 +18,15 @@ class DatalessField extends FormField {
 	 * Always returns false. 
 	 */
 	function hasData() { return false; }
+
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array(
+				'type' => 'hidden',
+			)
+		);
+	}
 	
 	/**
 	 * Returns the field's representation in the form.
@@ -49,6 +58,7 @@ class DatalessField extends FormField {
 	 */
 	function setAllowHTML($bool) {
 		$this->allowHTML = $bool;
+		return $this;
 	}
 	
 	/**
@@ -57,5 +67,9 @@ class DatalessField extends FormField {
 	function getAllowHTML() {
 		return $this->allowHTML;
 	}
+
+	function Type() {
+		return 'readonly';
+	}
+
 }
-?>

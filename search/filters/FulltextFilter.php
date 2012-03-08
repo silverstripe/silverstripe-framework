@@ -27,7 +27,7 @@
  */
 class FulltextFilter extends SearchFilter {
 
-	public function apply(SQLQuery $query) {
+	public function apply(DataQuery $query) {
 		$query->where(sprintf(
 			"MATCH (%s) AGAINST ('%s')",
 			$this->getDbName(),
@@ -40,4 +40,3 @@ class FulltextFilter extends SearchFilter {
 		return $this->getValue() == null || $this->getValue() == '';
 	}
 }
-?>

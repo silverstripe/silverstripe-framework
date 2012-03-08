@@ -3,12 +3,21 @@
  */
 
 (function($) {
-	
+
 	$.entwine('ss', function($){
 	
-		$('#sitetree_ul').entwine({
+		$('.cms-tree').entwine({
+			
+			Hints: null,
+			
 			onmatch: function() {
 				this._super();
+
+				// Don't reapply (expensive) tree behaviour if already present
+				if(!$.isNaN(this.data('jstree_instance_id'))) return;
+				
+				var hints = this.attr('data-hints');
+				if(hints) this.setHints($.parseJSON(hints));
 				
 				/**
 				 * @todo Icon and page type hover support
@@ -16,7 +25,6 @@
 				 * @todo Refresh after language <select> change (with Translatable enabled)
 				 * @todo Automatic load of full subtree via ajax on node checkbox selection (minNodeCount = 0)
 				 *  to avoid doing partial selection with "hidden nodes" (unloaded markup)
-				 * @todo Add siteTreeHints to field (as "data-hints" attribute with serialized JSON instead of javascript global variable)
 				 * @todo Disallow drag'n'drop when node has "noChildren" set (see siteTreeHints)
 				 * @todo Disallow moving of pages marked as deleted 
 				 *  most likely by server response codes rather than clientside
@@ -57,8 +65,15 @@
 											movedNodeClass = movedNode.getClassname(), 
 											newParentClass = newParent.getClassname(),
 											// Check allowedChildren of newParent or against root node rules
-											allowedChildren = siteTreeHints[newParentClass ? newParentClass : 'Root'].allowedChildren || [];
+											hints = self.getHints(),
+											disallowedChildren = [],
+											hintKey = newParentClass ? newParentClass : 'Root',
+											hint = (typeof hints[hintKey] != 'undefined') ? hints[hintKey] : null;
 
+										// Special case for VirtualPage: Check that original page type is an allowed child
+										if(hint && movedNode.attr('class').match(/VirtualPage-([^\s]*)/)) movedNodeClass = RegExp.$1;
+										
+										if(hint) disallowedChildren = (typeof hint.disallowedChildren != 'undefined') ? hint.disallowedChildren : [];
 										var isAllowed = (
 											// Don't allow moving the root node
 											movedNode.data('id') != 0 
@@ -67,7 +82,7 @@
 											// Children are generally allowed on parent
 											&& !newParent.hasClass('nochildren')
 											// movedNode is allowed as a child
-											&& ($.inArray(movedNodeClass, allowedChildren) != -1)
+											&& (!disallowedChildren.length || $.inArray(movedNodeClass, disallowedChildren) == -1)
 										);
 										
 										return isAllowed;
@@ -78,20 +93,26 @@
 								"drop_target" : false,
 								"drag_target" : false
 							},
-							'themes': {
-								'theme': 'apple'
+							'checkbox': {
+								'two_state': true
 							},
-							// 'plugins': ['html_data', 'ui', 'dnd', 'crrm', 'themeroller']
+							'themes': {
+								'theme': 'apple',
+								'url': 'sapphire/thirdparty/jstree/themes/apple/style.css'
+							},
+							// Caution: SilverStripe has disabled $.vakata.css.add_sheet() for performance reasons,
+							// which means you need to add any CSS manually to sapphire/admin/scss/_tree.css
 							'plugins': [
 								'html_data', 'ui', 'dnd', 'crrm', 'themes', 
 								'checkbox' // checkboxes are hidden unless .multiple is set
 							]
 						})
 						.bind('loaded.jstree', function(e, data) {
+							self.css('visibility', 'visible');
 							// Add ajax settings after init period to avoid unnecessary initial ajax load
 							// of existing tree in DOM - see load_node_html()
 							data.inst._set_settings({'html_data': {'ajax': {
-								'url': self.data('url-tree'),
+								'url': self.data('urlTree'),
 								'data': function(node) {
 									var params = self.data('searchparams') || [];
 									// Avoid duplication of parameters
@@ -107,40 +128,20 @@
 						})
 						.bind('before.jstree', function(e, data) {
 							if(data.func == 'start_drag') {
-								// Only allow drag'n'drop if it has been specifically enabled, or the tree is in search mode
-								if(!$('input[id=sortitems]').is(':checked') || self.data('searchparams')) {
+								// Don't allow drag'n'drop if multi-select is enabled'
+								if(!self.hasClass('draggable') || self.hasClass('multiselect')) {
 									e.stopImmediatePropagation();
 									return false;
 								}
 							}
 							
 							if($.inArray(data.func, ['check_node', 'uncheck_node'])) {
+								//Don't allow check and uncheck if parent is disabled
 								var node = $(data.args[0]).parents('li:first');
 								if(node.hasClass('disabled')) {
 									e.stopImmediatePropagation();
 									return false;
 								}
-							}
-						})
-						// TODO Move to EditForm logic
-						.bind('select_node.jstree', function(e, data) {
-							var node = data.rslt.obj, loadedNodeID = $('#Form_EditForm :input[name=ID]').val()
-							
-							// Don't allow checking disabled nodes
-							if($(node).hasClass('disabled')) return false;
-
-							// Don't allow reloading of currently selected node,
-							// mainly to avoid doing an ajax request on initial page load
-							if($(node).data('id') == loadedNodeID) return;
-
-							var url = $(node).find('a:first').attr('href');
-							if(url && url != '#') {
-								var xmlhttp = $('#Form_EditForm').loadForm(
-									url,
-									function(response) {}
-								);
-							} else {
-								$('#Form_EditForm').removeForm();
 							}
 						})
 						.bind('move_node.jstree', function(e, data) {
@@ -150,7 +151,7 @@
 							});
 
 							$.ajax({
-								'url': self.data('url-savetreenode'),
+								'url': self.data('urlSavetreenode'),
 								'data': {
 									ID: $(movedNode).data('id'), 
 									ParentID: $(newParentNode).data('id') || 0,
@@ -159,7 +160,7 @@
 							});
 						});
 					
-					$('#Form_EditForm').bind('loadnewpage', function(e, data) {
+					this.parents('.cms-content:first').bind('reloadeditform', function(e, data) {
 						self._onLoadNewPage(e, data);
 					});
 			},
@@ -188,7 +189,7 @@
 			 *  DOMElement
 			 */
 			getNodeByID: function(id) {
-				return this.jstree('get_node', this.find('*[data-id='+id+']'));
+				return this.find('*[data-id='+id+']');
 			},
 			
 			/**
@@ -197,7 +198,7 @@
 		 	 */
 		 	_onLoadNewPage: function(e, eventData) {
 				var self = this;
-			
+				
 		 		// finds a certain value in an array generated by jQuery.serializeArray()
 		 		var findInSerializedArray = function(arr, name) {
 		 			for(var i=0; i<arr.length; i++) {
@@ -206,15 +207,16 @@
 		 			return false;
 		 		};
 
-		 		var id = $(e.target.ID).val();
+				var handledform = $(e.target).is('.cms-edit-form') ? $(e.target)[0] : $(e.target).find('.cms-edit-form')[0];
+		 		var id = $(handledform.ID).val();
 
 		 		// check if a form with a valid ID exists
 		 		if(id) {
-		 			var parentID = $(e.target.ParentID).val(), 
+		 			var parentID = $(handledform.ParentID).val(), 
 						parentNode = this.find('li[data-id='+parentID+']');
 						node = this.find('li[data-id='+id+']'),
-						title = $((e.target.TreeTitle) ? e.target.TreeTitle : e.target.Title).val(),
-						className = $(e.target.ClassName).val();
+						title = $((handledform.TreeTitle) ? handledform.TreeTitle : handledform.Title).val(),
+						className = $(handledform.ClassName).val();
 
 		 			// set title (either from TreeTitle or from Title fields)
 		 			// Treetitle has special HTML formatting to denote the status changes.
@@ -258,63 +260,77 @@
 		 			}
 		 		}
 
+		 	},
+		 	onunmatch: function() {
+
 		 	}
 		});
-	});
-	
-	$('#sitetree_ul.multiple').entwine({
-		onmatch: function() {
-			this._super();
+		
+		$('.cms-tree.multiple').entwine({
+			onmatch: function() {
+				this._super();
+				this.jstree('show_checkboxes');
+			},
+			onunmatch: function() {
+				this._super();
+				this.jstree('uncheck_all');
+				this.jstree('hide_checkboxes');
+			},
+			/**
+			 * Function: getSelectedIDs
+			 * 
+			 * Returns:
+			 * 	(Array)
+			 */
+			getSelectedIDs: function() {
+				return $.map($(this).jstree('get_checked'), function(el, i) {return $(el).data('id');});
+			}
+		});
+		
+		$('.cms-tree li').entwine({
 			
-			this.jstree('show_checkboxes');
-		},
-		onunmatch: function() {
-			this._super();
+			/**
+			 * Function: setEnabled
+			 * 
+			 * Parameters:
+			 * 	(bool)
+			 */
+			setEnabled: function(bool) {
+				this.toggleClass('disabled', !(bool));
+			},
 			
-			this.jstree('hide_checkboxes');
-		},
-		/**
-		 * Function: getSelectedIDs
-		 * 
-		 * Returns:
-		 * 	(Array)
-		 */
-		getSelectedIDs: function() {
-			return $.map($(this).jstree('get_checked'), function(el, i) {return $(el).data('id');});
-		}
+			/**
+			 * Function: getClassname
+			 * 
+			 * Returns PHP class for this element. Useful to check business rules like valid drag'n'drop targets.
+			 */
+			getClassname: function() {
+				var matches = this.attr('class').match(/class-([^\s]*)/i);
+				return matches ? matches[1] : '';
+			},
+			
+			/**
+			 * Function: getID
+			 * 
+			 * Returns:
+			 * 	(Number)
+			 */
+			getID: function() {
+				return this.data('id');
+			}
+		});
+		
+		$('.cms-tree-view-modes input.view-mode').entwine({
+			onmatch: function() {
+				// set active by default
+				this.trigger('click');
+				this._super();
+			},
+			onclick: function(e) {
+				$('.cms-tree')
+					.toggleClass('draggable', $(e.target).val() == 'draggable')
+					.toggleClass('multiple', $(e.target).val() == 'multiselect');
+			}
+		});
 	});
-	
-	$('#sitetree_ul li').entwine({
-		
-		/**
-		 * Function: setEnabled
-		 * 
-		 * Parameters:
-		 * 	(bool)
-		 */
-		setEnabled: function(bool) {
-			this.toggleClass('disabled', !(bool));
-		},
-		
-		/**
-		 * Function: getClassname
-		 * 
-		 * Returns PHP class for this element. Useful to check business rules like valid drag'n'drop targets.
-		 */
-		getClassname: function() {
-			var matches = this.attr('class').match(/class-([^\s]*)/i);
-			return matches ? matches[1] : '';
-		},
-		
-		/**
-		 * Function: getID
-		 * 
-		 * Returns:
-		 * 	(Number)
-		 */
-		getID: function() {
-			return this.data('id');
-		}
-	});
-
 }(jQuery));

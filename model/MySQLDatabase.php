@@ -28,7 +28,7 @@ class MySQLDatabase extends SS_Database {
 
 	private static $connection_charset = null;
 
-	private $supportsTransactions=false;
+	private $supportsTransactions = true;
 
 	/**
 	 * Sets the character set for the MySQL database connection.
@@ -54,22 +54,22 @@ class MySQLDatabase extends SS_Database {
 	 *  - timezone: (optional) The timezone offset. For example: +12:00, "Pacific/Auckland", or "SYSTEM"
 	 */
 	public function __construct($parameters) {
-		$this->dbConn = mysql_connect($parameters['server'], $parameters['username'], $parameters['password'], true);
+		$this->dbConn = new MySQLi($parameters['server'], $parameters['username'], $parameters['password']);
+		
+		if($this->dbConn->connect_error) {
+			$this->databaseError("Couldn't connect to MySQL database | " . $this->dbConn->connect_error);
+		}
+		
+		$this->query("SET sql_mode = 'ANSI'");
 
 		if(self::$connection_charset) {
-			$this->query("SET CHARACTER SET '" . self::$connection_charset . "'");
-			$this->query("SET NAMES '" . self::$connection_charset . "'");
+			$this->dbConn->set_charset(self::$connection_charset);
 		}
 
-		$this->active = mysql_select_db($parameters['database'], $this->dbConn);
+		$this->active = $this->dbConn->select_db($parameters['database']);
 		$this->database = $parameters['database'];
 
-		if(!$this->dbConn) {
-			$this->databaseError("Couldn't connect to MySQL database");
-		}
-
 		if(isset($parameters['timezone'])) $this->query(sprintf("SET SESSION time_zone = '%s'", $parameters['timezone']));
-		$this->query("SET sql_mode = 'ANSI'");
 	}
 
 	/**
@@ -84,7 +84,7 @@ class MySQLDatabase extends SS_Database {
 	 * @return boolean
 	 */
 	public function supportsCollations() {
-		return $this->getVersion() >= 4.1;
+		return true;
 	}
 
 	/**
@@ -92,7 +92,7 @@ class MySQLDatabase extends SS_Database {
 	 * @return string
 	 */
 	public function getVersion() {
-		return mysql_get_server_info($this->dbConn);
+		return $this->dbConn->server_info;
 	}
 
 	/**
@@ -113,19 +113,19 @@ class MySQLDatabase extends SS_Database {
 			$starttime = microtime(true);
 		}
 
-		$handle = mysql_query($sql, $this->dbConn);
+		$handle = $this->dbConn->query($sql);
 
 		if(isset($_REQUEST['showqueries'])) {
 			$endtime = round(microtime(true) - $starttime,4);
 			Debug::message("\n$sql\n{$endtime}ms\n", false);
 		}
 
-		if(!$handle && $errorLevel) $this->databaseError("Couldn't run query: $sql | " . mysql_error($this->dbConn), $errorLevel);
+		if(!$handle && $errorLevel) $this->databaseError("Couldn't run query: $sql | " . $this->dbConn->error, $errorLevel);
 		return new MySQLQuery($this, $handle);
 	}
 
 	public function getGeneratedID($table) {
-		return mysql_insert_id($this->dbConn);
+		return $this->dbConn->insert_id;
 	}
 
 	public function isActive() {
@@ -133,15 +133,13 @@ class MySQLDatabase extends SS_Database {
 	}
 
 	public function createDatabase() {
-		$this->query("CREATE DATABASE `$this->database`");
-		$this->query("USE `$this->database`");
+		$this->query("CREATE DATABASE \"$this->database\"");
+		$this->query("USE \"$this->database\"");
 
 		$this->tableList = $this->fieldList = $this->indexList = null;
 
-		if(mysql_select_db($this->database, $this->dbConn)) {
-			$this->active = true;
-			return true;
-		}
+		$this->active = $this->dbConn->select_db($this->database);
+		return $this->active;
 	}
 
 	/**
@@ -173,10 +171,12 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function selectDatabase($dbname) {
 		$this->database = $dbname;
-		if($this->databaseExists($this->database)) {
-			if(mysql_select_db($this->database, $this->dbConn)) $this->active = true;
-		}
 		$this->tableList = $this->fieldList = $this->indexList = null;
+		$this->active = false;
+		if($this->databaseExists($this->database)) {
+			$this->active = $this->dbConn->select_db($this->database);
+		}
+		return $this->active;
 	}
 
 	/**
@@ -206,9 +206,15 @@ class MySQLDatabase extends SS_Database {
 	 */
 	public function createTable($table, $fields = null, $indexes = null, $options = null, $advancedOptions = null) {
 		$fieldSchemas = $indexSchemas = "";
-
-		$addOptions = empty($options[get_class($this)]) ? "ENGINE=MyISAM" : $options[get_class($this)];
-
+		
+		if(!empty($options[get_class($this)])) {
+			$addOptions = $options[get_class($this)];
+		} elseif(!empty($options[get_parent_class($this)])) {
+			$addOptions = $options[get_parent_class($this)];
+		} else {
+			$addOptions = "ENGINE=InnoDB";
+		}
+		
 		if(!isset($fields['ID'])) $fields['ID'] = "int(11) not null auto_increment";
 		if($fields) foreach($fields as $k => $v) $fieldSchemas .= "\"$k\" $v,\n";
 		if($indexes) foreach($indexes as $k => $v) $indexSchemas .= $this->getIndexSqlDefinition($k, $v) . ",\n";
@@ -221,7 +227,7 @@ class MySQLDatabase extends SS_Database {
 				$indexSchemas
 				primary key (ID)
 			) {$addOptions}");
-
+		
 		return $table;
 	}
 
@@ -235,6 +241,13 @@ class MySQLDatabase extends SS_Database {
 	 * @param $alteredOptions
 	 */
 	public function alterTable($tableName, $newFields = null, $newIndexes = null, $alteredFields = null, $alteredIndexes = null, $alteredOptions = null, $advancedOptions = null) {
+		if($this->isView($tableName)) {
+			DB::alteration_message(
+				sprintf("Table %s not changed as it is a view", $tableName),
+				"changed"
+			);
+			return;
+		}
 		$fieldSchemas = $indexSchemas = "";
 		$alterList = array();
 
@@ -245,19 +258,42 @@ class MySQLDatabase extends SS_Database {
 			$alterList[] .= "DROP INDEX \"$k\"";
 			$alterList[] .= "ADD ". $this->getIndexSqlDefinition($k, $v);
  		}
+ 		
+		if($alteredOptions && isset($alteredOptions[get_class($this)])) {
+			if(!isset($this->indexList[$tableName])) {
+				$this->indexList[$tableName] = $this->indexList($tableName);
+			}
+			
+			$skip = false;
+			foreach($this->indexList[$tableName] as $index) {
+				if(strpos($index, 'fulltext ') === 0) {
+					$skip = true;
+					break;
+				}
+			}
+			if($skip) {
+				DB::alteration_message(
+					sprintf("Table %s options not changed to %s due to fulltextsearch index", $tableName, $alteredOptions[get_class($this)]),
+					"changed"
+				);
+			} else {
+				$this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[get_class($this)]));
+				DB::alteration_message(
+					sprintf("Table %s options changed: %s", $tableName, $alteredOptions[get_class($this)]),
+					"changed"
+				);
+			}
+		}
 
  		$alterations = implode(",\n", $alterList);
 		$this->query("ALTER TABLE \"$tableName\" $alterations");
-
-		if($alteredOptions && isset($alteredOptions[get_class($this)])) {
-			$this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[get_class($this)]));
-			DB::alteration_message(
-				sprintf("Table %s options changed: %s", $tableName, $alteredOptions[get_class($this)]),
-				"changed"
-			);
-		}
 	}
-
+	
+	public function isView($tableName) {
+		$info = $this->query("SHOW /*!50002 FULL*/ TABLES LIKE '$tableName'")->record();
+		return $info && strtoupper($info['Table_type']) == 'VIEW';
+	}
+	
 	public function renameTable($oldTableName, $newTableName) {
 		$this->query("ALTER TABLE \"$oldTableName\" RENAME \"$newTableName\"");
 	}
@@ -347,9 +383,9 @@ class MySQLDatabase extends SS_Database {
 
 			if($field['Default'] || $field['Default'] === "0") {
 				if(is_numeric($field['Default']))
-					$fieldSpec .= " default " . addslashes($field['Default']);
+					$fieldSpec .= " default " . Convert::raw2sql($field['Default']);
 				else
-					$fieldSpec .= " default '" . addslashes($field['Default']) . "'";
+					$fieldSpec .= " default '" . Convert::raw2sql($field['Default']) . "'";
 			}
 			if($field['Extra']) $fieldSpec .= " $field[Extra]";
 
@@ -513,7 +549,7 @@ class MySQLDatabase extends SS_Database {
 	 * @return int
 	 */
 	public function affectedRows() {
-		return mysql_affected_rows($this->dbConn);
+		return $this->dbConn->affected_rows;
 	}
 
 	function databaseError($msg, $errorLevel = E_USER_ERROR) {
@@ -575,7 +611,8 @@ class MySQLDatabase extends SS_Database {
 
 		$defaultValue = '';
 		if(isset($values['default']) && is_numeric($values['default'])) {
-			$defaultValue = ' default ' . $values['default'];
+			$decs = strpos($precision, ',') !== false ? (int)substr($precision, strpos($precision, ',')+1) : 0;
+			$defaultValue = ' default ' . number_format($values['default'], $decs, '.', '');
 		}
 
 		return 'decimal(' . $precision . ') not null' . $defaultValue;
@@ -771,6 +808,11 @@ class MySQLDatabase extends SS_Database {
 
 		// Always ensure that only pages with ShowInSearch = 1 can be searched
 		$extraFilters['SiteTree'] .= " AND ShowInSearch <> 0";
+		
+		// File.ShowInSearch was added later, keep the database driver backwards compatible 
+		// by checking for its existence first
+		$fields = $this->fieldList('File');
+		if(array_key_exists('ShowInSearch', $fields)) $extraFilters['File'] .= " AND ShowInSearch <> 0";
 
 		$limit = $start . ", " . (int) $pageLength;
 
@@ -792,11 +834,12 @@ class MySQLDatabase extends SS_Database {
 			$match['SiteTree'] = $match['File'] = "1 = 1";
 		}
 
-		// Generate initial queries and base table names
+		// Generate initial DataLists and base table names
+		$lists = array();
 		$baseClasses = array('SiteTree' => '', 'File' => '');
 		foreach($classesToSearch as $class) {
-			$queries[$class] = singleton($class)->extendedSQL($notMatch . $match[$class] . $extraFilters[$class], "");
-			$baseClasses[$class] = reset($queries[$class]->from);
+			$lists[$class] = DataList::create($class)->where($notMatch . $match[$class] . $extraFilters[$class], "");
+			$baseClasses[$class] = '"'.$class.'"';
 		}
 
 		// Make column selection lists
@@ -805,18 +848,17 @@ class MySQLDatabase extends SS_Database {
 			'File' => array("ClassName","$baseClasses[File].ID","_utf8'' AS ParentID","Title","_utf8'' AS MenuTitle","_utf8'' AS URLSegment","Content","LastEdited","Created","Filename","Name","$relevance[File] AS Relevance","NULL AS CanViewType"),
 		);
 
-		// Process queries
-		foreach($classesToSearch as $class) {
-			// There's no need to do all that joining
-			$queries[$class]->from = array(str_replace('`','',$baseClasses[$class]) => $baseClasses[$class]);
-			$queries[$class]->select = $select[$class];
-			$queries[$class]->orderby = null;
-		}
-
-		// Combine queries
+		// Process and combine queries
 		$querySQLs = array();
 		$totalCount = 0;
-		foreach($queries as $query) {
+		foreach($lists as $class => $list) {
+			$query = $list->dataQuery()->query();
+
+			// There's no need to do all that joining
+			$query->from = array(str_replace(array('"','`'),'',$baseClasses[$class]) => $baseClasses[$class]);
+			$query->select = $select[$class];
+			$query->orderby = null;
+			
 			$querySQLs[] = $query->sql();
 			$totalCount += $query->unlimitedRowCount();
 		}
@@ -825,15 +867,18 @@ class MySQLDatabase extends SS_Database {
 		// Get records
 		$records = DB::query($fullQuery);
 
-		foreach($records as $record)
+		$objects = array();
+
+		foreach($records as $record) {
 			$objects[] = new $record['ClassName']($record);
+		}
 
+		$list = new PaginatedList(new ArrayList($objects));
+		$list->setPageStart($start);
+		$list->setPageLEngth($pageLength);
+		$list->setTotalItems($totalCount);
 
-		if(isset($objects)) $doSet = new DataObjectSet($objects);
-		else $doSet = new DataObjectSet();
-
-		$doSet->setPageLimits($start, $pageLength, $totalCount);
-		return $doSet;
+		return $list;
 	}
 
 	/**
@@ -866,11 +911,10 @@ class MySQLDatabase extends SS_Database {
 	}
 
 	/*
-	 * This will return text which has been escaped in a database-friendly manner
-	 * Using PHP's addslashes method won't work in MSSQL
+	 * This will return text which has been escaped in a database-friendly manner.
 	 */
 	function addslashes($value){
-		return mysql_real_escape_string($value, $this->dbConn);
+		return $this->dbConn->real_escape_string($value);
 	}
 
 	/*
@@ -924,14 +968,23 @@ class MySQLDatabase extends SS_Database {
 	 * See http://developer.postgresql.org/pgdocs/postgres/sql-set-transaction.html for details on transaction isolation options
 	 */
 	public function transactionStart($transaction_mode=false, $session_characteristics=false){
-		//Transactions not set up for MySQL yet
+		// This sets the isolation level for the NEXT transaction, not the current one.
+		if($transaction_mode) {
+			$this->query('SET TRANSACTION ' . $transaction_mode . ';');
+		}
+
+		$this->query('START TRANSACTION;');
+
+		if($session_characteristics) {
+			$this->query('SET SESSION TRANSACTION ' . $session_characteristics . ';');
+		}
 	}
 
 	/*
 	 * Create a savepoint that you can jump back to if you encounter problems
 	 */
 	public function transactionSavepoint($savepoint){
-		//Transactions not set up for MySQL yet
+		$this->query("SAVEPOINT $savepoint;");
 	}
 
 	/*
@@ -939,15 +992,19 @@ class MySQLDatabase extends SS_Database {
 	 * If you encounter a problem at any point during a transaction, you may
 	 * need to rollback that particular query, or return to a savepoint
 	 */
-	public function transactionRollback($savepoint=false){
-		//Transactions not set up for MySQL yet
+	public function transactionRollback($savepoint = false){
+		if($savepoint) {
+			$this->query('ROLLBACK TO ' . $savepoint . ';');
+		} else {
+			$this->query('ROLLBACK');
+		}
 	}
 
 	/*
 	 * Commit everything inside this transaction so far
 	 */
-	public function transactionEnd(){
-		//Transactions not set up for MySQL yet
+	public function transactionEnd($chain = false){
+		$this->query('COMMIT AND ' . ($chain ? '' : 'NO ') . 'CHAIN;');
 	}
 
 	/**
@@ -1032,6 +1089,34 @@ class MySQLDatabase extends SS_Database {
 
 		return "UNIX_TIMESTAMP($date1) - UNIX_TIMESTAMP($date2)";
 	}
+	
+	function supportsLocks() {
+		return true;
+	}
+	
+	function canLock($name) {
+		$id = $this->getLockIdentifier($name);
+		return (bool)DB::query(sprintf("SELECT IS_FREE_LOCK('%s')", $id))->value();
+	}
+	
+	function getLock($name, $timeout = 5) {
+		$id = $this->getLockIdentifier($name);
+		
+		// MySQL auto-releases existing locks on subsequent GET_LOCK() calls,
+		// in contrast to PostgreSQL and SQL Server who stack the locks.
+		
+		return (bool)DB::query(sprintf("SELECT GET_LOCK('%s', %d)", $id, $timeout))->value();
+	}
+	
+	function releaseLock($name) {
+		$id = $this->getLockIdentifier($name);
+		return (bool)DB::query(sprintf("SELECT RELEASE_LOCK('%s')", $id))->value();
+	}
+	
+	protected function getLockIdentifier($name) {
+		// Prefix with database name
+		return Convert::raw2sql($this->database . '_' . Convert::raw2sql($name));
+	}
 }
 
 /**
@@ -1063,26 +1148,25 @@ class MySQLQuery extends SS_Query {
 	}
 
 	public function __destruct() {
-		if(is_resource($this->handle)) mysql_free_result($this->handle);
+		if(is_object($this->handle)) $this->handle->free();
 	}
-
+	
 	public function seek($row) {
-		return is_resource($this->handle) ? mysql_data_seek($this->handle, $row) : false;
+		if(is_object($this->handle)) return $this->handle->data_seek($row);
 	}
-
+	
 	public function numRecords() {
-		return is_resource($this->handle) ? mysql_num_rows($this->handle) : false;
+		if(is_object($this->handle)) return $this->handle->num_rows;
 	}
-
+	
 	public function nextRecord() {
-		// Coalesce rather than replace common fields.
-		if(is_resource($this->handle) && $data = mysql_fetch_row($this->handle)) {
-			foreach($data as $columnIdx => $value) {
-				$columnName = mysql_field_name($this->handle, $columnIdx);
-				// $value || !$ouput[$columnName] means that the *last* occurring value is shown
-				// !$ouput[$columnName] means that the *first* occurring value is shown
-				if(isset($value) || !isset($output[$columnName])) {
-					$output[$columnName] = $value;
+		if(is_object($this->handle) && $data = $this->handle->fetch_row()) {
+			$output = array();
+			$this->handle->field_seek(0);
+			while($field = $this->handle->fetch_field()) {
+				$columnName = $field->name;
+				if(isset($data[$this->handle->current_field-1]) || !isset($output[$columnName])) {
+					$output[$columnName] = $data[$this->handle->current_field-1];
 				}
 			}
 			return $output;
@@ -1090,8 +1174,4 @@ class MySQLQuery extends SS_Query {
 			return false;
 		}
 	}
-
-
 }
-
-?>

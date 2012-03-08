@@ -7,11 +7,45 @@ class FileTest extends SapphireTest {
 	
 	static $fixture_file = 'FileTest.yml';
 	
+	protected $extraDataObjects = array('FileTest_MyCustomFile');
+
+	public function testLinkShortcodeHandler() {
+		$testFile = $this->objFromFixture('File', 'asdf');
+		$errorPage = $this->objFromFixture('ErrorPage', '404');
+
+		$parser = new ShortcodeParser();
+		$parser->register('file_link', array('File', 'link_shortcode_handler'));
+
+		$fileShortcode = sprintf('[file_link id=%d]', $testFile->ID);
+		$fileEnclosed  = sprintf('[file_link id=%d]Example Content[/file_link]', $testFile->ID);
+
+		$fileShortcodeExpected = $testFile->Link();
+		$fileEnclosedExpected  = sprintf('<a href="%s" class="file" data-type="txt" data-size="977 KB">Example Content</a>', $testFile->Link());
+
+		$this->assertEquals($fileShortcodeExpected, $parser->parse($fileShortcode), 'Test that simple linking works.');
+		$this->assertEquals($fileEnclosedExpected, $parser->parse($fileEnclosed), 'Test enclosed content is linked.');
+
+		$testFile->delete();
+
+		$fileShortcode = '[file_link id="-1"]';
+		$fileEnclosed  = '[file_link id="-1"]Example Content[/file_link]';
+
+		$fileShortcodeExpected = $errorPage->Link();
+		$fileEnclosedExpected  = sprintf('<a href="%s">Example Content</a>', $errorPage->Link());
+
+		$this->assertEquals($fileShortcodeExpected, $parser->parse($fileShortcode), 'Test link to 404 page if no suitable matches.');
+		$this->assertEquals($fileEnclosedExpected, $parser->parse($fileEnclosed));
+
+		$this->assertEquals('', $parser->parse('[file_link]'), 'Test that invalid ID attributes are not parsed.');
+		$this->assertEquals('', $parser->parse('[file_link id="text"]'));
+		$this->assertEquals('', $parser->parse('[file_link]Example Content[/file_link]'));
+	}
+
 	function testCreateWithFilenameWithSubfolder() {
 		// Note: We can't use fixtures/setUp() for this, as we want to create the db record manually.
 		// Creating the folder is necessary to avoid having "Filename" overwritten by setName()/setRelativePath(),
 		// because the parent folders don't exist in the database
-		$folder = Folder::findOrMake('/FileTest/');
+		$folder = Folder::find_or_make('/FileTest/');
 		$testfilePath = 'assets/FileTest/CreateWithFilenameHasCorrectPath.txt'; // Important: No leading slash
 		$fh = fopen(BASE_PATH . '/' . $testfilePath, "w");
 		fwrite($fh, str_repeat('x',1000000));
@@ -257,6 +291,65 @@ class FileTest extends SapphireTest {
 		$this->assertEquals($folder->Title, $newTitle3, "Folder Title updated after rename of Filename");
 	}
 
+	
+	function testGetClassForFileExtension() {
+		$orig = File::$class_for_file_extension;
+		File::$class_for_file_extension['*'] = 'MyGenericFileClass';
+		File::$class_for_file_extension['foo'] = 'MyFooFileClass';
+
+		$this->assertEquals(
+			'MyFooFileClass',
+			File::get_class_for_file_extension('foo'),
+			'Finds directly mapped file classes'
+		);
+		$this->assertEquals(
+			'MyFooFileClass',
+			File::get_class_for_file_extension('FOO'),
+			'Works without case sensitivity'
+		);
+		$this->assertEquals(
+			'MyGenericFileClass',
+			File::get_class_for_file_extension('unknown'),
+			'Falls back to generic class for unknown extensions'
+		);
+		
+		File::$class_for_file_extension = $orig;
+	}
+	
+	function testFolderConstructChild() {
+		$orig = File::$class_for_file_extension;
+		File::$class_for_file_extension['gif'] = 'FileTest_MyCustomFile';
+		
+		$folder1 = $this->objFromFixture('Folder', 'folder1');
+		$fileID = $folder1->constructChild('myfile.gif');
+		$file = DataObject::get_by_id('File', $fileID);
+		$this->assertEquals('FileTest_MyCustomFile', get_class($file));
+		
+		File::$class_for_file_extension = $orig;
+	}
+
+	function testSetsOwnerOnFirstWrite() {
+		Session::set('loggedInAs', null);
+		$member1 = new Member();
+		$member1->write();
+		$member2 = new Member();
+		$member2->write();
+
+		$file1 = new File();
+		$file1->write();
+		$this->assertEquals(0, $file1->OwnerID, 'Owner not written when no user is logged in');
+
+		$member1->logIn();
+		$file2 = new File();
+		$file2->write();
+		$this->assertEquals($member1->ID, $file2->OwnerID, 'Owner written when user is logged in');
+
+		$member2->logIn();
+		$file2->forceChange();
+		$file2->write();
+		$this->assertEquals($member1->ID, $file2->OwnerID, 'Owner not overwritten on existing files');
+	}
+		
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	function setUp() {
@@ -308,4 +401,8 @@ class FileTest extends SapphireTest {
 		if (file_exists("../assets/FileTest-folder-renamed3")) Filesystem::removeFolder("../assets/FileTest-folder-renamed3");
 	}
 
+}
+
+class FileTest_MyCustomFile extends File implements TestOnly {
+	
 }

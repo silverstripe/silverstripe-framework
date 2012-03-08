@@ -85,7 +85,7 @@ class SearchContextTest extends SapphireTest {
 		$context = $company->getDefaultSearchContext();
 		$fields = $context->getFields();
 		$this->assertEquals(
-			new FieldSet(
+			new FieldList(
 				new TextField("Name", 'Name'),
 		 		new TextareaField("Industry", 'Industry'),
 		 		new NumericField("AnnualProfit", 'The Almighty Annual Profit')
@@ -253,7 +253,6 @@ class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 		"ExactMatch" => "ExactMatchFilter",
 		"PartialMatch" => "PartialMatchFilter",
 		"Negation" => "NegationFilter",
-		"SubstringMatch" => "SubstringFilter",
 		"CollectionMatch" => "ExactMatchMultiFilter",
 		"StartsWith" => "StartsWithFilter",
 		"EndsWith" => "EndsWithFilter",
@@ -262,4 +261,4 @@ class SearchContextTest_AllFilterTypes extends DataObject implements TestOnly {
 	
 }
 
-?>
+

@@ -145,7 +145,7 @@ class RequestHandlingTest extends FunctionalTest {
 	}
 	
 	function testMethodsOnParentClassesOfRequestHandlerDeclined() {
-		$response = Director::test('testGoodBase1/getSecurityID');
+		$response = Director::test('testGoodBase1/getIterator');
 		$this->assertEquals(403, $response->getStatusCode());
 	}
 	
@@ -234,6 +234,17 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertContains('not allowed on form', $response->getBody());
 	}
 	
+	function testActionHandlingOnField() {
+		$data = array('action_actionOnField' => 1);
+		$response = $this->post('RequestHandlingFieldTest_Controller/TestForm', $data);
+		$this->assertEquals(200, $response->getStatusCode());
+		$this->assertEquals('Test method on MyField', $response->getBody());
+		
+		$data = array('action_actionNotAllowedOnField' => 1);
+		$response = $this->post('RequestHandlingFieldTest_Controller/TestForm', $data);
+		$this->assertEquals(404, $response->getStatusCode());
+	}
+	
 }
 
 /**
@@ -298,10 +309,10 @@ class RequestHandlingTest_Controller extends Controller implements TestOnly {
 	}
 	
 	function TestForm() {
-		return new RequestHandlingTest_Form($this, "TestForm", new FieldSet(
+		return new RequestHandlingTest_Form($this, "TestForm", new FieldList(
 			new RequestHandlingTest_FormField("MyField"),
 			new RequestHandlingTest_SubclassedFormField("SubclassedField")
-		), new FieldSet(
+		), new FieldList(
 			new FormAction("myAction")
 		));
 	}
@@ -350,10 +361,10 @@ class RequestHandlingTest_FormActionController extends Controller {
 		return new Form(
 			$this, 
 			"Form", 
-			new FieldSet(
+			new FieldList(
 				new TextField("MyField")
 			), 
-			new FieldSet(
+			new FieldList(
 				new FormAction("formaction"),
 				new FormAction('formactionInAllowedActions')
 			)
@@ -454,7 +465,7 @@ class RequestHandlingTest_Form extends Form {
 	);
 	
 	function handleField($request) {
-		return $this->dataFieldByName($request->param('FieldName'));
+		return $this->Fields()->dataFieldByName($request->param('FieldName'));
 	}
 	
 	function handleSubmission($request) {
@@ -472,8 +483,8 @@ class RequestHandlingTest_ControllerFormWithAllowedActions extends Controller im
 		return new RequestHandlingTest_FormWithAllowedActions(
 			$this,
 			'Form',
-			new FieldSet(),
-			new FieldSet(
+			new FieldList(),
+			new FieldList(
 				new FormAction('allowedformaction'),
 				new FormAction('disallowedformaction') // disallowed through $allowed_actions in form
 			)
@@ -542,5 +553,34 @@ class RequestHandlingTest_SubclassedFormField extends RequestHandlingTest_FormFi
 
 	function customSomething() {
 		return "customSomething";
+	}
+}
+
+
+/**
+ * Controller for the test
+ */
+class RequestHandlingFieldTest_Controller extends Controller implements TestOnly {
+	
+	function TestForm() {
+		return new Form($this, "TestForm", new FieldList(
+			new RequestHandlingTest_HandlingField("MyField")
+		), new FieldList(
+			new FormAction("myAction")
+		));
+	}
+}
+
+/**
+ * Form field for the test
+ */
+class RequestHandlingTest_HandlingField extends FormField {
+	
+	static $allowed_actions = array(
+		'actionOnField'
+	);
+	
+	function actionOnField() {
+		return "Test method on $this->name";
 	}
 }

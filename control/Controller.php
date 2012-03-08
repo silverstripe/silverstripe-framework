@@ -9,7 +9,7 @@
  * @package sapphire
  * @subpackage control
  */
-class Controller extends RequestHandler {
+class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 	/**
 	 * @var array $urlParams An array of arguments extracted from the URL 
@@ -85,6 +85,13 @@ class Controller extends RequestHandler {
 	}
 	
 	/**
+	 * Returns a link to this controller.  Overload with your own Link rules if they exist.
+	 */
+	function Link() {
+		return get_class($this) .'/';
+	}
+	
+	/**
 	 * Executes this controller, and return an {@link SS_HTTPResponse} object with the result.
 	 * 
 	 * This method first does a few set-up activities:
@@ -115,13 +122,14 @@ class Controller extends RequestHandler {
 	 * @return SS_HTTPResponse The response that this controller produces, 
 	 *  including HTTP headers such as redirection info
 	 */
-	function handleRequest(SS_HTTPRequest $request) {
+	function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
 		if(!$request) user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
 		
 		$this->pushCurrent();
 		$this->urlParams = $request->allParams();
 		$this->request = $request;
 		$this->response = new SS_HTTPResponse();
+		$this->setModel($model);
 		
 		$this->extend('onBeforeInit');
 
@@ -138,7 +146,7 @@ class Controller extends RequestHandler {
 			return $this->response;
 		}
 
-		$body = parent::handleRequest($request);
+		$body = parent::handleRequest($request, $model);
 		if($body instanceof SS_HTTPResponse) {
 			if(isset($_REQUEST['debug_request'])) Debug::message("Request handler returned SS_HTTPResponse object to $this->class controller; returning it without modification.");
 			$this->response = $body;
@@ -290,6 +298,23 @@ class Controller extends RequestHandler {
 	public function hasAction($action) {
 		return parent::hasAction($action) || $this->hasActionTemplate($action);
 	}
+
+	/**
+	 * Removes all the "action" part of the current URL and returns the result.
+	 * If no action parameter is present, returns the full URL
+	 * @static
+	 * @return String
+	 */
+	public function removeAction($fullURL, $action = null) {
+		if (!$action) $action = $this->getAction();    //default to current action
+		$returnURL = $fullURL;
+
+		if (($pos = strpos($fullURL, $action)) !== false) {
+			$returnURL = substr($fullURL,0,$pos);
+		}
+
+		return $returnURL;
+	}
 	
 	/**
 	 * Returns TRUE if this controller has a template that is specifically designed to handle a specific action.
@@ -367,6 +392,10 @@ class Controller extends RequestHandler {
 	 */
 	function can($perm, $member = null) {
 		if(!$member) $member = Member::currentUser();
+		if(is_array($perm)) {
+			$perm = array_map(array($this, 'can'), $perm, array_fill(0, count($perm), $member));
+			return min($perm);
+		}
 		if($this->hasMethod($methodName = 'can' . $perm)) {
 			return $this->$methodName($member);
 		} else {
@@ -392,15 +421,6 @@ class Controller extends RequestHandler {
 	 */
 	function CurrentMember() {
 		return Member::currentUser();
-	}
-
-	/**
-	 * Returns true if the visitor has been here before
-	 * @return boolean
-	 */
-	function PastVisitor() {
-		user_error("Controller::PastVisitor() is deprecated", E_USER_NOTICE);
-		return false;
 	}
 
 	/**
@@ -460,8 +480,7 @@ class Controller extends RequestHandler {
 	}
 	
 	/**
-	 * Redirect back. Uses either the HTTP_REFERER or a manually set request-variable called
-	 * _REDIRECT_BACK_URL.
+	 * Redirect back. Uses either the HTTP_REFERER or a manually set request-variable called "BackURL".
 	 * This variable is needed in scenarios where not HTTP-Referer is sent (
 	 * e.g when calling a page by location.href in IE).
 	 * If none of the two variables is available, it will redirect to the base
@@ -475,8 +494,8 @@ class Controller extends RequestHandler {
 		// redirect to the homepage - don't break into the global state at this stage because we'll
 		// be calling from a test context or something else where the global state is inappropraite
 		if($this->request) {
-			if($this->request->requestVar('_REDIRECT_BACK_URL')) {
-				$url = $this->request->requestVar('_REDIRECT_BACK_URL');
+			if($this->request->requestVar('BackURL')) {
+				$url = $this->request->requestVar('BackURL');
 			} else if($this->request->getHeader('Referer')) {
 				$url = $this->request->getHeader('Referer');
 			}
@@ -564,6 +583,12 @@ class Controller extends RequestHandler {
 		
 		return $result;
 	}
+
+	public static function get_template_global_variables() {
+		return array(
+			'CurrentPage' => 'curr',
+		);
+	}
 }
 
-?>
+

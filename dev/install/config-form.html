@@ -34,6 +34,9 @@
 									You aren't currently able to install the software.  Please <a href="#requirements">see below</a> for details.<br>
 									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
 								</p>
+								<?php if (isset($phpIniLocation)) { ?>  
+									<p>Your php.ini file is located at <?php echo $phpIniLocation; ?></p>
+								<?php } ?>
 							<?php } else { ?>
 								<?php if($alreadyInstalled) { ?>
 									<div class="warning">
@@ -283,7 +286,7 @@
 			
 			<div id="Footer">
 				<div class="footerTop"><!-- --></div>
-				<p><a href="http://silverstripe.org">SilverStripe Open Source CMS / Framework</a> | Copyright &copy; 2010 SilverStripe Limited</p>
+				<p><a href="http://silverstripe.org">SilverStripe Open Source CMS / Framework</a> | Copyright &copy; <?php echo date('Y'); ?> SilverStripe Limited</p>
 			</div>
 		</div>
 	</body>

@@ -10,6 +10,11 @@
  * @subpackage model
  */
 class Varchar extends StringField {
+
+	static $casting = array(
+		"Initial" => "Text",
+		"URL" => "Text",
+	);
 	
 	protected $size;
 	 
@@ -58,7 +63,7 @@ class Varchar extends StringField {
 	 * Ensure that the given value is an absolute URL.
 	 */
 	function URL() {
-		if(ereg('^[a-zA-Z]+://', $this->value)) return $this->value;
+		if(preg_match('#^[a-zA-Z]+://#', $this->value)) return $this->value;
 		else return "http://" . $this->value;
 	}
 
@@ -69,18 +74,7 @@ class Varchar extends StringField {
 	function RTF() {
 		return str_replace("\n", '\par ', $this->value);
 	}
-
-	/**
-	 * Returns the value of the string, limited to the specified number of characters
-	 * @param $limit int Character limit
-	 * @param $add string Extra string to add to the end of the limited string
-	 * @return string
-	 */
-	function LimitCharacters($limit = 20, $add = "...") {
-		$value = trim($this->value);
-		return (strlen($value) > $limit) ? substr($value, 0, $limit) . $add : $value;
-	}
-
+	
 	/**
 	 * (non-PHPdoc)
 	 * @see DBField::scaffoldFormField()
@@ -96,4 +90,4 @@ class Varchar extends StringField {
 	}
 }
 
-?>
+

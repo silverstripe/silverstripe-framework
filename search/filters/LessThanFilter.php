@@ -12,17 +12,17 @@ class LessThanFilter extends SearchFilter {
 	/**
 	 * @return $query
 	 */
-	public function apply(SQLQuery $query) {
-		$query = $this->applyRelation($query);
-		return $query->where(sprintf(
-			"%s < '%s'",
-			$this->getDbName(),
-			Convert::raw2sql($this->getDbFormattedValue())
-		));
+	public function apply(DataQuery $query) {
+		$this->model = $query->applyRelation($this->relation);
+		$value = $this->getDbFormattedValue();
+
+		if(is_numeric($value)) $filter = sprintf("%s < %s", $this->getDbName(), Convert::raw2sql($value));
+		else $filter = sprintf("%s < '%s'", $this->getDbName(), Convert::raw2sql($value));
+		
+		return $query->where($filter);
 	}
 	
 	public function isEmpty() {
 		return $this->getValue() == null || $this->getValue() == '';
 	}
 }
-?>

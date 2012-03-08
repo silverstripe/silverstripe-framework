@@ -72,7 +72,22 @@ class Image extends File {
 		
 		parent::defineMethods();
 	}
-	
+
+	function getCMSFields() {
+		$fields = parent::getCMSFields();
+
+		$urlLink = "<div class='field readonly'>";
+		$urlLink .= "<label class='left'>"._t('AssetTableField.URL','URL')."</label>";
+		$urlLink .= "<span class='readonly'><a href='{$this->Link()}'>{$this->RelativeLink()}</a></span>";
+		$urlLink .= "</div>";
+		
+		//attach the addition file information for an image to the existing FieldGroup create in the parent class
+		$fileAttributes = $fields->fieldByName('Root.Main.FilePreview')->fieldByName('FilePreviewData');
+		$fileAttributes->push(new ReadonlyField("Dimensions", _t('AssetTableField.DIM','Dimensions') . ':'));
+
+		return $fields;
+	}
+
 	/**
 	 * An image exists if it has a filename.
 	 * Does not do any filesystem checks.
@@ -113,6 +128,10 @@ class Image extends File {
 		return $this->getTag();
 	}
 
+	/**
+	 * File names are filtered through {@link FileNameFilter}, see class documentation
+	 * on how to influence this behaviour.
+	 */
 	function loadUploadedImage($tmpFile) {
 		if(!is_array($tmpFile)) {
 			user_error("Image::loadUploadedImage() Not passed an array.  Most likely, the form hasn't got the right enctype", E_USER_ERROR);
@@ -134,19 +153,16 @@ class Image extends File {
 		}
 
 		// Generate default filename
-		$file = str_replace(' ', '-',$tmpFile['name']);
-		$file = ereg_replace('[^A-Za-z0-9+.-]+','',$file);
-		$file = ereg_replace('-+', '-',$file);
-		if(!$file) {
-			$file = "file.jpg";
-		}
+		$nameFilter = Object::create('FileNameFilter');
+		$file = $nameFilter->filter($tmpFile['name']);
+		if(!$file) $file = "file.jpg";
 		
 		$file = ASSETS_PATH . "/$class/$file";
 		
 		while(file_exists(BASE_PATH . "/$file")) {
 			$i = $i ? ($i+1) : 2;
 			$oldFile = $file;
-			$file = ereg_replace('[0-9]*(\.[^.]+$)',$i . '\\1', $file);
+			$file = preg_replace('/[0-9]*(\.[^.]+$)/', $i . '\\1', $file);
 			if($oldFile == $file && $i > 2) user_error("Couldn't fix $file with $i", E_USER_ERROR);
 		}
 		
@@ -159,15 +175,15 @@ class Image extends File {
 	}
 	
 	public function SetWidth($width) {
-		return $this->getFormattedImage('SetWidth', $width);
+		return $this->getWidth() == $width ? $this : $this->getFormattedImage('SetWidth', $width);
 	}
 	
 	public function SetHeight($height) {
-		return $this->getFormattedImage('SetHeight', $height);
+		return $this->getHeight() == $height ? $this : $this->getFormattedImage('SetHeight', $height);
 	}
 	
 	public function SetSize($width, $height) {
-		return $this->getFormattedImage('SetSize', $width, $height);
+		return (($this->getWidth() == $width) &&  ($this->getHeight() == $height)) ? $this : $this->getFormattedImage('SetSize', $width, $height);
 	}
 	
 	public function SetRatioSize($width, $height) {
@@ -338,7 +354,7 @@ class Image extends File {
 		if(!$this->Filename) return 0;
 		
 		$numDeleted = 0;
-		$methodNames = $this->allMethodNames();
+		$methodNames = $this->allMethodNames(true);
 		$cachedFiles = array();
 		
 		$folder = $this->ParentID ? $this->Parent()->Filename : ASSETS_DIR . '/';
@@ -360,13 +376,13 @@ class Image extends File {
 		foreach($methodNames as $methodName) {
 			if(substr($methodName, 0, 8) == 'generate') {
 				$format = substr($methodName, 8);
-				$generateFuncs[] = $format;
+				$generateFuncs[] = preg_quote($format);
 			}
 		}
 		// All generate functions may appear any number of times in the image cache name.
 		$generateFuncs = implode('|', $generateFuncs);
-		$pattern = "/^(({$generateFuncs})\d+\-)+{$this->Name}$/i";
-		
+		$pattern = "/^(({$generateFuncs})\d+\-)+" . preg_quote($this->Name) . "$/i";
+
 		foreach($cachedFiles as $cfile) {
 			if(preg_match($pattern, $cfile)) {
 				if(Director::fileExists($cacheDir . $cfile)) {

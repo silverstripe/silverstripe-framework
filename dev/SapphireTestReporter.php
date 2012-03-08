@@ -227,6 +227,10 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 			$this->currentTest['timeElapsed'] = $this->timer->timeElapsed();
 		}
 		array_push($this->currentSuite['tests'], $this->currentTest);
+		if(method_exists($test, 'getActualOutput')) {
+			$output = $test->getActualOutput();
+			if($output) echo "\nOutput:\n$output";
+		}
 	}
 	
 	/**
@@ -253,7 +257,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	 */
 	private function getTestException(PHPUnit_Framework_Test $test, Exception $e) {
 		// get the name of the testFile from the test
-		$testName = ereg_replace('(.*)\((.*[^)])\)', '\\2', $test->toString());
+		$testName = preg_replace('/(.*)\((.*[^)])\)/', '\\2', $test->toString());
 		$trace = $e->getTrace();
 		// loop through the exception trace to find the original exception
 		for($i = 0; $i < count($trace); $i++) {
@@ -301,4 +305,3 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	
 }
 
-?>

@@ -47,14 +47,6 @@ class CheckboxSetFieldTest extends SapphireTest {
 		);
 	}
 	
-	function testAddExtraClass() {
-		/* CheckboxSetField has an extra class name and is in the HTML the field returns */
-		$cboxSetField = new CheckboxSetField('FeelingOk', 'Are you feeling ok?', array(0 => 'No', 1 => 'Yes'), '', null, '(Select one)');
-		$cboxSetField->addExtraClass('thisIsMyExtraClassForCheckboxSetField');
-		preg_match('/thisIsMyExtraClassForCheckboxSetField/', $cboxSetField->Field(), $matches);
-		$this->assertTrue($matches[0] == 'thisIsMyExtraClassForCheckboxSetField');
-	}
-	
 	function testSaveWithNothingSelected() {
 		$article = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
 		
@@ -117,8 +109,8 @@ class CheckboxSetFieldTest extends SapphireTest {
 		$form = new Form(
 			new Controller(), 
 			'Form',
-			new FieldSet($field),
-			new FieldSet()
+			new FieldList($field),
+			new FieldList()
 		);
 		$form->loadDataFrom($articleWithTags);
 		$this->assertEquals(

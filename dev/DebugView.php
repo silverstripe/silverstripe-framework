@@ -94,7 +94,6 @@ class DebugView extends Object {
 		echo '.failure span { color:#C80700; font-weight:bold; }';
 		echo '</style></head>';
 		echo '<body>';
-		echo '<div class="header"><img src="'. Director::absoluteBaseURL() .'sapphire/admin/images/mainmenu/logo.gif" width="26" height="23" /></div>';
 	}
 	
 	/**
@@ -127,7 +126,7 @@ class DebugView extends Object {
 	 */
 	public function writeError($httpRequest, $errno, $errstr, $errfile, $errline, $errcontext) {
 		$errorType = self::$error_types[$errno];
-		$httpRequestEnt = htmlentities($httpRequest);
+		$httpRequestEnt = htmlentities($httpRequest, ENT_COMPAT, 'UTF-8');
 		echo '<div class="info ' . $errorType['class'] . '">';
 		echo "<h1>[" . $errorType['title'] . '] ' . strip_tags($errstr) . "</h1>";
 		echo "<h3>$httpRequestEnt</h3>";
@@ -170,4 +169,3 @@ class DebugView extends Object {
 	}
 }
 
-?>

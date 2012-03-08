@@ -208,10 +208,12 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 			// checks on
 			if($menuItem->controller) {
 				$controllerObj = singleton($menuItem->controller);
-				// Necessary for canView() to have request data available,
-				// e.g. to check permissions against LeftAndMain->currentPage()
-				$controllerObj->setRequest(Controller::curr()->getRequest());
-				if(!$controllerObj->canView($member)) continue;
+				if(Controller::has_curr()) {
+					// Necessary for canView() to have request data available,
+					// e.g. to check permissions against LeftAndMain->currentPage()
+					$controllerObj->setRequest(Controller::curr()->getRequest());
+					if(!$controllerObj->canView($member)) continue;
+				}
 			}
 			
 			$viewableMenuItems[$code] = $menuItem;
@@ -288,14 +290,13 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 		$subClasses = array_unique($subClasses);
 		foreach($subClasses as $key => $className) {
 			// Remove abstract classes and LeftAndMain
-			$classReflection = new ReflectionClass($className);
-			if(
-				!$classReflection->isInstantiable() 
-				|| 'LeftAndMain' == $className 
-				|| ClassInfo::classImplements($className, 'TestOnly')
-			) {
+			if('LeftAndMain' == $className || ClassInfo::classImplements($className, 'TestOnly')) {
 				unset($subClasses[$key]);
-			}			
+			} else {
+				// Separate conditional to avoid autoloading the class
+				$classReflection = new ReflectionClass($className);
+				if(!$classReflection->isInstantiable()) unset($subClasses[$key]);
+			}
 		}
 		
 		return $subClasses;
@@ -322,4 +323,3 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 		return $entities;
 	}
 }
-?>

@@ -696,11 +696,17 @@ class Diff
 		return $content;
 	}
 
-	static function compareHTML($from, $to) {
+	/**
+	 * @param String
+	 * @param String
+	 * @param Boolean
+	 * @return String
+	 */
+	static function compareHTML($from, $to, $escape = false) {
 		// First split up the content into words and tags
 		$set1 = self::getHTMLChunks($from);
 		$set2 = self::getHTMLChunks($to);
-				
+
 		// Diff that
 		$diff = new Diff($set1, $set2);
 
@@ -710,9 +716,6 @@ class Diff
 		// Go through everything, converting edited tags (and their content) into single chunks.  Otherwise
 		// the generated HTML gets crusty
 		foreach($diff->edits as $edit) {
-			//echo "<li>$edit->type: " . htmlentities(implode(" " ,$edit->orig));
-			//if($edit->final) echo ' / ' . htmlentities(implode(" " ,$edit->final));
-			
 			switch($edit->type) {
 				case 'copy':
 					$lookForTag = false;
@@ -746,14 +749,12 @@ class Diff
 						if($tagStack[$listName]) $rechunked[$listName][sizeof($rechunked[$listName])-1] .= ' ' . $item;
 						else $rechunked[$listName][] = $item;
 	
-						if($lookForTag && isset($item[0]) && $item[0] == "<" && substr($item,0,2) != "</") {
+						if($lookForTag && !$tagStack[$listName] && isset($item[0]) && $item[0] == "<" && substr($item,0,2) != "</") { 
 							$tagStack[$listName] = 1;
 						} else if($tagStack[$listName]) {
 							if(substr($item,0,2) == "</") $tagStack[$listName]--;
 							else if(isset($item[0]) && $item[0] == "<") $tagStack[$listName]++;
 						}
-	
-						// echo "<li>" . htmlentities($item) . " -> "  .$tagStack[$listName];
 					}
 				}
 			}
@@ -763,32 +764,41 @@ class Diff
 		$diff = new Diff($rechunked[1], $rechunked[2]);
 		$content = '';
 		foreach($diff->edits as $edit) {
-			// echo "<li>$edit->type: " . htmlentities(implode(" " ,$edit->orig));
-			// if($edit->final) echo ' / ' . htmlentities(implode(" " ,$edit->final));
-			
+			$orig = ($escape) ? Convert::raw2xml($edit->orig) : $edit->orig;
+			$final = ($escape) ? Convert::raw2xml($edit->final) : $edit->final;
+
 			switch($edit->type) {
 				case 'copy':
-					$content .= " " . implode(" ", $edit->orig) . " ";
+					$content .= " " . implode(" ", $orig) . " ";
 					break;
 				
 				case 'change':
-					$content .= " <ins>" . implode(" ", $edit->final) . "</ins> ";
-					$content .= " <del>" . implode(" ", $edit->orig) . "</del> ";
+					$content .= " <ins>" . implode(" ", $final) . "</ins> ";
+					$content .= " <del>" . implode(" ", $orig) . "</del> ";
 					break;
 				
 				case 'add':
-					$content .= " <ins>" . implode(" ", $edit->final) . "</ins> ";
+					$content .= " <ins>" . implode(" ", $final) . "</ins> ";
 					break;
 				
 				case 'delete':
-					$content .= " <del>" . implode(" ", $edit->orig) . "</del> ";
+					$content .= " <del>" . implode(" ", $orig) . "</del> ";
 					break;
 			}
 		}		
-		// echo "<p>" . htmlentities($content) . "</p>";
+
 		return self::cleanHTML($content);
 	}
+	
+	/**
+	 * @param string|array If passed as an array, values will be concatenated with a comma.
+	 */
 	static function getHTMLChunks($content) {
+		if($content && !is_string($content) && !is_array($content) && !is_numeric($content)) {
+			throw new InvalidArgumentException('$content parameter needs to be a string or array');
+		}
+		if(is_array($content)) $content = implode(',', $content);
+		
 		$content = str_replace(array("&nbsp;","<", ">"),array(" "," <", "> "),$content);
 		$candidateChunks = split("[\t\r\n ]+", $content);
 		while(list($i,$item) = each($candidateChunks)) {
@@ -869,4 +879,4 @@ extends Diff
     }
 }
 
-?>
+

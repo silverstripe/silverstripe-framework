@@ -10,22 +10,28 @@ class DatetimeFieldTest extends SapphireTest {
 		
 		$this->originalLocale = i18n::get_locale();
 		i18n::set_locale('en_NZ');
+		$this->origDateFormat = DateField::$default_config['dateformat'];
+		DateField::$default_config['dateformat'] = 'dd/MM/yyyy';
+		$this->origTimeFormat = TimeField::$default_config['timeformat'];
+		TimeField::$default_config['timeformat'] = 'HH:mm:ss';
 	}
 	
 	function tearDown() {
 		parent::tearDown();
 		
 		i18n::set_locale($this->originalLocale);
+		DateField::$default_config['dateformat'] = $this->origDateFormat;
+		TimeField::$default_config['timeformat'] = $this->origTimeFormat;
 	}
 
 	function testFormSaveInto() {
 		$form = new Form(
 			new Controller(), 
 			'Form',
-			new FieldSet(
+			new FieldList(
 				$f = new DatetimeField('MyDatetime', null)
 			),
-			new FieldSet(
+			new FieldList(
 				new FormAction('doSubmit')
 			)
 		);
@@ -44,12 +50,6 @@ class DatetimeFieldTest extends SapphireTest {
 		
 		$f = new DatetimeField('Datetime', null, '2003-03-29 23:59:38');
 		$this->assertEquals('2003-03-29 23:59:38', $f->dataValue(), 'From date/time string');
-		
-		$f = new DatetimeField('Datetime', null, '2003-03-29');
-		$this->assertEquals('2003-03-29 00:00:00', $f->dataValue(), 'From date string (no time)');
-		
-		$f = new DatetimeField('Datetime', null, array('date' => '2003-03-29', 'time' => null));
-		$this->assertEquals('2003-03-29 00:00:00', $f->dataValue(), 'From date array (no time)');
 	}
 	
 	function testConstructorWithoutArgs() {
@@ -108,8 +108,65 @@ class DatetimeFieldTest extends SapphireTest {
 		$f = new DatetimeField('Datetime', 'Datetime', '2003-03-29 23:59:38');
 		$this->assertTrue($f->validate(new RequiredFields()));
 		
+		$f = new DatetimeField('Datetime', 'Datetime', '2003-03-29');
+		$this->assertTrue($f->validate(new RequiredFields()));
+		
 		$f = new DatetimeField('Datetime', 'Datetime', 'wrong');
 		$this->assertFalse($f->validate(new RequiredFields()));
+	}
+	
+	function testTimezone() {
+		$oldTz = date_default_timezone_get();
+		
+		date_default_timezone_set('Europe/Berlin');
+		// Berlin and Auckland have 12h time difference in northern hemisphere winter
+		$f = new DatetimeField('Datetime', 'Datetime', '2003-12-24 23:59:59');
+		$f->setConfig('usertimezone', 'Pacific/Auckland');
+		$this->assertEquals('25/12/2003 11:59:59', $f->Value(), 'User value is formatted, and in user timezone');
+		$this->assertEquals('25/12/2003', $f->getDateField()->Value());
+		$this->assertEquals('11:59:59', $f->getTimeField()->Value());
+		$this->assertEquals('2003-12-24 23:59:59', $f->dataValue(), 'Data value is unformatted, and in server timezone');
+		
+		date_default_timezone_set($oldTz);
+	}
+	
+	function testTimezoneFromFormSubmission() {
+		$oldTz = date_default_timezone_get();
+		
+		date_default_timezone_set('Europe/Berlin');
+		// Berlin and Auckland have 12h time difference in northern hemisphere summer, but Berlin and Moscow only 2h.
+		$f = new DatetimeField('Datetime', 'Datetime');
+		$f->setConfig('usertimezone', 'Pacific/Auckland'); // should be overridden by form submission
+		$f->setValue(array(
+			// pass in default format, at user time (Moscow)
+			'date' => '24/06/2003', 
+			'time' => '23:59:59',
+			'timezone' => 'Europe/Moscow'
+		));
+		$this->assertEquals('24/06/2003 23:59:59', $f->Value(), 'View composite value matches user timezone');
+		$this->assertEquals('24/06/2003', $f->getDateField()->Value(), 'View date part matches user timezone');
+		$this->assertEquals('23:59:59', $f->getTimeField()->Value(), 'View time part matches user timezone');
+		// 2h difference to Moscow
+		$this->assertEquals('2003-06-24 21:59:59', $f->dataValue(), 'Data value matches server timezone');
+		
+		date_default_timezone_set($oldTz);
+	}
+	
+	function testTimezoneFromConfig() {
+		$oldTz = date_default_timezone_get();
+		
+		date_default_timezone_set('Europe/Berlin');
+		// Berlin and Auckland have 12h time difference in northern hemisphere summer, but Berlin and Moscow only 2h.
+		$f = new DatetimeField('Datetime', 'Datetime');
+		$f->setConfig('usertimezone', 'Europe/Moscow'); 
+		$f->setValue(array(
+			// pass in default format, at user time (Moscow)
+			'date' => '24/06/2003', 
+			'time' => '23:59:59',
+		));
+		$this->assertEquals('2003-06-24 21:59:59', $f->dataValue(), 'Data value matches server timezone');
+		
+		date_default_timezone_set($oldTz);
 	}
 }
 

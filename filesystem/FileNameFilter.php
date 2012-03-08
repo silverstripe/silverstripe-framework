@@ -1,0 +1,121 @@
+<?php
+/**
+ * @package sapphire
+ * @subpackage filesystem
+ */
+
+/**
+ * Filter certain characters from file name, for nicer (more SEO-friendly) URLs
+ * as well as better filesystem compatibility. Can be used for files and folders.
+ * 
+ * Caution: Does not take care of full filename sanitization in regards to directory traversal etc.,
+ * please use PHP's built-in basename() for this purpose.
+ * 
+ * The default sanitizer is quite conservative regarding non-ASCII characters,
+ * in order to achieve maximum filesystem compatibility.
+ * In case your filesystem supports a wider character set,
+ * or is case sensitive, you might want to relax these rules
+ * via overriding {@link FileNameFilter_DefaultFilter::$default_replacements}.
+ * 
+ * To leave uploaded filenames as they are (being aware of filesystem restrictions),
+ * add the following code to your _config.php:
+ * <code>
+ * FileNameFilter::$default_use_transliterator = false;
+ * FileNameFilter::$default_replacements = array();
+ * </code>
+ * 
+ * See {@link URLSegmentFilter} for a more generic implementation.
+ */
+class FileNameFilter {
+	
+	/**
+	 * @var Boolean
+	 */
+	static $default_use_transliterator = true;
+	
+	/**
+	 * @var Array See {@link setReplacements()}.
+	 */
+	static $default_replacements = array(
+		'/\s/' => '-', // remove whitespace
+		'/_/' => '-', // underscores to dashes
+		'/[^A-Za-z0-9+.-]+/' => '', // remove non-ASCII chars, only allow alphanumeric plus dash and dot
+		'/[\-]{2,}/' => '-', // remove duplicate dashes
+		'/^[\.\-_]/' => '', // Remove all leading dots, dashes or underscores
+	);
+	
+	/**
+	 * @var Array See {@link setReplacements()}
+	 */
+	public $replacements = array();
+	
+	/**
+	 * Depending on the applied replacement rules, this method
+	 * might result in an empty string. In this case, {@link getDefaultName()}
+	 * will be used to return a randomly generated file name, while retaining its extension.
+	 * 
+	 * @param String Filename including extension (not path).
+	 * @return String A filtered filename
+	 */
+	function filter($name) {
+		$ext = pathinfo($name, PATHINFO_EXTENSION);
+		
+		$transliterator = $this->getTransliterator();
+		if($transliterator) $name = $transliterator->toASCII($name);
+		foreach($this->getReplacements() as $regex => $replace) {
+			$name = preg_replace($regex, $replace, $name);
+		}
+		
+		// Safeguard against empty file names
+		$nameWithoutExt = pathinfo($name, PATHINFO_FILENAME);
+		if(empty($nameWithoutExt)) $name = $this->getDefaultName() . '.' . $ext;
+		
+		return $name;
+	}
+	
+	/**
+	 * Take care not to add replacements which might invalidate the file structure,
+	 * e.g. removing dots will remove file extension information.
+	 * 
+	 * @param Array Map of find/replace used for preg_replace().
+	 */
+	function setReplacements($r) {
+		$this->replacements = $r;
+	}
+	
+	/**
+	 * @return Array
+	 */
+	function getReplacements() {
+		return ($this->replacements) ? $this->replacements : self::$default_replacements;
+	}
+		
+	/**
+	 * @var Transliterator
+	 */
+	protected $transliterator;
+	
+	/**
+	 * @return Transliterator|NULL
+	 */
+	function getTransliterator() {
+		if($this->transliterator === null && self::$default_use_transliterator) {
+			$this->transliterator = Object::create('Transliterator');
+		} 
+		return $this->transliterator;
+	}
+	
+	/**
+	 * @param Transliterator|FALSE
+	 */
+	function setTransliterator($t) {
+		$this->transliterator = $t;
+	}
+	
+	/**
+	 * @return String File name without extension
+	 */
+	function getDefaultName() {
+		return (string)uniqid();
+	}
+}

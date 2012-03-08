@@ -19,7 +19,7 @@ class PermissionCheckboxSetField extends FormField {
 	protected $hiddenPermissions = array();
 	
 	/**
-	 * @var DataObjectSet
+	 * @var SS_List
 	 */
 	protected $records = null;
 	
@@ -33,7 +33,7 @@ class PermissionCheckboxSetField extends FormField {
 	 * @param String $title
 	 * @param String $managedClass
 	 * @param String $filterField
-	 * @param Group|DataObjectSet $records One or more {@link Group} or {@link PermissionRole} records 
+	 * @param Group|SS_List $records One or more {@link Group} or {@link PermissionRole} records 
 	 *  used to determine permission checkboxes.
 	 *  Caution: saveInto() can only be used with a single record, all inherited permissions will be marked readonly.
 	 *  Setting multiple groups only makes sense in a readonly context. (Optional)
@@ -42,12 +42,12 @@ class PermissionCheckboxSetField extends FormField {
 		$this->filterField = $filterField;
 		$this->managedClass = $managedClass;
 
-		if(is_a($records, 'DataObjectSet')) {
+		if($records instanceof SS_List) {
 			$this->records = $records;
-		} elseif(is_a($records, 'DataObject')) {
-			$this->records = new DataObjectSet($records);
+		} elseif($records instanceof Group) {
+			$this->records = new ArrayList(array($records));
 		} elseif($records) {
-			throw new InvalidArgumentException('$record should be either a Group record, or a DataObjectSet of Group records');
+			throw new InvalidArgumentException('$record should be either a Group record, or a SS_List of Group records');
 		}
 		
 		// Get all available codes in the system as a categorized nested array
@@ -76,7 +76,7 @@ class PermissionCheckboxSetField extends FormField {
 		
 		$uninheritedCodes = array();
 		$inheritedCodes = array();
-		$records = ($this->records) ? $this->records : new DataObjectSet();
+		$records = ($this->records) ? $this->records : new ArrayList();
 		
 		// Get existing values from the form record (assuming the formfield name is a join field on the record)
 		if(is_object($this->form)) {
@@ -173,13 +173,14 @@ class PermissionCheckboxSetField extends FormField {
 				$options .= "<li><h5>$categoryName</h5></li>";
 				foreach($permissions as $code => $permission) {
 					if(in_array($code, $this->hiddenPermissions)) continue;
+					if(in_array($code, Permission::$hidden_permissions)) continue;
 					
 					$value = $permission['name'];
 			
 					$odd = ($odd + 1) % 2;
 					$extraClass = $odd ? 'odd' : 'even';
 					$extraClass .= ' val' . str_replace(' ', '', $code);
-					$itemID = $this->id() . '_' . ereg_replace('[^a-zA-Z0-9]+', '', $code);
+					$itemID = $this->id() . '_' . preg_replace('/[^a-zA-Z0-9]+/', '', $code);
 					$checked = $disabled = $inheritMessage = '';
 					$checked = (isset($uninheritedCodes[$code]) || isset($inheritedCodes[$code])) ? ' checked="checked"' : '';
 					$title = $permission['help'] ? 'title="' . htmlentities($permission['help'], ENT_COMPAT, 'UTF-8') . '" ' : '';
@@ -225,6 +226,9 @@ class PermissionCheckboxSetField extends FormField {
 		}
 		
 		if($fieldname && $record && ($record->has_many($fieldname) || $record->many_many($fieldname))) {
+			
+			if(!$record->ID) $record->write(); // We need a record ID to write permissions
+			
 			$idList = array();
 			if($this->value) foreach($this->value as $id => $bool) {
 			   if($bool) {

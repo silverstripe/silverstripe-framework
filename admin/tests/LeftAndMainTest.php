@@ -24,7 +24,7 @@ class LeftAndMainTest extends FunctionalTest {
 	public function testSaveTreeNodeSorting() {	
 		$this->loginWithPermission('ADMIN');
 				
-		$rootPages = DataObject::get('LeftAndMainTest_Object', '"ParentID" = 0'); // implicitly sorted
+		$rootPages = DataObject::get('LeftAndMainTest_Object', '"ParentID" = 0', '"ID"'); // forcing sorting for non-MySQL
 		$siblingIDs = $rootPages->column('ID');
 		$page1 = $rootPages->offsetGet(0);
 		$page2 = $rootPages->offsetGet(1);
@@ -83,25 +83,6 @@ class LeftAndMainTest extends FunctionalTest {
 	}
 	
 	/**
-	 * Test that CMS versions can be interpreted appropriately
-	 */
-	public function testCMSVersion() {
-		$l = new LeftAndMain();
-		$this->assertEquals("2.4", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/sapphire/branches/2.4/silverstripe_version $'));
-		$this->assertEquals("2.2.0", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/sapphire/tags/2.2.0/silverstripe_version $'));
-		$this->assertEquals("trunk", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/sapphire/trunk/silverstripe_version $'));
-		$this->assertEquals("2.4.0-alpha1", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/sapphire/tags/alpha/2.4.0-alpha1/silverstripe_version $'));
-		$this->assertEquals("2.4.0-beta1", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/sapphire/tags/beta/2.4.0-beta1/silverstripe_version $'));
-		$this->assertEquals("2.4.0-rc1", $l->versionFromVersionFile(
-			'$URL: http://svn.silverstripe.com/open/modules/sapphire/tags/rc/2.4.0-rc1/silverstripe_version $'));
-	}
-	
-	/**
 	 * Check that all subclasses of leftandmain can be accessed
 	 */
 	public function testLeftAndMainSubclasses() {
@@ -133,12 +114,13 @@ class LeftAndMainTest extends FunctionalTest {
 		$adminuser = $this->objFromFixture('Member', 'admin');
 		$securityonlyuser = $this->objFromFixture('Member', 'securityonlyuser');
 		$allcmssectionsuser = $this->objFromFixture('Member', 'allcmssectionsuser');
+		$allValsFn = create_function('$obj', 'return $obj->getValue();');
 		
 		// anonymous user
 		$this->session()->inst_set('loggedInAs', null);
 		$menuItems = singleton('LeftAndMain')->MainMenu();
 		$this->assertEquals(
-			$menuItems->column('Code'),
+			array_map($allValsFn, $menuItems->column('Code')),
 			array(),
 			'Without valid login, members cant access any menu entries'
 		);
@@ -147,7 +129,7 @@ class LeftAndMainTest extends FunctionalTest {
 		$this->session()->inst_set('loggedInAs', $securityonlyuser->ID);
 		$menuItems = singleton('LeftAndMain')->MainMenu();
 		$this->assertEquals(
-			$menuItems->column('Code'),
+			array_map($allValsFn, $menuItems->column('Code')),
 			array('SecurityAdmin','Help'),
 			'Groups with limited access can only access the interfaces they have permissions for'
 		);
@@ -155,10 +137,12 @@ class LeftAndMainTest extends FunctionalTest {
 		// all cms sections user
 		$this->session()->inst_set('loggedInAs', $allcmssectionsuser->ID);
 		$menuItems = singleton('LeftAndMain')->MainMenu();
-		$this->assertContains('SecurityAdmin', $menuItems->column('Code'),
+		$this->assertContains('SecurityAdmin', 
+			array_map($allValsFn, $menuItems->column('Code')),
 			'Group with CMS_ACCESS_LeftAndMain permission can access all sections'
 		);
-		$this->assertContains('Help', $menuItems->column('Code'),
+		$this->assertContains('Help', 
+			array_map($allValsFn, $menuItems->column('Code')),
 			'Group with CMS_ACCESS_LeftAndMain permission can access all sections'
 		);
 		
@@ -167,7 +151,7 @@ class LeftAndMainTest extends FunctionalTest {
 		$menuItems = singleton('LeftAndMain')->MainMenu();
 		$this->assertContains(
 			'SecurityAdmin',
-			$menuItems->column('Code'),
+			array_map($allValsFn, $menuItems->column('Code')),
 			'Administrators can access Security Admin'
 		);
 		

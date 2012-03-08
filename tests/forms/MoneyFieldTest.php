@@ -96,4 +96,3 @@ class MoneyFieldTest_CustomSetter_Object extends DataObject implements TestOnly 
 
 	}
 }
-?>

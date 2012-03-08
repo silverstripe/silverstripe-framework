@@ -15,16 +15,12 @@
  * )
  * </code>
  * 
- * <b>Labels</b>
- * 
- * By default, FormAction will use the title as the label for the left margin.  This can look redundant on the form.  If you'd rather have just the button alone with as pictured above try using {@link FormAction_WithoutLabel} instead.
- * 
  * @package forms
  * @subpackage actions
  */
 class FormAction extends FormField {
 
-	protected $extraData;
+	protected $template = 'FormAction';
 
 	protected $action;
 	
@@ -36,39 +32,25 @@ class FormAction extends FormField {
 	 */
 	public $useButtonTag = false;
 	
-	private $buttonContent = null;
-	
-	/**
-	 * Add content inside a button field.
-	 */
-	function setButtonContent($content) {
-		$this->buttonContent = (string) $content;
-	}
-	
+	protected $buttonContent = null;
 	
 	/**
 	 * Create a new action button.
 	 * @param action The method to call when the button is clicked
 	 * @param title The label on the button
 	 * @param form The parent form, auto-set when the field is placed inside a form 
-	 * @param extraData A piece of extra data that can be extracted with $this->extraData.  Useful for
-	 *                  calling $form->buttonClicked()->extraData()
-	 * @param extraClass A CSS class to apply to the button in addition to 'action'
 	 */
-	function __construct($action, $title = "", $form = null, $extraData = null, $extraClass = '') {
-		$this->extraData = $extraData;
-		$this->addExtraClass($extraClass); 
+	function __construct($action, $title = "", $form = null) {
 		$this->action = "action_$action";
-		
 		parent::__construct($this->action, $title, null, $form);
 	}
-	
-	static function create($action, $title = "", $extraData = null, $extraClass = null) {
-		return new FormAction($action, $title, null, $extraData, $extraClass);
+
+	static function create($action, $title = "") {
+		return new FormAction($action, $title);
 	}
-	
+
 	function actionName() {
-		return substr($this->name,7);
+		return substr($this->name, 7);
 	}
 	
 	/**
@@ -77,52 +59,71 @@ class FormAction extends FormField {
 	 */
 	function setFullAction($fullAction) {
 		$this->action = $fullAction;
+		return $this;
 	}
 
-	function extraData() {
-		return $this->extraData;
+	function Field($properties = array()) {
+		$properties = array_merge(
+			$properties,
+			array(
+				'Name' => $this->action,
+				'Title' => ($this->description && !$this->useButtonTag) ? $this->description : $this->Title(),
+				'UseButtonTag' => $this->useButtonTag
+			)
+		);
+		return $this->customise($properties)->renderWith($this->getTemplate());
 	}
-	
-	/**
-	 * Create a submit input, or button tag
-	 * using {@link FormField->createTag()} functionality.
-	 * 
-	 * @return HTML code for the input OR button element
-	 */
-	function Field() {
-		if($this->useButtonTag) {
-			$attributes = array(
-				'class' => 'action' . ($this->extraClass() ? $this->extraClass() : ''),
-				'id' => $this->id(),
-				'type' => 'submit',
-				'name' => $this->action,
-				'tabindex' => $this->getTabIndex()
-			);
-			if($this->isReadonly()) {
-				$attributes['disabled'] = 'disabled';
-				$attributes['class'] = $attributes['class'] . ' disabled';
-			}
-			
-			return $this->createTag('button', $attributes, $this->buttonContent ? $this->buttonContent : $this->Title());
-		} else {
-			$attributes = array(
-				'class' => 'action' . ($this->extraClass() ? $this->extraClass() : ''),
-				'id' => $this->id(),
-				'type' => 'submit',
-				'name' => $this->action,
+
+	public function Type() {
+		return 'action';
+	}
+
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array(
+				'disabled' => ($this->isReadonly() || $this->isDisabled()),
 				'value' => $this->Title(),
-				'tabindex' => $this->getTabIndex()
-			);
-			if($this->isReadonly()) {
-				$attributes['disabled'] = 'disabled';
-				$attributes['class'] = $attributes['class'] . ' disabled';
-			}
-			$attributes['title'] = ($this->description) ? $this->description : $this->Title();
-			
-			return $this->createTag('input', $attributes);
-		}
+				'type' => ($this->useButtonTag) ? null : 'submit',
+				'title' => ($this->useButtonTag) ? $this->description : null,
+			)
+		);
 	}
-	
+
+	/**
+	 * Add content inside a button field.
+	 */
+	function setButtonContent($content) {
+		$this->buttonContent = (string) $content;
+		return $this;
+	}
+
+	/**
+	 * @return String
+	 */
+	function getButtonContent() {
+		return $this->buttonContent;
+	}
+
+	/**
+	 * @param Boolean
+	 */
+	public function setUseButtonTag($bool) {
+		$this->useButtonTag = $bool;
+		return $this;
+	}
+
+	/**
+	 * @return Boolean
+	 */
+	public function getUseButtonTag() {
+		return $this->useButtonTag;
+	}
+
+	function extraClass() {
+		return 'action ' . parent::extraClass();
+	}
+
 	/**
 	 * Does not transform to readonly by purpose.
 	 * Globally disabled buttons would break the CMS.
@@ -132,19 +133,5 @@ class FormAction extends FormField {
 		$clone->setReadonly(true);
 		return $clone;
 	}
-	
-	function readonlyField() {
-		return $this;
-	}
-}
 
-/**
- * @package forms
- * @subpackage actions
- */
-class FormAction_WithoutLabel extends FormAction {
-	function Title(){
-		return null;
-	}
 }
-?>

@@ -6,13 +6,15 @@
  * @subpackage fields-dataless
  */
 class HeaderField extends DatalessField {
+
+	protected $template = 'HeaderField';
 	
 	/**
 	 * @var int $headingLevel The level of the <h1> to <h6> HTML tag. Default: 2
 	 */
 	protected $headingLevel = 2;
 	
-	function __construct($name, $title = null, $headingLevel = 2, $form = null) {
+	function __construct($name, $title = null, $headingLevel = 2) {
 		// legacy handling for old parameters: $title, $heading, ...
 		// instead of new handling: $name, $title, $heading, ...
 		$args = func_get_args();
@@ -27,19 +29,25 @@ class HeaderField extends DatalessField {
 		
 		if($headingLevel) $this->headingLevel = $headingLevel;
 		
-		parent::__construct($name, $title, null, $form);
+		parent::__construct($name, $title);
 	}
-	
-	function Field() {
-		$attributes = array(
-			'class' => $this->extraClass(),
-			'id' => $this->id()
-		);
-		return $this->createTag(
-			"h{$this->headingLevel}",
-			$attributes,
-			($this->getAllowHTML() ? $this->title : Convert::raw2xml($this->title))
+
+	public function getHeadingLevel() {
+		return $this->headingLevel;
+	}
+
+	function getAttributes() {
+		return array_merge(
+			array(
+				'id' => $this->ID(),
+				'class' => $this->extraClass()
+			),
+			$this->attributes
 		);
 	}
+
+	function Type() {
+		return null;
+	}
+
 }
-?>

@@ -2,7 +2,7 @@
 
 /**
  * Configure Sapphire from the _ss_environment.php file.
- * Usage: Put "require_once('sapphire/core/ConfigureFromEnv.php');" into your _config.php file.
+ * Usage: Put "require_once('../sapphire/conf/ConfigureFromEnv.php');" into your _config.php file.
  * 
  * If you include this file, you will be able to use the following defines in _ss_environment.php to control 
  * your site.

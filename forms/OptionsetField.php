@@ -34,7 +34,7 @@
  *  $map = $myDoSet->toDropDownMap();
  *  
  *   // Instantiate the OptionsetField 
- *   $fieldset = new Fieldset(
+ *   $FieldList = new FieldList(
  *     new OptionsetField(
  *      $name = "Foobar",
  *      $title = "FooBar's optionset",
@@ -55,64 +55,46 @@
  * @subpackage fields-basic
  */
 class OptionsetField extends DropdownField {
+
+	protected $template = 'OptionsetField';
 	
 	/**
 	 * @var Array
 	 */
 	protected $disabledItems = array();
-	
-	/**
-	 * Creates a new optionset field.
-	 * @param name The field name
-	 * @param title The field title
-	 * @param source An map of the dropdown items
-	 * @param value The current value
-	 * @param form The parent form
-	 */
-	function __construct($name, $title = "", $source = array(), $value = "", $form = null) {
-		parent::__construct($name, $title, $source, $value, $form);
+
+	function Field($properties = array()) {
+		$source = $this->getSource();
+		$odd = 0;
+		$options = array();
+		if($source) {
+			foreach($source as $value => $title) {
+				$itemID = $this->ID() . '_' . preg_replace('/[^a-zA-Z0-9]/', '', $value);
+				$odd = ($odd + 1) % 2;
+				$extraClass = $odd ? 'odd' : 'even';
+				$extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $value);
+				
+				$options[] = new ArrayData(array(
+					'ID' => $itemID,
+					'Class' => $extraClass,
+					'Name' => $this->name,
+					'Value' => $value,
+					'Title' => $title,
+					'isChecked' => $value == $this->value,
+					'isDisabled' => $this->disabled || in_array($value, $this->disabledItems),
+				));
+			}
+		}
+
+		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
+
+		return $this->customise($properties)->renderWith($this->getTemplate());
 	}
 
-	/**
-	 * Create a UL tag containing sets of radio buttons and labels.  The IDs are set to
-	 * FieldID_ItemKey, where ItemKey is the key with all non-alphanumerics removed.
-	 * 
-	 * @todo Should use CheckboxField FieldHolder rather than constructing own markup.
-	 */
-	function Field() {
-		$options = '';
-		$odd = 0;
-		$source = $this->getSource();
-		foreach($source as $key => $value) {
-			$itemID = $this->id() . "_" . ereg_replace('[^a-zA-Z0-9]+','',$key);
-		
-			if($key == $this->value/* || $useValue */) {
-				$useValue = false;
-				$checked = " checked=\"checked\"";
-			} else {
-				$checked="";
-			}
-			
-			$odd = ($odd + 1) % 2;
-			$extraClass = $odd ? "odd" : "even";
-			$extraClass .= " val" . preg_replace('/[^a-zA-Z0-9\-\_]/','_', $key);
-			$disabled = ($this->disabled || in_array($key, $this->disabledItems)) ? 'disabled="disabled"' : '';
-			
-			$options .= "<li class=\"".$extraClass."\"><input id=\"$itemID\" name=\"$this->name\" type=\"radio\" value=\"$key\"$checked $disabled class=\"radio\" /> <label for=\"$itemID\">$value</label></li>\n";
-		}
-		$id = $this->id();
-		return "<ul id=\"$id\" class=\"optionset {$this->extraClass()}\">\n$options</ul>\n";
-	}
-	
-	protected $disabled = false;
-	function setDisabled($val) {
-		$this->disabled = $val;
-	}
-	
 	function performReadonlyTransformation() {
 		// Source and values are DataObject sets.
 		$items = $this->getSource();
-		$field = new LookupField($this->name,$this->title ? $this->title : "" ,$items,$this->value);
+		$field = new LookupField($this->name, $this->title ? $this->title : '', $items, $this->value);
 		$field->setForm($this->form);
 		$field->setReadonly(true);
 		return $field;
@@ -126,6 +108,7 @@ class OptionsetField extends DropdownField {
 	 */
 	function setDisabledItems($items) {
 		$this->disabledItems = $items;
+		return $this;
 	}
 	
 	/**
@@ -136,7 +119,7 @@ class OptionsetField extends DropdownField {
 	}
 	
 	function ExtraOptions() {
-		return new DataObjectSet();
+		return new ArrayList();
 	}
+
 }
-?>

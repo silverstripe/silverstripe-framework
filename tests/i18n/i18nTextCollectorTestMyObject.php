@@ -17,4 +17,3 @@ class i18nTextCollectorTestMyObject extends DataObject implements TestOnly {
 	
 	static $plural_name = "My Objects";
 }
-?>

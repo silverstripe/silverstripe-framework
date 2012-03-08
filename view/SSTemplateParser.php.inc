@@ -27,11 +27,11 @@ This comment will not appear in the output
 
 // We want this to work when run by hand too
 if (defined(THIRDPARTY_PATH)) {
-	require THIRDPARTY_PATH . '/php-peg/Parser.php' ;
+	require_once(THIRDPARTY_PATH . '/php-peg/Parser.php');
 }
 else {
 	$base = dirname(__FILE__);
-	require $base.'/../thirdparty/php-peg/Parser.php';
+	require_once($base.'/../thirdparty/php-peg/Parser.php');
 }
 
 /**
@@ -490,6 +490,7 @@ class SSTemplateParser extends Parser {
 		$block = ++$res['subblocks'];
 		// Build the key for this block from the passed cache key, the block index, and the sha hash of the template itself
 		$key = "'" . sha1($sub['php']) . (isset($res['key']) && $res['key'] ? "_'.sha1(".$res['key'].")" : "'") . ".'_$block'";
+		$key = preg_replace('/[^a-zA-Z0-9_]/', '_', $key);
 		// Get any condition
 		$condition = isset($res['condition']) ? $res['condition'] : '';
 		
@@ -601,7 +602,7 @@ class SSTemplateParser extends Parser {
 	 *   'Arguments' an array of the Argument match rule result arrays
 	 *
 	 * Once a block has successfully been matched against, it will then look for the actual handler, which should
-	 * be on this class (either defined or decorated on) as ClosedBlock_Handler_Name(&$res), where Name is the
+	 * be on this class (either defined or extended on) as ClosedBlock_Handler_Name(&$res), where Name is the
 	 * tag name, first letter captialized (i.e Control, Loop, With, etc).
 	 * 
 	 * This function will be called with the match rule result array as it's first argument. It should return
@@ -626,7 +627,7 @@ class SSTemplateParser extends Parser {
 	function ClosedBlock__finalise(&$res) {
 		$blockname = $res['BlockName']['text'];
 		
-		$method = 'ClosedBlock_Handle_'.ucfirst(strtolower($blockname));
+		$method = 'ClosedBlock_Handle_'.$blockname;
 		if (method_exists($this, $method)) $res['php'] = $this->$method($res);
 		else {
 			throw new SSTemplateParseException('Unknown closed block "'.$blockname.'" encountered. Perhaps you are not supposed to close this block, or have mis-spelled it?', $this);
@@ -637,17 +638,22 @@ class SSTemplateParser extends Parser {
 	 * This is an example of a block handler function. This one handles the loop tag.
 	 */
 	function ClosedBlock_Handle_Loop(&$res) {
-		if ($res['ArgumentCount'] != 1) {
+		if ($res['ArgumentCount'] > 1) {
 			throw new SSTemplateParseException('Either no or too many arguments in control block. Must be one argument only.', $this);
 		}
-		
-		$arg = $res['Arguments'][0];
-		if ($arg['ArgumentMode'] == 'string') {
-			throw new SSTemplateParseException('Control block cant take string as argument.', $this);
+
+		//loop without arguments loops on the current scope
+		if ($res['ArgumentCount'] == 0) {
+			$on = '$scope->obj(\'Up\', null, true)->obj(\'Foo\', null, true)';
+		} else {    //loop in the normal way
+			$arg = $res['Arguments'][0];
+			if ($arg['ArgumentMode'] == 'string') {
+				throw new SSTemplateParseException('Control block cant take string as argument.', $this);
+			}
+			$on = str_replace('$$FINAL', 'obj', ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
 		}
-		
-		$on = str_replace('$$FINAL', 'obj', ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
-		return 
+
+		return
 			$on . '; $scope->pushScope(); while (($key = $scope->next()) !== false) {' . PHP_EOL .
 				$res['Template']['php'] . PHP_EOL .
 			'}; $scope->popScope(); ';
@@ -658,6 +664,7 @@ class SSTemplateParser extends Parser {
 	 * @deprecated
 	 */
 	function ClosedBlock_Handle_Control(&$res) {
+		Deprecation::notice('3.1', 'Use <% with %> or <% loop %> instead.');
 		return $this->ClosedBlock_Handle_Loop($res);
 	}
 	
@@ -706,7 +713,7 @@ class SSTemplateParser extends Parser {
 	function OpenBlock__finalise(&$res) {
 		$blockname = $res['BlockName']['text'];
 	
-		$method = 'OpenBlock_Handle_'.ucfirst(strtolower($blockname));
+		$method = 'OpenBlock_Handle_'.$blockname;
 		if (method_exists($this, $method)) $res['php'] = $this->$method($res);
 		else {
 			throw new SSTemplateParseException('Unknown open block "'.$blockname.'" encountered. Perhaps you missed the closing tag or have mis-spelled it?', $this);
@@ -724,9 +731,9 @@ class SSTemplateParser extends Parser {
 		
 		if($this->includeDebuggingComments) { // Add include filename comments on dev sites
 			return 
-				'$val .= \'<!-- include '.$php.' -->\';'. "\n".
-				'$val .= SSViewer::parse_template('.$php.', $scope->getItem());'. "\n".
-				'$val .= \'<!-- end include '.$php.' -->\';'. "\n";
+				'$val .= \'<!-- include '.addslashes($php).' -->\';'. "\n".
+				'$val .= SSViewer::execute_template('.$php.', $scope->getItem());'. "\n".
+				'$val .= \'<!-- end include '.addslashes($php).' -->\';'. "\n";
 		}
 		else {
 			return 
@@ -870,7 +877,7 @@ class SSTemplateParser extends Parser {
 		// TODO: This is pretty ugly & gets applied on all files not just html. I wonder if we can make this non-dynamically calculated
 		$text = preg_replace(
 			'/href\s*\=\s*\"\#/', 
-			'href="\' . (SSViewer::$options[\'rewriteHashlinks\'] ? Convert::raw2att( $_SERVER[\'REQUEST_URI\'] ) : "") . \'#',
+			'href="\' . (SSViewer::$options[\'rewriteHashlinks\'] ? strip_tags( $_SERVER[\'REQUEST_URI\'] ) : "") . \'#',
 			$text
 		);
 
@@ -918,7 +925,8 @@ class SSTemplateParser extends Parser {
 				$code = preg_replace('/(<html[^>]*>)/i', "\\1<!-- template $templateName -->", $code);
 				$code = preg_replace('/(<\/html[^>]*>)/i', "<!-- end template $templateName -->\\1", $code);
 			} else {
-				$code = "<!-- template $templateName -->\n" . $code . "\n<!-- end template $templateName -->";
+				$code = str_replace('<?php' . PHP_EOL, '<?php' . PHP_EOL . '$val .= \'<!-- template ' . $templateName . ' -->\';' . "\n", $code);
+				$code .= "\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
 			}
 		}	
 		

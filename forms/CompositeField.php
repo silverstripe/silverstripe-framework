@@ -9,7 +9,7 @@
 class CompositeField extends FormField {
 	
 	/**
-	 * @var FieldSet
+	 * @var FieldList
 	 */
 	protected $children;
 	
@@ -27,15 +27,27 @@ class CompositeField extends FormField {
 	 * count of your $children.
 	 */
 	protected $columnCount = null;
+
+	/**
+	 * @var String custom HTML tag to render with, e.g. to produce a <fieldset>.
+	 */
+	protected $tag = 'div';
 	
+	/**
+	 * @var String Optional description for this set of fields.
+	 * If the {@link $tag} property is set to use a 'fieldset', this will be
+	 * rendered as a <legend> tag, otherwise its a 'title' attribute.
+	 */
+	protected $legend;
+
 	public function __construct($children = null) {
-		if($children instanceof FieldSet) {
+		if($children instanceof FieldList) {
 			$this->children = $children;
 		} elseif(is_array($children)) {
-			$this->children = new FieldSet($children); 
+			$this->children = new FieldList($children); 
 		} else {
 			$children = is_array(func_get_args()) ? func_get_args() : array();
-			$this->children = new FieldSet($children); 
+			$this->children = new FieldList($children); 
 		}
 		$this->children->setContainerField($this);
 		
@@ -46,44 +58,114 @@ class CompositeField extends FormField {
 	}
 
 	/**
-	 * Returns all the sub-fields, suitable for <% control FieldSet %>
+	 * Returns all the sub-fields, suitable for <% control FieldList %>
 	 */
-	public function FieldSet() {
+	public function FieldList() {
 		return $this->children;
 	}
-	
+
+	/**
+	 * @deprecated 3.0 Please use {@link FieldList()}.
+	 */
+	public function FieldSet() {
+		Deprecation::notice('3.0', 'Use FieldList() instead.');
+		return $this->FieldList();
+	}
+
 	public function setID($id) {
 		$this->id = $id;
-	}
-	
-	public function Field() {
-		return $this->FieldHolder();
+		return $this;
 	}
 	
 	/**
 	 * Accessor method for $this->children
-	 * @return FieldSet
+	 * @return FieldList
 	 */
 	public function getChildren() {
 		return $this->children;
 	}
 	
 	/**
-	 * @param FieldSet $children
+	 * @param FieldList $children
 	 */
 	public function setChildren($children) {
 		$this->children = $children;
+		return $this;
+	}
+
+	/** @param String */
+	public function setTag($tag) {
+		$this->tag = $tag;
+		return $this;
+	}
+
+	/** @return String */
+	public function getTag() {
+		return $this->tag;
+	}
+
+	/** @param String */
+	public function setLegend($legend) {
+		$this->legend = $legend;
+		return $this;
+	}
+
+	/** @return String */
+	public function getLegend() {
+		return $this->legend;
+	}
+
+	function extraClasses() {
+		$classes = array('field', 'CompositeField', parent::extraClasses());
+		if($this->columnCount) $classes[] = 'multicolumn';
+		return implode(' ', $classes);
+	}
+
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array(
+				'tabindex' => null, 
+				'type' => null, 
+				'value' => null, 
+				'type' => null,
+				'title' => ($this->tag == 'fieldset') ? null : $this->legend
+			)
+		);
+	}
+
+	public function Field() {
+		$content = '';
+
+		if($this->tag == 'fieldset' && $this->legend) {
+			$content .= '<legend>' . $this->legend . '<legend>';
+		}
+
+		$fs = $this->FieldList();
+		foreach($fs as $subfield) {
+			if($this->columnCount) {
+				$className = "column{$this->columnCount}";
+				if(!next($fs)) $className .= " lastcolumn";
+				$content .= "\n<div class=\"{$className}\">\n" . $subfield->Field() . "\n</div>\n";
+			} else if($subfield){
+				$content .= "\n" . $subfield->Field() . "\n";
+			}
+		}
+				
+		return $this->createTag($this->getTag(), $this->getAttributes(), $content);
 	}
 
 	/**
 	 * Returns the fields nested inside another DIV
 	 */
 	function FieldHolder() {
-		$fs = $this->FieldSet();
-		$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
-		$className = ($this->columnCount) ? "field CompositeField {$this->extraClass()} multicolumn" : "field CompositeField {$this->extraClass()}";
-		$content = "<div class=\"$className\"$idAtt>\n";
-		
+		$content = '';
+
+		if($this->tag == 'fieldset' && $this->legend) {
+			$content .= '<legend>' . $this->legend . '<legend>';
+		}
+
+		$fs = $this->FieldList();
 		foreach($fs as $subfield) {
 			if($this->columnCount) {
 				$className = "column{$this->columnCount}";
@@ -93,21 +175,25 @@ class CompositeField extends FormField {
 				$content .= "\n" . $subfield->FieldHolder() . "\n";
 			}
 		}
-		$content .= "</div>\n";
 				
-		return $content;
+		return $this->createTag($this->getTag(), $this->getAttributes(), $content);
 	}
 		
 	/**
 	 * Returns the fields in the restricted field holder inside a DIV.
 	 */
-	function SmallFieldHolder() {//return $this->FieldHolder();
-		$fs = $this->FieldSet();
+	function SmallFieldHolder() {
+		$fs = $this->FieldList();
+		$tag = $this->getTag();
 		$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
 		$className = ($this->columnCount) ? "field CompositeField {$this->extraClass()} multicolumn" : "field CompositeField {$this->extraClass()}";
-		$content = "<div class=\"$className\"$idAtt>";
+		$content = "<$tag class=\"$className\"$idAtt>";
+
+		if($this->tag == 'fieldset' && $this->legend) {
+			$content .= '<legend>' . $this->legend . '<legend>';
+		}
 		
-		foreach($fs as $subfield) {//echo ' subf'.$subfield->Name();
+		foreach($fs as $subfield) {
 			if($this->columnCount) {
 				$className = "column{$this->columnCount}";
 				if(!next($fs)) $className .= " lastcolumn";
@@ -116,7 +202,7 @@ class CompositeField extends FormField {
 				$content .= $subfield->SmallFieldHolder() . " ";
 			}
 		}	
-		$content .= "</div>";
+		$content .= "</$tag>";
 	
 		return $content;
 	}	
@@ -134,7 +220,7 @@ class CompositeField extends FormField {
 					$isIncluded =  ($field->hasData());
 				}
 				if($isIncluded) {
-					$name = $field->Name();
+					$name = $field->getName();
 					if($name) {
 						$formName = (isset($this->form)) ? $this->form->FormName() : '(unknown form)';
 						if(isset($list[$name])) user_error("collateDataFields() I noticed that a field called '$name' appears twice in your form: '{$formName}'.  One is a '{$field->class}' and the other is a '{$list[$name]->class}'", E_USER_ERROR);
@@ -148,14 +234,21 @@ class CompositeField extends FormField {
 	function setForm($form) {
 		foreach($this->children as $f) if(is_object($f)) $f->setForm($form);
 		parent::setForm($form);
+		return $this;
 	}
 	
 	function setColumnCount($columnCount) {
 		$this->columnCount = $columnCount;
+		return $this;
 	}
 	
-	function isComposite() { return true; }
-	function hasData() { return false; }
+	function isComposite() { 
+		return true; 
+	}
+
+	function hasData() { 
+		return false; 
+	}
 
 	public function fieldByName($name) {
 		return $this->children->fieldByName($name);
@@ -168,7 +261,7 @@ class CompositeField extends FormField {
 	}
 	
 	/**
-	 * @uses FieldSet->insertBefore()
+	 * @uses FieldList->insertBefore()
 	 */
 	public function insertBefore($field, $insertBefore) {
 		$ret = $this->children->insertBefore($field, $insertBefore);
@@ -209,7 +302,7 @@ class CompositeField extends FormField {
 	 * versions of all the children
 	 */
 	public function performReadonlyTransformation() {
-		$newChildren = new FieldSet();
+		$newChildren = new FieldList();
 		$clone = clone $this;
 		foreach($clone->getChildren() as $idx => $child) {
 			if(is_object($child)) $child = $child->transform(new ReadonlyTransformation());
@@ -226,7 +319,7 @@ class CompositeField extends FormField {
 	 * versions of all the children
 	 */
 	public function performDisabledTransformation($trans) {
-		$newChildren = new FieldSet();
+		$newChildren = new FieldList();
 		$clone = clone $this;
 		if($clone->getChildren()) foreach($clone->getChildren() as $idx => $child) {
 			if(is_object($child)) {
@@ -258,7 +351,7 @@ class CompositeField extends FormField {
 		
 		$i = 0;
 		foreach($this->children as $child) {
-			if($child->Name() == $field->Name()) return $i;
+			if($child->getName() == $field->getName()) return $i;
 			$i++;
 		}
 		
@@ -271,7 +364,7 @@ class CompositeField extends FormField {
 	 * @param string|FormField
 	 */
 	function makeFieldReadonly($field) {
-		$fieldName = ($field instanceof FormField) ? $field->Name() : $field;
+		$fieldName = ($field instanceof FormField) ? $field->getName() : $field;
 		
 		// Iterate on items, looking for the applicable field
 		foreach($this->children as $i => $item) {
@@ -279,7 +372,7 @@ class CompositeField extends FormField {
 				$item->makeFieldReadonly($fieldName);
 			} else {
 				// Once it's found, use FormField::transform to turn the field into a readonly version of itself.
-				if($item->Name() == $fieldName) {
+				if($item->getName() == $fieldName) {
 					$this->children->replaceField($fieldName, $item->transform(new ReadonlyTransformation()));
 
 					// Clear an internal cache
@@ -313,4 +406,3 @@ class CompositeField extends FormField {
 	}
 }
 
-?>

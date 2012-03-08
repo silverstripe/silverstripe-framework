@@ -23,15 +23,6 @@ class ArrayDataTest extends SapphireTest {
 		$this->assertFalse($arrayData->hasField('c'));
 	}
 
-	function testWrappingAnEmptyObjectWorks() {
-		$object = (object) array();
-		$this->assertTrue(is_object($object));
-
-		$arrayData = new ArrayData($object);
-
-		$this->assertEquals(null, $arrayData->TotalItems()); // (tobych) Shouldn't we get 0?
-	}
-
 	function testWrappingAnAssociativeArrayWorks() {
 		$array = array("A" => "Alpha", "B" => "Beta");
 		$this->assertTrue(ArrayLib::is_associative($array));
@@ -41,12 +32,6 @@ class ArrayDataTest extends SapphireTest {
 		$this->assertTrue($arrayData->hasField("A"));
 		$this->assertEquals("Alpha", $arrayData->getField("A"));
 		$this->assertEquals("Beta", $arrayData->getField("B"));
-	}
-
-	function testWrappingAnEmptyArrayWorks() {
-		$arrayData = new ArrayData(array());
-
-		$this->assertEquals(null, $arrayData->TotalItems()); // (tobych) Shouldn't we get 0?
 	}
 
 	function testRefusesToWrapAnIndexedArray() {
@@ -62,11 +47,6 @@ class ArrayDataTest extends SapphireTest {
 		// $arrayData = new ArrayData($array);
 	}
 
-	function testForTemplateWorks() {
-		$arrayData = new ArrayData(array('b' => 'bunny'));
-		$this->assertEquals("array (\n  'b' => 'bunny',\n)", $arrayData->forTemplate());
-	}
-
 	function testSetField() {
 		$arrayData = new ArrayData(array());
 		
@@ -77,6 +57,9 @@ class ArrayDataTest extends SapphireTest {
 	}
 	
 	function testGetArray() {
+		$originalDeprecation = Deprecation::dump_settings();
+		Deprecation::notification_version('2.4');
+
 		$array = array(
 			'Foo' => 'Foo',
 			'Bar' => 'Bar',
@@ -86,6 +69,8 @@ class ArrayDataTest extends SapphireTest {
 		$arrayData = new ArrayData($array);
 		
 		$this->assertEquals($arrayData->getArray(), $array);
+
+		Deprecation::restore_settings($originalDeprecation);
 	}
 
 	function testArrayToObject() {
@@ -110,4 +95,4 @@ class ArrayDataTest_NonEmptyObject {
 
 }
 
-?>
+

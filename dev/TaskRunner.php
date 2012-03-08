@@ -11,7 +11,8 @@ class TaskRunner extends Controller {
 	);
 	
 	static $allowed_actions = array(
-		'index'
+		'index',
+		'runTask',
 	);
 	
 	function init() {
@@ -99,4 +100,4 @@ class TaskRunner extends Controller {
 	
 }
 
-?>
+

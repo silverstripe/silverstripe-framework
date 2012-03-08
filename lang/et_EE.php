@@ -539,4 +539,3 @@ $lang['et_EE']['Widget']['SINGULARNAME'] = 'Vidin';
 $lang['et_EE']['WidgetArea']['PLURALNAME'] = 'Vidina piirkonnad';
 $lang['et_EE']['WidgetArea']['SINGULARNAME'] = 'Vidina piirkond';
 
-?>

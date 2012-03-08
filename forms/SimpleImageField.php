@@ -32,12 +32,12 @@
  * 
  * <code>
  * function Form() {
- *    return new Form($this, "Form", new FieldSet(
+ *    return new Form($this, "Form", new FieldList(
  *        new SimpleImageField (
  *            $name = "FileTypeID",
  *            $title = "Upload your FileType"
  *        )
- *    ), new FieldSet(
+ *    ), new FieldList(
  * 
  *    // List the action buttons here - doform executes the function 'doform' below
  *        new FormAction("doform", "Submit")
@@ -63,10 +63,17 @@
  * @subpackage fields-files
  */
 
+/**
+ * @deprecated 3.0 Use UploadField with $myField->allowedExtensions = array('jpg', 'gif', 'png')
+ */
 class SimpleImageField extends FileField {
 
-	function __construct($name, $title = null, $value = null, $form = null, $rightTitle = null, $folderName = null) {
-		parent::__construct($name, $title, $value, $form, $rightTitle, $folderName);
+	function __construct($name, $title = null, $value = null) {
+		Deprecation::notice('3.0', "Use UploadField with $myField->allowedExtensions = array('jpg', 'gif', 'png')");
+
+		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRightTitle() and setFolderName() instead of constructor arguments');
+
+		parent::__construct($name, $title, $value);
 
 		$this->getValidator()->setAllowedExtensions(array('jpg','gif','png'));
 	}
@@ -95,7 +102,7 @@ class SimpleImageField extends FileField {
 				"type" => "file", 
 				"name" => $this->name, 
 				"id" => $this->id(),
-				"tabindex" => $this->getTabIndex(),
+				"tabindex" => $this->getAttribute('tabindex'),
 				'disabled' => $this->disabled
 			)
 		);
@@ -104,7 +111,7 @@ class SimpleImageField extends FileField {
 				"type" => "hidden", 
 				"name" => "MAX_FILE_SIZE", 
 				"value" => $this->getValidator()->getAllowedMaxFileSize(),
-				"tabindex" => $this->getTabIndex()
+				"tabindex" => $this->getAttribute('tabindex'),
 			)
 		);
 		$html .= "</div>";
@@ -137,16 +144,23 @@ class SimpleImageField_Disabled extends FormField {
 	function Field() {
 		$record = $this->form->getRecord();
 	    $fieldName = $this->name;
-	    if($record) $imageField = $record->$fieldName();
+			
 	    $field = "<div class=\"simpleimage\">";
-	    if($imageField && $imageField->exists()) {
-	      if($imageField->hasMethod('Thumbnail')) $field .= "<img src=\"".$imageField->Thumbnail()->URL."\" />";
-	      elseif($imageField->CMSThumbnail()) $field .= "<img src=\"".$imageField->CMSThumbnail()->URL."\" />";
-	      else {} // This shouldn't be called but it sometimes is for some reason, so we don't do anything
-	    }else{
-	    	$field .= "<label>" . _t('SimpleImageField.NOUPLOAD', 'No Image Uploaded') . "</label>";
-	    }
+			if($this->value) {
+				// Only the case for DataDifferencer
+				$field .= $this->value;
+			} else {
+				if($record) $imageField = $record->$fieldName();
+				if($imageField && $imageField->exists()) {
+		      if($imageField->hasMethod('Thumbnail')) $field .= "<img src=\"".$imageField->Thumbnail()->URL."\" />";
+		      elseif($imageField->CMSThumbnail()) $field .= "<img src=\"".$imageField->CMSThumbnail()->URL."\" />";
+		      else {} // This shouldn't be called but it sometimes is for some reason, so we don't do anything
+		    }else{
+		    	$field .= "<label>" . _t('SimpleImageField.NOUPLOAD', 'No Image Uploaded') . "</label>";
+		    }
+			}
 	    $field .= "</div>";
+	
 	    return $field;
 	}
 

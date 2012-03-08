@@ -7,7 +7,8 @@
  * Please set a validator on the form-object to get feedback
  * about imposed filesize/extension restrictions.
  * 
- * CAUTION: Doesn't work in the CMS due to ajax submission, please use {@link FileIFrameField} instead.
+ * See {@link UploadField} For a more full-featured field 
+ * (incl. ajax-friendly uploads, previews and relationship management).
  * 
  * <b>Usage</p>
  * 
@@ -17,11 +18,11 @@
  * class ExampleForm_Controller extends Page_Controller {
  * 
  * 	public function Form() {
- * 		$fields = new FieldSet(
+ * 		$fields = new FieldList(
  * 			new TextField('MyName'),
  * 			new FileField('MyFile')
  * 		);
- * 		$actions = new FieldSet(
+ * 		$actions = new FieldList(
  * 			new FormAction('doUpload', 'Upload file')
  * 		);
  *    $validator = new RequiredFields(array('MyName', 'MyFile'));
@@ -41,6 +42,8 @@
  * @subpackage fields-files
  */
 class FileField extends FormField {
+
+	protected $template = 'FileField';
 	
 	/**
 	 * Restrict filesize for either all filetypes
@@ -99,48 +102,38 @@ class FileField extends FormField {
 	 * @param string $name The internal field name, passed to forms.
 	 * @param string $title The field label.
 	 * @param int $value The value of the field.
-	 * @param Form $form Reference to the container form
-	 * @param string $rightTitle Used in SmallFieldHolder() to force a right-aligned label
-	 * @param string $folderName Folder to upload files to
 	 */
-	function __construct($name, $title = null, $value = null, $form = null, $rightTitle = null, $folderName = null) {
-		if(isset($folderName)) $this->folderName = $folderName;
+	function __construct($name, $title = null, $value = null) {
+		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRightTitle() and setFolderName() instead of constructor arguments');
+
 		$this->upload = new Upload();
 	
-		parent::__construct($name, $title, $value, $form, $rightTitle);
+		parent::__construct($name, $title, $value);
 	}
 
-	public function Field() {
-		return $this->createTag(
-			'input', 
-			array(
-				"type" => "file", 
-				"name" => $this->name, 
-				"id" => $this->id(),
-				"tabindex" => $this->getTabIndex()
-			)
-		) . 
-		$this->createTag(
-			'input', 
-		  	array(
-		  		"type" => "hidden", 
-		  		"name" => "MAX_FILE_SIZE", 
-		  		"value" => $this->getValidator()->getAllowedMaxFileSize(),
-				"tabindex" => $this->getTabIndex()
-		  	)
+	public function Field($properties = array()) {
+		$properties = array_merge($properties, array('MaxFileSize' => $this->getValidator()->getAllowedMaxFileSize()));
+		return $this->customise($properties)->renderWith($this->getTemplate());
+	}
+
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array('type' => 'file')
 		);
 	}
-	
+
 	public function saveInto(DataObject $record) {
 		if(!isset($_FILES[$this->name])) return false;
+		$fileClass = File::get_class_for_file_extension(pathinfo($_FILES[$this->name]['name'], PATHINFO_EXTENSION));
 		
 		if($this->relationAutoSetting) {
 			// assume that the file is connected via a has-one
 			$hasOnes = $record->has_one($this->name);
 			// try to create a file matching the relation
-			$file = (is_string($hasOnes)) ? Object::create($hasOnes) : new File(); 
+			$file = (is_string($hasOnes)) ? Object::create($hasOnes) : new $fileClass(); 
 		} else {
-			$file = new File();
+			$file = new $fileClass();
 		}
 		
 		$this->upload->loadIntoFile($_FILES[$this->name], $file, $this->folderName);
@@ -154,12 +147,13 @@ class FileField extends FormField {
 			// save to record
 			$record->{$this->name . 'ID'} = $file->ID;
 		}
+		return $this;
 	}
-	
+
 	public function Value() {
-		return $_FILES[$this->Name()];
+		return isset($_FILES[$this->getName()]) ? $_FILES[$this->getName()] : null;
 	}
-	
+
 	/**
 	 * Get custom validator for this field
 	 * 
@@ -176,6 +170,7 @@ class FileField extends FormField {
 	 */
 	public function setValidator($validator) {
 		$this->upload->setValidator($validator);
+		return $this;
 	}
 	
 	/**
@@ -183,6 +178,7 @@ class FileField extends FormField {
 	 */
 	public function setFolderName($folderName) {
 		$this->folderName = $folderName;
+		return $this;
 	}
 	
 	/**

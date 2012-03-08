@@ -36,7 +36,7 @@
  * @subpackage fields-relational
  */
 class TreeMultiselectField extends TreeDropdownField {
-	function __construct($name, $title, $sourceObject = "Group", $keyField = "ID", $labelField = "Title") {
+	function __construct($name, $title = null, $sourceObject = "Group", $keyField = "ID", $labelField = "Title") {
 		parent::__construct($name, $title, $sourceObject, $keyField, $labelField);
 		$this->value = 'unchanged';
 	}
@@ -59,7 +59,7 @@ class TreeMultiselectField extends TreeDropdownField {
 			
 		// Otherwise, look data up from the linked relation
 		} if($this->value != 'unchanged' && is_string($this->value)) {
-			$items = new DataObjectSet();
+			$items = new ArrayList();
 			$ids = explode(',', $this->value);
 			foreach($ids as $id) {
 				if(!is_numeric($id)) continue;
@@ -82,12 +82,11 @@ class TreeMultiselectField extends TreeDropdownField {
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jstree/jquery.jstree.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TreeDropdownField.js');
 		
-		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.all.css');
+		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
 	
 		$value = '';

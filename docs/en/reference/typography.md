@@ -93,11 +93,11 @@ Sometimes, it's not enough to add a class, you also want to remove the typograph
 This example sets another CSS class typographybis:
 
 	:::php
-	function getCMSFields() {
+	public function getCMSFields() {
 	        ...
 	        $htmleditor = new HTMLEditorField("ContentBis", "Content Bis");
 		$htmleditor->setCSSClass('typographybis');
-		$fields->addFieldToTab("Root.Content.Main", $htmleditor);
+		$fields->addFieldToTab("Root.Content", $htmleditor);
 		...
 	        return $fields;
 	}

@@ -1,7 +1,8 @@
 <?php
 /**
  * Represents a decimal field containing a currency amount.
- * Currency the currency class only supports single currencies.
+ * The currency class only supports single currencies.  For multi-currency support, use {@link Money}
+ * 
  * 
  * Example definition via {@link DataObject::$db}:
  * <code>
@@ -11,13 +12,15 @@
  * );
  * </code>
  *
- * @deprecated 2.5 Use Money class
- * 
  * @package sapphire
  * @subpackage model
  */
 class Currency extends Decimal {
 	protected static $currencySymbol = '$';
+	
+	function __construct($name, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0) {
+		parent::__construct($name, $wholeSize, $decimalSize, $defaultValue);
+	}
 	
 	/**
 	 * Returns the number as a currency, eg “$1,000.00”.
@@ -56,4 +59,3 @@ class Currency extends Decimal {
 	}
 }
 
-?>

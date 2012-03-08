@@ -9,7 +9,7 @@
  * @package cms
  * @subpackage core
  */
-class LeftAndMain extends Controller {
+class LeftAndMain extends Controller implements PermissionProvider {
 	
 	/**
 	 * The 'base' url for CMS administration areas.
@@ -20,49 +20,80 @@ class LeftAndMain extends Controller {
 	 */
 	static $url_base = "admin";
 	
+	/**
+	 * The current url segment attached to the LeftAndMain instance
+	 *
+	 * @var string
+	 */
 	static $url_segment;
 	
+	/**
+	 * @var string
+	 */
 	static $url_rule = '/$Action/$ID/$OtherID';
 	
+	/**
+	 * @var string
+	 */
 	static $menu_title;
 	
+	/**
+	 * @var int
+	 */
 	static $menu_priority = 0;
 	
+	/**
+	 * @var int
+	 */
 	static $url_priority = 50;
 
 	/**
-	 * @var string A subclass of {@link DataObject}. 
-	 * Determines what is managed in this interface,
-	 * through {@link getEditForm()} and other logic.
+	 * A subclass of {@link DataObject}. 
+	 * 
+	 * Determines what is managed in this interface, through 
+	 * {@link getEditForm()} and other logic.
+	 *
+	 * @var string 
 	 */
 	static $tree_class = null;
 	
 	/**
-	* The url used for the link in the Help tab in the backend
-	* Value can be overwritten if required in _config.php
-	*/
+	 * The url used for the link in the Help tab in the backend
+	 * 
+	 * @var string
+	 */
 	static $help_link = 'http://userhelp.silverstripe.org';
 
+	/**
+	 * @var array
+	 */
 	static $allowed_actions = array(
 		'index',
+		'save',
 		'savetreenode',
 		'getitem',
 		'getsubtree',
-		'myprofile',
 		'printable',
 		'show',
-		'Member_ProfileForm',
 		'EditorToolbar',
 		'EditForm',
-		'RootForm',
 		'AddForm',
 		'batchactions',
 		'BatchActionsForm',
 		'Member_ProfileForm',
 	);
+
+	/**
+	 * @var Array Codes which are required from the current user to view this controller.
+	 * If multiple codes are provided, all of them are required.
+	 * All CMS controllers require "CMS_ACCESS_LeftAndMain" as a baseline check,
+	 * and fall back to "CMS_ACCESS_<class>" if no permissions are defined here.
+	 * See {@link canView()} for more details on permission checks.
+	 */
+	static $required_permission_codes;
 	
 	/**
-	 * Register additional requirements through the {@link Requirements class}.
+	 * Register additional requirements through the {@link Requirements} class.
 	 * Used mainly to work around the missing "lazy loading" functionality
 	 * for getting css/javascript required after an ajax-call (e.g. loading the editform).
 	 *
@@ -79,31 +110,35 @@ class LeftAndMain extends Controller {
 	 * @return boolean
 	 */
 	function canView($member = null) {
-		if(!$member && $member !== FALSE) {
-			$member = Member::currentUser();
-		}
+		if(!$member && $member !== FALSE) $member = Member::currentUser();
 		
 		// cms menus only for logged-in members
 		if(!$member) return false;
 		
-		// alternative decorated checks
+		// alternative extended checks
 		if($this->hasMethod('alternateAccessCheck')) {
 			$alternateAllowed = $this->alternateAccessCheck();
 			if($alternateAllowed === FALSE) return false;
 		}
-			
-		// Default security check for LeftAndMain sub-class permissions
-		if(!Permission::checkMember($member, "CMS_ACCESS_$this->class") && 
-		   !Permission::checkMember($member, "CMS_ACCESS_LeftAndMain")) {
-			return false;
+
+		// Check for "CMS admin" permission
+		if(Permission::checkMember($member, "CMS_ACCESS_LeftAndMain")) return true;
+
+		// Check for LeftAndMain sub-class permissions			
+		$codes = array();
+		$extraCodes = $this->stat('required_permission_codes');
+		if($extraCodes !== false) { // allow explicit FALSE to disable subclass check
+			if($extraCodes) $codes = array_merge($codes, (array)$extraCodes);
+			else $codes[] = "CMS_ACCESS_$this->class";	
 		}
+		foreach($codes as $code) if(!Permission::checkMember($member, $code)) return false;
 		
 		return true;
 	}
 	
 	/**
-	 * @uses LeftAndMainDecorator->init()
-	 * @uses LeftAndMainDecorator->accessedCMS()
+	 * @uses LeftAndMainExtension->init()
+	 * @uses LeftAndMainExtension->accessedCMS()
 	 * @uses CMSMenu
 	 */
 	function init() {
@@ -124,7 +159,7 @@ class LeftAndMain extends Controller {
 			self::$help_link
 		);
 
-		// Allow customisation of the access check by a decorator
+		// Allow customisation of the access check by a extension
 		// Also all the canView() check to execute Director::redirect()
 		if(!$this->canView() && !$this->response->isFinished()) {
 			// When access /admin/, we should try a redirect to another part of the admin rather than be locked out
@@ -159,17 +194,22 @@ class LeftAndMain extends Controller {
 
 		// Audit logging hook
 		if(empty($_REQUEST['executeForm']) && !$this->isAjax()) $this->extend('accessedCMS');
+		
+		// Requirements
+
+		// Suppress behaviour/prototype validation instructions in CMS, not compatible with ajax loading of forms.
+		Validator::set_javascript_validation_handler('none');
 
 		// Set the members html editor config
 		HtmlEditorConfig::set_active(Member::currentUser()->getHtmlEditorConfigForCMS());
-		
 		
 		// Set default values in the config if missing.  These things can't be defined in the config
 		// file because insufficient information exists when that is being processed
 		$htmlEditorConfig = HtmlEditorConfig::get_active();
 		$htmlEditorConfig->setOption('language', i18n::get_tinymce_lang());
 		if(!$htmlEditorConfig->getOption('content_css')) {
-			$cssFiles = 'sapphire/admin/css/editor.css';
+			$cssFiles = array();
+			$cssFiles[] = 'sapphire/admin/css/editor.css';
 			
 			// Use theme from the site config
 			if(class_exists('SiteConfig') && ($config = SiteConfig::current_site_config()) && $config->Theme) {
@@ -180,108 +220,105 @@ class LeftAndMain extends Controller {
 				$theme = false;
 			}
 			
-			if($theme) $cssFiles .= ',' . THEMES_DIR . "/{$theme}/css/editor.css";
-			else if(project()) $cssFiles .= ',' . project() . '/css/editor.css';
+			if($theme) $cssFiles[] = THEMES_DIR . "/{$theme}/css/editor.css";
+			else if(project()) $cssFiles[] = project() . '/css/editor.css';
+			
+			// Remove files that don't exist
+			foreach($cssFiles as $k => $cssFile) {
+				if(!file_exists(BASE_PATH . '/' . $cssFile)) unset($cssFiles[$k]);
+			}
 
-			$htmlEditorConfig->setOption('content_css', $cssFiles);
+			$htmlEditorConfig->setOption('content_css', implode(',', $cssFiles));
 		}
 		
-
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/typography.css');
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/layout.css');
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/cms_left.css');
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/cms_right.css');
-		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
-		
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototypefix/intro.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototypefix/outro.js');
-		
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
-
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');  //import all of jquery ui
-
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-layout/jquery.layout.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-layout/jquery.layout.state.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/json-js/json2.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-metadata/jquery.metadata.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/jquery-fitheighttoparent/jquery.fitheighttoparent.js');
-		
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js');
-		// @todo Load separately so the CSS files can be inlined
-		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.all.css');
-		
-		// entwine
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		
-		// Required for TreeTools panel above tree
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
-		
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-cookie/jquery.cookie.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js');
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::add_i18n_javascript(SAPPHIRE_ADMIN_DIR . '/javascript/lang');
-		
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/effects.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/dragdrop.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/scriptaculous/controls.js');
-		
-		Requirements::javascript(THIRDPARTY_DIR . '/tree/tree.js');
-		Requirements::css(THIRDPARTY_DIR . '/tree/tree.css');
-		Requirements::javascript(THIRDPARTY_DIR . '/jstree/jquery.jstree.js');
-		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
-		
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js');
-
-		Requirements::themedCSS('typography');
-
-		foreach (self::$extra_requirements['javascript'] as $file) {
-			Requirements::javascript($file[0]);
-		}
-		
-		foreach (self::$extra_requirements['css'] as $file) {
-			Requirements::css($file[0], $file[1]);
-		}
-		
-		foreach (self::$extra_requirements['themedcss'] as $file) {
-			Requirements::themedCSS($file[0], $file[1]);
-		}
-		
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/unjquery.css');
-		
-		// Javascript combined files
+		// Using uncompressed files as they'll be processed by JSMin in the Requirements class.
+		// Not as effective as other compressors or pre-compressed+finetuned files, 
+		// but overall the unified minification into a single file brings more performance benefits
+		// than a couple of saved bytes (after gzip) in individual files.
+		// We also re-compress already compressed files through JSMin as this causes weird runtime bugs.
 		Requirements::combine_files(
-			'base.js',
+			'lib.js',
 			array(
-				'sapphire/thirdparty/prototype/prototype.js',
-				'sapphire/thirdparty/behaviour/behaviour.js',
-				'sapphire/thirdparty/jquery/jquery.js',
-				'sapphire/thirdparty/jquery-livequery/jquery.livequery.js',
-				'sapphire/javascript/jquery-ondemand/jquery.ondemand.js',
-				'sapphire/thirdparty/jquery-ui/jquery-ui.js',
-				'sapphire/javascript/i18n.js',
+				THIRDPARTY_DIR . '/jquery/jquery.js',
+				THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js',
+				SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js',
+				SAPPHIRE_DIR . '/admin/javascript/lib.js',
+				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
+				THIRDPARTY_DIR . '/json-js/json2.js',
+				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
+				THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js',
+				THIRDPARTY_DIR . '/jquery-query/jquery.query.js',
+				THIRDPARTY_DIR . '/jquery-form/jquery.form.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js',
+				// SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
+				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js',
+				SAPPHIRE_DIR . '/javascript/TreeDropdownField.js',
+				SAPPHIRE_DIR . '/javascript/DateField.js',
+				SAPPHIRE_DIR . '/javascript/HtmlEditorField.js',
+				SAPPHIRE_DIR . '/javascript/TabSet.js',
+				SAPPHIRE_DIR . '/javascript/Validator.js',
+				SAPPHIRE_DIR . '/javascript/i18n.js',
+				SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js',
+				SAPPHIRE_DIR . '/javascript/GridField.js',
 			)
 		);
+		
+		HTMLEditorField::include_js();
 
 		Requirements::combine_files(
 			'leftandmain.js',
-			array(
-				'sapphire/thirdparty/scriptaculous/effects.js',
-				'sapphire/thirdparty/scriptaculous/dragdrop.js',
-				'sapphire/thirdparty/scriptaculous/controls.js',
-				'sapphire/admin/javascript/LeftAndMain.js',
-				'sapphire/javascript/tree/tree.js',
-				'sapphire/javascript/TreeDropdownField.js',
-			)
+			array_unique(array_merge(
+				array(
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
+					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
+				),
+				Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang', true, true),
+				Requirements::add_i18n_javascript(SAPPHIRE_ADMIN_DIR . '/javascript/lang', true, true)
+			))
 		);
+
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.css');
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css');
+		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
+		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
+		Requirements::css(SAPPHIRE_DIR . '/css/GridField.css');
+
+		// Browser-specific requirements
+		$ie = isset($_SERVER['HTTP_USER_AGENT']) ? strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') : false;
+		if($ie) {
+			$version = substr($_SERVER['HTTP_USER_AGENT'], $ie + 5, 3);
+			if($version == 7) Requirements::css('sapphire/admin/css/ie7.css');
+			else if($version == 8) Requirements::css('sapphire/admin/css/ie8.css');
+		}
+
+		// Custom requirements				
+		foreach (self::$extra_requirements['javascript'] as $file) {
+			Requirements::javascript($file[0]);
+		}
+		foreach (self::$extra_requirements['css'] as $file) {
+			Requirements::css($file[0], $file[1]);
+		}
+		foreach (self::$extra_requirements['themedcss'] as $file) {
+			Requirements::themedCSS($file[0], $file[1]);
+		}
 
 		$dummy = null;
 		$this->extend('init', $dummy);
@@ -289,6 +326,20 @@ class LeftAndMain extends Controller {
 		// The user's theme shouldn't affect the CMS, if, for example, they have replaced
 		// TableListField.ss or Form.ss.
 		SSViewer::set_theme(null);
+	}
+	
+	function handleRequest($request, DataModel $model) {
+		$title = $this->Title();
+		
+		$response = parent::handleRequest($request, $model);
+		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
+		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', $title);
+		
+		return $response;
+	}
+
+	function index($request) {
+		return ($this->isAjax()) ? $this->show($request) : $this->getViewer('index')->process($this);
 	}
 
 	
@@ -302,6 +353,7 @@ class LeftAndMain extends Controller {
 		return false;
 	}
 
+	
 	//------------------------------------------------------------------------------------------//
 	// Main controllers
 
@@ -333,33 +385,24 @@ class LeftAndMain extends Controller {
 		if(!$title) $title = preg_replace('/Admin$/', '', $class);
 		return $title;
 	}
-
+	
 	public function show($request) {
 		// TODO Necessary for TableListField URLs to work properly
 		if($request->param('ID')) $this->setCurrentPageID($request->param('ID'));
 		
 		if($this->isAjax()) {
-			SSViewer::setOption('rewriteHashlinks', false);
-			$form = $this->getEditForm($request->param('ID'));
-			$content = $form->formHtmlContent();
+			if($request->getVar('cms-view-form')) {
+				$form = $this->getEditForm();
+				$content = $form->forTemplate();
+			} else {
+				// Rendering is handled by template, which will call EditForm() eventually
+				$content = $this->renderWith($this->getTemplatesWithSuffix('_Content'));
+			}
 		} else {
-			// Rendering is handled by template, which will call EditForm() eventually
 			$content = $this->renderWith($this->getViewer('show'));
 		}
-		
-		if($this->ShowSwitchView()) {
-			$content .= '<div id="AjaxSwitchView">' . $this->SwitchView() . '</div>';
-		}
-		
+				
 		return $content;
-	}
-
-	/**
-	 * @deprecated 2.4 Please use show()
-	 */
-	public function getitem($request) {
-		$form = $this->getEditForm($request->getVar('ID'));
-		return $form->formHtmlContent();
 	}
 
 	//------------------------------------------------------------------------------------------//
@@ -369,98 +412,138 @@ class LeftAndMain extends Controller {
 	 * Returns the main menu of the CMS.  This is also used by init() 
 	 * to work out which sections the user has access to.
 	 * 
-	 * @return DataObjectSet
+	 * @return SS_List
 	 */
 	public function MainMenu() {
 		// Don't accidentally return a menu if you're not logged in - it's used to determine access.
-		if(!Member::currentUser()) return new DataObjectSet();
+		if(!Member::currentUser()) return new ArrayList();
 
 		// Encode into DO set
-		$menu = new DataObjectSet();
+		$menu = new ArrayList();
 		$menuItems = CMSMenu::get_viewable_menu_items();
-		if($menuItems) foreach($menuItems as $code => $menuItem) {
-			// alternate permission checks (in addition to LeftAndMain->canView())
-			if(
-				isset($menuItem->controller) 
-				&& $this->hasMethod('alternateMenuDisplayCheck')
-				&& !$this->alternateMenuDisplayCheck($menuItem->controller)
-			) {
-				continue;
-			}
-
-			$linkingmode = "";
-			
-			if(strpos($this->Link(), $menuItem->url) !== false) {
-				if($this->Link() == $menuItem->url) {
-					$linkingmode = "current";
-				
-				// default menu is the one with a blank {@link url_segment}
-				} else if(singleton($menuItem->controller)->stat('url_segment') == '') {
-					if($this->Link() == $this->stat('url_base').'/') $linkingmode = "current";
-
-				} else {
-					$linkingmode = "current";
+		if($menuItems) {
+			foreach($menuItems as $code => $menuItem) {
+				// alternate permission checks (in addition to LeftAndMain->canView())
+				if(
+					isset($menuItem->controller) 
+					&& $this->hasMethod('alternateMenuDisplayCheck')
+					&& !$this->alternateMenuDisplayCheck($menuItem->controller)
+				) {
+					continue;
 				}
-			}
+
+				$linkingmode = "link";
+				
+				if($menuItem->controller && get_class($this) == $menuItem->controller) {
+					$linkingmode = "current";
+				} else if(strpos($this->Link(), $menuItem->url) !== false) {
+					if($this->Link() == $menuItem->url) {
+						$linkingmode = "current";
+				
+					// default menu is the one with a blank {@link url_segment}
+					} else if(singleton($menuItem->controller)->stat('url_segment') == '') {
+						if($this->Link() == $this->stat('url_base').'/') {
+							$linkingmode = "current";
+						}
+
+					} else {
+						$linkingmode = "current";
+					}
+				}
 		
-			// already set in CMSMenu::populate_menu(), but from a static pre-controller
-			// context, so doesn't respect the current user locale in _t() calls - as a workaround,
-			// we simply call LeftAndMain::menu_title_for_class() again 
-			// if we're dealing with a controller
-			if($menuItem->controller) {
-				$defaultTitle = LeftAndMain::menu_title_for_class($menuItem->controller);
-				$title = _t("{$menuItem->controller}.MENUTITLE", $defaultTitle);
-			} else {
-				$title = $menuItem->title;
+				// already set in CMSMenu::populate_menu(), but from a static pre-controller
+				// context, so doesn't respect the current user locale in _t() calls - as a workaround,
+				// we simply call LeftAndMain::menu_title_for_class() again 
+				// if we're dealing with a controller
+				if($menuItem->controller) {
+					$defaultTitle = LeftAndMain::menu_title_for_class($menuItem->controller);
+					$title = _t("{$menuItem->controller}.MENUTITLE", $defaultTitle);
+				} else {
+					$title = $menuItem->title;
+				}
+				
+				$menu->push(new ArrayData(array(
+					"MenuItem" => $menuItem,
+					"Title" => Convert::raw2xml($title),
+					"Code" => DBField::create('Text', $code),
+					"Link" => $menuItem->url,
+					"LinkingMode" => $linkingmode
+				)));
 			}
-			
-			$menu->push(new ArrayData(array(
-				"MenuItem" => $menuItem,
-				"Title" => Convert::raw2xml($title),
-				"Code" => $code,
-				"Link" => $menuItem->url,
-				"LinkingMode" => $linkingmode
-			)));
 		}
-		
+
 		// if no current item is found, assume that first item is shown
 		//if(!isset($foundCurrent)) 
 		return $menu;
 	}
 
-	public function CMSTopMenu() {
-		return $this->renderWith(array('CMSTopMenu_alternative','CMSTopMenu'));
+	public function Menu() {
+		return $this->renderWith($this->getTemplatesWithSuffix('_Menu'));
 	}
 
 	/**
 	 * Return a list of appropriate templates for this class, with the given suffix
 	 */
-	protected function getTemplatesWithSuffix($suffix) {
+	public function getTemplatesWithSuffix($suffix) {
+		$templates = array();
 		$classes = array_reverse(ClassInfo::ancestry($this->class));
 		foreach($classes as $class) {
-			$templates[] = $class . $suffix;
+			$template = $class . $suffix;
+			if(SSViewer::hasTemplate($template)) $templates[] = $template;
 			if($class == 'LeftAndMain') break;
 		}
 		return $templates;
 	}
 
-	public function Left() {
-		return $this->renderWith($this->getTemplatesWithSuffix('_left'));
-	}
-
-	public function Right() {
-		return $this->renderWith($this->getTemplatesWithSuffix('_right'));
+	public function Content() {
+		return $this->renderWith($this->getTemplatesWithSuffix('_Content'));
 	}
 
 	public function getRecord($id) {
 		$className = $this->stat('tree_class');
-		if($id instanceof $className) {
+		if($className && $id instanceof $className) {
 			return $id;
+		} else if($id == 'root') {
+			return singleton($className);
 		} else if(is_numeric($id)) {
 			return DataObject::get_by_id($className, $id);
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * @return ArrayList
+	 */
+	public function Breadcrumbs($unlinked = false) {
+		$title = self::menu_title_for_class($this->class);
+		$items = new ArrayList(array(
+			new ArrayData(array(
+				'Title' => $title,
+				'Link' => ($unlinked) ? false : $this->Link()
+			))
+		));
+		$record = $this->currentPage();
+		if($record && $record->exists()) {
+			if($record->hasExtension('Hierarchy')) {
+				$ancestors = $record->getAncestors();
+				$ancestors = new ArrayList(array_reverse($ancestors->toArray()));
+				$ancestors->push($record);
+				foreach($ancestors as $ancestor) {
+					$items->push(new ArrayData(array(
+						'Title' => $ancestor->Title,
+						'Link' => ($unlinked) ? false : Controller::join_links($this->Link('show'), $ancestor->ID)
+					)));		
+				}
+			} else {
+				$items->push(new ArrayData(array(
+					'Title' => $record->Title,
+					'Link' => ($unlinked) ? false : Controller::join_links($this->Link('show'), $record->ID)
+				)));	
+			}
+		}
+
+		return $items;
 	}
 	
 	/**
@@ -486,7 +569,8 @@ class LeftAndMain extends Controller {
 		if (!$numChildrenMethod) $numChildrenMethod = 'numChildren';
 		
 		// Get the tree root
-		$obj = $rootID ? $this->getRecord($rootID) : singleton($className);
+		$record = ($rootID) ? $this->getRecord($rootID) : null;
+		$obj = $record ? $record : singleton($className);
 		
 		// Mark the nodes of the tree to return
 		if ($filterFunction) $obj->setMarkingFilterFunction($filterFunction);
@@ -498,17 +582,17 @@ class LeftAndMain extends Controller {
 		
 		// NOTE: SiteTree/CMSMain coupling :-(
 		if(class_exists('SiteTree')) {
-			SiteTree::prepopuplate_permission_cache('CanEditType', $obj->markedNodeIDs(), 'SiteTree::can_edit_multiple');
+			SiteTree::prepopulate_permission_cache('CanEditType', $obj->markedNodeIDs(), 'SiteTree::can_edit_multiple');
 		}
 
 		// getChildrenAsUL is a flexible and complex way of traversing the tree
 		$titleEval = '
 			"<li id=\"record-$child->ID\" data-id=\"$child->ID\" class=\"" . $child->CMSTreeClasses($extraArg) . "\">" .
 			"<ins class=\"jstree-icon\">&nbsp;</ins>" .
-			"<a href=\"" . Controller::join_links(substr($extraArg->Link(),0,-1), "show", $child->ID) . "\" title=\"' 
+			"<a href=\"" . Controller::join_links($extraArg->Link("show"), $child->ID) . "\" title=\"' 
 			. _t('LeftAndMain.PAGETYPE','Page type: ') 
-			. '".$child->class."\" ><ins class=\"jstree-icon\">&nbsp;</ins>" . ($child->TreeTitle) . 
-			"</a>"
+			. '".$child->class."\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($child->TreeTitle) . 
+			"</span></a>"
 		';
 
 		$html = $obj->getChildrenAsUL(
@@ -535,7 +619,7 @@ class LeftAndMain extends Controller {
 				$treeTitle = '...';
 			}
 			
-			$html = "<ul id=\"sitetree\" class=\"tree unformatted\"><li id=\"record-0\" data-id=\"0\"class=\"Root nodelete\"><a href=\"$rootLink\"><strong>$treeTitle</strong></a>"
+			$html = "<ul><li id=\"record-0\" data-id=\"0\" class=\"Root nodelete\"><a href=\"$rootLink\"><strong>$treeTitle</strong></a>"
 				. $html . "</li></ul>";
 		}
 
@@ -584,6 +668,7 @@ class LeftAndMain extends Controller {
 		if(substr($SQL_id,0,3) != 'new') {
 			$record = DataObject::get_by_id($className, $SQL_id);
 			if($record && !$record->canEdit()) return Security::permissionFailure($this);
+			if(!$record || !$record->ID) throw new HTTPResponse_Exception("Bad record ID #" . (int)$data['ID'], 404);
 		} else {
 			if(!singleton($this->stat('tree_class'))->canCreate()) return Security::permissionFailure($this);
 			$record = $this->getNewItem($SQL_id, false);
@@ -599,7 +684,23 @@ class LeftAndMain extends Controller {
 		// write process might've changed the record, so we reload before returning
 		$form = $this->getEditForm($record->ID);
 		
-		return $form->formHtmlContent();
+		return $form->forTemplate();
+	}
+	
+	public function delete($data, $form) {
+		$className = $this->stat('tree_class');
+		
+		$record = DataObject::get_by_id($className, Convert::raw2sql($data['ID']));
+		if($record && !$record->canDelete()) return Security::permissionFailure();
+		if(!$record || !$record->ID) throw new HTTPResponse_Exception("Bad record ID #" . (int)$data['ID'], 404);
+		
+		$record->delete();
+		
+		if($this->isAjax()) {
+			return $this->EmptyForm()->forTemplate();
+		} else {
+			$this->redirectBack();
+		}
 	}
 
 	/**
@@ -719,21 +820,28 @@ class LeftAndMain extends Controller {
 		return $this->getEditForm();
 	}
 
-	public function getEditForm($id = null) {
+	/**
+	 * Calls {@link SiteTree->getCMSFields()}
+	 * 
+	 * @param Int $id
+	 * @param FieldList $fields
+	 * @return Form
+	 */
+	public function getEditForm($id = null, $fields = null) {
 		if(!$id) $id = $this->currentPageID();
 		
 		if(is_object($id)) {
 			$record = $id;
 		} else {
-			$record = ($id && $id != "root") ? $this->getRecord($id) : null;
+			$record = $this->getRecord($id);
 			if($record && !$record->canView()) return Security::permissionFailure($this);
 		}
 
 		if($record) {
-			$fields = $record->getCMSFields();
+			$fields = ($fields) ? $fields : $record->getCMSFields();
 			if ($fields == null) {
 				user_error(
-					"getCMSFields() returned null  - it should return a FieldSet object. 
+					"getCMSFields() returned null  - it should return a FieldList object. 
 					Perhaps you forgot to put a return statement at the end of your method?", 
 					E_USER_ERROR
 				);
@@ -750,6 +858,13 @@ class LeftAndMain extends Controller {
 			) {
 				$fields->push(new HiddenField('ParentID'));
 			}
+
+			// Added in-line to the form, but plucked into different view by LeftAndMain.Preview.js upon load
+			if(in_array('CMSPreviewable', class_implements($record))) {
+				$navField = new LiteralField('SilverStripeNavigator', $this->getSilverStripeNavigator());
+				$navField->setAllowHTML(true);
+				$fields->push($navField);
+			}
 			
 			if($record->hasMethod('getAllCMSActions')) {
 				$actions = $record->getAllCMSActions();
@@ -757,14 +872,32 @@ class LeftAndMain extends Controller {
 				$actions = $record->getCMSActions();
 				// add default actions if none are defined
 				if(!$actions || !$actions->Count()) {
-					if($record->canEdit()) {
-						$actions->push(new FormAction('save',_t('CMSMain.SAVE','Save')));
+					if($record->hasMethod('canEdit') && $record->canEdit()) {
+						$actions->push(
+							FormAction::create('save',_t('CMSMain.SAVE','Save'))
+								->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
+						);
+					}
+					if($record->hasMethod('canDelete') && $record->canDelete()) {
+						$actions->push(
+							FormAction::create('delete',_t('ModelAdmin.DELETE','Delete'))
+								->addExtraClass('ss-ui-action-destructive')
+						);
 					}
 				}
 			}
+
+			// Use <button> to allow full jQuery UI styling
+			$actionsFlattened = $actions->dataFields();
+			if($actionsFlattened) foreach($actionsFlattened as $action) $action->setUseButtonTag(true);
 			
 			$form = new Form($this, "EditForm", $fields, $actions);
+			$form->addExtraClass('cms-edit-form');
 			$form->loadDataFrom($record);
+			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
+			
+			// Set this if you want to split up tabs into a separate header row
+			// if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
 			
 			// Add a default or custom validator.
 			// @todo Currently the default Validator.js implementation
@@ -786,20 +919,16 @@ class LeftAndMain extends Controller {
 				$form->unsetValidator();
 			}
 		
-			if(!$record->canEdit()) {
+			if($record->hasMethod('canEdit') && !$record->canEdit()) {
 				$readonlyFields = $form->Fields()->makeReadonly();
 				$form->setFields($readonlyFields);
 			}
 		} else {
-			$form = $this->RootForm();
+			$form = $this->EmptyForm();
 		}
 		
 		return $form;
 	}	
-	
-	function RootForm() {
-		return $this->EmptyForm();
-	}
 	
 	/**
 	 * Returns a placeholder form, used by {@link getEditForm()} if no record is selected.
@@ -811,23 +940,26 @@ class LeftAndMain extends Controller {
 		$form = new Form(
 			$this, 
 			"EditForm", 
-			new FieldSet(
-				new HeaderField(
-					'WelcomeHeader',
-					$this->getApplicationName()
-				),
-				new LiteralField(
-					'WelcomeText',
-					sprintf('<p id="WelcomeMessage">%s %s. %s</p>',
-						_t('LeftAndMain_right.ss.WELCOMETO','Welcome to'),
-						$this->getApplicationName(),
-						_t('CHOOSEPAGE','Please choose an item from the left.')
-					)
-				)
+			new FieldList(
+				// new HeaderField(
+				// 	'WelcomeHeader',
+				// 	$this->getApplicationName()
+				// ),
+				// new LiteralField(
+				// 	'WelcomeText',
+				// 	sprintf('<p id="WelcomeMessage">%s %s. %s</p>',
+				// 		_t('LeftAndMain_right.ss.WELCOMETO','Welcome to'),
+				// 		$this->getApplicationName(),
+				// 		_t('CHOOSEPAGE','Please choose an item from the left.')
+				// 	)
+				// )
 			), 
-			new FieldSet()
+			new FieldList()
 		);
 		$form->unsetValidator();
+		$form->addExtraClass('cms-edit-form');
+		$form->addExtraClass('root-form');
+		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		
 		return $form;
 	}
@@ -839,19 +971,18 @@ class LeftAndMain extends Controller {
 		$class = $this->stat('tree_class');
 		
 		$typeMap = array($class => singleton($class)->i18n_singular_name());
-		$typeField = new DropdownField('Type', false, $typeMap, $class);
 		$form = new Form(
 			$this,
 			'AddForm',
-			new FieldSet(
-				new HiddenField('ParentID'),
-				$typeField->performReadonlyTransformation()
+			new FieldList(
+				new HiddenField('ParentID')
 			),
-			new FieldSet(
-				new FormAction('doAdd', _t('AssetAdmin_left.ss.GO','Go'))
+			new FieldList(
+				FormAction::create('doAdd', _t('AssetAdmin_left.ss.GO','Go'))
+					->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
 			)
 		);
-		$form->addExtraClass('actionparams');
+		$form->addExtraClass('add-form');
 		
 		return $form;
 	}
@@ -882,14 +1013,58 @@ class LeftAndMain extends Controller {
 		$form->saveInto($record);
 		$record->write();
 
-		// Used in TinyMCE inline folder creation
-		if(isset($data['returnID'])) {
-			return $record->ID;
-		} else if($this->isAjax()) {
+		if($this->isAjax()) {
 			$form = $this->getEditForm($record->ID);
-			return $form->formHtmlContent();
+			return $form->forTemplate();
 		} else {
 			return $this->redirect(Controller::join_links($this->Link('show'), $record->ID));
+		}
+	}
+
+	/**
+	 * Return the CMS's HTML-editor toolbar
+	 */
+	public function EditorToolbar() {
+		return Object::create('HtmlEditorField_Toolbar', $this, "EditorToolbar");
+	}
+
+	/**
+	 * Renders a panel containing tools which apply to all displayed
+	 * "content" (mostly through {@link EditForm()}), for example a tree navigation or a filter panel.
+	 * Auto-detects applicable templates by naming convention: "<controller classname>_Tools.ss",
+	 * and takes the most specific template (see {@link getTemplatesWithSuffix()}).
+	 * To explicitly disable the panel in the subclass, simply create a more specific, empty template.
+	 * 
+	 * @return String HTML
+	 */
+	public function Tools() {
+		$templates = $this->getTemplatesWithSuffix('_Tools');
+		if($templates) {
+			$viewer = new SSViewer($templates);
+			return $viewer->process($this);	
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Renders a panel containing tools which apply to the currently displayed edit form.
+	 * The main difference to {@link Tools()} is that the panel is displayed within
+	 * the element structure of the form panel (rendered through {@link EditForm}).
+	 * This means the panel will be loaded alongside new forms, and refreshed upon save,
+	 * which can mean a performance hit, depending on how complex your panel logic gets.
+	 * Any form fields contained in the returned markup will also be submitted with the main form,
+	 * which might be desired depending on the implementation details.
+	 * 
+	 * @return String HTML
+	 */
+	public function EditFormTools() {
+		$templates = $this->getTemplatesWithSuffix('_EditFormTools');
+		if($templates) {
+			$viewer = new SSViewer($templates);
+			return $viewer->process($this);	
+		} else {
+			return false;
 		}
 	}
 	
@@ -905,51 +1080,31 @@ class LeftAndMain extends Controller {
 	 */
 	function BatchActionsForm() {
 		$actions = $this->batchactions()->batchActionList();
-		$actionsMap = array();
+		$actionsMap = array('-1' => _t('LeftAndMain.DropdownBatchActionsDefault', 'Actions'));
 		foreach($actions as $action) $actionsMap[$action->Link] = $action->Title;
 		
 		$form = new Form(
 			$this,
 			'BatchActionsForm',
-			new FieldSet(
-				new LiteralField(
-					'Intro',
-					sprintf('<p><small>%s</small></p>',
-						_t(
-							'CMSMain_left.ss.SELECTPAGESACTIONS',
-							'Select the pages that you want to change &amp; then click an action:'
-						)
-					)
-				),
+			new FieldList(
 				new HiddenField('csvIDs'),
-				new DropdownField(
+				Object::create('DropdownField',
 					'Action',
 					false,
 					$actionsMap
-				)
+				)->setAttribute('autocomplete', 'off')
 			),
-			new FieldSet(
+			new FieldList(
 				// TODO i18n
 				new FormAction('submit', "Go")
 			)
 		);
-		$form->addExtraClass('actionparams');
+		$form->addExtraClass('cms-batch-actions nostyle');
 		$form->unsetValidator();
 		
 		return $form;
 	}
 	
-	public function myprofile() {
-		$form = $this->Member_ProfileForm();
-		return $this->customise(array(
-			'Form' => $form
-		))->renderWith('BlankPage');
-	}
-	
-	public function Member_ProfileForm() {
-		return new Member_ProfileForm($this, 'Member_ProfileForm', Member::currentUser());
-	}
-
 	public function printable() {
 		$form = $this->getEditForm($this->currentPageID());
 		if(!$form) return false;
@@ -965,6 +1120,21 @@ class LeftAndMain extends Controller {
 	}
 
 	/**
+	 * Used for preview controls, mainly links which switch between different states of the page.
+	 * 
+	 * @return ArrayData
+	 */
+	function getSilverStripeNavigator() {
+		$page = $this->currentPage();
+		if($page) {
+			$navigator = new SilverStripeNavigator($page);
+			return $navigator->renderWith($this->getTemplatesWithSuffix('_SilverStripeNavigator'));
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Identifier for the currently shown record,
 	 * in most cases a database ID. Inspects the following
 	 * sources (in this order):
@@ -977,8 +1147,8 @@ class LeftAndMain extends Controller {
 	public function currentPageID() {
 		if($this->request->requestVar('ID'))	{
 			return $this->request->requestVar('ID');
-		} elseif ($this->request->param('ID') && is_numeric($this->request->param('ID'))) {
-			return $this->request->param('ID');
+		} elseif (isset($this->urlParams['ID']) && is_numeric($this->urlParams['ID'])) {
+			return $this->urlParams['ID'];
 		} elseif(Session::get("{$this->class}.currentPage")) {
 			return Session::get("{$this->class}.currentPage");
 		} else {
@@ -1019,37 +1189,34 @@ class LeftAndMain extends Controller {
 	}
 	
 	/**
-	 * Get the staus of a certain page and version.
-	 *
-	 * This function is used for concurrent editing, and providing alerts
-	 * when multiple users are editing a single page. It echoes a json
-	 * encoded string to the UA.
+	 * URL to a previewable record which is shown through this controller.
+	 * The controller might not have any previewable content, in which case 
+	 * this method returns FALSE.
+	 * 
+	 * @return String|boolean
 	 */
+	public function PreviewLink() {
+		return false;
+	}
 
 	/**
 	 * Return the version number of this application.
 	 * Uses the subversion path information in <mymodule>/silverstripe_version
-	 * (automacially replaced $URL$ placeholder).
+	 * (automacially replaced by build scripts).
 	 * 
 	 * @return string
 	 */
 	public function CMSVersion() {
-		$sapphireVersionFile = file_get_contents(BASE_PATH . '/sapphire/silverstripe_version');		
-		$sapphireVersion = $this->versionFromVersionFile($sapphireVersionFile);
-
-		return "sapphire: $sapphireVersion";
-	}
-	
-	/**
-	 * Return the version from the content of a silverstripe_version file
-	 */
-	public function versionFromVersionFile($fileContent) {
-		if(preg_match('/\/trunk\/silverstripe_version/', $fileContent)) {
-			return "trunk";
+		if(file_exists(CMS_PATH . '/silverstripe_version')) {
+			$sapphireVersion = file_get_contents(CMS_PATH . '/silverstripe_version');
 		} else {
-			preg_match("/\/(?:branches|tags\/rc|tags\/beta|tags\/alpha|tags)\/([A-Za-z0-9._-]+)\/silverstripe_version/", $fileContent, $matches);
-			return ($matches) ? $matches[1] : null;
+			$sapphireVersion = file_get_contents(SAPPHIRE_PATH . '/silverstripe_version');
 		}
+		if(!$sapphireVersion) $sapphireVersion = _t('LeftAndMain.VersionUnknown', 'unknown');
+		return sprintf(
+			"sapphire: %s",
+			$sapphireVersion
+		);
 	}
 	
 	/**
@@ -1061,6 +1228,13 @@ class LeftAndMain extends Controller {
 			return $nav['items']; 
 		} 
 	}
+	
+	/**
+	 * @return SiteConfig
+	 */
+	function SiteConfig() {
+		return (class_exists('SiteConfig')) ? SiteConfig::current_site_config() : null;
+	}
 
 	/**
 	 * The application name. Customisable by calling
@@ -1071,124 +1245,45 @@ class LeftAndMain extends Controller {
 	static $application_name = 'SilverStripe CMS';
 	
 	/**
-	 * The application logo text. Customisable by calling
-	 * LeftAndMain::setApplicationName() - the second parameter.
-	 *
-	 * @var String
-	 */
-	static $application_logo_text = 'SilverStripe';
-
-	/**
-	 * Set the application name, and the logo text.
-	 *
-	 * @param String $name The application name
-	 * @param String $logoText The logo text
-	 */
-	static $application_link = "http://www.silverstripe.org/";
-	
-	/**
 	 * @param String $name
-	 * @param String $logoText
-	 * @param String $link (Optional)
 	 */
-	static function setApplicationName($name, $logoText = null, $link = null) {
+	static function setApplicationName($name) {
 		self::$application_name = $name;
-		self::$application_logo_text = $logoText ? $logoText : $name;
-		if($link) self::$application_link = $link;
 	}
 
 	/**
 	 * Get the application name.
-	 * @return String
+	 *
+	 * @return string
 	 */
 	function getApplicationName() {
 		return self::$application_name;
 	}
 	
 	/**
-	 * Get the application logo text.
-	 * @return String
+	 * @return string
 	 */
-	function getApplicationLogoText() {
-		return self::$application_logo_text;
-	}
-	
-	/**
-	 * @return String
-	 */
-	function ApplicationLink() {
-		return self::$application_link;
+	function Title() {
+		$app = $this->getApplicationName();
+		
+		return ($section = $this->SectionTitle()) ? sprintf('%s - %s', $app, $section) : $app;
 	}
 
 	/**
-	 * Return the title of the current section, as shown on the main menu
+	 * Return the title of the current section. Either this is pulled from
+	 * the current panel's menu_title or from the first active menu
+	 *
+	 * @return string
 	 */
 	function SectionTitle() {
+		if($title = $this->stat('menu_title')) return $title;
+		
 		// Get menu - use obj() to cache it in the same place as the template engine
 		$menu = $this->obj('MainMenu');
-		
+
 		foreach($menu as $menuItem) {
-			if($menuItem->LinkingMode == 'current') return $menuItem->Title;
+			if($menuItem->LinkingMode != 'link') return $menuItem->Title;
 		}
-	}
-
-	/**
-	 * The application logo path. Customisable by calling
-	 * LeftAndMain::setLogo() - the first parameter.
-	 *
-	 * @var unknown_type
-	 */
-	static $application_logo = 'sapphire/admin/images/mainmenu/logo.gif';
-
-	/**
-	 * The application logo style. Customisable by calling
-	 * LeftAndMain::setLogo() - the second parameter.
-	 *
-	 * @var String
-	 */
-	static $application_logo_style = '';
-	
-	/**
-	 * Set the CMS application logo.
-	 *
-	 * @param String $logo Relative path to the logo
-	 * @param String $logoStyle Custom CSS styles for the logo
-	 * 							e.g. "border: 1px solid red; padding: 5px;"
-	 */
-	static function setLogo($logo, $logoStyle) {
-		self::$application_logo = $logo;
-		self::$application_logo_style = $logoStyle;
-		self::$application_logo_text = '';
-	}
-	
-	/**
-	 * The height of the image should be around 164px to avoid the overlaping between the image and loading animation graphic.
-	 * If the given image's height is significantly larger or smaller, adjust the loading animation's top offset in 
-	 * positionLoadingSpinner() in LeftAndMain.js
-	 */
-	protected static $loading_image = 'sapphire/admin/images/logo.gif';
-	
-	/**
-	 * Set the image shown when the CMS is loading.
-	 */
-	static function set_loading_image($loadingImage) {
-		self::$loading_image = $loadingImage;
-	}
-	
-	function LoadingImage() {
-		return self::$loading_image;
-	}
-	
-	/**
-	 * Combines an optional background image and additional CSS styles,
-	 * set through {@link setLogo()}.
-	 * 
-	 * @return String CSS attribute
-	 */
-	function LogoStyle() {
-		$attr = self::$application_logo_style;
-		if(self::$application_logo) $attr .= "background: url(" . self::$application_logo . ") no-repeat; ";
-		return $attr;
 	}
 
 	/**
@@ -1196,6 +1291,59 @@ class LeftAndMain extends Controller {
 	 */
 	function MceRoot() {
 		return MCE_ROOT;
+	}
+	
+	/**
+	 * Same as {@link ViewableData->CSSClasses()}, but with a changed name
+	 * to avoid problems when using {@link ViewableData->customise()}
+	 * (which always returns "ArrayData" from the $original object).
+	 * 
+	 * @return String
+	 */
+	function BaseCSSClasses() {
+		return $this->CSSClasses();
+	}
+	
+	function IsPreviewExpanded() {
+		return ($this->request->getVar('cms-preview-expanded'));
+	}
+
+	/**
+	 * @return String
+	 */
+	function Locale() {
+		return DBField::create('DBLocale', i18n::get_locale());
+	}
+
+	function providePermissions() {
+		$perms = array(
+			"CMS_ACCESS_LeftAndMain" => array(
+				'name' => _t('CMSMain.ACCESSALLINTERFACES', 'Access to all CMS sections'),
+				'category' => _t('Permission.CMS_ACCESS_CATEGORY', 'CMS Access'),
+				'help' => _t('CMSMain.ACCESSALLINTERFACESHELP', 'Overrules more specific access settings.'),
+				'sort' => -100
+			)
+		);
+
+		// Add any custom ModelAdmin subclasses. Can't put this on ModelAdmin itself
+		// since its marked abstract, and needs to be singleton instanciated.
+		foreach(ClassInfo::subclassesFor('ModelAdmin') as $i => $class) {
+			if($class == 'ModelAdmin') continue;
+			if(ClassInfo::classImplements($class, 'TestOnly')) continue;
+
+			$title = _t("{$class}.MENUTITLE", LeftAndMain::menu_title_for_class($class));
+			$perms["CMS_ACCESS_" . $class] = array(
+				'name' => sprintf(_t(
+					'CMSMain.ACCESS', 
+					"Access to '%s' section",
+					PR_MEDIUM,
+					"Item in permission selection identifying the admin section. Example: Access to 'Files & Images'"
+				), $title, null),
+				'category' => _t('Permission.CMS_ACCESS_CATEGORY', 'CMS Access')
+			);
+		}
+
+		return $perms;
 	}
 	
 	/**
@@ -1303,4 +1451,4 @@ class LeftAndMainMarkingFilter {
 		return array_key_exists((int) $id, $this->ids) ? $this->ids[$id] : false;
 	}
 }
-?>
+

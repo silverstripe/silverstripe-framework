@@ -11,7 +11,7 @@
  * @subpackage control
  * @see Director::direct(),Director::addRules(),Director::set_environment_type()
  */
-class Director {
+class Director implements TemplateGlobalProvider {
 	
 	static private $urlParams;
 
@@ -21,12 +21,7 @@ class Director {
 	 * @var SiteTree
 	 */
 	private static $current_page;
-	
-	/**
-	 * @deprecated 2.4
-	 */
-	static $siteMode;
-	
+		
 	static $alternateBaseFolder;
 
 	static $alternateBaseURL;
@@ -36,12 +31,6 @@ class Director {
 	static $test_servers = array();
 	
 	static protected $environment_type;
-
-	/** 
-	 * @deprecated 2.4
- 	 */ 
-	static protected $callbacks;
-
 
 	/**
 	 * Add URL matching rules to the Director.
@@ -74,7 +63,7 @@ class Director {
 	 * @uses handleRequest() rule-lookup logic is handled by this.
 	 * @uses Controller::run() Controller::run() handles the page logic for a Director::direct() call.
 	 */
-	static function direct($url) {
+	static function direct($url, DataModel $model) {
 		// Validate $_FILES array before merging it with $_POST
 		foreach($_FILES as $k => $v) {
 			if(is_array($v['tmp_name'])) {
@@ -95,19 +84,19 @@ class Director {
 			(isset($_SERVER['X-HTTP-Method-Override'])) ? $_SERVER['X-HTTP-Method-Override'] : $_SERVER['REQUEST_METHOD'],
 			$url, 
 			$_GET, 
-			array_merge((array)$_POST, (array)$_FILES),
+			ArrayLib::array_merge_recursive((array)$_POST, (array)$_FILES),
 			@file_get_contents('php://input')
 		);
-		
-		// @todo find better way to extract HTTP headers
-		if(isset($_SERVER['HTTP_ACCEPT'])) $req->addHeader("Accept", $_SERVER['HTTP_ACCEPT']);
-		if(isset($_SERVER['CONTENT_TYPE'])) $req->addHeader("Content-Type", $_SERVER['CONTENT_TYPE']);
-		if(isset($_SERVER['HTTP_REFERER'])) $req->addHeader("Referer", $_SERVER['HTTP_REFERER']);
+
+		$headers = self::extract_request_headers($_SERVER);
+		foreach ($headers as $header => $value) {
+			$req->addHeader($header, $value);
+		}
 
 		// Load the session into the controller
 		$session = new Session(isset($_SESSION) ? $_SESSION : null);
 		
-		$result = Director::handleRequest($req, $session);
+		$result = Director::handleRequest($req, $session, $model);
 		$session->inst_save();
 
 		// Return code for a redirection request
@@ -197,7 +186,7 @@ class Director {
 		}
 		
 		// Replace the superglobals with appropriate test values
-		$_REQUEST = array_merge((array)$getVars, (array)$postVars); 
+		$_REQUEST = ArrayLib::array_merge_recursive((array)$getVars, (array)$postVars); 
 		$_GET = (array)$getVars; 
 		$_POST = (array)$postVars; 
 		$_SESSION = $session ? $session->inst_getAll() : array();
@@ -206,7 +195,8 @@ class Director {
 
 		$req = new SS_HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
 		if($headers) foreach($headers as $k => $v) $req->addHeader($k, $v);
-		$result = Director::handleRequest($req, $session);
+		// TODO: Pass in the DataModel
+		$result = Director::handleRequest($req, $session, DataModel::inst());
 		
 		// Restore the superglobals
 		$_REQUEST = $existingRequestVars; 
@@ -231,7 +221,7 @@ class Director {
 	 *
 	 * @return SS_HTTPResponse|string
 	 */
-	protected static function handleRequest(SS_HTTPRequest $request, Session $session) {
+	protected static function handleRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
 		krsort(Director::$rules);
 
 		if(isset($_REQUEST['debug'])) Debug::show(Director::$rules);
@@ -264,7 +254,7 @@ class Director {
 						$controllerObj->setSession($session);
 
 						try {
-							$result = $controllerObj->handleRequest($request);
+							$result = $controllerObj->handleRequest($request, $model);
 						} catch(SS_HTTPResponse_Exception $responseException) {
 							$result = $responseException->getResponse();
 						}
@@ -285,6 +275,7 @@ class Director {
 	 * @deprecated 3.0 Use SS_HTTPRequest->latestParam()
 	 */
 	static function urlParam($name) {
+		Deprecation::notice('3.0', 'Use SS_HTTPRequest->latestParam() instead.');
 		if(isset(Director::$urlParams[$name])) return Director::$urlParams[$name];
 	}
 	
@@ -294,6 +285,7 @@ class Director {
 	 * @deprecated 3.0 Use SS_HTTPRequest->latestParams()
 	 */
 	static function urlParams() {
+		Deprecation::notice('3.0', 'Use SS_HTTPRequest->latestParams() instead.');
 		return Director::$urlParams;
 	}
 
@@ -323,13 +315,6 @@ class Director {
 	 */
 	public static function set_current_page($page) {
 		self::$current_page = $page;
-	}
-	
-	/**
-	 * @deprecated 2.4 Use {@link Director::get_current_page()}.
-	 */
-	static function currentPage() {
-		return self::get_current_page();
 	}
 
 	/**
@@ -384,6 +369,7 @@ class Director {
 	 * @return String
 	 */
 	static function protocol() {
+		if(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https') return "https://";
 		return (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 'https://' : 'http://';
 	}
 
@@ -423,6 +409,7 @@ class Director {
 	 * @deprecated 2.5 Use Controller->redirectBack()
 	 */
 	static function redirectBack() {
+		Deprecation::notice('2.5', 'Use Controller->redirectBack() instead.');
 		Controller::curr()->redirectBack();
 	}
 
@@ -478,7 +465,7 @@ class Director {
 	 */
 	static function makeRelative($url) {
 		// Allow for the accidental inclusion of a // in the URL
-		$url = ereg_replace('([^:])//','\\1/',$url);
+		$url = preg_replace('#([^:])//#', '\\1/', $url);
 		$url = trim($url);
 
 		// Only bother comparing the URL to the absolute version if $url looks like a URL.
@@ -554,7 +541,31 @@ class Director {
 		$relativeUrl = Director::makeRelative($url);
 		return (bool)self::is_relative_url($relativeUrl);
 	}
+
+	/**
+	 * Takes a $_SERVER data array and extracts HTTP request headers.
+	 *
+	 * @param  array $data
+	 * @return array
+	 */
+	static function extract_request_headers(array $server) {
+		$headers = array();
 	
+		foreach($server as $key => $value) {
+			if(substr($key, 0, 5) == 'HTTP_') {
+				$key = substr($key, 5);
+				$key = strtolower(str_replace('_', ' ', $key));
+				$key = str_replace(' ', '-', ucwords($key));
+				$headers[$key] = $value;
+			}
+		}
+	
+		if(isset($server['CONTENT_TYPE'])) $headers['Content-Type'] = $server['CONTENT_TYPE'];
+		if(isset($server['CONTENT_LENGTH'])) $headers['Content-Length'] = $server['CONTENT_LENGTH'];
+	
+		return $headers;
+	}
+
 	/**
 	 * Given a filesystem reference relative to the site root, return the full file-system path.
 	 * 
@@ -635,7 +646,7 @@ class Director {
 			$matched = true;
 		}
 
-		if($matched && (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off')) {
+		if($matched && (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off') && !(isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https')) {
 			$destURL = str_replace('http:', 'https:', Director::absoluteURL($_SERVER['REQUEST_URI']));
 
 			// This coupling to SapphireTest is necessary to test the destination URL and to not interfere with tests
@@ -687,49 +698,6 @@ class Director {
 	 */
 	public static function is_cli() {
 		return (php_sapi_name() == "cli");
-	}
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Site mode methods
-	////////////////////////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * @deprecated 2.4
-	 */
-	static function set_site_mode($mode) {
-		user_error (
-			'Director::set_site_mode() is deprecated as the functionality is no longer neccesary.', E_USER_NOTICE
-		);
-		
-		Director::$siteMode = $mode;
-		
-		if(isset(self::$callbacks[$mode])) {
-			foreach(self::$callbacks[$mode] as $extension) {
-				call_user_func($extension);
-			}
-		}
-	}
-	
-	/**
-	 * @deprecated 2.4
-	 */
-	static function get_site_mode() {
-		user_error (
-			'Director::set_site_mode() is deprecated as the functionality is no longer neccesary.', E_USER_NOTICE
-		);
-		
-		return Director::$siteMode;
-	}
-
-	/**
-	 * @deprecated 2.4 Use a custom extension on your controller.
-	 */
-	static function add_callback($function, $mode = 'site') {
-		user_error (
-			'Director::add_callback() is deprecated, please use a custom extension on your controller', E_USER_NOTICE
-		);
-		
-		self::$callbacks[$mode][] = $function;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -799,9 +767,11 @@ class Director {
 	 * we recommend to set this mode via {@link Director::set_environment_type()}
 	 * or an _ss_environment.php instead.
 	 * 
+	 * @deprecated 3.0 Use Director::set_environment_type() or an _ss_environment.php instead.
 	 * @param $servers array An array of HTTP_HOST values that should be treated as development environments.
 	 */
 	static function set_dev_servers($servers) {
+		Deprecation::notice('3.0', 'Use Director::set_environment_type() or an _ss_environment.php instead.');
 		Director::$dev_servers = $servers;
 	}
 	
@@ -813,9 +783,11 @@ class Director {
 	 * we recommend to set this mode via {@link Director::set_environment_type()}
 	 * or an _ss_environment.php instead.
 	 * 
+	 * @deprecated 3.0 Use Director::set_environment_type() or an _ss_environment.php instead.
 	 * @param $servers array An array of HTTP_HOST values that should be treated as test environments.
 	 */
 	static function set_test_servers($servers) {
+		Deprecation::notice('3.0', 'Use Director::set_environment_type() or an _ss_environment.php instead.');
 		Director::$test_servers = $servers;
 	}
 
@@ -894,4 +866,21 @@ class Director {
 		return false;
 	}
 
+	/**
+	 * @return array Returns an array of strings of the method names of methods on the call that should be exposed
+	 * as global variables in the templates.
+	 */
+	public static function get_template_global_variables() {
+		return array(
+			'absoluteBaseURL',
+			'baseURL',
+			'is_ajax',
+			'isAjax' => 'is_ajax',
+			'BaseHref' => 'absoluteBaseURL',    //@deprecated 3.0
+		);
+	}
+
 }
+
+
+

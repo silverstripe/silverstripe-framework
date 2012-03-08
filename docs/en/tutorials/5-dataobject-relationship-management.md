@@ -82,8 +82,8 @@ The first step is to create the student and project objects.
 			'Nationality' => 'Text'
 		);
 	
-		function getCMSFields_forPopup() {
-			$fields = new FieldSet();
+		public function getCMSFields_forPopup() {
+			$fields = new FieldList();
 			
 			$fields->push( new TextField( 'FirstName', 'First Name' ) );
 			$fields->push( new TextField( 'Lastname' ) );
@@ -119,7 +119,7 @@ The second step is to add the table in the method *getCMSFields* which will allo
 	
 		...
 	
-		function getCMSFields() {
+		public function getCMSFields() {
 			$fields = parent::getCMSFields();
 			
 			$tablefield = new HasOneComplexTableField(
@@ -135,7 +135,7 @@ The second step is to add the table in the method *getCMSFields* which will allo
 			);
 			$tablefield->setParentClass('Project');
 			
-			$fields->addFieldToTab( 'Root.Content.Student', $tablefield );
+			$fields->addFieldToTab( 'Root.Student', $tablefield );
 			
 			return $fields;
 		}
@@ -153,7 +153,7 @@ Let’s walk through the parameters of the *HasOneComplexTableField* constructor
 You can also directly replace the last parameter by this code :
 
 	:::php
-	   new FieldSet(
+	   new FieldList(
 	      new TextField( 'FirstName', 'First Name' ),
 	      new TextField( 'Lastname' ),
 	      new TextField( 'Nationality' )
@@ -206,7 +206,7 @@ To use your *HasOneComplexTableField* table for a **1-to-1** relation, make this
 	
 		...
 	
-		function getCMSFields() {
+		public function getCMSFields() {
 		
 			...
 			
@@ -256,12 +256,12 @@ The first step is to create the mentor object and set the relation with the *Stu
 			'Students' => 'Student'
 		);
 		
-		function getCMSFields() {
+		public function getCMSFields() {
 			$fields = parent::getCMSFields();
 			
-			$fields->addFieldToTab( 'Root.Content.Main', new TextField( 'FirstName' ) );
-			$fields->addFieldToTab( 'Root.Content.Main', new TextField( 'Lastname' ) );
-			$fields->addFieldToTab( 'Root.Content.Main', new TextField( 'Nationality' ) );
+			$fields->addFieldToTab( 'Root.Content', new TextField( 'FirstName' ) );
+			$fields->addFieldToTab( 'Root.Content', new TextField( 'Lastname' ) );
+			$fields->addFieldToTab( 'Root.Content', new TextField( 'Nationality' ) );
 		
 			return $fields;
 		}
@@ -295,7 +295,7 @@ The second step is to add the table in the method *getCMSFields* which will allo
 	
 		...
 	
-		function getCMSFields() {
+		public function getCMSFields() {
 			$fields = parent::getCMSFields();
 		
 			...
@@ -313,7 +313,7 @@ The second step is to add the table in the method *getCMSFields* which will allo
 			);
 			$tablefield->setAddTitle( 'A Student' );
 		
-			$fields->addFieldToTab( 'Root.Content.Students', $tablefield );
+			$fields->addFieldToTab( 'Root.Students', $tablefield );
 		
 			return $fields;
 		}
@@ -380,8 +380,8 @@ The first step is to create the module object and set the relation with the *Pro
 	      'Projects' => 'Project'
 	   );
 	
-	   function getCMSFields_forPopup() {
-	      $fields = new FieldSet();
+	   public function getCMSFields_forPopup() {
+	      $fields = new FieldList();
 	      $fields->push( new TextField( 'Name' ) );
 	      return $fields;
 	   }
@@ -413,7 +413,7 @@ relation.
 	
 	   ...
 	
-	   function getCMSFields() {
+	   public function getCMSFields() {
 	      $fields = parent::getCMSFields();
 	
 	      ...
@@ -429,7 +429,7 @@ relation.
 	      );
 	      $modulesTablefield->setAddTitle( 'A Module' );
 	
-	      $fields->addFieldToTab( 'Root.Content.Modules', $modulesTablefield );
+	      $fields->addFieldToTab( 'Root.Modules', $modulesTablefield );
 	
 	      return $fields;
 	   }
@@ -638,7 +638,7 @@ from templates either within a control block or dot notation.
 *tutorial/code/Student.php, tutorial/code/Mentor.php*
 
 	:::php
-	function PersonalInfo() {
+	public function PersonalInfo() {
 		$template = 'GSOCPerson';
 		return $this->renderWith( $template );
 	}
@@ -702,7 +702,7 @@ it *MyProject* for instance.
 	
 		...
 	
-		function MyProject() {
+		public function MyProject() {
 			return DataObject::get( 'Project', "`MyStudentID` = '{$this->ID}'" );
 		}
 	
@@ -718,7 +718,7 @@ That's how we can use this function in the *Mentor* template.
 	<% include Menu2 %>
 
 	<div id="Content" class="typography">
-		<% include Breadcrumbs %>
+		<% include BreadCrumbs %>
 		$Content
 
 	    <h3>Personal Details</h3>
@@ -770,6 +770,6 @@ CMS and how to display them on the website.
 
 ## Download the code
 
-Download all the [code](http://doc.silverstripe.org/src/github/master/sapphire/docs/en/tutorials/_images/tutorial5-completecode.zip) for this tutorial.
+Download all the [code](http://doc.silverstripe.org/sapphire/docs/en/tutorials/_images/tutorial5-completecode.zip) for this tutorial.
 
-You can also download the [code](http://doc.silverstripe.org/src/github/master/sapphire/docs/en/tutorials/_images/tutorial5-completecode-blackcandy.zip) for use in the blackcandy template.
+You can also download the [code](http://doc.silverstripe.org/sapphire/docs/en/tutorials/_images/tutorial5-completecode-blackcandy.zip) for use in the blackcandy template.
