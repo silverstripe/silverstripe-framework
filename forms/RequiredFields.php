@@ -53,39 +53,6 @@ class RequiredFields extends Validator {
 	 return $result;
 	}
 
-	function javascript() {
-		$js = "";
-		$fields = $this->form->Fields();
-		$dataFields = $this->form->Fields()->dataFields();
-		if($dataFields) {
-			foreach($dataFields as $field) {
-				// if the field type has some special specific specification for validation of itself
-				$validationFunc = $field->jsValidation();
-				if($validationFunc) $js .= $validationFunc . "\n";
-			}
-		}
-		$useLabels = $this->useLabels ? 'true' : 'false';
-
-		if($this->required) {
-			foreach($this->required as $field) {
-				if($fields->dataFieldByName($field)) {
-					//$js .= "\t\t\t\t\trequire('$field', false, $useLabels);\n";
-					$js .= <<<JS
-						if(typeof fromAnOnBlur != 'undefined'){\n
-							if(fromAnOnBlur.name == '$field')\n
-								require(fromAnOnBlur);\n
-						}else{
-							require('$field');
-						}
-JS;
-				}
-			}
-		}
-
-		return $js;
-	}
-
-
 	/**
 	* Allows validation of fields via specification of a php function for validation which is executed after
 	* the form is submitted

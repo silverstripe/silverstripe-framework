@@ -396,16 +396,13 @@ class ModelAdmin_CollectionController extends Controller {
 		$fields = $context->getSearchFields();
 		$columnSelectionField = $this->ColumnSelectionField();
 		$fields->push($columnSelectionField);
-		$validator = new RequiredFields();
-		$validator->setJavascriptValidationHandler('none');
-		
+
 		$form = new Form($this, "SearchForm",
 			$fields,
 			new FieldList(
 				new FormAction('search', _t('MemberTableField.SEARCH', 'Search')),
 				$clearAction = new ResetFormAction('clearsearch', _t('ModelAdmin.CLEAR_SEARCH','Clear Search'))
-			),
-			$validator
+			)
 		);
 		//$form->setFormAction(Controller::join_links($this->Link(), "search"));
 		$form->setFormMethod('get');
@@ -437,11 +434,9 @@ class ModelAdmin_CollectionController extends Controller {
 						new FieldList(
 							$createButton = FormAction::create('add', $buttonLabel)
 								->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
-						),
-						$validator = new RequiredFields()
+						)
 				);
 		$createButton->dontEscape = true;
-		$validator->setJavascriptValidationHandler('none');
 		$form->setHTMLID("Form_CreateForm_" . $this->modelClass);
 		return $form;
 	}
@@ -498,15 +493,11 @@ class ModelAdmin_CollectionController extends Controller {
 			new FormAction('import', _t('ModelAdmin.IMPORT', 'Import from CSV'))
 		);
 		
-		$validator = new RequiredFields();
-		$validator->setJavascriptValidationHandler('none');
-		
 		$form = new Form(
 			$this,
 			"ImportForm",
 			$fields,
-			$actions,
-			$validator
+			$actions
 		);
 		$form->setHTMLID("Form_ImportForm_" . $this->modelClass);
 		return $form;
@@ -804,7 +795,6 @@ class ModelAdmin_CollectionController extends Controller {
 			
 			$validator = ($newRecord->hasMethod('getCMSValidator')) ? $newRecord->getCMSValidator() : null;
 			if(!$validator) $validator = new RequiredFields();
-			$validator->setJavascriptValidationHandler('none');
 			
 			$actions = new FieldList (
 				FormAction::create("doCreate", _t('ModelAdmin.ADDBUTTON', "Add"))
@@ -922,7 +912,6 @@ class ModelAdmin_RecordController extends Controller {
 		}
 		
 		$validator = ($this->currentRecord->hasMethod('getCMSValidator')) ? $this->currentRecord->getCMSValidator() : new RequiredFields();
-		$validator->setJavascriptValidationHandler('none');
 		
 		$actions = $this->currentRecord->getCMSActions();
 		if($this->currentRecord->canEdit(Member::currentUser())){

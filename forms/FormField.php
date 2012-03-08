@@ -664,15 +664,6 @@ class FormField extends RequestHandler {
 	}
 	
 	/**
-	 * javascript handler Functions for each field type by default
-	 * formfield doesnt have a validation function
-	 * 
-	 * @todo shouldn't this be an abstract method?
-	 */
-	function jsValidation() {
-	}
-	
-	/**
 	 * Validation Functions for each field type by default
 	 * formfield doesnt have a validation function
 	 * 

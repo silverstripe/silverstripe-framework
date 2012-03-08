@@ -77,36 +77,6 @@ class CustomRequiredFields extends RequiredFields{
 	}
 	
 	/**
-	 * Creates the client side validation from form fields
-	 * which is generated at the header of each page 
-	 */
-	function javascript() {
-		$code = '';
-		$fields = $this->form->Fields();
-		foreach($fields as $field){
-			//if the field type has some special specific specification for validation of itself
-			$valid = $field->jsValidation();
-			if($valid){
-				$code .= $valid;
-			}
-		}
-		if(is_array($this->required)){
-
-			foreach($this->required as $field) {
-				if(is_array($field) && isset($field['js'])){
-					$code .= $field['js'] . "\n";
-				}else if($fields->dataFieldByName($field)) {
-					$code .= "						require('$field');\n";
-					//Tabs for output tabbing :-)
-				}
-			}
-		}else{
-			USER_ERROR("CustomRequiredFields::requiredfields is not set / not an array",E_USER_WARNING);
-		}
-		return $code;
-	}
-	
-	/**
 	 * Creates the server side validation from form fields
 	 * which is executed on form submission
 	 */
