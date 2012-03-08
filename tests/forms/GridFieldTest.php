@@ -417,6 +417,34 @@ class GridFieldTest extends SapphireTest {
 		$this->setExpectedException('LogicException');
 		$field->FieldHolder();
 	}
+	
+	/**
+	 *  @covers GridField::FieldHolder
+	 */
+	public function testCanViewOnlyOddIDs() {
+		$this->logInWithPermission();
+		$list = new ArrayList(array(
+			new GridFieldTest_Permissions(array("ID" => 1, "Email" => "ongi.schwimmer@example.org", 'Name' => 'Ongi Schwimmer')),
+			new GridFieldTest_Permissions(array("ID" => 2, "Email" => "klaus.lozenge@example.org", 'Name' => 'Klaus Lozenge')),
+			new GridFieldTest_Permissions(array("ID" => 3, "Email" => "otto.fischer@example.org", 'Name' => 'Otto Fischer'))
+		));
+		
+		$config = new GridFieldConfig();
+		$config->addComponent(new GridFieldDefaultColumns());
+		$obj = new GridField('testfield', 'testfield', $list, $config);
+		$form = new Form(new Controller(), 'mockform', new FieldList(array($obj)), new FieldList());
+		$content = new CSSContentParser($obj->FieldHolder());
+		
+		$members = $content->getBySelector('.ss-gridfield-item tr');
+		
+		$this->assertEquals(2, count($members));
+		
+		$this->assertEquals((string)$members[0]->td[0], 'Ongi Schwimmer', 'First object Name should be Ongi Schwimmer');
+		$this->assertEquals((string)$members[0]->td[1], 'ongi.schwimmer@example.org', 'First object Email should be ongi.schwimmer@example.org');
+		
+		$this->assertEquals((string)$members[1]->td[0], 'Otto Fischer', 'Second object Name should be Otto Fischer');
+		$this->assertEquals((string)$members[1]->td[1], 'otto.fischer@example.org', 'Second object Email should be otto.fischer@example.org');
+	}
 }
 
 class GridFieldTest_Component implements GridField_ColumnProvider, GridField_ActionProvider, TestOnly{
@@ -473,7 +501,6 @@ class GridFieldTest_Player extends DataObject implements TestOnly {
 	static $belongs_many_many = array('Teams' => 'GridFieldTest_Team');
 }
 
-
 class GridFieldTest_HTMLFragments implements GridField_HTMLProvider, TestOnly{
 	function __construct($fragments) {
 		$this->fragments = $fragments;
@@ -481,5 +508,23 @@ class GridFieldTest_HTMLFragments implements GridField_HTMLProvider, TestOnly{
 	
 	function getHTMLFragments($gridField) {
 		return $this->fragments;
+	}
+}
+
+class GridFieldTest_Permissions extends DataObject implements TestOnly {
+	public static $db = array(
+		'Name' => 'Varchar',
+		'Email' => 'Varchar',
+	);
+	
+	public static $summary_fields = array(
+		'Name',
+		'Email'
+	);
+	
+	public function canView($member = null) {
+		// Only records with odd numbers are viewable
+		if(!($this->ID % 2)){ return false; }
+		return true;
 	}
 }
