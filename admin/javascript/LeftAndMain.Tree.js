@@ -207,7 +207,7 @@
 		 			return false;
 		 		};
 
-				var handledform = $(e.target).children('.cms-edit-form:first')[0];
+				var handledform = $(e.target).is('.cms-edit-form') ? $(e.target)[0] : $(e.target).find('.cms-edit-form')[0];
 		 		var id = $(handledform.ID).val();
 
 		 		// check if a form with a valid ID exists
