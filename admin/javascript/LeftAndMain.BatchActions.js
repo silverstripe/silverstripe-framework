@@ -242,10 +242,13 @@
 						var id, node;
 						
 						if(data.modified) {
+							var modifiedNodes = [];
 							for(id in data.modified) {
 								node = tree.getNodeByID(id);
 								tree.jstree('set_text', node, data.modified[id]['TreeTitle']);
+								modifiedNodes.push(node);
 							}
+							$(modifiedNodes).effect('highlight');
 						}
 						if(data.deleted) {
 							for(id in data.deleted) {
