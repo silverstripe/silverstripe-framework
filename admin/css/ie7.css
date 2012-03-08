@@ -15,4 +15,33 @@ html { overflow: hidden; }
 
 .jstree li a .ui-icon { text-indent: 0px !important; }
 
-.cms table.ss-gridfield-table tbody td button span.ui-button-text { zoom: 1; }
+.cms table.ss-gridfield-table tr th.extra span input { height: 23px; }
+
+.ss-gridfield-button-filter.ss-ui-button { margin: -1px -5px; background: #e6e6e6 url(../images/filter-icons.png) no-repeat -40px 6px; filter: none; }
+.ss-gridfield-button-filter.ss-ui-button.hover-alike:active { background: #2e7ead url(../images/filter-icons.png) no-repeat -15px 7px; filter: none; }
+.ss-gridfield-button-filter.ss-ui-button.hover-alike { background: #338dc1 url(../images/filter-icons.png) no-repeat -16px 6px; filter: none; }
+
+.ss-gridfield-button-reset.ss-ui-button { margin: -1px -5px; background: #e6e6e6 url(../images/filter-icons.png) no-repeat 8px 5px; filter: none; }
+.ss-gridfield-button-reset.ss-ui-button.filtered:hover { background: red url(../images/filter-icons.png) no-repeat 8px -17px; filter: none; }
+.ss-gridfield-button-reset.ss-ui-button.filtered:active { background: #e60000 url(../images/filter-icons.png) no-repeat 9px -16px; filter: none; }
+
+.cms table.ss-gridfield-table tr td { border-right: 1px solid #9a9a9a; }
+.cms table.ss-gridfield-table tr th { border-right: 1px solid #9a9a9a; }
+.cms table.ss-gridfield-table tr th.main { border-top: 1px solid #9a9a9a; border-bottom: none; }
+.cms table.ss-gridfield-table tr th.extra { border-top: 1px solid #9a9a9a; padding-right: 12px; }
+.cms table.ss-gridfield-table td:first-child, .cms table.ss-gridfield-table th:first-child { border-left: 1px solid #9a9a9a; }
+
+.cms .ss-gridfield table.ss-gridfield-table tbody td button.gridfield-button-delete { display: block; float: left; }
+.cms .ss-gridfield table.ss-gridfield-table tbody td button.gridfield-button-unlink.ui-state-hover { display: block; float: left; }
+.cms .ss-gridfield table.ss-gridfield-table tbody td a.edit-link { display: block; float: left; }
+
+.cms .cms-content .cms-content-fields .aligned_right_label { margin-left: 0; }
+.cms .cms-content .cms-content-fields .field.dropdown .middleColumn { max-width: 512px; }
+
+.pagination-page-number { position: relative; bottom: 10px; right: 10px; }
+.pagination-page-number input { width: 45px; padding: 0px; }
+
+table.ss-gridfield-table tr.title th h2 { float: left; }
+
+table.ss-gridfield-table tr.ss-gridfield-item.odd { background: white; }
+table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }

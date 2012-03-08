@@ -8,3 +8,19 @@
 .ss-ui-button.cms-page-add-button.ui-state-hover, .cms .ss-ui-button.cms-page-add-button:hover { background: #80bf40 url("../images/btn-icon-saaa1989272.png") 5px -49px no-repeat; }
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { background-image: none; }
+
+.ss-gridfield-button-filter.ss-ui-button { background: #e6e6e6 url(../images/filter-icons.png) no-repeat -40px 6px; filter: none; }
+.ss-gridfield-button-filter.ss-ui-button.hover-alike:active { background: #2e7ead url(../images/filter-icons.png) no-repeat -15px 7px; filter: none; }
+.ss-gridfield-button-filter.ss-ui-button.hover-alike { background: #338dc1 url(../images/filter-icons.png) no-repeat -16px 6px; filter: none; }
+
+.ss-gridfield-button-reset.ss-ui-button { background: #e6e6e6 url(../images/filter-icons.png) no-repeat 8px 5px; filter: none; }
+.ss-gridfield-button-reset.ss-ui-button.filtered:hover { background: red url(../images/filter-icons.png) no-repeat 8px -17px; filter: none; }
+.ss-gridfield-button-reset.ss-ui-button.filtered:active { background: #e60000 url(../images/filter-icons.png) no-repeat 9px -16px; filter: none; }
+
+.cms table.ss-gridfield-table tr td { border-right: 1px solid #9a9a9a; }
+.cms table.ss-gridfield-table tr th { border-right: 1px solid #9a9a9a; }
+.cms table.ss-gridfield-table tr th.main { border-top: 1px solid #9a9a9a; border-bottom: none; }
+.cms table.ss-gridfield-table tr th.extra { border-top: 1px solid #9a9a9a; }
+.cms table.ss-gridfield-table td:first-child, .cms table.ss-gridfield-table th:first-child { border-left: 1px solid #9a9a9a; }
+
+.cms .cms-content .cms-content-fields .aligned_right_label { margin-left: 0; }
