@@ -247,4 +247,18 @@
 		}
 	});
 
+	$(".ss-gridfield .pagination-page-number input").entwine({
+		onkeydown: function(event) {
+			if(event.keyCode == 13) {
+				var newpage = parseInt($(this).val(), 10);
+
+				var gridfield = $(this).getGridField();
+				gridfield.setState('GridFieldPaginator', {currentPage: newpage});
+				gridfield.reload();
+
+				return false;
+			}
+		}
+	});
+
 }(jQuery));
