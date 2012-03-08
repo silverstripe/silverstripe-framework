@@ -16,9 +16,20 @@
  */
 class GridFieldTitle implements GridField_HTMLProvider {
 
+	/**
+	 *
+	 * @var bool
+	 */
 	protected $newEnabled = true;
+	
+	/**
+	 *
+	 * @var type 
+	 */
+	protected $gridField = null;
 
-	function getHTMLFragments($gridField) {
+	public function getHTMLFragments( $gridField) {
+		$this->gridField = $gridField;
 		return array(
 			'header' => $gridField->customise(array(
 				'NewLink' => Controller::join_links($gridField->Link('item'), 'new'),
@@ -31,7 +42,14 @@ class GridFieldTitle implements GridField_HTMLProvider {
 	 * Returns whether or not the "add new" button will appear when rendering this DataGrid title
 	 * @return bool
 	 */
-	function getNewEnabled() {
+	public function getNewEnabled() {
+		if($this->gridField) {
+			$model = singleton($this->gridField->getModelClass());
+			if(!$model->canCreate()) {
+				return false;
+			}	
+		}
+		
 		return $this->newEnabled;
 	}
 
@@ -39,9 +57,7 @@ class GridFieldTitle implements GridField_HTMLProvider {
 	 * Enable or disable the "add new" button to add new DataGrid object instances
 	 * @param $enabled
 	 */
-	function setNewEnabled($enabled) {
+	public function setNewEnabled($enabled) {
 		$this->newEnabled = $enabled;
 	}
 }
-
-?>

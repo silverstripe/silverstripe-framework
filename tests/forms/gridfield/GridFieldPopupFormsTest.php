@@ -10,6 +10,7 @@ class GridFieldPopupFormsTest extends FunctionalTest {
 	
 
 	function testAddForm() {
+		$this->logInWithPermission('ADMIN');
 		$group = DataList::create('GridFieldPopupFormsTest_PeopleGroup')
 		            ->filter('Name', 'My Group')
 		            ->First();
@@ -45,6 +46,7 @@ class GridFieldPopupFormsTest extends FunctionalTest {
 	}
 
 	function testEditForm() {
+		$this->logInWithPermission('ADMIN');
 		$group = DataList::create('GridFieldPopupFormsTest_PeopleGroup')
 		            ->filter('Name', 'My Group')
 		            ->First();
