@@ -369,16 +369,22 @@ $gf_grid_x:	16px;
 					.datagrid-pagination {
 						position:absolute;
 						left:50%;
-						margin-left:-$gf_grid_x*10;
+						margin-left:$gf_grid_x*-7 - 4;
 						.pagination-page-number {
 							color:$color-text-light;
+							input {
+								width:$gf_grid_x*2 + 3;
+								height:$gf_grid_y*2 - 4;
+								margin-bottom:-$gf_grid_y/2;
+								padding:0px;
+							}
 						}
 						button.ss-gridfield-previouspage {
 							@include background (url(../images/icons/pagination-arrows.png) no-repeat -23px 7px);
 							@include box-shadow-none;
 							border:none;
-							width:10px;
-							margin:0 10px;
+							width:$gf_grid_x - 6;
+							margin:0 ($gf_grid_x - 6);
 							span {
 								text-indent:-9999em;
 							}
@@ -387,8 +393,8 @@ $gf_grid_x:	16px;
 							@include background (url(../images/icons/pagination-arrows.png) no-repeat -47px 7px);
 							@include box-shadow-none;
 							border:none;
-							width:10px;
-							margin:0 10px;
+							width:$gf_grid_x - 6;
+							margin:0 ($gf_grid_x - 6);
 							span {
 								text-indent:-9999em;
 							}
@@ -397,8 +403,8 @@ $gf_grid_x:	16px;
 							@include background (url(../images/icons/pagination-arrows.png) no-repeat 0px 7px);
 							@include box-shadow-none;
 							border:none;
-							width:10px;
-							margin:0 10px;
+							width:$gf_grid_x - 6;
+							margin:0 ($gf_grid_x - 6);
 							span {
 								text-indent:-9999em;
 							}
@@ -407,8 +413,8 @@ $gf_grid_x:	16px;
 							@include background (url(../images/icons/pagination-arrows.png) no-repeat -73px 7px);
 							@include box-shadow-none;
 							border:none;
-							width:10px;
-							margin:0 10px;
+							width:$gf_grid_x - 6;
+							margin:0 ($gf_grid_x - 6);
 							span {
 								text-indent:-9999em;
 							}
