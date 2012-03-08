@@ -367,6 +367,7 @@ $gf_grid_x:	16px;
 					@include border-bottom-radius($gf_border_radius);
 					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
 					.datagrid-pagination {
+						padding-top:2px;
 						position:absolute;
 						left:50%;
 						margin-left:$gf_grid_x*-7 - 4;
