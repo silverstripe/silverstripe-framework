@@ -87,7 +87,7 @@ $gf_grid_x:	16px;
 				button {
 					border: none;
 					background: none;
-					margin: 0 0 0 $gf_grid_x/8;
+					margin: 0 0 0 2px;
 					padding: 0;
 					width: auto;
 					text-shadow: none;
@@ -110,8 +110,8 @@ $gf_grid_x:	16px;
 				}
 				a.edit-link {
 					display:inline-block;
-					width:$gf_grid_x + 4;
-					height:$gf_grid_y*2 - 4;
+					width:20px;
+					height:20px;
 					text-indent:-9999em;
 					background: url(../images/icons/document--pencil.png) no-repeat 0 1px;
 				}				
@@ -137,7 +137,7 @@ $gf_grid_x:	16px;
 					background: $gf_colour_gradient_dark;
 					border-top: 1px solid $gf_colour_border;
 					padding: 5px;
-					min-height: $gf_grid_y*3 + 4;
+					min-height: 40px;
 					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
 					@include border-top-radius($gf_border_radius);
 					@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
@@ -145,7 +145,7 @@ $gf_grid_x:	16px;
 						padding: 0px;
 						font-size: $gf_grid_y*1.4;
 						color:#fff;
-						margin:$gf_grid_y/4 $gf_grid_x/2 0;
+						margin:3px 8px 0;
 						display:inline-block;
 					}
 					.right > * {
@@ -232,7 +232,7 @@ $gf_grid_x:	16px;
 						display: inline;
 						position: static;
 						input {
-							height:$gf_grid_y*2 + 4;
+							height:28px;
 						}
 					}
 					button.ss-ui-button {
@@ -267,7 +267,7 @@ $gf_grid_x:	16px;
 						border:none;	
 						width:100%;
 						text-align: left;
-						padding: $gf_grid_y/3 0;
+						padding: 4px 0;
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 						color: #fff;
 						@include border-radius(0);
@@ -283,12 +283,12 @@ $gf_grid_x:	16px;
 					}
 					&.ss-gridfield-button-filter.ss-ui-button{
 						position:absolute;
-						right:$gf_grid_x/2 - 1;
-						top:$gf_grid_y*-2 - 4;
+						right:5px;
+						top:-28px;
 						display:block;
 						text-indent:-9999em;
-						width:$gf_grid_x*2 - 2;
-						height:$gf_grid_y*2 + 4;
+						width:30px;
+						height:28px;
 						border: {
 							top-left-radius:0px;
 							bottom-left-radius:0px;
@@ -320,12 +320,12 @@ $gf_grid_x:	16px;
 					}
 					&.ss-gridfield-button-reset.ss-ui-button{
 						position:absolute;
-						right:$gf_grid_x*2 + 4;
-						top:$gf_grid_y*-2 - 4;
+						right:36px;
+						top:-28px;
 						display:block;
 						text-indent:-9999em;
-						width:$gf_grid_x*2 - 2;
-						height:$gf_grid_y*2 + 4;
+						width:30px;
+						height:28px;
 						float:right;
 						border: {
 							radius:0px;
@@ -383,12 +383,12 @@ $gf_grid_x:	16px;
 						padding-top:2px;
 						position:absolute;
 						left:50%;
-						margin-left:$gf_grid_x*-7 - 4;
+						margin-left:116px;
 						.pagination-page-number {
 							color:$color-text-light;
 							input {
-								width:$gf_grid_x*2 + 3;
-								height:$gf_grid_y*2 - 4;
+								width:35px;
+								height:18px;
 								margin-bottom:-$gf_grid_y/2;
 								padding:0px;
 							}
@@ -397,8 +397,8 @@ $gf_grid_x:	16px;
 							@include background (url(../images/icons/pagination-arrows.png) no-repeat -23px 7px);
 							@include box-shadow-none;
 							border:none;
-							width:$gf_grid_x - 6;
-							margin:0 ($gf_grid_x - 6);
+							width:10px;
+							margin:0 10px;
 							span {
 								text-indent:-9999em;
 							}
@@ -407,8 +407,8 @@ $gf_grid_x:	16px;
 							@include background (url(../images/icons/pagination-arrows.png) no-repeat -47px 7px);
 							@include box-shadow-none;
 							border:none;
-							width:$gf_grid_x - 6;
-							margin:0 ($gf_grid_x - 6);
+							width:10px;
+							margin:0 10px;
 							span {
 								text-indent:-9999em;
 							}
@@ -417,8 +417,8 @@ $gf_grid_x:	16px;
 							@include background (url(../images/icons/pagination-arrows.png) no-repeat 0px 7px);
 							@include box-shadow-none;
 							border:none;
-							width:$gf_grid_x - 6;
-							margin:0 ($gf_grid_x - 6);
+							width:10px;
+							margin:0 10px;
 							span {
 								text-indent:-9999em;
 							}
@@ -427,8 +427,8 @@ $gf_grid_x:	16px;
 							@include background (url(../images/icons/pagination-arrows.png) no-repeat -73px 7px);
 							@include box-shadow-none;
 							border:none;
-							width:$gf_grid_x - 6;
-							margin:0 ($gf_grid_x - 6);
+							width:10px;
+							margin:0 10px;
 							span {
 								text-indent:-9999em;
 							}
