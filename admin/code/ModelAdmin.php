@@ -125,7 +125,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * Class name of the form field used for the results list.  Overloading this in subclasses
 	 * can let you customise the results table field.
 	 */
-	protected $resultsTableClassName = 'TableListField';
+	protected $resultsTableClassName = 'GridField';
 
 	/**
 	 * Return {@link $this->resultsTableClassName}
@@ -651,19 +651,6 @@ class ModelAdmin_CollectionController extends Controller {
 	function search($request, $form) {
 		// Get the results form to be rendered
 		$resultsForm = $this->ResultsForm(array_merge($form->getData(), $request));
-		// Before rendering, let's get the total number of results returned
-		$tableField = $resultsForm->Fields()->dataFieldByName($this->modelClass);
-		$tableField->addExtraClass('resultsTable');
-		$numResults = $tableField->TotalCount();
-		
-		if($numResults) {
-			$msg = sprintf(
-				_t('ModelAdmin.FOUNDRESULTS',"Your search found %s matching items"), 
-				$numResults
-			);
-		} else {
-			$msg = _t('ModelAdmin.NORESULTS',"Your search didn't return any matching items");
-		}
 		return new SS_HTTPResponse(
 			$resultsForm->forTemplate(), 
 			200, 
@@ -715,37 +702,21 @@ class ModelAdmin_CollectionController extends Controller {
 	 *
 	 * @param array $searchCriteria passed through from ResultsForm 
 	 *
-	 * @return TableListField 
+	 * @return GridField 
 	 */
 	function getResultsTable($searchCriteria) {
 		
-		$summaryFields = $this->getResultColumns($searchCriteria);
-
 		$className = $this->parentController->resultsTableClassName();
-		$tf = new $className(
+		$datalist = $this->getSearchQuery($searchCriteria);
+		$tf = Object::create($className,
 			$this->modelClass,
-			$this->modelClass,
-			$summaryFields
-		);
-
-		$tf->setCustomQuery($this->getSearchQuery($searchCriteria));
-		$tf->setPageSize($this->parentController->stat('page_length'));
-		$tf->setShowPagination(true);
-		// @todo Remove records that can't be viewed by the current user
-		$tf->setPermissions(array_merge(array('view','export'), TableListField::permissions_for_object($this->modelClass)));
-
-		// csv export settings (select all columns regardless of user checkbox settings in 'ResultsAssembly')
-		$exportFields = $this->getResultColumns($searchCriteria, false);
-		$tf->setFieldListCsv($exportFields);
-
-		$url = '<a href=\"' . $this->Link() . '/$ID/edit\">$value</a>';
-		if(count($summaryFields)) {
-			$tf->setFieldFormatting(array_combine(
-				array_keys($summaryFields), 
-				array_fill(0,count($summaryFields), $url)
-			));
-		}
-	
+			false,
+			$datalist,
+			$fieldConfig = GridFieldConfig_RecordEditor::create()
+				->addComponent(new GridFieldExporter())
+		)->setDisplayFields($this->getResultColumns($searchCriteria));
+		
+		$fieldConfig->getComponentByType('GridFieldPaginator')->setItemsPerPage($this->parentController->stat('page_length'));
 		return $tf;
 	}
 	
@@ -757,7 +728,6 @@ class ModelAdmin_CollectionController extends Controller {
 	 * @return Form
 	 */
 	function ResultsForm($searchCriteria) {
-		
 		if($searchCriteria instanceof SS_HTTPRequest) $searchCriteria = $searchCriteria->getVars();
 		
 		$tf = $this->getResultsTable($searchCriteria);
