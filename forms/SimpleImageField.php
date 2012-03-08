@@ -102,7 +102,7 @@ class SimpleImageField extends FileField {
 				"type" => "file", 
 				"name" => $this->name, 
 				"id" => $this->id(),
-				"tabindex" => $this->getTabIndex(),
+				"tabindex" => $this->getAttribute('tabindex'),
 				'disabled' => $this->disabled
 			)
 		);
@@ -111,7 +111,7 @@ class SimpleImageField extends FileField {
 				"type" => "hidden", 
 				"name" => "MAX_FILE_SIZE", 
 				"value" => $this->getValidator()->getAllowedMaxFileSize(),
-				"tabindex" => $this->getTabIndex()
+				"tabindex" => $this->getAttribute('tabindex'),
 			)
 		);
 		$html .= "</div>";
