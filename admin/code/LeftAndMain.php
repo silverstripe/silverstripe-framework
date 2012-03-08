@@ -195,11 +195,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// Audit logging hook
 		if(empty($_REQUEST['executeForm']) && !$this->isAjax()) $this->extend('accessedCMS');
 		
-		// Requirements
-
-		// Suppress behaviour/prototype validation instructions in CMS, not compatible with ajax loading of forms.
-		Validator::set_javascript_validation_handler('none');
-
 		// Set the members html editor config
 		HtmlEditorConfig::set_active(Member::currentUser()->getHtmlEditorConfigForCMS());
 		
@@ -264,7 +259,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				SAPPHIRE_DIR . '/javascript/DateField.js',
 				SAPPHIRE_DIR . '/javascript/HtmlEditorField.js',
 				SAPPHIRE_DIR . '/javascript/TabSet.js',
-				SAPPHIRE_DIR . '/javascript/Validator.js',
 				SAPPHIRE_DIR . '/javascript/i18n.js',
 				SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js',
 				SAPPHIRE_DIR . '/javascript/GridField.js',
@@ -913,7 +907,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				// The clientside (mainly LeftAndMain*.js) rely on ajax responses
 				// which can be evaluated as javascript, hence we need
 				// to override any global changes to the validation handler.
-				$validator->setJavascriptValidationHandler('prototype');
 				$form->setValidator($validator);
 			} else {
 				$form->unsetValidator();

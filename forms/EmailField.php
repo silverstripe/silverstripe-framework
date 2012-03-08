@@ -10,40 +10,6 @@ class EmailField extends TextField {
 		return 'email text';
 	}
 
-	function jsValidation() {
-		$formID = $this->form->FormName();
-		$error = _t('EmailField.VALIDATIONJS', 'Please enter an email address.');
-		$jsFunc =<<<JS
-Behaviour.register({
-	"#$formID": {
-		validateEmailField: function(fieldName) {
-			var el = _CURRENT_FORM.elements[fieldName];
-			if(!el || !el.value) return true;
-
-		 	if(el.value.match(/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i)) {
-		 		return true;
-		 	} else {
-				validationError(el, "$error","validation");
-		 		return false;
-		 	} 	
-		}
-	}
-});
-JS;
-		//fix for the problem with more than one form on a page.
-		Requirements::customScript($jsFunc, 'func_validateEmailField' .'_' . $formID);
-
-		//return "\$('$formID').validateEmailField('$this->name');";
-		return <<<JS
-if(typeof fromAnOnBlur != 'undefined'){
-	if(fromAnOnBlur.name == '$this->name')
-		$('$formID').validateEmailField('$this->name');
-}else{
-	$('$formID').validateEmailField('$this->name');
-}
-JS;
-	}
-
 	/**
 	 * Validates for RFC 2822 compliant email adresses.
 	 * 

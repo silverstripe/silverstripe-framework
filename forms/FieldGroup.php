@@ -169,21 +169,6 @@ HTML;
 		}
 	}
 	
-	/**
-	 * This allows fields within this fieldgroup to still allow them to get valuated.
-	 */
-	function jsValidation(){
-		$fs = $this->FieldList();
-		$validationCode = '';
-		
-		foreach($fs as $subfield) {
-			if($value = $subfield->jsValidation()) {
-				$validationCode .= $value;
-			}
-		}
-		return $validationCode;
-	}
-	
 	function php($data){
 		return;
 	}

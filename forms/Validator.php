@@ -24,62 +24,26 @@ abstract class Validator extends Object {
 	 * @var array $errors
 	 */
 	protected $errors;
-	
+
 	/**
-	 * Static for default value of $this->javascriptValidationHandler.
-	 * Set with Validator::set_javascript_validation_handler();
-	 * @var string
-	 */
-	protected static $javascript_validation_handler = "prototype";
-	
-	/**
-	 * Handler for javascript validation.  Can be "prototype" or "none".
-	 * @var string
-	 */
-	protected $javascriptValidationHandler = null;
-	
-	/**
-	 * Call this function to set the javascript validation handler for all valdiation on your site.
-	 * This could be called from _config.php to set site-wide javascript validation, or from Controller::init()
-	 * to affect only the front-end site.
-	 * Use instance method {@link setJavascriptValidationHandler()} to
-	 * only set handler for a specific form instance.
-	 *
-	 * @param $handler A string representing the handler to use: 'prototype' or 'none'.
-	 * @todo Add 'jquery' as a handler option.
+	 * @deprecated 3.0 Use custom javascript validation instead
 	 */
 	public static function set_javascript_validation_handler($handler) {
-		if($handler == 'prototype' || $handler == 'none') {
-			self::$javascript_validation_handler = $handler;
-		} else {
-			user_error("Validator::setJavascriptValidationHandler() passed bad handler '$handler'", E_USER_WARNING);
-		}
-	}
-	
-	/**
-	 * Returns global validation handler used for all forms by default,
-	 * unless overwritten by {@link setJavascriptValidationHandler()}.
-	 * 
-	 * @return string
-	 */
-	public static function get_javascript_validator_handler() {
-		return self::$javascript_validation_handler;
+		Deprecation::notice('3.0', 'Use custom javascript validation instead.');
 	}
 
 	/**
-	 * Set JavaScript validation for this validator.
-	 * Use static method {@link set_javascript_validation_handler()}
-	 * to set handlers globally.
-	 * 
-	 * @param string $handler
+	 * @deprecated 3.0 Use custom javascript validation instead
+	 */
+	public static function get_javascript_validator_handler() {
+		Deprecation::notice('3.0', 'Use custom javascript validation instead.');
+	}
+
+	/**
+	 * @deprecated 3.0 Use custom javascript validation instead
 	 */
 	public function setJavascriptValidationHandler($handler) {
-		if($handler == 'prototype' || $handler == 'none') {
-			$this->javascriptValidationHandler = $handler; 
-		} else {
-			user_error("Validator::setJavascriptValidationHandler() passed bad handler '$handler'", E_USER_WARNING);
-		}
-		return $this;
+		Deprecation::notice('3.0', 'Use custom javascript validation instead.');
 	}
 
 	/**
@@ -89,9 +53,9 @@ abstract class Validator extends Object {
 	 * @return string
 	 */
 	public function getJavascriptValidationHandler() {
-		return ($this->javascriptValidationHandler) ? $this->javascriptValidationHandler : self::$javascript_validation_handler;
+		Deprecation::notice('3.0', 'Use custom javascript validation instead.');
 	}
-	
+
 	/**
 	 * @param Form $form
 	 */
@@ -106,7 +70,6 @@ abstract class Validator extends Object {
 	function validate(){
 		$this->errors = null;
 		$this->php($this->form->getData());
-			
 		return $this->errors;
 	}
 	
@@ -149,78 +112,6 @@ abstract class Validator extends Object {
 		}else if(!strlen($data[$fieldName])) $this->validationError($fieldName, "$fieldName is required.", "required");
 	}
 	
-	function includeJavascriptValidation() {
-		if($this->getJavascriptValidationHandler() == 'prototype') {
-			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
-			Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-			Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-			Requirements::javascript(SAPPHIRE_DIR . "/javascript/Validator.js");
-		
-			$code = $this->javascript();
-			$formID = $this->form->FormName();
-			$js = <<<JS
-Behaviour.register({
-	'#$formID': {
-		validate : function(fromAnOnBlur) {
-			initialiseForm(this, fromAnOnBlur);
-			$code
-
-			var error = hasHadFormError();
-			if(!error && fromAnOnBlur) clearErrorMessage(fromAnOnBlur);
-			if(error && !fromAnOnBlur) focusOnFirstErroredField();
-			
-			return !error;
-		},
-		onsubmit : function() {
-			if(typeof this.bypassValidation == 'undefined' || !this.bypassValidation) return this.validate();
-		}
-	},
-	'#$formID input' : {
-		initialise: function() {
-			if(!this.old_onblur) this.old_onblur = function() { return true; } 
-			if(!this.old_onfocus) this.old_onfocus = function() { return true; } 
-		},
-		onblur : function() {
-			if(this.old_onblur()) {
-				// Don't perform instant validation for CalendarDateField fields; it creates usability wierdness.
-				if(this.parentNode.className.indexOf('calendardate') == -1 || this.value) {
-					return $('$formID').validate(this);
-				} else {
-					return true;
-				}
-			}
-		}
-	},
-	'#$formID textarea' : {
-		initialise: function() {
-			if(!this.old_onblur) this.old_onblur = function() { return true; } 
-			if(!this.old_onfocus) this.old_onfocus = function() { return true; } 
-		},
-		onblur : function() {
-			if(this.old_onblur()) {
-				return $('$formID').validate(this);
-			}
-		}
-	},
-	'#$formID select' : {
-		initialise: function() {
-			if(!this.old_onblur) this.old_onblur = function() { return true; } 
-		},
-		onblur : function() {
-			if(this.old_onblur()) {
-				return $('$formID').validate(this); 
-			}
-		}
-	}
-});
-JS;
-
-			Requirements::customScript($js);
-			// HACK Notify the form that the validators client-side validation code has already been included
-			if($this->form) $this->form->jsValidationIncluded = true;
-		}
-	}
-	
 	/**
 	 * Returns true if the named field is "required".
 	 * Used by FormField to return a value for FormField::Required(), to do things like show *s on the form template.
@@ -229,8 +120,6 @@ JS;
 	function fieldIsRequired($fieldName) {
 		return false;
 	}
-	
-	abstract function javascript();
 	
 	abstract function php($data);
 }

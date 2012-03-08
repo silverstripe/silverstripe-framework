@@ -127,51 +127,6 @@ class PhoneNumberField extends FormField {
 	/**
 	 * @todo Very basic validation at the moment
 	 */
-	function jsValidation() {
-		$formID = $this->form->FormName();
-		
-		$jsFunc =<<<JS
-Behaviour.register({
-	"#$formID": {
-		validatePhoneNumber: function(fieldName) {
-			if(!$(fieldName + "_Holder")) return true;
-			
-			// Phonenumbers are split into multiple values, so get the inputs from the form.
-			var parts = $(fieldName + "_Holder").getElementsByTagName('input');
-			var isNull = true;
-			
-			// we're not validating empty fields (done by requiredfields)
-			for(i=0; i < parts.length ; i++ ) {
-				isNull = (parts[i].value == null || parts[i].value == "") ? isNull && true : false;
-			}
-			
-			if(!isNull) {
-				// Concatenate the string values from the parts of the input.
-				var joinedNumber = ""; 
-				for(i=0; i < parts.length; i++) joinedNumber += parts[i].value;
-				if(!joinedNumber.match(/^[0-9\+\-\(\)\s\#]*\$/)) {
-					// TODO Find a way to mark multiple error fields
-					validationError(
-						fieldName+"-Number",
-						"Please enter a valid phone number",
-						"validation",
-						false
-					);
-				}
-			}
-			return true;			
-		}
-	}
-});
-JS;
-		Requirements :: customScript($jsFunc, 'func_validatePhoneNumber');
-		
-		return "\$('$formID').validatePhoneNumber('$this->name');";
-	}
-	
-	/**
-	 * @todo Very basic validation at the moment
-	 */
 	function validate($validator){
 		$valid = preg_match(
 			'/^[0-9\+\-\(\)\s\#]*$/',

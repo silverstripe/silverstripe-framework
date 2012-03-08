@@ -217,10 +217,6 @@ class TimeField_Readonly extends TimeField {
 		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";
 	}
 	
-	function jsValidation() {
-		return null;
-	}
-	
 	function validate($validator) {
 		return true;	
 	}
