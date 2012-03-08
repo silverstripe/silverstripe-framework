@@ -1021,10 +1021,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$form->saveInto($record);
 		$record->write();
 
-		// Used in TinyMCE inline folder creation
-		if(isset($data['returnID'])) {
-			return $record->ID;
-		} else if($this->isAjax()) {
+		if($this->isAjax()) {
 			$form = $this->getEditForm($record->ID);
 			return $form->forTemplate();
 		} else {
