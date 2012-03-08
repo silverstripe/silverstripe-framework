@@ -67,7 +67,7 @@ $gf_grid_x:	16px;
 			background: transparent;
 			tr.filter-header {
 				.fieldgroup {
-					max-width:512px;
+					max-width:$gf_grid_x*32;
 				}
 			}
 		}
@@ -78,7 +78,7 @@ $gf_grid_x:	16px;
 				button {
 					border: none;
 					background: none;
-					margin: 0 0 0 2px;
+					margin: 0 0 0 $gf_grid_x/8;
 					padding: 0;
 					width: auto;
 					text-shadow: none;
@@ -128,7 +128,7 @@ $gf_grid_x:	16px;
 					background: $gf_colour_gradient_dark;
 					border-top: 1px solid $gf_colour_border;
 					padding: 5px;
-					min-height: 40px;
+					min-height: $gf_grid_y*3 + 4;
 					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
 					@include border-top-radius($gf_border_radius);
 					@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
@@ -136,7 +136,7 @@ $gf_grid_x:	16px;
 						padding: 0px;
 						font-size: $gf_grid_y*1.4;
 						color:#fff;
-						margin:3px $gf_grid_x/2 0;
+						margin:$gf_grid_y/4 $gf_grid_x/2 0;
 						display:inline-block;
 					}
 					.new{
@@ -209,7 +209,6 @@ $gf_grid_x:	16px;
 					span{
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 					}
-					
 				}
 				&.extra {
 					background: $gf_colour_subheader;		
@@ -255,7 +254,7 @@ $gf_grid_x:	16px;
 						border:none;	
 						width:100%;
 						text-align: left;
-						padding: 4px 0;
+						padding: $gf_grid_y/3 0;
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 						color: #fff;
 						@include border-radius(0);
