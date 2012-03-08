@@ -236,7 +236,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 				
 			// Add a Cancel link which is a button-like link and link back to one level up.
 			$curmbs = $this->Breadcrumbs();
-			if($curmbs->count()>=2){
+			if($curmbs && $curmbs->count()>=2){
 				$one_level_up = $curmbs->offsetGet($curmbs->count()-2);
 				$text = "
 				<a class=\"crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all\" href=\"".$one_level_up->Link."\">
@@ -378,6 +378,8 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	 * @return ArrayData
 	 */
 	function Breadcrumbs($unlinked = false) {
+		if(!$this->popupController->hasMethod('Breadcrumbs')) return;
+
 		$items = $this->popupController->Breadcrumbs($unlinked);
 		if($this->record && $this->record->ID) {
 			$items->push(new ArrayData(array(
