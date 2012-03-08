@@ -352,13 +352,19 @@ class GridField extends FormField {
 					// If the fragment still has a fragment definition in it, when we should defer this item until later.
 					if(preg_match('/\$DefineFragment\(([a-z0-9\-_]+)\)/i', $fragment, $matches)) {
 						// If we've already deferred this fragment, then we have a circular dependency
-						if(isset($fragmentDeferred[$k]) && $fragmentDeferred[$k] > 5) throw new LogicException("GridField HTML fragment '$fragmentName' and '$matches[1]' appear to have a circular dependency.");
+						if(isset($fragmentDeferred[$k]) && $fragmentDeferred[$k] > 5) {
+							throw new LogicException("GridField HTML fragment '$fragmentName' and '$matches[1]' " . 
+								"appear to have a circular dependency.");
+						}
 						
 						// Otherwise we can push to the end of the content array
 						unset($content[$k]);
 						$content[$k] = $v;
-						if(!isset($fragmentDeferred[$k])) $fragmentDeferred[$k] = 1;
-						else $fragmentDeferred[$k]++;
+						if(!isset($fragmentDeferred[$k])) {
+							$fragmentDeferred[$k] = 1;
+						} else {
+							$fragmentDeferred[$k]++;
+						}
 						break;
 					} else {
 						$content[$k] = preg_replace('/\$DefineFragment\(' . $fragmentName . '\)/i', $fragment, $content[$k]);
