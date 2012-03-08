@@ -907,7 +907,7 @@ form.member-profile-form {
 		overflow-x: auto;
 		background: none;
 		width:100%;
-		.aligned_right_label {
+		.aligned-right-label {
 			margin-left:$grid-x*23;
 			padding:$grid-x 0;
 		}
@@ -1359,10 +1359,10 @@ form.small {
  	p button#action_export {
 		margin-top:$grid-y*2;
 		span.btn-icon-download-csv {
-			height:$grid-y*2 + 1;
+			height:17px;
 		}
 		span.ui-button-text {
-			padding-left:$grid-x*3 + 3;
+			padding-left:26px;
 		} 
  	}
 }

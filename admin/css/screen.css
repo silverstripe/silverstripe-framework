@@ -405,7 +405,7 @@ form.member-profile-form .ui-corner-all, form.member-profile-form .ui-corner-top
 
 .cms .cms-content { border-right: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -webkit-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -o-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -moz-border-radius: 0; -webkit-border-radius: 0; -o-border-radius: 0; -ms-border-radius: 0; -khtml-border-radius: 0; border-radius: 0; }
 .cms .cms-content-fields { /* always show a y scroll bar as popups like TreeDropdowns  can trigger longer pages and the extra scroll bar doesn't  fire our sizing bar */ overflow-y: auto; overflow-x: auto; background: none; width: 100%; }
-.cms .cms-content-fields .aligned_right_label { margin-left: 184px; padding: 8px 0; }
+.cms .cms-content-fields .aligned-right-label { margin-left: 184px; padding: 8px 0; }
 
 /** -------------------------------------------- "Settings" Form -------------------------------------------- */
 #CanViewType .optionset li, #CanEditType .optionset li, #CanCreateTopLevelType .optionset li { float: none; width: auto; }
@@ -503,7 +503,7 @@ form.small .cms-file-info-data .field .middleColumn { margin-left: 120px; }
 .members_grid span button#action_gridfield_relationfind { display: none; }
 .members_grid p button#action_export { margin-top: 16px; }
 .members_grid p button#action_export span.btn-icon-download-csv { height: 17px; }
-.members_grid p button#action_export span.ui-button-text { padding-left: 27px; }
+.members_grid p button#action_export span.ui-button-text { padding-left: 26px; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .cms .jstree ul, .TreeDropdownField .treedropdownfield-panel .jstree ul { display: block; margin: 0; padding: 0; background: none; list-style-type: none; }
