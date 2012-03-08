@@ -708,15 +708,15 @@ class ModelAdmin_CollectionController extends Controller {
 		
 		$className = $this->parentController->resultsTableClassName();
 		$datalist = $this->getSearchQuery($searchCriteria);
+		$numItemsPerPage = $this->parentController->stat('page_length');
 		$tf = Object::create($className,
 			$this->modelClass,
 			false,
 			$datalist,
-			$fieldConfig = GridFieldConfig_RecordEditor::create()
-				->addComponent(new GridFieldExporter())
+			$fieldConfig = GridFieldConfig_RecordEditor::create($numItemsPerPage)
+				->addComponent(new GridFieldExporter())->removeComponentsByType('GridFieldFilter')
 		)->setDisplayFields($this->getResultColumns($searchCriteria));
-		
-		$fieldConfig->getComponentByType('GridFieldPaginator')->setItemsPerPage($this->parentController->stat('page_length'));
+
 		return $tf;
 	}
 	
