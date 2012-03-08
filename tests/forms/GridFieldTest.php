@@ -333,7 +333,90 @@ class GridFieldTest extends SapphireTest {
 		$request = new SS_HTTPRequest('POST', 'url');
 		$obj->gridFieldAlterAction(array('StateID'=>$id), $form, $request);
 	}
+	
+	/**
+	 * Test the interface for adding custom HTML fragment slots via a component
+	 */
+	public function testGridFieldCustomFragments() {
 
+			new GridFieldTest_HTMLFragments(array(
+				"header-left-actions" => "left\$DefineFragment(nested-left)",
+				"header-right-actions" => "right",
+			));
+
+		new GridFieldTest_HTMLFragments(array(
+			"nested-left" => "[inner]",
+		));
+
+
+		$config = GridFieldConfig::create()->addComponents(
+			new GridFieldTest_HTMLFragments(array(
+				"header" => "<tr><td><div class=\"right\">\$DefineFragment(header-right-actions)</div><div class=\"left\">\$DefineFragment(header-left-actions)</div></td></tr>",
+			)),
+			new GridFieldTest_HTMLFragments(array(
+				"header-left-actions" => "left",
+				"header-right-actions" => "rightone",
+			)),
+			new GridFieldTest_HTMLFragments(array(
+				"header-right-actions" => "righttwo",
+			))
+		);
+		$field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
+		$form = new Form(new Controller(), 'testform', new FieldList(array($field)), new FieldList());
+		
+		$this->assertContains("<div class=\"right\">rightone\nrighttwo</div><div class=\"left\">left</div>", 
+			$field->FieldHolder());
+	}
+
+	/**
+	 * Test the nesting of custom fragments
+	 */
+	public function testGridFieldCustomFragmentsNesting() {
+		$config = GridFieldConfig::create()->addComponents(
+			new GridFieldTest_HTMLFragments(array(
+				"level-one" => "first",
+			)),
+			new GridFieldTest_HTMLFragments(array(
+				"before" => "<div>\$DefineFragment(level-one)</div>",
+			)),
+			new GridFieldTest_HTMLFragments(array(
+				"level-one" => "<strong>\$DefineFragment(level-two)</strong>",
+			)),
+			new GridFieldTest_HTMLFragments(array(
+				"level-two" => "second",
+			))
+		);
+		$field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
+		$form = new Form(new Controller(), 'testform', new FieldList(array($field)), new FieldList());
+		
+		$this->assertContains("<div>first\n<strong>second</strong></div>", 
+			$field->FieldHolder());
+	}
+
+	/**
+	 * Test that circular dependencies throw an exception
+	 */
+	public function testGridFieldCustomFragmentsCircularDependencyThrowsException() {
+		$config = GridFieldConfig::create()->addComponents(
+			new GridFieldTest_HTMLFragments(array(
+				"level-one" => "first",
+			)),
+			new GridFieldTest_HTMLFragments(array(
+				"before" => "<div>\$DefineFragment(level-one)</div>",
+			)),
+			new GridFieldTest_HTMLFragments(array(
+				"level-one" => "<strong>\$DefineFragment(level-two)</strong>",
+			)),
+			new GridFieldTest_HTMLFragments(array(
+				"level-two" => "<blink>\$DefineFragment(level-one)</blink>",
+			))
+		);
+		$field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
+		$form = new Form(new Controller(), 'testform', new FieldList(array($field)), new FieldList());
+
+		$this->setExpectedException('LogicException');
+		$field->FieldHolder();
+	}
 }
 
 class GridFieldTest_Component implements GridField_ColumnProvider, GridField_ActionProvider, TestOnly{
@@ -388,4 +471,15 @@ class GridFieldTest_Player extends DataObject implements TestOnly {
 	);
 
 	static $belongs_many_many = array('Teams' => 'GridFieldTest_Team');
+}
+
+
+class GridFieldTest_HTMLFragments implements GridField_HTMLProvider, TestOnly{
+	function __construct($fragments) {
+		$this->fragments = $fragments;
+	}
+	
+	function getHTMLFragments($gridField) {
+		return $this->fragments;
+	}
 }

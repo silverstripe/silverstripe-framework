@@ -191,6 +191,42 @@ For example, this components will add a footer row to the grid field, thanking t
 	
 If you wish to add CSS or JavaScript for your component, you may also make `Requirements` calls in this method.
 
+### Defining new fragments
+
+Sometimes it is helpful to have one component write HTML into another component.  For example, you might have an action header row at the top of your GridField that several different components may define actions for.
+
+To do this, you can put the following code into one of the HTML fragments returned by an HTML provider.
+
+	$DefineFragment(fragment-name)
+
+Other `GridField_HTMLProvider` components can now write to `fragment-name` just as they would write to footer, etc.  Fragments can be nested.
+
+For example, this component creates a `header-actions` fragment name that can be populated by other components:
+
+	:::php
+	class HeaderActionComponent implements GridField_HTMLProvider {
+		public function getHTMLFragments($gridField) {
+			$colSpan = $gridField->getColumnCount();
+			array(
+				"header" => "<tr><td colspan=\"$colspan\">\$DefineFragment(header-actions)</td></tr>"
+			);
+		}
+	}
+	
+This is a simple example of how you might populate that new fragment:
+
+	:::php
+	class AddNewActionComponent implements GridField_HTMLProvider {
+		public function getHTMLFragments($gridField) {
+			$colSpan = $gridField->getColumnCount();
+			array(
+				"header-actions" => "<button>Add new</button>"
+			);
+		}
+	}
+
+If you write to a fragment that isn't defined anywhere, or you create a circular dependency within fragments, an exception will be thrown.
+
 ### GridField_ColumnProvider
 
 By default, a grid contains no columns.  All the columns displayed in a grid will need to be added by an appropriate component.

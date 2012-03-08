@@ -314,22 +314,79 @@ class GridField extends FormField {
 		
 		// Render headers, footers, etc
 		$content = array(
-			'header' => array(),
-			'body' => array(),
-			'footer' => array(),
-			'before' => array(),
-			'after' => array(),
+			"before" => "",
+			"after" => "",
+			"header" => "",
+			"footer" => "",
 		);
 
 		foreach($this->components as $item) {			
 			if($item instanceof GridField_HTMLProvider) {
 				$fragments = $item->getHTMLFragments($this);
 				foreach($fragments as $k => $v) {
-					$content[$k][] = $v;
+					$k = strtolower($k);
+					if(!isset($content[$k])) $content[$k] = "";
+					$content[$k] .= $v . "\n";
 				}
 			}
 		}
 
+		foreach($content as $k => $v) {
+			$content[$k] = trim($v);
+		}
+
+		// Replace custom fragments and check which fragments are defined
+		// Nested dependencies are handled by deferring the rendering of any content item that 
+		// Circular dependencies are detected by disallowing any item to be deferred more than 5 times
+		// It's a fairly crude algorithm but it works
+		
+		$fragmentDefined = array('header' => true, 'footer' => true, 'before' => true, 'after' => true);
+		reset($content);
+		while(list($k,$v) = each($content)) {
+			if(preg_match_all('/\$DefineFragment\(([a-z0-9\-_]+)\)/i', $v, $matches)) {
+				foreach($matches[1] as $match) {
+					$fragmentName = strtolower($match);
+					$fragmentDefined[$fragmentName] = true;
+					$fragment = isset($content[$fragmentName]) ? $content[$fragmentName] : "";
+
+					// If the fragment still has a fragment definition in it, when we should defer this item until later.
+					if(preg_match('/\$DefineFragment\(([a-z0-9\-_]+)\)/i', $fragment, $matches)) {
+						// If we've already deferred this fragment, then we have a circular dependency
+						if(isset($fragmentDeferred[$k]) && $fragmentDeferred[$k] > 5) throw new LogicException("GridField HTML fragment '$fragmentName' and '$matches[1]' appear to have a circular dependency.");
+						
+						// Otherwise we can push to the end of the content array
+						unset($content[$k]);
+						$content[$k] = $v;
+						if(!isset($fragmentDeferred[$k])) $fragmentDeferred[$k] = 1;
+						else $fragmentDeferred[$k]++;
+						break;
+					} else {
+						$content[$k] = preg_replace('/\$DefineFragment\(' . $fragmentName . '\)/i', $fragment, $content[$k]);
+					}
+				}
+			}
+		}
+
+		// Check for any undefined fragments, and if so throw an exception
+		// While we're at it, trim whitespace off the elements
+		foreach($content as $k => $v) {
+			if(empty($fragmentDefined[$k])) throw new LogicException("GridField HTML fragment '$k' was given content, " .
+				"but not defined.  Perhaps there is a supporting GridField component you need to add?");
+		}
+
+		$rows = array();
+		foreach($list as $idx => $record) {
+			$rowContent = '';
+			foreach($columns as $column) {
+				$colContent = $this->getColumnContent($record, $column);
+				// A return value of null means this columns should be skipped altogether.
+				if($colContent === null) continue;
+				$colAttributes = $this->getColumnAttributes($record, $column);
+				$rowContent .= $this->createTag('td', $colAttributes, $colContent);
+			}
+			$rows[] = $row;
+		}
+		$content['body'] = implode("\n", $rows);
 
 		$total = $list->count();
 		if($total > 0) {
@@ -364,13 +421,12 @@ class GridField extends FormField {
 				array("class" => 'ss-gridfield-item ss-gridfield-no-items'),
 				$this->createTag('td', array('colspan' => count($columns)), _t('GridField.NoItemsFound', 'No items found'))
 			);
-			$content['body'][] = $row;
 		}
 
 		// Turn into the relevant parts of a table
-		$head = $content['header'] ? $this->createTag('thead', array(), implode("\n", $content['header'])) : '';
-		$body = $content['body'] ? $this->createTag('tbody', array('class' => 'ss-gridfield-items'), implode("\n", $content['body'])) : '';
-		$foot = $content['footer'] ? $this->createTag('tfoot', array(), implode("\n", $content['footer'])) : '';
+		$head = $content['header'] ? $this->createTag('thead', array(), $content['header']) : '';
+		$body = $content['body'] ? $this->createTag('tbody', array('class' => 'ss-gridfield-items'), $content['body']) : '';
+		$foot = $content['footer'] ? $this->createTag('tfoot', array(), $content['footer']) : '';
 
 		$this->addExtraClass('ss-gridfield field');
 		$attrs = array_diff_key(
@@ -386,9 +442,9 @@ class GridField extends FormField {
 		);
 		return
 			$this->createTag('fieldset', $attrs, 
-				implode("\n", $content['before']) .
+				$content['before'] .
 				$this->createTag('table', $tableAttrs, $head."\n".$foot."\n".$body) .
-				implode("\n", $content['after'])
+				$content['after']
 			);
 	}
 	
