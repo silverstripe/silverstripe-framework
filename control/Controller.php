@@ -572,7 +572,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 				list($arg, $suffix) = explode('?',$arg,2);
 				$querystrings[] = $suffix;
 			}
-			if($arg) {
+			if((is_string($arg) && $arg) || is_numeric($arg)) {
+				$arg = (string)$arg;
 				if($result && substr($result,-1) != '/' && $arg[0] != '/') $result .= "/$arg";
 				else $result .= (substr($result, -1) == '/' && $arg[0] == '/') ? ltrim($arg, '/') : $arg;
 			}

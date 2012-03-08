@@ -108,6 +108,9 @@ class ControllerTest extends FunctionalTest {
 
 		/* If there are multiple, it takes the last one */
 		$this->assertEquals("my-page?arg=var#second-section", Controller::join_links("my-page#subsection", "?arg=var", "#second-section"));
+
+		/* Does type-safe checks for zero value */
+		$this->assertEquals("my-page/0", Controller::join_links("my-page", 0));
 	}
 	
 	/**
