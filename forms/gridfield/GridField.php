@@ -380,22 +380,9 @@ class GridField extends FormField {
 				"but not defined.  Perhaps there is a supporting GridField component you need to add?");
 		}
 
-		$rows = array();
-		foreach($list as $idx => $record) {
-			$rowContent = '';
-			foreach($columns as $column) {
-				$colContent = $this->getColumnContent($record, $column);
-				// A return value of null means this columns should be skipped altogether.
-				if($colContent === null) continue;
-				$colAttributes = $this->getColumnAttributes($record, $column);
-				$rowContent .= $this->createTag('td', $colAttributes, $colContent);
-			}
-			$rows[] = $row;
-		}
-		$content['body'] = implode("\n", $rows);
-
 		$total = $list->count();
 		if($total > 0) {
+			$rows = array();
 			foreach($list as $idx => $record) {
 				$rowContent = '';
 				foreach($columns as $column) {
@@ -419,10 +406,12 @@ class GridField extends FormField {
 					),
 					$rowContent
 				);
-				$content['body'][] = $row;
+				$rows[] = $row;
 			}
+			$content['body'] = implode("\n", $rows);
+
 		} else {    //display a message when the grid field is empty
-			$row = $this->createTag(
+			$content['body'] = $this->createTag(
 				'tr',
 				array("class" => 'ss-gridfield-item ss-gridfield-no-items'),
 				$this->createTag('td', array('colspan' => count($columns)), _t('GridField.NoItemsFound', 'No items found'))
