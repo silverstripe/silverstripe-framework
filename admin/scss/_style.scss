@@ -1344,15 +1344,16 @@ form.small {
  * -------------------------------------------- */
 
  .members_grid {
- 	p {
- 		button#action_export {
- 			margin-top:$grid-y*2;
- 			span.btn-icon-download-csv {
- 				height:$grid-y*2 + 1;
- 			}
- 			span.ui-button-text {
- 				padding-left:$grid-x*3 + 3;
- 			} 
- 		}
+ 	span button#action_gridfield_relationfind {
+ 		display:none;
+ 	}
+ 	p button#action_export {
+		margin-top:$grid-y*2;
+		span.btn-icon-download-csv {
+			height:$grid-y*2 + 1;
+		}
+		span.ui-button-text {
+			padding-left:$grid-x*3 + 3;
+		} 
  	}
 }
