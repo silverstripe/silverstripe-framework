@@ -37,6 +37,7 @@ class GridFieldRelationAddTest extends FunctionalTest {
 	}
 
 	function testAdd() {
+		$this->logInWithPermission('ADMIN');
 		$team1 = $this->objFromFixture('GridFieldTest_Team', 'team1');
 		$team2 = $this->objFromFixture('GridFieldTest_Team', 'team2');
 

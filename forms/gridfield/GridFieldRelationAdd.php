@@ -237,7 +237,7 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 			return $this->placeholderText;
 		} else {
 			$labels = array();
-			foreach($searchFields as $searchField) {
+			if($searchFields) foreach($searchFields as $searchField) {
 				$label = singleton($dataClass)->fieldLabel($searchField);
 				if($label) $labels[] = $label;
 			}

@@ -43,6 +43,7 @@ if($envFileExists) {
 }
 
 include_once('sapphire/core/Object.php');
+include_once('sapphire/view/TemplateGlobalProvider.php');
 include_once('sapphire/i18n/i18n.php');
 include_once('sapphire/dev/install/DatabaseConfigurationHelper.php');
 include_once('sapphire/dev/install/DatabaseAdapterRegistry.php');
