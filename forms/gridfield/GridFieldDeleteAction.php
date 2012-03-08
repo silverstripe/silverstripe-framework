@@ -69,6 +69,9 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	 * @return string - the HTML for the column 
 	 */
 	public function getColumnContent($gridField, $record, $columnName) {
+		if(!$record->canDelete()) {
+			return;
+		}
 		$field = Object::create('GridField_FormAction',
 			$gridField, 
 			'DeleteRecord'.$record->ID, 
@@ -96,6 +99,9 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 			$id = $arguments['RecordID'];
 			// Always deletes a record. Use GridFieldRelationDelete to detach it from the current relationship.
 			$item = $gridField->getList()->byID($id);
+			if(!$item->canDelete()) {
+				throw new ValidationException(_t('GridFieldAction_Delete.DeletePermissionsFailure',"No delete permissions"),0);
+			}
 			if(!$item) return;
 				$item->delete();
 		}

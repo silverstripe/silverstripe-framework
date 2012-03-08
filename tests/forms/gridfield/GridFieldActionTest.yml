@@ -1,0 +1,18 @@
+GridFieldAction_Delete_Team:
+	team1:
+		Name: Team 1
+		City: Cologne
+	team2:
+		Name: Team 2
+		City: Wellington
+	team3:
+		Name: Team 3
+		City: Auckland
+    
+GridFieldAction_Edit_Team:
+	team1:
+		Name: Team 1
+		City: Cologne
+	team2:
+		Name: Team 2
+		City: Wellington
