@@ -128,14 +128,6 @@ class Form extends RequestHandler {
 	protected $securityToken = null;
 	
 	/**
-	 * HACK This is a temporary hack to allow multiple calls to includeJavascriptValidation on
-	 * the validator (if one is present).
-	 *
-	 * @var boolean
-	 */
-	public $jsValidationIncluded = false;
-	
-	/**
 	 * @var array $extraClasses List of additional CSS classes for the form tag.
 	 */
 	protected $extraClasses = array();
@@ -324,23 +316,19 @@ class Form extends RequestHandler {
 		if(!$this->validate()) {
 			if(Director::is_ajax()) {
 				// Special case for legacy Validator.js implementation (assumes eval'ed javascript collected through FormResponse)
-				if($this->validator->getJavascriptValidationHandler() == 'prototype') {
-					return FormResponse::respond();
+				$acceptType = $request->getHeader('Accept');
+				if(strpos($acceptType, 'application/json') !== FALSE) {
+					// Send validation errors back as JSON with a flag at the start
+					$response = new SS_HTTPResponse(Convert::array2json($this->validator->getErrors()));
+					$response->addHeader('Content-Type', 'application/json');
 				} else {
-					$acceptType = $request->getHeader('Accept');
-					if(strpos($acceptType, 'application/json') !== FALSE) {
-						// Send validation errors back as JSON with a flag at the start
-						$response = new SS_HTTPResponse(Convert::array2json($this->validator->getErrors()));
-						$response->addHeader('Content-Type', 'application/json');
-					} else {
-						$this->setupFormErrors();
-						// Send the newly rendered form tag as HTML
-						$response = new SS_HTTPResponse($this->forTemplate());
-						$response->addHeader('Content-Type', 'text/html');
-					}
-					
-					return $response;
+					$this->setupFormErrors();
+					// Send the newly rendered form tag as HTML
+					$response = new SS_HTTPResponse($this->forTemplate());
+					$response->addHeader('Content-Type', 'text/html');
 				}
+				
+				return $response;
 			} else {
 				if($this->getRedirectToFormOnValidationError()) {
 					if($pageURL = $request->getHeader('Referer')) {
@@ -696,9 +684,6 @@ class Form extends RequestHandler {
 
 		// Forms shouldn't be cached, cos their error messages won't be shown
 		HTTP::set_cache_age(0);
-
-		// workaround to include javascript validation
-		if($this->validator && !$this->jsValidationIncluded) $this->validator->includeJavascriptValidation();
 
 		$attrs = $this->getAttributes();
 
@@ -1259,10 +1244,6 @@ class Form extends RequestHandler {
 	 * the attributes of the form.  These fields can be used to send the form to Ajax.
 	 */
 	function formHtmlContent() {
-		// Call FormAttributes to force inclusion of custom client-side validation of fields
-		// because it won't be included by the template
-		if($this->validator && !$this->jsValidationIncluded) $this->validator->includeJavascriptValidation();
-		
 		$this->IncludeFormTag = false;
 		$content = $this->forTemplate();
 		$this->IncludeFormTag = true;

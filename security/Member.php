@@ -1772,27 +1772,4 @@ class Member_Validator extends RequiredFields {
 		return $valid;
 	}
 
-
-	/**
-	 * Check if the submitted member data is valid (client-side)
-	 *
-	 * @param array $data Submitted data
-	 * @return bool Returns TRUE if the submitted data is valid, otherwise
-	 *              FALSE.
-	 */
-	function javascript() {
-		$js = parent::javascript();
-
-		// Execute the validators on the extensions
-		if($this->extension_instances) {
-			foreach($this->extension_instances as $extension) {
-				if(method_exists($extension, 'hasMethod') && $extension->hasMethod('updateJavascript')) {
-					$extension->updateJavascript($js, $this->form);
-				}
-			}
-		}
-
-		return $js;
-	}
-
 }

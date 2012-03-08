@@ -392,18 +392,20 @@ class ModelAdmin_CollectionController extends Controller {
 	 * @return Form
 	 */
 	public function SearchForm() {
-		$context = singleton($this->modelClass)->getDefaultSearchContext();
+		$SNG_model = singleton($this->modelClass);
+		$context = $SNG_model->getDefaultSearchContext();
 		$fields = $context->getSearchFields();
 		$columnSelectionField = $this->ColumnSelectionField();
 		$fields->push($columnSelectionField);
-		$validator = new RequiredFields();
-		$validator->setJavascriptValidationHandler('none');
-		
+
+		$validator = ($SNG_model->hasMethod('getCMSValidator')) ? $SNG_model->getCMSValidator() : new RequiredFields();
+		$clearAction = new ResetFormAction('clearsearch', _t('ModelAdmin.CLEAR_SEARCH','Clear Search'));
+
 		$form = new Form($this, "SearchForm",
 			$fields,
 			new FieldList(
 				new FormAction('search', _t('MemberTableField.SEARCH', 'Search')),
-				$clearAction = new ResetFormAction('clearsearch', _t('ModelAdmin.CLEAR_SEARCH','Clear Search'))
+				$clearAction
 			),
 			$validator
 		);
@@ -423,26 +425,28 @@ class ModelAdmin_CollectionController extends Controller {
 	 */ 
 	public function CreateForm() {
 		$modelName = $this->modelClass;
+		$SNG_model = singleton($modelName);
 
 		if($this->hasMethod('alternatePermissionCheck')) {
 			if(!$this->alternatePermissionCheck()) return false;
 		} else {
-			if(!singleton($modelName)->canCreate(Member::currentUser())) return false;
+			if(!$SNG_model->canCreate(Member::currentUser())) return false;
 		}
-		
-		$buttonLabel = sprintf(_t('ModelAdmin.CREATEBUTTON', "Create '%s'", PR_MEDIUM, "Create a new instance from a model class"), singleton($modelName)->i18n_singular_name());
+
+		$buttonLabel = sprintf(_t('ModelAdmin.CREATEBUTTON', "Create '%s'", PR_MEDIUM, "Create a new instance from a model class"), $SNG_model->i18n_singular_name());
+
+		$validator = ($SNG_model->hasMethod('getCMSValidator')) ? $SNG_model->getCMSValidator() : new RequiredFields();
+		$createButton = FormAction::create('add', $buttonLabel)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept');
 
 		$form = new Form($this, "CreateForm",
-						new FieldList(),
-						new FieldList(
-							$createButton = FormAction::create('add', $buttonLabel)
-								->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
-						),
-						$validator = new RequiredFields()
-				);
+			new FieldList(),
+			new FieldList($createButton),
+			$validator
+		);
+
 		$createButton->dontEscape = true;
-		$validator->setJavascriptValidationHandler('none');
 		$form->setHTMLID("Form_CreateForm_" . $this->modelClass);
+
 		return $form;
 	}
 	
@@ -498,15 +502,11 @@ class ModelAdmin_CollectionController extends Controller {
 			new FormAction('import', _t('ModelAdmin.IMPORT', 'Import from CSV'))
 		);
 		
-		$validator = new RequiredFields();
-		$validator->setJavascriptValidationHandler('none');
-		
 		$form = new Form(
 			$this,
 			"ImportForm",
 			$fields,
-			$actions,
-			$validator
+			$actions
 		);
 		$form->setHTMLID("Form_ImportForm_" . $this->modelClass);
 		return $form;
@@ -802,10 +802,8 @@ class ModelAdmin_CollectionController extends Controller {
 				$fields = $newRecord->getCMSFields();
 			}
 			
-			$validator = ($newRecord->hasMethod('getCMSValidator')) ? $newRecord->getCMSValidator() : null;
-			if(!$validator) $validator = new RequiredFields();
-			$validator->setJavascriptValidationHandler('none');
-			
+			$validator = ($newRecord->hasMethod('getCMSValidator')) ? $newRecord->getCMSValidator() : new RequiredFields();
+
 			$actions = new FieldList (
 				FormAction::create("doCreate", _t('ModelAdmin.ADDBUTTON', "Add"))
 					->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
@@ -922,7 +920,6 @@ class ModelAdmin_RecordController extends Controller {
 		}
 		
 		$validator = ($this->currentRecord->hasMethod('getCMSValidator')) ? $this->currentRecord->getCMSValidator() : new RequiredFields();
-		$validator->setJavascriptValidationHandler('none');
 		
 		$actions = $this->currentRecord->getCMSActions();
 		if($this->currentRecord->canEdit(Member::currentUser())){
