@@ -557,6 +557,8 @@ form.small .cms-file-info-data .field .middleColumn { margin-left: 120px; }
 .cms .jstree-apple.jstree-focused, .TreeDropdownField .treedropdownfield-panel .jstree-apple.jstree-focused { background: none; }
 .cms .jstree-apple.jstree-focused .jstree-apple > ul, .TreeDropdownField .treedropdownfield-panel .jstree-apple.jstree-focused .jstree-apple > ul { background: none; }
 .cms .jstree li, .TreeDropdownField .treedropdownfield-panel .jstree li { line-height: 25px; }
+.cms a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel a > .jstree-icon { display: none; }
+.cms .draggable a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .draggable a > .jstree-icon { display: block; }
 
 .jstree-apple li, .jstree-apple .jstree-apple ins { background: none; }
 .jstree-apple .jstree-unchecked > a > .jstree-checkbox { margin-right: 3px; }
@@ -583,8 +585,6 @@ form.small .cms-file-info-data .field .middleColumn { margin-left: 120px; }
 .tree-holder.jstree-apple .jstree-closed > ins, .cms-tree.jstree-apple .jstree-closed > ins { background-position: 0 0; }
 .tree-holder.jstree-apple .jstree-open > ins, .cms-tree.jstree-apple .jstree-open > ins { background-position: -20px 0; }
 
-.jstree-apple #record-0.jstree-open > ins { display: none; }
-
 a .jstree-pageicon { display: block; float: left; width: 16px; height: 16px; margin-right: 4px; background-color: transparent; background-image: url(../images/sitetree_ss_pageclass_icons_default.png); background-repeat: no-repeat; }
 
 li.class-HomePage > a .jstree-pageicon { background-position: 0 -48px; }
@@ -596,6 +596,8 @@ li.class-VirtualPage > a .jstree-pageicon { background-position: 0 -32px; }
 li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 
 .cms-tree { visibility: hidden; }
+.cms-tree.multiple li > a > .jstree-icon { display: none; }
+.cms-tree.multiple li#record-0 > a .jstree-checkbox { display: none; }
 
 /** Styles for the left hand side menu and header for the admin panels.  Take into consideration CSS selector performance.   @package sapphire @subpackage admin */
 .cms-logo-header { background-color: #00111d; position: relative; padding: 16px 8px 0 4px; line-height: 24px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #00111d), color-stop(50%, #003050), color-stop(100%, #00111d)); background-image: -webkit-linear-gradient(#00111d, #003050, #00111d); background-image: -moz-linear-gradient(#00111d, #003050, #00111d); background-image: -o-linear-gradient(#00111d, #003050, #00111d); background-image: -ms-linear-gradient(#00111d, #003050, #00111d); background-image: linear-gradient(#00111d, #003050, #00111d); }
