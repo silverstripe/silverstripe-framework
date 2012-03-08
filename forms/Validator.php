@@ -126,37 +126,6 @@ abstract class Validator extends Object {
 	}
 	
 	/**
-	 * @deprecated 2.4 Use Validator->getErrors() and custom code
-	 */
-	function showError() {
-		Deprecation::notice('2.4', 'Use Validator->getErrors() and custom code instead.');
-		Debug::show($this->errors);
-	}
-	
-	/**
-	 * @deprecated 2.4 Use custom code
-	 */
-	function getCombinedError(){
-		Deprecation::notice('2.4', 'Use custom code instead.');
-		if($this->errors) {
-			foreach($this->errors as $error){
-				$ret['message'] .= $error['message']."<br />";
-				$ret['messageType'] .= $error['messageType']."<br />";
-			}
-		
-			return $ret;
-		}
-	}
-	
-	/**
-	 * @deprecated 2.4 Use getErrors()
-	 */
-	function getError(){
-		Deprecation::notice('2.4', 'Use getErrors() instead.');
-		return $this->getErrors();
-	}
-	
-	/**
 	 * Returns all errors found by a previous call to {@link validate()}.
 	 * The array contains the following keys for each error:
 	 * - 'fieldName': the name of the FormField instance
