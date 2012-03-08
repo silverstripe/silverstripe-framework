@@ -391,6 +391,10 @@ class GridField extends FormField {
 				implode("\n", $content['after'])
 			);
 	}
+	
+	public function Field() {
+		return $this->FieldHolder();
+	}
 
 	public function getAttributes() {
 		return array_merge(parent::getAttributes(), array('data-url' => $this->Link()));
