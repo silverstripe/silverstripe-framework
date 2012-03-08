@@ -22,7 +22,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		'memberimport',
 		'GroupImportForm',
 		'groupimport',
-		'RootForm'
 	);
 
 	/**
@@ -118,8 +117,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 		$actions = new FieldList();
 		
-		$this->extend('updateRootFormFields', $fields, $actions);
-		
 		$form = new Form(
 			$this,
 			'EditForm',
@@ -130,6 +127,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
 		$form->addExtraClass('center ss-tabset ' . $this->BaseCSSClasses());
+
+		$this->extend('updateEditForm', $form);
 					
 		return $form;
 	}

@@ -55,7 +55,7 @@ class Group extends DataObject {
 	
 	/**
 	 * Caution: Only call on instances, not through a singleton.
-	 * The "root group" fields will be created through {@link SecurityAdmin->RootForm()}.
+	 * The "root group" fields will be created through {@link SecurityAdmin->EditForm()}.
 	 *
 	 * @return FieldList
 	 */

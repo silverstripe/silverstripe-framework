@@ -77,7 +77,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		'show',
 		'EditorToolbar',
 		'EditForm',
-		'RootForm',
 		'AddForm',
 		'batchactions',
 		'BatchActionsForm',
@@ -928,15 +927,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$form->setFields($readonlyFields);
 			}
 		} else {
-			$form = $this->RootForm();
+			$form = $this->EmptyForm();
 		}
 		
 		return $form;
 	}	
-	
-	function RootForm() {
-		return $this->EmptyForm();
-	}
 	
 	/**
 	 * Returns a placeholder form, used by {@link getEditForm()} if no record is selected.
