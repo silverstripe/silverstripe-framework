@@ -14,12 +14,16 @@ class AjaxUniqueTextField extends TextField {
 	
 	protected $restrictedRegex;
 	
-	function __construct($name, $title, $restrictedField, $restrictedTable, $value = "", $maxLength = null, $validationURL = null, $restrictedRegex = null ){
+	function __construct($name, $title, $restrictedField, $restrictedTable, $id, $value = "", $maxLength = null, $validationURL = null, $restrictedRegex = null ){
 		$this->maxLength = $maxLength;
 		
 		$this->restrictedField = $restrictedField;
 		
 		$this->restrictedTable = $restrictedTable;
+
+
+                // We kinda need the ID of the page or DataObject, to exclude it in the validator function. Haven't found a better method yet.
+                $this->id = $id;
 		
 		$this->validateURL = $validationURL;
 		
@@ -109,16 +113,19 @@ JS;
 
 	}
 
-	function validate( $validator ) {
-		
-		$result = DB::query(sprintf(
-			"SELECT COUNT(*) FROM \"%s\" WHERE \"%s\" = '%s'",
+function validate( $validator ) {
+                // Excluding the ID of the DataObject from the query, so the AjaxUnique is actually unique on this DataObject.
+                // Without excluding the ID itself, the count will always return 1 if the field itself hasn't changed. This means a "Not unique", even though it is.
+                // First thought was to make the result > 1, but that won't work sadly.
+                $result = DB::query(sprintf(
+			"SELECT COUNT(*) FROM \"%s\" WHERE \"%s\" = '%s' AND ID != '%d'",
 			$this->restrictedTable,
 			$this->restrictedField,
-			Convert::raw2sql($this->value)
+			Convert::raw2sql($this->value),
+                        $this->id
 		))->value();
 
-		if( $result && ( $result > 0 ) ) {
+                if( $result && ( $result > 0 ) ) {
 			$validator->validationError( $this->name, _t('Form.VALIDATIONNOTUNIQUE', "The value entered is not unique") );
 			return false;
 		}
