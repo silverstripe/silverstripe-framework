@@ -651,11 +651,7 @@ class ModelAdmin_CollectionController extends Controller {
 	function search($request, $form) {
 		// Get the results form to be rendered
 		$resultsForm = $this->ResultsForm(array_merge($form->getData(), $request));
-		return new SS_HTTPResponse(
-			$resultsForm->forTemplate(), 
-			200, 
-			$msg
-		);
+		return $resultsForm->forTemplate();
 	}
 	
 	/**
