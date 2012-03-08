@@ -111,8 +111,8 @@ class SearchContext extends Object {
 	 * @param string|array $sort Database column to sort on. 
 	 *  Falls back to {@link DataObject::$default_sort} if not provided.
 	 * @param string|array $limit 
-	 * @param SQLQuery $existingQuery
-	 * @return SQLQuery
+	 * @param DataList $existingQuery
+	 * @return DataList
 	 */
 	public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null) {
 	    if($existingQuery) {
