@@ -111,8 +111,14 @@ class CMSBatchActionHandler extends RequestHandler {
 						implode(", ", $idsFromLive)
 					);
 					$livePages = Versioned::get_by_stage($this->recordClass, 'Live', $sql);
-					if($pages) $pages->merge($livePages);
-					else $pages = $livePages;
+					if($pages) {
+						// Can't merge into a DataList, need to condense into an actual list first
+						// (which will retrieve all records as objects, so its an expensive operation)
+						$pages = new ArrayList($pages->toArray());
+						$pages->merge($livePages);
+					}	else {
+						$pages = $livePages;
+					}
 				}
 			}
 		} else {
