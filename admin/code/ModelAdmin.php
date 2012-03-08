@@ -710,7 +710,7 @@ class ModelAdmin_CollectionController extends Controller {
 			false,
 			$datalist,
 			$fieldConfig = GridFieldConfig_RecordEditor::create($numItemsPerPage)
-				->addComponent(new GridFieldExporter())->removeComponentsByType('GridFieldFilter')
+				->addComponent(new GridFieldExportButton())->removeComponentsByType('GridFieldFilterHeader')
 		)->setDisplayFields($this->getResultColumns($searchCriteria));
 
 		return $tf;

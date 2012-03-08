@@ -1,12 +1,12 @@
 <?php
-class GridFieldTitleTest extends SapphireTest {
+class GridFieldToolbarHeaderTest extends SapphireTest {
 
 
 	public function testGridTitleAddNewEnabled() {
 		$this->logInWithPermission('ADMIN');
 		//construct a fake form field to render out the grid field within it
 		$config = new GridFieldConfig();
-		$config->addComponent($titleField = new GridFieldTitle());
+		$config->addComponent($titleField = new GridFieldToolbarHeader());
 		$actions = new FieldList();
 		$grid = new GridField('TestField', 'Test Field', new DataList('Company'),$config);
 		$fields = new FieldList($rootTab = new TabSet("Root",$tabMain = new Tab('Main',$grid)));
@@ -21,7 +21,7 @@ class GridFieldTitleTest extends SapphireTest {
 		$this->logInWithPermission('ADMIN');
 		//construct a fake form field to render out the grid field within it
 		$config = new GridFieldConfig();
-		$config->addComponent($titleField = new GridFieldTitle());
+		$config->addComponent($titleField = new GridFieldToolbarHeader());
 		$actions = new FieldList();
 		$grid = new GridField('TestField', 'Test Field', new DataList('Company'),$config);
 		$fields = new FieldList($rootTab = new TabSet("Root",$tabMain = new Tab('Main',$grid)));
@@ -35,7 +35,7 @@ class GridFieldTitleTest extends SapphireTest {
 	public function testGridTitleAddNewWithoutPermission() {
 		if(Member::currentUser()) { Member::currentUser()->logOut(); }
 		$config = new GridFieldConfig();
-		$config->addComponent($titleField = new GridFieldTitle());
+		$config->addComponent($titleField = new GridFieldToolbarHeader());
 		$grid = new GridField('TestField', 'Test Field', new DataList('Company'),$config);
 		$fields = new FieldList(new TabSet("Root",$tabMain = new Tab('Main',$grid)));
 		$form = new Form(Controller::curr(), "TestForm", $fields, new FieldList());

@@ -131,9 +131,9 @@ class GridFieldConfig_Base extends GridFieldConfig {
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
 	public function __construct($itemsPerPage=null) {
-		$this->addComponent(new GridFieldTitle());
+		$this->addComponent(new GridFieldToolbarHeader());
 		$this->addComponent(new GridFieldSortableHeader());
-		$this->addComponent(new GridFieldFilter());
+		$this->addComponent(new GridFieldFilterHeader());
 		$this->addComponent(new GridFieldDefaultColumns());
 		$this->addComponent(new GridFieldPaginator($itemsPerPage));
 	}
@@ -158,14 +158,14 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
 	public function __construct($itemsPerPage=null) {
-		$this->addComponent(new GridFieldTitle());
+		$this->addComponent(new GridFieldToolbarHeader());
 		$this->addComponent(new GridFieldSortableHeader());
-		$this->addComponent(new GridFieldFilter());
+		$this->addComponent(new GridFieldFilterHeader());
 		$this->addComponent(new GridFieldDefaultColumns());
-		$this->addComponent(new GridFieldEditAction());
+		$this->addComponent(new GridFieldEditButton());
 		$this->addComponent(new GridFieldDeleteAction());
 		$this->addComponent(new GridFieldPaginator($itemsPerPage));
-		$this->addComponent(new GridFieldPopupForms());
+		$this->addComponent(new GridFieldDetailForm());
 	}
 }
 
@@ -181,7 +181,7 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
  * for example to change the field to search.
  * <code>
  * GridFieldConfig_RelationEditor::create()
- * 	->getComponentByType('GridFieldRelationAdd')->setSearchFields('MyField');
+ * 	->getComponentByType('GridFieldAddExistingAutocompleter')->setSearchFields('MyField');
  * </code>
  */
 class GridFieldConfig_RelationEditor extends GridFieldConfig {
@@ -200,14 +200,14 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig {
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
 	public function __construct($itemsPerPage=null) {
-		$this->addComponent(new GridFieldTitle());
-		$this->addComponent(new GridFieldRelationAdd());
+		$this->addComponent(new GridFieldToolbarHeader());
+		$this->addComponent(new GridFieldAddExistingAutocompleter());
 		$this->addComponent(new GridFieldSortableHeader());
-		$this->addComponent(new GridFieldFilter());
+		$this->addComponent(new GridFieldFilterHeader());
 		$this->addComponent(new GridFieldDefaultColumns());
-		$this->addComponent(new GridFieldEditAction());
-		$this->addComponent(new GridFieldRelationDelete());
+		$this->addComponent(new GridFieldEditButton());
+		$this->addComponent(new GridFieldRemoveButton());
 		$this->addComponent(new GridFieldPaginator($itemsPerPage));
-		$this->addComponent(new GridFieldPopupForms());
+		$this->addComponent(new GridFieldDetailForm());
 	}
 }

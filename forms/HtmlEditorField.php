@@ -355,7 +355,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 		$fileFieldConfig = GridFieldConfig::create();
 		$fileFieldConfig->addComponent(new GridFieldSortableHeader());
-		$fileFieldConfig->addComponent(new GridFieldFilter());
+		$fileFieldConfig->addComponent(new GridFieldFilterHeader());
 		$fileFieldConfig->addComponent(new GridFieldDefaultColumns());
 		$fileFieldConfig->addComponent(new GridFieldPaginator(5));
 		$fileField = new GridField('Files', false, null, $fileFieldConfig);

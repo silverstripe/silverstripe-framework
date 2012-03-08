@@ -30,7 +30,7 @@ This example creates exactly the same kind of grid as the previous example, but 
 	:::php
 	$config = GridFieldConfig::create();
 	// Provide a header row with filter controls
-	$config->addComponent(new GridFieldFilter());
+	$config->addComponent(new GridFieldFilterHeader());
 	// Provide a default set of columns based on $summary_fields
 	$config->addComponent(new GridFieldDefaultColumns());
 	// Provide a header row with sort controls
@@ -99,7 +99,7 @@ You can also specify formatting replacements, to replace column contents with HT
 
 This component will add a header to the grid with sort buttons.  It will detect which columns are sortable and only provide sort controls on those columns.
 
-### GridFieldFilter
+### GridFieldFilterHeader
 
 This component will add a header row with a text field filter for each column, letting you filter the results with text searches.  It will detect which columns are filterable and only provide sort controls on those columns.
 
@@ -109,34 +109,34 @@ This component will limit output to a fixed number of items per page add a foote
 
 ### GridFieldAction
 
-TODO Describe component, including GridFieldEditAction/GridFieldDeleteAction
+TODO Describe component, including GridFieldEditButton/GridFieldDeleteAction
 
-### GridFieldRelationAdd
+### GridFieldAddExistingAutocompleter
 
 This class is is responsible for adding objects to another object's has_many and many_many relation,
 as defined by the `[api:RelationList]` passed to the GridField constructor.
 Objects can be searched through an input field (partially matching one or more fields).
 Selecting from the results will add the object to the relation.
-Often used alongside `[api:GridFieldRelationDelete]` for detaching existing records from a relatinship.
+Often used alongside `[api:GridFieldRemoveButton]` for detaching existing records from a relatinship.
 For easier setup, have a look at a sample configuration in `[api:GridFieldConfig_RelationEditor]`.
 
-### GridFieldRelationDelete
+### GridFieldRemoveButton
 
 Allows to detach an item from an existing has_many or many_many relationship.
 Similar to {@link GridFieldDeleteAction}, but allows to distinguish between 
 a "delete" and "detach" action in the UI - and to use both in parallel, if required.
 Requires the GridField to be populated with a `[api:RelationList]` rather than a plain DataList.
-Often used alongside `[api:GridFieldRelationAdd]` to add existing records to the relationship.
+Often used alongside `[api:GridFieldAddExistingAutocompleter]` to add existing records to the relationship.
 
-### GridFieldPopupForms
+### GridFieldDetailForm
 
-TODO Describe component, including how it relates to GridFieldEditAction. Point to GridFieldConfig_RelationEditor for easier defaults.
+TODO Describe component, including how it relates to GridFieldEditButton. Point to GridFieldConfig_RelationEditor for easier defaults.
 
-### GridFieldTitle
+### GridFieldToolbarHeader
 
 TODO
 
-### GridFieldExporter
+### GridFieldExportButton
 
 TODO
 
@@ -152,16 +152,16 @@ It's common for a component to implement several of these interfaces in order to
  * `GridField_ActionProvider`, to define the sortasc and sortdesc actions that add sort column and direction to the state.
  * `GridField_DataManipulator`, to alter the sorting of the data list based on the sort column and direction values in the state.
 
- ### GridFieldRelationAdd
+ ### GridFieldAddExistingAutocompleter
 
-A GridFieldRelationAdd is responsible for adding objects to another object's `has_many` and `many_many` relation,
+A GridFieldAddExistingAutocompleter is responsible for adding objects to another object's `has_many` and `many_many` relation,
 as defined by the `[api:RelationList]` passed to the GridField constructor.
 Objects can be searched through an input field (partially matching one or more fields).
 Selecting from the results will add the object to the relation.
 
  	:::php
  	$group = DataObject::get_one('Group');
- 	$config = GridFieldConfig::create()->addComponent(new GridFieldRelationAdd(array('FirstName', 'Surname', 'Email'));
+ 	$config = GridFieldConfig::create()->addComponent(new GridFieldAddExistingAutocompleter(array('FirstName', 'Surname', 'Email'));
  	$gridField = new GridField('Members', 'Members', $group->Members(), $config);
 
 ## Component interfaces
@@ -293,7 +293,7 @@ Here is an example in full.  The actual implementation of the view and edit form
 	 *  - <FormURL>/field/<GridFieldName>/item/<RecordID>
 	 *  - <FormURL>/field/<GridFieldName>/item/<RecordID>/edit
 	 */
-	class GridFieldPopupForms implements GridField_URLHandler {
+	class GridFieldDetailForm implements GridField_URLHandler {
 		public function getURLHandlers($gridField) {
 			return array(
 				'item/$ID' => 'handleItem',

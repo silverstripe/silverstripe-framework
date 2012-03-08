@@ -9,7 +9,7 @@ class SecurityAdminTest extends FunctionalTest {
 	
 	protected $extraDataObjects = array('LeftAndMainTest_Object');
 
-	// TODO Fix export feature (moved from MemberTableField to GridFieldExporter)
+	// TODO Fix export feature (moved from MemberTableField to GridFieldExportButton)
 	// function testGroupExport() {
 	// 	$this->session()->inst_set('loggedInAs', $this->idFromFixture('Member', 'admin'));
 		
@@ -27,7 +27,7 @@ class SecurityAdminTest extends FunctionalTest {
 	// 	$this->assertRegExp('/"","","admin@example.com"/', $lines[1], "Member values are correctly exported");
 	// }
 
-	// TODO Fix export feature (moved from MemberTableField to GridFieldExporter)
+	// TODO Fix export feature (moved from MemberTableField to GridFieldExportButton)
 	// function testEmptyGroupExport() {
 	// 	$this->session()->inst_set('loggedInAs', $this->idFromFixture('Member', 'admin'));
 		

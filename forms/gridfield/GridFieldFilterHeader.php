@@ -1,13 +1,13 @@
 <?php
 /**
- * GridFieldFilter alters the gridfield with some filtering fields in the header of each column
+ * GridFieldFilterHeader alters the gridfield with some filtering fields in the header of each column
  * 
  * @see GridField
  * 
  * @package sapphire
  * @subpackage fields-relational
  */
-class GridFieldFilter implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {
+class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {
 	
 	/**
 	 *
@@ -19,7 +19,7 @@ class GridFieldFilter implements GridField_HTMLProvider, GridField_DataManipulat
 	}
 
 	function handleAction(GridField $gridField, $actionName, $arguments, $data) {
-		$state = $gridField->State->GridFieldFilter;
+		$state = $gridField->State->GridFieldFilterHeader;
 		if($actionName === 'filter') {
 			if(isset($data['filter'])){
 				foreach($data['filter'] as $key => $filter ){
@@ -39,7 +39,7 @@ class GridFieldFilter implements GridField_HTMLProvider, GridField_DataManipulat
 	 * @return SS_List 
 	 */
 	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
-		$state = $gridField->State->GridFieldFilter;
+		$state = $gridField->State->GridFieldFilterHeader;
 		if(!isset($state->Columns)) {
 			return $dataList;
 		}
@@ -58,7 +58,7 @@ class GridFieldFilter implements GridField_HTMLProvider, GridField_DataManipulat
 		$forTemplate->Fields = new ArrayList;
 
 		$columns = $gridField->getColumns();
-		$filterArguments = $gridField->State->GridFieldFilter->Columns->toArray();
+		$filterArguments = $gridField->State->GridFieldFilterHeader->Columns->toArray();
 		
 		$currentColumn = 0;
 		foreach($columns as $columnField) {
@@ -92,7 +92,7 @@ class GridFieldFilter implements GridField_HTMLProvider, GridField_DataManipulat
 		}
 		
 		return array(
-			'header' => $forTemplate->renderWith('GridFieldFilter_Row'),
+			'header' => $forTemplate->renderWith('GridFieldFilterHeader_Row'),
 		);
 	}
 }

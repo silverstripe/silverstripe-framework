@@ -846,7 +846,7 @@ class UploadField_SelectHandler extends RequestHandler {
 		$folder = $this->getFolder();
 		$config = GridFieldConfig::create();
 		$config->addComponent(new GridFieldSortableHeader());
-		$config->addComponent(new GridFieldFilter());
+		$config->addComponent(new GridFieldFilterHeader());
 		$config->addComponent(new GridFieldDefaultColumns());
 		$config->addComponent(new GridFieldPaginator(10));
 

@@ -14,7 +14,7 @@
  * @package sapphire
  * @subpackage gridfield
  */
-class GridFieldTitle implements GridField_HTMLProvider {
+class GridFieldToolbarHeader implements GridField_HTMLProvider {
 
 	/**
 	 *
@@ -34,7 +34,7 @@ class GridFieldTitle implements GridField_HTMLProvider {
 			'header' => $gridField->customise(array(
 				'NewLink' => Controller::join_links($gridField->Link('item'), 'new'),
 				'NewEnabled' => $this->getNewEnabled()
-			))->renderWith('GridFieldTitle')
+			))->renderWith('GridFieldToolbarHeader')
 		);
 	}
 

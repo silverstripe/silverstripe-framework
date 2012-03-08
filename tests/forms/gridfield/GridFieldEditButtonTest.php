@@ -1,6 +1,6 @@
 <?php
 
-class GridFieldEditActionTest extends SapphireTest {
+class GridFieldEditButtonTest extends SapphireTest {
 	
 	/** @var ArrayList */
 	protected $list;
@@ -20,7 +20,7 @@ class GridFieldEditActionTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
 		$this->list = new DataList('GridFieldAction_Edit_Team');
-		$config = GridFieldConfig::create()->addComponent(new GridFieldEditAction());
+		$config = GridFieldConfig::create()->addComponent(new GridFieldEditButton());
 		$this->gridField = new GridField('testfield', 'testfield', $this->list, $config);
 		$this->form = new Form(new Controller(), 'mockform', new FieldList(array($this->gridField)), new FieldList());
 	}

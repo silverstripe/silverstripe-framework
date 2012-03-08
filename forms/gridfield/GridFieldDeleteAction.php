@@ -1,7 +1,7 @@
 <?php
 /**
  * This class is an GridField Component that add Delete action for Objects in the GridField.
- * See {@link GridFieldRelationDelete} for detaching an item from the current relationship instead.
+ * See {@link GridFieldRemoveButton} for detaching an item from the current relationship instead.
  */
 class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_ActionProvider {
 	
@@ -97,7 +97,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
 		if($actionName == 'deleterecord') {
 			$id = $arguments['RecordID'];
-			// Always deletes a record. Use GridFieldRelationDelete to detach it from the current relationship.
+			// Always deletes a record. Use GridFieldRemoveButton to detach it from the current relationship.
 			$item = $gridField->getList()->byID($id);
 			if(!$item->canDelete()) {
 				throw new ValidationException(_t('GridFieldAction_Delete.DeletePermissionsFailure',"No delete permissions"),0);

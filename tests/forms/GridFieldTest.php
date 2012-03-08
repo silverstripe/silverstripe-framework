@@ -29,9 +29,9 @@ class GridFieldTest extends SapphireTest {
 		$obj = new GridField('testfield', 'testfield');
 
 		$expectedComponents = new ArrayList(array(
-			new GridFieldTitle(),
+			new GridFieldToolbarHeader(),
 			new GridFieldSortableHeader,
-			new GridFieldFilter,
+			new GridFieldFilterHeader,
 			new GridFieldDefaultColumns,
 			new GridFieldPaginator,
 			new GridState_Component,

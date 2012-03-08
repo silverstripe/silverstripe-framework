@@ -4,10 +4,10 @@
  * Similar to {@link GridFieldDeleteAction}, but allows to distinguish between 
  * a "delete" and "detach" action in the UI - and to use both in parallel, if required.
  * Requires the GridField to be populated with a {@link RelationList} rather than a plain {@link DataList}.
- * Often used alongside {@link GridFieldRelationAdd} to add existing records to the relationship.
+ * Often used alongside {@link GridFieldAddExistingAutocompleter} to add existing records to the relationship.
  * For easier setup, have a look at a sample configuration in {@link GridFieldConfig_RelationEditor}.
  */
-class GridFieldRelationDelete implements GridField_ColumnProvider, GridField_ActionProvider {
+class GridFieldRemoveButton implements GridField_ColumnProvider, GridField_ActionProvider {
 	
 	/**
 	 * Add a column 'UnlinkRelation'

@@ -1,22 +1,22 @@
 <?php
 
-class GridFieldPopupFormsTest extends FunctionalTest {
-	static $fixture_file = 'GridFieldPopupFormsTest.yml';
+class GridFieldDetailFormTest extends FunctionalTest {
+	static $fixture_file = 'GridFieldDetailFormTest.yml';
 
 	protected $extraDataObjects = array(
-		'GridFieldPopupFormsTest_Person',
-		'GridFieldPopupFormsTest_PeopleGroup'
+		'GridFieldDetailFormTest_Person',
+		'GridFieldDetailFormTest_PeopleGroup'
 	);
 	
 
 	function testAddForm() {
 		$this->logInWithPermission('ADMIN');
-		$group = DataList::create('GridFieldPopupFormsTest_PeopleGroup')
+		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
 		            ->filter('Name', 'My Group')
 		            ->First();
 		$count = $group->People()->Count();
 
-		$response = $this->get('GridFieldPopupFormsTest_Controller');
+		$response = $this->get('GridFieldDetailFormTest_Controller');
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
 		$addlinkitem = $parser->getBySelector('.ss-gridfield .new-link');
@@ -39,7 +39,7 @@ class GridFieldPopupFormsTest extends FunctionalTest {
 		);
 		$this->assertFalse($response->isError());
 
-		$group = DataList::create('GridFieldPopupFormsTest_PeopleGroup')
+		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
             ->filter('Name', 'My Group')
             ->First();
         $this->assertEquals($count + 1, $group->People()->Count());
@@ -47,13 +47,13 @@ class GridFieldPopupFormsTest extends FunctionalTest {
 
 	function testEditForm() {
 		$this->logInWithPermission('ADMIN');
-		$group = DataList::create('GridFieldPopupFormsTest_PeopleGroup')
+		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
 		            ->filter('Name', 'My Group')
 		            ->First();
 		$firstperson = $group->People()->First();
 		$this->assertTrue($firstperson->Surname != 'Baggins');
 
-		$response = $this->get('GridFieldPopupFormsTest_Controller');
+		$response = $this->get('GridFieldDetailFormTest_Controller');
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
 		$editlinkitem = $parser->getBySelector('.ss-gridfield-items .first .edit-link');
@@ -76,7 +76,7 @@ class GridFieldPopupFormsTest extends FunctionalTest {
 		);
 		$this->assertFalse($response->isError());
 
-		$group = DataList::create('GridFieldPopupFormsTest_PeopleGroup')
+		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
             ->filter('Name', 'My Group')
             ->First();
         $firstperson = $group->People()->First();
@@ -84,38 +84,38 @@ class GridFieldPopupFormsTest extends FunctionalTest {
 	}
 }
 
-class GridFieldPopupFormsTest_Person extends DataObject implements TestOnly {
+class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 	static $db = array(
 		'FirstName' => 'Varchar',
 		'Surname' => 'Varchar'
 	);
 
 	static $has_one = array(
-		'Group' => 'GridFieldPopupFormsTest_PeopleGroup'
+		'Group' => 'GridFieldDetailFormTest_PeopleGroup'
 	);
 }
 
-class GridFieldPopupFormsTest_PeopleGroup extends DataObject implements TestOnly {
+class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly {
 	static $db = array(
 		'Name' => 'Varchar'
 	);
 
 	static $has_many = array(
-		'People' => 'GridFieldPopupFormsTest_Person'
+		'People' => 'GridFieldDetailFormTest_Person'
 	);
 }
 
-class GridFieldPopupFormsTest_Controller extends Controller implements TestOnly {
+class GridFieldDetailFormTest_Controller extends Controller implements TestOnly {
 	protected $template = 'BlankPage';
 
 	function Form() {
-		$group = DataList::create('GridFieldPopupFormsTest_PeopleGroup')
+		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
 		            ->filter('Name', 'My Group')
 		            ->First();
 
 		$field = new GridField('testfield', 'testfield', $group->People());
-		$field->getConfig()->addComponent($gridFieldForm = new GridFieldPopupForms($this, 'Form'));
-		$field->getConfig()->addComponent(new GridFieldEditAction());
+		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
+		$field->getConfig()->addComponent(new GridFieldEditButton());
 		return new Form($this, 'Form', new FieldList($field), new FieldList());
 	}
 }
