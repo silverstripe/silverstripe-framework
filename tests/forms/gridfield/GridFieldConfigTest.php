@@ -82,6 +82,37 @@ class GridFieldConfigTest extends SapphireTest {
 		);
 	}
 	
+	public function testRemoveComponents() {
+		$config = GridFieldConfig::create()
+			->addComponent($c1 = new GridFieldConfigTest_MyComponent())
+			->addComponent($c2 = new GridFieldConfigTest_MyComponent())
+			->addComponent($c3 = new GridFieldConfigTest_MyOtherComponent())
+			->addComponent($c4 = new GridFieldConfigTest_MyOtherComponent());
+
+		$this->assertEquals(
+			4, 
+			$config->getComponents()->count()
+		);
+		
+		$config->removeComponent($c1);
+		$this->assertEquals(
+			3, 
+			$config->getComponents()->count()
+		);
+		
+		$config->removeComponentsByType("GridFieldConfigTest_MyComponent");
+		$this->assertEquals(
+			2, 
+			$config->getComponents()->count()
+		);
+		
+		$config->removeComponentsByType("GridFieldConfigTest_MyOtherComponent");
+		$this->assertEquals(
+			0, 
+			$config->getComponents()->count()
+		);
+	}
+	
 }
 
 class GridFieldConfigTest_MyComponent implements GridField_URLHandler, TestOnly {

@@ -54,6 +54,27 @@ class GridFieldConfig {
 	}
 	
 	/**
+	 * @param GridFieldComponent $component 
+	 * @return GridFieldConfig $this
+	 */
+	public function removeComponent(GridFieldComponent $component) {
+		$this->getComponents()->remove($component);
+		return $this;	
+	}
+	
+	/**
+	 * @param String Class name or interface
+	 * @return GridFieldConfig $this
+	 */
+	public function removeComponentsByType($type) {
+		$components = $this->getComponentsByType($type);
+		foreach($components as $component) {
+			$this->removeComponent($component);
+		}
+		return $this;
+	}
+	
+	/**
 	 * @return ArrayList Of GridFieldComponent
 	 */
 	public function getComponents() {
