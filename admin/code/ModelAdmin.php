@@ -846,6 +846,13 @@ class ModelAdmin_CollectionController extends Controller {
 			Director::redirect(Controller::join_links($this->Link(), $model->ID , 'edit'));
 		}
 	}
+	
+	/**
+	 * @return ArrayList
+	 */
+	public function Breadcrumbs(){
+		return new ArrayList();
+	}
 }
 
 /**
