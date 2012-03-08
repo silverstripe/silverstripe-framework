@@ -358,7 +358,7 @@ class GridField extends FormField {
 			$row = $this->createTag(
 				'tr',
 				array("class" => 'ss-gridfield-item ss-gridfield-no-items'),
-				$this->createTag('td', array(), _t('GridField.NoItemsFound', 'No items found'))
+				$this->createTag('td', array('colspan' => count($columns)), _t('GridField.NoItemsFound', 'No items found'))
 			);
 			$content['body'][] = $row;
 		}

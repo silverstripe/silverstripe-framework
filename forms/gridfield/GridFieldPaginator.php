@@ -87,6 +87,8 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		// Figure out which page and record range we're on
 		$countList = clone $gridField->List;
 		$totalRows = $countList->limit(null)->count();
+		if(!$totalRows) return array();
+
 		$totalPages = ceil($totalRows/$this->itemsPerPage);
 		if($totalPages == 0)
 			$totalPages = 1;
