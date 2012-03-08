@@ -178,7 +178,7 @@
 			 *  {Array} ids
 			 */
 			setIDs: function(ids) {
-				if(ids) this.find(':input[name=csvIDs]').val(ids.join(','));
+				this.find(':input[name=csvIDs]').val(ids ? ids.join(',') : null);
 			},
 			
 			/**
@@ -198,8 +198,7 @@
 			 *  (Event) e
 			 */
 			onsubmit: function(e) {
-				var ids = this.getIDs();
-				var tree = this.getTree();
+				var self = this, ids = this.getIDs(), tree = this.getTree();
 				
 				// if no nodes are selected, return with an error
 				if(!ids || !ids.length) {
@@ -227,59 +226,39 @@
 					data: this.serializeArray(),
 					complete: function(xmlhttp, status) {
 						button.removeClass('loading');
+
+						// Deselect all nodes
+						tree.jstree('uncheck_all');
+						self.setIDs([]);
+
+						// Reset action
+						self.find(':input[name=Action]').val('').change();
 					
 						// status message
 						var msg = xmlhttp.getResponseHeader('X-Status');
 						if(msg) statusMessage(msg, (status == 'success') ? 'good' : 'bad');
 					},
 					success: function(data, status) {
-						var id;
+						var id, node;
 						
-						// TODO This should use a more common serialization in a new tree library
 						if(data.modified) {
 							for(id in data.modified) {
-								var node = tree.getNodeByID(id);
-								// Can't use built-in set_title() as it sanitized the HTML (removing tags)
-								// $(node).find('.text').html(data.modified[id]['TreeTitle']);
+								node = tree.getNodeByID(id);
 								tree.jstree('set_text', node, data.modified[id]['TreeTitle']);
 							}
 						}
 						if(data.deleted) {
 							for(id in data.deleted) {
-								var node = tree.getNodeByID(id);
-								// TODO Remove node
-								// if(node && node.parentTreeNode)	node.parentTreeNode.removeTreeNode(node);
+								node = tree.getNodeByID(id);
+								if(node.length)	tree.jstree('delete_node', node);
 							}
 						}
 						if(data.error) {
 							for(id in data.error) {
-								var node = tree.getNodeByID(id);
+								node = tree.getNodeByID(id);
 								$(node).addClass('failed');
 							}
 						}
-						
-						// Deselect all nodes
-						tree.find('li').removeClass('selected');
-					
-						// TODO Fix up to work properly with jstree - unclear if state setting is still required in new design
-						// // Check if current page still exists, and refresh it.
-						// // Otherwise remove the current form
-						// var selectedNode = tree.jstree('get_selected');
-						// if(selectedNode) {
-						// 	var selectedNodeId = selectedNode.getID();
-						// 	if(data.modified[selectedNodeId]) {
-						// 		// only if the current page was modified
-						// 		tree.jstree('select_node', selectedNode);
-						// 	} else if(data.deleted[selectedNodeId]) {
-						// 		jQuery('.cms-edit-form').entwine('ss').removeForm();
-						// 	}
-						// } else {
-						// 	jQuery('.cms-edit-form').entwine('ss').removeForm();
-						// }
-					
-						// close panel
-						// TODO Coupling with tabs
-						// jQuery('#TreeActions').tabs('select', -1);
 					},
 					dataType: 'json'
 				});
