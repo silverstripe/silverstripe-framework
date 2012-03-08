@@ -144,7 +144,7 @@ class Versioned extends DataObjectDecorator {
 		// Get a specific stage
 		} else if(Versioned::current_stage() && Versioned::current_stage() != $this->defaultStage 
 					&& array_search(Versioned::current_stage(), $this->stages) !== false) {
-			foreach($query->from as $table => $dummy) {
+			foreach($query->getTables() as $table) {
 				$query->renameTable($table, $table . '_' . Versioned::current_stage());
 			}
 		}
