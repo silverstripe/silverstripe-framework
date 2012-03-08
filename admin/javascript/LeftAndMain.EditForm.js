@@ -181,6 +181,7 @@
 			 */
 			onclick: function(e) {
 				$('.cms-content').submitForm(this.parents('form'), this);
+				e.preventDefault();
 				return false;
 			}
 		});
