@@ -40,7 +40,7 @@ $gf_grid_x:	16px;
 .cms {
 	.ss-gridfield {
 		& > div {
-			margin-bottom: $gf_grid_y*3 - 1;
+			margin-bottom: $gf_grid_y*3;
 		}
 
 		&[data-selectable] {
@@ -76,7 +76,7 @@ $gf_grid_x:	16px;
 			background: transparent;
 			tr.filter-header {
 				.fieldgroup {
-					max-width:$gf_grid_x*32;
+					max-width:$gf_grid_x*32; //max width 512px
 				}
 			}
 		}
@@ -102,8 +102,8 @@ $gf_grid_x:	16px;
 				}
 				a.edit-link {
 					display:inline-block;
-					width:20px;
-					height:20px;
+					width:$gf_grid_x;
+					height:20px; //min height to fit the edit icon
 					text-indent:-9999em;
 					background: url(../images/icons/document--pencil.png) no-repeat 0 1px;
 				}				
@@ -129,7 +129,7 @@ $gf_grid_x:	16px;
 					background: $gf_colour_gradient_dark;
 					border-top: 1px solid $gf_colour_border;
 					padding: 5px;
-					min-height: 40px;
+					min-height: 40px; //this is to accomodate the add new button.
 					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
 					@include border-top-radius($gf_border_radius);
 					@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
@@ -224,7 +224,7 @@ $gf_grid_x:	16px;
 						display: inline;
 						position: static;
 						input {
-							height:28px;
+							height:28px; //height of input field - to match design.
 						}
 					}
 					button.ss-ui-button {
@@ -275,12 +275,12 @@ $gf_grid_x:	16px;
 					}
 					&.ss-gridfield-button-filter.ss-ui-button{
 						position:absolute;
-						right:5px;
+						right:5px; //positions filter button in correct position on top of input field
 						top:-28px;
 						display:block;
 						text-indent:-9999em;
-						width:30px;
-						height:28px;
+						width:30px; 
+						height:28px; //match the height of the input field
 						border: {
 							top-left-radius:0px;
 							bottom-left-radius:0px;
@@ -312,12 +312,12 @@ $gf_grid_x:	16px;
 					}
 					&.ss-gridfield-button-reset.ss-ui-button{
 						position:absolute;
-						right:36px;
+						right:34px; //positions reset button in correct position on top of input field and to the left of the filter button
 						top:-28px;
 						display:block;
 						text-indent:-9999em;
 						width:30px;
-						height:28px;
+						height:28px; //match the height of the input field
 						float:right;
 						border: {
 							radius:0px;
@@ -359,7 +359,7 @@ $gf_grid_x:	16px;
 				}
 
 				span.non-sortable {
-					padding:1em 1em;
+					padding:1em 1em; 
 					display:block;
 				}
 			}
@@ -375,13 +375,13 @@ $gf_grid_x:	16px;
 						padding-top:2px;
 						position:absolute;
 						left:50%;
-						margin-left:-116px;
+						margin-left:-116px; //half the width of .datagrid-pagination - centers pagination
 						.pagination-page-number {
 							color:$color-text-light;
 							input {
-								width:35px;
-								height:18px;
-								margin-bottom:-$gf_grid_y/2;
+								width:35px; //exact width so that a four digit number can be entered
+								height:18px;  
+								margin-bottom:-6px; //moves input field up to be aligned with the pagination buttons
 								padding:0px;
 							}
 						}
@@ -428,7 +428,7 @@ $gf_grid_x:	16px;
 					}
 					.pagination-records-number {
 						float:right;
-						padding:($gf_grid_y/2) 0;
+						padding:6px 0;
 						color:$color-text-light;
 					}
 				}

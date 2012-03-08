@@ -1354,15 +1354,15 @@ form.small {
 
  .members_grid {
  	span button#action_gridfield_relationfind {
- 		display:none;
+ 		display:none; //hides find button - redundant functionality
  	}
  	p button#action_export {
 		margin-top:$grid-y*2;
 		span.btn-icon-download-csv {
-			height:17px;
+			height:17px; //exact height of icon
 		}
 		span.ui-button-text {
-			padding-left:26px;
+			padding-left:26px; //to accomodate wider export icon
 		} 
  	}
 }
