@@ -267,10 +267,7 @@ class FieldList extends ArrayList {
 				if(is_a($parentPointer, 'TabSet')) {
 					// use $title on the innermost tab only
 					if ($k == $last_idx) {
-						if (!isset($title)) {
-							$title = $part;
-						}
-						$currentPointer = new Tab($part, $title);
+						$currentPointer = isset($title) ? new Tab($part, $title) : new Tab($part);
 					}
 					else {
 						$currentPointer = new TabSet($part);
