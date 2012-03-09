@@ -6,7 +6,7 @@
  * @package    sapphire
  * @subpackage model
  */
-class DataList extends ViewableData implements SS_List, SS_Limitable {
+class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Limitable {
 	/**
 	 * The DataObject class name that this data list is querying
 	 * 

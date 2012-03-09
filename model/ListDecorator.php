@@ -7,7 +7,7 @@
  * @package    sapphire
  * @subpackage model
  */
-abstract class SS_ListDecorator extends ViewableData implements SS_List, S_Limitable {
+abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Filterable, SS_Limitable {
 
 	protected $list;
 
@@ -117,6 +117,10 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List, S_Limit
 	public function sort() {
 		$args = func_get_args();
 		return call_user_func_array(array($this->list, 'sort'), $args);
+	}
+
+	public function canFilterBy($by) {
+		return $this->list->canFilterBy($by);
 	}
 
 	/**
