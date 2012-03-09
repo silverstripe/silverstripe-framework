@@ -162,7 +162,7 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .field .chzn-container-single .chzn-single:hover, .field .chzn-container-single .chzn-single:focus, .field .chzn-container-single .chzn-single:active { text-decoration: none; outline: none; }
 .field .chzn-container-single .chzn-single div { width: 24px; }
 .field .chzn-container-single .chzn-single div b { background-position: 4px 0px; }
-.field input.hasDatepicker { width: 100%; max-width: 96px; }
+.field input.hasDatepicker { width: 50%; max-width: 96px; }
 
 /** ---------------------------------------------------- Buttons ---------------------------------------------------- */
 .cms .Actions > *, .cms .cms-actions-row > * { display: block; float: left; margin-right: 8px; }
