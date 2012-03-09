@@ -252,10 +252,10 @@ class SQLQuery {
 	 * @param string|array $limit
 	 * @return SQLQuery This instance
 	 */
-	public function limit($limit) {
+	public function limit($limit, $offset = 0) {
 		if($limit && is_numeric($limit)) {
 			$this->limit = array(
-				'start' => 0,
+				'start' => $offset,
 				'limit' => $limit,
 			);
 		} else if($limit && is_string($limit)) {
@@ -667,7 +667,7 @@ class SQLQuery {
 	function firstRow() {
 		$query = clone $this;
 		$offset = $this->limit ? $this->limit['start'] : 0;
-		$query->limit(array('start' => $offset, 'limit' => 1));
+		$query->limit(1, $offset);
 		return $query;
 	}
 
@@ -677,7 +677,7 @@ class SQLQuery {
 	function lastRow() {
 		$query = clone $this;
 		$offset = $this->limit ? $this->limit['start'] : 0;
-		$query->limit(array('start' => $this->count() + $offset - 1, 'limit' => 1));
+		$query->limit(1, $this->count() + $offset - 1);
 		return $query;
 	}
 

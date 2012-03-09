@@ -5,7 +5,7 @@
  * @package    sapphire
  * @subpackage model
  */
-class ArrayList extends ViewableData implements SS_List {
+class ArrayList extends ViewableData implements SS_List, SS_Limitable {
 
 	/**
 	 * Holds the items in the list
@@ -119,6 +119,18 @@ class ArrayList extends ViewableData implements SS_List {
 	 * @return ArrayList 
 	 */
 	public function getRange($offset, $length) {
+		Deprecation::notice("3.0", 'getRange($offset, $length) is deprecated.  Use limit($length, $offset) instead.  Note the new argument order.');
+		return $this->limit($length, $offset);
+	}
+
+	/**
+	 * Get a sub-range of this dataobjectset as an array
+	 * 
+	 * @param int $offset
+	 * @param int $length
+	 * @return ArrayList 
+	 */
+	public function limit($length, $offset = 0) {
 		return new ArrayList(array_slice($this->items, $offset, $length));
 	}
 
@@ -356,6 +368,15 @@ class ArrayList extends ViewableData implements SS_List {
 		$multisortArgs[] = &$this->items;
 		call_user_func_array('array_multisort', $multisortArgs);
 		return $this;
+	}
+	
+	/**
+	 * Returns true if the given column can be used to filter the records.
+	 * 
+	 * It works by checking the fields available in the first record of the list.
+	 */
+	public function canFilterBy($by) {
+		return array_key_exists($by, $this->first());
 	}
 
 	/**
