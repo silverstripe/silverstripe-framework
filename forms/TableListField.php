@@ -1094,22 +1094,6 @@ JS
 		
 	}
 	
-	/**
-	 * Returns the content of the TableListField as a piece of FormResponse javascript
-	 * @deprecated Please use the standard URL through Link() which gives you the FieldHolder as an HTML fragment.
-	 */
-	function ajax_refresh() {
-		Deprecation::notice('2.4', 'Please use the standard URL through Link() which gives you the FieldHolder as an HTML fragment instead.');
-		// compute sourceItems here instead of Items() to ensure that
-		// pagination and filters are respected on template accessors
-		//$this->sourceItems();
-
-		$response = $this->renderWith($this->template);
-		FormResponse::update_dom_id($this->id(), $response, 1);
-		FormResponse::set_non_ajax_content($response);
-		return FormResponse::respond();
-	}
-	
 	function setFieldCasting($casting) {
 		$this->fieldCasting = $casting;
 		return $this;
