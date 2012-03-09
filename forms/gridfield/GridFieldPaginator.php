@@ -89,6 +89,8 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		$state = $gridField->State->GridFieldPaginator;
 		$state->currentPage = (int)$arguments;
 	}
+	
+	protected $totalItems = 0;
 
 	/**
 	 *
@@ -99,9 +101,12 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
 		if(!$this->checkDataType($dataList)) return $dataList;
 		
+		$this->totalItems = $gridField->getList()->count();
+		
 		$state = $gridField->State->GridFieldPaginator;
-		if(!is_int($state->currentPage))
+		if(!is_int($state->currentPage)) {
 			$state->currentPage = 1;
+		}
 
 		if(!($dataList instanceof SS_Limitable)) {
 			return $dataList;
@@ -126,8 +131,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 			$state->currentPage = 1;
 
 		// Figure out which page and record range we're on
-		$countList = clone $gridField->List;
-		$totalRows = $countList->limit(null)->count();
+		$totalRows = $this->totalItems;
 		if(!$totalRows) return array();
 
 		$totalPages = ceil($totalRows/$this->itemsPerPage);
