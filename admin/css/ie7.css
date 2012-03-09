@@ -31,9 +31,9 @@ html { overflow: hidden; }
 .cms table.ss-gridfield-table tr th.extra { border-top: 1px solid #9a9a9a; padding-right: 12px; }
 .cms table.ss-gridfield-table td:first-child, .cms table.ss-gridfield-table th:first-child { border-left: 1px solid #9a9a9a; }
 
-.cms .ss-gridfield table.ss-gridfield-table tbody td button { width: 40px; }
+.cms .ss-gridfield table.ss-gridfield-table tbody td button { width: 40px; border: 0; background: none; }
 .cms .ss-gridfield table.ss-gridfield-table tbody td button.gridfield-button-delete { display: block; float: left; }
-.cms .ss-gridfield table.ss-gridfield-table tbody td button.gridfield-button-unlink.ui-state-hover { display: block; float: left; }
+.cms .ss-gridfield table.ss-gridfield-table tbody td button.gridfield-button-unlink { display: block; float: left; }
 .cms .ss-gridfield table.ss-gridfield-table tbody td a.edit-link { display: block; float: left; }
 
 .cms .cms-content .cms-content-fields .aligned_right_label { margin-left: 0; }

@@ -24,3 +24,5 @@
 .cms table.ss-gridfield-table td:first-child, .cms table.ss-gridfield-table th:first-child { border-left: 1px solid #9a9a9a; }
 
 .cms .cms-content .cms-content-fields .aligned_right_label { margin-left: 0; }
+
+.cms .ss-gridfield table.ss-gridfield-table tbody td button { border: 0; background: none; }
