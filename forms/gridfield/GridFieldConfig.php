@@ -206,7 +206,7 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig {
 		$this->addComponent(new GridFieldFilterHeader());
 		$this->addComponent(new GridFieldDefaultColumns());
 		$this->addComponent(new GridFieldEditButton());
-		$this->addComponent(new GridFieldRemoveButton());
+		$this->addComponent(new GridFieldDeleteAction(true));
 		$this->addComponent(new GridFieldPaginator($itemsPerPage));
 		$this->addComponent(new GridFieldDetailForm());
 	}
