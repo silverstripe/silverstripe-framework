@@ -174,8 +174,7 @@
 		 * We need this onclick overloading because we can't get to the
 		 * clicked button from a form.onsubmit event.
 		 */
-		$('.cms-edit-form .Actions :submit').entwine({
-			
+		$('.cms-edit-form .Actions input.action[type=submit], .cms-edit-form .Actions button.action').entwine({
 			/**
 			 * Function: onclick
 			 */
