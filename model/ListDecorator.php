@@ -136,7 +136,7 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sort
 		return call_user_func_array(array($this->list, 'filter'), $args);
 	}
 
-	public function limit($length, $offset) {
+	public function limit($limit, $offset = 0) {
 		return $this->list->getRange($length, $offset);
 	}
 
