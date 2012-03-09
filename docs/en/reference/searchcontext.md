@@ -15,10 +15,6 @@ the $fields constructor parameter.
 `[api:SearchContext]` is mainly used by `[api:ModelAdmin]`, our generic data administration interface. Another
 implementation can be found in generic frontend search forms through the [genericviews](http://silverstripe.org/generic-views-module) module.
 
-## Requirements
-
-*  *SilverStripe 2.3*
-
 ## Usage
 
 Getting results

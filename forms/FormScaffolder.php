@@ -123,22 +123,17 @@ class FormScaffolder extends Object {
 							$this->obj->fieldLabel($relationship)
 						);
 					}
-					$relationshipFields = singleton($component)->summaryFields();
-
-					$foreignKey = $this->obj->getRemoteJoinField($relationship);
-					$fieldClass = (isset($this->fieldClasses[$relationship])) ? $this->fieldClasses[$relationship] : 'ComplexTableField';
-					$ctf = new $fieldClass(
-						$this,
+					$fieldClass = (isset($this->fieldClasses[$relationship])) ? $this->fieldClasses[$relationship] : 'GridField';
+					$grid = Object::create($fieldClass, 
 						$relationship,
-						null,
-						$relationshipFields,
-						"getCMSFields"
+						$this->obj->fieldLabel($relationship),
+						$this->obj->$relationship(),
+						GridFieldConfig_RelationEditor::create()
 					);
-					$ctf->setPermissions(TableListField::permissions_for_object($component));
 					if($this->tabbed) {
-						$fields->addFieldToTab("Root.$relationship", $ctf);
+						$fields->addFieldToTab("Root.$relationship", $grid);
 					} else {
-						$fields->push($ctf);
+						$fields->push($grid);
 					}
 				}
 			}
@@ -152,22 +147,17 @@ class FormScaffolder extends Object {
 						);
 					}
 
-					$relationshipFields = singleton($component)->summaryFields();
-					$fieldClass = (isset($this->fieldClasses[$relationship])) ? $this->fieldClasses[$relationship] : 'ComplexTableField';
-					$ctf = new $fieldClass(
-						$this,
+					$fieldClass = (isset($this->fieldClasses[$relationship])) ? $this->fieldClasses[$relationship] : 'GridField';
+					$grid = Object::create($fieldClass, 
 						$relationship,
+						$this->obj->fieldLabel($relationship),
 						$this->obj->$relationship(),
-						$relationshipFields,
-						"getCMSFields"
+						GridFieldConfig_RelationEditor::create()
 					);
-					
-					$ctf->setPermissions(TableListField::permissions_for_object($component));
-					$ctf->popupClass = "ScaffoldingComplexTableField_Popup";
 					if($this->tabbed) {
-						$fields->addFieldToTab("Root.$relationship", $ctf);
+						$fields->addFieldToTab("Root.$relationship", $grid);
 					} else {
-						$fields->push($ctf);
+						$fields->push($grid);
 					}
 				}
 			}
