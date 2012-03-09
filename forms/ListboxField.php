@@ -175,7 +175,10 @@ class ListboxField extends DropdownField {
 			$relation = ($fieldname && $record && $record->hasMethod($fieldname)) ? $record->$fieldname() : null;
 			if($fieldname && $record && $relation && $relation instanceof RelationList) {
 				$idList = (is_array($this->value)) ? array_values($this->value) : array();
-				if(!$record->ID) $record->write(); // record needs to have an ID in order to set relationships
+				if(!$record->ID) {
+					$record->write(); // record needs to have an ID in order to set relationships
+					$relation = ($fieldname && $record && $record->hasMethod($fieldname)) ? $record->$fieldname() : null;
+				}
 				$relation->setByIDList($idList);
 			} elseif($fieldname && $record) {
 				if($this->value) {
