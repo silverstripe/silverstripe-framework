@@ -1017,7 +1017,8 @@ class SSViewerTest_GlobalProvider implements TemplateGlobalProvider, TestOnly {
 	}
 
 	static function get_argmix() {
-		return 'z' . implode(':', func_get_args()) . 'z';
+		$args = func_get_args();
+		return 'z' . implode(':', $args) . 'z';
 	}
 
 }
