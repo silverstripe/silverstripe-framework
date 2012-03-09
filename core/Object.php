@@ -329,7 +329,7 @@ abstract class Object {
 	 * @return mixed
 	 */
 	public static function get_static($class, $name, $uncached = false) {
-		Deprecation::notice('3.0.0', 'combined_static is deprecated, replaced by Config#get');
+		Deprecation::notice('3.1.0', 'combined_static is deprecated, replaced by Config#get');
 		return Config::inst()->get($class, $name, Config::FIRST_SET);
 	}
 
@@ -341,7 +341,7 @@ abstract class Object {
 	 * @param mixed $value
 	 */
 	public static function set_static($class, $name, $value) {
-		Deprecation::notice('3.0.0', 'set_static is deprecated, replaced by Config#set');
+		Deprecation::notice('3.1.0', 'set_static is deprecated, replaced by Config#set');
 		Config::inst()->update($class, $name, $value);
 	}
 
@@ -358,7 +358,7 @@ abstract class Object {
 	 * @return mixed
 	 */
 	public static function uninherited_static($class, $name, $uncached = false) {
-		Deprecation::notice('3.0.0', 'uninherited_static is deprecated, replaced by Config#get');
+		Deprecation::notice('3.1.0', 'uninherited_static is deprecated, replaced by Config#get');
 		return Config::inst()->get($class, $name, Config::UNINHERITED);
 	}
 	
@@ -375,7 +375,7 @@ abstract class Object {
 	public static function combined_static($class, $name, $ceiling = false) {
 		if ($ceiling) throw new Exception('Ceiling argument to combined_static is no longer supported');
 
-		Deprecation::notice('3.0.0', 'combined_static is deprecated, replaced by Config#get');
+		Deprecation::notice('3.1.0', 'combined_static is deprecated, replaced by Config#get');
 		return Config::inst()->get($class, $name);
 	}
 	
@@ -387,7 +387,7 @@ abstract class Object {
 	 * @param bool $replace replace existing static vars
 	 */
 	public static function addStaticVars($class, $properties, $replace = false) {
-		Deprecation::notice('3.0.0', 'addStaticVars is deprecated, replaced by Config#set');
+		Deprecation::notice('3.1.0', 'addStaticVars is deprecated, replaced by Config#set');
 		foreach($properties as $prop => $value) self::add_static_var($class, $prop, $value, $replace);
 	}
 	
@@ -408,7 +408,7 @@ abstract class Object {
 	 * @param bool $replace completely replace existing static values
 	 */
 	public static function add_static_var($class, $name, $value, $replace = false) {
-		Deprecation::notice('3.0.0', 'add_static_var is deprecated, replaced by Config#set');
+		Deprecation::notice('3.1.0', 'add_static_var is deprecated, replaced by Config#set');
 
 		if ($replace) Config::inst()->remove($class, $name);
 		Config::inst()->update($class, $name, $value);
