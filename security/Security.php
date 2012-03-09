@@ -45,14 +45,6 @@ class Security extends Controller {
 	protected static $strictPathChecking = false;
 
 	/**
-	 * Should passwords be stored encrypted?
-	 * @deprecated 2.4 Please use 'none' as the default $encryptionAlgorithm instead
-	 *
-	 * @var bool
-	 */
-	protected static $encryptPasswords = true;
-
-	/**
 	 * The password encryption algorithm to use by default.
 	 * This is an arbitrary code registered through {@link PasswordEncryptor}.
 	 *
@@ -730,21 +722,6 @@ class Security extends Controller {
 	 */
 	public static function getStrictPathChecking() {
 		return self::$strictPathChecking;
-	}
-
-
-	/**
-	 * Set if passwords should be encrypted or not
-	 *
-	 * @deprecated 2.4 Use PasswordEncryptor_None instead.
-	 * 
-	 * @param bool $encrypt Set to TRUE if you want that all (new) passwords
-	 *                      will be stored encrypted, FALSE if you want to
-	 *                      store the passwords in clear text.
-	 */
-	public static function encrypt_passwords($encrypt) {
-		Deprecation::notice('2.4', 'Use PasswordEncryptor_None instead.');
-		self::$encryptPasswords = (bool)$encrypt;
 	}
 
 
