@@ -370,7 +370,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				// All other attributes
 				switch(this.find(':input[name=LinkType]:checked').val()) {
 					case 'internal':
-						href = '[sitetree_link id=' + this.find(':input[name=internal]').val() + ']';
+						href = '[sitetree_link,id=' + this.find(':input[name=internal]').val() + ']';
 						if(anchor) href += '#' + anchor;
 						break;
 
@@ -379,7 +379,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						break;
 					
 					case 'file':
-						href = '[file_link id=' + this.find(':input[name=file]').val() + ']';
+						href = '[file_link,id=' + this.find(':input[name=file]').val() + ']';
 						target = '_blank';
 						break;
 					

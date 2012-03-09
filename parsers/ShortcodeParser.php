@@ -170,10 +170,9 @@ class ShortcodeParser {
 		if($prefix == '[' && $suffix == ']') {
 			return substr($matches[0], 1, -1);
 		}
-		
 		$attributes = array(); // Parse attributes into into this array.
 		
-		if(preg_match_all('/(\w+) *= *(?:([\'"])(.*?)\\2|([^ "\'>]+))/', $matches[3], $match, PREG_SET_ORDER)) {
+		if(preg_match_all('/(\w+) *= *(?:([\'"])(.*?)\\2|([^ ,"\'>]+))/', $matches[3], $match, PREG_SET_ORDER)) {
 			foreach($match as $attribute) {
 				if(!empty($attribute[4])) {
 					$attributes[strtolower($attribute[1])] = $attribute[4];
