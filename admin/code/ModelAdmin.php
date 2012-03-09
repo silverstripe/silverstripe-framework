@@ -246,18 +246,23 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * with a default {@link CsvBulkLoader} class. In this case the column names of the first row
 	 * in the CSV file are assumed to have direct mappings to properties on the object.
 	 *
-	 * @return array
+	 * @return array Map of model class names to importer instances
 	 */
 	 function getModelImporters() {
-		$importers = $this->stat('model_importers');
+		$importerClasses = $this->stat('model_importers');
 
 		// fallback to all defined models if not explicitly defined
-		if(is_null($importers)) {
+		if(is_null($importerClasses)) {
 			$models = $this->getManagedModels();
 			foreach($models as $modelName => $options) {
 				if(is_numeric($modelName)) $modelName = $options;
-				$importers[$modelName] = 'CsvBulkLoader';
+				$importerClasses[$modelName] = 'CsvBulkLoader';
 			}
+		}
+
+		$importers = array();
+		foreach($importerClasses as $modelClass => $importerClass) {
+			$importers[$modelClass] = new $importerClass($modelClass);
 		}
 		
 		return $importers;
@@ -340,8 +345,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		}
 
 		$importers = $this->getModelImporters();
-		$importerClass = $importers[$this->modelClass];
-		$loader = new $importerClass($this->modelClass);
+		$loader = $importers[$this->modelClass];
 
 		// File wasn't properly uploaded, show a reminder to the user
 		if(
