@@ -432,7 +432,7 @@ form.member-profile-form .ui-corner-all, form.member-profile-form .ui-corner-top
 .cms-panel .collapsed-flyout { display: block !important; left: 41px; margin-top: -40px; position: fixed; width: 191px; }
 .cms-panel .collapsed-flyout li a span { display: block !important; }
 
-.cms .cms-panel-padded { width: 176px; padding: 16px 16px; overflow-x: hidden; overflow-y: auto; }
+.cms .cms-panel-padded { padding: 16px 16px; }
 
 /** ------------------------------------------------------------------
 * Dialog
