@@ -715,6 +715,32 @@ class FieldListTest extends SapphireTest {
 		unset($set);
 	}
 	
+	/**
+	 * FieldList::forTemplate() returns a concatenation of FieldHolder values.
+	 */
+	function testForTemplate() {
+		$set = new FieldList(
+			$a = new TextField('A'),
+			$b = new TextField('B')
+		);
+		
+		$this->assertEquals($a->FieldHolder() . $b->FieldHolder(), $set->forTempalte());
+	}
+
+	/**
+	 * FieldList::forTemplate() for an action list returns a concatenation of Field values.
+	 * Internally, this works by having FormAction::FieldHolder return just the field, but it's an important
+	 * use-case to test.
+	 */
+	function testForTemplateForActionList() {
+		$set = new FieldList(
+			$a = new FormAction('A'),
+			$b = new FormAction('B')
+		);
+		
+		$this->assertEquals($a->Field() . $b->Field(), $set->forTempalte());
+	}
+	
 	function testMakeFieldReadonly() {
 		$FieldList = new FieldList(
 			new TabSet('Root', new Tab('Main',
