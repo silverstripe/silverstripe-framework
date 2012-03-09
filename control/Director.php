@@ -802,19 +802,31 @@ class Director implements TemplateGlobalProvider {
 	/**
 	 * This function will return true if the site is in a development environment.
 	 * For information about environment types, see {@link Director::set_environment_type()}.
+	 * @param $dontTouchDB		If true, the database checks are not performed, which allows certain DB checks
+	 *							to not fail before the DB is ready. If false (default), DB checks are included.
 	 */
-	static function isDev() {
+	static function isDev($dontTouchDB = false) {
 		// This variable is used to supress repetitions of the isDev security message below.
 		static $firstTimeCheckingGetVar = true;
+
+		$result = false;
+
+		if(isset($_SESSION['isDev']) && $_SESSION['isDev']) $result = true;
+		if(self::$environment_type && self::$environment_type == 'dev') $result = true;
+
+		if(!empty(Director::$dev_servers))  {
+			Deprecation::notice('3.0', 'Director::$dev_servers doesn\'t work anymore');
+		}
 		
 		// Use ?isDev=1 to get development access on the live server
-		if(isset($_GET['isDev'])) {
+		if(!$dontTouchDB && !$result && isset($_GET['isDev'])) {
 			if(Security::database_is_ready()) {
 				if($firstTimeCheckingGetVar && !Permission::check('ADMIN')){
 					BasicAuth::requireLogin("SilverStripe developer access. Use your CMS login", "ADMIN");
 				}
 				$_SESSION['isDev'] = $_GET['isDev'];
-				if($firstTimeCheckingGetVar) $firstTimeCheckingGetVar = false;
+				$firstTimeCheckingGetVar = false;
+				$result = $_GET['isDev'];
 			} else {
 				if($firstTimeCheckingGetVar && DB::connection_attempted()) {
 	 				echo "<p style=\"padding: 3px; margin: 3px; background-color: orange; 
@@ -826,16 +838,7 @@ class Director implements TemplateGlobalProvider {
 			}
 		}
 
-		if(isset($_SESSION['isDev']) && $_SESSION['isDev']) return true;
-
-		if(self::$environment_type) return self::$environment_type == 'dev';
-		
-		// Check if we are running on one of the development servers
-		if(isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], Director::$dev_servers))  {
-			return true;
-		}
-		
-		return false;
+		return $result;
 	}
 	
 	/**
