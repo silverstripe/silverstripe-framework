@@ -1098,18 +1098,15 @@ class DataObjectTest_FieldlessSubTable extends DataObjectTest_Team implements Te
 
 
 class DataObjectTest_Team_Extension extends DataExtension implements TestOnly {
-	
-	function extraStatics($class=null, $extension=null) {
-		return array(
-			'db' => array(
-				'ExtendedDatabaseField' => 'Varchar'
-			),
-			'has_one' => array(
-				'ExtendedHasOneRelationship' => 'DataObjectTest_Player'
-			)
-		);
-	}
-	
+
+	static $db = array(
+		'ExtendedDatabaseField' => 'Varchar'
+	);
+
+	static $has_one = array(
+		'ExtendedHasOneRelationship' => 'DataObjectTest_Player'
+	);
+
 	function getExtendedDynamicField() {
 		return "extended dynamic field";
 	}

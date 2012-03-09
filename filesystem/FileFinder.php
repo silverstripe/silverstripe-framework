@@ -65,7 +65,14 @@ class SS_FileFinder {
 	protected $options;
 
 	public function __construct() {
-		$this->options = Object::combined_static(get_class($this), 'default_options');
+		$this->options = array();
+		$class = get_class($this);
+
+		// We build our options array ourselves, because possibly no class or config manifest exists at this point
+		do {
+			$this->options = array_merge(Object::static_lookup($class, 'default_options'), $this->options);
+		}
+		while ($class = get_parent_class($class));
 	}
 
 	/**

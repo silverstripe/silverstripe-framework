@@ -2,7 +2,7 @@
 /**
  * An extension to the default file finder with some extra filters to faciliate
  * autoload and template manifest generation:
- *   - Only modules with _config.php files arescanned.
+ *   - Only modules with _config.php files are scanned.
  *   - If a _manifest_exclude file is present inside a directory it is ignored.
  *   - Assets and module language directories are ignored.
  *   - Module tests directories are skipped if the ignore_tests option is not
@@ -14,6 +14,7 @@
 class ManifestFileFinder extends SS_FileFinder {
 
 	const CONFIG_FILE  = '_config.php';
+	const CONFIG_DIR  = '_config';
 	const EXCLUDE_FILE = '_manifest_exclude';
 	const LANG_DIR     = 'lang';
 	const TESTS_DIR    = 'tests';
@@ -53,6 +54,7 @@ class ManifestFileFinder extends SS_FileFinder {
 			$depth == 1
 			&& !($this->getOption('include_themes') && $basename == THEMES_DIR)
 			&& !file_exists($pathname . '/' . self::CONFIG_FILE)
+			&& !file_exists($pathname . '/' . self::CONFIG_DIR)
 		);
 
 		if ($lackingConfig) {

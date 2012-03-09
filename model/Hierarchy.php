@@ -24,20 +24,10 @@ class Hierarchy extends DataExtension {
 	
 	function augmentWrite(&$manipulation) {
 	}
-	
-	/**
-	 *
-	 * @param string $class
-	 * @param string $extension
-	 * @return array
-	 */
-	function extraStatics($class=null, $extension=null) {
-		return array(
-			'has_one' => array(
-				// TODO this method is called *both* statically and on an instance
-				"Parent" => ($class) ? $class : $this->owner->class
-			)
-		);
+
+	static function add_to_class($class, $extensionClass) {
+		Config::inst()->update($class, 'has_one', array('Parent' => $class));
+		parent::add_to_class($class, $extensionClass);
 	}
 
 	/**

@@ -102,25 +102,15 @@ class Versioned extends DataExtension {
 		$this->defaultStage = reset($stages);
 		$this->liveStage = array_pop($stages);
 	}
-	
-	/**
-	 *
-	 * @param string $class
-	 * @param string $extension
-	 * @return array
-	 */
-	function extraStatics($class=null, $extension=null) {
-		return array(
-			'db' => array(
-				'Version' => 'Int',
-			),
-			'has_many' => array(
-				// TODO this method is called *both* statically and on an instance
-				'Versions' => ($class) ? $class : $this->owner->class,
-			)
-		);
+
+	static $db = array(
+		'Version' => 'Int'
+	);
+
+	static function add_to_class($class, $extensionClass) {
+		Config::inst()->update($class, 'has_many', array('Versions' => $class));
+		parent::add_to_class($class, $extensionClass);
 	}
-	
 	
 	/**
 	 * Amend freshly created DataQuery objects with versioned-specific information 
