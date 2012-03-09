@@ -267,7 +267,7 @@ class TableField extends TableListField {
 			$this->value = null;
 			$items = $this->sourceItems();
 			
-			FormResponse::update_dom_id($this->id(), $this->FieldHolder());
+			// FormResponse::update_dom_id($this->id(), $this->FieldHolder());
 		}
 	}
 	

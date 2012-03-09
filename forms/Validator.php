@@ -7,9 +7,6 @@
  * 
  * Acts as a visitor to individual form fields.
  * 
- * @todo Automatically mark fields after serverside validation and replace the form through
- * FormResponse if the request was made by ajax.
- * 
  * @package forms
  * @subpackage validators
  */ 

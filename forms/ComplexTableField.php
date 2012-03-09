@@ -228,7 +228,7 @@ class ComplexTableField extends TableListField {
 			$js = <<<JS
 $('$id').GB_Caption = '$this->popupCaption';
 JS;
-				FormResponse::add($js);
+				// FormResponse::add($js);
 			} else {
 			$js = <<<JS
 Event.observe(window, 'load', function() { \$('$id').GB_Caption = '$this->popupCaption'; });
