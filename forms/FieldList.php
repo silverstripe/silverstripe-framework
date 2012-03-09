@@ -256,7 +256,7 @@ class FieldList extends ArrayList {
 	 */
 	public function findOrMakeTab($tabName, $title = null) {
 		$parts = explode('.',$tabName);
-		
+		$last_idx = count($parts) - 1;
 		// We could have made this recursive, but I've chosen to keep all the logic code within FieldList rather than add it to TabSet and Tab too.
 		$currentPointer = $this;
 		foreach($parts as $k => $part) {
@@ -266,13 +266,18 @@ class FieldList extends ArrayList {
 			if(!$currentPointer) {
 				if(is_a($parentPointer, 'TabSet')) {
 					// use $title on the innermost tab only
-					if($title && $k == count($parts)-1) {
+					if ($k == $last_idx) {
+						if (!isset($title)) {
+							$title = $part;
+						}
 						$currentPointer = new Tab($part, $title);
-					} else {
-						$currentPointer = new Tab($part);
+					}
+					else {
+						$currentPointer = new TabSet($part);
 					}
 					$parentPointer->push($currentPointer);
-				} else {
+				}
+				else {
 					$withName = ($parentPointer->hasMethod('Name')) ? " named '{$parentPointer->getName()}'" : null;
 					user_error("FieldList::addFieldToTab() Tried to add a tab to object '{$parentPointer->class}'{$withName} - '$part' didn't exist.", E_USER_ERROR);
 				}
