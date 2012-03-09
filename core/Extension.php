@@ -44,6 +44,19 @@ abstract class Extension {
 	}
 
 	/**
+	 * Called when this extension is added to a particular class
+	 *
+	 * TODO: This is likely to be replaced by event sytem before 3.0 final, so be aware
+	 * this API is fairly unstable.
+	 *
+	 * @static
+	 * @param $class
+	 */
+	static function add_to_class($class, $extensionClass) {
+		Config::add_static_source($class, $extensionClass);
+	}
+
+	/**
 	 * Set the owner of this extension.
 	 * @param Object $owner The owner object,
 	 * @param string $ownerBaseClass The base class that the extension is applied to; this may be
@@ -85,6 +98,8 @@ abstract class Extension {
 	public static function get_classname_without_arguments($extensionStr) {
 		return (($p = strpos($extensionStr, '(')) !== false) ? substr($extensionStr, 0, $p) : $extensionStr;
 	}
-	
+
+
+
 }
 

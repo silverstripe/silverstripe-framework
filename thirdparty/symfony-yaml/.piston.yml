@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  commit: 8a266aadcec878681ed458796b1ce792cc377f79
+  branch: master
+lock: false
+repository_class: Piston::Git::Repository
+repository_url: https://github.com/fabpot/yaml.git
