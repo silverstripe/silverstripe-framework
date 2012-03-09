@@ -87,19 +87,13 @@ class SQLQueryTest extends SapphireTest {
 			// numeric limit
 			$query = new SQLQuery();
 			$query->from[] = "MyTable";
-			$query->limit("99");
+			$query->limit(99);
 			$this->assertEquals("SELECT * FROM MyTable LIMIT 99", $query->sql());
 		
-			// array limit
-			$query = new SQLQuery();
-			$query->from[] = "MyTable";
-			$query->limit(array('limit'=>99));
-			$this->assertEquals("SELECT * FROM MyTable LIMIT 99", $query->sql());
-
 			// array limit with start (MySQL specific)
 			$query = new SQLQuery();
 			$query->from[] = "MyTable";
-			$query->limit(array('limit'=>99, 'start'=>97));
+			$query->limit(99, 97);
 			$this->assertEquals("SELECT * FROM MyTable LIMIT 99 OFFSET 97", $query->sql());
 		}
 	}

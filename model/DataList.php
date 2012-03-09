@@ -6,7 +6,7 @@
  * @package    sapphire
  * @subpackage model
  */
-class DataList extends ViewableData implements SS_List {
+class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortable, SS_Limitable {
 	/**
 	 * The DataObject class name that this data list is querying
 	 * 
@@ -145,8 +145,14 @@ class DataList extends ViewableData implements SS_List {
 	 * 
 	 * @param string $limit
 	 */
-	public function limit($limit) {
-		$this->dataQuery->limit($limit);
+	public function limit($limit, $offset = 0) {
+		if(!$limit && !$offset) {
+			return $this;
+		}
+		if($limit && !is_numeric($limit)) {
+			Deprecation::notice('3.0', 'Please pass limits as 2 arguments, rather than an array or SQL fragment.');
+		}
+		$this->dataQuery->limit($limit, $offset);
 		return $this;
 	}
 	
@@ -545,7 +551,8 @@ class DataList extends ViewableData implements SS_List {
 	 * @return DataList
 	 */
 	public function getRange($offset, $length) {
-		return $this->limit(array('start' => $offset, 'limit' => $length));
+		Deprecation::notice("3.0", 'getRange($offset, $length) is deprecated.  Use limit($length, $offset) instead.  Note the new argument order.');
+		return $this->limit($length, $offset);
 	}
 	
 	/**
@@ -813,7 +820,7 @@ class DataList extends ViewableData implements SS_List {
 	 * @return bool
 	 */
 	public function offsetExists($key) {
-	    return ($this->getRange($key, 1)->First() != null);
+	    return ($this->limit(1,$key)->First() != null);
 	}
 
 	/**
@@ -823,7 +830,7 @@ class DataList extends ViewableData implements SS_List {
 	 * @return DataObject
 	 */
 	public function offsetGet($key) {
-	    return $this->getRange($key, 1)->First();
+	    return $this->limit(1, $key)->First();
 	}
 	
 	/**

@@ -323,7 +323,7 @@ class GridField extends FormField {
 		foreach($this->components as $item) {			
 			if($item instanceof GridField_HTMLProvider) {
 				$fragments = $item->getHTMLFragments($this);
-				foreach($fragments as $k => $v) {
+				if($fragments) foreach($fragments as $k => $v) {
 					$k = strtolower($k);
 					if(!isset($content[$k])) $content[$k] = "";
 					$content[$k] .= $v . "\n";
@@ -650,7 +650,7 @@ class GridField extends FormField {
 				continue;
 			}
 			
-			if(in_array($actionName, array_map('strtolower', $component->getActions($this)))) {
+			if(is_array($component->getActions($this)) && in_array($actionName, array_map('strtolower', $component->getActions($this)))) {
 				return $component->handleAction($this, $actionName, $args, $data);
 			}
 		}

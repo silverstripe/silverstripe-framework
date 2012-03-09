@@ -8,17 +8,54 @@
  * @subpackage fields-relational
  */
 class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {
+
+	/**
+	 * See {@link throwExceptionOnBadDataType()}
+	 */
+	protected $throwExceptionOnBadDataType = true;
 	
+	/**
+	 * Determine what happens when this component is used with a list that isn't {@link SS_Filterable}.
+	 * 
+	 *  - true: An exception is thrown
+	 *  - false: This component will be ignored - it won't make any changes to the GridField.
+	 * 
+	 * By default, this is set to true so that it's clearer what's happening, but the predefined
+	 * {@link GridFieldConfig} subclasses set this to false for flexibility.
+	 */
+	public function throwExceptionOnBadDataType($throwExceptionOnBadDataType) {
+		$this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType; 
+	}
+	
+	/**
+	 * Check that this dataList is of the right data type.
+	 * Returns false if it's a bad data type, and if appropriate, throws an exception.
+	 */
+	protected function checkDataType($dataList) {
+		if($dataList instanceof SS_Filterable) {
+			return true;
+		} else {
+			if($this->throwExceptionOnBadDataType) {
+				throw new LogicException(get_class($this) . " expects an SS_Filterable list to be passed to the GridField.");
+			}
+			return false;
+		}
+	}
+
 	/**
 	 *
 	 * @param GridField $gridField
 	 * @return array
 	 */
 	public function getActions($gridField) {
+		if(!$this->checkDataType($gridField->getList())) return;
+
 		return array('filter', 'reset');
 	}
 
 	function handleAction(GridField $gridField, $actionName, $arguments, $data) {
+		if(!$this->checkDataType($gridField->getList())) return;
+
 		$state = $gridField->State->GridFieldFilterHeader;
 		if($actionName === 'filter') {
 			if(isset($data['filter'])){
@@ -39,6 +76,8 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 	 * @return SS_List 
 	 */
 	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
+		if(!$this->checkDataType($dataList)) return $dataList;
+		
 		$state = $gridField->State->GridFieldFilterHeader;
 		if(!isset($state->Columns)) {
 			return $dataList;
@@ -54,6 +93,8 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 	}
 
 	public function getHTMLFragments($gridField) {
+		if(!$this->checkDataType($gridField->getList())) return;
+
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList;
 

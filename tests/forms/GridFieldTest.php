@@ -30,12 +30,15 @@ class GridFieldTest extends SapphireTest {
 
 		$expectedComponents = new ArrayList(array(
 			new GridFieldToolbarHeader(),
-			new GridFieldSortableHeader,
-			new GridFieldFilterHeader,
-			new GridFieldDataColumns,
-			new GridFieldPaginator,
-			new GridState_Component,
+			$sort = new GridFieldSortableHeader(),
+			$filter = new GridFieldFilterHeader(),
+			new GridFieldDataColumns(),
+			$pagination = new GridFieldPaginator(),
+			new GridState_Component(),
 		));
+		$sort->throwExceptionOnBadDataType(false);
+		$filter->throwExceptionOnBadDataType(false);
+		$pagination->throwExceptionOnBadDataType(false);
 		
 		$this->assertEquals($expectedComponents, $obj->getConfig()->getComponents(), 'Testing default Config');
 	}
