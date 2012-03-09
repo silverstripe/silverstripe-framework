@@ -226,8 +226,6 @@ This returns the value inputted in the CMS, if it's set or what is in the $title
 
 ### Forms within Widgets
 
-**Requires SilverStripe 2.4 or newer**
-
 To implement a form inside a widget, you need to implement a custom controller for your widget to return this form. Make
 sure that your controller follows the usual naming conventions, and it will be automatically picked up by the
 `[api:WidgetArea]` rendering in your *Page.ss* template.

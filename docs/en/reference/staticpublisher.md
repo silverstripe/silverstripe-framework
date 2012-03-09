@@ -12,10 +12,6 @@ See [Partial-Caching](partial-caching) for a much more flexible way of building 
 content. Partial Caching is recommended as a basic enhancement to any SilverStripe site however if your site is planning
 a vast amount of traffic (eg an article is being dug) then Static Publisher will be appropriate.
 
-## Requirements
-
-*Requires SilverStripe 2.3*
-
 ## Usage
 
 SilverStripe doesn't have enough information about your template and data-structures to automatically determine which
@@ -123,8 +119,7 @@ Put this in mysite/_config.php.  This will create static content in a "cache/" s
 [View .htaccess
 example](http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpublisher/htaccess_example_rsyncsingleserver)
 
-*  **New for 2.4:** In 2.4, we use a simple PHP script, static-main.php, to control cache lookup.  This make the
-.htaccess update simpler.
+*  We use a simple PHP script, static-main.php, to control cache lookup.  This makes the .htaccess update simpler.
 
 Just look for this line:
 

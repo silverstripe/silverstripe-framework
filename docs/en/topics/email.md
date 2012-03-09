@@ -33,8 +33,6 @@ The default HTML template is located in `sapphire/templates/email/GenericEmail.s
 
 ### Templates
 
-**Requirements: SilverStripe 2.3+**
-
 *  Create a SS-template file called, in this example we will use 'MyEmail.ss' inside `mysite/templates/email`.
 *  Fill this out with the body text for your email. You can use any [SS-template syntax](/topics/templates) (e.g. `<% control %>`,
 `<% if %>`, $FirstName etc)

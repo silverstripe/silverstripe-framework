@@ -50,7 +50,6 @@ content.  This means that database access isn't required to provide a 500 error 
 
 ### From SilverStripe
 
-*Requires SilverStripe 2.3*
 You can indicate a log file relative to the site root. The named file will have a terse log sent to it, and the full log
 (an encoded file containing backtraces and things) will go to a file of a similar name, but with the suffix ".full"
 added.
@@ -62,15 +61,6 @@ added.
 	SS_Log::add_writer(new SS_LogFileWriter('/my/logfile/path'), SS_Log::WARN, '<=');
 	// or just errors
 	SS_Log::add_writer(new SS_LogFileWriter('/my/logfile/path'), SS_Log::ERR);
-
-
-#### Deprecated method (SS 2.3 ?)
-
-`<mysite>/_config.php`:
-
-	:::php
-	Debug::log_errors_to("/my/logfile/path");
-
 
 ### From PHP
 
@@ -96,11 +86,3 @@ You can send both fatal errors and warnings in your code to a specified email-ad
 	SS_Log::add_writer(new SS_LogEmailWriter('admin@domain.com'), SS_Log::WARN, '<=');
 	// or just errors
 	SS_Log::add_writer(new SS_LogEmailWriter('admin@domain.com'), SS_Log::ERR);
-
-
-### Deprecated method (SS 2.3 ?)
-
-	:::php
-	Debug::send_errors_to("developer@example.org");
-	Debug::send_warnings_to("developer@example.org"); // Optional, implied by send_errors_to()
-

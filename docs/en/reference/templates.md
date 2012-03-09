@@ -211,7 +211,7 @@ The value that given in the `<% loop %>` tags should be a collection variable.
 
 ### Modulus and MultipleOf
 
-New in 2.4 you can use 2 new controls $Modulus and $MultipleOf to help build column layouts.
+$Modulus and $MultipleOf can help to build column layouts.
 
 	:::ss
 	$Modulus(value, offset) // returns an int

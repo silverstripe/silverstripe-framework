@@ -6,7 +6,7 @@
 
 /**
  * Uses a substring match against content in column rows.
- * @deprecated Use PartialMatchFilter instead
+ * @deprecated 3.0 Use PartialMatchFilter instead
  * 
  * @package sapphire
  * @subpackage search

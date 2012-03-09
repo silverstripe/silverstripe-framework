@@ -381,7 +381,7 @@ class DataQuery {
 
 	/**
 	 * Add a join clause to this query
-	 * @deprecated Use innerJoin() or leftJoin() instead.
+	 * @deprecated 3.0 Use innerJoin() or leftJoin() instead.
 	 */
 	function join($join) {
 		Deprecation::notice('3.0', 'Use innerJoin() or leftJoin() instead.');
