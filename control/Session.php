@@ -417,7 +417,6 @@ class Session {
 	 * @param string $sid Start the session with a specific ID
 	 */
 	public static function start($sid = null) {
-		self::load_config();
 		$path = self::get_cookie_path();
 		$domain = self::get_cookie_domain();
 		$secure = self::get_cookie_secure();
@@ -462,31 +461,6 @@ class Session {
 				unset($_COOKIE[session_name()]);
 			}
 			session_destroy();
-		}
-	}
-
-	/**
-	 * Use the Session::$session_ips array to set timeouts based on IP address or IP address
-	 * range.
-	 * 
-	 * Note: The use of _sessions.php is deprecated.
-	 */
-	public static function load_config() {
-		foreach(self::$session_ips as $sessionIP => $timeout) {
-			if(preg_match('/^([0-9.]+)\s?-\s?([0-9.]+)$/', $sessionIP, $ips)) {
-				if(isset($_SERVER['REMOTE_ADDR'])) {
-					$startIP = ip2long($ips[1]);
-					$endIP = ip2long($ips[2]);
-					$clientIP = ip2long($_SERVER['REMOTE_ADDR']);
-					$minIP = min($startIP, $endIP);
-					$maxIP = max($startIP, $endIP);
-
-					if($minIP <= $clientIP && $clientIP <= $maxIP) {
-						return self::set_timeout($timeout);
-					}
-				}
-			}
-			// TODO - Net masks or something
 		}
 	}
 	
