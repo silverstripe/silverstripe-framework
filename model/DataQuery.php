@@ -373,9 +373,9 @@ class DataQuery {
 	/**
 	 * Set the limit of this query
 	 */
-	function limit($limit) {
+	function limit($limit, $offset = 0) {
 		$clone = $this;
-		$clone->query->limit($limit);
+		$clone->query->limit($limit, $offset);
 		return $clone;
 	}
 

@@ -323,7 +323,7 @@ class GridField extends FormField {
 		foreach($this->components as $item) {			
 			if($item instanceof GridField_HTMLProvider) {
 				$fragments = $item->getHTMLFragments($this);
-				foreach($fragments as $k => $v) {
+				if($fragments) foreach($fragments as $k => $v) {
 					$k = strtolower($k);
 					if(!isset($content[$k])) $content[$k] = "";
 					$content[$k] .= $v . "\n";

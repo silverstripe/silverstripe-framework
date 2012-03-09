@@ -197,18 +197,12 @@ class DataObjectTest extends SapphireTest {
 		// There's 4 records in total
 		$this->assertEquals(4, $players->count());
 
-		// Testing "## offset ##" syntax
-		$this->assertEquals(4, $players->limit("20 OFFSET 0")->count());
-		$this->assertEquals(0, $players->limit("20 OFFSET 20")->count());
-		$this->assertEquals(2, $players->limit("2 OFFSET 0")->count());
-		$this->assertEquals(1, $players->limit("5 OFFSET 3")->count());
-
 		// Testing "##, ##" syntax
-		$this->assertEquals(4, $players->limit("20")->count());
-		$this->assertEquals(4, $players->limit("0, 20")->count());
-		$this->assertEquals(0, $players->limit("20, 20")->count());
-		$this->assertEquals(2, $players->limit("0, 2")->count());
-		$this->assertEquals(1, $players->limit("3, 5")->count());
+		$this->assertEquals(4, $players->limit(20)->count());
+		$this->assertEquals(4, $players->limit(20, 0)->count());
+		$this->assertEquals(0, $players->limit(20, 20)->count());
+		$this->assertEquals(2, $players->limit(2, 0)->count());
+		$this->assertEquals(1, $players->limit(5, 3)->count());
 	}
 
 	/**

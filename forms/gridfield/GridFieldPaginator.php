@@ -21,11 +21,44 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	protected $itemClass = 'GridFieldPaginator_Row';
 
 	/**
+	 * See {@link throwExceptionOnBadDataType()}
+	 */
+	protected $throwExceptionOnBadDataType = true;
+
+	/**
 	 *
 	 * @param int $itemsPerPage - How many items should be displayed per page
 	 */
 	public function __construct($itemsPerPage=null) {
 		if($itemsPerPage) $this->itemsPerPage = $itemsPerPage;
+	}
+	
+	/**
+	 * Determine what happens when this component is used with a list that isn't {@link SS_Filterable}.
+	 * 
+	 *  - true: An exception is thrown
+	 *  - false: This component will be ignored - it won't make any changes to the GridField.
+	 * 
+	 * By default, this is set to true so that it's clearer what's happening, but the predefined
+	 * {@link GridFieldConfig} subclasses set this to false for flexibility.
+	 */
+	public function throwExceptionOnBadDataType($throwExceptionOnBadDataType) {
+		$this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType; 
+	}
+	
+	/**
+	 * Check that this dataList is of the right data type.
+	 * Returns false if it's a bad data type, and if appropriate, throws an exception.
+	 */
+	protected function checkDataType($dataList) {
+		if($dataList instanceof SS_Limitable) {
+			return true;
+		} else {
+			if($this->throwExceptionOnBadDataType) {
+				throw new LogicException(get_class($this) . " expects an SS_Limitable list to be passed to the GridField.");
+			}
+			return false;
+		}
 	}
 
 	/**
@@ -34,6 +67,8 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 * @return array
 	 */
 	public function getActions($gridField) {
+		if(!$this->checkDataType($gridField->getList())) return;
+		
 		return array('paginate');
 	}
 
@@ -46,6 +81,8 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 * @return void
 	 */
 	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
+		if(!$this->checkDataType($gridField->getList())) return;
+		
 		if($actionName !== 'paginate') {
 			return;
 		}
@@ -60,18 +97,20 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 * @return SS_List 
 	 */
 	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
+		if(!$this->checkDataType($dataList)) return $dataList;
+		
 		$state = $gridField->State->GridFieldPaginator;
 		if(!is_int($state->currentPage))
 			$state->currentPage = 1;
 
-		if(!$this->getListPaginatable($dataList)) {
+		if(!($dataList instanceof SS_Limitable)) {
 			return $dataList;
 		}
 		if(!$state->currentPage) {
-			return $dataList->getRange(0, (int)$this->itemsPerPage);
+			return $dataList->limit((int)$this->itemsPerPage);
 		}
 		$startRow = $this->itemsPerPage * ($state->currentPage - 1);
-		return $dataList->getRange((int)$startRow, (int)$this->itemsPerPage);
+		return $dataList->limit((int)$this->itemsPerPage, (int)$startRow);
 	}
 
 	/**
@@ -80,6 +119,8 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 * @return array
 	 */
 	public function getHTMLFragments($gridField) {
+		if(!$this->checkDataType($gridField->getList())) return;
+		
 		$state = $gridField->State->GridFieldPaginator;
 		if(!is_int($state->currentPage))
 			$state->currentPage = 1;
@@ -159,14 +200,4 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		return $this->itemsPerPage;
 	}
 
-	/** Duck check to see if list support methods we need to paginate */
-	protected function getListPaginatable(SS_List $list) {
-		// If no list yet, not paginatable
-		if (!$list) return false;
-		// Check for methods we use
-		if(!method_exists($list, 'getRange')) return false;
-		if(!method_exists($list, 'limit')) return false;
-		// Default it true
-		return true;
-	}
 }
