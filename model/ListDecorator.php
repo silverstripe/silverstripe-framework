@@ -7,7 +7,7 @@
  * @package    sapphire
  * @subpackage model
  */
-abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Filterable, SS_Limitable {
+abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sortable, SS_Filterable, SS_Limitable {
 
 	protected $list;
 
