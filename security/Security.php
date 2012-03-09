@@ -45,14 +45,6 @@ class Security extends Controller {
 	protected static $strictPathChecking = false;
 
 	/**
-	 * Should passwords be stored encrypted?
-	 * @deprecated 2.4 Please use 'none' as the default $encryptionAlgorithm instead
-	 *
-	 * @var bool
-	 */
-	protected static $encryptPasswords = true;
-
-	/**
 	 * The password encryption algorithm to use by default.
 	 * This is an arbitrary code registered through {@link PasswordEncryptor}.
 	 *
@@ -60,14 +52,6 @@ class Security extends Controller {
 	 */
 	protected static $encryptionAlgorithm = 'sha1_v2.4';
 
-	/**
-	 * Should a salt be used for the password encryption?
-	 * @deprecated 2.4 Please use a custom {@link PasswordEncryptor} instead
-	 *
-	 * @var bool
-	 */
-	protected static $useSalt = true;
-	
 	/**
 	 * Showing "Remember me"-checkbox 
 	 * on loginform, and saving encrypted credentials to a cookie. 
@@ -734,35 +718,6 @@ class Security extends Controller {
 
 
 	/**
-	 * Set if passwords should be encrypted or not
-	 *
-	 * @deprecated 2.4 Use PasswordEncryptor_None instead.
-	 * 
-	 * @param bool $encrypt Set to TRUE if you want that all (new) passwords
-	 *                      will be stored encrypted, FALSE if you want to
-	 *                      store the passwords in clear text.
-	 */
-	public static function encrypt_passwords($encrypt) {
-		Deprecation::notice('2.4', 'Use PasswordEncryptor_None instead.');
-		self::$encryptPasswords = (bool)$encrypt;
-	}
-
-
-	/**
-	 * Get a list of all available encryption algorithms.
-	 * Note: These are arbitrary codes, and not callable methods.
-	 * 
-	 * @deprecated 2.4 Use PasswordEncryptor::get_encryptors()
-	 *
-	 * @return array Returns an array of strings containing all supported encryption algorithms.
-	 */
-	public static function get_encryption_algorithms() {
-		Deprecation::notice('2.4', 'Use PasswordEncryptor::get_encryptors() instead.');
-		return array_keys(PasswordEncryptor::get_encryptors());
-	}
-
-
-	/**
 	 * Set the password encryption algorithm
 	 *
 	 * @param string $algorithm One of the available password encryption
@@ -816,7 +771,7 @@ class Security extends Controller {
 			// if the password is empty, don't encrypt
 			strlen(trim($password)) == 0  
 			// if no algorithm is provided and no default is set, don't encrypt
-			|| (!$algorithm && self::$encryptPasswords == false)
+			|| (!$algorithm)
 		) {
 			$algorithm = 'none';
 		} else {

@@ -81,7 +81,6 @@ abstract class PasswordEncryptor {
 	
 	/**
 	 * Return a string value stored in the {@link Member->Salt} property.
-	 * Note: Only used when {@link Security::$useSalt} is TRUE.
 	 * 
 	 * @uses RandomGenerator
 	 * 
