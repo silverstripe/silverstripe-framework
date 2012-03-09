@@ -343,7 +343,8 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 				if (isset($details['method'])) $details['callable'] = array($implementer, $details['method']);
 
 				// Save with both uppercase & lowercase first letter, so either works
-				$extraArray[lcfirst($varName)] = $details;
+				$lcFirst = strtolower($varName[0]) . substr($varName,1);
+				$extraArray[$lcFirst] = $details;
 				$extraArray[ucfirst($varName)] = $details;
 			}
 		}
