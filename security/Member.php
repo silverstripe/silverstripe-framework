@@ -659,7 +659,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$encryption_details = Security::encrypt_password(
 				$this->Password, // this is assumed to be cleartext
 				$this->Salt,
-				$this->PasswordEncryption,
+				($this->PasswordEncryption) ? $this->PasswordEncryption : Security::get_password_encryption_algorithm(),
 				$this
 			);
 
