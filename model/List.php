@@ -22,15 +22,6 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 	public function toNestedArray();
 
 	/**
-	 * Returns a subset of the items within the list.
-	 *
-	 * @param  int $offset
-	 * @param  int $length
-	 * @return SS_List
-	 */
-	public function getRange($offset, $length);
-
-	/**
 	 * Adds an item to the list, making no guarantees about where it will
 	 * appear.
 	 *

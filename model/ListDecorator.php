@@ -7,7 +7,7 @@
  * @package    sapphire
  * @subpackage model
  */
-abstract class SS_ListDecorator extends ViewableData implements SS_List {
+abstract class SS_ListDecorator extends ViewableData implements SS_List, S_Limitable {
 
 	protected $list;
 
@@ -59,10 +59,6 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List {
 
 	public function remove($itemObject) {
 		$this->list->remove($itemObject);
-	}
-
-	public function getRange($offset, $length) {
-		return $this->list->getRange($offset, $length);
 	}
 
 	public function getIterator() {
@@ -134,6 +130,10 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List {
 	public function filter(){
 		$args = func_get_args();
 		return call_user_func_array(array($this->list, 'filter'), $args);
+	}
+
+	public function limit($length, $offset) {
+		return $this->list->getRange($length, $offset);
 	}
 
 	/**

@@ -149,7 +149,7 @@ class PaginatedList extends SS_ListDecorator {
 	 */
 	public function getIterator() {
 		return new IteratorIterator(
-			$this->list->getRange($this->getPageStart(), $this->pageLength)
+			$this->list->limit($this->pageLength, $this->getPageStart())
 		);
 	}
 

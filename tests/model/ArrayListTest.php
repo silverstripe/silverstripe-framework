@@ -61,11 +61,11 @@ class ArrayListTest extends SapphireTest {
 		));
 	}
 
-	public function testGetRange() {
+	public function testLimit() {
 		$list = new ArrayList(array(
 			array('Key' => 1), array('Key' => 2), array('Key' => 3)
 		));
-		$this->assertEquals($list->getRange(1, 2)->toArray(), array(
+		$this->assertEquals($list->limit(2,1)->toArray(), array(
 			array('Key' => 2), array('Key' => 3)
 		));
 	}

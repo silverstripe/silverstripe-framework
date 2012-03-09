@@ -64,14 +64,14 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		if(!is_int($state->currentPage))
 			$state->currentPage = 1;
 
-		if(!$this->getListPaginatable($dataList)) {
+		if(!($dataList instanceof SS_Limitable)) {
 			return $dataList;
 		}
 		if(!$state->currentPage) {
-			return $dataList->getRange(0, (int)$this->itemsPerPage);
+			return $dataList->limit((int)$this->itemsPerPage);
 		}
 		$startRow = $this->itemsPerPage * ($state->currentPage - 1);
-		return $dataList->getRange((int)$startRow, (int)$this->itemsPerPage);
+		return $dataList->limit((int)$this->itemsPerPage, (int)$startRow);
 	}
 
 	/**
@@ -159,14 +159,4 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		return $this->itemsPerPage;
 	}
 
-	/** Duck check to see if list support methods we need to paginate */
-	protected function getListPaginatable(SS_List $list) {
-		// If no list yet, not paginatable
-		if (!$list) return false;
-		// Check for methods we use
-		if(!method_exists($list, 'getRange')) return false;
-		if(!method_exists($list, 'limit')) return false;
-		// Default it true
-		return true;
-	}
 }

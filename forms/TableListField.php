@@ -430,7 +430,7 @@ JS
 			    $SQL_start = 0;
 		    }
 		
-		    $items = $items->getRange($SQL_start, $SQL_limit);
+		    $items = $items->limit($SQL_limit, $SQL_start);
 	    }
 
 		return $items;
