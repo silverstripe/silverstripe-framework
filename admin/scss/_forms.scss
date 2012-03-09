@@ -107,9 +107,9 @@ form.nostyle {
 		}
 	}
 	
-	input[disabled],
-	textarea[disabled],
-	select[disabled] {
+	input[disabled], input.disabled,
+	textarea[disabled], textarea.disabled,
+	select[disabled], select.disabled {
 		color: lighten($color-text, 20%);
 		background: #efefef;
 		@include background-image(linear-gradient(darken(#efefef, 20%), #efefef 10%, #fff 90%, darken(#efefef, 20%)));
