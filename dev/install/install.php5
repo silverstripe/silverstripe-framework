@@ -670,7 +670,9 @@ class InstallRequirements {
 	}
 
 	function getTempFolder() {
-		if(file_exists($this->getBaseDir() . 'silverstripe-cache')) {
+		if (defined('TEMP_FOLDER')) {
+			$sysTmp = TEMP_FOLDER;
+		} elseif(file_exists($this->getBaseDir() . 'silverstripe-cache')) {
 			$sysTmp = $this->getBaseDir();
 		} elseif(function_exists('sys_get_temp_dir')) {
 			$sysTmp = sys_get_temp_dir();
