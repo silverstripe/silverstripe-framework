@@ -30,7 +30,7 @@
  */
 abstract class ModelAdmin extends LeftAndMain {
 
-	static $url_rule = '/$Action';	
+	static $url_rule = '/$ModelClass/$Action';	
 	
 	/**
 	 * List of all managed {@link DataObject}s in this interface.
@@ -49,51 +49,24 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * 
 	 * Available options:
 	 * - 'title': Set custom titles for the tabs or dropdown names
-	 * - 'collection_controller': Set a custom class to use as a collection controller for this model
-	 * - 'record_controller': Set a custom class to use as a record controller for this model
 	 *
 	 * @var array|string
 	 */
 	public static $managed_models = null;
 	
-	/**
-	 * More actions are dynamically added in {@link defineMethods()} below.
-	 */
 	public static $allowed_actions = array(
-		'add',
-		'edit',
-		'delete',
-		'import',
-		'renderimportform',
-		'handleList',
-		'handleItem',
-		'ImportForm'
+		'ImportForm',
+		'SearchForm',
 	);
 	
-	/**
-	 * @param string $collection_controller_class Override for controller class
-	 */
-	public static $collection_controller_class = "ModelAdmin_CollectionController";
-	
-	/**
-	 * @param string $collection_controller_class Override for controller class
-	 */
-	public static $record_controller_class = "ModelAdmin_RecordController";
-	
-	/**
-	 * Forward control to the default action handler
-	 */
 	public static $url_handlers = array(
-		'$Action' => 'handleAction'
+		'$ModelClass/$Action' => 'handleAction'
 	);
-	
+
 	/**
-	 * Model object currently in manipulation queue. Used for updating Link to point
-	 * to the correct generic data object in generated URLs.
-	 *
-	 * @var string
+	 * @var String
 	 */
-	private $currentModel = false;
+	protected $modelClass;
 	
 	/**
 	 * Change this variable if you don't want the Import from CSV form to appear. 
@@ -120,20 +93,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * @var int
 	 */
 	public static $page_length = 30;
-	
-	/**
-	 * Class name of the form field used for the results list.  Overloading this in subclasses
-	 * can let you customise the results table field.
-	 */
-	protected $resultsTableClassName = 'GridField';
-
-	/**
-	 * Return {@link $this->resultsTableClassName}
-	 */
-	public function resultsTableClassName() {
-		return $this->resultsTableClassName;
-	}
-	
+		
 	/**
 	 * Initialize the model admin interface. Sets up embedded jquery libraries and requisite plugins.
 	 * 
@@ -141,103 +101,101 @@ abstract class ModelAdmin extends LeftAndMain {
 	 */
 	public function init() {
 		parent::init();
-		
+
+		$models = $this->getManagedModels();
+		$this->modelClass = (isset($this->urlParams['ModelClass'])) ? $this->urlParams['ModelClass'] : $models[0];
+
 		// security check for valid models
-		if(isset($this->urlParams['Action']) && !in_array($this->urlParams['Action'], $this->getManagedModels())) {
-			//user_error('ModelAdmin::init(): Invalid Model class', E_USER_ERROR);
+		if(!in_array($this->modelClass, $models)) {
+			user_error('ModelAdmin::init(): Invalid Model class', E_USER_ERROR);
 		}
 		
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/silverstripe.tabs.css'); // follows the jQuery UI theme conventions
-		
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-livequery/jquery.livequery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ModelAdmin.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ModelAdmin.History.js');
 	}
-	
-	/**
-	 * overwrite the static page_length of the admin panel, 
-	 * should be called in the project _config file.
-	 */
-	static function set_page_length($length){
-		self::$page_length = $length;
-	}
-	
-	/**
-	 * Return the static page_length of the admin, default as 30
-	 */
-	static function get_page_length(){
-		return self::$page_length;
-	} 
-	
-	/**
-	 * Return the class name of the collection controller
-	 *
-	 * @param string $model model name to get the controller for
-	 * @return string the collection controller class
-	 */
-	function getCollectionControllerClass($model) {
-		$models = $this->getManagedModels();
-		
-		if(isset($models[$model]['collection_controller'])) {
-			$class = $models[$model]['collection_controller'];
-		} else {
-			$class = $this->stat('collection_controller_class');
+
+	function getEditForm($id = null) {
+		$list = $this->getList();
+		$listField = Object::create('GridField',
+			$this->modelClass,
+			false,
+			$list,
+			$fieldConfig = GridFieldConfig_RecordEditor::create($this->stat('page_length'))
+				->addComponent(new GridFieldExportButton())
+				->removeComponentsByType('GridFieldFilter')
+		);
+
+		// Validation
+		if(singleton($this->modelClass)->hasMethod('getCMSValidator')) {
+			$detailValidator = singleton($this->modelClass)->getCMSValidator();
+			$listField->getConfig()->getComponentByType('GridFieldDetailForm')->setValidator($detailValidator);
 		}
+
+		$form = new Form(
+			$this,
+			'EditForm',
+			new FieldList($listField),
+			new FieldList()
+		);
+		$form->addExtraClass('cms-edit-form cms-panel-padded center');
+		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
+		$form->setFormAction(Controller::join_links($this->Link($this->modelClass), 'EditForm'));
+
+		$this->extend('updateEditForm', $form);
 		
-		return $class;
+		return $form;
+	}
+
+	/**
+	 * @return SearchContext
+	 */
+	public function getSearchContext() {
+		$context = singleton($this->modelClass)->getDefaultSearchContext();
+
+		// Namespace fields, for easier detection if a search is present
+		foreach($context->getFields() as $field) $field->setName(sprintf('q[%s]', $field->getName()));
+		foreach($context->getFilters() as $filter) $filter->setFullName(sprintf('q[%s]', $filter->getFullName()));
+
+		$this->extend('updateSearchContext', $context);
+
+		return $context;
+	}
+
+	/**
+	 * @return Form
+	 */
+	public function SearchForm() {
+		$context = $this->getSearchContext();
+		$form = new Form($this, "SearchForm",
+			$context->getSearchFields(),
+			new FieldList(
+				Object::create('ResetFormAction','clearsearch', _t('ModelAdmin.CLEAR_SEARCH','Clear Search'))
+					->setUseButtonTag(true)->addExtraClass('ss-ui-action-minor'),
+				Object::create('FormAction', 'search', _t('MemberTableField.SEARCH', 'Search'))
+				->setUseButtonTag(true)
+			),
+			new RequiredFields()
+		);
+		$form->setFormMethod('get');
+		$form->setFormAction($this->Link($this->modelClass));
+		$form->addExtraClass('cms-search-form');
+		$form->disableSecurityToken();
+		$form->loadDataFrom($this->request->getVars());
+
+		$this->extend('updateSearchForm', $form);
+
+		return $form;
 	}
 	
-	/**
-	 * Return the class name of the record controller
-	 *
-	 * @param string $model model name to get the controller for
-	 * @return string the record controller class
-	 */
-	function getRecordControllerClass($model) {
-		$models = $this->getManagedModels();
-		
-		if(isset($models[$model]['record_controller'])) {
-			$class = $models[$model]['record_controller'];
-		} else {
-			$class = $this->stat('record_controller_class');
-		}
-		
-		return $class;
+	public function getList() {
+		$context = $this->getSearchContext();
+		$params = $this->request->requestVar('q');
+		$list = $context->getResults($params);
+
+		$this->extend('updateList', $list);
+
+		return $list;
 	}
-	
-	/**
-	 * Add mappings for generic form constructors to automatically delegate to a scaffolded form object.
-	 */
-	function defineMethods() {
-		parent::defineMethods();
-		foreach($this->getManagedModels() as $class => $options) {
-			if(is_numeric($class)) $class = $options;
-			$this->addWrapperMethod($class, 'bindModelController');
-			self::$allowed_actions[] = $class;
-		}
-	}
-	
-	/**
-	 * Base scaffolding method for returning a generic model instance.
-	 */
-	public function bindModelController($model, $request = null) {
-		$class = $this->getCollectionControllerClass($model);	
-		return new $class($this, $model);
-	}
-	
-	/**
-	 * This method can be overloaded to specify the UI by which the search class is chosen.
-	 *
-	 * It can create a tab strip or a dropdown.  The dropdown is useful when there are a large number of classes.
-	 * By default, it will show a tabs for 1-3 classes, and a dropdown for 4 or more classes.
-	 *
-	 * @return String: 'tabs' or 'dropdown'
-	 */
-	public function SearchClassSelector() {
-		return sizeof($this->getManagedModels()) > 3 ? 'dropdown' : 'tabs';
-	}
+
 	
 	/**
 	 * Returns managed models' create, search, and import forms
@@ -245,7 +203,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * @uses SearchFilter
 	 * @return SS_List of forms 
 	 */
-	protected function getModelForms() {
+	protected function getManagedModelTabs() {
 		$models = $this->getManagedModels();
 		$forms  = new ArrayList();
 		
@@ -254,7 +212,8 @@ abstract class ModelAdmin extends LeftAndMain {
 			$forms->push(new ArrayData(array (
 				'Title'     => (is_array($options) && isset($options['title'])) ? $options['title'] : singleton($class)->i18n_singular_name(),
 				'ClassName' => $class,
-				'Content'   => $this->$class()->getModelSidebar()
+				'Link' => $this->Link($class),
+				'LinkOrCurrent' => ($class == $this->modelClass) ? 'current' : 'link'
 			)));
 		}
 		
@@ -303,161 +262,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		
 		return $importers;
 	}
-	
-}
 
-/**
- * Handles a managed model class and provides default collection filtering behavior.
- *
- * @package cms
- * @subpackage core
- */
-class ModelAdmin_CollectionController extends Controller {
-	public $parentController;
-	protected $modelClass;
-	
-	public $showImportForm = null;
-	
-	static $url_handlers = array(
-		'$Action' => 'handleActionOrID'
-	);
-
-	function __construct($parent, $model) {
-		$this->parentController = $parent;
-		$this->modelClass = $model;
-		
-		parent::__construct();
-	}
-	
-	/**
-	 * Appends the model class to the URL.
-	 *
-	 * @param string $action
-	 * @return string
-	 */
-	function Link($action = null) {
-		return $this->parentController->Link(Controller::join_links($this->modelClass, $action));
-	}
-	
-	/**
-	 * Return the class name of the model being managed.
-	 *
-	 * @return unknown
-	 */
-	function getModelClass() {
-		return $this->modelClass;
-	}
-	
-	/**
-	 * Delegate to different control flow, depending on whether the
-	 * URL parameter is a number (record id) or string (action).
-	 * 
-	 * @param unknown_type $request
-	 * @return unknown
-	 */
-	function handleActionOrID($request) {
-		if (is_numeric($request->param('Action'))) {
-			return $this->handleID($request);
-		} else {
-			return $this->handleAction($request);
-		}
-	}
-	
-	/**
-	 * Delegate to the RecordController if a valid numeric ID appears in the URL
-	 * segment.
-	 *
-	 * @param SS_HTTPRequest $request
-	 * @return RecordController
-	 */
-	public function handleID($request) {
-		$class = $this->parentController->getRecordControllerClass($this->getModelClass());
-		return new $class($this, $request);
-	}
-	
-	// -----------------------------------------------------------------------------------------------------------------
-	
-	/**
-	 * Get a combination of the Search, Import and Create forms that can be inserted into a {@link ModelAdmin} sidebar.
-	 *
-	 * @return string
-	 */
-	public function getModelSidebar() {
-		return $this->renderWith('ModelSidebar');
-	}
-	
-	/**
-	 * Get a search form for a single {@link DataObject} subclass.
-	 * 
-	 * @return Form
-	 */
-	public function SearchForm() {
-		$SNG_model = singleton($this->modelClass);
-		$context = $SNG_model->getDefaultSearchContext();
-		$fields = $context->getSearchFields();
-		$columnSelectionField = $this->ColumnSelectionField();
-		$fields->push($columnSelectionField);
-
-		$validator = ($SNG_model->hasMethod('getCMSValidator')) ? $SNG_model->getCMSValidator() : new RequiredFields();
-		$clearAction = new ResetFormAction('clearsearch', _t('ModelAdmin.CLEAR_SEARCH','Clear Search'));
-
-		$form = new Form($this, "SearchForm",
-			$fields,
-			new FieldList(
-				new FormAction('search', _t('MemberTableField.SEARCH', 'Search')),
-				$clearAction
-			),
-			$validator
-		);
-		//$form->setFormAction(Controller::join_links($this->Link(), "search"));
-		$form->setFormMethod('get');
-		$form->setHTMLID("Form_SearchForm_" . $this->modelClass);
-		$form->disableSecurityToken();
-		$clearAction->setUseButtonTag(true);
-		$clearAction->addExtraClass('ss-ui-action-minor');
-
-		return $form;
-	}
-	
-	/**
-	 * Create a form that consists of one button 
-	 * that directs to a give model's Add form
-	 */ 
-	public function CreateForm() {
-		$modelName = $this->modelClass;
-		$SNG_model = singleton($modelName);
-
-		if($this->hasMethod('alternatePermissionCheck')) {
-			if(!$this->alternatePermissionCheck()) return false;
-		} else {
-			if(!$SNG_model->canCreate(Member::currentUser())) return false;
-		}
-
-		$buttonLabel = sprintf(_t('ModelAdmin.CREATEBUTTON', "Create '%s'", PR_MEDIUM, "Create a new instance from a model class"), $SNG_model->i18n_singular_name());
-
-		$validator = ($SNG_model->hasMethod('getCMSValidator')) ? $SNG_model->getCMSValidator() : new RequiredFields();
-		$createButton = FormAction::create('add', $buttonLabel)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept');
-
-		$form = new Form($this, "CreateForm",
-			new FieldList(),
-			new FieldList($createButton),
-			$validator
-		);
-
-		$createButton->dontEscape = true;
-		$form->setHTMLID("Form_CreateForm_" . $this->modelClass);
-
-		return $form;
-	}
-	
-	/**
-	 * Checks if a CSV import form should be generated by a className criteria or in general for ModelAdmin.
-	 */
-	function showImportForm() {
-		if($this->showImportForm === null) return $this->parentController->showImportForm;
-		else return $this->showImportForm;
-	}
-	
 	/**
 	 * Generate a CSV import form for a single {@link DataObject} subclass.
 	 *
@@ -466,8 +271,11 @@ class ModelAdmin_CollectionController extends Controller {
 	public function ImportForm() {
 		$modelName = $this->modelClass;
 		// check if a import form should be generated
-		if(!$this->showImportForm() || (is_array($this->showImportForm()) && !in_array($modelName,$this->showImportForm()))) return false;
-		$importers = $this->parentController->getModelImporters();
+		if(!$this->showImportForm || (is_array($this->showImportForm) && !in_array($modelName,$this->showImportForm))) {
+			return false;
+		}
+
+		$importers = $this->getModelImporters();
 		if(!$importers || !isset($importers[$modelName])) return false;
 		
 		if(!singleton($modelName)->canCreate(Member::currentUser())) return false;
@@ -508,7 +316,10 @@ class ModelAdmin_CollectionController extends Controller {
 			$fields,
 			$actions
 		);
-		$form->setHTMLID("Form_ImportForm_" . $this->modelClass);
+		$form->setFormAction(Controller::join_links($this->Link($this->modelClass), 'ImportForm'));
+
+		$this->extend('updateImportForm', $form);
+
 		return $form;
 	}
 	
@@ -524,14 +335,13 @@ class ModelAdmin_CollectionController extends Controller {
 	 * @param SS_HTTPRequest $request
 	 */
 	function import($data, $form, $request) {
+		if(!$this->showImportForm || (is_array($this->showImportForm) && !in_array($this->modelClass,$this->showImportForm))) {
+			return false;
+		}
 
-		$modelName = $data['ClassName'];
-
-		if(!$this->showImportForm() || (is_array($this->showImportForm()) && !in_array($modelName,$this->showImportForm()))) return false;
-		$importers = $this->parentController->getModelImporters();
-		$importerClass = $importers[$modelName];
-
-		$loader = new $importerClass($data['ClassName']);
+		$importers = $this->getModelImporters();
+		$importerClass = $importers[$this->modelClass];
+		$loader = new $importerClass($this->modelClass);
 
 		// File wasn't properly uploaded, show a reminder to the user
 		if(
@@ -566,467 +376,38 @@ class ModelAdmin_CollectionController extends Controller {
 		$form->sessionMessage($message, 'good');
 		$this->redirectBack();
 	}
-	
-	
-	/**
-	 * Return the columns available in the column selection field.
-	 * Overload this to make other columns available
-	 */
-	public function columnsAvailable() {
-		return singleton($this->modelClass)->summaryFields();
-	}
 
-	/**
-	 * Return the columns selected by default in the column selection field.
-	 * Overload this to make other columns selected by default
-	 */
-	public function columnsSelectedByDefault() {
-		return array_keys(singleton($this->modelClass)->summaryFields());
-	}
-	
-	/**
-	 * Give the flexibilility to show variouse combination of columns in the search result table
-	 */
-	public function ColumnSelectionField() {
-		$model = singleton($this->modelClass);
-		$source = $this->columnsAvailable();
-		
-		// select all fields by default
-		$value = $this->columnsSelectedByDefault();
-		
-		// Reorder the source so that you read items down the column and then across
-		$columnisedSource = array();
-		$keys = array_keys($source);
-		$midPoint = ceil(sizeof($source)/2);
-		for($i=0;$i<$midPoint;$i++) {
-			$key1 = $keys[$i];
-			$columnisedSource[$key1] = $model->fieldLabel($source[$key1]);
-			// If there are an odd number of items, the last item will be unset
-			if(isset($keys[$i+$midPoint])) {
-				$key2 = $keys[$i+$midPoint];
-				$columnisedSource[$key2] = $model->fieldLabel($source[$key2]);
-			}
-		}
-
-		$checkboxes = new CheckboxSetField("ResultAssembly", false, $columnisedSource, $value);
-		
-		$field = new CompositeField(
-			new LiteralField(
-				"ToggleResultAssemblyLink", 
-				sprintf("<a class=\"form_frontend_function toggle_result_assembly\" href=\"#\">%s</a>",
-					_t('ModelAdmin.CHOOSE_COLUMNS', 'Select result columns...')
-				)
-			),
-			$checkboxesBlock = new CompositeField(
-				$checkboxes,
-				new LiteralField("ClearDiv", "<div class=\"clear\"></div>"),
-				new LiteralField(
-					"TickAllAssemblyLink",
-					sprintf(
-						"<a class=\"form_frontend_function tick_all_result_assembly\" href=\"#\">%s</a>",
-						_t('ModelAdmin.SELECTALL', 'select all')
-					)
-				),
-				new LiteralField(
-					"UntickAllAssemblyLink",
-					sprintf(
-						"<a class=\"form_frontend_function untick_all_result_assembly\" href=\"#\">%s</a>",
-						_t('ModelAdmin.SELECTNONE', 'select none')
-					)
-				)
-			)
-		);
-		
-		$field->addExtraClass("ResultAssemblyBlock");
-		$checkboxesBlock->addExtraClass("hidden");
-		return $field;
-	}
-	
-	/**
-	 * Action to render a data object collection, using the model context to provide filters
-	 * and paging.
-	 * 
-	 * @return string
-	 */
-	function search($request, $form) {
-		// Get the results form to be rendered
-		$resultsForm = $this->ResultsForm(array_merge($form->getData(), $request));
-		return $resultsForm->forTemplate();
-	}
-	
-	/**
-	 * Gets the search query generated on the SearchContext from
-	 * {@link DataObject::getDefaultSearchContext()},
-	 * and the current GET parameters on the request.
-	 *
-	 * @return SQLQuery
-	 */
-	function getSearchQuery($searchCriteria) {
-		$context = singleton($this->modelClass)->getDefaultSearchContext();
-		return $context->getQuery($searchCriteria);
-	}
-	
-	/**
-	 * Returns all columns used for tabular search results display.
-	 * Defaults to all fields specified in {@link DataObject->summaryFields()}.
-	 * 
-	 * @param array $searchCriteria Limit fields by populating the 'ResultsAssembly' key
-	 * @param boolean $selectedOnly Limit by 'ResultsAssempty
-	 */
-	function getResultColumns($searchCriteria, $selectedOnly = true) {
-		$model = singleton($this->modelClass);
-
-		$summaryFields = $this->columnsAvailable();
-		
-		if($selectedOnly && isset($searchCriteria['ResultAssembly'])) {
-			$resultAssembly = $searchCriteria['ResultAssembly'];
-			if(!is_array($resultAssembly)) {
-				$explodedAssembly = split(' *, *', $resultAssembly);
-				$resultAssembly = array();
-				foreach($explodedAssembly as $item) $resultAssembly[$item] = true;
-			}
-			return array_intersect_key($summaryFields, $resultAssembly);
-		} else {
-			return $summaryFields;
-		}
-	}
-	
-	/**
-	 * Creates and returns the result table field for resultsForm.
-	 * Uses {@link resultsTableClassName()} to initialise the formfield. 
-	 * Method is called from {@link ResultsForm}.
-	 *
-	 * @param array $searchCriteria passed through from ResultsForm 
-	 *
-	 * @return GridField 
-	 */
-	function getResultsTable($searchCriteria) {
-		
-		$className = $this->parentController->resultsTableClassName();
-		$datalist = $this->getSearchQuery($searchCriteria);
-		$numItemsPerPage = $this->parentController->stat('page_length');
-		$tf = Object::create($className,
-			$this->modelClass,
-			false,
-			$datalist,
-			$fieldConfig = GridFieldConfig_RecordEditor::create($numItemsPerPage)
-				->addComponent(new GridFieldExportButton())->removeComponentsByType('GridFieldFilterHeader')
-		)->setDisplayFields($this->getResultColumns($searchCriteria));
-
-		return $tf;
-	}
-	
-	/**
-	 * Shows results from the "search" action in a TableListField. 
-	 *
-	 * @uses getResultsTable()
-	 *
-	 * @return Form
-	 */
-	function ResultsForm($searchCriteria) {
-		if($searchCriteria instanceof SS_HTTPRequest) $searchCriteria = $searchCriteria->getVars();
-		
-		$tf = $this->getResultsTable($searchCriteria);
-		
-		// implemented as a form to enable further actions on the resultset
-		// (serverside sorting, export as CSV, etc)
-		$form = new Form(
-			$this,
-			'ResultsForm',
-			new FieldList(
-				new HeaderField('SearchResults', _t('ModelAdmin.SEARCHRESULTS','Search Results'), 2),
-				$tf
-			),
-			new FieldList()
-		);
-		
-		// Include the search criteria on the results form URL, but not dodgy variables like those below
-		$filteredCriteria = $searchCriteria;
-		unset($filteredCriteria['ctf']);
-		unset($filteredCriteria['url']);
-		unset($filteredCriteria['action_search']);
-
-		$form->setFormAction($this->Link() . '/ResultsForm?' . http_build_query($filteredCriteria));
-		return $form;
-	}
-	
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Create a new model record.
-	 *
-	 * @param unknown_type $request
-	 * @return unknown
-	 */
-	function add($request) {
-		return new SS_HTTPResponse(
-			$this->AddForm()->forTemplate(), 
-			200, 
-			sprintf(
-				_t('ModelAdmin.ADDFORM', "Fill out this form to add a %s to the database."),
-				$this->modelClass
-			)
-		);
-	}
-
-	/**
-	 * Returns a form suitable for adding a new model, falling back on the default edit form.
-	 * 
-	 * Caution: The add-form shows a DataObject's {@link DataObject->getCMSFields()} method on a record
-	 * that doesn't exist in the database yet, hence has no ID. This means the {@link DataObject->getCMSFields()}
-	 * implementation has to ensure that no fields are added which would rely on a
-	 * record ID being present, e.g. {@link HasManyComplexTableField}.
-	 * 
-	 * Example:
-	 * <code>
-	 * function getCMSFields() {
-	 *   $fields = parent::getCMSFields();
-	 *     if($this->exists()) {
-	 *       $ctf = new HasManyComplexTableField($this, 'MyRelations', 'MyRelation');
-	 *       $fields->addFieldToTab('Root.Main', $ctf);
-	 *     }
-	 *   return $fields;
-	 * }
-	 * </code>
-	 *
-	 * @return Form
-	 */
-	public function AddForm() {
-		$newRecord = new $this->modelClass();
-		
-		if($newRecord->canCreate()){
-			if($newRecord->hasMethod('getCMSAddFormFields')) {
-				$fields = $newRecord->getCMSAddFormFields();
-			} else {
-				$fields = $newRecord->getCMSFields();
-			}
-			
-			$validator = ($newRecord->hasMethod('getCMSValidator')) ? $newRecord->getCMSValidator() : new RequiredFields();
-
-			$actions = new FieldList (
-				FormAction::create("doCreate", _t('ModelAdmin.ADDBUTTON', "Add"))
-					->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
-			);
-
-			$form = new Form($this, "AddForm", $fields, $actions, $validator);
-			$form->loadDataFrom($newRecord);
-			$form->addExtraClass('cms-edit-form');
-			
-			return $form;
-		}
-	}
-	
-	function doCreate($data, $form, $request) {
-		$className = $this->getModelClass();
-		$model = new $className();
-		// We write before saveInto, since this will let us save has-many and many-many relationships :-)
-		$model->write();
-		$form->saveInto($model);
-		$model->write();
-		
-		if($this->isAjax()) {
-			$class = $this->parentController->getRecordControllerClass($this->getModelClass());
-			$recordController = new $class($this, $request, $model->ID);
-			return new SS_HTTPResponse(
-				$recordController->EditForm()->forTemplate(), 
-				200, 
-				sprintf(
-					_t('ModelAdmin.LOADEDFOREDITING', "Loaded '%s' for editing."),
-					$model->Title
-				)
-			);
-		} else {
-			Director::redirect(Controller::join_links($this->Link(), $model->ID , 'edit'));
-		}
-	}
-	
 	/**
 	 * @return ArrayList
 	 */
-	public function Breadcrumbs(){
-		return new ArrayList();
-	}
-}
+	public function Breadcrumbs($unlinked = false) {
+		$items = parent::Breadcrumbs($unlinked);
 
-/**
- * Handles operations on a single record from a managed model.
- * 
- * @package cms
- * @subpackage core
- * @todo change the parent controller varname to indicate the model scaffolding functionality in ModelAdmin
- */
-class ModelAdmin_RecordController extends Controller {
-	protected $parentController;
-	protected $currentRecord;
-	
-	static $allowed_actions = array('edit', 'view', 'EditForm', 'ViewForm');
-	
-	function __construct($parentController, $request, $recordID = null) {
-		$this->parentController = $parentController;
-		$modelName = $parentController->getModelClass();
-		$recordID = ($recordID) ? $recordID : $request->param('Action');
-		$this->currentRecord = DataObject::get_by_id($modelName, $recordID);
-		
-		parent::__construct();
-	}
-	
-	/**
-	 * Link fragment - appends the current record ID to the URL.
-	 */
-	public function Link($action = null) {
-		return $this->parentController->Link(Controller::join_links($this->currentRecord->ID, $action));
-	}
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Edit action - shows a form for editing this record
-	 */
-	function edit($request) {
-		if ($this->currentRecord) {
-			if($this->isAjax()) {
-				$this->response->setBody($this->EditForm()->forTemplate());
-				$this->response->setStatusCode(
-					200, 
-					sprintf(
-						_t('ModelAdmin.LOADEDFOREDITING', "Loaded '%s' for editing."),
-						$this->currentRecord->Title
-					)
-				);
-				return $this->response;
-			} else {
-				// This is really quite ugly; to fix will require a change in the way that customise() works. :-(
-				return $this->parentController->parentController->customise(array(
-					'Content' => $this->parentController->parentController->customise(array(
-						'EditForm' => $this->EditForm()
-					))->renderWith(array("{$this->class}_Content",'ModelAdmin_Content', 'LeftAndMain_Content'))
-				))->renderWith(array('ModelAdmin', 'LeftAndMain'));
-			}
+		// Show the class name rather than ModelAdmin title as root node
+		$models = $this->getManagedModels();
+		$modelSpec = ArrayLib::is_associative($models) ? $models[$this->modelClass] : null;
+		if(is_array($modelSpec) && isset($modelSpec['title'])) {
+			$items[0]->Title = $modelSpec['title'];
 		} else {
-			return _t('ModelAdmin.ITEMNOTFOUND', "I can't find that item");
+			$items[0]->Title = singleton($this->modelClass)->i18n_singular_name();
 		}
+		
+		return $items;
 	}
 
 	/**
-	 * Returns a form for editing the attached model
+	 * overwrite the static page_length of the admin panel, 
+	 * should be called in the project _config file.
 	 */
-	public function EditForm() {
-		$fields = $this->currentRecord->getCMSFields();
-		$fields->push(new HiddenField("ID"));
-		
-		if($this->currentRecord->hasMethod('Link')) {
-			$fields->push(new LiteralField('SilverStripeNavigator', $this->getSilverStripeNavigator()));
-		}
-		
-		$validator = ($this->currentRecord->hasMethod('getCMSValidator')) ? $this->currentRecord->getCMSValidator() : new RequiredFields();
-		
-		$actions = $this->currentRecord->getCMSActions();
-		if($this->currentRecord->canEdit(Member::currentUser())){
-			if(!$actions->fieldByName('action_doSave') && !$actions->fieldByName('action_save')) {
-				$actions->push(
-					FormAction::create("doSave", _t('ModelAdmin.SAVE', "Save"))
-						->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
-				);
-			}
-		}else{
-			$fields = $fields->makeReadonly();
-		}
-		
-		if($this->currentRecord->canDelete(Member::currentUser())) {
-			if(!$actions->fieldByName('action_doDelete')) {
-				$actions->unshift(
-					FormAction::create('doDelete', _t('ModelAdmin.DELETE', 'Delete'))
-						->addExtraClass('ss-ui-action-destructive')->setAttribute('data-icon', 'delete')
-				);
-			}
-		}
-
-		$form = new Form($this, "EditForm", $fields, $actions, $validator);
-		$form->loadDataFrom($this->currentRecord);
-		$form->addExtraClass('cms-edit-form');
-
-		return $form;
+	static function set_page_length($length){
+		self::$page_length = $length;
 	}
-
-	/**
-	 * Postback action to save a record
-	 *
-	 * @param array $data
-	 * @param Form $form
-	 * @param SS_HTTPRequest $request
-	 * @return mixed
-	 */
-	function doSave($data, $form, $request) {
-		$form->saveInto($this->currentRecord);
-		
-		try {
-			$this->currentRecord->write();
-		} catch(ValidationException $e) {
-			$form->sessionMessage($e->getResult()->message(), 'bad');
-		}
-		
-		
-		// Behaviour switched on .
-		if($this->parentController->isAjax()) {
-			return $this->edit($request);
-		} else {
-			$this->parentController->redirectBack();
-		}
-	}	
 	
 	/**
-	 * Delete the current record
+	 * Return the static page_length of the admin, default as 30
 	 */
-	public function doDelete($data, $form, $request) {
-		if($this->currentRecord->canDelete(Member::currentUser())) {
-			$this->currentRecord->delete();
-			Director::redirect($this->parentController->Link('SearchForm?action=search'));
-		} else {
-			$this->parentController->redirectBack();
-		}
-		return;
-	}
-	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * Renders the record view template.
-	 * 
-	 * @param SS_HTTPRequest $request
-	 * @return mixed
-	 */
-	function view($request) {
-		if($this->currentRecord) {
-			$form = $this->ViewForm();
-			return $form->forTemplate();
-		} else {
-			return _t('ModelAdmin.ITEMNOTFOUND');
-		}
-	}
-
-	/**
-	 * Returns a form for viewing the attached model
-	 * 
-	 * @return Form
-	 */
-	public function ViewForm() {
-		$fields = $this->currentRecord->getCMSFields();
-		$form = new Form($this, "EditForm", $fields, new FieldList());
-		$form->loadDataFrom($this->currentRecord);
-		$form->makeReadonly();
-		return $form;
-	}
-	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	function index() {
-		Director::redirect(Controller::join_links($this->Link(), 'edit'));
-	}
-	
-	function getCurrentRecord(){
-		return $this->currentRecord;
-	}
+	static function get_page_length(){
+		return self::$page_length;
+	} 
 	
 }
-
