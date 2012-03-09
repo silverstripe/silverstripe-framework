@@ -132,10 +132,14 @@ class GridFieldConfig_Base extends GridFieldConfig {
 	 */
 	public function __construct($itemsPerPage=null) {
 		$this->addComponent(new GridFieldToolbarHeader());
-		$this->addComponent(new GridFieldSortableHeader());
-		$this->addComponent(new GridFieldFilterHeader());
+		$this->addComponent($sort = new GridFieldSortableHeader());
+		$this->addComponent($filter = new GridFieldFilterHeader());
 		$this->addComponent(new GridFieldDataColumns());
-		$this->addComponent(new GridFieldPaginator($itemsPerPage));
+		$this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
+
+		$sort->throwExceptionOnBadDataType(false);
+		$filter->throwExceptionOnBadDataType(false);
+		$pagination->throwExceptionOnBadDataType(false);
 	}
 }
 
@@ -159,13 +163,17 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
 	 */
 	public function __construct($itemsPerPage=null) {
 		$this->addComponent(new GridFieldToolbarHeader());
-		$this->addComponent(new GridFieldSortableHeader());
-		$this->addComponent(new GridFieldFilterHeader());
+		$this->addComponent($sort = new GridFieldSortableHeader());
+		$this->addComponent($filter = new GridFieldFilterHeader());
 		$this->addComponent(new GridFieldDataColumns());
 		$this->addComponent(new GridFieldEditButton());
 		$this->addComponent(new GridFieldDeleteAction());
-		$this->addComponent(new GridFieldPaginator($itemsPerPage));
+		$this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
 		$this->addComponent(new GridFieldDetailForm());
+
+		$sort->throwExceptionOnBadDataType(false);
+		$filter->throwExceptionOnBadDataType(false);
+		$pagination->throwExceptionOnBadDataType(false);
 	}
 }
 
@@ -202,12 +210,16 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig {
 	public function __construct($itemsPerPage=null) {
 		$this->addComponent(new GridFieldToolbarHeader());
 		$this->addComponent(new GridFieldAddExistingAutocompleter());
-		$this->addComponent(new GridFieldSortableHeader());
-		$this->addComponent(new GridFieldFilterHeader());
+		$this->addComponent($sort = new GridFieldSortableHeader());
+		$this->addComponent($filter = new GridFieldFilterHeader());
 		$this->addComponent(new GridFieldDataColumns());
 		$this->addComponent(new GridFieldEditButton());
-		$this->addComponent(new GridFieldDeleteAction(true));
-		$this->addComponent(new GridFieldPaginator($itemsPerPage));
+		$this->addComponent(new GridFieldDeleteAction());
+		$this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
 		$this->addComponent(new GridFieldDetailForm());
+
+		$sort->throwExceptionOnBadDataType(false);
+		$filter->throwExceptionOnBadDataType(false);
+		$pagination->throwExceptionOnBadDataType(false);
 	}
 }
