@@ -219,7 +219,7 @@ class FieldList extends ArrayList {
 	 * @param string $newFieldTitle New title of field
 	 * @return boolean
 	 */
-	function renameField($fieldName, $newFieldTitle) {
+	public function renameField($fieldName, $newFieldTitle) {
 		$field = $this->dataFieldByName($fieldName);
 		if(!$field) return false;
 		
@@ -424,7 +424,7 @@ class FieldList extends ArrayList {
 	 * 
 	 * @return FieldList
 	 */
-	function HiddenFields() {
+	public function HiddenFields() {
 		$hiddenFields = new FieldList();
 		$dataFields = $this->dataFields();
 		
@@ -439,7 +439,7 @@ class FieldList extends ArrayList {
 	 * Return all fields except for the hidden fields.
 	 * Useful when making your own simplified form layouts.
 	 */
-	function VisibleFields() {
+	public function VisibleFields() {
 		$visibleFields = new FieldList();
 		
 		foreach($this as $field) {
@@ -455,7 +455,7 @@ class FieldList extends ArrayList {
 	 * 
 	 * @return FieldList
 	 */
-	function transform($trans) {
+	public function transform($trans) {
 		$this->flushFieldsCache();
 		$newFields = new FieldList();
 		foreach($this as $field) {
@@ -467,12 +467,12 @@ class FieldList extends ArrayList {
 	/**
 	 * Returns the root field set that this belongs to
 	 */
-	function rootFieldSet() {
+	public function rootFieldSet() {
 		if($this->containerField) return $this->containerField->rootFieldSet();
 		else return $this;
 	}
 	
-	function setContainerField($field) {
+	public function setContainerField($field) {
 		$this->containerField = $field;
 		return $this;
 	}
@@ -482,7 +482,7 @@ class FieldList extends ArrayList {
 	 *
 	 * @return FieldList
 	 */
-	function makeReadonly() {
+	public function makeReadonly() {
 		return $this->transform(new ReadonlyTransformation());
 	}
 
@@ -491,7 +491,7 @@ class FieldList extends ArrayList {
 	 * 
 	 * @param string|FormField
 	 */
-	function makeFieldReadonly($field) {
+	public function makeFieldReadonly($field) {
 		$fieldName = ($field instanceof FormField) ? $field->getName() : $field;
 		$srcField = $this->dataFieldByName($fieldName);
 		$this->replaceField($fieldName, $srcField->performReadonlyTransformation());
@@ -506,7 +506,7 @@ class FieldList extends ArrayList {
 	 *
 	 * @param array $fieldNames Field names can be given as an array, or just as a list of arguments.
 	 */
-	function changeFieldOrder($fieldNames) {
+	public function changeFieldOrder($fieldNames) {
 		// Field names can be given as an array, or just as a list of arguments.
 		if(!is_array($fieldNames)) $fieldNames = func_get_args();
 		
@@ -541,7 +541,7 @@ class FieldList extends ArrayList {
 	 * @param string|FormField
 	 * @return Position in children collection (first position starts with 0). Returns FALSE if the field can't be found.
 	 */
-	function fieldPosition($field) {
+	public function fieldPosition($field) {
 		if(is_object($field)) $field = $field->getName();
 		
 		$i = 0;
@@ -563,7 +563,7 @@ class FieldList extends ArrayList {
  * @subpackage fields-structural
  */
 class HiddenFieldList extends FieldList {
-	function forTemplate() {
+	public function forTemplate() {
 		$output = "";
 		foreach($this as $field) {
 			$output .= $field->Field();

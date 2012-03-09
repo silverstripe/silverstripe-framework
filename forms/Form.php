@@ -152,7 +152,7 @@ class Form extends RequestHandler {
 	 * @param FieldList $actions All of the action buttons in the form - a {@link FieldLis} of {@link FormAction} objects
 	 * @param Validator $validator Override the default validator instance (Default: {@link RequiredFields})
 	 */
-	function __construct($controller, $name, FieldList $fields, FieldList $actions, $validator = null) {
+	public function __construct($controller, $name, FieldList $fields, FieldList $actions, $validator = null) {
 		parent::__construct();
 		
 		if(!$fields instanceof FieldList) throw new InvalidArgumentException('$fields must be a valid FieldList instance');
@@ -198,7 +198,7 @@ class Form extends RequestHandler {
 	 * Set up current form errors in session to
 	 * the current form if appropriate.
 	 */
-	function setupFormErrors() {
+	public function setupFormErrors() {
 		$errorInfo = Session::get("FormInfo.{$this->FormName()}");
 
 		if(isset($errorInfo['errors']) && is_array($errorInfo['errors'])) {
@@ -228,7 +228,7 @@ class Form extends RequestHandler {
 	 * and only triggers the requested form action/method
 	 * if the form is valid.
 	 */
-	function httpSubmission($request) {
+	public function httpSubmission($request) {
 		$vars = $request->requestVars();
 		if(isset($funcName)) {
 			Form::set_current_action($funcName);
@@ -384,7 +384,7 @@ class Form extends RequestHandler {
 	 * @param SS_HTTPRequest $request
 	 * @return FormField
 	 */
-	function handleField($request) {
+	public function handleField($request) {
 		$field = $this->Fields()->dataFieldByName($request->param('FieldName'));
 		
 		if($field) {
@@ -398,7 +398,7 @@ class Form extends RequestHandler {
 	/**
 	 * Convert this form into a readonly form
 	 */
-	function makeReadonly() {
+	public function makeReadonly() {
 		$this->transform(new ReadonlyTransformation());
 	}
 	
@@ -428,7 +428,7 @@ class Form extends RequestHandler {
 	 * Add an error message to a field on this form.  It will be saved into the session
 	 * and used the next time this form is displayed.
 	 */
-	function addErrorMessage($fieldName, $message, $messageType) {
+	public function addErrorMessage($fieldName, $message, $messageType) {
 		Session::add_to_array("FormInfo.{$this->FormName()}.errors",  array(
 			'fieldName' => $fieldName,
 			'message' => $message,
@@ -436,7 +436,7 @@ class Form extends RequestHandler {
 		));
 	}
 
-	function transform(FormTransformation $trans) {
+	public function transform(FormTransformation $trans) {
 		$newFields = new FieldList();
 		foreach($this->fields as $field) {
 			$newFields->push($field->transform($trans));
@@ -459,14 +459,14 @@ class Form extends RequestHandler {
 	 * Get the {@link Validator} attached to this form.
 	 * @return Validator
 	 */
-	function getValidator() {
+	public function getValidator() {
 		return $this->validator;
 	}
 
 	/**
 	 * Set the {@link Validator} on this form.
 	 */
-	function setValidator( Validator $validator ) {
+	public function setValidator( Validator $validator ) {
 		if($validator) {
 			$this->validator = $validator;
 			$this->validator->setForm($this);
@@ -477,14 +477,14 @@ class Form extends RequestHandler {
 	/**
 	 * Remove the {@link Validator} from this from.
 	 */
-	function unsetValidator(){
+	public function unsetValidator(){
 		$this->validator = null;
 	}
 
 	/**
 	 * Convert this form to another format.
 	 */
-	function transformTo(FormTransformation $format) {
+	public function transformTo(FormTransformation $format) {
 		$newFields = new FieldList();
 		foreach($this->fields as $field) {
 			$newFields->push($field->transformTo($format));
@@ -525,7 +525,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return FieldList The form fields
 	 */
-	function Fields() {
+	public function Fields() {
 		foreach($this->getExtraFields() as $field) {
 			if(!$this->fields->fieldByName($field->getName())) $this->fields->push($field);
 		}
@@ -540,7 +540,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return FieldList
 	 */
-	function HiddenFields() {
+	public function HiddenFields() {
 		return $this->fields->HiddenFields();
 	}
 
@@ -548,7 +548,7 @@ class Form extends RequestHandler {
 	 * Return all fields except for the hidden fields.
 	 * Useful when making your own simplified form layouts.
 	 */
-	function VisibleFields() {
+	public function VisibleFields() {
 		return $this->fields->VisibleFields();
 	}
 	
@@ -557,7 +557,7 @@ class Form extends RequestHandler {
 	 *
 	 * @param FieldList $fields
 	 */
-	function setFields($fields) {
+	public function setFields($fields) {
 		$this->fields = $fields;
 		return $this;
 	}
@@ -570,7 +570,7 @@ class Form extends RequestHandler {
 	 * @deprecated 3.0 Use Fields() and FieldList API instead
 	 * @return FormField
 	 */
-	function dataFieldByName($name) {
+	public function dataFieldByName($name) {
 		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
 
 		foreach($this->getExtraFields() as $field) {
@@ -585,7 +585,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return FieldList The action list
 	 */
-	function Actions() {
+	public function Actions() {
 		return $this->actions;
 	}
 
@@ -594,7 +594,7 @@ class Form extends RequestHandler {
 	 *
 	 * @param FieldList $actions
 	 */
-	function setActions($actions) {
+	public function setActions($actions) {
 		$this->actions = $actions;
 		return $this;
 	}
@@ -602,7 +602,7 @@ class Form extends RequestHandler {
 	/**
 	 * Unset all form actions
 	 */
-	function unsetAllActions(){
+	public function unsetAllActions(){
 		$this->actions = new FieldList();
 		return $this;
 	}
@@ -613,7 +613,7 @@ class Form extends RequestHandler {
 	 * @deprecated 3.0 Use Actions() and FieldList API instead
 	 * @param string $name
 	 */
-	function unsetActionByName($name) {
+	public function unsetActionByName($name) {
 		Deprecation::notice('3.0', 'Use Actions() and FieldList API instead');
 
 		$this->actions->removeByName($name);
@@ -623,7 +623,7 @@ class Form extends RequestHandler {
 	 * @param String
 	 * @param String
 	 */
-	function setAttribute($name, $value) {
+	public function setAttribute($name, $value) {
 		$this->attributes[$name] = $value;
 		return $this;
 	}
@@ -631,11 +631,11 @@ class Form extends RequestHandler {
 	/**
 	 * @return String
 	 */
-	function getAttribute($name) {
+	public function getAttribute($name) {
 		return @$this->attributes[$name];
 	}
 
-	function getAttributes() {
+	public function getAttributes() {
 		$attrs = array(
 			'id' => $this->FormName(),
 			'action' => $this->FormAction(),
@@ -659,7 +659,7 @@ class Form extends RequestHandler {
 	 *
 	 * @deprecated 3.0 Use Fields() and FieldList API instead
 	 */
-	function unsetDataFieldByName($fieldName){
+	public function unsetDataFieldByName($fieldName){
 		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
 
 		foreach($this->Fields()->dataFields() as $child) {
@@ -685,7 +685,7 @@ class Form extends RequestHandler {
 	 * If at least one argument is passed as a string, all arguments act as excludes by name.
 	 * @return String HTML attributes, ready for insertion into an HTML tag
 	 */
-	function getAttributesHTML($attrs = null) {
+	public function getAttributesHTML($attrs = null) {
 		$exclude = (is_string($attrs)) ? func_get_args() : null;
 
 		if(!$attrs || is_string($attrs)) $attrs = $this->getAttributes();
@@ -710,7 +710,7 @@ class Form extends RequestHandler {
 		return implode(' ', $parts);
 	}
 
-	function FormAttributes() {
+	public function FormAttributes() {
 		return $this->getAttributesHTML();
 	}
 
@@ -719,7 +719,7 @@ class Form extends RequestHandler {
 	* 
 	* @param target The value of the target
 	*/
-	function setTarget($target) {
+	public function setTarget($target) {
 		$this->target = $target;
 		return $this;
 	}
@@ -728,7 +728,7 @@ class Form extends RequestHandler {
 	 * Set the legend value to be inserted into
 	 * the <legend> element in the Form.ss template.
 	 */
-	function setLegend($legend) {
+	public function setLegend($legend) {
 		$this->legend = $legend;
 		return $this;
 	}
@@ -739,7 +739,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @param string $template The name of the template (without the .ss extension)
 	 */
-	function setTemplate($template) {
+	public function setTemplate($template) {
 		$this->template = $template;
 		return $this;
 	}
@@ -751,7 +751,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return string
 	 */
-	function getTemplate() {
+	public function getTemplate() {
 		if($this->template) return $this->template;
 		else return $this->class;
 	}
@@ -808,7 +808,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return string HTTP method
 	 */
-	function FormHttpMethod() {
+	public function FormHttpMethod() {
 		return $this->formMethod;
 	}
 	
@@ -818,7 +818,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return string Form tag compatbile HTTP method: 'get' or 'post'
 	 */
-	function FormMethod() {
+	public function FormMethod() {
 		if(in_array($this->formMethod,array('get','post'))) {
 			return $this->formMethod;
 		} else {
@@ -831,7 +831,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @param $method string
 	 */
-	function setFormMethod($method) {
+	public function setFormMethod($method) {
 		$this->formMethod = strtolower($method);
 		return $this;
 	}
@@ -842,7 +842,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return string 
 	 */
-	function FormAction() {
+	public function FormAction() {
 		if ($this->formActionPath) {
 			return $this->formActionPath;
 		} elseif($this->controller->hasMethod("FormObjectLink")) {
@@ -861,7 +861,7 @@ class Form extends RequestHandler {
 	 * Note: For "normal" forms, you shouldn't need to use this method.  It is recommended only for situations where you have
 	 * two relatively distinct parts of the system trying to communicate via a form post.
 	 */
-	function setFormAction($path) {
+	public function setFormAction($path) {
 		$this->formActionPath = $path;
 		return $this;
 	}
@@ -874,7 +874,7 @@ class Form extends RequestHandler {
 	/**
 	 * Returns the name of the form
 	 */
-	function FormName() {
+	public function FormName() {
 		if($this->htmlID) return $this->htmlID;
 		else return $this->class . '_' . str_replace(array('.','/'),'',$this->name);
 	}
@@ -882,21 +882,21 @@ class Form extends RequestHandler {
 	/**
 	 * Set the HTML ID attribute of the form
 	 */
-	function setHTMLID($id) {
+	public function setHTMLID($id) {
 		$this->htmlID = $id;
 	}
 	
 	/**
 	 * Returns this form's controller
 	 */
-	function Controller() {
+	public function Controller() {
 		return $this->controller;
 	}
 	
 	/**
 	 * @return string
 	 */
-	function Name() {
+	public function Name() {
 		return $this->name;
 	}
 	
@@ -905,7 +905,7 @@ class Form extends RequestHandler {
 	 * That method will return the field itself.
 	 * It means that you can execute $firstNameField = $form->FieldMap()->FirstName(), which can be handy
 	 */
-	function FieldMap() {
+	public function FieldMap() {
 		return new Form_FieldMap($this);
 	}
 
@@ -916,7 +916,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return string
 	 */
-	function Message() {
+	public function Message() {
 		$this->getMessageFromSession();
 		$message = $this->message;
 		$this->clearMessage();
@@ -926,7 +926,7 @@ class Form extends RequestHandler {
 	/**
 	 * @return string
 	 */
-	function MessageType() {
+	public function MessageType() {
 		$this->getMessageFromSession();
 		return $this->messageType;
 	}
@@ -948,7 +948,7 @@ class Form extends RequestHandler {
 	 * @param message the text of the message
 	 * @param type Should be set to good, bad, or warning.
 	 */
-	function setMessage($message, $type) {
+	public function setMessage($message, $type) {
 		$this->message = $message;
 		$this->messageType = $type;
 		return $this;
@@ -960,22 +960,22 @@ class Form extends RequestHandler {
 	 * @param message the text of the message
 	 * @param type Should be set to good, bad, or warning.
 	 */
-	function sessionMessage($message, $type) {
+	public function sessionMessage($message, $type) {
 		Session::set("FormInfo.{$this->FormName()}.formError.message", $message);
 		Session::set("FormInfo.{$this->FormName()}.formError.type", $type);
 	}
 
-	static function messageForForm( $formName, $message, $type ) {
+	public static function messageForForm( $formName, $message, $type ) {
 		Session::set("FormInfo.{$formName}.formError.message", $message);
 		Session::set("FormInfo.{$formName}.formError.type", $type);
 	}
 
-	function clearMessage() {
+	public function clearMessage() {
 		$this->message  = null;
 		Session::clear("FormInfo.{$this->FormName()}.errors");
 		Session::clear("FormInfo.{$this->FormName()}.formError");
 	}
-	function resetValidation() {
+	public function resetValidation() {
 		Session::clear("FormInfo.{$this->FormName()}.errors");
 	}
 
@@ -985,7 +985,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return DataObject
 	 */
-	function getRecord() {
+	public function getRecord() {
 		return $this->record;
 	}
 	
@@ -995,7 +995,7 @@ class Form extends RequestHandler {
 	 *
 	 * @return string
 	 */
-	function getLegend() {
+	public function getLegend() {
 		return $this->legend;
 	}
 
@@ -1062,7 +1062,7 @@ class Form extends RequestHandler {
 	 * @param $fieldList An optional list of fields to process.  This can be useful when you have a 
 	 * form that has some fields that save to one object, and some that save to another.
 	 */
-	function loadDataFrom($data, $clearMissingFields = false, $fieldList = null) {
+	public function loadDataFrom($data, $clearMissingFields = false, $fieldList = null) {
 		if(!is_object($data) && !is_array($data)) {
 			user_error("Form::loadDataFrom() not passed an array or an object", E_USER_WARNING);
 			return false;
@@ -1125,7 +1125,7 @@ class Form extends RequestHandler {
 	 * @param $fieldList An optional list of fields to process.  This can be useful when you have a 
 	 * form that has some fields that save to one object, and some that save to another.
 	 */
-	function saveInto(DataObjectInterface $dataObject, $fieldList = null) {
+	public function saveInto(DataObjectInterface $dataObject, $fieldList = null) {
 		$dataFields = $this->fields->saveableFields();
 		$lastField = null;
 		if($dataFields) foreach($dataFields as $field) {
@@ -1156,7 +1156,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return array
 	 */
-	function getData() {
+	public function getData() {
 		$dataFields = $this->fields->dataFields();
 		$data = array();
 		
@@ -1178,7 +1178,7 @@ class Form extends RequestHandler {
 	 * @param string $fieldName
 	 * @param mixed $fieldValue
 	 */
-	function resetField($fieldName, $fieldValue = null) {
+	public function resetField($fieldName, $fieldValue = null) {
 		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
 
 		$dataFields = $this->fields->dataFields();
@@ -1196,7 +1196,7 @@ class Form extends RequestHandler {
 	 * @param fieldName The name of the field.  Can be overridden by $_REQUEST[fieldName]
 	 * @param methodName The name of the field.  Can be overridden by $_REQUEST[methodName]
 	 */
-	function callfieldmethod($data) {
+	public function callfieldmethod($data) {
 		$fieldName = $data['fieldName'];
 		$methodName = $data['methodName'];
 		$fields = $this->fields->dataFields();
@@ -1226,7 +1226,7 @@ class Form extends RequestHandler {
 	 * This is returned when you access a form as $FormObject rather
 	 * than <% control FormObject %>
 	 */
-	function forTemplate() {
+	public function forTemplate() {
 		return $this->renderWith(array_merge(
 			(array)$this->getTemplate(),
 			array('Form')
@@ -1237,7 +1237,7 @@ class Form extends RequestHandler {
 	 * Return a rendered version of this form, suitable for ajax post-back.
 	 * It triggers slightly different behaviour, such as disabling the rewriting of # links
 	 */
-	function forAjaxTemplate() {
+	public function forAjaxTemplate() {
 		$view = new SSViewer(array(
 			$this->getTemplate(),
 			'Form'
@@ -1251,7 +1251,7 @@ class Form extends RequestHandler {
 	 * Attaches 3 extra hidden files, _form_action, _form_name, _form_method, and _form_enctype.  These are
 	 * the attributes of the form.  These fields can be used to send the form to Ajax.
 	 */
-	function formHtmlContent() {
+	public function formHtmlContent() {
 		$this->IncludeFormTag = false;
 		$content = $this->forTemplate();
 		$this->IncludeFormTag = true;
@@ -1268,7 +1268,7 @@ class Form extends RequestHandler {
 	 * Render this form using the given template, and return the result as a string
 	 * You can pass either an SSViewer or a template name
 	 */
-	function renderWithoutActionButton($template) {
+	public function renderWithoutActionButton($template) {
 		$custom = $this->customise(array(
 			"Actions" => "",
 		));
@@ -1282,12 +1282,12 @@ class Form extends RequestHandler {
 	 * Sets the button that was clicked.  This should only be called by the Controller.
 	 * @param funcName The name of the action method that will be called.
 	 */
-	function setButtonClicked($funcName) {
+	public function setButtonClicked($funcName) {
 		$this->buttonClickedFunc = $funcName;
 		return $this;
 	}
 
-	function buttonClicked() {
+	public function buttonClicked() {
 		foreach($this->actions as $action) {
 			if($this->buttonClickedFunc == $action->actionName()) return $action;
 		}
@@ -1296,7 +1296,7 @@ class Form extends RequestHandler {
 	/**
 	 * Return the default button that should be clicked when another one isn't available
 	 */
-	function defaultAction() {
+	public function defaultAction() {
 		if($this->hasDefaultAction && $this->actions)
 			return $this->actions->First();
 	}
@@ -1306,7 +1306,7 @@ class Form extends RequestHandler {
 	 * Ordinarily, when a form is processed and no action_XXX button is available, then the first button in the actions list
 	 * will be pressed.  However, if this is "delete", for example, this isn't such a good idea.
 	 */
-	function disableDefaultAction() {
+	public function disableDefaultAction() {
 		$this->hasDefaultAction = false;
 		return $this;
 	}
@@ -1318,7 +1318,7 @@ class Form extends RequestHandler {
 	 * 
 	 * Check for token state with {@link getSecurityToken()} and {@link SecurityToken->isEnabled()}.
 	 */
-	function disableSecurityToken() {
+	public function disableSecurityToken() {
 		$this->securityToken = new NullSecurityToken();
 		return $this;
 	}
@@ -1328,7 +1328,7 @@ class Form extends RequestHandler {
 	 * 
 	 * Check for token state with {@link getSecurityToken()} and {@link SecurityToken->isEnabled()}.
 	 */
-	function enableSecurityToken() {
+	public function enableSecurityToken() {
 		$this->securityToken = new SecurityToken();
 		return $this;
 	}
@@ -1343,7 +1343,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @deprecated 2.5 Use SecurityToken::disable()
 	 */
-	static function disable_all_security_tokens() {
+	public static function disable_all_security_tokens() {
 		Deprecation::notice('2.5', 'Use SecurityToken::disable() instead.');
 		SecurityToken::disable();
 	}
@@ -1356,7 +1356,7 @@ class Form extends RequestHandler {
 	 *
 	 * @return bool
 	 */
-	function securityTokenEnabled() {
+	public function securityTokenEnabled() {
 		Deprecation::notice('2.5', 'Use Form->getSecurityToken()->isEnabled() instead.');
 		return $this->securityToken->isEnabled();
 	}
@@ -1368,7 +1368,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return SecurityToken|null
 	 */
-	function getSecurityToken() {
+	public function getSecurityToken() {
 		return $this->securityToken;
 	}
 		
@@ -1379,7 +1379,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return string
 	 */
-	static function single_field_required() {
+	public static function single_field_required() {
 		if(self::current_action() == 'callfieldmethod') return $_REQUEST['fieldName'];
 	}
 
@@ -1387,14 +1387,14 @@ class Form extends RequestHandler {
 	 * Return the current form action being called, if available.
 	 * This is useful for optimising your forms
 	 */
-	static function current_action() {
+	public static function current_action() {
 		return self::$current_action;
 	}
 
 	/**
 	 * Set the current form action.  Should only be called by Controller.
 	 */
-	static function set_current_action($action) {
+	public static function set_current_action($action) {
 		self::$current_action = $action;
 	}
 	
@@ -1403,7 +1403,7 @@ class Form extends RequestHandler {
 	 * 
 	 * @return string
 	 */
-	function extraClass() {		
+	public function extraClass() {		
 		return implode(array_unique($this->extraClasses), ' ');
 	}
 	
@@ -1414,7 +1414,7 @@ class Form extends RequestHandler {
 	 * @param string $class A string containing a classname or several class
 	 *				names delimited by a single space.
 	 */
-	function addExtraClass($class) {
+	public function addExtraClass($class) {
 		$classes = explode(' ', $class);
 		
 		foreach($classes as $class) {
@@ -1432,13 +1432,13 @@ class Form extends RequestHandler {
 	 *
 	 * @param string $class
 	 */
-	function removeExtraClass($class) {
+	public function removeExtraClass($class) {
 		$classes = explode(' ', $class);
 		$this->extraClasses = array_diff($this->extraClasses, $classes);
 		return $this;
 	}
 	
-	function debug() {
+	public function debug() {
 		$result = "<h3>$this->class</h3><ul>";
 		foreach($this->fields as $field) {
 			$result .= "<li>$field" . $field->debug() . "</li>";
@@ -1460,7 +1460,7 @@ class Form extends RequestHandler {
 	 * Test a submission of this form.
 	 * @return SS_HTTPResponse the response object that the handling controller produces.  You can interrogate this in your unit test.
 	 */
-	function testSubmission($action, $data) {
+	public function testSubmission($action, $data) {
 		$data['action_' . $action] = true;
         
         return Director::test($this->FormAction(), $data, Controller::curr()->getSession());
@@ -1473,7 +1473,7 @@ class Form extends RequestHandler {
 	 * Test an ajax submission of this form.
 	 * @return SS_HTTPResponse the response object that the handling controller produces.  You can interrogate this in your unit test.
 	 */
-	function testAjaxSubmission($action, $data) {
+	public function testAjaxSubmission($action, $data) {
 		$data['ajax'] = 1;
 		return $this->testSubmission($action, $data);
 	}
@@ -1486,7 +1486,7 @@ class Form extends RequestHandler {
 class Form_FieldMap extends ViewableData {
 	protected $form;
 	
-	function __construct($form) {
+	public function __construct($form) {
 		$this->form = $form;
 		parent::__construct();
 	}
@@ -1494,11 +1494,11 @@ class Form_FieldMap extends ViewableData {
 	/**
 	 * Ensure that all potential method calls get passed to __call(), therefore to dataFieldByName
 	 */
-	function hasMethod($method) {
+	public function hasMethod($method) {
 		return true;
 	}
 
-	function __call($method, $args = null) {
+	public function __call($method, $args = null) {
 		return $this->form->Fields()->fieldByName($method);
 	}
 }
