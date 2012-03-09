@@ -45,10 +45,10 @@ class SS_DatetimeTest extends SapphireTest {
 		$this->assertNull($date->getValue(), 'Boolean FALSE evaluates to NULL');
 
 		$date = DBField::create('SS_Datetime', '0');
-		$this->assertEquals('1970-01-01 12:00:00', $date->getValue(), 'Zero is UNIX epoch time');
+		$this->assertEquals('1970-01-01 12:00:00', $date->getValue(), 'String zero is UNIX epoch time');
 
 		$date = DBField::create('SS_Datetime', 0);
-		$this->assertEquals('1970-01-01 12:00:00', $date->getValue(), 'Zero is UNIX epoch time');
+		$this->assertEquals('1970-01-01 12:00:00', $date->getValue(), 'Numeric zero is UNIX epoch time');
 	}
 
 }
