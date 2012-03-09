@@ -269,10 +269,6 @@ class DatetimeField extends FormField {
 		return ($dateValid && $timeValid);
 	}
 	
-	function jsValidation() {
-		return $this->dateField->jsValidation() . $this->timeField->jsValidation();
-	}
-	
 	function performReadonlyTransformation() {
 		$field = new DatetimeField_Readonly($this->name, $this->title, $this->dataValue());
 		$field->setForm($this->form);
@@ -312,10 +308,6 @@ class DatetimeField_Readonly extends DatetimeField {
 		}
 		
 		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";
-	}
-	
-	function jsValidation() {
-		return null;
 	}
 	
 	function validate($validator) {

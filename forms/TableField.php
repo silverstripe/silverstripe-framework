@@ -484,41 +484,6 @@ class TableField extends TableListField {
 		return $this;
 	}
 	
-	function jsValidation() {
-		$js = "";
-
-		$items = $this->Items();
-		if($items) foreach($items as $item) {
-			foreach($item->Fields() as $field) {
-				//if the field type has some special specific specification for validation of itself
-				$js .= $field->jsValidation($this->form->class."_".$this->form->Name());
-			}
-		}
-		
-		// TODO Implement custom requiredFields
-		$items = $this->sourceItems(); 
-		if($items && $this->requiredFields && $items->count()) {
-			foreach ($this->requiredFields as $field) {
-				foreach($items as $item){
-					$cellName = $this->getName().'['.$item->ID.']['.$field.']';
-					$js .= "\n";
-					if($fields->dataFieldByName($cellName)) {
-						$js .= <<<JS
-if(typeof fromAnOnBlur != 'undefined'){
-	if(fromAnOnBlur.name == '$cellName')
-		require(fromAnOnBlur);
-}else{
-	require('$cellName');
-}
-JS;
-					}
-				}
-			}
-		}
-
-		return $js;
-	}
-	
 	function php($data) {
 		$valid = true;
 		

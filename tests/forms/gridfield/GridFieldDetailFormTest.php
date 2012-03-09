@@ -5,7 +5,8 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 	protected $extraDataObjects = array(
 		'GridFieldDetailFormTest_Person',
-		'GridFieldDetailFormTest_PeopleGroup'
+		'GridFieldDetailFormTest_PeopleGroup',
+		'GridFieldDetailFormTest_Category',
 	);
 	
 
@@ -82,6 +83,47 @@ class GridFieldDetailFormTest extends FunctionalTest {
         $firstperson = $group->People()->First();
         $this->assertEquals($firstperson->Surname, 'Baggins');
 	}
+
+	function testNestedEditForm() {
+		$this->logInWithPermission('ADMIN');
+
+		$group = $this->objFromFixture('GridFieldDetailFormTest_PeopleGroup', 'group');
+		$person = $group->People()->First();
+		$category = $person->Categories()->First();
+
+		// Get first form (GridField managing PeopleGroup)
+		$response = $this->get('GridFieldDetailFormTest_GroupController');
+		$this->assertFalse($response->isError());
+		$parser = new CSSContentParser($response->getBody());
+
+		$groupEditLink = $parser->getByXpath('//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $group->ID . '")]//a');
+		$this->assertEquals(
+			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/1/edit',
+			(string)$groupEditLink[0]['href']
+		);
+
+		// Get second level form (GridField managing Person)
+		$response = $this->get((string)$groupEditLink[0]['href']);
+		$this->assertFalse($response->isError());
+		$parser = new CSSContentParser($response->getBody());
+		$personEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_People"]//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $person->ID . '")]//a');		
+		$this->assertEquals(
+			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/1/ItemEditForm/field/People/item/1/edit',
+			(string)$personEditLink[0]['href']
+		);
+
+		// Get third level form (GridField managing Category)
+		$response = $this->get((string)$personEditLink[0]['href']);
+		$this->assertFalse($response->isError());
+		$parser = new CSSContentParser($response->getBody());
+		$categoryEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_Categories"]//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $category->ID . '")]//a');	
+
+		// Get fourth level form (Category detail view)
+		$this->assertEquals(
+			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/1/ItemEditForm/field/People/item/1/ItemEditForm/field/Categories/item/1/edit',
+			(string)$categoryEditLink[0]['href']
+		);
+	}
 }
 
 class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
@@ -93,6 +135,22 @@ class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 	static $has_one = array(
 		'Group' => 'GridFieldDetailFormTest_PeopleGroup'
 	);
+
+	static $many_many = array(
+		'Categories' => 'GridFieldDetailFormTest_Category'
+	);
+
+	function getCMSFields() {
+		$fields = parent::getCMSFields();
+		// TODO No longer necessary once FormScaffolder uses GridField
+		$fields->replaceField('Categories',
+			Object::create('GridField', 'Categories', 'Categories',
+				$this->Categories(),
+				GridFieldConfig_RelationEditor::create()
+			)
+		);
+		return $fields;
+	}
 }
 
 class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly {
@@ -103,6 +161,40 @@ class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly
 	static $has_many = array(
 		'People' => 'GridFieldDetailFormTest_Person'
 	);
+	
+	function getCMSFields() {
+		$fields = parent::getCMSFields();
+		// TODO No longer necessary once FormScaffolder uses GridField
+		$fields->replaceField('People',
+			Object::create('GridField', 'People', 'People',
+				$this->People(),
+				GridFieldConfig_RelationEditor::create()
+			)
+		);
+		return $fields;
+	}
+}
+
+class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
+	static $db = array(
+		'Name' => 'Varchar'
+	);
+
+	static $belongs_many_many = array(
+		'People' => 'GridFieldDetailFormTest_Person'
+	);
+
+	function getCMSFields() {
+		$fields = parent::getCMSFields();
+		// TODO No longer necessary once FormScaffolder uses GridField
+		$fields->replaceField('People',
+			Object::create('GridField', 'People', 'People',
+				$this->People(),
+				GridFieldConfig_RelationEditor::create()
+			)
+		);
+		return $fields;
+	}
 }
 
 class GridFieldDetailFormTest_Controller extends Controller implements TestOnly {
@@ -120,4 +212,13 @@ class GridFieldDetailFormTest_Controller extends Controller implements TestOnly 
 	}
 }
 
-?>
+class GridFieldDetailFormTest_GroupController extends Controller implements TestOnly {
+	protected $template = 'BlankPage';
+
+	function Form() {
+		$field = new GridField('testfield', 'testfield', DataList::create('GridFieldDetailFormTest_PeopleGroup'));
+		$field->getConfig()->addComponent($gridFieldForm = new GridFieldPopupForms($this, 'Form'));
+		$field->getConfig()->addComponent(new GridFieldEditAction());
+		return new Form($this, 'Form', new FieldList($field), new FieldList());
+	}
+}
