@@ -53,14 +53,6 @@ class Security extends Controller {
 	protected static $encryptionAlgorithm = 'sha1_v2.4';
 
 	/**
-	 * Should a salt be used for the password encryption?
-	 * @deprecated 2.4 Please use a custom {@link PasswordEncryptor} instead
-	 *
-	 * @var bool
-	 */
-	protected static $useSalt = true;
-	
-	/**
 	 * Showing "Remember me"-checkbox 
 	 * on loginform, and saving encrypted credentials to a cookie. 
  	 *  
