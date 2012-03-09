@@ -73,7 +73,7 @@ class UploadField extends FileField {
 	 * Config for this field used in both, php and javascript (will be merged into the config of the javascript file upload plugin)
 	 * @var array
 	 */
-	protected $config = array(
+	protected $ufConfig = array(
 		/**
 		 * @var boolean
 		 */
@@ -265,7 +265,7 @@ class UploadField extends FileField {
 	 * @param mixed $val
 	 */
 	public function setConfig($key, $val) {
-		$this->config[$key] = $val;
+		$this->ufConfig[$key] = $val;
 		return $this;
 	}
 
@@ -274,7 +274,14 @@ class UploadField extends FileField {
 	 * @return mixed
 	 */
 	public function getConfig($key) {
-		return $this->config[$key];
+		return $this->ufConfig[$key];
+	}
+	
+	/**
+	 * Used to get config in the template
+	 */
+	public function getAutoUpload() {
+		return $this->getConfig('autoUpload');
 	}
 
 	/**
@@ -368,7 +375,7 @@ class UploadField extends FileField {
 		if (is_numeric($config['maxNumberOfFiles']) && $this->getItems()->count()) {
 			$configOverwrite['maxNumberOfFiles'] = $config['maxNumberOfFiles'] - $this->getItems()->count();
 		}
-		$config = array_merge($config, $this->config, $configOverwrite);
+		$config = array_merge($config, $this->ufConfig, $configOverwrite);
 		return $this->customise(array(
 			'configString' => str_replace('"', "'", Convert::raw2json($config)),
 			'config' => new ArrayData($config),
