@@ -10,7 +10,7 @@
  * WARNING: This is experimental and its API is subject to change.  Feel free to use it as long as you are happy of
  * refactoring your code in the future.
  */
-class GridFieldExporter implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler {
+class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler {
 
 	/**
 	 * @var array Map of a property name on the exported objects, with values being the column title in the CSV file.

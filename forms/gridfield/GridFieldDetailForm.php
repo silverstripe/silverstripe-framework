@@ -3,21 +3,21 @@
 /**
  * Provides view and edit forms at GridField-specific URLs.  
  * These can be placed into pop-ups by an appropriate front-end.
- * Usually added to a grid field alongside of {@link GridFieldEditAction}
+ * Usually added to a grid field alongside of {@link GridFieldEditButton}
  * which takes care of linking the individual rows to their edit view.
  * 
  * The URLs provided will be off the following form:
  *  - <FormURL>/field/<GridFieldName>/item/<RecordID>
  *  - <FormURL>/field/<GridFieldName>/item/<RecordID>/edit
  */
-class GridFieldPopupForms implements GridField_URLHandler {
+class GridFieldDetailForm implements GridField_URLHandler {
 
 
 
 	/**
 	 * @var String
 	 */
-	protected $template = 'GridFieldPopupForms';
+	protected $template = 'GridFieldDetailForm';
 
 	/**
 	 *

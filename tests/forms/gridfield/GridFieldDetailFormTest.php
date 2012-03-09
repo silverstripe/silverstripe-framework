@@ -1,23 +1,23 @@
 <?php
 
-class GridFieldPopupFormsTest extends FunctionalTest {
-	static $fixture_file = 'GridFieldPopupFormsTest.yml';
+class GridFieldDetailFormTest extends FunctionalTest {
+	static $fixture_file = 'GridFieldDetailFormTest.yml';
 
 	protected $extraDataObjects = array(
-		'GridFieldPopupFormsTest_Person',
-		'GridFieldPopupFormsTest_PeopleGroup',
-		'GridFieldPopupFormsTest_Category',
+		'GridFieldDetailFormTest_Person',
+		'GridFieldDetailFormTest_PeopleGroup',
+		'GridFieldDetailFormTest_Category',
 	);
 	
 
 	function testAddForm() {
 		$this->logInWithPermission('ADMIN');
-		$group = DataList::create('GridFieldPopupFormsTest_PeopleGroup')
+		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
 		            ->filter('Name', 'My Group')
 		            ->First();
 		$count = $group->People()->Count();
 
-		$response = $this->get('GridFieldPopupFormsTest_Controller');
+		$response = $this->get('GridFieldDetailFormTest_Controller');
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
 		$addlinkitem = $parser->getBySelector('.ss-gridfield .new-link');
@@ -40,7 +40,7 @@ class GridFieldPopupFormsTest extends FunctionalTest {
 		);
 		$this->assertFalse($response->isError());
 
-		$group = DataList::create('GridFieldPopupFormsTest_PeopleGroup')
+		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
             ->filter('Name', 'My Group')
             ->First();
         $this->assertEquals($count + 1, $group->People()->Count());
@@ -48,13 +48,13 @@ class GridFieldPopupFormsTest extends FunctionalTest {
 
 	function testEditForm() {
 		$this->logInWithPermission('ADMIN');
-		$group = DataList::create('GridFieldPopupFormsTest_PeopleGroup')
+		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
 		            ->filter('Name', 'My Group')
 		            ->First();
 		$firstperson = $group->People()->First();
 		$this->assertTrue($firstperson->Surname != 'Baggins');
 
-		$response = $this->get('GridFieldPopupFormsTest_Controller');
+		$response = $this->get('GridFieldDetailFormTest_Controller');
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
 		$editlinkitem = $parser->getBySelector('.ss-gridfield-items .first .edit-link');
@@ -77,7 +77,7 @@ class GridFieldPopupFormsTest extends FunctionalTest {
 		);
 		$this->assertFalse($response->isError());
 
-		$group = DataList::create('GridFieldPopupFormsTest_PeopleGroup')
+		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
             ->filter('Name', 'My Group')
             ->First();
         $firstperson = $group->People()->First();
@@ -87,18 +87,18 @@ class GridFieldPopupFormsTest extends FunctionalTest {
 	function testNestedEditForm() {
 		$this->logInWithPermission('ADMIN');
 
-		$group = $this->objFromFixture('GridFieldPopupFormsTest_PeopleGroup', 'group');
+		$group = $this->objFromFixture('GridFieldDetailFormTest_PeopleGroup', 'group');
 		$person = $group->People()->First();
 		$category = $person->Categories()->First();
 
 		// Get first form (GridField managing PeopleGroup)
-		$response = $this->get('GridFieldPopupFormsTest_GroupController');
+		$response = $this->get('GridFieldDetailFormTest_GroupController');
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
 
 		$groupEditLink = $parser->getByXpath('//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $group->ID . '")]//a');
 		$this->assertEquals(
-			'GridFieldPopupFormsTest_GroupController/Form/field/testfield/item/1/edit',
+			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/1/edit',
 			(string)$groupEditLink[0]['href']
 		);
 
@@ -108,7 +108,7 @@ class GridFieldPopupFormsTest extends FunctionalTest {
 		$parser = new CSSContentParser($response->getBody());
 		$personEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_People"]//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $person->ID . '")]//a');		
 		$this->assertEquals(
-			'GridFieldPopupFormsTest_GroupController/Form/field/testfield/item/1/ItemEditForm/field/People/item/1/edit',
+			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/1/ItemEditForm/field/People/item/1/edit',
 			(string)$personEditLink[0]['href']
 		);
 
@@ -120,24 +120,24 @@ class GridFieldPopupFormsTest extends FunctionalTest {
 
 		// Get fourth level form (Category detail view)
 		$this->assertEquals(
-			'GridFieldPopupFormsTest_GroupController/Form/field/testfield/item/1/ItemEditForm/field/People/item/1/ItemEditForm/field/Categories/item/1/edit',
+			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/1/ItemEditForm/field/People/item/1/ItemEditForm/field/Categories/item/1/edit',
 			(string)$categoryEditLink[0]['href']
 		);
 	}
 }
 
-class GridFieldPopupFormsTest_Person extends DataObject implements TestOnly {
+class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 	static $db = array(
 		'FirstName' => 'Varchar',
 		'Surname' => 'Varchar'
 	);
 
 	static $has_one = array(
-		'Group' => 'GridFieldPopupFormsTest_PeopleGroup'
+		'Group' => 'GridFieldDetailFormTest_PeopleGroup'
 	);
 
 	static $many_many = array(
-		'Categories' => 'GridFieldPopupFormsTest_Category'
+		'Categories' => 'GridFieldDetailFormTest_Category'
 	);
 
 	function getCMSFields() {
@@ -153,13 +153,13 @@ class GridFieldPopupFormsTest_Person extends DataObject implements TestOnly {
 	}
 }
 
-class GridFieldPopupFormsTest_PeopleGroup extends DataObject implements TestOnly {
+class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly {
 	static $db = array(
 		'Name' => 'Varchar'
 	);
 
 	static $has_many = array(
-		'People' => 'GridFieldPopupFormsTest_Person'
+		'People' => 'GridFieldDetailFormTest_Person'
 	);
 	
 	function getCMSFields() {
@@ -175,13 +175,13 @@ class GridFieldPopupFormsTest_PeopleGroup extends DataObject implements TestOnly
 	}
 }
 
-class GridFieldPopupFormsTest_Category extends DataObject implements TestOnly {
+class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
 	static $db = array(
 		'Name' => 'Varchar'
 	);
 
 	static $belongs_many_many = array(
-		'People' => 'GridFieldPopupFormsTest_Person'
+		'People' => 'GridFieldDetailFormTest_Person'
 	);
 
 	function getCMSFields() {
@@ -197,26 +197,26 @@ class GridFieldPopupFormsTest_Category extends DataObject implements TestOnly {
 	}
 }
 
-class GridFieldPopupFormsTest_Controller extends Controller implements TestOnly {
+class GridFieldDetailFormTest_Controller extends Controller implements TestOnly {
 	protected $template = 'BlankPage';
 
 	function Form() {
-		$group = DataList::create('GridFieldPopupFormsTest_PeopleGroup')
+		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
 		            ->filter('Name', 'My Group')
 		            ->First();
 
 		$field = new GridField('testfield', 'testfield', $group->People());
-		$field->getConfig()->addComponent($gridFieldForm = new GridFieldPopupForms($this, 'Form'));
-		$field->getConfig()->addComponent(new GridFieldEditAction());
+		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
+		$field->getConfig()->addComponent(new GridFieldEditButton());
 		return new Form($this, 'Form', new FieldList($field), new FieldList());
 	}
 }
 
-class GridFieldPopupFormsTest_GroupController extends Controller implements TestOnly {
+class GridFieldDetailFormTest_GroupController extends Controller implements TestOnly {
 	protected $template = 'BlankPage';
 
 	function Form() {
-		$field = new GridField('testfield', 'testfield', DataList::create('GridFieldPopupFormsTest_PeopleGroup'));
+		$field = new GridField('testfield', 'testfield', DataList::create('GridFieldDetailFormTest_PeopleGroup'));
 		$field->getConfig()->addComponent($gridFieldForm = new GridFieldPopupForms($this, 'Form'));
 		$field->getConfig()->addComponent(new GridFieldEditAction());
 		return new Form($this, 'Form', new FieldList($field), new FieldList());

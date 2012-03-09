@@ -29,10 +29,10 @@ class GridFieldTest extends SapphireTest {
 		$obj = new GridField('testfield', 'testfield');
 
 		$expectedComponents = new ArrayList(array(
-			new GridFieldTitle(),
+			new GridFieldToolbarHeader(),
 			new GridFieldSortableHeader,
-			new GridFieldFilter,
-			new GridFieldDefaultColumns,
+			new GridFieldFilterHeader,
+			new GridFieldDataColumns,
 			new GridFieldPaginator,
 			new GridState_Component,
 		));
@@ -48,13 +48,13 @@ class GridFieldTest extends SapphireTest {
 
 		$config = GridFieldConfig::create();
 		$config->addComponent(new GridFieldSortableHeader());
-		$config->addComponent(new GridFieldDefaultColumns());
+		$config->addComponent(new GridFieldDataColumns());
 
 		$obj = new GridField('testfield', 'testfield', ArrayList::create(array()),$config);
 
 		$expectedComponents = new ArrayList(array(
 			0 => new GridFieldSortableHeader,
-			1 => new GridFieldDefaultColumns,
+			1 => new GridFieldDataColumns,
 			2 => new GridState_Component,
 		));
 
@@ -430,7 +430,7 @@ class GridFieldTest extends SapphireTest {
 		));
 		
 		$config = new GridFieldConfig();
-		$config->addComponent(new GridFieldDefaultColumns());
+		$config->addComponent(new GridFieldDataColumns());
 		$obj = new GridField('testfield', 'testfield', $list, $config);
 		$form = new Form(new Controller(), 'mockform', new FieldList(array($obj)), new FieldList());
 		$content = new CSSContentParser($obj->FieldHolder());

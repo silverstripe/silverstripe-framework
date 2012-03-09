@@ -60,6 +60,23 @@ class GridFieldDeleteActionTest extends SapphireTest {
 		$this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
 		$this->assertEquals(2, $this->list->count(), 'User should be able to delete records with ADMIN permission.');
 	}
+	
+	public function testDeleteActionRemoveRelation() {
+		$this->logInWithPermission('ADMIN');
+		
+		$config = GridFieldConfig::create()->addComponent(new GridFieldDeleteAction(true));
+		
+		$gridField = new GridField('testfield', 'testfield', $this->list, $config);
+		$form = new Form(new Controller(), 'mockform', new FieldList(array($this->gridField)), new FieldList());
+		
+		$stateID = 'testGridStateActionField';
+		Session::set($stateID, array('grid'=>'', 'actionName'=>'deleterecord','args'=>array('RecordID'=>1)));
+		$request = new SS_HTTPRequest('POST', 'url', array(), array('action_gridFieldAlterAction?StateID='.$stateID=>true));
+		
+		$this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
+		$this->assertEquals(2, $this->list->count(), 'User should be able to delete records with ADMIN permission.');
+		
+	}
 }
 
 class GridFieldAction_Delete_Team extends DataObject implements TestOnly {

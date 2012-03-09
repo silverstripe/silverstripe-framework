@@ -88,15 +88,15 @@ class Group extends DataObject {
 		$parentidfield->setRightTitle('<span class="aligned_right_label">' . _t('Group.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles') . '</span>');
 
 		// Filter permissions
-		// TODO SecurityAdmin coupling, not easy to get to the form fields through GridFieldPopupForms
+		// TODO SecurityAdmin coupling, not easy to get to the form fields through GridFieldDetailForm
 		$permissionsField->setHiddenPermissions(SecurityAdmin::$hidden_permissions);
 
 		if($this->ID) {
 			$config = new GridFieldConfig_RelationEditor();
-			$config->addComponents(new GridFieldExporter());
-			$config->getComponentByType('GridFieldRelationAdd')
+			$config->addComponents(new GridFieldExportButton());
+			$config->getComponentByType('GridFieldAddExistingAutocompleter')
 				->setResultsFormat('$Title ($Email)')->setSearchFields(array('FirstName', 'Surname', 'Email'));
-			$config->getComponentByType('GridFieldPopupForms')->setValidator(new Member_Validator());
+			$config->getComponentByType('GridFieldDetailForm')->setValidator(new Member_Validator());
 			$memberList = Object::create('GridField', 'Members',false, $this->Members(), $config)->addExtraClass('members_grid');
 			// @todo Implement permission checking on GridField
 			//$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));

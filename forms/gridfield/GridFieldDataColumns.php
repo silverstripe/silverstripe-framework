@@ -6,7 +6,7 @@
  * @package sapphire
  * @subpackage fields-relational
  */
-class GridFieldDefaultColumns implements GridField_ColumnProvider {
+class GridFieldDataColumns implements GridField_ColumnProvider {
 
 	public function augmentColumns($gridField, &$columns) {
 		$baseColumns = array_keys($gridField->getDisplayFields());

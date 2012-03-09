@@ -1,5 +1,5 @@
 <?php
-class GridFieldRelationAddTest extends FunctionalTest {
+class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 
 	static $fixture_file = 'sapphire/tests/forms/gridfield/GridFieldTest.yml';
 
@@ -9,13 +9,13 @@ class GridFieldRelationAddTest extends FunctionalTest {
 		$team1 = $this->objFromFixture('GridFieldTest_Team', 'team1');
 		$team2 = $this->objFromFixture('GridFieldTest_Team', 'team2');
 
-		$response = $this->get('GridFieldRelationAddTest_Controller');
+		$response = $this->get('GridFieldAddExistingAutocompleterTest_Controller');
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
 		$btns = $parser->getBySelector('.ss-gridfield #action_gridfield_relationfind');
 
 		$response = $this->post(
-			'GridFieldRelationAddTest_Controller/Form/field/testfield/search/Team 2',
+			'GridFieldAddExistingAutocompleterTest_Controller/Form/field/testfield/search/Team 2',
 			array(
 				(string)$btns[0]['name'] => 1
 			)
@@ -26,7 +26,7 @@ class GridFieldRelationAddTest extends FunctionalTest {
 		$this->assertEquals(array($team2->ID => 'Team 2'), $result);
 
 		$response = $this->post(
-			'GridFieldRelationAddTest_Controller/Form/field/testfield/search/Unknown',
+			'GridFieldAddExistingAutocompleterTest_Controller/Form/field/testfield/search/Unknown',
 			array(
 				(string)$btns[0]['name'] => 1
 			)
@@ -41,7 +41,7 @@ class GridFieldRelationAddTest extends FunctionalTest {
 		$team1 = $this->objFromFixture('GridFieldTest_Team', 'team1');
 		$team2 = $this->objFromFixture('GridFieldTest_Team', 'team2');
 
-		$response = $this->get('GridFieldRelationAddTest_Controller');
+		$response = $this->get('GridFieldAddExistingAutocompleterTest_Controller');
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
 		$items = $parser->getBySelector('.ss-gridfield .ss-gridfield-items .ss-gridfield-item');
@@ -50,7 +50,7 @@ class GridFieldRelationAddTest extends FunctionalTest {
 
 		$btns = $parser->getBySelector('.ss-gridfield #action_gridfield_relationadd');
 		$response = $this->post(
-			'GridFieldRelationAddTest_Controller/Form/field/testfield',
+			'GridFieldAddExistingAutocompleterTest_Controller/Form/field/testfield',
 			array(
 				'relationID' => $team2->ID,
 				(string)$btns[0]['name'] => 1
@@ -67,15 +67,15 @@ class GridFieldRelationAddTest extends FunctionalTest {
 
 }
 
-class GridFieldRelationAddTest_Controller extends Controller implements TestOnly {
+class GridFieldAddExistingAutocompleterTest_Controller extends Controller implements TestOnly {
 
 	protected $template = 'BlankPage';
 
 	function Form() {
 		$player = DataObject::get('GridFieldTest_Player')->find('Email', 'player1@test.com');
 		$config = GridFieldConfig::create()->addComponents(
-			$relationComponent = new GridFieldRelationAdd('Name'),
-			new GridFieldDefaultColumns()
+			$relationComponent = new GridFieldAddExistingAutocompleter('Name'),
+			new GridFieldDataColumns()
 		);
 		$field = new GridField('testfield', 'testfield', $player->Teams(), $config);
 		return new Form($this, 'Form', new FieldList($field), new FieldList());

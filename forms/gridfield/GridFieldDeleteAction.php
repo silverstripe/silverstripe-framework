@@ -1,9 +1,27 @@
 <?php
 /**
  * This class is an GridField Component that add Delete action for Objects in the GridField.
- * See {@link GridFieldRelationDelete} for detaching an item from the current relationship instead.
+ * See {@link GridFieldRemoveButton} for detaching an item from the current relationship instead.
  */
 class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_ActionProvider {
+	
+	
+	/**
+	 * If this is set to true, this actionprovider will remove the object from the list, instead of 
+	 * deleting. In the case of a has one, has many or many many list it will uncouple the item from 
+	 * the list.
+	 *
+	 * @var boolean
+	 */
+	protected $removeRelation = false;
+	
+	/**
+	 *
+	 * @param boolean $unlinkRelation - true if removing the item from the list, but not deleting it
+	 */
+	public function __construct($unlinkRelation = false) {
+		$this->removeRelation = $unlinkRelation;
+	}
 	
 	/**
 	 * Add a column 'Delete'
@@ -58,7 +76,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	 * @return array 
 	 */
 	public function getActions($gridField) {
-		return array('deleterecord');
+		return array('deleterecord', 'unlinkrelation');
 	}
 	
 	/**
@@ -69,19 +87,20 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	 * @return string - the HTML for the column 
 	 */
 	public function getColumnContent($gridField, $record, $columnName) {
-		if(!$record->canDelete()) {
-			return;
+		if($this->removeRelation) {
+			$field = Object::create('GridField_FormAction', $gridField, 'UnlinkRelation'.$record->ID, false, "unlinkrelation", array('RecordID' => $record->ID))
+				->addExtraClass('gridfield-button-unlink')
+				->setAttribute('title', _t('GridAction.UnlinkRelation', "Unlink"))
+				->setAttribute('data-icon', 'chain--minus');
+		} else {
+			if(!$record->canDelete()) {
+				return;
+			}
+			$field = Object::create('GridField_FormAction', $gridField,  'DeleteRecord'.$record->ID, false, "deleterecord", array('RecordID' => $record->ID))
+				->addExtraClass('gridfield-button-delete')
+				->setAttribute('title', _t('GridAction.Delete', "Delete"))
+				->setAttribute('data-icon', 'decline');
 		}
-		$field = Object::create('GridField_FormAction',
-			$gridField, 
-			'DeleteRecord'.$record->ID, 
-			false, 
-			"deleterecord", 
-			array('RecordID' => $record->ID)
-		)
-			->addExtraClass('gridfield-button-delete')
-			->setAttribute('title', _t('GridAction.Delete', "delete"))
-			->setAttribute('data-icon', 'decline');
 		return $field->Field();
 	}
 	
@@ -95,15 +114,15 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	 * @return void
 	 */
 	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
-		if($actionName == 'deleterecord') {
-			$id = $arguments['RecordID'];
-			// Always deletes a record. Use GridFieldRelationDelete to detach it from the current relationship.
-			$item = $gridField->getList()->byID($id);
-			if(!$item->canDelete()) {
+		if($actionName == 'deleterecord' || $actionName == 'unlinkrelation') {
+			$item = $gridField->getList()->byID($arguments['RecordID']);
+			if(!$item) {
+				return;
+			}
+			if($actionName == 'deleterecord' && !$item->canDelete()) {
 				throw new ValidationException(_t('GridFieldAction_Delete.DeletePermissionsFailure',"No delete permissions"),0);
 			}
-			if(!$item) return;
-				$item->delete();
-		}
+			$gridField->getList()->remove($item);
+		} 
 	}
 }

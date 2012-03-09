@@ -4,17 +4,17 @@
  * as defined by the {@link RelationList} passed to the GridField constructor.
  * Objects can be searched through an input field (partially matching one or more fields).
  * Selecting from the results will add the object to the relation.
- * Often used alongside {@link GridFieldRelationDelete} for detaching existing records from a relatinship.
+ * Often used alongside {@link GridFieldRemoveButton} for detaching existing records from a relatinship.
  * For easier setup, have a look at a sample configuration in {@link GridFieldConfig_RelationEditor}.
  */
-class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
+class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
 	
 	/**
 	 * Which template to use for rendering
 	 * 
 	 * @var string $itemClass
 	 */
-	protected $itemClass = 'GridFieldRelationAdd';
+	protected $itemClass = 'GridFieldAddExistingAutocompleter';
 	
 	/**
 	 * Which columns that should be used for doing a "StartsWith" search.
@@ -161,7 +161,7 @@ class GridFieldRelationAdd implements GridField_HTMLProvider, GridField_ActionPr
 		$searchFields = ($this->getSearchFields()) ? $this->getSearchFields() : $this->scaffoldSearchFields($dataClass);
 		if(!$searchFields) {
 			throw new LogicException(
-				sprintf('GridFieldRelationAdd: No searchable fields could be found for class "%s"', $dataClass)
+				sprintf('GridFieldAddExistingAutocompleter: No searchable fields could be found for class "%s"', $dataClass)
 			);
 		}
 

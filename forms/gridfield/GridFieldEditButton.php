@@ -3,10 +3,10 @@
  * Provides the entry point to editing a single record presented by the grid.
  * Doesn't show an edit view on its own or modifies the record, but rather relies on routing conventions
  * established in {@link getColumnContent()}. The default routing applies to
- * the {@link GridFieldPopupForms} component, which has to be added separately
+ * the {@link GridFieldDetailForm} component, which has to be added separately
  * to the grid field configuration.
  */
-class GridFieldEditAction implements GridField_ColumnProvider {
+class GridFieldEditButton implements GridField_ColumnProvider {
 	
 	/**
 	 * Add a column 'Delete'
@@ -79,7 +79,7 @@ class GridFieldEditAction implements GridField_ColumnProvider {
 			'Link' => Controller::join_links($gridField->Link('item'), $record->ID, 'edit')
 		));
 
-		return $data->renderWith('GridFieldEditAction');
+		return $data->renderWith('GridFieldEditButton');
 	}
 	
 	/**
