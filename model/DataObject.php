@@ -1309,7 +1309,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @return HasManyList The components of the one-to-many relationship.
 	 */
-	public function getComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
+	public function getComponents($componentName, $filter = "", $sort = "", $join = "", $limit = null) {
 		$result = null;
 
 		if(!$componentClass = $this->has_many($componentName)) {

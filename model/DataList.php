@@ -146,7 +146,10 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @param string $limit
 	 */
 	public function limit($limit, $offset = 0) {
-		if(!is_numeric($limit)) {
+		if(!$limit && !$offset) {
+			return $this;
+		}
+		if($limit && !is_numeric($limit)) {
 			Deprecation::notice('3.0', 'Please pass limits as 2 arguments, rather than an array or SQL fragment.');
 		}
 		$this->dataQuery->limit($limit, $offset);
