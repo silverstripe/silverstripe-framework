@@ -650,7 +650,7 @@ class GridField extends FormField {
 				continue;
 			}
 			
-			if(is_array($component->getActions($this)) && in_array($actionName, array_map('strtolower', $component->getActions($this)))) {
+			if(in_array($actionName, array_map('strtolower', (array)$component->getActions($this)))) {
 				return $component->handleAction($this, $actionName, $args, $data);
 			}
 		}

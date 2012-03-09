@@ -605,7 +605,7 @@ abstract class Object {
 				user_error("Bad extension '$extension'", E_USER_WARNING);
 			} else {
 				$extensionClass = $matches[1];
-				DataObjectDecorator::unload_extra_statics($class, $extensionClass);
+				DataExtension::unload_extra_statics($class, $extensionClass);
 			}
 		}
 		
