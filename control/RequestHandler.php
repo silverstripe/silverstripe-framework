@@ -216,7 +216,7 @@ class RequestHandler extends ViewableData {
 	public function allowedActions() {
 
 		$actions = Config::inst()->get(get_class($this), 'allowed_actions');
-		
+
 		if($actions) {
 			// convert all keys and values to lowercase to 
 			// allow for easier comparison, unless it is a permission code
@@ -225,7 +225,7 @@ class RequestHandler extends ViewableData {
 			foreach($actions as $key => $value) {
 				if(is_numeric($key)) $actions[$key] = strtolower($value);
 			}
-			
+
 			return $actions;
 		}
 	}
@@ -253,7 +253,7 @@ class RequestHandler extends ViewableData {
 			if($isKey || $isValue) return true;
 		}
 		
-		if(!is_array($actions) || !$this->uninherited('allowed_actions')) {
+		if(!is_array($actions) || !$this->config()->get('allowed_actions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES)) {
 			if($action != 'init' && $action != 'run' && method_exists($this, $action)) return true;
 		}
 		
@@ -286,7 +286,7 @@ class RequestHandler extends ViewableData {
 						return Permission::check($test);
 					}
 					
-				} elseif((($key = array_search($actionOrAll, $allowedActions)) !== false) && is_numeric($key)) {
+				} elseif((($key = array_search($actionOrAll, $allowedActions, true)) !== false) && is_numeric($key)) {
 					// Case 4: Allow numeric array notation (search for array value as action instead of key)
 					return true;
 				}
@@ -297,7 +297,7 @@ class RequestHandler extends ViewableData {
 		// it should be allowed.
 		if($action == 'index' || empty($action)) return true;
 		
-		if($allowedActions === null || !$this->uninherited('allowed_actions')) {
+		if($allowedActions === null || !$this->config()->get('allowed_actions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES)) {
 			// If no allowed_actions are provided, then we should only let through actions that aren't handled by magic methods
 			// we test this by calling the unmagic method_exists. 
 			if(method_exists($this, $action)) {
