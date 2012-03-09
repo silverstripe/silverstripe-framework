@@ -217,8 +217,8 @@ class GridFieldDetailFormTest_GroupController extends Controller implements Test
 
 	function Form() {
 		$field = new GridField('testfield', 'testfield', DataList::create('GridFieldDetailFormTest_PeopleGroup'));
-		$field->getConfig()->addComponent($gridFieldForm = new GridFieldPopupForms($this, 'Form'));
-		$field->getConfig()->addComponent(new GridFieldEditAction());
+		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
+		$field->getConfig()->addComponent(new GridFieldEditButton());
 		return new Form($this, 'Form', new FieldList($field), new FieldList());
 	}
 }
