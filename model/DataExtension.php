@@ -51,21 +51,13 @@ abstract class DataExtension extends Extension {
 			return;
 		}
 		
-		// @deprecated 2.4 - use extraStatics() now, not extraDBFields()
-		if(method_exists($extensionClass, 'extraDBFields')) {
-			Deprecation::notice('2.4', 'DataExtension::extraDBFields() is deprecated. Please use extraStatics() instead.');
-			$extraStaticsMethod = 'extraDBFields';
-		} else {
-			$extraStaticsMethod = 'extraStatics';
-		}
-		
 		// If the extension has been manually applied to a subclass, we should ignore that.
 		if(Object::has_extension(get_parent_class($class), $extensionClass)) return;
 
 		// If there aren't any extraStatics we shouldn't try to load them.
-		if (!method_exists($extensionClass, $extraStaticsMethod) ) return;
-		
-		$statics = call_user_func(array(singleton($extensionClass), $extraStaticsMethod), $class, $extension);
+		if(!method_exists($extensionClass, 'extraStatics')) return;
+
+		$statics = call_user_func(array(singleton($extensionClass), 'extraStatics'), $class, $extension);
 		
 		if($statics) {
 			foreach($statics as $name => $newVal) {
