@@ -115,22 +115,6 @@ class BasicAuth {
 	}
 	
 	/**
-	 * @deprecated Use BasicAuth::protect_entire_site() instead.
-	 */
-	static function enable() {
-		Deprecation::notice('2.4', 'Use BasicAuth::protect_entire_site() instead.');
-		return self::protect_entire_site();
-	}
-
-	/**
-	 * @deprecated Use BasicAuth::protect_entire_site(false) instead.
-	 */
-	static function disable() {
-		Deprecation::notice('2.4', 'Use BasicAuth::protect_entire_site(false) instead.');
-		return self::protect_entire_site(false);
-	}
-
-	/**
 	 * Call {@link BasicAuth::requireLogin()} if {@link BasicAuth::protect_entire_site()} has been called.
 	 * This is a helper function used by {@link Controller::init()}.
 	 * 

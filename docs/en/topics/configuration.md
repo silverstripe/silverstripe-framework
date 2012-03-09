@@ -35,7 +35,6 @@ incomplete - please add to it** *Try to keep it in alphabetical order too! :)*
  | ----    |                                                            | ----------- |                                                                                                                                                                                                                             
  | Authenticator::register_authenticator($authenticator);|              | Enable an authentication method (for more details see [security](/topics/security)). |        
  | Authenticator::set_default_authenticator($authenticator); |          | Modify tab-order on login-form.|        
- | BasicAuth::disable() |                                               | Disable basic authentication checking for dev sites (useful when testing credit card transaction post-backs etc) |                                                             
  | BBCodeParser::disable_autolink_urls(); |                             | Disables plain hyperlinks from being turned into links when bbcode is parsed. |     
  | BlogEntry::allow_wysiwyg_editing();  |                               | Enable rich text editing for blog posts.  |                                                                                  
  | ContentNegotiator::set_encoding(string $encoding)  |					| The encoding charset to use - UTF-8 by default  |        
