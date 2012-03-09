@@ -74,7 +74,7 @@ class GridFieldAddExistingAutocompleterTest_Controller extends Controller implem
 	function Form() {
 		$player = DataObject::get('GridFieldTest_Player')->find('Email', 'player1@test.com');
 		$config = GridFieldConfig::create()->addComponents(
-			$relationComponent = new GridFieldAddExistingAutocompleter('Name'),
+			$relationComponent = new GridFieldAddExistingAutocompleter('before', 'Name'),
 			new GridFieldDataColumns()
 		);
 		$field = new GridField('testfield', 'testfield', $player->Teams(), $config);

@@ -206,6 +206,9 @@ class GridFieldDetailFormTest_Controller extends Controller implements TestOnly 
 		            ->First();
 
 		$field = new GridField('testfield', 'testfield', $group->People());
+		$field->getConfig()->addComponent(new GridFieldToolbarHeader());
+		$field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
+		$field->getConfig()->addComponent(new GridFieldEditButton());
 		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
 		$field->getConfig()->addComponent(new GridFieldEditButton());
 		return new Form($this, 'Form', new FieldList($field), new FieldList());
@@ -218,6 +221,8 @@ class GridFieldDetailFormTest_GroupController extends Controller implements Test
 	function Form() {
 		$field = new GridField('testfield', 'testfield', DataList::create('GridFieldDetailFormTest_PeopleGroup'));
 		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
+		$field->getConfig()->addComponent(new GridFieldToolbarHeader());
+		$field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
 		$field->getConfig()->addComponent(new GridFieldEditButton());
 		return new Form($this, 'Form', new FieldList($field), new FieldList());
 	}
