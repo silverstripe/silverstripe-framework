@@ -1047,14 +1047,14 @@ require_once('conf/ConfigureFromEnv.php');
 
 MySQLDatabase::set_connection_charset('utf8');
 
-// This line set's the current theme. More themes can be
-// downloaded from http://www.silverstripe.org/themes/
+// Set the current theme. More themes can be downloaded from
+// http://www.silverstripe.org/themes/
 SSViewer::set_theme('$theme');
 
 // Set the site locale
 i18n::set_locale('$locale');
 
-// enable nested URLs for this site (e.g. page/sub-page/)
+// Enable nested URLs for this site (e.g. page/sub-page/)
 if (class_exists('SiteTree')) SiteTree::enable_nested_urls();
 PHP
 			);
@@ -1080,14 +1080,14 @@ global \$databaseConfig;
 
 MySQLDatabase::set_connection_charset('utf8');
 
-// This line set's the current theme. More themes can be
-// downloaded from http://www.silverstripe.org/themes/
+// Set the current theme. More themes can be downloaded from
+// http://www.silverstripe.org/themes/
 SSViewer::set_theme('$theme');
 
 // Set the site locale
 i18n::set_locale('$locale');
 
-// enable nested URLs for this site (e.g. page/sub-page/)
+// Enable nested URLs for this site (e.g. page/sub-page/)
 if (class_exists('SiteTree')) SiteTree::enable_nested_urls();
 PHP
 			);
