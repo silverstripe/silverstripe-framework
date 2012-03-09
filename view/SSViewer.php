@@ -328,7 +328,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 			if ($createObject) $implementer = new $implementer();
 
 			// Get the exposed variables
-			$exposedVariables = $implementer::$variableMethod();
+			$exposedVariables = call_user_func(array($implementer, $variableMethod));
 
 			foreach($exposedVariables as $varName => $details) {
 				if (!is_array($details)) $details = array('method' => $details, 'casting' => Object::get_static('ViewableData', 'default_cast'));
