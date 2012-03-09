@@ -109,13 +109,13 @@ class MySQLDatabase extends SS_Database {
 			return;
 		}
 
-		if(isset($_REQUEST['showqueries'])) {
+		if(isset($_REQUEST['showqueries']) && Director::isDev(true)) {
 			$starttime = microtime(true);
 		}
 
 		$handle = $this->dbConn->query($sql);
 
-		if(isset($_REQUEST['showqueries'])) {
+		if(isset($_REQUEST['showqueries']) && Director::isDev(true)) {
 			$endtime = round(microtime(true) - $starttime,4);
 			Debug::message("\n$sql\n{$endtime}ms\n", false);
 		}
