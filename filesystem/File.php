@@ -627,16 +627,6 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Return the last 50 characters of the URL.
-	 * 
-	 * @deprecated 2.4
-	 */
-	function getLinkedURL() {
-		Deprecation::notice('2.4', 'Use getTreeTitle() instead.');
-		return "$this->Name";
-	}
-
-	/**
 	 * Returns an absolute filesystem path to the file.
 	 * Use {@link getRelativePath()} to get the same path relative to the webroot.
 	 * 
