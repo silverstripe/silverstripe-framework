@@ -1,6 +1,6 @@
 div.TreeDropdownField { width: 400px; background: #fff; border: 1px solid #aaa; cursor: pointer; overflow: hidden; }
 div.TreeDropdownField input { border: none; background: none; padding: 0; margin: 0; }
-div.TreeDropdownField .treedropdownfield-title { float: left; padding: 7px; line-height: 16px; overflow: hidden; width: 472px; }
+div.TreeDropdownField .treedropdownfield-title { float: left; padding: 7px; line-height: 16px; overflow: hidden; }
 div.TreeDropdownField .treedropdownfield-panel { clear: left; position: absolute; overflow: auto; display: none; cursor: default; border: 1px solid #aaa; border-top: none; margin: 1px 0 0 -1px; /* account for border on container div */ height: 200px; background-color: #fff; z-index: 50; -webkit-box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15); -moz-box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15); -o-box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15); box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15); }
 div.TreeDropdownField .treedropdownfield-panel ul.tree { margin: 0; }
 div.TreeDropdownField .treedropdownfield-panel ul.tree a { font-size: 12px; }
