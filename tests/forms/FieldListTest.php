@@ -729,4 +729,39 @@ class FieldListTest extends SapphireTest {
 			'Field nested inside a TabSet and FieldList can be marked readonly by FieldList->makeFieldReadonly()'
 		);
 	}
+
+	/**
+	 * Test VisibleFields and HiddenFields
+	 */
+	function testVisibleAndHiddenFields() {
+		$fields = new FieldList(
+			new TextField("A"),
+			new TextField("B"),
+			new HiddenField("C"),
+			new Tabset("Root",
+				new Tab("D", 
+					new TextField("D1"),
+					new HiddenField("D2")
+				)
+			)
+		);
+
+		$hidden = $fields->HiddenFields();
+		// Inside hidden fields, all HiddenField objects are included, even nested ones
+		$this->assertNotNull($hidden->dataFieldByName('C'));
+		$this->assertNotNull($hidden->dataFieldByName('D2'));
+		// Visible fields are not
+		$this->assertNull($hidden->dataFieldByName('B'));
+		$this->assertNull($hidden->dataFieldByName('D1'));
+		
+		$visible = $fields->VisibleFields();
+		// Visible fields exclude top level HiddenField objects
+		$this->assertNotNull($visible->dataFieldByName('A'));
+		$this->assertNull($visible->dataFieldByName('C'));
+		// But they don't exclude nested HiddenField objects.  This is a limitation; you should
+		// put all your HiddenFields at the top level.
+		$this->assertNotNull($visible->dataFieldByName('D2'));
+	}
+	
+	
 }
