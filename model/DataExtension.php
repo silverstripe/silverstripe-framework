@@ -47,7 +47,7 @@ abstract class DataExtension extends Extension {
 		if(preg_match('/^([^(]*)/', $extension, $matches)) {
 			$extensionClass = $matches[1];
 		} else {
-			user_error("Bad extenion '$extension' - can't find classname", E_USER_WARNING);
+			user_error("Bad extension '$extension' - can't find classname", E_USER_WARNING);
 			return;
 		}
 		
