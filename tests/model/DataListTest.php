@@ -50,7 +50,7 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals(array('Bob', 'Joe', 'Phil'), $list->column('Name'));
 		
 		// We can also restrict the output to a range
-		$this->assertEquals(array('Joe', 'Phil'), $list->getRange(1,2)->column('Name'));
+		$this->assertEquals(array('Joe', 'Phil'), $list->limit(2, 1)->column('Name'));
 	}
 	
 	function testDataClass() {
