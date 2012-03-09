@@ -53,6 +53,15 @@ $gf_grid_x:	16px;
 			}
 		}
 	}
+	
+	.ss-gridfield {
+		.add-existing-autocompleter {
+			input.relation-search {
+				width: 380px;
+			}
+			width: 500px;
+		}
+	}
 
 	table.ss-gridfield-table {
 		display: table; 
