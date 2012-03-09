@@ -771,7 +771,7 @@ class Security extends Controller {
 			// if the password is empty, don't encrypt
 			strlen(trim($password)) == 0  
 			// if no algorithm is provided and no default is set, don't encrypt
-			|| (!$algorithm && self::$encryptPasswords == false)
+			|| (!$algorithm)
 		) {
 			$algorithm = 'none';
 		} else {
