@@ -124,7 +124,9 @@ class SearchContext extends Object {
 	        $query = DataList::create($this->modelClass);
         }
         
-		$query->limit($limit);
+		if(is_array($limit)) $query->limit(isset($limit['limit']) ? $limit['limit'] : null, isset($limit['start']) ? $limit['start'] : null);
+		else $query->limit($limit);
+		
 		$query->sort($sort);
 		
 		// hack to work with $searchParems when it's an Object 
