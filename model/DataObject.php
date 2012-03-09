@@ -2479,11 +2479,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
 	 */
-	public static function get($callerClass, $filter = "", $sort = "", $join = "", $limit = "", $containerClass = "DataList") {
+	public static function get($callerClass, $filter = "", $sort = "", $join = "", $limit = null, $containerClass = "DataList") {
 		// Todo: Determine if we can deprecate for 3.0.0 and use DI or something instead
 		// Todo: Make the $containerClass method redundant
 		if($containerClass != "DataList") user_error("The DataObject::get() \$containerClass argument has been deprecated", E_USER_NOTICE);
-		$result = DataList::create($callerClass)->where($filter)->sort($sort)->limit($limit);
+		$result = DataList::create($callerClass)->where($filter)->sort($sort);
+		if($limit && strpos($limit, ',') !== false) {
+			$limitArguments = explode(',', $limit);
+			$result->limit($limitArguments[1],$limitArguments[0]);
+		} elseif($limit) {
+			$result->limit($limit);
+		}
 		if($join) $result = $result->join($join);
 		$result->setModel(DataModel::inst());
 		return $result;
