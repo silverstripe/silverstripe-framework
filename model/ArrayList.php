@@ -5,7 +5,7 @@
  * @package    sapphire
  * @subpackage model
  */
-class ArrayList extends ViewableData implements SS_List, SS_Limitable {
+class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Limitable {
 
 	/**
 	 * Holds the items in the list
