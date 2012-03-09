@@ -139,9 +139,13 @@ $gf_grid_x:	16px;
 						margin:$gf_grid_y/4 $gf_grid_x/2 0;
 						display:inline-block;
 					}
-					.new{
-						font-size: $gf_grid_y*1.2; 
+					.right > * {
 						float: right;
+						font-size: $gf_grid_y*1.2;
+					}
+					.left > * {
+						float: left;
+						font-size: $gf_grid_y*1.2;
 					}
 				}
 			}	
