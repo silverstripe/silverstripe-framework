@@ -134,7 +134,7 @@ class GridFieldConfig_Base extends GridFieldConfig {
 		$this->addComponent(new GridFieldToolbarHeader());
 		$this->addComponent(new GridFieldSortableHeader());
 		$this->addComponent(new GridFieldFilterHeader());
-		$this->addComponent(new GridFieldDefaultColumns());
+		$this->addComponent(new GridFieldDataColumns());
 		$this->addComponent(new GridFieldPaginator($itemsPerPage));
 	}
 }
@@ -161,7 +161,7 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
 		$this->addComponent(new GridFieldToolbarHeader());
 		$this->addComponent(new GridFieldSortableHeader());
 		$this->addComponent(new GridFieldFilterHeader());
-		$this->addComponent(new GridFieldDefaultColumns());
+		$this->addComponent(new GridFieldDataColumns());
 		$this->addComponent(new GridFieldEditButton());
 		$this->addComponent(new GridFieldDeleteAction());
 		$this->addComponent(new GridFieldPaginator($itemsPerPage));
@@ -204,7 +204,7 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig {
 		$this->addComponent(new GridFieldAddExistingAutocompleter());
 		$this->addComponent(new GridFieldSortableHeader());
 		$this->addComponent(new GridFieldFilterHeader());
-		$this->addComponent(new GridFieldDefaultColumns());
+		$this->addComponent(new GridFieldDataColumns());
 		$this->addComponent(new GridFieldEditButton());
 		$this->addComponent(new GridFieldDeleteAction(true));
 		$this->addComponent(new GridFieldPaginator($itemsPerPage));

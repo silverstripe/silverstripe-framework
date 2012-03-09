@@ -404,7 +404,7 @@ class GridField extends FormField {
 					array(
 						"class" => implode(' ', $classes),
 						'data-id' => $record->ID,
-						// TODO Allow per-row customization similar to GridFieldDefaultColumns
+						// TODO Allow per-row customization similar to GridFieldDataColumns
 						'data-class' => $record->ClassName,
 					),
 					$rowContent

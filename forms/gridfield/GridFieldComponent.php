@@ -36,7 +36,7 @@ interface GridField_ColumnProvider extends GridFieldComponent {
 
 	/**
 	 * Modify the list of columns displayed in the table.
-	 * See {@link GridField->getDisplayFields()} and {@link GridFieldDefaultColumns}.
+	 * See {@link GridField->getDisplayFields()} and {@link GridFieldDataColumns}.
 	 * 
 	 * @param  GridField
 	 * @param  Array List reference of all column names.

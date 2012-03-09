@@ -32,7 +32,7 @@ This example creates exactly the same kind of grid as the previous example, but 
 	// Provide a header row with filter controls
 	$config->addComponent(new GridFieldFilterHeader());
 	// Provide a default set of columns based on $summary_fields
-	$config->addComponent(new GridFieldDefaultColumns());
+	$config->addComponent(new GridFieldDataColumns());
 	// Provide a header row with sort controls
 	$config->addComponent(new GridFieldSortableHeader());
 	// Paginate results to 25 items per page, and show a footer with pagination controls
@@ -44,7 +44,7 @@ If we wanted to make a simpler grid without pagination or filtering, we could do
 	:::php
 	$config = GridFieldConfig::create();
 	// Provide a default set of columns based on $summary_fields
-	$config->addComponent(new GridFieldDefaultColumns());
+	$config->addComponent(new GridFieldDataColumns());
 	// Provide a header row with sort controls
 	$config->addComponent(new GridFieldPaginator(25));
 	$field = new GridField("Members", "Members of this group", $this->group->Members(), $config);
@@ -57,11 +57,11 @@ A `GridFieldConfig` is made up of a new of `GridFieldComponent` objects, which a
 `GridFieldComponent` is a family of interfaces.
 SilverStripe Framework comes with the following components that you can use out of the box.
 
-### GridFieldDefaultColumns
+### GridFieldDataColumns
 
 This is the one component that, in most cases, you must include.  It provides the default columns, sourcing them from the underlying DataObject's `$summary_fields` if no specific configuration is provided.
 
-Without GridFieldDefaultColumns added to a GridField, it would have no columns whatsoever.  Although this isn't particularly useful most of the time, we have allowed for this for two reasons:
+Without GridFieldDataColumns added to a GridField, it would have no columns whatsoever.  Although this isn't particularly useful most of the time, we have allowed for this for two reasons:
 
  * You may have a grid whose fields are generated purely by another non-standard component.
  * It keeps the core of the GridField lean, focused solely on providing APIs to the components.
@@ -233,7 +233,7 @@ By default, a grid contains no columns.  All the columns displayed in a grid wil
 
 For example, you may create a grid field with several components providing columns:
 
- * `GridFieldDefaultColumns` could provide basic data columns.
+ * `GridFieldDataColumns` could provide basic data columns.
  * An editor component could provide a column containing action buttons on the right.
  * A multiselect component clould provide a column showing a checkbox on the left.
 
