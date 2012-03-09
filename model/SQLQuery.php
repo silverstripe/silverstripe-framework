@@ -14,27 +14,31 @@ class SQLQuery {
 	
 	/**
 	 * An array of fields to select.
+	 *
 	 * @var array
 	 */
 	public $select = array();
 	
 	/**
 	 * An array of join clauses. The first one is just the table name.
+	 *
 	 * @var array
 	 */
 	public $from = array();
 	
 	/**
 	 * An array of filters.
+	 *
 	 * @var array
 	 */
 	public $where = array();
 	
 	/**
-	 * An ORDER BY clause.
+	 * A comma separated list of order by clauses, functions.
+	 *
 	 * @var string
 	 */
-	public $orderby;
+	public $orderby = "";
 	
 	/**
 	 * An array of fields to group by.
@@ -76,7 +80,7 @@ class SQLQuery {
 	 * Keep an internal register of find/replace pairs to execute when it's time to actually get the
 	 * query SQL.
 	 */
-	private $replacementsOld = array(), $replacementsNew = array();
+	public $replacementsOld = array(), $replacementsNew = array();
 	
 	/**
 	 * Construct a new SQLQuery.
@@ -276,34 +280,50 @@ class SQLQuery {
 	/**
 	 * Pass ORDER BY clause either as SQL snippet or in array format.
 	 *
-	 * @todo Implement passing of multiple orderby pairs in nested array syntax,
-	 * 	e.g. array(array('sort'=>'A','dir'=>'asc'),array('sort'=>'B'))
-	 * 
+	 * @example $sql->orderby("Column");
+	 * @example $sql->orderby("Column DESC");
+	 * @example $sql->orderby("Column DESC, ColumnTwo ASC");
+	 * @example $sql->orderby(array("Column" => "ASC", "ColumnTwo" => "DESC"));
+	 *
 	 * @param string|array $orderby
-	 * @return SQLQuery This instance
+	 * @return SQLQuery
 	 */
 	public function orderby($orderby) {
-		// if passed as an array, assume two array values with column and direction (asc|desc) 
-		if(is_array($orderby)) {
-			if(!array_key_exists('sort', $orderby)) user_error('SQLQuery::orderby(): Wrong format for $orderby array', E_USER_ERROR);
+		if(is_string($orderby)) $orderby = explode(",", $orderby);
 
-			if(isset($orderby['sort']) && !empty($orderby['sort']) && isset($orderby['dir']) && !empty($orderby['dir'])) {
-				$combinedOrderby = "\"" . Convert::raw2sql($orderby['sort']) . "\" " . Convert::raw2sql(strtoupper($orderby['dir']));
-			} elseif(isset($orderby['sort']) && !empty($orderby['sort'])) {
-				$combinedOrderby = "\"" . Convert::raw2sql($orderby['sort']) . "\"";
-			} else {
-				$combinedOrderby = false;
-			}
-		} else {
-			$combinedOrderby = $orderby;
-		}
-		
-		// If sort contains a function call, let's move the sort clause into a separate selected field.
-		// Some versions of MySQL choke if you have a group function referenced directly in the ORDER BY
-		if($combinedOrderby && strpos($combinedOrderby,'(') !== false) {
-			// Sort can be "Col1 DESC|ASC, Col2 DESC|ASC", we need to handle that
-			$sortParts = explode(",", $combinedOrderby);
+		if(is_array($orderby)) {
+			$clauses = array();
+			
+			foreach($orderby as $key => $value) {
+				if(!is_numeric($key)) {
+					$column = trim($key);
+					$direction = strtoupper(trim($value));
+				}
+				else {
+					$clause = explode(" ", trim($value));
+					
+					$column = trim($clause[0]);
+					$direction = (isset($clause[1])) ? strtoupper(trim($clause[1])) : "";
+				}
 				
+				$clauses[] = trim($column . ' '. $direction);
+			}
+			
+			$this->orderby = implode(", ", $clauses);
+		}
+		else {
+			user_error('SQLQuery::orderby() incorrect format for $orderby');
+		}
+
+		// If sort contains a function call, let's move the sort clause into a 
+		// separate selected field.
+		//
+		// Some versions of MySQL choke if you have a group function referenced 
+		// directly in the ORDER BY
+		if($this->orderby && strpos($this->orderby,'(') !== false) {
+			$sortParts = explode(",", $this->orderby);
+			$newSorts = array();
+			
 			// If you have select if(X,A,B),C then the array will return 'if(X','A','B)','C'.
 			// Turn this into 'if(X,A,B)','C' by counting brackets
 			while(list($i,$sortPart) = each($sortParts)) {
@@ -312,9 +332,10 @@ class SQLQuery {
 					if($i === null) break;
 					$sortPart .= ',' . $nextSortPart;
 				}
+				
 				$lumpedSortParts[] = $sortPart;
 			}
-				
+
 			foreach($lumpedSortParts as $i => $sortPart) {
 				$sortPart = trim($sortPart);
 				if(substr(strtolower($sortPart),-5) == ' desc') {
@@ -328,13 +349,37 @@ class SQLQuery {
 					$newSorts[] = "\"_SortColumn{$i}\" ASC";
 				}
 			}
-				
-			$combinedOrderby =  implode(", ", $newSorts);
+
+			$this->orderby = implode(", ", $newSorts);
 		}
 		
-		if(!empty($combinedOrderby)) $this->orderby = $combinedOrderby;
-		
 		return $this;
+	}
+	
+	/**
+	 * Reverses the order by clause by replacing ASC or DESC references in the
+	 * current order by with it's corollary. 
+	 *
+	 * @return SQLQuery
+	 */
+	public function reverseOrderBy() {
+		if($this->orderby) {
+			$clauses = explode(",", $this->orderby);
+			$reversed = array();
+
+			foreach($clauses as $clause) {
+				$parts = explode(" ", trim($clause));
+				
+				$column = $parts[0];
+				$dir = (isset($parts[1])) ? strtoupper(trim($parts[1])) : "ASC";
+				
+				$dir = ($dir == "ASC") ? "DESC" : "ASC";
+				
+				$reversed[] = trim($column . ' '. $dir);
+			}
+			
+			$this->orderby = implode(", ", $reversed);
+		}
 	}
 	
 	/**
@@ -464,29 +509,30 @@ class SQLQuery {
 	 * @return string
 	 */
 	function sql() {
-	    // TODO: Don't require this internal-state manipulate-and-preserve - let sqlQueryToString() handle the new syntax
-	    $origFrom = $this->from;
+		// TODO: Don't require this internal-state manipulate-and-preserve - let sqlQueryToString() handle the new syntax
+		$origFrom = $this->from;
 
-	    // Build from clauses
-	    foreach($this->from as $alias => $join) {
-	        // $join can be something like this array structure
-	        // array('type' => 'inner', 'table' => 'SiteTree', 'filter' => array("SiteTree.ID = 1", "Status = 'approved'"))
-	        if(is_array($join)) {
-	            if(is_string($join['filter'])) $filter = $join['filter'];
-	            else if(sizeof($join['filter']) == 1) $filter = $join['filter'][0];
-	            else $filter = "(" . implode(") AND (", $join['filter']) . ")";
-	            
+		// Build from clauses
+		foreach($this->from as $alias => $join) {
+			// $join can be something like this array structure
+			// array('type' => 'inner', 'table' => 'SiteTree', 'filter' => array("SiteTree.ID = 1", "Status = 'approved'"))
+			if(is_array($join)) {
+				if(is_string($join['filter'])) $filter = $join['filter'];
+				else if(sizeof($join['filter']) == 1) $filter = $join['filter'][0];
+				else $filter = "(" . implode(") AND (", $join['filter']) . ")";
+
 				$aliasClause = ($alias != $join['table']) ? " AS \"$alias\"" : "";
-	            $this->from[$alias] = strtoupper($join['type']) . " JOIN \"{$join['table']}\"$aliasClause ON $filter";
-	        }
-	    }
+				$this->from[$alias] = strtoupper($join['type']) . " JOIN \"{$join['table']}\"$aliasClause ON $filter";
+			}
+		}
 
 		$sql = DB::getConn()->sqlQueryToString($this);
+		
 		if($this->replacementsOld) {
 			$sql = str_replace($this->replacementsOld, $this->replacementsNew, $sql);
 		}
 
-	    $this->from = $origFrom;
+		$this->from = $origFrom;
 
 		// The query was most likely just created and then exectued.
 		if($sql === 'SELECT *') {

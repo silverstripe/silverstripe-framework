@@ -9,6 +9,9 @@
  */
 abstract class SS_ListDecorator extends ViewableData implements SS_List {
 
+	/**
+	 * @var SS_List
+	 */
 	protected $list;
 
 	public function __construct(SS_List $list) {
@@ -107,6 +110,10 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List {
 
 	public function canSortBy($by) {
 		return $this->list->canSortBy($by);
+	}
+
+	public function reverse() {
+		return $this->list->reverse();
 	}
 
 	/**

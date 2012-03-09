@@ -3210,9 +3210,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * The default sort expression. This will be inserted in the ORDER BY
 	 * clause of a SQL query if no other sort expression is provided.
+	 *
 	 * @var string
 	 */
-	public static $default_sort = null;
+	public static $default_sort = "ID ASC";
 
 	/**
 	 * Default list of fields that can be scaffolded by the ModelAdmin

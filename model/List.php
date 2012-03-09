@@ -107,7 +107,7 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 	public function sort();
 	
 	/**
-	 * Filter the list to include items with these charactaristics
+	 * Filter the list to include items with these characteristics
 	 * 
 	 * @example $list->filter('Name', 'bob'); // only bob in the list
 	 * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
@@ -118,7 +118,7 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 	public function filter();
 	
 	/**
-	 * Exclude the list to not contain items with these charactaristics
+	 * Exclude the list to not contain items with these characteristics
 	 *
 	 * @example $list->exclude('Name', 'bob'); // exclude bob from list
 	 * @example $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
@@ -128,4 +128,10 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 	 */
 	public function exclude();
 
+	/**
+	 * Reverses the list. 
+	 *
+	 * @example $list->reverse() 
+	 */
+	public function reverse();
 }
