@@ -726,20 +726,6 @@ class Security extends Controller {
 
 
 	/**
-	 * Get a list of all available encryption algorithms.
-	 * Note: These are arbitrary codes, and not callable methods.
-	 * 
-	 * @deprecated 2.4 Use PasswordEncryptor::get_encryptors()
-	 *
-	 * @return array Returns an array of strings containing all supported encryption algorithms.
-	 */
-	public static function get_encryption_algorithms() {
-		Deprecation::notice('2.4', 'Use PasswordEncryptor::get_encryptors() instead.');
-		return array_keys(PasswordEncryptor::get_encryptors());
-	}
-
-
-	/**
 	 * Set the password encryption algorithm
 	 *
 	 * @param string $algorithm One of the available password encryption
