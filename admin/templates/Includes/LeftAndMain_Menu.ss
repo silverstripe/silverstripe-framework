@@ -24,7 +24,7 @@
 		<ul class="cms-menu-list">
 		<% control MainMenu %>
 			<li class="$LinkingMode $FirstLast <% if LinkingMode == 'link' %><% else %>opened<% end_if %>" id="Menu-$Code">
-				<a href="$Link">
+				<a href="$Link" <% if Code == 'Help' %>target="_blank"<% end_if%>>
 					<span class="icon icon-16 icon-{$Code.LowerCase}">&nbsp;</span>
 					<span class="text">$Title</span>
 				</a>
