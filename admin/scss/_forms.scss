@@ -248,17 +248,16 @@ form.small .field, .field.small {
 		}
 	}
 
-	input.loading,
+	input.loading, button.loading,
 	input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading, 
 	.ui-widget-header input.ui-state-default.loading {
-		padding-left: 24px;
+		.ui-icon {
+			background: transparent url(../../images/network-save.gif) no-repeat 0 0;
+		}
+
 		color: lighten($color-text-dark, 20%);
-		background: $color-button-disabled url(../../images/network-save.gif) no-repeat 4px center;
 		border-color: darken($color-button-disabled, 10%);
 		cursor: default;
-		
-		@include text-shadow(none);
-		@include box-shadow(none);
 	}
 
 	.ss-ui-button {
