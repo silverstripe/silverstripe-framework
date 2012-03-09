@@ -958,63 +958,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	}
 	
 	/**
-	 * @return Form
-	 */
-	function AddForm() {
-		$class = $this->stat('tree_class');
-		
-		$typeMap = array($class => singleton($class)->i18n_singular_name());
-		$form = new Form(
-			$this,
-			'AddForm',
-			new FieldList(
-				new HiddenField('ParentID')
-			),
-			new FieldList(
-				FormAction::create('doAdd', _t('AssetAdmin_left.ss.GO','Go'))
-					->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
-			)
-		);
-		$form->addExtraClass('add-form');
-		
-		return $form;
-	}
-	
-	/**
-	 * Add a new group and return its details suitable for ajax.
-	 */
-	public function doAdd($data, $form) {
-		$class = $this->stat('tree_class');
-		
-		// check create permissions
-		if(!singleton($class)->canCreate()) return Security::permissionFailure($this);
-		
-		// check addchildren permissions
-		if(
-			singleton($class)->hasDatabaseField('Hierarchy') 
-			&& isset($data['ParentID'])
-			&& is_numeric($data['ParentID'])
-		) {
-			$parentRecord = DataObject::get_by_id($class, $data['ParentID']);
-			if(
-				$parentRecord->hasMethod('canAddChildren') 
-				&& !$parentRecord->canAddChildren()
-			) return Security::permissionFailure($this);
-		}
-		
-		$record = Object::create($class);
-		$form->saveInto($record);
-		$record->write();
-
-		if($this->isAjax()) {
-			$form = $this->getEditForm($record->ID);
-			return $form->forTemplate();
-		} else {
-			return $this->redirect(Controller::join_links($this->Link('show'), $record->ID));
-		}
-	}
-
-	/**
 	 * Return the CMS's HTML-editor toolbar
 	 */
 	public function EditorToolbar() {
