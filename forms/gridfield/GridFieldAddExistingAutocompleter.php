@@ -15,7 +15,12 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 	 * @var string $itemClass
 	 */
 	protected $itemClass = 'GridFieldAddExistingAutocompleter';
-	
+
+	/**
+	 * The HTML fragment to write this component into
+	 */
+	protected $targetFragment;
+
 	/**
 	 * Which columns that should be used for doing a "StartsWith" search.
 	 * If multiple fields are provided, the filtering is performed non-exclusive.
@@ -40,7 +45,8 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 	 *
 	 * @param array $searchFields Which fields on the object in the list should be searched
 	 */
-	public function __construct($searchFields = null) {
+	public function __construct($targetFragment = 'before', $searchFields = null) {
+		$this->targetFragment = $targetFragment;
 		$this->searchFields = (array)$searchFields;
 	}
 	
@@ -67,7 +73,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 		
 		$findAction = new GridField_FormAction($gridField, 'gridfield_relationfind', _t('GridField.Find', "Find"), 'find', 'find');
 		$findAction->setAttribute('data-icon', 'relationfind');
-		$addAction = new GridField_FormAction($gridField, 'gridfield_relationadd', _t('GridField.LinkExisting', "Link Exisiting"), 'addto', 'addto');
+		$addAction = new GridField_FormAction($gridField, 'gridfield_relationadd', _t('GridField.LinkExisting', "Link Existing"), 'addto', 'addto');
 		$addAction->setAttribute('data-icon', 'chain--plus');
 
 		// If an object is not found, disable the action
@@ -78,7 +84,10 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 		$forTemplate->Fields->push($searchField);
 		$forTemplate->Fields->push($findAction);
 		$forTemplate->Fields->push($addAction);
-		return array('before' => $forTemplate->renderWith($this->itemClass));
+		
+		return array(
+			$this->targetFragment => $forTemplate->renderWith($this->itemClass)
+		);
 	}
 	
 	/**

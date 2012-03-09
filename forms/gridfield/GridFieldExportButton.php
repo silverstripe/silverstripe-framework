@@ -27,11 +27,18 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	 * @var boolean
 	 */
 	protected $csvHasHeader = true;
+	
+	/**
+	 * Fragment to write the button to
+	 */
+	protected $targetFragment;
 
 	/**
-	 * @param array
+	 * @param string $targetFragment The HTML fragment to write the button into
+	 * @param array $exportColumns The columns to include in the export
 	 */
-	public function __construct($exportColumns = null) {
+	public function __construct($targetFragment = "after", $exportColumns = null) {
+		$this->targetFragment = $targetFragment;
 		$this->exportColumns = $exportColumns;
 	}
 
@@ -49,7 +56,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 		$button->setAttribute('data-icon', 'download-csv');
 		$button->addExtraClass('no-ajax');
 		return array(
-			'after' => '<p>' . $button->Field() . '</p>',
+			$this->targetFragment => '<p>' . $button->Field() . '</p>',
 		);
 	}
 
