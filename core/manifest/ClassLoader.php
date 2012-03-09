@@ -50,10 +50,6 @@ class SS_ClassLoader {
 	 */
 	public function pushManifest(SS_ClassManifest $manifest) {
 		$this->manifests[] = $manifest;
-
-		foreach ($manifest->getConfigs() as $config) {
-			require_once $config;
-		}
 	}
 
 	/**

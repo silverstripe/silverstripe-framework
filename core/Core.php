@@ -258,6 +258,10 @@ $loader = SS_ClassLoader::instance();
 $loader->registerAutoloader();
 $loader->pushManifest($manifest);
 
+// Now that the class manifest is up, load the configuration
+$configManifest = new SS_ConfigManifest(BASE_PATH, false, $flush);
+Config::inst()->pushConfigManifest($configManifest);
+
 SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
 	BASE_PATH, false, isset($_GET['flush'])
 ));
