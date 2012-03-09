@@ -785,18 +785,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	}
 	
 	/**
-	 * Returns true if this user is an administrator.
-	 * Administrators have access to everything.
-	 * 
-	 * @deprecated Use Permission::check('ADMIN') instead
-	 * @return Returns TRUE if this user is an administrator.
-	 */
-	function isAdmin() {
-		Deprecation::notice('2.4', 'Use Permission::check(\'ADMIN\') instead.');
-		return Permission::checkMember($this, 'ADMIN');
-	}
-	
-	/**
 	 * @param Array $columns Column names on the Member record to show in {@link getTitle()}.
 	 * @param String $sep Separator
 	 */
@@ -1435,124 +1423,7 @@ class Member_GroupSet extends ManyManyList {
 		if($allGroupIDs) $this->byIDs($allGroupIDs);
 		else $this->byIDs(array(0));
 	}
-	
-	/**
-	 * @deprecated Use setByIdList() and/or a CheckboxSetField
-	 */
-	function setByCheckboxes(array $checkboxes, array $data) {
-		Deprecation::notice('2.4', 'Use setByIdList() and/or a CheckboxSetField instead.');
-	}
-
-
-	/**
-	 * Allows you to set groups based on a CheckboxSetField
-	 *
-	 * Pass the form element from your post data directly to this method, and
-	 * it will update the groups and add and remove the member as appropriate.
-	 *
-	 * On the form setup:
-	 *
-	 * <code>
-	 * $fields->push(
-	 *   new CheckboxSetField(
-	 *     "NewsletterSubscriptions",
-	 *     "Receive email notification of events in ",
-	 *     $sourceitems = DataObject::get("NewsletterType")->toDropDownMap("GroupID","Title"),
-	 *     $selectedgroups = $member->Groups()->Map("ID","ID")
-	 *   )
-	 * );
-	 * </code>
-	 *
-	 * On the form handler:
-	 *
-	 * <code>
-	 * $groups = $member->Groups();
-	 * $checkboxfield = $form->Fields()->fieldByName("NewsletterSubscriptions");
-	 * $groups->setByCheckboxSetField($checkboxfield);
-	 * </code>
-	 *
-	 * @param CheckboxSetField $checkboxsetfield The CheckboxSetField (with
-	 *                                           data) from your form.
-	 */
-	function setByCheckboxSetField(CheckboxSetField $checkboxsetfield) {
-		// Get the values from the formfield.
-		$values = $checkboxsetfield->Value();
-		$sourceItems = $checkboxsetfield->getSource();
-
-		if($sourceItems) {
-			// If (some) values are present, add and remove as necessary.
-			if($values) {
-				// update the groups based on the selections
-				foreach($sourceItems as $k => $item) {
-					if(in_array($k,$values)) {
-						$add[] = $k;
-					} else {
-						$remove[] = $k;
-					}
-				}
-
-			// else we should be removing all from the necessary groups.
-			} else {
-				$remove = array_keys($sourceItems);
-			}
-
-			if($add)
-				$this->addManyByGroupID($add);
-
-			if($remove)
-				$this->RemoveManyByGroupID($remove);
-
-		} else {
-			USER_ERROR("Member::setByCheckboxSetField() - No source items could be found for checkboxsetfield " .
-								 $checkboxsetfield->getName(), E_USER_WARNING);
-		}
-	}
-
-
-	/**
-	 * @deprecated Use DataList::addMany
-	 */
-	function addManyByGroupID($ids){
-		Deprecation::notice('2.4', 'Use addMany() instead.');
-		return $this->addMany($ids);
-	}
-
-
-	/**
-	 * @deprecated Use DataList::removeMany
-	 */
-	function removeManyByGroupID($groupIds) {
-		Deprecation::notice('2.4', 'Use removeMany() instead.');
-		return $this->removeMany($ids);
-	}
-
-
-	/**
-	 * @deprecated Use DataObject::get("Group")->byIds()
-	 */
-	function getGroupsFromIDs($ids) {
-		Deprecation::notice('2.4', 'Use DataObject::get("Group")->byIds() instead.');
-		return DataObject::get("Group")->byIDs($ids);
-	}
-
-
-	/**
-	 * @deprecated Group.Code is deprecated
-	 */
-	function addManyByCodename($codenames) {
-		Deprecation::notice('2.4', 'Don\'t rely on codename');
-	}
-
-
-	/**
-	 * @deprecated Group.Code is deprecated
-	 */
-	function removeManyByCodename($codenames) {
-		Deprecation::notice('2.4', 'Don\'t rely on codename');
-	}
 }
-
-
 
 /**
  * Form for editing a member profile.
