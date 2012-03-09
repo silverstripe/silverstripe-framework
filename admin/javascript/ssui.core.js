@@ -15,7 +15,9 @@
 			this.find('ul').addClass('ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all');
 		 	this.find('li').addClass('ui-state-default ui-corner-top');
 		 	// TODO Figure out selected tab
-		 	this.find('li:first').selectIt();
+		 	var selected = this.find('li.current');
+		 	if(!selected.length) selected = this.find('li:first');
+		 	selected.selectIt();
 	 }
 	});
 	
