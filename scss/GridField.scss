@@ -53,6 +53,15 @@ $gf_grid_x:	16px;
 			}
 		}
 	}
+	
+	.ss-gridfield {
+		.add-existing-autocompleter {
+			input.relation-search {
+				width: 380px;
+			}
+			width: 500px;
+		}
+	}
 
 	table.ss-gridfield-table {
 		display: table; 
@@ -139,9 +148,13 @@ $gf_grid_x:	16px;
 						margin:$gf_grid_y/4 $gf_grid_x/2 0;
 						display:inline-block;
 					}
-					.new{
-						font-size: $gf_grid_y*1.2; 
+					.right > * {
 						float: right;
+						font-size: $gf_grid_y*1.2;
+					}
+					.left > * {
+						float: left;
+						font-size: $gf_grid_y*1.2;
 					}
 				}
 			}	

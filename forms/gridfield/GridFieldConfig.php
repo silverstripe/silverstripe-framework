@@ -163,6 +163,7 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
 	 */
 	public function __construct($itemsPerPage=null) {
 		$this->addComponent(new GridFieldToolbarHeader());
+		$this->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
 		$this->addComponent($sort = new GridFieldSortableHeader());
 		$this->addComponent($filter = new GridFieldFilterHeader());
 		$this->addComponent(new GridFieldDataColumns());
@@ -209,7 +210,8 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig {
 	 */
 	public function __construct($itemsPerPage=null) {
 		$this->addComponent(new GridFieldToolbarHeader());
-		$this->addComponent(new GridFieldAddExistingAutocompleter());
+		$this->addComponent(new GridFieldAddExistingAutocompleter('toolbar-header-left'));
+		$this->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
 		$this->addComponent($sort = new GridFieldSortableHeader());
 		$this->addComponent($filter = new GridFieldFilterHeader());
 		$this->addComponent(new GridFieldDataColumns());

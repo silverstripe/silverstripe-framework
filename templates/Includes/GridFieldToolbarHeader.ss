@@ -1,3 +1,7 @@
 <tr class="title">
-	<th colspan="$ColumnCount"><h2>$Title</h2><% if NewEnabled %> <a href="$NewLink" class="action ss-ui-action-constructive ss-ui-button ui-button ui-widget ui-state-default ui-corner-all new new-link" data-icon="add"><% _t('GridField.AddNew', 'Add New') %></a><% end_if %></th>
+	<th colspan="$ColumnCount">
+		<% if Title %><h2>$Title</h2><% end_if %>
+		<div class="left">\$DefineFragment(toolbar-header-left)</div>
+		<div class="right">\$DefineFragment(toolbar-header-right)</div>
+	</th>
 </tr>
