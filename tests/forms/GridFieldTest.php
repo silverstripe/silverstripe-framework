@@ -36,9 +36,9 @@ class GridFieldTest extends SapphireTest {
 			$pagination = new GridFieldPaginator(),
 			new GridState_Component(),
 		));
-		$sort->throwExceptionOnBadDataType(false);
-		$filter->throwExceptionOnBadDataType(false);
-		$pagination->throwExceptionOnBadDataType(false);
+		$sort->setThrowExceptionOnBadDataType(false);
+		$filter->setThrowExceptionOnBadDataType(false);
+		$pagination->setThrowExceptionOnBadDataType(false);
 		
 		$this->assertEquals($expectedComponents, $obj->getConfig()->getComponents(), 'Testing default Config');
 	}

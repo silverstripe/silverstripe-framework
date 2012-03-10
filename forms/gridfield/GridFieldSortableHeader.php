@@ -10,7 +10,7 @@
 class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {
 
 	/**
-	 * See {@link throwExceptionOnBadDataType()}
+	 * See {@link setThrowExceptionOnBadDataType()}
 	 */
 	protected $throwExceptionOnBadDataType = true;
 	
@@ -23,8 +23,15 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 	 * By default, this is set to true so that it's clearer what's happening, but the predefined
 	 * {@link GridFieldConfig} subclasses set this to false for flexibility.
 	 */
-	public function throwExceptionOnBadDataType($throwExceptionOnBadDataType) {
+	public function setThrowExceptionOnBadDataType($throwExceptionOnBadDataType) {
 		$this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType; 
+	}
+
+	/**
+	 * See {@link setThrowExceptionOnBadDataType()}
+	 */
+	public function getThrowExceptionOnBadDataType() {
+		return $this->throwExceptionOnBadDataType;
 	}
 	
 	/**

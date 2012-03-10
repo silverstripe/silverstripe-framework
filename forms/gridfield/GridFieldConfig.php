@@ -137,9 +137,9 @@ class GridFieldConfig_Base extends GridFieldConfig {
 		$this->addComponent(new GridFieldDataColumns());
 		$this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
 
-		$sort->throwExceptionOnBadDataType(false);
-		$filter->throwExceptionOnBadDataType(false);
-		$pagination->throwExceptionOnBadDataType(false);
+		$sort->setThrowExceptionOnBadDataType(false);
+		$filter->setThrowExceptionOnBadDataType(false);
+		$pagination->setThrowExceptionOnBadDataType(false);
 	}
 }
 
@@ -172,9 +172,9 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
 		$this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
 		$this->addComponent(new GridFieldDetailForm());
 
-		$sort->throwExceptionOnBadDataType(false);
-		$filter->throwExceptionOnBadDataType(false);
-		$pagination->throwExceptionOnBadDataType(false);
+		$sort->setThrowExceptionOnBadDataType(false);
+		$filter->setThrowExceptionOnBadDataType(false);
+		$pagination->setThrowExceptionOnBadDataType(false);
 	}
 }
 
@@ -220,8 +220,8 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig {
 		$this->addComponent($pagination = new GridFieldPaginator($itemsPerPage));
 		$this->addComponent(new GridFieldDetailForm());
 
-		$sort->throwExceptionOnBadDataType(false);
-		$filter->throwExceptionOnBadDataType(false);
-		$pagination->throwExceptionOnBadDataType(false);
+		$sort->setThrowExceptionOnBadDataType(false);
+		$filter->setThrowExceptionOnBadDataType(false);
+		$pagination->setThrowExceptionOnBadDataType(false);
 	}
 }
