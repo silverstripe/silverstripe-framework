@@ -108,7 +108,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$parser = new CSSContentParser($response->getBody());
 		$personEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_People"]//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $person->ID . '")]//a');		
 		$this->assertEquals(
-			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/1/ItemEditForm/field/People/item/1/edit',
+			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/1/ItemEditForm/field/People/item/' . $person->ID . '/edit',
 			(string)$personEditLink[0]['href']
 		);
 
@@ -120,7 +120,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 		// Get fourth level form (Category detail view)
 		$this->assertEquals(
-			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/1/ItemEditForm/field/People/item/1/ItemEditForm/field/Categories/item/1/edit',
+			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/1/ItemEditForm/field/People/item/' . $person->ID . '/ItemEditForm/field/Categories/item/1/edit',
 			(string)$categoryEditLink[0]['href']
 		);
 	}
