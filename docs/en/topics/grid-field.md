@@ -101,17 +101,21 @@ This component will add a header to the grid with sort buttons.  It will detect 
 
 ### GridFieldFilterHeader
 
-This component will add a header row with a text field filter for each column, letting you filter the results with text searches.  It will detect which columns are filterable and only provide sort controls on those columns.
+This component will add a header row with a text field filter for each column, letting you filter the results with text searches.  It will detect which columns are filterable and only provide filter controls on those columns.
 
 ### GridFieldPaginator
 
 This component will limit output to a fixed number of items per page add a footer row with pagination controls. The constructor takes 1 argument: the number of items per page.
 
-### GridFieldAction
+### GridFieldDeleteButton
 
-TODO Describe component, including GridFieldEditButton/GridFieldDeleteAction
+TODO Describe component
 
-### GridFieldAddExistingAutocompleter
+### GridFieldEditButton
+
+Adds a edit button to each row of the table. This needs another component to provide an edit interface - see GridFieldDetailForm for use within the CMS.
+
+### GridFieldRelationAdd
 
 This class is is responsible for adding objects to another object's has_many and many_many relation,
 as defined by the `[api:RelationList]` passed to the GridField constructor.
@@ -130,15 +134,17 @@ Often used alongside `[api:GridFieldAddExistingAutocompleter]` to add existing r
 
 ### GridFieldDetailForm
 
-TODO Describe component, including how it relates to GridFieldEditButton. Point to GridFieldConfig_RelationEditor for easier defaults.
+Provides add and edit forms for use within the CMS. This allows editing of the linked records. 
+This only provides the actual add/edit forms, GridFieldEditButton is required to provide a button to link to the edit form, 
+and GridFieldToolbarHeader is required to provide an add button.
 
 ### GridFieldToolbarHeader
 
-TODO
+Adds a title bar to the top of the GridField, with optional "New" button. The New button doesn't provide any functionality with this component alone - see GridFieldDetailForm.
 
 ### GridFieldExportButton
 
-TODO
+Adds an "Download as CSV" button. This will save the current List shown in the GridField as CSV. Takes the 
 
 ## Extending GridField with custom components
 
