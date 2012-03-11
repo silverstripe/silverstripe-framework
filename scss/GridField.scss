@@ -52,6 +52,16 @@ $gf_grid_x:	16px;
 				cursor: pointer;
 			}
 		}
+
+	 	p button#action_export {
+			margin-top:$gf_grid_y;
+			span.btn-icon-download-csv {
+				height:17px; //exact height of icon
+			}
+			span.ui-button-text {
+				padding-left:26px; //to accomodate wider export icon
+			} 
+	 	}
 	}
 	
 	.ss-gridfield {
