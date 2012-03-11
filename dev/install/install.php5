@@ -19,7 +19,6 @@ ini_set('mysql.connect_timeout', 5);
 
 ini_set('max_execution_time', 0);
 error_reporting(E_ALL ^ E_NOTICE);
-session_start();
 
 // Include environment files
 $usingEnv = false;
