@@ -309,8 +309,6 @@ form.small .field, .field.small {
 		/* constructive */
 		&.ss-ui-action-constructive {
 			font-weight: bold;
-			margin-top: 0;
-			margin-bottom: 0;
 			color: $color-text-light;
 			border-color: $color-button-constructive-border;
 			border-bottom-color: darken($color-button-constructive-border, 10%);			
