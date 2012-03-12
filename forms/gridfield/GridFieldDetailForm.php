@@ -66,7 +66,9 @@ class GridFieldDetailForm implements GridField_URLHandler {
 			$record = Object::create($gridField->getModelClass());	
 		}
 
-		if(!$class = ClassInfo::exists(get_class($this) . "_ItemRequest")) {
+		if(ClassInfo::exists(get_class($this) . "_ItemRequest")) {
+			$class = get_class($this) . "_ItemRequest";
+		} else {
 			$class = 'GridFieldDetailForm_ItemRequest';
 		}
 
