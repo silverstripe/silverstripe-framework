@@ -176,13 +176,16 @@ table.ss-gridfield-table tr.title th h2 {
 
 //fix for alternate colors on rows in datagrid
 
-table.ss-gridfield-table tr {	
-	&.ss-gridfield-item.odd {
-		background: white;
-	}
-	&.ss-gridfield-item.even {
-		background: #F0F4F7;
-	}
+table.ss-gridfield-table {
+	table-layout:fixed; //fix for uneven column widths and hidden filter buttons
+	tr {
+		&.ss-gridfield-item.odd {
+			background: white;
+		}
+		&.ss-gridfield-item.even {
+			background: #F0F4F7;
+		}
+	}	
 }	
 
 //fix for model admin filter styling 

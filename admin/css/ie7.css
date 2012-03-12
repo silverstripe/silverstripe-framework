@@ -49,6 +49,7 @@ html { overflow: hidden; }
 
 table.ss-gridfield-table tr.title th h2 { float: left; }
 
+table.ss-gridfield-table { table-layout: fixed; }
 table.ss-gridfield-table tr.ss-gridfield-item.odd { background: white; }
 table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }
 
