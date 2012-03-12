@@ -265,6 +265,9 @@ $gf_grid_x:	16px;
 				}
 				
 				button {
+					&#action_gridfield_relationadd:hover {
+						color: #444 !important; /* Not sure why IE think it needs this */
+					}
 					&:hover {
 						color: #ccc !important; /* Not sure why IE think it needs this */ 
 					}
