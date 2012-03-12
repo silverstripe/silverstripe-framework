@@ -42,71 +42,7 @@
 				 */
 				var self = this;
 					this
-						.jstree({
-							'core': {
-								'initially_open': ['record-0'],
-								'animation': 0,
-								'html_titles': true
-							},
-							'html_data': {
-								// 'ajax' will be set on 'loaded.jstree' event
-							},
-							'ui': {
-								"select_limit" : 1,
-								'initially_select': [this.find('.current').attr('id')]
-							},
-							 "crrm": {
-								 'move': {
-									// Check if a node is allowed to be moved.
-									// Caution: Runs on every drag over a new node
-									'check_move': function(data) {
-										var movedNode = $(data.o), newParent = $(data.np), 
-											isMovedOntoContainer = data.ot.get_container()[0] == data.np[0],
-											movedNodeClass = movedNode.getClassname(), 
-											newParentClass = newParent.getClassname(),
-											// Check allowedChildren of newParent or against root node rules
-											hints = self.getHints(),
-											disallowedChildren = [],
-											hintKey = newParentClass ? newParentClass : 'Root',
-											hint = (typeof hints[hintKey] != 'undefined') ? hints[hintKey] : null;
-
-										// Special case for VirtualPage: Check that original page type is an allowed child
-										if(hint && movedNode.attr('class').match(/VirtualPage-([^\s]*)/)) movedNodeClass = RegExp.$1;
-										
-										if(hint) disallowedChildren = (typeof hint.disallowedChildren != 'undefined') ? hint.disallowedChildren : [];
-										var isAllowed = (
-											// Don't allow moving the root node
-											movedNode.data('id') != 0 
-											// Only allow moving node inside the root container, not before/after it
-											&& (!isMovedOntoContainer || data.p == 'inside')
-											// Children are generally allowed on parent
-											&& !newParent.hasClass('nochildren')
-											// movedNode is allowed as a child
-											&& (!disallowedChildren.length || $.inArray(movedNodeClass, disallowedChildren) == -1)
-										);
-										
-										return isAllowed;
-									}
-								}
-							},
-							'dnd': {
-								"drop_target" : false,
-								"drag_target" : false
-							},
-							'checkbox': {
-								'two_state': true
-							},
-							'themes': {
-								'theme': 'apple',
-								'url': 'sapphire/thirdparty/jstree/themes/apple/style.css'
-							},
-							// Caution: SilverStripe has disabled $.vakata.css.add_sheet() for performance reasons,
-							// which means you need to add any CSS manually to sapphire/admin/scss/_tree.css
-							'plugins': [
-								'html_data', 'ui', 'dnd', 'crrm', 'themes', 
-								'checkbox' // checkboxes are hidden unless .multiple is set
-							]
-						})
+						.jstree(this.getTreeConfig())
 						.bind('loaded.jstree', function(e, data) {
 							self.css('visibility', 'visible');
 							// Add ajax settings after init period to avoid unnecessary initial ajax load
@@ -164,6 +100,74 @@
 						self._onLoadNewPage(e, data);
 					});
 			},
+
+			getTreeConfig: function() {
+				return {
+					'core': {
+						'initially_open': ['record-0'],
+						'animation': 0,
+						'html_titles': true
+					},
+					'html_data': {
+						// 'ajax' will be set on 'loaded.jstree' event
+					},
+					'ui': {
+						"select_limit" : 1,
+						'initially_select': [this.find('.current').attr('id')]
+					},
+					 "crrm": {
+						 'move': {
+							// Check if a node is allowed to be moved.
+							// Caution: Runs on every drag over a new node
+							'check_move': function(data) {
+								var movedNode = $(data.o), newParent = $(data.np), 
+									isMovedOntoContainer = data.ot.get_container()[0] == data.np[0],
+									movedNodeClass = movedNode.getClassname(), 
+									newParentClass = newParent.getClassname(),
+									// Check allowedChildren of newParent or against root node rules
+									hints = self.getHints(),
+									disallowedChildren = [],
+									hintKey = newParentClass ? newParentClass : 'Root',
+									hint = (typeof hints[hintKey] != 'undefined') ? hints[hintKey] : null;
+
+								// Special case for VirtualPage: Check that original page type is an allowed child
+								if(hint && movedNode.attr('class').match(/VirtualPage-([^\s]*)/)) movedNodeClass = RegExp.$1;
+								
+								if(hint) disallowedChildren = (typeof hint.disallowedChildren != 'undefined') ? hint.disallowedChildren : [];
+								var isAllowed = (
+									// Don't allow moving the root node
+									movedNode.data('id') !== 0 
+									// Only allow moving node inside the root container, not before/after it
+									&& (!isMovedOntoContainer || data.p == 'inside')
+									// Children are generally allowed on parent
+									&& !newParent.hasClass('nochildren')
+									// movedNode is allowed as a child
+									&& (!disallowedChildren.length || $.inArray(movedNodeClass, disallowedChildren) == -1)
+								);
+								
+								return isAllowed;
+							}
+						}
+					},
+					'dnd': {
+						"drop_target" : false,
+						"drag_target" : false
+					},
+					'checkbox': {
+						'two_state': true
+					},
+					'themes': {
+						'theme': 'apple',
+						'url': 'sapphire/thirdparty/jstree/themes/apple/style.css'
+					},
+					// Caution: SilverStripe has disabled $.vakata.css.add_sheet() for performance reasons,
+					// which means you need to add any CSS manually to sapphire/admin/scss/_tree.css
+					'plugins': [
+						'html_data', 'ui', 'dnd', 'crrm', 'themes', 
+						'checkbox' // checkboxes are hidden unless .multiple is set
+					]
+				};
+			},
 			
 			/**
 			 * Function:
@@ -193,41 +197,41 @@
 			},
 			
 			/**
-		 	 * Assumes to be triggered by a form element with the following input fields:
-		 	 * ID, ParentID, TreeTitle (or Title), ClassName
-		 	 */
-		 	_onLoadNewPage: function(e, eventData) {
+			 * Assumes to be triggered by a form element with the following input fields:
+			 * ID, ParentID, TreeTitle (or Title), ClassName
+			 */
+			_onLoadNewPage: function(e, eventData) {
 				var self = this;
 				
-		 		// finds a certain value in an array generated by jQuery.serializeArray()
-		 		var findInSerializedArray = function(arr, name) {
-		 			for(var i=0; i<arr.length; i++) {
-		 				if(arr[i].name == name) return arr[i].value;
-		 			};
-		 			return false;
-		 		};
+				// finds a certain value in an array generated by jQuery.serializeArray()
+				var findInSerializedArray = function(arr, name) {
+					for(var i=0; i<arr.length; i++) {
+						if(arr[i].name == name) return arr[i].value;
+					};
+					return false;
+				};
 
 				var handledform = $(e.target).is('.cms-edit-form') ? $(e.target)[0] : $(e.target).find('.cms-edit-form')[0];
-		 		var id = $(handledform.ID).val();
+				var id = $(handledform.ID).val();
 
-		 		// check if a form with a valid ID exists
-		 		if(id) {
-		 			var parentID = $(handledform.ParentID).val(), 
+				// check if a form with a valid ID exists
+				if(id) {
+					var parentID = $(handledform.ParentID).val(), 
 						parentNode = this.find('li[data-id='+parentID+']');
 						node = this.find('li[data-id='+id+']'),
 						title = $((handledform.TreeTitle) ? handledform.TreeTitle : handledform.Title).val(),
 						className = $(handledform.ClassName).val();
 
-		 			// set title (either from TreeTitle or from Title fields)
-		 			// Treetitle has special HTML formatting to denote the status changes.
-		 			if(title) this.jstree('rename_node', node, title);
+					// set title (either from TreeTitle or from Title fields)
+					// Treetitle has special HTML formatting to denote the status changes.
+					if(title) this.jstree('rename_node', node, title);
 
 					// TODO Fix node icon setting
-		 			// // update icon (only if it has changed)
-		 			// if(className) this.setNodeIcon(id, className);
+					// // update icon (only if it has changed)
+					// if(className) this.setNodeIcon(id, className);
 
-		 			// check if node exists, might have been created instead
-		 			if(!node.length) {
+					// check if node exists, might have been created instead
+					if(!node.length) {
 						this.jstree(
 							'create_node', 
 							parentNode, 
@@ -243,27 +247,27 @@
 							}
 						);
 						// set current tree element
-			 			this.jstree('select_node', node);
-		 			}
+						this.jstree('select_node', node);
+					}
 
 					// TODO Fix node parent setting
-		 			// // set correct parent (only if it has changed)
-		 			// if(parentID) this.setNodeParentID(id, jQuery(e.target.ParentID).val());
+					// // set correct parent (only if it has changed)
+					// if(parentID) this.setNodeParentID(id, jQuery(e.target.ParentID).val());
 
 					// TODO Fix doubleup when replacing page form with root form, reloads the old form over the root
-		 			// set current tree element regardless of wether the item was new
-		 			// this.jstree('select_node', node);
-		 		} else {
-		 			if(typeof eventData.origData != 'undefined') {
-		 				var node = this.find('li[data-id='+eventData.origData.ID+']');
-		 				if(node && node.data('id') != 0) this.jstree('delete_node', node);
-		 			}
-		 		}
+					// set current tree element regardless of wether the item was new
+					// this.jstree('select_node', node);
+				} else {
+					if(typeof eventData.origData != 'undefined') {
+						var node = this.find('li[data-id='+eventData.origData.ID+']');
+						if(node && node.data('id') != 0) this.jstree('delete_node', node);
+					}
+				}
 
-		 	},
-		 	onunmatch: function() {
+			},
+			onunmatch: function() {
 
-		 	}
+			}
 		});
 		
 		$('.cms-tree.multiple').entwine({
