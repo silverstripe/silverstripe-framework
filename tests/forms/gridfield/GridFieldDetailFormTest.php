@@ -98,7 +98,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 		$groupEditLink = $parser->getByXpath('//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $group->ID . '")]//a');
 		$this->assertEquals(
-			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/1/edit',
+			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/' . $group->ID . '/edit',
 			(string)$groupEditLink[0]['href']
 		);
 
@@ -117,12 +117,12 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
 		$categoryEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_Categories"]//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $category->ID . '")]//a');	
-
-		// Get fourth level form (Category detail view)
 		$this->assertEquals(
-			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/1/ItemEditForm/field/People/item/' . $person->ID . '/ItemEditForm/field/Categories/item/1/edit',
+			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/1/ItemEditForm/field/People/item/' . $category->ID . '/ItemEditForm/field/Categories/item/1/edit',
 			(string)$categoryEditLink[0]['href']
 		);
+
+		// Fourth level form would be a Category detail view
 	}
 }
 
