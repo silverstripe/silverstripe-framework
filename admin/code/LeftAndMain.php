@@ -1238,7 +1238,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return String
 	 */
 	function BaseCSSClasses() {
-		return $this->CSSClasses();
+		return $this->CSSClasses('Controller');
 	}
 	
 	function IsPreviewExpanded() {
