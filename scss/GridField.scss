@@ -53,6 +53,10 @@ $gf_grid_x:	16px;
 			}
 		}
 
+		span button#action_gridfield_relationfind {
+	 		display:none; //hides find button - redundant functionality
+	 	}
+
 	 	p button#action_export {
 			margin-top:$gf_grid_y;
 			span.btn-icon-download-csv {

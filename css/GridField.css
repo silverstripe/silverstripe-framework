@@ -2,11 +2,12 @@
 .cms .ss-gridfield > div { margin-bottom: 36px; }
 .cms .ss-gridfield[data-selectable] tr.ui-selected, .cms .ss-gridfield[data-selectable] tr.ui-selecting { background: #FFFAD6 !important; }
 .cms .ss-gridfield[data-selectable] td { cursor: pointer; }
-.cms .ss-gridfield .add-existing-autocompleter { width: 500px; }
-.cms .ss-gridfield .add-existing-autocompleter input.relation-search { width: 380px; }
+.cms .ss-gridfield span button#action_gridfield_relationfind { display: none; }
 .cms .ss-gridfield p button#action_export { margin-top: 12px; }
 .cms .ss-gridfield p button#action_export span.btn-icon-download-csv { height: 17px; }
 .cms .ss-gridfield p button#action_export span.ui-button-text { padding-left: 26px; }
+.cms .ss-gridfield .add-existing-autocompleter { width: 500px; }
+.cms .ss-gridfield .add-existing-autocompleter input.relation-search { width: 380px; }
 .cms table.ss-gridfield-table { display: table; box-shadow: none; padding: 0; border-collapse: separate; border-bottom: 0 none; width: 100%; }
 .cms table.ss-gridfield-table thead { color: #1d2224; background: transparent; }
 .cms table.ss-gridfield-table thead tr.filter-header .fieldgroup { max-width: 512px; }
