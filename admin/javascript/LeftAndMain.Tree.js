@@ -102,6 +102,7 @@
 			},
 
 			getTreeConfig: function() {
+				var self = this;
 				return {
 					'core': {
 						'initially_open': ['record-0'],
