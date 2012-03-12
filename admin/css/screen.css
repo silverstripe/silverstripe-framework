@@ -668,9 +668,14 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-menu-list.collapsed li .text, .cms-menu-list.collapsed li .toggle-children { display: none; }
 .cms-menu-list.collapsed li > li { display: none; }
 
+.ModelAdmin .cms-content-fields { overflow: hidden; }
+.ModelAdmin .cms-content-fields .cms-edit-form { overflow-y: auto; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form .resetformaction { margin-right: 0px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form .resetformaction span { padding-left: 0px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm { overflow: hidden; }
 
 .SecurityAdmin .cms-edit-form .cms-content-header h2 { display: none; }
 .SecurityAdmin .permissioncheckboxset .optionset li, .SecurityAdmin .permissioncheckboxsetfield_readonly .optionset li { float: none; width: auto; }
+
+.cms .cms-content .SecurityAdmin .cms-content-fields { overflow-y: auto; }
+.cms .cms-content .SecurityAdmin .cms-content-fields .aligned-right-label { margin-left: 184px; padding: 8px 0; }
