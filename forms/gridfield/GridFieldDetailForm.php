@@ -55,7 +55,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	 *
 	 * @param type $gridField
 	 * @param type $request
-	 * @return GridFieldPopupForm_ItemRequest 
+	 * @return GridFieldDetailForm_ItemRequest 
 	 */
 	public function handleItem($gridField, $request) {
 		$controller = $gridField->getForm()->Controller();
@@ -67,7 +67,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 		}
 
 		if(!$class = ClassInfo::exists(get_class($this) . "_ItemRequest")) {
-			$class = 'GridFieldPopupForm_ItemRequest';
+			$class = 'GridFieldDetailForm_ItemRequest';
 		}
 
 		$handler = Object::create($class, $gridField, $this, $record, $controller, $this->name);
@@ -122,7 +122,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	}
 }
 
-class GridFieldPopupForm_ItemRequest extends RequestHandler {
+class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	
 	/**
 	 *
@@ -273,7 +273,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	}
 
 	/**
-	 * Traverse up nested requests until we reach the first that's not a GridFieldPopupForm_ItemRequest.
+	 * Traverse up nested requests until we reach the first that's not a GridFieldDetailForm_ItemRequest.
 	 * The opposite of {@link Controller::curr()}, required because
 	 * Controller::$controller_stack is not directly accessible.
 	 * 
@@ -281,7 +281,7 @@ class GridFieldPopupForm_ItemRequest extends RequestHandler {
 	 */
 	protected function getToplevelController() {
 		$c = $this->popupController;
-		while($c && $c instanceof GridFieldPopupForm_ItemRequest) {
+		while($c && $c instanceof GridFieldDetailForm_ItemRequest) {
 			$c = $c->getController();
 		}
 		return $c;

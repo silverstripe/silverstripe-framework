@@ -308,11 +308,11 @@ Here is an example in full.  The actual implementation of the view and edit form
 
 		public function handleItem($gridField, $request) {
 			$record = $gridField->getList()->byId($request->param("ID"));
-			return new GridFieldPopupForm_ItemRequest($gridField, $this, $record);
+			return new GridFieldDetailForm_ItemRequest($gridField, $this, $record);
 		}
 	}
 
-	class GridFieldPopupForm_ItemRequest extends RequestHandler {
+	class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		protected $gridField;
 		protected $component;
 		protected $record;
