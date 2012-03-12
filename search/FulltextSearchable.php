@@ -77,28 +77,16 @@ class FulltextSearchable extends DataExtension {
 		parent::__construct();
 	}
 
-	/**
-	 * 
-	 * @param string $class
-	 * @param string $extension
-	 * @return array
-	 */
-	function extraStatics($class=null, $extension=null) {
-		if($extension && preg_match('/\([\'"](.*)[\'"]\)/', $extension, $matches)) {
-			$searchFields = $matches[1];
+	static function add_to_class($class, $extensionClass, $args) {
+		Config::inst()->update($class, 'indexes', array('SearchFields' => array(
+			'type' => 'fulltext',
+			'name' => 'SearchFields',
+			'value' => $args[0]
+		)));
 
-			return array(
-				'indexes' => array(
-					"SearchFields" => Array(
-						'type'=>'fulltext',
-						'name'=>'SearchFields',
-						'value'=> $searchFields
-					),
-				)
-			);
-		}
+		parent::add_to_class($class, $extensionClass, $args);
 	}
-	
+
 	/**
 	 * Shows all classes that had the {@link FulltextSearchable} extension applied through {@link enable()}.
 	 * 

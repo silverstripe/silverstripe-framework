@@ -52,7 +52,7 @@ abstract class Extension {
 	 * @static
 	 * @param $class
 	 */
-	static function add_to_class($class, $extensionClass) {
+	static function add_to_class($class, $extensionClass, $args) {
 		Config::add_static_source($class, $extensionClass);
 	}
 

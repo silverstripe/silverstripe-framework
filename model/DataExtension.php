@@ -32,7 +32,7 @@ abstract class DataExtension extends Extension {
 	);
 
 
-	static function add_to_class($class, $extensionClass) {
+	static function add_to_class($class, $extensionClass, $args) {
 		if(method_exists($class, 'extraDBFields')) {
 			$extraStaticsMethod = 'extraDBFields';
 		} else {
@@ -57,7 +57,7 @@ abstract class DataExtension extends Extension {
 			DataObject::$cache_has_own_table_field[$class] = null;
 		}
 
-		parent::add_to_class($class, $extensionClass);
+		parent::add_to_class($class, $extensionClass, $args);
 	}
 	
 	public static function unload_extra_statics($class, $extension) {

@@ -547,12 +547,12 @@ abstract class Object {
 			if($extensions = Config::inst()->get($class, 'extensions', Config::UNINHERITED)) {
 				foreach($extensions as $extension) {
 					// Get the extension class for this extension
-					$extensionClass = Extension::get_classname_without_arguments($extension);
+					list($extensionClass, $extensionArgs) = self::parse_class_spec($extension);
 
 					// If we haven't told that extension it's attached to this class yet, do that now
 					if (!isset(self::$_added_extensions[$extensionClass][$class])) {
 						// First call the add_to_class method - this will inherit down & is defined on Extension, so if not defined, no worries
-						call_user_func(array($extensionClass, 'add_to_class'), $class, $extensionClass);
+						call_user_func(array($extensionClass, 'add_to_class'), $class, $extensionClass, $extensionArgs);
 
 						// Then register it as having been told about us
 						if (!isset(self::$_added_extensions[$extensionClass])) self::$_added_extensions[$extensionClass] = array($class => true);

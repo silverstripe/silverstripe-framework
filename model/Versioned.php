@@ -107,9 +107,9 @@ class Versioned extends DataExtension {
 		'Version' => 'Int'
 	);
 
-	static function add_to_class($class, $extensionClass) {
+	static function add_to_class($class, $extensionClass, $args) {
 		Config::inst()->update($class, 'has_many', array('Versions' => $class));
-		parent::add_to_class($class, $extensionClass);
+		parent::add_to_class($class, $extensionClass, $args);
 	}
 	
 	/**
