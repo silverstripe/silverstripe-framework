@@ -13,7 +13,7 @@ class HtmlEditorField extends TextareaField {
 	 */
 	static $use_gzip = true;
 
-	protected $rows = null;
+	protected $rows = 30;
 	
 	/**
 	 * Includes the JavaScript neccesary for this field to work using the {@link Requirements} system.
@@ -90,6 +90,7 @@ class HtmlEditorField extends TextareaField {
 			parent::getAttributes(),
 			array(
 				'tinymce' => 'true',
+				'style'   => 'width: 97%; height: ' . ($this->rows * 16) . 'px', // prevents horizontal scrollbars
 				'value' => null,
 			)
 		);
