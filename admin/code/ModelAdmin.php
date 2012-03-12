@@ -121,7 +121,7 @@ abstract class ModelAdmin extends LeftAndMain {
 			$list,
 			$fieldConfig = GridFieldConfig_RecordEditor::create($this->stat('page_length'))
 				->addComponent(new GridFieldExportButton())
-				->removeComponentsByType('GridFieldFilter')
+				->removeComponentsByType('GridFieldFilterHeader')
 		);
 
 		// Validation
