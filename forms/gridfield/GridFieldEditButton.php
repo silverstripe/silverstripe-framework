@@ -28,7 +28,7 @@ class GridFieldEditButton implements GridField_ColumnProvider {
 	 * @return array
 	 */
 	public function getColumnAttributes($gridField, $record, $columnName) {
-		return array();
+		return array('class' => 'col-buttons');
 	}
 	
 	/**

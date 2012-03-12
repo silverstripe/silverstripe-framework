@@ -121,6 +121,10 @@ $gf_grid_x:	16px;
 					text-indent:-9999em;
 					background: url(../images/icons/document--pencil.png) no-repeat 0 1px;
 				}				
+
+				&.col-buttons {
+					white-space: nowrap;
+				}
 			}			
 		}
 

@@ -43,7 +43,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	 * @return array
 	 */
 	public function getColumnAttributes($gridField, $record, $columnName) {
-		return array();
+		return array('class' => 'col-buttons');
 	}
 	
 	/**
