@@ -10,16 +10,6 @@
  * A TableField-instance should never be saved twice without reloading, because otherwise it 
  * can't determine if a field is new (=create) or existing (=update), and will produce duplicates.
  * 
- * @param $name string The fieldname
- * @param $sourceClass string The source class of this field
- * @param $fieldList array An array of field headings of Fieldname => Heading Text (eg. heading1)
- * @param $fieldTypes array An array of field types of fieldname => fieldType (eg. formfield). Do not use for extra data/hiddenfields.
- * @param $filterField string The field to filter by.  Give the filter value in $sourceFilter.  The value will automatically be set on new records.
- * @param $sourceFilter string If $filterField has a value, then this is the value to filter by.  Otherwise, it is a SQL filter expression.
- * @param $editExisting boolean (Note: Has to stay on this position for legacy reasons)
- * @param $sourceSort string
- * @param $sourceJoin string
- * 
  * @todo We should refactor this to support a single FieldList instead of evaluated Strings for building FormFields
  * 
  * @package forms
@@ -92,10 +82,15 @@ class TableField extends TableListField {
 	public $showAddRow = true;
 	
 	/**
-	 * Automatically detect a has-one relationship
-	 * in the popup (=child-class) and save the relation ID.
-	 *
-	 * @var boolean
+	 * @param $name string The fieldname
+	 * @param $sourceClass string The source class of this field
+	 * @param $fieldList array An array of field headings of Fieldname => Heading Text (eg. heading1)
+	 * @param $fieldTypes array An array of field types of fieldname => fieldType (eg. formfield). Do not use for extra data/hiddenfields.
+	 * @param $filterField string The field to filter by.  Give the filter value in $sourceFilter.  The value will automatically be set on new records.
+	 * @param $sourceFilter string If $filterField has a value, then this is the value to filter by.  Otherwise, it is a SQL filter expression.
+	 * @param $editExisting boolean (Note: Has to stay on this position for legacy reasons)
+	 * @param $sourceSort string
+	 * @param $sourceJoin string
 	 */
 	function __construct($name, $sourceClass, $fieldList = null, $fieldTypes, $filterField = null, 
 						$sourceFilter = null, $editExisting = true, $sourceSort = null, $sourceJoin = null) {

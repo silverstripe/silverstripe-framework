@@ -18,13 +18,10 @@
  *  - fieldName				Name of the targeted formField
  *  - methodName				Method on the formfield (e.g. "ComplexTableField")
  *  - childID				Identifier of the database-record (the targeted table is determined by the $sourceClass parameter)
+ *  
+ * @deprecated 3.0 Use GridField with GridFieldConfig_RecordEditor
  *
- * @todo Find a less fragile solution for accessing this field through the main controller and ReferencedField, e.g.
- *      build a seperate CTF-instance (doesn't necessarly have to be connected to the original by ReferencedField)
  * @todo Control width/height of popup by constructor (hardcoded at the moment)
- * @todo Integrate search from MemberTableField.php
- * @todo Less performance-hungry implementation of detail-view paging (don't return all items on a single view)
- * @todo Use automatic has-many and many-many functions to return a ComponentSet rather than building the join manually
  * @package forms
  * @subpackage fields-relational
  */

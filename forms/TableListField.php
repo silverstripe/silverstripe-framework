@@ -11,12 +11,8 @@
  * All get variables are namespaced in the format ctf[MyFieldName][MyParameter] to avoid collisions
  * when multiple TableListFields are present in a form.
  * 
- * @param $name string The fieldname
- * @param $sourceClass string The source class of this field
- * @param $fieldList array An array of field headings of Fieldname => Heading Text (eg. heading1)
- * @param $sourceFilter string The filter field you wish to limit the objects by (eg. parentID)
- * @param $sourceSort string
- * @param $sourceJoin string
+ * @deprecated 3.0 Use GridField with GridFieldConfig_RecordEditor
+ * 
  * @package forms
  * @subpackage fields-relational
  */
@@ -231,6 +227,14 @@ class TableListField extends FormField {
 	 */
 	private $getDataListFromForm;
 	
+	/**
+	 * @param $name string The fieldname
+	 * @param $sourceClass string The source class of this field
+	 * @param $fieldList array An array of field headings of Fieldname => Heading Text (eg. heading1)
+	 * @param $sourceFilter string The filter field you wish to limit the objects by (eg. parentID)
+	 * @param $sourceSort string
+	 * @param $sourceJoin string
+	 */
 	function __construct($name, $sourceClass = null, $fieldList = null, $sourceFilter = null, 
 		$sourceSort = null, $sourceJoin = null) {
 
