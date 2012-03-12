@@ -260,6 +260,14 @@ form.small .field, .field.small {
 		cursor: default;
 	}
 
+	input.loading, button.loading {
+		&.ss-ui-action-constructive {
+			.ui-icon {
+				background: transparent url(../../images/network-save-constructive.gif) no-repeat 0 0;
+			}
+		}
+	}
+
 	.ss-ui-button {
 
 		&.buttonset {
