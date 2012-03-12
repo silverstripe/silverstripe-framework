@@ -26,3 +26,7 @@
 .cms .cms-content .cms-content-fields .aligned_right_label { margin-left: 0; }
 
 .cms .ss-gridfield table.ss-gridfield-table tbody td button { border: 0; background: none; }
+
+.ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.file { margin: 0px; }
+.ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.file input.file { margin-left: -132px; }
+.ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.checkbox { padding: 0px; }

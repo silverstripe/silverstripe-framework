@@ -169,3 +169,24 @@ table.ss-gridfield-table tr {
 		background: #F0F4F7;
 	}
 }	
+
+//fix for model admin filter styling 
+.ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content {
+	.cms-search-form {
+		overflow:hidden;
+		input {
+			width:160px;
+		}
+	}
+	#Form_ImportForm {
+		div.file {
+			margin:0px;
+			input.file {
+				margin-left: -132px; //hides unnecessary text input field 
+			}
+		}	
+		div.checkbox {
+			padding:0px; //stops clear database text from overflowing onto two lines.
+		}
+	}
+}
