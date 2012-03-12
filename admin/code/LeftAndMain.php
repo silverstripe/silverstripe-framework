@@ -613,7 +613,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$treeTitle = '...';
 			}
 			
-			$html = "<ul><li id=\"record-0\" data-id=\"0\" class=\"Root nodelete\"><a href=\"$rootLink\"><strong>$treeTitle</strong></a>"
+			$html = "<ul><li id=\"record-0\" data-id=\"0\" class=\"Root nodelete\"><strong>$treeTitle</strong>"
 				. $html . "</li></ul>";
 		}
 
