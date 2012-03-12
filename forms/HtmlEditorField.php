@@ -427,14 +427,20 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		// TODO Would be cleaner to consistently pass URL for both local and remote files,
 		// but GridField doesn't allow for this kind of metadata customization at the moment.
 		if($url = $request->getVar('FileURL')) {
-			if(Director::is_absolute_url($url)) {
+			if(Director::is_absolute_url($url) && !Director::is_site_url($url)) {
 				$url = $url;
-				$file = null;	
+				$file = new File(array(
+					'Title' => basename($url),
+					'Filename' => $url
+				));	
 			} else {
 				$url = Director::makeRelative($request->getVar('FileURL'));
-				$url = preg_replace('/_resampled/[^-]+-/', '', $url);
+				$url = preg_replace('/_resampled\/[^-]+-/', '', $url);
 				$file = DataList::create('File')->filter('Filename', $url)->first();	
-				if(!$file) $file = new File(array('Title' => basename($url)));	
+				if(!$file) $file = new File(array(
+					'Title' => basename($url),
+					'Filename' => $url
+				));	
 			}
 		} elseif($id = $request->getVar('ID')) {
 			$file = DataObject::get_by_id('File', $id);
@@ -449,6 +455,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		} else {
 			$fileWrapper = new HtmlEditorField_File($url, $file);
 		}
+
 		$fields = $this->getFieldsForFile($url, $fileWrapper);
 		$this->extend('updateFieldsForFile', $fields, $url, $fileWrapper);
 
@@ -504,10 +511,15 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return FieldList
 	 */
 	protected function getFieldsForImage($url, $file) {
-		$formattedImage = $file->getFormattedImage('SetWidth', Image::$asset_preview_width);
-		$thumbnail = $formattedImage ? $formattedImage->URL : '';
+		if($file instanceof Image) {
+			$formattedImage = $file->FormattedImage('SetWidth', Image::$asset_preview_width);
+			$thumbnailURL = $formattedImage ? $formattedImage->URL : $url;	
+		} else {
+			$thumbnailURL = $url;
+		}
+		
 		$previewField = new LiteralField("ImageFull",
-			"<img id='thumbnailImage' class='thumbnail-preview' src='{$thumbnail}?r=" . rand(1,100000)  . "' alt='{$file->Name}' />\n"
+			"<img id='thumbnailImage' class='thumbnail-preview' src='{$thumbnailURL}?r=" . rand(1,100000)  . "' alt='{$file->Name}' />\n"
 		);
 
 		$fields = new FieldList(
