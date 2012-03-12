@@ -197,7 +197,16 @@
 			 */
 			submitForm_responseHandler: function(oldForm, data, status, xmlhttp, origData) {
 				if(status == 'success') {
-					var form = this.replaceForm(oldForm, data);
+					var form, newContent = $(data);
+
+					// HACK If response contains toplevel panel rather than a form, replace it instead.
+					// For example, a page view shows tree + edit form. Deleting this page redirects to
+					// the "pages" overview, which doesn't have a separate tree panel.
+					if(newContent.is('.cms-content')) {
+						$('.cms-content').replaceWith(newContent);
+					} else {
+						form = this.replaceForm(oldForm, newContent);	
+					}
 				
 					if(typeof(Behaviour) != 'undefined') Behaviour.apply(); // refreshes ComplexTableField
 					
