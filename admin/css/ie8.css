@@ -1,3 +1,8 @@
+.cms .ss-ui-button { background-color: #e6e6e6; }
+.cms .ss-ui-button.ui-state-hover { background-color: #f3f3f3; }
+.cms .ss-ui-button.ss-ui-action-constructive { background-color: #669933; }
+.cms .ss-ui-button.ss-ui-action-constructive.ui-state-hover { background-color: #73ac39; }
+
 .cms-panel .cms-panel-content-collapsed { width: 40px; }
 .cms-panel .cms-panel-content-collapsed h2, .cms-panel .cms-panel-content-collapsed h3 { display: none; }
 

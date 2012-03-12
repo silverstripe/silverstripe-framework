@@ -2,6 +2,21 @@ html {
 	overflow: hidden;
 }
 
+//fix for background colors on buttons
+.cms .ss-ui-button {
+	background-color: #e6e6e6;
+	&.ui-state-hover {
+			background-color:lighten(#e6e6e6, 5%);
+		}
+	&.ss-ui-action-constructive {
+		background-color:#669933;
+		&.ui-state-hover {
+			background-color:lighten(#669933, 5%);
+		}
+	}
+}
+
+//
 .field {
 	input.text, 
 	textarea,
