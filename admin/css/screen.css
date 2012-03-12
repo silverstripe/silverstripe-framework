@@ -307,6 +307,7 @@ body.cms { overflow: hidden; }
 /** -------------------------------------------- "Add page" dialog -------------------------------------------- */
 .cms-page-add-form-dialog { display: none; }
 
+.cms-add-form .parent-mode { padding: 8px; overflow: auto; }
 .cms-add-form #PageType li { float: none; width: 100%; padding: 9px 0 9px 15px; overflow: hidden; border-bottom-width: 2px; border-bottom: 2px groove rgba(255, 255, 255, 0.8); -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
 .cms-add-form #PageType li:last-child { border-bottom: none; }
 .cms-add-form #PageType li:hover, .cms-add-form #PageType li.selected { background-color: rgba(255, 255, 102, 0.3); }

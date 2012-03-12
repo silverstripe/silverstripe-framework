@@ -405,6 +405,11 @@ body.cms {
 }
 
 .cms-add-form {
+	.parent-mode {
+		padding: $grid-x;
+		overflow: auto;
+	}
+
 	#PageType li {
 		float: none;
 		width: 100%;
