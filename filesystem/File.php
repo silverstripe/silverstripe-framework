@@ -357,7 +357,8 @@ class File extends DataObject {
 						sprintf('<a href="%s" target="_blank">%s</a>', $this->Link(), $this->RelativeLink())
 					),
 					new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded') . ':'),
-					new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed') . ':')
+					new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed') . ':'),
+					new ReadonlyField('BackLinkCount', _t('AssetTableField.BACKLINKCOUNT', 'Used on:'), $this->BackLinkTracking()->Count() . ' ' . _t('AssetTableField.PAGES', 'page(s)'))
 				)
 			)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')
 		)->setName("FilePreview")->addExtraClass('cms-file-info');
