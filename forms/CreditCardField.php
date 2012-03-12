@@ -8,8 +8,7 @@ class CreditCardField extends TextField {
 	
 	function Field() {
 		$parts = $this->value;
-		if(!is_array($parts))
-			$parts = explode("\n", chunk_split($parts,4,"\n"));
+		if(!is_array($parts)) $parts = explode("\n", chunk_split($parts,4,"\n"));
 		$parts = array_pad($parts, 4, "");
 
 		// TODO Mark as disabled/readonly
