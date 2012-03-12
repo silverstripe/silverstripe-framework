@@ -328,6 +328,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$response = parent::handleRequest($request, $model);
 		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
 		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', $title);
+		if(!$response->getHeader('X-ControllerURL')) $response->addHeader('X-ControllerURL', $request->getURL());
 		
 		return $response;
 	}
@@ -368,7 +369,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			"$action"
 		);
 	}
-	
+
 	/**
 	 * Returns the menu title for the given LeftAndMain subclass.
 	 * Implemented static so that we can get this value without instantiating an object.
