@@ -139,7 +139,7 @@ if(!isset($_SERVER['HTTP_HOST'])) {
  */
 if(!defined('BASE_PATH')) {
 	// Assuming that this file is sapphire/core/Core.php we can then determine the base path
-	define('BASE_PATH', rtrim(dirname(dirname(dirname(__FILE__)))), DIRECTORY_SEPARATOR);
+	define('BASE_PATH', rtrim(dirname(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR));
 }
 if(!defined('BASE_URL')) {
 	// Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting common elements
