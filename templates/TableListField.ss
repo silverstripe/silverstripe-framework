@@ -1,4 +1,4 @@
-<div id="$id" class="$CSSClasses $extraClass field">
+<div id="$id" class="$CSSClasses $extraClass field nolabel">
 	<% if Print %><% else %>
 		<% if Markable %>
 			<% include TableListField_SelectOptions %>

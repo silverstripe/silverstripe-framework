@@ -102,15 +102,12 @@ TableListField.prototype = {
 				'method': 'post', 
 				'data': {forceajax: 1, SecurityID: jQuery('input[name=SecurityID]').val()},
 				'success':  function(){
-					jQuery(row).fadeOut('fast', function() {
-						// remove row from DOM
-						this.element.parentNode.removeChild(obj.element);
-						// recalculate summary if needed (assumes that TableListField.js is present)
-						// TODO Proper inheritance
-						if(self._summarise) self._summarise();
-						// custom callback
-						if(self.callback_deleteRecord) self.callback_deleteRecord(e);
-					});
+					jQuery(row).remove();
+					// recalculate summary if needed (assumes that TableListField.js is present)
+					// TODO Proper inheritance
+					if(self._summarise) self._summarise();
+					// custom callback
+					if(self.callback_deleteRecord) self.callback_deleteRecord(e);
 				},
 				'error': this.ajaxErrorHandler
 			});

@@ -1,4 +1,4 @@
-<div id="$id" class="$CSSClasses $extraClass field" href="$CurrentLink">
+<div id="$id" class="$CSSClasses $extraClass field nolabel" href="$CurrentLink">
   <div class="middleColumn">
 		<% if Markable %>
 			<% include TableListField_SelectOptions %>

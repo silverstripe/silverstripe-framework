@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 		<% base_tag %>
 	</head>
-	<body>
+	<body class="cms" style="overflow: auto;">
 		<div class="right $PopupClasses">
 			$DetailForm
 		</div>

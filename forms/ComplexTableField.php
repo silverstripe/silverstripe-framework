@@ -418,7 +418,7 @@ JS;
 	
 	function add() {
 		if(!$this->can('add')) return;
-		
+
 		return $this->customise(array(
 			'DetailForm' => $this->AddForm(),
 		))->renderWith($this->templatePopup);
@@ -472,7 +472,7 @@ JS;
 			$childData->write();
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
-			return Director::redirectBack();
+			return Controller::curr()->redirectBack();
 		}
 
 		// Save this item into the given relationship
@@ -497,7 +497,7 @@ JS;
 		
 		$form->sessionMessage($message, 'good');
 		
-		$this->controller->redirectBack();
+		return Controller::curr()->redirectBack();
 	}
 }
 
@@ -644,7 +644,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 			$dataObject->write();
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
-			return Director::redirectBack();
+			return Controller::curr()->redirectBack();
 		}
 
 		// Save this item into the given relationship
@@ -666,7 +666,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		
 		$form->sessionMessage($message, 'good');
 
-		Director::redirectBack();
+		return Controller::curr()->redirectBack();
 	}
 	
 	function PopupCurrentItem() {
@@ -815,18 +815,18 @@ class ComplexTableField_Popup extends Form {
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
 		$this->dataObject = $dataObject;
 		
-		Requirements::clear();
-		Requirements::unblock_all();
 		
 		$actions = new FieldList();	
 		if(!$readonly) {
 			$actions->push(
-				$saveAction = new FormAction(
+				Object::create('FormAction', 
 					"saveComplexTableField", 
 					_t('CMSMain.SAVE', 'Save')
 				)
-			);	
-			$saveAction->addExtraClass('save');
+					->addExtraClass('save ss-ui-action-constructive')
+					->setUseButtonTag(true)
+					->setAttribute('data-icon', 'accept')
+			);
 		}
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
@@ -837,14 +837,7 @@ class ComplexTableField_Popup extends Form {
 	function forTemplate() {
 		$ret = parent::forTemplate();
 		
-		/**
-		 * WARNING: DO NOT CHANGE THE ORDER OF THESE JS FILES
-		 * Some have special requirements.
-		 */
-		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
 		Requirements::css(SAPPHIRE_DIR . '/css/ComplexTableField_popup.css');
-		Requirements::css(CMS_DIR . '/css/typography.css');
-		Requirements::css(CMS_DIR . '/css/cms_right.css');
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous.js");
@@ -860,14 +853,12 @@ class ComplexTableField_Popup extends Form {
 			$callback = $parent->getParentController()->requirementsForPopupCallback;
 		}
 		if($callback) call_user_func($callback, $this);
-
-		// Append requirements from DataObject
-		// DEPRECATED 2.4 Use ComplexTableField->requirementsForPopupCallback
- 		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
-			$this->dataObject->getRequirementsForPopup();
-		}
 		
 		return $ret;
+	}
+
+	function getTemplate() {
+		return 'Form';
 	}
 	
 	/**
