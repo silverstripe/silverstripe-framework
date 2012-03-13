@@ -149,7 +149,8 @@ class File extends DataObject {
 	 */
 	public static $apply_restrictions_to_admin = true;
 
-	
+	public static $update_filesystem = true;
+
 	/**
 	 * Cached result of a "SHOW FIELDS" call
 	 * in instance_get() for performance reasons.
@@ -476,6 +477,8 @@ class File extends DataObject {
 	 * (it might have been influenced by {@link setName()} or {@link setParentID()} before).
 	 */
 	public function updateFilesystem() {
+		if(!self::$update_filesystem) return false;
+
 		// Regenerate "Filename", just to be sure
 		$this->setField('Filename', $this->getRelativePath());
 		
@@ -511,7 +514,7 @@ class File extends DataObject {
 				// Only check if we're dealing with a file, otherwise the folder will need to be created
 				if(!file_exists(dirname($pathAfterAbs))) throw new Exception("Cannot move $pathBefore to $pathAfter - Directory " . dirname($pathAfter) . " doesn't exist");
 			} 
-			
+
 			// Rename file or folder
 			$success = rename($pathBeforeAbs, $pathAfterAbs);
 			if(!$success) throw new Exception("Cannot move $pathBeforeAbs to $pathAfterAbs");
