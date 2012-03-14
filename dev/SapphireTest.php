@@ -680,6 +680,22 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
       self::assertThat($actual, $constraint, $message);
   }
+
+  	/**
+  	 * Provide assertEmpty() in PHPUnit <3.5.
+  	 * We want to support PHPUnit 3.4, as this is the most recent release available
+  	 * to environments running PHP <=5.2.6, such as Debian Lenny.
+  	 */
+	public static function assertEmpty($item, $message = '') {
+		if(class_exists('PHPUnit_Framework_Constraint_IsEmpty')) {
+			parent::assertEmpty($item, $message);
+		} else {
+			if(!empty($item)) {
+				$message = $message ? $message : "Failed asserting that " . var_export($item, true) . " is empty.";
+				throw new PHPUnit_Framework_AssertionFailedError($message);
+			}
+		}
+	}
 	
 	/**
 	 * Helper function for the DOS matchers
