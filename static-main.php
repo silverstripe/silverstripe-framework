@@ -20,6 +20,8 @@ $cacheBaseDir = '../cache/'; // Should point to the same folder as FilesystemPub
 
 // Optional settings for FilesystemPublisher::$domain_based_mapping=TRUE
 $hostmapLocation = '../subsites/host-map.php'; 
+
+// Specific to 'homepagefordomain' module
 $homepageMapLocation = '../assets/_homepage-map.php';
 
 if (
