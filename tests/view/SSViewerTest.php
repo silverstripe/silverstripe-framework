@@ -137,7 +137,7 @@ SS
 
 	function testLocalFunctionsTakePriorityOverGlobals() {
 		$data = new ArrayData(array(
-			'Page' => new SSViewerTest_Page()
+			'Page' => new SSViewerTest_Object()
 		));
 
 		//call method with lots of arguments
@@ -174,7 +174,7 @@ SS
 						'Name' => 'SubKid2'
 					))
 				)),
-				new SSViewerTest_Page('Number6')
+				new SSViewerTest_Object('Number6')
 			))
 		));
 
@@ -535,16 +535,16 @@ after')
 	function testSSViewerBasicIteratorSupport() {
 		$data = new ArrayData(array(
 			'Set' => new ArrayList(array(
-				new SSViewerTest_Page("1"),
-				new SSViewerTest_Page("2"),
-				new SSViewerTest_Page("3"),
-				new SSViewerTest_Page("4"),
-				new SSViewerTest_Page("5"),
-				new SSViewerTest_Page("6"),
-				new SSViewerTest_Page("7"),
-				new SSViewerTest_Page("8"),
-				new SSViewerTest_Page("9"),
-				new SSViewerTest_Page("10"),
+				new SSViewerTest_Object("1"),
+				new SSViewerTest_Object("2"),
+				new SSViewerTest_Object("3"),
+				new SSViewerTest_Object("4"),
+				new SSViewerTest_Object("5"),
+				new SSViewerTest_Object("6"),
+				new SSViewerTest_Object("7"),
+				new SSViewerTest_Object("8"),
+				new SSViewerTest_Object("9"),
+				new SSViewerTest_Object("10"),
 			))
 		));
 
@@ -966,7 +966,7 @@ class SSViewerTest_Controller extends Controller {
 	
 }
 
-class SSViewerTest_Page extends SiteTree {
+class SSViewerTest_Object extends DataObject {
 
 	public $number = null;
 
