@@ -155,7 +155,6 @@
 								var val = self.getValue(), selectNode = treeHolder.find('*[data-id="' + val + '"]'), 
 									currentNode = data.inst.get_selected();
 								if(val && selectNode != currentNode) data.inst.select_node(selectNode);
-								data.inst.open_all();
 								firstLoad = false;
 								if(callback) callback.apply(self);
 							})
