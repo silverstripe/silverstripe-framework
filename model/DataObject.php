@@ -1859,7 +1859,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function getCMSFields($params = null) {
 		$tabbedFields = $this->scaffoldFormFields(array_merge(
 			array(
-				'includeRelations' => true,
+				// Don't allow has_many/many_many relationship editing before the record is first saved
+				'includeRelations' => ($this->ID > 0),
 				'tabbed' => true,
 				'ajaxSafe' => true
 			),
