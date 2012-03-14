@@ -328,7 +328,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$response = parent::handleRequest($request, $model);
 		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
 		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', $title);
-		if(!$response->getHeader('X-ControllerURL')) $response->addHeader('X-ControllerURL', $request->getURL());
+		if(!$response->getHeader('X-ControllerURL')) {
+			$url = $request->getURL();
+			if($getVars = $request->getVars()) {
+				if(isset($getVars['url'])) unset($getVars['url']);
+				$url = Controller::join_links($url, '?' . http_build_query($getVars));
+			}
+			$response->addHeader('X-ControllerURL', $url);
+		}
 		
 		return $response;
 	}
