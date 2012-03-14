@@ -59,7 +59,7 @@ class ManyManyList extends RelationList {
 		$baseClass = ClassInfo::baseDataClass($dataClass);
 
 		// Join to the many-many join table
-		$this->dataQuery->innerJoin($joinTable, "\"$this->localKey\" = \"$baseClass\".\"ID\"");
+		$this->dataQuery->innerJoin($joinTable, "\"$joinTable\".\"$this->localKey\" = \"$baseClass\".\"ID\"");
 
 		// Query the extra fields from the join table
 		if($extraFields) $this->dataQuery->selectFromTable($joinTable, array_keys($extraFields));
