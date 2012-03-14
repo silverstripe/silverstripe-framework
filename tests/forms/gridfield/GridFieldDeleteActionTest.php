@@ -31,7 +31,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 		// Check that there are content
 		$this->assertEquals(4, count($content->getBySelector('.ss-gridfield-item')));
 		// Make sure that there are no delete buttons
-		$this->assertEmpty($content->getBySelector('.gridfield-button-delete'), 'Delete buttons should not show when not logged in.');
+		$this->assertEquals(0, count($content->getBySelector('.gridfield-button-delete')), 'Delete buttons should not show when not logged in.');
 	}
 	
 	public function testShowDeleteButtonsWithAdminPermission() {
