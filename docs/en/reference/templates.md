@@ -217,25 +217,25 @@ $Modulus and $MultipleOf can help to build column layouts.
 	$Modulus(value, offset) // returns an int
 	$MultipleOf(factor, offset) // returns a boolean.
 
-The following example demonstrates how you can use $Modulus(4) to generate custom column names based on your control statement. Note that this works for any control statement (not just children)
+The following example demonstrates how you can use $Modulus(4) to generate custom column names based on your loop statement. Note that this works for any control statement (not just children)
 
 	:::ss
-	<% control Children %>
+	<% loop Children %>
 	<div class="column-{$Modulus(4)}">
 		...
 	</div>
-	<% end_control %>
+	<% end_loop %>
 
 Will return you column-3, column-2, column-1, column-0, column-3 etc. You can use these as styling hooks to float, position as you need.
 
 You can also use $MultipleOf(value, offset) to help build columned layouts. In this case we want to add a <br> after every 3th item
 
 	:::ss
-	<% control Children %>
+	<% loop Children %>
 		<% if MultipleOf(3) %>
 			<br>
 		<% end_if %>
-	<% end_control %>
+	<% end_loop %>
 
 ## Scope
 
@@ -352,9 +352,9 @@ Your function could return a single value as above or it could be a subclass of 
 And now you could call these values by using
 
 	:::ss
-	<% control MyCustomValues %>
+	<% with MyCustomValues %>
 	$Hi , $Name
-	<% end_control %>
+	<% end_with %>
 	
 	// output "Kia Ora , John Smith" 
 
