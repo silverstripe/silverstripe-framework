@@ -10,7 +10,8 @@
  * A TableField-instance should never be saved twice without reloading, because otherwise it 
  * can't determine if a field is new (=create) or existing (=update), and will produce duplicates.
  * 
- * @todo We should refactor this to support a single FieldList instead of evaluated Strings for building FormFields
+ * IMPORTANT: This class is about to be deprecated in favour of a new GridFieldEditableColumns component,
+ * see http://open.silverstripe.org/ticket/7045
  * 
  * @package forms
  * @subpackage fields-relational
