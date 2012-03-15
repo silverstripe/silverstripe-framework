@@ -231,7 +231,7 @@ input.radio { margin-left: 0; }
 * (see _tree.scss and _menu.scss).
 */
 /** ---------------------------------------------------- Core Styles. ---------------------------------------------------- */
-html, body { width: 100%; height: 100%; }
+html, body { width: 100%; height: 100%; /* Removes RHS whitespace on iPad */ overflow-x: hidden; }
 
 body.cms { overflow: hidden; }
 
