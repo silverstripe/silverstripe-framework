@@ -260,6 +260,10 @@ class TableListField extends FormField {
 	function __construct($name, $sourceClass, $fieldList = null, $sourceFilter = null, 
 		$sourceSort = null, $sourceJoin = null) {
 
+		// if $fieldList were passed in numeric array, convert to an associative array 
+ 		if($fieldList && array_key_exists(0, $fieldList)) { 
+ 			$fieldList = array_combine(array_values($fieldList), array_values($fieldList)); 
+ 		}
 		$this->fieldList = ($fieldList) ? $fieldList : singleton($sourceClass)->summaryFields();
 		$this->sourceClass = $sourceClass;
 		$this->sourceFilter = $sourceFilter;
