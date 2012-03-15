@@ -3,8 +3,10 @@
 		<h3 class="cms-panel-header"><% _t('FILTER', 'Filter') %></h3>
 		$SearchForm
 
-		<h3 class="cms-panel-header"><% _t('IMPORT', 'Import') %></h3>
-		$ImportForm
+		<% if ImportForm %>
+			<h3 class="cms-panel-header"><% _t('IMPORT', 'Import') %></h3>
+			$ImportForm
+		<% end_if %>
 	</div>
 	<div class="cms-panel-content-collapsed">
 		<h3 class="cms-panel-header"><% _t('FILTER', 'Filter') %></h3>
