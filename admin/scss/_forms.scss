@@ -220,6 +220,12 @@ form.small .field, .field.small {
 		width: 50%;
 		max-width: ($grid-x * 12);
 	}
+	
+	/* Hides borders in settings/access. Activated from JS */
+	&.remove-splitter {
+		border-bottom: none;
+		box-shadow: none;
+	}
 }
 
 /** ----------------------------------------------------
