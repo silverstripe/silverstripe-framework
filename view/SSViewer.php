@@ -52,7 +52,12 @@ class SSViewer_Scope {
 		array_splice($this->itemStack, $this->localIndex+1);
 	}
 	
-	function obj($name){
+	function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
+		return $on->obj($name, $arguments, $forceReturnedObject, $cache, $cacheName);
+	}
+	
+	function obj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null){
 		
 		switch ($name) {
 			case 'Up':
@@ -64,10 +69,7 @@ class SSViewer_Scope {
 				break;
 			
 			default:
-				$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
-				
-				$arguments = func_get_args();
-				$this->item = call_user_func_array(array($on, 'obj'), $arguments);
+				$this->item = $this->getObj($name, $arguments, $forceReturnedObject, $cache, $cacheName);
 				
 				$this->itemIterator = null;
 				$this->upIndex = $this->currentIndex ? $this->currentIndex : count($this->itemStack)-1;
@@ -389,19 +391,31 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 
 			// If we want to provide a casted object, look up what type object to use
 			if ($cast) {
-				// Get the object to cast as
-				$casting = isset($source['casting']) ? $source['casting'] : null;
-				// If not provided, use default
-				if (!$casting) $casting = Object::get_static('ViewableData', 'default_cast');
+				// If the handler returns an object, then we don't need to cast.
+				if(is_object($res['value'])) {
+					$res['obj'] = $res['value'];
 
-				$obj = new $casting($property);
-				$obj->setValue($res['value']);
+				} else {
+					// Get the object to cast as
+					$casting = isset($source['casting']) ? $source['casting'] : null;
+					// If not provided, use default
+					if (!$casting) $casting = Object::get_static('ViewableData', 'default_cast');
 
-				$res['obj'] = $obj;
+					$obj = new $casting($property);
+					$obj->setValue($res['value']);
+
+					$res['obj'] = $obj;
+				}
 			}
 
 			return $res;
 		}
+	}
+
+	function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+		$result = $this->getInjectedValue($name, (array)$arguments);
+		if($result) return $result['obj'];
+		else return parent::getObj($name, $arguments, $forceReturnedObject, $cache, $cacheName);
 	}
 
 	function __call($name, $arguments) {
