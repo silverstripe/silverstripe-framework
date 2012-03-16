@@ -210,13 +210,13 @@ If the user is logged in this will print out
 	Welcome Back, Admin
 
 
-#### <% if PastMember %>
+#### <% if IsRepeatMember %>
 
-Detect the visitor's previous experience with the site. `$PastMember` will return true if the visitor has signed up or
-logged in on the site before.
+Detect the visitor's previous experience with the site. `$IsRepeatMember` will return true if the visitor has signed up or logged in on the site before.
 
-Note that as of version 2.4 `$PastVisitor` is deprecated. If you wish to check if a visitor has been to the site before,
-set a cookie with `Cookie::set()` and test for it with `Cookie::get()`.
+Note that as of version 2.4 `$PastVisitor` is deprecated. If you wish to check if a visitor has been to the site before, set a cookie with `Cookie::set()` and test for it with `Cookie::get()`.
+
+Note that in 2.4 this variable was called `$PastMember`.  This still works in 3.0 but is deprecated.
 
 ### Date and Time
 
