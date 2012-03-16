@@ -394,6 +394,11 @@ body.cms { overflow: hidden; }
 .cms-preview-header { background-color: #FFBE66; padding: 10px; font-weight: bold; }
 
 /** -------------------------------------------- Member Profile -------------------------------------------- */
+form.member-profile-form { padding: 0 16px 0 0; }
+form.member-profile-form .ui-tabs-nav .ui-state-default, form.member-profile-form .ui-tabs-nav .ui-widget-content .ui-state-default, form.member-profile-form .ui-tabs-nav .ui-widget-header .ui-state-default { border-top: none; }
+form.member-profile-form #Root_Permissions { clear: both; padding: 16px; }
+form.member-profile-form #Root_Main { clear: both; padding: 16px; }
+form.member-profile-form #FavouritePageID { margin-top: 8px; }
 form.member-profile-form #CsvFile .middleColumn { background: none !important; }
 form.member-profile-form .advanced h4 { margin-bottom: .5em; }
 form.member-profile-form .Actions { text-align: left; border: 0; }
@@ -406,8 +411,8 @@ form.member-profile-form #Groups .middleColumn { margin-left: 0; width: 100%; }
 form.member-profile-form #Groups .middleColumn .TreeDropdownField { width: 90%; max-width: 90%; }
 form.member-profile-form #Permissions .optionset li { float: none; width: auto; }
 form.member-profile-form .ui-tabs-nav li { margin: 0 0 -1px 0; }
-form.member-profile-form .ui-corner-all, form.member-profile-form .ui-corner-top, form.member-profile-form .ui-corner-right, form.member-profile-form .ui-corner-tr { border-radius: 0; }
-form.member-profile-form .ui-corner-all, form.member-profile-form .ui-corner-top, form.member-profile-form .ui-corner-left, form.member-profile-form .ui-corner-tl { border-radius: 0; }
+form.member-profile-form .ui-tabs-nav .ui-corner-all, form.member-profile-form .ui-tabs-nav .ui-corner-top, form.member-profile-form .ui-tabs-nav .ui-corner-right, form.member-profile-form .ui-tabs-nav .ui-corner-tr { border-radius: 0; }
+form.member-profile-form .ui-tabs-nav .ui-corner-all, form.member-profile-form .ui-tabs-nav .ui-corner-top, form.member-profile-form .ui-tabs-nav .ui-corner-left, form.member-profile-form .ui-tabs-nav .ui-corner-tl { border-radius: 0; }
 
 .cms .cms-content { border-right: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -webkit-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -o-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -moz-border-radius: 0; -webkit-border-radius: 0; -o-border-radius: 0; -ms-border-radius: 0; -khtml-border-radius: 0; border-radius: 0; }
 .cms .cms-content-fields { /* always show a y scroll bar as popups like TreeDropdowns  can trigger longer pages and the extra scroll bar doesn't  fire our sizing bar */ overflow-y: auto; overflow-x: auto; background: none; width: 100%; }
@@ -450,6 +455,8 @@ form.member-profile-form .ui-corner-all, form.member-profile-form .ui-corner-top
 
 .cms .ui-widget-overlay { background-color: #000; background-image: none; }
 
+.cms .ui-dialog .ss-ui-dialog.ui-dialog-content { padding-top: 0px; }
+
 .ui-dialog { background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; border: 3px solid #000 !important; border-radius: 8px; overflow: visible; padding: 0; }
 .ui-dialog .ui-dialog-titlebar.ui-widget-header { font-size: 14px; background-color: #92a5b2; padding: 4px 4px 4px 16px; border-bottom: 2px solid #8399a7; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2NlZDdkYyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzkyYTViMiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ced7dc), color-stop(100%, #92a5b2)); background-image: -webkit-linear-gradient(#ced7dc, #92a5b2); background-image: -moz-linear-gradient(#ced7dc, #92a5b2); background-image: -o-linear-gradient(#ced7dc, #92a5b2); background-image: -ms-linear-gradient(#ced7dc, #92a5b2); background-image: linear-gradient(#ced7dc, #92a5b2); }
 .ui-dialog.loading { background-image: url(../images/spinner.gif); background-position: 50% 50%; background-repeat: no-repeat; }
@@ -461,7 +468,7 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .cms-dialog-content .ss-tabset { z-index: 60; -moz-border-radius: none; -webkit-border-radius: none; -o-border-radius: none; -ms-border-radius: none; -khtml-border-radius: none; border-radius: none; }
 .cms-dialog-content .ss-tabset .tab { background: none; overflow-y: auto; }
 .cms-dialog-content .ss-tabset.ui-tabs { background: none; }
-.cms-dialog-content .ss-tabset.ui-tabs .ui-tabs-nav { padding: 8px 0 0 0; border: none; }
+.cms-dialog-content .ss-tabset.ui-tabs .ui-tabs-nav { border: none; padding: 0 40px 0 0; float: right; }
 .cms-dialog-content .ss-tabset.ui-tabs .ui-tabs-nav li { font-weight: bold; line-height: 16px; padding: 11px 12px 9px; border-bottom: 2px solid #B3B3B3; }
 .cms-dialog-content .ss-tabset.ui-tabs .ui-tabs-nav li.ui-tabs-selected { margin-bottom: -1px; }
 .cms-dialog-content .ss-tabset.ui-tabs .ui-tabs-nav li:first-child { margin-left: 15px; }

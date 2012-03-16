@@ -822,7 +822,31 @@ body.cms {
  * -------------------------------------------- */
 
 form.member-profile-form {
-	
+	padding: 0 $grid-x*2 0 0;
+	.ui-tabs-nav {
+		.ui-state-default,
+		.ui-widget-content .ui-state-default,
+		.ui-widget-header .ui-state-default {
+			border: {
+				top:none;
+			}
+		}
+	}
+
+	#Root_Permissions {
+		clear:both;
+		padding: $grid-x*2;
+	}
+
+	#Root_Main {
+		clear:both;
+		padding: $grid-x*2;
+	}
+
+	#FavouritePageID {
+		margin-top:$grid-y;
+	}
+
 	#CsvFile .middleColumn {
 		background: none !important;
 	}
@@ -888,13 +912,13 @@ form.member-profile-form {
 		li {
 			margin:0 0 -1px 0;
 		}
-	}
-	.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
-		border-radius:0;
-	}
+		.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+			border-radius:0;
+		}
 
-	.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
-		border-radius:0;
+		.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+			border-radius:0;
+		}
 	}
 }
 
@@ -1092,6 +1116,10 @@ form.member-profile-form {
 	background-image: none;
 }
 
+.cms .ui-dialog .ss-ui-dialog.ui-dialog-content {
+	padding-top: 0px; //removes padding so that tabs are flush with header
+}
+
 // Elements with this class can either frame inline markup or an iframe,
 // most styles should be applied to .cms-dialog instead (which declares the content in the frame)
 .ui-dialog {
@@ -1147,8 +1175,9 @@ body.cms-dialog {
 			background: none;
 
 			.ui-tabs-nav {
-				padding: $grid-x 0 0 0;
 				border: none;
+				padding: 0 $grid-x*5 0 0; //allows for 40px gap to the right of tabs to match the tabs on main CMS
+				float: right;
 
 				li {	
 					&.ui-tabs-selected {
