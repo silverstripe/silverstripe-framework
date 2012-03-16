@@ -406,15 +406,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	//-----------------------------------------------------------------------------------
 
 	/**
-	 * returns a date object for use within a template
-	 * Usage: $Now.Year - Returns 2006
-	 * @return Date The current date
-	 */
-	function Now() {
-		$d = new Date(null);
-		$d->setValue(date("Y-m-d h:i:s"));
-		return $d;
-	}
 	 * Pushes this controller onto the stack of current controllers.
 	 * This means that any redirection, session setting, or other things that rely on Controller::curr() will now write to this
 	 * controller object.

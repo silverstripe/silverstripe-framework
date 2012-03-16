@@ -23,7 +23,7 @@
  * @package sapphire
  * @subpackage model
  */
-class SS_Datetime extends Date {
+class SS_Datetime extends Date implements TemplateGlobalProvider {
 	
 	function setValue($value) {
 		if($value === false || $value === null || (is_string($value) && !strlen($value))) {
@@ -123,6 +123,12 @@ class SS_Datetime extends Date {
 	 */
 	static function clear_mock_now() {
 		self::$mock_now = null;
+	}
+	
+	public static function get_template_global_variables() {
+		return array(
+			'Now' => array('method' => 'now', 'casting' => 'SS_Datetime'),
+		);
 	}
 }
 
