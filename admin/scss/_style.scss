@@ -841,6 +841,12 @@ form.member-profile-form {
 	#Root_Main {
 		clear:both;
 		padding: $grid-x*2;
+		.cms-help-toggle {
+			text-indent: -9999em;
+			display: inline-block;
+			width: 20px;
+			background:url(../images/question.png) no-repeat 0px 0px; 
+		}
 	}
 
 	#FavouritePageID {
