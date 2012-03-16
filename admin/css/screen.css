@@ -613,8 +613,8 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree-apple li, .cms-tree.jstree-apple li { padding: 0px; clear: left; }
 .tree-holder.jstree-apple ins, .cms-tree.jstree-apple ins { background-color: transparent; background-image: url(../images/sitetree_ss_default_icons.png); }
 .tree-holder.jstree-apple li.jstree-checked > a, .tree-holder.jstree-apple li.jstree-checked > a:link, .cms-tree.jstree-apple li.jstree-checked > a, .cms-tree.jstree-apple li.jstree-checked > a:link { background-color: #efe999; }
-.tree-holder.jstree-apple .jstree-closed > ins, .cms-tree.jstree-apple .jstree-closed > ins { background-position: 0 0; }
-.tree-holder.jstree-apple .jstree-open > ins, .cms-tree.jstree-apple .jstree-open > ins { background-position: -20px 0; }
+.tree-holder.jstree-apple .jstree-closed > ins, .cms-tree.jstree-apple .jstree-closed > ins { background-position: 0 0; cursor: pointer; }
+.tree-holder.jstree-apple .jstree-open > ins, .cms-tree.jstree-apple .jstree-open > ins { background-position: -20px 0; cursor: pointer; }
 
 a .jstree-pageicon { display: block; float: left; width: 16px; height: 16px; margin-right: 4px; background-color: transparent; background-image: url(../images/sitetree_ss_pageclass_icons_default.png); background-repeat: no-repeat; }
 
