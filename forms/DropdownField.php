@@ -165,7 +165,7 @@ class DropdownField extends FormField {
 	function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array('type' => null)
+			array('type' => null, 'value' => null)
 		);
 	}
 
