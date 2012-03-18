@@ -192,6 +192,7 @@ class Form extends RequestHandler {
 		'$Action!' => 'handleAction',
 		'POST ' => 'httpSubmission',
 		'GET ' => 'httpSubmission',
+		'HEAD ' => 'httpSubmission',
 	);
 	
 	/**
