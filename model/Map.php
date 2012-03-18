@@ -165,7 +165,9 @@ class SS_Map_Iterator implements Iterator {
 		if(isset($this->firstItems[$this->firstItemIdx])) {
 			return $this->firstItems[$this->firstItemIdx][1];
 		} else {
-			if($rewoundItem) return $rewoundItem->{$this->titleField};
+			if($rewoundItem) return ($rewoundItem->hasMethod($this->titleField))
+				? $rewoundItem->{$this->titleField}()
+				: $rewoundItem->{$this->titleField};
 		}
 		
 	}
@@ -174,7 +176,9 @@ class SS_Map_Iterator implements Iterator {
 		if(isset($this->firstItems[$this->firstItemIdx])) {
 			return $this->firstItems[$this->firstItemIdx][1];
 		} else {
-			return $this->items->current()->{$this->titleField};
+			return ($this->items->current()->hasMethod($this->titleField))
+				? $this->items->current()->{$this->titleField}()
+				: $this->items->current()->{$this->titleField};
 		}
 	}
 	

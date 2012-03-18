@@ -1051,7 +1051,11 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 			'Position' => 'Varchar(100)'
 		)
 	);
-	
+
+	function MyTitle() {
+		return 'Team ' . $this->Title;
+	}
+
 	function getDynamicField() {
 		return 'dynamicfield';
 	}
