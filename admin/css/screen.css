@@ -260,9 +260,9 @@ body.cms { overflow: hidden; }
 .cms-content-header h2 { float: left; padding: 8px 8px 0 8px; font-size: 14px; line-height: 24px; font-weight: bold; text-shadow: #bfcad2 1px 1px 0; max-width: 400px; margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
 .cms-content-header > div { width: 9999em; overflow: hidden; }
 .cms-content-header .cms-content-header-tabs { position: fixed; right: 40px; }
-.cms-content-header .cms-content-header-tabs .ui-tabs-nav li a { font-weight: bold; line-height: 16px; padding: 12px 20px 11px; }
+.cms-content-header .cms-content-header-tabs .ui-tabs-nav li a { font-weight: bold; line-height: 16px; padding: 12px 20px 12px; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-state-default, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-default, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-default { border-top: none; }
-.cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-state-active, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active { border-top: none; }
+.cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-state-active, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active { border-top: none; padding-bottom: 0px; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-all, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-top, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-right, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-tr { border-radius: 0; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-all, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-top, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-left, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-tl { border-radius: 0; }
 
