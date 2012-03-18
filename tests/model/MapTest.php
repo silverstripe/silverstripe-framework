@@ -68,6 +68,20 @@ class SS_MapTest extends SapphireTest {
 		), $map->keys());
 	}
 
+	function testMethodAsValueField() {
+		$list = DataList::create('DataObjectTest_Team');
+		$list->sort('Title');
+		$map = new SS_Map($list, 'ID', 'MyTitle');
+		$this->assertEquals(array(
+			'Team Subteam 1',
+			'Team Subteam 2',
+			'Team Subteam 3',
+			'Team Team 1',
+			'Team Team 2',
+			'Team Team 3'
+		), $map->values());
+	}
+
 	function testValues() {
 		$list = DataList::create('DataObjectTest_TeamComment');
 		$list->sort('Name');
