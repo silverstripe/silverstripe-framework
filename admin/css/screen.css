@@ -424,6 +424,7 @@ form.member-profile-form .ui-tabs-nav .ui-corner-all, form.member-profile-form .
 .cms .cms-content-fields #Root_Main .confirmedpassword { border-bottom: none; box-shadow: none; }
 .cms .cms-content-fields #Root_Main .customFormat { max-width: 80px; }
 .cms .cms-content-fields #Root_Main .cms-help-toggle { text-indent: -9999em; display: inline-block; width: 20px; background: url(../images/question.png) no-repeat 0px 0px; }
+.cms .cms-content-fields #Root_Permissions ul.optionset li { float: none; }
 
 /** -------------------------------------------- "Settings" Form -------------------------------------------- */
 #CanViewType .optionset li, #CanEditType .optionset li, #CanCreateTopLevelType .optionset li { float: none; width: auto; white-space: nowrap; }

@@ -978,6 +978,11 @@ form.member-profile-form {
 				background:url(../images/question.png) no-repeat 0px 0px;
 			}
 		}
+		#Root_Permissions{
+			ul.optionset li {
+				float:none;
+			}
+		}	
 	}
 }
 
