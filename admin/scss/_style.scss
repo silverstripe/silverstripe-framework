@@ -963,6 +963,21 @@ form.member-profile-form {
 			margin-left:$grid-x*23;
 			padding:$grid-x 0;
 		}
+		#Root_Main {
+			.confirmedpassword {
+				border-bottom:none;
+				box-shadow:none;
+			}
+			.customFormat {
+				max-width:80px;
+			}
+			.cms-help-toggle {
+				text-indent: -9999em;
+				display: inline-block;
+				width: 20px;
+				background:url(../images/question.png) no-repeat 0px 0px;
+			}
+		}
 	}
 }
 
