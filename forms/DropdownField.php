@@ -134,8 +134,8 @@ class DropdownField extends FormField {
 			// SQLMap needs this to add an empty value to the options
 			if(is_object($source) && $this->emptyString) {
 				$options[] = new ArrayData(array(
-					'Value' => $this->emptyString,
-					'Title' => '',
+					'Value' => '',
+					'Title' => $this->emptyString,
 				));
 			}
 
