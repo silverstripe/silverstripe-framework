@@ -146,9 +146,9 @@ abstract class DBField extends ViewableData {
 		} elseif(method_exists($conn, 'prepStringForDB')) {
 			return $conn->prepStringForDB($value);
 		} else {
-			return "'" . Convert::raw2sql($value) . "'";
+			return DB::getConn()->prepStringForDB($value);
 		}
-	}	
+	}
 	
 	/**
 	 * Prepare the current field for usage in a 
