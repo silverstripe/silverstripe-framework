@@ -75,8 +75,8 @@ abstract class StringField extends DBField {
 	 * @see core/model/fieldtypes/DBField#prepValueForDB($value)
 	 */
 	function prepValueForDB($value) {
-		if ( !$this->nullifyEmpty && $value === '' ) {
-			return "'" . Convert::raw2sql($value) . "'";
+		if(!$this->nullifyEmpty && $value === '') {
+			return DB::getConn()->prepStringForDB($value);
 		} else {
 			return parent::prepValueForDB($value);
 		}
