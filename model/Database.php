@@ -757,7 +757,19 @@ abstract class SS_Database {
 		}
 		return $text;
 	}
-	
+
+	/**
+	 * Wrap a string into DB-specific quotes. MySQL, PostgreSQL and SQLite3 only need single quotes around the string.
+	 * MSSQL will overload this and include it's own N prefix to mark the string as unicode, so characters like macrons
+	 * are saved correctly.
+	 *
+	 * @param string $string String to be prepared for database query
+	 * @return string Prepared string
+	 */
+	public function prepStringForDB($string) {
+		return "'" . Convert::raw2sql($string) . "'";
+	}
+
 	/**
 	 * Function to return an SQL datetime expression that can be used with the adapter in use
 	 * used for querying a datetime in a certain format
