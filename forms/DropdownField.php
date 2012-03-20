@@ -13,11 +13,10 @@
  * 
  * 	public function getCMSFields() {
  * 		$fields = parent::getCMSFields();
- * 		$galleries = DataObject::get('Gallery');
- * 		if ($galleries) {
- * 			$galleries = $galleries->toDropdownMap('ID', 'Title', '(Select one)', true);
- * 		}
- * 		$fields->addFieldToTab('Root.Content', new DropdownField('GalleryID', 'Gallery', $galleries), 'Content');
+ * 		$field = new DropdownField('GalleryID', 'Gallery', DataList::create('Gallery')->map('ID', 'Title'));
+ * 		$field->setHasEmptyDefault(true);
+ * 		$field->setEmptyString('(Select one)');
+ * 		$fields->addFieldToTab('Root.Content', $field, 'Content');
  * </code>
  * 
  * As you see, you need to put "GalleryID", rather than "Gallery" here.
