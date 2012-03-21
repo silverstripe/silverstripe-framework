@@ -1833,8 +1833,11 @@ class i18n extends Object implements TemplateGlobalProvider {
 			}
 		}
 
-		// Finally, load any translations from registered plugins
+		// Load any translations from registered plugins
 		if ($load_plugins) self::plugins_load($locale);
+		
+		// Make sure this is only done once. We don't want to attempt it hundreds of times for missing locals
+		if(!isset($lang[$locale])) $lang[$locale] = array();
 	}
 
 	/**
