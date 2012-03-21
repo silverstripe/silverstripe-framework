@@ -812,7 +812,7 @@ class GridField_FormAction extends FormAction {
 				// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch 
 				// will strip it from the requests 
 				'name' => 'action_gridFieldAlterAction'. '?' . http_build_query($actionData),
-				'data-url' => $this->gridField->Link(),
+				'data-url' => $this->gridField->Link() . '?' . http_build_query(Controller::curr()->getURLParams()),
 			)
 		);
 	}
