@@ -1,10 +1,19 @@
 <?php
 /**
- * This class is an GridField Component that add Delete action for Objects in the GridField.
- * See {@link GridFieldRemoveButton} for detaching an item from the current relationship instead.
+ * This class is an GridField component that adds a delete action for objects in a {@link GridField}.
+ *
+ * This will also supports unlinking a relation instead of deleting the object. Use the {@link $removeRelation}
+ * property set in the constructor.
+ *
+ * <code>
+ * $action = new GridFieldDeleteAction(); // delete objects permanently
+ * $action = new GridFieldDeleteAction(true); // removes the relation to object, instead of deleting
+ * </code>
+ *
+ * @package sapphire
+ * @subpackage gridfield
  */
 class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_ActionProvider {
-	
 	
 	/**
 	 * If this is set to true, this actionprovider will remove the object from the list, instead of 
