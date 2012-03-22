@@ -809,6 +809,10 @@ class Security extends Controller {
 		foreach($requiredTables as $table) {
 			// if any of the tables aren't created in the database
 			if(!ClassInfo::hasTable($table)) return false;
+
+			// HACK: DataExtensions aren't applied until a class is instantiated for
+			// the first time, so create an instance here.
+			singleton($table);
 		
 			// if any of the tables don't have all fields mapped as table columns
 			$dbFields = DB::fieldList($table);
