@@ -14,7 +14,6 @@
  * 	public function getCMSFields() {
  * 		$fields = parent::getCMSFields();
  * 		$field = new DropdownField('GalleryID', 'Gallery', DataList::create('Gallery')->map('ID', 'Title'));
- * 		$field->setHasEmptyDefault(true);
  * 		$field->setEmptyString('(Select one)');
  * 		$fields->addFieldToTab('Root.Content', $field, 'Content');
  * </code>
@@ -29,7 +28,7 @@
  *   static $db = array(
  *     'Country' => "Varchar(100)"
  *   );
- * }			
+ * }
  * </code>
  * 
  * Exampe instantiation:
@@ -55,7 +54,7 @@
  *   static $db = array(
  *     'Country' => "Enum('New Zealand,United States,Germany','New Zealand')"
  *   );
- * }			
+ * }
  * </code>
  * 
  * Field construction:
@@ -113,16 +112,9 @@ class DropdownField extends FormField {
 	 * @param $source An map of the dropdown items
 	 * @param $value The current value
 	 * @param $form The parent form
-	 * @param $emptyString mixed Add an empty selection on to of the {@link $source}-Array 
-	 * 	(can also be boolean, which results in an empty string)
-	 *  Argument is deprecated in 2.3, please use {@link setHasEmptyDefault()} and {@link setEmptyString()} instead.
 	 */
-	function __construct($name, $title = null, $source = array(), $value = "", $form = null, $emptyString = null) {
+	function __construct($name, $title = null, $source = array(), $value = "", $form = null) {
 		$this->setSource($source);
-		
-		if($emptyString) $this->setHasEmptyDefault(true);
-		if(is_string($emptyString)) $this->setEmptyString($emptyString);
-	
 		parent::__construct($name, ($title===null) ? $name : $title, $value, $form);
 	}
 	
@@ -130,7 +122,7 @@ class DropdownField extends FormField {
 		$source = $this->getSource();
 		$options = array();
 		if($source) {
-			// SQLMap needs this to add an empty value to the options
+			// SS_Map needs this to add an empty value to the options
 			if(is_object($source) && $this->emptyString) {
 				$options[] = new ArrayData(array(
 					'Value' => '',
