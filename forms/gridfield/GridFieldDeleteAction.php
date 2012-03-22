@@ -26,10 +26,10 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	
 	/**
 	 *
-	 * @param boolean $unlinkRelation - true if removing the item from the list, but not deleting it
+	 * @param boolean $removeRelation - true if removing the item from the list, but not deleting it
 	 */
-	public function __construct($unlinkRelation = false) {
-		$this->removeRelation = $unlinkRelation;
+	public function __construct($removeRelation = false) {
+		$this->removeRelation = $removeRelation;
 	}
 	
 	/**
@@ -39,8 +39,9 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	 * @param array $columns 
 	 */
 	public function augmentColumns($gridField, &$columns) {
-		if(!in_array('Actions', $columns))
+		if(!in_array('Actions', $columns)) {
 			$columns[] = 'Actions';
+		}
 	}
 	
 	/**
