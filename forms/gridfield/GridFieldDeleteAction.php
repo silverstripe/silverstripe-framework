@@ -2,8 +2,8 @@
 /**
  * This class is a {@link GridField} component that adds a delete action for objects.
  *
- * This will also supports unlinking a relation instead of deleting the object. Use the {@link $removeRelation}
- * property set in the constructor.
+ * This component also supports unlinking a relation instead of deleting the object.
+ * Use the {@link $removeRelation} property set in the constructor.
  *
  * <code>
  * $action = new GridFieldDeleteAction(); // delete objects permanently
