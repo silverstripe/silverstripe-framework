@@ -162,12 +162,15 @@ class RequestHandler extends ViewableData {
 						}
 						
 						try {
+							if(!$this->hasMethod($action)) {
+								return $this->httpError(404, "Action '$action' isn't available on class " . get_class($this) . ".");
+							}
 							$result = $this->$action($request);
 						} catch(SS_HTTPResponse_Exception $responseException) {
 							$result = $responseException->getResponse();
 						}
 					} else {
-						return $this->httpError(403, "Action '$action' isn't allowed on class $this->class");
+						return $this->httpError(403, "Action '$action' isn't allowed on class " . get_class($this) . ".");
 					}
 				
 					if($result instanceof SS_HTTPResponse && $result->isError()) {
