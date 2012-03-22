@@ -47,11 +47,6 @@ class UploadField extends FileField {
 	/**
 	 * @var String
 	 */
-	protected $folderName;
-
-	/**
-	 * @var String
-	 */
 	protected $template = 'UploadField';
 
 	/**
@@ -147,14 +142,6 @@ class UploadField extends FileField {
 
 		$this->getValidator()->setAllowedExtensions(array_filter(File::$allowed_extensions)); // filter out '' since this would be a regex problem on JS end
 		$this->getValidator()->setAllowedMaxFileSize(min(File::ini2bytes(ini_get('upload_max_filesize')), File::ini2bytes(ini_get('post_max_size')))); // get the lower max size
-	}
-
-	/**
-	 * Set the folder name to upload to (relative to ASSETS_PATH)
-	 * @param string $name Name of folder
-	 */
-	public function setFolderName($name) {
-		$this->folderName = $name;
 	}
 
 	/**
