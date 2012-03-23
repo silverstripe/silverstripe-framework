@@ -51,12 +51,12 @@
 
 				<% if Code == 'CMSPagesController' %>
 					<ul>
-						<li class="last <% if Top.class == 'CMSPagesController' %>current<% end_if %>" id="Menu-CMSPagesController">
+						<li class="first <% if Top.class == 'CMSPagesController' %>current<% end_if %>" id="Menu-CMSPagesController">
 							<a href="admin/pages/">
 								<span class="text">Edit &amp; organize</span>
 							</a>
 						</li>
-						<li class="first <% if Top.class == 'CMSPageAddController' %>current<% end_if %>" id="Menu-CMSPageAddController">
+						<li class="last <% if Top.class == 'CMSPageAddController' %>current<% end_if %>" id="Menu-CMSPageAddController">
 							<a href="admin/page/add/?ParentID=$Top.CurrentPageID">
 								<span class="text">Add pages</span>
 							</a>
@@ -66,12 +66,12 @@
 
 				<% if Code == 'AssetAdmin' %>
 					<ul>
-						<li class="last <% if Top.class == 'AssetAdmin' %>current<% end_if %>" id="Menu-AssetAdmin">
+						<li class="first <% if Top.class == 'AssetAdmin' %>current<% end_if %>" id="Menu-AssetAdmin">
 							<a href="admin/assets/">
 								<span class="text">Edit &amp; organize</span>
 							</a>
 						</li>
-						<li class="first <% if Top.class == 'CMSFileAddController' %>current<% end_if %>" id="Menu-CMSFileAddController">
+						<li class="last <% if Top.class == 'CMSFileAddController' %>current<% end_if %>" id="Menu-CMSFileAddController">
 							<a href="admin/assets/add">
 								<span class="text">Add files</span>
 							</a>

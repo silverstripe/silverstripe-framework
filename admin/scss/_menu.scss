@@ -271,9 +271,14 @@
 
 				}
 				
-				&.current a {
-					font-weight: bold;
-					color: $color-text-light;
+				&.current {
+					background: darken($color-menu-button, 5%);
+					border-top: 1px solid darken($color-menu-button, 5%);
+					
+					a {
+						font-weight: bold;
+						color: $color-text-light;
+					}
 				}
 				
 				&.first a {

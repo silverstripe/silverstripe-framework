@@ -654,6 +654,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-menu-list li.current li a { font-size: 11px; padding: 0 10px 0 40px; height: 32px; line-height: 32px; color: #e2f0f7; background: none; border-top: 1px solid #338dc1; border-bottom: 1px solid #1e5270; }
 .cms-menu-list li.current li a.current, .cms-menu-list li.current li a:hover { background: #2e7ead; border-top: 1px solid #2e7ead; color: white; }
 .cms-menu-list li.current li a:focus { background: #236184; border-top: 1px solid #1e5270; color: white; }
+.cms-menu-list li.current li.current { background: #2e7ead; border-top: 1px solid #2e7ead; }
 .cms-menu-list li.current li.current a { font-weight: bold; color: white; }
 .cms-menu-list li.current li.first a { border-top: none; }
 .cms-menu-list li ul { display: none; }
