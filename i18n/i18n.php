@@ -1821,7 +1821,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		// Load translations from themes
 		$themesBase = $base . '/themes';
 		
-		if(is_dir($themesBase)) {
+		if(is_dir($themesBase) && SSViewer::current_theme()) {
 			foreach(scandir($themesBase) as $theme) {
 				if(
 					strpos($theme, SSViewer::current_theme()) === 0
