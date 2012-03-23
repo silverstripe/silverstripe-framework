@@ -15,8 +15,10 @@ div.TreeDropdownField {
 	.treedropdownfield-title {
 		float: left;
 		padding: 7px;
+		width: 90%;
 		line-height: 16px;
 		overflow:hidden;
+		outline: none;
 	}
 
 	.treedropdownfield-panel {

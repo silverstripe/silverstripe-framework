@@ -243,9 +243,16 @@
 			}
 		});
 		
-		$('.TreeDropdownField .treedropdownfield-toggle-panel-link, .TreeDropdownField span.treedropdownfield-title').entwine({
+		$('.TreeDropdownField').entwine({
 			onclick: function(e) {
-				this.getField().togglePanel();
+				this.togglePanel();
+					
+				return false;
+			}
+		});
+	
+		$('.TreeDropdownField .treedropdownfield-panel').entwine({
+			onclick: function(e) {
 				return false;
 			}
 		});
