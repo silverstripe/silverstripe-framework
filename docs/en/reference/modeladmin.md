@@ -176,7 +176,7 @@ To customize the exported columns, override the edit form implementation in your
 			$form = parent::getEditForm($id);
 			if($this->modelClass == 'Product') {
 				$grid = $form->Fields()->fieldByName('Product');
-				$grid->getConfig()->getComponentByType('GridFieldExporter')
+				$grid->getConfig()->getComponentByType('GridFieldExportButton')
 					->setExportColumns(array(
 						// Excludes 'ProductCode' from the export
 						'Name' => 'Name',
