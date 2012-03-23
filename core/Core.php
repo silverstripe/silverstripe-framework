@@ -20,8 +20,6 @@
  * - MODULES_PATH: Not used at the moment
  * - THEMES_DIR: Path relative to webroot, e.g. "themes"
  * - THEMES_PATH: Absolute filepath, e.g. "/var/www/my-webroot/themes"
- * - CMS_DIR: Path relative to webroot, e.g. "cms"
- * - CMS_PATH: Absolute filepath, e.g. "/var/www/my-webroot/cms"
  * - SAPPHIRE_DIR: Path relative to webroot, e.g. "sapphire"
  * - SAPPHIRE_PATH:Absolute filepath, e.g. "/var/www/my-webroot/sapphire"
  * - SAPPHIRE_ADMIN_DIR: 
@@ -169,8 +167,6 @@ define('SAPPHIRE_DIR', 'sapphire');
 define('SAPPHIRE_PATH', BASE_PATH . '/' . SAPPHIRE_DIR);
 define('SAPPHIRE_ADMIN_DIR', 'sapphire/admin');
 define('SAPPHIRE_ADMIN_PATH', BASE_PATH . '/' . SAPPHIRE_ADMIN_DIR);
-define('CMS_DIR', 'cms');
-define('CMS_PATH', BASE_PATH . '/' . CMS_DIR);
 define('THIRDPARTY_DIR', SAPPHIRE_DIR . '/thirdparty');
 define('THIRDPARTY_PATH', BASE_PATH . '/' . THIRDPARTY_DIR);
 define('ASSETS_DIR', 'assets');
