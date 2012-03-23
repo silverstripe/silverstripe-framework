@@ -1049,8 +1049,10 @@ JS
 
 	function printall() {
 		Requirements::clear();
-		Requirements::css(CMS_DIR . '/css/typography.css');
-		Requirements::css(CMS_DIR . '/css/cms_right.css');
+		if(defined('CMS_DIR')) {
+			Requirements::css(CMS_DIR . '/css/typography.css');
+			Requirements::css(CMS_DIR . '/css/cms_right.css');
+		}
 		Requirements::css(SAPPHIRE_DIR . '/css/TableListField_print.css');
 		
 		$this->cachedSourceItems = null;
