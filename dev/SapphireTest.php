@@ -224,7 +224,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		
 		// Preserve memory settings
 		$this->originalMemoryLimit = ini_get('memory_limit');
-
+		
+		// turn off template debugging
+		SSViewer::set_source_file_comments(false);
+		
 		// Clear requirements
 		Requirements::clear();
 	}

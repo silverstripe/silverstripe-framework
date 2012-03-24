@@ -81,17 +81,17 @@ form button.minorAction {
 /**
  * Composite Fields - raw concatenation of fields for programmatic purposes.
  */
-.right form div.CompositeField {
+.right form div .composite-field {
 	margin-left: 7.5em;
 }
-.right form div.CompositeField div.field {
+.right form div .composite-field div.field {
 	font-size: 1em;
 }
 
-.right form div.CompositeField {
+.right form div .composite-field {
 	clear: both;
 }	
-.right form div.CompositeField label.left {
+.right form div .composite-field label.left {
 	float: left;
 	width: 10em;
 	margin-left: -10em;
