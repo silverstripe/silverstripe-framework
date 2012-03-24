@@ -1,5 +1,5 @@
 /*
-typography.css has been removed from sapphire, why shall we still has this? a dynamic typographp.css should be used by
+typography.css has been removed from framework, why shall we still has this? a dynamic typographp.css should be used by
 server side call, like Requirements::css(); 
 @import url("typography.css");
 */
@@ -124,7 +124,7 @@ html>body div.TreeDropdownField div.tree_holder {
 
 div.TreeDropdownField a.editLink {
 	border-width: 1px 1px 1px 0;
-	background: url(../../sapphire/images/TreeDropdownField_button.gif) left top no-repeat;
+	background: url(../images/TreeDropdownField_button.gif) left top no-repeat;
 	width: 19px;
 	height: 21px;
 	margin: 0;

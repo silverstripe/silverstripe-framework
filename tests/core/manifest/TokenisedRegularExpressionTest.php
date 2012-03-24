@@ -56,7 +56,7 @@ PHP
 		return token_get_all(<<<PHP
 <?php
 
-namespace sapphire\\test;
+namespace silverstripe\\test;
 
 class ClassA {
 	
@@ -179,6 +179,6 @@ PHP
 		$matches = $parser->findAll($tokens);
 		
 		$this->assertEquals(array(), $matches);
-		$this->assertEquals(array('sapphire', '\\', 'test'), $namespacedMatches[0]['namespaceName']);
+		$this->assertEquals(array('silverstripe', '\\', 'test'), $namespacedMatches[0]['namespaceName']);
 	}
 }

@@ -504,7 +504,7 @@ class DateField_View_JQuery extends Object {
 		if($this->getField()->getConfig('showcalendar')) {
 			Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 			
 			// Include language files (if required)
 			$lang = $this->getLang();
@@ -518,7 +518,7 @@ class DateField_View_JQuery extends Object {
 					));
 			}
 			
-			Requirements::javascript(SAPPHIRE_DIR . "/javascript/DateField.js");
+			Requirements::javascript(FRAMEWORK_DIR . "/javascript/DateField.js");
 		}
 		
 		return $html;

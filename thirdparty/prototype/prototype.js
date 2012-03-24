@@ -830,7 +830,7 @@ Ajax.Request.prototype = Object.extend(new Ajax.Base(), {
         // jquery ondemand integration patch
         prototypeAjax = this;
         completeHandler = function() {
-        	// Sapphire indication that the session has been lost
+        	// SilverStripe indication that the session has been lost
         	if(prototypeAjax.transport.responseText && prototypeAjax.transport.responseText.substr(0,12) == 'NOTLOGGEDIN:') {
         		if(typeof onSessionLost == 'function') onSessionLost();
     		

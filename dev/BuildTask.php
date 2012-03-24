@@ -7,7 +7,6 @@
  * To disable the task (in the case of potentially destructive updates or deletes), declare
  * the $Disabled property on the subclass.
  * 
- * @todo move from sapphire/testing to sapphire/dev or sapphire/development?
  * @package sapphire
  * @subpackage dev
  */

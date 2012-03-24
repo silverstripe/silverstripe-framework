@@ -70,15 +70,15 @@ class TabSet extends CompositeField {
 	 * The HTML is a standardised format, containing a &lt;ul;
 	 */
 	public function FieldHolder($properties = array()) {
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-cookie/jquery.cookie.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-cookie/jquery.cookie.js');
 		
-		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.css');
+		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.css');
 		
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/TabSet.js');
 		
 		$obj = $properties ? $this->customise($properties) : $this;
 		return $obj->renderWith($this->template);

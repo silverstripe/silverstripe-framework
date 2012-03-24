@@ -4,7 +4,7 @@
  * Set on controllers on construction time, typically overwritten
  * by {@link Controller->handleRequest()} and {@link Controller->handleAction()} later on.
  * 
- * @param sapphire
+ * @package sapphire
  * @subpackage control
  */
 class NullHTTPRequest extends SS_HTTPRequest {

@@ -6,7 +6,7 @@
  * @subpackage i18n
  */
 
-i18n::include_locale_file('sapphire', 'en_US');
+i18n::include_locale_file(FRAMEWORK_DIR, 'en_US');
 
 global $lang;
 

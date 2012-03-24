@@ -10,13 +10,13 @@ class YamlFixtureTest extends SapphireTest {
 	);
 	
 	function testAbsoluteFixturePath() {
-		$absPath = Director::baseFolder() . '/sapphire/tests/testing/YamlFixtureTest.yml';
+		$absPath = FRAMEWORK_PATH . '/tests/testing/YamlFixtureTest.yml';
 		$obj = new YamlFixture($absPath);
 		$this->assertEquals($absPath, $obj->getFixtureFile());
 	}
 	
 	function testRelativeFixturePath() {
-		$relPath = 'sapphire/tests/testing/YamlFixtureTest.yml';
+		$relPath = FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml';
 		$obj = new YamlFixture($relPath);
 		$this->assertEquals(Director::baseFolder() . '/' . $relPath, $obj->getFixtureFile());
 	}
@@ -25,7 +25,7 @@ class YamlFixtureTest extends SapphireTest {
 	 * @expectedException InvalidArgumentException
 	 */
 	function testFailsWithInvalidFixturePath() {
-		$invalidPath = 'sapphire/tests/testing/invalid.yml';
+		$invalidPath = FRAMEWORK_DIR . '/tests/testing/invalid.yml';
 		$obj = new YamlFixture($invalidPath);
 	}
 	

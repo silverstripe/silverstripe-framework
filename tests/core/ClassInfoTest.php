@@ -24,10 +24,10 @@ class ClassInfoTest extends SapphireTest {
 	}
 	
 	function testClassesForFolder() {
-		//$baseFolder = Director::baseFolder() . '/' . SAPPHIRE_DIR . '/tests/_ClassInfoTest';
+		//$baseFolder = Director::baseFolder() . '/' . FRAMEWORK_DIR . '/tests/_ClassInfoTest';
 		//$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
 		
-		$classes = ClassInfo::classes_for_folder('sapphire/tests');
+		$classes = ClassInfo::classes_for_folder(FRAMEWORK_DIR . '/tests');
 		$this->assertContains(
 			'classinfotest',
 			$classes,

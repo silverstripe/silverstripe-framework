@@ -1,8 +1,8 @@
 DataDifferencerTest_MockImage:
    image1:
-      Filename: sapphire/tests/model/testimages/test_image.png
+      Filename: framework/tests/model/testimages/test_image.png
    image2:
-      Filename: sapphire/tests/model/testimages/test.image.with.dots.png
+      Filename: framework/tests/model/testimages/test.image.with.dots.png
 DataDifferencerTest_HasOneRelationObject:
    relobj1:
       Title: obj1

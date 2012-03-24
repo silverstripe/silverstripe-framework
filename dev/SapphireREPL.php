@@ -36,7 +36,7 @@ class SapphireREPL extends Controller {
 	}
 
 	function index() {
-		if(!Director::is_cli()) return "The Sapphire Interactive Command-line doesn't work in a web browser.  Use 'sake interactive' from the command-line to run.";
+		if(!Director::is_cli()) return "The SilverStripe Interactive Command-line doesn't work in a web browser.  Use 'sake interactive' from the command-line to run.";
 
 
 		/* Try using PHP_Shell if it exists */
@@ -46,7 +46,7 @@ class SapphireREPL extends Controller {
 		if( empty( $__shell ) ) {
 			set_error_handler(array($this, 'error_handler'));
 
-			echo "Sapphire Interactive Command-line (REPL interface). Type help for hints.\n\n";
+			echo "SilverStripe Interactive Command-line (REPL interface). Type help for hints.\n\n";
 			while(true) {
 				echo SS_Cli::text("?> ", "cyan");
 				echo SS_Cli::start_colour("yellow");

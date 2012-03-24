@@ -24,7 +24,7 @@ class PhpSyntaxTest extends SapphireTest {
 		$settingTests = array('short_open_tag=Off','short_open_tag=On -d asp_tags=On');
 		
 		$files = $this->getAllFiles('php');
-		$files[] = BASE_PATH.'/sapphire/dev/install/config-form.html';
+		$files[] = FRAMEWORK_PATH.'/dev/install/config-form.html';
 		
 		foreach($files as $i => $file) {
 			$CLI_file = escapeshellarg($file);

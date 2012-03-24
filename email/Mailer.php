@@ -447,7 +447,7 @@ function getMimeType($filename) {
  */
 function loadMimeTypes() {
 	$mimetypePathCustom = '/etc/mime.types';
-	$mimetypePathGeneric = Director::baseFolder() . '/sapphire/email/mime.types';
+	$mimetypePathGeneric = FRAMEWORK_PATH . '/email/mime.types';
 	$mimeTypes = file_exists($mimetypePathGeneric) ?  file($mimetypePathGeneric) : file($mimetypePathCustom);
 	foreach($mimeTypes as $typeSpec) {
 		if(($typeSpec = trim($typeSpec)) && substr($typeSpec,0,1) != "#") {

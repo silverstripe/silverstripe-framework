@@ -19,7 +19,7 @@
  * <% sprintf(_t('MyNamespace.MYENTITY','Counting %s things'),$ThingsCount) %>
  * </code>
  *
- * Javascript (see sapphire/javascript/i18n.js):
+ * Javascript (see framework/javascript/i18n.js):
  * <code>
  * ss.i18n._t('MyEntity.MyNamespace','My default natural language value');
  * </code>
@@ -87,8 +87,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 	/**
 	 * Use javascript i18n through the ss.i18n class (enabled by default).
 	 * If set to TRUE, includes javascript requirements for the base library
-	 * (sapphire/javascript/i18n.js) and all necessary lang files (e.g. sapphire/lang/de_DE.js)
-	 * plus fallbacks to the default locale (e.g. sapphire/lang/en_US.js).
+	 * (framework/javascript/i18n.js) and all necessary lang files (e.g. framework/lang/de_DE.js)
+	 * plus fallbacks to the default locale (e.g. framework/lang/en_US.js).
 	 * If set to FALSE, only includes a stub implementation
 	 * which is necessary. Mainly disabled to save bandwidth
 	 * in a frontend context when website is in single language.

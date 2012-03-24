@@ -1,7 +1,7 @@
 <?php
 /**
  * Base class for all forms.
- * The form class is an extensible base for all forms on a sapphire application.  It can be used
+ * The form class is an extensible base for all forms on a SilverStripe application.  It can be used
  * either by extending it, and creating processor methods on the subclass, or by creating instances
  * of form whose actions are handled by the parent controller.
  *

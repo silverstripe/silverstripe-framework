@@ -63,10 +63,10 @@ class FileIFrameField extends FileField {
 	public function Field($properties = array()) {
 		Deprecation::notice('3.0', 'Use UploadField');
 
-		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 		
 		
 		if($this->form->getRecord() && $this->form->getRecord()->exists()) {
@@ -115,11 +115,11 @@ class FileIFrameField extends FileField {
 	public function iframe() {
 		// clear the requirements added by any parent controllers
 		Requirements::clear();
-		Requirements::add_i18n_javascript('sapphire/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript('sapphire/javascript/FileIFrameField.js');
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/FileIFrameField.js');
 		
-		Requirements::css('sapphire/css/FileIFrameField.css');
+		Requirements::css(FRAMEWORK_DIR . '/css/FileIFrameField.css');
 		
 		return $this->renderWith('FileIframeField_iframe');
 	}

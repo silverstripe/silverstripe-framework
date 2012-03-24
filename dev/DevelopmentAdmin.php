@@ -94,7 +94,7 @@ class DevelopmentAdmin extends Controller {
 			
 			$renderer = DebugView::create();
 			$renderer->writeHeader();
-			$renderer->writeInfo("Sapphire Development Tools", Director::absoluteBaseURL());
+			$renderer->writeInfo("SilverStripe Development Tools", Director::absoluteBaseURL());
 			$base = Director::baseURL();
 
 			echo '<div class="options"><ul>';
@@ -106,7 +106,7 @@ class DevelopmentAdmin extends Controller {
 		
 		// CLI mode
 		} else {
-			echo "SAPPHIRE DEVELOPMENT TOOLS\n--------------------------\n\n";
+			echo "SILVERSTRIPE DEVELOPMENT TOOLS\n--------------------------\n\n";
 			echo "You can execute any of the following commands:\n\n";
 			foreach($actions as $action => $description) {
 				echo "  sake dev/$action: $description\n";

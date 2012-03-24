@@ -715,7 +715,7 @@ class Director implements TemplateGlobalProvider {
 	 * The behaviour of these environments often varies slightly.  For example, development sites may have errors dumped to the screen,
 	 * and order confirmation emails might be sent to the developer instead of the client.
 	 * 
-	 * To help with this, Sapphire support the notion of an environment type.  The environment type can be dev, test, or live.
+	 * To help with this, SilverStripe supports the notion of an environment type.  The environment type can be dev, test, or live.
 	 * 
 	 * You can set it explicitly with Director::set_environment_tpye().  Or you can use {@link Director::set_dev_servers()} and {@link Director::set_test_servers()}
 	 * to set it implicitly, based on the value of $_SERVER['HTTP_HOST'].  If the HTTP_HOST value is one of the servers listed, then

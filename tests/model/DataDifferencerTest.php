@@ -6,7 +6,7 @@
 
 class DataDifferencerTest extends SapphireTest {
 	
-	static $fixture_file = 'sapphire/tests/model/DataDifferencerTest.yml';
+	static $fixture_file = 'DataDifferencerTest.yml';
 	
 	protected $extraDataObjects = array(
 		'DataDifferencerTest_Object',

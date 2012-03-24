@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is the Sapphire bootstrap.  It will get your environment ready to call Director::direct().
+ * This file is the Framework bootstrap.  It will get your environment ready to call Director::direct().
  *
  * It takes care of:
  *  - Including _ss_environment.php
@@ -20,12 +20,12 @@
  * - MODULES_PATH: Not used at the moment
  * - THEMES_DIR: Path relative to webroot, e.g. "themes"
  * - THEMES_PATH: Absolute filepath, e.g. "/var/www/my-webroot/themes"
- * - SAPPHIRE_DIR: Path relative to webroot, e.g. "sapphire"
- * - SAPPHIRE_PATH:Absolute filepath, e.g. "/var/www/my-webroot/sapphire"
- * - SAPPHIRE_ADMIN_DIR: 
- * - SAPPHIRE_ADMIN_PATH:
- * - THIRDPARTY_DIR: Path relative to webroot, e.g. "sapphire/thirdparty"
- * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/sapphire/thirdparty"
+ * - FRAMEWORK_DIR: Path relative to webroot, e.g. "framework"
+ * - FRAMEWORK_PATH:Absolute filepath, e.g. "/var/www/my-webroot/framework"
+ * - FRAMEWORK_ADMIN_DIR: Path relative to webroot, e.g. "framework/admin"
+ * - FRAMEWORK_ADMIN_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/admin"
+ * - THIRDPARTY_DIR: Path relative to webroot, e.g. "framework/thirdparty"
+ * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/thirdparty"
  * 
  * @todo This file currently contains a lot of bits and pieces, and its various responsibilities should probably be
  * moved into different subsystems.
@@ -124,7 +124,7 @@ if(!isset($_SERVER['HTTP_HOST'])) {
  * Define system paths
  */
 if(!defined('BASE_PATH')) {
-	// Assuming that this file is sapphire/core/Core.php we can then determine the base path
+	// Assuming that this file is framework/core/Core.php we can then determine the base path
 	$candidateBasePath = rtrim(dirname(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR);
 	// We can't have an empty BASE_PATH.  Making it / means that double-slashes occur in places but that's benign.
 	// This likely only happens on chrooted environemnts
@@ -155,11 +155,22 @@ define('MODULES_DIR', 'modules');
 define('MODULES_PATH', BASE_PATH . '/' . MODULES_DIR);
 define('THEMES_DIR', 'themes');
 define('THEMES_PATH', BASE_PATH . '/' . THEMES_DIR);
-define('SAPPHIRE_DIR', 'sapphire');
-define('SAPPHIRE_PATH', BASE_PATH . '/' . SAPPHIRE_DIR);
-define('SAPPHIRE_ADMIN_DIR', 'sapphire/admin');
-define('SAPPHIRE_ADMIN_PATH', BASE_PATH . '/' . SAPPHIRE_ADMIN_DIR);
-define('THIRDPARTY_DIR', SAPPHIRE_DIR . '/thirdparty');
+// Relies on this being in a subdir of the framework.
+// If it isn't, or is symlinked to a folder with a different name, you must define FRAMEWORK_DIR
+if(!defined('FRAMEWORK_DIR')) {
+	define('FRAMEWORK_DIR', basename(dirname(dirname(__FILE__))));
+}
+define('FRAMEWORK_PATH', BASE_PATH . '/' . FRAMEWORK_DIR);
+define('FRAMEWORK_ADMIN_DIR', FRAMEWORK_DIR . '/admin');
+define('FRAMEWORK_ADMIN_PATH', BASE_PATH . '/' . FRAMEWORK_ADMIN_DIR);
+
+// These are all deprecated. Use the FRAMEWORK_ versions instead.
+define('SAPPHIRE_DIR', FRAMEWORK_DIR);
+define('SAPPHIRE_PATH', FRAMEWORK_PATH);
+define('SAPPHIRE_ADMIN_DIR', FRAMEWORK_ADMIN_DIR);
+define('SAPPHIRE_ADMIN_PATH', FRAMEWORK_ADMIN_PATH);
+
+define('THIRDPARTY_DIR', FRAMEWORK_DIR . '/thirdparty');
 define('THIRDPARTY_PATH', BASE_PATH . '/' . THIRDPARTY_DIR);
 define('ASSETS_DIR', 'assets');
 define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
@@ -202,14 +213,14 @@ if(function_exists('mb_http_output')) {
 
 if(defined('CUSTOM_INCLUDE_PATH')) {
 	$includePath = CUSTOM_INCLUDE_PATH . PATH_SEPARATOR
-		. BASE_PATH . '/sapphire' . PATH_SEPARATOR
-		. BASE_PATH . '/sapphire/parsers' . PATH_SEPARATOR
-		. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
+		. FRAMEWORK_PATH . PATH_SEPARATOR
+		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
+		. THIRDPARTY_PATH . PATH_SEPARATOR
 		. get_include_path();
 } else {
-	$includePath = BASE_PATH . '/sapphire' . PATH_SEPARATOR
-		. BASE_PATH . '/sapphire/parsers' . PATH_SEPARATOR
-		. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
+	$includePath = FRAMEWORK_PATH . PATH_SEPARATOR
+		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
+		. THIRDPARTY_PATH . PATH_SEPARATOR
 		. get_include_path();
 }
 
@@ -284,7 +295,7 @@ function getSysTempDir() {
 }
 
 /**
- * Returns the temporary folder that sapphire/silverstripe should use for its cache files
+ * Returns the temporary folder that silverstripe should use for its cache files
  * This is loaded into the TEMP_FOLDER define on start up
  * 
  * @param $base The base path to use as the basis for the temp folder name.  Defaults to BASE_PATH,

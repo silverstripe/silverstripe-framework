@@ -246,7 +246,7 @@ class SS_ClassManifest {
 
 	/**
 	 * Returns an array of module names mapped to their paths.
-	 * "Modules" in sapphire are simply directories with a _config.php file.
+	 * "Modules" in SilverStripe are simply directories with a _config.php file.
 	 *
 	 * @return array
 	 */

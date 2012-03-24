@@ -211,12 +211,12 @@ class ComplexTableField extends TableListField {
 		Requirements::javascript(THIRDPARTY_DIR . "/behaviour/behaviour.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/greybox/AmiJS.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/greybox/greybox.js");
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField.js");
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/TableListField.js');
+		Requirements::javascript(FRAMEWORK_DIR . "/javascript/ComplexTableField.js");
 		Requirements::css(THIRDPARTY_DIR . "/greybox/greybox.css");
-		Requirements::css(SAPPHIRE_DIR . "/css/TableListField.css");
-		Requirements::css(SAPPHIRE_DIR . "/css/ComplexTableField.css");
+		Requirements::css(FRAMEWORK_DIR . "/css/TableListField.css");
+		Requirements::css(FRAMEWORK_DIR . "/css/ComplexTableField.css");
 		
 		// set caption if required
 		if($this->popupCaption) {
@@ -834,13 +834,13 @@ class ComplexTableField_Popup extends Form {
 	function forTemplate() {
 		$ret = parent::forTemplate();
 		
-		Requirements::css(SAPPHIRE_DIR . '/css/ComplexTableField_popup.css');
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous/controls.js");
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField_popup.js");
+		Requirements::css(FRAMEWORK_DIR . '/css/ComplexTableField_popup.css');
+		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/prototype/prototype.js");
+		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/behaviour/behaviour.js");
+		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/scriptaculous/scriptaculous.js");
+		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/scriptaculous/scriptaculous/controls.js");
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(FRAMEWORK_DIR . "/javascript/ComplexTableField_popup.js");
 
 		// Append requirements from instance callbacks
 		$parent = $this->getParentController();
