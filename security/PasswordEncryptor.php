@@ -22,7 +22,7 @@ abstract class PasswordEncryptor {
 	 * @return Array Map of encryptor code to the used class.
 	 */
 	static function get_encryptors() {
-		return self::$encryptors;
+		return Config::inst()->get(__CLASS__, 'encryptors');
 	}
 	
 	/**
@@ -51,13 +51,15 @@ abstract class PasswordEncryptor {
 	 * @return PasswordEncryptor|Boolean Returns FALSE if class was not found
 	 */
 	static function create_for_algorithm($algorithm) {
-		if(!isset(self::$encryptors[$algorithm])) {
+		
+		$encryptors = self::get_encryptors();
+		if(!isset($encryptors[$algorithm])) {
 			throw new PasswordEncryptor_NotFoundException(
 				sprintf('No implementation found for "%s"', $algorithm)
 			);
 		}
 		
-		$classWithArgs = self::$encryptors[$algorithm];
+		$classWithArgs = $encryptors[$algorithm];
 		$class = (($p = strpos($classWithArgs, '(')) !== false) ? substr($classWithArgs, 0, $p) : $classWithArgs;
 		if(!class_exists($class)) {
 			throw new PasswordEncryptor_NotFoundException(
