@@ -697,6 +697,7 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 
 		case E_NOTICE:
 		case E_USER_NOTICE:
+		case E_USER_DEPRECATED:
 			Debug::noticeHandler($errno, $errstr, $errfile, $errline, null);
 			break;
 	}
