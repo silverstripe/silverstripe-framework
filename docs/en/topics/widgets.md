@@ -114,8 +114,8 @@ An example widget is below:
 		static $description = "Shows flickr photos.";
 		
 		public function Photos() {
-			Requirements::javascript("sapphire/thirdparty/prototype/prototype.js");
-			Requirements::javascript("sapphire/thirdparty/scriptaculous/effects.js");
+			Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
+			Requirements::javascript(THIRDPARTY_DIR . "/scriptaculous/effects.js");
 			Requirements::javascript("mashups/javascript/lightbox.js");
 			Requirements::css("mashups/css/lightbox.css");
 			
@@ -185,7 +185,7 @@ To render the widget, simply include $SilverStripeFeed in your template:
 
 
 As directed in the definition of SilverStripeFeed(), the Widget will be rendered through the WidgetHolder template. This
-is pre-defined at `/sapphire/templates/WidgetHolder.ss` and simply consists of: 
+is pre-defined at `framework/templates/WidgetHolder.ss` and simply consists of: 
 
 	:::ss
 	<div class="WidgetHolder">
@@ -312,7 +312,7 @@ For a widget to be put in our official widget database they must follow this con
 
 #### File Structure for your widget
 
-You should have a folder called widget_YourName in the top level (the one with sapphire, cms..) with all your files. See
+You should have a folder called widget_YourName in the top level (the one with framework, cms..) with all your files. See
 the example below. Your widget **MUST** have at least 1 Template file, 1 PHP file, the README File
 [(Example)](http://open.silverstripe.com/browser/modules/widgets/twitter/trunk/README)and an _config.php file for
 configuration. If you dont need any config options for the widget to work then you still need an _config.php by you can
