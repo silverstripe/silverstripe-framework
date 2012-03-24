@@ -23,7 +23,7 @@
 			form.addClass('loading');
 
 			$.ajax($.extend({}, {
-				headers: {"X-Get-Fragment" : 'CurrentField'},
+				headers: {"X-Pjax" : 'CurrentField'},
 				type: "POST",
 				url: this.data('url'),
 				dataType: 'html',
@@ -217,7 +217,7 @@
 					var suggestionUrl = $(searchField).attr('data-search-url').substr(1,$(searchField).attr('data-search-url').length-2);
 					$.ajax({
 						headers: {
-							"X-Get-Fragment" : 'Partial'
+							"X-Pjax" : 'Partial'
 						},
 						type: "GET",
 						url: suggestionUrl+'/'+request.term,

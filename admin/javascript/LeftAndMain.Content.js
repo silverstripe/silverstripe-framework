@@ -55,16 +55,18 @@
 
 				this.trigger('loadform', {form: form, url: url});
 			
-				return jQuery.ajax(jQuery.extend({
-					url: url, 
+				var opts = jQuery.extend({}, {
 					// Ensure that form view is loaded (rather than whole "Content" template)
-					data: {'cms-view-form': 1},
+					headers: {"X-Pjax" : "CurrentForm"},
+					url: url, 
 					complete: function(xmlhttp, status) {
 						self.loadForm_responseHandler(form, xmlhttp.responseText, status, xmlhttp);
 						if(callback) callback.apply(self, arguments);
 					}, 
 					dataType: 'html'
-				}, ajaxOptions));
+				}, ajaxOptions);
+
+				return jQuery.ajax(opts);
 			},
 			
 			/**
@@ -148,6 +150,7 @@
 				formData.push({name: 'BackURL', value:History.getPageUrl()});
 
 				jQuery.ajax(jQuery.extend({
+					headers: {"X-Pjax" : "CurrentForm"},
 					url: form.attr('action'), 
 					data: formData,
 					type: 'POST',
@@ -289,7 +292,6 @@
 					if($.path.isExternal($(node).find('a:first'))) url = url = $.path.makeUrlAbsolute(url, $('base').attr('href'));
 					// Reload only edit form if it exists (side-by-side view of tree and edit view), otherwise reload whole panel
 					if(container.find('.cms-edit-form').length) {
-						url += '?cms-view-form=1';
 						container.entwine('ss').loadPanel(url, null, {selector: '.cms-edit-form'});
 					} else {
 						container.entwine('ss').loadPanel(url);	

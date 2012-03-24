@@ -348,51 +348,6 @@ class RequestHandler extends ViewableData {
 	}
 
 	/**
-	 * Handle the X-Get-Fragment header that AJAX responses may provide, returning the 
-	 * fragment, or, in the case of non-AJAX form submissions, redirecting back to the submitter.
-	 *
-	 * X-Get-Fragment ensures that users won't end up seeing the unstyled form HTML in their browser
-	 * If a JS error prevents the Ajax overriding of form submissions from happening. It also provides
-	 * better non-JS operation.
-	 * 
-	 * Out of the box, the handler "CurrentForm" value, which will return the rendered form.  Non-Ajax
-	 * calls will redirect back.
-	 * 
-	 * To extend its responses, pass a map to the $options argument.  Each key is the value of X-Get-Fragment
-	 * that will work, and the value is a PHP 'callable' value that will return the response for that
-	 * value.
-	 * 
-	 * If you specify $options['default'], this will be used as the non-ajax response.
-	 * 
-	 * Note that if you use handleFragmentResponse, then any Ajax requests will have to include X-Get-Fragment
-	 * or an error will be thrown.
-	 */
-	function handleFragmentResponse($form, $options = array()) {
-		// Prepare the default options and combine with the others
-		$lOptions = array(
-			'currentform' => array($form, 'forTemplate'),
-			'default' => array('Director', 'redirectBack'),
-		);
-		if($options) foreach($options as $k => $v) {
-			$lOptions[strtolower($k)] = $v;
-		}
-		
-		if($fragment = $this->request->getHeader('X-Get-Fragment')) {
-			$fragment = strtolower($fragment);
-			if(isset($lOptions[$fragment])) {
-				return call_user_func($lOptions[$fragment]);
-			} else {
-				throw new SS_HTTPResponse_Exception("X-Get-Fragment = '$fragment' not supported for this URL.", 400);
-			}
-			
-		} else {
-			if($this->isAjax()) throw new SS_HTTPResponse_Exception("Ajax requests to this URL require an X-Get-Fragment header.", 400);
-			return call_user_func($lOptions['default']);
-		}
-		
-	}
-	
-	/**
 	 * Returns the SS_HTTPRequest object that this controller is using.
 	 * Returns a placeholder {@link NullHTTPRequest} object unless 
 	 * {@link handleAction()} or {@link handleRequest()} have been called,

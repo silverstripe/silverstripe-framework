@@ -33,27 +33,28 @@ jQuery.noConflict();
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
 
 		// global ajax handlers
-		$.ajaxSetup({
-			complete: function(xhr) {
-				// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it.
-				// Causes non-pushState browser to re-request the URL, so ignore for those.
-				if(window.History.enabled && !History.emulated.pushState) {
-					var url = xhr.getResponseHeader('X-ControllerURL');
-					// Normalize trailing slashes in URL to work around routing weirdnesses in SS_HTTPRequest.
-					var isSame = (url && History.getPageUrl().replace(/\/+$/, '') == url.replace(/\/+$/, ''));
-					if(isSame) {
-						window.History.replaceState({}, '', url);
-					}
+		$(document).ajaxComplete(function(e, xhr, settings) {
+			// Simulates a redirect on an ajax response.
+			if(window.History.enabled) {
+				var url = xhr.getResponseHeader('X-ControllerURL');
+				// Normalize trailing slashes in URL to work around routing weirdnesses in SS_HTTPRequest.
+				var isSame = (url && History.getPageUrl().replace(/\/+$/, '') == url.replace(/\/+$/, ''));
+				if(url && !isSame) {
+					var opts = {
+						pjax: settings.headers ? settings.headers['X-Pjax'] : null, 
+						selector: settings.headers ? settings.headers['X-Pjax-Selector'] : null
+					};
+					window.History.pushState(opts, '', url);
 				}
-			},
-			error: function(xmlhttp, status, error) {
-				if(xmlhttp.status < 200 || xmlhttp.status > 399) {
-					var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.statusText;
-				} else {
-					msg = error;
-				}
-				statusMessage(msg, 'bad');
 			}
+		});
+		$(document).ajaxError(function(e, xhr, settings, error) {
+			if(xhr.status < 200 || xhr.status > 399) {
+				var msg = (xhr.getResponseHeader('X-Status')) ? xhr.getResponseHeader('X-Status') : xhr.statusText;
+			} else {
+				msg = error;
+			}
+			statusMessage(msg, 'bad');
 		});
 		
 		/**
@@ -147,8 +148,8 @@ jQuery.noConflict();
 			loadPanel: function(url, title, data) {
 				if(!data) data = {};
 				if(!title) title = "";
-				
-				var selector = data.selector || '.cms-content', contentEl = $(selector);
+				if(!data.selector) data.selector = '.cms-content';
+				var contentEl = $(data.selector);
 				
 				// Check change tracking (can't use events as we need a way to cancel the current state change)
 				var trackedEls = contentEl.find(':data(changetracker)').add(contentEl.filter(':data(changetracker)'));
@@ -209,8 +210,21 @@ jQuery.noConflict();
 					state: state, element: contentEl
 				});
 
+				var headers = {};
+				if(state.data.pjax) {
+					headers['X-Pjax'] = state.data.pjax;
+				} else if(contentEl[0] != null && contentEl.is('form')) {
+					// Replace a form
+					headers["X-Pjax"] = 'CurrentForm';
+				} else {
+					// Replace full RHS content area
+					headers["X-Pjax"] = 'Content';
+				}
+				headers['X-Pjax-Selector'] = selector;
+
 				contentEl.addClass('loading');
 				var xhr = $.ajax({
+					headers: headers,
 					url: state.url,
 					success: function(data, status, xhr) {
 						// Update title
