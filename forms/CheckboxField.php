@@ -50,7 +50,7 @@ class CheckboxField extends FormField {
 	 * Returns a readonly version of this field
 	 */
 	function performReadonlyTransformation() {
-		$field = new CheckboxField_Readonly($this->name, $this->title, $this->value ? _t('CheckboxField.YES', 'Yes') : _t('CheckboxField.NO', 'No'));
+		$field = new CheckboxField_Readonly($this->name, $this->title, $this->value);
 		$field->setForm($this->form);
 		return $field;	
 	}
@@ -75,7 +75,7 @@ class CheckboxField_Readonly extends ReadonlyField {
 	}
 	
 	function setValue($val) {
-		$this->value = (int)($val) ? _t('CheckboxField.YES', 'Yes') : _t('CheckboxField.NO', 'No');
+		$this->value = $val ? _t('CheckboxField.YES', 'Yes') : _t('CheckboxField.NO', 'No');
 	}
 
 }
