@@ -559,12 +559,12 @@ $lang['en_US']['MemberDatetimeOptionsetField']['TWODIGITYEAR'] = array(
 	40,
 	'Help text describing what "YY" means in ISO date formatting'
 );
-$lang['en_US']['MemberImportForm']['Help1'] = '<p>Import members in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>';
+$lang['en_US']['MemberImportForm']['Help1'] = '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>';
 $lang['en_US']['MemberImportForm']['Help2'] = '<div class="advanced">
 	<h4>Advanced usage</h4>
 	<ul>
 	<li>Allowed columns: <em>%s</em></li>
-	<li>Existing members are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>
+	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>
 	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>
 	</ul>
 </div>';
@@ -735,7 +735,7 @@ $lang['en_US']['SecurityAdmin']['SGROUPS'] = 'Security Groups';
 $lang['en_US']['SecurityAdmin']['TABIMPORT'] = 'Import';
 $lang['en_US']['SecurityAdmin']['TABROLES'] = 'Roles';
 $lang['en_US']['SecurityAdmin']['VIEWUSER'] = 'View User';
-$lang['en_US']['SecurityAdmin_MemberImportForm']['BtnImport'] = 'Import';
+$lang['en_US']['SecurityAdmin_MemberImportForm']['BtnImport'] = 'Import from CSV';
 $lang['en_US']['SecurityAdmin_MemberImportForm']['FileFieldLabel'] = 'CSV File <small>(Allowed extensions: *.csv)</small>';
 $lang['en_US']['SimpleImageField']['NOUPLOAD'] = 'No Image Uploaded';
 $lang['en_US']['SiteTree']['TABMAIN'] = 'Main';

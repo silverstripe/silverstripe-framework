@@ -17,7 +17,7 @@ class MemberImportForm extends Form {
 		if(!$fields) {
 			$helpHtml = _t(
 				'MemberImportForm.Help1', 
-				'<p>Import members in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+				'<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
 			);
 			$helpHtml .= _t(
 				'MemberImportForm.Help2', 
@@ -25,7 +25,7 @@ class MemberImportForm extends Form {
 	<h4>Advanced usage</h4>
 	<ul>
 	<li>Allowed columns: <em>%s</em></li>
-	<li>Existing members are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>
+	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>
 	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>
 	</ul>
 </div>');
@@ -48,16 +48,19 @@ class MemberImportForm extends Form {
 		}
 		
 		if(!$actions) $actions = new FieldList(
-			new FormAction('doImport', _t('SecurityAdmin_MemberImportForm.BtnImport', 'Import'))
+			$importAction = new FormAction('doImport', _t('SecurityAdmin_MemberImportForm.BtnImport', 'Import from CSV'))
 		);
-		
+
+		$importAction->addExtraClass('ss-ui-button');
+
 		if(!$validator) $validator = new RequiredFields('CsvFile');
-		
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/MemberImportForm.js');
+
+		$this->addExtraClass('cms');
 		$this->addExtraClass('import-form');
 	}
 	
