@@ -814,10 +814,6 @@ class Director implements TemplateGlobalProvider {
 		if(isset($_SESSION['isDev']) && $_SESSION['isDev']) $result = true;
 		if(self::$environment_type && self::$environment_type == 'dev') $result = true;
 
-		if(!empty(Director::$dev_servers))  {
-			Deprecation::notice('3.0', 'Director::$dev_servers doesn\'t work anymore');
-		}
-		
 		// Use ?isDev=1 to get development access on the live server
 		if(!$dontTouchDB && !$result && isset($_GET['isDev'])) {
 			if(Security::database_is_ready()) {
