@@ -117,6 +117,23 @@ class CheckboxFieldTest extends SapphireTest {
 		/* Delete the record we tested */
 		$article->delete();
 	}
+
+	function testReadonlyCheckboxField() {
+		// Test 1: a checked checkbox goes to "Yes"
+		$field1 = new CheckboxField('IsChecked', 'Checked');
+		$field1->setValue('on');
+		$this->assertEquals(_t('CheckboxField.YES', 'Yes'), trim(strip_tags($field1->performReadonlyTransformation()->Field())));
+
+		// Test 2: an checkbox with the value set to false to "No"
+		$field2 = new CheckboxField('IsChecked', 'Checked');
+		$field2->setValue(false);
+		$this->assertEquals(_t('CheckboxField.NO', 'No'), trim(strip_tags($field2->performReadonlyTransformation()->Field())));
+
+		// Test 3: an checkbox with no value ever set goes to "No"
+		$field3 = new CheckboxField('IsChecked', 'Checked');
+		$this->assertEquals(_t('CheckboxField.NO', 'No'), trim(strip_tags($field3->performReadonlyTransformation()->Field())));
+
+	}
 	
 }
 class CheckboxFieldTest_Article extends DataObject implements TestOnly {
