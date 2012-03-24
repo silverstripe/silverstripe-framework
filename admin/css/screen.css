@@ -109,6 +109,7 @@ body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif;
 .cms h4 { font-size: 14px; }
 .cms h5 { font-size: 12px; }
 .cms p { line-height: 16px; margin-bottom: 16px; }
+.cms em { font-style: italic; }
 .cms code { font-family: 'Bitstream Vera Sans Mono','Courier', monospace; }
 
 /** This file defines CMS-specific customizations to the jQuery UI theme. Every rule in this file should be wrapped in the '.cms' selector (to make it more specific), and contain ONLY overwritten jQuery UI rules (with 'ui-' prefix).  This file should be fairly short, as we're using our own custom jQuery UI theme already. TODO Add theme reference  Use _style.scss to add more generic style information, and read the jQuery UI theming API: http://jqueryui.com/docs/Theming/API */
@@ -507,6 +508,12 @@ form.small .cms-file-info-data .field .middleColumn { margin-left: 120px; }
 .members_grid p button#action_export { margin-top: 16px; }
 .members_grid p button#action_export span.btn-icon-download-csv { height: 17px; }
 .members_grid p button#action_export span.ui-button-text { padding-left: 26px; }
+
+/** Import forms */
+form.import-form ul { list-style: disc; }
+form.import-form ul li { margin-left: 20px; }
+form.import-form p { margin-bottom: 5px; }
+form.import-form label.left { width: 250px; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .cms .jstree ul, .TreeDropdownField .treedropdownfield-panel .jstree ul { display: block; margin: 0; padding: 0; background: none; list-style-type: none; }

@@ -49,13 +49,16 @@ class GroupImportForm extends Form {
 		}
 		
 		if(!$actions) $actions = new FieldList(
-			new FormAction('doImport', _t('SecurityAdmin_MemberImportForm.BtnImport', 'Import'))
+			$importAction = new FormAction('doImport', _t('SecurityAdmin_MemberImportForm.BtnImport', 'Import from CSV'))
 		);
-		
+
+		$importAction->addExtraClass('ss-ui-button');
+
 		if(!$validator) $validator = new RequiredFields('CsvFile');
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
-		
+
+		$this->addExtraClass('cms');
 		$this->addExtraClass('import-form');
 	}
 	
