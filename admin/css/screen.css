@@ -191,6 +191,8 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .cms .ss-ui-button.ss-ui-action-minor { background: none; border: 0; color: #393939; text-decoration: underline; -moz-box-shadow: none; -webkit-box-shadow: none; -o-box-shadow: none; box-shadow: none; }
 .cms .ss-ui-button.ss-ui-action-minor:hover { text-decoration: none; color: #1f1f1f; }
 .cms .ss-ui-button.ss-ui-action-minor:focus, .cms .ss-ui-button.ss-ui-action-minor:active { text-decoration: none; color: #525252; }
+.cms .ss-ui-button.ss-ui-button-loading { opacity: 0.8; }
+.cms .ss-ui-loading-icon { background: url(../../images/network-save.gif) no-repeat; display: block; width: 16px; height: 16px; }
 
 /** ---------------------------------------------------- Grouped form fields ---------------------------------------------------- */
 .fieldgroup .fieldgroup-field { float: left; display: block; width: 184px; padding-right: 8px; }

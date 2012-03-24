@@ -319,7 +319,7 @@ form.small .field, .field.small {
 			);
 			@include box-shadow(0 0 5px darken($color-button-generic, 20%) inset);
 		}
-
+		
 		/* constructive */
 		&.ss-ui-action-constructive {
 			font-weight: bold;
@@ -384,6 +384,17 @@ form.small .field, .field.small {
 				color: lighten($color-text-dark, 20%);
 			}
 		}
+		
+		&.ss-ui-button-loading {
+			opacity: 0.8;
+		}
+	}
+	
+	.ss-ui-loading-icon {
+		background: url(../../images/network-save.gif) no-repeat;
+		display: block;
+		width: 16px;
+		height: 16px;
 	}
 }
 

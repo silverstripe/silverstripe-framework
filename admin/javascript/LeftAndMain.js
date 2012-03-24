@@ -124,6 +124,8 @@ jQuery.noConflict();
 			 */
 			loadPanel: function(url, title, data) {
 				if(!data) data = {};
+				if(!title) title = "";
+				
 				var selector = data.selector || '.cms-content', contentEl = $(selector);
 				
 				// Check change tracking (can't use events as we need a way to cancel the current state change)
@@ -138,7 +140,7 @@ jQuery.noConflict();
 					
 					if(abort) return;
 				}
-
+				
 				if(window.History.enabled) {
 					// Active menu item is set based on X-Controller ajax header,
 					// which matches one class on the menu
@@ -186,7 +188,6 @@ jQuery.noConflict();
 				});
 
 				contentEl.addClass('loading');
-				
 				var xhr = $.ajax({
 					url: state.url,
 					success: function(data, status, xhr) {
@@ -247,9 +248,21 @@ jQuery.noConflict();
 				});
 				
 				this.setCurrentXHR(xhr);
+			},
+			/**
+			 * Function: refresh
+			 * 
+			 * Updates the container based on the current url
+			 *
+			 * Returns: void
+			 */
+			refresh: function() {
+				$(window).trigger('statechange');
+				
+				$(this).redraw();
 			}
 		});
-
+		
 		$('.cms-content-fields').entwine({
 			redraw: function() {
 				this.layout();
@@ -299,8 +312,21 @@ jQuery.noConflict();
 		 * Little helper to avoid repetition, and make it easy to trigger actions via a link,
 		 * without reloading the page, changing the URL, or loading in any new panel content.
 		 */
-		$('.cms .cms-link-ajax').entwine({
+		$('.cms .ss-ui-button-ajax').entwine({
 			onclick: function(e) {
+				$(this).removeClass('ui-button-text-only');
+				$(this).addClass('ss-ui-button-loading ui-button-text-icons');
+				
+				var loading = $(this).find(".ss-ui-loading-icon");
+				
+				if(loading.length < 1) {
+					loading = $("<span></span>").addClass('ss-ui-loading-icon ui-button-icon-primary ui-icon');
+					
+					$(this).prepend(loading);
+				}
+				
+				loading.show();
+				
 				var href = this.attr('href'), url = href ? href : this.data('href');
 
 				jQuery.ajax({
@@ -308,7 +334,19 @@ jQuery.noConflict();
 					// Ensure that form view is loaded (rather than whole "Content" template)
 					complete: function(xmlhttp, status) {
 						var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.responseText;
-						if (typeof msg != "undefined" && msg != null) eval(msg);
+						console.log(msg);
+						
+						try {
+							if (typeof msg != "undefined" && msg != null) eval(msg);
+						}
+						catch(e) {}
+						
+						loading.hide();
+						
+						$(".cms-container").refresh();
+						
+						$(this).removeClass('ss-ui-button-loading ui-button-text-icons');
+						$(this).addClass('ui-button-text-only');
 					},
 					dataType: 'html'
 				});
