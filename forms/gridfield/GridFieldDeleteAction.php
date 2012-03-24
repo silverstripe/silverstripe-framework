@@ -1,10 +1,19 @@
 <?php
 /**
- * This class is an GridField Component that add Delete action for Objects in the GridField.
- * See {@link GridFieldRemoveButton} for detaching an item from the current relationship instead.
+ * This class is a {@link GridField} component that adds a delete action for objects.
+ *
+ * This component also supports unlinking a relation instead of deleting the object.
+ * Use the {@link $removeRelation} property set in the constructor.
+ *
+ * <code>
+ * $action = new GridFieldDeleteAction(); // delete objects permanently
+ * $action = new GridFieldDeleteAction(true); // removes the relation to object, instead of deleting
+ * </code>
+ *
+ * @package sapphire
+ * @subpackage gridfield
  */
 class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_ActionProvider {
-	
 	
 	/**
 	 * If this is set to true, this actionprovider will remove the object from the list, instead of 
@@ -17,10 +26,10 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	
 	/**
 	 *
-	 * @param boolean $unlinkRelation - true if removing the item from the list, but not deleting it
+	 * @param boolean $removeRelation - true if removing the item from the list, but not deleting it
 	 */
-	public function __construct($unlinkRelation = false) {
-		$this->removeRelation = $unlinkRelation;
+	public function __construct($removeRelation = false) {
+		$this->removeRelation = $removeRelation;
 	}
 	
 	/**
@@ -30,8 +39,9 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	 * @param array $columns 
 	 */
 	public function augmentColumns($gridField, &$columns) {
-		if(!in_array('Actions', $columns))
+		if(!in_array('Actions', $columns)) {
 			$columns[] = 'Actions';
+		}
 	}
 	
 	/**
