@@ -62,7 +62,7 @@ Some constants are user-defineable within *_ss_environment.php*.
 
  | Name  |																| Description | 
  | ----  |																| ----------- | 
- | *TEMP_FOLDER* |														| Absolute file path to store temporary files such as cached templates or the class manifest. Needs to be writeable by the webserver user. Defaults to *sys_get_temp_dir()*, and falls back to *silverstripe-cache* in the webroot. See *getTempFolder()* in *sapphire/core/Core.php* | 
+ | *TEMP_FOLDER* |														| Absolute file path to store temporary files such as cached templates or the class manifest. Needs to be writeable by the webserver user. Defaults to *sys_get_temp_dir()*, and falls back to *silverstripe-cache* in the webroot. See *getTempFolder()* in *framework/core/Core.php* | 
 
 ## User-level: Member-object
 

@@ -15,10 +15,10 @@ Now you need to setup a virtual host in Nginx with the following configuration s
 	        index  index.html index.php;
 	
 	        if (!-f $request_filename) {
-	                rewrite ^/(.*?)(\?|$)(.*)$ /sapphire/main.php?url=$1&$3 last;
+	                rewrite ^/(.*?)(\?|$)(.*)$ /framework/main.php?url=$1&$3 last;
 	        }
 	
-	        error_page  404  /sapphire/main.php;
+	        error_page  404  /framework/main.php;
 	
 	        location ~ \.php$ {
 	                fastcgi_pass   127.0.0.1:9000;

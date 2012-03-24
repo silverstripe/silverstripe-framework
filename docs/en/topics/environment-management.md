@@ -57,13 +57,13 @@ The mechanism by which the `_ss_environment.php` files work is quite simple.  He
 
 *  At the beginning of SilverStripe's execution, the `_ss_environment.php` file is searched for, and if it is found, it's
 included.  SilverStripe looks in 3 places for the file:
-    * The site's base folder (ie, a sibling of sapphire, jsparty, and cms)
+    * The site's base folder (ie, a sibling of framework, jsparty, and cms)
     * The parent of the base folder
     * The grandparent of the base folder
 *  The `_ss_environment.php` file sets a number of "define()".
 *  "conf/ConfigureFromEnv.php" is included from within your `mysite/_config.php`.  This file has a number of regular
 configuration commands that use those defines as their arguments.  If you are curious, open up
-`sapphire/conf/ConfigureFromEnv.php` and see for yourself!
+`framework/conf/ConfigureFromEnv.php` and see for yourself!
 
 ### An Example
 

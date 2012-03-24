@@ -23,7 +23,7 @@ by stripping HTML markup, or transforming it where possible
 	$email->send();
 
 
-The default HTML template is located in `sapphire/templates/email/GenericEmail.ss`.
+The default HTML template is located in `framework/templates/email/GenericEmail.ss`.
 
 ### Sending Plaintext only
 

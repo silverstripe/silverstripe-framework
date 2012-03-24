@@ -1,6 +1,6 @@
 # Release Process
 
-Describes the process followed for "core" releases (mainly the `sapphire` and `cms` modules).
+Describes the process followed for "core" releases (mainly the `framework` and `cms` modules).
 For other modules, we've compiled a helpful guide for a good [module release process](module-release-process).
 
 ## Release Maintainer
@@ -18,7 +18,7 @@ Release dates are usually not published prior to the release, but you can get a 
 reviewing the [release milestone](http://open.silverstripe.com/roadmap) on open.silverstripe.org. Releases will be
 announced on the [release announcements mailing list](http://groups.google.com/group/silverstripe-announce).
 
-Releases of the *cms* and *sapphire* modules are coupled at the moment, they follow the same numbering scheme. Module
+Releases of the *cms* and *framework* modules are coupled at the moment, they follow the same numbering scheme. Module
 releases are documented separately in [module-release-process](module-release-process).
 
 ## Release Numbering

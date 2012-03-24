@@ -1,4 +1,4 @@
-#  How To Create a Sapphire Test
+#  How To Create a SilverStripe Test
 
 A unit test class will test the behaviour of one of your `[api:DataObjects]`.  This simple fragment of `[api:SiteTreeTest]`
 provides us the basics of creating unit tests.
@@ -15,7 +15,7 @@ provides us the basics of creating unit tests.
 	
 		 * Define the fixture file to use for this test class
 		 */
-		static $fixture_file = 'sapphire/tests/SiteTreeTest.yml';
+		static $fixture_file = 'SiteTreeTest.yml';
 	
 		/**
 	

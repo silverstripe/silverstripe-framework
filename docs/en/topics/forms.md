@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Form is the base class of all forms in a sapphire application. Forms in your application can be created either by
+Form is the base class of all forms in a SilverStripe application. Forms in your application can be created either by
 instantiating the Form class itself, or by subclassing it. 
 
 ## Instantiating a form
@@ -254,7 +254,7 @@ which includes a container `<div>` as well as a `<label>` element (if applicable
 You can also render each field without these structural elements through the `[Field()](api:FormField->Field())` method.
 In order to influence the form rendering, overloading these two methods is a good start.
 
-In addition, most form fields are rendered through SilverStripe templates, e.g. `TextareaField` is rendered via `sapphire/templates/forms/TextareaField.ss`.
+In addition, most form fields are rendered through SilverStripe templates, e.g. `TextareaField` is rendered via `framework/templates/forms/TextareaField.ss`.
 These templates can be overwritten globally by placing a template with the same name in your `mysite` directory,
 or set on a form field instance via `[setTemplate()](api:FormField->setTemplate())` and `[setFieldHolderTemplate()](api:FormField->setFieldHolderTemplate())`.
 

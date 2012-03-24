@@ -2,7 +2,7 @@
 
 This document provides guidelines for code formatting and documentation
 to developers contributing to SilverStripe. It applies to all PHP files
-in the sapphire/ and cms/ modules, as well as any supported additional modules.
+in the framework/ and cms/ modules, as well as any supported additional modules.
 
 Coding standards are an important aspect for every software project,
 and facilitate collaboration by making code more consistent and readable.

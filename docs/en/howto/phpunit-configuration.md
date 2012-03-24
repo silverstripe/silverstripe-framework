@@ -25,10 +25,10 @@ All command-line arguments are documented on [phpunit.de](http://www.phpunit.de/
 ## Usage of "phpunit" executable
 
  * `phpunit`: Runs all tests in all folders
- * `phpunit sapphire/tests/`: Run all tests of the sapphire module
- * `phpunit sapphire/tests/filesystem`: Run all filesystem tests within the sapphire module
- * `phpunit sapphire/tests/filesystem/FolderTest.php`: Run a single test
- * `phpunit sapphire/tests '' flush=all`: Run tests with optional `$_GET` parameters (you need an empty second argument)
+ * `phpunit framework/tests/`: Run all tests of the framework module
+ * `phpunit framework/tests/filesystem`: Run all filesystem tests within the framework module
+ * `phpunit framework/tests/filesystem/FolderTest.php`: Run a single test
+ * `phpunit framework/tests '' flush=all`: Run tests with optional `$_GET` parameters (you need an empty second argument)
 
 ## Coverage reports
 
@@ -61,7 +61,7 @@ for unit and functional tests.
 
 Example `phpunit-unittests-only.xml`:
 
-	<phpunit bootstrap="/sapphire/tests/bootstrap.php" colors="true">
+	<phpunit bootstrap="framework/tests/bootstrap.php" colors="true">
 		<testsuites>
 			<testsuite>
 				<directory>mysite/tests/unit</directory>
@@ -83,8 +83,8 @@ This applies for all thirdparty code
 
 	<filter>
 		<blacklist>
-			<directory suffix=".php">sapphire/dev/</directory>
-			<directory suffix=".php">sapphire/thirdparty/</directory>
+			<directory suffix=".php">framework/dev/</directory>
+			<directory suffix=".php">framework/thirdparty/</directory>
 			<directory suffix=".php">cms/thirdparty/</directory>
 			
 			<!-- Add your custom rules here -->
@@ -101,7 +101,7 @@ particularly if you have a lot of database write operations.
 This is a problem when you're trying to to "[Test Driven Development](http://en.wikipedia.org/wiki/Test-driven_development)".
 
 To speed things up a bit, you can simply use a faster database just for executing tests.
-The sapphire database layer makes this relatively easy, most likely
+The SilverStripe database layer makes this relatively easy, most likely
 you won't need to adjust any project code or alter SQL statements.
 
 The [SQLite3 module](http://www.silverstripe.org/sqlite-database/) provides an interface
@@ -122,7 +122,7 @@ Example `mysite/_config.php`:
 	
 You can either use the database on a single invocation:
 
-	phpunit sapphire/tests "" db=sqlite3
+	phpunit framework/tests "" db=sqlite3
 	
 or through a `<php>` flag in your `phpunit.xml` (see [Appenix C: "Setting PHP INI settings"](http://www.phpunit.de/manual/current/en/appendixes.configuration.html)):
 

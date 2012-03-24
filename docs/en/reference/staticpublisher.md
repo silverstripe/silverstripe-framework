@@ -123,12 +123,12 @@ example](http://open.silverstripe.com/browser/modules/cms/trunk/code/staticpubli
 
 Just look for this line:
 
-	RewriteRule .* sapphire/main.php?url=%1&%{QUERY_STRING} [L]
+	RewriteRule .* framework/main.php?url=%1&%{QUERY_STRING} [L]
 
 
 And change the PHP script from main.php to static-main.php:
 
-	RewriteRule .* sapphire/static-main.php?url=%1&%{QUERY_STRING} [L]
+	RewriteRule .* framework/static-main.php?url=%1&%{QUERY_STRING} [L]
 
 ## Using Static Publisher With Subsites Module
 

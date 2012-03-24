@@ -17,7 +17,7 @@ First of all, create a new folder structure in your SilverStripe webroot, which 
 form our module for this example. 
 	
 	cms/
-	sapphire/
+	framework/
 	zzz_admin/
 		_config.php
 		code/
@@ -34,7 +34,7 @@ the common `Page` object (a new PHP class `MyPage` will look for a `MyPage.ss` t
 We can use this to create a different base template with `LeftAndMain.ss`
 (which corresponds to the `LeftAndMain` PHP controller class).
 
-Copy the template markup of the base implementation at `sapphire/admin/templates/LeftAndMain.ss` into `zzz_admin/admin/templates/LeftAndMain.ss`. It will automatically be picked up by the CMS logic. Add a new section after the `$Content` tag:
+Copy the template markup of the base implementation at `framework/admin/templates/LeftAndMain.ss` into `zzz_admin/admin/templates/LeftAndMain.ss`. It will automatically be picked up by the CMS logic. Add a new section after the `$Content` tag:
 	
 	:::ss
 	...

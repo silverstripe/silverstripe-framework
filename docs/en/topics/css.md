@@ -11,7 +11,7 @@ You are free to add `<style>` and `<link>` tags to your template (typically `the
 
 SilverStripe provides a management layer for javascript and CSS files on top of that with the [Requirements](/reference/requirements) class,
 by adding some simple PHP calls to your controller or template. Some files are automatically included,
-depending on what functionality you are using (e.g. SilverStripe forms automatically include `sapphire/css/Form.css`).
+depending on what functionality you are using (e.g. SilverStripe forms automatically include `framework/css/Form.css`).
 
 In your controller (e.g. `mysite/code/Page.php`):
 

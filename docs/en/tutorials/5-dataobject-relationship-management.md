@@ -28,16 +28,16 @@ To do this, we are gonna use the following objects :
 This is a table which sums up the relations between them :
  | Project             | Student             | Mentor        | Modules          |                           
  | -------             | -------             | ------        | ------------------                           
- | i18n Multi-Language | Bernat Foj Capell   | Ingo Schommer | Cms, Sapphire, i18n, Translation              | 
- | Image Manipulation  | Mateusz Ujma        | Sam Minnee    | Cms, Sapphire, ImageManipulation              | 
- | Google Maps         | Ofir Picazo Navarro | Hayden Smith  | Cms, Sapphire, Maps                           | 
- | Mashups             | Lakshan Perera      | Matt Peel     | Cms, Sapphire, MashUps                        | 
- | Multiple Databases  | Philipp Krenn       | Brian Calhoun | Cms, Sapphire, MultipleDatabases              | 
- | Reporting           | Quin Hoxie          | Sam Minnee    | Cms, Sapphire, Reporting                      | 
- | Security & OpenID   | Markus Lanthaler    | Hayden Smith  | Cms, Sapphire, auth_openid                    | 
- | SEO                 | Will Scott          | Brian Calhoun | Cms, Sapphire, googleadwords, googleanalytics | 
- | Usability           | Elijah Lofgren      | Sean Harvey   | Cms, Sapphire, UsabilityElijah                | 
- | Safari 3 Support    | Meg Risen           | Sean Harvey   | Cms, Sapphire, UsabilityMeg                   | 
+ | i18n Multi-Language | Bernat Foj Capell   | Ingo Schommer | Cms, Framework, i18n, Translation              | 
+ | Image Manipulation  | Mateusz Ujma        | Sam Minnee    | Cms, Framework, ImageManipulation              | 
+ | Google Maps         | Ofir Picazo Navarro | Hayden Smith  | Cms, Framework, Maps                           | 
+ | Mashups             | Lakshan Perera      | Matt Peel     | Cms, Framework, MashUps                        | 
+ | Multiple Databases  | Philipp Krenn       | Brian Calhoun | Cms, Framework, MultipleDatabases              | 
+ | Reporting           | Quin Hoxie          | Sam Minnee    | Cms, Framework, Reporting                      | 
+ | Security & OpenID   | Markus Lanthaler    | Hayden Smith  | Cms, Framework, auth_openid                    | 
+ | SEO                 | Will Scott          | Brian Calhoun | Cms, Framework, googleadwords, googleanalytics | 
+ | Usability           | Elijah Lofgren      | Sean Harvey   | Cms, Framework, UsabilityElijah                | 
+ | Safari 3 Support    | Meg Risen           | Sean Harvey   | Cms, Framework, UsabilityMeg                   | 
 
 ## GSOC Projects
 
@@ -770,6 +770,6 @@ CMS and how to display them on the website.
 
 ## Download the code
 
-Download all the [code](http://doc.silverstripe.org/sapphire/docs/en/tutorials/_images/tutorial5-completecode.zip) for this tutorial.
+Download all the [code](http://doc.silverstripe.org/framework/docs/en/tutorials/_images/tutorial5-completecode.zip) for this tutorial.
 
-You can also download the [code](http://doc.silverstripe.org/sapphire/docs/en/tutorials/_images/tutorial5-completecode-blackcandy.zip) for use in the blackcandy template.
+You can also download the [code](http://doc.silverstripe.org/framework/docs/en/tutorials/_images/tutorial5-completecode-blackcandy.zip) for use in the blackcandy template.
