@@ -334,7 +334,6 @@ jQuery.noConflict();
 					// Ensure that form view is loaded (rather than whole "Content" template)
 					complete: function(xmlhttp, status) {
 						var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.responseText;
-						console.log(msg);
 						
 						try {
 							if (typeof msg != "undefined" && msg != null) eval(msg);
