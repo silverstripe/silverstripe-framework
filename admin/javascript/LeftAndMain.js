@@ -187,8 +187,20 @@ jQuery.noConflict();
 					state: state, element: contentEl
 				});
 
+				var headers = {};
+				
+				// Replace a form
+				if(contentEl[0] != null && contentEl[0].tagName.toLowerCase() == 'form') {
+					headers["X-Get-Fragment"] = 'CurrentForm';
+					
+				// Replace full RHS content area
+				} else if(contentEl.hasClass("cms-content")) {
+					headers["X-Get-Fragment"] = 'Content';
+				}
+
 				contentEl.addClass('loading');
 				var xhr = $.ajax({
+					headers: headers,
 					url: state.url,
 					success: function(data, status, xhr) {
 						// Update title

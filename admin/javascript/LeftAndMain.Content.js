@@ -56,9 +56,9 @@
 				this.trigger('loadform', {form: form, url: url});
 			
 				return jQuery.ajax(jQuery.extend({
-					url: url, 
 					// Ensure that form view is loaded (rather than whole "Content" template)
-					data: {'cms-view-form': 1},
+					headers: {"X-Get-Fragment" : "CurrentForm"},
+					url: url, 
 					complete: function(xmlhttp, status) {
 						self.loadForm_responseHandler(form, xmlhttp.responseText, status, xmlhttp);
 						if(callback) callback.apply(self, arguments);
@@ -143,6 +143,7 @@
 				// add button action
 				formData.push({name: $(button).attr('name'), value:'1'});
 				jQuery.ajax(jQuery.extend({
+					headers: {"X-Get-Fragment" : "CurrentForm"},
 					url: form.attr('action'), 
 					data: formData,
 					type: 'POST',
@@ -290,7 +291,6 @@
 					if($(node).find('a:first').is(':internal')) url = url = $.path.makeUrlAbsolute(url, $('base').attr('href'));
 					// Reload only edit form if it exists (side-by-side view of tree and edit view), otherwise reload whole panel
 					if(container.find('.cms-edit-form').length) {
-						url += '?cms-view-form=1';
 						container.entwine('ss').loadPanel(url, null, {selector: '.cms-edit-form'});
 					} else {
 						container.entwine('ss').loadPanel(url);	
