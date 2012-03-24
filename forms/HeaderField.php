@@ -53,4 +53,5 @@ class HeaderField extends DatalessField {
 	function Type() {
 		return null;
 	}
+
 }

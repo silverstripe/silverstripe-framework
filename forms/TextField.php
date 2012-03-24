@@ -50,5 +50,6 @@ class TextField extends FormField {
 	function InternallyLabelledField() {
 		if(!$this->value) $this->value = $this->Title();
 		return $this->Field();
-	}	
+	}
+	
 }
