@@ -2397,28 +2397,52 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DBField
 	 */
 	public function relObject($fieldPath) {
-		$parts = explode('.', $fieldPath);
-		$fieldName = array_pop($parts);
-		$component = $this;
-		foreach($parts as $relation) {
-			if ($rel = $component->has_one($relation)) {
-				$component = singleton($rel);
-			} elseif ($rel = $component->has_many($relation)) {
-				$component = singleton($rel);
-			} elseif ($rel = $component->many_many($relation)) {
-				$component = singleton($rel[1]);
-			} elseif($className = $this->castingClass($relation)) {
-				$component = $className;
+		if(strpos($fieldPath, '.') !== false) {
+			$parts = explode('.', $fieldPath);
+			$fieldName = array_pop($parts);
+
+			// Traverse dot syntax
+			$component = $this;
+			foreach($parts as $relation) {
+				$component = $component->$relation();
 			}
+
+			$object = $component->dbObject($fieldName);
+
+		} else {
+			$object = $this->dbObject($fieldPath);
 		}
 
-		$object = $component->dbObject($fieldName);
 
 		if (!($object instanceof DBField) && !($object instanceof DataList)) {
 			// Todo: come up with a broader range of exception objects to describe differnet kinds of errors programatically
 			throw new Exception("Unable to traverse to related object field [$fieldPath] on [$this->class]");
 		}
 		return $object;
+	}
+
+	/**
+	 * Traverses to a field referenced by relationships between data objects, returning the value
+	 * The path to the related field is specified with dot separated syntax (eg: Parent.Child.Child.FieldName)
+	 *
+	 * @param $fieldPath string
+	 * @return string
+	 */
+	public function relField($fieldPath) {
+		if(strpos($fieldPath, '.') !== false) {
+			$parts = explode('.', $fieldPath);
+			$fieldName = array_pop($parts);
+
+			// Traverse dot syntax
+			$component = $this;
+			foreach($parts as $relation) {
+				$component = $component->$relation();
+			}
+
+			return $component->$fieldName;
+		} else {
+			return $this->$fieldPath;
+		}
 	}
 
 	/**

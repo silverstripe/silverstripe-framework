@@ -1007,6 +1007,33 @@ class DataObjectTest extends SapphireTest {
 		$this->assertFalse($objEmpty->isEmpty(), 'Zero value in attribute considered non-empty');
 	}
 	
+	function testRelField() {
+		$captain = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+		// Test traversal of a single has_one
+		$this->assertEquals("Team 1", $captain->relField('FavouriteTeam.Title'));
+		// Test direct field access
+		$this->assertEquals("Captain", $captain->relField('FirstName'));
+
+		$player = $this->objFromFixture('DataObjectTest_Player', 'player2');
+		// Test that we can traverse more than once, and that arbitrary methods are okay
+		$this->assertEquals("Team 1", $player->relField('Teams.First.Title'));
+	}
+
+	function testRelObject() {
+		$captain = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+		// Test traversal of a single has_one
+		$this->assertInstanceOf("Varchar", $captain->relObject('FavouriteTeam.Title'));
+		$this->assertEquals("Team 1", $captain->relObject('FavouriteTeam.Title')->getValue());
+		// Test direct field access
+		$this->assertInstanceOf("Boolean", $captain->relObject('IsRetired'));
+		$this->assertEquals(1, $captain->relObject('IsRetired')->getValue());
+
+		$player = $this->objFromFixture('DataObjectTest_Player', 'player2');
+		// Test that we can traverse more than once, and that arbitrary methods are okay
+		$this->assertInstanceOf("Varchar", $player->relObject('Teams.First.Title'));
+		$this->assertEquals("Team 1", $player->relObject('Teams.First.Title')->getValue());
+	}
+	
 
 }
 
