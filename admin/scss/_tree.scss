@@ -24,8 +24,14 @@
 			min-height: 18px;
 			line-height: 18px;
 			white-space: nowrap;
-			margin-left: 18px;
 			min-width: 18px;
+			
+			li {
+				margin: 0;
+			}
+			li li {
+				margin-left: 10px;
+			}
 		}
 		ins {
 			display: inline-block;
@@ -240,7 +246,7 @@
 	}
 	li.jstree-open > ul {
 		display: block;
-		margin-left:-13px;
+		
 		li ul {
 			margin-left:2px;
 		}
