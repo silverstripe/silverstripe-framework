@@ -23,7 +23,11 @@ jQuery.noConflict();
 		// global ajax error handlers
 		$.ajaxSetup({
 			error: function(xmlhttp, status, error) {
-				var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.statusText;
+				if(xmlhttp.status < 200 || xmlhttp.status > 399) {
+					var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.statusText;
+				} else {
+					msg = error;
+				}
 				statusMessage(msg, 'bad');
 			}
 		});
