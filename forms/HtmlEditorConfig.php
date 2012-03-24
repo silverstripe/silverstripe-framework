@@ -81,8 +81,6 @@ class HtmlEditorConfig {
 		'safari_warning' => false,
 		'relative_urls' => true,
 		'verify_html' => true,
-		
-		'spellchecker_rpc_url' => 'sapphire/thirdparty/tinymce-spellchecker/rpc.php'
 	);
 	
 	/**

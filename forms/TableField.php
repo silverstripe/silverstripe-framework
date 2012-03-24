@@ -464,13 +464,13 @@ class TableField extends TableListField {
 	 * Sets the template to be rendered with
 	 */
 	function FieldHolder($properties = array()) {
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableField.js');
-		Requirements::css(SAPPHIRE_DIR . '/css/TableListField.css');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/behaviour/behaviour.js');
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/TableListField.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/TableField.js');
+		Requirements::css(FRAMEWORK_DIR . '/css/TableListField.css');
 		
 		$obj = $properties ? $this->customise($properties) : $this;
 		return $obj->renderWith($this->template);

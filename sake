@@ -2,26 +2,29 @@
 
 # Check for an argument
 if [ ${1:-""} = "" ]; then
-	echo "Sapphire Sake
+	echo "SilverStripe Sake
 
 Usage: $0 (command-url) (params)
-Executes a Sapphire command"
+Executes a SilverStripe command"
 	exit 1
 fi
 
-# Set $sapphire and $base
+# Set $framework and $base
 sakedir=`dirname $0`
 if [ -f $sakedir/cli-script.php ]; then
-	sapphire=$sakedir
+	framework=$sakedir
 	base=`dirname $sakedir`
+elif [ -d ./framework ]; then
+	framework=./framework
+	base=.
 elif [ -d ./sapphire ]; then
-	sapphire=./sapphire
+	framework=./sapphire
 	base=.
 elif [ -f ./cli-script.php ]; then
-	sapphire=.
+	framework=.
 	base=..
 else
-	echo "Can't find ./sapphire/cli-script.php or ./cli-script.php"
+	echo "Can't find ./framework/cli-script.php or ./cli-script.php"
 	exit 1
 fi
 
@@ -102,4 +105,4 @@ fi
 ################################################################################################
 ## Basic execution
 
-$php $sapphire/cli-script.php ${*}
+$php $framework/cli-script.php ${*}

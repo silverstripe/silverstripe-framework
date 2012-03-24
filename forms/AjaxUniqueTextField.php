@@ -31,8 +31,8 @@ class AjaxUniqueTextField extends TextField {
 	function Field($properties = array()) {
 		Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/behaviour/behaviour.js");
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/UniqueFields.js");
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(FRAMEWORK_DIR . "/javascript/UniqueFields.js");
 		
 		$url = Convert::raw2att( $this->validateURL );
 		

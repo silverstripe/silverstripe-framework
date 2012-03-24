@@ -1433,7 +1433,7 @@ class Member_GroupSet extends ManyManyList {
 class Member_ProfileForm extends Form {
 	
 	function __construct($controller, $name, $member) {
-		Requirements::block(SAPPHIRE_DIR . '/admin/css/layout.css');
+		Requirements::block(FRAMEWORK_DIR . '/admin/css/layout.css');
 		
 		$fields = $member->getCMSFields();
 		$fields->push(new HiddenField('ID','ID',$member->ID));

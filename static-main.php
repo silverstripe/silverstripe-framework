@@ -35,7 +35,7 @@ if (
 ) {
 	// Define system paths (copied from Core.php)
 	if(!defined('BASE_PATH')) {
-		// Assuming that this file is sapphire/static-main.php we can then determine the base path
+		// Assuming that this file is framework/static-main.php we can then determine the base path
 		define('BASE_PATH', rtrim(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR);
 	}
 	if(!defined('BASE_URL')) {

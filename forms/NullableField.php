@@ -74,7 +74,7 @@ class NullableField extends FormField {
 
 	/**
 	 * (non-PHPdoc)
-	 * @see sapphire/forms/FormField#Field()
+	 * @see framework/forms/FormField#Field()
 	 */
 	function Field($properties = array()) {
 		if ( $this->isReadonly()) {
@@ -114,7 +114,7 @@ class NullableField extends FormField {
 
 	/**
 	 * (non-PHPdoc)
-	 * @see sapphire/forms/FormField#debug()
+	 * @see framework/forms/FormField#debug()
 	 */
 	function debug() {
 		$result = "$this->class ($this->name: $this->title : <font style='color:red;'>$this->message</font>) = ";

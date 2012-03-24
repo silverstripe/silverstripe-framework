@@ -1,5 +1,5 @@
 <?php
-// Simulate an execution from sapphire/cli-script.php, Core.php has too many
+// Simulate an execution from framework/cli-script.php, Core.php has too many
 // hardcoded assumptions about folder depth of the executing script.
 
 // Make sure display_errors is on
@@ -9,10 +9,13 @@ ini_set('display_errors', 1);
 global $_SERVER;
 if (!$_SERVER) $_SERVER = array();
 
-$_SERVER['SCRIPT_FILENAME'] = getcwd() . DIRECTORY_SEPARATOR . 'sapphire' . DIRECTORY_SEPARATOR . 'cli-script.php';
-$_SERVER['SCRIPT_NAME'] = '.' . DIRECTORY_SEPARATOR . 'sapphire' . DIRECTORY_SEPARATOR . 'cli-script.php'; 
+$frameworkPath = dirname(dirname(__FILE__));
+$frameworkDir = basename($frameworkPath);
 
-define('BASE_PATH', getcwd());
+$_SERVER['SCRIPT_FILENAME'] = $frameworkPath . DIRECTORY_SEPARATOR . 'cli-script.php';
+$_SERVER['SCRIPT_NAME'] = '.' . DIRECTORY_SEPARATOR . $frameworkDir . DIRECTORY_SEPARATOR . 'cli-script.php'; 
+
+define('BASE_PATH', dirname($frameworkPath));
 
 // Copied from cli-script.php, to enable same behaviour through phpunit runner.
 if(isset($_SERVER['argv'][2])) {
@@ -34,7 +37,7 @@ if(isset($_SERVER['argv'][2])) {
 $_GET['flush'] = 1;
 
 // Connect to database
-require_once(getcwd()."/sapphire/core/Core.php");
+require_once($frameworkPath . "/core/Core.php");
 global $databaseConfig;
 DB::connect($databaseConfig);
 

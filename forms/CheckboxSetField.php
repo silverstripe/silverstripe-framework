@@ -44,7 +44,7 @@ class CheckboxSetField extends OptionsetField {
 	 * e.g. SQLMap, ArrayList or an array.
 	 */
 	function Field($properties = array()) {
-		Requirements::css(SAPPHIRE_DIR . '/css/CheckboxSetField.css');
+		Requirements::css(FRAMEWORK_DIR . '/css/CheckboxSetField.css');
 
 		$source = $this->source;
 		$values = $this->value;
@@ -286,4 +286,5 @@ class CheckboxSetField extends OptionsetField {
 	function ExtraOptions() {
 		return FormField::ExtraOptions();
 	}
+	
 }

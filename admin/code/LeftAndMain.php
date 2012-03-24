@@ -209,7 +209,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$htmlEditorConfig->setOption('language', i18n::get_tinymce_lang());
 		if(!$htmlEditorConfig->getOption('content_css')) {
 			$cssFiles = array();
-			$cssFiles[] = 'sapphire/admin/css/editor.css';
+			$cssFiles[] = FRAMEWORK_ADMIN_DIR . '/css/editor.css';
 			
 			// Use theme from the site config
 			if(class_exists('SiteConfig') && ($config = SiteConfig::current_site_config()) && $config->Theme) {
@@ -241,32 +241,32 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			array(
 				THIRDPARTY_DIR . '/jquery/jquery.js',
 				THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js',
-				SAPPHIRE_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js',
-				SAPPHIRE_DIR . '/admin/javascript/lib.js',
+				FRAMEWORK_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/lib.js',
 				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
 				THIRDPARTY_DIR . '/json-js/json2.js',
 				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
 				THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js',
 				THIRDPARTY_DIR . '/jquery-query/jquery.query.js',
 				THIRDPARTY_DIR . '/jquery-form/jquery.form.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
+				FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js',
+				FRAMEWORK_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
+				FRAMEWORK_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
+				FRAMEWORK_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
+				FRAMEWORK_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js',
+				FRAMEWORK_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js',
+				FRAMEWORK_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
 				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js',
-				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js',
-				SAPPHIRE_DIR . '/javascript/TreeDropdownField.js',
-				SAPPHIRE_DIR . '/javascript/DateField.js',
-				SAPPHIRE_DIR . '/javascript/HtmlEditorField.js',
-				SAPPHIRE_DIR . '/javascript/TabSet.js',
-				SAPPHIRE_DIR . '/javascript/i18n.js',
-				SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js',
-				SAPPHIRE_DIR . '/javascript/GridField.js',
+				FRAMEWORK_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js',
+				FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js',
+				FRAMEWORK_DIR . '/javascript/TreeDropdownField.js',
+				FRAMEWORK_DIR . '/javascript/DateField.js',
+				FRAMEWORK_DIR . '/javascript/HtmlEditorField.js',
+				FRAMEWORK_DIR . '/javascript/TabSet.js',
+				FRAMEWORK_DIR . '/javascript/i18n.js',
+				FRAMEWORK_ADMIN_DIR . '/javascript/ssui.core.js',
+				FRAMEWORK_DIR . '/javascript/GridField.js',
 			)
 		);
 		
@@ -276,36 +276,36 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			'leftandmain.js',
 			array_unique(array_merge(
 				array(
-					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.js',
-					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
-					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
-					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js',
-					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
-					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
-					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
-					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js',
-					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
-					SAPPHIRE_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.js',
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js',
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js',
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
 				),
-				Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang', true, true),
-				Requirements::add_i18n_javascript(SAPPHIRE_ADMIN_DIR . '/javascript/lang', true, true)
+				Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', true, true),
+				Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/javascript/lang', true, true)
 			))
 		);
 
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.css');
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-		Requirements::css(SAPPHIRE_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css');
 		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
-		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
-		Requirements::css(SAPPHIRE_DIR . '/css/GridField.css');
+		Requirements::css(FRAMEWORK_DIR . '/css/TreeDropdownField.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
+		Requirements::css(FRAMEWORK_DIR . '/css/GridField.css');
 
 		// Browser-specific requirements
 		$ie = isset($_SERVER['HTTP_USER_AGENT']) ? strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') : false;
 		if($ie) {
 			$version = substr($_SERVER['HTTP_USER_AGENT'], $ie + 5, 3);
-			if($version == 7) Requirements::css('sapphire/admin/css/ie7.css');
-			else if($version == 8) Requirements::css('sapphire/admin/css/ie8.css');
+			if($version == 7) Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/ie7.css');
+			else if($version == 8) Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/ie8.css');
 		}
 
 		// Custom requirements				
@@ -1078,7 +1078,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$form->setActions(null);
 
 		Requirements::clear();
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/LeftAndMain_printable.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/LeftAndMain_printable.css');
 		return array(
 			"PrintForm" => $form
 		);
@@ -1175,11 +1175,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(defined('CMS_PATH') && file_exists(CMS_PATH . '/silverstripe_version')) {
 			$sapphireVersion = file_get_contents(CMS_PATH . '/silverstripe_version');
 		} else {
-			$sapphireVersion = file_get_contents(SAPPHIRE_PATH . '/silverstripe_version');
+			$sapphireVersion = file_get_contents(FRAMEWORK_PATH . '/silverstripe_version');
 		}
 		if(!$sapphireVersion) $sapphireVersion = _t('LeftAndMain.VersionUnknown', 'unknown');
 		return sprintf(
-			"sapphire: %s",
+			"SilverStripe: %s",
 			$sapphireVersion
 		);
 	}
@@ -1313,7 +1313,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	
 	/**
 	 * Register the given javascript file as required in the CMS.
-	 * Filenames should be relative to the base, eg, SAPPHIRE_DIR . '/javascript/loader.js'
+	 * Filenames should be relative to the base, eg, FRAMEWORK_DIR . '/javascript/loader.js'
 	 */
 	public static function require_javascript($file) {
 		self::$extra_requirements['javascript'][] = array($file);

@@ -7,7 +7,7 @@ class i18nTextCollectorTest extends SapphireTest {
 	
 	/**
 	 * @var string $tmpBasePath Used to write language files.
-	 * We don't want to store them inside sapphire (or in any web-accessible place)
+	 * We don't want to store them inside framework (or in any web-accessible place)
 	 * in case something goes wrong with the file parsing.
 	 */
 	protected $alternateBaseSavePath;

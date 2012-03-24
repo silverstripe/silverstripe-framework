@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Sapphire configuration file
+ * Framework configuration file
  *
- * Here you can make different settings for the Sapphire module (the core
+ * Here you can make different settings for the Framework module (the core
  * module).
  *
  * For example you can register the authentication methods you wish to use
@@ -45,7 +45,7 @@ Object::useCustomClass('Datetime',   'SS_Datetime', true);
 /**
  * The root directory of TinyMCE
  */
-define('MCE_ROOT', 'sapphire/thirdparty/tinymce/');
+define('MCE_ROOT', FRAMEWORK_DIR . '/thirdparty/tinymce/');
 
 ShortcodeParser::get('default')->register('file_link', array('File', 'link_shortcode_handler'));
 

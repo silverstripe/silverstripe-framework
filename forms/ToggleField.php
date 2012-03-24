@@ -49,9 +49,9 @@ class ToggleField extends ReadonlyField {
 	function Field($properties = array()) {
 		$content = '';
 		
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ToggleField.js");
+		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/prototype/prototype.js");
+		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/behaviour/behaviour.js");
+		Requirements::javascript(FRAMEWORK_DIR . "/javascript/ToggleField.js");
 		
 		if($this->startClosed) $this->addExtraClass('startClosed');
 		

@@ -1,7 +1,7 @@
 <?php
 class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 
-	static $fixture_file = 'sapphire/tests/forms/gridfield/GridFieldTest.yml';
+	static $fixture_file = 'GridFieldTest.yml';
 
 	protected $extraDataObjects = array('GridFieldTest_Team', 'GridFieldTest_Player');
 	

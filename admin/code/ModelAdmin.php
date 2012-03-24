@@ -110,7 +110,7 @@ abstract class ModelAdmin extends LeftAndMain {
 			user_error('ModelAdmin::init(): Invalid Model class', E_USER_ERROR);
 		}
 		
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ModelAdmin.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/ModelAdmin.js');
 	}
 
 	function getEditForm($id = null, $fields = null) {

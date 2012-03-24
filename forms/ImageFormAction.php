@@ -28,7 +28,7 @@ class ImageFormAction extends FormAction {
 
 	function Field($properties = array()) {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/ImageFormAction.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/ImageFormAction.js');
 		
 		$classClause = '';
 		if($this->className) $classClause = $this->className . ' ';

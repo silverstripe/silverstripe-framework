@@ -31,7 +31,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function init() {
 		parent::init();
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/SecurityAdmin.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/SecurityAdmin.js');
 	}
 	
 	public function getEditForm($id = null, $fields = null) {
@@ -133,12 +133,12 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	
 	public function memberimport() {
 		Requirements::clear();
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/MemberImportForm.css');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/MemberImportForm.js');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/MemberImportForm.css');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/MemberImportForm.js');
 		
 		return $this->renderWith('BlankPage', array(
 			'Form' => $this->MemberImportForm()->forTemplate(),
@@ -164,12 +164,12 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		
 	public function groupimport() {
 		Requirements::clear();
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/screen.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
-		Requirements::css(SAPPHIRE_ADMIN_DIR . '/css/MemberImportForm.css');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/MemberImportForm.js');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/MemberImportForm.css');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/MemberImportForm.js');
 		
 		return $this->renderWith('BlankPage', array(
 			'Content' => ' ',

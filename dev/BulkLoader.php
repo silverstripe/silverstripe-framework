@@ -1,7 +1,7 @@
 <?php
 /**
  * A base for bulk loaders of content into the SilverStripe database.
- * Bulk loaders give SilverStripe authors the ability to do large-scale uploads into their Sapphire databases.
+ * Bulk loaders give SilverStripe authors the ability to do large-scale uploads into their SilverStripe databases.
  * 
  * You can configure column-handling, 
  * 

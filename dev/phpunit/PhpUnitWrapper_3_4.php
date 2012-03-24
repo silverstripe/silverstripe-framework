@@ -29,9 +29,18 @@ class PhpUnitWrapper_3_4 extends PhpUnitWrapper {
 
 		if($this->getCoverageStatus()) {
 			// blacklist selected folders from coverage report
+			$modules = $this->moduleDirectories();
+			
 			foreach(TestRunner::$coverage_filter_dirs as $dir) {
-				PHPUnit_Util_Filter::addDirectoryToFilter(BASE_PATH . '/' . $dir);
-			}	
+				if($dir[0] == '*') {
+					$dir = substr($dir, 1);
+					foreach ($modules as $module) {
+						PHPUnit_Util_Filter::addDirectoryToFilter(BASE_PATH . '/' . $dir);
+					}
+				} else {
+					PHPUnit_Util_Filter::addDirectoryToFilter(BASE_PATH . '/' . $dir);
+				}
+			}
 			$this->getFrameworkTestResults()->collectCodeCoverageInformation(true);
 		}
 	}

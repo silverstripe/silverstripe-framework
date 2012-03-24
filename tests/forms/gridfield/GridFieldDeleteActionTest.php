@@ -12,7 +12,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 	protected $form;
 	
 	/** @var string */
-	public static $fixture_file = 'sapphire/tests/forms/gridfield/GridFieldActionTest.yml';
+	public static $fixture_file = 'GridFieldActionTest.yml';
 
 	/** @var array */
 	protected $extraDataObjects = array('GridFieldAction_Delete_Team', 'GridFieldAction_Edit_Team');

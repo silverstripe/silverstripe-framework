@@ -1138,7 +1138,7 @@ class MySQLQuery extends SS_Query {
 	private $handle;
 
 	/**
-	 * Hook the result-set given into a Query class, suitable for use by sapphire.
+	 * Hook the result-set given into a Query class, suitable for use by SilverStripe.
 	 * @param database The database object that created this query.
 	 * @param handle the internal mysql handle that is points to the resultset.
 	 */
