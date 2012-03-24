@@ -1374,3 +1374,22 @@ form.small {
 		} 
  	}
 }
+
+/**
+ * Import forms
+ */
+form.import-form {
+	ul {
+		list-style: disc;
+		li {
+			margin-left: 20px;
+		}
+	}
+	p {
+		margin-bottom: 5px;
+	}
+	label.left {
+		width: 250px;
+	}
+}
+

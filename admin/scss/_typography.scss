@@ -38,7 +38,9 @@ body, html {
 		line-height: $grid-y * 2;
 		margin-bottom: $grid-y * 2;
 	}
-	
+	em {
+		font-style: italic;
+	}
 	code {
 		font-family: 'Bitstream Vera Sans Mono','Courier', monospace;
 	}
