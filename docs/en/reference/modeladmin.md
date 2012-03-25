@@ -167,25 +167,21 @@ Export is also available, although at the moment only to the CSV format,
 through a button at the end of a results list. You can also export search results.
 It is handled through the `[api:GridFieldExportButton]` component.
 
-To customize the exported columns, override the edit form implementation in your `ModelAdmin`:
+To customize the exported columns, create a new method called `getExportFields` in your `ModelAdmin`:
 
 	:::php
 	class MyAdmin extends ModelAdmin {
 		// ...
-		function getEditForm($id = null) {
-			$form = parent::getEditForm($id);
-			if($this->modelClass == 'Product') {
-				$grid = $form->Fields()->fieldByName('Product');
-				$grid->getConfig()->getComponentByType('GridFieldExportButton')
-					->setExportColumns(array(
-						// Excludes 'ProductCode' from the export
-						'Name' => 'Name',
-						'Price' => 'Price'
-					));
-			}
-			return $form;
+		function getExportFields() {
+			return array(
+				'Name' => 'Name',
+				'ProductCode' => 'Product Code',
+				'Category.Title' => 'Category'
+			);
 		}
 	}
+
+Dot syntax support allows you to select a field on a related `has_one` object.
 
 ## Extending existing ModelAdmins
 
@@ -195,6 +191,7 @@ also another tool at your disposal: The `[api:Extension]` API.
 
 	:::php
 	class MyAdminExtension extends Extension {
+		// ...
 		function updateEditForm(&$form) {
 			$form->Fields()->push(/* ... */)
 		}
