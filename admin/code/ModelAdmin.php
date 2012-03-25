@@ -115,12 +115,14 @@ abstract class ModelAdmin extends LeftAndMain {
 
 	function getEditForm($id = null) {
 		$list = $this->getList();
+		$exportButton = new GridFieldExportButton();
+		$exportButton->setExportColumns($this->getExportFields());
 		$listField = Object::create('GridField',
 			$this->modelClass,
 			false,
 			$list,
 			$fieldConfig = GridFieldConfig_RecordEditor::create($this->stat('page_length'))
-				->addComponent(new GridFieldExportButton())
+				->addComponent($exportButton)
 				->removeComponentsByType('GridFieldFilterHeader')
 		);
 
@@ -143,6 +145,16 @@ abstract class ModelAdmin extends LeftAndMain {
 		$this->extend('updateEditForm', $form);
 		
 		return $form;
+	}
+
+	/**
+	 * Define which fields are used in the {@link getEditForm} GridField export.
+	 * By default, it uses the summary fields from the model definition.
+	 *
+	 * @return array
+	 */
+	public function getExportFields() {
+		return singleton($this->modelClass)->summaryFields();
 	}
 
 	/**
