@@ -113,7 +113,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 		foreach($items as $item) {
 			$columnData = array();
 			foreach($csvColumns as $columnSource => $columnHeader) {
-				$value = $item->$columnSource;
+				$value = $item->relField($columnSource);
 				$value = str_replace(array("\r", "\n"), "\n", $value);
 				$columnData[] = '"' . str_replace('"', '\"', $value) . '"';
 			}
