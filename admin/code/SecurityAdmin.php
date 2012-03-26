@@ -44,18 +44,18 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		if($record && !$record->canView()) return Security::permissionFailure($this);
 		
 		$memberList = Object::create('GridField',
-			'Members', 
-			false, 
-			DataList::create('Member'), 
+			'Members',
+			false,
+			DataList::create('Member'),
 			$memberListConfig = GridFieldConfig_RecordEditor::create()
 				->addComponent(new GridFieldExportButton())
 		)->addExtraClass("members_grid");
 		$memberListConfig->getComponentByType('GridFieldDetailForm')->setValidator(new Member_Validator());
 
 		$groupList = Object::create('GridField',
-			'Groups', 
-			false, 
-			DataList::create('Group'), 
+			'Groups',
+			false,
+			DataList::create('Group'),
 			GridFieldConfig_RecordEditor::create()
 		)->setDisplayFields(array(
 			'Breadcrumbs' => singleton('Group')->fieldLabel('Title')
@@ -67,7 +67,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 				'Root',
 				new Tab('Users', _t('SecurityAdmin.Users', 'Users'),
 					$memberList,
-					new LiteralField('MembersCautionText', 
+					new LiteralField('MembersCautionText',
 						sprintf('<p class="caution-remove"><strong>%s</strong></p>',
 							_t(
 								'SecurityAdmin.MemberListCaution', 
@@ -104,19 +104,14 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		
 		// Add roles editing interface
 		if(Permission::check('APPLY_ROLES')) {
-			$rolesField = new GridField(
+			$rolesField = Object::create('GridField',
 				'Roles',
 				false,
 				DataList::create('PermissionRole'),
 				GridFieldConfig_RecordEditor::create()
 			);
-			// $rolesCTF->setPermissions(array('add', 'edit', 'delete'));
 
 			$rolesTab = $fields->findOrMakeTab('Root.Roles', _t('SecurityAdmin.TABROLES', 'Roles'));
-			$rolesTab->push(new LiteralField(
-				'RolesDescription', 
-				''
-			));
 			$rolesTab->push($rolesField);
 		}
 
@@ -134,7 +129,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		$form->addExtraClass('center ss-tabset ' . $this->BaseCSSClasses());
 
 		$this->extend('updateEditForm', $form);
-					
+
 		return $form;
 	}
 	
