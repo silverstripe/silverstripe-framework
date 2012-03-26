@@ -544,7 +544,8 @@ Copyright (c) 2011 by Harvest
     };
 
     Chosen.prototype.results_show = function() {
-      var dd_top;
+	//patch applied: https://github.com/harvesthq/chosen/issues/300, add variable declaration dd_width
+      var dd_top, dd_width;
       if (!this.is_multiple) {
         this.selected_item.addClass("chzn-single-with-drop");
         if (this.result_single_selected) {
@@ -552,6 +553,8 @@ Copyright (c) 2011 by Harvest
         }
       }
       dd_top = this.is_multiple ? this.container.height() : this.container.height() - 1;
+	//patch applied: https://github.com/harvesthq/chosen/issues/300, add variable assignment dd_width
+	  dd_width = this.container.width() - get_side_border_padding(this.dropdown);
       this.dropdown.css({
         "top": dd_top + "px",
         "left": 0
