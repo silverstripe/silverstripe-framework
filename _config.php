@@ -42,8 +42,6 @@ Director::addRules(20, array(
 Object::useCustomClass('SSDatetime', 'SS_Datetime', true);
 Object::useCustomClass('Datetime',   'SS_Datetime', true);
 
-
-
 /**
  * The root directory of TinyMCE
  */
@@ -62,12 +60,6 @@ ShortcodeParser::get('default')->register('file_link', array('File', 'link_short
 if(!defined('EMAIL_BOUNCEHANDLER_KEY')) {
 	define('EMAIL_BOUNCEHANDLER_KEY', '1aaaf8fb60ea253dbf6efa71baaacbb3');
 }
-
-PasswordEncryptor::register('none', 'PasswordEncryptor_None');
-PasswordEncryptor::register('md5', 'PasswordEncryptor_LegacyPHPHash("md5")');
-PasswordEncryptor::register('sha1','PasswordEncryptor_LegacyPHPHash("sha1")');
-PasswordEncryptor::register('md5_v2.4', 'PasswordEncryptor_PHPHash("md5")');
-PasswordEncryptor::register('sha1_v2.4','PasswordEncryptor_PHPHash("sha1")');
 
 // Zend_Cache temp directory setting
 $_ENV['TMPDIR'] = TEMP_FOLDER; // for *nix
