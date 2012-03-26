@@ -64,6 +64,11 @@ class GD extends Object {
 		$width = round($width);
 		$height = round($height);
 		
+		// Check that a resize is actually necessary.
+		if ($width == $this->width && $height == $this->height) {
+			return $this;
+		}
+		
 		$newGD = imagecreatetruecolor($width, $height);
 		
 		// Preserves transparency between images
@@ -124,6 +129,11 @@ class GD extends Object {
 
 		$width = round($width);
 		$height = round($height);
+		
+		// Check that a resize is actually necessary.
+		if ($width == $this->width && $height == $this->height) {
+			return $this;
+		}
 		
 		if(!$width && !$height) user_error("No dimensions given", E_USER_ERROR);
 		if(!$width) user_error("Width not given", E_USER_ERROR);
@@ -299,6 +309,10 @@ class GD extends Object {
 		$width = round($width);
 		$height = round($height);
 		
+		// Check that a resize is actually necessary.
+		if ($width == $this->width && $height == $this->height) {
+			return $this;
+		}
 		
 		$newGD = imagecreatetruecolor($width, $height);
 		
