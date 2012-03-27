@@ -544,7 +544,7 @@ class RestfulServerTest_AuthorRating extends DataObject implements TestOnly {
 	static $db = array(
 		'Rating' => 'Int',
 		'SecretField' => 'Text',
-		'WriteProtectedField' => 'Text'
+		'WriteProtectedField' => 'Text',
 	);
 	
 	static $has_one = array(

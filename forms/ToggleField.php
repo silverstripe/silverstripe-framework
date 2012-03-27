@@ -59,7 +59,7 @@ class ToggleField extends ReadonlyField {
 		$rawInput = Convert::html2raw($valforInput);
 		
 		if($this->charNum) $reducedVal = substr($rawInput,0,$this->charNum);
-		else $reducedVal = DBField::create('Text',$rawInput)->{$this->truncateMethod}();
+		else $reducedVal = DBField::create_field('Text',$rawInput)->{$this->truncateMethod}();
 		
 		// only create togglefield if the truncated content is shorter
 		if(strlen($reducedVal) < strlen($rawInput)) {
