@@ -35,49 +35,49 @@ If more variables exist in the future, consider creating a variables file.*/
 /** ---------------------------------------------------- Double tone borders  http://daverupert.com/2011/06/two-tone-borders-with-css3/ ----------------------------------------------------- */
 /** ----------------------------- Sprite images ----------------------------- */
 /** Helper SCSS file for generating sprites for the interface. */
-.btn-icon-sprite, .ui-state-default .btn-icon-accept, .ui-state-default .btn-icon-accept_disabled, .ui-state-default .btn-icon-add, .ui-state-default .btn-icon-add_disabled, .ui-state-default .btn-icon-addpage, .ui-state-default .btn-icon-addpage_disabled, .ui-state-default .btn-icon-arrow-circle-135-left, .ui-state-default .btn-icon-back, .ui-state-default .btn-icon-back_disabled, .ui-state-default .btn-icon-chain--arrow, .ui-state-default .btn-icon-chain--exclamation, .ui-state-default .btn-icon-chain--minus, .ui-state-default .btn-icon-chain--pencil, .ui-state-default .btn-icon-chain--plus, .ui-state-default .btn-icon-chain-small, .ui-state-default .btn-icon-chain-unchain, .ui-state-default .btn-icon-chain, .ui-state-default .btn-icon-cross-circle, .ui-state-default .btn-icon-cross-circle_disabled, .ui-state-default .btn-icon-decline, .ui-state-default .btn-icon-decline_disabled, .ui-state-default .btn-icon-download-csv, .ui-state-default .btn-icon-drive-upload, .ui-state-default .btn-icon-drive-upload_disabled, .ui-state-default .btn-icon-magnifier, .ui-state-default .btn-icon-minus-circle, .ui-state-default .btn-icon-minus-circle_disabled, .ui-state-default .btn-icon-navigation, .ui-state-default .btn-icon-navigation_disabled, .ui-state-default .btn-icon-network-cloud, .ui-state-default .btn-icon-network-cloud_disabled, .ui-state-default .btn-icon-pencil, .ui-state-default .btn-icon-pencil_disabled, .ui-state-default .btn-icon-plug-disconnect-prohibition, .ui-state-default .btn-icon-plug-disconnect-prohibition_disabled, .ui-state-default .btn-icon-preview, .ui-state-default .btn-icon-preview_disabled, .ui-state-default .btn-icon-settings, .ui-state-default .btn-icon-settings_disabled, .ui-state-default .btn-icon-unpublish, .ui-state-default .btn-icon-unpublish_disabled { background: url('../images/btn-icon-sc495ceeeca.png') no-repeat; }
+.btn-icon-sprite, .ui-state-default .btn-icon-accept, .ui-state-default .btn-icon-accept_disabled, .ui-state-default .btn-icon-add, .ui-state-default .btn-icon-add_disabled, .ui-state-default .btn-icon-addpage, .ui-state-default .btn-icon-addpage_disabled, .ui-state-default .btn-icon-arrow-circle-135-left, .ui-state-default .btn-icon-back, .ui-state-default .btn-icon-back_disabled, .ui-state-default .btn-icon-chain--arrow, .ui-state-default .btn-icon-chain--exclamation, .ui-state-default .btn-icon-chain--minus, .ui-state-default .btn-icon-chain--pencil, .ui-state-default .btn-icon-chain--plus, .ui-state-default .btn-icon-chain-small, .ui-state-default .btn-icon-chain-unchain, .ui-state-default .btn-icon-chain, .ui-state-default .btn-icon-cross-circle, .ui-state-default .btn-icon-cross-circle_disabled, .ui-state-default .btn-icon-decline, .ui-state-default .btn-icon-decline_disabled, .ui-state-default .btn-icon-download-csv, .ui-state-default .btn-icon-drive-upload, .ui-state-default .btn-icon-drive-upload_disabled, .ui-state-default .btn-icon-magnifier, .ui-state-default .btn-icon-minus-circle, .ui-state-default .btn-icon-minus-circle_disabled, .ui-state-default .btn-icon-navigation, .ui-state-default .btn-icon-navigation_disabled, .ui-state-default .btn-icon-network-cloud, .ui-state-default .btn-icon-network-cloud_disabled, .ui-state-default .btn-icon-pencil, .ui-state-default .btn-icon-pencil_disabled, .ui-state-default .btn-icon-plug-disconnect-prohibition, .ui-state-default .btn-icon-plug-disconnect-prohibition_disabled, .ui-state-default .btn-icon-preview, .ui-state-default .btn-icon-preview_disabled, .ui-state-default .btn-icon-settings, .ui-state-default .btn-icon-settings_disabled, .ui-state-default .btn-icon-unpublish, .ui-state-default .btn-icon-unpublish_disabled { background: url('../images/btn-icon-s41050dc384.png') no-repeat; }
 
 .ui-state-default .btn-icon-accept { background-position: 0 0; }
 .ui-state-default .btn-icon-accept_disabled { background-position: 0 -17px; }
 .ui-state-default .btn-icon-add { background-position: 0 -34px; }
 .ui-state-default .btn-icon-add_disabled { background-position: 0 -52px; }
 .ui-state-default .btn-icon-addpage { background-position: 0 -70px; }
-.ui-state-default .btn-icon-addpage_disabled { background-position: 0 -88px; }
-.ui-state-default .btn-icon-arrow-circle-135-left { background-position: 0 -104px; }
-.ui-state-default .btn-icon-back { background-position: 0 -120px; }
-.ui-state-default .btn-icon-back_disabled { background-position: 0 -136px; }
-.ui-state-default .btn-icon-chain--arrow { background-position: 0 -151px; }
-.ui-state-default .btn-icon-chain--exclamation { background-position: 0 -167px; }
-.ui-state-default .btn-icon-chain--minus { background-position: 0 -183px; }
-.ui-state-default .btn-icon-chain--pencil { background-position: 0 -199px; }
-.ui-state-default .btn-icon-chain--plus { background-position: 0 -215px; }
-.ui-state-default .btn-icon-chain-small { background-position: 0 -231px; }
-.ui-state-default .btn-icon-chain-unchain { background-position: 0 -247px; }
-.ui-state-default .btn-icon-chain { background-position: 0 -263px; }
-.ui-state-default .btn-icon-cross-circle { background-position: 0 -279px; }
-.ui-state-default .btn-icon-cross-circle_disabled { background-position: 0 -295px; }
-.ui-state-default .btn-icon-decline { background-position: 0 -311px; }
-.ui-state-default .btn-icon-decline_disabled { background-position: 0 -328px; }
-.ui-state-default .btn-icon-download-csv { background-position: 0 -345px; }
-.ui-state-default .btn-icon-drive-upload { background-position: 0 -363px; }
-.ui-state-default .btn-icon-drive-upload_disabled { background-position: 0 -379px; }
-.ui-state-default .btn-icon-magnifier { background-position: 0 -395px; }
-.ui-state-default .btn-icon-minus-circle { background-position: 0 -411px; }
-.ui-state-default .btn-icon-minus-circle_disabled { background-position: 0 -427px; }
-.ui-state-default .btn-icon-navigation { background-position: 0 -443px; }
-.ui-state-default .btn-icon-navigation_disabled { background-position: 0 -459px; }
-.ui-state-default .btn-icon-network-cloud { background-position: 0 -475px; }
-.ui-state-default .btn-icon-network-cloud_disabled { background-position: 0 -491px; }
-.ui-state-default .btn-icon-pencil { background-position: 0 -507px; }
-.ui-state-default .btn-icon-pencil_disabled { background-position: 0 -523px; }
-.ui-state-default .btn-icon-plug-disconnect-prohibition { background-position: 0 -539px; }
-.ui-state-default .btn-icon-plug-disconnect-prohibition_disabled { background-position: 0 -555px; }
-.ui-state-default .btn-icon-preview { background-position: 0 -571px; }
-.ui-state-default .btn-icon-preview_disabled { background-position: 0 -588px; }
-.ui-state-default .btn-icon-settings { background-position: 0 -605px; }
-.ui-state-default .btn-icon-settings_disabled { background-position: 0 -621px; }
-.ui-state-default .btn-icon-unpublish { background-position: 0 -637px; }
-.ui-state-default .btn-icon-unpublish_disabled { background-position: 0 -655px; }
+.ui-state-default .btn-icon-addpage_disabled { background-position: 0 -86px; }
+.ui-state-default .btn-icon-arrow-circle-135-left { background-position: 0 -102px; }
+.ui-state-default .btn-icon-back { background-position: 0 -118px; }
+.ui-state-default .btn-icon-back_disabled { background-position: 0 -134px; }
+.ui-state-default .btn-icon-chain--arrow { background-position: 0 -149px; }
+.ui-state-default .btn-icon-chain--exclamation { background-position: 0 -165px; }
+.ui-state-default .btn-icon-chain--minus { background-position: 0 -181px; }
+.ui-state-default .btn-icon-chain--pencil { background-position: 0 -197px; }
+.ui-state-default .btn-icon-chain--plus { background-position: 0 -213px; }
+.ui-state-default .btn-icon-chain-small { background-position: 0 -229px; }
+.ui-state-default .btn-icon-chain-unchain { background-position: 0 -245px; }
+.ui-state-default .btn-icon-chain { background-position: 0 -261px; }
+.ui-state-default .btn-icon-cross-circle { background-position: 0 -277px; }
+.ui-state-default .btn-icon-cross-circle_disabled { background-position: 0 -293px; }
+.ui-state-default .btn-icon-decline { background-position: 0 -309px; }
+.ui-state-default .btn-icon-decline_disabled { background-position: 0 -326px; }
+.ui-state-default .btn-icon-download-csv { background-position: 0 -343px; }
+.ui-state-default .btn-icon-drive-upload { background-position: 0 -361px; }
+.ui-state-default .btn-icon-drive-upload_disabled { background-position: 0 -377px; }
+.ui-state-default .btn-icon-magnifier { background-position: 0 -393px; }
+.ui-state-default .btn-icon-minus-circle { background-position: 0 -409px; }
+.ui-state-default .btn-icon-minus-circle_disabled { background-position: 0 -425px; }
+.ui-state-default .btn-icon-navigation { background-position: 0 -441px; }
+.ui-state-default .btn-icon-navigation_disabled { background-position: 0 -457px; }
+.ui-state-default .btn-icon-network-cloud { background-position: 0 -473px; }
+.ui-state-default .btn-icon-network-cloud_disabled { background-position: 0 -489px; }
+.ui-state-default .btn-icon-pencil { background-position: 0 -505px; }
+.ui-state-default .btn-icon-pencil_disabled { background-position: 0 -521px; }
+.ui-state-default .btn-icon-plug-disconnect-prohibition { background-position: 0 -537px; }
+.ui-state-default .btn-icon-plug-disconnect-prohibition_disabled { background-position: 0 -553px; }
+.ui-state-default .btn-icon-preview { background-position: 0 -569px; }
+.ui-state-default .btn-icon-preview_disabled { background-position: 0 -586px; }
+.ui-state-default .btn-icon-settings { background-position: 0 -603px; }
+.ui-state-default .btn-icon-settings_disabled { background-position: 0 -619px; }
+.ui-state-default .btn-icon-unpublish { background-position: 0 -635px; }
+.ui-state-default .btn-icon-unpublish_disabled { background-position: 0 -653px; }
 
 .icon { text-indent: -9999px; border: none; outline: none; }
 .icon.icon-24 { width: 24px; height: 24px; background: url('../images/menu-icons/24x24-s546fcae8fd.png'); }
@@ -550,14 +550,18 @@ form.import-form label.left { width: 250px; }
 .cms .jstree-rtl > ul > li, .TreeDropdownField .treedropdownfield-panel .jstree-rtl > ul > li { margin-right: 0px; }
 .cms .jstree > ul > li, .TreeDropdownField .treedropdownfield-panel .jstree > ul > li { margin-left: 0px; }
 .cms #vakata-dragged, .TreeDropdownField .treedropdownfield-panel #vakata-dragged { display: block; margin: 0 0 0 0; padding: 4px 4px 4px 24px; position: absolute; top: -2000px; line-height: 16px; z-index: 10000; }
-.cms #vakata-contextmenu, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu { display: block; visibility: hidden; left: 0; top: -200px; position: absolute; margin: 0; padding: 0; min-width: 180px; background: #ebebeb; border: 1px solid silver; z-index: 10000; *width: 180px; }
+.cms #vakata-contextmenu, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu { display: block; visibility: hidden; left: 0; top: -200px; position: absolute; margin: 0; padding: 0; min-width: 180px; background: #FFF; border: 1px solid silver; z-index: 10000; *width: 180px; -moz-box-shadow: 0 0 10px #cccccc; -webkit-box-shadow: 0 0 10px #cccccc; -o-box-shadow: 0 0 10px #cccccc; box-shadow: 0 0 10px #cccccc; }
+.cms #vakata-contextmenu::before, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu::before { content: ""; display: block; /* reduce the damage in FF3.0 */ position: absolute; top: -10px; left: 24px; width: 0; border-width: 0 6px 10px 6px; border-color: #FFF transparent; border-style: solid; z-index: 10000; }
+.cms #vakata-contextmenu::after, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu::after { content: ""; display: block; /* reduce the damage in FF3.0 */ position: absolute; top: -11px; left: 23px; width: 0; border-width: 0 7px 11px 7px; border-color: #CCC transparent; border-style: solid; }
 .cms #vakata-contextmenu ul, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu ul { min-width: 180px; *width: 180px; }
 .cms #vakata-contextmenu ul, .cms #vakata-contextmenu li, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu ul, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li { margin: 0; padding: 0; list-style-type: none; display: block; }
-.cms #vakata-contextmenu li, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li { line-height: 20px; min-height: 20px; position: relative; padding: 0px; }
-.cms #vakata-contextmenu li a, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li a { padding: 1px 6px; line-height: 17px; display: block; text-decoration: none; margin: 1px 1px 0 1px; }
-.cms #vakata-contextmenu li ins, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li ins { float: left; width: 16px; height: 16px; text-decoration: none; margin-right: 2px; }
-.cms #vakata-contextmenu li a:hover, .cms #vakata-contextmenu li.vakata-hover > a, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li a:hover, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li.vakata-hover > a { background: gray; color: white; }
-.cms #vakata-contextmenu li ul, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li ul { display: none; position: absolute; top: -2px; left: 100%; background: #ebebeb; border: 1px solid gray; }
+.cms #vakata-contextmenu li, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li { line-height: 20px; min-height: 23px; position: relative; padding: 0px; }
+.cms #vakata-contextmenu li:last-child, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li:last-child { margin-bottom: 1px; }
+.cms #vakata-contextmenu li a, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li a { padding: 1px 10px; line-height: 23px; display: block; text-decoration: none; margin: 1px 1px 0 1px; border: 0; }
+.cms #vakata-contextmenu li ins, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li ins { float: left; width: 0; height: 0; text-decoration: none; margin-right: 2px; }
+.cms #vakata-contextmenu li .jstree-pageicon, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li .jstree-pageicon { margin-top: 3px; margin-right: 5px; }
+.cms #vakata-contextmenu li a:hover, .cms #vakata-contextmenu li.vakata-hover > a, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li a:hover, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li.vakata-hover > a { padding: 1px 10px; background: #3875d7; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIyMCUiIHN0b3AtY29sb3I9IiMzODc1ZDciLz48c3RvcCBvZmZzZXQ9IjkwJSIgc3RvcC1jb2xvcj0iIzJhNjJiYyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(20%, #3875d7), color-stop(90%, #2a62bc)); background-image: -webkit-linear-gradient(top, #3875d7 20%, #2a62bc 90%); background-image: -moz-linear-gradient(top, #3875d7 20%, #2a62bc 90%); background-image: -o-linear-gradient(top, #3875d7 20%, #2a62bc 90%); background-image: -ms-linear-gradient(top, #3875d7 20%, #2a62bc 90%); background-image: linear-gradient(top, #3875d7 20%, #2a62bc 90%); color: #FFF; border: none; }
+.cms #vakata-contextmenu li ul, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li ul { display: none; position: absolute; top: -2px; left: 100%; background: #FFF; border: 1px solid silver; -moz-box-shadow: 0 0 10px #cccccc; -webkit-box-shadow: 0 0 10px #cccccc; -o-box-shadow: 0 0 10px #cccccc; box-shadow: 0 0 10px #cccccc; }
 .cms #vakata-contextmenu .right, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu .right { right: 100%; left: auto; }
 .cms #vakata-contextmenu .bottom, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu .bottom { bottom: -1px; top: auto; }
 .cms #vakata-contextmenu li.vakata-separator, .TreeDropdownField .treedropdownfield-panel #vakata-contextmenu li.vakata-separator { min-height: 0; height: 1px; line-height: 1px; font-size: 1px; overflow: hidden; margin: 0 2px; background: silver; /* border-top:1px solid #fefefe; */ padding: 0; }
@@ -622,8 +626,8 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree-apple li, .cms-tree.jstree-apple li { padding: 0px; clear: left; }
 .tree-holder.jstree-apple ins, .cms-tree.jstree-apple ins { background-color: transparent; background-image: url(../images/sitetree_ss_default_icons.png); }
 .tree-holder.jstree-apple li.jstree-checked > a, .tree-holder.jstree-apple li.jstree-checked > a:link, .cms-tree.jstree-apple li.jstree-checked > a, .cms-tree.jstree-apple li.jstree-checked > a:link { background-color: #efe999; }
-.tree-holder.jstree-apple .jstree-closed > ins, .cms-tree.jstree-apple .jstree-closed > ins { background-position: 0 0; cursor: pointer; }
-.tree-holder.jstree-apple .jstree-open > ins, .cms-tree.jstree-apple .jstree-open > ins { background-position: -20px 0; cursor: pointer; }
+.tree-holder.jstree-apple .jstree-closed > ins, .cms-tree.jstree-apple .jstree-closed > ins { background-position: 0 0; }
+.tree-holder.jstree-apple .jstree-open > ins, .cms-tree.jstree-apple .jstree-open > ins { background-position: -20px 0; }
 
 a .jstree-pageicon { display: block; float: left; width: 16px; height: 16px; margin-right: 4px; background-color: transparent; background-image: url(../images/sitetree_ss_pageclass_icons_default.png); background-repeat: no-repeat; }
 

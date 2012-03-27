@@ -613,7 +613,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		// getChildrenAsUL is a flexible and complex way of traversing the tree
 		$titleEval = '
-			"<li id=\"record-$child->ID\" data-id=\"$child->ID\" class=\"" . $child->CMSTreeClasses($extraArg) . "\">" .
+			"<li id=\"record-$child->ID\" data-id=\"$child->ID\" data-ssclass=\"$child->ClassName\" class=\"" . $child->CMSTreeClasses($extraArg) . "\">" .
 			"<ins class=\"jstree-icon\">&nbsp;</ins>" .
 			"<a href=\"" . Controller::join_links($extraArg->Link("show"), $child->ID) . "\" title=\"' 
 			. _t('LeftAndMain.PAGETYPE','Page type: ') 
