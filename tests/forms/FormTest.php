@@ -468,7 +468,7 @@ class FormTest_Controller extends Controller implements TestOnly {
 		return $this->redirectBack();
 	}
 
-	function getViewer(){
+	function getViewer($action = null) {
 		return new SSViewer('BlankPage');
 	}
 
@@ -505,7 +505,7 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 		return $this->redirectBack();
 	}
 
-	function getViewer(){
+	function getViewer($action = null) {
 		return new SSViewer('BlankPage');
 	}
 }

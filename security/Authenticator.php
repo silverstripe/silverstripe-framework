@@ -37,9 +37,8 @@ abstract class Authenticator extends Object {
    * @return bool|Member Returns FALSE if authentication fails, otherwise
    *                     the member object
    */
-  public abstract static function authenticate($RAW_data,
-                                               Form $form = null);
-
+	public static function authenticate($RAW_data, Form $form = null) {
+	}
 
   /**
    * Method that creates the login form for this authentication method
@@ -49,7 +48,8 @@ abstract class Authenticator extends Object {
    * @return Form Returns the login form to use with this authentication
    *              method
    */
-  public abstract static function get_login_form(Controller $controller);
+	public static function get_login_form(Controller $controller) {
+	}
 
 
   /**
@@ -57,7 +57,8 @@ abstract class Authenticator extends Object {
    *
    * @return string Returns the name of the authentication method.
    */
-  public abstract static function get_name();
+	public static function get_name() {
+	}
 
   public static function register($authenticator) {
 	self::register_authenticator($authenticator);	

@@ -2654,7 +2654,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *                            When false will just clear session-local cached data 
 	 * 
 	 */
-	public function flushCache($persistant=true) {
+	public function flushCache($persistant = true) {
 		if($persistant) Aggregate::flushCache($this->class);
 		
 		if($this->class == 'DataObject') {

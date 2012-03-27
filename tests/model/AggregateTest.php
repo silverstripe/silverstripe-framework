@@ -73,13 +73,15 @@ class AggregateTest extends SapphireTest {
 	 * Test basic aggregation on a passed type
 	 */
 	function testTypeSpecifiedAggregate() {
+		$foo = $this->objFromFixture('AggregateTest_Foo', 'foo1');
+
 		// Template style access
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Foo')->XML_val('Max', array('Foo')), 9);
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Fab')->XML_val('Max', array('Fab')), 3);
+		$this->assertEquals($foo->Aggregate('AggregateTest_Foo')->XML_val('Max', array('Foo')), 9);
+		$this->assertEquals($foo->Aggregate('AggregateTest_Fab')->XML_val('Max', array('Fab')), 3);
 
 		// PHP style access
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Foo')->Max('Foo'), 9);
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Fab')->Max('Fab'), 3);
+		$this->assertEquals($foo->Aggregate('AggregateTest_Foo')->Max('Foo'), 9);
+		$this->assertEquals($foo->Aggregate('AggregateTest_Fab')->Max('Fab'), 3);
 	}
 	/* */
 	
@@ -90,7 +92,7 @@ class AggregateTest extends SapphireTest {
 	function testAutoTypeAggregate() {
 		$foo = $this->objFromFixture('AggregateTest_Foo', 'foo1');
 		$fab = $this->objFromFixture('AggregateTest_Fab', 'fab1');
-		
+
 		// Template style access
 		$this->assertEquals($foo->Aggregate()->XML_val('Max', array('Foo')), 9);
 		$this->assertEquals($fab->Aggregate()->XML_val('Max', array('Fab')), 3);
@@ -106,13 +108,15 @@ class AggregateTest extends SapphireTest {
 	 * @return unknown_type
 	 */
 	function testBaseFieldAggregate() {
+		$foo = $this->objFromFixture('AggregateTest_Foo', 'foo1');
+
 		$this->assertEquals(
-			$this->formatDate(DataObject::Aggregate('AggregateTest_Foo')->Max('LastEdited')),
+			$this->formatDate($foo->Aggregate('AggregateTest_Foo')->Max('LastEdited')),
 			$this->formatDate(DataObject::get_one('AggregateTest_Foo', '', '', '"LastEdited" DESC')->LastEdited)
 		);
 		
 		$this->assertEquals(
-			$this->formatDate(DataObject::Aggregate('AggregateTest_Foo')->Max('Created')),
+			$this->formatDate($foo->Aggregate('AggregateTest_Foo')->Max('Created')),
 			$this->formatDate(DataObject::get_one('AggregateTest_Foo', '', '', '"Created" DESC')->Created)
 		);
 	}
@@ -122,13 +126,14 @@ class AggregateTest extends SapphireTest {
 	 * Test aggregation takes place on the passed type & it's children only
 	 */
 	function testChildAggregate() {
-		
+		$foo = $this->objFromFixture('AggregateTest_Foo', 'foo1');
+	
 		// For base classes, aggregate is calculcated on it and all children classes
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Foo')->Max('Foo'), 9);
+		$this->assertEquals($foo->Aggregate('AggregateTest_Foo')->Max('Foo'), 9);
 
 		// For subclasses, aggregate is calculated for that subclass and it's children only
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Fab')->Max('Foo'), 9);
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Fac')->Max('Foo'), 6);
+		$this->assertEquals($foo->Aggregate('AggregateTest_Fab')->Max('Foo'), 9);
+		$this->assertEquals($foo->Aggregate('AggregateTest_Fac')->Max('Foo'), 6);
 		
 	}
 	/* */
@@ -145,35 +150,35 @@ class AggregateTest extends SapphireTest {
 	 * Test cache is correctly flushed on write
 	 */
 	function testCacheFlushing() {
-		
+		$foo = $this->objFromFixture('AggregateTest_Foo', 'foo1');
+		$fab = $this->objFromFixture('AggregateTest_Fab', 'fab1');
+
 		// For base classes, aggregate is calculcated on it and all children classes
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Foo')->Max('Foo'), 9);
+		$this->assertEquals($fab->Aggregate('AggregateTest_Foo')->Max('Foo'), 9);
 
 		// For subclasses, aggregate is calculated for that subclass and it's children only
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Fab')->Max('Foo'), 9);
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Fac')->Max('Foo'), 6);
-		
-		$foo = $this->objFromFixture('AggregateTest_Foo', 'foo1');
+		$this->assertEquals($fab->Aggregate('AggregateTest_Fab')->Max('Foo'), 9);
+		$this->assertEquals($fab->Aggregate('AggregateTest_Fac')->Max('Foo'), 6);
+
 		$foo->Foo = 12;
 		$foo->write();
 
 		// For base classes, aggregate is calculcated on it and all children classes
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Foo')->Max('Foo'), 12);
+		$this->assertEquals($fab->Aggregate('AggregateTest_Foo')->Max('Foo'), 12);
 
 		// For subclasses, aggregate is calculated for that subclass and it's children only
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Fab')->Max('Foo'), 9);
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Fac')->Max('Foo'), 6);
+		$this->assertEquals($fab->Aggregate('AggregateTest_Fab')->Max('Foo'), 9);
+		$this->assertEquals($fab->Aggregate('AggregateTest_Fac')->Max('Foo'), 6);
 				
-		$fab = $this->objFromFixture('AggregateTest_Fab', 'fab1');
 		$fab->Foo = 15;
 		$fab->write();
 		
 		// For base classes, aggregate is calculcated on it and all children classes
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Foo')->Max('Foo'), 15);
+		$this->assertEquals($fab->Aggregate('AggregateTest_Foo')->Max('Foo'), 15);
 
 		// For subclasses, aggregate is calculated for that subclass and it's children only
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Fab')->Max('Foo'), 15);
-		$this->assertEquals(DataObject::Aggregate('AggregateTest_Fac')->Max('Foo'), 6);
+		$this->assertEquals($fab->Aggregate('AggregateTest_Fab')->Max('Foo'), 15);
+		$this->assertEquals($fab->Aggregate('AggregateTest_Fac')->Max('Foo'), 6);
 	}
 	/* */
 	

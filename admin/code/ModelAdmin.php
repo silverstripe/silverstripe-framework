@@ -113,7 +113,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ModelAdmin.js');
 	}
 
-	function getEditForm($id = null) {
+	function getEditForm($id = null, $fields = null) {
 		$list = $this->getList();
 		$exportButton = new GridFieldExportButton();
 		$exportButton->setExportColumns($this->getExportFields());

@@ -140,8 +140,8 @@ class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 		'Categories' => 'GridFieldDetailFormTest_Category'
 	);
 
-	function getCMSFields() {
-		$fields = parent::getCMSFields();
+	function getCMSFields($params = null) {
+		$fields = parent::getCMSFields($params);
 		// TODO No longer necessary once FormScaffolder uses GridField
 		$fields->replaceField('Categories',
 			Object::create('GridField', 'Categories', 'Categories',
@@ -162,8 +162,8 @@ class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly
 		'People' => 'GridFieldDetailFormTest_Person'
 	);
 	
-	function getCMSFields() {
-		$fields = parent::getCMSFields();
+	function getCMSFields($params = null) {
+		$fields = parent::getCMSFields($params);
 		// TODO No longer necessary once FormScaffolder uses GridField
 		$fields->replaceField('People',
 			Object::create('GridField', 'People', 'People',
@@ -184,8 +184,8 @@ class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
 		'People' => 'GridFieldDetailFormTest_Person'
 	);
 
-	function getCMSFields() {
-		$fields = parent::getCMSFields();
+	function getCMSFields($params = null) {
+		$fields = parent::getCMSFields($params);
 		// TODO No longer necessary once FormScaffolder uses GridField
 		$fields->replaceField('People',
 			Object::create('GridField', 'People', 'People',

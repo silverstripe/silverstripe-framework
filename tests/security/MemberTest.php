@@ -591,29 +591,29 @@ class MemberTest extends FunctionalTest {
 }
 class MemberTest_ViewingAllowedExtension extends DataExtension implements TestOnly {
 
-	public function canView() {
+	public function canView($member = null) {
 		return true;
 	}
 
 }
 class MemberTest_ViewingDeniedExtension extends DataExtension implements TestOnly {
 
-	public function canView() {
+	public function canView($member = null) {
 		return false;
 	}
 
 }
 class MemberTest_EditingAllowedDeletingDeniedExtension extends DataExtension implements TestOnly {
 
-	public function canView() {
+	public function canView($member = null) {
 		return true;
 	}
 
-	public function canEdit() {
+	public function canEdit($member = null) {
 		return true;
 	}
 
-	public function canDelete() {
+	public function canDelete($member = null) {
 		return false;
 	}
 

@@ -319,7 +319,7 @@ class File extends DataObject {
 	 * Returns the fields to power the edit screen of files in the CMS
 	 * @return FieldList
 	 */
-	function getCMSFields() {
+	function getCMSFields($params = null) {
 		// Preview
 		if($this instanceof Image) {
 			$formattedImage = $this->getFormattedImage('SetWidth', Image::$asset_preview_width);
@@ -816,8 +816,8 @@ class File extends DataObject {
 		}
 	}
 	
-	public function flushCache() {
-		parent::flushCache();
+	public function flushCache($persistant = true) {
+		parent::flushCache($persistant);
 		
 		self::$cache_file_fields = null;
 	}
