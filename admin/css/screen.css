@@ -525,6 +525,9 @@ form.import-form ul li { margin-left: 20px; }
 form.import-form p { margin-bottom: 5px; }
 form.import-form label.left { width: 250px; }
 
+/** -------------------------------------------- Page Edit Controller -------------------------------------------- */
+.cms-container .CMSMain.CMSPageEditController { margin-left: -1px; }
+
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .cms .jstree ul, .TreeDropdownField .treedropdownfield-panel .jstree ul { display: block; margin: 0; padding: 0; background: none; list-style-type: none; }
 .cms .jstree li, .TreeDropdownField .treedropdownfield-panel .jstree li { display: block; margin: 0; padding: 0; list-style-type: none; display: block; min-height: 18px; line-height: 18px; white-space: nowrap; margin-left: 18px; min-width: 18px; }

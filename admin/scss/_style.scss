@@ -1426,5 +1426,14 @@ form.import-form {
 	label.left {
 		width: 250px;
 	}
+
 }
 
+/** --------------------------------------------
+ * Page Edit Controller
+ * -------------------------------------------- */
+
+.cms-container .CMSMain.CMSPageEditController {
+	// Fix pixel gap between nav tree and main page header
+ 	margin-left:-1px;
+}
