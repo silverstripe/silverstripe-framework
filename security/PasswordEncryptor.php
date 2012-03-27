@@ -139,13 +139,7 @@ class PasswordEncryptor_PHPHash extends PasswordEncryptor {
 	}
 	
 	function encrypt($password, $salt = null, $member = null) {
-		if(function_exists('hash')) {
-			// Available in PHP 5.1+ only
-			return hash($this->algorithm, $password . $salt);
-		} else {
-			// Fallback to global built-in methods
-			return call_user_func($this->algorithm, $password . $salt);
-		}
+		return hash($this->algorithm, $password . $salt);
 	}
 }
 
