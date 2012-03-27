@@ -35,8 +35,6 @@ class SS_DatetimeTest extends SapphireTest {
 	}
 
 	function testSetNullAndZeroValues() {
-		date_default_timezone_set('UTC');
-
 		$date = DBField::create('SS_Datetime', '');
 		$this->assertNull($date->getValue(), 'Empty string evaluates to NULL');
 
