@@ -6,6 +6,8 @@
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
 #AssetUploadField { border-bottom: 0; -moz-box-shadow: none; -webkit-box-shadow: none; -o-box-shadow: none; box-shadow: none; }
 
+body.cms.ss-uploadfield-edit-iframe { padding: 16px; overflow: auto; }
+
 .ss-assetuploadfield h3 { border-bottom: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); margin: 0 0 8px; padding: 0 0 7px; clear: both; }
 .ss-assetuploadfield .field { border-bottom: 0; }
 .ss-assetuploadfield .ss-uploadfield-files { margin: 0; padding: 0; }
@@ -30,7 +32,7 @@
 .ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-cancel { position: absolute; top: 7px; right: 7px; }
 .ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-cancel button { display: block; overflow: hidden; text-indent: -9999px; padding: 0; margin: 0; border: 0; width: 16px; height: 16px; cursor: pointer; -moz-box-shadow: none; -webkit-box-shadow: none; -o-box-shadow: none; box-shadow: none; }
 .ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-editform { /* don't use display none, for it will break jQuery('iframe').contents().height() */ height: 0; overflow: hidden; clear: both; }
-.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-editform iframe { margin: 16px; width: 100%; }
+.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-editform iframe { width: 100%; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-info { float: left; margin: 19px 0 0; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-fromcomputer { position: relative; overflow: hidden; display: block; margin: 0 10px 0 0; }
 .ss-assetuploadfield .ss-uploadfield-addfile .ss-uploadfield-item-uploador { float: left; font-weight: bold; font-size: 22px; padding: 0 20px; line-height: 70px; display: none; }
