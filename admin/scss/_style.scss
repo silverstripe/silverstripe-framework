@@ -408,6 +408,20 @@ body.cms {
 }
 
 .cms-add-form {
+	.step-label {
+		.flyout {
+			height:17px; //centres number within the grey arrow 
+			padding-top:5px;
+		}
+		.title {
+			padding-top:5px; //aligns label with point of arrow
+			font-weight:bold; //to match pagetype label
+			@include text-shadow(1px 1px 0 $color-text-shadow);
+		}
+	}
+	ul.SelectionGroup {
+		padding-left:28px;
+	}
 	.parent-mode {
 		padding: $grid-x;
 		overflow: auto;

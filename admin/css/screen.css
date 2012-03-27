@@ -312,6 +312,9 @@ body.cms { overflow: hidden; }
 /** -------------------------------------------- "Add page" dialog -------------------------------------------- */
 .cms-page-add-form-dialog { display: none; }
 
+.cms-add-form .step-label .flyout { height: 17px; padding-top: 5px; }
+.cms-add-form .step-label .title { padding-top: 5px; font-weight: bold; text-shadow: 1px 1px 0 white; }
+.cms-add-form ul.SelectionGroup { padding-left: 28px; }
 .cms-add-form .parent-mode { padding: 8px; overflow: auto; }
 .cms-add-form #PageType li { float: none; width: 100%; padding: 9px 0 9px 15px; overflow: hidden; border-bottom-width: 2px; border-bottom: 2px groove rgba(255, 255, 255, 0.8); -webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch; }
 .cms-add-form #PageType li:last-child { border-bottom: none; }
