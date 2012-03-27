@@ -40,19 +40,6 @@
 
 if(defined('E_DEPRECATED')) error_reporting(E_ALL & ~(E_DEPRECATED | E_STRICT));
 else error_reporting(E_ALL);
-/*
- * This is for versions of PHP prior to version 5.2
- * Creating this here will allow both web requests and cron jobs to inherit it.
- */
-if (!function_exists('array_fill_keys')) {
-	function array_fill_keys($keys,$value) {
-		//Sometimes we get passed an empty array, and if that's the case, you'll get an error message
-		if(sizeof($keys)==0)
-			return Array();
-		else
-			return array_combine($keys,array_fill(0,count($keys),$value));
-	}
-}
 
 /**
  * Include _ss_environment.php files
