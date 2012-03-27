@@ -106,11 +106,10 @@ body.cms {
 
 	h2 {
 		float: left;
-		padding: $grid-y $grid-x 0 $grid-x;
+		padding: $grid-y $grid-x 0 0;
 		font-size: $font-base-size + 2;
 		line-height: $grid-x * 3;
 		font-weight: bold;
-		text-shadow: darken($color-widget-bg, 15%) 1px 1px 0;
 		max-width: $grid-x*50;
 		margin: 0;
 		@include hide-text-overflow();
@@ -584,7 +583,7 @@ body.cms {
 	
 	.cms-panel-content {
 		width: ($grid-x * 22);
-		padding: $grid-y $grid-x;
+		padding: 0 $grid-x;
 		overflow: auto;
 		height:100%;
 	}

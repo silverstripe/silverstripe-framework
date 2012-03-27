@@ -406,7 +406,7 @@ form.small .field, .field.small {
 		float: left;
 		display: block;
 		width: $grid-x * 23;
-		padding-right: $grid-x;
+		padding: $grid-y 0 0 $grid-x;
 
 		&.odd {
 			

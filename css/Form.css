@@ -27,13 +27,13 @@ form .indicator.block { display: inline; }
 form button.minorAction { background: none; padding: 0; border: 0; color: #0074C6; text-decoration: underline; }
 
 /** Composite Fields - raw concatenation of fields for programmatic purposes. */
-.right form div.CompositeField { margin-left: 7.5em; }
+.right form div .composite-field { margin-left: 7.5em; }
 
-.right form div.CompositeField div.field { font-size: 1em; }
+.right form div .composite-field div.field { font-size: 1em; }
 
-.right form div.CompositeField { clear: both; }
+.right form div .composite-field { clear: both; }
 
-.right form div.CompositeField label.left { float: left; width: 10em; margin-left: -10em; }
+.right form div .composite-field label.left { float: left; width: 10em; margin-left: -10em; }
 
 .right form div.column2 { float: left; width: 45%; margin-right: 4%; }
 
