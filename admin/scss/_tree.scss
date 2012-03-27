@@ -541,11 +541,13 @@
 	}
 
 	& .jstree-closed > ins { 
-		background-position:0 0; 
+		background-position:0 0;
+		cursor:pointer; 
 	}
 
 	& .jstree-open > ins { 
-		background-position:-20px 0; 
+		background-position:-20px 0;
+		cursor:pointer;
 	}
 }
 

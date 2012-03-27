@@ -1,7 +1,7 @@
 // Chosen, a Select Box Enhancer for jQuery and Protoype
 // by Patrick Filler for Harvest, http://getharvest.com
 // 
-// Version 0.9.7
+// Version 0.9.8
 // Full source at https://github.com/harvesthq/chosen
 // Copyright (c) 2011 Harvest http://getharvest.com
 
@@ -129,6 +129,7 @@ Copyright (c) 2011 by Harvest
       this.result_single_selected = null;
       this.allow_single_deselect = (this.options.allow_single_deselect != null) && (this.form_field.options[0] != null) && this.form_field.options[0].text === "" ? this.options.allow_single_deselect : false;
       this.disable_search_threshold = this.options.disable_search_threshold || 0;
+      this.search_contains = this.options.search_contains || false;
       this.choices = 0;
       return this.results_none_found = this.options.no_results_text || "No results match";
     };
@@ -281,7 +282,7 @@ Copyright (c) 2011 by Harvest
 
     Chosen.prototype.set_default_values = function() {
       Chosen.__super__.set_default_values.call(this);
-      this.single_temp = new Template('<a href="javascript:void(0)" class="chzn-single"><span>#{default}</span><div><b></b></div></a><div class="chzn-drop" style="left:-9000px;"><div class="chzn-search"><input type="text" autocomplete="off" /></div><ul class="chzn-results"></ul></div>');
+      this.single_temp = new Template('<a href="javascript:void(0)" class="chzn-single chzn-default"><span>#{default}</span><div><b></b></div></a><div class="chzn-drop" style="left:-9000px;"><div class="chzn-search"><input type="text" autocomplete="off" /></div><ul class="chzn-results"></ul></div>');
       this.multi_temp = new Template('<ul class="chzn-choices"><li class="search-field"><input type="text" value="#{default}" class="default" autocomplete="off" style="width:25px;" /></li></ul><div class="chzn-drop" style="left:-9000px;"><ul class="chzn-results"></ul></div>');
       this.choice_temp = new Template('<li class="search-choice" id="#{id}"><span>#{choice}</span><a href="javascript:void(0)" class="search-choice-close" rel="#{position}"></a></li>');
       return this.no_results_temp = new Template('<li class="no-results">' + this.results_none_found + ' "<span>#{terms}</span>"</li>');
@@ -407,7 +408,7 @@ Copyright (c) 2011 by Harvest
       var target_closelink;
       if (!this.is_disabled) {
         target_closelink = evt != null ? evt.target.hasClassName("search-choice-close") : false;
-        if (evt && evt.type === "mousedown") evt.stop();
+        if (evt && evt.type === "mousedown" && !this.results_showing) evt.stop();
         if (!this.pending_destroy_click && !target_closelink) {
           if (!this.active_field) {
             if (this.is_multiple) this.search_field.clear();
@@ -493,7 +494,7 @@ Copyright (c) 2011 by Harvest
           if (data.selected && this.is_multiple) {
             this.choice_build(data);
           } else if (data.selected && !this.is_multiple) {
-            this.selected_item.down("span").update(data.html);
+            this.selected_item.removeClassName("chzn-default").down("span").update(data.html);
             if (this.allow_single_deselect) this.single_deselect_control_build();
           }
         }
@@ -659,6 +660,7 @@ Copyright (c) 2011 by Harvest
     Chosen.prototype.results_reset = function(evt) {
       this.form_field.options[0].selected = true;
       this.selected_item.down("span").update(this.default_text);
+      if (!this.is_multiple) this.selected_item.addClassName("chzn-default");
       this.show_search_field_default();
       evt.target.remove();
       if (typeof Event.simulate === 'function') this.form_field.simulate("change");
@@ -674,6 +676,7 @@ Copyright (c) 2011 by Harvest
           this.result_deactivate(high);
         } else {
           this.search_results.descendants(".result-selected").invoke("removeClassName", "result-selected");
+          this.selected_item.removeClassName("chzn-default");
           this.result_single_selected = high;
         }
         high.addClassName("result-selected");
@@ -726,11 +729,12 @@ Copyright (c) 2011 by Harvest
     };
 
     Chosen.prototype.winnow_results = function() {
-      var found, option, part, parts, regex, result_id, results, searchText, startpos, text, zregex, _i, _j, _len, _len2, _ref;
+      var found, option, part, parts, regex, regexAnchor, result_id, results, searchText, startpos, text, zregex, _i, _j, _len, _len2, _ref;
       this.no_results_clear();
       results = 0;
       searchText = this.search_field.value === this.default_text ? "" : this.search_field.value.strip().escapeHTML();
-      regex = new RegExp('^' + searchText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), 'i');
+      regexAnchor = this.search_contains ? "" : "^";
+      regex = new RegExp(regexAnchor + searchText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), 'i');
       zregex = new RegExp(searchText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), 'i');
       _ref = this.results_data;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {

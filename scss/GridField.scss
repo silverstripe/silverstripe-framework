@@ -98,6 +98,16 @@ $gf_grid_x:	16px;
 		tbody {
 			background: #FFF;
 			td {
+				// Give browser some hints on which cols take priority:
+				// The last column (buttons) should always shrink to fit.
+				// Overwritten for IE7, which doesn't support this.
+				width: 100%;
+				&.col-buttons {
+					width: auto;
+					text-align: right;
+					white-space: nowrap;
+				}
+
 				button {
 					border: none;
 					background: none;
@@ -118,13 +128,9 @@ $gf_grid_x:	16px;
 					display:inline-block;
 					width:$gf_grid_x;
 					height:20px; //min height to fit the edit icon
-					text-indent:-9999em;
+					text-indent:9999em;
 					background: url(../images/icons/document--pencil.png) no-repeat 0 1px;
 				}				
-
-				&.col-buttons {
-					white-space: nowrap;
-				}
 			}			
 		}
 
@@ -265,6 +271,9 @@ $gf_grid_x:	16px;
 				}
 				
 				button {
+					&#action_gridfield_relationadd:hover {
+						color: #444 !important; /* Not sure why IE think it needs this */
+					}
 					&:hover {
 						color: #ccc !important; /* Not sure why IE think it needs this */ 
 					}

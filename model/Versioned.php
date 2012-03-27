@@ -1006,7 +1006,7 @@ class Versioned extends DataExtension {
 	}
 
 	/**
-	 * Return the equivalent of a DataObject::get() call, querying the latest
+	 * Return the equivalent of a DataList::create() call, querying the latest
 	 * version of each page stored in the (class)_versions tables.
 	 *
 	 * In particular, this will query deleted records as well as active ones.

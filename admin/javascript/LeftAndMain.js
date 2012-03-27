@@ -18,6 +18,18 @@ jQuery.noConflict();
 			spinner.show();
 		};
 		
+		// apply an select element only when it is ready, ie. when it is rendered into a template
+		// with css applied and got a width value.
+		var applyChosen = function(el){
+			if(el.outerWidth()){
+				el.chosen().addClass("has-chzn");
+				// Copy over title attribute if required
+				if(el.attr('title')) el.siblings('.chzn-container').attr('title', el.attr('title'));
+			} else {
+				setTimeout(function() {applyChosen(el);},500);
+			}
+		};
+		
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
 
 		// global ajax error handlers
@@ -456,8 +468,8 @@ jQuery.noConflict();
 				// Explicitly disable default placeholder if no custom one is defined
 				if(!this.data('placeholder')) this.data('placeholder', ' ');
 
-				// Apply chosen
-				this.chosen().addClass("has-chzn");
+				// Apply Chosen
+				applyChosen(this);
 				
 				this._super();
 			}

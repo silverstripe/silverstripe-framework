@@ -28,10 +28,10 @@
  * 
  * <code>
  * //Database request for the object
- * $myDoSet = DataObject::get("FooBars","");
+ * $myDoSet = DataList::create("FooBars","");
  * if($myDoSet){
  *  // This returns an array of ID => Title
- *  $map = $myDoSet->toDropDownMap();
+ *  $map = $myDoSet->map();
  *  
  *   // Instantiate the OptionsetField 
  *   $FieldList = new FieldList(
