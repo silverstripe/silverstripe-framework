@@ -23,6 +23,8 @@ jQuery.noConflict();
 		var applyChosen = function(el){
 			if(el.outerWidth()){
 				el.chosen().addClass("has-chzn");
+				// Copy over title attribute if required
+				if(el.attr('title')) el.siblings('.chzn-container').attr('title', el.attr('title'));
 			} else {
 				setTimeout(function() {applyChosen(el);},500);
 			}

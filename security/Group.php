@@ -85,7 +85,10 @@ class Group extends DataObject {
 			)
 		);
 		
-		$parentidfield->setRightTitle('<span class="aligned-right-label">' . _t('Group.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles') . '</span>');
+		$parentidfield->setAttribute(
+			'title', 
+			_t('Group.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles')
+		);
 
 		// Filter permissions
 		// TODO SecurityAdmin coupling, not easy to get to the form fields through GridFieldDetailForm

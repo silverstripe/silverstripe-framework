@@ -952,17 +952,12 @@ form.member-profile-form {
 	}
 	
 	.cms-content-fields {
-		/* always show a y scroll bar as popups like TreeDropdowns 
-		 can trigger longer pages and the extra scroll bar doesn't 
-		 fire our sizing bar */
+		// always show a y scroll bar as popups like TreeDropdowns 
+		// can trigger longer pages and the extra scroll bar doesn't fire our sizing bar
 		overflow-y: auto;
 		overflow-x: auto;
 		background: none;
 		width:100%;
-		.aligned-right-label {
-			margin-left:$grid-x*23;
-			padding:$grid-x 0;
-		}
 		#Root_Main {
 			.confirmedpassword {
 				border-bottom:none;
