@@ -84,13 +84,13 @@ class Money extends DBField implements CompositeDBField {
 		if($this->getCurrency()) {
 			$manipulation['fields'][$this->name.'Currency'] = $this->prepValueForDB($this->getCurrency());
 		} else {
-			$manipulation['fields'][$this->name.'Currency'] = DBField::create('Varchar', $this->getCurrency())->nullValue();
+			$manipulation['fields'][$this->name.'Currency'] = DBField::create_field('Varchar', $this->getCurrency())->nullValue();
 		}
 		
 		if($this->getAmount()) {
 			$manipulation['fields'][$this->name.'Amount'] = $this->getAmount();
 		} else {
-			$manipulation['fields'][$this->name.'Amount'] = DBField::create('Decimal', $this->getAmount())->nullValue();
+			$manipulation['fields'][$this->name.'Amount'] = DBField::create_field('Decimal', $this->getAmount())->nullValue();
 		}
 	}
 	

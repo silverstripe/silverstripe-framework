@@ -1092,7 +1092,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 								// if database column doesn't correlate to a DBField instance...
 								if(!$fieldObj) {
-									$fieldObj = DBField::create('Varchar', $this->record[$fieldName], $fieldName);
+									$fieldObj = DBField::create_field('Varchar', $this->record[$fieldName], $fieldName);
 								}
 
 								// Both CompositeDBFields and regular fields need to be repopulated
@@ -2380,12 +2380,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Special case for has_one relationships
 		} else if(preg_match('/ID$/', $fieldName) && $this->has_one(substr($fieldName,0,-2))) {
 			$val = (isset($this->record[$fieldName])) ? $this->record[$fieldName] : null;
-			return DBField::create('ForeignKey', $val, $fieldName, $this);
+			return DBField::create_field('ForeignKey', $val, $fieldName, $this);
 			
 		// Special case for ClassName
 		} else if($fieldName == 'ClassName') {
 			$val = get_class($this);
-			return DBField::create('Varchar', $val, $fieldName, $this);
+			return DBField::create_field('Varchar', $val, $fieldName, $this);
 		}
 	}
 

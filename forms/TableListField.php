@@ -637,8 +637,8 @@ JS
 			$summaryFields[] = new ArrayData(array(
 				'Function' => $function,
 				'SummaryValue' => $summaryValue,
-				'Name' => DBField::create('Varchar', $fieldName),
-				'Title' => DBField::create('Varchar', $fieldTitle),
+				'Name' => DBField::create_field('Varchar', $fieldName),
+				'Title' => DBField::create_field('Varchar', $fieldTitle),
 			));
 		}
 		return new ArrayList($summaryFields);
@@ -1234,13 +1234,13 @@ JS
 		}
 		if(strpos($castingDefinition,'->') === false) {
 			$castingFieldType = $castingDefinition;
-			$castingField = DBField::create($castingFieldType, $value);
+			$castingField = DBField::create_field($castingFieldType, $value);
 			$value = call_user_func_array(array($castingField,'XML'),$castingParams);
 		} else {
 			$fieldTypeParts = explode('->', $castingDefinition);
 			$castingFieldType = $fieldTypeParts[0];	
 			$castingMethod = $fieldTypeParts[1];
-			$castingField = DBField::create($castingFieldType, $value);
+			$castingField = DBField::create_field($castingFieldType, $value);
 			$value = call_user_func_array(array($castingField,$castingMethod),$castingParams);
 		}
 		

@@ -27,17 +27,6 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @var DataModel
 	 */
 	protected $model;
-	
-	/**
-	 * Synonym of the constructor.  Can be chained with literate methods.
-	 * DataList::create("SiteTree")->sort("Title") is legal, but
-	 * new DataList("SiteTree")->sort("Title") is not.
-	 * 
-	 * @param string $dataClass - The DataObject class to query.
-	 */
-	public static function create($dataClass) {
-		return new DataList($dataClass);
-	}
 
 	/**
 	 * Create a new DataList.
