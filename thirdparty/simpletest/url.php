@@ -106,7 +106,7 @@ class SimpleUrl {
         }
         if (preg_match('/^([^\/]*)@(.*)/', $url, $matches)) {
             $url = $prefix . $matches[2];
-            $parts = split(":", $matches[1]);
+            $parts = preg_split('/:/', $matches[1]);
             return array(
                     urldecode($parts[0]),
                     isset($parts[1]) ? urldecode($parts[1]) : false);
@@ -184,7 +184,7 @@ class SimpleUrl {
     function _parseRequest($raw) {
         $this->_raw = $raw;
         $request = new SimpleGetEncoding();
-        foreach (split("&", $raw) as $pair) {
+        foreach (preg_split('/&/', $raw) as $pair) {
             if (preg_match('/(.*?)=(.*)/', $pair, $matches)) {
                 $request->add($matches[1], urldecode($matches[2]));
             } elseif ($pair) {
@@ -379,7 +379,7 @@ class SimpleUrl {
      */
     function clearRequest() {
         $this->_raw = false;
-        $this->_request = &new SimpleGetEncoding();
+        $this->_request = new SimpleGetEncoding();
     }
     
     /**
