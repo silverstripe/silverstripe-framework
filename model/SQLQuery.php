@@ -554,7 +554,7 @@ class SQLQuery {
 	 * Return the number of rows in this query if the limit were removed.  Useful in paged data sets. 
 	 * @return int 
 	 */ 
-	function unlimitedRowCount( $column = null) {
+	function unlimitedRowCount($column = null) {
 		// we can't clear the select if we're relying on its output by a HAVING clause
 		if(count($this->having)) {
 			$records = $this->execute();

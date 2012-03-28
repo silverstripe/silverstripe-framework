@@ -406,7 +406,7 @@ class Folder extends File {
 	 * You can modify this FieldList by subclassing folder, or by creating a {@link DataExtension}
 	 * and implemeting updateCMSFields(FieldList $fields) on that extension.
 	 */
-	function getCMSFields() {
+	function getCMSFields($param = null) {
 		// Hide field on root level, which can't be renamed
 		if(!$this->ID || $this->ID === "root") {
 			$titleField = new HiddenField("Name");	

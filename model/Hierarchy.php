@@ -674,12 +674,12 @@ class Hierarchy extends DataExtension {
 		self::$expanded = array();
 		self::$treeOpened = array();
 	}
-	
-	function reset() {
+
+	public static function reset() {
 		self::$marked = array();
 		self::$expanded = array();
 		self::$treeOpened = array();
 	}
-}
 
+}
 
