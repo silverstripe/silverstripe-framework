@@ -800,7 +800,7 @@ class Diff
 		if(is_array($content)) $content = implode(',', $content);
 		
 		$content = str_replace(array("&nbsp;","<", ">"),array(" "," <", "> "),$content);
-		$candidateChunks = split("[\t\r\n ]+", $content);
+		$candidateChunks = preg_split("/[\t\r\n ]+/", $content);
 		while(list($i,$item) = each($candidateChunks)) {
 			if(isset($item[0]) && $item[0] == "<") {
 				$newChunk = $item;
