@@ -322,7 +322,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		SSViewer::set_theme(null);
 	}
 	
-	function handleRequest($request, DataModel $model) {
+	function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
 		$title = $this->Title();
 		
 		$response = parent::handleRequest($request, $model);
