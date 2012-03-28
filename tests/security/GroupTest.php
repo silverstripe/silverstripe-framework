@@ -94,15 +94,6 @@ class GroupTest extends FunctionalTest {
 
 	   }
 	
-	function testDelete() {
-		$adminGroup = $this->objFromFixture('Group', 'admingroup');
-		
-		$adminGroup->delete();
-		
-		$this->assertEquals(0, DataObject::get('Group', "\"ID\"={$adminGroup->ID}")->count(), 'Group is removed');
-		$this->assertEquals(0, DataObject::get('Permission',"\"GroupID\"={$adminGroup->ID}")->count(), 'Permissions removed along with the group');
-	}
-	
 	function testCollateAncestorIDs() {
 		$parentGroup = $this->objFromFixture('Group', 'parentgroup');
 		$childGroup = $this->objFromFixture('Group', 'childgroup');
@@ -128,6 +119,19 @@ class GroupTest extends FunctionalTest {
 			'Orphaned nodes dont contain invalid parent IDs'
 		);
 	}
+
+	public function testDelete() {
+		$group = $this->objFromFixture('Group', 'parentgroup');
+		$groupID = $group->ID;
+		$childGroupID = $this->idFromFixture('Group', 'childgroup');
+		$group->delete();
+
+		$this->assertEquals(0, DataObject::get('Group', "\"ID\" = {$groupID}")->Count(), 'Group is removed');
+		$this->assertEquals(0, DataObject::get('Permission', "\"GroupID\" = {$groupID}")->Count(), 'Permissions removed along with the group');
+		$this->assertEquals(0, DataObject::get('Group', "\"ParentID\" = {$groupID}")->Count(), 'Child groups are removed');
+		$this->assertEquals(0, DataObject::get('Group', "\"ParentID\" = {$childGroupID}")->Count(), 'Grandchild groups are removed');
+	}
+
 }
 
 class GroupTest_Member extends Member implements TestOnly {

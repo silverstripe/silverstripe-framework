@@ -6,6 +6,9 @@ Group:
    childgroup:
       Code: childgroup
       Parent: =>Group.parentgroup
+   grandchildgroup:
+      Code: grandchildgroup
+      Parent: =>Group.childgroup
    group1:
       Title: Group 1
    group2:
