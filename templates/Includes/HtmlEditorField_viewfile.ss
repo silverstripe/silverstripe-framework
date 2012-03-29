@@ -2,7 +2,7 @@
 	<div class="overview">
 		<span class="thumbnail">$Preview</span>
 		<span class="title">$Name</span>
-		<a href="#" class="btn-icon-cross-circle action-delete"><% _t('HtmlEditorField.DeleteItem', 'delete') %></a>
+		<a href="#" class="btn-icon-cross-circle ui-button-icon-primary ui-icon action-delete"><% _t('HtmlEditorField.DeleteItem', 'delete') %></a>
 	</div>
 	<div class="details">
 		<fieldset>
