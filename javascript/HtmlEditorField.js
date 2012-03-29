@@ -697,6 +697,30 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		});
 
 		/**
+		 * Show the second step after uploading an image
+		 */
+		$('.ss-assetuploadfield').entwine({
+			onmatch: function() {
+				this._super();
+
+				// Always hide the "second step" part, we don't need it here
+				this.find('.ss-uploadfield-editandorganize').hide();
+
+			},
+			onfileuploadstop: function(e) {
+				//get the uploaded file ID when this event triggers, signaling the upload has compeleted successfully
+				//always use the last one uploaded
+				var uploadedFileID = $('ul.ss-uploadfield-files').children('li.ss-uploadfield-item').last().data('fileid');
+
+				//trigger the detail view for filling out details about the file we are about to insert into TinyMCE
+				var form = this.closest('form');
+				form.closest('form').showFileView(uploadedFileID);
+				form.redraw();
+			}
+
+		});
+
+		/**
 		 * Represents a single selected file, together with a set of form fields to edit its properties.
 		 * Overload this based on the media type to determine how the HTML should be created.
 		 */
