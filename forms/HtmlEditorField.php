@@ -393,11 +393,11 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$tabSet = new TabSet(
 			"MediaFormInsertImageTabs",
 			new Tab(
-				'From your computer',
+				_t('HtmlEditorField.FROMCOMPUTER','From your computer'),
 				$computerUploadField
 			),
 			new Tab(
-				'From the CMS',
+				_t('HtmlEditorField.FROMCMS','From the CMS'),
 				$fromCMS
 			)
 		);
