@@ -387,7 +387,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$computerUploadField->setConfig('previewMaxHeight', 30);
 		$computerUploadField->addExtraClass('ss-assetuploadfield');
 		$computerUploadField->removeExtraClass('ss-uploadfield');
-		$computerUploadField->setTemplate('AssetUploadField');
+		$computerUploadField->setTemplate('PageUploadField');
 		$computerUploadField->setFolderName(Upload::$uploads_folder);
 
 		$tabSet = new TabSet(
