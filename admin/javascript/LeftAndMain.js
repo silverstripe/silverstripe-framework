@@ -223,12 +223,13 @@ jQuery.noConflict();
 						var layoutClasses = ['east', 'west', 'center', 'north', 'south'];
 						var elemClasses = contentEl.attr('class');
 						
-						var origLayoutClasses = $.grep(
-							elemClasses.split(' '),
-							function(val) { 
-								return ($.inArray(val, layoutClasses) >= 0);
-							}
-						);
+						var origLayoutClasses = '';
+						if(elemClasses) {
+							origLayoutClasses = $.grep(
+								elemClasses.split(' '),
+								function(val) { return ($.inArray(val, layoutClasses) >= 0);}
+							);
+						}
 						
 						newContentEl
 							.removeClass(layoutClasses.join(' '))
