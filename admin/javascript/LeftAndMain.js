@@ -253,7 +253,7 @@ jQuery.noConflict();
 						// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it
 						if(window.History.enabled) {
 							var url = xhr.getResponseHeader('X-ControllerURL');
-							if(url) window.history.replaceState({}, '', url);
+							if(url) window.History.replaceState({}, '', url);
 						}
 						
 						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: newContentEl});
