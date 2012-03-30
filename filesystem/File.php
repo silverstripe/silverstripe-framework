@@ -316,7 +316,10 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Returns the fields to power the edit screen of files in the CMS
+	 * Returns the fields to power the edit screen of files in the CMS.
+	 * You can modify this FieldList by subclassing folder, or by creating a {@link DataExtension}
+	 * and implemeting updateCMSFields(FieldList $fields) on that extension.
+	 * 
 	 * @return FieldList
 	 */
 	function getCMSFields($params = null) {
@@ -382,6 +385,9 @@ class File extends DataObject {
 				)
 			)
 		);
+
+		// Folder has its own updateCMSFields hook
+		if(!($this instanceof Folder)) $this->extend('updateCMSFields', $fields);
 
 		return $fields;
 	}
