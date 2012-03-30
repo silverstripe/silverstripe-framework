@@ -429,7 +429,10 @@
 				}
 
 				// Create State
-				currentState = History.extractState(History.getFullUrl(currentHash||document.location.href,false),true);
+				// MODIFIED ischommer: URL normalization needs to respect our <base> tag,
+				// otherwise will go into infinite loops
+				currentState = History.extractState(History.getFullUrl(currentHash||document.location.href,true),true);
+				// END MODIFIED
 
 				// Check if we are the same state
 				if ( History.isLastSavedState(currentState) ) {
