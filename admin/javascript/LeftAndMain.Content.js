@@ -142,6 +142,11 @@
 				var formData = form.serializeArray();
 				// add button action
 				formData.push({name: $(button).attr('name'), value:'1'});
+				// Artificial HTTP referer, IE doesn't submit them via ajax. 
+				// Also rewrites anchors to their page counterparts, which is important
+				// as automatic browser ajax response redirects seem to discard the hash/fragment.
+				formData.push({name: 'BackURL', value:History.getPageUrl()});
+
 				jQuery.ajax(jQuery.extend({
 					url: form.attr('action'), 
 					data: formData,
