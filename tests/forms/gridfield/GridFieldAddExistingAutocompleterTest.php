@@ -33,7 +33,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 		);
 		$this->assertFalse($response->isError());
 		$result = Convert::json2array($response->getBody());
-		$this->assertFalse($result);
+		$this->assertEmpty($result, 'The output is either an empty array or boolean FALSE');
 	}
 
 	function testAdd() {

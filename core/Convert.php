@@ -92,28 +92,28 @@ class Convert {
 			return str_replace(array("\\", '"', "\n", "\r", "'"), array("\\\\", '\"', '\n', '\r', "\\'"), $val);
 		}
 	}
-	
+
 	/**
-	 * Uses the PHP 5.2 native json_encode function if available,
-	 * otherwise falls back to the Services_JSON class.
-	 * 
-	 * @see http://pear.php.net/pepr/pepr-proposal-show.php?id=198
-	 * @uses Director::baseFolder()
-	 * @uses Services_JSON
+	 * Encode a value as a JSON encoded string.
 	 *
-	 * @param mixed $val
-	 * @return string JSON safe string
+	 * @param mixed $val Value to be encoded
+	 * @return string JSON encoded string
 	 */
 	static function raw2json($val) {
-		if(function_exists('json_encode')) {
-			return json_encode($val);	
-		} else {
-			require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');
-			$json = new Services_JSON();
-			return $json->encode($val);
-		}
+		return json_encode($val);
 	}
-	
+
+	/**
+	 * Encode an array as a JSON encoded string.
+	 * THis is an alias to {@link raw2json()}
+	 *
+	 * @param array $val Array to convert
+	 * @return string JSON encoded string
+	 */
+	static function array2json($val) {
+		return self::raw2json($val);
+	}
+
 	static function raw2sql($val) {
 		if(is_array($val)) {
 			foreach($val as $k => $v) $val[$k] = self::raw2sql($v);
@@ -138,41 +138,15 @@ class Convert {
 			else return html_entity_decode($val, ENT_QUOTES, 'UTF-8');
 		}
 	}
-	
-	/**
-	 * Convert an array into a JSON encoded string.
-	 * 
-	 * @see http://pear.php.net/pepr/pepr-proposal-show.php?id=198
-	 * @uses Director::baseFolder()
-	 * @uses Services_JSON
-	 * 
-	 * @param array $val Array to convert
-	 * @return string JSON encoded string
-	 */
-	static function array2json($val) {
-		if(function_exists('json_encode')) {
-			return json_encode($val);
-		} else {
-			require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');
-			$json = new Services_JSON();
-			return $json->encode($val);
-		}
-	}
-	
+
 	/**
 	 * Convert a JSON encoded string into an object.
-	 * 
-	 * @see http://pear.php.net/pepr/pepr-proposal-show.php?id=198
-	 * @uses Director::baseFolder()
-	 * @uses Services_JSON
 	 *
 	 * @param string $val
-	 * @return mixed JSON safe string
+	 * @return mixed
 	 */
 	static function json2obj($val) {
-		require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');
-		$json = new Services_JSON();
-		return $json->decode($val);
+		return json_decode($val);
 	}
 
 	/**
@@ -183,15 +157,7 @@ class Convert {
 	 * @return array|boolean
 	 */
 	static function json2array($val) {
-		$json = self::json2obj($val);
-		if(!$json) return false;
-		
-		$arr = array();
-		foreach($json as $k => $v) {
-			$arr[$k] = $v;
-		}
-		
-		return $arr;
+		return json_decode($val, true);
 	}
 	
 	/**
