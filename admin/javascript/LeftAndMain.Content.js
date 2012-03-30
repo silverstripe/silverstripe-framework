@@ -159,10 +159,10 @@
 						  self.submitForm_responseHandler(form, xmlhttp.responseText, status, xmlhttp, formData);
 						}
 
-						// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it
+						// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it.
 						if(window.History.enabled) {
 							var url = xmlhttp.getResponseHeader('X-ControllerURL');
-							if(url) window.history.replaceState({}, '', url);
+							if(url) window.History.replaceState({}, '', url);
 						}
 						
 						// Re-init tabs (in case the form tag itself is a tabset)
@@ -287,7 +287,7 @@
 				var url = $(node).find('a:first').attr('href');
 				if(url && url != '#') {
 
-					if($(node).find('a:first').is(':internal')) url = url = $.path.makeUrlAbsolute(url, $('base').attr('href'));
+					if($.path.isExternal($(node).find('a:first'))) url = url = $.path.makeUrlAbsolute(url, $('base').attr('href'));
 					// Reload only edit form if it exists (side-by-side view of tree and edit view), otherwise reload whole panel
 					if(container.find('.cms-edit-form').length) {
 						url += '?cms-view-form=1';
