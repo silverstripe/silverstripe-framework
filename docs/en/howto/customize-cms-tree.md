@@ -221,5 +221,5 @@ The look of the page node will be changed
 from ![Deleted Page Node](../_images/tree_node.png) to ![As-normal Page Node](../_images/page_node_removed.png)
 
 ## How to customize a tree node icon ##
-
+__yet to add__
 
