@@ -2404,7 +2404,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			// Traverse dot syntax
 			$component = $this;
 			foreach($parts as $relation) {
-				$component = $component->$relation();
+				if($component instanceof SS_List) {
+					if(method_exists($component,$relation)) $component = $component->$relation();
+					else $component = $component->relation($relation);
+				} else {
+					$component = $component->$relation();
+				}
 			}
 
 			$object = $component->dbObject($fieldName);
@@ -2436,7 +2441,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			// Traverse dot syntax
 			$component = $this;
 			foreach($parts as $relation) {
-				$component = $component->$relation();
+				if($component instanceof SS_List) {
+					if(method_exists($component,$relation)) $component = $component->$relation();
+					else $component = $component->relation($relation);
+				} else {
+					$component = $component->$relation();
+				}
 			}
 
 			return $component->$fieldName;
