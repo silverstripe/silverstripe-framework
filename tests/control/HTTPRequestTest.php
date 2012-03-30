@@ -1,7 +1,31 @@
 <?php
 
 class HTTPRequestTest extends SapphireTest {
+	
 	static $fixture_file = null;
+
+	function testUrlNormalisation() {
+		$this->assertEquals(
+			'leading/slash',
+			Object::create('SS_HTTPRequest', "GET", "/leading/slash")->getURL()
+		);
+		$this->assertEquals(
+			'multipleleading/slash',
+			Object::create('SS_HTTPRequest', "GET", "//multipleleading/slash")->getURL()
+		);
+		$this->assertEquals(
+			'trailing/slash/',
+			Object::create('SS_HTTPRequest', "GET", "trailing/slash/")->getURL()
+		);
+		$this->assertEquals(
+			'multipletrailing/slash/',
+			Object::create('SS_HTTPRequest', "GET", "multipletrailing/slash//")->getURL()
+		);
+		$this->assertEquals(
+			'multiple/part/slash/',
+			Object::create('SS_HTTPRequest', "GET", 'multiple//part//slash/')->getURL()
+		);
+	}
 	
 	function testMatch() {
 		$request = new SS_HTTPRequest("GET", "admin/crm/add");
