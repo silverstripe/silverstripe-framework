@@ -32,8 +32,16 @@ jQuery.noConflict();
 		
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
 
-		// global ajax error handlers
+		// global ajax handlers
 		$.ajaxSetup({
+			complete: function(xhr) {
+				// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it.
+				// Causes non-pushState browser to re-request the URL, so ignore for those.
+				if(window.History.enabled && !History.emulated.pushState) {
+					var url = xmlhttp.getResponseHeader('X-ControllerURL');
+					if(url) window.History.replaceState({}, '', url);
+				}
+			},
 			error: function(xmlhttp, status, error) {
 				if(xmlhttp.status < 200 || xmlhttp.status > 399) {
 					var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.statusText;
@@ -87,13 +95,6 @@ jQuery.noConflict();
 				});
 				
 				$('.cms-edit-form').live('reloadeditform', function(e, data) {
-					// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it
-					// Causes non-pushState browser to re-request the URL, so ignore for those.
-					if(window.History.enabled && !History.emulated.pushState) {
-						var url = data.xmlhttp.getResponseHeader('X-ControllerURL');
-						if(url) window.history.replaceState({}, '', url);
-					}
-					
 					self.redraw();
 				});
 				
@@ -250,13 +251,6 @@ jQuery.noConflict();
 						self.redraw();
 						newContentEl.css('visibility', 'visible');
 						newContentEl.removeClass('loading');
-
-						// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it.
-						// Causes non-pushState browser to re-request the URL, so ignore for those.
-						if(window.History.enabled && !History.emulated.pushState) {
-							var url = xhr.getResponseHeader('X-ControllerURL');
-							if(url) window.History.replaceState({}, '', url);
-						}
 
 						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: newContentEl});
 					},
