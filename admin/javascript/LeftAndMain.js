@@ -38,8 +38,12 @@ jQuery.noConflict();
 				// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it.
 				// Causes non-pushState browser to re-request the URL, so ignore for those.
 				if(window.History.enabled && !History.emulated.pushState) {
-					var url = xmlhttp.getResponseHeader('X-ControllerURL');
-					if(url) window.History.replaceState({}, '', url);
+					var url = xhr.getResponseHeader('X-ControllerURL');
+					// Normalize trailing slashes in URL to work around routing weirdnesses in SS_HTTPRequest.
+					var isSame = (url && History.getPageUrl().replace(/\/+$/, '') == url.replace(/\/+$/, ''));
+					if(isSame) {
+						window.History.replaceState({}, '', url);
+					}
 				}
 			},
 			error: function(xmlhttp, status, error) {
