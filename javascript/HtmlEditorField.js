@@ -699,7 +699,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		/**
 		 * Show the second step after uploading an image
 		 */
-		$('.ss-assetuploadfield').entwine({
+		$('form.htmleditorfield-form.htmleditorfield-mediaform div.ss-assetuploadfield').entwine({
 			onmatch: function() {
 				this._super();
 
@@ -708,13 +708,23 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 			},
 			onfileuploadstop: function(e) {
-				//get the uploaded file ID when this event triggers, signaling the upload has compeleted successfully
-				//always use the last one uploaded
-				var uploadedFileID = $('ul.ss-uploadfield-files').children('li.ss-uploadfield-item').last().data('fileid');
-
-				//trigger the detail view for filling out details about the file we are about to insert into TinyMCE
 				var form = this.closest('form');
-				form.closest('form').showFileView(uploadedFileID);
+
+				//update the editFields to show those Files that are newly uploaded
+				var editFieldIDs = [];
+				form.find('div.content-edit').find('div.ss-htmleditorfield-file').each(function(){
+					//get the uploaded file ID when this event triggers, signaling the upload has compeleted successfully
+					editFieldIDs.push($(this).data('id'));
+				});
+				var uploadedFiles = $('ul.ss-uploadfield-files').children('li.ss-uploadfield-item');
+				uploadedFiles.each(function(){
+					var uploadedID = $(this).data('fileid');
+					if ($.inArray(uploadedID, editFieldIDs) == -1) {
+						//trigger the detail view for filling out details about the file we are about to insert into TinyMCE
+						form.showFileView(uploadedID);
+					}
+				});
+
 				form.redraw();
 			}
 
