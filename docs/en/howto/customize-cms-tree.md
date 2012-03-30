@@ -1,10 +1,12 @@
-# How to customize CMS Tree #
+# How to customize CMS Tree Node #
 
 ## Introduction ##
 
-A tree node in CMS could be rendered with lot of extra information but a node title, such as a link that wraps around the node title, a node's id which is given as id attribute of the node &lt;li&gt; tag, a extra checkbox beside the tree title, tree icon class or extra &lt;span&gt;
-tags showing the node status, etc. SilverStripe tree node will be typically rendered into
-html code like this:
+A tree node in CMS could be rendered with lot of extra information but a node title, such as a
+link that wraps around the node title, a node's id which is given as id attribute of the node
+&lt;li&gt; tag, a extra checkbox beside the tree title, tree icon class or extra &lt;span&gt;
+tags showing the node status, etc. SilverStripe tree node will be typically rendered into html
+code like this:
 
 	:::ss
 	...
@@ -45,9 +47,16 @@ most common case, the four common flags are in the format of mapping. i.e.
 Depending on the publication status, a site tree node will eventually pick up one of the
 four or end up without any flag.
 
-Developers can easily add a new flag, delete or alter an existing flag on how it is looked (status class) or changing the flag label. The customization of these lozenges could be done either through inherited subclass or `[api:DataExtension]`. It is just really about how we change the return value of function `SiteTree->getTreeTitle()` by two easily extendable methods `SiteTree->getStatusClass()` and `SiteTree->getStatusFlags()`.
+Developers can easily add a new flag, delete or alter an existing flag on how it is looked
+or changing the flag label. The customization of these lozenges could be done either through
+inherited subclass or `[api:DataExtension]`. It is just really about how we change the return
+value of function `SiteTree->getTreeTitle()` by two easily extendable methods
+`SiteTree->getStatusClass()` and `SiteTree->getStatusFlags()`.
 
-Note: Though the flag is not necessarily tie to its status of __publication__ and it could be used for flagging anything you like, we should keep this lozenge to show version-related status, while let `SiteTree->CMSTreeClasses()` to deal with other customised classes, which will be used for the class attribute of &lt;li&gt; tag of the tree node.
+Note: Though the flag is not necessarily tie to its status of __publication__ and it could
+be used for flagging anything you like, we should keep this lozenge to show version-related
+status, while let `SiteTree->CMSTreeClasses()` to deal with other customised classes, which
+will be used for the class attribute of &lt;li&gt; tag of the tree node.
 
 ### Add new flag ###
 __Example: using a subclass__
@@ -73,7 +82,8 @@ __Example: using a subclass__
 		}
 	}
 
-The above subclass of `[api:SiteTree]` will add a new flag for indicating its __'Scheduled To Publish'__ status.
+The above subclass of `[api:SiteTree]` will add a new flag for indicating its
+__'Scheduled To Publish'__ status.
 
 __Example: using a decorator__
 
@@ -96,7 +106,8 @@ __Example: using a decorator__
 
 	Object::add_extension("SiteTree", "SiteTreeDecorator");
 
-Both the above subclass and the decorator will produce same HTML code for `getTreeTitle()` if the page is scheduled to publish:
+Both the above subclass and the decorator will produce same HTML code for `getTreeTitle()` if
+the page is scheduled to publish:
 
 	:::ss
 	<span class="jstree-pageicon"></span>
@@ -105,11 +116,11 @@ Both the above subclass and the decorator will produce same HTML code for `getTr
 
 The look of the page node will be changed
 
-from ![Normal Page Node](../_images/page_node_normal.png "Normal Page Node")
-to ![Scheduled Page Node](../_images/page_node_scheduled.png "Scheduled Page Node")
+from ![Normal Page Node](../_images/page_node_normal.png") to ![Scheduled Page Node](../_images/page_node_scheduled.png)
 
 ### Delete an existing flag ###
-Assuming you want to show one of the existing flags presented by the mapping __"deletedonlive" => 'Deleted'__ by some reason, it can be done:
+Assuming you want to show one of the existing flags presented by the mapping
+__"deletedonlive" => 'Deleted'__ by some reason, it can be done:
 
 __Example: using a subclass__
 
@@ -146,18 +157,19 @@ __Example: using a decorator__
 
 	Object::add_extension("SiteTree", "SiteTreeDecorator");
 
-Both the above subclass and the decorator will produce same HTML code for `getTreeTitle()` if the page is __'Deleted on live', i.e. no flag at all:
+Both the above subclass and the decorator will produce same HTML code for `getTreeTitle()` if
+the page is __'Deleted on live', i.e. no flag at all:
 
 	:::ss
 	<span class="jstree-pageicon"></span>New Page
 
 The look of the page node will be changed
 
-from ![Deleted Page Node](../_images/tree_node.png "Deleted Page Node")
-to ![As-normal Page Node](../_images/page_node_deleted_as_normal.png "Deleted Page Node Shows as Normal")
+from ![Deleted Page Node](../_images/tree_node.png) to ![As-normal Page Node](../_images/page_node_deleted_as_normal.png)
 
 ### Alter an existing flag ###
-Assuming you want to alter one of the existing flags presented by the mapping __"deletedonlive" => 'Deleted'__ by some reason, it can be done:
+Assuming you want to alter one of the existing flags presented by the mapping
+__"deletedonlive" => 'Deleted'__ by some reason, it can be done:
 
 __Example: using a subclass__
 
@@ -196,7 +208,8 @@ __Example: using a decorator__
 
 	Object::add_extension("SiteTree", "SiteTreeDecorator");
 
-Both the above subclass and the decorator will produce same HTML code for `getTreeTitle()` if the page is previously __'Deleted on live'__:
+Both the above subclass and the decorator will produce same HTML code for `getTreeTitle()` if
+the page is previously __'Deleted on live'__:
 
 	:::ss
 	<span class="jstree-pageicon"></span>
@@ -205,7 +218,6 @@ Both the above subclass and the decorator will produce same HTML code for `getTr
 
 The look of the page node will be changed
 
-from ![Deleted Page Node](../_images/tree_node.png "Deleted Page Node")
-to ![As-normal Page Node](../_images/page_node_removed.png "Deleted Page Node Shows as Normal")
+from ![Deleted Page Node](../_images/tree_node.png) to ![As-normal Page Node](../_images/page_node_removed.png)
 
 
