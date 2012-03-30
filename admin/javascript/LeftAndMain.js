@@ -88,7 +88,8 @@ jQuery.noConflict();
 				
 				$('.cms-edit-form').live('reloadeditform', function(e, data) {
 					// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it
-					if(window.History.enabled) {
+					// Causes non-pushState browser to re-request the URL, so ignore for those.
+					if(window.History.enabled && !History.emulated.pushState) {
 						var url = data.xmlhttp.getResponseHeader('X-ControllerURL');
 						if(url) window.history.replaceState({}, '', url);
 					}
@@ -250,12 +251,13 @@ jQuery.noConflict();
 						newContentEl.css('visibility', 'visible');
 						newContentEl.removeClass('loading');
 
-						// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it
-						if(window.History.enabled) {
+						// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it.
+						// Causes non-pushState browser to re-request the URL, so ignore for those.
+						if(window.History.enabled && !History.emulated.pushState) {
 							var url = xhr.getResponseHeader('X-ControllerURL');
 							if(url) window.History.replaceState({}, '', url);
 						}
-						
+
 						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: newContentEl});
 					},
 					error: function(xhr, status, e) {

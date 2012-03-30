@@ -160,7 +160,8 @@
 						}
 
 						// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it.
-						if(window.History.enabled) {
+						// Causes non-pushState browser to re-request the URL, so ignore for those.
+						if(window.History.enabled && !History.emulated.pushState) {
 							var url = xmlhttp.getResponseHeader('X-ControllerURL');
 							if(url) window.History.replaceState({}, '', url);
 						}
