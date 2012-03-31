@@ -80,7 +80,7 @@ class ChangePasswordForm extends Form {
 			// The user is not logged in and no valid auto login hash is available
 			if(!$member) {
 				Session::clear('AutoLoginHash');
-				Director::redirect('loginpage');
+				Director::redirect('login');
 				return;
 			}
 		}
