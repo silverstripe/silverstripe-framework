@@ -19,6 +19,11 @@ abstract class PasswordEncryptor {
 	protected static $encryptors = array();
 	
 	/**
+	 * @var array
+	 */
+	protected static $encryptor_args = array();
+	
+	/**
 	 * @return Array Map of encryptor code to the used class.
 	 */
 	static function get_encryptors() {
@@ -34,21 +39,27 @@ abstract class PasswordEncryptor {
 	 * @param String $code This value will be stored stored in the 
 	 * 	{@link Member->PasswordEncryption} property.
 	 * @param String $class Classname of a {@link PasswordEncryptor} subclass
+	 * @param array $params Instantiation parameters for the encryptor class
 	 */
-	static function register($code, $class) {
+	static function register($code, $class, $params = array()) {
 		self::$encryptors[$code] = $class;
+		self::$encryptor_args[$code] = $params;
 	}
 	
 	/**
 	 * @param String $code Unique lookup.
 	 */
 	static function unregister($code) {
-		if(isset(self::$encryptors[$code])) unset(self::$encryptors[$code]);
+		if(isset(self::$encryptors[$code])) {
+			unset(self::$encryptors[$code]);
+			unset(self::$encryptor_args[$code]);
+		}
 	}
 	
 	/**
 	 * @param String $algorithm
-	 * @return PasswordEncryptor|Boolean Returns FALSE if class was not found
+	 * @return PasswordEncryptor Throws PasswordEncryptor_NotFoundException if 
+	 *  class was not found
 	 */
 	static function create_for_algorithm($algorithm) {
 		if(!isset(self::$encryptors[$algorithm])) {
@@ -57,15 +68,16 @@ abstract class PasswordEncryptor {
 			);
 		}
 		
-		$classWithArgs = self::$encryptors[$algorithm];
-		$class = (($p = strpos($classWithArgs, '(')) !== false) ? substr($classWithArgs, 0, $p) : $classWithArgs;
+		$class = self::$encryptors[$algorithm];
 		if(!class_exists($class)) {
 			throw new PasswordEncryptor_NotFoundException(
 				sprintf('No class found for "%s"', $class)
 			);
 		}
-
-		return eval("return new $classWithArgs;");
+		$refClass = new ReflectionClass($class);
+		
+		$args = self::$encryptor_args[$algorithm];
+		return($refClass->newInstanceArgs($args));
 	}
 		
 	/**
