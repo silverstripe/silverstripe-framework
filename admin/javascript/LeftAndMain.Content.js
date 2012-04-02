@@ -164,13 +164,6 @@
 						  self.submitForm_responseHandler(form, xmlhttp.responseText, status, xmlhttp, formData);
 						}
 
-						// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it.
-						// Causes non-pushState browser to re-request the URL, so ignore for those.
-						if(window.History.enabled && !History.emulated.pushState) {
-							var url = xmlhttp.getResponseHeader('X-ControllerURL');
-							if(url) window.History.replaceState({}, '', url);
-						}
-						
 						// Re-init tabs (in case the form tag itself is a tabset)
 						if(self.hasClass('ss-tabset')) self.removeClass('ss-tabset').addClass('ss-tabset');
 
