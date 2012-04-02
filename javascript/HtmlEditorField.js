@@ -782,8 +782,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				return {
 					'src' : this.find(':input[name=URL]').val(),
 					'alt' : this.find(':input[name=AltText]').val(),
-					'width' : width ? parseInt(width, 10) + "px" : null,
-					'height' : height ? parseInt(height, 10) + "px" : null,
+					'width' : width ? parseInt(width, 10) : null,
+					'height' : height ? parseInt(height, 10) : null,
 					'title' : this.find(':input[name=Title]').val(),
 					'class' : this.find(':input[name=CSSClass]').val()
 				};
