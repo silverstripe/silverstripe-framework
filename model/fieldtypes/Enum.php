@@ -87,10 +87,10 @@ class Enum extends DBField {
 	}
 	
 	function Lower() {
-		return StringField::Lower();
+		return StringField::LowerCase();
 	}
 	function Upper() {
-		return StringField::Upper();
+		return StringField::UpperCase();
 	}
 }
 
