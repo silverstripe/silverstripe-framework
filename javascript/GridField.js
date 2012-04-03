@@ -111,7 +111,49 @@
 			}
 		}
 	});
+	
+	$('.ss-gridfield .action.gridfield-button-print').entwine({
+		UUID: null,
+		onmatch: function() {
+			this._super();
+			this.setUUID(new Date().getTime());
+		},
+		onclick: function(e){
+			var self = this, iframeID = 'gridfield-print-iframe' + this.getUUID();
+			var printIframe = $('#' + iframeID);
+			
+			if(!printIframe.length){
+				printIframe = $('<IFRAME id="'+iframeID+'" class="ss-gridfield-print-iframe">');
+				$(document.body).append(printIframe);
+			}
+			
+			var self = this, btn = this.closest(':button'), grid = this.getGridField(), 
+				form = this.closest('form'), data = form.find(':input').serialize();
 
+			// Add current button
+			data += '&' + encodeURIComponent(btn.attr('name')) + '=' + encodeURIComponent(btn.val());
+
+			// Include any GET parameters from the current URL, as the view state might depend on it.
+			// For example, a list prefiltered through external search criteria might be passed to GridField.
+			if(window.location.search) data = window.location.search.replace(/^\?/, '') + '&' + data;
+
+			var url = $.path.makeUrlAbsolute(grid.data('url') + '?' + data, $('base').attr('href'));
+			printIframe.attr('src', url);
+			return false;
+		}
+	});
+	
+	$('.ss-gridfield-print-iframe').entwine({
+		onmatch: function(){
+			this.hide().bind('load', function() 
+		    {	
+				this.focus();
+				var ifWin = this.contentWindow || this;
+				ifWin.print();
+		    });;
+		}
+	});
+	
 	/**
 	 * Prevents actions from causing an ajax reload of the field.
 	 * Useful e.g. for actions which rely on HTTP response headers being interpreted nativel
