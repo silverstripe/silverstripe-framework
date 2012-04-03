@@ -107,6 +107,12 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 		}
 		
 		$items = $gridField->getList();
+		foreach($gridField->getConfig()->getComponents() as $component){
+			if($component instanceof GridFieldFilterHeader || $component instanceof GridFieldSortableHeader) {
+				$items = $component->getManipulatedData($gridField, $items);
+			}
+		}
+		
 		$itemRows = new ArrayList();
 		foreach($items as $item) {
 			$itemRow = new ArrayList();
