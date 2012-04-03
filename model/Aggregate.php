@@ -90,7 +90,7 @@ class Aggregate extends ViewableData {
 	 * This gets the aggregate function 
 	 * 
 	 */
-	public function XML_val($name, $args) {
+	public function XML_val($name, $args = null, $cache = false) {
 		$func = strtoupper( strpos($name, 'get') === 0 ? substr($name, 3) : $name );
 		$attribute = $args ? $args[0] : 'ID';
 		

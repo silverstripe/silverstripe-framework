@@ -196,8 +196,13 @@ class DateField extends TextField {
 				// Setting in correct locale
 				if(is_array($val) && $this->validateArrayValue($val)) {
 					// set() gets confused with custom date formats when using array notation
-					$this->valueObj = new Zend_Date($val, null, $this->locale);
-					$this->value = $this->valueObj->toArray();
+					if(!(empty($val['day']) || empty($val['month']) || empty($val['year']))) {
+						$this->valueObj = new Zend_Date($val, null, $this->locale);
+						$this->value = $this->valueObj->toArray();
+					} else {
+						$this->value = $val;
+						$this->valueObj = null;
+					}
 				}
 				// load ISO date from database (usually through Form->loadDataForm())
 				else if(!empty($val) && Zend_Date::isDate($val, $this->getConfig('datavalueformat'), $this->locale)) {

@@ -30,6 +30,14 @@ class DebugView extends Object {
 			'title' => 'User Notice',
 			'class' => 'notice'
 		),
+		E_DEPRECATED => array(
+			'title' => 'Deprecation',
+			'class' => 'notice'
+		),
+		E_USER_DEPRECATED => array(
+			'title' => 'Deprecation',
+			'class' => 'notice'
+		),
 		E_CORE_ERROR => array(
 			'title' => 'Core Error',
 			'class' => 'error'

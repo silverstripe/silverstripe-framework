@@ -232,8 +232,4 @@
 	};
 	
 	$.path = path;
-
-	// Internal Helper
-	$.expr[':'].internal = function(obj){return obj.href.match(/^mailto\:/) || (obj.hostname == location.hostname);};
-	$.expr[':'].external = function(obj){return !$(obj).is(':internal')};
 }(jQuery));

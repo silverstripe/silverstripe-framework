@@ -62,8 +62,8 @@ class DataDifferencerTest_Object extends DataObject implements TestOnly {
 		'HasOneRelation' => 'DataDifferencerTest_HasOneRelationObject'
 	);
 	
-	function getCMSFields() {
-		$fields = parent::getCMSFields();
+	function getCMSFields($params = null) {
+		$fields = parent::getCMSFields($params);
 		$choices = array(
 			'a' => 'a',
 			'b' => 'b',

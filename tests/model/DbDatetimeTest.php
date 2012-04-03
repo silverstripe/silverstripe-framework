@@ -11,6 +11,8 @@ class DbDatetimeTest extends FunctionalTest {
 		E_USER_ERROR => 1800,
 		E_USER_NOTICE => 5,
 	);
+
+	private $adapter;
 	
 	/**
 	 * Check if dates match more or less. This takes into the account the db query

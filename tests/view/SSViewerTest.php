@@ -930,7 +930,7 @@ class SSViewerTestFixture extends ViewableData {
 	}
 	
 
-	function XML_val($fieldName, $arguments = null) {
+	function XML_val($fieldName, $arguments = null, $cache = false) {
 		if(preg_match('/NotSet/i', $fieldName)) {
 			return '';
 		} else if(preg_match('/Raw/i', $fieldName)) {
@@ -940,7 +940,7 @@ class SSViewerTestFixture extends ViewableData {
 		}
 	}
 
-	function hasValue($fieldName, $arguments = null) {
+	function hasValue($fieldName, $arguments = null, $cache = true) {
 		return (bool)$this->XML_val($fieldName, $arguments);
 	}
 }

@@ -100,7 +100,7 @@ body.cms {
 		float:left;
 		margin-top:$grid-x - 1;
 		span.btn-icon-back {
-			height:15px;
+			height:16px;
 		}
 	}
 
@@ -129,7 +129,7 @@ body.cms {
 				a {
 					font-weight: bold;
 					line-height: $grid-y * 2;
-					padding: ($grid-y * 2 - 4) ($grid-x * 2 + 4) $grid-y + 3;
+					padding: $grid-y*1.5 $grid-x*2.5 $grid-y*1.5;
 				}
 			}
 			
@@ -147,6 +147,7 @@ body.cms {
 				border: {
 					top:none;
 				}
+				padding-bottom:0px;
 			}
 			.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
 				border-radius:0;
@@ -407,6 +408,20 @@ body.cms {
 }
 
 .cms-add-form {
+	.step-label {
+		.flyout {
+			height:17px; //centres number within the grey arrow 
+			padding-top:5px;
+		}
+		.title {
+			padding-top:5px; //aligns label with point of arrow
+			font-weight:bold; //to match pagetype label
+			@include text-shadow(1px 1px 0 $color-text-shadow);
+		}
+	}
+	ul.SelectionGroup {
+		padding-left:28px;
+	}
 	.parent-mode {
 		padding: $grid-x;
 		overflow: auto;
@@ -822,7 +837,37 @@ body.cms {
  * -------------------------------------------- */
 
 form.member-profile-form {
-	
+	padding: 0 $grid-x*2 0 0;
+	.ui-tabs-nav {
+		.ui-state-default,
+		.ui-widget-content .ui-state-default,
+		.ui-widget-header .ui-state-default {
+			border: {
+				top:none;
+			}
+		}
+	}
+
+	#Root_Permissions {
+		clear:both;
+		padding: $grid-x*2;
+	}
+
+	#Root_Main {
+		clear:both;
+		padding: $grid-x*2;
+		.cms-help-toggle {
+			text-indent: -9999em;
+			display: inline-block;
+			width: 20px;
+			background:url(../images/question.png) no-repeat 0px 0px; 
+		}
+	}
+
+	#FavouritePageID {
+		margin-top:$grid-y;
+	}
+
 	#CsvFile .middleColumn {
 		background: none !important;
 	}
@@ -888,13 +933,13 @@ form.member-profile-form {
 		li {
 			margin:0 0 -1px 0;
 		}
-	}
-	.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
-		border-radius:0;
-	}
+		.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+			border-radius:0;
+		}
 
-	.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
-		border-radius:0;
+		.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+			border-radius:0;
+		}
 	}
 }
 
@@ -907,17 +952,32 @@ form.member-profile-form {
 	}
 	
 	.cms-content-fields {
-		/* always show a y scroll bar as popups like TreeDropdowns 
-		 can trigger longer pages and the extra scroll bar doesn't 
-		 fire our sizing bar */
+		// always show a y scroll bar as popups like TreeDropdowns 
+		// can trigger longer pages and the extra scroll bar doesn't fire our sizing bar
 		overflow-y: auto;
 		overflow-x: auto;
 		background: none;
 		width:100%;
-		.aligned-right-label {
-			margin-left:$grid-x*23;
-			padding:$grid-x 0;
+		#Root_Main {
+			.confirmedpassword {
+				border-bottom:none;
+				box-shadow:none;
+			}
+			.customFormat {
+				max-width:80px;
+			}
+			.cms-help-toggle {
+				text-indent: -9999em;
+				display: inline-block;
+				width: 20px;
+				background:url(../images/question.png) no-repeat 0px 0px;
+			}
 		}
+		#Root_Permissions{
+			ul.optionset li {
+				float:none;
+			}
+		}	
 	}
 }
 
@@ -1092,6 +1152,10 @@ form.member-profile-form {
 	background-image: none;
 }
 
+.cms .ui-dialog .ss-ui-dialog.ui-dialog-content {
+	padding-top: 0px; //removes padding so that tabs are flush with header
+}
+
 // Elements with this class can either frame inline markup or an iframe,
 // most styles should be applied to .cms-dialog instead (which declares the content in the frame)
 .ui-dialog {
@@ -1147,8 +1211,9 @@ body.cms-dialog {
 			background: none;
 
 			.ui-tabs-nav {
-				padding: $grid-x 0 0 0;
 				border: none;
+				padding: 0 $grid-x*5 0 0; //allows for 40px gap to the right of tabs to match the tabs on main CMS
+				float: right;
 
 				li {	
 					&.ui-tabs-selected {
@@ -1391,5 +1456,14 @@ form.import-form {
 	label.left {
 		width: 250px;
 	}
+
 }
 
+/** --------------------------------------------
+ * Page Edit Controller
+ * -------------------------------------------- */
+
+.cms-container .CMSMain.CMSPageEditController {
+	// Fix pixel gap between nav tree and main page header
+ 	margin-left:-1px;
+}

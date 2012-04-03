@@ -59,7 +59,7 @@ class Group extends DataObject {
 	 *
 	 * @return FieldList
 	 */
-	public function getCMSFields() {
+	public function getCMSFields($params = null) {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');
 		
 		$fields = new FieldList(
@@ -85,7 +85,10 @@ class Group extends DataObject {
 			)
 		);
 		
-		$parentidfield->setRightTitle('<span class="aligned-right-label">' . _t('Group.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles') . '</span>');
+		$parentidfield->setAttribute(
+			'title', 
+			_t('Group.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles')
+		);
 
 		// Filter permissions
 		// TODO SecurityAdmin coupling, not easy to get to the form fields through GridFieldDetailForm
@@ -334,17 +337,21 @@ class Group extends DataObject {
 			if(!$this->Code) $this->setCode($this->Title);
 		}
 	}
-	
-	function onAfterDelete() {
-		parent::onAfterDelete();
-		
+
+	function onBeforeDelete() {
+		parent::onBeforeDelete();
+
+		// if deleting this group, delete it's children as well
+		foreach($this->Groups() as $group) {
+			$group->delete();
+		}
+
 		// Delete associated permissions
-		$permissions = $this->Permissions();
-		foreach ( $permissions as $permission ) {
+		foreach($this->Permissions() as $permission) {
 			$permission->delete();
 		}
 	}
-	
+
 	/**
 	 * Checks for permission-code CMS_ACCESS_SecurityAdmin.
 	 * If the group has ADMIN permissions, it requires the user to have ADMIN permissions as well.

@@ -145,7 +145,7 @@ class DataQuery {
 			if($this->dataClass != $baseClass) {
 				// Get the ClassName values to filter to
 				$classNames = ClassInfo::subclassesFor($this->dataClass);
-				if(!$classNames) user_error("DataObject::get() Can't find data sub-classes for '$callerClass'");
+				if(!$classNames) user_error("DataList::create() Can't find data sub-classes for '$callerClass'");
 				$query->where[] = "\"$baseClass\".\"ClassName\" IN ('" . implode("','", $classNames) . "')";
 			}
 		}

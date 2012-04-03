@@ -32,16 +32,16 @@ class DateTest extends SapphireTest {
 	}
 	
 	function testNiceDate() {
-		$this->assertEquals('01/04/2008', DBField::create('Date', 1206968400)->Nice(),
+		$this->assertEquals('31/03/2008', DBField::create('Date', 1206968400)->Nice(),
 			"Date->Nice() works with timestamp integers"
 		);
-		$this->assertEquals('31/03/2008', DBField::create('Date', 1206882000)->Nice(),
+		$this->assertEquals('30/03/2008', DBField::create('Date', 1206882000)->Nice(),
 			"Date->Nice() works with timestamp integers"
 		);
-		$this->assertEquals('01/04/2008', DBField::create('Date', '1206968400')->Nice(),
+		$this->assertEquals('31/03/2008', DBField::create('Date', '1206968400')->Nice(),
 			"Date->Nice() works with timestamp strings"
 		);
-		$this->assertEquals('31/03/2008', DBField::create('Date', '1206882000')->Nice(),
+		$this->assertEquals('30/03/2008', DBField::create('Date', '1206882000')->Nice(),
 			"Date->Nice() works with timestamp strings"
 		);
 		$this->assertEquals('04/03/2003', DBField::create('Date', '4/3/03')->Nice(),
@@ -74,16 +74,16 @@ class DateTest extends SapphireTest {
 	}
 	
 	function testLongDate() {
-		$this->assertEquals('1 April 2008', DBField::create('Date', 1206968400)->Long(),
+		$this->assertEquals('31 March 2008', DBField::create('Date', 1206968400)->Long(),
 			"Date->Long() works with numeric timestamp"
 		);
-		$this->assertEquals('1 April 2008', DBField::create('Date', '1206968400')->Long(),
+		$this->assertEquals('31 March 2008', DBField::create('Date', '1206968400')->Long(),
 			"Date->Long() works with string timestamp"
 		);
-		$this->assertEquals('31 March 2008', DBField::create('Date', 1206882000)->Long(),
+		$this->assertEquals('30 March 2008', DBField::create('Date', 1206882000)->Long(),
 			"Date->Long() works with numeric timestamp"
 		);
-		$this->assertEquals('31 March 2008', DBField::create('Date', '1206882000')->Long(),
+		$this->assertEquals('30 March 2008', DBField::create('Date', '1206882000')->Long(),
 			"Date->Long() works with numeric timestamp"
 		);
 		$this->assertEquals('3 April 2003', DBField::create('Date', '2003-4-3')->Long(),

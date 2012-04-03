@@ -1084,7 +1084,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @return FieldList Return a FieldList of fields that would appropriate for
 	 *                  editing this member.
 	 */
-	public function getCMSFields() {
+	public function getCMSFields($params = null) {
 		require_once('Zend/Date.php');
 		
 		$fields = parent::getCMSFields();

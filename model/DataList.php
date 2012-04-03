@@ -658,7 +658,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * 
 	 * Example: Get members from all Groups:
 	 * 
-	 *     DataObject::get("Group")->relation("Members")
+	 *     DataList::Create("Group")->relation("Members")
 	 * 
 	 * @param string $relationName
 	 * @return HasManyList|ManyManyList
@@ -666,6 +666,10 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	public function relation($relationName) {
 		$ids = $this->column('ID');
 		return singleton($this->dataClass)->$relationName()->forForeignID($ids);
+	}
+
+	function dbObject($fieldName) {
+		return singleton($this->dataClass)->dbObject($fieldName);
 	}
 
 	/**

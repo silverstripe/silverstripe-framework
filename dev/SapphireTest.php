@@ -143,6 +143,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		i18n::set_date_format(null);
 		i18n::set_time_format(null);
 		
+		// Set default timezone consistently to avoid NZ-specific dependencies
+		date_default_timezone_set('UTC');
+		
 		// Remove password validation
 		$this->originalMemberPasswordValidator = Member::password_validator();
 		$this->originalRequirements = Requirements::backend();
@@ -272,6 +275,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// which is used in DatabaseAdmin->doBuild()
 		global $_SINGLETONS;
 		$_SINGLETONS = array();
+
+		// Set default timezone consistently to avoid NZ-specific dependencies
+		date_default_timezone_set('UTC');
 	}
 	
 	/**
@@ -765,7 +771,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// Disable PHPUnit error handling
 		restore_error_handler();
 		
-		// Create a temporary database
+		// Create a temporary database, and force the connection to use UTC for time
+		global $databaseConfig;
+		$databaseConfig['timezone'] = '+0:00';
+		DB::connect($databaseConfig);
 		$dbConn = DB::getConn();
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
 		$dbname = strtolower(sprintf('%stmpdb', $prefix)) . rand(1000000,9999999);

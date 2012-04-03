@@ -7,69 +7,69 @@
 /** -----------------------------------------------
  * Colours
  * ------------------------------------------------ */
-$color-base: #b0bec7;
-$color-widget-bg: lighten($color-base, 20%);
+$color-base: #b0bec7 !default;
+$color-widget-bg: lighten($color-base, 20%) !default;
 
-$color-dark-bg: #003050;
-$color-dark-separator: #19435c;
-$color-medium-separator: #808080;
-$color-light-separator: rgba(201, 205, 206, 0.8);
+$color-dark-bg: #003050 !default;
+$color-dark-separator: #19435c !default;
+$color-medium-separator: #808080 !default;
+$color-light-separator: rgba(201, 205, 206, 0.8) !default;
 
-$color-tab: #d9d9d9;
-$color-dark-grey: #7B8C91;
+$color-tab: #d9d9d9 !default;
+$color-dark-grey: #7B8C91 !default;
 
-$color-shadow-light: rgba(201, 205, 206, 0.8);
-$color-shadow-dark: rgba(107, 120, 123, 0.5);
+$color-shadow-light: rgba(201, 205, 206, 0.8) !default;
+$color-shadow-dark: rgba(107, 120, 123, 0.5) !default;
 
-$color-highlight: #FFFF66;
-$color-highlight-opacity: rgba(255, 255, 102, 0.3);
+$color-highlight: #FFFF66 !default;
+$color-highlight-opacity: rgba(255, 255, 102, 0.3) !default;
 
-$color-menu-button: #338DC1;
-$color-menu-background: #c6d7df;
-$color-menu-border: #8c99a1;
+$color-menu-button: #338DC1 !default;
+$color-menu-background: #c6d7df !default;
+$color-menu-border: #8c99a1 !default;
 
-$color-text: #444;
-$color-text-light: white;
-$color-text-light-link: white;
-$color-text-disabled: #aaa;
-$color-text-dark: #1f1f1f;
-$color-text-dark-link: #3EBAE0;
-$color-text-blue-link:#1556B2;
-$color-text-shadow: white;
+$color-text: #444 !default;
+$color-text-light: white !default;
+$color-text-light-link: white !default;
+$color-text-disabled: #aaa !default;
+$color-text-dark: #1f1f1f !default;
+$color-text-dark-link: #3EBAE0 !default;
+$color-text-blue-link:#1556B2 !default;
+$color-text-shadow: white !default;
 
 
-$color-button-generic: #e6e6e6;
-$color-button-generic-border: #c0c0c2;
+$color-button-generic: #e6e6e6 !default;
+$color-button-generic-border: #c0c0c2 !default;
 
-$color-button-highlight: #e6e6e6;
-$color-button-highlight-border: #708284;
+$color-button-highlight: #e6e6e6 !default;
+$color-button-highlight-border: #708284 !default;
 
-$color-button-constructive: #669933;
-$color-button-constructive-border: #78a127;
+$color-button-constructive: #669933 !default;
+$color-button-constructive-border: #78a127 !default;
 
-$color-button-destructive: #f00;
+$color-button-destructive: #f00 !default;
 
-$color-button-disabled: #eeeded;
+$color-button-disabled: #eeeded !default;
 
-$color-warning: #FF9300;
-$color-error: #FF9300;
-$color-notice: #FF9300;
-$color-good: $color-button-constructive;
+$color-warning: #FF9300 !default;
+$color-error: #FF9300 !default;
+$color-notice: #FF9300 !default;
+$color-good: $color-button-constructive !default;
 
-$color-cms-batchactions-menu-background: #f5f5f5;
-$color-cms-batchactions-menu-selected-background: #efe999;
+$color-cms-batchactions-menu-background: #f5f5f5 !default;
+$color-cms-batchactions-menu-selected-background: #efe999 !default;
 
 /** -----------------------------------------------
  * Textures
  * ----------------------------------------------- */
-$tab-panel-texture-color: #f0f3f4;
-$tab-panel-texture-background: $tab-panel-texture-color url(../images/textures/bg_cms_main_content.png) repeat top left;
+$tab-panel-texture-color: #f0f3f4 !default;
+$tab-panel-texture-background: $tab-panel-texture-color url(../images/textures/bg_cms_main_content.png) repeat top left !default;
 
 /** -----------------------------------------------
  * Typography. 
  * ------------------------------------------------ */
-$font-family: Arial, sans-serif;
-$font-base-size: 12px;
+$font-family: Arial, sans-serif !default;
+$font-base-size: 12px !default;
 
 /** -----------------------------------------------
  * Grid Units (px)
@@ -78,10 +78,10 @@ $font-base-size: 12px;
  * both x (=horizontal) and y (=vertical). All internal padding and
  * margins are scaled to this and accounting for paragraphs
  * ------------------------------------------------ */
-$grid-y: 8px;
-$grid-x: 8px;
+$grid-y: 8px !default;
+$grid-x: 8px !default;
 
 /** -----------------------------------------------
  * Application Logo (CMS Logo) Must be 24px x 24px
  * ------------------------------------------------ */
-$application-logo-small: url("../images/logo_small.png");
+$application-logo-small: url("../images/logo_small.png") !default;

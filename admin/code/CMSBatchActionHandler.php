@@ -81,7 +81,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		$actionHandler = new $actionClass();
 		
 		// Sanitise ID list and query the database for apges
-		$ids = split(' *, *', trim($request->requestVar('csvIDs')));
+		$ids = preg_split('/ *, */', trim($request->requestVar('csvIDs')));
 		foreach($ids as $k => $v) if(!is_numeric($v)) unset($ids[$k]);
 		
 		if($ids) {
@@ -135,7 +135,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		$actionHandler = new $actionClass['class']();
 
 		// Sanitise ID list and query the database for apges
-		$ids = split(' *, *', trim($request->requestVar('csvIDs')));
+		$ids = preg_split('/ *, */', trim($request->requestVar('csvIDs')));
 		foreach($ids as $k => $id) $ids[$k] = (int)$id;
 		$ids = array_filter($ids);
 		
@@ -157,7 +157,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		$actionHandler = new $actionClass();
 
 		// Sanitise ID list and query the database for apges
-		$ids = split(' *, *', trim($request->requestVar('csvIDs')));
+		$ids = preg_split('/ *, */', trim($request->requestVar('csvIDs')));
 		foreach($ids as $k => $id) $ids[$k] = (int)$id;
 		$ids = array_filter($ids);
 		

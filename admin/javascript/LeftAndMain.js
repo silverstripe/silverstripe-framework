@@ -18,12 +18,28 @@ jQuery.noConflict();
 			spinner.show();
 		};
 		
+		// apply an select element only when it is ready, ie. when it is rendered into a template
+		// with css applied and got a width value.
+		var applyChosen = function(el){
+			if(el.outerWidth()){
+				el.chosen().addClass("has-chzn");
+				// Copy over title attribute if required
+				if(el.attr('title')) el.siblings('.chzn-container').attr('title', el.attr('title'));
+			} else {
+				setTimeout(function() {applyChosen(el);},500);
+			}
+		};
+		
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
 
 		// global ajax error handlers
 		$.ajaxSetup({
 			error: function(xmlhttp, status, error) {
-				var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.statusText;
+				if(xmlhttp.status < 200 || xmlhttp.status > 399) {
+					var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.statusText;
+				} else {
+					msg = error;
+				}
 				statusMessage(msg, 'bad');
 			}
 		});
@@ -72,7 +88,8 @@ jQuery.noConflict();
 				
 				$('.cms-edit-form').live('reloadeditform', function(e, data) {
 					// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it
-					if(window.History.enabled) {
+					// Causes non-pushState browser to re-request the URL, so ignore for those.
+					if(window.History.enabled && !History.emulated.pushState) {
 						var url = data.xmlhttp.getResponseHeader('X-ControllerURL');
 						if(url) window.history.replaceState({}, '', url);
 					}
@@ -207,12 +224,13 @@ jQuery.noConflict();
 						var layoutClasses = ['east', 'west', 'center', 'north', 'south'];
 						var elemClasses = contentEl.attr('class');
 						
-						var origLayoutClasses = $.grep(
-							elemClasses.split(' '),
-							function(val) { 
-								return ($.inArray(val, layoutClasses) >= 0);
-							}
-						);
+						var origLayoutClasses = [];
+						if(elemClasses) {
+							origLayoutClasses = $.grep(
+								elemClasses.split(' '),
+								function(val) { return ($.inArray(val, layoutClasses) >= 0);}
+							);
+						}
 						
 						newContentEl
 							.removeClass(layoutClasses.join(' '))
@@ -233,12 +251,13 @@ jQuery.noConflict();
 						newContentEl.css('visibility', 'visible');
 						newContentEl.removeClass('loading');
 
-						// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it
-						if(window.History.enabled) {
+						// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it.
+						// Causes non-pushState browser to re-request the URL, so ignore for those.
+						if(window.History.enabled && !History.emulated.pushState) {
 							var url = xhr.getResponseHeader('X-ControllerURL');
-							if(url) window.history.replaceState({}, '', url);
+							if(url) window.History.replaceState({}, '', url);
 						}
-						
+
 						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: newContentEl});
 					},
 					error: function(xhr, status, e) {
@@ -452,8 +471,8 @@ jQuery.noConflict();
 				// Explicitly disable default placeholder if no custom one is defined
 				if(!this.data('placeholder')) this.data('placeholder', ' ');
 
-				// Apply chosen
-				this.chosen().addClass("has-chzn");
+				// Apply Chosen
+				applyChosen(this);
 				
 				this._super();
 			}

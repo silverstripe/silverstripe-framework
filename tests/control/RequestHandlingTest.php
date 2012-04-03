@@ -329,7 +329,7 @@ class RequestHandlingTest_Controller extends Controller implements TestOnly {
 		$this->httpError(404, 'This page does not exist.');
 	}
 
-	public function getViewer(){
+	public function getViewer($action) {
 		return new SSViewer('BlankPage');
 	}
 }
@@ -384,7 +384,7 @@ class RequestHandlingTest_FormActionController extends Controller {
 		return 'formactionInAllowedActions';
 	}
 
-	public function getViewer(){
+	public function getViewer($action = null) {
 		return new SSViewer('BlankPage');
 	}
 

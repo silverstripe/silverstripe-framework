@@ -207,16 +207,16 @@
 			onclick: function(e) {
 				// Only catch left clicks, in order to allow opening in tabs.
 				// Ignore external links, fallback to standard link behaviour
-				if(e.which > 1 || this.is(':external')) return;
+				var isExternal = $.path.isExternal(this.attr('href'));
+				if(e.which > 1 || isExternal) return;
 				e.preventDefault();
 
 				var item = this.getMenuItem();
 
 				var url = this.attr('href');
-				if(this.is(':internal')) url = $('base').attr('href') + url;
+				if(!isExternal) url = $('base').attr('href') + url;
 				
 				var children = item.find('li');
-
 				if(children.length) {
 					children.first().find('a').click();
 				} else {
@@ -261,8 +261,4 @@
 		});
 		
 	});
-
-	// Internal Helper
-	$.expr[':'].internal = function(obj){return obj.href.match(/^mailto\:/) || (obj.hostname == location.hostname);};
-	$.expr[':'].external = function(obj){return !$(obj).is(':internal');};
 }(jQuery));

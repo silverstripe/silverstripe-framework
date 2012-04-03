@@ -26,7 +26,7 @@ SilverStripe core is currently hosted on [github.com/silverstripe](http://github
  * The `installer` project ([github.com/silverstripe/silverstripe-installer](http://github.com/silverstripe/silverstripe-installer))
  * The `sapphire` module ([github.com/silverstripe/sapphire](http://github.com/silverstripe/sapphire))
  * The `cms` module ([github.com/silverstripe/silverstripe-cms](http://github.com/silverstripe/silverstripe-cms))
- * A sample theme called `blackcandy` ([github.com/silverstripe-themes/silverstripe-blackcandy](http://github.com/silverstripe-themes/silverstripe-blackcandy))
+ * A sample theme called `simple` ([github.com/silverstripe-themes/silverstripe-simple](http://github.com/silverstripe-themes/silverstripe-simple))
 
 First, you'll have to decide what you want to do with your project: 
 
@@ -72,7 +72,7 @@ Run the following command to download all core dependencies via [Piston](http://
 	cd my-silverstripe-project/
 	tools/new-project
 
-This will add `sapphire`, `cms` and the `blackcandy` theme to your project.
+This will add `sapphire`, `cms` and the `simple` theme to your project.
 
 As a fallback solution, you can simply download all necessary files without any dependency management through piston.
 This is handy if you have an existing project in version control, and want a one-off snapshot
@@ -146,8 +146,7 @@ Please replace `<username>` below with your github username.
 	cd my-silverstripe-project
 	git clone git@github.com:<username>/sapphire.git sapphire
 	git clone git@github.com:<username>/silverstripe-cms.git cms
-	rm -rf themes
-	git clone git@github.com:<username>/silverstripe-blackcandy.git themes
+	git clone git@github.com:<username>/silverstripe-simple.git themes/simple
 
 Now you need to add the original repository as `upstream`, so you can keep your fork updated later on.
 
@@ -155,7 +154,7 @@ Now you need to add the original repository as `upstream`, so you can keep your 
 	(git remote add upstream git://github.com/silverstripe/silverstripe-installer.git && git fetch upstream)
 	(cd sapphire && git remote add upstream git://github.com/silverstripe/sapphire.git && git fetch upstream)
 	(cd cms && git remote add upstream git://github.com/silverstripe/silverstripe-cms.git && git fetch upstream)
-	(cd themes/blackcandy && git remote add upstream git://github.com/silverstripe-themes/silverstripe-blackcandy.git)
+	(cd themes/simple && git remote add upstream git://github.com/silverstripe-themes/silverstripe-simple.git)
 
 Now that you're set up, please read our ["Collaboration on Git"](../misc/collaboration-on-git) guide,
 as well as our general ["Contributor guidelines"](../misc/contributing).
@@ -175,7 +174,7 @@ You can optionally select a ["release branch"](https://github.com/silverstripe/s
 	git checkout -b 2.4 origin/2.4
 	(cd sapphire && git checkout -b 2.4 origin/2.4)
 	(cd cms && git checkout -b 2.4 origin/2.4)
-	(cd themes/blackcandy && git checkout -b 2.4 origin/2.4)
+	(cd themes/simple && git checkout -b 2.4 origin/2.4)
 	# repeat for all modules in your project...
 
 After creating the local branch, you can simply switch between branches:
@@ -184,7 +183,7 @@ After creating the local branch, you can simply switch between branches:
 	git checkout 2.4
 	(cd sapphire && git checkout 2.4)
 	(cd cms && git checkout 2.4)
-	(cd themes/blackcandy && git checkout 2.4)
+	(cd themes/simple && git checkout 2.4)
 	# repeat for all modules in your project...
 
 To switch back to master:
@@ -193,7 +192,7 @@ To switch back to master:
 	git checkout master
 	(cd sapphire && git checkout master)
 	(cd cms && git checkout master)
-	(cd themes/blackcandy && git checkout master)
+	(cd themes/simple && git checkout master)
 	# repeat for all modules in your project...
 
 You can't switch branches if your working copy has local changes (typically in `mysite/_config.php`).

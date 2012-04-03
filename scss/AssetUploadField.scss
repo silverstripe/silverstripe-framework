@@ -8,6 +8,11 @@
 	@include box-shadow(none);
 }
 
+body.cms.ss-uploadfield-edit-iframe {
+	padding: $grid-x*2;
+	overflow: auto;
+}
+
 .ss-assetuploadfield {
 	h3 {
 		border-bottom: 1px solid $color-shadow-light;
@@ -162,7 +167,6 @@
 			clear: both;
 
 			iframe {
-				margin: $grid-x*2;
 				width: 100%;
 			}
 		}

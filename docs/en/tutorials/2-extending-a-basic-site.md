@@ -87,7 +87,6 @@ We'll start with the *ArticlePage* page type. First we create the model, a class
 		
 	}
 	 
-	?>
 
 
 Here we've created our data object/controller pair, but we haven't actually extended them at all. Don't worry about the
@@ -116,8 +115,6 @@ Let's create the *ArticleHolder* page type.
 	class ArticleHolder_Controller extends Page_Controller {
 		
 	}
-	 
-	?>
 
 
 Here we have done something interesting: the *$allowed_children* field. This is one of a number of static fields we can
@@ -249,7 +246,7 @@ Let's walk through these changes.
 *$dateField* is added only to the DateField in order to change the configuration.
 
 	:::php
-	$dateField->setConfig('showCalendar', true);
+	$dateField->setConfig('showcalendar', true);
 
 Set *showCalendar* to true to have a calendar appear underneath the Date field when you click on the field. 
 
@@ -423,44 +420,6 @@ This will change the icons for the pages in the CMS.
 > e.g. when you specify **news** above, the filename will be **news-file.gif**.
 
 ![](_images/icons2.jpg)
-
-### Allowing comments on news articles
-
-A handy feature built into SilverStripe is the ability for guests to your site to leave comments on pages. We can turn
-this on for an article simply by ticking the box in the behaviour tab of a page in the CMS. Enable this for all your
-*ArticlePage*s.
-
-![](_images/comments.jpg)
-
-We then need to include *$PageComments* in our template, which will insert the comment form as well as all comments left
-on the page.
-
-**themes/tutorial/templates/Layout/ArticlePage.ss**
-
-	:::html
-	...
-	<div class="newsDetails">
-		Posted on $Date.Nice by $Author
-	</div>
-	$PageComments
-	...
-
-
-You should also prepare the *Page* template in the same manner, so comments can be enabled at a later point on any page.
-
-![](_images/news-comments.jpg)
-
-It would be nice to have comments on for all articles by default. We can do this with the *$defaults* array. Add this to
-the *ArticlePage* class:
-
-	:::php
-	static $defaults = array(
-		'ProvideComments' => true
-	);
-
-
-You can set defaults for any of the fields in your data object. *ProvideComments* is defined in *SiteTree*, so it is
-part of our *ArticlePage* data object.
 
 ## Showing the latest news on the homepage
 

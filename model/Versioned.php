@@ -132,7 +132,7 @@ class Versioned extends DataExtension {
 	 * Augment the the SQLQuery that is created by the DataQuery
 	 * @todo Should this all go into VersionedDataQuery?
 	 */
-	function augmentSQL(SQLQuery &$query, DataQuery &$dataQuery) {
+	function augmentSQL(SQLQuery &$query, DataQuery &$dataQuery = null) {
 	    $baseTable = ClassInfo::baseDataClass($dataQuery->dataClass());
 	    
 		switch($dataQuery->getQueryParam('Versioned.mode')) {
@@ -1006,7 +1006,7 @@ class Versioned extends DataExtension {
 	}
 
 	/**
-	 * Return the equivalent of a DataObject::get() call, querying the latest
+	 * Return the equivalent of a DataList::create() call, querying the latest
 	 * version of each page stored in the (class)_versions tables.
 	 *
 	 * In particular, this will query deleted records as well as active ones.

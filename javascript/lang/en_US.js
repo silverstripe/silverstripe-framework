@@ -11,6 +11,7 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 		'UNIQUEFIELD.CANNOTLEAVEEMPTY': 'This field cannot be left empty',
 		'RESTRICTEDTEXTFIELD.CHARCANTBEUSED': "The character '%s' cannot be used in this field",
 		'UPDATEURL.CONFIRM': 'Would you like me to change the URL to:\n\n%s/\n\nClick Ok to change the URL, click Cancel to leave it as:\n\n%s',
+		'UPDATEURL.CONFIRMURLCHANGED':'The URL has been changed to\n"%s"',
 		'FILEIFRAMEFIELD.DELETEFILE': 'Delete File',
 		'FILEIFRAMEFIELD.UNATTACHFILE': 'Un-Attach File',
 		'FILEIFRAMEFIELD.DELETEIMAGE': 'Delete Image',
