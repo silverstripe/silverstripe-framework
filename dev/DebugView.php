@@ -31,11 +31,11 @@ class DebugView extends Object {
 			'class' => 'notice'
 		),
 		E_DEPRECATED => array(
-			'title' => 'Deprecation',
+			'title' => 'Deprecated',
 			'class' => 'notice'
 		),
 		E_USER_DEPRECATED => array(
-			'title' => 'Deprecation',
+			'title' => 'User Deprecated',
 			'class' => 'notice'
 		),
 		E_CORE_ERROR => array(
