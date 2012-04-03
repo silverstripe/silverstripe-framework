@@ -1,18 +1,17 @@
-body {
-	text-align: center;
+.header {
+	padding-bottom:10px;
 }
 
-#Container .typography p {
-	margin-left: 0;
-	margin-right: 0;
+.header p {
+	color:#fff;
 }
 
-#Container * {
-	text-align: left;
+.brand {
+	float:none;
 }
 
-#Header p {
-	margin-left: 30px;
+#Navigation {
+	display:none;
 }
 
 ul#Themes{
@@ -20,6 +19,7 @@ ul#Themes{
 	margin: 0 5px 20px 5px;
 	float: left;
 	width: 320px;
+	padding:0;
 }
 	ul#Themes li {
 		clear: both;
@@ -35,7 +35,7 @@ ul#Themes{
 		margin: -2px 5px 0 15px;
 	}
 
-h4.sectionHeading {
+h1.sectionHeading {
 	margin-top: 20px;
 }
 
@@ -45,10 +45,11 @@ h4.sectionHeading {
 	border: 1px #ff8e8e solid;
 	color: #f03838;
 }
-	#Container p.error { color: #f03838;}
+	.main p.error { color: #f03838;}
 .warning {
 	padding: 0.5em;
 	background-color: #fcf8f2;
+	border-radius:4px;
 	border: 1px #ffc28b solid;
 	color: #cb6a1c;
 }
@@ -81,9 +82,9 @@ p.error a:hover {
 }
 span.middleColumn {
 	width: 297px;
-	margin-right: 0;
-	margin-top: 5px;
+	margin:0;
 	padding: 4px;
+	float:right;
 }
 input.text, textarea, select {
 	padding: 2px;
@@ -99,25 +100,19 @@ input.text, textarea, select {
 #stats {
 	margin-right: 5px;
 }
-table.testResults {
-	border-collapse: collapse;
-	width: 100%;
-	margin: 10px 0;
-}
-#Layout h4 {
-	font-size: 2em;
+
+.main h2 {
 	margin: 36px 0 18px 0;
 	font-weight: bold;
-	line-height: 1.8;
 	clear: left;
-	border-top: 2px solid #888;
 	text-indent: 5px;
 	width: 100%;
 	overflow: hidden;
+	border-top:1px solid #E5E5E5;
 }
-	#Layout h4 span {
+	.main h2 span {
 		float: right;
-		font-size: 10px;
+		font-size: 0.8em;
 		padding: 10px 10px 0 0;
 		font-weight: normal;
 		color: #888;
@@ -127,7 +122,9 @@ table.testResults {
  * Requirements and test results
  * ------------------------------------------------ */
 table.testResults {
-	margin-top: 0;
+	border-collapse: collapse;
+	width: 100%;
+	margin: -1px 0px 10px 0;
 }
 	table.testResults td {
 		border: 1px #CCC solid;
@@ -160,7 +157,8 @@ h5.requirement {
 	padding: 10px;
 	background: #f1f1f1;
 	border: 1px solid #ccc;
-	border-width: 0 1px 1px 1px;
+	border-radius:4px 4px 0 0;
+	border-width: 1px;
 	margin: 0;
 	overflow: hidden;
 }	
@@ -179,7 +177,7 @@ h5.requirement {
 	h5.requirement a {
 		font-size: 10px;
 		float: right;
-		line-height: 19px;
+		line-height: 13px;
 		margin: 0 0 0 30px;
 		color: #666;
 		text-decoration: none;
@@ -198,9 +196,9 @@ h5.requirement {
 	margin-bottom: 0;
 }
 
-#Layout .helpText {
+.main .helpText {
 	float: right;
-	width: 370px;
+	width: 350px;
 	padding-right: 10px;
 }
 
@@ -210,7 +208,7 @@ h5.requirement {
 
 .fields {
 	float: left;
-	width: 330px;
+	width: 450px;
 }
 
 #devHelp,
@@ -218,16 +216,23 @@ h5.requirement {
 	height: 18em;
 }
 
-#Layout input.action {
-	text-align: center;
+.main .action input{
+	cursor:pointer;
+	text-align:center;
+	color:#fff;
+	background-color:#EF7F24;
+	border:none;
+	border-radius:4px;
 	font-size: 13px;
 	width: 220px;
 	font-weight: bold;
 	margin: 5px 0;
+	padding:5px;
+	font-family:"HelveticaNeueLTPro-Bd", "Helvetica Neue LT Pro Bold", "HelveticaNeueBold", "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue LT Pro", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 #use_environment_field {
-	margin-bottom: 25px;
+	margin: 20px 0 10px;
 }
 
 #use_environment_field input {
@@ -236,7 +241,7 @@ h5.requirement {
 }
 
 .dbfields {
-	margin: 10px;
+	margin: 10px 10px 10px 0;
 }
 
 #database_credentials {
@@ -247,26 +252,60 @@ h5.requirement {
 #database_selection {
 	overflow: hidden;
 	margin: 0;
+	padding-left:5px;
 }
 	#database_selection li {
 		margin-left: 0;
 		padding-left: 0;
+		list-style-type:none;
 	}
 		#database_selection li input {
 			margin-right: 5px;
+			border-radius:4px;
+			background:#ededed;
 		}
-		#database_selection li label {
-			display: inline;
+
+		#database_selection li input:focus{
+			outline:none; background-color:#fff;
 		}
+
+		#database_selection li .field label {
+			float:left;
+			margin-top:15px;
+		}
+
+#AdminAccount input {
+	border-radius:4px;
+	background:#ededed;
+}
+
+#AdminAccount select {
+	border-radius:4px;
+	background:none;
+	margin-top:5px;
+}
+
+#AdminAccount select:focus{
+	outline:none;
+}
+
+#AdminAccount input:focus{
+	outline:none; background-color:#fff;
+}
+
+#AdminAccount .field label {
+	float:left;
+	margin-top:15px;
+}
 
 .databaseError {
 	clear:both;
 	overflow: hidden;
 	width: 290px;
 	line-height: 1.2;
-	margin: 10px;
-	margin-bottom: 0;
+	margin: 10px 0 20px;
 	display: none;
+	border-radius:4px;
 }
 
 	.databaseError ul {
@@ -277,6 +316,21 @@ h5.requirement {
 		padding-left: 0;
 	}
 
+input#install_button {
+	cursor:pointer;
+	text-align:center;
+	color:#fff;
+	background-color:#359318;
+	border:none;
+	border-radius:4px;
+	font-size: 13px;
+	width: 220px;
+	font-weight: bold;
+	margin: 5px 0;
+	padding:5px;
+	font-family:"HelveticaNeueLTPro-Bd", "Helvetica Neue LT Pro Bold", "HelveticaNeueBold", "HelveticaNeue-Bold", "Helvetica Neue Bold", "Helvetica Neue LT Pro", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 .goodInstall {
 	padding: 0.5em;
 	background-color: #e2fee1;
@@ -286,7 +340,7 @@ h5.requirement {
 	line-height: 18px;
 	padding: 10px;
 }
-	#Layout p.goodInstall {
+	.main p.goodInstall {
 		color: #359318;
 	}
 	.goodInstall a {

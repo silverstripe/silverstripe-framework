@@ -5,201 +5,204 @@
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 		<script type="text/javascript" src="sapphire/thirdparty/jquery/jquery.js"></script>
 		<script type="text/javascript" src="sapphire/dev/install/install.js"></script>
-		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/layout.css">
-		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/typography.css">
-		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/form.css">
+		<link rel="stylesheet" type="text/css" href="themes/simple/css/layout.css">
+		<link rel="stylesheet" type="text/css" href="themes/simple/css/typography.css">
+		<link rel="stylesheet" type="text/css" href="themes/simple/css/form.css">
 		<link rel="stylesheet" type="text/css" href="sapphire/dev/install/install.css">
 		<link rel="shortcut icon" href="favicon.ico">
 	</head>
-	<body>
-		<div id="BgContainer">
-			<div id="Container">
-				<div id="Header">
-					<h1>SilverStripe CMS / Framework Installation</h1>
-					<p>Version <?php echo $silverstripe_version; ?></p>
+	<body class="page no-sidebar">
+		<div class="header">
+			<div class="inner">
+				<div class="brand">
+					<h1>SilverStripe</h1>
 				</div>
-				
-				<div id="Navigation">&nbsp;</div>
-				<div class="clear"><!-- --></div>
-				
-				<div id="Layout">
-					<div class="typography">
-						<p>Thanks for choosing to use SilverStripe! Please follow the instructions below and you should be up in running in no time.<br>
-							If you get stuck, head over to the <a href="http://silverstripe.org/installing-silverstripe" target="_blank">installation forum</a>, or check out our <a href="http://doc.silverstripe.org/doku.php?id=suggested-web-hosts" target="_blank">list of suggested web hosts</a> known to work with SilverStripe.
-						</p>
-			
-						<form action="install.php" method="post">
-							<?php if(isset($hasErrorOtherThanDatabase)) { ?>
-								<p class="error">
-									You aren't currently able to install the software.  Please <a href="#requirements">see below</a> for details.<br>
+				<p>Version <?php echo $silverstripe_version; ?></p>
+			</div>	
+		</div>
+		
+		<div id="Navigation">&nbsp;</div>
+		<div class="clear"><!-- --></div>
+		<div class="main">
+			<div class="inner">
+				<div class="content-container">
+					<h1>CMS/Framework Installation</h1>
+					<p>Thanks for choosing to use SilverStripe! Please follow the instructions below and you should be up in running in no time.<br>
+						If you get stuck, head over to the <a href="http://silverstripe.org/installing-silverstripe" target="_blank">installation forum</a>, or check out our <a href="http://doc.silverstripe.org/doku.php?id=suggested-web-hosts" target="_blank">list of suggested web hosts</a> known to work with SilverStripe.
+					</p>
+		
+					<form action="install.php" method="post">
+						<?php if(isset($hasErrorOtherThanDatabase)) { ?>
+							<p class="error">
+								You aren't currently able to install the software.  Please <a href="#requirements">see below</a> for details.<br>
+								If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
+							</p>
+							<?php if (isset($phpIniLocation)) { ?>  
+								<p>Your php.ini file is located at <?php echo $phpIniLocation; ?></p>
+							<?php } ?>
+						<?php } else { ?>
+							<?php if($alreadyInstalled) { ?>
+								<div class="warning">
+									<p><strong>Note:</strong> SilverStripe is already installed here.<br>
+									If you wish to reinstall SilverStripe, please delete the <strong>mysite/_config.php</strong> file first.</p>
+								</div>
+							<?php } else if($req->hasWarnings()) { ?>
+								<p class="warning">
+									There are some issues that we recommend you look at before installing, however, you are still able to install the software.
+									Please see below for details.<br>
 									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
 								</p>
-								<?php if (isset($phpIniLocation)) { ?>  
-									<p>Your php.ini file is located at <?php echo $phpIniLocation; ?></p>
-								<?php } ?>
-							<?php } else { ?>
-								<?php if($alreadyInstalled) { ?>
-									<div class="warning">
-										<p><strong>Note:</strong> SilverStripe is already installed here.<br>
-										If you wish to reinstall SilverStripe, please delete the <strong>mysite/_config.php</strong> file first.</p>
-									</div>
-								<?php } else if($req->hasWarnings()) { ?>
-									<p class="warning">
-										There are some issues that we recommend you look at before installing, however, you are still able to install the software.
-										Please see below for details.<br>
-										If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
-									</p>
-								<?php } else if(!$dbReq->hasErrors() && !$adminReq->hasErrors()) { ?>
-									<p class="goodInstall"><em class="inlineBarText">You're ready to install! Please confirm the configuration options below.</em> <a href="#install">Install SilverStripe</a></p>
-								<?php } ?>
-								
-								<?php if($dbReq->hasErrors()) { ?>
-									<p class="error">
-										The database details don't appear to be correct.  Please <a href="#database_credentials">review and correct</a> before installing.
-									</p>
-								<?php } ?>
-								
-								<?php if($adminReq->hasErrors()) { ?>
-									<p class="error">
-										Please <a href="#AdminAccount">enter an email address and password</a> for the default administrator account before installing.
-									</p>
-								<?php } ?>
+							<?php } else if(!$dbReq->hasErrors() && !$adminReq->hasErrors()) { ?>
+								<p class="goodInstall"><em class="inlineBarText">You're ready to install! Please confirm the configuration options below.</em> <a href="#install">Install SilverStripe</a></p>
 							<?php } ?>
 							
-							
-							<h4 id="requirements"><em class="inlineBarText">Requirements</em> <span>Step: 1 of 5</span></h4>
-							<?php $req->showTable(); ?>
-							<?php $dbReq->showTable(); ?>
-							
-							<p>
-								Read more about our <a href="http://doc.silverstripe.org/doku.php?id=server-requirements" target="_blank">server requirements</a>.
-							</p>
-							
-							<div class="action">
-								<input type="submit" class="action" value="Re-check requirements">
-							</div>
-							
-							<h4 class="sectionHeading"><em class="inlineBarText">Database</em> <span>Step: 2 of 5</span></h4>
-							<div id="database_credentials" class="section">
-								
-								<?php $dbReq->showTable("Database Configuration"); ?>
-								
-								<p id="dbHelp" class="helpText">
-									SilverStripe stores its content in a relational SQL database. Please provide the username and password to connect to the server here.
-									If this account has permission to create databases, then we will create the database for you; otherwise, you must give the name of a
-									database that already exists.<br><br>
-									<strong>Other databases:</strong><br>
-									Databases in the list that are greyed out cannot currently be used. Click on them for more information and possible remedies.
+							<?php if($dbReq->hasErrors()) { ?>
+								<p class="error">
+									The database details don't appear to be correct.  Please <a href="#database_credentials">review and correct</a> before installing.
 								</p>
-								<div class="fields">							
-									<div class="field">
-										<ul id="database_selection">
-											<?php
-											foreach($databaseClasses as $class => $details) {
-												$checked = ($databaseConfig['type'] == $class || $type == $class) ? ' checked="checked"' : '';
-												$disabled = $help = '';
-												if($usingEnv) {
-													// All are disabled by default when environment is used
-													$disabled = 'disabled="disabled"';
-													// If SS_DATABASE_CLASS is specified, check the database in the list
-													if(defined('SS_DATABASE_CLASS') && SS_DATABASE_CLASS == $class) {
-														$checked = ' checked="checked"';
-													}
-												} else {
-													$disabled = !$details['supported'] || !$details['hasModule'] ? 'notavailable="true"' : '';
-													if ($disabled) {
-														if (!$details['supported'] && !$details['hasModule']) {
-															$help = 'PHP does not have the required extension, and SilverStripe does not have the correct module installed';
-															$helpText = '<li style="width:auto">'.$details['missingExtensionText'].'</li>';
-															$helpText .= '<li style="width:auto">'.$details['missingModuleText'].'</li>';
-														} else if ($details['supported'] && !$details['hasModule']) {
-															$help = 'PHP has the required extension, but SilverStripe is missing the module';
-															$helpText = '<li style="width:auto">'.$details['missingModuleText'].'</li>';
-														} else if (!$details['supported'] && $details['hasModule']) {
-															$help = 'SilverStripe has the module installed, but PHP is missing the required extension';
-															$helpText = '<li style="width:auto">'.$details['missingExtensionText'].'</li>';
-														}
-														$help .= "<ul>$helpText</ul>";
-													}
+							<?php } ?>
+							
+							<?php if($adminReq->hasErrors()) { ?>
+								<p class="error">
+									Please <a href="#AdminAccount">enter an email address and password</a> for the default administrator account before installing.
+								</p>
+							<?php } ?>
+						<?php } ?>
+						
+						
+						<h2 id="requirements"><em class="inlineBarText">Requirements</em> <span>Step: 1 of 5</span></h2>
+						<?php $req->showTable(); ?>
+						<?php $dbReq->showTable(); ?>
+						
+						<p>
+							Read more about our <a href="http://doc.silverstripe.org/doku.php?id=server-requirements" target="_blank">server requirements</a>.
+						</p>
+						
+						<div class="action">
+							<input type="submit" class="action" value="Re-check requirements?">
+						</div>
+						
+						<h2 class="sectionHeading"><em class="inlineBarText">Database</em> <span>Step: 2 of 5</span></h2>
+						<div id="database_credentials" class="section">
+							
+							<?php $dbReq->showTable("Database Configuration"); ?>
+							
+							<p id="dbHelp" class="helpText">
+								SilverStripe stores its content in a relational SQL database. Please provide the username and password to connect to the server here.
+								If this account has permission to create databases, then we will create the database for you; otherwise, you must give the name of a
+								database that already exists.<br><br>
+								<strong>Other databases:</strong><br>
+								Databases in the list that are greyed out cannot currently be used. Click on them for more information and possible remedies.
+							</p>
+							<div class="fields">							
+								<div class="field">
+									<ul id="database_selection">
+										<?php
+										foreach($databaseClasses as $class => $details) {
+											$checked = ($databaseConfig['type'] == $class || $type == $class) ? ' checked="checked"' : '';
+											$disabled = $help = '';
+											if($usingEnv) {
+												// All are disabled by default when environment is used
+												$disabled = 'disabled="disabled"';
+												// If SS_DATABASE_CLASS is specified, check the database in the list
+												if(defined('SS_DATABASE_CLASS') && SS_DATABASE_CLASS == $class) {
+													$checked = ' checked="checked"';
 												}
-												echo "<li>";
-												echo "<input id=\"$class\" class=\"databaseClass\" type=\"radio\" name=\"db[type]\" value=\"$class\"$checked $disabled>";
-												echo "<label class=\"left\" ".($help || $disabled ? 'style="font-weight:normal;color:grey" ' : 'style="color:green"')."for=\"$class\">{$details['title']}</label>";
-												if ($help) {
-													echo '<div class="error databaseError">'.$help.'</div>';
+											} else {
+												$disabled = !$details['supported'] || !$details['hasModule'] ? 'notavailable="true"' : '';
+												if ($disabled) {
+													if (!$details['supported'] && !$details['hasModule']) {
+														$help = 'PHP does not have the required extension, and SilverStripe does not have the correct module installed';
+														$helpText = '<li style="width:auto">'.$details['missingExtensionText'].'</li>';
+														$helpText .= '<li style="width:auto">'.$details['missingModuleText'].'</li>';
+													} else if ($details['supported'] && !$details['hasModule']) {
+														$help = 'PHP has the required extension, but SilverStripe is missing the module';
+														$helpText = '<li style="width:auto">'.$details['missingModuleText'].'</li>';
+													} else if (!$details['supported'] && $details['hasModule']) {
+														$help = 'SilverStripe has the module installed, but PHP is missing the required extension';
+														$helpText = '<li style="width:auto">'.$details['missingExtensionText'].'</li>';
+													}
+													$help .= "<ul>$helpText</ul>";
 												}
-
-												// generate db-specific config fields
-												echo '<div class="dbfields">';
-												if(isset($details['fields'])) foreach($details['fields'] as $fieldName => $fieldSpec) {
-													$fieldTitle = $fieldSpec['title'];
-													$fieldType = ($fieldName == 'password') ? 'password' : 'text';
-
-													// values
-													$defaultValue = (isset($fieldSpec['default'])) ? $fieldSpec['default'] : null;
-													if($usingEnv && isset($fieldSpec['envVar']) && defined($fieldSpec['envVar'])) {
-														$value = constant($fieldSpec['envVar']);
-													} else {
-														$value = (isset($databaseConfig[$fieldName])) ? $databaseConfig[$fieldName] : $defaultValue;
-													}
-													
-													// attributes
-													$attrs = array(
-														'id' => "db_{$class}_{$fieldName}",
-														'class' => 'text',
-														'type' => $fieldType,
-														'name' => "db[$class][$fieldName]",
-														'value' => $value,
-													);
-													if($usingEnv && isset($fieldSpec['envVar']) && defined($fieldSpec['envVar'])) {
-														$attrs['disabled'] = 'disabled';
-													}
-													if(isset($fieldSpec['envVar'])) {
-														$attrs['class'] .= ' configured-by-env';
-													}
-													$attrHTML = '';
-													foreach($attrs as $attrName => $attrValue) $attrHTML .= "$attrName=\"$attrValue\" ";
-													if(isset($fieldSpec['attributes'])) $attrs = array_merge($attrs, $fieldSpec['attributes']);
-													
-													// html
-													echo "<div class=\"field\">";
-													echo "<label for=\"db_{$class}_$fieldName\">$fieldTitle:</label>";
-													echo "<span class=\"middleColumn\">";
-													echo "<input $attrHTML>";
-													echo "</span>";
-													echo "</div>";
-												}
-												echo '</div>';
-												
-												echo "</li>";
 											}
-											?>
-										</ul>
-										
-										<?php if($envFileExists) { ?>
-										<div id="use_environment_field" class="field">
-											<input id="use_environment" type="checkbox" name="useEnv" <?php if($usingEnv) echo "checked=\"checked\"" ?>>
-											<label for="use_environment">Use _ss_environment file for configuration (<a href="http://doc.silverstripe.org/doku.php?id=environment-management" target="_blank">?</a>)</label>
-										</div>
-										<?php } ?>
-										
-									</div>
+											echo "<li>";
+											echo "<input id=\"$class\" class=\"databaseClass\" type=\"radio\" name=\"db[type]\" value=\"$class\"$checked $disabled>";
+											echo "<label class=\"left\" ".($help || $disabled ? 'style="font-weight:normal;color:grey" ' : 'style="color:green"')."for=\"$class\">{$details['title']}</label>";
+											if ($help) {
+												echo '<div class="error databaseError">'.$help.'</div>';
+											}
+
+											// generate db-specific config fields
+											echo '<div class="dbfields">';
+											if(isset($details['fields'])) foreach($details['fields'] as $fieldName => $fieldSpec) {
+												$fieldTitle = $fieldSpec['title'];
+												$fieldType = ($fieldName == 'password') ? 'password' : 'text';
+
+												// values
+												$defaultValue = (isset($fieldSpec['default'])) ? $fieldSpec['default'] : null;
+												if($usingEnv && isset($fieldSpec['envVar']) && defined($fieldSpec['envVar'])) {
+													$value = constant($fieldSpec['envVar']);
+												} else {
+													$value = (isset($databaseConfig[$fieldName])) ? $databaseConfig[$fieldName] : $defaultValue;
+												}
+												
+												// attributes
+												$attrs = array(
+													'id' => "db_{$class}_{$fieldName}",
+													'class' => 'text',
+													'type' => $fieldType,
+													'name' => "db[$class][$fieldName]",
+													'value' => $value,
+												);
+												if($usingEnv && isset($fieldSpec['envVar']) && defined($fieldSpec['envVar'])) {
+													$attrs['disabled'] = 'disabled';
+												}
+												if(isset($fieldSpec['envVar'])) {
+													$attrs['class'] .= ' configured-by-env';
+												}
+												$attrHTML = '';
+												foreach($attrs as $attrName => $attrValue) $attrHTML .= "$attrName=\"$attrValue\" ";
+												if(isset($fieldSpec['attributes'])) $attrs = array_merge($attrs, $fieldSpec['attributes']);
+												
+												// html
+												echo "<div class=\"field\">";
+												echo "<label for=\"db_{$class}_$fieldName\">$fieldTitle:</label>";
+												echo "<span class=\"middleColumn\">";
+												echo "<input $attrHTML>";
+												echo "</span>";
+												echo "</div>";
+											}
+											echo '</div>';
+											
+											echo "</li>";
+										}
+										?>
+									</ul>
 									
-									<div class="action">
-										<input type="submit" class="action" value="Re-check requirements">
+									<?php if($envFileExists) { ?>
+									<div id="use_environment_field" class="field">
+										<input id="use_environment" type="checkbox" name="useEnv" <?php if($usingEnv) echo "checked=\"checked\"" ?>>
+										<label for="use_environment">Use _ss_environment file for configuration (<a href="http://doc.silverstripe.org/doku.php?id=environment-management" target="_blank">?</a>)</label>
 									</div>
+									<?php } ?>
+									
+								</div>
+								
+								<div class="action">
+									<input type="submit" class="action" value="Re-check requirements?">
 								</div>
 							</div>
-							
-							<div class="clear"><!-- --></div>
-							
-							<h4><em class="inlineBarText">CMS Admin Account</em> <span>Step: 3 of 5</span></h4>
+						</div>
 						
-							<div id="AdminAccount" class="section">
-								
-								<div class="fieldGroup">
-									<p class="helpText">We will set up the first administrator account for you automatically. You can change these details later in the "Security" section within the CMS.</p>
-									
+						<div class="clear"><!-- --></div>
+						
+						<h2><em class="inlineBarText">CMS Admin Account</em> <span>Step: 3 of 5</span></h2>
+					
+						<div id="AdminAccount" class="section">
+							
+							<div class="fieldGroup">
+								<p class="helpText">We will set up the first administrator account for you automatically. You can change these details later in the "Security" section within the CMS.</p>
+								<div class="fields">
 									<div class="field">	
 										<label for="admin_username">Email:</label>
 										<span class="middleColumn">
@@ -213,17 +216,18 @@
 											<input type="password" class="text configured-by-env" name="admin[password]" id="admin_password" value="<?php echo $adminConfig['password']; ?>" <?php if($usingEnv && defined('SS_DEFAULT_ADMIN_PASSWORD')) echo 'disabled="disabled"' ?>>
 										</span>
 									</div>
-								</div>
-								
-								<div class="fieldGroup">
-									<p class="helpText">
-										"Default language" determines the default locale settings
-										(for dates, currencies, etc.), as well as the default language
-										of the CMS interface. This can be changed for each user.
-										<br><br>
-										Warning: The CMS interface may be missing translations in certain locales.
-									</p>
-									
+								</div>	
+							</div>
+							
+							<div class="fieldGroup">
+								<p class="helpText">
+									"Default language" determines the default locale settings
+									(for dates, currencies, etc.), as well as the default language
+									of the CMS interface. This can be changed for each user.
+									<br><br>
+									Warning: The CMS interface may be missing translations in certain locales.
+								</p>
+								<div class="fields">	
 									<div class="field">
 										<label for="locale">Default language:</label>
 										<span class="middleColumn">
@@ -240,54 +244,56 @@
 									</div>
 								</div>
 							</div>
+						</div>
+						
+						<h2><em class="inlineBarText">Theme</em> <span>Step: 4 of 5</span></h2>
+						<p class="helpText">You can change the theme or <a href="http://silverstripe.org/themes">download</a> another from the SilverStripe website after installation.</p>
+						<div class="fields">
+							<ul id="Themes">
+								<li><input type="radio" name="template" value="simple" id="Simple" <?php if(!isset($_POST['template']) || $_POST['template'] == 'Simple') {?>checked="checked"<?php }?>><label for="Simple"><a href="http://silverstripe.org/Simple/">Simple</a> - our default theme ready to use.</label></li>
+								<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" <?php if(isset($_POST['template']) && $_POST['template'] == 'tutorial') {?>checked="checked"<?php }?>><label for="EmptyTemplate">Empty template - ready to begin the <a href="http://doc.silverstripe.org/doku.php?id=tutorials" target="_blank">tutorial</a>.</label></li>
+							</ul>
+						</div>
+						
+						<h2 id="install"><em class="inlineBarText">Confirm Install</em> <span>Step: 5 of 5</span></h2>
+						
+						<?php if(isset($hasErrorOtherThanDatabase)) { ?>
+							<p class="error">
+								You aren't currently able to install the software.  Please <a href="#requirements">see above</a> for details.<br>
+								If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
+							</p>
+						<?php } else { ?>
+							<p id="stats-container">
+								<input type="checkbox" id="stats" name="stats" checked="checked">
+									<label for="stats">Send information about my webserver to silverstripe.org<br />
+										<small>(anonymous version information, used for statistical purposes)</small>
+								</label><p>
 							
-							<h4><em class="inlineBarText">Theme</em> <span>Step: 4 of 5</span></h4>
-							<p class="helpText">You can change the theme or <a href="http://silverstripe.org/themes">download</a> another from the SilverStripe website after installation.</p>
-							<div class="field">
-								<ul id="Themes">
-									<li><input type="radio" name="template" value="blackcandy" id="BlackCandy" <?php if(!isset($_POST['template']) || $_POST['template'] == 'blackcandy') {?>checked="checked"<?php }?>><label for="BlackCandy"><a href="http://silverstripe.org/blackcandy/">BlackCandy</a> - our default theme ready to use.</label></li>
-									<li><input type="radio" name="template" value="tutorial" id="EmptyTemplate" <?php if(isset($_POST['template']) && $_POST['template'] == 'tutorial') {?>checked="checked"<?php }?>><label for="EmptyTemplate">Empty template - ready to begin the <a href="http://doc.silverstripe.org/doku.php?id=tutorials" target="_blank">tutorial</a>.</label></li>
-								</ul>
-							</div>
-							
-							<h4 id="install"><em class="inlineBarText">Confirm Install</em> <span>Step: 5 of 5</span></h4>
-							
-							<?php if(isset($hasErrorOtherThanDatabase)) { ?>
-								<p class="error">
-									You aren't currently able to install the software.  Please <a href="#requirements">see above</a> for details.<br>
-									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
-								</p>
-							<?php } else { ?>
-								<p id="stats-container">
-									<input type="checkbox" id="stats" name="stats" checked="checked">
-										<label for="stats">Send information about my webserver to silverstripe.org<br />
-											<small>(anonymous version information, used for statistical purposes)</small>
-									</label><p>
+							<p>
+								<?php if($alreadyInstalled) { ?>
+									<input id="install_button" type="submit" disabled="disabled" class="action" name="go" value="Install SilverStripe">
+								<?php } else { ?>
+									<input id="install_button" type="submit" class="action" name="go" value="Install SilverStripe">
+								<?php } ?>
 								
-								<p>
-									<?php if($alreadyInstalled) { ?>
-										<input id="install_button" type="submit" disabled="disabled" class="action" name="go" value="Install SilverStripe">
-									<?php } else { ?>
-										<input id="install_button" type="submit" class="action" name="go" value="Install SilverStripe">
-									<?php } ?>
-									
-									<span id="saving_top" style="display: none">
-										&nbsp;
-										<img src="sapphire/images/network-save.gif">
-										(this will take a minute or so)
-									</span>
-								</p>
-							<?php } ?>
-						</form>
-					</div>
+								<span id="saving_top" style="display: none">
+									&nbsp;
+									<img src="sapphire/images/network-save.gif">
+									(this will take a minute or so)
+								</span>
+							</p>
+						<?php } ?>
+					</form>
 				</div>
-				<div class="clear"><!-- --></div>
 			</div>
+		</div>	
+		<div class="clear"><!-- --></div>
 			
-			<div id="Footer">
+		<div class="footer">
+			<div class="inner">
 				<div class="footerTop"><!-- --></div>
 				<p><a href="http://silverstripe.org">SilverStripe Open Source CMS / Framework</a> | Copyright &copy; <?php echo date('Y'); ?> SilverStripe Limited</p>
-			</div>
+			</div>	
 		</div>
 	</body>
 </html>
