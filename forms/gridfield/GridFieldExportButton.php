@@ -110,6 +110,11 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 		}
 
 		$items = $gridField->getList();
+		foreach($gridField->getConfig()->getComponents() as $component){
+			if($component instanceof GridFieldFilterHeader || $component instanceof GridFieldSortableHeader) {
+				$items = $component->getManipulatedData($gridField, $items);
+			}
+		}
 		foreach($items as $item) {
 			$columnData = array();
 			foreach($csvColumns as $columnSource => $columnHeader) {
