@@ -398,9 +398,12 @@ body.cms { overflow: hidden; }
 
 /** -------------------------------------------- Member Profile -------------------------------------------- */
 form.member-profile-form { padding: 0 16px 0 0; }
+form.member-profile-form .ui-tabs-nav { margin-right: 40px !important; float: right; }
+form.member-profile-form .ui-tabs-nav .ui-state-active, form.member-profile-form .ui-tabs-nav .ui-widget-content .ui-state-active, form.member-profile-form .ui-tabs-nav .ui-widget-header .ui-state-active { padding-bottom: 1px; margin-bottom: -1px; }
 form.member-profile-form .ui-tabs-nav .ui-state-default, form.member-profile-form .ui-tabs-nav .ui-widget-content .ui-state-default, form.member-profile-form .ui-tabs-nav .ui-widget-header .ui-state-default { border-top: none; }
-form.member-profile-form #Root_Permissions { clear: both; padding: 16px; }
-form.member-profile-form #Root_Main { clear: both; }
+form.member-profile-form .ui-tabs-nav .ui-state-default a, form.member-profile-form .ui-tabs-nav .ui-widget-content .ui-state-default a, form.member-profile-form .ui-tabs-nav .ui-widget-header .ui-state-default a { padding: 12px 20px 11px; }
+form.member-profile-form #Root_Permissions { clear: both; border-top: 1px solid #a6a6a6; }
+form.member-profile-form #Root_Main { clear: both; border-top: 1px solid #a6a6a6; padding-top: 16px; }
 form.member-profile-form #Root_Main .cms-help-toggle { text-indent: -9999em; display: inline-block; width: 20px; background: url(../images/question.png) no-repeat 0px 0px; }
 form.member-profile-form #FavouritePageID { margin-top: 8px; }
 form.member-profile-form #CsvFile .middleColumn { background: none !important; }
@@ -486,6 +489,10 @@ form.member-profile-form .ui-tabs-nav .ui-corner-all, form.member-profile-form .
 .ui-dialog.loading { background-image: url(../images/spinner.gif); background-position: 50% 50%; background-repeat: no-repeat; }
 
 body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; }
+
+.ui-dialog.edit-profile-popup .ui-dialog-titlebar { height: 0px; padding: 0 4px 0 16px; }
+.ui-dialog.edit-profile-popup .ui-dialog-titlebar .ui-dialog-title { position: absolute; }
+.ui-dialog.edit-profile-popup .ss-ui-dialog { padding-right: 0px; }
 
 /** -------------------------------------------- "Insert X" forms -------------------------------------------- */
 .htmleditorfield-linkform .step2 { margin-bottom: 16px; }

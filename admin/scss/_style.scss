@@ -839,22 +839,35 @@ body.cms {
 form.member-profile-form {
 	padding: 0 $grid-x*2 0 0;
 	.ui-tabs-nav {
+		margin-right:40px !important; //adds a 40px gap to the right of the tabs to match designs on main CMS
+		float:right;
+		.ui-state-active, 
+		.ui-widget-content .ui-state-active, 
+		.ui-widget-header .ui-state-active {
+			padding-bottom: 1px;
+			margin-bottom:-1px;
+		}
 		.ui-state-default,
 		.ui-widget-content .ui-state-default,
 		.ui-widget-header .ui-state-default {
 			border: {
 				top:none;
 			}
+			a {
+				padding:12px 20px 11px;
+			}
 		}
 	}
 
 	#Root_Permissions {
 		clear:both;
-		padding: $grid-x*2;
+		border-top: 1px solid darken($color-tab, 20%);
 	}
 
 	#Root_Main {
 		clear:both;
+		border-top: 1px solid darken($color-tab, 20%);
+		padding-top:$grid-y*2;
 		.cms-help-toggle {
 			text-indent: -9999em;
 			display: inline-block;
@@ -1296,6 +1309,19 @@ body.cms-dialog {
 	background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
 }
 
+.ui-dialog.edit-profile-popup {
+	.ui-dialog-titlebar {
+		height:0px; //removes the header outside of the iframe on edit profile popup. 
+		padding:0 4px 0 16px;
+
+		.ui-dialog-title {
+			position:absolute;
+		}
+	}
+	.ss-ui-dialog {
+		padding-right:0px;
+	}
+}
 
 
 
