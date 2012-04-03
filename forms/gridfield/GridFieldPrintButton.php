@@ -129,6 +129,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 					"ItemRow" => $itemRow
 				)
 			));
+			$item->destroy();
 		}
 		$ret = new ArrayData(
 			array(
@@ -136,9 +137,6 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 				"ItemRows" => $itemRows,
 			)
 		);
-		
-		
-		$item->destroy();
 		
 		return $ret;
 	}
