@@ -129,9 +129,11 @@ $gf_grid_x:	16px;
 					width:$gf_grid_x;
 					height:20px; //min height to fit the edit icon
 					text-indent:9999em;
+					overflow: hidden;
+					vertical-align: middle;
 					background: url(../images/icons/document--pencil.png) no-repeat 0 1px;
-				}				
-			}			
+				}
+			}
 		}
 
 		tfoot {
