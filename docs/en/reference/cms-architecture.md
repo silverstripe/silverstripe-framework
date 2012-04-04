@@ -259,5 +259,6 @@ Note: You can see any additional HTTP headers through the web developer tools in
 ## Related
 
  * [Howto: Extend the CMS Interface](../howto/extend-cms-interface)
+ * [Howto: Customize the CMS tree](../howto/customize-cms-tree)
  * [Reference: ModelAdmin](../reference/modeladmin)
  * [Topics: Rich Text Editing](../topics/rich-text-editing)
