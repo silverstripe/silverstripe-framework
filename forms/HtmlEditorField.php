@@ -322,7 +322,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				)
 			),
 			new FieldList(
-				Object::create('ResetFormAction', 'remove', _t('HtmlEditorField.BUTTONREMOVELINK', 'Remove link'))
+				ResetFormAction::create('remove', _t('HtmlEditorField.BUTTONREMOVELINK', 'Remove link'))
 					->addExtraClass('ss-ui-action-destructive')
 					->setUseButtonTag(true)
 				,

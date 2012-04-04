@@ -232,7 +232,7 @@ class Folder extends File {
 		// $parentFolder = Folder::findOrMake("Uploads");
 
 		// Generate default filename
-		$nameFilter = Object::create('FileNameFilter');
+		$nameFilter = FileNameFilter::create();
 		$file = $nameFilter->filter($tmpFile['name']);
 		while($file[0] == '_' || $file[0] == '.') {
 			$file = substr($file, 1);

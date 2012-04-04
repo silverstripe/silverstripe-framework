@@ -349,12 +349,12 @@ class File extends DataObject {
 		}
 
 		//create the file attributes in a FieldGroup
-		$filePreview = FormField::create('CompositeField', 
-			FormField::create('CompositeField',
+		$filePreview = CompositeField::create(
+			CompositeField::create(
 				$previewField
 			)->setName("FilePreviewImage")->addExtraClass('cms-file-info-preview'),
-			FormField::create('CompositeField',
-				FormField::create('CompositeField', 
+			CompositeField::create(
+				CompositeField::create(
 					new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':'),
 					new ReadonlyField("Size", _t('AssetTableField.SIZE','File size') . ':', $this->getSize()),
 					$urlField = new ReadonlyField('ClickableURL', _t('AssetTableField.URL','URL'),
@@ -566,7 +566,7 @@ class File extends DataObject {
 		if(!$name) $name = $this->Title;
 
 		// Fix illegal characters
-		$filter = Object::create('FileNameFilter');
+		$filter = FileNameFilter::create();
 		$name = $filter->filter($name);
 
 		// We might have just turned it blank, so check again.

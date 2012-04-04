@@ -66,8 +66,7 @@ class Group extends DataObject {
 			new TabSet("Root",
 				new Tab('Members', _t('SecurityAdmin.MEMBERS', 'Members'),
 					new TextField("Title", $this->fieldLabel('Title')),
-					$parentidfield = Object::create('DropdownField',
-						'ParentID', 
+					$parentidfield = DropdownField::create(						'ParentID', 
 						$this->fieldLabel('Parent'), 
 						DataList::create('Group')->exclude('ID', $this->ID)->map('ID', 'Breadcrumbs')
 					)->setEmptyString(' ')
@@ -100,7 +99,7 @@ class Group extends DataObject {
 			$config->getComponentByType('GridFieldAddExistingAutocompleter')
 				->setResultsFormat('$Title ($Email)')->setSearchFields(array('FirstName', 'Surname', 'Email'));
 			$config->getComponentByType('GridFieldDetailForm')->setValidator(new Member_Validator());
-			$memberList = Object::create('GridField', 'Members',false, $this->Members(), $config)->addExtraClass('members_grid');
+			$memberList = GridField::create('Members',false, $this->Members(), $config)->addExtraClass('members_grid');
 			// @todo Implement permission checking on GridField
 			//$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));
 			$fields->addFieldToTab('Root.Members', $memberList);
@@ -164,7 +163,7 @@ class Group extends DataObject {
 				$inheritedRoleIDs = array();
 			}
 
-			$rolesField = Object::create('ListboxField', 'Roles', false, $allRoles->map()->toArray())
+			$rolesField = ListboxField::create('Roles', false, $allRoles->map()->toArray())
 					->setMultiple(true)
 					->setDefaultItems($groupRoleIDs)
 					->setAttribute('data-placeholder', _t('Group.AddRole', 'Add a role for this group'))

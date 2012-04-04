@@ -153,7 +153,7 @@ class Image extends File {
 		}
 
 		// Generate default filename
-		$nameFilter = Object::create('FileNameFilter');
+		$nameFilter = FileNameFilter::create();
 		$file = $nameFilter->filter($tmpFile['name']);
 		if(!$file) $file = "file.jpg";
 		

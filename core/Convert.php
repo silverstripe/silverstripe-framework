@@ -320,7 +320,7 @@ class Convert {
 	 * @return string
 	 */
 	public static function raw2url($title) {
-		$f = Object::create('URLSegmentFilter');
+		$f = URLSegmentFilter::create();
 		return $f->filter($title);
 	}
 }

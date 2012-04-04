@@ -131,7 +131,7 @@ class Upload extends Controller {
 		}
 
 		// Generate default filename
-		$nameFilter = Object::create('FileNameFilter');
+		$nameFilter = FileNameFilter::create();
 		$file = $nameFilter->filter($tmpFile['name']);
 		$fileName = basename($file);
 

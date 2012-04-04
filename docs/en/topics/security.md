@@ -213,8 +213,8 @@ PHP:
 		public function search($request) {
 			$htmlTitle = '<p>Your results for:' . Convert::raw2xml($request->getVar('Query')) . '</p>';
 			return $this->customise(array(
-				'Query' => DBField::create('Text', $request->getVar('Query')),
-				'HTMLTitle' => DBField::create('HTMLText', $htmlTitle)
+				'Query' => Text::create($request->getVar('Query')),
+				'HTMLTitle' => HTMLText::create($htmlTitle)
 			));
 		}
 	}
@@ -243,7 +243,7 @@ PHP:
 			$rssRelativeLink = "/rss?Query=" . urlencode($_REQUEST['query']) . "&sortOrder=asc";
 			$rssLink = Controller::join_links($this->Link(), $rssRelativeLink);
 			return $this->customise(array(
-				"RSSLink" => DBField::create("Text", $rssLink),
+				"RSSLink" => Text::create($rssLink),
 			));
 		}
 	}

@@ -969,7 +969,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Return the CMS's HTML-editor toolbar
 	 */
 	public function EditorToolbar() {
-		return Object::create('HtmlEditorField_Toolbar', $this, "EditorToolbar");
+		return HtmlEditorField_Toolbar::create($this, "EditorToolbar");
 	}
 
 	/**
@@ -1032,7 +1032,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			'BatchActionsForm',
 			new FieldList(
 				new HiddenField('csvIDs'),
-				Object::create('DropdownField',
+				DropdownField::create(
 					'Action',
 					false,
 					$actionsMap

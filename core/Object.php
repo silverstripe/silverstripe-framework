@@ -87,7 +87,7 @@ abstract class Object {
 	 * or calling on Object and passing the class name as the first parameter. The following
 	 * are equivalent:
 	 *    $list = DataList::create('SiteTree');
-	 *    $list = Object::create('DataList', 'SiteTree');
+	 *    $list = DataList::create('SiteTree');
 	 *
 	 * @param string $class the class name
 	 * @param mixed $arguments,... arguments to pass to the constructor
@@ -121,7 +121,7 @@ abstract class Object {
 	 * are respected.
 	 * 
 	 * `Object::create_from_string("Versioned('Stage','Live')")` will return the result of
-	 * `Object::create('Versioned', 'Stage', 'Live);`
+	 * `Versioned::create('Stage', 'Live);`
 	 * 
 	 * It is designed for simple, clonable objects.  The first time this method is called for a given
 	 * string it is cached, and clones of that object are returned.
@@ -130,7 +130,7 @@ abstract class Object {
 	 * impossible to pass null as the firstArg argument.
 	 * 
 	 * `Object::create_from_string("Varchar(50)", "MyField")` will return the result of
-	 * `Object::create('Vachar', 'MyField', '50');`
+	 * `Vachar::create('MyField', '50');`
 	 * 
 	 * Arguments are always strings, although this is a quirk of the current implementation rather
 	 * than something that can be relied upon.

@@ -151,7 +151,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if(!$admins) {
 			// Leave 'Email' and 'Password' are not set to avoid creating
 			// persistent logins in the database. See Security::setDefaultAdmin().
-			$admin = Object::create('Member');
+			$admin = Member::create();
 			$admin->FirstName = _t('Member.DefaultAdminFirstname', 'Default Admin');
 			$admin->write();
 			$admin->Groups()->add($adminGroup);
@@ -480,13 +480,13 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	function sendInfo($type = 'signup', $data = null) {
 		switch($type) {
 			case "signup":
-				$e = Object::create('Member_SignupEmail');
+				$e = Member_SignupEmail::create();
 				break;
 			case "changePassword":
-				$e = Object::create('Member_ChangePasswordEmail');
+				$e = Member_ChangePasswordEmail::create();
 				break;
 			case "forgotPassword":
-				$e = Object::create('Member_ForgotPasswordEmail');
+				$e = Member_ForgotPasswordEmail::create();
 				break;
 		}
 
@@ -1134,7 +1134,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$groupsMap = DataList::create('Group')->map('ID', 'Breadcrumbs')->toArray();
 			asort($groupsMap);
 			$fields->addFieldToTab('Root.Main',
-				Object::create('ListboxField', 'DirectGroups', singleton('Group')->i18n_plural_name())
+				ListboxField::create('DirectGroups', singleton('Group')->i18n_plural_name())
 					->setMultiple(true)->setSource($groupsMap)
 			);
 

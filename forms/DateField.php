@@ -112,7 +112,7 @@ class DateField extends TextField {
 
 	function FieldHolder() {
 		// TODO Replace with properly extensible view helper system 
-		$d = Object::create('DateField_View_JQuery', $this); 
+		$d = DateField_View_JQuery::create($this); 
 		$d->onBeforeRender(); 
 		$html = parent::FieldHolder(); 
 		$html = $d->onAfterRender($html); 
@@ -459,7 +459,7 @@ class DateField_Disabled extends DateField {
  * @package sapphire
  * @subpackage forms
  */
-class DateField_View_JQuery {
+class DateField_View_JQuery extends Object {
 	
 	protected $field;
 	
