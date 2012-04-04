@@ -1,9 +1,10 @@
 <?php
+
 /************************************************************************************
  ************************************************************************************
  **                                                                                **
  **  If you can read this text in your browser then you don't have PHP installed.  **
- **  Please install PHP 5.0 or higher, preferably PHP 5.2 or 5.3.                  **
+ **  Please install PHP 5.3 or higher.                                             **
  **                                                                                **
  ************************************************************************************
  ************************************************************************************/
@@ -12,8 +13,10 @@
  * @package sapphire
  * @subpackage core
  */
+$majorVersion = strtok(phpversion(),'.');
+$minorVersion = strtok('.');
 
-if(version_compare(phpversion(), 5, '<')) {
+if($majorVersion < 5 || ($majorVersion == 5 && $minorVersion < 3)) {
 	header("HTTP/1.1 500 Server Error");
 	echo str_replace('$PHPVersion', phpversion(), file_get_contents("dev/install/php5-required.html"));
 	die();
