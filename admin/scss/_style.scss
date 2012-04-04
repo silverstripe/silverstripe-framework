@@ -1343,6 +1343,10 @@ body.cms-dialog {
 		}
 	}
 
+	.ss-uploadfield-editandorganize {
+		display: none;
+	}
+
 	// TODO Consolidate with .assetuploadfield and .ss-uploadfield styles
 	.ss-htmleditorfield-file {
 		border: 1px solid lighten($color-medium-separator, 20%);

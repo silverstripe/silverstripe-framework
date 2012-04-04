@@ -700,13 +700,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		 * Show the second step after uploading an image
 		 */
 		$('form.htmleditorfield-form.htmleditorfield-mediaform div.ss-assetuploadfield').entwine({
-			onmatch: function() {
-				this._super();
-
-				// Always hide the "second step" part, we don't need it here
-				this.find('.ss-uploadfield-editandorganize').hide();
-
-			},
+			//the UploadField div.ss-uploadfield-editandorganize is hidden in CSS,
+			// because we use the detail view for each individual file instead
 			onfileuploadstop: function(e) {
 				var form = this.closest('form');
 
