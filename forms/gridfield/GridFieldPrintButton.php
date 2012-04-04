@@ -131,10 +131,24 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 			));
 			$item->destroy();
 		}
+		
+		//get title for the print view
+		$form = $gridField->getForm();
+		$currentController = Controller::curr();
+		$title = method_exists($currentController, 'Title')?$currentController->Title():
+					($currentController->Title?$currentController->Title:
+					($form?$form->Name():''));
+		if($fieldTitle = $gridField->Title()) $title .= ($title?' - ':'').$fieldTitle;
+		
+		//$state = $gridField->getState(false)->__toString();
+		
 		$ret = new ArrayData(
 			array(
+				"Title" => $title,
 				"Header" => $header,
 				"ItemRows" => $itemRows,
+				"Datetime" => SS_Datetime::now(),
+				"Member" => Member::currentUser(),
 			)
 		);
 		
