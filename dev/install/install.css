@@ -118,6 +118,10 @@ input.text, textarea, select {
 		color: #888;
 	}
 
+	.main h2.no-line {
+		border-top:none;
+	}
+
 /**
  * Requirements and test results
  * ------------------------------------------------ */
@@ -263,6 +267,10 @@ h5.requirement {
 			margin-right: 5px;
 			border-radius:4px;
 			background:#ededed;
+		}
+
+		#database_selection li .databaseClass {
+			background:none;
 		}
 
 		#database_selection li input:focus{

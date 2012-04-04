@@ -126,8 +126,8 @@
 												}
 											}
 											echo "<li>";
-											echo "<input id=\"$class\" class=\"databaseClass\" type=\"radio\" name=\"db[type]\" value=\"$class\"$checked $disabled>";
-											echo "<label class=\"left\" ".($help || $disabled ? 'style="font-weight:normal;color:grey" ' : 'style="color:green"')."for=\"$class\">{$details['title']}</label>";
+											echo "<input id=\"$class\" class=\"databaseClass left\" type=\"radio\" name=\"db[type]\" value=\"$class\"$checked $disabled>";
+											echo "<label ".($help || $disabled ? 'style="font-weight:normal;color:grey;margin-left:15px" ' : 'style="color:green;margin-left:15px"')."for=\"$class\">{$details['title']}</label>";
 											if ($help) {
 												echo '<div class="error databaseError">'.$help.'</div>';
 											}
