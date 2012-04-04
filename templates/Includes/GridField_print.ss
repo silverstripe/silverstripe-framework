@@ -16,9 +16,9 @@
 			</tbody>
 		</table>
 		<p>
-			Printed at $Datetime.Nice
+			<% _t('GridField.PRINTEDAT', 'Printed at') %> $Datetime.Time, $Datetime.Date
 			<br />
-			Printed by $Member.Name
+			<% _t('GridField.PRINTEDBY', 'Printed by') %> $Member.Name
 		</p>
 	</body>
 </html>
