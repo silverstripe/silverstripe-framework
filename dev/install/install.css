@@ -10,6 +10,18 @@
 	float:none;
 }
 
+.brand h1 {
+	float:left;
+}
+
+.brand .logo {
+	float:left;
+	margin-right:15px;
+	height:55px;
+	width:55px;
+	background:url(../install/images/ss-logo.png) center center no-repeat;
+}
+
 #Navigation {
 	display:none;
 }
