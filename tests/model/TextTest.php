@@ -99,7 +99,7 @@ class TextTest extends SapphireTest {
 		);
 		
 		foreach($cases as $originalValue => $expectedValue) {
-			$textObj = DBField::create('Text', $originalValue);
+			$textObj = DBField::create_field('Text', $originalValue);
 			$this->assertEquals($expectedValue, $textObj->BigSummary(4));
 		}
 	}
@@ -115,7 +115,7 @@ class TextTest extends SapphireTest {
 		$testKeyword3 = 'a';
 		$testKeyword3a = 'ate';
 
-		$textObj = DBField::create('Text', $testString1, 'Text');
+		$textObj = DBField::create_field('Text', $testString1, 'Text');
 		
 		$this->assertEquals(
 			'... text. It is a <span class="highlight">test</span>...',
@@ -145,27 +145,27 @@ class TextTest extends SapphireTest {
 	}	
 
 	public function testRAW() {
-		$data = DBField::create('Text', 'This &amp; This');
+		$data = DBField::create_field('Text', 'This &amp; This');
 		$this->assertEquals($data->RAW(), 'This &amp; This');
 	}
 	
 	public function testXML() {
-		$data = DBField::create('Text', 'This & This');
+		$data = DBField::create_field('Text', 'This & This');
 		$this->assertEquals($data->XML(), 'This &amp; This');
 	}
 
 	public function testHTML() {
-		$data = DBField::create('Text', 'This & This');
+		$data = DBField::create_field('Text', 'This & This');
 		$this->assertEquals($data->HTML(), 'This &amp; This');
 	}
 
 	public function testJS() {
-		$data = DBField::create('Text', '"this is a test"');
+		$data = DBField::create_field('Text', '"this is a test"');
 		$this->assertEquals($data->JS(), '\"this is a test\"');
 	}
 
 	public function testATT() {
-		$data = DBField::create('Text', '"this is a test"');
+		$data = DBField::create_field('Text', '"this is a test"');
 		$this->assertEquals($data->ATT(), '&quot;this is a test&quot;');
 	}
 }

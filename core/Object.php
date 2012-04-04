@@ -83,13 +83,27 @@ abstract class Object {
 	 * overload is found, an instance of this is returned rather than the original class. To overload a class, use
 	 * {@link Object::useCustomClass()}
 	 *
+	 * This can be called in one of two ways - either calling via the class directly,
+	 * or calling on Object and passing the class name as the first parameter. The following
+	 * are equivalent:
+	 *    $list = DataList::create('SiteTree');
+	 *    $list = Object::create('DataList', 'SiteTree');
+	 *
 	 * @param string $class the class name
 	 * @param mixed $arguments,... arguments to pass to the constructor
 	 * @return Object
 	 */
 	public static function create() {
 		$args  = func_get_args();
-		$class = self::getCustomClass(array_shift($args));
+
+		// Class to create should be the calling class if not Object,
+		// otherwise the first parameter
+		$class = get_called_class();
+		if($class == 'Object')
+			$class = array_shift($args);
+		
+		$class = self::getCustomClass($class);
+		
 		$reflector = new ReflectionClass($class);
 		if($reflector->getConstructor()) {
 			return $reflector->newInstanceArgs($args);

@@ -12,24 +12,6 @@ class ManyManyList extends RelationList {
 	protected $foreignKey, $foreignID;
 
 	protected $extraFields;
-	
-	/**
-	 * Synonym of the constructor.  Can be chained with literate methods.
-	 * ManyManyList::create("Group","Member","ID", "GroupID")->sort("Title") is legal, but
-	 * new ManyManyList("Group","Member","ID", "GroupID")->sort("Title") is not.
-	 * 
-	 * @param string $dataClass The class of the DataObjects that this will list.
-	 * @param string $joinTable The name of the table whose entries define the content of this many_many relation.
-	 * @param string $localKey The key in the join table that maps to the dataClass' PK.
-	 * @param string $foreignKey The key in the join table that maps to joined class' PK.
-	 * @param string $extraFields A map of field => fieldtype of extra fields on the join table.
-	 * 
-	 * @see ManyManyList::__construct();
-	 * @example ManyManyList::create('Group','Group_Members', 'GroupID', 'MemberID');
-	 */
-	public static function create($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = array()) {
-		return new ManyManyList($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = array());
-	}
 
 	/**
 	 * Create a new ManyManyList object.

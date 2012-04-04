@@ -103,7 +103,7 @@ class MoneyField extends FormField {
 	function saveInto($dataObject) {
 		$fieldName = $this->name;
 		if($dataObject->hasMethod("set$fieldName")) {
-			$dataObject->$fieldName = DBField::create('Money', array(
+			$dataObject->$fieldName = DBField::create_field('Money', array(
 				"Currency" => $this->fieldCurrency->Value(),
 				"Amount" => $this->fieldAmount->Value()
 			));

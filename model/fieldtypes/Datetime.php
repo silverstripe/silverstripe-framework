@@ -96,7 +96,7 @@ class SS_Datetime extends Date {
 		if(self::$mock_now) {
 			return self::$mock_now;
 		} else {
-			return DBField::create('SS_Datetime', date('Y-m-d H:i:s'));
+			return DBField::create_field('SS_Datetime', date('Y-m-d H:i:s'));
 		}
 	}
 	
@@ -111,7 +111,7 @@ class SS_Datetime extends Date {
 		if($datetime instanceof SS_Datetime) {
 			self::$mock_now = $datetime;
 		} elseif(is_string($datetime)) {
-			self::$mock_now = DBField::create('SS_Datetime', $datetime);
+			self::$mock_now = DBField::create_field('SS_Datetime', $datetime);
 		} else {
 			throw new Exception('SS_Datetime::set_mock_now(): Wrong format: ' . $datetime);
 		}

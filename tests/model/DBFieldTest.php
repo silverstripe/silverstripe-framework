@@ -202,7 +202,7 @@ class DBFieldTest extends SapphireTest {
 		
 		$value = 'üåäöÜÅÄÖ';
 		foreach ($allFields as $stringField) {
-			$stringField = DBField::create($stringField, $value);
+			$stringField = DBField::create_field($stringField, $value);
 			for ($i = 1; $i < mb_strlen($value); $i++) {
 				$expected = mb_substr($value, 0, $i) . '...';
 				$this->assertEquals($expected, $stringField->LimitCharacters($i));
@@ -211,12 +211,12 @@ class DBFieldTest extends SapphireTest {
 		
 		$value = '<p>üåäö&amp;ÜÅÄÖ</p>';
 		foreach ($htmlFields as $stringField) {
-			$stringField = DBField::create($stringField, $value);
+			$stringField = DBField::create_field($stringField, $value);
 			$this->assertEquals('üåäö&amp;ÜÅÄ...', $stringField->LimitCharacters(8));
 		}
 		
-		$this->assertEquals('ÅÄÖ', DBField::create('Text', 'åäö')->UpperCase());
-		$this->assertEquals('åäö', DBField::create('Text', 'ÅÄÖ')->LowerCase());
+		$this->assertEquals('ÅÄÖ', DBField::create_field('Text', 'åäö')->UpperCase());
+		$this->assertEquals('åäö', DBField::create_field('Text', 'ÅÄÖ')->LowerCase());
 	}
 	
 }

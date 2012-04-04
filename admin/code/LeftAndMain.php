@@ -467,7 +467,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$menu->push(new ArrayData(array(
 					"MenuItem" => $menuItem,
 					"Title" => Convert::raw2xml($title),
-					"Code" => DBField::create('Text', $code),
+					"Code" => DBField::create_field('Text', $code),
 					"Link" => $menuItem->url,
 					"LinkingMode" => $linkingmode
 				)));
@@ -1256,7 +1256,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return String
 	 */
 	function Locale() {
-		return DBField::create('DBLocale', i18n::get_locale());
+		return DBField::create_field('DBLocale', i18n::get_locale());
 	}
 
 	function providePermissions() {

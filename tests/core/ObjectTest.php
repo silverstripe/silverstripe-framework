@@ -119,6 +119,11 @@ class ObjectTest extends SapphireTest {
 		$strongObj = Object::strong_create('ObjectTest_CreateTest', 'arg1', 'arg2', array(), null, 'arg5');
 		$this->assertEquals($strongObj->constructArguments, array('arg1', 'arg2', array(), null, 'arg5'));
 	}
+
+	public function testCreateLateStaticBinding() {
+		$createdObj = ObjectTest_CreateTest::create('arg1', 'arg2', array(), null, 'arg5');
+		$this->assertEquals($createdObj->constructArguments, array('arg1', 'arg2', array(), null, 'arg5'));
+	}
 	
 	/**
 	 * Tests that {@link Object::useCustomClass()} correnctly replaces normal and strong objects

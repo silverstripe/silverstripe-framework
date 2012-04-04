@@ -25,13 +25,13 @@
 * 		if($this->getStreetName()) {
 * 			$manipulation['fields']["{$this->name}Name"] = $this->prepValueForDB($this->getStreetName());
 * 		} else {
-* 			$manipulation['fields']["{$this->name}Name"] = DBField::create('Varchar', $this->getStreetName())->nullValue();
+* 			$manipulation['fields']["{$this->name}Name"] = DBField::create_field('Varchar', $this->getStreetName())->nullValue();
 * 		}
 * 		
 * 		if($this->getStreetNumber()) {
 * 			$manipulation['fields']["{$this->name}Number"] = $this->prepValueForDB($this->getStreetNumber());
 * 		} else {
-* 			$manipulation['fields']["{$this->name}Number"] = DBField::create('Int', $this->getStreetNumber())->nullValue();
+* 			$manipulation['fields']["{$this->name}Number"] = DBField::create_field('Int', $this->getStreetNumber())->nullValue();
 * 		}
 * 	}
 * 	

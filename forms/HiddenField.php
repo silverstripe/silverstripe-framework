@@ -28,9 +28,4 @@ class HiddenField extends FormField {
 			array('type' => 'hidden')
 		);
 	}
-
-	static function create($name) {
-		return new HiddenField($name);
-	}
-
 }
