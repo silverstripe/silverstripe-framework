@@ -115,7 +115,7 @@ abstract class ModelAdmin extends LeftAndMain {
 
 	function getEditForm($id = null) {
 		$list = $this->getList();
-		$exportButton = new GridFieldExportButton();
+		$exportButton = new GridFieldExportButton('before');
 		$exportButton->setExportColumns($this->getExportFields());
 		$listField = Object::create('GridField',
 			$this->modelClass,
@@ -124,7 +124,7 @@ abstract class ModelAdmin extends LeftAndMain {
 			$fieldConfig = GridFieldConfig_RecordEditor::create($this->stat('page_length'))
 				->addComponent($exportButton)
 				->removeComponentsByType('GridFieldFilterHeader')
-				->addComponents(new GridFieldPrintButton())
+				->addComponents(new GridFieldPrintButton('before'))
 		);
 
 		// Validation
