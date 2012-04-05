@@ -141,8 +141,8 @@
 			 * 
 			 * Suppress submission unless it is handled through ajaxSubmit().
 			 */
-			onsubmit: function(e) {
-				this.parents('.cms-content').submitForm(this);
+			onsubmit: function(e, button) {
+				this.parents('.cms-content').submitForm(this, button);
 				
 				return false;
 			},
@@ -179,7 +179,7 @@
 			 * Function: onclick
 			 */
 			onclick: function(e) {
-				$('.cms-content').submitForm(this.parents('form'), this);
+				this.parents('form').trigger('submit', [this]);
 				e.preventDefault();
 				return false;
 			}
