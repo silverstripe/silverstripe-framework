@@ -654,7 +654,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					.toggleClass('ui-state-disabled', !hasItems);
 
 				// Hide file selection and step labels when editing an existing file
-				this.find('.header-select,.content-select,.header-edit')[editingSelected ? 'hide' : 'show']();
+				this.find('#MediaFormInsertImageTabs,.header-edit')[editingSelected ? 'hide' : 'show']();
 			},
 			getFileView: function(idOrUrl) {
 				return this.find('.ss-htmleditorfield-file[data-id=' + idOrUrl + ']');
