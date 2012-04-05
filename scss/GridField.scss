@@ -114,6 +114,11 @@ $gf_grid_x:	16px;
 					white-space: nowrap;
 				}
 
+				&.col-description {
+					width: auto;
+					white-space:nowrap;
+				}
+
 				button {
 					border: none;
 					background: none;
@@ -292,7 +297,7 @@ $gf_grid_x:	16px;
 						border:none;	
 						width:100%;
 						text-align: left;
-						padding: 4px 0;
+						padding: 4px 8px 4px 0;
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 						color: #fff;
 						@include border-radius(0);
