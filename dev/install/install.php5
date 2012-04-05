@@ -952,21 +952,25 @@ class Installer extends InstallRequirements {
 		<script src="sapphire/thirdparty/jquery/jquery.js"></script>
 	</head>
 	<body>
-		<div id="BgContainer">
-			<div id="Container">
-				<div id="Header">
-					<h1>SilverStripe CMS / Framework Installation</h1>
+		<div class="install-header">
+			<div class="inner">
+				<div class="brand">
+					<span class="logo"></span>
+					<h1>SilverStripe</h1>
 				</div>
+				<p>Version <?php echo $silverstripe_version; ?></p>
+			</div>	
+		</div>
 
-				<div id="Navigation">&nbsp;</div>
-				<div class="clear"><!-- --></div>
+		<div id="Navigation">&nbsp;</div>
+		<div class="clear"><!-- --></div>
 
-				<div id="Layout">
-					<div class="typography">
-						<h1>Installing SilverStripe...</h1>
-						<p>I am now running through the installation steps (this should take about 30 seconds)</p>
-						<p>If you receive a fatal error, refresh this page to continue the installation</p>
-						<ul>
+		<div class="main">
+			<div class="inner">
+				<h1>Installing SilverStripe...</h1>
+				<p>I am now running through the installation steps (this should take about 30 seconds)</p>
+				<p>If you receive a fatal error, refresh this page to continue the installation</p>
+				<ul>
 <?php
 		} else {
 			echo "SILVERSTRIPE COMMAND-LINE INSTALLATION\n\n";

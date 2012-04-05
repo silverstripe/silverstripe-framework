@@ -6,6 +6,17 @@
 	color:#fff;
 }
 
+.install-header
+{
+	padding-bottom:10px;
+	background:#161616;
+}
+
+.install-header .inner{
+	padding-top:55px; 
+	position:relative;
+}
+
 .brand {
 	float:none;
 }
@@ -24,6 +35,10 @@
 
 #Navigation {
 	display:none;
+}
+
+.main .inner ul {
+	padding-left:20px;
 }
 
 ul#Themes{
@@ -55,6 +70,7 @@ h1.sectionHeading {
 	padding: 0.5em;
 	background-color: #fdf5f5;
 	border: 1px #ff8e8e solid;
+	border-radius:4px;
 	color: #f03838;
 }
 	.main p.error { color: #f03838;}
