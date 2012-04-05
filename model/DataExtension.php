@@ -32,7 +32,7 @@ abstract class DataExtension extends Extension {
 	);
 
 
-	static function add_to_class($class, $extensionClass, $args) {
+	static function add_to_class($class, $extensionClass, $args = null) {
 		if(method_exists($class, 'extraDBFields')) {
 			$extraStaticsMethod = 'extraDBFields';
 		} else {
