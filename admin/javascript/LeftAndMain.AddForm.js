@@ -13,7 +13,7 @@
 		 *  ss.i18n
 		 *  .cms-edit-form
 		 */
-		$('.add-form').entwine({
+		$('.cms-edit-form.cms-add-form').entwine({
 			/**
 			 * Variable: Tree
 			 * (DOMElement)
