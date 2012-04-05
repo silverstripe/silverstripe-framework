@@ -536,17 +536,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 	
 	/**
-	 * Returns true if this controller is processing an ajax request
-	 * @return boolean True if this controller is processing an ajax request
-	 */
-	function isAjax() {
-		return (
-			isset($this->requestParams['ajax']) || isset($_REQUEST['ajax']) ||
-			(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest")
-		);
-	}
-	
-	/**
 	 * Joins two or more link segments together, putting a slash between them if necessary.
 	 * Use this for building the results of {@link Link()} methods.
 	 * If either of the links have query strings, 

@@ -392,19 +392,32 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// TODO Necessary for TableListField URLs to work properly
 		if($request->param('ID')) $this->setCurrentPageID($request->param('ID'));
 		
-		if($this->isAjax()) {
-			if($request->getVar('cms-view-form')) {
-				$form = $this->getEditForm();
-				$content = $form->forTemplate();
-			} else {
-				// Rendering is handled by template, which will call EditForm() eventually
-				$content = $this->renderWith($this->getTemplatesWithSuffix('_Content'));
-			}
-		} else {
-			$content = $this->renderWith($this->getViewer('show'));
-		}
-				
-		return $content;
+		return $this->handleFragmentResponse(null, array(
+			'CurrentForm' => array($this, 'showEditForm'),
+			'Content' => array($this, 'showContent'),
+			'default' => array($this, 'showDefault'),
+		));
+	}
+
+	/**
+	 *  Helper for {@link show().  Turn into anonymous function when we drop PHP 5.3 support.
+	 */
+	public function showEditForm() {
+		return $this->getEditForm()->forTemplate();
+	}
+	
+	/**
+	 *  Helper for {@link show().  Turn into anonymous function when we drop PHP 5.3 support.
+	 */
+	public function showContent() {
+		return $this->renderWith($this->getTemplatesWithSuffix('_Content'));
+	}
+	
+	/**
+	 *  Helper for {@link show().  Turn into anonymous function when we drop PHP 5.3 support.
+	 */
+	public function showDefault() {
+		return $this->renderWith($this->getViewer('show'));
 	}
 
 	//------------------------------------------------------------------------------------------//
@@ -686,7 +699,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// write process might've changed the record, so we reload before returning
 		$form = $this->getEditForm($record->ID);
 		
-		return $form->forTemplate();
+		return $this->handleFragmentResponse($form);
 	}
 	
 	public function delete($data, $form) {
@@ -697,12 +710,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(!$record || !$record->ID) throw new HTTPResponse_Exception("Bad record ID #" . (int)$data['ID'], 404);
 		
 		$record->delete();
-		
-		if($this->isAjax()) {
-			return $this->EmptyForm()->forTemplate();
-		} else {
-			$this->redirectBack();
-		}
+
+		return $this->handleFragmentResponse($this->EmptyForm());
 	}
 
 	/**
