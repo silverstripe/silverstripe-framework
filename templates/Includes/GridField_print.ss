@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
-		
+		<% if $Title %><title>$Title</title><% end_if %>
 	</head>
-	<body>
+	<body onload="window.print();">
 		<% if $Title %><h3>$Title</h3><% end_if %>
 		<table>
 			<thead>
@@ -21,4 +21,5 @@
 			<% _t('GridField.PRINTEDBY', 'Printed by') %> $Member.Name
 		</p>
 	</body>
+
 </html>

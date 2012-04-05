@@ -119,15 +119,7 @@
 			this.setUUID(new Date().getTime());
 		},
 		onclick: function(e){
-			var self = this, iframeID = 'gridfield-print-iframe' + this.getUUID();
-			var printIframe = $('#' + iframeID);
-			
-			if(!printIframe.length){
-				printIframe = $('<IFRAME id="'+iframeID+'" class="ss-gridfield-print-iframe">');
-				$(document.body).append(printIframe);
-			}
-			
-			var self = this, btn = this.closest(':button'), grid = this.getGridField(), 
+			var btn = this.closest(':button'), grid = this.getGridField(),
 				form = this.closest('form'), data = form.find(':input').serialize();
 
 			// Add current button
@@ -138,7 +130,8 @@
 			if(window.location.search) data = window.location.search.replace(/^\?/, '') + '&' + data;
 
 			var url = $.path.makeUrlAbsolute(grid.data('url') + '?' + data, $('base').attr('href'));
-			printIframe.attr('src', url);
+			var newWindow = window.open(url);
+
 			return false;
 		}
 	});
