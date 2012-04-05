@@ -340,7 +340,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			redraw: function(setDefaults) {
 				this._super();
 
-				var linkType = this.find(':input[name=LinkType]:checked').val(), list =  ['internal', 'external', 'file', 'email'], i, item;
+				var linkType = this.find(':input[name=LinkType]:checked').val(), list = ['internal', 'external', 'file', 'email'];
 
 				// If we haven't selected an existing link, then just make sure we default to "internal" for the link type.
 				if(!linkType) {
@@ -351,11 +351,17 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.addAnchorSelector();
 
 				// Toggle field visibility and state based on type selection
-				for(i=0;item==list[i];i++) jQuery(this.find('.field#' + item)).toggle(item == linkType);
-				jQuery(this.find('.field#Anchor')).toggle(linkType == 'internal' || linkType == 'anchor');
-				jQuery(this.find('.field#AnchorSelector')).toggle(linkType=='anchor');
-				jQuery(this.find('.field#AnchorRefresh')).toggle(linkType=='anchor');
+				this.find('.field').hide();
+				this.find('.field#LinkType').show();
+				this.find('.field#' + linkType).show();
+				if(linkType == 'internal' || linkType == 'anchor') this.find('.field#Anchor').show();
+				if(linkType == 'anchor') {
+					this.find('.field#AnchorSelector').show();
+					this.find('.field#AnchorRefresh').show();
+				}
+
 				this.find(':input[name=TargetBlank]').attr('disabled', (linkType == 'email'));
+
 				if(typeof setDefaults == 'undefined' || setDefaults) {
 					this.find(':input[name=TargetBlank]').attr('checked', (linkType == 'file'));
 				}
