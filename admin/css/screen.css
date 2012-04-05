@@ -280,7 +280,7 @@ body.cms { overflow: hidden; }
 .CMSPagesController .cms-content-header-tabs .ui-tabs-nav li a.content-treeview { background: url(../images/content-header-tabs-sprite.png) no-repeat 2px 0px; }
 .CMSPagesController .cms-content-header-tabs .ui-tabs-nav li a.content-galleryview { background: url(../images/content-header-tabs-sprite.png) no-repeat -87px 0px; }
 .CMSPagesController .cms-content-header-tabs .ui-tabs-nav li a.content-listview { background: url(../images/content-header-tabs-sprite.png) no-repeat -38px 0px; }
-.CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-state-active, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active { border-top: none; }
+.CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-state-active, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active { border-top: none; padding-bottom: 1px; }
 .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-state-active a.content-treeview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active a.content-treeview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active a.content-treeview { background: url(../images/content-header-tabs-sprite.png) no-repeat 2px -40px; }
 .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-state-active a.content-galleryview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active a.content-galleryview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active a.content-galleryview { background: url(../images/content-header-tabs-sprite.png) no-repeat -87px -40px; }
 .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-state-active a.content-listview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active a.content-listview, .CMSPagesController .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active a.content-listview { background: url(../images/content-header-tabs-sprite.png) no-repeat -38px -40px; }
@@ -713,7 +713,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-menu-list.collapsed li > li { display: none; }
 
 .ModelAdmin .cms-content-fields { overflow: hidden; }
-.ModelAdmin .cms-content-fields .cms-edit-form { overflow-y: auto; }
+.ModelAdmin .cms-content-fields .cms-edit-form { overflow-y: scroll; overflow-x: hidden; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form .resetformaction { margin-right: 0px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form .resetformaction span { padding-left: 0px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm { overflow: hidden; }
