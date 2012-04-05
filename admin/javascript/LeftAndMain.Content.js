@@ -83,11 +83,11 @@
 			 *  (XMLHTTPRequest) xmlhttp
 			 */
 			loadForm_responseHandler: function(oldForm, html, status, xmlhttp) {
+				if(!html) return;
 
 				if(oldForm.length > 0) {
 					oldForm.replaceWith(html); // triggers onmatch() on form
-				}
-				else {
+				} else {
 					 $('.cms-content').append(html);
 				}
 				
@@ -199,6 +199,8 @@
 			 */
 			submitForm_responseHandler: function(oldForm, data, status, xmlhttp, origData) {
 				if(status == 'success') {
+					if(!data) return;
+
 					var form, newContent = $(data);
 
 					// HACK If response contains toplevel panel rather than a form, replace it instead.

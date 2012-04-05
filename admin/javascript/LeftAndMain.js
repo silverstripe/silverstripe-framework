@@ -227,6 +227,10 @@ jQuery.noConflict();
 					headers: headers,
 					url: state.url,
 					success: function(data, status, xhr) {
+						// Pseudo-redirects via X-ControllerURL might return empty data, in which
+						// case we'll ignore the response
+						if(!data) return;
+
 						// Update title
 						var title = xhr.getResponseHeader('X-Title');
 						if(title) document.title = title;
