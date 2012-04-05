@@ -68,7 +68,7 @@ class CMSBatchActionHandler extends RequestHandler {
 
 	function handleAction($request) {
 		// This method can't be called without ajax.
-		if(!$this->parentController->isAjax()) {
+		if(!$request->isAjax()) {
 			$this->parentController->redirectBack();
 			return;
 		}

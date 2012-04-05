@@ -230,4 +230,16 @@ class HTTPRequestTest extends SapphireTest {
 			'Nested GET parameters should supplement POST parameters'
 		);
 	}
+
+	function testIsAjax() {
+		$req = new SS_HTTPRequest('GET', '/', array('ajax' => 0));
+		$this->assertFalse($req->isAjax());
+
+		$req = new SS_HTTPRequest('GET', '/', array('ajax' => 1));
+		$this->assertTrue($req->isAjax());
+
+		$req = new SS_HTTPRequest('GET', '/');
+		$req->addHeader('X-Requested-With', 'XMLHttpRequest');
+		$this->assertTrue($req->isAjax());
+	}
 }

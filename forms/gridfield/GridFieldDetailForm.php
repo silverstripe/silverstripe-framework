@@ -196,7 +196,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			'ItemEditForm' => $form,
 		))->renderWith($this->template);
 
-		if($controller->isAjax()) {
+		if($request->isAjax()) {
 			return $return;	
 		} else {
 			// If not requested by ajax, we need to render it within the controller context+template

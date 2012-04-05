@@ -682,7 +682,7 @@ class Director implements TemplateGlobalProvider {
 	 */
 	static function is_ajax() {
 		if(Controller::has_curr()) {
-			return Controller::curr()->isAjax();
+			return Controller::curr()->getRequest()->isAjax();
 		} else {
 			return (
 				isset($_REQUEST['ajax']) ||

@@ -193,7 +193,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(Director::redirected_to()) return;
 
 		// Audit logging hook
-		if(empty($_REQUEST['executeForm']) && !$this->isAjax()) $this->extend('accessedCMS');
+		if(empty($_REQUEST['executeForm']) && !$this->request->isAjax()) $this->extend('accessedCMS');
 		
 		// Set the members html editor config
 		HtmlEditorConfig::set_active(Member::currentUser()->getHtmlEditorConfigForCMS());
@@ -341,7 +341,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	}
 
 	function index($request) {
-		return ($this->isAjax()) ? $this->show($request) : $this->getViewer('index')->process($this);
+		return ($request->isAjax()) ? $this->show($request) : $this->getViewer('index')->process($this);
 	}
 
 	
