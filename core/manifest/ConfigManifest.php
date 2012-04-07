@@ -59,15 +59,13 @@ class SS_ConfigManifest {
 		if (!$forceRegen) {
 			// The PHP config sources are always needed
 			$this->phpConfigSources = $this->cache->load('php_config_sources');
-
-			// Get the variant key spec - if this isn't present, we can't figure out what variant we're in so it's full regen time
-			if ($this->variantKeySpec = $this->cache->load('variant_key_spec')) {
-				// Try getting the pre-filtered & merged config for this variant
-				if (!($this->yamlConfig = $this->cache->load('yaml_config_'.$this->variantKey()))) {
-					// Otherwise, if we do have the yaml config fragments (and we should since we have a variant key spec) work out the config for this variant
-					if ($this->yamlConfigFragments = $this->cache->load('yaml_config_fragments')) {
-						$this->buildYamlConfigVariant();
-					}
+			// Get the variant key spec
+			$this->variantKeySpec = $this->cache->load('variant_key_spec');
+			// Try getting the pre-filtered & merged config for this variant
+			if (!($this->yamlConfig = $this->cache->load('yaml_config_'.$this->variantKey()))) {
+				// Otherwise, if we do have the yaml config fragments (and we should since we have a variant key spec) work out the config for this variant
+				if ($this->yamlConfigFragments = $this->cache->load('yaml_config_fragments')) {
+					$this->buildYamlConfigVariant();
 				}
 			}
 		}
@@ -122,6 +120,10 @@ class SS_ConfigManifest {
 	 * @param bool $cache Cache the result.
 	 */
 	public function regenerate($includeTests = false, $cache = true) {
+		$this->phpConfigSources = array();
+		$this->yamlConfigFragments = array();
+		$this->variantKeySpec = array();
+
 		$finder = new ManifestFileFinder();
 		$finder->setOptions(array(
 			'name_regex'    => '/_config.php$/',
