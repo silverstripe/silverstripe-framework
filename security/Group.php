@@ -59,15 +59,14 @@ class Group extends DataObject {
 	 *
 	 * @return FieldList
 	 */
-	public function getCMSFields() {
+	public function getCMSFields($params = null) {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');
 		
 		$fields = new FieldList(
 			new TabSet("Root",
 				new Tab('Members', _t('SecurityAdmin.MEMBERS', 'Members'),
 					new TextField("Title", $this->fieldLabel('Title')),
-					$parentidfield = Object::create('DropdownField',
-						'ParentID', 
+					$parentidfield = DropdownField::create(						'ParentID', 
 						$this->fieldLabel('Parent'), 
 						DataList::create('Group')->exclude('ID', $this->ID)->map('ID', 'Breadcrumbs')
 					)->setEmptyString(' ')
@@ -101,7 +100,7 @@ class Group extends DataObject {
 			$config->getComponentByType('GridFieldAddExistingAutocompleter')
 				->setResultsFormat('$Title ($Email)')->setSearchFields(array('FirstName', 'Surname', 'Email'));
 			$config->getComponentByType('GridFieldDetailForm')->setValidator(new Member_Validator());
-			$memberList = Object::create('GridField', 'Members',false, $this->Members(), $config)->addExtraClass('members_grid');
+			$memberList = GridField::create('Members',false, $this->Members(), $config)->addExtraClass('members_grid');
 			// @todo Implement permission checking on GridField
 			//$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));
 			$fields->addFieldToTab('Root.Members', $memberList);
@@ -165,7 +164,7 @@ class Group extends DataObject {
 				$inheritedRoleIDs = array();
 			}
 
-			$rolesField = Object::create('ListboxField', 'Roles', false, $allRoles->map()->toArray())
+			$rolesField = ListboxField::create('Roles', false, $allRoles->map()->toArray())
 					->setMultiple(true)
 					->setDefaultItems($groupRoleIDs)
 					->setAttribute('data-placeholder', _t('Group.AddRole', 'Add a role for this group'))
@@ -338,17 +337,21 @@ class Group extends DataObject {
 			if(!$this->Code) $this->setCode($this->Title);
 		}
 	}
-	
-	function onAfterDelete() {
-		parent::onAfterDelete();
-		
+
+	function onBeforeDelete() {
+		parent::onBeforeDelete();
+
+		// if deleting this group, delete it's children as well
+		foreach($this->Groups() as $group) {
+			$group->delete();
+		}
+
 		// Delete associated permissions
-		$permissions = $this->Permissions();
-		foreach ( $permissions as $permission ) {
+		foreach($this->Permissions() as $permission) {
 			$permission->delete();
 		}
 	}
-	
+
 	/**
 	 * Checks for permission-code CMS_ACCESS_SecurityAdmin.
 	 * If the group has ADMIN permissions, it requires the user to have ADMIN permissions as well.

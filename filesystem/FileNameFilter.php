@@ -26,7 +26,7 @@
  * 
  * See {@link URLSegmentFilter} for a more generic implementation.
  */
-class FileNameFilter {
+class FileNameFilter extends Object {
 	
 	/**
 	 * @var Boolean
@@ -100,7 +100,7 @@ class FileNameFilter {
 	 */
 	function getTransliterator() {
 		if($this->transliterator === null && self::$default_use_transliterator) {
-			$this->transliterator = Object::create('Transliterator');
+			$this->transliterator = Transliterator::create();
 		} 
 		return $this->transliterator;
 	}

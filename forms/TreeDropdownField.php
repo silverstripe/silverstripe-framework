@@ -343,7 +343,7 @@ class TreeDropdownField extends FormField {
 class TreeDropdownField_Readonly extends TreeDropdownField {
 	protected $readonly = true;
 	
-	function Field() {
+	function Field($properties = array()) {
 		$fieldName = $this->labelField;
 		if($this->value) {
 			$keyObj = $this->objectForKey($this->value);

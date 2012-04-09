@@ -113,11 +113,11 @@ abstract class ModelAdmin extends LeftAndMain {
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ModelAdmin.js');
 	}
 
-	function getEditForm($id = null) {
+	function getEditForm($id = null, $fields = null) {
 		$list = $this->getList();
 		$exportButton = new GridFieldExportButton('before');
 		$exportButton->setExportColumns($this->getExportFields());
-		$listField = Object::create('GridField',
+		$listField = GridField::create(
 			$this->modelClass,
 			false,
 			$list,
@@ -181,9 +181,9 @@ abstract class ModelAdmin extends LeftAndMain {
 		$form = new Form($this, "SearchForm",
 			$context->getSearchFields(),
 			new FieldList(
-				Object::create('ResetFormAction','clearsearch', _t('ModelAdmin.CLEAR_SEARCH','Clear Search'))
+				ResetFormAction::create('clearsearch', _t('ModelAdmin.CLEAR_SEARCH','Clear Search'))
 					->setUseButtonTag(true)->addExtraClass('ss-ui-action-minor'),
-				Object::create('FormAction', 'search', _t('MemberTableField.SEARCH', 'Search'))
+				FormAction::create('search', _t('MemberTableField.SEARCH', 'Search'))
 				->setUseButtonTag(true)
 			),
 			new RequiredFields()

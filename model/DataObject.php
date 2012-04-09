@@ -1092,7 +1092,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 								// if database column doesn't correlate to a DBField instance...
 								if(!$fieldObj) {
-									$fieldObj = DBField::create('Varchar', $this->record[$fieldName], $fieldName);
+									$fieldObj = DBField::create_field('Varchar', $this->record[$fieldName], $fieldName);
 								}
 
 								// Both CompositeDBFields and regular fields need to be repopulated
@@ -2380,12 +2380,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Special case for has_one relationships
 		} else if(preg_match('/ID$/', $fieldName) && $this->has_one(substr($fieldName,0,-2))) {
 			$val = (isset($this->record[$fieldName])) ? $this->record[$fieldName] : null;
-			return DBField::create('ForeignKey', $val, $fieldName, $this);
+			return DBField::create_field('ForeignKey', $val, $fieldName, $this);
 			
 		// Special case for ClassName
 		} else if($fieldName == 'ClassName') {
 			$val = get_class($this);
-			return DBField::create('Varchar', $val, $fieldName, $this);
+			return DBField::create_field('Varchar', $val, $fieldName, $this);
 		}
 	}
 
@@ -2404,7 +2404,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			// Traverse dot syntax
 			$component = $this;
 			foreach($parts as $relation) {
-				$component = $component->$relation();
+				if($component instanceof SS_List) {
+					if(method_exists($component,$relation)) $component = $component->$relation();
+					else $component = $component->relation($relation);
+				} else {
+					$component = $component->$relation();
+				}
 			}
 
 			$object = $component->dbObject($fieldName);
@@ -2436,7 +2441,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			// Traverse dot syntax
 			$component = $this;
 			foreach($parts as $relation) {
-				$component = $component->$relation();
+				if($component instanceof SS_List) {
+					if(method_exists($component,$relation)) $component = $component->$relation();
+					else $component = $component->relation($relation);
+				} else {
+					$component = $component->$relation();
+				}
 			}
 
 			return $component->$fieldName;
@@ -2654,7 +2664,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *                            When false will just clear session-local cached data 
 	 * 
 	 */
-	public function flushCache($persistant=true) {
+	public function flushCache($persistant = true) {
 		if($persistant) Aggregate::flushCache($this->class);
 		
 		if($this->class == 'DataObject') {

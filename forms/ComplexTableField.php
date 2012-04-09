@@ -816,7 +816,7 @@ class ComplexTableField_Popup extends Form {
 		$actions = new FieldList();	
 		if(!$readonly) {
 			$actions->push(
-				Object::create('FormAction', 
+				FormAction::create(
 					"saveComplexTableField", 
 					_t('CMSMain.SAVE', 'Save')
 				)

@@ -717,7 +717,7 @@ class ViewableData_Debugger extends ViewableData {
 		
 		// check for an extra attached data
 		if($this->object->hasMethod('data') && $this->object->data() != $this->object) {
-			$debug .= Object::create('ViewableData_Debugger', $this->object->data())->forTemplate();
+			$debug .= ViewableData_Debugger::create($this->object->data())->forTemplate();
 		}
 		
 		return $debug;

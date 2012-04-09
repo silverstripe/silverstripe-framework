@@ -316,10 +316,13 @@ class File extends DataObject {
 	}
 
 	/**
-	 * Returns the fields to power the edit screen of files in the CMS
+	 * Returns the fields to power the edit screen of files in the CMS.
+	 * You can modify this FieldList by subclassing folder, or by creating a {@link DataExtension}
+	 * and implemeting updateCMSFields(FieldList $fields) on that extension.
+	 * 
 	 * @return FieldList
 	 */
-	function getCMSFields() {
+	function getCMSFields($params = null) {
 		// Preview
 		if($this instanceof Image) {
 			$formattedImage = $this->getFormattedImage('SetWidth', Image::$asset_preview_width);
@@ -346,12 +349,12 @@ class File extends DataObject {
 		}
 
 		//create the file attributes in a FieldGroup
-		$filePreview = FormField::create('CompositeField', 
-			FormField::create('CompositeField',
+		$filePreview = CompositeField::create(
+			CompositeField::create(
 				$previewField
 			)->setName("FilePreviewImage")->addExtraClass('cms-file-info-preview'),
-			FormField::create('CompositeField',
-				FormField::create('CompositeField', 
+			CompositeField::create(
+				CompositeField::create(
 					new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':'),
 					new ReadonlyField("Size", _t('AssetTableField.SIZE','File size') . ':', $this->getSize()),
 					$urlField = new ReadonlyField('ClickableURL', _t('AssetTableField.URL','URL'),
@@ -382,6 +385,9 @@ class File extends DataObject {
 				)
 			)
 		);
+
+		// Folder has its own updateCMSFields hook
+		if(!($this instanceof Folder)) $this->extend('updateCMSFields', $fields);
 
 		return $fields;
 	}
@@ -560,7 +566,7 @@ class File extends DataObject {
 		if(!$name) $name = $this->Title;
 
 		// Fix illegal characters
-		$filter = Object::create('FileNameFilter');
+		$filter = FileNameFilter::create();
 		$name = $filter->filter($name);
 
 		// We might have just turned it blank, so check again.
@@ -816,8 +822,8 @@ class File extends DataObject {
 		}
 	}
 	
-	public function flushCache() {
-		parent::flushCache();
+	public function flushCache($persistant = true) {
+		parent::flushCache($persistant);
 		
 		self::$cache_file_fields = null;
 	}

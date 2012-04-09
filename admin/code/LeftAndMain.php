@@ -104,6 +104,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		'css' => array(),
 		'themedcss' => array(),
 	);
+
+	/**
+	 * @var PJAXResponseNegotiator
+	 */
+	protected $responseNegotiator;
 	
 	/**
 	 * @param Member $member
@@ -193,7 +198,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(Director::redirected_to()) return;
 
 		// Audit logging hook
-		if(empty($_REQUEST['executeForm']) && !$this->isAjax()) $this->extend('accessedCMS');
+		if(empty($_REQUEST['executeForm']) && !$this->request->isAjax()) $this->extend('accessedCMS');
 		
 		// Set the members html editor config
 		HtmlEditorConfig::set_active(Member::currentUser()->getHtmlEditorConfigForCMS());
@@ -250,7 +255,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js',
-				// SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
+				SAPPHIRE_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
 				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js',
 				SAPPHIRE_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.js',
@@ -322,26 +327,35 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		SSViewer::set_theme(null);
 	}
 	
-	function handleRequest($request, DataModel $model) {
+	function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
 		$title = $this->Title();
 		
 		$response = parent::handleRequest($request, $model);
 		if(!$response->getHeader('X-Controller')) $response->addHeader('X-Controller', $this->class);
 		if(!$response->getHeader('X-Title')) $response->addHeader('X-Title', $title);
-		if(!$response->getHeader('X-ControllerURL')) {
-			$url = $request->getURL();
-			if($getVars = $request->getVars()) {
-				if(isset($getVars['url'])) unset($getVars['url']);
-				$url = Controller::join_links($url, '?' . http_build_query($getVars));
-			}
-			$response->addHeader('X-ControllerURL', $url);
-		}
 		
 		return $response;
 	}
 
+	/**
+	 * Overloaded redirection logic to trigger a fake redirect on ajax requests.
+	 * While this violates HTTP principles, its the only way to work around the
+	 * fact that browsers handle HTTP redirects opaquely, no intervention via JS is possible.
+	 * In isolation, that's not a problem - but combined with history.pushState()
+	 * it means we would request the same redirection URL twice if we want to update the URL as well.
+	 * See LeftAndMain.js for the required jQuery ajaxComplete handlers.
+	 */
+	function redirect($url, $code=302) {
+		if($this->request->isAjax()) {
+			$this->response->addHeader('X-ControllerURL', $url);
+			return ''; // Actual response will be re-requested by client
+		} else {
+			parent::redirect($url, $code);
+		}
+	}
+
 	function index($request) {
-		return ($this->isAjax()) ? $this->show($request) : $this->getViewer('index')->process($this);
+		return $this->getResponseNegotiator()->respond($request);
 	}
 
 	
@@ -391,20 +405,30 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	public function show($request) {
 		// TODO Necessary for TableListField URLs to work properly
 		if($request->param('ID')) $this->setCurrentPageID($request->param('ID'));
-		
-		if($this->isAjax()) {
-			if($request->getVar('cms-view-form')) {
-				$form = $this->getEditForm();
-				$content = $form->forTemplate();
-			} else {
-				// Rendering is handled by template, which will call EditForm() eventually
-				$content = $this->renderWith($this->getTemplatesWithSuffix('_Content'));
-			}
-		} else {
-			$content = $this->renderWith($this->getViewer('show'));
+		return $this->getResponseNegotiator()->respond($request);
+	}
+
+	/**
+	 * Caution: Volatile API.
+	 *  
+	 * @return PJAXResponseNegotiator
+	 */
+	protected function getResponseNegotiator() {
+		if(!$this->responseNegotiator) {
+			$controller = $this;
+			$this->responseNegotiator = new PJAXResponseNegotiator(array(
+				'CurrentForm' => function() use(&$controller) {
+					return $controller->getEditForm()->forTemplate();
+				},
+				'Content' => function() use(&$controller) {
+					return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
+				},
+				'default' => function() use(&$controller) {
+					return $controller->renderWith($controller->getViewer('show'));
+				}
+			));
 		}
-				
-		return $content;
+		return $this->responseNegotiator;
 	}
 
 	//------------------------------------------------------------------------------------------//
@@ -467,7 +491,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				$menu->push(new ArrayData(array(
 					"MenuItem" => $menuItem,
 					"Title" => Convert::raw2xml($title),
-					"Code" => DBField::create('Text', $code),
+					"Code" => DBField::create_field('Text', $code),
 					"Link" => $menuItem->url,
 					"LinkingMode" => $linkingmode
 				)));
@@ -589,7 +613,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		// getChildrenAsUL is a flexible and complex way of traversing the tree
 		$titleEval = '
-			"<li id=\"record-$child->ID\" data-id=\"$child->ID\" class=\"" . $child->CMSTreeClasses($extraArg) . "\">" .
+			"<li id=\"record-$child->ID\" data-id=\"$child->ID\" data-ssclass=\"$child->ClassName\" class=\"" . $child->CMSTreeClasses($extraArg) . "\">" .
 			"<ins class=\"jstree-icon\">&nbsp;</ins>" .
 			"<a href=\"" . Controller::join_links($extraArg->Link("show"), $child->ID) . "\" title=\"' 
 			. _t('LeftAndMain.PAGETYPE','Page type: ') 
@@ -680,13 +704,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$form->saveInto($record, true);
 		$record->write();
 		$this->extend('onAfterSave', $record);
-
+		$this->setCurrentPageID($record->ID);
+		
 		$this->response->addHeader('X-Status', _t('LeftAndMain.SAVEDUP'));
-		
-		// write process might've changed the record, so we reload before returning
-		$form = $this->getEditForm($record->ID);
-		
-		return $form->forTemplate();
+		return $this->getResponseNegotiator()->respond($request);
 	}
 	
 	public function delete($data, $form) {
@@ -697,12 +718,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if(!$record || !$record->ID) throw new HTTPResponse_Exception("Bad record ID #" . (int)$data['ID'], 404);
 		
 		$record->delete();
-		
-		if($this->isAjax()) {
-			return $this->EmptyForm()->forTemplate();
-		} else {
-			$this->redirectBack();
-		}
+
+		$this->response->addHeader('X-Status', _t('LeftAndMain.SAVEDUP'));
+		return $this->getResponseNegotiator()->respond(
+			$request, 
+			array('currentform' => array($this, 'EmptyForm'))
+		);
 	}
 
 	/**
@@ -969,7 +990,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Return the CMS's HTML-editor toolbar
 	 */
 	public function EditorToolbar() {
-		return Object::create('HtmlEditorField_Toolbar', $this, "EditorToolbar");
+		return HtmlEditorField_Toolbar::create($this, "EditorToolbar");
 	}
 
 	/**
@@ -1032,7 +1053,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			'BatchActionsForm',
 			new FieldList(
 				new HiddenField('csvIDs'),
-				Object::create('DropdownField',
+				DropdownField::create(
 					'Action',
 					false,
 					$actionsMap
@@ -1256,7 +1277,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return String
 	 */
 	function Locale() {
-		return DBField::create('DBLocale', i18n::get_locale());
+		return DBField::create_field('DBLocale', i18n::get_locale());
 	}
 
 	function providePermissions() {

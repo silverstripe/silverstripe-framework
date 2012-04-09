@@ -32,16 +32,29 @@ jQuery.noConflict();
 		
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
 
-		// global ajax error handlers
-		$.ajaxSetup({
-			error: function(xmlhttp, status, error) {
-				if(xmlhttp.status < 200 || xmlhttp.status > 399) {
-					var msg = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.statusText;
-				} else {
-					msg = error;
+		// global ajax handlers
+		$(document).ajaxComplete(function(e, xhr, settings) {
+			// Simulates a redirect on an ajax response.
+			if(window.History.enabled) {
+				var url = xhr.getResponseHeader('X-ControllerURL');
+				// Normalize trailing slashes in URL to work around routing weirdnesses in SS_HTTPRequest.
+				var isSame = (url && History.getPageUrl().replace(/\/+$/, '') == url.replace(/\/+$/, ''));
+				if(url && !isSame) {
+					var opts = {
+						pjax: settings.headers ? settings.headers['X-Pjax'] : null, 
+						selector: settings.headers ? settings.headers['X-Pjax-Selector'] : null
+					};
+					window.History.pushState(opts, '', url);
 				}
-				statusMessage(msg, 'bad');
 			}
+		});
+		$(document).ajaxError(function(e, xhr, settings, error) {
+			if(xhr.status < 200 || xhr.status > 399) {
+				var msg = (xhr.getResponseHeader('X-Status')) ? xhr.getResponseHeader('X-Status') : xhr.statusText;
+			} else {
+				msg = error;
+			}
+			statusMessage(msg, 'bad');
 		});
 		
 		/**
@@ -87,12 +100,6 @@ jQuery.noConflict();
 				});
 				
 				$('.cms-edit-form').live('reloadeditform', function(e, data) {
-					// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it
-					if(window.History.enabled) {
-						var url = data.xmlhttp.getResponseHeader('X-ControllerURL');
-						if(url) window.history.replaceState({}, '', url);
-					}
-					
 					self.redraw();
 				});
 				
@@ -141,8 +148,8 @@ jQuery.noConflict();
 			loadPanel: function(url, title, data) {
 				if(!data) data = {};
 				if(!title) title = "";
-				
-				var selector = data.selector || '.cms-content', contentEl = $(selector);
+				if(!data.selector) data.selector = '.cms-content';
+				var contentEl = $(data.selector);
 				
 				// Check change tracking (can't use events as we need a way to cancel the current state change)
 				var trackedEls = contentEl.find(':data(changetracker)').add(contentEl.filter(':data(changetracker)'));
@@ -203,10 +210,27 @@ jQuery.noConflict();
 					state: state, element: contentEl
 				});
 
+				var headers = {};
+				if(state.data.pjax) {
+					headers['X-Pjax'] = state.data.pjax;
+				} else if(contentEl[0] != null && contentEl.is('form')) {
+					// Replace a form
+					headers["X-Pjax"] = 'CurrentForm';
+				} else {
+					// Replace full RHS content area
+					headers["X-Pjax"] = 'Content';
+				}
+				headers['X-Pjax-Selector'] = selector;
+
 				contentEl.addClass('loading');
 				var xhr = $.ajax({
+					headers: headers,
 					url: state.url,
 					success: function(data, status, xhr) {
+						// Pseudo-redirects via X-ControllerURL might return empty data, in which
+						// case we'll ignore the response
+						if(!data) return;
+
 						// Update title
 						var title = xhr.getResponseHeader('X-Title');
 						if(title) document.title = title;
@@ -223,12 +247,13 @@ jQuery.noConflict();
 						var layoutClasses = ['east', 'west', 'center', 'north', 'south'];
 						var elemClasses = contentEl.attr('class');
 						
-						var origLayoutClasses = $.grep(
-							elemClasses.split(' '),
-							function(val) { 
-								return ($.inArray(val, layoutClasses) >= 0);
-							}
-						);
+						var origLayoutClasses = [];
+						if(elemClasses) {
+							origLayoutClasses = $.grep(
+								elemClasses.split(' '),
+								function(val) { return ($.inArray(val, layoutClasses) >= 0);}
+							);
+						}
 						
 						newContentEl
 							.removeClass(layoutClasses.join(' '))
@@ -249,12 +274,6 @@ jQuery.noConflict();
 						newContentEl.css('visibility', 'visible');
 						newContentEl.removeClass('loading');
 
-						// Simulates a redirect on an ajax response - just exchange the URL without re-requesting it
-						if(window.History.enabled) {
-							var url = xhr.getResponseHeader('X-ControllerURL');
-							if(url) window.history.replaceState({}, '', url);
-						}
-						
 						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: newContentEl});
 					},
 					error: function(xhr, status, e) {

@@ -92,7 +92,7 @@ class DevelopmentAdmin extends Controller {
 			// This action is sake-only right now.
 			unset($actions["modules/add"]);
 			
-			$renderer = Object::create('DebugView');
+			$renderer = DebugView::create();
 			$renderer->writeHeader();
 			$renderer->writeInfo("Sapphire Development Tools", Director::absoluteBaseURL());
 			$base = Director::baseURL();
@@ -116,33 +116,33 @@ class DevelopmentAdmin extends Controller {
 	}
 	
 	function tests($request) {
-		return Object::create('TestRunner');
+		return TestRunner::create();
 	}
 	
 	function jstests($request) {
-		return Object::create('JSTestRunner');
+		return JSTestRunner::create();
 	}
 	
 	function tasks() {
-		return Object::create('TaskRunner');
+		return TaskRunner::create();
 	}
 	
 	function viewmodel() {
-		return Object::create('ModelViewer');
+		return ModelViewer::create();
 	}
 	
 	function build($request) {
 		if(Director::is_cli()) {
-			$da = Object::create('DatabaseAdmin');
+			$da = DatabaseAdmin::create();
 			return $da->handleRequest($request, $this->model);
 		} else {
-			$renderer = Object::create('DebugView');
+			$renderer = DebugView::create();
 			$renderer->writeHeader();
 			$renderer->writeInfo("Environment Builder", Director::absoluteBaseURL());
 			echo "<div style=\"margin: 0 2em\">";
 			echo "<div class=\"status pending\"><h2 class='buildProgress'>Database is building.... Check below for any errors</h2><h2 class='buildCompleted'>Database has been built successfully</h2></div>";
 
-			$da = Object::create('DatabaseAdmin');
+			$da = DatabaseAdmin::create();
 			return $da->handleRequest($request, $this->model);
 
 			echo "</div>";
@@ -157,10 +157,10 @@ class DevelopmentAdmin extends Controller {
 	 *		'build/defaults' => 'buildDefaults',
 	 */
 	function buildDefaults() {
-		$da = Object::create('DatabaseAdmin');
+		$da = DatabaseAdmin::create();
 
 		if (!Director::is_cli()) {
-			$renderer = Object::create('DebugView');
+			$renderer = DebugView::create();
 			$renderer->writeHeader();
 			$renderer->writeInfo("Defaults Builder", Director::absoluteBaseURL());
 			echo "<div style=\"margin: 0 2em\">";
@@ -189,6 +189,6 @@ class DevelopmentAdmin extends Controller {
 	}
 	
 	function viewcode($request) {
-		return Object::create('CodeViewer');
+		return CodeViewer::create();
 	}
 }

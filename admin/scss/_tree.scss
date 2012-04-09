@@ -24,14 +24,8 @@
 			min-height: 18px;
 			line-height: 18px;
 			white-space: nowrap;
+			margin-left: 18px;
 			min-width: 18px;
-			
-			li {
-				margin: 0;
-			}
-			li li {
-				margin-left: 10px;
-			}
 		}
 		ins {
 			display: inline-block;
@@ -125,50 +119,86 @@
 		margin: 0;
 		padding: 0;
 		min-width: 180px;
-		background: #ebebeb;
+		background: #FFF;
 		border: 1px solid silver;
 		z-index: 10000; *width:180px;
+		@include box-shadow(0 0 10px #CCC);
+		&::before {
+			content:"";
+			display:block; /* reduce the damage in FF3.0 */
+			position:absolute;
+			top: -10px;
+			left: 24px;
+			width:0;
+			border-width: 0 6px 10px 6px  ;
+			border-color:  #FFF transparent;
+			border-style: solid;
+			z-index: 10000;
+		}
+		&::after {
+			content:"";
+			display:block; /* reduce the damage in FF3.0 */
+			position:absolute;
+			top: -11px;
+			left: 23px;
+			width:0;
+			border-width: 0 7px 11px 7px  ;
+			border-color:  #CCC transparent;
+			border-style: solid;
+		}
 	}
 	#vakata-contextmenu ul {
 		min-width: 180px; *width:180px;
 	}
 	#vakata-contextmenu ul, #vakata-contextmenu li {
 		margin: 0;
-		padding: 0;
+		padding: 0 ;
 		list-style-type: none;
 		display: block;
 	}
 	#vakata-contextmenu li {
 		line-height: 20px;
-		min-height: 20px;
+		min-height: 23px;
 		position: relative;
 		padding: 0px;
+		&:last-child {
+			margin-bottom: 1px;
+		}
 	}
 	#vakata-contextmenu li a {
-		padding: 1px 6px;
-		line-height: 17px;
+		padding: 1px 10px;
+		line-height: 23px;
 		display: block;
 		text-decoration: none;
 		margin: 1px 1px 0 1px;
+		border: 0;
 	}
 	#vakata-contextmenu li ins {
 		float: left;
-		width: 16px;
-		height: 16px;
+		width: 0;
+		height: 0;
 		text-decoration: none;
 		margin-right: 2px;
 	}
+	#vakata-contextmenu li .jstree-pageicon {
+		margin-top: 3px;
+		margin-right: 5px;
+	}
 	#vakata-contextmenu li a:hover, #vakata-contextmenu li.vakata-hover > a {
-		background: gray;
-		color: white;
+		padding: 1px 10px;
+		background: #3875d7;
+		@include background-image(linear-gradient(top, #3875d7 20%, #2a62bc 90%));
+		color: #FFF;
+		border: none;
 	}
 	#vakata-contextmenu li ul {
 		display: none;
 		position: absolute;
 		top: -2px;
 		left: 100%;
-		background: #ebebeb;
-		border: 1px solid gray;
+		background: #FFF;
+		border: 1px solid silver;
+		@include box-shadow(0 0 10px #CCC);
 	}
 	#vakata-contextmenu .right {
 		right: 100%;
@@ -246,7 +276,7 @@
 	}
 	li.jstree-open > ul {
 		display: block;
-		
+		margin-left:-13px;
 		li ul {
 			margin-left:2px;
 		}
@@ -476,7 +506,7 @@
 		border: 1px solid #7C8816;
 		background-color: #DAE79A;
 	}
-		
+
 	/* comment speech bubble - ccs3 only - source: http://nicolasgallagher.com/pure-css-speech-bubbles/demo/ */
 	& span.comment-count {
 		clear: both;
@@ -541,13 +571,11 @@
 	}
 
 	& .jstree-closed > ins { 
-		background-position:0 0;
-		cursor:pointer; 
+		background-position:0 0; 
 	}
 
 	& .jstree-open > ins { 
-		background-position:-20px 0;
-		cursor:pointer;
+		background-position:-20px 0; 
 	}
 }
 

@@ -407,7 +407,7 @@ class UploadField extends FileField {
 	 * @return UploadField_ItemHandler
 	 */
 	public function getItemHandler($itemID) {
-		return Object::create('UploadField_ItemHandler', $this, $itemID);
+		return UploadField_ItemHandler::create($this, $itemID);
 	}
 
 	/**
@@ -415,7 +415,7 @@ class UploadField extends FileField {
 	 * @return UploadField_ItemHandler
 	 */
 	public function handleSelect(SS_HTTPRequest $request) {
-		return Object::create('UploadField_SelectHandler', $this, $this->folderName);
+		return UploadField_SelectHandler::create($this, $this->folderName);
 	}
 
 	/**

@@ -93,7 +93,7 @@ of the CMS you have to take care of instanciation yourself:
 	// File: mysite/code/MyController.php
 	class MyObjectController extends Controller {
 		public function EditorToolbar() {
-			return Object::create('HtmlEditorField_Toolbar', $this, "EditorToolbar");
+			return HtmlEditorField_Toolbar::create($this, "EditorToolbar");
 		}
 	}
 

@@ -12,7 +12,7 @@ class StringFieldTest extends SapphireTest {
 	function testLowerCase() {
 		$this->assertEquals(
 			'this is a test!',
-			DBField::create('StringFieldTest_MyStringField', 'This is a TEST!')->LowerCase()
+			DBField::create_field('StringFieldTest_MyStringField', 'This is a TEST!')->LowerCase()
 		);
 	}
 
@@ -22,7 +22,7 @@ class StringFieldTest extends SapphireTest {
 	function testUpperCase() {
 		$this->assertEquals(
 			'THIS IS A TEST!',
-			DBField::create('StringFieldTest_MyStringField', 'This is a TEST!')->UpperCase()
+			DBField::create_field('StringFieldTest_MyStringField', 'This is a TEST!')->UpperCase()
 		);
 	}
 

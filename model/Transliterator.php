@@ -13,17 +13,13 @@
  * @package sapphire
  * @subpackage model
  */
-class Transliterator {
+class Transliterator extends Object {
 	/**
 	 * Allow the use of iconv() to perform transliteration.  Set to false to disable.
 	 * Even if this variable is true, iconv() won't be used if it's not installed.
 	 */
 	static $use_iconv = false;
-	
-	function __construct() {
-		// A constructor is necessary for Object::create() to work
-	}
-	
+		
 	/**
 	 * Convert the given utf8 string to a safe ASCII source
 	 */

@@ -13,7 +13,7 @@
 		 *  ss.i18n
 		 *  .cms-edit-form
 		 */
-		$('.add-form').entwine({
+		$('.cms-edit-form.cms-add-form').entwine({
 			/**
 			 * Variable: Tree
 			 * (DOMElement)
@@ -87,7 +87,7 @@
 				var data = this.serializeArray();
 				data.push({name:'Suffix',value:newPages[parentID]++});
 				data.push({name:button.attr('name'),value:button.val()});
-				
+
 				// TODO Should be set by hiddenfield already
 				jQuery('.cms-content').entwine('ss').loadForm(
 					this.attr('action'),
@@ -96,7 +96,12 @@
 						// Tree updates are triggered by Form_EditForm load events
 						button.removeClass('loading');
 					},
-					{type: 'POST', data: data}
+					{
+						type: 'POST', 
+						data: data, 
+						// Refresh the whole area to avoid reloading just the form, without the tree around it
+						headers: {'X-Pjax': 'Content'}
+					}
 				);
 		
 				this.setNewPages(newPages);

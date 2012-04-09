@@ -131,7 +131,7 @@ abstract class DataExtension extends Extension {
 	 * @return array Returns a map where the keys are db, has_one, etc, and
 	 *               the values are additional fields/relations to be defined.
 	 */
-	function extraStatics($class=null, $extension=null) {
+	function extraStatics($class = null, $extension = null) {
 		return array();
 	}
 	

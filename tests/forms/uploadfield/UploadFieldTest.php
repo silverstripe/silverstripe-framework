@@ -567,21 +567,21 @@ static $many_many = array(
 
 class UploadFieldTest_FileExtension extends DataExtension implements TestOnly {
 
-	function extraStatics() {
+	function extraStatics($class = null, $extension = null) {
 		return array(
 			'has_one' => array('Record' => 'UploadFieldTest_Record')
  		);
 	}
 
-	function canDelete() {
+	function canDelete($member = null) {
 		if($this->owner->Name == 'nodelete.txt') return false;
 	}
 
-	function canEdit() {
+	function canEdit($member = null) {
 		if($this->owner->Name == 'noedit.txt') return false;
 	}
 
-	function canView() {
+	function canView($member = null) {
 		if($this->owner->Name == 'noview.txt') return false;
 	}
 }

@@ -14,18 +14,6 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 */
 	protected $items;
 	
-	
-	/**
-	 * Synonym of the constructor. Can be chained with literate methods.
-	 * ArrayList::create("SiteTree")->sort("Title") is legal, but
-	 * new ArrayList("SiteTree")->sort("Title") is not.
-	 * 
-	 * @param array $items - an initial array to fill this object with
-	 */
-	public static function create(array $items = array()) {
-		return new ArrayList($items);
-	}
-	
 	/**
 	 *
 	 * @param array $items - an initial array to fill this object with

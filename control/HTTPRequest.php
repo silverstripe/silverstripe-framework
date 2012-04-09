@@ -232,6 +232,20 @@ class SS_HTTPRequest implements ArrayAccess {
 	function getURL() {
 		return ($this->getExtension()) ? $this->url . '.' . $this->getExtension() : $this->url; 
 	}
+
+	/**
+	 * Returns true if this request an ajax request,
+	 * based on custom HTTP ajax added by common JavaScript libraries,
+	 * or based on an explicit "ajax" request parameter.
+	 * 
+	 * @return boolean
+	 */
+	function isAjax() {
+		return (
+			$this->requestVar('ajax') ||
+			$this->getHeader('X-Requested-With') && $this->getHeader('X-Requested-With') == "XMLHttpRequest"
+		);
+	}
 	
 	/**
 	 * Enables the existence of a key-value pair in the request to be checked using

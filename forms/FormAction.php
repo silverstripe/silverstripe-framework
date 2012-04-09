@@ -45,10 +45,6 @@ class FormAction extends FormField {
 		parent::__construct($this->action, $title, null, $form);
 	}
 
-	static function create($action, $title = "") {
-		return new FormAction($action, $title);
-	}
-
 	function actionName() {
 		return substr($this->name, 7);
 	}

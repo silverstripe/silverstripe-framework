@@ -239,13 +239,13 @@ class GridField extends FormField {
 		
 		if(strpos($castingDefinition,'->') === false) {
 			$castingFieldType = $castingDefinition;
-			$castingField = DBField::create($castingFieldType, $value);
+			$castingField = DBField::create_field($castingFieldType, $value);
 			$value = call_user_func_array(array($castingField,'XML'),$castingParams);
 		} else {
 			$fieldTypeParts = explode('->', $castingDefinition);
 			$castingFieldType = $fieldTypeParts[0];	
 			$castingMethod = $fieldTypeParts[1];
-			$castingField = DBField::create($castingFieldType, $value);
+			$castingField = DBField::create_field($castingFieldType, $value);
 			$value = call_user_func_array(array($castingField,$castingMethod),$castingParams);
 		}
 		

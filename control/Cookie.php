@@ -21,22 +21,17 @@ class Cookie {
 	 * @param string $path See http://php.net/set_session
 	 * @param string $domain See http://php.net/set_session
 	 * @param boolean $secure See http://php.net/set_session
-	 * @param boolean $httpOnly See http://php.net/set_session (PHP 5.2+ only)
+	 * @param boolean $httpOnly See http://php.net/set_session
 	 */
 	static function set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = false) {
 		if(!headers_sent($file, $line)) {
 			$expiry = $expiry > 0 ? time()+(86400*$expiry) : $expiry;
 			$path = ($path) ? $path : Director::baseURL();
-
-			// Versions of PHP prior to 5.2 do not support the $httpOnly value
-			if(version_compare(phpversion(), 5.2, '<')) {
-				setcookie($name, $value, $expiry, $path, $domain, $secure);
-			} else {
-				setcookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
-			}
+			setcookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
 		} else {
-			if(self::$report_errors) 
+			if(self::$report_errors) {
 				user_error("Cookie '$name' can't be set. The site started outputting was content at line $line in $file", E_USER_WARNING);
+			}
 		}
 	}
 	

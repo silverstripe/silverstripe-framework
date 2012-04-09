@@ -4,7 +4,7 @@
  ************************************************************************************
  **                                                                                **
  **  If you can read this text in your browser then you don't have PHP installed.  **
- **  Please install PHP 5.2 or higher, preferably PHP 5.3.                         **
+ **  Please install PHP 5.3 or higher.                                             **
  **                                                                                **
  ************************************************************************************
  ************************************************************************************/
@@ -402,9 +402,9 @@ class InstallRequirements {
 			$this->requireDateTimezone(array('PHP Configuration', 'date.timezone set and valid', 'date.timezone option in php.ini must be set in PHP 5.3.0+', ini_get('date.timezone')));
 		}
 
-		$this->suggestPHPSetting('asp_tags', array(''), array('PHP Configuration', 'asp_tags option turned off', 'This should be turned off as it can cause issues with SilverStripe'));
-		$this->suggestPHPSetting('magic_quotes_gpc', array(''), array('PHP Configuration', 'magic_quotes_gpc option turned off', 'This should be turned off, as it can cause issues with cookies. More specifically, unserializing data stored in cookies.'));
-		$this->suggestPHPSetting('display_errors', array(''), array('PHP Configuration', 'display_errors option turned off', 'Unless you\'re in a development environment, this should be turned off, as it can expose sensitive data to website users.'));
+		$this->suggestPHPSetting('asp_tags', array(false,0,''), array('PHP Configuration', 'asp_tags option turned off', 'This should be turned off as it can cause issues with SilverStripe'));
+		$this->suggestPHPSetting('magic_quotes_gpc', array(false,0,''), array('PHP Configuration', 'magic_quotes_gpc option turned off', 'This should be turned off, as it can cause issues with cookies. More specifically, unserializing data stored in cookies.'));
+		$this->suggestPHPSetting('display_errors', array(false,0,''), array('PHP Configuration', 'display_errors option turned off', 'Unless you\'re in a development environment, this should be turned off, as it can expose sensitive data to website users.'));
 
 		// Check memory allocation
 		$this->requireMemory(32*1024*1024, 64*1024*1024, array("PHP Configuration", "Memory allocated (PHP config option 'memory_limit')", "SilverStripe needs a minimum of 32M allocated to PHP, but recommends 64M.", ini_get("memory_limit")));
@@ -414,7 +414,6 @@ class InstallRequirements {
 
 	function suggestPHPSetting($settingName, $settingValues, $testDetails) {
 		$this->testing($testDetails);
-
 		$val = ini_get($settingName);
 		if(!in_array($val, $settingValues) && $val != $settingValues) {
 			$testDetails[2] = "$settingName is set to '$val' in php.ini.  $testDetails[2]";

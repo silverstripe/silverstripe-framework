@@ -112,7 +112,7 @@ class DateField extends TextField {
 
 	function FieldHolder() {
 		// TODO Replace with properly extensible view helper system 
-		$d = Object::create('DateField_View_JQuery', $this); 
+		$d = DateField_View_JQuery::create($this); 
 		$d->onBeforeRender(); 
 		$html = parent::FieldHolder(); 
 		$html = $d->onAfterRender($html); 
@@ -196,8 +196,13 @@ class DateField extends TextField {
 				// Setting in correct locale
 				if(is_array($val) && $this->validateArrayValue($val)) {
 					// set() gets confused with custom date formats when using array notation
-					$this->valueObj = new Zend_Date($val, null, $this->locale);
-					$this->value = $this->valueObj->toArray();
+					if(!(empty($val['day']) || empty($val['month']) || empty($val['year']))) {
+						$this->valueObj = new Zend_Date($val, null, $this->locale);
+						$this->value = $this->valueObj->toArray();
+					} else {
+						$this->value = $val;
+						$this->valueObj = null;
+					}
 				}
 				// load ISO date from database (usually through Form->loadDataForm())
 				else if(!empty($val) && Zend_Date::isDate($val, $this->getConfig('datavalueformat'), $this->locale)) {
@@ -454,7 +459,7 @@ class DateField_Disabled extends DateField {
  * @package sapphire
  * @subpackage forms
  */
-class DateField_View_JQuery {
+class DateField_View_JQuery extends Object {
 	
 	protected $field;
 	
