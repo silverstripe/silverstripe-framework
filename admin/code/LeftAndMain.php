@@ -1172,7 +1172,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return string
 	 */
 	public function CMSVersion() {
-		if(file_exists(CMS_PATH . '/silverstripe_version')) {
+		if(defined('CMS_PATH') && file_exists(CMS_PATH . '/silverstripe_version')) {
 			$sapphireVersion = file_get_contents(CMS_PATH . '/silverstripe_version');
 		} else {
 			$sapphireVersion = file_get_contents(SAPPHIRE_PATH . '/silverstripe_version');

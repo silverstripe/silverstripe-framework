@@ -619,7 +619,7 @@ class GridField extends FormField {
 			}
 		}
 		
-		switch($request->getHeader('X-Get-Fragment')) {
+		switch($request->getHeader('X-Pjax')) {
 			case 'CurrentField':
 				return $this->FieldHolder();
 				break;
