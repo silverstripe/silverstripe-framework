@@ -142,7 +142,7 @@
 			 * Suppress submission unless it is handled through ajaxSubmit().
 			 */
 			onsubmit: function(e, button) {
-				this.parents('.cms-content').submitForm(this, button);
+				this.closest('.cms-content').submitForm(this, button);
 				
 				return false;
 			},

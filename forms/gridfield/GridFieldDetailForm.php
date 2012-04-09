@@ -311,7 +311,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		
 		$form->sessionMessage($message, 'good');
 
-		return Controller::curr()->redirectBack();
+		return Controller::curr()->redirect($this->Link());
 	}
 
 	function doDelete($data, $form) {
