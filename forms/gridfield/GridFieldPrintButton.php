@@ -95,6 +95,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
  	 */
 	function generatePrintData($gridField) {
 		$printColumns = ($this->printColumns) ? $this->printColumns : $gridField->getDisplayFields();
+		$header = null;
 		if($this->printHasHeader){
 			$header = new ArrayList();
 			foreach($printColumns as $field => $label){
