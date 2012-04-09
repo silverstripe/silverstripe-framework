@@ -523,12 +523,12 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		);
 
 		$fields = new FieldList(
-			$filePreview = FormField::create('CompositeField', 
-				FormField::create('CompositeField',
+			$filePreview = CompositeField::create(
+				CompositeField::create(
 					$previewField
 				)->setName("FilePreviewImage")->addExtraClass('cms-file-info-preview'),
-				FormField::create('CompositeField',
-					FormField::create('CompositeField', 
+				CompositeField::create(
+					CompositeField::create(
 						new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':', $file->FileType),
 						new ReadonlyField("Size", _t('AssetTableField.SIZE','File size') . ':', $file->getSize()),
 						$urlField = new ReadonlyField('ClickableURL', _t('AssetTableField.URL','URL'),
