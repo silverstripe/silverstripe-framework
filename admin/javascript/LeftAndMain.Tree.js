@@ -96,7 +96,7 @@
 							});
 						});
 					
-					this.parents('.cms-content:first').bind('reloadeditform', function(e, data) {
+					this.parents('.cms-container').bind('afterstatechange', function(e, data) {
 						self._onLoadNewPage(e, data);
 					});
 			},
