@@ -332,11 +332,11 @@ jQuery.noConflict();
 		 * "opt in" to panel loading, while by default links still exhibit their default behaviour.
 		 * Same goes for breadcrumbs in the CMS.
 		 */
-		$('.cms .cms-panel-link, .cms a.crumb').entwine({
+		$('.cms .cms-panel-link').entwine({
 			onclick: function(e) {
 				var href = this.attr('href'), url = href ? href : this.data('href'),
 					data = (this.data('targetPanel')) ? {selector: this.data('targetPanel')} : null;
-				
+
 				$('.cms-container').loadPanel(url, null, data);
 				e.preventDefault();
 			}
