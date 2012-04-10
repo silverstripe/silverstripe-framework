@@ -124,7 +124,11 @@ if(!isset($_SERVER['HTTP_HOST'])) {
  */
 if(!defined('BASE_PATH')) {
 	// Assuming that this file is sapphire/core/Core.php we can then determine the base path
-	define('BASE_PATH', rtrim(dirname(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR));
+	$candidateBasePath = rtrim(dirname(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR);
+	// We can't have an empty BASE_PATH.  Making it / means that double-slashes occur in places but that's benign.
+	// This likely only happens on chrooted environemnts
+	if($candidateBasePath == '') $candidateBasePath = DIRECTORY_SEPARATOR;
+	define('BASE_PATH', $candidateBasePath);
 }
 if(!defined('BASE_URL')) {
 	// Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting common elements
