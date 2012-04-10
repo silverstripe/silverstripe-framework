@@ -14,10 +14,10 @@
 .cms table.ss-gridfield-table thead { color: #1d2224; background: transparent; }
 .cms table.ss-gridfield-table thead tr.filter-header .fieldgroup { max-width: 512px; }
 .cms table.ss-gridfield-table tbody { background: #FFF; }
-.cms table.ss-gridfield-table tbody td { width: 100%; white-space: nowrap; }
+.cms table.ss-gridfield-table tbody td { width: auto; white-space: nowrap; }
 .cms table.ss-gridfield-table tbody td.col-buttons { width: auto; text-align: right; }
 .cms table.ss-gridfield-table tbody td.col-description { width: auto; }
-.cms table.ss-gridfield-table tbody td.col-listChildrenLink { width: auto; border-right: none; text-indent: -9999em; padding: 0; }
+.cms table.ss-gridfield-table tbody td.col-listChildrenLink { width: 16px; border-right: none; text-indent: -9999em; padding: 0; }
 .cms table.ss-gridfield-table tbody td.col-listChildrenLink .list-children-link { background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 12px -4px; display: block; }
 .cms table.ss-gridfield-table tbody td.col-getTreeTitle span.item { color: #1556b2; }
 .cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge { clear: both; text-transform: uppercase; display: inline-block; padding: 0px 3px; font-size: 0.75em; line-height: 1em; margin-left: 10px; margin-right: 6px; margin-top: -1px; -webkit-border-radius: 2px 2px; -moz-border-radius: 2px / 2px; -o-border-radius: 2px / 2px; -ms-border-radius: 2px / 2px; -khtml-border-radius: 2px / 2px; border-radius: 2px / 2px; }

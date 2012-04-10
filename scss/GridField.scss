@@ -108,7 +108,7 @@ $gf_grid_x:	16px;
 				// Give browser some hints on which cols take priority:
 				// The last column (buttons) should always shrink to fit.
 				// Overwritten for IE7, which doesn't support this.
-				width: 100%;
+				width: auto;
 				white-space:nowrap;
 				&.col-buttons {
 					width: auto;
@@ -120,7 +120,7 @@ $gf_grid_x:	16px;
 				}
 
 				&.col-listChildrenLink {
-					width:auto;
+					width:$gf_grid_x;
 					border-right:none;
 					text-indent:-9999em;
 					padding:0;
