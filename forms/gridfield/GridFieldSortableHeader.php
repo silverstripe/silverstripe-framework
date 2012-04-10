@@ -85,6 +85,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 				}
 			} else {
 				$field = new LiteralField($columnField, '<span class="non-sortable">' . $title . '</span>');
+				$field->addExtraClass("col-".preg_replace('/[^\w]/', '-', $columnField));
 			}
 			$forTemplate->Fields->push($field);
 		}
