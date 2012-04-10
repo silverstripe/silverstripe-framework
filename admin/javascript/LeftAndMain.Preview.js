@@ -129,6 +129,7 @@
 			
 			_fixIframeLinks: function() {
 				var doc = this.find('iframe')[0].contentDocument;
+				if(!doc) return;
 
 				// Block outside links from going anywhere
 				var links = doc.getElementsByTagName('A');

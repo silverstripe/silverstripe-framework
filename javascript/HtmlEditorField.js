@@ -209,8 +209,17 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					}
 				});
 
-				// Only works after TinyMCE.init() has been invoked, see $(window).bind() call below for details.
-				this.redraw();
+				// Using a global config (generated through HTMLEditorConfig PHP logic).
+				// Depending on browser cache load behaviour, entwine's DOMMaybeChanged
+				// can be called before the bottom-most inline script tag is executed,
+				// which defines the global. If that's the case, wait for the window load.
+				if(typeof ssTinyMceConfig != 'undefined') {
+					this.redraw();
+				} else {
+					$(window).bind('load', function() {
+						self.redraw();
+					});
+				}
 
 				this._super();
 			},
@@ -218,6 +227,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			redraw: function() {
 				// Using a global config (generated through HTMLEditorConfig PHP logic)
 				var config = ssTinyMceConfig, self = this, ed = this.getEditor();
+
+				tinyMCE.init(config);
 
 				// Avoid flicker (also set in CSS to apply as early as possible)
 				self.css('visibility', '');
