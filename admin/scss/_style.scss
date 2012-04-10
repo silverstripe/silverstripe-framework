@@ -603,10 +603,13 @@ body.cms {
 	}
 	
 	.cms-panel-content {
-		width: ($grid-x * 22);
+		width: $grid-x * 22;
 		padding: $grid-y $grid-x;
 		overflow: auto;
 		height:100%;
+		.dropdown select {
+			width:$grid-x * 20;
+		}
 	}
 	
 	.cms-content-header {
