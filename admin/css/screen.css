@@ -35,7 +35,7 @@ If more variables exist in the future, consider creating a variables file.*/
 /** ---------------------------------------------------- Double tone borders  http://daverupert.com/2011/06/two-tone-borders-with-css3/ ----------------------------------------------------- */
 /** ----------------------------- Sprite images ----------------------------- */
 /** Helper SCSS file for generating sprites for the interface. */
-.btn-icon-sprite, .ui-state-default .btn-icon-accept, .ui-state-default .btn-icon-accept_disabled, .ui-state-default .btn-icon-add, .ui-state-default .btn-icon-add_disabled, .ui-state-default .btn-icon-addpage, .ui-state-default .btn-icon-addpage_disabled, .ui-state-default .btn-icon-arrow-circle-135-left, .ui-state-default .btn-icon-back, .ui-state-default .btn-icon-back_disabled, .ui-state-default .btn-icon-chain--arrow, .ui-state-default .btn-icon-chain--exclamation, .ui-state-default .btn-icon-chain--minus, .ui-state-default .btn-icon-chain--pencil, .ui-state-default .btn-icon-chain--plus, .ui-state-default .btn-icon-chain-small, .ui-state-default .btn-icon-chain-unchain, .ui-state-default .btn-icon-chain, .ui-state-default .btn-icon-cross-circle, .ui-state-default .btn-icon-cross-circle_disabled, .ui-state-default .btn-icon-decline, .ui-state-default .btn-icon-decline_disabled, .ui-state-default .btn-icon-download-csv, .ui-state-default .btn-icon-drive-upload, .ui-state-default .btn-icon-drive-upload_disabled, .ui-state-default .btn-icon-magnifier, .ui-state-default .btn-icon-minus-circle, .ui-state-default .btn-icon-minus-circle_disabled, .ui-state-default .btn-icon-navigation, .ui-state-default .btn-icon-navigation_disabled, .ui-state-default .btn-icon-network-cloud, .ui-state-default .btn-icon-network-cloud_disabled, .ui-state-default .btn-icon-pencil, .ui-state-default .btn-icon-pencil_disabled, .ui-state-default .btn-icon-plug-disconnect-prohibition, .ui-state-default .btn-icon-plug-disconnect-prohibition_disabled, .ui-state-default .btn-icon-preview, .ui-state-default .btn-icon-preview_disabled, .ui-state-default .btn-icon-settings, .ui-state-default .btn-icon-settings_disabled, .ui-state-default .btn-icon-unpublish, .ui-state-default .btn-icon-unpublish_disabled { background: url('../images/btn-icon-s41050dc384.png') no-repeat; }
+.btn-icon-sprite, .ui-state-default .btn-icon-accept, .ui-state-default .btn-icon-accept_disabled, .ui-state-default .btn-icon-add, .ui-state-default .btn-icon-add_disabled, .ui-state-default .btn-icon-addpage, .ui-state-default .btn-icon-addpage_disabled, .ui-state-default .btn-icon-arrow-circle-135-left, .ui-state-default .btn-icon-back, .ui-state-default .btn-icon-back_disabled, .ui-state-default .btn-icon-chain--arrow, .ui-state-default .btn-icon-chain--exclamation, .ui-state-default .btn-icon-chain--minus, .ui-state-default .btn-icon-chain--pencil, .ui-state-default .btn-icon-chain--plus, .ui-state-default .btn-icon-chain-small, .ui-state-default .btn-icon-chain-unchain, .ui-state-default .btn-icon-chain, .ui-state-default .btn-icon-cross-circle, .ui-state-default .btn-icon-cross-circle_disabled, .ui-state-default .btn-icon-decline, .ui-state-default .btn-icon-decline_disabled, .ui-state-default .btn-icon-download-csv, .ui-state-default .btn-icon-drive-upload, .ui-state-default .btn-icon-drive-upload_disabled, .ui-state-default .btn-icon-grid_print, .ui-state-default .btn-icon-magnifier, .ui-state-default .btn-icon-minus-circle, .ui-state-default .btn-icon-minus-circle_disabled, .ui-state-default .btn-icon-navigation, .ui-state-default .btn-icon-navigation_disabled, .ui-state-default .btn-icon-network-cloud, .ui-state-default .btn-icon-network-cloud_disabled, .ui-state-default .btn-icon-pencil, .ui-state-default .btn-icon-pencil_disabled, .ui-state-default .btn-icon-plug-disconnect-prohibition, .ui-state-default .btn-icon-plug-disconnect-prohibition_disabled, .ui-state-default .btn-icon-preview, .ui-state-default .btn-icon-preview_disabled, .ui-state-default .btn-icon-settings, .ui-state-default .btn-icon-settings_disabled, .ui-state-default .btn-icon-unpublish, .ui-state-default .btn-icon-unpublish_disabled { background: url('../images/btn-icon-sfafdfa106f.png') no-repeat; }
 
 .ui-state-default .btn-icon-accept { background-position: 0 0; }
 .ui-state-default .btn-icon-accept_disabled { background-position: 0 -17px; }
@@ -61,23 +61,24 @@ If more variables exist in the future, consider creating a variables file.*/
 .ui-state-default .btn-icon-download-csv { background-position: 0 -343px; }
 .ui-state-default .btn-icon-drive-upload { background-position: 0 -361px; }
 .ui-state-default .btn-icon-drive-upload_disabled { background-position: 0 -377px; }
-.ui-state-default .btn-icon-magnifier { background-position: 0 -393px; }
-.ui-state-default .btn-icon-minus-circle { background-position: 0 -409px; }
-.ui-state-default .btn-icon-minus-circle_disabled { background-position: 0 -425px; }
-.ui-state-default .btn-icon-navigation { background-position: 0 -441px; }
-.ui-state-default .btn-icon-navigation_disabled { background-position: 0 -457px; }
-.ui-state-default .btn-icon-network-cloud { background-position: 0 -473px; }
-.ui-state-default .btn-icon-network-cloud_disabled { background-position: 0 -489px; }
-.ui-state-default .btn-icon-pencil { background-position: 0 -505px; }
-.ui-state-default .btn-icon-pencil_disabled { background-position: 0 -521px; }
-.ui-state-default .btn-icon-plug-disconnect-prohibition { background-position: 0 -537px; }
-.ui-state-default .btn-icon-plug-disconnect-prohibition_disabled { background-position: 0 -553px; }
-.ui-state-default .btn-icon-preview { background-position: 0 -569px; }
-.ui-state-default .btn-icon-preview_disabled { background-position: 0 -586px; }
-.ui-state-default .btn-icon-settings { background-position: 0 -603px; }
-.ui-state-default .btn-icon-settings_disabled { background-position: 0 -619px; }
-.ui-state-default .btn-icon-unpublish { background-position: 0 -635px; }
-.ui-state-default .btn-icon-unpublish_disabled { background-position: 0 -653px; }
+.ui-state-default .btn-icon-grid_print { background-position: 0 -393px; }
+.ui-state-default .btn-icon-magnifier { background-position: 0 -409px; }
+.ui-state-default .btn-icon-minus-circle { background-position: 0 -425px; }
+.ui-state-default .btn-icon-minus-circle_disabled { background-position: 0 -441px; }
+.ui-state-default .btn-icon-navigation { background-position: 0 -457px; }
+.ui-state-default .btn-icon-navigation_disabled { background-position: 0 -473px; }
+.ui-state-default .btn-icon-network-cloud { background-position: 0 -489px; }
+.ui-state-default .btn-icon-network-cloud_disabled { background-position: 0 -505px; }
+.ui-state-default .btn-icon-pencil { background-position: 0 -521px; }
+.ui-state-default .btn-icon-pencil_disabled { background-position: 0 -537px; }
+.ui-state-default .btn-icon-plug-disconnect-prohibition { background-position: 0 -553px; }
+.ui-state-default .btn-icon-plug-disconnect-prohibition_disabled { background-position: 0 -569px; }
+.ui-state-default .btn-icon-preview { background-position: 0 -585px; }
+.ui-state-default .btn-icon-preview_disabled { background-position: 0 -602px; }
+.ui-state-default .btn-icon-settings { background-position: 0 -619px; }
+.ui-state-default .btn-icon-settings_disabled { background-position: 0 -635px; }
+.ui-state-default .btn-icon-unpublish { background-position: 0 -651px; }
+.ui-state-default .btn-icon-unpublish_disabled { background-position: 0 -669px; }
 
 .icon { text-indent: -9999px; border: none; outline: none; }
 .icon.icon-24 { width: 24px; height: 24px; background: url('../images/menu-icons/24x24-s546fcae8fd.png'); }
@@ -546,9 +547,7 @@ form.import-form label.left { width: 250px; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .cms .jstree ul, .TreeDropdownField .treedropdownfield-panel .jstree ul { display: block; margin: 0; padding: 0; background: none; list-style-type: none; }
-.cms .jstree li, .TreeDropdownField .treedropdownfield-panel .jstree li { display: block; margin: 0; padding: 0; list-style-type: none; display: block; min-height: 18px; line-height: 18px; white-space: nowrap; min-width: 18px; }
-.cms .jstree li li, .TreeDropdownField .treedropdownfield-panel .jstree li li { margin: 0; }
-.cms .jstree li li li, .TreeDropdownField .treedropdownfield-panel .jstree li li li { margin-left: 10px; }
+.cms .jstree li, .TreeDropdownField .treedropdownfield-panel .jstree li { display: block; margin: 0; padding: 0; list-style-type: none; display: block; min-height: 18px; line-height: 18px; white-space: nowrap; margin-left: 18px; min-width: 18px; }
 .cms .jstree ins, .TreeDropdownField .treedropdownfield-panel .jstree ins { display: inline-block; text-decoration: none; width: 18px; height: 18px; margin: 0 0 0 0; padding: 0; float: left; }
 .cms .jstree a, .TreeDropdownField .treedropdownfield-panel .jstree a { display: inline-block; line-height: 16px; height: 16px; color: black; white-space: nowrap; text-decoration: none; padding: 1px 2px; margin: 0; border: 1px solid #fff; }
 .cms .jstree a:focus, .cms .jstree a:active, .cms .jstree a:hover, .TreeDropdownField .treedropdownfield-panel .jstree a:focus, .TreeDropdownField .treedropdownfield-panel .jstree a:active, .TreeDropdownField .treedropdownfield-panel .jstree a:hover { outline: none; text-decoration: none; cursor: pointer; text-shadow: none; }
@@ -588,7 +587,7 @@ form.import-form label.left { width: 250px; }
 .cms .jstree a > ins, .TreeDropdownField .treedropdownfield-panel .jstree a > ins { height: 16px; width: 16px; }
 .cms .jstree a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .jstree a > .jstree-icon { margin-right: 3px; }
 .cms .jstree-rtl a > .jstree-icon, .TreeDropdownField .treedropdownfield-panel .jstree-rtl a > .jstree-icon { margin-left: 3px; margin-right: 0; }
-.cms li.jstree-open > ul, .TreeDropdownField .treedropdownfield-panel li.jstree-open > ul { display: block; }
+.cms li.jstree-open > ul, .TreeDropdownField .treedropdownfield-panel li.jstree-open > ul { display: block; margin-left: -13px; }
 .cms li.jstree-open > ul li ul, .TreeDropdownField .treedropdownfield-panel li.jstree-open > ul li ul { margin-left: 2px; }
 .cms li.jstree-closed > ul, .TreeDropdownField .treedropdownfield-panel li.jstree-closed > ul { display: none; }
 .cms #vakata-dragged ins, .TreeDropdownField .treedropdownfield-panel #vakata-dragged ins { display: block; text-decoration: none; width: 16px; height: 16px; margin: 0 0 0 0; padding: 0; position: absolute; top: 4px; left: 4px; -moz-border-radius: 4px; border-radius: 4px; -webkit-border-radius: 4px; }
