@@ -183,7 +183,6 @@ table.ss-gridfield-table tr.title th h2 {
 //fix for alternate colors on rows in datagrid
 
 table.ss-gridfield-table {
-	table-layout:fixed; //fix for uneven column widths and hidden filter buttons
 	tr {
 		&.ss-gridfield-item.odd {
 			background: white;
@@ -214,3 +213,16 @@ table.ss-gridfield-table {
 		}
 	}
 }
+
+//fix for view children arrow in pages list view 
+.cms .ss-gridfield table.ss-gridfield-table tbody {
+	td {
+		&.col-listChildrenLink {
+			width:16px;
+			.list-children-link {
+				background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 4px -4px;
+				display:block;
+			}
+		}
+	}
+}				
