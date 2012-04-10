@@ -251,6 +251,8 @@ body.cms { overflow: hidden; }
 /** -------------------------------------------- Helpers -------------------------------------------- */
 .cms-helper-hide-actions .Actions { display: none; }
 
+.hide { display: none; }
+
 /** -------------------------------------------- Panels Styles -------------------------------------------- */
 .cms-container { height: 100%; background: #f0f3f4 url(../images/textures/bg_cms_main_content.png) repeat top left; }
 
