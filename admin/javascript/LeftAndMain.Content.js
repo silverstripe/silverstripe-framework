@@ -150,7 +150,10 @@
 				formData.push({name: 'BackURL', value:History.getPageUrl()});
 
 				jQuery.ajax(jQuery.extend({
-					headers: {"X-Pjax" : "CurrentForm"},
+					headers: {
+						"X-Pjax" : "CurrentForm",
+						'X-Pjax-Selector': '.cms-edit-form'
+					},
 					url: form.attr('action'), 
 					data: formData,
 					type: 'POST',
