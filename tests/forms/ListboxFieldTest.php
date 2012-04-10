@@ -117,19 +117,19 @@ class ListboxFieldTest extends SapphireTest {
 		$field->setValue(array($tag1->ID,$tag2->ID));
 		$field->saveInto($article);
 		$article = Dataobject::get_by_id('ListboxFieldTest_Article', $article->ID, false);
-		$this->assertEquals(array($tag1->ID, $tag2->ID), $article->Tags()->column('ID'));
+		$this->assertEquals(array($tag1->ID, $tag2->ID), $article->Tags()->sort('ID')->column('ID'));
 
 		// Remove existing relation
 		$field->setValue(array($tag1->ID));
 		$field->saveInto($article);
 		$article = Dataobject::get_by_id('ListboxFieldTest_Article', $article->ID, false);
-		$this->assertEquals(array($tag1->ID), $article->Tags()->column('ID'));
+		$this->assertEquals(array($tag1->ID), $article->Tags()->sort('ID')->column('ID'));
 
 		// Set NULL value
 		$field->setValue(null);
 		$field->saveInto($article);
 		$article = Dataobject::get_by_id('ListboxFieldTest_Article', $article->ID, false);
-		$this->assertEquals(array(), $article->Tags()->column('ID'));
+		$this->assertEquals(array(), $article->Tags()->sort('ID')->column('ID'));
 	}
 	
 	/**
