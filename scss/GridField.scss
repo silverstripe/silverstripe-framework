@@ -300,12 +300,6 @@ $gf_grid_x:	16px;
 				&.extra,&.action {
 					padding: 0;
 					cursor: default;
-					button,button:hover {
-						&.ss-ui-button {
-							margin-left: .9em;
-							color: #222;
-						}
-					}
 				}
 				&.main{
 					white-space:nowrap;
@@ -337,9 +331,6 @@ $gf_grid_x:	16px;
 						border-bottom-width: 0;	
 						@include border-radius(2px, 2px);			
 					}				
-				}
-				&.action {
-					border-right: 0;
 				}
 				&.first {
 					@include border-top-left-radius($gf_border_radius);
