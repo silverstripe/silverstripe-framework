@@ -109,15 +109,14 @@ $gf_grid_x:	16px;
 				// The last column (buttons) should always shrink to fit.
 				// Overwritten for IE7, which doesn't support this.
 				width: 100%;
+				white-space:nowrap;
 				&.col-buttons {
 					width: auto;
 					text-align: right;
-					white-space: nowrap;
 				}
 
 				&.col-description {
 					width: auto;
-					white-space:nowrap;
 				}
 
 				&.col-listChildrenLink {
@@ -129,14 +128,6 @@ $gf_grid_x:	16px;
 						background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 12px -4px;
 						display:block;
 					}
-				}
-
-				&.col-Created {
-					white-space:nowrap;
-				}
-
-				&.col-LastEdited {
-					white-space:nowrap;
 				}
 
 				&.col-getTreeTitle {
