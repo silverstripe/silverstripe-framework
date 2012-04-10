@@ -21,6 +21,7 @@ $gf_colour_border: rgba(0,0,0,.1);
 $gf_colour_zebra: #F0F4F7;
 $gf_colour_font: #666;
 $gf_colour_text_shadow: rgba(0,0,0,.3);
+$color-text-blue-link:#1556B2 !default;
 $gf_border_radius:	7px;
 $gf_color_border_filter_button: #9A9A9A;
 $gf_color_button: #e6e6e6;
@@ -139,6 +140,9 @@ $gf_grid_x:	16px;
 				}
 
 				&.col-getTreeTitle {
+					span.item {
+						color:$color-text-blue-link;
+					}
 					span.badge {
 						clear: both;
 						text-transform: uppercase;
@@ -310,6 +314,9 @@ $gf_grid_x:	16px;
 					span{
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 					}
+					&.col-listChildrenLink {
+						border-right:none;
+					}
 				}
 				&.extra {
 					background: $gf_colour_subheader;		
@@ -457,10 +464,6 @@ $gf_grid_x:	16px;
 				span.non-sortable {
 					padding:1em 1em; 
 					display:block;
-				}
-
-				&.col-listChildrenLink {
-					border-right:none;
 				}
 			}
 
