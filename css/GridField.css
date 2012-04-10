@@ -17,6 +17,16 @@
 .cms table.ss-gridfield-table tbody td { width: 100%; }
 .cms table.ss-gridfield-table tbody td.col-buttons { width: auto; text-align: right; white-space: nowrap; }
 .cms table.ss-gridfield-table tbody td.col-description { width: auto; white-space: nowrap; }
+.cms table.ss-gridfield-table tbody td.col-listChildrenLink { width: auto; border-right: none; text-indent: -9999em; padding: 0; }
+.cms table.ss-gridfield-table tbody td.col-listChildrenLink .list-children-link { background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 12px -4px; display: block; }
+.cms table.ss-gridfield-table tbody td.col-Created { white-space: nowrap; }
+.cms table.ss-gridfield-table tbody td.col-LastEdited { white-space: nowrap; }
+.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge { clear: both; text-transform: uppercase; display: inline-block; padding: 0px 3px; font-size: 0.75em; line-height: 1em; margin-left: 10px; margin-right: 6px; margin-top: -1px; -webkit-border-radius: 2px 2px; -moz-border-radius: 2px / 2px; -o-border-radius: 2px / 2px; -ms-border-radius: 2px / 2px; -khtml-border-radius: 2px / 2px; border-radius: 2px / 2px; }
+.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.modified { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
+.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.addedtodraft { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
+.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.deletedonlive { color: #636363; border: 1px solid #E49393; background-color: #F2DADB; }
+.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.removedfromdraft { color: #636363; border: 1px solid #E49393; background-color: #F2DADB; }
+.cms table.ss-gridfield-table tbody td.col-getTreeTitle span.badge.workflow-approval { color: #56660C; border: 1px solid #7C8816; background-color: #DAE79A; }
 .cms table.ss-gridfield-table tbody td button { border: none; background: none; margin: 0 0 0 2px; padding: 0; width: auto; text-shadow: none; }
 .cms table.ss-gridfield-table tbody td button.ui-state-hover { background: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .cms table.ss-gridfield-table tbody td button.ui-state-active { border: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
@@ -40,7 +50,7 @@
 .cms table.ss-gridfield-table tr th div.fieldgroup { min-width: 200px; padding-right: 0; }
 .cms table.ss-gridfield-table tr th.extra, .cms table.ss-gridfield-table tr th.action { padding: 0; cursor: default; }
 .cms table.ss-gridfield-table tr th.extra button.ss-ui-button, .cms table.ss-gridfield-table tr th.extra button:hover.ss-ui-button, .cms table.ss-gridfield-table tr th.action button.ss-ui-button, .cms table.ss-gridfield-table tr th.action button:hover.ss-ui-button { margin-left: .9em; color: #222; }
-.cms table.ss-gridfield-table tr th.main { border-top: 1px solid rgba(0, 0, 0, 0.1); color: #fff; background: #9cb0b9; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+.cms table.ss-gridfield-table tr th.main { white-space: nowrap; border-top: 1px solid rgba(0, 0, 0, 0.1); color: #fff; background: #9cb0b9; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
 .cms table.ss-gridfield-table tr th.main span { text-shadow: rgba(0, 0, 0, 0.3) 0px -1px 0; }
 .cms table.ss-gridfield-table tr th.extra { background: #bac8ce; padding: 5px; border-top: rgba(0, 0, 0, 0.3); }
 .cms table.ss-gridfield-table tr th.extra span { width: auto; display: inline; position: static; }
@@ -65,6 +75,7 @@
 .cms table.ss-gridfield-table tr th input.ss-gridfield-sort { padding: 2px; }
 .cms table.ss-gridfield-table tr th input.ss-gridfield-sort:focus { -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .cms table.ss-gridfield-table tr th span.non-sortable { padding: 1em 1em; display: block; }
+.cms table.ss-gridfield-table tr th.col-listChildrenLink { border-right: none; }
 .cms table.ss-gridfield-table tr td { border-right: 1px solid rgba(0, 0, 0, 0.1); padding: 6.4px 12px; color: #666666; }
 .cms table.ss-gridfield-table tr td.bottom-all { -moz-border-radius-bottomleft: 7px; -webkit-border-bottom-left-radius: 7px; -o-border-bottom-left-radius: 7px; -ms-border-bottom-left-radius: 7px; -khtml-border-bottom-left-radius: 7px; border-bottom-left-radius: 7px; -moz-border-radius-bottomright: 7px; -webkit-border-bottom-right-radius: 7px; -o-border-bottom-right-radius: 7px; -ms-border-bottom-right-radius: 7px; -khtml-border-bottom-right-radius: 7px; border-bottom-right-radius: 7px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b1c0c5), color-stop(100%, #7f9198)); background-image: -webkit-linear-gradient(#b1c0c5, #7f9198); background-image: -moz-linear-gradient(#b1c0c5, #7f9198); background-image: -o-linear-gradient(#b1c0c5, #7f9198); background-image: -ms-linear-gradient(#b1c0c5, #7f9198); background-image: linear-gradient(#b1c0c5, #7f9198); }
 .cms table.ss-gridfield-table tr td.bottom-all .datagrid-pagination { padding-top: 2px; position: absolute; left: 50%; margin-left: -116px; }

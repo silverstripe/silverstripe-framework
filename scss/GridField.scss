@@ -119,6 +119,70 @@ $gf_grid_x:	16px;
 					white-space:nowrap;
 				}
 
+				&.col-listChildrenLink {
+					width:auto;
+					border-right:none;
+					text-indent:-9999em;
+					padding:0;
+					.list-children-link {
+						background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 12px -4px;
+						display:block;
+					}
+				}
+
+				&.col-Created {
+					white-space:nowrap;
+				}
+
+				&.col-LastEdited {
+					white-space:nowrap;
+				}
+
+				&.col-getTreeTitle {
+					span.badge {
+						clear: both;
+						text-transform: uppercase;
+						display: inline-block;
+						padding: 0px 3px;
+						font-size: 0.75em;
+						line-height: 1em;
+						margin-left: 10px;
+						margin-right: 6px;
+						margin-top:  -1px;
+						@include border-radius(2px, 2px);
+					}
+					
+					span.badge.modified {
+						color:  #7E7470;
+						border: 1px solid #C9B800;
+						background-color: #FFF0BC;
+					}
+					
+					span.badge.addedtodraft {
+						color:  #7E7470;
+						border: 1px solid #C9B800;
+						background-color: #FFF0BC;
+					}
+					
+					span.badge.deletedonlive {
+						color:  #636363;
+						border: 1px solid #E49393;
+						background-color: #F2DADB;
+					}
+					
+					span.badge.removedfromdraft {
+						color:  #636363;
+						border: 1px solid #E49393;
+						background-color: #F2DADB;
+					}
+					
+					span.badge.workflow-approval {
+						color:  #56660C;
+						border: 1px solid #7C8816;
+						background-color: #DAE79A;
+					}
+				}
+
 				button {
 					border: none;
 					background: none;
@@ -244,6 +308,7 @@ $gf_grid_x:	16px;
 					}
 				}
 				&.main{
+					white-space:nowrap;
 					border-top: 1px solid $gf_colour_border;
 					color:#fff;
 					background: darken($gf_colour_subheader,10%);
@@ -401,6 +466,10 @@ $gf_grid_x:	16px;
 				span.non-sortable {
 					padding:1em 1em; 
 					display:block;
+				}
+
+				&.col-listChildrenLink {
+					border-right:none;
 				}
 			}
 
