@@ -72,11 +72,11 @@ class ManyManyListTest extends SapphireTest {
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$team2 = $this->objFromFixture('DataObjectTest_Team', 'team2');
 		$player1->Teams()->setByIdList(array($team1->ID, $team2->ID));
-		$this->assertEquals(array($team1->ID, $team2->ID), $player1->Teams()->column());
+		$this->assertEquals(array($team1->ID, $team2->ID), $player1->Teams()->sort('Title')->column());
 		$player1->Teams()->setByIdList(array($team1->ID));
-		$this->assertEquals(array($team1->ID), $player1->Teams()->column());
+		$this->assertEquals(array($team1->ID), $player1->Teams()->sort('Title')->column());
 		$player1->Teams()->setByIdList(array($team2->ID));
-		$this->assertEquals(array($team2->ID), $player1->Teams()->column());
+		$this->assertEquals(array($team2->ID), $player1->Teams()->sort('Title')->column());
 	}
 
 	public function testAddingWithMultipleForeignKeys() {
@@ -89,7 +89,7 @@ class ManyManyListTest extends SapphireTest {
 		$playersTeam1Team2->add($newPlayer);
 		$this->assertEquals(
 			array($team1->ID, $team2->ID),
-			$newPlayer->Teams()->column('ID')
+			$newPlayer->Teams()->sort('Title')->column('ID')
 		);
 	}
 	
