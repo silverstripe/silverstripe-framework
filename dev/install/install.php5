@@ -944,10 +944,7 @@ class Installer extends InstallRequirements {
 <html>
 	<head>
 		<title>Installing SilverStripe...</title>
-		<link rel="stylesheet" type="text/css" href="themes/simple/css/layout.css" />
-		<link rel="stylesheet" type="text/css" href="themes/simple/css/typography.css" />
-		<link rel="stylesheet" type="text/css" href="themes/simple/css/form.css" />
-		<link rel="stylesheet" type="text/css" href="sapphire/dev/install/install.css" />
+		<link rel="stylesheet" type="text/css" href="sapphire/dev/install/css/install.css" />
 		<script src="sapphire/thirdparty/jquery/jquery.js"></script>
 	</head>
 	<body>
@@ -957,7 +954,6 @@ class Installer extends InstallRequirements {
 					<span class="logo"></span>
 					<h1>SilverStripe</h1>
 				</div>
-				<p>Version <?php echo $silverstripe_version; ?></p>
 			</div>	
 		</div>
 
@@ -966,7 +962,7 @@ class Installer extends InstallRequirements {
 
 		<div class="main">
 			<div class="inner">
-				<h1>Installing SilverStripe...</h1>
+				<h2>Installing SilverStripe...</h2>
 				<p>I am now running through the installation steps (this should take about 30 seconds)</p>
 				<p>If you receive a fatal error, refresh this page to continue the installation</p>
 				<ul>
