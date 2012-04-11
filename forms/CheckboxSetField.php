@@ -133,11 +133,6 @@ class CheckboxSetField extends OptionsetField {
 		return $this->customise($properties)->renderWith($this->getTemplate());
 	}
 	
-	function setDisabled($val) {
-		$this->disabled = $val;
-		return $this;
-	}
-	
 	/**
 	 * Default selections, regardless of the {@link setValue()} settings.
 	 * Note: Items marked as disabled through {@link setDisabledItems()} can still be

@@ -238,12 +238,4 @@ class DropdownField extends FormField {
 		$field->setReadonly(true);
 		return $field;
 	}
-
-	/**
-	 * Set form being disabled
-	 */
-	function setDisabled($disabled = true) {
-		$this->disabled = $disabled;
-		return $this;
-	}
 }
