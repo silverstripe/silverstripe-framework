@@ -8,8 +8,8 @@ class HiddenField extends FormField {
 
 	protected $template = 'HiddenField';
 
-	function FieldHolder() {
-		return $this->Field();
+	function FieldHolder($properties = array()) {
+		return $this->Field($properties);
 	}
 
 	function performReadonlyTransformation() {

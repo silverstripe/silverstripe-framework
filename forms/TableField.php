@@ -231,7 +231,7 @@ class TableField extends TableListField {
 	/** 
 	 * Saves the Dataobjects contained in the field
 	 */
-	function saveInto(DataObject $record) {
+	function saveInto(DataObjectInterface $record) {
 		// CMS sometimes tries to set the value to one.
 		if(is_array($this->value)){
 			$newFields = array();
@@ -463,7 +463,7 @@ class TableField extends TableListField {
 	/**
 	 * Sets the template to be rendered with
 	 */
-	function FieldHolder() {
+	function FieldHolder($properties = array()) {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
@@ -472,7 +472,8 @@ class TableField extends TableListField {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableField.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/TableListField.css');
 		
-		return $this->renderWith($this->template);
+		$obj = $properties ? $this->customise($properties) : $this;
+		return $obj->renderWith($this->template);
 	}
 		
 	function setTransformationConditions($conditions) {

@@ -70,7 +70,7 @@ class PermissionCheckboxSetField extends FormField {
 		return $this->hiddenPermissions;
 	}
 
-	function Field() {
+	function Field($properties = array()) {
 		Requirements::css(SAPPHIRE_DIR . '/css/CheckboxSetField.css');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');
 		
@@ -215,7 +215,7 @@ class PermissionCheckboxSetField extends FormField {
 	 *
 	 * @param DataObject $record
 	 */
-	function saveInto(DataObject $record) {
+	function saveInto(DataObjectInterface $record) {
 		$fieldname = $this->name;
 		$managedClass = $this->managedClass;
 

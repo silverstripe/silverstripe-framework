@@ -14,8 +14,8 @@ class HTMLVarchar extends Varchar {
 		return ShortcodeParser::get_active()->parse($this->value);
 	}
 	
-	public function hasValue() {
-		return parent::hasValue() && $this->value != '<p></p>';
+	public function exists() {
+		return parent::exists() && $this->value != '<p></p>';
 	}
 	
 	public function scaffoldFormField($title = null, $params = null) {

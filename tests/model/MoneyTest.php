@@ -207,23 +207,23 @@ class MoneyTest extends SapphireTest {
 		);
 	}
 	
-	function testHasValue() {
+	function testExists() {
 		$m1 = new Money();
-		$this->assertFalse($m1->hasValue());
+		$this->assertFalse($m1->exists());
 		
 		$m2 = new Money();
 		$m2->setValue(array(
 			'Currency' => 'EUR',
 			'Amount' => 3.44
 		));
-		$this->assertTrue($m2->hasValue());
+		$this->assertTrue($m2->exists());
 		
 		$m3 = new Money();
 		$m3->setValue(array(
 			'Currency' => 'EUR',
 			'Amount' => 0
 		));
-		$this->assertTrue($m3->hasValue());
+		$this->assertTrue($m3->exists());
 	}
 
 	function testLoadIntoDataObject() {

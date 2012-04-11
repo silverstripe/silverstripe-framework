@@ -32,8 +32,8 @@ class DatalessField extends FormField {
 	 * Returns the field's representation in the form.
 	 * For dataless fields, this defaults to $Field.
 	 */
-	function FieldHolder() {
-		return $this->Field();
+	function FieldHolder($properties = array()) {
+		return $this->Field($properties);
 	}
 
 	/**

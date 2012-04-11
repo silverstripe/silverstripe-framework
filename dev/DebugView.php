@@ -53,6 +53,10 @@ class DebugView extends Object {
 		E_USER_WARNING => array(
 			'title' => 'User Warning',
 			'class' => 'warning'
+		),
+		E_STRICT => array(
+			'title' => 'Strict Notice',
+			'class' => 'notice'
 		)
 	);
 

@@ -22,12 +22,13 @@ class ToggleCompositeField extends CompositeField {
 		parent::__construct($children);
 	}
 	
-	public function FieldHolder() {
+	public function FieldHolder($properties = array()) {
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ToggleCompositeField.js");
 		
-		return $this->renderWith($this->template);
+		$obj = $properties ? $this->customise($properties) : $this;
+		return $obj->renderWith($this->template);
 	}	
 	
 	/**

@@ -56,7 +56,7 @@ class Varchar extends StringField {
 	 * Return the first letter of the string followed by a .
 	 */
 	function Initial() {
-		if($this->hasValue()) return $this->value[0] . '.';
+		if($this->exists()) return $this->value[0] . '.';
 	}
 	
 	/**

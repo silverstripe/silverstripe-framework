@@ -157,42 +157,42 @@ class DBFieldTest extends SapphireTest {
 		$this->assertEquals("00:00:00", $time->getValue());
 	}
 	
-	function testHasValue() {
+	function testExists() {
 		$varcharField = new Varchar("testfield");
 		$this->assertTrue($varcharField->getNullifyEmpty());
 		$varcharField->setValue('abc');
-		$this->assertTrue($varcharField->hasValue());
+		$this->assertTrue($varcharField->exists());
 		$varcharField->setValue('');
-		$this->assertFalse($varcharField->hasValue());
+		$this->assertFalse($varcharField->exists());
 		$varcharField->setValue(null);
-		$this->assertFalse($varcharField->hasValue());
+		$this->assertFalse($varcharField->exists());
 		
 		$varcharField = new Varchar("testfield", 50, array('nullifyEmpty'=>false));
 		$this->assertFalse($varcharField->getNullifyEmpty());
 		$varcharField->setValue('abc');
-		$this->assertTrue($varcharField->hasValue());
+		$this->assertTrue($varcharField->exists());
 		$varcharField->setValue('');
-		$this->assertTrue($varcharField->hasValue());
+		$this->assertTrue($varcharField->exists());
 		$varcharField->setValue(null);
-		$this->assertFalse($varcharField->hasValue());
+		$this->assertFalse($varcharField->exists());
 
 		$textField = new Text("testfield");
 		$this->assertTrue($textField->getNullifyEmpty());
 		$textField->setValue('abc');
-		$this->assertTrue($textField->hasValue());
+		$this->assertTrue($textField->exists());
 		$textField->setValue('');
-		$this->assertFalse($textField->hasValue());
+		$this->assertFalse($textField->exists());
 		$textField->setValue(null);
-		$this->assertFalse($textField->hasValue());
+		$this->assertFalse($textField->exists());
 		
 		$textField = new Text("testfield", array('nullifyEmpty'=>false));
 		$this->assertFalse($textField->getNullifyEmpty());
 		$textField->setValue('abc');
-		$this->assertTrue($textField->hasValue());
+		$this->assertTrue($textField->exists());
 		$textField->setValue('');
-		$this->assertTrue($textField->hasValue());
+		$this->assertTrue($textField->exists());
 		$textField->setValue(null);
-		$this->assertFalse($textField->hasValue());
+		$this->assertFalse($textField->exists());
 	}
 	
 	function testStringFieldsWithMultibyteData() {

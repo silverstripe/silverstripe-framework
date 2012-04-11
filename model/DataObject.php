@@ -596,7 +596,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				if(!array_key_exists($k, $customFields)) continue;
 				
 				$dbObj = ($v instanceof DBField) ? $v : $this->dbObject($k);
-				$isEmpty = ($isEmpty && !$dbObj->hasValue());
+				$isEmpty = ($isEmpty && !$dbObj->exists());
 			}
 		}
 		return $isEmpty;
@@ -3346,7 +3346,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
  	function hasValue($field, $arguments = null, $cache = true) {
  		$obj = $this->dbObject($field);
  		if($obj) {
- 			return $obj->hasValue();
+ 			return $obj->exists();
  		} else {
  			return parent::hasValue($field, $arguments, $cache);
  		}

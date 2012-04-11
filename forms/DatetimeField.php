@@ -74,17 +74,17 @@ class DatetimeField extends FormField {
 		return $this;
 	}
 	
-	function FieldHolder() {
+	function FieldHolder($properties = array()) {
 		$config = array(
 			'datetimeorder' => $this->getConfig('datetimeorder'),
 		);
 		$config = array_filter($config);
 		$this->addExtraClass(Convert::raw2json($config));
 
-		return parent::FieldHolder();
+		return parent::FieldHolder($properties);
 	}
 	
-	function Field() {
+	function Field($properties = array()) {
 		Requirements::css(SAPPHIRE_DIR . '/css/DatetimeField.css');
 		
 		$tzField = ($this->getConfig('usertimezone')) ? $this->timezoneField->FieldHolder() : '';
@@ -287,7 +287,7 @@ class DatetimeField_Readonly extends DatetimeField {
 	
 	protected $readonly = true;
 		
-	function Field() {
+	function Field($properties = array()) {
 		$valDate = $this->dateField->dataValue();
 		$valTime = $this->timeField->dataValue();
 		if($valDate && $valTime) {

@@ -12,7 +12,7 @@ class LookupField extends DropdownField {
 	/**
 	 * Returns a readonly span containing the correct value.
 	 */
-	function Field() {
+	function Field($properties = array()) {
 		$source = $this->getSource();
 		
 		

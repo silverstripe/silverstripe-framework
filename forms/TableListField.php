@@ -278,7 +278,7 @@ class TableListField extends FormField {
 		return new TableListField_ItemRequest($this, $request->param('ID'));
 	}
 	
-	function FieldHolder() {
+	function FieldHolder($properties = array()) {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
@@ -299,7 +299,9 @@ class TableListField extends FormField {
 			});
 JS
 		);}
-		return $this->renderWith($this->template);
+
+		$obj = $properties ? $this->customise($properties) : $this;
+		return $obj->renderWith($this->template);
 	}
 	
 	function Headings() {

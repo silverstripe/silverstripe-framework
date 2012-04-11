@@ -206,7 +206,7 @@ class ComplexTableField extends TableListField {
 	/**
 	 * @return String
 	 */
-	function FieldHolder() {
+	function FieldHolder($properties = array()) {
 		Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/behaviour/behaviour.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/greybox/AmiJS.js");
