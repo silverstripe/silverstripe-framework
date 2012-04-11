@@ -100,6 +100,14 @@ $gf_grid_x:	16px;
 					max-width:$gf_grid_x*32; //max width 512px
 				}
 			}
+			tr:first-child { //sets 7px border-radius on the top row in the thead - accounts for edgecase where there is no title row.
+				th:first-child {
+					@include border-top-left-radius($gf_border_radius);
+				}
+				th:last-child {
+					@include border-top-right-radius($gf_border_radius);
+				}
+			} 
 		}
 		
 		tbody {
@@ -219,7 +227,6 @@ $gf_grid_x:	16px;
 		
 		tr {	
 			&.title {
-				@include border-top-radius($gf_border_radius);
 				th {
 					position: relative;
 					background: $gf_colour_gradient_dark;
@@ -227,7 +234,6 @@ $gf_grid_x:	16px;
 					padding: 5px;
 					min-height: 40px; //this is to accomodate the add new button.
 					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
-					@include border-top-radius($gf_border_radius);
 					@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 					h2{
 						padding: 0px;
