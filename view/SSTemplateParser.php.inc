@@ -99,7 +99,7 @@ class SSTemplateParser extends Parser {
 	# Template is any structurally-complete portion of template (a full nested level in other words). It's the primary matcher, 
 	# and is used by all enclosing blocks, as well as a base for the top level
 	 
-	Template: (Comment | If | Require | CacheBlock | UncachedBlock | OldI18NTag | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+
+	Template: (Comment | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+
 	*/
 	function Template_STR(&$res, $sub) {
 		$res['php'] .= $sub['php'] . PHP_EOL ;
@@ -264,7 +264,7 @@ class SSTemplateParser extends Parser {
 	
 	function Argument_FreeString(&$res, $sub) {
 		$res['ArgumentMode'] = 'string';
-		$res['php'] = "'" . str_replace("'", "\\'", $sub['text']) . "'";
+		$res['php'] = "'" . str_replace("'", "\\'", rtrim($sub['text'])) . "'";
 	}
 	
 	/*!*
@@ -573,7 +573,55 @@ class SSTemplateParser extends Parser {
 	function OldI18NTag_STR(&$res, $sub) {
 		$res['php'] = '$val .= ' . $sub['php'] . ';';
 	}
-	
+
+	/*!*
+
+	# An argument that can be passed through to an included template
+
+	NamedArgument: Name:Word "=" Value:Argument
+
+	*/
+	function NamedArgument_Name(&$res, $sub) {
+		$res['php'] = "'" . $sub['text'] . "' => ";
+	}
+
+	function NamedArgument_Value(&$res, $sub) {
+		$res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] : str_replace('$$FINAL', 'XML_val', $sub['php']);
+	}
+
+	/*!*
+
+	# The include tag
+
+	Include: "<%" < "include" < Template:Word < (NamedArgument ( < "," < NamedArgument )*)? > "%>"
+
+	*/
+	function Include__construct(&$res){
+		$res['arguments'] = array();
+	}
+
+	function Include_Template(&$res, $sub){
+		$res['template'] = "'" . $sub['text'] . "'";
+	}
+
+	function Include_NamedArgument(&$res, $sub){
+		$res['arguments'][] = $sub['php'];
+	}
+
+	function Include__finalise(&$res){
+		$template = $res['template'];
+		$arguments = $res['arguments'];
+
+		$res['php'] = '$val .= SSViewer::execute_template('.$template.', $scope->getItem(), array('.implode(',', $arguments)."));\n";
+
+		if($this->includeDebuggingComments) { // Add include filename comments on dev sites
+			$res['php'] =
+				'$val .= \'<!-- include '.addslashes($template).' -->\';'. "\n".
+				$res['php'].
+				'$val .= \'<!-- end include '.addslashes($template).' -->\';'. "\n";
+		}
+	}
+
 	/*!*
 	
 	# To make the block support reasonably extendable, we don't explicitly define each closed block and it's structure,
@@ -586,7 +634,7 @@ class SSTemplateParser extends Parser {
 	# NotBlockTag matches against any word that might come after a "<%" that the generic open and closed block handlers
 	# shouldn't attempt to match against, because they're handled by more explicit matchers 
 	 
-	NotBlockTag: "end_" | (("if" | "else_if" | "else" | "require" | "cached" | "uncached" | "cacheblock") ] )
+	NotBlockTag: "end_" | (("if" | "else_if" | "else" | "require" | "cached" | "uncached" | "cacheblock" | "include") ] )
 	
 	# Match against closed blocks - blocks with an opening and a closing tag that surround some internal portion of
 	# template
@@ -718,28 +766,7 @@ class SSTemplateParser extends Parser {
 			throw new SSTemplateParseException('Unknown open block "'.$blockname.'" encountered. Perhaps you missed the closing tag or have mis-spelled it?', $this);
 		}
 	}
-	
-	/**
-	 * This is an open block handler, for the <% include %> tag
-	 */
-	function OpenBlock_Handle_Include(&$res) {
-		if ($res['ArgumentCount'] != 1) throw new SSTemplateParseException('Include takes exactly one argument', $this);
-		
-		$arg = $res['Arguments'][0];
-		$php = ($arg['ArgumentMode'] == 'default') ? $arg['string_php'] : $arg['php'];
-		
-		if($this->includeDebuggingComments) { // Add include filename comments on dev sites
-			return 
-				'$val .= \'<!-- include '.addslashes($php).' -->\';'. "\n".
-				'$val .= SSViewer::execute_template('.$php.', $scope->getItem());'. "\n".
-				'$val .= \'<!-- end include '.addslashes($php).' -->\';'. "\n";
-		}
-		else {
-			return 
-				'$val .= SSViewer::execute_template('.$php.', $scope->getItem());'. "\n";
-		}
-	}
-	
+
 	/**
 	 * This is an open block handler, for the <% debug %> utility tag
 	 */

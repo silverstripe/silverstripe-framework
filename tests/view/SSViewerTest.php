@@ -443,6 +443,33 @@ after')
 		$this->assertRegExp('/<head><base href=".*" \/><\/head>/', $response->getBody());
 	}
 
+	function testIncludeWithArguments() {
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeWithArguments %>'),
+			'<p>[out:Arg1]</p><p>[out:Arg2]</p>'
+		);
+
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeWithArguments Arg1=A %>'),
+			'<p>A</p><p>[out:Arg2]</p>'
+		);
+
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeWithArguments Arg1=A, Arg2=B %>'),
+			'<p>A</p><p>B</p>'
+		);
+
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeWithArguments Arg1=A Bare String, Arg2=B Bare String %>'),
+			'<p>A Bare String</p><p>B Bare String</p>'
+		);
+
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeWithArguments Arg1="A", Arg2=$B %>', new ArrayData(array('B' => 'Bar'))),
+			'<p>A</p><p>Bar</p>'
+		);
+	}
+
 	
 	function testRecursiveInclude() {
 		$view = new SSViewer(array('SSViewerTestRecursiveInclude'));
