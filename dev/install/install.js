@@ -45,7 +45,7 @@ $(document).ready(function() {
 		if($(this).text() == 'Hide All Requirements') {
 			// hide the shown requirements
 			$(this).parents('h5').next('table.testResults').find('.good').hide();
-			$(this).text('See All Requirements');
+			$(this).text('Show All Requirements');
 		}
 		else {
 			// show the requirements.
