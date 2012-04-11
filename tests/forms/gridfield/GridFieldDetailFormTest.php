@@ -8,13 +8,13 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		'GridFieldDetailFormTest_PeopleGroup',
 		'GridFieldDetailFormTest_Category',
 	);
-	
 
 	function testAddForm() {
 		$this->logInWithPermission('ADMIN');
 		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
-		            ->filter('Name', 'My Group')
-		            ->First();
+			->filter('Name', 'My Group')
+			->sort('Name')
+			->First();
 		$count = $group->People()->Count();
 
 		$response = $this->get('GridFieldDetailFormTest_Controller');
@@ -41,16 +41,18 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 
 		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
-            ->filter('Name', 'My Group')
-            ->First();
-        $this->assertEquals($count + 1, $group->People()->Count());
+			->filter('Name', 'My Group')
+			->sort('Name')
+			->First();
+		$this->assertEquals($count + 1, $group->People()->Count());
 	}
 
 	function testEditForm() {
 		$this->logInWithPermission('ADMIN');
 		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
-		            ->filter('Name', 'My Group')
-		            ->First();
+			->filter('Name', 'My Group')
+			->sort('Name')
+			->First();
 		$firstperson = $group->People()->First();
 		$this->assertTrue($firstperson->Surname != 'Baggins');
 
@@ -78,10 +80,11 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 
 		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
-            ->filter('Name', 'My Group')
-            ->First();
-        $firstperson = $group->People()->First();
-        $this->assertEquals($firstperson->Surname, 'Baggins');
+			->filter('Name', 'My Group')
+			->sort('Name')
+			->First();
+		$firstperson = $group->People()->First();
+		$this->assertEquals($firstperson->Surname, 'Baggins');
 	}
 
 	function testNestedEditForm() {
@@ -108,7 +111,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$parser = new CSSContentParser($response->getBody());
 		$personEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_People"]//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $person->ID . '")]//a');		
 		$this->assertEquals(
-			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/1/ItemEditForm/field/People/item/' . $person->ID . '/edit',
+			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People/item/%d/edit', $group->ID, $person->ID),
 			(string)$personEditLink[0]['href']
 		);
 
@@ -118,7 +121,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$parser = new CSSContentParser($response->getBody());
 		$categoryEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_Categories"]//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $category->ID . '")]//a');	
 		$this->assertEquals(
-			'GridFieldDetailFormTest_GroupController/Form/field/testfield/item/1/ItemEditForm/field/People/item/' . $category->ID . '/ItemEditForm/field/Categories/item/1/edit',
+			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People/item/%d/ItemEditForm/field/Categories/item/%d/edit', $group->ID, $person->ID, $category->ID),
 			(string)$categoryEditLink[0]['href']
 		);
 
@@ -202,8 +205,9 @@ class GridFieldDetailFormTest_Controller extends Controller implements TestOnly 
 
 	function Form() {
 		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
-		            ->filter('Name', 'My Group')
-		            ->First();
+			->filter('Name', 'My Group')
+			->sort('Name')
+			->First();
 
 		$field = new GridField('testfield', 'testfield', $group->People());
 		$field->getConfig()->addComponent(new GridFieldToolbarHeader());
@@ -219,7 +223,7 @@ class GridFieldDetailFormTest_GroupController extends Controller implements Test
 	protected $template = 'BlankPage';
 
 	function Form() {
-		$field = new GridField('testfield', 'testfield', DataList::create('GridFieldDetailFormTest_PeopleGroup'));
+		$field = new GridField('testfield', 'testfield', DataList::create('GridFieldDetailFormTest_PeopleGroup')->sort('Name'));
 		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
 		$field->getConfig()->addComponent(new GridFieldToolbarHeader());
 		$field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
