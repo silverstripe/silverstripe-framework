@@ -30,8 +30,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 	}
 	
 	function testNoLegacyPasswordHashMigrationOnIncompatibleAlgorithm() {
-		PasswordEncryptor::register('crc32', 'PasswordEncryptor_PHPHash("crc32")');
-		
+		Config::inst()->update('PasswordEncryptor', 'encryptors', array('crc32'=>array('PasswordEncryptor_PHPHash'=>'crc32')));
 		$field=Member::get_unique_identifier_field();
 		
 		$member = new Member();
