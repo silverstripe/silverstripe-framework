@@ -26,7 +26,7 @@ class ImageFormAction extends FormAction {
 		parent::__construct($action, $title, $form);
 	}
 
-	function Field() {
+	function Field($properties = array()) {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/ImageFormAction.js');
 		

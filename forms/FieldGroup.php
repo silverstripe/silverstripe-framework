@@ -92,7 +92,7 @@ class FieldGroup extends CompositeField {
 	 * @todo Shouldn't use SmallFieldHolder() (very difficult to style), 
 	 * it is easier to overwrite the <div class="field"> behaviour in a more specific class
 	 */
-	function Field() {
+	function Field($properties = array()) {
 		$fs = $this->FieldList();
     	$spaceZebra = isset($this->zebra) ? " fieldgroup-$this->zebra" : '';
     	$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
@@ -131,7 +131,7 @@ class FieldGroup extends CompositeField {
 	    return $this;
  	}
   
-	function FieldHolder() {
+	function FieldHolder($properties = array()) {
 		$Title = $this->XML_val('Title');
 		$Message = $this->XML_val('Message');
 		$MessageType = $this->XML_val('MessageType');

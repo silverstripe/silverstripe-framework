@@ -123,7 +123,7 @@ class FileField extends FormField {
 		);
 	}
 
-	public function saveInto(DataObject $record) {
+	public function saveInto(DataObjectInterface $record) {
 		if(!isset($_FILES[$this->name])) return false;
 		$fileClass = File::get_class_for_file_extension(pathinfo($_FILES[$this->name]['name'], PATHINFO_EXTENSION));
 		

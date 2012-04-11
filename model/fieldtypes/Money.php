@@ -102,7 +102,7 @@ class Money extends DBField implements CompositeDBField {
 
 	function setValue($value, $record = null, $markChanged = true) {
 		// @todo Allow resetting value to NULL through Money $value field
-		if ($value instanceof Money && $value->hasValue()) {
+		if ($value instanceof Money && $value->exists()) {
 			$this->setCurrency($value->getCurrency(), $markChanged);
 			$this->setAmount($value->getAmount(), $markChanged);
 			if($markChanged) $this->isChanged = true;
@@ -190,7 +190,7 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @return boolean
 	 */
-	function hasValue() {
+	function exists() {
 		return ($this->getCurrency() && is_numeric($this->getAmount()));
 	}
 	

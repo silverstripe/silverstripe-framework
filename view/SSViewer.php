@@ -719,7 +719,9 @@ class SSViewer {
 		if(isset($this->chosenTemplates['main'])) {
 			$template = $this->chosenTemplates['main'];
 		} else {
-			$template = $this->chosenTemplates[ reset($dummy = array_keys($this->chosenTemplates)) ];
+			$keys = array_keys($this->chosenTemplates);
+			$key = reset($keys);
+			$template = $this->chosenTemplates[$key];
 		}
 		
 		if(isset($_GET['debug_profile'])) Profiler::mark("SSViewer::process", " for $template");

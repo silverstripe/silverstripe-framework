@@ -69,7 +69,7 @@ class TabSet extends CompositeField {
 	 * Returns a tab-strip and the associated tabs.
 	 * The HTML is a standardised format, containing a &lt;ul;
 	 */
-	public function FieldHolder() {
+	public function FieldHolder($properties = array()) {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-cookie/jquery.cookie.js');
@@ -80,7 +80,8 @@ class TabSet extends CompositeField {
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
 		
-		return $this->renderWith($this->template);
+		$obj = $properties ? $this->customise($properties) : $this;
+		return $obj->renderWith($this->template);
 	}
 	
 	/**

@@ -120,6 +120,7 @@ abstract class DBField extends ViewableData {
 		$this->value = $value;
 	}
 	
+	
 	/**
 	 * Determines if the field has a value which
 	 * is not considered to be 'null' in
@@ -127,15 +128,8 @@ abstract class DBField extends ViewableData {
 	 * 
 	 * @return boolean
 	 */
-	function hasValue() {
-		return ($this->value);
-	}
-	
-	/**
-	 * @return bool
-	 */
 	public function exists() {
-		return $this->hasValue();
+		return ($this->value);
 	}
 	
 	/**
@@ -167,7 +161,7 @@ abstract class DBField extends ViewableData {
 	 * @param array $manipulation
 	 */
 	function writeToManipulation(&$manipulation) {
-		$manipulation['fields'][$this->name] = $this->hasValue() ? $this->prepValueForDB($this->value) : $this->nullValue();
+		$manipulation['fields'][$this->name] = $this->exists() ? $this->prepValueForDB($this->value) : $this->nullValue();
 	}
 	
 	/**

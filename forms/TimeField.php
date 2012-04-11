@@ -63,13 +63,13 @@ class TimeField extends TextField {
 		parent::__construct($name,$title,$value);
 	}
 	
-	function Field() {
+	function Field($properties = array()) {
 		$config = array(
 			'timeformat' => $this->getConfig('timeformat')
 		);
 		$config = array_filter($config);
 		$this->addExtraClass(Convert::raw2json($config));
-		return parent::Field();
+		return parent::Field($properties);
 	}
 	
 	function Type() {
@@ -206,7 +206,7 @@ class TimeField_Readonly extends TimeField {
 	
 	protected $readonly = true;
 	
-	function Field() {
+	function Field($properties = array()) {
 		if($this->valueObj) {
 			$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('timeformat')));
 		} else {

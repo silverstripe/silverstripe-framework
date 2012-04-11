@@ -85,12 +85,14 @@ class SelectionGroup extends CompositeField {
 		return true;
 	}
 	
-	function FieldHolder() {
+	function FieldHolder($properties = array()) {
 		Requirements::javascript(THIRDPARTY_DIR .'/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR   . '/javascript/SelectionGroup.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/SelectionGroup.css');
+
+		$obj = $properties ? $this->customise($properties) : $this;
 		
-		return $this->renderWith($this->template);
+		return $obj->renderWith($this->template);
 	}
 }
 

@@ -76,7 +76,7 @@ class NullableField extends FormField {
 	 * (non-PHPdoc)
 	 * @see sapphire/forms/FormField#Field()
 	 */
-	function Field() {
+	function Field($properties = array()) {
 		if ( $this->isReadonly()) {
 			$nullableCheckbox = new CheckboxField_Readonly($this->getIsNullId());
 		} else {

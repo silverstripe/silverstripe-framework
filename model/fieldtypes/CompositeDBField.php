@@ -177,6 +177,6 @@ interface CompositeDBField {
 	 * 
 	 * @return boolean
 	 */
-	function hasValue();
+	function exists();
 	
 }

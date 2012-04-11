@@ -5,7 +5,7 @@
  */
 class MemberDatetimeOptionsetField extends OptionsetField {
 
-	function Field() {
+	function Field($properties = array()) {
 		$options = '';
 		$odd = 0;
 		$source = $this->getSource();

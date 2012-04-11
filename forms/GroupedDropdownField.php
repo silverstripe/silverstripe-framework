@@ -39,7 +39,7 @@
  */
 class GroupedDropdownField extends DropdownField {
 
-	function Field() {
+	function Field($properties = array()) {
 		$options = '';
 		foreach($this->getSource() as $value => $title) {
 			if(is_array($title)) {

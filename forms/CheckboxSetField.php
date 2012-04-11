@@ -133,11 +133,6 @@ class CheckboxSetField extends OptionsetField {
 		return $this->customise($properties)->renderWith($this->getTemplate());
 	}
 	
-	function setDisabled($val) {
-		$this->disabled = $val;
-		return $this;
-	}
-	
 	/**
 	 * Default selections, regardless of the {@link setValue()} settings.
 	 * Note: Items marked as disabled through {@link setDisabledItems()} can still be
@@ -180,7 +175,7 @@ class CheckboxSetField extends OptionsetField {
 	 *
 	 * @param DataObject $record The record to save into
 	 */
-	function saveInto(DataObject $record) {
+	function saveInto(DataObjectInterface $record) {
 		$fieldname = $this->name;
 		$relation = ($fieldname && $record && $record->hasMethod($fieldname)) ? $record->$fieldname() : null;
 		if($fieldname && $record && $relation && $relation instanceof RelationList) {

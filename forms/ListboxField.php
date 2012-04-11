@@ -169,7 +169,7 @@ class ListboxField extends DropdownField {
 	 *
 	 * @param DataObject $record The record to save into
 	 */
-	function saveInto(DataObject $record) {
+	function saveInto(DataObjectInterface $record) {
 		if($this->multiple) {
 			$fieldname = $this->name;
 			$relation = ($fieldname && $record && $record->hasMethod($fieldname)) ? $record->$fieldname() : null;

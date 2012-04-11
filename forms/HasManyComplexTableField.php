@@ -64,8 +64,8 @@ class HasManyComplexTableField extends ComplexTableField {
 		
 	}
 	
-	function FieldHolder() {
-		$ret = parent::FieldHolder();
+	function FieldHolder($properties = array()) {
+		$ret = parent::FieldHolder($properties);
 		
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/HasManyFileField.js");
@@ -87,7 +87,7 @@ class HasManyComplexTableField extends ComplexTableField {
 		return $this->controller->ID;
 	}
 	
-	function saveInto(DataObject $record) {
+	function saveInto(DataObjectInterface $record) {
 		$fieldName = $this->name;
 		$saveDest = $record->$fieldName();
 		

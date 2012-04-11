@@ -60,7 +60,7 @@ class FileIFrameField extends FileField {
 	/**
 	 * @return string
 	 */
-	public function Field() {
+	public function Field($properties = array()) {
 		Deprecation::notice('3.0', 'Use UploadField');
 
 		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');

@@ -64,9 +64,9 @@ abstract class StringField extends DBField {
 
 	/**
 	 * (non-PHPdoc)
-	 * @see core/model/fieldtypes/DBField#hasValue()
+	 * @see core/model/fieldtypes/DBField#exists()
 	 */
-	function hasValue() {
+	function exists() {
 		return ($this->value || $this->value == '0') || ( !$this->nullifyEmpty && $this->value === '');
 	}
 
