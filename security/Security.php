@@ -105,6 +105,14 @@ class Security extends Controller {
 	static $force_database_is_ready = null;
 	
 	/**
+	 * When the database has once been verified as ready, it will not do the
+	 * checks again.
+	 *
+	 * @var bool
+	 */
+	protected static $database_is_ready = false;
+
+	/**
 	 * Set location of word list file
 	 * 
 	 * @param string $wordListFile Location of word list file
@@ -800,6 +808,8 @@ class Security extends Controller {
 	public static function database_is_ready() {
 		// Used for unit tests
 		if(self::$force_database_is_ready !== NULL) return self::$force_database_is_ready;
+
+		if(self::$database_is_ready) return self::$database_is_ready;
 		
 		$requiredTables = ClassInfo::dataClassesFor('Member');
 		$requiredTables[] = 'Group';
@@ -822,6 +832,7 @@ class Security extends Controller {
 			
 			if($missingFields) return false;
 		}
+		self::$database_is_ready = true;
 		
 		return true;
 	}
