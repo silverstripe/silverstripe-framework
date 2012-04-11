@@ -786,6 +786,48 @@ after')
 			)
 		);
 	}
+	
+	/**
+	 * Test that nested loops restore the loop variables correctly when pushing and popping states
+	 */
+	function testNestedLoops(){
+		
+		// Data to run the loop tests on - one sequence of three items, one with child elements
+		// (of a different size to the main sequence)
+		$data = new ArrayData(array(
+			'Foo' => new ArrayList(array(
+				new ArrayData(array(
+					'Name' => '1',
+					'Children' => new ArrayList(array(
+						new ArrayData(array(
+							'Name' => 'a'
+						)),
+						new ArrayData(array(
+							'Name' => 'b'
+						)),
+					)),
+				)),
+				new ArrayData(array(
+					'Name' => '2',
+					'Children' => new ArrayList(),
+				)),
+				new ArrayData(array(
+					'Name' => '3',
+					'Children' => new ArrayList(),
+				)),
+			)),
+		));
+
+		// Make sure that including a loop inside a loop will not destroy the internal count of
+		// items, checked by using "Last"
+		$this->assertEqualIgnoringWhitespace(
+			'1ab23last',
+			$this->render(
+				'<% loop $Foo %>$Name<% loop Children %>$Name<% end_loop %><% if Last %>last<% end_if %><% end_loop %>',
+				$data
+			)
+		);
+	}
 
 	/**
 	 * @covers SSViewer::get_themes()

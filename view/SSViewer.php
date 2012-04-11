@@ -50,6 +50,7 @@ class SSViewer_Scope {
 	function resetLocalScope(){
 		list($this->item, $this->itemIterator, $this->popIndex, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->localIndex];
 		array_splice($this->itemStack, $this->localIndex+1);
+		$this->itemIteratorTotal = $this->itemIterator ? $this->itemIterator->count() : 0;
 	}
 	
 	function obj($name){
