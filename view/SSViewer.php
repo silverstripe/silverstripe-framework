@@ -796,7 +796,10 @@ class SSViewer {
 			if(isset($_GET['debug_profile'])) Profiler::unmark("SSViewer::process - compile", " for $template");
 		}
 
-		$internalArguments = array('I18NNamespace' => basename($template));
+		$templateSpecificGlobals = array('I18NNamespace' => basename($template));
+		$arguments = $arguments ? array_merge($templateSpecificGlobals, $arguments) : $templateSpecificGlobals;
+
+		$subtemplateGlobals = array();
 
 		// Makes the rendered sub-templates available on the parent item,
 		// through $Content and $Layout placeholders.
@@ -805,11 +808,11 @@ class SSViewer {
 				$subtemplateViewer = new SSViewer($this->chosenTemplates[$subtemplate]);
 				$subtemplateViewer->setPartialCacheStore($this->getPartialCacheStore());
 
-				$internalArguments[$subtemplate] = $subtemplateViewer->process($item);
+				$subtemplateGlobals[$subtemplate] = $subtemplateViewer->process($item, $arguments);
 			}
 		}
 
-		$val = $this->includeGeneratedTemplate($cacheFile, $item, $arguments ? array_merge($internalArguments, $arguments) : $internalArguments);
+		$val = $this->includeGeneratedTemplate($cacheFile, $item, array_merge($subtemplateGlobals, $arguments));
 		$output = Requirements::includeInHTML($template, $val);
 		
 		array_pop(SSViewer::$topLevel);
