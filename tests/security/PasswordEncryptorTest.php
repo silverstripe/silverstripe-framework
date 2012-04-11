@@ -1,12 +1,26 @@
 <?php
 class PasswordEncryptorTest extends SapphireTest {
+
+	/**
+	 *
+	 * @var Config
+	 */
+	private $config = null;
+
+	public function setUp() {
+		parent::setUp();
+		$this->config = clone(Config::inst());
+	}
+
+	public function tearDown() {
+		parent::tearDown();
+		Config::set_instance($this->config);
+	}
+
 	function testCreateForCode() {
-		PasswordEncryptor::register('test', 'PasswordEncryptorTest_TestEncryptor');
+		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test'=>array('PasswordEncryptorTest_TestEncryptor'=>null)));
 		$e = PasswordEncryptor::create_for_algorithm('test');
-		$this->assertType(
-			'PasswordEncryptorTest_TestEncryptor',
-			$e
-		);
+		$this->assertType('PasswordEncryptorTest_TestEncryptor', $e );
 	}
 	
 	/**
@@ -17,25 +31,27 @@ class PasswordEncryptorTest extends SapphireTest {
 	}
 	
 	function testRegister() {
-		PasswordEncryptor::register('test', 'PasswordEncryptorTest_TestEncryptor');
-		$this->assertContains('test', array_keys(PasswordEncryptor::get_encryptors()));
-		$this->assertContains('PasswordEncryptorTest_TestEncryptor', array_values(PasswordEncryptor::get_encryptors()));
+		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test'=>array('PasswordEncryptorTest_TestEncryptor'=>null)));
+		$encryptors = PasswordEncryptor::get_encryptors();
+		$this->assertContains('test', array_keys($encryptors));
+		$encryptor = $encryptors['test'];
+		$this->assertContains('PasswordEncryptorTest_TestEncryptor', key($encryptor));
 	}
 	
 	function testUnregister() {
-		PasswordEncryptor::register('test', 'PasswordEncryptorTest_TestEncryptor');
-		PasswordEncryptor::unregister('test');
+		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test'=>array('PasswordEncryptorTest_TestEncryptor'=>null)));
+		Config::inst()->remove('PasswordEncryptor', 'encryptors', 'test');
 		$this->assertNotContains('test', array_keys(PasswordEncryptor::get_encryptors()));
 	}
 	
 	function testEncrytorPHPHashWithArguments() {
-		PasswordEncryptor::register('test_md5', 'PasswordEncryptor_PHPHash("md5")');
+		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_md5'=>array('PasswordEncryptor_PHPHash'=>'md5')));
 		$e = PasswordEncryptor::create_for_algorithm('test_md5');
 		$this->assertEquals('md5', $e->getAlgorithm());
 	}
 	
 	function testEncrytorPHPHash() {
-		PasswordEncryptor::register('test_sha1', 'PasswordEncryptor_PHPHash("sha1")');
+		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_sha1'=>array('PasswordEncryptor_PHPHash'=>'sha1')));
 		$e = PasswordEncryptor::create_for_algorithm('test_sha1');
 		$password = 'mypassword';
 		$salt = 'mysalt';
@@ -46,7 +62,7 @@ class PasswordEncryptorTest extends SapphireTest {
 	}
 	
 	function testEncrytorPHPHashCompare() {
-		PasswordEncryptor::register('test_sha1', 'PasswordEncryptor_PHPHash("sha1")');
+		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_sha1'=>array('PasswordEncryptor_PHPHash'=>'sha1')));
 		$e = PasswordEncryptor::create_for_algorithm('test_sha1');
 		$this->assertTrue($e->compare(sha1('mypassword'), sha1('mypassword')));
 		$this->assertFalse($e->compare(sha1('mypassword'), sha1('mywrongpassword')));
@@ -59,7 +75,7 @@ class PasswordEncryptorTest extends SapphireTest {
 	 * 	php -r "echo(base_convert(sha1('mypassword'), 16, 36));"
 	 */
 	function testEncrytorLegacyPHPHashCompare() {
-		PasswordEncryptor::register('test_sha1legacy', 'PasswordEncryptor_LegacyPHPHash("sha1")');
+		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_sha1legacy'=>array('PasswordEncryptor_LegacyPHPHash'=>'sha1')));
 		$e = PasswordEncryptor::create_for_algorithm('test_sha1legacy');
 		// precomputed hashes for 'mypassword' from different architectures
 		$amdHash = 'h1fj0a6m4o6k0sosks88oo08ko4gc4s';
