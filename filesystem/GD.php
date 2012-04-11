@@ -30,7 +30,12 @@ class GD extends Object {
 			switch($type) {
 				case 1: if(function_exists('imagecreatefromgif')) $this->setGD(imagecreatefromgif($filename)); break;
 				case 2: if(function_exists('imagecreatefromjpeg')) $this->setGD(imagecreatefromjpeg($filename)); break;
-				case 3: if(function_exists('imagecreatefrompng')) $this->setGD(imagecreatefrompng($filename)); break;
+				case 3: if(function_exists('imagecreatefrompng')) {
+					$img = imagecreatefrompng($filename);
+					imagesavealpha($img, true); // save alphablending setting (important)
+					$this->setGD($img);
+					break;
+				}
 			}
 		}
 		
