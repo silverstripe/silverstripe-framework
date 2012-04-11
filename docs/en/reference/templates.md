@@ -121,6 +121,14 @@ a variable is true
 		<% include MembersOnlyInclude %>
 	<% end_if %>
 
+Includes can't directly access the parent scope of the scope active when the include is included. However you can
+pass arguments to the include, which are available on the scope top within the include
+
+	:::ss
+	<% with CurrentMember %>
+		<% include MemberDetails PageTitle=$Top.Title, PageID=$Top.ID %>
+	<% end_with %>
+
 You can also perform includes using the Requirements Class via the template controls. See the section on
 [Includes in Templates](requirements#including_inside_template_files) for more details and examples.
 
