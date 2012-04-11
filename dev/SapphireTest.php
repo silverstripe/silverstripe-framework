@@ -159,6 +159,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		if(class_exists('SiteTree')) SiteTree::reset();
 		Hierarchy::reset();
 		if(Controller::has_curr()) Controller::curr()->setSession(new Session(array()));
+		Security::$database_is_ready = null;
 		
 		$this->originalTheme = SSViewer::current_theme();
 		
@@ -770,7 +771,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	static function create_temp_db() {
 		// Disable PHPUnit error handling
 		restore_error_handler();
-		
+
 		// Create a temporary database, and force the connection to use UTC for time
 		global $databaseConfig;
 		$databaseConfig['timezone'] = '+0:00';

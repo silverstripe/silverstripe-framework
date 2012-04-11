@@ -110,7 +110,7 @@ class Security extends Controller {
 	 *
 	 * @var bool
 	 */
-	protected static $database_is_ready = false;
+	static $database_is_ready = false;
 
 	/**
 	 * Set location of word list file
