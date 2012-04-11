@@ -31,8 +31,8 @@ class SSViewer_Scope {
 	protected $itemIteratorTotal;   //Total number of items in the iterator
 	
 	private $popIndex; // A pointer into the item stack for which item should be scope on the next pop call
-	private $upIndex; // A pointer into the item stack for which item is "up" from this one
-	private $currentIndex; // A pointer into the item stack for which item is this one (or null if not in stack yet)
+	private $upIndex = null; // A pointer into the item stack for which item is "up" from this one
+	private $currentIndex = null; // A pointer into the item stack for which item is this one (or null if not in stack yet)
 	
 	private $localIndex;
 
@@ -56,6 +56,8 @@ class SSViewer_Scope {
 		
 		switch ($name) {
 			case 'Up':
+				if ($this->upIndex === null) user_error('Up called when we\'re already at the top of the scope', E_USER_ERROR);
+
 				list($this->item, $this->itemIterator, $unused2, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->upIndex];
 				break;
 			
