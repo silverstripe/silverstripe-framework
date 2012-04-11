@@ -52,7 +52,7 @@ class SS_ClassManifest {
 			15 => '{',
 		));
 	}
-	
+
 	/**
 	 * @return TokenisedRegularExpression
 	 */
@@ -78,7 +78,7 @@ class SS_ClassManifest {
 			17 => '{',
 		));
 	}
-	
+
 	/**
 	 * @return TokenisedRegularExpression
 	 */
@@ -92,7 +92,7 @@ class SS_ClassManifest {
 			5 => ';',
 		));
 	}
-	
+
 	/**
 	 * @return TokenisedRegularExpression
 	 */
@@ -103,7 +103,7 @@ class SS_ClassManifest {
 			2 => array(T_STRING, 'save_to' => 'interfaceName')
 		));
 	}
-	
+
 	/**
 	 * Constructs and initialises a new class manifest, either loading the data
 	 * from the cache or re-scanning for classes.
@@ -243,11 +243,11 @@ class SS_ClassManifest {
 	public function getConfigs() {
 		return $this->configs;
 	}
-	
+
 	/**
 	 * Returns an array of module names mapped to their paths.
 	 * "Modules" in sapphire are simply directories with a _config.php file.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getModules() {
@@ -268,7 +268,7 @@ class SS_ClassManifest {
 			'classes', 'roots', 'children', 'descendants', 'interfaces',
 			'implementors', 'configs'
 		);
-		
+
 		// Reset the manifest so stale info doesn't cause errors.
 		foreach ($reset as $reset) {
 			$this->$reset = array();
@@ -276,7 +276,7 @@ class SS_ClassManifest {
 
 		$finder = new ManifestFileFinder();
 		$finder->setOptions(array(
-			'name_regex'    => '/\.php$/',
+			'name_regex'    => '/^(_config.php|[^_].*\.php)$/',
 			'ignore_files'  => array('index.php', 'main.php', 'cli-script.php'),
 			'ignore_tests'  => !$this->tests,
 			'file_callback' => array($this, 'handleFile')
@@ -328,7 +328,7 @@ class SS_ClassManifest {
 				$namespace = $data['namespace'];
 			}
 		}
-		
+
 		if (!$classes) {
 			$tokens     = token_get_all($file);
 			if(version_compare(PHP_VERSION, '5.3', '>=')) {
@@ -353,7 +353,7 @@ class SS_ClassManifest {
 			$name       = $namespace . $class['className'];
 			$extends    = isset($class['extends']) ? implode('', $class['extends']) : null;
 			$implements = isset($class['interfaces']) ? $class['interfaces'] : null;
-			
+
 			if($extends && $extends[0] != '\\') {
 				$extends = $namespace . $extends;
 			} elseif($extends) {
@@ -380,7 +380,7 @@ class SS_ClassManifest {
 			} else {
 				$this->roots[] = $name;
 			}
-			
+
 			if ($implements) {
 				$interface = $namespace;
 				for($i = 0; $i < count($implements); ++$i) {
@@ -395,7 +395,7 @@ class SS_ClassManifest {
 					}
 					if($i == count($implements)-1 || $implements[$i+1] == ',') {
 						$interface = strtolower($interface);
-		
+
 						if (!isset($this->implementors[$interface])) {
 							$this->implementors[$interface] = array($name);
 						} else {
@@ -405,7 +405,7 @@ class SS_ClassManifest {
 				}
 			}
 		}
-		
+
 		foreach ($interfaces as $interface) {
 			$this->interfaces[strtolower($namespace . $interface['interfaceName'])] = $pathname;
 		}
@@ -421,7 +421,7 @@ class SS_ClassManifest {
 	protected function coalesceDescendants($class) {
 		$result = array();
 		$lClass = strtolower($class);
-		
+
 		if (array_key_exists($lClass, $this->children)) {
 			$this->descendants[$lClass] = array();
 
