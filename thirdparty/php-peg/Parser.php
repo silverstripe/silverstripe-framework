@@ -269,16 +269,16 @@ class FalseOnlyPackrat extends Parser {
  * @author Hamish Friedlander
  */
 class ConservativePackrat extends Parser {
-	function packhas( $key ) {
+	function packhas( $key, $pos ) {
 		return isset( $this->packres[$key] ) && $this->packres[$key] !== NULL ;
 	}
 
-	function packread( $key ) {
+	function packread( $key, $pos ) {
 		$this->pos = $this->packpos[$key];
 		return $this->packres[$key] ;
 	}
 
-	function packwrite( $key, $res ) {
+	function packwrite( $key, $pos, $res ) {
 		if ( isset( $this->packres[$key] ) ) {
 			$this->packres[$key] = $res ;
 			$this->packpos[$key] = $this->pos ;
