@@ -213,9 +213,6 @@ jQuery.noConflict();
 				var headers = {};
 				if(state.data.pjax) {
 					headers['X-Pjax'] = state.data.pjax;
-				} else if(contentEl[0] != null && contentEl.is('form')) {
-					// Replace a form
-					headers["X-Pjax"] = 'CurrentForm';
 				} else {
 					// Replace full RHS content area
 					headers["X-Pjax"] = 'Content';
