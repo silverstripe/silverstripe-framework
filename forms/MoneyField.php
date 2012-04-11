@@ -100,7 +100,7 @@ class MoneyField extends FormField {
 	 *
 	 * (see @link MoneyFieldTest_CustomSetter_Object for more information)
 	 */
-	function saveInto($dataObject) {
+	function saveInto(DataObjectInterface $dataObject) {
 		$fieldName = $this->name;
 		if($dataObject->hasMethod("set$fieldName")) {
 			$dataObject->$fieldName = DBField::create_field('Money', array(

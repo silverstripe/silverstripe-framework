@@ -231,7 +231,7 @@ class TableField extends TableListField {
 	/** 
 	 * Saves the Dataobjects contained in the field
 	 */
-	function saveInto(DataObject $record) {
+	function saveInto(DataObjectInterface $record) {
 		// CMS sometimes tries to set the value to one.
 		if(is_array($this->value)){
 			$newFields = array();

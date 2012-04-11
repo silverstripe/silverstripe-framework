@@ -96,7 +96,7 @@ class HtmlEditorField extends TextareaField {
 		);
 	}
 	
-	public function saveInto($record) {
+	public function saveInto(DataObjectInterface $record) {
 		if($record->escapeTypeForField($this->name) != 'xml') {
 			throw new Exception (
 				'HtmlEditorField->saveInto(): This field should save into a HTMLText or HTMLVarchar field.'

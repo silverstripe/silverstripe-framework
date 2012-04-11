@@ -87,7 +87,7 @@ class HasManyComplexTableField extends ComplexTableField {
 		return $this->controller->ID;
 	}
 	
-	function saveInto(DataObject $record) {
+	function saveInto(DataObjectInterface $record) {
 		$fieldName = $this->name;
 		$saveDest = $record->$fieldName();
 		

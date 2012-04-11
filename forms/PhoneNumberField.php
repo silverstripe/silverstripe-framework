@@ -103,8 +103,7 @@ class PhoneNumberField extends FormField {
 		return $parts;
 	}
 	
-	public function saveInto( $record ) {
-    
+	public function saveInto(DataObjectInterface $record) {
 		list( $countryCode, $areaCode, $phoneNumber, $extension ) = $this->parseValue();
 		$fieldName = $this->name;
 		

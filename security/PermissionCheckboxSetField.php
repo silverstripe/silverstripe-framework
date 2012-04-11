@@ -215,7 +215,7 @@ class PermissionCheckboxSetField extends FormField {
 	 *
 	 * @param DataObject $record
 	 */
-	function saveInto(DataObject $record) {
+	function saveInto(DataObjectInterface $record) {
 		$fieldname = $this->name;
 		$managedClass = $this->managedClass;
 

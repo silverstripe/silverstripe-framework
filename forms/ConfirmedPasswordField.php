@@ -286,7 +286,7 @@ class ConfirmedPasswordField extends FormField {
 	 * @param DataObject $record
 	 * @return bool
 	 */
-	function saveInto(DataObject $record) {
+	function saveInto(DataObjectInterface $record) {
 		if(!$this->isSaveable()) return false;
 		
 		if(!($this->canBeEmpty && !$this->value)) {
