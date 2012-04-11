@@ -75,7 +75,6 @@ class File extends DataObject {
 		"Title" => "Varchar(255)",
 		"Filename" => "Text",
 		"Content" => "Text",
-		"Sort" => "Int",
 		// Only applies to files, doesn't inherit for folder
 		'ShowInSearch' => 'Boolean(1)',
 	);
@@ -840,7 +839,6 @@ class File extends DataObject {
 		$labels['Filename'] = _t('File.Filename', 'Filename');
 		$labels['Filename'] = _t('File.Filename', 'Filename');
 		$labels['Content'] = _t('File.Content', 'Content');
-		$labels['Sort'] = _t('File.Sort', 'Sort Order');
 		
 		return $labels;
 	}
