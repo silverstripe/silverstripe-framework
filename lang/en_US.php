@@ -597,11 +597,11 @@ $lang['en_US']['MemberTableField']['DeleteTitleTextDatabase'] = array(
 );
 $lang['en_US']['MemberTableField']['ERRORADDINGUSER'] = 'There was an error adding the user to the group: %s';
 $lang['en_US']['MemberTableField']['FILTER'] = 'Filter';
-$lang['en_US']['MemberTableField']['SEARCH'] = 'Search';
+$lang['en_US']['MemberTableField']['APPLY FILTER'] = 'Apply Filter';
 $lang['en_US']['ModelAdmin']['ADDBUTTON'] = 'Add';
 $lang['en_US']['ModelAdmin']['ADDFORM'] = 'Fill out this form to add a %s to the database.';
 $lang['en_US']['ModelAdmin']['CHOOSE_COLUMNS'] = 'Select result columns...';
-$lang['en_US']['ModelAdmin']['CLEAR_SEARCH'] = 'Clear Search';
+$lang['en_US']['ModelAdmin']['RESET'] = 'Reset';
 $lang['en_US']['ModelAdmin']['CREATEBUTTON'] = array(
 	'Create \'%s\'',
 	PR_MEDIUM,
