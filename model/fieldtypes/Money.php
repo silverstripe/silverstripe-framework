@@ -190,7 +190,7 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @return boolean
 	 */
-	function hasValue() {
+	function exists() {
 		return ($this->getCurrency() && is_numeric($this->getAmount()));
 	}
 	
