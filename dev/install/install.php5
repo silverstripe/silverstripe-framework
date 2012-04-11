@@ -525,7 +525,7 @@ class InstallRequirements {
 					$text = "All Requirements Pass but ". $warningRequirements . ' '. $pluralWarnings;
 				}
 
-				echo "<h5 class='requirement $className'><em class='inlineBarText'>$section</em> <a href='#'>See All Requirements</a> <span>$text</span></h5>";
+				echo "<h5 class='requirement $className'>$section <a href='#'>Show All Requirements</a> <span>$text</span></h5>";
 				echo "<table class=\"testResults\">";
 				echo $output;
 				echo "</table>";
