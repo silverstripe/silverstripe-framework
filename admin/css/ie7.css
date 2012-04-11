@@ -50,7 +50,6 @@ html { overflow: hidden; }
 
 table.ss-gridfield-table tr.title th h2 { float: left; }
 
-table.ss-gridfield-table { table-layout: fixed; }
 table.ss-gridfield-table tr.ss-gridfield-item.odd { background: white; }
 table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }
 
@@ -59,3 +58,6 @@ table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.file { margin: 0px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.file input.file { margin-left: -132px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.checkbox { padding: 0px; }
+
+.cms .ss-gridfield table.ss-gridfield-table tbody td.col-listChildrenLink { width: 16px; }
+.cms .ss-gridfield table.ss-gridfield-table tbody td.col-listChildrenLink .list-children-link { background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 4px -4px; display: block; }

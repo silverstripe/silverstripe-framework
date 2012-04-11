@@ -60,6 +60,10 @@ body.cms {
 	}
 }
 
+.hide {
+	display: none;
+}
+
 /** --------------------------------------------
  * Panels Styles
  * -------------------------------------------- */
@@ -86,7 +90,7 @@ body.cms {
 	padding: ($grid-y - 8) $grid-x $grid-y;	
 	height: $grid-y * 4;
 	z-index: 60;
-
+	@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2) inset);
 	background: {
 		image:url(../images/textures/cms_content_header.png);
 		repeat:repeat;
@@ -206,7 +210,7 @@ body.cms {
 			bottom:none;
 		}
 
-		text-shadow: lighten($color-tab, 60%) 0 1px 0;
+		text-shadow: lighten($color-tab, 5%) 0 1px 0;
 	}
 	
 	.ui-state-active, 
@@ -255,6 +259,7 @@ body.cms {
 				border: {
 					top:none;
 				}
+				padding-bottom:1px;
 		
 				a {
 					&.content-treeview {
@@ -598,10 +603,13 @@ body.cms {
 	}
 	
 	.cms-panel-content {
-		width: ($grid-x * 22);
+		width: $grid-x * 22;
 		padding: $grid-y $grid-x;
 		overflow: auto;
 		height:100%;
+		.dropdown select {
+			width:$grid-x * 20;
+		}
 		#LastEditedFrom {
 			@include box-shadow(none);
 			input {
@@ -865,23 +873,35 @@ body.cms {
 form.member-profile-form {
 	padding: 0 $grid-x*2 0 0;
 	.ui-tabs-nav {
+		margin-right:40px !important; //adds a 40px gap to the right of the tabs to match designs on main CMS
+		float:right;
+		.ui-state-active, 
+		.ui-widget-content .ui-state-active, 
+		.ui-widget-header .ui-state-active {
+			padding-bottom: 1px;
+			margin-bottom:-1px;
+		}
 		.ui-state-default,
 		.ui-widget-content .ui-state-default,
 		.ui-widget-header .ui-state-default {
 			border: {
 				top:none;
 			}
+			a {
+				padding:12px 20px 11px;
+			}
 		}
 	}
 
 	#Root_Permissions {
 		clear:both;
-		padding: $grid-x*2;
+		border-top: 1px solid darken($color-tab, 20%);
 	}
 
 	#Root_Main {
 		clear:both;
-		padding: $grid-x*2;
+		border-top: 1px solid darken($color-tab, 20%);
+		padding-top:$grid-y*2;
 		.cms-help-toggle {
 			text-indent: -9999em;
 			display: inline-block;
@@ -1190,15 +1210,131 @@ form.member-profile-form {
 	border-radius: $grid-y;
   overflow: visible;
   padding: 0;
-
+ 
   // Titlebar for pop-up dialog.
 	.ui-dialog-titlebar.ui-widget-header {
-	  font-size: $font-base-size+2;
-		background-color: #92a5b2;
-		padding: $grid-y/2 $grid-x/2 $grid-y/2 $grid-x*2;
-		border-bottom: 2px solid #8399a7;
+	  	font-size: $font-base-size+2;
+		padding: 0;
+		border:none;
+		background: {
+			color:transparent;
+			image:url(../images/textures/cms_content_header.png);
+			repeat:repeat;	
+		}
+		@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2) inset);
+		.ui-dialog-title {
+			position:absolute;
+		}
+	}
 
-		@include background-image(linear-gradient(#ced7dc, #92a5b2));
+	.cms-dialog-content {
+		background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+		padding-bottom: $grid-y;
+		padding-top:0px;
+
+		.Actions {
+			overflow: auto;
+			margin: $grid-y 0;
+			padding-bottom: $grid-y;
+			float: right;
+		}
+
+		.ss-tabset {	
+			@include border-radius(none);
+
+			.tab {
+				background: none;
+				overflow-y: auto;
+			}
+
+			&.ui-tabs {
+				background: none;
+
+				.ui-tabs-nav {
+					border: none;
+					padding: 0 $grid-x*5 0 0; //allows for 40px gap to the right of tabs to match the tabs on main CMS
+					float:right;
+
+					li {	
+						margin:0;
+						&.ui-tabs-selected {
+							margin-bottom: -1px;
+							padding-bottom:11px;
+						}
+
+						&:first-child {
+							margin-left: 15px;
+						}
+						font-weight: bold;
+						line-height: 16px;
+						padding: 12px 12px 10px;
+						border-bottom: 2px solid #B3B3B3;
+					}
+
+					.ui-state-focus a {
+						outline:none;
+					}
+
+					.ui-state-default, 
+					.ui-widget-content .ui-state-default, 
+					.ui-widget-header .ui-state-default {
+						background-color: $color-base;
+						@include background-image(
+							linear-gradient($color-base, darken($color-base, 12%))
+							);
+						
+						border: {
+							right-color: darken($color-tab, 20%);
+							left-color: $color-tab;
+							bottom:none;
+							top:none;
+						}
+
+						text-shadow: lighten($color-tab, 60%) 0 1px 0;
+					}
+					
+					.ui-state-active, 
+					.ui-widget-content .ui-state-active, 
+					.ui-widget-header .ui-state-active {
+						background: $color-widget-bg;
+						border: {
+							right-color: darken($color-tab, 20%);
+							left-color: darken($color-tab, 20%);
+						}
+						margin-right:-1px;
+						margin-left:-3px;
+						z-index:2;
+						
+						a {
+							border: {
+								bottom:none;
+								top:none;
+							}
+
+						}
+					}
+					.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+					border-radius:0;
+					}
+
+					.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+						border-radius:0;
+					}
+				}
+				
+
+				.ui-tabs-panel {
+					background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+					overflow-x:hidden;
+					clear:both;
+					border-top: 1px solid darken($color-tab, 20%);
+				}
+			}
+		}
+		.clear {
+			clear: both;
+		}
+		
 	}
 
 	&.loading {
@@ -1211,61 +1347,6 @@ form.member-profile-form {
 body.cms-dialog {
 	overflow: auto;
 	background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
-}
-
-.cms-dialog-content {
-	background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
-	padding-bottom: $grid-y;
-
-	.Actions {
-		overflow: auto;
-		margin: $grid-y 0;
-		padding-bottom: $grid-y;
-		float: right;
-	}
-
-	.ss-tabset {	
-		z-index: 60;
-		@include border-radius(none);
-
-		.tab {
-			background: none;
-			overflow-y: auto;
-		}
-
-		&.ui-tabs {
-			background: none;
-
-			.ui-tabs-nav {
-				border: none;
-				padding: 0 $grid-x*5 0 0; //allows for 40px gap to the right of tabs to match the tabs on main CMS
-				float: right;
-
-				li {	
-					&.ui-tabs-selected {
-						margin-bottom: -1px;
-					}
-
-					&:first-child {
-						margin-left: 15px;
-					}
-					font-weight: bold;
-					line-height: 16px;
-					padding: 11px 12px 9px;
-					border-bottom: 2px solid #B3B3B3;
-				}
-			}
-
-			.ui-tabs-panel {
-				border: 1px solid #AAAAAA;
-				background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
-			}
-		}
-	}
-	.clear {
-		clear: both;
-	}
-	
 }
 
 /** --------------------------------------------
@@ -1283,6 +1364,10 @@ body.cms-dialog {
 		tbody td:first-child img {
 			max-height: 30px;
 		}
+	}
+
+	.ss-uploadfield-editandorganize {
+		display: none;
 	}
 
 	// TODO Consolidate with .assetuploadfield and .ss-uploadfield styles
@@ -1326,7 +1411,10 @@ body.cms-dialog {
 			}
 
 			.action-delete {
-				display: inline-block;
+				float:right;
+				padding:$grid-x;
+				background:none;
+				border:none;
 			}
 		}
 

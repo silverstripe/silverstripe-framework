@@ -369,25 +369,53 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		));
 		
 		$numericLabelTmpl = '<span class="step-label"><span class="flyout">%d</span><span class="arrow"></span><strong class="title">%s</strong></span>';
-		$fields = new FieldList(
-			new LiteralField(
-				'Heading', 
-				sprintf('<h3>%s</h3>', _t('HtmlEditorField.IMAGE', 'Image'))
-			),
-			
-			$contentComposite = new CompositeField(
-				new LiteralField('headerSelect', '<h4 class="field header-select">' . sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.Find', 'Find')) . '</h4>'),
+
+		$fromCMS = new CompositeField(
+			new LiteralField('headerSelect', '<h4 class="field header-select">' . sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.Find', 'Find')) . '</h4>'),
 				$selectComposite = new CompositeField(
 					new TreeDropdownField('ParentID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder'),
 					$fileField
-				),
-				
-				new LiteralField('headerEdit', '<h4 class="field header-edit">' . sprintf($numericLabelTmpl, '2', _t('HtmlEditorField.EditDetails', 'Edit details')) . '</h4>'),
-				$editComposite = new CompositeField(
-					new LiteralField('contentEdit', '<div class="content-edit"></div>')
 				)
-				
+		);
+
+		$fromCMS->addExtraClass('content');
+		$selectComposite->addExtraClass('content-select');
+
+		Requirements::css(SAPPHIRE_DIR . '/css/AssetUploadField.css');
+		$computerUploadField = Object::create('UploadField', 'AssetUploadField', '');
+		$computerUploadField->setConfig('previewMaxWidth', 40);
+		$computerUploadField->setConfig('previewMaxHeight', 30);
+		$computerUploadField->addExtraClass('ss-assetuploadfield');
+		$computerUploadField->removeExtraClass('ss-uploadfield');
+		$computerUploadField->setTemplate('HtmlEditorField_UploadField');
+		$computerUploadField->setFolderName(Upload::$uploads_folder);
+
+		$tabSet = new TabSet(
+			"MediaFormInsertImageTabs",
+			new Tab(
+				_t('HtmlEditorField.FROMCOMPUTER','From your computer'),
+				$computerUploadField
+			),
+			new Tab(
+				_t('HtmlEditorField.FROMCMS','From the CMS'),
+				$fromCMS
 			)
+		);
+
+		$allFields = new CompositeField(
+			$tabSet,
+			new LiteralField('headerEdit', '<h4 class="field header-edit">' . sprintf($numericLabelTmpl, '2', _t('HtmlEditorField.EditDetails', 'Edit details')) . '</h4>'),
+			$editComposite = new CompositeField(
+				new LiteralField('contentEdit', '<div class="content-edit"></div>')
+			)
+		);
+
+		$fields = new FieldList(
+			new LiteralField(
+				'Heading',
+				sprintf('<h3>%s</h3>', _t('HtmlEditorField.IMAGE', 'Insert Image'))
+			),
+			$allFields
 		);
 		
 		$actions = new FieldList(
@@ -404,9 +432,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			$actions
 		);
 		
-		$contentComposite->addExtraClass('content');
-		$selectComposite->addExtraClass('content-select');
-		
+
 		$form->unsetValidator();
 		$form->disableSecurityToken();
 		$form->loadDataFrom($this);

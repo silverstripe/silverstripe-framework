@@ -95,7 +95,8 @@ class Group extends DataObject {
 
 		if($this->ID) {
 			$config = new GridFieldConfig_RelationEditor();
-			$config->addComponents(new GridFieldExportButton());
+			$config->addComponents(new GridFieldExportButton('before'));
+			$config->addComponents(new GridFieldPrintButton('before'));
 			$config->getComponentByType('GridFieldAddExistingAutocompleter')
 				->setResultsFormat('$Title ($Email)')->setSearchFields(array('FirstName', 'Surname', 'Email'));
 			$config->getComponentByType('GridFieldDetailForm')->setValidator(new Member_Validator());

@@ -21,6 +21,7 @@ $gf_colour_border: rgba(0,0,0,.1);
 $gf_colour_zebra: #F0F4F7;
 $gf_colour_font: #666;
 $gf_colour_text_shadow: rgba(0,0,0,.3);
+$color-text-blue-link:#1556B2 !default;
 $gf_border_radius:	7px;
 $gf_color_border_filter_button: #9A9A9A;
 $gf_color_button: #e6e6e6;
@@ -75,6 +76,12 @@ $gf_grid_x:	16px;
 			}
 			width: 500px;
 		}
+		.grid-print-button{
+			display: inline-block;
+		}
+		.grid-csv-button{
+			display: inline-block;
+		}
 	}
 
 	table.ss-gridfield-table {
@@ -93,6 +100,14 @@ $gf_grid_x:	16px;
 					max-width:$gf_grid_x*32; //max width 512px
 				}
 			}
+			tr:first-child { //sets 7px border-radius on the top row in the thead - accounts for edgecase where there is no title row.
+				th:first-child {
+					@include border-top-left-radius($gf_border_radius);
+				}
+				th:last-child {
+					@include border-top-right-radius($gf_border_radius);
+				}
+			} 
 		}
 		
 		tbody {
@@ -101,11 +116,74 @@ $gf_grid_x:	16px;
 				// Give browser some hints on which cols take priority:
 				// The last column (buttons) should always shrink to fit.
 				// Overwritten for IE7, which doesn't support this.
-				width: 100%;
+				width: auto;
+				white-space:nowrap;
 				&.col-buttons {
 					width: auto;
 					text-align: right;
-					white-space: nowrap;
+				}
+
+				&.col-description {
+					width: auto;
+				}
+
+				&.col-listChildrenLink {
+					width:$gf_grid_x;
+					border-right:none;
+					text-indent:-9999em;
+					padding:0;
+					.list-children-link {
+						background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 12px -4px;
+						display:block;
+					}
+				}
+
+				&.col-getTreeTitle {
+					span.item {
+						color:$color-text-blue-link;
+					}
+					span.badge {
+						clear: both;
+						text-transform: uppercase;
+						display: inline-block;
+						padding: 0px 3px;
+						font-size: 0.75em;
+						line-height: 1em;
+						margin-left: 10px;
+						margin-right: 6px;
+						margin-top:  -1px;
+						@include border-radius(2px, 2px);
+					}
+					
+					span.badge.modified {
+						color:  #7E7470;
+						border: 1px solid #C9B800;
+						background-color: #FFF0BC;
+					}
+					
+					span.badge.addedtodraft {
+						color:  #7E7470;
+						border: 1px solid #C9B800;
+						background-color: #FFF0BC;
+					}
+					
+					span.badge.deletedonlive {
+						color:  #636363;
+						border: 1px solid #E49393;
+						background-color: #F2DADB;
+					}
+					
+					span.badge.removedfromdraft {
+						color:  #636363;
+						border: 1px solid #E49393;
+						background-color: #F2DADB;
+					}
+					
+					span.badge.workflow-approval {
+						color:  #56660C;
+						border: 1px solid #7C8816;
+						background-color: #DAE79A;
+					}
 				}
 
 				button {
@@ -149,7 +227,6 @@ $gf_grid_x:	16px;
 		
 		tr {	
 			&.title {
-				@include border-top-radius($gf_border_radius);
 				th {
 					position: relative;
 					background: $gf_colour_gradient_dark;
@@ -157,7 +234,6 @@ $gf_grid_x:	16px;
 					padding: 5px;
 					min-height: 40px; //this is to accomodate the add new button.
 					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
-					@include border-top-radius($gf_border_radius);
 					@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 					h2{
 						padding: 0px;
@@ -225,20 +301,18 @@ $gf_grid_x:	16px;
 				&.extra,&.action {
 					padding: 0;
 					cursor: default;
-					button,button:hover {
-						&.ss-ui-button {
-							margin-left: .9em;
-							color: #222;
-						}
-					}
 				}
 				&.main{
+					white-space:nowrap;
 					border-top: 1px solid $gf_colour_border;
 					color:#fff;
 					background: darken($gf_colour_subheader,10%);
 					border-bottom: 1px solid $gf_colour_border;
 					span{
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
+					}
+					&.col-listChildrenLink {
+						border-right:none;
 					}
 				}
 				&.extra {
@@ -261,9 +335,6 @@ $gf_grid_x:	16px;
 						border-bottom-width: 0;	
 						@include border-radius(2px, 2px);			
 					}				
-				}
-				&.action {
-					border-right: 0;
 				}
 				&.first {
 					@include border-top-left-radius($gf_border_radius);
@@ -288,7 +359,7 @@ $gf_grid_x:	16px;
 						border:none;	
 						width:100%;
 						text-align: left;
-						padding: 4px 0;
+						padding: 4px 8px 4px 0;
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 						color: #fff;
 						@include border-radius(0);

@@ -55,6 +55,7 @@
 			// Custom properties
 			iframeUrl: '',
 			reloadOnOpen: true,
+			dialogExtraClass: '',
 
 			// Defaults
 			width: '80%',
@@ -78,6 +79,8 @@
 				self._resizeIframe();
 				self.uiDialog.removeClass('loading');
 			}).hide();
+			
+			if(this.options.dialogExtraClass) this.uiDialog.addClass(this.options.dialogExtraClass);
 			this.element.append(iframe);
 
 			// Let the iframe handle its scrolling

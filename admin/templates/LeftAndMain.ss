@@ -24,7 +24,7 @@
 
 	</div>
 		
-	<div id="cms-editor-dialogs">
+	<div id="cms-editor-dialogs" class="hide">
 		<% control EditorToolbar %>
 			$MediaForm
 			$LinkForm

@@ -1,0 +1,7 @@
+h3 { font-family: Arial, sans-serif; }
+
+table { border-collapse: collapse; font-family: Arial, sans-serif; color: #333; font-size: 12pt; }
+table th { border-bottom: 2px solid #333; padding: 5px 10px; font-weight: bold; text-align: left; }
+table th:first-child { padding-left: 0px; }
+table td { border-top: 1px solid #aaa; border-bottom: 1px solid #aaa; text-align: left; padding: 5px 10px; }
+table td:first-child { padding-left: 0px; }

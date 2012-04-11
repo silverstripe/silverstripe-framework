@@ -944,28 +944,32 @@ class Installer extends InstallRequirements {
 <html>
 	<head>
 		<title>Installing SilverStripe...</title>
-		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/layout.css" />
-		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/typography.css" />
-		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/form.css" />
+		<link rel="stylesheet" type="text/css" href="themes/simple/css/layout.css" />
+		<link rel="stylesheet" type="text/css" href="themes/simple/css/typography.css" />
+		<link rel="stylesheet" type="text/css" href="themes/simple/css/form.css" />
 		<link rel="stylesheet" type="text/css" href="sapphire/dev/install/install.css" />
 		<script src="sapphire/thirdparty/jquery/jquery.js"></script>
 	</head>
 	<body>
-		<div id="BgContainer">
-			<div id="Container">
-				<div id="Header">
-					<h1>SilverStripe CMS / Framework Installation</h1>
+		<div class="install-header">
+			<div class="inner">
+				<div class="brand">
+					<span class="logo"></span>
+					<h1>SilverStripe</h1>
 				</div>
+				<p>Version <?php echo $silverstripe_version; ?></p>
+			</div>	
+		</div>
 
-				<div id="Navigation">&nbsp;</div>
-				<div class="clear"><!-- --></div>
+		<div id="Navigation">&nbsp;</div>
+		<div class="clear"><!-- --></div>
 
-				<div id="Layout">
-					<div class="typography">
-						<h1>Installing SilverStripe...</h1>
-						<p>I am now running through the installation steps (this should take about 30 seconds)</p>
-						<p>If you receive a fatal error, refresh this page to continue the installation</p>
-						<ul>
+		<div class="main">
+			<div class="inner">
+				<h1>Installing SilverStripe...</h1>
+				<p>I am now running through the installation steps (this should take about 30 seconds)</p>
+				<p>If you receive a fatal error, refresh this page to continue the installation</p>
+				<ul>
 <?php
 		} else {
 			echo "SILVERSTRIPE COMMAND-LINE INSTALLATION\n\n";
@@ -1016,7 +1020,7 @@ class Installer extends InstallRequirements {
 			$fh = fopen('mysite/_config.php', 'wb');
 			fclose($fh);
 		}
-		$theme = isset($_POST['template']) ? $_POST['template'] : 'blackcandy';
+		$theme = isset($_POST['template']) ? $_POST['template'] : 'simple';
 		$locale = isset($_POST['locale']) ? $_POST['locale'] : 'en_US';
 		$type = $config['db']['type'];
 		$dbConfig = $config['db'][$type];

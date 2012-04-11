@@ -671,7 +671,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					.toggleClass('ui-state-disabled', !hasItems);
 
 				// Hide file selection and step labels when editing an existing file
-				this.find('.header-select,.content-select,.header-edit')[editingSelected ? 'hide' : 'show']();
+				this.find('#MediaFormInsertImageTabs,.header-edit')[editingSelected ? 'hide' : 'show']();
 			},
 			getFileView: function(idOrUrl) {
 				return this.find('.ss-htmleditorfield-file[data-id=' + idOrUrl + ']');
@@ -711,6 +711,35 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				form.getFileView(item.data('id')).remove();
 				form.redraw();
 			}
+		});
+
+		/**
+		 * Show the second step after uploading an image
+		 */
+		$('form.htmleditorfield-form.htmleditorfield-mediaform div.ss-assetuploadfield').entwine({
+			//the UploadField div.ss-uploadfield-editandorganize is hidden in CSS,
+			// because we use the detail view for each individual file instead
+			onfileuploadstop: function(e) {
+				var form = this.closest('form');
+
+				//update the editFields to show those Files that are newly uploaded
+				var editFieldIDs = [];
+				form.find('div.content-edit').find('div.ss-htmleditorfield-file').each(function(){
+					//get the uploaded file ID when this event triggers, signaling the upload has compeleted successfully
+					editFieldIDs.push($(this).data('id'));
+				});
+				var uploadedFiles = $('ul.ss-uploadfield-files').children('li.ss-uploadfield-item');
+				uploadedFiles.each(function(){
+					var uploadedID = $(this).data('fileid');
+					if ($.inArray(uploadedID, editFieldIDs) == -1) {
+						//trigger the detail view for filling out details about the file we are about to insert into TinyMCE
+						form.showFileView(uploadedID);
+					}
+				});
+
+				form.redraw();
+			}
+
 		});
 
 		/**

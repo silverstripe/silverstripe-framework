@@ -61,7 +61,7 @@ __Example: using a subclass__
 		function getScheduledToPublish(){
 			// return either true or false
 		}
-
+		
 		function getStatusFlags(){
 			$flags = parent::getStatusFlags();
 			$flags['scheduledtopublish'] = "Scheduled To Publish";
@@ -71,6 +71,6 @@ __Example: using a subclass__
 
 The above subclass of `[api:SiteTree]` will add a new flag for indicating its
 __'Scheduled To Publish'__ status. The look of the page node will be changed
-from ![Normal Page Node](../_images/page_node_normal.png") to ![Scheduled Page Node](../_images/page_node_scheduled.png). The getStatusFlags has an `updateStatusFlags()`
+from ![Normal Page Node](../_images/page_node_normal.png) to ![Scheduled Page Node](../_images/page_node_scheduled.png). The getStatusFlags has an `updateStatusFlags()`
 extension point, so the flags can be modified through `DataExtension` rather than
 inheritance as well. Deleting existing flags works by simply unsetting the array key.
