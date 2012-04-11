@@ -74,14 +74,14 @@ class DatetimeField extends FormField {
 		return $this;
 	}
 	
-	function FieldHolder() {
+	function FieldHolder($properties = array()) {
 		$config = array(
 			'datetimeorder' => $this->getConfig('datetimeorder'),
 		);
 		$config = array_filter($config);
 		$this->addExtraClass(Convert::raw2json($config));
 
-		return parent::FieldHolder();
+		return parent::FieldHolder($properties);
 	}
 	
 	function Field($properties = array()) {

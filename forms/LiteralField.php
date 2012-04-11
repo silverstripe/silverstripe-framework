@@ -27,12 +27,19 @@ class LiteralField extends DatalessField {
 		parent::__construct($name);
 	}
 	
-	function FieldHolder() {
-		return is_object($this->content) ? $this->content->forTemplate() : $this->content; 
+	function FieldHolder($properties = array()) {
+		if(is_object($this->content)) {
+			$obj = $this->content;
+			if($properties)
+				$obj = $obj->customise($properties);
+			return $obj->forTemplate();
+		} else {
+			return $this->content;
+		}
 	}
 
 	function Field($properties = array()) {
-		return $this->FieldHolder();
+		return $this->FieldHolder($properties);
 	}
 
 	/**

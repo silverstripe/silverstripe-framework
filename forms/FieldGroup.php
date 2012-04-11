@@ -131,7 +131,7 @@ class FieldGroup extends CompositeField {
 	    return $this;
  	}
   
-	function FieldHolder() {
+	function FieldHolder($properties = array()) {
 		$Title = $this->XML_val('Title');
 		$Message = $this->XML_val('Message');
 		$MessageType = $this->XML_val('MessageType');

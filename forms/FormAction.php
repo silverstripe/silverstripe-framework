@@ -70,8 +70,8 @@ class FormAction extends FormField {
 		return $this->customise($properties)->renderWith($this->getTemplate());
 	}
 	
-	function FieldHolder() {
-		return $this->Field();
+	function FieldHolder($properties = array()) {
+		return $this->Field($properties);
 	}
 
 	public function Type() {

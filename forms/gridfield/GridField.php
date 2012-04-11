@@ -289,7 +289,7 @@ class GridField extends FormField {
 	 *
 	 * @return string
 	 */
-	public function FieldHolder() {
+	public function FieldHolder($properties = array()) {
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::css(SAPPHIRE_DIR . '/css/GridField.css');
 
@@ -449,7 +449,7 @@ class GridField extends FormField {
 	}
 	
 	public function Field($properties = array()) {
-		return $this->FieldHolder();
+		return $this->FieldHolder($properties);
 	}
 
 	public function getAttributes() {

@@ -110,7 +110,7 @@ class DateField extends TextField {
 		parent::__construct($name, $title, $value);
 	}
 
-	function FieldHolder() {
+	function FieldHolder($properties = array()) {
 		// TODO Replace with properly extensible view helper system 
 		$d = DateField_View_JQuery::create($this); 
 		$d->onBeforeRender(); 

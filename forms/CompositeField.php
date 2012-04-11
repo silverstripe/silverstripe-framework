@@ -158,7 +158,7 @@ class CompositeField extends FormField {
 	/**
 	 * Returns the fields nested inside another DIV
 	 */
-	function FieldHolder() {
+	function FieldHolder($properties = array()) {
 		$content = '';
 
 		if($this->tag == 'fieldset' && $this->legend) {

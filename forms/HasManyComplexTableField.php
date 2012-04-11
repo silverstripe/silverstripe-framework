@@ -64,8 +64,8 @@ class HasManyComplexTableField extends ComplexTableField {
 		
 	}
 	
-	function FieldHolder() {
-		$ret = parent::FieldHolder();
+	function FieldHolder($properties = array()) {
+		$ret = parent::FieldHolder($properties);
 		
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/HasManyFileField.js");
