@@ -220,7 +220,7 @@ class Debug {
 			),
 			SS_Log::NOTICE
 		);
-		
+
 		if(Director::isDev()) {
 			self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Notice");
 		}
@@ -699,6 +699,7 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 		case E_USER_NOTICE:
 		case E_DEPRECATED:
 		case E_USER_DEPRECATED:
+		case E_STRICT:
 			Debug::noticeHandler($errno, $errstr, $errfile, $errline, null);
 			break;
 	}
