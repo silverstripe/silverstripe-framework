@@ -31,8 +31,8 @@ class SSViewer_Scope {
 	protected $itemIteratorTotal;   //Total number of items in the iterator
 	
 	private $popIndex; // A pointer into the item stack for which item should be scope on the next pop call
-	private $upIndex; // A pointer into the item stack for which item is "up" from this one
-	private $currentIndex; // A pointer into the item stack for which item is this one (or null if not in stack yet)
+	private $upIndex = null; // A pointer into the item stack for which item is "up" from this one
+	private $currentIndex = null; // A pointer into the item stack for which item is this one (or null if not in stack yet)
 	
 	private $localIndex;
 
@@ -56,6 +56,8 @@ class SSViewer_Scope {
 		
 		switch ($name) {
 			case 'Up':
+				if ($this->upIndex === null) user_error('Up called when we\'re already at the top of the scope', E_USER_ERROR);
+
 				list($this->item, $this->itemIterator, $unused2, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->upIndex];
 				break;
 			
@@ -300,7 +302,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 
 	protected $extras;
 
-	function __construct($item, $extras = array()){
+	function __construct($item, $extras = null){
 		parent::__construct($item);
 
 		// Build up global property providers array only once per request
@@ -317,7 +319,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 			$this->createCallableArray(self::$iteratorProperties, "TemplateIteratorProvider", "get_template_iterator_variables", true);   //call non-statically
 		}
 
-		$this->extras = $extras;
+		$this->extras = $extras ? $extras : array();
 	}
 
 	protected function createCallableArray(&$extraArray, $interfaceToQuery, $variableMethod, $createObject = false) {
@@ -504,7 +506,7 @@ class SSViewer {
 	 * @var string
 	 */
 	protected static $current_custom_theme = null;
-	
+
 	/**
 	 * Create a template from a string instead of a .ss file
 	 * 
@@ -697,7 +699,59 @@ class SSViewer {
 			self::$flushed = true;
 		}
 	}
-	
+
+	/**
+	 * @var Zend_Cache_Core
+	 */
+	protected $partialCacheStore = null;
+
+	/**
+	 * Set the cache object to use when storing / retrieving partial cache blocks.
+	 * @param Zend_Cache_Core $cache
+	 */
+	public function setPartialCacheStore($cache) {
+		$this->partialCacheStore = $cache;
+	}
+
+	/**
+	 * Get the cache object to use when storing / retrieving partial cache blocks
+	 * @return Zend_Cache_Core
+	 */
+	public function getPartialCacheStore() {
+		return $this->partialCacheStore ? $this->partialCacheStore : SS_Cache::factory('cacheblock');
+	}
+
+	/**
+	 * An internal utility function to set up variables in preparation for including a compiled
+	 * template, then do the include
+	 *
+	 * Effectively this is the common code that both SSViewer#process and SSViewer_FromString#process call
+	 *
+	 * @param string $cacheFile - The path to the file that contains the template compiled to PHP
+	 * @param Object $item - The item to use as the root scope for the template
+	 * @param array|null $arguments - Any variables to layer into the root scope
+	 * @return string - The result of executing the template
+	 */
+	protected function includeGeneratedTemplate($cacheFile, $item, $arguments) {
+		if(isset($_GET['showtemplate']) && $_GET['showtemplate']) {
+			$lines = file($cacheFile);
+			echo "<h2>Template: $cacheFile</h2>";
+			echo "<pre>";
+			foreach($lines as $num => $line) {
+				echo str_pad($num+1,5) . htmlentities($line, ENT_COMPAT, 'UTF-8');
+			}
+			echo "</pre>";
+		}
+
+		$cache = $this->getPartialCacheStore();
+		$scope = new SSViewer_DataPresenter($item, $arguments ? $arguments : array());
+		$val = '';
+
+		include($cacheFile);
+
+		return $val;
+	}
+
 	/**
 	 * The process() method handles the "meat" of the template processing.
 	 * It takes care of caching the output (via {@link SS_Cache}),
@@ -711,11 +765,15 @@ class SSViewer {
 	 * @param SS_Cache $cache Optional cache backend
 	 * @return String Parsed template output.
 	 */
-	public function process($item, $cache = null) {
+	public function process($item, $arguments = null) {
 		SSViewer::$topLevel[] = $item;
-		
-		if (!$cache) $cache = SS_Cache::factory('cacheblock');
-		
+
+		if ($arguments && $arguments instanceof Zend_Cache_Core) {
+			Deprecation::notice('3.0', 'Use setPartialCacheStore to override the partial cache storage backend, the second argument to process is now an array of variables.');
+			$this->setPartialCacheStore($arguments);
+			$arguments = null;
+		}
+
 		if(isset($this->chosenTemplates['main'])) {
 			$template = $this->chosenTemplates['main'];
 		} else {
@@ -741,34 +799,24 @@ class SSViewer {
 
 			if(isset($_GET['debug_profile'])) Profiler::unmark("SSViewer::process - compile", " for $template");
 		}
-	
-		
-		if(isset($_GET['showtemplate']) && !Director::isLive()) {
-			$lines = file($cacheFile);
-			echo "<h2>Template: $cacheFile</h2>";
-			echo "<pre>";
-			foreach($lines as $num => $line) {
-				echo str_pad($num+1,5) . htmlentities($line, ENT_COMPAT, 'UTF-8');
-			}
-			echo "</pre>";
-		}
-		
+
+		$templateSpecificGlobals = array('I18NNamespace' => basename($template));
+		$arguments = $arguments ? array_merge($templateSpecificGlobals, $arguments) : $templateSpecificGlobals;
+
+		$subtemplateGlobals = array();
+
 		// Makes the rendered sub-templates available on the parent item,
 		// through $Content and $Layout placeholders.
 		foreach(array('Content', 'Layout') as $subtemplate) {
 			if(isset($this->chosenTemplates[$subtemplate])) {
 				$subtemplateViewer = new SSViewer($this->chosenTemplates[$subtemplate]);
-				$item = $item->customise(array(
-					$subtemplate => $subtemplateViewer->process($item, $cache)
-				));
+				$subtemplateViewer->setPartialCacheStore($this->getPartialCacheStore());
+
+				$subtemplateGlobals[$subtemplate] = $subtemplateViewer->process($item, $arguments);
 			}
 		}
 
-		$scope = new SSViewer_DataPresenter($item, array('I18NNamespace' => basename($template)));
-		$val = "";
-		
-		include($cacheFile);
-
+		$val = $this->includeGeneratedTemplate($cacheFile, $item, array_merge($subtemplateGlobals, $arguments));
 		$output = Requirements::includeInHTML($template, $val);
 		
 		array_pop(SSViewer::$topLevel);
@@ -794,9 +842,9 @@ class SSViewer {
 	 * Execute the given template, passing it the given data.
 	 * Used by the <% include %> template tag to process templates.
 	 */
-	static function execute_template($template, $data) {
+	static function execute_template($template, $data, $arguments = null) {
 		$v = new SSViewer($template);
-		return $v->process($data);
+		return $v->process($data, $arguments);
 	}
 
 	static function parseTemplateContent($content, $template="") {			
@@ -850,7 +898,13 @@ class SSViewer_FromString extends SSViewer {
 		$this->content = $content;
 	}
 	
-	public function process($item, $cache = null) {
+	public function process($item, $arguments = null) {
+		if ($arguments && $arguments instanceof Zend_Cache_Core) {
+			Deprecation::notice('3.0', 'Use setPartialCacheStore to override the partial cache storage backend, the second argument to process is now an array of variables.');
+			$this->setPartialCacheStore($arguments);
+			$arguments = null;
+		}
+
 		$template = SSViewer::parseTemplateContent($this->content, "string sha1=".sha1($this->content));
 
 		$tmpFile = tempnam(TEMP_FOLDER,"");
@@ -858,26 +912,9 @@ class SSViewer_FromString extends SSViewer {
 		fwrite($fh, $template);
 		fclose($fh);
 
-		if(isset($_GET['showtemplate']) && $_GET['showtemplate']) {
-			$lines = file($tmpFile);
-			echo "<h2>Template: $tmpFile</h2>";
-			echo "<pre>";
-			foreach($lines as $num => $line) {
-				echo str_pad($num+1,5) . htmlentities($line, ENT_COMPAT, 'UTF-8');
-			}
-			echo "</pre>";
-		}
+		$val = $this->includeGeneratedTemplate($tmpFile, $item, $arguments);
 
-		$scope = new SSViewer_DataPresenter($item);
-		$val = "";
-		$valStack = array();
-		
-		$cache = SS_Cache::factory('cacheblock');
-		
-		include($tmpFile);
 		unlink($tmpFile);
-		
-
 		return $val;
 	}
 }

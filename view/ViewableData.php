@@ -328,12 +328,12 @@ class ViewableData extends Object implements IteratorAggregate {
 		
 		$data = ($this->customisedObject) ? $this->customisedObject : $this;
 		
-		if(is_array($customFields) || $customFields instanceof ViewableData) {
+		if($customFields instanceof ViewableData) {
 			$data = $data->customise($customFields);
 		}
 		
 		if($template instanceof SSViewer) {
-			return $template->process($data);
+			return $template->process($data, is_array($customFields) ? $customFields : null);
 		}
 		
 		throw new UnexpectedValueException (
