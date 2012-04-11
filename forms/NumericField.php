@@ -6,18 +6,11 @@
  * @subpackage fields-formattedinput
  */
 class NumericField extends TextField{
-	
-	function Field() {
-		$html = parent::Field();
-		Requirements::javascript(SAPPHIRE_DIR . 'javascript/NumericField.js');
-		
-		return $html;
-	}
 
 	function Type() {
 		return 'numeric text';
 	}
-	
+
 	/** PHP Validation **/
 	function validate($validator){
 		if($this->value && !is_numeric(trim($this->value))){
