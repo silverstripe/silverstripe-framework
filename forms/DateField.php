@@ -120,7 +120,7 @@ class DateField extends TextField {
 		return $html;
 	}
 
-	function Field() {
+	function Field($properties = array()) {
 		$config = array(
 			'showcalendar' => $this->getConfig('showcalendar'),
 			'isoDateformat' => $this->getConfig('dateformat'),
@@ -425,7 +425,7 @@ class DateField_Disabled extends DateField {
 	
 	protected $disabled = true;
 		
-	function Field() {
+	function Field($properties = array()) {
 		if($this->valueObj) {
 			if($this->valueObj->isToday()) {
 				$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat')) . ' ('._t('DateField.TODAY','today').')');

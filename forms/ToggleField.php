@@ -46,7 +46,7 @@ class ToggleField extends ReadonlyField {
 		parent::__construct($name, $title, $value);
 	}
 
-	function Field() {
+	function Field($properties = array()) {
 		$content = '';
 		
 		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");

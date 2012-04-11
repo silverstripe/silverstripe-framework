@@ -448,7 +448,7 @@ class GridField extends FormField {
 			);
 	}
 	
-	public function Field() {
+	public function Field($properties = array()) {
 		return $this->FieldHolder();
 	}
 

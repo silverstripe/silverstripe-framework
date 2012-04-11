@@ -28,7 +28,7 @@ class AjaxUniqueTextField extends TextField {
 		parent::__construct($name, $title, $value);	
 	}
 	 
-	function Field() {
+	function Field($properties = array()) {
 		Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/behaviour/behaviour.js");
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');

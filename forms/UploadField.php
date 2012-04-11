@@ -310,7 +310,7 @@ class UploadField extends FileField {
 		);
 	}
 
-	public function Field() {
+	public function Field($properties = array()) {
 		$record = $this->getRecord();
 		$name = $this->getName();
 

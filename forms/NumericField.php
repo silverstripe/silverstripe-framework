@@ -7,7 +7,7 @@
  */
 class NumericField extends TextField{
 	
-	function Field() {
+	function Field($properties = array()) {
 		$html = parent::Field();
 		Requirements::javascript(SAPPHIRE_DIR . 'javascript/NumericField.js');
 		

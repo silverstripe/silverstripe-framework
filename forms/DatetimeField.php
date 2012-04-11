@@ -84,7 +84,7 @@ class DatetimeField extends FormField {
 		return parent::FieldHolder();
 	}
 	
-	function Field() {
+	function Field($properties = array()) {
 		Requirements::css(SAPPHIRE_DIR . '/css/DatetimeField.css');
 		
 		$tzField = ($this->getConfig('usertimezone')) ? $this->timezoneField->FieldHolder() : '';
@@ -287,7 +287,7 @@ class DatetimeField_Readonly extends DatetimeField {
 	
 	protected $readonly = true;
 		
-	function Field() {
+	function Field($properties = array()) {
 		$valDate = $this->dateField->dataValue();
 		$valTime = $this->timeField->dataValue();
 		if($valDate && $valTime) {

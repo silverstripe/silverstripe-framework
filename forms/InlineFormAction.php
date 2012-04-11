@@ -27,7 +27,7 @@ class InlineFormAction extends FormField {
 		return new InlineFormAction_ReadOnly( $this->name, $this->title );
 	}
 	
-	function Field() {
+	function Field($properties = array()) {
 		if($this->includeDefaultJS) {
 			Requirements::javascriptTemplate(SAPPHIRE_DIR . '/javascript/InlineFormAction.js',array('ID'=>$this->id()));
 		}
@@ -59,7 +59,7 @@ class InlineFormAction_ReadOnly extends FormField {
 	
 	protected $readonly = true;
 	
-	function Field() {
+	function Field($properties = array()) {
 		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\" disabled=\"disabled\" class=\"action disabled$this->extraClass\" />";
 	}	
 	

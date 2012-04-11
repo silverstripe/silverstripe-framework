@@ -43,7 +43,7 @@ class MoneyField extends FormField {
 	/**
 	 * @return string
 	 */
-	function Field() {
+	function Field($properties = array()) {
 		return "<div class=\"fieldgroup\">" .
 			"<div class=\"fieldgroupField\">" . $this->fieldCurrency->SmallFieldHolder() . "</div>" . 
 			"<div class=\"fieldgroupField\">" . $this->fieldAmount->SmallFieldHolder() . "</div>" . 

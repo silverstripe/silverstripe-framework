@@ -56,7 +56,7 @@ class HtmlEditorField extends TextareaField {
 	/**
 	 * @return string
 	 */
-	function Field() {
+	function Field($properties = array()) {
 		// mark up broken links
 		$value  = new SS_HTMLValue($this->value);
 		
@@ -221,7 +221,7 @@ class HtmlEditorField extends TextareaField {
  * @subpackage fields-formattedinput
  */
 class HtmlEditorField_Readonly extends ReadonlyField {
-	function Field() {
+	function Field($properties = array()) {
 		$valforInput = $this->value ? Convert::raw2att($this->value) : "";
 		return "<span class=\"readonly typography\" id=\"" . $this->id() . "\">" . ( $this->value && $this->value != '<p></p>' ? $this->value : '<i>(not set)</i>' ) . "</span><input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
 	}

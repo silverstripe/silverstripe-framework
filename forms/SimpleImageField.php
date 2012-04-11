@@ -78,7 +78,7 @@ class SimpleImageField extends FileField {
 		$this->getValidator()->setAllowedExtensions(array('jpg','gif','png'));
 	}
 
-	function Field() {
+	function Field($properties = array()) {
 	    if($this->form) $record = $this->form->getRecord();
 	    $fieldName = $this->name;
 	    if(isset($record)&&$record) {
@@ -141,7 +141,7 @@ class SimpleImageField_Disabled extends FormField {
 	
 	protected $readonly = true;
 	
-	function Field() {
+	function Field($properties = array()) {
 		$record = $this->form->getRecord();
 	    $fieldName = $this->name;
 			

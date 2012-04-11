@@ -26,7 +26,7 @@ class PhoneNumberField extends FormField {
 		parent::__construct($name, $title, $value);
 	}
 	
-	public function Field() {
+	public function Field($properties = array()) {
 		$fields = new FieldGroup( $this->name );
 		$fields->setID("{$this->name}_Holder");
 		list($countryCode, $areaCode, $phoneNumber, $extension) = $this->parseValue();

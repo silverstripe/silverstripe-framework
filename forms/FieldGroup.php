@@ -92,7 +92,7 @@ class FieldGroup extends CompositeField {
 	 * @todo Shouldn't use SmallFieldHolder() (very difficult to style), 
 	 * it is easier to overwrite the <div class="field"> behaviour in a more specific class
 	 */
-	function Field() {
+	function Field($properties = array()) {
 		$fs = $this->FieldList();
     	$spaceZebra = isset($this->zebra) ? " fieldgroup-$this->zebra" : '';
     	$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';

@@ -93,7 +93,7 @@ class ConfirmedPasswordField extends FormField {
 		$this->setValue($value);
 	}
 	
-	function Field() {
+	function Field($properties = array()) {
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/ConfirmedPasswordField.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/ConfirmedPasswordField.css');

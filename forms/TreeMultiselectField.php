@@ -78,7 +78,7 @@ class TreeMultiselectField extends TreeDropdownField {
 	 * We overwrite the field attribute to add our hidden fields, as this 
 	 * formfield can contain multiple values.
 	 */
-	function Field() {
+	function Field($properties = array()) {
 		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
 		
 		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
@@ -178,7 +178,7 @@ class TreeMultiselectField_Readonly extends TreeMultiselectField {
 	
 	protected $readonly = true;
 	
-	function Field() {
+	function Field($properties = array()) {
 		$titleArray = $itemIDs = array();
 		$titleList = $itemIDsList = "";
 		if($items = $this->getItems()) {

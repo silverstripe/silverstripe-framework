@@ -31,7 +31,7 @@ class LiteralField extends DatalessField {
 		return is_object($this->content) ? $this->content->forTemplate() : $this->content; 
 	}
 
-	function Field() {
+	function Field($properties = array()) {
 		return $this->FieldHolder();
 	}
 
