@@ -267,6 +267,14 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$this->name = $name;
 	}
 
+	public function forTemplate() {
+		return sprintf(
+			'<div id="cms-editor-dialogs" data-url-linkform="%s" data-url-mediaform="%s"></div>',
+			Controller::join_links($this->controller->Link($this->name), 'LinkForm', 'forTemplate'),
+			Controller::join_links($this->controller->Link($this->name), 'MediaForm', 'forTemplate')
+		);
+	}
+
 	/**
 	 * Searches the SiteTree for display in the dropdown
 	 *  
@@ -627,6 +635,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$this->extend('updateAllowedExtensions', $exts);
 		return $exts;
 	}
+
 }
 
 /**

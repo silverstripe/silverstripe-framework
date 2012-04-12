@@ -251,12 +251,10 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				this._super();
 			},
-
 			isChanged: function() {
 				var ed = this.getEditor();
 				return (ed && ed.getInstance() && ed.isDirty());
 			},
-
 			resetChanged: function() {
 				var ed = this.getEditor();
 				if(typeof tinyMCE == 'undefined') return;
@@ -265,13 +263,70 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var inst = tinyMCE.getInstanceById(this.attr('id'));
 				if (inst) inst.startContent = tinymce.trim(inst.getContent({format : 'raw', no_events : 1}));
 			},
+			openLinkDialog: function() {
+				this.openDialog('link');
+			},
+			openMediaDialog: function() {
+				this.openDialog('media');	
+			},
+			openDialog: function(type) {
+				var capitalize = function(text) {
+    			return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+				};
 
+				var url = $('#cms-editor-dialogs').data('url' + capitalize(type) + 'form'),
+					dialog = $('.htmleditorfield-' + type + 'dialog');
+
+				if(dialog.length) {
+					dialog.open();
+				} else {
+					// Show a placeholder for instant feedback. Will be replaced with actual
+					// form dialog once its loaded.
+					dialog = $('<div class="htmleditorfield-dialog htmleditorfield-' + type + 'dialog loading">');
+					$('body').append(dialog);
+					$.ajax({
+						url: url,
+						success: function(html) {
+							dialog.html(html);
+						}
+					});
+				}
+			},
 			onunmatch: function() {
 				// TODO Throws exceptions in Firefox, most likely due to the element being removed from the DOM at this point
 				// var ed = tinyMCE.get(this.attr('id'));
 				// if(ed) ed.remove();
 
 				this._super();
+			}
+		});
+
+		$('.htmleditorfield-dialog').entwine({
+			onmatch: function() {
+				// Create jQuery dialog
+				this.dialog({autoOpen: true, bgiframe: true, modal: true, height: 500, width: '80%', ghost: true});
+
+				this._super();
+			},
+			getForm: function() {
+				return this.find('form');
+			},
+			open: function() {
+				this.dialog('open');
+			},
+			close: function() {
+				this.dialog('close');
+			},
+			toggle: function(bool) {
+				if(this.is(':visible')) this.close();
+				else this.open();
+			},
+			ondialogopen: function(e) {
+				this.getForm().updateFromEditor();
+				this.redraw();
+			},
+			ondialogclose: function(e) {
+				this.getForm().resetFields();
 			}
 		});
 
@@ -286,40 +341,30 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 			// TODO Figure out how to keep bookmark reference in entwine, and still be allowed to delete the JS object
 			// Bookmark: null,
-
 			onmatch: function() {
 				// Move title from headline to (jQuery compatible) title attribute
 				var titleEl = this.find(':header:first');
-				this.attr('title', titleEl.text());
+				this.getDialog().attr('title', titleEl.text());
 				titleEl.remove();
-
-				// Create jQuery dialog
-				this.dialog({autoOpen: false, bgiframe: true, modal: true, height: 500, width: '80%', ghost: true});
 
 				this.setEditor(ss.editorWrappers['default']());
 			},
 			redraw: function() {
 			},
-			toggle: function() {
-				if(this.is(':visible')) this.close();
-				else this.open();
-			},
-			close: function() {
-				this.dialog('close');
-				this.getEditor().onclose();
+			resetFields: function() {
 				if(typeof window._ss_htmleditorfield_bookmark != 'undefined') window._ss_htmleditorfield_bookmark = null;
+				this.getEditor().onclose();
 			},
-			open: function() {
-				this.updateFromEditor();
-				this.dialog('open');
-				this.redraw();
-				this.getEditor().onopen();
-				window._ss_htmleditorfield_bookmark = this.getEditor().createBookmark();
+			getDialog: function() {
+				// TODO Refactor to listen to form events to remove two-way coupling
+				return this.closest('.htmleditorfield-dialog');
 			},
 			/**
 			 * Update the view state based on the current editor selection.
 			 */
 			updateFromEditor: function() {
+				this.getEditor().onopen();
+				window._ss_htmleditorfield_bookmark = this.getEditor().createBookmark();
 			}
 		});
 
@@ -331,23 +376,16 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		 */
 		$('form.htmleditorfield-linkform').entwine({
 
-			close: function() {
-				this._super();
-
-				this.resetFields();
-			},
-
 			// TODO Entwine doesn't respect submits triggered by ENTER key
 			onsubmit: function(e) {
 				this.insertLink();
-				this.close();
+				this.getDialog().close();
 				return false;
 			},
-
 			resetFields: function() {
+				this._super();
 				this.find('fieldset :input:not(:radio)').val('').change();
 			},
-
 			redraw: function(setDefaults) {
 				this._super();
 
@@ -377,7 +415,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					this.find(':input[name=TargetBlank]').attr('checked', (linkType == 'file'));
 				}
 			},
-
 			insertLink: function() {
 				var href, target = null, anchor = this.find(':input[name=Anchor]').val(), ed = this.getEditor();
 				
@@ -428,12 +465,10 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.trigger('onafterinsert', attributes);
 				this.updateFromEditor();
 			},
-
 			removeLink: function() {
 				this.getEditor().removeLink();
 				this.close();
 			},
-
 			addAnchorSelector: function() {
 				// Avoid adding twice
 				if(this.find(':input[name=AnchorSelector]').length) return;
@@ -466,7 +501,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					self.find(':input[name="Anchor"]').val($(this).val());
 				});
 			},
-
 			// this function collects the anchors in the currently active editor and regenerates the dropdown
 			refreshAnchors: function() {
 				var selector = this.find(':input[name=AnchorSelector]'), anchors = [];
@@ -485,7 +519,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					selector.append($('<option value="'+anchors[j]+'">'+anchors[j]+'</option>'));
 				}
 			},
-
 			updateFromEditor: function() {
 				var htmlTagPattern = /<\S[^><]*>/g, fieldName, data = this.getCurrentLink();
 				
@@ -502,7 +535,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					}
 				}
 			},
-
 		/**
 		 * Return information about the currently selected link, suitable for population of the link
 		 * form.
@@ -623,13 +655,11 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					$(this).insertHTML();
 				});
 				ed.repaint();
-				this.close();
+				this.getDialog().close();
 
 				return false;
 			},
-			ondialogopen: function() {
-				this.redraw();
-
+			updateFromEditor: function() {
 				var self = this, ed = this.getEditor(), node = $(ed.getSelectedNode());
 				// TODO Depends on managed mime type
 				if(node.is('img')) {
@@ -644,16 +674,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				// HACK: Hide selected node in IE because its drag handles on potentially selected elements
 				// don't respect the z-index of the dialog overlay.
 				// jQuery(ed.getContainer()).hide();
-			},
-			ondialogclose: function() {
-				var ed = this.getEditor(), node = $(ed.getSelectedNode());
-
-				// HACK: See ondialogopen()
-				// jQuery(ed.getContainer()).show();
-
-				this.find('.ss-htmleditorfield-file').remove(); // Remove any existing views
-				this.find('.ss-gridfield-items .ui-selected').removeClass('ui-selected'); // Unselect all items
-				this.redraw();
 			},
 			redraw: function() {
 				this._super();
@@ -672,6 +692,18 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				// Hide file selection and step labels when editing an existing file
 				this.find('#MediaFormInsertImageTabs,.header-edit')[editingSelected ? 'hide' : 'show']();
+			},
+			resetFields: function() {
+				var ed = this.getEditor(), node = $(ed.getSelectedNode());
+
+				// HACK: See ondialogopen()
+				// jQuery(ed.getContainer()).show();
+
+				this.find('.ss-htmleditorfield-file').remove(); // Remove any existing views
+				this.find('.ss-gridfield-items .ui-selected').removeClass('ui-selected'); // Unselect all items
+				this.redraw();
+
+				this._super();
 			},
 			getFileView: function(idOrUrl) {
 				return this.find('.ss-htmleditorfield-file[data-id=' + idOrUrl + ']');

@@ -24,12 +24,7 @@
 
 	</div>
 		
-	<div id="cms-editor-dialogs" class="hide">
-		<% control EditorToolbar %>
-			$MediaForm
-			$LinkForm
-		<% end_control %>
-	</div>
+	$EditorToolbar
 
 	<!-- <div class="ss-cms-bottom-bar">
 			<div class="holder">
