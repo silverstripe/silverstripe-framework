@@ -292,8 +292,7 @@ class ViewableData extends Object implements IteratorAggregate {
 				$mergeFields = is_subclass_of($class, 'DataObject') ? array('db', 'casting') : array('casting');
 				
 				if($mergeFields) foreach($mergeFields as $field) {
-					$casting = Object::uninherited_static($class, $field);
-					
+					$casting = Config::inst()->get($class, $field, Config::UNINHERITED);
 					if($casting) foreach($casting as $field => $cast) {
 						if(!isset($cache[$field])) $cache[$field] = self::castingObjectCreatorPair($cast);
 					}

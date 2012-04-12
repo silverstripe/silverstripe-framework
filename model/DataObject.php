@@ -208,7 +208,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array Map of fieldname to specification, similiar to {@link DataObject::$db}.
 	 */
 	public static function custom_database_fields($class) {
-		$fields = Object::uninherited_static($class, 'db');
+		$fields = Config::inst()->get($class, 'db', Config::UNINHERITED);
 		
 		foreach(self::composite_fields($class, false) as $fieldName => $fieldClass) {
 			// Remove the original fieldname, its not an actual database column
@@ -222,7 +222,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 		
 		// Add has_one relationships
-		$hasOne = Object::uninherited_static($class, 'has_one');
+		$hasOne = Config::inst()->get($class, 'has_one', Config::UNINHERITED);
 		if($hasOne) foreach(array_keys($hasOne) as $field) {
 			$fields[$field . 'ID'] = 'ForeignKey';
 		}
@@ -268,7 +268,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	private static function cache_composite_fields($class) {
 		$compositeFields = array();
 		
-		$fields = Object::uninherited_static($class, 'db');
+		$fields = Config::inst()->get($class, 'db', Config::UNINHERITED);
 		if($fields) foreach($fields as $fieldName => $fieldClass) {
 			// Strip off any parameters
 			$bPos = strpos('(', $fieldClass);
@@ -954,7 +954,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$classes = array_reverse(ClassInfo::ancestry($this));
 		
 		foreach($classes as $class) {
-			$defaults = Object::uninherited_static($class, 'defaults');
+			$defaults = Config::inst()->get($class, 'defaults', Config::UNINHERITED);
 			
 			if($defaults && !is_array($defaults)) {
 				user_error("Bad '$this->class' defaults given: " . var_export($defaults, true),
@@ -1417,13 +1417,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(in_array($class, array('Object', 'ViewableData', 'DataObject'))) continue;
 
 			if($component) {
-				$hasOne = Object::uninherited_static($class, 'has_one');
+				$hasOne = Config::inst()->get($class, 'has_one', Config::UNINHERITED);
 				
 				if(isset($hasOne[$component])) {
 					return $hasOne[$component];
 				}
 			} else {
-				$newItems = (array) Object::uninherited_static($class, 'has_one');
+				$newItems = (array)Config::inst()->get($class, 'has_one', Config::UNINHERITED);
 				// Validate the data
 				foreach($newItems as $k => $v) {
 					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$has_one has a bad entry: " 
@@ -1484,13 +1484,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 
 			if($fieldName) {
-				$db = Object::uninherited_static($class, 'db');
+				$db = Config::inst()->get($class, 'db', Config::UNINHERITED);
 				
 				if(isset($db[$fieldName])) {
 					return $db[$fieldName];
 				}
 			} else {
-				$newItems = (array) Object::uninherited_static($class, 'db');
+				$newItems = (array)Config::inst()->get($class, 'db', Config::UNINHERITED);
 				// Validate the data
 				foreach($newItems as $k => $v) {
 					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$db has a bad entry: " 
@@ -1635,7 +1635,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(in_array($class, array('ViewableData', 'Object', 'DataObject'))) continue;
 
 			if($component) {
-				$manyMany = Object::uninherited_static($class, 'many_many');
+				$manyMany = Config::inst()->get($class, 'many_many', Config::UNINHERITED);
 				// Try many_many
 				$candidate = (isset($manyMany[$component])) ? $manyMany[$component] : null;
 				if($candidate) {
@@ -1645,13 +1645,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 
 				// Try belongs_many_many
-				$belongsManyMany = Object::uninherited_static($class, 'belongs_many_many');
+				$belongsManyMany = Config::inst()->get($class, 'belongs_many_many', Config::UNINHERITED);
 				$candidate = (isset($belongsManyMany[$component])) ? $belongsManyMany[$component] : null;
 				if($candidate) {
 					$childField = $candidate . "ID";
 
 					// We need to find the inverse component name
-					$otherManyMany = Object::uninherited_static($candidate, 'many_many');
+					$otherManyMany = Config::inst()->get($candidate, 'many_many', Config::UNINHERITED);
 					if(!$otherManyMany) {
 						user_error("Inverse component of $candidate not found ({$this->class})", E_USER_ERROR);
 					}
@@ -1670,7 +1670,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					user_error("Orphaned \$belongs_many_many value for $this->class.$component", E_USER_ERROR);
 				}
 			} else {
-				$newItems = (array) Object::uninherited_static($class, 'many_many');
+				$newItems = (array)Config::inst()->get($class, 'many_many', Config::UNINHERITED);
 				// Validate the data
 				foreach($newItems as $k => $v) {
 					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$many_many has a bad entry: " 
@@ -1678,7 +1678,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 				$items = isset($items) ? array_merge($newItems, $items) : $newItems;
 				
-				$newItems = (array) Object::uninherited_static($class, 'belongs_many_many');
+				$newItems = (array)Config::inst()->get($class, 'belongs_many_many', Config::UNINHERITED);
 				// Validate the data
 				foreach($newItems as $k => $v) {
 					if(!is_string($k) || is_numeric($k) || !is_string($v)) user_error("$class::\$belongs_many_many has a bad entry: " 
@@ -1700,8 +1700,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array or false
 	 */
 	function database_extensions($class){
-		
-		$extensions = Object::uninherited_static($class, 'database_extensions');
+		$extensions = Config::inst()->get($class, 'database_extensions', Config::UNINHERITED);
 		
 		if($extensions)
 			return $extensions;
@@ -2126,7 +2125,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		// if no fieldmap is cached, get all fields
 		if(!$fieldMap) {
-			$fieldMap = Object::uninherited_static($this->class, 'db');
+			$fieldMap = Config::inst()->get($this->class, 'db', Config::UNINHERITED);
 			
 			// all $db fields on this specific class (no parents)
 			foreach(self::composite_fields($this->class, false) as $fieldname => $fieldtype) {
@@ -2138,7 +2137,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			
 			// all has_one relations on this specific class,
 			// add foreign key
-			$hasOne = Object::uninherited_static($this->class, 'has_one');
+			$hasOne = Config::inst()->get($this->class, 'has_one', Config::UNINHERITED);
 			if($hasOne) foreach($hasOne as $fieldName => $fieldSchema) {
 				$fieldMap[$fieldName . 'ID'] = "ForeignKey";
 			}
@@ -2171,7 +2170,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			if(get_parent_class($dataClass) == 'DataObject') {
 				DataObject::$cache_has_own_table[$dataClass] = true;
 			} else {
-				DataObject::$cache_has_own_table[$dataClass] = Object::uninherited_static($dataClass, 'db') || Object::uninherited_static($dataClass, 'has_one');
+				DataObject::$cache_has_own_table[$dataClass] = Config::inst()->get($dataClass, 'db', Config::UNINHERITED) || Config::inst()->get($dataClass, 'has_one', Config::UNINHERITED);
 			}
 		}
 		return DataObject::$cache_has_own_table[$dataClass];
@@ -2967,7 +2966,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($ancestry) foreach($ancestry as $ancestorClass) {
 			if($ancestorClass == 'ViewableData') break;
 			$types = array(
-				'db'        => (array) Object::uninherited_static($ancestorClass, 'db'),
+				'db'        => (array)Config::inst()->get($ancestorClass, 'db', Config::UNINHERITED)
 			);
 			if($includerelations){
 				$types['has_one'] = (array)singleton($ancestorClass)->uninherited('has_one', true);
