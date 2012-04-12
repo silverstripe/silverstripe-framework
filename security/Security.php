@@ -514,7 +514,9 @@ class Security extends Controller {
 	 */
 	public static function getPasswordResetLink($autoLoginHash) {
 		$autoLoginHash = urldecode($autoLoginHash);
-		return self::Link('changepassword') . "?h=$autoLoginHash";
+		$selfControllerClass = __CLASS__;
+		$selfController = new $selfControllerClass();
+		return $selfController->Link('changepassword') . "?h=$autoLoginHash";
 	}
 	
 	/**

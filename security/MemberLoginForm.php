@@ -130,14 +130,14 @@ JS
 			if(isset($_REQUEST['BackURL'])) $backURL = $_REQUEST['BackURL']; 
 			else $backURL = null; 
 
-		 	if($backURL) Session::set('BackURL', $backURL);			
+			if($backURL) Session::set('BackURL', $backURL);
 			
 			if($badLoginURL = Session::get("BadLoginURL")) {
 				$this->controller->redirect($badLoginURL);
 			} else {
 				// Show the right tab on failed login
-				$loginLink = Director::absoluteURL(Security::Link("login")); 
-				if($backURL) $loginLink .= '?BackURL=' . urlencode($backURL); 
+				$loginLink = Director::absoluteURL($this->controller->Link('login'));
+				if($backURL) $loginLink .= '?BackURL=' . urlencode($backURL);
 				$this->controller->redirect($loginLink . '#' . $this->FormName() .'_tab');
 			}
 		}
