@@ -168,7 +168,7 @@ class Hierarchy extends DataExtension {
 			$children = $node->$childrenMethod($context);
 		} else {
 			user_error(sprintf("Can't find the method '%s' on class '%s' for getting tree children", 
-				$childrenMethod, get_class($this->owner)), E_USER_ERROR);
+				$childrenMethod, get_class($node)), E_USER_ERROR);
 		}
 		
 		$node->markExpanded();
