@@ -2659,13 +2659,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Flush the cached results for all relations (has_one, has_many, many_many)
 	 * Also clears any cached aggregate data
-	 * 
-	 * @param boolean $persistant When true will also clear persistant data stored in the Cache system.
+	 *
+	 * @param boolean $persistent When true will also clear persistent data stored in the Cache system.
 	 *                            When false will just clear session-local cached data 
-	 * 
+	 *
 	 */
-	public function flushCache($persistant = true) {
-		if($persistant) Aggregate::flushCache($this->class);
+	public function flushCache($persistent = true) {
+		if($persistent) Aggregate::flushCache($this->class);
 		
 		if($this->class == 'DataObject') {
 			DataObject::$cache_get_one = array();
