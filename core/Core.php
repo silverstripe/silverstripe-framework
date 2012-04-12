@@ -38,8 +38,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 // ENVIRONMENT CONFIG
 
-if(defined('E_DEPRECATED')) error_reporting(E_ALL & ~(E_STRICT));
-else error_reporting(E_ALL);
+// ALL errors are reported, including E_STRICT by default *unless* the site is in
+// live mode, where reporting is limited to fatal errors and warnings (see later in this file)
+error_reporting(E_ALL | E_STRICT);
 
 /**
  * Include _ss_environment.php files
@@ -253,13 +254,11 @@ SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
 	BASE_PATH, false, isset($_GET['flush'])
 ));
 
-// If this is a dev site, enable php error reporting
-// This is necessary to force developers to acknowledge and fix
-// notice level errors (you can override this directive in your _config.php)
-if (Director::isLive()) {
-	if(defined('E_DEPRECATED')) error_reporting(E_ALL & ~(E_DEPRECATED | E_STRICT | E_NOTICE));
-	else error_reporting(E_ALL & ~E_NOTICE);
+// If in live mode, ensure deprecation, strict and notices are not reported
+if(Director::isLive()) {
+	error_reporting(E_ALL & ~(E_DEPRECATED | E_STRICT | E_NOTICE));
 }
+
 ///////////////////////////////////////////////////////////////////////////////
 // POST-MANIFEST COMMANDS
 
