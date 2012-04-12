@@ -85,11 +85,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @todo Define the options that can be set here
 	 */
 	public static $api_access = false;
-	
-	public static
-		$cache_has_own_table       = array(),
-		$cache_has_own_table_field = array();
-	
+
 	/**
 	 * True if this DataObject has been destroyed.
 	 * @var boolean
@@ -128,13 +124,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	protected $original;
 
 	/**
-	 * The one-to-one, one-to-many and many-to-one components
-	 * indexed by component name.
-	 * @var array
-	 */
-	protected $components;
-	
-	/**
 	 * Used by onBeforeDelete() to ensure child classes call parent::onBeforeDelete()
 	 * @var boolean
 	 */
@@ -150,7 +139,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Should dataobjects be validated before they are written?
 	 */
 	private static $validation_enabled = true;
-	
+
+	/**
+	 * Static caches used by relevant functions.
+	 */
+	public static $cache_has_own_table = array();
+	public static $cache_has_own_table_field = array();
+	protected static $_cache_get_one;
+	protected static $_cache_get_class_ancestry;
+	protected static $_cache_composite_fields = array();	
+
+	/**
+	 * Non-static relationship cache, indexed by component name.
+	 */
+	protected $components;
+
 	/**
 	 * Returns when validation on DataObjects is enabled.
 	 * @return bool
@@ -227,9 +230,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		return (array)$fields;
 	}
 	
-	private static $_cache_custom_database_fields = array();
-	
-	
 	/**
 	 * Returns the field class if the given db field on the class is a composite field.
 	 * Will check all applicable ancestor classes and aggregate results.
@@ -283,9 +283,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		self::$_cache_composite_fields[$class] = $compositeFields;
 	}
 	
-	private static $_cache_composite_fields = array();
-	
-
 	/**
 	 * Construct a new DataObject.
 	 *
@@ -391,7 +388,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Destroy all of this objects dependant objects.
+	 * Destroy all of this objects dependant objects and local caches.
 	 * You'll need to call this to get the memory of an object that has components or extensions freed.
 	 */
 	function destroy() {
@@ -1159,10 +1156,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		return $this->record['ID'];
 	}
 
-
 	/**
 	 * Write the cached components to the database. Cached components could refer to two different instances of the same record.
-	 * 
+	 *
 	 * @param $recursive Recursively write components
 	 */
 	public function writeComponents($recursive = false) {
@@ -1225,12 +1221,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * A cache used by getClassAncestry()
-	 * @var array
-	 */
-	protected static $ancestry;
-
-	/**
 	 * Get the class ancestry, including the current class name.
 	 * The ancestry will be returned as an array of class names, where the 0th element
 	 * will be the class that inherits directly from DataObject, and the last element
@@ -1239,13 +1229,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array Class ancestry
 	 */
 	public function getClassAncestry() {
-		if(!isset(DataObject::$ancestry[$this->class])) {
-			DataObject::$ancestry[$this->class] = array($this->class);
-			while(($class = get_parent_class(DataObject::$ancestry[$this->class][0])) != "DataObject") {
-				array_unshift(DataObject::$ancestry[$this->class], $class);
+		if(!isset(DataObject::$_cache_get_class_ancestry[$this->class])) {
+			DataObject::$_cache_get_class_ancestry[$this->class] = array($this->class);
+			while(($class = get_parent_class(DataObject::$_cache_get_class_ancestry[$this->class][0])) != "DataObject") {
+				array_unshift(DataObject::$_cache_get_class_ancestry[$this->class], $class);
 			}
 		}
-		return DataObject::$ancestry[$this->class];
+		return DataObject::$_cache_get_class_ancestry[$this->class];
 	}
 
 	/**
@@ -1291,12 +1281,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$this->components[$componentName] = $component;
 		return $component;
 	}
-
-	/**
-	 * A cache used by component getting classes
-	 * @var array
-	 */
-	protected $componentCache;
 
 	/**
 	 * Returns a one-to-many relation as a HasManyList
@@ -2487,11 +2471,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		return $this->extendedSQL($filter, $sort, $limit, $join, $having);
 
 	}
-	
-	/**
-	 * Cache for the hairy bit of buildSQL
-	 */
-	private static $cache_buildSQL_query;
 
 	/**
 	 * @deprecated 3.0 Use DataList::create and DataList to do your querying
@@ -2612,12 +2591,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * A cache used by get_one.
-	 * @var array
-	 */
-	protected static $cache_get_one;
-
-	/**
 	 * Return the first item matching the given query.
 	 * All calls to get_one() are cached.
 	 *
@@ -2638,28 +2611,28 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$cacheKey = md5($cacheKey);
 		
 		// Flush destroyed items out of the cache
-		if($cache && isset(DataObject::$cache_get_one[$callerClass][$cacheKey]) && DataObject::$cache_get_one[$callerClass][$cacheKey] instanceof DataObject && DataObject::$cache_get_one[$callerClass][$cacheKey]->destroyed) {
-			DataObject::$cache_get_one[$callerClass][$cacheKey
+		if($cache && isset(DataObject::$_cache_get_one[$callerClass][$cacheKey]) && DataObject::$_cache_get_one[$callerClass][$cacheKey] instanceof DataObject && DataObject::$_cache_get_one[$callerClass][$cacheKey]->destroyed) {
+			DataObject::$_cache_get_one[$callerClass][$cacheKey
 			] = false;
 		}
-		if(!$cache || !isset(DataObject::$cache_get_one[$callerClass][$cacheKey])) {
+		if(!$cache || !isset(DataObject::$_cache_get_one[$callerClass][$cacheKey])) {
 			$dl = DataList::create($callerClass)->where($filter)->sort($orderby);
 			$dl->setModel(DataModel::inst());
 			$item = $dl->First();
 
 			if($cache) {
-				DataObject::$cache_get_one[$callerClass][$cacheKey] = $item;
-				if(!DataObject::$cache_get_one[$callerClass][$cacheKey]) {
-					DataObject::$cache_get_one[$callerClass][$cacheKey] = false;
+				DataObject::$_cache_get_one[$callerClass][$cacheKey] = $item;
+				if(!DataObject::$_cache_get_one[$callerClass][$cacheKey]) {
+					DataObject::$_cache_get_one[$callerClass][$cacheKey] = false;
 				}
 			}
 		}
-		return $cache ? DataObject::$cache_get_one[$callerClass][$cacheKey] : $item;
+		return $cache ? DataObject::$_cache_get_one[$callerClass][$cacheKey] : $item;
 	}
 
 	/**
 	 * Flush the cached results for all relations (has_one, has_many, many_many)
-	 * Also clears any cached aggregate data
+	 * Also clears any cached aggregate data.
 	 *
 	 * @param boolean $persistent When true will also clear persistent data stored in the Cache system.
 	 *                            When false will just clear session-local cached data 
@@ -2669,27 +2642,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($persistent) Aggregate::flushCache($this->class);
 		
 		if($this->class == 'DataObject') {
-			DataObject::$cache_get_one = array();
+			DataObject::$_cache_get_one = array();
 			return;
 		}
 
 		$classes = ClassInfo::ancestry($this->class);
 		foreach($classes as $class) {
-			if(isset(self::$cache_get_one[$class])) unset(self::$cache_get_one[$class]);
+			if(isset(self::$_cache_get_one[$class])) unset(self::$_cache_get_one[$class]);
 		}
 		
 		$this->extend('flushCache');
-		
-		$this->componentCache = array();
 	}
 
 	static function flush_and_destroy_cache() {
-		if(self::$cache_get_one) foreach(self::$cache_get_one as $class => $items) {
+		if(self::$_cache_get_one) foreach(self::$_cache_get_one as $class => $items) {
 			if(is_array($items)) foreach($items as $item) {
 				if($item) $item->destroy();
 			}
 		}
-		self::$cache_get_one = array();
+		self::$_cache_get_one = array();
 	}
 	
 	/**
