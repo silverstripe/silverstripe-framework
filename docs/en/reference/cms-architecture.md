@@ -179,6 +179,22 @@ Alternatively, form-related Ajax calls can be invoked through their own wrappers
 which don't cause history events and hence allow callbacks: `$('.cms-content').loadForm()`
 and `$('.cms-content').submitForm()`.
 
+Within the PHP logic, the `[api:PjaxResponseNegotiator]` class determines which view is rendered.
+Through a custom `X-Pjax` HTTP header, the client can declare which view he's expecting,
+through identifiers like `CurrentForm` or `Content` (see `[api:LeftAndMain->getResponseNegotiator()]`).
+These identifiers are passed to `loadPanel()` via the `pjax` data option.
+
+## Ajax Redirects
+
+Sometimes, a server response represents a new URL state, e.g. when submitting an "add record" form,
+the resulting view will be the edit form of the new record. On non-ajax submissions, that's easily
+handled through a HTTP redirection. On ajax submissions, browsers handle these redirects
+transparently, so the CMS JavaScript doesn't know about them (or the new URL).
+To work around this, we're using a custom `X-ControllerURL` HTTP response header
+which can declare a new URL. If this header is set, the CMS JavaScript will
+push the URL to its history stack, causing the logic to fetch it in a subsequent ajax request.
+Note: To avoid double processing, the first response body is usually empty.
+
 ## State through HTTP response metadata
 
 By loading mostly HTML responses, we don't have an easy way to communicate
