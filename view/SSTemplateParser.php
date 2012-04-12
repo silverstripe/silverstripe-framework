@@ -1,9 +1,3 @@
-
-Strict Standards: Declaration of TokenLiteral::match_code() should be compatible with that of TokenExpressionable::match_code() in /Users/hfried/Sites/silverstripe-ssv/sapphire/thirdparty/php-peg/Compiler.php on line 288
-
-Strict Standards: Declaration of TokenRegex::match_code() should be compatible with that of TokenExpressionable::match_code() in /Users/hfried/Sites/silverstripe-ssv/sapphire/thirdparty/php-peg/Compiler.php on line 304
-
-Strict Standards: Declaration of TokenWhitespace::match_code() should be compatible with that of TokenTerminal::match_code() in /Users/hfried/Sites/silverstripe-ssv/sapphire/thirdparty/php-peg/Compiler.php on line 316
 <?php
 
 /*
