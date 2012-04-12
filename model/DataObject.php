@@ -2652,8 +2652,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 		
 		$this->extend('flushCache');
+		
+		$this->components = array();
 	}
 
+	/**
+	 * Flush the get_one global cache and destroy associated objects.
+	 */
 	static function flush_and_destroy_cache() {
 		if(self::$_cache_get_one) foreach(self::$_cache_get_one as $class => $items) {
 			if(is_array($items)) foreach($items as $item) {
@@ -2664,11 +2669,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
-	 * Reset internal caches, for example after test runs
+	 * Reset all global caches associated with DataObject.
 	 */
 	static function reset() {
-		self::$cache_get_one = array();
-		self::$cache_buildSQL_query = array();
+		self::$cache_has_own_table = array();
+		self::$cache_has_own_table_field = array();
+		self::$_cache_get_one = array();
+		self::$_cache_composite_fields = array();
+		self::$_cache_get_class_ancestry = array();
 	}
 
 	/**
