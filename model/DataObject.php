@@ -235,10 +235,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Will check all applicable ancestor classes and aggregate results.
 	 */
 	static function is_composite_field($class, $name, $aggregated = true) {
-		if(!isset(self::$_cache_composite_fields[$class])) self::cache_composite_fields($class);
+		if(!isset(DataObject::$_cache_composite_fields[$class])) self::cache_composite_fields($class);
 		
-		if(isset(self::$_cache_composite_fields[$class][$name])) {
-			return self::$_cache_composite_fields[$class][$name];
+		if(isset(DataObject::$_cache_composite_fields[$class][$name])) {
+			return DataObject::$_cache_composite_fields[$class][$name];
 			
 		} else if($aggregated && $class != 'DataObject' && ($parentClass=get_parent_class($class)) != 'DataObject') {
 			return self::is_composite_field($parentClass, $name);
@@ -250,9 +250,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Will check all applicable ancestor classes and aggregate results.
 	 */
 	static function composite_fields($class, $aggregated = true) {
-		if(!isset(self::$_cache_composite_fields[$class])) self::cache_composite_fields($class);
+		if(!isset(DataObject::$_cache_composite_fields[$class])) self::cache_composite_fields($class);
 		
-		$compositeFields = self::$_cache_composite_fields[$class];
+		$compositeFields = DataObject::$_cache_composite_fields[$class];
 		
 		if($aggregated && $class != 'DataObject' && ($parentClass=get_parent_class($class)) != 'DataObject') {
 			$compositeFields = array_merge($compositeFields, 
@@ -280,7 +280,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 		}
 		
-		self::$_cache_composite_fields[$class] = $compositeFields;
+		DataObject::$_cache_composite_fields[$class] = $compositeFields;
 	}
 	
 	/**
@@ -2122,7 +2122,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return 'Int';
 		}
 		// get cached fieldmap
-		$fieldMap = isset(self::$cache_has_own_table_field[$this->class]) ? self::$cache_has_own_table_field[$this->class] : null;
+		$fieldMap = isset(DataObject::$cache_has_own_table_field[$this->class]) ? DataObject::$cache_has_own_table_field[$this->class] : null;
 		
 		// if no fieldmap is cached, get all fields
 		if(!$fieldMap) {
@@ -2144,7 +2144,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 
 			// set cached fieldmap
-			self::$cache_has_own_table_field[$this->class] = $fieldMap;
+			DataObject::$cache_has_own_table_field[$this->class] = $fieldMap;
 		}
 
 		// Remove string-based "constructor-arguments" from the DBField definition
@@ -2167,14 +2167,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// which causes PHP < 5.3 to segfault in rare circumstances, see PHP bug #46753
 		if($dataClass == 'DataObject' || !in_array('DataObject', ClassInfo::ancestry($dataClass))) return false;
 		
-		if(!isset(self::$cache_has_own_table[$dataClass])) {
+		if(!isset(DataObject::$cache_has_own_table[$dataClass])) {
 			if(get_parent_class($dataClass) == 'DataObject') {
-				self::$cache_has_own_table[$dataClass] = true;
+				DataObject::$cache_has_own_table[$dataClass] = true;
 			} else {
-				self::$cache_has_own_table[$dataClass] = Object::uninherited_static($dataClass, 'db') || Object::uninherited_static($dataClass, 'has_one');
+				DataObject::$cache_has_own_table[$dataClass] = Object::uninherited_static($dataClass, 'db') || Object::uninherited_static($dataClass, 'has_one');
 			}
 		}
-		return self::$cache_has_own_table[$dataClass];
+		return DataObject::$cache_has_own_table[$dataClass];
 	}
 	
 	/**
@@ -2648,7 +2648,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		$classes = ClassInfo::ancestry($this->class);
 		foreach($classes as $class) {
-			if(isset(self::$_cache_get_one[$class])) unset(self::$_cache_get_one[$class]);
+			if(isset(DataObject::$_cache_get_one[$class])) unset(DataObject::$_cache_get_one[$class]);
 		}
 		
 		$this->extend('flushCache');
@@ -2660,23 +2660,23 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Flush the get_one global cache and destroy associated objects.
 	 */
 	static function flush_and_destroy_cache() {
-		if(self::$_cache_get_one) foreach(self::$_cache_get_one as $class => $items) {
+		if(DataObject::$_cache_get_one) foreach(DataObject::$_cache_get_one as $class => $items) {
 			if(is_array($items)) foreach($items as $item) {
 				if($item) $item->destroy();
 			}
 		}
-		self::$_cache_get_one = array();
+		DataObject::$_cache_get_one = array();
 	}
 	
 	/**
 	 * Reset all global caches associated with DataObject.
 	 */
 	static function reset() {
-		self::$cache_has_own_table = array();
-		self::$cache_has_own_table_field = array();
-		self::$_cache_get_one = array();
-		self::$_cache_composite_fields = array();
-		self::$_cache_get_class_ancestry = array();
+		DataObject::$cache_has_own_table = array();
+		DataObject::$cache_has_own_table_field = array();
+		DataObject::$_cache_get_one = array();
+		DataObject::$_cache_composite_fields = array();
+		DataObject::$_cache_get_class_ancestry = array();
 	}
 
 	/**
