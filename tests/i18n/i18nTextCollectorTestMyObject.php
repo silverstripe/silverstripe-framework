@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class i18nTextCollectorTestMyObject extends DataObject implements TestOnly {

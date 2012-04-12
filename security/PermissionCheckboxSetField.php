@@ -7,7 +7,7 @@
  * 
  * The field can gets its assignment data either from {@link Group} or {@link PermissionRole} records.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PermissionCheckboxSetField extends FormField {
@@ -274,7 +274,7 @@ class PermissionCheckboxSetField extends FormField {
  * Readonly version of a {@link PermissionCheckboxSetField} - 
  * uses the same structure, but has all checkboxes disabled.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PermissionCheckboxSetField_Readonly extends PermissionCheckboxSetField {

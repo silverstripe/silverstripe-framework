@@ -11,7 +11,7 @@
  * 
  * @see http://doc.silverstripe.org/tutorial:4-site-search
  *
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 class FulltextSearchable extends DataExtension {

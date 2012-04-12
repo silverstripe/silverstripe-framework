@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  * 
  * @todo Test that order of combine_files() is correct

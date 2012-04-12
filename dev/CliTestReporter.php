@@ -2,7 +2,7 @@
 /**
  * Test reporter optimised for CLI (ie, plain-text) output
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class CliTestReporter extends SapphireTestReporter {

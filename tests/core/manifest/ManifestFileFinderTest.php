@@ -2,7 +2,7 @@
 /**
  * Tests for the {@link ManifestFileFinder} class.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage tests
  */
 class ManifestFileFinderTest extends SapphireTest {

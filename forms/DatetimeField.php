@@ -25,7 +25,7 @@
  * - "datetimeorder": An sprintf() template to determine in which order the date and time values will
  * be combined. This is necessary as those separate formats are set in their invididual fields.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage forms
  */
 class DatetimeField extends FormField {

@@ -4,7 +4,7 @@
  * 
  * @todo Allow for custom limiting/filtering of scaffoldFormField dropdown
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class PrimaryKey extends Int {

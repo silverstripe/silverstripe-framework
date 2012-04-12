@@ -2,7 +2,7 @@
 /**
  * A list object that wraps around an array of objects or arrays.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage model
  */
 class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sortable, SS_Limitable {

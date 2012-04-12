@@ -12,7 +12,7 @@
  * complies with your privacy standards. We're logging
  * username and IP.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class LoginAttempt extends DataObject {

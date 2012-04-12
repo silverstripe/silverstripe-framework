@@ -1,4 +1,4 @@
-/** Core styles for the basic GridField form field without any specific style.  @package sapphire @subpackage scss @todo Add radial gradient to default delete button state @todo Create SASS mixin-function to simply swap the from/to, to to/from colours in grsdient mixins? */
+/** Core styles for the basic GridField form field without any specific style.  @package framework @subpackage scss @todo Add radial gradient to default delete button state @todo Create SASS mixin-function to simply swap the from/to, to to/from colours in grsdient mixins? */
 .cms .ss-gridfield > div { margin-bottom: 36px; }
 .cms .ss-gridfield[data-selectable] tr.ui-selected, .cms .ss-gridfield[data-selectable] tr.ui-selecting { background: #FFFAD6 !important; }
 .cms .ss-gridfield[data-selectable] td { cursor: pointer; }

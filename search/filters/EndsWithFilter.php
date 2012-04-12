@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 
@@ -13,7 +13,7 @@
  *  "abcdefg" => "abcd" # false
  * </code>
  * 
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 class EndsWithFilter extends SearchFilter {

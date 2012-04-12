@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage formatters
  */
 class JSONDataFormatter extends DataFormatter {

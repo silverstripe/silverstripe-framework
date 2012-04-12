@@ -17,7 +17,7 @@
  * Objects of type {@link ViewableData} can have an "escaping type",
  * which determines if they are automatically escaped before output by {@link SSViewer}. 
  * 
- * @package sapphire
+ * @package framework
  * @subpackage misc
  */
 class Convert {

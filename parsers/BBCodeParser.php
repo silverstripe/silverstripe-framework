@@ -11,7 +11,7 @@ unset($options);
 /**
  * BBCode parser object.
  * Use on a text field in a template with $Content.Parse(BBCodeParser).
- * @package sapphire
+ * @package framework
  * @subpackage misc
  */
 class BBCodeParser extends TextParser {

@@ -3,7 +3,7 @@
  * A class which builds a manifest of all templates present in a directory,
  * in both modules and themes.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage manifest
  */
 class SS_TemplateManifest {

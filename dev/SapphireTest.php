@@ -5,7 +5,7 @@ require_once 'TestRunner.php';
  * Test case class for the Sapphire framework.
  * Sapphire unit testing is based on PHPUnit, but provides a number of hooks into our data model that make it easier to work with.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class SapphireTest extends PHPUnit_Framework_TestCase {

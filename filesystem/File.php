@@ -59,7 +59,7 @@
  * Ensure that you always set a "Filename" property when writing to the database,
  * leaving it out can lead to unexpected results.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage filesystem
  */
 class File extends DataObject {

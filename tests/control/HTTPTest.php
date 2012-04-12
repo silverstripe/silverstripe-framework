@@ -2,7 +2,7 @@
 /**
  * Tests the {@link HTTP} class
  *
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class HTTPTest extends SapphireTest {

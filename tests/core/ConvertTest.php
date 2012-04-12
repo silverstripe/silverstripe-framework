@@ -1,7 +1,7 @@
 <?php
 /**
  * Test various functions on the {@link Convert} class.
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class ConvertTest extends SapphireTest {

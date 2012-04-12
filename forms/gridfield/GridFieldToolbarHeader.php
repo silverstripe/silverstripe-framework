@@ -6,7 +6,7 @@
  * 
  * This header provides two new HTML fragment spaces: 'toolbar-header-left' and 'toolbar-header-right'.
  *
- * @package sapphire
+ * @package framework
  * @subpackage gridfield
  */
 class GridFieldToolbarHeader implements GridField_HTMLProvider {

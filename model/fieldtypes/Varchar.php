@@ -6,7 +6,7 @@
  * @see HTMLVarchar
  * @see Text
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Varchar extends StringField {

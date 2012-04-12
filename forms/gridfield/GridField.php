@@ -15,7 +15,7 @@
  * 
  * @see SS_List
  * 
- * @package sapphire
+ * @package framework
  * @subpackage fields-relational
  */
 class GridField extends FormField {
@@ -732,7 +732,7 @@ class GridField extends FormField {
  * This class is the base class when you want to have an action that alters the state of the gridfield,
  * rendered as a button element. 
  * 
- * @package sapphire
+ * @package framework
  * @subpackage forms
  * 
  */

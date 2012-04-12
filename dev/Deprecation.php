@@ -27,7 +27,7 @@
  * calls a non-module method which then calls a deprecated method, that call will use the global check version, not
  * the module specific check version.
  *
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 class Deprecation {

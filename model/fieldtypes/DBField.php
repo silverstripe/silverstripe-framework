@@ -23,7 +23,7 @@
  * }
  * </code>
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 abstract class DBField extends ViewableData {

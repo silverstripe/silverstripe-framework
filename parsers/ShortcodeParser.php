@@ -49,7 +49,7 @@
  *     [/shortcode]
  * </code>
  *
- * @package sapphire
+ * @package framework
  * @subpackage misc
  */
 class ShortcodeParser {

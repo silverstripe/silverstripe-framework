@@ -2,7 +2,7 @@
 /**
  * Tests for the {@link SS_FileFinder} class.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage tests
  */
 class FileFinderTest extends SapphireTest {

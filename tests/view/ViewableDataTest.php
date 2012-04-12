@@ -3,7 +3,7 @@
  * See {@link SSViewerTest->testCastingHelpers()} for more tests related to casting and ViewableData behaviour, 
  * from a template-parsing perspective.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class ViewableDataTest extends SapphireTest {

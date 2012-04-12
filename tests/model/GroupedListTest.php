@@ -2,7 +2,7 @@
 /**
  * Tests for the {@link GroupedList} list decorator.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage tests
  */
 class GroupedListTest extends SapphireTest {

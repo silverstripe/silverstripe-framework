@@ -91,7 +91,7 @@
 * }
  * </code>
  *
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 interface CompositeDBField {

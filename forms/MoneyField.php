@@ -6,7 +6,7 @@
  * 
  * @author Ingo Schommer, SilverStripe Ltd. (<firstname>@silverstripe.com)
  * 
- * @package sapphire
+ * @package framework
  * @subpackage fields-formattedinput
  */
 class MoneyField extends FormField {

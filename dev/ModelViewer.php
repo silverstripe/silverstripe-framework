@@ -5,7 +5,7 @@
  *
  * Requirements: http://graphviz.org/
  * 
- * @package sapphire
+ * @package framework
  * @subpackage tools
  */
 class ModelViewer extends Controller {
@@ -84,7 +84,7 @@ class ModelViewer extends Controller {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tools
  */
 class ModelViewer_Module extends ModelViewer {
@@ -116,7 +116,7 @@ class ModelViewer_Module extends ModelViewer {
 /**
  * Represents a single model in the model viewer 
  * 
- * @package sapphire
+ * @package framework
  * @subpackage tools
  */
 class ModelViewer_Model extends ViewableData {
@@ -178,7 +178,7 @@ class ModelViewer_Model extends ViewableData {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tools
  */
 class ModelViewer_Field extends ViewableData {
@@ -194,7 +194,7 @@ class ModelViewer_Field extends ViewableData {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tools
  */
 class ModelViewer_Relation extends ViewableData {

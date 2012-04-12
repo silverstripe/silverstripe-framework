@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 
@@ -22,7 +22,7 @@
  *   );
  * </code>
  *
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 class FulltextFilter extends SearchFilter {

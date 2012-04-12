@@ -7,7 +7,7 @@
  *  doesn't switch throughout the test execution. This means tests might
  *  fail when run at 23:59:59.
  *
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class SS_DatetimeTest extends SapphireTest {

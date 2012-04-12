@@ -21,7 +21,7 @@
 // Modified by SilverStripe silverstripe.com
 
 /**
- * @package  sapphire
+ * @package framework
  * @subpackage misc
  * @author   Stijn de Reede  <sjr@gmx.co.uk> , SilverStripe
  *

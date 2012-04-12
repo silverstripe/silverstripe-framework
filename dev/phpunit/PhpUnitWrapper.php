@@ -1,6 +1,6 @@
 <?php
 /**
-* @package sapphire
+* @package framework
 * @subpackage dev
 */
 
@@ -255,7 +255,7 @@ if(!PhpUnitWrapper::has_php_unit()) {
 	 * PHPUnit is a testing framework that can be installed using PEAR.
 	 * It's not bundled with SilverStripe, you will need to install it yourself.
 	 * 
-	 * @package sapphire
+	 * @package framework
 	 * @subpackage testing
 	 */
 	class PHPUnit_Framework_TestCase {

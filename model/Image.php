@@ -3,7 +3,7 @@
 /**
  * Represents an Image
  *
- * @package sapphire
+ * @package framework
  * @subpackage filesystem
  */
 class Image extends File {
@@ -458,7 +458,7 @@ class Image extends File {
  * When Image object are processed or resized, a suitable Image_Cached object is returned, pointing to the
  * cached copy of the processed image.
  *
- * @package sapphire
+ * @package framework
  * @subpackage filesystem
  */
 class Image_Cached extends Image {

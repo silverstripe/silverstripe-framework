@@ -20,7 +20,7 @@
  * 
  * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class SS_Datetime extends Date {

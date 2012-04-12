@@ -7,7 +7,7 @@
  * 
  * Director also has a number of static methods that provide information about the environment, such as {@link Director::set_environment_type()}.
  *
- * @package sapphire
+ * @package framework
  * @subpackage control
  * @see Director::direct(),Director::addRules(),Director::set_environment_type()
  */

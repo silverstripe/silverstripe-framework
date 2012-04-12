@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class ComplexTableFieldTest extends FunctionalTest {

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  * 
  * @todo tests for addStaticVars()

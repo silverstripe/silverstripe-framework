@@ -2,7 +2,7 @@
 /**
  * Tests various static getter and setter methods on {@link Object}
  *
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class ObjectStaticTest extends SapphireTest {

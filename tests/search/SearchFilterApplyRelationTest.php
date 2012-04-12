@@ -5,7 +5,7 @@
  * the right "join" clauses to $query without the component parent class missing from
  * "join" chain.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class SearchFilterApplyRelationTest extends SapphireTest{

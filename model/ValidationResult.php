@@ -3,7 +3,7 @@
 /**
  * A class that combined as a boolean result with an optional list of error messages.
  * This is used for returning validation results from validators
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 class ValidationResult extends Object {

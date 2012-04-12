@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 
@@ -8,7 +8,7 @@
  * Uses a substring match against content in column rows.
  * @deprecated 3.0 Use PartialMatchFilter instead
  * 
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 class SubstringFilter extends PartialMatchFilter {

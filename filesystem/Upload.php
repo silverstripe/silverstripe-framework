@@ -14,7 +14,7 @@
  * (see http://doc.silverstripe.org/secure-development#filesystem).
  * {@link File::$allowed_extensions} provides a good start for a list of "safe" extensions.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage filesystem
  * 
  * @todo Allow for non-database uploads
@@ -329,7 +329,7 @@ class Upload extends Controller {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage filesystem
  */
 class Upload_Validator {

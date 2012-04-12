@@ -6,7 +6,7 @@
  * methods like {@link MemberAuthenticator} or {@link OpenIDAuthenticator}.
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 abstract class Authenticator extends Object {

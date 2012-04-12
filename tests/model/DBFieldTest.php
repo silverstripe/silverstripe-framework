@@ -3,7 +3,7 @@
 /**
  * 
  * Tests for DBField objects.
- * @package sapphire
+ * @package framework
  * @subpackage tests
  *
  */

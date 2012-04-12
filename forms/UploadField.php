@@ -20,7 +20,7 @@
  * </code>
  * 
  * @author Zauberfisch
- * @package sapphire
+ * @package framework
  * @subpackage forms
  */
 class UploadField extends FileField {
@@ -563,7 +563,7 @@ class UploadField extends FileField {
  * RequestHandler for actions (edit, remove, delete) on a single item (File) of the UploadField
  * 
  * @author Zauberfisch
- * @package sapphire
+ * @package framework
  * @subpackage forms
  */
 class UploadField_ItemHandler extends RequestHandler {

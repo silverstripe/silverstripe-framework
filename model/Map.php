@@ -3,7 +3,7 @@
 /**
  * Creates a map from an SS_List by defining a key column and a value column.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
@@ -127,7 +127,7 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 
 /**
  * Builds a map iterator around an Iterator.  Called by SS_Map
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class SS_Map_Iterator implements Iterator {

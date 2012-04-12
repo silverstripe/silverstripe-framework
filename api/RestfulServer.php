@@ -90,7 +90,7 @@
  * @todo Access to extendable methods/relations like SiteTree/1/Versions or SiteTree/1/Version/22
  * @todo Respect $api_access array notation in search contexts
  * 
- * @package sapphire
+ * @package framework
  * @subpackage api
  */
 class RestfulServer extends Controller {
@@ -618,7 +618,7 @@ class RestfulServer extends Controller {
 /**
  * Restful server handler for a SS_List
  * 
- * @package sapphire
+ * @package framework
  * @subpackage api
  */
 class RestfulServer_List {
@@ -638,7 +638,7 @@ class RestfulServer_List {
 /**
  * Restful server handler for a single DataObject
  * 
- * @package sapphire
+ * @package framework
  * @subpackage api
  */
 class RestfulServer_Item {

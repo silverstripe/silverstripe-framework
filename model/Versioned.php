@@ -2,7 +2,7 @@
 /**
  * The Versioned extension allows your DataObjects to have several versions, allowing
  * you to rollback changes and view history. An example of this is the pages used in the CMS.
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Versioned extends DataExtension {
@@ -1067,7 +1067,7 @@ class Versioned extends DataExtension {
 /**
  * Represents a single version of a record.
  *
- * @package sapphire
+ * @package framework
  * @subpackage model
  *
  * @see Versioned

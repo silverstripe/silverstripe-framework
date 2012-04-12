@@ -5,7 +5,7 @@
  * to create or amend a query for {@link DataObject} instances.
  * See {@link SearchContext} for more information.
  *
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 abstract class SearchFilter extends Object {

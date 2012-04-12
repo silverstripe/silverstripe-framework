@@ -13,7 +13,7 @@
  * Authenticator::register_authenticator('OpenIDAuthenticator');
  * </code>
  *
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 

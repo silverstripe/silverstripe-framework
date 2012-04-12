@@ -132,7 +132,7 @@ body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif;
 .cms .ui-state-hover { cursor: pointer; }
 .cms .ui-widget input, .cms .ui-widget select, .cms .ui-widget textarea, .cms .ui-widget button { color: #444444; font-size: 12px; font-family: Arial, sans-serif; }
 
-/** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in sapphire/css/Form.css.  @package sapphire @subpackage admin */
+/** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in sapphire/css/Form.css.  @package framework @subpackage admin */
 /** ---------------------------------------------------- Basic form fields ---------------------------------------------------- */
 form.nostyle .field { padding: 0; border: 0; }
 form.nostyle label { float: none; width: auto; }
@@ -667,7 +667,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-tree.multiple li > a > .jstree-icon { display: none; }
 .cms-tree.multiple li#record-0 > a .jstree-checkbox { display: none; }
 
-/** Styles for the left hand side menu and header for the admin panels.  Take into consideration CSS selector performance.   @package sapphire @subpackage admin */
+/** Styles for the left hand side menu and header for the admin panels.  Take into consideration CSS selector performance.   @package framework @subpackage admin */
 .cms-logo-header { background-color: #00111d; position: relative; padding: 9px 8px 0 4px; line-height: 24px; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMTExZCIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMDAzMDUwIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDAxMTFkIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkKSIgLz48L3N2Zz4g'); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #00111d), color-stop(50%, #003050), color-stop(100%, #00111d)); background-image: -webkit-linear-gradient(#00111d, #003050, #00111d); background-image: -moz-linear-gradient(#00111d, #003050, #00111d); background-image: -o-linear-gradient(#00111d, #003050, #00111d); background-image: -ms-linear-gradient(#00111d, #003050, #00111d); background-image: linear-gradient(#00111d, #003050, #00111d); }
 .cms-logo-header span { color: white; white-space: nowrap; text-overflow: ellipsis; display: block; }
 .cms-logo-header span a { color: #3ebae0; display: inline; }

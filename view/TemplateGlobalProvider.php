@@ -4,7 +4,7 @@
  *
  * Director::AbsoluteBaseURL is an example of this.
  *
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 interface TemplateGlobalProvider {

@@ -16,7 +16,7 @@
  * Note: We can't unit test this class because of segfaults in PHP5.3 when trying to
  * use get_all_tests() within a SapphireTest.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class FullTestSuite {

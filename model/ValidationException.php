@@ -4,7 +4,7 @@
  * exception rather than a user error, the exception can be caught in unit tests and as such
  * can be used as a successful test.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage validation
  */
 class ValidationException extends Exception {

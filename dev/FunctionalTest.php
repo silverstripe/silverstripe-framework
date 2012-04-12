@@ -19,7 +19,7 @@
  *  }	
  * </code>
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class FunctionalTest extends SapphireTest {

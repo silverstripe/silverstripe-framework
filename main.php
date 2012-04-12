@@ -10,7 +10,7 @@
  ************************************************************************************/
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 
@@ -50,7 +50,7 @@ if (version_compare(phpversion(), '5.3.2', '<')) {
  *
  * On Apache, RewriteEngine can be used to do this.
  *
- * @package sapphire
+ * @package framework
  * @subpackage core
  * @see Director::direct()
  */

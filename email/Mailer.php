@@ -3,7 +3,7 @@
  * Mailer objects are responsible for actually sending emails.
  * The default Mailer class will use PHP's mail() function.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage email
  */
 class Mailer extends Object {

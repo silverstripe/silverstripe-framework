@@ -22,7 +22,7 @@
  * 
  * @author Bernat Foj Capell <bernat@silverstripe.com>
  * @author Ingo Schommer <FIRSTNAME@silverstripe.com>
- * @package sapphire
+ * @package framework
  * @subpackage i18n
  * @uses i18nEntityProvider
  * @uses i18n

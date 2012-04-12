@@ -1,7 +1,7 @@
 <?php
 /**
  * Represents a permission assigned to a group.
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Permission extends DataObject implements TemplateGlobalProvider {
@@ -635,7 +635,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
  *
  * This class is used to group permissions together for showing on an
  * interface.
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Permission_Group {

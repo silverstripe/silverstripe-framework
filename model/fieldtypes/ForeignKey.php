@@ -9,7 +9,7 @@
  * @param string $name
  * @param DataOject $object The object that the foreign key is stored on (should have a relation with $name) 
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class ForeignKey extends Int {

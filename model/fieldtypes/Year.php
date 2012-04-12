@@ -1,13 +1,13 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 
 /**
  * Represents a single year field.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Year extends DBField {

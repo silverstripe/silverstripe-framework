@@ -4,7 +4,7 @@
 /**
  * A utility class which builds a manifest of configuration items
  * 
- * @package    sapphire
+ * @package framework
  * @subpackage manifest
  */
 class SS_ConfigManifest {

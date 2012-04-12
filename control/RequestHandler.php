@@ -25,7 +25,7 @@
  *
  * {@link RequestHandler::handleRequest()} is where this behaviour is implemented.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage control
  */
 class RequestHandler extends ViewableData {

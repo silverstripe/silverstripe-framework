@@ -33,7 +33,7 @@ define('TEST_INCOMPLETE', 2);
  *  0.6 First created [David Spurr]
  *  0.7 Added fix to getTestException provided [Glen Ogilvie]
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  *
  * @version 0.7 2006-03-12

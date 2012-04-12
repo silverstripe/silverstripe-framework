@@ -17,7 +17,7 @@
  * through the "text/xml" or "application/xhtml+xml" Content-Type.
  * Please see http://webkit.org/blog/68/understanding-html-xml-and-xhtml/ for further information.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage control
  * 
  * @todo Check for correct XHTML doctype in xhtml()

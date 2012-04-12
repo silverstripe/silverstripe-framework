@@ -2,7 +2,7 @@
 /**
  * An extension that adds additional functionality to a {@link DataObject}.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage model
  */
 abstract class DataExtension extends Extension {

@@ -30,7 +30,7 @@
  * </html>
  * </code>
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class JSTestRunner extends Controller {

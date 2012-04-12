@@ -31,7 +31,7 @@
  * moved into different subsystems.
  * @todo A lot of this stuff is very order-independent; for example, the require_once calls have to happen after the defines.'
  * This could be decoupled.
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 

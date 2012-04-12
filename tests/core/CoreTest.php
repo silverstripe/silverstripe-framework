@@ -3,7 +3,7 @@
  * Tests for the core of SilverStripe, such as how the temporary
  * directory is determined throughout the framework.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class CoreTest extends SapphireTest {

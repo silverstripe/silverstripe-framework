@@ -44,7 +44,7 @@
  * http://www.yoursite.com/dev/tasks/MyMigrationTask?isDev=1
  * </code>
  * 
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 class MigrationTask extends BuildTask {

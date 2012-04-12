@@ -3,7 +3,7 @@
  * Class to facilitate command-line output.
  * Support less-trivial output stuff such as colours (on xterm-color)
  * 
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 class SS_Cli extends Object {

@@ -1,13 +1,13 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 
 /**
  * Matches textual content with a LIKE '%keyword%' construct.
  *
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 class PartialMatchFilter extends SearchFilter {

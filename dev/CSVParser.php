@@ -19,7 +19,7 @@
  * }
  * </code>
  * 
- * @package sapphire
+ * @package framework
  * @subpackage bulkloading
  */
 class CSVParser extends Object implements Iterator {

@@ -3,7 +3,7 @@
  * Implements a "lazy loading" DataObjectSet.
  * Uses {@link DataQuery} to do the actual query generation.
  * 
- * @package    sapphire
+ * @package framework
  * @subpackage model
  */
 class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortable, SS_Limitable {

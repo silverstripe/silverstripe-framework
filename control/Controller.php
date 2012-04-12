@@ -6,7 +6,7 @@
  * the appropriate action - either by calling the action method, or displaying the action's template.
  *
  * See {@link getTemplate()} for information on how the template is chosen.
- * @package sapphire
+ * @package framework
  * @subpackage control
  */
 class Controller extends RequestHandler implements TemplateGlobalProvider {

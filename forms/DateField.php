@@ -456,7 +456,7 @@ class DateField_Disabled extends DateField {
  * 
  * Caution: This API is highly volatile, and might change without prior deprecation.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage forms
  */
 class DateField_View_JQuery extends Object {

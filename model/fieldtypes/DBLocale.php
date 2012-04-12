@@ -4,7 +4,7 @@
  * 
  * @todo Allowing showing locale values in different languages through Nice()
  * 
- * @package sapphire
+ * @package framework
  * @subpackage i18n
  */
 class DBLocale extends Varchar {

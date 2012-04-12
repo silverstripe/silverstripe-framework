@@ -2,7 +2,7 @@
 /**
  * The member class which represents the users of the system
  *
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Member extends DataObject implements TemplateGlobalProvider {
@@ -1385,7 +1385,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 /**
  * Represents a set of Groups attached to a member.
  * Handles the hierarchy logic.
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Member_GroupSet extends ManyManyList {
@@ -1427,7 +1427,7 @@ class Member_GroupSet extends ManyManyList {
 
 /**
  * Form for editing a member profile.
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Member_ProfileForm extends Form {
@@ -1482,7 +1482,7 @@ class Member_ProfileForm extends Form {
 
 /**
  * Class used as template to send an email to new members
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Member_SignupEmail extends Email {
@@ -1532,7 +1532,7 @@ class Member_SignupEmail extends Email {
 /**
  * Class used as template to send an email saying that the password has been
  * changed
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Member_ChangePasswordEmail extends Email {
@@ -1550,7 +1550,7 @@ class Member_ChangePasswordEmail extends Email {
 
 /**
  * Class used as template to send the forgot password email
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Member_ForgotPasswordEmail extends Email {
@@ -1566,7 +1566,7 @@ class Member_ForgotPasswordEmail extends Email {
 
 /**
  * Member Validator
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Member_Validator extends RequiredFields {

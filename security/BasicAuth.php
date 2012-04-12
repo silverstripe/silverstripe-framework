@@ -8,7 +8,7 @@
  * It also has a function to protect your entire site.  See {@link BasicAuth::protect_entire_site()}
  * for more information. You can control this setting on controller-level by using {@link Controller->basicAuthEnabled}.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class BasicAuth {

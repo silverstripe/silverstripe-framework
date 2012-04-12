@@ -5,7 +5,7 @@
  * methods which are called just once per suite, not once per
  * test method in each suite/case.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class SapphireTestSuite extends PHPUnit_Framework_TestSuite {

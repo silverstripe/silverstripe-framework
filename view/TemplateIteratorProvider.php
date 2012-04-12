@@ -5,7 +5,7 @@
  *
  * SSViewer_BasicIteratorSupport is an example of this. See also @TemplateGlobalProvider
  *
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 interface TemplateIteratorProvider {

@@ -4,7 +4,7 @@
  * (mcrypt_create_iv(), openssl_random_pseudo_bytes(), /dev/urandom, COM.CAPICOM.Utilities.1, mt_rand()).
  * Chosen method depends on operating system and PHP version.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  * @author Ingo Schommer
  */

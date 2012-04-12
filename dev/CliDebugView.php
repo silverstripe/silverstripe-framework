@@ -3,7 +3,7 @@
  * A basic HTML wrapper for stylish rendering of a developement info view.
  * Used to output error messages, and test results.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage dev
  * 
  * @todo Perhaps DebugView should be an interface / ABC, implemented by HTMLDebugView and CliDebugView?

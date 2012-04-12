@@ -2,7 +2,7 @@
 /**
  * This component provides a button for opening the add new form provided by {@link GridFieldDetailForm}.
  *
- * @package sapphire
+ * @package framework
  * @subpackage gridfield
  */
 class GridFieldAddNewButton implements GridField_HTMLProvider {

@@ -10,7 +10,7 @@
 /**
  * Execution time profiler.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage misc
  */
 class Profiler {

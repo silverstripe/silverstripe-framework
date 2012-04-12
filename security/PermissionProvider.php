@@ -2,7 +2,7 @@
 /**
  * Used to let classes provide new permission codes.
  * Every implementor of PermissionProvider is accessed and providePermissions() called to get the full list of permission codes.
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 interface PermissionProvider {

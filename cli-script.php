@@ -5,7 +5,7 @@
  * 
  * This file lets you execute SilverStripe requests from the command-line.  The URL is passed as the first argument to the scripts.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 

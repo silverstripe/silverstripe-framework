@@ -13,7 +13,7 @@
  * and falls back to the "tidy" CLI tool. If none of those exists,
  * the string is parsed directly without sanitization.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 class CSSContentParser extends Object {

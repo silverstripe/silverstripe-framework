@@ -4,7 +4,7 @@
  * functionality. It passes through list methods to the underlying list
  * implementation.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage model
  */
 abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sortable, SS_Filterable, SS_Limitable {

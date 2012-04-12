@@ -6,7 +6,7 @@
  *
  * The purpose of this class is to have a footer that can round off GridField without having to use pagination.
  *
- * @package sapphire
+ * @package framework
  * @subpackage gridfield
  */
 class GridFieldFooter implements GridField_HTMLProvider {

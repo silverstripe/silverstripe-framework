@@ -1,7 +1,7 @@
 <?php
 /**
  * Standard Change Password Form
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class ChangePasswordForm extends Form {

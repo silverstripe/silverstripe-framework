@@ -19,7 +19,7 @@ require_once 'Zend/Currency.php';
  * @todo Addition, substraction and allocation of values
  * @todo Model validation for $allowedCurrencies
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Money extends DBField implements CompositeDBField {

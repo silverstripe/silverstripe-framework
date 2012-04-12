@@ -11,7 +11,7 @@
  * @todo Accept X_HTTP_METHOD_OVERRIDE http header and $_REQUEST['_method'] to override request types (useful for webclients
  *   not supporting PUT and DELETE)
  * 
- * @package sapphire
+ * @package framework
  * @subpackage control
  */
 class SS_HTTPRequest implements ArrayAccess {
