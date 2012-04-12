@@ -297,7 +297,7 @@
 					if($.path.isExternal($(node).find('a:first'))) url = url = $.path.makeUrlAbsolute(url, $('base').attr('href'));
 					// Reload only edit form if it exists (side-by-side view of tree and edit view), otherwise reload whole panel
 					if(container.find('.cms-edit-form').length) {
-						container.entwine('ss').loadPanel(url, null, {selector: '.cms-edit-form'});
+						container.entwine('ss').loadPanel(url, null, {selector: '.cms-edit-form', pjax: 'CurrentForm'});
 					} else {
 						container.entwine('ss').loadPanel(url);	
 					}
