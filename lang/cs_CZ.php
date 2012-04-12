@@ -2,7 +2,7 @@
 
 /**
  * Czech (Czech Republic) language pack
- * @package sapphire
+ * @package framework
  * @subpackage i18n
  */
 

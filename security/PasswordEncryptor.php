@@ -8,7 +8,7 @@
  * 
  * Used in {@link Security::encrypt_password()}.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 abstract class PasswordEncryptor {
@@ -120,7 +120,7 @@ abstract class PasswordEncryptor {
  * Please note that the implemented algorithms depend on the PHP
  * distribution and architecture.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_PHPHash extends PasswordEncryptor {
@@ -159,7 +159,7 @@ class PasswordEncryptor_PHPHash extends PasswordEncryptor {
  * floating point precision problems in base_convert().
  * See http://open.silverstripe.org/ticket/3004
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
@@ -184,7 +184,7 @@ class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
 /**
  * Uses MySQL's PASSWORD encryption. Requires an active DB connection.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_MySQLPassword extends PasswordEncryptor {
@@ -202,7 +202,7 @@ class PasswordEncryptor_MySQLPassword extends PasswordEncryptor {
 /**
  * Uses MySQL's OLD_PASSWORD encyrption. Requires an active DB connection.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_MySQLOldPassword extends PasswordEncryptor {
@@ -222,7 +222,7 @@ class PasswordEncryptor_MySQLOldPassword extends PasswordEncryptor {
  * Also used when Security::$encryptPasswords is set to FALSE.
  * Not recommended.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_None extends PasswordEncryptor {
@@ -236,7 +236,7 @@ class PasswordEncryptor_None extends PasswordEncryptor {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_NotFoundException extends Exception {}

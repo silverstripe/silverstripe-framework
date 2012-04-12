@@ -10,7 +10,7 @@
  * @todo Character conversion
  * 
  * @see http://rfc.net/rfc4180.html
- * @package sapphire
+ * @package framework
  * @subpackage bulkloading
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
  */
@@ -252,7 +252,7 @@ abstract class BulkLoader extends ViewableData {
  * 
  * @todo Refactor to support lazy-loaded DataObjectSets once they are implemented.
  *
- * @package sapphire
+ * @package framework
  * @subpackage bulkloading
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
  */

@@ -3,7 +3,7 @@
  * GridFieldPaginator paginates the gridfields list and adds controlls to the
  * bottom of the gridfield.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage fields-relational
  */
 class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {

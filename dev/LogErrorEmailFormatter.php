@@ -4,7 +4,7 @@ require_once 'Zend/Log/Formatter/Interface.php';
 /**
  * Formats SS error emails with a basic layout.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 class SS_LogErrorEmailFormatter implements Zend_Log_Formatter_Interface {

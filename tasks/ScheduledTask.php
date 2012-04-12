@@ -52,7 +52,7 @@
  * </code>
  * 
  * @todo Improve documentation
- * @package sapphire
+ * @package framework
  * @subpackage cron
  */
 abstract class ScheduledTask extends CliController {

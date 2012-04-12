@@ -7,7 +7,7 @@
  * 
  * @todo Add support for INSERT and UPDATE queries
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class SQLQuery {

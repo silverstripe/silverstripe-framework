@@ -1,7 +1,7 @@
 <?php
 /**
  * Library of static methods for manipulating arrays.
- * @package sapphire
+ * @package framework
  * @subpackage misc
  */
 class ArrayLib {

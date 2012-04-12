@@ -10,7 +10,7 @@
  * with access to {@link SecurityAdmin} (but no ADMIN privileges) to get themselves ADMIN access
  * (which might be implied by certain roles).
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PermissionRole extends DataObject {

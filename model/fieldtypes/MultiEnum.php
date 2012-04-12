@@ -1,13 +1,13 @@
 <?php
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 
 /**
  * Represents an multi-select enumeration field.
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class MultiEnum extends Enum {

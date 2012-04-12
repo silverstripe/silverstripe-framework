@@ -2,7 +2,7 @@
 /**
  * Represents a boolean field.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Boolean extends DBField {

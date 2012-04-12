@@ -7,7 +7,7 @@
  * To disable the task (in the case of potentially destructive updates or deletes), declare
  * the $Disabled property on the subclass.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 abstract class BuildTask extends Object {

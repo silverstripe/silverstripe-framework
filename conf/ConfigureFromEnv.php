@@ -38,7 +38,7 @@
  * Email:
  *  - SS_SEND_ALL_EMAILS_TO: If you set this define, all emails will be redirected to this address.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 

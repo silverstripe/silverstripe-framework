@@ -63,7 +63,7 @@
  * @todo Add instance specific removeExtension() which undos loadExtraStatics()
  *  and defineMethods()
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class DataObject extends ViewableData implements DataObjectInterface, i18nEntityProvider {

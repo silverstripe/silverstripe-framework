@@ -6,7 +6,7 @@
  * "sake DailyTask" from the commandline will call {@link process()} on every subclass
  * of DailyTask.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage cron
  */
 abstract class CliController extends Controller {

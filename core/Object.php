@@ -11,7 +11,7 @@
  * @todo Create instance-specific removeExtension() which removes an extension from $extension_instances,
  * but not from static $extensions, and clears everything added through defineMethods(), mainly $extra_methods.
  *
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 abstract class Object {

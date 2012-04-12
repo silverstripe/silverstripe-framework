@@ -10,7 +10,7 @@
  * );
  * </code>
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Percentage extends Decimal {

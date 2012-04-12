@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 
@@ -16,7 +16,7 @@
  * 
  * See {@link browse()} output for generic usage instructions.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class TestRunner extends Controller {

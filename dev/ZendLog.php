@@ -8,7 +8,7 @@ require_once 'Zend/Log.php';
  * Please refer to {@link SS_Log} for information on
  * setting up logging for your projects.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 class SS_ZendLog extends Zend_Log {

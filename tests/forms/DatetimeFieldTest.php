@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class DatetimeFieldTest extends SapphireTest {
@@ -171,7 +171,7 @@ class DatetimeFieldTest extends SapphireTest {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class DatetimeFieldTest_Model extends DataObject implements TestOnly {

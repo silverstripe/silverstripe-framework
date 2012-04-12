@@ -3,7 +3,7 @@
  * Represents a test usage session of a web-app
  * It will maintain session-state from request to request
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class TestSession {
@@ -176,7 +176,7 @@ class TestSession {
 /**
  * Wrapper around SS_HTTPResponse to make it look like a SimpleHTTPResposne
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class TestSession_STResponseWrapper {

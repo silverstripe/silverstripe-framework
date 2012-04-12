@@ -19,7 +19,7 @@
  * @todo add support for user defined config: Debug::die_on_notice(true | false)
  * @todo better way of figuring out the error context to display in highlighted source
  * 
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 class Debug {

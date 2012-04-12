@@ -2,7 +2,7 @@
 /**
  * Tests for the {@link SS_TemplateLoader} class.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage tests
  */
 class TemplateLoaderTest extends SapphireTest {

@@ -2,7 +2,7 @@
 /**
  * A set of static methods for manipulating cookies.
  *
- * @package sapphire
+ * @package framework
  * @subpackage misc
  */
 class Cookie {

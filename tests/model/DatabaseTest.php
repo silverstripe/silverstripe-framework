@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage Testing
  */
 class DatabaseTest extends SapphireTest {

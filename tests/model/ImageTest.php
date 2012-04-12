@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class ImageTest extends SapphireTest {

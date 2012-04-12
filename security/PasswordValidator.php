@@ -12,7 +12,7 @@
  * Member::set_password_validator($pwdValidator);
  * </code>
  *
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PasswordValidator extends Object {

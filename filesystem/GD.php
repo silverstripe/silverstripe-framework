@@ -1,7 +1,7 @@
 <?php
 /**
  * A wrapper class for GD-based images, with lots of manipulation functions.
- * @package sapphire
+ * @package framework
  * @subpackage filesystem
  */
 class GD extends Object {

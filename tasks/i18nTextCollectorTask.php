@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tasks
  */
 class i18nTextCollectorTask extends BuildTask {

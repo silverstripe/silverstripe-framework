@@ -1,6 +1,6 @@
 <?php
 /**
- * @package    sapphire
+ * @package framework
  * @subpackage model
  * @deprecated 3.0 Use {@link DataExtension}.
  */

@@ -54,7 +54,7 @@
  * @see http://www.w3.org/TR/i18n-html-tech-lang
  *
  * @author Bernat Foj Capell <bernat@silverstripe.com>
- * @package sapphire
+ * @package framework
  * @subpackage misc
  */
 class i18n extends Object implements TemplateGlobalProvider {

@@ -20,7 +20,7 @@
 * 
 * @see http://doc.silverstripe.com/doku.php?id=searchcontext
 *
-* @package sapphire
+* @package framework
 * @subpackage search
 */
 class SearchContext extends Object {

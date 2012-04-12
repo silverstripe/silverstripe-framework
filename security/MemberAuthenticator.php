@@ -3,7 +3,7 @@
  * Authenticator for the default "member" method
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class MemberAuthenticator extends Authenticator {

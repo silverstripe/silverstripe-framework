@@ -2,7 +2,7 @@
 
 /**
  * French (France) language pack
- * @package sapphire
+ * @package framework
  * @subpackage i18n
  */
 

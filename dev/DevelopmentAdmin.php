@@ -5,7 +5,7 @@
  * ; and TaskRunner.
  *
  * @todo documentation for how to add new unit tests and tasks
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 class DevelopmentAdmin extends Controller {

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class SapphireSoapServerTest extends FunctionalTest {
@@ -20,7 +20,7 @@ class SapphireSoapServerTest extends FunctionalTest {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class SapphireSoapServerTest_MyServer extends SapphireSoapServer {

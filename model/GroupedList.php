@@ -3,7 +3,7 @@
  * A list decorator that allows a list to be grouped into sub-lists by common
  * values of a field.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage model
  */
 class GroupedList extends SS_ListDecorator {

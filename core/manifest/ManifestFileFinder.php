@@ -8,7 +8,7 @@
  *   - Module tests directories are skipped if the ignore_tests option is not
  *     set to false.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage manifest
  */
 class ManifestFileFinder extends SS_FileFinder {

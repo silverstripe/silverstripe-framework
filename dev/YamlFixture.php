@@ -62,7 +62,7 @@ require_once 'thirdparty/spyc/spyc.php';
  *      ErrorCode: 404
  * </code>
  * 
- * @package sapphire
+ * @package framework
  * @subpackage core
  * 
  * @see http://code.google.com/p/spyc/

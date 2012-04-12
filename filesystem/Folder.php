@@ -14,7 +14,7 @@
  * See {@link File} documentation for more details about the
  * relationship between the database and filesystem in the SilverStripe file APIs.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage filesystem
  */
 class Folder extends File {

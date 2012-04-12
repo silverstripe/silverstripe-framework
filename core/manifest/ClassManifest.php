@@ -9,7 +9,7 @@
  *   - All implementors of an interface.
  *   - All module configuration files.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage manifest
  */
 class SS_ClassManifest {

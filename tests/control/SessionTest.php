@@ -3,7 +3,7 @@
 /**
  * Tests to cover the {@link Session} class
  *
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 

@@ -19,7 +19,7 @@ define('16384',E_USER_DEPRECATED);
 define('30719',E_ALL);
 */
 /**
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 class SapphireREPL extends Controller {

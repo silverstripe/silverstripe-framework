@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 
@@ -8,7 +8,7 @@
  * A basic HTML wrapper for stylish rendering of a developement info view.
  * Used to output error messages, and test results.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 class DebugView extends Object {

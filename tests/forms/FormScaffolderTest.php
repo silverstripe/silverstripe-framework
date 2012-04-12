@@ -3,7 +3,7 @@
 /**
  * Tests for DataObject FormField scaffolding
  * 
- * @package sapphire
+ * @package framework
  * @subpackage tests
  *
  */

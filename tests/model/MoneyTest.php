@@ -8,7 +8,7 @@
  */
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class MoneyTest extends SapphireTest {

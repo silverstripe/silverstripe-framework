@@ -10,7 +10,7 @@
  ************************************************************************************/
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 $majorVersion = strtok(phpversion(),'.');
@@ -52,7 +52,7 @@ if($majorVersion < 5 || ($majorVersion == 5 && $minorVersion < 3)) {
  *
  * On Apache, RewriteEngine can be used to do this.
  *
- * @package sapphire
+ * @package framework
  * @subpackage core
  * @see Director::direct()
  */

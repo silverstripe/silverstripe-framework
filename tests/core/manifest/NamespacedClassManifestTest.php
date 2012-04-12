@@ -2,7 +2,7 @@
 /**
  * Tests for the {@link SS_ClassManifest} class.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage tests
  */
 class NamespacedClassManifestTest extends SapphireTest {

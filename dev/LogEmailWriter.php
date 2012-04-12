@@ -6,7 +6,7 @@ require_once 'Zend/Log/Writer/Abstract.php';
  * 
  * @see SS_Log for more information on using writers.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {

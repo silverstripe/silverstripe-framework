@@ -4,7 +4,7 @@
  * similar to DataObject.
  *
  * In addition to the methods defined below, the data of the object should be directly accessible as fields.
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 interface DataObjectInterface {

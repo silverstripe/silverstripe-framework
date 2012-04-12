@@ -5,7 +5,7 @@
  * is not aware of the SQL syntax. This means we have to be conservative
  * with modifying the SQL string.
  *
- * @package sapphire
+ * @package framework
  * @subpackage parsers
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
  */

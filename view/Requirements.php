@@ -4,7 +4,7 @@
  * Requirements tracker, for javascript and css.
  * @todo Document the requirements tracker, and discuss it with the others.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage view
  */
 class Requirements {
@@ -313,7 +313,7 @@ class Requirements {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage view
  */
 class Requirements_Backend {

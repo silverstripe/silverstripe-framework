@@ -1,7 +1,7 @@
 <?php
 /**
  * Interface for database helper classes.
- * @package sapphire
+ * @package framework
  */
 interface DatabaseConfigurationHelper {
 

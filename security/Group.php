@@ -2,7 +2,7 @@
 /**
  * A security group.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Group extends DataObject {

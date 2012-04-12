@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class DecimalTest extends SapphireTest {
@@ -37,7 +37,7 @@ class DecimalTest extends SapphireTest {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class DecimalTest_DataObject extends DataObject implements TestOnly {

@@ -3,7 +3,7 @@
  * A class that handles loading classes and interfaces from a class manifest
  * instance.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage manifest
  */
 class SS_ClassLoader {

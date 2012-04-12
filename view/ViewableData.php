@@ -6,7 +6,7 @@
  * is provided and automatically escaped by ViewableData. Any class that needs to be available to a view (controllers,
  * {@link DataObject}s, page controls) should inherit from this class.
  *
- * @package sapphire
+ * @package framework
  * @subpackage view
  */
 class ViewableData extends Object implements IteratorAggregate {
@@ -577,7 +577,7 @@ class ViewableData extends Object implements IteratorAggregate {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage view
  */
 class ViewableData_Customised extends ViewableData {
@@ -649,7 +649,7 @@ class ViewableData_Customised extends ViewableData {
 /**
  * Allows you to render debug information about a {@link ViewableData} object into a template.
  *
- * @package sapphire
+ * @package framework
  * @subpackage view
  */
 class ViewableData_Debugger extends ViewableData {

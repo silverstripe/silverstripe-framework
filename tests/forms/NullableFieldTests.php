@@ -1,7 +1,7 @@
 <?php
 /**
  * Tests the NullableField form field class.
- * @package sapphire
+ * @package framework
  * @subpackage tests
  * @author Pete Bacon Darwin
  *

@@ -7,7 +7,7 @@
  * @see Text
  * @see Varchar
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class HTMLText extends Text {

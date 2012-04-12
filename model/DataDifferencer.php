@@ -30,7 +30,7 @@
  * $diff->ignoreFields('AuthorID', 'Status');
  * </code>
  * 
- * @package sapphire
+ * @package framework
  * @subpackage misc
  */
 class DataDifferencer extends ViewableData {

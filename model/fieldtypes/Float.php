@@ -2,7 +2,7 @@
 /**
  * Represents a floating point field.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Float extends DBField {

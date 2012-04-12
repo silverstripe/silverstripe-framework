@@ -2,7 +2,7 @@
 /**
  * Represents a response returned by a controller.
  *
- * @package sapphire
+ * @package framework
  * @subpackage control
  */
 class SS_HTTPResponse {
@@ -261,7 +261,7 @@ class SS_HTTPResponse {
  * throw new SS_HTTPResponse_Exception(new SS_HTTPResponse('There was an internal server error.', 500));
  * </code>
  *
- * @package sapphire
+ * @package framework
  * @subpackage control
  */
 class SS_HTTPResponse_Exception extends Exception {

@@ -2,7 +2,7 @@
 /**
  * Test the security class, including log-in form, change password form, etc
  *
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class SecurityTest extends FunctionalTest {
