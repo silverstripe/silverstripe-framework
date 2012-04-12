@@ -89,7 +89,7 @@
 				data.push({name:button.attr('name'),value:button.val()});
 
 				// TODO Should be set by hiddenfield already
-				jQuery('.cms-content').entwine('ss').loadForm(
+				jQuery('.cms-content').entwine('ss').submitForm(
 					this.attr('action'),
 					null,
 					function() {

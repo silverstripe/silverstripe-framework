@@ -194,9 +194,6 @@ jQuery.noConflict();
 			 * For example, a ModelAdmin search event should contain the search terms
 			 * as URL parameters, and the result display should automatically appear 
 			 * if the URL is loaded without ajax.
-			 * 
-			 * Alternatively, you can load new content via $('.cms-content').loadForm(<url>).
-			 * In this case, the action won't be recorded in the browser history.
 			 */
 			handleStateChange: function() {
 				var self = this, h = window.History, state = h.getState(); 

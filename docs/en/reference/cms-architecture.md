@@ -176,8 +176,7 @@ should be placed in jQuery.entinwe `onmatch()` rules which apply to the newly cr
 See `$('.cms-container').handleStateChange()` in `LeftAndMain.js` for details.
 
 Alternatively, form-related Ajax calls can be invoked through their own wrappers,
-which don't cause history events and hence allow callbacks: `$('.cms-content').loadForm()`
-and `$('.cms-content').submitForm()`.
+which don't cause history events and hence allow callbacks: `$('.cms-content').submitForm()`.
 
 Within the PHP logic, the `[api:PjaxResponseNegotiator]` class determines which view is rendered.
 Through a custom `X-Pjax` HTTP header, the client can declare which view he's expecting,
