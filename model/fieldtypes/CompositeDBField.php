@@ -7,7 +7,7 @@
  * 
  * Example with a combined street name and number:
  * <code>
-* class Street extends DBFields implements CompositeDBField() {
+* class Street extends DBField implements CompositeDBField {
 * 	protected $streetNumber;
 * 	protected $streetName;
 * 	protected $isChanged = false;
@@ -42,7 +42,7 @@
 * 	}
 * 	
 * 	function setValue($value, $record = null, $markChanged=true) {
-* 		if ($value instanceof Street && $value->hasValue()) {
+* 		if ($value instanceof Street && $value->exists()) {
 * 			$this->setStreetName($value->getStreetName(), $markChanged);
 * 			$this->setStreetNumber($value->getStreetNumber(), $markChanged);
 * 			if($markChanged) $this->isChanged = true;
@@ -85,7 +85,7 @@
 * 		return $this->isChanged;
 * 	}
 * 	
-* 	function hasValue() {
+* 	function exists() {
 * 		return ($this->getStreetName() || $this->getStreetNumber());
 * 	}
 * }
