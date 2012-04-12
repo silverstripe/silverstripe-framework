@@ -83,7 +83,6 @@ class CsvBulkLoader extends BulkLoader {
 					$relationObj = new $relationClass();
 					$relationObj->write();
 				}
-				$obj->setComponent($relationName, $relationObj);
 				$obj->{"{$relationName}ID"} = $relationObj->ID;
 				$obj->write();
 				$obj->flushCache(); // avoid relation caching confusion
@@ -92,7 +91,6 @@ class CsvBulkLoader extends BulkLoader {
 				// we have a relation column with dot notation
 				list($relationName,$columnName) = explode('.', $fieldName);
 				$relationObj = $obj->getComponent($relationName); // always gives us an component (either empty or existing)
-				$obj->setComponent($relationName, $relationObj);
 				$relationObj->write();
 				$obj->{"{$relationName}ID"} = $relationObj->ID;
 				$obj->write();
