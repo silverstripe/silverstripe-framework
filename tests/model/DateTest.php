@@ -112,4 +112,16 @@ class DateTest extends SapphireTest {
 		$range = $date->RangeString(DBField::create_field('Date', '2000-10-20'), true);
 		$this->assertEquals('10th - 20th Oct 2000', $range);
 	}
+
+	function testExtendedDates() {
+		$date = DBField::create_field('Date', '1800-10-10');
+		$this->assertEquals('10 Oct 1800', $date->Format('d M Y'));
+
+		$date = DBField::create_field('Date', '1500-10-10');
+		$this->assertEquals('10 Oct 1500', $date->Format('d M Y'));
+
+		$date = DBField::create_field('Date', '3000-4-3');
+		$this->assertEquals('03 Apr 3000', $date->Format('d M Y'));
+	}
+
 }
