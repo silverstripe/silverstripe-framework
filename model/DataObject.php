@@ -1391,9 +1391,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param string $componentName Name of the component
 	 * @param DataObject|HasManyList|ManyManyList $componentValue Value of the component
+	 * @deprecated 3.0 Not used internally anymore.
 	 */
 	public function setComponent($componentName, $componentValue) {
-		$this->componentCache[$componentName] = $componentValue;
+		Deprecation::notice('3.0', 'Not used internally anymore.');
 	}
 
 	/**
