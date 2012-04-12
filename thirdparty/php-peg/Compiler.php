@@ -273,7 +273,7 @@ class TokenLiteral extends TokenExpressionable {
 		parent::__construct( 'literal', "'" . substr($value,1,-1) . "'" );
 	}
 
-	function match_code() {
+	function match_code( $value ) {
 		// We inline single-character matches for speed
 		if ( !$this->contains_expression() && strlen( eval( 'return '.  $this->value . ';' ) ) == 1 ) {
 			return $this->match_fail_conditional( 'substr($this->string,$this->pos,1) == '.$this->value, 
@@ -298,7 +298,7 @@ class TokenRegex extends TokenExpressionable {
 		parent::__construct('rx', self::escape($value));
 	}
 
-	function match_code() {
+	function match_code( $value ) {
 		return parent::match_code("'{$this->value}'");
 	}
 }
@@ -309,7 +309,7 @@ class TokenWhitespace extends TokenTerminal {
 	}
 
 	/* Call recursion indirectly */
-	function match_code() {
+	function match_code( $value ) {
 		$code = parent::match_code( '' ) ;
 		return $this->value ? $code->replace( array( 'FAIL' => NULL )) : $code ;
 	}
