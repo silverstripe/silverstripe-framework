@@ -325,7 +325,7 @@ class SimpleWidget extends SimpleTag {
      *    @param SimpleEncoding $encoding    Form packet.
      *    @access public
      */
-    function write(&$encoding) {
+    function write(&$encoding, $x, $y) {
         if ($this->getName()) {
             $encoding->add($this->getName(), $this->getValue());
         }
@@ -680,7 +680,7 @@ class SimpleUploadTag extends SimpleWidget {
      *    @param SimpleEncoding $encoding    Form packet.
      *    @access public
      */
-    function write(&$encoding) {
+    function write(&$encoding, $x, $y) {
         if (! file_exists($this->getValue())) {
             return;
         }
@@ -1415,4 +1415,4 @@ class SimpleFrameTag extends SimpleTag {
         return false;
     }
 }
-?>
+

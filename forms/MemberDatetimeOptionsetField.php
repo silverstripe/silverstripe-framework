@@ -89,12 +89,11 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 		}
 	}
 
-	function validate() {
+	function validate($validator) {
 		$value = isset($_POST[$this->name . '_custom']) ? $_POST[$this->name . '_custom'] : null;
 		if(!$value) return true; // no custom value, don't validate
 
 		// Check that the current date with the date format is valid or not
-		$validator = $this->form ? $this->form->getValidator() : null;
 		require_once 'Zend/Date.php';
 		$date = Zend_Date::now()->toString($value);
 		$valid = Zend_Date::isDate($date, $value);

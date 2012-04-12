@@ -531,7 +531,7 @@ abstract class Object {
 	 * @return array Numeric array of either {@link DataExtension} classnames,
 	 *  or eval'ed classname strings with constructor arguments.
 	 */
-	function get_extensions($class, $includeArgumentString = false) {
+	public static function get_extensions($class, $includeArgumentString = false) {
 		$extensions = Config::inst()->get($class, 'extensions');
 
 		if($includeArgumentString) {

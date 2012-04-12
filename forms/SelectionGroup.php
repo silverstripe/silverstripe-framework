@@ -27,25 +27,6 @@ class SelectionGroup extends CompositeField {
 		
 		Requirements::css(SAPPHIRE_DIR . '/css/SelectionGroup.css');
 	}
-	
-	/**
-	 * Return a readonly version of this field.  Keeps the composition but returns readonly
-	 * versions of all the children
-	 */
-	public function performDisabledTransformation($trans) {
-		$newChildren = array();
-		$clone = clone $this;
-		if($clone->children) foreach($clone->getChildren() as $idx => $child) {
-			if(is_object($child)) {
-				$child = $child->transform($trans);
-			}
-			$newChildren[$idx] = $child;
-		}
-
-		$clone->setChildren(new FieldList($newChildren));
-		$clone->setReadonly(true);
-		return $clone;
-	}
 
 	function FieldSet() {
 		return $this->FieldList();
@@ -76,7 +57,7 @@ class SelectionGroup extends CompositeField {
 			if(is_object($item)) $newItems[] = $item->customise($extra);
 			else $newItems[] = new ArrayData($extra);
 
-			$firstSelected = $checked ="";			
+			$firstSelected = $checked ="";
 		}
 		return new ArrayList($newItems);
 	}

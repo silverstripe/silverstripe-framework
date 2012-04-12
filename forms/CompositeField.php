@@ -298,39 +298,42 @@ class CompositeField extends FormField {
 	}
 	
 	/**
-	 * Return a readonly version of this field.  Keeps the composition but returns readonly
-	 * versions of all the children
+	 * Return a readonly version of this field. Keeps the composition but returns readonly
+	 * versions of all the child {@link FormField} objects.
+	 *
+	 * @return CompositeField
 	 */
 	public function performReadonlyTransformation() {
 		$newChildren = new FieldList();
 		$clone = clone $this;
-		foreach($clone->getChildren() as $idx => $child) {
+		if($clone->getChildren()) foreach($clone->getChildren() as $idx => $child) {
 			if(is_object($child)) $child = $child->transform(new ReadonlyTransformation());
 			$newChildren->push($child, $idx);
 		}
 
 		$clone->children = $newChildren;
 		$clone->readonly = true;
+
 		return $clone;
 	}
 
 	/**
-	 * Return a readonly version of this field.  Keeps the composition but returns readonly
-	 * versions of all the children
+	 * Return a disabled version of this field. Keeps the composition but returns disabled
+	 * versions of all the child {@link FormField} objects.
+	 *
+	 * @return CompositeField
 	 */
-	public function performDisabledTransformation($trans) {
+	public function performDisabledTransformation() {
 		$newChildren = new FieldList();
 		$clone = clone $this;
 		if($clone->getChildren()) foreach($clone->getChildren() as $idx => $child) {
-			if(is_object($child)) {
-				$child = $child->transform($trans);
-			}
+			if(is_object($child)) $child = $child->transform(new DisabledTransformation());
 			$newChildren->push($child, $idx);
 		}
 
 		$clone->children = $newChildren;
 		$clone->readonly = true;
-		
+
 		return $clone;
 	}
 
@@ -394,15 +397,14 @@ class CompositeField extends FormField {
 		$result .= "</ul>";
 		return $result;
 	}
-	
-	function validate($validator){
-		
+
+	function validate($validator) {
 		$valid = true;
 		foreach($this->children as $idx => $child){
 			$valid = ($child && $child->validate($validator) && $valid);
 		}
-		
 		return $valid;
 	}
+
 }
 

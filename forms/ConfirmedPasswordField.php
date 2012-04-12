@@ -216,8 +216,7 @@ class ConfirmedPasswordField extends FormField {
 		return (!$this->showOnClick || ($this->showOnClick && $isVisible && $isVisible->Value()));
 	}
 	
-	function validate() {
-		$validator = $this->form->getValidator();
+	function validate($validator) {
 		$name = $this->name;
 		
 		// if field isn't visible, don't validate

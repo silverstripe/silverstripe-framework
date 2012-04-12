@@ -89,6 +89,30 @@ class FormField extends RequestHandler {
 	protected $attributes = array();
 
 	/**
+	 * Takes a fieldname and converts camelcase to spaced
+	 * words. Also resolves combined fieldnames with dot syntax
+	 * to spaced words.
+	 *
+	 * Examples:
+	 * - 'TotalAmount' will return 'Total Amount'
+	 * - 'Organisation.ZipCode' will return 'Organisation Zip Code'
+	 *
+	 * @param string $fieldName
+	 * @return string
+	 */
+	public static function name_to_label($fieldName) {
+		if(strpos($fieldName, '.') !== false) {
+			$parts = explode('.', $fieldName);
+			$label = $parts[count($parts)-2] . ' ' . $parts[count($parts)-1];
+		} else {
+			$label = $fieldName;
+		}
+		$label = preg_replace("/([a-z]+)([A-Z])/","$1 $2", $label);
+		
+		return $label;
+	}
+
+	/**
 	 * Create a new field.
 	 * @param name The internal field name, passed to forms.
 	 * @param title The field label.
@@ -582,8 +606,8 @@ class FormField extends RequestHandler {
 	/**
 	 * @return boolean
 	 */
-	function isDisabled() { 
-		return $this->disabled; 
+	function isDisabled() {
+		return $this->disabled;
 	}
 
 	/**
@@ -591,8 +615,8 @@ class FormField extends RequestHandler {
 	 * to actually transform this instance.
 	 * @param $bool boolean Setting "false" has no effect on the field-state.
 	 */
-	function setDisabled($bool) { 
-		$this->disabled = $bool; 
+	function setDisabled($bool) {
+		$this->disabled = $bool;
 		return $this;
 	}
 	
@@ -607,21 +631,23 @@ class FormField extends RequestHandler {
 	}
 	
 	/**
-	 * Return a disabled version of this field
+	 * Return a disabled version of this field.
+	 * Tries to find a class of the class name of this field suffixed with "_Disabled",
+	 * failing that, finds a method {@link setDisabled()}.
+	 *
+	 * @return FormField
 	 */
 	function performDisabledTransformation() {
 		$clone = clone $this;
 		$disabledClassName = $clone->class . '_Disabled';
-		if( ClassInfo::exists( $disabledClassName ) )
-			return new $disabledClassName( $this->name, $this->title, $this->value );
-		elseif($clone->hasMethod('setDisabled')){
+		if(ClassInfo::exists($disabledClassName)) {
+			return new $disabledClassName($this->name, $this->title, $this->value);
+		} else {
 			$clone->setDisabled(true);
 			return $clone;
-		}else{
-			return $this->performReadonlyTransformation();
 		}
 	}
-	
+
 	function transform(FormTransformation $trans) {
 		return $trans->transform($this);
 	}
@@ -662,14 +688,16 @@ class FormField extends RequestHandler {
 		if($content || $tag != 'input') return "<$tag$preparedAttributes>$content</$tag>";
 		else return "<$tag$preparedAttributes />";
 	}
-	
+
 	/**
-	 * Validation Functions for each field type by default
-	 * formfield doesnt have a validation function
-	 * 
-	 * @todo shouldn't this be an abstract method?
+	 * Abstract method each {@link FormField} subclass must implement,
+	 * determines whether the field is valid or not based on the value.
+	 * @todo Make this abstract.
+	 *
+	 * @param Validator
+	 * @return boolean
 	 */
-	function validate() {
+	function validate($validator) {
 		return true;
 	}
 
@@ -690,7 +718,7 @@ class FormField extends RequestHandler {
 	 */
 	function setDescription($description) {
 		$this->description = $description;
-		return $this;	
+		return $this;
 	}
 
 	/**
@@ -721,31 +749,7 @@ class FormField extends RequestHandler {
 			return $validator->fieldIsRequired($this->name);
 		}
 	}
-	
-	/**
-	 * Takes a fieldname and converts camelcase to spaced
-	 * words. Also resolves combined fieldnames with dot syntax
-	 * to spaced words.
-	 * 
-	 * Examples:
-	 * - 'TotalAmount' will return 'Total Amount'
-	 * - 'Organisation.ZipCode' will return 'Organisation Zip Code'
-	 *
-	 * @param string $fieldName
-	 * @return string
-	 */
-	public function name_to_label($fieldName) {
-		if(strpos($fieldName, '.') !== false) {
-			$parts = explode('.', $fieldName);
-			$label = $parts[count($parts)-2] . ' ' . $parts[count($parts)-1];
-		} else {
-			$label = $fieldName;
-		}
-		$label = preg_replace("/([a-z]+)([A-Z])/","$1 $2", $label);
-		
-		return $label;
-	}
-	
+
 	/**
 	 * Set the FieldList that contains this field. 
 	 *
