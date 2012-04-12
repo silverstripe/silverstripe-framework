@@ -471,6 +471,11 @@ $gf_grid_x:	16px;
 				&.bottom-all {
 					@include border-bottom-radius($gf_border_radius);
 					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
+					.datagrid-footer-message {
+					    text-align: center;
+						padding-top: 6px;
+				        color:$color-text-light;
+					}
 					.datagrid-pagination {
 						padding-top:2px;
 						position:absolute;
