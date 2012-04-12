@@ -120,7 +120,7 @@ class SimpleForm {
         $class = $this->_encoding;
         $encoding = new $class();
         for ($i = 0, $count = count($this->_widgets); $i < $count; $i++) {
-            $this->_widgets[$i]->write($encoding);
+            $this->_widgets[$i]->write($encoding, 0, 0);
         }
         return $encoding;
     }
@@ -305,7 +305,7 @@ class SimpleForm {
         foreach ($this->_buttons as $button) {
             if ($selector->isMatch($button)) {
                 $encoding = $this->_encode();
-                $button->write($encoding);
+                $button->write($encoding, 0, 0);
                 if ($additional) {
                     $encoding->merge($additional);
                 }

@@ -83,11 +83,11 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 
 	function testDateFormValid() {
 		$field = new MemberDatetimeOptionsetField('DateFormat', 'DateFormat');
-		$this->assertTrue($field->validate());
+		$this->assertTrue($field->validate(null));
 		$_POST['DateFormat_custom'] = 'dd MM yyyy';
-		$this->assertTrue($field->validate());
+		$this->assertTrue($field->validate(null));
 		$_POST['DateFormat_custom'] = 'sdfdsfdfd1244';
-		$this->assertFalse($field->validate());
+		$this->assertFalse($field->validate(null));
 	}
 
 }

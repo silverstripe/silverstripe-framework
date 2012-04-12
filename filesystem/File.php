@@ -796,7 +796,7 @@ class File extends DataObject {
 	 * @param string $phpIniValue
 	 * @return int
 	 */
-	public function ini2bytes($PHPiniValue) {
+	public static function ini2bytes($PHPiniValue) {
 		switch(strtolower(substr(trim($PHPiniValue), -1))) {
 			case 'g':
 				$PHPiniValue *= 1024;

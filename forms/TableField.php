@@ -687,7 +687,7 @@ class TableField_Item extends TableListField_Item {
 		return new FieldList($this->fields);
 	}
 	
-	function Fields() {
+	function Fields($xmlSafe = true) {
 		return $this->fields;
 	}
 	

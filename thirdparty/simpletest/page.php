@@ -980,4 +980,4 @@ class SimplePage {
         return null;
     }
 }
-?>
+
