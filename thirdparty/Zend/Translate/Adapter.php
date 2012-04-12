@@ -720,34 +720,37 @@ abstract class Zend_Translate_Adapter {
             }
         }
 
-        if (!Zend_Locale::isLocale($locale, true, false)) {
-            if (!Zend_Locale::isLocale($locale, false, false)) {
-                // language does not exist, return original string
-                $this->_log($messageId, $locale);
-                // use rerouting when enabled
-                if (!empty($this->_options['route'])) {
-                    if (array_key_exists($locale, $this->_options['route']) &&
-                        !array_key_exists($locale, $this->_routed)) {
-                        $this->_routed[$locale] = true;
-                        return $this->translate($messageId, $this->_options['route'][$locale]);
-                    }
-                }
+        // CUSTOM ischommer: Skip locale checks, too computationally expensive.
+        // Assume correct locale value is passed in.
+        // if (!Zend_Locale::isLocale($locale, true, false)) {
+        //     if (!Zend_Locale::isLocale($locale, false, false)) {
+        //         // language does not exist, return original string
+        //         $this->_log($messageId, $locale);
+        //         // use rerouting when enabled
+        //         if (!empty($this->_options['route'])) {
+        //             if (array_key_exists($locale, $this->_options['route']) &&
+        //                 !array_key_exists($locale, $this->_routed)) {
+        //                 $this->_routed[$locale] = true;
+        //                 return $this->translate($messageId, $this->_options['route'][$locale]);
+        //             }
+        //         }
 
-                $this->_routed = array();
-                if ($plural === null) {
-                    return $messageId;
-                }
+        //         $this->_routed = array();
+        //         if ($plural === null) {
+        //             return $messageId;
+        //         }
 
-                $rule = Zend_Translate_Plural::getPlural($number, $plocale);
-                if (!isset($plural[$rule])) {
-                    $rule = 0;
-                }
+        //         $rule = Zend_Translate_Plural::getPlural($number, $plocale);
+        //         if (!isset($plural[$rule])) {
+        //             $rule = 0;
+        //         }
 
-                return $plural[$rule];
-            }
+        //         return $plural[$rule];
+        //     }
 
-            $locale = new Zend_Locale($locale);
-        }
+        //     $locale = new Zend_Locale($locale);
+        // }
+        // CUSTOM END
 
         $locale = (string) $locale;
         if ((is_string($messageId) || is_int($messageId)) && isset($this->_translate[$locale][$messageId])) {
