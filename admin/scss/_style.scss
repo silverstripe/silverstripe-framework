@@ -610,8 +610,8 @@ body.cms {
 	}
 	
 	.cms-panel-content {
-		width: $grid-x * 22;
-		padding: $grid-y $grid-x;
+		width: ($grid-x * 22);
+		padding: 0 $grid-x;
 		overflow: auto;
 		height:100%;
 		.dropdown select {
