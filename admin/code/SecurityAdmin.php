@@ -141,7 +141,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/MemberImportForm.js');
 		
 		return $this->renderWith('BlankPage', array(
-			'Form' => $this->MemberImportForm(),
+			'Form' => $this->MemberImportForm()->forTemplate(),
 			'Content' => ' '
 		));
 	}
@@ -173,7 +173,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		
 		return $this->renderWith('BlankPage', array(
 			'Content' => ' ',
-			'Form' => $this->GroupImportForm()
+			'Form' => $this->GroupImportForm()->forTemplate()
 		));
 	}
 	
