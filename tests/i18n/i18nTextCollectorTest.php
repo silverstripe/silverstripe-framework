@@ -52,7 +52,7 @@ _t(
 'Line 1 and ' .
 'Line \'2\' and ' .
 'Line "3"',
-PR_MEDIUM,
+
 'Comment'
 );
 
@@ -64,8 +64,8 @@ PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
 			array(
-				'Test.CONCATENATED' => array("Line 1 and Line \\'2\\' and Line \"3\"",'PR_MEDIUM','Comment'),
-				'Test.CONCATENATED2' => array("Line \"4\" and Line 5",null,null)
+				'Test.CONCATENATED' => array("Line 1 and Line '2' and Line \"3\"",'Comment'),
+				'Test.CONCATENATED2' => array("Line \"4\" and Line 5")
 			)
 		);
 	}	
@@ -78,7 +78,7 @@ SS;
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'Test'),
 			array(
-				'Test.SINGLEQUOTE' => array('Single Quote',null,null)
+				'Test.SINGLEQUOTE' => array('Single Quote')
 			)
 		);
 
@@ -88,7 +88,7 @@ SS;
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'Test'),
 			array(
-				'Test.DOUBLEQUOTE' => array("Double Quote and Spaces", null, null)
+				'Test.DOUBLEQUOTE' => array("Double Quote and Spaces")
 			)
 		);
 		
@@ -98,7 +98,7 @@ SS;
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'Test'),
 			array(
-				'Test.NOSEMICOLON' => array("No Semicolon", null, null)
+				'Test.NOSEMICOLON' => array("No Semicolon")
 			)
 		);
 	}
@@ -115,7 +115,7 @@ SS;
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'Test'),
 			array(
-				'Test.NEWLINES' => array("New Lines", null, null)
+				'Test.NEWLINES' => array("New Lines")
 			)
 		);
 
@@ -123,14 +123,13 @@ SS;
 <% _t(
 	'Test.PRIOANDCOMMENT',
 	' Prio and Value with "Double Quotes"',
-	PR_MEDIUM,
 	'Comment with "Double Quotes"'
 ) %>
 SS;
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'Test'),
 			array(
-				'Test.PRIOANDCOMMENT' => array(' Prio and Value with "Double Quotes"','PR_MEDIUM','Comment with "Double Quotes"')
+				'Test.PRIOANDCOMMENT' => array(' Prio and Value with "Double Quotes"','Comment with "Double Quotes"')
 			)
 		);
 
@@ -138,14 +137,14 @@ SS;
 <% _t(
 	'Test.PRIOANDCOMMENT',
 	" Prio and Value with 'Single Quotes'",
-	PR_MEDIUM,
+	
 	"Comment with 'Single Quotes'"
 ) %>
 SS;
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'Test'),
 			array(
-				'Test.PRIOANDCOMMENT' => array(" Prio and Value with \'Single Quotes\'",'PR_MEDIUM',"Comment with 'Single Quotes'")
+				'Test.PRIOANDCOMMENT' => array(" Prio and Value with 'Single Quotes'","Comment with 'Single Quotes'")
 			)
 		);
 	}
@@ -160,7 +159,7 @@ PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
 			array(
-				'Test.SINGLEQUOTE' => array('Single Quote',null,null)
+				'Test.SINGLEQUOTE' => array('Single Quote')
 			)
 		);
 		
@@ -170,7 +169,7 @@ PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
 			array(
-				'Test.DOUBLEQUOTE' => array("Double Quote and Spaces", null, null)
+				'Test.DOUBLEQUOTE' => array("Double Quote and Spaces")
 			)
 		);
 	}
@@ -187,7 +186,7 @@ PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
 			array(
-				'Test.NEWLINES' => array("New Lines", null, null)
+				'Test.NEWLINES' => array("New Lines")
 			)
 		);
 		
@@ -195,14 +194,14 @@ PHP;
 _t(
 	'Test.PRIOANDCOMMENT',
 	' Value with "Double Quotes"',
-	PR_MEDIUM,
+	
 	'Comment with "Double Quotes"'
 );
 PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
 			array(
-				'Test.PRIOANDCOMMENT' => array(' Value with "Double Quotes"','PR_MEDIUM','Comment with "Double Quotes"')
+				'Test.PRIOANDCOMMENT' => array(' Value with "Double Quotes"','Comment with "Double Quotes"')
 			)
 		);
 		
@@ -210,14 +209,14 @@ PHP;
 _t(
 	'Test.PRIOANDCOMMENT',
 	" Value with 'Single Quotes'",
-	PR_MEDIUM,
+	
 	"Comment with 'Single Quotes'"
 );
 PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
 			array(
-				'Test.PRIOANDCOMMENT' => array(" Value with \'Single Quotes\'",'PR_MEDIUM',"Comment with 'Single Quotes'")
+				'Test.PRIOANDCOMMENT' => array(" Value with 'Single Quotes'","Comment with 'Single Quotes'")
 			)
 		);
 		
@@ -230,7 +229,7 @@ PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
 			array(
-				'Test.PRIOANDCOMMENT' => array("Value with \'Escaped Single Quotes\'",null,null)
+				'Test.PRIOANDCOMMENT' => array("Value with 'Escaped Single Quotes'")
 			)
 		);
 	
@@ -243,7 +242,7 @@ PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
 			array(
-				'Test.PRIOANDCOMMENT' => array("Doublequoted Value with \'Unescaped Single Quotes\'",null,null)
+				'Test.PRIOANDCOMMENT' => array("Doublequoted Value with 'Unescaped Single Quotes'")
 			)
 		);
 	}
@@ -264,7 +263,7 @@ PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
 			array(
-				'Test.NEWLINESINGLEQUOTE' => array("Line 1{$eol}Line 2",null,null)
+				'Test.NEWLINESINGLEQUOTE' => array("Line 1{$eol}Line 2")
 			)
 		);
 
@@ -278,7 +277,7 @@ PHP;
 		$this->assertEquals(
 			$c->collectFromCode($php, 'mymodule'),
 			array(
-				'Test.NEWLINEDOUBLEQUOTE' => array("Line 1{$eol}Line 2",null,null)
+				'Test.NEWLINEDOUBLEQUOTE' => array("Line 1{$eol}Line 2")
 			)
 		);
 	}
@@ -287,49 +286,46 @@ PHP;
 	 * Input for langArrayCodeForEntitySpec() should be suitable for insertion
 	 * into single-quoted strings, so needs to be escaped already.
 	 */
-	function testLangArrayCodeForEntity() {
-		$c = new i18nTextCollector();
-		$locale = $c->getDefaultLocale();
+	function testPhpWriterLangArrayCodeForEntity() {
+		$c = new i18nTextCollector_Writer_Php();
 		
 		$this->assertEquals(
-			$c->langArrayCodeForEntitySpec('Test.SIMPLE', array('Simple Value')),
-			"\$lang['{$locale}']['Test']['SIMPLE'] = 'Simple Value';" . PHP_EOL
+			$c->langArrayCodeForEntitySpec('Test.SIMPLE', array('Simple Value'), 'en_US'),
+			"\$lang['en_US']['Test']['SIMPLE'] = 'Simple Value';" . PHP_EOL
 		);
 		
 		$this->assertEquals(
 			// single quotes should be properly escaped by the parser already
-			$c->langArrayCodeForEntitySpec('Test.ESCAPEDSINGLEQUOTES', array("Value with \'Escaped Single Quotes\'")),
-			"\$lang['{$locale}']['Test']['ESCAPEDSINGLEQUOTES'] = 'Value with \'Escaped Single Quotes\'';" . PHP_EOL
+			$c->langArrayCodeForEntitySpec('Test.ESCAPEDSINGLEQUOTES', array("Value with 'Escaped Single Quotes'"), 'en_US'),
+			"\$lang['en_US']['Test']['ESCAPEDSINGLEQUOTES'] = 'Value with \'Escaped Single Quotes\'';" . PHP_EOL
 		);
 		
 		$this->assertEquals(
-			$c->langArrayCodeForEntitySpec('Test.DOUBLEQUOTES', array('Value with "Double Quotes"')),
-			"\$lang['{$locale}']['Test']['DOUBLEQUOTES'] = 'Value with \"Double Quotes\"';" . PHP_EOL
+			$c->langArrayCodeForEntitySpec('Test.DOUBLEQUOTES', array('Value with "Double Quotes"'), 'en_US'),
+			"\$lang['en_US']['Test']['DOUBLEQUOTES'] = 'Value with \"Double Quotes\"';" . PHP_EOL
 		);
 		
 		$php = <<<PHP
-\$lang['$locale']['Test']['PRIOANDCOMMENT'] = array(
-	'Value with \'Single Quotes\'',
-	PR_MEDIUM,
-	'Comment with \'Single Quotes\''
+\$lang['en_US']['Test']['PRIOANDCOMMENT'] = array (
+  0 => 'Value with \'Single Quotes\'',
+  1 => 'Comment with \'Single Quotes\'',
 );
 
 PHP;
 		$this->assertEquals(
-			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT', array("Value with \'Single Quotes\'",'PR_MEDIUM',"Comment with 'Single Quotes'")),
+			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT', array("Value with 'Single Quotes'","Comment with 'Single Quotes'"), 'en_US'),
 			$php
 		);
 		
 		$php = <<<PHP
-\$lang['$locale']['Test']['PRIOANDCOMMENT'] = array(
-	'Value with "Double Quotes"',
-	PR_MEDIUM,
-	'Comment with "Double Quotes"'
+\$lang['en_US']['Test']['PRIOANDCOMMENT'] = array (
+  0 => 'Value with "Double Quotes"',
+  1 => 'Comment with "Double Quotes"',
 );
 
 PHP;
 		$this->assertEquals(
-			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT', array('Value with "Double Quotes"','PR_MEDIUM','Comment with "Double Quotes"')),
+			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT', array('Value with "Double Quotes"','Comment with "Double Quotes"'), 'en_US'),
 			$php
 		);
 	}
@@ -345,43 +341,43 @@ PHP;
 		$this->assertArrayHasKey('i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE', $matches);
 		$this->assertEquals(
 			$matches['i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE'],
-			array('Layout Template no namespace', null, null)
+			array('Layout Template no namespace')
 		);
 		*/
 		$this->assertArrayHasKey('RandomNamespace.SPRINTFNONAMESPACE', $matches);
 		$this->assertEquals(
 			$matches['RandomNamespace.SPRINTFNONAMESPACE'],
-			array('My replacement no namespace: %s', null, null)
+			array('My replacement no namespace: %s')
 		);
 		$this->assertArrayHasKey('i18nTestModule.LAYOUTTEMPLATE', $matches);
 		$this->assertEquals(
 			$matches['i18nTestModule.LAYOUTTEMPLATE'],
-			array('Layout Template', null, null)
+			array('Layout Template')
 		);
 		$this->assertArrayHasKey('i18nTestModule.SPRINTFNAMESPACE', $matches);
 		$this->assertEquals(
 			$matches['i18nTestModule.SPRINTFNAMESPACE'],
-			array('My replacement: %s', null, null)
+			array('My replacement: %s')
 		);
 		$this->assertArrayHasKey('i18nTestModule.WITHNAMESPACE', $matches);
 		$this->assertEquals(
 			$matches['i18nTestModule.WITHNAMESPACE'],
-			array('Include Entity with Namespace', null, null)
+			array('Include Entity with Namespace')
 		);
 		$this->assertArrayHasKey('i18nTestModuleInclude.ss.NONAMESPACE', $matches);
 		$this->assertEquals(
 			$matches['i18nTestModuleInclude.ss.NONAMESPACE'],
-			array('Include Entity without Namespace', null, null)
+			array('Include Entity without Namespace')
 		);
 		$this->assertArrayHasKey('i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE', $matches);
 		$this->assertEquals(
 			$matches['i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE'],
-			array('My include replacement: %s', null, null)
+			array('My include replacement: %s')
 		);
 		$this->assertArrayHasKey('i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE', $matches);
 		$this->assertEquals(
 			$matches['i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE'],
-			array('My include replacement no namespace: %s', null, null)
+			array('My include replacement no namespace: %s')
 		);
 	}
 	
@@ -397,48 +393,48 @@ PHP;
 		// all entities from i18nTestTheme1.ss
 		$this->assertEquals(
 			$matches['i18nTestTheme1.LAYOUTTEMPLATE'],
-			array('Theme1 Layout Template', null, null)
+			array('Theme1 Layout Template')
 		);
 		
 		$this->assertArrayHasKey('i18nTestTheme1.ss.LAYOUTTEMPLATENONAMESPACE', $matches);
 		$this->assertEquals(
 			$matches['i18nTestTheme1.ss.LAYOUTTEMPLATENONAMESPACE'],
-			array('Theme1 Layout Template no namespace', null, null)
+			array('Theme1 Layout Template no namespace')
 		);
 		
 		$this->assertEquals(
 			$matches['i18nTestTheme1.SPRINTFNAMESPACE'],
-			array('Theme1 My replacement: %s', null, null)
+			array('Theme1 My replacement: %s')
 		);
 		
 		$this->assertArrayHasKey('i18nTestTheme1.ss.SPRINTFNONAMESPACE', $matches);
 		$this->assertEquals(
 			$matches['i18nTestTheme1.ss.SPRINTFNONAMESPACE'],
-			array('Theme1 My replacement no namespace: %s', null, null)
+			array('Theme1 My replacement no namespace: %s')
 		);
 
 		// all entities from i18nTestTheme1Include.ss	
 		$this->assertEquals(
 			$matches['i18nTestTheme1Include.WITHNAMESPACE'],
-			array('Theme1 Include Entity with Namespace', null, null)
+			array('Theme1 Include Entity with Namespace')
 		);
 		
 		$this->assertArrayHasKey('i18nTestTheme1Include.ss.NONAMESPACE', $matches);
 		$this->assertEquals(
 			$matches['i18nTestTheme1Include.ss.NONAMESPACE'],
-			array('Theme1 Include Entity without Namespace', null, null)
+			array('Theme1 Include Entity without Namespace')
 		);
 		
 		
 		$this->assertEquals(
 			$matches['i18nTestTheme1Include.SPRINTFINCLUDENAMESPACE'],
-			array('Theme1 My include replacement: %s', null, null)
+			array('Theme1 My include replacement: %s')
 		);
 		
 		$this->assertArrayHasKey('i18nTestTheme1Include.ss.SPRINTFINCLUDENONAMESPACE', $matches);
 		$this->assertEquals(
 			$matches['i18nTestTheme1Include.ss.SPRINTFINCLUDENONAMESPACE'],
-			array('Theme1 My include replacement no namespace: %s', null, null)
+			array('Theme1 My include replacement no namespace: %s')
 		);
 		
 		SSViewer::set_theme($theme);
@@ -451,6 +447,7 @@ PHP;
 		i18n::set_default_locale('en_US');
 
 		$c = new i18nTextCollector();
+		$c->setWriter(new i18nTextCollector_Writer_Php());
 		$c->basePath = $this->alternateBasePath;
 		$c->baseSavePath = $this->alternateBaseSavePath;
 		
@@ -465,31 +462,30 @@ PHP;
 		
 		$moduleLangFileContent = file_get_contents($moduleLangFile);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestModule']['ADDITION'] = 'Addition';",
+			"\$lang['en']['i18nTestModule']['ADDITION'] = 'Addition';",
 			$moduleLangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestModule']['ENTITY'] = array(
-	'Entity with \"Double Quotes\"',
-	PR_LOW,
-	'Comment for entity'
+			"\$lang['en']['i18nTestModule']['ENTITY'] = array (
+  0 => 'Entity with \"Double Quotes\"',
+  1 => 'Comment for entity',
 );",
 			$moduleLangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestModule']['MAINTEMPLATE'] = 'Main Template';",
+			"\$lang['en']['i18nTestModule']['MAINTEMPLATE'] = 'Main Template';",
 			$moduleLangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestModule']['OTHERENTITY'] = 'Other Entity';",
+			"\$lang['en']['i18nTestModule']['OTHERENTITY'] = 'Other Entity';",
 			$moduleLangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestModule']['WITHNAMESPACE'] = 'Include Entity with Namespace';",
+			"\$lang['en']['i18nTestModule']['WITHNAMESPACE'] = 'Include Entity with Namespace';",
 			$moduleLangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestModuleInclude.ss']['NONAMESPACE'] = 'Include Entity without Namespace';",
+			"\$lang['en']['i18nTestModuleInclude.ss']['NONAMESPACE'] = 'Include Entity without Namespace';",
 			$moduleLangFileContent
 		);
 		
@@ -501,11 +497,11 @@ PHP;
 		);
 		$otherModuleLangFileContent = file_get_contents($otherModuleLangFile);
 		$this->assertContains(
-			"\$lang['en_US']['i18nOtherModule']['ENTITY'] = 'Other Module Entity';",
+			"\$lang['en']['i18nOtherModule']['ENTITY'] = 'Other Module Entity';",
 			$otherModuleLangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en_US']['i18nOtherModule']['MAINTEMPLATE'] = 'Main Template Other Module';",
+			"\$lang['en']['i18nOtherModule']['MAINTEMPLATE'] = 'Main Template Other Module';",
 			$otherModuleLangFileContent
 		);
 		
@@ -517,40 +513,40 @@ PHP;
 		);
 		$theme1LangFileContent = file_get_contents($theme1LangFile);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestTheme1']['MAINTEMPLATE'] = 'Theme1 Main Template';",
+			"\$lang['en']['i18nTestTheme1']['MAINTEMPLATE'] = 'Theme1 Main Template';",
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestTheme1']['LAYOUTTEMPLATE'] = 'Theme1 Layout Template';",
+			"\$lang['en']['i18nTestTheme1']['LAYOUTTEMPLATE'] = 'Theme1 Layout Template';",
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestTheme1']['SPRINTFNAMESPACE'] = 'Theme1 My replacement: %s';",
+			"\$lang['en']['i18nTestTheme1']['SPRINTFNAMESPACE'] = 'Theme1 My replacement: %s';",
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestTheme1.ss']['LAYOUTTEMPLATENONAMESPACE'] = 'Theme1 Layout Template no namespace';",
+			"\$lang['en']['i18nTestTheme1.ss']['LAYOUTTEMPLATENONAMESPACE'] = 'Theme1 Layout Template no namespace';",
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestTheme1.ss']['SPRINTFNONAMESPACE'] = 'Theme1 My replacement no namespace: %s';",
+			"\$lang['en']['i18nTestTheme1.ss']['SPRINTFNONAMESPACE'] = 'Theme1 My replacement no namespace: %s';",
 			$theme1LangFileContent
 		);
 		
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestTheme1Include']['SPRINTFINCLUDENAMESPACE'] = 'Theme1 My include replacement: %s';",
+			"\$lang['en']['i18nTestTheme1Include']['SPRINTFINCLUDENAMESPACE'] = 'Theme1 My include replacement: %s';",
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestTheme1Include']['WITHNAMESPACE'] = 'Theme1 Include Entity with Namespace';",
+			"\$lang['en']['i18nTestTheme1Include']['WITHNAMESPACE'] = 'Theme1 Include Entity with Namespace';",
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestTheme1Include.ss']['NONAMESPACE'] = 'Theme1 Include Entity without Namespace';",
+			"\$lang['en']['i18nTestTheme1Include.ss']['NONAMESPACE'] = 'Theme1 Include Entity without Namespace';",
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestTheme1Include.ss']['SPRINTFINCLUDENONAMESPACE'] = 'Theme1 My include replacement no namespace: %s';",
+			"\$lang['en']['i18nTestTheme1Include.ss']['SPRINTFINCLUDENONAMESPACE'] = 'Theme1 My include replacement no namespace: %s';",
 			$theme1LangFileContent
 		);
 		
@@ -562,7 +558,7 @@ PHP;
 		);
 		$theme2LangFileContent = file_get_contents($theme2LangFile);
 		$this->assertContains(
-			"\$lang['en_US']['i18nTestTheme2']['MAINTEMPLATE'] = 'Theme2 Main Template';",
+			"\$lang['en']['i18nTestTheme2']['MAINTEMPLATE'] = 'Theme2 Main Template';",
 			$theme2LangFileContent
 		);
 

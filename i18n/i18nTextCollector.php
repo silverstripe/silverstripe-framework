@@ -37,24 +37,32 @@ class i18nTextCollector extends Object {
 	 * @todo Fully support changing of basePath through {@link SSViewer} and {@link ManifestBuilder}
 	 */
 	public $basePath;
-	
-	/**
-	 * @var string $baseSavePath The directory base on which the collector should create new lang folders and files.
-	 * Usually the webroot set through {@link Director::baseFolder()}.
-	 * Can be overwritten for testing or export purposes.
-	 * @todo Fully support changing of baseSavePath through {@link SSViewer} and {@link ManifestBuilder}
-	 */
+
 	public $baseSavePath;
+
+	/**
+	 * @var i18nTextCollector_Writer
+	 */
+	protected $writer;
 	
 	/**
 	 * @param $locale
 	 */
 	function __construct($locale = null) {
-		$this->defaultLocale = ($locale) ? $locale : i18n::default_locale();
+		$this->defaultLocale = ($locale) ? $locale : i18n::get_lang_from_locale(i18n::default_locale());
 		$this->basePath = Director::baseFolder();
 		$this->baseSavePath = Director::baseFolder();
 		
 		parent::__construct();
+	}
+
+	public function setWriter($writer) {
+		$this->writer = $writer;
+	}
+
+	public function getWriter() {
+		if(!$this->writer) $this->writer = new i18nTextCollector_Writer_Php();
+		return $this->writer;
 	}
 	
 	/**
@@ -139,10 +147,10 @@ class i18nTextCollector extends Object {
 			}			
 		}
 
-		// Write the generated master string tables
-		$this->writeMasterStringFile($entitiesByModule);
-		
-		//Debug::message("Done!", false);
+		// Write each module language file
+		if($entitiesByModule) foreach($entitiesByModule as $module => $entities) {
+			$this->getWriter()->write($entities, $this->defaultLocale, $this->baseSavePath . '/' . $module);
+		}
 	}
 	
 	/**
@@ -151,7 +159,7 @@ class i18nTextCollector extends Object {
 	 * @param string $module Module's name or 'themes'
 	 */
 	protected function processModule($module) {	
-		$entitiesArr = array();
+		$entities = array();
 
 		//Debug::message("Processing Module '{$module}'", false);
 
@@ -166,8 +174,8 @@ class i18nTextCollector extends Object {
 			// exclude ss-templates, they're scanned separately
 			if(substr($filePath,-3) == 'php') {
 				$content = file_get_contents($filePath);
-				$entitiesArr = array_merge($entitiesArr,(array)$this->collectFromCode($content, $module));
-				$entitiesArr = array_merge($entitiesArr, (array)$this->collectFromEntityProviders($filePath, $module));
+				$entities = array_merge($entities,(array)$this->collectFromCode($content, $module));
+				$entities = array_merge($entities, (array)$this->collectFromEntityProviders($filePath, $module));
 			}
 		}
 		
@@ -178,41 +186,69 @@ class i18nTextCollector extends Object {
 				$content = file_get_contents($filePath);
 				// templates use their filename as a namespace
 				$namespace = basename($filePath);
-				$entitiesArr = array_merge($entitiesArr, (array)$this->collectFromTemplate($content, $module, $namespace));
+				$entities = array_merge($entities, (array)$this->collectFromTemplate($content, $module, $namespace));
 			}
 		}
 
 		// sort for easier lookup and comparison with translated files
-		ksort($entitiesArr);
+		ksort($entities);
 
-		return $entitiesArr;
+		return $entities;
 	}
 	
 	public function collectFromCode($content, $module) {
-		$entitiesArr = array();
-		
-		$regexRule = '#_t[[:space:]]*\(' .
-			'[[:space:]]*("[^"]*"|\\\'[^\']*\\\')[[:space:]]*,' . // namespace.entity
-			'[[:space:]]*(("([^"]|\\\")*"|\'([^\']|\\\\\')*\')' .  // value
-			'([[:space:]]*\\.[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))*)' . // concatenations
-			'([[:space:]]*,[[:space:]]*[^,)]*)?([[:space:]]*,' . // priority (optional)
-			'[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))?[[:space:]]*' . // comment (optional)
-		'\)#';
+		$entities = array();
 
-		while (preg_match($regexRule, $content, $regs)) {
-			$entitiesArr = array_merge($entitiesArr, (array)$this->entitySpecFromRegexMatches($regs));
-			
-			// remove parsed content to continue while() loop
-			$content = str_replace($regs[0],"",$content);
+		$tokens = token_get_all("<?php\n" . $content);
+		$inTransFn = false;
+		$inConcat = false;
+		$currentEntity = array();
+		foreach($tokens as $token) {
+			if(is_array($token)) {
+				list($id, $text) = $token;
+				if($id == T_STRING && $text == '_t') {
+					// start definition
+					$inTransFn = true;
+				} elseif($inTransFn && $id == T_CONSTANT_ENCAPSED_STRING) {
+					// Fixed quoting escapes, and remove leading/trailing quotes
+					if(preg_match('/^\'/', $text)) {
+						$text = str_replace("\'", "'", $text);
+						$text = preg_replace('/^\'/', '', $text);
+						$text = preg_replace('/\'$/', '', $text);
+					} else {
+						$text = str_replace('\"', '"', $text);
+						$text = preg_replace('/^"/', '', $text);
+						$text = preg_replace('/"$/', '', $text);
+					}
+					
+					if($inConcat) $currentEntity[count($currentEntity)-1] .= $text;
+					else $currentEntity[] = $text;
+				} 
+			} elseif($inTransFn && $token == '.') {
+				$inConcat = true;	
+			} elseif($inTransFn && $token == ',') {
+				$inConcat = false;	
+			} elseif($inTransFn && $token == ')') {
+				// finalize definition
+				$inTransFn = false;
+				$inConcat = false;
+				$entity = array_shift($currentEntity);
+				$entities[$entity] = $currentEntity;
+				$currentEntity = array();
+			}
 		}
 		
-		ksort($entitiesArr);
+		foreach($entities as $entity => $spec) {
+			unset($entities[$entity]);
+			$entities[$this->normalizeEntity($entity, $module)] = $spec;
+		}
+		ksort($entities);
 		
-		return $entitiesArr;
+		return $entities;
 	}
 
-	public function collectFromTemplate($content, $module, $fileName) {
-		$entitiesArr = array();
+	public function collectFromTemplate($content, $fileName, $module) {
+		$entities = array();
 		
 		// Search for included templates
 		preg_match_all('/<' . '% include +([A-Za-z0-9_]+) +%' . '>/', $content, $regs, PREG_SET_ORDER);
@@ -223,36 +259,32 @@ class i18nTextCollector extends Object {
 			if(!$filePath) $filePath = SSViewer::getTemplateFileByType($includeName, 'main');
 			if($filePath) {
 				$includeContent = file_get_contents($filePath);
-				$entitiesArr = array_merge($entitiesArr,(array)$this->collectFromTemplate($includeContent, $module, $includeFileName));
+				$entities = array_merge($entities,(array)$this->collectFromTemplate($includeContent, $module, $includeFileName));
 			}
 			// @todo Will get massively confused if you include the includer -> infinite loop
 		}
 
-		// @todo respect template tags (< % _t() % > instead of _t())
-		$regexRule = '#_t[[:space:]]*\(' .
-			'[[:space:]]*("[^"]*"|\\\'[^\']*\\\')[[:space:]]*,' . // namespace.entity
-			'[[:space:]]*(("([^"]|\\\")*"|\'([^\']|\\\\\')*\')' .  // value
-			'([[:space:]]*\\.[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))*)' . // concatenations
-			'([[:space:]]*,[[:space:]]*[^,)]*)?([[:space:]]*,' . // priority (optional)
-			'[[:space:]]*("([^"]|\\\")*"|\'([^\']|\\\\\')*\'))?[[:space:]]*' . // comment (optional)
-		'\)#';
-
-		while (preg_match($regexRule,$content,$regs)) {
-			$entitiesArr = array_merge($entitiesArr,(array)$this->entitySpecFromRegexMatches($regs, $fileName));
-			// remove parsed content to continue while() loop
-			$content = str_replace($regs[0],"",$content);
+		// Collect in actual template
+		if(preg_match_all('/<%\s*(_t\(.*)%>/ms', $content, $matches)) {
+			foreach($matches as $match) {
+				$entities = array_merge($entities, $this->collectFromCode($match[0], $module));
+			}
 		}
+
+		foreach($entities as $entity => $spec) {
+			unset($entities[$entity]);
+			$entities[$this->normalizeEntity($entity, $module)] = $spec;
+		}
+		ksort($entities);
 		
-		ksort($entitiesArr);
-		
-		return $entitiesArr;
+		return $entities;
 	}
 	
 	/**
 	 * @uses i18nEntityProvider
 	 */
 	function collectFromEntityProviders($filePath) {
-		$entitiesArr = array();
+		$entities = array();
 		
 		$classes = ClassInfo::classes_for_file($filePath);
 		if($classes) foreach($classes as $class) {
@@ -264,22 +296,20 @@ class i18nTextCollector extends Object {
 				if($reflectionClass->isAbstract()) continue;
 
 				$obj = singleton($class);
-				$entitiesArr = array_merge($entitiesArr,(array)$obj->provideI18nEntities());
+				$entities = array_merge($entities,(array)$obj->provideI18nEntities());
 			}
 		}
 		
-		ksort($entitiesArr);
-		
-		return $entitiesArr;
+		ksort($entities);
+		return $entities;
 	}
 	
 	/**
-	 * @todo Fix regexes so the deletion of quotes, commas and newlines from wrong matches isn't necessary
+	 * @param String $fullName
+	 * @param String $_namespace 
+	 * @return String|FALSE
 	 */
-	protected function entitySpecFromRegexMatches($regs, $_namespace = null) {
-		// remove wrapping quotes
-		$fullName = substr($regs[1],1,-1);
-		
+	protected function normalizeEntity($fullName, $_namespace = null) {
 		// split fullname into entity parts
 		$entityParts = explode('.', $fullName);
 		if(count($entityParts) > 1) {
@@ -299,117 +329,10 @@ class i18nTextCollector extends Object {
 		// through $db, which are detected by {@link collectFromEntityProviders}.
 		if(strpos('$', $entity) !== FALSE) return false;
 		
-		// remove wrapping quotes
-		$value = !empty($regs[2]) ? substr($regs[2],1,-1) : null;
-
-		$value = preg_replace("#([^\\\\])['\"][[:space:]]*\.[[:space:]]*['\"]#", '\\1', $value);
-
-		// only escape quotes when wrapped in double quotes, to make them safe for insertion
-		// into single-quoted PHP code. If they're wrapped in single quotes, the string should
-		// be properly escaped already
-		if(substr($regs[2],0,1) == '"') {
-			// Double quotes don't need escaping
-			$value = str_replace('\\"','"', $value);
-			// But single quotes do
-			$value = str_replace("'","\\'", $value);
-		}
-
-		// remove starting comma and any newlines
-		$eol = PHP_EOL;
-		$prio = !empty($regs[10]) ? trim(preg_replace("/$eol/", '', substr($regs[10],1))) : null;
-
-		// remove wrapping quotes
-		$comment = !empty($regs[12]) ? substr($regs[12],1,-1) : null;
-
-		return array(
-			"{$namespace}.{$entity}" => array(
-				$value,
-				$prio,
-				$comment
-			)
-		);
+		return "{$namespace}.{$entity}";
 	}
 	
-	/**
-	 * Input for langArrayCodeForEntitySpec() should be suitable for insertion
-	 * into single-quoted strings, so needs to be escaped already.
-	 * 
-	 * @param string $entity The entity name, e.g. CMSMain.BUTTONSAVE
-	 */
-	public function langArrayCodeForEntitySpec($entityFullName, $entitySpec) {
-		$php = '';
-		$eol = PHP_EOL;
-		
-		$entityParts = explode('.', $entityFullName);
-		if(count($entityParts) > 1) {
-			// templates don't have a custom namespace
-			$entity = array_pop($entityParts);
-			// namespace might contain dots, so we implode back
-			$namespace = implode('.',$entityParts); 
-		} else {
-			user_error("i18nTextCollector::langArrayCodeForEntitySpec(): Wrong entity format for $entityFullName with values" . var_export($entitySpec, true), E_USER_WARNING);
-			return false;
-		}
-		
-		$value = $entitySpec[0];
-		$prio = (isset($entitySpec[1])) ? addcslashes($entitySpec[1],'\'') : null;
-		$comment = (isset($entitySpec[2])) ? addcslashes($entitySpec[2],'\'') : null;
-		
-		$php .= '$lang[\'' . $this->defaultLocale . '\'][\'' . $namespace . '\'][\'' . $entity . '\'] = ';
-		if ($prio) {
-			$php .= "array($eol\t'" . $value . "',$eol\t" . $prio;
-			if ($comment) {
-				$php .= ",$eol\t'" . $comment . '\''; 
-			}
-			$php .= "$eol);";
-		} else {
-			$php .= '\'' . $value . '\';';
-		}
-		$php .= "$eol";
-		
-		return $php;
-	}
 	
-	/**
-	 * Write the master string table of every processed module
-	 */
-	protected function writeMasterStringFile($entitiesByModule) {
-		// Write each module language file
-		if($entitiesByModule) foreach($entitiesByModule as $module => $entities) {
-			$php = '';
-			$eol = PHP_EOL;
-			
-			// Create folder for lang files
-			$langFolder = $this->baseSavePath . '/' . $module . '/lang';
-			if(!file_exists($langFolder)) {
-				Filesystem::makeFolder($langFolder, Filesystem::$folder_create_mask);
-				touch($langFolder . '/_manifest_exclude');
-			}
-
-			// Open the English file and write the Master String Table
-			$langFile = $langFolder . '/' . $this->defaultLocale . '.php';
-			if($fh = fopen($langFile, "w")) {
-				if($entities) foreach($entities as $fullName => $spec) {
-					$php .= $this->langArrayCodeForEntitySpec($fullName, $spec);
-				}
-				
-				// test for valid PHP syntax by eval'ing it
-				try{
-					eval($php);
-				} catch(Exception $e) {
-					user_error('i18nTextCollector->writeMasterStringFile(): Invalid PHP language file. Error: ' . $e->toString(), E_USER_ERROR);
-				}
-				
-				fwrite($fh, "<"."?php{$eol}{$eol}global \$lang;{$eol}{$eol}" . $php . "{$eol}");
-				fclose($fh);
-				
-				//Debug::message("Created file: $langFolder/" . $this->defaultLocale . ".php", false);
-			} else {
-				user_error("Cannot write language file! Please check permissions of $langFolder/" . $this->defaultLocale . ".php", E_USER_ERROR);
-			}
-		}
-
-	}
 	
 	/**
 	 * Helper function that searches for potential files to be parsed
@@ -440,5 +363,92 @@ class i18nTextCollector extends Object {
 	
 	public function setDefaultLocale($locale) {
 		$this->defaultLocale = $locale;
+	}
+}
+
+/**
+ * Allows serialization of entity definitions collected through {@link i18nTextCollector}
+ * into a persistent format, usually on the filesystem.
+ */
+interface i18nTextCollector_Writer {
+	/**
+	 * @param Array $entities Map of entity names (incl. namespace) to an numeric array,
+	 * with at least one element, the original string, and an optional second element, the context.
+	 * @param String $locale
+	 * @param String $path The directory base on which the collector should create new lang folders and files.
+	 * Usually the webroot set through {@link Director::baseFolder()}. Can be overwritten for testing or export purposes.
+	 * @return Boolean success
+	 */
+	function write($entities, $locale, $path);
+}
+
+/**
+ * Legacy writer for 2.x style persistence.
+ */
+class i18nTextCollector_Writer_Php implements i18nTextCollector_Writer {
+
+	public function write($entities, $locale, $path) {
+		$php = '';
+		$eol = PHP_EOL;
+		
+		// Create folder for lang files
+		$langFolder = $path . '/lang';
+		if(!file_exists($langFolder)) {
+			Filesystem::makeFolder($langFolder, Filesystem::$folder_create_mask);
+			touch($langFolder . '/_manifest_exclude');
+		}
+
+		// Open the English file and write the Master String Table
+		$langFile = $langFolder . '/' . $locale . '.php';
+		if($fh = fopen($langFile, "w")) {
+			if($entities) foreach($entities as $fullName => $spec) {
+				$php .= $this->langArrayCodeForEntitySpec($fullName, $spec, $locale);
+			}
+			// test for valid PHP syntax by eval'ing it
+			try{
+				eval($php);
+			} catch(Exception $e) {
+				throw new LogicException('i18nTextCollector->writeMasterStringFile(): Invalid PHP language file. Error: ' . $e->toString());
+			}
+			
+			fwrite($fh, "<"."?php{$eol}{$eol}global \$lang;{$eol}{$eol}" . $php . "{$eol}");
+			fclose($fh);
+			
+		} else {
+			throw new LogicException("Cannot write language file! Please check permissions of $langFolder/" . $locale . ".php");
+		}
+
+		return true;
+	}
+
+	/**
+	 * Input for langArrayCodeForEntitySpec() should be suitable for insertion
+	 * into single-quoted strings, so needs to be escaped already.
+	 * 
+	 * @param string $entity The entity name, e.g. CMSMain.BUTTONSAVE
+	 */
+	public function langArrayCodeForEntitySpec($entityFullName, $entitySpec, $locale) {
+		$php = '';
+		$eol = PHP_EOL;
+		
+		$entityParts = explode('.', $entityFullName);
+		if(count($entityParts) > 1) {
+			// templates don't have a custom namespace
+			$entity = array_pop($entityParts);
+			// namespace might contain dots, so we implode back
+			$namespace = implode('.',$entityParts); 
+		} else {
+			user_error("i18nTextCollector::langArrayCodeForEntitySpec(): Wrong entity format for $entityFullName with values" . var_export($entitySpec, true), E_USER_WARNING);
+			return false;
+		}
+		
+		$value = $entitySpec[0];
+		$comment = (isset($entitySpec[1])) ? addcslashes($entitySpec[1],'\'') : null;
+
+		$php .= '$lang[\'' . $locale . '\'][\'' . $namespace . '\'][\'' . $entity . '\'] = ';
+		$php .= (count($entitySpec) == 1) ? var_export($entitySpec[0], true) : var_export($entitySpec, true);
+		$php .= ";$eol";
+		
+		return $php;
 	}
 }

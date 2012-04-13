@@ -1452,14 +1452,17 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * 						 the class name where this string is used and Entity identifies the string inside the namespace.
 	 * @param string $string The original string itself. In a usual call this is a mandatory parameter, but if you are reusing a string which
 	 *				 has already been "declared" (using another call to this function, with the same class and entity), you can omit it.
-	 * @param string $priority Optional parameter to set a translation priority. If a string is widely used, should have a high priority (PR_HIGH),
-	 * 				    in this way translators will be able to prioritise this strings. If a string is rarely shown, you should use PR_LOW.
-	 *				    You can use PR_MEDIUM as well. Leaving this field blank will be interpretated as a "normal" priority (less than PR_MEDIUM).
 	 * @param string $context If the string can be difficult to translate by any reason, you can help translators with some more info using this param
-	 *
 	 * @return string The translated string, according to the currently set locale {@link i18n::set_locale()}
 	 */
-	static function _t($entity, $string = "", $priority = 40, $context = "") {
+	static function _t($entity, $string = "", $context = "") {
+		if(is_numeric($context) && in_array($context, array(PR_LOW, PR_MEDIUM, PR_HIGH))) {
+			$context = func_get_arg(4);
+			Deprecation::notice(
+				'3.0', 
+				'The $priority argument to _t() is deprecated, please use module inclusion priorities instead'
+			);
+		}
 		// get current locale (either default or user preference)
 		$locale = i18n::get_locale();
 		$lang = i18n::get_lang_from_locale($locale);
