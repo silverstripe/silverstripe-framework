@@ -116,7 +116,8 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	 * Fix HTTP_HOST from reverse proxies
 	 */
 	if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
-		$_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
+		// Get the first host, in case there's multiple separated through commas
+		$_SERVER['HTTP_HOST'] = strtok($_SERVER['HTTP_X_FORWARDED_HOST'], ',');
 	}
 }
 
