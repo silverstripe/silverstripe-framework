@@ -1207,7 +1207,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * 
 	 * @var String
 	 */
-	static $application_name = 'SilverStripe CMS';
+	static $application_name = 'SilverStripe';
 	
 	/**
 	 * @param String $name

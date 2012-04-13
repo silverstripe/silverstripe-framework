@@ -4,7 +4,7 @@
 			<a href="http://www.silverstripe.org/" target="_blank" title="SilverStripe (Version - $CMSVersion)">
 				SilverStripe <% if CMSVersion %><abbr class="version">$CMSVersion</abbr><% end_if %>
 			</a>
-			<span>$SiteConfig.Title</span>
+			<span><% if SiteConfig %>$SiteConfig.Title<% else %>$ApplicationName<% end_if %></span>
 		</div>
 	
 		<div class="cms-login-status">
