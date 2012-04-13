@@ -301,9 +301,12 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 	private static $globalProperties = null;
 	private static $iteratorProperties = null;
 
-	protected $extras;
+	/** @var array|null Overlay variables. Take precedence over anything from the current scope */
+	protected $overlay;
+	/** @var array|null Underlay variables. Concede precedence to overlay variables or anything from the current scope */
+	protected $underlay;
 
-	function __construct($item, $extras = null){
+	function __construct($item, $overlay = null, $underlay = null){
 		parent::__construct($item);
 
 		// Build up global property providers array only once per request
@@ -320,7 +323,8 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 			$this->createCallableArray(self::$iteratorProperties, "TemplateIteratorProvider", "get_template_iterator_variables", true);   //call non-statically
 		}
 
-		$this->extras = $extras ? $extras : array();
+		$this->overlay = $overlay ? $overlay : array();
+		$this->underlay = $underlay ? $underlay : array();
 	}
 
 	protected function createCallableArray(&$extraArray, $interfaceToQuery, $variableMethod, $createObject = false) {
@@ -354,16 +358,22 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 	}
 
 	function getInjectedValue($property, $params, $cast = true) {
-		// Check if the method to-be-called exists on the target object, and if so don't check global objects
 		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
-		if (isset($on->$property) || method_exists($on, $property)) return null;
 
 		// Find the source of the value
 		$source = null;
 
 		// Check for a presenter-specific override
-		if (array_key_exists($property, $this->extras)) {
-			$source = array('value' => $this->extras[$property]);
+		if (array_key_exists($property, $this->overlay)) {
+			$source = array('value' => $this->overlay[$property]);
+		}
+		// Check if the method to-be-called exists on the target object - if so, don't check any further injection locations
+		else if (isset($on->$property) || method_exists($on, $property)) {
+			$source = null;
+		}
+		// Check for a presenter-specific override
+		else if (array_key_exists($property, $this->underlay)) {
+			$source = array('value' => $this->underlay[$property]);
 		}
 		// Then for iterator-specific overrides
 		else if (array_key_exists($property, self::$iteratorProperties)) {
@@ -730,10 +740,11 @@ class SSViewer {
 	 *
 	 * @param string $cacheFile - The path to the file that contains the template compiled to PHP
 	 * @param Object $item - The item to use as the root scope for the template
-	 * @param array|null $arguments - Any variables to layer into the root scope
+	 * @param array|null $overlay - Any variables to layer on top of the scope
+	 * @param array|null $underlay - Any variables to layer underneath the scope
 	 * @return string - The result of executing the template
 	 */
-	protected function includeGeneratedTemplate($cacheFile, $item, $arguments) {
+	protected function includeGeneratedTemplate($cacheFile, $item, $overlay, $underlay) {
 		if(isset($_GET['showtemplate']) && $_GET['showtemplate']) {
 			$lines = file($cacheFile);
 			echo "<h2>Template: $cacheFile</h2>";
@@ -745,7 +756,7 @@ class SSViewer {
 		}
 
 		$cache = $this->getPartialCacheStore();
-		$scope = new SSViewer_DataPresenter($item, $arguments ? $arguments : array());
+		$scope = new SSViewer_DataPresenter($item, $overlay, $underlay);
 		$val = '';
 
 		include($cacheFile);
@@ -801,10 +812,7 @@ class SSViewer {
 			if(isset($_GET['debug_profile'])) Profiler::unmark("SSViewer::process - compile", " for $template");
 		}
 
-		$templateSpecificGlobals = array('I18NNamespace' => basename($template));
-		$arguments = $arguments ? array_merge($templateSpecificGlobals, $arguments) : $templateSpecificGlobals;
-
-		$subtemplateGlobals = array();
+		$underlay = array('I18NNamespace' => basename($template));
 
 		// Makes the rendered sub-templates available on the parent item,
 		// through $Content and $Layout placeholders.
@@ -813,11 +821,11 @@ class SSViewer {
 				$subtemplateViewer = new SSViewer($this->chosenTemplates[$subtemplate]);
 				$subtemplateViewer->setPartialCacheStore($this->getPartialCacheStore());
 
-				$subtemplateGlobals[$subtemplate] = $subtemplateViewer->process($item, $arguments);
+				$underlay[$subtemplate] = $subtemplateViewer->process($item, $arguments);
 			}
 		}
 
-		$val = $this->includeGeneratedTemplate($cacheFile, $item, array_merge($subtemplateGlobals, $arguments));
+		$val = $this->includeGeneratedTemplate($cacheFile, $item, $arguments, $underlay);
 		$output = Requirements::includeInHTML($template, $val);
 		
 		array_pop(SSViewer::$topLevel);
@@ -913,7 +921,7 @@ class SSViewer_FromString extends SSViewer {
 		fwrite($fh, $template);
 		fclose($fh);
 
-		$val = $this->includeGeneratedTemplate($tmpFile, $item, $arguments);
+		$val = $this->includeGeneratedTemplate($tmpFile, $item, $arguments, null);
 
 		unlink($tmpFile);
 		return $val;
