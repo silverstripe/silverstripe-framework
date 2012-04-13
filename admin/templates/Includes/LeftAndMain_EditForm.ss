@@ -4,11 +4,7 @@
 	<div class="cms-content-header north">
 		<div>
 			
-			<% if Backlink %>
-				<a class="backlink ss-ui-button cms-panel-link" data-icon="back" href="$Backlink">
-					<% _t('Back', 'Back') %>
-				</a>
-			<% end_if %>
+			<% include BackLink_Button %>
 
 			<h2 id="page-title-heading">
 			<% control Controller %>

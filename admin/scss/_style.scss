@@ -101,34 +101,41 @@ body.cms {
 	}
 	
 	.backlink {
-		float:left;
-		margin-top:$grid-x - 1;
 		span.btn-icon-back {
 			height:16px;
 		}
 	}
 
 	h2 {
-		float: left;
 		padding: $grid-y $grid-x 0 $grid-x;
 		font-size: $font-base-size + 2;
 		line-height: $grid-x * 3;
 		font-weight: bold;
 		text-shadow: darken($color-widget-bg, 15%) 1px 1px 0;
-		max-width: $grid-x*50;
+		max-width: 100%;
 		margin: 0;
 		@include hide-text-overflow();
+		display:table-cell;
+		vertical-align:top;
 	}
 
-	& > div {
-		width: 9999em;
+	& div {
+		width: 100%;
 		overflow: hidden;
+		display:table-row;
+		& .cms_backlink {
+			display:table-cell;
+			vertical-align:middle;
+			width:auto;
+		}
 	}
 	
 	.cms-content-header-tabs {
-		position:fixed;
-		right:40px;
+		display:table-cell;
+		white-space:nowrap;
 		.ui-tabs-nav {
+			float:right;
+			margin-right:$grid-x*4;
 			li {
 				a {
 					font-weight: bold;
