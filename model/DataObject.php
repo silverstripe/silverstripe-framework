@@ -148,6 +148,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	protected static $_cache_get_one;
 	protected static $_cache_get_class_ancestry;
 	protected static $_cache_composite_fields = array();	
+	protected static $_cache_field_labels = array();
 
 	/**
 	 * Non-static relationship cache, indexed by component name.
@@ -2672,6 +2673,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		DataObject::$_cache_get_one = array();
 		DataObject::$_cache_composite_fields = array();
 		DataObject::$_cache_get_class_ancestry = array();
+		DataObject::$_cache_field_labels = array();
 	}
 
 	/**
@@ -2953,33 +2955,39 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array|string Array of all element labels if no argument given, otherwise the label of the field
 	 */
 	public function fieldLabels($includerelations = true) {
-		$customLabels = $this->stat('field_labels');
-		$autoLabels = array();
+		$cacheKey = $this->class . '_' . $includerelations;
 		
-		// get all translated static properties as defined in i18nCollectStatics()
-		$ancestry = ClassInfo::ancestry($this->class);
-		$ancestry = array_reverse($ancestry);
-		if($ancestry) foreach($ancestry as $ancestorClass) {
-			if($ancestorClass == 'ViewableData') break;
-			$types = array(
-				'db'        => (array)Config::inst()->get($ancestorClass, 'db', Config::UNINHERITED)
-			);
-			if($includerelations){
-				$types['has_one'] = (array)singleton($ancestorClass)->uninherited('has_one', true);
-				$types['has_many'] = (array)singleton($ancestorClass)->uninherited('has_many', true);
-				$types['many_many'] = (array)singleton($ancestorClass)->uninherited('many_many', true);
-			}
-			foreach($types as $type => $attrs) {
-				foreach($attrs as $name => $spec)
-				$autoLabels[$name] = _t("{$ancestorClass}.{$type}_{$name}",FormField::name_to_label($name));
- 			}
- 		}
+		if(!isset(self::$_cache_field_labels[$cacheKey])) {
+			$customLabels = $this->stat('field_labels');
+			$autoLabels = array();
+			
+			// get all translated static properties as defined in i18nCollectStatics()
+			$ancestry = ClassInfo::ancestry($this->class);
+			$ancestry = array_reverse($ancestry);
+			if($ancestry) foreach($ancestry as $ancestorClass) {
+				if($ancestorClass == 'ViewableData') break;
+				$types = array(
+					'db'        => (array)Config::inst()->get($ancestorClass, 'db', Config::UNINHERITED)
+				);
+				if($includerelations){
+					$types['has_one'] = (array)singleton($ancestorClass)->uninherited('has_one', true);
+					$types['has_many'] = (array)singleton($ancestorClass)->uninherited('has_many', true);
+					$types['many_many'] = (array)singleton($ancestorClass)->uninherited('many_many', true);
+				}
+				foreach($types as $type => $attrs) {
+					foreach($attrs as $name => $spec) {
+						// var_dump("{$ancestorClass}.{$type}_{$name}");
+						$autoLabels[$name] = _t("{$ancestorClass}.{$type}_{$name}",FormField::name_to_label($name));
+					}
+	 			}
+	 		}
 
-		$labels = array_merge((array)$autoLabels, (array)$customLabels);
+			$labels = array_merge((array)$autoLabels, (array)$customLabels);
+			$this->extend('updateFieldLabels', $labels);	
+			self::$_cache_field_labels[$cacheKey] = $labels;
+		}
 		
-		$this->extend('updateFieldLabels', $labels);
-
-		return $labels;
+		return self::$_cache_field_labels[$cacheKey];
 	}
 	
 	/**
