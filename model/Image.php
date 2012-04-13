@@ -73,8 +73,8 @@ class Image extends File {
 		parent::defineMethods();
 	}
 
-	function getCMSFields($params = null) {
-		$fields = parent::getCMSFields($params);
+	function getCMSFields() {
+		$fields = parent::getCMSFields();
 
 		$urlLink = "<div class='field readonly'>";
 		$urlLink .= "<label class='left'>"._t('AssetTableField.URL','URL')."</label>";

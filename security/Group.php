@@ -59,7 +59,7 @@ class Group extends DataObject {
 	 *
 	 * @return FieldList
 	 */
-	public function getCMSFields($params = null) {
+	public function getCMSFields() {
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');
 		
 		$fields = new FieldList(

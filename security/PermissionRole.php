@@ -33,8 +33,8 @@ class PermissionRole extends DataObject {
 
 	static $plural_name = 'Roles';
 	
-	function getCMSFields($params = null) {
-		$fields = parent::getCMSFields($params);
+	function getCMSFields() {
+		$fields = parent::getCMSFields();
 		
 		$fields->removeFieldFromTab('Root', 'Codes');
 		$fields->removeFieldFromTab('Root', 'Groups');

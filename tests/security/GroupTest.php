@@ -136,7 +136,7 @@ class GroupTest extends FunctionalTest {
 
 class GroupTest_Member extends Member implements TestOnly {
    
-   function getCMSFields($params = null) {
+   function getCMSFields() {
       $groups = DataObject::get('Group');
       $groupsMap = ($groups) ? $groups->map() : false;
       $fields = new FieldList(

@@ -1837,18 +1837,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @see Good example of complex FormField building: SiteTree::getCMSFields()
 	 *
-	 * @param array $params See {@link scaffoldFormFields()}
 	 * @return FieldList Returns a TabSet for usage within the CMS - don't use for frontend forms.
 	 */
-	public function getCMSFields($params = null) {
-		$tabbedFields = $this->scaffoldFormFields(array_merge(
-			array(
-				// Don't allow has_many/many_many relationship editing before the record is first saved
-				'includeRelations' => ($this->ID > 0),
-				'tabbed' => true,
-				'ajaxSafe' => true
-			),
-			(array)$params
+	public function getCMSFields() {
+		$tabbedFields = $this->scaffoldFormFields(array(
+			// Don't allow has_many/many_many relationship editing before the record is first saved
+			'includeRelations' => ($this->ID > 0),
+			'tabbed' => true,
+			'ajaxSafe' => true
 		));
 		
 		$this->extend('updateCMSFields', $tabbedFields);

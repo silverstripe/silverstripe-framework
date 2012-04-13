@@ -321,7 +321,7 @@ class File extends DataObject {
 	 * 
 	 * @return FieldList
 	 */
-	function getCMSFields($params = null) {
+	function getCMSFields() {
 		// Preview
 		if($this instanceof Image) {
 			$formattedImage = $this->getFormattedImage('SetWidth', Image::$asset_preview_width);
