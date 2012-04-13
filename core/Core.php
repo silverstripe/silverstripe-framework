@@ -116,7 +116,7 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	 * Fix HTTP_HOST from reverse proxies
 	 */
 	if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
-		$_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
+		$_SERVER['HTTP_HOST'] = substr($_SERVER['HTTP_X_FORWARDED_HOST'],0,strpos($_SERVER['HTTP_X_FORWARDED_HOST'],','));
 	}
 }
 
