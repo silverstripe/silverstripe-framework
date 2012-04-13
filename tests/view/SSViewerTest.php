@@ -468,6 +468,11 @@ after')
 			$this->render('<% include SSViewerTestIncludeWithArguments Arg1="A", Arg2=$B %>', new ArrayData(array('B' => 'Bar'))),
 			'<p>A</p><p>Bar</p>'
 		);
+
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeWithArguments Arg1="A" %>', new ArrayData(array('Arg1' => 'Foo', 'Arg2' => 'Bar'))),
+			'<p>A</p><p>Bar</p>'
+		);
 	}
 
 	
