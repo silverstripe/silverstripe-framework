@@ -40,7 +40,7 @@
 
 // ALL errors are reported, including E_STRICT by default *unless* the site is in
 // live mode, where reporting is limited to fatal errors and warnings (see later in this file)
-error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL & ~(E_STRICT));
 
 /**
  * Include _ss_environment.php files
