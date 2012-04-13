@@ -1876,12 +1876,25 @@ class i18n extends Object implements TemplateGlobalProvider {
 		// TODO Also include custom Zend_Translate routing languages
 		$selectedLocales = array_unique(array($lang, $locale));
 
+		// Sort modules by inclusion priority, then alphabetically
+		// TODO Should be handled by priority flags within modules
+		$prios = array('sapphire' => 10, 'framework' => 10, 'admin' => 11, 'cms' => 12, 'mysite' => 90);
+		$modules = SS_ClassLoader::instance()->getManifest()->getModules();
+		ksort($modules);
+		uksort(
+			$modules,
+			function($a, $b) use(&$prios) {
+				$prioA = (isset($prios[$a])) ? $prios[$a] : 50;
+				$prioB = (isset($prios[$b])) ? $prios[$b] : 50;
+				return ($prioA > $prioB);
+			}
+		);
+
 		// Loop in reverse order, meaning the translator with the highest priority goes first
 		$translators = array_reverse(self::get_translators(), true);
 		foreach($translators as $priority => $translators) {
 			foreach($translators as $name => $translator) {
 				$adapter = $translator->getAdapter();
-				$modules = SS_ClassLoader::instance()->getManifest()->getModules();
 
 				// Load translations from modules
 				foreach($modules as $module) {
