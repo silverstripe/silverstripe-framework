@@ -329,6 +329,26 @@ PHP;
 			$php
 		);
 	}
+
+	/**
+	 * @todo Should be in a separate test suite, but don't want to duplicate setup logic
+	 */
+	function testYamlWriter() {
+		$writer = new i18nTextCollector_Writer_RailsYaml();
+		$entities = array(
+			'Level1.Level2.EntityName' => array('Text', 'Context'),
+			'Level1.OtherEntityName' => array('Other Text', 'Other Context'),
+		);
+		$yaml = <<<YAML
+de:
+  Level1:
+    Level2:
+      EntityName: Text
+    OtherEntityName: 'Other Text'
+
+YAML;
+		$this->assertEquals($yaml, $writer->getYaml($entities, 'de'));
+	}
 	
 	function testCollectFromIncludedTemplates() {
 		$c = new i18nTextCollector();
