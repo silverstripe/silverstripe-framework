@@ -63,6 +63,15 @@ abstract class DataExtension extends Extension {
 	public static function unload_extra_statics($class, $extension) {
 		throw new Exception('unload_extra_statics gone');
 	}
+
+	/**
+	 * Hook for extension-specific validation.
+	 *
+	 * @param $validationResult Local validation result
+	 * @throws ValidationException
+	 */
+	function validate(ValidationResult &$validationResult) {
+	}
 	
 	/**
 	 * Edit the given query object to support queries for this extension
