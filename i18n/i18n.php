@@ -12,7 +12,7 @@ require_once 'i18nRailsYamlAdapter.php';
  * PHP:
  * <code>
  * _t('MyNamespace.MYENTITY', 'My default natural language value');
- * _t('MyNamespace.MYENTITY', 'My default natural language value', PR_MEDIUM, 'My explanatory context');
+ * _t('MyNamespace.MYENTITY', 'My default natural language value', 'My explanatory context');
  * sprintf(_t('MyNamespace.MYENTITY', 'Counting %s things'), 42);
  * </code>
  * 

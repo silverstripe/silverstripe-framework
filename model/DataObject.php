@@ -3304,13 +3304,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		$entities["{$this->class}.SINGULARNAME"] = array(
 			$this->singular_name(),
-			PR_MEDIUM,
+			
 			'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
 		);
 
 		$entities["{$this->class}.PLURALNAME"] = array(
 			$this->plural_name(),
-			PR_MEDIUM,
+			
 			'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface'
 		);
 		

@@ -252,13 +252,13 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 			}
 			if($labels) {
 				return sprintf(
-					_t('GridField.PlaceHolderWithLabels', 'Find %s by %s', PR_MEDIUM, 'Find <object type> by <field names>'), 
+					_t('GridField.PlaceHolderWithLabels', 'Find %s by %s', 'Find <object type> by <field names>'), 
 					singleton($dataClass)->plural_name(),
 					implode(', ', $labels)
 				);
 			} else {
 				return sprintf(
-					_t('GridField.PlaceHolder', 'Find %s', PR_MEDIUM, 'Find <object type>'), 
+					_t('GridField.PlaceHolder', 'Find %s', 'Find <object type>'), 
 					singleton($dataClass)->plural_name()
 				);
 			}

@@ -318,7 +318,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 		foreach($cmsClasses as $cmsClass) {
 			$defaultTitle = LeftAndMain::menu_title_for_class($cmsClass);
 			$ownerModule = i18n::get_owner_module($cmsClass);
-			$entities["{$cmsClass}.MENUTITLE"] = array($defaultTitle, PR_HIGH, 'Menu title', $ownerModule);
+			$entities["{$cmsClass}.MENUTITLE"] = array($defaultTitle, 'Menu title', $ownerModule);
 		}
 		return $entities;
 	}

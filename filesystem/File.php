@@ -856,7 +856,7 @@ class File extends DataObject {
 					_t(
 						'File.INVALIDEXTENSION', 
 						'Extension is not allowed (valid: %s)',
-						PR_MEDIUM,
+						
 						'Argument 1: Comma-separated list of valid extensions'
 					),
 					wordwrap(implode(', ',$exts))

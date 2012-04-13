@@ -630,7 +630,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 					_t(
 						'Member.ValidationIdentifierFailed', 
 						'Can\'t overwrite existing member #%d with identical identifier (%s = %s))', 
-						PR_MEDIUM,
+						
 						'The values in brackets show a fieldname mapped to a value, usually denoting an existing email address'
 					),
 					$existingRecord->ID,
@@ -1104,7 +1104,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				
 		$mainFields->replaceField('Locale', new DropdownField(
 			"Locale", 
-			_t('Member.INTERFACELANG', "Interface Language", PR_MEDIUM, 'Language of the CMS'), 
+			_t('Member.INTERFACELANG', "Interface Language", 'Language of the CMS'), 
 			i18n::get_existing_translations()
 		));
 		
@@ -1208,11 +1208,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$labels['Password'] = _t('Member.db_Password', 'Password');
 		$labels['NumVisit'] = _t('Member.db_NumVisit', 'Number of Visits');
 		$labels['LastVisited'] = _t('Member.db_LastVisited', 'Last Visited Date');
-		$labels['PasswordExpiry'] = _t('Member.db_PasswordExpiry', 'Password Expiry Date', PR_MEDIUM, 'Password expiry date');
-		$labels['LockedOutUntil'] = _t('Member.db_LockedOutUntil', 'Locked out until', PR_MEDIUM, 'Security related date');
+		$labels['PasswordExpiry'] = _t('Member.db_PasswordExpiry', 'Password Expiry Date', 'Password expiry date');
+		$labels['LockedOutUntil'] = _t('Member.db_LockedOutUntil', 'Locked out until', 'Security related date');
 		$labels['Locale'] = _t('Member.db_Locale', 'Interface Locale');
 		if($includerelations){
-			$labels['Groups'] = _t('Member.belongs_many_many_Groups', 'Groups', PR_MEDIUM, 'Security Groups this member belongs to');
+			$labels['Groups'] = _t('Member.belongs_many_many_Groups', 'Groups', 'Security Groups this member belongs to');
 		}
 		return $labels;
 	}
@@ -1542,7 +1542,7 @@ class Member_ChangePasswordEmail extends Email {
     
     function __construct() {
 		parent::__construct();
-    	$this->subject = _t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", PR_MEDIUM, 'Email subject');
+    	$this->subject = _t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject');
     }
 }
 
@@ -1560,7 +1560,7 @@ class Member_ForgotPasswordEmail extends Email {
     
     function __construct() {
 		parent::__construct();
-    	$this->subject = _t('Member.SUBJECTPASSWORDRESET', "Your password reset link", PR_MEDIUM, 'Email subject');
+    	$this->subject = _t('Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject');
     }
 }
 

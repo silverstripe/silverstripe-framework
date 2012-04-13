@@ -25,7 +25,7 @@ interface i18nEntityProvider {
 	 * 	foreach($this->stat('my_static_array) as $key => $value) {
 	 * 		$entities["MyTestClass.my_static_array_{$key}"] = array(
 	 * 			$value,
-	 * 			PR_MEDIUM,
+	 * 			
 	 * 			'My context description'
 	 * 		);
 	 * 	}
@@ -52,7 +52,7 @@ interface i18nEntityProvider {
 	 * 	$entities = array();
 	 * 		$entities["MyOtherModuleClass.MYENTITY"] = array(
 	 * 			$value,
-	 * 			PR_MEDIUM,
+	 * 			
 	 * 			'My context description',
 	 * 			'myothermodule'
 	 * 		);
