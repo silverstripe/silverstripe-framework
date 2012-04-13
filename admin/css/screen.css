@@ -259,11 +259,12 @@ body.cms { overflow: hidden; }
 
 .cms-content-header { padding: 0px 8px 8px; height: 32px; z-index: 60; -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; -o-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; background-image: url(../images/textures/cms_content_header.png); background-repeat: repeat; }
 .cms-content-header a { color: #1556b2; }
-.cms-content-header .backlink { float: left; margin-top: 7px; }
 .cms-content-header .backlink span.btn-icon-back { height: 16px; }
-.cms-content-header h2 { float: left; padding: 8px 8px 0 8px; font-size: 14px; line-height: 24px; font-weight: bold; text-shadow: #bfcad2 1px 1px 0; max-width: 400px; margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
-.cms-content-header > div { width: 9999em; overflow: hidden; }
-.cms-content-header .cms-content-header-tabs { position: fixed; right: 40px; }
+.cms-content-header h2 { padding: 8px 8px 0 8px; font-size: 14px; line-height: 24px; font-weight: bold; text-shadow: #bfcad2 1px 1px 0; max-width: 100%; margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; display: table-cell; vertical-align: top; }
+.cms-content-header div { width: 100%; overflow: hidden; display: table-row; }
+.cms-content-header div .cms_backlink { display: table-cell; vertical-align: middle; width: auto; }
+.cms-content-header .cms-content-header-tabs { display: table-cell; white-space: nowrap; }
+.cms-content-header .cms-content-header-tabs .ui-tabs-nav { float: right; margin-right: 32px; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav li a { font-weight: bold; line-height: 16px; padding: 12px 20px 12px; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-state-default, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-default, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-default { border-top: none; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-state-active, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-active, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-active { border-top: none; padding-bottom: 0px; }
@@ -728,7 +729,6 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form .resetformaction { margin-right: 0px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm { overflow: hidden; }
 
-.SecurityAdmin .cms-edit-form .cms-content-header h2 { display: none; }
 .SecurityAdmin .permissioncheckboxset .optionset li, .SecurityAdmin .permissioncheckboxsetfield_readonly .optionset li { float: none; width: auto; }
 
 .cms .cms-content .SecurityAdmin .cms-content-fields { overflow-y: auto; }
