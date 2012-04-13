@@ -40,7 +40,7 @@
 
 // ALL errors are reported, including E_STRICT by default *unless* the site is in
 // live mode, where reporting is limited to fatal errors and warnings (see later in this file)
-error_reporting(E_ALL & ~(E_STRICT));
+error_reporting(E_ALL | E_STRICT);
 
 /**
  * Include _ss_environment.php files
@@ -223,6 +223,10 @@ require_once 'core/ClassInfo.php';
 require_once 'view/TemplateGlobalProvider.php';
 require_once 'control/Director.php';
 require_once 'dev/Debug.php';
+require_once 'dev/DebugView.php';
+require_once 'dev/Backtrace.php';
+require_once 'dev/ZendLog.php';
+require_once 'dev/Log.php';
 require_once 'filesystem/FileFinder.php';
 require_once 'core/manifest/ClassLoader.php';
 require_once 'core/manifest/ClassManifest.php';
