@@ -2,7 +2,7 @@
 /**
  * A collection of static methods for manipulating the filesystem. 
  * 
- * @package sapphire
+ * @package framework
  * @subpackage filesystem
  */
 class Filesystem extends Object {

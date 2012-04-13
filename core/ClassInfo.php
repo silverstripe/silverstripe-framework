@@ -1,10 +1,10 @@
 <?php
 /**
  * Provides introspection information about the class tree.
- * It's a cached wrapper around the built-in class functions.  Sapphire uses class introspection heavily
+ * It's a cached wrapper around the built-in class functions.  SilverStripe uses class introspection heavily
  * and without the caching it creates an unfortunate performance hit.
  *
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 class ClassInfo {

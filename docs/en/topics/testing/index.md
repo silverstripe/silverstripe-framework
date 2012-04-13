@@ -1,8 +1,8 @@
 # Unit and Integration Testing
 
-The Sapphire core contains various features designed to simplify the process of creating and managing automated tests.
+The SilverStripe core contains various features designed to simplify the process of creating and managing automated tests.
 
-* [Create a unit test](create-sapphire-test): Writing tests to check core data objects
+* [Create a unit test](create-silverstripe-test): Writing tests to check core data objects
 * [Creating a functional test](create-functional-test): An overview of functional tests and how to write a functional test
 * [Email Sending](email-sending): An overview of the built-in email testing code
 * [Troubleshooting](testing-guide-troubleshooting): Frequently asked questions list for testing issues
@@ -27,7 +27,7 @@ To get started now, follow the installation instructions below, and check
 The framework has a required dependency on [PHPUnit](http://www.phpunit.de/) and an optional dependency on
 [SimpleTest](http://simpletest.org/), the two premiere PHP testing frameworks.
 
-To run Sapphire tests, you'll need to be able to access PHPUnit on your include path. First, you'll need to make sure
+To run SilverStripe tests, you'll need to be able to access PHPUnit on your include path. First, you'll need to make sure
 that you have the PEAR command line client installed. To test this out, type `pear help` at your prompt. You should
 see a bunch of generic PEAR info. If it's not installed, you'll need to set it up first (see: [Getting Started with
 PEAR](http://www.sitepoint.com/article/getting-started-with-pear/)) or else manually install PHPUnit (see: [Installation
@@ -55,7 +55,7 @@ their own:
 
 ### Via Command Line
 
-`cd` to the root level of your project and run [sake](/topics/commandline) (Sapphire Make) to execute the tests:
+`cd` to the root level of your project and run [sake](/topics/commandline) (SilverStripe Make) to execute the tests:
 
 	/path/to/project$ sake dev/tests/all
 
@@ -68,7 +68,7 @@ Run specific tests:
 	dev/tests/MyTest,MyOtherTest
 
 
-Run all tests in a module folder, e.g. "sapphire"
+Run all tests in a module folder, e.g. "framework"
 
 	dev/tests/module/<modulename>
 
@@ -85,7 +85,7 @@ Tests are written by creating subclasses of `[api:SapphireTest]`.  You should pu
 
 Generally speaking, there should be one test class for each application class.  The name of the test class should be the
 application class, with "Test" as a suffix.  For instance, we have all the tests for `SiteTree` in
-`sapphire/tests/SiteTreeTest.php`
+`framework/tests/SiteTreeTest.php`
 
 You will generally write two different kinds of test classes.
 
@@ -96,9 +96,9 @@ Some people may note that we have used the same naming convention as Ruby on Rai
 
 ## How To
 
-Tutorials and recipes for creating tests using the Sapphire framework:
+Tutorials and recipes for creating tests using the SilverStripe framework:
 
-*  **[Create a Sapphire Test](/topics/testing/create-sapphire-test)**
+*  **[Create a SilverStripe Test](/topics/testing/create-silverstripe-test)**
 *  **Load Test Fixtures**
 *  **[Create a Functional Test](/topics/testing/create-functional-test)**
 *  **[Test Outgoing Email Sending](/topics/testing/email-sending)**

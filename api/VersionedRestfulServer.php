@@ -2,7 +2,7 @@
 /**
  * Simple wrapper to allow access to the live site via REST
  * 
- * @package sapphire
+ * @package framework
  * @subpackage integration
  */ 
 class VersionedRestfulServer extends Controller {

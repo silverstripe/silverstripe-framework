@@ -15,7 +15,7 @@
  * 
  * @author Cam Spiers <camspiers at gmail dot com>
  * 
- * @package sapphire
+ * @package framework
  * @subpackage formatters
  */
 class FormEncodedDataFormatter extends XMLDataFormatter {

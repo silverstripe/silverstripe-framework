@@ -2,7 +2,7 @@
 /**
  * An interface that a class can implement to be treated as a list container.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage model
  */
 interface SS_List extends ArrayAccess, Countable, IteratorAggregate {

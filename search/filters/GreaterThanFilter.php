@@ -4,7 +4,7 @@
  *
  * @todo documentation
  * 
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 class GreaterThanFilter extends SearchFilter {

@@ -4,7 +4,7 @@
  *
  * Supported indexes for {@link requireTable()}:
  *
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class MySQLDatabase extends SS_Database {
@@ -1121,7 +1121,7 @@ class MySQLDatabase extends SS_Database {
 
 /**
  * A result-set from a MySQL database.
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class MySQLQuery extends SS_Query {
@@ -1138,7 +1138,7 @@ class MySQLQuery extends SS_Query {
 	private $handle;
 
 	/**
-	 * Hook the result-set given into a Query class, suitable for use by sapphire.
+	 * Hook the result-set given into a Query class, suitable for use by SilverStripe.
 	 * @param database The database object that created this query.
 	 * @param handle the internal mysql handle that is points to the resultset.
 	 */

@@ -5,7 +5,7 @@
  */
 class LeftAndMainTest extends FunctionalTest {
 
-	static $fixture_file = 'sapphire/admin/tests/LeftAndMainTest.yml';
+	static $fixture_file = 'LeftAndMainTest.yml';
 	
 	protected $extraDataObjects = array('LeftAndMainTest_Object');
 	

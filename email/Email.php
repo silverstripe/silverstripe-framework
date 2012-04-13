@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage email
  */
 
@@ -20,7 +20,7 @@ if(isset($_SERVER['SERVER_NAME'])) {
 
 /**
  * Class to support sending emails.
- * @package sapphire
+ * @package framework
  * @subpackage email
  */
 class Email extends ViewableData {
@@ -616,7 +616,7 @@ class Email extends ViewableData {
 
 /**
  * Base class that email bounce handlers extend
- * @package sapphire
+ * @package framework
  * @subpackage email
  */
 class Email_BounceHandler extends Controller {
@@ -647,7 +647,7 @@ class Email_BounceHandler extends Controller {
 			return;
 		}
 
-		// Check against access key defined in sapphire/_config.php
+		// Check against access key defined in framework/_config.php
 		if( $_REQUEST['Key'] != EMAIL_BOUNCEHANDLER_KEY) {
 			echo 'Error: Access validation failed. Invalid "Key" specified.';
 			return;
@@ -738,7 +738,7 @@ class Email_BounceHandler extends Controller {
 
 /**
  * Database record for recording a bounced email
- * @package sapphire
+ * @package framework
  * @subpackage email
  */
 class Email_BounceRecord extends DataObject {

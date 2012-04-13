@@ -3,7 +3,7 @@
  * This class acts as a wrapper around the built in DOMDocument class in order to use it to manage a HTML snippet,
  * rather than a whole document, while still exposing the DOMDocument API.
  *
- * @package sapphire
+ * @package framework
  * @subpackage integration
  */
 class SS_HTMLValue extends ViewableData {

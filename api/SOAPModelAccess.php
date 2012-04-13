@@ -32,7 +32,7 @@
  *
  * @todo Test relation methods
  * 
- * @package sapphire
+ * @package framework
  * @subpackage api
  */
 class SOAPModelAccess extends SapphireSoapServer {

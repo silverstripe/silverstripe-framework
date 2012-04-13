@@ -3,7 +3,7 @@
 /**
  * Tests for FieldList
  * 
- * @package sapphire
+ * @package framework
  * @subpackage tests
  * 
  * @todo test for {@link FieldList->setValues()}. Need to check

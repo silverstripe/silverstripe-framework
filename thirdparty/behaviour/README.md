@@ -10,11 +10,11 @@ Caution: Seriously outdated, consider using [http://github.com/hafriedlander/jqu
 
 # Requirements
 
- * Custom Prototype 1.4 RC3 (see `sapphire/thirdparty/prototype/prototype.js`)
+ * Custom Prototype 1.4 RC3 (see `framework/thirdparty/prototype/prototype.js`)
 
 # Tutorial
 
-In Sapphire, I've tried to make Javascript development a lot more well-structured.  It's very easy to write spaghetti, but this ultimately prevents maintainability.  This page is a guide to better Javascript. (hopefully).
+In SilverStripe, I've tried to make Javascript development a lot more well-structured.  It's very easy to write spaghetti, but this ultimately prevents maintainability.  This page is a guide to better Javascript. (hopefully).
 
 ## Required includes
 

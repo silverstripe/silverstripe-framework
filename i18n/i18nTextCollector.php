@@ -8,7 +8,7 @@
  * 
  * Collects all found entities (and their natural language text for the default locale)
  * into language-files for each module in an array notation. Creates or overwrites these files,
- * e.g. sapphire/lang/en_US.php.
+ * e.g. framework/lang/en_US.php.
  * 
  * The collector needs to be run whenever you make new translatable
  * entities available. Please don't alter the arrays in language tables manually.
@@ -22,7 +22,7 @@
  * 
  * @author Bernat Foj Capell <bernat@silverstripe.com>
  * @author Ingo Schommer <FIRSTNAME@silverstripe.com>
- * @package sapphire
+ * @package framework
  * @subpackage i18n
  * @uses i18nEntityProvider
  * @uses i18n
@@ -158,8 +158,8 @@ class i18nTextCollector extends Object {
 		// Search for calls in code files if these exists
 		if(is_dir("$this->basePath/$module/code")) {
 			$fileList = $this->getFilesRecursive("$this->basePath/$module/code");
-		} else if($module == 'sapphire' || substr($module, 0, 7) == 'themes/') {
-			// sapphire doesn't have the usual module structure, so we'll scan all subfolders
+		} else if($module == FRAMEWORK_DIR || substr($module, 0, 7) == 'themes/') {
+			// framework doesn't have the usual module structure, so we'll scan all subfolders
 			$fileList = $this->getFilesRecursive("$this->basePath/$module");
 		}
 		foreach($fileList as $filePath) {

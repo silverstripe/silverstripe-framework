@@ -1,7 +1,7 @@
 <?php
 /**
  * Implements a basic security model
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Security extends Controller {
@@ -362,16 +362,16 @@ class Security extends Controller {
 			// with the tabstrip library otherwise
 			$link_base = Director::absoluteURL($this->Link("login"));
 			
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
+			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 			
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 			
 			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 			
-			Requirements::css(SAPPHIRE_DIR . '/css/Security_login.css');
+			Requirements::css(FRAMEWORK_DIR . '/css/Security_login.css');
 			
-			Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
+			Requirements::javascript(FRAMEWORK_DIR . '/javascript/TabSet.js');
 			
 			$content = '<div id="Form_EditForm">';
 			$content .= '<div class="ss-tabset">';

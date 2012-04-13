@@ -13,13 +13,15 @@
  * PHP version check. Make sure we've got at least PHP 5.3 in the most friendly way possible
  */
 
+define('FRAMEWORK_NAME', 'framework');
+
 $majorVersion = strtok(phpversion(),'.');
 $minorVersion = strtok('.');
 
 if($majorVersion < 5 || ($majorVersion == 5 && $minorVersion < 3)) {
 	header("HTTP/1.1 500 Server Error");
-	echo str_replace('$PHPVersion', phpversion(), file_get_contents("sapphire/dev/install/php5-required.html"));
+	echo str_replace(array('$PHPVersion', 'sapphire'), array(phpversion(), FRAMEWORK_NAME), file_get_contents(FRAMEWORK_NAME . "/dev/install/php5-required.html"));
 	die();
 }
 
-include('sapphire/dev/install/install.php5');
+include(FRAMEWORK_NAME . '/dev/install/install.php5');

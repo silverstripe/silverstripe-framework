@@ -10,7 +10,7 @@
  ************************************************************************************/
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 $majorVersion = strtok(phpversion(),'.');
@@ -43,23 +43,23 @@ if($majorVersion < 5 || ($majorVersion == 5 && $minorVersion < 3)) {
  *
  * CONFIGURING THE WEBSERVER
  *
- * To use Sapphire, every request that doesn't point directly to a file should be rewritten to
- * sapphire/main.php?url=(url).  For example, http://www.example.com/about-us/rss would be rewritten 
- * to http://www.example.com/sapphire/main.php?url=about-us/rss
+ * To use SilverStripe, every request that doesn't point directly to a file should be rewritten to
+ * framework/main.php?url=(url).  For example, http://www.example.com/about-us/rss would be rewritten 
+ * to http://www.example.com/framework/main.php?url=about-us/rss
  *
  * It's important that requests that point directly to a file aren't rewritten; otherwise, visitors 
  * won't be able to download any CSS, JS, image files, or other downloads.
  *
  * On Apache, RewriteEngine can be used to do this.
  *
- * @package sapphire
+ * @package framework
  * @subpackage core
  * @see Director::direct()
  */
 
 
 /**
- * Include Sapphire's core code
+ * Include SilverStripe's core code
  */
 require_once("core/Core.php");
 

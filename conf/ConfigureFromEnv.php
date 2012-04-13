@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Configure Sapphire from the _ss_environment.php file.
- * Usage: Put "require_once('../sapphire/conf/ConfigureFromEnv.php');" into your _config.php file.
+ * Configure SilverStripe from the _ss_environment.php file.
+ * Usage: Put "require_once('conf/ConfigureFromEnv.php');" into your _config.php file.
  * 
  * If you include this file, you will be able to use the following defines in _ss_environment.php to control 
  * your site.
@@ -38,7 +38,7 @@
  * Email:
  *  - SS_SEND_ALL_EMAILS_TO: If you set this define, all emails will be redirected to this address.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 

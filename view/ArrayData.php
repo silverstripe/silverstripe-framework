@@ -9,7 +9,7 @@
  * ));
  * </code>
  *
- * @package sapphire
+ * @package framework
  * @subpackage view
  */
 class ArrayData extends ViewableData {

@@ -3,7 +3,7 @@
  * @author Ingo Schommer (ingo at silverstripe dot com)
  * @todo There's currently no way to save outside of assets/ folder
  * 
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class FolderTest extends SapphireTest {

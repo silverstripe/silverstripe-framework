@@ -3,7 +3,7 @@
  * Class Enum represents an enumeration of a set of strings.
  * See {@link DropdownField} for a {@link FormField} to select enum values.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Enum extends DBField {

@@ -2,7 +2,7 @@
 /**
  * Tests for the {@link SS_ClassManifest} class.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage tests
  */
 class NamespacedClassManifestTest extends SapphireTest {
@@ -23,12 +23,12 @@ class NamespacedClassManifestTest extends SapphireTest {
 
 	public function testGetItemPath() {
 		$expect = array(
-			'SAPPHIRE\TEST\CLASSA'     => 'module/classes/ClassA.php',
-			'Sapphire\Test\ClassA'     => 'module/classes/ClassA.php',
-			'sapphire\test\classa'     => 'module/classes/ClassA.php',
-			'SAPPHIRE\TEST\INTERFACEA' => 'module/interfaces/InterfaceA.php',
-			'Sapphire\Test\InterfaceA' => 'module/interfaces/InterfaceA.php',
-			'sapphire\test\interfacea' => 'module/interfaces/InterfaceA.php'
+			'SILVERSTRIPE\TEST\CLASSA'     => 'module/classes/ClassA.php',
+			'Silverstripe\Test\ClassA'     => 'module/classes/ClassA.php',
+			'silverstripe\test\classa'     => 'module/classes/ClassA.php',
+			'SILVERSTRIPE\TEST\INTERFACEA' => 'module/interfaces/InterfaceA.php',
+			'Silverstripe\Test\InterfaceA' => 'module/interfaces/InterfaceA.php',
+			'silverstripe\test\interfacea' => 'module/interfaces/InterfaceA.php'
 		);
 
 		foreach ($expect as $name => $path) {
@@ -38,14 +38,14 @@ class NamespacedClassManifestTest extends SapphireTest {
 
 	public function testGetClasses() {
 		$expect = array(
-			'sapphire\test\classa' => "{$this->base}/module/classes/ClassA.php",
-			'sapphire\test\classb' => "{$this->base}/module/classes/ClassB.php",
-			'sapphire\test\classc' => "{$this->base}/module/classes/ClassC.php",
-			'sapphire\test\classd' => "{$this->base}/module/classes/ClassD.php",
-			'sapphire\test\classe' => "{$this->base}/module/classes/ClassE.php",
-			'sapphire\test\classf' => "{$this->base}/module/classes/ClassF.php",
-			'sapphire\test\classg' => "{$this->base}/module/classes/ClassG.php",
-			'sapphire\test\classh' => "{$this->base}/module/classes/ClassH.php"
+			'silverstripe\test\classa' => "{$this->base}/module/classes/ClassA.php",
+			'silverstripe\test\classb' => "{$this->base}/module/classes/ClassB.php",
+			'silverstripe\test\classc' => "{$this->base}/module/classes/ClassC.php",
+			'silverstripe\test\classd' => "{$this->base}/module/classes/ClassD.php",
+			'silverstripe\test\classe' => "{$this->base}/module/classes/ClassE.php",
+			'silverstripe\test\classf' => "{$this->base}/module/classes/ClassF.php",
+			'silverstripe\test\classg' => "{$this->base}/module/classes/ClassG.php",
+			'silverstripe\test\classh' => "{$this->base}/module/classes/ClassH.php"
 		);
 		
 		$this->assertEquals($expect, $this->manifest->getClasses());
@@ -53,13 +53,13 @@ class NamespacedClassManifestTest extends SapphireTest {
 
 	public function testGetClassNames() {
 		$this->assertEquals(
-			array('sapphire\test\classa', 'sapphire\test\classb', 'sapphire\test\classc', 'sapphire\test\classd', 'sapphire\test\classe', 'sapphire\test\classf', 'sapphire\test\classg', 'sapphire\test\classh'),
+			array('silverstripe\test\classa', 'silverstripe\test\classb', 'silverstripe\test\classc', 'silverstripe\test\classd', 'silverstripe\test\classe', 'silverstripe\test\classf', 'silverstripe\test\classg', 'silverstripe\test\classh'),
 			$this->manifest->getClassNames());
 	}
 
 	public function testGetDescendants() {
 		$expect = array(
-			'sapphire\test\classa' => array('sapphire\test\ClassB', 'sapphire\test\ClassH'),
+			'silverstripe\test\classa' => array('silverstripe\test\ClassB', 'silverstripe\test\ClassH'),
 		);
 		
 		$this->assertEquals($expect, $this->manifest->getDescendants());
@@ -67,8 +67,8 @@ class NamespacedClassManifestTest extends SapphireTest {
 
 	public function testGetDescendantsOf() {
 		$expect = array(
-			'SAPPHIRE\TEST\CLASSA' => array('sapphire\test\ClassB', 'sapphire\test\ClassH'),
-			'sapphire\test\classa' => array('sapphire\test\ClassB', 'sapphire\test\ClassH'),
+			'SILVERSTRIPE\TEST\CLASSA' => array('silverstripe\test\ClassB', 'silverstripe\test\ClassH'),
+			'silverstripe\test\classa' => array('silverstripe\test\ClassB', 'silverstripe\test\ClassH'),
 		);
 
 		foreach ($expect as $class => $desc) {
@@ -78,28 +78,28 @@ class NamespacedClassManifestTest extends SapphireTest {
 
 	public function testGetInterfaces() {
 		$expect = array(
-			'sapphire\test\interfacea' => "{$this->base}/module/interfaces/InterfaceA.php",
+			'silverstripe\test\interfacea' => "{$this->base}/module/interfaces/InterfaceA.php",
 		);
 		$this->assertEquals($expect, $this->manifest->getInterfaces());
 	}
 
 	public function testGetImplementors() {
 		$expect = array(
-			'sapphire\test\interfacea' => array('sapphire\test\ClassE'),
-			'interfacea' => array('sapphire\test\ClassF'),
-			'sapphire\test\subtest\interfacea' => array('sapphire\test\ClassG')
+			'silverstripe\test\interfacea' => array('silverstripe\test\ClassE'),
+			'interfacea' => array('silverstripe\test\ClassF'),
+			'silverstripe\test\subtest\interfacea' => array('silverstripe\test\ClassG')
 		);
 		$this->assertEquals($expect, $this->manifest->getImplementors());
 	}
 
 	public function testGetImplementorsOf() {
 		$expect = array(
-			'SAPPHIRE\TEST\INTERFACEA' => array('sapphire\test\ClassE'),
-			'sapphire\test\interfacea' => array('sapphire\test\ClassE'),
-			'INTERFACEA' => array('sapphire\test\ClassF'),
-			'interfacea' => array('sapphire\test\ClassF'),
-			'SAPPHIRE\TEST\SUBTEST\INTERFACEA' => array('sapphire\test\ClassG'),
-			'sapphire\test\subtest\interfacea' => array('sapphire\test\ClassG'),
+			'SILVERSTRIPE\TEST\INTERFACEA' => array('silverstripe\test\ClassE'),
+			'silverstripe\test\interfacea' => array('silverstripe\test\ClassE'),
+			'INTERFACEA' => array('silverstripe\test\ClassF'),
+			'interfacea' => array('silverstripe\test\ClassF'),
+			'SILVERSTRIPE\TEST\SUBTEST\INTERFACEA' => array('silverstripe\test\ClassG'),
+			'silverstripe\test\subtest\interfacea' => array('silverstripe\test\ClassG'),
 		);
 
 		foreach ($expect as $interface => $impl) {

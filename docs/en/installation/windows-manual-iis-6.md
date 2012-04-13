@@ -138,10 +138,10 @@ At the moment, all URLs will have index.php in them. This is because IIS does no
 	# URLs with query strings 
 	# Don't catch successful file references 
 	RewriteCond %{REQUEST_FILENAME} !-f 
-	RewriteRule ^(.*)\?(.+)$ /sapphire/main.php?url=$1&$2
+	RewriteRule ^(.*)\?(.+)$ /framework/main.php?url=$1&$2
 	# URLs without query strings 
 	RewriteCond %{REQUEST_FILENAME} !-f 
-	RewriteRule ^(.*)$ /sapphire/main.php?url=$1
+	RewriteRule ^(.*)$ /framework/main.php?url=$1
 
 Friendly URLs should now be working when you browse to your site.
 

@@ -9,7 +9,7 @@ following connections:
  
 All data tables in SilverStripe are defined as subclasses of `[api:DataObject]`. Inheritance is supported in the data
 model: seperate tables will be linked together, the data spread across these tables. The mapping and saving/loading
-logic is handled by sapphire, you don't need to worry about writing SQL most of the time. 
+logic is handled by SilverStripe, you don't need to worry about writing SQL most of the time. 
 
 The advanced object-relational layer in SilverStripe is one of the main reasons for requiring PHP5. Most of its
 customizations are possible through [PHP5 Object
@@ -242,7 +242,7 @@ So far we have only filtered a data list by fields on the object that you're req
 be okay, but often, a data model is made up of a number of related objects.  For example, in SilverStripe each member 
 can be placed in a number of groups, and each group has a number of permissions.
 
-For this, Sapphire ORM supports **Relation Filters**.  Any ORM request can be filtered by fields on a related object by 
+For this, the SilverStripe ORM supports **Relation Filters**.  Any ORM request can be filtered by fields on a related object by 
 specifying the filter key as `<relation-name>.<field-in-related-object>`.  You can chain relations together as many 
 times as is necessary.
 
@@ -528,7 +528,7 @@ accessors available on both ends.
 
 ### Adding relations
 
-Inside sapphire it doesn't matter if you're editing a *has_many*- or a *many_many*-relationship. You need to get a
+Inside SilverStripe it doesn't matter if you're editing a *has_many*- or a *many_many*-relationship. You need to get a
 `[api:ComponentSet]`.
 
 	:::php
@@ -671,7 +671,7 @@ Example: Disallow creation of new players if the currently logged-in player is n
 	        exit();
 	    }
 	
-	    // CAUTION: You are required to call the parent-function, otherwise sapphire will not execute the request.
+	    // CAUTION: You are required to call the parent-function, otherwise SilverStripe will not execute the request.
 	    parent::onBeforeWrite();
 	  }
 	}

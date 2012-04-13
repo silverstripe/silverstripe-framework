@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 
@@ -16,7 +16,7 @@
  * 
  * See {@link browse()} output for generic usage instructions.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class TestRunner extends Controller {
@@ -63,12 +63,9 @@ class TestRunner extends Controller {
 	 * @see http://www.phpunit.de/manual/current/en/appendixes.configuration.html#appendixes.configuration.blacklist-whitelist
 	 */
 	static $coverage_filter_dirs = array(
-		'cms/thirdparty',
-		'cms/tests',
-		'cms/lang',
-		'sapphire/thirdparty',
-		'sapphire/tests',
-		'sapphire/lang',
+		'*/thirdparty',
+		'*/tests',
+		'*/lang',
 	);
 	
 	/**
@@ -198,7 +195,7 @@ class TestRunner extends Controller {
 	
 	/**
 	 * Run coverage tests for one or more "modules".
-	 * A module is generally a toplevel folder, e.g. "mysite" or "sapphire".
+	 * A module is generally a toplevel folder, e.g. "mysite" or "framework".
 	 */
 	function coverageModule($request) {
 		$this->module($request, true);
@@ -229,7 +226,7 @@ class TestRunner extends Controller {
 	
 	/**
 	 * Run tests for one or more "modules".
-	 * A module is generally a toplevel folder, e.g. "mysite" or "sapphire".
+	 * A module is generally a toplevel folder, e.g. "mysite" or "framework".
 	 */
 	function module($request, $coverage = false) {
 		self::use_test_manifest();
@@ -285,7 +282,7 @@ class TestRunner extends Controller {
 		restore_error_handler();
 
 
-		self::$default_reporter->writeHeader("Sapphire Test Runner");
+		self::$default_reporter->writeHeader("SilverStripe Test Runner");
 		if (count($classList) > 1) { 
 			self::$default_reporter->writeInfo("All Tests", "Running test cases: ",implode(", ", $classList));
 		} else

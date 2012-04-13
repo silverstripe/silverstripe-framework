@@ -3,9 +3,9 @@
 /**
  * File similar to main.php designed for command-line scripts
  * 
- * This file lets you execute Sapphire requests from the command-line.  The URL is passed as the first argument to the scripts.
+ * This file lets you execute SilverStripe requests from the command-line.  The URL is passed as the first argument to the scripts.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 
@@ -57,7 +57,7 @@ if(isset($_SERVER['argv'][1])) {
 }
 
 /**
- * Include Sapphire's core code
+ * Include SilverStripe's core code
  */
 require_once("core/Core.php");
 

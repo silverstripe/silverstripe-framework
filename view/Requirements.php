@@ -4,7 +4,7 @@
  * Requirements tracker, for javascript and css.
  * @todo Document the requirements tracker, and discuss it with the others.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage view
  */
 class Requirements {
@@ -134,7 +134,7 @@ class Requirements {
 	 * Register the given stylesheet file as required.
 	 * See {@link Requirements_Backend::css()}
 	 * 
-	 * @param $file String Filenames should be relative to the base, eg, 'sapphire/javascript/tree/tree.css'
+	 * @param $file String Filenames should be relative to the base, eg, 'framework/javascript/tree/tree.css'
 	 * @param $media String Comma-separated list of media-types (e.g. "screen,projector") 
 	 * @see http://www.w3.org/TR/REC-CSS2/media.html
 	 */
@@ -313,7 +313,7 @@ class Requirements {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage view
  */
 class Requirements_Backend {
@@ -479,7 +479,7 @@ class Requirements_Backend {
 	}
 	/**
 	 * Register the given javascript file as required.
-	 * Filenames should be relative to the base, eg, 'sapphire/javascript/loader.js'
+	 * Filenames should be relative to the base, eg, 'framework/javascript/loader.js'
 	 */
 	
 	public function javascript($file) {
@@ -552,7 +552,7 @@ class Requirements_Backend {
 	/**
 	 * Register the given stylesheet file as required.
 	 * 
-	 * @param $file String Filenames should be relative to the base, eg, 'sapphire/javascript/tree/tree.css'
+	 * @param $file String Filenames should be relative to the base, eg, 'framework/javascript/tree/tree.css'
 	 * @param $media String Comma-separated list of media-types (e.g. "screen,projector") 
 	 * @see http://www.w3.org/TR/REC-CSS2/media.html
 	 */
@@ -745,10 +745,10 @@ class Requirements_Backend {
 	}
 	
 	/**
-	 * Add i18n files from the given javascript directory.  Sapphire expects that the given directory
+	 * Add i18n files from the given javascript directory.  SilverStripe expects that the given directory
 	 * will contain a number of java script files named by language: en_US.js, de_DE.js, etc.
 	 * 
-	 * @param String The javascript lang directory, relative to the site root, e.g., 'sapphire/javascript/lang'
+	 * @param String The javascript lang directory, relative to the site root, e.g., 'framework/javascript/lang'
 	 * @param Boolean Return all relative file paths rather than including them in requirements
 	 * @param Boolean Only include language files, not the base libraries
 	 */
@@ -758,7 +758,7 @@ class Requirements_Backend {
 			// Include i18n.js even if no languages are found.  The fact that
 			// add_i18n_javascript() was called indicates that the methods in
 			// here are needed.
-			if(!$langOnly) $files[] = SAPPHIRE_DIR . '/javascript/i18n.js';
+			if(!$langOnly) $files[] = FRAMEWORK_DIR . '/javascript/i18n.js';
 
 			if(substr($langDir,-1) != '/') $langDir .= '/';
 			
@@ -767,7 +767,7 @@ class Requirements_Backend {
 		
 		// Stub i18n implementation for when i18n is disabled.
 		} else {
-			if(!$langOnly) $files[] = SAPPHIRE_DIR . '/javascript/i18nx.js';
+			if(!$langOnly) $files[] = FRAMEWORK_DIR . '/javascript/i18nx.js';
 		}
 
 		if($return) {

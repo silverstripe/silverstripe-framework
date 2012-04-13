@@ -6,7 +6,7 @@
  * 
  * @see http://www.phpunit.de/manual/3.5/en/extending-phpunit.html#extending-phpunit.PHPUnit_Framework_TestListener
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class SS_TestListener implements PHPUnit_Framework_TestListener {

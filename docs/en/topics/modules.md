@@ -1,12 +1,12 @@
 # Modules
 
-Sapphire is designed to be a modular application system - even the CMS is simply a module that plugs into it.  
+SilverStripe is designed to be a modular application system - even the CMS is simply a module that plugs into it.  
 
 A module is, quite simply, a collection of classes, templates, and other resources that is loaded into a top-level
-directory.  In a default SilverStripe download, even resources in 'sapphire' and 'mysite' are treated in exactly the
+directory.  In a default SilverStripe download, even resources in 'framework' and 'mysite' are treated in exactly the
 same as every other module.
 
-Sapphire's `[api:ManifestBuilder]` will find any class, css or template files anywhere under the site's main
+SilverStripe's `[api:ManifestBuilder]` will find any class, css or template files anywhere under the site's main
 directory.  The _config.php file in the module directory can be used to define director rules, calls to
 Object::useCustomClass(), and the like.  So, by unpacking a module into site's main directory and viewing the site with
 ?flush=1 on the end of the URL, all the module's new behaviour will be incorporated to your site:
@@ -40,7 +40,7 @@ instead make it easier for developers to build other applications.
 ## Installation
 
 Modules should exist in the root folder of your SilverStripe. The root folder being the one that contains the
-*sapphire*, *cms* and other folders.
+*framework*, *cms* and other folders.
 
 The following article explains the generic installation of a module. Individual modules have their own requirements such
 as creating folders or configuring API keys. For information about installing or configuring a specific module see the

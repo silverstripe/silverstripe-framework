@@ -237,6 +237,9 @@ class TableListField extends FormField {
 	 */
 	function __construct($name, $sourceClass = null, $fieldList = null, $sourceFilter = null, 
 		$sourceSort = null, $sourceJoin = null) {
+		if(FRAMEWORK_DIR != 'sapphire') {
+			user_error('TableListField requires FRAMEWORK_DIR to be sapphire.', E_USER_WARNING);
+		}
 
 		if($sourceClass) {
 			// You can optionally pass a list
@@ -279,12 +282,12 @@ class TableListField extends FormField {
 	}
 	
 	function FieldHolder($properties = array()) {
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
-		Requirements::css(SAPPHIRE_DIR . '/css/TableListField.css');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/prototype/prototype.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/behaviour/behaviour.js');
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/TableListField.js');
+		Requirements::css(FRAMEWORK_DIR . '/css/TableListField.css');
 		
 		if($this->clickAction) {
 			$id = $this->id();
@@ -1055,7 +1058,7 @@ JS
 			Requirements::css(CMS_DIR . '/css/typography.css');
 			Requirements::css(CMS_DIR . '/css/cms_right.css');
 		}
-		Requirements::css(SAPPHIRE_DIR . '/css/TableListField_print.css');
+		Requirements::css('sapphire/css/TableListField_print.css');
 		
 		$this->cachedSourceItems = null;
 		$oldShowPagination = $this->showPagination;

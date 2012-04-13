@@ -8,7 +8,7 @@
  * meaning you can set parameters specific to the "owner instance"
  * in new Extension instances.
  *
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 abstract class Extension {

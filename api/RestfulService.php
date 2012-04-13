@@ -4,7 +4,7 @@
  * Through this you could connect and aggregate data of various web services.
  * For more info visit wiki documentation - http://doc.silverstripe.org/doku.php?id=restfulservice  
  * 
- * @package sapphire
+ * @package framework
  * @subpackage integration
  */
 class RestfulService extends ViewableData {
@@ -405,7 +405,7 @@ class RestfulService extends ViewableData {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage integration
  */
 class RestfulService_Response extends SS_HTTPResponse {

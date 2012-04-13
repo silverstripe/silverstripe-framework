@@ -24,7 +24,7 @@
  *   - max_depth (int): The maxmium depth to traverse down the folder tree,
  *     default to unlimited.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage filesystem
  */
 class SS_FileFinder {

@@ -86,7 +86,7 @@ If a variable returns a string, that string will be inserted into the template. 
 the system will attempt to render the object through its forTemplate() method. If the `forTemplate()` method has not been
 defined, the system will return an error.
 
-SilverStripe provides lots of properties and methods. For more details on built-in page controls and variables, see http://doc.silverstripe.org/sapphire/en/reference/built-in-page-controls
+SilverStripe provides lots of properties and methods. For more details on built-in page controls and variables, see http://doc.silverstripe.org/framework/en/reference/built-in-page-controls
 
 ### Escaping
 

@@ -2,7 +2,7 @@
 /**
  * Handles finding templates from a stack of template manifest objects.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage manifest
  */
 class SS_TemplateLoader {

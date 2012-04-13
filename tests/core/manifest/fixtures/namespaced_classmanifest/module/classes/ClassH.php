@@ -3,6 +3,6 @@
  * @ignore
  */
 
-namespace sapphire\test;
+namespace silverstripe\test;
 
-class ClassH extends \sapphire\test\ClassA {  }
+class ClassH extends \silverstripe\test\ClassA {  }

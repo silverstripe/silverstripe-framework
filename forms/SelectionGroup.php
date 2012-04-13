@@ -25,7 +25,7 @@ class SelectionGroup extends CompositeField {
 		
 		parent::__construct($items);
 		
-		Requirements::css(SAPPHIRE_DIR . '/css/SelectionGroup.css');
+		Requirements::css(FRAMEWORK_DIR . '/css/SelectionGroup.css');
 	}
 
 	function FieldSet() {
@@ -68,8 +68,8 @@ class SelectionGroup extends CompositeField {
 	
 	function FieldHolder($properties = array()) {
 		Requirements::javascript(THIRDPARTY_DIR .'/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR   . '/javascript/SelectionGroup.js');
-		Requirements::css(SAPPHIRE_DIR . '/css/SelectionGroup.css');
+		Requirements::javascript(FRAMEWORK_DIR   . '/javascript/SelectionGroup.js');
+		Requirements::css(FRAMEWORK_DIR . '/css/SelectionGroup.css');
 
 		$obj = $properties ? $this->customise($properties) : $this;
 		

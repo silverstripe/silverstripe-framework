@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class HtmlEditorFieldTest extends FunctionalTest {
@@ -94,7 +94,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class HtmlEditorFieldTest_DummyMediaFormFieldExtension extends Extension implements TestOnly {

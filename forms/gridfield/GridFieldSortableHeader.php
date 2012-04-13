@@ -4,7 +4,7 @@
  * 
  * @see GridField
  * 
- * @package sapphire
+ * @package framework
  * @subpackage fields-relational
  */
 class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {

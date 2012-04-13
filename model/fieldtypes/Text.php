@@ -13,7 +13,7 @@
  * @see HTMLVarchar
  * @see Varchar
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Text extends StringField {

@@ -3,6 +3,6 @@
  * @ignore
  */
 
-namespace sapphire\test;
+namespace silverstripe\test;
 
 class ClassG implements subtest\InterfaceA {  }

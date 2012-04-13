@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  * 
  * @todo test Director::alternateBaseFolder()
@@ -251,7 +251,7 @@ class DirectorTest extends SapphireTest {
 			'SERVER_PROTOCOL'      => 'HTTP/1.1',
 			'REQUEST_METHOD'       => 'GET',
 			'REQUEST_URI'          => '/',
-			'SCRIPT_NAME'          => '/sapphire/main.php',
+			'SCRIPT_NAME'          => FRAMEWORK_DIR . '/main.php',
 			'CONTENT_TYPE'         => 'text/xml',
 			'CONTENT_LENGTH'       => 10
 		);

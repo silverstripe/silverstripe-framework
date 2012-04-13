@@ -144,7 +144,7 @@ restriction is needed to avoid performance-hits by caching and sorting potential
 
 ### Casting
 
-Column-values can be casted, based on the casting-types available through DBObject (sapphire/core/model/fieldtypes).
+Column-values can be casted, based on the casting-types available through DBObject (framework/core/model/fieldtypes).
 
 	:::php
 	$myTableListField->setFieldCasting(array(

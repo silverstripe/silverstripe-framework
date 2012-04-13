@@ -1,5 +1,5 @@
 /*
-typography.css has been removed from sapphire, why shall we still has this? a dynamic typographp.css should be used by
+typography.css has been removed from framework, why shall we still has this? a dynamic typographp.css should be used by
 server side call, like Requirements::css(); 
 @import url("typography.css");
 */
@@ -40,7 +40,7 @@ html > body div.TreeDropdownField div.tree_holder { top: 20px; left: 0px; z-inde
 /** HACK IE6, see http://www.hedgerwow.com/360/bugs/css-select-free.html */
 .SelectionGroup div.TreeDropdownField div.tree_holder iframe { display: none; /* IE5*/ display/**/: block; /* IE5*/ position: absolute; top: 0; left: 0; z-index: -1; filter: mask(); width: 180px; /*must have for any big value*/ height: 200px; border: 0; }
 
-div.TreeDropdownField a.editLink { border-width: 1px 1px 1px 0; background: url(../../sapphire/images/TreeDropdownField_button.gif) left top no-repeat; width: 19px; height: 21px; margin: 0; padding: 0; float: left; clear: right; z-index: 0; overflow: hidden; }
+div.TreeDropdownField a.editLink { border-width: 1px 1px 1px 0; background: url(../images/TreeDropdownField_button.gif) left top no-repeat; width: 19px; height: 21px; margin: 0; padding: 0; float: left; clear: right; z-index: 0; overflow: hidden; }
 
 /* added block/width so tree values don't disappear in ie7 */
 .SelectionGroup div.TreeDropdownField ul.tree li { display: block; width: 100%; }

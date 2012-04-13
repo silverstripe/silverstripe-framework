@@ -460,7 +460,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
  * @see http://doc.silverstripe.org/themes
  * @see http://doc.silverstripe.org/themes:developing
  * 
- * @package sapphire
+ * @package framework
  * @subpackage view
  */
 class SSViewer {
@@ -889,7 +889,7 @@ class SSViewer {
 
 /**
  * Special SSViewer that will process a template passed as a string, rather than a filename.
- * @package sapphire
+ * @package framework
  * @subpackage view
  */
 class SSViewer_FromString extends SSViewer {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This class is the base class of any Sapphire object that can be used to handle HTTP requests.
+ * This class is the base class of any SilverStripe object that can be used to handle HTTP requests.
  * 
  * Any RequestHandler object can be made responsible for handling its own segment of the URL namespace.
  * The {@link Director} begins the URL parsing process; it will parse the beginning of the URL to identify which
@@ -10,7 +10,7 @@
  *
  * You can use ?debug_request=1 to view information about the different components and rule matches for a specific URL.
  *
- * In Sapphire, URL parsing is distributed throughout the object graph.  For example, suppose that we have a search form
+ * In SilverStripe, URL parsing is distributed throughout the object graph.  For example, suppose that we have a search form
  * that contains a {@link TreeMultiSelectField} named "Groups".  We want to use ajax to load segments of this tree as they are needed
  * rather than downloading the tree right at the beginning.  We could use this URL to get the tree segment that appears underneath
  * Group #36: "admin/crm/SearchForm/field/Groups/treesegment/36"
@@ -25,7 +25,7 @@
  *
  * {@link RequestHandler::handleRequest()} is where this behaviour is implemented.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage control
  */
 class RequestHandler extends ViewableData {

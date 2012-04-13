@@ -74,7 +74,7 @@
  * @see Cookie
  * @todo This class is currently really basic and could do with a more well-thought-out implementation.
  *
- * @package sapphire
+ * @package framework
  * @subpackage control
  */
 

@@ -7,7 +7,7 @@
  * See {@link ScheduledTask} for details.
  * 
  * @todo Improve documentation
- * @package sapphire
+ * @package framework
  * @subpackage cron
  */
 class DailyTask extends ScheduledTask {

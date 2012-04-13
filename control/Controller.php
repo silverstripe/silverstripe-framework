@@ -1,12 +1,12 @@
 <?php
 /**
  * Base controller class.
- * Controllers are the cornerstone of all site functionality in Sapphire.  The {@link Director}
+ * Controllers are the cornerstone of all site functionality in SilverStripe.  The {@link Director}
  * selects a controller to pass control to, and then calls {@link run()}.  This method will execute
  * the appropriate action - either by calling the action method, or displaying the action's template.
  *
  * See {@link getTemplate()} for information on how the template is chosen.
- * @package sapphire
+ * @package framework
  * @subpackage control
  */
 class Controller extends RequestHandler implements TemplateGlobalProvider {

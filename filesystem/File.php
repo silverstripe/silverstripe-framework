@@ -3,7 +3,7 @@
  * This class handles the representation of a file on the filesystem within the framework.
  * Most of the methods also handle the {@link Folder} subclass.
  * 
- * Note: The files are stored in the assets/ directory, but sapphire
+ * Note: The files are stored in the assets/ directory, but SilverStripe
  * looks at the db object to gather information about a file such as URL
  * It then uses this for all processing functions (like image manipulation).
  * 
@@ -55,11 +55,11 @@
  * 
  * Typically both files and folders should be created first on the filesystem,
  * and then reflected in as database records. Folders can be created recursively
- * from sapphire both in the database and filesystem through {@link Folder::findOrMake()}.
+ * from SilverStripe both in the database and filesystem through {@link Folder::findOrMake()}.
  * Ensure that you always set a "Filename" property when writing to the database,
  * leaving it out can lead to unexpected results.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage filesystem
  */
 class File extends DataObject {
@@ -415,21 +415,21 @@ class File extends DataObject {
 	/**
 	 * Return the relative URL of an icon for the file type,
 	 * based on the {@link appCategory()} value.
-	 * Images are searched for in "sapphire/images/app_icons/".
+	 * Images are searched for in "framework/images/app_icons/".
 	 * 
 	 * @return String 
 	 */
 	function Icon() {
 		$ext = $this->Extension;
-		if(!Director::fileExists(SAPPHIRE_DIR . "/images/app_icons/{$ext}_32.gif")) {
+		if(!Director::fileExists(FRAMEWORK_DIR . "/images/app_icons/{$ext}_32.gif")) {
 			$ext = $this->appCategory();
 		}
 
-		if(!Director::fileExists(SAPPHIRE_DIR . "/images/app_icons/{$ext}_32.gif")) {
+		if(!Director::fileExists(FRAMEWORK_DIR . "/images/app_icons/{$ext}_32.gif")) {
 			$ext = "generic";
 		}
 
-		return SAPPHIRE_DIR . "/images/app_icons/{$ext}_32.gif";
+		return FRAMEWORK_DIR . "/images/app_icons/{$ext}_32.gif";
 	}
 	
 	/**

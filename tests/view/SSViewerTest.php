@@ -41,8 +41,8 @@ class SSViewerTest extends SapphireTest {
 	
 	function testRequirements() {
 		$requirements = $this->getMock("Requirements_Backend", array("javascript", "css"));
-		$jsFile = 'sapphire/tests/forms/a.js';
-		$cssFile = 'sapphire/tests/forms/a.js';
+		$jsFile = FRAMEWORK_DIR . '/tests/forms/a.js';
+		$cssFile = FRAMEWORK_DIR . '/tests/forms/a.js';
 		
 		$requirements->expects($this->once())->method('javascript')->with($jsFile);
 		$requirements->expects($this->once())->method('css')->with($cssFile);
@@ -938,10 +938,10 @@ after')
 		
 		$result = $view->process($data);
 		$expected = '<!doctype html>
-<html><!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsFullSource.ss -->
+<html><!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsFullSource.ss -->
 	<head></head>
 	<body></body>
-<!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsFullSource.ss --></html>
+<!-- end template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsFullSource.ss --></html>
 ';
 		$this->assertEquals($result, $expected);
 		
@@ -949,14 +949,14 @@ after')
 		$data = new ArrayData(array());
 		
 		$result = $view->process($data);
-		$expected = '<!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsPartialSource.ss --><div class=\'typography\'></div><!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsPartialSource.ss -->';
+		$expected = '<!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsPartialSource.ss --><div class=\'typography\'></div><!-- end template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsPartialSource.ss -->';
 		$this->assertEquals($result, $expected);
 		
 		$view = new SSViewer(array('SSViewerTestCommentsWithInclude'));
 		$data = new ArrayData(array());
 		
 		$result = $view->process($data);
-		$expected = '<!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsWithInclude.ss --><div class=\'typography\'><!-- include \'SSViewerTestCommentsInclude\' --><!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsInclude.ss -->Included<!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsInclude.ss --><!-- end include \'SSViewerTestCommentsInclude\' --></div><!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsWithInclude.ss -->';
+		$expected = '<!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsWithInclude.ss --><div class=\'typography\'><!-- include \'SSViewerTestCommentsInclude\' --><!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsInclude.ss -->Included<!-- end template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsInclude.ss --><!-- end include \'SSViewerTestCommentsInclude\' --></div><!-- end template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsWithInclude.ss -->';
 		$this->assertEquals($result, $expected);
 		
 		SSViewer::set_source_file_comments(false);

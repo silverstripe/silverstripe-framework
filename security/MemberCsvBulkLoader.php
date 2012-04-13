@@ -3,7 +3,7 @@
  * Imports member records, and checks/updates duplicates based on their
  * 'Email' property.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class MemberCsvBulkLoader extends CsvBulkLoader {

@@ -11,7 +11,7 @@ unset($options);
 /**
  * BBCode parser object.
  * Use on a text field in a template with $Content.Parse(BBCodeParser).
- * @package sapphire
+ * @package framework
  * @subpackage misc
  */
 class BBCodeParser extends TextParser {
@@ -29,13 +29,16 @@ class BBCodeParser extends TextParser {
 	protected static $allowSimilies = false;
 	 
 	/**
-	 * Set the location of the smiles folder. By default use the ones in sapphire
+	 * Set the location of the smiles folder. By default use the ones in framework
 	 * but this can be overridden by setting  BBCodeParser::set_icon_folder('themes/yourtheme/images/');
 	 * @var string
 	 */
-	protected static $smilies_location = 'sapphire/images/smilies';
+	protected static $smilies_location = null;
 	
 	static function smilies_location() {
+		if(!BBCodeParser::$smilies_location) {
+			return FRAMEWORK_DIR . '/images/smilies';
+		}
 		return BBCodeParser::$smilies_location;
 	}
 	static function set_icon_folder($path) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * A base class for all sapphire objects to inherit from.
+ * A base class for all SilverStripe objects to inherit from.
  *
  * This class provides a number of pattern implementations, as well as methods and fixes to add extra psuedo-static
  * and method functionality to PHP.
@@ -11,7 +11,7 @@
  * @todo Create instance-specific removeExtension() which removes an extension from $extension_instances,
  * but not from static $extensions, and clears everything added through defineMethods(), mainly $extra_methods.
  *
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 abstract class Object {

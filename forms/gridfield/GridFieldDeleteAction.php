@@ -10,7 +10,7 @@
  * $action = new GridFieldDeleteAction(true); // removes the relation to object, instead of deleting
  * </code>
  *
- * @package sapphire
+ * @package framework
  * @subpackage gridfield
  */
 class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_ActionProvider {

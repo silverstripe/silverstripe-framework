@@ -67,10 +67,10 @@ class HasManyComplexTableField extends ComplexTableField {
 	function FieldHolder($properties = array()) {
 		$ret = parent::FieldHolder($properties);
 		
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/HasManyFileField.js");
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/RelationComplexTableField.js');
-		Requirements::css(SAPPHIRE_DIR . '/css/HasManyFileField.css');
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(FRAMEWORK_DIR . "/javascript/HasManyFileField.js");
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/RelationComplexTableField.js');
+		Requirements::css(FRAMEWORK_DIR . '/css/HasManyFileField.css');
 		
 		return $ret;
 	}

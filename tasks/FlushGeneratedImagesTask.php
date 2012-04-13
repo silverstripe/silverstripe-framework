@@ -3,7 +3,7 @@
  * Remove all cached/generated images that have been created as the result of a manipulation method being called on a
  * {@link Image} object
  *
- * @package sapphire
+ * @package framework
  * @subpackage filesystem
  */
 class FlushGeneratedImagesTask extends BuildTask {

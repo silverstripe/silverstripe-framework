@@ -5,7 +5,7 @@
  * @todo Test filter and limit through GET params
  * @todo Test DELETE verb
  *
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class SoapModelAccessTest extends SapphireTest {

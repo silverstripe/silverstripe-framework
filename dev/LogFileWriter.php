@@ -11,7 +11,7 @@ require_once 'Zend/Log/Writer/Abstract.php';
  * @uses error_log() built-in PHP function.
  * @see SS_Log for more information on using writers.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 class SS_LogFileWriter extends Zend_Log_Writer_Abstract {

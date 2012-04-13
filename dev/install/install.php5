@@ -11,7 +11,7 @@
 
 /**
  * SilverStripe CMS Installer
- * This installer doesn't use any of the fancy Sapphire stuff in case it's unsupported.
+ * This installer doesn't use any of the fancy SilverStripe stuff in case it's unsupported.
  */
 
 // speed up mysql_connect timeout if the server can't be found
@@ -41,11 +41,11 @@ if($envFileExists) {
 	}
 }
 
-include_once('sapphire/core/Object.php');
-include_once('sapphire/view/TemplateGlobalProvider.php');
-include_once('sapphire/i18n/i18n.php');
-include_once('sapphire/dev/install/DatabaseConfigurationHelper.php');
-include_once('sapphire/dev/install/DatabaseAdapterRegistry.php');
+include_once(FRAMEWORK_NAME . '/core/Object.php');
+include_once(FRAMEWORK_NAME . '/view/TemplateGlobalProvider.php');
+include_once(FRAMEWORK_NAME . '/i18n/i18n.php');
+include_once(FRAMEWORK_NAME . '/dev/install/DatabaseConfigurationHelper.php');
+include_once(FRAMEWORK_NAME . '/dev/install/DatabaseAdapterRegistry.php');
 
 // Set default locale, but try and sniff from the user agent
 $locales = i18n::$common_locales;
@@ -135,14 +135,8 @@ if(file_exists('mysite/_config.php')) {
 	}
 }
 
-if(file_exists('sapphire/silverstripe_version')) {
-	$sapphireVersionFile = file_get_contents('sapphire/silverstripe_version');
-		if(strstr($sapphireVersionFile, "/sapphire/trunk")) {
-			$silverstripe_version = "trunk";
-		} else {
-			preg_match("/sapphire\/(?:(?:branches)|(?:tags))(?:\/rc)?\/([A-Za-z0-9._-]+)\/silverstripe_version/", $sapphireVersionFile, $matches);
-			$silverstripe_version = $matches[1];
-		}
+if(file_exists(FRAMEWORK_NAME . '/silverstripe_version')) {
+	$silverstripe_version = file_get_contents(FRAMEWORK_NAME . '/silverstripe_version');
 } else {
 	$silverstripe_version = "unknown";
 }
@@ -192,7 +186,7 @@ if($installFromCli && ($req->hasErrors() || $dbReq->hasErrors())) {
 if((isset($_REQUEST['go']) || $installFromCli) && !$req->hasErrors() && !$dbReq->hasErrors() && $adminConfig['username'] && $adminConfig['password']) {
 	// Confirm before reinstalling
 	if(!$installFromCli && $alreadyInstalled) {
-		include('sapphire/dev/install/config-form.html');
+		include(FRAMEWORK_NAME . '/dev/install/config-form.html');
 
 	} else {
 		$inst = new Installer();
@@ -205,7 +199,7 @@ if((isset($_REQUEST['go']) || $installFromCli) && !$req->hasErrors() && !$dbReq-
 
 // Show the config form
 } else {
-	include('sapphire/dev/install/config-form.html');
+	include(FRAMEWORK_NAME . '/dev/install/config-form.html');
 }
 
 /**
@@ -328,14 +322,14 @@ class InstallRequirements {
 		$this->requirePHPVersion('5.3.0', '5.2.0', array("PHP Configuration", "PHP5 installed", null, "PHP version " . phpversion()));
 
 		// Check that we can identify the root folder successfully
-		$this->requireFile('sapphire/dev/install/config-form.html', array("File permissions",
+		$this->requireFile(FRAMEWORK_NAME . '/dev/install/config-form.html', array("File permissions",
 			"Does the webserver know where files are stored?",
 			"The webserver isn't letting me identify where files are stored.",
 			$this->getBaseDir()
 		));
 
 		$this->requireModule('mysite', array("File permissions", "mysite/ directory exists?"));
-		$this->requireModule('sapphire', array("File permissions", "sapphire/ directory exists?"));
+		$this->requireModule(FRAMEWORK_NAME, array("File permissions", FRAMEWORK_NAME . "/ directory exists?"));
 
 		if($isApache) {
 			$this->requireWriteable('.htaccess', array("File permissions", "Is the .htaccess file writeable?", null));
@@ -944,8 +938,8 @@ class Installer extends InstallRequirements {
 <html>
 	<head>
 		<title>Installing SilverStripe...</title>
-		<link rel="stylesheet" type="text/css" href="sapphire/dev/install/css/install.css" />
-		<script src="sapphire/thirdparty/jquery/jquery.js"></script>
+		<link rel="stylesheet" type="text/css" href="<?php echo FRAMEWORK_NAME; ?>/dev/install/css/install.css" />
+		<script src="<?php echo FRAMEWORK_NAME; ?>/thirdparty/jquery/jquery.js"></script>
 	</head>
 	<body>
 		<div class="install-header">
@@ -978,14 +972,8 @@ class Installer extends InstallRequirements {
 		flush();
 
 		if(isset($config['stats'])) {
-			if(file_exists('sapphire/silverstripe_version')) {
-				$sapphireVersionFile = file_get_contents('sapphire/silverstripe_version');
-				if(strstr($sapphireVersionFile, "/sapphire/trunk")) {
-					$silverstripe_version = "trunk";
-				} else {
-					preg_match("/sapphire\/(?:(?:branches)|(?:tags))(?:\/rc)?\/([A-Za-z0-9._-]+)\/silverstripe_version/", $sapphireVersionFile, $matches);
-					$silverstripe_version = $matches[1];
-				}
+			if(file_exists(FRAMEWORK_NAME . '/silverstripe_version')) {
+				$silverstripe_version = file_get_contents(FRAMEWORK_NAME . '/silverstripe_version');
 			} else {
 				$silverstripe_version = "unknown";
 			}
@@ -1117,9 +1105,9 @@ PHP
 			}
 		}
 
-		// Load the sapphire runtime
-		$_SERVER['SCRIPT_FILENAME'] = dirname(realpath($_SERVER['SCRIPT_FILENAME'])) . '/sapphire/main.php';
-		chdir('sapphire');
+		// Load the SilverStripe runtime
+		$_SERVER['SCRIPT_FILENAME'] = dirname(realpath($_SERVER['SCRIPT_FILENAME'])) . '/' . FRAMEWORK_NAME . '/main.php';
+		chdir(FRAMEWORK_NAME);
 
 		// Rebuild the manifest
 		$_GET['flush'] = true;
@@ -1207,7 +1195,7 @@ HTML;
 
 		if($base != '.') $baseClause = "RewriteBase '$base'\n";
 		else $baseClause = "";
-
+		$modulePath = FRAMEWORK_NAME;
 		$rewrite = <<<TEXT
 <Files *.ss>
 	Order deny,allow
@@ -1233,7 +1221,7 @@ ErrorDocument 500 /assets/error-500.html
 	$baseClause
 	RewriteCond %{REQUEST_URI} ^(.*)$
 	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule .* sapphire/main.php?url=%1&%{QUERY_STRING} [L]
+	RewriteRule .* $modulePath/main.php?url=%1&%{QUERY_STRING} [L]
 </IfModule>
 TEXT;
 
@@ -1258,6 +1246,7 @@ TEXT;
 	 * so that rewriting capability can be use.
 	 */
 	function createWebConfig() {
+		$modulePath = FRAMEWORK_NAME;
 		$content = <<<TEXT
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
@@ -1276,7 +1265,7 @@ TEXT;
 					<conditions>
 						<add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
 					</conditions>
-					<action type="Rewrite" url="sapphire/main.php?url={R:1}" appendQueryString="true" />
+					<action type="Rewrite" url="$modulePath/main.php?url={R:1}" appendQueryString="true" />
 				</rule>
 			</rules>
 		</rewrite>

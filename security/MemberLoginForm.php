@@ -1,7 +1,7 @@
 <?php
 /**
  * Log-in form for the "member" authentication method
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class MemberLoginForm extends LoginForm {

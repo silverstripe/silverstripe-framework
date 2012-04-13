@@ -6,7 +6,7 @@
  * {@link MemberLoginForm} or {@link OpenIDLoginForm}.
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 abstract class LoginForm extends Form {

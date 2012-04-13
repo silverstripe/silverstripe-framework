@@ -3,7 +3,7 @@
  * Mailer objects are responsible for actually sending emails.
  * The default Mailer class will use PHP's mail() function.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage email
  */
 class Mailer extends Object {
@@ -447,7 +447,7 @@ function getMimeType($filename) {
  */
 function loadMimeTypes() {
 	$mimetypePathCustom = '/etc/mime.types';
-	$mimetypePathGeneric = Director::baseFolder() . '/sapphire/email/mime.types';
+	$mimetypePathGeneric = FRAMEWORK_PATH . '/email/mime.types';
 	$mimeTypes = file_exists($mimetypePathGeneric) ?  file($mimetypePathGeneric) : file($mimetypePathCustom);
 	foreach($mimeTypes as $typeSpec) {
 		if(($typeSpec = trim($typeSpec)) && substr($typeSpec,0,1) != "#") {

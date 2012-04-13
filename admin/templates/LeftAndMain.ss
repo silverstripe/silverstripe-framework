@@ -7,7 +7,7 @@
 <title>$Title</title>
 </head>
 
-<body class="loading cms" lang="$Locale.RFC1766">
+<body class="loading cms" lang="$Locale.RFC1766" data-frameworkpath="$FrameworkDir">
 	
 	<% include CMSLoadingScreen %>
 	

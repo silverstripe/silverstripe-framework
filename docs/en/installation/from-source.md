@@ -24,7 +24,7 @@ See [frequently asked questions](/installation/from-source#frequently-asked-ques
 SilverStripe core is currently hosted on [github.com/silverstripe](http://github.com/silverstripe). The core consists of four parts:
 
  * The `installer` project ([github.com/silverstripe/silverstripe-installer](http://github.com/silverstripe/silverstripe-installer))
- * The `sapphire` module ([github.com/silverstripe/sapphire](http://github.com/silverstripe/sapphire))
+ * The `framework` module ([github.com/silverstripe/sapphire](http://github.com/silverstripe/sapphire))
  * The `cms` module ([github.com/silverstripe/silverstripe-cms](http://github.com/silverstripe/silverstripe-cms))
  * A sample theme called `simple` ([github.com/silverstripe-themes/silverstripe-simple](http://github.com/silverstripe-themes/silverstripe-simple))
 
@@ -72,7 +72,7 @@ Run the following command to download all core dependencies via [Piston](http://
 	cd my-silverstripe-project/
 	tools/new-project
 
-This will add `sapphire`, `cms` and the `simple` theme to your project.
+This will add `framework`, `cms` and the `simple` theme to your project.
 
 As a fallback solution, you can simply download all necessary files without any dependency management through piston.
 This is handy if you have an existing project in version control, and want a one-off snapshot
@@ -144,7 +144,7 @@ Please replace `<username>` below with your github username.
 
 	git clone git@github.com:<username>/silverstripe-installer.git my-silverstripe-project
 	cd my-silverstripe-project
-	git clone git@github.com:<username>/sapphire.git sapphire
+	git clone git@github.com:<username>/sapphire.git framework
 	git clone git@github.com:<username>/silverstripe-cms.git cms
 	git clone git@github.com:<username>/silverstripe-simple.git themes/simple
 
@@ -152,7 +152,7 @@ Now you need to add the original repository as `upstream`, so you can keep your 
 
 	cd my-silverstripe-project
 	(git remote add upstream git://github.com/silverstripe/silverstripe-installer.git && git fetch upstream)
-	(cd sapphire && git remote add upstream git://github.com/silverstripe/sapphire.git && git fetch upstream)
+	(cd framework && git remote add upstream git://github.com/silverstripe/sapphire.git && git fetch upstream)
 	(cd cms && git remote add upstream git://github.com/silverstripe/silverstripe-cms.git && git fetch upstream)
 	(cd themes/simple && git remote add upstream git://github.com/silverstripe-themes/silverstripe-simple.git)
 
@@ -172,7 +172,7 @@ You can optionally select a ["release branch"](https://github.com/silverstripe/s
 
 	cd my-silverstripe-project
 	git checkout -b 2.4 origin/2.4
-	(cd sapphire && git checkout -b 2.4 origin/2.4)
+	(cd framework && git checkout -b 2.4 origin/2.4)
 	(cd cms && git checkout -b 2.4 origin/2.4)
 	(cd themes/simple && git checkout -b 2.4 origin/2.4)
 	# repeat for all modules in your project...
@@ -181,7 +181,7 @@ After creating the local branch, you can simply switch between branches:
 
 	cd my-silverstripe-project
 	git checkout 2.4
-	(cd sapphire && git checkout 2.4)
+	(cd framework && git checkout 2.4)
 	(cd cms && git checkout 2.4)
 	(cd themes/simple && git checkout 2.4)
 	# repeat for all modules in your project...
@@ -190,7 +190,7 @@ To switch back to master:
 
 	cd my-silverstripe-project
 	git checkout master
-	(cd sapphire && git checkout master)
+	(cd framework && git checkout master)
 	(cd cms && git checkout master)
 	(cd themes/simple && git checkout master)
 	# repeat for all modules in your project...
@@ -223,19 +223,19 @@ If you have copied the installer files into a new project, we recommend to repea
 In case you chose the "Installation for contributions" option, all modules in your project
 will be standard git repositories, and you can update them as usual.
 
-	cd my-silverstripe-project/sapphire
+	cd my-silverstripe-project/framework
 	git pull
 
 ### Updating modules via piston or download ###
 
-For the "Installation for a new project" option, modules like `sapphire` or `cms`
+For the "Installation for a new project" option, modules like `framework` or `cms`
 are added as plain files without a direct link to their originating repository.
 If these plain files are managed by piston, the update process is simple:
 
 	cd my-silverstripe-project
-	piston update sapphire
+	piston update framework
 	# Use "svn" instead of "git" for subversion repositories
-	git add sapphire/*
+	git add framework/*
 	git commit -m "udpated dependencies"
 
 For file downloads without piston, you can simply download the source code again and replace it.

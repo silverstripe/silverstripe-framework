@@ -10,7 +10,7 @@
  * $ascii = $tr->toASCII($unicode);
  * </code>
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Transliterator extends Object {

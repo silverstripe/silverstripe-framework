@@ -20,7 +20,7 @@
  * </code>
  * 
  * @author Zauberfisch
- * @package sapphire
+ * @package framework
  * @subpackage forms
  */
 class UploadField extends FileField {
@@ -326,8 +326,8 @@ class UploadField extends FileField {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/i18n.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/i18n.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/ssui.core.js');
 
 		Requirements::combine_files('uploadfield.js', array(
 			THIRDPARTY_DIR . '/javascript-templates/tmpl.js',
@@ -336,12 +336,12 @@ class UploadField extends FileField {
 			THIRDPARTY_DIR . '/jquery-fileupload/cors/jquery.xdr-transport.js',
 			THIRDPARTY_DIR . '/jquery-fileupload/jquery.fileupload.js',
 			THIRDPARTY_DIR . '/jquery-fileupload/jquery.fileupload-ui.js',
-			SAPPHIRE_DIR . '/javascript/UploadField_uploadtemplate.js',
-			SAPPHIRE_DIR . '/javascript/UploadField_downloadtemplate.js',
-			SAPPHIRE_DIR . '/javascript/UploadField.js',
+			FRAMEWORK_DIR . '/javascript/UploadField_uploadtemplate.js',
+			FRAMEWORK_DIR . '/javascript/UploadField_downloadtemplate.js',
+			FRAMEWORK_DIR . '/javascript/UploadField.js',
 		));
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css'); // TODO hmmm, remove it?
-		Requirements::css(SAPPHIRE_DIR . '/css/UploadField.css');
+		Requirements::css(FRAMEWORK_DIR . '/css/UploadField.css');
 
 		$config = array(
 			'url' => $this->Link('upload'),
@@ -566,7 +566,7 @@ class UploadField extends FileField {
  * RequestHandler for actions (edit, remove, delete) on a single item (File) of the UploadField
  * 
  * @author Zauberfisch
- * @package sapphire
+ * @package framework
  * @subpackage forms
  */
 class UploadField_ItemHandler extends RequestHandler {
@@ -718,7 +718,7 @@ class UploadField_ItemHandler extends RequestHandler {
 		$items = $this->parent->getItems();
 		if($this->parent->managesRelation() && !$items->byID($item->ID)) return $this->httpError(403);
 
-		Requirements::css(SAPPHIRE_DIR . '/css/UploadField.css');
+		Requirements::css(FRAMEWORK_DIR . '/css/UploadField.css');
 
 		return $this->customise(array(
 			'Form' => $this->EditForm()

@@ -3,7 +3,7 @@
 ## Introduction
 
 This page lists a number of "page options" , "rendering tools" or "special URL variables" that you can use to debug your
-sapphire applications.  These are consumed in PHP using the $_REQUEST or $_GET super globals throughout the Sapphire
+SilverStruoe applications.  These are consumed in PHP using the $_REQUEST or $_GET super globals throughout the SilverStripe
 core.
 
 **General Usage**

@@ -3,7 +3,7 @@
  * 
  * @see GridField
  * 
- * @package sapphire
+ * @package framework
  * @subpackage fields-relational
  */
 class GridFieldDataColumns implements GridField_ColumnProvider {

@@ -12,7 +12,7 @@
  * );
  * </code>
  *
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Currency extends Decimal {

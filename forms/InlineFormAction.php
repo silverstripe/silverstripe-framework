@@ -3,7 +3,7 @@
  * Render a button that will submit the form its contained in through ajax.
  * If you want to add custom behaviour, please set {@link inlcudeDefaultJS()} to FALSE and work with behaviour.js.
  * 
- * @see sapphire/javascript/InlineFormAction.js
+ * @see framework/javascript/InlineFormAction.js
  * 
  * @package forms
  * @subpackage actions
@@ -29,7 +29,7 @@ class InlineFormAction extends FormField {
 	
 	function Field($properties = array()) {
 		if($this->includeDefaultJS) {
-			Requirements::javascriptTemplate(SAPPHIRE_DIR . '/javascript/InlineFormAction.js',array('ID'=>$this->id()));
+			Requirements::javascriptTemplate(FRAMEWORK_DIR . '/javascript/InlineFormAction.js',array('ID'=>$this->id()));
 		}
 		
 		return "<input type=\"submit\" name=\"action_{$this->name}\" value=\"{$this->title}\" id=\"{$this->id()}\" class=\"action{$this->extraClass}\" />";
@@ -40,7 +40,7 @@ class InlineFormAction extends FormField {
 	}
 	
 	/**
-	 * Optionally disable the default javascript include (sapphire/javascript/InlineFormAction.js),
+	 * Optionally disable the default javascript include (framework/javascript/InlineFormAction.js),
 	 * which routes to an "admin-custom"-URL.
 	 * 
 	 * @param $bool boolean

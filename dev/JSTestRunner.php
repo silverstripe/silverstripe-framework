@@ -30,7 +30,7 @@
  * </html>
  * </code>
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class JSTestRunner extends Controller {
@@ -121,7 +121,7 @@ class JSTestRunner extends Controller {
 	function runTests($tests) {
 		$this->setUp();
 
-		self::$default_reporter->writeHeader("Sapphire JavaScript Test Runner");
+		self::$default_reporter->writeHeader("SilverStripe JavaScript Test Runner");
 		self::$default_reporter->writeInfo("All Tests", "Running test cases: " . implode(", ", $tests));
 
 		foreach($tests as $test) {

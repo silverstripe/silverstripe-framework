@@ -2,7 +2,7 @@
 /**
  * Allows human reading of a test in a format suitable for agile documentation
  * 
- * @package sapphire
+ * @package framework
  * @subpackage tools
  */
 class CodeViewer extends Controller {

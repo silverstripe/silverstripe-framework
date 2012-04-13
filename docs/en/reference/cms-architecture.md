@@ -27,7 +27,7 @@ on our [blog](http://www.silverstripe.org/the-3-0-ui-a-better-framework-for-your
 
 All CSS in the CMS UI is written in the [SCSS language extensions](http://sass-lang.com/)
 and the [Compass framework](http://compass-style.org/), which helps
-us maintain expressive and concise style declarations. The files are located in `sapphire/admin/scss`
+us maintain expressive and concise style declarations. The files are located in `framework/admin/scss`
 (and if you have the `cms` module installed, in `cms/scss`), and are compiled to a `css` folder on the
 same directory path. Changes to the SCSS files can be automatically converted by installing
 the ["compass" module](http://www.silverstripe.org/compass-module/) for SilverStripe, 
@@ -138,8 +138,8 @@ Due to the procedural and selector-driven style of UI programming in jQuery.entw
 it can be difficult to find the piece of code responsible for a certain behaviour.
 Therefore it is important to adhere to file naming conventions.
 E.g. a feature only applicable to `ModelAdmin` should be placed in
-`sapphire/admin/javascript/ModelAdmin.js`, while something modifying all forms (including ModelAdmin forms)
-would be better suited in `sapphire/admin/javascript/LeftAndMain.EditForm.js`.
+`framework/admin/javascript/ModelAdmin.js`, while something modifying all forms (including ModelAdmin forms)
+would be better suited in `framework/admin/javascript/LeftAndMain.EditForm.js`.
 Selectors used in these files should mirrow the "scope" set by its filename,
 so don't place a rule applying to all form buttons inside `ModelAdmin.js`.
 
@@ -151,7 +151,7 @@ and [jQuery.delegate](http://api.jquery.com/delegate/), so takes care of dynamic
 
 Most interfaces will require their own JavaScript and CSS files, so the Ajax loading has
 to ensure they're loaded unless already present. A custom-built library called 
-`jQuery.ondemand` (located in `sapphire/thirdparty`) takes care of this transparently -
+`jQuery.ondemand` (located in `framework/thirdparty`) takes care of this transparently -
 so as a developer just declare your dependencies through the `[api:Requirements]` API.
 
 ## Ajax Loading and Browser History 
@@ -231,11 +231,11 @@ To avoid repetition, we've written some helpers for various use cases:
 SilverStripe automatically applies a [jQuery UI button style](http://jqueryui.com/demos/button/)
 to all elements with the class `.ss-ui-button`. We've extended the jQuery UI widget a bit
 to support defining icons via HTML5 data attributes (see `ssui.core.js`).
-These icon identifiers relate to icon files in `sapphire/admin/images/btn-icons`,
+These icon identifiers relate to icon files in `framework/admin/images/btn-icons`,
 and are sprited into a single file through SCSS and the Compass framework 
 (see [tutorial](http://compass-style.org/help/tutorials/spriting/)).
 Compass also creates the correct CSS classes to show those sprites via background images
-(see `sapphire/admin/scss/_sprites.scss`).
+(see `framework/admin/scss/_sprites.scss`).
 
 Input: `<a href="..." class="ss-ui-button" data-icon="add" />Button text</a>`
 

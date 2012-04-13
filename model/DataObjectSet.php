@@ -1,7 +1,7 @@
 <?php
 /**
  * @deprecated Please use {@link DataList} or {@link ArrayList} instead.
- * @package    sapphire
+ * @package framework
  * @subpackage model
  */
 class DataObjectSet extends ArrayList {

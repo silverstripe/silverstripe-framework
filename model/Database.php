@@ -2,7 +2,7 @@
 /**
  * Abstract database connectivity class.
  * Sub-classes of this implement the actual database connection libraries
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 abstract class SS_Database {
@@ -904,7 +904,7 @@ abstract class SS_Database {
  * Primarily, the SS_Query class takes care of the iterator plumbing, letting the subclasses focusing
  * on providing the specific data-access methods that are required: {@link nextRecord()}, {@link numRecords()}
  * and {@link seek()}
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 abstract class SS_Query implements Iterator {

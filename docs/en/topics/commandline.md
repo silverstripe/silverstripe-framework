@@ -10,7 +10,7 @@ The main entry point for any commandline execution is `cli-script.php`. For exam
 from the commandline, use this command:
 
 	cd your-webroot/
-	php sapphire/cli-script.php dev/build
+	php framework/cli-script.php dev/build
 
 Make sure that your commandline php version uses the same configuration as your webserver (run `php -i` to find out more).
 
@@ -20,9 +20,9 @@ You can add parameters to the command by using normal form encoding.
 All parameters will be available in `$_GET` within SilverStripe.
 
 	cd your-webroot/
-	php sapphire/cli-script.php myurl myparam=1 myotherparam=2
+	php framework/cli-script.php myurl myparam=1 myotherparam=2
 
-## SAKE: Sapphire make
+## SAKE: SilverStripe make
 
 Sake is a simple wrapper around `cli-script.php`. It also tries to detect which `php` executable to use
 if more than one are available.
@@ -35,7 +35,7 @@ If you get an error when running the command php -v, then you may not have php-c
 You can copy the `sake` file into `/usr/bin/sake` for easier access (this is optional):
 
 	cd your-webroot/
-	sudo ./sapphire/sake installsake
+	sudo ./framework/sake installsake
 
 Note: This currently only works on unix-like systems, not on Windows.
 
@@ -68,7 +68,7 @@ Using this example, /Users/sminnee/Sites/mysite/ would be accessed at http://mys
 
 ## Usage
 
-Sake will either run `./sapphire/cli-script.php` or `./cli-script.php`, depending on what's available.
+Sake will either run `./framework/cli-script.php` or `./cli-script.php`, depending on what's available.
 
 It's particularly useful for running build tasks...
 
@@ -87,7 +87,7 @@ It can also be handy if you have a long running script.
 
 You can use sake to make daemon processes for your application.
 
-Step 1: Make a task or controller class that runs a loop.  Because Sapphire has memory leaks, you should make the PHP
+Step 1: Make a task or controller class that runs a loop.  Because SilverStripe has memory leaks, you should make the PHP
 process exit when it hits some reasonable memory limit.  Sake will automatically restart your process whenever it exits.
 
 The other thing you should do is include some appropriate sleep()s so that your process doesn't hog the system.  The

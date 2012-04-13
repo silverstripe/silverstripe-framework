@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 class TaskRunner extends Controller {
@@ -36,7 +36,7 @@ class TaskRunner extends Controller {
 		if(!Director::is_cli()) {
 			$renderer = new DebugView();
 			$renderer->writeHeader();
-			$renderer->writeInfo("Sapphire Development Tools: Tasks", Director::absoluteBaseURL());
+			$renderer->writeInfo("SilverStripe Development Tools: Tasks", Director::absoluteBaseURL());
 			$base = Director::absoluteBaseURL();
 			
 			echo "<ul>";
@@ -51,7 +51,7 @@ class TaskRunner extends Controller {
 			$renderer->writeFooter();
 		// CLI mode
 		} else {
-			echo "SAPPHIRE DEVELOPMENT TOOLS: Tasks\n--------------------------\n\n";
+			echo "SILVERSTRIPE DEVELOPMENT TOOLS: Tasks\n--------------------------\n\n";
 			foreach($tasks as $task) {
 				echo " * $task: sake dev/tasks/" . $task['class'] . "\n";
 			}

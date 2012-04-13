@@ -2,7 +2,7 @@
 /**
  * Represents a signed 32 bit integer field.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Int extends DBField {
