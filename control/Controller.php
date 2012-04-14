@@ -406,6 +406,32 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	//-----------------------------------------------------------------------------------
 
 	/**
+	 * Given some pre-defined modules, return the filesystem path of the module.
+	 * @param string $name Name of module to find path of
+	 * @return string
+	 */
+	function ModulePath($name) {
+		switch($name) {
+			case 'framework':
+				$path = FRAMEWORK_DIR;
+				break;
+			case 'frameworkadmin':
+				$path = FRAMEWORK_ADMIN_DIR;
+				break;
+			case 'thirdparty':
+				$path = THIRDPARTY_DIR;
+				break;
+			case 'assets':
+				$path = ASSETS_DIR;
+				break;
+			default:
+				throw InvalidArgumentException($name . ' is not a supported argument. Possible values: framework, frameworkadmin, thirdparty, assets');
+		}
+
+		return $path;
+	}
+
+	/**
 	 * returns a date object for use within a template
 	 * Usage: $Now.Year - Returns 2006
 	 * @return Date The current date
