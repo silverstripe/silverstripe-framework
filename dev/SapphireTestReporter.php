@@ -274,16 +274,24 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	/**
 	 * Display error bar if it exists
 	 */
-	public function writeResults() {		
+	public function writeResults() {
 		$passCount = 0;
 		$failCount = 0;
 		$testCount = 0;
+		$incompleteCount = 0;
 		$errorCount = 0;
 		
 		foreach($this->suiteResults['suites'] as $suite) {
 			foreach($suite['tests'] as $test) {
 				$testCount++;
-				($test['status'] == 1) ? $passCount++ : $failCount++;
+				if($test['status'] == 2) {
+					$incompleteCount++;
+				} elseif($test['status'] == 1) {
+					$passCount++;
+				} else {
+					$failCount++;
+				}
+
 				if ($test['status'] != 1) {
 					echo "<div class=\"failure\"><span>&otimes; ". $this->testNameToPhrase($test['name']) ."</span><br>";
 					echo "<pre>".htmlentities($test['message'], ENT_COMPAT, 'UTF-8')."</pre><br>";
@@ -294,7 +302,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 		}
 		$result = ($failCount > 0) ? 'fail' : 'pass';
 		echo "<div class=\"status $result\">";
-		echo "<h2><span>$testCount</span> tests run: <span>$passCount</span> passes, <span>$failCount</span> fails, and <span>0</span> exceptions</h2>";
+		echo "<h2><span>$testCount</span> tests run: <span>$passCount</span> passes, <span>$failCount</span> failures, and <span>$incompleteCount</span> incomplete</h2>";
 		echo "</div>";
 		
 	}
