@@ -40,8 +40,8 @@ class DatalessField extends FormField {
 	 * Returns the field's representation in a field group.
 	 * For dataless fields, this defaults to $Field.
 	 */
-	function SmallFieldHolder() {
-		return $this->Field();
+	function SmallFieldHolder($properties = array()) {
+		return $this->Field($properties);
 	}
 
 	/**
