@@ -159,7 +159,7 @@ class SS_Backtrace {
 	 */
 	static function get_rendered_backtrace($bt, $plainText = false, $ignoredFunctions = null) {
 		$bt = self::filter_backtrace($bt, $ignoredFunctions);
-		$result = "<ul>";
+		$result = ($plainText) ? '' : '<ul>';
 		foreach($bt as $item) {
 			if($plainText) {
 				$result .= self::full_func_name($item,true) . "\n";
@@ -177,7 +177,7 @@ class SS_Backtrace {
 				$result .= "</li>\n";
 			}
 		}
-		$result .= "</ul>";
+		if(!$plainText) $result .= '</ul>';
 		return $result;
 	}
 	
