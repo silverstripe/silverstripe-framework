@@ -98,12 +98,9 @@ class CliTestReporter extends SapphireTestReporter {
 				
 			}
 
-			if( $test['status'] == 2) {
-				echo "\n" . SS_Cli::text($test['name'] . "\n" . $test['message'] . "\n", 'yellow', null);
-			} else {
-				echo "\n" . SS_Cli::text($test['name'] . "\n". $test['message'] . "\n", 'red', null);
-				echo SS_Backtrace::get_rendered_backtrace($filteredTrace, true);
-			}
+			$color = ($test['status'] == 2) ? 'yellow' : 'red';
+			echo "\n" . SS_Cli::text($test['name'] . "\n". $test['message'] . "\n", $color, null);
+			echo SS_Backtrace::get_rendered_backtrace($filteredTrace, true);
 			echo "--------------------\n";
 		}
 	}
