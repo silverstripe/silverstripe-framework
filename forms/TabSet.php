@@ -80,7 +80,7 @@ class TabSet extends CompositeField {
 		
 		$obj = $properties ? $this->customise($properties) : $this;
 		
-		return $obj->renderWith($this->getFieldHolderTemplates());
+		return $obj->renderWith($this->getTemplates());
 	}
 	
 	/**

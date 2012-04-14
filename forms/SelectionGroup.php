@@ -73,8 +73,8 @@ class SelectionGroup extends CompositeField {
 		Requirements::css(SAPPHIRE_DIR . '/css/SelectionGroup.css');
 
 		$obj = $properties ? $this->customise($properties) : $this;
-		
-		return $obj->renderWith($this->getFieldHolderTemplates());
+
+		return $obj->renderWith($this->getTemplates());
 	}
 }
 
