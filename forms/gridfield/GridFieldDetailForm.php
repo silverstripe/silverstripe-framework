@@ -12,8 +12,6 @@
  */
 class GridFieldDetailForm implements GridField_URLHandler {
 
-
-
 	/**
 	 * @var String
 	 */

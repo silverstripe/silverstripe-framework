@@ -1,14 +1,14 @@
 <?php
 /**
- * SelectionGroup represents a number of fields that are selectable by a radio button that appears at
- * the beginning of each item.  Using CSS, you can configure the field to only display its contents if
- * the corresponding radio button is selected.
+ * SelectionGroup represents a number of fields that are selectable by a radio 
+ * button that appears at the beginning of each item.  Using CSS, you can 
+ * configure the field to only display its contents if the corresponding radio 
+ * button is selected.
+ *
  * @package forms
  * @subpackage fields-structural
  */
 class SelectionGroup extends CompositeField {
-	
-	protected $template = "SelectionGroup";
 	
 	/**
 	 * Create a new selection group.
@@ -59,6 +59,7 @@ class SelectionGroup extends CompositeField {
 
 			$firstSelected = $checked ="";
 		}
+		
 		return new ArrayList($newItems);
 	}
 	
@@ -72,8 +73,8 @@ class SelectionGroup extends CompositeField {
 		Requirements::css(SAPPHIRE_DIR . '/css/SelectionGroup.css');
 
 		$obj = $properties ? $this->customise($properties) : $this;
-		
-		return $obj->renderWith($this->template);
+
+		return $obj->renderWith($this->getTemplates());
 	}
 }
 

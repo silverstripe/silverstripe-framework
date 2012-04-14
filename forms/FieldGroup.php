@@ -45,8 +45,8 @@
  * @subpackage fields-structural
  */
 class FieldGroup extends CompositeField {
+	
 	protected $zebra;
-	public $subfieldParam = "SmallFieldHolder";
 	
 	function __construct($arg1 = null, $arg2 = null) {
 		if(is_array($arg1) || is_a($arg1, 'FieldSet')) {
@@ -86,44 +86,9 @@ class FieldGroup extends CompositeField {
 	}
 
 	/**
-	 * Returns a set of <span class="subfield"> tags, each containing a sub-field.
-	 * You can also use <% control FieldSet %>, if you'd like more control over the generated HTML
-	 * 
-	 * @todo Shouldn't use SmallFieldHolder() (very difficult to style), 
-	 * it is easier to overwrite the <div class="field"> behaviour in a more specific class
-	 */
-	function Field($properties = array()) {
-		$fs = $this->FieldList();
-    	$spaceZebra = isset($this->zebra) ? " fieldgroup-$this->zebra" : '';
-    	$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
-		$content = "<div class=\"fieldgroup$spaceZebra\"$idAtt>";
-
-		$count = 1;
-		foreach($fs as $subfield) {
-			$childZebra = (!isset($childZebra) || $childZebra == "odd") ? "even" : "odd";
-			if($subfield->hasMethod('setZebra'))  {
-				$subfield->setZebra($childZebra);
-			}
-
-			//label the first and last fields of each surrounding div
-			if ($count == 1) $firstLast = "first";
-			elseif ($count == count($fs)) $firstLast = "last";
-			else $firstLast = '';
-
-			$content .= "<div class=\"fieldgroup-field $firstLast\">" . $subfield->{$this->subfieldParam}() . "</div>";
-			$count++;
-		}
-		$content .= "</div>";
-		
-		return $content;
-	}
-	
-	public function setID($id) {
-		$this->id = Convert::raw2att($id);
-	}
-  
-	/**
 	 * Set an odd/even class
+	 *
+	 * @param string $zebra one of odd or even.
 	 */
   	function setZebra($zebra) {
 	    if($zebra == 'odd' || $zebra == 'even') $this->zebra = $zebra;
@@ -131,47 +96,40 @@ class FieldGroup extends CompositeField {
 	    return $this;
  	}
   
-	function FieldHolder($properties = array()) {
-		$Title = $this->XML_val('Title');
-		$Message = $this->XML_val('Message');
-		$MessageType = $this->XML_val('MessageType');
-		$RightTitle = $this->XML_val('RightTitle');
-		$Type = $this->XML_val('Type');
-		$extraClass = $this->XML_val('extraClass');
-		$Name = $this->XML_val('Name');
-		$Field = $this->XML_val('Field');
-		
-		$titleBlock = (!empty($Title)) ? "<label class=\"left\">$Title</label>" : "";
-		$messageBlock = (!empty($Message)) ? "<span class=\"message $MessageType\">$Message</span>" : "";
-		$rightTitleBlock = (!empty($RightTitle)) ? "<label class=\"right\">$RightTitle</label>" : "";
-		$id = $Name ? ' id="$Name"' : '';
-
-		return <<<HTML
-<div$id class="field $Type $extraClass">$titleBlock<div class="middleColumn">$Field</div>$rightTitleBlock$messageBlock</div>
-HTML;
+	/**
+	 * @return string
+	 */
+	function getZebra() {
+		return $this->zebra;
 	}
 	
+	/**
+	 * @return string
+	 */
 	function Message() {
 		$fs = $this->FieldList();
+		
 		foreach($fs as $subfield) {
 			if($m = $subfield->Message()) $message[] = $m;
 		}
-		if(isset($message)) return implode(",  ", $message) . ". ";
+		
+		return (isset($message)) ? implode(",  ", $message) . ". " : "";
 	}	
 	
-	function MessageType(){
+	/**
+	 * @return string
+	 */
+	function MessageType() {
 		$fs = $this->FieldList();
+		
 		foreach($fs as $subfield) {
 			if($m = $subfield->MessageType()) $MessageType[] = $m;
 		}
-		if(isset($MessageType)) {
-			return implode(".  ", $MessageType);
-		}
+		
+		return (isset($MessageType)) ? implode(".  ", $MessageType) : "";
 	}
 	
-	function php($data){
+	function php($data) {
 		return;
-	}
-	
+	}	
 }
-

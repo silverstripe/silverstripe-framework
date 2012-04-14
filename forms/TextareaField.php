@@ -21,16 +21,14 @@
  * @subpackage fields-basic
  */
 class TextareaField extends FormField {
-
-	protected $template = 'TextareaField';
-
+	
 	/**
-	 * @var Int Visible number of text lines.
+	 * @var int Visible number of text lines.
 	 */
 	protected $rows = 5;
 
 	/**
-	 * @var Int Width of the text area (in average character widths)
+	 * @var int Width of the text area (in average character widths)
 	 */
 	protected $cols = 20;
 
@@ -60,13 +58,14 @@ class TextareaField extends FormField {
 	}
 
 	function getTemplate() {
-		return ($this->isReadonly()) ? "{$this->template}_Readonly" : $this->template;
+		return ($this->isReadonly()) ? "{$this->template}_readonly" : $this->template;
 	}
 
 	/**
-	 * Performs a readonly transformation on this field. You should still be able
-	 * to copy from this field, and it should still send when you submit
+	 * Performs a readonly transformation on this field. You should still be 
+	 * able to copy from this field, and it should still send when you submit
 	 * the form it's attached to.
+	 *
 	 * The element shouldn't be both disabled and readonly at the same time.
 	 */
 	function performReadonlyTransformation() {
@@ -80,6 +79,7 @@ class TextareaField extends FormField {
 	 * Performs a disabled transformation on this field. You shouldn't be able to
 	 * copy from this field, and it should not send any data when you submit the
 	 * form it's attached to.
+	 *
 	 * The element shouldn't be both disabled and readonly at the same time.
 	 */
 	function performDisabledTransformation() {

@@ -75,8 +75,6 @@
  * @subpackage fields-basic
  */
 class DropdownField extends FormField {
-	
-	protected $template = 'DropdownField';
 
 	/**
 	 * @var boolean $source Associative or numeric array of all dropdown items,
@@ -158,7 +156,7 @@ class DropdownField extends FormField {
 
 		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
 
-		return $this->customise($properties)->renderWith($this->getTemplate());
+		return parent::Field($properties);
 	}
 
 	function getAttributes() {

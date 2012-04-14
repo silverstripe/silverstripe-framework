@@ -47,11 +47,6 @@ class UploadField extends FileField {
 	/**
 	 * @var String
 	 */
-	protected $template = 'UploadField';
-
-	/**
-	 * @var String
-	 */
 	protected $templateFileButtons = 'UploadField_FileButtons';
 
 	/**
@@ -375,13 +370,15 @@ class UploadField extends FileField {
 		if (is_numeric($config['maxNumberOfFiles']) && $this->getItems()->count()) {
 			$configOverwrite['maxNumberOfFiles'] = $config['maxNumberOfFiles'] - $this->getItems()->count();
 		}
+		
 		$config = array_merge($config, $this->ufConfig, $configOverwrite);
+		
 		return $this->customise(array(
 			'configString' => str_replace('"', "'", Convert::raw2json($config)),
 			'config' => new ArrayData($config),
 			'multiple' => $config['maxNumberOfFiles'] !== 1,
 			'displayInput' => (!isset($configOverwrite['maxNumberOfFiles']) || $configOverwrite['maxNumberOfFiles'])
-		))->renderWith($this->getTemplate());
+		))->renderWith($this->getTemplates());
 	}
 
 	/**
