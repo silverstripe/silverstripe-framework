@@ -18,7 +18,9 @@
 ini_set('mysql.connect_timeout', 5);
 
 ini_set('max_execution_time', 0);
-error_reporting(E_ALL ^ E_NOTICE);
+
+// enable the highest level of error reporting during installation (same as Core.php in framework)
+error_reporting(E_ALL | E_STRICT);
 
 // Include environment files
 $usingEnv = false;
