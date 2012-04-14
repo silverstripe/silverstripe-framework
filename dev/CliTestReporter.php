@@ -14,12 +14,19 @@ class CliTestReporter extends SapphireTestReporter {
 		$passCount = 0;
 		$failCount = 0;
 		$testCount = 0;
+		$incompleteCount = 0;
 		$errorCount = 0;
-		
+
 		foreach($this->suiteResults['suites'] as $suite) {
 			foreach($suite['tests'] as $test) {
 				$testCount++;
-				($test['status'] == 1) ? $passCount++ : $failCount++;
+				if($test['status'] == 2) {
+					$incompleteCount++;
+				} elseif($test['status'] === 1) {
+					$passCount++;
+				} else {
+					$failCount++;
+				}
 			}
 		}
 		
@@ -29,8 +36,9 @@ class CliTestReporter extends SapphireTestReporter {
 		}  else {
 			echo SS_Cli::text(" AT LEAST ONE FAILURE ", "white", "red");
 		}
-		echo "\n\n$testCount tests run: " . SS_Cli::text("$passCount passes", null) . ", ". SS_Cli::text("$failCount fails", null) . ", and 0 exceptions\n";
-		
+
+		echo sprintf("\n\n%d tests run: %s, %s, and %s\n", $testCount, SS_Cli::text("$passCount passes"), SS_Cli::text("$failCount failures"), SS_Cli::text("$incompleteCount incomplete"));
+
 		if(function_exists('memory_get_peak_usage')) {
 			echo "Maximum memory usage: " . number_format(memory_get_peak_usage()/(1024*1024), 1) . "M\n\n";
 		}
@@ -72,7 +80,6 @@ class CliTestReporter extends SapphireTestReporter {
 	
 	protected function writeTest($test) {
 		if ($test['status'] != 1) {
-			
 			$filteredTrace = array();
 			$ignoredClasses = array('TestRunner');
 			foreach($test['trace'] as $item) {
@@ -88,9 +95,13 @@ class CliTestReporter extends SapphireTestReporter {
 					&& $item['function'] == 'run') break;
 				
 			}
-			
-			echo "\n\n" . SS_Cli::text($this->testNameToPhrase($test['name']) . "\n". $test['message'] . "\n", 'red', null, true);
-			echo SS_Backtrace::get_rendered_backtrace($filteredTrace, true);
+
+			if( $test['status'] == 2) {
+				echo "\n" . SS_Cli::text($this->testNameToPhrase($test['name']) . "\n" . $test['message'] . "\n", 'yellow', null, true);
+			} else {
+				echo "\n" . SS_Cli::text($this->testNameToPhrase($test['name']) . "\n". $test['message'] . "\n", 'red', null, true);
+				echo SS_Backtrace::get_rendered_backtrace($filteredTrace, true);
+			}
 			echo "\n--------------------\n";
 		}
 	}
