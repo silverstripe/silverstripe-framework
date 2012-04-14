@@ -85,29 +85,6 @@ class FieldGroup extends CompositeField {
 		return preg_replace("/[^a-zA-Z0-9]+/", "", $this->title);
 	}
 
-
-	/**
-	 * Generates the field HTML with the HTML for child {@link FormField}
-	 *
-	 * @param array $properties custom properties for the template
-	 */
-	function Field($properties = array()) {
-		$props = $this->customise(new ArrayData($properties));
-		
-		return $props->renderWith('FieldGroupField');
-	}
-	
-	/**
-	 * Generates the field HTML with the HTML for child {@link FormField}
-	 *
-	 * @param array $properties custom properties for the template
-	 */
-	function FieldHolder($properties = array()) {
-		$props = $this->customise(new ArrayData($properties));
-	
-		return $props->renderWith('FieldGroupHolder');
-	}
-  
 	/**
 	 * Set an odd/even class
 	 *

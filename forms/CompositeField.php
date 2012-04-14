@@ -1,8 +1,11 @@
 <?php
 /**
  * Base class for all fields that contain other fields.
- * Implements sequentialisation - so that when we're saving / loading data, we can populate
- * a tabbed form properly.  All of the children are stored in $this->children
+ *
+ * Implements sequentialisation - so that when we're saving / loading data, we 
+ * can populate a tabbed form properly. All of the children are stored in 
+ * $this->children
+ *
  * @package forms
  * @subpackage fields-structural
  */
@@ -32,11 +35,6 @@ class CompositeField extends FormField {
 	 * @var String custom HTML tag to render with, e.g. to produce a <fieldset>.
 	 */
 	protected $tag = 'div';
-	
-	/**
-	 * @var string
-	 */
-	protected $template = "CompositeField";
 	
 	/**
 	 * @var String Optional description for this set of fields.
@@ -152,32 +150,6 @@ class CompositeField extends FormField {
 		);
 	}
 
-	public function Field($properties = array()) {
-		$props = $this->customise($properties);
-		
-		return $props->renderWith($this->getTemplate());
-	}
-
-	/**
-	 * @param array
-	 */
-	function FieldHolder($properties = array()) {
-		$props = $this->customise($properties);
-
-		return $props->renderWith($this->getTemplate());
-	}
-		
-	/**
-	 * Returns the fields in the restricted field holder.
-	 *
-	 * @param array
-	 */
-	function SmallFieldHolder($properties = array()) {
-		$obj = ($properties) ? $this->customise($properties) : $this;
-
-		return $obj->renderWith($this->getTemplate());
-	}	
-	
 	/**
 	 * Add all of the non-composite fields contained within this field to the 
 	 * list.

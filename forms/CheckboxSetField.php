@@ -33,11 +33,9 @@
  * @subpackage fields-basic
  */
 class CheckboxSetField extends OptionsetField {
-
-	protected $template = 'CheckboxSetField';
 	
 	/**
-	 * @var Array
+	 * @var array
 	 */
 	protected $defaultItems = array();
 	
@@ -130,7 +128,7 @@ class CheckboxSetField extends OptionsetField {
 
 		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
 
-		return $this->customise($properties)->renderWith($this->getTemplate());
+		return $this->customise($properties)->renderWith($this->getTemplates());
 	}
 	
 	/**
@@ -288,5 +286,4 @@ class CheckboxSetField extends OptionsetField {
 	function ExtraOptions() {
 		return FormField::ExtraOptions();
 	}
-	
 }
