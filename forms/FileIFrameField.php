@@ -12,8 +12,6 @@
  */
 class FileIFrameField extends FileField {
 	
-	protected $template = 'FileIFrameField';
-	
 	public static $allowed_actions = array (
 		'iframe',
 		'EditFileForm',

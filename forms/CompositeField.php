@@ -1,8 +1,11 @@
 <?php
 /**
  * Base class for all fields that contain other fields.
- * Implements sequentialisation - so that when we're saving / loading data, we can populate
- * a tabbed form properly.  All of the children are stored in $this->children
+ *
+ * Implements sequentialisation - so that when we're saving / loading data, we 
+ * can populate a tabbed form properly. All of the children are stored in 
+ * $this->children
+ *
  * @package forms
  * @subpackage fields-structural
  */
@@ -59,6 +62,8 @@ class CompositeField extends FormField {
 
 	/**
 	 * Returns all the sub-fields, suitable for <% control FieldList %>
+	 *
+	 * @return FieldList
 	 */
 	public function FieldList() {
 		return $this->children;
@@ -76,9 +81,10 @@ class CompositeField extends FormField {
 		$this->id = $id;
 		return $this;
 	}
-	
+
 	/**
 	 * Accessor method for $this->children
+	 *
 	 * @return FieldList
 	 */
 	public function getChildren() {
@@ -93,24 +99,33 @@ class CompositeField extends FormField {
 		return $this;
 	}
 
-	/** @param String */
+	/** 
+	 * @param string 
+	 */
 	public function setTag($tag) {
 		$this->tag = $tag;
+		
 		return $this;
 	}
 
-	/** @return String */
+	/**
+	 * @return string 
+	 */
 	public function getTag() {
 		return $this->tag;
 	}
 
-	/** @param String */
+	/** 
+	 * @param string 
+	 */
 	public function setLegend($legend) {
 		$this->legend = $legend;
 		return $this;
 	}
 
-	/** @return String */
+	/**
+	 * @return string 
+	 */
 	public function getLegend() {
 		return $this->legend;
 	}
@@ -118,6 +133,7 @@ class CompositeField extends FormField {
 	function extraClasses() {
 		$classes = array('field', 'CompositeField', parent::extraClasses());
 		if($this->columnCount) $classes[] = 'multicolumn';
+		
 		return implode(' ', $classes);
 	}
 
@@ -134,80 +150,10 @@ class CompositeField extends FormField {
 		);
 	}
 
-	public function Field($properties = array()) {
-		$content = '';
-
-		if($this->tag == 'fieldset' && $this->legend) {
-			$content .= '<legend>' . $this->legend . '<legend>';
-		}
-
-		$fs = $this->FieldList();
-		foreach($fs as $subfield) {
-			if($this->columnCount) {
-				$className = "column{$this->columnCount}";
-				if(!next($fs)) $className .= " lastcolumn";
-				$content .= "\n<div class=\"{$className}\">\n" . $subfield->Field() . "\n</div>\n";
-			} else if($subfield){
-				$content .= "\n" . $subfield->Field() . "\n";
-			}
-		}
-				
-		return $this->createTag($this->getTag(), $this->getAttributes(), $content);
-	}
-
 	/**
-	 * Returns the fields nested inside another DIV
-	 */
-	function FieldHolder($properties = array()) {
-		$content = '';
-
-		if($this->tag == 'fieldset' && $this->legend) {
-			$content .= '<legend>' . $this->legend . '<legend>';
-		}
-
-		$fs = $this->FieldList();
-		foreach($fs as $subfield) {
-			if($this->columnCount) {
-				$className = "column{$this->columnCount}";
-				if(!next($fs)) $className .= " lastcolumn";
-				$content .= "\n<div class=\"{$className}\">\n" . $subfield->FieldHolder() . "\n</div>\n";
-			} else if($subfield){
-				$content .= "\n" . $subfield->FieldHolder() . "\n";
-			}
-		}
-				
-		return $this->createTag($this->getTag(), $this->getAttributes(), $content);
-	}
-		
-	/**
-	 * Returns the fields in the restricted field holder inside a DIV.
-	 */
-	function SmallFieldHolder() {
-		$fs = $this->FieldList();
-		$tag = $this->getTag();
-		$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
-		$className = ($this->columnCount) ? "field CompositeField {$this->extraClass()} multicolumn" : "field CompositeField {$this->extraClass()}";
-		$content = "<$tag class=\"$className\"$idAtt>";
-
-		if($this->tag == 'fieldset' && $this->legend) {
-			$content .= '<legend>' . $this->legend . '<legend>';
-		}
-		
-		foreach($fs as $subfield) {
-			if($this->columnCount) {
-				$className = "column{$this->columnCount}";
-				if(!next($fs)) $className .= " lastcolumn";
-				$content .= "<div class=\"{$className}\">" . $subfield->FieldHolder() . "</div>";
-			} else if($subfield){
-				$content .= $subfield->SmallFieldHolder() . " ";
-			}
-		}	
-		$content .= "</$tag>";
-	
-		return $content;
-	}	
-	/**
-	 * Add all of the non-composite fields contained within this field to the list.
+	 * Add all of the non-composite fields contained within this field to the 
+	 * list.
+	 *
 	 * Sequentialisation is used when connecting the form to its data source
 	 */
 	public function collateDataFields(&$list, $saveableOnly = false) {
@@ -232,14 +178,21 @@ class CompositeField extends FormField {
 	}
 
 	function setForm($form) {
-		foreach($this->children as $f) if(is_object($f)) $f->setForm($form);
+		foreach($this->children as $f) 
+			if(is_object($f)) $f->setForm($form);
+			
 		parent::setForm($form);
+		
 		return $this;
 	}
 	
 	function setColumnCount($columnCount) {
 		$this->columnCount = $columnCount;
 		return $this;
+	}
+	
+	function getColumnCount() {
+		return $this->columnCount;
 	}
 	
 	function isComposite() { 
@@ -253,8 +206,11 @@ class CompositeField extends FormField {
 	public function fieldByName($name) {
 		return $this->children->fieldByName($name);
 	}
+	
 	/**
 	 * Add a new child field to the end of the set.
+	 * 
+	 * @param FormField
 	 */
 	public function push(FormField $field) {
 		$this->children->push($field);

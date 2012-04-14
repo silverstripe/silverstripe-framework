@@ -1,12 +1,11 @@
 <?php
 /**
  * Allows visibility of a group of fields to be toggled using '+' and '-' icons
+ *
  * @package forms
  * @subpackage fields-structural
  */
 class ToggleCompositeField extends CompositeField {
-	
-	protected $template = "ToggleCompositeField";
 	
 	/**
 	 * @var $headingLevel int
@@ -28,7 +27,8 @@ class ToggleCompositeField extends CompositeField {
 		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ToggleCompositeField.js");
 		
 		$obj = $properties ? $this->customise($properties) : $this;
-		return $obj->renderWith($this->template);
+		
+		return $obj->renderWith($this->getTemplates());
 	}	
 	
 	/**
@@ -41,7 +41,7 @@ class ToggleCompositeField extends CompositeField {
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function HeadingLevel() {
 		return $this->headingLevel;

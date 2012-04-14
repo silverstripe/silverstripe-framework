@@ -64,6 +64,7 @@ class ListboxField extends DropdownField {
 	function __construct($name, $title = '', $source = array(), $value = '', $size = null, $multiple = false) {
 		if($size) $this->size = $size;
 		if($multiple) $this->multiple = $multiple;
+		
 		parent::__construct($name, $title, $source, $value);
 	}
 	
@@ -96,8 +97,12 @@ class ListboxField extends DropdownField {
 				));
 			}
 		}
-		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
-		return $this->customise($properties)->renderWith($this->getTemplate());
+		
+		$properties = array_merge($properties, array(
+			'Options' => new ArrayList($options)
+		));
+		
+		return $this->customise($properties)->renderWith($this->getTemplates());
 	}
 
 	function getAttributes() {

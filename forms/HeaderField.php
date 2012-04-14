@@ -1,13 +1,13 @@
 <?php
 /**
  * Field that generates a heading tag.
+ *
  * This can be used to add extra text in your forms.
+ *
  * @package forms
  * @subpackage fields-dataless
  */
 class HeaderField extends DatalessField {
-
-	protected $template = 'HeaderField';
 	
 	/**
 	 * @var int $headingLevel The level of the <h1> to <h6> HTML tag. Default: 2
@@ -53,5 +53,4 @@ class HeaderField extends DatalessField {
 	function Type() {
 		return null;
 	}
-
 }

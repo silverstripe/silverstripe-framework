@@ -1,14 +1,11 @@
 <?php
 /**
  * Single checkbox field.
+ *
  * @package forms
  * @subpackage fields-basic
  */
 class CheckboxField extends FormField {
-
-	protected $template = 'CheckboxField';
-
-	protected $fieldHolderTemplate = 'CheckboxFieldHolder';
 
 	function setValue($value) {
 		$this->value = ($value) ? 1 : 0;
@@ -21,17 +18,6 @@ class CheckboxField extends FormField {
 
 	function Value() {
 		return ($this->value) ? 1 : 0;
-	}
-
-	/**
-	 * Returns a restricted field holder used within things like FieldGroups
-	 */
-	function SmallFieldHolder() {
-		$result = $this->Field();
-		if($t = $this->Title()) {
-			$result .= "<label for=\"" . $this->id() ."\">$t</label> ";
-		}
-		return $result;
 	}
 
 	function getAttributes() {
@@ -65,6 +51,7 @@ class CheckboxField extends FormField {
 
 /**
  * Readonly version of a checkbox field - "Yes" or "No".
+ *
  * @package forms
  * @subpackage fields-basic
  */

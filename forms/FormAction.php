@@ -20,8 +20,6 @@
  */
 class FormAction extends FormField {
 
-	protected $template = 'FormAction';
-
 	protected $action;
 	
 	/**
@@ -36,12 +34,14 @@ class FormAction extends FormField {
 	
 	/**
 	 * Create a new action button.
+	 *
 	 * @param action The method to call when the button is clicked
 	 * @param title The label on the button
 	 * @param form The parent form, auto-set when the field is placed inside a form 
 	 */
 	function __construct($action, $title = "", $form = null) {
 		$this->action = "action_$action";
+		
 		parent::__construct($this->action, $title, null, $form);
 	}
 
@@ -67,7 +67,8 @@ class FormAction extends FormField {
 				'UseButtonTag' => $this->useButtonTag
 			)
 		);
-		return $this->customise($properties)->renderWith($this->getTemplate());
+		
+		return parent::Field($properties);
 	}
 	
 	function FieldHolder($properties = array()) {

@@ -1,15 +1,14 @@
 <?php
 /**
  * Text input field.
+ *
  * @package forms
  * @subpackage fields-basic
  */
 class TextField extends FormField {
 
-	protected $template = 'TextField';
-
 	/**
-	 * @var Int
+	 * @var int
 	 */
 	protected $maxLength;
 	
@@ -23,15 +22,16 @@ class TextField extends FormField {
 	}
 	
 	/**
-	 * @param Int $length
+	 * @param int $length
 	 */
 	function setMaxLength($length) {
 		$this->maxLength = $length;
+		
 		return $this;
 	}
 	
 	/**
-	 * @return Int
+	 * @return int
 	 */
 	function getMaxLength() {
 		return $this->maxLength;
@@ -50,6 +50,5 @@ class TextField extends FormField {
 	function InternallyLabelledField() {
 		if(!$this->value) $this->value = $this->Title();
 		return $this->Field();
-	}
-	
+	}	
 }

@@ -375,8 +375,8 @@ $gf_grid_x:	16px;
 					}
 					&.ss-gridfield-button-filter.ss-ui-button{
 						position:absolute;
-						right:5px; //positions filter button in correct position on top of input field
-						top:-28px;
+						top: 0;
+						right: 0;
 						display:block;
 						text-indent:-9999em;
 						width:30px; 
@@ -412,8 +412,8 @@ $gf_grid_x:	16px;
 					}
 					&.ss-gridfield-button-reset.ss-ui-button{
 						position:absolute;
-						right:34px; //positions reset button in correct position on top of input field and to the left of the filter button
-						top:-28px;
+						right: 29px;
+						top: 0;
 						display:block;
 						text-indent:-9999em;
 						width:30px;

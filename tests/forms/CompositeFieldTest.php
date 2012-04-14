@@ -15,7 +15,7 @@ class CompositeFieldTest extends SapphireTest {
 			),
 			new TextField('D')
 		);
-		
+
 		$this->assertEquals(0, $compositeOuter->fieldPosition('A'));
 		$this->assertEquals(1, $compositeOuter->fieldPosition('B'));
 		$this->assertEquals(3, $compositeOuter->fieldPosition('D'));
@@ -30,16 +30,18 @@ class CompositeFieldTest extends SapphireTest {
 	}
 	
 	function testTag() {
-		$composite = new CompositeField(
+		$div = new CompositeField(
 			new TextField('A'),
 			new TextField('B')
 		);
-		$this->assertStringStartsWith('<div', trim($composite->FieldHolder()));
-		$this->assertStringEndsWith('/div>', trim($composite->FieldHolder()));
+		$this->assertStringStartsWith('<div', trim($div->FieldHolder()));
+		$this->assertStringEndsWith('/div>', trim($div->FieldHolder()));
+		
+		$fieldset = new CompositeField();
+		$fieldset->setTag('fieldset');
 
-		$composite->setTag('fieldset');
-		$this->assertStringStartsWith('<fieldset', trim($composite->FieldHolder()));
-		$this->assertStringEndsWith('/fieldset>', trim($composite->FieldHolder()));		
+		$this->assertStringStartsWith('<fieldset', trim($fieldset->FieldHolder()));
+		$this->assertStringEndsWith('/fieldset>', trim($fieldset->FieldHolder()));		
 	}
 
 	function testLegend() {
@@ -47,18 +49,14 @@ class CompositeFieldTest extends SapphireTest {
 			new TextField('A'),
 			new TextField('B')
 		);
-		$composite->setLegend('My legend');
-		$parser = new CSSContentParser($composite->Field());
-		$root = $parser->getBySelector('div.composite');
-		$this->assertObjectHasAttribute('title', $root[0]->attributes());
-		$this->assertEquals('My legend', (string)$root[0]['title']);
-
+		
 		$composite->setTag('fieldset');
 		$composite->setLegend('My legend');
+		
 		$parser = new CSSContentParser($composite->Field());
 		$root = $parser->getBySelector('fieldset.composite');
-		$this->assertObjectNotHasAttribute('title', $root[0]->attributes());
 		$legend = $parser->getBySelector('fieldset.composite legend');
+		
 		$this->assertNotNull($legend);
 		$this->assertEquals('My legend', (string)$legend[0]);
 	}

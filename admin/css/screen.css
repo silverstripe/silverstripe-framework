@@ -197,7 +197,7 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .cms .ss-ui-loading-icon { background: url(../../images/network-save.gif) no-repeat; display: block; width: 16px; height: 16px; }
 
 /** ---------------------------------------------------- Grouped form fields ---------------------------------------------------- */
-.fieldgroup .fieldgroup-field { float: left; display: block; width: 184px; padding-right: 8px; }
+.fieldgroup .fieldgroup-field { float: left; display: block; width: 184px; padding: 8px 0 0 8px; }
 .fieldgroup .fieldgroup-field .field { border: none; padding-bottom: 0; }
 
 /** ---------------------------------------------------- Checkbox Field ---------------------------------------------------- */
@@ -353,7 +353,7 @@ body.cms { overflow: hidden; }
 /* -------------------------------------------------------- Content Tools is the sidebar on the left of the main content panel */
 .cms-content-tools { background-color: #dde3e7; width: 192px; border-right: 1px solid #bfcad2; overflow-y: auto; overflow-x: hidden; z-index: 70; -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; -o-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; float: left; position: relative; }
 .cms-content-tools .cms-panel-header { clear: both; margin: 0 0 7px; line-height: 24px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -moz-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -o-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); }
-.cms-content-tools .cms-panel-content { width: 176px; padding: 8px 8px; overflow: auto; height: 100%; }
+.cms-content-tools .cms-panel-content { width: 176px; padding: 0 8px; overflow: auto; height: 100%; }
 .cms-content-tools .cms-panel-content .dropdown select { width: 160px; }
 .cms-content-tools .cms-panel-content #LastEditedFrom { -moz-box-shadow: none; -webkit-box-shadow: none; -o-box-shadow: none; box-shadow: none; }
 .cms-content-tools .cms-panel-content #LastEditedFrom input { width: 160px; }

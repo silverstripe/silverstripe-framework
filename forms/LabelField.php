@@ -8,8 +8,6 @@
  * @subpackage fields-dataless
  */
 class LabelField extends DatalessField {
-
-	protected $template = 'LabelField';
 	
 	/**
 	 * @param string $name
