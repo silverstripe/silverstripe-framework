@@ -31,10 +31,12 @@ class CliTestReporter extends SapphireTestReporter {
 		}
 		
 		echo "\n\n";
-		if ($failCount == 0) {
-			echo SS_Cli::text(" ALL TESTS PASS ", "white", "green");
+		if ($failCount == 0 && $incompleteCount > 0) {
+			echo SS_Cli::text(" OK, BUT INCOMPLETE TESTS! ", "black", "yellow");
+		} elseif ($failCount == 0) {
+			echo SS_Cli::text(" ALL TESTS PASS ", "black", "green");
 		}  else {
-			echo SS_Cli::text(" AT LEAST ONE FAILURE ", "white", "red");
+			echo SS_Cli::text(" AT LEAST ONE FAILURE ", "black", "red");
 		}
 
 		echo sprintf("\n\n%d tests run: %s, %s, and %s\n", $testCount, SS_Cli::text("$passCount passes"), SS_Cli::text("$failCount failures"), SS_Cli::text("$incompleteCount incomplete"));
@@ -97,12 +99,12 @@ class CliTestReporter extends SapphireTestReporter {
 			}
 
 			if( $test['status'] == 2) {
-				echo "\n" . SS_Cli::text($this->testNameToPhrase($test['name']) . "\n" . $test['message'] . "\n", 'yellow', null, true);
+				echo "\n" . SS_Cli::text($test['name'] . "\n" . $test['message'] . "\n", 'yellow', null);
 			} else {
-				echo "\n" . SS_Cli::text($this->testNameToPhrase($test['name']) . "\n". $test['message'] . "\n", 'red', null, true);
+				echo "\n" . SS_Cli::text($test['name'] . "\n". $test['message'] . "\n", 'red', null);
 				echo SS_Backtrace::get_rendered_backtrace($filteredTrace, true);
 			}
-			echo "\n--------------------\n";
+			echo "--------------------\n";
 		}
 	}
 	
