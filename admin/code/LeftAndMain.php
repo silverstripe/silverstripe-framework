@@ -1172,15 +1172,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return string
 	 */
 	public function CMSVersion() {
-		if(defined('CMS_PATH') && file_exists(CMS_PATH . '/silverstripe_version')) {
-			$sapphireVersion = file_get_contents(CMS_PATH . '/silverstripe_version');
-		} else {
-			$sapphireVersion = file_get_contents(FRAMEWORK_PATH . '/silverstripe_version');
-		}
-		if(!$sapphireVersion) $sapphireVersion = _t('LeftAndMain.VersionUnknown', 'unknown');
+		$frameworkVersion = file_get_contents(FRAMEWORK_PATH . '/silverstripe_version');
+		if(!$frameworkVersion) $frameworkVersion = _t('LeftAndMain.VersionUnknown', 'Unknown');
+		
 		return sprintf(
-			"SilverStripe: %s",
-			$sapphireVersion
+			"Framework: %s",
+			$frameworkVersion
 		);
 	}
 	
