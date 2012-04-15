@@ -481,6 +481,7 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 	}
 
 	public function getYaml($entities, $locale) {
+		// Check required because Zend_Translate_RailsYAML also includes the lib, from a different location
 		if(!class_exists('sfYamlDumper', false)) require_once 'thirdparty/symfony-yaml/lib/sfYamlDumper.php';
 
 		// Unflatten array
