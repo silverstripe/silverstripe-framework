@@ -32,7 +32,7 @@
 							<?php if(isset($hasErrorOtherThanDatabase)) { ?>
 								<p class="message error">
 									You aren't currently able to install the software.  Please <a href="#requirements">see below</a> for details.<br>
-									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
+									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/sapphire/en/installation/server-requirements">server requirements</a>.
 								</p>
 								<?php if (isset($phpIniLocation)) { ?>  
 									<p>Your php.ini file is located at <?php echo $phpIniLocation; ?></p>
@@ -46,7 +46,7 @@
 								<?php } else if($req->hasWarnings()) { ?>
 									<div class="message warning">
 										<p>There are some issues that we recommend you look at before installing, however, you are still able to install the software. Please see below for details.<br>
-										If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.</p>
+										If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/sapphire/en/installation/server-requirements">server requirements</a>.</p>
 									</div>
 								<?php } else if(!$dbReq->hasErrors() && !$adminReq->hasErrors()) { ?>
 									<div class="message goodInstall"><p>You're ready to install! Please confirm the configuration options below. <a href="#install">Install SilverStripe</a></p>
@@ -71,7 +71,7 @@
 							<?php $dbReq->showTable(); ?>
 							
 							<p class="helpText requirementsHelpText">
-								Read more about our <a href="http://doc.silverstripe.org/doku.php?id=server-requirements" target="_blank">server requirements</a>.
+								Read more about our <a href="http://doc.silverstripe.org/sapphire/en/installation/server-requirements" target="_blank">server requirements</a>.
 							</p>
 							
 							<div class="action">
@@ -230,7 +230,7 @@
 												<?php
 												$selectedLocale = isset($_POST['locale']) ? $_POST['locale'] : $defaultLocale;
 												foreach($locales as $code => $details) {
-													$selected = $code == $selectedLocale ? ' selected="true"' : '';
+													$selected = $code == $selectedLocale ? ' selected="selected"' : '';
 													echo "<option$selected value=\"$code\">{$details[0]} - {$details[1]}</option>\n";
 												}
 												?>
@@ -252,7 +252,7 @@
 							<?php if(isset($hasErrorOtherThanDatabase)) { ?>
 								<p class="error">
 									You aren't currently able to install the software.  Please <a href="#requirements">see above</a> for details.<br>
-									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements wiki page</a>.
+									If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/doku.php?id=server-requirements">server requirements page</a>.
 								</p>
 							<?php } else { ?>
 								<p id="stats-container">
@@ -270,7 +270,7 @@
 									
 									<span id="saving_top" style="display: none">
 										&nbsp;
-										<img src="<?php echo FRAMEWORK_NAME; ?>/images/network-save.gif">
+										<img src="<?php echo FRAMEWORK_NAME; ?>/images/network-save.gif" alt="Saving">
 										(this will take a minute or so)
 									</span>
 								</p>
