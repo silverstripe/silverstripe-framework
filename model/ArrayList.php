@@ -293,7 +293,18 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	public function canSortBy($by) {
 		return true;
 	}
-
+	
+	/**
+	 * Reverses an {@link ArrayList}
+	 *
+	 * @return ArrayList
+	 */
+	public function reverse() {
+		$this->items = array_reverse($this->items);
+		
+		return $this;
+	}
+	
 	/**
 	 * Sorts this list by one or more fields. You can either pass in a single
 	 * field name and direction, or a map of field names to sort directions.

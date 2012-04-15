@@ -26,4 +26,13 @@ interface SS_Sortable {
 	 */
 	public function sort();
 	
+	
+	/**
+	 * Reverses the list based on reversing the current sort.
+	 *
+	 * @example $list->reverse();
+	 *
+	 * @return array
+	 */
+	public function reverse();
 }
