@@ -1,0 +1,25 @@
+el:
+  AssetAdmin:
+    CHOOSEFILE: "Επιλογή αρχείου"
+    MENUTITLE: "Αρχεία & Εικόνες"
+  CMSMain:
+    MENUTITLE: "Περιεχόμενο"
+    SAVE: "Αποθήκευση"
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "Αλλάξατε το κωδικό ασφαλείας σας για το"
+  ComplexTableField.ss:
+    ADDITEM: "Προσθήκη"
+  DropdownField:
+    CHOOSE: "(Επιλέξτε)"
+  HtmlEditorField:
+  LeftAndMain:
+    HELP: "Βοήθεια"
+    SAVED: "αποθηκεύτηκαν"
+  Member:
+    EMAIL: "Email"
+    INTERFACELANG: "Γλώσσα Εφαρμογής"
+    SUBJECTPASSWORDCHANGED: "Ο κωδικός ασφαλείας σας έχει αλλάξει"
+    SUBJECTPASSWORDRESET: "Σύνδεσμος επαναφοράς κωδικού ασφαλείας"
+  SecurityAdmin:
+    MENUTITLE: "Ασφάλεια"
+  SiteTree:

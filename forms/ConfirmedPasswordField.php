@@ -107,7 +107,7 @@ class ConfirmedPasswordField extends FormField {
 				$title = _t(
 					'ConfirmedPasswordField.SHOWONCLICKTITLE', 
 					'Change Password', 
-					PR_MEDIUM, 
+					
 					'Label of the link which triggers display of the "change password" formfields'
 				);
 			}

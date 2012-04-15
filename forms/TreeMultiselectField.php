@@ -104,7 +104,7 @@ class TreeMultiselectField extends TreeDropdownField {
 				$value = implode(",", $idArray);
 			}
 		} else {
-			$title = _t('DropdownField.CHOOSE', '(Choose)', PR_MEDIUM, 'start value of a dropdown');
+			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 		} 
 		
 		return $this->createTag (

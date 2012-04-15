@@ -195,7 +195,7 @@ class Date extends DBField {
 					_t(
 						'Date.TIMEDIFFAGO',
 						"%s ago",
-						PR_MEDIUM,
+						
 						'Natural language time difference, e.g. 2 hours ago'
 					),
 					$this->TimeDiff()
@@ -205,7 +205,7 @@ class Date extends DBField {
 					_t(
 						'Date.TIMEDIFFIN',
 						"in %s",
-						PR_MEDIUM,
+						
 						'Natural language time difference, e.g. in 2 hours'
 					),
 					$this->TimeDiff()

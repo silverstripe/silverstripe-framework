@@ -1,0 +1,18 @@
+mn:
+  AssetAdmin:
+    MENUTITLE: "Файлууд & Зургууд"
+  CMSMain:
+    MENUTITLE: "Сайтын агуулга"
+  ComplexTableField.ss:
+    ADDITEM: "Нэмэх"
+  DropdownField:
+    CHOOSE: "(Сонго)"
+  HtmlEditorField:
+  LeftAndMain:
+    HELP: "Тусламж"
+  Member:
+    EMAIL: "Имэйл"
+    SUBJECTPASSWORDCHANGED: "Таны нууц үг өөрчлөгдлөө."
+  SecurityAdmin:
+    MENUTITLE: "Хамгаалалт"
+  SiteTree:

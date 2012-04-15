@@ -160,7 +160,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// can't be done in cms/_config.php as locale is not set yet
 		CMSMenu::add_link(
 			'Help', 
-			_t('LeftAndMain.HELP', 'Help', PR_HIGH, 'Menu title'), 
+			_t('LeftAndMain.HELP', 'Help', 'Menu title'), 
 			self::$help_link
 		);
 
@@ -1298,7 +1298,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				'name' => sprintf(_t(
 					'CMSMain.ACCESS', 
 					"Access to '%s' section",
-					PR_MEDIUM,
+					
 					"Item in permission selection identifying the admin section. Example: Access to 'Files & Images'"
 				), $title, null),
 				'category' => _t('Permission.CMS_ACCESS_CATEGORY', 'CMS Access')

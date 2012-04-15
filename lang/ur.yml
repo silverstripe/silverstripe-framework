@@ -1,0 +1,11 @@
+ur:
+  CMSMain:
+    SAVE: "محفوظ"
+  Date:
+    DAYS: "دن"
+    YEAR: "سال"
+    YEARS: "سال"
+  Member:
+    GREETING: "خوش آئندہ"
+  SecurityAdmin:
+    MENUTITLE: "حفاظت"

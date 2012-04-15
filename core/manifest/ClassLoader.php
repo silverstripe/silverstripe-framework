@@ -14,7 +14,7 @@ class SS_ClassLoader {
 	private static $instance;
 
 	/**
-	 * @var SS_ClassManifest[]
+	 * @var array Map of 'instance' (SS_ClassManifest) and other options.
 	 */
 	protected $manifests = array();
 
@@ -32,7 +32,7 @@ class SS_ClassLoader {
 	 * @return SS_ClassManifest
 	 */
 	public function getManifest() {
-		return $this->manifests[count($this->manifests) - 1];
+		return $this->manifests[count($this->manifests) - 1]['instance'];
 	}
 	
 	/**
@@ -47,16 +47,23 @@ class SS_ClassLoader {
 	 * also include any module configuration files at the same time.
 	 *
 	 * @param SS_ClassManifest $manifest
+	 * @param Boolean Marks the manifest as exclusive. If set to FALSE, will
+	 * look for classes in earlier manifests as well.
 	 */
-	public function pushManifest(SS_ClassManifest $manifest) {
-		$this->manifests[] = $manifest;
+	public function pushManifest(SS_ClassManifest $manifest, $exclusive = true) {
+		$this->manifests[] = array('exclusive' => $exclusive, 'instance' => $manifest);
+
+		foreach ($manifest->getConfigs() as $config) {
+			require_once $config;
+		}
 	}
 
 	/**
 	 * @return SS_ClassManifest
 	 */
 	public function popManifest() {
-		return array_pop($this->manifests);
+		$manifest = array_pop($this->manifests);
+		return $manifest['instance'];
 	}
 
 	public function registerAutoloader() {
@@ -68,11 +75,28 @@ class SS_ClassLoader {
 	 * manifest.
 	 *
 	 * @param string $class
+	 * @return String
 	 */
 	public function loadClass($class) {
-		if ($path = $this->getManifest()->getItemPath($class)) {
+		if ($path = $this->getItemPath($class)) {
 			require_once $path;
 		}
+		return $path;
+	}
+	
+	/**
+	 * Returns the path for a class or interface in the currently active manifest,
+	 * or any previous ones if later manifests aren't set to "exclusive".
+	 * 
+	 * @return String
+	 */
+	public function getItemPath($class) {
+		foreach(array_reverse($this->manifests) as $manifest) {
+			$manifestInst = $manifest['instance'];
+			if ($path = $manifestInst->getItemPath($class)) return $path;
+			if($manifest['exclusive']) break;
+		}
+		return false;
 	}
 
 	/**
@@ -82,7 +106,7 @@ class SS_ClassLoader {
 	 * @return bool
 	 */
 	public function classExists($class) {
-		return class_exists($class, false) || $this->getManifest()->getItemPath($class);
+		return class_exists($class, false) || $this->getItemPath($class);
 	}
 
 }

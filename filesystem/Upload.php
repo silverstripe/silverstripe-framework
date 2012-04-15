@@ -500,7 +500,7 @@ class Upload_Validator {
 				_t(
 					'File.TOOLARGE', 
 					'Filesize is too large, maximum %s allowed.',
-					PR_MEDIUM,
+					
 					'Argument 1: Filesize (e.g. 1MB)'
 				),
 				$arg
@@ -514,7 +514,7 @@ class Upload_Validator {
 				_t(
 					'File.INVALIDEXTENSION', 
 					'Extension is not allowed (valid: %s)',
-					PR_MEDIUM,
+					
 					'Argument 1: Comma-separated list of valid extensions'
 				),
 				wordwrap(implode(', ', $this->allowedExtensions))
