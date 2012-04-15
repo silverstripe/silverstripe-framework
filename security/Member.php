@@ -1456,7 +1456,7 @@ class Member_ProfileForm extends Form {
 	function dosave($data, $form) {
 		// don't allow ommitting or changing the ID
 		if(!isset($data['ID']) || $data['ID'] != Member::currentUserID()) {
-			return Director::redirectBack();
+			return $this->controller->redirectBack();
 		}
 		
 		$SQL_data = Convert::raw2sql($data);
@@ -1476,7 +1476,7 @@ class Member_ProfileForm extends Form {
 		$message = _t('Member.PROFILESAVESUCCESS', 'Successfully saved.') . ' ' . $closeLink;
 		$form->sessionMessage($message, 'good');
 		
-		Director::redirectBack();
+		$this->controller->redirectBack();
 	}
 }
 
