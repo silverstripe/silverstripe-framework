@@ -1479,7 +1479,9 @@ class i18n extends Object implements TemplateGlobalProvider {
 				// If language table isn't loaded for this locale, get it for each of the modules.
 				// The method will automatically load fallback languages (the lang for a locale).
 				if(!$adapter->isAvailable($locale) && !$adapter->isAvailable($lang)) {
-					i18n::include_by_locale($locale);
+					// TODO Remove reliance on global state, by refactoring into an i18nTranslatorManager
+					// which is instanciated by core with a $clean instance variable.
+					i18n::include_by_locale($locale, (isset($_GET['flush'])));
 				}
 				$translation = $adapter->translate($entity, $locale);
 
@@ -1496,11 +1498,13 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @return array Array of priority keys to instances of Zend_Translate, mapped by name.
 	 */
 	static function get_translators() {
-		if(!self::$translators) {
+		if(!Zend_Translate::getCache()) {
 			Zend_Translate::setCache(
 				SS_Cache::factory('i18n', 'Output', array('lifetime' => null, 'automatic_serialization' => true))
 			);
-			
+		}
+
+		if(!self::$translators) {
 			$defaultPriority = 10;
 			self::$translators[$defaultPriority] = array(
 				'core' => new Zend_Translate(array(
@@ -1872,9 +1876,15 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * will load the base locale file as well (if available).
 	 * 
 	 * @param string $locale All resources from any module in locale $locale will be loaded
+	 * @param Boolean $clean Clean old caches?
 	 */
-	static function include_by_locale($locale) {
+	static function include_by_locale($locale, $clean = false) {
 		$lang = i18n::get_lang_from_locale($locale);
+
+		if($clean) {
+			$cache = Zend_Translate::getCache();
+			if($cache) $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+		}
 		
 		// Automatically include fallback language (if applicable)
 		// TODO Also include custom Zend_Translate routing languages
@@ -1905,7 +1915,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 					foreach($selectedLocales as $selectedLocale) {
 						$filename = $adapter->getFilenameForLocale($selectedLocale);
 						$filepath = "{$module}/lang/" . $filename;
-						
+
 						if($filename && !file_exists($filepath)) continue;
 						$adapter->addTranslation(
 							array('content' => $filepath, 'locale' => $selectedLocale)
