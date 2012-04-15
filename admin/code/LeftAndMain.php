@@ -397,7 +397,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Menu title is *not* internationalised.
 	 */
 	static function menu_title_for_class($class) {
-		$title = eval("return $class::\$menu_title;");
+		$title = Config::inst()->get($class, 'menu_title', Config::FIRST_SET);
 		if(!$title) $title = preg_replace('/Admin$/', '', $class);
 		return $title;
 	}
