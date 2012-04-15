@@ -1,0 +1,8 @@
+--- 
+format: 1
+handler: 
+  commit: 2d5f2164b200309f6643f8f8486e0cdbbcae348d
+  branch: master
+lock: false
+repository_class: Piston::Git::Repository
+repository_url: git://github.com/chillu/zend_translate_railsyaml.git

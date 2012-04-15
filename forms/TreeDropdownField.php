@@ -175,7 +175,7 @@ class TreeDropdownField extends FormField {
 		if($record) {
 			$title = $record->{$this->labelField};
 		} else {
-			$title = _t('DropdownField.CHOOSE', '(Choose)', PR_MEDIUM, 'start value of a dropdown');
+			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 		}
 
 		// TODO Implement for TreeMultiSelectField

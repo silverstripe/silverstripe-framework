@@ -1,0 +1,149 @@
+ro:
+  AssetAdmin:
+    CHOOSEFILE: "Alege fişier "
+    MENUTITLE: "Fisiere & Imagini"
+    NEWFOLDER: "DosarNou"
+  BasicAuth:
+    ENTERINFO: "Va rugam introduceţi un user si o parolă."
+  CMSMain:
+    MENUTITLE: "Continut Site"
+    SAVE: "Salvează"
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "Ti-ai schimbat parola in"
+    HELLO: "Salut"
+  ComplexTableField.ss:
+    ADDITEM: "Adaugă"
+    SORTASC: "Sortează ascendent"
+    SORTDESC: "Sortează descendent"
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: "Schimba Parola"
+  DataObject:
+    PLURALNAME: "Obiecte Data"
+    SINGULARNAME: "Obiect Data"
+  Date:
+    DAY: "zi"
+    DAYS: "zile"
+    HOUR: "oră"
+    HOURS: "ore"
+    MIN: "minut"
+    MINS: "minute"
+    MONTH: "lună"
+    MONTHS: "luni"
+    SEC: "secundă"
+    SECS: "secunde"
+    TIMEDIFFAGO: "in urma cu %s"
+    YEAR: "an"
+    YEARS: "ani"
+  DropdownField:
+    CHOOSE: "(Alege)"
+  EmailField:
+    VALIDATION: "Vă rugăm introduceţi o adresă de email."
+  File:
+    INVALIDEXTENSION: "Extensia nu este acceptata (valide: %s)"
+    PLURALNAME: "Fisiere"
+    SINGULARNAME: "Fisier"
+    TOOLARGE: "Marimea fisierului este prea mare, marimea maxima este de %s"
+  Folder:
+    PLURALNAME: "Fisiere"
+    SINGULARNAME: "Fisier"
+  ForgotPasswordEmail.ss:
+    HELLO: "Salut"
+  Form:
+    VALIDATIONNOTUNIQUE: "Valoarea introdusă nu este unică"
+  Group:
+    Code: "Cod Grup"
+    Locked: "Blocat?"
+    PLURALNAME: "Grupuri"
+    Parent: "Grup de Baza"
+    SINGULARNAME: "Grup"
+    has_many_Permissions: "Permisiuni"
+    many_many_Members: "Membri"
+  HtmlEditorField:
+    BUTTONINSERTLINK: "Insereaza link"
+    BUTTONREMOVELINK: "Indeparteaza link"
+    CSSCLASS: "Aliniere / stil"
+    EMAIL: "Adresa email"
+    FILE: "Fisier"
+    FLASH: "Insereaza flash"
+    FOLDER: "Director"
+    IMAGE: "Insereaza imagine"
+    IMAGEDIMENSIONS: "Dimensiuni"
+    IMAGEHEIGHTPX: "Inaltime"
+    IMAGEWIDTHPX: "Latime"
+    LINK: "Insereaza/editeaza linkul pentru textul selectat"
+    LINKDESCR: "Descriere link"
+    LINKEMAIL: "Adresa email"
+    LINKEXTERNAL: "Alt site web"
+    LINKFILE: "Descarca un fisier"
+    LINKINTERNAL: "Pagina de pe site"
+    LINKOPENNEWWIN: "Deschideti link intr-o fereastra noua?"
+    LINKTO: "Link la"
+    PAGE: "Pagina"
+    URL: "URL"
+  Image:
+    PLURALNAME: "Fisiere"
+    SINGULARNAME: "Fisier"
+  LeftAndMain:
+    HELP: "Ajutor"
+    PAGETYPE: "Tip pagină: "
+    PERMALREADY: "Ne pare rău, dar nu puteţi accesa acea parte a CMS-ului. Daca doriţi să va autentificaţi ca altcineva, faceţi-o mai jos."
+    PERMDEFAULT: "Vă rugăm alegeţi o metodă de autentificare si introduceţi credenţialele pentru a accesa CMS-ul."
+    PLEASESAVE: "Va Rugam Salvaţi Pagina: Această pagină nu a putut fi actualizată deoarece încă nu a fost  salvată."
+    SAVED: "salvat"
+  LoginAttempt:
+    PLURALNAME: "Tentative Login"
+    SINGULARNAME: "Tentativa Login"
+  Member:
+    ADDRESS: "Adresă"
+    BUTTONLOGIN: "Autentificare"
+    BUTTONLOSTPASSWORD: "Am uitat parola"
+    EMAIL: "Email"
+    GREETING: "Bine aţi venit"
+    INTERFACELANG: "Limba interfetei"
+    LOGGEDINAS: "Sunteţi autentificat ca %s."
+    MOBILE: "Mobil"
+    NAME: "Nume"
+    PHONE: "Telefon"
+    PLURALNAME: "Membri"
+    SINGULARNAME: "Membru"
+    SUBJECTPASSWORDCHANGED: "Parola dumneavoastra a fost schimbata"
+    SUBJECTPASSWORDRESET: "Link-ul de resetare a parolei"
+    WELCOMEBACK: "Bine ai revenit, %s"
+    belongs_many_many_Groups: "Grupuri"
+    db_LockedOutUntil: "Blocat pana cand"
+    db_PasswordExpiry: "Data de Expirare a Parolei"
+  MemberAuthenticator:
+    TITLE: "E-mail si Parolă"
+  MemberPassword:
+    PLURALNAME: "Parole Membru"
+    SINGULARNAME: "Parola Membru"
+  MemberTableField:
+    ADD: "Adaugă "
+    ADDEDTOGROUP: "Membrul a fost adăugat in grup"
+  ModelAdmin:
+    CREATEBUTTON: "Creaza '%s'"
+  Page:
+    PLURALNAME: "Pagini"
+    SINGULARNAME: "Pagina"
+  Permission:
+    PLURALNAME: "Permisiuni"
+    SINGULARNAME: "Permisiune"
+  ReportAdmin:
+    MENUTITLE: "Rapoarte"
+  Security:
+    ERRORPASSWORDPERMISSION: "Trebuie sa fii autentificat pentru a schimba parola."
+  SecurityAdmin:
+    ADDMEMBER: "Adaugă membru"
+    MENUTITLE: "Securitate"
+    NEWGROUP: "Grup Nou"
+    SGROUPS: "Grupuri de securitate"
+  SiteTree:
+    TABMAIN: "Pincipal"
+  ToggleCompositeField.ss:
+    HIDE: "Ascunde "
+    SHOW: "Afişează "
+  ToggleField:
+    LESS: "mai puţin "
+    MORE: "mai mult"
+  Versioned:
+    has_many_Versions: "Versiune"

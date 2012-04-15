@@ -42,7 +42,7 @@ class NullableField extends FormField {
 		$this->isNullLabel = $isNullLabel;
 		if ( is_null($this->isNullLabel) ) {
 			// Set a default label if one is not provided.
-			$this->isNullLabel = _t('NullableField.IsNullLabel', 'Is Null', PR_HIGH);
+			$this->isNullLabel = _t('NullableField.IsNullLabel', 'Is Null');
 		}
 		parent::__construct($valueField->getName(), $valueField->Title(), $valueField->Value(), $valueField->getForm(), $valueField->RightTitle());
 		$this->readonly = $valueField->isReadonly();

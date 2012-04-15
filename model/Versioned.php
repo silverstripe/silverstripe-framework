@@ -1049,7 +1049,7 @@ class Versioned extends DataExtension {
 	protected static $reading_mode = null;
 	
 	function updateFieldLabels(&$labels) {
-		$labels['Versions'] = _t('Versioned.has_many_Versions', 'Versions', PR_MEDIUM, 'Past Versions of this page');
+		$labels['Versions'] = _t('Versioned.has_many_Versions', 'Versions', 'Past Versions of this page');
 	}
 	
 	function flushCache() {

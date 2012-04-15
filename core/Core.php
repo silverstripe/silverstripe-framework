@@ -391,8 +391,8 @@ function stripslashes_recursively(&$array) {
 /**
  * @see i18n::_t()
  */
-function _t($entity, $string = "", $priority = 40, $context = "") {
-	return i18n::_t($entity, $string, $priority, $context);
+function _t($entity, $string = "", $context = "") {
+	return i18n::_t($entity, $string, $context);
 }
 
 /**

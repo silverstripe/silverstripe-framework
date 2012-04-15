@@ -1,0 +1,480 @@
+lv:
+  AssetAdmin:
+    CHOOSEFILE: "Izvēlaties failu:"
+    MENUTITLE: "Faili un Attēli"
+    NEWFOLDER: "JaunaMape"
+  AssetAdmin_left.ss:
+    GO: "Doties"
+  BBCodeParser:
+    ALIGNEMENT: "Līdzināšana"
+    ALIGNEMENTEXAMPLE: "izlīdzināts pa labi"
+    BOLD: "Treknraksta teksts"
+    BOLDEXAMPLE: "Treknraksts"
+    CODE: "Blokkods"
+    CODEDESCRIPTION: "Neformatēts blokkods"
+    CODEEXAMPLE: "Blokkods"
+    COLORED: "Iekrāsots teksts"
+    COLOREDEXAMPLE: "zils teksts"
+    EMAILLINK: "E-pasta saite"
+    EMAILLINKDESCRIPTION: "Izveidot saiti uz e-pasta adresi"
+    IMAGE: "Attēls"
+    IMAGEDESCRIPTION: "Rādīt attēlu rakstā"
+    ITALIC: "Slīpraksta teksts"
+    ITALICEXAMPLE: "Slīpraksts"
+    LINK: "Tīmekļa vietnes saite"
+    LINKDESCRIPTION: "Saite uz citu tīmekļa vietni vai URL"
+    STRUCK: "Pārsvītrot tekstu"
+    STRUCKEXAMPLE: "Pārsvītrots"
+    UNDERLINE: "Pasvītrots teksts"
+    UNDERLINEEXAMPLE: "Pasvītrots"
+    UNORDERED: "Nesakārtots saraksts"
+    UNORDEREDDESCRIPTION: "Nesakārtots saraksts"
+    UNORDEREDEXAMPLE1: "nesakārtots elements 1"
+  BasicAuth:
+    ENTERINFO: "Lūdz ievadiet lietotājvārdu un paroli."
+    ERRORNOTADMIN: "Šis lietotājs nav administrators."
+    ERRORNOTREC: "Šis lietotājvārds / parole nav atpazīts"
+  Boolean:
+    ANY: "Jebkurš"
+    NO: "Nē"
+    YES: "Jā"
+  CMSBatchActions:
+    PUBLISHED_PAGES: "Publicētas %d lapas, %d kļūdas"
+  CMSMain:
+    MENUTITLE: "Lapas"
+    SAVE: "Saglabāt"
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "Jūs nomainījāt savu paroli "
+    CHANGEPASSWORDTEXT2: "Lai pieslēgtos, izmantojiet sekojošus datus:"
+    EMAIL: "E-pasts"
+    HELLO: "Sveiki"
+    PASSWORD: "Parole"
+  CheckboxField:
+    NO: "Nē"
+    YES: "Jā"
+  ComplexTableField:
+    CLOSEPOPUP: "Aizvērt izlēcošo logu"
+    SUCCESSADD: "Pievienots %s %s %s"
+    SUCCESSEDIT: "Saglabāts %s %s %s"
+  ComplexTableField.ss:
+    ADDITEM: "Pievienot %s"
+    NOITEMSFOUND: "Netika atrasts neviens ieraksts"
+    SORTASC: "Kārtot augoši"
+    SORTDESC: "Kārtot dilstoši"
+  ComplexTableField_popup.ss:
+    NEXT: "Nākamais"
+    PREVIOUS: "Iepriekšējais"
+  ConfirmedPasswordField:
+    ATLEAST: "Parolēm jābūt vismaz %s simbolu garām."
+    BETWEEN: "Parolēm jābūt %s l'diz %s simbolu garām."
+    HAVETOMATCH: "Parolēm ir jāsakrīt."
+    LEASTONE: "Parolēm ir jāsatur vismaz viens cipars un viens burtciparu simbols."
+    MAXIMUM: "Parolēm jābūt līdz %s simbolu garām."
+    NOEMPTY: "Paroles nedrīkst būt tukšas."
+    SHOWONCLICKTITLE: "Mainīt paroli"
+  CreditCardField:
+    FIRST: "pirmais"
+    FOURTH: "ceturtais"
+    SECOND: "otrais"
+    THIRD: "trešais"
+    VALIDATIONJS1: "Lūdzu pārliecinieties, ka esiet ievadījuši "
+    VALIDATIONJS2: "kredītkartes numur pareizi."
+  CurrencyField:
+    CURRENCYSYMBOL: "Ls"
+    VALIDATIONJS: "Lūduz ievadiet derīgu valūtu."
+  DataObject:
+    PLURALNAME: "Datu Objekti"
+    SINGULARNAME: "Datu Objekts"
+  Date:
+    DAY: "diena"
+    DAYS: "dienas"
+    HOUR: "stunda"
+    HOURS: "stundas"
+    MIN: "minūte"
+    MINS: "minūtes"
+    MONTH: "mēnesis"
+    MONTHS: "mēneši"
+    SEC: "sekunde"
+    SECS: "sekundes"
+    TIMEDIFFAGO: "pirms %s"
+    YEAR: "gads"
+    YEARS: "gadi"
+  DateField:
+    NOTSET: "nav uzstādīts"
+    TODAY: "šodien"
+    VALIDATIONJS: "Lūdzu ievadiet derīgu datuma formātu (DD/MM/GGGG)."
+    VALIDDATEFORMAT2: "Lūdzu ievadiet derīgu daruma formātu (%s)"
+    VALIDDATEMAXDATE: "Jūsu norādītajam datumam ir jāsakrīt vai jābūt vecākam par maksimāli atļauto datumu (%s)"
+    VALIDDATEMINDATE: "Jūsu datumam ir jāsakrīt vai jābūt jaunākam par minimāli atļauto datumu (%s)"
+  DropdownField:
+    CHOOSE: "(Izvēlieties)"
+  EmailField:
+    VALIDATION: "Lūdzu ievadiet e-pasta adresi."
+    VALIDATIONJS: "Lūdzu ievadiet e-pasta adresi."
+  Email_BounceRecord:
+    PLURALNAME: "Atgriezti e-pasta ieraksti"
+    SINGULARNAME: "Atgriezts e-pasta ieraksts"
+  Enum:
+    ANY: "Jebkuru"
+  File:
+    Content: "Saturs"
+    Filename: "Faila nosaukums"
+    INVALIDEXTENSION: "Neatļauts paplašinājums (atļauti: %s)"
+    NOFILESIZE: "Faila izmērs ir nulle baiti."
+    NOVALIDUPLOAD: "Augšupielādei nederīgs fails"
+    Name: "Nosaukms"
+    PLURALNAME: "Faili"
+    SINGULARNAME: "Fails"
+    Sort: "Kārtošanas secība"
+    TOOLARGE: "Faila izmērs ir pārāk liels, māksimāli pieļaujams ir %s ."
+    Title: "Virsraksts"
+  FileIFrameField:
+    ATTACH: "Pievienot %s"
+    ATTACHONCESAVED: "% būs iespējams pievienot tikai tad, kad ieraksts būs saglabāts."
+    DELETE: "Dzēst %s"
+    FILE: "Fails"
+    FROMCOMPUTER: "No Jūsu datora"
+    FROMFILESTORE: "No failu glabātuves"
+    NOSOURCE: "Lūdzu izvēlieties avota failu, kuru pievienot"
+    REPLACE: "Aizvietot %s"
+  FileIFrameField.ss:
+    TITLE: "Attēlu augšupielādes Iframe rāmis"
+  Folder:
+    CREATED: "Pirmoreiz augšupielādēts"
+    DELSELECTED: "Dzēst izvēlētos failus"
+    DETAILSTAB: "Parametri"
+    FILENAME: "Faila nosaukums"
+    FILESTAB: "Faili"
+    LASTEDITED: "Pēdējoreiz atjaunots"
+    PLURALNAME: "Faili"
+    SINGULARNAME: "Fails"
+    TITLE: "Virsraksts"
+    TYPE: "Tips"
+    UPLOADTAB: "Augšupielāde"
+    URL: "URL"
+    VIEWEDITASSET: "Skatīt/Labot palīgfailu"
+  ForgotPasswordEmail.ss:
+    HELLO: "Sveiki"
+    TEXT1: "Šeit ir Jūsu"
+    TEXT2: "paroles atiestatīšanas saite"
+    TEXT3: " "
+  Form:
+    FIELDISREQUIRED: "%s ir obligāti aizpildāms."
+    VALIDATIONCREDITNUMBER: "Lūdzu pārliecinaties, ka%s kredītkartes numuru ir ievadīts pareizi ."
+    VALIDATIONFAILED: "Datu validēšana neizdevās"
+    VALIDATIONNOTUNIQUE: "Ievadītā vērtība nav unikāla"
+    VALIDATIONPASSWORDSDONTMATCH: "Paroles nesakrīt"
+    VALIDATIONPASSWORDSNOTEMPTY: "Paroles nedrīkst būt tukšas"
+    VALIDATIONSTRONGPASSWORD: "Parolēm ir jāsatur vismaz viens cipars un viens burtciparu simbols."
+    VALIDATOR: "Validators"
+    VALIDCURRENCY: "Lūdzu ievadat derīgu valūtu."
+  FormField:
+    NONE: "neviens"
+  Group:
+    Code: "Grupas kods"
+    DefaultGroupTitleAdministrators: "Administratori"
+    DefaultGroupTitleContentAuthors: "Satura autori"
+    Description: "Apraksts"
+    IMPORTTABTITLE: "Imports"
+    IPRestrictions: "IP adreses ierobežojumi"
+    Locked: "Slēgt?"
+    PLURALNAME: "Grupas"
+    Parent: "Grupas vecāks"
+    RolesAddEditLink: "Pievienot/labot lomas"
+    SINGULARNAME: "Grupa"
+    Sort: "Kārtošanas secība"
+    has_many_Permissions: "Atļaujas"
+    many_many_Members: "Dalībnieki"
+  GroupImportForm:
+    Help1: "<p>Importēt vienu vai vairākas grupas <em>CSV</em> formatā (komatatdalītas vērtības). <small><a href=\"#\" class=\"toggle-advanced\">Rādīt paplašinātu pielietojumu</a></small></p>"
+    Help2: |
+            <div class="advanced">
+            <h4>Paplašināts pielietojums</h4>
+            <ul>
+            <li>Atļautās kolonnas: <em>%s</em></li>
+            <li>Katra no esošajām grupām tiek atlasīta pēc tās unikālā <em>Koda</em> vērtības, un tiek atjaunota ar jauno vērtību no importētā faila.</li>
+            <li>Grupu hierarhijas<em>VecākaKods</em> kolonna.</li>
+            <li>Piekļuves tiesību kodi var tikt piekārtoti<em>PermissionCode</em> kolonnā. Esošie piekļuves tiesību kodi netiks dzēsti.</li>
+            </ul>
+            </div>    ResultCreated: "Izveidotas %d grupas"
+    ResultDeleted: "Dzēstas %d grupas"
+    ResultUpdated: "Atjauninātas %d grupas"
+  HtmlEditorField:
+    ANCHORVALUE: "Enkurs"
+    BUTTONINSERTFLASH: "Ievietot Flash"
+    BUTTONINSERTIMAGE: "Ievietot attēlu"
+    BUTTONINSERTLINK: "Ievietot saiti"
+    BUTTONREMOVELINK: "Noņemt saiti"
+    CAPTIONTEXT: "Virsraksta teksts"
+    CSSCLASS: "Novietojums / stils"
+    CSSCLASSCENTER: "Neatkarīgs, centrēts"
+    CSSCLASSLEFT: "Kreisajā pusē ar tekstu apkārt."
+    CSSCLASSLEFTALONE: "Patstāvīgi, kreisajā pusē."
+    CSSCLASSRIGHT: "Labajā pusē ar tekstu apkārt."
+    EMAIL: "E-pasta adrese"
+    FILE: "Fails"
+    FLASH: "Flash"
+    FOLDER: "Mape"
+    IMAGE: "Attēls"
+    IMAGEALTTEXT: "Alternatīvais teksts (alt) - būs redzams, kad nebūs iespējams attēlot attēlu"
+    IMAGEDIMENSIONS: "Izmēri"
+    IMAGEHEIGHTPX: "Augstums"
+    IMAGETITLE: "Apraksts (paskaidre)  - papildus informācijai par attēlu"
+    IMAGEWIDTHPX: "Platums"
+    LINK: "Saite"
+    LINKANCHOR: "Enkurs uz šo lapu"
+    LINKDESCR: "Saites apraksts"
+    LINKEMAIL: "E-pasta adrese"
+    LINKEXTERNAL: "Cita tīmekļa vietne"
+    LINKFILE: "Lejupielādēt failu"
+    LINKINTERNAL: "Vietnes lapa"
+    LINKOPENNEWWIN: "Atvērt saiti jaunā logā?"
+    LINKTEXT: "Saites teksts"
+    LINKTO: "Saite uz"
+    PAGE: "Lapa"
+    SEARCHFILENAME: "Meklēt pēc faila nosaukuma"
+    SHOWUPLOADFORM: "Augšupielādēt failu"
+    URL: "URL"
+  Image:
+    PLURALNAME: "Faili"
+    SINGULARNAME: "Fails"
+  ImageField:
+    IMAGE: "Attēls"
+  Image_Cached:
+    PLURALNAME: "Faili"
+    SINGULARNAME: "Fails"
+  Image_iframe.ss:
+    TITLE: "Attēla augšupielādes iframe bloks"
+  LeftAndMain:
+    CANT_REORGANISE: "Jums nav piekļuves tiesības, lai pārkārtotu vietnes koku. Jūs izmaiņas netika saglabātas."
+    HELP: "Palīdzība"
+    PAGETYPE: "Lapas tips:"
+    PERMAGAIN: "Jūs esat atteicies no CMS. Ja jūs vēlaties vēlreiz pieteikties, tad ievadiet zemāk savu lietotājvārdu un paroli."
+    PERMALREADY: "Atvaino, bet tev nav piekļuves tiesību šai CMS daļai. Ja jūs vēlaties autorizēties kā kāds cits, tad to var izdarīt zemāk"
+    PERMDEFAULT: "Lai piekļūtu CMS, lūdzu izvēlieties autentificēšanas metodi un ievadiet savus akreditācijas datus."
+    PLEASESAVE: "Lūdzu saglabājiet lapu: Šo lapu nav iespējams atjaunot, jo tā vēl nav saglabāta."
+    SAVED: "saglabāts"
+  LeftAndMain_right.ss:
+    WELCOMETO: "Laipni lūgti"
+  LoginAttempt:
+    Email: "E-pasta adrese"
+    IP: "IP Adrese"
+    PLURALNAME: "Pieteikšanās mēģinājumi"
+    SINGULARNAME: "Pieteikšanās mēģinājums"
+    Status: "Statuss"
+  Member:
+    ADDRESS: "Adreses"
+    BUTTONCHANGEPASSWORD: "Mainīt paroli"
+    BUTTONLOGIN: "PIeslēgties"
+    BUTTONLOGINOTHER: "Pieslēgties ar citu kontu"
+    BUTTONLOSTPASSWORD: "Aizmirsāt paroli?"
+    CONFIRMNEWPASSWORD: "Apstiprināt jauno paroli"
+    CONFIRMPASSWORD: "Apstiprināt paroli"
+    CONTACTINFO: "Kontaktinfomācija"
+    DefaultAdminFirstname: "Noklusējuma administrators"
+    EMAIL: "E-pasts"
+    EMAILSIGNUPINTRO1: "Paldies, ka kļuvāt par mūsu jaunāku biedru! Jūsu konta detaļas ir apskatāmas zemāk."
+    EMAILSIGNUPINTRO2: "Jūs variet pierakstīties tīmekļa vietnei izmantojot zemāk esošos datus"
+    EMAILSIGNUPSUBJECT: "Paldies par pierakstīšanos"
+    EMPTYNEWPASSWORD: "Jaunā parole nedrīkst būt tukša, lūdzu mēģiniet vēlreiz"
+    ENTEREMAIL: "Lai iegūtu paroles atiestatīšanas saiti, lūdzu ievadiet e-pasta adresi."
+    ERRORLOCKEDOUT: "Jūsu konts ir īslaicīgi atslēgts pārāk liela kļūdainu pieslēgšanās mēģinājumu dēļ. Lūdzu mēģiniet vēlreiz pēc 20 minūtēm."
+    ERRORNEWPASSWORD: "Jaunā parole ir ievadīta savādāk, lūdzu mēģiniet vēlreiz"
+    ERRORPASSWORDNOTMATCH: "Jūsu pašreizējā parole nesakrīt, lūdzu mēģiniet vēlreiz"
+    ERRORWRONGCRED: "Ievadītā e-pasta adrese vai parole nav pareiza. Lūdzu mēģiniet vēlreiz."
+    FIRSTNAME: "Vārds"
+    GREETING: "Laipni lūgti"
+    INTERFACELANG: "Saskarnes Valoda"
+    INVALIDNEWPASSWORD: "Nevaram apstiprināt šo paroli: %s"
+    LOGGEDINAS: "Jūs esat pieslēdzies kā %s."
+    MOBILE: "Mobīlā telefona nr."
+    NAME: "Vārds"
+    NEWPASSWORD: "Jaunā parole"
+    PASSWORD: "Parole"
+    PHONE: "Tālruņa nr."
+    PLURALNAME: "Dalībnieki"
+    PROFILESAVESUCCESS: "Veiksmīgi saglabāts."
+    REMEMBERME: "Atcerēties mani nākamreiz?"
+    SINGULARNAME: "Dalībnieks"
+    SUBJECTPASSWORDCHANGED: "Jūsu parole tika nomainīta"
+    SUBJECTPASSWORDRESET: "Jūsu paroles atiestatīšanas saite "
+    SURNAME: "Uzvārds"
+    VALIDATIONMEMBEREXISTS: "Lietotājs ar tādu pašu %s jau eksistē"
+    ValidationIdentifierFailed: "Nav iespējams pārrakstīt esoša lietotāja #%d datus ar identisku identifikatoru (%s = %s))"
+    WELCOMEBACK: "Laipni lūgti atpakaļ, %s"
+    YOUROLDPASSWORD: "Jūsu vecā parole"
+    belongs_many_many_Groups: "Grupas"
+    db_LastVisited: "Pēdējā apmeklējuma datums"
+    db_Locale: "Saskarnes lokalizācija"
+    db_LockedOutUntil: "Izslēgts līdz"
+    db_NumVisit: "Apmeklējumu skaits"
+    db_Password: "Parole"
+    db_PasswordExpiry: "Paroles Termiņa Izbeigšanās Datums"
+  MemberAuthenticator:
+    TITLE: "E-pasts un Parole"
+  MemberImportForm:
+    Help1: "<p>Importēt lietotājus <em>CSV formātā</em> (komatatdalītas vērtības). <small><a href=\"#\" class=\"toggle-advanced\">Rādīt uzlabotu pielietojumu</a></small></p>"
+    Help2: |
+            <div class="advanced">
+            <h4>Paplašināts pielietojums</h4>
+            <ul>
+            <li>Atļautās kolonnas: <em>%s</em></li>
+            <li>Katra no esošajiem lietotājiem tiek atlasīts pēc tā unikālā <em>Koda</em> vērtības, un tiek atjaunots ar jauno vērtību no importētā faila.</li>
+            <li>Grupas var tikt piekārtotas kolonnā <em>Grupas</em>. Grupas tiek identificētas pēc to  parametra <em>Kods</em>, Vairākas grupas var tikt atdalītas ar komatu. Esošās grupas lietotāju tiesības netiks dzēstas.</li>
+            </ul>
+            </div>    ResultCreated: "Izveidoti %d lietotāji"
+    ResultDeleted: "Dzēsti %d lietotāji"
+    ResultNone: "Nav izmaiņas"
+    ResultUpdated: "Atjaunināti %d lietotāji"
+  MemberPassword:
+    PLURALNAME: "Dalībnieku paroles"
+    SINGULARNAME: "Dalībnieka parole"
+  MemberTableField:
+    ADD: "Pievienot"
+    ADDEDTOGROUP: "Lietotājs pievienots grupai"
+    ADDINGFIELD: "Pievienošana neizdevās"
+    DeleteTitleText: "Izdzēst no šīs grupas"
+    DeleteTitleTextDatabase: "Izdzēst no datubāzes un visām grupām"
+    ERRORADDINGUSER: "Atgadījusies kļūda pievienojot lietotāju grupai: %s"
+    FILTER: "Filtrēt"
+    SEARCH: "Meklēt"
+  ModelAdmin:
+    ADDBUTTON: "Pievienot"
+    ADDFORM: "Lai datubāzei pievienotu %s, aizpildiet šo formu. "
+    CHOOSE_COLUMNS: "Izvēlēties rezultātu kolonnas..."
+    CLEAR_SEARCH: "Notīrīt meklēšanas filtru"
+    CREATEBUTTON: "Izveidot '%s'"
+    DELETE: "Dzēst"
+    DELETEDRECORDS: "Dzēsti %s ieraksti."
+    FOUNDRESULTS: "Atrasti %s jūsu meklēšanas pieprasījumam atbilstoši ieraksti"
+    IMPORT: "Importēt no CSV"
+    IMPORTEDRECORDS: "Importēti %s ieraksti."
+    ITEMNOTFOUND: "Nevaru atrast šo ierakstu"
+    LOADEDFOREDITING: "'%s' ielādēts labošanai."
+    NOCSVFILE: "Lūdzu izvēlaties CSV failu, kuru importēt"
+    NOIMPORT: "Nav ko importēt"
+    NORESULTS: "Nekas netika atrasts"
+    SAVE: "Saglabāt"
+    SEARCHRESULTS: "Meklēšanas rezultāti"
+    SELECTALL: "izvēlēties visus"
+    SELECTNONE: "neizvēlēties nevienu"
+    UPDATEDRECORDS: "Atjaunoti %s ieraksti."
+  MoneyField:
+    FIELDLABELAMOUNT: "Skaits"
+    FIELDLABELCURRENCY: "Valūta"
+  MyEntity:
+    MyNamespace: "Mana noklusētās valodas vērtība"
+  MyNamespace:
+    MYENTITY: "Saskaita %s lietas"
+  NullableField:
+    IsNullLabel: "Ir Null"
+  NumericField:
+    VALIDATION: "'%s' nav skaitlis, šajā laukā drīkst ievadīt tikai skaitļus"
+    VALIDATIONJS: "nav skaitlis, šajā laukā atļauts ievadīt tikai skaitļus"
+  Page:
+    PLURALNAME: "Lapas"
+    SINGULARNAME: "Lapa"
+  Permission:
+    AdminGroup: "Administrators"
+    FULLADMINRIGHTS: "Pilnas administratora tiesības"
+    FULLADMINRIGHTS_HELP: "Ietver un pārraksta visas pārējās piesaistītās atļaujas"
+    PLURALNAME: "Atļaujas"
+    SINGULARNAME: "Atļauja"
+  PermissionCheckboxSetField:
+    AssignedTo: "piesaistīts \"%s\""
+    FromGroup: "mantots no grupas \"%s\""
+    FromRole: "mantots no lomas \"%s\""
+    FromRoleOnGroup: "mantots no lomas \"%s\" grupā \"%s\""
+  PermissionRole:
+    PLURALNAME: "Lomas"
+    SINGULARNAME: "Loma"
+  PermissionRoleCode:
+    PLURALNAME: "Lomu atļauju kodi"
+    SINGULARNAME: "Lomas atļaujas kods"
+  Permissions:
+    PERMISSIONS_CATEGORY: "Lomas un piekļuves tiesības"
+  PhoneNumberField:
+    VALIDATION: "Lūdzu ievadiet derīgu tālruņa numuru"
+  RelationComplexTableField.ss:
+    ADD: "Pievienot"
+    CSVEXPORT: "Eksportēt uz CSV"
+    NOTFOUND: "Nav atrast neviens ieraksts"
+  ReportAdmin:
+    MENUTITLE: "Atskaites"
+  Security:
+    ALREADYLOGGEDIN: "Jums nav piekļuves tiesību šai lapai. Ja jums ir izveidots cits konts ar kuru ir iespējams piekļūt šai lapai, tad jūs varat <a href=\"%s\">atkārtoti pieslēgties</a>. "
+    BUTTONSEND: "Nosūtīt man paroles atiestatīšanas saiti"
+    CHANGEPASSWORDBELOW: "Jūs varat nomainīt savu paroli zemāk."
+    CHANGEPASSWORDHEADER: "Mainīt paroli"
+    ENTERNEWPASSWORD: "Lūdzu ievadiet jaunu paroli."
+    ERRORPASSWORDPERMISSION: "Lai mainītu paroli, Jums ir jāpieslēdzas!"
+    IPADDRESSES: "IP Adreses"
+    LOGGEDOUT: "Jūs esat atslēdzies. Ja jūs vēlaties vēlreiz pieslēgties, ievadiet zemāk savus datus. "
+    LOGIN: "Pieslēgties"
+    LOSTPASSWORDHEADER: "Pazudusi Parole"
+    NOTEPAGESECURED: "Šī lapa ir pasargāta. Ievadiet savus autorizācijas datus zemāk un mēs jūs uzreiz nosūtīsim pie lapas apskates"
+    NOTERESETLINKINVALID: "<p>Paroles atiestatīšanas saite ir nederīga vai tās termiņš ir iztecējis.</p><p>Jūs varat pieprasīt jaunu <a href=\"%s\">šeit</a> vai arī nomainīt paroli pēc tam, kad esiet <a href=\"%s\">pieslēgušies</a>.</p>"
+    NOTERESETPASSWORD: "Lūdzu ievadiet savu e-pasta adresi un mēs nosūtīsim jums saiti, kas atiestatīs jūsu paroli."
+    PASSWORDSENTHEADER: "Parole atiestatīšanas saite nosūtīta uz '%s'"
+    PASSWORDSENTTEXT: "Paldies! Atiestatīšanas saite ir nosūtīta uz '%s', konts ar norādīto e-pasta adresi eksistē."
+  SecurityAdmin:
+    ADDMEMBER: "Pievienot lietotāju"
+    APPLY_ROLES: "Piemērot grupām lomas"
+    APPLY_ROLES_HELP: "Iespēja labot grupai piekārtotās lomas. Nepieciešamas piekļuves tiesības 'Drošība' sadaļai. "
+    EDITPERMISSIONS: "Pārvaldīt grupu tiesības"
+    EDITPERMISSIONS_HELP: "Iespēja labot grupas piekļuves tiesības un IP adreses. Nepieciešamas piekļuves tiesības 'Drošība' sadaļai. "
+    GROUPNAME: "Grupas nosaukums"
+    IPADDRESSESHELP: |
+                      <p>Jūs varat ierobežot grupas noteiktam IP adrešu apgabalam (katrā rindā norādiet vienu apgabalu). <br />Apgabalus var norādīt jebkurā no sekojošām formām: <br />
+                      203.96.152.12<br />
+                      203.96.152/24<br />
+                      203.96/16<br />
+                      203/8<br /><br />Ja Jūs šajā laukā ievadāt vienu vai vairākus IP adrešu apgabalus, tad lietotāji piederēs šīm grupām tikai tad, ja tie pieslēgsies ar vienu no derīgajām IP adresēm. Tas gan netraucēs lietotājiem pieslēgties sistēmai. Tas ir paredzēts, jo vienam un tam pašam lietotājam var būt vajadzība pieslēgties, lai piekļūtu atsevišķām sistēmas daļām, kurām nav IP adrešu ierobežojumi.    MEMBERS: "Lietotāji"
+    MENUTITLE: "Drošība"
+    MemberListCaution: "Brīdinājums: Izņemot lietotājus no šī saraksta, tie tiks dzēsti no visām grupām un datubāzes"
+    NEWGROUP: "Jauna grupa"
+    PERMISSIONS: "Atļaujas"
+    ROLES: "Lomas"
+    ROLESDESCRIPTION: "Šī sadaļa jums ļauj pievienot šai grupai lomas. Lomas ir loģiskas atļauju grupas, kuras var labot Lomas cilnē"
+    SGROUPS: "Drošības grupas"
+    TABIMPORT: "Imports"
+    TABROLES: "Lomas"
+    VIEWUSER: "Skatīt lietotāju"
+  SecurityAdmin_MemberImportForm:
+    BtnImport: "Importēt"
+    FileFieldLabel: "CSV fails <small>(Atļautie paplašinājumi: *.csv)</small>"
+  SimpleImageField:
+    NOUPLOAD: "Netika augšupielādēts neviens attēls"
+  SiteTree:
+    TABMAIN: "Sākums"
+  TableField:
+    ISREQUIRED: "%s ir nepieciešams '%s'"
+  TableField.ss:
+    ADD: "PIevienot jaunu rindu"
+    ADDITEM: "Pievienot %s"
+  TableListField:
+    CSVEXPORT: "Eksportēt uz CSV"
+    PRINT: "Drukāt"
+    SELECT: "Izvēlēties:"
+  TableListField.ss:
+    NOITEMSFOUND: "Nav atrasts neviens ieraksts"
+    SORTASC: "Kārtot augošā secībā"
+    SORTDESC: "Kārtot dilstošā secībā"
+  TableListField_PageControls.ss:
+    DISPLAYING: "Parādīt"
+    OF: "no"
+    TO: "uz"
+    VIEWFIRST: "Skatīt pirmo"
+    VIEWLAST: "Skatīt pēdējo"
+    VIEWNEXT: "Skatīt nākamo"
+    VIEWPREVIOUS: "Skatīt iepriekšējo"
+  TimeField:
+    VALIDATEFORMAT: "Lūdzu ievadiet derīgu laika formātu (%s)"
+  ToggleCompositeField.ss:
+    HIDE: "Slēpt"
+    SHOW: "Rādīt"
+  ToggleField:
+    LESS: "mazāk"
+    MORE: "vairāk"
+  Versioned:
+    has_many_Versions: "Versijas"

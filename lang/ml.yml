@@ -1,0 +1,13 @@
+ml:
+  AssetAdmin:
+    MENUTITLE: "ഫയലുകളും ചിത്രങളും"
+  Date:
+    DAYS: "ദിവസങള്‍"
+    HOUR: "മണിക്കൂര്‍"
+    HOURS: "മണിക്കൂറുകള്‍"
+    YEAR: "വര്‍ഷം"
+    YEARS: "വര്‍ഷങള്‍"
+  HtmlEditorField:
+    BUTTONINSERTIMAGE: "ചിത്രം ചേര്‍ക്കുക"
+  LeftAndMain:
+    HELP: "സഹായം"

@@ -1,0 +1,15 @@
+en:
+  NONAMESPACE: Include Entity without Namespace
+  SPRINTFNONAMESPACE: My replacement no namespace: %s
+  SPRINTFINCLUDENONAMESPACE: My include replacement no namespace: %s
+  LAYOUTTEMPLATENONAMESPACE: Layout Template no namespace
+  i18nTestModule:
+    # Comment for entity
+    ENTITY: Entity with "Double Quotes"
+    ADDITION: Addition
+    MAINTEMPLATE: Main Template
+    WITHNAMESPACE: Include Entity with Namespace
+    LAYOUTTEMPLATE: Layout Template
+    SPRINTFNAMESPACE: My replacement: %s
+  i18nTestModuleInclude.ss:
+    SPRINTFINCLUDENAMESPACE: My include replacement: %s

@@ -114,7 +114,7 @@ class PermissionCheckboxSetField extends FormField {
 								_t(
 									'PermissionCheckboxSetField.FromRole',
 									'inherited from role "%s"',
-									PR_MEDIUM,
+									
 									'A permission inherited from a certain permission role'
 								),
 								$role->Title
@@ -136,7 +136,7 @@ class PermissionCheckboxSetField extends FormField {
 										_t(
 											'PermissionCheckboxSetField.FromRoleOnGroup',
 											'inherited from role "%s" on group "%s"',
-											PR_MEDIUM,
+											
 											'A permission inherited from a role on a certain group'
 										),
 										$role->Title, 
@@ -153,7 +153,7 @@ class PermissionCheckboxSetField extends FormField {
 									_t(
 										'PermissionCheckboxSetField.FromGroup',
 										'inherited from group "%s"',
-										PR_MEDIUM,
+										
 										'A permission inherited from a certain group'
 									),
 									$parent->Title

@@ -182,7 +182,7 @@ class Security extends Controller {
 							'Security.ALREADYLOGGEDIN', 
 							"You don't have access to this page.  If you have another account that "
 								. "can access that page, you can log in again below.",
-							PR_MEDIUM,
+							
 							"%s will be replaced with a link to log in."
 						),
 						'logInAgain' => _t(

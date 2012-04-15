@@ -1,0 +1,26 @@
+uz:
+  AssetAdmin:
+    MENUTITLE: "Fayllar va Rasmlar"
+  CMSMain:
+    MENUTITLE: "Saytdagi ma'lumotlar"
+    SAVE: "Saqlash"
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "Yangi parol"
+  ComplexTableField.ss:
+    ADDITEM: "Qo'shish"
+  DropdownField:
+    CHOOSE: "(Tanlang)"
+  HtmlEditorField:
+  LeftAndMain:
+    HELP: "Yordam"
+    PAGETYPE: "Sahifa turi:"
+    PERMAGAIN: "Siz saytdan chiqdingiz."
+    PERMALREADY: "Bu erdan saytga kirishingiz mumkin"
+  Member:
+    EMAIL: "Email"
+    INTERFACELANG: "Ko'rinish tili"
+    SUBJECTPASSWORDCHANGED: "Parol o'zgardi"
+    SUBJECTPASSWORDRESET: "Parol o'zgartirish uchun adres"
+  SecurityAdmin:
+    MENUTITLE: "Havfsizlik"
+  SiteTree:

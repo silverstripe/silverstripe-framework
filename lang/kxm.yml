@@ -1,0 +1,11 @@
+kxm:
+  AssetAdmin:
+    MENUTITLE: "រូបភាព និង ឯកសារ"
+  CMSMain:
+    MENUTITLE: "ទំព័រ"
+  LeftAndMain:
+    HELP: "ជំនួយការ"
+  ReportAdmin:
+    MENUTITLE: "របាយការណ៍"
+  SecurityAdmin:
+    MENUTITLE: "សុវត្ថិភាព"
