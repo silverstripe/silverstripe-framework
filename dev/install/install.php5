@@ -353,19 +353,17 @@ class InstallRequirements {
 		}
 
 		// Check for web server, unless we're calling the installer from the command-line
-		if(!isset($_SERVER['argv']) || !$_SERVER['argv']) {
-			$this->isRunningWebServer(array("Webserver Configuration", "Server software", "Unknown", $webserver));
+		$this->isRunningWebServer(array("Webserver Configuration", "Server software", "Unknown", $webserver));
 
-			if($isApache) {
-				$this->requireApacheRewriteModule('mod_rewrite', array("Webserver Configuration", "URL rewriting support", "You need mod_rewrite to use friendly URLs with SilverStripe, but it is not enabled."));
-			} elseif($isIIS) {
-				$this->requireIISRewriteModule('IIS_UrlRewriteModule', array("Webserver Configuration", "URL rewriting support", "You need to enable the IIS URL Rewrite Module to use friendly URLs with SilverStripe, but it is not installed or enabled. Download it for IIS 7 from http://www.iis.net/expand/URLRewrite"));
-			} else {
-				$this->warning(array("Webserver Configuration", "URL rewriting support", "I can't tell whether any rewriting module is running.  You may need to configure a rewriting rule yourself."));
-			}
-
-			$this->requireServerVariables(array('SCRIPT_NAME','HTTP_HOST','SCRIPT_FILENAME'), array("Webserver config", "Recognised webserver", "You seem to be using an unsupported webserver.  The server variables SCRIPT_NAME, HTTP_HOST, SCRIPT_FILENAME need to be set."));
+		if($isApache) {
+			$this->requireApacheRewriteModule('mod_rewrite', array("Webserver Configuration", "URL rewriting support", "You need mod_rewrite to use friendly URLs with SilverStripe, but it is not enabled."));
+		} elseif($isIIS) {
+			$this->requireIISRewriteModule('IIS_UrlRewriteModule', array("Webserver Configuration", "URL rewriting support", "You need to enable the IIS URL Rewrite Module to use friendly URLs with SilverStripe, but it is not installed or enabled. Download it for IIS 7 from http://www.iis.net/expand/URLRewrite"));
+		} else {
+			$this->warning(array("Webserver Configuration", "URL rewriting support", "I can't tell whether any rewriting module is running.  You may need to configure a rewriting rule yourself."));
 		}
+
+		$this->requireServerVariables(array('SCRIPT_NAME','HTTP_HOST','SCRIPT_FILENAME'), array("Webserver config", "Recognised webserver", "You seem to be using an unsupported webserver.  The server variables SCRIPT_NAME, HTTP_HOST, SCRIPT_FILENAME need to be set."));
 
 		// Check for GD support
 		if(!$this->requireFunction("imagecreatetruecolor", array("PHP Configuration", "GD2 support", "PHP must have GD version 2."))) {
@@ -935,8 +933,7 @@ class Installer extends InstallRequirements {
 	}
 
 	function install($config) {
-		if(isset($_SERVER['HTTP_HOST'])) {
-			?>
+?>
 <html>
 	<head>
 		<title>Installing SilverStripe...</title>
@@ -963,9 +960,6 @@ class Installer extends InstallRequirements {
 				<p>If you receive a fatal error, refresh this page to continue the installation</p>
 				<ul>
 <?php
-		} else {
-			echo "SILVERSTRIPE COMMAND-LINE INSTALLATION\n\n";
-		}
 
 		$webserver = $this->findWebserver();
 		$isIIS = $this->isIIS();
@@ -1279,11 +1273,6 @@ TEXT;
 	}
 
 	function checkRewrite() {
-		if(!isset($_SERVER['HTTP_HOST']) || !$_SERVER['HTTP_HOST']) {
-			$this->statusMessage("Installer seems to be called from command-line, we're going to assume that rewriting is working.");
-			return true;
-		}
-
 		$destinationURL = str_replace('install.php', '', $_SERVER['SCRIPT_NAME']) .
 			($this->checkModuleExists('cms') ? 'home/successfullyinstalled?flush=1' : '?flush=1');
 
