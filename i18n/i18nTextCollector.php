@@ -209,6 +209,11 @@ class i18nTextCollector extends Object {
 				if($id == T_STRING && $text == '_t') {
 					// start definition
 					$inTransFn = true;
+				} elseif($inTransFn && $id == T_VARIABLE) {
+					// Dynamic definition from provideEntities - skip
+					$inTransFn = false;
+					$inConcat = false;
+					$currentEntity = array();
 				} elseif($inTransFn && $id == T_CONSTANT_ENCAPSED_STRING) {
 					// Fixed quoting escapes, and remove leading/trailing quotes
 					if(preg_match('/^\'/', $text)) {
@@ -221,8 +226,11 @@ class i18nTextCollector extends Object {
 						$text = preg_replace('/"$/', '', $text);
 					}
 					
-					if($inConcat) $currentEntity[count($currentEntity)-1] .= $text;
-					else $currentEntity[] = $text;
+					if($inConcat) {
+						$currentEntity[count($currentEntity)-1] .= $text;
+					} else {
+						$currentEntity[] = $text;
+					} 
 				} 
 			} elseif($inTransFn && $token == '.') {
 				$inConcat = true;	
@@ -239,6 +247,12 @@ class i18nTextCollector extends Object {
 		}
 		
 		foreach($entities as $entity => $spec) {
+			// call without master language definition
+			if(!$spec) {
+				unset($entities[$entity]);
+				continue; 
+			}
+
 			unset($entities[$entity]);
 			$entities[$this->normalizeEntity($entity, $module)] = $spec;
 		}
@@ -291,7 +305,7 @@ class i18nTextCollector extends Object {
 			// Not all classes can be instanciated without mandatory arguments,
 			// so entity collection doesn't work for all SilverStripe classes currently
 			// Requires PHP 5.1+
-			if(class_exists($class) && in_array('i18nEntityProvider', class_implements($class))) {
+			if(class_exists($class, false) && in_array('i18nEntityProvider', class_implements($class))) {
 				$reflectionClass = new ReflectionClass($class);
 				if($reflectionClass->isAbstract()) continue;
 
@@ -327,7 +341,7 @@ class i18nTextCollector extends Object {
 		// and skip the processing. This is mostly used for
 		// dynamically translating static properties, e.g. looping
 		// through $db, which are detected by {@link collectFromEntityProviders}.
-		if(strpos('$', $entity) !== FALSE) return false;
+		if($entity && strpos('$', $entity) !== FALSE) return false;
 		
 		return "{$namespace}.{$entity}";
 	}
@@ -441,7 +455,7 @@ class i18nTextCollector_Writer_Php implements i18nTextCollector_Writer {
 			user_error("i18nTextCollector::langArrayCodeForEntitySpec(): Wrong entity format for $entityFullName with values" . var_export($entitySpec, true), E_USER_WARNING);
 			return false;
 		}
-		
+	
 		$value = $entitySpec[0];
 		$comment = (isset($entitySpec[1])) ? addcslashes($entitySpec[1],'\'') : null;
 
