@@ -556,7 +556,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	static function currentUser() {
 		$id = Member::currentUserID();
 		if($id) {
-			return DataObject::get_one("Member", "\"Member\".\"ID\" = $id", true, 1);
+			return DataObject::get_one("Member", "\"Member\".\"ID\" = $id", true);
 		}
 	}
 
