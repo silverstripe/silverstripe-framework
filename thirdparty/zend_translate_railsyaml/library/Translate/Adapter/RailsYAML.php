@@ -50,7 +50,7 @@ class Translate_Adapter_RailsYaml extends Zend_Translate_Adapter {
         }
 
         $content = sfYaml::load(file_get_contents($this->_filename));
-        if($locale != 'auto' && !array_key_exists($locale, $content)) {
+        if($locale != 'auto' && $content && !array_key_exists($locale, $content)) {
             require_once 'Zend/Translate/Exception.php';
             throw new Zend_Translate_Exception(sprintf('Locale "%s" not found in file %s', $locale, $this->_filename));
         }
@@ -58,7 +58,7 @@ class Translate_Adapter_RailsYaml extends Zend_Translate_Adapter {
         // Rails YML files supported arbitrarily nested keys, Zend_Translate doesn't - so we flatten them.
         // See http://stackoverflow.com/questions/7011451/transaprently-flatten-an-array/7011675
         $flattened = array();
-        if($content[$locale]) {
+        if($content && $content[$locale]) {
             $iterator = new Translate_Adapter_RailsYaml_Iterator(new RecursiveArrayIterator($content[$locale]));
             foreach($iterator as $k => $v) {
                 $flattened[implode($options['keyDelimiter'], $iterator->getKeyStack())] = $v;
