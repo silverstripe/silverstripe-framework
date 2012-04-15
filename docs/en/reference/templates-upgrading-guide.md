@@ -62,24 +62,6 @@ to the wrapped method. The list of these methods is:
  - i18nLocale() -> i18n::get_locale()
  - CurrentPage() -> Controller::curr()
 
-#### Iterator-specific
-
-Some of the removed methods were utilities that exposed the current state of the current scope's iteration. These
-currently have no replacement. The list of these methods is:
-
- - First
- - Last
- - FirstLast
- - Middle
- - MiddleString
- - Even
- - Odd
- - EvenOdd
- - Pos
- - TotalItems
- - Modulus
- - MultipleOf
-
 #### Scope-exposing
 
 Some of the removed methods exposed access to the various scopes. These currently have no replacement. The list of
