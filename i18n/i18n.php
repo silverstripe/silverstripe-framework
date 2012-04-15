@@ -1,6 +1,7 @@
 <?php
 require_once 'Zend/Translate.php';
 require_once 'i18nRailsYamlAdapter.php';
+require_once 'i18nSSLegacyAdapter.php';
 
 /**
  * Base-class for storage and retrieval of translated entities.
@@ -1475,11 +1476,11 @@ class i18n extends Object implements TemplateGlobalProvider {
 			foreach($translators as $name => $translator) {
 				$adapter = $translator->getAdapter();
 
-				// if language table isn't loaded for this locale, get it for each of the modules
+				// If language table isn't loaded for this locale, get it for each of the modules.
+				// The method will automatically load fallback languages (the lang for a locale).
 				if(!$adapter->isAvailable($locale) && !$adapter->isAvailable($lang)) {
 					i18n::include_by_locale($locale);
 				}
-
 				$translation = $adapter->translate($entity, $locale);
 
 				// Return translation only if we found a match thats not the entity itself (Zend fallback)
@@ -1904,6 +1905,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 					foreach($selectedLocales as $selectedLocale) {
 						$filename = $adapter->getFilenameForLocale($selectedLocale);
 						$filepath = "{$module}/lang/" . $filename;
+						
 						if($filename && !file_exists($filepath)) continue;
 						$adapter->addTranslation(
 							array('content' => $filepath, 'locale' => $selectedLocale)

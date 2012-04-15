@@ -1,7 +1,5 @@
 <?php
 
-i18n::include_locale_file('i18nothermodule', 'en_US');
-
 global $lang;
 
 if(array_key_exists('de_DE', $lang) && is_array($lang['de_DE'])) {

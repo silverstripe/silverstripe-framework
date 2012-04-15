@@ -349,9 +349,18 @@ class i18nTest extends SapphireTest {
 		// Load non-exclusive to retain core class autoloading
 		$classManifest = new SS_ClassManifest($this->alternateBasePath, true, true, false);
 		SS_ClassLoader::instance()->pushManifest($classManifest);
+
+		// Changed manifest, so we also need to unset all previously collected messages.
+		// The easiest way to do this it to register a new adapter.
+		$adapter = new Zend_Translate(array(
+			'adapter' => 'i18nRailsYamlAdapter',
+			'locale' => i18n::default_locale(),
+			'disableNotices' => true,
+		));
+		i18n::register_translator($adapter, 'core');
 		
 		i18n::set_locale('en_US');
-		
+
 		$this->assertEquals(
 			i18n::_t('i18nTestModule.ENTITY'),
 			'Entity with "Double Quotes"'
@@ -370,12 +379,12 @@ class i18nTest extends SapphireTest {
 		i18n::register_translator($translator, 'custom', 11);
 		$this->assertEquals(
 			i18n::_t('i18nTestModule.ENTITY'),
-			'i18nTestModule.ENTITY CustomAdapter (en_US)',
+			'i18nTestModule.ENTITY CustomAdapter (en)',
 			'Existing entities overruled by adapter with higher priority'
 		);
 		$this->assertEquals(
 			i18n::_t('AdapterEntity1', 'AdapterEntity1'),
-			'AdapterEntity1 CustomAdapter (en_US)',
+			'AdapterEntity1 CustomAdapter (en)',
 			'New entities only defined in new adapter are detected'
 		);
 		
@@ -387,7 +396,7 @@ class i18nTest extends SapphireTest {
 		i18n::register_translator($translator, 'othercustom_lower_prio', 5); 
 		$this->assertEquals(
 			i18n::_t('i18nTestModule.ENTITY'),
-			'i18nTestModule.ENTITY CustomAdapter (en_US)',
+			'i18nTestModule.ENTITY CustomAdapter (en)',
 			'Adapter with lower priority loses'
 		);
 		
@@ -399,7 +408,7 @@ class i18nTest extends SapphireTest {
 		i18n::register_translator($translator, 'othercustom_higher_prio', 15);
 		$this->assertEquals(
 			i18n::_t('i18nTestModule.ENTITY'),
-			'i18nTestModule.ENTITY OtherCustomAdapter (en_US)',
+			'i18nTestModule.ENTITY OtherCustomAdapter (en)',
 			'Adapter with higher priority wins'
 		);
 		

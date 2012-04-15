@@ -30,7 +30,7 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 		// Emulates behaviour in i18n::get_translators()
 		$this->origAdapter = i18n::get_translator('core');
 		$adapter = new Zend_Translate(array(
-			'adapter' => 'i18nRailsYamlAdapter',
+			'adapter' => 'i18nSSLegacyAdapter',
 			'locale' => i18n::default_locale(),
 			'disableNotices' => true,
 		));
