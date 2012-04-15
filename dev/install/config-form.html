@@ -28,12 +28,6 @@
 				
 				<div id="Layout">
 					<div class="typography">
-						<!--
-<p>Thanks for choosing to use SilverStripe! Please follow the instructions below and you should be up in running in no time.<br>
-							If you get stuck, head over to the <a href="http://silverstripe.org/installing-silverstripe" target="_blank">installation forum</a>, or check out our list of <a href="http://doc.silverstripe.org/doku.php?id=suggested-web-hosts" target="_blank">suggested web hosts</a> known to work with SilverStripe.
-						</p>
--->
-			
 						<form action="install.php" method="post">
 							<?php if(isset($hasErrorOtherThanDatabase)) { ?>
 								<p class="message error">
@@ -96,7 +90,7 @@
 									<strong>Other databases:</strong><br>
 									Databases in the list that are greyed out cannot currently be used. Click on them for more information and possible remedies.
 								</p>
-								<div class="fields">							
+								<div class="fields">
 									<div class="field">
 										<ul id="database_selection">
 											<?php
@@ -184,7 +178,7 @@
 										<?php if($envFileExists) { ?>
 										<div id="use_environment_field" class="field">
 											<input id="use_environment" type="checkbox" name="useEnv" <?php if($usingEnv) echo "checked=\"checked\"" ?>>
-											<label for="use_environment">Use _ss_environment file for configuration (<a href="http://doc.silverstripe.org/doku.php?id=environment-management" target="_blank">?</a>)</label>
+											<label for="use_environment">Use _ss_environment file for configuration (<a href="http://doc.silverstripe.org/sapphire/en/topics/environment-management" target="_blank">?</a>)</label>
 										</div>
 										<?php } ?>
 										

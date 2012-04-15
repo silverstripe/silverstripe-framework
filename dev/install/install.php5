@@ -392,9 +392,7 @@ class InstallRequirements {
 		// Check for Standard PHP Library (SPL) support
 		$this->requireFunction('spl_classes', array('PHP Configuration', 'SPL support', 'Standard PHP Library (SPL) not included in PHP.'));
 
-		if(version_compare(PHP_VERSION, '5.3.0', '>=')) {
-			$this->requireDateTimezone(array('PHP Configuration', 'date.timezone set and valid', 'date.timezone option in php.ini must be set in PHP 5.3.0+', ini_get('date.timezone')));
-		}
+		$this->requireDateTimezone(array('PHP Configuration', 'date.timezone set and valid', 'date.timezone option in php.ini must be set correctly.', ini_get('date.timezone')));
 
 		$this->suggestPHPSetting('asp_tags', array(false,0,''), array('PHP Configuration', 'asp_tags option turned off', 'This should be turned off as it can cause issues with SilverStripe'));
 		$this->suggestPHPSetting('magic_quotes_gpc', array(false,0,''), array('PHP Configuration', 'magic_quotes_gpc option turned off', 'This should be turned off, as it can cause issues with cookies. More specifically, unserializing data stored in cookies.'));
@@ -1135,8 +1133,10 @@ PHP
 
 		// @todo Exception thrown if database with admin already exists with same Email
 		try {
+			$this->statusMessage('Creating default admin account...');
 			$adminMember->write();
 		} catch(Exception $e) {
+			$this->statusMessage('Admin account could not be created.');
 		}
 
 		// Syncing filesystem (so /assets/Uploads is available instantly, see ticket #2266)
