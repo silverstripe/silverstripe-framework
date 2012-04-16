@@ -132,7 +132,7 @@ body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif;
 .cms .ui-state-hover { cursor: pointer; }
 .cms .ui-widget input, .cms .ui-widget select, .cms .ui-widget textarea, .cms .ui-widget button { color: #444444; font-size: 12px; font-family: Arial, sans-serif; }
 
-/** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in sapphire/css/Form.css.  @package framework @subpackage admin */
+/** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in framework/css/Form.css.  @package framework @subpackage admin */
 /** ---------------------------------------------------- Basic form fields ---------------------------------------------------- */
 form.nostyle .field { padding: 0; border: 0; }
 form.nostyle label { float: none; width: auto; }
@@ -257,13 +257,15 @@ body.cms { overflow: hidden; }
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form, .cms-preview, .cms-preview iframe, .cms-preview-controls { display: -moz-inline-box; -moz-box-orient: vertical; display: inline-block; vertical-align: middle; *vertical-align: auto; }
 .cms-preview, .cms-menu, .cms-content, .cms-content-header, .cms-content-tools, .cms-content-fields, .cms-edit-form, .cms-preview, .cms-preview iframe, .cms-preview-controls { *display: inline; }
 
-.cms-content-header { padding: 0px 8px 8px; height: 32px; z-index: 60; -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; -o-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; background-image: url(../images/textures/cms_content_header.png); background-repeat: repeat; }
+.cms-content-header { padding: 0px 8px 8px; height: 32px; z-index: 60; -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; -o-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; background-image: url(../images/textures/cms_content_header.png); background-repeat: repeat; overflow: hidden; }
 .cms-content-header a { color: #1556b2; }
 .cms-content-header .backlink span.btn-icon-back { height: 16px; }
-.cms-content-header h2 { padding: 8px 8px 0 8px; font-size: 14px; line-height: 24px; font-weight: bold; text-shadow: #bfcad2 1px 1px 0; max-width: 100%; margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; display: table-cell; vertical-align: top; }
-.cms-content-header div { width: 100%; overflow: hidden; display: table-row; }
+.cms-content-header h2 { padding: 8px 8px 0 8px; font-size: 14px; line-height: 24px; font-weight: bold; text-shadow: #bfcad2 1px 1px 0; margin: 0; display: table-cell; vertical-align: top; width: 100%; }
+.cms-content-header h2 .breadcrumbs-wrapper { display: table-row; }
+.cms-content-header h2 .breadcrumbs-wrapper .crumb { display: table-cell; line-height: 26px; }
+.cms-content-header div { display: table-row; }
 .cms-content-header div .cms_backlink { display: table-cell; vertical-align: middle; width: auto; }
-.cms-content-header .cms-content-header-tabs { display: table-cell; white-space: nowrap; }
+.cms-content-header .cms-content-header-tabs { display: table-cell; white-space: nowrap; width: 100%; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav { float: right; margin-right: 32px; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav li a { font-weight: bold; line-height: 16px; padding: 12px 20px 12px; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-state-default, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-default, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-default { border-top: none; }
