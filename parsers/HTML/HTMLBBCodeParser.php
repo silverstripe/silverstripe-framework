@@ -177,7 +177,7 @@ class SSHTMLBBCodeParser
         $this->addFilters($this->_options['filters']);
     }
     
-    function &getStaticProperty($class, $var)
+    static function &getStaticProperty($class, $var)
     {
         static $properties;
         if (!isset($properties[$class])) {

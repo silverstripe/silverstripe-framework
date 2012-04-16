@@ -22,7 +22,7 @@ class TestViewer extends Controller {
 			'{' => 'classBody',
 		),
 		'classBody' => array(
-			T_FUNCTION => array('methodName','createMethod'),
+			T_FUNCTION => array('methodName','createBodyMethod'),
 			'}' => array('start', 'completeClass'),
 		),
 		'methodName' => array(
@@ -84,7 +84,7 @@ class TestViewer extends Controller {
 		$this->classes[] = $this->currentClass;
 	}
 	
-	function createMethod($token) {
+	function createBodyMethod($token) {
 		$this->currentMethod = array();
 		$this->currentMethod['content'] = "<pre>";
 	}
