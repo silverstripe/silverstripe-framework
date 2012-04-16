@@ -237,28 +237,5 @@
 			}
 		});
 		
-		$('.cms-menu-list #Menu-CMSPageSettingsController, .cms-menu-list #Menu-CMSPageHistoryController, .cms-menu-list #Menu-CMSPageEditController').entwine({
-			setRecordID: function(id) {
-				// Only applies to edit forms relating to page elements
-				if(!$('.cms-content').is('.CMSMain')) return;
-
-				var link = this.find('a:first'), href = link.attr("href").split('/');
-				// Assumes that current ID will always be the last URL segment (and not a query parameter)
-				href[href.length -1] = id;
-				link.attr('href', href.join('/'));
-			}
-		});
-
-		$('.cms-menu-list #Menu-CMSPageAddController').entwine({
-			setRecordID: function(id) {
-				// Only applies to edit forms relating to page elements
-				if(!$('.cms-content').is('.CMSMain')) return;
-
-				var link = this.find('a:first'), href = link.attr('href');
-				if(!href.match(/\?/)) href += '?';
-				link.attr('href', href.replace(/\?.*$/, '?ParentID=' + id));
-			}
-		});
-		
 	});
 }(jQuery));
