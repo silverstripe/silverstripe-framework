@@ -94,7 +94,8 @@ body.cms {
 	background: {
 		image:url(../images/textures/cms_content_header.png);
 		repeat:repeat;
-	} 
+	}
+	overflow:hidden;
 
 	a {
 		color: $color-text-blue-link;
@@ -112,16 +113,20 @@ body.cms {
 		line-height: $grid-x * 3;
 		font-weight: bold;
 		text-shadow: darken($color-widget-bg, 15%) 1px 1px 0;
-		max-width: 100%;
 		margin: 0;
-		@include hide-text-overflow();
 		display:table-cell;
 		vertical-align:top;
+		width:100%;
+		.breadcrumbs-wrapper {
+			display:table-row;
+			.crumb {
+				display:table-cell;
+				line-height:26px;
+			}
+		}
 	}
 
 	& div {
-		width: 100%;
-		overflow: hidden;
 		display:table-row;
 		& .cms_backlink {
 			display:table-cell;
@@ -133,6 +138,7 @@ body.cms {
 	.cms-content-header-tabs {
 		display:table-cell;
 		white-space:nowrap;
+		width:100%;
 		.ui-tabs-nav {
 			float:right;
 			margin-right:$grid-x*4;
