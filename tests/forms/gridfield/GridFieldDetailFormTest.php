@@ -83,8 +83,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 			->filter('Name', 'My Group')
 			->sort('Name')
 			->First();
-		$firstperson = $group->People()->First();
-		$this->assertEquals($firstperson->Surname, 'Baggins');
+		$this->assertDOSContains(array(array('Surname' => 'Baggins')), $group->People());
 	}
 
 	function testNestedEditForm() {
