@@ -41,9 +41,7 @@ class CliTestReporter extends SapphireTestReporter {
 
 		echo sprintf("\n\n%d tests run: %s, %s, and %s\n", $testCount, SS_Cli::text("$passCount passes"), SS_Cli::text("$failCount failures"), SS_Cli::text("$incompleteCount incomplete"));
 
-		if(function_exists('memory_get_peak_usage')) {
-			echo "Maximum memory usage: " . number_format(memory_get_peak_usage()/(1024*1024), 1) . "M\n\n";
-		}
+		echo "Maximum memory usage: " . number_format(memory_get_peak_usage()/(1024*1024), 1) . "M\n\n";
 		
 		// Use sake dev/tests/all --showslow to show slow tests
 		if((isset($_GET['args']) && is_array($_GET['args']) && in_array('--showslow', $_GET['args'])) || isset($_GET['showslow'])) {
