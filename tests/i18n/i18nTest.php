@@ -171,14 +171,10 @@ class i18nTest extends SapphireTest {
 		i18n::set_locale('en_US');
 		i18n::get_translator('core')->getAdapter()->addTranslation(array(
 			'i18nTestModule.MAINTEMPLATE' => 'Main Template',
-			'i18nTestModule.ss.SPRINTFNONAMESPACE' => 'My replacement no namespace: %s',
 			'i18nTestModule.LAYOUTTEMPLATE' => 'Layout Template',
-			'i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE' => 'Layout Template no namespace',
 			'i18nTestModule.SPRINTFNAMESPACE' => 'My replacement: %s',
 			'i18nTestModule.WITHNAMESPACE' => 'Include Entity with Namespace',
-			'i18nTestModuleInclude.ss.NONAMESPACE' => 'Include Entity without Namespace',
 			'i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE' => 'My include replacement: %s',
-			'i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE' => 'My include replacement no namespace: %s'
 		), 'en_US');
 		
 		$viewer = new SSViewer('i18nTestModule');
@@ -187,22 +183,14 @@ class i18nTest extends SapphireTest {
 			"Layout Template\n",
 			$parsedHtml
 		);
-		$this->assertContains(
-			"Layout Template no namespace\n",
-			$parsedHtml
-		);
 		
 		i18n::set_locale('de_DE');
 		i18n::get_translator('core')->getAdapter()->addTranslation(array(
 			'i18nTestModule.MAINTEMPLATE' => 'TRANS Main Template',
-			'i18nTestModule.ss.SPRINTFNONAMESPACE' => 'TRANS My replacement no namespace: %s',
 			'i18nTestModule.LAYOUTTEMPLATE' => 'TRANS Layout Template',
-			'i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE' => 'TRANS Layout Template no namespace',
 			'i18nTestModule.SPRINTFNAMESPACE' => 'TRANS My replacement: %s',
 			'i18nTestModule.WITHNAMESPACE' => 'TRANS Include Entity with Namespace',
-			'i18nTestModuleInclude.ss.NONAMESPACE' => 'TRANS Include Entity without Namespace',
 			'i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE' => 'TRANS My include replacement: %s',
-			'i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE' => 'TRANS My include replacement no namespace: %s'
 		), 'de_DE');
 
 		$viewer = new SSViewer('i18nTestModule');
@@ -216,10 +204,6 @@ class i18nTest extends SapphireTest {
 			$parsedHtml
 		);
 		$this->assertContains(
-			"TRANS Layout Template no namespace",
-			$parsedHtml
-		);
-		$this->assertContains(
 			"TRANS My replacement: TestPropertyValue",
 			$parsedHtml
 		);
@@ -228,18 +212,10 @@ class i18nTest extends SapphireTest {
 			$parsedHtml
 		);
 		$this->assertContains(
-			"TRANS Include Entity without Namespace",
-			$parsedHtml
-		);
-		$this->assertContains(
 			"TRANS My include replacement: TestPropertyValue",
 			$parsedHtml
 		);
-		$this->assertContains(
-			"TRANS My include replacement no namespace: TestPropertyValue",
-			$parsedHtml
-		);
-		
+
 		i18n::set_locale($oldLocale);
 	}
 
