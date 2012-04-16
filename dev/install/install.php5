@@ -19,6 +19,8 @@ ini_set('mysql.connect_timeout', 5);
 
 ini_set('max_execution_time', 0);
 
+error_reporting(E_ALL | E_STRICT);
+
 // Include environment files
 $usingEnv = false;
 $envFileExists = false;
@@ -40,21 +42,95 @@ if($envFileExists) {
 	}
 }
 
-// include the core of the framework, we need this for dependencies like i18n, include paths etc
-include_once(FRAMEWORK_NAME . '/core/Core.php');
+require_once FRAMEWORK_NAME . '/dev/install/DatabaseConfigurationHelper.php';
+require_once FRAMEWORK_NAME . '/dev/install/DatabaseAdapterRegistry.php';
 
 // Set default locale, but try and sniff from the user agent
-$locales = i18n::$common_locales;
-$defaultLocale = i18n::get_locale();
-if(isset($_SERVER['HTTP_USER_AGENT'])) {
-	foreach($locales as $code => $details) {
-		$bits = explode('_', $code);
-		if(preg_match("/{$bits[0]}.{$bits[1]}/", $_SERVER['HTTP_USER_AGENT'])) {
-			$defaultLocale = $code;
-			break;
-		}
-	}
-}
+$defaultLocale = 'en_US';
+$locales = array(
+	'af_ZA' => array('Afrikaans', 'Afrikaans'),
+	'sq_AL' => array('Albanian', 'shqip'),
+	'ar_EG' => array('Arabic', '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'),
+	'eu_ES' => array('Basque', 'euskera'),
+	'be_BY' => array('Belarusian', '&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103; &#1084;&#1086;&#1074;&#1072;'),
+	'bn_BD' => array('Bengali', '&#2476;&#2494;&#2434;&#2482;&#2494;'),
+	'bg_BG' => array('Bulgarian', '&#1073;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;'),
+	'ca_ES' => array('Catalan', 'catal&agrave;'),
+	'zh_yue' => array('Chinese (Cantonese)', '&#24291;&#26481;&#35441; [&#24191;&#19996;&#35805;]'),
+	'zh_cmn' => array('Chinese (Mandarin)', '&#26222;&#36890;&#35441; [&#26222;&#36890;&#35805;]'),
+	'hr_HR' => array('Croatian', 'Hrvatski'),
+	'cs_CZ' => array('Czech', '&#x010D;e&#353;tina'),
+	'cy_GB' => array('Welsh', 'Welsh/Cymraeg'),
+	'da_DK' => array('Danish', 'dansk'),
+	'nl_NL' => array('Dutch', 'Nederlands'),
+	'en_NZ' => array('English (NZ)', 'English (NZ)'),
+	'en_US' => array('English (US)', 'English (US)'),
+	'en_GB' => array('English (UK)', 'English (UK)'),
+	'eo_XX' => array('Esperanto', 'Esperanto'),
+	'et_EE' => array('Estonian', 'eesti keel'),
+	'fo_FO' => array('Faroese', 'F&oslash;royska'),
+	'fi_FI' => array('Finnish', 'suomi'),
+	'fr_FR' => array('French', 'fran&ccedil;ais'),
+	'gd_GB' => array('Gaelic', 'Gaeilge'),
+	'gl_ES' => array('Galician', 'Galego'),
+	'de_DE' => array('German', 'Deutsch'),
+	'el_GR' => array('Greek', '&#949;&#955;&#955;&#951;&#957;&#953;&#954;&#940;'),
+	'gu_IN' => array('Gujarati', '&#2711;&#2753;&#2716;&#2736;&#2750;&#2724;&#2752;'),
+	'ha_NG' => array('Hausa', '&#1581;&#1614;&#1608;&#1618;&#1587;&#1614;'),
+	'he_IL' => array('Hebrew', '&#1506;&#1489;&#1512;&#1497;&#1514;'),
+	'hi_IN' => array('Hindi', '&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;'),
+	'hu_HU' => array('Hungarian', 'magyar'),
+	'is_IS' => array('Icelandic', '&Iacute;slenska'),
+	'id_ID' => array('Indonesian', 'Bahasa Indonesia'),
+	'ga_IE' => array('Irish', 'Irish'),
+	'it_IT' => array('Italian', 'italiano'),
+	'ja_JP' => array('Japanese', '&#26085;&#26412;&#35486;'),
+	'jv_ID' => array('Javanese', 'basa Jawa'),
+	'ko_KR' => array('Korean', '&#54620;&#44397;&#50612; [&#38867;&#22283;&#35486;]'),
+	'ku_IQ' => array('Kurdish', 'Kurd&iacute;'),
+	'lv_LV' => array('Latvian', 'latvie&#353;u'),
+	'lt_LT' => array('Lithuanian', 'lietuvi&#353;kai'),
+	'mk_MK' => array('Macedonian', '&#1084;&#1072;&#1082;&#1077;&#1076;&#1086;&#1085;&#1089;&#1082;&#1080;'),
+	'mi_NZ' => array('Maori', 'Maori'),
+	'ms_MY' => array('Malay', 'Bahasa melayu'),
+	'mt_MT' => array('Maltese', 'Malti'),
+	'mr_IN' => array('Marathi', '&#2350;&#2352;&#2366;&#2336;&#2368;'),
+	'ne_NP' => array('Nepali', '&#2344;&#2375;&#2346;&#2366;&#2354;&#2368;'),
+	'nb_NO' => array('Norwegian', 'Norsk'),
+	'om_ET' => array('Oromo', 'Afaan Oromo'),
+	'fa_IR' => array('Persian', '&#1601;&#1575;&#1585;&#1587;&#1609;'),
+	'pl_PL' => array('Polish', 'polski'),
+	'pt_PT' => array('Portuguese (Portugal)', 'portugu&ecirc;s (Portugal)'),
+	'pt_BR' => array('Portuguese (Brazil)', 'portugu&ecirc;s (Brazil)'),
+	'pa_IN' => array('Punjabi', '&#2602;&#2672;&#2588;&#2622;&#2604;&#2624;'),
+	'qu_PE' => array('Quechua', 'Quechua'),
+	'rm_CH' => array('Romansh', 'rumantsch'),
+	'ro_RO' => array('Romanian', 'rom&acirc;n'),
+	'ru_RU' => array('Russian', '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;'),
+	'sco_SCO' => array('Scots', 'Scoats leid, Lallans'),
+	'sr_RS' => array('Serbian', '&#1089;&#1088;&#1087;&#1089;&#1082;&#1080;'),
+	'sk_SK' => array('Slovak', 'sloven&#269;ina'),
+	'sl_SI' => array('Slovenian', 'sloven&#353;&#269;ina'),
+	'es_ES' => array('Spanish', 'espa&ntilde;ol'),
+	'sv_SE' => array('Swedish', 'Svenska'),
+	'tl_PH' => array('Tagalog', 'Tagalog'),
+	'ta_IN' => array('Tamil', '&#2980;&#2990;&#3007;&#2996;&#3021;'),
+	'te_IN' => array('Telugu', '&#3108;&#3142;&#3122;&#3137;&#3095;&#3137;'),
+	'to_TO' => array('Tonga', 'chiTonga'),
+	'ts_ZA' => array('Tsonga', 'xiTshonga'),
+	'tn_ZA' => array('Tswana', 'seTswana'),
+	'tr_TR' => array('Turkish', 'T&uuml;rk&ccedil;e'),
+	'tk_TM' => array('Turkmen', '&#1090;&#1199;&#1088;&#1082;m&#1077;&#1085;&#1095;&#1077;'),
+	'tw_GH' => array('Twi', 'twi'),
+	'uk_UA' => array('Ukrainian', '&#1059;&#1082;&#1088;&#1072;&#1111;&#1085;&#1089;&#1100;&#1082;&#1072;'),
+	'ur_PK' => array('Urdu', '&#1575;&#1585;&#1583;&#1608;'),
+	'uz_UZ' => array('Uzbek', '&#1118;&#1079;&#1073;&#1077;&#1082;'),
+	've_ZA' => array('Venda', 'tshiVen&#x1E13;a'),
+	'vi_VN' => array('Vietnamese', 'ti&#7871;ng vi&#7879;t'),
+	'wo_SN' => array('Wolof', 'Wollof'),
+	'xh_ZA' => array('Xhosa', 'isiXhosa'),
+	'zu_ZA' => array('Zulu', 'isiZulu'),
+);
 
 // Discover which databases are available
 DatabaseAdapterRegistry::autodiscover();
@@ -339,7 +415,7 @@ class InstallRequirements {
 		}
 		$this->requireWriteable('assets', array("File permissions", "Is the assets/ directory writeable?", null));
 
-		$tempFolder = getTempFolder();
+		$tempFolder = $this->getTempFolder();
 		$this->requireTempFolder(array('File permissions', 'Is a temporary directory available?', null, $tempFolder));
 		if($tempFolder) {
 			// in addition to the temp folder being available, check it is writable
@@ -653,14 +729,36 @@ class InstallRequirements {
 		}
 	}
 
+	function getTempFolder() {
+		$sysTmp = sys_get_temp_dir();
+		$worked = true;
+		$ssTmp = "$sysTmp/silverstripe-cache";
+
+		if(!@file_exists($ssTmp)) {
+			@$worked = mkdir($ssTmp);
+		}
+
+		if(!$worked) {
+			$ssTmp = dirname($_SERVER['SCRIPT_FILENAME']) . '/silverstripe-cache';
+			$worked = true;
+			if(!@file_exists($ssTmp)) {
+				@$worked = mkdir($ssTmp);
+			}
+		}
+
+		if($worked) return $ssTmp;
+
+		return false;
+	}
+
 	function requireTempFolder($testDetails) {
 		$this->testing($testDetails);
 
-		$tempFolder = getTempFolder();
+		$tempFolder = $this->getTempFolder();
 		if(!$tempFolder) {
 			$testDetails[2] = "Permission problem gaining access to a temp directory. " .
 				"Please create a folder named silverstripe-cache in the base directory " .
-				"of the installation and ensure it has the adequate permissions";
+				"of the installation and ensure it has the adequate permissions.";
 			$this->error($testDetails);
 		}
 	}
@@ -1070,6 +1168,8 @@ PHP
 		$_SESSION['isDev'] = 1;
 
 		$this->statusMessage("Building database schema...");
+
+		require_once 'core/Core.php';
 
 		// Build database
 		$con = new Controller();
