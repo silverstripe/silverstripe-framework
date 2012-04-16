@@ -1,13 +1,11 @@
 <?php
 
 // Register the SilverStripe provided databases
-$frameworkPath = defined('FRAMEWORK_PATH') ? FRAMEWORK_PATH : FRAMEWORK_NAME;
-
 DatabaseAdapterRegistry::register(
 	array(
 		'class' => 'MySQLDatabase',
 		'title' => 'MySQL 5.0+',
-		'helperPath' => $frameworkPath . '/dev/install/MySQLDatabaseConfigurationHelper.php',
+		'helperPath' => FRAMEWORK_PATH . '/dev/install/MySQLDatabaseConfigurationHelper.php',
 		'supported' => function_exists('mysql_connect'),
 	)
 );

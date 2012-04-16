@@ -19,9 +19,6 @@ ini_set('mysql.connect_timeout', 5);
 
 ini_set('max_execution_time', 0);
 
-// enable the highest level of error reporting during installation (same as Core.php in framework)
-error_reporting(E_ALL | E_STRICT);
-
 // Include environment files
 $usingEnv = false;
 $envFileExists = false;
@@ -43,11 +40,8 @@ if($envFileExists) {
 	}
 }
 
-include_once(FRAMEWORK_NAME . '/core/Object.php');
-include_once(FRAMEWORK_NAME . '/view/TemplateGlobalProvider.php');
-include_once(FRAMEWORK_NAME . '/i18n/i18n.php');
-include_once(FRAMEWORK_NAME . '/dev/install/DatabaseConfigurationHelper.php');
-include_once(FRAMEWORK_NAME . '/dev/install/DatabaseAdapterRegistry.php');
+// include the core of the framework, we need this for dependencies like i18n, include paths etc
+include_once(FRAMEWORK_NAME . '/core/Core.php');
 
 // Set default locale, but try and sniff from the user agent
 $locales = i18n::$common_locales;
@@ -345,7 +339,7 @@ class InstallRequirements {
 		}
 		$this->requireWriteable('assets', array("File permissions", "Is the assets/ directory writeable?", null));
 
-		$tempFolder = $this->getTempFolder();
+		$tempFolder = getTempFolder();
 		$this->requireTempFolder(array('File permissions', 'Is a temporary directory available?', null, $tempFolder));
 		if($tempFolder) {
 			// in addition to the temp folder being available, check it is writable
@@ -659,50 +653,16 @@ class InstallRequirements {
 		}
 	}
 
-	function getTempFolder() {
-		if (defined('TEMP_FOLDER')) {
-			$sysTmp = TEMP_FOLDER;
-		} elseif(file_exists($this->getBaseDir() . 'silverstripe-cache')) {
-			$sysTmp = $this->getBaseDir();
-		} elseif(function_exists('sys_get_temp_dir')) {
-			$sysTmp = sys_get_temp_dir();
-		} elseif(isset($_ENV['TMP'])) {
-			$sysTmp = $_ENV['TMP'];
-		} else {
-			@$tmpFile = tempnam('adfadsfdas', '');
-			@unlink($tmpFile);
-			$sysTmp = dirname($tmpFile);
-		}
-
-	    $worked = true;
-	    $ssTmp = $sysTmp . DIRECTORY_SEPARATOR . 'silverstripe-cache';
-
-		if(!@file_exists($ssTmp)) {
-			@$worked = mkdir($ssTmp);
-
-			if(!$worked) {
-				$ssTmp = dirname($_SERVER['SCRIPT_FILENAME']) . DIRECTORY_SEPARATOR . 'silverstripe-cache';
-				$worked = true;
-				if(!@file_exists($ssTmp)) {
-					@$worked = mkdir($ssTmp);
-				}
-			}
-		}
-
-		if($worked) return $ssTmp;
-		else return false;
-	}
-
 	function requireTempFolder($testDetails) {
 		$this->testing($testDetails);
 
-		$tempFolder = $this->getTempFolder();
+		$tempFolder = getTempFolder();
 		if(!$tempFolder) {
 			$testDetails[2] = "Permission problem gaining access to a temp directory. " .
 				"Please create a folder named silverstripe-cache in the base directory " .
 				"of the installation and ensure it has the adequate permissions";
 			$this->error($testDetails);
-	    }
+		}
 	}
 
 	function requireApacheModule($moduleName, $testDetails) {
@@ -1002,6 +962,7 @@ class Installer extends InstallRequirements {
 		$locale = isset($_POST['locale']) ? $_POST['locale'] : 'en_US';
 		$type = $config['db']['type'];
 		$dbConfig = $config['db'][$type];
+		if(!isset($dbConfig['path'])) $dbConfig['path'] = '';
 		if(!$dbConfig) {
 			echo "<p style=\"color: red\">Bad config submitted</p><pre>";
 			print_r($config);
@@ -1045,7 +1006,7 @@ PHP
 			$this->writeToFile("mysite/_config.php", <<<PHP
 <?php
 
-global \$project;
+Global \$project;
 \$project = 'mysite';
 
 global \$databaseConfig;
@@ -1108,8 +1069,6 @@ PHP
 		// Show errors as if you're in development mode
 		$_SESSION['isDev'] = 1;
 
-		require_once('core/Core.php');
-
 		$this->statusMessage("Building database schema...");
 
 		// Build database
@@ -1131,16 +1090,25 @@ PHP
 		$adminMember->Password = $config['admin']['password'];
 		$adminMember->PasswordEncryption = Security::get_password_encryption_algorithm();
 
-		// @todo Exception thrown if database with admin already exists with same Email
 		try {
-			$this->statusMessage('Creating default admin account...');
+			$this->statusMessage('Creating default CMS admin account...');
 			$adminMember->write();
 		} catch(Exception $e) {
-			$this->statusMessage('Admin account could not be created.');
+			$this->statusMessage(
+				sprintf('Warning: Default CMS admin account could not be created (error: %s)', $e->getMessage())
+			);
 		}
 
 		// Syncing filesystem (so /assets/Uploads is available instantly, see ticket #2266)
-		Filesystem::sync();
+		// show a warning if there was a problem doing so
+		try {
+			$this->statusMessage('Creating initial filesystem assets...');
+			Filesystem::sync();
+		} catch(Exception $e) {
+			$this->statusMessage(
+				sprintf('Warning: Creating initial filesystem assets failed (error: %s)', $e->getMessage())
+			);
+		}
 
 		$_SESSION['username'] = $config['admin']['username'];
 		$_SESSION['password'] = $config['admin']['password'];
