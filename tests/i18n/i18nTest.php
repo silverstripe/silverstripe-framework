@@ -224,8 +224,11 @@ class i18nTest extends SapphireTest {
 		$oldLocale = i18n::get_locale();
 
 		i18n::set_locale('en_US');
-		$lang['en_US']['i18nTestModule']['NEWMETHODSIG'] = 'TRANS New _t method signature test';
-		$lang['en_US']['i18nTestModule']['INJECTIONS'] = 'TRANS Hello {name} {greeting}. But it is late, {goodbye}';
+
+		i18n::get_translator('core')->getAdapter()->addTranslation(array(
+			'i18nTestModule.NEWMETHODSIG' => 'TRANS New _t method signature test',
+			'i18nTestModule.INJECTIONS' => 'TRANS Hello {name} {greeting}. But it is late, {goodbye}'
+		), 'en_US');
 
 		$entity = "i18nTestModule.INJECTIONS";
 		$default = "Hello {name} {greeting}. But it is late, {goodbye}";
@@ -271,8 +274,10 @@ class i18nTest extends SapphireTest {
 		$oldLocale = i18n::get_locale();
 
 		i18n::set_locale('en_US');
-		$lang['en_US']['i18nTestModule']['NEWMETHODSIG'] = 'TRANS New _t method signature test';
-		$lang['en_US']['i18nTestModule']['INJECTIONS'] = 'TRANS Hello {name} {greeting}. But it is late, {goodbye}';
+		i18n::get_translator('core')->getAdapter()->addTranslation(array(
+			'i18nTestModule.NEWMETHODSIG' => 'TRANS New _t method signature test',
+			'i18nTestModule.INJECTIONS' => 'TRANS Hello {name} {greeting}. But it is late, {goodbye}'
+		),'en_US');
 
 		$viewer = new SSViewer('i18nTestModule');
 		$parsedHtml = $viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue')));
@@ -280,13 +285,10 @@ class i18nTest extends SapphireTest {
 			"Hello Mark welcome. But it is late, bye\n",
 			$parsedHtml, "Testing fallback to the translation default (but using the injection array)"
 		);
+
 		$this->assertContains(
 			"TRANS Hello Paul good you are here. But it is late, see you\n",
 			$parsedHtml, "Testing entity, default string and injection array"
-		);
-		$this->assertContains(
-			"TRANS Hello Steffen willkommen. But it is late, wiedersehen\n",
-			$parsedHtml, "Full test of translation, using default, context and injection array"
 		);
 
 		$this->assertContains(
