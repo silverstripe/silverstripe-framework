@@ -41,7 +41,7 @@ class MultiEnum extends Enum {
 	/**
 	 * Return a {@link CheckboxSetField} suitable for editing this field 
 	 */
-	function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null) {
+	function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null, $emptyString = null) {
 		if(!$title) $title = $this->name;
 		if(!$name) $name = $this->name;
 
@@ -51,4 +51,3 @@ class MultiEnum extends Enum {
 	}
 }
 
- ?>

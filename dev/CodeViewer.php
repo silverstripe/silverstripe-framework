@@ -36,7 +36,7 @@ class CodeViewer extends Controller {
 			'{' => 'classBody',
 		),
 		'classBody' => array(
-			T_FUNCTION => array('methodName','createMethod'),
+			T_FUNCTION => array('methodName','createBodyMethod'),
 			'}' => array('start', 'completeClass'),
 			T_DOC_COMMENT => array('', 'saveMethodComment'),
 		),
@@ -159,7 +159,7 @@ class CodeViewer extends Controller {
 		$this->classes[] = $this->currentClass;
 	}
 	
-	function createMethod($token) {
+	function createBodyMethod($token) {
 		$this->currentMethod = array();
 		$this->currentMethod['content'] = "<pre>";
 		$this->currentMethod['description'] = $this->methodComment['pretty'];
