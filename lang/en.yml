@@ -319,7 +319,7 @@ en:
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
     ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
-    ERRORWRONGCRED: null
+    ERRORWRONGCRED: "That doesn't seem to be the right e-mail address or password. Please try again."
     FIRSTNAME: 'First Name'
     GREETING: Welcome
     INTERFACELANG: 'Interface Language'
