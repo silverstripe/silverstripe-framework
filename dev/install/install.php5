@@ -156,12 +156,7 @@ if($req->isIIS()) {
 
 if($req->hasErrors()) {
 	$hasErrorOtherThanDatabase = true;
-	if ( function_exists('php_ini_loaded_file')) {
-		// show the location of the php.ini if any issues exist
-		$phpIniLocation = php_ini_loaded_file();
-	} else {
-		$phpIniLocation = null;
-	}
+	$phpIniLocation = php_ini_loaded_file();
 }
 
 if($databaseConfig) {
