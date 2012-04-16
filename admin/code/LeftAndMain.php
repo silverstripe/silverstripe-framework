@@ -624,7 +624,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$html = $obj->getChildrenAsUL(
 			"", 
 			$titleEval,
-			$this, 
+			singleton('CMSPageEditController'), 
 			true, 
 			$childrenMethod,
 			$numChildrenMethod,
