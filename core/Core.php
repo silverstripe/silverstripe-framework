@@ -285,6 +285,11 @@ Debug::loadErrorHandlers();
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
 
+function getSysTempDir() {
+	Deprecation::notice(3.0, 'Please use PHP function get_sys_temp_dir() instead.');
+	return sys_get_temp_dir();
+}
+
 /**
  * Returns the temporary folder that silverstripe should use for its cache files
  * This is loaded into the TEMP_FOLDER define on start up

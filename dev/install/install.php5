@@ -1006,7 +1006,7 @@ PHP
 			$this->writeToFile("mysite/_config.php", <<<PHP
 <?php
 
-Global \$project;
+global \$project;
 \$project = 'mysite';
 
 global \$databaseConfig;
