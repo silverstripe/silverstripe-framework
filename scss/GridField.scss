@@ -98,6 +98,9 @@ $gf_grid_x:	16px;
 			tr.filter-header {
 				.fieldgroup {
 					max-width:$gf_grid_x*32; //max width 512px
+					.fieldgroup-field {
+						padding:0;
+					}
 				}
 			}
 			tr:first-child { //sets 7px border-radius on the top row in the thead - accounts for edgecase where there is no title row.
@@ -375,8 +378,8 @@ $gf_grid_x:	16px;
 					}
 					&.ss-gridfield-button-filter.ss-ui-button{
 						position:absolute;
-						top: 0;
-						right: 0;
+						top: -28px;
+						right: -1px;
 						display:block;
 						text-indent:-9999em;
 						width:30px; 
@@ -412,8 +415,8 @@ $gf_grid_x:	16px;
 					}
 					&.ss-gridfield-button-reset.ss-ui-button{
 						position:absolute;
-						right: 29px;
-						top: 0;
+						right: 28px;
+						top: -28px;
 						display:block;
 						text-indent:-9999em;
 						width:30px;
