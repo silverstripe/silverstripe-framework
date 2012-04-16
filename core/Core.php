@@ -285,19 +285,6 @@ Debug::loadErrorHandlers();
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
 
-function getSysTempDir() {
-	if(function_exists('sys_get_temp_dir')) {
-		$sysTmp = sys_get_temp_dir();
-	} elseif(isset($_ENV['TMP'])) {
-		$sysTmp = $_ENV['TMP'];    	
-	} else {
-		$tmpFile = tempnam('adfadsfdas','');
-		unlink($tmpFile);
-		$sysTmp = dirname($tmpFile);
-	}
-	return $sysTmp;
-}
-
 /**
  * Returns the temporary folder that silverstripe should use for its cache files
  * This is loaded into the TEMP_FOLDER define on start up
@@ -319,7 +306,7 @@ function getTempFolder($base = null) {
 		return $ssTmp;
 	}
 
-	$sysTmp = getSysTempDir();
+	$sysTmp = sys_get_temp_dir();
 	$worked = true;
 	$ssTmp = "$sysTmp/$cachefolder";
 
@@ -333,12 +320,6 @@ function getTempFolder($base = null) {
 		if(!@file_exists($ssTmp)) {
 			@$worked = mkdir($ssTmp);
 		}
-	}
-
-	if(!$worked) {
-		user_error("Permission problem gaining access to a temp folder. " .
-			"Please create a folder named silverstripe-cache in the base folder "  .
-			"of the installation and ensure it has the correct permissions", E_USER_ERROR);
 	}
 
 	return $ssTmp;
@@ -416,7 +397,7 @@ function increase_memory_limit_to($memoryLimit = -1) {
 	// Increase the memory limit if it's too low
 	if($memoryLimit == -1 || translate_memstring($memoryLimit) > translate_memstring($curLimit)) {
 		ini_set('memory_limit', $memoryLimit);
-	} 
+	}
 
 	return true;
 }
