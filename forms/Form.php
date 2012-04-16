@@ -479,6 +479,7 @@ class Form extends RequestHandler {
 	 */
 	public function unsetValidator(){
 		$this->validator = null;
+		return $this;
 	}
 
 	/**
