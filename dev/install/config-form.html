@@ -45,8 +45,8 @@
 									</div>
 								<?php } else if($req->hasWarnings()) { ?>
 									<div class="message warning">
-										<p>There are some issues that we recommend you look at before installing, however, you are still able to install the software. Please see below for details.<br>
-										If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/sapphire/en/installation/server-requirements">server requirements</a>.</p>
+										<p>There are some issues that we recommend you look at before installing, however, you are still able to install the software.
+										<br>Please see below for details. If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/sapphire/en/installation/server-requirements">server requirements</a>.</p>
 									</div>
 								<?php } else if(!$dbReq->hasErrors() && !$adminReq->hasErrors()) { ?>
 									<div class="message goodInstall"><p>You're ready to install! Please confirm the configuration options below. <a href="#install">Install SilverStripe</a></p>
