@@ -103,7 +103,7 @@ class SSTemplateParser extends Parser {
 	# and is used by all enclosing blocks, as well as a base for the top level.
 	# Any new template elements need to be included in this list, if they are to work.
 	 
-	Template: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+
+	Template: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+
 	*/
 	function Template_STR(&$res, $sub) {
 		$res['php'] .= $sub['php'] . PHP_EOL ;
