@@ -187,9 +187,12 @@ class SS_ConfigManifest {
 			'file' => basename(basename($basename, '.yml'), '.yaml')
 		);
 		
+		// Make sure the linefeeds are all converted to \n, PCRE '$' will not match anything else.
+		$fileContents = str_replace(array("\r\n", "\r"), "\n", file_get_contents($pathname));
+
 		// YAML parsers really should handle this properly themselves, but neither spyc nor symfony-yaml do. So we
 		// follow in their vein and just do what we need, not what the spec says
-		$parts = preg_split('/^---$/m', file_get_contents($pathname), -1, PREG_SPLIT_NO_EMPTY);
+		$parts = preg_split('/^---$/m', $fileContents, -1, PREG_SPLIT_NO_EMPTY);
 
 		// If only one document, it's a headerless fragment. So just add it with an anonymous name
 		if (count($parts) == 1) {
