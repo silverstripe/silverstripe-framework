@@ -286,16 +286,8 @@ Debug::loadErrorHandlers();
 // HELPER FUNCTIONS
 
 function getSysTempDir() {
-	if(function_exists('sys_get_temp_dir')) {
-		$sysTmp = sys_get_temp_dir();
-	} elseif(isset($_ENV['TMP'])) {
-		$sysTmp = $_ENV['TMP'];    	
-	} else {
-		$tmpFile = tempnam('adfadsfdas','');
-		unlink($tmpFile);
-		$sysTmp = dirname($tmpFile);
-	}
-	return $sysTmp;
+	Deprecation::notice(3.0, 'Please use PHP function get_sys_temp_dir() instead.');
+	return sys_get_temp_dir();
 }
 
 /**
@@ -319,7 +311,7 @@ function getTempFolder($base = null) {
 		return $ssTmp;
 	}
 
-	$sysTmp = getSysTempDir();
+	$sysTmp = sys_get_temp_dir();
 	$worked = true;
 	$ssTmp = "$sysTmp/$cachefolder";
 
@@ -336,9 +328,11 @@ function getTempFolder($base = null) {
 	}
 
 	if(!$worked) {
-		user_error("Permission problem gaining access to a temp folder. " .
-			"Please create a folder named silverstripe-cache in the base folder "  .
-			"of the installation and ensure it has the correct permissions", E_USER_ERROR);
+		throw new Exception(
+			'Permission problem gaining access to a temp folder. ' .
+			'Please create a folder named silverstripe-cache in the base folder ' .
+			'of the installation and ensure it has the correct permissions'
+		);
 	}
 
 	return $ssTmp;
@@ -416,7 +410,7 @@ function increase_memory_limit_to($memoryLimit = -1) {
 	// Increase the memory limit if it's too low
 	if($memoryLimit == -1 || translate_memstring($memoryLimit) > translate_memstring($curLimit)) {
 		ini_set('memory_limit', $memoryLimit);
-	} 
+	}
 
 	return true;
 }

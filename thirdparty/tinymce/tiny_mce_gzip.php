@@ -9,29 +9,12 @@
  * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
-// CUSTOM SilverStripe: Copied from Core.php
-if(!function_exists('getSysTempDir')) {
-	function getSysTempDir() {
-		if(function_exists('sys_get_temp_dir')) {
-			$sysTmp = sys_get_temp_dir();
-		} elseif(isset($_ENV['TMP'])) {
-			$sysTmp = $_ENV['TMP'];    	
-		} else {
-			$tmpFile = tempnam('adfadsfdas','');
-			unlink($tmpFile);
-			$sysTmp = dirname($tmpFile);
-		}
-		return $sysTmp;
-	}	
-}
-// CUSTOM END
-
 // Handle incoming request if it's a script call
 if (TinyMCE_Compressor::getParam("js")) {
 	// Default settings
 	$tinyMCECompressor = new TinyMCE_Compressor(array(
 		// CUSTOM SilverStripe
-		'cache_dir' => getSysTempDir()
+		'cache_dir' => sys_get_temp_dir()
 		// CUSTOM END
 	));
 
