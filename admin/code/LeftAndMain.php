@@ -590,10 +590,22 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return String Nested unordered list with links to each page
 	 */
 	function getSiteTreeFor($className, $rootID = null, $childrenMethod = null, $numChildrenMethod = null, $filterFunction = null, $minNodeCount = 30) {
+		// Filter criteria
+		$params = $this->request->getVar('q');
+		if(isset($params['FilterClass']) && $filterClass = $params['FilterClass']){
+			if(!is_subclass_of($filterClass, 'CMSSiteTreeFilter')) {
+				throw new Exception(sprintf('Invalid filter class passed: %s', $filterClass));
+			}
+			$filter = new $filterClass($params);
+		} else {
+			$filter = null;
+		}
+
 		// Default childrenMethod and numChildrenMethod
-		if (!$childrenMethod) $childrenMethod = 'AllChildrenIncludingDeleted';
-		if (!$numChildrenMethod) $numChildrenMethod = 'numChildren';
-		
+		if(!$childrenMethod) $childrenMethod = ($filter && $filter->getChildrenMethod()) ? $filter->getChildrenMethod() : 'AllChildrenIncludingDeleted';
+		if(!$numChildrenMethod) $numChildrenMethod = 'numChildren';
+		if(!$filterFunction) $filterFunction = ($filter) ? array($filter, 'isPageIncluded') : null;
+
 		// Get the tree root
 		$record = ($rootID) ? $this->getRecord($rootID) : null;
 		$obj = $record ? $record : singleton($className);
@@ -657,22 +669,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * If ID = 0, then get the whole tree.
 	 */
 	public function getsubtree($request) {
-		if($filterClass = $request->requestVar('FilterClass')) {
-			if(!is_subclass_of($filterClass, 'CMSSiteTreeFilter')) {
-				throw new Exception(sprintf('Invalid filter class passed: %s', $filterClass));
-			}
-
-			$filter = new $filterClass($request->requestVars());
-		} else {
-			$filter = null;
-		}
-		
 		$html = $this->getSiteTreeFor(
 			$this->stat('tree_class'), 
 			$request->getVar('ID'), 
-			($filter) ? $filter->getChildrenMethod() : null, 
+			null, 
 			null,
-			($filter) ? array($filter, 'isPageIncluded') : null, 
+			null, 
 			$request->getVar('minNodeCount')
 		);
 
