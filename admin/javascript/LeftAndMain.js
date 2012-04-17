@@ -330,7 +330,7 @@ jQuery.noConflict();
 		 */
 		$('.cms .cms-panel-link').entwine({
 			onclick: function(e) {
-				var href = this.attr('href'), url = href ? href : this.data('href'),
+				var href = this.attr('href'), url = (href && !href.match(/^#/)) ? href : this.data('href'),
 					data = (this.data('targetPanel')) ? {selector: this.data('targetPanel')} : null;
 
 				$('.cms-container').loadPanel(url, null, data);
@@ -559,6 +559,51 @@ jQuery.noConflict();
 		onclick: function(e) {
 			$(this.attr('href')).toggle();
 			e.preventDefault();
+		}
+	});
+
+	/**
+	 * Allows to lazy load a panel, by leaving it empty
+	 * and declaring a URL to load its content via a 'url' HTML5 data attribute.
+	 * The loaded HTML is cached, with cache key being the 'url' attribute.
+	 * In order for this to work consistently, we assume that the responses are stateless.
+	 * To avoid caching, add a 'deferred-no-cache' to the node.
+	 */
+	window._panelDeferredCache = {};
+	$('.cms-panel-deferred').entwine({
+		onmatch: function() {
+			this._super();
+			this.redraw();
+		},
+		onunmatch: function() {
+			// Save the HTML state at the last possible moment.
+			// Don't store the DOM to avoid memory leaks.
+			if(!this.data('deferredNoCache')) window._panelDeferredCache[this.data('url')] = this.html();
+			this._super();
+		},
+		redraw: function() {
+			var self = this, url = this.data('url');
+			if(!url) throw 'Elements of class .cms-panel-deferred need a "data-url" attribute';
+
+			this._super();
+
+			// If the node is empty, try to either load it from cache or via ajax.
+			if(!this.children().length) {
+				if(!this.data('deferredNoCache') && typeof window._panelDeferredCache[url] !== 'undefined') {
+					this.html(window._panelDeferredCache[url]);
+				} else {
+					this.addClass('loading');
+					$.ajax({
+						url: url,
+						complete: function() {
+							self.removeClass('loading');
+						},
+						success: function(data, status, xhr) {
+							self.html(data);
+						}
+					});
+				}
+			}
 		}
 	});
 	
