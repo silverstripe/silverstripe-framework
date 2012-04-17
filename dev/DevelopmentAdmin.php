@@ -83,8 +83,7 @@ class DevelopmentAdmin extends Controller {
 			"tests/endsession" => "Ends a test session",
 			"jstests" => "See a list of JavaScript tests to run",
 			"jstests/all" => "Run all JavaScript tests",
-			"tasks" => "See a list of build tasks to run",
-			"viewcode" => "Read source code in a literate programming style",
+			"tasks" => "See a list of build tasks to run"
 		);
 		
 		// Web mode
@@ -125,10 +124,6 @@ class DevelopmentAdmin extends Controller {
 	
 	function tasks() {
 		return TaskRunner::create();
-	}
-	
-	function viewmodel() {
-		return ModelViewer::create();
 	}
 	
 	function build($request) {
@@ -186,9 +181,5 @@ class DevelopmentAdmin extends Controller {
 	
 	function errors() {
 		Director::redirect("Debug_");
-	}
-	
-	function viewcode($request) {
-		return CodeViewer::create();
 	}
 }
