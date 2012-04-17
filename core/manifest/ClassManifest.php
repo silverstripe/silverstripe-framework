@@ -331,18 +331,15 @@ class SS_ClassManifest {
 
 		if (!$classes) {
 			$tokens     = token_get_all($file);
-			if(version_compare(PHP_VERSION, '5.3', '>=')) {
-				$classes = self::get_namespaced_class_parser()->findAll($tokens);
-				$namespace = self::get_namespace_parser()->findAll($tokens);
-				if($namespace) {
-					$namespace = implode('', $namespace[0]['namespaceName']) . '\\';
-				} else {
-					$namespace = '';
-				}
+			
+			$classes = self::get_namespaced_class_parser()->findAll($tokens);
+			$namespace = self::get_namespace_parser()->findAll($tokens);
+			if($namespace) {
+				$namespace = implode('', $namespace[0]['namespaceName']) . '\\';
 			} else {
-				$classes = self::get_class_parser()->findAll($tokens);
 				$namespace = '';
 			}
+
 			$interfaces = self::get_interface_parser()->findAll($tokens);
 
 			$cache = array('classes' => $classes, 'interfaces' => $interfaces, 'namespace' => $namespace);
