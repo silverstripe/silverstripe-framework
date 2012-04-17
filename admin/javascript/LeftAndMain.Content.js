@@ -222,21 +222,20 @@
 				var url = $(node).find('a:first').attr('href');
 				if(url && url != '#') {
 
+					// Ensure URL is absolute (important for IE)
 					if($.path.isExternal($(node).find('a:first'))) url = url = $.path.makeUrlAbsolute(url, $('base').attr('href'));
-					// Reload only edit form if it exists (side-by-side view of tree and edit view), otherwise reload whole panel
-					if(container.find('.cms-edit-form').length) {
-						container.entwine('ss').loadPanel(url, null, {selector: '.cms-edit-form', pjax: 'CurrentForm'});
-					} else {
-						container.entwine('ss').loadPanel(url);	
-					}
+					// Retain search parameters
+					if(document.location.search) url = $.path.addSearchParams(url, document.location.search.replace(/^\?/, ''));
+					// Load new page
+					container.entwine('ss').loadPanel(url);	
 				} else {
 					self.removeForm();
 				}
 			});
 		}
 	});
-	
-	$('.cms-content.loading,.cms-edit-form.loading').entwine({
+
+	$('.cms-content.loading,.cms-edit-form.loading,.cms-content-fields.loading,.cms-content-view.loading').entwine({
 		onmatch: function() {
 			this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>');
 		},

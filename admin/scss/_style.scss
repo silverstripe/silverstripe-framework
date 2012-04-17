@@ -126,9 +126,9 @@ body.cms {
 		}
 	}
 
-	& div {
-		display:table-row;
-		& .cms_backlink {
+	& > div {
+		display:table;
+		.cms_backlink {
 			display:table-cell;
 			vertical-align:middle;
 			width:auto;

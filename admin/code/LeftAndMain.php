@@ -624,19 +624,22 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 
 		// getChildrenAsUL is a flexible and complex way of traversing the tree
-		$titleEval = '
-			"<li id=\"record-$child->ID\" data-id=\"$child->ID\" data-ssclass=\"$child->ClassName\" class=\"" . $child->CMSTreeClasses($extraArg) . "\">" .
-			"<ins class=\"jstree-icon\">&nbsp;</ins>" .
-			"<a href=\"" . Controller::join_links($extraArg->Link("show"), $child->ID) . "\" title=\"' 
-			. _t('LeftAndMain.PAGETYPE','Page type: ') 
-			. '".$child->class."\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($child->TreeTitle) . 
-			"</span></a>"
-		';
-
+		$controller = $this;
+		$recordController = ($this->stat('tree_class') == 'SiteTree') ?  singleton('CMSPageEditController') : $this;
+		$titleFn = function(&$child) use(&$controller, &$recordController) {
+			$classes = $child->CMSTreeClasses();
+			if($controller->isCurrentPage($child)) $classes .= " current";
+			return "<li id=\"record-$child->ID\" data-id=\"$child->ID\" data-ssclass=\"$child->ClassName\" class=\"" . $classes . "\">" .
+				"<ins class=\"jstree-icon\">&nbsp;</ins>" .
+				"<a href=\"" . Controller::join_links($recordController->Link("show"), $child->ID) . "\" title=\"' 
+				. _t('LeftAndMain.PAGETYPE','Page type: ') 
+				. '".$child->class."\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($child->TreeTitle) . 
+				"</span></a>";
+		};
 		$html = $obj->getChildrenAsUL(
 			"", 
-			$titleEval,
-			singleton('CMSPageEditController'), 
+			$titleFn,
+			singleton('CMSPagesController'), 
 			true, 
 			$childrenMethod,
 			$numChildrenMethod,

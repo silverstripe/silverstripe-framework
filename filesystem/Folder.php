@@ -433,14 +433,11 @@ class Folder extends File {
 	/**
 	 * @return String
 	 */
-	function CMSTreeClasses($controller) {
+	function CMSTreeClasses() {
 		$classes = sprintf('class-%s', $this->class);
 
 		if(!$this->canDelete())
 			$classes .= " nodelete";
-
-		if($controller->isCurrentPage($this))
-			$classes .= " current";
 
 		if(!$this->canEdit()) 
 			$classes .= " disabled";
