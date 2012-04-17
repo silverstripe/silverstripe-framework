@@ -49,6 +49,8 @@ jQuery.noConflict();
 			}
 		});
 		$(document).ajaxError(function(e, xhr, settings, error) {
+			if(xhr.status == 0) return; // ignore aborted requests
+
 			if(xhr.status < 200 || xhr.status > 399) {
 				var msg = (xhr.getResponseHeader('X-Status')) ? xhr.getResponseHeader('X-Status') : xhr.statusText;
 			} else {
