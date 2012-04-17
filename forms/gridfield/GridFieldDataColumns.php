@@ -95,11 +95,16 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 			return $value;
 		}
 
-		$format = str_replace('$value', "__VAL__", $gridField->FieldFormatting[$fieldName]);
-		$format = preg_replace('/\$([A-Za-z0-9-_]+)/', '$item->$1', $format);
-		$format = str_replace('__VAL__', '$value', $format);
-		eval('$value = "' . $format . '";');
-		return $value;
+		$spec = $gridField->FieldFormatting[$fieldName];
+		if(is_callable($spec)) {
+			return $spec($item);
+		} else {
+			$format = str_replace('$value', "__VAL__", $spec);
+			$format = preg_replace('/\$([A-Za-z0-9-_]+)/', '$item->$1', $format);
+			$format = str_replace('__VAL__', '$value', $format);
+			eval('$value = "' . $format . '";');
+			return $value;
+		}
 	}
 	
 	/**

@@ -195,7 +195,8 @@ class GridField extends FormField {
 	/**
 	 * Specify custom formatting for fields, e.g. to render a link instead of pure text.
 	 * Caution: Make sure to escape special php-characters like in a normal php-statement.
-	 * Example:	"myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'
+	 * Example:	"myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'.
+	 * Alternatively, pass a anonymous function, which takes one parameter: The list item.
 	 *
 	 * @param array $casting
 	 * @todo refactor this into GridFieldComponent
