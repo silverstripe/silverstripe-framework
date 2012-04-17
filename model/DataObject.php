@@ -883,7 +883,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Validate the current object.
 	 *
 	 * By default, there is no validation - objects are always valid!  However, you can overload this method in your
-	 * DataObject sub-classes to specify custom validation.
+	 * DataObject sub-classes to specify custom validation, or use the hook through DataExtension.
 	 * 
 	 * Invalid objects won't be able to be written - a warning will be thrown and no write will occur.  onBeforeWrite()
 	 * and onAfterWrite() won't get called either.
@@ -894,7 +894,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return A {@link ValidationResult} object
 	 */
 	protected function validate() {
-		return new ValidationResult();
+		$result = new ValidationResult();
+		$this->extend('validate', $result);
+		return $result;
 	}
 
 	/**
