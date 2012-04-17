@@ -19,8 +19,8 @@
 
 
 		init : function(ed, url) {
-	      // Register commands
-	      ed.addCommand('mceInsertMacron', function() {
+			// Register commands
+			ed.addCommand('mceInsertMacron', function() {
 				ed.windowManager.open({
 					file : url + '/macron.htm',
 					width : 350 + parseInt(ed.getLang('advanced.charmap_delta_width', 0)),
@@ -31,13 +31,12 @@
 				});
 			});
 	
-	      // Register buttons
-	      ed.addButton('ssmacron', {
-	        title : 'Insert a Macron',
-	        cmd : 'mceInsertMacron',
-	        image : url + '/img/macron.png'
-	      });
-	      
+			// Register buttons
+			ed.addButton('ssmacron', {
+				title : 'Insert a Macron',
+				cmd : 'mceInsertMacron',
+				image : url + '/img/macron.png'
+			});
 		}
 	});
 
