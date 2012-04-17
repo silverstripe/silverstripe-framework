@@ -102,7 +102,7 @@
 						
 			redraw: function() {
 				// Force initialization of tabsets to avoid layout glitches
-				this.add(this.find('.ss-tabset')).redrawTabs();
+				this.add(this.find('.cms-tabset')).redrawTabs();
 
 				var approxWidth = $('.cms-container').width() - $('.cms-menu').width();
 				this.find('.cms-content-actions').width(approxWidth).height('auto');

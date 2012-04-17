@@ -14,14 +14,14 @@
 				var self = this;
 				
 				// Force initialization of tabsets to avoid layout glitches
-				this.find('.ss-tabset').redrawTabs();
+				this.find('.cms-tabset').redrawTabs();
 				
 				this._super();
 			},
 						
 			redraw: function() {
 				// Force initialization of tabsets to avoid layout glitches
-				this.add(this.find('.ss-tabset')).redrawTabs();
+				this.add(this.find('.cms-tabset')).redrawTabs();
 
 				this.layout();
 			},
@@ -64,7 +64,7 @@
 				
 				// save tab selections in order to reconstruct them later
 				var selectedTabs = [];
-				form.find('.ss-tabset').each(function(i, el) {
+				form.find('.cms-tabset').each(function(i, el) {
 					if($(el).attr('id')) selectedTabs.push({id:$(el).attr('id'), selected:$(el).tabs('option', 'selected')});
 				});
 
@@ -99,7 +99,7 @@
 						}
 
 						// Re-init tabs (in case the form tag itself is a tabset)
-						if(self.hasClass('ss-tabset')) self.removeClass('ss-tabset').addClass('ss-tabset');
+						if(self.hasClass('cms-tabset')) self.removeClass('cms-tabset').addClass('cms-tabset');
 
 						// re-select previously saved tabs
 						$.each(selectedTabs, function(i, selectedTab) {
