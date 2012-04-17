@@ -2160,10 +2160,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return bool
 	 */
 	public static function has_own_table($dataClass) {
-		
-		// The condition below has the same effect as !is_subclass_of($dataClass,'DataObject'),
-		// which causes PHP < 5.3 to segfault in rare circumstances, see PHP bug #46753
-		if($dataClass == 'DataObject' || !in_array('DataObject', ClassInfo::ancestry($dataClass))) return false;
+		if(!is_subclass_of($dataClass,'DataObject')) return false;
 		
 		if(!isset(DataObject::$cache_has_own_table[$dataClass])) {
 			if(get_parent_class($dataClass) == 'DataObject') {

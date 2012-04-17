@@ -264,7 +264,6 @@ abstract class DataFormatter extends Object {
 		// add default required fields
 		$dbFields = array_merge($dbFields, array('ID'=>'Int'));
 		
-		// @todo Requires PHP 5.1+
 		if(is_array($this->removeFields)) {
 			$dbFields = array_diff_key($dbFields, array_combine($this->removeFields,$this->removeFields));
 		}

@@ -17,8 +17,6 @@
  * Usage through URL (module-specific): http://localhost/dev/tasks/i18nTextCollectorTask/?module=mymodule
  * Usage on CLI: sake dev/tasks/i18nTextCollectorTask
  * Usage on CLI (module-specific): sake dev/tasks/i18nTextCollectorTask module=mymodule
- *
- * Requires PHP 5.1+ due to class_implements() limitations
  * 
  * @author Bernat Foj Capell <bernat@silverstripe.com>
  * @author Ingo Schommer <FIRSTNAME@silverstripe.com>
