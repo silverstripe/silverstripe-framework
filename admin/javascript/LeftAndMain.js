@@ -330,8 +330,12 @@ jQuery.noConflict();
 		 */
 		$('.cms .cms-panel-link').entwine({
 			onclick: function(e) {
-				var href = this.attr('href'), url = (href && !href.match(/^#/)) ? href : this.data('href'),
-					data = (this.data('targetPanel')) ? {selector: this.data('targetPanel')} : null;
+				var href = this.attr('href'), 
+					url = (href && !href.match(/^#/)) ? href : this.data('href'),
+					data = {
+						selector: this.data('targetPanel'),
+						pjax: this.data('pjax')
+					};
 
 				$('.cms-container').loadPanel(url, null, data);
 				e.preventDefault();
