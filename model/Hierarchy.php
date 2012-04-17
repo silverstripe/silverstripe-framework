@@ -34,7 +34,7 @@ class Hierarchy extends DataExtension {
 	 * Returns the children of this DataObject as an XHTML UL. This will be called recursively on each child,
 	 * so if they have children they will be displayed as a UL inside a LI.
 	 * @param string $attributes Attributes to add to the UL.
-	 * @param string $titleEval PHP code to evaluate to start each child - this should include '<li>'
+	 * @param string|callable $titleEval PHP code to evaluate to start each child - this should include '<li>'
 	 * @param string $extraArg Extra arguments that will be passed on to children, for if they overload this function.
 	 * @param boolean $limitToMarked Display only marked children.
 	 * @param string $childrenMethod The name of the method used to get children from each object
@@ -64,7 +64,8 @@ class Hierarchy extends DataExtension {
 			foreach($children as $child) {
 				if(!$limitToMarked || $child->isMarked()) {
 					$foundAChild = true;
-					$output .= eval("return $titleEval;") . "\n" . 
+					$output .= (is_callable($titleEval)) ? $titleEval($child) : eval("return $titleEval;");
+					$output .= "\n" . 
 					$child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod, $numChildrenMethod, false, $minNodeCount) . "</li>\n";
 				}
 			}
