@@ -260,7 +260,7 @@ en:
     IMAGEHEIGHTPX: Height
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGEWIDTHPX: Width
-    LINK: Link
+    LINK: 'Insert Link'
     LINKANCHOR: 'Anchor on this page'
     LINKDESCR: 'Link description'
     LINKEMAIL: 'Email address'
