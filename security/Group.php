@@ -467,26 +467,5 @@ class Group extends DataObject {
 		
 		// Members are populated through Member->requireDefaultRecords()
 	}
-
-	/**
-	 * @return String
-	 */
-	function CMSTreeClasses($controller) {
-		$classes = sprintf('class-%s', $this->class);
-
-		if(!$this->canDelete())
-			$classes .= " nodelete";
-
-		if($controller->isCurrentPage($this))
-			$classes .= " current";
-
-		if(!$this->canEdit()) 
-			$classes .= " disabled";
-			
-		$classes .= $this->markingClasses();
-
-		return $classes;
-	}
-}
 	
-
+}
