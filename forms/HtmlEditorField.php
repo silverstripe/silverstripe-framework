@@ -302,7 +302,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			new FieldList(
 				new LiteralField(
 					'Heading', 
-					sprintf('<h3>%s</h3>', _t('HtmlEditorField.LINK', 'Link'))
+					sprintf('<h3>%s</h3>', _t('HtmlEditorField.LINK', 'Insert Link'))
 				),
 				$contentComposite = new CompositeField(
 					new OptionsetField(

@@ -345,7 +345,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				// Move title from headline to (jQuery compatible) title attribute
 				var titleEl = this.find(':header:first');
 				this.getDialog().attr('title', titleEl.text());
-				titleEl.remove();
 
 				this.setEditor(ss.editorWrappers['default']());
 			},
@@ -400,7 +399,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.addAnchorSelector();
 
 				// Toggle field visibility and state based on type selection
-				this.find('.field').hide();
+				this.find('div.content .field').hide();
 				this.find('.field#LinkType').show();
 				this.find('.field#' + linkType).show();
 				if(linkType == 'internal' || linkType == 'anchor') this.find('.field#Anchor').show();
@@ -481,7 +480,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					this.find(':input[name=Anchor]').parent().append(anchorSelector);
 
 					anchorSelector.focus(function(e) {
-						self.refreshAnchors($(this));
+						self.refreshAnchors();
 					});
 				} else {
 					var buttonRefresh = $('<a id="Form_EditorToolbarLinkForm_AnchorRefresh" title="Refresh the anchor list" alt="Refresh the anchor list" class="buttonRefresh"><span></span></a>');
@@ -489,12 +488,12 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					this.find(':input[name=Anchor]').parent().append(buttonRefresh).append(anchorSelector);
 
 					buttonRefresh.click(function(e) {
-						refreshAnchors(anchorSelector);
+						self.refreshAnchors();
 					});
 				}
 
 				// initialization
-				this.refreshAnchors();
+				self.refreshAnchors();
 
 				// copy the value from dropdown to the text field
 				anchorSelector.change(function(e) {
@@ -503,13 +502,16 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			},
 			// this function collects the anchors in the currently active editor and regenerates the dropdown
 			refreshAnchors: function() {
-				var selector = this.find(':input[name=AnchorSelector]'), anchors = [];
+				var selector = this.find(':input[name=AnchorSelector]'), anchors = [], ed = this.getEditor();
 				// name attribute is defined as CDATA, should accept all characters and entities
 				// http://www.w3.org/TR/1999/REC-html401-19991224/struct/links.html#h-12.2
-				var raw = this.getEditor().getContent().match(/name="([^"]+?)"|name='([^']+?)'/gim);
-				if (raw && raw.length) {
-					for(var i = 0; i < raw.length; i++) {
-						anchors.push(raw[i].substr(6).replace(/"$/, ''));
+
+				if(ed) {
+					var raw = ed.getContent().match(/name="([^"]+?)"|name='([^']+?)'/gim);
+					if (raw && raw.length) {
+						for(var i = 0; i < raw.length; i++) {
+							anchors.push(raw[i].substr(6).replace(/"$/, ''));
+						}
 					}
 				}
 
@@ -670,10 +672,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				}
 
 				this.redraw();
-
-				// HACK: Hide selected node in IE because its drag handles on potentially selected elements
-				// don't respect the z-index of the dialog overlay.
-				// jQuery(ed.getContainer()).hide();
 			},
 			redraw: function() {
 				this._super();
