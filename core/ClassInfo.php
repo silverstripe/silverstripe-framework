@@ -8,11 +8,11 @@
  * @subpackage core
  */
 class ClassInfo {
-		/**
-	 * @todo Improve documentation
+	/**
+	 * Wrapper for classes getter.
 	 */
 	static function allClasses() {
-		return SS_ClassLoader::instance()->allClasses();
+		return SS_ClassLoader::instance()->getManifest()->getClasses();
 	}
 
 	/**
