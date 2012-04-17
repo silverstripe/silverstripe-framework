@@ -41,34 +41,34 @@
 				/* Attach classes to dropzone when element can be dropped*/
 				$(document).unbind('dragover');
 				$(document).bind('dragover', function (e) {
-				    timeout = window.dropZoneTimeout;
+					timeout = window.dropZoneTimeout;
 					var $target = $(e.target);
-				    if (!timeout) {
-				        dropZone.addClass('active');
-				    } else {
-				        clearTimeout(timeout);
-				    }				
-				    if ($target.closest('.ss-uploadfield-dropzone').length > 0) {
-				        dropZone.addClass('hover');
-				    } else {
-				        dropZone.removeClass('hover');
-				    }
-				    window.dropZoneTimeout = setTimeout(function () {
-				        window.dropZoneTimeout = null;
-				        dropZone.removeClass('active hover');
-				    }, 100);
+					if (!timeout) {
+						dropZone.addClass('active');
+					} else {
+						clearTimeout(timeout);
+					}
+					if ($target.closest('.ss-uploadfield-dropzone').length > 0) {
+						dropZone.addClass('hover');
+					} else {
+						dropZone.removeClass('hover');
+					}
+					window.dropZoneTimeout = setTimeout(function () {
+						window.dropZoneTimeout = null;
+						dropZone.removeClass('active hover');
+					}, 100);
 				});
 				
 				//disable default behaviour if file dropped in the wrong area
 				$(document).bind('drop dragover', function (e){					
-				    e.preventDefault(); 
+					e.preventDefault(); 
 				});
-				
-			
-			
+
+
+
 				this.setConfig(config);
 				this.fileupload($.extend(true, 
-					{					
+					{
 						formData: function(form) {
 							
 							return [
