@@ -3,6 +3,8 @@
 // TODO we need a seperated file for styles that are used in both cms and front end (such as buttons)
 @import "../admin/scss/themes/default.scss";
 
+
+
 #AssetUploadField {
 	border-bottom: 0;
 	@include box-shadow(none);
@@ -203,17 +205,24 @@ body.cms.ss-uploadfield-edit-iframe {
 			height: 66px;
 			width: 300px;
 			float: left;
-			
+			&.active{
+				&.hover{
+					@include box-shadow(rgba(#fff,0.6) 0 0 3px 3px inset);
+				}
+			}
 			div {
+				z-index:1;
 				padding: 15px 0 0;
 				line-height: 22px;
 				font-size: 20px;
 				font-weight: bold;
 				text-align: center;
-				
+				display:block;
+				margin:0 auto;
 				span {
 					display: block;
 					font-size: 12px;
+					z-index:-1;
 				}
 			}
 		}
