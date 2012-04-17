@@ -185,7 +185,7 @@ function plaintextEmail($to, $from, $subject, $plainContent, $attachedFiles, $cu
 	$plainContent = ($plainEncoding == "base64") ? chunk_split(base64_encode($plainContent),60) : QuotedPrintable_encode($plainContent);
 
 	// Messages with attachments are handled differently
-	if(is_array($attachedFiles)) {
+	if($attachedFiles) {
 		// The first part is the message itself
 		$fullMessage = processHeaders($headers, $plainContent);
 		$messageParts = array($fullMessage);
