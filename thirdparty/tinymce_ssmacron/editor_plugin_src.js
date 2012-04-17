@@ -29,7 +29,7 @@
 				}, {
 					plugin_url : url
 				});
-			})
+			});
 	
 			// Register buttons
 			ed.addButton('ssmacron', {
