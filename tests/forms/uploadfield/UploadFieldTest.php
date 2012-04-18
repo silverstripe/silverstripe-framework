@@ -28,7 +28,7 @@
 		$this->assertFalse($response->isError());
 		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
 		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
-		$this->assertNotNull($uploadedFile);
+		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 	}
 
 	function testUploadHasOneRelation() {
@@ -48,7 +48,7 @@
 		$this->assertFalse($response->isError());
 		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
 		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
-		$this->assertNotNull($uploadedFile);
+		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
 		$this->assertTrue($record->HasOneFile()->exists());
@@ -69,7 +69,7 @@
 		$this->assertFalse($response->isError());
 		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
 		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
-		$this->assertNotNull($uploadedFile);
+		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
 		$this->assertEquals(3, $record->HasManyFiles()->Count());
@@ -91,7 +91,7 @@
 		$this->assertFalse($response->isError());
 		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
 		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
-		$this->assertNotNull($uploadedFile);
+		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
 		$this->assertEquals($relationCount+1, $record->ManyManyFiles()->Count());
@@ -605,7 +605,7 @@
 		}
 
 		// Remove left over folders and any files that may exist
-		if(file_exists('../assets/UploadFieldTest')) Filesystem::removeFolder('../assets/FileTest');
+		if(file_exists('../assets/UploadFieldTest')) Filesystem::removeFolder('../assets/UploadFieldTest');
 	}
 
 }
