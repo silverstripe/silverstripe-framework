@@ -1,10 +1,17 @@
 es_AR:
   AssetAdmin:
-    CHOOSEFILE: "Elegir un archivo:"
     MENUTITLE: "Archivos & Imágenes"
     NEWFOLDER: "Nueva Carpeta"
-  AssetAdmin_left.ss:
-    GO: "Ir"
+  AssetTableField:
+    CREATED: "Agregado por primera vez"
+    DIM: "Dimensiones"
+    FILENAME: "Nombre del Archivo"
+    LASTEDIT: "Modificado por última vez"
+    OWNER: "Propietario"
+    SIZE: "Tamaño"
+    TITLE: "Título"
+    TYPE: "Tipo"
+    URL: "URL"
   BBCodeParser:
     ALIGNEMENT: "Alineación"
     ALIGNEMENTEXAMPLE: "alineado a la derecha"
@@ -38,9 +45,9 @@ es_AR:
     ANY: "Cualquiera"
     NO: "No"
     YES: "Sí"
-  CMSBatchActions:
-    PUBLISHED_PAGES: "Se publicaron %d páginas, %d fallas"
   CMSMain:
+    ACCESS: "Acceder a la sección '%s'"
+    ACCESSALLINTERFACES: "Acceder a todas las secciones del CMS"
     MENUTITLE: "Páginas"
     SAVE: "Guardar"
   ChangePasswordEmail.ss:
@@ -58,7 +65,6 @@ es_AR:
     SUCCESSEDIT: "Guardado %s %s %s"
   ComplexTableField.ss:
     ADDITEM: "Agregar %s"
-    NOITEMSFOUND: "No se encontraron items"
     SORTASC: "Ordenar ascendente"
     SORTDESC: "Ordenar descendente"
   ComplexTableField_popup.ss:
@@ -67,21 +73,15 @@ es_AR:
   ConfirmedPasswordField:
     ATLEAST: "Las contraseñas deben ser al menos de %s caracteres de largo."
     BETWEEN: "Las contraseñas deben ser de %s a %s caracteres de largo."
-    HAVETOMATCH: "La contraseña tiene que coincidir."
-    LEASTONE: "Las contraseñas deben tener al menos un dígito y un carácter alfanumérico."
     MAXIMUM: "Las contraseñas deben ser de al menos %s caracteres de largo."
-    NOEMPTY: "La contraseña no puede estar vacía."
     SHOWONCLICKTITLE: "Cambiar Contraseña"
   CreditCardField:
     FIRST: "primero"
     FOURTH: "cuarto"
     SECOND: "segundo"
     THIRD: "tercero"
-    VALIDATIONJS1: "Por favor asegurarte de haber ingresado el"
-    VALIDATIONJS2: "número de tarjeta de crédito correctamente."
   CurrencyField:
     CURRENCYSYMBOL: "$"
-    VALIDATIONJS: "Por favor ingresa una moneda válida."
   DataObject:
     PLURALNAME: "Objetos de Datos"
     SINGULARNAME: "Objeto de Datos"
@@ -102,7 +102,6 @@ es_AR:
   DateField:
     NOTSET: "no especificada"
     TODAY: "hoy"
-    VALIDATIONJS: "Por favor ingresa un formato de fecha válido (DD/MM/AAAA)."
     VALIDDATEFORMAT2: "Por favor ingresar un formato válido de fecha (%s)"
     VALIDDATEMAXDATE: "Su fecha tiene que ser más antigua o coincidente con la máxima fecha permitida (%s)"
     VALIDDATEMINDATE: "Su fecha tiene que ser más reciente o coincidente con la mínima fecha permitida (%s)"
@@ -110,7 +109,6 @@ es_AR:
     CHOOSE: "(Selecciona)"
   EmailField:
     VALIDATION: "Por favor ingresa una dirección de email."
-    VALIDATIONJS: "Por favor ingresa una dirección de email."
   Email_BounceRecord:
     PLURALNAME: "Registros de rebotes de email"
     SINGULARNAME: "Registro de rebotes de email"
@@ -125,7 +123,6 @@ es_AR:
     Name: "Nombre"
     PLURALNAME: "Archivos"
     SINGULARNAME: "Archivo"
-    Sort: "Ordenar"
     TOOLARGE: "Tamaño de archivo muy grande, máximo permitido %s."
     Title: "Título"
   FileIFrameField:
@@ -136,22 +133,6 @@ es_AR:
     FROMFILESTORE: "Desde el almacén de archivos"
     NOSOURCE: "Por favor seleccionar un archivo fuente para adjuntar"
     REPLACE: "Reemplazar %s"
-  FileIFrameField.ss:
-    TITLE: "Iframe de subida de imágenes"
-  Folder:
-    CREATED: "El Primero Cargado"
-    DELSELECTED: "Eliminar archivos seleccionados"
-    DETAILSTAB: "Detalles"
-    FILENAME: "Nombre de Archivo"
-    FILESTAB: "Archivos"
-    LASTEDITED: "El Último Actualizado"
-    PLURALNAME: "Archivos"
-    SINGULARNAME: "Archivo"
-    TITLE: "Título"
-    TYPE: "Tipo"
-    UPLOADTAB: "Cargado"
-    URL: "URL"
-    VIEWEDITASSET: "Ver/Editar Activo"
   ForgotPasswordEmail.ss:
     HELLO: "Hola"
     TEXT1: "Aquí esta tu"
@@ -174,13 +155,9 @@ es_AR:
     DefaultGroupTitleAdministrators: "Administradores"
     DefaultGroupTitleContentAuthors: "Autores de contenido"
     Description: "Descripción"
-    IMPORTTABTITLE: "Importar"
-    IPRestrictions: "Restricciones a Direcciones IP"
     Locked: "¿Bloqueado?"
-    PLURALNAME: "Grupos"
     Parent: "Grupo Superior"
     RolesAddEditLink: "Agregar/Editar roles"
-    SINGULARNAME: "Grupo"
     Sort: "Ordenar"
     has_many_Permissions: "Permisos"
     many_many_Members: "Miembros"
@@ -191,8 +168,6 @@ es_AR:
     ResultUpdated: "Se actualizaron %d grupos"
   HtmlEditorField:
     ANCHORVALUE: "Anclar"
-    BUTTONINSERTFLASH: "Insertar Flash"
-    BUTTONINSERTIMAGE: "Insertar imagen"
     BUTTONINSERTLINK: "Insertar enlace"
     BUTTONREMOVELINK: "Quitar enlace"
     CSSCLASS: "Alineación / estilo"
@@ -202,7 +177,6 @@ es_AR:
     CSSCLASSRIGHT: "A la derecha, justificando texto."
     EMAIL: "Dirección email"
     FILE: "Archivo"
-    FLASH: "Flash"
     FOLDER: "Carpeta"
     IMAGE: "Imagen"
     IMAGEALTTEXT: "Texto alternativo (alt) - mostrado si no se puede mostrar la imagen"
@@ -218,20 +192,11 @@ es_AR:
     LINKFILE: "Descargar un archivo"
     LINKINTERNAL: "Página en el sitio"
     LINKOPENNEWWIN: "¿Abrir enlace en una nueva ventana?"
-    LINKTEXT: "Texto del enlace"
     LINKTO: "Enlazar a"
     PAGE: "Página"
-    SEARCHFILENAME: "Buscar por nombre de archivo"
-    SHOWUPLOADFORM: "Subir archivo"
     URL: "URL"
-  Image:
-    PLURALNAME: "Archivos"
-    SINGULARNAME: "Archivo"
   ImageField:
     IMAGE: "Imagen"
-  Image_Cached:
-    PLURALNAME: "Archivos"
-    SINGULARNAME: "Archivo"
   Image_iframe.ss:
     TITLE: "Subiendo Imagen Iframe"
   LeftAndMain:
@@ -243,13 +208,9 @@ es_AR:
     PERMDEFAULT: "Por favor elegir un método de autenticación e ingresar sus credenciales para acceder al CMS."
     PLEASESAVE: "Por favor Guarda la Página: No se puede actualizar esta página porque aún no se ha guardado."
     SAVED: "guardado"
-  LeftAndMain_right.ss:
-    WELCOMETO: "Bienvenido a "
   LoginAttempt:
     Email: "Dirección Email"
     IP: "Dirección IP"
-    PLURALNAME: "Intentos de Acceso"
-    SINGULARNAME: "Intento de Acceso"
     Status: "Estado"
   Member:
     ADDRESS: "Dirección"
@@ -306,75 +267,36 @@ es_AR:
     ResultDeleted: "Se eliminaron %d miembros"
     ResultNone: "Sin cambios"
     ResultUpdated: "Se actualizaron %d miembros"
-  MemberPassword:
-    PLURALNAME: "Contraseñas de Miembros"
-    SINGULARNAME: "Contraseña de Miembro"
-  MemberTableField:
-    ADD: "Agregar"
-    ADDEDTOGROUP: "Miembro añadido al grupo"
-    ADDINGFIELD: "Falló la inserción"
-    DeleteTitleText: "Eliminar de este grupo"
-    DeleteTitleTextDatabase: "Eliminar de la base de datos y todos los grupos"
-    ERRORADDINGUSER: "Hubo un error al agregar el usuario al grupo: %s"
-    FILTER: "Filtro"
-    SEARCH: "Buscar"
   ModelAdmin:
-    ADDBUTTON: "Agregar"
-    ADDFORM: "Llena este formulario para agregar un %s a la base de datos."
-    CHOOSE_COLUMNS: "Seleccionar columnas de resultados..."
-    CLEAR_SEARCH: "Borrar la Búsqueda"
-    CREATEBUTTON: "Crear '%s'"
     DELETE: "Eliminar"
     DELETEDRECORDS: "Eliminados %s registros."
-    FOUNDRESULTS: "Tu búsqueda dió como resultado %s items coincidentes"
     IMPORT: "Importar desde CSV"
     IMPORTEDRECORDS: "Registros %s importados."
-    ITEMNOTFOUND: "No puedo encontrar ese item"
-    LOADEDFOREDITING: "Cargado '%s' para editar."
     NOCSVFILE: "Por favor explorar por un archivo CVS para importar"
     NOIMPORT: "Nada para importar"
-    NORESULTS: "Sin resultados"
-    SAVE: "Guardar"
-    SEARCHRESULTS: "Buscar en Resultados"
-    SELECTALL: "seleccionar todo"
-    SELECTNONE: "seleccionar nada"
     UPDATEDRECORDS: "Actualizados %s registros."
   MoneyField:
     FIELDLABELAMOUNT: "Cantidad"
     FIELDLABELCURRENCY: "Moneda"
-  MyEntity:
-    MyNamespace: "Valor por defecto de mi idioma natural"
-  MyNamespace:
-    MYENTITY: "Contando %s objetos"
   NullableField:
     IsNullLabel: "Es nulo"
   NumericField:
     VALIDATION: "'%s' no es un número, este campo únicamente acepta números"
-    VALIDATIONJS: "no es un número, únicamente se pueden ingresar números en éste campo."
-  Page:
-    PLURALNAME: "Págs."
-    SINGULARNAME: "Página"
   Permission:
     AdminGroup: "Administrador"
+    CMS_ACCESS_CATEGORY: "Acceso al CMS"
     FULLADMINRIGHTS: "Privilegios administrativos completos"
-    PLURALNAME: "Permisos"
-    SINGULARNAME: "Permiso"
   PermissionCheckboxSetField:
     AssignedTo: "asignado a \"%s\""
     FromGroup: "heredado desde el grupo \"%s\""
     FromRole: "heredado desde el rol \"%s\""
     FromRoleOnGroup: "heredado desde el rol \"%s\" en el grupo \"%s\""
-  PermissionRole:
-    PLURALNAME: "Roles"
-    SINGULARNAME: "Rol"
   Permissions:
     PERMISSIONS_CATEGORY: "Roles y permisos de acceso"
   PhoneNumberField:
     VALIDATION: "Por favor ingresa un número telefónico válido"
   RelationComplexTableField.ss:
     ADD: "Agregar"
-    CSVEXPORT: "Exportar a CSV"
-    NOTFOUND: "No encontré elementos"
   ReportAdmin:
     MENUTITLE: "Informes"
   Security:
@@ -384,44 +306,28 @@ es_AR:
     CHANGEPASSWORDHEADER: "Cambia tu contraseña"
     ENTERNEWPASSWORD: "Por favor incorpora la nueva contraseña"
     ERRORPASSWORDPERMISSION: "¡Debes haber ingresado al sitio para cambiar la contraseña!"
-    IPADDRESSES: "Dirección IP"
     LOGGEDOUT: "Tu sesión ha caducado. Si deseas ingresar de nuevo, incorpora tus credenciales abajo."
     LOGIN: "Acceso"
-    LOSTPASSWORDHEADER: "Olvidé mi Contraseña"
     NOTEPAGESECURED: "Esta página está protegida. Ingresa tus credenciales abajo y en seguida te enviaremos una autorización."
     NOTERESETLINKINVALID: "<p>El enlace de renovación de contraseña es inválido o ha vencido.</p><p>Usted puede requerir una nueva <a href=\"%s\">aquí</a> o cambie su contraseña luego de haber <a href=\"%s\">ingresado</a>.</p>"
     NOTERESETPASSWORD: "Ingresa tu dirección email y te enviaremos un enlace con el cual podrás restablecer la contraseña"
     PASSWORDSENTHEADER: "Enlace para restablecer tu contraseña enviado a '%s'"
     PASSWORDSENTTEXT: "¡Gracias! Se ha enviado el enlace para restablecer tu contraseña a '%s'."
   SecurityAdmin:
-    ADDMEMBER: "Agregar Miembro"
+    ACCESS_HELP: "Permitir ver, agregar y editar usuarios, así como asignar permisos y roles a ellos."
     APPLY_ROLES: "Aplicar roles a grupos"
     APPLY_ROLES_HELP: "Posibilidad de editar los roles asignados a un grupo. Necesita el permiso \"Acceder a la sección 'Seguridad'\"."
     EDITPERMISSIONS: "Administrar permisos para grupos"
     EDITPERMISSIONS_HELP: "Posibilidad de editar permisos y direcciones IP a un grupo. Necesita el permiso \"Acceder a la sección 'Seguridad'\"."
     GROUPNAME: "Nombre de grupo"
-    IPADDRESSESHELP: |
-                      <p>Puedes restringir a este grupo dentro de una rango de direcciones IP (un rango por línea). <br />
-                      Los rangos se pueden escribir dentro de las siguientes formas: <br />
-                      203.96.152.12<br />
-                      203.96.152/24<br />
-                      203.96/16<br />
-                      203/8<br /><br />
-                      Si tu entras uno o más rangos de direcciones IP en esta caja, entonces los miembros obtendrán
-                      los derechos de pertenecer a dicho grupo si ingresan al sitio web desde alguno de las
-                      direcciones IP válidas. Esto no va a impedir que puedan ingresar. Esto es porque el mismo
-                      usuario podría tener que ingresar al sitio para llegar a partes de él donde no hay
-                      restricciones en el uso con direcciones IP.    MEMBERS: "Miembros"
+    MEMBERS: "Miembros"
     MENUTITLE: "Seguridad"
     MemberListCaution: "Advertencia: la eliminación de miembros de esta lista los eliminará de todos los grupos y de la base de datos"
     NEWGROUP: "Nuevo Grupo"
     PERMISSIONS: "Permisos"
     ROLES: "roles"
     ROLESDESCRIPTION: "Esta sección le permite agregar roles a este grupo. Los roles son agrupaciones lógicas de permisos, que se pueden editar en la pestaña Roles."
-    SGROUPS: "Grupos de seguridad"
-    TABIMPORT: "Importar"
     TABROLES: "Roles"
-    VIEWUSER: "Ver usuario"
   SecurityAdmin_MemberImportForm:
     BtnImport: "importar"
     FileFieldLabel: "Archivo CSV <small>(extensiones permitidas: *.csv)</small>"
@@ -433,19 +339,14 @@ es_AR:
     ISREQUIRED: "En %s '%s' es obligatorio."
   TableField.ss:
     ADD: "Agregar una nueva fila"
-    ADDITEM: "Agregar %s"
   TableListField:
     CSVEXPORT: "Exportar a CSV"
     PRINT: "Imprimir"
     SELECT: "Seleccionar:"
   TableListField.ss:
-    NOITEMSFOUND: "N ose encontraron ítems"
     SORTASC: "Ordenar en orden ascendente"
     SORTDESC: "Ordenar en orden descendente"
   TableListField_PageControls.ss:
-    DISPLAYING: "Mostrando"
-    OF: "de"
-    TO: "a"
     VIEWFIRST: "Ver primero"
     VIEWLAST: "Ver último"
     VIEWNEXT: "Ver siguiente"

@@ -1,10 +1,15 @@
 fo:
   AssetAdmin:
-    CHOOSEFILE: "Áset eina fílu"
     MENUTITLE: "Fílur og myndir"
     NEWFOLDER: "Nýggj skjátta"
-  AssetAdmin_left.ss:
-    GO: "Víðari"
+  AssetTableField:
+    FILENAME: "Fílunavn"
+    LASTEDIT: "Seinast broyting"
+    OWNER: "Eigari"
+    SIZE: "Stødd"
+    TITLE: "Heiti"
+    TYPE: "Slag"
+    URL: "URL"
   BBCodeParser:
     COLOREDEXAMPLE: "bláur tekstur"
     EMAILLINK: "Teldupost leinka"
@@ -19,6 +24,7 @@ fo:
     ERRORNOTADMIN: "Hasin brúkarin er ikki ein fyrisitari."
     ERRORNOTREC: "Brúkaranavn / loyniorð er skeivt"
   CMSMain:
+    ACCESS: "Rættindi til '%s' (%s)"
     MENUTITLE: "Heimasíðu innihald"
     SAVE: "Goym"
   ChangePasswordEmail.ss:
@@ -31,7 +37,6 @@ fo:
     SUCCESSADD: "Stovnaði %s %s %s"
   ComplexTableField.ss:
     ADDITEM: "Stovna %s"
-    NOITEMSFOUND: "Einki var funnið"
     SORTASC: "Raða hækkandi"
     SORTDESC: "Raða lækkandi"
   ComplexTableField_popup.ss:
@@ -40,21 +45,15 @@ fo:
   ConfirmedPasswordField:
     ATLEAST: "Loyniorð mugu verða í minsta lagi %s stavir til longdar."
     BETWEEN: "Loyniorð mugu verða %s til %s stavir til longdar."
-    HAVETOMATCH: "Loyniorð mugu samsvara."
-    LEASTONE: "Loyniorð mugu hava í minsta lagi innihalda eitt tal og ein bókstav."
     MAXIMUM: "Loyniorð mugu verða í mesta lagi %s stavir til longdar."
-    NOEMPTY: "Loyniorð kunnu ikki verða tóm."
     SHOWONCLICKTITLE: "Broyt loyniorð"
   CreditCardField:
     FIRST: "fyrsta"
     FOURTH: "fjóra"
     SECOND: "næsta"
     THIRD: "triða"
-    VALIDATIONJS1: "Vinarliga tryggja at tygum hava inntøppað"
-    VALIDATIONJS2: "gjaldskortsnummarið rætt"
   CurrencyField:
     CURRENCYSYMBOL: "$"
-    VALIDATIONJS: "Vinarliga inntøppa eitt galdandi gjaldsoyra."
   DataObject:
     PLURALNAME: "Dáta eindir"
     SINGULARNAME: "Dáta eind"
@@ -75,7 +74,6 @@ fo:
   DateField:
     NOTSET: "ikki ásett"
     TODAY: "í dag"
-    VALIDATIONJS: "Vinarliga inntøppa eitt galdandi dato format (DD/MM/YYYY)."
   DropdownField:
     CHOOSE: "(Áset)"
   EmailField:
@@ -87,19 +85,8 @@ fo:
     Name: "Navn"
     PLURALNAME: "Fílur"
     SINGULARNAME: "Fíla"
-    Sort: "Raða eftir"
     TOOLARGE: "Fílan er ov stór, mest loyvt er %s."
     Title: "Heiti"
-  Folder:
-    DETAILSTAB: "upplýsningar"
-    FILENAME: "Fílunavn"
-    FILESTAB: "Fílur"
-    LASTEDITED: "Seinast broytt"
-    PLURALNAME: "Fílur"
-    SINGULARNAME: "Fíla"
-    TITLE: "Heiti"
-    TYPE: "Slag"
-    URL: "URL"
   ForgotPasswordEmail.ss:
     HELLO: "Hey"
     TEXT1: "Her er títt"
@@ -116,15 +103,11 @@ fo:
     Code: "Bólka kota"
     Description: "Frágreiðing"
     Locked: "Læst?"
-    PLURALNAME: "Bólkar"
     Parent: "Yvirbólkur"
-    SINGULARNAME: "Bólkur"
     Sort: "Raða eftir"
     has_many_Permissions: "Loyvir"
     many_many_Members: "Limir"
   HtmlEditorField:
-    BUTTONINSERTFLASH: "Innset flash"
-    BUTTONINSERTIMAGE: "Innset mynd"
     BUTTONINSERTLINK: "Stovna leinku"
     BUTTONREMOVELINK: "Strika leinku"
     CSSCLASSCENTER: "Í miðuni, einsamalt."
@@ -132,7 +115,6 @@ fo:
     CSSCLASSRIGHT: "Til høgru, við tekstinum rundan um."
     EMAIL: "Teldupostadressu"
     FILE: "Fíla"
-    FLASH: "Flash"
     FOLDER: "Skjátta"
     IMAGE: "Mynd"
     IMAGEHEIGHTPX: "Hædd"
@@ -146,12 +128,6 @@ fo:
     LINKTO: "Leinka til"
     PAGE: "Síða"
     URL: "URL"
-  Image:
-    PLURALNAME: "Fílur"
-    SINGULARNAME: "Fíla"
-  Image_Cached:
-    PLURALNAME: "Fílur"
-    SINGULARNAME: "Fíla"
   LeftAndMain:
     HELP: "Leiðbeiningar"
     PAGETYPE: "Slag av síðu:"
@@ -163,8 +139,6 @@ fo:
   LoginAttempt:
     Email: "Teldupostur"
     IP: "IP adressa"
-    PLURALNAME: "Royndir at innrita"
-    SINGULARNAME: "Roynd at innrita"
     Status: "Støða"
   Member:
     ADDRESS: "Bústaður"
@@ -202,34 +176,16 @@ fo:
     db_PasswordExpiry: "Loyniorð gongur út"
   MemberAuthenticator:
     TITLE: "Teldupostadressa &amp; Loyniorð"
-  MemberPassword:
-    PLURALNAME: "Loyniorð hjá brúkarum"
-    SINGULARNAME: "Loyniorð hjá brúkara"
-  MemberTableField:
-    ADD: "Stovna"
-    ADDEDTOGROUP: "Legði lim í bólkin"
-    FILTER: "Filtur"
-    SEARCH: "Leita"
   ModelAdmin:
-    CLEAR_SEARCH: "Nullstilla leiting"
-    CREATEBUTTON: "Stovna '%s'"
     DELETE: "Strika"
     IMPORT: "Innles frá CSV"
     IMPORTEDRECORDS: "Innlæs %s skrásetingar."
-    SAVE: "Goym"
-    SEARCHRESULTS: "Leitiúrslit"
     UPDATEDRECORDS: "Dagførdi %s skrásetingar."
-  Page:
-    PLURALNAME: "Síður"
-    SINGULARNAME: "Síða"
   Permission:
-    PLURALNAME: "Rættindir"
-    SINGULARNAME: "Rættindi"
   PhoneNumberField:
     VALIDATION: "Vinarliga inntøppa eitt galdandi telefonnummar"
   RelationComplexTableField.ss:
     ADD: "Stovna"
-    CSVEXPORT: "Útles til CSV"
   ReportAdmin:
     MENUTITLE: "Úrrit"
   Security:
@@ -238,19 +194,14 @@ fo:
     CHANGEPASSWORDHEADER: "Broyt títt loyniorð"
     ENTERNEWPASSWORD: "Vinarliga inntøppa eitt nýtt loyniorð"
     ERRORPASSWORDPERMISSION: "Tú má verða innritað/ur fyri at kunna broyta títt loyniorð!"
-    IPADDRESSES: "IP-adressur"
     LOGGEDOUT: "Tú ert blivin útritaður. Um tygum ynskja at innrita aftur, inntøppa so tínar upplýsningar niðanfyri."
     LOGIN: "Innrita"
-    LOSTPASSWORDHEADER: "Gloymt loyniorð"
   SecurityAdmin:
-    ADDMEMBER: "Stovna lim"
     GROUPNAME: "Bólkaheiti"
     MEMBERS: "Limir"
     MENUTITLE: "Trygd"
     NEWGROUP: "Nýggjur bólkur"
     PERMISSIONS: "Rættindi"
-    SGROUPS: "Trygdarbólkar"
-    VIEWUSER: "Vís brúkara"
   SiteTree:
     TABMAIN: "Alment"
   TableField.ss:
@@ -258,8 +209,6 @@ fo:
     CSVEXPORT: "Útles til CSV"
     PRINT: "Prenta"
   TableListField_PageControls.ss:
-    OF: "av"
-    TO: "til"
     VIEWFIRST: "Vís fyrstu"
     VIEWLAST: "Vís seinastu"
     VIEWNEXT: "Vís næstu"

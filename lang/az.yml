@@ -1,10 +1,5 @@
 az:
   AssetAdmin:
-    CHOOSEFILE: "Faylı seç:"
-    MENUTITLE: "Fayllar və şəkillər"
-    NEWFOLDER: "Yeni Qovluq"
-  AssetAdmin_left.ss:
-    GO: "Get"
   BBCodeParser:
     ALIGNEMENT: "Yönlənmə"
     ALIGNEMENTEXAMPLE: "sağa yönəlmə"
@@ -38,10 +33,7 @@ az:
     ANY: "İstənilən"
     NO: "Yox"
     YES: "Bəli"
-  CMSBatchActions:
-    PUBLISHED_PAGES: "%d ədəd səhifə dərc olunub, %d xəta"
   CMSMain:
-    MENUTITLE: "Səhifələr"
     SAVE: "Yadda saxla"
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: "Siz parolu bu url üçün dəyişdiniz"
@@ -58,7 +50,6 @@ az:
     SUCCESSEDIT: "%s %s %s yadda saxlanıldı"
   ComplexTableField.ss:
     ADDITEM: "%s əlavə et"
-    NOITEMSFOUND: "Həç bir şey tapılmadı. "
     SORTASC: "Artma ilə sırala"
     SORTDESC: "Azalma ilə sırala"
   ComplexTableField_popup.ss:
@@ -67,21 +58,15 @@ az:
   ConfirmedPasswordField:
     ATLEAST: "Parol ən azı %s simvol olmalıdır."
     BETWEEN: "Parol ən azı %s ən çoxu %s simvol olmalıdır."
-    HAVETOMATCH: "Şifrələr eyni olmalıdır."
-    LEASTONE: "Parol ən azı bir rəqəm və bir hərf təşkil etməlidir."
     MAXIMUM: "Parol ən çox %s simvol olmalıdır."
-    NOEMPTY: "Şifrə boş ola bilməz."
     SHOWONCLICKTITLE: "Parolu dəyiş"
   CreditCardField:
     FIRST: "birinci"
     FOURTH: "dördüncü"
     SECOND: "ikinci"
     THIRD: "üçüncü"
-    VALIDATIONJS1: "Əmin olun ki, "
-    VALIDATIONJS2: "kredit kart nömrəsini düzgün daxil etmisiniz."
   CurrencyField:
     CURRENCYSYMBOL: "$"
-    VALIDATIONJS: "Düzgün valyuta daxil edin."
   DataObject:
     PLURALNAME: "Data Obyektlər"
     SINGULARNAME: "Data Obyekt"
@@ -102,13 +87,11 @@ az:
   DateField:
     NOTSET: "təyin edilməyib"
     TODAY: "bu gün"
-    VALIDATIONJS: "Düzgün zaman formatı daxil edin (DD-MM-YYYY)."
     VALIDDATEFORMAT2: "Zəhmət olmasa düzgün zaman formatı daxil edin  (%s)"
   DropdownField:
     CHOOSE: "(Seçin)"
   EmailField:
     VALIDATION: "E-poçtu yazın."
-    VALIDATIONJS: "E-mail adresi daxil edin."
   Email_BounceRecord:
     PLURALNAME: "Email Bounce Records"
     SINGULARNAME: "Email Bounce Record"
@@ -123,7 +106,6 @@ az:
     Name: "Ad"
     PLURALNAME: "Fayllar"
     SINGULARNAME: "Fayl"
-    Sort: "Sıralama"
     TOOLARGE: "Faylın ölçüsü çox böyükdür, maksimum %s olmalıdır."
     Title: "Başlıq"
   FileIFrameField:
@@ -134,20 +116,6 @@ az:
     FROMFILESTORE: "Fayllar siyahısından"
     NOSOURCE: "Xahiş edirik əlavə etmək üçün source faylı seçin"
     REPLACE: "Əvəz et %s"
-  Folder:
-    CREATED: "Birinci yüklənmiş"
-    DELSELECTED: "Seçilmiş faylları sil"
-    DETAILSTAB: "Məlumatlar"
-    FILENAME: "Faylın adı"
-    FILESTAB: "Fayllar"
-    LASTEDITED: "Axırıncı yenilənmiş"
-    PLURALNAME: "Fayllar"
-    SINGULARNAME: "Fayl"
-    TITLE: "Başlıq"
-    TYPE: "Tip"
-    UPLOADTAB: "Köçür"
-    URL: "URL"
-    VIEWEDITASSET: "Aktivləri Göstər/Redakte "
   ForgotPasswordEmail.ss:
     HELLO: "Salam"
     TEXT1: "Burada sizin"
@@ -170,34 +138,13 @@ az:
     DefaultGroupTitleAdministrators: "Administratorlar"
     DefaultGroupTitleContentAuthors: "Məzmun müəllifləri"
     Description: "Qısa təsvir"
-    IMPORTTABTITLE: "İmport"
-    IPRestrictions: "İP ünvan məhdudiyyətləri"
     Locked: "Bloklanıb?"
-    PLURALNAME: "Qruplar"
     Parent: "Valideyn qrupu"
-    RolesAddEditLink: "Rollar əlavə et/dəyiş"
-    SINGULARNAME: "Qrup"
     Sort: "Sıralama"
     has_many_Permissions: "Səlahiyyətlər"
     many_many_Members: "Üzvlər"
-  GroupImportForm:
-    Help1: "<p>Qrupları <em>CSV</em> formatda import et (). <small><a href=\"#\" class=\"toggle-advanced\">Genişlənmiş formada istifadə</a></small></p>"
-    Help2: |
-            <div class="advanced">
-            <h4>Genişlənmiş istifadə</h4>
-            <ul>
-            <li>İcazə verilən sütünlar: <em>%s</em></li>
-            <li>Mövcud qruplar öz unikal <em>kodları</em> ilə tapılır  və import olunmuş fayllardan öz qiymətlərini alır</li>
-            <li>Qrup ierarxiyası <em>ParentCode</em> sütunundan istifadə etməklə yarana bilər.</li>
-            <li>Səlahiyyət kodları <em>PermissionCode</em> sütunu ilə verilə bilər. Mövcud səlahiyyət kodları sıfırlanmır.</li>
-            </ul>
-            </div>    ResultCreated: "%d ədəd qrup yaradıldı"
-    ResultDeleted: "%d ədə qrup silindi"
-    ResultUpdated: "%d ədəd qrup yeniləndi"
   HtmlEditorField:
     ANCHORVALUE: "Ankor"
-    BUTTONINSERTFLASH: "Flash əlavə et"
-    BUTTONINSERTIMAGE: "Şəkil əlavə et"
     BUTTONINSERTLINK: "Link əlavə et"
     BUTTONREMOVELINK: "Linki sil"
     CAPTIONTEXT: "Mətn"
@@ -208,7 +155,6 @@ az:
     CSSCLASSRIGHT: "Sağda, mətnin kəsilməsi ilə."
     EMAIL: "E-poçt ünvanı"
     FILE: "Fayl"
-    FLASH: "Flash"
     FOLDER: "Qovluq"
     IMAGE: "Şəkil"
     IMAGEDIMENSIONS: "Ölçülər"
@@ -222,36 +168,14 @@ az:
     LINKFILE: "Faylı yüklə"
     LINKINTERNAL: "Saytda olan səhifə"
     LINKOPENNEWWIN: "Link yeni pəncərədə açılsın?"
-    LINKTEXT: "Link mətni"
     LINKTO: "Linki qoy"
     PAGE: "Səhifə"
-    SEARCHFILENAME: "Faylın adına görə axtar"
-    SHOWUPLOADFORM: "Fayl köçür"
     URL: "URL"
-  Image:
-    PLURALNAME: "Fayllar"
-    SINGULARNAME: "Fayl"
   ImageField:
     IMAGE: "Şəkil"
-  Image_Cached:
-    PLURALNAME: "Fayllar"
-    SINGULARNAME: "Fayl"
-  LeftAndMain:
-    CANT_REORGANISE: "Bu sayt ierarxiyasını sıralamağa icazə yoxdur. Dəyişiklik yadda saxlanılmadı."
-    HELP: "Kömək"
-    PAGETYPE: "Səhifənin tipi:"
-    PERMAGAIN: "Siz CMS-dən çıxdınız. Əgər yenidən daxil olmaq istəyirsinizsə, istifadəçi adı və parolu yazın."
-    PERMALREADY: "Sizin CMS-in bu hissəsinə daxil olmaq üçün icazəniz yoxdur. Əgər başqa adla daxil olmaq istəyirsinizsə davam edin"
-    PERMDEFAULT: "Zəhmət olmasa autentifikasiya metodunu seçin və CMS-ə daxil o lmaq üçün rekvizitlərinizi yazın."
-    PLEASESAVE: "Zəhmət olmasa səhifəni yadda saxlayın: Bu səhifə yenilənə bilməz, çünki, yadda saxlanılmayıb."
-    SAVED: "yadda saxlanıldı"
-  LeftAndMain_right.ss:
-    WELCOMETO: "Xoş gəlmisiniz"
   LoginAttempt:
     Email: "E-poçt"
     IP: "İP ünvan"
-    PLURALNAME: "Daxil olma cəhdləri"
-    SINGULARNAME: "Daxil olma cəhdi"
     Status: "Status"
   Member:
     ADDRESS: "Ünvan"
@@ -303,96 +227,28 @@ az:
     db_PasswordExpiry: "Parolun etibarlılığının bitmə vaxtı"
   MemberAuthenticator:
     TITLE: "E-poçt &amp; Parol"
-  MemberImportForm:
-    Help1: |
-            <p>Üzvləri <em>CSV formatda</em> import et. <small><a href="#" class="toggle-advanced">Genişlənmiş formada istifadə</a></small></p>
-                Help2: |
-            <div class="advanced">
-            <h4>Genişlənmiş istifadə</h4>
-            <ul>
-            <li>İcazə verilən sütünlar: <em>%s</em></li>
-            <li>Mövcud istifadəçilər öz unikal <em>kodları</em> ilə tapılır  və import olunmuş fayllardan öz qiymətlərini alır</li>
-            <li>Qruplar <em>Groups</em> sütünü ilə mənimsədilə bilər. Qruplar öz <em>Code</em> parametri ilə identifikasiya olunur, bir neçə qrup vergüllə ayrılır. Mövcud qrup üzvlükləri sıfırlanmır.</li>
-            </ul>
-            </div>    ResultCreated: "%d ədəd üzv yaradıldı"
-    ResultDeleted: "%d üzv silinib"
-    ResultNone: "Dəyişiklik yoxdur"
-    ResultUpdated: "%d ədəd üzv dəyişildi"
-  MemberPassword:
-    PLURALNAME: "Üzvlərin parolları"
-    SINGULARNAME: "Üzvün parolu"
-  MemberTableField:
-    ADD: "Əlavə et"
-    ADDEDTOGROUP: "Üzv qrupa əlavə olundu"
-    ADDINGFIELD: "Əlavə olunmadı"
-    DeleteTitleText: "Bu qrupdan sil"
-    DeleteTitleTextDatabase: "Verilənlər bazasından və bütün qruplardan sil"
-    ERRORADDINGUSER: "Göstərilən qrupa istifadəçini əlavə etmək mümkün olmadı: %s"
-    FILTER: "Filtr"
-    SEARCH: "Axtarış"
-  ModelAdmin:
-    ADDBUTTON: "Əlavə et"
-    ADDFORM: "Formanı doldurun və %s-nu verilənlər bazasına əlavə edin."
-    CHOOSE_COLUMNS: "Nəticə sütunlarını seç..."
-    CLEAR_SEARCH: "Təmizlə"
-    CREATEBUTTON: "'%s' yarat"
-    DELETE: "Sil"
-    DELETEDRECORDS: "%s yazı silindi."
-    FOUNDRESULTS: "Axtarış nəticəsində %s nəticə tapıldı"
-    IMPORT: "CSV fayldan import et"
-    IMPORTEDRECORDS: "%s yazı import olundu."
-    ITEMNOTFOUND: "Tapılmır"
-    LOADEDFOREDITING: "Dəyişmək üçün '%s'  yükləndi."
-    NOCSVFILE: "Zəhmət olmasa CSV faylı import etmək üçün seçin"
-    NOIMPORT: "İmport etməyə heç bir şey yoxdur"
-    NORESULTS: "Nəticə yoxdur"
-    SAVE: "Yadda saxla"
-    SEARCHRESULTS: "Axtarış nəticələri"
-    SELECTALL: "hamısını seç"
-    SELECTNONE: "heç biri"
-    UPDATEDRECORDS: "%s yazı yeniləndi."
   MoneyField:
     FIELDLABELAMOUNT: "Miqdar"
     FIELDLABELCURRENCY: "Valyuta"
-  MyEntity:
-    MyNamespace: "Susmaya görə dil"
-  MyNamespace:
-    MYENTITY: "%s ədə sayılıb"
   NullableField:
     IsNullLabel: "Boşdur"
   NumericField:
     VALIDATION: "'%s' rəqəm deyil, bu sahədə yalnız rəqəmlər daxil edilə bilər"
-    VALIDATIONJS: "rəqəm deyil, bu sahədə yalnız rəqəmlər ola bilər"
-  Page:
-    PLURALNAME: "Səhifələr"
-    SINGULARNAME: "Səhifə"
   Permission:
     AdminGroup: "Administrator"
     FULLADMINRIGHTS: "Tam administrativ hüquqlar"
     FULLADMINRIGHTS_HELP: "Başqa təyin edilmiş bütün icazələr rədd olunur."
-    PLURALNAME: "Səlahiyyətlər"
-    SINGULARNAME: "Səlahiyyət"
   PermissionCheckboxSetField:
     AssignedTo: "mənimsədilib \"%s\""
     FromGroup: "\"%s\" qrupundan törəyib"
     FromRole: "\"%s\" rolundan törəyib"
     FromRoleOnGroup: "\"%s\" rolundan \"%s\" qrupunda törəyib"
-  PermissionRole:
-    PLURALNAME: "Rollar"
-    SINGULARNAME: "Rol"
-  PermissionRoleCode:
-    PLURALNAME: "Səlahiyyət rolu kodları"
-    SINGULARNAME: "Səlahiyyət rolu kodu"
   Permissions:
-    PERMISSIONS_CATEGORY: "Rollar və icazə səlahiyyətləri"
+    PERMISSIONS_CATEGORY: "İcazələr"
   PhoneNumberField:
     VALIDATION: "Düzgün telefon nömrəsi daxil et."
   RelationComplexTableField.ss:
     ADD: "Əlavə et"
-    CSVEXPORT: "CSV-yə eksport et"
-    NOTFOUND: "Heç nə tapılmadı"
-  ReportAdmin:
-    MENUTITLE: "Hesabatlar"
   Security:
     ALREADYLOGGEDIN: "Sizin bu səhifəyə icazəniz yoxdur. Əgər bu səhifəyə icazəsi olan başqa profiliniz varsa hesabınıza <a href=\"%s\">daxil olun"
     BUTTONSEND: "Parolu sıfırlama linkini göndər"
@@ -400,40 +256,18 @@ az:
     CHANGEPASSWORDHEADER: "Parolu dəyiş"
     ENTERNEWPASSWORD: "Yeni şifrəni daxil edin."
     ERRORPASSWORDPERMISSION: "Parolu dəyişmək üçün hesaba daxil olmalısınız!"
-    IPADDRESSES: "İP ünvanlar"
     LOGGEDOUT: "Hesabdan çıxdınız. Yenidən daxil olmaq üçün məlumatları daxil edin."
     LOGIN: "Daxil ol"
-    LOSTPASSWORDHEADER: "Parol itib"
     NOTEPAGESECURED: "Səhifə təhlükəsizdir. Məlumatları daxil edin və biz sizə göndərəcəyik. "
     NOTERESETLINKINVALID: "<p>Parolu sıfırlama linki düzgün deyil yaxud vaxtı keçib.</p><p>Yenisini əldə etmək üçün  <a href=\"%s\">buraya keçin</a> yaxud <a href=\"%s\">daxil olub</a> parolunuzu dəyişin.</p>"
     NOTERESETPASSWORD: "E-poçtunuzu daxil edin və parol sıfırlama linkini göndərəcəyik"
     PASSWORDSENTHEADER: "'%s' e-poçtuna parolun sıfırlanma linki göndərildi"
     PASSWORDSENTTEXT: "Çox sağolun! Hesabınızı təkrar quraşdırılmasl üçün keçid '%s' göndərildi."
   SecurityAdmin:
-    ADDMEMBER: "Üzv Əlavə et"
-    APPLY_ROLES: "Qruplara rollar tətbiq et "
-    APPLY_ROLES_HELP: "Qrupa mənimsədilmiş rolları dəyişmək imkanı. \"'Təhlükəsizlik' bölməsinə icazə\" səlahiyyəti tələb olunur."
-    EDITPERMISSIONS: "Qrup üçün səlahiyyətlərə nəzarət et"
-    EDITPERMISSIONS_HELP: "Qrup üzrə səlahiyyətləri və İP ünvanları dəyişmə imkanı. \"'Təhlükəsizlik' bölməsinə icazə\" səlahiyyəti tələb olunur."
     GROUPNAME: "Qrupun adı"
-    IPADDRESSESHELP: |
-                      <p>Siz bu qrupun girişini İP ünvanlar diapazonuna daxil edə bilərsiniz(hər ip ünvan bir sətirdə olmaqla). <br /> İP ünvanlar aşağıdakı kimi olmalıdır: <br />
-                      203.96.152.12<br />
-                      203.96.152/24<br />
-                      203.96/16<br />
-                      203/8<br /><br /> Siz bir və ya bir neçə İP ünvan daxil etdikdə, bu qrupun üzvləri yalnız bu İP ünvanlardan daxil olduqda verilən səlahiyyətləri icra bilərlər. Bu hər kəsi daxil olmağa qadağan etmir.     MEMBERS: "Üzvlər"
-    MENUTITLE: "Təhlükəsizlik"
-    MemberListCaution: "Diqqət: İstifadəçilərin bu siyahıdan silinməsi, onların bütün qruplardan və verilənlər bazasından silinməsinə səbəb olacaq"
-    NEWGROUP: "Yeni qrup"
+    MEMBERS: "Üzvlər"
     PERMISSIONS: "Səlahiyyətlər"
     ROLES: "Rollar"
-    SGROUPS: "Təhlükəsizlik qrupu"
-    TABIMPORT: "İmport"
-    TABROLES: "Rollar"
-    VIEWUSER: "İstifadəçiyə bax"
-  SecurityAdmin_MemberImportForm:
-    BtnImport: "İmport"
-    FileFieldLabel: "CSV fayl <small>(İcazəli genişlənmələr: *.csv)</small>"
   SimpleImageField:
     NOUPLOAD: "Şəkil yüklənməmişdir"
   SiteTree:
@@ -442,23 +276,18 @@ az:
     ISREQUIRED: "%s-da '%s' tələb olunur"
   TableField.ss:
     ADD: "Yeni sətir əlavə et"
-    ADDITEM: "%s - i Əlavə et"
   TableListField:
     CSVEXPORT: "CSV-yə ixrac et"
     PRINT: "Çap et"
     SELECT: "Seç:"
   TableListField.ss:
-    NOITEMSFOUND: "Heç bir şey tapılmadı"
-    SORTASC: "Artan sıralama ilə düz"
-    SORTDESC: "Azalan sıralama ilə düz"
+    SORTASC: "Artma sırası ilə sırala"
+    SORTDESC: "Azalma sırası ilə sırala"
   TableListField_PageControls.ss:
-    DISPLAYING: "Göstərilir"
-    OF: "dan"
-    TO: "a"
     VIEWFIRST: "Birinciyə bax"
-    VIEWLAST: "Sonuncuya bax"
+    VIEWLAST: "Axırıncı baxılmış"
     VIEWNEXT: "Növbəti"
-    VIEWPREVIOUS: "Əvvəlki"
+    VIEWPREVIOUS: "Əvvəlkinə bax"
   TimeField:
     VALIDATEFORMAT: "Düzgün zaman formatı daxil edin (%s)"
   ToggleCompositeField.ss:

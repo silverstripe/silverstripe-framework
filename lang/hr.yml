@@ -1,15 +1,22 @@
 hr:
   AssetAdmin:
-    CHOOSEFILE: "Odaberite datoteku"
     MENUTITLE: "Datoteke i Slike"
     NEWFOLDER: "Novi direktorij"
-  AssetAdmin_left.ss:
-    GO: "Idi"
+  AssetTableField:
+    CREATED: "Uploadano"
+    DIM: "Dimenzije"
+    FILENAME: "Ime datoteke"
+    LASTEDIT: "Zadnja promjena"
+    OWNER: "Vlasnik"
+    SIZE: "Veličina"
+    TITLE: "Naslov"
+    TYPE: "Tip"
   BasicAuth:
     ENTERINFO: "Unesite korisničko ime i lozinu"
     ERRORNOTADMIN: "Korisnik nije administrator"
     ERRORNOTREC: "Korisničko ime / lozinka nije prepoznata"
   CMSMain:
+    ACCESS: "Pristup u '%s' (%s)"
     MENUTITLE: "Sadržaj stranice"
     SAVE: "Snimi"
   ChangePasswordEmail.ss:
@@ -18,7 +25,6 @@ hr:
     HELLO: "Pozdrav"
   ComplexTableField.ss:
     ADDITEM: "Dodaj"
-    NOITEMSFOUND: "Ništa nije pronađeno"
     SORTASC: "Sortiraj (ascending)"
     SORTDESC: "Sortiraj (descending)"
   ComplexTableField_popup.ss:
@@ -53,9 +59,6 @@ hr:
     PLURALNAME: "Datoteke"
     SINGULARNAME: "Datoteka"
     TOOLARGE: "Prevelika datoteka, dozvoljeni maksimum je %s."
-  Folder:
-    PLURALNAME: "Datoteke"
-    SINGULARNAME: "Datoteka"
   ForgotPasswordEmail.ss:
     HELLO: "Pozdrav"
     TEXT1: "Ovdje je vaš"
@@ -73,14 +76,10 @@ hr:
   Group:
     Code: "Krupni kod"
     Locked: "Zaključano?"
-    PLURALNAME: "Grupe"
     Parent: "Roditeljska grupa"
-    SINGULARNAME: "Grupa"
     has_many_Permissions: "Dozvole"
     many_many_Members: "Članovi"
   HtmlEditorField:
-    BUTTONINSERTFLASH: "Umetni Flash"
-    BUTTONINSERTIMAGE: "Umetni sliku"
     BUTTONINSERTLINK: "Ubaci vezu"
     BUTTONREMOVELINK: "Obriši vezu"
     CSSCLASS: "Poravnanje / Stil"
@@ -89,7 +88,6 @@ hr:
     CSSCLASSRIGHT: "Desno, sa okruženjem teksta"
     EMAIL: "Email adresa"
     FILE: "Datoteka"
-    FLASH: "Ubaci flash"
     FOLDER: "Direktorij"
     IMAGE: "Ubaci sliku"
     IMAGEDIMENSIONS: "Dimenzije"
@@ -105,9 +103,6 @@ hr:
     LINKTO: "Poveži na"
     PAGE: "Stranica"
     URL: "URL"
-  Image:
-    PLURALNAME: "Datoteke"
-    SINGULARNAME: "Datoteka"
   Image_iframe.ss:
     TITLE: "Iframe za upload slike"
   LeftAndMain:
@@ -119,8 +114,6 @@ hr:
     PLEASESAVE: "Molim spremite stranicu: Nemože biti ažurirano dok nije spremljeno."
     SAVED: "spremljeno"
   LoginAttempt:
-    PLURALNAME: "Pokušaji prijave"
-    SINGULARNAME: "Pokušaj prijave"
   Member:
     ADDRESS: "Adresa"
     BUTTONCHANGEPASSWORD: "Promjeni lozinku"
@@ -160,27 +153,13 @@ hr:
     db_PasswordExpiry: "Lozinka ističe"
   MemberAuthenticator:
     TITLE: "E-mail &amp; Lozinka"
-  MemberPassword:
-    PLURALNAME: "Korisnička lozinke"
-    SINGULARNAME: "Korisnička lozinka"
-  MemberTableField:
-    ADD: "Dodaj"
-    ADDEDTOGROUP: "Dodaj člana u grupu"
-  ModelAdmin:
-    CREATEBUTTON: "Kreiraj '%s'"
   NumericField:
     VALIDATION: "'%s' nije broj, prihvaćaju se samo brojevi"
-  Page:
-    PLURALNAME: "Stranice"
-    SINGULARNAME: "Stranica"
   Permission:
-    PLURALNAME: "Dozvole"
-    SINGULARNAME: "Dozvola"
   PhoneNumberField:
     VALIDATION: "Molim unesite ispravan telefonski broj"
   RelationComplexTableField.ss:
     ADD: "Dodaj"
-    NOTFOUND: "Nije pronađeno"
   ReportAdmin:
     MENUTITLE: "Izvještaji"
   Security:
@@ -190,27 +169,15 @@ hr:
     CHANGEPASSWORDHEADER: "Promjeni lozinku"
     ENTERNEWPASSWORD: "Upišite novu lozinku"
     ERRORPASSWORDPERMISSION: "Morate biti prijavljeni kako bi ste promjenili lozinku"
-    IPADDRESSES: "IP adresa"
     LOGGEDOUT: "Odlogirani ste. Želite li se ponovno logirati, upišite podatke"
     LOGIN: "Logiraj se"
-    LOSTPASSWORDHEADER: "Izgubljena lozinka"
     NOTEPAGESECURED: "Stranica je osigurana. Upišite svoje podatke i poslat ćemo Vam."
     NOTERESETPASSWORD: "Upišite vaš e-mail i polati ćemo Vam link na kojem možete dobiti novu lozinku"
     PASSWORDSENTHEADER: "Link je poslan na '%s'"
     PASSWORDSENTTEXT: "Hvala Vam! Link na reset lozinke je poslan na '%s'."
   SecurityAdmin:
-    ADDMEMBER: "Dodaj člana"
-    IPADDRESSESHELP: |
-                      <p>Možete ograničiti ovu grupu na određen raspon IP adresa. Unesite 1 raspon po retku. Rasponi IP adresa mogu biti u bilo kojem od ovih 4 formi: <br />
-                      203.96.152.12<br />
-                      203.96.152/24<br />
-                      203.96/16<br />
-                      203/8<br />
-                      <br />
-                      Ukoliko unesete jednu ili više IP adresa u ovaj box, tada će članovi imati pravo pristupiti grupi ukoliko se logiraju sa neke od dozvoljenih IIP adresa. To neće spriječiti da se ljudi logiraju. To je zato da se koristnik može logirati u dijelove sustava na koje se ne odnosi restrikcija u IP adresama.</p>    MENUTITLE: "Sigurnost"
+    MENUTITLE: "Sigurnost"
     NEWGROUP: "Nova Grupa"
-    SGROUPS: "Sigurnosne grupe"
-    VIEWUSER: "Pogledaj korisnika"
   SimpleImageField:
     NOUPLOAD: "Nema uploadanih slika"
   SiteTree:
@@ -220,9 +187,6 @@ hr:
   TableField.ss:
     ADD: "Dodaj novi redak"
   TableListField_PageControls.ss:
-    DISPLAYING: "Prikazujem"
-    OF: "od"
-    TO: "do"
     VIEWFIRST: "Pogledaj prvi"
     VIEWLAST: "Pogledaj zadnji"
     VIEWNEXT: "Pogledaj slijedeći"

@@ -1,10 +1,4 @@
 ms:
-  AssetAdmin:
-    CHOOSEFILE: "Pilih fail"
-    MENUTITLE: "Fail-fail & Imej-imej"
-    NEWFOLDER: "FolderBaru"
-  AssetAdmin_left.ss:
-    GO: "Teruskan"
   BBCodeParser:
     ALIGNEMENT: "Penjajaran"
     COLORED: "Teks berwarna"
@@ -19,9 +13,6 @@ ms:
     ENTERINFO: "Maukkan ID pengguna dan katalaluan"
     ERRORNOTADMIN: "Pengguna ini bukan pentadbir."
     ERRORNOTREC: "ID pengguna dan katalaluan tidak dikenali"
-  CMSMain:
-    MENUTITLE: "Kandungan Laman"
-    SAVE: "Simpan"
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: "Anda telah mengubah kata lalaun untuk"
     CHANGEPASSWORDTEXT2: "Sila gunakan maklumat di bawah untuk mendaftar masuk:"
@@ -30,14 +21,12 @@ ms:
     PASSWORD: "Kata Laluan"
   ComplexTableField.ss:
     ADDITEM: "Tambah"
-    NOITEMSFOUND: "Tiada hasil carian"
     SORTASC: "Susun secara menaik"
     SORTDESC: "Susun secara menurun"
   ComplexTableField_popup.ss:
     NEXT: "Berikut"
     PREVIOUS: "Dahulu"
   ConfirmedPasswordField:
-    HAVETOMATCH: "Kata laluan mesti sepadan."
     SHOWONCLICKTITLE: "Tukar Kata Aluan"
   DataObject:
     PLURALNAME: "Objek-objek Data"
@@ -67,20 +56,6 @@ ms:
     PLURALNAME: "Fail-fail"
     SINGULARNAME: "Fail"
     TOOLARGE: "Saiz fail terlalu besar, %s maksimum dibenarkan"
-  Folder:
-    CREATED: "Muatnaik yang pertama"
-    DELSELECTED: "Hapuskan fail terpilih"
-    DETAILSTAB: "Keterangan"
-    FILENAME: "Nama fail"
-    FILESTAB: "Fail-fail"
-    LASTEDITED: "Kemaskini terakhir"
-    PLURALNAME: "Fail-fail"
-    SINGULARNAME: "Fail"
-    TITLE: "Tajuk"
-    TYPE: "Jenis"
-    UPLOADTAB: "Muatnaik"
-    URL: "Url"
-    VIEWEDITASSET: "LIhat/Sunting Aset"
   ForgotPasswordEmail.ss:
     HELLO: "Hi"
   Form:
@@ -96,14 +71,10 @@ ms:
   Group:
     Code: "Kod Kumpulan"
     Locked: "Dikuncikan?"
-    PLURALNAME: "Kumpulan-kumpulan"
     Parent: "Kumpulan Induk"
-    SINGULARNAME: "Kumpulan"
     has_many_Permissions: "Keizinan"
     many_many_Members: "Ahli-ahli"
   HtmlEditorField:
-    BUTTONINSERTFLASH: "Masukkan Flash"
-    BUTTONINSERTIMAGE: "Masukkan imej"
     BUTTONINSERTLINK: "Masukkan pautan"
     BUTTONREMOVELINK: "Hapuskan pautan"
     CSSCLASS: "Penjajaran / gaya"
@@ -112,7 +83,6 @@ ms:
     CSSCLASSRIGHT: "Di sebelah kanan, dengan kata-kata menyelubungi."
     EMAIL: "Alamat emel"
     FILE: "Fail"
-    FLASH: "Flash"
     FOLDER: "Fail lipatan"
     IMAGE: "Imej"
     IMAGEDIMENSIONS: "Dimensi-dimensi"
@@ -128,23 +98,10 @@ ms:
     LINKTO: "Paut ke"
     PAGE: "Halaman"
     URL: "URL"
-  Image:
-    PLURALNAME: "Fail-fail"
-    SINGULARNAME: "Fail"
   Image_iframe.ss:
     TITLE: "Iframe untuk memuatnaik imej"
-  LeftAndMain:
-    HELP: "Bantuan"
-    PAGETYPE: "Jenis halaman:"
-    PERMAGAIN: "Anda telah logout dari CMS. Masukkan id pengguna dan katalaluan di bawah untuk mendaftar masuk semula."
-    PERMALREADY: "Maaf, "
-    PERMDEFAULT: "Masukkan alamat Email dan katalaluan untuk menggunakan CMS"
-    PLEASESAVE: "Sila simpan mukasurat ini. Kemaskini mukasurat hanya boleh berlaku selepas ia disimpan (saved)."
-    SAVED: "Telah disimpan"
   LoginAttempt:
     Email: "Alamat Emel"
-    PLURALNAME: "Percubaan-percubaan Daftar Masuk"
-    SINGULARNAME: "Percubaan Daftar Masuk"
   Member:
     ADDRESS: "Alamat"
     BUTTONCHANGEPASSWORD: "Ubah Kata Lalaun"
@@ -187,32 +144,14 @@ ms:
     db_PasswordExpiry: "Tempoh Tamat Kata Lalaun"
   MemberAuthenticator:
     TITLE: "Email &amp; katalaluan"
-  MemberPassword:
-    PLURALNAME: "Kata-kata kunci Ahli"
-    SINGULARNAME: "Kata Kunci Ahli"
-  MemberTableField:
-    ADD: "Tambah"
-    ADDEDTOGROUP: "Ahli dimasukkan ke dalam kumpulan"
-    ADDINGFIELD: "Penambahan gagal"
-    FILTER: "Saring"
-    SEARCH: "Cari"
-  ModelAdmin:
-    CREATEBUTTON: "Bentukkan '%s'"
   NumericField:
     VALIDATION: "'%s' bukan nombor, hanya nombor-nombor boleh diterima untuk medan ini"
-  Page:
-    PLURALNAME: "Halaman-halaman"
-    SINGULARNAME: "Halaman"
   Permission:
     FULLADMINRIGHTS: "Hak mutlah pentadbiran"
-    PLURALNAME: "Kebenaran-kebenaran"
-    SINGULARNAME: "Kebenaran"
   PhoneNumberField:
     VALIDATION: "Sila isikan nombor telefon yang sah"
   RelationComplexTableField.ss:
     ADD: "Tambah"
-  ReportAdmin:
-    MENUTITLE: "Laporan-laporan"
   Security:
     ALREADYLOGGEDIN: "Anda tidak mempunyai kebenaran untuk mencapai mukasurat ini. Jika anda mempunyai akaun lain dengan kebenaran yang deperlukan, sila daftar masuk di bawah."
     BUTTONSEND: "Hantar pautan penukaran katalaluan kepada saya"
@@ -221,17 +160,10 @@ ms:
     ENTERNEWPASSWORD: "Masukkan kata laluan yang baru"
     ERRORPASSWORDPERMISSION: "Anda perlu didaftarkan masuk untuk menukar katalaluan."
     LOGGEDOUT: "Anda telah mendaftar keluar. Untuk mendaftar masuk semula, masukkan maklumat yang diperlukan di bawah."
-    LOSTPASSWORDHEADER: "Hilang Kata Lalaun"
     NOTEPAGESECURED: "Halaman ini adalah halaman berkeselamatan tinggi. Masukkan maklumat yang deperlukan sebelum meneruskan capaian. "
     NOTERESETPASSWORD: "Masukkan alamat emel dan kami akan hantar pautan untuk menukar kata laluan anda."
     PASSWORDSENTHEADER: "Pautan penukaran kata laluan telah dihantar ke '%s'"
     PASSWORDSENTTEXT: "Terima kasih! Pautan penukaran kata laluan telah dihantar ke '%s'"
-  SecurityAdmin:
-    ADDMEMBER: "Tambah Ahli"
-    EDITPERMISSIONS: "Alamat IP dan keizinan menyunting setiap kumpulan"
-    MENUTITLE: "Sekuriti"
-    NEWGROUP: "Kumpulan Baru"
-    SGROUPS: "Kumpulan sekuriti"
   SimpleImageField:
     NOUPLOAD: "Tiada imej dimuat naikkan"
   SiteTree:
@@ -240,8 +172,6 @@ ms:
     ISREQUIRED: "'%s' diperlukan dalam %s."
   TableField.ss:
   TableListField_PageControls.ss:
-    DISPLAYING: "Memaparkan"
-    TO: "ke"
     VIEWFIRST: "Lihat pertama"
     VIEWLAST: "Lihat terakhir"
     VIEWNEXT: "Lihat berikut"

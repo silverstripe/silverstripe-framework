@@ -1,10 +1,17 @@
 bs:
   AssetAdmin:
-    CHOOSEFILE: "Izaberite datoteku"
     MENUTITLE: "Datoteke i slike"
     NEWFOLDER: "NoviDirektorij"
-  AssetAdmin_left.ss:
-    GO: "Idi"
+  AssetTableField:
+    CREATED: "Prvo postavljeno"
+    DIM: "Dimenzije"
+    FILENAME: "Ime datoteke"
+    LASTEDIT: "Zadnja promjena"
+    OWNER: "Vlasnik"
+    SIZE: "Veličina"
+    TITLE: "Naslov"
+    TYPE: "Tip"
+    URL: "URL"
   BBCodeParser:
     ALIGNEMENT: "Poravnanje"
     ALIGNEMENTEXAMPLE: "desno poravnanje"
@@ -35,6 +42,7 @@ bs:
     ERRORNOTADMIN: "Ovaj korisnik nije administrator."
     ERRORNOTREC: "Korisničko ime / šifra nije prepoznata"
   CMSMain:
+    ACCESS: "Pristup do %s u CMS-u"
     MENUTITLE: "Sadržaj stranice"
     SAVE: "Snimi"
   ChangePasswordEmail.ss:
@@ -43,7 +51,6 @@ bs:
     HELLO: "Pozdrav"
   ComplexTableField.ss:
     ADDITEM: "Dodaj %S"
-    NOITEMSFOUND: "Nema pronađenih stavki"
     SORTASC: "Uzlazno raszvrstavanje"
     SORTDESC: "Silazno razvrstavanje"
   ComplexTableField_popup.ss:
@@ -52,20 +59,14 @@ bs:
   ConfirmedPasswordField:
     ATLEAST: "Šifre moraju sadržavati najmanje %s znakova."
     BETWEEN: "Šifre moraju sadržavati %s do %s znakova."
-    HAVETOMATCH: "Šifre se moraju slagati"
-    LEASTONE: "Šifre moraju sadržavati najmanje jedan broj i jedan alfanumerički znak."
     MAXIMUM: "Šifre mogu sadržavati najviše %s znakova."
-    NOEMPTY: "Polja za unos šifre ne smiju biti prazna."
   CreditCardField:
     FIRST: "prvo"
     FOURTH: "četvrto"
     SECOND: "drugo"
     THIRD: "treće"
-    VALIDATIONJS1: "Molimo provjerite da li ste unijeli"
-    VALIDATIONJS2: "broj kreditne kartice ispravno."
   CurrencyField:
     CURRENCYSYMBOL: "KM"
-    VALIDATIONJS: "Molimo, unesite ispravnu valutu."
   Date:
     DAY: "dan"
     DAYS: "dani"
@@ -82,26 +83,12 @@ bs:
   DateField:
     NOTSET: "nije postavljeno"
     TODAY: "danas"
-    VALIDATIONJS: "Molimo unesite ispravan oblik datuma (DD-MM-YYYY)."
   DropdownField:
     CHOOSE: "(Izaberite)"
   EmailField:
     VALIDATION: "Molimo, unesite e-mail adresu."
-    VALIDATIONJS: "Molimo unesite e-mail adresu."
   File:
     NOFILESIZE: "Veličina datoteke je nula bajta."
-  Folder:
-    CREATED: "Prvo postavljeno"
-    DELSELECTED: "Izbriši izabrane datoteke"
-    DETAILSTAB: "Detalji"
-    FILENAME: "Ime datoteke"
-    FILESTAB: "Datoteke"
-    LASTEDITED: "Posljednje postavljeno"
-    TITLE: "Naslov"
-    TYPE: "Tip"
-    UPLOADTAB: "Postavi na server"
-    URL: "URL"
-    VIEWEDITASSET: "Pregledaj/Izmijeni aktivu"
   ForgotPasswordEmail.ss:
     HELLO: "Pozdrav"
     TEXT1: "Ovo je Vaš"
@@ -121,8 +108,6 @@ bs:
     NONE: "ništa"
   HtmlEditorField:
     ANCHORVALUE: "Sidro"
-    BUTTONINSERTFLASH: "Ubaci Flash"
-    BUTTONINSERTIMAGE: "Ubaci sliku"
     BUTTONINSERTLINK: "Ubaci link"
     BUTTONREMOVELINK: "Ukloni link"
     CSSCLASS: "Poravnanje / stil"
@@ -132,7 +117,6 @@ bs:
     CSSCLASSRIGHT: "Desno, sa okruženim tekstom."
     EMAIL: "E-mail adresa"
     FILE: "Datoteka"
-    FLASH: "Flash"
     FOLDER: "Direktorij"
     IMAGE: "Slika"
     IMAGEDIMENSIONS: "Dimenzije"
@@ -194,22 +178,14 @@ bs:
     YOUROLDPASSWORD: "Vaša stara šifra"
   MemberAuthenticator:
     TITLE: "E-mail i šifra"
-  MemberTableField:
-    ADD: "Dodaj"
-    ADDEDTOGROUP: "Dodaj člana u grupu"
-    ADDINGFIELD: "Neuspješno dodavanje"
-    FILTER: "Filter"
-    SEARCH: "Pretraga"
   NumericField:
     VALIDATION: "'%s' nije broj. U ovo polje možete unijeti samo brojeve"
-    VALIDATIONJS: "nije broj, samo se brojevi mogu unositi u ovo polje"
   Permission:
     FULLADMINRIGHTS: "Puna administrativna ovlaštenja"
   PhoneNumberField:
     VALIDATION: "Molimo, unesite ispravan broj telefona"
   RelationComplexTableField.ss:
     ADD: "Dodaj"
-    NOTFOUND: "Nema pronađenih stavki"
   Security:
     ALREADYLOGGEDIN: "Ne možete pristupiti ovoj stranici. Ukoliko imate drugi korisnički račun koji može pristupiti ovoj stranici, prijavite si ispod."
     BUTTONSEND: "Pošalji mi link za ponovno podešavanje šifre"
@@ -217,29 +193,19 @@ bs:
     CHANGEPASSWORDHEADER: "Promijenite Vašu šifru"
     ENTERNEWPASSWORD: "Molimo, unesite novu šifru."
     ERRORPASSWORDPERMISSION: "Morate se prijaviti kako bi promijenili Vašu šifru."
-    IPADDRESSES: "IP adrese"
     LOGGEDOUT: "Odjavljeni ste. Ukoliko se želite ponovo prijaviti, unesite Vaše podatke ispod."
     LOGIN: "Prijava"
-    LOSTPASSWORDHEADER: "Izgubljena šifra"
     NOTEPAGESECURED: "Ova stranica je osigurana. Unesite Vaše podatke i poslat ćemo Vam sadržaj."
     NOTERESETPASSWORD: "Unesite Vašu e-mail adresu na koju ćemo Vam poslati link za ponovno podešavanje Vaše šifre."
     PASSWORDSENTHEADER: "Link za ponovno podešavanje šifre je poslan na adresu '%s'"
     PASSWORDSENTTEXT: "Zahvaljujemo! Link za ponovno podešavanje šifre je poslan na adresu '%s'."
   SecurityAdmin:
-    ADDMEMBER: "Dodaj člana"
     EDITPERMISSIONS: "Izmijeni ovlaštenja i IP adrese na svakoj grupi"
     GROUPNAME: "Ime grupe"
-    IPADDRESSESHELP: |
-                      <p>Možete ograničiti ovu grupu na određeni opseg IP adresa (jedan opseg po liniji).<br />Opseg može biti u bilo kojem od slijedećih oblika: <br />
-                      203.96.152.12<br />
-                      203.96.152/24<br />
-                      203.96/16<br />
-                      203/8<br /><br />Ako unesete u polje jedan ili više opsega IP adresa, samo korisnici koji se prijave sa jedne od dozvoljenih IP adresa će dobiti ovlaštenje da budu u ovoj grupi. To neće spriječiti ljude da se prijave.    MEMBERS: "Članovi"
+    MEMBERS: "Članovi"
     MENUTITLE: "Sigurnost"
     NEWGROUP: "Nova grupa"
     PERMISSIONS: "Ovlaštenja"
-    SGROUPS: "Sigurnosne grupe"
-    VIEWUSER: "Pregledaj korisnika"
   SimpleImageField:
     NOUPLOAD: "Nijedna slika nije postavljena"
   SiteTree:
@@ -252,8 +218,6 @@ bs:
     CSVEXPORT: "Izvezi u CSV"
     PRINT: "Štampaj"
   TableListField_PageControls.ss:
-    OF: "od"
-    TO: "do"
   ToggleCompositeField.ss:
     HIDE: "Sakrij"
     SHOW: "Prikaži"

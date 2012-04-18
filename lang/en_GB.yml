@@ -1,10 +1,17 @@
 en_GB:
   AssetAdmin:
-    CHOOSEFILE: "Choose file:"
     MENUTITLE: "Files & Images"
     NEWFOLDER: "NewFolder"
-  AssetAdmin_left.ss:
-    GO: "Go"
+  AssetTableField:
+    CREATED: "First uploaded"
+    DIM: "Dimensions"
+    FILENAME: "Filename"
+    LASTEDIT: "Last changed"
+    OWNER: "Owner"
+    SIZE: "Size"
+    TITLE: "Title"
+    TYPE: "Type"
+    URL: "URL"
   BBCodeParser:
     ALIGNEMENT: "Alignment"
     ALIGNEMENTEXAMPLE: "right aligned"
@@ -35,6 +42,8 @@ en_GB:
     ERRORNOTADMIN: "That user is not an administrator."
     ERRORNOTREC: "That username / password isn't recognised"
   CMSMain:
+    ACCESS: "Access to '%s' section"
+    ACCESSALLINTERFACES: "Access to all CMS sections"
     MENUTITLE: "Pages"
     SAVE: "Save"
   ChangePasswordEmail.ss:
@@ -49,7 +58,6 @@ en_GB:
     SUCCESSEDIT: "Saved %s %s %s"
   ComplexTableField.ss:
     ADDITEM: "Add %s"
-    NOITEMSFOUND: "No items found"
     SORTASC: "Sort ascending"
     SORTDESC: "Sort descending"
   ComplexTableField_popup.ss:
@@ -58,21 +66,15 @@ en_GB:
   ConfirmedPasswordField:
     ATLEAST: "Passwords must be at least %s characters long."
     BETWEEN: "Passwords must be %s to %s characters long."
-    HAVETOMATCH: "Passwords have to match."
-    LEASTONE: "Passwords must have at least one digit and one alphanumeric character."
     MAXIMUM: "Passwords must be at most %s characters long."
-    NOEMPTY: "Passwords can't be empty."
     SHOWONCLICKTITLE: "Change Password"
   CreditCardField:
     FIRST: "first"
     FOURTH: "fourth"
     SECOND: "second"
     THIRD: "third"
-    VALIDATIONJS1: "Please ensure you have entered the"
-    VALIDATIONJS2: "credit card number correctly."
   CurrencyField:
     CURRENCYSYMBOL: "$"
-    VALIDATIONJS: "Please enter a valid currency."
   DataObject:
     PLURALNAME: "Data Objects"
     SINGULARNAME: "Data Object"
@@ -93,12 +95,10 @@ en_GB:
   DateField:
     NOTSET: "not set"
     TODAY: "today"
-    VALIDATIONJS: "Please enter a valid date format (DD/MM/YYYY)."
   DropdownField:
     CHOOSE: "(Choose)"
   EmailField:
     VALIDATION: "Please enter an email address."
-    VALIDATIONJS: "Please enter an email address."
   File:
     Content: "Content"
     Filename: "Filename"
@@ -107,23 +107,8 @@ en_GB:
     Name: "Name"
     PLURALNAME: "Files"
     SINGULARNAME: "File"
-    Sort: "Sort Order"
     TOOLARGE: "Filesize is too large; maximum %s is allowed."
     Title: "Title"
-  Folder:
-    CREATED: "First Uploaded"
-    DELSELECTED: "Delete selected files"
-    DETAILSTAB: "Details"
-    FILENAME: "Filename"
-    FILESTAB: "Files"
-    LASTEDITED: "Last Updated"
-    PLURALNAME: "Files"
-    SINGULARNAME: "File"
-    TITLE: "Title"
-    TYPE: "Type"
-    UPLOADTAB: "Upload"
-    URL: "URL"
-    VIEWEDITASSET: "View/Edit Asset"
   ForgotPasswordEmail.ss:
     HELLO: "Hello"
     TEXT1: "Here is your"
@@ -144,18 +129,13 @@ en_GB:
   Group:
     Code: "Group Code"
     Description: "Description"
-    IPRestrictions: "IP Address Restrictions"
     Locked: "Locked?"
-    PLURALNAME: "Groups"
     Parent: "Parent Group"
-    SINGULARNAME: "Group"
     Sort: "Sort Order"
     has_many_Permissions: "Permissions"
     many_many_Members: "Members"
   HtmlEditorField:
     ANCHORVALUE: "Anchor"
-    BUTTONINSERTFLASH: "Insert Flash"
-    BUTTONINSERTIMAGE: "Insert image"
     BUTTONINSERTLINK: "Insert link"
     BUTTONREMOVELINK: "Remove link"
     CSSCLASS: "Alignment / style"
@@ -165,7 +145,6 @@ en_GB:
     CSSCLASSRIGHT: "On the right, with text wrapping around."
     EMAIL: "Email address"
     FILE: "File"
-    FLASH: "Flash"
     FOLDER: "Folder"
     IMAGE: "Image"
     IMAGEDIMENSIONS: "Dimensions"
@@ -179,14 +158,9 @@ en_GB:
     LINKFILE: "Download a file"
     LINKINTERNAL: "Page on the site"
     LINKOPENNEWWIN: "Open link in a new window?"
-    LINKTEXT: "Link text"
     LINKTO: "Link to"
     PAGE: "Page"
-    SEARCHFILENAME: "Search by file name"
     URL: "URL"
-  Image:
-    PLURALNAME: "Files"
-    SINGULARNAME: "File"
   Image_iframe.ss:
     TITLE: "Image Uploading Iframe"
   LeftAndMain:
@@ -200,8 +174,6 @@ en_GB:
   LoginAttempt:
     Email: "Email Address"
     IP: "IP Address"
-    PLURALNAME: "Log-in Attempts"
-    SINGULARNAME: "Log-in Attempt"
     Status: "Status"
   Member:
     ADDRESS: "Address"
@@ -249,56 +221,22 @@ en_GB:
     db_PasswordExpiry: "Password Expiry Date"
   MemberAuthenticator:
     TITLE: "E-mail &amp; Password"
-  MemberPassword:
-    PLURALNAME: "Member Passwords"
-    SINGULARNAME: "Member Password"
-  MemberTableField:
-    ADD: "Add"
-    ADDEDTOGROUP: "Added member to group"
-    ADDINGFIELD: "Adding failed"
-    FILTER: "Filter"
-    SEARCH: "Search"
   ModelAdmin:
-    ADDBUTTON: "Add"
-    ADDFORM: "Fill out this form to add a %s to the database."
-    CHOOSE_COLUMNS: "Select result columns..."
-    CLEAR_SEARCH: "Clear Search"
-    CREATEBUTTON: "Create '%s'"
     DELETE: "Delete"
     DELETEDRECORDS: "Deleted %s records."
-    FOUNDRESULTS: "Your search found %s matching items"
     IMPORT: "Import from CSV"
     IMPORTEDRECORDS: "Imported %s records."
-    ITEMNOTFOUND: "That item was not found."
-    LOADEDFOREDITING: "Loaded '%s' for editing."
     NOCSVFILE: "Please browse for a CSV file to import"
     NOIMPORT: "Nothing to import"
-    NORESULTS: "No results"
-    SAVE: "Save"
-    SEARCHRESULTS: "Search Results"
-    SELECTALL: "select all"
-    SELECTNONE: "select none"
     UPDATEDRECORDS: "Updated %s records."
-  MyEntity:
-    MyNamespace: "My default natural language value"
-  MyNamespace:
-    MYENTITY: "Counting %s things"
   NumericField:
     VALIDATION: "'%s' is not a number, only numbers can be accepted for this field"
-    VALIDATIONJS: "is not a number, only numbers can be accepted for this field"
-  Page:
-    PLURALNAME: "Pages"
-    SINGULARNAME: "Page"
   Permission:
     FULLADMINRIGHTS: "Full administrative rights"
-    PLURALNAME: "Permissions"
-    SINGULARNAME: "Permission"
   PhoneNumberField:
     VALIDATION: "Please enter a valid phone number"
   RelationComplexTableField.ss:
     ADD: "Add"
-    CSVEXPORT: "Export to CSV"
-    NOTFOUND: "No items found"
   ReportAdmin:
     MENUTITLE: "Reports"
   Security:
@@ -308,34 +246,20 @@ en_GB:
     CHANGEPASSWORDHEADER: "Change your password"
     ENTERNEWPASSWORD: "Please enter a new password."
     ERRORPASSWORDPERMISSION: "You must be logged in in order to change your password!"
-    IPADDRESSES: "IP Addresses"
     LOGGEDOUT: "You have been logged out. If you would like to log in again, enter your credentials below."
     LOGIN: "Log in"
-    LOSTPASSWORDHEADER: "Lost Password"
     NOTEPAGESECURED: "That page is secured. Enter your credentials below and we will send you right along."
     NOTERESETLINKINVALID: "<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href=\"%s\">here</a> or change your password after you <a href=\"%s\">logged in</a>.</p>"
     NOTERESETPASSWORD: "Enter your e-mail address and we will send you a link with which you can reset your password"
     PASSWORDSENTHEADER: "Password reset link sent to '%s'"
     PASSWORDSENTTEXT: "Thank you! A reset link has been sent to '%s', provided an account exists for this email address."
   SecurityAdmin:
-    ADDMEMBER: "Add Member"
     EDITPERMISSIONS: "Manage permissions for groups"
     GROUPNAME: "Group name"
-    IPADDRESSESHELP: |
-                      <p>You can restrict this group to a particular
-                      IP address range (one range per line). <br />Ranges can be in any of the following forms: <br />
-                      203.96.152.12<br />
-                      203.96.152/24<br />
-                      203.96/16<br />
-                      203/8<br /><br />If you enter one or more IP address ranges in this box, then members will only get
-                      the rights of being in this group if they log on from one of the valid IP addresses. It won't prevent
-                      people from logging in. This is because the same user might have to log in to access parts of the
-                      system without IP address restrictions.    MEMBERS: "Members"
+    MEMBERS: "Members"
     MENUTITLE: "Security"
     NEWGROUP: "New Group"
     PERMISSIONS: "Permissions"
-    SGROUPS: "Security Groups"
-    VIEWUSER: "View User"
   SimpleImageField:
     NOUPLOAD: "No Image Uploaded"
   SiteTree:
@@ -348,9 +272,6 @@ en_GB:
     CSVEXPORT: "Export to CSV"
     PRINT: "Print"
   TableListField_PageControls.ss:
-    DISPLAYING: "Displaying"
-    OF: "of"
-    TO: "to"
     VIEWFIRST: "View first"
     VIEWLAST: "View last"
     VIEWNEXT: "View next"

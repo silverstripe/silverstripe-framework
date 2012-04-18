@@ -1,15 +1,24 @@
 hu:
   AssetAdmin:
-    CHOOSEFILE: "Válassz fájlt"
     MENUTITLE: "Fájlok és Képek"
     NEWFOLDER: "Új mappa"
-  AssetAdmin_left.ss:
-    GO: "Mehet"
+  AssetTableField:
+    CREATED: "Először feltöltve"
+    DIM: "Képméret"
+    FILENAME: "Fájlnév"
+    LASTEDIT: "Utoljára változott"
+    OWNER: "Tulajdonos"
+    SIZE: "Méret"
+    TITLE: "Cím"
+    TYPE: "Típus"
+    URL: "URL"
   BasicAuth:
     ENTERINFO: "Kérünk, ajd meg egy felhasználónevet és jelszót."
     ERRORNOTADMIN: "Ez a felhasználó nem adminisztrátor. "
     ERRORNOTREC: "Ez a felhasználónév / jelszó nem létezik"
   CMSMain:
+    ACCESS: "'%s' elérése (%s)"
+    ACCESSALLINTERFACES: "Elérés minden CMS interfészhez"
     MENUTITLE: "Honlaptartalom"
     SAVE: "Mentés"
   ChangePasswordEmail.ss:
@@ -21,7 +30,6 @@ hu:
     SUCCESSADD: "%s %s %s hozzáadva"
   ComplexTableField.ss:
     ADDITEM: "Hozzáadás:"
-    NOITEMSFOUND: "Nem található elem"
     SORTASC: "Rendezés növekvő sorrendben"
     SORTDESC: "Rendezés csökkenő sorrendben"
   ComplexTableField_popup.ss:
@@ -58,9 +66,6 @@ hu:
     PLURALNAME: "Fájlok"
     SINGULARNAME: "Fájl"
     TOOLARGE: "Fájlméret túl nagy, max megengedett %s."
-  Folder:
-    PLURALNAME: "Fájlok"
-    SINGULARNAME: "Fájl"
   ForgotPasswordEmail.ss:
     HELLO: "Szia"
   Form:
@@ -74,14 +79,10 @@ hu:
     VALIDCURRENCY: "Kérünk, ajd meg egy létező valutát."
   Group:
     Code: "Csoport Kód"
-    PLURALNAME: "Csoportok"
     Parent: "Szülő csoport"
-    SINGULARNAME: "Csoport"
     has_many_Permissions: "Jogosultságok"
     many_many_Members: "Tagok"
   HtmlEditorField:
-    BUTTONINSERTFLASH: "Flash beszúrása"
-    BUTTONINSERTIMAGE: "Kép beszúrása"
     BUTTONINSERTLINK: "Link beszúrása"
     BUTTONREMOVELINK: "Link eltávolítása"
     CSSCLASS: "Elhelyezkedés / stílus"
@@ -90,7 +91,6 @@ hu:
     CSSCLASSRIGHT: "Jobb oldalon, szöveg körbefuttatásával. "
     EMAIL: "E-mail cím"
     FILE: "Fájl"
-    FLASH: "Flash animáció beszúrása"
     FOLDER: "Mappa"
     IMAGE: "Kép beszúrása"
     IMAGEDIMENSIONS: "Képméret"
@@ -106,9 +106,6 @@ hu:
     LINKTO: "Linkelés ide:"
     PAGE: "Oldal"
     URL: "URL"
-  Image:
-    PLURALNAME: "Fájlok"
-    SINGULARNAME: "Fájl"
   Image_iframe.ss:
     TITLE: "Képfeltöltő iframe"
   LeftAndMain:
@@ -120,8 +117,6 @@ hu:
     PLEASESAVE: "Kérjük, mentsd el az oldalt: az oldalt nem lehetett frissíteni, mivel még nem került elmentésre."
     SAVED: "Elmentve."
   LoginAttempt:
-    PLURALNAME: "Belépési próbálkozások"
-    SINGULARNAME: "Belépési próbálkozás"
   Member:
     ADDRESS: "Cím"
     BUTTONCHANGEPASSWORD: "Jelszó megváltoztatása"
@@ -161,41 +156,17 @@ hu:
     db_PasswordExpiry: "Jelszó érvényességi idejének lejárta"
   MemberAuthenticator:
     TITLE: "E-mail és jelszó"
-  MemberTableField:
-    ADD: "Hozzáadás"
-    ADDEDTOGROUP: "Tag hozzáadásra került a csoporthoz."
-    ADDINGFIELD: "Hozzáadás meghiúsult"
-    FILTER: "Szűrés"
-    SEARCH: "Keresés"
   ModelAdmin:
-    ADDBUTTON: "Hozzáadás"
-    ADDFORM: "Töltsd ki az űrlapot egy %s hozzáadásához."
-    CHOOSE_COLUMNS: "Eredményoszlopok kiválasztása"
-    CLEAR_SEARCH: "Keresés törlése"
-    CREATEBUTTON: "'%s' létrehozása"
     DELETE: "Törlés"
     DELETEDRECORDS: "%s sor törölve."
-    FOUNDRESULTS: "A keresés %s megfelelő elemet talált"
     IMPORT: "Betöltés CSV-ből"
     IMPORTEDRECORDS: "%s sor betöltve."
-    ITEMNOTFOUND: "Nem találom az elemet."
-    LOADEDFOREDITING: "'%s' betöltése szerkesztésre."
     NOCSVFILE: "Kérünk, válaszd ki a betöltendő CSV fájlt"
     NOIMPORT: "Nincs mit betölteni"
-    NORESULTS: "Nincs találat"
-    SAVE: "Mentés"
-    SEARCHRESULTS: "Keresési eredmények"
-    SELECTALL: "mind kiválasztása"
-    SELECTNONE: "kiválasztás törlése"
     UPDATEDRECORDS: "%s sor frissítve."
   NumericField:
     VALIDATION: "A „%s” nem szám, ebbe a mezőbe csak számok írhatók"
-  Page:
-    PLURALNAME: "Oldalak"
-    SINGULARNAME: "Oldal"
   Permission:
-    PLURALNAME: "Jogosultságok"
-    SINGULARNAME: "Jogosultság"
   PhoneNumberField:
     VALIDATION: "Kérünk, adj meg egy valós telefonszámot."
   ReportAdmin:
@@ -208,17 +179,14 @@ hu:
     ENTERNEWPASSWORD: "Kérünk, add meg az új jelszavad."
     ERRORPASSWORDPERMISSION: "Hogy meg tudd változtatni a jelszavad, bejelentkezve kell lenned."
     LOGGEDOUT: "Kiléptetésre kerültél. Ha újra be szeretnél jelentkezni, add meg alább az azonosítási adataid."
-    LOSTPASSWORDHEADER: "Elfelejtett jelszó"
     NOTEPAGESECURED: "Ez az oldal védett. Add meg alább az azonosítási adataidat, és továbbirányítunk."
     NOTERESETPASSWORD: "Add meg az e-mail címed, és küldünk egy linket, mellyel új jelszót kérhetsz."
     PASSWORDSENTHEADER: "Az új jelszót kérő link elküldésre került a „%s” címre."
     PASSWORDSENTTEXT: "Köszönjük! Az új jelszót kérő link elküldésre került a „%s” címre."
   SecurityAdmin:
-    ADDMEMBER: "Tag hozzáadása"
     EDITPERMISSIONS: "Jogosultságok és IP címek szerkesztése minden csoportban"
     MENUTITLE: "Biztonság"
     NEWGROUP: "Új csoport"
-    SGROUPS: "Biztonsági csoportok"
   SimpleImageField:
     NOUPLOAD: "Nincs feltöltött kép"
   SiteTree:
@@ -227,7 +195,6 @@ hu:
     ISREQUIRED: "A %s-ben „%s” szükséges. "
   TableField.ss:
   TableListField_PageControls.ss:
-    DISPLAYING: "Bemutatás"
     VIEWFIRST: "Első mutatása"
     VIEWLAST: "Utolsó mutatása"
     VIEWNEXT: "Következő mutatása"

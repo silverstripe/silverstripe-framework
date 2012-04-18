@@ -1,24 +1,14 @@
 ne:
-  AssetAdmin:
-    CHOOSEFILE: "फाइल छान्नुहोस्"
-    MENUTITLE: "फाइल र तस्बिरहरु"
-    NEWFOLDER: "नयाँ फोल्डर"
-  AssetAdmin_left.ss:
-    GO: "जाउ"
   BasicAuth:
     ENTERINFO: "कृपया एउता प्रयोगकता नाम र पासओड हल्नुहोस्"
     ERRORNOTADMIN: "यो प्रयोगकता मुख्य प्रयोगकता होइन"
     ERRORNOTREC: "त्यो प्रयोगकता / पासओड बुझन् सकिएन"
-  CMSMain:
-    MENUTITLE: "साईट सामाग्री"
-    SAVE: "सेभ गर्नुस्"
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: "तपाईंले आफनो पासओड  यसका लागि परिवतन गर्नु भयो "
     CHANGEPASSWORDTEXT2: "दिएको विवरण अनुसार भित्र जान सक्नुहुन्छ :"
     HELLO: "हाई"
   ComplexTableField.ss:
     ADDITEM: "थप्"
-    NOITEMSFOUND: "कुनै पनि सामाग्री भेटिएन्"
     SORTASC: "बढ्दो क्रमाङ्कन "
     SORTDESC: "घट्दो क्रमाङ्कन "
   ComplexTableField_popup.ss:
@@ -54,8 +44,6 @@ ne:
     VALIDATIONSTRONGPASSWORD: "पासओडमा कम्तिमा पनि एउटा अक्छेर र एउटा अंक हुनुपर्दछ"
     VALIDCURRENCY: "कृपया मिलने पैसा लेखनुहोस्"
   HtmlEditorField:
-    BUTTONINSERTFLASH: "फ्लश हाल"
-    BUTTONINSERTIMAGE: "तस्बिर हाल"
     BUTTONINSERTLINK: "लिन्क राखनुहोस्"
     BUTTONREMOVELINK: "लिन्क हटाउनुहोस्"
     CSSCLASS: "समरेखिन / स्टाईल"
@@ -64,7 +52,6 @@ ne:
     CSSCLASSRIGHT: "दाँयामा, टेक्स राप गरियोस्"
     EMAIL: "ईमेल ठेगाना  "
     FILE: "फाइल"
-    FLASH: "फाल्स् हाल्नुहोस्"
     FOLDER: "फोल्डर"
     IMAGE: "तस्बिर हाल्नुहोस्"
     IMAGEDIMENSIONS: "आयाम"
@@ -82,14 +69,6 @@ ne:
     URL: "यू.र्.ल् "
   Image_iframe.ss:
     TITLE: "तस्बिर उप्लोओद गर्ने Iफ्रमे"
-  LeftAndMain:
-    HELP: "सहयोग"
-    PAGETYPE: "पेज किसिम:"
-    PERMAGAIN: "तपाईं CMS बहिर आउनुभएको छ । यदी तपाईं फेरि भित्र जान चाहानुहुन्छ भने,आफ्नो प्रयोगकता नाम र पासओड तल लेखनुहोस् ।"
-    PERMALREADY: "मफ गर्दिनुस्,तपाईंले CMS को त्यो भाग चलाउन पाउनुहुन्न । यदी तपाईं अरु कोही भएर भित्र जान चाहानुहुन्छ भने,त्यो तल गरनुस्"
-    PERMDEFAULT: "कृपया एउटा authentication method छन्नुस् र CMS भित्र जान आफ्नो विवरण लेखनुहोस् । "
-    PLEASESAVE: "कृपया पेज सेभ गरनुस् : यो पेज उप्डेट गर्न सकिएन किनकि यो पेज अहिले सम्म सेभ गरिएकौ छैन ।"
-    SAVED: "सेभ गरियो"
   Member:
     ADDRESS: "ठेगाना"
     BUTTONCHANGEPASSWORD: "पासओड परिवर्तन गर्नुहोस् "
@@ -124,9 +103,6 @@ ne:
     YOUROLDPASSWORD: "तपाईंको पुरानो पासओड"
   MemberAuthenticator:
     TITLE: "ईमेल &amp; पासओड"
-  MemberTableField:
-    ADD: "थप"
-    ADDEDTOGROUP: "समुहमा कार्यकर्ता हालियो "
   NumericField:
     VALIDATION: "'%s' नम्बर होइन, नम्बर मात्र यो ठाउँमा हाल्न मिल्छ "
   PhoneNumberField:
@@ -139,16 +115,10 @@ ne:
     ENTERNEWPASSWORD: "कृपया नयाँ पासओड लेखनुहोस्"
     ERRORPASSWORDPERMISSION: "तपाईंले आफ्नो पासओड परिवर्तन गर्न चाहानुहुन्छ भन्ने तपाईं भित्र जानु भएको हुनुपर्छ    ।"
     LOGGEDOUT: "तपाईं बहिर निकलिनुभएको छ ।  यदि तपाईं फेरि भित्र जाने हो भन्ने, आफ्नो विवरण तल लेखनुहोस् ।  "
-    LOSTPASSWORDHEADER: "पासओड हरायो"
     NOTEPAGESECURED: "त्यो पजे सुरक्षा छ । तपाईंको विवरण लेखनुहोस् अनी हामि तपाईंलाई भित्र पठाउनेछौ । "
     NOTERESETPASSWORD: "तपाईंको ईमेल ठेगाना लेखनुहोस् र हामि तपाईंलाई पासओड पुनर्स्थापना लिक पठाउनेछौ "
     PASSWORDSENTHEADER: "पासओड पुनर्स्थापना लिक '%s' मा पठाइएको छ "
     PASSWORDSENTTEXT: "धन्यवाद ! पासओड पुनर्स्थापना लिक '%s' मा पठाइएको छ ।"
-  SecurityAdmin:
-    ADDMEMBER: "कार्यकर्ता थप"
-    MENUTITLE: "सुरक्षा"
-    NEWGROUP: "नयाँ समुह"
-    SGROUPS: "सुरक्षा समुह"
   SimpleImageField:
     NOUPLOAD: "कुनै पनि तस्बिर उप्लोओद गरिएको छैन "
   SiteTree:

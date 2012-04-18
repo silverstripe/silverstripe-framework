@@ -1,6 +1,17 @@
 sl:
   AssetAdmin:
-    CHOOSEFILE: "Izberite datoteko:"
+    MENUTITLE: "Datoteke in slike"
+    NEWFOLDER: "Nova mapa"
+  AssetTableField:
+    CREATED: "Naloženo na začetku"
+    DIM: "Dimenzije"
+    FILENAME: "Ime datoteke"
+    LASTEDIT: "Zadnje naloženo"
+    OWNER: "Lastnik"
+    SIZE: "Velikost"
+    TITLE: "Naslov"
+    TYPE: "Tip"
+    URL: "URL"
   BBCodeParser:
     ALIGNEMENT: "Poravnava"
     ALIGNEMENTEXAMPLE: "desno poravnano"
@@ -35,6 +46,10 @@ sl:
     NO: "Ne"
     YES: "Da"
   CMSMain:
+    ACCESS: "Dostop do sklopa: %s"
+    ACCESSALLINTERFACES: "Dostop do vseh sklopov CMS"
+    ACCESSALLINTERFACESHELP: "Omogoča bolj specifične nastavitve za možnosti dostop."
+    MENUTITLE: "Strani"
     SAVE: "Shrani"
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: "Geslo ste spremenili v"
@@ -51,7 +66,6 @@ sl:
     SUCCESSEDIT: "Shranjeno: %s %s %s"
   ComplexTableField.ss:
     ADDITEM: "Dodaj %s"
-    NOITEMSFOUND: "Ni zadetkov"
     SORTASC: "Razvrsti naraščajoče"
     SORTDESC: "Razvrsti padajoče"
   ComplexTableField_popup.ss:
@@ -60,21 +74,15 @@ sl:
   ConfirmedPasswordField:
     ATLEAST: "Geslo naj ima najmanj %s znakov."
     BETWEEN: "Geslo naj ima med %s in %s alfa-numeričnih znakov."
-    HAVETOMATCH: "Vpisani gesli se morata ujemati."
-    LEASTONE: "Geslo naj bo sestavljeno iz najmenj ene črke in najmanj ene številke."
     MAXIMUM: "Geslo lahko ima največ %s znakov."
-    NOEMPTY: "Vpišite geslo (dvakrat)  v za to predvideni polji."
     SHOWONCLICKTITLE: "Spremeni geslo"
   CreditCardField:
     FIRST: "prvič"
     FOURTH: "četrtič"
     SECOND: "drugič"
     THIRD: "tretjič"
-    VALIDATIONJS1: "Preverite, da ste vpisali"
-    VALIDATIONJS2: "pravo številko kreditne kartice."
   CurrencyField:
     CURRENCYSYMBOL: "$"
-    VALIDATIONJS: "Izberite valuto."
   DataObject:
     PLURALNAME: "Podatkovni objekti"
     SINGULARNAME: "Podatkovni objekt"
@@ -95,7 +103,6 @@ sl:
   DateField:
     NOTSET: "ni nastavljeno"
     TODAY: "danes"
-    VALIDATIONJS: "Vpišite datum v ustreznem formatu (DD-MM-LLLL)."
     VALIDDATEFORMAT2: "Vpišite datum v ustreznem formatu (%s)"
     VALIDDATEMAXDATE: "Preverite, da datum ni novejši, kot je predvideno (%s)."
     VALIDDATEMINDATE: "Preverite, da datum ni starejši, kot je predvideno (%s)."
@@ -103,7 +110,6 @@ sl:
     CHOOSE: "(Izberi)"
   EmailField:
     VALIDATION: "Vpišite veljaven e-naslov (npr. ime@elektronskaposta.si)."
-    VALIDATIONJS: "Vpišite e-naslov."
   Email_BounceRecord:
     PLURALNAME: "Seznam zavrnjenih e-sporočil"
     SINGULARNAME: "Zavrnjeno e-sporočilo"
@@ -118,7 +124,6 @@ sl:
     Name: "Ime"
     PLURALNAME: "Datoteke"
     SINGULARNAME: "Datoteka"
-    Sort: "Vrstni red"
     TOOLARGE: "Datoteka je prevelika, največja dovoljena je %s."
     Title: "Naslov"
   FileIFrameField:
@@ -130,22 +135,6 @@ sl:
     FROMFILESTORE: "Iz knjižnice datotek"
     NOSOURCE: "Izberite datoteko, ki jo boste pripeli."
     REPLACE: "Zamenjaj %s"
-  FileIFrameField.ss:
-    TITLE: "Slika \"Uploading Iframe\""
-  Folder:
-    CREATED: "Najprej naloženo"
-    DELSELECTED: "Izbriši označene datoteke"
-    DETAILSTAB: "Podrobno"
-    FILENAME: "Ime datoteke"
-    FILESTAB: "Datoteke"
-    LASTEDITED: "Nazadnje urejano"
-    PLURALNAME: "Datoteke"
-    SINGULARNAME: "Datoteka"
-    TITLE: "Naslov"
-    TYPE: "Vrsta"
-    UPLOADTAB: "Naloži"
-    URL: "URL"
-    VIEWEDITASSET: "Preglej/uredi Knjižnico datotek"
   ForgotPasswordEmail.ss:
     HELLO: "Pozdravljeni,"
     TEXT1: "Tukaj je vaša"
@@ -168,18 +157,27 @@ sl:
     DefaultGroupTitleAdministrators: "Administratorji"
     DefaultGroupTitleContentAuthors: "Avtorji vsebine"
     Description: "Opis"
-    IPRestrictions: "Omejitve po IP-naslovih"
     Locked: "Zaklenjeno za urejanje?"
-    PLURALNAME: "Skupine"
     Parent: "Nadrejena skupina"
-    SINGULARNAME: "Skupina"
+    RolesAddEditLink: "Dodaj in uredi vloge"
     Sort: "Način razvrščanja"
     has_many_Permissions: "Dovoljenja"
     many_many_Members: "Uporabniki"
+  GroupImportForm:
+    Help1: "<p>Uvozi eno ali več skupin v formatu <em>CSV</ em> (comma-separated values). <small> <a href=\"#\" class=\"toggle-advanced\">Prikaži možnosti za napredno urejanje</ a> </ small> </ p>"
+    Help2: |
+            <div class="advanced"> <h4>Napredno urejanje</ h4> <ul> <li>Dovoljeni stolpci: <em>%s</ em>.</ li>
+            <li>Skupine so definirane z vrednostjo< em>Code</ em> in so posodobljene z novimi vrednostmi iz uvožene datoteke.</ li>
+            <li>Hierarhijo skupin ureja stolpec <em>ParentCode </ em>.</ li> 
+            <li>Dovoljenja so dodeljena v stolpcu <em>PermissionCode</ em>. Obstoječa dovoljenja se ne izbrišejo.
+            </li>
+            </ul>
+            </div>
+    ResultCreated: "Število ustvarjenih skupin %d"
+    ResultDeleted: "Število izbrisanih skupin %d"
+    ResultUpdated: "Število ponastavljenih skupin %d"
   HtmlEditorField:
     ANCHORVALUE: "Sidro"
-    BUTTONINSERTFLASH: "Vstavi flash-datoteko"
-    BUTTONINSERTIMAGE: "Vključi podobo"
     BUTTONINSERTLINK: "Vstavi povezavo"
     BUTTONREMOVELINK: "Odstrani povezavo"
     CAPTIONTEXT: "Pripis"
@@ -190,7 +188,6 @@ sl:
     CSSCLASSRIGHT: "Desno, z oblivajočim besedilom"
     EMAIL: "E-naslov"
     FILE: "Datoteka"
-    FLASH: "Flash"
     FOLDER: "Mapa"
     IMAGE: "Slika"
     IMAGEALTTEXT: "Nadomestno besedilo (alt) bo izpisano, kadar slike ne bo možno prikazati"
@@ -206,27 +203,25 @@ sl:
     LINKFILE: "Naloženo datoteko"
     LINKINTERNAL: "Stran znotraj tega spletnega mesta"
     LINKOPENNEWWIN: "Naj se povezava odpira v novem oknu?"
-    LINKTEXT: "Besedilo s povezavo"
     LINKTO: "Poveži na"
     PAGE: "Stran"
-    SEARCHFILENAME: "Išči po imenu datoteke"
-    SHOWUPLOADFORM: "Naloži datoteko"
     URL: "URL"
-  Image:
-    PLURALNAME: "Datoteke"
-    SINGULARNAME: "Datoteka"
   ImageField:
     IMAGE: "Slika"
-  Image_Cached:
-    PLURALNAME: "Datoteke"
-    SINGULARNAME: "Datoteka"
   Image_iframe.ss:
     TITLE: "Slika \"uploading iframe\""
+  LeftAndMain:
+    CANT_REORGANISE: "Nimate pravic za spreminjanje strukture, zato vaša sprememba ni bila shranjena."
+    HELP: "Pomoč"
+    PAGETYPE: "Tip strani:"
+    PERMAGAIN: "Odjavili ste se iz CMS-vmesnika. Če se želite ponovno prijaviti, vpišite uporabniško ime in geslo."
+    PERMALREADY: "Do tega dela CMS-vmesnika nimate dostopa. Če se želite vpisati z drugim uporabniškim imenom, lahko to storite spodaj"
+    PERMDEFAULT: "Izberite način avtentikacije in vpišite svoje podatke za dostop do CMS-vmesnika."
+    PLEASESAVE: "Shranite stran: te strani ne morete posodobiti, ker še ni bila shranjena."
+    SAVED: "shranjeno"
   LoginAttempt:
     Email: "E-naslov"
     IP: "IP-naslov"
-    PLURALNAME: "Poskusi prijave"
-    SINGULARNAME: "Poskus prijave"
     Status: "Stanje"
   Member:
     ADDRESS: "Naslov"
@@ -278,49 +273,53 @@ sl:
     db_PasswordExpiry: "Datum poteka veljavnosti gesla"
   MemberAuthenticator:
     TITLE: "Uporabniški račun"
-  MemberPassword:
-    PLURALNAME: "Gesla uporabnika"
-    SINGULARNAME: "Geslo uporabnika"
+  MemberImportForm:
+    Help1: "<p>Uvoz uporabnikov v <em>formatu CSV</em> (comma-separated values). <small><a href=\"#\" class=\"toggle-advanced\">Prikaži možnosti za napredno urejanje.</a></small></p>"
+    Help2: |
+            <div class="advanced"> <h4>Napredno urejanje</ h4>
+            <ul>
+            <li>Dovoljeni stolpci: <em>%s</ em>.</ li>
+            <li>Člani imajo unikatne vrednosti < em>Code</ em>; posodobljeni so z vrednostmi iz uvožene datoteke.</ li>
+            <li>Skupine so članom pripisane v stolpcu <em>Groups</ em>. Skupine so definirane z vrednostjo< em>Code</ em>; kadar je navedenih več skupin, so te ločene z vejico. Že dodeljena članstva v skupinah se ne izbrišejo.</ li> 
+            </ul>
+            </div>
+    ResultCreated: "Število ustvarjenih uporabnikov: %d"
+    ResultDeleted: "Število izbrisanih uporabnikov: %d"
+    ResultNone: "Ni sprememb"
+    ResultUpdated: "Število posodobljenih uporabnikov: %d"
+  ModelAdmin:
+    DELETE: "Izbriši"
+    DELETEDRECORDS: "Število izbrisanih zapisov: %s"
+    IMPORT: "Uvozi CSV-datoteko"
+    IMPORTEDRECORDS: "Število uvoženih zapisov: %s"
+    NOCSVFILE: "Poiščite CSV-datoteko za uvoz"
+    NOIMPORT: "Ne najdem ničesar za uvoz"
+    UPDATEDRECORDS: "Število posodobljenih zapisov: %s"
   MoneyField:
     FIELDLABELAMOUNT: "Znesek"
     FIELDLABELCURRENCY: "Valuta"
-  MyEntity:
-    MyNamespace: "Privzeta vrednost za moj naravni jezik"
-  MyNamespace:
-    MYENTITY: "Štetje enot: %s"
   NullableField:
     IsNullLabel: "Prazno polje"
   NumericField:
     VALIDATION: "\"%s\" ni število. V to polje pa lahko zapišete samo števila"
-    VALIDATIONJS: "ni število; v to polje je možno vpisati samo števila"
-  Page:
-    PLURALNAME: "Strani"
-    SINGULARNAME: "Stran"
   Permission:
     AdminGroup: "Administrator"
+    CMS_ACCESS_CATEGORY: "Dostop do CMS-vmesnika"
     FULLADMINRIGHTS: "Popolne administratorske pravice"
     FULLADMINRIGHTS_HELP: "Lahko izniči oziroma upravlja z vsemi drugimi dovoljenji."
-    PLURALNAME: "Dovoljenja"
-    SINGULARNAME: "Dovoljenje"
   PermissionCheckboxSetField:
     AssignedTo: "dodeljeno: %s"
     FromGroup: "podedovano iz skupine \"%s\""
     FromRole: "podedovano iz vloge \"%s\""
     FromRoleOnGroup: "podedovano iz vloge \"%s\" na skupino \"%s\""
-  PermissionRole:
-    PLURALNAME: "Vloge"
-    SINGULARNAME: "Vloga"
-  PermissionRoleCode:
-    PLURALNAME: "Dovoljenja posameznih vlog"
-    SINGULARNAME: "Dovoljenja posamezne vloge"
   Permissions:
     PERMISSIONS_CATEGORY: "Vloge in dovoljenja za dostop"
   PhoneNumberField:
     VALIDATION: "Vpišite veljavno telefonsko številko"
   RelationComplexTableField.ss:
     ADD: "Dodaj"
-    CSVEXPORT: "Izvozi v CSV-datoteko"
-    NOTFOUND: "Ni zadetkov"
+  ReportAdmin:
+    MENUTITLE: "Poročila"
   Security:
     ALREADYLOGGEDIN: "Nimate dovoljenja za dostop do te strani. Če imate uporabniško ime z večimi pravicami, se lahko <a href=\"%s\">ponovno prijavite</a>."
     BUTTONSEND: "Pošlji povezavo za ponastavitev gesla"
@@ -328,32 +327,33 @@ sl:
     CHANGEPASSWORDHEADER: "Spremenite geslo"
     ENTERNEWPASSWORD: "Vpišite novo geslo."
     ERRORPASSWORDPERMISSION: "Da bi lahko zamenjali geslo, se morate prijaviti."
-    IPADDRESSES: "IP-naslov"
     LOGGEDOUT: "Vaša prijava je bila prekinjena. Če se želite ponovno prijaviti, vpišite svoje podatke."
     LOGIN: "Prijava"
-    LOSTPASSWORDHEADER: "Pozabljeno geslo"
     NOTEPAGESECURED: "Stran je zaščitena. Da bi lahko nadaljevali, vpišite svoje podatke."
     NOTERESETLINKINVALID: |
                            <p>Povezava za ponastavitev gesla je neveljavna oziroma je verjetno pretekla.</p>
-                           <p>Novo povezavo za ponastavitev gesla lahko zahtevate <a href="%s">tukaj</a> ali pa ga zamenjate, tako da se <a href="%s">prijavite</a>.</p>    NOTERESETPASSWORD: "Vpišite e-naslov, na katerega vam bomo poslali povezavo za ponastavitev gesla"
+                           <p>Novo povezavo za ponastavitev gesla lahko zahtevate <a href="%s">tukaj</a> ali pa ga zamenjate, tako da se <a href="%s">prijavite</a>.</p>
+    NOTERESETPASSWORD: "Vpišite e-naslov, na katerega vam bomo poslali povezavo za ponastavitev gesla"
     PASSWORDSENTHEADER: "Povezava za ponastavitev gesla je bila poslana na: %s"
     PASSWORDSENTTEXT: "Hvala! Povezava za ponastavitev gesla za uporabniški račun, ustvarjen z e-nalovom: %s, je bila poslana."
   SecurityAdmin:
+    ACCESS_HELP: "Dovoli ogled, dodajanje in urejanje uporabnikov ter dodeljevanje dovoljenj in vlog zanje."
+    APPLY_ROLES: "Skupinam pripiši vloge"
+    APPLY_ROLES_HELP: "Možnost upravljanja z vlogami skupin. Potrebujete dovoljenje za dostop do sklopa \"Varnost\"."
+    EDITPERMISSIONS: "Upravljanje dovoljenj za skupine"
+    EDITPERMISSIONS_HELP: "Možnost upravljanja z dovoljenji in IP-naslovi skupin. Potrebujete dovoljenje za dostop do sklopa \"Varnost\"."
     GROUPNAME: "Ime skupine"
-    IPADDRESSESHELP: |
-                      <p>Skupino lahko omejite na dostop z določenih IP-številk, tako da v vsako vrstico vpišete po eno IP-številko.<br />
-                      IP-številke oziroma njihove obsege lahko vpišete na naslednje možne načine: <br />
-                      203.96.152.12<br />
-                      203.96.152/24<br />
-                      203.96/16<br />
-                      203/8<br /><br />
-                      
-                      Če bo na tem seznamu navedena najmanj ena IP-številka, bodo pravice, podedovane po tej skupini, dodeljene samo tistim članom, ki se bodo prijavili z enega izmed IP-naslovov na seznamu. S tem pa nikomur ne boste preprečili prijave, saj bodo uporabniki še vedno lahko urejali tiste sklope CMS-vmesnika, ki niso omejeni z dostopom prek določenih IP-naslovov.
-                          MEMBERS: "Člani"
+    MEMBERS: "Člani"
+    MENUTITLE: "Varnost"
+    MemberListCaution: "Pozor! Če boste odstranili uporabnike s tega seznama, jih boste hkrati odstranili iz vseh drugih skupin in izbrisali iz podatkovne zbirke."
+    NEWGROUP: "Nova Skupina"
     PERMISSIONS: "Dovoljenja"
     ROLES: "Vloge"
     ROLESDESCRIPTION: "Tukaj lahko skupini dodajate vloge. Vloge so logični sklopi dovoljenj, ki jih urejate v zavihku \"Vloge\"."
-    VIEWUSER: "Prikaži uporabnika"
+    TABROLES: "Vloge"
+  SecurityAdmin_MemberImportForm:
+    BtnImport: "Uvozi"
+    FileFieldLabel: "CSV-datoteka <small>(Samo končnica: *.csv)</small>"
   SimpleImageField:
     NOUPLOAD: "Slika ni naložena"
   SiteTree:
@@ -362,19 +362,14 @@ sl:
     ISREQUIRED: "V %s je treba vnesti \"%s\"."
   TableField.ss:
     ADD: "Dodaj vrstico"
-    ADDITEM: "Dodaj %s"
   TableListField:
     CSVEXPORT: "Izvozi kot CSV-datoteko"
     PRINT: "Natisni"
     SELECT: "Izberi:"
   TableListField.ss:
-    NOITEMSFOUND: "Ni zadetkov"
     SORTASC: "Razvrsti naraščajoče"
     SORTDESC: "Razvrsti padajoče"
   TableListField_PageControls.ss:
-    DISPLAYING: "Prikaz"
-    OF: "od"
-    TO: "za"
     VIEWFIRST: "Na začetek"
     VIEWLAST: "Na konec"
     VIEWNEXT: "Naslednja"

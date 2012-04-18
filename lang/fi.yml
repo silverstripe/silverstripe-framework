@@ -1,10 +1,17 @@
 fi:
   AssetAdmin:
-    CHOOSEFILE: "Valitse tiedosto"
     MENUTITLE: "Tiedostot ja kuvat"
     NEWFOLDER: "Uusi kansio"
-  AssetAdmin_left.ss:
-    GO: "Siirry"
+  AssetTableField:
+    CREATED: "Ensimmäisen kerran ladattu palvelimelle"
+    DIM: "Mitat"
+    FILENAME: "Tiedoston nimi"
+    LASTEDIT: "Viimeksi muokattu"
+    OWNER: "Omistaja"
+    SIZE: "Koko"
+    TITLE: "Otsikko"
+    TYPE: "Tyyppi"
+    URL: "URL"
   BBCodeParser:
     ALIGNEMENT: "Tasaus"
     ALIGNEMENTEXAMPLE: "tasattu oikealle"
@@ -38,9 +45,10 @@ fi:
     ANY: "Yhtään"
     NO: "Ei"
     YES: "Kyllä"
-  CMSBatchActions:
-    PUBLISHED_PAGES: "Julkaistu %d sivua, %d epäonnistumista"
   CMSMain:
+    ACCESS: "Pääsy %s:ään CMS:ssä"
+    ACCESSALLINTERFACES: "Pääsy kaikkiin CMS-osioihin"
+    ACCESSALLINTERFACESHELP: "Ohittaa tarkemmat käyttöoikeudet."
     MENUTITLE: "Sivuston sisältö"
     SAVE: "Tallenna"
   ChangePasswordEmail.ss:
@@ -58,7 +66,6 @@ fi:
     SUCCESSEDIT: "Tallennettu %s %s %s"
   ComplexTableField.ss:
     ADDITEM: "Lisää %s"
-    NOITEMSFOUND: "Kohteita ei löytynyt"
     SORTASC: "Nouseva järjestys"
     SORTDESC: "Laskeva järjestys"
   ComplexTableField_popup.ss:
@@ -67,21 +74,15 @@ fi:
   ConfirmedPasswordField:
     ATLEAST: "Salasanojen pitää olla vähintään %s merkkiä pitkä."
     BETWEEN: "Salasanojen pitää olla %s-%s merkkiä pitkät."
-    HAVETOMATCH: "Salasanojen on oltava samat."
-    LEASTONE: "Salasanoissa pitää olla vähintään yksi numero ja yksi alfanumeerinen merkki."
     MAXIMUM: "Salasanojen pitää olla korkeintaan %s merkkiä pitkät."
-    NOEMPTY: "Salasanat eivät voi olla tyhjiä."
     SHOWONCLICKTITLE: "Vaihda salasana"
   CreditCardField:
     FIRST: "ensimmäinen"
     FOURTH: "neljäs"
     SECOND: "toinen"
     THIRD: "kolmas"
-    VALIDATIONJS1: "Varmista että olet syöttänyt "
-    VALIDATIONJS2: "luottokorttinumeron oikein."
   CurrencyField:
     CURRENCYSYMBOL: "$"
-    VALIDATIONJS: "Anna kelvollinen valuutta."
   DataObject:
     PLURALNAME: "Dataobjektit"
     SINGULARNAME: "Dataobjekti"
@@ -102,7 +103,6 @@ fi:
   DateField:
     NOTSET: "ei asetettu"
     TODAY: "tänään"
-    VALIDATIONJS: "Ole hyvä ja syötä hyväksytty päivämäärä (DD/MM/VVVV)."
     VALIDDATEFORMAT2: "Anna päivämäärä kelvollisessa muoto (%s)"
     VALIDDATEMAXDATE: "Päivämäärän täytyy olla vanhempi tai vastata myöhäisintä sallittua päivämäärää (%s)"
     VALIDDATEMINDATE: "Päivämäärän täytyy olla uudempi tai vastata aikaisinta sallittua päivämäärää (%s)"
@@ -110,7 +110,6 @@ fi:
     CHOOSE: "(Valitse)"
   EmailField:
     VALIDATION: "Kirjoita sähköpostiosoite."
-    VALIDATIONJS: "Ole hyvä ja syötä sähköpostiosoite."
   Enum:
     ANY: "Yhtään"
   File:
@@ -122,7 +121,6 @@ fi:
     Name: "Nimi"
     PLURALNAME: "Tiedostot"
     SINGULARNAME: "Tiedosto"
-    Sort: "Järjestys"
     TOOLARGE: "Tiedosto on liian iso, %s on suurin sallittu."
     Title: "Otsikko"
   FileIFrameField:
@@ -134,22 +132,6 @@ fi:
     FROMFILESTORE: "Tiedostovarastosta"
     NOSOURCE: "Valitse lähdetiedosto liitettäväksi"
     REPLACE: "Korvaa %s"
-  FileIFrameField.ss:
-    TITLE: "Kuvansiirto Iframe"
-  Folder:
-    CREATED: "Ensimmäinen kopioitu palvelimelle"
-    DELSELECTED: "Poista valitut tiedostot"
-    DETAILSTAB: "Tietoja"
-    FILENAME: "Tiedostonimi"
-    FILESTAB: "Tiedostot"
-    LASTEDITED: "Viimeeksi päivitetty"
-    PLURALNAME: "Tiedostot"
-    SINGULARNAME: "Tiedosto"
-    TITLE: "Otsikko"
-    TYPE: "Tyyppi"
-    UPLOADTAB: "Kopioi palvelimelle"
-    URL: "URL"
-    VIEWEDITASSET: "Näytä/muokkaa etu"
   ForgotPasswordEmail.ss:
     HELLO: "Hei"
     TEXT1: "Tässä on sinun"
@@ -171,13 +153,9 @@ fi:
     DefaultGroupTitleAdministrators: "Järjestelmänvalvojat"
     DefaultGroupTitleContentAuthors: "Sisällöntuottajat"
     Description: "Kuvaus"
-    IMPORTTABTITLE: "Tuo"
-    IPRestrictions: "Rajoitukset IP-osoitteisiin"
     Locked: "Lukittu?"
-    PLURALNAME: "Ryhmät"
     Parent: "Yliryhmä"
     RolesAddEditLink: "Lisää/muokkaa rooleja"
-    SINGULARNAME: "Ryhmä"
     Sort: "Järjestys"
     has_many_Permissions: "Luvat"
     many_many_Members: "Jäsenet"
@@ -188,8 +166,6 @@ fi:
     ResultUpdated: "Päivitetty %d ryhmää"
   HtmlEditorField:
     ANCHORVALUE: "Ankkuri"
-    BUTTONINSERTFLASH: "Lisää Flash-video"
-    BUTTONINSERTIMAGE: "Lisää kuva"
     BUTTONINSERTLINK: "Lisää linkki"
     BUTTONREMOVELINK: "Poista linkki"
     CAPTIONTEXT: "Kuvateksti"
@@ -200,7 +176,6 @@ fi:
     CSSCLASSRIGHT: "Oikealla, tesktin ympätöimänä."
     EMAIL: "Sähköpostiosoite"
     FILE: "Tiedosto"
-    FLASH: "Lisää flash-video"
     FOLDER: "Kansio"
     IMAGE: "Lisää kuva"
     IMAGEALTTEXT: "Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää"
@@ -215,20 +190,11 @@ fi:
     LINKFILE: "Lataa tiedosto"
     LINKINTERNAL: "Sivu sivustolla"
     LINKOPENNEWWIN: "Avataanko linkki uudessa ikkunassa?"
-    LINKTEXT: "Linkin teksti"
     LINKTO: "Linkki"
     PAGE: "Sivu"
-    SEARCHFILENAME: "Hae tiedoston nimen mukaan"
-    SHOWUPLOADFORM: "Lataa tiedosto"
     URL: "URL-osoite"
-  Image:
-    PLURALNAME: "Tiedostot"
-    SINGULARNAME: "Tiedosto"
   ImageField:
     IMAGE: "Kuva"
-  Image_Cached:
-    PLURALNAME: "Tiedostot"
-    SINGULARNAME: "Tiedosto"
   LeftAndMain:
     CANT_REORGANISE: "Sinulla ei ole käyttöoikeutta uudelleen järjestää sivustorakennetta. Muutoksiasi ei tallennettu."
     HELP: "Ohje"
@@ -238,13 +204,9 @@ fi:
     PERMDEFAULT: "Valitse tunnistustapa ja syötä tunnistetietosi CMS:ään."
     PLEASESAVE: "Tätä sivua ei voitu päivittää, koska sitä ei ole vielä tallennettu. Tallenna sivu."
     SAVED: "tallennettu"
-  LeftAndMain_right.ss:
-    WELCOMETO: "Tervetuloa"
   LoginAttempt:
     Email: "Sähköpostiosoite"
     IP: "IP-osoite"
-    PLURALNAME: "Kirjautumisyritykset"
-    SINGULARNAME: "Kirjautumisyritys"
     Status: "Tila"
   Member:
     ADDRESS: "Osoite"
@@ -302,73 +264,36 @@ fi:
     ResultDeleted: "Poistettu %d jäsentä"
     ResultNone: "Ei muutoksia"
     ResultUpdated: "Päivitetty %d jäsentä"
-  MemberPassword:
-    PLURALNAME: "Jäsenen salasanat"
-    SINGULARNAME: "Jäsenen salasana"
-  MemberTableField:
-    ADD: "Lisää"
-    ADDEDTOGROUP: "Ryhmään lisättiin jäsen"
-    ADDINGFIELD: "Lisäys epäonnistui"
-    DeleteTitleText: "Poista tästä ryhmästä"
-    DeleteTitleTextDatabase: "Poista tietokannasta ja kaikista ryhmistä"
-    ERRORADDINGUSER: "Tapahtui virhe liitettäessä käyttäjää ryhmään: %s"
-    FILTER: "Suodata"
-    SEARCH: "Haku"
   ModelAdmin:
-    ADDBUTTON: "Lisää"
-    ADDFORM: "Täytä tämä lomake lisätäksesi kohteen '%s' tietokantaan"
-    CHOOSE_COLUMNS: "Valitse tulossarakkeet..."
-    CLEAR_SEARCH: "Tyhjennä haku"
-    CREATEBUTTON: "Create '%s'"
     DELETE: "Poista"
     DELETEDRECORDS: "Poistettu %s tietuetta."
-    FOUNDRESULTS: "Haku tuotti %s yhteensopivaa kohdetta"
     IMPORT: "Tuo CSV:stä"
     IMPORTEDRECORDS: "Tuotiin %s tietuetta."
-    ITEMNOTFOUND: "En löydä kohdetta"
-    LOADEDFOREDITING: "Ladattu '%s' muokkaamista varten."
     NOIMPORT: "Ei tuotavia"
-    NORESULTS: "Ei tuloksia"
-    SAVE: "Tallenna"
-    SEARCHRESULTS: "Haun tulokset"
-    SELECTALL: "valitse kaikki"
-    SELECTNONE: "poista valinta"
     UPDATEDRECORDS: "Päivitetty %s tietuetta."
   MoneyField:
     FIELDLABELAMOUNT: "Määrä"
     FIELDLABELCURRENCY: "Valuutta"
-  MyNamespace:
-    MYENTITY: "Laskemassa %s kohdetta"
   NullableField:
     IsNullLabel: "On nolla"
   NumericField:
     VALIDATION: "%s ei ole numero, tähän kenttään hyväksytään vain numeroita."
-    VALIDATIONJS: "ei ole numero, tämä kenttä hyväksyy vain numeroita"
-  Page:
-    PLURALNAME: "Sivut"
-    SINGULARNAME: "Sivu"
   Permission:
     AdminGroup: "Järjestelmänvalvoja"
+    CMS_ACCESS_CATEGORY: "CMS-pääsy"
     FULLADMINRIGHTS: "Täydet ylläpitäjän oikeudet"
     FULLADMINRIGHTS_HELP: "Merkitsee ja ohittaa kaikki muut määritellyt käyttöoikeudet."
-    PLURALNAME: "Luvat"
-    SINGULARNAME: "Lupa"
   PermissionCheckboxSetField:
     AssignedTo: "määritetty \"%s\""
     FromGroup: "periytynyt ryhmästä \"%s\""
     FromRole: "periytynyt roolista \"%s\""
     FromRoleOnGroup: "periytynyt roolista \"%s\" ryhmässä \"%s\""
-  PermissionRole:
-    PLURALNAME: "Roolit"
-    SINGULARNAME: "Rooli"
   Permissions:
     PERMISSIONS_CATEGORY: "Roolit ja käyttöoikeudet"
   PhoneNumberField:
     VALIDATION: "Kirjoita pätevä puhelinnumero"
   RelationComplexTableField.ss:
     ADD: "Lisää"
-    CSVEXPORT: "Vie CSV:een"
-    NOTFOUND: "Kohteita ei löytynyt"
   ReportAdmin:
     MENUTITLE: "Raportit"
   Security:
@@ -378,38 +303,28 @@ fi:
     CHANGEPASSWORDHEADER: "Vaihda salasanasi"
     ENTERNEWPASSWORD: "Syötä uusi salasanasi"
     ERRORPASSWORDPERMISSION: "Sinun täytyy olla kirjautuneena sisään, jotta voit vaihtaa salasanasi."
-    IPADDRESSES: "IP-osoitteet"
     LOGGEDOUT: "Kirjauduit ulos. Jos haluat kirjautua sisään, syötä tietosi alle."
     LOGIN: "Kirjaudu sisään"
-    LOSTPASSWORDHEADER: "Salasana kadotettu"
     NOTEPAGESECURED: "Tämä sivu on suojattu. Syötä tunnistetietosi alle ja annamme sinulle oikeat oikeudet."
     NOTERESETLINKINVALID: "<p>Salasanan linkki on virheellinen tai vanhentunut.</p><p>Voit pyytää uuden <a href=\"%s\">täällä</a> tai vaihda salasanasi <a href=\"%s\">sisäänkirjauduttuasi</a>.</p>"
     NOTERESETPASSWORD: "Syötä sähköpostiosoitteesi ja lähetämme sinulle linkin, jonka avulla saat palautettua salasanasi"
     PASSWORDSENTHEADER: "Salasanan palautuslinkki lähetettiin osoitteeseen %s"
     PASSWORDSENTTEXT: "Kiitos! Salasanan palautuslinkki on lähetetty osoitteeseen %s."
   SecurityAdmin:
-    ADDMEMBER: "Lisää jäsen"
+    ACCESS_HELP: "Oikeuttaa käyttäjien katselun, lisäämisen ja muokkaamisen, kuten myös käyttöoikeuksien ja roolien määrittämisen heille."
     APPLY_ROLES: "Aseta roolit ryhmille"
     APPLY_ROLES_HELP: "Mahdollisuus muokata ryhmän roolinimityksiä. Vaatii \"Pääsy turvallisuusosioon\" -oikeuden."
     EDITPERMISSIONS: "Muokkaa jokaisen ryhmän oikeuksia ja IP-osotteita."
     EDITPERMISSIONS_HELP: "Mahdollisuus muokata ryhmän käyttöoikeuksia ja IP-osoitteita. Vaatii \"Pääsy turvallisuusosioon\" -oikeuden."
     GROUPNAME: "Ryhmän nimi"
-    IPADDRESSESHELP: |
-                      <p>Voit rajata tämän ryhmän käyttöoikeudet vain tiettyihin IP osoitteisiin (yksi raja riville).<br />Rajat voi olla seuraavissa muodoissa:<br />
-                      203.96.152.12<br />
-                      203.96.152/24<br />
-                      203.96/16<br />
-                      203/8<br /><br />Jos syötät yhden tai useamman IP osoitteen tähän laatikkoon, jäsenet saavat ryhmän oikeudet vain kirjautuessaan sallitusta IP osoitteesta. Kirjautumista ei kuitenkaan estetä muista IP osoitteesta ja käyttäjä pystyy toimimaan järjestelmän alueilla, joissa rajoitus ei ole käytössä.    MEMBERS: "Jäsenet"
+    MEMBERS: "Jäsenet"
     MENUTITLE: "Turvallisuus"
     MemberListCaution: "Varoitus: Jäsenten poistaminen listalta poistaa ne kaikista ryhmistä ja tietokannasta"
     NEWGROUP: "Uusi ryhmä"
     PERMISSIONS: "Oikeudet"
     ROLES: "Roolit"
     ROLESDESCRIPTION: "Tässä osiossa voit lisätä rooleja tähän ryhmään. Roolit ovat käyttöoikeuksien loogisia ryhmittymiä, joita voidaan muokata Roolit-välilehdellä"
-    SGROUPS: "Tietoturvaryhmät"
-    TABIMPORT: "Tuonti"
     TABROLES: "Roolit"
-    VIEWUSER: "Näytä käyttäjä"
   SecurityAdmin_MemberImportForm:
     BtnImport: "Tuonti"
     FileFieldLabel: "CSV-tiedosto <small>(Sallitut päätteet: *.csv)</small>"
@@ -421,17 +336,14 @@ fi:
     ISREQUIRED: "%s:ssa %s on tarvittu."
   TableField.ss:
     ADD: "Lisää uusi rivi"
-    ADDITEM: "Lisää %s"
   TableListField:
     CSVEXPORT: "Vie CSV:nä"
     PRINT: "Tulosta"
     SELECT: "Valitse:"
   TableListField.ss:
-    NOITEMSFOUND: "Kohteita ei löytynyt"
     SORTASC: "Järjestä nousevasti"
     SORTDESC: "Järjestä laskevasti"
   TableListField_PageControls.ss:
-    DISPLAYING: "Näytetään"
     VIEWFIRST: "Näytä ensimmäinen"
     VIEWLAST: "Näytä viimeinen"
     VIEWNEXT: "Näytä seuraava"

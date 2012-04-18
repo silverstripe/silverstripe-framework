@@ -23,7 +23,6 @@ vi_VN:
     YEARS: "năm"
   DateField:
     TODAY: "hôm nay"
-    VALIDATIONJS: "Hãy nhập một giá trị ngày hợp lệ (ngày/tháng/năm)"
   DropdownField:
     CHOOSE: "(chọn)"
   HtmlEditorField:

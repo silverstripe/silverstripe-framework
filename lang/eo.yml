@@ -1,10 +1,17 @@
 eo:
   AssetAdmin:
-    CHOOSEFILE: "Elekti dosieron:"
     MENUTITLE: "Dosieroj kaj Bildoj"
     NEWFOLDER: "NewFolder"
-  AssetAdmin_left.ss:
-    GO: "Ek"
+  AssetTableField:
+    CREATED: "Unue alŝutita"
+    DIM: "Dimensioj"
+    FILENAME: "Nomo de dosiero"
+    LASTEDIT: "Laste ŝanĝita"
+    OWNER: "Posedanto"
+    SIZE: "Grando"
+    TITLE: "Titolo"
+    TYPE: "Tipo"
+    URL: "URL"
   BBCodeParser:
     ALIGNEMENT: "Ĝisrandigo"
     ALIGNEMENTEXAMPLE: "ĝisrandigita dekstren"
@@ -38,9 +45,10 @@ eo:
     ANY: "Ajna"
     NO: "Ne"
     YES: "Jes"
-  CMSBatchActions:
-    PUBLISHED_PAGES: "Publikigis %d paĝojn"
   CMSMain:
+    ACCESS: "Aliro al sekcio '%s'"
+    ACCESSALLINTERFACES: "Aliro al ĉiuj interfacoj de CMS"
+    ACCESSALLINTERFACESHELP: "Nuligas pli specifajn alirajn agordojn."
     MENUTITLE: "Paĝoj"
     SAVE: "Konservi"
   ChangePasswordEmail.ss:
@@ -58,7 +66,6 @@ eo:
     SUCCESSEDIT: "Konservita %s %s %s"
   ComplexTableField.ss:
     ADDITEM: "Almeti je %s"
-    NOITEMSFOUND: "Ne trovis erojn"
     SORTASC: "Ordigi kreske"
     SORTDESC: "Ordigi malkreske"
   ComplexTableField_popup.ss:
@@ -67,21 +74,15 @@ eo:
   ConfirmedPasswordField:
     ATLEAST: "Pasvortoj devas enhavi almenaŭ %s signojn."
     BETWEEN: "Pasvortoj devas enhavi inter %s kaj %s signojn."
-    HAVETOMATCH: "Pasvortoj devas kongrui."
-    LEASTONE: "Pasvortoj devas enhavi almenaŭ unu ciferon kaj unu literciferan signon."
     MAXIMUM: "Pasvortoj devas enhavi ne pli ol %s signojn."
-    NOEMPTY: "Pasvortoj devas esti nemalplenaj."
     SHOWONCLICKTITLE: "Ŝangi Pasvorton"
   CreditCardField:
     FIRST: "unuan"
     FOURTH: "kvaran"
     SECOND: "duan"
     THIRD: "trian"
-    VALIDATIONJS1: "Bonvole certigu ke vi tajpis la"
-    VALIDATIONJS2: "kreditkartan numeron ĝuste."
   CurrencyField:
     CURRENCYSYMBOL: "$"
-    VALIDATIONJS: "Bonvole tajpu validan valuton."
   DataObject:
     PLURALNAME: "Datumaj Objektoj"
     SINGULARNAME: "Datuma Objekto"
@@ -102,14 +103,12 @@ eo:
   DateField:
     NOTSET: "ne agordita"
     TODAY: "hodiaŭ"
-    VALIDATIONJS: "Bonvole tajpu validan datoformaton (TT/MM/JJJJ)."
     VALIDDATEMAXDATE: "Via dato devas esti pli aĝa ol aŭ egala al la maksimuma permesita dato"
     VALIDDATEMINDATE: "Via dato devas esti malpli aĝa ol aŭ egala al la minimuma permesita dato"
   DropdownField:
     CHOOSE: "(Elekti)"
   EmailField:
     VALIDATION: "Bonvolu enigi retpoŝtan adreson."
-    VALIDATIONJS: "Bonvole tajpu retadreson."
   Email_BounceRecord:
     PLURALNAME: "Registroj de neliveritaj mesaĝoj"
     SINGULARNAME: "Registro de neliverita mesaĝo"
@@ -124,7 +123,6 @@ eo:
     Name: "Nomo"
     PLURALNAME: "Dosieroj"
     SINGULARNAME: "Dosiero"
-    Sort: "Ordiga Ordo"
     TOOLARGE: "Dosiero estas tro granda, Maksimumo permesita estas %s."
     Title: "Titolo"
   FileIFrameField:
@@ -136,22 +134,6 @@ eo:
     FROMFILESTORE: "El la dosiera konservejo"
     NOSOURCE: "Bonvolu elekti fontan dosieron por alkroĉi"
     REPLACE: "Anstataŭigi je %s"
-  FileIFrameField.ss:
-    TITLE: "Bilda alŝuta Iframe"
-  Folder:
-    CREATED: "Unue Alŝutita"
-    DELSELECTED: "Forigi elektitajn dosierojn"
-    DETAILSTAB: "Detaloj"
-    FILENAME: "Nomo de dosiero"
-    FILESTAB: "Dosieroj"
-    LASTEDITED: "Laste Alŝutita"
-    PLURALNAME: "Dosieroj"
-    SINGULARNAME: "Dosiero"
-    TITLE: "Titolo"
-    TYPE: "Tipo"
-    UPLOADTAB: "Alŝuti"
-    URL: "URL"
-    VIEWEDITASSET: "Vidigi/Redakti Havaĵon"
   ForgotPasswordEmail.ss:
     HELLO: "Saluton"
     TEXT1: "Jen via"
@@ -174,13 +156,9 @@ eo:
     DefaultGroupTitleAdministrators: "Administrantoj"
     DefaultGroupTitleContentAuthors: "Enhavaŭtoroj"
     Description: "Priskribo"
-    IMPORTTABTITLE: "Importi"
-    IPRestrictions: "IP-Adresaj Limigoj"
     Locked: "Ŝlosita?"
-    PLURALNAME: "Grupoj"
     Parent: "Patra Grupo"
     RolesAddEditLink: "Aldoni/redakti rolojn"
-    SINGULARNAME: "Grupo"
     Sort: "Ordiga Ordo"
     has_many_Permissions: "Permesoj"
     many_many_Members: "Membroj"
@@ -195,13 +173,12 @@ eo:
             <li>Grupaj hierarkioj estas kreeblaj per kolumno <em>PatroKodo</em>.</li>
             <li>Permkodoj estas agordeblaj per kolumno <em>PermisKodo</em>. Ekzistantaj permiskodoj ne vakiĝos.</li>
             </ul>
-            </div>    ResultCreated: "Kreis %d grupojn"
+            </div>
+    ResultCreated: "Kreis %d grupojn"
     ResultDeleted: "Forigis %d grupojn"
     ResultUpdated: "Aktualigis %d grupojn"
   HtmlEditorField:
     ANCHORVALUE: "Ankri"
-    BUTTONINSERTFLASH: "Enmeti je Flash"
-    BUTTONINSERTIMAGE: "Enmeti bildon"
     BUTTONINSERTLINK: "Almeti ligilon"
     BUTTONREMOVELINK: "Forigi ligilon"
     CAPTIONTEXT: "Titola teksto"
@@ -212,7 +189,6 @@ eo:
     CSSCLASSRIGHT: "Dekstre, kaj teksto ĉirkaŭfluas."
     EMAIL: "Retpoŝta adreso"
     FILE: "Dosiero"
-    FLASH: "Flash"
     FOLDER: "Dosierujo"
     IMAGE: "Bildo"
     IMAGEALTTEXT: "Alternativa teksto (alt) - vidigi ĝin se ne eblas vidigi bildon"
@@ -228,20 +204,11 @@ eo:
     LINKFILE: "Elŝuti dosieron"
     LINKINTERNAL: "Paĝo en la retejo"
     LINKOPENNEWWIN: "Malfermi ligilon en nova fenestro?"
-    LINKTEXT: "Ligila teksto"
     LINKTO: "Ligilo al"
     PAGE: "Paĝo"
-    SEARCHFILENAME: "Serĉi laŭ dosiernomo"
-    SHOWUPLOADFORM: "Alŝuti dosieron"
     URL: "URL"
-  Image:
-    PLURALNAME: "Dosieroj"
-    SINGULARNAME: "Dosiero"
   ImageField:
     IMAGE: "Bildo"
-  Image_Cached:
-    PLURALNAME: "Dosieroj"
-    SINGULARNAME: "Dosiero"
   Image_iframe.ss:
     TITLE: "Iframe por alŝuti bildon"
   LeftAndMain:
@@ -253,13 +220,9 @@ eo:
     PERMDEFAULT: "Enigi vian retadreson kaj pasvorton por aliri al la CMS."
     PLEASESAVE: "Bonvolu konservi paĝon: Ne eblis ĝisdatigi ĉi tiun paĝon ĉar ĝi ankoraŭ ne estas konservita."
     SAVED: "konservis"
-  LeftAndMain_right.ss:
-    WELCOMETO: "Bonvenon al"
   LoginAttempt:
     Email: "Retadreso"
     IP: "IP-Adreso"
-    PLURALNAME: "Provoj Ensaluti"
-    SINGULARNAME: "Provo ensaluti"
     Status: "Stato"
   Member:
     ADDRESS: "Trakt"
@@ -318,83 +281,42 @@ eo:
             <li>Kongruas ekzistantajn membrojn laŭ ilia unika agordo <em>Kodo</em>, kaj aktualigas ilin laŭ eventualaj novaj valoroj el la importita dosiero.</li>
             <li>Povas agordi grupojn laŭ la kolumno <em>Grupoj</em>. Identigas grupojn laŭ ilia agordo <em>Kodo</em>, povas apartigi pluroblan grupon per komoj. Ne vakigas ekzistantajn grupojn.</li>
             </ul>
-            </div>    ResultCreated: "Kreis %d membrojn"
+            </div>
+    ResultCreated: "Kreis %d membrojn"
     ResultDeleted: "Forigis %d membrojn"
     ResultNone: "Neniu ŝanĝo"
     ResultUpdated: "Aktualigis %d membrojn"
-  MemberPassword:
-    PLURALNAME: "Pasvortoj de Membroj"
-    SINGULARNAME: "Pasvorto de Membro"
-  MemberTableField:
-    ADD: "Enmeti"
-    ADDEDTOGROUP: "Enmetis membron en grupon"
-    ADDINGFIELD: "Malsukcesis aldoni"
-    DeleteTitleText: "Forigi el ĉi tiu grupo"
-    DeleteTitleTextDatabase: "Forigi el datumbazo kaj ĉiuj grupoj"
-    ERRORADDINGUSER: "Eraro okazis aldonante la uzanton al la grupo: %s"
-    FILTER: "Filtri"
-    SEARCH: "Serĉi"
   ModelAdmin:
-    ADDBUTTON: "Aldoni"
-    ADDFORM: "Plenigu ĉi tiun formularon por aldoni je %s al la datumbazo."
-    CHOOSE_COLUMNS: "Elekti rezultajn kolumnojn..."
-    CLEAR_SEARCH: "Vakigi Serĉon"
-    CREATEBUTTON: "Krei je '%s'"
     DELETE: "Forigi"
     DELETEDRECORDS: "Forigis %s rikordojn."
-    FOUNDRESULTS: "Via serĉo trovis %s kongruajn erojn"
     IMPORT: "Importi el CSV"
     IMPORTEDRECORDS: "Importis je %s %s"
-    ITEMNOTFOUND: "Ne povas trovi tiun eron"
-    LOADEDFOREDITING: "Ŝargis je '%s' por redakti."
     NOCSVFILE: "Bonvolu foliumi por CSV-dosiero importota"
     NOIMPORT: "Nenio importota"
-    NORESULTS: "Neniu rezulto"
-    SAVE: "Konservi"
-    SEARCHRESULTS: "Serĉi Rezultojn"
-    SELECTALL: "elekti ĉiujn"
-    SELECTNONE: "elekti neniun"
     UPDATEDRECORDS: "Ĝisdatigis %s rikordojn."
   MoneyField:
     FIELDLABELAMOUNT: "Kvanto"
     FIELDLABELCURRENCY: "Kurzo"
-  MyEntity:
-    MyNamespace: "Valoro de mia defaŭlta natura lingvo"
-  MyNamespace:
-    MYENTITY: "Nombras %s erojn"
   NullableField:
     IsNullLabel: "Estas senvalora"
   NumericField:
     VALIDATION: "'%s' ne estas numero, nur numeroj esti akcepteblaj por ĉi tiu kampo"
-    VALIDATIONJS: "ne estas numero; akceptas nur numerojn por ĉi tiu kampo"
-  Page:
-    PLURALNAME: "Pags"
-    SINGULARNAME: "Page"
   Permission:
     AdminGroup: "Administranto"
+    CMS_ACCESS_CATEGORY: "CMS-aliro"
     FULLADMINRIGHTS: "Ĉiuj administraj rajtoj"
     FULLADMINRIGHTS_HELP: "Implicas kaj superregas ĉiujn aliajn agorditajn permesojn."
-    PLURALNAME: "Permesoj"
-    SINGULARNAME: "Permeso"
   PermissionCheckboxSetField:
     AssignedTo: "agordita al \"%s\""
     FromGroup: "heredita de grupo \"%s\""
     FromRole: "heredita de rolo \"%s\""
     FromRoleOnGroup: "heredita de rolo \"%s\" en grupo \"%s\""
-  PermissionRole:
-    PLURALNAME: "Roloj"
-    SINGULARNAME: "Rolo"
-  PermissionRoleCode:
-    PLURALNAME: "PermesRolaj Kodoj"
-    SINGULARNAME: "PermesRola Kodo"
   Permissions:
     PERMISSIONS_CATEGORY: "Roloj kaj aliraj permesoj"
   PhoneNumberField:
     VALIDATION: "Bonvolu enigi validan telefonnumeron"
   RelationComplexTableField.ss:
     ADD: "Enmeti"
-    CSVEXPORT: "Eksporti al CSV"
-    NOTFOUND: "Neniu ero trovita"
   ReportAdmin:
     MENUTITLE: "Raportoj"
   Security:
@@ -404,41 +326,28 @@ eo:
     CHANGEPASSWORDHEADER: "Ŝanĝi vian pasvorton"
     ENTERNEWPASSWORD: "Bonvolu enigi novan pasvorton."
     ERRORPASSWORDPERMISSION: "Vi devas ensaluti por ŝanĝi vian pasvorton!"
-    IPADDRESSES: "IP-Adresoj"
     LOGGEDOUT: "Vi elsalutis. Se vi volas ensaluti denove, enigu viajn legitimaĵon sube."
     LOGIN: "Ensaluti"
-    LOSTPASSWORDHEADER: "Perdis Pasvorton"
     NOTEPAGESECURED: "Tiu paĝo estas sekurigita.  Enigu viajn akreditaĵojn sube kaj vi aliros pluen."
     NOTERESETLINKINVALID: "<p>La pasvorta reagorda ligilo estas nevalida aŭ pasis limdaton.</p><p>Vi povas peti novan <a href=\"%s\">ĉi tie</a> aŭ ŝanĝi vian pasvorton kiam <a href=\"%s\">ensalutinta</a>.</p>"
     NOTERESETPASSWORD: "Enigu vian retpoŝtan adreson kaj ni sendos al vi ligilon per kiu vi povas reagordi vian pasvorton"
     PASSWORDSENTHEADER: "Sendis al '%s' ligilon reagordi pasvorton"
     PASSWORDSENTTEXT: "Dankon! Sendis al '%s' ligilon reagordi pasvorton, kondiĉe ke ekzistas konto por ĉi tiu retadreso."
   SecurityAdmin:
-    ADDMEMBER: "Enmeti Membron"
+    ACCESS_HELP: "Permesi vidigi, enmeti kaj redakti uzantojn, aldone al agordi permesojn kaj rolojn al ili."
     APPLY_ROLES: "Apliki roloj al grupoj"
     APPLY_ROLES_HELP: "Eblo redakti la rolojn agorditajn al grupo. Bezonas la permesilon \"Aliro al sekcio 'Sekureco'\""
     EDITPERMISSIONS: "Agordi permesojn kaj IP-adresojn ĉe ĉiu grupo"
     EDITPERMISSIONS_HELP: "Eblo redakti Permesojn kaj IP-adresojn por grupo. Bezonas la permesilon \"Aliro al sekcio 'Sekureco'\""
     GROUPNAME: "Grupa Nomo"
-    IPADDRESSESHELP: |
-                      <p>Vi povas limigi ĉi tiun grupon al specifa
-                      IP-adresa amplekso (unu amplekso en unu linio). <br />Ampleksoj povas havi iun el la jenaj formoj: <br />
-                      203.96.152.12<br />
-                      203.96.152/24<br />
-                      203.96/16<br />
-                      203/8<br /><br />Se vi enigas almenaŭ unu IP-adresan amplekson en ĉi tiun kadron, tiam membroj ricevos nur
-                      la rajtojn de membreco de ĉi tiu grupo se ili ensalutas el iu el la validaj IP-adresoj. Ĝi ne malebligos
-                      al iu ensaluti. Tio estas ĉar la sama uzanto eble devas ensaluti por aliri partojn de la sistemo sen IP-adresajn limigojn.    MEMBERS: "Membroj"
+    MEMBERS: "Membroj"
     MENUTITLE: "Sekureco"
     MemberListCaution: "Averto: forigi membrojn el ĉi tiu listo forigos ilin el ĉiuj grupoj kaj la datumbazo."
     NEWGROUP: "Nova Grupo"
     PERMISSIONS: "Permesoj"
     ROLES: "Roloj"
     ROLESDESCRIPTION: "Ĉi tiu sekcio ebligas aldoni rolojn al ĉi tiu grupo. Roloj estas logikaj grupoj de permesoj, kiuj estas redakteblaj en la langeto Roloj"
-    SGROUPS: "Grupoj de sekureco"
-    TABIMPORT: "Importi"
     TABROLES: "Roloj"
-    VIEWUSER: "Vidigi Uzanton"
   SecurityAdmin_MemberImportForm:
     BtnImport: "Importi"
     FileFieldLabel: "CSV-dosiero <small>(Permesitaj sufiksoj: *.csv)</small>"
@@ -450,18 +359,13 @@ eo:
     ISREQUIRED: "En %s '%s' estas bezonata."
   TableField.ss:
     ADD: "Enmeti novan vicon"
-    ADDITEM: "Aldoni je %s"
   TableListField:
     CSVEXPORT: "Eksporti al CSV"
     PRINT: "Presi"
   TableListField.ss:
-    NOITEMSFOUND: "Ne trovis eron"
     SORTASC: "Ordigi kreskante"
     SORTDESC: "Ordigi malkreskante"
   TableListField_PageControls.ss:
-    DISPLAYING: "Vidigas"
-    OF: "de"
-    TO: "al"
     VIEWFIRST: "Vidigi unuan"
     VIEWLAST: "Vidigi lastan"
     VIEWNEXT: "Vidigi sekvan"
