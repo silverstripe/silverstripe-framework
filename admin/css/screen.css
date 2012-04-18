@@ -262,7 +262,9 @@ body.cms { overflow: hidden; }
 .cms-content-header .backlink span.btn-icon-back { height: 16px; }
 .cms-content-header h2 { padding: 8px 8px 0 8px; font-size: 14px; line-height: 24px; font-weight: bold; text-shadow: #bfcad2 1px 1px 0; margin: 0; display: table-cell; vertical-align: top; width: 100%; }
 .cms-content-header h2 .breadcrumbs-wrapper { display: table-row; }
-.cms-content-header h2 .breadcrumbs-wrapper .crumb { display: table-cell; line-height: 26px; }
+.cms-content-header h2 .breadcrumbs-wrapper .crumb { display: table-cell; line-height: 26px; padding: 0 5px; }
+.cms-content-header h2 .breadcrumbs-wrapper .crumb:first-child { padding-left: 0px; }
+.cms-content-header h2 .breadcrumbs-wrapper .crumb:last-child { padding-right: 0px; }
 .cms-content-header > div { display: table; }
 .cms-content-header > div .cms_backlink { display: table-cell; vertical-align: middle; width: auto; }
 .cms-content-header .cms-content-header-tabs { display: table-cell; white-space: nowrap; width: 100%; }
@@ -274,7 +276,6 @@ body.cms { overflow: hidden; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-all, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-top, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-left, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-corner-tl { border-radius: 0; }
 
 .cms-edit-form .cms-content-header-tabs .ui-tabs-nav li a { text-indent: 0; }
-.cms-edit-form .cms-content-header-tabs .ui-tabs-nav .ui-state-default a, .cms-edit-form .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-default a, .cms-edit-form .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-default a { color: #1f1f1f; }
 
 /** -------------------------------------------- Tabs -------------------------------------------- */
 .cms-content-header .ui-tabs-nav li, .cms-dialog .ui-tabs-nav li { margin: 0; }
@@ -305,7 +306,7 @@ body.cms { overflow: hidden; }
 .ss-loading-screen .loading-animation { display: none; position: absolute; left: 49%; top: 75%; }
 
 /** -------------------------------------------- Actions -------------------------------------------- */
-.cms-content-actions { margin: 8px 16px 16px 16px; height: 32px; z-index: 70; -moz-box-shadow: #f0f3f4 0 -16px 16px; -webkit-box-shadow: #f0f3f4 0 -16px 16px; -o-box-shadow: #f0f3f4 0 -16px 16px; box-shadow: #f0f3f4 0 -16px 16px; }
+.cms-content-actions { margin: 8px 16px 16px 16px; height: 32px; z-index: 70; background-color: #e6eaed; -moz-box-shadow: #e6eaed 0 -16px 16px; -webkit-box-shadow: #e6eaed 0 -16px 16px; -o-box-shadow: #e6eaed 0 -16px 16px; box-shadow: #e6eaed 0 -16px 16px; }
 
 /** -------------------------------------------- Messages -------------------------------------------- */
 .message { margin: 0 0 8px 0; padding: 7px 7px; font-weight: bold; border: 1px black solid; }
@@ -353,7 +354,7 @@ body.cms { overflow: hidden; }
 .cms-content-toolbar .chzn-container-single .chzn-single div b { background: url(../images/sprites-32x32/menu-arrow-deselected-down.png) no-repeat 9px 11px; float: right; width: 24px; }
 
 /* -------------------------------------------------------- Content Tools is the sidebar on the left of the main content panel */
-.cms-content-tools { background-color: #dde3e7; width: 192px; border-right: 1px solid #bfcad2; overflow-y: auto; overflow-x: hidden; z-index: 70; -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; -o-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; float: left; position: relative; }
+.cms-content-tools { background-color: #c6d7df; width: 192px; border-right: 1px solid #bfcad2; overflow-y: auto; overflow-x: hidden; z-index: 70; -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; -o-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; float: left; position: relative; }
 .cms-content-tools .cms-panel-header { clear: both; margin: 0 0 7px; line-height: 24px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -moz-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -o-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); }
 .cms-content-tools .cms-panel-content { width: 176px; padding: 0 8px; overflow: auto; height: 100%; }
 .cms-content-tools .cms-panel-content .dropdown select { width: 160px; }
@@ -559,6 +560,24 @@ form.import-form label.left { width: 250px; }
 
 /** -------------------------------------------- Page Edit Controller -------------------------------------------- */
 .cms-container .CMSMain.CMSPageEditController { margin-left: -1px; }
+.cms-container .CMSMain.CMSPageEditController .cms-edit-form { background: #e6eaed; }
+.cms-container .CMSMain.CMSPageEditController .cms-edit-form .ui-tabs-nav { float: right; margin: 8px 24px -1px 0; }
+.cms-container .CMSMain.CMSPageEditController .cms-edit-form .ui-tabs-nav li a { font-weight: bold; line-height: 16px; padding: 8px 20px 8px; }
+.cms-container .CMSMain.CMSPageEditController .cms-edit-form .ui-tabs-nav .ui-state-default, .cms-container .CMSMain.CMSPageEditController .cms-edit-form .ui-tabs-nav .ui-widget-content .ui-state-default, .cms-container .CMSMain.CMSPageEditController .cms-edit-form .ui-tabs-nav .ui-widget-header .ui-state-default { border: 1px solid #c0c0c2; }
+.cms-container .CMSMain.CMSPageEditController .cms-edit-form .ui-tabs-nav .ui-state-active, .cms-container .CMSMain.CMSPageEditController .cms-edit-form .ui-tabs-nav .ui-widget-content .ui-state-active, .cms-container .CMSMain.CMSPageEditController .cms-edit-form .ui-tabs-nav .ui-widget-header .ui-state-active { padding-bottom: 1px; background: #e6eaed; border: 1px solid #c0c0c2; }
+.cms-container .CMSMain.CMSPageEditController .ss-tabset .ui-tabs-panel { background: #e6eaed; clear: both; border-top: 1px solid #c0c0c2; }
+.cms-container .CMSPageSettingsController .cms-edit-form { background: #e6eaed; }
+.cms-container .CMSPageSettingsController .cms-edit-form .ui-tabs-nav { float: right; margin: 8px 40px -1px 0; }
+.cms-container .CMSPageSettingsController .cms-edit-form .ui-tabs-nav li a { font-weight: bold; line-height: 16px; padding: 8px 20px 8px; }
+.cms-container .CMSPageSettingsController .cms-edit-form .ui-tabs-nav .ui-state-default, .cms-container .CMSPageSettingsController .cms-edit-form .ui-tabs-nav .ui-widget-content .ui-state-default, .cms-container .CMSPageSettingsController .cms-edit-form .ui-tabs-nav .ui-widget-header .ui-state-default { border: 1px solid #c0c0c2; }
+.cms-container .CMSPageSettingsController .cms-edit-form .ui-tabs-nav .ui-state-active, .cms-container .CMSPageSettingsController .cms-edit-form .ui-tabs-nav .ui-widget-content .ui-state-active, .cms-container .CMSPageSettingsController .cms-edit-form .ui-tabs-nav .ui-widget-header .ui-state-active { padding-bottom: 1px; background: #e6eaed; border: 1px solid #c0c0c2; }
+.cms-container .CMSPageSettingsController .ss-tabset .ui-tabs-panel { background: #e6eaed; clear: both; border-top: 1px solid #c0c0c2; }
+.cms-container .CMSPageHistoryController .cms-edit-form { background: #e6eaed; }
+.cms-container .CMSPageHistoryController .cms-edit-form .ui-tabs-nav { float: right; margin: 8px 24px -1px 0; }
+.cms-container .CMSPageHistoryController .cms-edit-form .ui-tabs-nav li a { font-weight: bold; line-height: 16px; padding: 8px 20px 8px; }
+.cms-container .CMSPageHistoryController .cms-edit-form .ui-tabs-nav .ui-state-default, .cms-container .CMSPageHistoryController .cms-edit-form .ui-tabs-nav .ui-widget-content .ui-state-default, .cms-container .CMSPageHistoryController .cms-edit-form .ui-tabs-nav .ui-widget-header .ui-state-default { border: 1px solid #c0c0c2; }
+.cms-container .CMSPageHistoryController .cms-edit-form .ui-tabs-nav .ui-state-active, .cms-container .CMSPageHistoryController .cms-edit-form .ui-tabs-nav .ui-widget-content .ui-state-active, .cms-container .CMSPageHistoryController .cms-edit-form .ui-tabs-nav .ui-widget-header .ui-state-active { padding-bottom: 1px; background: #e6eaed; border: 1px solid #c0c0c2; }
+.cms-container .CMSPageHistoryController .ss-tabset .ui-tabs-panel { background: #e6eaed; clear: both; border-top: 1px solid #c0c0c2; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .cms .jstree ul, .TreeDropdownField .treedropdownfield-panel .jstree ul { display: block; margin: 0; padding: 0; background: none; list-style-type: none; }
@@ -682,7 +701,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-login-status { border-top: 1px solid #19435c; height: 24px; padding: 7px 4px 0 4px; overflow: hidden; line-height: 16px; font-size: 11px; }
 .cms-login-status .logout-link { display: inline-block; height: 16px; width: 16px; float: left; margin: 0 8px 0 3px; background: url('../images/sprites-32x32-sa4e142f7f0.png') 0 -669px no-repeat; text-indent: -9999em; }
 
-.cms-menu { z-index: 80; background: #c6d7df; border-right: 1px solid #8c99a1; width: 191px; /* 8x24 - 1 */ -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; -o-box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; }
+.cms-menu { z-index: 80; background: #b0bec7; border-right: 1px solid #8c99a1; width: 191px; /* 8x24 - 1 */ -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; -o-box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; box-shadow: rgba(107, 120, 123, 0.5) 0 0 8px; }
 .cms-menu a { text-decoration: none; }
 .cms-menu .cms-panel-content { width: 191px; /* 8x24 - 1 */ overflow-x: hidden; overflow-y: auto; }
 .cms-menu.collapsed { width: 40px; cursor: auto; z-index: 1000; }
