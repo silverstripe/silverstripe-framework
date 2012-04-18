@@ -44,19 +44,36 @@ class PjaxResponseNegotiator {
 			array_change_key_case($this->callbacks, CASE_LOWER),
 			array_change_key_case($extraCallbacks, CASE_LOWER)
 		);
+
+		$response = new SS_HTTPResponse();
 		
-		if($fragment = $request->getHeader('X-Pjax')) {
-			$fragment = strtolower($fragment);
-			if(isset($callbacks[$fragment])) {
-				return call_user_func($callbacks[$fragment]);
+		$responseParts = array();
+		if($fragmentStr = $request->getHeader('X-Pjax')) {
+			$fragments = explode(',', strtolower($fragmentStr));
+			foreach($fragments as $fragment) {
+				if(isset($callbacks[$fragment])) {
+					$responseParts[$fragment] = call_user_func($callbacks[$fragment]);
+				} else {
+					throw new SS_HTTPResponse_Exception("X-Pjax = '$fragment' not supported for this URL.", 400);
+				}
+			}
+			if(count($responseParts) == 1) {
+				$response->setBody(array_pop($responseParts));
 			} else {
-				throw new SS_HTTPResponse_Exception("X-Pjax = '$fragment' not supported for this URL.", 400);
+				if($request->getHeader('Accept') != 'text/json') {
+					throw new SS_HTTPResponse_Exception(
+						'Multiple comma-separated fragments can only be returne with an "Accept: text/json" header',
+						400
+					);
+				}
+				$response->setBody(Convert::raw2json($responseParts));
+				$response->addHeader('Content-Type', 'text/json');
 			}
 		} else {
 			if($request->isAjax()) throw new SS_HTTPResponse_Exception("Ajax requests to this URL require an X-Pjax header.", 400);
-			return call_user_func($callbacks['default']);
+			$response->setBody(call_user_func($callbacks['default']));
 		}
-		
+		return $response;
 	}
 
 	/**
