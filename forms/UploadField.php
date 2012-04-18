@@ -477,7 +477,6 @@ class UploadField extends FileField {
 				} else {
 					// The file has been uploaded successfully, attach it to the related record.
 					$file = $this->upload->getFile();
-					$file->write();
 					$this->attachFile($file);
 
 					// Collect all output data.
