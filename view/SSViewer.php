@@ -338,7 +338,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 			$exposedVariables = call_user_func(array($implementer, $variableMethod));
 
 			foreach($exposedVariables as $varName => $details) {
-				if (!is_array($details)) $details = array('method' => $details, 'casting' => Object::get_static('ViewableData', 'default_cast'));
+				if (!is_array($details)) $details = array('method' => $details, 'casting' => Config::inst()->get('ViewableData', 'default_cast', Config::FIRST_SET));
 
 				// If just a value (and not a key => value pair), use it for both key and value
 				if (is_numeric($varName)) $varName = $details['method'];
@@ -405,7 +405,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 				// Get the object to cast as
 				$casting = isset($source['casting']) ? $source['casting'] : null;
 				// If not provided, use default
-				if (!$casting) $casting = Object::get_static('ViewableData', 'default_cast');
+				if (!$casting) $casting = Config::inst()->get('ViewableData', 'default_cast', Config::FIRST_SET);
 
 				$obj = new $casting($property);
 				$obj->setValue($res['value']);
