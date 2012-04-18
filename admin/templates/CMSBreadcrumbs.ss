@@ -1,4 +1,4 @@
-<div class="breadcrumbs-wrapper">
+<div class="breadcrumbs-wrapper" data-pjax-fragment="Breadcrumbs">
 	<% loop Breadcrumbs %>
 		<% if Last %>
 			<span class="cms-panel-link crumb">$Title.XML</span>

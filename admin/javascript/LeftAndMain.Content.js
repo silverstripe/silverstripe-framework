@@ -86,8 +86,7 @@
 				// sending back different `X-Pjax` headers and content
 				jQuery.ajax(jQuery.extend({
 					headers: {
-						"X-Pjax" : "CurrentForm",
-						'X-Pjax-Selector': '.cms-edit-form'
+						"X-Pjax" : "CurrentForm,Breadcrumbs"
 					},
 					url: form.attr('action'), 
 					data: formData,

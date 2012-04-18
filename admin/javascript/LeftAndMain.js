@@ -40,10 +40,7 @@ jQuery.noConflict();
 				// Normalize trailing slashes in URL to work around routing weirdnesses in SS_HTTPRequest.
 				var isSame = (url && History.getPageUrl().replace(/\/+$/, '') == url.replace(/\/+$/, ''));
 				if(url && !isSame) {
-					opts = {
-						pjax: xhr.getResponseHeader('X-Pjax') ? xhr.getResponseHeader('X-Pjax') : settings.headers['X-Pjax'], 
-						selector: xhr.getResponseHeader('X-Pjax-Selector') ? xhr.getResponseHeader('X-Pjax-Selector') : settings.headers['X-Pjax-Selector']
-					};
+					opts = {pjax: xhr.getResponseHeader('X-Pjax') ? xhr.getResponseHeader('X-Pjax') : settings.headers['X-Pjax']};
 					window.History.pushState(opts, '', url);
 				}
 			}
@@ -205,30 +202,24 @@ jQuery.noConflict();
 			 * if the URL is loaded without ajax.
 			 */
 			handleStateChange: function() {
-				var self = this, h = window.History, state = h.getState(); 
-				
 				// Don't allow parallel loading to avoid edge cases
 				if(this.getCurrentXHR()) this.getCurrentXHR().abort();
-				
-				var selector = state.data.selector || '.cms-content', contentEl = $(selector);
+
+				var self = this, h = window.History, state = h.getState(),
+					fragments = state.data.pjax || 'Content', headers = {},
+					reduceFn = function(fragment) {return '[data-pjax-fragment="' + fragment + '"]';},
+					contentEls = $($.map(fragments.split(','), reduceFn).join(','));
 				
 				this.trigger('beforestatechange', {
-					state: state, element: contentEl
+					state: state, element: contentEls
 				});
 
 				// Set Pjax headers, which can declare a preference for the returned view.
 				// The actually returned view isn't always decided upon when the request
 				// is fired, so the server might decide to change it based on its own logic.
-				var headers = {};
-				if(state.data.pjax) {
-					headers['X-Pjax'] = state.data.pjax;
-				} else {
-					// Standard Pjax behaviour is to replace right content area
-					headers["X-Pjax"] = 'Content';
-				}
-				headers['X-Pjax-Selector'] = selector;
+				headers['X-Pjax'] = fragments;
 
-				contentEl.addClass('loading');
+				contentEls.addClass('loading');
 				var xhr = $.ajax({
 					headers: headers,
 					url: state.url,
@@ -240,46 +231,60 @@ jQuery.noConflict();
 						// Update title
 						var title = xhr.getResponseHeader('X-Title');
 						if(title) document.title = title;
-						
-						// Update panels
-						var newContentEl = $(data);
-						if(newContentEl.find('.cms-container').length) {
-							throw 'Content loaded via ajax is not allowed to contain tags matching the ".cms-container" selector to avoid infinite loops';
+
+						// Remove loading indication from old content els (regardless of which are replaced)
+						contentEls.removeClass('loading');
+
+						var newFragments = {};
+						if(xhr.getResponseHeader('Content-Type') == 'text/json') {
+							newFragments = data;
+						} else {
+							// Fall back to replacing the first fragment only if HTML is returned
+							newFragments[fragments.split(',').pop()] = data;
 						}
+
+						$.each(newFragments, function(newFragment, html) {
+							var contentEl = $('[data-pjax-fragment=' + newFragment + ']'), newContentEl = $(html);
+							
+							// Update panels
+							if(newContentEl.find('.cms-container').length) {
+								throw 'Content loaded via ajax is not allowed to contain tags matching the ".cms-container" selector to avoid infinite loops';
+							}
+							
+							// Set loading state and store element state
+							newContentEl.addClass('loading');
+							var origStyle = contentEl.attr('style');
+							var layoutClasses = ['east', 'west', 'center', 'north', 'south'];
+							var elemClasses = contentEl.attr('class');
+							
+							var origLayoutClasses = [];
+							if(elemClasses) {
+								origLayoutClasses = $.grep(
+									elemClasses.split(' '),
+									function(val) { return ($.inArray(val, layoutClasses) >= 0);}
+								);
+							}
+							
+							newContentEl
+								.removeClass(layoutClasses.join(' '))
+								.addClass(origLayoutClasses.join(' '));
+							if(origStyle) newContentEl.attr('style', origStyle);
+							newContentEl.css('visibility', 'hidden');
+
+							// Allow injection of inline styles, as they're not allowed in the document body.
+							// Not handling this through jQuery.ondemand to avoid parsing the DOM twice.
+							var styles = newContentEl.find('style').detach();
+							if(styles.length) $(document).find('head').append(styles);
+
+							// Replace panel completely (we need to override the "layout" attribute, so can't replace the child instead)
+							contentEl.replaceWith(newContentEl);
+
+							// Unset loading and restore element state (to avoid breaking existing panel visibility, e.g. with preview expanded)
+							self.redraw();
+							newContentEl.css('visibility', 'visible');
+							newContentEl.removeClass('loading');
+						});
 						
-						// Set loading state and store element state
-						newContentEl.addClass('loading');
-						var origStyle = contentEl.attr('style');
-						var layoutClasses = ['east', 'west', 'center', 'north', 'south'];
-						var elemClasses = contentEl.attr('class');
-						
-						var origLayoutClasses = [];
-						if(elemClasses) {
-							origLayoutClasses = $.grep(
-								elemClasses.split(' '),
-								function(val) { return ($.inArray(val, layoutClasses) >= 0);}
-							);
-						}
-						
-						newContentEl
-							.removeClass(layoutClasses.join(' '))
-							.addClass(origLayoutClasses.join(' '));
-						if(origStyle) newContentEl.attr('style', origStyle);
-						newContentEl.css('visibility', 'hidden');
-
-						// Allow injection of inline styles, as they're not allowed in the document body.
-						// Not handling this through jQuery.ondemand to avoid parsing the DOM twice.
-						var styles = newContentEl.find('style').detach();
-						if(styles.length) $(document).find('head').append(styles);
-
-						// Replace panel completely (we need to override the "layout" attribute, so can't replace the child instead)
-						contentEl.replaceWith(newContentEl);
-
-						// Unset loading and restore element state (to avoid breaking existing panel visibility, e.g. with preview expanded)
-						self.redraw();
-						newContentEl.css('visibility', 'visible');
-						newContentEl.removeClass('loading');
-
 						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: newContentEl});
 					},
 					error: function(xhr, status, e) {
@@ -290,6 +295,7 @@ jQuery.noConflict();
 				
 				this.setCurrentXHR(xhr);
 			},
+
 			/**
 			 * Function: refresh
 			 * 
