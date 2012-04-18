@@ -245,8 +245,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				// TODO Move to onunmatch for less coupling (once we figure out how to work with detached DOM nodes in TinyMCE)
 				$('.cms-container').bind('beforestatechange', function() {
 					self.css('visibility', 'hidden');
-					ed.getContainer();
-					if(ed) $(ed).remove();
+					var container = ed.getInstance() ? ed.getContainer() : null;
+					if(container && container.length) container.remove();
 				});
 
 				this._super();
