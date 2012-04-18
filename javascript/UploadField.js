@@ -236,11 +236,26 @@
 		});
 		$('div.ss-upload .ss-uploadfield-item-editform').entwine({
 			fitHeight: function() {
-				var iframe = this.find('iframe'), h = iframe.contents().height();
+				var iframe = this.find('iframe'), padding = 32;
+				var h = iframe.contents().find('form').height() + padding;			
+				
+				/*Set options for open edit view based on browsers*/
+				if($.browser.msie && $.browser.version.slice(0,3) == "8.0"){
+					//set content background, and overflow to auto for IE8
+					iframe.contents().find('body').css({'overflow':'auto','background-color':'#E2E2E2'});
+				}else if($.browser.msie && $.browser.version.slice(0,3) == "7.0"){
+					//set content height and background color
+					iframe.contents().find('body').css({'height':(h-padding),'background-color':'#E2E2E2'});		
+				}else{
+					//set content height for real browsers
+					iframe.contents().find('body').css({'height':h-padding});	
+				}
+			
 				// Set iframe to match its contents height
-				iframe.height(h); 
-				// set container to match the same height
-				iframe.parent().height(h);
+				iframe.height(h);
+				// set container to match the same height				
+				iframe.parent().height(h+2);
+				iframe.contents().find('body form').css({'width':'98%'});
 			},
 			toggleEditForm: function() {
 				if(this.height() === 0) {

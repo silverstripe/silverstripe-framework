@@ -13,6 +13,10 @@
 body.cms.ss-uploadfield-edit-iframe {
 	padding: $grid-x*2;
 	overflow: auto;
+	span.readonly{
+		font-style:italic;
+		color:lighten($color-text, 15%);
+	}
 }
 
 .ss-assetuploadfield {
@@ -35,7 +39,6 @@ body.cms.ss-uploadfield-edit-iframe {
 		
 		.ss-uploadfield-item {
 			border: 1px solid lighten($color-medium-separator, 20%);
-			border-bottom:0;
 			@include border-radius(5px);
 			@include background-clip(padding-box);
 			background: #E2E2E2;
@@ -67,7 +70,8 @@ body.cms.ss-uploadfield-edit-iframe {
 			z-index: 1;
 			margin: 3px 0 3px 50px;
 			width: 40%;
-			background: #fff;
+			color:lighten($color-text, 20%);
+			background: $color-button-disabled;
 			border: 1px solid lighten($color-medium-separator, 20%);
 			@include border-radius(5px);
 			display: block;

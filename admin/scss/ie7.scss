@@ -27,6 +27,24 @@ html {
 	}
 }
 
+.ss-uploadfield-edit-iframe{
+	.field {
+		&.treedropdown{
+			height:150px !important;				
+		}
+		.TreeDropdownField {
+			ul{
+				min-height:100px;
+				height:auto;
+				max-height:150px;
+			}
+		}
+	}
+}
+
+
+
+
 //fix for add one button not positioning properly
 
 .ss-ui-button.cms-page-add-button {

@@ -30,7 +30,8 @@ div.TreeDropdownField {
 		border: 1px solid #aaa;
 		border-top: none;
 		margin: 1px 0 0 -1px; /* account for border on container div */
-		height: 200px;
+		//height: 200px;
+		max-height:200px;
 		background-color: #fff;
 		z-index: 50;
 		-webkit-box-shadow: 0 4px 5px rgba(0,0,0,.15);
