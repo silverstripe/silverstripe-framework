@@ -1742,22 +1742,13 @@ class i18n extends Object implements TemplateGlobalProvider {
 	
 	/**
 	 * Returns the "short" language name from a locale,
-	 * e.g. "en_US" would return "en". This conversion
-	 * is determined internally by the {@link $tinymce_lang}
-	 * lookup table. If no match can be found in this lookup,
-	 * the characters before the underscore ("_") are returned.
-	 * 
-	 * @todo More generic lookup table, don't rely on tinymce specific conversion
+	 * e.g. "en_US" would return "en". 
 	 * 
 	 * @param string $locale E.g. "en_US"
 	 * @return string Short language code, e.g. "en"
 	 */
 	static function get_lang_from_locale($locale) {
-		if(isset(self::$tinymce_lang[$locale])) {
-			return self::$tinymce_lang[$locale];
-		} else {
-			return preg_replace('/(_|-).*/', '', $locale);
-		}
+		return preg_replace('/(_|-).*/', '', $locale);
 	}
 	
 	/**
