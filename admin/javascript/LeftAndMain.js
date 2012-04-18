@@ -638,7 +638,11 @@ jQuery.noConflict();
 				ajaxOptions: {
 					// Overwrite ajax loading to use CMS logic instead
 					beforeSend: function(xhr, settings) {
-						$('.cms-container').entwine('ss').loadPanel(settings.url);
+						var makeAbs = $.path.makeUrlAbsolute,
+							baseUrl = $('base').attr('href'),
+							isSame = (makeAbs(settings.url, baseUrl) == makeAbs(document.location.href));
+							
+						if(!isSame) $('.cms-container').entwine('ss').loadPanel(settings.url);
 						return false;
 					}
 				},
