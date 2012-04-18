@@ -58,7 +58,7 @@ _t(
 
 _t(
 'Test.CONCATENATED2',
-"Line "4" and " .
+"Line \"4\" and " . 
 "Line 5");
 PHP;
 		$this->assertEquals(
@@ -87,7 +87,7 @@ SS;
 		$this->assertEquals(
 			$c->collectFromTemplate($html, 'mymodule', 'Test'),
 			array(
-				'Test.SINGLEQUOTE' => array('Single Quote',null,null),
+				'Test.SINGLEQUOTE' => array('Single Quote'),
 				'i18nTestModule.NEWMETHODSIG' => array("New _t method signature test",null,null),
 				'i18nTestModule.INJECTIONS_0' => array("Hello {name} {greeting}. But it is late, {goodbye}", null, null),
 				'i18nTestModule.INJECTIONS_1' => array("Hello {name} {greeting}. But it is late, {goodbye}", null, null),
@@ -328,11 +328,10 @@ PHP;
 		$collectedTranslatables = $c->collectFromCode($php, 'mymodule');
 
 		$expectedArray = (array(
-			'i18nTestModule.NEWMETHODSIG' => array("New _t method signature test", null, null),
-			'i18nTestModule.INJECTIONS1' => array("_DOES_NOT_EXIST", 40, "Hello {name} {greeting}. But it is late, {goodbye}"),
-			'i18nTestModule.INJECTIONS2' => array("Hello {name} {greeting}. But it is late, {goodbye}", null, null),
-			'i18nTestModule.INJECTIONS3' => array("Hello {name} {greeting}. But it is late, {goodbye}", 40, "New context (this should be ignored)"),
-			'i18nTestModule.INJECTIONS4' => array(null, null, null),
+			'i18nTestModule.NEWMETHODSIG' => array("New _t method signature test"),
+			'i18nTestModule.INJECTIONS1' => array("_DOES_NOT_EXIST", "Hello {name} {greeting}. But it is late, {goodbye}"),
+			'i18nTestModule.INJECTIONS2' => array("Hello {name} {greeting}. But it is late, {goodbye}"),
+			'i18nTestModule.INJECTIONS3' => array("Hello {name} {greeting}. But it is late, {goodbye}", "New context (this should be ignored)"),
 		));
 
 		ksort($expectedArray);

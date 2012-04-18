@@ -193,135 +193,79 @@ class i18nTextCollector extends Object {
 
 		return $entities;
 	}
-	
+
 	public function collectFromCode($content, $module) {
-		$entitiesArr = array();
+		$entities = array();
 
-		$newRegexRule = '/_t\s*\(\s*(.+?)\s*\)\s*;\s*/is';
+		$tokens = token_get_all("<?php\n" . $content);
+		$inTransFn = false;
+		$inConcat = false;
+		$finalTokenDueToArray = false;
+		$currentEntity = array();
+		foreach($tokens as $token) {
+			if(is_array($token)) {
+				list($id, $text) = $token;
 
-		$matchesArray = array();    //array for the matches to go into
-		if (preg_match_all($newRegexRule, $content, $matchesArray) > 0) {   //we have at least one match
+				if($inTransFn && $id == T_ARRAY) {
+					//raw 'array' token found in _t function, stop processing the tokens for this _t now
+					$finalTokenDueToArray = true;
+				}
 
-			//take all the matched _t entities
-			foreach($matchesArray[1] as $match) {
-				//replace all commas with backticks (unique character to explode on later)
-				$replacedMatch = preg_replace('/("|\'|_LOW|_MEDIUM|_HIGH)\s*,\s*([\'"]|"|\'|array|PR)/','$1`$2',$match);  //keep array text
-
-				//$replacedMatch = trim($replacedMatch," \"'\n");  //remove starting and ending quotes
-				$replacedMatch = trim($replacedMatch," \n");  //remove starting and ending spaces and newlines
-
-				$parts = explode('`',$replacedMatch);   //cut up the _t call
-
-				$partsWOQuotes = array();
-				foreach($parts as $part) {
-					$part = trim($part,"\n");  //remove spaces and newlines from part
-
-					$firstChar = substr($part,0,1);
-					if ($firstChar == "'" || $firstChar == '"') {
-						//remove wrapping quotes
-						$part = substr($part,1,-1);
-
-						//remove inner concatenation
-						$part = preg_replace("/$firstChar\\s*\\.\\s*$firstChar/",'',$part);
+				if($id == T_STRING && $text == '_t') {
+					// start definition
+					$inTransFn = true;
+				} elseif($inTransFn && $id == T_VARIABLE) {
+					// Dynamic definition from provideEntities - skip
+					$inTransFn = false;
+					$inConcat = false;
+					$currentEntity = array();
+				} elseif($inTransFn && $id == T_CONSTANT_ENCAPSED_STRING) {
+					// Fixed quoting escapes, and remove leading/trailing quotes
+					if(preg_match('/^\'/', $text)) {
+						$text = str_replace("\'", "'", $text);
+						$text = preg_replace('/^\'/', '', $text);
+						$text = preg_replace('/\'$/', '', $text);
+					} else {
+						$text = str_replace('\"', '"', $text);
+						$text = preg_replace('/^"/', '', $text);
+						$text = preg_replace('/"$/', '', $text);
 					}
 
-					$partsWOQuotes[] = $part;  //remove starting and ending quotes from inner parts
+					if($inConcat) {
+						$currentEntity[count($currentEntity)-1] .= $text;
+					} else {
+						$currentEntity[] = $text;
+					}
 				}
-
-				if ($parts && count($partsWOQuotes) > 0) {
-
-					$entitiesArr = array_merge($entitiesArr, (array)$this->entitySpecFromNewParts($partsWOQuotes));
-				}
+			} elseif($inTransFn && $token == '.') {
+				$inConcat = true;
+			} elseif($inTransFn && $token == ',') {
+				$inConcat = false;
+			} elseif($inTransFn && ($token == ')' || $finalTokenDueToArray)) {
+				// finalize definition
+				$inTransFn = false;
+				$inConcat = false;
+				$entity = array_shift($currentEntity);
+				$entities[$entity] = $currentEntity;
+				$currentEntity = array();
+				$finalTokenDueToArray = false;
 			}
 		}
 
-		ksort($entitiesArr);
-
-		return $entitiesArr;
-	}
-
-
-	/**
-	 * Test if one string starts with another
-	 */
-	protected function startsWith($haystack, $needle) {
-        $length = strlen($needle);
-        return (substr($haystack, 0, $length) === $needle);
-	}
-
-	/**
-	 * Converts a parts array from explode function into an array of entities for the i18n text collector
-	 * @return array
-	 */
-	protected function entitySpecFromNewParts($parts, $namespace = null) {
-		// first thing in the parts array will always be the entity
-		// split fullname into entity parts
-		//set defaults
-		$value = "";
-		$prio = null;
-		$comment = null;
-
-		$entityParts = explode('.', $parts[0]);
-		if(count($entityParts) > 1) {
-			// templates don't have a custom namespace
-			$entity = array_pop($entityParts);
-			// namespace might contain dots, so we explode
-			$namespace = implode('.',$entityParts);
-		} else {
-			$entity = array_pop($entityParts);
-			$namespace = $namespace;
-		}
-
-		//find the array (if found, then we are dealing with the new _t syntax
-		$newSyntax = false;
-		$offset = 0;
-		foreach($parts as $p) {
-			if ($this->startsWith($p,'array')) {    //remove everything after (and including) the array
-				$newSyntax = true;
-				$parts = array_splice($parts,0,$offset);
-				break;
+		foreach($entities as $entity => $spec) {
+			// call without master language definition
+			if(!$spec) {
+				unset($entities[$entity]);
+				continue;
 			}
-			$offset++;
+
+			unset($entities[$entity]);
+			$entities[$this->normalizeEntity($entity, $module)] = $spec;
 		}
+		ksort($entities);
 
-		//2nd part of array is always "string"
-		if (isset($parts[1])) $value = $parts[1];
-
-
-		//3rd part can either be priority or context, if old or now syntax is used
-		if (isset($parts[2])) {
-			if ($newSyntax) {
-				$prio = 40; //default priority
-				$comment = $parts[2];
-			} else {
-				if (stripos($parts[2], 'PR_LOW') !== false ||
-				    stripos($parts[2], 'PR_MEDIUM') !== false ||
-				    stripos($parts[2], 'PR_HIGH') !== false) {  //definitely old syntax
-					$prio = $parts[2];
-				} else {    //default to new syntax (3rd position is comment/context
-					$prio = 40; //default priority
-					$comment = $parts[2];
-				}
-			}
-		}
-
-		//if 4th position is set then this is old syntax and it is the context
-		//it would be array in the new syntax and therefore should have already been spliced off
-		if (isset($parts[3])) {
-			$comment = $parts[3];
-			$prio = $parts[2];  //3rd position is now definitely priority
-		}
-
-		return array(
-			"{$namespace}.{$entity}" => array(
-				$value,
-				$prio,
-				$comment
-			)
-		);
+		return $entities;
 	}
-
-
 
 	public function collectFromTemplate($content, $fileName, $module) {
 		$entities = array();
