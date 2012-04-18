@@ -1627,6 +1627,13 @@ form.import-form {
 	 		background:darken($color-widget-bg, 2%);
 	 		clear:both;
 	 		border-top:1px solid $color-button-generic-border;
+	 		.ss-tabset {
+	 			border-top:none;
+	 			.ui-tabs-nav {
+	 				margin-top:0px;
+	 				margin-right:8px;
+	 			}
+	 		}
 	 	}
 	}
 	//Styling of tabs on page settings
