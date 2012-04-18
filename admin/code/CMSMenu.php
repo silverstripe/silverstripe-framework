@@ -59,9 +59,9 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 	 * Return a CMSMenuItem to add the given controller to the CMSMenu
 	 */
 	protected static function menuitem_for_controller($controllerClass) {
-		$urlBase      = Object::get_static($controllerClass, 'url_base');
-		$urlSegment   = Object::get_static($controllerClass, 'url_segment');
-		$menuPriority = Object::get_static($controllerClass, 'menu_priority');
+		$urlBase      = Config::inst()->get($controllerClass, 'url_base', Config::FIRST_SET);
+		$urlSegment   = Config::inst()->get($controllerClass, 'url_segment', Config::FIRST_SET);
+		$menuPriority = Config::inst()->get($controllerClass, 'menu_priority', Config::FIRST_SET);
 		
 		// Don't add menu items defined the old way
 		if($urlSegment === null && $controllerClass != "CMSMain") return;
@@ -81,12 +81,12 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 	 * Add the appropriate Director rules for the given controller.
 	 */
 	protected static function add_director_rule_for_controller($controllerClass) {
-		$urlBase      = Object::get_static($controllerClass, 'url_base');
-		$urlSegment   = Object::get_static($controllerClass, 'url_segment');
-		$urlRule      = Object::get_static($controllerClass, 'url_rule');
-		$urlPriority  = Object::get_static($controllerClass, 'url_priority');
-		
-		if($urlSegment || $controllerClass == "CMSMain") {
+		$urlBase      = Config::inst()->get($controllerClass, 'url_base', Config::FIRST_SET);
+		$urlSegment   = Config::inst()->get($controllerClass, 'url_segment', Config::FIRST_SET);
+		$urlRule      = Config::inst()->get($controllerClass, 'url_rule', Config::FIRST_SET);
+		$urlPriority  = Config::inst()->get($controllerClass, 'url_priority', Config::FIRST_SET);
+
+		if($urlSegment || $controllerClass == 'CMSMain') {
 			$link = Controller::join_links($urlBase, $urlSegment) . '/';
 		
 			// Make director rule

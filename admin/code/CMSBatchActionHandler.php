@@ -130,7 +130,7 @@ class CMSBatchActionHandler extends RequestHandler {
 
 	function handleApplicablePages($request) {
 		// Find the action handler
-		$actions = Object::get_static($this->class, 'batch_actions');
+		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET);
 		$actionClass = $actions[$request->param('BatchAction')];
 		$actionHandler = new $actionClass['class']();
 
@@ -152,7 +152,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	
 	function handleConfirmation($request) {
 		// Find the action handler
-		$actions = Object::get_static($this->class, 'batch_actions');
+		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET);
 		$actionClass = $actions[$request->param('BatchAction')];
 		$actionHandler = new $actionClass();
 
@@ -203,7 +203,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	 * @return array See {@link register()} for the returned format.
 	 */
 	function batchActions() {
-		$actions = Object::get_static($this->class, 'batch_actions');
+		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET)
 		if($actions) foreach($actions as $action) {
 			if($action['recordClass'] != $this->recordClass) unset($action);
 		}
