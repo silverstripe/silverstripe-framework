@@ -711,7 +711,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$this->setCurrentPageID($record->ID);
 		
 		$this->response->addHeader('X-Status', _t('LeftAndMain.SAVEDUP'));
-		return $this->getResponseNegotiator()->respond($request);
+		return $this->getResponseNegotiator()->respond($this->request);
 	}
 	
 	public function delete($data, $form) {
@@ -725,7 +725,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		$this->response->addHeader('X-Status', _t('LeftAndMain.SAVEDUP'));
 		return $this->getResponseNegotiator()->respond(
-			$request, 
+			$this->request, 
 			array('currentform' => array($this, 'EmptyForm'))
 		);
 	}
