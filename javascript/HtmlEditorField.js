@@ -13,8 +13,15 @@
  * Caution: Incomplete and unstable API.
  */
  ss.editorWrappers = {};
+ ss.editorWrappers.initial
  ss.editorWrappers.tinyMCE = (function() {
 	return {
+		init: function(config) {
+			if(!ss.editorWrappers.tinyMCE.initialized) {
+				tinyMCE.init(config);
+				ss.editorWrappers.tinyMCE.initialized = true;
+			}
+		},
 		/**
 		 * @return Mixed Implementation specific object
 		 */
@@ -196,7 +203,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			 * Constructor: onmatch
 			 */
 			onmatch : function() {
-				var self = this, ed = ss.editorWrappers['default']();
+				var self = this, edClass = this.data('editor') || ss.editorWrappers['default'], ed = edClass();
 				this.setEditor(ed);
 				this.closest('form').bind('beforesave', function() {
 					// TinyMCE modifies input, so change tracking might get false
@@ -228,7 +235,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				// Using a global config (generated through HTMLEditorConfig PHP logic)
 				var config = ssTinyMceConfig, self = this, ed = this.getEditor();
 
-				tinyMCE.init(config);
+				ed.init(config);
 
 				// Avoid flicker (also set in CSS to apply as early as possible)
 				self.css('visibility', '');
