@@ -243,7 +243,7 @@ class ViewableData extends Object implements IteratorAggregate {
 			return $fieldSpec;
 		}
 
-		$specs = Object::combined_static(get_class($this), 'casting');
+		$specs = Config::inst()->get(get_class($this), 'casting');
 		if(isset($specs[$field])) return $specs[$field];
 
 		if($this->failover) return $this->failover->castingHelper($field);

@@ -2229,9 +2229,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 							}
 					}
 
-					$this->set_uninherited('permissionCache', $permissionCache);
+					Config::inst()->update($this->class, 'permissionCache', $permissionCache);
 				}
-
 
 				if($permissionCache[$memberID][$perm]) {
 					return in_array($this->ID, $permissionCache[$memberID][$perm]);
