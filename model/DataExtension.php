@@ -1,6 +1,6 @@
 <?php
 /**
- * An extension that adds additional functionality to a {@link DataObject}.
+  An extension that adds additional functionality to a {@link DataObject}.
  *
  * @package framework
  * @subpackage model
@@ -18,19 +18,18 @@ abstract class DataExtension extends Extension {
 	 * @var array
 	 */
 	protected static $extendable_statics = array(
-		'db' => true, 
+		'db' => true,
 		'has_one' => true,
 		'belongs_to' => true,
-		'indexes' => true, 
-		'defaults' => true, 
-		'has_many' => true, 
-		'many_many' => true, 
-		'belongs_many_many' => true, 
+		'indexes' => true,
+		'defaults' => true,
+		'has_many' => true,
+		'many_many' => true,
+		'belongs_many_many' => true,
 		'many_many_extraFields' => true,
 		'searchable_fields' => true,
 		'api_access' => false,
 	);
-
 
 	static function add_to_class($class, $extensionClass, $args = null) {
 		if(method_exists($class, 'extraDBFields')) {
@@ -185,12 +184,12 @@ abstract class DataExtension extends Extension {
 	 * by the extension
 	 * By default, the summaryField() of its owner will merge more fields defined in the extension's
 	 * $extra_fields['summary_fields']
+	 *
+	 * @param array $fields Array of field names
 	 */
-	function updateSummaryFields(&$fields){
-		$extra_fields = $this->extraStatics();
-		if(isset($extra_fields['summary_fields'])){
-			$summary_fields = $extra_fields['summary_fields'];
-			
+	function updateSummaryFields(&$fields) {
+		$summary_fields = Config::inst()->get($this->class, 'summary_fields');
+		if($summary_fields) {
 			// if summary_fields were passed in numeric array,
 			// convert to an associative array
 			if($summary_fields && array_key_exists(0, $summary_fields)) {
@@ -199,25 +198,20 @@ abstract class DataExtension extends Extension {
 			if($summary_fields) $fields = array_merge($fields, $summary_fields);
 		}
 	}
-	
+
 	/**
 	 * this function is used to provide modifications to the fields labels in CMS
 	 * by the extension
 	 * By default, the fieldLabels() of its owner will merge more fields defined in the extension's
 	 * $extra_fields['field_labels']
+	 *
+	 * @param array $labels Array of field labels
 	 */
-	function updateFieldLabels(&$lables){
-		$extra_fields = $this->extraStatics();
-		if(isset($extra_fields['field_labels'])){
-			$field_labels = $extra_fields['field_labels'];
-			if($field_labels) $lables = array_merge($lables, $field_labels);
+	function updateFieldLabels(&$labels) {
+		$field_labels = Config::inst()->get($this->class, 'field_labels');
+		if($field_labels) {
+			$labels = array_merge($labels, $field_labels);
 		}
-	}
-	
-	/**
-	 * Clear any internal caches.
-	 */
-	function flushCache() {
 	}
 
 }
