@@ -1,10 +1,17 @@
 sr:
   AssetAdmin:
-    CHOOSEFILE: "Изаберите датотеку"
     MENUTITLE: "Fajlovi & Slike"
     NEWFOLDER: "Нова фасцикла"
-  AssetAdmin_left.ss:
-    GO: "Иди"
+  AssetTableField:
+    CREATED: "Прво достављено"
+    DIM: "Димензије"
+    FILENAME: "Име датотеке"
+    LASTEDIT: "Последње промењено"
+    OWNER: "Власник"
+    SIZE: "Величина"
+    TITLE: "Наслов"
+    TYPE: "Тип"
+    URL: "URL"
   BBCodeParser:
     ALIGNEMENT: "Поравнање"
     ALIGNEMENTEXAMPLE: "поравнат уз десну страну"
@@ -39,7 +46,6 @@ sr:
     HELLO: "Здраво"
   ComplexTableField.ss:
     ADDITEM: "Додај "
-    NOITEMSFOUND: "Нема пронађених ставки"
     SORTASC: "Сортирај у растућем поретку"
     SORTDESC: "Сортирају у опадајућем поретку"
   ComplexTableField_popup.ss:
@@ -47,21 +53,15 @@ sr:
     PREVIOUS: "Претходно"
   ConfirmedPasswordField:
     ATLEAST: "Лозинка мора да има најмање %s знакова."
-    HAVETOMATCH: "Лозинке морају да се поклапају."
-    LEASTONE: "Лозинке морају да имају најмање једну цифру и један алфанумерички знак."
     MAXIMUM: "Лозинка може да има највише %s знакова."
-    NOEMPTY: "Лозинке не могу да буду празне."
     SHOWONCLICKTITLE: "Promeni Lozinku"
   CreditCardField:
     FIRST: "први"
     FOURTH: "четврти"
     SECOND: "други"
     THIRD: "трећи"
-    VALIDATIONJS1: "Проверите да ли сте унели"
-    VALIDATIONJS2: "исправан број кредитне картице."
   CurrencyField:
     CURRENCYSYMBOL: "дин."
-    VALIDATIONJS: "Унесите исправну валуту."
   Date:
     DAY: "дан"
     DAYS: "дана"
@@ -77,28 +77,14 @@ sr:
     YEARS: "година"
   DateField:
     TODAY: "данас"
-    VALIDATIONJS: "Унесите исправан формат датума (ДД/ММ/ГГГГ)."
   DropdownField:
     CHOOSE: "(изаберите)"
   EmailField:
     VALIDATION: "Унесите адресу е-поште."
-    VALIDATIONJS: "Унесите имејл адресу."
   File:
     PLURALNAME: "Fajlovi"
     SINGULARNAME: "Fajl"
     TOOLARGE: "Velicina fajl-a je prevelika, maksimum dozvoljena velicina je %s"
-  Folder:
-    DELSELECTED: "Обриши изабране датотеке"
-    DETAILSTAB: "Детаљи"
-    FILENAME: "Име датотеке"
-    FILESTAB: "Датотеке"
-    LASTEDITED: "З"
-    PLURALNAME: "Fajlovi"
-    SINGULARNAME: "Fajl"
-    TITLE: "Наслов"
-    TYPE: "Тип"
-    UPLOADTAB: "Достави"
-    URL: "URL"
   ForgotPasswordEmail.ss:
     HELLO: "Здраво"
   Form:
@@ -115,13 +101,9 @@ sr:
   Group:
     Code: "Grupni Kod"
     Locked: "Zakljucano?"
-    PLURALNAME: "Grupe"
-    SINGULARNAME: "Grupa"
     has_many_Permissions: "Ovlašcenja"
     many_many_Members: "članovi"
   HtmlEditorField:
-    BUTTONINSERTFLASH: "Уметни флеш датотеку"
-    BUTTONINSERTIMAGE: "Уметни слику"
     BUTTONINSERTLINK: "Уметни линк"
     BUTTONREMOVELINK: "Уклони линк"
     CSSCLASS: "Поравнање / стил"
@@ -130,7 +112,6 @@ sr:
     CSSCLASSRIGHT: "Са десне стране, са текстом преломљеним около."
     EMAIL: "Адреса е-поште"
     FILE: "Датотека"
-    FLASH: "Флеш"
     FOLDER: "Фасцикла"
     IMAGE: "Слика"
     IMAGEDIMENSIONS: "Димензије"
@@ -146,9 +127,6 @@ sr:
     LINKTO: "Повежи на"
     PAGE: "Страна"
     URL: "URL"
-  Image:
-    PLURALNAME: "Fajlovi"
-    SINGULARNAME: "Fajl"
   Image_iframe.ss:
     TITLE: "Iframe за достављање слика"
   LeftAndMain:
@@ -160,8 +138,6 @@ sr:
     PLEASESAVE: "Сачувајте страну: ова страна не може да буде ажурирана јер још увек није сачувана."
     SAVED: "сачувано"
   LoginAttempt:
-    PLURALNAME: "Login Pokušaja"
-    SINGULARNAME: "Login Pokušaj"
   Member:
     ADDRESS: "Адреса"
     BUTTONCHANGEPASSWORD: "Промени лозинку"
@@ -201,22 +177,12 @@ sr:
     db_PasswordExpiry: "Datum Isteka Lozinke"
   MemberAuthenticator:
     TITLE: "Пошаљи лозинку"
-  MemberPassword:
-    PLURALNAME: "Lozinke člana"
-    SINGULARNAME: "Lozinka člana"
-  MemberTableField:
-    ADD: "Додај"
-    ADDEDTOGROUP: "Члан додат групи"
-    ADDINGFIELD: "Додавање није успело"
-    FILTER: "Филтер"
-    SEARCH: "Претрага"
   NumericField:
     VALIDATION: "'%s' није број. У ово поље могу да буду унесени само бројеви."
   PhoneNumberField:
     VALIDATION: "Унесите исправан број телефона"
   RelationComplexTableField.ss:
     ADD: "Додај"
-    NOTFOUND: "Нема пронађених ставки"
   ReportAdmin:
     MENUTITLE: "Izvestaji"
   Security:
@@ -226,19 +192,15 @@ sr:
     CHANGEPASSWORDHEADER: "Промени моју лозинку"
     ENTERNEWPASSWORD: "Унесите нову лозинку."
     ERRORPASSWORDPERMISSION: "Морате да будете пријављени да бисте променили своју лозинку!"
-    IPADDRESSES: "IP адресе"
     LOGGEDOUT: "Одјављени сте. Уколико желите да се поново пријавите, унесите своје податке."
     LOGIN: "Пријављивање"
-    LOSTPASSWORDHEADER: "Изгубљена лозинка"
     NOTEPAGESECURED: "Ова страна је обезбеђена. Унесите своје податке и ми ћемо вам послати садржај."
     NOTERESETPASSWORD: "Унесите своју адресу е-поште и ми ћемо вам послати линк помоћу којег можете да промените своју лозинку"
     PASSWORDSENTHEADER: "Линк за ресетовање лозинке послат на '%s'"
     PASSWORDSENTTEXT: "Хвала вам! Линк за промену лозинке је послат на '%s'."
   SecurityAdmin:
-    ADDMEMBER: "Додај члана"
     MENUTITLE: "Zastita"
     NEWGROUP: "Нова група"
-    SGROUPS: "Безбедносне групе"
   SimpleImageField:
     NOUPLOAD: "Ниједна слика није достављена"
   SiteTree:
@@ -251,9 +213,6 @@ sr:
     CSVEXPORT: "Извези у CSV"
     PRINT: "Штампај"
   TableListField_PageControls.ss:
-    DISPLAYING: "Приказујем"
-    OF: "од"
-    TO: "до"
     VIEWNEXT: "Погледај следеће"
     VIEWPREVIOUS: "Погледај претходно"
   ToggleCompositeField.ss:

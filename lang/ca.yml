@@ -1,10 +1,17 @@
 ca:
   AssetAdmin:
-    CHOOSEFILE: "Trieu un fitxer"
     MENUTITLE: "Fitxers i imatges"
     NEWFOLDER: "NovaCarpeta"
-  AssetAdmin_left.ss:
-    GO: "Vés"
+  AssetTableField:
+    CREATED: "Carregat per primer cop"
+    DIM: "Dimensions"
+    FILENAME: "Nom del fitxer"
+    LASTEDIT: "Darrer canvi"
+    OWNER: "Propietari"
+    SIZE: "Mida"
+    TITLE: "Títol"
+    TYPE: "Tipus"
+    URL: "URL"
   BBCodeParser:
     ALIGNEMENT: "Alineació"
     ALIGNEMENTEXAMPLE: "alineat a la dreta"
@@ -35,6 +42,7 @@ ca:
     ERRORNOTADMIN: "Aquest usuari no és un administrador."
     ERRORNOTREC: "Aquest nom d'usuari / contrasenya no es reconeix"
   CMSMain:
+    ACCESS: "Accés a %s al SGC"
     MENUTITLE: "Contingut del web"
     SAVE: "Desa"
   ChangePasswordEmail.ss:
@@ -49,7 +57,6 @@ ca:
     SUCCESSEDIT: "S'ha desat %s %s %s"
   ComplexTableField.ss:
     ADDITEM: "Afegir %s"
-    NOITEMSFOUND: "No s'han trobat elements"
     SORTASC: "Ordena ascendentment"
     SORTDESC: "Ordena descendentment"
   ComplexTableField_popup.ss:
@@ -58,21 +65,15 @@ ca:
   ConfirmedPasswordField:
     ATLEAST: "Les contrasenyes han de ser almenys de %s caràcters."
     BETWEEN: "Les contrasenyes han de ser de entre %s i %s caràcters."
-    HAVETOMATCH: "Les contrasenyes han de coincidir."
-    LEASTONE: "Les contrasenyes han de tenir almenys un dígit i un caràcter alfanumèric."
     MAXIMUM: "Les contrasenyes han de ser com a molt de %s caràcters."
-    NOEMPTY: "Les contrasenyes no poden estar buides."
     SHOWONCLICKTITLE: "Canvia la contrasenya"
   CreditCardField:
     FIRST: "primer"
     FOURTH: "quart"
     SECOND: "segon"
     THIRD: "tercer"
-    VALIDATIONJS1: "Si us plau, assegureu-vos d'haver introduït el"
-    VALIDATIONJS2: "nombre de targeta de crèdit correctament."
   CurrencyField:
     CURRENCYSYMBOL: "€E"
-    VALIDATIONJS: "Si us plau, introduïu una moneda vàlida."
   DataObject:
     PLURALNAME: "Objectes de dades"
     SINGULARNAME: "Objecte de dades"
@@ -93,12 +94,10 @@ ca:
   DateField:
     NOTSET: "no definit"
     TODAY: "avui"
-    VALIDATIONJS: "Si us plau, introduïu un format de data vàlid (DD/MM/YYYY)."
   DropdownField:
     CHOOSE: "(Trieu)"
   EmailField:
     VALIDATION: "Si us plau, introduïu una adreça de correu electrònic."
-    VALIDATIONJS: "Si us plau, introduïu una adreça de correu vàlida."
   File:
     Content: "Contingut"
     Filename: "Nom del fitxer"
@@ -107,23 +106,8 @@ ca:
     Name: "Nom"
     PLURALNAME: "Fitxers"
     SINGULARNAME: "Fitxer"
-    Sort: "Ordre"
     TOOLARGE: "La mida del fitxer és massa llarga, com a màxim està permès de %s."
     Title: "Títol"
-  Folder:
-    CREATED: "Primera càrrega"
-    DELSELECTED: "Suprimeix els fitxers seleccionats"
-    DETAILSTAB: "Detalls"
-    FILENAME: "Nom del fitxer"
-    FILESTAB: "Fitxers"
-    LASTEDITED: "Darrera actualització"
-    PLURALNAME: "Fitxers"
-    SINGULARNAME: "Fitxer"
-    TITLE: "Títol"
-    TYPE: "Tipus"
-    UPLOADTAB: "Càrrega"
-    URL: "URL"
-    VIEWEDITASSET: "Veure/editar recurs"
   ForgotPasswordEmail.ss:
     HELLO: "Hola"
     TEXT1: "Aquí teniu el vostre"
@@ -144,18 +128,13 @@ ca:
   Group:
     Code: "Codi de grup"
     Description: "Descripció"
-    IPRestrictions: "Restriccions d'adreces IP"
     Locked: "Bloquejat?"
-    PLURALNAME: "Grups"
     Parent: "Grup precedent"
-    SINGULARNAME: "Grup"
     Sort: "Ordre"
     has_many_Permissions: "Permisos"
     many_many_Members: "Membres"
   HtmlEditorField:
     ANCHORVALUE: "Ancla"
-    BUTTONINSERTFLASH: "Insereix flash"
-    BUTTONINSERTIMAGE: "Insereix una imatge"
     BUTTONINSERTLINK: "Insereix un enllaç"
     BUTTONREMOVELINK: "Suprimeix un enllaç"
     CSSCLASS: "Alineació / estil"
@@ -165,7 +144,6 @@ ca:
     CSSCLASSRIGHT: "A la dreta, amb text envoltant."
     EMAIL: "Adreça de correu electrònic"
     FILE: "Fitxer"
-    FLASH: "Flash"
     FOLDER: "Carpeta"
     IMAGE: "Imatge"
     IMAGEDIMENSIONS: "Dimensions"
@@ -179,14 +157,9 @@ ca:
     LINKFILE: "Descàrrega d'un fitxer"
     LINKINTERNAL: "Pàgina del lloc web"
     LINKOPENNEWWIN: "Obrir l'enllaç a una nova finestra?"
-    LINKTEXT: "Text de l'enllaç"
     LINKTO: "Enllaça a"
     PAGE: "Pàgina"
-    SEARCHFILENAME: "Cerca per nom de fitxer"
     URL: "URL"
-  Image:
-    PLURALNAME: "Fitxers"
-    SINGULARNAME: "Fitxer"
   Image_iframe.ss:
     TITLE: "Iframe Carregador d'imatge"
   LeftAndMain:
@@ -200,8 +173,6 @@ ca:
   LoginAttempt:
     Email: "Adreça de correu"
     IP: "Adreça IP"
-    PLURALNAME: "Intents d'entrada"
-    SINGULARNAME: "Intent d'entrada"
     Status: "Estat"
   Member:
     ADDRESS: "Adreça"
@@ -249,56 +220,22 @@ ca:
     db_PasswordExpiry: "Data d'expiració de la contrasenya"
   MemberAuthenticator:
     TITLE: "Correu electrònic i contrasenya"
-  MemberPassword:
-    PLURALNAME: "Contrasenyes de membre"
-    SINGULARNAME: "Contrasenya de membre"
-  MemberTableField:
-    ADD: "Afegeix"
-    ADDEDTOGROUP: "S'ha afegit el membre al grup"
-    ADDINGFIELD: "No s'ha pogut afegir"
-    FILTER: "Filtra"
-    SEARCH: "Cerca"
   ModelAdmin:
-    ADDBUTTON: "Afegeix"
-    ADDFORM: "Ompliu aquest formulari per a afegir un %s a la base de dades."
-    CHOOSE_COLUMNS: "Selecciona les columnes de resultats.."
-    CLEAR_SEARCH: "Neteja la cerca"
-    CREATEBUTTON: "Crea un/a '%s'"
     DELETE: "Suprimeix"
     DELETEDRECORDS: "S'ha suprimit %s registres."
-    FOUNDRESULTS: "La vostra cerca ha trobat %s elements concordants"
     IMPORT: "Importa de CSV"
     IMPORTEDRECORDS: "S'han importat %s registres."
-    ITEMNOTFOUND: "No es pot trobar aquest element"
-    LOADEDFOREDITING: "S'ha carregat '%s' per a editar."
     NOCSVFILE: "Si us plau, cerqueu el fitxer CSV per a importar"
     NOIMPORT: "No hi ha res a importar"
-    NORESULTS: "La vostra cerca no ha retornat cap element concordant"
-    SAVE: "Desa"
-    SEARCHRESULTS: "Resultats de la cerca"
-    SELECTALL: "selecciona-ho tot"
-    SELECTNONE: "no seleccionis res"
     UPDATEDRECORDS: "S'han actualitzat %s registres."
-  MyEntity:
-    MyNamespace: "El valor del meu idioma natural per defecte"
-  MyNamespace:
-    MYENTITY: "S'estan contant %s coses"
   NumericField:
     VALIDATION: "'%s' no és un nombre, només es poden acceptar nombres en aquest camp"
-    VALIDATIONJS: "no és un número, només s'accepten números per aquest camp"
-  Page:
-    PLURALNAME: "Pàgines"
-    SINGULARNAME: "Pàgina"
   Permission:
     FULLADMINRIGHTS: "Drets administratius totals"
-    PLURALNAME: "Permisos"
-    SINGULARNAME: "Permís"
   PhoneNumberField:
     VALIDATION: "Si us plau, introduïu un número de telèfon vàlid"
   RelationComplexTableField.ss:
     ADD: "Afegeix"
-    CSVEXPORT: "Exporta a CSV"
-    NOTFOUND: "No s'han trobat elements"
   ReportAdmin:
     MENUTITLE: "Informes"
   Security:
@@ -308,30 +245,20 @@ ca:
     CHANGEPASSWORDHEADER: "Canviar la vostra contrasenya"
     ENTERNEWPASSWORD: "Si us plau, introduïu una nova contrasenya."
     ERRORPASSWORDPERMISSION: "Heu d'estar connectat per a canviar la vostra contrasenya!"
-    IPADDRESSES: "Adreces IP"
     LOGGEDOUT: "Heu estat desconnectat. Si voleu entrar de nou, introduïu les vostres credencials a sota."
     LOGIN: "Entrar"
-    LOSTPASSWORDHEADER: "Contrasenya perduda"
     NOTEPAGESECURED: "Aquesta pàgina està protegida. Introduïu les vostres credencials a sota i us hi enviarem."
     NOTERESETLINKINVALID: "<p>L'enllaç de reinici de contrasenya és invàlid o està expirat.</p><p>Podeu demanar-ne un de nou <a href=\"%s\">aquí</a> o canviar la vostra contrasenya després <a href=\"%s\">d'entrar</a>.</p>"
     NOTERESETPASSWORD: "Introduïu la vostra adreça de correu electrònic i us enviarem un enllaç amb el qual reiniciar la vostra contrasenya"
     PASSWORDSENTHEADER: "L'enllaç per reiniciar la contrasenya s'ha enviat a '%s'"
     PASSWORDSENTTEXT: "Gràcies! L'enllaç per reiniciar la contrasenya s'ha enviat a '%s'"
   SecurityAdmin:
-    ADDMEMBER: "Afegeix un membre"
     EDITPERMISSIONS: "Edita els permisos i les adreces IP de cada grup"
     GROUPNAME: "Nom de grup"
-    IPADDRESSESHELP: |
-                      <p>Podeu restringir aquest grup a un rang particular d'adreces IP (un rang per línia)<br />Els rangs poden ser qualsevol de les següents formes: <br />
-                      203.96.152.12<br />
-                      203.96.152/24<br />
-                      203.96/16<br />
-                      203/8<br /><br />Si introduïu una o més adreces IP en aquesta caixa, llavors els membres només tindran els drets del grup si entren des d'una de les adreces IP vàlides. No previndrà a la gent de connectar-se. Això és perquè el mateix usuari pot haver d'entrar a parts del sistema sense restriccions d'IP.    MEMBERS: "Membres"
+    MEMBERS: "Membres"
     MENUTITLE: "Seguretat"
     NEWGROUP: "Nou grup"
     PERMISSIONS: "Permisos"
-    SGROUPS: "Grups de seguretat"
-    VIEWUSER: "Veure usuari"
   SimpleImageField:
     NOUPLOAD: "No heu carregat cap imatge"
   SiteTree:
@@ -344,9 +271,6 @@ ca:
     CSVEXPORT: "Exporta a CSV"
     PRINT: "Imprimeix"
   TableListField_PageControls.ss:
-    DISPLAYING: "S'està mostrant"
-    OF: "de"
-    TO: "a"
     VIEWFIRST: "Veure el primer"
     VIEWLAST: "Veure el darrer"
     VIEWNEXT: "Veure el següent"

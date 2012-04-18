@@ -122,9 +122,6 @@ PHP
 	}
 	
 	function testNamesapcedClassDefParser() {
-		if(version_compare(PHP_VERSION, '5.3', '<')) {
-			return;
-		}
 		$parser = SS_ClassManifest::get_namespaced_class_parser();
 		
 		$tokens = $this->getNamespaceTokens();
@@ -167,9 +164,6 @@ PHP
 	}
 	
 	function testNamespaceDefParser() {
-		if(version_compare(PHP_VERSION, '5.3', '<')) {
-			return;
-		}
 		$parser = SS_ClassManifest::get_namespace_parser();
 		
 		$namespacedTokens = $this->getNamespaceTokens();

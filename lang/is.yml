@@ -1,10 +1,5 @@
 is:
   AssetAdmin:
-    CHOOSEFILE: "Veldu skrá"
-    MENUTITLE: "Skrár og myndir"
-    NEWFOLDER: "Ný Mappa"
-  AssetAdmin_left.ss:
-    GO: "Framkvæma"
   BBCodeParser:
     ALIGNEMENT: "Textastilling"
     ALIGNEMENTEXAMPLE: "hægri jafnað"
@@ -37,7 +32,6 @@ is:
     NO: "Nei"
     YES: "Já"
   CMSMain:
-    MENUTITLE: "Efni síðu"
     SAVE: "Vista"
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: "Þú breyttir þínu lykilorði vegna"
@@ -50,11 +44,10 @@ is:
     YES: "Já"
   ComplexTableField:
     CLOSEPOPUP: "Loka glugga"
-    SUCCESSADD: "Bætti við %s %s %s"
+    SUCCESSADD: "Bætt við %s %s %s"
     SUCCESSEDIT: "Vitað %s %s %s"
   ComplexTableField.ss:
     ADDITEM: "Bæta við %s."
-    NOITEMSFOUND: "Engir hlutir fundust"
     SORTASC: "Raða í hækkandi röð"
     SORTDESC: "Raða í lækkandi röð"
   ComplexTableField_popup.ss:
@@ -63,21 +56,15 @@ is:
   ConfirmedPasswordField:
     ATLEAST: "Lykilorðin verða að vera að minstakosti %s stafa löng."
     BETWEEN: "Lykilorðin verða að vera %s til %s stafa löng."
-    HAVETOMATCH: "Lykilorðin verða að stemma"
-    LEASTONE: "Lykilorðin verða að innihalda að minsta kosti einn tölustaf og eitt tákn."
     MAXIMUM: "Lykilorðin mega ekki vera lengri en %s stafa löng."
-    NOEMPTY: "Lykilorð má ekki vera tómt"
     SHOWONCLICKTITLE: "Breyta lykliorði"
   CreditCardField:
     FIRST: "fyrsta"
     FOURTH: "fjórða"
     SECOND: "annað"
     THIRD: "þriðja"
-    VALIDATIONJS1: "Vinasamlegast vertu viss um að þú hafir slegið inn"
-    VALIDATIONJS2: "kredit korta númer rétt"
   CurrencyField:
     CURRENCYSYMBOL: "kr"
-    VALIDATIONJS: "Vinsamlegast sláðu inn löglegan gjaldmiðil."
   DataObject:
     PLURALNAME: "Gagna hlutir"
     SINGULARNAME: "Gagna hlutir"
@@ -98,12 +85,10 @@ is:
   DateField:
     NOTSET: "ekki valið"
     TODAY: "í dag"
-    VALIDATIONJS: "Vinsamlegast sláðu inn gilt dagssetningar snið (DD.MM.ÁÁÁÁ)."
   DropdownField:
     CHOOSE: "(Veldu)"
   EmailField:
     VALIDATION: "Vinsamlegast sláðu inn tölvupóstfang"
-    VALIDATIONJS: "Vinasamlegast sláðu inn tölvupóstfang."
   Enum:
     ANY: "Einhver"
   File:
@@ -115,7 +100,6 @@ is:
     Name: "Nafn"
     PLURALNAME: "Skrár"
     SINGULARNAME: "Skrá"
-    Sort: "Röðun"
     TOOLARGE: "Skráin er of stór, hámark %s er leyfilegt"
     Title: "Titill"
   FileIFrameField:
@@ -123,20 +107,6 @@ is:
     FILE: "Skrá"
     FROMCOMPUTER: "Frá tölvunni þinni"
     FROMFILESTORE: "Frá skrárgeymslu"
-  Folder:
-    CREATED: "First sótt"
-    DELSELECTED: "Eyða völdum skrám"
-    DETAILSTAB: "Upplýsingar"
-    FILENAME: "Skráarnafn"
-    FILESTAB: "Skrár"
-    LASTEDITED: "Síðast uppfært"
-    PLURALNAME: "Skrár"
-    SINGULARNAME: "Skrá"
-    TITLE: "Titill"
-    TYPE: "Tegund"
-    UPLOADTAB: "Sækja"
-    URL: "Veffang (URL)"
-    VIEWEDITASSET: "Skoða/breyta eignum"
   ForgotPasswordEmail.ss:
     HELLO: "Hæ"
     TEXT1: "Hérna er þitt"
@@ -157,22 +127,13 @@ is:
   Group:
     Code: "Hóp kóði"
     Description: "Lýsing"
-    IPRestrictions: "IP tölu takmörkun"
     Locked: "Læst?"
-    PLURALNAME: "Hópar"
     Parent: "Yfir hópur"
-    RolesAddEditLink: "Bæta við/breyta hlutverkum"
-    SINGULARNAME: "Hópur"
     Sort: "Röðun"
     has_many_Permissions: "Leyfi"
     many_many_Members: "Félagar"
-  GroupImportForm:
-    ResultDeleted: "Eyddi %d hópum"
-    ResultUpdated: "Uppfærði %d hópa"
   HtmlEditorField:
     ANCHORVALUE: "Markstikla"
-    BUTTONINSERTFLASH: "Setja inn Flash"
-    BUTTONINSERTIMAGE: "Setja inn mynd"
     BUTTONINSERTLINK: "Bæta við hlekk"
     BUTTONREMOVELINK: "Fjarlægja hlekk"
     CSSCLASS: "Textastilling / stíll"
@@ -182,7 +143,6 @@ is:
     CSSCLASSRIGHT: "Til hægri, með textann umhverfis"
     EMAIL: "Tölvupóstfang"
     FILE: "Skrá"
-    FLASH: "Flash"
     FOLDER: "Mappa"
     IMAGE: "Mynd"
     IMAGEDIMENSIONS: "Stærð"
@@ -196,34 +156,14 @@ is:
     LINKFILE: "Hlaða niður skrá"
     LINKINTERNAL: "Síða innan heimasíðunnar"
     LINKOPENNEWWIN: "Opna hlekk í nýjum glugga?"
-    LINKTEXT: "Texti á hlekk"
     LINKTO: "Hlekkur í"
     PAGE: "Síða"
-    SEARCHFILENAME: "Leita eftir nafni skráar"
     URL: "Veffang (URL)"
-  Image:
-    PLURALNAME: "Skrár"
-    SINGULARNAME: "Skrá"
   ImageField:
     IMAGE: "Mynd"
-  Image_Cached:
-    PLURALNAME: "Skrár"
-    SINGULARNAME: "Skrá"
-  LeftAndMain:
-    HELP: "Hjálp"
-    PAGETYPE: "Tegund síðu:"
-    PERMAGAIN: "Þú hefur verið út skráður úr  kerfinu. Ef þú vilt innskrá þig aftur, sláðu þá inn notendanafn og lykilorð"
-    PERMALREADY: "Þú hefur ekki aðgang að þessum hluta kerfisins. Ef þú vilt innskrá þig sem einhver annar, gerðu það þá hér fyrir neðan"
-    PERMDEFAULT: "Sláðu inn tölvupóstfang og lykilorð til að fá aðgang að kerfinu"
-    PLEASESAVE: "Vinsamlegast vistaðu síðuna: Það er ekki hægt að uppfæra þessa síðu því hún hefur ekki verið vistuð."
-    SAVED: "vistað"
-  LeftAndMain_right.ss:
-    WELCOMETO: "Velkominn til"
   LoginAttempt:
     Email: "Tölvupóstfang"
     IP: "IP tala"
-    PLURALNAME: "Innskrá tilraunir"
-    SINGULARNAME: "Innskrá tilraunir"
     Status: "Staða"
   Member:
     ADDRESS: "Heimilisfang"
@@ -270,40 +210,6 @@ is:
     db_PasswordExpiry: "Lykilorð rennur út"
   MemberAuthenticator:
     TITLE: "Tölvupóstur &amp; Lykilorð"
-  MemberImportForm:
-    ResultNone: "Engar breytingar"
-  MemberPassword:
-    PLURALNAME: "Lykilorð félaga"
-    SINGULARNAME: "Lykilorð félaga"
-  MemberTableField:
-    ADD: "Bæta við"
-    ADDEDTOGROUP: "Bæta félaga í hóp"
-    ADDINGFIELD: "Það mistókst að bæta við"
-    DeleteTitleText: "Eyða úr þessum  hóp"
-    DeleteTitleTextDatabase: "Eyða úr gagnagrunni og gúppum"
-    FILTER: "Sía"
-    SEARCH: "Leita"
-  ModelAdmin:
-    ADDBUTTON: "Bæta við"
-    ADDFORM: "Fylltu út þetta form til að bæta %s við gagnagrunninn"
-    CHOOSE_COLUMNS: "Veldu niðurstöðu dálka..."
-    CLEAR_SEARCH: "Hreinsa leit"
-    CREATEBUTTON: "Búa til '%s'"
-    DELETE: "Eyða"
-    DELETEDRECORDS: "Eyddi %s færslur"
-    FOUNDRESULTS: "Leitin þín skilaði %s samsvarandi hlutum"
-    IMPORT: "Flytja inn frá CSV"
-    IMPORTEDRECORDS: "Flutti inn %s færlsur."
-    ITEMNOTFOUND: "Ég get ekki fundið þennan atriði "
-    LOADEDFOREDITING: "Sótti '%s' til breytingar"
-    NOCSVFILE: "Vinasamlegast finndu CSV skrá til að flytja inn"
-    NOIMPORT: "Það er ekkert til að flytja inn"
-    NORESULTS: "Leitin þín skilaðu engum niðurstöðum"
-    SAVE: "Vista"
-    SEARCHRESULTS: "Leitarniðurstöður"
-    SELECTALL: "velja allt"
-    SELECTNONE: "velja ekkert"
-    UPDATEDRECORDS: "Uppfærði %s færslur"
   MoneyField:
     FIELDLABELAMOUNT: "Reikningur"
     FIELDLABELCURRENCY: "Gjaldmiðill"
@@ -311,22 +217,12 @@ is:
     IsNullLabel: "Er Null"
   NumericField:
     VALIDATION: "'%s' er ekki tölustafur, aðeins tölustafir eru leyfðir í þessu svæði"
-    VALIDATIONJS: "er ekki tölur, aðeins tölur eru leyfðar í þessu svæði"
-  Page:
-    PLURALNAME: "Síða"
-    SINGULARNAME: "Síða"
   Permission:
     FULLADMINRIGHTS: "Full stjórnanda réttindi"
-    PLURALNAME: "Leyfi"
-    SINGULARNAME: "Leyfi"
   PhoneNumberField:
     VALIDATION: "Vinsamlegast sláðu inn gilt símanúmer"
   RelationComplexTableField.ss:
     ADD: "Bæta við"
-    CSVEXPORT: "Flytja út í  CSV"
-    NOTFOUND: "Engir hlutir fundust"
-  ReportAdmin:
-    MENUTITLE: "Skýrslur"
   Security:
     ALREADYLOGGEDIN: "Þú hefur ekki aðgang að þessari síðu. Ef þú hefur annan reikning sem hefur aðgang að þessari síðu, þá getur þú innskráð þig fyrir neðan."
     BUTTONSEND: "Sendu mér hlekk til að endursetja lykilorðið"
@@ -334,27 +230,17 @@ is:
     CHANGEPASSWORDHEADER: "Breyttu lykilorðinu þínu"
     ENTERNEWPASSWORD: "Vinsamlegast sláðu inn nýtt lykilorð"
     ERRORPASSWORDPERMISSION: "Þú verður að vera innskráður til að geta breytt lykilorðinu þínu!"
-    IPADDRESSES: "IP Tala"
     LOGGEDOUT: "Þú hefur verið útskráð(ur). Ef þú villt innskrá þig aftur, sláðu þá inn auðkennið þín fyrir neðan."
     LOGIN: "Innskrá"
-    LOSTPASSWORDHEADER: "Tapað lykilorð"
     NOTEPAGESECURED: "Þessi síða er læst. Sláðu inn auðkennið þitt fyrir neðan og við munum senda þig áfram."
     NOTERESETPASSWORD: "Sláðu inn tölvupóstfangið þitt og við munum senda þér hlekk þar sem þú getur endursett lykilorðið þitt"
     PASSWORDSENTHEADER: "Hlekkurinn til að endursetja lykilorðið hefur verið sent til '$s'"
     PASSWORDSENTTEXT: "Þakka þér fyrir! Hlekkurinn til að endursetja lykilorðið hefur verið sent til '$s'"
   SecurityAdmin:
-    ADDMEMBER: "Bæta við félaga"
-    APPLY_ROLES: "Bæta hlutverkum við grúppur"
-    EDITPERMISSIONS: "Breyta réttindum og IP tölum fyrir hverja grúppu"
     GROUPNAME: "Nafn hóps"
     MEMBERS: "Félagar"
-    MENUTITLE: "Aðgangur"
-    NEWGROUP: "Nýr hópur"
     PERMISSIONS: "Leyfi"
     ROLES: "Hlutverk"
-    SGROUPS: "Aðgangs grúppur"
-    TABROLES: "Hlutverk"
-    VIEWUSER: "Skoða Notanda"
   SimpleImageField:
     NOUPLOAD: "Engin mynd sótt"
   SiteTree:
@@ -367,16 +253,11 @@ is:
     CSVEXPORT: "Flytja út í CSV"
     PRINT: "Prenta"
     SELECT: "Veldu:"
-  TableListField.ss:
-    NOITEMSFOUND: "Engar færslur fundust"
   TableListField_PageControls.ss:
-    DISPLAYING: "Birtir"
-    OF: "af"
-    TO: "til"
-    VIEWFIRST: "Sýna fyrsta"
-    VIEWLAST: "Sýna síðasta"
+    VIEWFIRST: "Sýna first"
+    VIEWLAST: "Sýna síðast"
     VIEWNEXT: "Sýna næsta"
-    VIEWPREVIOUS: "Sýna fyrra"
+    VIEWPREVIOUS: "Sýna fyrri"
   ToggleCompositeField.ss:
     HIDE: "Fela"
     SHOW: "Sýna"

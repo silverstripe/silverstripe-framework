@@ -1,10 +1,17 @@
 si:
   AssetAdmin:
-    CHOOSEFILE: "ලිපිය තෝරන්න"
     MENUTITLE: "ලිපි හා පිංතූර"
     NEWFOLDER: "අලත් ගොනුවක්"
-  AssetAdmin_left.ss:
-    GO: "යන්න"
+  AssetTableField:
+    CREATED: "පලමු ලිපිය අප්ලෝඩ් කරන ලදී"
+    DIM: "මාන"
+    FILENAME: "ලිපි නම"
+    LASTEDIT: "අවසාන ලිපිය වෙනස්  කරන ලදී"
+    OWNER: "හිමි කරැ"
+    SIZE: "තරම"
+    TITLE: "මතකව"
+    TYPE: "වර්ගය"
+    URL: "URL"
   BBCodeParser:
     COLORED: "පාට කළ අකුරු"
     COLOREDEXAMPLE: "නිල් පැහැ අකුරු"
@@ -24,7 +31,6 @@ si:
     HELLO: "කොහොමද"
   ComplexTableField.ss:
     ADDITEM: "එකතු කරන්න"
-    NOITEMSFOUND: "හිස්"
     SORTASC: "ආරෝහන පිළිවෙලට"
     SORTDESC: "ආවරෝහන පිළිවෙලට"
   ComplexTableField_popup.ss:
@@ -62,16 +68,6 @@ si:
     PLURALNAME: "ලිපි"
     SINGULARNAME: "ලිපිය"
     TOOLARGE: "ලිපියේ තරම විශාලයි, උපරිමය %s"
-  Folder:
-    DELSELECTED: "තෝරාගත් ගොනු මකන්න"
-    DETAILSTAB: "තොරතුරු"
-    FILENAME: "ගොනුවේ නම"
-    FILESTAB: "ගොනු"
-    PLURALNAME: "ලිපි"
-    SINGULARNAME: "ලිපිය"
-    TITLE: "මාතෘකාව"
-    UPLOADTAB: "අප්ලෝඩ්"
-    URL: "URL"
   ForgotPasswordEmail.ss:
     HELLO: "කොහොමද"
     TEXT1: "මෙය ඔබගේ"
@@ -88,14 +84,10 @@ si:
   Group:
     Code: "කාන්ඩ සංකේතය"
     Locked: "අගුලුලාද?"
-    PLURALNAME: "කාන්ඩ"
     Parent: "මවු කාන්ඩය"
-    SINGULARNAME: "කාන්ඩය"
     has_many_Permissions: "අවසර"
     many_many_Members: "සාමාජිකයින්"
   HtmlEditorField:
-    BUTTONINSERTFLASH: "Flash ඇතුල් කරන්න"
-    BUTTONINSERTIMAGE: "පි0තුරයක් ඇතුල් කරන්න"
     BUTTONINSERTLINK: "බැදීමක් යොදන්න"
     BUTTONREMOVELINK: "බැදීම ගලවන්න"
     CSSCLASS: "අලයින්මන්ට් / ස්ටයිල්"
@@ -103,7 +95,6 @@ si:
     CSSCLASSRIGHT: "දකුනු පැත්තට, අකුරැ වටේට යොදන්න"
     EMAIL: "ඊමේල් ලිපිනය"
     FILE: "ලිපිය"
-    FLASH: "Flash ඇතුල් කරන්න"
     FOLDER: "ගොනුව"
     IMAGE: "පි0තුරයක් ඇතුල් කරන්න"
     IMAGEDIMENSIONS: "මාන"
@@ -119,9 +110,6 @@ si:
     LINKTO: "බැදේ"
     PAGE: "පිටුව"
     URL: "URL"
-  Image:
-    PLURALNAME: "ලිපි"
-    SINGULARNAME: "ලිපිය"
   Image_iframe.ss:
     TITLE: "පිංතූර අප්ලෝඩ් කරන Iframe ඵක"
   LeftAndMain:
@@ -133,8 +121,6 @@ si:
     PLEASESAVE: "පිටුව සේව් කරන්න, නැතිනම් මෙම පිටුව යාවත්කාලීන කල නොහැක"
     SAVED: "සේවි කරන ලදී"
   LoginAttempt:
-    PLURALNAME: "ඇතුල්වීම් උත්සහයන්"
-    SINGULARNAME: "ඇතුල්වීම් උත්සහය"
   Member:
     ADDRESS: "ලිපිනය"
     BUTTONCHANGEPASSWORD: "මුර පදය අලුත් කරන්න"
@@ -174,25 +160,9 @@ si:
     db_PasswordExpiry: "මුර පදය කල් ඉකුත් වීමේ දිනය"
   MemberAuthenticator:
     TITLE: "ඊමේල් හා මුර පදය"
-  MemberPassword:
-    PLURALNAME: "සාමාජිකය මුර පද"
-    SINGULARNAME: "සාමාජිකය මුර පදය"
-  MemberTableField:
-    ADD: "එකතු කරන්න"
-    ADDEDTOGROUP: "කන්ඩායම් සාමාඡිකයෙකු ඵකතු කරන්න"
-    ADDINGFIELD: "එකතු කිරීම අසාර්ථකයි"
-    FILTER: "Filter"
-    SEARCH: "සොයන්න"
-  ModelAdmin:
-    CREATEBUTTON: "'%s' හදන්න"
   NumericField:
     VALIDATION: "'%s' අංකයක් නොවේ, අංක පමනක් බාරගනියි"
-  Page:
-    PLURALNAME: "පිටු"
-    SINGULARNAME: "පිටුව"
   Permission:
-    PLURALNAME: "අවසර"
-    SINGULARNAME: "අවසරය"
   PhoneNumberField:
     VALIDATION: "නිවැරදි දුරකතන අ0කයක් යොදන්න"
   RelationComplexTableField.ss:
@@ -207,15 +177,12 @@ si:
     ENTERNEWPASSWORD: "අලුත් මුර පදය ඇතුල් කරන්න"
     ERRORPASSWORDPERMISSION: "ඹබගේ මුරපදය වෙනස් කිරීමට ප්රවිශ්ට වන්න"
     LOGGEDOUT: "ඹබ පිටවී ඇත, නැවත ඇතුල් වීමට ඹබගේ දත්ත යොදන්න"
-    LOSTPASSWORDHEADER: "මුර පදය නැති වී ඇත"
     NOTERESETPASSWORD: "ඹබට ප්රතිස්තාපනය කල හැකි ලිංක් ඵක ඵවීමට ඹබගේ ඊමේල් ලිපිනය යොදන්න"
     PASSWORDSENTHEADER: "මුර පදය අලුත් කරන ලිපිනය %s ට යවන ලදී"
     PASSWORDSENTTEXT: "ස්තුති! මුර පදය අලුත් කරන ලිපිනය %s ට යවන ලදී"
   SecurityAdmin:
-    ADDMEMBER: "සාමාජිකයෙක් ඵකතු කරන්න"
     MENUTITLE: "ආරක්ශාව"
     NEWGROUP: "අලුත් කන්ඩාමක්"
-    SGROUPS: "ආරක්ශක කන්ඩායම්"
   SimpleImageField:
     NOUPLOAD: "පි0තුර අප්ලෝඩ් කර නැත"
   SiteTree:
@@ -227,9 +194,6 @@ si:
   TableListField:
     PRINT: "මුද්රණය කරන්න"
   TableListField_PageControls.ss:
-    DISPLAYING: "පෙන්වන්නේ"
-    OF: "ගේ"
-    TO: "ට"
     VIEWFIRST: "පළමු එක පෙන්වන්න"
     VIEWLAST: "අවසානය පෙන්වන්න"
     VIEWNEXT: "ඊළඟ එක පෙන්වන්න"

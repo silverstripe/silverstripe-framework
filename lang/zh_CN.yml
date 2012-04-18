@@ -1,15 +1,23 @@
 zh_CN:
   AssetAdmin:
-    CHOOSEFILE: "选择文件"
     MENUTITLE: "文件和图片"
     NEWFOLDER: "新建文件夹"
-  AssetAdmin_left.ss:
-    GO: "执行"
+  AssetTableField:
+    CREATED: "第一次被上传"
+    DIM: "尺寸"
+    FILENAME: "文件名"
+    LASTEDIT: "上一次被更改"
+    OWNER: "拥有者"
+    SIZE: "大小"
+    TITLE: "文件名称"
+    TYPE: "类型"
+    URL: "URL"
   BasicAuth:
     ENTERINFO: "请输入用户名和密码"
     ERRORNOTADMIN: "此用户没有管理员权限。"
     ERRORNOTREC: "没有找到此用户名/密码"
   CMSMain:
+    ACCESS: "在 CMS 访问 %s"
     MENUTITLE: "网站内容"
     SAVE: "保存"
   ChangePasswordEmail.ss:
@@ -18,7 +26,6 @@ zh_CN:
     HELLO: "嗨"
   ComplexTableField.ss:
     ADDITEM: "新加"
-    NOITEMSFOUND: "没有发现数据"
     SORTASC: "正序排列"
     SORTDESC: "倒序排列"
   ComplexTableField_popup.ss:
@@ -52,9 +59,6 @@ zh_CN:
     PLURALNAME: "文件"
     SINGULARNAME: "文件"
     TOOLARGE: "文件过大，最大只允许 %s"
-  Folder:
-    PLURALNAME: "文件"
-    SINGULARNAME: "文件"
   ForgotPasswordEmail.ss:
     HELLO: "嗨"
   Form:
@@ -69,14 +73,10 @@ zh_CN:
   Group:
     Code: "团队代码"
     Locked: "锁定？"
-    PLURALNAME: "团队"
     Parent: "主团队"
-    SINGULARNAME: "团队"
     has_many_Permissions: "权限"
     many_many_Members: "成员"
   HtmlEditorField:
-    BUTTONINSERTFLASH: "插入Flash动画"
-    BUTTONINSERTIMAGE: "插入图像"
     BUTTONINSERTLINK: "插入链接"
     BUTTONREMOVELINK: "删除链接"
     CSSCLASS: "对齐/样式"
@@ -85,7 +85,6 @@ zh_CN:
     CSSCLASSRIGHT: "右端自动换行"
     EMAIL: "电子邮件地址"
     FILE: "文件"
-    FLASH: "插入Flash动画"
     FOLDER: "文件夹"
     IMAGE: "插入图像"
     IMAGEDIMENSIONS: "尺寸"
@@ -101,9 +100,6 @@ zh_CN:
     LINKTO: "链接到"
     PAGE: "页"
     URL: "（路径）URL"
-  Image:
-    PLURALNAME: "文件"
-    SINGULARNAME: "文件"
   Image_iframe.ss:
     TITLE: "图象上传内嵌框架（Iframe）"
   LeftAndMain:
@@ -115,8 +111,6 @@ zh_CN:
     PLEASESAVE: "请先保存：因为该网页还未保存，所以该页无法更新。"
     SAVED: "已保存"
   LoginAttempt:
-    PLURALNAME: "尝试登陆次数"
-    SINGULARNAME: "尝试登陆次数"
   Member:
     ADDRESS: "地址"
     BUTTONCHANGEPASSWORD: "更改密码"
@@ -156,24 +150,11 @@ zh_CN:
     db_PasswordExpiry: "密码过期日期"
   MemberAuthenticator:
     TITLE: "电邮地址和密码"
-  MemberPassword:
-    PLURALNAME: "成员密码"
-    SINGULARNAME: "成员密码"
-  MemberTableField:
-    ADD: "新加"
-    ADDEDTOGROUP: "会员被加入某会员组"
   ModelAdmin:
-    ADDBUTTON: "添加"
-    CREATEBUTTON: "创建'%s'"
     DELETE: "删除"
-    ITEMNOTFOUND: "无法找到该内容"
-    LOADEDFOREDITING: "正在打开'%s'的编辑试图"
-    SAVE: "保存"
   NumericField:
     VALIDATION: "“%s\"不是一个数字，这个栏域只可以用数字填写"
   Permission:
-    PLURALNAME: "权限"
-    SINGULARNAME: "权限"
   PhoneNumberField:
     VALIDATION: "请输入有效电话号码"
   ReportAdmin:
@@ -186,16 +167,13 @@ zh_CN:
     ENTERNEWPASSWORD: "请输入新密码"
     ERRORPASSWORDPERMISSION: "您必需登录以更改您的密码"
     LOGGEDOUT: "您已被撤消登录。如果您想再次登录，在下面输入您的登录信息。"
-    LOSTPASSWORDHEADER: "忘记密码"
     NOTEPAGESECURED: "此页是受安全保护的。输入您的登录信息，我们会将您送达。"
     NOTERESETPASSWORD: "输入您的电邮地址，我们会给您发送一个您可重设密码的链接"
     PASSWORDSENTHEADER: "密码重设链接已发送给“%s”"
     PASSWORDSENTTEXT: "谢谢！密码重设链接已发送给“%s”"
   SecurityAdmin:
-    ADDMEMBER: "新加会员"
     MENUTITLE: "安全"
     NEWGROUP: "新建会员组"
-    SGROUPS: "各个不同权限的会员组"
   SimpleImageField:
     NOUPLOAD: "没有上传的图像"
   SiteTree:

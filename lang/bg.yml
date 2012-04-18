@@ -1,10 +1,4 @@
 bg:
-  AssetAdmin:
-    CHOOSEFILE: "Избери файл"
-    MENUTITLE: "Файлове & Изображения"
-    NEWFOLDER: "Нова папка"
-  AssetAdmin_left.ss:
-    GO: "Давай"
   BBCodeParser:
     ALIGNEMENT: "Подреждане"
     ALIGNEMENTEXAMPLE: "подреди в дясно"
@@ -34,9 +28,6 @@ bg:
     ENTERINFO: "Моля, въведете потребителско име и парола."
     ERRORNOTADMIN: "Този потребител не е администратор."
     ERRORNOTREC: "Това потребителско име / парола не е разпознато"
-  CMSMain:
-    MENUTITLE: "Съдържание на сайта"
-    SAVE: "Съхрани"
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: "Вие сменихте вашата парола за"
     CHANGEPASSWORDTEXT2: "Вече можете да ползвате следните данни за вход:"
@@ -44,12 +35,10 @@ bg:
     HELLO: "Здравей!"
     PASSWORD: "Парола"
   ComplexTableField:
-    CLOSEPOPUP: "Затвори прозорец"
     SUCCESSADD: "Добавено %s %s %s"
     SUCCESSEDIT: "Съхранено %s %s %s"
   ComplexTableField.ss:
     ADDITEM: "Добави %s"
-    NOITEMSFOUND: "Нито един от елементите не беше открит"
     SORTASC: "Възходящ"
     SORTDESC: "Низходящ"
   ComplexTableField_popup.ss:
@@ -58,20 +47,15 @@ bg:
   ConfirmedPasswordField:
     ATLEAST: "Паролите трябва да бъдат поне %s символа дълги."
     BETWEEN: "Паролите трябва да бъдат от %s до %s символа дълги."
-    HAVETOMATCH: "Паролите трябва да съвпадат."
-    LEASTONE: "Паролите трябва да съдържат поне една цифра и една буква."
     MAXIMUM: "Паролите може да бъдат най-много %s символа дълги."
-    NOEMPTY: "Паролите неможе да бъдат празни."
+    SHOWONCLICKTITLE: "Промяна на парола"
   CreditCardField:
     FIRST: "първи"
     FOURTH: "четвърти"
     SECOND: "втори"
     THIRD: "трети"
-    VALIDATIONJS1: "Моля подсигурете се че сте въвели правилно"
-    VALIDATIONJS2: "номера на кредитната карта"
   CurrencyField:
     CURRENCYSYMBOL: "$"
-    VALIDATIONJS: "Моля въведете валидна валута."
   Date:
     DAY: "ден"
     DAYS: "дни"
@@ -83,31 +67,22 @@ bg:
     MONTHS: "месеци"
     SEC: "секунда"
     SECS: "секунди"
+    TIMEDIFFAGO: "преди %s"
     YEAR: "година"
     YEARS: "години"
   DateField:
     NOTSET: "Не нагласено"
     TODAY: "днес"
-    VALIDATIONJS: "Моля въведете правилен формат за дата (ДД/ММ/ГГГГ)."
   DropdownField:
     CHOOSE: "(Избери)"
   EmailField:
     VALIDATION: "Моля, въведете email адрес"
-    VALIDATIONJS: "Моля въведете мейл адрес."
   File:
+    INVALIDEXTENSION: "Непозволен тип файл (позволени: %s)"
     NOFILESIZE: "Размер на файла е нула байта."
-  Folder:
-    CREATED: "Първо качени"
-    DELSELECTED: "Изтрий избраните файлове"
-    DETAILSTAB: "Детайли"
-    FILENAME: "Файл име"
-    FILESTAB: "Файлове"
-    LASTEDITED: "Последно променени"
-    TITLE: "Заглавие"
-    TYPE: "Вид"
-    UPLOADTAB: "Качи "
-    URL: "URL"
-    VIEWEDITASSET: "Виж/Промени Актив"
+    PLURALNAME: "Файлове"
+    SINGULARNAME: "Файл"
+    TOOLARGE: "Файлът е прекалено голям, позволена големина - до %s."
   ForgotPasswordEmail.ss:
     HELLO: "Здравей!"
     TEXT1: "Ето вашият"
@@ -125,10 +100,12 @@ bg:
     VALIDCURRENCY: "Моля, въведете валидна валута."
   FormField:
     NONE: "никой"
+  Group:
+    Locked: "Заключена?"
+    has_many_Permissions: "Разрешения"
+    many_many_Members: "Членове"
   HtmlEditorField:
     ANCHORVALUE: "Котва"
-    BUTTONINSERTFLASH: "Въведи Flash"
-    BUTTONINSERTIMAGE: "Въведи изображение"
     BUTTONINSERTLINK: "Вмъкни препратка"
     BUTTONREMOVELINK: "Премахни препратка"
     CSSCLASS: "Подравняване / стил"
@@ -138,7 +115,6 @@ bg:
     CSSCLASSRIGHT: "В дясно, с текст който да се нанася около него"
     EMAIL: "email адрес"
     FILE: "Файл"
-    FLASH: "Flash"
     FOLDER: "Папка"
     IMAGE: "Изображение"
     IMAGEDIMENSIONS: "Размери"
@@ -157,14 +133,7 @@ bg:
     URL: "URL"
   Image_iframe.ss:
     TITLE: "Качване на изображението Iрамка"
-  LeftAndMain:
-    HELP: "Помощ"
-    PAGETYPE: "Вид страница:"
-    PERMAGAIN: "Вие излязохте от CMS. Ако искате да влезнете отново, моля въведете потребителско име и парола."
-    PERMALREADY: "Съжелявам, но нямате достъп до тази част от CMS. Ако искате да влезете с друго потребителско име, моля направете го по-долу"
-    PERMDEFAULT: "Въведете мейл адреса и паролата си за да влезните в CMS."
-    PLEASESAVE: "Моля, съхранете страницата: Тази страница не може да се актуализира защото още не е запазена."
-    SAVED: "съхранено"
+  LoginAttempt:
   Member:
     ADDRESS: "Адрес"
     BUTTONCHANGEPASSWORD: "Променете паролата"
@@ -191,39 +160,28 @@ bg:
     NEWPASSWORD: "Нова парола"
     PASSWORD: "Парола"
     PHONE: "Домашен телефон"
+    PLURALNAME: "Членове"
     REMEMBERME: "Запомни ме за следващия път?"
+    SINGULARNAME: "Член"
     SUBJECTPASSWORDCHANGED: "Вашата парола беше променена"
     SUBJECTPASSWORDRESET: "Връзка за изчистване на вашата парола"
     SURNAME: "Фамилия"
     VALIDATIONMEMBEREXISTS: "Вече съществува потребител с този email"
     WELCOMEBACK: "Добре дошли отново, %s"
     YOUROLDPASSWORD: "Вашата стара парола"
+    belongs_many_many_Groups: "Групи"
+    db_LockedOutUntil: "Заключен до"
+    db_PasswordExpiry: "Дата на изтичане валидността на паролата"
   MemberAuthenticator:
     TITLE: "email и парола"
-  MemberTableField:
-    ADD: "Добави"
-    ADDEDTOGROUP: "Добавен член към група"
-    ADDINGFIELD: "Добавянето провалено"
-    FILTER: "Филтър"
-    SEARCH: "Търсене"
-  ModelAdmin:
-    ADDBUTTON: "Добави"
-    CLEAR_SEARCH: "Изчисти търсенето"
-    DELETE: "Изтрий"
-    IMPORT: "Внеси от CSV"
-    SAVE: "Съхрани"
-    SEARCHRESULTS: "Резултати от търсенето"
   NumericField:
     VALIDATION: "'%s' не е число, в това поле са позволени само числа"
-    VALIDATIONJS: "не е номер, само номера може да бъдат въведени тук"
   Permission:
     FULLADMINRIGHTS: "Пълни административни права"
   PhoneNumberField:
     VALIDATION: "Моля, въведете валиден телефонен номер"
   RelationComplexTableField.ss:
     ADD: "Добави"
-    CSVEXPORT: "Изнеси на CSV"
-    NOTFOUND: "Няма намерени предмети"
   Security:
     ALREADYLOGGEDIN: "Вие нямате достъп до тази страница. Ако имате друг акаунт, с който може да влезете в тази страница, въведете го по-долу."
     BUTTONSEND: "Пратете ми линка за промяна на паролата"
@@ -231,29 +189,16 @@ bg:
     CHANGEPASSWORDHEADER: "Сменете вашата парола"
     ENTERNEWPASSWORD: "Моля, въведете нова парола."
     ERRORPASSWORDPERMISSION: "Трябва да сте влезли, за да можете да промените вашата парола!"
-    IPADDRESSES: "IP Адреси"
     LOGGEDOUT: "Вие излязохте. Ако искате да влезнете отново, въведете вашите данни по-долу."
     LOGIN: "Влезте в системата"
-    LOSTPASSWORDHEADER: "Забравена парола"
     NOTEPAGESECURED: "Тази страница е защитена. Вкарайте вашите данни по-долу и ще ви препратим по-нататък."
     NOTERESETPASSWORD: "Въведете вашият email адрес и ще ви изпратим линк с който ще можете да смените паролата си"
     PASSWORDSENTHEADER: "Линк за смяна на паролата е изпратен на '%s'"
     PASSWORDSENTTEXT: "Благодарим ви! Линка за смяна на паролота беше изпратен на '%s'."
   SecurityAdmin:
-    ADDMEMBER: "Добави член"
-    EDITPERMISSIONS: "Промени разрешенията и IP адресите за всяка група"
     GROUPNAME: "Име на група"
-    IPADDRESSESHELP: |
-                      <p>Можете да ограничите тази група на специфичен IP обсег. Въведете 1 обсег на линия. Може да бъдат въведени IP адрес по следния начин: <br />
-                      203.96.152.12<br />
-                      203.96.152/24<br />
-                      203.96/16<br />
-                      203/8<br /><br />Ако въведете един или повече IP адреси тук, потребителите ще имат правата на тази група само когато се впишат използвайки някои от IP адресите посочени тук. Това няма да предотврати потребителите да се вписват. Това е защото същият потребител може да има права да се вписва и да има достъп до определени места в системата без да има някакви IP ограничения.    MEMBERS: "Потребители"
-    MENUTITLE: "Сигурност"
-    NEWGROUP: "Нова група"
+    MEMBERS: "Потребители"
     PERMISSIONS: "Разрешения"
-    SGROUPS: "Групи за сигурност"
-    VIEWUSER: "Виж Потребител"
   SimpleImageField:
     NOUPLOAD: "Няма качени изображения"
   SiteTree:
@@ -266,9 +211,6 @@ bg:
     CSVEXPORT: "Експортирай на CSV"
     PRINT: "Принтирай"
   TableListField_PageControls.ss:
-    DISPLAYING: "Показани"
-    OF: "от"
-    TO: "за"
     VIEWFIRST: "Преглед на първото"
     VIEWLAST: "Преглед на последното"
     VIEWNEXT: "Преглед на следващото"
@@ -279,3 +221,5 @@ bg:
   ToggleField:
     LESS: "по-малко"
     MORE: "повече"
+  Versioned:
+    has_many_Versions: "Версии"

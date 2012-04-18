@@ -1,10 +1,17 @@
 es:
   AssetAdmin:
-    CHOOSEFILE: "Seleccione archivo"
     MENUTITLE: "Archivos e Imágenes"
     NEWFOLDER: "NuevaCarpeta"
-  AssetAdmin_left.ss:
-    GO: "Ir"
+  AssetTableField:
+    CREATED: "Agregado por primera vez"
+    DIM: "Dimensiones"
+    FILENAME: "Nombre del archivo"
+    LASTEDIT: "Modificado por última vez"
+    OWNER: "Propietario"
+    SIZE: "Tamaño"
+    TITLE: "Título"
+    TYPE: "Tipo"
+    URL: "URL"
   BBCodeParser:
     ALIGNEMENT: "Alineación"
     ALIGNEMENTEXAMPLE: "alineado a la derecha"
@@ -35,6 +42,8 @@ es:
     ERRORNOTADMIN: "Ese usuario no es un administrador."
     ERRORNOTREC: "Ese nombre de usuario / contraseña no pudo ser reconocido."
   CMSMain:
+    ACCESS: "Acceso a '%s' (%s)"
+    ACCESSALLINTERFACES: "Acceder a todas las interfaces del CMS"
     MENUTITLE: "Contenido del sitio"
     SAVE: "Guardar"
   ChangePasswordEmail.ss:
@@ -49,7 +58,6 @@ es:
     SUCCESSEDIT: "Guardado %s %s %s"
   ComplexTableField.ss:
     ADDITEM: "Agregar %s"
-    NOITEMSFOUND: "No se encontraron elementos"
     SORTASC: "Orden Ascendente"
     SORTDESC: "Orden Descendente"
   ComplexTableField_popup.ss:
@@ -58,21 +66,15 @@ es:
   ConfirmedPasswordField:
     ATLEAST: "Las contraseñas requieren un mínimo de %s caracteres"
     BETWEEN: "Las contraseñas requieren de %s a %s caracteres"
-    HAVETOMATCH: "Las contraseñas deben coincidir."
-    LEASTONE: "Las contraseñas requieren al menos un dígito y un elemento alfanumérico."
     MAXIMUM: "Las contraseñas no deben contar con más de %s caracteres"
-    NOEMPTY: "Las contraseñas no pueden estar en blanco."
     SHOWONCLICKTITLE: "Cambiar contraseña"
   CreditCardField:
     FIRST: "primero"
     FOURTH: "cuarto"
     SECOND: "segundo"
     THIRD: "tercero"
-    VALIDATIONJS1: "Por favor, asegúrese de haber digitado el"
-    VALIDATIONJS2: "número de tarjeta de crédito correctamente"
   CurrencyField:
     CURRENCYSYMBOL: "$"
-    VALIDATIONJS: "Por favor, digite un tipo de moneda que sea válido"
   DataObject:
     PLURALNAME: "Objetos de Datos"
     SINGULARNAME: "Objeto de Datos"
@@ -93,12 +95,10 @@ es:
   DateField:
     NOTSET: "sin establecer"
     TODAY: "hoy"
-    VALIDATIONJS: "Por favor, introduce un formato válido de fecha (DD/MM/AAAA)."
   DropdownField:
     CHOOSE: "(Elegir)"
   EmailField:
     VALIDATION: "Por favor introduzca una dirección de email."
-    VALIDATIONJS: "Por favor, digite una dirección de correo electrónico."
   File:
     Content: "Contenido"
     Filename: "Nombre del archivo"
@@ -107,23 +107,8 @@ es:
     Name: "Nombre"
     PLURALNAME: "Archivos"
     SINGULARNAME: "Archivo"
-    Sort: "Orden de Clasificación"
     TOOLARGE: "El archivo es demasiado grande, tamaño máximo: %s."
     Title: "Título"
-  Folder:
-    CREATED: "Primero Subido (Uploaded)"
-    DELSELECTED: "Borrar los archivos seleccionados"
-    DETAILSTAB: "Detalles"
-    FILENAME: "Nombre de Archivo"
-    FILESTAB: "Archivos"
-    LASTEDITED: "Último Actualizado"
-    PLURALNAME: "Archivos"
-    SINGULARNAME: "Archivo"
-    TITLE: "Título"
-    TYPE: "Tipo"
-    UPLOADTAB: "Subir"
-    URL: "URL"
-    VIEWEDITASSET: "Ver/Editar Activo"
   ForgotPasswordEmail.ss:
     HELLO: "Hola"
     TEXT1: "Aquí tiene su"
@@ -144,11 +129,8 @@ es:
   Group:
     Code: "Código de grupo"
     Description: "Descripción"
-    IPRestrictions: "Restricciones de Direcciones IP"
     Locked: "¿Bloqueado?"
-    PLURALNAME: "Grupos"
     Parent: "Grupo Padre"
-    SINGULARNAME: "Grupo"
     Sort: "Orden de Clasificación"
     has_many_Permissions: "Permisos"
     many_many_Members: "Miembros"
@@ -156,8 +138,6 @@ es:
     ResultDeleted: "Se eliminaron %d grupos"
   HtmlEditorField:
     ANCHORVALUE: "Ancla"
-    BUTTONINSERTFLASH: "Insertar Flash"
-    BUTTONINSERTIMAGE: "Insertar imagen"
     BUTTONINSERTLINK: "Insertar enlace"
     BUTTONREMOVELINK: "Eliminar enlace"
     CSSCLASS: "Alineación / estilo"
@@ -167,7 +147,6 @@ es:
     CSSCLASSRIGHT: "A la derecha, con el texto flotando alrededor."
     EMAIL: "Dirección de E-mail"
     FILE: "Archivo"
-    FLASH: "Insertar flash"
     FOLDER: "Carpeta"
     IMAGE: "Insertar imagen"
     IMAGEDIMENSIONS: "Dimensiones"
@@ -181,14 +160,9 @@ es:
     LINKFILE: "Descarga de un archivo"
     LINKINTERNAL: "Página en el sitio"
     LINKOPENNEWWIN: "¿Abrir enlace en una ventana nueva?"
-    LINKTEXT: "Texto del enlace"
     LINKTO: "Enlazar a"
     PAGE: "Página"
-    SEARCHFILENAME: "Buscar por nombre de archivo"
     URL: "URL"
-  Image:
-    PLURALNAME: "Archivos"
-    SINGULARNAME: "Archivo"
   Image_iframe.ss:
     TITLE: "Iframe para agregar imágenes"
   LeftAndMain:
@@ -202,8 +176,6 @@ es:
   LoginAttempt:
     Email: "Correo electrónico"
     IP: "Dirección IP"
-    PLURALNAME: "Intentos de inicio de sesión"
-    SINGULARNAME: "Intento de inicio de sesión"
     Status: "Estado"
   Member:
     ADDRESS: "Dirección"
@@ -253,58 +225,22 @@ es:
     TITLE: "E-mail &amp; Contraseña"
   MemberImportForm:
     ResultDeleted: "Se eliminaron %d miembros"
-  MemberPassword:
-    PLURALNAME: "Contraseñas de miembros"
-    SINGULARNAME: "Contraseña del miembro"
-  MemberTableField:
-    ADD: "Añadir"
-    ADDEDTOGROUP: "Miembro añadido al grupo"
-    ADDINGFIELD: "Fallo sumando"
-    DeleteTitleText: "Eliminar de este grupo"
-    DeleteTitleTextDatabase: "Eliminar de la base de datos y de todos los grupos"
-    FILTER: "Filtro"
-    SEARCH: "Buscar"
   ModelAdmin:
-    ADDBUTTON: "Añadir"
-    ADDFORM: "Rellena este formulario para añadir un %s a la base de datos."
-    CHOOSE_COLUMNS: "Seleccionar columnas resultantes..."
-    CLEAR_SEARCH: "Borrar Búsqueda"
-    CREATEBUTTON: "Crear '%s'"
     DELETE: "Eliminar"
     DELETEDRECORDS: "%s registros eliminados."
-    FOUNDRESULTS: "Tu búsqueda ha encontrado %s artículos relacionados"
     IMPORT: "Importar desde CSV"
     IMPORTEDRECORDS: "Importados %s registros."
-    ITEMNOTFOUND: "No puedo encontrar ese artículo"
-    LOADEDFOREDITING: "Se ha cargado '%s' para su edición"
     NOCSVFILE: "Por favor, selecciona un archivo CSV para importar"
     NOIMPORT: "Nada para importar"
-    NORESULTS: "No hay resultados"
-    SAVE: "Guardar"
-    SEARCHRESULTS: "Buscar Resultados"
-    SELECTALL: "seleccionar todos"
-    SELECTNONE: "no seleccionar ninguno"
     UPDATEDRECORDS: "Actualizados %s registros"
-  MyEntity:
-    MyNamespace: "Valor por defecto de mi idioma nativo"
-  MyNamespace:
-    MYENTITY: "Contando %s cosas"
   NumericField:
     VALIDATION: "'%s' no es un número, este campo solo acepta números"
-    VALIDATIONJS: "no es un número, para este campo sólo son aceptados números"
-  Page:
-    PLURALNAME: "Páginas"
-    SINGULARNAME: "Página"
   Permission:
     FULLADMINRIGHTS: "Todos los derechos administrativos"
-    PLURALNAME: "Permisos"
-    SINGULARNAME: "Permiso"
   PhoneNumberField:
     VALIDATION: "Por favor introduzca un número de teléfono válido"
   RelationComplexTableField.ss:
     ADD: "Añadir"
-    CSVEXPORT: "Exportar a CSV"
-    NOTFOUND: "No se han encontrado registros"
   ReportAdmin:
     MENUTITLE: "Informes"
   Security:
@@ -314,30 +250,20 @@ es:
     CHANGEPASSWORDHEADER: "Modifique su contraseña"
     ENTERNEWPASSWORD: "Por favor introduzca una nueva contraseña."
     ERRORPASSWORDPERMISSION: "Debe iniciar una sesión para poder cambiar su contraseña!"
-    IPADDRESSES: "Direcciones IP"
     LOGGEDOUT: "Ha terminado su sesión. Si desea iniciar sesión nuevamente, introduzca sus datos de acreditación a continuación."
     LOGIN: "Entrar"
-    LOSTPASSWORDHEADER: "Contraseña Perdida"
     NOTEPAGESECURED: "Esa página está protegida. Introduzca sus datos de acreditación a continuación y lo enviaremos a ella en un momento."
     NOTERESETLINKINVALID: "<p>El enlace para cambiar la contraseña es inválido o a caducado.</p><p>Puedes solicitar uno nuevo <a href=\"%s\">aquí</a> o cambiar tu contraseña una vez te hayas <a href=\"%s\">identificado</a>.</p>"
     NOTERESETPASSWORD: "Introduzca su dirección de e-mail, y le enviaremos un enlace, con el cual podrá restaurar su contraseña"
     PASSWORDSENTHEADER: "El enlace para restaurar la contraseña se ha enviado a  %s'"
     PASSWORDSENTTEXT: "Gracias! El enlace para restaurar su contraseña ha sido enviado a '%s'."
   SecurityAdmin:
-    ADDMEMBER: "Añadir Miembro"
     EDITPERMISSIONS: "Editar permisos y direcciones IP de cada grupo"
     GROUPNAME: "Nombre del grupo"
-    IPADDRESSESHELP: |
-                      <p>Tu puedes restringir este grupo a un rango de direcciones IP. Introduce 1 rango por línea. Los rangos pueden tener cualquiera de las siguientes 4 formas: <br />
-                      203.96.152.12<br />
-                      203.96.152/24<br />
-                      203.96/16<br />
-                      203/8<br /><br /> Si introduces una o más rangos de direcciones IP en esta caja, entonces los miembros sólo obtendrán los permisos de pertenecer a este grupo si ellos se conectan desde una de las direcciones IP válidas. Esto no impedirá que la gente pueda identificarse. Esto es porque el mismo usuario podría tener que identificarse para acceder a partes del sistema sin restricciones de dirección IP.    MEMBERS: "Miembros"
+    MEMBERS: "Miembros"
     MENUTITLE: "Seguridad"
     NEWGROUP: "Nuevo grupo"
     PERMISSIONS: "Permisos"
-    SGROUPS: "Grupos de seguridad"
-    VIEWUSER: "Vista Usuario"
   SimpleImageField:
     NOUPLOAD: "No se han agregado imágenes"
   SiteTree:
@@ -350,9 +276,6 @@ es:
     CSVEXPORT: "Exportar a CSV"
     PRINT: "Imprimir"
   TableListField_PageControls.ss:
-    DISPLAYING: "Mostrando"
-    OF: "de"
-    TO: "a"
     VIEWFIRST: "Ver primero"
     VIEWLAST: "Ver último"
     VIEWNEXT: "Ver siguiente"

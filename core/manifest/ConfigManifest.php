@@ -176,9 +176,8 @@ class SS_ConfigManifest {
 		// Keep track of all the modules we've seen
 		$this->addModule(dirname(dirname($pathname)));
 
-		// We use Symfony Yaml since it's the most complete. It still doesn't handle all of YAML, but it's better than
-		// nothing.
-		if(!class_exists('sfYamlParser', false)) require_once 'thirdparty/symfony-yaml/lib/sfYamlParser.php';
+		// Use the Zend copy of this script to prevent class conflicts when RailsYaml is included
+		require_once 'thirdparty/zend_translate_railsyaml/library/Translate/Adapter/thirdparty/sfYaml/lib/sfYamlParser.php';
 		$parser = new sfYamlParser();
 
 		// The base header

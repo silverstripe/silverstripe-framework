@@ -30,16 +30,47 @@
 			Config: null,
 
 			onmatch: function() {
+				
 				if(this.is('.readonly,.disabled')) return;
 
 				var fileInput = this.find('input');
 				var dropZone = this.find('.ss-uploadfield-dropzone');
 				var config = $.parseJSON(fileInput.data('config').replace(/'/g,'"'));
+				
+				
+				/* Attach classes to dropzone when element can be dropped*/
+				$(document).unbind('dragover');
+				$(document).bind('dragover', function (e) {
+					timeout = window.dropZoneTimeout;
+					var $target = $(e.target);
+					if (!timeout) {
+						dropZone.addClass('active');
+					} else {
+						clearTimeout(timeout);
+					}
+					if ($target.closest('.ss-uploadfield-dropzone').length > 0) {
+						dropZone.addClass('hover');
+					} else {
+						dropZone.removeClass('hover');
+					}
+					window.dropZoneTimeout = setTimeout(function () {
+						window.dropZoneTimeout = null;
+						dropZone.removeClass('active hover');
+					}, 100);
+				});
+				
+				//disable default behaviour if file dropped in the wrong area
+				$(document).bind('drop dragover', function (e){					
+					e.preventDefault(); 
+				});
+
+
 
 				this.setConfig(config);
 				this.fileupload($.extend(true, 
 					{
 						formData: function(form) {
+							
 							return [
 								{name: 'SecurityID', value: $(form).find(':input[name=SecurityID]').val()},
 								{name: 'ID', value: $(form).find(':input[name=ID]').val()}
@@ -90,6 +121,7 @@
 				if (this.data('fileupload')._isXHRUpload({multipart: true})) {
 					$('.ss-uploadfield-item-uploador').show();
 					dropZone.show(); // drag&drop avaliable
+					
 				}
 				this._super();
 			},
@@ -147,11 +179,13 @@
 		});
 		$('div.ss-upload *').entwine({
 			getUploadField: function() {
+			
 				return this.parents('div.ss-upload:first');
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-files .ss-uploadfield-item').entwine({
 			onmatch: function() {
+			
 				this.closest('.ss-upload').find('.ss-uploadfield-addfile').addClass('borderTop');
 			},
 			onunmatch: function() {

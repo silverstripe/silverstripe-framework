@@ -1,8 +1,12 @@
 mi_NZ:
   AssetAdmin:
     MENUTITLE: "Ngā kōnae me ngā atahanga. "
-  AssetAdmin_left.ss:
-    GO: "Haere"
+  AssetTableField:
+    DIM: "Nuinga"
+    OWNER: "Kaiūmanga"
+    SIZE: "Nuinga"
+    TITLE: "Ingoa "
+    TYPE: "Tūmomo "
   CMSMain:
     MENUTITLE: "Wāhi kai"
     SAVE: "tiakina"

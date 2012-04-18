@@ -1,15 +1,23 @@
 uk:
   AssetAdmin:
-    CHOOSEFILE: "Вибрати файл"
     MENUTITLE: "Файли та Картинки"
     NEWFOLDER: "Нова Тека"
-  AssetAdmin_left.ss:
-    GO: "Уперед"
+  AssetTableField:
+    CREATED: "Вперше завантажено"
+    DIM: "Виміри"
+    FILENAME: "Ім'я файлу"
+    LASTEDIT: "Востаннє змінено"
+    OWNER: "Власник"
+    SIZE: "Розмір"
+    TITLE: "Назва"
+    TYPE: "Тип"
+    URL: "URL"
   BasicAuth:
     ENTERINFO: "Будь ласка, введіть ім'я користувача та пароль."
     ERRORNOTADMIN: "Цей користувач не є адміністратором."
     ERRORNOTREC: "Таке ім'я користувача / пароль не існує"
   CMSMain:
+    ACCESS: "Доступ до секції '%s'"
     MENUTITLE: "Сторінки"
     SAVE: "Зберегти"
   ChangePasswordEmail.ss:
@@ -21,7 +29,6 @@ uk:
     SUCCESSADD: "Додано %s %s %s"
   ComplexTableField.ss:
     ADDITEM: "Додати"
-    NOITEMSFOUND: "Нічого не знайдено"
     SORTASC: "За зростанням"
     SORTDESC: "За спаданням"
   ComplexTableField_popup.ss:
@@ -30,9 +37,7 @@ uk:
   ConfirmedPasswordField:
     ATLEAST: "Довжина паролю має бути менше %s символів."
     BETWEEN: "Пароль має бути від %s до %s символів."
-    HAVETOMATCH: "Паролі мають співпадати"
     MAXIMUM: "Пароль має бути довшим %s символів."
-    NOEMPTY: "Пароль не може бути пустим"
     SHOWONCLICKTITLE: "Змінити пароль"
   CreditCardField:
     FIRST: "перший"
@@ -63,7 +68,6 @@ uk:
     CHOOSE: "(Оберіть)"
   EmailField:
     VALIDATION: "Будь ласка, введіть адресу е-пошти."
-    VALIDATIONJS: "Будь ласка введіть ємейл адресу."
   Enum:
     ANY: "Будь-який"
   File:
@@ -80,11 +84,6 @@ uk:
     FROMCOMPUTER: "З Вашого комп’ютера"
     FROMFILESTORE: "З сервера"
     REPLACE: "Замінити"
-  FileIFrameField.ss:
-    TITLE: "Фрейм для завантаження зображень"
-  Folder:
-    PLURALNAME: "Файли"
-    SINGULARNAME: "Файл"
   ForgotPasswordEmail.ss:
     HELLO: "Привіт"
   Form:
@@ -99,15 +98,11 @@ uk:
   Group:
     Code: "Код групи"
     Locked: "Заблокувати?"
-    PLURALNAME: "Групи"
     Parent: "Батьківська група"
-    SINGULARNAME: "Група"
     has_many_Permissions: "Права"
     many_many_Members: "Члени"
   HtmlEditorField:
     ANCHORVALUE: "Якір"
-    BUTTONINSERTFLASH: "Вставити носій Flash"
-    BUTTONINSERTIMAGE: "Вставити зображення"
     BUTTONINSERTLINK: "Вставити посилання"
     BUTTONREMOVELINK: "Вмдалити посилання"
     CAPTIONTEXT: "Текст заголовку"
@@ -117,7 +112,6 @@ uk:
     CSSCLASSRIGHT: "Справа, з текстом навколо."
     EMAIL: "Адреса е-пошти"
     FILE: "Файл"
-    FLASH: "Flash"
     FOLDER: "Тека"
     IMAGE: "Зображення"
     IMAGEALTTEXT: "Альтернативний текст (alt) - відображається якщо зображення не відображається"
@@ -136,14 +130,8 @@ uk:
     LINKTO: "Посилатися на"
     PAGE: "Сторінка"
     URL: "URL"
-  Image:
-    PLURALNAME: "Файли"
-    SINGULARNAME: "Файл"
   ImageField:
     IMAGE: "Зображення"
-  Image_Cached:
-    PLURALNAME: "Файли"
-    SINGULARNAME: "Файл"
   Image_iframe.ss:
     TITLE: "АйФрейм завантаження зображення"
   LeftAndMain:
@@ -155,8 +143,6 @@ uk:
     PLEASESAVE: "Будь ласка, збережіть сторінку: Ця сторінка не може бути оновлена, бо вона ще не була збережена."
     SAVED: "збережено"
   LoginAttempt:
-    PLURALNAME: "Підтвердження логіну"
-    SINGULARNAME: "Логін підтверджено"
   Member:
     ADDRESS: "Адреса"
     BUTTONCHANGEPASSWORD: "Змінити пароль"
@@ -200,23 +186,8 @@ uk:
     db_PasswordExpiry: "Дата закінчення терміну дії пароля"
   MemberAuthenticator:
     TITLE: "Е-пошта та Пароль"
-  MemberPassword:
-    PLURALNAME: "Паролі користувачів"
-    SINGULARNAME: "Пароль користувача"
-  MemberTableField:
-    ADD: "Додати"
-    ADDEDTOGROUP: "Додані користувачі до групи"
-    ADDINGFIELD: "Додавання не вдалося."
-    DeleteTitleText: "Видалити з цієї групи"
-    DeleteTitleTextDatabase: "Видалити з бази даних та з всіх груп"
-    FILTER: "Фільтр"
-    SEARCH: "Пошук"
   ModelAdmin:
-    CHOOSE_COLUMNS: "Вибрати результуючі стовпці..."
-    CLEAR_SEARCH: "Очистити результати пошуку"
-    CREATEBUTTON: "Створено '%s'"
     IMPORT: "Імпортувати з CSV"
-    SEARCHRESULTS: "Результати пошуку"
   MoneyField:
     FIELDLABELAMOUNT: "Кількість"
     FIELDLABELCURRENCY: "Валюта"
@@ -224,23 +195,11 @@ uk:
     IsNullLabel: "Is Null"
   NumericField:
     VALIDATION: "'%s' не є числом, для цього поля тільки числа є дійсними"
-    VALIDATIONJS: "це не число, тільки числа можуть бути введені в це поле"
-  Page:
-    PLURALNAME: "Сторінки"
-    SINGULARNAME: "Сторінка"
   Permission:
-    PLURALNAME: "Права"
-    SINGULARNAME: "Право"
   PermissionCheckboxSetField:
     FromGroup: "Успадкований від цієї групи \"%s\""
     FromRole: "Успадкований від цієї ролі \"%s\""
     FromRoleOnGroup: "Успадкований з ролі \"%s\" на групу \"%s\""
-  PermissionRole:
-    PLURALNAME: "Ролі"
-    SINGULARNAME: "Роль"
-  PermissionRoleCode:
-    PLURALNAME: "Коди ролей доступу"
-    SINGULARNAME: "Код ролі доступу"
   PhoneNumberField:
     VALIDATION: "Будь ласка, введіть дійсний номер телефону"
   ReportAdmin:
@@ -253,17 +212,14 @@ uk:
     ENTERNEWPASSWORD: "Ви можете змінити пароль нижче."
     ERRORPASSWORDPERMISSION: "Ви повинні увійти до системи для зміни паролю!"
     LOGGEDOUT: "Ви вийшли з системи. Якщо Ви хочете знову увійти, то введіть дані нижче."
-    LOSTPASSWORDHEADER: "Загублений Пароль"
     NOTEPAGESECURED: "Ця сторінка захищена. Будь ласка, введіть Ваші дані нижче та ми Вас перенаправимо далі."
     NOTERESETPASSWORD: "Введіть адресу Вашої е-пошти і ми надішлемо вам посилання для відновлення паролю"
     PASSWORDSENTHEADER: "Посилання відновлення паролю надіслано на '%s'"
     PASSWORDSENTTEXT: "Дякуємо! Посилання для відновлення паролю було надіслано на '%s'."
   SecurityAdmin:
-    ADDMEMBER: "Додати Користувача"
     EDITPERMISSIONS: "Керувати дозволами для груп"
     MENUTITLE: "Безпека"
     NEWGROUP: "Нова Група"
-    SGROUPS: "Групи безпеки"
   SimpleImageField:
     NOUPLOAD: "Не завантажено жодного зображення"
   SiteTree:

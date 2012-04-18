@@ -98,8 +98,73 @@
 		$this->assertEquals($record->ManyManyFiles()->Last()->Name, $tmpFileName);
 	}
 
-	function testAllowedMaxFileNumber() {
-		$this->markTestIncomplete();
+	function testAllowedMaxFileNumberWithHasOne() {
+		$this->loginWithPermission('ADMIN');
+		
+		// Test each of the three cases - has one with no max filel limit, has one with a limit of
+		// one, has one with a limit of more than one (makes no sense, but should test it anyway).
+		// Each of them should function in the same way - attaching the first file should work, the
+		// second should cause an error.
+		foreach (array('HasOneFile', 'HasOneFileMaxOne', 'HasOneFileMaxTwo') as $recordName) {
+			// Unset existing has_one relation before re-uploading
+			$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+			$record->{$recordName . 'ID'} = null;
+			$record->write();
+
+			$tmpFileName = 'testUploadHasOneRelation.txt';
+			$_FILES = array($recordName => $this->getUploadFile($tmpFileName));
+			$response = $this->post(
+				"UploadFieldTest_Controller/Form/field/$recordName/upload",
+				array($recordName => $this->getUploadFile($tmpFileName))
+			);
+			$body = json_decode($response->getBody());
+			$this->assertEquals(0, $body[0]->error);
+		
+			// Write to it again, should result in an error.
+			$response = $this->post(
+				"UploadFieldTest_Controller/Form/field/$recordName/upload",
+				array($recordName => $this->getUploadFile($tmpFileName))
+			);
+			$body = json_decode($response->getBody());
+			$this->assertNotEquals(0, $body[0]->error);
+		}
+	}
+
+	function testAllowedMaxFileNumberWithHasMany() {
+		$this->loginWithPermission('ADMIN');
+		
+		// The 'HasManyFilesMaxTwo' field has a maximum of two files able to be attached to it.
+		// We want to add files to it until we attempt to add the third. We expect that the first
+		// two should work and the third will fail.
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$record->HasManyFilesMaxTwo()->removeAll();
+		
+		$tmpFileName = 'testUploadHasManyRelation.txt';
+		$_FILES = array('HasManyFilesMaxTwo' => $this->getUploadFile($tmpFileName));
+
+		// Write the first element, should be okay.
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/HasManyFilesMaxTwo/upload',
+			array('HasManyFilesMaxTwo' => $this->getUploadFile($tmpFileName))
+		);
+		$body = json_decode($response->getBody());
+		$this->assertEquals(0, $body[0]->error);
+
+		// Write the second element, should be okay.
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/HasManyFilesMaxTwo/upload',
+			array('HasManyFilesMaxTwo' => $this->getUploadFile($tmpFileName))
+		);
+		$body = json_decode($response->getBody());
+		$this->assertEquals(0, $body[0]->error);
+
+		// Write the third element, should result in error.
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/HasManyFilesMaxTwo/upload',
+			array('HasManyFilesMaxTwo' => $this->getUploadFile($tmpFileName))
+		);
+		$body = json_decode($response->getBody());
+		$this->assertNotEquals(0, $body[0]->error);
 	}
 
 	function testRemoveFromHasOne() {
@@ -553,10 +618,13 @@ static $db = array(
 
 static $has_one = array(
 	'HasOneFile' => 'File',
+	'HasOneFileMaxOne' => 'File',
+	'HasOneFileMaxTwo' => 'File',
 );
 
 static $has_many = array(
 	'HasManyFiles' => 'File',
+	'HasManyFilesMaxTwo' => 'File',
 );
 
 static $many_many = array(
@@ -570,7 +638,7 @@ class UploadFieldTest_FileExtension extends DataExtension implements TestOnly {
 	function extraStatics($class = null, $extension = null) {
 		return array(
 			'has_one' => array('Record' => 'UploadFieldTest_Record')
- 		);
+		);
 	}
 
 	function canDelete($member = null) {
@@ -601,9 +669,24 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 		$fieldHasOne->setFolderName('UploadFieldTest');
 		$fieldHasOne->setRecord($record);
 		
+		$fieldHasOneMaxOne = new UploadField('HasOneFileMaxOne');
+		$fieldHasOneMaxOne->setFolderName('UploadFieldTest');
+		$fieldHasOneMaxOne->setConfig('allowedMaxFileNumber', 1);
+		$fieldHasOneMaxOne->setRecord($record);
+		
+		$fieldHasOneMaxTwo = new UploadField('HasOneFileMaxTwo');
+		$fieldHasOneMaxTwo->setFolderName('UploadFieldTest');
+		$fieldHasOneMaxTwo->setConfig('allowedMaxFileNumber', 2);
+		$fieldHasOneMaxTwo->setRecord($record);
+		
 		$fieldHasMany = new UploadField('HasManyFiles');
 		$fieldHasMany->setFolderName('UploadFieldTest');
 		$fieldHasMany->setRecord($record);
+		
+		$fieldHasManyMaxTwo = new UploadField('HasManyFilesMaxTwo');
+		$fieldHasManyMaxTwo->setFolderName('UploadFieldTest');
+		$fieldHasManyMaxTwo->setConfig('allowedMaxFileNumber', 2);
+		$fieldHasManyMaxTwo->setRecord($record);
 		
 		$fieldManyMany = new UploadField('ManyManyFiles');
 		$fieldManyMany->setFolderName('UploadFieldTest');
@@ -629,7 +712,10 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 			new FieldList(
 				$fieldNoRelation,
 				$fieldHasOne,
+				$fieldHasOneMaxOne,
+				$fieldHasOneMaxTwo,
 				$fieldHasMany,
+				$fieldHasManyMaxTwo,
 				$fieldManyMany,
 				$fieldReadonly,
 				$fieldDisabled,
@@ -641,7 +727,10 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 			new RequiredFields(
 				'NoRelationField',
 				'HasOneFile',
+				'HasOneFileMaxOne',
+				'HasOneFileMaxTwo',
 				'HasManyFiles',
+				'HasManyFilesMaxTwo',
 				'ManyManyFiles',
 				'ReadonlyField',
 				'DisabledField',

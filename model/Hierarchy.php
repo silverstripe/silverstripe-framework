@@ -31,6 +31,38 @@ class Hierarchy extends DataExtension {
 	}
 
 	/**
+	 * Validate the owner object - check for existence of infinite loops.
+	 */
+	function validate(ValidationResult $validationResult) {
+		if (!$this->owner->ID) return; // The object is new, won't be looping.
+		if (!$this->owner->ParentID) return; // The object has no parent, won't be looping.
+		if (!$this->owner->isChanged('ParentID')) return; // The parent has not changed, skip the check for performance reasons.
+
+		// Walk the hierarchy upwards until we reach the top, or until we reach the originating node again.
+		$node = $this->owner;
+		while($node) {
+			if ($node->ParentID==$this->owner->ID) {
+				// Hierarchy is looping.
+				$validationResult->error(
+					sprintf(
+						_t(
+							'Hierarchy.InfiniteLoopNotAllowed',
+							'Infinite loop found within the "%s" hierarchy. Please change the parent to resolve this',
+							'First argument is the class that makes up the hierarchy.'
+						),
+						$this->owner->class
+					),
+					'INFINITE_LOOP'
+				);
+				break;
+			}
+			$node = $node->ParentID ? $node->Parent() : null;
+		}
+
+		// At this point the $validationResult contains the response.
+	}
+
+	/**
 	 * Returns the children of this DataObject as an XHTML UL. This will be called recursively on each child,
 	 * so if they have children they will be displayed as a UL inside a LI.
 	 * @param string $attributes Attributes to add to the UL.

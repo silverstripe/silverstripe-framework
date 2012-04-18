@@ -1,24 +1,14 @@
 pa:
-  AssetAdmin:
-    CHOOSEFILE: "ਫਾਈਲ ਚੁਣੋੋੋੋ"
-    MENUTITLE: "ਫਾਈਲਾਂ ਅਤੇ ਤਸਵੀਰਾਂ"
-    NEWFOLDER: "ਨਵਾਂ ਫੋਲਡਰ"
-  AssetAdmin_left.ss:
-    GO: "ਜਾਓ"
   BasicAuth:
     ENTERINFO: "ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ username ਅਤੇ password ਪਾਉ"
     ERRORNOTADMIN: "ਇਹ user ਪ੍ਰਬੰਧਕ ਨਹੀ ਹੈ।"
     ERRORNOTREC: "That username / password isn't recognised"
-  CMSMain:
-    MENUTITLE: "ਸਾਈਟ ਸਮਾਨ"
-    SAVE: "ਬਚਾ"
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: "ਤੁਸੀ ਆਪਣਾ ਪਾਸਵਰਡ ਬਦਲਿਆ ਖਾਤਰ"
     CHANGEPASSWORDTEXT2: "You can now use the following credentials to log in:"
     HELLO: "ਹਾਏ"
   ComplexTableField.ss:
     ADDITEM: "ਜੋੜ ੋ "
-    NOITEMSFOUND: "ਕੋਈ ਚੀਜ਼ ਨਹੀ ਿਮਲੀ"
     SORTASC: "Sort ascending"
     SORTDESC: "Sort descending"
   ComplexTableField_popup.ss:
@@ -54,8 +44,6 @@ pa:
     VALIDATIONSTRONGPASSWORD: "Passwords must have at least one digit and one alphanumeric character."
     VALIDCURRENCY: "ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ ਸਹੀ ੰਕਰੰਸੀ ਪਾਉ।"
   HtmlEditorField:
-    BUTTONINSERTFLASH: "ਫਲੈਸ਼ ਪਾਉ"
-    BUTTONINSERTIMAGE: "ਫੋਟੋ ਪਾਉ"
     BUTTONINSERTLINK: "ਿਲੰਕ ਪਾਉ"
     BUTTONREMOVELINK: "ਿਲੰਕ ਕੱਟੋਂ"
     CSSCLASS: "Alignment / style"
@@ -64,7 +52,6 @@ pa:
     CSSCLASSRIGHT: "On the right, with text wrapping around."
     EMAIL: "ਈਮੇਲ ਪਤਾ"
     FILE: "ਫਾਈਲ"
-    FLASH: "ਫਲੈਸ਼ ਪਾਉ"
     FOLDER: "ਫੋਲਡਰ"
     IMAGE: "ਫੋਟੋ ਪਾਉ"
     IMAGEDIMENSIONS: "Dimensions"
@@ -82,14 +69,6 @@ pa:
     URL: "URL"
   Image_iframe.ss:
     TITLE: "Image Uploading Iframe"
-  LeftAndMain:
-    HELP: "ਮੱਦਦ "
-    PAGETYPE: "ਪੰਨੇ ਦੀ ਿਕਸਮ"
-    PERMAGAIN: "You have been logged out of the CMS. If you would like to log in again, enter a username and password below."
-    PERMALREADY: "I'm sorry, but you can't access that part of the CMS. If you want to log in as someone else, do so below"
-    PERMDEFAULT: "Please choose an authentication method and enter your credentials to access the CMS."
-    PLEASESAVE: "Please Save Page: This page could not be upated because it hasn't been saved"
-    SAVED: "ਬਚਾਿੲਆ"
   Member:
     ADDRESS: "ਪਤਾ	"
     BUTTONCHANGEPASSWORD: "ਤਬਦੀਲ Password"
@@ -124,9 +103,6 @@ pa:
     YOUROLDPASSWORD: "ਤੁਹਾਡਾ ਪੁਰਾਣਾ password"
   MemberAuthenticator:
     TITLE: "ਈਮੇਲ &amp; "
-  MemberTableField:
-    ADD: "ਜੋੜ ੋ "
-    ADDEDTOGROUP: "ਮੈਂਬਰ ਗਰੁੱਪ ਿਵੱਚ ਜੋਿੜਆ"
   NumericField:
     VALIDATION: "'%s' is not a number, only numbers can be accepted for this field"
   PhoneNumberField:
@@ -139,16 +115,10 @@ pa:
     ENTERNEWPASSWORD: "ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ ਨਵਾਂ password ਪਾਉ।"
     ERRORPASSWORDPERMISSION: "You must be logged in in order to change your password!"
     LOGGEDOUT: "You have been logged out. If you would like to log in again, enter your credentials below."
-    LOSTPASSWORDHEADER: "Password  ਗੁਆਿਚਆ"
     NOTEPAGESECURED: "That page is secured. Enter your credentials below and we will send you right along."
     NOTERESETPASSWORD: "Enter your e-mail address and we will send you a link with which you can reset your password"
     PASSWORDSENTHEADER: "Password reset link sent to '%s'"
     PASSWORDSENTTEXT: "Thank you! The password reset link has been sent to '%s'."
-  SecurityAdmin:
-    ADDMEMBER: "ਮੈਂਬਰ ਜੋੜੋ"
-    MENUTITLE: "ਸੁਰੱਿਖਆ"
-    NEWGROUP: "ਨਵਾਂ ਗਰੁੱਪ	"
-    SGROUPS: "ਸੁਰੱਿਖਆ ਗਰੁੱਪ	"
   SimpleImageField:
     NOUPLOAD: "ਕੋਈ ਫੋਟੋ ਅੱਪਲੋਡ ਨਹੀ ਹੋਈ"
   SiteTree:

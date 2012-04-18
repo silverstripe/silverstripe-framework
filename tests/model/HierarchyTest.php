@@ -13,6 +13,25 @@ class HierarchyTest extends SapphireTest {
 	);
 
 	/**
+	 * Test the Hierarchy prevents infinite loops.
+	 */
+	function testPreventLoop() {
+		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+
+		$obj2->ParentID = $obj2aa->ID;
+		try {
+			$obj2->write();
+		}
+		catch (ValidationException $e) {
+			$this->assertContains('Infinite loop found within the "HierarchyTest_Object" hierarchy', $e->getMessage());
+			return;
+		}
+
+		$this->fail('Failed to prevent infinite loop in hierarchy.');
+	}
+
+	/**
 	 * Test Hierarchy::AllHistoricalChildren().
 	 */
 	function testAllHistoricalChildren() {

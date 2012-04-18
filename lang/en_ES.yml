@@ -1,9 +1,0 @@
-en_ES:
-  AssetAdmin:
-    MENUTITLE: "Files & Images"
-  CMSMain:
-    MENUTITLE: "Site Content"
-  LeftAndMain:
-    HELP: "Help"
-  SecurityAdmin:
-    MENUTITLE: "Security"

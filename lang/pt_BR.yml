@@ -1,10 +1,17 @@
 pt_BR:
   AssetAdmin:
-    CHOOSEFILE: "Selecione Arquivo"
     MENUTITLE: "Arquivos & Imagens"
     NEWFOLDER: "Nova Pasta"
-  AssetAdmin_left.ss:
-    GO: "Ir"
+  AssetTableField:
+    CREATED: "Primeiro upload"
+    DIM: "Dimensões"
+    FILENAME: "Nome do Arquivo"
+    LASTEDIT: "Última Alteração"
+    OWNER: "Dono"
+    SIZE: "Tamanho"
+    TITLE: "Título"
+    TYPE: "Tipo"
+    URL: "URL"
   BBCodeParser:
     ALIGNEMENT: "Alinhamento"
     ALIGNEMENTEXAMPLE: "alinhado a direito"
@@ -33,6 +40,8 @@ pt_BR:
     ERRORNOTADMIN: "Este usuário não é um administrador"
     ERRORNOTREC: "Este nome de usuário / senha não é reconhecido"
   CMSMain:
+    ACCESS: "Acesso a '%s' (%s)"
+    ACCESSALLINTERFACES: "Acessar todas as interfaces do CMS"
     MENUTITLE: "Conteúdo do Site"
     SAVE: "Salvar"
   ChangePasswordEmail.ss:
@@ -47,7 +56,6 @@ pt_BR:
     SUCCESSEDIT: "%s %s %s salvo(s)"
   ComplexTableField.ss:
     ADDITEM: "Incluir %s"
-    NOITEMSFOUND: "Nenhum ítem encontrado"
     SORTASC: "Ordenar ascendente"
     SORTDESC: "Ordenar descendente"
   ComplexTableField_popup.ss:
@@ -56,21 +64,15 @@ pt_BR:
   ConfirmedPasswordField:
     ATLEAST: "A senha tem que possuir no minimo %s caracteres."
     BETWEEN: "As senhas devem ter o numero de caracteres entre %s  e %s."
-    HAVETOMATCH: "As senhas devem ser idênticas."
-    LEASTONE: "As senhas devem ter no minimo 1 numero e um caractere alfanumérico."
     MAXIMUM: "A senha tem que possuir no máximo %s caracteres."
-    NOEMPTY: "As senhas não podem ser vazias"
     SHOWONCLICKTITLE: "Trocar senha"
   CreditCardField:
     FIRST: "primeiro"
     FOURTH: "quarto"
     SECOND: "segundo"
     THIRD: "terceiro"
-    VALIDATIONJS1: "Por favor, assegure que você informou o"
-    VALIDATIONJS2: "numero do cartão correto."
   CurrencyField:
     CURRENCYSYMBOL: "R$"
-    VALIDATIONJS: "Por favor, entre com um valor monetário correto."
   DataObject:
     PLURALNAME: "Dados dos objetos"
     SINGULARNAME: "Dado do objeto"
@@ -91,12 +93,10 @@ pt_BR:
   DateField:
     NOTSET: "não informado"
     TODAY: "hoje"
-    VALIDATIONJS: "Por favor, entre com o formato de data correto (DD/MM/YYYY)."
   DropdownField:
     CHOOSE: "Selecione"
   EmailField:
     VALIDATION: "Por favor escreva um endereço de e-mail"
-    VALIDATIONJS: "Por favor, ente com um endereço de email."
   File:
     Content: "Conteudo"
     Filename: "Nome do Arquivo"
@@ -105,23 +105,8 @@ pt_BR:
     Name: "Nome"
     PLURALNAME: "Arquivos"
     SINGULARNAME: "Arquivo"
-    Sort: "Ordenação"
     TOOLARGE: "Tamanho do arquivo muito grande, máximo %s permitido."
     Title: "Titulo"
-  Folder:
-    CREATED: "Primeiros arquivos enviados"
-    DELSELECTED: "Excluir arquivos selecionados"
-    DETAILSTAB: "Detalhes"
-    FILENAME: "nome do arquivo"
-    FILESTAB: "Arquivos"
-    LASTEDITED: "Ultima atualização"
-    PLURALNAME: "Arquivos"
-    SINGULARNAME: "Arquivo"
-    TITLE: "Titulo"
-    TYPE: "Tipo"
-    UPLOADTAB: "Upload"
-    URL: "URL"
-    VIEWEDITASSET: "Ver/Editar Item"
   ForgotPasswordEmail.ss:
     HELLO: "Olá"
     TEXT1: "Este é seu"
@@ -142,18 +127,13 @@ pt_BR:
   Group:
     Code: "Grupo de código"
     Description: "Descrição"
-    IPRestrictions: "Restrição de endereços IP"
     Locked: "Travado?"
-    PLURALNAME: "Grupos"
     Parent: "Grupo pai"
-    SINGULARNAME: "Grupo"
     Sort: "Ordenação"
     has_many_Permissions: "Permissões"
     many_many_Members: "Membros"
   HtmlEditorField:
     ANCHORVALUE: "Âncora"
-    BUTTONINSERTFLASH: "Inserir Flash"
-    BUTTONINSERTIMAGE: "Inserir imagem"
     BUTTONINSERTLINK: "Inserir link"
     BUTTONREMOVELINK: "Remover link"
     CSSCLASS: "Alinhamento / estilo"
@@ -163,7 +143,6 @@ pt_BR:
     CSSCLASSRIGHT: "Na direita, com o texto ajustado."
     EMAIL: "Endereço de e-mail"
     FILE: "Arquivo"
-    FLASH: "Flash"
     FOLDER: "Pasta"
     IMAGE: "Imagem"
     IMAGEDIMENSIONS: "Dimensões"
@@ -177,17 +156,9 @@ pt_BR:
     LINKFILE: "Download de arquivo"
     LINKINTERNAL: "Página no site"
     LINKOPENNEWWIN: "Abrir link em nova janela?"
-    LINKTEXT: "Texto de link"
     LINKTO: "Link para"
     PAGE: "Página"
-    SEARCHFILENAME: "Procurar por nome de arquivo"
     URL: "URL"
-  Image:
-    PLURALNAME: "Arquivos"
-    SINGULARNAME: "Arquivo"
-  Image_Cached:
-    PLURALNAME: "Arquivos"
-    SINGULARNAME: "Arquivo"
   Image_iframe.ss:
     TITLE: "Upload de imagem"
   LeftAndMain:
@@ -201,8 +172,6 @@ pt_BR:
   LoginAttempt:
     Email: "Endereço de E-mail"
     IP: "Endereço IP"
-    PLURALNAME: "Tentativas de login"
-    SINGULARNAME: "Tentativa de login"
     Status: "Status"
   Member:
     ADDRESS: "Endereço"
@@ -250,56 +219,22 @@ pt_BR:
     db_PasswordExpiry: "Data de expiração da senha"
   MemberAuthenticator:
     TITLE: "E-mail &amp; Senha"
-  MemberPassword:
-    PLURALNAME: "Senhas do Usuário"
-    SINGULARNAME: "Senha do Usuário"
-  MemberTableField:
-    ADD: "Adicionar"
-    ADDEDTOGROUP: "Adicionado membro ao grupo"
-    ADDINGFIELD: "Ocorreu uma falha ao incluir"
-    FILTER: "Filtro"
-    SEARCH: "Buscar"
   ModelAdmin:
-    ADDBUTTON: "Incluir"
-    ADDFORM: "Preencha este formulário para incluir %s no banco de dados"
-    CHOOSE_COLUMNS: "Selecione colunas de resultado..."
-    CLEAR_SEARCH: "Limpar pesquisa"
-    CREATEBUTTON: "Criar '%s'"
     DELETE: "Excluir"
     DELETEDRECORDS: "Registros %s excluidos"
-    FOUNDRESULTS: "Sua pesquisa encontrou %s itens"
     IMPORT: "importar do CSV"
     IMPORTEDRECORDS: "Registros  %s importados"
-    ITEMNOTFOUND: "Não foi possível encontrar o item"
-    LOADEDFOREDITING: "'%s' recuperados para edição."
     NOCSVFILE: "Por favor, localize um arquivo CSV para importar"
     NOIMPORT: "Não há itens a serem importados"
-    NORESULTS: "Não houve resultados"
-    SAVE: "Salvar"
-    SEARCHRESULTS: "Resultados da pesquisa"
-    SELECTALL: "selecionar todos"
-    SELECTNONE: "selecionar nenhum"
     UPDATEDRECORDS: "Registros %s atualizados"
-  MyEntity:
-    MyNamespace: "Valor padrão da lingua"
-  MyNamespace:
-    MYENTITY: "Foram contadas %s itens"
   NumericField:
     VALIDATION: "'%s' não é um número, somente números são aceitos neste campo"
-    VALIDATIONJS: "não é um número, somente números neste campo"
-  Page:
-    PLURALNAME: "Páginas"
-    SINGULARNAME: "Página"
   Permission:
     FULLADMINRIGHTS: "Todos os direitos administrativos"
-    PLURALNAME: "Permissões"
-    SINGULARNAME: "Persmissão"
   PhoneNumberField:
     VALIDATION: "Por favor digite um número de telefone válido"
   RelationComplexTableField.ss:
     ADD: "Incluir"
-    CSVEXPORT: "Exportar para CSV"
-    NOTFOUND: "nenhum item encontrado"
   ReportAdmin:
     MENUTITLE: "Relatórios"
   Security:
@@ -309,31 +244,20 @@ pt_BR:
     CHANGEPASSWORDHEADER: "Alterar sua senha"
     ENTERNEWPASSWORD: "Por favor entre uma nova senha."
     ERRORPASSWORDPERMISSION: "Você precisa estar logado para alterar sua senha!"
-    IPADDRESSES: "Endereço IP"
     LOGGEDOUT: "Você saiu do sistema. Se você gostaria de entrar novamente, digite suas credenciais abaixo"
     LOGIN: "Entrar"
-    LOSTPASSWORDHEADER: "Senha perdida"
     NOTEPAGESECURED: "Esta página é protegida. Digite suas credenciais abaixo para continuar."
     NOTERESETLINKINVALID: "<p> O link de reinicialização da senha é invalido ou expirado.</p><p>Você pode requisitar um novo <a href=\"%s\">aqui</a> ou mudar sua senha após <a href=\"%s\">logado</a></p>"
     NOTERESETPASSWORD: "Digite seu endereço de e-mail e nós mandaremos a você um link com o qual você pode resetar sua senha"
     PASSWORDSENTHEADER: "Link para resetar senha enviado para '%s'"
     PASSWORDSENTTEXT: "Obrigado! O link para resetar a senha foi enviado para '%s'."
   SecurityAdmin:
-    ADDMEMBER: "Adicionar Membro"
     EDITPERMISSIONS: "Editar permissões e endereço IP para cada grupo"
     GROUPNAME: "Nome do grupo"
-    IPADDRESSESHELP: |
-                      <p> Você pode restringir este grupo a uma escalade de endereço IP privado(um por linha)<br/> Estas escalas podem ser em qualque um dos formatos: <br>
-                      203.96.152.12<br />
-                      203.96.152/24<br />
-                      203.96/16<br />
-                      203/8<br /><br />
-                      se você entrar com um ou mais escalas de endereços no campo, os usuários só poderão acessar o grupo de se eles estiverem logados com um endereço IP válido. Isto não impede de as pessoas de se logar. Isto é devia a possibilidade de o usuário possa  acessar partes do site que não tenho restrição de endereço IP.    MEMBERS: "Membros"
+    MEMBERS: "Membros"
     MENUTITLE: "Segurança"
     NEWGROUP: "Novo Grupo"
     PERMISSIONS: "Permissões"
-    SGROUPS: "Grupos de segurança"
-    VIEWUSER: "Ver Usuario"
   SimpleImageField:
     NOUPLOAD: "Não foi feito o upload de nenhuma imagem"
   SiteTree:
@@ -346,9 +270,6 @@ pt_BR:
     CSVEXPORT: "Exportar para CSV"
     PRINT: "Imprimir"
   TableListField_PageControls.ss:
-    DISPLAYING: "Mostrando"
-    OF: "de"
-    TO: "para"
     VIEWFIRST: "Ver o Primeiro"
     VIEWLAST: "Ver o Ultimo"
     VIEWNEXT: "Ver o próximo"

@@ -1,10 +1,17 @@
 sk:
   AssetAdmin:
-    CHOOSEFILE: "Vybrať súbor"
     MENUTITLE: "Súbory a obrázky"
     NEWFOLDER: "Nový Adresár"
-  AssetAdmin_left.ss:
-    GO: "Vykonať"
+  AssetTableField:
+    CREATED: "Prvýkrát nahrané"
+    DIM: "Rozmery"
+    FILENAME: "Názov"
+    LASTEDIT: "Posledne zmenené"
+    OWNER: "Vlastník"
+    SIZE: "Veľkosť"
+    TITLE: "Titulok"
+    TYPE: "Typ"
+    URL: "URL"
   BBCodeParser:
     ALIGNEMENT: "Zarovnanie"
     ALIGNEMENTEXAMPLE: "zarovnané vpravo"
@@ -38,9 +45,10 @@ sk:
     ANY: "Ktorýkoľvek"
     NO: "Nie"
     YES: "Áno"
-  CMSBatchActions:
-    PUBLISHED_PAGES: "Publikovaných %d stránok, %d zlyhaní"
   CMSMain:
+    ACCESS: "Prístup do '%s' sekcie"
+    ACCESSALLINTERFACES: "Pristup do všetkých častí CMS."
+    ACCESSALLINTERFACESHELP: "Prepisuje viac špecifických  nastavení prístupu."
     MENUTITLE: "Obsah webu"
     SAVE: "Uložiť"
   ChangePasswordEmail.ss:
@@ -58,7 +66,6 @@ sk:
     SUCCESSEDIT: "Uložené %s %s %s"
   ComplexTableField.ss:
     ADDITEM: "Pridať %s"
-    NOITEMSFOUND: "Žiadne položky nenájdené"
     SORTASC: "Zoradiť vzostupne"
     SORTDESC: "Zoradiť zostupne"
   ComplexTableField_popup.ss:
@@ -67,21 +74,15 @@ sk:
   ConfirmedPasswordField:
     ATLEAST: "Heslá musia mať aspoň %s znakov."
     BETWEEN: "Heslá musia mať od %s po %s znakov."
-    HAVETOMATCH: "Heslá sa musia zhodovať"
-    LEASTONE: "Heslá musia mať aspoň jedno číslo a jednen abecedný znak."
     MAXIMUM: "Heslá musia mať najviac %s znakov."
-    NOEMPTY: "Heslá nemôžu byť prázdne."
     SHOWONCLICKTITLE: "Zmeniť heslo"
   CreditCardField:
     FIRST: "prvý"
     FOURTH: "štvrtý"
     SECOND: "druhý"
     THIRD: "tretí"
-    VALIDATIONJS1: "Prosím uistite sa že ste zadali"
-    VALIDATIONJS2: "správne číslo karty."
   CurrencyField:
     CURRENCYSYMBOL: "$"
-    VALIDATIONJS: "Prosím zadajte platnú menu."
   DataObject:
     PLURALNAME: "Datové objekty"
     SINGULARNAME: "Dátový objekt"
@@ -102,7 +103,6 @@ sk:
   DateField:
     NOTSET: "nezadané"
     TODAY: "dnes"
-    VALIDATIONJS: "Prosím napíste platný formát dátumu (DD/MM/RRRR)."
     VALIDDATEFORMAT2: "Zadajte platný dátum vo formáte (%s)"
     VALIDDATEMAXDATE: "Váš dátum musi byť strarši alebo zhodný s maximalnim povolením dátumom (%s)"
     VALIDDATEMINDATE: "Váš dátum musí byť novši alebo zodpovedajúci minimalnemu povolenému dátumu (%s)"
@@ -110,7 +110,6 @@ sk:
     CHOOSE: "(Vyberte si)"
   EmailField:
     VALIDATION: "Prosím zadajte e-mailovú adresu."
-    VALIDATIONJS: "Prosím napíste emailovú adresu."
   Email_BounceRecord:
     PLURALNAME: "Záznamy o odskočených e-mailoch"
     SINGULARNAME: "Záznam o odskočených e-mailoch"
@@ -125,7 +124,6 @@ sk:
     Name: "Meno"
     PLURALNAME: "Súbory"
     SINGULARNAME: "Súbor"
-    Sort: "Zoradiť podľa"
     TOOLARGE: "Súbor je príliš veľký, maximálna veľkosť je %s."
     Title: "Názov"
   FileIFrameField:
@@ -137,22 +135,6 @@ sk:
     FROMFILESTORE: "Z úložiska súborov"
     NOSOURCE: "Prosím zvolte zdrojový súbor pre priloženie"
     REPLACE: "Vymeniť %s"
-  FileIFrameField.ss:
-    TITLE: "Iframe pre nahrávnie obrázkov"
-  Folder:
-    CREATED: "Prvé nahraté"
-    DELSELECTED: "Vymazať označené súbory"
-    DETAILSTAB: "Detaily"
-    FILENAME: "Meno súboru"
-    FILESTAB: "Súbory"
-    LASTEDITED: "Posledné nahraté"
-    PLURALNAME: "Súbory"
-    SINGULARNAME: "Súbor"
-    TITLE: "Názov"
-    TYPE: "Typ"
-    UPLOADTAB: "Nahrať"
-    URL: "URL"
-    VIEWEDITASSET: "Prezerať/Upraviť položky"
   ForgotPasswordEmail.ss:
     HELLO: "Dobrý deň"
     TEXT1: "Tu je váš"
@@ -175,13 +157,9 @@ sk:
     DefaultGroupTitleAdministrators: "Administratori"
     DefaultGroupTitleContentAuthors: "Autori obsahu"
     Description: "Popis"
-    IMPORTTABTITLE: "Importovať"
-    IPRestrictions: "Obmedzenia IP adries"
     Locked: "Zamknuté?"
-    PLURALNAME: "Skupiny"
     Parent: "Nadradená skupina"
     RolesAddEditLink: "Pridať/upraviť úlohy"
-    SINGULARNAME: "Skupina"
     Sort: "Zoradiť podľa"
     has_many_Permissions: "Právomoci"
     many_many_Members: "Uživatelia"
@@ -193,13 +171,12 @@ sk:
             Povolené stĺpce: %s
             Existujúce skupiny sú najdené podla ich unikátnej hodnoty <em>Code</em>, a aktualizované novými hodnotami z importovaného súboru.
             Hierarchia skupín môže byť vytvorená použitím stĺpca <em>ParentCode</em>.
-            Právomoci môžu byt pridelené pomocou stĺpca <em>PermissionCode</em>. Existujúce právomoci nie su vymazané.    ResultCreated: "Vytvorené %d skupiny"
+            Právomoci môžu byt pridelené pomocou stĺpca <em>PermissionCode</em>. Existujúce právomoci nie su vymazané.
+    ResultCreated: "Vytvorené %d skupiny"
     ResultDeleted: "Vymazané %d skupiny"
     ResultUpdated: "Aktualizované %d skupiny"
   HtmlEditorField:
     ANCHORVALUE: "Odkaz"
-    BUTTONINSERTFLASH: "Vložiť Flash"
-    BUTTONINSERTIMAGE: "Vložiť obrázok"
     BUTTONINSERTLINK: "Vložiť odkaz"
     BUTTONREMOVELINK: "Odstrániť odkaz"
     CAPTIONTEXT: "Text nadpisu"
@@ -210,7 +187,6 @@ sk:
     CSSCLASSRIGHT: "Vpravo, s obtekajúcim textom."
     EMAIL: "E-mailovú adresu"
     FILE: "Súbor"
-    FLASH: "Vložiť flash"
     FOLDER: "Adresár"
     IMAGE: "Vložiť obrázok"
     IMAGEALTTEXT: "Atlernatívni text (alt) - vypísaní pokiaľ nemože byť zobrazení obrázok"
@@ -226,20 +202,11 @@ sk:
     LINKFILE: "Stiahnutie súboru"
     LINKINTERNAL: "Stránku na vlastnom webe"
     LINKOPENNEWWIN: "Otvoriť odkaz v novom okne?"
-    LINKTEXT: "Text odkazu"
     LINKTO: "Odkázať na"
     PAGE: "Stránku"
-    SEARCHFILENAME: "Vyhľadať podľa názvu súboru"
-    SHOWUPLOADFORM: "Pridať súbor"
     URL: "URL"
-  Image:
-    PLURALNAME: "Súbory"
-    SINGULARNAME: "Súbor"
   ImageField:
     IMAGE: "Obrázok"
-  Image_Cached:
-    PLURALNAME: "Súbory"
-    SINGULARNAME: "Súbor"
   Image_iframe.ss:
     TITLE: "Rámec pre nahranie obrázku"
   LeftAndMain:
@@ -251,13 +218,9 @@ sk:
     PERMDEFAULT: "Vyberte si prosím metódu autentifikácie a zadajte svoje prístupové údaje k CMS."
     PLEASESAVE: "Prosím uložte stránku: Táto stránka nemôže byť aktualizovaná, lebo ešte nebola uložená."
     SAVED: "uložené"
-  LeftAndMain_right.ss:
-    WELCOMETO: "Vitajte v"
   LoginAttempt:
     Email: "Emailová adresa"
     IP: "IP adreasa"
-    PLURALNAME: "Pokusy o prihlásenie"
-    SINGULARNAME: "Pokus o prihlásenie"
     Status: "Status"
   Member:
     ADDRESS: "Adresa"
@@ -315,83 +278,42 @@ sk:
             Pokročile použitie
             Povolené stĺpce
             Existujúci uživatelia sú najdený podľa ich unikátnej <em>Code</em> hodnoty, a aktualizovaný novými hodnotami z importovaného súboru.
-            Skupiny môžu byť pridelené cez stĺpec <em>Groups</em>. Skupiny sú identifikované cez ich <em>Code</em> hodnotu, viacero skupín môže byť oddelených pomocou čiarky. Existujúce členstvá v skupinách nie su vymazané.    ResultCreated: "Vytvorených %d členov"
+            Skupiny môžu byť pridelené cez stĺpec <em>Groups</em>. Skupiny sú identifikované cez ich <em>Code</em> hodnotu, viacero skupín môže byť oddelených pomocou čiarky. Existujúce členstvá v skupinách nie su vymazané.
+    ResultCreated: "Vytvorených %d členov"
     ResultDeleted: "Zmazaných %d členov"
     ResultNone: "Žiadne zmeny"
     ResultUpdated: "Aktualizovaných %d členov"
-  MemberPassword:
-    PLURALNAME: "Heslá uživatela"
-    SINGULARNAME: "Heslo uživatela"
-  MemberTableField:
-    ADD: "Pridať"
-    ADDEDTOGROUP: "Člen pridaný do skupiny"
-    ADDINGFIELD: "Pridávanie zlyhalo"
-    DeleteTitleText: "Vymazať z tejto skupiny"
-    DeleteTitleTextDatabase: "Vymazať z databázy a všetkých skupín"
-    ERRORADDINGUSER: "Nastala chyba pri pridávani uživatela do skupiny: %s"
-    FILTER: "Filter"
-    SEARCH: "Vyhľadať"
   ModelAdmin:
-    ADDBUTTON: "Pridať"
-    ADDFORM: "Vyplnte tento formulár aby ste pridali %s do databázy."
-    CHOOSE_COLUMNS: "Zvoliťe stĺpce výsledkov"
-    CLEAR_SEARCH: "Zmazať vysledky vyhľadávania"
-    CREATEBUTTON: "Vytvoriť '%s'"
     DELETE: "Vymazať"
     DELETEDRECORDS: "Vymazaných %s záznamov."
-    FOUNDRESULTS: "Vaše vyhľadávanie našlo %s zhodných položiek"
     IMPORT: "Importovať z CSV"
     IMPORTEDRECORDS: "Importovaných %s záznamov."
-    ITEMNOTFOUND: "Neviem najsť tú položku"
-    LOADEDFOREDITING: "Načítané '%s' pre úpravu."
     NOCSVFILE: "Prosím vyhľadajte CSV súbor pre importovanie"
     NOIMPORT: "Nie je čo importovať"
-    NORESULTS: "Žiadne výsledky"
-    SAVE: "Uložiť"
-    SEARCHRESULTS: "Výsledky vyhľadávania"
-    SELECTALL: "označ všetky"
-    SELECTNONE: "odznač všetky"
     UPDATEDRECORDS: "Aktualizovaných %s záznamov."
   MoneyField:
     FIELDLABELAMOUNT: "Množstvo"
     FIELDLABELCURRENCY: "Mena"
-  MyEntity:
-    MyNamespace: "Moja predvolená hodnota jazyka"
-  MyNamespace:
-    MYENTITY: "Počítam %s vecí"
   NullableField:
     IsNullLabel: "Is Null"
   NumericField:
     VALIDATION: "'%s' nie je číslo. V tomto poli môžu byť zadané iba čísla"
-    VALIDATIONJS: "nie je číslo, iba čísla možu byť zadané do tohoto poľa"
-  Page:
-    PLURALNAME: "Stranky"
-    SINGULARNAME: "Stránka"
   Permission:
     AdminGroup: "Administrátor"
+    CMS_ACCESS_CATEGORY: "Prístup do CMS"
     FULLADMINRIGHTS: "Plné administrátorské práva"
     FULLADMINRIGHTS_HELP: "Ma prednosť pred všetkými ostatnými prideleniami a právomocami."
-    PLURALNAME: "Právomoci"
-    SINGULARNAME: "Právomoc"
   PermissionCheckboxSetField:
     AssignedTo: "pridelené \"%s\""
     FromGroup: "zdediť zo skupiny \"%s\""
     FromRole: "zdediť z úlohy \"%s\""
     FromRoleOnGroup: "zdediť z úlohy \"%s\" v skupine \"%s\""
-  PermissionRole:
-    PLURALNAME: "Úlohy"
-    SINGULARNAME: "Úloha"
-  PermissionRoleCode:
-    PLURALNAME: "Kódy právomocí úloh"
-    SINGULARNAME: "Kód právomocí úloh"
   Permissions:
     PERMISSIONS_CATEGORY: "Úlohy a prístupové práva"
   PhoneNumberField:
     VALIDATION: "Prosím zadajte platné telefónne číslo"
   RelationComplexTableField.ss:
     ADD: "Pridať"
-    CSVEXPORT: "Exportovať do CSV"
-    NOTFOUND: "Nenajdené žiadne položky"
   ReportAdmin:
     MENUTITLE: "Reporty"
   Security:
@@ -401,38 +323,28 @@ sk:
     CHANGEPASSWORDHEADER: "Zmeniť heslo"
     ENTERNEWPASSWORD: "Prosím zadajte nové heslo."
     ERRORPASSWORDPERMISSION: "Pre zmenu hesla musíte byť prihlásený!"
-    IPADDRESSES: "IP adresa"
     LOGGEDOUT: "Boli ste odhlásený. Ak sa chcete znovu prihlásiť, zadajte svoje prihlasovacie údaje."
     LOGIN: "Prihlásiť"
-    LOSTPASSWORDHEADER: "Stratené heslo"
     NOTEPAGESECURED: "Táto stránka je zabezpečená. Zadajte svoje prihlasovacie údaje a my Vám zároveň pošleme práva."
     NOTERESETLINKINVALID: "<p> Odkaz na reset hesla je nesprávny alebo mu vypršala platnosť.</p><p>O nový môžete požiadať <a href=\"%s\">tu</a> alebo si zmente heslo po <a href=\"%s\">prihlásení</a>.</p>"
     NOTERESETPASSWORD: "Zadajte svoju e-mailovú adresu a my Vám pošleme odkaz na resetovanie hesla"
     PASSWORDSENTHEADER: "Odkaz na resetovanie hesla odoslaný pre '%s'"
     PASSWORDSENTTEXT: "Ďakujeme! Odkaz na resetovanie hesla bol poslaný pre '%s'."
   SecurityAdmin:
-    ADDMEMBER: "Pridať člena"
+    ACCESS_HELP: "Povoliť prezeranie, pridávanie a úpravu uživaťeľov, ako aj pridelovanie právomoci pre nich."
     APPLY_ROLES: "Aplikovať úlohy skupinám"
     APPLY_ROLES_HELP: "Schopnosť upravovať úlohy pridelené skupine. Vyžaduje prístup do sekcie \"Bezpečnosť\"."
     EDITPERMISSIONS: "Spravovať právomoci pre skupiny"
     EDITPERMISSIONS_HELP: "Schopnosť upravovať právomoci a IP adresi pre skupinu. Vyžaduje prístup do sekcie \"Bezpečnosť\"."
     GROUPNAME: "Názov skupiny"
-    IPADDRESSESHELP: |
-                      <p>Túto skupinu môžete obmedziť na rozsah určitých IP adries (jeden rozsah na riadok). <br /> Rozsahy môžu byť v ktorej koľvek z nasledujúcich foriem: <br />
-                      203.96.152.12<br />
-                      203.96.152/24<br />
-                      203.96/16<br />
-                      203/8<br /><br />Pokiaľ zadáte jednu alebo viac rozsahov IP adries do tohto poľa, uživatelia dostanú právomoci danej skupiny iba pokiaľ sa prihlásia z platných IP adresies. Tieto nastavenia im nezabránia prihlasenie. Je to kvôli tomu aby sa rovnaký uživateľ prihlásiť k rôznym častiam systému aj bez obmedzení na základe IP adries.    MEMBERS: "Členovia"
+    MEMBERS: "Členovia"
     MENUTITLE: "Bezpečnosť"
     MemberListCaution: "Upozornenie: Odstánenie členov z tohto zoznamu ich odstáni zo všetkých skupín a databázy."
     NEWGROUP: "Nová skupina"
     PERMISSIONS: "Právomoci"
     ROLES: "Úlohy"
     ROLESDESCRIPTION: "Táto sekcia umožnuje pridať úlohy skupine. Úlohy sú logické zoskupenia právomocí, ktoré môžu byť zmenené v záložke Úloh"
-    SGROUPS: "Bezpečnostné skupiny"
-    TABIMPORT: "Importovať"
     TABROLES: "Úlohy"
-    VIEWUSER: "Zobraz uživaťela"
   SecurityAdmin_MemberImportForm:
     BtnImport: "Importovať"
     FileFieldLabel: "CSV súbor <small>(Povoléné koncovki súborov: *.csv)</small>"
@@ -444,19 +356,14 @@ sk:
     ISREQUIRED: "V %s '%s' je požadované."
   TableField.ss:
     ADD: "Pridať nový riadok"
-    ADDITEM: "Pridať %s"
   TableListField:
     CSVEXPORT: "Exportovať do CSV"
     PRINT: "Vytlačiť"
     SELECT: "Vyberte:"
   TableListField.ss:
-    NOITEMSFOUND: "Nenajdené žiadne položky"
     SORTASC: "Zoradiť vzostupne"
     SORTDESC: "Zoradiť zostupne"
   TableListField_PageControls.ss:
-    DISPLAYING: "Zobrazujem"
-    OF: "z"
-    TO: "do"
     VIEWFIRST: "Zobraziť prvé"
     VIEWLAST: "Zobraziť posledné"
     VIEWNEXT: "Zobraziť nasledujúce"

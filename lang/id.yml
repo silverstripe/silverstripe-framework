@@ -1,10 +1,5 @@
 id:
   AssetAdmin:
-    CHOOSEFILE: "Pilih file"
-    MENUTITLE: "File-file & Gambar-gambar"
-    NEWFOLDER: "FolderBaru"
-  AssetAdmin_left.ss:
-    GO: "Maju"
   BBCodeParser:
     ALIGNEMENT: "Penjajaran barisan"
     ALIGNEMENTEXAMPLE: "jajar kanan"
@@ -35,7 +30,6 @@ id:
     ERRORNOTADMIN: "User tersebut bukan administrator."
     ERRORNOTREC: "Username/password tidak dikenali"
   CMSMain:
-    MENUTITLE: "Isi Situs"
     SAVE: "Simpan"
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: "Anda merubah password anda untuk"
@@ -43,12 +37,11 @@ id:
     EMAIL: "Email"
     HELLO: "Hai"
   ComplexTableField:
-    CLOSEPOPUP: "Tutup Popup"
+    CLOSEPOPUP: "Tutup popup"
     SUCCESSADD: "Telah menambah %s %s %s"
     SUCCESSEDIT: "Telah menyimpan %s %s %s"
   ComplexTableField.ss:
     ADDITEM: "Tambahkan %s"
-    NOITEMSFOUND: "Tidak ada item yang ditemukan"
     SORTASC: "Urut ascending"
     SORTDESC: "Urut descending"
   ComplexTableField_popup.ss:
@@ -57,21 +50,15 @@ id:
   ConfirmedPasswordField:
     ATLEAST: "Kata sandi harus sedikitnya %s karakter panjangnya."
     BETWEEN: "Panjang kata sandi harus %s sampai %s karakter panjangnya."
-    HAVETOMATCH: "Kata sandi harus sama."
-    LEASTONE: "Kata sandi harus sedikitnya mempunyai satu karakter digit dan satu karakter alphanumeric."
     MAXIMUM: "Kata sandi harus maksimal %s karakter panjangnya."
-    NOEMPTY: "Kata sandi tidak boleh kosong."
     SHOWONCLICKTITLE: "Ganti Kata Sandi"
   CreditCardField:
     FIRST: "pertama"
     FOURTH: "keempat"
     SECOND: "kedua"
     THIRD: "ketiga"
-    VALIDATIONJS1: "Mohon pastikan anda telah memasukkan"
-    VALIDATIONJS2: "nomer kartu kredit anda dengan benar."
   CurrencyField:
     CURRENCYSYMBOL: "$"
-    VALIDATIONJS: "Mohon masukkan mata uang yang sah."
   DataObject:
     PLURALNAME: "Objek-objek Data"
     SINGULARNAME: "Objek Data"
@@ -92,12 +79,10 @@ id:
   DateField:
     NOTSET: "tidak diset"
     TODAY: "hari ini"
-    VALIDATIONJS: "Mohon masukkan format tanggal yabg sah (TT/BB/TTTT)."
   DropdownField:
     CHOOSE: "(Pilih)"
   EmailField:
     VALIDATION: "Harap masukkan alamat email."
-    VALIDATIONJS: "Mohon masukkan alamat email."
   File:
     Content: "Isi"
     Filename: "Nama File"
@@ -106,23 +91,8 @@ id:
     Name: "Nama"
     PLURALNAME: "File-file"
     SINGULARNAME: "File"
-    Sort: "Urutan Sortir"
     TOOLARGE: "Ukuran File terlalu besar, maksimum %s diperbolehkan."
     Title: "Judul"
-  Folder:
-    CREATED: "Uploaded Pertama Kali"
-    DELSELECTED: "Hapus file-file yang telah dipilih"
-    DETAILSTAB: "Perincian"
-    FILENAME: "Nama file"
-    FILESTAB: "File-file"
-    LASTEDITED: "Terakhir Kali Diperbaharui"
-    PLURALNAME: "File-file"
-    SINGULARNAME: "File"
-    TITLE: "Judul"
-    TYPE: "Tipe"
-    UPLOADTAB: "Upload"
-    URL: "URL"
-    VIEWEDITASSET: "Tampilkan/Edit Aset"
   ForgotPasswordEmail.ss:
     HELLO: "Hai"
     TEXT1: "Inilah"
@@ -145,18 +115,13 @@ id:
     DefaultGroupTitleAdministrators: "Pengurus"
     DefaultGroupTitleContentAuthors: "Pencipta isi"
     Description: "Deskripsi"
-    IPRestrictions: "Restriksi alamat IP"
     Locked: "Terkunci?"
-    PLURALNAME: "Grup-grup"
     Parent: "Grup induk"
-    SINGULARNAME: "Grup"
     Sort: "Urutan Sortir"
     has_many_Permissions: "Ijin"
     many_many_Members: "Anggota-anggota"
   HtmlEditorField:
     ANCHORVALUE: "Anchor"
-    BUTTONINSERTFLASH: "Beri Flash"
-    BUTTONINSERTIMAGE: "Beri gambar"
     BUTTONINSERTLINK: "Beri link"
     BUTTONREMOVELINK: "Pindahkan link"
     CSSCLASS: "Aligmen/gaya"
@@ -166,7 +131,6 @@ id:
     CSSCLASSRIGHT: "Pada sebelah kanan, dengan teks disekitarnya"
     EMAIL: "Alamat email"
     FILE: "File"
-    FLASH: "Beri flash"
     FOLDER: "Folder"
     IMAGE: "Beri gambar"
     IMAGEDIMENSIONS: "Dimensi"
@@ -182,29 +146,12 @@ id:
     LINKOPENNEWWIN: "Buka link pada jendela baru?"
     LINKTO: "Link ke"
     PAGE: "Halaman"
-    SEARCHFILENAME: "Cari berdasarkan nama file"
-    SHOWUPLOADFORM: "Upload arsip"
     URL: "URL"
-  Image:
-    PLURALNAME: "File-file"
-    SINGULARNAME: "File"
   Image_iframe.ss:
     TITLE: "Iframe Meng-upload Gambar"
-  LeftAndMain:
-    HELP: "Bantuan"
-    PAGETYPE: "Tipe halaman:"
-    PERMAGAIN: "Anda sudah keluar dari CMS. Jika Anda ingin ingin masuk lagi, masukkan username dan password di bawah ini."
-    PERMALREADY: "Mohon maaf, Anda tidak dapat memasuki bagian CMS tersebut. Jika anda ingin masuk sebagai orang lain, lakukan di bawah ini"
-    PERMDEFAULT: "Masukkan alamat email dan kata sandi untuk mengakses CMS."
-    PLEASESAVE: "Mohon Simpan Halaman : Halaman ini tidak dapat di-update karena belum disimpan."
-    SAVED: "tersimpan"
-  LeftAndMain_right.ss:
-    WELCOMETO: "Selamat datang di"
   LoginAttempt:
     Email: "Alamat Email"
     IP: "Alamat IP"
-    PLURALNAME: "Login yang telah dicoba"
-    SINGULARNAME: "Login yang telah dicoba"
     Status: "Status"
   Member:
     ADDRESS: "Alamat"
@@ -251,58 +198,18 @@ id:
     db_PasswordExpiry: "Tanggal Kata Sandi Berakhir"
   MemberAuthenticator:
     TITLE: "E-mail &amp; Password"
-  MemberPassword:
-    PLURALNAME: "Kata-kata Sandi Anggota"
-    SINGULARNAME: "Kata Sandi Anggota"
-  MemberTableField:
-    ADD: "Tambah"
-    ADDEDTOGROUP: "Member yang telah ditambahkan ke dalam grup"
-    ADDINGFIELD: "Penambahan gagal"
-    FILTER: "Filter"
-    SEARCH: "Cari"
-  ModelAdmin:
-    ADDBUTTON: "Tambah"
-    ADDFORM: "Isi formulir ini untuk menambahkan %s ke database."
-    CHOOSE_COLUMNS: "Pilih kolum-kolum hasil..."
-    CLEAR_SEARCH: "Hapus Pencarian"
-    CREATEBUTTON: "Buat '%s'"
-    DELETE: "Hapus"
-    DELETEDRECORDS: "Telah menghapus %s catatan."
-    FOUNDRESULTS: "Pencarian anda menemukan %s hasil yang cocok"
-    IMPORT: "Impor dari CSV"
-    IMPORTEDRECORDS: "Telah mengimpor %s %s."
-    ITEMNOTFOUND: "Saya tidak bisa menemukan barang tersebut"
-    LOADEDFOREDITING: "'%s' telah diload untuk diedit."
-    NOCSVFILE: "Mohon pilih sebuah file CSV untuk diimpor"
-    NOIMPORT: "Tidak ada yang bisa diimpor"
-    NORESULTS: "Tidak ada hasil"
-    SAVE: "Simpan"
-    SEARCHRESULTS: "Hasil Pencarian"
-    SELECTALL: "pilih semua"
-    SELECTNONE: "tidak pilih"
-    UPDATEDRECORDS: "Telah membaharui %s catatan."
   MoneyField:
     FIELDLABELAMOUNT: "Jumlah"
     FIELDLABELCURRENCY: "Mata Uang"
   NumericField:
     VALIDATION: "'%s' bukan angka, hanya angka yang dapat diterima untuk field ini"
-    VALIDATIONJS: "bukanlah sebuah angka, hanya angka yang bisa diterima di field ini "
-  Page:
-    PLURALNAME: "Halaman-halaman"
-    SINGULARNAME: "Halaman"
   Permission:
     AdminGroup: "Pengurus"
     FULLADMINRIGHTS: "Hak-hak administratif yang penuh"
-    PLURALNAME: "Ijin-ijin"
-    SINGULARNAME: "Ijin"
   PhoneNumberField:
     VALIDATION: "Harap masukkan nomor telepon yang valid"
   RelationComplexTableField.ss:
     ADD: "Tambah"
-    CSVEXPORT: "Ekspor ke CSV"
-    NOTFOUND: "Tidak ada barang yang diketemukan"
-  ReportAdmin:
-    MENUTITLE: "Laporan-laporan"
   Security:
     ALREADYLOGGEDIN: "Anda tidak memiliki akses ke halaman ini. Jika anda memiliki keanggotaan yang dapat mengakses halaman ini, anda dapat masuk di bawah ini."
     BUTTONSEND: "Kirimi saya link untuk mengeset ulang password "
@@ -310,28 +217,16 @@ id:
     CHANGEPASSWORDHEADER: "Ubah password anda"
     ENTERNEWPASSWORD: "Harap masukkan password anda yang baru"
     ERRORPASSWORDPERMISSION: "Anda harus masuk terlebih dahulu untuk merubah password Anda!"
-    IPADDRESSES: "Alamat-alamat IP"
     LOGGEDOUT: "Anda telah keluar. Jika Anda ingin masuk lagi, masukkan surat kepercayaan Anda di bawah ini."
     LOGIN: "Log in"
-    LOSTPASSWORDHEADER: "Password yang Hilang"
     NOTEPAGESECURED: "Halaman ini diamankan. Masukkan surat kepercayaan Anda di bawah ini dan kami akan mengirim Anda ke jalur yang benar."
     NOTERESETPASSWORD: "Masukkan alamat e-mail anda dan kami akan mengirimi anda link yang dapat anda gunakan untuk mengeset ulang password "
     PASSWORDSENTHEADER: "link untuk mengeset ulang password dikirim ke '%s'"
     PASSWORDSENTTEXT: "Terima kasih! Link untuk mengeset ulang password telah dikirim ke '%s'."
   SecurityAdmin:
-    ADDMEMBER: "Tambah Member"
-    EDITPERMISSIONS: "Edit ijin-ijin dan alamat-alamat IP setiap grup"
     GROUPNAME: "Nama grup"
-    IPADDRESSESHELP: |
-                      <p>Anda bisa merestriksi grup ini ke dalam lingkup alamat IP secara khusus (satu lingkup per baris). <br />Lingkup-lingkup dapat dimasukkan dalam bentuk-bentuk sebagai berikut: <br />
-                      203.96.152/24<br />
-                      203.96/16<br />
-                      203/8<br /><br />Jika anda masukkan satu lingkup alamat IP atau lebih ke dalam kotak ini, anggota-anggota hanya akan mempunyai hak-hak dalam grup ini jika mereka log on dari salah satu alamat-alamat IP yang disahkan. Ini tidak akan mencegah orang untuk log in. Hal ini dibiarkan karena pengguna yang sama mungkin harus log in untuk mengakses bagian-bagian dari sistem tanpa restriksi alamat IP.    MEMBERS: "Anggota-anggota"
-    MENUTITLE: "Keamanan"
-    NEWGROUP: "Grup Baru"
+    MEMBERS: "Anggota-anggota"
     PERMISSIONS: "Ijin-ijin"
-    SGROUPS: "Grup keamanan"
-    VIEWUSER: "Tampilkan Pengguna"
   SimpleImageField:
     NOUPLOAD: "Tidak Ada Gambar yang Di-upload"
   SiteTree:
@@ -345,13 +240,10 @@ id:
     PRINT: "Cetak"
     SELECT: "Pilih:"
   TableListField_PageControls.ss:
-    DISPLAYING: "Menampilkan"
-    OF: "dari"
-    TO: "ke"
-    VIEWFIRST: "Simak pertama"
-    VIEWLAST: "Simak terakhir"
-    VIEWNEXT: "Simak berikutnya"
-    VIEWPREVIOUS: "Simak sebelumnya"
+    VIEWFIRST: "Tampil pertama"
+    VIEWLAST: "Tampil terakhir"
+    VIEWNEXT: "Tampil berikutnya"
+    VIEWPREVIOUS: "Tampil sebelumnya"
   ToggleCompositeField.ss:
     HIDE: "Sembunyikan"
     SHOW: "Perlihatkan"

@@ -1,10 +1,17 @@
 tr:
   AssetAdmin:
-    CHOOSEFILE: "Dosya seç"
     MENUTITLE: "Dosyalar & İmajlar"
     NEWFOLDER: "YeniKlasör"
-  AssetAdmin_left.ss:
-    GO: "Git"
+  AssetTableField:
+    CREATED: "Yüklenme tarihi"
+    DIM: "Boyutları"
+    FILENAME: "Dosya Adı"
+    LASTEDIT: "Güncellenme tarihi"
+    OWNER: "Sahibi"
+    SIZE: "Boyutu"
+    TITLE: "Başlık"
+    TYPE: "Türü"
+    URL: "URL"
   BBCodeParser:
     ALIGNEMENT: "Hizalama"
     ALIGNEMENTEXAMPLE: "sağa hizalı"
@@ -35,6 +42,8 @@ tr:
     ERRORNOTADMIN: "O kullanıcı, yönetici değildir"
     ERRORNOTREC: "Kullanıcı adı / şifre hatalı"
   CMSMain:
+    ACCESS: "'%s' (%s) erişimi"
+    ACCESSALLINTERFACES: "Tüm İYS arayüzlerine erişim"
     MENUTITLE: "Site İçeriği"
     SAVE: "Kaydet"
   ChangePasswordEmail.ss:
@@ -49,7 +58,6 @@ tr:
     SUCCESSEDIT: "Kaydedildi %s %s %s"
   ComplexTableField.ss:
     ADDITEM: "%s ekle"
-    NOITEMSFOUND: "Hiçbir öğe bulunamadı"
     SORTASC: "Sırala (artan)"
     SORTDESC: "Sırala (azalan)"
   ComplexTableField_popup.ss:
@@ -58,21 +66,15 @@ tr:
   ConfirmedPasswordField:
     ATLEAST: "Şifre uzunluğu en az %s karakter olmalı."
     BETWEEN: "Şifre uzunluğu %s ile %s karakter arası olmalı."
-    HAVETOMATCH: "Şifreler aynı olmalı."
-    LEASTONE: "Şifre en az bir nümerik(0-9) ve bir alfanümerik(a-z) karakter içermeli."
     MAXIMUM: "Şifre uzunluğu en fazla %s karakter olmalı."
-    NOEMPTY: "Şifreler boş bırakılamaz."
     SHOWONCLICKTITLE: "Parola Değiştir"
   CreditCardField:
     FIRST: "ilk"
     FOURTH: "dördüncü"
     SECOND: "ikinci"
     THIRD: "üçüncü"
-    VALIDATIONJS1: "Girdiğinizden lütfen emin olun"
-    VALIDATIONJS2: "kredi kartını doğru olarak."
   CurrencyField:
     CURRENCYSYMBOL: "USD"
-    VALIDATIONJS: "Lütfen geçerli bir para birimi girin."
   DataObject:
     PLURALNAME: "Data Nesneleri"
     SINGULARNAME: "Data Nesnesi"
@@ -93,12 +95,10 @@ tr:
   DateField:
     NOTSET: "ayarlanmamış"
     TODAY: "bugün"
-    VALIDATIONJS: "Lütfen geçerli bir tarih formatı girin (GG-AA-YYYY)."
   DropdownField:
     CHOOSE: "(Seçiniz)"
   EmailField:
     VALIDATION: "Lütfen bir eposta adresi giriniz"
-    VALIDATIONJS: "Lütfen e-posta adresini girin."
   Email_BounceRecord:
     PLURALNAME: "Eposta Geri-dönüş Kayıtları"
     SINGULARNAME: "Eposta Geri-dönüş Kaydı"
@@ -110,23 +110,8 @@ tr:
     Name: "Ad"
     PLURALNAME: "Dosyalar"
     SINGULARNAME: "Dosya"
-    Sort: "Sırala"
     TOOLARGE: "Dosya boyutu çok büyük, izin verilen maksimum boyut: %s"
     Title: "Başlık"
-  Folder:
-    CREATED: "İlk Yüklenmiş"
-    DELSELECTED: "Seçili dosyaları sil"
-    DETAILSTAB: "Detaylar"
-    FILENAME: "Dosya adı"
-    FILESTAB: "Dosyalar"
-    LASTEDITED: "Son Güncellenmiş"
-    PLURALNAME: "Dosyalar"
-    SINGULARNAME: "Dosya"
-    TITLE: "Başlık"
-    TYPE: "Tip"
-    UPLOADTAB: "Yükle(upload)"
-    URL: "URL"
-    VIEWEDITASSET: "Varlıkları Göster/Düzenle"
   ForgotPasswordEmail.ss:
     HELLO: "Merhaba"
     TEXT1: "Profilinize ait"
@@ -147,18 +132,13 @@ tr:
   Group:
     Code: "Grup Kodu"
     Description: "Açıklama"
-    IPRestrictions: "IP Adres Engellemeleri"
     Locked: "Kilitli?"
-    PLURALNAME: "Gruplar"
     Parent: "Ana Grup"
-    SINGULARNAME: "Grup"
     Sort: "Sırala"
     has_many_Permissions: "İzinler"
     many_many_Members: "Üyeler"
   HtmlEditorField:
     ANCHORVALUE: "Anchor(çapa)"
-    BUTTONINSERTFLASH: "Flash Ekle"
-    BUTTONINSERTIMAGE: "Resim ekle"
     BUTTONINSERTLINK: "Bağlantı ekle"
     BUTTONREMOVELINK: "Bağlantıyı sil"
     CSSCLASS: "Hizalama / stil"
@@ -168,7 +148,6 @@ tr:
     CSSCLASSRIGHT: "Sağ tarafta, metin ile çevrili"
     EMAIL: "Eposta adresi"
     FILE: "Dosya"
-    FLASH: "Flash"
     FOLDER: "Klasör"
     IMAGE: "Resim"
     IMAGEDIMENSIONS: "Boyutlar"
@@ -182,17 +161,9 @@ tr:
     LINKFILE: "Dosya indir"
     LINKINTERNAL: "Bu sitedeki bir sayfa (iç bağlantı)"
     LINKOPENNEWWIN: "Bağlantı yeni bir pencerede mi açılsın?"
-    LINKTEXT: "Bağlantı metni"
     LINKTO: "Bağlantı oluştur"
     PAGE: "Sayfa"
-    SEARCHFILENAME: "Dosya adıyla ara"
     URL: "URL"
-  Image:
-    PLURALNAME: "Dosyalar"
-    SINGULARNAME: "Dosya"
-  Image_Cached:
-    PLURALNAME: "Dosyalar"
-    SINGULARNAME: "Dosya"
   Image_iframe.ss:
     TITLE: "Resim göndermek için gerekli IFrame"
   LeftAndMain:
@@ -206,8 +177,6 @@ tr:
   LoginAttempt:
     Email: "Eposta Adresi"
     IP: "IP Adresi"
-    PLURALNAME: "Giriş Denemeleri"
-    SINGULARNAME: "Giriş Denemesi"
     Status: "Durum"
   Member:
     ADDRESS: "Adres"
@@ -255,58 +224,24 @@ tr:
     db_PasswordExpiry: "Parola için Son Geçerlilik Tarihi"
   MemberAuthenticator:
     TITLE: "E-posta & Şifre"
-  MemberPassword:
-    PLURALNAME: "Üye Parolaları"
-    SINGULARNAME: "Üye Parolası"
-  MemberTableField:
-    ADD: "Ekle"
-    ADDEDTOGROUP: "Üye gruba eklendi"
-    ADDINGFIELD: "Ekleme başarısız"
-    FILTER: "Filtre"
-    SEARCH: "Ara"
   ModelAdmin:
-    ADDBUTTON: "Ekle"
-    ADDFORM: "Yeni bir %s eklemek için bu formu doldurun."
-    CHOOSE_COLUMNS: "Sonuç kolonlarını seçiniz..."
-    CLEAR_SEARCH: "Aramayı Temizle"
-    CREATEBUTTON: "'%s' yarat"
     DELETE: "Sil"
     DELETEDRECORDS: "Silinen %s kayıt."
-    FOUNDRESULTS: "Arama sonucu %s eşleşen kayıt bulundu"
     IMPORT: "CSV'den içer aktar"
     IMPORTEDRECORDS: "%s kayıt aktarıldı."
-    ITEMNOTFOUND: "Bu öğeyi bulanamadım"
-    LOADEDFOREDITING: "'%s' düzenleme için yüklendi."
     NOCSVFILE: "CSV dosyası ekleme"
     NOIMPORT: "İçe aktarılacak birşey yok"
-    NORESULTS: "Sonuç bulunamadı"
-    SAVE: "Kaydet"
-    SEARCHRESULTS: "Arama Sonuçları"
-    SELECTALL: "hepsini seç"
-    SELECTNONE: "hiçbirini seçme"
     UPDATEDRECORDS: "Güncellenen %s kayıt."
-  MyEntity:
-    MyNamespace: "Anadilimde varsayılan değer"
-  MyNamespace:
-    MYENTITY: "%s sayımı"
   NullableField:
     IsNullLabel: "Boş değer"
   NumericField:
     VALIDATION: "'%s' bir sayı değil, bu alana bir sayı girmeniz gerekmektedir"
-    VALIDATIONJS: "numara değil, bu kutuda sadece numara kullanılabilir."
-  Page:
-    PLURALNAME: "Sayfalar"
-    SINGULARNAME: "Sayfa"
   Permission:
     FULLADMINRIGHTS: "Tüm yönetici(administrator) hakları"
-    PLURALNAME: "İzinler"
-    SINGULARNAME: "İzin"
   PhoneNumberField:
     VALIDATION: "Lütfen geçerli bir telefon numarası giriniz"
   RelationComplexTableField.ss:
     ADD: "Ekle"
-    CSVEXPORT: "CSV olarak dışa aktar"
-    NOTFOUND: "Herhangi bir öğe bulunamadı"
   ReportAdmin:
     MENUTITLE: "Raporlar"
   Security:
@@ -316,30 +251,23 @@ tr:
     CHANGEPASSWORDHEADER: "Şifre değiştir"
     ENTERNEWPASSWORD: "Lütfen bir şifre giriniz."
     ERRORPASSWORDPERMISSION: "Şifrenizi değiştirebilmek için sisteme giriş yapmış olmanız gerekmektedir!"
-    IPADDRESSES: "IP Adresleri"
     LOGGEDOUT: "Çıkış yaptınız. Eğer tekrar giriş yapmak istiyorsanız lütfen kullanıcı bilgilerinizi giriniz."
     LOGIN: "Oturum aç"
-    LOSTPASSWORDHEADER: "Şifremi Kaybettim"
     NOTEPAGESECURED: "O sayfaya erişim kısıtlanmıştır. Lütfen aşağıdaki formu kullanarak kullanıcı bilgilerinizi giriniz."
     NOTERESETLINKINVALID: "<p>Parola belirleme linki geçersiz veya linkin süresi dolmuş.</p><p>Yeni bir tane talep etmek için <a href=\"%s\">tıklayınız</a> veya değiştirmek için <a href=\"%s\">giriş</a> yapınız.</p>"
     NOTERESETPASSWORD: "E-posta adresinize şifrenizi sıfırlamanızı sağlayacak linki gönderebilmemiz için lütfen e-posta adresinizi giriniz"
     PASSWORDSENTHEADER: "'%s' adresine gönderildi"
     PASSWORDSENTTEXT: "Teşekkür ederiz! '%s' adresine gönderildi"
   SecurityAdmin:
-    ADDMEMBER: "Yeni Üye Ekle"
     EDITPERMISSIONS: "Herbir gruptaki izinleri ve IP adreslerini düzenle"
     GROUPNAME: "Grup adı"
-    IPADDRESSESHELP: |
-                      <p>Bu grubu belirli bir IP adresi aralığı için kısıtlayabilirsiniz. Her bir satıra bir IP aralığı girmelisiniz. IP aralıkları aşağıdaki formatlardan herhangi biri olabilir: <br />
-                      203.96.152.12<br />
-                      203.96.152/24<br />
-                      203.96/16<br />
-                      203/8<br /><br />Eğer bu kutuya bir veya daha fazla IP aralığı girerseniz, sadece bu IP aralığındakı IP ye sahip üye bu grubunun haklarına ulaşabilir, fakat bu durum oturum açmasına engel olmaz, çünkü aynı üye IP kısıtlaması olmadan sisteme girmek isteyebilir.    MEMBERS: "Üyeler"
+    MEMBERS: "Üyeler"
     MENUTITLE: "Güvenlik"
     NEWGROUP: "Yeni Grup"
     PERMISSIONS: "İzinler"
-    SGROUPS: "Güvenlik grupları"
-    VIEWUSER: "Kullanıcıyı Göster"
+    TABROLES: "Roller"
+  SecurityAdmin_MemberImportForm:
+    BtnImport: "Aktar"
   SimpleImageField:
     NOUPLOAD: "Henüz Resim Yüklenmemiş"
   SiteTree:
@@ -351,10 +279,10 @@ tr:
   TableListField:
     CSVEXPORT: "CSV olarak kaydet"
     PRINT: "Yazdır"
+  TableListField.ss:
+    SORTASC: "Artan olarak sırala"
+    SORTDESC: "Azalan olarak sırala"
   TableListField_PageControls.ss:
-    DISPLAYING: "Görüntüleniyor"
-    OF: "/"
-    TO: "->"
     VIEWFIRST: "İlkini görüntüle"
     VIEWLAST: "Sonuncuyu görüntüle"
     VIEWNEXT: "Sonrakini görüntüle"

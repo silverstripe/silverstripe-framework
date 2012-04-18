@@ -1,13 +1,6 @@
 ro:
-  AssetAdmin:
-    CHOOSEFILE: "Alege fişier "
-    MENUTITLE: "Fisiere & Imagini"
-    NEWFOLDER: "DosarNou"
   BasicAuth:
     ENTERINFO: "Va rugam introduceţi un user si o parolă."
-  CMSMain:
-    MENUTITLE: "Continut Site"
-    SAVE: "Salvează"
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: "Ti-ai schimbat parola in"
     HELLO: "Salut"
@@ -43,9 +36,6 @@ ro:
     PLURALNAME: "Fisiere"
     SINGULARNAME: "Fisier"
     TOOLARGE: "Marimea fisierului este prea mare, marimea maxima este de %s"
-  Folder:
-    PLURALNAME: "Fisiere"
-    SINGULARNAME: "Fisier"
   ForgotPasswordEmail.ss:
     HELLO: "Salut"
   Form:
@@ -53,9 +43,7 @@ ro:
   Group:
     Code: "Cod Grup"
     Locked: "Blocat?"
-    PLURALNAME: "Grupuri"
     Parent: "Grup de Baza"
-    SINGULARNAME: "Grup"
     has_many_Permissions: "Permisiuni"
     many_many_Members: "Membri"
   HtmlEditorField:
@@ -64,7 +52,6 @@ ro:
     CSSCLASS: "Aliniere / stil"
     EMAIL: "Adresa email"
     FILE: "Fisier"
-    FLASH: "Insereaza flash"
     FOLDER: "Director"
     IMAGE: "Insereaza imagine"
     IMAGEDIMENSIONS: "Dimensiuni"
@@ -80,19 +67,7 @@ ro:
     LINKTO: "Link la"
     PAGE: "Pagina"
     URL: "URL"
-  Image:
-    PLURALNAME: "Fisiere"
-    SINGULARNAME: "Fisier"
-  LeftAndMain:
-    HELP: "Ajutor"
-    PAGETYPE: "Tip pagină: "
-    PERMALREADY: "Ne pare rău, dar nu puteţi accesa acea parte a CMS-ului. Daca doriţi să va autentificaţi ca altcineva, faceţi-o mai jos."
-    PERMDEFAULT: "Vă rugăm alegeţi o metodă de autentificare si introduceţi credenţialele pentru a accesa CMS-ul."
-    PLEASESAVE: "Va Rugam Salvaţi Pagina: Această pagină nu a putut fi actualizată deoarece încă nu a fost  salvată."
-    SAVED: "salvat"
   LoginAttempt:
-    PLURALNAME: "Tentative Login"
-    SINGULARNAME: "Tentativa Login"
   Member:
     ADDRESS: "Adresă"
     BUTTONLOGIN: "Autentificare"
@@ -114,29 +89,9 @@ ro:
     db_PasswordExpiry: "Data de Expirare a Parolei"
   MemberAuthenticator:
     TITLE: "E-mail si Parolă"
-  MemberPassword:
-    PLURALNAME: "Parole Membru"
-    SINGULARNAME: "Parola Membru"
-  MemberTableField:
-    ADD: "Adaugă "
-    ADDEDTOGROUP: "Membrul a fost adăugat in grup"
-  ModelAdmin:
-    CREATEBUTTON: "Creaza '%s'"
-  Page:
-    PLURALNAME: "Pagini"
-    SINGULARNAME: "Pagina"
   Permission:
-    PLURALNAME: "Permisiuni"
-    SINGULARNAME: "Permisiune"
-  ReportAdmin:
-    MENUTITLE: "Rapoarte"
   Security:
     ERRORPASSWORDPERMISSION: "Trebuie sa fii autentificat pentru a schimba parola."
-  SecurityAdmin:
-    ADDMEMBER: "Adaugă membru"
-    MENUTITLE: "Securitate"
-    NEWGROUP: "Grup Nou"
-    SGROUPS: "Grupuri de securitate"
   SiteTree:
     TABMAIN: "Pincipal"
   ToggleCompositeField.ss:

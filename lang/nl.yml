@@ -1,10 +1,17 @@
 nl:
   AssetAdmin:
-    CHOOSEFILE: "Kies een bestand "
     MENUTITLE: "Bestanden en foto's"
     NEWFOLDER: "Nieuwe Map"
-  AssetAdmin_left.ss:
-    GO: "Doen"
+  AssetTableField:
+    CREATED: "Eerste upload"
+    DIM: "Dimensies"
+    FILENAME: "Bestandsnaam"
+    LASTEDIT: "Laatste wijziging"
+    OWNER: "Eigenaar"
+    SIZE: "Grootte"
+    TITLE: "Titel"
+    TYPE: "Type"
+    URL: "URL"
   BBCodeParser:
     ALIGNEMENT: "Uitlijning"
     ALIGNEMENTEXAMPLE: "rechts uitgelijnd"
@@ -38,9 +45,10 @@ nl:
     ANY: "Elke"
     NO: "Nee"
     YES: "Ja"
-  CMSBatchActions:
-    PUBLISHED_PAGES: "%d pagina's gepubliceerd"
   CMSMain:
+    ACCESS: "Toegang tot '%s'"
+    ACCESSALLINTERFACES: "Toegang tot alle CMS onderdelen"
+    ACCESSALLINTERFACESHELP: "Overstemt meer specifieke toegangsinstellingen"
     MENUTITLE: "Pagina Inhoud"
     SAVE: "Bewaar"
   ChangePasswordEmail.ss:
@@ -58,7 +66,6 @@ nl:
     SUCCESSEDIT: "%s %s %s Opgeslagen"
   ComplexTableField.ss:
     ADDITEM: "Voeg %s toe"
-    NOITEMSFOUND: "Geen items gevonden"
     SORTASC: "Sorteer oplopend"
     SORTDESC: "Sorteer aflopend"
   ComplexTableField_popup.ss:
@@ -67,21 +74,15 @@ nl:
   ConfirmedPasswordField:
     ATLEAST: "Paswoorden moeten tenminste %s karakters lang zijn."
     BETWEEN: "Paswoorden moeten tussen de %s en %s karakters lang zijn."
-    HAVETOMATCH: "Paswoorden moeten overeenkomen."
-    LEASTONE: "Paswoorden moeten bestaan uit minstens één cijfer en één alfanumeriek karakter."
     MAXIMUM: "Paswoorden mogen niet meer dan %s karakters lang zijn."
-    NOEMPTY: "Paswoordvelden mogen niet leeg zijn."
     SHOWONCLICKTITLE: "Verander wachtwoord"
   CreditCardField:
     FIRST: "eerste"
     FOURTH: "vierde"
     SECOND: "tweede"
     THIRD: "derde"
-    VALIDATIONJS1: "Zorg er voor dat je de "
-    VALIDATIONJS2: "kaartnummer correct"
   CurrencyField:
     CURRENCYSYMBOL: "$"
-    VALIDATIONJS: "Gelieve geldige valuta in te geven"
   DataObject:
     PLURALNAME: "Gegeven Objecten"
     SINGULARNAME: "Gegeven Object"
@@ -102,7 +103,6 @@ nl:
   DateField:
     NOTSET: "niet ingesteld"
     TODAY: "vandaag"
-    VALIDATIONJS: "Gelieve een geldig datum formaat (DD-MM-JJJJ) in te geven."
     VALIDDATEFORMAT2: "Vul een gelding datum format (%s) in"
     VALIDDATEMAXDATE: "De datum moet vroeger of gelijk zijn aan de laatst toegestane datum (%s)"
     VALIDDATEMINDATE: "De datum moet later of gelijk zijn aan de vroegst toegestane datum (%s)"
@@ -110,7 +110,6 @@ nl:
     CHOOSE: "(Kies)"
   EmailField:
     VALIDATION: "Voer a.u.b. een emailadres in."
-    VALIDATIONJS: "Gelieve een email adres in te voeren."
   Email_BounceRecord:
     PLURALNAME: "Onbezorgbare emails"
     SINGULARNAME: "Onbezorgbare email"
@@ -125,7 +124,6 @@ nl:
     Name: "Naam"
     PLURALNAME: "Bestanden"
     SINGULARNAME: "Bestand"
-    Sort: "Sorteer-richting"
     TOOLARGE: "Bestand is te groot, het maximum dat is toegestaan is %s"
     Title: "Titel "
   FileIFrameField:
@@ -137,22 +135,6 @@ nl:
     FROMFILESTORE: "Vanaf de website's bestandsopslag"
     NOSOURCE: "Selecteer een bron bestand om toe te voegen"
     REPLACE: "Vervang %s"
-  FileIFrameField.ss:
-    TITLE: "Afbeelding Upload Iframe"
-  Folder:
-    CREATED: "Eerste geuploade"
-    DELSELECTED: "Verwijder geselecteerde bestanden"
-    DETAILSTAB: "Details"
-    FILENAME: "Bestandsnaam"
-    FILESTAB: "Bestanden"
-    LASTEDITED: "Laatst gewijzigd"
-    PLURALNAME: "Bestanden"
-    SINGULARNAME: "Bestand"
-    TITLE: "Titel"
-    TYPE: "Type"
-    UPLOADTAB: "Uploaden"
-    URL: "URL"
-    VIEWEDITASSET: "Bekijk/Bewerk Bestand"
   ForgotPasswordEmail.ss:
     HELLO: "Hallo"
     TEXT1: "Hier is uw"
@@ -175,13 +157,9 @@ nl:
     DefaultGroupTitleAdministrators: "Beheerders"
     DefaultGroupTitleContentAuthors: "Inhoud Auteurs"
     Description: "Omschrijving "
-    IMPORTTABTITLE: "Importeer"
-    IPRestrictions: "IP-adres beperkingen"
     Locked: "Gesloten?"
-    PLURALNAME: "Groepen"
     Parent: "Bovenliggende groep"
     RolesAddEditLink: "Toevoegen/wijzigingen rollen"
-    SINGULARNAME: "Groep"
     Sort: "Sorteer-richting"
     has_many_Permissions: "Rechten"
     many_many_Members: "Lid"
@@ -196,13 +174,12 @@ nl:
             <li>Groep hiërarchieën kunnen aangemaakt worden met behulp van een <em>ParentCode</em> kolom.</li>
             <li>Toegangsrechten kunnen worden toegekend met de <em>PermissionCode</em> kolom. Bestaande toegangsrechten worden niet gewist.</li>
             </ul>
-            </div>    ResultCreated: "%d groepen aangemaakt"
+            </div>
+    ResultCreated: "%d groepen aangemaakt"
     ResultDeleted: "%d groepen verwijderd"
     ResultUpdated: "%d groepen aangepast"
   HtmlEditorField:
     ANCHORVALUE: "Anker"
-    BUTTONINSERTFLASH: "Invoegen Flash"
-    BUTTONINSERTIMAGE: "Afbeelding toevoegen"
     BUTTONINSERTLINK: "Link invoegen"
     BUTTONREMOVELINK: "Link verwijderen"
     CAPTIONTEXT: "Onderschrift"
@@ -211,10 +188,10 @@ nl:
     CSSCLASSLEFT: "Aan de linkerkant, met tekst eromheen."
     CSSCLASSLEFTALONE: |
                         Links, losstaand.
-                            CSSCLASSRIGHT: "Aan de rechterkant, met tekst eromheen."
+                        
+    CSSCLASSRIGHT: "Aan de rechterkant, met tekst eromheen."
     EMAIL: "Emailadres"
     FILE: "Bestand"
-    FLASH: "Flash"
     FOLDER: "Map"
     IMAGE: "Afbeelding"
     IMAGEALTTEXT: "Alternatieve tekst (alt tekst) - wordt getoond als de afbeelding niet kan worden geladen"
@@ -230,20 +207,11 @@ nl:
     LINKFILE: "Een bestand downloaden"
     LINKINTERNAL: "Pagina op deze site"
     LINKOPENNEWWIN: "Link in een nieuw venster openen?"
-    LINKTEXT: "Tekst van de link"
     LINKTO: "Verwijs naar"
     PAGE: "Pagina"
-    SEARCHFILENAME: "Zoeken op bestandsnaam"
-    SHOWUPLOADFORM: "Bestand Uploaden"
     URL: "URL"
-  Image:
-    PLURALNAME: "Bestanden"
-    SINGULARNAME: "Bestand"
   ImageField:
     IMAGE: "Afbeelding"
-  Image_Cached:
-    PLURALNAME: "Bestanden"
-    SINGULARNAME: "Bestand"
   Image_iframe.ss:
     TITLE: "Afbeelding uploaden"
   LeftAndMain:
@@ -255,13 +223,9 @@ nl:
     PERMDEFAULT: "Geef uw e-mailadres en wachtwoord voor toegang tot het CMS."
     PLEASESAVE: "Deze pagina kon niet bijgewerkt worden, omdat deze nog niet is bewaard."
     SAVED: "bewaard"
-  LeftAndMain_right.ss:
-    WELCOMETO: "Welkom bij"
   LoginAttempt:
     Email: "Email adres "
     IP: "IP Adres"
-    PLURALNAME: "Inlog pogingen"
-    SINGULARNAME: "Inlog poging"
     Status: "Status"
   Member:
     ADDRESS: "Adres"
@@ -325,83 +289,42 @@ nl:
             </ul>
             </div>
             </ul>
-            </div>    ResultCreated: "%d leden toegevoegd"
+            </div>
+    ResultCreated: "%d leden toegevoegd"
     ResultDeleted: "%d leden verwijderd"
     ResultNone: "Geen wijzingen"
     ResultUpdated: "%d leden aangepast"
-  MemberPassword:
-    PLURALNAME: "Gebruikerswachtwoorden"
-    SINGULARNAME: "Gebruikerswachtwoord"
-  MemberTableField:
-    ADD: "Toevoegen"
-    ADDEDTOGROUP: "Lid toegevoegd aan groep"
-    ADDINGFIELD: "Toevoegen mislukt"
-    DeleteTitleText: "Verwijder uit deze groep"
-    DeleteTitleTextDatabase: "Verwijder uit database en alle groepen"
-    ERRORADDINGUSER: "Fout bij het toewijzen van de gebruiker aan de group : %s"
-    FILTER: "Filter"
-    SEARCH: "Zoeken"
   ModelAdmin:
-    ADDBUTTON: "Toevoegen"
-    ADDFORM: "Vul dit formulier in voor het toevoegen van %s aan de database."
-    CHOOSE_COLUMNS: "Selecteer kolommen met resultaat ..."
-    CLEAR_SEARCH: "Zoek opschonen"
-    CREATEBUTTON: "Creëer '%s'"
     DELETE: "Verwijderen"
     DELETEDRECORDS: "%s Verwijderde resultaten."
-    FOUNDRESULTS: "Uw zoekopdracht heeft %s overeenkomende objecten gevonden"
     IMPORT: "Importeren vanuit CSV"
     IMPORTEDRECORDS: "%s Geïmporteerde resultaten."
-    ITEMNOTFOUND: "Ik kan dat object niet vinden"
-    LOADEDFOREDITING: "'%s' Geladen voor bewerking."
     NOCSVFILE: "Selecteer een CSV bestand op uw computer om te importeren"
     NOIMPORT: "Niks om te importeren"
-    NORESULTS: "Uw zoekopdracht heeft geen resultaten opgeleverd"
-    SAVE: "Opslaan"
-    SEARCHRESULTS: "Zoekresultaten"
-    SELECTALL: "selecteer alles"
-    SELECTNONE: "selecteer niets"
     UPDATEDRECORDS: "%s Geüpdate resultaten."
   MoneyField:
     FIELDLABELAMOUNT: "Aantal"
     FIELDLABELCURRENCY: "Valuta"
-  MyEntity:
-    MyNamespace: "Mijn taal instelling"
-  MyNamespace:
-    MYENTITY: "Telt %s onderdelen"
   NullableField:
     IsNullLabel: "is nul"
   NumericField:
     VALIDATION: "'%s' is geen cijfer, alleen cijfers worden geaccepteerd voor dit veld"
-    VALIDATIONJS: "is geen nummer, alleen nummers zijn toegelaten in dit veld"
-  Page:
-    PLURALNAME: "Pagina's"
-    SINGULARNAME: "Pagina"
   Permission:
     AdminGroup: "Beheerder"
+    CMS_ACCESS_CATEGORY: "CMS Toegang"
     FULLADMINRIGHTS: "Volledige admin rechten"
     FULLADMINRIGHTS_HELP: "Impliceert en overstemt alle andere toegewezen rechten."
-    PLURALNAME: "Machtigingen"
-    SINGULARNAME: "Machtiging"
   PermissionCheckboxSetField:
     AssignedTo: "toegewezen aan \"%s\""
     FromGroup: "geërfd van groep \"%s\""
     FromRole: "geërfd van rol \"%s\""
     FromRoleOnGroup: "geërfd van rol \"%s\" in groep \"%s\""
-  PermissionRole:
-    PLURALNAME: "Rollen"
-    SINGULARNAME: "Rol"
-  PermissionRoleCode:
-    PLURALNAME: "Rechten Rol Codes"
-    SINGULARNAME: "Rechten Rol Code"
   Permissions:
     PERMISSIONS_CATEGORY: "Rollen en toegangsrechten"
   PhoneNumberField:
     VALIDATION: "Voer een geldig telefoonnummer in"
   RelationComplexTableField.ss:
     ADD: "Toevoegen"
-    CSVEXPORT: "Exporteren naar CSV"
-    NOTFOUND: "Geen items gevonden"
   ReportAdmin:
     MENUTITLE: "Verslagen"
   Security:
@@ -411,38 +334,28 @@ nl:
     CHANGEPASSWORDHEADER: "Verander Uw wachtwoord"
     ENTERNEWPASSWORD: "Voer een nieuw wachtwoord in."
     ERRORPASSWORDPERMISSION: "U moet ingelogd zijn om Uw wachtwoord te kunnen veranderen!"
-    IPADDRESSES: "IP Adressen"
     LOGGEDOUT: "U bent uitgelogd.  Als U weer wilt inloggen kunt U Uw gegevens hier beneden invoeren."
     LOGIN: "Meld aan"
-    LOSTPASSWORDHEADER: "Wachtwoord verloren"
     NOTEPAGESECURED: "Deze pagina is beveiligd. Voer Uw gegevens in en U wordt automatisch doorgestuurd."
     NOTERESETLINKINVALID: "<p>De link naar de wachtwoord-resetpagina is onjuist of vervallen.</p><p>U kunt <a href=\"%s\">hier</a> een nieuwe link aanvragen of uw wachtwoord wijzigen nadat u bent <a href=\"%s\">ingelogd</a>.</p>"
     NOTERESETPASSWORD: "Voer Uw emailadres in en we zenden U een link waarmee U Uw wachtwoord opnieuw kunt aanmaken"
     PASSWORDSENTHEADER: "Link om Uw wachtwoord opnieuw aan te maken is verstuurd naar '%s'"
     PASSWORDSENTTEXT: "Bedankt! De link om je wachtwoord opnieuw in te stellen is verstuurd naar '%s'."
   SecurityAdmin:
-    ADDMEMBER: "Lid toevoegen"
+    ACCESS_HELP: "Bevoegdheid voor bekijken, toevoegen en bewerken van leden, en toewijzen van rechten en rollen aan hen."
     APPLY_ROLES: "Pas rollen toe aan groepen"
     APPLY_ROLES_HELP: "Bewerkingsmogelijkheid van rollen voor groepen. Heeft rechten voor \"Beveiligingsectie\" nodig."
     EDITPERMISSIONS: "Bewerk rechten en IP-adressen bij elke groep"
     EDITPERMISSIONS_HELP: "Bewerkingsmogelijkheid van Rechten en IP adressen voor groepen. Heeft rechten voor \"Beveiligingsectie\" nodig."
     GROUPNAME: "Groep naam"
-    IPADDRESSESHELP: |
-                      <p>U kunt deze groep beperken tot een bepaalt bereik IP-adressen (één bereik per regel). <br /> Een IP-adres man in elk van de volgende vormen genoteerd worden: <br />
-                      203.96.152.12 <br />
-                      203.96.152/24 <br />
-                      203.96/16 <br />
-                      203 / 8 <br /> <br /> Als u één of meer IP-adres reeksen in dit vak invult, dan zullen alleen de leden rechten krijgen in deze groep als ze zich aanmelden bij een van de geldige IP-adressen. Het zal niet voorkomen dat mensen inloggen. Dit is omdat dezelfde gebruiker misschien in moet loggen om toegang te krijgen tot onderdelen van het systeem zonder IP adres restricties.    MEMBERS: "Leden"
+    MEMBERS: "Leden"
     MENUTITLE: "Beveiliging"
     MemberListCaution: "Let op: Verwijderen van leden van deze lijst heeft als gevolg dat deze uit alle groepen en de database worden verwijderd"
     NEWGROUP: "Nieuwe Groep"
     PERMISSIONS: "Rechten"
     ROLES: "Rollen"
     ROLESDESCRIPTION: "In deze sectie kan je rollen toevoegen aan deze groep. Rollen zijn logische groeperingen van rechten die in het Rollen tapblad gewijzigd kunnen worden."
-    SGROUPS: "Beveiligingsgroepen"
-    TABIMPORT: "Importeer"
     TABROLES: "Rollen"
-    VIEWUSER: "Bekijk Lid"
   SecurityAdmin_MemberImportForm:
     BtnImport: "Importeer"
     FileFieldLabel: "CSV Bestand <small>(Toegestane extensies: *.csv)</small>"
@@ -454,19 +367,14 @@ nl:
     ISREQUIRED: "Bij %s is '%s' verplicht."
   TableField.ss:
     ADD: "Nieuwe rij toevoegen"
-    ADDITEM: "Voeg %s toe"
   TableListField:
     CSVEXPORT: "Exporteer naar CSV"
     PRINT: "Afdrukken"
     SELECT: "Selecteer:"
   TableListField.ss:
-    NOITEMSFOUND: "Geen items gevonden"
     SORTASC: "Sorteer in oplopende volgorde"
     SORTDESC: "Sorteer in aflopende volgorde"
   TableListField_PageControls.ss:
-    DISPLAYING: "Toont"
-    OF: "of"
-    TO: "naar"
     VIEWFIRST: "Bekijk eerste"
     VIEWLAST: "Bekijk laatste"
     VIEWNEXT: "Bekijk volgende"
