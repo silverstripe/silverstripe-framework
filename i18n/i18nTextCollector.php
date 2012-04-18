@@ -193,17 +193,24 @@ class i18nTextCollector extends Object {
 
 		return $entities;
 	}
-	
+
 	public function collectFromCode($content, $module) {
 		$entities = array();
 
 		$tokens = token_get_all("<?php\n" . $content);
 		$inTransFn = false;
 		$inConcat = false;
+		$finalTokenDueToArray = false;
 		$currentEntity = array();
 		foreach($tokens as $token) {
 			if(is_array($token)) {
 				list($id, $text) = $token;
+
+				if($inTransFn && $id == T_ARRAY) {
+					//raw 'array' token found in _t function, stop processing the tokens for this _t now
+					$finalTokenDueToArray = true;
+				}
+
 				if($id == T_STRING && $text == '_t') {
 					// start definition
 					$inTransFn = true;
@@ -223,39 +230,40 @@ class i18nTextCollector extends Object {
 						$text = preg_replace('/^"/', '', $text);
 						$text = preg_replace('/"$/', '', $text);
 					}
-					
+
 					if($inConcat) {
 						$currentEntity[count($currentEntity)-1] .= $text;
 					} else {
 						$currentEntity[] = $text;
-					} 
-				} 
+					}
+				}
 			} elseif($inTransFn && $token == '.') {
-				$inConcat = true;	
+				$inConcat = true;
 			} elseif($inTransFn && $token == ',') {
-				$inConcat = false;	
-			} elseif($inTransFn && $token == ')') {
+				$inConcat = false;
+			} elseif($inTransFn && ($token == ')' || $finalTokenDueToArray)) {
 				// finalize definition
 				$inTransFn = false;
 				$inConcat = false;
 				$entity = array_shift($currentEntity);
 				$entities[$entity] = $currentEntity;
 				$currentEntity = array();
+				$finalTokenDueToArray = false;
 			}
 		}
-		
+
 		foreach($entities as $entity => $spec) {
 			// call without master language definition
 			if(!$spec) {
 				unset($entities[$entity]);
-				continue; 
+				continue;
 			}
 
 			unset($entities[$entity]);
 			$entities[$this->normalizeEntity($entity, $module)] = $spec;
 		}
 		ksort($entities);
-		
+
 		return $entities;
 	}
 
@@ -276,6 +284,11 @@ class i18nTextCollector extends Object {
 			// @todo Will get massively confused if you include the includer -> infinite loop
 		}
 
+		// use parser to extract <%t style translatable entities
+		$translatables = i18nTextCollector_Parser::GetTranslatables($content);
+		$entities = array_merge($entities,(array)$translatables);
+
+		// use the old method of getting _t() style translatable entities
 		// Collect in actual template
 		if(preg_match_all('/<%\s*(_t\(.*)%>/ms', $content, $matches)) {
 			foreach($matches as $match) {
@@ -515,5 +528,50 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 		$yamlHandler = new sfYaml();
 		// TODO Dumper can't handle YAML comments, so the context information is currently discarded
 		return $yamlHandler->dump(array($locale => $entitiesNested), 99);
+	}
+}
+
+/**
+ * Parser that scans through a template and extracts the parameters to the _t and <%t calls
+ */
+class i18nTextCollector_Parser extends SSTemplateParser {
+
+	static $entities = array();
+	static $currentEntity = array();
+
+	function Translate__construct(&$res) {
+		self::$currentEntity = array(null,null,null); //start with empty array
+	}
+
+	function Translate_Entity(&$res, $sub) {
+		self::$currentEntity[0] = $sub['text']; //entity
+	}
+
+	function Translate_Default(&$res, $sub) {
+		self::$currentEntity[1] = $sub['String']['text']; //value
+	}
+
+	function Translate_Context(&$res, $sub) {
+		self::$currentEntity[2] = $sub['String']['text']; //comment
+	}
+
+	function Translate__finalise(&$res) {
+		// set the entity name and the value (default), as well as the context (comment)
+		// priority is no longer used, so that is blank
+		self::$entities[self::$currentEntity[0]] = array(self::$currentEntity[1],null,self::$currentEntity[2]);
+	}
+
+	/**
+	 * Parses a template and returns any translatable entities
+	 */
+	static function GetTranslatables($template) {
+		self::$entities = array();
+
+		// Run the parser and throw away the result
+		$parser = new i18nTextCollector_Parser($template);
+		if(substr($template, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) $parser->pos = 3;
+		$parser->match_TopTemplate();
+
+		return self::$entities;
 	}
 }

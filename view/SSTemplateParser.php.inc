@@ -7,7 +7,7 @@ This is the uncompiled parser for the SilverStripe template language, PHP with s
 It gets run through the php-peg parser compiler to have those comments turned into code that match parts of the template language,
 producing the executable version SSTemplateParser.php
 
-To recompile after changing this file, run this from the 'framework/core' directory via command line:
+To recompile after changing this file, run this from the 'framework/view' directory via command line (in most cases this is: sapphire/view):
  
 	php ../thirdparty/php-peg/cli.php SSTemplateParser.php.inc > SSTemplateParser.php 
   
@@ -76,6 +76,9 @@ forbidden)
  
 Closed Block: An SS template block that wraps content, and requires a counterpart <% end_blockname %> tag
 
+Angle Bracket: angle brackets "<" and ">" are used to eat whitespace between template elements
+N: eats white space including newlines (using in legacy _t support)
+
 */
 class SSTemplateParser extends Parser {
 
@@ -97,9 +100,10 @@ class SSTemplateParser extends Parser {
 	/*!* SSTemplateParser
 
 	# Template is any structurally-complete portion of template (a full nested level in other words). It's the primary matcher, 
-	# and is used by all enclosing blocks, as well as a base for the top level
+	# and is used by all enclosing blocks, as well as a base for the top level.
+	# Any new template elements need to be included in this list, if they are to work.
 	 
-	Template: (Comment | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+
+	Template: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock | OpenBlock | MalformedBlock | Injection | Text)+
 	*/
 	function Template_STR(&$res, $sub) {
 		$res['php'] .= $sub['php'] . PHP_EOL ;
@@ -174,6 +178,60 @@ class SSTemplateParser extends Parser {
 	function Lookup_LastLookupStep(&$res, $sub) {
 		$this->Lookup_AddLookupStep($res, $sub, '$$FINAL');
 	}
+
+
+	/*!*
+
+	# New Translatable Syntax
+	# <%t Entity DefaultString is Context name1=string name2=$functionCall
+	# (This is a new way to call translatable strings. The parser transforms this into a call to the _t() method)
+
+	Translate: "<%t" < Entity < (Default:QuotedString)? < (!("is" "=") < "is" < Context:QuotedString)? < (InjectionVariables)? > "%>"
+	InjectionVariables: (< InjectionName:Word "=" Argument)+
+	Entity: / [A-Za-z_] [\w\.]* /
+	*/
+
+	function Translate__construct(&$res) {
+		$res['php'] = '$val .= _t(';
+	}
+
+	function Translate_Entity(&$res, $sub) {
+		$res['php'] .= "'$sub[text]'";
+	}
+
+	function Translate_Default(&$res, $sub) {
+		$res['php'] .= ",$sub[text]";
+	}
+
+	function Translate_Context(&$res, $sub) {
+		$res['php'] .= ",$sub[text]";
+	}
+
+	function Translate_InjectionVariables(&$res, $sub) {
+		$res['php'] .= ",$sub[php]";
+	}
+
+	function Translate__finalise(&$res) {
+		$res['php'] .= ');';
+	}
+
+	function InjectionVariables__construct(&$res) {
+		$res['php'] = "array(";
+	}
+
+	function InjectionVariables_InjectionName(&$res, $sub) {
+		$res['php'] .= "'$sub[text]'=>";
+	}
+
+	function InjectionVariables_Argument(&$res, $sub) {
+		$res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php']) . ',';
+	}
+
+	function InjectionVariables__finalise(&$res) {
+		if (substr($res['php'], -1) == ',') $res['php'] = substr($res['php'], 0, -1); //remove last comma in the array
+		$res['php'] .= ')';
+	}
+
 
 	/*!*
 	
@@ -264,7 +322,7 @@ class SSTemplateParser extends Parser {
 	
 	function Argument_FreeString(&$res, $sub) {
 		$res['ArgumentMode'] = 'string';
-		$res['php'] = "'" . str_replace("'", "\\'", rtrim($sub['text'])) . "'";
+		$res['php'] = "'" . str_replace("'", "\\'", $sub['text']) . "'";
 	}
 	
 	/*!*
@@ -507,8 +565,10 @@ class SSTemplateParser extends Parser {
 	 
 	# This is the core used by both syntaxes, without the block start & end tags
 	 
-	OldTPart: "_t" < "(" < QuotedString (< "," < CallArguments)? > ")"
-	
+	OldTPart: "_t" N "(" N QuotedString (N "," N CallArguments)? N ")" N (";")?
+
+	# whitespace with a newline
+	N: / [\s\n]* /
 	*/
 	function OldTPart__construct(&$res) {
 		$res['php'] = "_t(";
