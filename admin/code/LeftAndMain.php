@@ -1164,7 +1164,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * 
 	 * @return String|boolean
 	 */
-	public function PreviewLink() {
+	public function LinkPreview() {
 		return false;
 	}
 
