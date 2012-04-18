@@ -442,14 +442,20 @@ class UploadField extends FileField {
 				'error' => $tmpfile['error']
 			);
 		}
+
+		// Check for constraints on the record to which the file will be attached.
 		if (!$return['error'] && $record && $record->exists()) {
 			$tooManyFiles = false;
+			// Some relationships allow many files to be attached.
 			if ($this->getConfig('allowedMaxFileNumber') && ($record->has_many($name) || $record->many_many($name))) {
 				if(!$record->isInDB()) $record->write();
 				$tooManyFiles = $record->{$name}()->count() >= $this->getConfig('allowedMaxFileNumber');
+			// has_one only allows one file at any given time.
 			} elseif($record->has_one($name)) {
 				$tooManyFiles = $record->{$name}() && $record->{$name}()->exists();
 			}
+
+			// Report the constraint violation.
 			if ($tooManyFiles) {
 				if(!$this->getConfig('allowedMaxFileNumber')) $this->setConfig('allowedMaxFileNumber', 1);
 				$return['error'] = sprintf(_t(
@@ -469,9 +475,12 @@ class UploadField extends FileField {
 				if ($this->upload->isError()) {
 					$return['error'] = implode(' '.PHP_EOL, $this->upload->getErrors());
 				} else {
+					// The file has been uploaded successfully, attach it to the related record.
 					$file = $this->upload->getFile();
 					$file->write();
 					$this->attachFile($file);
+
+					// Collect all output data.
 					$file =  $this->customiseFile($file);
 					$return = array_merge($return, array(
 						'id' => $file->ID,
