@@ -240,7 +240,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			'lib.js',
 			array(
 				THIRDPARTY_DIR . '/jquery/jquery.js',
-				THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js',
 				FRAMEWORK_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js',
 				FRAMEWORK_ADMIN_DIR . '/javascript/lib.js',
 				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',

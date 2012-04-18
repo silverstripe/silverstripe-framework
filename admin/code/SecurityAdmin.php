@@ -135,7 +135,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::clear();
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/MemberImportForm.css');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/MemberImportForm.js');
@@ -166,7 +165,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		Requirements::clear();
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/MemberImportForm.css');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/MemberImportForm.js');
