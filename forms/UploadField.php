@@ -4,14 +4,14 @@
  * Field for uploading single or multiple files of all types, including images.
  * <b>NOTE: this Field will call write() on the supplied record</b>
  * 
- * <b>Features (some might not be avaliable to old browsers):</b>
+ * <b>Features (some might not be available to old browsers):</b>
  * 
  * - File Drag&Drop support
  * - Progressbar
  * - Image thumbnail/file icons even before upload finished
  * - Saving into relations
  * - Edit file
- * - allowedExtensions is by default File::$allowed_extensions<li>maxFileSize the vaule of min(upload_max_filesize, post_max_size) from php.ini
+ * - allowedExtensions is by default File::$allowed_extensions<li>maxFileSize the value of min(upload_max_filesize, post_max_size) from php.ini
  * 
  * @example <code>
  * $UploadField = new UploadField('myFiles', 'Please upload some images <span>(max. 5 files)</span>');
@@ -74,7 +74,7 @@ class UploadField extends FileField {
 		 */
 		'autoUpload' => true,
 		/**
-		 * php validation of allowedMaxFileNumber only works when a db relation is avaliable, set to null to allow unlimited
+		 * php validation of allowedMaxFileNumber only works when a db relation is available, set to null to allow unlimited
 		 * if record has a has_one and allowedMaxFileNumber is null, it will be set to 1
 		 * @var int
 		 */
@@ -122,7 +122,7 @@ class UploadField extends FileField {
 	/**
 	 * @param string $name The internal field name, passed to forms.
 	 * @param string $title The field label.
-	 * @param SS_List $items If no items are defined, the field will try to auto-detect an existion relation on {@link $record}, 
+	 * @param SS_List $items If no items are defined, the field will try to auto-detect an existing relation on {@link $record}, 
 	 *                       with the same name as the field name.
 	 * @param Form $form Reference to the container form
 	 */
@@ -175,7 +175,7 @@ class UploadField extends FileField {
 
 	/**
 	 * Force a record to be used as "Parent" for uploaded Files (eg a Page with a has_one to File)
-	 * @param DataOjbect $record
+	 * @param DataObject $record
 	 */
 	public function setRecord($record) {
 		$this->record = $record;
@@ -310,7 +310,7 @@ class UploadField extends FileField {
 		$name = $this->getName();
 
 		// if there is a has_one relation with that name on the record and 
-		// allowedMaxFileNumber has not been set, its wanted to be 1
+		// allowedMaxFileNumber has not been set, it's wanted to be 1
 		if(
 			$record && $record->exists()
 			&& $record->has_one($name) && !$this->getConfig('allowedMaxFileNumber')
@@ -633,7 +633,7 @@ class UploadField_ItemHandler extends RequestHandler {
 	}
 
 	/**
-	 * Action to handle removeing a single file from the db relation
+	 * Action to handle removing a single file from the db relation
 	 * 
 	 * @param SS_HTTPRequest $request
 	 * @return SS_HTTPResponse
