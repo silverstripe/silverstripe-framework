@@ -177,7 +177,7 @@ class DataExtensionTest_Player extends DataObject implements TestOnly {
 
 class DataExtensionTest_PlayerExtension extends DataExtension implements TestOnly {
 	
-	function extraStatics($class=null, $extension=null) {
+	public static function add_to_class($class = null, $extensionClass = null, $args = null) {
 		// Only add these extensions if the $class is set to DataExtensionTest_Player, to
 		// test that the argument works.
 		if($class == 'DataExtensionTest_Player') {
@@ -197,23 +197,21 @@ class DataExtensionTest_PlayerExtension extends DataExtension implements TestOnl
 }
 
 class DataExtensionTest_ContactRole extends DataExtension implements TestOnly {
-	
-	function extraStatics($class=null, $extension=null) {
-		return array(
-			'db' => array(
-				'Website' => 'Varchar',
-				'Phone' => 'Varchar(255)',
-			),
-			'has_many' => array(
-				'RelatedObjects' => 'DataExtensionTest_RelatedObject'
-			),
-			'defaults' => array(
-				'Phone' => '123'
-			),
-			'api_access' => true,
-		);
-	}
-	
+
+	public static $db =array(
+		'db' => array(
+			'Website' => 'Varchar',
+			'Phone' => 'Varchar(255)',
+		),
+		'has_many' => array(
+			'RelatedObjects' => 'DataExtensionTest_RelatedObject'
+		),
+		'defaults' => array(
+			'Phone' => '123'
+		),
+		'api_access' => true,
+	);
+
 }
 
 class DataExtensionTest_RelatedObject extends DataObject implements TestOnly {
@@ -293,19 +291,19 @@ class DataExtensionTest_Ext2 extends DataExtension implements TestOnly {
 }
 
 class DataExtensionTest_Faves extends DataExtension implements TestOnly {
-	public function extraStatics($class=null, $extension=null) {
-		return array(
-			'many_many' => array(
-				'Faves' => 'DataExtensionTest_RelatedObject'
-			)
-		);
-	}
+
+	public static $many_many = array(
+		'Faves' => 'DataExtensionTest_RelatedObject'
+	);
+
 }
 
 class DataExtensionTest_AppliedToDO extends DataExtension implements TestOnly {
+
 	public function testMethodApplied() {
 		return "hello world";
 	}
+
 }
 
 DataObject::add_extension('DataExtensionTest_MyObject', 'DataExtensionTest_Ext1');

@@ -612,34 +612,32 @@
 
 class UploadFieldTest_Record extends DataObject implements TestOnly {
 
-static $db = array(
-	'Title' => 'Text',
-);
+	static $db = array(
+		'Title' => 'Text',
+	);
 
-static $has_one = array(
-	'HasOneFile' => 'File',
-	'HasOneFileMaxOne' => 'File',
-	'HasOneFileMaxTwo' => 'File',
-);
+	static $has_one = array(
+		'HasOneFile' => 'File',
+		'HasOneFileMaxOne' => 'File',
+		'HasOneFileMaxTwo' => 'File',
+	);
 
-static $has_many = array(
-	'HasManyFiles' => 'File',
-	'HasManyFilesMaxTwo' => 'File',
-);
+	static $has_many = array(
+		'HasManyFiles' => 'File',
+		'HasManyFilesMaxTwo' => 'File',
+	);
 
-static $many_many = array(
-	'ManyManyFiles' => 'File',
-);
+	static $many_many = array(
+		'ManyManyFiles' => 'File',
+	);
 
 }
 
 class UploadFieldTest_FileExtension extends DataExtension implements TestOnly {
 
-	function extraStatics($class = null, $extension = null) {
-		return array(
-			'has_one' => array('Record' => 'UploadFieldTest_Record')
-		);
-	}
+	public static $has_one = array(
+		'Record' => 'UploadFieldTest_Record'
+	);
 
 	function canDelete($member = null) {
 		if($this->owner->Name == 'nodelete.txt') return false;
