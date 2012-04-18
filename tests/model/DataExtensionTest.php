@@ -100,7 +100,7 @@ class DataExtensionTest extends SapphireTest {
 	 * Test that DataObject::$api_access can be set to true via a extension
 	 */
 	function testApiAccessCanBeExtended() {
-		$this->assertTrue(Object::get_static('DataExtensionTest_Member', 'api_access'));
+		$this->assertTrue(Config::inst()->get('DataExtensionTest_Member', 'api_access', Config::FIRST_SET));
 	}
 	
 	function testPermissionExtension() {
