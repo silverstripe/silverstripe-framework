@@ -116,11 +116,12 @@ body.cms {
 		margin: 0;
 		display:table-cell;
 		vertical-align:top;
-		width:100%;
+		width:60%;
 		.breadcrumbs-wrapper {
-			display:table-row;
+			// display:table;
 			.crumb {
-				display:table-cell;
+				// display:table-cell;
+				display: inline;
 				line-height:26px;
 				padding:0 5px;
 			}
@@ -135,6 +136,7 @@ body.cms {
 
 	& > div {
 		display:table;
+		width: 100%;
 		.cms_backlink {
 			display:table-cell;
 			vertical-align:middle;
@@ -145,7 +147,7 @@ body.cms {
 	.cms-content-header-tabs {
 		display:table-cell;
 		white-space:nowrap;
-		width:100%;
+		width:40%;
 		.ui-tabs-nav {
 			float:right;
 			margin-right:$grid-x*4;

@@ -260,14 +260,13 @@ body.cms { overflow: hidden; }
 .cms-content-header { padding: 0px 8px 8px; height: 32px; z-index: 60; -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; -o-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px inset; background-image: url(../images/textures/cms_content_header.png); background-repeat: repeat; overflow: hidden; }
 .cms-content-header a { color: #1556b2; }
 .cms-content-header .backlink span.btn-icon-back { height: 16px; }
-.cms-content-header h2 { padding: 8px 8px 0 8px; font-size: 14px; line-height: 24px; font-weight: bold; text-shadow: #bfcad2 1px 1px 0; margin: 0; display: table-cell; vertical-align: top; width: 100%; }
-.cms-content-header h2 .breadcrumbs-wrapper { display: table-row; }
-.cms-content-header h2 .breadcrumbs-wrapper .crumb { display: table-cell; line-height: 26px; padding: 0 5px; }
+.cms-content-header h2 { padding: 8px 8px 0 8px; font-size: 14px; line-height: 24px; font-weight: bold; text-shadow: #bfcad2 1px 1px 0; margin: 0; display: table-cell; vertical-align: top; width: 60%; }
+.cms-content-header h2 .breadcrumbs-wrapper .crumb { display: inline; line-height: 26px; padding: 0 5px; }
 .cms-content-header h2 .breadcrumbs-wrapper .crumb:first-child { padding-left: 0px; }
 .cms-content-header h2 .breadcrumbs-wrapper .crumb:last-child { padding-right: 0px; }
-.cms-content-header > div { display: table; }
+.cms-content-header > div { display: table; width: 100%; }
 .cms-content-header > div .cms_backlink { display: table-cell; vertical-align: middle; width: auto; }
-.cms-content-header .cms-content-header-tabs { display: table-cell; white-space: nowrap; width: 100%; }
+.cms-content-header .cms-content-header-tabs { display: table-cell; white-space: nowrap; width: 40%; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav { float: right; margin-right: 32px; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav li a { font-weight: bold; line-height: 16px; padding: 12px 20px 12px; }
 .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-state-default, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-content .ui-state-default, .cms-content-header .cms-content-header-tabs .ui-tabs-nav .ui-widget-header .ui-state-default { border-top: none; }
