@@ -254,19 +254,20 @@ class TestRunner extends Controller {
 	 */
 	function runTests($classList, $coverage = false) {
 		$startTime = microtime(true);
-		
-		// XDEBUG seem to cause problems with test execution :-(
+
+		// disable xdebug, as it messes up test execution
 		if(function_exists('xdebug_disable')) xdebug_disable();
-		
-		ini_set('max_execution_time', 0);		
-		
+
+		ini_set('max_execution_time', 0);
+
 		$this->setUp();
-		
+
 		// Optionally skip certain tests
 		$skipTests = array();
 		if($this->request->getVar('SkipTests')) {
 			$skipTests = explode(',', $this->request->getVar('SkipTests'));
 		}
+
 		$classList = array_diff($classList, $skipTests);
 		
 		// run tests before outputting anything to the client
@@ -281,16 +282,14 @@ class TestRunner extends Controller {
 		// Remove the error handler so that PHPUnit can add its own
 		restore_error_handler();
 
-
 		self::$default_reporter->writeHeader("SilverStripe Test Runner");
-		if (count($classList) > 1) { 
+		if (count($classList) > 1) {
 			self::$default_reporter->writeInfo("All Tests", "Running test cases: ",implode(", ", $classList));
-		} else
-		if (count($classList) == 1) { 
-			self::$default_reporter->writeInfo($classList[0], "");
+		} elseif (count($classList) == 1) {
+			self::$default_reporter->writeInfo($classList[0], '');
 		} else {
-			// border case: no tests are available. 
-			self::$default_reporter->writeInfo("", "");
+			// border case: no tests are available.
+			self::$default_reporter->writeInfo('', '');
 		}
 
 		// perform unit tests (use PhpUnitWrapper or derived versions)

@@ -203,7 +203,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	 * @return array See {@link register()} for the returned format.
 	 */
 	function batchActions() {
-		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET)
+		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET);
 		if($actions) foreach($actions as $action) {
 			if($action['recordClass'] != $this->recordClass) unset($action);
 		}
