@@ -432,6 +432,7 @@ class UploadField extends FileField {
 		$tmpfile = $request->postVar($name);
 		$record = $this->getRecord();
 		
+		// Check if the file has been uploaded into the temporary storage.
 		if (!$tmpfile) {
 			$return = array('error' => _t('UploadField.FIELDNOTSET', 'File information not found'));
 		} else {
@@ -444,7 +445,7 @@ class UploadField extends FileField {
 		}
 
 		// Check for constraints on the record to which the file will be attached.
-		if (!$return['error'] && $record && $record->exists()) {
+		if (!$return['error'] && $this->relationAutoSetting && $record && $record->exists()) {
 			$tooManyFiles = false;
 			// Some relationships allow many files to be attached.
 			if ($this->getConfig('allowedMaxFileNumber') && ($record->has_many($name) || $record->many_many($name))) {
@@ -464,20 +465,47 @@ class UploadField extends FileField {
 				), $this->getConfig('allowedMaxFileNumber'));
 			}
 		}
+
+		// Process the uploaded file
 		if (!$return['error']) {
+			$fileObject = null;
+
+			if ($this->relationAutoSetting) {
+				// Search for classes that can hold the uploaded files by traversing the relationship.
+				if ($record->hasMethod($name)) {
+					$remote = $record->$name();
+					if ($remote instanceof DataList) {
+						// has_many or many_many
+						$desiredClass = $remote->dataClass();
+					}
+					else if (is_object($remote)) {
+						// has_one
+						$desiredClass = $remote->ClassName;
+					}
+
+					// If we have a specific class, create new object explicitly. Otherwise rely on Upload::load to choose the class.
+					if (is_string($desiredClass)) $fileObject = Object::create($desiredClass);
+				}
+			}
+
+			// Get the uploaded file into a new file object.
 			try {
-				$this->upload->loadIntoFile($tmpfile, null, $this->folderName);
+				$this->upload->loadIntoFile($tmpfile, $fileObject, $this->folderName);
 			} catch (Exception $e) {
 				// we shouldn't get an error here, but just in case
 				$return['error'] = $e->getMessage();
 			}
+
 			if (!$return['error']) {
 				if ($this->upload->isError()) {
 					$return['error'] = implode(' '.PHP_EOL, $this->upload->getErrors());
 				} else {
-					// The file has been uploaded successfully, attach it to the related record.
 					$file = $this->upload->getFile();
-					$this->attachFile($file);
+
+					// Attach the file to the related record.
+					if ($this->relationAutoSetting) {
+						$this->attachFile($file);
+					}
 
 					// Collect all output data.
 					$file =  $this->customiseFile($file);
