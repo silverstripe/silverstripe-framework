@@ -1457,7 +1457,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * @param string $string The original string itself. In a usual call this is a mandatory parameter, but if you are reusing a string which
 	 *				 has already been "declared" (using another call to this function, with the same class and entity), you can omit it.
 	 * @param string $context (optional) If the string can be difficult to translate by any reason, you can help translators with some more info using this param
-	 * @param string injectionArray (optional) array of key value pairs that are used to replace corresponding expressions in {curly brackets} in the $string
+	 * @param string injectionArray (optional) array of key value pairs that are used to replace corresponding expressions in {curly brackets} in the $string.
+	 *               The injection array can also be used as the their argument to the _t() function
 	 * @return string The translated string, according to the currently set locale {@link i18n::set_locale()}
 	 */
 	static function _t($entity, $string = "", $context = "", $injection = "") {
