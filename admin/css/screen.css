@@ -687,6 +687,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 
 .cms-tree { visibility: hidden; }
 .cms-tree.multiple li > a > .jstree-icon { display: none; }
+.cms-tree.multiple li > a > .jstree-icon.jstree-checkbox { display: inline-block; }
 .cms-tree.multiple li#record-0 > a .jstree-checkbox { display: none; }
 
 /** Styles for the left hand side menu and header for the admin panels.  Take into consideration CSS selector performance.   @package framework @subpackage admin */

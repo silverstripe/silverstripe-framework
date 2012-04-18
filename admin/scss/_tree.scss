@@ -610,9 +610,15 @@ li.class-ErrorPage > a .jstree-pageicon {
 	visibility: hidden; // enabled by JS to avoid layout glitches
 
 	&.multiple {
-		// Hide draggable icon when multiselect is enabled
-		li > a > .jstree-icon {
-			display: none;
+		li > a {
+			// Hide draggable icon when multiselect is enabled
+			& > .jstree-icon {
+				display: none;
+			}
+			// But show the checkbox
+			& > .jstree-icon.jstree-checkbox {
+				display: inline-block;
+			}
 		}
 
 		li#record-0 {
