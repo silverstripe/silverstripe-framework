@@ -355,7 +355,7 @@ body.cms { overflow: hidden; }
 
 /* -------------------------------------------------------- Content Tools is the sidebar on the left of the main content panel */
 .cms-content-tools { background-color: #c6d7df; width: 192px; border-right: 1px solid #bfcad2; overflow-y: auto; overflow-x: hidden; z-index: 70; -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; -o-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; float: left; position: relative; }
-.cms-content-tools .cms-panel-header { clear: both; margin: 0 0 7px; line-height: 24px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -moz-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); -o-box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); box-shadow: 0 1px 0 rgba(228, 230, 230, 0.8); }
+.cms-content-tools .cms-panel-header { clear: both; margin: 0 0 7px; line-height: 24px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); }
 .cms-content-tools .cms-panel-content { width: 176px; padding: 0 8px; overflow: auto; height: 100%; }
 .cms-content-tools .cms-panel-content .dropdown select { width: 160px; }
 .cms-content-tools .cms-panel-content #LastEditedFrom { -moz-box-shadow: none; -webkit-box-shadow: none; -o-box-shadow: none; box-shadow: none; }
@@ -465,7 +465,7 @@ form.member-profile-form .ui-tabs-nav .ui-corner-all, form.member-profile-form .
 .cms-panel#cms-content-tools-CMSPageEditController .cms-panel-content-collapsed .cms-panel-header { width: 600px; position: relative; top: 24px; right: 577px; text-align: right; }
 .cms-panel .cms-panel-content-collapsed { width: 40px; display: none; }
 .cms-panel .cms-panel-content-collapsed h2, .cms-panel .cms-panel-content-collapsed h3 { border-bottom: 0; margin-left: 8px; -moz-transform-origin: bottom right; -webkit-transform-origin: bottom right; -o-transform-origin: bottom right; -ms-transform-origin: bottom right; transform-origin: bottom right; -moz-transform: rotate(270deg); -webkit-transform: rotate(270deg); -o-transform: rotate(270deg); -ms-transform: rotate(270deg); transform: rotate(270deg); }
-.cms-panel .cms-panel-content-collapsed .cms-panel-header { width: 600px; position: relative; right: 577px; text-align: right; }
+.cms-panel .cms-panel-content-collapsed .cms-panel-header { width: 600px; position: relative; right: 577px; text-align: right; border-bottom: none; box-shadow: none; }
 .cms-panel .child-flyout-indicator { width: 0; height: 0; border-right: 3px dashed #1f1f1f; border-top: 3px solid transparent; border-left: 3px solid transparent; border-bottom: 3px dashed #1f1f1f; position: absolute; right: 1px; margin-top: -8px; display: none; /* To be shown by javascript, see LeftAndMain.Panel.js */ }
 .cms-panel .collapsed-flyout { display: block !important; left: 41px; margin-top: -40px; position: fixed; width: 191px; }
 .cms-panel .collapsed-flyout li a span { display: block !important; }

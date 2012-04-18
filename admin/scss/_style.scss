@@ -612,7 +612,7 @@ body.cms {
 		margin: 0 0 $grid-y - 1;
 		line-height: $grid-y * 3;
 		
-		@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 10%))
+		@include doubleborder(bottom, $color-light-separator, lighten($color-shadow-light, 95%));
 	}
 	
 	.cms-panel-content {
@@ -1156,6 +1156,8 @@ form.member-profile-form {
 			position:relative;
 			right:577px;
 			text-align:right;
+			border-bottom:none;
+			box-shadow:none;
 		}
 	}
 
