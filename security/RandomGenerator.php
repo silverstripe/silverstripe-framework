@@ -21,8 +21,10 @@ class RandomGenerator {
 		
 		// TODO Fails with "Could not gather sufficient random data" on IIS, temporarily disabled on windows
 		if(!$isWin) {
-			$e = mcrypt_create_iv(64, MCRYPT_DEV_URANDOM);
-			if($e !== false) return $e;
+			if(function_exists('mcrypt_create_iv')) {
+				$e = mcrypt_create_iv(64, MCRYPT_DEV_URANDOM);
+				if($e !== false) return $e;
+			}
 		}
 
 		// Fall back to SSL methods - may slow down execution by a few ms
