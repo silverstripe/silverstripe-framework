@@ -52,14 +52,16 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		)->addExtraClass("members_grid");
 		$memberListConfig->getComponentByType('GridFieldDetailForm')->setValidator(new Member_Validator());
 
-		$groupList = GridField::create(			'Groups',
+		$groupList = GridField::create(
+			'Groups',
 			false,
 			DataList::create('Group'),
 			GridFieldConfig_RecordEditor::create()
-		)->setDisplayFields(array(
+		);
+		$columns = $groupList->getConfig()->getComponentByType('GridFieldDataColumns');
+		$columns->setDisplayFields(array(
 			'Breadcrumbs' => singleton('Group')->fieldLabel('Title')
 		));
-
 		
 		$fields = new FieldList(
 			$root = new TabSet(

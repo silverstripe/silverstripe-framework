@@ -371,7 +371,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$fileField->setList($this->getFiles($parentID));
 		$fileField->setAttribute('data-selectable', true);
 		$fileField->setAttribute('data-multiselect', true);
-		$fileField->setDisplayFields(array(
+		$columns = $fileField->getConfig()->getComponentByType('GridFieldDataColumns');
+		$columns->setDisplayFields(array(
 			'CMSThumbnail' => false,
 			'Name' => _t('File.Name'),
 		));
