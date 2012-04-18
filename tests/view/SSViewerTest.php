@@ -461,7 +461,7 @@ after')
 
 		$this->assertEquals(
 			$this->render('<% include SSViewerTestIncludeWithArguments Arg1=A Bare String, Arg2=B Bare String %>'),
-			'<p>A Bare String</p><p>B Bare String</p>'
+			'<p>A Bare String</p><p>B Bare String </p>'
 		);
 
 		$this->assertEquals(

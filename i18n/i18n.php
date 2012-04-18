@@ -1456,25 +1456,40 @@ class i18n extends Object implements TemplateGlobalProvider {
 	 * 						 the class name where this string is used and Entity identifies the string inside the namespace.
 	 * @param string $string The original string itself. In a usual call this is a mandatory parameter, but if you are reusing a string which
 	 *				 has already been "declared" (using another call to this function, with the same class and entity), you can omit it.
-	 * @param string $context If the string can be difficult to translate by any reason, you can help translators with some more info using this param
+	 * @param string $context (optional) If the string can be difficult to translate by any reason, you can help translators with some more info using this param
+	 * @param string injectionArray (optional) array of key value pairs that are used to replace corresponding expressions in {curly brackets} in the $string.
+	 *               The injection array can also be used as the their argument to the _t() function
 	 * @return string The translated string, according to the currently set locale {@link i18n::set_locale()}
 	 */
-	static function _t($entity, $string = "", $context = "") {
+	static function _t($entity, $string = "", $context = "", $injection = "") {
 		if(is_numeric($context) && in_array($context, array(PR_LOW, PR_MEDIUM, PR_HIGH))) {
-			$context = func_get_arg(4);
 			Deprecation::notice(
-				'3.0', 
+				'3.0',
 				'The $priority argument to _t() is deprecated, please use module inclusion priorities instead'
 			);
 		}
+
+		//fetch the injection array out of the parameters (if it is present)
+		$argList = func_get_args();
+		$argNum = func_num_args();
+		//_t($entity, $string = "", $context (optional), $injectionArray (optional))
+		$injectionArray = null;
+		for($i = 0; $i < $argNum; $i++) {
+			if (is_array($argList[$i])) {   //we have reached the injectionArray
+				$injectionArray = $argList[$i]; //any array in the args will be the injection array
+			}
+		}
+
 		// get current locale (either default or user preference)
 		$locale = i18n::get_locale();
 		$lang = i18n::get_lang_from_locale($locale);
-		
+
 		// Only call getter if static isn't already defined (for performance reasons)
 		$translatorsByPrio = self::$translators;
 		if(!$translatorsByPrio) $translatorsByPrio = self::get_translators();
-		
+
+		$returnValue = $string; // Fall back to default string argument
+
 		foreach($translatorsByPrio as $priority => $translators) {
 			foreach($translators as $name => $translator) {
 				$adapter = $translator->getAdapter();
@@ -1489,13 +1504,23 @@ class i18n extends Object implements TemplateGlobalProvider {
 				$translation = $adapter->translate($entity, $locale);
 
 				// Return translation only if we found a match thats not the entity itself (Zend fallback)
-				if($translation && $translation != $entity) return $translation;
+				if($translation && $translation != $entity) {
+					$returnValue = $translation;
+					break 2;
+				}
 			}
 		}
-		
-		// Fall back to default string argument
-		return $string;
+
+		// inject the variables from injectionArray (if present)
+		if ($injectionArray && count($injectionArray) > 0) {
+			foreach($injectionArray as $variable => $injection) {
+				$returnValue = str_replace('{'.$variable.'}', $injection, $returnValue);
+			}
+		}
+
+		return $returnValue;
 	}
+
 
 	/**
 	 * @return array Array of priority keys to instances of Zend_Translate, mapped by name.
