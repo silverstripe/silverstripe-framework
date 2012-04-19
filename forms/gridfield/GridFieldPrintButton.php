@@ -6,9 +6,6 @@
 
 /**
  * Adds an "Print" button to the bottom or top of a GridField.
- * 
- * WARNING: This is experimental and its API is subject to change.  Feel free to use it as long as you are happy of
- * refactoring your code in the future.
  */
 class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler {
 
