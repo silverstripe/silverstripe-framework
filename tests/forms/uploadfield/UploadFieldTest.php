@@ -28,7 +28,7 @@
 		$this->assertFalse($response->isError());
 		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
 		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
-		$this->assertNotNull($uploadedFile);
+		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 	}
 
 	function testUploadHasOneRelation() {
@@ -48,11 +48,36 @@
 		$this->assertFalse($response->isError());
 		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
 		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
-		$this->assertNotNull($uploadedFile);
+		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
 		$this->assertTrue($record->HasOneFile()->exists());
 		$this->assertEquals($record->HasOneFile()->Name, $tmpFileName);
+	}
+
+	function testUploadHasOneRelationWithExtendedFile() {
+		$this->loginWithPermission('ADMIN');
+
+		// Unset existing has_one relation before re-uploading
+		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$record->HasOneExtendedFileID = null;
+		$record->write();
+
+		$tmpFileName = 'testUploadHasOneRelationWithExtendedFile.txt';
+		$_FILES = array('HasOneExtendedFile' => $this->getUploadFile($tmpFileName));
+		$response = $this->post(
+			'UploadFieldTest_Controller/Form/field/HasOneExtendedFile/upload',
+			array('HasOneExtendedFile' => $this->getUploadFile($tmpFileName))
+		);
+		$this->assertFalse($response->isError());
+
+		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
+		$uploadedFile = DataObject::get_one('UploadFieldTest_ExtendedFile', sprintf('"Name" = \'%s\'', $tmpFileName));
+		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
+
+		$record = DataObject::get_by_id($record->class, $record->ID, false);
+		$this->assertTrue($record->HasOneExtendedFile()->exists(), 'The extended file is attached to the class');
+		$this->assertEquals($record->HasOneExtendedFile()->Name, $tmpFileName, 'Proper file has been attached');
 	}
 
 	function testUploadHasManyRelation() {
@@ -69,7 +94,7 @@
 		$this->assertFalse($response->isError());
 		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
 		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
-		$this->assertNotNull($uploadedFile);
+		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
 		$this->assertEquals(3, $record->HasManyFiles()->Count());
@@ -91,7 +116,7 @@
 		$this->assertFalse($response->isError());
 		$this->assertFileExists(ASSETS_PATH . "/UploadFieldTest/$tmpFileName");
 		$uploadedFile = DataObject::get_one('File', sprintf('"Name" = \'%s\'', $tmpFileName));
-		$this->assertNotNull($uploadedFile);
+		$this->assertTrue(is_object($uploadedFile), 'The file object is created');
 
 		$record = DataObject::get_by_id($record->class, $record->ID, false);
 		$this->assertEquals($relationCount+1, $record->ManyManyFiles()->Count());
@@ -605,7 +630,7 @@
 		}
 
 		// Remove left over folders and any files that may exist
-		if(file_exists('../assets/UploadFieldTest')) Filesystem::removeFolder('../assets/FileTest');
+		if(file_exists('../assets/UploadFieldTest')) Filesystem::removeFolder('../assets/UploadFieldTest');
 	}
 
 }
@@ -620,6 +645,7 @@ class UploadFieldTest_Record extends DataObject implements TestOnly {
 		'HasOneFile' => 'File',
 		'HasOneFileMaxOne' => 'File',
 		'HasOneFileMaxTwo' => 'File',
+		'HasOneExtendedFile' => 'UploadFieldTest_ExtendedFile'
 	);
 
 	static $has_many = array(
@@ -666,6 +692,10 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 		$fieldHasOne = new UploadField('HasOneFile');
 		$fieldHasOne->setFolderName('UploadFieldTest');
 		$fieldHasOne->setRecord($record);
+
+		$fieldHasOneExtendedFile = new UploadField('HasOneExtendedFile');
+		$fieldHasOneExtendedFile->setFolderName('UploadFieldTest');
+		$fieldHasOneExtendedFile->setRecord($record);
 		
 		$fieldHasOneMaxOne = new UploadField('HasOneFileMaxOne');
 		$fieldHasOneMaxOne->setFolderName('UploadFieldTest');
@@ -712,6 +742,7 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 				$fieldHasOne,
 				$fieldHasOneMaxOne,
 				$fieldHasOneMaxTwo,
+				$fieldHasOneExtendedFile,
 				$fieldHasMany,
 				$fieldHasManyMaxTwo,
 				$fieldManyMany,
@@ -727,6 +758,7 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 				'HasOneFile',
 				'HasOneFileMaxOne',
 				'HasOneFileMaxTwo',
+				'HasOneExtendedFile',
 				'HasManyFiles',
 				'HasManyFilesMaxTwo',
 				'ManyManyFiles',
@@ -741,5 +773,12 @@ class UploadFieldTest_Controller extends Controller implements TestOnly {
 	function submit($data, $form) {
 		
 	}
+
+}
+
+/**
+ * Used for testing the create-on-upload
+ */
+class UploadFieldTest_ExtendedFile extends File implements TestOnly {
 
 }
