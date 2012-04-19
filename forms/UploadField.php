@@ -432,6 +432,7 @@ class UploadField extends FileField {
 		$tmpfile = $request->postVar($name);
 		$record = $this->getRecord();
 		
+		// Check if the file has been uploaded into the temporary storage.
 		if (!$tmpfile) {
 			$return = array('error' => _t('UploadField.FIELDNOTSET', 'File information not found'));
 		} else {
@@ -442,14 +443,20 @@ class UploadField extends FileField {
 				'error' => $tmpfile['error']
 			);
 		}
-		if (!$return['error'] && $record && $record->exists()) {
+
+		// Check for constraints on the record to which the file will be attached.
+		if (!$return['error'] && $this->relationAutoSetting && $record && $record->exists()) {
 			$tooManyFiles = false;
+			// Some relationships allow many files to be attached.
 			if ($this->getConfig('allowedMaxFileNumber') && ($record->has_many($name) || $record->many_many($name))) {
 				if(!$record->isInDB()) $record->write();
 				$tooManyFiles = $record->{$name}()->count() >= $this->getConfig('allowedMaxFileNumber');
+			// has_one only allows one file at any given time.
 			} elseif($record->has_one($name)) {
 				$tooManyFiles = $record->{$name}() && $record->{$name}()->exists();
 			}
+
+			// Report the constraint violation.
 			if ($tooManyFiles) {
 				if(!$this->getConfig('allowedMaxFileNumber')) $this->setConfig('allowedMaxFileNumber', 1);
 				$return['error'] = sprintf(_t(
@@ -458,20 +465,49 @@ class UploadField extends FileField {
 				), $this->getConfig('allowedMaxFileNumber'));
 			}
 		}
+
+		// Process the uploaded file
 		if (!$return['error']) {
+			$fileObject = null;
+
+			if ($this->relationAutoSetting) {
+				// Search for classes that can hold the uploaded files by traversing the relationship.
+				if ($record->hasMethod($name)) {
+					$remote = $record->$name();
+					if ($remote instanceof DataList) {
+						// has_many or many_many
+						$desiredClass = $remote->dataClass();
+					}
+					else if (is_object($remote)) {
+						// has_one
+						$desiredClass = $remote->ClassName;
+					}
+
+					// If we have a specific class, create new object explicitly. Otherwise rely on Upload::load to choose the class.
+					if (is_string($desiredClass)) $fileObject = Object::create($desiredClass);
+				}
+			}
+
+			// Get the uploaded file into a new file object.
 			try {
-				$this->upload->loadIntoFile($tmpfile, null, $this->folderName);
+				$this->upload->loadIntoFile($tmpfile, $fileObject, $this->folderName);
 			} catch (Exception $e) {
 				// we shouldn't get an error here, but just in case
 				$return['error'] = $e->getMessage();
 			}
+
 			if (!$return['error']) {
 				if ($this->upload->isError()) {
 					$return['error'] = implode(' '.PHP_EOL, $this->upload->getErrors());
 				} else {
 					$file = $this->upload->getFile();
-					$file->write();
-					$this->attachFile($file);
+
+					// Attach the file to the related record.
+					if ($this->relationAutoSetting) {
+						$this->attachFile($file);
+					}
+
+					// Collect all output data.
 					$file =  $this->customiseFile($file);
 					$return = array_merge($return, array(
 						'id' => $file->ID,
