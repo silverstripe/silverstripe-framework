@@ -828,7 +828,9 @@ class UploadField_ItemHandler extends RequestHandler {
 	
 }
 
-
+/**
+ * File selection popup for attaching existing files.
+ */
 class UploadField_SelectHandler extends RequestHandler {
 
 	/**
@@ -854,6 +856,8 @@ class UploadField_SelectHandler extends RequestHandler {
 	}
 
 	function index() {
+		// Requires a separate JS file, because we can't reach into the iframe with entwine.
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/UploadField_select.js');
 		return $this->renderWith('CMSDialog');
 	}
 
@@ -866,42 +870,63 @@ class UploadField_SelectHandler extends RequestHandler {
 	}
 
 	/**
+	 * Build the file selection form.
+	 *
 	 * @return Form
 	 */
 	function Form() {
+		// Find out the requested folder ID.
+		$folderID = $this->parent->getRequest()->requestVar('ParentID');
+		if (!isset($folderID)) {
+			$folder = Folder::find_or_make($this->folderName);
+			$folderID = $folder->ID;
+		}
+
+		// Construct the form
 		$action = new FormAction('doAttach', _t('UploadField.AttachFile', 'Attach file(s)'));
 		$action->addExtraClass('ss-ui-action-constructive icon-accept');
-		return new Form(
+		$form = new Form(
 			$this,
 			'Form',
-			new FieldList($this->getListField()),
+			new FieldList($this->getListField($folderID)),
 			new FieldList($action)
 		);
+
+		// Add a class so we can reach the form from the frontend.
+		$form->addExtraClass('uploadfield-form');
+
+		return $form;
 	}
 
 	/**
+	 * @param $folderID The ID of the folder to display.
 	 * @return FormField
 	 */
-	protected function getListField() {
-		$folder = $this->getFolder();
+	protected function getListField($folderID) {
+		// Generate the folder selection field.
+		$folderField = new TreeDropdownField('ParentID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder');
+		$folderField->setValue($folderID);
+
+		// Generate the file list field.
 		$config = GridFieldConfig::create();
 		$config->addComponent(new GridFieldSortableHeader());
 		$config->addComponent(new GridFieldFilterHeader());
 		$config->addComponent(new GridFieldDataColumns());
 		$config->addComponent(new GridFieldPaginator(10));
 
-		$field = new GridField('Files', false, $folder->stageChildren(), $config);
-		$field->setAttribute('data-selectable', true);
-		if($this->parent->getConfig('allowedMaxFileNumber') > 1) $field->setAttribute('data-multiselect', true);
+		// Create the data source for the list of files within the current directory.
+		$files = DataList::create('File')->filter('ParentID', $folderID);
 
-		return $field;
-	}
+		$fileField = new GridField('Files', false, $files, $config);
+		$fileField->setAttribute('data-selectable', true);
+		if($this->parent->getConfig('allowedMaxFileNumber') > 1) $fileField->setAttribute('data-multiselect', true);
 
-	/**
-	 * @return Folder
-	 */
-	function getFolder() {
-		return Folder::find_or_make($this->folderName);
+		$selectComposite = new CompositeField(
+			$folderField,
+			$fileField
+		);
+
+		return $selectComposite;
 	}
 
 	function doAttach($data, $form) {
