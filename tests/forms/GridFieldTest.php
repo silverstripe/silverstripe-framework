@@ -85,40 +85,6 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::getDisplayFields
-	 */
-	public function testGridFieldGetDefaultDisplayFields() {
-		$obj = new GridField('testfield', 'testfield', DataList::create('Member'));
-		$expected = array(
-			'FirstName' => 'First Name',
-			'Surname' => 'Last Name',
-			'Email' => 'Email',
-		);
-		$this->assertEquals($expected, $obj->getDisplayFields());
-	}
-
-	/**
-	 * @covers GridField::setDisplayFields
-	 * @covers GridField::getDisplayFields
-	 */
-	public function testGridFieldCustomDisplayFields() {
-		$obj = new GridField('testfield', 'testfield', DataList::create('Member'));
-		$expected = array('Email' => 'Email');
-		$obj->setDisplayFields($expected);
-		$this->assertEquals($expected, $obj->getDisplayFields());
-	}
-
-	/**
-	 * @covers GridField::setDisplayFields
-	 * @covers GridField::getDisplayFields
-	 */
-	public function testGridFieldDisplayFieldsWithBadArguments() {
-		$this->setExpectedException('InvalidArgumentException');
-		$obj = new GridField('testfield', 'testfield', DataList::create('Member'));
-		$obj->setDisplayFields(new stdClass());
-	}
-
-	/**
 	 * @covers GridField::setList
 	 * @covers GridField::getList
 	 */
@@ -282,28 +248,6 @@ class GridFieldTest extends SapphireTest {
 		$config = GridFieldConfig::create()->addComponent(new GridFieldTest_Component);
 		$obj = new GridField('testfield', 'testfield', ArrayList::create(), $config);
 		$this->assertEquals('handledAction is executed', $obj->handleAction('jump', array(), array()));
-	}
-
-	/**
-	 * @covers GridField::getFieldCasting
-	 * @covers GridField::setFieldCasting
-	 */
-	public function testFieldCasting() {
-		$obj = new GridField('testfield', 'testfield');
-		$this->assertEquals(array(), $obj->getFieldCasting());
-		$obj->setFieldCasting(array("MyShortText"=>"Text->FirstSentence"));
-		$this->assertEquals(array("MyShortText"=>"Text->FirstSentence"), $obj->getFieldCasting());
-	}
-	
-	/**
-	 * @covers GridField::getFieldFormatting
-	 * @covers GridField::setFieldFormatting
-	 */
-	public function testFieldFormatting() {
-		$obj = new GridField('testfield', 'testfield');
-		$this->assertEquals(array(), $obj->getFieldFormatting());
-		$obj->setFieldFormatting(array("myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'));
-		$this->assertEquals(array("myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'), $obj->getFieldFormatting());
 	}
 
 	/**

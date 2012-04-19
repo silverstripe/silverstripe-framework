@@ -8,13 +8,92 @@
  */
 class GridFieldDataColumns implements GridField_ColumnProvider {
 
+	/** @var array */
+	public $fieldCasting = array();
+
+	/** @var array */
+	public $fieldFormatting = array();
+	
+	/**
+	 * This is the columns that will be visible
+	 *
+	 * @var array
+	 */
+	protected $displayFields = array();
+
 	public function augmentColumns($gridField, &$columns) {
-		$baseColumns = array_keys($gridField->getDisplayFields());
+		$baseColumns = array_keys($this->getDisplayFields($gridField));
 		foreach($baseColumns as $col) $columns[] = $col;
 	}
 
 	public function getColumnsHandled($gridField) {
-		return array_keys($gridField->getDisplayFields());
+		return array_keys($this->getDisplayFields($gridField));
+	}
+	
+	/**
+	 * Override the default behaviour of showing the models summaryFields with
+	 * these fields instead
+	 * Example: array( 'Name' => 'Members name', 'Email' => 'Email address')
+	 *
+	 * @param array $fields 
+	 */
+	public function setDisplayFields($fields) {
+		if(!is_array($fields)) {
+			throw new InvalidArgumentException('Arguments passed to GridFieldDataColumns::setDisplayFields() must be an array');
+		}
+		$this->displayFields = $fields;
+		return $this;
+	}
+
+	/**
+	 * Get the DisplayFields
+	 * 
+	 * @return array
+	 * @see GridFieldDataColumns::setDisplayFields
+	 */
+	public function getDisplayFields($gridField) {
+		if(!$this->displayFields) {
+			return singleton($gridField->getModelClass())->summaryFields();
+		}
+		return $this->displayFields;
+	}
+
+	/**
+	 * Specify castings with fieldname as the key, and the desired casting as value.
+	 * Example: array("MyCustomDate"=>"Date","MyShortText"=>"Text->FirstSentence")
+	 *
+	 * @param array $casting
+	 */
+	public function setFieldCasting($casting) {
+		$this->fieldCasting = $casting;
+		return $this;
+	}
+
+	/**
+	 * Specify custom formatting for fields, e.g. to render a link instead of pure text.
+	 * Caution: Make sure to escape special php-characters like in a normal php-statement.
+	 * Example:	"myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'.
+	 * Alternatively, pass a anonymous function, which takes one parameter: The list item.
+	 *
+	 * @return array
+	 */
+	public function getFieldCasting() {
+		return $this->fieldCasting;
+	}
+
+	/**
+	 * @param array $formatting
+	 */
+	public function setFieldFormatting($formatting) {
+		$this->fieldFormatting = $formatting;
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getFieldFormatting() {
+		return $this->fieldFormatting;
 	}
 
 	/**
@@ -48,7 +127,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 						$tmpItem = $tmpItem->$relationMethod();
 					}
 				}
-			}			
+			}
 		}
 
 		$value = $this->castValue($gridField, $column, $value);
@@ -63,7 +142,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	}
 	
 	public function getColumnMetadata($gridField, $column) {
-		$columns = $gridField->getDisplayFields();
+		$columns = $this->getDisplayFields($gridField);
 		return array(
 			'title' => $columns[$column],
 		);
@@ -76,8 +155,8 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	 * @return type 
 	 */
 	protected function castValue($gridField, $fieldName, $value) {
-		if(array_key_exists($fieldName, $gridField->FieldCasting)) {
-			return $gridField->getCastedValue($value, $gridField->FieldCasting[$fieldName]);
+		if(array_key_exists($fieldName, $this->fieldCasting)) {
+			return $gridField->getCastedValue($value, $this->fieldCasting[$fieldName]);
 		} elseif(is_object($value) && method_exists($value, 'Nice')) {
 			return $value->Nice();
 		}
@@ -91,11 +170,11 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	 * @return type 
 	 */
 	protected function formatValue($gridField, $item, $fieldName, $value) {
-		if(!array_key_exists($fieldName, $gridField->FieldFormatting)) {
+		if(!array_key_exists($fieldName, $this->fieldFormatting)) {
 			return $value;
 		}
 
-		$spec = $gridField->FieldFormatting[$fieldName];
+		$spec = $this->fieldFormatting[$fieldName];
 		if(is_callable($spec)) {
 			return $spec($item);
 		} else {
