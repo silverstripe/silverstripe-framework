@@ -11,11 +11,12 @@ class EmailField extends TextField {
 	}
 
 	function getAttributes() {
-		$attrs = array(
-			'type' => 'email',
+		return array_merge(
+			parent::getAttributes(),
+			array(
+				'type' => 'email'
+			)
 		);
-
-		return array_merge($attrs, $this->attributes);
 	}
 
 	/**
