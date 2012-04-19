@@ -284,24 +284,28 @@ class FormTest extends FunctionalTest {
 				// leaving out security token
 			)
 		);
+
 		$this->assertEquals(400, $response->getStatusCode(), 'Submission fails without security token');
-		
+
 		$response = $this->get('FormTest_ControllerWithSecurityToken');
 		$tokenEls = $this->cssParser()->getBySelector('#Form_Form_SecurityID');
+
 		$this->assertEquals(
-			1, 
-			count($tokenEls), 
+			1,
+			count($tokenEls),
 			'Token form field added for controller without disableSecurityToken()'
 		);
-		$token = (string)$tokenEls[0];
-		$response = $this->submitForm(
-			'Form_Form',
-			null,
+
+		$token = (string)$tokenEls[0]['value'];
+
+		$response = $this->post(
+			'FormTest_ControllerWithSecurityToken/Form',
 			array(
 				'Email' => 'test@test.com',
 				'SecurityID' => $token
 			)
 		);
+
 		$this->assertEquals(200, $response->getStatusCode(), 'Submission suceeds with security token');
 	}
 	
