@@ -559,7 +559,13 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			return DataObject::get_one("Member", "\"Member\".\"ID\" = $id", true, 1);
 		}
 	}
-
+	
+	/**
+	 * Returns true if the current member is a repeat visitor who has logged in more than once.
+	 */
+	static function is_repeat_member() {
+		return Cookie::get("PastMember") ? true : false;
+	}
 
 	/**
 	 * Get the ID of the current logged in user
@@ -1377,7 +1383,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public static function get_template_global_variables() {
 		return array(
 			'CurrentMember' => 'currentUser',
-			'currentUser'
+			'currentUser',
+			'PastMember' => 'is_repeat_member',
+			'IsRepeatMember' => 'is_repeat_member',
 		);
 	}
 }
