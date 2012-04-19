@@ -10,6 +10,14 @@ class EmailField extends TextField {
 		return 'email text';
 	}
 
+	function getAttributes() {
+		$attrs = array(
+			'type' => 'email',
+		);
+
+		return array_merge($attrs, $this->attributes);
+	}
+
 	/**
 	 * Validates for RFC 2822 compliant email adresses.
 	 * 
