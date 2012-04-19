@@ -210,8 +210,8 @@ class SecurityTest extends FunctionalTest {
 		
 		// Request new password by email
 		$response = $this->get('Security/lostpassword');
-		$response = $this->submitForm('MemberLoginForm_LostPasswordForm', null, array('Email' => 'sam@silverstripe.com'));
-		
+		$response = $this->post('Security/LostPasswordForm', array('Email' => 'sam@silverstripe.com'));
+
 		$this->assertEmailSent('sam@silverstripe.com');
 		
 		// Load password link from email
@@ -386,7 +386,7 @@ class SecurityTest extends FunctionalTest {
 		$this->get('Security/logout');
 		$this->session()->inst_set('BackURL', $backURL);
 		$this->get('Security/login');
-		
+
 		return $this->submitForm(
 			"MemberLoginForm_LoginForm", 
 			null,

@@ -43,7 +43,7 @@ class EmailField extends TextField {
 				"validation"
 			);
 			return false;
-		} else{
+		} else {
 			return true;
 		}
 	}
