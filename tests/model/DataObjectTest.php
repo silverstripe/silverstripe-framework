@@ -367,7 +367,7 @@ class DataObjectTest extends SapphireTest {
 	}
 	
 	function testRandomSort() {
-		/* If we perforn the same regularly sorted query twice, it should return the same results */
+		/* If we perform the same regularly sorted query twice, it should return the same results */
 		$itemsA = DataObject::get("DataObjectTest_TeamComment", "", "ID");
 		foreach($itemsA as $item) $keysA[] = $item->ID;
 
@@ -555,6 +555,7 @@ class DataObjectTest extends SapphireTest {
 				//'Created',
 				//'LastEdited',
 				'SubclassDatabaseField',
+				'ParentTeamID',
 				'Title',
 				'DatabaseField',
 				'ExtendedDatabaseField',
@@ -569,6 +570,7 @@ class DataObjectTest extends SapphireTest {
 			array_keys(DataObject::database_fields('DataObjectTest_SubTeam')),
 			array(
 				'SubclassDatabaseField',
+				'ParentTeamID',
 			),
 			'databaseFields() on subclass contains only fields defined on instance'
 		);
@@ -731,7 +733,7 @@ class DataObjectTest extends SapphireTest {
 	
 	function testManyManyExtraFields() {
 		$player = $this->objFromFixture('DataObjectTest_Player', 'player1');
-	   $team = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		
 		// Extra fields are immediately available on the Team class (defined in $many_many_extraFields)
 		$teamExtraFields = $team->many_many_extraFields('Players');
@@ -1015,7 +1017,7 @@ class DataObjectTest extends SapphireTest {
 		$objEmpty->Title = '0'; // 
 		$this->assertFalse($objEmpty->isEmpty(), 'Zero value in attribute considered non-empty');
 	}
-	
+
 	function testRelField() {
 		$captain = $this->objFromFixture('DataObjectTest_Player', 'captain1');
 		// Test traversal of a single has_one
@@ -1095,6 +1097,7 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 	);
 
 	static $has_many = array(
+		'SubTeams' => 'DataObjectTest_SubTeam',
 		'Comments' => 'DataObjectTest_TeamComment'
 	);
 	
@@ -1141,6 +1144,10 @@ class DataObjectTest_Fixture extends DataObject implements TestOnly {
 class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
 	static $db = array(
 		'SubclassDatabaseField' => 'Varchar'
+	);
+
+	static $has_one = array(
+		"ParentTeam" => 'DataObjectTest_Team',
 	);
 }
 class OtherSubclassWithSameField extends DataObjectTest_Team implements TestOnly {

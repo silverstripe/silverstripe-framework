@@ -24,6 +24,8 @@ class DataQuery {
 	 * @var array
 	 */
 	protected $collidingFields = array();
+
+	private $queriedColumns = null;
 	
 	/**
 	 * @var Boolean
@@ -86,11 +88,12 @@ class DataQuery {
 	}
 	
 	/**
-	 * Set up the simplest intial query
+	 * Set up the simplest initial query
 	 */
 	function initialiseQuery() {
-		// Get the tables to join to
-		$tableClasses = ClassInfo::dataClassesFor($this->dataClass);
+		// Get the tables to join to.
+		// Don't get any subclass tables - let lazy loading do that.
+		$tableClasses = ClassInfo::ancestry($this->dataClass, true);
 		
 		// Error checking
 		if(!$tableClasses) {
@@ -113,28 +116,78 @@ class DataQuery {
 		}
 
 		$this->query->from("\"$baseClass\"");
-		$this->selectAllFromTable($this->query, $baseClass);
+		$this->selectColumnsFromTable($this->query, $baseClass);
 
 		singleton($this->dataClass)->extend('augmentDataQueryCreation', $this->query, $this);
+	}
+
+	function setQueriedColumns($queriedColumns) {
+		$this->queriedColumns = $queriedColumns;
 	}
 
 	/**
 	 * Ensure that the query is ready to execute.
 	 */
-	function getFinalisedQuery() {
-		$query = clone $this->query;
-		
-		// Get the tables to join to
-		$tableClasses = ClassInfo::dataClassesFor($this->dataClass);
-		$baseClass = array_shift($tableClasses);
-		
-		$collidingFields = array();
+	function getFinalisedQuery($queriedColumns = null) {
+		if(!$queriedColumns) $queriedColumns = $this->queriedColumns;
+		if($queriedColumns) {
+			$queriedColumns = array_merge($queriedColumns, array('Created', 'LastEdited', 'ClassName'));
+		}
 
-		// Join all the tables
-		if($this->querySubclasses) {
-			foreach($tableClasses as $tableClass) {
+		$query = clone $this->query;
+
+		// Generate the list of tables to iterate over and the list of columns required by any existing where clauses.
+		// This second step is skipped if we're fetching the whole dataobject as any required columns will get selected
+		// regardless.
+		if($queriedColumns) {
+			$tableClasses = ClassInfo::dataClassesFor($this->dataClass);
+
+			foreach ($query->where as $where) {
+				// Check for just the column, in the form '"Column" = ?' and the form '"Table"."Column"' = ?
+				if (preg_match('/^"([^"]+)"/', $where, $matches) ||
+					preg_match('/^"([^"]+)"\."[^"]+"/', $where, $matches)) {
+					if (!in_array($matches[1], $queriedColumns)) $queriedColumns[] = $matches[1];
+				}
+			}
+		}
+		else $tableClasses = ClassInfo::ancestry($this->dataClass, true);
+
+		$tableNames = array_keys($tableClasses);
+		$baseClass = $tableNames[0];
+
+		// Empty the existing select query of all non-generated selects (eg, random sorts and many-many-extrafields).
+		// Maybe we should remove all fields that exist on this class instead?
+		foreach ($query->select as $name => $column) {
+			if (!is_numeric($name)) unset($query->select[$name]);
+		}
+
+		// Iterate over the tables and check what we need to select from them. If any selects are made (or the table is
+		// required for a select)
+		foreach($tableClasses as $tableClass) {
+			$joinTable = false;
+
+			// If queriedColumns is set, then check if any of the fields are in this table.
+			if ($queriedColumns) {
+				$tableFields = DataObject::database_fields($tableClass);
+				$selectColumns = array();
+				// Look through columns specifically requested in query (or where clause)
+				foreach ($queriedColumns as $queriedColumn) {
+					if (array_key_exists($queriedColumn, $tableFields)) {
+						$selectColumns[] = $queriedColumn;
+					}
+				}
+
+				$this->selectColumnsFromTable($query, $tableClass, $selectColumns);
+				if ($selectColumns && $tableClass != $baseClass) {
+					$joinTable = true;
+				}
+			} else {
+				$this->selectColumnsFromTable($query, $tableClass);
+				if ($tableClass != $baseClass) $joinTable = true;
+			}
+
+			if ($joinTable) {
 				$query->leftJoin($tableClass, "\"$tableClass\".\"ID\" = \"$baseClass\".\"ID\"") ;
-				$this->selectAllFromTable($query, $tableClass);
 			}
 		}
 		
@@ -307,28 +360,28 @@ class DataQuery {
 	/**
 	 * Update the SELECT clause of the query with the columns from the given table
 	 */
-	protected function selectAllFromTable(SQLQuery &$query, $tableClass) {
-    	// Add SQL for multi-value fields
-    	$databaseFields = DataObject::database_fields($tableClass);
-    	$compositeFields = DataObject::composite_fields($tableClass, false);
-    	if($databaseFields) foreach($databaseFields as $k => $v) {
-    		if(!isset($compositeFields[$k])) {
-    			// Update $collidingFields if necessary
-    			if(isset($query->select[$k])) {
-    				if(!isset($this->collidingFields[$k])) $this->collidingFields[$k] = array($query->select[$k]);
-    				$this->collidingFields[$k][] = "\"$tableClass\".\"$k\"";
+	protected function selectColumnsFromTable(SQLQuery &$query, $tableClass, $columns = null) {
+		// Add SQL for multi-value fields
+		$databaseFields = DataObject::database_fields($tableClass);
+		$compositeFields = DataObject::composite_fields($tableClass, false);
+		if($databaseFields) foreach($databaseFields as $k => $v) {
+			if((is_null($columns) || in_array($k, $columns)) && !isset($compositeFields[$k])) {
+				// Update $collidingFields if necessary
+				if(isset($query->select[$k])) {
+					if(!isset($this->collidingFields[$k])) $this->collidingFields[$k] = array($query->select[$k]);
+					$this->collidingFields[$k][] = "\"$tableClass\".\"$k\"";
 				
-    			} else {
-    				$query->select[$k] = "\"$tableClass\".\"$k\"";
-    			}
-    		}
-    	}
-    	if($compositeFields) foreach($compositeFields as $k => $v) {
-			if($v) {
-			    $dbO = Object::create_from_string($v, $k);
-    		    $dbO->addToQuery($query);
-		    }
-    	}
+				} else {
+					$query->select[$k] = "\"$tableClass\".\"$k\"";
+				}
+			}
+		}
+		if($compositeFields) foreach($compositeFields as $k => $v) {
+			if((is_null($columns) || in_array($k, $columns)) && $v) {
+				$dbO = Object::create_from_string($v, $k);
+				$dbO->addToQuery($query);
+			}
+		}
 	}
 	
 	/**
@@ -561,7 +614,7 @@ class DataQuery {
 	 * Query the given field column from the database and return as an array.
 	 */
 	public function column($field = 'ID') {
-		$query = $this->getFinalisedQuery();
+		$query = $this->getFinalisedQuery(array($field));
 		$query->select($this->expressionForField($field, $query));
 		$this->ensureSelectContainsOrderbyColumns($query);
 
