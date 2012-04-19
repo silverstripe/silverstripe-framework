@@ -333,9 +333,6 @@ abstract class Object {
 	 * If any extra values are discovered, they are then merged with the default PHP static values, or in some cases
 	 * completely replace the default PHP static when you set $replace = true, and do not define extra data on any child
 	 * classes
-	 * 
-	 * Note that from SilverStripe 2.3.2, Object::get_static() can only be used to get public
-	 * static variables, not protected ones.
 	 *
 	 * @param string $class
 	 * @param string $name the property name
@@ -343,7 +340,7 @@ abstract class Object {
 	 * @return mixed
 	 */
 	public static function get_static($class, $name, $uncached = false) {
-		Deprecation::notice('3.1.0', 'combined_static is deprecated, replaced by Config#get');
+		Deprecation::notice('3.1.0', 'get_static is deprecated, replaced by Config#get');
 		return Config::inst()->get($class, $name, Config::FIRST_SET);
 	}
 
@@ -355,17 +352,12 @@ abstract class Object {
 	 * @param mixed $value
 	 */
 	public static function set_static($class, $name, $value) {
-		Deprecation::notice('3.1.0', 'set_static is deprecated, replaced by Config#set');
+		Deprecation::notice('3.1.0', 'set_static is deprecated, replaced by Config#update');
 		Config::inst()->update($class, $name, $value);
 	}
 
 	/**
 	 * Get an uninherited static variable - a variable that is explicity set in this class, and not in the parent class.
-	 * 
-	 * Note that from SilverStripe 2.3.2, Object::uninherited_static() can only be used to get public
-	 * static variables, not protected ones.
-	 * 
-	 * @todo Recursively filter out parent statics, currently only inspects the parent class
 	 *
 	 * @param string $class
 	 * @param string $name
@@ -401,7 +393,7 @@ abstract class Object {
 	 * @param bool $replace replace existing static vars
 	 */
 	public static function addStaticVars($class, $properties, $replace = false) {
-		Deprecation::notice('3.1.0', 'addStaticVars is deprecated, replaced by Config#set');
+		Deprecation::notice('3.1.0', 'addStaticVars is deprecated, replaced by Config#update');
 		foreach($properties as $prop => $value) self::add_static_var($class, $prop, $value, $replace);
 	}
 	
@@ -422,7 +414,7 @@ abstract class Object {
 	 * @param bool $replace completely replace existing static values
 	 */
 	public static function add_static_var($class, $name, $value, $replace = false) {
-		Deprecation::notice('3.1.0', 'add_static_var is deprecated, replaced by Config#set');
+		Deprecation::notice('3.1.0', 'add_static_var is deprecated, replaced by Config#remove and Config#update');
 
 		if ($replace) Config::inst()->remove($class, $name);
 		Config::inst()->update($class, $name, $value);
@@ -783,21 +775,21 @@ abstract class Object {
 	 * @see Object::get_static()
 	 */
 	public function stat($name, $uncached = false) {
-		return self::get_static(($this->class ? $this->class : get_class($this)), $name, $uncached);
+		return Config::inst()->get(($this->class ? $this->class : get_class($this)), $name, Config::FIRST_SET);
 	}
 	
 	/**
 	 * @see Object::set_static()
 	 */
 	public function set_stat($name, $value) {
-		self::set_static(($this->class ? $this->class : get_class($this)), $name, $value);
+		Config::inst()->update(($this->class ? $this->class : get_class($this)), $name, $value);
 	}
 	
 	/**
 	 * @see Object::uninherited_static()
 	 */
 	public function uninherited($name) {
-		return self::uninherited_static(($this->class ? $this->class : get_class($this)), $name);
+		return Config::inst()->get(($this->class ? $this->class : get_class($this)), $name, Config::UNINHERITED);
 	}
 	
 	/**

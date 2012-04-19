@@ -332,8 +332,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$match = $fixture->idFromFixture($className, $identifier);
 			if($match) return $match;
 		}
-		
-		$fixtureFiles = Object::get_static(get_class($this), 'fixture_file');
+
+		$fixtureFiles = Config::inst()->get(get_class($this), 'fixture_file', Config::FIRST_SET);
 		user_error(sprintf(
 			"Couldn't find object '%s' (class: %s) in files %s",
 			$identifier,
@@ -381,7 +381,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			if($match) return $match;
 		}
 
-		$fixtureFiles = Object::get_static(get_class($this), 'fixture_file');
+		$fixtureFiles = Config::inst()->get(get_class($this), 'fixture_file', Config::FIRST_SET);
 		user_error(sprintf(
 			"Couldn't find object '%s' (class: %s) in files %s",
 			$identifier,
