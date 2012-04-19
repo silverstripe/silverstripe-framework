@@ -10,6 +10,15 @@ class EmailField extends TextField {
 		return 'email text';
 	}
 
+	function getAttributes() {
+		return array_merge(
+			parent::getAttributes(),
+			array(
+				'type' => 'email'
+			)
+		);
+	}
+
 	/**
 	 * Validates for RFC 2822 compliant email adresses.
 	 * 
