@@ -34,12 +34,6 @@ class GridField extends FormField {
 
 	/** @var string - the classname of the DataObject that the GridField will display. Defaults to the value of $this->list->dataClass */
 	protected $modelClassName = '';
-	
-	/** @var array */
-	public $fieldCasting = array();
-
-	/** @var array */
-	public $fieldFormatting = array();
 
 	/** @var GridState - the current state of the GridField */
 	protected $state = null;
@@ -54,13 +48,6 @@ class GridField extends FormField {
 	 * The components list 
 	 */
 	protected $components = array();
-	
-	/**
-	 * This is the columns that will be visible
-	 *
-	 * @var array
-	 */
-	protected $displayFields = array();
 	
 	/**
 	 * Internal dispatcher for column handlers.
@@ -109,7 +96,7 @@ class GridField extends FormField {
 	 * this modelclass $summary_fields
 	 * 
 	 * @param string $modelClassName
-	 * @see GridField::getDisplayFields()
+	 * @see GridFieldDataColumns::getDisplayFields()
 	 */
 	public function setModelClass($modelClassName) {
 		$this->modelClassName = $modelClassName;
@@ -144,82 +131,12 @@ class GridField extends FormField {
 	}
 
 	/**
-	 * Get the DisplayFields
-	 * 
-	 * @return array
-	 * @see GridField::setDisplayFields
-	 */
-	public function getDisplayFields() {
-		if(!$this->displayFields) {
-			return singleton($this->getModelClass())->summaryFields();
-		}
-		return $this->displayFields;
-	}
-	
-	/**
 	 * Get the GridFieldConfig
 	 *
 	 * @return GridFieldConfig
 	 */
 	public function getConfig() {
 		return $this->config;
-	}
-	
-	/**
-	 * Override the default behaviour of showing the models summaryFields with
-	 * these fields instead
-	 * Example: array( 'Name' => 'Members name', 'Email' => 'Email address')
-	 *
-	 * @param array $fields 
-	 */
-	public function setDisplayFields($fields) {
-		if(!is_array($fields)) {
-			throw new InvalidArgumentException('Arguments passed to GridField::setDisplayFields() must be an array');
-		}
-		$this->displayFields = $fields;
-		return $this;
-	}
-
-	/**
-	 * Specify castings with fieldname as the key, and the desired casting as value.
-	 * Example: array("MyCustomDate"=>"Date","MyShortText"=>"Text->FirstSentence")
-	 *
-	 * @param array $casting
-	 * @todo refactor this into GridFieldComponent
-	 */
-	public function setFieldCasting($casting) {
-		$this->fieldCasting = $casting;
-		return $this;
-	}
-
-	/**
-	 * Specify custom formatting for fields, e.g. to render a link instead of pure text.
-	 * Caution: Make sure to escape special php-characters like in a normal php-statement.
-	 * Example:	"myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'.
-	 * Alternatively, pass a anonymous function, which takes one parameter: The list item.
-	 *
-	 * @param array $casting
-	 * @todo refactor this into GridFieldComponent
-	 */
-	public function getFieldCasting() {
-		return $this->fieldCasting;
-	}
-
-	/**
-	 * @param array $casting
-	 * @todo refactor this into GridFieldComponent
-	 */
-	public function setFieldFormatting($formatting) {
-		$this->fieldFormatting = $formatting;
-		return $this;
-	}
-
-	/**
-	 * @param array $casting
-	 * @todo refactor this into GridFieldComponent
-	 */
-	public function getFieldFormatting() {
-		return $this->fieldFormatting;
 	}
 	
 	/**
