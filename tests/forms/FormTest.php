@@ -193,22 +193,23 @@ class FormTest extends FunctionalTest {
 	
 	function testSessionValidationMessage() {
 		$this->get('FormTest_Controller');
-		
-		$response = $this->submitForm(
-			'Form_Form',
-			null,
+
+		$response = $this->post(
+			'FormTest_Controller/Form',
 			array(
 				'Email' => 'invalid',
 				// leaving out "Required" field
 			)
 		);
+
 		$this->assertPartialMatchBySelector(
 			'#Email span.message',
 			array(
-				_t('EmailField.VALIDATION', "Please enter an email address.")
+				'Please enter an email address.'
 			),
 			'Formfield validation shows note on field if invalid'
 		);
+
 		$this->assertPartialMatchBySelector(
 			'#SomeRequiredField span.required',
 			array(
@@ -216,20 +217,19 @@ class FormTest extends FunctionalTest {
 			),
 			'Required fields show a notification on field when left blank'
 		);
-		
 	}
-	
+
 	function testSessionSuccessMessage() {
 		$this->get('FormTest_Controller');
-		
-		$response = $this->submitForm(
-			'Form_Form',
-			null,
+
+		$response = $this->post(
+			'FormTest_Controller/Form',
 			array(
 				'Email' => 'test@test.com',
 				'SomeRequiredField' => 'test',
 			)
 		);
+
 		$this->assertPartialMatchBySelector(
 			'#Form_Form_error',
 			array(
