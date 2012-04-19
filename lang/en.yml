@@ -561,7 +561,7 @@ en:
     DROPFILES: "drop files"
     EDITINFO: "Edit this file"
     FIELDNOTSET: "File information not found"
-    FROMCOMPUTER: "Upload from your computer"
+    FROMCOMPUTER: "From your computer"
     MAXNUMBEROFFILES: "Max number of %s file(s) exceeded."
     REMOVEERROR: "Error removing file"
     REMOVEINFO: "Remove this file from here, but do not delete it from the file store"
