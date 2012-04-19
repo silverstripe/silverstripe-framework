@@ -243,7 +243,7 @@ class ViewableData extends Object implements IteratorAggregate {
 			return $fieldSpec;
 		}
 
-		$specs = Object::combined_static(get_class($this), 'casting');
+		$specs = Config::inst()->get(get_class($this), 'casting');
 		if(isset($specs[$field])) return $specs[$field];
 
 		if($this->failover) return $this->failover->castingHelper($field);
@@ -275,7 +275,7 @@ class ViewableData extends Object implements IteratorAggregate {
 			$class = self::$default_cast;
 		}
 		
-		return Object::get_static($class, 'escape_type');
+		return Config::inst()->get($class, 'escape_type', Config::FIRST_SET);
 	}
 	
 	/**
@@ -389,7 +389,7 @@ class ViewableData extends Object implements IteratorAggregate {
 		}
 		
 		if(!is_object($value) && $forceReturnedObject) {
-			$default = Object::get_static('ViewableData', 'default_cast');
+			$default = Config::inst()->get('ViewableData', 'default_cast', Config::FIRST_SET);
 			$value   = new $default($fieldName);
 		}
 		

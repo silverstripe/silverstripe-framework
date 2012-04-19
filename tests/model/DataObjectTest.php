@@ -1021,9 +1021,11 @@ class DataObjectTest extends SapphireTest {
 
 	function testRelObject() {
 		$captain = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+
 		// Test traversal of a single has_one
 		$this->assertInstanceOf("Varchar", $captain->relObject('FavouriteTeam.Title'));
 		$this->assertEquals("Team 1", $captain->relObject('FavouriteTeam.Title')->getValue());
+
 		// Test direct field access
 		$this->assertInstanceOf("Boolean", $captain->relObject('IsRetired'));
 		$this->assertEquals(1, $captain->relObject('IsRetired')->getValue());

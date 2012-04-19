@@ -17,7 +17,93 @@ class ConfigTest_DefinesFooDoesntExtendObject {
 	protected static $foo = 4;
 }
 
+class ConfigStaticTest_First extends Config {
+	public static $first  = array('test_1');
+	public static $second = array('test_1');
+	public static $third  = 'test_1';
+}
+
+class ConfigStaticTest_Second extends ConfigStaticTest_First {
+	public static $first = array('test_2');
+}
+
+class ConfigStaticTest_Third extends ConfigStaticTest_Second {
+	public static $first  = array('test_3');
+	public static $second = array('test_3');
+	public static $fourth = array('test_3');
+}
+
+class ConfigStaticTest_Fourth extends ConfigStaticTest_Third {
+	public static $fourth = array('test_4');
+}
+
+class ConfigStaticTest_Combined1 extends Config {
+	public static $first  = array('test_1');
+	public static $second = array('test_1');
+}
+
+class ConfigStaticTest_Combined2 extends ConfigStaticTest_Combined1 {
+	public static $first  = array('test_2');
+	public static $second = null;
+}
+
+class ConfigStaticTest_Combined3 extends ConfigStaticTest_Combined2 {
+	public static $first  = array('test_3');
+	public static $second = array('test_3');
+}
+
 class ConfigTest extends SapphireTest {
+
+	function testUpdateStatic() {
+		$this->assertEquals(Config::inst()->get('ConfigStaticTest_First', 'first', Config::FIRST_SET), array('test_1'));
+		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Second', 'first', Config::FIRST_SET), array('test_2'));
+		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Third', 'first', Config::FIRST_SET), array('test_3'));
+
+		Config::inst()->update('ConfigStaticTest_First', 'first', array('test_1_2'));
+		Config::inst()->update('ConfigStaticTest_Third', 'first', array('test_3_2'));
+		Config::inst()->update('ConfigStaticTest_Fourth', 'first', array('test_4'));
+
+		$this->assertEquals(Config::inst()->get('ConfigStaticTest_First', 'first', Config::FIRST_SET), array('test_1_2', 'test_1'));
+
+		Config::inst()->update('ConfigStaticTest_Fourth', 'second', array('test_4'));
+		Config::inst()->update('ConfigStaticTest_Third', 'second', array('test_3_2'));
+
+		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Fourth', 'second', Config::FIRST_SET), array('test_4'));
+		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Third', 'second', Config::FIRST_SET), array('test_3_2', 'test_3'));
+
+		Config::inst()->remove('ConfigStaticTest_Third', 'second');
+		Config::inst()->update('ConfigStaticTest_Third', 'second', array('test_3_2'));
+		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Third', 'second', Config::FIRST_SET), array('test_3_2'));
+	}
+
+	function testUninheritedStatic() {
+		$this->assertEquals(Config::inst()->get('ConfigStaticTest_First',  'third', Config::UNINHERITED), 'test_1');
+		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Fourth', 'third', Config::UNINHERITED), null);
+
+		Config::inst()->update('ConfigStaticTest_First', 'first', array('test_1b'));
+		Config::inst()->update('ConfigStaticTest_Second', 'first', array('test_2b'));
+
+		// Check that it can be applied to parent and subclasses, and queried directly
+		$this->assertContains('test_1b', Config::inst()->get('ConfigStaticTest_First', 'first', Config::UNINHERITED));
+		$this->assertContains('test_2b', Config::inst()->get('ConfigStaticTest_Second', 'first', Config::UNINHERITED));
+
+		// But it won't affect subclasses - this is *uninherited* static
+		$this->assertNotContains('test_2b', Config::inst()->get('ConfigStaticTest_Third', 'first', Config::UNINHERITED));
+		$this->assertNotContains('test_2b', Config::inst()->get('ConfigStaticTest_Fourth', 'first', Config::UNINHERITED));
+
+		// Subclasses that don't have the static explicitly defined should allow definition, also
+		// This also checks that set can be called after the first uninherited get() 
+		// call (which can be buggy due to caching) 
+		Config::inst()->update('ConfigStaticTest_Fourth', 'first', array('test_4b'));
+		$this->assertContains('test_4b', Config::inst()->get('ConfigStaticTest_Fourth', 'first', Config::UNINHERITED));
+	}
+
+	function testCombinedStatic() {
+		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Combined3', 'first'), array('test_3', 'test_2', 'test_1'));
+
+		// test that null values are ignored, but values on either side are still merged
+		$this->assertEquals(Config::inst()->get('ConfigStaticTest_Combined3', 'second'), array('test_3', 'test_1'));
+	}
 
 	function testMerges() {
 		$result = array('A' => 1, 'B' => 2, 'C' => 3);

@@ -138,8 +138,8 @@ class RequestHandler extends ViewableData {
 		
 		// We stop after RequestHandler; in other words, at ViewableData
 		while($handlerClass && $handlerClass != 'ViewableData') {
-			$urlHandlers = Object::get_static($handlerClass, 'url_handlers');
-			
+			$urlHandlers = Config::inst()->get($handlerClass, 'url_handlers', Config::FIRST_SET);
+
 			if($urlHandlers) foreach($urlHandlers as $rule => $action) {
 				if(isset($_REQUEST['debug_request'])) Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
 				if($params = $request->match($rule, true)) {
