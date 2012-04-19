@@ -6,11 +6,7 @@ class GridFieldDataColumnsTest extends SapphireTest {
 	 */
 	public function testGridFieldGetDefaultDisplayFields() {
 		$obj = new GridField('testfield', 'testfield', DataList::create('Member'));
-		$expected = array(
-			'FirstName' => 'First Name',
-			'Surname' => 'Last Name',
-			'Email' => 'Email',
-		);
+		$expected = singleton('Member')->summaryFields();
 		$columns = $obj->getConfig()->getComponentByType('GridFieldDataColumns');
 		$this->assertEquals($expected, $columns->getDisplayFields($obj));
 	}
