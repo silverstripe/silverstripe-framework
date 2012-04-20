@@ -86,9 +86,9 @@ class DataExtensionTest extends SapphireTest {
 		$player->setField('DateBirth', '1990-5-10');
 		$player->Address = '123 somewhere street';
 		$player->write();
-		
+
 		unset($player);
-		
+
 		// Pull the record out of the DB and examine the extended fields
 		$player = DataObject::get_one('DataExtensionTest_Player', "\"Name\" = 'Joe'");
 		$this->assertEquals($player->DateBirth, '1990-05-10');
@@ -181,16 +181,14 @@ class DataExtensionTest_PlayerExtension extends DataExtension implements TestOnl
 		// Only add these extensions if the $class is set to DataExtensionTest_Player, to
 		// test that the argument works.
 		if($class == 'DataExtensionTest_Player') {
-			return array(
-				'db' => array(
-					'Address' => 'Text',
-					'DateBirth' => 'Date',
-					'Status' => "Enum('Shooter,Goalie')"
-				),
-				'defaults' => array(
-					'Status' => 'Goalie'
-				)
-			);
+			Config::inst()->update($class, 'db', array(
+				'Address' => 'Text',
+				'DateBirth' => 'Date',
+				'Status' => "Enum('Shooter,Goalie')"
+			));
+			Config::inst()->update($class, 'defaults', array(
+				'Status' => 'Goalie'
+			));
 		}
 	}
 	
@@ -198,19 +196,20 @@ class DataExtensionTest_PlayerExtension extends DataExtension implements TestOnl
 
 class DataExtensionTest_ContactRole extends DataExtension implements TestOnly {
 
-	public static $db =array(
-		'db' => array(
-			'Website' => 'Varchar',
-			'Phone' => 'Varchar(255)',
-		),
-		'has_many' => array(
-			'RelatedObjects' => 'DataExtensionTest_RelatedObject'
-		),
-		'defaults' => array(
-			'Phone' => '123'
-		),
-		'api_access' => true,
+	public static $db = array(
+		'Website' => 'Varchar',
+		'Phone' => 'Varchar(255)',
 	);
+
+	public static $has_many = array(
+		'RelatedObjects' => 'DataExtensionTest_RelatedObject'
+	);
+
+	public static $defaults = array(
+		'Phone' => '123'
+	);
+
+	public static $api_access = true;
 
 }
 
