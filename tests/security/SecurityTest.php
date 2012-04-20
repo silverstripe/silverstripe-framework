@@ -75,7 +75,6 @@ class SecurityTest extends FunctionalTest {
 
 		/* View the Security/login page */
 		$response = $this->get('Security/login');
-		
 		$items = $this->cssParser()->getBySelector('#MemberLoginForm_LoginForm input.action');
 		
 		/* We have only 1 input, one to allow the user to log in as someone else */
@@ -84,12 +83,11 @@ class SecurityTest extends FunctionalTest {
 		$this->autoFollowRedirection = true;
 		
 		/* Submit the form, using only the logout action and a hidden field for the authenticator */
-		$response = $this->submitForm(
-			'MemberLoginForm_LoginForm', 
-			null,
+		$response = $this->post(
+			'Security/LoginForm',
 			array(
 				'AuthenticationMethod' => 'MemberAuthenticator',
-				'action_dologout' => 1,
+				'action_logout' => 1,
 			)
 		);
 
@@ -183,7 +181,7 @@ class SecurityTest extends FunctionalTest {
 		$this->mainSession->followRedirection();
 		$changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
 		$this->assertEquals(302, $changedResponse->getStatusCode());
-		$this->assertEquals(Director::baseURL() . 'test/link', $changedResponse->getHeader('Location'));
+		$this->assertRegExp('/Security\/login/', $changedResponse->getHeader('Location'));
 	}
 	
 	function testChangePasswordForLoggedInUsers() {
@@ -193,7 +191,7 @@ class SecurityTest extends FunctionalTest {
 		$this->get('Security/changepassword?BackURL=test/back');
 		$changedResponse = $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword');
 		$this->assertEquals(302, $changedResponse->getStatusCode());
-		$this->assertEquals(Director::baseURL() . 'test/back', $changedResponse->getHeader('Location'));
+		$this->assertRegexp('/Security\/login/', $changedResponse->getHeader('Location'));
 		$this->assertEquals($this->idFromFixture('Member', 'test'), $this->session()->inst_get('loggedInAs'));
 		
 		// Check if we can login with the new password
@@ -387,14 +385,14 @@ class SecurityTest extends FunctionalTest {
 		$this->session()->inst_set('BackURL', $backURL);
 		$this->get('Security/login');
 
-		return $this->submitForm(
-			"MemberLoginForm_LoginForm", 
-			null,
+		return $this->post(
+			'Security/LoginForm',
 			array(
-				'Email' => $email, 
-				'Password' => $password, 
+				'Email' => $email,
+				'Password' => $password,
 				'AuthenticationMethod' => 'MemberAuthenticator',
 				'action_dologin' => 1,
+				'BackURL' => $backURL
 			)
 		);
 	}
@@ -403,12 +401,11 @@ class SecurityTest extends FunctionalTest {
 	 * Helper method to execute a change password form
 	 */
 	function doTestChangepasswordForm($oldPassword, $newPassword) {
-		return $this->submitForm(
-			"ChangePasswordForm_ChangePasswordForm", 
-			null,
+		return $this->post(
+			'Security/ChangePasswordForm',
 			array(
-				'OldPassword' => $oldPassword, 
-				'NewPassword1' => $newPassword, 
+				'OldPassword' => $oldPassword,
+				'NewPassword1' => $newPassword,
 				'NewPassword2' => $newPassword,
 				'action_doChangePassword' => 1,
 			)
@@ -420,7 +417,7 @@ class SecurityTest extends FunctionalTest {
 	 */
 	function loginErrorMessage() {
 		return $this->session()->inst_get('FormInfo.MemberLoginForm_LoginForm.formError.message');
-	}	
+	}
 	
 }
 
