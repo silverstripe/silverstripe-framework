@@ -194,9 +194,8 @@ class FormTest extends FunctionalTest {
 	function testSessionValidationMessage() {
 		$this->get('FormTest_Controller');
 		
-		$response = $this->submitForm(
-			'Form_Form',
-			null,
+		$response = $this->post(
+			'FormTest_Controller/Form',
 			array(
 				'Email' => 'invalid',
 				// leaving out "Required" field
@@ -222,9 +221,8 @@ class FormTest extends FunctionalTest {
 	function testSessionSuccessMessage() {
 		$this->get('FormTest_Controller');
 		
-		$response = $this->submitForm(
-			'Form_Form',
-			null,
+		$response = $this->post(
+			'FormTest_Controller/Form',
 			array(
 				'Email' => 'test@test.com',
 				'SomeRequiredField' => 'test',
