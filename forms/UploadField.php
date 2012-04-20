@@ -471,20 +471,10 @@ class UploadField extends FileField {
 			$fileObject = null;
 
 			if ($this->relationAutoSetting) {
-				// Search for classes that can hold the uploaded files by traversing the relationship.
-				if ($record->hasMethod($name)) {
-					$remote = $record->$name();
-					if ($remote instanceof DataList) {
-						// has_many or many_many
-						$desiredClass = $remote->dataClass();
-					}
-					else if (is_object($remote)) {
-						// has_one
-						$desiredClass = $remote->ClassName;
-					}
-
-					// If we have a specific class, create new object explicitly. Otherwise rely on Upload::load to choose the class.
-					if (is_string($desiredClass)) $fileObject = Object::create($desiredClass);
+				// Search for relations that can hold the uploaded files.
+				if ($relationClass = $this->getRelationAutosetClass()) {
+					// Create new object explicitly. Otherwise rely on Upload::load to choose the class.
+					$fileObject = Object::create($relationClass);
 				}
 			}
 
@@ -593,6 +583,17 @@ class UploadField extends FileField {
 		);
 	}
 
+	/**
+	 * Gets the foreign class that needs to be created.
+	 *
+	 * @return string Foreign class name.
+	 */
+	public function getRelationAutosetClass() {
+		$name = $this->getName();
+		$record = $this->getRecord();
+
+		if (isset($name) && isset($record)) return $record->getRelationClass($name);
+	}
 }
 
 /**
@@ -916,6 +917,13 @@ class UploadField_SelectHandler extends RequestHandler {
 
 		// Create the data source for the list of files within the current directory.
 		$files = DataList::create('File')->filter('ParentID', $folderID);
+
+		// If relation is to be autoset, make sure only objects from related class are listed.
+		if ($this->parent->relationAutoSetting) {
+			if ($relationClass = $this->parent->getRelationAutosetClass()) {
+				$files->filter('ClassName', $relationClass);
+			}
+		}
 
 		$fileField = new GridField('Files', false, $files, $config);
 		$fileField->setAttribute('data-selectable', true);
