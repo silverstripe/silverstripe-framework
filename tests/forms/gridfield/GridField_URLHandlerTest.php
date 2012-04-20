@@ -4,28 +4,30 @@
  * Test the API for creating GridField_URLHandler compeonnts
  */
 class GridField_URLHandlerTest extends FunctionalTest {
+
 	function testFormSubmission() {
-		$result = $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/showform");
-		$formResult = $this->submitForm('Form_Form', 'action_doAction', array('Test' => 'foo bar') );
-		$this->assertEquals("Submitted foo bar to component", $formResult->getBody());
+		$result = $this->get('GridField_URLHandlerTest_Controller/Form/field/Grid/showform');
+		$formEl = $this->cssParser()->getBySelector('#Form_Form');
+		$formResult = $this->post((string) $formEl[0]['action'], array('Test' => 'foo bar', 'action_doAction' => 1));
+		$this->assertEquals('Submitted foo bar to component', $formResult->getBody());
 	}
 
 	function testNestedRequestHandlerFormSubmission() {
-		$result = $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/item/3/showform");
-		$formResult = $this->submitForm('Form_Form', 'action_doAction', array('Test' => 'foo bar') );
-		$this->assertEquals("Submitted foo bar to item #3", $formResult->getBody());
+		$result = $this->get('GridField_URLHandlerTest_Controller/Form/field/Grid/item/3/showform');
+		$formEl = $this->cssParser()->getBySelector('#Form_Form');
+		$formResult = $this->post((string) $formEl[0]['action'], array('Test' => 'foo bar', 'action_doAction' => 1));
+		$this->assertEquals('Submitted foo bar to item #3', $formResult->getBody());
 	}
 
 	function testURL() {
-		$result = $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/testpage");
-		$this->assertEquals("Test page for component", $result->getBody());
+		$result = $this->get('GridField_URLHandlerTest_Controller/Form/field/Grid/testpage');
+		$this->assertEquals('Test page for component', $result->getBody());
 	}
 
 	function testNestedRequestHandlerURL() {
-		$result = $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/item/5/testpage");
-		$this->assertEquals("Test page for item #5", $result->getBody());
+		$result = $this->get('GridField_URLHandlerTest_Controller/Form/field/Grid/item/5/testpage');
+		$this->assertEquals('Test page for item #5', $result->getBody());
 	}
-
 
 }
 

@@ -62,52 +62,39 @@ class TestSession {
 		if(!$this->lastResponse) user_error("Director::test($url) returned null", E_USER_WARNING);
 		return $this->lastResponse;
 	}
-	
+
 	/**
 	 * Submit the form with the given HTML ID, filling it out with the given data.
 	 * Acts on the most recent response.
-	 * 
 	 * Any data parameters have to be present in the form, with exact form field name
 	 * and values, otherwise they are removed from the submission.
-	 * 
+	 *
 	 * Caution: Parameter names have to be formatted
 	 * as they are in the form submission, not as they are interpreted by PHP.
 	 * Wrong: array('mycheckboxvalues' => array(1 => 'one', 2 => 'two'))
 	 * Right: array('mycheckboxvalues[1]' => 'one', 'mycheckboxvalues[2]' => 'two')
-	 * 
-	 * @see http://www.simpletest.org/en/form_testing_documentation.html
-	 * 
+	 *
 	 * @param String $formID HTML 'id' attribute of a form (loaded through a previous response)
 	 * @param String $button HTML 'name' attribute of the button (NOT the 'id' attribute)
-	 * @param Array $data Map of GET/POST data. 
+	 * @param Array $data Map of GET/POST data.
 	 * @return SS_HTTPResponse
 	 */
 	function submitForm($formID, $button = null, $data = array()) {
-		$page = $this->lastPage();
+		$page = $this->lastResponse;
 		if($page) {
 			$form = $page->getFormById($formID);
 			if (!$form) {
 				user_error("TestSession::submitForm failed to find the form {$formID}");
 			}
 
-			foreach($data as $k => $v) {
-				$form->setField(new SimpleByName($k), $v);
-			}
-
-			if($button) $submission = $form->submitButton(new SimpleByName($button));
-			else $submission = $form->submit();
-
 			$url = Director::makeRelative($form->getAction()->asString());
 
-			$postVars = array();
-			parse_str($submission->_encode(), $postVars);
-			return $this->post($url, $postVars);
-			
+			return $this->post($url, array_merge($data, array($button => 1)));
 		} else {
 			user_error("TestSession::submitForm called when there is no form loaded.  Visit the page with the form first", E_USER_WARNING);
 		}
 	}
-	
+
 	/**
 	 * If the last request was a 3xx response, then follow the redirection
 	 */
@@ -146,25 +133,6 @@ class TestSession {
 		return new CSSContentParser($this->lastContent());
 	}
 
-	
-	/**
-	 * Get the last response as a SimplePage object
-	 */
-	function lastPage() {
-		require_once("thirdparty/simpletest/http.php");
-		require_once("thirdparty/simpletest/page.php");
-		require_once("thirdparty/simpletest/form.php");
-
-		$builder = new SimplePageBuilder();
-		if($this->lastResponse) {
-			$page = &$builder->parse(new TestSession_STResponseWrapper($this->lastResponse));
-			$builder->free();
-			unset($builder);
-		
-			return $page;
-		}
-	}
-	
 	/**
 	 * Get the current session, as a Session object
 	 */
