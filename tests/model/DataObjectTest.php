@@ -183,6 +183,15 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals($this->idFromFixture('DataObjectTest_Team', 'team1'), $captain1->FavouriteTeamID);
 	}
 
+	function testGetRelationClass() {
+		$obj = new DataObjectTest_Player();
+		$this->assertEquals(singleton('DataObjectTest_Player')->getRelationClass('FavouriteTeam'), 'DataObjectTest_Team', 'has_one is properly inspected');
+		$this->assertEquals(singleton('DataObjectTest_Company')->getRelationClass('CurrentStaff'), 'DataObjectTest_Staff', 'has_many is properly inspected');
+		$this->assertEquals(singleton('DataObjectTest_Team')->getRelationClass('Players'), 'DataObjectTest_Player', 'many_many is properly inspected');
+		$this->assertEquals(singleton('DataObjectTest_Player')->getRelationClass('Teams'), 'DataObjectTest_Team', 'belongs_many_many is properly inspected');
+		$this->assertEquals(singleton('DataObjectTest_CEO')->getRelationClass('Company'), 'DataObjectTest_Company', 'belongs_to is properly inspected');
+	}
+
 	function testGetHasOneRelations() {
 		$captain1 = $this->objFromFixture("DataObjectTest_Player", "captain1");
 		/* There will be a field called (relname)ID that contains the ID of the object linked to via the has_one relation */
