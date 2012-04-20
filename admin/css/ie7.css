@@ -14,6 +14,8 @@ html { overflow: hidden; }
 .cms-tree-view-modes div { float: left; }
 .cms-tree-view-modes span { float: left; padding-top: 5px; }
 
+.cms-panel-content .cms-tree li { width: 200px; overflow: hidden; float: left; display: inline; }
+
 .cms-content-toolbar { border-bottom: 1px solid #c9cdce; padding-bottom: 5px; }
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { background-image: none; }
