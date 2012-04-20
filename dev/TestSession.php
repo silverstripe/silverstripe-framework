@@ -64,6 +64,38 @@ class TestSession {
 	}
 
 	/**
+	 * Submit the form with the given HTML ID, filling it out with the given data.
+	 * Acts on the most recent response.
+	 * Any data parameters have to be present in the form, with exact form field name
+	 * and values, otherwise they are removed from the submission.
+	 *
+	 * Caution: Parameter names have to be formatted
+	 * as they are in the form submission, not as they are interpreted by PHP.
+	 * Wrong: array('mycheckboxvalues' => array(1 => 'one', 2 => 'two'))
+	 * Right: array('mycheckboxvalues[1]' => 'one', 'mycheckboxvalues[2]' => 'two')
+	 *
+	 * @param String $formID HTML 'id' attribute of a form (loaded through a previous response)
+	 * @param String $button HTML 'name' attribute of the button (NOT the 'id' attribute)
+	 * @param Array $data Map of GET/POST data.
+	 * @return SS_HTTPResponse
+	 */
+	function submitForm($formID, $button = null, $data = array()) {
+		$page = $this->lastResponse;
+		if($page) {
+			$form = $page->getFormById($formID);
+			if (!$form) {
+				user_error("TestSession::submitForm failed to find the form {$formID}");
+			}
+
+			$url = Director::makeRelative($form->getAction()->asString());
+
+			return $this->post($url, array_merge($data, array($button => 1)));
+		} else {
+			user_error("TestSession::submitForm called when there is no form loaded.  Visit the page with the form first", E_USER_WARNING);
+		}
+	}
+
+	/**
 	 * If the last request was a 3xx response, then follow the redirection
 	 */
 	function followRedirection() {

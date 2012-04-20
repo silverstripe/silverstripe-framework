@@ -105,7 +105,32 @@ class FunctionalTest extends SapphireTest {
 		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
 		return $response;
 	}
-	
+
+	/**
+	 * Submit the form with the given HTML ID, filling it out with the given data.
+	 * Acts on the most recent response.
+	 * Any data parameters have to be present in the form, with exact form field name
+	 * and values, otherwise they are removed from the submission.
+	 *
+	 * Caution: Parameter names have to be formatted
+	 * as they are in the form submission, not as they are interpreted by PHP.
+	 * Wrong: array('mycheckboxvalues' => array(1 => 'one', 2 => 'two'))
+	 * Right: array('mycheckboxvalues[1]' => 'one', 'mycheckboxvalues[2]' => 'two')
+	 *
+	 * @see http://www.simpletest.org/en/form_testing_documentation.html
+	 *
+	 * @param String $formID HTML 'id' attribute of a form (loaded through a previous response)
+	 * @param String $button HTML 'name' attribute of the button (NOT the 'id' attribute)
+	 * @param Array $data Map of GET/POST data.
+	 * @return SS_HTTPResponse
+	 */
+	function submitForm($formID, $button = null, $data = array()) {
+		$this->cssParser = null;
+		$response = $this->mainSession->submitForm($formID, $button, $data);
+		if($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) $response = $this->mainSession->followRedirection();
+		return $response;
+	}
+
 	/**
 	 * Return the most recent content
 	 */
