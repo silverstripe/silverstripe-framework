@@ -653,6 +653,24 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		 * of remove files as well.
 		 */
 		$('form.htmleditorfield-mediaform').entwine({
+			onmatch: function() {
+				this.toggleLooks();
+				this._super();
+			},
+			toggleLooks: function(){
+				var updateExisting = Boolean(this.find('.ss-htmleditorfield-file').length);
+				if(updateExisting){
+					this.find('.htmleditorfield-mediaform-heading.insert').hide();
+					this.find('.Actions .image-insert').hide();
+					this.find('.htmleditorfield-mediaform-heading.update').show();
+					this.find('.Actions .image-update').show();
+				}else{
+					this.find('.htmleditorfield-mediaform-heading.insert').show();
+					this.find('.Actions .image-insert').show();
+					this.find('.htmleditorfield-mediaform-heading.update').hide();
+					this.find('.Actions .image-update').hide();
+				}
+			},
 			onsubmit: function() {
 				var self = this, ed = this.getEditor();
 
@@ -682,7 +700,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			},
 			redraw: function() {
 				this._super();
-
+				this.toggleLooks();
 				var ed = this.getEditor(), node = $(ed.getSelectedNode()),
 					hasItems = Boolean(this.find('.ss-htmleditorfield-file').length),
 					editingSelected = node.is('img');
