@@ -82,14 +82,12 @@ class TestSession {
 	function submitForm($formID, $button = null, $data = array()) {
 		$page = $this->lastResponse;
 		if($page) {
-			$form = $page->getFormById($formID);
-			if (!$form) {
+			$formEl = $this->cssParser()->getBySelector('#' . $formID);
+			if (!$formEl) {
 				user_error("TestSession::submitForm failed to find the form {$formID}");
 			}
 
-			$url = Director::makeRelative($form->getAction()->asString());
-
-			return $this->post($url, array_merge($data, array($button => 1)));
+			return $this->post((string) $formEl[0]['action'], array_merge($data, array($button => 1)));
 		} else {
 			user_error("TestSession::submitForm called when there is no form loaded.  Visit the page with the form first", E_USER_WARNING);
 		}
