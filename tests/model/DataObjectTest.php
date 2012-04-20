@@ -1036,6 +1036,24 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals("Team 1", $player->relObject('Teams.First.Title')->getValue());
 	}
 	
+	function testLateStaticBindingStyle() {
+		// Confirm that DataObjectTest_Player::get() operates as excepted
+		$this->assertEquals(4, DataObjectTest_Player::get()->Count());
+		$this->assertInstanceOf('DataObjectTest_Player', DataObjectTest_Player::get()->First());
+		
+		// You can't pass arguments to LSB syntax - use the DataList methods instead.
+		$this->setExpectedException('InvalidArgumentException');
+		DataObjectTest_Player::get(null, "\"ID\" = 1");
+		
+	}
+
+	function testBrokenLateStaticBindingStyle() {
+		// If you call DataObject::get() you have to pass a first argument
+		$this->setExpectedException('InvalidArgumentException');
+		DataObject::get();
+		
+	}
+	
 
 }
 
