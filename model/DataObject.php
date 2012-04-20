@@ -271,6 +271,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		$fields = Config::inst()->get($class, 'db', Config::UNINHERITED);
 		if($fields) foreach($fields as $fieldName => $fieldClass) {
+			if(!is_string($fieldClass)) continue;
+
 			// Strip off any parameters
 			$bPos = strpos('(', $fieldClass);
 			if($bPos !== FALSE) $fieldClass = substr(0,$bPos, $fieldClass);
