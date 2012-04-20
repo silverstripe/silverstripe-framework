@@ -193,22 +193,23 @@ class FormTest extends FunctionalTest {
 	
 	function testSessionValidationMessage() {
 		$this->get('FormTest_Controller');
-		
-		$response = $this->submitForm(
-			'Form_Form',
-			null,
+
+		$response = $this->post(
+			'FormTest_Controller/Form',
 			array(
 				'Email' => 'invalid',
 				// leaving out "Required" field
 			)
 		);
+
 		$this->assertPartialMatchBySelector(
 			'#Email span.message',
 			array(
-				_t('EmailField.VALIDATION', "Please enter an email address.")
+				'Please enter an email address.'
 			),
 			'Formfield validation shows note on field if invalid'
 		);
+
 		$this->assertPartialMatchBySelector(
 			'#SomeRequiredField span.required',
 			array(
@@ -216,20 +217,19 @@ class FormTest extends FunctionalTest {
 			),
 			'Required fields show a notification on field when left blank'
 		);
-		
 	}
-	
+
 	function testSessionSuccessMessage() {
 		$this->get('FormTest_Controller');
-		
-		$response = $this->submitForm(
-			'Form_Form',
-			null,
+
+		$response = $this->post(
+			'FormTest_Controller/Form',
 			array(
 				'Email' => 'test@test.com',
 				'SomeRequiredField' => 'test',
 			)
 		);
+
 		$this->assertPartialMatchBySelector(
 			'#Form_Form_error',
 			array(
@@ -275,7 +275,7 @@ class FormTest extends FunctionalTest {
 		SecurityToken::enable();
 		
 		$response = $this->get('FormTest_ControllerWithSecurityToken');
-		// can't use submitForm() as it'll automatically insert SecurityID into the POST data
+
 		$response = $this->post(
 			'FormTest_ControllerWithSecurityToken/Form',
 			array(
@@ -285,23 +285,24 @@ class FormTest extends FunctionalTest {
 			)
 		);
 		$this->assertEquals(400, $response->getStatusCode(), 'Submission fails without security token');
-		
+
 		$response = $this->get('FormTest_ControllerWithSecurityToken');
+
 		$tokenEls = $this->cssParser()->getBySelector('#Form_Form_SecurityID');
 		$this->assertEquals(
-			1, 
-			count($tokenEls), 
+			1,
+			count($tokenEls),
 			'Token form field added for controller without disableSecurityToken()'
 		);
-		$token = (string)$tokenEls[0];
-		$response = $this->submitForm(
-			'Form_Form',
-			null,
+
+		$response = $this->post(
+			'FormTest_ControllerWithSecurityToken/Form',
 			array(
 				'Email' => 'test@test.com',
-				'SecurityID' => $token
+				'SecurityID' => (string)$tokenEls[0]['value']
 			)
 		);
+
 		$this->assertEquals(200, $response->getStatusCode(), 'Submission suceeds with security token');
 	}
 	
