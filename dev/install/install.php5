@@ -440,7 +440,10 @@ class InstallRequirements {
 		$this->requireClass('DOMDocument', array("PHP Configuration", "DOM/XML support", "DOM/XML support not included in PHP."));
 
 		// Check for token_get_all
-		$this->requireFunction('token_get_all', array("PHP Configuration", "PHP Tokenizer", "PHP tokenizer support not included in PHP."));
+		$this->requireFunction('token_get_all', array("PHP Configuration", "Tokenizer support", "Tokenizer support not included in PHP."));
+
+		// Check for CType support
+		$this->requireFunction('ctype_digit', array('PHP Configuration', 'CType support', 'CType support not included in PHP.'));
 
 		// Check for session support
 		$this->requireFunction('session_start', array('PHP Configuration', 'Session support', 'Session support not included in PHP.'));
@@ -955,7 +958,7 @@ class InstallRequirements {
 		$section = $testDetails[0];
 		$test = $testDetails[1];
 
-		$this->tests[$section][$test] = array("error", $testDetails[2]);
+		$this->tests[$section][$test] = array("error", @$testDetails[2]);
 		$this->errors[] = $testDetails;
 	}
 
@@ -963,7 +966,7 @@ class InstallRequirements {
 		$section = $testDetails[0];
 		$test = $testDetails[1];
 
-		$this->tests[$section][$test] = array("warning", $testDetails[2]);
+		$this->tests[$section][$test] = array("warning", @$testDetails[2]);
 		$this->warnings[] = $testDetails;
 	}
 
