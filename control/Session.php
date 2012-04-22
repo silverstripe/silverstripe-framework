@@ -257,12 +257,12 @@ class Session {
 	
 	/**
 	 * Clear all the values
+	 *
+	 * @return void
 	 */
 	public static function clear_all() {
-		$ret = self::current_session()->inst_clearAll();
-		self::$default_session = null;
-		
-		return $ret;
+		self::current_session()->inst_clearAll();
+		self::$default_session = null;			
 	}
 		
 	/**
