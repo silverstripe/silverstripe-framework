@@ -438,6 +438,7 @@ class InstallRequirements {
 		// Check for XML support
 		$this->requireFunction('xml_set_object', array("PHP Configuration", "XML support", "XML support not included in PHP."));
 		$this->requireClass('DOMDocument', array("PHP Configuration", "DOM/XML support", "DOM/XML support not included in PHP."));
+		$this->requireFunction('simplexml_load_file', array('PHP Configuration', 'SimpleXML support', 'SimpleXML support not included in PHP.'));
 
 		// Check for token_get_all
 		$this->requireFunction('token_get_all', array("PHP Configuration", "Tokenizer support", "Tokenizer support not included in PHP."));
