@@ -12,6 +12,12 @@
 @import "compass/css3/text-shadow";
 @import "compass/css3/border-radius";
 
+/*$experimental-support-for-svg variable comes from 
+imported compass/support file and enables svg gradients in IE9. 
+This is needed for the background gradients to work as desired with 
+multiple images. */
+$experimental-support-for-svg: true; 
+
 $gf_colour_gradient_light: #B1C0C5;
 $gf_colour_gradient_dark: #7F9198;
 $gf_colour_base: #95a5ab;
