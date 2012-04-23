@@ -132,7 +132,7 @@
 				if(!dialog.length) dialog = jQuery('<div class="ss-uploadfield-dialog" id="' + dialogId + '" />');
 
 				// Show dialog
-				dialog.ssdialog({iframeUrl: config['urlSelectDialog']});
+				dialog.ssdialog({iframeUrl: config['urlSelectDialog'], height: 550});
 
 				// TODO Allow single-select
 				dialog.find('iframe').bind('load', function(e) {
