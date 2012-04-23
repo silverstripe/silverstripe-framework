@@ -505,7 +505,7 @@ form.member-profile-form .ui-tabs-nav .ui-corner-all, form.member-profile-form .
 .ui-dialog .cms-dialog-content .clear { clear: both; }
 .ui-dialog.loading { background-image: url(../images/spinner.gif); background-position: 50% 50%; background-repeat: no-repeat; }
 
-body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; }
+body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; position: relative; }
 
 /** -------------------------------------------- "Insert X" forms -------------------------------------------- */
 .htmleditorfield-linkform .step2 { margin-bottom: 16px; }
