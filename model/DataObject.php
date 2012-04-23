@@ -1342,7 +1342,38 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			
 		return singleton($componentClass)->extendedSQL($combinedFilter, $sort, $limit, $join);
 	}
-	
+
+	/**
+	 * Find the foreign class of a relation on this DataObject, regardless of the relation type.
+	 *
+	 * @param $relationName Relation name.
+	 * @return string Class name, or null if not found.
+	 */
+	public function getRelationClass($relationName) {
+		// Go through all relationship configuration fields.
+		$candidates = array_merge(
+			($relations = Config::inst()->get($this->class, 'has_one')) ? $relations : array(),
+			($relations = Config::inst()->get($this->class, 'has_many')) ? $relations : array(),
+			($relations = Config::inst()->get($this->class, 'many_many')) ? $relations : array(),
+			($relations = Config::inst()->get($this->class, 'belongs_many_many')) ? $relations : array(),
+			($relations = Config::inst()->get($this->class, 'belongs_to')) ? $relations : array()
+		);
+
+		if (isset($candidates[$relationName])) {
+			$remoteClass = $candidates[$relationName];
+
+			// If dot notation is present, extract just the first part that contains the class.
+			if(($fieldPos = strpos($remoteClass, '.'))!==false) {
+				return substr($remoteClass, 0, $fieldPos);
+			}
+
+			// Otherwise just return the class
+			return $remoteClass;
+		}
+
+		return null;
+	}
+
 	/**
 	 * Tries to find the database key on another object that is used to store a relationship to this class. If no join
 	 * field can be found it defaults to 'ParentID'.
