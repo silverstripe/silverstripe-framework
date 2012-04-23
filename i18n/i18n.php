@@ -1542,7 +1542,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 				))
 			);
 			
-			i18n::include_by_locale('en_US');
+			i18n::include_by_locale('en_US', isset($_GET['flush']));
 		}
 		
 		return self::$translators;
