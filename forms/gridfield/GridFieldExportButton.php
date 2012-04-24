@@ -6,9 +6,6 @@
 
 /**
  * Adds an "Export list" button to the bottom of a GridField.
- * 
- * WARNING: This is experimental and its API is subject to change.  Feel free to use it as long as you are happy of
- * refactoring your code in the future.
  */
 class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler {
 
@@ -95,30 +92,55 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	}
 
 	/**
-	 * Export core.
- 	 */
+	 * Generate export fields for CSV.
+	 *
+	 * @param GridField $gridField
+	 * @return array
+	 */
 	function generateExportFileData($gridField) {
 		$separator = $this->csvSeparator;
 		$csvColumns = ($this->exportColumns) ? $this->exportColumns : singleton($gridField->getModelClass())->summaryFields();
 		$fileData = '';
 		$columnData = array();
 		$fieldItems = new ArrayList();
-		
+
 		if($this->csvHasHeader) {
-			$fileData .= "\"" . implode("\"{$separator}\"", array_values($csvColumns)) . "\"";
+			$headers = array();
+
+			// determine the CSV headers. If a field is callable (e.g. anonymous function) then use the
+			// source name as the header instead
+			foreach($csvColumns as $columnSource => $columnHeader) {
+				$headers[] = (!is_string($columnHeader) && is_callable($columnHeader)) ? $columnSource : $columnHeader;
+			}
+
+			$fileData .= "\"" . implode("\"{$separator}\"", array_values($headers)) . "\"";
 			$fileData .= "\n";
 		}
 
 		$items = $gridField->getList();
+
+		// @todo should GridFieldComponents change behaviour based on whether others are available in the config?
 		foreach($gridField->getConfig()->getComponents() as $component){
 			if($component instanceof GridFieldFilterHeader || $component instanceof GridFieldSortableHeader) {
 				$items = $component->getManipulatedData($gridField, $items);
 			}
 		}
+
 		foreach($items as $item) {
 			$columnData = array();
 			foreach($csvColumns as $columnSource => $columnHeader) {
-				$value = $item->relField($columnSource);
+				if(!is_string($columnHeader) && is_callable($columnHeader)) {
+					if($item->hasMethod($columnSource)) {
+						$relObj = $item->{$columnSource}();
+					} else {
+						$relObj = $item->relObject($columnSource);
+					}
+
+					$value = $columnHeader($relObj);
+				} else {
+					$value = $item->relField($columnSource);
+				}
+
 				$value = str_replace(array("\r", "\n"), "\n", $value);
 				$columnData[] = '"' . str_replace('"', '\"', $value) . '"';
 			}
@@ -127,7 +149,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
 			$item->destroy();
 		}
-			
+
 		return $fileData;
 	}
 
