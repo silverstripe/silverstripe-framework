@@ -65,16 +65,22 @@ If you don't use version control, we recommend that you stick to the official [s
    or the [latest release](https://github.com/silverstripe/silverstripe-installer/zipball/2.4).
  * Add and commit the files to your repository
 
-### Step 2: Getting the required modules ###
+### Step 2: Installing phing with git version control support ###
 
-Run the following command to download all core dependencies via [Piston](http://piston.rubyforge.org):
+Run the following commands to install the Phing build system:
 
-	cd my-silverstripe-project/
-	tools/new-project
+	sudo pear install phing
+	sudo pear install VersionControl_Git-0.4.4
+
+### Step 3: Getting the required modules ###
+
+Run the following command to download all core dependencies using [Phing](http://www.phing.info/):
+
+	phing update_modules
 
 This will add `framework`, `cms` and the `simple` theme to your project.
 
-As a fallback solution, you can simply download all necessary files without any dependency management through piston.
+As a fallback solution, you can simply download all necessary files without any dependency management through Phing.
 This is handy if you have an existing project in version control, and want a one-off snapshot
 of the modules. The only way to update this codebase later is to overwrite the whole folder, with no easy way to track and re-apply any changes made to it since.
 
@@ -86,9 +92,9 @@ The `tools` scripts are just getting you started - to maintain your installation
 you will need to learn how to add and update modules via the `git` commandline utility.
 </div>
 
-### Step 3: Committing the modules ###
+### Step 4: Committing the modules ###
 
-Regardless of using Piston or not, all files in your project will be unversioned,
+Regardless of using Phing or not, some files in your project will be unversioned,
 and need to be added to your own repository. The commands depend on your repository type:
 
 	# for subversion
@@ -101,18 +107,15 @@ and need to be added to your own repository. The commands depend on your reposit
 	git add *
 	git commit -m "adding dependencies"
 
-### Step 4: Switch branches ###
+### Step 5: Switch branches ###
 
-The `tools/new-project` script doesn't allow you to switch branches easily,
-it is designed as a helper to get you started. The script is based on a `template.php`
-located in `tools/lib/template.php`. To switch branches (before running the script),
-create your own `template.php` and adjust the paths:
+The Phing script makes it easy to switch branches and/or modules. Just edit the `dependent-modules` file in
+your project's root folder. This file contains documentation about how to specify which modules (and which branches)
+you want to include in the project. After updating the file run the `phing update_modules` command again.
 
-`tools/new-project --template /path/to/template.php`
+Note: Phing can do some more useful things. Run `phing help` to see everything you can do with it.
 
-If your project is managed by piston, you can run a `piston import --force` to switch branches.
-
-### Step 5: Running the web-based installer ###
+### Step 6: Running the web-based installer ###
 
 You can now run through the web-based installer for your operating system of choice ([instructions](/installation)).
 
