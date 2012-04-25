@@ -446,4 +446,14 @@ class Folder extends File {
 
 		return $classes;
 	}
+	
+	/**
+	 * @return string
+	 */
+	function getTreeTitle() {
+		return $treeTitle = sprintf(
+			"<span class=\"jstree-foldericon\"></span><span class=\"item\">%s</span>",
+			Convert::raw2xml(str_replace(array("\n","\r"),"",$this->Title))
+		);
+	}
 }
