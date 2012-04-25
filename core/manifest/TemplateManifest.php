@@ -53,7 +53,7 @@ class SS_TemplateManifest {
 	 *     ),
 	 *     'page' => array(
 	 *       'themes' => array(
-	 *         'blackcandy' => array(
+	 *         'simple' => array(
 	 *           'main'   => '/path/to/theme/Page.ss'
 	 *           'Layout' => '/path/to/theme/Layout/Page.ss'
 	 *         )

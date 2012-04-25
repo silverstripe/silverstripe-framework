@@ -19,7 +19,7 @@ is an MVC framework!
 
 To start your theme you first need to create the basic folder structure for the theme. Check out the image below for the
 layout of your folders. First you need to create a folder in the themes directory called the name of your theme (we're
-using "blackcandy"). Please note that underscores in the theme name are reserved to denote "sub-themes" (e.g.
+using "simple"). Please note that underscores in the theme name are reserved to denote "sub-themes" (e.g.
 "blackcandy_blog").
 
 ![themes:basicfilestructure.gif](_images/basicfilestructure.gif)
@@ -236,7 +236,7 @@ The templating system will search for the appropriate files in the following ord
 3. module (eg blog)
 
 So if, for example, you had a typography.css file for a module in the module folder (eg blog/css/), in the theme module
-directory (eg themes/blackcandy_blog/css/), and in your site folder (eg mysite/css/), the system would use the file
+directory (eg themes/simple/css/), and in your site folder (eg mysite/css/), the system would use the file
 mysite/css/typography.css
 
 <div class="notice" markdown='1'>
