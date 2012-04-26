@@ -29,10 +29,9 @@ existing modules or the directories lists in "Core Structure".
 
 ## Themes Structure
 
- | `themes/blackcandy/`      | Standard "blackcandy" theme                                         | 
+ | `themes/simple/`      | Standard "simple" theme                                         |
  | ------------------        | ---------------------------                                         | 
- | `themes/blackcandy_blog/` | Theme additions for the blog module                                 | 
- | `themes/yourtheme/`       | The themes folder can contain more than one theme - here's your own | 
+ | `themes/yourtheme/`       | The themes folder can contain more than one theme - here's your own |
 
 
 See [themes](/topics/themes)
