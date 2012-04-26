@@ -240,7 +240,7 @@ class Form extends RequestHandler {
 		// Protection against CSRF attacks
 		$token = $this->getSecurityToken();
 		if(!$token->checkRequest($request)) {
-			$this->httpError(400, "Security token doesn't match, possible CSRF attack.");
+			$this->httpError(400, "Sorry, your session has timed out.");
 		}
 		
 		// Determine the action button clicked
