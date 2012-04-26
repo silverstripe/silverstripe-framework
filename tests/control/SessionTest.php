@@ -45,6 +45,30 @@ class SessionTest extends SapphireTest {
 		$this->assertEquals($session, array('Test' => 'Test', 'Test-2' => 'Test-2'));
 	}
 
+	/**
+	 * Check that changedData isn't populated with junk when clearing non-existent entries.
+	 */
+	function testClearElementThatDoesntExist() {
+		$s = new Session(array('something' => array('does' => 'exist')));
+
+		$s->inst_clear('something.doesnt.exist');
+		$this->assertEquals(array(), $s->inst_changedData());
+
+		$s->inst_set('something-else', 'val');
+		$s->inst_clear('something-new');
+		$this->assertEquals(array('something-else' => 'val'), $s->inst_changedData());
+	}
+
+	/**
+	 * Check that changedData is populated with clearing data.
+	 */
+	function testClearElementThatDoesExist() {
+		$s = new Session(array('something' => array('does' => 'exist')));
+
+		$s->inst_clear('something.does');
+		$this->assertEquals(array('something' => array('does' => null)), $s->inst_changedData());
+	}
+
 	function testNonStandardPath(){
 		Session::set_session_store_path(realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../session'));
 		Session::start();

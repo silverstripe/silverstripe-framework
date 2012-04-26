@@ -103,6 +103,17 @@ class Session {
 	protected $changedData = array();
 
 	/**
+	 * Start PHP session, then create a new Session object with the given start data.
+	 *
+	 * @param $data Can be an array of data (such as $_SESSION) or another Session object to clone.
+	 */
+	function __construct($data) {
+		if($data instanceof Session) $data = $data->inst_getAll();
+
+		$this->data = $data;
+	}
+
+	/**
 	 * Cookie domain, for example 'www.php.net'.
 	 * 
 	 * To make cookies visible on all subdomains then the domain
@@ -176,17 +187,6 @@ class Session {
 		return self::$session_store_path;
 	}
 
-	/**
-	 * Create a new session object, with the given starting data
-	 *
-	 * @param $data Can be an array of data (such as $_SESSION) or another Session object to clone.
-	 */
-	function __construct($data) {
-		if($data instanceof Session) $data = $data->inst_getAll();
-		
-		$this->data = $data;
-	}
-	
 	/**
 	 * Provide an <code>array</code> of rules specifing timeouts for IPv4 address ranges or
 	 * individual IPv4 addresses. The key is an IP address or range and the value is the time
@@ -300,12 +300,14 @@ class Session {
 				$var = &$var[$n];
 				$diffVar = &$diffVar[$n];
 			}
-			
-			$var = $val;
-			$diffVar = $val;
+
+			if($var !== $val) {
+				$var = $val;
+				$diffVar = $val;
+			}
 		}
 	}
-	
+
 	public function inst_addToArray($name, $val) {
 		$names = explode('.', $name);
 		
@@ -355,14 +357,22 @@ class Session {
 		$diffVar = &$this->changedData;
 			
 		foreach($names as $n) {
+			// don't clear a record that doesn't exist
+			if(!isset($var[$n])) return;
 			$var = &$var[$n];
+		}
+
+		// only loop to find data within diffVar if var is proven to exist in the above loop
+		foreach($names as $n) {
 			$diffVar = &$diffVar[$n];
 		}
 
-		$var = null;
-		$diffVar = null;
+		if($var !== null) {
+			$var = null;
+			$diffVar = null;
+		}
 	}
-	
+
 	public function inst_clearAll() {
 		if($this->data && is_array($this->data)) {
 			foreach(array_keys($this->data) as $key) {
@@ -370,7 +380,7 @@ class Session {
 			}
 		}
 	}
-	
+
 	public function inst_getAll() {
 		return $this->data;
 	}
@@ -380,7 +390,10 @@ class Session {
 	 * Only save the changes, so that anyone manipulating $_SESSION directly doesn't get burned.
 	 */ 
 	public function inst_save() {
-		$this->recursivelyApply($this->changedData, $_SESSION);
+		if($this->changedData) {
+			if(!isset($_SESSION)) Session::start();
+			$this->recursivelyApply($this->changedData, $_SESSION);
+		}
 	}
 	
 	/**
@@ -397,7 +410,15 @@ class Session {
 			}
 		}
 	}
-	
+
+	/**
+	 * Return the changed data, for debugging purposes.
+	 * @return array
+	 */
+	public function inst_changedData() {
+		return $this->changedData;
+	}
+
 	/**
 	* Sets the appropriate form message in session, with type. This will be shown once,
 	* for the form specified.
@@ -431,7 +452,7 @@ class Session {
 
 			// Allow storing the session in a non standard location
 			if($session_path) session_save_path($session_path);
-			
+
 			// @ is to supress win32 warnings/notices when session wasn't cleaned up properly
 			// There's nothing we can do about this, because it's an operating system function!
 			if($sid) session_id($sid);
