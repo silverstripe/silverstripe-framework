@@ -62,6 +62,7 @@ class HTTP {
 		}
 		$regExps[] = '/(background-image:[^;]*url *\()([^)]+)(\))/ie';
 		$regExps[] = '/(background:[^;]*url *\()([^)]+)(\))/ie';
+		$regExps[] = '/(list-style-image:[^;]*url *\()([^)]+)(\))/ie';
 
 		// Make
 		$code = 'stripslashes("$1") . (' . str_replace('$URL', 'stripslashes("$2")', $code) . ') . stripslashes("$3")';
