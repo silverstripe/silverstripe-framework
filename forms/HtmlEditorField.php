@@ -422,14 +422,19 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$fields = new FieldList(
 			new LiteralField(
 				'Heading',
-				sprintf('<h3>%s</h3>', _t('HtmlEditorField.IMAGE', 'Insert Image'))
+				sprintf('<h3 class="htmleditorfield-mediaform-heading insert">%s</h3>', _t('HtmlEditorField.INSERTIMAGE', 'Insert Image')).
+				sprintf('<h3 class="htmleditorfield-mediaform-heading update">%s</h3>', _t('HtmlEditorField.UpdateIMAGE', 'Update Image'))
 			),
 			$allFields
 		);
 		
 		$actions = new FieldList(
 			FormAction::create('insertimage', _t('HtmlEditorField.BUTTONINSERT', 'Insert'))
-				->addExtraClass('ss-ui-action-constructive')
+				->addExtraClass('ss-ui-action-constructive image-insert')
+				->setAttribute('data-icon', 'accept')
+				->setUseButtonTag(true),
+			FormAction::create('insertimage', _t('HtmlEditorField.BUTTONUpdate', 'Update'))
+				->addExtraClass('ss-ui-action-constructive image-update')
 				->setAttribute('data-icon', 'accept')
 				->setUseButtonTag(true)
 		);
