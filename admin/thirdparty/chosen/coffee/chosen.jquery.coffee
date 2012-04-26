@@ -9,8 +9,9 @@ $.fn.extend({
   chosen: (options) ->
     # Do no harm and return as soon as possible for unsupported browsers, namely IE6 and IE7
     return this if $.browser.msie and ($.browser.version is "6.0" or  $.browser.version is "7.0")
-    $(this).each((input_field) ->
-      new Chosen(this, options) unless ($ this).hasClass "chzn-done"
+    this.each((input_field) ->
+      $this = $ this
+      $this.data('chosen', new Chosen(this, options)) unless $this.hasClass "chzn-done"
     )
 })
 
@@ -34,13 +35,16 @@ class Chosen extends AbstractChosen
     container_div = ($ "<div />", {
       id: @container_id
       class: "chzn-container#{ if @is_rtl then ' chzn-rtl' else '' }"
-      style: 'width: ' + (@f_width) + 'px;' #use parens around @f_width so coffeescript doesn't think + ' px' is a function parameter
+      #patch applied: https://github.com/harvesthq/chosen/issues/300
+      style: 'width: ' + (@options.width or @f_width) + 'px;' #use parens around @f_width so coffeescript doesn't think + ' px' is a function parameter
+
+
     })
     
     if @is_multiple
       container_div.html '<ul class="chzn-choices"><li class="search-field"><input type="text" value="' + @default_text + '" class="default" autocomplete="off" style="width:25px;" /></li></ul><div class="chzn-drop" style="left:-9000px;"><ul class="chzn-results"></ul></div>'
     else
-      container_div.html '<a href="javascript:void(0)" class="chzn-single chzn-default"><span>' + @default_text + '</span><div><b></b></div></a><div class="chzn-drop" style="left:-9000px;"><div class="chzn-search"><input type="text" autocomplete="off" /></div><ul class="chzn-results"></ul></div>'
+      container_div.html '<a href="javascript:void(0)" class="chzn-single chzn-default"><span>' + this.default_text + '</span><div><b></b></div></a><div class="chzn-drop" style="left:-9000px;"><div class="chzn-search"><input type="text" autocomplete="off" /></div><ul class="chzn-results"></ul></div>'
 
     @form_field_jq.hide().after container_div
     @container = ($ '#' + @container_id)
@@ -48,7 +52,8 @@ class Chosen extends AbstractChosen
     @dropdown = @container.find('div.chzn-drop').first()
     
     dd_top = @container.height()
-    dd_width = (@f_width - get_side_border_padding(@dropdown))
+    #patch applied: https://github.com/harvesthq/chosen/issues/300
+    dd_width = (@container.width - get_side_border_padding(@dropdown))
     
     @dropdown.css({"width": dd_width  + "px", "top": dd_top + "px"})
 
@@ -235,8 +240,15 @@ class Chosen extends AbstractChosen
         this.result_do_highlight( @result_single_selected )
 
     dd_top = if @is_multiple then @container.height() else (@container.height() - 1)
+
+    #patch applied: https://github.com/harvesthq/chosen/issues/300, add variable assignment dd_width
+    dd_width = this.container.width() - get_side_border_padding(@dropdown);
+
     @dropdown.css {"top":  dd_top + "px", "left":0}
-    @results_showing = true
+    @results_showing = true 
+
+    #patch applied: https://github.com/harvesthq/chosen/issues/300
+    @search_field.css 'width', (dd_width - get_side_border_padding(@search_container) - get_side_border_padding(@search_field)) + 'px';
 
     @search_field.focus()
     @search_field.val @search_field.val()
