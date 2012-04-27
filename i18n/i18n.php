@@ -1799,11 +1799,12 @@ class i18n extends Object implements TemplateGlobalProvider {
 		if (!$path) {
 			return false;
 		}
-
+		
 		$path = Director::makeRelative($path);
 		$path = str_replace('\\', '/', $path);
 
-		return substr($path, 0, strpos($path, '/'));
+		$parts = explode('/', trim($path, '/'));
+		return array_shift($parts);
 	}
 
 	/**
