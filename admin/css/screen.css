@@ -305,7 +305,8 @@ body.cms { overflow: hidden; }
 .ss-loading-screen .loading-animation { display: none; position: absolute; left: 49%; top: 75%; }
 
 /** -------------------------------------------- Actions -------------------------------------------- */
-.cms-content-actions { margin: 8px 16px 16px 16px; height: 32px; z-index: 70; background-color: #e6eaed; -moz-box-shadow: #e6eaed 0 -16px 16px; -webkit-box-shadow: #e6eaed 0 -16px 16px; -o-box-shadow: #e6eaed 0 -16px 16px; box-shadow: #e6eaed 0 -16px 16px; }
+.cms-content-actions { margin: 8px 16px 16px 0; padding-left: 16px; height: 32px; z-index: 0; -moz-box-shadow: #e6eaed 0 -16px 16px; -webkit-box-shadow: #e6eaed 0 -16px 16px; -o-box-shadow: #e6eaed 0 -16px 16px; box-shadow: #e6eaed 0 -16px 16px; }
+.root-form .cms-content-actions { -moz-box-shadow: rgba(240, 243, 244, 0.8) 0 -16px 16px; -webkit-box-shadow: rgba(240, 243, 244, 0.8) 0 -16px 16px; -o-box-shadow: rgba(240, 243, 244, 0.8) 0 -16px 16px; box-shadow: rgba(240, 243, 244, 0.8) 0 -16px 16px; }
 
 /** -------------------------------------------- Messages -------------------------------------------- */
 .message { margin: 0 0 8px 0; padding: 7px 7px; font-weight: bold; border: 1px black solid; }
