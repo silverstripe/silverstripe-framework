@@ -99,30 +99,84 @@ class SQLQueryTest extends SapphireTest {
 	}
 	
 	function testSelectWithOrderbyClause() {
-		// numeric limit
 		$query = new SQLQuery();
 		$query->from[] = "MyTable";
-		$query->orderby('MyName ASC');
-		// can't escape as we don't know if ASC or DESC is appended
-		$this->assertEquals("SELECT * FROM MyTable ORDER BY MyName ASC", $query->sql());
+		$query->orderby('MyName');
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY MyName', $query->sql());
 		
-		// array limit
 		$query = new SQLQuery();
 		$query->from[] = "MyTable";
-		$query->orderby(array('sort'=>'MyName'));
-		$this->assertEquals('SELECT * FROM MyTable ORDER BY "MyName"', $query->sql());
+		$query->orderby('MyName desc');
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY MyName DESC', $query->sql());
+		
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->orderby('MyName ASC, Color DESC');
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY MyName ASC, Color DESC', $query->sql());
+		
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->orderby('MyName ASC, Color');
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY MyName ASC, Color', $query->sql());
 
-		// array limit with start (MySQL specific)
 		$query = new SQLQuery();
 		$query->from[] = "MyTable";
-		$query->orderby(array('sort'=>'MyName','dir'=>'desc'));
-		$this->assertEquals('SELECT * FROM MyTable ORDER BY "MyName" DESC', $query->sql());
+		$query->orderby(array('MyName' => 'desc'));
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY MyName DESC', $query->sql());
+		
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->orderby(array('MyName' => 'desc', 'Color'));
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY MyName DESC, Color', $query->sql());
+		
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->orderby('implode("MyName","Color")');
+		$this->assertEquals('SELECT implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY _SortColumn0', $query->sql());
+		
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->orderby('implode("MyName","Color") DESC');
+		$this->assertEquals('SELECT implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY _SortColumn0 DESC', $query->sql());
+		
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->orderby('RAND()');
+		
+		$this->assertEquals('SELECT RAND() AS "_SortColumn0" FROM MyTable ORDER BY _SortColumn0', $query->sql());
 	}
 	
-	function testSelectWithComplexOrderbyClause() {
-		// @todo Test "ORDER BY RANDOM() ASC,MyName DESC" etc.
+	public function testReverseOrderBy() {
+		$query = new SQLQuery();
+		$query->from('MyTable');
+		
+		// default is ASC
+		$query->orderby("Name");
+		$query->reverseOrderBy();
+
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY Name DESC',$query->sql());	
+		
+		$query->orderby("Name DESC");
+		$query->reverseOrderBy();
+
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY Name ASC',$query->sql());
+		
+		$query->orderby(array("Name" => "ASC"));
+		$query->reverseOrderBy();
+		
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY Name DESC',$query->sql());
+		
+		$query->orderby(array("Name" => 'DESC', 'Color' => 'asc'));
+		$query->reverseOrderBy();
+		
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY Name ASC, Color DESC',$query->sql());
+		
+		$query->orderby('implode("MyName","Color") DESC');
+		$query->reverseOrderBy();
+		
+		$this->assertEquals('SELECT implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY _SortColumn0 ASC',$query->sql());
 	}
-	
+
 	function testFiltersOnID() {
 		$query = new SQLQuery();
 		$query->where[] = "ID = 5";
