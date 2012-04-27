@@ -538,6 +538,11 @@ class SQLQuery {
 		$this->replacementsNew[] = $new;
 	}
 
+	public function getFilter() {
+		Deprecation::notice('3.0', 'Please use prepareSelect() instead of getFilter()');
+		return $this->prepareSelect();
+	}
+
 	/**
 	 * Return an SQL WHERE clause to filter a SELECT query.
 	 *
