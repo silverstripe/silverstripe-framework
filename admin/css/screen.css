@@ -438,6 +438,7 @@ form.member-profile-form .ui-tabs-nav .ui-corner-all, form.member-profile-form .
 form.member-profile-form .ui-tabs-nav .ui-corner-all, form.member-profile-form .ui-tabs-nav .ui-corner-top, form.member-profile-form .ui-tabs-nav .ui-corner-left, form.member-profile-form .ui-tabs-nav .ui-corner-tl { border-radius: 0; }
 
 .cms .cms-content { border-right: 1px solid rgba(201, 205, 206, 0.8); -moz-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -webkit-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -o-box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); box-shadow: 3px 0 4px rgba(0, 0, 0, 0.15); -moz-border-radius: 0; -webkit-border-radius: 0; -o-border-radius: 0; -ms-border-radius: 0; -khtml-border-radius: 0; border-radius: 0; }
+.cms form.cms-content { padding: 8px 16px 16px 16px; }
 .cms .cms-content-fields { overflow-y: auto; overflow-x: auto; background: none; width: 100%; }
 .cms .cms-content-fields #Root_Main .confirmedpassword { border-bottom: none; box-shadow: none; }
 .cms .cms-content-fields #Root_Main .customFormat { max-width: 80px; }
