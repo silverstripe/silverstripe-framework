@@ -506,4 +506,13 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals($this->idFromFixture('DataObjectTest_Team', 'team2'), $list->first()->TeamID, 'First comment should be for Team 2');
 		$this->assertEquals($this->idFromFixture('DataObjectTest_Team', 'team1'), $list->last()->TeamID, 'Last comment should be for Team 1');
 	}
+	
+	public function testReverse() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->sort('Name');
+		$list->reverse();
+		
+		$this->assertEquals('Bob', $list->last()->Name, 'Last comment should be from Bob');
+		$this->assertEquals('Phil', $list->first()->Name, 'First comment should be from Phil');
+	}
 }

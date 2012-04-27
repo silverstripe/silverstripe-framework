@@ -257,6 +257,23 @@ class ArrayListTest extends SapphireTest {
 			(object) array('Name' => 'Bob')
 		));
 	}
+	
+	public function testReverse() {
+		$list = new ArrayList(array(
+			array('Name' => 'John'),
+			array('Name' => 'Bob'),
+			array('Name' => 'Steve')
+		));
+
+		$list->sort('Name', 'ASC');
+		$list->reverse();
+		
+		$this->assertEquals($list->toArray(), array(
+			array('Name' => 'Steve'),
+			array('Name' => 'John'),
+			array('Name' => 'Bob')
+		));
+	}
 
 	public function testSimpleMultiSort() {
 		$list = new ArrayList(array(

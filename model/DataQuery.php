@@ -3,14 +3,31 @@
 /**
  * An object representing a query of data from the DataObject's supporting database.
  * Acts as a wrapper over {@link SQLQuery} and performs all of the query generation.
- * Used extensively by DataList.
+ * Used extensively by {@link DataList}.
+ *
+ * @subpackage model
+ * @package sapphire
  */
 class DataQuery {
+	
+	/**
+	 * @var String
+	 */
 	protected $dataClass;
+	
+	/**
+	 * @var SQLQuery
+	 */
 	protected $query;
 	
+	/**
+	 * @var array
+	 */
 	protected $collidingFields = array();
 	
+	/**
+	 * @var Boolean
+	 */
 	private $queryFinalised = false;
 	
 	// TODO: replace subclass_access with this
@@ -20,7 +37,8 @@ class DataQuery {
 	
 	/**
 	 * Create a new DataQuery.
-	 * @param $dataClass The name of the DataObject class that you wish to query
+	 *
+	 * @param String The name of the DataObject class that you wish to query
 	 */
 	function __construct($dataClass) {
 		$this->dataClass = $dataClass;
@@ -172,49 +190,50 @@ class DataQuery {
 		$baseClass = array_shift($tableClasses);
 
 		if($query->orderby) {
-			$orderByFields = explode(',', $query->orderby);
-			foreach($orderByFields as $ob => $col) {
-				$col = trim($col);
+			$orderby = $query->getOrderBy();
 
-				// don't touch functions in the ORDER BY or function calls selected as fields
-				if(strpos($col, '(') !== false || preg_match('/_SortColumn/', $col)) continue;
-
-				$columnParts = explode(' ', $col);
-				if (count($columnParts) == 2) {
-					$col = $columnParts[0];
-					$dir = $columnParts[1];
-				} else {
-					$dir = 'ASC';
-				}
-
-				$orderByFields[$ob] = $col . ' ' . $dir;
-				$col = str_replace('"', '', $col);
+			foreach($orderby as $k => $dir) {
+				// don't touch functions in the ORDER BY or function calls 
+				// selected as fields
+				if(strpos($k, '(') !== false || preg_match('/_SortColumn/', $k)) 
+					continue;
+				
+				$col = str_replace('"', '', trim($k));
 				$parts = explode('.', $col);
 
 				if(count($parts) == 1) {
 					$databaseFields = DataObject::database_fields($baseClass);
-					// database_fields() doesn't return ID, so we need to manually add it here
+	
+					// database_fields() doesn't return ID, so we need to 
+					// manually add it here
 					$databaseFields['ID'] = true;
-
+				
 					if(isset($databaseFields[$parts[0]])) {
 						$qualCol = "\"$baseClass\".\"{$parts[0]}\"";
-						$orderByFields[$ob] = trim($qualCol . " " . $dir);
+						
+						// remove original sort
+						unset($orderby[$k]);
+						
+						// add new columns sort
+						$orderby[$qualCol] = $dir;
+							
 					} else {
 						$qualCol = "\"$parts[0]\"";
 					}
-
-					if(!isset($query->select[$parts[0]]) && !in_array($qualCol, $query->select)) {
+					
+					if(!isset($query->select[$col]) && !in_array($qualCol, $query->select)) {
 						$query->select[] = $qualCol;
 					}
 				} else {
 					$qualCol = '"' . implode('"."', $parts) . '"';
+					
 					if(!in_array($qualCol, $query->select)) {
 						$query->select[] = $qualCol;
 					}
 				}
 			}
 
-			$query->orderby = implode(',', $orderByFields);
+			$query->orderby = $orderby;
 		}
 	}
 
@@ -357,17 +376,28 @@ class DataQuery {
 	
 	/**
 	 * Set the ORDER BY clause of this query
+	 *
+	 * @see SQLQuery::orderby()
+	 *
+	 * @return DataQuery
 	 */
-	function sort($sort) {
-		if($sort) {
-			$clone = $this;
-			// Add quoting to sort expression if it's a simple column name
-			if(!is_array($sort) && preg_match('/^[A-Z][A-Z0-9_]*$/i', $sort)) $sort = "\"$sort\"";
-			$clone->query->orderby($sort);
-			return $clone;
-		} else {
-			return $this;
-		}
+	function sort($sort = null, $direction = null, $clear = true) {
+		$clone = $this;
+		$clone->query->orderby($sort, $direction, $clear);
+			
+		return $clone;
+	}
+	
+	/**
+	 * Reverse order by clause
+	 *
+	 * @return DataQuery
+	 */
+	function reverseSort() {
+		$clone = $this;
+		
+		$clone->query->reverseOrderBy();
+		return $clone;
 	}
 	
 	/**

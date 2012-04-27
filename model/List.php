@@ -77,5 +77,4 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 	 * @return array
 	 */
 	public function column($colName = "ID");
-
 }
