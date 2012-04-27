@@ -135,10 +135,10 @@ class i18nTextCollector extends Object {
 			
 			// extract all entities for "foreign" modules (fourth argument)
 			foreach($entitiesByModule[$module] as $fullName => $spec) {
-				if(isset($spec[3]) && $spec[3] && $spec[3] != $module) {
-					$othermodule = $spec[3];
+				if(isset($spec[2]) && $spec[2] && $spec[2] != $module) {
+					$othermodule = $spec[2];
 					if(!isset($entitiesByModule[$othermodule])) $entitiesByModule[$othermodule] = array();
-					unset($spec[3]);
+					unset($spec[2]);
 					$entitiesByModule[$othermodule][$fullName] = $spec;
 					unset($entitiesByModule[$module][$fullName]);
 				}
