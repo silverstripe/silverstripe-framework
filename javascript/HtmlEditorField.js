@@ -653,6 +653,21 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		 * of remove files as well.
 		 */
 		$('form.htmleditorfield-mediaform').entwine({
+			onmatch: function() {
+				this.toggleLooks();
+				this._super();
+			},
+			toggleLooks: function(){
+				var updateExisting = Boolean(this.find('.ss-htmleditorfield-file').length);
+				this.find('.htmleditorfield-mediaform-heading.insert')[updateExisting ? 'hide' : 'show']();
+				this.find('.Actions .image-insert')[updateExisting ? 'hide' : 'show']();
+				this.find('.htmleditorfield-mediaform-heading.update')[updateExisting ? 'show' : 'hide']();
+				this.find('.Actions .image-update')[updateExisting ? 'show' : 'hide']();
+			},
+			toggleCloseButton: function(){
+				var updateExisting = Boolean(this.find('.ss-htmleditorfield-file').length);
+				this.find('.overview .action-delete')[updateExisting ? 'hide' : 'show']();
+			},
 			onsubmit: function() {
 				var self = this, ed = this.getEditor();
 
@@ -674,15 +689,15 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				if(node.is('img')) {
 					this.showFileView(node.attr('src'), function() {
 						$(this).updateFromNode(node);
+						self.toggleCloseButton();
 						self.redraw();
 					});
 				}
-
+				this.toggleLooks();
 				this.redraw();
 			},
 			redraw: function() {
 				this._super();
-
 				var ed = this.getEditor(), node = $(ed.getSelectedNode()),
 					hasItems = Boolean(this.find('.ss-htmleditorfield-file').length),
 					editingSelected = node.is('img');
