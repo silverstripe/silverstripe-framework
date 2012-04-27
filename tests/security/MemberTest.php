@@ -551,6 +551,14 @@ class MemberTest extends FunctionalTest {
 			$staffMember->onChangeGroups(array($newAdminGroup->ID)),
 			'Adding new admin group relation is not allowed for non-admin members'
 		);
+
+		$this->session()->inst_set('loggedInAs', $adminMember->ID);
+		$this->assertTrue(
+			$staffMember->onChangeGroups(array($newAdminGroup->ID)),
+			'Adding new admin group relation is allowed for normal users, when granter is logged in as admin'
+		);
+		$this->session()->inst_set('loggedInAs', null);
+
 		$this->assertTrue(
 			$adminMember->onChangeGroups(array($newAdminGroup->ID)),
 			'Adding new admin group relation is allowed for admin members'
