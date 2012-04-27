@@ -1,6 +1,5 @@
 en:
   AssetAdmin:
-    MENUTITLE: Files
     NEWFOLDER: NewFolder
   AssetTableField:
     BACKLINKCOUNT: 'Used on:'
@@ -55,28 +54,13 @@ en:
     ANY: Any
     NO: No
     YES: Yes
-  CMSFileAddController:
-    MENUTITLE: Files
   CMSMain:
     ACCESS: 'Access to ''%s'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    MENUTITLE: 'Edit Page'
     SAVE: Save
-  CMSPageAddController:
-    MENUTITLE: 'Add page'
-  CMSPageEditController:
-    MENUTITLE: 'Edit Page'
-  CMSPageHistoryController:
-    MENUTITLE: History
-  CMSPageSettingsController:
-    MENUTITLE: 'Edit Page'
-  CMSPagesController:
-    MENUTITLE: Pages
   CMSProfileController:
     MENUTITLE: CMSProfileController
-  CMSSettingsController:
-    MENUTITLE: Settings
   ChangePasswordEmail.ss:
     CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
@@ -377,10 +361,6 @@ en:
   MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
-  MyAdmin:
-    MENUTITLE: 'My Product Admin'
-  MyModelAdmin:
-    MENUTITLE: MyModel
   NullableField:
     IsNullLabel: 'Is Null'
   NumericField:
@@ -401,8 +381,6 @@ en:
     VALIDATION: 'Please enter a valid phone number'
   RelationComplexTableField.ss:
     ADD: Add
-  ReportAdmin:
-    MENUTITLE: Reports
   Security:
     ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
     BUTTONSEND: 'Send me the password reset link'
@@ -459,8 +437,6 @@ en:
     VIEWLAST: 'View last'
     VIEWNEXT: 'View next'
     VIEWPREVIOUS: 'View previous'
-  TestModelAdmin:
-    MENUTITLE: 'Test ModelAdmin'
   TextareaField_Readonly.ss:
     NONE: none
   TimeField:
@@ -490,6 +466,3 @@ en:
     Saved: Saved
   Versioned:
     has_many_Versions: Versions
-  Page:
-    PLURALNAME: Pags
-    SINGULARNAME: Page
