@@ -69,7 +69,8 @@ If you don't use version control, we recommend that you stick to the official [s
 
 Run the following commands to install the Phing build system:
 
-	sudo pear install phing
+	sudo pear channel-discover pear.phing.info
+	sudo pear install phing/phing
 	sudo pear install VersionControl_Git-0.4.4
 
 ### Step 3: Getting the required modules ###
