@@ -8,7 +8,7 @@ DatabaseAdapterRegistry::register(
 		'class' => 'MySQLDatabase',
 		'title' => 'MySQL 5.0+',
 		'helperPath' => $frameworkPath . '/dev/install/MySQLDatabaseConfigurationHelper.php',
-		'supported' => function_exists('mysql_connect'),
+		'supported' => class_exists('MySQLi'),
 	)
 );
 
