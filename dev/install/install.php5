@@ -21,6 +21,11 @@ ini_set('max_execution_time', 0);
 
 error_reporting(E_ALL | E_STRICT);
 
+// Attempt to start a session so that the username and password can be sent back to the user.
+if (function_exists('session_start')) {
+	session_start();
+}
+
 // Include environment files
 $usingEnv = false;
 $envFileExists = false;
