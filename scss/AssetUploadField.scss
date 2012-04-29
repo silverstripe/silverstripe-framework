@@ -19,6 +19,10 @@ body.cms.ss-uploadfield-edit-iframe {
 	}
 }
 
+.ss-uploadfield-edit-iframe {
+	background: #E2E2E2;
+}
+
 .ss-assetuploadfield {
 	h3 {
 		border-bottom: 1px solid $color-shadow-light;
@@ -40,8 +44,7 @@ body.cms.ss-uploadfield-edit-iframe {
 		.ss-uploadfield-item {
 			border: 1px solid lighten($color-medium-separator, 20%);
 			@include border-radius(5px);
-			@include background-clip(padding-box);
-			background: #E2E2E2;
+			@include background-clip(padding-box);			
 			margin: 0 0 5px;
 			padding: 0;
 			overflow: hidden;

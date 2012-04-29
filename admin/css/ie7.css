@@ -7,8 +7,17 @@ html { overflow: hidden; }
 
 .field input.text, .field textarea, .field .TreeDropdownField { padding-left: 0; padding-right: 0; }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 .ss-uploadfield-edit-iframe .field.treedropdown { height: 150px !important; }
 .ss-uploadfield-edit-iframe .field .TreeDropdownField ul { min-height: 100px; height: auto; max-height: 150px; }
+=======
+div.ss-upload .ss-uploadfield-item-editform .field .TreeDropdownField ul { height: 100px; }
+>>>>>>> BUGFIX: IE7 fixes for file upload
+=======
+.ss-uploadfield-edit-iframe .field.treedropdown { height: 150px !important; }
+.ss-uploadfield-edit-iframe .field .TreeDropdownField ul { min-height: 100px; height: auto; max-height: 150px; }
+>>>>>>> BUGFIX: Fix for #7003
 
 .ss-ui-button.cms-page-add-button { float: left; }
 
