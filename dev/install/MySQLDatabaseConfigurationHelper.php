@@ -29,7 +29,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	public function requireDatabaseServer($databaseConfig) {
 		$success = false;
 		$error = '';
-		$conn = new MySQLi($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
+		$conn = @new MySQLi($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
 		if($conn && $conn->connect_errno < 2000) {
 			$success = true;
 		} else {
