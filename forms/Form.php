@@ -216,31 +216,33 @@ class Form extends RequestHandler {
 	);
 
 	/**
-	 * Set up current form errors in session to
-	 * the current form if appropriate.
+	 * Take errors from a ValidationResult and populate the form with the appropriate message.
+	 * 
+	 * @param ValidationResult $result The erroneous ValidationResult.  If none passed, this will be atken
+	 * from the session
 	 */
-	public function setupFormErrors() {
-		$errorInfo = Session::get("FormInfo.{$this->FormName()}");
-
-		if(isset($errorInfo['errors']) && is_array($errorInfo['errors'])) {
-			foreach($errorInfo['errors'] as $error) {
-				$field = $this->fields->dataFieldByName($error['fieldName']);
-
-				if(!$field) {
-					$errorInfo['message'] = $error['message'];
-					$errorInfo['type'] = $error['messageType'];
-				} else {
-					$field->setError($error['message'], $error['messageType']);
-				}
-			}
-
-			// load data in from previous submission upon error
-			if(isset($errorInfo['data'])) $this->loadDataFrom($errorInfo['data']);
+	public function setupFormErrors($result = null, $data = null) {
+		if(!$result) $result = Session::get("FormInfo.{$this->FormName()}.result");
+		if(!$result) return;
+		
+		foreach($result->fieldErrors() as $fieldName => $fieldError) {
+			$field = $this->fields->dataFieldByName($fieldName);
+			$field->setError($fieldError['message'], $fieldError['messageType']);
 		}
 
-		if(isset($errorInfo['message']) && isset($errorInfo['type'])) {
-			$this->setMessage($errorInfo['message'], $errorInfo['type']);
-		}
+		$this->setMessage($result->overallMessage(), $result->valid() ? 'good' : 'bad');
+
+		// load data in from previous submission upon error
+		if(!$data) $data = Session::get("FormInfo.{$this->FormName()}.data");
+		if($data) $this->loadDataFrom($data);
+	}
+
+	/**
+	 * Save information to the session to be picked up by {@link setUpFormErrors()}
+	 */
+	public function saveFormErrorsToSession($result = null, $data = null) {
+		Session::set("FormInfo.{$this->FormName()}.result", $result);
+		Session::set("FormInfo.{$this->FormName()}.data", $data);
 	}
 	
 	/**
@@ -348,20 +350,30 @@ class Form extends RequestHandler {
 			}
 		}*/
 		
-		// Validate the form
-		if(!$this->validate()) {
-			return $this->getValidationErrorResponse();
+		// Action handlers may throw ValidationExceptions.
+		try {
+			// Or we can use the Valiator attached to the form
+			$result = $this->validationResult();
+			if(!$result->valid()) {
+				return $this->getValidationErrorResponse($result);
+			}
+			
+			// First, try a handler method on the controller (has been checked for allowed_actions above already)
+			if($this->controller->hasMethod($funcName)) {
+				return $this->controller->$funcName($vars, $this, $request);
+			// Otherwise, try a handler method on the form object.
+			} elseif($this->hasMethod($funcName)) {
+				return $this->$funcName($vars, $this, $request);
+			} elseif($field = $this->checkFieldsForAction($this->Fields(), $funcName)) {
+				return $field->$funcName($vars, $this, $request);
+			}
+
+		} catch(ValidationException $e) {
+			// The ValdiationResult contains all the relevant metadata
+			$result = $e->getResult();
+			return $this->getValidationErrorResponse($result);
 		}
-		
-		// First, try a handler method on the controller (has been checked for allowed_actions above already)
-		if($this->controller->hasMethod($funcName)) {
-			return $this->controller->$funcName($vars, $this, $request);
-		// Otherwise, try a handler method on the form object.
-		} elseif($this->hasMethod($funcName)) {
-			return $this->$funcName($vars, $this, $request);
-		} elseif($field = $this->checkFieldsForAction($this->Fields(), $funcName)) {
-			return $field->$funcName($vars, $this, $request);
-		}
+
 		
 		return $this->httpError(404);
 	}
@@ -388,36 +400,42 @@ class Form extends RequestHandler {
 	 * 
 	 * @return SS_HTTPResponse|string
 	 */
-	protected function getValidationErrorResponse() {
+	protected function getValidationErrorResponse(ValidationResult $result) {
 		$request = $this->getRequest();
 		if($request->isAjax()) {
-				// Special case for legacy Validator.js implementation 
-				// (assumes eval'ed javascript collected through FormResponse)
-				$acceptType = $request->getHeader('Accept');
-				if(strpos($acceptType, 'application/json') !== FALSE) {
-					// Send validation errors back as JSON with a flag at the start
-					$response = new SS_HTTPResponse(Convert::array2json($this->validator->getErrors()));
-					$response->addHeader('Content-Type', 'application/json');
-				} else {
-					$this->setupFormErrors();
-					// Send the newly rendered form tag as HTML
-					$response = new SS_HTTPResponse($this->forTemplate());
-					$response->addHeader('Content-Type', 'text/html');
-				}
-				
-				return $response;
+			// Special case for legacy Validator.js implementation 
+			// (assumes eval'ed javascript collected through FormResponse)
+			$acceptType = $request->getHeader('Accept');
+			if(strpos($acceptType, 'application/json') !== FALSE) {
+				// Send validation errors back as JSON with a flag at the start
+				$response = new SS_HTTPResponse(Convert::array2json($result->getErrorMetaData()));
+				$response->addHeader('Content-Type', 'application/json');
+
 			} else {
-				if($this->getRedirectToFormOnValidationError()) {
-					if($pageURL = $request->getHeader('Referer')) {
-						if(Director::is_site_url($pageURL)) {
-							// Remove existing pragmas
-							$pageURL = preg_replace('/(#.*)/', '', $pageURL);
-							return $this->controller->redirect($pageURL . '#' . $this->FormName());
-						}
+				$this->setupFormErrors($result, $this->getData());
+				// Send the newly rendered form tag as HTML
+				$response = new SS_HTTPResponse($this->forTemplate());
+				$response->addHeader('Content-Type', 'text/html');
+			}
+			
+			return $response;
+
+		} else {
+			// Save the relevant information in the session
+			$this->saveFormErrorsToSession($result, $this->getData());
+			
+			// Redirect back to the form
+			if($this->getRedirectToFormOnValidationError()) {
+				if($pageURL = $request->getHeader('Referer')) {
+					if(Director::is_site_url($pageURL)) {
+						// Remove existing pragmas
+						$pageURL = preg_replace('/(#.*)/', '', $pageURL);
+						return $this->controller->redirect($pageURL . '#' . $this->FormName());
 					}
 				}
-				return $this->controller->redirectBack();
 			}
+			return $this->controller->redirectBack();
+		}
 	}
 	
 	/**
@@ -491,13 +509,13 @@ class Form extends RequestHandler {
 	/**
 	 * Add an error message to a field on this form.  It will be saved into the session
 	 * and used the next time this form is displayed.
+	 * 
+	 * @deprecated 3.2
 	 */
 	public function addErrorMessage($fieldName, $message, $messageType) {
-		Session::add_to_array("FormInfo.{$this->FormName()}.errors",  array(
-			'fieldName' => $fieldName,
-			'message' => $message,
-			'messageType' => $messageType,
-		));
+		Deprecation::notice('3.2', 'Throw a ValidationException instead.');
+
+		$this->getSessionValidationResult()->error($message, null, $fieldName, $messageType);
 	}
 
 	public function transform(FormTransformation $trans) {
@@ -988,7 +1006,6 @@ class Form extends RequestHandler {
 	 * @return string
 	 */
 	public function Message() {
-		$this->getMessageFromSession();
 		return $this->message;
 	}
 	
@@ -996,17 +1013,7 @@ class Form extends RequestHandler {
 	 * @return string
 	 */
 	public function MessageType() {
-		$this->getMessageFromSession();
 		return $this->messageType;
-	}
-
-	protected function getMessageFromSession() {
-		if($this->message || $this->messageType) {
-			return $this->message;
-		}else{
-			$this->message = Session::get("FormInfo.{$this->FormName()}.formError.message");
-			$this->messageType = Session::get("FormInfo.{$this->FormName()}.formError.type");
-		}
 	}
 
 	/**
@@ -1028,24 +1035,64 @@ class Form extends RequestHandler {
 	 * @param type Should be set to good, bad, or warning.
 	 */
 	public function sessionMessage($message, $type) {
-		Session::set("FormInfo.{$this->FormName()}.formError.message", $message);
-		Session::set("FormInfo.{$this->FormName()}.formError.type", $type);
+		// Benign message
+		if($type == "good") {
+			$this->getSessionValidationResult()->addMessage($message, null, null, $type);
+
+		// Bad message causing a validation error
+		} else {
+			$this->getSessionValidationResult()->error($message, null, null, $type);
+		}
 	}
 
+	/**
+	 * @deprecated 3.1
+	 */
 	public static function messageForForm( $formName, $message, $type ) {
-		Session::set("FormInfo.{$formName}.formError.message", $message);
-		Session::set("FormInfo.{$formName}.formError.type", $type);
+		Deprecation::notice('3.1', 'Create an instance of the form you wish to attach a message to.');
+	}
+
+	/**
+	 * Returns the ValidationResult stored in the session.
+	 * You can use this to modify messages without throwing a ValidationException.
+	 * If a ValidationResult doesn't yet exist, a new one will be created
+	 * 
+	 * @return ValidationResult The ValidationResult object stored in the session
+	 */
+	public function getSessionValidationResult() {
+		$result = Session::get("FormInfo.{$this->FormName()}.result");
+
+		if(!$result || !($result instanceof ValidationResult)) {
+			$result = new ValidationResult;
+			Session::set("FormInfo.{$this->FormName()}.result", $result);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Sets the ValidationResult in the session to be used with the next view of this form.
+	 * @param ValidationResult $result              The result to save
+	 * @param boolean          $combineWithExisting If true, then this will be added to the existing result.
+	 */
+	public function setSessionValidationResult(ValidationResult $result, $combineWithExisting = false) {
+		if($combineWithExisting) {
+			$existingResult = $this->getSessionValidationResult();
+			$existingResult->combineAnd($result);
+		
+		} else {
+			Session::set("FormInfo.{$this->FormName()}.result", $result);
+		}
 	}
 
 	public function clearMessage() {
 		$this->message  = null;
-		Session::clear("FormInfo.{$this->FormName()}.errors");
-		Session::clear("FormInfo.{$this->FormName()}.formError");
+		Session::clear("FormInfo.{$this->FormName()}.result");
 		Session::clear("FormInfo.{$this->FormName()}.data");
 	}
 	public function resetValidation() {
-		Session::clear("FormInfo.{$this->FormName()}.errors");
 		Session::clear("FormInfo.{$this->FormName()}.data");
+		Session::clear("FormInfo.{$this->FormName()}.result");
 	}
 
 	/**
@@ -1070,27 +1117,50 @@ class Form extends RequestHandler {
 
 	/**
 	 * Processing that occurs before a form is executed.
-	 * This includes form validation, if it fails, we redirect back
-	 * to the form with appropriate error messages.
+	 * 
+	 * This includes form validation, if it fails, we throw a ValidationException
 	 * Triggered through {@link httpSubmission()}.
+	 * 
 	 * Note that CSRF protection takes place in {@link httpSubmission()},
 	 * if it fails the form data will never reach this method.
 	 * 
 	 * @return boolean
 	 */
-	public function validate(){
+	public function validate() {
+		$result = $this->validationResult();
+
+		// Valid
+		if($result->valid()) {
+			return true;
+
+		// Invalid
+		} else {
+			$this->saveFormErrorsToSession($result, $this->getData());
+			return false;
+		}
+	}
+
+	/**
+	 * Experimental method - return a ValidationResult for the validator
+	 * @return [type] [description]
+	 */
+	private function validationResult() {
+		// Start with a "valid" validation result
+		$result = new ValidationResult;
+
+		// Opportunity to invalidate via validator
 		if($this->validator){
 			$errors = $this->validator->validate();
 
-			if($errors){
-				// Load errors into session and post back
-				$data = $this->getData();
-				Session::set("FormInfo.{$this->FormName()}.errors", $errors); 
-				Session::set("FormInfo.{$this->FormName()}.data", $data);
-				return false;
+			// Convert the old-style Validator result into a ValidationResult
+			if($errors) {
+				foreach($errors as $error) {
+					$result->error($error['message'], null, $error['fieldName'], $error['messageType']);
+				}
 			}
 		}
-		return true;
+
+		return $result;
 	}
 
 	const MERGE_DEFAULT = 0;

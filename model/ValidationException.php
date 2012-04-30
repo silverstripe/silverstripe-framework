@@ -27,26 +27,31 @@ class ValidationException extends Exception {
 	 * the error code number.
 	 * @param integer $code The error code number, if not given in the second parameter
 	 */
-	public function __construct($result = null, $message = null, $code = 0) {
-		
-		// Check arguments
-		if(!($result instanceof ValidationResult)) {
-			
-			// Shift parameters if no ValidationResult is given
-			$code = $message;
-			$message = $result;
-			
-			// Infer ValidationResult from parameters
-			$result = new ValidationResult(false, $message);
-		} elseif(empty($message)) {
-			
-			// Infer message if not given
-			$message = $result->message();
+	public function __construct($result = null, $code = 0, $dummy = null) {
+		$exceptionMessage = null;
+
+		// Backwards compatibiliy failover.  The 2nd argument used to be $message, and $code the 3rd.
+		// For callers using that, we ditch the message
+		if(!is_numeric($code)) {
+			$exceptionMessage = $code;
+			if($dummy) $code = $dummy;
+		}
+
+		if($result instanceof ValidationResult) {
+			$this->result = $result;
+
+		} else if(is_string($result)) {
+			$this->result = new ValidationResult(false, $result);
+
+		} else if(!$result) {
+			$this->result = new ValidationResult(false, _t("ValdiationExcetpion.DEFAULT_ERROR", "Validation error"));
+
+		} else {
+			throw new InvalidArgumentException("ValidationExceptions must be passed a ValdiationResult, a string, or nothing at all");
 		}
 		
 		// Construct
-		$this->result = $result;
-		parent::__construct($message, $code);
+		parent::__construct($exceptionMessage ? $exceptionMessage : $this->result->message(), $code);
 	}
 	
 	/**
