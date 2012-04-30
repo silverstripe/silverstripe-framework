@@ -1015,23 +1015,10 @@ class Form extends RequestHandler {
 			$errors = $this->validator->validate();
 
 			if($errors){
-				if(Director::is_ajax() && $this->validator->getJavascriptValidationHandler() == 'prototype') {
-					FormResponse::status_message(_t('Form.VALIDATIONFAILED', 'Validation failed'), 'bad');
-					foreach($errors as $error) {
-						FormResponse::add(sprintf(
-							"validationError('%s', '%s', '%s');\n",
-							Convert::raw2js($error['fieldName']),
-							Convert::raw2js($error['message']),
-							Convert::raw2js($error['messageType'])
-						));
-					}
-				} else {
-					$data = $this->getData();
-
-					// Load errors into session and post back
-					Session::set("FormInfo.{$this->FormName()}.errors", $errors); 
-					Session::set("FormInfo.{$this->FormName()}.data", $data);
-				}
+				// Load errors into session and post back
+				$data = $this->getData();
+				Session::set("FormInfo.{$this->FormName()}.errors", $errors); 
+				Session::set("FormInfo.{$this->FormName()}.data", $data);
 				return false;
 			}
 		}
