@@ -212,7 +212,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$fields = Config::inst()->get($class, 'db', Config::UNINHERITED);
 		
 		foreach(self::composite_fields($class, false) as $fieldName => $fieldClass) {
-			// Remove the original fieldname, its not an actual database column
+			// Remove the original fieldname, it's not an actual database column
 			unset($fields[$fieldName]);
 			
 			// Add all composite columns
@@ -362,6 +362,19 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				else $this->record[$k] = $v;
 			}
 		}
+
+		// Identify fields that should be lazy loaded, but only on existing records
+		if(!empty($record['ID'])) {
+			$currentObj = get_class($this);
+			while($currentObj != 'DataObject') {
+				$fields = self::custom_database_fields($currentObj);
+				foreach($fields as $field => $type) {
+					if(!array_key_exists($field, $record)) $this->record[$field.'_Lazy'] = $currentObj;
+				}
+				$currentObj = get_parent_class($currentObj);
+			}
+		}
+
 		$this->original = $this->record;
 
 		// Keep track of the modification date of all the data sourced to make this page
@@ -413,7 +426,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	function duplicate($doWrite = true) {
 		$className = $this->class;
-		$clone = new $className( $this->record, false, $this->model );
+		$clone = new $className( $this->toMap(), false, $this->model );
 		$clone->ID = 0;
 		
 		$clone->extend('onBeforeDuplicate', $this, $doWrite);
@@ -707,6 +720,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array The data as a map.
 	 */
 	public function toMap() {
+		foreach ($this->record as $key => $value) {
+			if (strlen($key) > 5 && substr($key, -5) == '_Lazy') {
+				$this->loadLazyFields($value);
+				break;
+			}
+		}
+
 		return $this->record;
 	}
 
@@ -874,7 +894,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		foreach($fieldNames as $fieldName) {
 			if(!isset($this->changed[$fieldName])) $this->changed[$fieldName] = 1;
 			// Populate the null values in record so that they actually get written
-			if(!isset($this->record[$fieldName])) $this->record[$fieldName] = null;
+			if(!$this->$fieldName) $this->record[$fieldName] = null;
 		}
 		
 		// @todo Find better way to allow versioned to write a new version after forceChange
@@ -1509,7 +1529,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$classes = ClassInfo::ancestry($this);
 		$good = false;
 		$items = array();
-		
+
 		foreach($classes as $class) {
 			// Wait until after we reach DataObject
 			if(!$good) {
@@ -1930,7 +1950,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function getField($field) {
 		// If we already have an object in $this->record, then we should just return that
 		if(isset($this->record[$field]) && is_object($this->record[$field]))  return $this->record[$field];
-		
+
+		// Do we have a field that needs to be lazy loaded?
+		if(isset($this->record[$field.'_Lazy'])) {
+			$tableClass = $this->record[$field.'_Lazy'];
+			$this->loadLazyFields($tableClass);
+		}
+
 		// Otherwise, we need to determine if this is a complex field
 		if(self::is_composite_field($this->class, $field)) {
 			$helper = $this->castingHelper($field);
@@ -1950,12 +1976,64 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Return a map of all the fields for this record.
+	 * Return a map of all the fields for this record
+	 * @deprecated 2.4 Use toMap()
 	 *
 	 * @return array A map of field names to field values.
 	 */
 	public function getAllFields() {
-		return $this->record;
+		return $this->toMap();
+	}
+
+	/**
+	 * Loads all the stub fields than an initial lazy load didn't load fully.
+	 *
+	 * @param tableClass Base table to load the values from. Others are joined as required.
+	 */
+
+	protected function loadLazyFields($tableClass = null) {
+		// Smarter way to work out the tableClass? Should the functionality in toMap and getField be moved into here?
+		if (!$tableClass) $tableClass = $this->ClassName;
+
+		$dataQuery = new DataQuery($tableClass);
+		$dataQuery->where("\"$tableClass\".\"ID\" = {$this->record['ID']}")->limit(1);
+		$columns = array();
+
+		// Add SQL for fields, both simple & multi-value
+		// TODO: This is copy & pasted from buildSQL(), it could be moved into a method
+		$databaseFields = self::database_fields($tableClass);
+		if($databaseFields) foreach($databaseFields as $k => $v) {
+			if(!isset($this->record[$k]) || $this->record[$k] === null) {
+				$columns[] = $k;
+			}
+		}
+
+		if ($columns) {
+			$query = $dataQuery->query(); // eh?
+			$this->extend('augmentSQL', $query, $dataQuery);
+
+			$dataQuery->setQueriedColumns($columns);
+			$newData = $dataQuery->execute()->record();
+
+			// Load the data into record
+			if($newData) {
+				foreach($newData as $k => $v) {
+					if (in_array($k, $columns)) {
+						$this->record[$k] = $v;
+						$this->original[$k] = $v;
+						unset($this->record[$k . '_Lazy']);
+					}
+				}
+
+			// No data means that the query returned nothing; assign 'null' to all the requested fields
+			} else {
+				foreach($columns as $k) {
+					$this->record[$k] = null;
+					$this->original[$k] = null;
+					unset($this->record[$k . '_Lazy']);
+				}
+			}
+		}
 	}
 
 	/**
@@ -2047,6 +2125,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Situation 1: Passing an DBField
 		if($val instanceof DBField) {
 			$val->Name = $fieldName;
+
+			// If we've just lazy-loaded the column, then we need to populate the $original array by
+			// called getField(). Too much overhead? Could this be done by a quicker method? Maybe only
+			// on a call to getChanged()?
+			if (isset($this->record[$fieldName.'_Lazy'])) {
+				$this->getField($fieldName);
+			}
+
 			$this->record[$fieldName] = $val;
 		// Situation 2: Passing a literal or non-DBField object
 		} else {
@@ -2068,7 +2154,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					$this->changed[$fieldName] = 2;
 				}
 
-				// value is always saved back when strict check succeeds
+				// If we've just lazy-loaded the column, then we need to populate the $original array by
+				// called getField(). Too much overhead? Could this be done by a quicker method? Maybe only
+				// on a call to getChanged()?
+				if (isset($this->record[$fieldName.'_Lazy'])) {
+					$this->getField($fieldName);
+				}
+
+				// Value is always saved back when strict check succeeds.
 				$this->record[$fieldName] = $val;
 			}
 		}
@@ -2107,8 +2200,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function hasField($field) {
 		return (
-			array_key_exists($field, $this->record) 
+			array_key_exists($field, $this->record)
 			|| $this->db($field)
+			|| (substr($field,-2) == 'ID') && $this->has_one(substr($field,0, -2))
 			|| $this->hasMethod("get{$field}")
 		);
 	}
@@ -2391,7 +2485,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			
 		// Special case for has_one relationships
 		} else if(preg_match('/ID$/', $fieldName) && $this->has_one(substr($fieldName,0,-2))) {
-			$val = (isset($this->record[$fieldName])) ? $this->record[$fieldName] : null;
+			$val = $this->$fieldName;
 			return DBField::create_field('ForeignKey', $val, $fieldName, $this);
 			
 		// Special case for ClassName
@@ -2496,7 +2590,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function buildSQL($filter = "", $sort = "", $limit = "", $join = "", $restrictClasses = true, $having = "") {
 		Deprecation::notice('3.0', 'Use DataList::create and DataList to do your querying instead.');
 		return $this->extendedSQL($filter, $sort, $limit, $join, $having);
-
 	}
 
 	/**

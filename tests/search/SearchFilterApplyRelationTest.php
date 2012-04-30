@@ -153,7 +153,7 @@ class SearchFilterApplyRelationTest_HasManyParent extends DataObject implements 
 }
 
 class SearchFilterApplyRelationTest_HasManyChild extends SearchFilterApplyRelationTest_HasManyParent implements TestOnly {
-	// This is to create an seperate Table only.
+	// This is to create an separate Table only.
 	static $db = array(
 		"ChildField" => "Varchar"
 	);
