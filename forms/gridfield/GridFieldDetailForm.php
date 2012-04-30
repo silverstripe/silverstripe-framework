@@ -147,6 +147,20 @@ class GridFieldDetailForm implements GridField_URLHandler {
 			return 'GridFieldItemRequest_ItemRequest';
 		}
 	}
+
+	/**
+	 * @param function $cb Make changes on the edit form after constructing it.
+	 */
+	public function setItemEditFormCallback($cb) {
+		$this->itemEditFormCallback = $cb;
+	}
+
+	/**
+	 * @return function
+	 */
+	public function getItemEditFormCallback() {
+		return $this->itemEditFormCallback;
+	}
 }
 
 class GridFieldDetailForm_ItemRequest extends RequestHandler {
@@ -296,6 +310,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			// e.g. page/edit/show/6/ vs. page/edit/EditForm/field/MyGridField/....
 			$form->Backlink = $toplevelController->Link();
 		}
+
+		$cb = $this->component->getItemEditFormCallback();
+		if($cb) $cb($form, $this);
+
 		return $form;
 	}
 

@@ -133,6 +133,25 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$component->setItemRequestClass('GridFieldDetailFormTest_ItemRequest');
 		$this->assertEquals('GridFieldDetailFormTest_ItemRequest', $component->getItemRequestClass());
 	}
+
+	function testItemEditFormCallback() {
+		$category = new GridFieldDetailFormTest_Category();
+		$component = new GridFieldDetailForm();
+		$component->setItemEditFormCallback(function($form, $component) {
+			$form->Fields()->push(new HiddenField('Callback'));
+		});
+		// Note: A lot of scaffolding to execute the tested logic,
+		// due to the coupling of form creation with request handling (and its context)
+		$request = new GridFieldDetailForm_ItemRequest(
+			GridField::create('Categories', 'Categories'),
+			$component,
+			$category,
+			new Controller(),
+			'Form'
+		);
+		$form = $request->ItemEditForm();
+		$this->assertNotNull($form->Fields()->fieldByName('Callback'));
+	}
 }
 
 class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
