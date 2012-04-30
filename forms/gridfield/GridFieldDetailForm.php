@@ -149,14 +149,14 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	}
 
 	/**
-	 * @param function $cb Make changes on the edit form after constructing it.
+	 * @param Closure $cb Make changes on the edit form after constructing it.
 	 */
-	public function setItemEditFormCallback($cb) {
+	public function setItemEditFormCallback(Closure $cb) {
 		$this->itemEditFormCallback = $cb;
 	}
 
 	/**
-	 * @return function
+	 * @return Closure
 	 */
 	public function getItemEditFormCallback() {
 		return $this->itemEditFormCallback;
