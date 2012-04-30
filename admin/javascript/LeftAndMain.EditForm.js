@@ -147,6 +147,16 @@
 				return false;
 			},
 
+			onkeydown: function(e) {
+				if(e.which == 13) {
+					// Submit the form with the first action button if enter key is pressed.
+					// Avoids browsers auto-selecting the first button available,
+					// which might be on a form field, e.g. an UploadField popup trigger.
+					var btn = this.find('.Actions .action:first');
+					this.trigger('submit', e, btn);
+				}
+			},
+
 			/**
 			 * Function: validate
 			 * 
