@@ -1135,7 +1135,12 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			asort($groupsMap);
 			$fields->addFieldToTab('Root.Main',
 				ListboxField::create('DirectGroups', singleton('Group')->i18n_plural_name())
-					->setMultiple(true)->setSource($groupsMap)
+					->setMultiple(true)
+					->setSource($groupsMap)
+					->setAttribute(
+						'data-placeholder', 
+						_t('Member.ADDGROUP', 'Add group', 'Placeholder text for a dropdown')
+					)
 			);
 
 			// Add permission field (readonly to avoid complicated group assignment logic).
