@@ -572,6 +572,17 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		return $clone->where("$SQL_col = '" . Convert::raw2sql($value) . "'")->First();
 	}
 	
+	/**
+	 * Restrict the columns to fetch into this DataList
+	 *
+	 * @param array $queriedColumns
+	 * @return DataList
+	 */
+	public function setQueriedColumns($queriedColumns) {
+		$clone = clone $this;
+		$clone->dataQuery->setQueriedColumns($queriedColumns);
+		return $clone;
+	}
 
 	/**
 	 * Filter this list to only contain the given Primary IDs
