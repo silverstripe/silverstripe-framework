@@ -149,9 +149,9 @@ class Versioned extends DataExtension {
 				
 				// Add all <basetable>_versions columns
 				foreach(self::$db_for_versions_table as $name => $type) {
-					$query->select[] = sprintf('"%s_versions"."%s"', $baseTable, $name);
+					$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 				}
-				$query->select[] = sprintf('"%s_versions"."%s" AS "ID"', $baseTable, 'RecordID');
+				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
 
 				if($table != $baseTable) {
 					$query->from[$table] .= " AND \"{$table}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
@@ -195,9 +195,9 @@ class Versioned extends DataExtension {
 		
     		// Add all <basetable>_versions columns
     		foreach(self::$db_for_versions_table as $name => $type) {
-    			$query->selectMore(sprintf('"%s_versions"."%s"', $baseTable, $name));
+    			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
     		}
-    		$query->selectMore(sprintf('"%s_versions"."%s" AS "ID"', $baseTable, 'RecordID'));
+    		$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
     		
     		// latest_version has one more step
     	    // Return latest version instances, regardless of whether they are on a particular stage
@@ -722,7 +722,7 @@ class Versioned extends DataExtension {
 		
 		// Add all <basetable>_versions columns
 		foreach(self::$db_for_versions_table as $name => $type) {
-			$query->select[] = sprintf('"%s_versions"."%s"', $baseTable, $name);
+			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 		}
 		
 		$query->where[] = "\"{$baseTable}_versions\".\"RecordID\" = '{$this->owner->ID}'";

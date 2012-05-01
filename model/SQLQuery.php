@@ -114,6 +114,14 @@ class SQLQuery {
 	}
 	
 	/**
+	 * Clear the selected fields to start over
+	 */
+	function clearSelect() {
+		$this->select = array();
+		return $this;
+	}
+	
+	/**
 	 * Specify the list of columns to be selected by the query.
 	 *
 	 * <code>
@@ -129,10 +137,13 @@ class SQLQuery {
 	 */
 	public function select($fields) {
 		if (func_num_args() > 1) {
-			$this->select = func_get_args();
-		} else {
-			$this->select = is_array($fields) ? $fields : array($fields);
+			$fields = func_get_args();
+		} else if(!is_array($fields)) {
+			$fields = array($fields);
 		}
+
+		$this->select = array();
+		$this->selectMore($fields);
 		
 		return $this;
 	}
@@ -143,29 +154,45 @@ class SQLQuery {
 	 * @param array|string
 	 */
 	public function selectMore($fields) {
-		if(func_num_args() > 1) $fields = func_get_args();
-		
-		if(is_array($fields)) {
-			foreach($fields as $field) {
-				$this->select[] = $field;
-			}
-		} else {
-			$this->select[] = $fields;
+		if (func_num_args() > 1) {
+			$fields = func_get_args();
+		} else if(!is_array($fields)) {
+			$fields = array($fields);
 		}
+		
+		$this->select = array();
+		foreach($fields as $idx => $field) {
+			if(preg_match('/^(.*) +AS +"?([^"]*)"?/i', $field, $matches)) {
+				Deprecation::notice("3.0", "Use selectField() to specify column aliases");
+				$this->selectField($matches[1], $matches[2]);
+			} else {
+				$this->selectField($field, is_numeric($idx) ? null : $idx);
+			}
+		}
+	}
+	
+	/**
+	 * Select an additional field
+	 *
+	 * @param $field The field to select
+	 * @param $alias The alias of that field
+	 */
+	public function selectField($field, $alias = null) {
+		if(!$alias) {
+			if(preg_match('/"([^"]+)"$/', $field, $matches)) $alias = $matches[1];
+			else $alias = $field;
+		}
+		$this->select[$alias] = $field;
 	}
 
 	/**
-	 * Return the SQL expression for the given field
+	 * Return the SQL expression for the given field alias.
+	 * Returns null if the given alias doesn't exist.
 	 *
 	 * @todo This should be refactored after $this->select is changed to make that easier
 	 */
 	public function expressionForField($field) {
-		foreach($this->select as $sel) {
-			if(preg_match('/AS +"?([^"]*)"?/i', $sel, $matches)) $selField = $matches[1];
-			else if(preg_match('/"([^"]*)"\."([^"]*)"/', $sel, $matches)) $selField = $matches[2];
-			else if(preg_match('/"?([^"]*)"?/', $sel, $matches)) $selField = $matches[2];
-			if($selField == $field) return $sel;
-		}
+		return isset($this->select[$field]) ? $this->select[$field] : null;
 	}
 	
 	/**
@@ -317,13 +344,12 @@ class SQLQuery {
 			else {
 				$sort = explode(",", $clauses);
 			}
-			
+
 			$clauses = array();
 			
 			foreach($sort as $clause) {
-				$clause = explode(" ", trim($clause));
-				$dir = (isset($clause[1])) ? $clause[1] : $direction;
-				$clauses[$clause[0]] = $dir;
+				list($column, $direction) = $this->getDirectionFromString($clause, $direction);
+				$clauses[$column] = $direction;
 			}
 		}
 		
@@ -331,16 +357,13 @@ class SQLQuery {
 			foreach($clauses as $key => $value) {
 				if(!is_numeric($key)) {
 					$column = trim($key);
-					$direction = strtoupper(trim($value));
+					$columnDir = strtoupper(trim($value));
 				}
 				else {
-					$clause = explode(" ", trim($value));
-					
-					$column = trim($clause[0]);
-					$direction = (isset($clause[1])) ? strtoupper(trim($clause[1])) : "";
+					list($column, $columnDir) = $this->getDirectionFromString($value);
 				}
 				
-				$this->orderby[$column] = $direction;
+				$this->orderby[$column] = $columnDir;
 			}
 		}
 		else {
@@ -354,16 +377,16 @@ class SQLQuery {
 		// directly in the ORDER BY
 		if($this->orderby) {
 			$i = 0;
-			
 			foreach($this->orderby as $clause => $dir) {
-				if(strpos($clause, '(') !== false) {
+				// Function calls and multi-word columns like "CASE WHEN ..."
+				if(strpos($clause, '(') !== false || strpos($clause, " ") !== false ) {
 					// remove the old orderby
 					unset($this->orderby[$clause]);
 					
 					$clause = trim($clause);
 					$column = "_SortColumn{$i}";
 					
-					$this->select(sprintf("%s AS \"%s\"", $clause, $column));
+					$this->selectField($clause, $column);
 					$this->orderby($column, $dir, false);
 					$i++;
 				}
@@ -373,6 +396,22 @@ class SQLQuery {
 		return $this;
 	}
 	
+	/**
+	 * Extract the direction part of a single-column order by clause.
+	 * 
+	 * Return a 2 element array: array($column, $direction)
+	 */
+	private function getDirectionFromString($value, $defaultDirection = null) {
+		if(preg_match('/^(.*)(asc|desc)$/i', $value, $matches)) {
+			$column = trim($matches[1]);
+			$direction = strtoupper($matches[2]);
+		} else {
+			$column = $value;
+			$direction = $defaultDirection ? $defaultDirection : "ASC";
+		}
+		return array($column, $direction);
+	}
+
 	/**
 	 * Returns the current order by as array if not already. To handle legacy
 	 * statements which are stored as strings. Without clauses and directions, 
@@ -542,6 +581,29 @@ class SQLQuery {
 		Deprecation::notice('3.0', 'Please use prepareWhere() instead of getFilter()');
 		return $this->prepareWhere();
 	}
+	
+	/**
+	 * Return an itemised select list as a map, where keys are the aliases, and values are the column sources.
+	 * Aliases will always be provided (if the alias is implicit, the alias value will be inferred), and won't be quoted.
+	 * E.g., 'Title' => '"SiteTree"."Title"'.
+	 */
+	public function itemisedSelect() {
+		return $this->select;
+	}
+
+	/**
+	 * Returns the WHERE clauses ready for inserting into a query.
+	 * @return string
+	 */
+	public function prepareSelect() {
+		$clauses = array();
+		foreach($this->select as $alias => $field) {
+			// Don't include redundant aliases.
+			if($alias === $field || preg_match('/"' . preg_quote($alias) . '"$/', $field)) $clauses[] = $field;
+			else $clauses[] = "$field AS \"$alias\"";
+		}
+		return implode(", ", $clauses);
+	}
 
 	/**
 	 * Returns the WHERE clauses ready for inserting into a query.
@@ -696,7 +758,7 @@ class SQLQuery {
 		if($column == null) {
 			if($this->groupby) {
 				$countQuery = new SQLQuery();
-				$countQuery->select = array("count(*)");
+				$countQuery->select("count(*)");
 				$countQuery->from = array('(' . $clone->sql() . ') all_distinct');
 
 				return $countQuery->execute()->value();
@@ -714,21 +776,11 @@ class SQLQuery {
 
 	/**
 	 * Returns true if this query can be sorted by the given field.
-	 * Note that the implementation of this method is a little crude at the moment, it wil return
-	 * "false" more often that is strictly necessary.
 	 */
 	function canSortBy($fieldName) {
 		$fieldName = preg_replace('/(\s+?)(A|DE)SC$/', '', $fieldName);
 		
-		$sql = $this->sql();
-	
-		$selects = $this->select;
-		foreach($selects as $i => $sel) {
-			if (preg_match('/"(.*)"\."(.*)"/', $sel, $matches)) $selects[$i] = $matches[2];
-		}
-	
-		$SQL_fieldName = Convert::raw2sql($fieldName);
-		return (in_array($SQL_fieldName,$selects) || stripos($sql,"AS {$SQL_fieldName}"));
+		return isset($this->select[$fieldName]);
 	}
 
 
@@ -770,22 +822,20 @@ class SQLQuery {
 
     /**
      * Return a new SQLQuery that calls the given aggregate functions on this data.
-     * @param $columns An aggregate expression, such as 'MAX("Balance")', or an array of them.
+     * @param $column An aggregate expression, such as 'MAX("Balance")', or a set of them.
      */
-    function aggregate($columns) {
-        if(!is_array($columns)) $columns = array($columns);
-
+    function aggregate($column) {
 		if($this->groupby || $this->limit) {
 		    throw new Exception("SQLQuery::aggregate() doesn't work with groupby or limit, yet");
 	    }
-        
-        $clone = clone $this;
+
+		$clone = clone $this;
 		$clone->limit = null;
 		$clone->orderby = null;
 		$clone->groupby = null;
-		$clone->select = $columns;
+		$clone->select($column);
 
-        return $clone;
+		return $clone;
     }
 	
 	/**

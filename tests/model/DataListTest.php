@@ -515,4 +515,18 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals('Bob', $list->last()->Name, 'Last comment should be from Bob');
 		$this->assertEquals('Phil', $list->first()->Name, 'First comment should be from Phil');
 	}
+
+	public function testSortByComplexExpression() {
+		// Test an expression with both spaces and commas
+		// This test also tests that column() can be called with a complex sort expression, so keep using column() below
+		$list = DataObjectTest_Team::get()->sort('CASE WHEN "DataObjectTest_Team"."ClassName" = \'DataObjectTest_SubTeam\' THEN 0 ELSE 1 END, "Title" DESC');
+		$this->assertEquals(array(
+			'Subteam 3',
+			'Subteam 2',
+			'Subteam 1',
+			'Team 3',
+			'Team 2',
+			'Team 1',
+		), $list->column("Title"));
+	}
 }

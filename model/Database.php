@@ -728,9 +728,10 @@ abstract class SS_Database {
 		
 		if($sqlQuery->delete) {
 			$text = "DELETE ";
-		} else if($sqlQuery->select) {
-			$text = "SELECT $distinct" . implode(", ", $sqlQuery->select);
+		} else {
+			$text = "SELECT $distinct" . $sqlQuery->prepareSelect();
 		}
+		
 		if($sqlQuery->from) $text .= " FROM " . implode(" ", $sqlQuery->from);
 		if($sqlQuery->where) $text .= " WHERE (" . $sqlQuery->prepareWhere(). ")";
 		if($sqlQuery->groupby) $text .= " GROUP BY " . $sqlQuery->prepareGroupBy();

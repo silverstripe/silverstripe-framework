@@ -96,8 +96,8 @@ class Money extends DBField implements CompositeDBField {
 	
 	function addToQuery(&$query) {
 		parent::addToQuery($query);
-		$query->select[] = sprintf('"%sAmount"', $this->name);
-		$query->select[] = sprintf('"%sCurrency"', $this->name);
+		$query->selectField(sprintf('"%sAmount"', $this->name));
+		$query->selectField(sprintf('"%sCurrency"', $this->name));
 	}
 
 	function setValue($value, $record = null, $markChanged = true) {
