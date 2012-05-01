@@ -56,7 +56,13 @@
 					if(typeof cookieCollapsed != 'undefined' && cookieCollapsed != null) collapsed = (cookieCollapsed == 'true');
 				} 
 				if(typeof collapsed == 'undefined') collapsed = jQuery(this).hasClass('collapsed');
-				this.togglePanel(!collapsed, true);
+				
+				//Set the filter to be closed
+				if (this.hasClass('filter')) {
+					this.togglePanel(collapsed, true);
+				} else {
+					this.togglePanel(!collapsed, true);
+				}
 				
 				this._super();
 			},
