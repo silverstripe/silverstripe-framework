@@ -69,7 +69,7 @@
 class SimpleImageField extends FileField {
 
 	function __construct($name, $title = null, $value = null) {
-		Deprecation::notice('3.0', "Use UploadField with $myField->allowedExtensions = array('jpg', 'gif', 'png')");
+		Deprecation::notice('3.0', "Use UploadField with \$myField->allowedExtensions = array('jpg', 'gif', 'png')");
 
 		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRightTitle() and setFolderName() instead of constructor arguments');
 
