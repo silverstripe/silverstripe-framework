@@ -162,6 +162,7 @@ class i18nTextCollector extends Object {
 		//Debug::message("Processing Module '{$module}'", false);
 
 		// Search for calls in code files if these exists
+		$fileList = array();
 		if(is_dir("$this->basePath/$module/code")) {
 			$fileList = $this->getFilesRecursive("$this->basePath/$module/code");
 		} else if($module == FRAMEWORK_DIR || substr($module, 0, 7) == 'themes/') {
