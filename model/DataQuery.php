@@ -105,7 +105,6 @@ class DataQuery {
 		}
 
 		$baseClass = array_shift($tableClasses);
-		$select = array("\"$baseClass\".*");
 
 		// Build our intial query
 		$this->query = new SQLQuery(array());
@@ -116,7 +115,6 @@ class DataQuery {
 		}
 
 		$this->query->from("\"$baseClass\"");
-		$this->selectColumnsFromTable($this->query, $baseClass);
 
 		singleton($this->dataClass)->extend('augmentDataQueryCreation', $this->query, $this);
 	}
@@ -154,12 +152,6 @@ class DataQuery {
 
 		$tableNames = array_keys($tableClasses);
 		$baseClass = $tableNames[0];
-
-		// Empty the existing select query of all non-generated selects (eg, random sorts and many-many-extrafields).
-		// Maybe we should remove all fields that exist on this class instead?
-		foreach ($query->select as $name => $column) {
-			if (!is_numeric($name)) unset($query->select[$name]);
-		}
 
 		// Iterate over the tables and check what we need to select from them. If any selects are made (or the table is
 		// required for a select)
