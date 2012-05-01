@@ -63,14 +63,6 @@
 				this._super();
 			},
 			
-			onclick: function(e) {
-				// By default, the whole collapsed area serves as a trigger
-				if(this.data('expandOnClick') && jQuery(this).hasClass('collapsed')) {
-					e.preventDefault();
-					this.expandPanel();
-				}
-			},
-
 			/**
 			 * @param {Boolean} TRUE to expand, FALSE to collapse.
 			 * @param {Boolean} TRUE means that events won't be fired, which is useful for the component initialization phase.

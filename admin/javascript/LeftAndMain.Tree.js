@@ -328,13 +328,16 @@
 		$('.cms-tree-view-modes input.view-mode').entwine({
 			onmatch: function() {
 				// set active by default
-				this.trigger('click');
+				this.redraw();
 				this._super();
 			},
 			onclick: function(e) {
+				this.redraw();
+			},
+			redraw: function(type) {
 				$('.cms-tree')
-					.toggleClass('draggable', $(e.target).val() == 'draggable')
-					.toggleClass('multiple', $(e.target).val() == 'multiselect');
+					.toggleClass('draggable', this.val() == 'draggable')
+					.toggleClass('multiple', this.val() == 'multiselect');
 			}
 		});
 	});
