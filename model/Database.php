@@ -732,7 +732,7 @@ abstract class SS_Database {
 			$text = "SELECT $distinct" . implode(", ", $sqlQuery->select);
 		}
 		if($sqlQuery->from) $text .= " FROM " . implode(" ", $sqlQuery->from);
-		if($sqlQuery->where) $text .= " WHERE (" . $sqlQuery->prepareSelect(). ")";
+		if($sqlQuery->where) $text .= " WHERE (" . $sqlQuery->prepareWhere(). ")";
 		if($sqlQuery->groupby) $text .= " GROUP BY " . $sqlQuery->prepareGroupBy();
 		if($sqlQuery->having) $text .= " HAVING ( " .$sqlQuery->prepareHaving() . " )";
 		if($sqlQuery->orderby) $text .= " ORDER BY " . $sqlQuery->prepareOrderBy();

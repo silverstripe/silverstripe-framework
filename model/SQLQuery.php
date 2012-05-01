@@ -539,28 +539,26 @@ class SQLQuery {
 	}
 
 	public function getFilter() {
-		Deprecation::notice('3.0', 'Please use prepareSelect() instead of getFilter()');
-		return $this->prepareSelect();
+		Deprecation::notice('3.0', 'Please use prepareWhere() instead of getFilter()');
+		return $this->prepareWhere();
 	}
 
 	/**
-	 * Return an SQL WHERE clause to filter a SELECT query.
-	 *
+	 * Returns the WHERE clauses ready for inserting into a query.
 	 * @return string
 	 */
-	public function prepareSelect() {
+	public function prepareWhere() {
 		return ($this->where) ? implode(") {$this->connective} (" , $this->where) : '';
 	}
 	
 	/**
-	 * Returns the ORDER BY columns ready for inserting into a query
-	 *
+	 * Returns the ORDER BY clauses ready for inserting into a query.
 	 * @return string
 	 */
 	public function prepareOrderBy() {
 		$statments = array();
 			
-		if($order = $this->getOrderBy()) {			
+		if($order = $this->getOrderBy()) {
 			foreach($order as $clause => $dir) {
 				$statements[] = trim($clause . ' '. $dir);
 			}
@@ -570,8 +568,7 @@ class SQLQuery {
 	}
 	
 	/**
-	 * Returns the GROUP by columns ready for inserting into a query.
-	 *
+	 * Returns the GROUP BY clauses ready for inserting into a query.
 	 * @return string
 	 */
 	public function prepareGroupBy() {
@@ -579,8 +576,7 @@ class SQLQuery {
 	}
 	
 	/**
-	 * Returns the HAVING columns ready for inserting into a query.
-	 *
+	 * Returns the HAVING clauses ready for inserting into a query.
 	 * @return string
 	 */
 	public function prepareHaving() {
