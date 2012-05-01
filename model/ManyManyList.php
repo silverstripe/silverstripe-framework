@@ -133,7 +133,7 @@ class ManyManyList extends RelationList {
     function removeAll() {
 		$query = $this->dataQuery()->query();
 		$query->delete = true;
-		$query->select = array('*');
+		$query->select(array('*'));
 		$query->from = array("\"$this->joinTable\"");
 		$query->orderby = null;
 		$query->execute();

@@ -189,7 +189,13 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			$this->dataQuery->sort(null, null); // wipe the sort
 			
 			foreach(func_get_arg(0) as $col => $dir) {
-				$this->dataQuery->sort($this->getRelationName($col), $dir, false);
+				// Convert column expressions to SQL fragment, while still allowing the passing of raw SQL fragments.
+				try {
+					$relCol = $this->getRelationName($col);
+				} catch(InvalidArgumentException $e) {
+					$relCol = $col;
+				}
+				$this->dataQuery->sort($relCol, $dir, false);
 			}
 		}
 		
@@ -250,12 +256,16 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 
 	/**
 	 * Translates a Object relation name to a Database name and apply the relation join to 
-	 * the query
+	 * the query.  Throws an InvalidArgumentException if the $field doesn't correspond to a relation
 	 *
 	 * @param string $field
 	 * @return string
 	 */
 	public function getRelationName($field) {
+		if(!preg_match('/^[A-Z0-9._]+$/i', $field)) {
+			throw new InvalidArgumentException("Bad field expression $field");
+		}
+		
 		if(strpos($field,'.') === false) {
 			return '"'.$field.'"';
 		}
