@@ -91,7 +91,7 @@ class RequestHandler extends ViewableData {
 		// Check necessary to avoid class conflicts before manifest is rebuilt
 		if(class_exists('NullHTTPRequest')) $this->request = new NullHTTPRequest();
 		
-		// This will prevent bugs if setModel() isn't called.
+		// This will prevent bugs if setDataModel() isn't called.
 		$this->model = DataModel::inst();
 		
 		parent::__construct();
@@ -100,7 +100,7 @@ class RequestHandler extends ViewableData {
 	/**
 	 * Set the DataModel for this request.
 	 */
-	public function setModel($model) {
+	public function setDataModel($model) {
 		$this->model = $model;
 	}
 	
@@ -134,7 +134,7 @@ class RequestHandler extends ViewableData {
 		}
 	
 		$this->request = $request;
-		$this->setModel($model);
+		$this->setDataModel($model);
 		
 		// We stop after RequestHandler; in other words, at ViewableData
 		while($handlerClass && $handlerClass != 'ViewableData') {

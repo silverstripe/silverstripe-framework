@@ -129,7 +129,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		$this->urlParams = $request->allParams();
 		$this->request = $request;
 		$this->response = new SS_HTTPResponse();
-		$this->setModel($model);
+		$this->setDataModel($model);
 		
 		$this->extend('onBeforeInit');
 

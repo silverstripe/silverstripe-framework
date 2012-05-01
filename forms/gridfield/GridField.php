@@ -586,7 +586,7 @@ class GridField extends FormField {
 		}
 
 		$this->request = $request;
-		$this->setModel($model);
+		$this->setDataModel($model);
 
 		$fieldData = $this->request->requestVar($this->getName());
 		if($fieldData && $fieldData['GridState']) $this->getState(false)->setValue($fieldData['GridState']);

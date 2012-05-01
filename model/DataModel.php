@@ -35,14 +35,14 @@ class DataModel {
 			return clone $this->customDataLists[$class];
 		} else {
 			$list = DataList::create($class);
-			$list->setModel($this);
+			$list->setDataModel($this);
 			return $list;
 		}
 	}
 	
 	function __set($class, $item) {
 		$item = clone $item;
-		$item->setModel($this);
+		$item->setDataModel($this);
 		$this->customDataLists[$class] = $item;
 	}
 	

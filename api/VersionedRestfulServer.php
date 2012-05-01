@@ -12,7 +12,7 @@ class VersionedRestfulServer extends Controller {
 	);
 	
 	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
-		$this->setModel($model);
+		$this->setDataModel($model);
 		Versioned::reading_stage('Live');
 		$restfulserver = new RestfulServer();
 		$response = $restfulserver->handleRequest($request, $model);

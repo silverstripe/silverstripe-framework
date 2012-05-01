@@ -399,7 +399,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Set the DataModel
 	 */
-	function setModel(DataModel $model) {
+	function setDataModel(DataModel $model) {
 		$this->model = $model;
 	}
 
@@ -1328,7 +1328,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$joinField = $this->getRemoteJoinField($componentName, 'has_many');
 		
 		$result = new HasManyList($componentClass, $joinField);
-		if($this->model) $result->setModel($this->model);
+		if($this->model) $result->setDataModel($this->model);
 		$result->setForeignID($this->ID);
 
 		$result = $result->where($filter)->limit($limit)->sort($sort);
@@ -1449,7 +1449,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		$result = new ManyManyList($componentClass, $table, $componentField, $parentField,
 			$this->many_many_extraFields($componentName));
-		if($this->model) $result->setModel($this->model);
+		if($this->model) $result->setDataModel($this->model);
 
 		// If this is called on a singleton, then we return an 'orphaned relation' that can have the
 		// foreignID set elsewhere.
@@ -2626,7 +2626,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 			
 			$result = DataList::create(get_called_class());
-			$result->setModel(DataModel::inst());
+			$result->setDataModel(DataModel::inst());
 			return $result;
 		}
 		
@@ -2641,7 +2641,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$result->limit($limit);
 		}
 		if($join) $result = $result->join($join);
-		$result->setModel(DataModel::inst());
+		$result->setDataModel(DataModel::inst());
 		return $result;
 	}
 	
@@ -2653,10 +2653,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	    if($class) {
 			$list = new DataList($class);
-			$list->setModel(DataModel::inst());
+			$list->setDataModel(DataModel::inst());
 		} else if(isset($this)) {
 			$list = new DataList(get_class($this));
-			$list->setModel($this->model);
+			$list->setDataModel($this->model);
 		}
 	    else throw new InvalidArgumentException("DataObject::aggregate() must be called as an instance method or passed a classname");
 		return $list;
@@ -2752,7 +2752,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 		if(!$cache || !isset(DataObject::$_cache_get_one[$callerClass][$cacheKey])) {
 			$dl = DataList::create($callerClass)->where($filter)->sort($orderby);
-			$dl->setModel(DataModel::inst());
+			$dl->setDataModel(DataModel::inst());
 			$item = $dl->First();
 
 			if($cache) {

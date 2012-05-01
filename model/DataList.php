@@ -46,7 +46,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @param DataModel $model 
 	 */
-	public function setModel(DataModel $model) {
+	public function setDataModel(DataModel $model) {
 		$this->model = $model;
 	}
 	

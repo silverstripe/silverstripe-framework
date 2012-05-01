@@ -1222,17 +1222,15 @@ class DataObjectTest_CEO extends DataObjectTest_Staff {
 }
 
 class DataObjectTest_TeamComment extends DataObject {
-	
 	static $db = array(
-		'Name' => "Varchar",
-		"Comment" => "Text"
+		'Name' => 'Varchar',
+		'Comment' => 'Text'
 	);
-	
+
 	static $has_one = array(
-		'Team' 	=> 'DataObjectTest_Team'
+		'Team' => 'DataObjectTest_Team'
 	);
 }
 
 DataObject::add_extension('DataObjectTest_Team', 'DataObjectTest_Team_Extension');
-
 
