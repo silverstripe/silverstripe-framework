@@ -630,15 +630,15 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			if($controller->isCurrentPage($child)) $classes .= " current";
 			return "<li id=\"record-$child->ID\" data-id=\"$child->ID\" data-ssclass=\"$child->ClassName\" class=\"" . $classes . "\">" .
 				"<ins class=\"jstree-icon\">&nbsp;</ins>" .
-				"<a href=\"" . Controller::join_links($recordController->Link("show"), $child->ID) . "\" title=\"" 
-				. _t('LeftAndMain.PAGETYPE','Page type: ') 
-				. ".$child->class\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($child->TreeTitle) . 
+				"<a href=\"" . Controller::join_links($recordController->Link("show"), $child->ID) . "\" title=\"" .
+				_t('LeftAndMain.PAGETYPE','Page type: ') .
+				"$child->class\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($child->TreeTitle).
 				"</span></a>";
 		};
 		$html = $obj->getChildrenAsUL(
-			"", 
+			"",
 			$titleFn,
-			singleton('CMSPagesController'), 
+			singleton('CMSPagesController'),
 			true, 
 			$childrenMethod,
 			$numChildrenMethod,
