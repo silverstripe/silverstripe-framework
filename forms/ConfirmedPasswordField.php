@@ -247,13 +247,25 @@ class ConfirmedPasswordField extends FormField {
 		if(($this->minLength || $this->maxLength)) {
 			if($this->minLength && $this->maxLength) {
 				$limit = "{{$this->minLength},{$this->maxLength}}";
-				$errorMsg = sprintf(_t('ConfirmedPasswordField.BETWEEN', 'Passwords must be %s to %s characters long.'), $this->minLength, $this->maxLength);
+				$errorMsg = _t(
+					'ConfirmedPasswordField.BETWEEN', 
+					'Passwords must be {min} to {max} characters long.', 
+					array('min' => $this->minLength, 'max' => $this->maxLength)
+				);
 			} elseif($this->minLength) {
 				$limit = "{{$this->minLength}}.*";
-				$errorMsg = sprintf(_t('ConfirmedPasswordField.ATLEAST', 'Passwords must be at least %s characters long.'), $this->minLength);
+				$errorMsg = _t(
+					'ConfirmedPasswordField.ATLEAST', 
+					'Passwords must be at least {min} characters long.', 
+					array('min' => $this->minLength)
+				);
 			} elseif($this->maxLength) {
 				$limit = "{0,{$this->maxLength}}";
-				$errorMsg = sprintf(_t('ConfirmedPasswordField.MAXIMUM', 'Passwords must be at most %s characters long.'), $this->maxLength);
+				$errorMsg = _t(
+					'ConfirmedPasswordField.MAXIMUM', 
+					'Passwords must be at most {max} characters long.', 
+					array('max' => $this->maxLength)
+				);
 			}
 			$limitRegex = '/^.' . $limit . '$/';
 			if(!empty($value) && !preg_match($limitRegex,$value)) {

@@ -44,13 +44,11 @@ class Hierarchy extends DataExtension {
 			if ($node->ParentID==$this->owner->ID) {
 				// Hierarchy is looping.
 				$validationResult->error(
-					sprintf(
-						_t(
-							'Hierarchy.InfiniteLoopNotAllowed',
-							'Infinite loop found within the "%s" hierarchy. Please change the parent to resolve this',
-							'First argument is the class that makes up the hierarchy.'
-						),
-						$this->owner->class
+					_t(
+						'Hierarchy.InfiniteLoopNotAllowed',
+						'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this',
+						'First argument is the class that makes up the hierarchy.',
+						array('type' => $this->owner->class)
 					),
 					'INFINITE_LOOP'
 				);

@@ -70,17 +70,17 @@ class GroupImportForm extends Form {
 		
 		// result message
 		$msgArr = array();
-		if($result->CreatedCount()) $msgArr[] = sprintf(
-			_t('GroupImportForm.ResultCreated', 'Created %d groups'),
-			$result->CreatedCount()
+		if($result->CreatedCount()) $msgArr[] = _t(
+			'GroupImportForm.ResultCreated', 'Created {count} groups',
+			array('count' => $result->CreatedCount())
 		);
-		if($result->UpdatedCount()) $msgArr[] = sprintf(
-			_t('GroupImportForm.ResultUpdated', 'Updated %d groups'),
-			$result->UpdatedCount()
+		if($result->UpdatedCount()) $msgArr[] = _t(
+			'GroupImportForm.ResultUpdated', 'Updated %d groups',
+			array('count' => $result->UpdatedCount())
 		);
-		if($result->DeletedCount()) $msgArr[] = sprintf(
-			_t('GroupImportForm.ResultDeleted', 'Deleted %d groups'),
-			$result->DeletedCount()
+		if($result->DeletedCount()) $msgArr[] = _t(
+			'GroupImportForm.ResultDeleted', 'Deleted %d groups',
+			array('count' => $result->DeletedCount())
 		);
 		$msg = ($msgArr) ? implode(',', $msgArr) : _t('MemberImportForm.ResultNone', 'No changes');
 	

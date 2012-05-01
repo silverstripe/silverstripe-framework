@@ -485,12 +485,11 @@ JS;
 		
 		$editLink = Controller::join_links($this->Link(), 'item/' . $childData->ID . '/edit');
 		
-		$message = sprintf(
-			_t('ComplexTableField.SUCCESSADD', 'Added %s %s %s'),
-			$childData->singular_name(),
-			'<a href="' . $editLink . '">' . $childData->Title . '</a>',
-			$closeLink
+		$message = _t(
+			'ComplexTableField.SUCCESSADD2', 'Added {name}',
+			array('name' => $childData->singular_name())
 		);
+		$message .= '<a href="' . $editLink . '">' . $childData->Title . '</a>' . $closeLink;
 		
 		$form->sessionMessage($message, 'good');
 		

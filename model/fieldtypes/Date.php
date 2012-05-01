@@ -191,24 +191,18 @@ class Date extends DBField {
 	function Ago() {
 		if($this->value) {
 			if(strtotime($this->value) == time() || time() > strtotime($this->value)) {
-				return sprintf(
-					_t(
-						'Date.TIMEDIFFAGO',
-						"%s ago",
-						
-						'Natural language time difference, e.g. 2 hours ago'
-					),
-					$this->TimeDiff()
+				return _t(
+					'Date.TIMEDIFFAGO',
+					"{difference} ago",
+					'Natural language time difference, e.g. 2 hours ago',
+					array('difference' => $this->TimeDiff())
 				);
 			} else {
-				return sprintf(
-					_t(
-						'Date.TIMEDIFFIN',
-						"in %s",
-						
-						'Natural language time difference, e.g. in 2 hours'
-					),
-					$this->TimeDiff()
+				return _t(
+					'Date.TIMEDIFFIN',
+					"in {difference}",
+					'Natural language time difference, e.g. in 2 hours',
+					array('difference' => $this->TimeDiff())
 				);
 			}
 		}

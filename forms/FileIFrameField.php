@@ -92,9 +92,11 @@ class FileIFrameField extends FileField {
 				)
 			);
 		} else {
-			return sprintf(_t (
-				'FileIFrameField.ATTACHONCESAVED', '%ss can be attached once you have saved the record for the first time.'
-			), $this->FileTypeName());
+			return _t(
+				'FileIFrameField.ATTACHONCESAVED', 
+				'{type}s can be attached once you have saved the record for the first time.',
+				array('type' => $this->FileTypeName())
+			);
 		}
 	}
 	
@@ -130,9 +132,9 @@ class FileIFrameField extends FileField {
 		$selectFile = _t('FileIFrameField.FROMFILESTORE', 'From the File Store');
 		
 		if($this->AttachedFile() && $this->AttachedFile()->ID) {
-			$title = sprintf(_t('FileIFrameField.REPLACE', 'Replace %s'), $this->FileTypeName());
+			$title = _t('FileIFrameField.REPLACE', 'Replace {type}', array('type' => $this->FileTypeName()));
 		} else {
-			$title = sprintf(_t('FileIFrameField.ATTACH', 'Attach %s'), $this->FileTypeName());
+			$title = _t('FileIFrameField.ATTACH', 'Attach {type}', array('type' => $this->FileTypeName()));
 		}
 		
 		$fileSources = array();
@@ -235,7 +237,7 @@ class FileIFrameField extends FileField {
 			),
 			new FieldList (
 				$deleteButton = new FormAction (
-					'delete', sprintf(_t('FileIFrameField.DELETE', 'Delete %s'), $this->FileTypeName())
+					'delete', _t('FileIFrameField.DELETE', 'Delete {type}', array('type' => $this->FileTypeName()))
 				)
 			)
 		);

@@ -310,9 +310,9 @@ class DateField extends TextField {
 		if(!$valid) {
 			$validator->validationError(
 				$this->name, 
-				sprintf(
-					_t('DateField.VALIDDATEFORMAT2', "Please enter a valid date format (%s)."), 
-					$this->getConfig('dateformat')
+				_t(
+					'DateField.VALIDDATEFORMAT2', "Please enter a valid date format ({format}).", 
+					array('format' => $this->getConfig('dateformat'))
 				), 
 				"validation", 
 				false
@@ -331,9 +331,9 @@ class DateField extends TextField {
 			if(!$this->valueObj->isLater($minDate) && !$this->valueObj->equals($minDate)) {
 				$validator->validationError(
 					$this->name, 
-					sprintf(
-						_t('DateField.VALIDDATEMINDATE', "Your date has to be newer or matching the minimum allowed date (%s)"), 
-						$minDate->toString($this->getConfig('dateformat'))
+					_t(
+						'DateField.VALIDDATEMINDATE', "Your date has to be newer or matching the minimum allowed date ({date})", 
+						array('date' => $minDate->toString($this->getConfig('dateformat')))
 					),
 					"validation", 
 					false
@@ -351,9 +351,9 @@ class DateField extends TextField {
 			if(!$this->valueObj->isEarlier($maxDate) && !$this->valueObj->equals($maxDate)) {
 				$validator->validationError(
 					$this->name, 
-					sprintf(
-						_t('DateField.VALIDDATEMAXDATE', "Your date has to be older or matching the maximum allowed date (%s)"), 
-						$maxDate->toString($this->getConfig('dateformat'))
+					_t(
+						'DateField.VALIDDATEMAXDATE', "Your date has to be older or matching the maximum allowed date ({date})", 
+						array('date' => $maxDate->toString($this->getConfig('dateformat')))
 					),
 					"validation", 
 					false

@@ -494,10 +494,10 @@ class Security extends Controller {
 		$email = Convert::raw2xml(rawurldecode($request->param('ID')) . '.' . $request->getExtension());
 
 		$customisedController = $controller->customise(array(
-			'Title' => sprintf(_t('Security.PASSWORDSENTHEADER', "Password reset link sent to '%s'"), $email),
+			'Title' => _t('Security.PASSWORDSENTHEADER', "Password reset link sent to '{email}'", array('email' => $email)),
 			'Content' =>
 				"<p>" . 
-				sprintf(_t('Security.PASSWORDSENTTEXT', "Thank you! A reset link has been sent to  '%s', provided an account exists for this email address."), $email) .
+				_t('Security.PASSWORDSENTTEXT', "Thank you! A reset link has been sent to '{email}', provided an account exists for this email address.", array('email' => $email)) .
 				"</p>",
 			'Email' => $email
 		));
@@ -571,12 +571,10 @@ class Security extends Controller {
 			if(isset($_REQUEST['h'])) {
 				$customisedController = $controller->customise(
 					array('Content' =>
-						sprintf(
-							_t('Security.NOTERESETLINKINVALID',
-								'<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="%s">here</a> or change your password after you <a href="%s">logged in</a>.</p>'
-							),
-							$this->Link('lostpassword'),
-							$this->link('login')
+						_t(
+							'Security.NOTERESETLINKINVALID',
+							'<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>',
+							array('link1' => $this->Link('lostpassword'), 'link2' => $this->link('login'))
 						)
 					)
 				);
