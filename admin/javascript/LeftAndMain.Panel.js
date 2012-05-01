@@ -55,12 +55,12 @@
 					cookieCollapsed = $.cookie('cms-panel-collapsed-' + this.attr('id'));
 					if(typeof cookieCollapsed != 'undefined' && cookieCollapsed != null) collapsed = (cookieCollapsed == 'true');
 				} 
-				if(typeof collapsed == 'undefined') collapsed = jQuery(this).hasClass('collapsed');
 				
 				//Set the filter to be closed
 				if (this.hasClass('filter')) {
-					this.togglePanel(collapsed, true);
+					this.togglePanel(false, true);
 				} else {
+					if(typeof collapsed == 'undefined') collapsed = jQuery(this).hasClass('collapsed');
 					this.togglePanel(!collapsed, true);
 				}
 				
