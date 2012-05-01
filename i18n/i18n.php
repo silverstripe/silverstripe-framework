@@ -1512,9 +1512,36 @@ class i18n extends Object implements TemplateGlobalProvider {
 		}
 
 		// inject the variables from injectionArray (if present)
-		if ($injectionArray && count($injectionArray) > 0) {
-			foreach($injectionArray as $variable => $injection) {
-				$returnValue = str_replace('{'.$variable.'}', $injection, $returnValue);
+		if($injectionArray) {
+			$regex = '/\{[\w\d]*\}/i';
+			if(!preg_match($regex, $returnValue)) {
+				// Legacy mode: If no injection placeholders are found, 
+				// replace sprintf placeholders in fixed order.
+				$returnValue = vsprintf($returnValue, array_values($injectionArray));
+			} else if(!ArrayLib::is_associative($injectionArray)) {
+				// Legacy mode: If injection placeholders are found,
+				// but parameters are passed without names, replace them in fixed order.
+				$returnValue = preg_replace_callback(
+					$regex, 
+					function($matches) use(&$injectionArray) {
+						return $injectionArray ? array_shift($injectionArray) : '';
+					},
+					$returnValue
+				);
+			} else {
+				// Standard placeholder replacement with named injections and variable order.
+				foreach($injectionArray as $variable => $injection) {
+					$placeholder = '{'.$variable.'}';
+					$returnValue = str_replace($placeholder, $injection, $returnValue, $count);
+					if(!$count) {
+						SS_Log::log(sprintf(
+							"Couldn't find placeholder '%s' in translation string '%s' (id: '%s')",
+							$placeholder,
+							$returnValue,
+							$entity
+						), SS_Log::NOTICE);
+					}
+				}
 			}
 		}
 
