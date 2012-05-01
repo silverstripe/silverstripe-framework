@@ -611,6 +611,10 @@ body.cms {
 	@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2));
 	float: left;
 	position: relative;
+
+	&.filter{
+		padding:0 !important;
+	}
 	
 	.cms-panel-header {
 		clear: both;
@@ -624,6 +628,7 @@ body.cms {
 		width: ($grid-x * 22);
 		padding: 0 $grid-x;
 		overflow: auto;
+		overflow-x:hidden;
 		height:100%;
 		.dropdown select {
 			width:$grid-x * 20;
@@ -1454,8 +1459,10 @@ body.cms-dialog {
  * Search forms (used in AssetAdmin, ModelAdmin, etc)
  * -------------------------------------------- */
 .cms-search-form {
-	overflow: auto;
 	margin-bottom: $grid-y*2;
+	.filter &{
+		margin-bottom:0;
+	}
 }
 
 /** --------------------------------------------
