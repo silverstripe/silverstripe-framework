@@ -844,8 +844,8 @@ class MySQLDatabase extends SS_Database {
 
 		// Make column selection lists
 		$select = array(
-			'SiteTree' => array("ClassName","$baseClasses[SiteTree].ID","ParentID","Title","MenuTitle","URLSegment","Content","LastEdited","Created","_utf8'' AS Filename", "_utf8'' AS Name", "$relevance[SiteTree] AS Relevance", "CanViewType"),
-			'File' => array("ClassName","$baseClasses[File].ID","_utf8'' AS ParentID","Title","_utf8'' AS MenuTitle","_utf8'' AS URLSegment","Content","LastEdited","Created","Filename","Name","$relevance[File] AS Relevance","NULL AS CanViewType"),
+			'SiteTree' => array("ClassName","$baseClasses[SiteTree].\"ID\"","ParentID","Title","MenuTitle","URLSegment","Content","LastEdited","Created","Filename" => "_utf8''", "Name" => "_utf8''", "Relevance" => $relevance['SiteTree'], "CanViewType"),
+			'File' => array("ClassName","$baseClasses[File].\"ID\"","ParentID" => "_utf8''","Title","MenuTitle" => "_utf8''","URLSegment" => "_utf8''","Content","LastEdited","Created","Filename","Name", "Relevance" => $relevance['File'], "CanViewType" => "NULL"),
 		);
 
 		// Process and combine queries
@@ -856,7 +856,7 @@ class MySQLDatabase extends SS_Database {
 
 			// There's no need to do all that joining
 			$query->from = array(str_replace(array('"','`'),'',$baseClasses[$class]) => $baseClasses[$class]);
-			$query->select = $select[$class];
+			$query->select($select[$class]);
 			$query->orderby = null;
 			
 			$querySQLs[] = $query->sql();

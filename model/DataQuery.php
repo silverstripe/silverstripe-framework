@@ -598,7 +598,7 @@ class DataQuery {
 		$subSelect= $subtractQuery->getFinalisedQuery();
 		$fieldExpression = $this->expressionForField($field, $subSelect);
 		$subSelect->clearSelect();
-		$subSelect->selectField($fieldExpression);
+		$subSelect->selectField($fieldExpression, $field);
 		$this->where($this->expressionForField($field, $this).' NOT IN ('.$subSelect->sql().')');
 
 		return $this;
@@ -624,7 +624,7 @@ class DataQuery {
 		$originalSelect = $query->itemisedSelect();
 		$fieldExpression = $this->expressionForField($field, $query);
 		$query->clearSelect();
-		$query->selectField($fieldExpression);
+		$query->selectField($fieldExpression, $field);
 		$this->ensureSelectContainsOrderbyColumns($query, $originalSelect);
 
 		return $query->execute()->column($field);
