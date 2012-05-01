@@ -4,7 +4,7 @@
 
 (function($) {
 	$.entwine('ss', function($){
-		$('#cms-content-tools #Form_SearchForm').entwine({
+		$('.cms-content-tools #Form_SearchForm').entwine({
 			onsubmit: function(e) {
 				//We need to trigger handleStateChange() explicitly, otherwise handleStageChange()
 				//doesn't called if landing from another section of cms
