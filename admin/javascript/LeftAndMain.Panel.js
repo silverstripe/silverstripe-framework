@@ -55,14 +55,10 @@
 					cookieCollapsed = $.cookie('cms-panel-collapsed-' + this.attr('id'));
 					if(typeof cookieCollapsed != 'undefined' && cookieCollapsed != null) collapsed = (cookieCollapsed == 'true');
 				} 
-				
-				//Set the filter to be closed
-				if (this.hasClass('filter')) {
-					this.togglePanel(false, true);
-				} else {
-					if(typeof collapsed == 'undefined') collapsed = jQuery(this).hasClass('collapsed');
-					this.togglePanel(!collapsed, true);
-				}
+				if(typeof collapsed == 'undefined') collapsed = jQuery(this).hasClass('collapsed');
+
+				// Toggle visibility
+				this.togglePanel(!collapsed, true);
 				
 				this._super();
 			},
