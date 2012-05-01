@@ -1488,7 +1488,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		$translatorsByPrio = self::$translators;
 		if(!$translatorsByPrio) $translatorsByPrio = self::get_translators();
 
-		$returnValue = $string; // Fall back to default string argument
+		$returnValue = (is_string($string)) ? $string : ''; // Fall back to default string argument
 
 		foreach($translatorsByPrio as $priority => $translators) {
 			foreach($translators as $name => $translator) {
