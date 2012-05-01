@@ -122,6 +122,17 @@ body.cms {
 			.crumb {
 				display:table-cell;
 				line-height:26px;
+				position:relative;
+				.show-ellipsis {
+					position:absolute;
+					top:0;
+					right:0;
+					display:none;
+					padding-right:5px;
+				}
+			}
+			.crumb.extra-padding {
+				padding-right:15px;
 			}
 		}
 	}

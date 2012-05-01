@@ -559,6 +559,34 @@ jQuery.noConflict();
 			e.preventDefault();
 		}
 	});
+
+	/**
+	 * CMS Breadcrumbs - when breadcrumbs overflow (due to window size), adds ellipsis. 
+	 */
+
+	$('.breadcrumbs-wrapper').entwine({
+		updateEllipsis: function() {
+			this.find('.crumb').each(function() {
+				//checks for height of breadcrumb. If it is greater than 26px then the text is wrapping and so ellipsis are shown.
+				if ($(this).height() > 26) {
+					$(this).find('.show-ellipsis').show();
+					$(this).addClass('extra-padding');
+				} else {
+					$(this).find('.show-ellipsis').hide();
+					$(this).removeClass('extra-padding');
+				}
+			});
+		},
+	});
+	//if window size causes text wrapping in breadcrumbs then updateEllipsis is triggered on page load
+	//otherwise the updateEllipsis function is triggered every time the window is resized.
+	$(document).ready(function(){
+		var breadcrumbs = $('.breadcrumbs-wrapper');
+		$(window).bind('resize', function() {
+			breadcrumbs.updateEllipsis();
+		});
+		breadcrumbs.updateEllipsis();
+	});
 	
 }(jQuery));
 
