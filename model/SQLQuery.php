@@ -343,13 +343,12 @@ class SQLQuery {
 			else {
 				$sort = explode(",", $clauses);
 			}
-			
+
 			$clauses = array();
 			
 			foreach($sort as $clause) {
-				$clause = explode(" ", trim($clause));
-				$dir = (isset($clause[1])) ? $clause[1] : $direction;
-				$clauses[$clause[0]] = $dir;
+				list($column, $direction) = $this->getDirectionFromString($clause, $direction);
+				$clauses[$column] = $direction;
 			}
 		}
 		
@@ -357,16 +356,13 @@ class SQLQuery {
 			foreach($clauses as $key => $value) {
 				if(!is_numeric($key)) {
 					$column = trim($key);
-					$direction = strtoupper(trim($value));
+					$columnDir = strtoupper(trim($value));
 				}
 				else {
-					$clause = explode(" ", trim($value));
-					
-					$column = trim($clause[0]);
-					$direction = (isset($clause[1])) ? strtoupper(trim($clause[1])) : "";
+					list($column, $columnDir) = $this->getDirectionFromString($value);
 				}
 				
-				$this->orderby[$column] = $direction;
+				$this->orderby[$column] = $columnDir;
 			}
 		}
 		else {
@@ -380,9 +376,9 @@ class SQLQuery {
 		// directly in the ORDER BY
 		if($this->orderby) {
 			$i = 0;
-			
 			foreach($this->orderby as $clause => $dir) {
-				if(strpos($clause, '(') !== false) {
+				// Function calls and multi-word columns like "CASE WHEN ..."
+				if(strpos($clause, '(') !== false || strpos($clause, " ") !== false ) {
 					// remove the old orderby
 					unset($this->orderby[$clause]);
 					
@@ -399,6 +395,22 @@ class SQLQuery {
 		return $this;
 	}
 	
+	/**
+	 * Extract the direction part of a single-column order by clause.
+	 * 
+	 * Return a 2 element array: array($column, $direction)
+	 */
+	private function getDirectionFromString($value, $defaultDirection = null) {
+		if(preg_match('/^(.*)(asc|desc)$/i', $value, $matches)) {
+			$column = trim($matches[1]);
+			$direction = strtoupper($matches[2]);
+		} else {
+			$column = $value;
+			$direction = $defaultDirection ? $defaultDirection : "ASC";
+		}
+		return array($column, $direction);
+	}
+
 	/**
 	 * Returns the current order by as array if not already. To handle legacy
 	 * statements which are stored as strings. Without clauses and directions, 

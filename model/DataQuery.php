@@ -229,7 +229,7 @@ class DataQuery {
 	 * @param SQLQuery $query
 	 * @return null
 	 */
-	protected function ensureSelectContainsOrderbyColumns($query) {
+	protected function ensureSelectContainsOrderbyColumns($query, $originalSelect = array()) {
 		$tableClasses = ClassInfo::dataClassesFor($this->dataClass);
 		$baseClass = array_shift($tableClasses);
 
@@ -239,8 +239,13 @@ class DataQuery {
 			foreach($orderby as $k => $dir) {
 				// don't touch functions in the ORDER BY or function calls 
 				// selected as fields
-				if(strpos($k, '(') !== false || preg_match('/_SortColumn/', $k)) 
+				if(strpos($k, '(') !== false) continue;
+				
+				// Pull through SortColumn references from the originalSelect variables
+				if(preg_match('/_SortColumn/', $k)) {
+					if(isset($originalSelect[$k])) $query->selectField($originalSelect[$k], $k);
 					continue;
+				}
 				
 				$col = str_replace('"', '', trim($k));
 				$parts = explode('.', $col);
@@ -616,8 +621,11 @@ class DataQuery {
 	 */
 	public function column($field = 'ID') {
 		$query = $this->getFinalisedQuery(array($field));
-		$query->select($this->expressionForField($field, $query));
-		$this->ensureSelectContainsOrderbyColumns($query);
+		$originalSelect = $query->itemisedSelect();
+		$fieldExpression = $this->expressionForField($field, $query);
+		$query->clearSelect();
+		$query->selectField($fieldExpression);
+		$this->ensureSelectContainsOrderbyColumns($query, $originalSelect);
 
 		return $query->execute()->column($field);
 	}
