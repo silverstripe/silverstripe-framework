@@ -142,19 +142,14 @@
 			 * Suppress submission unless it is handled through ajaxSubmit().
 			 */
 			onsubmit: function(e, button) {
-				this.closest('.cms-content').submitForm(this, button);
+				// Only submit if a button is present.
+				// This supressed submits from ENTER keys in input fields,
+				// which means the browser auto-selects the first available form button.
+				// This might be an unrelated button of the form field,
+				// or a destructive action (if "save" is not available, or not on first position).
+				if(button) this.closest('.cms-content').submitForm(this, button);
 				
 				return false;
-			},
-
-			onkeydown: function(e) {
-				if(e.which == 13) {
-					// Submit the form with the first action button if enter key is pressed.
-					// Avoids browsers auto-selecting the first button available,
-					// which might be on a form field, e.g. an UploadField popup trigger.
-					var btn = this.find('.Actions .action:first');
-					this.trigger('submit', e, btn);
-				}
 			},
 
 			/**
