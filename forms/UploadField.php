@@ -915,15 +915,17 @@ class UploadField_SelectHandler extends RequestHandler {
 		$config->addComponent(new GridFieldDataColumns());
 		$config->addComponent(new GridFieldPaginator(10));
 
-		// Create the data source for the list of files within the current directory.
-		$files = DataList::create('File')->filter('ParentID', $folderID);
-
-		// If relation is to be autoset, make sure only objects from related class are listed.
+		// If relation is to be autoset, we need to make sure we only list compatible objects.
+		$baseClass = null;
 		if ($this->parent->relationAutoSetting) {
-			if ($relationClass = $this->parent->getRelationAutosetClass()) {
-				$files->filter('ClassName', $relationClass);
-			}
+			$baseClass = $this->parent->getRelationAutosetClass();
 		}
+
+		// By default we can attach anything that is a file, or derives from file.
+		if (!$baseClass) $baseClass = 'File';
+
+		// Create the data source for the list of files within the current directory.
+		$files = DataList::create($baseClass)->filter('ParentID', $folderID);
 
 		$fileField = new GridField('Files', false, $files, $config);
 		$fileField->setAttribute('data-selectable', true);
