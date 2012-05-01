@@ -23,14 +23,14 @@ class SQLQueryTest extends SapphireTest {
 	
 	function testSelectFromUserSpecifiedFields() {
 		$query = new SQLQuery();
-		$query->select = array("Name", "Title", "Description");
+		$query->select(array("Name", "Title", "Description"));
 		$query->from[] = "MyTable";
 		$this->assertEquals("SELECT Name, Title, Description FROM MyTable", $query->sql());
 	}
 	
 	function testSelectWithWhereClauseFilter() {
 		$query = new SQLQuery();
-		$query->select = array("Name","Meta");
+		$query->select(array("Name","Meta"));
 		$query->from[] = "MyTable";
 		$query->where[] = "Name = 'Name'";
 		$query->where[] = "Meta = 'Test'";

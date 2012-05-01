@@ -205,8 +205,7 @@ class DataQuery {
 						user_error("Bad collision item '$collision'", E_USER_WARNING);
 					}
 				}
-				$query->select[$k] = "CASE " . implode( " ", $caseClauses) . " ELSE NULL END"
-					.  " AS \"$k\"";
+				$query->selectField("CASE " . implode( " ", $caseClauses) . " ELSE NULL END", $k);
 			}
 		}
 
@@ -221,8 +220,8 @@ class DataQuery {
 			}
 		}
 
-		$query->select[] = "\"$baseClass\".\"ID\"";
-		$query->select[] = "CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE '$baseClass' END AS \"RecordClassName\"";
+		$query->selectField("\"$baseClass\".\"ID\"", "ID");
+		$query->selectField("CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE '$baseClass' END", "RecordClassName");
 
 		// TODO: Versioned, Translatable, SiteTreeSubsites, etc, could probably be better implemented as subclasses of DataQuery
 		singleton($this->dataClass)->extend('augmentSQL', $query, $this);
@@ -274,14 +273,18 @@ class DataQuery {
 						$qualCol = "\"$parts[0]\"";
 					}
 					
+					// To-do: Remove this if block once SQLQuery::$select has been refactored to store itemisedSelect()
+					// format internally; then this check can be part of selectField()
 					if(!isset($query->select[$col]) && !in_array($qualCol, $query->select)) {
-						$query->select[] = $qualCol;
+						$query->selectField($qualCol);
 					}
 				} else {
 					$qualCol = '"' . implode('"."', $parts) . '"';
 					
+					// To-do: Remove this if block once SQLQuery::$select has been refactored to store itemisedSelect()
+					// format internally; then this check can be part of selectField()
 					if(!in_array($qualCol, $query->select)) {
-						$query->select[] = $qualCol;
+						$query->selectField($qualCol);
 					}
 				}
 			}
@@ -367,12 +370,12 @@ class DataQuery {
 		if($databaseFields) foreach($databaseFields as $k => $v) {
 			if((is_null($columns) || in_array($k, $columns)) && !isset($compositeFields[$k])) {
 				// Update $collidingFields if necessary
-				if(isset($query->select[$k])) {
-					if(!isset($this->collidingFields[$k])) $this->collidingFields[$k] = array($query->select[$k]);
+				if($expressionForField = $query->expressionForField($k)) {
+					if(!isset($this->collidingFields[$k])) $this->collidingFields[$k] = array($expressionForField);
 					$this->collidingFields[$k][] = "\"$tableClass\".\"$k\"";
 				
 				} else {
-					$query->select[$k] = "\"$tableClass\".\"$k\"";
+					$query->selectField("\"$tableClass\".\"$k\"", $k);
 				}
 			}
 		}
@@ -596,8 +599,12 @@ class DataQuery {
 	 */
 	public function subtract(DataQuery $subtractQuery, $field='ID') {
 		$subSelect= $subtractQuery->getFinalisedQuery();
-		$subSelect->select($this->expressionForField($field, $subSelect));
+		$fieldExpression = $this->expressionForField($field, $subSelect);
+		$subSelect->clearSelect();
+		$subSelect->selectField($fieldExpression);
 		$this->where($this->expressionForField($field, $this).' NOT IN ('.$subSelect->sql().')');
+
+		return $this;
 	}
 
 	/**
@@ -607,7 +614,9 @@ class DataQuery {
 		$fieldExpressions = array_map(create_function('$item', 
 			"return '\"$table\".\"' . \$item . '\"';"), $fields);
 		
-		$this->select($fieldExpressions);
+		$this->query->select($fieldExpressions);
+
+		return $this;
 	}
 
 	/**
@@ -636,7 +645,7 @@ class DataQuery {
 	 * Clear the selected fields to start over
 	 */
 	public function clearSelect() {
-		$this->query->select = array();
+		$this->query->clearSelect();
 
 		return $this;
 	}
@@ -644,8 +653,8 @@ class DataQuery {
 	/**
 	 * Select the given field expressions.  You must do your own escaping
 	 */
-	protected function select($fieldExpressions) {
-		$this->query->select = array_merge($this->query->select, $fieldExpressions);
+	protected function selectField($fieldExpression, $alias = null) {
+		$this->query->selectField($fieldExpression, $alias);
 	}
 
 	//// QUERY PARAMS

@@ -114,6 +114,14 @@ class SQLQuery {
 	}
 	
 	/**
+	 * Clear the selected fields to start over
+	 */
+	function clearSelect() {
+		$this->select = array();
+		return $this;
+	}
+	
+	/**
 	 * Specify the list of columns to be selected by the query.
 	 *
 	 * <code>
@@ -153,9 +161,26 @@ class SQLQuery {
 			$this->select[] = $fields;
 		}
 	}
+	
+	/**
+	 * Select an additional field
+	 *
+	 * @param $field The field to select
+	 * @param $alias The alias of that field
+	 */
+	public function selectField($field, $alias = null) {
+		// Let's not put unnecessary aliases into the query
+		if($alias && preg_match('/"' . preg_quote($alias) . '"$/', $field)) {
+			$alias = null;
+		}
+		
+		if($alias) $this->select[] = "$field AS \"$alias\"";
+		else $this->select[] = $field;
+	}
 
 	/**
-	 * Return the SQL expression for the given field
+	 * Return the SQL expression for the given field alias.
+	 * Returns null if the given alias doesn't exist.
 	 *
 	 * @todo This should be refactored after $this->select is changed to make that easier
 	 */
@@ -166,6 +191,7 @@ class SQLQuery {
 			else if(preg_match('/"?([^"]*)"?/', $sel, $matches)) $selField = $matches[2];
 			if($selField == $field) return $sel;
 		}
+		return null;
 	}
 	
 	/**
@@ -541,6 +567,29 @@ class SQLQuery {
 	public function getFilter() {
 		Deprecation::notice('3.0', 'Please use prepareWhere() instead of getFilter()');
 		return $this->prepareWhere();
+	}
+	
+	/**
+	 * Return an itemised select list as a map, where keys are the aliases, and values are the column sources.
+	 * Aliases will always be provided (if the alias is implicit, the alias value will be inferred), and won't be quoted.
+	 * E.g., 'Title' => '"SiteTree"."Title"'.
+	 */
+	public function itemisedSelect() {
+		$output = array();
+		foreach($this->select as $item) {
+			$split = preg_split('/ AS /i', $item, 2);
+			if(isset($split[1])) {
+				$source = $split[0];
+				$alias = $split[1];
+			} else {
+				$source = $item;
+				$alias = substr($item,strrpos($item,'.')+1);
+			}
+			// Drop quoting
+			$alias = preg_replace('/^"(.*)"$/','\\1', $alias);
+			$output[$alias] = $source;
+		}
+		return $output;
 	}
 
 	/**
