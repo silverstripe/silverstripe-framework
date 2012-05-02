@@ -44,13 +44,13 @@ class PasswordEncryptorTest extends SapphireTest {
 		$this->assertNotContains('test', array_keys(PasswordEncryptor::get_encryptors()));
 	}
 	
-	function testEncrytorPHPHashWithArguments() {
+	function testEncryptorPHPHashWithArguments() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_md5'=>array('PasswordEncryptor_PHPHash'=>'md5')));
 		$e = PasswordEncryptor::create_for_algorithm('test_md5');
 		$this->assertEquals('md5', $e->getAlgorithm());
 	}
 	
-	function testEncrytorPHPHash() {
+	function testEncryptorPHPHash() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_sha1'=>array('PasswordEncryptor_PHPHash'=>'sha1')));
 		$e = PasswordEncryptor::create_for_algorithm('test_sha1');
 		$password = 'mypassword';
@@ -60,8 +60,19 @@ class PasswordEncryptorTest extends SapphireTest {
 			$e->encrypt($password, $salt)
 		);
 	}
+
+	function testEncryptorBlowfish() {
+		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_blowfish'=>array('PasswordEncryptor_Blowfish'=>'')));
+		$e = PasswordEncryptor::create_for_algorithm('test_blowfish');
+		$password = 'mypassword';
+		$salt = '10$mysaltmustbetwen2char';
+		$this->assertEquals(
+			crypt($password, '$2y$' . $salt), 
+			'$2y$' . $salt . $e->encrypt($password, $salt)
+		);
+	}
 	
-	function testEncrytorPHPHashCompare() {
+	function testEncryptorPHPHashCompare() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_sha1'=>array('PasswordEncryptor_PHPHash'=>'sha1')));
 		$e = PasswordEncryptor::create_for_algorithm('test_sha1');
 		$this->assertTrue($e->compare(sha1('mypassword'), sha1('mypassword')));
@@ -74,7 +85,7 @@ class PasswordEncryptorTest extends SapphireTest {
 	 * Handy command for reproducing via CLI on different architectures:
 	 * 	php -r "echo(base_convert(sha1('mypassword'), 16, 36));"
 	 */
-	function testEncrytorLegacyPHPHashCompare() {
+	function testEncryptorLegacyPHPHashCompare() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_sha1legacy'=>array('PasswordEncryptor_LegacyPHPHash'=>'sha1')));
 		$e = PasswordEncryptor::create_for_algorithm('test_sha1legacy');
 		// precomputed hashes for 'mypassword' from different architectures
