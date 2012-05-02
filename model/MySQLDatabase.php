@@ -1158,18 +1158,10 @@ class MySQLQuery extends SS_Query {
 	public function numRecords() {
 		if(is_object($this->handle)) return $this->handle->num_rows;
 	}
-	
+
 	public function nextRecord() {
-		if(is_object($this->handle) && $data = $this->handle->fetch_row()) {
-			$output = array();
-			$this->handle->field_seek(0);
-			while($field = $this->handle->fetch_field()) {
-				$columnName = $field->name;
-				if(isset($data[$this->handle->current_field-1]) || !isset($output[$columnName])) {
-					$output[$columnName] = $data[$this->handle->current_field-1];
-				}
-			}
-			return $output;
+		if(is_object($this->handle) && ($data = $this->handle->fetch_assoc())) {
+			return $data;
 		} else {
 			return false;
 		}
