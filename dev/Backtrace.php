@@ -33,6 +33,8 @@ class SS_Backtrace {
 		array('PasswordEncryptor_MySQLPassword', 'salt'),
 		array('PasswordEncryptor_MySQLOldPassword', 'encrypt'),
 		array('PasswordEncryptor_MySQLOldPassword', 'salt'),
+		array('PasswordEncryptor_Blowfish', 'encrypt'),
+		array('PasswordEncryptor_Blowfish', 'salt'),
 	);
 	
 	/**
