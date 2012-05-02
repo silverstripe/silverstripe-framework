@@ -51,9 +51,10 @@ class CreditCardField extends TextField {
 				}
 				$validator->validationError(
 					$this->name,
-					sprintf(
-						_t('Form.VALIDATIONCREDITNUMBER', "Please ensure you have entered the %s credit card number correctly."),
-						$number
+					_t(
+						'Form.VALIDATIONCREDITNUMBER', 
+						"Please ensure you have entered the {number} credit card number correctly.",
+						array('number' => $number)
 					),
 					"validation",
 					false

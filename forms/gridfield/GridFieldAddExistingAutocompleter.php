@@ -251,15 +251,15 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 				if($label) $labels[] = $label;
 			}
 			if($labels) {
-				return sprintf(
-					_t('GridField.PlaceHolderWithLabels', 'Find %s by %s', 'Find <object type> by <field names>'), 
-					singleton($dataClass)->plural_name(),
-					implode(', ', $labels)
+				return _t(
+					'GridField.PlaceHolderWithLabels', 
+					'Find {type} by {name}',  
+					array('type' => singleton($dataClass)->plural_name(), 'name' => implode(', ', $labels))
 				);
 			} else {
-				return sprintf(
-					_t('GridField.PlaceHolder', 'Find %s', 'Find <object type>'), 
-					singleton($dataClass)->plural_name()
+				return _t(
+					'GridField.PlaceHolder', 'Find {type}',
+					array('type' => singleton($dataClass)->plural_name())
 				);
 			}
 		}

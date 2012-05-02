@@ -55,7 +55,7 @@ en:
     NO: No
     YES: Yes
   CMSMain:
-    ACCESS: 'Access to ''%s'' section'
+    ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
     ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
     SAVE: Save
@@ -72,7 +72,7 @@ en:
     YES: Yes
   ComplexTableField:
     CLOSEPOPUP: 'Close Popup'
-    SUCCESSADD: 'Added %s %s %s'
+    SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
     SUCCESSEDIT2: 'Deleted %s %s'
   ComplexTableField.ss:
@@ -83,9 +83,9 @@ en:
     NEXT: Next
     PREVIOUS: Previous
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least %s characters long.'
-    BETWEEN: 'Passwords must be %s to %s characters long.'
-    MAXIMUM: 'Passwords must be at most %s characters long.'
+    ATLEAST: 'Passwords must be at least {min} characters long.'
+    BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'Change Password'
   CreditCardField:
     FIRST: first
@@ -108,16 +108,16 @@ en:
     MONTHS: ' months'
     SEC: ' sec'
     SECS: ' secs'
-    TIMEDIFFAGO: '%s ago'
-    TIMEDIFFIN: 'in %s'
+    TIMEDIFFAGO: '{difference} ago'
+    TIMEDIFFIN: 'in {difference}'
     YEAR: ' year'
     YEARS: ' years'
   DateField:
     NOTSET: 'not set'
     TODAY: today
-    VALIDDATEFORMAT2: 'Please enter a valid date format (%s).'
-    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date (%s)'
-    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date (%s)'
+    VALIDDATEFORMAT2: 'Please enter a valid date format ({format}).'
+    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
+    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   DropdownField:
     CHOOSE: (Choose)
   EmailField:
@@ -130,24 +130,24 @@ en:
   File:
     Content: Content
     Filename: Filename
-    INVALIDEXTENSION: 'Extension is not allowed (valid: %s)'
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: Name
     PLURALNAME: Files
     SINGULARNAME: File
-    TOOLARGE: 'Filesize is too large, maximum %s allowed.'
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed.'
     Title: Title
   FileIFrameField:
-    ATTACH: 'Attach %s'
-    ATTACHONCESAVED: '%ss can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete %s'
+    ATTACH: 'Attach {type}'
+    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
     FILE: File
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
-    REPLACE: 'Replace %s'
+    REPLACE: 'Replace {type}'
   FileIFrameField_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   ForgotPasswordEmail.ss:
@@ -157,8 +157,7 @@ en:
     TEXT3: for
   Form:
     FIELDISREQUIRED: '%s is required'
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the %s credit card number correctly.'
-    VALIDATIONFAILED: 'Validation failed'
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly.'
     VALIDATIONNOTUNIQUE: 'The value entered is not unique'
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwords can''t be empty'
@@ -179,8 +178,8 @@ en:
     NoItemsFound: 'No items found'
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Printed by'
-    PlaceHolder: 'Find %s'
-    PlaceHolderWithLabels: 'Find %s by %s'
+    PlaceHolder: 'Find {type}'
+    PlaceHolderWithLabels: 'Find {type} by {name}'
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   GridFieldAction_Delete:
@@ -209,16 +208,17 @@ en:
   GroupImportForm:
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: "<div class=\"advanced\">\n	<h4>Advanced usage</h4>\n	<ul>\n	<li>Allowed columns: <em>%s</em></li>\n	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>\n	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>\n	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>\n	</ul>\n</div>"
-    ResultCreated: 'Created %d groups'
+    ResultCreated: 'Created {count} groups'
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "%s" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
     BUTTONINSERTLINK: 'Insert link'
     BUTTONREMOVELINK: 'Remove link'
+    BUTTONUpdate: Update
     CAPTIONTEXT: 'Caption text'
     CSSCLASS: 'Alignment / style'
     CSSCLASSCENTER: 'Centered, on its own.'
@@ -233,12 +233,12 @@ en:
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     Find: Find
-    IMAGE: 'Insert Image'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
     IMAGEDIMENSIONS: Dimensions
     IMAGEHEIGHTPX: Height
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGEWIDTHPX: Width
+    INSERTIMAGE: 'Insert Image'
     LINK: 'Insert Link'
     LINKANCHOR: 'Anchor on this page'
     LINKDESCR: 'Link description'
@@ -250,6 +250,7 @@ en:
     LINKTO: 'Link to'
     PAGE: Page
     URL: URL
+    UpdateIMAGE: 'Update Image'
   ImageField:
     IMAGE: Image
   Image_iframe.ss:
@@ -270,6 +271,7 @@ en:
     IP: 'IP Address'
     Status: Status
   Member:
+    ADDGROUP: 'Add group'
     ADDRESS: Address
     BUTTONCHANGEPASSWORD: 'Change Password'
     BUTTONLOGIN: 'Log in'
@@ -293,8 +295,8 @@ en:
     FIRSTNAME: 'First Name'
     GREETING: Welcome
     INTERFACELANG: 'Interface Language'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: %s'
-    LOGGEDINAS: 'You''re logged in as %s.'
+    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
+    LOGGEDINAS: 'You''re logged in as {name}.'
     MOBILE: Mobile
     NAME: Name
     NEWPASSWORD: 'New Password'
@@ -308,8 +310,8 @@ en:
     SUBJECTPASSWORDRESET: 'Your password reset link'
     SURNAME: Surname
     VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
-    ValidationIdentifierFailed: 'Can''t overwrite existing member #%d with identical identifier (%s = %s))'
-    WELCOMEBACK: 'Welcome Back, %s'
+    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
+    WELCOMEBACK: 'Welcome Back, {firstname}'
     YOUROLDPASSWORD: 'Your old password'
     belongs_many_many_Groups: Groups
     db_LastVisited: 'Last Visited Date'
@@ -343,37 +345,37 @@ en:
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: "<div class=\"advanced\">\n	<h4>Advanced usage</h4>\n	<ul>\n	<li>Allowed columns: <em>%s</em></li>\n	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>\n	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>\n	</ul>\n</div>"
-    ResultCreated: 'Created %d members'
+    ResultCreated: 'Created {count} members'
     ResultDeleted: 'Deleted %d members'
     ResultNone: 'No changes'
-    ResultUpdated: 'Updated %d members'
+    ResultUpdated: 'Updated {count} members'
   MemberTableField:
     'APPLY FILTER': 'Apply Filter'
   ModelAdmin:
     DELETE: Delete
-    DELETEDRECORDS: 'Deleted %s records.'
+    DELETEDRECORDS: 'Deleted {count} records.'
     IMPORT: 'Import from CSV'
-    IMPORTEDRECORDS: 'Imported %s records.'
+    IMPORTEDRECORDS: 'Imported {count} records.'
     NOCSVFILE: 'Please browse for a CSV file to import'
     NOIMPORT: 'Nothing to import'
     RESET: Reset
-    UPDATEDRECORDS: 'Updated %s records.'
+    UPDATEDRECORDS: 'Updated {count} records.'
   MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
   NullableField:
     IsNullLabel: 'Is Null'
   NumericField:
-    VALIDATION: '''%s'' is not a number, only numbers can be accepted for this field'
+    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
   PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "%s"'
-    FromGroup: 'inherited from group "%s"'
-    FromRole: 'inherited from role "%s"'
+    AssignedTo: 'assigned to "{title}"'
+    FromGroup: 'inherited from group "{title}"'
+    FromRole: 'inherited from role "{title}"'
     FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
@@ -391,10 +393,10 @@ en:
     LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
     LOGIN: 'Log in'
     NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="%s">here</a> or change your password after you <a href="%s">logged in</a>.</p>'
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
     NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''%s'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to  ''%s'', provided an account exists for this email address.'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
     APPLY_ROLES: 'Apply roles to groups'
@@ -440,7 +442,7 @@ en:
   TextareaField_Readonly.ss:
     NONE: none
   TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format (%s)'
+    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleCompositeField.ss:
     HIDE: Hide
     SHOW: Show
@@ -459,7 +461,7 @@ en:
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
     FROMFILES: 'From files'
-    MAXNUMBEROFFILES: 'Max number of %s file(s) exceeded.'
+    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'

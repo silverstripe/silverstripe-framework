@@ -16,9 +16,9 @@ class NumericField extends TextField{
 		if($this->value && !is_numeric(trim($this->value))){
  			$validator->validationError(
  				$this->name,
-				sprintf(
-					_t('NumericField.VALIDATION', "'%s' is not a number, only numbers can be accepted for this field"),
-					$this->value
+				_t(
+					'NumericField.VALIDATION', "'{value}' is not a number, only numbers can be accepted for this field",
+					array('value' => $this->value)
 				),
 				"validation"
 			);

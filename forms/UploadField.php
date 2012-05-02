@@ -348,23 +348,26 @@ class UploadField extends FileField {
 		if (count($this->getValidator()->getAllowedExtensions())) {
 			$allowedExtensions = $this->getValidator()->getAllowedExtensions();
 			$config['acceptFileTypes'] = '(\.|\/)(' . implode('|', $allowedExtensions) . ')$';
-			$config['errorMessages']['acceptFileTypes'] = sprintf(_t(
+			$config['errorMessages']['acceptFileTypes'] = _t(
 				'File.INVALIDEXTENSION', 
-				'Extension is not allowed (valid: %s)'
-			), wordwrap(implode(', ', $allowedExtensions)));
+				'Extension is not allowed (valid: {extensions})',
+				array('extensions' => wordwrap(implode(', ', $allowedExtensions)))
+			);
 		}
 		if ($this->getValidator()->getAllowedMaxFileSize()) {
 			$config['maxFileSize'] = $this->getValidator()->getAllowedMaxFileSize();
-			$config['errorMessages']['maxFileSize'] = sprintf(_t(
+			$config['errorMessages']['maxFileSize'] = _t(
 				'File.TOOLARGE', 
-				'Filesize is too large, maximum %s allowed.'
-			), File::format_size($config['maxFileSize']));
+				'Filesize is too large, maximum {size} allowed.',
+				array('size' => File::format_size($config['maxFileSize']))
+			);
 		}
 		if ($config['maxNumberOfFiles'] > 1) {
-			$config['errorMessages']['maxNumberOfFiles'] = sprintf(_t(
+			$config['errorMessages']['maxNumberOfFiles'] = _t(
 				'UploadField.MAXNUMBEROFFILES', 
-				'Max number of %s file(s) exceeded.'
-			), $config['maxNumberOfFiles']);
+				'Max number of {count} file(s) exceeded.',
+				array('count' => $config['maxNumberOfFiles'])
+			);
 		}
 		$configOverwrite = array();
 		if (is_numeric($config['maxNumberOfFiles']) && $this->getItems()->count()) {
@@ -459,10 +462,11 @@ class UploadField extends FileField {
 			// Report the constraint violation.
 			if ($tooManyFiles) {
 				if(!$this->getConfig('allowedMaxFileNumber')) $this->setConfig('allowedMaxFileNumber', 1);
-				$return['error'] = sprintf(_t(
+				$return['error'] = _t(
 					'UploadField.MAXNUMBEROFFILES', 
-					'Max number of %s file(s) exceeded.'
-				), $this->getConfig('allowedMaxFileNumber'));
+					'Max number of {count} file(s) exceeded.',
+					array('count' => $this->getConfig('allowedMaxFileNumber'))
+				);
 			}
 		}
 

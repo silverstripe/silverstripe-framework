@@ -105,7 +105,11 @@ JS
 	protected function getMessageFromSession() {
 		parent::getMessageFromSession();
 		if(($member = Member::currentUser()) && !Session::get('MemberLoginForm.force_message')) {
-			$this->message = sprintf(_t('Member.LOGGEDINAS', "You're logged in as %s."), $member->{$this->loggedInAsField});
+			$this->message = _t(
+				'Member.LOGGEDINAS', 
+				"You're logged in as {name}.", 
+				array('name' => $member->{$this->loggedInAsField})
+			);
 		}
 		Session::set('MemberLoginForm.force_message', false);
 	}
@@ -198,7 +202,7 @@ JS
 			}
 
 			Session::set('Security.Message.message',
-				sprintf(_t('Member.WELCOMEBACK', "Welcome Back, %s"), $firstname)
+				_t('Member.WELCOMEBACK', "Welcome Back, {firstname}", array('firstname' => $firstname))
 			);
 			Session::set("Security.Message.type", "good");
 		}

@@ -75,17 +75,17 @@ class MemberImportForm extends Form {
 		
 		// result message
 		$msgArr = array();
-		if($result->CreatedCount()) $msgArr[] = sprintf(
-			_t('MemberImportForm.ResultCreated', 'Created %d members'),
-			$result->CreatedCount()
+		if($result->CreatedCount()) $msgArr[] = _t(
+			'MemberImportForm.ResultCreated', 'Created {count} members',
+			array('count' => $result->CreatedCount())
 		);
-		if($result->UpdatedCount()) $msgArr[] = sprintf(
-			_t('MemberImportForm.ResultUpdated', 'Updated %d members'),
-			$result->UpdatedCount()
+		if($result->UpdatedCount()) $msgArr[] = _t(
+			'MemberImportForm.ResultUpdated', 'Updated {count} members',
+			array('count' => $result->UpdatedCount())
 		);
-		if($result->DeletedCount()) $msgArr[] = sprintf(
-			_t('MemberImportForm.ResultDeleted', 'Deleted %d members'),
-			$result->DeletedCount()
+		if($result->DeletedCount()) $msgArr[] = _t(
+			'MemberImportForm.ResultDeleted', 'Deleted %d members',
+			array('count' => $result->DeletedCount())
 		);
 		$msg = ($msgArr) ? implode(',', $msgArr) : _t('MemberImportForm.ResultNone', 'No changes');
 	

@@ -251,7 +251,8 @@ class i18nTest extends SapphireTest {
 
 		i18n::get_translator('core')->getAdapter()->addTranslation(array(
 			'i18nTestModule.NEWMETHODSIG' => 'TRANS New _t method signature test',
-			'i18nTestModule.INJECTIONS' => 'TRANS Hello {name} {greeting}. But it is late, {goodbye}'
+			'i18nTestModule.INJECTIONS' => 'TRANS Hello {name} {greeting}. But it is late, {goodbye}',
+			'i18nTestModule.INJECTIONSLEGACY' => 'TRANS Hello %s %s. But it is late, %s',
 		), 'en_US');
 
 		$entity = "i18nTestModule.INJECTIONS";
@@ -285,6 +286,24 @@ class i18nTest extends SapphireTest {
 		$this->assertContains(
 			"TRANS Hello Cat meow. But it is late, meow",
 			$translated, "Testing a translation with just entity and injection array"
+		);
+
+		$translated = i18n::_t(
+			'i18nTestModule.INJECTIONSLEGACY', // has %s placeholders
+			array("name"=>"Cat", "greeting2"=>"meow", "goodbye"=>"meow")
+		);
+		$this->assertContains(
+			"TRANS Hello Cat meow. But it is late, meow",
+			$translated, "Testing sprintf placeholders with named injections"
+		);
+
+		$translated = i18n::_t(
+			'i18nTestModule.INJECTIONS', // has {name} placeholders
+			array("Cat", "meow", "meow")
+		);
+		$this->assertContains(
+			"TRANS Hello Cat meow. But it is late, meow",
+			$translated, "Testing named injection placeholders with unnamed injections"
 		);
 
 		i18n::set_locale($oldLocale);

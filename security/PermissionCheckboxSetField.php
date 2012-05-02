@@ -96,9 +96,9 @@ class PermissionCheckboxSetField extends FormField {
 			$relationMethod = $this->name;
 			foreach($record->$relationMethod() as $permission) {
 				if(!isset($uninheritedCodes[$permission->Code])) $uninheritedCodes[$permission->Code] = array();
-				$uninheritedCodes[$permission->Code][] = sprintf(
-					_t('PermissionCheckboxSetField.AssignedTo', 'assigned to "%s"'),
-					$record->Title
+				$uninheritedCodes[$permission->Code][] = _t(
+					'PermissionCheckboxSetField.AssignedTo', 'assigned to "{title}"',
+					array('title' => $record->Title)
 				);
 			}
 
@@ -110,14 +110,11 @@ class PermissionCheckboxSetField extends FormField {
 					foreach($record->Roles() as $role) {
 						foreach($role->Codes() as $code) {
 							if (!isset($inheritedCodes[$code->Code])) $inheritedCodes[$code->Code] = array();
-							$inheritedCodes[$code->Code][] = sprintf(
-								_t(
-									'PermissionCheckboxSetField.FromRole',
-									'inherited from role "%s"',
-									
-									'A permission inherited from a certain permission role'
-								),
-								$role->Title
+							$inheritedCodes[$code->Code][] = _t(
+								'PermissionCheckboxSetField.FromRole',
+								'inherited from role "{title}"',
+								'A permission inherited from a certain permission role',
+								array('title' => $role->Title)
 							);
 						}
 					}
@@ -132,15 +129,11 @@ class PermissionCheckboxSetField extends FormField {
 							if ($role->Codes()) {
 								foreach($role->Codes() as $code) {
 									if (!isset($inheritedCodes[$code->Code])) $inheritedCodes[$code->Code] = array();
-									$inheritedCodes[$code->Code][] = sprintf(
-										_t(
-											'PermissionCheckboxSetField.FromRoleOnGroup',
-											'inherited from role "%s" on group "%s"',
-											
-											'A permission inherited from a role on a certain group'
-										),
-										$role->Title, 
-										$parent->Title
+									$inheritedCodes[$code->Code][] = _t(
+										'PermissionCheckboxSetField.FromRoleOnGroup',
+										'inherited from role "%s" on group "%s"',
+										'A permission inherited from a role on a certain group',
+										array('roletitle' => $role->Title, 'grouptitle' => $parent->Title)
 									);
 								}
 							}
@@ -149,14 +142,11 @@ class PermissionCheckboxSetField extends FormField {
 							foreach($parent->Permissions() as $permission) {
 								if (!isset($inheritedCodes[$permission->Code])) $inheritedCodes[$permission->Code] = array();
 								$inheritedCodes[$permission->Code][] = 
-								sprintf(
-									_t(
-										'PermissionCheckboxSetField.FromGroup',
-										'inherited from group "%s"',
-										
-										'A permission inherited from a certain group'
-									),
-									$parent->Title
+								_t(
+									'PermissionCheckboxSetField.FromGroup',
+									'inherited from group "{title}"',
+									'A permission inherited from a certain group',
+									array('title' => $parent->Title)
 								);
 							}
 						}

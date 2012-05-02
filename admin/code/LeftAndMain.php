@@ -1299,12 +1299,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 			$title = _t("{$class}.MENUTITLE", LeftAndMain::menu_title_for_class($class));
 			$perms["CMS_ACCESS_" . $class] = array(
-				'name' => sprintf(_t(
+				'name' => _t(
 					'CMSMain.ACCESS', 
-					"Access to '%s' section",
-					
-					"Item in permission selection identifying the admin section. Example: Access to 'Files & Images'"
-				), $title, null),
+					"Access to '{title}' section",
+					"Item in permission selection identifying the admin section. Example: Access to 'Files & Images'",
+					array('title' => $title)
+				),
 				'category' => _t('Permission.CMS_ACCESS_CATEGORY', 'CMS Access')
 			);
 		}
