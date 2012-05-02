@@ -115,7 +115,7 @@ body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif;
 .cms code { font-family: 'Bitstream Vera Sans Mono','Courier', monospace; }
 
 /** This file defines CMS-specific customizations to the jQuery UI theme. Every rule in this file should be wrapped in the '.cms' selector (to make it more specific), and contain ONLY overwritten jQuery UI rules (with 'ui-' prefix).  This file should be fairly short, as we're using our own custom jQuery UI theme already. TODO Add theme reference  Use _style.scss to add more generic style information, and read the jQuery UI theming API: http://jqueryui.com/docs/Theming/API */
-.cms .ui-tabs { padding: 0; background: #f0f3f4 url(../images/textures/bg_cms_main_content.png) repeat top left; }
+.cms .ui-tabs { padding: 0; background: none; }
 .cms .ui-tabs .ui-widget-header { border: 0; background: none; }
 .cms .ui-tabs .ui-tabs-nav { margin: 0; padding: 0; }
 .cms .ui-tabs .ui-tabs-nav li { top: 0; }
