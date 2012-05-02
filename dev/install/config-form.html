@@ -229,9 +229,9 @@
 											<select name="locale" id="locale">
 												<?php
 												$selectedLocale = isset($_POST['locale']) ? $_POST['locale'] : $defaultLocale;
-												foreach($locales as $code => $details) {
+												foreach($locales as $code => $title) {
 													$selected = $code == $selectedLocale ? ' selected="selected"' : '';
-													echo "<option$selected value=\"$code\">{$details[0]} - {$details[1]}</option>\n";
+													echo "<option$selected value=\"$code\">{$title}</option>\n";
 												}
 												?>
 											</select> 
