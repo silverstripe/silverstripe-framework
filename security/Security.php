@@ -50,7 +50,7 @@ class Security extends Controller {
 	 *
 	 * @var string
 	 */
-	protected static $encryptionAlgorithm = 'sha1_v2.4';
+	protected static $encryptionAlgorithm = 'blowfish';
 
 	/**
 	 * Showing "Remember me"-checkbox 

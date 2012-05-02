@@ -28,6 +28,16 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	 */
 	protected $validator;
 
+	/**
+	 * @var String
+	 */
+	protected $itemRequestClass;
+
+	/**
+	 * @var function With two parameters: $form and $component
+	 */
+	protected $itemEditFormCallback;
+
 	function getURLHandlers($gridField) {
 		return array(
 			'item/$ID' => 'handleItem',
@@ -64,11 +74,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 			$record = Object::create($gridField->getModelClass());	
 		}
 
-		if(ClassInfo::exists(get_class($this) . "_ItemRequest")) {
-			$class = get_class($this) . "_ItemRequest";
-		} else {
-			$class = 'GridFieldDetailForm_ItemRequest';
-		}
+		$class = $this->getItemRequestClass();
 
 		$handler = Object::create($class, $gridField, $this, $record, $controller, $this->name);
 		$handler->setTemplate($this->template);
@@ -119,6 +125,41 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	 */
 	public function getValidator() {
 		return $this->validator;
+	}
+
+	/**
+	 * @param String
+	 */
+	public function setItemRequestClass($class) {
+		$this->itemRequestClass = $class;
+		return $this;
+	}
+
+	/**
+	 * @return String
+	 */
+	public function getItemRequestClass() {
+		if($this->itemRequestClass) {
+			return $this->itemRequestClass;
+		} else if(ClassInfo::exists(get_class($this) . "_ItemRequest")) {
+			return get_class($this) . "_ItemRequest";
+		} else {
+			return 'GridFieldItemRequest_ItemRequest';
+		}
+	}
+
+	/**
+	 * @param Closure $cb Make changes on the edit form after constructing it.
+	 */
+	public function setItemEditFormCallback(Closure $cb) {
+		$this->itemEditFormCallback = $cb;
+	}
+
+	/**
+	 * @return Closure
+	 */
+	public function getItemEditFormCallback() {
+		return $this->itemEditFormCallback;
 	}
 }
 
@@ -269,6 +310,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			// e.g. page/edit/show/6/ vs. page/edit/EditForm/field/MyGridField/....
 			$form->Backlink = $toplevelController->Link();
 		}
+
+		$cb = $this->component->getItemEditFormCallback();
+		if($cb) $cb($form, $this);
+
 		return $form;
 	}
 

@@ -116,7 +116,50 @@ abstract class PasswordEncryptor {
 }
 
 /**
- * This is the default class used for built-in hash types in PHP.
+ * Blowfish encryption - this is the default from SilverStripe 3.
+ * PHP 5.3+ will provide a php implementation if there is no system
+ * version available.
+ * 
+ * @package framework
+ * @subpackage security
+ */
+class PasswordEncryptor_Blowfish extends PasswordEncryptor {
+	/**
+	 * Cost of encryption.
+	 * Higher costs will increase security, but also increase server load.
+	 * If you are using basic auth, you may need to decrease this as encryption
+	 * will be run on every request.
+	 * Must be between 4 and 31.
+	 */
+	protected static $cost = 10;
+
+	function encrypt($password, $salt = null, $member = null) {
+		// We use $2y$ here instead of $2a$ - in PHP < 5.3.7, passwords
+		// with non-ascii characters will use a flawed version of the blowfish
+		// algorithm when specified with $2a$. $2y$ specifies non-flawed version
+		// in all cases.
+		// See https://bugs.php.net/bug.php?id=55477&edit=1
+		$method_and_salt = '$2y$' . $salt;
+		$encrypted_password = crypt($password, $method_and_salt);
+		// We *never* want to generate blank passwords. If something
+		// goes wrong, throw an exception.
+		if(strpos($encrypted_password, $method_and_salt) === false) {
+			throw new PasswordEncryptor_EncryptionFailed('Blowfish password encryption failed.');
+		}
+
+		// Remove the method and salt from the password, as the salt
+		// is stored in a separate column.
+		return substr($encrypted_password, strlen($method_and_salt));
+	}
+
+	function salt($password, $memeber = null) {
+		$generator = new RandomGenerator();
+		return self::$cost . '$' . substr($generator->generateHash('sha1'), 0, 21);
+	}
+}
+
+/**
+ * Encryption using built-in hash types in PHP.
  * Please note that the implemented algorithms depend on the PHP
  * distribution and architecture.
  * 
@@ -240,3 +283,9 @@ class PasswordEncryptor_None extends PasswordEncryptor {
  * @subpackage security
  */
 class PasswordEncryptor_NotFoundException extends Exception {}
+
+/**
+ * @package framework
+ * @subpackage security
+ */
+class PasswordEncryptor_EncryptionFailed extends Exception {}

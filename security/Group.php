@@ -94,12 +94,23 @@ class Group extends DataObject {
 		$permissionsField->setHiddenPermissions(SecurityAdmin::$hidden_permissions);
 
 		if($this->ID) {
+			$group = $this;
 			$config = new GridFieldConfig_RelationEditor();
 			$config->addComponents(new GridFieldExportButton('before'));
 			$config->addComponents(new GridFieldPrintButton('before'));
 			$config->getComponentByType('GridFieldAddExistingAutocompleter')
 				->setResultsFormat('$Title ($Email)')->setSearchFields(array('FirstName', 'Surname', 'Email'));
-			$config->getComponentByType('GridFieldDetailForm')->setValidator(new Member_Validator());
+			$config->getComponentByType('GridFieldDetailForm')
+				->setValidator(new Member_Validator())
+				->setItemEditFormCallback(function($form, $component) use($group) {
+					// If new records are created in a group context,
+					// set this group by default.
+					$record = $form->getRecord();
+					if($record && !$record->ID) {
+						$groupsField = $form->Fields()->dataFieldByName('DirectGroups');
+						if($groupsField) $groupsField->setValue($group->ID);
+					}
+				});
 			$memberList = GridField::create('Members',false, $this->Members(), $config)->addExtraClass('members_grid');
 			// @todo Implement permission checking on GridField
 			//$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));
