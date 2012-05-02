@@ -103,10 +103,10 @@ abstract class ModelAdmin extends LeftAndMain {
 		parent::init();
 
 		$models = $this->getManagedModels();
-		$this->modelClass = (isset($this->urlParams['ModelClass'])) ? $this->urlParams['ModelClass'] : $models[0];
+		$this->modelClass = (isset($this->urlParams['ModelClass'])) ? $this->urlParams['ModelClass'] : key($models);
 
 		// security check for valid models
-		if(!in_array($this->modelClass, $models)) {
+		if(!array_key_exists($this->modelClass, $models)) {
 			user_error('ModelAdmin::init(): Invalid Model class', E_USER_ERROR);
 		}
 		
@@ -226,9 +226,8 @@ abstract class ModelAdmin extends LeftAndMain {
 		$forms  = new ArrayList();
 		
 		foreach($models as $class => $options) { 
-			if(is_numeric($class)) $class = $options;
 			$forms->push(new ArrayData(array (
-				'Title'     => (is_array($options) && isset($options['title'])) ? $options['title'] : singleton($class)->i18n_singular_name(),
+				'Title'     => $options['title'],
 				'ClassName' => $class,
 				'Link' => $this->Link($class),
 				'LinkOrCurrent' => ($class == $this->modelClass) ? 'current' : 'link'
@@ -239,7 +238,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	}
 	
 	/**
-	 * @return array
+	 * @return array Map of class name to an array of 'title' (see {@link $managed_models})
 	 */
 	function getManagedModels() {
 		$models = $this->stat('managed_models');
@@ -253,6 +252,14 @@ abstract class ModelAdmin extends LeftAndMain {
 				Make sure that this property is defined, and that its visibility is set to "public"', 
 				E_USER_ERROR
 			);
+		}
+
+		// Normalize models to have their model class in array key
+		foreach($models as $k => $v) {
+			if(is_numeric($k)) {
+				$models[$v] = array('title' => singleton($v)->i18n_singular_name());
+				unset($models[$k]);
+			}
 		}
 		
 		return $models;
@@ -273,7 +280,6 @@ abstract class ModelAdmin extends LeftAndMain {
 		if(is_null($importerClasses)) {
 			$models = $this->getManagedModels();
 			foreach($models as $modelName => $options) {
-				if(is_numeric($modelName)) $modelName = $options;
 				$importerClasses[$modelName] = 'CsvBulkLoader';
 			}
 		}
@@ -407,12 +413,7 @@ abstract class ModelAdmin extends LeftAndMain {
 
 		// Show the class name rather than ModelAdmin title as root node
 		$models = $this->getManagedModels();
-		$modelSpec = ArrayLib::is_associative($models) ? $models[$this->modelClass] : null;
-		if(is_array($modelSpec) && isset($modelSpec['title'])) {
-			$items[0]->Title = $modelSpec['title'];
-		} else {
-			$items[0]->Title = singleton($this->modelClass)->i18n_singular_name();
-		}
+		$items[0]->Title = $models[$this->modelClass]['title'];
 		$items[0]->Link = $this->Link($this->modelClass);
 		
 		return $items;
