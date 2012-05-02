@@ -496,28 +496,22 @@ class Upload_Validator {
 		if(!$this->isValidSize()) {
 			$ext = (isset($pathInfo['extension'])) ? $pathInfo['extension'] : '';
 			$arg = File::format_size($this->getAllowedMaxFileSize($ext));
-			$this->errors[] = sprintf(
-				_t(
-					'File.TOOLARGE', 
-					'Filesize is too large, maximum %s allowed.',
-					
-					'Argument 1: Filesize (e.g. 1MB)'
-				),
-				$arg
+			$this->errors[] = _t(
+				'File.TOOLARGE', 
+				'Filesize is too large, maximum {size} allowed.',
+				'Argument 1: Filesize (e.g. 1MB)',
+				array('size' => $arg)
 			);
 			return false;
 		}
 
 		// extension validation
 		if(!$this->isValidExtension()) {
-			$this->errors[] = sprintf(
-				_t(
-					'File.INVALIDEXTENSION', 
-					'Extension is not allowed (valid: %s)',
-					
-					'Argument 1: Comma-separated list of valid extensions'
-				),
-				wordwrap(implode(', ', $this->allowedExtensions))
+			$this->errors[] = _t(
+				'File.INVALIDEXTENSION', 
+				'Extension is not allowed (valid: {extensions})',
+				'Argument 1: Comma-separated list of valid extensions',
+				array('extensions' => wordwrap(implode(', ', $this->allowedExtensions)))
 			);
 			return false;
 		}

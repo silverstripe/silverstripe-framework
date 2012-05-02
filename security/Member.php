@@ -626,16 +626,15 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				)
 			);
 			if($existingRecord) {
-				throw new ValidationException(new ValidationResult(false, sprintf(
-					_t(
-						'Member.ValidationIdentifierFailed', 
-						'Can\'t overwrite existing member #%d with identical identifier (%s = %s))', 
-						
-						'The values in brackets show a fieldname mapped to a value, usually denoting an existing email address'
-					),
-					$existingRecord->ID,
-					$identifierField,
-					$this->$identifierField
+				throw new ValidationException(new ValidationResult(false, _t(
+					'Member.ValidationIdentifierFailed', 
+					'Can\'t overwrite existing member #{id} with identical identifier ({name} = {value}))', 
+					'The values in brackets show a fieldname mapped to a value, usually denoting an existing email address',
+					array(
+						'id' => $existingRecord->ID,
+						'name' => $identifierField,
+						'value' => $this->$identifierField
+					)
 				)));
 			}
 		}
@@ -1624,12 +1623,10 @@ class Member_Validator extends RequiredFields {
 			$uniqueField = $this->form->dataFieldByName($identifierField);
 			$this->validationError(
 				$uniqueField->id(),
-				sprintf(
-					_t(
-						'Member.VALIDATIONMEMBEREXISTS',
-						'A member already exists with the same %s'
-					),
-					strtolower($identifierField)
+				_t(
+					'Member.VALIDATIONMEMBEREXISTS',
+					'A member already exists with the same %s',
+					array('identifier' => strtolower($identifierField))
 				),
 				'required'
 			);
