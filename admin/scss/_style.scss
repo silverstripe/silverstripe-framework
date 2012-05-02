@@ -1716,4 +1716,27 @@ form.import-form {
 	}
 }
 
+/** --------------------------------------------
+ * Page Settings Controller
+ * -------------------------------------------- */
 
+.cms-container .CMSMain.CMSPageSettingsController {
+	.tab#Root_Settings {
+		.optionset li {
+			white-space:nowrap;
+			padding-top:$grid-y;
+			label {
+				padding-left:2px;
+			}
+		}
+		.fieldgroup .fieldgroup-field {
+			width:$grid-x*27;
+			padding-left:0;
+		}
+		.TreeDropdownField .treedropdownfield-toggle-panel-link {
+			border-left:none;
+			background:none;
+			background-image:none;
+		}
+	}
+}

@@ -582,6 +582,12 @@ form.import-form label.left { width: 250px; }
 .cms-container .CMSPageHistoryController .cms-edit-form .ui-tabs-nav .ui-state-active, .cms-container .CMSPageHistoryController .cms-edit-form .ui-tabs-nav .ui-widget-content .ui-state-active, .cms-container .CMSPageHistoryController .cms-edit-form .ui-tabs-nav .ui-widget-header .ui-state-active { padding-bottom: 1px; background: #e6eaed; border: 1px solid #c0c0c2; }
 .cms-container .CMSPageHistoryController .ss-tabset .ui-tabs-panel { background: #e6eaed; clear: both; border-top: 1px solid #c0c0c2; }
 
+/** -------------------------------------------- Page Settings Controller -------------------------------------------- */
+.cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .optionset li { white-space: nowrap; padding-top: 8px; }
+.cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .optionset li label { padding-left: 2px; }
+.cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .fieldgroup .fieldgroup-field { width: 216px; padding-left: 0; }
+.cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .TreeDropdownField .treedropdownfield-toggle-panel-link { border-left: none; background: none; background-image: none; }
+
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .cms .jstree ul, .TreeDropdownField .treedropdownfield-panel .jstree ul { display: block; margin: 0; padding: 0; background: none; list-style-type: none; }
 .cms .jstree li, .TreeDropdownField .treedropdownfield-panel .jstree li { display: block; margin: 0; padding: 0; list-style-type: none; display: block; min-height: 18px; line-height: 18px; white-space: nowrap; margin-left: 18px; min-width: 18px; }
