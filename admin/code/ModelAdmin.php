@@ -113,6 +113,11 @@ abstract class ModelAdmin extends LeftAndMain {
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/ModelAdmin.js');
 	}
 
+	public function Link($action = null) {
+		if(!$action) $action = $this->modelClass;
+		return parent::Link($action);
+	}
+
 	function getEditForm($id = null, $fields = null) {
 		$list = $this->getList();
 		$exportButton = new GridFieldExportButton('before');
@@ -408,6 +413,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		} else {
 			$items[0]->Title = singleton($this->modelClass)->i18n_singular_name();
 		}
+		$items[0]->Link = $this->Link($this->modelClass);
 		
 		return $items;
 	}
