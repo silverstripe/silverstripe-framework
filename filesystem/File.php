@@ -240,7 +240,7 @@ class File extends DataObject {
 	 * @return string
 	 */
 	function getTreeTitle() {
-		return $this->Title;
+		return Convert::raw2xml($this->Title);
 	}
 
 	/**
