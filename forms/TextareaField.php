@@ -57,24 +57,6 @@ class TextareaField extends FormField {
 		);
 	}
 
-	function getTemplate() {
-		return ($this->isReadonly()) ? "{$this->template}_readonly" : $this->template;
-	}
-
-	/**
-	 * Performs a readonly transformation on this field. You should still be 
-	 * able to copy from this field, and it should still send when you submit
-	 * the form it's attached to.
-	 *
-	 * The element shouldn't be both disabled and readonly at the same time.
-	 */
-	function performReadonlyTransformation() {
-		$clone = clone $this;
-		$clone->setReadonly(true);
-		$clone->setDisabled(false);
-		return $clone;
-	}
-
 	/**
 	 * Performs a disabled transformation on this field. You shouldn't be able to
 	 * copy from this field, and it should not send any data when you submit the
