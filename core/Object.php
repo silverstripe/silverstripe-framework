@@ -278,10 +278,9 @@ abstract class Object {
 
 	/**
 	 * Get the value of a static property of a class, even in that property is declared protected (but not private), without any inheritance,
-	 * merging or parent lookup if it doesn't exist on the given class
+	 * merging or parent lookup if it doesn't exist on the given class.
 	 *
-	 * In 5.3, we can do this fast using $foo::$bar syntax, but this method then needs to be in a base class of $class
-	 * to bust the protected def
+	 * If using PHP 5.4, we can do this using $foo::$bar syntax. PHP 5.3 uses ReflectionClass to get the static properties instead.
 	 *
 	 * @static
 	 * @param $class - The class to get the static from
