@@ -137,9 +137,9 @@ class PaginatedList extends SS_ListDecorator {
 	 * @param SQLQuery $query
 	 */
 	public function setPaginationFromQuery(SQLQuery $query) {
-		if ($query->limit) {
-			$this->setPageLength($query->limit['limit']);
-			$this->setPageStart($query->limit['start']);
+		if ($limit = $query->getLimit()) {
+			$this->setPageLength($limit['limit']);
+			$this->setPageStart($limit['start']);
 			$this->setTotalItems($query->unlimitedRowCount());
 		}
 	}

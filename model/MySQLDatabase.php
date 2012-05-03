@@ -855,9 +855,9 @@ class MySQLDatabase extends SS_Database {
 			$query = $list->dataQuery()->query();
 
 			// There's no need to do all that joining
-			$query->from = array(str_replace(array('"','`'),'',$baseClasses[$class]) => $baseClasses[$class]);
-			$query->select($select[$class]);
-			$query->orderby = null;
+			$query->setFrom(array(str_replace(array('"','`'), '', $baseClasses[$class]) => $baseClasses[$class]));
+			$query->setSelect($select[$class]);
+			$query->setOrderBy(array());
 			
 			$querySQLs[] = $query->sql();
 			$totalCount += $query->unlimitedRowCount();

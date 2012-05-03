@@ -34,10 +34,12 @@ class PaginatedListTest extends SapphireTest {
 
 	public function testSetPaginationFromQuery() {
 		$query = $this->getMock('SQLQuery');
-		$query->limit = array('limit' => 15, 'start' => 30);
+		$query->expects($this->once())
+		      ->method('getLimit')
+			  ->will($this->returnValue(array('limit' => 15, 'start' => 30)));
 		$query->expects($this->once())
 		      ->method('unlimitedRowCount')
-		      ->will($this->returnValue(100));
+			  ->will($this->returnValue(100));
 
 		$list = new PaginatedList(new ArrayList());
 		$list->setPaginationFromQuery($query);

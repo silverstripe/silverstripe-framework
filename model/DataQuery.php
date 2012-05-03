@@ -58,7 +58,7 @@ class DataQuery {
 	 * Return the {@link DataObject} class that is being queried.
 	 */
 	function dataClass() {
-	    return $this->dataClass;
+		return $this->dataClass;
 	}
 
 	/**
@@ -75,15 +75,22 @@ class DataQuery {
 	 */
 	function removeFilterOn($fieldExpression) {
 		$matched = false;
-		foreach($this->query->where as $i=>$item) {
-			if(strpos($item, $fieldExpression) !== false) {
-				unset($this->query->where[$i]);
+
+		$where = $this->query->getWhere();
+		foreach($where as $i => $clause) {
+			if(strpos($clause, $fieldExpression) !== false) {
+				unset($where[$i]);
 				$matched = true;
 			}
 		}
-		
-		if(!$matched) throw new InvalidArgumentException("Couldn't find $fieldExpression in the query filter.");
-		
+
+		// set the entire where clause back, but clear the original one first
+		if($matched) {
+			$this->query->setWhere($where);
+		} else {
+			throw new InvalidArgumentException("Couldn't find $fieldExpression in the query filter.");
+		}
+
 		return $this;
 	}
 	
@@ -108,13 +115,13 @@ class DataQuery {
 
 		// Build our intial query
 		$this->query = new SQLQuery(array());
-		$this->query->distinct = true;
+		$this->query->setDistinct(true);
 		
 		if($sort = singleton($this->dataClass)->stat('default_sort')) {
 			$this->sort($sort);
 		}
 
-		$this->query->from("\"$baseClass\"");
+		$this->query->setFrom("\"$baseClass\"");
 
 		singleton($this->dataClass)->extend('augmentDataQueryCreation', $this->query, $this);
 	}
@@ -140,7 +147,7 @@ class DataQuery {
 		if($queriedColumns) {
 			$tableClasses = ClassInfo::dataClassesFor($this->dataClass);
 
-			foreach ($query->where as $where) {
+			foreach ($query->getWhere() as $where) {
 				// Check for just the column, in the form '"Column" = ?' and the form '"Table"."Column"' = ?
 				if (preg_match('/^"([^"]+)"/', $where, $matches) ||
 					preg_match('/^"([^"]+)"\."[^"]+"/', $where, $matches)) {
@@ -179,7 +186,7 @@ class DataQuery {
 			}
 
 			if ($joinTable) {
-				$query->leftJoin($tableClass, "\"$tableClass\".\"ID\" = \"$baseClass\".\"ID\"") ;
+				$query->addLeftJoin($tableClass, "\"$tableClass\".\"ID\" = \"$baseClass\".\"ID\"") ;
 			}
 		}
 		
@@ -208,7 +215,7 @@ class DataQuery {
 				// Get the ClassName values to filter to
 				$classNames = ClassInfo::subclassesFor($this->dataClass);
 				if(!$classNames) user_error("DataList::create() Can't find data sub-classes for '$callerClass'");
-				$query->where[] = "\"$baseClass\".\"ClassName\" IN ('" . implode("','", $classNames) . "')";
+				$query->addWhere("\"$baseClass\".\"ClassName\" IN ('" . implode("','", $classNames) . "')");
 			}
 		}
 
@@ -233,9 +240,7 @@ class DataQuery {
 		$tableClasses = ClassInfo::dataClassesFor($this->dataClass);
 		$baseClass = array_shift($tableClasses);
 
-		if($query->orderby) {
-			$orderby = $query->getOrderBy();
-
+		if($orderby = $query->getOrderBy()) {
 			foreach($orderby as $k => $dir) {
 				// don't touch functions in the ORDER BY or function calls 
 				// selected as fields
@@ -270,23 +275,24 @@ class DataQuery {
 						$qualCol = "\"$parts[0]\"";
 					}
 					
-					// To-do: Remove this if block once SQLQuery::$select has been refactored to store itemisedSelect()
+					// To-do: Remove this if block once SQLQuery::$select has been refactored to store getSelect()
 					// format internally; then this check can be part of selectField()
-					if(!isset($query->select[$col]) && !in_array($qualCol, $query->select)) {
+					$selects = $query->getSelect();
+					if(!isset($selects[$col]) && !in_array($qualCol, $selects)) {
 						$query->selectField($qualCol);
 					}
 				} else {
 					$qualCol = '"' . implode('"."', $parts) . '"';
 					
-					// To-do: Remove this if block once SQLQuery::$select has been refactored to store itemisedSelect()
+					// To-do: Remove this if block once SQLQuery::$select has been refactored to store getSelect()
 					// format internally; then this check can be part of selectField()
-					if(!in_array($qualCol, $query->select)) {
+					if(!in_array($qualCol, $query->getSelect())) {
 						$query->selectField($qualCol);
 					}
 				}
 			}
 
-			$query->orderby = $orderby;
+			$query->setOrderBy($orderby);
 		}
 	}
 
@@ -390,7 +396,7 @@ class DataQuery {
 	function having($having) {
 		if($having) {
 			$clone = $this;
-			$clone->query->having[] = $having;
+			$clone->query->addHaving($having);
 			return $clone;
 		} else {
 			return $this;
@@ -403,7 +409,7 @@ class DataQuery {
 	function where($filter) {
 		if($filter) {
 			$clone = $this;
-			$clone->query->where($filter);
+			$clone->query->addWhere($filter);
 			return $clone;
 		} else {
 			return $this;
@@ -436,7 +442,11 @@ class DataQuery {
 	 */
 	function sort($sort = null, $direction = null, $clear = true) {
 		$clone = $this;
-		$clone->query->orderby($sort, $direction, $clear);
+		if($clear) {
+			$clone->query->setOrderBy($sort, $direction);
+		} else {
+			$clone->query->addOrderBy($sort, $direction);
+		}
 			
 		return $clone;
 	}
@@ -458,7 +468,7 @@ class DataQuery {
 	 */
 	function limit($limit, $offset = 0) {
 		$clone = $this;
-		$clone->query->limit($limit, $offset);
+		$clone->query->setLimit($limit, $offset);
 		return $clone;
 	}
 
@@ -470,9 +480,13 @@ class DataQuery {
 		Deprecation::notice('3.0', 'Use innerJoin() or leftJoin() instead.');
 		if($join) {
 			$clone = $this;
-			$clone->query->from[] = $join;
+			$clone->query->addFrom($join);
 			// TODO: This needs to be resolved for all databases
-			if(DB::getConn() instanceof MySQLDatabase) $clone->query->groupby[] = reset($clone->query->from) . ".\"ID\"";
+
+			if(DB::getConn() instanceof MySQLDatabase) {
+				$from = $clone->query->getFrom();
+				$clone->query->setGroupBy(reset($from) . ".\"ID\"");
+			}
 			return $clone;
 		} else {
 			return $this;
@@ -487,7 +501,7 @@ class DataQuery {
 	public function innerJoin($table, $onClause, $alias = null) {
 		if($table) {
 			$clone = $this;
-			$clone->query->innerJoin($table, $onClause, $alias);
+			$clone->query->addInnerJoin($table, $onClause, $alias);
 			return $clone;
 		} else {
 			return $this;
@@ -502,7 +516,7 @@ class DataQuery {
 	public function leftJoin($table, $onClause, $alias = null) {
 		if($table) {
 			$clone = $this;
-			$clone->query->leftJoin($table, $onClause, $alias);
+			$clone->query->addLeftJoin($table, $onClause, $alias);
 			return $clone;
 		} else {
 			return $this;
@@ -530,7 +544,7 @@ class DataQuery {
     		if ($component = $model->has_one($rel)) {	
     			if(!$this->query->isJoinedTo($component)) {
     				$foreignKey = $model->getReverseAssociation($component);
-    				$this->query->leftJoin($component, "\"$component\".\"ID\" = \"{$modelClass}\".\"{$foreignKey}ID\"");
+    				$this->query->addLeftJoin($component, "\"$component\".\"ID\" = \"{$modelClass}\".\"{$foreignKey}ID\"");
 				
     				/**
     				 * add join clause to the component's ancestry classes so that the search filter could search on its 
@@ -541,7 +555,7 @@ class DataQuery {
     					$ancestry = array_reverse($ancestry);
     					foreach($ancestry as $ancestor){
     						if($ancestor != $component){
-    							$this->query->innerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
+    							$this->query->addInnerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
     							$component=$ancestor;
     						}
     					}
@@ -553,7 +567,7 @@ class DataQuery {
     			if(!$this->query->isJoinedTo($component)) {
     			 	$ancestry = $model->getClassAncestry();
     				$foreignKey = $model->getRemoteJoinField($rel);
-    				$this->query->leftJoin($component, "\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
+    				$this->query->addLeftJoin($component, "\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
     				/**
     				 * add join clause to the component's ancestry classes so that the search filter could search on its 
     				 * ancestor fields.
@@ -563,7 +577,7 @@ class DataQuery {
     					$ancestry = array_reverse($ancestry);
     					foreach($ancestry as $ancestor){
     						if($ancestor != $component){
-    							$this->query->innerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
+    							$this->query->addInnerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
     							$component=$ancestor;
     						}
     					}
@@ -575,10 +589,10 @@ class DataQuery {
     			list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
     			$parentBaseClass = ClassInfo::baseDataClass($parentClass);
     			$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-    			$this->query->innerJoin($relationTable, "\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
-    			$this->query->leftJoin($componentBaseClass, "\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
+    			$this->query->addInnerJoin($relationTable, "\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
+    			$this->query->addLeftJoin($componentBaseClass, "\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
     			if(ClassInfo::hasTable($componentClass)) {
-    				$this->query->leftJoin($componentClass, "\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
+    				$this->query->addLeftJoin($componentClass, "\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
     			}
     			$modelClass = $componentClass;
 
@@ -597,7 +611,7 @@ class DataQuery {
 	public function subtract(DataQuery $subtractQuery, $field='ID') {
 		$subSelect= $subtractQuery->getFinalisedQuery();
 		$fieldExpression = $this->expressionForField($field, $subSelect);
-		$subSelect->clearSelect();
+		$subSelect->setSelect(array());
 		$subSelect->selectField($fieldExpression, $field);
 		$this->where($this->expressionForField($field, $this).' NOT IN ('.$subSelect->sql().')');
 
@@ -611,7 +625,7 @@ class DataQuery {
 		$fieldExpressions = array_map(create_function('$item', 
 			"return '\"$table\".\"' . \$item . '\"';"), $fields);
 		
-		$this->query->select($fieldExpressions);
+		$this->query->setSelect($fieldExpressions);
 
 		return $this;
 	}
@@ -621,9 +635,9 @@ class DataQuery {
 	 */
 	public function column($field = 'ID') {
 		$query = $this->getFinalisedQuery(array($field));
-		$originalSelect = $query->itemisedSelect();
+		$originalSelect = $query->getSelect();
 		$fieldExpression = $this->expressionForField($field, $query);
-		$query->clearSelect();
+		$query->setSelect(array());
 		$query->selectField($fieldExpression, $field);
 		$this->ensureSelectContainsOrderbyColumns($query, $originalSelect);
 
@@ -637,17 +651,8 @@ class DataQuery {
 			return "\"$baseClass\".\"ID\"";
 
 		} else {
-		    return $query->expressionForField($field);
-	    }
-	}
-	
-	/**
-	 * Clear the selected fields to start over
-	 */
-	public function clearSelect() {
-		$this->query->clearSelect();
-
-		return $this;
+			return $query->expressionForField($field);
+		}
 	}
 
 	/**
