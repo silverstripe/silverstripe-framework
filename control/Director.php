@@ -94,6 +94,8 @@ class Director implements TemplateGlobalProvider {
 		}
 
 		// Load the session into the controller
+		if(!isset($_SESSION) && (isset($_COOKIE[session_name()]) || isset($_REQUEST[session_name()]))) Session::start();
+
 		$session = new Session(isset($_SESSION) ? $_SESSION : null);
 		
 		$result = Director::handleRequest($req, $session, $model);

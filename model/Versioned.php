@@ -791,9 +791,17 @@ class Versioned extends DataExtension {
 
 		if(!headers_sent() && !Director::is_cli()) {
 			if(Versioned::current_stage() == 'Live') {
-				Cookie::set('bypassStaticCache', null, 0, null, null, false, true /* httponly */);
+				// clear the cookie if it's set
+				if(!empty($_COOKIE['bypassStaticCache'])) {
+					Cookie::set('bypassStaticCache', null, 0, null, null, false, true /* httponly */);
+					unset($_COOKIE['bypassStaticCache']);
+				}
 			} else {
-				Cookie::set('bypassStaticCache', '1', 0, null, null, false, true /* httponly */);
+				// set the cookie if it's cleared
+				if(empty($_COOKIE['bypassStaticCache'])) {
+					Cookie::set('bypassStaticCache', '1', 0, null, null, false, true /* httponly */);
+					$_COOKIE['bypassStaticCache'] = 1;
+				}
 			}
 		}
 	}
