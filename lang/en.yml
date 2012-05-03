@@ -46,6 +46,8 @@ en:
     UNORDERED: 'Unordered list'
     UNORDEREDDESCRIPTION: 'Unordered list'
     UNORDEREDEXAMPLE1: 'unordered item 1'
+  BackLink_Button.ss:
+    Back: Back
   BasicAuth:
     ENTERINFO: 'Please enter a username and password.'
     ERRORNOTADMIN: 'That user is not an administrator.'
@@ -54,6 +56,8 @@ en:
     ANY: Any
     NO: No
     YES: Yes
+  CMSLoadingScreen.ss:
+    LOADING: Loading...
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
     ACCESSALLINTERFACES: 'Access to all CMS sections'
@@ -264,8 +268,13 @@ en:
     PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
     PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
     PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PreviewButton: Preview
     SAVED: saved
     VersionUnknown: unknown
+  LeftAndMain.ss:
+    VIEWPAGEIN: 'Page view:'
+  LeftAndMain_Menu.ss:
+    LOGOUT: 'Log out'
   LoginAttempt:
     Email: 'Email Address'
     IP: 'IP Address'
@@ -359,7 +368,17 @@ en:
     NOCSVFILE: 'Please browse for a CSV file to import'
     NOIMPORT: 'Nothing to import'
     RESET: Reset
+    Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
+  ModelAdmin_ImportSpec.ss:
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECRELATIONS: Relations
+  ModelAdmin_Tools.ss:
+    FILTER: Filter
+    IMPORT: Import
+  ModelSidebar.ss:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
   MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
@@ -418,6 +437,9 @@ en:
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
+  SilverStripeNavigator:
+    Edit: Edit
+    OpenNewWindow: 'Open in new window'
   SimpleImageField:
     NOUPLOAD: 'No Image Uploaded'
   SiteTree:
@@ -439,8 +461,6 @@ en:
     VIEWLAST: 'View last'
     VIEWNEXT: 'View next'
     VIEWPREVIOUS: 'View previous'
-  TextareaField_Readonly.ss:
-    NONE: none
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleCompositeField.ss:

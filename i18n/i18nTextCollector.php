@@ -159,8 +159,6 @@ class i18nTextCollector extends Object {
 	protected function processModule($module) {	
 		$entities = array();
 
-		//Debug::message("Processing Module '{$module}'", false);
-
 		// Search for calls in code files if these exists
 		$fileList = array();
 		if(is_dir("$this->basePath/$module/code")) {
@@ -179,8 +177,9 @@ class i18nTextCollector extends Object {
 		}
 		
 		// Search for calls in template files if these exists
-		if(is_dir("$this->basePath/$module/templates")) {
-			$fileList = $this->getFilesRecursive("$this->basePath/$module/templates");
+		if(is_dir("$this->basePath/$module/")) {
+			$dummy = array();
+			$fileList = $this->getFilesRecursive("$this->basePath/$module/", $dummy, 'ss');
 			foreach($fileList as $index => $filePath) {
 				$content = file_get_contents($filePath);
 				// templates use their filename as a namespace
@@ -302,7 +301,7 @@ class i18nTextCollector extends Object {
 			$entities[$this->normalizeEntity($entity, $module)] = $spec;
 		}
 		ksort($entities);
-		
+
 		return $entities;
 	}
 	
@@ -365,8 +364,9 @@ class i18nTextCollector extends Object {
 	 * 
 	 * @param string $folder base directory to scan (will scan recursively)
 	 * @param array $fileList Array where potential files will be added to
+	 * @param String $type Optional, "php" or "ss"
 	 */
-	protected function getFilesRecursive($folder, &$fileList = null) {
+	protected function getFilesRecursive($folder, &$fileList = null, $type = null) {
 		if(!$fileList) $fileList = array();
 		$items = scandir($folder);
 		$isValidFolder = (
@@ -376,9 +376,13 @@ class i18nTextCollector extends Object {
 
 		if($items && $isValidFolder) foreach($items as $item) {
 			if(substr($item,0,1) == '.') continue;
-			if(substr($item,-4) == '.php') $fileList[substr($item,0,-4)] = "$folder/$item";
-			else if(substr($item,-3) == '.ss') $fileList[$item] = "$folder/$item";
-			else if(is_dir("$folder/$item")) $this->getFilesRecursive("$folder/$item", $fileList);
+			if(substr($item,-4) == '.php' && (!$type || $type == 'php')) {
+				$fileList[substr($item,0,-4)] = "$folder/$item";
+			}
+			else if(substr($item,-3) == '.ss' && (!$type || $type == 'ss')) {
+				$fileList[$item] = "$folder/$item";
+			}
+			else if(is_dir("$folder/$item")) $this->getFilesRecursive("$folder/$item", $fileList, $type);
 		}
 		return $fileList;
 	}
