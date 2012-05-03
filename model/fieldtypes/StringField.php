@@ -1,7 +1,7 @@
 <?php
 /**
  * An abstract base class for the string field types (i.e. Varchar and Text)
- * @package sapphire
+ * @package framework
  * @subpackage model
  * @author Pete Bacon Darwin
  *
@@ -64,9 +64,9 @@ abstract class StringField extends DBField {
 
 	/**
 	 * (non-PHPdoc)
-	 * @see core/model/fieldtypes/DBField#hasValue()
+	 * @see core/model/fieldtypes/DBField#exists()
 	 */
-	function hasValue() {
+	function exists() {
 		return ($this->value || $this->value == '0') || ( !$this->nullifyEmpty && $this->value === '');
 	}
 
@@ -75,8 +75,8 @@ abstract class StringField extends DBField {
 	 * @see core/model/fieldtypes/DBField#prepValueForDB($value)
 	 */
 	function prepValueForDB($value) {
-		if ( !$this->nullifyEmpty && $value === '' ) {
-			return "'" . Convert::raw2sql($value) . "'";
+		if(!$this->nullifyEmpty && $value === '') {
+			return DB::getConn()->prepStringForDB($value);
 		} else {
 			return parent::prepValueForDB($value);
 		}

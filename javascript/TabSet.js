@@ -2,10 +2,6 @@
 	$.entwine('ss', function($){
 		/**
 		 * Lightweight wrapper around jQuery UI tabs.
-		 * Ensures that anchor links are set properly,
-		 * and any nested tabs are scrolled if they have
-		 * their height explicitly set. This is important
-		 * for forms inside the CMS layout.
 		 */
 		$('.ss-tabset').entwine({
 			onmatch: function() {
@@ -16,12 +12,7 @@
 			
 			redrawTabs: function() {
 				this.rewriteHashlinks();
-
-				// Initialize jQuery UI tabs
-				var id = this.attr('id');
-				this.tabs({
-					cookie: ($.cookie && id) ? { expires: 30, path: '/', name: 'ui-tabs-' + id } : false
-			});
+				this.tabs();
 			},
 		
 			/**

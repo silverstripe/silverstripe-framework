@@ -1,4 +1,4 @@
-<div id="$id" class="$CSSClasses $extraClass field" href="$CurrentLink">
+<div id="$id" class="$CSSClasses $extraClass field nolabel" href="$CurrentLink">
   <div class="middleColumn">
 		<% if Markable %>
 			<% include TableListField_SelectOptions %>
@@ -17,9 +17,9 @@
 						<span class="sortLink <% if SortBy %><% else %>sortLinkHidden<% end_if %>">
 							<a href="$SortLink">
 								<% if SortDirection = desc %>
-								<img src="sapphire/images/bullet_arrow_up.png" alt="<% _t('SORTASC', 'Sort ascending') %>" />
+								<img src="$ModulePath(framework)/images/bullet_arrow_up.png" alt="<% _t('SORTASC', 'Sort ascending') %>" />
 								<% else %>
-								<img src="sapphire/images/bullet_arrow_down.png" alt="<% _t('SORTDESC', 'Sort descending') %>" />
+								<img src="$ModulePath(framework)/images/bullet_arrow_down.png" alt="<% _t('SORTDESC', 'Sort descending') %>" />
 								<% end_if %>
 							</a>
 							&nbsp;
@@ -49,8 +49,8 @@
 				<td colspan="$ItemCount">
 					<input type="hidden" id="{$id}_PopupHeight" value="$PopupHeight" disabled="disabled">
 					<input type="hidden" id="{$id}_PopupWidth" value="$PopupWidth" disabled="disabled">
-					<a class="popuplink addlink" href="$AddLink" alt="add"><img src="sapphire/images/add.gif" alt="<% _t('ADDITEM', 'add') %>" />
-						<% sprintf(_t('ADDITEM', 'Add %s', PR_MEDIUM, 'Add [name]'),$Title) %>
+					<a class="popuplink addlink" href="$AddLink" alt="add"><img src="$ModulePath(framework)/images/add.gif" alt="<% _t('ADDITEM', 'add') %>" />
+						<% sprintf(_t('ADDITEM', 'Add %s', 'Add [name]'),$Title) %>
 					</a>
 				</td>
 				<% control Actions %><td width="18">&nbsp;</td><% end_control %>

@@ -2,7 +2,7 @@
 /**
  * Tests for the template manifest.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage tests
  */
 class TemplateManifestTest extends SapphireTest {

@@ -1,0 +1,11 @@
+el:
+  AssetAdmin:
+    MENUTITLE: "Αρχεία & Εικόνες"
+  CMSMain:
+    MENUTITLE: "Περιεχόμενο"
+    SAVE: "Αποθήκευση"
+  LeftAndMain:
+    HELP: "Βοήθεια"
+    SAVED: "αποθηκεύτηκαν"
+  SecurityAdmin:
+    MENUTITLE: "Ασφάλεια"

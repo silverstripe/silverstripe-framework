@@ -2,7 +2,7 @@
 /**
  * Abstract database connectivity class.
  * Sub-classes of this implement the actual database connection libraries
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 abstract class SS_Database {
@@ -395,8 +395,9 @@ abstract class SS_Database {
 		}
 		
 		//Indexes specified as arrays cannot be checked with this line: (it flattens out the array)
-		if(!is_array($spec))
-			$spec = ereg_replace(" *, *",",",$spec);
+		if(!is_array($spec)) {
+			$spec = preg_replace('/\s*,\s*/', ',', $spec);
+        }
 
 		if(!isset($this->tableList[strtolower($table)])) $newTable = true;
 
@@ -470,7 +471,7 @@ abstract class SS_Database {
 		// collations.
 		// TODO: move this to the MySQLDatabase file, or drop it altogether?
 		if(!$this->supportsCollations()) {
-			$spec = eregi_replace(' *character set [^ ]+( collate [^ ]+)?( |$)','\\2',$spec);
+			$spec = preg_replace('/ *character set [^ ]+( collate [^ ]+)?( |$)/', '\\2', $spec);
 		}
 		
 		if(!isset($this->tableList[strtolower($table)])) $newTable = true;
@@ -632,8 +633,8 @@ abstract class SS_Database {
 	 * @param string $array Array where the replacement should happen
 	 */
 	static function replace_with_null(&$array) {
-		$array = ereg_replace('= *\'\'', "= null", $array);
-		
+		$array = preg_replace('/= *\'\'/', '= null', $array);
+
 		if(is_array($array)) {
 			foreach($array as $key => $value) {
 				if(is_array($value)) {
@@ -724,16 +725,18 @@ abstract class SS_Database {
 	 */
 	public function sqlQueryToString(SQLQuery $sqlQuery) {
 		$distinct = $sqlQuery->distinct ? "DISTINCT " : "";
+		
 		if($sqlQuery->delete) {
 			$text = "DELETE ";
-		} else if($sqlQuery->select) {
-			$text = "SELECT $distinct" . implode(", ", $sqlQuery->select);
+		} else {
+			$text = "SELECT $distinct" . $sqlQuery->prepareSelect();
 		}
+		
 		if($sqlQuery->from) $text .= " FROM " . implode(" ", $sqlQuery->from);
-		if($sqlQuery->where) $text .= " WHERE (" . $sqlQuery->getFilter(). ")";
-		if($sqlQuery->groupby) $text .= " GROUP BY " . implode(", ", $sqlQuery->groupby);
-		if($sqlQuery->having) $text .= " HAVING ( " . implode(" ) AND ( ", $sqlQuery->having) . " )";
-		if($sqlQuery->orderby) $text .= " ORDER BY " . $sqlQuery->orderby;
+		if($sqlQuery->where) $text .= " WHERE (" . $sqlQuery->prepareWhere(). ")";
+		if($sqlQuery->groupby) $text .= " GROUP BY " . $sqlQuery->prepareGroupBy();
+		if($sqlQuery->having) $text .= " HAVING ( " .$sqlQuery->prepareHaving() . " )";
+		if($sqlQuery->orderby) $text .= " ORDER BY " . $sqlQuery->prepareOrderBy();
 
 		if($sqlQuery->limit) {
 			$limit = $sqlQuery->limit;
@@ -756,7 +759,19 @@ abstract class SS_Database {
 		}
 		return $text;
 	}
-	
+
+	/**
+	 * Wrap a string into DB-specific quotes. MySQL, PostgreSQL and SQLite3 only need single quotes around the string.
+	 * MSSQL will overload this and include it's own N prefix to mark the string as unicode, so characters like macrons
+	 * are saved correctly.
+	 *
+	 * @param string $string String to be prepared for database query
+	 * @return string Prepared string
+	 */
+	public function prepStringForDB($string) {
+		return "'" . Convert::raw2sql($string) . "'";
+	}
+
 	/**
 	 * Function to return an SQL datetime expression that can be used with the adapter in use
 	 * used for querying a datetime in a certain format
@@ -891,7 +906,7 @@ abstract class SS_Database {
  * Primarily, the SS_Query class takes care of the iterator plumbing, letting the subclasses focusing
  * on providing the specific data-access methods that are required: {@link nextRecord()}, {@link numRecords()}
  * and {@link seek()}
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 abstract class SS_Query implements Iterator {
@@ -1087,4 +1102,4 @@ abstract class SS_Query implements Iterator {
 	abstract function seek($rowNum);
 }
 
-?>
+

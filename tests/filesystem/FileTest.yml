@@ -28,3 +28,7 @@ File:
       Filename: assets/FileTest-folder1/File1.txt
       Name: File1.txt
       ParentID: =>Folder.folder1
+ErrorPage:
+    404:
+      Title: Page not Found
+      ErrorCode: 404

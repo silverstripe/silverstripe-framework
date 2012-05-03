@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage core
  * A PHP diff engine
  */
@@ -22,7 +22,7 @@
 define('USE_ASSERTS', function_exists('assert'));
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage core
  * @access private
  */
@@ -45,7 +45,7 @@ class _DiffOp {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage core
  * @access private
  */
@@ -65,7 +65,7 @@ class _DiffOp_Copy extends _DiffOp {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage core
  * @access private
  */
@@ -83,7 +83,7 @@ class _DiffOp_Delete extends _DiffOp {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage core
  * @access private
  */
@@ -101,7 +101,7 @@ class _DiffOp_Add extends _DiffOp {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage core
  * @access private
  */
@@ -138,7 +138,7 @@ class _DiffOp_Change extends _DiffOp {
  *
  * @author Geoffrey T. Dairiki
  * @access private
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 class _DiffEngine
@@ -524,7 +524,7 @@ class _DiffEngine
 
 /**
  * Class representing a 'diff' between two sequences of strings.
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 class Diff
@@ -800,7 +800,7 @@ class Diff
 		if(is_array($content)) $content = implode(',', $content);
 		
 		$content = str_replace(array("&nbsp;","<", ">"),array(" "," <", "> "),$content);
-		$candidateChunks = split("[\t\r\n ]+", $content);
+		$candidateChunks = preg_split("/[\t\r\n ]+/", $content);
 		while(list($i,$item) = each($candidateChunks)) {
 			if(isset($item[0]) && $item[0] == "<") {
 				$newChunk = $item;
@@ -823,7 +823,7 @@ class Diff
 
 /**
  * Computes diff between sequences of strings.
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 class MappedDiff
@@ -879,4 +879,4 @@ extends Diff
     }
 }
 
-?>
+

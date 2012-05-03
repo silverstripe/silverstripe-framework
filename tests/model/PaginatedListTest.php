@@ -2,7 +2,7 @@
 /**
  * Tests for the {@link PaginatedList} class.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage tests
  */
 class PaginatedListTest extends SapphireTest {

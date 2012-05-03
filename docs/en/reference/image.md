@@ -89,7 +89,7 @@ For output of an image tag with the image automatically resized to 80px width, y
 	$Image.SetWidth(80) // returns a image 80px wide, ratio kept the same
 	$Image.SetHeight(80) // returns a image 80px tall, ration kept the same
 	$Image.SetSize(80,80) // returns a 80x80px padded image
-	$Image.SetRatioSize(80,80) // **New in 2.4** returns an image scaled proportional, with its greatest diameter scaled to 80px
+	$Image.SetRatioSize(80,80) // Returns an image scaled proportional, with its greatest diameter scaled to 80px
 	$Image.PaddedImage(80, 80) // Returns an 80x80 image. Unused space is padded white. No crop. No stretching
 	$Image.Width // returns width of image
 	$Image.Height // returns height of image

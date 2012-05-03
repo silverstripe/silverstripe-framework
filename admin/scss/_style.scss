@@ -1,4 +1,4 @@
-/**
+ /**
  * This file defines most styles of the CMS: Colors, fonts, backgrounds, 
  * alignments, dimensions.
  * 
@@ -18,16 +18,11 @@
  * Core Styles.
  * ---------------------------------------------------- */
 
-html,body {	
+html,body {
 	width: 100%;
 	height: 100%;
-	
-	@include global-reset;
-
-	font-size: $font-base-size;
-	line-height: $grid-vertical * 2;
-	font-family: $font-family;
-	color: $color-text;
+	/* Removes RHS whitespace on iPad */
+	overflow-x: hidden;
 }
 
 body.cms {
@@ -36,7 +31,7 @@ body.cms {
 
 .cms {
 	a {
-		color: $color-text-dark-link;
+		color: $color-text-blue-link;
 		text-decoration: none;
 	
 		&:hover,
@@ -65,6 +60,10 @@ body.cms {
 	}
 }
 
+.hide {
+	display: none;
+}
+
 /** --------------------------------------------
  * Panels Styles
  * -------------------------------------------- */
@@ -87,71 +86,208 @@ body.cms {
 	@include inline-block;
 }
 
-
 .cms-content-header {
-	background-color: darken($color-widget-bg, 20%);
-	padding: $grid-vertical $grid-horizontal ($grid-vertical - 2);	
-	height: $grid-vertical * 4;
+	padding: ($grid-y - 8) $grid-x $grid-y;	
+	height: $grid-y * 4;
 	z-index: 60;
-	border-bottom: 2px solid darken($color-widget-bg, 35%);
+	@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2) inset);
+	background: {
+		image:url(../images/textures/cms_content_header.png);
+		repeat:repeat;
+	}
+	overflow:hidden;
 
-	@include box-shadow($color-widget-bg 0 $grid-vertical $grid-vertical*2);
+	a {
+		color: $color-text-blue-link;
+	}
 	
-	@include background-image(
-		linear-gradient(darken($color-widget-bg, 10%), darken($color-widget-bg, 30%))
-	);
-	
+	.backlink {
+		span.btn-icon-back {
+			height:16px;
+		}
+	}
+
 	h2 {
-		float: left;
-		padding: $grid-vertical $grid-horizontal 0 0;
+		padding: $grid-y $grid-x 0 $grid-x;
 		font-size: $font-base-size + 2;
-		line-height: $grid-horizontal * 3;
+		line-height: $grid-x * 3;
 		font-weight: bold;
 		text-shadow: darken($color-widget-bg, 15%) 1px 1px 0;
-		width: $grid-horizontal * 22 /* 24 - (padding on each side + margin) */;
 		margin: 0;
-		@include hide-text-overflow();
+		display:table-cell;
+		vertical-align:top;
+		width:60%;
+		.breadcrumbs-wrapper {
+			// display:table;
+			.crumb {
+				// display:table-cell;
+				display: inline;
+				line-height:26px;
+				padding:0 5px;
+			}
+			.crumb:first-child {
+				padding-left:0px;
+			}
+			.crumb:last-child {
+				padding-right:0px;
+			}
+		}
 	}
 
 	& > div {
-		width: 9999em;
-		overflow: hidden;
+		display:table;
+		width: 100%;
+		.cms_backlink {
+			display:table-cell;
+			vertical-align:middle;
+			width:auto;
+		}
 	}
 	
 	.cms-content-header-tabs {
-		float: left;
+		display:table-cell;
+		white-space:nowrap;
+		width:40%;
+		.ui-tabs-nav {
+			float:right;
+			margin-right:$grid-x*4;
+			li {
+				a {
+					font-weight: bold;
+					line-height: $grid-y * 2;
+					padding: $grid-y*1.5 $grid-x*2.5 $grid-y*1.5;
+				}
+			}
+			
+			.ui-state-default, 
+			.ui-widget-content .ui-state-default, 
+			.ui-widget-header .ui-state-default {
+				border: {
+					top:none;
+				}
+			}
+			
+			.ui-state-active, 
+			.ui-widget-content .ui-state-active, 
+			.ui-widget-header .ui-state-active {
+				border: {
+					top:none;
+				}
+				padding-bottom:0px;
+			}
+			.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+				border-radius:0;
+			}
+
+			.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+				border-radius:0;
+			}
+		}
 	}
 }
 
-.ui-tabs .cms-content-header, .cms-dialog .ui-tabs-nav {
-	.ui-tabs-nav li {
+.cms-edit-form {
+	.cms-content-header-tabs {
+		.ui-tabs-nav {
+			li {
+				a {
+					text-indent:0;
+				}
+			}
+		}
+	}		
+}
+
+/** --------------------------------------------
+ * Tabs
+ * -------------------------------------------- */
+.cms-content-header .ui-tabs-nav, .cms-dialog .ui-tabs-nav {
+	li {
+		margin:0;
 		a {
 			font-weight: bold;
-			line-height: $grid-vertical * 2;
-			padding: ($grid-vertical * 2 - 5) $grid-horizontal + 4 $grid-vertical + 1;
-			border-bottom: 2px solid darken($color-tab, 15%);
+			line-height: $grid-y * 2;
+			padding: ($grid-y * 2 - 4) ($grid-x * 2 + 4) $grid-y + 3;
 		}
 	}
 	
 	.ui-state-default, 
 	.ui-widget-content .ui-state-default, 
 	.ui-widget-header .ui-state-default {
-		background-color: $color-tab;
+		background-color: $color-base;
 		@include background-image(
-			linear-gradient($color-tab, darken($color-tab, 10%)
-		));
+			linear-gradient($color-base, darken($color-base, 12%))
+			);
 		
-		border-color: darken($color-tab, 20%);
-		text-shadow: lighten($color-tab, 60%) 0 1px 0;
+		border: {
+			right-color: darken($color-tab, 20%);
+			left-color: $color-tab;
+			bottom:none;
+		}
+
+		text-shadow: lighten($color-tab, 5%) 0 1px 0;
 	}
 	
 	.ui-state-active, 
 	.ui-widget-content .ui-state-active, 
 	.ui-widget-header .ui-state-active {
 		background: $color-widget-bg;
+		border: {
+			right-color: darken($color-tab, 20%);
+			left-color: darken($color-tab, 20%);
+		}
+		margin-right:-1px;
+		margin-left:-1px;
+		z-index:2;
 		
 		a {
-			border-bottom: 2px solid $color-widget-bg;
+			border-bottom:none;
+		}
+	}
+}
+
+.CMSPagesController {
+	.cms-content-header-tabs {
+		.ui-tabs-nav {
+			li {
+				a {
+					font-weight: bold;
+					line-height: $grid-y * 2;
+					padding: ($grid-y * 2 - 4) ($grid-x * 2 + 4) $grid-y + 3;
+					text-indent:-9999em;
+
+					&.content-treeview {
+						background:url(../images/content-header-tabs-sprite.png) no-repeat 2px 0px;
+					}
+					&.content-galleryview {
+						background:url(../images/content-header-tabs-sprite.png) no-repeat -87px 0px;
+					}
+					&.content-listview {
+						background:url(../images/content-header-tabs-sprite.png) no-repeat -38px 0px;
+					}
+				}
+			}
+			
+			.ui-state-active, 
+			.ui-widget-content .ui-state-active, 
+			.ui-widget-header .ui-state-active {
+				border: {
+					top:none;
+				}
+				padding-bottom:1px;
+		
+				a {
+					&.content-treeview {
+						background:url(../images/content-header-tabs-sprite.png) no-repeat 2px -40px;
+					}
+					&.content-galleryview {
+						background:url(../images/content-header-tabs-sprite.png) no-repeat -87px -40px;
+					}
+					&.content-listview {
+						background:url(../images/content-header-tabs-sprite.png) no-repeat -38px -40px;
+					}
+				}
+			}
 		}
 	}
 }
@@ -236,21 +372,23 @@ body.cms {
  * -------------------------------------------- */
 
 .cms-content-actions {
-	margin: $grid-vertical $grid-horizontal*2 $grid-vertical*2 $grid-horizontal*2;
-	height: $grid-vertical*4;
-	z-index: 70;
-	
-	@include box-shadow($tab-panel-texture-color 0 $grid-vertical*-2 $grid-vertical*2);
+	margin: $grid-y $grid-x*2 $grid-y*2 0;
+	padding-left:$grid-x*2;
+	height: $grid-y*4;
+	z-index: 0;
+	@include box-shadow(darken($color-widget-bg, 2%) 0 $grid-y*-2 $grid-y*2);
+	.root-form &{
+		@include box-shadow(rgba($tab-panel-texture-color, 0.8) 0 $grid-y*-2 $grid-y*2);
+	}
 }
-
 
 /** --------------------------------------------
  * Messages
  * -------------------------------------------- */
 
 .message {
-	margin: 0 0 $grid_vertical 0;
-	padding: $grid_vertical - 1 $grid_horizontal - 1;
+	margin: 0 0 $grid-y 0;
+	padding: $grid-y - 1 $grid-x - 1;
 	font-weight: bold;
 	
 	border: 1px black solid;
@@ -268,7 +406,7 @@ body.cms {
 		background-color: lighten($color-warning, 20%);
 		border-color: $color-warning;
 	}
-	&.error {
+	&.error, &.bad, &.required {
 		background-color: lighten($color-error, 20%);
 		border-color: $color-error;
 	}
@@ -293,6 +431,25 @@ body.cms {
 }
 
 .cms-add-form {
+	.step-label {
+		.flyout {
+			height:17px; //centres number within the grey arrow 
+			padding-top:5px;
+		}
+		.title {
+			padding-top:5px; //aligns label with point of arrow
+			font-weight:bold; //to match pagetype label
+			@include text-shadow(1px 1px 0 $color-text-shadow);
+		}
+	}
+	ul.SelectionGroup {
+		padding-left:28px;
+	}
+	.parent-mode {
+		padding: $grid-x;
+		overflow: auto;
+	}
+
 	#PageType li {
 		float: none;
 		width: 100%;
@@ -383,13 +540,59 @@ body.cms {
 	
 	@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 50%));
 	@include legacy-pie-clearfix();
-		
-	& > * {
-		float: left;
-	}
 	
-	.cms-tree-view-modes * {
-		display: inline-block;
+	.cms-tree-view-modes {
+		float:right;
+		padding-top:$grid-y - 3;
+		* {
+			display: inline-block;
+			label {
+				color:$color-text-blue-link;
+			}
+		}
+	}
+
+/* smaller treedropdown */
+	.chzn-container-single .chzn-single  {
+		height: 26px;
+		line-height: 26px;
+		padding-left:25px;
+		color: darken($color-dark-grey, 15%);
+		@include background-image(
+			linear-gradient($color-button-generic, darken($color-button-generic, 10%))
+		);
+		font: {
+			size:13px;
+			weight:bold;
+		}
+		text-shadow:darken($color-text-shadow, 10%) 0 -1px 1px;
+		box-shadow:none;
+		&:hover {
+			@include box-shadow(0 0 5px darken($color-button-generic, 20%));
+			@include background-image(
+				linear-gradient(lighten($color-button-generic, 2%), darken($color-button-generic, 8%))
+			);
+		}
+
+		&:active {
+			@include box-shadow(inset 0 1px 3px darken($color-button-generic, 60%));
+		}
+ 		
+ 		span {
+ 			padding-top:1px;
+ 		}
+
+		div {
+			background:url(../images/btn-icon/settings.png) 5px 4px no-repeat;
+			border-left:none;
+			width:100%;
+		}
+
+		div b {
+			background: url(../images/sprites-32x32/menu-arrow-deselected-down.png) no-repeat 9px 11px;
+			float:right;
+			width:24px;
+		}	
 	}
 }
 
@@ -399,41 +602,64 @@ body.cms {
  * panel
  */
 .cms-content-tools {
-	background-color: darken($color-widget-bg, 5%);
-	width: $grid-horizontal * 24;
+	background-color: $color-panel-background;
+	width: $grid-x * 24;
 	border-right: 1px solid darken($color-widget-bg, 15%);
 	overflow-y: auto;	
 	overflow-x: hidden;
 	z-index: 70;
+	@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2));
 	float: left;
 	position: relative;
 	
 	.cms-panel-header {
-		padding: 0;
-		margin: 0 0 $grid-vertical - 1;
-		line-height: $grid-vertical * 3;
+		clear: both;
+		margin: 0 0 $grid-y - 1;
+		line-height: $grid-y * 3;
 		
-		@include doubleborder(bottom, $color-light-separator, lighten($color-light-separator, 10%))
+		@include doubleborder(bottom, $color-light-separator, lighten($color-shadow-light, 95%));
 	}
 	
 	.cms-panel-content {
-		width: ($grid-horizontal * 22);
-		padding: $grid-vertical $grid-horizontal;
-		overflow-x: hidden;
-		overflow-y: auto;
+		width: ($grid-x * 22);
+		padding: 0 $grid-x;
+		overflow: auto;
+		height:100%;
+		.dropdown select {
+			width:$grid-x * 20;
+		}
+		#LastEditedFrom {
+			@include box-shadow(none);
+			input {
+				width:$grid-x * 20;
+				&.hasDatepicker {
+					max-width:$grid-x * 20;
+				}
+			}
+		}
+		#LastEditedTo {
+			@include box-shadow(none);
+			input {
+				width:$grid-x * 20;
+				&.hasDatepicker {
+					max-width:$grid-x * 20;
+				}
+			}
+		}
+		.Actions .ss-ui-action-constructive {
+			margin-right:5px; //accounts for the scrollbar in the filter - keeps the actions on one line instead of wrapping onto two.
+		}
 	}
 	
 	.cms-content-header {
 		background-color: darken($color-widget-bg, 40%);	
-		border-bottom: 2px solid darken($color-widget-bg, 50%);
-
 		@include background-image(
 			linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 40%))
 		);
 
 		h2 {
 			text-shadow: darken($color-widget-bg, 50%) -1px -1px 0;
-			width: $grid-horizontal * 22 /* 24 - (padding on each side + margin) */;
+			width: $grid-x * 22 /* 24 - (padding on each side + margin) */;
 			color: lighten($color-widget-bg, 60%);
 			
 			@include hide-text-overflow();
@@ -442,10 +668,15 @@ body.cms {
 
 	h3,h4,h5 {
 		font-weight: bold;
-		line-height: $grid-vertical * 2;
+		line-height: $grid-y * 2;
 	}
 	h3 {
 		font-size: $font-base-size + 1;
+	}
+
+	h4 {
+		font-size: $font-base-size;
+		margin:5px 0;
 	}
 	
 	.ui-widget-content {
@@ -463,7 +694,7 @@ body.cms {
 			float: none;
 			width: auto;
 			font-size: 11px;
-			padding: 0 $grid-horizontal 4px 0;
+			padding: 0 $grid-x 4px 0;
 		}
 		
 		.middleColumn {
@@ -484,24 +715,8 @@ body.cms {
 				margin: 2px 0; 
 			}
 		}
-		
-		/* smaller treedropdown */
-		.chzn-container-single .chzn-single  {
-			height: 24px;
-			line-height: 24px;
-			font-size: 11px;
-	 		
-			div b {
-				background-position: 4px 0;
-			}
-		}
 	}
-		
-	/* buttons now need to line with with reduced input sizes */
-	.ss-ui-button {
-		padding: 5px $grid-horizontal;
-	}
-		
+
 	.fieldgroup {
 		.fieldgroup-field {
 			width: auto;
@@ -549,7 +764,7 @@ body.cms {
 	
 	td {
 		border-bottom: 1px solid darken($color-widget-bg, 10%);
-		padding: $grid-vertical - 1 2px;
+		padding: $grid-y - 1 2px;
 		font-size: 11px;
 	}
 }
@@ -557,15 +772,12 @@ body.cms {
 /** 
  * CMS Batch actions
  */
-.cms-content-constructive-actions {
-	float: left;
-}
 
 .cms-content-batchactions {
-	float: right;
+	float: left;
 	position:  relative;
 	display: block;
-	margin-right: 8px;
+	margin-left: 8px;
 	
 	form > * {
 		display: block;
@@ -575,11 +787,6 @@ body.cms {
 	form.cms-batch-actions {
 		float:  left;
 	}
-}
-
-.cms-content-constructive-actions a {
-	display: block;
-	float: right;
 }
 
 #Form_BatchActionsForm select {
@@ -659,13 +866,16 @@ body.cms {
 
 		.cms-preview-toggle-link {
 			float: right;
-			.ui-button-text{
-				padding:0;
-			}
-
 		}
 	}
 	
+}
+
+.cms-preview-toggle-link {
+	display: block;
+	float: right;
+	font-size: 12px;
+	text-decoration: none;
 }
 
 .cms-preview-header {
@@ -679,7 +889,49 @@ body.cms {
  * -------------------------------------------- */
 
 form.member-profile-form {
-	
+	padding: 0 $grid-x*2 0 0;
+	.ui-tabs-nav {
+		margin-right:40px !important; //adds a 40px gap to the right of the tabs to match designs on main CMS
+		float:right;
+		.ui-state-active, 
+		.ui-widget-content .ui-state-active, 
+		.ui-widget-header .ui-state-active {
+			padding-bottom: 1px;
+			margin-bottom:-1px;
+		}
+		.ui-state-default,
+		.ui-widget-content .ui-state-default,
+		.ui-widget-header .ui-state-default {
+			border: {
+				top:none;
+			}
+			a {
+				padding:12px 20px 11px;
+			}
+		}
+	}
+
+	#Root_Permissions {
+		clear:both;
+		border-top: 1px solid darken($color-tab, 20%);
+	}
+
+	#Root_Main {
+		clear:both;
+		border-top: 1px solid darken($color-tab, 20%);
+		padding-top:$grid-y*2;
+		.cms-help-toggle {
+			text-indent: -9999em;
+			display: inline-block;
+			width: 20px;
+			background:url(../images/question.png) no-repeat 0px 0px; 
+		}
+	}
+
+	#FavouritePageID {
+		margin-top:$grid-y;
+	}
+
 	#CsvFile .middleColumn {
 		background: none !important;
 	}
@@ -694,7 +946,7 @@ form.member-profile-form {
 	}
 	
 	input.customFormat {
-		width: $grid-horizontal * 10;
+		width: $grid-x * 10;
 		border: 1px solid #ccc !important;
 		padding: 3px;
 		display: inline-block;
@@ -740,6 +992,19 @@ form.member-profile-form {
 			}	
 		}
 	}
+
+	.ui-tabs-nav {
+		li {
+			margin:0 0 -1px 0;
+		}
+		.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+			border-radius:0;
+		}
+
+		.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+			border-radius:0;
+		}
+	}
 }
 
 .cms {
@@ -749,14 +1014,57 @@ form.member-profile-form {
 		@include box-shadow(3px 0 4px rgba(0,0,0,0.15));
 		@include border-radius(0);
 	}
+
+	form.cms-content {
+		padding:$grid-y $grid-x*2 $grid-y*2 $grid-x*2; 
+	}
 	
 	.cms-content-fields {
-		/* always show a y scroll bar as popups like TreeDropdowns 
-		 can trigger longer pages and the extra scroll bar doesn't 
-		 fire our sizing bar */
+		// always show a y scroll bar as popups like TreeDropdowns 
+		// can trigger longer pages and the extra scroll bar doesn't fire our sizing bar
 		overflow-y: auto;
 		overflow-x: auto;
 		background: none;
+		width:100%;
+		#Root_Main {
+			.confirmedpassword {
+				border-bottom:none;
+				box-shadow:none;
+			}
+			.customFormat {
+				max-width:80px;
+			}
+			.cms-help-toggle {
+				text-indent: -9999em;
+				display: inline-block;
+				width: 20px;
+				background:url(../images/question.png) no-repeat 0px 0px;
+			}
+		}
+		#Root_Permissions{
+			ul.optionset li {
+				float:none;
+			}
+		}	
+	}
+}
+
+/** --------------------------------------------
+ * "Settings" Form
+ * -------------------------------------------- */
+#CanViewType, #CanEditType, #CanCreateTopLevelType {
+	.optionset li {
+		// All options on their own line
+		float: none;
+		width: auto;
+		white-space: nowrap;
+	}
+}
+#ViewerGroups, #EditorGroups, #CreateTopLevelGroups {
+	select {
+		// Fix for chosen.js width detection on hidden elements.
+		// TODO Remove once .field styling in _form.scss is refactored to allow flexible field widths
+		width: $grid-x * 64;
 	}
 }
 
@@ -773,7 +1081,7 @@ form.member-profile-form {
 		a { 
 			display: block;
 			text-align: right;
-			padding: $grid-vertical/2 0;
+			padding: $grid-y/2 0;
 			width: 100%;
 		
 			@include background-image(
@@ -796,31 +1104,69 @@ form.member-profile-form {
 	}
 	
 	&.collapsed {
+
+		cursor: pointer;
+
+		.cms-panel-header * {
+			display: none;
+		}
 		
 		.cms-panel-content {
 			display: none;
 		}
 		
-		/*
-		.cms-panel-header {
-			@include rotate(-90deg);
-			position: relative;
-			top: $grid-vertical * 10;
-			border: none;
-			padding: 0;
-		}
-		*/
+		//.cms-panel-header {
+		//	@include rotate(-90deg);
+		//	position: relative;
+		//	top: $grid-y * 10;
+		//	border: none;
+		//	padding: 0;
+		//}
 
+	}
+
+	.cms-panel-header {
+		width: 100%;
+	}
+
+	&#cms-content-tools-CMSPageEditController {
+		.cms-panel-content-collapsed {
+			width: 40px;
+			display: none; // Avoids FOUC
+
+			h2, h3 {
+				border-bottom: 0;
+				margin-left: $grid-y;
+				@include transform-origin(bottom, right);
+				@include rotate(270deg);
+			}
+			.cms-panel-header {
+			width: 600px;
+			position:relative;
+			top:24px;
+			right:577px;
+			text-align:right;
+			}
+		}
 	}
 
 	.cms-panel-content-collapsed {
 		width: 40px;
+		display: none; // Avoids FOUC
 
 		h2, h3 {
 			border-bottom: 0;
-			margin-left: $grid-vertical;
-			@include transform-origin(bottom, left);
-			@include rotate(90deg);
+			margin-left: $grid-y;
+			@include transform-origin(bottom, right);
+			@include rotate(270deg);
+		}
+		.cms-panel-header {
+			width: 600px;
+			position:relative;
+			right:577px;
+			text-align:right;
+			border-bottom:none;
+			box-shadow:none;
 		}
 	}
 
@@ -851,15 +1197,10 @@ form.member-profile-form {
 
 }
 
-.cms-panel-padded {
-	width: ($grid-horizontal * 22);
-	padding: $grid-vertical*2 $grid-horizontal*2;
-	overflow-x: hidden;
-	overflow-y: auto;
-}
-
-.cms-content .cms-panel.collapsed {
-	cursor: pointer;
+.cms {
+	.cms-panel-padded {
+		padding: $grid-y*2 $grid-x*2;
+	}
 }
 
 /** ------------------------------------------------------------------
@@ -881,24 +1222,143 @@ form.member-profile-form {
 	background-image: none;
 }
 
+.cms .ui-dialog .ss-ui-dialog.ui-dialog-content {
+	padding-top: 0px; //removes padding so that tabs are flush with header
+}
+
 // Elements with this class can either frame inline markup or an iframe,
 // most styles should be applied to .cms-dialog instead (which declares the content in the frame)
 .ui-dialog {
   background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
   border: 3px solid #000 !important;
-	border-radius: $grid-vertical;
+	border-radius: $grid-y;
   overflow: visible;
   padding: 0;
-
+ 
   // Titlebar for pop-up dialog.
 	.ui-dialog-titlebar.ui-widget-header {
-	  font-size: $font-base-size+2;
-		background-color: #92a5b2;
-		padding: $grid-vertical/2 $grid-horizontal/2 $grid-vertical/2 $grid-horizontal*2;
-		border-bottom: 2px solid #8399a7;
-		// @include border-radius-top(4px);
-		// @include border-radius-bottom(0px);
-		@include background-image(linear-gradient(#ced7dc, #92a5b2));
+	  	font-size: $font-base-size+2;
+		padding: 0;
+		border:none;
+		background: {
+			color:transparent;
+			image:url(../images/textures/cms_content_header.png);
+			repeat:repeat;	
+		}
+		@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2) inset);
+		.ui-dialog-title {
+			position:absolute;
+		}
+	}
+
+	.cms-dialog-content {
+		background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+		padding-bottom: $grid-y;
+		padding-top:0px;
+
+		.Actions {
+			overflow: auto;
+			margin: $grid-y 0;
+			padding-bottom: $grid-y;
+			float: right;
+		}
+
+		.cms-tabset {	
+			@include border-radius(none);
+
+			.tab {
+				background: none;
+				overflow-y: auto;
+			}
+
+			&.ui-tabs {
+				background: none;
+
+				.ui-tabs-nav {
+					border: none;
+					padding: 0 $grid-x*5 0 0; //allows for 40px gap to the right of tabs to match the tabs on main CMS
+					float:right;
+
+					li {	
+						margin:0;
+						&.ui-tabs-selected {
+							margin-bottom: -1px;
+							padding-bottom:11px;
+						}
+
+						&:first-child {
+							margin-left: 15px;
+						}
+						font-weight: bold;
+						line-height: 16px;
+						padding: 12px 12px 10px;
+						border-bottom: 2px solid #B3B3B3;
+					}
+
+					.ui-state-focus a {
+						outline:none;
+					}
+
+					.ui-state-default, 
+					.ui-widget-content .ui-state-default, 
+					.ui-widget-header .ui-state-default {
+						background-color: $color-base;
+						@include background-image(
+							linear-gradient($color-base, darken($color-base, 12%))
+							);
+						
+						border: {
+							right-color: darken($color-tab, 20%);
+							left-color: $color-tab;
+							bottom:none;
+							top:none;
+						}
+
+						text-shadow: lighten($color-tab, 60%) 0 1px 0;
+					}
+					
+					.ui-state-active, 
+					.ui-widget-content .ui-state-active, 
+					.ui-widget-header .ui-state-active {
+						background: $color-widget-bg;
+						border: {
+							right-color: darken($color-tab, 20%);
+							left-color: darken($color-tab, 20%);
+						}
+						margin-right:-1px;
+						margin-left:-3px;
+						z-index:2;
+						
+						a {
+							border: {
+								bottom:none;
+								top:none;
+							}
+
+						}
+					}
+					.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+					border-radius:0;
+					}
+
+					.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+						border-radius:0;
+					}
+				}
+				
+
+				.ui-tabs-panel {
+					background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
+					overflow-x:hidden;
+					clear:both;
+					border-top: 1px solid darken($color-tab, 20%);
+				}
+			}
+		}
+		.clear {
+			clear: both;
+		}
+		
 	}
 
 	&.loading {
@@ -911,60 +1371,7 @@ form.member-profile-form {
 body.cms-dialog {
 	overflow: auto;
 	background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
-}
-
-.cms-dialog-content {
-	background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
-	padding-bottom: $grid-vertical;
-
-	.Actions {
-		overflow: auto;
-		margin: $grid-vertical 0;
-		padding-bottom: $grid-vertical;
-		float: right;
-	}
-
-	.ss-tabset {	
-		z-index: 60;
-		@include border-radius(none);
-
-		.tab {
-			background: none;
-			overflow-y: auto;
-		}
-
-		&.ui-tabs {
-			background: none;
-
-			.ui-tabs-nav {
-				padding: $grid-horizontal 0 0 0;
-				border: none;
-
-				li {	
-					&.ui-tabs-selected {
-						margin-bottom: -1px;
-					}
-
-					&:first-child {
-						margin-left: 15px;
-					}
-					font-weight: bold;
-					line-height: 16px;
-					padding: 11px 12px 9px;
-					border-bottom: 2px solid #B3B3B3;
-				}
-			}
-
-			.ui-tabs-panel {
-				border: 1px solid #AAAAAA;
-				background: url("../images/textures/bg_cms_main_content.png") repeat left top #F0F3F4;
-			}
-		}
-	}
-	.clear {
-		clear: both;
-	}
-	
+	position:relative;
 }
 
 /** --------------------------------------------
@@ -972,8 +1379,83 @@ body.cms-dialog {
  * -------------------------------------------- */
 .htmleditorfield-linkform {
 	.step2 {
-		margin-bottom: $grid-horizontal*2;
+		margin-bottom: $grid-x*2;
 	}
+}
+
+.htmleditorfield-mediaform {
+	.ss-gridfield {
+		// Set thumbnail size 
+		tbody td:first-child img {
+			max-height: 30px;
+		}
+	}
+
+	.ss-uploadfield-editandorganize {
+		display: none;
+	}
+
+	// TODO Consolidate with .assetuploadfield and .ss-uploadfield styles
+	.ss-htmleditorfield-file {
+		border: 1px solid lighten($color-medium-separator, 20%);
+		@include border-radius(5px);
+		@include background-clip(padding-box);
+		background: #E2E2E2;
+		margin-bottom: $grid-x*2;
+
+		&.loading {
+			width: 100%;
+			height: 100px;
+			background-image: url(../images/spinner.gif);
+			background-position: 50% 50%;
+			background-repeat: no-repeat;
+		}
+
+		.overview {
+			background-color: #5db4df;
+			@include background-image(linear-gradient(top,  #5db4df 0%,#5db1dd 8%,#439bcb 50%,#3f99cd 54%,#207db6 96%,#1e7cba 100%));
+
+			.thumbnail {
+				display: inline-block;
+				vertical-align: middle;
+				padding: $grid-x/2;
+
+				img {
+					max-height: $grid-x*3;
+				}
+			}
+
+			.title {
+				display: inline-block;
+				vertical-align: middle;
+				background: #fff;
+				border: 1px solid lighten($color-medium-separator, 20%);
+				@include border-radius(5px);
+				margin-left: $grid-x*2;
+				padding: $grid-x/2;
+			}
+
+			.action-delete {
+				float:right;
+				padding:$grid-x;
+				background:none;
+				border:none;
+			}
+		}
+
+		.details {
+			padding: $grid-x*2;
+		}
+	}
+	
+}
+
+/** --------------------------------------------
+ * Search forms (used in AssetAdmin, ModelAdmin, etc)
+ * -------------------------------------------- */
+.cms-search-form {
+	overflow: auto;
+	margin-bottom: $grid-y*2;
 }
 
 /** --------------------------------------------
@@ -1011,4 +1493,250 @@ body.cms-dialog {
 		padding: 4px;
 	}
 	
+}
+
+/** --------------------------------------------
+ * Item Edit Form
+ * -------------------------------------------- */
+
+.cms-file-info {
+	overflow: auto;
+	// Emulate .field bottom border styling without applying .field class,
+	// as it messes up the nested .field element styling (blocklevel labels)
+	border-bottom: 1px solid $color-shadow-light;
+  @include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
+  margin-bottom: $grid-x;
+
+	// Preview might not always be available
+	.cms-file-info-preview {
+		float: left;
+		width: $grid-x * 22; // Same as ".field label"
+		margin-right: $grid-x;
+
+		img {
+			max-width: $grid-x * 22; // Same as ".field label"
+		}
+	}
+	.cms-file-info-data {
+		float: left;
+
+		.field {
+			// Unsetting styles from .field, make it more compact visually
+			margin-bottom: 0;
+			padding-bottom: $grid-x;
+			border: none;
+			box-shadow: none;
+			label, span {
+				padding: 0;
+			}
+		}
+	}
+}
+
+form.small {
+	.cms-file-info-preview {
+		width: $grid-x*14;
+
+		img {
+			max-width: $grid-x*14;
+		}
+	}
+
+	.cms-file-info-data {
+		// Ensure it fits beside the image preview
+		max-width: 350px;
+
+		// Reduced label widths to fit everything in smaller space
+		.field {
+			padding-bottom: 0;
+
+			label {
+				width: $grid-x*14;
+			}
+			.middleColumn {
+				margin-left: $grid-x*15;
+			}
+		}
+	}
+}
+
+/** --------------------------------------------
+ * Users Members Admin
+ * -------------------------------------------- */
+
+ .members_grid {
+ 	span button#action_gridfield_relationfind {
+ 		display:none; //hides find button - redundant functionality
+ 	}
+ 	p button#action_export {
+		margin-top:$grid-y*2;
+		span.btn-icon-download-csv {
+			height:17px; //exact height of icon
+		}
+		span.ui-button-text {
+			padding-left:26px; //to accomodate wider export icon
+		} 
+ 	}
+}
+
+/**
+ * Import forms
+ */
+form.import-form {
+	ul {
+		list-style: disc;
+		li {
+			margin-left: 20px;
+		}
+	}
+	p {
+		margin-bottom: 5px;
+	}
+	label.left {
+		width: 250px;
+	}
+
+}
+
+/** --------------------------------------------
+ * Page Edit Controller
+ * -------------------------------------------- */
+
+.cms-container {
+	.CMSMain.CMSPageEditController {
+		// Fix pixel gap between nav tree and main page header
+	 	margin-left:-1px;
+	 	//Styling of tabs on page edit
+	 	.cms-edit-form {
+	 		background:darken($color-widget-bg, 2%);
+	 		.ui-tabs-nav {
+				float:right;
+				margin:$grid-x $grid-x*3 -1px 0;
+				li {
+					a {
+						font-weight: bold;
+						line-height: $grid-y * 2;
+						padding: $grid-y $grid-x*2.5 $grid-y;
+					}
+				}
+				.ui-state-default,
+				.ui-widget-content .ui-state-default,
+				.ui-widget-header .ui-state-default {
+					border:1px solid $color-button-generic-border;
+				}
+				.ui-state-active,
+				.ui-widget-content .ui-state-active,
+				.ui-widget-header .ui-state-active {
+					padding-bottom:1px;
+					background:darken($color-widget-bg, 2%);
+					border:1px solid $color-button-generic-border;
+				}
+			}
+		}
+	 	.ss-tabset .ui-tabs-panel {
+	 		background:darken($color-widget-bg, 2%);
+	 		clear:both;
+	 		border-top:1px solid $color-button-generic-border;
+	 		.ss-tabset {
+	 			border-top:none;
+	 			.ui-tabs-nav {
+	 				margin-top:0px;
+	 				margin-right:8px;
+	 			}
+	 		}
+	 	}
+	}
+	//Styling of tabs on page settings
+	.CMSPageSettingsController {
+	 	.cms-edit-form {
+	 		background:darken($color-widget-bg, 2%);
+	 		.ui-tabs-nav {
+				float:right;
+				margin:$grid-x $grid-x*5 -1px 0;
+				li {
+					a {
+						font-weight: bold;
+						line-height: $grid-y * 2;
+						padding: $grid-y $grid-x*2.5 $grid-y;
+					}
+				}
+				.ui-state-default,
+				.ui-widget-content .ui-state-default,
+				.ui-widget-header .ui-state-default {
+					border:1px solid $color-button-generic-border;
+				}
+				.ui-state-active,
+				.ui-widget-content .ui-state-active,
+				.ui-widget-header .ui-state-active {
+					padding-bottom:1px;
+					background:darken($color-widget-bg, 2%);
+					border:1px solid $color-button-generic-border;
+				}
+			}
+		}
+	 	.ss-tabset .ui-tabs-panel {
+	 		background:darken($color-widget-bg, 2%);
+	 		clear:both;
+	 		border-top:1px solid $color-button-generic-border;
+	 	}
+	}
+	//Styling of tabs on page History
+	.CMSPageHistoryController {
+		.cms-edit-form {
+	 		background:darken($color-widget-bg, 2%);
+	 		.ui-tabs-nav {
+				float:right;
+				margin:$grid-x $grid-x*3 -1px 0;
+				li {
+					a {
+						font-weight: bold;
+						line-height: $grid-y * 2;
+						padding: $grid-y $grid-x*2.5 $grid-y;
+					}
+				}
+				.ui-state-default,
+				.ui-widget-content .ui-state-default,
+				.ui-widget-header .ui-state-default {
+					border:1px solid $color-button-generic-border;
+				}
+				.ui-state-active,
+				.ui-widget-content .ui-state-active,
+				.ui-widget-header .ui-state-active {
+					padding-bottom:1px;
+					background:darken($color-widget-bg, 2%);
+					border:1px solid $color-button-generic-border;
+				}
+			}
+		}
+	 	.ss-tabset .ui-tabs-panel {
+	 		background:darken($color-widget-bg, 2%);
+	 		clear:both;
+	 		border-top:1px solid $color-button-generic-border;
+	 	}
+	}
+}
+
+/** --------------------------------------------
+ * Page Settings Controller
+ * -------------------------------------------- */
+
+.cms-container .CMSMain.CMSPageSettingsController {
+	.tab#Root_Settings {
+		.optionset li {
+			white-space:nowrap;
+			padding-top:$grid-y;
+			label {
+				padding-left:2px;
+			}
+		}
+		.fieldgroup .fieldgroup-field {
+			width:$grid-x*27;
+			padding-left:0;
+		}
+		.TreeDropdownField .treedropdownfield-toggle-panel-link {
+			border-left:none;
+			background:none;
+			background-image:none;
+		}
+	}
 }

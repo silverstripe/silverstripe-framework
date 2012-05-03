@@ -30,15 +30,51 @@
 			Config: null,
 
 			onmatch: function() {
+				
+				if(this.is('.readonly,.disabled')) return;
+
 				var fileInput = this.find('input');
 				var dropZone = this.find('.ss-uploadfield-dropzone');
 				var config = $.parseJSON(fileInput.data('config').replace(/'/g,'"'));
+				
+				
+				/* Attach classes to dropzone when element can be dropped*/
+				$(document).unbind('dragover');
+				$(document).bind('dragover', function (e) {
+					timeout = window.dropZoneTimeout;
+					var $target = $(e.target);
+					if (!timeout) {
+						dropZone.addClass('active');
+					} else {
+						clearTimeout(timeout);
+					}
+					if ($target.closest('.ss-uploadfield-dropzone').length > 0) {
+						dropZone.addClass('hover');
+					} else {
+						dropZone.removeClass('hover');
+					}
+					window.dropZoneTimeout = setTimeout(function () {
+						window.dropZoneTimeout = null;
+						dropZone.removeClass('active hover');
+					}, 100);
+				});
+				
+				//disable default behaviour if file dropped in the wrong area
+				$(document).bind('drop dragover', function (e){					
+					e.preventDefault(); 
+				});
+
+
 
 				this.setConfig(config);
 				this.fileupload($.extend(true, 
 					{
 						formData: function(form) {
-							return [{name: 'SecurityID', value: $(form).find(':input[name=SecurityID]').val()}];
+							
+							return [
+								{name: 'SecurityID', value: $(form).find(':input[name=SecurityID]').val()},
+								{name: 'ID', value: $(form).find(':input[name=ID]').val()}
+							];
 						},
 						errorMessages: {
 							// errorMessages for all error codes suggested from the plugin author, some will be overwritten by the config comming from php
@@ -85,6 +121,7 @@
 				if (this.data('fileupload')._isXHRUpload({multipart: true})) {
 					$('.ss-uploadfield-item-uploador').show();
 					dropZone.show(); // drag&drop avaliable
+					
 				}
 				this._super();
 			},
@@ -95,11 +132,11 @@
 				if(!dialog.length) dialog = jQuery('<div class="ss-uploadfield-dialog" id="' + dialogId + '" />');
 
 				// Show dialog
-				dialog.ssdialog({iframeUrl: config['urlSelectDialog']});
+				dialog.ssdialog({iframeUrl: config['urlSelectDialog'], height: 550});
 
 				// TODO Allow single-select
 				dialog.find('iframe').bind('load', function(e) {
-					var contents = $(this).contents(), gridField = contents.find('fieldset.ss-gridfield');
+					var contents = $(this).contents(), gridField = contents.find('.ss-gridfield');
 					// TODO Fix jQuery custom event bubbling across iframes on same domain
 					// gridField.find('.ss-gridfield-items')).bind('selectablestop', function() {
 					// });
@@ -142,11 +179,13 @@
 		});
 		$('div.ss-upload *').entwine({
 			getUploadField: function() {
+			
 				return this.parents('div.ss-upload:first');
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-files .ss-uploadfield-item').entwine({
 			onmatch: function() {
+			
 				this.closest('.ss-upload').find('.ss-uploadfield-addfile').addClass('borderTop');
 			},
 			onunmatch: function() {
@@ -192,32 +231,44 @@
 					this.siblings().toggleClass('ui-state-disabled');
 					editform.toggleEditForm();
 				}
+				e.preventDefault(); // Avoid a form submit
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-item-editform').entwine({
-			EditFormVisible: false,
 			fitHeight: function() {
-				var iframe = this.find('iframe'),
-					h = iframe.contents().height() + 'px';
-				iframe.css('height', h);
-				return h;
-			},
-			showEditForm: function() {
-				return this.stop().animate({height: this.fitHeight()});
-			},
-			hideEditFormShow: function() {
-				return this.stop().animate({height: 0});
+				var iframe = this.find('iframe'), padding = 32;
+				var h = iframe.contents().find('form').height() + padding;			
+				
+				/* Set height of body except in IE8. Setting this in IE8 breaks the 
+				dropdown */
+				if(!$.browser.msie && $.browser.version.slice(0,3) != "8.0"){
+					iframe.contents().find('body').css({'height':(h-padding)});	
+				}
+
+				// Set iframe to match its contents height
+				iframe.height(h);
+
+				// set container to match the same height
+				iframe.contents().find('body form').css({'width':'98%'});
+
+				iframe.parent().height(h+2);
+				iframe.contents().find('body form').css({'width':'98%'});
+
+
 			},
 			toggleEditForm: function() {
-				if (this.getEditFormVisible()) this.hideEditFormShow();
-				else this.showEditForm();
-				this.setEditFormVisible(!this.getEditFormVisible());
+				if(this.height() === 0) {
+					this.fitHeight();	
+				} else {
+					this.height(0);
+				}
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-item-editform iframe').entwine({
 			onmatch: function() {
+				// TODO entwine event binding doesn't work for iframes
 				this.load(function() {
-					$(this).parent().removeClass('loading');
+					$(this).parent().removeClass('loading');	
 				});
 			}
 		});

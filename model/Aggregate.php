@@ -30,7 +30,7 @@
  * backend (and the two-level backend with the File backend as the slow store) meets this requirement
  * 
  * @author hfried
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 class Aggregate extends ViewableData {
@@ -78,7 +78,7 @@ class Aggregate extends ViewableData {
 	protected function query($attr) {
 		$singleton = singleton($this->type);
 		$query = $singleton->buildSQL($this->filter);
-		$query->select = array($attr);
+		$query->select($attr);
 		$query->orderby = null;
 		$singleton->extend('augmentSQL', $query);
 		return $query;
@@ -90,7 +90,7 @@ class Aggregate extends ViewableData {
 	 * This gets the aggregate function 
 	 * 
 	 */
-	public function XML_val($name, $args) {
+	public function XML_val($name, $args = null, $cache = false) {
 		$func = strtoupper( strpos($name, 'get') === 0 ? substr($name, 3) : $name );
 		$attribute = $args ? $args[0] : 'ID';
 		
@@ -129,7 +129,7 @@ class Aggregate extends ViewableData {
  * A subclass of Aggregate that calculates aggregates for the result of a has_many query.
  * 
  * @author hfried
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 class Aggregate_Relationship extends Aggregate {
@@ -161,7 +161,7 @@ class Aggregate_Relationship extends Aggregate {
 			$query = $this->object->getManyManyComponentsQuery($this->relationship, $this->filter);
 		}
 		
-		$query->select = array($attr);
+		$query->select($attr);
 		$query->groupby = array();
 		
 		$singleton = singleton($this->type);

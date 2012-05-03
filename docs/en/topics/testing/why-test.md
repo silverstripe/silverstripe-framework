@@ -50,13 +50,13 @@ To turn the key in the lock and answer this question, we need to look at how aut
 aspects of the SilverStripe platform. There are some significant differences in goals and focus between different layers
 of the system and interactions between the core, and various supporting modules.
 
-### Sapphire Core
+### SilverStripe Core
 
 In open source core development, we are focussing on a large and (for the most part) stable system with existing well
 defined behavior. Our overarching goal is that we do not want to break or change this existing behavior, but at the same
 time we want to extend and improve it.
 
-Testing the Sapphire framework should focus on [characterization](http://en.wikipedia.org/wiki/Characterization_Test).
+Testing the SilverStripe framework should focus on [characterization](http://en.wikipedia.org/wiki/Characterization_Test).
 We should be writing tests that illustrate the way that the API works, feeding commonly used methods with a range of
 inputs and states and verifying that these methods respond with clear and predictable results.
 

@@ -108,6 +108,9 @@ class ControllerTest extends FunctionalTest {
 
 		/* If there are multiple, it takes the last one */
 		$this->assertEquals("my-page?arg=var#second-section", Controller::join_links("my-page#subsection", "?arg=var", "#second-section"));
+
+		/* Does type-safe checks for zero value */
+		$this->assertEquals("my-page/0", Controller::join_links("my-page", 0));
 	}
 	
 	/**
@@ -129,11 +132,13 @@ class ControllerTest extends FunctionalTest {
 			'Without an allowed_actions, any defined methods are recognised as actions'
 		);
 	}
-	
+
+	/* Controller::BaseURL no longer exists, but was just a direct call to Director::BaseURL, so not sure what this code was supposed to test
 	public function testBaseURL() {
 		Director::setBaseURL('/baseurl/');
 		$this->assertEquals(Controller::BaseURL(), Director::BaseURL());
 	}
+	*/
 }
 
 /**

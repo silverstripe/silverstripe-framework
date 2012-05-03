@@ -63,13 +63,13 @@ class TimeField extends TextField {
 		parent::__construct($name,$title,$value);
 	}
 	
-	function Field() {
+	function Field($properties = array()) {
 		$config = array(
 			'timeformat' => $this->getConfig('timeformat')
 		);
 		$config = array_filter($config);
 		$this->addExtraClass(Convert::raw2json($config));
-		return parent::Field();
+		return parent::Field($properties);
 	}
 	
 	function Type() {
@@ -116,6 +116,8 @@ class TimeField extends TextField {
 			$this->value = null;
 			$this->valueObj = null;
 		}
+
+		return $this;
 	}
 	
 	/**
@@ -141,9 +143,9 @@ class TimeField extends TextField {
 		if(!Zend_Date::isDate($this->value, $this->getConfig('timeformat'), $this->locale)) {
 			$validator->validationError(
 				$this->name, 
-				sprintf(
-					_t('TimeField.VALIDATEFORMAT', "Please enter a valid time format (%s)"), 
-					$this->getConfig('timeformat')
+				_t(
+					'TimeField.VALIDATEFORMAT', "Please enter a valid time format ({format})", 
+					array('format' => $this->getConfig('timeformat'))
 				), 
 				"validation", 
 				false
@@ -165,6 +167,7 @@ class TimeField extends TextField {
 	 */
 	function setLocale($locale) {
 		$this->locale = $locale;
+		return $this;
 	}
 	
 	/**
@@ -173,6 +176,7 @@ class TimeField extends TextField {
 	 */
 	function setConfig($name, $val) {		
 		$this->config[$name] = $val;
+		return $this;
 	}
 	
 	/**
@@ -202,7 +206,7 @@ class TimeField_Readonly extends TimeField {
 	
 	protected $readonly = true;
 	
-	function Field() {
+	function Field($properties = array()) {
 		if($this->valueObj) {
 			$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('timeformat')));
 		} else {
@@ -213,12 +217,7 @@ class TimeField_Readonly extends TimeField {
 		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";
 	}
 	
-	function jsValidation() {
-		return null;
-	}
-	
 	function validate($validator) {
 		return true;	
 	}
 }
-?>

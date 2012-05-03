@@ -27,7 +27,7 @@ on our [blog](http://www.silverstripe.org/the-3-0-ui-a-better-framework-for-your
 
 All CSS in the CMS UI is written in the [SCSS language extensions](http://sass-lang.com/)
 and the [Compass framework](http://compass-style.org/), which helps
-us maintain expressive and concise style declarations. The files are located in `sapphire/admin/scss`
+us maintain expressive and concise style declarations. The files are located in `framework/admin/scss`
 (and if you have the `cms` module installed, in `cms/scss`), and are compiled to a `css` folder on the
 same directory path. Changes to the SCSS files can be automatically converted by installing
 the ["compass" module](http://www.silverstripe.org/compass-module/) for SilverStripe, 
@@ -36,6 +36,7 @@ Each file describes its purpose at the top of the declarations. Note that you ca
 plain CSS without SCSS for your custom CMS interfaces as well, we just mandate SCSS for core usage.
 
 As there's a whole lot of CSS driving the CMS, we have certain best practives around writing it:
+
  * Use the `id` attribute sparingly. Remember that it "closes off" the structure to code reuse, as HTML elements
    require unique `id` attributes. Code reuse can happen both in CSS and JavaScript behaviour.
  * Separate presentation from structure in class names, e.g. `left-menu` is encoding the component position
@@ -71,6 +72,15 @@ Depending on the complexity of your layout, you'll also need to overload the
 "EditForm" template (e.g. `MyCMSController_EditForm.ss`), e.g. to implement
 a tabbed form which only scrolls the main tab areas, while keeping the buttons at the bottom of the frame.
 This requires manual assignment of the template to your form instance, see `[api:CMSMain->getEditForm()]` for details.
+
+Often its useful to have a "tools" panel in between the menu and your content,
+usually occupied by a search form or navigational helper.
+In this case, you can either overload the full base template as described above.
+To avoid duplicating all this template code, you can also use the special `[api:LeftAndMain->Tools()]` and 
+`[api:LeftAndMain->EditFormTools()]` methods available in `LeftAndMain`.
+These placeholders are populated by auto-detected templates, 
+with the naming convention of "<controller classname>_Tools.ss" and "<controller classname>_EditFormTools.ss".
+So to add or "subclass" a tools panel, simply create this file and it's automatically picked up.
 
 ## Layout and Panels
 
@@ -128,8 +138,8 @@ Due to the procedural and selector-driven style of UI programming in jQuery.entw
 it can be difficult to find the piece of code responsible for a certain behaviour.
 Therefore it is important to adhere to file naming conventions.
 E.g. a feature only applicable to `ModelAdmin` should be placed in
-`sapphire/admin/javascript/ModelAdmin.js`, while something modifying all forms (including ModelAdmin forms)
-would be better suited in `sapphire/admin/javascript/LeftAndMain.EditForm.js`.
+`framework/admin/javascript/ModelAdmin.js`, while something modifying all forms (including ModelAdmin forms)
+would be better suited in `framework/admin/javascript/LeftAndMain.EditForm.js`.
 Selectors used in these files should mirrow the "scope" set by its filename,
 so don't place a rule applying to all form buttons inside `ModelAdmin.js`.
 
@@ -141,7 +151,7 @@ and [jQuery.delegate](http://api.jquery.com/delegate/), so takes care of dynamic
 
 Most interfaces will require their own JavaScript and CSS files, so the Ajax loading has
 to ensure they're loaded unless already present. A custom-built library called 
-`jQuery.ondemand` (located in `sapphire/thirdparty`) takes care of this transparently -
+`jQuery.ondemand` (located in `framework/thirdparty`) takes care of this transparently -
 so as a developer just declare your dependencies through the `[api:Requirements]` API.
 
 ## Ajax Loading and Browser History 
@@ -166,8 +176,73 @@ should be placed in jQuery.entinwe `onmatch()` rules which apply to the newly cr
 See `$('.cms-container').handleStateChange()` in `LeftAndMain.js` for details.
 
 Alternatively, form-related Ajax calls can be invoked through their own wrappers,
-which don't cause history events and hence allow callbacks: `$('.cms-content').loadForm()`
-and `$('.cms-content').submitForm()`.
+which don't cause history events and hence allow callbacks: `$('.cms-content').submitForm()`.
+
+Within the PHP logic, the `[api:PjaxResponseNegotiator]` class determines which view is rendered.
+Through a custom `X-Pjax` HTTP header, the client can declare which view he's expecting,
+through identifiers like `CurrentForm` or `Content` (see `[api:LeftAndMain->getResponseNegotiator()]`).
+These identifiers are passed to `loadPanel()` via the `pjax` data option.
+
+## Ajax Redirects
+
+Sometimes, a server response represents a new URL state, e.g. when submitting an "add record" form,
+the resulting view will be the edit form of the new record. On non-ajax submissions, that's easily
+handled through a HTTP redirection. On ajax submissions, browsers handle these redirects
+transparently, so the CMS JavaScript doesn't know about them (or the new URL).
+To work around this, we're using a custom `X-ControllerURL` HTTP response header
+which can declare a new URL. If this header is set, the CMS JavaScript will
+push the URL to its history stack, causing the logic to fetch it in a subsequent ajax request.
+Note: To avoid double processing, the first response body is usually empty.
+
+## State through HTTP response metadata
+
+By loading mostly HTML responses, we don't have an easy way to communicate
+information which can't be directly contained in the produced HTML.
+For example, the currently used controller class might've changed due to a "redirect", 
+which affects the currently active menu entry. We're using HTTP response headers to contain this data
+without affecting the response body.
+
+	:::php
+	class MyController extends LeftAndMain {
+		class myaction() {
+			// ...
+			$this->response->addHeader('X-Controller', 'MyOtherController');
+			return $html;
+		}
+	}
+
+Built-in headers are:
+
+	* `X-Controller`: PHP class name matching a menu entry, which is marked active
+	* `X-ControllerURL`: Alternative URL to record in the HTML5 browser history
+	* `X-Status`: Extended status information, used for an information popover.
+
+## Special Links
+
+Some links should do more than load a new page in the browser window.
+To avoid repetition, we've written some helpers for various use cases:
+
+ * Load into a panel: `<a href="..." class="cms-panel-link" data-target-panel=".cms-content">`
+ * Load via ajax, and show response status message: `<a href="..." class="cms-link-ajax">`
+ * Load URL as an iframe into a popup/dialog: `<a href="..." class="ss-ui-dialog-link">`
+
+## Buttons
+
+SilverStripe automatically applies a [jQuery UI button style](http://jqueryui.com/demos/button/)
+to all elements with the class `.ss-ui-button`. We've extended the jQuery UI widget a bit
+to support defining icons via HTML5 data attributes (see `ssui.core.js`).
+These icon identifiers relate to icon files in `framework/admin/images/btn-icons`,
+and are sprited into a single file through SCSS and the Compass framework 
+(see [tutorial](http://compass-style.org/help/tutorials/spriting/)).
+Compass also creates the correct CSS classes to show those sprites via background images
+(see `framework/admin/scss/_sprites.scss`).
+
+Input: `<a href="..." class="ss-ui-button" data-icon="add" />Button text</a>`
+
+Output: `<a href="..." data-icon="add" class="ss-ui-button ss-ui-action-constructive ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button"><span class="ui-button-icon-primary ui-icon btn-icon-add"></span><span class="ui-button-text">Button text</span></a>`
+
+Note that you can create buttons from pretty much any element, although
+when using an input of type button, submit or reset, support is limited to plain text labels with no icons.
 
 ## Menu
 
@@ -177,7 +252,28 @@ which auto-detects all subclasses of `LeftAndMain`. This means that your custom
 To modify existing menu entries or create new ones, see `[api:CMSMenu::add_menu_item()]`
 and `[api:CMSMenu::remove_menu_item()]`.
 
+New content panels are typically loaded via Ajax, which might change
+the current menu context. For example, a link to edit a file might be clicked
+within a page edit form, which should change the currently active menu entry
+from "Page" to "Files & Images". To communicate this state change, a controller
+response has the option to pass along a special HTTP response header,
+which is picked up by the menu:
+
+	:::php
+	public function mycontrollermethod() {
+		// .. logic here
+		$this->getResponse()->addHeader('X-Controller', 'AssetAdmin');
+		return 'my response';
+	}
+
+This is usually handled by the existing `[api:LeftAndMain]` logic,
+so you don't need to worry about it. The same concept applies for
+'X-Title' (change the window title) and 'X-ControllerURL' (change the URL recorded in browser history).
+Note: You can see any additional HTTP headers through the web developer tools in your browser of choice.
+
 ## Related
 
  * [Howto: Extend the CMS Interface](../howto/extend-cms-interface)
+ * [Howto: Customize the CMS tree](../howto/customize-cms-tree)
  * [Reference: ModelAdmin](../reference/modeladmin)
+ * [Topics: Rich Text Editing](../topics/rich-text-editing)

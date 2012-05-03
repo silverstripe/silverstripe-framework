@@ -20,7 +20,7 @@
 * 
 * @see http://doc.silverstripe.com/doku.php?id=searchcontext
 *
-* @package sapphire
+* @package framework
 * @subpackage search
 */
 class SearchContext extends Object {
@@ -111,8 +111,8 @@ class SearchContext extends Object {
 	 * @param string|array $sort Database column to sort on. 
 	 *  Falls back to {@link DataObject::$default_sort} if not provided.
 	 * @param string|array $limit 
-	 * @param SQLQuery $existingQuery
-	 * @return SQLQuery
+	 * @param DataList $existingQuery
+	 * @return DataList
 	 */
 	public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null) {
 	    if($existingQuery) {
@@ -124,7 +124,9 @@ class SearchContext extends Object {
 	        $query = DataList::create($this->modelClass);
         }
         
-		$query->limit($limit);
+		if(is_array($limit)) $query->limit(isset($limit['limit']) ? $limit['limit'] : null, isset($limit['start']) ? $limit['start'] : null);
+		else $query->limit($limit);
+		
 		$query->sort($sort);
 		
 		// hack to work with $searchParems when it's an Object 
@@ -162,7 +164,7 @@ class SearchContext extends Object {
 	 * @return SS_List
 	 */
 	public function getResults($searchParams, $sort = false, $limit = false) {
-		$searchParams = array_filter($searchParams, array($this,'clearEmptySearchFields'));
+		$searchParams = array_filter((array)$searchParams, array($this,'clearEmptySearchFields'));
 
 		// getQuery actually returns a DataList
 		return $this->getQuery($searchParams, $sort, $limit);
@@ -266,4 +268,4 @@ class SearchContext extends Object {
 	}
 	
 }
-?>
+

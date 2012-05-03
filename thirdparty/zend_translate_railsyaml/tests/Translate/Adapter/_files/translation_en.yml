@@ -1,0 +1,9 @@
+en:
+  Message1: Message1 (en)
+  Message2: Message2 (en)
+  Namespace1:
+    Message1: Namespace1 Message1 (en)
+    Namespace1Message1: Namespace1 Message2 (en)
+  Namespace2:
+    Message1: Namespace2 Message1 (en)
+    Namespace2Message2: Namespace2 Message2 (en)

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class SQLFormatterTest extends SapphireTest {
@@ -39,4 +39,3 @@ SQL;
 	}
 	
 }
-?>

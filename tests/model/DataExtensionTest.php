@@ -86,9 +86,9 @@ class DataExtensionTest extends SapphireTest {
 		$player->setField('DateBirth', '1990-5-10');
 		$player->Address = '123 somewhere street';
 		$player->write();
-		
+
 		unset($player);
-		
+
 		// Pull the record out of the DB and examine the extended fields
 		$player = DataObject::get_one('DataExtensionTest_Player', "\"Name\" = 'Joe'");
 		$this->assertEquals($player->DateBirth, '1990-05-10');
@@ -100,7 +100,7 @@ class DataExtensionTest extends SapphireTest {
 	 * Test that DataObject::$api_access can be set to true via a extension
 	 */
 	function testApiAccessCanBeExtended() {
-		$this->assertTrue(Object::get_static('DataExtensionTest_Member', 'api_access'));
+		$this->assertTrue(Config::inst()->get('DataExtensionTest_Member', 'api_access', Config::FIRST_SET));
 	}
 	
 	function testPermissionExtension() {
@@ -177,43 +177,40 @@ class DataExtensionTest_Player extends DataObject implements TestOnly {
 
 class DataExtensionTest_PlayerExtension extends DataExtension implements TestOnly {
 	
-	function extraStatics($class=null, $extension=null) {
+	public static function add_to_class($class = null, $extensionClass = null, $args = null) {
 		// Only add these extensions if the $class is set to DataExtensionTest_Player, to
 		// test that the argument works.
 		if($class == 'DataExtensionTest_Player') {
-			return array(
-				'db' => array(
-					'Address' => 'Text',
-					'DateBirth' => 'Date',
-					'Status' => "Enum('Shooter,Goalie')"
-				),
-				'defaults' => array(
-					'Status' => 'Goalie'
-				)
-			);
+			Config::inst()->update($class, 'db', array(
+				'Address' => 'Text',
+				'DateBirth' => 'Date',
+				'Status' => "Enum('Shooter,Goalie')"
+			));
+			Config::inst()->update($class, 'defaults', array(
+				'Status' => 'Goalie'
+			));
 		}
 	}
 	
 }
 
 class DataExtensionTest_ContactRole extends DataExtension implements TestOnly {
-	
-	function extraStatics($class=null, $extension=null) {
-		return array(
-			'db' => array(
-				'Website' => 'Varchar',
-				'Phone' => 'Varchar(255)',
-			),
-			'has_many' => array(
-				'RelatedObjects' => 'DataExtensionTest_RelatedObject'
-			),
-			'defaults' => array(
-				'Phone' => '123'
-			),
-			'api_access' => true,
-		);
-	}
-	
+
+	public static $db = array(
+		'Website' => 'Varchar',
+		'Phone' => 'Varchar(255)',
+	);
+
+	public static $has_many = array(
+		'RelatedObjects' => 'DataExtensionTest_RelatedObject'
+	);
+
+	public static $defaults = array(
+		'Phone' => '123'
+	);
+
+	public static $api_access = true;
+
 }
 
 class DataExtensionTest_RelatedObject extends DataObject implements TestOnly {
@@ -293,22 +290,22 @@ class DataExtensionTest_Ext2 extends DataExtension implements TestOnly {
 }
 
 class DataExtensionTest_Faves extends DataExtension implements TestOnly {
-	public function extraStatics($class=null, $extension=null) {
-		return array(
-			'many_many' => array(
-				'Faves' => 'DataExtensionTest_RelatedObject'
-			)
-		);
-	}
+
+	public static $many_many = array(
+		'Faves' => 'DataExtensionTest_RelatedObject'
+	);
+
 }
 
 class DataExtensionTest_AppliedToDO extends DataExtension implements TestOnly {
+
 	public function testMethodApplied() {
 		return "hello world";
 	}
+
 }
 
 DataObject::add_extension('DataExtensionTest_MyObject', 'DataExtensionTest_Ext1');
 DataObject::add_extension('DataExtensionTest_MyObject', 'DataExtensionTest_Ext2');
 DataObject::add_extension('DataExtensionTest_MyObject', 'DataExtensionTest_Faves');
-?>
+

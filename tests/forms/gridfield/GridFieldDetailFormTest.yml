@@ -1,0 +1,17 @@
+GridFieldDetailFormTest_Person:
+	joe:
+		FirstName: Joe
+		Surname: Bloggs
+	jane:
+		FirstName: Jane
+		Surname: Doe
+
+GridFieldDetailFormTest_PeopleGroup:
+	group:
+		Name: My Group
+		People: =>GridFieldDetailFormTest_Person.joe,=>GridFieldDetailFormTest_Person.jane
+
+GridFieldDetailFormTest_Category:
+	category1:
+		Name: Category 1
+		People: =>GridFieldDetailFormTest_Person.joe,=>GridFieldDetailFormTest_Person.jane

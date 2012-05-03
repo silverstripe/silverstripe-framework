@@ -65,4 +65,3 @@ class TabularStyle extends ViewableData {
 		$this->form->$field = $val;
 	}
 }
-?>

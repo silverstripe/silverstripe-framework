@@ -1,10 +1,12 @@
 File:
   example_file:
     Name: example.pdf
+    Filename: folder/subfolder/example.pdf
 
 Image:
   example_image:
     Name: example.jpg
+    Filename: folder/subfolder/example.jpg
 
 HtmlEditorFieldTest_Object:
   home:

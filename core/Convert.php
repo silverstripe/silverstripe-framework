@@ -17,7 +17,7 @@
  * Objects of type {@link ViewableData} can have an "escaping type",
  * which determines if they are automatically escaped before output by {@link SSViewer}. 
  * 
- * @package sapphire
+ * @package framework
  * @subpackage misc
  */
 class Convert {
@@ -92,28 +92,28 @@ class Convert {
 			return str_replace(array("\\", '"', "\n", "\r", "'"), array("\\\\", '\"', '\n', '\r', "\\'"), $val);
 		}
 	}
-	
+
 	/**
-	 * Uses the PHP 5.2 native json_encode function if available,
-	 * otherwise falls back to the Services_JSON class.
-	 * 
-	 * @see http://pear.php.net/pepr/pepr-proposal-show.php?id=198
-	 * @uses Director::baseFolder()
-	 * @uses Services_JSON
+	 * Encode a value as a JSON encoded string.
 	 *
-	 * @param mixed $val
-	 * @return string JSON safe string
+	 * @param mixed $val Value to be encoded
+	 * @return string JSON encoded string
 	 */
 	static function raw2json($val) {
-		if(function_exists('json_encode')) {
-			return json_encode($val);	
-		} else {
-			require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');
-			$json = new Services_JSON();
-			return $json->encode($val);
-		}
+		return json_encode($val);
 	}
-	
+
+	/**
+	 * Encode an array as a JSON encoded string.
+	 * THis is an alias to {@link raw2json()}
+	 *
+	 * @param array $val Array to convert
+	 * @return string JSON encoded string
+	 */
+	static function array2json($val) {
+		return self::raw2json($val);
+	}
+
 	static function raw2sql($val) {
 		if(is_array($val)) {
 			foreach($val as $k => $v) $val[$k] = self::raw2sql($v);
@@ -138,41 +138,15 @@ class Convert {
 			else return html_entity_decode($val, ENT_QUOTES, 'UTF-8');
 		}
 	}
-	
-	/**
-	 * Convert an array into a JSON encoded string.
-	 * 
-	 * @see http://pear.php.net/pepr/pepr-proposal-show.php?id=198
-	 * @uses Director::baseFolder()
-	 * @uses Services_JSON
-	 * 
-	 * @param array $val Array to convert
-	 * @return string JSON encoded string
-	 */
-	static function array2json($val) {
-		if(function_exists('json_encode')) {
-			return json_encode($val);
-		} else {
-			require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');
-			$json = new Services_JSON();
-			return $json->encode($val);
-		}
-	}
-	
+
 	/**
 	 * Convert a JSON encoded string into an object.
-	 * 
-	 * @see http://pear.php.net/pepr/pepr-proposal-show.php?id=198
-	 * @uses Director::baseFolder()
-	 * @uses Services_JSON
 	 *
 	 * @param string $val
-	 * @return mixed JSON safe string
+	 * @return object|boolean
 	 */
 	static function json2obj($val) {
-		require_once(Director::baseFolder() . '/sapphire/thirdparty/json/JSON.php');
-		$json = new Services_JSON();
-		return $json->decode($val);
+		return json_decode($val);
 	}
 
 	/**
@@ -183,15 +157,7 @@ class Convert {
 	 * @return array|boolean
 	 */
 	static function json2array($val) {
-		$json = self::json2obj($val);
-		if(!$json) return false;
-		
-		$arr = array();
-		foreach($json as $k => $v) {
-			$arr[$k] = $v;
-		}
-		
-		return $arr;
+		return json_decode($val, true);
 	}
 	
 	/**
@@ -269,12 +235,8 @@ class Convert {
 			$config = $defaultConfig;
 		}
 
-		// sTRIp style and script
-		/* $data = eregi_replace("<style(^A-Za-z0-9>][^>]*)?>.*</style[^>]*>","", $data);*/
-		/* $data = eregi_replace("<script(^A-Za-z0-9>][^>]*)?>.*</script[^>]*>","", $data);*/
-		
-		$data = preg_replace("/<style(^A-Za-z0-9>][^>]*)?>.*?<\/style[^>]*>/i","", $data);
-		$data = preg_replace("/<script(^A-Za-z0-9>][^>]*)?>.*?<\/script[^>]*>/i","", $data);
+		$data = preg_replace("/<style([^A-Za-z0-9>][^>]*)?>.*?<\/style[^>]*>/is","", $data);
+		$data = preg_replace("/<script([^A-Za-z0-9>][^>]*)?>.*?<\/script[^>]*>/is","", $data);
 
 		if($config['ReplaceBoldAsterisk']) {
 			$data = preg_replace('%<(strong|b)( [^>]*)?>|</(strong|b)>%i','*',$data);
@@ -284,33 +246,29 @@ class Convert {
 		if(!$preserveLinks && !$config['PreserveLinks']) {
 			$data = preg_replace('/<a[^>]*href\s*=\s*"([^"]*)">(.*?)<\/a>/ie', "Convert::html2raw('\\2').'[\\1]'", $data);
 			$data = preg_replace('/<a[^>]*href\s*=\s*([^ ]*)>(.*?)<\/a>/ie', "Convert::html2raw('\\2').'[\\1]'", $data);
-			
-			/* $data = eregi_replace('<a[^>]*href *= *"([^"]*)">([^<>]*)</a>', '\\2 [\\1]', $data); */
-			/* $data = eregi_replace('<a[^>]*href *= *([^ ]*)>([^<>]*)</a>', '\\2 [\\1]', $data); */
 		}
 	
 		// Replace images with their alt tags
 		if($config['ReplaceImagesWithAlt']) {
-			$data = eregi_replace('<img[^>]*alt *= *"([^"]*)"[^>]*>', ' \\1 ', $data);
-			$data = eregi_replace('<img[^>]*alt *= *([^ ]*)[^>]*>', ' \\1 ', $data);
+			$data = preg_replace('/<img[^>]*alt *= *"([^"]*)"[^>]*>/i', ' \\1 ', $data);
+			$data = preg_replace('/<img[^>]*alt *= *([^ ]*)[^>]*>/i', ' \\1 ', $data);
 		}
 	
 		// Compress whitespace
 		if($config['CompressWhitespace']) {
-			$data = ereg_replace("[\n\r\t ]+", " ", $data);
+			$data = preg_replace("/\s+/", " ", $data);
 		}
 		
 		// Parse newline tags
-		$data = ereg_replace("[ \n\r\t]*<[Hh][1-6]([^A-Za-z0-9>][^>]*)?> *", "\n\n", $data);
-		$data = ereg_replace("[ \n\r\t]*<[Pp]([^A-Za-z0-9>][^>]*)?> *", "\n\n", $data);
-		$data = ereg_replace("[ \n\r\t]*<[Dd][Ii][Vv]([^A-Za-z0-9>][^>]*)?> *", "\n\n", $data);
-		$data = ereg_replace("\n\n\n+","\n\n", $data);
-		
-		$data = ereg_replace("<[Bb][Rr]([^A-Za-z0-9>][^>]*)?> *", "\n", $data);
-		$data = ereg_replace("<[Tt][Rr]([^A-Za-z0-9>][^>]*)?> *", "\n", $data);
-		$data = ereg_replace("</[Tt][Dd]([^A-Za-z0-9>][^>]*)?> *", "    ", $data);
+		$data = preg_replace("/\s*<[Hh][1-6]([^A-Za-z0-9>][^>]*)?> */", "\n\n", $data);
+		$data = preg_replace("/\s*<[Pp]([^A-Za-z0-9>][^>]*)?> */", "\n\n", $data);
+		$data = preg_replace("/\s*<[Dd][Ii][Vv]([^A-Za-z0-9>][^>]*)?> */", "\n\n", $data);
+		$data = preg_replace("/\n\n\n+/", "\n\n", $data);
+
+		$data = preg_replace("/<[Bb][Rr]([^A-Za-z0-9>][^>]*)?> */", "\n", $data);
+		$data = preg_replace("/<[Tt][Rr]([^A-Za-z0-9>][^>]*)?> */", "\n", $data);
+		$data = preg_replace("/<\/[Tt][Dd]([^A-Za-z0-9>][^>]*)?> */", "    ", $data);
 		$data = preg_replace('/<\/p>/i', "\n\n", $data );
-		
 	
 		// Replace HTML entities
 		//$data = preg_replace("/&#([0-9]+);/e", 'chr(\1)', $data);
@@ -327,7 +285,7 @@ class Convert {
 		}
 		return trim(wordwrap(trim($data), $wordWrap));
 	}
-	
+
 	/**
 	 * There are no real specifications on correctly encoding mailto-links,
 	 * but this seems to be compatible with most of the user-agents.
@@ -355,7 +313,7 @@ class Convert {
 	 * @return string
 	 */
 	public static function raw2url($title) {
-		$f = Object::create('URLSegmentFilter');
+		$f = URLSegmentFilter::create();
 		return $f->filter($title);
 	}
 }

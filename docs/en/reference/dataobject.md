@@ -31,8 +31,6 @@ These calls retrieve a `[api:FieldList]` for the area where you intend to work w
 
 ### For the CMS
 
- * Requirements: SilverStripe 2.3.*
-
 	:::php
 	$fields = singleton('MyDataObject')->getCMSFields();
 
@@ -42,23 +40,17 @@ These calls retrieve a `[api:FieldList]` for the area where you intend to work w
 Used for simple frontend forms without relation editing or `[api:TabSet] behaviour. Uses `scaffoldFormFields()` by
 default. To customize, either overload this method in your subclass, or extend it by `DataExtension->updateFormFields()`.
 
-* Requirements: SilverStripe 2.3.*
-
 	:::php
 	$fields = singleton('MyDataObject')->getFrontEndFields();
 
 
 ## Customizing Scaffolded Fields
 
- * Requirements: SilverStripe 2.3.*
-
 This section covers how to enhance the default scaffolded form fields from above.  It is particularly useful when used
 in conjunction with the `[api:ModelAdmin]` in the CMS to make relevant data administration interfaces.
 
 
 ### Searchable Fields
-
-* Requirements: SilverStripe 2.3.*
 
 The `$searchable_fields` property uses a mixed array format that can be used to further customize your generated admin
 system. The default is a set of array values listing the fields.
@@ -139,8 +131,6 @@ To include relations (''$has_one'', `$has_many` and `$many_many`) in your search
 
 
 ### Summary Fields
-
-* Requirements: SilverStripe 2.3.*
 
 Summary fields can be used to show a quick overview of the data for a specific `[api:DataObject]` record. Most common use is
 their display as table columns, e.g. in the search results of a `[api:ModelAdmin]` CMS interface.

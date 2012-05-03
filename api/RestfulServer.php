@@ -1,10 +1,10 @@
 <?php
 /**
- * Sapphire's generic RESTful server.
+ * SilverStripe's generic RESTful server.
  * 
  * This class gives your application a RESTful API for free.  All you have to do is define static $api_access = true on
  * the appropriate DataObjects.  You will need to ensure that all of your data manipulation and security is defined in
- * your model layer (ie, the DataObject classes) and not in your Controllers.  This is the recommended design for Sapphire
+ * your model layer (ie, the DataObject classes) and not in your Controllers.  This is the recommended design for SilverStripe
  * applications.
  * 
  * Enabling restful access on a model will also enable a SOAP API, see {@link SOAPModelAccess}.
@@ -90,7 +90,7 @@
  * @todo Access to extendable methods/relations like SiteTree/1/Versions or SiteTree/1/Version/22
  * @todo Respect $api_access array notation in search contexts
  * 
- * @package sapphire
+ * @package framework
  * @subpackage api
  */
 class RestfulServer extends Controller {
@@ -618,7 +618,7 @@ class RestfulServer extends Controller {
 /**
  * Restful server handler for a SS_List
  * 
- * @package sapphire
+ * @package framework
  * @subpackage api
  */
 class RestfulServer_List {
@@ -638,7 +638,7 @@ class RestfulServer_List {
 /**
  * Restful server handler for a single DataObject
  * 
- * @package sapphire
+ * @package framework
  * @subpackage api
  */
 class RestfulServer_Item {

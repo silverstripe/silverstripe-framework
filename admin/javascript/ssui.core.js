@@ -15,7 +15,9 @@
 			this.find('ul').addClass('ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all');
 		 	this.find('li').addClass('ui-state-default ui-corner-top');
 		 	// TODO Figure out selected tab
-		 	this.find('li:first').selectIt();
+		 	var selected = this.find('li.current');
+		 	if(!selected.length) selected = this.find('li:first');
+		 	selected.selectIt();
 	 }
 	});
 	
@@ -30,6 +32,21 @@
 	});
 
 	/**
+	 * Allows icon definition via HTML5 data attrs for easier handling in PHP
+	 */
+	$.widget('ssui.button', $.ui.button, {
+		_resetButton: function() {
+			var iconPrimary = this.element.data('iconPrimary') ? this.element.data('iconPrimary') : this.element.data('icon'),
+				iconSecondary = this.element.data('iconSecondary');
+			// TODO Move prefix out of this method, without requriing it for every icon definition in a data attr
+			if(iconPrimary) this.options.icons.primary = 'btn-icon-' + iconPrimary;
+			if(iconSecondary) this.options.icons.secondary = 'btn-icon-' + iconSecondary;
+
+			$.ui.button.prototype._resetButton.call(this);
+		}
+	});
+
+	/**
 	 * Extends jQueryUI dialog with iframe abilities (and related resizing logic),
 	 * and sets some CMS-wide defaults.
 	 */
@@ -38,6 +55,7 @@
 			// Custom properties
 			iframeUrl: '',
 			reloadOnOpen: true,
+			dialogExtraClass: '',
 
 			// Defaults
 			width: '80%',
@@ -61,6 +79,8 @@
 				self._resizeIframe();
 				self.uiDialog.removeClass('loading');
 			}).hide();
+			
+			if(this.options.dialogExtraClass) this.uiDialog.addClass(this.options.dialogExtraClass);
 			this.element.append(iframe);
 
 			// Let the iframe handle its scrolling

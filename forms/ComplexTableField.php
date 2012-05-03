@@ -18,13 +18,10 @@
  *  - fieldName				Name of the targeted formField
  *  - methodName				Method on the formfield (e.g. "ComplexTableField")
  *  - childID				Identifier of the database-record (the targeted table is determined by the $sourceClass parameter)
+ *  
+ * @deprecated 3.0 Use GridField with GridFieldConfig_RecordEditor
  *
- * @todo Find a less fragile solution for accessing this field through the main controller and ReferencedField, e.g.
- *      build a seperate CTF-instance (doesn't necessarly have to be connected to the original by ReferencedField)
  * @todo Control width/height of popup by constructor (hardcoded at the moment)
- * @todo Integrate search from MemberTableField.php
- * @todo Less performance-hungry implementation of detail-view paging (don't return all items on a single view)
- * @todo Use automatic has-many and many-many functions to return a ComponentSet rather than building the join manually
  * @package forms
  * @subpackage fields-relational
  */
@@ -209,17 +206,17 @@ class ComplexTableField extends TableListField {
 	/**
 	 * @return String
 	 */
-	function FieldHolder() {
+	function FieldHolder($properties = array()) {
 		Requirements::javascript(THIRDPARTY_DIR . "/prototype/prototype.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
+		Requirements::javascript(THIRDPARTY_DIR . "/behaviour/behaviour.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/greybox/AmiJS.js");
 		Requirements::javascript(THIRDPARTY_DIR . "/greybox/greybox.js");
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField.js");
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/TableListField.js');
+		Requirements::javascript(FRAMEWORK_DIR . "/javascript/ComplexTableField.js");
 		Requirements::css(THIRDPARTY_DIR . "/greybox/greybox.css");
-		Requirements::css(SAPPHIRE_DIR . "/css/TableListField.css");
-		Requirements::css(SAPPHIRE_DIR . "/css/ComplexTableField.css");
+		Requirements::css(FRAMEWORK_DIR . "/css/TableListField.css");
+		Requirements::css(FRAMEWORK_DIR . "/css/ComplexTableField.css");
 		
 		// set caption if required
 		if($this->popupCaption) {
@@ -228,7 +225,7 @@ class ComplexTableField extends TableListField {
 			$js = <<<JS
 $('$id').GB_Caption = '$this->popupCaption';
 JS;
-				FormResponse::add($js);
+				// FormResponse::add($js);
 			} else {
 			$js = <<<JS
 Event.observe(window, 'load', function() { \$('$id').GB_Caption = '$this->popupCaption'; });
@@ -340,10 +337,12 @@ JS;
 
 	function setController($controller) {
 		$this->controller = $controller;
+		return $this;
 	}
 
 	function setTemplatePopup($template) {
 		$this->templatePopup = $template;
+		return $this;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -416,7 +415,7 @@ JS;
 	
 	function add() {
 		if(!$this->can('add')) return;
-		
+
 		return $this->customise(array(
 			'DetailForm' => $this->AddForm(),
 		))->renderWith($this->templatePopup);
@@ -448,6 +447,7 @@ JS;
 	 */
 	function setRelationAutoSetting($value) {
 		Deprecation::notice('3.0', 'Manipulate the DataList instead.');
+		return $this;
 	}
 	
 	/**
@@ -469,7 +469,7 @@ JS;
 			$childData->write();
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
-			return Director::redirectBack();
+			return Controller::curr()->redirectBack();
 		}
 
 		// Save this item into the given relationship
@@ -485,16 +485,15 @@ JS;
 		
 		$editLink = Controller::join_links($this->Link(), 'item/' . $childData->ID . '/edit');
 		
-		$message = sprintf(
-			_t('ComplexTableField.SUCCESSADD', 'Added %s %s %s'),
-			$childData->singular_name(),
-			'<a href="' . $editLink . '">' . $childData->Title . '</a>',
-			$closeLink
+		$message = _t(
+			'ComplexTableField.SUCCESSADD2', 'Added {name}',
+			array('name' => $childData->singular_name())
 		);
+		$message .= '<a href="' . $editLink . '">' . $childData->Title . '</a>' . $closeLink;
 		
 		$form->sessionMessage($message, 'good');
 		
-		$this->controller->redirectBack();
+		return Controller::curr()->redirectBack();
 	}
 }
 
@@ -641,7 +640,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 			$dataObject->write();
 		} catch(ValidationException $e) {
 			$form->sessionMessage($e->getResult()->message(), 'bad');
-			return Director::redirectBack();
+			return Controller::curr()->redirectBack();
 		}
 
 		// Save this item into the given relationship
@@ -663,7 +662,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		
 		$form->sessionMessage($message, 'good');
 
-		Director::redirectBack();
+		return Controller::curr()->redirectBack();
 	}
 	
 	function PopupCurrentItem() {
@@ -812,18 +811,18 @@ class ComplexTableField_Popup extends Form {
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
 		$this->dataObject = $dataObject;
 		
-		Requirements::clear();
-		Requirements::unblock_all();
 		
 		$actions = new FieldList();	
 		if(!$readonly) {
 			$actions->push(
-				$saveAction = new FormAction(
+				FormAction::create(
 					"saveComplexTableField", 
 					_t('CMSMain.SAVE', 'Save')
 				)
-			);	
-			$saveAction->addExtraClass('save');
+					->addExtraClass('save ss-ui-action-constructive')
+					->setUseButtonTag(true)
+					->setAttribute('data-icon', 'accept')
+			);
 		}
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
@@ -834,21 +833,13 @@ class ComplexTableField_Popup extends Form {
 	function forTemplate() {
 		$ret = parent::forTemplate();
 		
-		/**
-		 * WARNING: DO NOT CHANGE THE ORDER OF THESE JS FILES
-		 * Some have special requirements.
-		 */
-		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
-		Requirements::css(SAPPHIRE_DIR . '/css/ComplexTableField_popup.css');
-		Requirements::css(CMS_DIR . '/css/typography.css');
-		Requirements::css(CMS_DIR . '/css/cms_right.css');
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/prototype/prototype.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/behaviour/behaviour.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/prototype_improvements.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous.js");
-		Requirements::javascript(SAPPHIRE_DIR . "/thirdparty/scriptaculous/scriptaculous/controls.js");
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/ComplexTableField_popup.js");
+		Requirements::css(FRAMEWORK_DIR . '/css/ComplexTableField_popup.css');
+		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/prototype/prototype.js");
+		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/behaviour/behaviour.js");
+		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/scriptaculous/scriptaculous.js");
+		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/scriptaculous/scriptaculous/controls.js");
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(FRAMEWORK_DIR . "/javascript/ComplexTableField_popup.js");
 
 		// Append requirements from instance callbacks
 		$parent = $this->getParentController();
@@ -858,14 +849,12 @@ class ComplexTableField_Popup extends Form {
 			$callback = $parent->getParentController()->requirementsForPopupCallback;
 		}
 		if($callback) call_user_func($callback, $this);
-
-		// Append requirements from DataObject
-		// DEPRECATED 2.4 Use ComplexTableField->requirementsForPopupCallback
- 		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
-			$this->dataObject->getRequirementsForPopup();
-		}
 		
 		return $ret;
+	}
+
+	function getTemplate() {
+		return 'Form';
 	}
 	
 	/**
@@ -876,4 +865,4 @@ class ComplexTableField_Popup extends Form {
 	}
 }
 
-?>
+

@@ -9,29 +9,12 @@
  * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
-// CUSTOM SilverStripe: Copied from Core.php
-if(!function_exists('getSysTempDir')) {
-	function getSysTempDir() {
-		if(function_exists('sys_get_temp_dir')) {
-			$sysTmp = sys_get_temp_dir();
-		} elseif(isset($_ENV['TMP'])) {
-			$sysTmp = $_ENV['TMP'];    	
-		} else {
-			$tmpFile = tempnam('adfadsfdas','');
-			unlink($tmpFile);
-			$sysTmp = dirname($tmpFile);
-		}
-		return $sysTmp;
-	}	
-}
-// CUSTOM END
-
 // Handle incoming request if it's a script call
 if (TinyMCE_Compressor::getParam("js")) {
 	// Default settings
 	$tinyMCECompressor = new TinyMCE_Compressor(array(
 		// CUSTOM SilverStripe
-		'cache_dir' => getSysTempDir()
+		'cache_dir' => sys_get_temp_dir()
 		// CUSTOM END
 	));
 
@@ -169,8 +152,8 @@ class TinyMCE_Compressor {
 			$allFiles[$i] = $file;
 		}
 
-		// Generate hash for all files
-		$hash = md5(implode('', $allFiles));
+		// Generate hash for all files, and script path so multiple projects don't share the same cache
+		$hash = md5(implode('', $allFiles) . $_SERVER['SCRIPT_NAME']);
 
 		// Check if it supports gzip
 		$zlibOn = ini_get('zlib.output_compression') || (ini_set('zlib.output_compression', 0) === false);
@@ -185,7 +168,6 @@ class TinyMCE_Compressor {
 
 		// Set cache file name
 		$cacheFile = $this->settings["cache_dir"] . "/" . $hash . ($supportsGzip ? ".gz" : ".js");
-
  		// Set headers
 		header("Content-type: text/javascript");
 		header("Vary: Accept-Encoding");  // Handle proxies
@@ -337,4 +319,4 @@ class TinyMCE_Compressor {
 		return $content;
 	}
 }
-?>
+

@@ -1,7 +1,7 @@
 <?php
 /**
  * Standard Change Password Form
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class ChangePasswordForm extends Form {
@@ -111,13 +111,17 @@ class ChangePasswordForm extends Form {
 				}
 				else {
 					// Redirect to default location - the login form saying "You are logged in as..."
-					$redirectURL = HTTP::setGetVar('BackURL', Director::absoluteBaseURL(), Security::Link('login'));
+					$redirectURL = HTTP::setGetVar('BackURL', Director::absoluteBaseURL(), $this->controller->Link('login'));
 					Director::redirect($redirectURL);					
 				}
 			} else {
 				$this->clearMessage();
 				$this->sessionMessage(
-					sprintf(_t('Member.INVALIDNEWPASSWORD', "We couldn't accept that password: %s"), nl2br("\n".$isValid->starredList())), 
+					_t(
+						'Member.INVALIDNEWPASSWORD', 
+						"We couldn't accept that password: {password}",
+						array('password' => nl2br("\n".$isValid->starredList()))
+					), 
 					"bad"
 				);
 				Director::redirectBack();
@@ -134,4 +138,3 @@ class ChangePasswordForm extends Form {
 
 }
 
-?>

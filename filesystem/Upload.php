@@ -14,7 +14,7 @@
  * (see http://doc.silverstripe.org/secure-development#filesystem).
  * {@link File::$allowed_extensions} provides a good start for a list of "safe" extensions.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage filesystem
  * 
  * @todo Allow for non-database uploads
@@ -131,7 +131,7 @@ class Upload extends Controller {
 		}
 
 		// Generate default filename
-		$nameFilter = Object::create('FileNameFilter');
+		$nameFilter = FileNameFilter::create();
 		$file = $nameFilter->filter($tmpFile['name']);
 		$fileName = basename($file);
 
@@ -144,13 +144,13 @@ class Upload extends Controller {
 			// make sure archives retain valid extensions
 			if(substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.gz')) == '.tar.gz' ||
 				substr($relativeFilePath, strlen($relativeFilePath) - strlen('.tar.bz2')) == '.tar.bz2') {
-					$relativeFilePath = ereg_replace('[0-9]*(\.tar\.[^.]+$)',$i . '\\1', $relativeFilePath);
+					$relativeFilePath = preg_replace('/[0-9]*(\.tar\.[^.]+$)/', $i . '\\1', $relativeFilePath);
 			} else if (strpos($relativeFilePath, '.') !== false) {
-				$relativeFilePath = ereg_replace('[0-9]*(\.[^.]+$)',$i . '\\1', $relativeFilePath);
+				$relativeFilePath = preg_replace('/[0-9]*(\.[^.]+$)/', $i . '\\1', $relativeFilePath);
 			} else if (strpos($relativeFilePath, '_') !== false) {
-				$relativeFilePath = ereg_replace('_([^_]+$)', '_'.$i, $relativeFilePath);
+				$relativeFilePath = preg_replace('/_([^_]+$)/', '_'.$i, $relativeFilePath);
 			} else {
-				$relativeFilePath .= "_$i";
+				$relativeFilePath .= '_'.$i;
 			}
 			if($oldFilePath == $relativeFilePath && $i > 2) user_error("Couldn't fix $relativeFilePath with $i tries", E_USER_ERROR);
 		}
@@ -329,7 +329,7 @@ class Upload extends Controller {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage filesystem
  */
 class Upload_Validator {
@@ -496,28 +496,22 @@ class Upload_Validator {
 		if(!$this->isValidSize()) {
 			$ext = (isset($pathInfo['extension'])) ? $pathInfo['extension'] : '';
 			$arg = File::format_size($this->getAllowedMaxFileSize($ext));
-			$this->errors[] = sprintf(
-				_t(
-					'File.TOOLARGE', 
-					'Filesize is too large, maximum %s allowed.',
-					PR_MEDIUM,
-					'Argument 1: Filesize (e.g. 1MB)'
-				),
-				$arg
+			$this->errors[] = _t(
+				'File.TOOLARGE', 
+				'Filesize is too large, maximum {size} allowed.',
+				'Argument 1: Filesize (e.g. 1MB)',
+				array('size' => $arg)
 			);
 			return false;
 		}
 
 		// extension validation
 		if(!$this->isValidExtension()) {
-			$this->errors[] = sprintf(
-				_t(
-					'File.INVALIDEXTENSION', 
-					'Extension is not allowed (valid: %s)',
-					PR_MEDIUM,
-					'Argument 1: Comma-separated list of valid extensions'
-				),
-				wordwrap(implode(', ', $this->allowedExtensions))
+			$this->errors[] = _t(
+				'File.INVALIDEXTENSION', 
+				'Extension is not allowed (valid: {extensions})',
+				'Argument 1: Comma-separated list of valid extensions',
+				array('extensions' => wordwrap(implode(', ', $this->allowedExtensions)))
 			);
 			return false;
 		}

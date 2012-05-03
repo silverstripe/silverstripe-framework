@@ -9,7 +9,7 @@
  * @param string $name
  * @param DataOject $object The object that the foreign key is stored on (should have a relation with $name) 
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class ForeignKey extends Int {
@@ -31,25 +31,25 @@ class ForeignKey extends Int {
 		$hasOneClass = $this->object->has_one($relationName);
 
 		if($hasOneClass && singleton($hasOneClass) instanceof Image) {
-			if(isset($params['ajaxSafe']) && $params['ajaxSafe']) {
-				$field = new ImageField($relationName, $title, $this->value);
-			} else {
-				$field = new SimpleImageField($relationName, $title, $this->value);
-			}
+			$field = new UploadField($relationName, $title);
+			$field->getValidator()->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif'));
 		} elseif($hasOneClass && singleton($hasOneClass) instanceof File) {
-			if(isset($params['ajaxSafe']) && $params['ajaxSafe']) {
-				$field = new FileIFrameField($relationName, $title, $this->value);
-			} else {
-				$field = new FileField($relationName, $title, $this->value);
-			}
+			$field = new UploadField($relationName, $title);
 		} else {
 			$titleField = (singleton($hasOneClass)->hasField('Title')) ? "Title" : "Name";
-			$map = DataList::create($hasOneClass)->map("ID", $titleField);
-			$field =  new DropdownField($this->name, $title, $map, null, null, ' ');
+			$list = DataList::create($hasOneClass);
+			// Don't scaffold a dropdown for large tables, as making the list concrete
+			// might exceed the available PHP memory in creating too many DataObject instances
+			if($list->count() < 100) {
+				$field = new DropdownField($this->name, $title, $list->map("ID", $titleField), null, null, ' ');	
+			} else {
+				$field = new NumericField($this->name, $title);	
+			}
+			
 		}
 		
 		return $field;
 	}
 }
 
-?>
+

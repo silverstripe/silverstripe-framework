@@ -1,7 +1,7 @@
 <?php
 /**
  * Log-in form for the "member" authentication method
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class MemberLoginForm extends LoginForm {
@@ -90,16 +90,13 @@ class MemberLoginForm extends LoginForm {
 		parent::__construct($controller, $name, $fields, $actions);
 
 		// Focus on the email input when the page is loaded
-		// Only include this if other form JS validation is enabled
-		if($this->getValidator()->getJavascriptValidationHandler() != 'none') {
-			Requirements::customScript(<<<JS
-				(function() {
-					var el = document.getElementById("MemberLoginForm_LoginForm_Email");
-					if(el && el.focus) el.focus(); 
-				})();
+		Requirements::customScript(<<<JS
+			(function() {
+				var el = document.getElementById("MemberLoginForm_LoginForm_Email");
+				if(el && el.focus) el.focus();
+			})();
 JS
-			);
-		}
+		);
 	}
 
 	/**
@@ -108,7 +105,11 @@ JS
 	protected function getMessageFromSession() {
 		parent::getMessageFromSession();
 		if(($member = Member::currentUser()) && !Session::get('MemberLoginForm.force_message')) {
-			$this->message = sprintf(_t('Member.LOGGEDINAS', "You're logged in as %s."), $member->{$this->loggedInAsField});
+			$this->message = _t(
+				'Member.LOGGEDINAS', 
+				"You're logged in as {name}.", 
+				array('name' => $member->{$this->loggedInAsField})
+			);
 		}
 		Session::set('MemberLoginForm.force_message', false);
 	}
@@ -133,14 +134,14 @@ JS
 			if(isset($_REQUEST['BackURL'])) $backURL = $_REQUEST['BackURL']; 
 			else $backURL = null; 
 
-		 	if($backURL) Session::set('BackURL', $backURL);			
+			if($backURL) Session::set('BackURL', $backURL);
 			
 			if($badLoginURL = Session::get("BadLoginURL")) {
 				$this->controller->redirect($badLoginURL);
 			} else {
 				// Show the right tab on failed login
-				$loginLink = Director::absoluteURL(Security::Link("login")); 
-				if($backURL) $loginLink .= '?BackURL=' . urlencode($backURL); 
+				$loginLink = Director::absoluteURL($this->controller->Link('login'));
+				if($backURL) $loginLink .= '?BackURL=' . urlencode($backURL);
 				$this->controller->redirect($loginLink . '#' . $this->FormName() .'_tab');
 			}
 		}
@@ -201,7 +202,7 @@ JS
 			}
 
 			Session::set('Security.Message.message',
-				sprintf(_t('Member.WELCOMEBACK', "Welcome Back, %s"), $firstname)
+				_t('Member.WELCOMEBACK', "Welcome Back, {firstname}", array('firstname' => $firstname))
 			);
 			Session::set("Security.Message.type", "good");
 		}
@@ -280,4 +281,3 @@ JS
 	}
 
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class PercentageTest extends SapphireTest {
@@ -44,4 +44,3 @@ class PercentageTest extends SapphireTest {
 	}
 	
 }
-?>

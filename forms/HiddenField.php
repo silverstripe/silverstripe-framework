@@ -1,15 +1,14 @@
 <?php
 /**
  * Hidden field.
+ *
  * @package forms
  * @subpackage fields-dataless
  */
 class HiddenField extends FormField {
 
-	protected $template = 'HiddenField';
-
-	function FieldHolder() {
-		return $this->Field();
+	function FieldHolder($properties = array()) {
+		return $this->Field($properties);
 	}
 
 	function performReadonlyTransformation() {
@@ -28,9 +27,4 @@ class HiddenField extends FormField {
 			array('type' => 'hidden')
 		);
 	}
-
-	static function create($name) {
-		return new HiddenField($name);
-	}
-
 }

@@ -4,7 +4,7 @@
  * Through this you could connect and aggregate data of various web services.
  * For more info visit wiki documentation - http://doc.silverstripe.org/doku.php?id=restfulservice  
  * 
- * @package sapphire
+ * @package framework
  * @subpackage integration
  */
 class RestfulService extends ViewableData {
@@ -160,7 +160,8 @@ class RestfulService extends ViewableData {
 	public function curlRequest($url, $method, $data = null, $headers = null, $curlOptions = array()) {
 		$ch        = curl_init();
 		$timeout   = 5;
-		$useragent = 'SilverStripe/' . SapphireInfo::Version();
+		$sapphireInfo = new SapphireInfo(); 
+		$useragent = 'SilverStripe/' . $sapphireInfo->Version();
 
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -405,7 +406,7 @@ class RestfulService extends ViewableData {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage integration
  */
 class RestfulService_Response extends SS_HTTPResponse {
@@ -465,4 +466,4 @@ class RestfulService_Response extends SS_HTTPResponse {
 	}
 }
 
-?>
+

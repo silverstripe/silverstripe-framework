@@ -1,0 +1,50 @@
+da:
+  AssetAdmin:
+    MENUTITLE: "Filer & Billeder"
+    NEWFOLDER: "Ny mappe"
+  AssetTableField:
+    CREATED: "Først uploadet"
+    DIM: "Dimensioner"
+    FILENAME: "Filnavn"
+    LASTEDIT: "Sidst ændret"
+    OWNER: "Ejer"
+    SIZE: "Størrelse"
+    TITLE: "Titel"
+    TYPE: "Type"
+    URL: "URL Adresse"
+  CMSMain:
+    ACCESS: "Adgang til %S i CMS"
+    ACCESSALLINTERFACES: "Adgang til alle CMS grænseflader"
+    MENUTITLE: "Indhold site"
+    SAVE: "Gem"
+  ComplexTableField:
+    CLOSEPOPUP: "Luk popup"
+    SUCCESSADD: "Tilføjede %s %s %s"
+  LeftAndMain:
+    CANT_REORGANISE: "Du har ikke rettigheder to at omroker is sidetræet. Dine ændringer er ikke blevet gemt"
+    HELP: "Hjælp"
+    PAGETYPE: "Sidetype:"
+    PERMAGAIN: "Du er blevet logget ud af CMS, hvis du vil logge ind igen, indtast brugernavn og kodeord nedenfor."
+    PERMALREADY: "Beklager, men du kan ikke få adgang til denne del af CMS, hvis du vil logge ind som en anden, kan du gøre det nedenfor"
+    PERMDEFAULT: "Indtast din email adresse og kodeord for at få adgang til CMS systemet"
+    PLEASESAVE: "Gem siden: Denne side kunne ikke blive opdateret, fordi den endnu ikke er gemt."
+    SAVED: "gemt"
+  ModelAdmin:
+    DELETE: "Slet"
+    DELETEDRECORDS: "%S poster er slettet."
+    IMPORT: "Importer fra CSV"
+    IMPORTEDRECORDS: "Importerede %s poster."
+    NOCSVFILE: "Tryk p&aring; Gennemse for at v&aelig;lge en CSVfil til importering"
+    NOIMPORT: "Intet at importere"
+    UPDATEDRECORDS: "Opdaterede %s poster."
+  ReportAdmin:
+    MENUTITLE: "Reporter"
+  SecurityAdmin:
+    EDITPERMISSIONS: "Rediger tilladelser og IP-adresser for hver gruppe"
+    MENUTITLE: "Sikkerhed"
+    NEWGROUP: "Ny gruppe"
+  TableListField_PageControls.ss:
+    VIEWFIRST: "Vis f&oslash;rste"
+    VIEWLAST: "Vis Sidste"
+    VIEWNEXT: "Vis n&aelig;ste"
+    VIEWPREVIOUS: "Vis forrige"

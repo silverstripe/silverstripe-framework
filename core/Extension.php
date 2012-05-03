@@ -8,7 +8,7 @@
  * meaning you can set parameters specific to the "owner instance"
  * in new Extension instances.
  *
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 abstract class Extension {
@@ -41,6 +41,19 @@ abstract class Extension {
 	
 	function __construct() {
 		$this->class = get_class($this);
+	}
+
+	/**
+	 * Called when this extension is added to a particular class
+	 *
+	 * TODO: This is likely to be replaced by event sytem before 3.0 final, so be aware
+	 * this API is fairly unstable.
+	 *
+	 * @static
+	 * @param $class
+	 */
+	static function add_to_class($class, $extensionClass, $args = null) {
+		Config::add_static_source($class, $extensionClass);
 	}
 
 	/**
@@ -85,7 +98,8 @@ abstract class Extension {
 	public static function get_classname_without_arguments($extensionStr) {
 		return (($p = strpos($extensionStr, '(')) !== false) ? substr($extensionStr, 0, $p) : $extensionStr;
 	}
-	
+
+
+
 }
 
-?>

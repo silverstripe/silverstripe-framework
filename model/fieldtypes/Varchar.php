@@ -6,7 +6,7 @@
  * @see HTMLVarchar
  * @see Text
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Varchar extends StringField {
@@ -56,14 +56,14 @@ class Varchar extends StringField {
 	 * Return the first letter of the string followed by a .
 	 */
 	function Initial() {
-		if($this->hasValue()) return $this->value[0] . '.';
+		if($this->exists()) return $this->value[0] . '.';
 	}
 	
 	/**
 	 * Ensure that the given value is an absolute URL.
 	 */
 	function URL() {
-		if(ereg('^[a-zA-Z]+://', $this->value)) return $this->value;
+		if(preg_match('#^[a-zA-Z]+://#', $this->value)) return $this->value;
 		else return "http://" . $this->value;
 	}
 
@@ -90,4 +90,4 @@ class Varchar extends StringField {
 	}
 }
 
-?>
+

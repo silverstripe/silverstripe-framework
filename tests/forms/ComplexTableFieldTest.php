@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class ComplexTableFieldTest extends FunctionalTest {
@@ -198,4 +198,3 @@ class ComplexTableFieldTest_Sponsor extends DataObject implements TestOnly {
 	);
 
 }
-?>

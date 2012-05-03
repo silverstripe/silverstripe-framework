@@ -118,7 +118,7 @@
 			 * Update title from tree node value
 			 */
 			updateTitle: function() {
-				var self = this, tree = self.find('.tree-holder');
+				var self = this, tree = self.find('.tree-holder'), val = this.getValue();
 				var updateFn = function() {
 					var val = self.getValue();
 					if(val) {
@@ -131,7 +131,7 @@
 				};
 
 				// Load the tree if its not already present
-				if(jQuery.jstree._reference(tree)) updateFn();
+				if(jQuery.jstree._reference(tree) || !val) updateFn();
 				else this.loadTree(null, updateFn);
 			},
 			setValue: function(val) {
@@ -146,7 +146,7 @@
 				var self = this, panel = this.getPanel(), treeHolder = $(panel).find('.tree-holder');
 				var params = (params) ? $.extend({}, this.getRequestParams(), params) : this.getRequestParams();
 				panel.addClass('loading');
-				treeHolder.load(this.data('url-tree'), params, function(html, status, xhr) {
+				treeHolder.load(this.data('urlTree'), params, function(html, status, xhr) {
 					var firstLoad = true;
 					if(status == 'success') {
 						$(this)
@@ -155,7 +155,6 @@
 								var val = self.getValue(), selectNode = treeHolder.find('*[data-id="' + val + '"]'), 
 									currentNode = data.inst.get_selected();
 								if(val && selectNode != currentNode) data.inst.select_node(selectNode);
-								data.inst.open_all();
 								firstLoad = false;
 								if(callback) callback.apply(self);
 							})
@@ -194,7 +193,7 @@
 						// TODO Hack to avoid ajax load on init, see http://code.google.com/p/jstree/issues/detail?id=911
 						'data': this.getPanel().find('.tree-holder').html(),
 						'ajax': {
-							'url': this.data('url-tree'),
+							'url': this.data('urlTree'),
 							'data': function(node) {
 								var id = $(node).data("id") ? $(node).data("id") : 0, params = self.getRequestParams();
 								params = $.extend({}, params, {ID: id, ajax: 1});
@@ -244,9 +243,16 @@
 			}
 		});
 		
-		$('.TreeDropdownField .treedropdownfield-toggle-panel-link, .TreeDropdownField span.treedropdownfield-title').entwine({
+		$('.TreeDropdownField').entwine({
 			onclick: function(e) {
-				this.getField().togglePanel();
+				this.togglePanel();
+					
+				return false;
+			}
+		});
+	
+		$('.TreeDropdownField .treedropdownfield-panel').entwine({
+			onclick: function(e) {
 				return false;
 			}
 		});
@@ -306,7 +312,7 @@
 		$('.TreeDropdownField.multiple').entwine({
 			getTreeConfig: function() {
 				var cfg = this._super();
-				cfg.checkbox = {override_ui: true};
+				cfg.checkbox = {override_ui: true, two_state: true};
 				cfg.plugins.push('checkbox');
 				cfg.ui.select_limit = -1;
 				return cfg;
@@ -315,7 +321,7 @@
 				var self = this, panel = this.getPanel(), treeHolder = $(panel).find('.tree-holder');
 				var params = (params) ? $.extend({}, this.getRequestParams(), params) : this.getRequestParams();
 				panel.addClass('loading');
-				treeHolder.load(this.data('url-tree'), params, function(html, status, xhr) {
+				treeHolder.load(this.data('urlTree'), params, function(html, status, xhr) {
 					var firstLoad = true;
 					if(status == 'success') {
 						$(this)

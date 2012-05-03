@@ -1,0 +1,201 @@
+hr:
+  AssetAdmin:
+    MENUTITLE: "Datoteke i Slike"
+    NEWFOLDER: "Novi direktorij"
+  AssetTableField:
+    CREATED: "Uploadano"
+    DIM: "Dimenzije"
+    FILENAME: "Ime datoteke"
+    LASTEDIT: "Zadnja promjena"
+    OWNER: "Vlasnik"
+    SIZE: "Veličina"
+    TITLE: "Naslov"
+    TYPE: "Tip"
+  BasicAuth:
+    ENTERINFO: "Unesite korisničko ime i lozinu"
+    ERRORNOTADMIN: "Korisnik nije administrator"
+    ERRORNOTREC: "Korisničko ime / lozinka nije prepoznata"
+  CMSMain:
+    ACCESS: "Pristup u '%s' (%s)"
+    MENUTITLE: "Sadržaj stranice"
+    SAVE: "Snimi"
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "Promjenili ste lozinku za "
+    CHANGEPASSWORDTEXT2: "Za prijavu koristite slijedeće podatke"
+    HELLO: "Pozdrav"
+  ComplexTableField.ss:
+    ADDITEM: "Dodaj"
+    SORTASC: "Sortiraj (ascending)"
+    SORTDESC: "Sortiraj (descending)"
+  ComplexTableField_popup.ss:
+    NEXT: "Slijedeći"
+    PREVIOUS: "Prethodni"
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: "Promjeni Lozinku"
+  DataObject:
+    PLURALNAME: "Podatkovni Objekti"
+    SINGULARNAME: "Podatkovni Objekt"
+  Date:
+    DAY: "dan"
+    DAYS: "dani"
+    HOUR: "sat"
+    HOURS: "sati"
+    MIN: "minute"
+    MINS: "minute"
+    MONTH: "mjesec"
+    MONTHS: "mjeseci"
+    SEC: "sekunde"
+    SECS: "sekundi"
+    TIMEDIFFAGO: "Prije %s"
+    YEAR: "godina"
+    YEARS: "godine"
+  DateField:
+  DropdownField:
+    CHOOSE: "(Odaberi)"
+  EmailField:
+    VALIDATION: "Upišite email adresu"
+  File:
+    INVALIDEXTENSION: "Nastavak nije dozvoljen (ispravno: %s)"
+    PLURALNAME: "Datoteke"
+    SINGULARNAME: "Datoteka"
+    TOOLARGE: "Prevelika datoteka, dozvoljeni maksimum je %s."
+  ForgotPasswordEmail.ss:
+    HELLO: "Pozdrav"
+    TEXT1: "Ovdje je vaš"
+    TEXT2: "link za resetiranje zaporke"
+    TEXT3: "za"
+  Form:
+    FIELDISREQUIRED: "%s je obavezan"
+    VALIDATIONCREDITNUMBER: "Uvjerite se da ste unjeli %s broj kreditne kartice ispravno"
+    VALIDATIONFAILED: "Provjera nije uspjela"
+    VALIDATIONNOTUNIQUE: "Unesena vrijednost nije unikatna"
+    VALIDATIONPASSWORDSDONTMATCH: "Lozine se ne slažu"
+    VALIDATIONPASSWORDSNOTEMPTY: "Lozinke moraju imati najmanje jedan broj i jedan alfanumerički znak"
+    VALIDATIONSTRONGPASSWORD: "Lozinke moraju imati najmanje jedan broj i jedan alfanumerički znak"
+    VALIDCURRENCY: "Unesite ispravnu valutu"
+  Group:
+    Code: "Krupni kod"
+    Locked: "Zaključano?"
+    Parent: "Roditeljska grupa"
+    has_many_Permissions: "Dozvole"
+    many_many_Members: "Članovi"
+  HtmlEditorField:
+    BUTTONINSERTLINK: "Ubaci vezu"
+    BUTTONREMOVELINK: "Obriši vezu"
+    CSSCLASS: "Poravnanje / Stil"
+    CSSCLASSCENTER: "Centralno"
+    CSSCLASSLEFT: "Lijevo, sa okruženjem teksta."
+    CSSCLASSRIGHT: "Desno, sa okruženjem teksta"
+    EMAIL: "Email adresa"
+    FILE: "Datoteka"
+    FOLDER: "Direktorij"
+    IMAGE: "Ubaci sliku"
+    IMAGEDIMENSIONS: "Dimenzije"
+    IMAGEHEIGHTPX: "Visina"
+    IMAGEWIDTHPX: "Širina"
+    LINK: "Ubaci/editiraj link za označeni tekst"
+    LINKDESCR: "Opis veze"
+    LINKEMAIL: "Email adresa"
+    LINKEXTERNAL: "Na drugom webu"
+    LINKFILE: "Downlad datoteke"
+    LINKINTERNAL: "Stranicu na ovom webu"
+    LINKOPENNEWWIN: "Otvori vezu (link) u novom prozoru?"
+    LINKTO: "Poveži na"
+    PAGE: "Stranica"
+    URL: "URL"
+  Image_iframe.ss:
+    TITLE: "Iframe za upload slike"
+  LeftAndMain:
+    HELP: "Pomoć"
+    PAGETYPE: "Tip Stranice:"
+    PERMAGAIN: "Odjavili ste se sa CMS-a. Želite li se ponovno prijaviti, upišite korisničko ime i lozinku"
+    PERMALREADY: "Nažalost, ne možete pristupiti tom dijelu CMS-a. Želite li se prijaviti kao netko drugi, učinite to ispod"
+    PERMDEFAULT: "Odaberite metodu autorizacije te upišite svoje podatke za pristup CMS-u."
+    PLEASESAVE: "Molim spremite stranicu: Nemože biti ažurirano dok nije spremljeno."
+    SAVED: "spremljeno"
+  LoginAttempt:
+  Member:
+    ADDRESS: "Adresa"
+    BUTTONCHANGEPASSWORD: "Promjeni lozinku"
+    BUTTONLOGIN: "Prijavi"
+    BUTTONLOGINOTHER: "Prijavite se kao netko drugi"
+    BUTTONLOSTPASSWORD: "Zaboraljena lozinka"
+    CONFIRMNEWPASSWORD: "Potvrdite novu lozinku"
+    CONFIRMPASSWORD: "Potvrdi lozinku"
+    CONTACTINFO: "Kontakt informacije"
+    EMAIL: "Email"
+    EMAILSIGNUPINTRO1: "Hvala Vam na prijavi za novog člana, Vaši detalji prikazani su ispod"
+    EMAILSIGNUPINTRO2: "Na stranicu se možete prijaviti koristeći podatke navedene ispod"
+    EMAILSIGNUPSUBJECT: "Hvala Vam na prijavi"
+    ERRORNEWPASSWORD: "Pogrečno ste upisali novu lozinku, pokušajte ponovno"
+    ERRORPASSWORDNOTMATCH: "Vaša trenutna lozinka se ne podudara, probajte ponovno"
+    ERRORWRONGCRED: "Pogrešan Email ili lozinka. Pokušajte ponovno"
+    FIRSTNAME: "Ime"
+    GREETING: "Dobrodošli"
+    INTERFACELANG: "Jezik sučelja"
+    LOGGEDINAS: "Prijavljeni ste kao %s"
+    MOBILE: "Broj Mobitela"
+    NAME: "Ime"
+    NEWPASSWORD: "Nova lozinka"
+    PASSWORD: "Lozinka"
+    PHONE: "Broj Telefona"
+    PLURALNAME: "Članovi"
+    REMEMBERME: "Zapamti me"
+    SINGULARNAME: "Član"
+    SUBJECTPASSWORDCHANGED: "Vaša lozinka je promjenjena"
+    SUBJECTPASSWORDRESET: "Link za reset lozinke"
+    SURNAME: "Prezime"
+    VALIDATIONMEMBEREXISTS: "Već postoji korisnik sa tim Emailom"
+    WELCOMEBACK: "Dobrodošli %s"
+    YOUROLDPASSWORD: "Stara lozinka"
+    belongs_many_many_Groups: "Grupe"
+    db_LockedOutUntil: "Zaključano do"
+    db_PasswordExpiry: "Lozinka ističe"
+  MemberAuthenticator:
+    TITLE: "E-mail &amp; Lozinka"
+  NumericField:
+    VALIDATION: "'%s' nije broj, prihvaćaju se samo brojevi"
+  Permission:
+  PhoneNumberField:
+    VALIDATION: "Molim unesite ispravan telefonski broj"
+  RelationComplexTableField.ss:
+    ADD: "Dodaj"
+  ReportAdmin:
+    MENUTITLE: "Izvještaji"
+  Security:
+    ALREADYLOGGEDIN: "Nemate pristup na ovu stranicu. Imate li drugi korisnički račun, koristite njega"
+    BUTTONSEND: "Pošalji mi link za reset lozinke"
+    CHANGEPASSWORDBELOW: "Svoju lozinku možete promjeniti ovdje"
+    CHANGEPASSWORDHEADER: "Promjeni lozinku"
+    ENTERNEWPASSWORD: "Upišite novu lozinku"
+    ERRORPASSWORDPERMISSION: "Morate biti prijavljeni kako bi ste promjenili lozinku"
+    LOGGEDOUT: "Odlogirani ste. Želite li se ponovno logirati, upišite podatke"
+    LOGIN: "Logiraj se"
+    NOTEPAGESECURED: "Stranica je osigurana. Upišite svoje podatke i poslat ćemo Vam."
+    NOTERESETPASSWORD: "Upišite vaš e-mail i polati ćemo Vam link na kojem možete dobiti novu lozinku"
+    PASSWORDSENTHEADER: "Link je poslan na '%s'"
+    PASSWORDSENTTEXT: "Hvala Vam! Link na reset lozinke je poslan na '%s'."
+  SecurityAdmin:
+    MENUTITLE: "Sigurnost"
+    NEWGROUP: "Nova Grupa"
+  SimpleImageField:
+    NOUPLOAD: "Nema uploadanih slika"
+  SiteTree:
+    TABMAIN: "'Main'"
+  TableField:
+    ISREQUIRED: "U %s '%s' je obavezan"
+  TableField.ss:
+    ADD: "Dodaj novi redak"
+  TableListField_PageControls.ss:
+    VIEWFIRST: "Pogledaj prvi"
+    VIEWLAST: "Pogledaj zadnji"
+    VIEWNEXT: "Pogledaj slijedeći"
+    VIEWPREVIOUS: "Pogledaj prethodni"
+  ToggleCompositeField.ss:
+    HIDE: "Sakrij"
+    SHOW: "Pokaži"
+  ToggleField:
+    LESS: "manje"
+    MORE: "više"
+  Versioned:
+    has_many_Versions: "Verzije"

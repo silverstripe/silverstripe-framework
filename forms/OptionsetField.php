@@ -28,10 +28,10 @@
  * 
  * <code>
  * //Database request for the object
- * $myDoSet = DataObject::get("FooBars","");
+ * $myDoSet = DataList::create("FooBars","");
  * if($myDoSet){
  *  // This returns an array of ID => Title
- *  $map = $myDoSet->toDropDownMap();
+ *  $map = $myDoSet->map();
  *  
  *   // Instantiate the OptionsetField 
  *   $FieldList = new FieldList(
@@ -55,8 +55,6 @@
  * @subpackage fields-basic
  */
 class OptionsetField extends DropdownField {
-
-	protected $template = 'OptionsetField';
 	
 	/**
 	 * @var Array
@@ -67,6 +65,7 @@ class OptionsetField extends DropdownField {
 		$source = $this->getSource();
 		$odd = 0;
 		$options = array();
+		
 		if($source) {
 			foreach($source as $value => $title) {
 				$itemID = $this->ID() . '_' . preg_replace('/[^a-zA-Z0-9]/', '', $value);
@@ -86,9 +85,13 @@ class OptionsetField extends DropdownField {
 			}
 		}
 
-		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
+		$properties = array_merge($properties, array(
+			'Options' => new ArrayList($options)
+		));
 
-		return $this->customise($properties)->renderWith($this->getTemplate());
+		return $this->customise($properties)->renderWith(
+			$this->getTemplates()
+		);
 	}
 
 	function performReadonlyTransformation() {
@@ -97,6 +100,7 @@ class OptionsetField extends DropdownField {
 		$field = new LookupField($this->name, $this->title ? $this->title : '', $items, $this->value);
 		$field->setForm($this->form);
 		$field->setReadonly(true);
+		
 		return $field;
 	}
 	
@@ -108,6 +112,7 @@ class OptionsetField extends DropdownField {
 	 */
 	function setDisabledItems($items) {
 		$this->disabledItems = $items;
+		return $this;
 	}
 	
 	/**

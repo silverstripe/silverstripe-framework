@@ -6,7 +6,7 @@
  * 
  * @author Ingo Schommer, SilverStripe Ltd. (<firstname>@silverstripe.com)
  * 
- * @package sapphire
+ * @package framework
  * @subpackage fields-formattedinput
  */
 class MoneyField extends FormField {
@@ -43,7 +43,7 @@ class MoneyField extends FormField {
 	/**
 	 * @return string
 	 */
-	function Field() {
+	function Field($properties = array()) {
 		return "<div class=\"fieldgroup\">" .
 			"<div class=\"fieldgroupField\">" . $this->fieldCurrency->SmallFieldHolder() . "</div>" . 
 			"<div class=\"fieldgroupField\">" . $this->fieldAmount->SmallFieldHolder() . "</div>" . 
@@ -87,6 +87,8 @@ class MoneyField extends FormField {
 		//  decimal and thousands signs, while respecting the stored
 		//  precision in the database without truncating it during display
 		//  and subsequent save operations
+
+		return $this;
 	}
 	
 	/**
@@ -98,10 +100,10 @@ class MoneyField extends FormField {
 	 *
 	 * (see @link MoneyFieldTest_CustomSetter_Object for more information)
 	 */
-	function saveInto($dataObject) {
+	function saveInto(DataObjectInterface $dataObject) {
 		$fieldName = $this->name;
 		if($dataObject->hasMethod("set$fieldName")) {
-			$dataObject->$fieldName = DBField::create('Money', array(
+			$dataObject->$fieldName = DBField::create_field('Money', array(
 				"Currency" => $this->fieldCurrency->Value(),
 				"Amount" => $this->fieldAmount->Value()
 			));
@@ -129,6 +131,8 @@ class MoneyField extends FormField {
 		
 		$this->fieldAmount->setReadonly($bool);
 		$this->fieldCurrency->setReadonly($bool);
+
+		return $this;
 	}
 
 	function setDisabled($bool) {
@@ -136,6 +140,8 @@ class MoneyField extends FormField {
 		
 		$this->fieldAmount->setDisabled($bool);
 		$this->fieldCurrency->setDisabled($bool);
+
+		return $this;
 	}
 	
 	/**
@@ -148,6 +154,8 @@ class MoneyField extends FormField {
 		$oldVal = $this->fieldCurrency->Value();
 		$this->fieldCurrency = $this->FieldCurrency($this->name);
 		$this->fieldCurrency->setValue($oldVal);
+
+		return $this;
 	}
 	
 	/**
@@ -159,10 +167,10 @@ class MoneyField extends FormField {
 	
 	function setLocale($locale) {
 		$this->_locale = $locale;
+		return $this;
 	}
 	
 	function getLocale() {
 		return $this->_locale;
 	}
 }
-?>

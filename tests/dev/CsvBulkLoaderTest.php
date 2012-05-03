@@ -131,7 +131,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals($testPlayer->ContractID, $testContract->ID, 'Creating new has_one relation works');
 		
 		// Test nested setting of relation properties
-		$contractAmount = DBField::create('Currency', $compareRow[5])->RAW();
+		$contractAmount = DBField::create_field('Currency', $compareRow[5])->RAW();
 		$this->assertEquals($testPlayer->Contract()->Amount, $contractAmount, 'Setting nested values in a relation works');
 		
 		fclose($file);
@@ -157,7 +157,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 		$this->assertEquals($player->Biography, 'He\'s a good guy', 'test updating of duplicate imports within the same import works');
 
 		// load with updated data
-		$filepath = Director::baseFolder() . '/sapphire/tests/dev/CsvBulkLoaderTest_PlayersWithIdUpdated.csv';
+		$filepath = FRAMEWORK_PATH . '/tests/dev/CsvBulkLoaderTest_PlayersWithIdUpdated.csv';
 		$results = $loader->load($filepath);
 		
 		// HACK need to update the loaded record from the database
@@ -249,4 +249,4 @@ class CsvBulkLoaderTest_PlayerContract extends DataObject implements TestOnly {
 	);
 }
 
-?>
+

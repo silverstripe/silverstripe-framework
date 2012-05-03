@@ -19,7 +19,7 @@
  * @todo add support for user defined config: Debug::die_on_notice(true | false)
  * @todo better way of figuring out the error context to display in highlighted source
  * 
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 class Debug {
@@ -220,7 +220,7 @@ class Debug {
 			),
 			SS_Log::NOTICE
 		);
-		
+
 		if(Director::isDev()) {
 			self::showError($errno, $errstr, $errfile, $errline, $errcontext, "Notice");
 		}
@@ -697,6 +697,9 @@ function errorHandler($errno, $errstr, $errfile, $errline) {
 
 		case E_NOTICE:
 		case E_USER_NOTICE:
+		case E_DEPRECATED:
+		case E_USER_DEPRECATED:
+		case E_STRICT:
 			Debug::noticeHandler($errno, $errstr, $errfile, $errline, null);
 			break;
 	}

@@ -79,4 +79,5 @@ save it to the database
 
 ## CMS Field Editor
 
-Please see `[api:HTMLEditorField]` for in-depth documentation about custom forms created through a GUI in the CMS.
+Please see `[api:HTMLEditorField]` for in-depth documentation about custom forms created through a GUI in the CMS,
+as well as the topic documentation about [Rich Text Editing](/topics/rich-text-editing)

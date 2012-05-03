@@ -7,12 +7,12 @@
  *  doesn't switch throughout the test execution. This means tests might
  *  fail when run at 23:59:59.
  *
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class SS_DatetimeTest extends SapphireTest {
 	function testNowWithSystemDate() {
-		$systemDatetime = DBField::create('SS_Datetime', date('Y-m-d H:i:s'));
+		$systemDatetime = DBField::create_field('SS_Datetime', date('Y-m-d H:i:s'));
 		$nowDatetime = SS_Datetime::now();
 		
 		$this->assertEquals($systemDatetime->Date(), $nowDatetime->Date());
@@ -22,15 +22,33 @@ class SS_DatetimeTest extends SapphireTest {
 		// Test setting
 		$mockDate = '2001-12-31 22:10:59';
 		SS_Datetime::set_mock_now($mockDate);
-		$systemDatetime = DBField::create('SS_Datetime', date('Y-m-d H:i:s'));
+		$systemDatetime = DBField::create_field('SS_Datetime', date('Y-m-d H:i:s'));
 		$nowDatetime = SS_Datetime::now();
 		$this->assertNotEquals($systemDatetime->Date(), $nowDatetime->Date());
 		$this->assertEquals($nowDatetime->getValue(), $mockDate);
 		
 		// Test clearing
 		SS_Datetime::clear_mock_now();
-		$systemDatetime = DBField::create('SS_Datetime', date('Y-m-d H:i:s'));
+		$systemDatetime = DBField::create_field('SS_Datetime', date('Y-m-d H:i:s'));
 		$nowDatetime = SS_Datetime::now();
 		$this->assertEquals($systemDatetime->Date(), $nowDatetime->Date());
 	}
+
+	function testSetNullAndZeroValues() {
+		$date = DBField::create_field('SS_Datetime', '');
+		$this->assertNull($date->getValue(), 'Empty string evaluates to NULL');
+
+		$date = DBField::create_field('SS_Datetime', null);
+		$this->assertNull($date->getValue(), 'NULL is set as NULL');
+
+		$date = DBField::create_field('SS_Datetime', false);
+		$this->assertNull($date->getValue(), 'Boolean FALSE evaluates to NULL');
+
+		$date = DBField::create_field('SS_Datetime', '0');
+		$this->assertEquals('1970-01-01 00:00:00', $date->getValue(), 'String zero is UNIX epoch time');
+
+		$date = DBField::create_field('SS_Datetime', 0);
+		$this->assertEquals('1970-01-01 00:00:00', $date->getValue(), 'Numeric zero is UNIX epoch time');
+	}
+
 }

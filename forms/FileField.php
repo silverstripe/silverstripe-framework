@@ -42,8 +42,6 @@
  * @subpackage fields-files
  */
 class FileField extends FormField {
-
-	protected $template = 'FileField';
 	
 	/**
 	 * Restrict filesize for either all filetypes
@@ -112,8 +110,11 @@ class FileField extends FormField {
 	}
 
 	public function Field($properties = array()) {
-		$properties = array_merge($properties, array('MaxFileSize' => $this->getValidator()->getAllowedMaxFileSize()));
-		return $this->customise($properties)->renderWith($this->getTemplate());
+		$properties = array_merge($properties, array(
+			'MaxFileSize' => $this->getValidator()->getAllowedMaxFileSize()
+		));
+		
+		return parent::Field($properties);
 	}
 
 	function getAttributes() {
@@ -123,7 +124,7 @@ class FileField extends FormField {
 		);
 	}
 
-	public function saveInto(DataObject $record) {
+	public function saveInto(DataObjectInterface $record) {
 		if(!isset($_FILES[$this->name])) return false;
 		$fileClass = File::get_class_for_file_extension(pathinfo($_FILES[$this->name]['name'], PATHINFO_EXTENSION));
 		

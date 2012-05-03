@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 
@@ -16,7 +16,7 @@
  * 
  * See {@link browse()} output for generic usage instructions.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class TestRunner extends Controller {
@@ -63,12 +63,9 @@ class TestRunner extends Controller {
 	 * @see http://www.phpunit.de/manual/current/en/appendixes.configuration.html#appendixes.configuration.blacklist-whitelist
 	 */
 	static $coverage_filter_dirs = array(
-		'cms/thirdparty',
-		'cms/tests',
-		'cms/lang',
-		'sapphire/thirdparty',
-		'sapphire/tests',
-		'sapphire/lang',
+		'*/thirdparty',
+		'*/tests',
+		'*/lang',
 	);
 	
 	/**
@@ -198,7 +195,7 @@ class TestRunner extends Controller {
 	
 	/**
 	 * Run coverage tests for one or more "modules".
-	 * A module is generally a toplevel folder, e.g. "mysite" or "sapphire".
+	 * A module is generally a toplevel folder, e.g. "mysite" or "framework".
 	 */
 	function coverageModule($request) {
 		$this->module($request, true);
@@ -229,7 +226,7 @@ class TestRunner extends Controller {
 	
 	/**
 	 * Run tests for one or more "modules".
-	 * A module is generally a toplevel folder, e.g. "mysite" or "sapphire".
+	 * A module is generally a toplevel folder, e.g. "mysite" or "framework".
 	 */
 	function module($request, $coverage = false) {
 		self::use_test_manifest();
@@ -257,19 +254,20 @@ class TestRunner extends Controller {
 	 */
 	function runTests($classList, $coverage = false) {
 		$startTime = microtime(true);
-		
-		// XDEBUG seem to cause problems with test execution :-(
+
+		// disable xdebug, as it messes up test execution
 		if(function_exists('xdebug_disable')) xdebug_disable();
-		
-		ini_set('max_execution_time', 0);		
-		
+
+		ini_set('max_execution_time', 0);
+
 		$this->setUp();
-		
+
 		// Optionally skip certain tests
 		$skipTests = array();
 		if($this->request->getVar('SkipTests')) {
 			$skipTests = explode(',', $this->request->getVar('SkipTests'));
 		}
+
 		$classList = array_diff($classList, $skipTests);
 		
 		// run tests before outputting anything to the client
@@ -284,16 +282,14 @@ class TestRunner extends Controller {
 		// Remove the error handler so that PHPUnit can add its own
 		restore_error_handler();
 
-
-		self::$default_reporter->writeHeader("Sapphire Test Runner");
-		if (count($classList) > 1) { 
+		self::$default_reporter->writeHeader("SilverStripe Test Runner");
+		if (count($classList) > 1) {
 			self::$default_reporter->writeInfo("All Tests", "Running test cases: ",implode(", ", $classList));
-		} else
-		if (count($classList) == 1) { 
-			self::$default_reporter->writeInfo($classList[0], "");
+		} elseif (count($classList) == 1) {
+			self::$default_reporter->writeInfo($classList[0], '');
 		} else {
-			// border case: no tests are available. 
-			self::$default_reporter->writeInfo("", "");
+			// border case: no tests are available.
+			self::$default_reporter->writeInfo('', '');
 		}
 
 		// perform unit tests (use PhpUnitWrapper or derived versions)
@@ -335,11 +331,11 @@ class TestRunner extends Controller {
 	function startsession() {
 		if(!Director::isLive()) {
 			if(SapphireTest::using_temp_db()) {
-				$endLink = Director::baseURL() . "/dev/tests/endsession";
+				$endLink = Director::baseURL() . "dev/tests/endsession";
 				return "<p><a id=\"end-session\" href=\"$endLink\">You're in the middle of a test session; click here to end it.</a></p>";
 			
 			} else if(!isset($_GET['fixture'])) {
-				$me = Director::baseURL() . "/dev/tests/startsession";
+				$me = Director::baseURL() . "dev/tests/startsession";
 				return <<<HTML
 <form action="$me">				
 	<p>Enter a fixture file name to start a new test session.  Don't forget to visit dev/tests/endsession when you're done!</p>

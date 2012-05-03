@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class CompositeDBFieldTest extends SapphireTest {
@@ -50,4 +50,3 @@ class SubclassedDBFieldObject extends CompositeDBFieldTest_DataObject {
 		'OtherMoney' => 'Money', 
 	);
 }
-?>

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Partial caching, new in SilverStripe 2.4, is a feature that allows the caching of just a portion of a page.
+Partial caching is a feature that allows the caching of just a portion of a page.
 
 As opposed to static publishing, which avoids the SilverStripe controller layer on cached pages, partial caching allows
 caching for pages that contain a mix of moderately static & user specific data, and still provide full access control
@@ -54,7 +54,7 @@ From a block that shows a summary of the page edits if administrator, nothing if
 ## Aggregates
 
 Often you want to invalidate a cache when any in a set of objects change, or when the objects in a relationship change.
-To help do this, SilverStripe 2.4 also introduces the concept of Aggregates. These calculate and return SQL aggregates
+To help do this, SilverStripe introduces the concept of Aggregates. These calculate and return SQL aggregates
 on sets of `[api:DataObject]`s - the most useful for us being the Max aggregate.
 
 For example, if we have a menu, we want that menu to update whenever _any_ page is edited, but would like to cache it
@@ -165,7 +165,7 @@ temporarily disable a particular cache block by changing just the tag, leaving t
 
 ## Nested cacheblocks
 
-New since 2.4 beta 2 is the ability to nest independent cache blocks (with one important rule, discussed later).
+You can also nest independent cache blocks (with one important rule, discussed later).
 
 Any nested cache blocks are calculated independently from their containing block, regardless of the cached state of that
 container.

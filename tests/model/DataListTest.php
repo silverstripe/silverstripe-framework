@@ -50,7 +50,7 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals(array('Bob', 'Joe', 'Phil'), $list->column('Name'));
 		
 		// We can also restrict the output to a range
-		$this->assertEquals(array('Joe', 'Phil'), $list->getRange(1,2)->column('Name'));
+		$this->assertEquals(array('Joe', 'Phil'), $list->limit(2, 1)->column('Name'));
 	}
 	
 	function testDataClass() {
@@ -447,6 +447,7 @@ class DataListTest extends SapphireTest {
 			$this->idFromFixture('DataObjectTest_Team', 'team1'),
 			$this->idFromFixture('DataObjectTest_Team', 'team2')
 		)));
+		$list->sort('Name');
 		$this->assertEquals(2, $list->count());
 		$this->assertEquals('Joe', $list->first()->Name, 'First comment should be from Phil');
 		$this->assertEquals('Phil', $list->last()->Name, 'First comment should be from Phil');
@@ -504,5 +505,28 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals(3, $list->count());
 		$this->assertEquals($this->idFromFixture('DataObjectTest_Team', 'team2'), $list->first()->TeamID, 'First comment should be for Team 2');
 		$this->assertEquals($this->idFromFixture('DataObjectTest_Team', 'team1'), $list->last()->TeamID, 'Last comment should be for Team 1');
+	}
+	
+	public function testReverse() {
+		$list = DataList::create("DataObjectTest_TeamComment");
+		$list->sort('Name');
+		$list->reverse();
+		
+		$this->assertEquals('Bob', $list->last()->Name, 'Last comment should be from Bob');
+		$this->assertEquals('Phil', $list->first()->Name, 'First comment should be from Phil');
+	}
+
+	public function testSortByComplexExpression() {
+		// Test an expression with both spaces and commas
+		// This test also tests that column() can be called with a complex sort expression, so keep using column() below
+		$list = DataObjectTest_Team::get()->sort('CASE WHEN "DataObjectTest_Team"."ClassName" = \'DataObjectTest_SubTeam\' THEN 0 ELSE 1 END, "Title" DESC');
+		$this->assertEquals(array(
+			'Subteam 3',
+			'Subteam 2',
+			'Subteam 1',
+			'Team 3',
+			'Team 2',
+			'Team 1',
+		), $list->column("Title"));
 	}
 }

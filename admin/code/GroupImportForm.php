@@ -49,13 +49,16 @@ class GroupImportForm extends Form {
 		}
 		
 		if(!$actions) $actions = new FieldList(
-			new FormAction('doImport', _t('SecurityAdmin_MemberImportForm.BtnImport', 'Import'))
+			$importAction = new FormAction('doImport', _t('SecurityAdmin_MemberImportForm.BtnImport', 'Import from CSV'))
 		);
-		
+
+		$importAction->addExtraClass('ss-ui-button');
+
 		if(!$validator) $validator = new RequiredFields('CsvFile');
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
-		
+
+		$this->addExtraClass('cms');
 		$this->addExtraClass('import-form');
 	}
 	
@@ -67,24 +70,23 @@ class GroupImportForm extends Form {
 		
 		// result message
 		$msgArr = array();
-		if($result->CreatedCount()) $msgArr[] = sprintf(
-			_t('GroupImportForm.ResultCreated', 'Created %d groups'),
-			$result->CreatedCount()
+		if($result->CreatedCount()) $msgArr[] = _t(
+			'GroupImportForm.ResultCreated', 'Created {count} groups',
+			array('count' => $result->CreatedCount())
 		);
-		if($result->UpdatedCount()) $msgArr[] = sprintf(
-			_t('GroupImportForm.ResultUpdated', 'Updated %d groups'),
-			$result->UpdatedCount()
+		if($result->UpdatedCount()) $msgArr[] = _t(
+			'GroupImportForm.ResultUpdated', 'Updated %d groups',
+			array('count' => $result->UpdatedCount())
 		);
-		if($result->DeletedCount()) $msgArr[] = sprintf(
-			_t('GroupImportForm.ResultDeleted', 'Deleted %d groups'),
-			$result->DeletedCount()
+		if($result->DeletedCount()) $msgArr[] = _t(
+			'GroupImportForm.ResultDeleted', 'Deleted %d groups',
+			array('count' => $result->DeletedCount())
 		);
 		$msg = ($msgArr) ? implode(',', $msgArr) : _t('MemberImportForm.ResultNone', 'No changes');
 	
 		$this->sessionMessage($msg, 'good');
 		
-		$this->redirectBack();
+		$this->controller->redirectBack();
 	}
 	
 }
-?>

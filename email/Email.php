@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage email
  */
 
@@ -20,7 +20,7 @@ if(isset($_SERVER['SERVER_NAME'])) {
 
 /**
  * Class to support sending emails.
- * @package sapphire
+ * @package framework
  * @subpackage email
  */
 class Email extends ViewableData {
@@ -360,9 +360,13 @@ class Email extends ViewableData {
 	 * @desc Validates the email address. Returns true of false
 	 */
 	static function validEmailAddress($address) {
-		return ereg('^([a-zA-Z0-9_+\.\-]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$', $address);
+        if (function_exists('filter_var')) {
+            return filter_var($address, FILTER_VALIDATE_EMAIL);
+        } else {
+            return preg_match('#^([a-zA-Z0-9_+\.\-]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$#', $address);
+        }
 	}
-	
+
 	/**
 	 * Send the email in plaintext.
 	 * 
@@ -612,7 +616,7 @@ class Email extends ViewableData {
 
 /**
  * Base class that email bounce handlers extend
- * @package sapphire
+ * @package framework
  * @subpackage email
  */
 class Email_BounceHandler extends Controller {
@@ -643,7 +647,7 @@ class Email_BounceHandler extends Controller {
 			return;
 		}
 
-		// Check against access key defined in sapphire/_config.php
+		// Check against access key defined in framework/_config.php
 		if( $_REQUEST['Key'] != EMAIL_BOUNCEHANDLER_KEY) {
 			echo 'Error: Access validation failed. Invalid "Key" specified.';
 			return;
@@ -658,7 +662,7 @@ class Email_BounceHandler extends Controller {
 	}
 		
 	private function recordBounce( $email, $date = null, $time = null, $error = null ) {
-		if(ereg('<(.*)>', $email, $parts)) $email = $parts[1];
+		if(preg_match('/<(.*)>/', $email, $parts)) $email = $parts[1];
 		
 		$SQL_email = Convert::raw2sql($email);
 		$SQL_bounceTime = Convert::raw2sql("$date $time");
@@ -734,7 +738,7 @@ class Email_BounceHandler extends Controller {
 
 /**
  * Database record for recording a bounced email
- * @package sapphire
+ * @package framework
  * @subpackage email
  */
 class Email_BounceRecord extends DataObject {
@@ -766,4 +770,4 @@ class Email_BounceRecord extends DataObject {
 	}
 }
 
-?>
+

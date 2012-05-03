@@ -4,11 +4,14 @@
  * functionality. It passes through list methods to the underlying list
  * implementation.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage model
  */
-abstract class SS_ListDecorator extends ViewableData implements SS_List {
+abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sortable, SS_Filterable, SS_Limitable {
 
+	/**
+	 * @var SS_List
+	 */
 	protected $list;
 
 	public function __construct(SS_List $list) {
@@ -61,10 +64,6 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List {
 		$this->list->remove($itemObject);
 	}
 
-	public function getRange($offset, $length) {
-		return $this->list->getRange($offset, $length);
-	}
-
 	public function getIterator() {
 		return $this->list->getIterator();
 	}
@@ -109,6 +108,10 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List {
 		return $this->list->canSortBy($by);
 	}
 
+	public function reverse() {
+		return $this->list->reverse();
+	}
+
 	/**
 	 * Sorts this list by one or more fields. You can either pass in a single
 	 * field name and direction, or a map of field names to sort directions.
@@ -123,6 +126,10 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List {
 		return call_user_func_array(array($this->list, 'sort'), $args);
 	}
 
+	public function canFilterBy($by) {
+		return $this->list->canFilterBy($by);
+	}
+
 	/**
 	 * Filter the list to include items with these charactaristics
 	 *
@@ -134,6 +141,10 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List {
 	public function filter(){
 		$args = func_get_args();
 		return call_user_func_array(array($this->list, 'filter'), $args);
+	}
+
+	public function limit($limit, $offset = 0) {
+		return $this->list->limit($limit, $offset);
 	}
 
 	/**

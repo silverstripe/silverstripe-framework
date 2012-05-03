@@ -11,6 +11,7 @@ the language and functions which are used in the guides.
 * [Grouping DataObjectSets](grouping-dataobjectsets). Group results in a [api:DataObjectSet] to create sub sections.
 * [PHPUnit Configuration](phpunit-configuration). How to setup your testing environment with PHPUnit
 * [Extend the CMS Interface](extend-cms-interface). 
+* [How to customize CMS Tree](customize-cms-tree).
 
 ## Feedback
 

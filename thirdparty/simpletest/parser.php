@@ -197,7 +197,7 @@ class SimpleLexer {
         $this->_case = $case;
         $this->_regexes = array();
         $this->_parser = &$parser;
-        $this->_mode = &new SimpleStateStack($start);
+        $this->_mode = new SimpleStateStack($start);
         $this->_mode_handlers = array($start => $start);
     }
     
@@ -579,7 +579,7 @@ class SimpleHtmlSaxParser {
      *    @static
      */
     function &createLexer(&$parser) {
-        $lexer = &new SimpleHtmlLexer($parser);
+        $lexer = new SimpleHtmlLexer($parser);
         return $lexer;
     }
     
@@ -690,7 +690,7 @@ class SimpleHtmlSaxParser {
      *    @access public
      *    @static
      */
-    function decodeHtml($html) {
+    static function decodeHtml($html) {
         return html_entity_decode($html, ENT_QUOTES);
     }
     
@@ -703,7 +703,7 @@ class SimpleHtmlSaxParser {
      *    @access public
      *    @static
      */
-    function normalise($html) {
+    static function normalise($html) {
         $text = preg_replace('|<!--.*?-->|', '', $html);
         $text = preg_replace('|<script[^>]*>.*?</script>|', '', $text);
         $text = preg_replace('|<img[^>]*alt\s*=\s*"([^"]*)"[^>]*>|', ' \1 ', $text);
@@ -761,4 +761,4 @@ class SimpleSaxListener {
     function addContent($text) {
     }
 }
-?>
+

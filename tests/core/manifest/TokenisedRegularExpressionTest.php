@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class TokenisedRegularExpressionTest extends SapphireTest {
@@ -47,7 +47,7 @@ interface InterfaceC extends InterfaceA, InterfaceB {
 }
 interface InterfaceD extends InterfaceA, InterfaceB, InterfaceC {
 }
-?>
+
 PHP
 );
 	}
@@ -56,7 +56,7 @@ PHP
 		return token_get_all(<<<PHP
 <?php
 
-namespace sapphire\\test;
+namespace silverstripe\\test;
 
 class ClassA {
 	
@@ -86,7 +86,7 @@ class ClassG implements subtest\\InterfaceG {
 
 }
 
-?>
+
 PHP
 );
 	}
@@ -122,9 +122,6 @@ PHP
 	}
 	
 	function testNamesapcedClassDefParser() {
-		if(version_compare(PHP_VERSION, '5.3', '<')) {
-			return;
-		}
 		$parser = SS_ClassManifest::get_namespaced_class_parser();
 		
 		$tokens = $this->getNamespaceTokens();
@@ -167,9 +164,6 @@ PHP
 	}
 	
 	function testNamespaceDefParser() {
-		if(version_compare(PHP_VERSION, '5.3', '<')) {
-			return;
-		}
 		$parser = SS_ClassManifest::get_namespace_parser();
 		
 		$namespacedTokens = $this->getNamespaceTokens();
@@ -179,6 +173,6 @@ PHP
 		$matches = $parser->findAll($tokens);
 		
 		$this->assertEquals(array(), $matches);
-		$this->assertEquals(array('sapphire', '\\', 'test'), $namespacedMatches[0]['namespaceName']);
+		$this->assertEquals(array('silverstripe', '\\', 'test'), $namespacedMatches[0]['namespaceName']);
 	}
 }

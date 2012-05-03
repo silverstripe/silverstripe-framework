@@ -52,7 +52,7 @@ there are any problems they will follow up with you, so please ensure they have 
 
 ### Sending git pull requests
 
-The SilverStripe core modules (`sapphire` and `cms`), as well as some of the more popular modules are in
+The SilverStripe core modules (`framework` and `cms`), as well as some of the more popular modules are in
 git version control. SilverStripe hosts its modules on [github.com/silverstripe](http://github.com/silverstripe) and [github.com/silverstripe-labs](http://github.com/silverstripe-labs).
 After [installing git](http://help.github.com/git-installation-redirect) and creating a [free github.com account](https://github.com/signup/free), you can "fork" a module,
 which creates a copy that you can commit to (see github's [guide to "forking"](http://help.github.com/forking/)).
@@ -137,7 +137,7 @@ Its contents are fetched from different releases automatically every couple of m
 ### Source Control
 
 In order to balance editorial control with effective collaboration, we keep
-documentation alongside the module source code, e.g. in `sapphire/docs/`,
+documentation alongside the module source code, e.g. in `framework/docs/`,
 or as code comments within PHP code.
 Contributing documentation is the same process as providing any other patch
 (see [Patches and Bugfixes](contributing#submitting-patches-bugfixes-and-enhancements)).
@@ -230,9 +230,9 @@ on placing HTML blocks inside Markdown.
 
 ### Translating Documentation
 
-Documentation is kept alongside the source code, typically in a module subdirectory like `sapphire/docs/en/`.
+Documentation is kept alongside the source code, typically in a module subdirectory like `framework/docs/en/`.
 Each language has its own subfolder, which can duplicate parts or the whole body of documentation.
-German documentation would for example live in `sapphire/docs/de/`.
+German documentation would for example live in `framework/docs/de/`.
 The [sapphiredocs](https://github.com/silverstripe/silverstripe-sapphiredocs) module that drives
 [doc.silverstripe.org](http://doc.silverstripe.org) automatically resolves these subfolders into a language dropdown.
 
@@ -245,14 +245,13 @@ The [sapphiredocs](https://github.com/silverstripe/silverstripe-sapphiredocs) mo
 ## Translating the User Interface
 
 The content for UI elements (button labels, field titles) and instruction texts shown in the CMS and
-elsewhere is stored in the PHP code for a module (see [i18n](/topics/i18n)). All content can be extracted as a "language file"
-which is then uploaded to [translate.silverstripe.org](http://translate.silverstripe.org). This website provides
-an online editor for translators (like you!). Every now and then, translations will be merged back into
-the codebase from there, and released alongside other PHP code.
-
+elsewhere is stored in the PHP code for a module (see [i18n](/topics/i18n)). 
+All content can be extracted as a "language file", and uploaded to an online translation editor interface.
 SilverStripe is already translated in over 60 languages, and we're relying on native speakers
-to keep these up to date, and of course add new languages. Please [register](http://translate.silverstripe.org/apply)
-a free translator account to get started, even if you just feel like fixing up a few sentences.
+to keep these up to date, and of course add new languages. 
+Please [register](translation-process) a free translator account to get started, 
+even if you just feel like fixing up a few sentences.
+See [our translation workflow](translation-process) for more details.
 
 ## Related
 

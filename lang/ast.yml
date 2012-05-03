@@ -1,0 +1,53 @@
+ast:
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "Camudasti la contraseña pa"
+  ComplexTableField.ss:
+    ADDITEM: "Amestar %s"
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: "Camudar contraseña"
+  DataObject:
+    PLURALNAME: "Oxetos de datos"
+    SINGULARNAME: "Oxetu de datos"
+  Date:
+    TIMEDIFFAGO: "Hai %s"
+  DropdownField:
+    CHOOSE: "(Escoyer)"
+  Email_BounceRecord:
+    PLURALNAME: "Rexistros de rebote de corréu"
+    SINGULARNAME: "Rexistru de rebote de corréu"
+  File:
+    INVALIDEXTENSION: "La estensión nun ta permitida (válides: %s)"
+    PLURALNAME: "Ficheros"
+    SINGULARNAME: "Ficheru"
+    TOOLARGE: "El tamañu de ficheru ye enforma grande, el máximu permitíu ye %s."
+  Group:
+    Code: "Códigu de grupu"
+    Locked: "¿Bloquiáu?"
+    Parent: "Grupu padre"
+    has_many_Permissions: "Permisos"
+    many_many_Members: "Miembros"
+  HtmlEditorField:
+  LoginAttempt:
+  Member:
+    EMAIL: "Corréu"
+    INTERFACELANG: "Llingua de la interfaz"
+    PLURALNAME: "Miembros"
+    SINGULARNAME: "Miembru"
+    SUBJECTPASSWORDCHANGED: "Se camudó la to contraseña"
+    SUBJECTPASSWORDRESET: "Enllaz pa reaniciar la contraseña"
+    ValidationIdentifierFailed: "Nun se pue sobroscribir el miembru esistente #%d col mesmu identificador (%s = %s))"
+    belongs_many_many_Groups: "Grupos"
+    db_LockedOutUntil: "Bloquiáu fasta"
+    db_PasswordExpiry: "Data d'espiración de la contraseña"
+  NullableField:
+    IsNullLabel: "Ye nulu"
+  Permission:
+  PermissionCheckboxSetField:
+    FromGroup: "heredáu del grupu \"%s\""
+    FromRole: "heredáu del rol \"%s\""
+    FromRoleOnGroup: "heredáu del rol \"%s\" nel grupu \"%s\""
+  Security:
+    ALREADYLOGGEDIN: "Nun tienes accesu a esta páxina. Si tienes otra cuenta que pueda entrar nesta páxina, pues <a href=\"%s\">volver a coneutate</a>."
+  SiteTree:
+  Versioned:
+    has_many_Versions: "Versiones"

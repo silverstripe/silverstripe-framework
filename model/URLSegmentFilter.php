@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 
@@ -14,12 +14,7 @@
  * 
  * See {@link FileNameFilter} for similar implementation for filesystem-based URLs.
  */
-class URLSegmentFilter {
-	
-	/**
-	 * Necessary to support {@link Object::create()}
-	 */
-	function __construct() {}
+class URLSegmentFilter extends Object {
 	
 	/**
 	 * @var Boolean
@@ -104,7 +99,7 @@ class URLSegmentFilter {
 	 */
 	function getTransliterator() {
 		if($this->transliterator === null && self::$default_use_transliterator) {
-			$this->transliterator = Object::create('Transliterator');
+			$this->transliterator = Transliterator::create();
 		} 
 		return $this->transliterator;
 	}

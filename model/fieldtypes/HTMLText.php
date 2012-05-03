@@ -7,7 +7,7 @@
  * @see Text
  * @see Varchar
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class HTMLText extends Text {
@@ -44,7 +44,7 @@ class HTMLText extends Text {
 	 * @param string $add What to add to the end of the summary if we cut at a less-than-ideal cut point
 	 * @return string A nice(ish) summary with no html tags (but possibly still some html entities)
 	 * 
-	 * @see sapphire/core/model/fieldtypes/Text#Summary($maxWords)
+	 * @see framework/core/model/fieldtypes/Text#Summary($maxWords)
 	 */
 	public function Summary($maxWords = 50, $flex = 15, $add = '...') {
 		$str = false;
@@ -106,7 +106,7 @@ class HTMLText extends Text {
 	 * 
 	 * This is the HTML aware equivilent to Text#FirstSentence
 	 * 
-	 * @see sapphire/core/model/fieldtypes/Text#FirstSentence()
+	 * @see framework/core/model/fieldtypes/Text#FirstSentence()
 	 */
 	function FirstSentence() {
 		/* Use summary's html processing logic to get the first paragraph */
@@ -128,18 +128,18 @@ class HTMLText extends Text {
 		return ShortcodeParser::get_active()->parse($this->value);
 	}
 	
-	public function hasValue() {
-		return parent::hasValue() && $this->value != '<p></p>';
+	public function exists() {
+		return parent::exists() && $this->value != '<p></p>';
 	}
 	
 	public function scaffoldFormField($title = null, $params = null) {
 		return new HtmlEditorField($this->name, $title);
 	}
 	
-	public function scaffoldSearchField($title = null) {
+	public function scaffoldSearchField($title = null, $params = null) {
 		return new TextField($this->name, $title);
 	}
 
 }
 
-?>
+

@@ -35,7 +35,6 @@ incomplete - please add to it** *Try to keep it in alphabetical order too! :)*
  | ----    |                                                            | ----------- |                                                                                                                                                                                                                             
  | Authenticator::register_authenticator($authenticator);|              | Enable an authentication method (for more details see [security](/topics/security)). |        
  | Authenticator::set_default_authenticator($authenticator); |          | Modify tab-order on login-form.|        
- | BasicAuth::disable() |                                               | Disable basic authentication checking for dev sites (useful when testing credit card transaction post-backs etc) |                                                             
  | BBCodeParser::disable_autolink_urls(); |                             | Disables plain hyperlinks from being turned into links when bbcode is parsed. |     
  | BlogEntry::allow_wysiwyg_editing();  |                               | Enable rich text editing for blog posts.  |                                                                                  
  | ContentNegotiator::set_encoding(string $encoding)  |					| The encoding charset to use - UTF-8 by default  |        
@@ -63,7 +62,7 @@ Some constants are user-defineable within *_ss_environment.php*.
 
  | Name  |																| Description | 
  | ----  |																| ----------- | 
- | *TEMP_FOLDER* |														| Absolute file path to store temporary files such as cached templates or the class manifest. Needs to be writeable by the webserver user. Defaults to *sys_get_temp_dir()*, and falls back to *silverstripe-cache* in the webroot. See *getTempFolder()* in *sapphire/core/Core.php* | 
+ | *TEMP_FOLDER* |														| Absolute file path to store temporary files such as cached templates or the class manifest. Needs to be writeable by the webserver user. Defaults to *sys_get_temp_dir()*, and falls back to *silverstripe-cache* in the webroot. See *getTempFolder()* in *framework/core/Core.php* | 
 
 ## User-level: Member-object
 

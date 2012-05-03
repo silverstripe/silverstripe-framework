@@ -4,14 +4,14 @@
  * Field for uploading single or multiple files of all types, including images.
  * <b>NOTE: this Field will call write() on the supplied record</b>
  * 
- * <b>Features (some might not be avaliable to old browsers):</b>
+ * <b>Features (some might not be available to old browsers):</b>
  * 
  * - File Drag&Drop support
  * - Progressbar
  * - Image thumbnail/file icons even before upload finished
  * - Saving into relations
  * - Edit file
- * - allowedExtensions is by default File::$allowed_extensions<li>maxFileSize the vaule of min(upload_max_filesize, post_max_size) from php.ini
+ * - allowedExtensions is by default File::$allowed_extensions<li>maxFileSize the value of min(upload_max_filesize, post_max_size) from php.ini
  * 
  * @example <code>
  * $UploadField = new UploadField('myFiles', 'Please upload some images <span>(max. 5 files)</span>');
@@ -20,7 +20,7 @@
  * </code>
  * 
  * @author Zauberfisch
- * @package sapphire
+ * @package framework
  * @subpackage forms
  */
 class UploadField extends FileField {
@@ -47,11 +47,6 @@ class UploadField extends FileField {
 	/**
 	 * @var String
 	 */
-	protected $template = 'UploadField';
-
-	/**
-	 * @var String
-	 */
 	protected $templateFileButtons = 'UploadField_FileButtons';
 
 	/**
@@ -73,13 +68,13 @@ class UploadField extends FileField {
 	 * Config for this field used in both, php and javascript (will be merged into the config of the javascript file upload plugin)
 	 * @var array
 	 */
-	protected $config = array(
+	protected $ufConfig = array(
 		/**
 		 * @var boolean
 		 */
 		'autoUpload' => true,
 		/**
-		 * php validation of allowedMaxFileNumber only works when a db relation is avaliable, set to null to allow unlimited
+		 * php validation of allowedMaxFileNumber only works when a db relation is available, set to null to allow unlimited
 		 * if record has a has_one and allowedMaxFileNumber is null, it will be set to 1
 		 * @var int
 		 */
@@ -127,7 +122,7 @@ class UploadField extends FileField {
 	/**
 	 * @param string $name The internal field name, passed to forms.
 	 * @param string $title The field label.
-	 * @param SS_List $items If no items are defined, the field will try to auto-detect an existion relation on {@link $record}, 
+	 * @param SS_List $items If no items are defined, the field will try to auto-detect an existing relation on {@link $record}, 
 	 *                       with the same name as the field name.
 	 * @param Form $form Reference to the container form
 	 */
@@ -180,7 +175,7 @@ class UploadField extends FileField {
 
 	/**
 	 * Force a record to be used as "Parent" for uploaded Files (eg a Page with a has_one to File)
-	 * @param DataOjbect $record
+	 * @param DataObject $record
 	 */
 	public function setRecord($record) {
 		$this->record = $record;
@@ -265,7 +260,7 @@ class UploadField extends FileField {
 	 * @param mixed $val
 	 */
 	public function setConfig($key, $val) {
-		$this->config[$key] = $val;
+		$this->ufConfig[$key] = $val;
 		return $this;
 	}
 
@@ -274,7 +269,14 @@ class UploadField extends FileField {
 	 * @return mixed
 	 */
 	public function getConfig($key) {
-		return $this->config[$key];
+		return $this->ufConfig[$key];
+	}
+	
+	/**
+	 * Used to get config in the template
+	 */
+	public function getAutoUpload() {
+		return $this->getConfig('autoUpload');
 	}
 
 	/**
@@ -303,12 +305,12 @@ class UploadField extends FileField {
 		);
 	}
 
-	public function Field() {
+	public function Field($properties = array()) {
 		$record = $this->getRecord();
 		$name = $this->getName();
 
 		// if there is a has_one relation with that name on the record and 
-		// allowedMaxFileNumber has not been set, its wanted to be 1
+		// allowedMaxFileNumber has not been set, it's wanted to be 1
 		if(
 			$record && $record->exists()
 			&& $record->has_one($name) && !$this->getConfig('allowedMaxFileNumber')
@@ -317,11 +319,10 @@ class UploadField extends FileField {
 		}
 
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/i18n.js');
-		Requirements::javascript(SAPPHIRE_ADMIN_DIR . '/javascript/ssui.core.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/i18n.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/ssui.core.js');
 
 		Requirements::combine_files('uploadfield.js', array(
 			THIRDPARTY_DIR . '/javascript-templates/tmpl.js',
@@ -330,12 +331,12 @@ class UploadField extends FileField {
 			THIRDPARTY_DIR . '/jquery-fileupload/cors/jquery.xdr-transport.js',
 			THIRDPARTY_DIR . '/jquery-fileupload/jquery.fileupload.js',
 			THIRDPARTY_DIR . '/jquery-fileupload/jquery.fileupload-ui.js',
-			SAPPHIRE_DIR . '/javascript/UploadField_uploadtemplate.js',
-			SAPPHIRE_DIR . '/javascript/UploadField_downloadtemplate.js',
-			SAPPHIRE_DIR . '/javascript/UploadField.js',
+			FRAMEWORK_DIR . '/javascript/UploadField_uploadtemplate.js',
+			FRAMEWORK_DIR . '/javascript/UploadField_downloadtemplate.js',
+			FRAMEWORK_DIR . '/javascript/UploadField.js',
 		));
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css'); // TODO hmmm, remove it?
-		Requirements::css(SAPPHIRE_DIR . '/css/UploadField.css');
+		Requirements::css(FRAMEWORK_DIR . '/css/UploadField.css');
 
 		$config = array(
 			'url' => $this->Link('upload'),
@@ -347,35 +348,40 @@ class UploadField extends FileField {
 		if (count($this->getValidator()->getAllowedExtensions())) {
 			$allowedExtensions = $this->getValidator()->getAllowedExtensions();
 			$config['acceptFileTypes'] = '(\.|\/)(' . implode('|', $allowedExtensions) . ')$';
-			$config['errorMessages']['acceptFileTypes'] = sprintf(_t(
+			$config['errorMessages']['acceptFileTypes'] = _t(
 				'File.INVALIDEXTENSION', 
-				'Extension is not allowed (valid: %s)'
-			), wordwrap(implode(', ', $allowedExtensions)));
+				'Extension is not allowed (valid: {extensions})',
+				array('extensions' => wordwrap(implode(', ', $allowedExtensions)))
+			);
 		}
 		if ($this->getValidator()->getAllowedMaxFileSize()) {
 			$config['maxFileSize'] = $this->getValidator()->getAllowedMaxFileSize();
-			$config['errorMessages']['maxFileSize'] = sprintf(_t(
+			$config['errorMessages']['maxFileSize'] = _t(
 				'File.TOOLARGE', 
-				'Filesize is too large, maximum %s allowed.'
-			), File::format_size($config['maxFileSize']));
+				'Filesize is too large, maximum {size} allowed.',
+				array('size' => File::format_size($config['maxFileSize']))
+			);
 		}
 		if ($config['maxNumberOfFiles'] > 1) {
-			$config['errorMessages']['maxNumberOfFiles'] = sprintf(_t(
+			$config['errorMessages']['maxNumberOfFiles'] = _t(
 				'UploadField.MAXNUMBEROFFILES', 
-				'Max number of %s file(s) exceeded.'
-			), $config['maxNumberOfFiles']);
+				'Max number of {count} file(s) exceeded.',
+				array('count' => $config['maxNumberOfFiles'])
+			);
 		}
 		$configOverwrite = array();
 		if (is_numeric($config['maxNumberOfFiles']) && $this->getItems()->count()) {
 			$configOverwrite['maxNumberOfFiles'] = $config['maxNumberOfFiles'] - $this->getItems()->count();
 		}
-		$config = array_merge($config, $this->config, $configOverwrite);
+		
+		$config = array_merge($config, $this->ufConfig, $configOverwrite);
+		
 		return $this->customise(array(
 			'configString' => str_replace('"', "'", Convert::raw2json($config)),
 			'config' => new ArrayData($config),
 			'multiple' => $config['maxNumberOfFiles'] !== 1,
 			'displayInput' => (!isset($configOverwrite['maxNumberOfFiles']) || $configOverwrite['maxNumberOfFiles'])
-		))->renderWith($this->getTemplate());
+		))->renderWith($this->getTemplates());
 	}
 
 	/**
@@ -401,7 +407,7 @@ class UploadField extends FileField {
 	 * @return UploadField_ItemHandler
 	 */
 	public function getItemHandler($itemID) {
-		return Object::create('UploadField_ItemHandler', $this, $itemID);
+		return UploadField_ItemHandler::create($this, $itemID);
 	}
 
 	/**
@@ -409,7 +415,7 @@ class UploadField extends FileField {
 	 * @return UploadField_ItemHandler
 	 */
 	public function handleSelect(SS_HTTPRequest $request) {
-		return Object::create('UploadField_SelectHandler', $this, $this->folderName);
+		return UploadField_SelectHandler::create($this, $this->folderName);
 	}
 
 	/**
@@ -429,6 +435,7 @@ class UploadField extends FileField {
 		$tmpfile = $request->postVar($name);
 		$record = $this->getRecord();
 		
+		// Check if the file has been uploaded into the temporary storage.
 		if (!$tmpfile) {
 			$return = array('error' => _t('UploadField.FIELDNOTSET', 'File information not found'));
 		} else {
@@ -439,36 +446,62 @@ class UploadField extends FileField {
 				'error' => $tmpfile['error']
 			);
 		}
-		if (!$return['error'] && $record && $record->exists()) {
+
+		// Check for constraints on the record to which the file will be attached.
+		if (!$return['error'] && $this->relationAutoSetting && $record && $record->exists()) {
 			$tooManyFiles = false;
+			// Some relationships allow many files to be attached.
 			if ($this->getConfig('allowedMaxFileNumber') && ($record->has_many($name) || $record->many_many($name))) {
 				if(!$record->isInDB()) $record->write();
 				$tooManyFiles = $record->{$name}()->count() >= $this->getConfig('allowedMaxFileNumber');
+			// has_one only allows one file at any given time.
 			} elseif($record->has_one($name)) {
 				$tooManyFiles = $record->{$name}() && $record->{$name}()->exists();
 			}
+
+			// Report the constraint violation.
 			if ($tooManyFiles) {
 				if(!$this->getConfig('allowedMaxFileNumber')) $this->setConfig('allowedMaxFileNumber', 1);
-				$return['error'] = sprintf(_t(
+				$return['error'] = _t(
 					'UploadField.MAXNUMBEROFFILES', 
-					'Max number of %s file(s) exceeded.'
-				), $this->getConfig('allowedMaxFileNumber'));
+					'Max number of {count} file(s) exceeded.',
+					array('count' => $this->getConfig('allowedMaxFileNumber'))
+				);
 			}
 		}
+
+		// Process the uploaded file
 		if (!$return['error']) {
+			$fileObject = null;
+
+			if ($this->relationAutoSetting) {
+				// Search for relations that can hold the uploaded files.
+				if ($relationClass = $this->getRelationAutosetClass()) {
+					// Create new object explicitly. Otherwise rely on Upload::load to choose the class.
+					$fileObject = Object::create($relationClass);
+				}
+			}
+
+			// Get the uploaded file into a new file object.
 			try {
-				$this->upload->loadIntoFile($tmpfile, null, $this->folderName);
+				$this->upload->loadIntoFile($tmpfile, $fileObject, $this->folderName);
 			} catch (Exception $e) {
 				// we shouldn't get an error here, but just in case
 				$return['error'] = $e->getMessage();
 			}
+
 			if (!$return['error']) {
 				if ($this->upload->isError()) {
 					$return['error'] = implode(' '.PHP_EOL, $this->upload->getErrors());
 				} else {
 					$file = $this->upload->getFile();
-					$file->write();
-					$this->attachFile($file);
+
+					// Attach the file to the related record.
+					if ($this->relationAutoSetting) {
+						$this->attachFile($file);
+					}
+
+					// Collect all output data.
 					$file =  $this->customiseFile($file);
 					$return = array_merge($return, array(
 						'id' => $file->ID,
@@ -554,13 +587,24 @@ class UploadField extends FileField {
 		);
 	}
 
+	/**
+	 * Gets the foreign class that needs to be created.
+	 *
+	 * @return string Foreign class name.
+	 */
+	public function getRelationAutosetClass() {
+		$name = $this->getName();
+		$record = $this->getRecord();
+
+		if (isset($name) && isset($record)) return $record->getRelationClass($name);
+	}
 }
 
 /**
  * RequestHandler for actions (edit, remove, delete) on a single item (File) of the UploadField
  * 
  * @author Zauberfisch
- * @package sapphire
+ * @package framework
  * @subpackage forms
  */
 class UploadField_ItemHandler extends RequestHandler {
@@ -630,7 +674,7 @@ class UploadField_ItemHandler extends RequestHandler {
 	}
 
 	/**
-	 * Action to handle removeing a single file from the db relation
+	 * Action to handle removing a single file from the db relation
 	 * 
 	 * @param SS_HTTPRequest $request
 	 * @return SS_HTTPResponse
@@ -712,7 +756,7 @@ class UploadField_ItemHandler extends RequestHandler {
 		$items = $this->parent->getItems();
 		if($this->parent->managesRelation() && !$items->byID($item->ID)) return $this->httpError(403);
 
-		Requirements::css(SAPPHIRE_DIR . '/css/UploadField.css');
+		Requirements::css(FRAMEWORK_DIR . '/css/UploadField.css');
 
 		return $this->customise(array(
 			'Form' => $this->EditForm()
@@ -739,7 +783,7 @@ class UploadField_ItemHandler extends RequestHandler {
 			$actions = $file->{$this->parent->getConfig('fileEditActions')}();
 		} else {
 			$actions = new FieldList($saveAction = new FormAction('doEdit', _t('UploadField.DOEDIT', 'Save')));
-			$saveAction->addExtraClass('ss-ui-action-constructive');
+			$saveAction->addExtraClass('ss-ui-action-constructive icon-accept');
 		}
 		if (is_a($this->parent->getConfig('fileEditValidator'), 'Validator')) {
 			$validator = $this->parent->getConfig('fileEditValidator');
@@ -789,7 +833,9 @@ class UploadField_ItemHandler extends RequestHandler {
 	
 }
 
-
+/**
+ * File selection popup for attaching existing files.
+ */
 class UploadField_SelectHandler extends RequestHandler {
 
 	/**
@@ -815,6 +861,8 @@ class UploadField_SelectHandler extends RequestHandler {
 	}
 
 	function index() {
+		// Requires a separate JS file, because we can't reach into the iframe with entwine.
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/UploadField_select.js');
 		return $this->renderWith('CMSDialog');
 	}
 
@@ -827,42 +875,72 @@ class UploadField_SelectHandler extends RequestHandler {
 	}
 
 	/**
+	 * Build the file selection form.
+	 *
 	 * @return Form
 	 */
 	function Form() {
+		// Find out the requested folder ID.
+		$folderID = $this->parent->getRequest()->requestVar('ParentID');
+		if (!isset($folderID)) {
+			$folder = Folder::find_or_make($this->folderName);
+			$folderID = $folder->ID;
+		}
+
+		// Construct the form
 		$action = new FormAction('doAttach', _t('UploadField.AttachFile', 'Attach file(s)'));
-		$action->addExtraClass('ss-ui-action-constructive');
-		return new Form(
+		$action->addExtraClass('ss-ui-action-constructive icon-accept');
+		$form = new Form(
 			$this,
 			'Form',
-			new FieldList($this->getListField()),
+			new FieldList($this->getListField($folderID)),
 			new FieldList($action)
 		);
+
+		// Add a class so we can reach the form from the frontend.
+		$form->addExtraClass('uploadfield-form');
+
+		return $form;
 	}
 
 	/**
+	 * @param $folderID The ID of the folder to display.
 	 * @return FormField
 	 */
-	protected function getListField() {
-		$folder = $this->getFolder();
+	protected function getListField($folderID) {
+		// Generate the folder selection field.
+		$folderField = new TreeDropdownField('ParentID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder');
+		$folderField->setValue($folderID);
+
+		// Generate the file list field.
 		$config = GridFieldConfig::create();
 		$config->addComponent(new GridFieldSortableHeader());
-		$config->addComponent(new GridFieldFilter());
-		$config->addComponent(new GridFieldDefaultColumns());
+		$config->addComponent(new GridFieldFilterHeader());
+		$config->addComponent(new GridFieldDataColumns());
 		$config->addComponent(new GridFieldPaginator(10));
 
-		$field = new GridField('Files', false, $folder->stageChildren(), $config);
-		$field->setAttribute('data-selectable', true);
-		if($this->parent->getConfig('allowedMaxFileNumber') > 1) $field->setAttribute('data-multiselect', true);
+		// If relation is to be autoset, we need to make sure we only list compatible objects.
+		$baseClass = null;
+		if ($this->parent->relationAutoSetting) {
+			$baseClass = $this->parent->getRelationAutosetClass();
+		}
 
-		return $field;
-	}
+		// By default we can attach anything that is a file, or derives from file.
+		if (!$baseClass) $baseClass = 'File';
 
-	/**
-	 * @return Folder
-	 */
-	function getFolder() {
-		return Folder::find_or_make($this->folderName);
+		// Create the data source for the list of files within the current directory.
+		$files = DataList::create($baseClass)->filter('ParentID', $folderID);
+
+		$fileField = new GridField('Files', false, $files, $config);
+		$fileField->setAttribute('data-selectable', true);
+		if($this->parent->getConfig('allowedMaxFileNumber') > 1) $fileField->setAttribute('data-multiselect', true);
+
+		$selectComposite = new CompositeField(
+			$folderField,
+			$fileField
+		);
+
+		return $selectComposite;
 	}
 
 	function doAttach($data, $form) {

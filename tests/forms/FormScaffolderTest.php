@@ -3,7 +3,7 @@
 /**
  * Tests for DataObject FormField scaffolding
  * 
- * @package sapphire
+ * @package framework
  * @subpackage tests
  *
  */
@@ -128,12 +128,13 @@ class FormScaffolderTest_ArticleExtension extends DataExtension implements TestO
 	static $db = array(
 		'ExtendedField' => 'Varchar'
 	);
-	function updateCMSFields(&$fields) {
+
+	function updateCMSFields(FieldList $fields) {
 		$fields->addFieldToTab('Root.Main',
 			new TextField('AddedExtensionField')
 		);
 	}
+
 }
 
 DataObject::add_extension('FormScaffolderTest_Article', 'FormScaffolderTest_ArticleExtension');
-?>

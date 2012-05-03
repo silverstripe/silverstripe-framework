@@ -69,7 +69,7 @@
 class SimpleImageField extends FileField {
 
 	function __construct($name, $title = null, $value = null) {
-		Deprecation::notice('3.0', "Use UploadField with $myField->allowedExtensions = array('jpg', 'gif', 'png')");
+		Deprecation::notice('3.0', "Use UploadField with \$myField->allowedExtensions = array('jpg', 'gif', 'png')");
 
 		if(count(func_get_args()) > 3) Deprecation::notice('3.0', 'Use setRightTitle() and setFolderName() instead of constructor arguments');
 
@@ -78,7 +78,7 @@ class SimpleImageField extends FileField {
 		$this->getValidator()->setAllowedExtensions(array('jpg','gif','png'));
 	}
 
-	function Field() {
+	function Field($properties = array()) {
 	    if($this->form) $record = $this->form->getRecord();
 	    $fieldName = $this->name;
 	    if(isset($record)&&$record) {
@@ -102,7 +102,7 @@ class SimpleImageField extends FileField {
 				"type" => "file", 
 				"name" => $this->name, 
 				"id" => $this->id(),
-				"tabindex" => $this->getTabIndex(),
+				"tabindex" => $this->getAttribute('tabindex'),
 				'disabled' => $this->disabled
 			)
 		);
@@ -111,7 +111,7 @@ class SimpleImageField extends FileField {
 				"type" => "hidden", 
 				"name" => "MAX_FILE_SIZE", 
 				"value" => $this->getValidator()->getAllowedMaxFileSize(),
-				"tabindex" => $this->getTabIndex()
+				"tabindex" => $this->getAttribute('tabindex'),
 			)
 		);
 		$html .= "</div>";
@@ -141,7 +141,7 @@ class SimpleImageField_Disabled extends FormField {
 	
 	protected $readonly = true;
 	
-	function Field() {
+	function Field($properties = array()) {
 		$record = $this->form->getRecord();
 	    $fieldName = $this->name;
 			

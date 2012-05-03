@@ -1,7 +1,7 @@
 <?php
 /**
  * Implements a basic security model
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Security extends Controller {
@@ -45,29 +45,13 @@ class Security extends Controller {
 	protected static $strictPathChecking = false;
 
 	/**
-	 * Should passwords be stored encrypted?
-	 * @deprecated 2.4 Please use 'none' as the default $encryptionAlgorithm instead
-	 *
-	 * @var bool
-	 */
-	protected static $encryptPasswords = true;
-
-	/**
 	 * The password encryption algorithm to use by default.
 	 * This is an arbitrary code registered through {@link PasswordEncryptor}.
 	 *
 	 * @var string
 	 */
-	protected static $encryptionAlgorithm = 'sha1_v2.4';
+	protected static $encryptionAlgorithm = 'blowfish';
 
-	/**
-	 * Should a salt be used for the password encryption?
-	 * @deprecated 2.4 Please use a custom {@link PasswordEncryptor} instead
-	 *
-	 * @var bool
-	 */
-	protected static $useSalt = true;
-	
 	/**
 	 * Showing "Remember me"-checkbox 
 	 * on loginform, and saving encrypted credentials to a cookie. 
@@ -120,6 +104,14 @@ class Security extends Controller {
 	 */
 	static $force_database_is_ready = null;
 	
+	/**
+	 * When the database has once been verified as ready, it will not do the
+	 * checks again.
+	 *
+	 * @var bool
+	 */
+	static $database_is_ready = false;
+
 	/**
 	 * Set location of word list file
 	 * 
@@ -190,7 +182,7 @@ class Security extends Controller {
 							'Security.ALREADYLOGGEDIN', 
 							"You don't have access to this page.  If you have another account that "
 								. "can access that page, you can log in again below.",
-							PR_MEDIUM,
+							
 							"%s will be replaced with a link to log in."
 						),
 						'logInAgain' => _t(
@@ -349,7 +341,7 @@ class Security extends Controller {
 			$tmpPage->ID = -1 * rand(1,10000000);
 
 			$controller = new Page_Controller($tmpPage);
-			$controller->setModel($this->model);
+			$controller->setDataModel($this->model);
 			$controller->init();
 			//Controller::$currentController = $controller;
 		} else {
@@ -370,17 +362,16 @@ class Security extends Controller {
 			// with the tabstrip library otherwise
 			$link_base = Director::absoluteURL($this->Link("login"));
 			
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-			Requirements::javascript(SAPPHIRE_DIR . "/javascript/jquery_improvements.js");
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
+			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 			
-			Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 			
 			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 			
-			Requirements::css(SAPPHIRE_DIR . '/css/Security_login.css');
+			Requirements::css(FRAMEWORK_DIR . '/css/Security_login.css');
 			
-			Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
+			Requirements::javascript(FRAMEWORK_DIR . '/javascript/TabSet.js');
 			
 			$content = '<div id="Form_EditForm">';
 			$content .= '<div class="ss-tabset">';
@@ -465,8 +456,7 @@ class Security extends Controller {
 	 * @return Form Returns the lost password form
 	 */
 	public function LostPasswordForm() {
-		return Object::create('MemberLoginForm',
-			$this,
+		return MemberLoginForm::create(			$this,
 			'LostPasswordForm',
 			new FieldList(
 				new EmailField('Email', _t('Member.EMAIL', 'Email'))
@@ -504,10 +494,10 @@ class Security extends Controller {
 		$email = Convert::raw2xml(rawurldecode($request->param('ID')) . '.' . $request->getExtension());
 
 		$customisedController = $controller->customise(array(
-			'Title' => sprintf(_t('Security.PASSWORDSENTHEADER', "Password reset link sent to '%s'"), $email),
+			'Title' => _t('Security.PASSWORDSENTHEADER', "Password reset link sent to '{email}'", array('email' => $email)),
 			'Content' =>
 				"<p>" . 
-				sprintf(_t('Security.PASSWORDSENTTEXT', "Thank you! A reset link has been sent to  '%s', provided an account exists for this email address."), $email) .
+				_t('Security.PASSWORDSENTTEXT', "Thank you! A reset link has been sent to '{email}', provided an account exists for this email address.", array('email' => $email)) .
 				"</p>",
 			'Email' => $email
 		));
@@ -524,7 +514,9 @@ class Security extends Controller {
 	 */
 	public static function getPasswordResetLink($autoLoginHash) {
 		$autoLoginHash = urldecode($autoLoginHash);
-		return self::Link('changepassword') . "?h=$autoLoginHash";
+		$selfControllerClass = __CLASS__;
+		$selfController = new $selfControllerClass();
+		return $selfController->Link('changepassword') . "?h=$autoLoginHash";
 	}
 	
 	/**
@@ -579,12 +571,10 @@ class Security extends Controller {
 			if(isset($_REQUEST['h'])) {
 				$customisedController = $controller->customise(
 					array('Content' =>
-						sprintf(
-							_t('Security.NOTERESETLINKINVALID',
-								'<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="%s">here</a> or change your password after you <a href="%s">logged in</a>.</p>'
-							),
-							$this->Link('lostpassword'),
-							$this->link('login')
+						_t(
+							'Security.NOTERESETLINKINVALID',
+							'<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>',
+							array('link1' => $this->Link('lostpassword'), 'link2' => $this->link('login'))
 						)
 					)
 				);
@@ -735,35 +725,6 @@ class Security extends Controller {
 
 
 	/**
-	 * Set if passwords should be encrypted or not
-	 *
-	 * @deprecated 2.4 Use PasswordEncryptor_None instead.
-	 * 
-	 * @param bool $encrypt Set to TRUE if you want that all (new) passwords
-	 *                      will be stored encrypted, FALSE if you want to
-	 *                      store the passwords in clear text.
-	 */
-	public static function encrypt_passwords($encrypt) {
-		Deprecation::notice('2.4', 'Use PasswordEncryptor_None instead.');
-		self::$encryptPasswords = (bool)$encrypt;
-	}
-
-
-	/**
-	 * Get a list of all available encryption algorithms.
-	 * Note: These are arbitrary codes, and not callable methods.
-	 * 
-	 * @deprecated 2.4 Use PasswordEncryptor::get_encryptors()
-	 *
-	 * @return array Returns an array of strings containing all supported encryption algorithms.
-	 */
-	public static function get_encryption_algorithms() {
-		Deprecation::notice('2.4', 'Use PasswordEncryptor::get_encryptors() instead.');
-		return array_keys(PasswordEncryptor::get_encryptors());
-	}
-
-
-	/**
 	 * Set the password encryption algorithm
 	 *
 	 * @param string $algorithm One of the available password encryption
@@ -817,7 +778,7 @@ class Security extends Controller {
 			// if the password is empty, don't encrypt
 			strlen(trim($password)) == 0  
 			// if no algorithm is provided and no default is set, don't encrypt
-			|| (!$algorithm && self::$encryptPasswords == false)
+			|| (!$algorithm)
 		) {
 			$algorithm = 'none';
 		} else {
@@ -847,6 +808,8 @@ class Security extends Controller {
 	public static function database_is_ready() {
 		// Used for unit tests
 		if(self::$force_database_is_ready !== NULL) return self::$force_database_is_ready;
+
+		if(self::$database_is_ready) return self::$database_is_ready;
 		
 		$requiredTables = ClassInfo::dataClassesFor('Member');
 		$requiredTables[] = 'Group';
@@ -855,6 +818,10 @@ class Security extends Controller {
 		foreach($requiredTables as $table) {
 			// if any of the tables aren't created in the database
 			if(!ClassInfo::hasTable($table)) return false;
+
+			// HACK: DataExtensions aren't applied until a class is instantiated for
+			// the first time, so create an instance here.
+			singleton($table);
 		
 			// if any of the tables don't have all fields mapped as table columns
 			$dbFields = DB::fieldList($table);
@@ -865,6 +832,7 @@ class Security extends Controller {
 			
 			if($missingFields) return false;
 		}
+		self::$database_is_ready = true;
 		
 		return true;
 	}

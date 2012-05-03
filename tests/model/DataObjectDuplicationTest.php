@@ -104,4 +104,3 @@ class DataObjectDuplicateTestClass3 extends DataObject implements TestOnly {
 }
 
 
-?>

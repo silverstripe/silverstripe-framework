@@ -2,7 +2,7 @@
 
 The `GridField` is a flexible form field for creating tables of data.  It's new in SilverStripe 3.0 and replaces `ComplexTableField`, `TableListField`, and `TableField`.  It's built as a lean core with a number of components that you plug into it.  By selecting from the components that we provide or writing your own, you can grid a wide variety of grid controls.
 
-# Using GridField
+## Using GridField
 
 A GridField is created like any other field: you create an instance of the GridField object and add it to the fields of a form. At its simplest, GridField takes 3 arguments: field name, field title, and an `SS_List` of records to display.
 
@@ -19,20 +19,20 @@ This example might come from a Controller designed to manage the members of a gr
 
 Note that the only way to specify the data that is listed in a grid field is with `SS_List` argument.  If you want to customise the data displayed, you can do so by customising this object.
 
-This will create a read-only grid field that will show the columns specified in the Member's `$summary_fields` setting, and will let you sort and/or filter by those columns, as well as show pagination controls with 25 records per page.
+This will create a read-only grid field that will show the columns specified in the Member's `$summary_fields` setting, and will let you sort and/or filter by those columns, as well as show pagination controls with a handful of records per page.
 
-## GridFieldConfig
+## GridFieldConfig: Portable configuration
 
-This grid create above a useful default case, but when developing applications you may need to control the behaviour of your grid more precisely than this.  To this end, the `GridField` constructor allows for 4th argument, `$config`, where you can pass a `GridFieldConfig` object.
+The example above a useful default case, but when developing applications you may need to control the behaviour of your grid more precisely than this.  To this end, the `GridField` constructor allows for fourth argument, `$config`, where you can pass a `GridFieldConfig` object.
 
 This example creates exactly the same kind of grid as the previous example, but it creates the configuration manually:
 
 	:::php
 	$config = GridFieldConfig::create();
 	// Provide a header row with filter controls
-	$config->addComponent(new GridFieldFilter());
+	$config->addComponent(new GridFieldFilterHeader());
 	// Provide a default set of columns based on $summary_fields
-	$config->addComponent(new GridFieldDefaultColumns());
+	$config->addComponent(new GridFieldDataColumns());
 	// Provide a header row with sort controls
 	$config->addComponent(new GridFieldSortableHeader());
 	// Paginate results to 25 items per page, and show a footer with pagination controls
@@ -44,22 +44,24 @@ If we wanted to make a simpler grid without pagination or filtering, we could do
 	:::php
 	$config = GridFieldConfig::create();
 	// Provide a default set of columns based on $summary_fields
-	$config->addComponent(new GridFieldDefaultColumns());
+	$config->addComponent(new GridFieldDataColumns());
 	// Provide a header row with sort controls
 	$config->addComponent(new GridFieldPaginator(25));
 	$field = new GridField("Members", "Members of this group", $this->group->Members(), $config);
 
-A `GridFieldConfig` is made up of a new of `GridFieldComponent` objects.  `GridFieldComponent` is a family of interfaces.
+A `GridFieldConfig` is made up of a new of `GridFieldComponent` objects, which are described in the next chapter.
 
-## Build-in components
 
+## GridFieldComponent: Modular features
+
+`GridFieldComponent` is a family of interfaces.
 SilverStripe Framework comes with the following components that you can use out of the box.
 
-### GridFieldDefaultColumns
+### GridFieldDataColumns
 
 This is the one component that, in most cases, you must include.  It provides the default columns, sourcing them from the underlying DataObject's `$summary_fields` if no specific configuration is provided.
 
-Without GridFieldDefaultColumns added to a GridField, it would have no columns whatsoever.  Although this isn't particularly useful most of the time, we have allowed for this for two reasons:
+Without GridFieldDataColumns added to a GridField, it would have no columns whatsoever.  Although this isn't particularly useful most of the time, we have allowed for this for two reasons:
 
  * You may have a grid whose fields are generated purely by another non-standard component.
  * It keeps the core of the GridField lean, focused solely on providing APIs to the components.
@@ -91,21 +93,60 @@ You can also specify formatting replacements, to replace column contents with HT
 		'Email' => '<strong>$Email</strong>',
 	));
 	
-**EXPERIMENTAL API WARNING:** We will most likely refactor this so that this configuration methods are called on the component rather than the grid field.  Whoever does this should also update this documentation page. :-)
+**EXPERIMENTAL API WARNING:** We will most likely refactor this so that this configuration methods are called on the component rather than the grid field. 
 
 ### GridFieldSortableHeader
 
 This component will add a header to the grid with sort buttons.  It will detect which columns are sortable and only provide sort controls on those columns.
 
-### GridFieldFilter
+### GridFieldFilterHeader
 
-This component will add a header row with a text field filter for each column, letting you filter the results with text searches.  It will detect which columns are filterable and only provide sort controls on those columns.
+This component will add a header row with a text field filter for each column, letting you filter the results with text searches.  It will detect which columns are filterable and only provide filter controls on those columns.
 
 ### GridFieldPaginator
 
 This component will limit output to a fixed number of items per page add a footer row with pagination controls. The constructor takes 1 argument: the number of items per page.
 
-# Extending GridField with custom components
+### GridFieldDeleteButton
+
+TODO Describe component
+
+### GridFieldEditButton
+
+Adds a edit button to each row of the table. This needs another component to provide an edit interface - see GridFieldDetailForm for use within the CMS.
+
+### GridFieldRelationAdd
+
+This class is is responsible for adding objects to another object's has_many and many_many relation,
+as defined by the `[api:RelationList]` passed to the GridField constructor.
+Objects can be searched through an input field (partially matching one or more fields).
+Selecting from the results will add the object to the relation.
+Often used alongside `[api:GridFieldRemoveButton]` for detaching existing records from a relatinship.
+For easier setup, have a look at a sample configuration in `[api:GridFieldConfig_RelationEditor]`.
+
+### GridFieldRemoveButton
+
+Allows to detach an item from an existing has_many or many_many relationship.
+Similar to {@link GridFieldDeleteAction}, but allows to distinguish between 
+a "delete" and "detach" action in the UI - and to use both in parallel, if required.
+Requires the GridField to be populated with a `[api:RelationList]` rather than a plain DataList.
+Often used alongside `[api:GridFieldAddExistingAutocompleter]` to add existing records to the relationship.
+
+### GridFieldDetailForm
+
+Provides add and edit forms for use within the CMS. This allows editing of the linked records. 
+This only provides the actual add/edit forms, GridFieldEditButton is required to provide a button to link to the edit form, 
+and GridFieldToolbarHeader is required to provide an add button.
+
+### GridFieldToolbarHeader
+
+Adds a title bar to the top of the GridField, with optional "New" button. The New button doesn't provide any functionality with this component alone - see GridFieldDetailForm.
+
+### GridFieldExportButton
+
+Adds an "Download as CSV" button. This will save the current List shown in the GridField as CSV. Takes the 
+
+## Extending GridField with custom components
 
 You can create a custom component by building a class that implements one or more of the following interfaces: `GridField_HTMLProvider`, `GridField_ColumnProvider`, `GridField_ActionProvider`, or `GridField_DataManipulator`.
 
@@ -116,6 +157,18 @@ It's common for a component to implement several of these interfaces in order to
  * `GridField_HTMLProvider`, to generate the header row including the GridField_Action buttons
  * `GridField_ActionProvider`, to define the sortasc and sortdesc actions that add sort column and direction to the state.
  * `GridField_DataManipulator`, to alter the sorting of the data list based on the sort column and direction values in the state.
+
+ ### GridFieldAddExistingAutocompleter
+
+A GridFieldAddExistingAutocompleter is responsible for adding objects to another object's `has_many` and `many_many` relation,
+as defined by the `[api:RelationList]` passed to the GridField constructor.
+Objects can be searched through an input field (partially matching one or more fields).
+Selecting from the results will add the object to the relation.
+
+ 	:::php
+ 	$group = DataObject::get_one('Group');
+ 	$config = GridFieldConfig::create()->addComponent(new GridFieldAddExistingAutocompleter(array('FirstName', 'Surname', 'Email'));
+ 	$gridField = new GridField('Members', 'Members', $group->Members(), $config);
 
 ## Component interfaces
 
@@ -144,13 +197,49 @@ For example, this components will add a footer row to the grid field, thanking t
 	
 If you wish to add CSS or JavaScript for your component, you may also make `Requirements` calls in this method.
 
+### Defining new fragments
+
+Sometimes it is helpful to have one component write HTML into another component.  For example, you might have an action header row at the top of your GridField that several different components may define actions for.
+
+To do this, you can put the following code into one of the HTML fragments returned by an HTML provider.
+
+	$DefineFragment(fragment-name)
+
+Other `GridField_HTMLProvider` components can now write to `fragment-name` just as they would write to footer, etc.  Fragments can be nested.
+
+For example, this component creates a `header-actions` fragment name that can be populated by other components:
+
+	:::php
+	class HeaderActionComponent implements GridField_HTMLProvider {
+		public function getHTMLFragments($gridField) {
+			$colSpan = $gridField->getColumnCount();
+			array(
+				"header" => "<tr><td colspan=\"$colspan\">\$DefineFragment(header-actions)</td></tr>"
+			);
+		}
+	}
+	
+This is a simple example of how you might populate that new fragment:
+
+	:::php
+	class AddNewActionComponent implements GridField_HTMLProvider {
+		public function getHTMLFragments($gridField) {
+			$colSpan = $gridField->getColumnCount();
+			array(
+				"header-actions" => "<button>Add new</button>"
+			);
+		}
+	}
+
+If you write to a fragment that isn't defined anywhere, or you create a circular dependency within fragments, an exception will be thrown.
+
 ### GridField_ColumnProvider
 
 By default, a grid contains no columns.  All the columns displayed in a grid will need to be added by an appropriate component.
 
 For example, you may create a grid field with several components providing columns:
 
- * `GridFieldDefaultColumns` could provide basic data columns.
+ * `GridFieldDataColumns` could provide basic data columns.
  * An editor component could provide a column containing action buttons on the right.
  * A multiselect component clould provide a column showing a checkbox on the left.
 
@@ -184,7 +273,7 @@ To provide your actions, define the following two functions:
  * **`function getActions($gridField)`:** Return a list of actions that this component provides.  There is no namespacing on these actions, so you need to ensure that they don't conflict with other components.
  * **`function handleAction(GridField $gridField, $actionName, $arguments, $data)`:** Handle the action defined by `$actionName` and `$arguments`.  `$data` will contain the full data from the form, if you need to access that.
 
-To call your actions, you need to create `GridField_Action` elsewhere in your component.  Read more about them below.
+To call your actions, you need to create `GridField_FormAction` elsewhere in your component.  Read more about them below.
 
 **EXPERIMENTAL API WARNING:** handleAction implementations often contain a big switch statement and this interface might be amended on, such that each action is defined in a separate method.  If we do this, it will be done before 3.0 stable so that we can lock down the API, but early adopters should be aware of this potential for change!
 
@@ -210,7 +299,7 @@ Here is an example in full.  The actual implementation of the view and edit form
 	 *  - <FormURL>/field/<GridFieldName>/item/<RecordID>
 	 *  - <FormURL>/field/<GridFieldName>/item/<RecordID>/edit
 	 */
-	class GridFieldPopupForms implements GridField_URLHandler {
+	class GridFieldDetailForm implements GridField_URLHandler {
 		public function getURLHandlers($gridField) {
 			return array(
 				'item/$ID' => 'handleItem',
@@ -219,11 +308,11 @@ Here is an example in full.  The actual implementation of the view and edit form
 
 		public function handleItem($gridField, $request) {
 			$record = $gridField->getList()->byId($request->param("ID"));
-			return new GridFieldPopupForm_ItemRequest($gridField, $this, $record);
+			return new GridFieldDetailForm_ItemRequest($gridField, $this, $record);
 		}
 	}
 
-	class GridFieldPopupForm_ItemRequest extends RequestHandler {
+	class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		protected $gridField;
 		protected $component;
 		protected $record;

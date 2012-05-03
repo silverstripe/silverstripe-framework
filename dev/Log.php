@@ -41,7 +41,7 @@ require_once 'Zend/Log.php';
  * $logEmailWriter->setFormatter($myEmailFormatter);
  * </code>
  * 
- * @package sapphire
+ * @package framework
  * @subpackage dev
  */
 class SS_Log {

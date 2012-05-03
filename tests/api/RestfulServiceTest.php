@@ -211,7 +211,7 @@ XML;
  * @todo Less overloading of request()
  * @todo Currently only works with relative (internal) URLs
  * 
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class RestfulServiceTest_MockRestfulService extends RestfulService {

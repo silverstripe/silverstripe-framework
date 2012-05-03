@@ -5,13 +5,13 @@ Requires a [`silverstripe-installer`](http://github.com/silverstripe/silverstrip
 
 ## Installation ##
 
-See [installation on different platforms](http://doc.silverstripe.org/sapphire/en/installation/),
-and [installation from source](http://doc.silverstripe.org/sapphire/en/installation/from-source).
+See [installation on different platforms](http://doc.silverstripe.org/framework/en/installation/),
+and [installation from source](http://doc.silverstripe.org/framework/en/installation/from-source).
 
 ## Links ##
 
- * [Requirements](http://doc.silverstripe.org/sapphire/en/installation/server-requirements)
- * [Changelogs](http://doc.silverstripe.org/sapphire/en/changelogs/)
+ * [Requirements](http://doc.silverstripe.org/framework/en/installation/server-requirements)
+ * [Changelogs](http://doc.silverstripe.org/framework/en/changelogs/)
  * [Bugtracker](http://open.silverstripe.org)
  * [Forums](http://silverstripe.org/forums)
  * [Developer Mailinglist](https://groups.google.com/forum/#!forum/silverstripe-dev)

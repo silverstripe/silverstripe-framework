@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class i18nTextCollectorTestMyObject extends DataObject implements TestOnly {
@@ -17,4 +17,3 @@ class i18nTextCollectorTestMyObject extends DataObject implements TestOnly {
 	
 	static $plural_name = "My Objects";
 }
-?>

@@ -7,7 +7,7 @@
  * 
  * Example with a combined street name and number:
  * <code>
-* class Street extends DBFields implements CompositeDBField() {
+* class Street extends DBField implements CompositeDBField {
 * 	protected $streetNumber;
 * 	protected $streetName;
 * 	protected $isChanged = false;
@@ -25,24 +25,24 @@
 * 		if($this->getStreetName()) {
 * 			$manipulation['fields']["{$this->name}Name"] = $this->prepValueForDB($this->getStreetName());
 * 		} else {
-* 			$manipulation['fields']["{$this->name}Name"] = DBField::create('Varchar', $this->getStreetName())->nullValue();
+* 			$manipulation['fields']["{$this->name}Name"] = DBField::create_field('Varchar', $this->getStreetName())->nullValue();
 * 		}
 * 		
 * 		if($this->getStreetNumber()) {
 * 			$manipulation['fields']["{$this->name}Number"] = $this->prepValueForDB($this->getStreetNumber());
 * 		} else {
-* 			$manipulation['fields']["{$this->name}Number"] = DBField::create('Int', $this->getStreetNumber())->nullValue();
+* 			$manipulation['fields']["{$this->name}Number"] = DBField::create_field('Int', $this->getStreetNumber())->nullValue();
 * 		}
 * 	}
 * 	
 * 	function addToQuery(&$query) {
 * 		parent::addToQuery($query);
-* 		$query->select[] = "{$this->name}Number";
-* 		$query->select[] = "{$this->name}Name";
+* 		$query->select("{$this->name}Number");
+* 		$query->select("{$this->name}Name");
 * 	}
 * 	
 * 	function setValue($value, $record = null, $markChanged=true) {
-* 		if ($value instanceof Street && $value->hasValue()) {
+* 		if ($value instanceof Street && $value->exists()) {
 * 			$this->setStreetName($value->getStreetName(), $markChanged);
 * 			$this->setStreetNumber($value->getStreetNumber(), $markChanged);
 * 			if($markChanged) $this->isChanged = true;
@@ -85,13 +85,13 @@
 * 		return $this->isChanged;
 * 	}
 * 	
-* 	function hasValue() {
+* 	function exists() {
 * 		return ($this->getStreetName() || $this->getStreetNumber());
 * 	}
 * }
  * </code>
  *
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 interface CompositeDBField {
@@ -177,6 +177,6 @@ interface CompositeDBField {
 	 * 
 	 * @return boolean
 	 */
-	function hasValue();
+	function exists();
 	
 }

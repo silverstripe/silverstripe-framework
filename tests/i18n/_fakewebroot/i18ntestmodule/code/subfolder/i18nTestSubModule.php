@@ -6,4 +6,3 @@ class i18nTestSubModule extends Object {
 		parent::__construct();
 	}
 }
-?>

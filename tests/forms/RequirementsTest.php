@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  * 
  * @todo Test that order of combine_files() is correct
@@ -241,7 +241,9 @@ class RequirementsTest extends SapphireTest {
 
 	function testConditionalTemplateRequire() {
 		$basePath = $this->getCurrentRelativePath();
-		
+		// we're asserting "framework", so set the relative path accordingly in case FRAMEWORK_DIR was changed to something else
+		$basePath = 'framework' . substr($basePath, strlen(FRAMEWORK_DIR));
+
 		$backend = new RequirementsTest_Backend();
 		$holder = Requirements::backend();
 		Requirements::set_backend($backend);

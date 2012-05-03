@@ -5,9 +5,8 @@
  * @subpackage transformations
  */
 class DisabledTransformation extends FormTransformation {
-	public function transform($field) {
+	function transform(FormField $field) {
 		return $field->performDisabledTransformation($this);
 	}
 }
 
-?>

@@ -5,10 +5,10 @@
 			return $(this).each(function() {
 				if($(this).data('datepicker')) return; // already applied
 
-				this.siblings("button").addClass("ui-icon ui-icon-calendar");
+				$(this).siblings("button").addClass("ui-icon ui-icon-calendar");
 				
 				var holder = $(this).parents('.field.date:first'), 
-					config = $.extend(opts || {}, $(this).metadata({type: 'class'}), {});
+					config = $.extend(opts || {}, $(this).data(), {});
 				if(!config.showcalendar) return;
 	
 				if(config.locale && $.datepicker.regional[config.locale]) {

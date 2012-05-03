@@ -2,7 +2,7 @@
 /**
  * Test reporter optimised for CLI (ie, plain-text) output
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class CliTestReporter extends SapphireTestReporter {
@@ -14,26 +14,34 @@ class CliTestReporter extends SapphireTestReporter {
 		$passCount = 0;
 		$failCount = 0;
 		$testCount = 0;
+		$incompleteCount = 0;
 		$errorCount = 0;
-		
+
 		foreach($this->suiteResults['suites'] as $suite) {
 			foreach($suite['tests'] as $test) {
 				$testCount++;
-				($test['status'] == 1) ? $passCount++ : $failCount++;
+				if($test['status'] == 2) {
+					$incompleteCount++;
+				} elseif($test['status'] === 1) {
+					$passCount++;
+				} else {
+					$failCount++;
+				}
 			}
 		}
 		
 		echo "\n\n";
-		if ($failCount == 0) {
-			echo SS_Cli::text(" ALL TESTS PASS ", "white", "green");
+		if ($failCount == 0 && $incompleteCount > 0) {
+			echo SS_Cli::text(" OK, BUT INCOMPLETE TESTS! ", "black", "yellow");
+		} elseif ($failCount == 0) {
+			echo SS_Cli::text(" ALL TESTS PASS ", "black", "green");
 		}  else {
-			echo SS_Cli::text(" AT LEAST ONE FAILURE ", "white", "red");
+			echo SS_Cli::text(" AT LEAST ONE FAILURE ", "black", "red");
 		}
-		echo "\n\n$testCount tests run: " . SS_Cli::text("$passCount passes", null) . ", ". SS_Cli::text("$failCount fails", null) . ", and 0 exceptions\n";
-		
-		if(function_exists('memory_get_peak_usage')) {
-			echo "Maximum memory usage: " . number_format(memory_get_peak_usage()/(1024*1024), 1) . "M\n\n";
-		}
+
+		echo sprintf("\n\n%d tests run: %s, %s, and %s\n", $testCount, SS_Cli::text("$passCount passes"), SS_Cli::text("$failCount failures"), SS_Cli::text("$incompleteCount incomplete"));
+
+		echo "Maximum memory usage: " . number_format(memory_get_peak_usage()/(1024*1024), 1) . "M\n\n";
 		
 		// Use sake dev/tests/all --showslow to show slow tests
 		if((isset($_GET['args']) && is_array($_GET['args']) && in_array('--showslow', $_GET['args'])) || isset($_GET['showslow'])) {
@@ -72,7 +80,6 @@ class CliTestReporter extends SapphireTestReporter {
 	
 	protected function writeTest($test) {
 		if ($test['status'] != 1) {
-			
 			$filteredTrace = array();
 			$ignoredClasses = array('TestRunner');
 			foreach($test['trace'] as $item) {
@@ -88,10 +95,11 @@ class CliTestReporter extends SapphireTestReporter {
 					&& $item['function'] == 'run') break;
 				
 			}
-			
-			echo "\n\n" . SS_Cli::text($this->testNameToPhrase($test['name']) . "\n". $test['message'] . "\n", 'red', null, true);
+
+			$color = ($test['status'] == 2) ? 'yellow' : 'red';
+			echo "\n" . SS_Cli::text($test['name'] . "\n". $test['message'] . "\n", $color, null);
 			echo SS_Backtrace::get_rendered_backtrace($filteredTrace, true);
-			echo "\n--------------------\n";
+			echo "--------------------\n";
 		}
 	}
 	

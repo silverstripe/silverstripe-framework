@@ -1,0 +1,571 @@
+//Color Variables
+$message:			#BDBD00; 		// blue
+$good:				#359318; 		// green
+
+$warning:			#E07127; 		// orange
+$warningBg:			#fcf8f2;
+$warningBorder:		#ffc28b;
+
+$error:				#C61414 /* #E21607 */; 		// red
+$errorBg:			#FDF1F3;
+$errorBorder:		#F8C3CD;
+
+$link:				#0973A6;
+$gradientTop:		#B1C0C5;
+$gradientBottom:	#7F9198;
+
+//Mixin to create a gradient from top to bottom
+@mixin topGradient($topColor, $bottomColor){
+	background: $topColor; /* Old browszzzzzers */
+	background: -moz-linear-gradient(top, $topColor 0%, $bottomColor 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$topColor), color-stop(100%,$bottomColor)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, $topColor 0%,$bottomColor 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, $topColor 0%,$bottomColor 100%); /* Opera11.10+ */
+	background: -ms-linear-gradient(top, $topColor 0%,$bottomColor 100%); /* IE10+ */     
+	background: linear-gradient(top, $topColor 0%,$bottomColor 100%); /* W3C */
+	.lt-ie9 &{
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$topColor}', endColorstr='#{$bottomColor}',GradientType=0 ); /* IE6-9 */
+	}
+	$experimental-support-for-svg: true;
+	/* @include background-image(linear-gradient(top, $topColor,$bottomColor)); */
+}
+
+//Mixin to create rounded corners. Takes a value for each of the 4 corners
+@mixin roundedCorners($topLeft, $topRight, $bottomRight, $bottomLeft){
+	-moz-border-radius-topleft: $topLeft;
+	-moz-border-radius-topright: $topRight;
+	-moz-border-radius-bottomright: $bottomRight;
+	-moz-border-radius-bottomleft: $bottomLeft;
+	-webkit-border-radius: $topLeft $topRight $bottomRight $bottomLeft;
+	border-radius: $topLeft $topRight $bottomRight $bottomLeft;
+}
+
+//Mixin to create a regular box shadow
+@mixin boxShadow($horizontal, $vertical, $blur, $spread, $color){
+	-webkit-box-shadow: $horizontal $vertical $blur $spread $color;
+	-moz-box-shadow: $horizontal $vertical $blur $spread $color;
+	box-shadow: $horizontal $vertical $blur $spread $color;
+}
+
+// Drop shadows
+@mixin box-shadow($shadow: 0 1px 3px rgba(0,0,0,.15)) {
+  -webkit-box-shadow: $shadow;
+     -moz-box-shadow: $shadow;
+          box-shadow: $shadow;
+
+}
+
+//Mixin to create an inset box shadow
+@mixin boxShadowInset($horizontal, $vertical, $blur, $spread, $color){
+	-webkit-box-shadow: inset $horizontal $vertical $blur $spread $color;
+	-moz-box-shadow: inset $horizontal $vertical $blur $spread $color;
+	box-shadow: inset $horizontal $vertical $blur $spread $color;
+}
+
+// Transitions
+@mixin transition($transition) {
+  -webkit-transition: $transition;
+     -moz-transition: $transition;
+      -ms-transition: $transition;
+       -o-transition: $transition;
+          transition: $transition;
+}
+
+
+body {
+	font-family: Arial, san-serif;
+	font-size: 13px;
+	line-height: 18px;
+	margin-bottom: 18px;
+	color: #333;
+	width: 940px;
+	margin: 0 auto 18px;
+	/* background: url(../../../admin/images/textures/bg_cms_main_content.png) repeat scroll left top #F0F3F4; */
+	background-color: #f4f4f4;
+	
+	/* Typography */
+	p {
+		font-size: 13px;
+		line-height: 18px;
+		margin-bottom: 18px;
+		color: #333;
+	}
+	a {
+		color: $link;
+	}
+	h1, h2, h3, h4, h5, h6 {
+	    color: #222;
+	    font-family: inherit;
+	    font-weight: bold;
+	    margin: 0;
+	    margin: 27px 0 9px;
+	    text-rendering: optimizelegibility;
+	    clear: both;
+	    text-shadow: 0 1px 0 #fff;
+	    small {
+	    	font-weight: normal;
+	    	font-size: 12px;
+	    	color: #666;
+	    }
+	}
+	h1 {
+		font-size: 36px;
+		line-height: 36px;
+		letter-spacing: -0.5px;
+	}
+	h1 {
+		background: transparent url(../../../admin/images/logo.gif) no-repeat left top;
+		text-indent: -9999px;
+		height: 164px;
+		width: 161px;
+		float: left;
+		padding-right: 40px;
+		border-right: 1px solid $gradientTop;
+		margin-right: 40px;
+	}
+	h2 {
+		font-size: 34px;
+		line-height: 36px;
+		letter-spacing: -0.5px;
+	}
+	h3 {
+		font-size: 18px;
+		line-height: 27px;
+	}
+	h4 {
+		font-size: 14px;
+		line-height: 18px;
+		margin: 18px 0 9px;
+	}
+	h5 {
+		font-size: 12px;
+		line-height: 18px;
+		margin: 18px 0 0;
+	}
+
+	/* Helpers */
+	.clear {
+		clear: both;
+	}
+	.left {
+		float: left;
+	}
+	
+	/* Messages */
+	.message {
+		padding: 2px 18px;
+		margin-bottom: 18px;
+		@include roundedCorners(3px, 3px, 3px, 3px);
+		p {
+			margin: 11px 0 13px;
+		}
+		.lt-ie8 & p {
+			/* margin-top: 7px; */
+			/* margin-bottom: 10px; */
+		}
+		&.warning {
+			background-color: $warningBg;
+			border: 1px $warningBorder solid;
+		}
+		&.error {
+			background-color: #FDF1F3 /* #fdf5f5 */;
+			border: 1px solid $errorBorder;
+		}
+		ul {
+			margin-left: 18px;
+			margin-top: -9px;
+			li {
+			
+			}
+		}
+	}
+	.helpText {
+		float: right;
+		width: 425px;
+		padding-left: 20px;
+		color: #666;
+		margin-top: 0;
+		background: transparent url(../../../admin/images/question.png) no-repeat left 1px;
+		&.requirementsHelpText {
+			margin-top: 17px;
+		}
+	}
+	
+	.typography {
+		// General tables
+		table {
+			margin: 9px 0 27px;
+			border-collapse: collapse;
+			width: 100%;
+			thead{
+				tr {
+					td, th {
+						font-weight: bold;
+						vertical-align: bottom;
+						padding: 12px;
+					}
+				}
+			}
+			th, td {
+				padding: 8px 12px;
+				text-align: left;
+			}
+			td {
+				vertical-align: top;
+				border-top: none;
+				background-color: #fff;
+			}
+			th + th,
+			td + td,
+			th + td {
+				/* border-left: 1px solid #ddd; */
+			}
+			tbody{
+			    tr:nth-child(odd) td,
+			    tr:nth-child(odd) th{
+			      background-color: #fcfcfc;
+			    }
+			    tr:hover td,
+			    tr:hover th{
+			      background-color: #f6f6f6;
+			    }
+			}
+			tfoot { 
+				font-style: italic;
+				color: #888;
+			}
+		}
+	
+		// Forms
+		input, textarea, select {
+			width: 420px;
+			margin-bottom: 9px;
+			color: #707070;
+			border: 1px solid #ddd;
+		    display: inline-block;
+		    height: 18px;
+		    padding: 4px 6px;
+		    line-height: 18px;
+		    font-size: 13px;
+		    @include roundedCorners(3px,3px,3px,3px);
+		}
+		
+		// Focus states
+		input,
+		textarea {
+			$transition: border linear .2s, box-shadow linear .2s;
+  			@include transition($transition);
+			@include box-shadow(inset 0 1px 3px rgba(0,0,0,.1));
+		}
+		input:focus,
+		textarea:focus {
+			outline: 0;
+			border-color: rgba(82,168,236,.8);
+			$shadow: inset 0 1px 3px rgba(0,0,0,.1), 0 0 4px rgba(82,168,236,.6);
+			@include box-shadow($shadow);
+		}
+		input[type=file]:focus,
+		input[type=checkbox]:focus,
+		select:focus {
+			@include box-shadow(none); // override for file inputs
+			outline: 1px dotted #666; // Select elements don't get box-shadow styles, so instead we do outline
+		}
+		// End Focus states
+		
+		select {
+			height: 26px;
+		}
+		option {
+			line-height: 27px;
+			font-size: 12px;
+			padding: 2px 6px;
+			color:#666;
+		}
+		label {
+			width: auto;
+			float: none;
+			padding-top: 0;
+			margin: 0 0 5px 0;	
+			text-align: left;
+			display: block;
+		}
+		.fields {
+			float: left;
+		}
+		input.action {
+			text-align: center;
+			font-weight: bold;
+			margin: 9px 0 27px;
+			padding: 6px 8px;
+			width: 200px;
+			width: auto;
+			color: #222;
+			border: 1px solid #aaa;
+			text-shadow: 0 1px 0 #eee;
+			font-size: 13px;
+			float: none;
+			height: auto;
+			@include topGradient (#fbfbfb, #bbb);
+			@include roundedCorners(3px,3px,3px,3px);
+			@include boxShadow(0, 1px, 0, 0, #fff);
+			background-color: #ddd;
+			&:hover {
+				@include boxShadow(0, 1px, 2px, 0, #ccc);
+				@include topGradient (#fbfbfb, #ccc);
+			}
+			&:focus, &:active {
+				@include boxShadow(0, 1px, 0, 0, #fff);
+				@include topGradient (#fbfbfb, #bbb);
+			}
+		}
+		input.action:hover,
+		input.action:focus {
+			cursor: pointer;
+		}
+		input[type="checkbox"], input[type="radio"] {
+		    border: medium none;
+		    height: auto;
+		    line-height: normal;
+		    padding: 0;
+		    width: auto;
+		    margin-right: 6px;
+		    float: left;
+		    margin-top:	3px;
+		}
+		#install_button {
+			font-size: 20px;
+			color: #fff;
+		    border-color: #78A127 #78A127 #59781D;
+			text-shadow: 0 1px 1px #4D7326;
+			padding: 8px 14px;
+			background-color: green;
+			@include topGradient(#80BF40, #59862D);
+			@include boxShadow(0, 1px, 0, 0, #fff);
+			&:hover {
+				@include boxShadow(0, 1px, 3px, 0, #bbb);
+			}
+			&:focus, &:active {
+				@include boxShadow(0, 1px, 0, 0, #fff);
+				@include topGradient(#80BF40, #59862D);
+			}
+			&[disabled=disabled] {
+				border: 1px solid #aaa;
+				border-color: #bbb #bbb #aaa;
+				color: #999;
+				text-shadow: 0 1px 0 #eee;
+				@include topGradient (#fbfbfb, #bbb);
+				&:hover {
+					@include boxShadow(0, 1px, 0, 0, #fff);
+				}
+			}
+		}
+	}
+	
+	/* Custom styles */
+	#Container {
+		margin-bottom: 40px;
+		h3.sectionHeading {
+			padding-top: 27px;
+			border-top: 1px solid $gradientTop;
+			clear: both;
+		}
+		#Header {
+			margin-bottom: 30px;
+			height: 200px;
+			div.left {
+				width: 698px;
+				margin-top: 47px;
+			}
+		}
+		#Navigation {
+			display: none;
+		}
+	}
+	h5.requirement {
+		padding: 12px 18px;
+		font-size: 14px;
+		border: 1px solid darken($gradientBottom,2%);
+		border-top: 1px solid lighten($gradientBottom,5%);
+		margin: 0;
+		color: #fff;
+		position: relative;
+		text-shadow: 0 -1px 0 darken($gradientBottom, 5%);
+		@include roundedCorners(3px, 3px, 3px, 3px);
+		@include boxShadow(0, 1px, 0, 0, #fff);
+		background-color: #eee;
+		@include topGradient($gradientTop,$gradientBottom);
+		span {
+			font-weight: normal;
+			font-size: 12px;
+			padding: 3px 6px;
+			margin-left: 5px;
+			text-shadow: none;
+			background-color: lighten($gradientTop, 25%);
+			@include roundedCorners(2px, 2px, 2px, 2px);
+			@include boxShadow(0,0,2px,0,$gradientBottom);
+		}
+		&.good span{
+			color: $good /* #359318 */;
+		}
+		&.warning span{
+			color: $warning;
+		}
+		&.error span{
+			color: $error;
+		}
+		a {
+			font-size: 11px;
+			right: 9px;
+			position: absolute;
+			line-height: 19px;
+			margin: 0 0 0 30px;
+			color: #fff;
+			text-decoration: none;
+			font-weight: normal;
+			padding-right: 21px;
+			background: transparent url(../../../admin/images/arrows.png) no-repeat right top;
+			&:hover {
+				background: transparent url(../../../admin/images/arrows.png) no-repeat right -40px;
+			}
+		}
+	}
+	table.testResults {
+		border-top: none;
+		margin-top: -1px;
+		margin-bottom: 9px;
+		@include boxShadow(0, 1px, 0, 0, #fff);
+		@include roundedCorners(3px,3px,3px,3px);
+		overflow: hidden;
+		tr {
+			&.good {
+				display: none;
+				border: none;
+				td {
+					color: $good;
+				}
+			}
+			&.warning {
+				border: none;
+				td {
+					color: $warning;
+				}
+			}
+			&.error {
+				border: none;
+				color: $error;
+			}
+		}
+		td {
+			border: 1px solid #ddd;
+			width: 50%;
+		}
+	}
+	#database_selection, #Themes {
+		list-style: none;
+		margin: 0;
+		margin-bottom: 18px;
+		padding-left: 0;
+		li {
+			clear: left;
+			padding: 3px 0;
+			.dbfields {
+				padding: 12px;
+				border: 1px solid #ddd;
+				background-color: #fafafa;
+				margin-bottom: 9px;
+				@include roundedCorners(3px,3px,3px,3px);
+				@include boxShadowInset(0,0,3px,0,#ddd);
+				@include boxShadow(0,1px,0,0,#fff);
+			}
+		}
+	}
+	ul#Themes {
+		float: left;
+		width: 445px;
+	}
+	.databaseError {
+		width: 422px;
+	}
+	#Footer {
+		margin-top: 67px;
+		margin-bottom: 18px;
+		p {
+			font-size: 12px;
+			color: #999;
+		}
+	}
+}
+
+//PHP5 required screen
+body {
+	#Header {
+		h1 {
+			margin-top: 45px;
+			margin-bottom: 27px;
+		}
+		h3 {
+			margin-top: -10px;
+		}
+	}
+}
+
+
+// IE overides
+.lt-ie8 {
+	#database_credentials, #AdminAccount {
+		float: left;
+	}
+}
+
+
+/* styles not tested */
+
+#adminAcc,
+#devHelp,
+#localeHelp {
+	padding-top: 20px;
+}
+#devHelp,
+#devSection {
+	height: 18em;
+}
+#use_environment_field {
+	margin-bottom: 25px;
+    background-color: #FAFAFA;
+    border: 1px solid #DDDDDD;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 1px 0 0 white;
+    margin-bottom: 9px;
+    padding: 10px 10px 8px;
+	input {
+		float: left;
+		margin-right: 5px;
+	}
+}
+.databaseError {
+	ul {
+		margin-bottom: 0;
+	}
+	ul, li {
+		margin-left: 0;
+		padding-left: 0;
+	}
+}
+#Layout p.goodInstall {
+	color: #359318;
+}
+.goodInstall {
+	padding: 0.5em;
+	background-color: #e2fee1;
+	border: 1px #43cb3e solid;
+	color: #359318;
+	overflow: hidden;
+	line-height: 18px;
+	padding: 10px;
+	a {
+		float: right;
+		font-size: 18px;
+		padding: 0 2px 2px 0;
+		font-weight: bold;
+	}
+}

@@ -2,10 +2,10 @@
 /**
  * The member class which represents the users of the system
  *
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
-class Member extends DataObject {
+class Member extends DataObject implements TemplateGlobalProvider {
 
 	static $db = array(
 		'FirstName' => 'Varchar',
@@ -151,7 +151,7 @@ class Member extends DataObject {
 		if(!$admins) {
 			// Leave 'Email' and 'Password' are not set to avoid creating
 			// persistent logins in the database. See Security::setDefaultAdmin().
-			$admin = Object::create('Member');
+			$admin = Member::create();
 			$admin->FirstName = _t('Member.DefaultAdminFirstname', 'Default Admin');
 			$admin->write();
 			$admin->Groups()->add($adminGroup);
@@ -480,13 +480,13 @@ class Member extends DataObject {
 	function sendInfo($type = 'signup', $data = null) {
 		switch($type) {
 			case "signup":
-				$e = Object::create('Member_SignupEmail');
+				$e = Member_SignupEmail::create();
 				break;
 			case "changePassword":
-				$e = Object::create('Member_ChangePasswordEmail');
+				$e = Member_ChangePasswordEmail::create();
 				break;
 			case "forgotPassword":
-				$e = Object::create('Member_ForgotPasswordEmail');
+				$e = Member_ForgotPasswordEmail::create();
 				break;
 		}
 
@@ -626,16 +626,15 @@ class Member extends DataObject {
 				)
 			);
 			if($existingRecord) {
-				throw new ValidationException(new ValidationResult(false, sprintf(
-					_t(
-						'Member.ValidationIdentifierFailed', 
-						'Can\'t overwrite existing member #%d with identical identifier (%s = %s))', 
-						PR_MEDIUM,
-						'The values in brackets show a fieldname mapped to a value, usually denoting an existing email address'
-					),
-					$existingRecord->ID,
-					$identifierField,
-					$this->$identifierField
+				throw new ValidationException(new ValidationResult(false, _t(
+					'Member.ValidationIdentifierFailed', 
+					'Can\'t overwrite existing member #{id} with identical identifier ({name} = {value}))', 
+					'The values in brackets show a fieldname mapped to a value, usually denoting an existing email address',
+					array(
+						'id' => $existingRecord->ID,
+						'name' => $identifierField,
+						'value' => $this->$identifierField
+					)
 				)));
 			}
 		}
@@ -659,7 +658,7 @@ class Member extends DataObject {
 			$encryption_details = Security::encrypt_password(
 				$this->Password, // this is assumed to be cleartext
 				$this->Salt,
-				$this->PasswordEncryption,
+				($this->PasswordEncryption) ? $this->PasswordEncryption : Security::get_password_encryption_algorithm(),
 				$this
 			);
 
@@ -702,9 +701,9 @@ class Member extends DataObject {
 	 * @return boolean
 	 */
 	function onChangeGroups($ids) {
-		// Filter out admin groups to avoid privilege escalation, 
-		// unless the current user is an admin already
-		if(!Permission::checkMember($this, 'ADMIN')) {
+		// Filter out admin groups to avoid privilege escalation,
+		// unless the current user is an admin already OR the logged in user is an admin
+		if(!(Permission::check('ADMIN') || Permission::checkMember($this, 'ADMIN'))) {
 			$adminGroups = Permission::get_groups_by_permission('ADMIN');
 			$adminGroupIDs = ($adminGroups) ? $adminGroups->column('ID') : array();
 			return count(array_intersect($ids, $adminGroupIDs)) == 0;
@@ -782,18 +781,6 @@ class Member extends DataObject {
 			
 			$this->Groups()->add($group);
 		}
-	}
-	
-	/**
-	 * Returns true if this user is an administrator.
-	 * Administrators have access to everything.
-	 * 
-	 * @deprecated Use Permission::check('ADMIN') instead
-	 * @return Returns TRUE if this user is an administrator.
-	 */
-	function isAdmin() {
-		Deprecation::notice('2.4', 'Use Permission::check(\'ADMIN\') instead.');
-		return Permission::checkMember($this, 'ADMIN');
 	}
 	
 	/**
@@ -939,25 +926,26 @@ class Member extends DataObject {
 
 
 	/**
-	 * Get a "many-to-many" map that holds for all members their group
-	 * memberships
+	 * Get a "many-to-many" map that holds for all members their group memberships,
+	 * including any parent groups where membership is implied.
+	 * Use {@link DirectGroups()} to only retrieve the group relations without inheritance.
 	 *
 	 * @todo Push all this logic into Member_GroupSet's getIterator()?
 	 */
 	public function Groups() {
 		$groups = new Member_GroupSet('Group', 'Group_Members', 'GroupID', 'MemberID');
-		if($this->ID) $groups->setForeignID($this->ID);
+		$groups->setForeignID($this->ID);
 		
-		// Filter out groups that aren't allowed from this IP
-		$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
-		$disallowedGroups = array();
-		foreach($groups as $group) {
-			if(!$group->allowedIPAddress($ip)) $disallowedGroups[] = $groupID;
-		}
-		if($disallowedGroups) $group->where("\"Group\".\"ID\" NOT IN (" .
-			implode(',',$disallowedGroups) . ")");
+		$this->extend('updateGroups', $groups);
 
 		return $groups;
+	}
+
+	/**
+	 * @return ManyManyList
+	 */
+	public function DirectGroups() {
+		return $this->getManyManyComponents('Groups');
 	}
 
 
@@ -1115,7 +1103,7 @@ class Member extends DataObject {
 				
 		$mainFields->replaceField('Locale', new DropdownField(
 			"Locale", 
-			_t('Member.INTERFACELANG', "Interface Language", PR_MEDIUM, 'Language of the CMS'), 
+			_t('Member.INTERFACELANG', "Interface Language", 'Language of the CMS'), 
 			i18n::get_existing_translations()
 		));
 		
@@ -1140,12 +1128,20 @@ class Member extends DataObject {
 		// Groups relation will get us into logical conflicts because
 		// Members are displayed within  group edit form in SecurityAdmin
 		$fields->removeByName('Groups');
-		
+
 		if(Permission::check('EDIT_PERMISSIONS')) {
-			$groupsField = new TreeMultiselectField('Groups', false, 'Group');
-			$fields->findOrMakeTab('Root.Groups', singleton('Group')->i18n_plural_name());
-			$fields->addFieldToTab('Root.Groups', $groupsField);
-			
+			$groupsMap = DataList::create('Group')->map('ID', 'Breadcrumbs')->toArray();
+			asort($groupsMap);
+			$fields->addFieldToTab('Root.Main',
+				ListboxField::create('DirectGroups', singleton('Group')->i18n_plural_name())
+					->setMultiple(true)
+					->setSource($groupsMap)
+					->setAttribute(
+						'data-placeholder', 
+						_t('Member.ADDGROUP', 'Add group', 'Placeholder text for a dropdown')
+					)
+			);
+
 			// Add permission field (readonly to avoid complicated group assignment logic).
 			// This should only be available for existing records, as new records start
 			// with no permissions until they have a group assignment anyway.
@@ -1216,11 +1212,11 @@ class Member extends DataObject {
 		$labels['Password'] = _t('Member.db_Password', 'Password');
 		$labels['NumVisit'] = _t('Member.db_NumVisit', 'Number of Visits');
 		$labels['LastVisited'] = _t('Member.db_LastVisited', 'Last Visited Date');
-		$labels['PasswordExpiry'] = _t('Member.db_PasswordExpiry', 'Password Expiry Date', PR_MEDIUM, 'Password expiry date');
-		$labels['LockedOutUntil'] = _t('Member.db_LockedOutUntil', 'Locked out until', PR_MEDIUM, 'Security related date');
+		$labels['PasswordExpiry'] = _t('Member.db_PasswordExpiry', 'Password Expiry Date', 'Password expiry date');
+		$labels['LockedOutUntil'] = _t('Member.db_LockedOutUntil', 'Locked out until', 'Security related date');
 		$labels['Locale'] = _t('Member.db_Locale', 'Interface Locale');
 		if($includerelations){
-			$labels['Groups'] = _t('Member.belongs_many_many_Groups', 'Groups', PR_MEDIUM, 'Security Groups this member belongs to');
+			$labels['Groups'] = _t('Member.belongs_many_many_Groups', 'Groups', 'Security Groups this member belongs to');
 		}
 		return $labels;
 	}
@@ -1381,12 +1377,19 @@ class Member extends DataObject {
 		// If can't find a suitable editor, just default to cms
 		return $currentName ? $currentName : 'cms';
 	}
+
+	public static function get_template_global_variables() {
+		return array(
+			'CurrentMember' => 'currentUser',
+			'currentUser'
+		);
+	}
 }
 
 /**
  * Represents a set of Groups attached to a member.
  * Handles the hierarchy logic.
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Member_GroupSet extends ManyManyList {
@@ -1424,142 +1427,27 @@ class Member_GroupSet extends ManyManyList {
 		if($allGroupIDs) $this->byIDs($allGroupIDs);
 		else $this->byIDs(array(0));
 	}
-	
-	/**
-	 * @deprecated Use setByIdList() and/or a CheckboxSetField
-	 */
-	function setByCheckboxes(array $checkboxes, array $data) {
-		Deprecation::notice('2.4', 'Use setByIdList() and/or a CheckboxSetField instead.');
-	}
-
-
-	/**
-	 * Allows you to set groups based on a CheckboxSetField
-	 *
-	 * Pass the form element from your post data directly to this method, and
-	 * it will update the groups and add and remove the member as appropriate.
-	 *
-	 * On the form setup:
-	 *
-	 * <code>
-	 * $fields->push(
-	 *   new CheckboxSetField(
-	 *     "NewsletterSubscriptions",
-	 *     "Receive email notification of events in ",
-	 *     $sourceitems = DataObject::get("NewsletterType")->toDropDownMap("GroupID","Title"),
-	 *     $selectedgroups = $member->Groups()->Map("ID","ID")
-	 *   )
-	 * );
-	 * </code>
-	 *
-	 * On the form handler:
-	 *
-	 * <code>
-	 * $groups = $member->Groups();
-	 * $checkboxfield = $form->Fields()->fieldByName("NewsletterSubscriptions");
-	 * $groups->setByCheckboxSetField($checkboxfield);
-	 * </code>
-	 *
-	 * @param CheckboxSetField $checkboxsetfield The CheckboxSetField (with
-	 *                                           data) from your form.
-	 */
-	function setByCheckboxSetField(CheckboxSetField $checkboxsetfield) {
-		// Get the values from the formfield.
-		$values = $checkboxsetfield->Value();
-		$sourceItems = $checkboxsetfield->getSource();
-
-		if($sourceItems) {
-			// If (some) values are present, add and remove as necessary.
-			if($values) {
-				// update the groups based on the selections
-				foreach($sourceItems as $k => $item) {
-					if(in_array($k,$values)) {
-						$add[] = $k;
-					} else {
-						$remove[] = $k;
-					}
-				}
-
-			// else we should be removing all from the necessary groups.
-			} else {
-				$remove = array_keys($sourceItems);
-			}
-
-			if($add)
-				$this->addManyByGroupID($add);
-
-			if($remove)
-				$this->RemoveManyByGroupID($remove);
-
-		} else {
-			USER_ERROR("Member::setByCheckboxSetField() - No source items could be found for checkboxsetfield " .
-								 $checkboxsetfield->getName(), E_USER_WARNING);
-		}
-	}
-
-
-	/**
-	 * @deprecated Use DataList::addMany
-	 */
-	function addManyByGroupID($ids){
-		Deprecation::notice('2.4', 'Use addMany() instead.');
-		return $this->addMany($ids);
-	}
-
-
-	/**
-	 * @deprecated Use DataList::removeMany
-	 */
-	function removeManyByGroupID($groupIds) {
-		Deprecation::notice('2.4', 'Use removeMany() instead.');
-		return $this->removeMany($ids);
-	}
-
-
-	/**
-	 * @deprecated Use DataObject::get("Group")->byIds()
-	 */
-	function getGroupsFromIDs($ids) {
-		Deprecation::notice('2.4', 'Use DataObject::get("Group")->byIds() instead.');
-		return DataObject::get("Group")->byIDs($ids);
-	}
-
-
-	/**
-	 * @deprecated Group.Code is deprecated
-	 */
-	function addManyByCodename($codenames) {
-		Deprecation::notice('2.4', 'Don\'t rely on codename');
-	}
-
-
-	/**
-	 * @deprecated Group.Code is deprecated
-	 */
-	function removeManyByCodename($codenames) {
-		Deprecation::notice('2.4', 'Don\'t rely on codename');
-	}
 }
-
-
 
 /**
  * Form for editing a member profile.
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Member_ProfileForm extends Form {
 	
 	function __construct($controller, $name, $member) {
-		Requirements::block(SAPPHIRE_DIR . '/admin/css/layout.css');
+		Requirements::block(FRAMEWORK_DIR . '/admin/css/layout.css');
 		
 		$fields = $member->getCMSFields();
 		$fields->push(new HiddenField('ID','ID',$member->ID));
 
 		$actions = new FieldList(
- 			$saveAction = new FormAction('dosave',_t('CMSMain.SAVE', 'Save'), null, null, "ss-ui-button ss-ui-action-constructive")
+ 			FormAction::create('dosave',_t('CMSMain.SAVE', 'Save'))
+ 				->addExtraClass('ss-ui-button ss-ui-action-constructive')
+ 				->setAttribute('data-icon', 'accept')
+ 				->setUseButtonTag(true)
 		);
-		$saveAction->addExtraClass('ss-ui-action-constructive');
 		
 		$validator = new Member_Validator();
 		
@@ -1572,7 +1460,7 @@ class Member_ProfileForm extends Form {
 	function dosave($data, $form) {
 		// don't allow ommitting or changing the ID
 		if(!isset($data['ID']) || $data['ID'] != Member::currentUserID()) {
-			return Director::redirectBack();
+			return $this->controller->redirectBack();
 		}
 		
 		$SQL_data = Convert::raw2sql($data);
@@ -1592,13 +1480,13 @@ class Member_ProfileForm extends Form {
 		$message = _t('Member.PROFILESAVESUCCESS', 'Successfully saved.') . ' ' . $closeLink;
 		$form->sessionMessage($message, 'good');
 		
-		Director::redirectBack();
+		$this->controller->redirectBack();
 	}
 }
 
 /**
  * Class used as template to send an email to new members
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Member_SignupEmail extends Email {
@@ -1648,7 +1536,7 @@ class Member_SignupEmail extends Email {
 /**
  * Class used as template to send an email saying that the password has been
  * changed
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Member_ChangePasswordEmail extends Email {
@@ -1658,7 +1546,7 @@ class Member_ChangePasswordEmail extends Email {
     
     function __construct() {
 		parent::__construct();
-    	$this->subject = _t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", PR_MEDIUM, 'Email subject');
+    	$this->subject = _t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject');
     }
 }
 
@@ -1666,7 +1554,7 @@ class Member_ChangePasswordEmail extends Email {
 
 /**
  * Class used as template to send the forgot password email
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Member_ForgotPasswordEmail extends Email {
@@ -1676,13 +1564,13 @@ class Member_ForgotPasswordEmail extends Email {
     
     function __construct() {
 		parent::__construct();
-    	$this->subject = _t('Member.SUBJECTPASSWORDRESET', "Your password reset link", PR_MEDIUM, 'Email subject');
+    	$this->subject = _t('Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject');
     }
 }
 
 /**
  * Member Validator
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class Member_Validator extends RequiredFields {
@@ -1735,12 +1623,10 @@ class Member_Validator extends RequiredFields {
 			$uniqueField = $this->form->dataFieldByName($identifierField);
 			$this->validationError(
 				$uniqueField->id(),
-				sprintf(
-					_t(
-						'Member.VALIDATIONMEMBEREXISTS',
-						'A member already exists with the same %s'
-					),
-					strtolower($identifierField)
+				_t(
+					'Member.VALIDATIONMEMBEREXISTS',
+					'A member already exists with the same %s',
+					array('identifier' => strtolower($identifierField))
 				),
 				'required'
 			);
@@ -1757,29 +1643,6 @@ class Member_Validator extends RequiredFields {
 		}
 
 		return $valid;
-	}
-
-
-	/**
-	 * Check if the submitted member data is valid (client-side)
-	 *
-	 * @param array $data Submitted data
-	 * @return bool Returns TRUE if the submitted data is valid, otherwise
-	 *              FALSE.
-	 */
-	function javascript() {
-		$js = parent::javascript();
-
-		// Execute the validators on the extensions
-		if($this->extension_instances) {
-			foreach($this->extension_instances as $extension) {
-				if(method_exists($extension, 'hasMethod') && $extension->hasMethod('updateJavascript')) {
-					$extension->updateJavascript($js, $this->form);
-				}
-			}
-		}
-
-		return $js;
 	}
 
 }

@@ -12,8 +12,6 @@
  */
 class FileIFrameField extends FileField {
 	
-	protected $template = 'FileIFrameField';
-	
 	public static $allowed_actions = array (
 		'iframe',
 		'EditFileForm',
@@ -60,13 +58,13 @@ class FileIFrameField extends FileField {
 	/**
 	 * @return string
 	 */
-	public function Field() {
+	public function Field($properties = array()) {
 		Deprecation::notice('3.0', 'Use UploadField');
 
-		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
 		
 		
 		if($this->form->getRecord() && $this->form->getRecord()->exists()) {
@@ -94,9 +92,11 @@ class FileIFrameField extends FileField {
 				)
 			);
 		} else {
-			return sprintf(_t (
-				'FileIFrameField.ATTACHONCESAVED', '%ss can be attached once you have saved the record for the first time.'
-			), $this->FileTypeName());
+			return _t(
+				'FileIFrameField.ATTACHONCESAVED', 
+				'{type}s can be attached once you have saved the record for the first time.',
+				array('type' => $this->FileTypeName())
+			);
 		}
 	}
 	
@@ -115,11 +115,11 @@ class FileIFrameField extends FileField {
 	public function iframe() {
 		// clear the requirements added by any parent controllers
 		Requirements::clear();
-		Requirements::add_i18n_javascript('sapphire/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript('sapphire/javascript/FileIFrameField.js');
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/FileIFrameField.js');
 		
-		Requirements::css('sapphire/css/FileIFrameField.css');
+		Requirements::css(FRAMEWORK_DIR . '/css/FileIFrameField.css');
 		
 		return $this->renderWith('FileIframeField_iframe');
 	}
@@ -132,9 +132,9 @@ class FileIFrameField extends FileField {
 		$selectFile = _t('FileIFrameField.FROMFILESTORE', 'From the File Store');
 		
 		if($this->AttachedFile() && $this->AttachedFile()->ID) {
-			$title = sprintf(_t('FileIFrameField.REPLACE', 'Replace %s'), $this->FileTypeName());
+			$title = _t('FileIFrameField.REPLACE', 'Replace {type}', array('type' => $this->FileTypeName()));
 		} else {
-			$title = sprintf(_t('FileIFrameField.ATTACH', 'Attach %s'), $this->FileTypeName());
+			$title = _t('FileIFrameField.ATTACH', 'Attach {type}', array('type' => $this->FileTypeName()));
 		}
 		
 		$fileSources = array();
@@ -237,7 +237,7 @@ class FileIFrameField extends FileField {
 			),
 			new FieldList (
 				$deleteButton = new FormAction (
-					'delete', sprintf(_t('FileIFrameField.DELETE', 'Delete %s'), $this->FileTypeName())
+					'delete', _t('FileIFrameField.DELETE', 'Delete {type}', array('type' => $this->FileTypeName()))
 				)
 			)
 		);

@@ -3,14 +3,33 @@
 /**
  * An object representing a query of data from the DataObject's supporting database.
  * Acts as a wrapper over {@link SQLQuery} and performs all of the query generation.
- * Used extensively by DataList.
+ * Used extensively by {@link DataList}.
+ *
+ * @subpackage model
+ * @package sapphire
  */
 class DataQuery {
+	
+	/**
+	 * @var String
+	 */
 	protected $dataClass;
+	
+	/**
+	 * @var SQLQuery
+	 */
 	protected $query;
 	
+	/**
+	 * @var array
+	 */
 	protected $collidingFields = array();
+
+	private $queriedColumns = null;
 	
+	/**
+	 * @var Boolean
+	 */
 	private $queryFinalised = false;
 	
 	// TODO: replace subclass_access with this
@@ -20,7 +39,8 @@ class DataQuery {
 	
 	/**
 	 * Create a new DataQuery.
-	 * @param $dataClass The name of the DataObject class that you wish to query
+	 *
+	 * @param String The name of the DataObject class that you wish to query
 	 */
 	function __construct($dataClass) {
 		$this->dataClass = $dataClass;
@@ -62,17 +82,18 @@ class DataQuery {
 			}
 		}
 		
-		if(!$matched) user_error("Couldn't find $fieldExpression in the query filter.", E_USER_WARNING);
+		if(!$matched) throw new InvalidArgumentException("Couldn't find $fieldExpression in the query filter.");
 		
 		return $this;
 	}
 	
 	/**
-	 * Set up the simplest intial query
+	 * Set up the simplest initial query
 	 */
 	function initialiseQuery() {
-		// Get the tables to join to
-		$tableClasses = ClassInfo::dataClassesFor($this->dataClass);
+		// Get the tables to join to.
+		// Don't get any subclass tables - let lazy loading do that.
+		$tableClasses = ClassInfo::ancestry($this->dataClass, true);
 		
 		// Error checking
 		if(!$tableClasses) {
@@ -84,7 +105,6 @@ class DataQuery {
 		}
 
 		$baseClass = array_shift($tableClasses);
-		$select = array("\"$baseClass\".*");
 
 		// Build our intial query
 		$this->query = new SQLQuery(array());
@@ -95,28 +115,71 @@ class DataQuery {
 		}
 
 		$this->query->from("\"$baseClass\"");
-		$this->selectAllFromTable($this->query, $baseClass);
 
 		singleton($this->dataClass)->extend('augmentDataQueryCreation', $this->query, $this);
+	}
+
+	function setQueriedColumns($queriedColumns) {
+		$this->queriedColumns = $queriedColumns;
 	}
 
 	/**
 	 * Ensure that the query is ready to execute.
 	 */
-	function getFinalisedQuery() {
-		$query = clone $this->query;
-		
-		// Get the tables to join to
-		$tableClasses = ClassInfo::dataClassesFor($this->dataClass);
-		$baseClass = array_shift($tableClasses);
-		
-		$collidingFields = array();
+	function getFinalisedQuery($queriedColumns = null) {
+		if(!$queriedColumns) $queriedColumns = $this->queriedColumns;
+		if($queriedColumns) {
+			$queriedColumns = array_merge($queriedColumns, array('Created', 'LastEdited', 'ClassName'));
+		}
 
-		// Join all the tables
-		if($this->querySubclasses) {
-			foreach($tableClasses as $tableClass) {
+		$query = clone $this->query;
+
+		// Generate the list of tables to iterate over and the list of columns required by any existing where clauses.
+		// This second step is skipped if we're fetching the whole dataobject as any required columns will get selected
+		// regardless.
+		if($queriedColumns) {
+			$tableClasses = ClassInfo::dataClassesFor($this->dataClass);
+
+			foreach ($query->where as $where) {
+				// Check for just the column, in the form '"Column" = ?' and the form '"Table"."Column"' = ?
+				if (preg_match('/^"([^"]+)"/', $where, $matches) ||
+					preg_match('/^"([^"]+)"\."[^"]+"/', $where, $matches)) {
+					if (!in_array($matches[1], $queriedColumns)) $queriedColumns[] = $matches[1];
+				}
+			}
+		}
+		else $tableClasses = ClassInfo::ancestry($this->dataClass, true);
+
+		$tableNames = array_keys($tableClasses);
+		$baseClass = $tableNames[0];
+
+		// Iterate over the tables and check what we need to select from them. If any selects are made (or the table is
+		// required for a select)
+		foreach($tableClasses as $tableClass) {
+			$joinTable = false;
+
+			// If queriedColumns is set, then check if any of the fields are in this table.
+			if ($queriedColumns) {
+				$tableFields = DataObject::database_fields($tableClass);
+				$selectColumns = array();
+				// Look through columns specifically requested in query (or where clause)
+				foreach ($queriedColumns as $queriedColumn) {
+					if (array_key_exists($queriedColumn, $tableFields)) {
+						$selectColumns[] = $queriedColumn;
+					}
+				}
+
+				$this->selectColumnsFromTable($query, $tableClass, $selectColumns);
+				if ($selectColumns && $tableClass != $baseClass) {
+					$joinTable = true;
+				}
+			} else {
+				$this->selectColumnsFromTable($query, $tableClass);
+				if ($tableClass != $baseClass) $joinTable = true;
+			}
+
+			if ($joinTable) {
 				$query->leftJoin($tableClass, "\"$tableClass\".\"ID\" = \"$baseClass\".\"ID\"") ;
-				$this->selectAllFromTable($query, $tableClass);
 			}
 		}
 		
@@ -134,8 +197,7 @@ class DataQuery {
 						user_error("Bad collision item '$collision'", E_USER_WARNING);
 					}
 				}
-				$query->select[$k] = "CASE " . implode( " ", $caseClauses) . " ELSE NULL END"
-					.  " AS \"$k\"";
+				$query->selectField("CASE " . implode( " ", $caseClauses) . " ELSE NULL END", $k);
 			}
 		}
 
@@ -145,13 +207,13 @@ class DataQuery {
 			if($this->dataClass != $baseClass) {
 				// Get the ClassName values to filter to
 				$classNames = ClassInfo::subclassesFor($this->dataClass);
-				if(!$classNames) user_error("DataObject::get() Can't find data sub-classes for '$callerClass'");
+				if(!$classNames) user_error("DataList::create() Can't find data sub-classes for '$callerClass'");
 				$query->where[] = "\"$baseClass\".\"ClassName\" IN ('" . implode("','", $classNames) . "')";
 			}
 		}
 
-		$query->select[] = "\"$baseClass\".\"ID\"";
-		$query->select[] = "CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE '$baseClass' END AS \"RecordClassName\"";
+		$query->selectField("\"$baseClass\".\"ID\"", "ID");
+		$query->selectField("CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE '$baseClass' END", "RecordClassName");
 
 		// TODO: Versioned, Translatable, SiteTreeSubsites, etc, could probably be better implemented as subclasses of DataQuery
 		singleton($this->dataClass)->extend('augmentSQL', $query, $this);
@@ -167,54 +229,64 @@ class DataQuery {
 	 * @param SQLQuery $query
 	 * @return null
 	 */
-	protected function ensureSelectContainsOrderbyColumns($query) {
+	protected function ensureSelectContainsOrderbyColumns($query, $originalSelect = array()) {
 		$tableClasses = ClassInfo::dataClassesFor($this->dataClass);
 		$baseClass = array_shift($tableClasses);
 
 		if($query->orderby) {
-			$orderByFields = explode(',', $query->orderby);
-			foreach($orderByFields as $ob => $col) {
-				$col = trim($col);
+			$orderby = $query->getOrderBy();
 
-				// don't touch functions in the ORDER BY or function calls selected as fields
-				if(strpos($col, '(') !== false || preg_match('/_SortColumn/', $col)) continue;
+			foreach($orderby as $k => $dir) {
+				// don't touch functions in the ORDER BY or function calls 
+				// selected as fields
+				if(strpos($k, '(') !== false) continue;
 
-				$columnParts = explode(' ', $col);
-				if (count($columnParts) == 2) {
-					$col = $columnParts[0];
-					$dir = $columnParts[1];
-				} else {
-					$dir = 'ASC';
-				}
-
-				$orderByFields[$ob] = $col . ' ' . $dir;
-				$col = str_replace('"', '', $col);
+				$col = str_replace('"', '', trim($k));
 				$parts = explode('.', $col);
 
+				// Pull through SortColumn references from the originalSelect variables
+				if(preg_match('/_SortColumn/', $col)) {
+					if(isset($originalSelect[$col])) $query->selectField($originalSelect[$col], $col);
+					continue;
+				}
+				
 				if(count($parts) == 1) {
 					$databaseFields = DataObject::database_fields($baseClass);
-					// database_fields() doesn't return ID, so we need to manually add it here
+	
+					// database_fields() doesn't return ID, so we need to 
+					// manually add it here
 					$databaseFields['ID'] = true;
-
+				
 					if(isset($databaseFields[$parts[0]])) {
 						$qualCol = "\"$baseClass\".\"{$parts[0]}\"";
-						$orderByFields[$ob] = trim($qualCol . " " . $dir);
+						
+						// remove original sort
+						unset($orderby[$k]);
+						
+						// add new columns sort
+						$orderby[$qualCol] = $dir;
+							
 					} else {
 						$qualCol = "\"$parts[0]\"";
 					}
-
-					if(!isset($query->select[$parts[0]]) && !in_array($qualCol, $query->select)) {
-						$query->select[] = $qualCol;
+					
+					// To-do: Remove this if block once SQLQuery::$select has been refactored to store itemisedSelect()
+					// format internally; then this check can be part of selectField()
+					if(!isset($query->select[$col]) && !in_array($qualCol, $query->select)) {
+						$query->selectField($qualCol);
 					}
 				} else {
 					$qualCol = '"' . implode('"."', $parts) . '"';
+					
+					// To-do: Remove this if block once SQLQuery::$select has been refactored to store itemisedSelect()
+					// format internally; then this check can be part of selectField()
 					if(!in_array($qualCol, $query->select)) {
-						$query->select[] = $qualCol;
+						$query->selectField($qualCol);
 					}
 				}
 			}
 
-			$query->orderby = implode(',', $orderByFields);
+			$query->orderby = $orderby;
 		}
 	}
 
@@ -288,28 +360,28 @@ class DataQuery {
 	/**
 	 * Update the SELECT clause of the query with the columns from the given table
 	 */
-	protected function selectAllFromTable(SQLQuery &$query, $tableClass) {
-    	// Add SQL for multi-value fields
-    	$databaseFields = DataObject::database_fields($tableClass);
-    	$compositeFields = DataObject::composite_fields($tableClass, false);
-    	if($databaseFields) foreach($databaseFields as $k => $v) {
-    		if(!isset($compositeFields[$k])) {
-    			// Update $collidingFields if necessary
-    			if(isset($query->select[$k])) {
-    				if(!isset($this->collidingFields[$k])) $this->collidingFields[$k] = array($query->select[$k]);
-    				$this->collidingFields[$k][] = "\"$tableClass\".\"$k\"";
+	protected function selectColumnsFromTable(SQLQuery &$query, $tableClass, $columns = null) {
+		// Add SQL for multi-value fields
+		$databaseFields = DataObject::database_fields($tableClass);
+		$compositeFields = DataObject::composite_fields($tableClass, false);
+		if($databaseFields) foreach($databaseFields as $k => $v) {
+			if((is_null($columns) || in_array($k, $columns)) && !isset($compositeFields[$k])) {
+				// Update $collidingFields if necessary
+				if($expressionForField = $query->expressionForField($k)) {
+					if(!isset($this->collidingFields[$k])) $this->collidingFields[$k] = array($expressionForField);
+					$this->collidingFields[$k][] = "\"$tableClass\".\"$k\"";
 				
-    			} else {
-    				$query->select[$k] = "\"$tableClass\".\"$k\"";
-    			}
-    		}
-    	}
-    	if($compositeFields) foreach($compositeFields as $k => $v) {
-			if($v) {
-			    $dbO = Object::create_from_string($v, $k);
-    		    $dbO->addToQuery($query);
-		    }
-    	}
+				} else {
+					$query->selectField("\"$tableClass\".\"$k\"", $k);
+				}
+			}
+		}
+		if($compositeFields) foreach($compositeFields as $k => $v) {
+			if((is_null($columns) || in_array($k, $columns)) && $v) {
+				$dbO = Object::create_from_string($v, $k);
+				$dbO->addToQuery($query);
+			}
+		}
 	}
 	
 	/**
@@ -357,31 +429,42 @@ class DataQuery {
 	
 	/**
 	 * Set the ORDER BY clause of this query
+	 *
+	 * @see SQLQuery::orderby()
+	 *
+	 * @return DataQuery
 	 */
-	function sort($sort) {
-		if($sort) {
-			$clone = $this;
-			// Add quoting to sort expression if it's a simple column name
-			if(!is_array($sort) && preg_match('/^[A-Z][A-Z0-9_]*$/i', $sort)) $sort = "\"$sort\"";
-			$clone->query->orderby($sort);
-			return $clone;
-		} else {
-			return $this;
-		}
+	function sort($sort = null, $direction = null, $clear = true) {
+		$clone = $this;
+		$clone->query->orderby($sort, $direction, $clear);
+			
+		return $clone;
+	}
+	
+	/**
+	 * Reverse order by clause
+	 *
+	 * @return DataQuery
+	 */
+	function reverseSort() {
+		$clone = $this;
+		
+		$clone->query->reverseOrderBy();
+		return $clone;
 	}
 	
 	/**
 	 * Set the limit of this query
 	 */
-	function limit($limit) {
+	function limit($limit, $offset = 0) {
 		$clone = $this;
-		$clone->query->limit($limit);
+		$clone->query->limit($limit, $offset);
 		return $clone;
 	}
 
 	/**
 	 * Add a join clause to this query
-	 * @deprecated Use innerJoin() or leftJoin() instead.
+	 * @deprecated 3.0 Use innerJoin() or leftJoin() instead.
 	 */
 	function join($join) {
 		Deprecation::notice('3.0', 'Use innerJoin() or leftJoin() instead.');
@@ -513,8 +596,12 @@ class DataQuery {
 	 */
 	public function subtract(DataQuery $subtractQuery, $field='ID') {
 		$subSelect= $subtractQuery->getFinalisedQuery();
-		$subSelect->select($this->expressionForField($field, $subSelect));
+		$fieldExpression = $this->expressionForField($field, $subSelect);
+		$subSelect->clearSelect();
+		$subSelect->selectField($fieldExpression, $field);
 		$this->where($this->expressionForField($field, $this).' NOT IN ('.$subSelect->sql().')');
+
+		return $this;
 	}
 
 	/**
@@ -524,16 +611,21 @@ class DataQuery {
 		$fieldExpressions = array_map(create_function('$item', 
 			"return '\"$table\".\"' . \$item . '\"';"), $fields);
 		
-		$this->select($fieldExpressions);
+		$this->query->select($fieldExpressions);
+
+		return $this;
 	}
 
 	/**
 	 * Query the given field column from the database and return as an array.
 	 */
 	public function column($field = 'ID') {
-		$query = $this->getFinalisedQuery();
-		$query->select($this->expressionForField($field, $query));
-		$this->ensureSelectContainsOrderbyColumns($query);
+		$query = $this->getFinalisedQuery(array($field));
+		$originalSelect = $query->itemisedSelect();
+		$fieldExpression = $this->expressionForField($field, $query);
+		$query->clearSelect();
+		$query->selectField($fieldExpression, $field);
+		$this->ensureSelectContainsOrderbyColumns($query, $originalSelect);
 
 		return $query->execute()->column($field);
 	}
@@ -553,7 +645,7 @@ class DataQuery {
 	 * Clear the selected fields to start over
 	 */
 	public function clearSelect() {
-		$this->query->select = array();
+		$this->query->clearSelect();
 
 		return $this;
 	}
@@ -561,8 +653,8 @@ class DataQuery {
 	/**
 	 * Select the given field expressions.  You must do your own escaping
 	 */
-	protected function select($fieldExpressions) {
-		$this->query->select = array_merge($this->query->select, $fieldExpressions);
+	protected function selectField($fieldExpression, $alias = null) {
+		$this->query->selectField($fieldExpression, $alias);
 	}
 
 	//// QUERY PARAMS

@@ -2,7 +2,7 @@
 /**
  * Matches on rows where the field is not equal to the given value.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 class NegationFilter extends SearchFilter {
@@ -18,4 +18,3 @@ class NegationFilter extends SearchFilter {
 	
 }
 
-?>

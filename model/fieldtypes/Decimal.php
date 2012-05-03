@@ -1,7 +1,7 @@
 <?php
 /**
  * Represents a Decimal field.
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Decimal extends DBField {
@@ -67,4 +67,4 @@ class Decimal extends DBField {
 	
 }
 
-?>
+

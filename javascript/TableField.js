@@ -68,7 +68,7 @@ TableField.prototype = {
 			jQuery.ajax({
 				'url': link.getAttribute("href"),
 				'method': 'post', 
-				'data': {ajax: 1, 'SecurityID': $('SecurityID') ? $('SecurityID').value : null},
+				'data': {ajax: 1, 'SecurityID': document.getElementById('SecurityID') ? document.getElementById('SecurityID').value : null},
 				'success': function(response){
 					jQuery(row).fadeOut('fast', function() {
 						// remove row from DOM

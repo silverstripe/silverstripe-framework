@@ -2,6 +2,14 @@
  * File: LeftAndMain.EditForm.js
  */
 (function($) {
+	
+	// Can't bind this through jQuery
+	window.onbeforeunload = function(e) {
+		var form = $('.cms-edit-form');
+		form.trigger('beforesave');
+		if(form.is('.changed')) return ss.i18n._t('LeftAndMain.CONFIRMUNSAVEDSHORT');
+	};
+
 	$.entwine('ss', function($){
 
 		/**
@@ -52,18 +60,15 @@
 			
 				this._setupChangeTracker();
 
-				// Can't bind this through jQuery
-				window.onbeforeunload = function(e) {
-					self.trigger('beforesave');
-					if(self.is('.changed')) return ss.i18n._t('LeftAndMain.CONFIRMUNSAVEDSHORT');
-				};
-
 				// Catch navigation events before they reach handleStateChange(),
 				// in order to avoid changing the menu state if the action is cancelled by the user
-				$('.cms-menu')
+				// $('.cms-menu')
 				
-				// focus input on first form element
-				this.find(':input:visible:not(:submit):first').focus();
+				// focus input on first form element. Exclude elements which
+				// specifically opt-out of this behaviour via "data-skip-autofocus".
+				// This opt-out is useful if the first visible field is shown far down a scrollable area,
+				// for example for the pagination input field after a long GridField listing.
+				this.find(':input:visible:not(:submit)[data-skip-autofocus!="true"]:first').focus();
 				
 				// Optionally get the form attributes from embedded fields, see Form->formHtmlContent()
 				for(var overrideAttr in {'action':true,'method':true,'enctype':true,'name':true}) {
@@ -100,7 +105,7 @@
 						
 			redraw: function() {
 				// Force initialization of tabsets to avoid layout glitches
-				this.add(this.find('.ss-tabset')).redrawTabs();
+				this.add(this.find('.cms-tabset')).redrawTabs();
 
 				var approxWidth = $('.cms-container').width() - $('.cms-menu').width();
 				this.find('.cms-content-actions').width(approxWidth).height('auto');
@@ -139,8 +144,13 @@
 			 * 
 			 * Suppress submission unless it is handled through ajaxSubmit().
 			 */
-			onsubmit: function(e) {
-				this.parents('.cms-content').submitForm(this);
+			onsubmit: function(e, button) {
+				// Only submit if a button is present.
+				// This supressed submits from ENTER keys in input fields,
+				// which means the browser auto-selects the first available form button.
+				// This might be an unrelated button of the form field,
+				// or a destructive action (if "save" is not available, or not on first position).
+				if(button) this.closest('.cms-content').submitForm(this, button);
 				
 				return false;
 			},
@@ -172,106 +182,17 @@
 		 * We need this onclick overloading because we can't get to the
 		 * clicked button from a form.onsubmit event.
 		 */
-		$('.cms-edit-form .Actions input, .cms-edit-form .Actions button').entwine({
-			
+		$('.cms-edit-form .Actions input.action[type=submit], .cms-edit-form .Actions button.action').entwine({
 			/**
 			 * Function: onclick
 			 */
 			onclick: function(e) {
-				$('.cms-content').submitForm(this.parents('form'), this);
+				this.parents('form').trigger('submit', [this]);
+				e.preventDefault();
 				return false;
 			}
 		});
-	
-		/**
-		 * Class: .cms-edit-form textarea.htmleditor
-		 * 
-		 * Add tinymce to HtmlEditorFields within the CMS. Works in combination
-		 * with a TinyMCE.init() call which is prepopulated with the used HTMLEditorConfig settings,
-		 * and included in the page as an inline <script> tag.
-		 */
-		$('.cms-edit-form textarea.htmleditor').entwine({
-			
-			/**
-			 * Constructor: onmatch
-			 */
-			onmatch : function() {
-				var self = this;
-				this.closest('form').bind('beforesave', function() {
-					if(typeof tinyMCE == 'undefined') return;
 
-					// TinyMCE modifies input, so change tracking might get false
-					// positives when comparing string values - don't save if the editor doesn't think its dirty.
-					if(self.isChanged()) {
-						tinyMCE.triggerSave();
-						// TinyMCE assigns value attr directly, which doesn't trigger change event
-						self.trigger('change'); 	
-					}
-				});
-
-				// Only works after TinyMCE.init() has been invoked, see $(window).bind() call below for details.
-				this.redraw();
-
-				this._super();
-			},
-
-			redraw: function() {
-				// Using a global config (generated through HTMLEditorConfig PHP logic)
-				var config = ssTinyMceConfig, self = this;
-
-				// Avoid flicker (also set in CSS to apply as early as possible)
-				self.css('visibility', '');
-
-				// Create editor instance and render it.
-				// Similar logic to adapter/jquery/jquery.tinymce.js, but doesn't rely on monkey-patching
-				// jQuery methods, and avoids replicate the script lazyloading which is already in place with jQuery.ondemand.
-				var ed = new tinymce.Editor(this.attr('id'), config);
-				ed.onInit.add(function() {
-					self.css('visibility', 'visible');
-				});
-				ed.render();
-
-				// Handle editor de-registration by hooking into state changes.
-				// TODO Move to onunmatch for less coupling (once we figure out how to work with detached DOM nodes in TinyMCE)
-				$('.cms-container').bind('beforestatechange', function() {
-					self.css('visibility', 'hidden');
-					var ed = tinyMCE.get(self.attr('id'));
-					if(ed) ed.remove();
-				});
-
-				this._super();
-			},
-
-			isChanged: function() {
-				if(typeof tinyMCE == 'undefined') return;
-
-				var inst = tinyMCE.getInstanceById(this.attr('id'));
-				return inst ? inst.isDirty() : false;
-			},
-
-			resetChanged: function() {
-				if(typeof tinyMCE == 'undefined') return;
-
-				var inst = tinyMCE.getInstanceById(this.attr('id'));
-				if (inst) inst.startContent = tinymce.trim(inst.getContent({format : 'raw', no_events : 1}));
-			},
-
-			onunmatch: function() {
-				// TODO Throws exceptions in Firefox, most likely due to the element being removed from the DOM at this point
-				// var ed = tinyMCE.get(this.attr('id'));
-				// if(ed) ed.remove();
-
-				this._super();
-			}
-		});
-
-		$('.cms-edit-form .ss-gridfield .action-edit').entwine({
-			onclick: function(e) {
-				$('.cms-container').loadPanel(this.attr('href'), '', {selector: '.cms-edit-form'});
-				e.preventDefault();
-			}
-		});
-		
 	});
 
 }(jQuery));

@@ -32,16 +32,16 @@ class DatalessField extends FormField {
 	 * Returns the field's representation in the form.
 	 * For dataless fields, this defaults to $Field.
 	 */
-	function FieldHolder() {
-		return $this->Field();
+	function FieldHolder($properties = array()) {
+		return $this->Field($properties);
 	}
 
 	/**
 	 * Returns the field's representation in a field group.
 	 * For dataless fields, this defaults to $Field.
 	 */
-	function SmallFieldHolder() {
-		return $this->Field();
+	function SmallFieldHolder($properties = array()) {
+		return $this->Field($properties);
 	}
 
 	/**
@@ -58,6 +58,7 @@ class DatalessField extends FormField {
 	 */
 	function setAllowHTML($bool) {
 		$this->allowHTML = $bool;
+		return $this;
 	}
 	
 	/**

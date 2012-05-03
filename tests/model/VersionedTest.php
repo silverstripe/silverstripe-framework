@@ -240,7 +240,7 @@ class VersionedTest extends SapphireTest {
 	    $this->assertEquals(array(
 	        'VersionedTest_DataObject_Live',
 	        'VersionedTest_Subclass_Live',
-	    ), DataObject::get('VersionedTest_DataObject')->dataQuery()->query()->queriedTables());
+	    ), DataObject::get('VersionedTest_Subclass')->dataQuery()->query()->queriedTables());
 	}
 }
 

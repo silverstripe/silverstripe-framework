@@ -3,7 +3,8 @@ DataObjectTest_Team:
 		Title: Team 1
 	team2:
 		Title: Team 2
-      
+	team3:
+		Title: Team 3
 DataObjectTest_Player:
 	captain1:
 		FirstName: Captain
@@ -25,6 +26,7 @@ DataObjectTest_SubTeam:
 		Title: Subteam 1
 		SubclassDatabaseField: Subclassed 1
 		ExtendedDatabaseField: Extended 1
+		ParentTeam: =>DataObjectTest_Team.team1
 	subteam2_with_player_relation:
 		Title: Subteam 2
 		SubclassDatabaseField: Subclassed 2

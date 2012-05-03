@@ -1,0 +1,18 @@
+GridFieldTest_Team:
+	team1:
+		Name: Team 1
+		City: Cologne
+	team2:
+		Name: Team 2
+		City: Wellington
+	team3:
+		Name: Team 3
+		City: Auckland
+	team4:
+		Name: Team 4
+		City: Melbourne
+GridFieldTest_Player:
+	player1_team1:
+		Name: Player 1
+		Email: player1@test.com
+		Teams: =>GridFieldTest_Team.team1

@@ -15,7 +15,7 @@
  * 
  * @see SS_List
  * 
- * @package sapphire
+ * @package framework
  * @subpackage fields-relational
  */
 class GridField extends FormField {
@@ -25,6 +25,7 @@ class GridField extends FormField {
 	 * @var array
 	 */
 	public static $allowed_actions = array(
+		'index',
 		'gridFieldAlterAction'
 	);
 	
@@ -33,12 +34,6 @@ class GridField extends FormField {
 
 	/** @var string - the classname of the DataObject that the GridField will display. Defaults to the value of $this->list->dataClass */
 	protected $modelClassName = '';
-	
-	/** @var array */
-	public $fieldCasting = array();
-
-	/** @var array */
-	public $fieldFormatting = array();
 
 	/** @var GridState - the current state of the GridField */
 	protected $state = null;
@@ -53,13 +48,6 @@ class GridField extends FormField {
 	 * The components list 
 	 */
 	protected $components = array();
-	
-	/**
-	 * This is the columns that will be visible
-	 *
-	 * @var array
-	 */
-	protected $displayFields = array();
 	
 	/**
 	 * Internal dispatcher for column handlers.
@@ -79,8 +67,6 @@ class GridField extends FormField {
 	 */
 	public function __construct($name, $title = null, SS_List $dataList = null, GridFieldConfig $config = null) {
 		parent::__construct($name, $title, null);
-		
-		FormField::__construct($name);
 
 		if($dataList) {
 			$this->setList($dataList);
@@ -98,8 +84,10 @@ class GridField extends FormField {
 		
 		
 		$this->addExtraClass('ss-gridfield');
-		$this->requireDefaultCSS();
-		
+	}
+
+	function index($request) {
+		return $this->gridFieldAlterAction(array(), $this->getForm(), $request);
 	}
 	
 	/**
@@ -108,7 +96,7 @@ class GridField extends FormField {
 	 * this modelclass $summary_fields
 	 * 
 	 * @param string $modelClassName
-	 * @see GridField::getDisplayFields()
+	 * @see GridFieldDataColumns::getDisplayFields()
 	 */
 	public function setModelClass($modelClassName) {
 		$this->modelClassName = $modelClassName;
@@ -141,27 +129,7 @@ class GridField extends FormField {
 		$this->components = $config->getComponents();
 		return $this;
 	}
-	
-	/**
-	 * Require the default css styling
-	 */
-	protected function requireDefaultCSS() {
-		Requirements::css('sapphire/css/GridField.css');
-	}
 
-	/**
-	 * Get the DisplayFields
-	 * 
-	 * @return array
-	 * @see GridField::setDisplayFields
-	 */
-	public function getDisplayFields() {
-		if(!$this->displayFields) {
-			return singleton($this->getModelClass())->summaryFields();
-		}
-		return $this->displayFields;
-	}
-	
 	/**
 	 * Get the GridFieldConfig
 	 *
@@ -169,62 +137,6 @@ class GridField extends FormField {
 	 */
 	public function getConfig() {
 		return $this->config;
-	}
-	
-	/**
-	 * Override the default behaviour of showing the models summaryFields with
-	 * these fields instead
-	 * Example: array( 'Name' => 'Members name', 'Email' => 'Email address')
-	 *
-	 * @param array $fields 
-	 */
-	public function setDisplayFields($fields) {
-		if(!is_array($fields)) {
-			throw new InvalidArgumentException('Arguments passed to GridField::setDisplayFields() must be an array');
-		}
-		$this->displayFields = $fields;
-		return $this;
-	}
-
-	/**
-	 * Specify castings with fieldname as the key, and the desired casting as value.
-	 * Example: array("MyCustomDate"=>"Date","MyShortText"=>"Text->FirstSentence")
-	 *
-	 * @param array $casting
-	 * @todo refactor this into GridFieldComponent
-	 */
-	public function setFieldCasting($casting) {
-		$this->fieldCasting = $casting;
-		return $this;
-	}
-
-	/**
-	 * Specify custom formatting for fields, e.g. to render a link instead of pure text.
-	 * Caution: Make sure to escape special php-characters like in a normal php-statement.
-	 * Example:	"myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'
-	 *
-	 * @param array $casting
-	 * @todo refactor this into GridFieldComponent
-	 */
-	public function getFieldCasting() {
-		return $this->fieldCasting;
-	}
-
-	/**
-	 * @param array $casting
-	 * @todo refactor this into GridFieldComponent
-	 */
-	public function setFieldFormatting($formatting) {
-		$this->fieldFormatting = $formatting;
-		return $this;
-	}
-
-	/**
-	 * @param array $casting
-	 * @todo refactor this into GridFieldComponent
-	 */
-	public function getFieldFormatting() {
-		return $this->fieldFormatting;
 	}
 	
 	/**
@@ -245,13 +157,13 @@ class GridField extends FormField {
 		
 		if(strpos($castingDefinition,'->') === false) {
 			$castingFieldType = $castingDefinition;
-			$castingField = DBField::create($castingFieldType, $value);
+			$castingField = DBField::create_field($castingFieldType, $value);
 			$value = call_user_func_array(array($castingField,'XML'),$castingParams);
 		} else {
 			$fieldTypeParts = explode('->', $castingDefinition);
 			$castingFieldType = $fieldTypeParts[0];	
 			$castingMethod = $fieldTypeParts[1];
-			$castingField = DBField::create($castingFieldType, $value);
+			$castingField = DBField::create_field($castingFieldType, $value);
 			$value = call_user_func_array(array($castingField,$castingMethod),$castingParams);
 		}
 		
@@ -295,7 +207,18 @@ class GridField extends FormField {
 	 *
 	 * @return string
 	 */
-	public function FieldHolder() {
+	public function FieldHolder($properties = array()) {
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
+		Requirements::css(FRAMEWORK_DIR . '/css/GridField.css');
+
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/json-js/json2.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/i18n.js');
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/GridField.js');
+
 		// Get columns
 		$columns = $this->getColumns();
 
@@ -309,65 +232,146 @@ class GridField extends FormField {
 		
 		// Render headers, footers, etc
 		$content = array(
-			'header' => array(),
-			'body' => array(),
-			'footer' => array(),
-			'before' => array(),
-			'after' => array(),
+			"before" => "",
+			"after" => "",
+			"header" => "",
+			"footer" => "",
 		);
 
 		foreach($this->components as $item) {			
 			if($item instanceof GridField_HTMLProvider) {
 				$fragments = $item->getHTMLFragments($this);
-				foreach($fragments as $k => $v) {
-					$content[$k][] = $v;
+				if($fragments) foreach($fragments as $k => $v) {
+					$k = strtolower($k);
+					if(!isset($content[$k])) $content[$k] = "";
+					$content[$k] .= $v . "\n";
 				}
 			}
 		}
 
-		foreach($list as $idx => $record) {
-			$record->iteratorProperties($idx, $list->count());
-			$rowContent = '';
-			foreach($columns as $column) {
-				$colContent = $this->getColumnContent($record, $column);
-				// A return value of null means this columns should be skipped altogether.
-				if($colContent === null) continue;
-				$colAttributes = $this->getColumnAttributes($record, $column);
-				$rowContent .= $this->createTag('td', $colAttributes, $colContent);
+		foreach($content as $k => $v) {
+			$content[$k] = trim($v);
+		}
+
+		// Replace custom fragments and check which fragments are defined
+		// Nested dependencies are handled by deferring the rendering of any content item that 
+		// Circular dependencies are detected by disallowing any item to be deferred more than 5 times
+		// It's a fairly crude algorithm but it works
+		
+		$fragmentDefined = array('header' => true, 'footer' => true, 'before' => true, 'after' => true);
+		reset($content);
+		while(list($k,$v) = each($content)) {
+			if(preg_match_all('/\$DefineFragment\(([a-z0-9\-_]+)\)/i', $v, $matches)) {
+				foreach($matches[1] as $match) {
+					$fragmentName = strtolower($match);
+					$fragmentDefined[$fragmentName] = true;
+					$fragment = isset($content[$fragmentName]) ? $content[$fragmentName] : "";
+
+					// If the fragment still has a fragment definition in it, when we should defer this item until later.
+					if(preg_match('/\$DefineFragment\(([a-z0-9\-_]+)\)/i', $fragment, $matches)) {
+						// If we've already deferred this fragment, then we have a circular dependency
+						if(isset($fragmentDeferred[$k]) && $fragmentDeferred[$k] > 5) {
+							throw new LogicException("GridField HTML fragment '$fragmentName' and '$matches[1]' " . 
+								"appear to have a circular dependency.");
+						}
+						
+						// Otherwise we can push to the end of the content array
+						unset($content[$k]);
+						$content[$k] = $v;
+						if(!isset($fragmentDeferred[$k])) {
+							$fragmentDeferred[$k] = 1;
+						} else {
+							$fragmentDeferred[$k]++;
+						}
+						break;
+					} else {
+						$content[$k] = preg_replace('/\$DefineFragment\(' . $fragmentName . '\)/i', $fragment, $content[$k]);
+					}
+				}
 			}
-			$row = $this->createTag(
-				'tr', 
-				array(
-					"class" => 'ss-gridfield-item ' . $record->FirstLast() . " " . $record->EvenOdd(),
-					'data-id' => $record->ID
-				),
-				$rowContent
+		}
+
+		// Check for any undefined fragments, and if so throw an exception
+		// While we're at it, trim whitespace off the elements
+		foreach($content as $k => $v) {
+			if(empty($fragmentDefined[$k])) throw new LogicException("GridField HTML fragment '$k' was given content, " .
+				"but not defined.  Perhaps there is a supporting GridField component you need to add?");
+		}
+
+		$total = $list->count();
+		if($total > 0) {
+			$rows = array();
+			foreach($list as $idx => $record) {
+				if(!$record->canView()) {
+					continue;
+				}
+				$rowContent = '';
+				foreach($this->getColumns() as $column) {
+					$colContent = $this->getColumnContent($record, $column);
+					// A return value of null means this columns should be skipped altogether.
+					if($colContent === null) continue;
+					$colAttributes = $this->getColumnAttributes($record, $column);
+					$rowContent .= $this->createTag('td', $colAttributes, $colContent);
+				}
+				$classes = array('ss-gridfield-item');
+				if ($idx == 0) $classes[] = 'first';
+				if ($idx == $total-1) $classes[] = 'last';
+				$classes[] = ($idx % 2) ? 'even' : 'odd';
+				$row = $this->createTag(
+					'tr',
+					array(
+						"class" => implode(' ', $classes),
+						'data-id' => $record->ID,
+						// TODO Allow per-row customization similar to GridFieldDataColumns
+						'data-class' => $record->ClassName,
+					),
+					$rowContent
+				);
+				$rows[] = $row;
+			}
+			$content['body'] = implode("\n", $rows);
+		} 
+		
+		// Display a message when the grid field is empty
+		if(!(isset($content['body']) && $content['body'])) {    
+			$content['body'] = $this->createTag(
+				'tr',
+				array("class" => 'ss-gridfield-item ss-gridfield-no-items'),
+				$this->createTag('td', array('colspan' => count($columns)), _t('GridField.NoItemsFound', 'No items found'))
 			);
-			$content['body'][] = $row;
 		}
 
 		// Turn into the relevant parts of a table
-		$head = $content['header'] ? $this->createTag('thead', array(), implode("\n", $content['header'])) : '';
-		$body = $content['body'] ? $this->createTag('tbody', array('class' => 'ss-gridfield-items'), implode("\n", $content['body'])) : '';
-		$foot = $content['footer'] ? $this->createTag('tfoot', array(), implode("\n", $content['footer'])) : '';
+		$head = $content['header'] ? $this->createTag('thead', array(), $content['header']) : '';
+		$body = $content['body'] ? $this->createTag('tbody', array('class' => 'ss-gridfield-items'), $content['body']) : '';
+		$foot = $content['footer'] ? $this->createTag('tfoot', array(), $content['footer']) : '';
 
-		$this->addExtraClass('ss-gridfield');
+		$this->addExtraClass('ss-gridfield field');
 		$attrs = array_diff_key(
 			$this->getAttributes(), 
 			array('value' => false, 'type' => false, 'name' => false)
 		);
+		$attrs['data-name'] = $this->getName();
 		$tableAttrs = array(
 			'id' => isset($this->id) ? $this->id : null,
-			'class' => "field CompositeField {$this->extraClass()}",
+			'class' => 'ss-gridfield-table',
 			'cellpadding' => '0',
 			'cellspacing' => '0'	
 		);
 		return
 			$this->createTag('fieldset', $attrs, 
-				implode("\n", $content['before']) .
+				$content['before'] .
 				$this->createTag('table', $tableAttrs, $head."\n".$foot."\n".$body) .
-				implode("\n", $content['after'])
+				$content['after']
 			);
+	}
+	
+	public function Field($properties = array()) {
+		return $this->FieldHolder($properties);
+	}
+
+	public function getAttributes() {
+		return array_merge(parent::getAttributes(), array('data-url' => $this->Link()));
 	}
 
 	/**
@@ -383,6 +387,7 @@ class GridField extends FormField {
 				$item->augmentColumns($this, $columns);
 			}
 		}
+
 		return $columns;
 	}
 
@@ -401,8 +406,11 @@ class GridField extends FormField {
 		}
 		
 		if(!empty($this->columnDispatch[$column])) {
-			$handler = $this->columnDispatch[$column];
-			return $handler->getColumnContent($this, $record, $column);
+			$content = "";
+			foreach($this->columnDispatch[$column] as $handler) {
+				$content .= $handler->getColumnContent($this, $record, $column);
+			}
+			return $content;
 		} else {
 			throw new InvalidArgumentException("Bad column '$column'");
 		}
@@ -424,15 +432,18 @@ class GridField extends FormField {
 		}
 		
 		if(!empty($this->columnDispatch[$column])) {
-			$handler = $this->columnDispatch[$column];
-			$attrs =  $handler->getColumnAttributes($this, $record, $column);
-			if(is_array($attrs)) {
-				return $attrs;
-			}  elseif($attrs) {
-				throw new LogicException("Non-array response from " . get_class($handler) . "::getColumnAttributes()");
-			} else {
-				return array();
+			$attrs = array();
+
+			foreach($this->columnDispatch[$column] as $handler) {
+				$column_attrs = $handler->getColumnAttributes($this, $record, $column);
+
+				if(is_array($column_attrs))
+					$attrs = array_merge($attrs, $column_attrs);
+				elseif($column_attrs)
+					throw new LogicException("Non-array response from " . get_class($handler) . "::getColumnAttributes()");
 			}
+
+			return $attrs;
 		} else {
 			throw new InvalidArgumentException("Bad column '$column'");
 		}
@@ -453,13 +464,19 @@ class GridField extends FormField {
 		}
 		
 		if(!empty($this->columnDispatch[$column])) {
-			$handler = $this->columnDispatch[$column];
-			$metadata = $handler->getColumnMetadata($this, $column);
-			if(is_array($metadata)) {
-				return $metadata;
-			} elseif($metadata) {
-				throw new LogicException("Non-array response from " . get_class($handler) . "::getColumnMetadata()");
+			$metadata = array();
+
+			foreach($this->columnDispatch[$column] as $handler) {
+				$column_metadata = $handler->getColumnMetadata($this, $column);
+				
+				if(is_array($column_metadata))
+					$metadata = array_merge($metadata, $column_metadata);
+				else
+					throw new LogicException("Non-array response from " . get_class($handler) . "::getColumnMetadata()");
+				
 			}
+			
+			return $metadata;
 		}
 		throw new InvalidArgumentException("Bad column '$column'");
 	}
@@ -486,12 +503,12 @@ class GridField extends FormField {
 			if($item instanceof GridField_ColumnProvider) {
 				$columns = $item->getColumnsHandled($this);
 				foreach($columns as $column) {
-					$this->columnDispatch[$column] = $item;
+					$this->columnDispatch[$column][] = $item;
 				}
 			}
-		}			
+		}
 	}
-	
+
 	/**
 	 * This is the action that gets executed when a GridField_AlterAction gets clicked.
 	 *
@@ -499,25 +516,30 @@ class GridField extends FormField {
 	 * @return string 
 	 */
 	public function gridFieldAlterAction($data, $form, SS_HTTPRequest $request) {
-		$id = $data['StateID'];
-		$stateChange = Session::get($id);
-		$gridName = $stateChange['grid'];
-		$grid = $form->Fields()->dataFieldByName($gridName);
-		
-		$state = $grid->getState(false);
-		if(isset($data['GridState'])) $state->setValue($data['GridState']);
-		
-		$actionName = $stateChange['actionName'];
-		$args = isset($stateChange['args']) ? $stateChange['args'] : array();
-		$html = $grid->handleAction($actionName, $args, $data);
-		
-		if($html) {
-			return $html;
+		$html = '';
+		$data = $request->requestVars();
+		$fieldData = @$data[$this->getName()];
+
+		// Update state from client
+		$state = $this->getState(false);
+		if(isset($fieldData['GridState'])) $state->setValue($fieldData['GridState']);
+
+		// Try to execute alter action
+		foreach($data as $k => $v) {
+			if(preg_match('/^action_gridFieldAlterAction\?StateID=(.*)/', $k, $matches)) {
+				$id = $matches[1];
+				$stateChange = Session::get($id);
+				$actionName = $stateChange['actionName'];
+				$args = isset($stateChange['args']) ? $stateChange['args'] : array();
+				$html = $this->handleAction($actionName, $args, $data);
+				// A field can optionally return its own HTML
+				if($html) return $html;
+			}
 		}
 		
-		switch($request->getHeader('X-Get-Fragment')) {
+		switch($request->getHeader('X-Pjax')) {
 			case 'CurrentField':
-				return $grid->FieldHolder();
+				return $this->FieldHolder();
 				break;
 
 			case 'CurrentForm':
@@ -546,7 +568,7 @@ class GridField extends FormField {
 				continue;
 			}
 			
-			if(in_array($actionName, array_map('strtolower', $component->getActions($this)))) {
+			if(in_array($actionName, array_map('strtolower', (array)$component->getActions($this)))) {
 				return $component->handleAction($this, $actionName, $args, $data);
 			}
 		}
@@ -564,7 +586,10 @@ class GridField extends FormField {
 		}
 
 		$this->request = $request;
-		$this->setModel($model);
+		$this->setDataModel($model);
+
+		$fieldData = $this->request->requestVar($this->getName());
+		if($fieldData && $fieldData['GridState']) $this->getState(false)->setValue($fieldData['GridState']);
 		
 		foreach($this->components as $component) {
 			if(!($component instanceof GridField_URLHandler)) {
@@ -622,25 +647,20 @@ class GridField extends FormField {
 
 
 /**
- * This class is the base class when you want to have an action that alters the state of the gridfield
+ * This class is the base class when you want to have an action that alters the state of the gridfield,
+ * rendered as a button element. 
  * 
- * @package sapphire
+ * @package framework
  * @subpackage forms
  * 
  */
-class GridField_Action extends FormAction {
+class GridField_FormAction extends FormAction {
 
 	/**
 	 *
 	 * @var GridField
 	 */
 	protected $gridField;
-	
-	/**
-	 *
-	 * @var string
-	 */
-	protected $buttonLabel;
 	
 	/**
 	 *
@@ -655,7 +675,10 @@ class GridField_Action extends FormAction {
 	//protected $stateFields = array();
 	
 	protected $actionName;
+
 	protected $args = array();
+
+	public $useButtonTag = true;
 
 	/**
 	 *
@@ -665,12 +688,11 @@ class GridField_Action extends FormAction {
 	 * @param type $actionName
 	 * @param type $args 
 	 */
-	public function __construct(GridField $gridField, $name, $label, $actionName, $args) {
+	public function __construct(GridField $gridField, $name, $title, $actionName, $args) {
 		$this->gridField = $gridField;
-		$this->buttonLabel = $label;
 		$this->actionName = $actionName;
 		$this->args = $args;
-		parent::__construct($name);
+		parent::__construct($name, $title);
 	}
 
 	/**
@@ -691,41 +713,26 @@ class GridField_Action extends FormAction {
 		return '%'.dechex(ord($match[0]));
 	}
 
-	/**
-	 * Default method used by Templates to render the form
-	 *
-	 * @return string HTML tag
-	 */
-	public function Field() {
+	public function getAttributes() {
 		// Store state in session, and pass ID to client side
 		$state = array(
 			'grid' => $this->getNameFromParent(),
 			'actionName' => $this->actionName,
 			'args' => $this->args,
 		);
-		
 		$id = preg_replace('/[^\w]+/', '_', uniqid('', true));
 		Session::set($id, $state);
-		
 		$actionData['StateID'] = $id;
 		
-		// And generate field
-		$attributes = array(
-			'class' => 'action' . ($this->extraClass() ? $this->extraClass() : ''),
-			'id' => $this->id(),
-			'type' => 'submit',
-			// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch 
-			// will strip it from the requests 
-			'name' => 'action_gridFieldAlterAction'. '?' . http_build_query($actionData),
-			'tabindex' => $this->getTabIndex(),
+		return array_merge(
+			parent::getAttributes(),
+			array(
+				// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch 
+				// will strip it from the requests 
+				'name' => 'action_gridFieldAlterAction'. '?' . http_build_query($actionData),
+				'data-url' => $this->gridField->Link(),
+			)
 		);
-
-		if($this->isReadonly()) {
-			$attributes['disabled'] = 'disabled';
-			$attributes['class'] = $attributes['class'] . ' disabled';
-		}
-		
-		return $this->createTag('button', $attributes, $this->buttonLabel);
 	}
 
 	/**

@@ -10,7 +10,7 @@
 /**
  * Execution time profiler.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage misc
  */
 class Profiler {
@@ -232,4 +232,3 @@ class Profiler {
             $this->running[$name] += $this->elapsedTime($name);
     }
 }
-?>

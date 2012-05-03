@@ -45,8 +45,8 @@
  * @subpackage fields-structural
  */
 class FieldGroup extends CompositeField {
+	
 	protected $zebra;
-	public $subfieldParam = "SmallFieldHolder";
 	
 	function __construct($arg1 = null, $arg2 = null) {
 		if(is_array($arg1) || is_a($arg1, 'FieldSet')) {
@@ -79,107 +79,57 @@ class FieldGroup extends CompositeField {
 				if($subfield->getName()) $count++;
 			}
 			if($count == 1) $compositeTitle .= 'Group';
-			return ereg_replace("[^a-zA-Z0-9]+","",$compositeTitle);
+			return preg_replace("/[^a-zA-Z0-9]+/", "", $compositeTitle);
 		}
 
-		return ereg_replace("[^a-zA-Z0-9]+","",$this->title);	
+		return preg_replace("/[^a-zA-Z0-9]+/", "", $this->title);
 	}
-	
-	/**
-	 * Returns a set of <span class="subfield"> tags, each containing a sub-field.
-	 * You can also use <% control FieldSet %>, if you'd like more control over the generated HTML
-	 * 
-	 * @todo Shouldn't use SmallFieldHolder() (very difficult to style), 
-	 * it is easier to overwrite the <div class="field"> behaviour in a more specific class
-	 */
-	function Field() {
-		$fs = $this->FieldList();
-    	$spaceZebra = isset($this->zebra) ? " fieldgroup-$this->zebra" : '';
-    	$idAtt = isset($this->id) ? " id=\"{$this->id}\"" : '';
-		$content = "<div class=\"fieldgroup$spaceZebra\"$idAtt>";
-		
-		foreach($fs as $subfield) {
-			$childZebra = (!isset($childZebra) || $childZebra == "odd") ? "even" : "odd";
-			if($subfield->hasMethod('setZebra'))  {
-				$subfield->setZebra($childZebra);
-			}
-			
-			$content .= "<div class=\"fieldgroup-field\">" . $subfield->{$this->subfieldParam}() . "</div>";
-		}
-		$content .= "</div>";
-		
-		return $content;
-	}
-	
-	public function setID($id) {
-		$this->id = Convert::raw2att($id);
-	}
-  
+
 	/**
 	 * Set an odd/even class
+	 *
+	 * @param string $zebra one of odd or even.
 	 */
   	function setZebra($zebra) {
 	    if($zebra == 'odd' || $zebra == 'even') $this->zebra = $zebra;
 	    else user_error("setZebra passed '$zebra'.  It should be passed 'odd' or 'even'", E_USER_WARNING);
+	    return $this;
  	}
   
-	function FieldHolder() {
-		$Title = $this->XML_val('Title');
-		$Message = $this->XML_val('Message');
-		$MessageType = $this->XML_val('MessageType');
-		$RightTitle = $this->XML_val('RightTitle');
-		$Type = $this->XML_val('Type');
-		$extraClass = $this->XML_val('extraClass');
-		$Name = $this->XML_val('Name');
-		$Field = $this->XML_val('Field');
-		
-		$titleBlock = (!empty($Title)) ? "<label class=\"left\">$Title</label>" : "";
-		$messageBlock = (!empty($Message)) ? "<span class=\"message $MessageType\">$Message</span>" : "";
-		$rightTitleBlock = (!empty($RightTitle)) ? "<label class=\"right\">$RightTitle</label>" : "";
-		$id = $Name ? ' id="$Name"' : '';
-
-		return <<<HTML
-<div$id class="field $Type $extraClass">$titleBlock<div class="middleColumn">$Field</div>$rightTitleBlock$messageBlock</div>
-HTML;
-	}
-	
-	function Message() {
-		$fs = $this->FieldList();
-		foreach($fs as $subfield) {
-			if($m = $subfield->Message()) $message[] = $m;
-		}
-		if(isset($message)) return implode(",  ", $message) . ". ";
-	}	
-	
-	function MessageType(){
-		$fs = $this->FieldList();
-		foreach($fs as $subfield) {
-			if($m = $subfield->MessageType()) $MessageType[] = $m;
-		}
-		if(isset($MessageType)) {
-			return implode(".  ", $MessageType);
-		}
+	/**
+	 * @return string
+	 */
+	function getZebra() {
+		return $this->zebra;
 	}
 	
 	/**
-	 * This allows fields within this fieldgroup to still allow them to get valuated.
+	 * @return string
 	 */
-	function jsValidation(){
+	function Message() {
 		$fs = $this->FieldList();
-		$validationCode = '';
 		
 		foreach($fs as $subfield) {
-			if($value = $subfield->jsValidation()) {
-				$validationCode .= $value;
-			}
+			if($m = $subfield->Message()) $message[] = $m;
 		}
-		return $validationCode;
+		
+		return (isset($message)) ? implode(",  ", $message) . ". " : "";
+	}	
+	
+	/**
+	 * @return string
+	 */
+	function MessageType() {
+		$fs = $this->FieldList();
+		
+		foreach($fs as $subfield) {
+			if($m = $subfield->MessageType()) $MessageType[] = $m;
+		}
+		
+		return (isset($MessageType)) ? implode(".  ", $MessageType) : "";
 	}
 	
-	function php($data){
+	function php($data) {
 		return;
-	}
-	
+	}	
 }
-
-?>

@@ -29,12 +29,6 @@ the templates
 	<% require themedCSS(TreeSelector) %>
 	<% require javascript(cms/javascript/LeftAndMain.js) %>
 
-
-Note that currently (as of 2.3) you cannot pass a second parameter to a function via the template parser so doing the
-following will not work. 
-
-	<% require css(cms/css/TreeSelector.css, 'screen,projection') %>
-
 ## Combining Files
 
 You can concatenate several CSS or javascript files into a single dynamically generated file. This increases performance

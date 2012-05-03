@@ -2,11 +2,25 @@
 
 // TODO we need a seperated file for styles that are used in both cms and front end (such as buttons)
 @import "../admin/scss/themes/default.scss";
-@import "sprites.scss";
+
+
 
 #AssetUploadField {
 	border-bottom: 0;
 	@include box-shadow(none);
+}
+
+body.cms.ss-uploadfield-edit-iframe {
+	padding: $grid-x*2;
+	overflow: auto;
+	span.readonly{
+		font-style:italic;
+		color:lighten($color-text, 15%);
+	}
+}
+
+.ss-uploadfield-edit-iframe {
+	background: #E2E2E2;
 }
 
 .ss-assetuploadfield {
@@ -17,6 +31,11 @@
 		padding: 0 0 7px;
 		clear: both;
 	}
+
+	.field {
+		border-bottom: 0;
+		box-shadow:none;
+	}
 	
 	.ss-uploadfield-files {
 		margin: 0;
@@ -25,8 +44,7 @@
 		.ss-uploadfield-item {
 			border: 1px solid lighten($color-medium-separator, 20%);
 			@include border-radius(5px);
-			@include background-clip(padding-box);
-			background: #E2E2E2;
+			@include background-clip(padding-box);			
 			margin: 0 0 5px;
 			padding: 0;
 			overflow: hidden;
@@ -55,7 +73,8 @@
 			z-index: 1;
 			margin: 3px 0 3px 50px;
 			width: 40%;
-			background: #fff;
+			color:lighten($color-text, 20%);
+			background: $color-button-disabled;
 			border: 1px solid lighten($color-medium-separator, 20%);
 			@include border-radius(5px);
 			display: block;
@@ -89,7 +108,7 @@
 			left: 0;
 			z-index: 0;
 		}
-		label.ss-ui-button {
+		.ss-ui-button {
 			background: none;
 			border: 0;
 			@include box-shadow(none);
@@ -101,17 +120,14 @@
 				// TODO tmp hack until we have permissions and can disable delete
 				display: none;
 			}
-			&.ss-uploadfield-fromfiles {
-				//@include actionButtonSprite('network-cloud');
-			}
-			&.ss-uploadfield-item-delete {
-				//color: $color-button-destructive;
-				//@include actionButtonSprite('minus-circle');
-			}
 			&.ss-uploadfield-item-edit {
 				padding-top: 0;
 				padding-bottom: 0;
 				line-height: 30px;
+			}
+
+			.ui-icon {
+				display: none;
 			}
 		}
 		.ss-uploadfield-item-progress {
@@ -151,7 +167,7 @@
 				height: 16px;
 				cursor: pointer;
 				@include single-box-shadow(none);
-				background: sprite($sprites16, cross-circle) no-repeat;
+				// background: sprite($sprites16, cross-circle) no-repeat;
 			}
 		}
 		
@@ -160,14 +176,14 @@
 			height: 0;
 			overflow: hidden;
 			clear: both;
+
 			iframe {
 				width: 100%;
 			}
 		}
 	}
+
 	.ss-uploadfield-addfile {
-		height: 70px;
-		padding: 5px 15px 15px;
 	
 		.ss-uploadfield-item-info {
 			float: left;
@@ -178,7 +194,6 @@
 			overflow: hidden;
 			display: block;
 			margin: 0 10px 0 0;
-			@include actionButtonSpriteConstructive('drive-upload');
 		}
 		.ss-uploadfield-item-uploador {
 			float: left;
@@ -197,17 +212,24 @@
 			height: 66px;
 			width: 300px;
 			float: left;
-			
+			&.active{
+				&.hover{
+					@include box-shadow(rgba(#fff,0.6) 0 0 3px 3px inset);
+				}
+			}
 			div {
+				z-index:1;
 				padding: 15px 0 0;
 				line-height: 22px;
 				font-size: 20px;
 				font-weight: bold;
 				text-align: center;
-				
+				display:block;
+				margin:0 auto;
 				span {
 					display: block;
 					font-size: 12px;
+					z-index:-1;
 				}
 			}
 		}

@@ -41,8 +41,8 @@ class SSViewerTest extends SapphireTest {
 	
 	function testRequirements() {
 		$requirements = $this->getMock("Requirements_Backend", array("javascript", "css"));
-		$jsFile = 'sapphire/tests/forms/a.js';
-		$cssFile = 'sapphire/tests/forms/a.js';
+		$jsFile = FRAMEWORK_DIR . '/tests/forms/a.js';
+		$cssFile = FRAMEWORK_DIR . '/tests/forms/a.js';
 		
 		$requirements->expects($this->once())->method('javascript')->with($jsFile);
 		$requirements->expects($this->once())->method('css')->with($cssFile);
@@ -83,6 +83,115 @@ SS
 		
 		$this->assertEquals('{$Test}', $this->render('{\\$Test}'), 'Escapes can be used to avoid injection');
 		$this->assertEquals('{\\[out:Test]}', $this->render('{\\\\$Test}'), 'Escapes before injections are correctly unescaped');
+	}
+
+
+	function testGlobalVariableCalls() {
+		$this->assertEquals('automatic', $this->render('$SSViewerTest_GlobalAutomatic'));
+		$this->assertEquals('reference', $this->render('$SSViewerTest_GlobalReferencedByString'));
+		$this->assertEquals('reference', $this->render('$SSViewerTest_GlobalReferencedInArray'));
+	}
+
+	function testGlobalVariableCallsWithArguments() {
+		$this->assertEquals('zz', $this->render('$SSViewerTest_GlobalThatTakesArguments'));
+		$this->assertEquals('zFooz', $this->render('$SSViewerTest_GlobalThatTakesArguments("Foo")'));
+		$this->assertEquals('zFoo:Bar:Bazz', $this->render('$SSViewerTest_GlobalThatTakesArguments("Foo", "Bar", "Baz")'));
+		$this->assertEquals('zreferencez', $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalReferencedByString)'));
+	}
+
+	function testGlobalVariablesAreEscaped() {
+		$this->assertEquals('<div></div>', $this->render('$SSViewerTest_GlobalHTMLFragment'));
+		$this->assertEquals('&lt;div&gt;&lt;/div&gt;', $this->render('$SSViewerTest_GlobalHTMLEscaped'));
+
+		$this->assertEquals('z<div></div>z', $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalHTMLFragment)'));
+		$this->assertEquals('z&lt;div&gt;&lt;/div&gt;z', $this->render('$SSViewerTest_GlobalThatTakesArguments($SSViewerTest_GlobalHTMLEscaped)'));
+	}
+
+	function testCoreGlobalVariableCalls() {
+		$this->assertEquals(Director::absoluteBaseURL(), $this->render('{$absoluteBaseURL}'), 'Director::absoluteBaseURL can be called from within template');
+		$this->assertEquals(Director::absoluteBaseURL(), $this->render('{$AbsoluteBaseURL}'), 'Upper-case %AbsoluteBaseURL can be called from within template');
+
+		$this->assertEquals(Director::is_ajax(), $this->render('{$isAjax}'), 'All variations of is_ajax result in the correct call');
+		$this->assertEquals(Director::is_ajax(), $this->render('{$IsAjax}'), 'All variations of is_ajax result in the correct call');
+		$this->assertEquals(Director::is_ajax(), $this->render('{$is_ajax}'), 'All variations of is_ajax result in the correct call');
+		$this->assertEquals(Director::is_ajax(), $this->render('{$Is_ajax}'), 'All variations of is_ajax result in the correct call');
+
+		$this->assertEquals(i18n::get_locale(), $this->render('{$i18nLocale}'), 'i18n template functions result correct result');
+		$this->assertEquals(i18n::get_locale(), $this->render('{$get_locale}'), 'i18n template functions result correct result');
+
+		//only run this test if we have a controller - i.e. if we are running this test from a web-browser
+		if (Controller::has_curr()) $this->assertEquals((string)Controller::curr(), $this->render('{$CurrentPage}'), 'i18n template functions result correct result');
+		if (Controller::has_curr()) $this->assertEquals((string)Controller::curr(), $this->render('{$currentPage}'), 'i18n template functions result correct result');
+
+		$this->assertEquals((string)Member::currentUser(), $this->render('{$CurrentMember}'), 'Member template functions result correct result');
+		$this->assertEquals((string)Member::currentUser(), $this->render('{$CurrentUser}'), 'Member template functions result correct result');
+		$this->assertEquals((string)Member::currentUser(), $this->render('{$currentMember}'), 'Member template functions result correct result');
+		$this->assertEquals((string)Member::currentUser(), $this->render('{$currentUser}'), 'Member template functions result correct result');
+
+		$this->assertEquals(SecurityToken::getSecurityID(), $this->render('{$getSecurityID}'), 'SecurityToken template functions result correct result');
+		$this->assertEquals(SecurityToken::getSecurityID(), $this->render('{$SecurityID}'), 'SecurityToken template functions result correct result');
+
+		$this->assertEquals(Permission::check("ADMIN"), (bool)$this->render('{$HasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
+		$this->assertEquals(Permission::check("ADMIN"), (bool)$this->render('{$hasPerm(\'ADMIN\')}'), 'Permissions template functions result correct result');
+	}
+
+	function testLocalFunctionsTakePriorityOverGlobals() {
+		$data = new ArrayData(array(
+			'Page' => new SSViewerTest_Object()
+		));
+
+		//call method with lots of arguments
+		$result = $this->render('<% with Page %>$lotsOfArguments11("a","b","c","d","e","f","g","h","i","j","k")<% end_with %>',$data);
+		$this->assertEquals("abcdefghijk",$result, "Function can accept up to 11 arguments");
+
+		//call method that does not exist
+		$result = $this->render('<% with Page %><% if IDoNotExist %>hello<% end_if %><% end_with %>',$data);
+		$this->assertEquals("",$result, "Method does not exist - empty result");
+
+		//call if that does not exist
+		$result = $this->render('<% with Page %>$IDoNotExist("hello")<% end_with %>',$data);
+		$this->assertEquals("",$result, "Method does not exist - empty result");
+
+		//call method with same name as a global method (local call should take priority)
+		$result = $this->render('<% with Page %>$absoluteBaseURL<% end_with %>',$data);
+		$this->assertEquals("testLocalFunctionPriorityCalled",$result, "Local Object's function called. Did not return the actual baseURL of the current site");
+	}
+
+	function testCurrentScopeLoopWith() {
+		// Data to run the loop tests on - one sequence of three items, each with a subitem
+		$data = new ArrayData(array(
+			'Foo' => new ArrayList(array(
+				'Subocean' => new ArrayData(array(
+						'Name' => 'Higher'
+					)),
+				new ArrayData(array(
+					'Sub' => new ArrayData(array(
+						'Name' => 'SubKid1'
+					))
+				)),
+				new ArrayData(array(
+					'Sub' => new ArrayData(array(
+						'Name' => 'SubKid2'
+					))
+				)),
+				new SSViewerTest_Object('Number6')
+			))
+		));
+
+		$result = $this->render('<% loop Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %>',$data);
+		$this->assertEquals("SubKid1SubKid2Number6",$result, "Loop works");
+
+		$result = $this->render('<% loop Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %>',$data);
+		$this->assertEquals("SubKid1SubKid2Number6",$result, "Loop works");
+
+		$result = $this->render('<% with Foo %>$Count<% end_with %>',$data);
+		$this->assertEquals("4",$result, "4 items in the DataObjectSet");
+
+		$result = $this->render('<% with Foo %><% loop Up.Foo %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %><% end_with %>',$data);
+		$this->assertEquals("SubKid1SubKid2Number6",$result, "Loop in with Up.Foo scope works");
+
+		$result = $this->render('<% with Foo %><% loop %>$Number<% if Sub %><% with Sub %>$Name<% end_with %><% end_if %><% end_loop %><% end_with %>',$data);
+		$this->assertEquals("SubKid1SubKid2Number6",$result, "Loop in current scope works");
 	}
 	
 	function testObjectDotArguments() {
@@ -334,10 +443,42 @@ after')
 		$this->assertRegExp('/<head><base href=".*" \/><\/head>/', $response->getBody());
 	}
 
+	function testIncludeWithArguments() {
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeWithArguments %>'),
+			'<p>[out:Arg1]</p><p>[out:Arg2]</p>'
+		);
+
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeWithArguments Arg1=A %>'),
+			'<p>A</p><p>[out:Arg2]</p>'
+		);
+
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeWithArguments Arg1=A, Arg2=B %>'),
+			'<p>A</p><p>B</p>'
+		);
+
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeWithArguments Arg1=A Bare String, Arg2=B Bare String %>'),
+			'<p>A Bare String</p><p>B Bare String </p>'
+		);
+
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeWithArguments Arg1="A", Arg2=$B %>', new ArrayData(array('B' => 'Bar'))),
+			'<p>A</p><p>Bar</p>'
+		);
+
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeWithArguments Arg1="A" %>', new ArrayData(array('Arg1' => 'Foo', 'Arg2' => 'Bar'))),
+			'<p>A</p><p>Bar</p>'
+		);
+	}
+
 	
 	function testRecursiveInclude() {
 		$view = new SSViewer(array('SSViewerTestRecursiveInclude'));
-		
+
 		$data = new ArrayData(array(
 			'Title' => 'A',
 			'Children' => new ArrayList(array(
@@ -363,7 +504,167 @@ after')
 	function assertEqualIgnoringWhitespace($a, $b) {
 		$this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b));
 	}
+
+	/**
+	 * See {@link ViewableDataTest} for more extensive casting tests,
+	 * this test just ensures that basic casting is correctly applied during template parsing.
+	 */
+	function testCastingHelpers() {
+		$vd = new SSViewerTest_ViewableData();
+		$vd->TextValue = '<b>html</b>';
+		$vd->HTMLValue = '<b>html</b>';
+		$vd->UncastedValue = '<b>html</b>';
+
+		// Value casted as "Text"
+		$this->assertEquals(
+			'&lt;b&gt;html&lt;/b&gt;',
+			$t = SSViewer::fromString('$TextValue')->process($vd)
+		);
+		$this->assertEquals(
+			'<b>html</b>',
+			$t = SSViewer::fromString('$TextValue.RAW')->process($vd)
+		);
+		$this->assertEquals(
+			'&lt;b&gt;html&lt;/b&gt;',
+			$t = SSViewer::fromString('$TextValue.XML')->process($vd)
+		);
+
+		// Value casted as "HTMLText"
+		$this->assertEquals(
+			'<b>html</b>',
+			$t = SSViewer::fromString('$HTMLValue')->process($vd)
+		);
+		$this->assertEquals(
+			'<b>html</b>',
+			$t = SSViewer::fromString('$HTMLValue.RAW')->process($vd)
+		);
+		$this->assertEquals(
+			'&lt;b&gt;html&lt;/b&gt;',
+			$t = SSViewer::fromString('$HTMLValue.XML')->process($vd)
+		);
+
+		// Uncasted value (falls back to ViewableData::$default_cast="HTMLText")
+		$vd = new SSViewerTest_ViewableData(); // TODO Fix caching
+		$vd->UncastedValue = '<b>html</b>';
+		$this->assertEquals(
+			'<b>html</b>',
+			$t = SSViewer::fromString('$UncastedValue')->process($vd)
+		);
+		$vd = new SSViewerTest_ViewableData(); // TODO Fix caching
+		$vd->UncastedValue = '<b>html</b>';
+		$this->assertEquals(
+			'<b>html</b>',
+			$t = SSViewer::fromString('$UncastedValue.RAW')->process($vd)
+		);
+		$vd = new SSViewerTest_ViewableData(); // TODO Fix caching
+		$vd->UncastedValue = '<b>html</b>';
+		$this->assertEquals(
+			'&lt;b&gt;html&lt;/b&gt;',
+			$t = SSViewer::fromString('$UncastedValue.XML')->process($vd)
+		);
+	}
 	
+	function testSSViewerBasicIteratorSupport() {
+		$data = new ArrayData(array(
+			'Set' => new ArrayList(array(
+				new SSViewerTest_Object("1"),
+				new SSViewerTest_Object("2"),
+				new SSViewerTest_Object("3"),
+				new SSViewerTest_Object("4"),
+				new SSViewerTest_Object("5"),
+				new SSViewerTest_Object("6"),
+				new SSViewerTest_Object("7"),
+				new SSViewerTest_Object("8"),
+				new SSViewerTest_Object("9"),
+				new SSViewerTest_Object("10"),
+			))
+		));
+
+		//base test
+		$result = $this->render('<% loop Set %>$Number<% end_loop %>',$data);
+		$this->assertEquals("12345678910",$result,"Numbers rendered in order");
+
+		//test First
+		$result = $this->render('<% loop Set %><% if First %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("1",$result,"Only the first number is rendered");
+
+		//test Last
+		$result = $this->render('<% loop Set %><% if Last %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("10",$result,"Only the last number is rendered");
+				
+		//test Even
+		$result = $this->render('<% loop Set %><% if Even() %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("246810",$result,"Even numbers rendered in order");
+
+		//test Even with quotes
+		$result = $this->render('<% loop Set %><% if Even("1") %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("246810",$result,"Even numbers rendered in order");
+
+		//test Even without quotes
+		$result = $this->render('<% loop Set %><% if Even(1) %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("246810",$result,"Even numbers rendered in order");
+
+		//test Even with zero-based start index
+		$result = $this->render('<% loop Set %><% if Even("0") %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("13579",$result,"Even (with zero-based index) numbers rendered in order");
+
+		//test Odd
+		$result = $this->render('<% loop Set %><% if Odd %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("13579",$result,"Odd numbers rendered in order");
+
+		//test FirstLast
+		$result = $this->render('<% loop Set %><% if FirstLast %>$Number$FirstLast<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("1first10last",$result,"First and last numbers rendered in order");
+
+		//test Middle
+		$result = $this->render('<% loop Set %><% if Middle %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("23456789",$result,"Middle numbers rendered in order");
+
+		//test MiddleString
+		$result = $this->render('<% loop Set %><% if MiddleString == "middle" %>$Number$MiddleString<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("2middle3middle4middle5middle6middle7middle8middle9middle",$result,"Middle numbers rendered in order");
+
+		//test EvenOdd
+		$result = $this->render('<% loop Set %>$EvenOdd<% end_loop %>',$data);
+		$this->assertEquals("oddevenoddevenoddevenoddevenoddeven",$result,"Even and Odd is returned in sequence numbers rendered in order");
+
+		//test Pos
+		$result = $this->render('<% loop Set %>$Pos<% end_loop %>',$data);
+		$this->assertEquals("12345678910",$result,"Even and Odd is returned in sequence numbers rendered in order");
+
+		//test Total
+		$result = $this->render('<% loop Set %>$TotalItems<% end_loop %>',$data);
+		$this->assertEquals("10101010101010101010",$result,"10 total items X 10 are returned");
+
+		//test Modulus
+		$result = $this->render('<% loop Set %>$Modulus(2,1)<% end_loop %>',$data);
+		$this->assertEquals("1010101010",$result,"1-indexed pos modular divided by 2 rendered in order");
+
+		//test MultipleOf 3
+		$result = $this->render('<% loop Set %><% if MultipleOf(3) %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("369",$result,"Only numbers that are multiples of 3 are returned");
+
+		//test MultipleOf 4
+		$result = $this->render('<% loop Set %><% if MultipleOf(4) %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("48",$result,"Only numbers that are multiples of 4 are returned");
+
+		//test MultipleOf 5
+		$result = $this->render('<% loop Set %><% if MultipleOf(5) %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("510",$result,"Only numbers that are multiples of 5 are returned");
+
+		//test MultipleOf 10
+		$result = $this->render('<% loop Set %><% if MultipleOf(10,1) %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("10",$result,"Only numbers that are multiples of 10 (with 1-based indexing) are returned");
+
+		//test MultipleOf 9 zero-based
+		$result = $this->render('<% loop Set %><% if MultipleOf(9,0) %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("110",$result,"Only numbers that are multiples of 9 with zero-based indexing are returned. I.e. the first and last item");
+
+		//test MultipleOf 11
+		$result = $this->render('<% loop Set %><% if MultipleOf(11) %>$Number<% end_if %><% end_loop %>',$data);
+		$this->assertEquals("",$result,"Only numbers that are multiples of 11 are returned. I.e. nothing returned");
+	}
+
 	/**
 	 * Test $Up works when the scope $Up refers to was entered with a "with" block
 	 */
@@ -490,6 +791,48 @@ after')
 			)
 		);
 	}
+	
+	/**
+	 * Test that nested loops restore the loop variables correctly when pushing and popping states
+	 */
+	function testNestedLoops(){
+		
+		// Data to run the loop tests on - one sequence of three items, one with child elements
+		// (of a different size to the main sequence)
+		$data = new ArrayData(array(
+			'Foo' => new ArrayList(array(
+				new ArrayData(array(
+					'Name' => '1',
+					'Children' => new ArrayList(array(
+						new ArrayData(array(
+							'Name' => 'a'
+						)),
+						new ArrayData(array(
+							'Name' => 'b'
+						)),
+					)),
+				)),
+				new ArrayData(array(
+					'Name' => '2',
+					'Children' => new ArrayList(),
+				)),
+				new ArrayData(array(
+					'Name' => '3',
+					'Children' => new ArrayList(),
+				)),
+			)),
+		));
+
+		// Make sure that including a loop inside a loop will not destroy the internal count of
+		// items, checked by using "Last"
+		$this->assertEqualIgnoringWhitespace(
+			'1ab23last',
+			$this->render(
+				'<% loop $Foo %>$Name<% loop Children %>$Name<% end_loop %><% if Last %>last<% end_if %><% end_loop %>',
+				$data
+			)
+		);
+	}
 
 	/**
 	 * @covers SSViewer::get_themes()
@@ -600,10 +943,10 @@ after')
 		
 		$result = $view->process($data);
 		$expected = '<!doctype html>
-<html><!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsFullSource.ss -->
+<html><!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsFullSource.ss -->
 	<head></head>
 	<body></body>
-<!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsFullSource.ss --></html>
+<!-- end template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsFullSource.ss --></html>
 ';
 		$this->assertEquals($result, $expected);
 		
@@ -611,14 +954,14 @@ after')
 		$data = new ArrayData(array());
 		
 		$result = $view->process($data);
-		$expected = '<!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsPartialSource.ss --><div class=\'typography\'></div><!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsPartialSource.ss -->';
+		$expected = '<!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsPartialSource.ss --><div class=\'typography\'></div><!-- end template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsPartialSource.ss -->';
 		$this->assertEquals($result, $expected);
 		
 		$view = new SSViewer(array('SSViewerTestCommentsWithInclude'));
 		$data = new ArrayData(array());
 		
 		$result = $view->process($data);
-		$expected = '<!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsWithInclude.ss --><div class=\'typography\'><!-- include \'SSViewerTestCommentsInclude\' --><!-- template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsInclude.ss -->Included<!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsInclude.ss --><!-- end include \'SSViewerTestCommentsInclude\' --></div><!-- end template ' . BASE_PATH . '/sapphire/tests/templates/SSViewerTestCommentsWithInclude.ss -->';
+		$expected = '<!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsWithInclude.ss --><div class=\'typography\'><!-- include \'SSViewerTestCommentsInclude\' --><!-- template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsInclude.ss -->Included<!-- end template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsInclude.ss --><!-- end include \'SSViewerTestCommentsInclude\' --></div><!-- end template ' . FRAMEWORK_PATH . '/tests/templates/SSViewerTestCommentsWithInclude.ss -->';
 		$this->assertEquals($result, $expected);
 		
 		SSViewer::set_source_file_comments(false);
@@ -661,7 +1004,7 @@ class SSViewerTestFixture extends ViewableData {
 	}
 	
 
-	function XML_val($fieldName, $arguments = null) {
+	function XML_val($fieldName, $arguments = null, $cache = false) {
 		if(preg_match('/NotSet/i', $fieldName)) {
 			return '';
 		} else if(preg_match('/Raw/i', $fieldName)) {
@@ -671,12 +1014,18 @@ class SSViewerTestFixture extends ViewableData {
 		}
 	}
 
-	function hasValue($fieldName, $arguments = null) {
+	function hasValue($fieldName, $arguments = null, $cache = true) {
 		return (bool)$this->XML_val($fieldName, $arguments);
 	}
 }
 
 class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
+
+	public static $casting = array(
+		'TextValue' => 'Text',
+		'HTMLValue' => 'HTMLText'
+	);
+
 	function methodWithOneArgument($arg1) {
 		return "arg1:{$arg1}";
 	}
@@ -689,4 +1038,61 @@ class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
 
 class SSViewerTest_Controller extends Controller {
 	
+}
+
+class SSViewerTest_Object extends DataObject {
+
+	public $number = null;
+
+	function __construct($number = null) {
+		parent::__construct();
+		$this->number = $number;
+	}
+
+	function Number() {
+		return $this->number;
+	}
+
+	function absoluteBaseURL() {
+		return "testLocalFunctionPriorityCalled";
+	}
+
+	function lotsOfArguments11($a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k) {
+		return $a. $b. $c. $d. $e. $f. $g. $h. $i. $j. $k;
+	}
+}
+
+class SSViewerTest_GlobalProvider implements TemplateGlobalProvider, TestOnly {
+
+	public static function get_template_global_variables() {
+		return array(
+			'SSViewerTest_GlobalHTMLFragment' => array('method' => 'get_html'),
+			'SSViewerTest_GlobalHTMLEscaped' => array('method' => 'get_html', 'casting' => 'Varchar'),
+
+			'SSViewerTest_GlobalAutomatic',
+			'SSViewerTest_GlobalReferencedByString' => 'get_reference',
+			'SSViewerTest_GlobalReferencedInArray' => array('method' => 'get_reference'),
+
+			'SSViewerTest_GlobalThatTakesArguments' => array('method' => 'get_argmix')
+
+		);
+	}
+
+	static function get_html() {
+		return '<div></div>';
+	}
+
+	static function SSViewerTest_GlobalAutomatic() {
+		return 'automatic';
+	}
+
+	static function get_reference() {
+		return 'reference';
+	}
+
+	static function get_argmix() {
+		$args = func_get_args();
+		return 'z' . implode(':', $args) . 'z';
+	}
+
 }

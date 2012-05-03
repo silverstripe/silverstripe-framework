@@ -6,7 +6,7 @@
  * See {@link SOAPModelAccess} for an auto-generated SOAP API for your models.
  * 
  * @todo Improve documentation
- * @package sapphire
+ * @package framework
  * @subpackage integration
  */
 class SapphireSoapServer extends Controller {
@@ -100,4 +100,4 @@ class SapphireSoapServer extends Controller {
 	}
 }
 
-?>
+

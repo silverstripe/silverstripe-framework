@@ -11,12 +11,8 @@
  * All get variables are namespaced in the format ctf[MyFieldName][MyParameter] to avoid collisions
  * when multiple TableListFields are present in a form.
  * 
- * @param $name string The fieldname
- * @param $sourceClass string The source class of this field
- * @param $fieldList array An array of field headings of Fieldname => Heading Text (eg. heading1)
- * @param $sourceFilter string The filter field you wish to limit the objects by (eg. parentID)
- * @param $sourceSort string
- * @param $sourceJoin string
+ * @deprecated 3.0 Use GridField with GridFieldConfig_RecordEditor
+ * 
  * @package forms
  * @subpackage fields-relational
  */
@@ -231,8 +227,19 @@ class TableListField extends FormField {
 	 */
 	private $getDataListFromForm;
 	
+	/**
+	 * @param $name string The fieldname
+	 * @param $sourceClass string The source class of this field
+	 * @param $fieldList array An array of field headings of Fieldname => Heading Text (eg. heading1)
+	 * @param $sourceFilter string The filter field you wish to limit the objects by (eg. parentID)
+	 * @param $sourceSort string
+	 * @param $sourceJoin string
+	 */
 	function __construct($name, $sourceClass = null, $fieldList = null, $sourceFilter = null, 
 		$sourceSort = null, $sourceJoin = null) {
+		if(FRAMEWORK_DIR != 'sapphire' && !SapphireTest::is_running_test()) {
+			user_error('TableListField requires FRAMEWORK_DIR to be sapphire.', E_USER_WARNING);
+		}
 
 		if($sourceClass) {
 			// You can optionally pass a list
@@ -274,14 +281,13 @@ class TableListField extends FormField {
 		return new TableListField_ItemRequest($this, $request->param('ID'));
 	}
 	
-	function FieldHolder() {
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/prototype/prototype.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/behaviour/behaviour.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/prototype_improvements.js');
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TableListField.js');
-		Requirements::css(SAPPHIRE_DIR . '/css/TableListField.css');
+	function FieldHolder($properties = array()) {
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/prototype/prototype.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/behaviour/behaviour.js');
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/TableListField.js');
+		Requirements::css(FRAMEWORK_DIR . '/css/TableListField.css');
 		
 		if($this->clickAction) {
 			$id = $this->id();
@@ -296,7 +302,9 @@ class TableListField extends FormField {
 			});
 JS
 		);}
-		return $this->renderWith($this->template);
+
+		$obj = $properties ? $this->customise($properties) : $this;
+		return $obj->renderWith($this->template);
 	}
 	
 	function Headings() {
@@ -386,10 +394,12 @@ JS
 	 */
 	function setCustomQuery(DataList $dataList) {
 		$this->dataList = $dataList;
+		return $this;
 	}
 
 	function setCustomCsvQuery(DataList $dataList) {
 		$this->customCsvQuery = $query;
+		return $this;
 	}
 	
 	function setCustomSourceItems(SS_List $items) {
@@ -401,6 +411,8 @@ JS
 		} else {
 			user_error('TableList::setCustomSourceItems() should be passed a SS_List', E_USER_WARNING);
 		}
+
+		return $this;
 	}
 	
 	/**
@@ -427,7 +439,7 @@ JS
 			    $SQL_start = 0;
 		    }
 		
-		    $items = $items->getRange($SQL_start, $SQL_limit);
+		    $items = $items->limit($SQL_limit, $SQL_start);
 	    }
 
 		return $items;
@@ -500,6 +512,7 @@ JS
 	 */
 	function setClick_AjaxLoad($urlBase, $formID) {
 		$this->clickAction = "this.ajaxRequest('" . addslashes($urlBase) . "', '" . addslashes($formID) . "')";
+		return $this;
 	}
 
 	/**
@@ -507,6 +520,7 @@ JS
 	 */
 	function setClick_PopupLoad($urlBase) {
 		$this->clickAction = "var w = window.open(baseHref() + '$urlBase' + this.id.replace(/.*-(\d*)$/,'$1'), 'popup'); w.focus();";
+		return $this;
 	}
 	
 	function performReadonlyTransformation() {
@@ -628,8 +642,8 @@ JS
 			$summaryFields[] = new ArrayData(array(
 				'Function' => $function,
 				'SummaryValue' => $summaryValue,
-				'Name' => DBField::create('Varchar', $fieldName),
-				'Title' => DBField::create('Varchar', $fieldTitle),
+				'Name' => DBField::create_field('Varchar', $fieldName),
+				'Title' => DBField::create_field('Varchar', $fieldTitle),
 			));
 		}
 		return new ArrayList($summaryFields);
@@ -702,6 +716,7 @@ JS
 	
 	function setPermissions($arr) {
 		$this->permissions = $arr;
+		return $this;
 	}
 
 	/**
@@ -718,6 +733,7 @@ JS
 	 */
 	function setShowPagination($bool) {
 		$this->showPagination = (bool)$bool;
+		return $this;
 	}
 
 	/**
@@ -732,6 +748,7 @@ JS
 	
 	function setPageSize($pageSize) {
 	 	$this->pageSize = $pageSize;
+	 	return $this;
 	}
 	 
 	 function PageSize() {
@@ -749,6 +766,7 @@ JS
 	function setExtraLinkParams($params){
 		Deprecation::notice('2.4', 'Put the query string onto your FormAction instead().');
 		$this->extraLinkParams = $params;
+		return $this;
 	}
 	
 	/**
@@ -908,6 +926,7 @@ JS
 	 */
 	 function setFieldListCsv($fields) {
 	 	$this->fieldListCsv = $fields;
+	 	return $this;
 	 }
 	
 	/**
@@ -915,6 +934,7 @@ JS
 	 */
 	function setCsvSeparator($csvSeparator) {
 		$this->csvSeparator = $csvSeparator;
+		return $this;
 	}
 	
 	/**
@@ -929,6 +949,7 @@ JS
 	 */
 	function removeCsvHeader() {
 		$this->csvHasHeader = false;
+		return $this;
 	}
 	 
 	/**
@@ -1033,9 +1054,11 @@ JS
 
 	function printall() {
 		Requirements::clear();
-		Requirements::css(CMS_DIR . '/css/typography.css');
-		Requirements::css(CMS_DIR . '/css/cms_right.css');
-		Requirements::css(SAPPHIRE_DIR . '/css/TableListField_print.css');
+		if(defined('CMS_DIR')) {
+			Requirements::css(CMS_DIR . '/css/typography.css');
+			Requirements::css(CMS_DIR . '/css/cms_right.css');
+		}
+		Requirements::css('sapphire/css/TableListField_print.css');
 		
 		$this->cachedSourceItems = null;
 		$oldShowPagination = $this->showPagination;
@@ -1082,32 +1105,19 @@ JS
 		
 	}
 	
-	/**
-	 * Returns the content of the TableListField as a piece of FormResponse javascript
-	 * @deprecated Please use the standard URL through Link() which gives you the FieldHolder as an HTML fragment.
-	 */
-	function ajax_refresh() {
-		Deprecation::notice('2.4', 'Please use the standard URL through Link() which gives you the FieldHolder as an HTML fragment instead.');
-		// compute sourceItems here instead of Items() to ensure that
-		// pagination and filters are respected on template accessors
-		//$this->sourceItems();
-
-		$response = $this->renderWith($this->template);
-		FormResponse::update_dom_id($this->id(), $response, 1);
-		FormResponse::set_non_ajax_content($response);
-		return FormResponse::respond();
-	}
-	
 	function setFieldCasting($casting) {
 		$this->fieldCasting = $casting;
+		return $this;
 	}
 
 	function setFieldFormatting($formatting) {
 		$this->fieldFormatting = $formatting;
+		return $this;
 	}
 	
 	function setCSVFieldFormatting($formatting) {
 		$this->csvFieldFormatting = $formatting;
+		return $this;
 	}
 	
 	/**
@@ -1115,6 +1125,7 @@ JS
 	 */
 	function setFieldList($fieldList) {
 		$this->fieldList = $fieldList;
+		return $this;
 	}
 	
 	/**
@@ -1148,6 +1159,7 @@ JS
 	
 	function setTemplate($template) {
 		$this->template = $template;
+		return $this;
 	}
 	
 	function CurrentLink() {
@@ -1227,13 +1239,13 @@ JS
 		}
 		if(strpos($castingDefinition,'->') === false) {
 			$castingFieldType = $castingDefinition;
-			$castingField = DBField::create($castingFieldType, $value);
+			$castingField = DBField::create_field($castingFieldType, $value);
 			$value = call_user_func_array(array($castingField,'XML'),$castingParams);
 		} else {
 			$fieldTypeParts = explode('->', $castingDefinition);
 			$castingFieldType = $fieldTypeParts[0];	
 			$castingMethod = $fieldTypeParts[1];
-			$castingField = DBField::create($castingFieldType, $value);
+			$castingField = DBField::create_field($castingFieldType, $value);
 			$value = call_user_func_array(array($castingField,$castingMethod),$castingParams);
 		}
 		
@@ -1242,6 +1254,7 @@ JS
 	 
 	function setHighlightConditions($conditions) {
 		$this->highlightConditions = $conditions;
+		return $this;
 	}
 	
 	/**
@@ -1574,4 +1587,4 @@ class TableListField_ItemRequest extends RequestHandler {
 		return $this->ctf;
 	}
 }
-?>
+

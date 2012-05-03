@@ -21,6 +21,14 @@
 @import "compass/css3";
 @import "compass/utilities/sprites/sprite-img";
 @import "compass/utilities/general";
+@import "compass/support";
+
+/*$experimental-support-for-svg variable comes from 
+imported compass/support file and enables svg gradients in IE9. 
+It was put here because there didn't seem to be a more logical place to put it.
+If more variables exist in the future, consider creating a variables file.*/
+
+$experimental-support-for-svg: true; 
 
 /** -----------------------------
  * Theme

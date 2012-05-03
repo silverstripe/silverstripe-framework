@@ -22,7 +22,7 @@
  * Again, @see BBCodeParser for an example of the syntax
  * 
  * @todo Define a proper syntax for (or refactor) usable_tags that can be extended as needed.
- * @package sapphire
+ * @package framework
  * @subpackage misc
  */
 abstract class TextParser extends Object {
@@ -50,4 +50,3 @@ abstract class TextParser extends Object {
 	 */
 	abstract function parse();
 }
-?>

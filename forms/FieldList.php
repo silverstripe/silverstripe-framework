@@ -219,7 +219,7 @@ class FieldList extends ArrayList {
 	 * @param string $newFieldTitle New title of field
 	 * @return boolean
 	 */
-	function renameField($fieldName, $newFieldTitle) {
+	public function renameField($fieldName, $newFieldTitle) {
 		$field = $this->dataFieldByName($fieldName);
 		if(!$field) return false;
 		
@@ -256,7 +256,7 @@ class FieldList extends ArrayList {
 	 */
 	public function findOrMakeTab($tabName, $title = null) {
 		$parts = explode('.',$tabName);
-		
+		$last_idx = count($parts) - 1;
 		// We could have made this recursive, but I've chosen to keep all the logic code within FieldList rather than add it to TabSet and Tab too.
 		$currentPointer = $this;
 		foreach($parts as $k => $part) {
@@ -266,13 +266,15 @@ class FieldList extends ArrayList {
 			if(!$currentPointer) {
 				if(is_a($parentPointer, 'TabSet')) {
 					// use $title on the innermost tab only
-					if($title && $k == count($parts)-1) {
-						$currentPointer = new Tab($part, $title);
-					} else {
-						$currentPointer = new Tab($part);
+					if ($k == $last_idx) {
+						$currentPointer = isset($title) ? new Tab($part, $title) : new Tab($part);
+					}
+					else {
+						$currentPointer = new TabSet($part);
 					}
 					$parentPointer->push($currentPointer);
-				} else {
+				}
+				else {
 					$withName = ($parentPointer->hasMethod('Name')) ? " named '{$parentPointer->getName()}'" : null;
 					user_error("FieldList::addFieldToTab() Tried to add a tab to object '{$parentPointer->class}'{$withName} - '$part' didn't exist.", E_USER_ERROR);
 				}
@@ -401,6 +403,7 @@ class FieldList extends ArrayList {
 	 */
 	public function setForm($form) {
 		foreach($this as $field) $field->setForm($form);
+		return $this;
 	}
 	
 	/**
@@ -413,6 +416,7 @@ class FieldList extends ArrayList {
 			$fieldName = $field->getName();
 			if(isset($data[$fieldName])) $field->setValue($data[$fieldName]);
 		}
+		return $this;
 	}
 	
 	/**
@@ -422,7 +426,7 @@ class FieldList extends ArrayList {
 	 * 
 	 * @return FieldList
 	 */
-	function HiddenFields() {
+	public function HiddenFields() {
 		$hiddenFields = new FieldList();
 		$dataFields = $this->dataFields();
 		
@@ -432,6 +436,20 @@ class FieldList extends ArrayList {
 		
 		return $hiddenFields;
 	}
+	
+	/**
+	 * Return all fields except for the hidden fields.
+	 * Useful when making your own simplified form layouts.
+	 */
+	public function VisibleFields() {
+		$visibleFields = new FieldList();
+		
+		foreach($this as $field) {
+			if(!($field instanceof HiddenField)) $visibleFields->push($field);
+		}
+		
+		return $visibleFields;
+	}
 
 	/**
 	 * Transform this FieldList with a given tranform method,
@@ -439,7 +457,7 @@ class FieldList extends ArrayList {
 	 * 
 	 * @return FieldList
 	 */
-	function transform($trans) {
+	public function transform($trans) {
 		$this->flushFieldsCache();
 		$newFields = new FieldList();
 		foreach($this as $field) {
@@ -451,13 +469,14 @@ class FieldList extends ArrayList {
 	/**
 	 * Returns the root field set that this belongs to
 	 */
-	function rootFieldSet() {
+	public function rootFieldSet() {
 		if($this->containerField) return $this->containerField->rootFieldSet();
 		else return $this;
 	}
 	
-	function setContainerField($field) {
+	public function setContainerField($field) {
 		$this->containerField = $field;
+		return $this;
 	}
 	
 	/**
@@ -465,7 +484,7 @@ class FieldList extends ArrayList {
 	 *
 	 * @return FieldList
 	 */
-	function makeReadonly() {
+	public function makeReadonly() {
 		return $this->transform(new ReadonlyTransformation());
 	}
 
@@ -474,7 +493,7 @@ class FieldList extends ArrayList {
 	 * 
 	 * @param string|FormField
 	 */
-	function makeFieldReadonly($field) {
+	public function makeFieldReadonly($field) {
 		$fieldName = ($field instanceof FormField) ? $field->getName() : $field;
 		$srcField = $this->dataFieldByName($fieldName);
 		$this->replaceField($fieldName, $srcField->performReadonlyTransformation());
@@ -489,7 +508,7 @@ class FieldList extends ArrayList {
 	 *
 	 * @param array $fieldNames Field names can be given as an array, or just as a list of arguments.
 	 */
-	function changeFieldOrder($fieldNames) {
+	public function changeFieldOrder($fieldNames) {
 		// Field names can be given as an array, or just as a list of arguments.
 		if(!is_array($fieldNames)) $fieldNames = func_get_args();
 		
@@ -524,7 +543,7 @@ class FieldList extends ArrayList {
 	 * @param string|FormField
 	 * @return Position in children collection (first position starts with 0). Returns FALSE if the field can't be found.
 	 */
-	function fieldPosition($field) {
+	public function fieldPosition($field) {
 		if(is_object($field)) $field = $field->getName();
 		
 		$i = 0;
@@ -535,21 +554,14 @@ class FieldList extends ArrayList {
 		
 		return false;
 	}
-	
-}
 
-/**
- * A field list designed to store a list of hidden fields.  When inserted into a template, only the
- * input tags will be included
- * 
- * @package    forms
- * @subpackage fields-structural
- */
-class HiddenFieldList extends FieldList {
+	/**
+	 * Default template rendering of a FieldList will concatenate all FieldHolder values.
+	 */
 	function forTemplate() {
 		$output = "";
 		foreach($this as $field) {
-			$output .= $field->Field();
+			$output .= $field->FieldHolder();
 		}
 		return $output;
 	}

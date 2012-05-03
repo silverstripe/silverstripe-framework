@@ -5,7 +5,7 @@
  * @todo Test filter and limit through GET params
  * @todo Test DELETE verb
  *
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class SoapModelAccessTest extends SapphireTest {
@@ -160,4 +160,3 @@ class SoapModelAccessTest_Page extends DataObject implements TestOnly {
 		'Content' => 'HTMLText',
 	);
 }
-?>

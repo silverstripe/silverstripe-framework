@@ -13,6 +13,25 @@ class HierarchyTest extends SapphireTest {
 	);
 
 	/**
+	 * Test the Hierarchy prevents infinite loops.
+	 */
+	function testPreventLoop() {
+		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+
+		$obj2->ParentID = $obj2aa->ID;
+		try {
+			$obj2->write();
+		}
+		catch (ValidationException $e) {
+			$this->assertContains('Infinite loop found within the "HierarchyTest_Object" hierarchy', $e->getMessage());
+			return;
+		}
+
+		$this->fail('Failed to prevent infinite loop in hierarchy.');
+	}
+
+	/**
 	 * Test Hierarchy::AllHistoricalChildren().
 	 */
 	function testAllHistoricalChildren() {
@@ -148,6 +167,17 @@ class HierarchyTest extends SapphireTest {
 		
 		// 2b has merely been moved to a different parent and so shouldn't be shown
 		$this->assertNotContains("Obj 2b", $children);
+	}
+
+	function testBreadcrumbs() {
+		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
+		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
+		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+
+		$this->assertEquals('Obj 1', $obj1->getBreadcrumbs());
+		$this->assertEquals('Obj 2 &raquo; Obj 2a', $obj2a->getBreadcrumbs());
+		$this->assertEquals('Obj 2 &raquo; Obj 2a &raquo; Obj 2aa', $obj2aa->getBreadcrumbs());
 	}
 
 }

@@ -11,12 +11,12 @@
  * 
  * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Time extends DBField {
 
-	function setValue($value) {	
+	function setValue($value, $record = null) {
 		if($value) {
 			if(preg_match( '/(\d{1,2})[:.](\d{2})([a|A|p|P|][m|M])/', $value, $match )) $this->TwelveHour( $match );
 			else $this->value = date('H:i:s', strtotime($value));
@@ -75,4 +75,3 @@ class Time extends DBField {
 	}
 	
 }
-?>

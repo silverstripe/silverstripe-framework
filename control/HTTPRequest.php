@@ -11,7 +11,7 @@
  * @todo Accept X_HTTP_METHOD_OVERRIDE http header and $_REQUEST['_method'] to override request types (useful for webclients
  *   not supporting PUT and DELETE)
  * 
- * @package sapphire
+ * @package framework
  * @subpackage control
  */
 class SS_HTTPRequest implements ArrayAccess {
@@ -231,6 +231,20 @@ class SS_HTTPRequest implements ArrayAccess {
 	 */
 	function getURL() {
 		return ($this->getExtension()) ? $this->url . '.' . $this->getExtension() : $this->url; 
+	}
+
+	/**
+	 * Returns true if this request an ajax request,
+	 * based on custom HTTP ajax added by common JavaScript libraries,
+	 * or based on an explicit "ajax" request parameter.
+	 * 
+	 * @return boolean
+	 */
+	function isAjax() {
+		return (
+			$this->requestVar('ajax') ||
+			$this->getHeader('X-Requested-With') && $this->getHeader('X-Requested-With') == "XMLHttpRequest"
+		);
 	}
 	
 	/**

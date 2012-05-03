@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 
@@ -10,7 +10,7 @@
  * @todo case sensitivity switch
  * @todo documentation
  * 
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 class ExactMatchFilter extends SearchFilter {
@@ -33,4 +33,3 @@ class ExactMatchFilter extends SearchFilter {
 		return $this->getValue() == null || $this->getValue() == '';
 	}
 }
-?>

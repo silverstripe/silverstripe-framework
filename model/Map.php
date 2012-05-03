@@ -3,7 +3,7 @@
 /**
  * Creates a map from an SS_List by defining a key column and a value column.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
@@ -127,7 +127,7 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 
 /**
  * Builds a map iterator around an Iterator.  Called by SS_Map
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class SS_Map_Iterator implements Iterator {
@@ -165,7 +165,9 @@ class SS_Map_Iterator implements Iterator {
 		if(isset($this->firstItems[$this->firstItemIdx])) {
 			return $this->firstItems[$this->firstItemIdx][1];
 		} else {
-			if($rewoundItem) return $rewoundItem->{$this->titleField};
+			if($rewoundItem) return ($rewoundItem->hasMethod($this->titleField))
+				? $rewoundItem->{$this->titleField}()
+				: $rewoundItem->{$this->titleField};
 		}
 		
 	}
@@ -174,7 +176,9 @@ class SS_Map_Iterator implements Iterator {
 		if(isset($this->firstItems[$this->firstItemIdx])) {
 			return $this->firstItems[$this->firstItemIdx][1];
 		} else {
-			return $this->items->current()->{$this->titleField};
+			return ($this->items->current()->hasMethod($this->titleField))
+				? $this->items->current()->{$this->titleField}()
+				: $this->items->current()->{$this->titleField};
 		}
 	}
 	

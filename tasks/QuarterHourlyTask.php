@@ -6,10 +6,9 @@
  * they need to be triggered by an external automation tool like unix cron.
  * See {@link ScheduledTask} for details.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage cron
  */
 class QuarterHourlyTask extends ScheduledTask {
 	
 }
-?>

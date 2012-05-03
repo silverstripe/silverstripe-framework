@@ -1,0 +1,391 @@
+nl:
+  AssetAdmin:
+    MENUTITLE: "Bestanden en foto's"
+    NEWFOLDER: "Nieuwe Map"
+  AssetTableField:
+    CREATED: "Eerste upload"
+    DIM: "Dimensies"
+    FILENAME: "Bestandsnaam"
+    LASTEDIT: "Laatste wijziging"
+    OWNER: "Eigenaar"
+    SIZE: "Grootte"
+    TITLE: "Titel"
+    TYPE: "Type"
+    URL: "URL"
+  BBCodeParser:
+    ALIGNEMENT: "Uitlijning"
+    ALIGNEMENTEXAMPLE: "rechts uitgelijnd"
+    BOLD: "Vetgedrukte tekst"
+    BOLDEXAMPLE: "Vetgedrukt"
+    CODE: "Code Blok"
+    CODEDESCRIPTION: "niet opgemaakt code blok"
+    CODEEXAMPLE: "Code Blok"
+    COLORED: "Gekleurde tekst"
+    COLOREDEXAMPLE: "blauwe tekst"
+    EMAILLINK: "Email link"
+    EMAILLINKDESCRIPTION: "Maak een koppeling naar een e-mailadres"
+    IMAGE: "Foto"
+    IMAGEDESCRIPTION: "Toon een afbeelding in uw bericht"
+    ITALIC: "Cursieve tekst"
+    ITALICEXAMPLE: "Cursief"
+    LINK: "Website link"
+    LINKDESCRIPTION: "Link naar een andere website of URL"
+    STRUCK: "Doorgehaalde tekst"
+    STRUCKEXAMPLE: "Doorgehaald"
+    UNDERLINE: "Onderstreepte tekst"
+    UNDERLINEEXAMPLE: "Onderstreept"
+    UNORDERED: "Ongesorteerde lijst"
+    UNORDEREDDESCRIPTION: "Ongesorteerde lijst"
+    UNORDEREDEXAMPLE1: "ongesorteerd item 1"
+  BasicAuth:
+    ENTERINFO: "Voer een gebruikers naam en wachtwoord in."
+    ERRORNOTADMIN: "Die gebruiker is geen beheerder."
+    ERRORNOTREC: "De gebruikersnaam en/of wachtwoord wordt niet herkend"
+  Boolean:
+    ANY: "Elke"
+    NO: "Nee"
+    YES: "Ja"
+  CMSMain:
+    ACCESS: "Toegang tot '%s'"
+    ACCESSALLINTERFACES: "Toegang tot alle CMS onderdelen"
+    ACCESSALLINTERFACESHELP: "Overstemt meer specifieke toegangsinstellingen"
+    MENUTITLE: "Pagina Inhoud"
+    SAVE: "Bewaar"
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "U heeft het wachtwoord veranderd voor"
+    CHANGEPASSWORDTEXT2: "U kunt nu onderstaande gegevens gebruiken om in te loggen:"
+    EMAIL: "E-mail"
+    HELLO: "Hallo"
+    PASSWORD: "Wachtwoord"
+  CheckboxField:
+    NO: "Nee"
+    YES: "Ja"
+  ComplexTableField:
+    CLOSEPOPUP: "Sluit Popup"
+    SUCCESSADD: "Toegevoegd %s %s %s"
+    SUCCESSEDIT: "%s %s %s Opgeslagen"
+  ComplexTableField.ss:
+    ADDITEM: "Voeg %s toe"
+    SORTASC: "Sorteer oplopend"
+    SORTDESC: "Sorteer aflopend"
+  ComplexTableField_popup.ss:
+    NEXT: "Volgende"
+    PREVIOUS: "Vorige"
+  ConfirmedPasswordField:
+    ATLEAST: "Paswoorden moeten tenminste %s karakters lang zijn."
+    BETWEEN: "Paswoorden moeten tussen de %s en %s karakters lang zijn."
+    MAXIMUM: "Paswoorden mogen niet meer dan %s karakters lang zijn."
+    SHOWONCLICKTITLE: "Verander wachtwoord"
+  CreditCardField:
+    FIRST: "eerste"
+    FOURTH: "vierde"
+    SECOND: "tweede"
+    THIRD: "derde"
+  CurrencyField:
+    CURRENCYSYMBOL: "$"
+  DataObject:
+    PLURALNAME: "Gegeven Objecten"
+    SINGULARNAME: "Gegeven Object"
+  Date:
+    DAY: "dag"
+    DAYS: "dagen"
+    HOUR: "uur"
+    HOURS: "uren"
+    MIN: "minuut"
+    MINS: "minuten"
+    MONTH: "maand"
+    MONTHS: "maanden"
+    SEC: "seconde"
+    SECS: "seconden"
+    TIMEDIFFAGO: "%s geleden"
+    YEAR: "jaar"
+    YEARS: "jaren"
+  DateField:
+    NOTSET: "niet ingesteld"
+    TODAY: "vandaag"
+    VALIDDATEFORMAT2: "Vul een gelding datum format (%s) in"
+    VALIDDATEMAXDATE: "De datum moet vroeger of gelijk zijn aan de laatst toegestane datum (%s)"
+    VALIDDATEMINDATE: "De datum moet later of gelijk zijn aan de vroegst toegestane datum (%s)"
+  DropdownField:
+    CHOOSE: "(Kies)"
+  EmailField:
+    VALIDATION: "Voer a.u.b. een emailadres in."
+  Email_BounceRecord:
+    PLURALNAME: "Onbezorgbare emails"
+    SINGULARNAME: "Onbezorgbare email"
+  Enum:
+    ANY: "Elke"
+  File:
+    Content: "Inhoud"
+    Filename: "Bestandsnaam "
+    INVALIDEXTENSION: "Extensie is niet toegestaan (gedig: %s)"
+    NOFILESIZE: "Bestandsgrootte is nul bytes."
+    NOVALIDUPLOAD: "Geen geldig bestand"
+    Name: "Naam"
+    PLURALNAME: "Bestanden"
+    SINGULARNAME: "Bestand"
+    TOOLARGE: "Bestand is te groot, het maximum dat is toegestaan is %s"
+    Title: "Titel "
+  FileIFrameField:
+    ATTACH: "Voeg %s toe"
+    ATTACHONCESAVED: "%sen kunnen worden toegevoegd nadat het item voor de eerste keer is opgeslagen"
+    DELETE: "Verwijder %s"
+    FILE: "Bestand"
+    FROMCOMPUTER: "Vanaf computer"
+    FROMFILESTORE: "Vanaf de website's bestandsopslag"
+    NOSOURCE: "Selecteer een bron bestand om toe te voegen"
+    REPLACE: "Vervang %s"
+  ForgotPasswordEmail.ss:
+    HELLO: "Hallo"
+    TEXT1: "Hier is uw"
+    TEXT2: "wachtwoord reset link"
+    TEXT3: "voor"
+  Form:
+    FIELDISREQUIRED: "%s is verplicht"
+    VALIDATIONCREDITNUMBER: "Controleer het credit card nummer %s op correctheid."
+    VALIDATIONFAILED: "Validatie is mislukt"
+    VALIDATIONNOTUNIQUE: "De ingevoerde waarde is niet uniek"
+    VALIDATIONPASSWORDSDONTMATCH: "Wachtwoorden komen niet overeen"
+    VALIDATIONPASSWORDSNOTEMPTY: "Wachtwoorden mogen niet leeg zijn"
+    VALIDATIONSTRONGPASSWORD: "Wachtwoorden moeten tenminste een cijfer en een alfanumeriek teken bevatten."
+    VALIDATOR: "Controleur"
+    VALIDCURRENCY: "Voer een geldige munteenheid in."
+  FormField:
+    NONE: "geen"
+  Group:
+    Code: "Groep code"
+    DefaultGroupTitleAdministrators: "Beheerders"
+    DefaultGroupTitleContentAuthors: "Inhoud Auteurs"
+    Description: "Omschrijving "
+    Locked: "Gesloten?"
+    Parent: "Bovenliggende groep"
+    RolesAddEditLink: "Toevoegen/wijzigingen rollen"
+    Sort: "Sorteer-richting"
+    has_many_Permissions: "Rechten"
+    many_many_Members: "Lid"
+  GroupImportForm:
+    Help1: "<p>Importeer en of meerdere groepen in <em>CSV</em> formaat (Kommagescheiden bestandsformaat). <small><a href=\"#\" class=\"toggle-advanced\">Toon geavanceerd gebruik</a></small></p>"
+    Help2: |
+            <div class="advanced">
+            <h4>Geavanceerd gebruik</h4>
+            <ul>
+            <li>Toegestane kolommen: <em>%s</em></li>
+            <li>Bestaande groepen worden geïdentificeerd door middel van hun unieke <em>Code</em> waarde en aangepast met de nieuwe waarden van het geïmporteerde bestand</li>
+            <li>Groep hiërarchieën kunnen aangemaakt worden met behulp van een <em>ParentCode</em> kolom.</li>
+            <li>Toegangsrechten kunnen worden toegekend met de <em>PermissionCode</em> kolom. Bestaande toegangsrechten worden niet gewist.</li>
+            </ul>
+            </div>
+    ResultCreated: "%d groepen aangemaakt"
+    ResultDeleted: "%d groepen verwijderd"
+    ResultUpdated: "%d groepen aangepast"
+  HtmlEditorField:
+    ANCHORVALUE: "Anker"
+    BUTTONINSERTLINK: "Link invoegen"
+    BUTTONREMOVELINK: "Link verwijderen"
+    CAPTIONTEXT: "Onderschrift"
+    CSSCLASS: "Uitlijning / stijl"
+    CSSCLASSCENTER: "Gecentreerd, op zichzelf staand."
+    CSSCLASSLEFT: "Aan de linkerkant, met tekst eromheen."
+    CSSCLASSLEFTALONE: |
+                        Links, losstaand.
+                        
+    CSSCLASSRIGHT: "Aan de rechterkant, met tekst eromheen."
+    EMAIL: "Emailadres"
+    FILE: "Bestand"
+    FOLDER: "Map"
+    IMAGE: "Afbeelding"
+    IMAGEALTTEXT: "Alternatieve tekst (alt tekst) - wordt getoond als de afbeelding niet kan worden geladen"
+    IMAGEDIMENSIONS: "Dimensies"
+    IMAGEHEIGHTPX: "Hoogte"
+    IMAGETITLE: "Titel tekst (tooltip) - Toon extra informatie over de afbeelding"
+    IMAGEWIDTHPX: "Breedte"
+    LINK: "Link"
+    LINKANCHOR: "Anker op deze pagina"
+    LINKDESCR: "Link omschrijving"
+    LINKEMAIL: "Emailadres"
+    LINKEXTERNAL: "Een andere website"
+    LINKFILE: "Een bestand downloaden"
+    LINKINTERNAL: "Pagina op deze site"
+    LINKOPENNEWWIN: "Link in een nieuw venster openen?"
+    LINKTO: "Verwijs naar"
+    PAGE: "Pagina"
+    URL: "URL"
+  ImageField:
+    IMAGE: "Afbeelding"
+  Image_iframe.ss:
+    TITLE: "Afbeelding uploaden"
+  LeftAndMain:
+    CANT_REORGANISE: "Je hebt niet de juiste rechten om de site structuur te wijzigen. De veranderingen zijn niet opgeslagen."
+    HELP: "Help"
+    PAGETYPE: "Pagina type: "
+    PERMAGAIN: "U bent uitgelogd uit het CMS.  Als U weer wilt inloggen vul dan uw gebruikersnaam en wachtwoord hier beneden in."
+    PERMALREADY: "Helaas, dat deel van het CMS is niet toegankelijk voor U. Hieronder kunt U als iemand anders inloggen."
+    PERMDEFAULT: "Geef uw e-mailadres en wachtwoord voor toegang tot het CMS."
+    PLEASESAVE: "Deze pagina kon niet bijgewerkt worden, omdat deze nog niet is bewaard."
+    SAVED: "bewaard"
+  LoginAttempt:
+    Email: "Email adres "
+    IP: "IP Adres"
+    Status: "Status"
+  Member:
+    ADDRESS: "Adres"
+    BUTTONCHANGEPASSWORD: "Wachtwoord veranderen"
+    BUTTONLOGIN: "Inloggen"
+    BUTTONLOGINOTHER: "Als iemand anders inloggen"
+    BUTTONLOSTPASSWORD: "Ik ben mijn wachtwoord vergeten..."
+    CONFIRMNEWPASSWORD: "Bevestig het nieuwe wachtwoord"
+    CONFIRMPASSWORD: "Bevestig wachtwoord"
+    CONTACTINFO: "Contact Informatie"
+    DefaultAdminFirstname: "Standaard Beheerder"
+    EMAIL: "Email"
+    EMAILSIGNUPINTRO1: "Bedankt voor je inschrijving, hieronder staan Uw gegevens ter referentie."
+    EMAILSIGNUPINTRO2: "U kunt inloggen met onderstaande gegevens"
+    EMAILSIGNUPSUBJECT: "Bedankt voor de registratie"
+    EMPTYNEWPASSWORD: "Het nieuwe wachtwoord mag niet leeg zijn, probeer opnieuw"
+    ENTEREMAIL: "Typ uw e-mailadres om een link te ontvangen waarmee u uw wachtwoord kunt resetten."
+    ERRORLOCKEDOUT: "Je account is tijdelijk geblokkeerd wegens te veel mislukte pogingen tot aanmelding. Gelieve het over 20 minuten opnieuw te proberen."
+    ERRORNEWPASSWORD: "Het nieuwe wachtwoord komt niet overeen met de bevestiging, probeer het nogmaals"
+    ERRORPASSWORDNOTMATCH: "Huidige wachtwoord kom niet overeen, probeer het nogmaals"
+    ERRORWRONGCRED: "Dat is niet het juiste email adres of wachtwoord. Probeert U het a.u.b. opnieuw."
+    FIRSTNAME: "Voornaam"
+    GREETING: "Welkom"
+    INTERFACELANG: "Interface Taal"
+    INVALIDNEWPASSWORD: "Wachtwoord is niet toegestaan: %s"
+    LOGGEDINAS: "U bent ingelogd als %s."
+    MOBILE: "Mobiel"
+    NAME: "Naam"
+    NEWPASSWORD: "Nieuw Wachtwoord"
+    PASSWORD: "Wachtwoord"
+    PHONE: "Telefoon"
+    PLURALNAME: "Leden"
+    PROFILESAVESUCCESS: "Succesvol opgeslagen"
+    REMEMBERME: "Wachtwoord onthouden voor de volgende keer?"
+    SINGULARNAME: "Lid"
+    SUBJECTPASSWORDCHANGED: "Uw wachtwoord is veranderd"
+    SUBJECTPASSWORDRESET: "Link om Uw wachtwoord opnieuw aan te maken"
+    SURNAME: "Achternaam"
+    VALIDATIONMEMBEREXISTS: "Er bestaat reeds een gebruiker met dit emailadres"
+    ValidationIdentifierFailed: "Kan bestaande gebruiker #%d niet overschrijven met identieke sleutel (%s = %s))"
+    WELCOMEBACK: "Welkom Terug, %s"
+    YOUROLDPASSWORD: "Uw oude wachtwoord"
+    belongs_many_many_Groups: "Groepen"
+    db_LastVisited: "Datum van het laatste bezoek"
+    db_Locale: "Interface taal"
+    db_LockedOutUntil: "Gesloten tot"
+    db_NumVisit: "Aantal bezoeken"
+    db_Password: "Wachtwoord"
+    db_PasswordExpiry: "Wachtwoord Vervaldatum"
+  MemberAuthenticator:
+    TITLE: "Email &amp; Wachtwoord"
+  MemberImportForm:
+    Help1: "<p>Importeer leden in <em>CSV</em> formaat (Kommagescheiden bestandsformaat). <small><a href=\"#\" class=\"toggle-advanced\">Toon geavanceerd gebruik</a></small></p>"
+    Help2: |
+            <div class="advanced">
+            <h4>Geavanceerd gebruik</h4>
+            <ul>
+            <li>Toegestane kolommen: <em>%s</em></li>
+            <li>Bestaande leden worden geïdentificeerd door middel van hun unieke <em>Code</em> waarde en aangepast met de nieuwe waarden van het geïmporteerde bestand</li>
+            <li>Groepen kunnen toegewezen worden met de <em>Groups</em> kolom. Groepen worden geïdentificeerd met hun <em>Code</em> waarde en meerdere groepen kunnen worden gescheiden met een komma. Bestaande groep lidmaatschappen worden niet gewist.</li>
+            </ul>
+            </div>
+            </ul>
+            </div>
+    ResultCreated: "%d leden toegevoegd"
+    ResultDeleted: "%d leden verwijderd"
+    ResultNone: "Geen wijzingen"
+    ResultUpdated: "%d leden aangepast"
+  ModelAdmin:
+    DELETE: "Verwijderen"
+    DELETEDRECORDS: "%s Verwijderde resultaten."
+    IMPORT: "Importeren vanuit CSV"
+    IMPORTEDRECORDS: "%s Geïmporteerde resultaten."
+    NOCSVFILE: "Selecteer een CSV bestand op uw computer om te importeren"
+    NOIMPORT: "Niks om te importeren"
+    UPDATEDRECORDS: "%s Geüpdate resultaten."
+  MoneyField:
+    FIELDLABELAMOUNT: "Aantal"
+    FIELDLABELCURRENCY: "Valuta"
+  NullableField:
+    IsNullLabel: "is nul"
+  NumericField:
+    VALIDATION: "'%s' is geen cijfer, alleen cijfers worden geaccepteerd voor dit veld"
+  Permission:
+    AdminGroup: "Beheerder"
+    CMS_ACCESS_CATEGORY: "CMS Toegang"
+    FULLADMINRIGHTS: "Volledige admin rechten"
+    FULLADMINRIGHTS_HELP: "Impliceert en overstemt alle andere toegewezen rechten."
+  PermissionCheckboxSetField:
+    AssignedTo: "toegewezen aan \"%s\""
+    FromGroup: "geërfd van groep \"%s\""
+    FromRole: "geërfd van rol \"%s\""
+    FromRoleOnGroup: "geërfd van rol \"%s\" in groep \"%s\""
+  Permissions:
+    PERMISSIONS_CATEGORY: "Rollen en toegangsrechten"
+  PhoneNumberField:
+    VALIDATION: "Voer een geldig telefoonnummer in"
+  RelationComplexTableField.ss:
+    ADD: "Toevoegen"
+  ReportAdmin:
+    MENUTITLE: "Verslagen"
+  Security:
+    ALREADYLOGGEDIN: "Je hebt niet de juiste rechten, om deze pagina te kunnen bekijken.  Als je een ander account met de juiste rechten hebt, kun je hier <a href=\"%s\">opnieuw inloggen</a>."
+    BUTTONSEND: "Zend mij de link om mijn wachtwoord opnieuw aan te maken"
+    CHANGEPASSWORDBELOW: "U kunt Uw wachtwoord hier beneden veranderen."
+    CHANGEPASSWORDHEADER: "Verander Uw wachtwoord"
+    ENTERNEWPASSWORD: "Voer een nieuw wachtwoord in."
+    ERRORPASSWORDPERMISSION: "U moet ingelogd zijn om Uw wachtwoord te kunnen veranderen!"
+    LOGGEDOUT: "U bent uitgelogd.  Als U weer wilt inloggen kunt U Uw gegevens hier beneden invoeren."
+    LOGIN: "Meld aan"
+    NOTEPAGESECURED: "Deze pagina is beveiligd. Voer Uw gegevens in en U wordt automatisch doorgestuurd."
+    NOTERESETLINKINVALID: "<p>De link naar de wachtwoord-resetpagina is onjuist of vervallen.</p><p>U kunt <a href=\"%s\">hier</a> een nieuwe link aanvragen of uw wachtwoord wijzigen nadat u bent <a href=\"%s\">ingelogd</a>.</p>"
+    NOTERESETPASSWORD: "Voer Uw emailadres in en we zenden U een link waarmee U Uw wachtwoord opnieuw kunt aanmaken"
+    PASSWORDSENTHEADER: "Link om Uw wachtwoord opnieuw aan te maken is verstuurd naar '%s'"
+    PASSWORDSENTTEXT: "Bedankt! De link om je wachtwoord opnieuw in te stellen is verstuurd naar '%s'."
+  SecurityAdmin:
+    ACCESS_HELP: "Bevoegdheid voor bekijken, toevoegen en bewerken van leden, en toewijzen van rechten en rollen aan hen."
+    APPLY_ROLES: "Pas rollen toe aan groepen"
+    APPLY_ROLES_HELP: "Bewerkingsmogelijkheid van rollen voor groepen. Heeft rechten voor \"Beveiligingsectie\" nodig."
+    EDITPERMISSIONS: "Bewerk rechten en IP-adressen bij elke groep"
+    EDITPERMISSIONS_HELP: "Bewerkingsmogelijkheid van Rechten en IP adressen voor groepen. Heeft rechten voor \"Beveiligingsectie\" nodig."
+    GROUPNAME: "Groep naam"
+    MEMBERS: "Leden"
+    MENUTITLE: "Beveiliging"
+    MemberListCaution: "Let op: Verwijderen van leden van deze lijst heeft als gevolg dat deze uit alle groepen en de database worden verwijderd"
+    NEWGROUP: "Nieuwe Groep"
+    PERMISSIONS: "Rechten"
+    ROLES: "Rollen"
+    ROLESDESCRIPTION: "In deze sectie kan je rollen toevoegen aan deze groep. Rollen zijn logische groeperingen van rechten die in het Rollen tapblad gewijzigd kunnen worden."
+    TABROLES: "Rollen"
+  SecurityAdmin_MemberImportForm:
+    BtnImport: "Importeer"
+    FileFieldLabel: "CSV Bestand <small>(Toegestane extensies: *.csv)</small>"
+  SimpleImageField:
+    NOUPLOAD: "Geen afbeeldingen ontvangen"
+  SiteTree:
+    TABMAIN: "Hoofdgedeelte"
+  TableField:
+    ISREQUIRED: "Bij %s is '%s' verplicht."
+  TableField.ss:
+    ADD: "Nieuwe rij toevoegen"
+  TableListField:
+    CSVEXPORT: "Exporteer naar CSV"
+    PRINT: "Afdrukken"
+    SELECT: "Selecteer:"
+  TableListField.ss:
+    SORTASC: "Sorteer in oplopende volgorde"
+    SORTDESC: "Sorteer in aflopende volgorde"
+  TableListField_PageControls.ss:
+    VIEWFIRST: "Bekijk eerste"
+    VIEWLAST: "Bekijk laatste"
+    VIEWNEXT: "Bekijk volgende"
+    VIEWPREVIOUS: "Bekijk vorige"
+  TimeField:
+    VALIDATEFORMAT: "Vul een geldig datumformaat (%s) in"
+  ToggleCompositeField.ss:
+    HIDE: "Verbergen"
+    SHOW: "Bekijk"
+  ToggleField:
+    LESS: "minder"
+    MORE: "meer"
+  Versioned:
+    has_many_Versions: "Versies"

@@ -15,4 +15,3 @@ class DataQueryTest extends SapphireTest {
 	}
 }
 
-?>

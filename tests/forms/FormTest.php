@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class FormTest extends FunctionalTest {
@@ -194,9 +194,8 @@ class FormTest extends FunctionalTest {
 	function testSessionValidationMessage() {
 		$this->get('FormTest_Controller');
 		
-		$response = $this->submitForm(
-			'Form_Form',
-			null,
+		$response = $this->post(
+			'FormTest_Controller/Form',
 			array(
 				'Email' => 'invalid',
 				// leaving out "Required" field
@@ -222,9 +221,8 @@ class FormTest extends FunctionalTest {
 	function testSessionSuccessMessage() {
 		$this->get('FormTest_Controller');
 		
-		$response = $this->submitForm(
-			'Form_Form',
-			null,
+		$response = $this->post(
+			'FormTest_Controller/Form',
 			array(
 				'Email' => 'test@test.com',
 				'SomeRequiredField' => 'test',
@@ -468,7 +466,7 @@ class FormTest_Controller extends Controller implements TestOnly {
 		return $this->redirectBack();
 	}
 
-	function getViewer(){
+	function getViewer($action = null) {
 		return new SSViewer('BlankPage');
 	}
 
@@ -505,7 +503,7 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 		return $this->redirectBack();
 	}
 
-	function getViewer(){
+	function getViewer($action = null) {
 		return new SSViewer('BlankPage');
 	}
 }
@@ -513,4 +511,3 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 Director::addRules(50, array(
 	'FormTest_Controller' => "FormTest_Controller",
 ));
-?>

@@ -20,7 +20,7 @@
 //
 
 /**
- * @package  sapphire
+ * @package framework
  * @subpackage misc
  * @author   Stijn de Reede  <sjr@gmx.co.uk>
  */
@@ -30,7 +30,7 @@
 require_once 'HTML/BBCodeParser/Filter.php';
 
 /**
- * @package  sapphire
+ * @package framework
  * @subpackage misc
  */
 class SSHTMLBBCodeParser_Filter_Images extends SSHTMLBBCodeParser_Filter

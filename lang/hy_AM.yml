@@ -1,0 +1,11 @@
+hy_AM:
+  AssetAdmin:
+    MENUTITLE: "Նշոցներ և Պատկերներ"
+  CMSMain:
+    MENUTITLE: "Կայքի Պարունակություն"
+  LeftAndMain:
+    HELP: "Օգնություն"
+  ReportAdmin:
+    MENUTITLE: "Զեկույցներ"
+  SecurityAdmin:
+    MENUTITLE: "Անվտանգություն"

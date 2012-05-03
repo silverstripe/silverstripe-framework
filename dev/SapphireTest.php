@@ -5,7 +5,7 @@ require_once 'TestRunner.php';
  * Test case class for the Sapphire framework.
  * Sapphire unit testing is based on PHPUnit, but provides a number of hooks into our data model that make it easier to work with.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class SapphireTest extends PHPUnit_Framework_TestCase {
@@ -143,6 +143,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		i18n::set_date_format(null);
 		i18n::set_time_format(null);
 		
+		// Set default timezone consistently to avoid NZ-specific dependencies
+		date_default_timezone_set('UTC');
+		
 		// Remove password validation
 		$this->originalMemberPasswordValidator = Member::password_validator();
 		$this->originalRequirements = Requirements::backend();
@@ -156,6 +159,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		if(class_exists('SiteTree')) SiteTree::reset();
 		Hierarchy::reset();
 		if(Controller::has_curr()) Controller::curr()->setSession(new Session(array()));
+		Security::$database_is_ready = null;
 		
 		$this->originalTheme = SSViewer::current_theme();
 		
@@ -224,7 +228,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		
 		// Preserve memory settings
 		$this->originalMemoryLimit = ini_get('memory_limit');
-
+		
+		// turn off template debugging
+		SSViewer::set_source_file_comments(false);
+		
 		// Clear requirements
 		Requirements::clear();
 	}
@@ -272,6 +279,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// which is used in DatabaseAdmin->doBuild()
 		global $_SINGLETONS;
 		$_SINGLETONS = array();
+
+		// Set default timezone consistently to avoid NZ-specific dependencies
+		date_default_timezone_set('UTC');
 	}
 	
 	/**
@@ -322,8 +332,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$match = $fixture->idFromFixture($className, $identifier);
 			if($match) return $match;
 		}
-		
-		$fixtureFiles = Object::get_static(get_class($this), 'fixture_file');
+
+		$fixtureFiles = Config::inst()->get(get_class($this), 'fixture_file', Config::FIRST_SET);
 		user_error(sprintf(
 			"Couldn't find object '%s' (class: %s) in files %s",
 			$identifier,
@@ -371,7 +381,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			if($match) return $match;
 		}
 
-		$fixtureFiles = Object::get_static(get_class($this), 'fixture_file');
+		$fixtureFiles = Config::inst()->get(get_class($this), 'fixture_file', Config::FIRST_SET);
 		user_error(sprintf(
 			"Couldn't find object '%s' (class: %s) in files %s",
 			$identifier,
@@ -680,6 +690,22 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
       self::assertThat($actual, $constraint, $message);
   }
+
+  	/**
+  	 * Provide assertEmpty() in PHPUnit <3.5.
+  	 * We want to support PHPUnit 3.4, as this is the most recent release available
+  	 * to environments running PHP <=5.2.6, such as Debian Lenny.
+  	 */
+	public static function assertEmpty($item, $message = '') {
+		if(class_exists('PHPUnit_Framework_Constraint_IsEmpty')) {
+			parent::assertEmpty($item, $message);
+		} else {
+			if(!empty($item)) {
+				$message = $message ? $message : "Failed asserting that " . var_export($item, true) . " is empty.";
+				throw new PHPUnit_Framework_AssertionFailedError($message);
+			}
+		}
+	}
 	
 	/**
 	 * Helper function for the DOS matchers
@@ -748,8 +774,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	static function create_temp_db() {
 		// Disable PHPUnit error handling
 		restore_error_handler();
-		
-		// Create a temporary database
+
+		// Create a temporary database, and force the connection to use UTC for time
+		global $databaseConfig;
+		$databaseConfig['timezone'] = '+0:00';
+		DB::connect($databaseConfig);
 		$dbConn = DB::getConn();
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
 		$dbname = strtolower(sprintf('%stmpdb', $prefix)) . rand(1000000,9999999);
@@ -860,4 +889,4 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected $cache_generatedMembers = array();
 }
 
-?>
+

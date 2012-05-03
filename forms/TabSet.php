@@ -27,8 +27,6 @@
  */
 class TabSet extends CompositeField {
 	
-	protected $template = "TabSetFieldHolder";
-	
 	/**
 	 * @param string $name Identifier
 	 * @param string $title (Optional) Natural language title of the tabset
@@ -69,19 +67,20 @@ class TabSet extends CompositeField {
 	 * Returns a tab-strip and the associated tabs.
 	 * The HTML is a standardised format, containing a &lt;ul;
 	 */
-	public function FieldHolder() {
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/jquery_improvements.js");
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-cookie/jquery.cookie.js');
+	public function FieldHolder($properties = array()) {
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-cookie/jquery.cookie.js');
 		
-		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.css');
+		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.css');
 		
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TabSet.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/TabSet.js');
 		
-		return $this->renderWith($this->template);
+		$obj = $properties ? $this->customise($properties) : $this;
+		
+		return $obj->renderWith($this->getTemplates());
 	}
 	
 	/**
@@ -90,13 +89,16 @@ class TabSet extends CompositeField {
 	public function Tabs() {
 		return $this->children;
 	}
+	
 	public function setTabs($children){
 		$this->children = $children;
 	}
 
 	public function setTabSet($val) {
 		$this->tabSet = $val;
+		return $this;
 	}
+	
 	public function getTabSet() {
 		if(isset($this->tabSet)) return $this->tabSet;
 	}
@@ -127,7 +129,7 @@ class TabSet extends CompositeField {
 	/**
 	 * Add a new child field to the end of the set.
 	 */
-	public function push($field) {
+	public function push(FormField $field) {
 		parent::push($field);
 		$field->setTabSet($this);
 	}

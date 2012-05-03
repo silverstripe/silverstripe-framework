@@ -1,6 +1,6 @@
 <?php
 /**
-* @package sapphire
+* @package framework
 * @subpackage dev
 */
 
@@ -189,7 +189,7 @@ class PhpUnitWrapper implements IPhpUnitWrapper {
 	}
 
 	/**
-	 * Perform all tests, added to the suite and initialises Sapphire to collect
+	 * Perform all tests, added to the suite and initialises SilverStripe to collect
 	 * the results of the unit tests.
 	 *
 	 * This method calls @see beforeRunTests and @see afterRunTests.
@@ -210,6 +210,22 @@ class PhpUnitWrapper implements IPhpUnitWrapper {
 		$this->beforeRunTests();
 		$this->getSuite()->run($this->getFrameworkTestResults());
 		$this->aferRunTests();
+	}
+
+	/**
+	 * Returns an array containing all the module folders in the base dir.
+	 *
+	 * @return array
+	 */
+	protected function moduleDirectories() {
+		$files = scandir(BASE_PATH);
+		$modules = array();
+		foreach($files as $file) {
+			if(is_dir(BASE_PATH . "/$file") && file_exists(BASE_PATH . "/$file/_config.php")) {
+				$modules[] = $file;
+			}
+		}
+		return $modules;
 	}
 }
 
@@ -237,9 +253,9 @@ class PhpUnitWrapper_Exception extends Exception {}
 if(!PhpUnitWrapper::has_php_unit()) {
 	/**
 	 * PHPUnit is a testing framework that can be installed using PEAR.
-	 * It's not bundled with Sapphire, you will need to install it yourself.
+	 * It's not bundled with SilverStripe, you will need to install it yourself.
 	 * 
-	 * @package sapphire
+	 * @package framework
 	 * @subpackage testing
 	 */
 	class PHPUnit_Framework_TestCase {

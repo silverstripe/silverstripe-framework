@@ -120,7 +120,7 @@ class SimpleForm {
         $class = $this->_encoding;
         $encoding = new $class();
         for ($i = 0, $count = count($this->_widgets); $i < $count; $i++) {
-            $this->_widgets[$i]->write($encoding);
+            $this->_widgets[$i]->write($encoding, 0, 0);
         }
         return $encoding;
     }
@@ -172,7 +172,7 @@ class SimpleForm {
      */
     function _addRadioButton(&$tag) {
         if (! isset($this->_radios[$tag->getName()])) {
-            $this->_widgets[] = &new SimpleRadioGroup();
+            $this->_widgets[] = new SimpleRadioGroup();
             $this->_radios[$tag->getName()] = count($this->_widgets) - 1;
         }
         $this->_widgets[$this->_radios[$tag->getName()]]->addWidget($tag);
@@ -191,7 +191,7 @@ class SimpleForm {
             $index = $this->_checkboxes[$tag->getName()];
             if (! SimpleTestCompatibility::isA($this->_widgets[$index], 'SimpleCheckboxGroup')) {
                 $previous = &$this->_widgets[$index];
-                $this->_widgets[$index] = &new SimpleCheckboxGroup();
+                $this->_widgets[$index] = new SimpleCheckboxGroup();
                 $this->_widgets[$index]->addWidget($previous);
             }
             $this->_widgets[$index]->addWidget($tag);
@@ -305,7 +305,7 @@ class SimpleForm {
         foreach ($this->_buttons as $button) {
             if ($selector->isMatch($button)) {
                 $encoding = $this->_encode();
-                $button->write($encoding);
+                $button->write($encoding, 0, 0);
                 if ($additional) {
                     $encoding->merge($additional);
                 }

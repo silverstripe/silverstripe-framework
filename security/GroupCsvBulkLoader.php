@@ -2,7 +2,7 @@
 /**
  * @todo Migrate Permission->Arg and Permission->Type values
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class GroupCsvBulkLoader extends CsvBulkLoader {

@@ -20,6 +20,8 @@ $cacheBaseDir = '../cache/'; // Should point to the same folder as FilesystemPub
 
 // Optional settings for FilesystemPublisher::$domain_based_mapping=TRUE
 $hostmapLocation = '../subsites/host-map.php'; 
+
+// Specific to 'homepagefordomain' module
 $homepageMapLocation = '../assets/_homepage-map.php';
 
 if (
@@ -33,7 +35,7 @@ if (
 ) {
 	// Define system paths (copied from Core.php)
 	if(!defined('BASE_PATH')) {
-		// Assuming that this file is sapphire/static-main.php we can then determine the base path
+		// Assuming that this file is framework/static-main.php we can then determine the base path
 		define('BASE_PATH', rtrim(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR);
 	}
 	if(!defined('BASE_URL')) {
@@ -103,4 +105,3 @@ if (
 	include 'main.php';
 }
 
-?>

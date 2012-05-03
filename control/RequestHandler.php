@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This class is the base class of any Sapphire object that can be used to handle HTTP requests.
+ * This class is the base class of any SilverStripe object that can be used to handle HTTP requests.
  * 
  * Any RequestHandler object can be made responsible for handling its own segment of the URL namespace.
  * The {@link Director} begins the URL parsing process; it will parse the beginning of the URL to identify which
@@ -10,7 +10,7 @@
  *
  * You can use ?debug_request=1 to view information about the different components and rule matches for a specific URL.
  *
- * In Sapphire, URL parsing is distributed throughout the object graph.  For example, suppose that we have a search form
+ * In SilverStripe, URL parsing is distributed throughout the object graph.  For example, suppose that we have a search form
  * that contains a {@link TreeMultiSelectField} named "Groups".  We want to use ajax to load segments of this tree as they are needed
  * rather than downloading the tree right at the beginning.  We could use this URL to get the tree segment that appears underneath
  * Group #36: "admin/crm/SearchForm/field/Groups/treesegment/36"
@@ -25,7 +25,7 @@
  *
  * {@link RequestHandler::handleRequest()} is where this behaviour is implemented.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage control
  */
 class RequestHandler extends ViewableData {
@@ -91,7 +91,7 @@ class RequestHandler extends ViewableData {
 		// Check necessary to avoid class conflicts before manifest is rebuilt
 		if(class_exists('NullHTTPRequest')) $this->request = new NullHTTPRequest();
 		
-		// This will prevent bugs if setModel() isn't called.
+		// This will prevent bugs if setDataModel() isn't called.
 		$this->model = DataModel::inst();
 		
 		parent::__construct();
@@ -100,7 +100,7 @@ class RequestHandler extends ViewableData {
 	/**
 	 * Set the DataModel for this request.
 	 */
-	public function setModel($model) {
+	public function setDataModel($model) {
 		$this->model = $model;
 	}
 	
@@ -134,12 +134,12 @@ class RequestHandler extends ViewableData {
 		}
 	
 		$this->request = $request;
-		$this->setModel($model);
+		$this->setDataModel($model);
 		
 		// We stop after RequestHandler; in other words, at ViewableData
 		while($handlerClass && $handlerClass != 'ViewableData') {
-			$urlHandlers = Object::get_static($handlerClass, 'url_handlers');
-			
+			$urlHandlers = Config::inst()->get($handlerClass, 'url_handlers', Config::FIRST_SET);
+
 			if($urlHandlers) foreach($urlHandlers as $rule => $action) {
 				if(isset($_REQUEST['debug_request'])) Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
 				if($params = $request->match($rule, true)) {
@@ -162,12 +162,15 @@ class RequestHandler extends ViewableData {
 						}
 						
 						try {
+							if(!$this->hasMethod($action)) {
+								return $this->httpError(404, "Action '$action' isn't available on class " . get_class($this) . ".");
+							}
 							$result = $this->$action($request);
 						} catch(SS_HTTPResponse_Exception $responseException) {
 							$result = $responseException->getResponse();
 						}
 					} else {
-						return $this->httpError(403, "Action '$action' isn't allowed on class $this->class");
+						return $this->httpError(403, "Action '$action' isn't allowed on class " . get_class($this) . ".");
 					}
 				
 					if($result instanceof SS_HTTPResponse && $result->isError()) {
@@ -214,14 +217,9 @@ class RequestHandler extends ViewableData {
 	 * @return array|null
 	 */
 	public function allowedActions() {
-		$actions = Object::combined_static(get_class($this), 'allowed_actions', 'RequestHandler');
-		
-		foreach($this->extension_instances as $extension) {
-			if($extensionActions = Object::get_static(get_class($extension), 'allowed_actions')) {
-				$actions = array_merge($actions, $extensionActions);
-			}
-		}
-		
+
+		$actions = Config::inst()->get(get_class($this), 'allowed_actions');
+
 		if($actions) {
 			// convert all keys and values to lowercase to 
 			// allow for easier comparison, unless it is a permission code
@@ -230,7 +228,7 @@ class RequestHandler extends ViewableData {
 			foreach($actions as $key => $value) {
 				if(is_numeric($key)) $actions[$key] = strtolower($value);
 			}
-			
+
 			return $actions;
 		}
 	}
@@ -258,7 +256,7 @@ class RequestHandler extends ViewableData {
 			if($isKey || $isValue) return true;
 		}
 		
-		if(!is_array($actions) || !$this->uninherited('allowed_actions')) {
+		if(!is_array($actions) || !$this->config()->get('allowed_actions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES)) {
 			if($action != 'init' && $action != 'run' && method_exists($this, $action)) return true;
 		}
 		
@@ -291,7 +289,7 @@ class RequestHandler extends ViewableData {
 						return Permission::check($test);
 					}
 					
-				} elseif((($key = array_search($actionOrAll, $allowedActions)) !== false) && is_numeric($key)) {
+				} elseif((($key = array_search($actionOrAll, $allowedActions, true)) !== false) && is_numeric($key)) {
 					// Case 4: Allow numeric array notation (search for array value as action instead of key)
 					return true;
 				}
@@ -302,7 +300,7 @@ class RequestHandler extends ViewableData {
 		// it should be allowed.
 		if($action == 'index' || empty($action)) return true;
 		
-		if($allowedActions === null || !$this->uninherited('allowed_actions')) {
+		if($allowedActions === null || !$this->config()->get('allowed_actions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES)) {
 			// If no allowed_actions are provided, then we should only let through actions that aren't handled by magic methods
 			// we test this by calling the unmagic method_exists. 
 			if(method_exists($this, $action)) {
@@ -340,7 +338,15 @@ class RequestHandler extends ViewableData {
 
 		throw $e;
 	}
-	
+
+	/**
+	 * @deprecated 3.0 Use SS_HTTPRequest->isAjax() instead (through Controller->getRequest())
+	 */
+	function isAjax() {
+		Deprecation::notice('3.0', 'Use SS_HTTPRequest->isAjax() instead (through Controller->getRequest())');
+		return $this->request->isAjax();
+	}
+
 	/**
 	 * Returns the SS_HTTPRequest object that this controller is using.
 	 * Returns a placeholder {@link NullHTTPRequest} object unless 

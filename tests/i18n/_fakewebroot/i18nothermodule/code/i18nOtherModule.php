@@ -7,4 +7,3 @@ class i18nOtherModule extends Object {
 		);
 	}
 }
-?>

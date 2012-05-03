@@ -3,10 +3,10 @@
  * Implements a "lazy loading" DataObjectSet.
  * Uses {@link DataQuery} to do the actual query generation.
  * 
- * @package    sapphire
+ * @package framework
  * @subpackage model
  */
-class DataList extends ViewableData implements SS_List {
+class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortable, SS_Limitable {
 	/**
 	 * The DataObject class name that this data list is querying
 	 * 
@@ -27,17 +27,6 @@ class DataList extends ViewableData implements SS_List {
 	 * @var DataModel
 	 */
 	protected $model;
-	
-	/**
-	 * Synonym of the constructor.  Can be chained with literate methods.
-	 * DataList::create("SiteTree")->sort("Title") is legal, but
-	 * new DataList("SiteTree")->sort("Title") is not.
-	 * 
-	 * @param string $dataClass - The DataObject class to query.
-	 */
-	public static function create($dataClass) {
-		return new DataList($dataClass);
-	}
 
 	/**
 	 * Create a new DataList.
@@ -48,6 +37,7 @@ class DataList extends ViewableData implements SS_List {
 	public function __construct($dataClass) {
 		$this->dataClass = $dataClass;
 		$this->dataQuery = new DataQuery($this->dataClass);
+		
 		parent::__construct();
 	}
 
@@ -56,7 +46,7 @@ class DataList extends ViewableData implements SS_List {
 	 *
 	 * @param DataModel $model 
 	 */
-	public function setModel(DataModel $model) {
+	public function setDataModel(DataModel $model) {
 		$this->model = $model;
 	}
 	
@@ -145,59 +135,68 @@ class DataList extends ViewableData implements SS_List {
 	 * 
 	 * @param string $limit
 	 */
-	public function limit($limit) {
-		$this->dataQuery->limit($limit);
+	public function limit($limit, $offset = 0) {
+		if(!$limit && !$offset) {
+			return $this;
+		}
+		if($limit && !is_numeric($limit)) {
+			Deprecation::notice('3.0', 'Please pass limits as 2 arguments, rather than an array or SQL fragment.');
+		}
+		$this->dataQuery->limit($limit, $offset);
 		return $this;
 	}
 	
 	/**
 	 * Set the sort order of this data list
 	 *
-	 * @return DataList
 	 * @see SS_List::sort()
+	 * @see SQLQuery::orderby
+	 *
 	 * @example $list->sort('Name'); // default ASC sorting
 	 * @example $list->sort('Name DESC'); // DESC sorting
 	 * @example $list->sort('Name', 'ASC');
 	 * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
+	 *
+	 * @return DataList
 	 */
 	public function sort() {
-		if(count(func_get_args())==0){
+		if(count(func_get_args()) == 0) {
 			return $this;
 		}
-		if(count(func_get_args())>2){
+		
+		if(count(func_get_args()) > 2) {
 			throw new InvalidArgumentException('This method takes zero, one or two arguments');
 		}
 
-		// sort('Name','Desc')
-		if(count(func_get_args())==2){
+		if(count(func_get_args()) == 2) {
+			// sort('Name','Desc')
 			if(!in_array(strtolower(func_get_arg(1)),array('desc','asc'))){
 				user_error('Second argument to sort must be either ASC or DESC');
 			}
-			$this->dataQuery->sort(func_get_arg(0).' '.func_get_arg(1));
-			return $this;
+			
+			$this->dataQuery->sort(func_get_arg(0), func_get_arg(1));
 		}
-		
-		// sort('Name') - default to ASC sorting if not specified
-		if(is_string(func_get_arg(0)) && func_get_arg(0)){
+		else if(is_string(func_get_arg(0)) && func_get_arg(0)){
 			// sort('Name ASC')
-			if(stristr(func_get_arg(0), ' asc') || stristr(func_get_arg(0), ' desc')){
+			if(stristr(func_get_arg(0), ' asc') || stristr(func_get_arg(0), ' desc')) {
 				$this->dataQuery->sort(func_get_arg(0));
 			} else {
-				$this->dataQuery->sort(func_get_arg(0).' ASC');
+				$this->dataQuery->sort(func_get_arg(0), 'ASC');
 			}
-			
-			return $this;
 		}
-		
-		// sort(array('Name'=>'desc'));
-		$argumentArray = func_get_arg(0);
-		if(is_array($argumentArray)){
-			$sort = array();
-			foreach($argumentArray as $column => $direction) {
-				$sort[]= ''.$this->getRelationName($column).' '.$direction;
+		else if(is_array(func_get_arg(0))) {
+			// sort(array('Name'=>'desc'));
+			$this->dataQuery->sort(null, null); // wipe the sort
+			
+			foreach(func_get_arg(0) as $col => $dir) {
+				// Convert column expressions to SQL fragment, while still allowing the passing of raw SQL fragments.
+				try {
+					$relCol = $this->getRelationName($col);
+				} catch(InvalidArgumentException $e) {
+					$relCol = $col;
+				}
+				$this->dataQuery->sort($relCol, $dir, false);
 			}
-			$this->dataQuery->sort(implode(',', $sort));
-			return $this;
 		}
 		
 		return $this;
@@ -206,8 +205,8 @@ class DataList extends ViewableData implements SS_List {
 	/**
 	 * Filter the list to include items with these charactaristics
 	 *
-	 * @return DataList
 	 * @see SS_List::filter()
+	 *
 	 * @example $list->filter('Name', 'bob'); // only bob in the list
 	 * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
 	 * @example $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the age 21
@@ -215,6 +214,8 @@ class DataList extends ViewableData implements SS_List {
 	 * @example $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43))); // aziz with the age 21 or 43 and bob with the Age 21 or 43
 	 *
 	 * @todo extract the sql from $customQuery into a SQLGenerator class
+	 *
+	 * @return DataList
 	 */
 	public function filter() {
 		$numberFuncArgs = count(func_get_args());
@@ -255,12 +256,16 @@ class DataList extends ViewableData implements SS_List {
 
 	/**
 	 * Translates a Object relation name to a Database name and apply the relation join to 
-	 * the query
+	 * the query.  Throws an InvalidArgumentException if the $field doesn't correspond to a relation
 	 *
 	 * @param string $field
 	 * @return string
 	 */
 	public function getRelationName($field) {
+		if(!preg_match('/^[A-Z0-9._]+$/i', $field)) {
+			throw new InvalidArgumentException("Bad field expression $field");
+		}
+		
 		if(strpos($field,'.') === false) {
 			return '"'.$field.'"';
 		}
@@ -289,9 +294,8 @@ class DataList extends ViewableData implements SS_List {
 	}
 	
 	/**
-	 * Exclude the list to not contain items with these charactaristics
+	 * Exclude the list to not contain items with these characteristics
 	 *
-	 * @return DataList
 	 * @see SS_List::exclude()
 	 * @example $list->exclude('Name', 'bob'); // exclude bob from list
 	 * @example $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
@@ -300,6 +304,8 @@ class DataList extends ViewableData implements SS_List {
 	 * @example $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43))); // bob age 21 or 43, phil age 21 or 43 would be excluded
 	 *
 	 * @todo extract the sql from this method into a SQLGenerator class
+	 *
+	 * @return DataList
 	 */
 	public function exclude(){
 		$numberFuncArgs = count(func_get_args());
@@ -343,6 +349,7 @@ class DataList extends ViewableData implements SS_List {
 		
 		$newlist = clone $this;
 		$newlist->dataQuery->subtract($list->dataQuery());
+		
 		return $newlist;
 	}
 	
@@ -356,6 +363,7 @@ class DataList extends ViewableData implements SS_List {
 	 */
 	public function innerJoin($table, $onClause, $alias = null) {
 		$this->dataQuery->innerJoin($table, $onClause, $alias);
+		
 		return $this;
 	}
 
@@ -369,6 +377,7 @@ class DataList extends ViewableData implements SS_List {
 	 */
 	public function leftJoin($table, $onClause, $alias = null) {
 		$this->dataQuery->leftJoin($table, $onClause, $alias);
+		
 		return $this;
 	}
 
@@ -382,9 +391,11 @@ class DataList extends ViewableData implements SS_List {
 		$query = $this->dataQuery->query();
 		$rows = $query->execute();
 		$results = array();
+		
 		foreach($rows as $row) {
 			$results[] = $this->createDataObject($row);
 		}
+		
 		return $results;
 	}
 
@@ -395,6 +406,7 @@ class DataList extends ViewableData implements SS_List {
 	 */
 	public function toNestedArray() {
 		$result = array();
+		
 		foreach($this as $item) {
 			$result[] = $item->toMap();
 		}
@@ -404,6 +416,7 @@ class DataList extends ViewableData implements SS_List {
 
 	public function debug() {
 		$val = "<h2>" . $this->class . "</h2><ul>";
+		
 		foreach($this->toNestedArray() as $item) {
 			$val .= "<li style=\"list-style-type: disc; margin-left: 20px\">" . Debug::text($item) . "</li>";
 		}
@@ -545,7 +558,8 @@ class DataList extends ViewableData implements SS_List {
 	 * @return DataList
 	 */
 	public function getRange($offset, $length) {
-		return $this->limit(array('start' => $offset, 'limit' => $length));
+		Deprecation::notice("3.0", 'getRange($offset, $length) is deprecated.  Use limit($length, $offset) instead.  Note the new argument order.');
+		return $this->limit($length, $offset);
 	}
 	
 	/**
@@ -568,6 +582,17 @@ class DataList extends ViewableData implements SS_List {
 		return $clone->where("$SQL_col = '" . Convert::raw2sql($value) . "'")->First();
 	}
 	
+	/**
+	 * Restrict the columns to fetch into this DataList
+	 *
+	 * @param array $queriedColumns
+	 * @return DataList
+	 */
+	public function setQueriedColumns($queriedColumns) {
+		$clone = clone $this;
+		$clone->dataQuery->setQueriedColumns($queriedColumns);
+		return $clone;
+	}
 
 	/**
 	 * Filter this list to only contain the given Primary IDs
@@ -578,6 +603,7 @@ class DataList extends ViewableData implements SS_List {
 	public function byIDs(array $ids) {
 		$baseClass = ClassInfo::baseDataClass($this->dataClass);
 		$this->where("\"$baseClass\".\"ID\" IN (" . implode(',', $ids) .")");
+		
 		return $this;
 	}
 
@@ -590,6 +616,7 @@ class DataList extends ViewableData implements SS_List {
 	public function byID($id) {
 		$baseClass = ClassInfo::baseDataClass($this->dataClass);
 		$clone = clone $this;
+		
 		return $clone->where("\"$baseClass\".\"ID\" = " . (int)$id)->First();
 	}
 	
@@ -651,7 +678,7 @@ class DataList extends ViewableData implements SS_List {
 	 * 
 	 * Example: Get members from all Groups:
 	 * 
-	 *     DataObject::get("Group")->relation("Members")
+	 *     DataList::Create("Group")->relation("Members")
 	 * 
 	 * @param string $relationName
 	 * @return HasManyList|ManyManyList
@@ -659,6 +686,10 @@ class DataList extends ViewableData implements SS_List {
 	public function relation($relationName) {
 		$ids = $this->column('ID');
 		return singleton($this->dataClass)->$relationName()->forForeignID($ids);
+	}
+
+	function dbObject($fieldName) {
+		return singleton($this->dataClass)->dbObject($fieldName);
 	}
 
 	/**
@@ -755,7 +786,18 @@ class DataList extends ViewableData implements SS_List {
 	    $item = $this->byID($itemID);
 	    if($item) return $item->delete();
 	}
-
+	
+	/**
+	 * Reverses a list of items.
+	 *
+	 * @return DataList
+	 */
+	public function reverse() {
+		$this->dataQuery->reverseSort();
+		
+		return $this;
+	}
+	
 	/**
 	 * This method won't function on DataLists due to the specific query that it represent
 	 * 
@@ -813,7 +855,7 @@ class DataList extends ViewableData implements SS_List {
 	 * @return bool
 	 */
 	public function offsetExists($key) {
-	    return ($this->getRange($key, 1)->First() != null);
+	    return ($this->limit(1,$key)->First() != null);
 	}
 
 	/**
@@ -823,7 +865,7 @@ class DataList extends ViewableData implements SS_List {
 	 * @return DataObject
 	 */
 	public function offsetGet($key) {
-	    return $this->getRange($key, 1)->First();
+	    return $this->limit(1, $key)->First();
 	}
 	
 	/**

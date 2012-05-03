@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 
@@ -9,7 +9,7 @@
  * 
  * @todo add to tests
  * 
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 class WithinRangeFilter extends SearchFilter {
@@ -37,4 +37,3 @@ class WithinRangeFilter extends SearchFilter {
 	
 }
 
-?>

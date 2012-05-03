@@ -12,7 +12,7 @@ Never update a website on the live server without trying it on a development cop
 *  Backup your website
 *  Download the new release and uncompress it to a temporary folder
 *  Leave custom folders like *mysite* or *themes* in place.
-*  Identify system folders in your webroot (`cms`, `sapphire` and any additional modules). 
+*  Identify system folders in your webroot (`cms`, `framework` and any additional modules). 
 * Delete existing system folders (or move them outside of your webroot)
 * Extract and replace system folders from your download (Deleting instead of "copying over" existing folders
 ensures that files removed from the new SilverStripe release are not persisting in your installation)

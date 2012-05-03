@@ -8,7 +8,7 @@
  * 
  * Used in {@link Security::encrypt_password()}.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 abstract class PasswordEncryptor {
@@ -22,7 +22,7 @@ abstract class PasswordEncryptor {
 	 * @return Array Map of encryptor code to the used class.
 	 */
 	static function get_encryptors() {
-		return self::$encryptors;
+		return Config::inst()->get('PasswordEncryptor', 'encryptors');
 	}
 	
 	/**
@@ -36,6 +36,7 @@ abstract class PasswordEncryptor {
 	 * @param String $class Classname of a {@link PasswordEncryptor} subclass
 	 */
 	static function register($code, $class) {
+		Deprecation::notice('3.0', 'Use the Config system to register Password encryptors');
 		self::$encryptors[$code] = $class;
 	}
 	
@@ -43,29 +44,37 @@ abstract class PasswordEncryptor {
 	 * @param String $code Unique lookup.
 	 */
 	static function unregister($code) {
+		Deprecation::notice('3.0', 'Use the Config system to unregister Password encryptors');
 		if(isset(self::$encryptors[$code])) unset(self::$encryptors[$code]);
 	}
 	
 	/**
 	 * @param String $algorithm
-	 * @return PasswordEncryptor|Boolean Returns FALSE if class was not found
+	 * @return PasswordEncryptor
+	 * @throws PasswordEncryptor_NotFoundException
 	 */
 	static function create_for_algorithm($algorithm) {
-		if(!isset(self::$encryptors[$algorithm])) {
+		$encryptors = self::get_encryptors();
+		if(!isset($encryptors[$algorithm])) {
 			throw new PasswordEncryptor_NotFoundException(
 				sprintf('No implementation found for "%s"', $algorithm)
 			);
 		}
 		
-		$classWithArgs = self::$encryptors[$algorithm];
-		$class = (($p = strpos($classWithArgs, '(')) !== false) ? substr($classWithArgs, 0, $p) : $classWithArgs;
+		$class=key($encryptors[$algorithm]);
 		if(!class_exists($class)) {
 			throw new PasswordEncryptor_NotFoundException(
 				sprintf('No class found for "%s"', $class)
 			);
-		}
 
-		return eval("return new $classWithArgs;");
+		}
+		$refClass = new ReflectionClass($class);
+		if(!$refClass->getConstructor()) {
+			return new $class;
+		}
+		
+		$arguments = $encryptors[$algorithm];
+		return($refClass->newInstanceArgs($arguments));
 	}
 		
 	/**
@@ -81,7 +90,6 @@ abstract class PasswordEncryptor {
 	
 	/**
 	 * Return a string value stored in the {@link Member->Salt} property.
-	 * Note: Only used when {@link Security::$useSalt} is TRUE.
 	 * 
 	 * @uses RandomGenerator
 	 * 
@@ -108,11 +116,54 @@ abstract class PasswordEncryptor {
 }
 
 /**
- * This is the default class used for built-in hash types in PHP.
+ * Blowfish encryption - this is the default from SilverStripe 3.
+ * PHP 5.3+ will provide a php implementation if there is no system
+ * version available.
+ * 
+ * @package framework
+ * @subpackage security
+ */
+class PasswordEncryptor_Blowfish extends PasswordEncryptor {
+	/**
+	 * Cost of encryption.
+	 * Higher costs will increase security, but also increase server load.
+	 * If you are using basic auth, you may need to decrease this as encryption
+	 * will be run on every request.
+	 * Must be between 4 and 31.
+	 */
+	protected static $cost = 10;
+
+	function encrypt($password, $salt = null, $member = null) {
+		// We use $2y$ here instead of $2a$ - in PHP < 5.3.7, passwords
+		// with non-ascii characters will use a flawed version of the blowfish
+		// algorithm when specified with $2a$. $2y$ specifies non-flawed version
+		// in all cases.
+		// See https://bugs.php.net/bug.php?id=55477&edit=1
+		$method_and_salt = '$2y$' . $salt;
+		$encrypted_password = crypt($password, $method_and_salt);
+		// We *never* want to generate blank passwords. If something
+		// goes wrong, throw an exception.
+		if(strpos($encrypted_password, $method_and_salt) === false) {
+			throw new PasswordEncryptor_EncryptionFailed('Blowfish password encryption failed.');
+		}
+
+		// Remove the method and salt from the password, as the salt
+		// is stored in a separate column.
+		return substr($encrypted_password, strlen($method_and_salt));
+	}
+
+	function salt($password, $memeber = null) {
+		$generator = new RandomGenerator();
+		return self::$cost . '$' . substr($generator->generateHash('sha1'), 0, 21);
+	}
+}
+
+/**
+ * Encryption using built-in hash types in PHP.
  * Please note that the implemented algorithms depend on the PHP
  * distribution and architecture.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_PHPHash extends PasswordEncryptor {
@@ -140,13 +191,7 @@ class PasswordEncryptor_PHPHash extends PasswordEncryptor {
 	}
 	
 	function encrypt($password, $salt = null, $member = null) {
-		if(function_exists('hash')) {
-			// Available in PHP 5.1+ only
-			return hash($this->algorithm, $password . $salt);
-		} else {
-			// Fallback to global built-in methods
-			return call_user_func($this->algorithm, $password . $salt);
-		}
+		return hash($this->algorithm, $password . $salt);
 	}
 }
 
@@ -157,7 +202,7 @@ class PasswordEncryptor_PHPHash extends PasswordEncryptor {
  * floating point precision problems in base_convert().
  * See http://open.silverstripe.org/ticket/3004
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
@@ -182,7 +227,7 @@ class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
 /**
  * Uses MySQL's PASSWORD encryption. Requires an active DB connection.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_MySQLPassword extends PasswordEncryptor {
@@ -200,7 +245,7 @@ class PasswordEncryptor_MySQLPassword extends PasswordEncryptor {
 /**
  * Uses MySQL's OLD_PASSWORD encyrption. Requires an active DB connection.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_MySQLOldPassword extends PasswordEncryptor {
@@ -220,7 +265,7 @@ class PasswordEncryptor_MySQLOldPassword extends PasswordEncryptor {
  * Also used when Security::$encryptPasswords is set to FALSE.
  * Not recommended.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_None extends PasswordEncryptor {
@@ -234,7 +279,13 @@ class PasswordEncryptor_None extends PasswordEncryptor {
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_NotFoundException extends Exception {}
+
+/**
+ * @package framework
+ * @subpackage security
+ */
+class PasswordEncryptor_EncryptionFailed extends Exception {}

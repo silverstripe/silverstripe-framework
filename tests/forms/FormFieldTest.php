@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class FormFieldTest extends SapphireTest {
@@ -117,4 +117,3 @@ class FormFieldTest extends SapphireTest {
 	}
 	
 }
-?>

@@ -1,7 +1,7 @@
 <?php
 /**
  * A wrapper class for GD-based images, with lots of manipulation functions.
- * @package sapphire
+ * @package framework
  * @subpackage filesystem
  */
 class GD extends Object {
@@ -30,7 +30,12 @@ class GD extends Object {
 			switch($type) {
 				case 1: if(function_exists('imagecreatefromgif')) $this->setGD(imagecreatefromgif($filename)); break;
 				case 2: if(function_exists('imagecreatefromjpeg')) $this->setGD(imagecreatefromjpeg($filename)); break;
-				case 3: if(function_exists('imagecreatefrompng')) $this->setGD(imagecreatefrompng($filename)); break;
+				case 3: if(function_exists('imagecreatefrompng')) {
+					$img = imagecreatefrompng($filename);
+					imagesavealpha($img, true); // save alphablending setting (important)
+					$this->setGD($img);
+					break;
+				}
 			}
 		}
 		
@@ -63,6 +68,11 @@ class GD extends Object {
 		
 		$width = round($width);
 		$height = round($height);
+		
+		// Check that a resize is actually necessary.
+		if ($width == $this->width && $height == $this->height) {
+			return $this;
+		}
 		
 		$newGD = imagecreatetruecolor($width, $height);
 		
@@ -124,6 +134,11 @@ class GD extends Object {
 
 		$width = round($width);
 		$height = round($height);
+		
+		// Check that a resize is actually necessary.
+		if ($width == $this->width && $height == $this->height) {
+			return $this;
+		}
 		
 		if(!$width && !$height) user_error("No dimensions given", E_USER_ERROR);
 		if(!$width) user_error("Width not given", E_USER_ERROR);
@@ -299,6 +314,10 @@ class GD extends Object {
 		$width = round($width);
 		$height = round($height);
 		
+		// Check that a resize is actually necessary.
+		if ($width == $this->width && $height == $this->height) {
+			return $this;
+		}
 		
 		$newGD = imagecreatetruecolor($width, $height);
 		
@@ -408,4 +427,3 @@ class GD extends Object {
 	
 }
 
-?>

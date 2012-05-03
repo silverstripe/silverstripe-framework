@@ -6,9 +6,9 @@
  * to group or testsuite definitions in a custom phpunit.xml file.
  * 
  * Usage:
- * - "phpunit sapphire/tests/FullTestSuite.php" 
+ * - "phpunit framework/tests/FullTestSuite.php" 
  *    (all tests)
- * - "phpunit sapphire/tests/FullTestSuite.php '' module=sapphire,cms" 
+ * - "phpunit framework/tests/FullTestSuite.php '' module=framework,cms" 
  *   (comma-separated modules. empty quotes are necessary to avoid PHPUnit argument confusion)
  * 
  * See http://www.phpunit.de/manual/current/en/organizing-tests.html#organizing-tests.testsuite
@@ -16,7 +16,7 @@
  * Note: We can't unit test this class because of segfaults in PHP5.3 when trying to
  * use get_all_tests() within a SapphireTest.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage testing
  */
 class FullTestSuite {
@@ -27,7 +27,7 @@ class FullTestSuite {
 	 * @return PHPUnit_Framework_TestSuite
 	 */
 	public static function suite() {
-		require_once('sapphire/tests/bootstrap.php');
+		require_once(dirname(__FILE__) . '/bootstrap.php');
 		
 		$suite = new PHPUnit_Framework_TestSuite();
 		if(isset($_GET['module'])) {
@@ -47,7 +47,7 @@ class FullTestSuite {
 	 * @return Array
 	 */
 	public static function get_all_tests() {
-		require_once('sapphire/tests/bootstrap.php');
+		require_once(dirname(__FILE__) . '/bootstrap.php');
 		
 		TestRunner::use_test_manifest();
 		$tests = ClassInfo::subclassesFor('SapphireTest');
@@ -58,13 +58,13 @@ class FullTestSuite {
 		
 	/**
 	 * Run tests for one or more "modules".
-	 * A module is generally a toplevel folder, e.g. "mysite" or "sapphire".
+	 * A module is generally a toplevel folder, e.g. "mysite" or "framework".
 	 * 
 	 * @param String $nameStr
 	 * @return Array
 	 */
 	protected static function get_module_tests($namesStr) {
-		require_once('sapphire/tests/bootstrap.php');
+		require_once(dirname(__FILE__) . '/bootstrap.php');
 		
 		$tests = array();
 		$names = explode(',', $namesStr);

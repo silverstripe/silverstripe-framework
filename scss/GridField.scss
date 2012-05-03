@@ -1,7 +1,7 @@
 /**
  * Core styles for the basic GridField form field without any specific style.
  *
- * @package sapphire
+ * @package framework
  * @subpackage scss
  * @todo Add radial gradient to default delete button state
  * @todo Create SASS mixin-function to simply swap the from/to, to to/from colours in grsdient mixins?
@@ -12,6 +12,12 @@
 @import "compass/css3/text-shadow";
 @import "compass/css3/border-radius";
 
+/*$experimental-support-for-svg variable comes from 
+imported compass/support file and enables svg gradients in IE9. 
+This is needed for the background gradients to work as desired with 
+multiple images. */
+$experimental-support-for-svg: true; 
+
 $gf_colour_gradient_light: #B1C0C5;
 $gf_colour_gradient_dark: #7F9198;
 $gf_colour_base: #95a5ab;
@@ -21,8 +27,16 @@ $gf_colour_border: rgba(0,0,0,.1);
 $gf_colour_zebra: #F0F4F7;
 $gf_colour_font: #666;
 $gf_colour_text_shadow: rgba(0,0,0,.3);
+$color-text-blue-link:#1556B2 !default;
 $gf_border_radius:	7px;
+$gf_color_border_filter_button: #9A9A9A;
+$gf_color_button: #e6e6e6;
+$gf_color_button_filter_hover: #338DC1;
+$gf_color_button_reset_hover: #FF0000;
+$color-text-light: white;
 
+$gf_grid_y:	12px;
+$gf_grid_x:	16px;
 
 @mixin box-shadow-none {
 	-moz-box-shadow: none;
@@ -31,9 +45,9 @@ $gf_border_radius:	7px;
 }
 
 .cms {
-	fieldset.ss-gridfield {
+	.ss-gridfield {
 		& > div {
-			margin-bottom: 35px;
+			margin-bottom: $gf_grid_y*3;
 		}
 
 		&[data-selectable] {
@@ -45,24 +59,142 @@ $gf_border_radius:	7px;
 				cursor: pointer;
 			}
 		}
+
+		span button#action_gridfield_relationfind {
+	 		display:none; //hides find button - redundant functionality
+	 	}
+
+	 	p button#action_export {
+			margin-top:$gf_grid_y;
+			span.btn-icon-download-csv {
+				height:17px; //exact height of icon
+			}
+			span.ui-button-text {
+				padding-left:26px; //to accomodate wider export icon
+			} 
+	 	}
+	}
+	
+	.ss-gridfield {
+		.add-existing-autocompleter {
+			input.relation-search {
+				width: 380px;
+			}
+			width: 500px;
+		}
+		.grid-print-button{
+			display: inline-block;
+		}
+		.grid-csv-button{
+			display: inline-block;
+		}
 	}
 
-	table.ss-gridfield.field {
+	table.ss-gridfield-table {
+		display: table; 
 		box-shadow: none;		
 		padding: 0;
-		margin: 20px 0 0 0;
 		border-collapse: separate;	
 		border-bottom: 0 none;				
+		width: 100%;
 
 		thead {
 			color: darken($gf_colour_base, 50%);	
 			background: transparent;
+			tr.filter-header {
+				.fieldgroup {
+					max-width:$gf_grid_x*32; //max width 512px
+					.fieldgroup-field {
+						padding:0;
+					}
+				}
+			}
+			tr:first-child { //sets 7px border-radius on the top row in the thead - accounts for edgecase where there is no title row.
+				th:first-child {
+					@include border-top-left-radius($gf_border_radius);
+				}
+				th:last-child {
+					@include border-top-right-radius($gf_border_radius);
+				}
+			} 
 		}
 		
 		tbody {
 			background: #FFF;
 			td {
-				/* Emulate a link by default */
+				// Give browser some hints on which cols take priority:
+				// The last column (buttons) should always shrink to fit.
+				// Overwritten for IE7, which doesn't support this.
+				width: auto;
+				white-space:nowrap;
+				&.col-buttons {
+					width: auto;
+					text-align: right;
+				}
+
+				&.col-description {
+					width: auto;
+				}
+
+				&.col-listChildrenLink {
+					width:$gf_grid_x;
+					border-right:none;
+					text-indent:-9999em;
+					padding:0;
+					.list-children-link {
+						background: transparent url(../images/sitetree_ss_default_icons.png) no-repeat 12px -4px;
+						display:block;
+					}
+				}
+
+				&.col-getTreeTitle {
+					span.item {
+						color:$color-text-blue-link;
+					}
+					span.badge {
+						clear: both;
+						text-transform: uppercase;
+						display: inline-block;
+						padding: 0px 3px;
+						font-size: 0.75em;
+						line-height: 1em;
+						margin-left: 10px;
+						margin-right: 6px;
+						margin-top:  -1px;
+						@include border-radius(2px, 2px);
+					}
+					
+					span.badge.modified {
+						color:  #7E7470;
+						border: 1px solid #C9B800;
+						background-color: #FFF0BC;
+					}
+					
+					span.badge.addedtodraft {
+						color:  #7E7470;
+						border: 1px solid #C9B800;
+						background-color: #FFF0BC;
+					}
+					
+					span.badge.deletedonlive {
+						color:  #636363;
+						border: 1px solid #E49393;
+						background-color: #F2DADB;
+					}
+					
+					span.badge.removedfromdraft {
+						color:  #636363;
+						border: 1px solid #E49393;
+						background-color: #F2DADB;
+					}
+					
+					span.badge.workflow-approval {
+						color:  #56660C;
+						border: 1px solid #7C8816;
+						background-color: #DAE79A;
+					}
+				}
+
 				button {
 					border: none;
 					background: none;
@@ -70,8 +202,25 @@ $gf_border_radius:	7px;
 					padding: 0;
 					width: auto;
 					text-shadow: none;
-				}				
-			}			
+					&.ui-state-hover {
+						background:none;
+						@include box-shadow-none;
+					}
+					&.ui-state-active {
+						border:none;
+						@include box-shadow-none;
+					}
+				}
+				a.edit-link {
+					display:inline-block;
+					width:$gf_grid_x;
+					height:20px; //min height to fit the edit icon
+					text-indent:9999em;
+					overflow: hidden;
+					vertical-align: middle;
+					background: url(../images/icons/document--pencil.png) no-repeat 0 1px;
+				}
+			}
 		}
 
 		tfoot {
@@ -85,11 +234,39 @@ $gf_border_radius:	7px;
 			}
 		}
 		
-		tr {			
-			&.sortable-header {
+		tr {	
+			&.title {
 				th {
+					position: relative;
 					background: $gf_colour_gradient_dark;
+					border-top: 1px solid $gf_colour_border;
+					padding: 5px;
+					min-height: 40px; //this is to accomodate the add new button.
+					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
+					@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
+					h2{
+						padding: 0px;
+						font-size: $gf_grid_y*1.4;
+						color:#fff;
+						margin:3px 8px 0;
+						display:inline-block;
+					}
+					.right > * {
+						float: right;
+						font-size: $gf_grid_y*1.2;
+					}
+					.left > * {
+						float: left;
+						font-size: $gf_grid_y*1.2;
+					}
 				}
+			}	
+			&.sortable-header {
+				background: $gf_colour_subheader;	
+				th{
+					padding: 0px;
+				}
+				
 			}			
 			&:hover {
 				background: #FFFAD6 !important;
@@ -110,44 +287,42 @@ $gf_border_radius:	7px;
 			
 			th {
 				font-weight: bold;
-				font-size: 12px;
+				font-size: $gf_grid_y;
 				color: #FFF;
 				padding: 5px;
 				border-right: 1px solid $gf_colour_border;
 				&.main:first-child{
-					@include border-top-left-radius($gf_border_radius);
+					//@include border-top-left-radius($gf_border_radius);
 				}
 				&.main:last-child{
-					@include border-top-right-radius($gf_border_radius);
+					//@include border-top-right-radius($gf_border_radius);
 				}
 				div {
 					&.fieldgroup,&.fieldgroup-field {
-						width: auto;
+						width: 100%;
+						position:relative;
 					}
 					&.fieldgroup {
-						min-width: 200px;
+						min-width: $gf_grid_x*12.5;
 						padding-right:0;
 					}
 				}
 				&.extra,&.action {
-					background: $gf_colour_gradient_dark;
 					padding: 0;
 					cursor: default;
-					button,button:hover {
-						&.ss-ui-button {
-							margin-left: .9em;
-							color: #222;
-						}
-					}
 				}
 				&.main{
+					white-space:nowrap;
 					border-top: 1px solid $gf_colour_border;
 					color:#fff;
-					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
+					background: darken($gf_colour_subheader,10%);
+					border-bottom: 1px solid $gf_colour_border;
 					span{
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 					}
-					
+					&.col-listChildrenLink {
+						border-right:none;
+					}
 				}
 				&.extra {
 					background: $gf_colour_subheader;		
@@ -157,6 +332,9 @@ $gf_border_radius:	7px;
 						width: auto;
 						display: inline;
 						position: static;
+						input {
+							height:28px; //height of input field - to match design.
+						}
 					}
 					button.ss-ui-button {
 						padding: .3em;
@@ -167,9 +345,6 @@ $gf_border_radius:	7px;
 						@include border-radius(2px, 2px);			
 					}				
 				}
-				&.action {
-					border-right: 0;
-				}
 				&.first {
 					@include border-top-left-radius($gf_border_radius);
 				}
@@ -178,6 +353,9 @@ $gf_border_radius:	7px;
 				}
 				
 				button {
+					&#action_gridfield_relationadd:hover {
+						color: #444 !important; /* Not sure why IE think it needs this */
+					}
 					&:hover {
 						color: #ccc !important; /* Not sure why IE think it needs this */ 
 					}
@@ -186,32 +364,187 @@ $gf_border_radius:	7px;
 						@include box-shadow-none; 
 					}
 					&.ss-gridfield-sort {
-						background: transparent url(../images/arrows-01.png) no-repeat right 2px;
+						background: transparent url(../images/arrows.png) no-repeat right 6px;
 						border:none;	
 						width:100%;
 						text-align: left;
-						padding: 4px 0;
+						padding: 4px 8px 4px 0;
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 						color: #fff;
 						@include border-radius(0);
+						&:hover {
+							background-position: right -34px;
+						}
+						&.ss-gridfield-sorted-desc {
+							background-position: right -72px;
+						}
+						&.ss-gridfield-sorted-asc {
+							background-position: right -116px;
+						}
+					}
+					&.ss-gridfield-button-filter.ss-ui-button{
+						position:absolute;
+						top: -28px;
+						right: -1px;
+						display:block;
+						text-indent:-9999em;
+						width:30px; 
+						height:28px; //match the height of the input field
+						border: {
+							top-left-radius:0px;
+							bottom-left-radius:0px;
+							top-right-radius:4px;
+							bottom-right-radius:4px;
+							bottom-width:1px;
+							color:$gf_color_border_filter_button;
+						}
+						@include background (url(../images/icons/filter-icons.png) no-repeat -40px 6px,
+							linear-gradient(
+								lighten($gf_color_button, 10%),
+								darken($gf_color_button, 5%)
+							));
+						&.hover-alike:active {
+							@include background (url(../images/icons/filter-icons.png) no-repeat -16px 6px,
+							linear-gradient(
+								lighten($gf_color_button_filter_hover, 5%), 
+								darken($gf_color_button_filter_hover, 5%)
+							));
+							@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
+						}
+						&.hover-alike {
+							@include background (url(../images/icons/filter-icons.png) no-repeat -16px 6px,
+							linear-gradient(
+								lighten($gf_color_button_filter_hover, 5%), 
+								darken($gf_color_button_filter_hover, 5%)
+							));
+						}
+					}
+					&.ss-gridfield-button-reset.ss-ui-button{
+						position:absolute;
+						right: 28px;
+						top: -28px;
+						display:block;
+						text-indent:-9999em;
+						width:30px;
+						height:28px; //match the height of the input field
+						float:right;
+						border: {
+							radius:0px;
+							bottom-width:1px;
+							color:$gf_color_border_filter_button;
+						}
+						@include background (url(../images/icons/filter-icons.png) no-repeat 8px 5px,
+							linear-gradient(color-stops(
+								lighten($gf_color_button, 10%),
+								darken($gf_color_button, 5%)
+							))
+						);
+						&.filtered:hover {
+							@include background (url(../images/icons/filter-icons.png) no-repeat 8px -17px,
+							linear-gradient(
+								$gf_color_button_reset_hover, 
+								darken($gf_color_button_reset_hover, 10%)
+							));
+						}
+						&.filtered:active {
+							@include background (url(../images/icons/filter-icons.png) no-repeat 8px -17px,
+							linear-gradient(
+								$gf_color_button_reset_hover, 
+								darken($gf_color_button_reset_hover, 10%)
+							));
+							@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
+						}
 					}		
 				}
+
 				input {
 					&.ss-gridfield-sort {
 						padding: 2px;
 						&:focus {
 							@include box-shadow-none;
 						}
+
 					}
 				}
+
+				span.non-sortable {
+					padding:1em 1em; 
+					display:block;
+				}
 			}
+
 			td {
 				border-right: 1px solid $gf_colour_border;
-				padding: 7px 12px;
+				padding: $gf_grid_x/2.5 $gf_grid_y;
 				color: $gf_colour_font;
 				&.bottom-all {
 					@include border-bottom-radius($gf_border_radius);
-					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));	
+					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
+					.datagrid-footer-message {
+					    text-align: center;
+						padding-top: 6px;
+				        color:$color-text-light;
+					}
+					.datagrid-pagination {
+						padding-top:2px;
+						position:absolute;
+						left:50%;
+						margin-left:-116px; //half the width of .datagrid-pagination - centers pagination
+						.pagination-page-number {
+							color:$color-text-light;
+							input {
+								width:35px; //exact width so that a four digit number can be entered
+								height:18px;  
+								margin-bottom:-6px; //moves input field up to be aligned with the pagination buttons
+								padding:0px;
+							}
+						}
+						button.ss-gridfield-previouspage {
+							@include background (url(../images/icons/pagination-arrows.png) no-repeat -23px 7px);
+							@include box-shadow-none;
+							border:none;
+							width:10px;
+							margin:0 10px;
+							span {
+								text-indent:-9999em;
+							}
+						}
+						button.ss-gridfield-nextpage {
+							@include background (url(../images/icons/pagination-arrows.png) no-repeat -47px 7px);
+							@include box-shadow-none;
+							border:none;
+							width:10px;
+							margin:0 10px;
+							span {
+								text-indent:-9999em;
+							}
+						}
+						button.ss-gridfield-firstpage {
+							@include background (url(../images/icons/pagination-arrows.png) no-repeat 0px 7px);
+							@include box-shadow-none;
+							border:none;
+							width:10px;
+							margin:0 10px;
+							span {
+								text-indent:-9999em;
+							}
+						}
+						button.ss-gridfield-lastpage {
+							@include background (url(../images/icons/pagination-arrows.png) no-repeat -73px 7px);
+							@include box-shadow-none;
+							border:none;
+							width:10px;
+							margin:0 10px;
+							span {
+								text-indent:-9999em;
+							}
+						}
+					}
+					.pagination-records-number {
+						float:right;
+						padding:6px 0;
+						color:$color-text-light;
+					}
 				}
 			}
 			&.last td {

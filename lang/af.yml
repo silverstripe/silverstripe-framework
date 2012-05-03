@@ -1,0 +1,163 @@
+af:
+  AssetAdmin:
+    MENUTITLE: "Lêers & Prente"
+    NEWFOLDER: "NewFolder"
+  AssetTableField:
+    URL: "URL"
+  BBCodeParser:
+    ALIGNEMENT: "Belyning"
+    BOLD: "Vet Teks"
+    BOLDEXAMPLE: "Vet"
+    COLORED: "Gekleurde teks"
+    COLOREDEXAMPLE: "blou teks"
+    ITALIC: "Skuinsstrepe Teks"
+    ITALICEXAMPLE: "Skuinsstrepe"
+    STRUCK: "Deur-gestreepde Teks"
+    STRUCKEXAMPLE: "Deur-gestreep"
+    UNDERLINE: "Beklemtoonde Teks"
+    UNDERLINEEXAMPLE: "Beklemtoon"
+  CMSMain:
+    ACCESS: "Toegang tot '%s' afdeling"
+    MENUTITLE: "Blaaie"
+    SAVE: "Save"
+  CMSPagesController:
+    MENUTITLE: "CMSPagesController"
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "U het die wagwoord vir"
+  ComplexTableField.ss:
+    ADDITEM: "Byvoeg %s"
+  ConfirmedPasswordField:
+    ATLEAST: "Wagwoorde moet ten minste %s karakters lank wees."
+    BETWEEN: "Wagwoorde moet %s tot %s karakters lank wees."
+    MAXIMUM: "Wagwoorde moet op die langste %s karakters lank wees."
+    SHOWONCLICKTITLE: "Verander Wagwoord"
+  CreditCardField:
+    FIRST: "eerste"
+    FOURTH: "vierde"
+    SECOND: "tweede"
+    THIRD: "derde"
+  CurrencyField:
+    CURRENCYSYMBOL: "R"
+  DataObject:
+    PLURALNAME: "Data Voorwerpe"
+    SINGULARNAME: "Data Voorwerp"
+  Date:
+    TIMEDIFFAGO: "%s gelede"
+  DateField:
+    NOTSET: "nier gestel"
+    TODAY: "vandag"
+    VALIDDATEMAXDATE: "U datum moet ouer wees of pas by die maksimum datum wat toegelaat word (%s)"
+    VALIDDATEMINDATE: "U datum moet nuwer wees of pas by die minimum datum wat toegelaat word (%s)"
+  DropdownField:
+    CHOOSE: "(Kies)"
+  EmailField:
+  File:
+    INVALIDEXTENSION: "Uitbreiding is nie toegelaat nie. (geldig: %s)"
+    NOFILESIZE: "Lêergrootte is nul grepe."
+    PLURALNAME: "Lêers"
+    SINGULARNAME: "Lêer"
+    TOOLARGE: "Lêergroote is te groot, maksimum %s toegelaat."
+  FileIFrameField:
+    NOSOURCE: "Kies asseblief 'n bron lêer om by te voeg"
+  ForgotPasswordEmail.ss:
+    TEXT1: "Hier is u"
+    TEXT2: "wagwoord herstel skakel"
+    TEXT3: "vir"
+  Form:
+    FIELDISREQUIRED: "%s word benodig."
+    VALIDATIONCREDITNUMBER: "Maak asseblief seker dat u die %s krediet kaart nommer korrek ingesleutel het"
+    VALIDATIONNOTUNIQUE: "The waarde wat ingesleutel is is nie uniek nie"
+    VALIDATIONPASSWORDSDONTMATCH: "Wagwoorde pas nie"
+    VALIDATIONPASSWORDSNOTEMPTY: "Wagwoorde kan nie leeg wees nie"
+    VALIDATIONSTRONGPASSWORD: "Wagwoorde moet minstens een nommer en een alfa-numeriese karaketer bevat"
+    VALIDATOR: "Vergeldiger"
+  FormField:
+    NONE: "geen"
+  Group:
+    Code: "Groep Kode"
+    DefaultGroupTitleAdministrators: "Administrateurs"
+    DefaultGroupTitleContentAuthors: "Inhouds Outeurs"
+    Locked: "Gesluit?"
+    Parent: "Ouer Groep"
+    has_many_Permissions: "Toestemmings"
+    many_many_Members: "Lidde"
+  HtmlEditorField:
+    ANCHORVALUE: "Anker"
+    CSSCLASSLEFTALONE: "Op die linkerkant, op sy eie."
+    LINKANCHOR: "Anker op hierdie bladsy"
+  LeftAndMain:
+    HELP: "Help"
+    VersionUnknown: "Unknown"
+  LoginAttempt:
+  Member:
+    BUTTONCHANGEPASSWORD: "Verander Wagwoord"
+    CONFIRMNEWPASSWORD: "Bevestig Nuwe Wagwoord"
+    CONFIRMPASSWORD: "Bevestig wagwoord"
+    DefaultAdminFirstname: "Verstek Admin"
+    EMAIL: "Epos"
+    ERRORPASSWORDNOTMATCH: "U huidige wagwoord pas nie, probeer asseblief weer"
+    INTERFACELANG: "Koppelvlak Taal"
+    NEWPASSWORD: "Nuwe wagwoord"
+    PLURALNAME: "Lidde"
+    SINGULARNAME: "Lid"
+    SUBJECTPASSWORDCHANGED: "U wagwoord het verander."
+    SUBJECTPASSWORDRESET: "U wagwoord herlaai skakel"
+    YOUROLDPASSWORD: "U ou wagwoord"
+    belongs_many_many_Groups: "Groepe"
+    db_LockedOutUntil: "Utgesluit tot en met"
+    db_PasswordExpiry: "Wagwoord Vervaldatum"
+  MemberImportForm:
+    ResultCreated: "Het %d lede geskep"
+    ResultDeleted: "Het %d lede verwyder"
+    ResultNone: "Geen veranderinge"
+    ResultUpdated: "Het %d lede opgedateer"
+  NullableField:
+    IsNullLabel: "Is Null"
+  NumericField:
+  Permission:
+    AdminGroup: "Administrateur"
+    CMS_ACCESS_CATEGORY: "IBS Toegang"
+    FULLADMINRIGHTS_HELP: "Impliseer en oorskryf alle ander toegekende permissies."
+  PermissionCheckboxSetField:
+    AssignedTo: "toegeken aan \"%s\""
+    FromGroup: "oorgeërf van groep \"%s\""
+    FromRole: "oorgeërf van rol \"%s\""
+    FromRoleOnGroup: "oorgeërf van rol \"%s\" op groep \"%s\""
+  Permissions:
+    PERMISSIONS_CATEGORY: "Rolle en toegang permissies"
+  RelationComplexTableField.ss:
+    ADD: "Voeg by"
+  ReportAdmin:
+    MENUTITLE: "Verslae"
+  Security:
+    ALREADYLOGGEDIN: "U het nie toegang tot hierdie bladsy nie. As u n' ander rekening het wat toegang tot hierdie bladsy het, kan u weer <a href=\"%s\">inteken</a>."
+  SecurityAdmin:
+    ACCESS_HELP: "Laat toe wys, byvoeging en verandering van gebruikers, so wel as die toekenning van permissies en rolle aan hulle."
+    APPLY_ROLES: "Wend rolle tot groepe toe"
+    APPLY_ROLES_HELP: "Vermoë om rolle toegeken aan 'n groep te verander. Benodig die \"Toegang tot 'Sekuriteit' afdeling' permissie."
+    EDITPERMISSIONS_HELP: "Vermoë om Permissies en IP Adresse vir 'n groep te verander. Benodig die \"Toegang tot 'Sekuriteit' afdeling\" permissie."
+    MENUTITLE: "Sekuriteit"
+    MemberListCaution: "Waarskuwing: Deur lede te verwyder van hierdie lys sal hulle ook van alle groepe en die databasis verwyder"
+    ROLES: "Rolle"
+    ROLESDESCRIPTION: " "
+    TABROLES: "Rolle"
+  SecurityAdmin_MemberImportForm:
+    BtnImport: "Voer In"
+    FileFieldLabel: "CSV Lêer <small>(Laat toe uitbreidings: *.csv)</small>"
+  SiteTree:
+    TABMAIN: "Hoof"
+  TableField.ss:
+    ADD: "Voeg nuwe ry by"
+  TableListField:
+    PRINT: "Druk"
+    SELECT: "Select:"
+  TableListField.ss:
+    SORTASC: "Sorteer in stygende orde"
+    SORTDESC: "Sorteer in dalende orde"
+  TableListField_PageControls.ss:
+    VIEWFIRST: "View first"
+    VIEWLAST: "View last"
+    VIEWNEXT: "View next"
+    VIEWPREVIOUS: "View previous"
+  Versioned:
+    has_many_Versions: "Weergawe"

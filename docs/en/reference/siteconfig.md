@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The `[api:SiteConfig]` panel was introduced in 2.4 for providing a generic interface for managing site wide settings or
+The `[api:SiteConfig]` panel provides a generic interface for managing site wide settings or
 functionality which is used throughout the site. Out of the box it provides 2 fields 'Site Name' and 'Site Tagline'.
 
 ## Accessing `[api:SiteConfig]` Options

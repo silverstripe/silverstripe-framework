@@ -27,6 +27,8 @@
  * 
  * @see http://doc.silverstripe.org/tutorial/5-dataobject-relationship-management
  * 
+ * @deprecated 3.0 Use GridField with GridFieldConfig_RelationEditor
+ * 
  * @package forms
  * @subpackage fields-relational
  */
@@ -48,6 +50,8 @@ class HasManyComplexTableField extends ComplexTableField {
 	
 	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
+
+		Deprecation::notice('3.0', 'Use GridField with GridFieldConfig_RelationEditor');
 		
 		$this->Markable = true;
 
@@ -60,13 +64,13 @@ class HasManyComplexTableField extends ComplexTableField {
 		
 	}
 	
-	function FieldHolder() {
-		$ret = parent::FieldHolder();
+	function FieldHolder($properties = array()) {
+		$ret = parent::FieldHolder($properties);
 		
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
-		Requirements::javascript(SAPPHIRE_DIR . "/javascript/HasManyFileField.js");
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/RelationComplexTableField.js');
-		Requirements::css(SAPPHIRE_DIR . '/css/HasManyFileField.css');
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(FRAMEWORK_DIR . "/javascript/HasManyFileField.js");
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/RelationComplexTableField.js');
+		Requirements::css(FRAMEWORK_DIR . '/css/HasManyFileField.css');
 		
 		return $ret;
 	}
@@ -83,7 +87,7 @@ class HasManyComplexTableField extends ComplexTableField {
 		return $this->controller->ID;
 	}
 	
-	function saveInto(DataObject $record) {
+	function saveInto(DataObjectInterface $record) {
 		$fieldName = $this->name;
 		$saveDest = $record->$fieldName();
 		
@@ -158,4 +162,4 @@ class HasManyComplexTableField_Item extends ComplexTableField_Item {
 	}
 }
 
-?>
+

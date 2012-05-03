@@ -23,14 +23,14 @@ class SQLQueryTest extends SapphireTest {
 	
 	function testSelectFromUserSpecifiedFields() {
 		$query = new SQLQuery();
-		$query->select = array("Name", "Title", "Description");
+		$query->select(array("Name", "Title", "Description"));
 		$query->from[] = "MyTable";
 		$this->assertEquals("SELECT Name, Title, Description FROM MyTable", $query->sql());
 	}
 	
 	function testSelectWithWhereClauseFilter() {
 		$query = new SQLQuery();
-		$query->select = array("Name","Meta");
+		$query->select(array("Name","Meta"));
 		$query->from[] = "MyTable";
 		$query->where[] = "Name = 'Name'";
 		$query->where[] = "Meta = 'Test'";
@@ -87,48 +87,96 @@ class SQLQueryTest extends SapphireTest {
 			// numeric limit
 			$query = new SQLQuery();
 			$query->from[] = "MyTable";
-			$query->limit("99");
+			$query->limit(99);
 			$this->assertEquals("SELECT * FROM MyTable LIMIT 99", $query->sql());
 		
-			// array limit
-			$query = new SQLQuery();
-			$query->from[] = "MyTable";
-			$query->limit(array('limit'=>99));
-			$this->assertEquals("SELECT * FROM MyTable LIMIT 99", $query->sql());
-
 			// array limit with start (MySQL specific)
 			$query = new SQLQuery();
 			$query->from[] = "MyTable";
-			$query->limit(array('limit'=>99, 'start'=>97));
+			$query->limit(99, 97);
 			$this->assertEquals("SELECT * FROM MyTable LIMIT 99 OFFSET 97", $query->sql());
 		}
 	}
 	
 	function testSelectWithOrderbyClause() {
-		// numeric limit
 		$query = new SQLQuery();
 		$query->from[] = "MyTable";
-		$query->orderby('MyName ASC');
-		// can't escape as we don't know if ASC or DESC is appended
-		$this->assertEquals("SELECT * FROM MyTable ORDER BY MyName ASC", $query->sql());
+		$query->orderby('MyName');
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY MyName ASC', $query->sql());
 		
-		// array limit
 		$query = new SQLQuery();
 		$query->from[] = "MyTable";
-		$query->orderby(array('sort'=>'MyName'));
-		$this->assertEquals('SELECT * FROM MyTable ORDER BY "MyName"', $query->sql());
+		$query->orderby('MyName desc');
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY MyName DESC', $query->sql());
+		
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->orderby('MyName ASC, Color DESC');
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY MyName ASC, Color DESC', $query->sql());
+		
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->orderby('MyName ASC, Color');
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY MyName ASC, Color ASC', $query->sql());
 
-		// array limit with start (MySQL specific)
 		$query = new SQLQuery();
 		$query->from[] = "MyTable";
-		$query->orderby(array('sort'=>'MyName','dir'=>'desc'));
-		$this->assertEquals('SELECT * FROM MyTable ORDER BY "MyName" DESC', $query->sql());
+		$query->orderby(array('MyName' => 'desc'));
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY MyName DESC', $query->sql());
+		
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->orderby(array('MyName' => 'desc', 'Color'));
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY MyName DESC, Color ASC', $query->sql());
+		
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->orderby('implode("MyName","Color")');
+		$this->assertEquals('SELECT *, implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" ASC', $query->sql());
+		
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->orderby('implode("MyName","Color") DESC');
+		$this->assertEquals('SELECT *, implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" DESC', $query->sql());
+		
+		$query = new SQLQuery();
+		$query->from[] = "MyTable";
+		$query->orderby('RAND()');
+		
+		$this->assertEquals('SELECT *, RAND() AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" ASC', $query->sql());
 	}
 	
-	function testSelectWithComplexOrderbyClause() {
-		// @todo Test "ORDER BY RANDOM() ASC,MyName DESC" etc.
+	public function testReverseOrderBy() {
+		$query = new SQLQuery();
+		$query->from('MyTable');
+		
+		// default is ASC
+		$query->orderby("Name");
+		$query->reverseOrderBy();
+
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY Name DESC',$query->sql());	
+		
+		$query->orderby("Name DESC");
+		$query->reverseOrderBy();
+
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY Name ASC',$query->sql());
+		
+		$query->orderby(array("Name" => "ASC"));
+		$query->reverseOrderBy();
+		
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY Name DESC',$query->sql());
+		
+		$query->orderby(array("Name" => 'DESC', 'Color' => 'asc'));
+		$query->reverseOrderBy();
+		
+		$this->assertEquals('SELECT * FROM MyTable ORDER BY Name ASC, Color DESC',$query->sql());
+		
+		$query->orderby('implode("MyName","Color") DESC');
+		$query->reverseOrderBy();
+		
+		$this->assertEquals('SELECT *, implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" ASC',$query->sql());
 	}
-	
+
 	function testFiltersOnID() {
 		$query = new SQLQuery();
 		$query->where[] = "ID = 5";
@@ -252,4 +300,4 @@ class SQLQueryTest_DO extends DataObject implements TestOnly {
 	);
 }
 
-?>
+

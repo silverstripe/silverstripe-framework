@@ -9,7 +9,6 @@ class i18nTestModule extends DataObject implements TestOnly {
 		_t(
 			'i18nTestModule.ENTITY', 
 			'Entity with "Double Quotes"', 
-			PR_LOW, 
 			'Comment for entity'
 		);
 	}

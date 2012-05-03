@@ -23,7 +23,7 @@
  * }
  * </code>
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 abstract class DBField extends ViewableData {
@@ -63,11 +63,18 @@ abstract class DBField extends ViewableData {
 		parent::__construct();
 	}
 	
+
+	static function create() {
+		Deprecation::notice('3.0', 'DBField::create_field() is deprecated as it clashes with Object::create(). Use DBField::create_field() instead.');
+
+		return call_user_func_array(array('DBField', 'create_field'), func_get_args());
+	}
+
 	/**
 	 * Create a DBField object that's not bound to any particular field.
 	 * Useful for accessing the classes behaviour for other parts of your code.
 	 */
-	static function create($className, $value, $name = null, $object = null) {
+	static function create_field($className, $value, $name = null, $object = null) {
 		$dbField = Object::create($className, $name, $object);
 		$dbField->setValue($value, null, false);
 		return $dbField;
@@ -113,6 +120,7 @@ abstract class DBField extends ViewableData {
 		$this->value = $value;
 	}
 	
+	
 	/**
 	 * Determines if the field has a value which
 	 * is not considered to be 'null' in
@@ -120,15 +128,8 @@ abstract class DBField extends ViewableData {
 	 * 
 	 * @return boolean
 	 */
-	function hasValue() {
-		return ($this->value);
-	}
-	
-	/**
-	 * @return bool
-	 */
 	public function exists() {
-		return $this->hasValue();
+		return ($this->value);
 	}
 	
 	/**
@@ -143,9 +144,9 @@ abstract class DBField extends ViewableData {
 		if($value === null || $value === "" || $value === false) {
 			return "null";
 		} else {
-			return "'" . Convert::raw2sql($value) . "'";
+			return DB::getConn()->prepStringForDB($value);
 		}
-	}	
+	}
 	
 	/**
 	 * Prepare the current field for usage in a 
@@ -160,7 +161,7 @@ abstract class DBField extends ViewableData {
 	 * @param array $manipulation
 	 */
 	function writeToManipulation(&$manipulation) {
-		$manipulation['fields'][$this->name] = $this->hasValue() ? $this->prepValueForDB($this->value) : $this->nullValue();
+		$manipulation['fields'][$this->name] = $this->exists() ? $this->prepValueForDB($this->value) : $this->nullValue();
 	}
 	
 	/**
@@ -299,4 +300,3 @@ DBG;
 	}
 	
 }
-?>

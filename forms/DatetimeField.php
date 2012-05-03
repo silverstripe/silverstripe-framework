@@ -25,7 +25,7 @@
  * - "datetimeorder": An sprintf() template to determine in which order the date and time values will
  * be combined. This is necessary as those separate formats are set in their invididual fields.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage forms
  */
 class DatetimeField extends FormField {
@@ -57,8 +57,8 @@ class DatetimeField extends FormField {
 	function __construct($name, $title = null, $value = ""){
 		$this->config = self::$default_config;
 		
-		$this->dateField = Object::create('DateField', $name . '[date]', false);
-		$this->timeField = Object::create('TimeField', $name . '[time]', false);
+		$this->dateField = DateField::create($name . '[date]', false);
+		$this->timeField = TimeField::create($name . '[time]', false);
 		$this->timezoneField = new HiddenField($this->getName() . '[timezone]');
 		
 		parent::__construct($name, $title, $value);
@@ -70,20 +70,22 @@ class DatetimeField extends FormField {
 		$this->dateField->setForm($form);
 		$this->timeField->setForm($form);
 		$this->timezoneField->setForm($form);
+
+		return $this;
 	}
 	
-	function FieldHolder() {
+	function FieldHolder($properties = array()) {
 		$config = array(
 			'datetimeorder' => $this->getConfig('datetimeorder'),
 		);
 		$config = array_filter($config);
 		$this->addExtraClass(Convert::raw2json($config));
 
-		return parent::FieldHolder();
+		return parent::FieldHolder($properties);
 	}
 	
-	function Field() {
-		Requirements::css(SAPPHIRE_DIR . '/css/DatetimeField.css');
+	function Field($properties = array()) {
+		Requirements::css(FRAMEWORK_DIR . '/css/DatetimeField.css');
 		
 		$tzField = ($this->getConfig('usertimezone')) ? $this->timezoneField->FieldHolder() : '';
 		return $this->dateField->FieldHolder() . 
@@ -146,7 +148,7 @@ class DatetimeField extends FormField {
 					unset($userValueObj);
 				} else {
 					// Validation happens later, so set the raw string in case Zend_Date doesn't accept it
-					$this->value = sprintf($this->getConfig('datetimeorder'), $val['date'], $val['time']);
+					$this->value = trim(sprintf($this->getConfig('datetimeorder'), $val['date'], $val['time']));
 				}
 				
 				if($userTz) date_default_timezone_set($dataTz);
@@ -172,6 +174,8 @@ class DatetimeField extends FormField {
 				$this->timeField->setValue($valueObj->get($this->timeField->getConfig('timeformat'), $this->locale));
 			}
 		}
+
+		return $this;
 	}
 	
 	function Value() {
@@ -187,6 +191,7 @@ class DatetimeField extends FormField {
 		$this->dateField->setDisabled($bool);
 		$this->timeField->setDisabled($bool);
 		if($this->timezoneField) $this->timezoneField->setDisabled($bool);
+		return $this;
 	}
 
 	function setReadonly($bool) {
@@ -194,6 +199,7 @@ class DatetimeField extends FormField {
 		$this->dateField->setReadonly($bool);
 		$this->timeField->setReadonly($bool);
 		if($this->timezoneField) $this->timezoneField->setReadonly($bool);
+		return $this;
 	}
 	
 	/**
@@ -220,6 +226,7 @@ class DatetimeField extends FormField {
 	function setLocale($locale) {
 		$this->dateField->setLocale($locale);
 		$this->timeField->setLocale($locale);
+		return $this;
 	}
 	
 	function getLocale() {
@@ -240,6 +247,8 @@ class DatetimeField extends FormField {
 			$this->timezoneField->setValue($val);
 			$this->setValue($this->dataValue());
 		}
+
+		return $this;
 	}
 	
 	/**
@@ -260,10 +269,6 @@ class DatetimeField extends FormField {
 		return ($dateValid && $timeValid);
 	}
 	
-	function jsValidation() {
-		return $this->dateField->jsValidation() . $this->timeField->jsValidation();
-	}
-	
 	function performReadonlyTransformation() {
 		$field = new DatetimeField_Readonly($this->name, $this->title, $this->dataValue());
 		$field->setForm($this->form);
@@ -282,14 +287,14 @@ class DatetimeField_Readonly extends DatetimeField {
 	
 	protected $readonly = true;
 		
-	function Field() {
+	function Field($properties = array()) {
 		$valDate = $this->dateField->dataValue();
 		$valTime = $this->timeField->dataValue();
 		if($valDate && $valTime) {
 			$format = sprintf(
 				$this->getConfig('datetimeorder'), 
 				$this->dateField->getConfig('dateformat'), 
-				$this->dateField->getConfig('timeformat')
+				$this->timeField->getConfig('timeformat')
 			);
 			$valueObj = new Zend_Date(
 				sprintf($this->getConfig('datetimeorder'), $valDate, $valTime),
@@ -305,12 +310,7 @@ class DatetimeField_Readonly extends DatetimeField {
 		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";
 	}
 	
-	function jsValidation() {
-		return null;
-	}
-	
 	function validate($validator) {
 		return true;	
 	}
 }
-?>

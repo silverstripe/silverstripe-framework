@@ -12,9 +12,9 @@
  * to avoid touching the filesystem.
  * 
  * See {@link File} documentation for more details about the
- * relationship between the database and filesystem in the sapphire file APIs.
+ * relationship between the database and filesystem in the SilverStripe file APIs.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage filesystem
  */
 class Folder extends File {
@@ -23,7 +23,7 @@ class Folder extends File {
 
 	static $plural_name = "Folders";
 
-	static $default_sort = "\"Sort\"";
+	static $default_sort = "\"Name\"";
 	
 	/**
 	 * 
@@ -232,7 +232,7 @@ class Folder extends File {
 		// $parentFolder = Folder::findOrMake("Uploads");
 
 		// Generate default filename
-		$nameFilter = Object::create('FileNameFilter');
+		$nameFilter = FileNameFilter::create();
 		$file = $nameFilter->filter($tmpFile['name']);
 		while($file[0] == '_' || $file[0] == '.') {
 			$file = substr($file, 1);
@@ -261,13 +261,13 @@ class Folder extends File {
 			$oldFile = $file;
 			
 			if(strpos($file, '.') !== false) {
-				$file = ereg_replace('[0-9]*(\.[^.]+$)', $i . '\\1', $file);
+				$file = preg_replace('/[0-9]*(\.[^.]+$)/', $i . '\\1', $file);
 			} elseif(strpos($file, '_') !== false) {
-				$file = ereg_replace('_([^_]+$)', '_' . $i, $file);
+				$file = preg_replace('/_([^_]+$)/', '_' . $i, $file);
 			} else {
-				$file .= "_$i";
+				$file .= '_'.$i;
 			}
-			
+
 			if($oldFile == $file && $i > 2) user_error("Couldn't fix $file$ext with $i", E_USER_ERROR);
 		}
 		
@@ -330,6 +330,15 @@ class Folder extends File {
 	function setFilename($filename) {
 		$this->setField('Title',pathinfo($filename, PATHINFO_BASENAME));
 		parent::setFilename($filename);
+	}
+
+	/**
+	 * A folder doesn't have a (meaningful) file size.
+	 * 
+	 * @return Null
+	 */
+	function getSize() {
+		return null;
 	}
 	
 	/**
@@ -398,41 +407,17 @@ class Folder extends File {
 	 * and implemeting updateCMSFields(FieldList $fields) on that extension.
 	 */
 	function getCMSFields() {
-		$config = GridFieldConfig::create();
-		$config->addComponent(new GridFieldSortableHeader());
-		$config->addComponent(new GridFieldFilter());
-		$config->addComponent(new GridFieldDefaultColumns());
-		$config->addComponent(new GridFieldPaginator(10));
-		$config->addComponent(new GridFieldAction_Delete());
-		$config->addComponent(new GridFieldAction_Edit());
-		$config->addComponent($gridFieldForm = new GridFieldPopupForms(Controller::curr(), 'EditForm'));
-		$gridFieldForm->setTemplate('CMSGridFieldPopupForms');
-		$files = DataList::create('File')->filter('ParentID', $this->ID)->exclude('ClassName', 'Folder');
-		$gridField = new GridField('File','Files', $files, $config);
-		$gridField->setDisplayFields(array(
-			'StripThumbnail' => '',
-			'Parent.FileName' => 'Folder',
-			'Title'=>'Title',
-			'Size'=>'Size',
-		));
-
-		$titleField = ($this->ID && $this->ID != "root") ? new TextField("Title", _t('Folder.TITLE')) : new HiddenField("Title");
+		// Hide field on root level, which can't be renamed
+		if(!$this->ID || $this->ID === "root") {
+			$titleField = new HiddenField("Name");	
+		} else {
+			$titleField = new TextField("Name", $this->fieldLabel('Name'));
+		}
 		
 		$fields = new FieldList(
-			new TabSet('Root',
-				new Tab('Main',
-					$titleField,
-					$gridField,
-					new HiddenField("ID"),
-					new HiddenField("DestFolderID")
-				)
-			)
+			$titleField,
+			new HiddenField('ParentID')
 		);
-		
-		if(!$this->canEdit()) {
-			$fields->removeByName("Upload");
-		}
-
 		$this->extend('updateCMSFields', $fields);
 		
 		return $fields;
@@ -448,14 +433,11 @@ class Folder extends File {
 	/**
 	 * @return String
 	 */
-	function CMSTreeClasses($controller) {
+	function CMSTreeClasses() {
 		$classes = sprintf('class-%s', $this->class);
 
 		if(!$this->canDelete())
 			$classes .= " nodelete";
-
-		if($controller->isCurrentPage($this))
-			$classes .= " current";
 
 		if(!$this->canEdit()) 
 			$classes .= " disabled";
@@ -463,5 +445,15 @@ class Folder extends File {
 		$classes .= $this->markingClasses();
 
 		return $classes;
+	}
+	
+	/**
+	 * @return string
+	 */
+	function getTreeTitle() {
+		return $treeTitle = sprintf(
+			"<span class=\"jstree-foldericon\"></span><span class=\"item\">%s</span>",
+			Convert::raw2xml(str_replace(array("\n","\r"),"",$this->Title))
+		);
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 
@@ -62,6 +62,54 @@ class GridFieldConfigTest extends SapphireTest {
 		);
 		$this->assertNull(
 			$config->getComponentByType('GridFieldConfigTest_UnknownComponent')
+		);
+	}
+
+	public function testAddComponents() {
+		$config = GridFieldConfig::create()
+			->addComponents(
+				$c1 = new GridFieldConfigTest_MyComponent(),
+				$c2 = new GridFieldConfigTest_MyOtherComponent()
+			);
+
+		$this->assertEquals(
+			$c1, 
+			$config->getComponentByType('GridFieldConfigTest_MyComponent')
+		);
+		$this->assertEquals(
+			$c2,
+			$config->getComponentByType('GridFieldConfigTest_MyOtherComponent')
+		);
+	}
+	
+	public function testRemoveComponents() {
+		$config = GridFieldConfig::create()
+			->addComponent($c1 = new GridFieldConfigTest_MyComponent())
+			->addComponent($c2 = new GridFieldConfigTest_MyComponent())
+			->addComponent($c3 = new GridFieldConfigTest_MyOtherComponent())
+			->addComponent($c4 = new GridFieldConfigTest_MyOtherComponent());
+
+		$this->assertEquals(
+			4, 
+			$config->getComponents()->count()
+		);
+		
+		$config->removeComponent($c1);
+		$this->assertEquals(
+			3, 
+			$config->getComponents()->count()
+		);
+		
+		$config->removeComponentsByType("GridFieldConfigTest_MyComponent");
+		$this->assertEquals(
+			2, 
+			$config->getComponents()->count()
+		);
+		
+		$config->removeComponentsByType("GridFieldConfigTest_MyOtherComponent");
+		$this->assertEquals(
+			0, 
+			$config->getComponents()->count()
 		);
 	}
 	

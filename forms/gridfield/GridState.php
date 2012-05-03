@@ -6,7 +6,7 @@
  * 
  * @see GridField
  * 
- * @package sapphire
+ * @package framework
  * @subpackage fields-relational
  */
 class GridState extends HiddenField {
@@ -39,7 +39,7 @@ class GridState extends HiddenField {
 
 		if ($value) $this->setValue($value);
 
-		parent::__construct('GridState');
+		parent::__construct($grid->getName() . '[GridState]');
 	}
 	
 	/**

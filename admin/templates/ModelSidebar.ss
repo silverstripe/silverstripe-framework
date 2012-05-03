@@ -1,7 +1,3 @@
-<% if CreateForm %>
-	$CreateForm
-<% end_if %>
-
 <h3><% _t('SEARCHLISTINGS','Search') %></h3>
 $SearchForm
 

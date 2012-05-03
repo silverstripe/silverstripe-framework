@@ -86,7 +86,7 @@ If a variable returns a string, that string will be inserted into the template. 
 the system will attempt to render the object through its forTemplate() method. If the `forTemplate()` method has not been
 defined, the system will return an error.
 
-SilverStripe provides lots of properties and methods. For more details on built-in page controls and variables, see http://doc.silverstripe.org/sapphire/en/reference/built-in-page-controls
+SilverStripe provides lots of properties and methods. For more details on built-in page controls and variables, see http://doc.silverstripe.org/framework/en/reference/built-in-page-controls
 
 ### Escaping
 
@@ -120,6 +120,14 @@ a variable is true
 	<% if CurrentMember %>
 		<% include MembersOnlyInclude %>
 	<% end_if %>
+
+Includes can't directly access the parent scope of the scope active when the include is included. However you can
+pass arguments to the include, which are available on the scope top within the include
+
+	:::ss
+	<% with CurrentMember %>
+		<% include MemberDetails PageTitle=$Top.Title, PageID=$Top.ID %>
+	<% end_with %>
 
 You can also perform includes using the Requirements Class via the template controls. See the section on
 [Includes in Templates](requirements#including_inside_template_files) for more details and examples.
@@ -211,31 +219,31 @@ The value that given in the `<% loop %>` tags should be a collection variable.
 
 ### Modulus and MultipleOf
 
-New in 2.4 you can use 2 new controls $Modulus and $MultipleOf to help build column layouts.
+$Modulus and $MultipleOf can help to build column layouts.
 
 	:::ss
 	$Modulus(value, offset) // returns an int
 	$MultipleOf(factor, offset) // returns a boolean.
 
-The following example demonstrates how you can use $Modulus(4) to generate custom column names based on your control statement. Note that this works for any control statement (not just children)
+The following example demonstrates how you can use $Modulus(4) to generate custom column names based on your loop statement. Note that this works for any control statement (not just children)
 
 	:::ss
-	<% control Children %>
+	<% loop Children %>
 	<div class="column-{$Modulus(4)}">
 		...
 	</div>
-	<% end_control %>
+	<% end_loop %>
 
 Will return you column-3, column-2, column-1, column-0, column-3 etc. You can use these as styling hooks to float, position as you need.
 
 You can also use $MultipleOf(value, offset) to help build columned layouts. In this case we want to add a <br> after every 3th item
 
 	:::ss
-	<% control Children %>
+	<% loop Children %>
 		<% if MultipleOf(3) %>
 			<br>
 		<% end_if %>
-	<% end_control %>
+	<% end_loop %>
 
 ## Scope
 
@@ -352,9 +360,9 @@ Your function could return a single value as above or it could be a subclass of 
 And now you could call these values by using
 
 	:::ss
-	<% control MyCustomValues %>
+	<% with MyCustomValues %>
 	$Hi , $Name
-	<% end_control %>
+	<% end_with %>
 	
 	// output "Kia Ora , John Smith" 
 

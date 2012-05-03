@@ -1,46 +1,30 @@
-<div class="cms-content center $BaseCSSClasses" data-layout="{type: 'border'}">
+<div class="cms-content center $BaseCSSClasses" data-layout-type="border">
 
 	<div class="cms-content-header north">
 		<div>
-			<h2><% _t('ModelAdmin.Title', 'My Model') %></h2>
-		</div>
-	</div>
-
-	<div class="cms-content-tools west cms-panel cms-panel-layout" data-expandOnClick="true" data-layout="{type: 'border'}">	
-		<div class="cms-panel-content center">
-			<h3 class="cms-panel-header"><% _t('Filter', 'Filter') %></h3>
-		
-			<div id="SearchForm_holder" class="leftbottom ss-tabset">		
-				<% if SearchClassSelector = tabs %>
-					<ul>
-						<% control ModelForms %>
-							 <li class="$FirstLast"><a id="tab-ModelAdmin_$Title.HTMLATT" href="#{$Form.Name}_$ClassName">$Title</a></li>
-						<% end_control %>
-					</ul>
+			<h2>
+				<% if SectionTitle %>
+					$SectionTitle
+				<% else %>
+					<% _t('ModelAdmin.Title', 'Data Models') %>
 				<% end_if %>
+			</h2>
 
-				<% if SearchClassSelector = dropdown %>
-					<div id="ModelClassSelector" class="ui-widget-container">
-						Search for:
-						<select>
-							<% control ModelForms %>
-								<option value="{$Form.Name}_$ClassName">$Title</option>
-							<% end_control %>
-						</select>
-					</div>
-				<% end_if %>
-
-				<% control ModelForms %>
-					<div class="tab" id="{$Form.Name}_$ClassName">
-						$Content
-					</div>
+			<div class="cms-content-header-tabs ss-ui-tabs-nav">
+				<ul>
+				<% control ManagedModelTabs %>
+					<li class="tab-$ClassName $LinkOrCurrent">
+						<a href="$Link" class="cms-panel-link">$Title</a>
+					</li>
 				<% end_control %>
+				</ul>
 			</div>
+
 		</div>
-		
 	</div>
 
-	<div class="cms-content-fields center ui-widget-content">
+	<div class="cms-content-fields center ui-widget-content" data-layout-type="border">
+		$Tools
 		$EditForm
 	</div>
 	

@@ -1,9 +1,9 @@
 <?php
 /**
- * A DataFormatter object handles transformation of data from Sapphire model objects to a particular output format, and vice versa.
+ * A DataFormatter object handles transformation of data from SilverStripe model objects to a particular output format, and vice versa.
  * This is most commonly used in developing RESTful APIs.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage formatters
  */
 abstract class DataFormatter extends Object {
@@ -264,7 +264,6 @@ abstract class DataFormatter extends Object {
 		// add default required fields
 		$dbFields = array_merge($dbFields, array('ID'=>'Int'));
 		
-		// @todo Requires PHP 5.1+
 		if(is_array($this->removeFields)) {
 			$dbFields = array_diff_key($dbFields, array_combine($this->removeFields,$this->removeFields));
 		}

@@ -29,7 +29,7 @@ class DeprecationTest extends SapphireTest {
 	}
 
 	/**
-     * @expectedException PHPUnit_Framework_Error_Notice
+     * @expectedException PHPUnit_Framework_Error
 	 */
 	function testEqualVersionTriggersNotice() {
 		Deprecation::notification_version('2.0.0');
@@ -43,7 +43,7 @@ class DeprecationTest extends SapphireTest {
 	}
 
 	/**
-    * @expectedException PHPUnit_Framework_Error_Notice
+    * @expectedException PHPUnit_Framework_Error
 	 */
 	function testGreaterVersionTriggersNotice() {
 		Deprecation::notification_version('3.0.0');
@@ -52,21 +52,22 @@ class DeprecationTest extends SapphireTest {
 
 	function testNonMatchingModuleNotifcationVersionDoesntAffectNotice() {
 		Deprecation::notification_version('1.0.0');
-		Deprecation::notification_version('3.0.0', 'mysite');
-		$this->callThatOriginatesFromSapphire();
+		global $project;
+		Deprecation::notification_version('3.0.0', $project);
+		$this->callThatOriginatesFromFramework();
 	}
 
 	/**
-    * @expectedException PHPUnit_Framework_Error_Notice
+    * @expectedException PHPUnit_Framework_Error
 	 */
 	function testMatchingModuleNotifcationVersionAffectsNotice() {
 		Deprecation::notification_version('1.0.0');
-		Deprecation::notification_version('3.0.0', 'sapphire');
-		$this->callThatOriginatesFromSapphire();
+		Deprecation::notification_version('3.0.0', FRAMEWORK_DIR);
+		$this->callThatOriginatesFromFramework();
 	}
 
-	protected function callThatOriginatesFromSapphire() {
-		$this->assertEquals(DeprecationTest_Deprecation::get_module(), 'sapphire');
+	protected function callThatOriginatesFromFramework() {
+		$this->assertEquals(DeprecationTest_Deprecation::get_module(), FRAMEWORK_DIR);
 		Deprecation::notice('2.0', 'Deprecation test passed');
 	}
 

@@ -4,7 +4,7 @@
  *
  * This class is used to create an RSS feed.
  * @todo Improve documentation
- * @package sapphire
+ * @package framework
  * @subpackage integration
  */
 class RSSFeed extends ViewableData {
@@ -215,7 +215,7 @@ class RSSFeed extends ViewableData {
  * This class is used for entries of an RSS feed.
  *
  * @see RSSFeed
- * @package sapphire
+ * @package framework
  * @subpackage integration
  */
 class RSSFeed_Entry extends ViewableData {
@@ -317,4 +317,3 @@ class RSSFeed_Entry extends ViewableData {
 		else user_error($this->failover->class . " object has either an AbsoluteLink nor a Link method.  Can't put a link in the RSS feed", E_USER_WARNING);
 	}
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage Testing
  */
 class DatabaseTest extends SapphireTest {
@@ -133,4 +133,3 @@ class DatabaseTest_MyObject extends DataObject implements TestOnly {
 		'MyField' => 'Varchar'
 	);
 }
-?>

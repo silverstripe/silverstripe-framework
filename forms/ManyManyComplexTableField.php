@@ -30,6 +30,8 @@
  * );
  * </code>
  * 
+ * @deprecated 3.0 Use GridField with GridFieldConfig_RelationEditor
+ * 
  * @package forms
  * @subpackage fields-relational
  */
@@ -40,6 +42,8 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 	public $itemClass = 'ManyManyComplexTableField_Item';
 		
 	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+
+		Deprecation::notice('3.0', 'Use GridField with GridFieldConfig_RelationEditor');
 
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 		
@@ -73,7 +77,7 @@ class ManyManyComplexTableField extends HasManyComplexTableField {
 		
 	function getQuery() {
 		$query = parent::getQuery();
-		$query->select[] = "CASE WHEN \"{$this->manyManyParentClass}ID\" IS NULL THEN '0' ELSE '1' END AS \"Checked\"";
+		$query->selectField("CASE WHEN \"{$this->manyManyParentClass}ID\" IS NULL THEN '0' ELSE '1' END", "Checked");
 		$query->groupby[] = "\"{$this->manyManyParentClass}ID\""; // necessary for Postgres
 
 		return $query;
@@ -103,4 +107,4 @@ class ManyManyComplexTableField_Item extends ComplexTableField_Item {
 	}
 }
 
-?>
+

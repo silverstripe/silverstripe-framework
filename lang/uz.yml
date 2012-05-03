@@ -1,0 +1,13 @@
+uz:
+  AssetAdmin:
+    MENUTITLE: "Fayllar va Rasmlar"
+  CMSMain:
+    MENUTITLE: "Saytdagi ma'lumotlar"
+    SAVE: "Saqlash"
+  LeftAndMain:
+    HELP: "Yordam"
+    PAGETYPE: "Sahifa turi:"
+    PERMAGAIN: "Siz saytdan chiqdingiz."
+    PERMALREADY: "Bu erdan saytga kirishingiz mumkin"
+  SecurityAdmin:
+    MENUTITLE: "Havfsizlik"

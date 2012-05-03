@@ -3,11 +3,11 @@
 ## Introduction
 
 Creating a module is a good way to re-use abstract code and templates across multiple projects. SilverStripe already has
-certain modules included, for example "sapphire" and "cms". These three modules are the core functionality and
+certain modules included, for example "framework" and "cms". These three modules are the core functionality and
 templating for any initial installation. If you're wanting to add generic functionality that isn't specific to your
 project, like a forum, an ecommerce package or a blog you can do it like this;
 
-1.  Create another directory at the root level (same level as "sapphire" and "cms")
+1.  Create another directory at the root level (same level as "framework" and "cms")
 2.  You must create an _config.php inside your module directory, else SilverStripe will not include it
 3.  Inside your module directory, follow our [directory structure guidelines](/topics/directory-structure#module_structure)
 
@@ -55,4 +55,4 @@ adherence to conventions, writing documentation, and releasing updates. See [con
 *  [Module Release Process](module-release-process)
 *  [Debugging methods](/topics/debugging)
 *  [URL Variable Tools](/reference/urlvariabletools) - Lists a number of ���page options��� , ���rendering tools��� or ���special
-URL variables��� that you can use to debug your sapphire applications
+URL variables��� that you can use to debug your SilverStripe applications

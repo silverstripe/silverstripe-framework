@@ -1,6 +1,6 @@
 <?php
 /**
- * A base class for all sapphire objects to inherit from.
+ * A base class for all SilverStripe objects to inherit from.
  *
  * This class provides a number of pattern implementations, as well as methods and fixes to add extra psuedo-static
  * and method functionality to PHP.
@@ -11,7 +11,7 @@
  * @todo Create instance-specific removeExtension() which removes an extension from $extension_instances,
  * but not from static $extensions, and clears everything added through defineMethods(), mainly $extra_methods.
  *
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 abstract class Object {
@@ -36,19 +36,6 @@ abstract class Object {
 	 */
 	public static $extensions = null;
 	
-	/**#@+
-	 * @var array
-	 */
-	
-	private static
-		$statics = array(),
-		$cached_statics = array(),
-		$uninherited_statics = array(),
-		$cached_uninherited_statics = array(),
-		$extra_statics = array(),
-		$replaced_statics = array(),
-		$_cache_statics_prepared = array();
-	
 	private static
 		$classes_constructed = array(),
 		$extra_methods       = array(),
@@ -64,7 +51,26 @@ abstract class Object {
 	 * @var string the class name
 	 */
 	public $class;
-	
+
+
+	/**
+	 * @todo Set this via dependancy injection? Can't call it $config, because too many clashes with form elements etc
+	 * @var Config_ForClass
+	 */
+	private $_config_forclass = null;
+
+	/**
+	 * Get a configuration accessor for this class. Short hand for Config::inst()->get($this->class, .....).
+	 * @return Config_ForClass|null
+	 */
+	public function config() {
+		if (!$this->_config_forclass) {
+			$this->_config_forclass = Config::inst()->forClass($this->class);
+		}
+
+		return $this->_config_forclass;
+	}
+
 	/**
 	 * @var array all current extension instances.
 	 */
@@ -77,13 +83,27 @@ abstract class Object {
 	 * overload is found, an instance of this is returned rather than the original class. To overload a class, use
 	 * {@link Object::useCustomClass()}
 	 *
+	 * This can be called in one of two ways - either calling via the class directly,
+	 * or calling on Object and passing the class name as the first parameter. The following
+	 * are equivalent:
+	 *    $list = DataList::create('SiteTree');
+	 *    $list = DataList::create('SiteTree');
+	 *
 	 * @param string $class the class name
 	 * @param mixed $arguments,... arguments to pass to the constructor
 	 * @return Object
 	 */
 	public static function create() {
 		$args  = func_get_args();
-		$class = self::getCustomClass(array_shift($args));
+
+		// Class to create should be the calling class if not Object,
+		// otherwise the first parameter
+		$class = get_called_class();
+		if($class == 'Object')
+			$class = array_shift($args);
+		
+		$class = self::getCustomClass($class);
+		
 		$reflector = new ReflectionClass($class);
 		if($reflector->getConstructor()) {
 			return $reflector->newInstanceArgs($args);
@@ -101,7 +121,7 @@ abstract class Object {
 	 * are respected.
 	 * 
 	 * `Object::create_from_string("Versioned('Stage','Live')")` will return the result of
-	 * `Object::create('Versioned', 'Stage', 'Live);`
+	 * `Versioned::create('Stage', 'Live);`
 	 * 
 	 * It is designed for simple, clonable objects.  The first time this method is called for a given
 	 * string it is cached, and clones of that object are returned.
@@ -110,7 +130,7 @@ abstract class Object {
 	 * impossible to pass null as the firstArg argument.
 	 * 
 	 * `Object::create_from_string("Varchar(50)", "MyField")` will return the result of
-	 * `Object::create('Vachar', 'MyField', '50');`
+	 * `Vachar::create('MyField', '50');`
 	 * 
 	 * Arguments are always strings, although this is a quirk of the current implementation rather
 	 * than something that can be relied upon.
@@ -255,7 +275,55 @@ abstract class Object {
 		
 		return $class;
 	}
-	
+
+	/**
+	 * Get the value of a static property of a class, even in that property is declared protected (but not private), without any inheritance,
+	 * merging or parent lookup if it doesn't exist on the given class
+	 *
+	 * In 5.3, we can do this fast using $foo::$bar syntax, but this method then needs to be in a base class of $class
+	 * to bust the protected def
+	 *
+	 * @static
+	 * @param $class - The class to get the static from
+	 * @param $name - The property to get from the class
+	 * @param null $default - The value to return if property doesn't exist on class
+	 * @return any - The value of the static property $name on class $class, or $default if that property is not defined
+	 */
+	public static function static_lookup($class, $name, $default = null) {
+		if (version_compare(PHP_VERSION, '5.4', '>=') && is_subclass_of($class, 'Object')) {
+			if (isset($class::$$name)) {
+				$parent = get_parent_class($class);
+				if (!$parent || !isset($parent::$$name) || $parent::$$name !== $class::$$name) return $class::$$name;
+			}
+			return $default;
+		}
+		else {
+			// TODO: This gets set once, then not updated, so any changes to statics after this is called the first time for any class won't be exposed
+			static $static_properties = array();
+
+			if (!isset($static_properties[$class])) {
+				$reflection = new ReflectionClass($class);
+				$static_properties[$class] = $reflection->getStaticProperties();
+			}
+
+			if (isset($static_properties[$class][$name])) {
+				$value = $static_properties[$class][$name];
+
+				$parent = get_parent_class($class);
+				if (!$parent) return $value;
+
+				if (!isset($static_properties[$parent])) {
+					$reflection = new ReflectionClass($parent);
+					$static_properties[$parent] = $reflection->getStaticProperties();
+				}
+
+				if (!isset($static_properties[$parent][$name]) || $static_properties[$parent][$name] !== $value) return $value;
+			}
+		}
+
+		return $default;
+	}
+
 	/**
 	 * Get a static variable, taking into account SS's inbuild static caches and pseudo-statics
 	 *
@@ -265,9 +333,6 @@ abstract class Object {
 	 * If any extra values are discovered, they are then merged with the default PHP static values, or in some cases
 	 * completely replace the default PHP static when you set $replace = true, and do not define extra data on any child
 	 * classes
-	 * 
-	 * Note that from SilverStripe 2.3.2, Object::get_static() can only be used to get public
-	 * static variables, not protected ones.
 	 *
 	 * @param string $class
 	 * @param string $name the property name
@@ -275,64 +340,8 @@ abstract class Object {
 	 * @return mixed
 	 */
 	public static function get_static($class, $name, $uncached = false) {
-		if(!isset(self::$_cache_statics_prepared[$class])) {
-			Object::prepare_statics($class);
-		}
-
-		if(!isset(self::$cached_statics[$class][$name]) || $uncached) {
-			$extra     = $builtIn = $break = $replacedAt = false;
-			$ancestry  = array_reverse(ClassInfo::ancestry($class));
-			
-			// traverse up the class tree and build extra static and stop information
-			foreach($ancestry as $ancestor) {
-				if(isset(self::$extra_statics[$ancestor][$name])) {
-					$toMerge = self::$extra_statics[$ancestor][$name];
-					
-					if(is_array($toMerge) && is_array($extra)) {
-						$extra = array_merge($toMerge, $extra);
-					} elseif(!$extra) {
-						$extra = $toMerge;
-					} else {
-						$break = true;
-					}
-					
-					if(isset(self::$replaced_statics[$ancestor][$name])) $replacedAt = $break = $ancestor;
-					
-					if($break) break;
-				}
-			}
-			
-			// check whether to merge in the default value
-			if($replacedAt && ($replacedAt == $class || !is_array($extra))) {
-				$value = $extra;
-			} elseif($replacedAt) {
-				// determine whether to merge in lower-class variables
-				$ancestorRef     = new ReflectionClass(reset($ancestry));
-				$ancestorProps   = $ancestorRef->getStaticProperties();
-				$ancestorInbuilt = array_key_exists($name, $ancestorProps) ? $ancestorProps[$name] : null;
-				
-				$replacedRef     = new ReflectionClass($replacedAt);
-				$replacedProps   = $replacedRef->getStaticProperties();
-				$replacedInbuilt = array_key_exists($name, $replacedProps) ? $replacedProps[$name] : null;
-				
-				if($ancestorInbuilt != $replacedInbuilt) {
-					$value = is_array($ancestorInbuilt) ? array_merge($ancestorInbuilt, (array) $extra) : $extra;
-				} else {
-					$value = $extra;
-				}
-			} else {
-				// get a built-in value
-				$reflector = new ReflectionClass($class);
-				$props     = $reflector->getStaticProperties();
-				$inbuilt   = array_key_exists($name, $props) ? $props[$name] : null;
-				$value     = isset($extra) && is_array($extra) ? array_merge($extra, (array) $inbuilt) : $inbuilt;
-			}
-			
-			self::$cached_statics[$class][$name] = true;
-			self::$statics[$class][$name]        = $value;
-		}
-		
-		return self::$statics[$class][$name];
+		Deprecation::notice('3.1.0', 'get_static is deprecated, replaced by Config#get');
+		return Config::inst()->get($class, $name, Config::FIRST_SET);
 	}
 
 	/**
@@ -343,62 +352,20 @@ abstract class Object {
 	 * @param mixed $value
 	 */
 	public static function set_static($class, $name, $value) {
-		if(!isset(self::$_cache_statics_prepared[$class])) {
-			Object::prepare_statics($class);
-		}
-
-		self::$statics[$class][$name] = $value;
-		self::$uninherited_statics[$class][$name] = $value;
-		self::$cached_statics[$class][$name] = true;
-		self::$cached_uninherited_statics[$class][$name] = true;
+		Deprecation::notice('3.1.0', 'set_static is deprecated, replaced by Config#update');
+		Config::inst()->update($class, $name, $value);
 	}
 
 	/**
 	 * Get an uninherited static variable - a variable that is explicity set in this class, and not in the parent class.
-	 * 
-	 * Note that from SilverStripe 2.3.2, Object::uninherited_static() can only be used to get public
-	 * static variables, not protected ones.
-	 * 
-	 * @todo Recursively filter out parent statics, currently only inspects the parent class
 	 *
 	 * @param string $class
 	 * @param string $name
 	 * @return mixed
 	 */
 	public static function uninherited_static($class, $name, $uncached = false) {
-		if(!isset(self::$_cache_statics_prepared[$class])) {
-			Object::prepare_statics($class);
-		}
-		
-		if(!isset(self::$cached_uninherited_statics[$class][$name]) || $uncached) {
-			$classRef = new ReflectionClass($class);
-			$classProp = $classRef->getStaticPropertyValue($name, null);
-
-			$parentClass = get_parent_class($class);
-			if($parentClass) {
-				$parentRef = new ReflectionClass($parentClass);
-				$parentProp = $parentRef->getStaticPropertyValue($name, null);
-				if($parentProp == $classProp) $classProp = null;
-			}
-			
-			// Add data from extra_statics if it has been applied to this specific class (it
-			// wouldn't make sense to have them inherit in this method).  This is kept separate
-			// from the equivalent get_static code because it's so much simpler
-			if(isset(self::$extra_statics[$class][$name])) {
-				$toMerge = self::$extra_statics[$class][$name];
-				
-				if(is_array($toMerge) && is_array($classProp)) {
-					$classProp = array_merge($toMerge, $classProp);
-				} elseif(!$classProp) {
-					$classProp = $toMerge;
-				}
-			}
-			
-			self::$cached_uninherited_statics[$class][$name] = true;
-			self::$uninherited_statics[$class][$name] = $classProp;
-		}
-
-		return self::$uninherited_statics[$class][$name];
+		Deprecation::notice('3.1.0', 'uninherited_static is deprecated, replaced by Config#get');
+		return Config::inst()->get($class, $name, Config::UNINHERITED);
 	}
 	
 	/**
@@ -412,24 +379,10 @@ abstract class Object {
 	 * @return mixed
 	 */
 	public static function combined_static($class, $name, $ceiling = false) {
-		$ancestry = ClassInfo::ancestry($class);
-		$values   = null;
-		
-		if($ceiling) while(current($ancestry) != $ceiling && $ancestry) {
-			array_shift($ancestry);
-		}
-		
-		if($ancestry) foreach($ancestry as $ancestor) {
-			$merge = self::uninherited_static($ancestor, $name);
-			
-			if(is_array($values) && is_array($merge)) {
-				$values = array_merge($values, $merge);
-			} elseif($merge) {
-				$values = $merge;
-			}
-		}
-		
-		return $values;
+		if ($ceiling) throw new Exception('Ceiling argument to combined_static is no longer supported');
+
+		Deprecation::notice('3.1.0', 'combined_static is deprecated, replaced by Config#get');
+		return Config::inst()->get($class, $name);
 	}
 	
 	/**
@@ -440,6 +393,7 @@ abstract class Object {
 	 * @param bool $replace replace existing static vars
 	 */
 	public static function addStaticVars($class, $properties, $replace = false) {
+		Deprecation::notice('3.1.0', 'addStaticVars is deprecated, replaced by Config#update');
 		foreach($properties as $prop => $value) self::add_static_var($class, $prop, $value, $replace);
 	}
 	
@@ -460,23 +414,12 @@ abstract class Object {
 	 * @param bool $replace completely replace existing static values
 	 */
 	public static function add_static_var($class, $name, $value, $replace = false) {
-		if(is_array($value) && isset(self::$extra_statics[$class][$name]) && !$replace) {
-			self::$extra_statics[$class][$name] = array_merge_recursive(self::$extra_statics[$class][$name], $value);
-		} else {
-			self::$extra_statics[$class][$name] = $value;
-		}
-		
-		if ($replace) {
-			self::set_static($class, $name, $value);
-			self::$replaced_statics[$class][$name] = true;
-			
-		// Clear caches
-		} else {
-			self::$cached_statics[$class][$name] = null;
-			self::$cached_uninherited_statics[$class][$name] = null;
-		}
+		Deprecation::notice('3.1.0', 'add_static_var is deprecated, replaced by Config#remove and Config#update');
+
+		if ($replace) Config::inst()->remove($class, $name);
+		Config::inst()->update($class, $name, $value);
 	}
-	
+
 	/**
 	 * Return TRUE if a class has a specified extension
 	 *
@@ -485,7 +428,9 @@ abstract class Object {
 	 */
 	public static function has_extension($class, $requiredExtension) {
 		$requiredExtension = strtolower($requiredExtension);
-		if($extensions = self::combined_static($class, 'extensions')) foreach($extensions as $extension) {
+		$extensions = Config::inst()->get($class, 'extensions');
+
+		if($extensions) foreach($extensions as $extension) {
 			$left = strtolower(Extension::get_classname_without_arguments($extension));
 			$right = strtolower(Extension::get_classname_without_arguments($requiredExtension));
 			if($left == $right) return true;
@@ -520,68 +465,25 @@ abstract class Object {
 		}
 		
 		// unset some caches
-		self::$cached_statics[$class]['extensions'] = null;
 		$subclasses = ClassInfo::subclassesFor($class);
 		$subclasses[] = $class;
+
 		if($subclasses) foreach($subclasses as $subclass) {
 			unset(self::$classes_constructed[$subclass]);
 			unset(self::$extra_methods[$subclass]);
 		}
-		
-		// merge with existing static vars
-		$extensions = self::uninherited_static($class, 'extensions');
-		
-		// We use unshift rather than push so that module extensions are added before built-in ones.
-		// in particular, this ensures that the Versioned rewriting is done last.
-		if($extensions) array_unshift($extensions, $extension);
-		else $extensions = array($extension);
-		
-		self::set_static($class, 'extensions', $extensions);
-		
+
+		Config::inst()->update($class, 'extensions', array($extension));
+
 		// load statics now for DataObject classes
 		if(is_subclass_of($class, 'DataObject')) {
-			if(is_subclass_of($extensionClass, 'DataExtension')) {
-				DataExtension::load_extra_statics($class, $extension);
-			}
-			else {
+			if(!is_subclass_of($extensionClass, 'DataExtension')) {
 				user_error("$extensionClass cannot be applied to $class without being a DataExtension", E_USER_ERROR);
 			}
 		}
 	}
 
-	/**
-	 * Prepare static variables before processing a {@link get_static} or {@link set_static}
-	 * call.
-	 */
-	private static function prepare_statics($class) {
-		// _cache_statics_prepared setting must come first to prevent infinite loops when we call
-		// get_static below
-		self::$_cache_statics_prepared[$class] = true;
-		
-		// load statics now for DataObject classes
-		if(is_subclass_of($class, 'DataObject')) {
-			$extensions = Object::uninherited_static($class, 'extensions');
-			
-			if($extensions) {
-				foreach($extensions as $extension) {
-					$extensionClass = $extension;
-					
-					if(preg_match('/^([^(]*)/', $extension, $matches)) {
-						$extensionClass = $matches[1];
-					}
-					
-					if(is_subclass_of($extensionClass, 'DataExtension')) {
-						DataExtension::load_extra_statics($class, $extension);
-					}
-					else {
-						user_error("$extensionClass cannot be applied to $class without being a DataExtension", E_USER_ERROR);
-					}
-				}
-			}
-		}
-	}
-	
-	
+
 	/**
 	 * Remove an extension from a class.
 	 * Keep in mind that this won't revert any datamodel additions
@@ -599,37 +501,19 @@ abstract class Object {
 	 * @param string $extension Classname of an {@link Extension} subclass, without parameters
 	 */
 	public static function remove_extension($class, $extension) {
-		// unload statics now for DataObject classes
-		if(is_subclass_of($class, 'DataObject')) {
-			if(!preg_match('/^([^(]*)/', $extension, $matches)) {
-				user_error("Bad extension '$extension'", E_USER_WARNING);
-			} else {
-				$extensionClass = $matches[1];
-				DataObjectDecorator::unload_extra_statics($class, $extensionClass);
-			}
-		}
-		
-		if(self::has_extension($class, $extension)) {
-			self::set_static(
-				$class,
-				'extensions',
-				array_diff(self::uninherited_static($class, 'extensions'), array($extension))
-			);
-		}
-		
+		Config::inst()->remove($class, 'extensions', Config::anything(), $extension);
+
 		// unset singletons to avoid side-effects
 		global $_SINGLETONS;
 		$_SINGLETONS = array();
 
 		// unset some caches
-		self::$cached_statics[$class]['extensions'] = null;
 		$subclasses = ClassInfo::subclassesFor($class);
 		$subclasses[] = $class;
 		if($subclasses) foreach($subclasses as $subclass) {
 			unset(self::$classes_constructed[$subclass]);
 			unset(self::$extra_methods[$subclass]);
 		}
-		
 	}
 	
 	/**
@@ -639,8 +523,9 @@ abstract class Object {
 	 * @return array Numeric array of either {@link DataExtension} classnames,
 	 *  or eval'ed classname strings with constructor arguments.
 	 */
-	function get_extensions($class, $includeArgumentString = false) {
-		$extensions = self::get_static($class, 'extensions');
+	public static function get_extensions($class, $includeArgumentString = false) {
+		$extensions = Config::inst()->get($class, 'extensions');
+
 		if($includeArgumentString) {
 			return $extensions;
 		} else {
@@ -653,18 +538,33 @@ abstract class Object {
 	}
 	
 	// -----------------------------------------------------------------------------------------------------------------
-	
+
+	private static $_added_extensions = array();
+
 	public function __construct() {
 		$this->class = get_class($this);
-		
+
 		// Don't bother checking some classes that should never be extended
 		static $notExtendable = array('Object', 'ViewableData', 'RequestHandler');
 		
 		if($extensionClasses = ClassInfo::ancestry($this->class)) foreach($extensionClasses as $class) {
 			if(in_array($class, $notExtendable)) continue;
-			
-			if($extensions = self::uninherited_static($class, 'extensions')) {
+
+			if($extensions = Config::inst()->get($class, 'extensions', Config::UNINHERITED)) {
 				foreach($extensions as $extension) {
+					// Get the extension class for this extension
+					list($extensionClass, $extensionArgs) = self::parse_class_spec($extension);
+
+					// If we haven't told that extension it's attached to this class yet, do that now
+					if (!isset(self::$_added_extensions[$extensionClass][$class])) {
+						// First call the add_to_class method - this will inherit down & is defined on Extension, so if not defined, no worries
+						call_user_func(array($extensionClass, 'add_to_class'), $class, $extensionClass, $extensionArgs);
+
+						// Then register it as having been told about us
+						if (!isset(self::$_added_extensions[$extensionClass])) self::$_added_extensions[$extensionClass] = array($class => true);
+						else self::$_added_extensions[$extensionClass][$class] = true;
+					}
+
 					$instance = self::create_from_string($extension);
 					$instance->setOwner(null, $class);
 					$this->extension_instances[$instance->class] = $instance;
@@ -875,21 +775,21 @@ abstract class Object {
 	 * @see Object::get_static()
 	 */
 	public function stat($name, $uncached = false) {
-		return self::get_static(($this->class ? $this->class : get_class($this)), $name, $uncached);
+		return Config::inst()->get(($this->class ? $this->class : get_class($this)), $name, Config::FIRST_SET);
 	}
 	
 	/**
 	 * @see Object::set_static()
 	 */
 	public function set_stat($name, $value) {
-		self::set_static(($this->class ? $this->class : get_class($this)), $name, $value);
+		Config::inst()->update(($this->class ? $this->class : get_class($this)), $name, $value);
 	}
 	
 	/**
 	 * @see Object::uninherited_static()
 	 */
 	public function uninherited($name) {
-		return self::uninherited_static(($this->class ? $this->class : get_class($this)), $name);
+		return Config::inst()->get(($this->class ? $this->class : get_class($this)), $name, Config::UNINHERITED);
 	}
 	
 	/**

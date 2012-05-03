@@ -68,7 +68,7 @@ class CMSBatchActionHandler extends RequestHandler {
 
 	function handleAction($request) {
 		// This method can't be called without ajax.
-		if(!$this->parentController->isAjax()) {
+		if(!$request->isAjax()) {
 			$this->parentController->redirectBack();
 			return;
 		}
@@ -81,7 +81,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		$actionHandler = new $actionClass();
 		
 		// Sanitise ID list and query the database for apges
-		$ids = split(' *, *', trim($request->requestVar('csvIDs')));
+		$ids = preg_split('/ *, */', trim($request->requestVar('csvIDs')));
 		foreach($ids as $k => $v) if(!is_numeric($v)) unset($ids[$k]);
 		
 		if($ids) {
@@ -111,8 +111,14 @@ class CMSBatchActionHandler extends RequestHandler {
 						implode(", ", $idsFromLive)
 					);
 					$livePages = Versioned::get_by_stage($this->recordClass, 'Live', $sql);
-					if($pages) $pages->merge($livePages);
-					else $pages = $livePages;
+					if($pages) {
+						// Can't merge into a DataList, need to condense into an actual list first
+						// (which will retrieve all records as objects, so its an expensive operation)
+						$pages = new ArrayList($pages->toArray());
+						$pages->merge($livePages);
+					}	else {
+						$pages = $livePages;
+					}
 				}
 			}
 		} else {
@@ -124,12 +130,12 @@ class CMSBatchActionHandler extends RequestHandler {
 
 	function handleApplicablePages($request) {
 		// Find the action handler
-		$actions = Object::get_static($this->class, 'batch_actions');
+		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET);
 		$actionClass = $actions[$request->param('BatchAction')];
 		$actionHandler = new $actionClass['class']();
 
 		// Sanitise ID list and query the database for apges
-		$ids = split(' *, *', trim($request->requestVar('csvIDs')));
+		$ids = preg_split('/ *, */', trim($request->requestVar('csvIDs')));
 		foreach($ids as $k => $id) $ids[$k] = (int)$id;
 		$ids = array_filter($ids);
 		
@@ -146,12 +152,12 @@ class CMSBatchActionHandler extends RequestHandler {
 	
 	function handleConfirmation($request) {
 		// Find the action handler
-		$actions = Object::get_static($this->class, 'batch_actions');
+		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET);
 		$actionClass = $actions[$request->param('BatchAction')];
 		$actionHandler = new $actionClass();
 
 		// Sanitise ID list and query the database for apges
-		$ids = split(' *, *', trim($request->requestVar('csvIDs')));
+		$ids = preg_split('/ *, */', trim($request->requestVar('csvIDs')));
 		foreach($ids as $k => $id) $ids[$k] = (int)$id;
 		$ids = array_filter($ids);
 		
@@ -197,7 +203,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	 * @return array See {@link register()} for the returned format.
 	 */
 	function batchActions() {
-		$actions = Object::get_static($this->class, 'batch_actions');
+		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET);
 		if($actions) foreach($actions as $action) {
 			if($action['recordClass'] != $this->recordClass) unset($action);
 		}

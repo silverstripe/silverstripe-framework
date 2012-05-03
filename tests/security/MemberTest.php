@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class MemberTest extends FunctionalTest {
@@ -179,7 +179,7 @@ class MemberTest extends FunctionalTest {
 		$member = $this->objFromFixture('Member', 'test');
 		$this->assertNotNull($member);
 		
-		Member::set_password_validator(new NZGovtPasswordValidator());
+		Member::set_password_validator(new MemberTest_PasswordValidator());
 	
 		// BAD PASSWORDS
 		
@@ -551,6 +551,14 @@ class MemberTest extends FunctionalTest {
 			$staffMember->onChangeGroups(array($newAdminGroup->ID)),
 			'Adding new admin group relation is not allowed for non-admin members'
 		);
+
+		$this->session()->inst_set('loggedInAs', $adminMember->ID);
+		$this->assertTrue(
+			$staffMember->onChangeGroups(array($newAdminGroup->ID)),
+			'Adding new admin group relation is allowed for normal users, when granter is logged in as admin'
+		);
+		$this->session()->inst_set('loggedInAs', null);
+
 		$this->assertTrue(
 			$adminMember->onChangeGroups(array($newAdminGroup->ID)),
 			'Adding new admin group relation is allowed for admin members'
@@ -591,30 +599,40 @@ class MemberTest extends FunctionalTest {
 }
 class MemberTest_ViewingAllowedExtension extends DataExtension implements TestOnly {
 
-	public function canView() {
+	public function canView($member = null) {
 		return true;
 	}
 
 }
 class MemberTest_ViewingDeniedExtension extends DataExtension implements TestOnly {
 
-	public function canView() {
+	public function canView($member = null) {
 		return false;
 	}
 
 }
 class MemberTest_EditingAllowedDeletingDeniedExtension extends DataExtension implements TestOnly {
 
-	public function canView() {
+	public function canView($member = null) {
 		return true;
 	}
 
-	public function canEdit() {
+	public function canEdit($member = null) {
 		return true;
 	}
 
-	public function canDelete() {
+	public function canDelete($member = null) {
 		return false;
 	}
 
+}
+
+class MemberTest_PasswordValidator extends PasswordValidator {
+	function __construct() {
+		parent::__construct();
+		$this->minLength(7);
+		$this->checkHistoricalPasswords(6);
+		$this->characterStrength(3, array('lowercase','uppercase','digits','punctuation'));
+	}
+	
 }

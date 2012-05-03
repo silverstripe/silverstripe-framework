@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 
@@ -9,7 +9,7 @@
  * SQL syntax used: Column IN ('val1','val2')
  * 
  * @todo Add negation (NOT IN)6
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 class ExactMatchMultiFilter extends SearchFilter {
@@ -50,4 +50,3 @@ class ExactMatchMultiFilter extends SearchFilter {
 		return $this->getValue() == null || $this->getValue() == '';
 	}
 }
-?>

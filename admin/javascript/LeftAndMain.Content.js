@@ -13,112 +13,17 @@
 			onmatch: function() {
 				var self = this;
 				
-				// Listen to tree selection events
-				this.find('.cms-tree').bind('select_node.jstree', function(e, data) {
-					var node = data.rslt.obj, loadedNodeID = self.find(':input[name=ID]').val(), origEvent = data.args[2];
-					
-					// Don't trigger unless coming from a click event.
-					// Avoids problems with automated section switches from tree to detail view
-					// when JSTree auto-selects elements on first load.
-					if(!origEvent) return false;
-					
-					// Don't allow checking disabled nodes
-					if($(node).hasClass('disabled')) return false;
-
-					// Don't allow reloading of currently selected node,
-					// mainly to avoid doing an ajax request on initial page load
-					if($(node).data('id') == loadedNodeID) return;
-
-					var url = $(node).find('a:first').attr('href');
-					if(url && url != '#') {
-						if($(node).find('a:first').is(':internal')) url = $('base').attr('href') + url;
-						$('.cms-container').loadPanel(url);
-					} else {
-						self.removeForm();
-					}
-				});
-				
 				// Force initialization of tabsets to avoid layout glitches
-				this.find('.ss-tabset').redrawTabs();
+				this.find('.cms-tabset').redrawTabs();
 				
 				this._super();
 			},
 						
 			redraw: function() {
 				// Force initialization of tabsets to avoid layout glitches
-				this.add(this.find('.ss-tabset')).redrawTabs();
+				this.add(this.find('.cms-tabset')).redrawTabs();
 
 				this.layout();
-			},
-			
-			/**
-			 * Function: loadForm
-			 * 
-			 * See $('.cms-container').loadPanel() on a frequently used alternative
-			 * to direct ajax loading of content, with support for the window.History object.
-			 * 
-			 * Parameters:
-			 *  (String) url - ..
-			 *  (Function) callback - (Optional) Called after the form content as been loaded
-			 *  (Object) ajaxOptions - Object literal merged into the jQuery.ajax() call (Optional)
-			 * 
-			 * Returns:
-			 *  (XMLHTTPRequest)
-			 */
-			loadForm: function(url, form, callback, ajaxOptions) {
-				var self = this;
-				if(!form || !form.length) {
-					var form = $('.cms-content-fields form:first', self);
-					if(form.length == 0) form = $('.cms-content-fields').parents("form").eq(0);
-				}
-
-				// Alert when unsaved changes are present
-				if(!form.confirmUnsavedChanges()) return false;
-			
-				// hide existing form - shown again through _loadResponse()
-				form.addClass('loading');
-
-				this.trigger('loadform', {form: form, url: url});
-			
-				return jQuery.ajax(jQuery.extend({
-					url: url, 
-					// Ensure that form view is loaded (rather than whole "Content" template)
-					data: {'cms-view-form': 1},
-					complete: function(xmlhttp, status) {
-						self.loadForm_responseHandler(form, xmlhttp.responseText, status, xmlhttp);
-						if(callback) callback.apply(self, arguments);
-					}, 
-					dataType: 'html'
-				}, ajaxOptions));
-			},
-			
-			/**
-			 * Function: loadForm_responseHandler
-			 *
-			 * Loads the response into the DOM provided. Assumes oldForm is contains
-			 * the form tag to replace. If oldForm isn't present in the DOM, such as
-			 * if this form is only shown after click, append the whole form.
-			 *
-			 * Parameters:
-			 *  (String) oldForm - HTML or eval'd javascript
-			 *  (String) html - HTML to replace oldForm
-			 *  (String) status
-			 *  (XMLHTTPRequest) xmlhttp
-			 */
-			loadForm_responseHandler: function(oldForm, html, status, xmlhttp) {
-
-				if(oldForm.length > 0) {
-					oldForm.replaceWith(html); // triggers onmatch() on form
-				}
-				else {
-					 $('.cms-content').append(html);
-				}
-				
-				// redraw the layout.
-				jQuery('.cms-container').entwine('ss').redraw();
-				
-				// set status message based on response
-				var _statusMessage = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.statusText;
 			},
 			
 			/**
@@ -159,7 +64,7 @@
 				
 				// save tab selections in order to reconstruct them later
 				var selectedTabs = [];
-				form.find('.ss-tabset').each(function(i, el) {
+				form.find('.cms-tabset').each(function(i, el) {
 					if($(el).attr('id')) selectedTabs.push({id:$(el).attr('id'), selected:$(el).tabs('option', 'selected')});
 				});
 
@@ -167,7 +72,16 @@
 				var formData = form.serializeArray();
 				// add button action
 				formData.push({name: $(button).attr('name'), value:'1'});
+				// Artificial HTTP referer, IE doesn't submit them via ajax. 
+				// Also rewrites anchors to their page counterparts, which is important
+				// as automatic browser ajax response redirects seem to discard the hash/fragment.
+				formData.push({name: 'BackURL', value:History.getPageUrl()});
+
 				jQuery.ajax(jQuery.extend({
+					headers: {
+						"X-Pjax" : "CurrentForm",
+						'X-Pjax-Selector': '.cms-edit-form'
+					},
 					url: form.attr('action'), 
 					data: formData,
 					type: 'POST',
@@ -183,14 +97,17 @@
 						if(loadResponse !== false) {
 						  self.submitForm_responseHandler(form, xmlhttp.responseText, status, xmlhttp, formData);
 						}
-						
+
 						// Re-init tabs (in case the form tag itself is a tabset)
-						if(self.hasClass('ss-tabset')) self.removeClass('ss-tabset').addClass('ss-tabset');
-						
+						if(self.hasClass('cms-tabset')) self.removeClass('cms-tabset').addClass('cms-tabset');
+
 						// re-select previously saved tabs
 						$.each(selectedTabs, function(i, selectedTab) {
 							form.find('#' + selectedTab.id).tabs('select', selectedTab.selected);
 						});
+
+						// Redraw the layout
+						$('.cms-container').redraw();
 					}, 
 					dataType: 'html'
 				}, ajaxOptions));
@@ -213,10 +130,21 @@
 			 */
 			submitForm_responseHandler: function(oldForm, data, status, xmlhttp, origData) {
 				if(status == 'success') {
-					var form = this.replaceForm(oldForm, data);
-				
-					Behaviour.apply(); // refreshes ComplexTableField
+					if(!data) return;
 
+					var form, newContent = $(data);
+
+					// HACK If response contains toplevel panel rather than a form, replace it instead.
+					// For example, a page view shows tree + edit form. Deleting this page redirects to
+					// the "pages" overview, which doesn't have a separate tree panel.
+					if(newContent.is('.cms-content')) {
+						$('.cms-content').replaceWith(newContent);
+					} else {
+						form = this.replaceForm(oldForm, newContent);	
+					}
+				
+					if(typeof(Behaviour) != 'undefined') Behaviour.apply(); // refreshes ComplexTableField
+					
 					this.trigger('reloadeditform', {form: form, origData: origData, xmlhttp: xmlhttp});
 				}
 
@@ -261,8 +189,53 @@
 			}
 		});
 	});
-	
-	$('.cms-content.loading,.cms-edit-form.loading').entwine({
+
+	/**
+	 * Load edit form for the selected node when its clicked.
+	 */
+	$('.cms-content .cms-tree').entwine({
+		onmatch: function() {
+			var self = this;
+
+			this._super();
+
+			this.bind('select_node.jstree', function(e, data) {
+				var node = data.rslt.obj, loadedNodeID = self.find(':input[name=ID]').val(), origEvent = data.args[2], container = $('.cms-container');
+				
+				// Don't trigger unless coming from a click event.
+				// Avoids problems with automated section switches from tree to detail view
+				// when JSTree auto-selects elements on first load.
+				if(!origEvent) {
+					return false;
+				}else if($(origEvent.target).hasClass('jstree-icon') || $(origEvent.target).hasClass('jstree-pageicon')){
+					// in case the click is not on the node title, ie on pageicon or dragicon, 
+					return false;
+				}
+				
+				// Don't allow checking disabled nodes
+				if($(node).hasClass('disabled')) return false;
+
+				// Don't allow reloading of currently selected node,
+				// mainly to avoid doing an ajax request on initial page load
+				if($(node).data('id') == loadedNodeID) return;
+
+				var url = $(node).find('a:first').attr('href');
+				if(url && url != '#') {
+
+					// Ensure URL is absolute (important for IE)
+					if($.path.isExternal($(node).find('a:first'))) url = url = $.path.makeUrlAbsolute(url, $('base').attr('href'));
+					// Retain search parameters
+					if(document.location.search) url = $.path.addSearchParams(url, document.location.search.replace(/^\?/, ''));
+					// Load new page
+					container.entwine('ss').loadPanel(url);	
+				} else {
+					self.removeForm();
+				}
+			});
+		}
+	});
+
+	$('.cms-content.loading,.cms-edit-form.loading,.cms-content-fields.loading,.cms-content-view.loading').entwine({
 		onmatch: function() {
 			this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>');
 		},
@@ -270,5 +243,5 @@
 			this.find('.cms-content-loading-overlay,.cms-content-loading-spinner').remove();
 		}
 	});
-	
+
 })(jQuery);

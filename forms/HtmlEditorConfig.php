@@ -81,8 +81,6 @@ class HtmlEditorConfig {
 		'safari_warning' => false,
 		'relative_urls' => true,
 		'verify_html' => true,
-		
-		'spellchecker_rpc_url' => 'sapphire/thirdparty/tinymce-spellchecker/rpc.php'
 	);
 	
 	/**
@@ -121,7 +119,8 @@ class HtmlEditorConfig {
 	 * @return mixed - $v returned for chaining
 	 */
 	function setOption($k,$v) {
-		return $this->settings[$k] = $v;
+		$this->settings[$k] = $v;
+		return $this;
 	}
 	
 	/**
@@ -133,6 +132,7 @@ class HtmlEditorConfig {
 		foreach ($a as $k=>$v) {
 			$this->settings[$k] = $v;
 		}
+		return $this;
 	}
 	
 	/**
@@ -173,6 +173,7 @@ class HtmlEditorConfig {
 				unset($this->plugins[$plugin]);
 			}
 		}
+		return $this;
 	}
 	
 	/**
@@ -198,6 +199,7 @@ class HtmlEditorConfig {
 			$line = array_shift($buttons);
 		}
 		$this->buttons[$line] = is_array($buttons) ? $buttons : array($buttons);
+		return $this;
 	}
 	
 	/**
@@ -214,6 +216,7 @@ class HtmlEditorConfig {
 		foreach ($inserts as $button) {
 			$this->buttons[$line][] = $button;
 		}
+		return $this;
 	}
 	
 	/**
@@ -303,7 +306,6 @@ class HtmlEditorConfig {
 if((typeof tinyMCE != 'undefined')) {
 	$externalPluginsJS
 	var ssTinyMceConfig = " . Convert::raw2json($config) . ";
-	tinyMCE.init(ssTinyMceConfig);
 }
 ";
 	}

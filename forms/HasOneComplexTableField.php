@@ -47,7 +47,7 @@ class HasOneComplexTableField extends HasManyComplexTableField {
 		return $this->controller->{$this->joinField};
 	}
 	
-	function saveInto(DataObject $record) {
+	function saveInto(DataObjectInterface $record) {
 		$fieldName = $this->name;
 		$fieldNameID = $fieldName . 'ID';
 		
@@ -100,4 +100,3 @@ class HasOneComplexTableField_Item extends ComplexTableField_Item {
 	}
 }
 
-?>

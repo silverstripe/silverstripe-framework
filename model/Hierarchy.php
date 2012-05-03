@@ -2,7 +2,7 @@
 /**
  * DataObjects that use the Hierarchy extension can be be organised as a hierarchy, with children and parents.
  * The most obvious example of this is SiteTree.
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Hierarchy extends DataExtension {
@@ -24,27 +24,47 @@ class Hierarchy extends DataExtension {
 	
 	function augmentWrite(&$manipulation) {
 	}
-	
+
+	static function add_to_class($class, $extensionClass, $args = null) {
+		Config::inst()->update($class, 'has_one', array('Parent' => $class));
+		parent::add_to_class($class, $extensionClass, $args);
+	}
+
 	/**
-	 *
-	 * @param string $class
-	 * @param string $extension
-	 * @return array
+	 * Validate the owner object - check for existence of infinite loops.
 	 */
-	function extraStatics($class=null, $extension=null) {
-		return array(
-			'has_one' => array(
-				// TODO this method is called *both* statically and on an instance
-				"Parent" => ($class) ? $class : $this->owner->class
-			)
-		);
+	function validate(ValidationResult $validationResult) {
+		if (!$this->owner->ID) return; // The object is new, won't be looping.
+		if (!$this->owner->ParentID) return; // The object has no parent, won't be looping.
+		if (!$this->owner->isChanged('ParentID')) return; // The parent has not changed, skip the check for performance reasons.
+
+		// Walk the hierarchy upwards until we reach the top, or until we reach the originating node again.
+		$node = $this->owner;
+		while($node) {
+			if ($node->ParentID==$this->owner->ID) {
+				// Hierarchy is looping.
+				$validationResult->error(
+					_t(
+						'Hierarchy.InfiniteLoopNotAllowed',
+						'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this',
+						'First argument is the class that makes up the hierarchy.',
+						array('type' => $this->owner->class)
+					),
+					'INFINITE_LOOP'
+				);
+				break;
+			}
+			$node = $node->ParentID ? $node->Parent() : null;
+		}
+
+		// At this point the $validationResult contains the response.
 	}
 
 	/**
 	 * Returns the children of this DataObject as an XHTML UL. This will be called recursively on each child,
 	 * so if they have children they will be displayed as a UL inside a LI.
 	 * @param string $attributes Attributes to add to the UL.
-	 * @param string $titleEval PHP code to evaluate to start each child - this should include '<li>'
+	 * @param string|callable $titleEval PHP code to evaluate to start each child - this should include '<li>'
 	 * @param string $extraArg Extra arguments that will be passed on to children, for if they overload this function.
 	 * @param boolean $limitToMarked Display only marked children.
 	 * @param string $childrenMethod The name of the method used to get children from each object
@@ -74,7 +94,8 @@ class Hierarchy extends DataExtension {
 			foreach($children as $child) {
 				if(!$limitToMarked || $child->isMarked()) {
 					$foundAChild = true;
-					$output .= eval("return $titleEval;") . "\n" . 
+					$output .= (is_callable($titleEval)) ? $titleEval($child) : eval("return $titleEval;");
+					$output .= "\n" . 
 					$child->getChildrenAsUL("", $titleEval, $extraArg, $limitToMarked, $childrenMethod, $numChildrenMethod, false, $minNodeCount) . "</li>\n";
 				}
 			}
@@ -178,7 +199,7 @@ class Hierarchy extends DataExtension {
 			$children = $node->$childrenMethod($context);
 		} else {
 			user_error(sprintf("Can't find the method '%s' on class '%s' for getting tree children", 
-				$childrenMethod, get_class($this->owner)), E_USER_ERROR);
+				$childrenMethod, get_class($node)), E_USER_ERROR);
 		}
 		
 		$node->markExpanded();
@@ -605,6 +626,21 @@ class Hierarchy extends DataExtension {
 		
 		return $ancestors;
 	}
+
+	/**
+	 * Returns a human-readable, flattened representation of the path to the object,
+	 * using its {@link Title()} attribute.
+	 * 
+	 * @param String
+	 * @return String
+	 */
+	public function getBreadcrumbs($separator = ' &raquo; ') {
+		$crumbs = array();
+		$ancestors = array_reverse($this->owner->getAncestors()->toArray());
+		foreach($ancestors as $ancestor) $crumbs[] = $ancestor->Title;
+		$crumbs[] = $this->owner->Title;
+		return implode($separator, $crumbs);
+	}
 	
 	/**
 	 * Get the next node in the tree of the type. If there is no instance of the className descended from this node,
@@ -669,12 +705,12 @@ class Hierarchy extends DataExtension {
 		self::$expanded = array();
 		self::$treeOpened = array();
 	}
-	
-	function reset() {
+
+	public static function reset() {
 		self::$marked = array();
 		self::$expanded = array();
 		self::$treeOpened = array();
 	}
+
 }
 
-?>

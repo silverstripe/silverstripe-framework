@@ -2,7 +2,7 @@
 /**
  * Simple wrapper to allow access to the live site via REST
  * 
- * @package sapphire
+ * @package framework
  * @subpackage integration
  */ 
 class VersionedRestfulServer extends Controller {
@@ -11,8 +11,8 @@ class VersionedRestfulServer extends Controller {
 		'index'
 	);
 	
-	function handleRequest($request, $model) {
-		$this->setModel($model);
+	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+		$this->setDataModel($model);
 		Versioned::reading_stage('Live');
 		$restfulserver = new RestfulServer();
 		$response = $restfulserver->handleRequest($request, $model);
@@ -20,4 +20,4 @@ class VersionedRestfulServer extends Controller {
 	}
 }
 
-?>
+

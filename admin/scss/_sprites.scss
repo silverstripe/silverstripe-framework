@@ -1,15 +1,18 @@
 /**
  * Helper SCSS file for generating sprites for the interface.
- *
- * S
  */
 @import "compass/utilities/sprites/base";
 
-$icon24: sprite-map("menu_icons/24x24/*.png");
-$icon16: sprite-map("menu_icons/16x16/*.png");
+@import "btn-icon/*.png";
+.ui-state-default {
+	@include all-btn-icon-sprites;
+}
 
-$btn_icons: sprite-map("btn_icons/*.png", $spacing: 10px);
-$sprites32: sprite-map("sprites_32x32/*.png", $spacing: 10px);
+$icon24: sprite-map("menu-icons/24x24/*.png");
+$icon16: sprite-map("menu-icons/16x16/*.png");
+
+$btn-icon: sprite-map("btn-icon/*.png", $spacing: 10px);
+$sprites32: sprite-map("sprites-32x32/*.png", $spacing: 10px);
 
 @mixin icons($sprite) {
 	background: $sprite;

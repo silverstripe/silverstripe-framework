@@ -1,0 +1,25 @@
+mi_NZ:
+  AssetAdmin:
+    MENUTITLE: "Ngā kōnae me ngā atahanga. "
+  AssetTableField:
+    DIM: "Nuinga"
+    OWNER: "Kaiūmanga"
+    SIZE: "Nuinga"
+    TITLE: "Ingoa "
+    TYPE: "Tūmomo "
+  CMSMain:
+    MENUTITLE: "Wāhi kai"
+    SAVE: "tiakina"
+  ComplexTableField.ss:
+    ADDITEM: "Whakaurunga"
+  LeftAndMain:
+    HELP: "Āwhina"
+    PAGETYPE: "Momo whārangi:"
+    PERMAGAIN: "Kua takiputaina atu koe i te CMS. Ki te pīrangi koe ki te takiuru atu anō, tāurutia tētahi ingoa kaiwhakamahi me te kupuhipa. "
+    PERMALREADY: "Aroha mai, kāore e taea te whakauru i tērā wāhanga o te CMS. Ki te pīrangi koe ki te takiuru atu mā tētahi atu ingoa, whakamahia ki raro nei."
+    PERMDEFAULT: "Whiriwhiria koa tētahi aratuka motuhēhēnga me te tāuru i ō pūkenga ki te whakauru i te CMS."
+  Member:
+  SecurityAdmin:
+    MENUTITLE: "Haumarutanga"
+    NEWGROUP: "Roopu hou"
+  SiteTree:

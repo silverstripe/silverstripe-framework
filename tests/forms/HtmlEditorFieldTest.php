@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class HtmlEditorFieldTest extends FunctionalTest {
@@ -10,7 +10,7 @@ class HtmlEditorFieldTest extends FunctionalTest {
 	public static $use_draft_site = true;
 	
 	protected $requiredExtensions = array(
-		'HtmlEditorField_Toolbar' => array('HtmlEditorFieldTest_DummyImageFormFieldExtension')
+		'HtmlEditorField_Toolbar' => array('HtmlEditorFieldTest_DummyMediaFormFieldExtension')
 	);
 	
 	protected $extraDataObjects = array('HtmlEditorFieldTest_Object');
@@ -76,27 +76,28 @@ class HtmlEditorFieldTest extends FunctionalTest {
 		);
 	}
 
-	public function testExtendImageFormFields() {
-		if(class_exists('ThumbnailStripField')) {
-			$controller = new Controller();
+	public function testHtmlEditorFieldFileLocal() {
+		$file = new HtmlEditorField_File('http://domain.com/folder/my_image.jpg?foo=bar');
+		$this->assertEquals('http://domain.com/folder/my_image.jpg?foo=bar', $file->URL);
+		$this->assertEquals('my_image.jpg', $file->Name);
+		$this->assertEquals('jpg', $file->Extension);
+		// TODO Can't easily test remote file dimensions
+	}
 
-			$toolbar = new HtmlEditorField_Toolbar($controller, 'DummyToolbar');
-
-			$imageForm = $toolbar->ImageForm();
-			$this->assertTrue(HtmlEditorFieldTest_DummyImageFormFieldExtension::$update_called);
-			$this->assertEquals($imageForm->Fields(), HtmlEditorFieldTest_DummyImageFormFieldExtension::$fields);
-		} else {
-			$this->markTestSkipped('Test requires cms module (ThumbnailStripfield class)');
-		}
-		
+	public function testHtmlEditorFieldFileRemote() {
+		$fileFixture = new File(array('Name' => 'my_local_image.jpg', 'Filename' => 'folder/my_local_image.jpg'));
+		$file = new HtmlEditorField_File('http://localdomain.com/folder/my_local_image.jpg', $fileFixture);
+		$this->assertEquals('http://localdomain.com/folder/my_local_image.jpg', $file->URL);
+		$this->assertEquals('my_local_image.jpg', $file->Name);
+		$this->assertEquals('jpg', $file->Extension);
 	}
 }
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
-class HtmlEditorFieldTest_DummyImageFormFieldExtension extends Extension implements TestOnly {
+class HtmlEditorFieldTest_DummyMediaFormFieldExtension extends Extension implements TestOnly {
 	public static $fields = null;
 	public static $update_called = false;
 

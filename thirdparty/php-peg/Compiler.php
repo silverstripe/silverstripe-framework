@@ -139,7 +139,7 @@ abstract class Token extends PHPWriter {
 	// abstract protected function match_code() ;
 
 	function compile() {
-		$code = $this->match_code() ;
+		$code = $this->match_code($this->value) ;
 
 		$id = $this->varid() ;
 
@@ -254,8 +254,8 @@ abstract class TokenExpressionable extends TokenTerminal {
 
 	static $expression_rx = '/ \$(\w+) | { \$(\w+) } /x';
 
-	function contains_expression(){
-		return preg_match(self::$expression_rx, $this->value);
+	function contains_expression( $value ){
+		return preg_match(self::$expression_rx, $value);
 	}
 
 	function expression_replace($matches) {
@@ -273,17 +273,17 @@ class TokenLiteral extends TokenExpressionable {
 		parent::__construct( 'literal', "'" . substr($value,1,-1) . "'" );
 	}
 
-	function match_code() {
+	function match_code( $value ) {
 		// We inline single-character matches for speed
-		if ( !$this->contains_expression() && strlen( eval( 'return '.  $this->value . ';' ) ) == 1 ) {
-			return $this->match_fail_conditional( 'substr($this->string,$this->pos,1) == '.$this->value, 
+		if ( !$this->contains_expression($value) && strlen( eval( 'return '. $value . ';' ) ) == 1 ) {
+			return $this->match_fail_conditional( 'substr($this->string,$this->pos,1) == '.$value,
 				PHPBuilder::build()->l(
 					'$this->pos += 1;',
-					$this->set_text( $this->value )
+					$this->set_text($value)
 				)
 			);
 		}
-		return parent::match_code($this->value);
+		return parent::match_code($value);
 	}
 }
 
@@ -298,8 +298,8 @@ class TokenRegex extends TokenExpressionable {
 		parent::__construct('rx', self::escape($value));
 	}
 
-	function match_code() {
-		return parent::match_code("'{$this->value}'");
+	function match_code( $value ) {
+		return parent::match_code("'{$value}'");
 	}
 }
 
@@ -309,9 +309,9 @@ class TokenWhitespace extends TokenTerminal {
 	}
 
 	/* Call recursion indirectly */
-	function match_code() {
+	function match_code( $value ) {
 		$code = parent::match_code( '' ) ;
-		return $this->value ? $code->replace( array( 'FAIL' => NULL )) : $code ;
+		return $value ? $code->replace( array( 'FAIL' => NULL )) : $code ;
 	}
 }
 
@@ -320,13 +320,13 @@ class TokenRecurse extends Token {
 		parent::__construct( 'recurse', $value ) ;
 	}
 
-	function match_function() {
-		return "'".$this->function_name($this->value)."'";
+	function match_function( $value ) {
+		return "'".$this->function_name($value)."'";
 	}
 	
-	function match_code() {
-		$function = $this->match_function() ;
-		$storetag = $this->function_name( $this->tag ? $this->tag : $this->match_function() ) ;
+	function match_code( $value ) {
+		$function = $this->match_function($value) ;
+		$storetag = $this->function_name( $this->tag ? $this->tag : $this->match_function($value) ) ;
 
 		if ( ParserCompiler::$debug ) {
 			$debug_header = PHPBuilder::build()
@@ -373,8 +373,8 @@ class TokenRecurse extends Token {
 }
 
 class TokenExpressionedRecurse extends TokenRecurse {
-	function match_function() {
-		return '$this->expression($result, $stack, \''.$this->value.'\')';
+	function match_function( $value ) {
+		return '$this->expression($result, $stack, \''.$value.'\')';
 	}
 }
 
@@ -383,9 +383,9 @@ class TokenSequence extends Token {
 		parent::__construct( 'sequence', $value ) ;
 	}
 
-	function match_code() {
+	function match_code( $value ) {
 		$code = PHPBuilder::build() ;
-		foreach( $this->value as $token ) {
+		foreach( $value as $token ) {
 			$code->l(
 				$token->compile()->replace(array(
 					'MATCH' => NULL,
@@ -404,14 +404,14 @@ class TokenOption extends Token {
 		parent::__construct( 'option', array( $opt1, $opt2 ) ) ;
 	}
 
-	function match_code() {
+	function match_code( $value ) {
 		$id = $this->varid() ;
 		$code = PHPBuilder::build()
 			->l(
 			$this->save($id)
 			) ;
 
-		foreach ( $this->value as $opt ) {
+		foreach ( $value as $opt ) {
 			$code->l(
 				$opt->compile()->replace(array(
 					'MATCH' => 'MBREAK',

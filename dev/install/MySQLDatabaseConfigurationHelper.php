@@ -18,7 +18,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	 * @return boolean
 	 */
 	public function requireDatabaseFunctions($databaseConfig) {
-		return (function_exists('mysql_connect')) ? true : false;
+		return class_exists('MySQLi');
 	}
 
 	/**
@@ -29,12 +29,12 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	public function requireDatabaseServer($databaseConfig) {
 		$success = false;
 		$error = '';
-		$conn = @mysql_connect($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
-		if($conn || mysql_errno() < 2000) {
+		$conn = @new MySQLi($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
+		if($conn && $conn->connect_errno < 2000) {
 			$success = true;
 		} else {
 			$success = false;
-			$error = mysql_error();
+			$error = ($conn) ? $conn->connect_error : '';
 		}
 		return array(
 			'success' => $success,
@@ -48,13 +48,13 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	 * @return mixed string Version number as string | boolean FALSE on failure
 	 */
 	public function getDatabaseVersion($databaseConfig) {
-		$conn = @mysql_connect($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
+		$conn = new MySQLi($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
 		if(!$conn) return false;
-		$version = @mysql_get_server_info($conn);
+		$version = $conn->server_info;
 		if(!$version) {
 			// fallback to trying a query
-			$result = @mysql_query("SELECT VERSION()");
-			$row = @mysql_fetch_array($result);
+			$result = $conn->query('SELECT VERSION()');
+			$row = $result->fetch_array();
 			if($row && isset($row[0])) {
 				$version = trim($row[0]);
 			}
@@ -93,12 +93,12 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	public function requireDatabaseConnection($databaseConfig) {
 		$success = false;
 		$error = '';
-		$conn = @mysql_connect($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
+		$conn = new MySQLi($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
 		if($conn) {
 			$success = true;
 		} else {
 			$success = false;
-			$error = mysql_error();
+			$error = ($conn) ? $conn->connect_error : '';
 		}
 		return array(
 			'success' => $success,
@@ -116,13 +116,13 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	public function requireDatabaseOrCreatePermissions($databaseConfig) {
 		$success = false;
 		$alreadyExists = false;
-		$conn = @mysql_connect($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
-		if(@mysql_select_db($databaseConfig['database'], $conn)) {
+		$conn = new MySQLi($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
+		if($conn && $conn->select_db($databaseConfig['database'])) {
 			$success = true;
 			$alreadyExists = true;
 		} else {
-			if(@mysql_query("CREATE DATABASE testing123", $conn)) {
-				mysql_query("DROP DATABASE testing123", $conn);
+			if($conn && $conn->query('CREATE DATABASE testing123')) {
+				mysql_query('DROP DATABASE testing123', $conn);
 				$success = true;
 				$alreadyExists = false;
 			}

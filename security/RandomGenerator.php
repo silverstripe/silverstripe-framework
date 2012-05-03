@@ -4,7 +4,7 @@
  * (mcrypt_create_iv(), openssl_random_pseudo_bytes(), /dev/urandom, COM.CAPICOM.Utilities.1, mt_rand()).
  * Chosen method depends on operating system and PHP version.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  * @author Ingo Schommer
  */
@@ -21,8 +21,7 @@ class RandomGenerator {
 		
 		// TODO Fails with "Could not gather sufficient random data" on IIS, temporarily disabled on windows
 		if(!$isWin) {
-			// mcrypt with urandom is only available on PHP 5.3 or newer
-			if(version_compare(PHP_VERSION, '5.3.0', '>=') && function_exists('mcrypt_create_iv')) {
+			if(function_exists('mcrypt_create_iv')) {
 				$e = mcrypt_create_iv(64, MCRYPT_DEV_URANDOM);
 				if($e !== false) return $e;
 			}

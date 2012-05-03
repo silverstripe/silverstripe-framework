@@ -1,15 +1,15 @@
 <?php
 /**
  * Base controller class.
- * Controllers are the cornerstone of all site functionality in Sapphire.  The {@link Director}
+ * Controllers are the cornerstone of all site functionality in SilverStripe.  The {@link Director}
  * selects a controller to pass control to, and then calls {@link run()}.  This method will execute
  * the appropriate action - either by calling the action method, or displaying the action's template.
  *
  * See {@link getTemplate()} for information on how the template is chosen.
- * @package sapphire
+ * @package framework
  * @subpackage control
  */
-class Controller extends RequestHandler {
+class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 	/**
 	 * @var array $urlParams An array of arguments extracted from the URL 
@@ -122,14 +122,14 @@ class Controller extends RequestHandler {
 	 * @return SS_HTTPResponse The response that this controller produces, 
 	 *  including HTTP headers such as redirection info
 	 */
-	function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
+	function handleRequest(SS_HTTPRequest $request, DataModel $model) {
 		if(!$request) user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
 		
 		$this->pushCurrent();
 		$this->urlParams = $request->allParams();
 		$this->request = $request;
 		$this->response = new SS_HTTPResponse();
-		$this->setModel($model);
+		$this->setDataModel($model);
 		
 		$this->extend('onBeforeInit');
 
@@ -297,6 +297,23 @@ class Controller extends RequestHandler {
 	
 	public function hasAction($action) {
 		return parent::hasAction($action) || $this->hasActionTemplate($action);
+	}
+
+	/**
+	 * Removes all the "action" part of the current URL and returns the result.
+	 * If no action parameter is present, returns the full URL
+	 * @static
+	 * @return String
+	 */
+	public function removeAction($fullURL, $action = null) {
+		if (!$action) $action = $this->getAction();    //default to current action
+		$returnURL = $fullURL;
+
+		if (($pos = strpos($fullURL, $action)) !== false) {
+			$returnURL = substr($fullURL,0,$pos);
+		}
+
+		return $returnURL;
 	}
 	
 	/**
@@ -519,17 +536,6 @@ class Controller extends RequestHandler {
 	}
 	
 	/**
-	 * Returns true if this controller is processing an ajax request
-	 * @return boolean True if this controller is processing an ajax request
-	 */
-	function isAjax() {
-		return (
-			isset($this->requestParams['ajax']) || isset($_REQUEST['ajax']) ||
-			(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest")
-		);
-	}
-	
-	/**
 	 * Joins two or more link segments together, putting a slash between them if necessary.
 	 * Use this for building the results of {@link Link()} methods.
 	 * If either of the links have query strings, 
@@ -555,7 +561,8 @@ class Controller extends RequestHandler {
 				list($arg, $suffix) = explode('?',$arg,2);
 				$querystrings[] = $suffix;
 			}
-			if($arg) {
+			if((is_string($arg) && $arg) || is_numeric($arg)) {
+				$arg = (string)$arg;
 				if($result && substr($result,-1) != '/' && $arg[0] != '/') $result .= "/$arg";
 				else $result .= (substr($result, -1) == '/' && $arg[0] == '/') ? ltrim($arg, '/') : $arg;
 			}
@@ -566,6 +573,12 @@ class Controller extends RequestHandler {
 		
 		return $result;
 	}
+
+	public static function get_template_global_variables() {
+		return array(
+			'CurrentPage' => 'curr',
+		);
+	}
 }
 
-?>
+

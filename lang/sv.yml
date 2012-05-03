@@ -1,0 +1,383 @@
+sv:
+  AssetAdmin:
+    MENUTITLE: "Filer & bilder"
+    NEWFOLDER: "Ny mapp"
+  AssetTableField:
+    CREATED: "Först uppladdad"
+    DIM: "Dimensioner"
+    FILENAME: "Filnamn"
+    LASTEDIT: "Senast ändrad"
+    OWNER: "Ägare"
+    SIZE: "Storlek"
+    TITLE: "Titel"
+    TYPE: "Typ"
+    URL: "URL"
+  BBCodeParser:
+    ALIGNEMENT: "Justering"
+    ALIGNEMENTEXAMPLE: "högerjusterad"
+    BOLD: "Fet text"
+    BOLDEXAMPLE: "Fet"
+    CODE: "Kod-block"
+    CODEDESCRIPTION: "Oformaterat kod-block"
+    CODEEXAMPLE: "Kod-block"
+    COLORED: "Färgad text"
+    COLOREDEXAMPLE: "blå text"
+    EMAILLINK: "E-postlänk"
+    EMAILLINKDESCRIPTION: "Skapa länk till en e-postadress"
+    IMAGE: "Bild"
+    IMAGEDESCRIPTION: "Visa en bild i ditt inlägg"
+    ITALIC: "Kursiv text"
+    ITALICEXAMPLE: "Kursiv"
+    LINK: "Hemsidelänk"
+    LINKDESCRIPTION: "Länk till en annan sida eller URL"
+    STRUCK: "Genomstruken text"
+    STRUCKEXAMPLE: "Genomstruken"
+    UNDERLINE: "Understruken text"
+    UNDERLINEEXAMPLE: "Understruken"
+    UNORDERED: "Oordnad lista"
+    UNORDEREDDESCRIPTION: "Oordnad lista"
+    UNORDEREDEXAMPLE1: "oordnad artikel 1"
+  BasicAuth:
+    ENTERINFO: "Var god ange användarnamn och lösenord"
+    ERRORNOTADMIN: "Den användaren är ingen administratör"
+    ERRORNOTREC: "Det användarnamnet / lösenordet känns inte igen"
+  Boolean:
+    ANY: "Valfri"
+    NO: "Nej"
+    YES: "Ja"
+  CMSMain:
+    ACCESS: "Tillgång till '%s' (%s)"
+    ACCESSALLINTERFACES: "Tillgång till alla CMS-delar"
+    MENUTITLE: "Sidor"
+    SAVE: "Spara"
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "Du har ändrat ditt lösenord för"
+    CHANGEPASSWORDTEXT2: "Du kan nu använda följande uppgifter för att logga in:"
+    EMAIL: "E-post"
+    HELLO: "Hej"
+    PASSWORD: "Lösenord"
+  CheckboxField:
+    NO: "Nej"
+    YES: "Ja"
+  ComplexTableField:
+    CLOSEPOPUP: "Stäng popup"
+    SUCCESSADD: "Lade till %s %s %s"
+    SUCCESSEDIT: "Sparade %s %s %s"
+  ComplexTableField.ss:
+    ADDITEM: "Lägg till %s"
+    SORTASC: "Sortera stigande"
+    SORTDESC: "Sortera fallande"
+  ComplexTableField_popup.ss:
+    NEXT: "Nästa"
+    PREVIOUS: "Föregående"
+  ConfirmedPasswordField:
+    ATLEAST: "Lösenord måste bestå av minst %s tecken."
+    BETWEEN: "Lösenord måste vara mellan %s och %s tecken långt."
+    MAXIMUM: "Lösenord får inte bestå av fler än %s tecken."
+    SHOWONCLICKTITLE: "Ändra lösenord"
+  CreditCardField:
+    FIRST: "första"
+    FOURTH: "fjärde"
+    SECOND: "andra"
+    THIRD: "tredje"
+  CurrencyField:
+    CURRENCYSYMBOL: "dollar"
+  DataObject:
+    PLURALNAME: "Dataobjekt"
+    SINGULARNAME: "Dataobjekt"
+  Date:
+    DAY: "dag"
+    DAYS: "dagar"
+    HOUR: "timme"
+    HOURS: "timmar"
+    MIN: "min"
+    MINS: "min"
+    MONTH: "månad "
+    MONTHS: "månader "
+    SEC: "sek"
+    SECS: "sekunder"
+    TIMEDIFFAGO: "%s sen"
+    YEAR: "år"
+    YEARS: "år"
+  DateField:
+    NOTSET: "inte angivet"
+    TODAY: "idag"
+    VALIDDATEMAXDATE: "Ditt datum måste vara äldre eller matcha maximalt tillåtna datumet (%s)"
+    VALIDDATEMINDATE: "Ditt datum måste vara nyare eller matcha minimalt tillåtna datumet (%s)"
+  DropdownField:
+    CHOOSE: "(Välj)"
+  EmailField:
+    VALIDATION: "Var god ange en e-postadress."
+  Email_BounceRecord:
+    PLURALNAME: "E-post ej giltig mottagare register"
+    SINGULARNAME: "E-post ej giltig mottagare register"
+  Enum:
+    ANY: "Valfri"
+  File:
+    Content: "Innehåll"
+    Filename: "Filnamn"
+    INVALIDEXTENSION: "Detta tillägg är inte tillåtet (tillåtna: %s)"
+    NOFILESIZE: "Filstorleken är noll bytes"
+    NOVALIDUPLOAD: "Filen är inte en giltig fil"
+    Name: "Namn"
+    PLURALNAME: "Filer"
+    SINGULARNAME: "Fil"
+    TOOLARGE: "Filstorleken är för stor, största möjliga är %s."
+    Title: "Titel"
+  FileIFrameField:
+    ATTACH: "Bifoga % s"
+    ATTACHONCESAVED: "% SS kan bifogas när du har sparat posten för första gången"
+    DELETE: "Radera %s"
+    FILE: "Fil"
+    FROMCOMPUTER: "Från din dataor"
+    FROMFILESTORE: "Från filarkivet"
+    NOSOURCE: "Vänligen välj en käll-fil att tillägga"
+    REPLACE: "Ersätt %s"
+  ForgotPasswordEmail.ss:
+    HELLO: "Hej"
+    TEXT1: "Här är din"
+    TEXT2: "Återställningslänk för lösenord"
+    TEXT3: "för"
+  Form:
+    FIELDISREQUIRED: "%s är obligatorisk"
+    VALIDATIONCREDITNUMBER: "Var god och kontrollera så att du har angett %s kontokortsnumret korrekt"
+    VALIDATIONFAILED: "Valideringen misslyckades"
+    VALIDATIONNOTUNIQUE: "Det angivna värdet är inte unikt"
+    VALIDATIONPASSWORDSDONTMATCH: "Lösenorden matchar inte"
+    VALIDATIONPASSWORDSNOTEMPTY: "Lösenord kan inte vara tomt"
+    VALIDATIONSTRONGPASSWORD: "Lösenord måste bestå av minst en siffra och en bokstav."
+    VALIDATOR: "Validator"
+    VALIDCURRENCY: "Var god ange en giltig valuta."
+  FormField:
+    NONE: "ingen"
+  Group:
+    Code: "Gruppkod"
+    DefaultGroupTitleAdministrators: "Administratörer"
+    DefaultGroupTitleContentAuthors: "Författare"
+    Description: "Beskrivning"
+    Locked: "Låst?"
+    Parent: "Föräldragrupp"
+    RolesAddEditLink: "Lägg till/redigera roller"
+    Sort: "Sorteringsordning"
+    has_many_Permissions: "Tillstånd"
+    many_many_Members: "Medlemmar"
+  GroupImportForm:
+    Help1: "<p>Importera en eller fler grupper i <em>CSV</em> format (komma-separerade värden). <small><a href=\"#\" class =\"toggle-advanced\">Visa avancerade val</a></small></p>"
+    Help2: |
+            <div class="advanced">
+            <h4>Avancerade val</h4>
+            <ul>
+            <li>Tillåtna kolumner: <em>%s</em></li>
+            <li>Existerande grupper matchas med deras unika <em>Code</em> värde, och uppdateras med nya värden från den importerade filen.</li>
+            <li>Gruppernas hierarki kan skapas genom att lägga till en <em>ParentCode</em> kolumn.</li>
+            <li>Tillträdes koder kan tilldelas genom att lägga till en <em>PermissionCode</em> kolumn. Existerande tillträdes koder raderas ej.</li>
+            </ul>
+            </div>
+    ResultCreated: "Skapade %d grupper"
+    ResultDeleted: "Raderade %d grupper"
+    ResultUpdated: "Uppdaterade %d grupper"
+  HtmlEditorField:
+    ANCHORVALUE: "Ankare"
+    BUTTONINSERTLINK: "Infoga länk"
+    BUTTONREMOVELINK: "Ta bort länk"
+    CAPTIONTEXT: "Bildtext"
+    CSSCLASS: "Placering / stil"
+    CSSCLASSCENTER: "Centrerad, för sig själv"
+    CSSCLASSLEFT: "Till vänster, med text runt omkring"
+    CSSCLASSLEFTALONE: "Till vänster, för sig själv."
+    CSSCLASSRIGHT: "Till höger, med text runt omkring."
+    EMAIL: "E-postadress"
+    FILE: "Fil"
+    FOLDER: "Mapp"
+    IMAGE: "Bild"
+    IMAGEALTTEXT: "Alternativ text (alt) - visas om bilden inte kan visas"
+    IMAGEDIMENSIONS: "Dimensioner"
+    IMAGEHEIGHTPX: "Höjd"
+    IMAGETITLE: "Titel text (tooltip) - för ytterligare information om bilden"
+    IMAGEWIDTHPX: "Bredd"
+    LINK: "Länk"
+    LINKANCHOR: "Ankare på den här sidan"
+    LINKDESCR: "Länk-beskrivning"
+    LINKEMAIL: "E-postadress"
+    LINKEXTERNAL: "En annan sajt"
+    LINKFILE: "Ladda ner en fil"
+    LINKINTERNAL: "Sida på sajten"
+    LINKOPENNEWWIN: "Öppna länk i nytt fönster"
+    LINKTO: "Länka till"
+    PAGE: "Sida"
+    URL: "URL"
+  ImageField:
+    IMAGE: "Bild"
+  Image_iframe.ss:
+    TITLE: "Iframe för uppladdning"
+  LeftAndMain:
+    CANT_REORGANISE: "Du har inte behörighet att rearange site tree. Ditt förändring sparades inte."
+    HELP: "Hjälp"
+    PAGETYPE: "Sidtyp"
+    PERMAGAIN: "Du har blivit utloggad. Du kan ange användarnamn och lösenord för att logga in igen"
+    PERMALREADY: "Tyvärr så har du inte tillträde till den delen av CMSet. Om du vill logga in med en annan användare kan du göra det nedan"
+    PERMDEFAULT: "Var god välj en inloggningsmetod och fyll i dina uppgifter för att logga in i CMSet."
+    PLEASESAVE: "Var god spara sidan. Den här sidan kan inte uppdateras för den har inte sparats än."
+    SAVED: "sparad"
+  LoginAttempt:
+    Email: "E-postadress"
+    IP: "IP-adress"
+    Status: "Status"
+  Member:
+    ADDRESS: "Adress"
+    BUTTONCHANGEPASSWORD: "Ändra lösenord"
+    BUTTONLOGIN: "Logga in"
+    BUTTONLOGINOTHER: "Logga in som annan användare"
+    BUTTONLOSTPASSWORD: "Jag har glömt mitt lösenord"
+    CONFIRMNEWPASSWORD: "Bekräfta nytt lösenord"
+    CONFIRMPASSWORD: "Bekräfta lösenord"
+    CONTACTINFO: "Kontaktinformation"
+    EMAIL: "E-post"
+    EMAILSIGNUPINTRO1: "Tack för att du registrerar dig som medlem, dina uppgifter är listade här nedanför. Spara dem för framtida bruk."
+    EMAILSIGNUPINTRO2: "Du kan logga in på hemsidan med uppgifterna angivna nedan"
+    EMAILSIGNUPSUBJECT: "Tack för att du registrerar dig"
+    EMPTYNEWPASSWORD: "Det nya lösenordet kan inte vara tomt, vänligen försök igen"
+    ENTEREMAIL: "Ange en e-postadress för att få en återställningslänk för lösenordet."
+    ERRORLOCKEDOUT: "Ditt konto har stängts av tillfället på grund av för många misslyckade inloggningsförsök. Försök igen om 20 minuter."
+    ERRORNEWPASSWORD: "Du har angett ditt nya lösenord annorlunda, försök igen"
+    ERRORPASSWORDNOTMATCH: "Ditt nuvarande lösenord matchar inte, var god försök igen"
+    ERRORWRONGCRED: "Antingen e-postadressen eller lösenordet är fel. Försök igen."
+    FIRSTNAME: "Förnamn"
+    GREETING: "Välkommen"
+    INTERFACELANG: "Gränssnittsspråk"
+    INVALIDNEWPASSWORD: "Vi kunde inte acceptera det lösenorder: %s"
+    LOGGEDINAS: "Du är inloggad som %s."
+    MOBILE: "Mobil"
+    NAME: "Namn"
+    NEWPASSWORD: "Nytt lösenord"
+    PASSWORD: "Lösenord"
+    PHONE: "Telefon"
+    PLURALNAME: "Medlemmar"
+    PROFILESAVESUCCESS: "Lyckades spara."
+    REMEMBERME: "Kom ihåg mig nästa gång"
+    SINGULARNAME: "Medlem"
+    SUBJECTPASSWORDCHANGED: "Ditt lösenord har ändrats"
+    SUBJECTPASSWORDRESET: "Din återställningslänk"
+    SURNAME: "Efternamn"
+    VALIDATIONMEMBEREXISTS: "Det finns redan en medlem med den här e-postadressen"
+    ValidationIdentifierFailed: "Kan inte skriva över existerande medlem #%d med identisk identifier (%s = %s))"
+    WELCOMEBACK: "Välkommen åter, %s"
+    YOUROLDPASSWORD: "Ditt gamla lösenord"
+    belongs_many_many_Groups: "Grupper"
+    db_LastVisited: "Datum för senaste besöket"
+    db_Locale: "Interfacespråk"
+    db_LockedOutUntil: "Utelåst till"
+    db_NumVisit: "Antal besök"
+    db_Password: "Lösenord"
+    db_PasswordExpiry: "Lösenordet upphör att gälla"
+  MemberAuthenticator:
+    TITLE: "E-post &amp; Lösenord"
+  MemberImportForm:
+    Help1: "<p>Importera medlemmar i <em>CSV format</em> (komma-separerade värden). <small><a href=\"#\" class =\"toggle-advanced\">Visa avancerade val</a></small></p>"
+    Help2: |
+            <div class="advanced">
+            <h4>Avancerat</h4>
+            <ul>
+            <li>Tillåtna kolumner: <em>%s</em></li>
+            <li>Existerande medlemmar matchas med deras unika <em>Code</em> väre, och uppdateras med nya värden från den importerade filen</li>
+            <li>Grupper kan tilldelas genom <em>Grupp</em> kolumnen. Grupper identifieras genom deras <em>Code</em> värde, multipla grupper kan separeras med komma. Existerande gruppmedlemskap raderas ej</li>
+            </ul>
+            </div>
+    ResultCreated: "Skapade %d medlemmar"
+    ResultDeleted: "Raderade %d medlemmar"
+    ResultNone: "Inga ändringar"
+    ResultUpdated: "Uppdaterade %d medlemmar"
+  ModelAdmin:
+    DELETE: "Ta bort"
+    DELETEDRECORDS: "Raderade %s poster."
+    IMPORT: "Importera från CSV"
+    IMPORTEDRECORDS: "Importerade %s poster."
+    NOCSVFILE: "Var god och bläddra efter en CSV-fil för import"
+    NOIMPORT: "Inget att importera"
+    UPDATEDRECORDS: "Uppdaterade %s poster."
+  MoneyField:
+    FIELDLABELAMOUNT: "Summa"
+    FIELDLABELCURRENCY: "Valuta"
+  NullableField:
+    IsNullLabel: "Är Null"
+  NumericField:
+    VALIDATION: "'%s' är inget nummer. Bara nummer är accepterat för detta fält"
+  Permission:
+    AdminGroup: "Administratör"
+    CMS_ACCESS_CATEGORY: "CMS Tillgång"
+    FULLADMINRIGHTS: "Fulla administrativa rättigheter"
+  PermissionCheckboxSetField:
+    AssignedTo: "tilldelad \"%s\""
+    FromGroup: "ärvt från grupp \"%s\""
+    FromRole: "ärvt från roll \"%s\""
+    FromRoleOnGroup: "ärvt från roll \"%s\" i grupp \"%s\""
+  Permissions:
+    PERMISSIONS_CATEGORY: "Roller och tillgångs inställningar"
+  PhoneNumberField:
+    VALIDATION: "Var god ange ett giltigt telefonnummer"
+  RelationComplexTableField.ss:
+    ADD: "Lägg till"
+  ReportAdmin:
+    MENUTITLE: "Rapporter"
+  Security:
+    ALREADYLOGGEDIN: "Du har inte tillträde till den här sidan. Om du har ett annat konto som har rätt behörighet kan du <a href=\"%s\">logga in igen</a>."
+    BUTTONSEND: "Skicka återställningslänk"
+    CHANGEPASSWORDBELOW: "Du kan ändra ditt lösenord nedan"
+    CHANGEPASSWORDHEADER: "Ändra ditt lösenord"
+    ENTERNEWPASSWORD: "Var god ange ett nytt lösenord"
+    ERRORPASSWORDPERMISSION: "Du måste logga in för att kunna ändra ditt lösenord"
+    LOGGEDOUT: "Du har blivit utloggad. Om du vill logga in igen anger du dina uppgifter nedan."
+    LOGIN: "Logga in"
+    NOTEPAGESECURED: "Den här sidan är låst. Fyll i dina uppgifter nedan så skickar vi dig vidare."
+    NOTERESETLINKINVALID: "<p>Lösenordsåterställningslänke är felaktig eller för gammal.</p><p>Du kan beställa en ny <a href=\"%s\">här</a> eller ändra ditt lösenord efter att du har <a href=\"%s\">loggat in</a>.</p>"
+    NOTERESETPASSWORD: "Ange din e-postadress så skickar vi en länk med vilken du kan återställa ditt lösenord"
+    PASSWORDSENTHEADER: "Länk för återställning av lösenord är skickad till '%s'"
+    PASSWORDSENTTEXT: "Tack! Länken för att återställa lösenordet har skickats till '%s'."
+  SecurityAdmin:
+    ACCESS_HELP: "Tillåt visning, tillägg samt redigering av användare, samt att tilldela tillträdes koder och roller till dem."
+    APPLY_ROLES: "Applicera roller till grupper"
+    APPLY_ROLES_HELP: "Förmåga att redigera rollerna tilldelade en grupp. Kräver \"Tillträde till 'Säkerhets' sektionen\" tillgång."
+    EDITPERMISSIONS: "Redigera tillstånd för grupper"
+    EDITPERMISSIONS_HELP: "Förmåga att redigera Tillgång samt IP Adresser för en grupp. Kräver \"Tillträde till 'Säkerhets' sektionen\" tillgång."
+    GROUPNAME: "Gruppnamn"
+    MEMBERS: "Medlemmar"
+    MENUTITLE: "Säkerhet"
+    MemberListCaution: "Varning: Att radera medlemmar från den här listan kommer också att radera dem från alla grupper i databasen"
+    NEWGROUP: "Ny grupp"
+    PERMISSIONS: "Behörigheter"
+    ROLES: "Roller"
+    ROLESDESCRIPTION: "Den här sektionen låter dig lägga till roller till den här gruppen. Roller är logiska tillgångs grupper, som kan redigeras i Roller-fliken"
+    TABROLES: "Roller"
+  SecurityAdmin_MemberImportForm:
+    BtnImport: "Importera"
+    FileFieldLabel: "CSV Fil <small>(Tillåtna filtyper: *.csv)</small>"
+  SimpleImageField:
+    NOUPLOAD: "Ingen bild uppladdad"
+  SiteTree:
+    TABMAIN: "Main"
+  TableField:
+    ISREQUIRED: "I %s är '%s' obligatorisk."
+  TableField.ss:
+    ADD: "Lägg till ny rad"
+  TableListField:
+    CSVEXPORT: "Exportera till CSV"
+    PRINT: "Skriv ut"
+    SELECT: "Välj:"
+  TableListField.ss:
+    SORTASC: "Sortera i stigande ordning"
+    SORTDESC: "Sortera i fallande ordning"
+  TableListField_PageControls.ss:
+    VIEWFIRST: "Visa första"
+    VIEWLAST: "Visa sista"
+    VIEWNEXT: "Visa nästa"
+    VIEWPREVIOUS: "Visa föregående"
+  TimeField:
+    VALIDATEFORMAT: "Ange ett riktigt format för tid (%s)"
+  ToggleCompositeField.ss:
+    HIDE: "Göm"
+    SHOW: "Visa"
+  ToggleField:
+    LESS: "mindre"
+    MORE: "mer"
+  Versioned:
+    has_many_Versions: "Versioner"

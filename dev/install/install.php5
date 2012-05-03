@@ -4,22 +4,27 @@
  ************************************************************************************
  **                                                                                **
  **  If you can read this text in your browser then you don't have PHP installed.  **
- **  Please install PHP 5.2 or higher, preferably PHP 5.3.                         **
+ **  Please install PHP 5.3.2 or higher, preferably PHP 5.3.4+.                    **
  **                                                                                **
  ************************************************************************************
  ************************************************************************************/
 
 /**
  * SilverStripe CMS Installer
- * This installer doesn't use any of the fancy Sapphire stuff in case it's unsupported.
+ * This installer doesn't use any of the fancy SilverStripe stuff in case it's unsupported.
  */
 
 // speed up mysql_connect timeout if the server can't be found
 ini_set('mysql.connect_timeout', 5);
 
 ini_set('max_execution_time', 0);
-error_reporting(E_ALL ^ E_NOTICE);
-session_start();
+
+error_reporting(E_ALL | E_STRICT);
+
+// Attempt to start a session so that the username and password can be sent back to the user.
+if (function_exists('session_start')) {
+	session_start();
+}
 
 // Include environment files
 $usingEnv = false;
@@ -42,23 +47,69 @@ if($envFileExists) {
 	}
 }
 
-include_once('sapphire/core/Object.php');
-include_once('sapphire/i18n/i18n.php');
-include_once('sapphire/dev/install/DatabaseConfigurationHelper.php');
-include_once('sapphire/dev/install/DatabaseAdapterRegistry.php');
+require_once FRAMEWORK_NAME . '/dev/install/DatabaseConfigurationHelper.php';
+require_once FRAMEWORK_NAME . '/dev/install/DatabaseAdapterRegistry.php';
 
 // Set default locale, but try and sniff from the user agent
-$locales = i18n::$common_locales;
-$defaultLocale = i18n::get_locale();
-if(isset($_SERVER['HTTP_USER_AGENT'])) {
-	foreach($locales as $code => $details) {
-		$bits = explode('_', $code);
-		if(preg_match("/{$bits[0]}.{$bits[1]}/", $_SERVER['HTTP_USER_AGENT'])) {
-			$defaultLocale = $code;
-			break;
-		}
-	}
-}
+$defaultLocale = 'en_US';
+$locales = array(
+  'af_ZA' => 'Afrikaans (South Africa)',
+  'ar_EG' => 'Arabic (Egypt)',
+  'hy_AM' => 'Armenian (Armenia)',
+  'ast_ES' => 'Asturian (Spain)',
+  'az_AZ' => 'Azerbaijani (Azerbaijan)',
+  'bs_BA' => 'Bosnian (Bosnia and Herzegovina)',
+  'bg_BG' => 'Bulgarian (Bulgaria)',
+  'ca_ES' => 'Catalan (Spain)',
+  'zh_CN' => 'Chinese (China)',
+  'zh_TW' => 'Chinese (Taiwan)',
+  'hr_HR' => 'Croatian (Croatia)',
+  'cs_CZ' => 'Czech (Czech Republic)',
+  'da_DK' => 'Danish (Denmark)',
+  'nl_NL' => 'Dutch (Netherlands)',
+  'en_GB' => 'English (United Kingdom)',
+  'en_US' => 'English (United States)',
+  'eo_XX' => 'Esperanto',
+  'et_EE' => 'Estonian (Estonia)',
+  'fo_FO' => 'Faroese (Faroe Islands)',
+  'fi_FI' => 'Finnish (Finland)',
+  'fr_FR' => 'French (France)',
+  'de_DE' => 'German (Germany)',
+  'el_GR' => 'Greek (Greece)',
+  'he_IL' => 'Hebrew (Israel)',
+  'hu_HU' => 'Hungarian (Hungary)',
+  'is_IS' => 'Icelandic (Iceland)',
+  'id_ID' => 'Indonesian (Indonesia)',
+  'it_IT' => 'Italian (Italy)',
+  'ja_JP' => 'Japanese (Japan)',
+  'km_KH' => 'Khmer (Cambodia)',
+  'lc_XX' => 'LOLCAT',
+  'lv_LV' => 'Latvian (Latvia)',
+  'lt_LT' => 'Lithuanian (Lithuania)',
+  'ms_MY' => 'Malay (Malaysia)',
+  'mi_NZ' => 'Maori (New Zealand)',
+  'ne_NP' => 'Nepali (Nepal)',
+  'nb_NO' => 'Norwegian',
+  'fa_IR' => 'Persian (Iran)',
+  'pl_PL' => 'Polish (Poland)',
+  'pt_BR' => 'Portuguese (Brazil)',
+  'pa_IN' => 'Punjabi (India)',
+  'ro_RO' => 'Romanian (Romania)',
+  'ru_RU' => 'Russian (Russia)',
+  'sr_RS' => 'Serbian (Serbia)',
+  'si_LK' => 'Sinhalese (Sri Lanka)',
+  'sk_SK' => 'Slovak (Slovakia)',
+  'sl_SI' => 'Slovenian (Slovenia)',
+  'es_AR' => 'Spanish (Argentina)',
+  'es_MX' => 'Spanish (Mexico)',
+  'es_ES' => 'Spanish (Spain)',
+  'sv_SE' => 'Swedish (Sweden)',
+  'th_TH' => 'Thai (Thailand)',
+  'tr_TR' => 'Turkish (Turkey)',
+  'uk_UA' => 'Ukrainian (Ukraine)',
+  'uz_UZ' => 'Uzbek (Uzbekistan)',
+  'vi_VN' => 'Vietnamese (Vietnam)',
+);
 
 // Discover which databases are available
 DatabaseAdapterRegistry::autodiscover();
@@ -135,14 +186,8 @@ if(file_exists('mysite/_config.php')) {
 	}
 }
 
-if(file_exists('sapphire/silverstripe_version')) {
-	$sapphireVersionFile = file_get_contents('sapphire/silverstripe_version');
-		if(strstr($sapphireVersionFile, "/sapphire/trunk")) {
-			$silverstripe_version = "trunk";
-		} else {
-			preg_match("/sapphire\/(?:(?:branches)|(?:tags))(?:\/rc)?\/([A-Za-z0-9._-]+)\/silverstripe_version/", $sapphireVersionFile, $matches);
-			$silverstripe_version = $matches[1];
-		}
+if(file_exists(FRAMEWORK_NAME . '/silverstripe_version')) {
+	$silverstripe_version = file_get_contents(FRAMEWORK_NAME . '/silverstripe_version');
 } else {
 	$silverstripe_version = "unknown";
 }
@@ -160,6 +205,7 @@ if($req->isIIS()) {
 
 if($req->hasErrors()) {
 	$hasErrorOtherThanDatabase = true;
+	$phpIniLocation = php_ini_loaded_file();
 }
 
 if($databaseConfig) {
@@ -186,7 +232,7 @@ if($installFromCli && ($req->hasErrors() || $dbReq->hasErrors())) {
 if((isset($_REQUEST['go']) || $installFromCli) && !$req->hasErrors() && !$dbReq->hasErrors() && $adminConfig['username'] && $adminConfig['password']) {
 	// Confirm before reinstalling
 	if(!$installFromCli && $alreadyInstalled) {
-		include('sapphire/dev/install/config-form.html');
+		include(FRAMEWORK_NAME . '/dev/install/config-form.html');
 
 	} else {
 		$inst = new Installer();
@@ -199,7 +245,7 @@ if((isset($_REQUEST['go']) || $installFromCli) && !$req->hasErrors() && !$dbReq-
 
 // Show the config form
 } else {
-	include('sapphire/dev/install/config-form.html');
+	include(FRAMEWORK_NAME . '/dev/install/config-form.html');
 }
 
 /**
@@ -241,7 +287,7 @@ class InstallRequirements {
 					$databaseConfig,
 					array(
 						"Database Configuration",
-						"Database access credentials correct",
+						"Database access credentials",
 						"That username/password doesn't work"
 					)
 				)) {
@@ -249,7 +295,7 @@ class InstallRequirements {
 						$databaseConfig,
 						array(
 							"Database Configuration",
-							"Database server meets required version",
+							"Database server version requirement",
 							'',
 							'Version ' . $this->getDatabaseConfigurationHelper($databaseConfig['type'])->getDatabaseVersion($databaseConfig)
 						)
@@ -319,17 +365,17 @@ class InstallRequirements {
 		$isIIS = $this->isIIS(7);
 		$webserver = $this->findWebserver();
 
-		$this->requirePHPVersion('5.3.0', '5.2.0', array("PHP Configuration", "PHP5 installed", null, "PHP version " . phpversion()));
+		$this->requirePHPVersion('5.3.4', '5.3.2', array("PHP Configuration", "PHP5 installed", null, "PHP version " . phpversion()));
 
 		// Check that we can identify the root folder successfully
-		$this->requireFile('sapphire/dev/install/config-form.html', array("File permissions",
+		$this->requireFile(FRAMEWORK_NAME . '/dev/install/config-form.html', array("File permissions",
 			"Does the webserver know where files are stored?",
 			"The webserver isn't letting me identify where files are stored.",
 			$this->getBaseDir()
 		));
 
 		$this->requireModule('mysite', array("File permissions", "mysite/ directory exists?"));
-		$this->requireModule('sapphire', array("File permissions", "sapphire/ directory exists?"));
+		$this->requireModule(FRAMEWORK_NAME, array("File permissions", FRAMEWORK_NAME . "/ directory exists?"));
 
 		if($isApache) {
 			$this->requireWriteable('.htaccess', array("File permissions", "Is the .htaccess file writeable?", null));
@@ -351,19 +397,17 @@ class InstallRequirements {
 		}
 
 		// Check for web server, unless we're calling the installer from the command-line
-		if(!isset($_SERVER['argv']) || !$_SERVER['argv']) {
-			$this->isRunningWebServer(array("Webserver Configuration", "Server software", "Unknown", $webserver));
+		$this->isRunningWebServer(array("Webserver Configuration", "Server software", "Unknown", $webserver));
 
-			if($isApache) {
-				$this->requireApacheRewriteModule('mod_rewrite', array("Webserver Configuration", "URL rewriting support", "You need mod_rewrite to use friendly URLs with SilverStripe, but it is not enabled."));
-			} elseif($isIIS) {
-				$this->requireIISRewriteModule('IIS_UrlRewriteModule', array("Webserver Configuration", "URL rewriting support", "You need to enable the IIS URL Rewrite Module to use friendly URLs with SilverStripe, but it is not installed or enabled. Download it for IIS 7 from http://www.iis.net/expand/URLRewrite"));
-			} else {
-				$this->warning(array("Webserver Configuration", "URL rewriting support", "I can't tell whether any rewriting module is running.  You may need to configure a rewriting rule yourself."));
-			}
-
-			$this->requireServerVariables(array('SCRIPT_NAME','HTTP_HOST','SCRIPT_FILENAME'), array("Webserver config", "Recognised webserver", "You seem to be using an unsupported webserver.  The server variables SCRIPT_NAME, HTTP_HOST, SCRIPT_FILENAME need to be set."));
+		if($isApache) {
+			$this->requireApacheRewriteModule('mod_rewrite', array("Webserver Configuration", "URL rewriting support", "You need mod_rewrite to use friendly URLs with SilverStripe, but it is not enabled."));
+		} elseif($isIIS) {
+			$this->requireIISRewriteModule('IIS_UrlRewriteModule', array("Webserver Configuration", "URL rewriting support", "You need to enable the IIS URL Rewrite Module to use friendly URLs with SilverStripe, but it is not installed or enabled. Download it for IIS 7 from http://www.iis.net/expand/URLRewrite"));
+		} else {
+			$this->warning(array("Webserver Configuration", "URL rewriting support", "I can't tell whether any rewriting module is running.  You may need to configure a rewriting rule yourself."));
 		}
+
+		$this->requireServerVariables(array('SCRIPT_NAME','HTTP_HOST','SCRIPT_FILENAME'), array("Webserver config", "Recognised webserver", "You seem to be using an unsupported webserver.  The server variables SCRIPT_NAME, HTTP_HOST, SCRIPT_FILENAME need to be set."));
 
 		// Check for GD support
 		if(!$this->requireFunction("imagecreatetruecolor", array("PHP Configuration", "GD2 support", "PHP must have GD version 2."))) {
@@ -373,9 +417,13 @@ class InstallRequirements {
 		// Check for XML support
 		$this->requireFunction('xml_set_object', array("PHP Configuration", "XML support", "XML support not included in PHP."));
 		$this->requireClass('DOMDocument', array("PHP Configuration", "DOM/XML support", "DOM/XML support not included in PHP."));
+		$this->requireFunction('simplexml_load_file', array('PHP Configuration', 'SimpleXML support', 'SimpleXML support not included in PHP.'));
 
 		// Check for token_get_all
-		$this->requireFunction('token_get_all', array("PHP Configuration", "PHP Tokenizer", "PHP tokenizer support not included in PHP."));
+		$this->requireFunction('token_get_all', array("PHP Configuration", "Tokenizer support", "Tokenizer support not included in PHP."));
+
+		// Check for CType support
+		$this->requireFunction('ctype_digit', array('PHP Configuration', 'CType support', 'CType support not included in PHP.'));
 
 		// Check for session support
 		$this->requireFunction('session_start', array('PHP Configuration', 'Session support', 'Session support not included in PHP.'));
@@ -392,23 +440,20 @@ class InstallRequirements {
 		// Check for Standard PHP Library (SPL) support
 		$this->requireFunction('spl_classes', array('PHP Configuration', 'SPL support', 'Standard PHP Library (SPL) not included in PHP.'));
 
-		if(version_compare(PHP_VERSION, '5.3.0', '>=')) {
-			$this->requireDateTimezone(array('PHP Configuration', 'date.timezone set and valid', 'date.timezone option in php.ini must be set in PHP 5.3.0+', ini_get('date.timezone')));
-		}
+		$this->requireDateTimezone(array('PHP Configuration', 'date.timezone setting and validity', 'date.timezone option in php.ini must be set correctly.', ini_get('date.timezone')));
 
-		$this->suggestPHPSetting('asp_tags', array(''), array('PHP Configuration', 'asp_tags option turned off', 'This should be turned off as it can cause issues with SilverStripe'));
-		$this->suggestPHPSetting('magic_quotes_gpc', array(''), array('PHP Configuration', 'magic_quotes_gpc option turned off', 'This should be turned off, as it can cause issues with cookies. More specifically, unserializing data stored in cookies.'));
-		$this->suggestPHPSetting('display_errors', array(''), array('PHP Configuration', 'display_errors option turned off', 'This should be turned off, as it can expose sensitive data to website users.'));
+		$this->suggestPHPSetting('asp_tags', array(false,0,''), array('PHP Configuration', 'asp_tags option', 'This should be turned off as it can cause issues with SilverStripe'));
+		$this->suggestPHPSetting('magic_quotes_gpc', array(false,0,''), array('PHP Configuration', 'magic_quotes_gpc option', 'This should be turned off, as it can cause issues with cookies. More specifically, unserializing data stored in cookies.'));
+		$this->suggestPHPSetting('display_errors', array(false,0,''), array('PHP Configuration', 'display_errors option', 'Unless you\'re in a development environment, this should be turned off, as it can expose sensitive data to website users.'));
 
 		// Check memory allocation
-		$this->requireMemory(32*1024*1024, 64*1024*1024, array("PHP Configuration", "Memory allocated (PHP config option 'memory_limit')", "SilverStripe needs a minimum of 32M allocated to PHP, but recommends 64M.", ini_get("memory_limit")));
+		$this->requireMemory(32*1024*1024, 64*1024*1024, array("PHP Configuration", "Memory allocation (PHP config option 'memory_limit')", "SilverStripe needs a minimum of 32M allocated to PHP, but recommends 64M.", ini_get("memory_limit")));
 
 		return $this->errors;
 	}
 
 	function suggestPHPSetting($settingName, $settingValues, $testDetails) {
 		$this->testing($testDetails);
-
 		$val = ini_get($settingName);
 		if(!in_array($val, $settingValues) && $val != $settingValues) {
 			$testDetails[2] = "$settingName is set to '$val' in php.ini.  $testDetails[2]";
@@ -520,7 +565,7 @@ class InstallRequirements {
 					$text = "All Requirements Pass but ". $warningRequirements . ' '. $pluralWarnings;
 				}
 
-				echo "<h5 class='requirement $className'><em class='inlineBarText'>$section</em> <a href='#'>See All Requirements</a> <span>$text</span></h5>";
+				echo "<h5 class='requirement $className'>$section <a href='#'>Show All Requirements</a> <span>$text</span></h5>";
 				echo "<table class=\"testResults\">";
 				echo $output;
 				echo "</table>";
@@ -663,35 +708,25 @@ class InstallRequirements {
 	}
 
 	function getTempFolder() {
-		if(file_exists($this->getBaseDir() . 'silverstripe-cache')) {
-			$sysTmp = $this->getBaseDir();
-		} elseif(function_exists('sys_get_temp_dir')) {
-			$sysTmp = sys_get_temp_dir();
-		} elseif(isset($_ENV['TMP'])) {
-			$sysTmp = $_ENV['TMP'];
-		} else {
-			@$tmpFile = tempnam('adfadsfdas', '');
-			@unlink($tmpFile);
-			$sysTmp = dirname($tmpFile);
-		}
-
-	    $worked = true;
-	    $ssTmp = $sysTmp . DIRECTORY_SEPARATOR . 'silverstripe-cache';
+		$sysTmp = sys_get_temp_dir();
+		$worked = true;
+		$ssTmp = "$sysTmp/silverstripe-cache";
 
 		if(!@file_exists($ssTmp)) {
 			@$worked = mkdir($ssTmp);
+		}
 
-			if(!$worked) {
-				$ssTmp = dirname($_SERVER['SCRIPT_FILENAME']) . DIRECTORY_SEPARATOR . 'silverstripe-cache';
-				$worked = true;
-				if(!@file_exists($ssTmp)) {
-					@$worked = mkdir($ssTmp);
-				}
+		if(!$worked) {
+			$ssTmp = dirname($_SERVER['SCRIPT_FILENAME']) . '/silverstripe-cache';
+			$worked = true;
+			if(!@file_exists($ssTmp)) {
+				@$worked = mkdir($ssTmp);
 			}
 		}
 
 		if($worked) return $ssTmp;
-		else return false;
+
+		return false;
 	}
 
 	function requireTempFolder($testDetails) {
@@ -701,9 +736,9 @@ class InstallRequirements {
 		if(!$tempFolder) {
 			$testDetails[2] = "Permission problem gaining access to a temp directory. " .
 				"Please create a folder named silverstripe-cache in the base directory " .
-				"of the installation and ensure it has the adequate permissions";
+				"of the installation and ensure it has the adequate permissions.";
 			$this->error($testDetails);
-	    }
+		}
 	}
 
 	function requireApacheModule($moduleName, $testDetails) {
@@ -903,7 +938,7 @@ class InstallRequirements {
 		$section = $testDetails[0];
 		$test = $testDetails[1];
 
-		$this->tests[$section][$test] = array("error", $testDetails[2]);
+		$this->tests[$section][$test] = array("error", @$testDetails[2]);
 		$this->errors[] = $testDetails;
 	}
 
@@ -911,7 +946,7 @@ class InstallRequirements {
 		$section = $testDetails[0];
 		$test = $testDetails[1];
 
-		$this->tests[$section][$test] = array("warning", $testDetails[2]);
+		$this->tests[$section][$test] = array("warning", @$testDetails[2]);
 		$this->warnings[] = $testDetails;
 	}
 
@@ -932,37 +967,33 @@ class Installer extends InstallRequirements {
 	}
 
 	function install($config) {
-		if(isset($_SERVER['HTTP_HOST'])) {
-			?>
+?>
 <html>
 	<head>
 		<title>Installing SilverStripe...</title>
-		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/layout.css" />
-		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/typography.css" />
-		<link rel="stylesheet" type="text/css" href="themes/blackcandy/css/form.css" />
-		<link rel="stylesheet" type="text/css" href="sapphire/dev/install/install.css" />
-		<script src="sapphire/thirdparty/jquery/jquery.js"></script>
+		<link rel="stylesheet" type="text/css" href="<?php echo FRAMEWORK_NAME; ?>/dev/install/css/install.css" />
+		<script src="<?php echo FRAMEWORK_NAME; ?>/thirdparty/jquery/jquery.js"></script>
 	</head>
 	<body>
-		<div id="BgContainer">
-			<div id="Container">
-				<div id="Header">
-					<h1>SilverStripe CMS / Framework Installation</h1>
+		<div class="install-header">
+			<div class="inner">
+				<div class="brand">
+					<span class="logo"></span>
+					<h1>SilverStripe</h1>
 				</div>
+			</div>	
+		</div>
 
-				<div id="Navigation">&nbsp;</div>
-				<div class="clear"><!-- --></div>
+		<div id="Navigation">&nbsp;</div>
+		<div class="clear"><!-- --></div>
 
-				<div id="Layout">
-					<div class="typography">
-						<h1>Installing SilverStripe...</h1>
-						<p>I am now running through the installation steps (this should take about 30 seconds)</p>
-						<p>If you receive a fatal error, refresh this page to continue the installation</p>
-						<ul>
+		<div class="main">
+			<div class="inner">
+				<h2>Installing SilverStripe...</h2>
+				<p>I am now running through the installation steps (this should take about 30 seconds)</p>
+				<p>If you receive a fatal error, refresh this page to continue the installation</p>
+				<ul>
 <?php
-		} else {
-			echo "SILVERSTRIPE COMMAND-LINE INSTALLATION\n\n";
-		}
 
 		$webserver = $this->findWebserver();
 		$isIIS = $this->isIIS();
@@ -971,14 +1002,8 @@ class Installer extends InstallRequirements {
 		flush();
 
 		if(isset($config['stats'])) {
-			if(file_exists('sapphire/silverstripe_version')) {
-				$sapphireVersionFile = file_get_contents('sapphire/silverstripe_version');
-				if(strstr($sapphireVersionFile, "/sapphire/trunk")) {
-					$silverstripe_version = "trunk";
-				} else {
-					preg_match("/sapphire\/(?:(?:branches)|(?:tags))(?:\/rc)?\/([A-Za-z0-9._-]+)\/silverstripe_version/", $sapphireVersionFile, $matches);
-					$silverstripe_version = $matches[1];
-				}
+			if(file_exists(FRAMEWORK_NAME . '/silverstripe_version')) {
+				$silverstripe_version = file_get_contents(FRAMEWORK_NAME . '/silverstripe_version');
 			} else {
 				$silverstripe_version = "unknown";
 			}
@@ -1009,10 +1034,11 @@ class Installer extends InstallRequirements {
 			$fh = fopen('mysite/_config.php', 'wb');
 			fclose($fh);
 		}
-		$theme = isset($_POST['template']) ? $_POST['template'] : 'blackcandy';
+		$theme = isset($_POST['template']) ? $_POST['template'] : 'simple';
 		$locale = isset($_POST['locale']) ? $_POST['locale'] : 'en_US';
 		$type = $config['db']['type'];
 		$dbConfig = $config['db'][$type];
+		if(!isset($dbConfig['path'])) $dbConfig['path'] = '';
 		if(!$dbConfig) {
 			echo "<p style=\"color: red\">Bad config submitted</p><pre>";
 			print_r($config);
@@ -1038,14 +1064,14 @@ require_once('conf/ConfigureFromEnv.php');
 
 MySQLDatabase::set_connection_charset('utf8');
 
-// This line set's the current theme. More themes can be
-// downloaded from http://www.silverstripe.org/themes/
+// Set the current theme. More themes can be downloaded from
+// http://www.silverstripe.org/themes/
 SSViewer::set_theme('$theme');
 
 // Set the site locale
 i18n::set_locale('$locale');
 
-// enable nested URLs for this site (e.g. page/sub-page/)
+// Enable nested URLs for this site (e.g. page/sub-page/)
 if (class_exists('SiteTree')) SiteTree::enable_nested_urls();
 PHP
 			);
@@ -1071,14 +1097,14 @@ global \$databaseConfig;
 
 MySQLDatabase::set_connection_charset('utf8');
 
-// This line set's the current theme. More themes can be
-// downloaded from http://www.silverstripe.org/themes/
+// Set the current theme. More themes can be downloaded from
+// http://www.silverstripe.org/themes/
 SSViewer::set_theme('$theme');
 
 // Set the site locale
 i18n::set_locale('$locale');
 
-// enable nested URLs for this site (e.g. page/sub-page/)
+// Enable nested URLs for this site (e.g. page/sub-page/)
 if (class_exists('SiteTree')) SiteTree::enable_nested_urls();
 PHP
 			);
@@ -1110,18 +1136,18 @@ PHP
 			}
 		}
 
-		// Load the sapphire runtime
-		$_SERVER['SCRIPT_FILENAME'] = dirname(realpath($_SERVER['SCRIPT_FILENAME'])) . '/sapphire/main.php';
-		chdir('sapphire');
+		// Load the SilverStripe runtime
+		$_SERVER['SCRIPT_FILENAME'] = dirname(realpath($_SERVER['SCRIPT_FILENAME'])) . '/' . FRAMEWORK_NAME . '/main.php';
+		chdir(FRAMEWORK_NAME);
 
 		// Rebuild the manifest
 		$_GET['flush'] = true;
 		// Show errors as if you're in development mode
 		$_SESSION['isDev'] = 1;
 
-		require_once('core/Core.php');
-
 		$this->statusMessage("Building database schema...");
+
+		require_once 'core/Core.php';
 
 		// Build database
 		$con = new Controller();
@@ -1142,14 +1168,25 @@ PHP
 		$adminMember->Password = $config['admin']['password'];
 		$adminMember->PasswordEncryption = Security::get_password_encryption_algorithm();
 
-		// @todo Exception thrown if database with admin already exists with same Email
 		try {
+			$this->statusMessage('Creating default CMS admin account...');
 			$adminMember->write();
 		} catch(Exception $e) {
+			$this->statusMessage(
+				sprintf('Warning: Default CMS admin account could not be created (error: %s)', $e->getMessage())
+			);
 		}
 
 		// Syncing filesystem (so /assets/Uploads is available instantly, see ticket #2266)
-		Filesystem::sync();
+		// show a warning if there was a problem doing so
+		try {
+			$this->statusMessage('Creating initial filesystem assets...');
+			Filesystem::sync();
+		} catch(Exception $e) {
+			$this->statusMessage(
+				sprintf('Warning: Creating initial filesystem assets failed (error: %s)', $e->getMessage())
+			);
+		}
 
 		$_SESSION['username'] = $config['admin']['username'];
 		$_SESSION['password'] = $config['admin']['password'];
@@ -1200,7 +1237,7 @@ HTML;
 
 		if($base != '.') $baseClause = "RewriteBase '$base'\n";
 		else $baseClause = "";
-
+		$modulePath = FRAMEWORK_NAME;
 		$rewrite = <<<TEXT
 <Files *.ss>
 	Order deny,allow
@@ -1226,7 +1263,7 @@ ErrorDocument 500 /assets/error-500.html
 	$baseClause
 	RewriteCond %{REQUEST_URI} ^(.*)$
 	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule .* sapphire/main.php?url=%1&%{QUERY_STRING} [L]
+	RewriteRule .* $modulePath/main.php?url=%1&%{QUERY_STRING} [L]
 </IfModule>
 TEXT;
 
@@ -1251,6 +1288,7 @@ TEXT;
 	 * so that rewriting capability can be use.
 	 */
 	function createWebConfig() {
+		$modulePath = FRAMEWORK_NAME;
 		$content = <<<TEXT
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
@@ -1269,7 +1307,7 @@ TEXT;
 					<conditions>
 						<add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
 					</conditions>
-					<action type="Rewrite" url="sapphire/main.php?url={R:1}" appendQueryString="true" />
+					<action type="Rewrite" url="$modulePath/main.php?url={R:1}" appendQueryString="true" />
 				</rule>
 			</rules>
 		</rewrite>
@@ -1281,11 +1319,6 @@ TEXT;
 	}
 
 	function checkRewrite() {
-		if(!isset($_SERVER['HTTP_HOST']) || !$_SERVER['HTTP_HOST']) {
-			$this->statusMessage("Installer seems to be called from command-line, we're going to assume that rewriting is working.");
-			return true;
-		}
-
 		$destinationURL = str_replace('install.php', '', $_SERVER['SCRIPT_NAME']) .
 			($this->checkModuleExists('cms') ? 'home/successfullyinstalled?flush=1' : '?flush=1');
 

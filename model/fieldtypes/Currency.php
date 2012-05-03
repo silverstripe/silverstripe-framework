@@ -12,7 +12,7 @@
  * );
  * </code>
  *
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Currency extends Decimal {
@@ -41,7 +41,7 @@ class Currency extends Decimal {
 		else return $val;
 	}
 	
-	function setValue($value) {
+	function setValue($value, $record = null) {
 		$matches = null;
 		if(is_numeric($value)) {
 			$this->value = $value;
@@ -59,4 +59,3 @@ class Currency extends Decimal {
 	}
 }
 
-?>

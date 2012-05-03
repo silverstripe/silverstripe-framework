@@ -11,7 +11,7 @@
  * 
  * @see http://doc.silverstripe.org/tutorial:4-site-search
  *
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 class FulltextSearchable extends DataExtension {
@@ -52,9 +52,7 @@ class FulltextSearchable extends DataExtension {
 			if(!class_exists($class)) continue;
 			
 			if(isset($defaultColumns[$class])) {
-				if(DB::getConn()->getDatabaseServer() == 'mysql') {
-					Object::add_static_var($class, 'create_table_options', array('MySQLDatabase' => 'ENGINE=MyISAM'), true);
-				}
+				Config::inst()->update($class, 'create_table_options', array('MySQLDatabase' => 'ENGINE=MyISAM'));
 				Object::add_extension($class, "FulltextSearchable('{$defaultColumns[$class]}')");
 			} else {
 				throw new Exception("FulltextSearchable::enable() I don't know the default search columns for class '$class'");
@@ -77,34 +75,22 @@ class FulltextSearchable extends DataExtension {
 		parent::__construct();
 	}
 
-	/**
-	 * 
-	 * @param string $class
-	 * @param string $extension
-	 * @return array
-	 */
-	function extraStatics($class=null, $extension=null) {
-		if($extension && preg_match('/\([\'"](.*)[\'"]\)/', $extension, $matches)) {
-			$searchFields = $matches[1];
+	static function add_to_class($class, $extensionClass, $args = null) {
+		Config::inst()->update($class, 'indexes', array('SearchFields' => array(
+			'type' => 'fulltext',
+			'name' => 'SearchFields',
+			'value' => $args[0]
+		)));
 
-			return array(
-				'indexes' => array(
-					"SearchFields" => Array(
-						'type'=>'fulltext',
-						'name'=>'SearchFields',
-						'value'=> $searchFields
-					),
-				)
-			);
-		}
+		parent::add_to_class($class, $extensionClass, $args);
 	}
-	
+
 	/**
 	 * Shows all classes that had the {@link FulltextSearchable} extension applied through {@link enable()}.
 	 * 
 	 * @return Array
 	 */
-	function get_searchable_classes() {
+	static function get_searchable_classes() {
 		return self::$searchable_classes;
 	}
 	

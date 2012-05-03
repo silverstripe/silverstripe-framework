@@ -58,7 +58,7 @@
  * SS_Cache::pick_backend('two-level', 'any', 10); // No need for special backend for aggregate - TwoLevels with a File slow backend supports tags
  * 
  * @author hfried
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 class SS_Cache {

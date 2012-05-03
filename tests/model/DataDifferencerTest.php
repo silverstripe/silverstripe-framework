@@ -1,12 +1,12 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 
 class DataDifferencerTest extends SapphireTest {
 	
-	static $fixture_file = 'sapphire/tests/model/DataDifferencerTest.yml';
+	static $fixture_file = 'DataDifferencerTest.yml';
 	
 	protected $extraDataObjects = array(
 		'DataDifferencerTest_Object',
@@ -35,6 +35,16 @@ class DataDifferencerTest extends SapphireTest {
 		$relobj1 = $this->objFromFixture('DataDifferencerTest_HasOneRelationObject', 'relobj1');
 		$relobj2 = $this->objFromFixture('DataDifferencerTest_HasOneRelationObject', 'relobj2');
 
+		// in order to ensure the Filename path is correct, append the correct FRAMEWORK_DIR to the start
+		// this is only really necessary to make the test pass when FRAMEWORK_DIR is not "framework"
+		$image1->Filename = FRAMEWORK_DIR . substr($image1->Filename, 9);
+		$image2->Filename = FRAMEWORK_DIR . substr($image2->Filename, 9);
+		$origUpdateFilesystem = File::$update_filesystem;
+		File::$update_filesystem = false; // we don't want the filesystem being updated on write, as we're only dealing with mock files
+		$image1->write();
+		$image2->write();
+		File::$update_filesystem = $origUpdateFilesystem;
+
 		// create a new version
 		$obj1->ImageID = $image2->ID;
 		$obj1->HasOneRelationID = $relobj2->ID;
@@ -43,6 +53,7 @@ class DataDifferencerTest extends SapphireTest {
 		$obj1v2 = Versioned::get_version('DataDifferencerTest_Object', $obj1->ID, $obj1->Version);
 		$differ = new DataDifferencer($obj1v1, $obj1v2);
 		$obj1Diff = $differ->diffedData();
+
 		$this->assertContains($image1->Filename, $obj1Diff->getField('Image'));
 		$this->assertContains($image2->Filename, $obj1Diff->getField('Image'));
 		$this->assertContains('<ins>obj2</ins><del>obj1</del>', str_replace(' ','',$obj1Diff->getField('HasOneRelationID')));

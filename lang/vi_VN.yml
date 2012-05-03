@@ -1,0 +1,42 @@
+vi_VN:
+  AssetAdmin:
+    MENUTITLE: "Tập tin & Hình ảnh"
+  CMSMain:
+    MENUTITLE: "Nội dung"
+    SAVE: "Lưu"
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "Bạn có thể thay đổi mật khẩu tại"
+  ComplexTableField.ss:
+    ADDITEM: "Thêm"
+  Date:
+    DAY: "ngày"
+    DAYS: "ngày"
+    HOUR: "giờ"
+    HOURS: "giờ"
+    MIN: "phút"
+    MINS: "phút"
+    MONTH: "tháng"
+    MONTHS: "tháng"
+    SEC: "giây"
+    SECS: "giây"
+    YEAR: "năm"
+    YEARS: "năm"
+  DateField:
+    TODAY: "hôm nay"
+  DropdownField:
+    CHOOSE: "(chọn)"
+  HtmlEditorField:
+  LeftAndMain:
+    HELP: "Trợ giúp"
+    PAGETYPE: "Loại:"
+    PERMDEFAULT: "Nhập email và mật khẩu để truy cập vào phần quản lý"
+    SAVED: "đã lưu"
+  Member:
+    EMAIL: "Email"
+    INTERFACELANG: "Ngôn ngữ"
+    SUBJECTPASSWORDCHANGED: "Thay đổi mật khẩu"
+    SUBJECTPASSWORDRESET: "Quên mật khẩu"
+  SecurityAdmin:
+    MENUTITLE: "Bảo mật"
+  SiteTree:
+    TABMAIN: "Nội dung"

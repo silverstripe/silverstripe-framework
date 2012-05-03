@@ -9,7 +9,7 @@
  *
  * To run this action, the user needs to have administrator rights!
  * 
- * @package sapphire
+ * @package framework
  * @subpackage tasks
  */
 class EncryptAllPasswordsTask extends BuildTask {

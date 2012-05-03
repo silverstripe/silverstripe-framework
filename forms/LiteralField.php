@@ -27,12 +27,19 @@ class LiteralField extends DatalessField {
 		parent::__construct($name);
 	}
 	
-	function FieldHolder() {
-		return is_object($this->content) ? $this->content->forTemplate() : $this->content; 
+	function FieldHolder($properties = array()) {
+		if(is_object($this->content)) {
+			$obj = $this->content;
+			if($properties)
+				$obj = $obj->customise($properties);
+			return $obj->forTemplate();
+		} else {
+			return $this->content;
+		}
 	}
 
-	function Field() {
-		return $this->FieldHolder();
+	function Field($properties = array()) {
+		return $this->FieldHolder($properties);
 	}
 
 	/**
@@ -42,6 +49,7 @@ class LiteralField extends DatalessField {
 	 */
 	function setContent($content) {
 		$this->content = $content;
+		return $this;
 	}
 	
 	/**
@@ -55,7 +63,8 @@ class LiteralField extends DatalessField {
 	 * Synonym of {@link setContent()} so that LiteralField is more compatible with other field types.
 	 */
 	function setValue($value) {
-		return $this->setContent($value);
+		$this->setContent($value);
+		return $this;
 	}
 
 	function performReadonlyTransformation() {

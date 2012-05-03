@@ -4,7 +4,7 @@
  *
  * @todo documentation
  * 
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 class LessThanFilter extends SearchFilter {
@@ -26,4 +26,3 @@ class LessThanFilter extends SearchFilter {
 		return $this->getValue() == null || $this->getValue() == '';
 	}
 }
-?>

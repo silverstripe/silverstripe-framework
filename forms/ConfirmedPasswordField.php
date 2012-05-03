@@ -93,10 +93,10 @@ class ConfirmedPasswordField extends FormField {
 		$this->setValue($value);
 	}
 	
-	function Field() {
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/ConfirmedPasswordField.js');
-		Requirements::css(SAPPHIRE_DIR . '/css/ConfirmedPasswordField.css');
+	function Field($properties = array()) {
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/ConfirmedPasswordField.js');
+		Requirements::css(FRAMEWORK_DIR . '/css/ConfirmedPasswordField.css');
 		
 		$content = '';
 		
@@ -107,13 +107,13 @@ class ConfirmedPasswordField extends FormField {
 				$title = _t(
 					'ConfirmedPasswordField.SHOWONCLICKTITLE', 
 					'Change Password', 
-					PR_MEDIUM, 
+					
 					'Label of the link which triggers display of the "change password" formfields'
 				);
 			}
 			
 			$content .= "<div class=\"showOnClick\">\n";
-			$content .= "<a href=\"#\"" . $this->getTabIndexHTML() . ">{$title}</a>\n";
+			$content .= "<a href=\"#\">{$title}</a>\n";
 			$content .= "<div class=\"showOnClickContainer\">";
 		}
 
@@ -138,6 +138,7 @@ class ConfirmedPasswordField extends FormField {
 	 */
 	function setCanBeEmpty($value) {
 		$this->canBeEmpty = (bool)$value;
+		return $this;
 	}
 	
 	/**
@@ -149,6 +150,7 @@ class ConfirmedPasswordField extends FormField {
 	 */
 	public function setShowOnClickTitle($title) {
 		$this->showOnClickTitle = $title;
+		return $this;
 	}
 	
 	/**
@@ -162,6 +164,7 @@ class ConfirmedPasswordField extends FormField {
 		foreach($this->children as $field) {
 			$field->setRightTitle($title);
 		}
+		return $this;
 	}
 	
 	/**
@@ -176,6 +179,7 @@ class ConfirmedPasswordField extends FormField {
 				}
 			}
 		}
+		return $this;
 	}
 	
 	/**
@@ -196,97 +200,8 @@ class ConfirmedPasswordField extends FormField {
 		}
 		$this->children->fieldByName($this->getName() . '[_Password]')->setValue($this->value);
 		$this->children->fieldByName($this->getName() . '[_ConfirmPassword]')->setValue($this->value);
-	}
-	
-	function jsValidation() {
-		$formID = $this->form->FormName();
-		$jsTests = '';
-		
-		$jsTests .= "
-			// if fields are hidden, reset values and don't validate
-			var containers = $$('.showOnClickContainer', $('#'+fieldName));
-			if(containers.length && !Element.visible(containers[0])) {
-				passEl.value = null;
-				confEl.value = null;
-				return true;
-			}
-		";
 
-		$error1 = _t('ConfirmedPasswordField.HAVETOMATCH', 'Passwords have to match.');
-		$jsTests .= "
-			if(passEl.value != confEl.value) {
-				validationError(confEl, \"$error1\", \"error\");
-				return false;
-			}
-		";
-		
-		$error2 = _t('ConfirmedPasswordField.NOEMPTY', 'Passwords can\'t be empty.');
-		if(!$this->canBeEmpty) {
-			$jsTests .= "
-				if(!passEl.value || !confEl.value) {
-					validationError(confEl, \"$error2\", \"error\");
-					return false;
-				}
-			";
-		}
-		
-		if(($this->minLength || $this->maxLength)) {
-			if($this->minLength && $this->maxLength) {
-				$limit = "{{$this->minLength},{$this->maxLength}}";
-				$errorMsg = sprintf(_t('ConfirmedPasswordField.BETWEEN', 'Passwords must be %s to %s characters long.'), $this->minLength, $this->maxLength);
-			} elseif($this->minLength) {
-				$limit = "{{$this->minLength}}.*";
-				$errorMsg = sprintf(_t('ConfirmedPasswordField.ATLEAST', 'Passwords must be at least %s characters long.'), $this->minLength);
-			} elseif($this->maxLength) {
-				$limit = "{0,{$this->maxLength}}";
-				$errorMsg = sprintf(_t('ConfirmedPasswordField.MAXIMUM', 'Passwords must be at most %s characters long.'), $this->maxLength);
-			}
-			$limitRegex = '/^.' . $limit . '$/';
-			$jsTests .= "
-			if(passEl.value && !passEl.value.match({$limitRegex})) {
-				validationError(confEl, \"{$errorMsg}\", \"error\");
-				return false;
-			}
-			";
-		}
-		
-		$error3 = _t('ConfirmedPasswordField.LEASTONE', 'Passwords must have at least one digit and one alphanumeric character.');
-		if($this->requireStrongPassword) {
-			$jsTests .= "
-				if(!passEl.value.match(/^(([a-zA-Z]+\d+)|(\d+[a-zA-Z]+))[a-zA-Z0-9]*$/)) {
-					validationError(
-						confEl, 
-						\"$error3\", 
-						\"error\"
-					);
-					return false;
-				}
-			";
-		}
-		
-		$jsFunc =<<<JS
-Behaviour.register({
-	"#$formID": {
-		validateConfirmedPassword: function(fieldName) {
-			var passEl = _CURRENT_FORM.elements['Password[_Password]'];
-			var confEl = _CURRENT_FORM.elements['Password[_ConfirmPassword]'];
-			$jsTests
-			return true;
-		}
-	}
-});
-JS;
-		Requirements :: customScript($jsFunc, 'func_validateConfirmedPassword');
-		
-		//return "\$('$formID').validateConfirmedPassword('$this->name');";
-		return <<<JS
-if(typeof fromAnOnBlur != 'undefined'){
-	if(fromAnOnBlur.name == '$this->name')
-		$('$formID').validateConfirmedPassword('$this->name');
-}else{
-	$('$formID').validateConfirmedPassword('$this->name');
-}
-JS;
+		return $this;
 	}
 
 	/**
@@ -301,8 +216,7 @@ JS;
 		return (!$this->showOnClick || ($this->showOnClick && $isVisible && $isVisible->Value()));
 	}
 	
-	function validate() {
-		$validator = $this->form->getValidator();
+	function validate($validator) {
 		$name = $this->name;
 		
 		// if field isn't visible, don't validate
@@ -333,13 +247,25 @@ JS;
 		if(($this->minLength || $this->maxLength)) {
 			if($this->minLength && $this->maxLength) {
 				$limit = "{{$this->minLength},{$this->maxLength}}";
-				$errorMsg = sprintf(_t('ConfirmedPasswordField.BETWEEN', 'Passwords must be %s to %s characters long.'), $this->minLength, $this->maxLength);
+				$errorMsg = _t(
+					'ConfirmedPasswordField.BETWEEN', 
+					'Passwords must be {min} to {max} characters long.', 
+					array('min' => $this->minLength, 'max' => $this->maxLength)
+				);
 			} elseif($this->minLength) {
 				$limit = "{{$this->minLength}}.*";
-				$errorMsg = sprintf(_t('ConfirmedPasswordField.ATLEAST', 'Passwords must be at least %s characters long.'), $this->minLength);
+				$errorMsg = _t(
+					'ConfirmedPasswordField.ATLEAST', 
+					'Passwords must be at least {min} characters long.', 
+					array('min' => $this->minLength)
+				);
 			} elseif($this->maxLength) {
 				$limit = "{0,{$this->maxLength}}";
-				$errorMsg = sprintf(_t('ConfirmedPasswordField.MAXIMUM', 'Passwords must be at most %s characters long.'), $this->maxLength);
+				$errorMsg = _t(
+					'ConfirmedPasswordField.MAXIMUM', 
+					'Passwords must be at most {max} characters long.', 
+					array('max' => $this->maxLength)
+				);
 			}
 			$limitRegex = '/^.' . $limit . '$/';
 			if(!empty($value) && !preg_match($limitRegex,$value)) {
@@ -371,7 +297,7 @@ JS;
 	 * @param DataObject $record
 	 * @return bool
 	 */
-	function saveInto(DataObject $record) {
+	function saveInto(DataObjectInterface $record) {
 		if(!$this->isSaveable()) return false;
 		
 		if(!($this->canBeEmpty && !$this->value)) {

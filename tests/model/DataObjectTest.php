@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class DataObjectTest extends SapphireTest {
@@ -183,6 +183,15 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEquals($this->idFromFixture('DataObjectTest_Team', 'team1'), $captain1->FavouriteTeamID);
 	}
 
+	function testGetRelationClass() {
+		$obj = new DataObjectTest_Player();
+		$this->assertEquals(singleton('DataObjectTest_Player')->getRelationClass('FavouriteTeam'), 'DataObjectTest_Team', 'has_one is properly inspected');
+		$this->assertEquals(singleton('DataObjectTest_Company')->getRelationClass('CurrentStaff'), 'DataObjectTest_Staff', 'has_many is properly inspected');
+		$this->assertEquals(singleton('DataObjectTest_Team')->getRelationClass('Players'), 'DataObjectTest_Player', 'many_many is properly inspected');
+		$this->assertEquals(singleton('DataObjectTest_Player')->getRelationClass('Teams'), 'DataObjectTest_Team', 'belongs_many_many is properly inspected');
+		$this->assertEquals(singleton('DataObjectTest_CEO')->getRelationClass('Company'), 'DataObjectTest_Company', 'belongs_to is properly inspected');
+	}
+
 	function testGetHasOneRelations() {
 		$captain1 = $this->objFromFixture("DataObjectTest_Player", "captain1");
 		/* There will be a field called (relname)ID that contains the ID of the object linked to via the has_one relation */
@@ -197,18 +206,12 @@ class DataObjectTest extends SapphireTest {
 		// There's 4 records in total
 		$this->assertEquals(4, $players->count());
 
-		// Testing "## offset ##" syntax
-		$this->assertEquals(4, $players->limit("20 OFFSET 0")->count());
-		$this->assertEquals(0, $players->limit("20 OFFSET 20")->count());
-		$this->assertEquals(2, $players->limit("2 OFFSET 0")->count());
-		$this->assertEquals(1, $players->limit("5 OFFSET 3")->count());
-
 		// Testing "##, ##" syntax
-		$this->assertEquals(4, $players->limit("20")->count());
-		$this->assertEquals(4, $players->limit("0, 20")->count());
-		$this->assertEquals(0, $players->limit("20, 20")->count());
-		$this->assertEquals(2, $players->limit("0, 2")->count());
-		$this->assertEquals(1, $players->limit("3, 5")->count());
+		$this->assertEquals(4, $players->limit(20)->count());
+		$this->assertEquals(4, $players->limit(20, 0)->count());
+		$this->assertEquals(0, $players->limit(20, 20)->count());
+		$this->assertEquals(2, $players->limit(2, 0)->count());
+		$this->assertEquals(1, $players->limit(5, 3)->count());
 	}
 
 	/**
@@ -364,7 +367,7 @@ class DataObjectTest extends SapphireTest {
 	}
 	
 	function testRandomSort() {
-		/* If we perforn the same regularly sorted query twice, it should return the same results */
+		/* If we perform the same regularly sorted query twice, it should return the same results */
 		$itemsA = DataObject::get("DataObjectTest_TeamComment", "", "ID");
 		foreach($itemsA as $item) $keysA[] = $item->ID;
 
@@ -552,6 +555,7 @@ class DataObjectTest extends SapphireTest {
 				//'Created',
 				//'LastEdited',
 				'SubclassDatabaseField',
+				'ParentTeamID',
 				'Title',
 				'DatabaseField',
 				'ExtendedDatabaseField',
@@ -566,6 +570,7 @@ class DataObjectTest extends SapphireTest {
 			array_keys(DataObject::database_fields('DataObjectTest_SubTeam')),
 			array(
 				'SubclassDatabaseField',
+				'ParentTeamID',
 			),
 			'databaseFields() on subclass contains only fields defined on instance'
 		);
@@ -728,7 +733,7 @@ class DataObjectTest extends SapphireTest {
 	
 	function testManyManyExtraFields() {
 		$player = $this->objFromFixture('DataObjectTest_Player', 'player1');
-	   $team = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		
 		// Extra fields are immediately available on the Team class (defined in $many_many_extraFields)
 		$teamExtraFields = $team->many_many_extraFields('Players');
@@ -1012,6 +1017,53 @@ class DataObjectTest extends SapphireTest {
 		$objEmpty->Title = '0'; // 
 		$this->assertFalse($objEmpty->isEmpty(), 'Zero value in attribute considered non-empty');
 	}
+
+	function testRelField() {
+		$captain = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+		// Test traversal of a single has_one
+		$this->assertEquals("Team 1", $captain->relField('FavouriteTeam.Title'));
+		// Test direct field access
+		$this->assertEquals("Captain", $captain->relField('FirstName'));
+
+		$player = $this->objFromFixture('DataObjectTest_Player', 'player2');
+		// Test that we can traverse more than once, and that arbitrary methods are okay
+		$this->assertEquals("Team 1", $player->relField('Teams.First.Title'));
+	}
+
+	function testRelObject() {
+		$captain = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+
+		// Test traversal of a single has_one
+		$this->assertInstanceOf("Varchar", $captain->relObject('FavouriteTeam.Title'));
+		$this->assertEquals("Team 1", $captain->relObject('FavouriteTeam.Title')->getValue());
+
+		// Test direct field access
+		$this->assertInstanceOf("Boolean", $captain->relObject('IsRetired'));
+		$this->assertEquals(1, $captain->relObject('IsRetired')->getValue());
+
+		$player = $this->objFromFixture('DataObjectTest_Player', 'player2');
+		// Test that we can traverse more than once, and that arbitrary methods are okay
+		$this->assertInstanceOf("Varchar", $player->relObject('Teams.First.Title'));
+		$this->assertEquals("Team 1", $player->relObject('Teams.First.Title')->getValue());
+	}
+	
+	function testLateStaticBindingStyle() {
+		// Confirm that DataObjectTest_Player::get() operates as excepted
+		$this->assertEquals(4, DataObjectTest_Player::get()->Count());
+		$this->assertInstanceOf('DataObjectTest_Player', DataObjectTest_Player::get()->First());
+		
+		// You can't pass arguments to LSB syntax - use the DataList methods instead.
+		$this->setExpectedException('InvalidArgumentException');
+		DataObjectTest_Player::get(null, "\"ID\" = 1");
+		
+	}
+
+	function testBrokenLateStaticBindingStyle() {
+		// If you call DataObject::get() you have to pass a first argument
+		$this->setExpectedException('InvalidArgumentException');
+		DataObject::get();
+		
+	}
 	
 
 }
@@ -1045,6 +1097,7 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 	);
 
 	static $has_many = array(
+		'SubTeams' => 'DataObjectTest_SubTeam',
 		'Comments' => 'DataObjectTest_TeamComment'
 	);
 	
@@ -1057,7 +1110,11 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 			'Position' => 'Varchar(100)'
 		)
 	);
-	
+
+	function MyTitle() {
+		return 'Team ' . $this->Title;
+	}
+
 	function getDynamicField() {
 		return 'dynamicfield';
 	}
@@ -1088,6 +1145,10 @@ class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
 	static $db = array(
 		'SubclassDatabaseField' => 'Varchar'
 	);
+
+	static $has_one = array(
+		"ParentTeam" => 'DataObjectTest_Team',
+	);
 }
 class OtherSubclassWithSameField extends DataObjectTest_Team implements TestOnly {
 	static $db = array(
@@ -1104,18 +1165,15 @@ class DataObjectTest_FieldlessSubTable extends DataObjectTest_Team implements Te
 
 
 class DataObjectTest_Team_Extension extends DataExtension implements TestOnly {
-	
-	function extraStatics($class=null, $extension=null) {
-		return array(
-			'db' => array(
-				'ExtendedDatabaseField' => 'Varchar'
-			),
-			'has_one' => array(
-				'ExtendedHasOneRelationship' => 'DataObjectTest_Player'
-			)
-		);
-	}
-	
+
+	static $db = array(
+		'ExtendedDatabaseField' => 'Varchar'
+	);
+
+	static $has_one = array(
+		'ExtendedHasOneRelationship' => 'DataObjectTest_Player'
+	);
+
 	function getExtendedDynamicField() {
 		return "extended dynamic field";
 	}
@@ -1164,17 +1222,15 @@ class DataObjectTest_CEO extends DataObjectTest_Staff {
 }
 
 class DataObjectTest_TeamComment extends DataObject {
-	
 	static $db = array(
-		'Name' => "Varchar",
-		"Comment" => "Text"
+		'Name' => 'Varchar',
+		'Comment' => 'Text'
 	);
-	
+
 	static $has_one = array(
-		'Team' 	=> 'DataObjectTest_Team'
+		'Team' => 'DataObjectTest_Team'
 	);
 }
 
 DataObject::add_extension('DataObjectTest_Team', 'DataObjectTest_Team_Extension');
 
-?>

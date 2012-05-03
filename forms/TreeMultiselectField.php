@@ -78,17 +78,16 @@ class TreeMultiselectField extends TreeDropdownField {
 	 * We overwrite the field attribute to add our hidden fields, as this 
 	 * formfield can contain multiple values.
 	 */
-	function Field() {
-		Requirements::add_i18n_javascript(SAPPHIRE_DIR . '/javascript/lang');
+	function Field($properties = array()) {
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
 		
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/jquery_improvements.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/thirdparty/jstree/jquery.jstree.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/TreeDropdownField.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jstree/jquery.jstree.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/TreeDropdownField.js');
 		
-		Requirements::css(SAPPHIRE_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
-		Requirements::css(SAPPHIRE_DIR . '/css/TreeDropdownField.css');
+		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
+		Requirements::css(FRAMEWORK_DIR . '/css/TreeDropdownField.css');
 	
 		$value = '';
 		$itemList = '';
@@ -105,7 +104,7 @@ class TreeMultiselectField extends TreeDropdownField {
 				$value = implode(",", $idArray);
 			}
 		} else {
-			$title = _t('DropdownField.CHOOSE', '(Choose)', PR_MEDIUM, 'start value of a dropdown');
+			$title = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 		} 
 		
 		return $this->createTag (
@@ -133,7 +132,7 @@ class TreeMultiselectField extends TreeDropdownField {
 	 * Calls function $record->onChange($items) before saving to the assummed 
 	 * Component set.
 	 */
-	function saveInto(DataObject $record) {
+	function saveInto(DataObjectInterface $record) {
 		// Detect whether this field has actually been updated
 		if($this->value !== 'unchanged') {
 			$items = array();
@@ -179,7 +178,7 @@ class TreeMultiselectField_Readonly extends TreeMultiselectField {
 	
 	protected $readonly = true;
 	
-	function Field() {
+	function Field($properties = array()) {
 		$titleArray = $itemIDs = array();
 		$titleList = $itemIDsList = "";
 		if($items = $this->getItems()) {

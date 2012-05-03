@@ -7,7 +7,7 @@
  * 
  * The field can gets its assignment data either from {@link Group} or {@link PermissionRole} records.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PermissionCheckboxSetField extends FormField {
@@ -70,9 +70,9 @@ class PermissionCheckboxSetField extends FormField {
 		return $this->hiddenPermissions;
 	}
 
-	function Field() {
-		Requirements::css(SAPPHIRE_DIR . '/css/CheckboxSetField.css');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/PermissionCheckboxSetField.js');
+	function Field($properties = array()) {
+		Requirements::css(FRAMEWORK_DIR . '/css/CheckboxSetField.css');
+		Requirements::javascript(FRAMEWORK_DIR . '/javascript/PermissionCheckboxSetField.js');
 		
 		$uninheritedCodes = array();
 		$inheritedCodes = array();
@@ -96,9 +96,9 @@ class PermissionCheckboxSetField extends FormField {
 			$relationMethod = $this->name;
 			foreach($record->$relationMethod() as $permission) {
 				if(!isset($uninheritedCodes[$permission->Code])) $uninheritedCodes[$permission->Code] = array();
-				$uninheritedCodes[$permission->Code][] = sprintf(
-					_t('PermissionCheckboxSetField.AssignedTo', 'assigned to "%s"'),
-					$record->Title
+				$uninheritedCodes[$permission->Code][] = _t(
+					'PermissionCheckboxSetField.AssignedTo', 'assigned to "{title}"',
+					array('title' => $record->Title)
 				);
 			}
 
@@ -110,14 +110,11 @@ class PermissionCheckboxSetField extends FormField {
 					foreach($record->Roles() as $role) {
 						foreach($role->Codes() as $code) {
 							if (!isset($inheritedCodes[$code->Code])) $inheritedCodes[$code->Code] = array();
-							$inheritedCodes[$code->Code][] = sprintf(
-								_t(
-									'PermissionCheckboxSetField.FromRole',
-									'inherited from role "%s"',
-									PR_MEDIUM,
-									'A permission inherited from a certain permission role'
-								),
-								$role->Title
+							$inheritedCodes[$code->Code][] = _t(
+								'PermissionCheckboxSetField.FromRole',
+								'inherited from role "{title}"',
+								'A permission inherited from a certain permission role',
+								array('title' => $role->Title)
 							);
 						}
 					}
@@ -132,15 +129,11 @@ class PermissionCheckboxSetField extends FormField {
 							if ($role->Codes()) {
 								foreach($role->Codes() as $code) {
 									if (!isset($inheritedCodes[$code->Code])) $inheritedCodes[$code->Code] = array();
-									$inheritedCodes[$code->Code][] = sprintf(
-										_t(
-											'PermissionCheckboxSetField.FromRoleOnGroup',
-											'inherited from role "%s" on group "%s"',
-											PR_MEDIUM,
-											'A permission inherited from a role on a certain group'
-										),
-										$role->Title, 
-										$parent->Title
+									$inheritedCodes[$code->Code][] = _t(
+										'PermissionCheckboxSetField.FromRoleOnGroup',
+										'inherited from role "%s" on group "%s"',
+										'A permission inherited from a role on a certain group',
+										array('roletitle' => $role->Title, 'grouptitle' => $parent->Title)
 									);
 								}
 							}
@@ -149,14 +142,11 @@ class PermissionCheckboxSetField extends FormField {
 							foreach($parent->Permissions() as $permission) {
 								if (!isset($inheritedCodes[$permission->Code])) $inheritedCodes[$permission->Code] = array();
 								$inheritedCodes[$permission->Code][] = 
-								sprintf(
-									_t(
-										'PermissionCheckboxSetField.FromGroup',
-										'inherited from group "%s"',
-										PR_MEDIUM,
-										'A permission inherited from a certain group'
-									),
-									$parent->Title
+								_t(
+									'PermissionCheckboxSetField.FromGroup',
+									'inherited from group "{title}"',
+									'A permission inherited from a certain group',
+									array('title' => $parent->Title)
 								);
 							}
 						}
@@ -180,7 +170,7 @@ class PermissionCheckboxSetField extends FormField {
 					$odd = ($odd + 1) % 2;
 					$extraClass = $odd ? 'odd' : 'even';
 					$extraClass .= ' val' . str_replace(' ', '', $code);
-					$itemID = $this->id() . '_' . ereg_replace('[^a-zA-Z0-9]+', '', $code);
+					$itemID = $this->id() . '_' . preg_replace('/[^a-zA-Z0-9]+/', '', $code);
 					$checked = $disabled = $inheritMessage = '';
 					$checked = (isset($uninheritedCodes[$code]) || isset($inheritedCodes[$code])) ? ' checked="checked"' : '';
 					$title = $permission['help'] ? 'title="' . htmlentities($permission['help'], ENT_COMPAT, 'UTF-8') . '" ' : '';
@@ -215,7 +205,7 @@ class PermissionCheckboxSetField extends FormField {
 	 *
 	 * @param DataObject $record
 	 */
-	function saveInto(DataObject $record) {
+	function saveInto(DataObjectInterface $record) {
 		$fieldname = $this->name;
 		$managedClass = $this->managedClass;
 
@@ -226,6 +216,9 @@ class PermissionCheckboxSetField extends FormField {
 		}
 		
 		if($fieldname && $record && ($record->has_many($fieldname) || $record->many_many($fieldname))) {
+			
+			if(!$record->ID) $record->write(); // We need a record ID to write permissions
+			
 			$idList = array();
 			if($this->value) foreach($this->value as $id => $bool) {
 			   if($bool) {
@@ -271,14 +264,14 @@ class PermissionCheckboxSetField extends FormField {
  * Readonly version of a {@link PermissionCheckboxSetField} - 
  * uses the same structure, but has all checkboxes disabled.
  * 
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class PermissionCheckboxSetField_Readonly extends PermissionCheckboxSetField {
 
 	protected $readonly = true;
 	
-	function saveInto($record) {
+	function saveInto(DataObjectInterface $record) {
 		return false;
 	}
 }

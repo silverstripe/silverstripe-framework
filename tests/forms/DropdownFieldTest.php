@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tests
  */
 class DropdownFieldTest extends SapphireTest {
@@ -212,4 +212,3 @@ class DropdownFieldTest extends SapphireTest {
 	}
 	
 }
-?>

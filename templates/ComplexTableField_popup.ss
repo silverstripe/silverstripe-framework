@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 		<% base_tag %>
 	</head>
-	<body>
+	<body class="cms" style="overflow: auto;">
 		<div class="right $PopupClasses">
 			$DetailForm
 		</div>
@@ -15,7 +15,7 @@
 				<tr>
 					<% if Paginator.PrevLink %>
 						<td id="ComplexTableField_Pagination_Previous">
-							<a href="$Paginator.PrevLink"><img src="sapphire/images/pagination/record-prev.png" /><% _t('PREVIOUS', 'Previous') %></a>
+							<a href="$Paginator.PrevLink"><img src="$ModulePath(framework)/images/pagination/record-prev.png" /><% _t('PREVIOUS', 'Previous') %></a>
 						</td>
 					<% end_if %>
 					<% if xdsfdsf %>
@@ -32,7 +32,7 @@
 					<% end_if %>
 					<% if Paginator.NextLink %>
 						<td id="ComplexTableField_Pagination_Next">
-							<a href="$Paginator.NextLink"><% _t('NEXT', 'Next') %><img src="sapphire/images/pagination/record-next.png" /></a>
+							<a href="$Paginator.NextLink"><% _t('NEXT', 'Next') %><img src="$ModulePath(framework)/images/pagination/record-next.png" /></a>
 						</td>
 					<% end_if %>
 				</tr>

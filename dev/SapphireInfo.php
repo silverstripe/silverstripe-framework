@@ -1,7 +1,7 @@
 <?php
 /**
  * Returns information about the current site instance.
- * @package sapphire
+ * @package framework
  * @subpackage control
  */
 class SapphireInfo extends Controller {
@@ -17,18 +17,8 @@ class SapphireInfo extends Controller {
 	}
 	
 	function Version() {
-		$sapphireVersionFile = file_get_contents(BASE_PATH . '/sapphire/silverstripe_version');
-
-		if(strstr($sapphireVersionFile, "/sapphire/trunk")) {
-			$sapphireVersion = "trunk";
-		} else {
-			if(preg_match("/sapphire\/(?:(?:branches)|(?:tags))(?:\/rc)?\/([A-Za-z0-9._-]+)\/silverstripe_version/", $sapphireVersionFile, $matches)) {
-				$sapphireVersion = $matches[1];
-			} else {
-				$sapphireVersion = "unknown";
-			}
-		}
-		
+		$sapphireVersion = file_get_contents(FRAMEWORK_PATH . '/silverstripe_version');
+		if(!$sapphireVersion) $sapphireVersion = _t('LeftAndMain.VersionUnknown', 'unknown');
 		return $sapphireVersion;
 	}
 	

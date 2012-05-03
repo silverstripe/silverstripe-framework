@@ -4,7 +4,7 @@
  *
  * @todo documentation
  * 
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 class GreaterThanFilter extends SearchFilter {
@@ -25,4 +25,3 @@ class GreaterThanFilter extends SearchFilter {
 		return $this->getValue() == null || $this->getValue() == '';
 	}
 }
-?>

@@ -4,7 +4,7 @@
  *
  * Supported indexes for {@link requireTable()}:
  *
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class MySQLDatabase extends SS_Database {
@@ -109,13 +109,13 @@ class MySQLDatabase extends SS_Database {
 			return;
 		}
 
-		if(isset($_REQUEST['showqueries'])) {
+		if(isset($_REQUEST['showqueries']) && Director::isDev(true)) {
 			$starttime = microtime(true);
 		}
 
 		$handle = $this->dbConn->query($sql);
 
-		if(isset($_REQUEST['showqueries'])) {
+		if(isset($_REQUEST['showqueries']) && Director::isDev(true)) {
 			$endtime = round(microtime(true) - $starttime,4);
 			Debug::message("\n$sql\n{$endtime}ms\n", false);
 		}
@@ -844,8 +844,8 @@ class MySQLDatabase extends SS_Database {
 
 		// Make column selection lists
 		$select = array(
-			'SiteTree' => array("ClassName","$baseClasses[SiteTree].ID","ParentID","Title","MenuTitle","URLSegment","Content","LastEdited","Created","_utf8'' AS Filename", "_utf8'' AS Name", "$relevance[SiteTree] AS Relevance", "CanViewType"),
-			'File' => array("ClassName","$baseClasses[File].ID","_utf8'' AS ParentID","Title","_utf8'' AS MenuTitle","_utf8'' AS URLSegment","Content","LastEdited","Created","Filename","Name","$relevance[File] AS Relevance","NULL AS CanViewType"),
+			'SiteTree' => array("ClassName","$baseClasses[SiteTree].\"ID\"","ParentID","Title","MenuTitle","URLSegment","Content","LastEdited","Created","Filename" => "_utf8''", "Name" => "_utf8''", "Relevance" => $relevance['SiteTree'], "CanViewType"),
+			'File' => array("ClassName","$baseClasses[File].\"ID\"","ParentID" => "_utf8''","Title","MenuTitle" => "_utf8''","URLSegment" => "_utf8''","Content","LastEdited","Created","Filename","Name", "Relevance" => $relevance['File'], "CanViewType" => "NULL"),
 		);
 
 		// Process and combine queries
@@ -856,7 +856,7 @@ class MySQLDatabase extends SS_Database {
 
 			// There's no need to do all that joining
 			$query->from = array(str_replace(array('"','`'),'',$baseClasses[$class]) => $baseClasses[$class]);
-			$query->select = $select[$class];
+			$query->select($select[$class]);
 			$query->orderby = null;
 			
 			$querySQLs[] = $query->sql();
@@ -1121,7 +1121,7 @@ class MySQLDatabase extends SS_Database {
 
 /**
  * A result-set from a MySQL database.
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class MySQLQuery extends SS_Query {
@@ -1138,7 +1138,7 @@ class MySQLQuery extends SS_Query {
 	private $handle;
 
 	/**
-	 * Hook the result-set given into a Query class, suitable for use by sapphire.
+	 * Hook the result-set given into a Query class, suitable for use by SilverStripe.
 	 * @param database The database object that created this query.
 	 * @param handle the internal mysql handle that is points to the resultset.
 	 */
@@ -1158,18 +1158,10 @@ class MySQLQuery extends SS_Query {
 	public function numRecords() {
 		if(is_object($this->handle)) return $this->handle->num_rows;
 	}
-	
+
 	public function nextRecord() {
-		if(is_object($this->handle) && $data = $this->handle->fetch_row()) {
-			$output = array();
-			$this->handle->field_seek(0);
-			while($field = $this->handle->fetch_field()) {
-				$columnName = $field->name;
-				if(isset($data[$this->handle->current_field-1]) || !isset($output[$columnName])) {
-					$output[$columnName] = $data[$this->handle->current_field-1];
-				}
-			}
-			return $output;
+		if(is_object($this->handle) && ($data = $this->handle->fetch_assoc())) {
+			return $data;
 		} else {
 			return false;
 		}

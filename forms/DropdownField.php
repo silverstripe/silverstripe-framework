@@ -13,11 +13,10 @@
  * 
  * 	public function getCMSFields() {
  * 		$fields = parent::getCMSFields();
- * 		$galleries = DataObject::get('Gallery');
- * 		if ($galleries) {
- * 			$galleries = $galleries->toDropdownMap('ID', 'Title', '(Select one)', true);
- * 		}
- * 		$fields->addFieldToTab('Root.Content', new DropdownField('GalleryID', 'Gallery', $galleries), 'Content');
+ * 		$field = new DropdownField('GalleryID', 'Gallery', DataList::create('Gallery')->map('ID', 'Title'));
+ * 		$field->setHasEmptyDefault(true);
+ * 		$field->setEmptyString('(Select one)');
+ * 		$fields->addFieldToTab('Root.Content', $field, 'Content');
  * </code>
  * 
  * As you see, you need to put "GalleryID", rather than "Gallery" here.
@@ -76,8 +75,6 @@
  * @subpackage fields-basic
  */
 class DropdownField extends FormField {
-	
-	protected $template = 'DropdownField';
 
 	/**
 	 * @var boolean $source Associative or numeric array of all dropdown items,
@@ -134,8 +131,8 @@ class DropdownField extends FormField {
 			// SQLMap needs this to add an empty value to the options
 			if(is_object($source) && $this->emptyString) {
 				$options[] = new ArrayData(array(
-					'Value' => $this->emptyString,
-					'Title' => '',
+					'Value' => '',
+					'Title' => $this->emptyString,
 				));
 			}
 
@@ -159,13 +156,13 @@ class DropdownField extends FormField {
 
 		$properties = array_merge($properties, array('Options' => new ArrayList($options)));
 
-		return $this->customise($properties)->renderWith($this->getTemplate());
+		return parent::Field($properties);
 	}
 
 	function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
-			array('type' => null)
+			array('type' => null, 'value' => null)
 		);
 	}
 
@@ -194,6 +191,7 @@ class DropdownField extends FormField {
 	 */
 	function setSource($source) {
 		$this->source = $source;
+		return $this;
 	}
 	
 	/**
@@ -201,6 +199,7 @@ class DropdownField extends FormField {
 	 */
 	function setHasEmptyDefault($bool) {
 		$this->hasEmptyDefault = $bool;
+		return $this;
 	}
 	
 	/**
@@ -220,6 +219,7 @@ class DropdownField extends FormField {
 	function setEmptyString($str) {
 		$this->setHasEmptyDefault(true);
 		$this->emptyString = $str;
+		return $this;
 	}
 
 	/**
@@ -235,12 +235,5 @@ class DropdownField extends FormField {
 		$field->setForm($this->form);
 		$field->setReadonly(true);
 		return $field;
-	}
-
-	/**
-	 * Set form being disabled
-	 */
-	function setDisabled($disabled = true) {
-		$this->disabled = $disabled;
 	}
 }

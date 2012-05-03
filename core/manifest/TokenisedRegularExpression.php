@@ -3,7 +3,7 @@
 /**
  * A tokenised regular expression is a parser, similar to a regular expression, that acts on tokens rather than characters.
  * This is a crucial component of the ManifestBuilder.
- * @package sapphire
+ * @package framework
  * @subpackage core
  */ 
 class TokenisedRegularExpression {
@@ -27,8 +27,8 @@ class TokenisedRegularExpression {
 				$tokens[$i] = array($token, $token);
 			}
 		}
-		
-		$startKeys = array_keys($tokenTypes, $this->expression[0]);	
+
+		$startKeys = array_keys($tokenTypes, is_array($this->expression[0]) ? $this->expression[0][0] : $this->expression[0]);
 		$allMatches = array();
 		
 		foreach($startKeys as $startKey) {

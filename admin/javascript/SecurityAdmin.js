@@ -30,42 +30,47 @@
 				$(this).bind('load', refreshAfterImport);
 			}
 		});
-	})
-	
-	/**
-	 * Delete selected folders through "batch actions" tab.
-	 */
-	$(document).ready(function() {
-		$('#Form_BatchActionsForm').entwine('ss').register(
-			// TODO Hardcoding of base URL
-			'admin/security/batchactions/delete', 
-			function(ids) {
-				var confirmed = confirm(
-					ss.i18n.sprintf(
-						ss.i18n._t('SecurityAdmin.BATCHACTIONSDELETECONFIRM'),
-						ids.length
-					)
-				);
-				return (confirmed) ? ids : false;
-			}
-		);
 	});
 	
 	$.entwine('ss', function($){
 		/**
-		 * Class: .cms-edit-form .Actions #Form_EditForm_action_addmember
+		 * Class: #Permissions .checkbox[value=ADMIN]
+		 * 
+		 * Automatically check and disable all checkboxes if ADMIN permissions are selected.
+		 * As they're disabled, any changes won't be submitted (which is intended behaviour),
+		 * checking all boxes is purely presentational.
 		 */
-		$('.cms-edit-form .Actions #Form_EditForm_action_addmember').entwine({
-			// Function: onclick
+		$('#Permissions .checkbox[value=ADMIN]').entwine({
+			onmatch: function() {
+				this.toggleCheckboxes();
+
+				this._super();
+			},
+			/**
+			 * Function: onclick
+			 */
 			onclick: function(e) {
-				// CAUTION: Assumes that a MemberTableField-instance is present as an editing form
-				var t = $('#Form_EditForm_Members');
-				t[0].openPopup(
-					null,
-					$('base').attr('href') + t.find('a.addlink').attr('href'),
-					t.find('table')[0]
-				);
-				return false;
+				this.toggleCheckboxes();
+			},
+			/**
+			 * Function: toggleCheckboxes
+			 */
+			toggleCheckboxes: function() {
+				var self = this, checkboxes = this.parents('.field:eq(0)').find('.checkbox').not(this);
+				
+				if(this.is(':checked')) {
+					checkboxes.each(function() {
+						$(this).data('SecurityAdmin.oldChecked', $(this).attr('checked'));
+						$(this).data('SecurityAdmin.oldDisabled', $(this).attr('disabled'));
+						$(this).attr('disabled', 'disabled');
+						$(this).attr('checked', 'checked');
+					});
+				} else {
+					checkboxes.each(function() {
+						$(this).attr('checked', $(this).data('SecurityAdmin.oldChecked'));
+						$(this).attr('disabled', $(this).data('SecurityAdmin.oldDisabled'));
+					});
+				}
 			}
 		});
 	});

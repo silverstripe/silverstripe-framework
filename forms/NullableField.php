@@ -42,7 +42,7 @@ class NullableField extends FormField {
 		$this->isNullLabel = $isNullLabel;
 		if ( is_null($this->isNullLabel) ) {
 			// Set a default label if one is not provided.
-			$this->isNullLabel = _t('NullableField.IsNullLabel', 'Is Null', PR_HIGH);
+			$this->isNullLabel = _t('NullableField.IsNullLabel', 'Is Null');
 		}
 		parent::__construct($valueField->getName(), $valueField->Title(), $valueField->Value(), $valueField->getForm(), $valueField->RightTitle());
 		$this->readonly = $valueField->isReadonly();
@@ -61,6 +61,7 @@ class NullableField extends FormField {
 	 */
 	function setIsNullLabel(string $isNulLabel){
 		$this->isNullLabel = $isNulLabel;
+		return $this;
 	}
 	
 	/**
@@ -73,9 +74,9 @@ class NullableField extends FormField {
 
 	/**
 	 * (non-PHPdoc)
-	 * @see sapphire/forms/FormField#Field()
+	 * @see framework/forms/FormField#Field()
 	 */
-	function Field() {
+	function Field($properties = array()) {
 		if ( $this->isReadonly()) {
 			$nullableCheckbox = new CheckboxField_Readonly($this->getIsNullId());
 		} else {
@@ -95,6 +96,8 @@ class NullableField extends FormField {
 		}
 		$this->valueField->setValue($value);
 		parent::setValue($value);
+
+		return $this;
 	}
 	
 	/**
@@ -105,11 +108,13 @@ class NullableField extends FormField {
 		// We need to pass through the name change to the underlying value field.
 		$this->valueField->setName($name);
 		parent::setName($name);
+
+		return $this;
 	}
 
 	/**
 	 * (non-PHPdoc)
-	 * @see sapphire/forms/FormField#debug()
+	 * @see framework/forms/FormField#debug()
 	 */
 	function debug() {
 		$result = "$this->class ($this->name: $this->title : <font style='color:red;'>$this->message</font>) = ";

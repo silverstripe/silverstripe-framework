@@ -19,7 +19,7 @@ require_once 'Zend/Currency.php';
  * @todo Addition, substraction and allocation of values
  * @todo Model validation for $allowedCurrencies
  * 
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Money extends DBField implements CompositeDBField {
@@ -84,25 +84,25 @@ class Money extends DBField implements CompositeDBField {
 		if($this->getCurrency()) {
 			$manipulation['fields'][$this->name.'Currency'] = $this->prepValueForDB($this->getCurrency());
 		} else {
-			$manipulation['fields'][$this->name.'Currency'] = DBField::create('Varchar', $this->getCurrency())->nullValue();
+			$manipulation['fields'][$this->name.'Currency'] = DBField::create_field('Varchar', $this->getCurrency())->nullValue();
 		}
 		
 		if($this->getAmount()) {
 			$manipulation['fields'][$this->name.'Amount'] = $this->getAmount();
 		} else {
-			$manipulation['fields'][$this->name.'Amount'] = DBField::create('Decimal', $this->getAmount())->nullValue();
+			$manipulation['fields'][$this->name.'Amount'] = DBField::create_field('Decimal', $this->getAmount())->nullValue();
 		}
 	}
 	
 	function addToQuery(&$query) {
 		parent::addToQuery($query);
-		$query->select[] = sprintf('"%sAmount"', $this->name);
-		$query->select[] = sprintf('"%sCurrency"', $this->name);
+		$query->selectField(sprintf('"%sAmount"', $this->name));
+		$query->selectField(sprintf('"%sCurrency"', $this->name));
 	}
 
 	function setValue($value, $record = null, $markChanged = true) {
 		// @todo Allow resetting value to NULL through Money $value field
-		if ($value instanceof Money && $value->hasValue()) {
+		if ($value instanceof Money && $value->exists()) {
 			$this->setCurrency($value->getCurrency(), $markChanged);
 			$this->setAmount($value->getAmount(), $markChanged);
 			if($markChanged) $this->isChanged = true;
@@ -190,7 +190,7 @@ class Money extends DBField implements CompositeDBField {
 	/**
 	 * @return boolean
 	 */
-	function hasValue() {
+	function exists() {
 		return ($this->getCurrency() && is_numeric($this->getAmount()));
 	}
 	
@@ -292,4 +292,3 @@ class Money extends DBField implements CompositeDBField {
 		return (string)$this->getAmount();
 	}
 }
-?>

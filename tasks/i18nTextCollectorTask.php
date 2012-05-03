@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage tasks
  */
 class i18nTextCollectorTask extends BuildTask {
@@ -28,9 +28,10 @@ class i18nTextCollectorTask extends BuildTask {
 	 */	
 	public function run($request) {
 		increase_time_limit_to();
-		$c = new i18nTextCollector();
+		$c = new i18nTextCollector($request->getVar('locale'));
+		$writer = $request->getVar('writer');
+		if($writer) $c->setWriter(new $writer());
 		$restrictModules = ($request->getVar('module')) ? explode(',', $request->getVar('module')) : null;
 		return $c->run($restrictModules);
 	}
 }
-?>

@@ -1,0 +1,189 @@
+zh_CN:
+  AssetAdmin:
+    MENUTITLE: "文件和图片"
+    NEWFOLDER: "新建文件夹"
+  AssetTableField:
+    CREATED: "第一次被上传"
+    DIM: "尺寸"
+    FILENAME: "文件名"
+    LASTEDIT: "上一次被更改"
+    OWNER: "拥有者"
+    SIZE: "大小"
+    TITLE: "文件名称"
+    TYPE: "类型"
+    URL: "URL"
+  BasicAuth:
+    ENTERINFO: "请输入用户名和密码"
+    ERRORNOTADMIN: "此用户没有管理员权限。"
+    ERRORNOTREC: "没有找到此用户名/密码"
+  CMSMain:
+    ACCESS: "在 CMS 访问 %s"
+    MENUTITLE: "网站内容"
+    SAVE: "保存"
+  ChangePasswordEmail.ss:
+    CHANGEPASSWORDTEXT1: "您已更改了登陆%s的密码"
+    CHANGEPASSWORDTEXT2: "您现在可以用下列权限信息进行登路："
+    HELLO: "嗨"
+  ComplexTableField.ss:
+    ADDITEM: "新加"
+    SORTASC: "正序排列"
+    SORTDESC: "倒序排列"
+  ComplexTableField_popup.ss:
+    NEXT: "下一页"
+    PREVIOUS: "上一页"
+  ConfirmedPasswordField:
+    SHOWONCLICKTITLE: "更改密码"
+  DataObject:
+    PLURALNAME: "数据对象"
+    SINGULARNAME: "数据对象"
+  Date:
+    DAY: "天"
+    DAYS: "天"
+    HOUR: "个小时"
+    HOURS: "个小时"
+    MIN: "分钟"
+    MINS: "分钟"
+    MONTH: "个月"
+    MONTHS: "个月"
+    SEC: "秒"
+    SECS: "秒"
+    YEAR: "年"
+    YEARS: "年"
+  DateField:
+  DropdownField:
+    CHOOSE: "（选择）"
+  EmailField:
+    VALIDATION: "请输入电邮地址。"
+  File:
+    INVALIDEXTENSION: "文件格式不适用（可用：%s）"
+    PLURALNAME: "文件"
+    SINGULARNAME: "文件"
+    TOOLARGE: "文件过大，最大只允许 %s"
+  ForgotPasswordEmail.ss:
+    HELLO: "嗨"
+  Form:
+    FIELDISREQUIRED: "%s是必需填写的"
+    VALIDATIONCREDITNUMBER: "请确认您输入了正确的%s信用卡号。"
+    VALIDATIONFAILED: "验证失败"
+    VALIDATIONNOTUNIQUE: "输入值已被他人占用"
+    VALIDATIONPASSWORDSDONTMATCH: "（密码相互不匹配）"
+    VALIDATIONPASSWORDSNOTEMPTY: "密码不能空白"
+    VALIDATIONSTRONGPASSWORD: "密码至少必需包含一个数字和一个字母。"
+    VALIDCURRENCY: "请输入有效的货币"
+  Group:
+    Code: "团队代码"
+    Locked: "锁定？"
+    Parent: "主团队"
+    has_many_Permissions: "权限"
+    many_many_Members: "成员"
+  HtmlEditorField:
+    BUTTONINSERTLINK: "插入链接"
+    BUTTONREMOVELINK: "删除链接"
+    CSSCLASS: "对齐/样式"
+    CSSCLASSCENTER: "自居中"
+    CSSCLASSLEFT: "左端自动换行"
+    CSSCLASSRIGHT: "右端自动换行"
+    EMAIL: "电子邮件地址"
+    FILE: "文件"
+    FOLDER: "文件夹"
+    IMAGE: "插入图像"
+    IMAGEDIMENSIONS: "尺寸"
+    IMAGEHEIGHTPX: "高（像素）"
+    IMAGEWIDTHPX: "宽（像素）"
+    LINK: "对所选文字插入/编辑链接"
+    LINKDESCR: "链接描述"
+    LINKEMAIL: "电子邮件地址"
+    LINKEXTERNAL: "其它网站"
+    LINKFILE: "下载文件"
+    LINKINTERNAL: "本站网页"
+    LINKOPENNEWWIN: "在新窗口打开链接？"
+    LINKTO: "链接到"
+    PAGE: "页"
+    URL: "（路径）URL"
+  Image_iframe.ss:
+    TITLE: "图象上传内嵌框架（Iframe）"
+  LeftAndMain:
+    HELP: "帮助"
+    PAGETYPE: "网页类型"
+    PERMAGAIN: "您于CMS的登录已被注销，请在下面输入用户名和密码重新登录。"
+    PERMALREADY: "对不起，您无权登录CMS的这一部分。如果您要用另外的帐号，请在下面登录。"
+    PERMDEFAULT: "请先选择一种验证方法并输入您的权限信息，以登录CMS。"
+    PLEASESAVE: "请先保存：因为该网页还未保存，所以该页无法更新。"
+    SAVED: "已保存"
+  LoginAttempt:
+  Member:
+    ADDRESS: "地址"
+    BUTTONCHANGEPASSWORD: "更改密码"
+    BUTTONLOGIN: "登录"
+    BUTTONLOGINOTHER: "使用其他帐户登录"
+    BUTTONLOSTPASSWORD: "忘记密码"
+    CONFIRMNEWPASSWORD: "确认新密码"
+    CONFIRMPASSWORD: "确认密码"
+    CONTACTINFO: "联系信息"
+    EMAIL: "电子邮件"
+    EMAILSIGNUPINTRO1: "感谢成为会员。便于将来参照，您的信息在下面列出。"
+    EMAILSIGNUPINTRO2: "您可以用下列登录信息登录网站"
+    EMAILSIGNUPSUBJECT: "感谢注册"
+    ERRORNEWPASSWORD: "您输入了一个不同的新密码，请重新输入"
+    ERRORPASSWORDNOTMATCH: "您当前的密码不正确，请再次输入"
+    ERRORWRONGCRED: "电邮地址或密码似乎不对。请重新输入。"
+    FIRSTNAME: "名"
+    GREETING: "欢迎，"
+    INTERFACELANG: "界面语言"
+    LOGGEDINAS: "您以%s登录成功"
+    MOBILE: "手机"
+    NAME: "姓名"
+    NEWPASSWORD: "新密码"
+    PASSWORD: "密码"
+    PHONE: "电话"
+    PLURALNAME: "成员"
+    REMEMBERME: "记住我的信息？"
+    SINGULARNAME: "成员"
+    SUBJECTPASSWORDCHANGED: "您的密码已更改"
+    SUBJECTPASSWORDRESET: "重设您的密码链接"
+    SURNAME: "姓"
+    VALIDATIONMEMBEREXISTS: "已经存在用这个电子邮件的会员"
+    WELCOMEBACK: "欢迎再次访问，%s"
+    YOUROLDPASSWORD: "您的旧密码"
+    belongs_many_many_Groups: "团队"
+    db_LockedOutUntil: "禁止直至"
+    db_PasswordExpiry: "密码过期日期"
+  MemberAuthenticator:
+    TITLE: "电邮地址和密码"
+  ModelAdmin:
+    DELETE: "删除"
+  NumericField:
+    VALIDATION: "“%s\"不是一个数字，这个栏域只可以用数字填写"
+  Permission:
+  PhoneNumberField:
+    VALIDATION: "请输入有效电话号码"
+  ReportAdmin:
+    MENUTITLE: "报表"
+  Security:
+    ALREADYLOGGEDIN: "您无访问此页的权限。如果您拥有另一个可访问次页的帐户，请在下面登录。"
+    BUTTONSEND: "给我发送密码重设链接"
+    CHANGEPASSWORDBELOW: "您可在下面更改您的密码"
+    CHANGEPASSWORDHEADER: "更改您的密码"
+    ENTERNEWPASSWORD: "请输入新密码"
+    ERRORPASSWORDPERMISSION: "您必需登录以更改您的密码"
+    LOGGEDOUT: "您已被撤消登录。如果您想再次登录，在下面输入您的登录信息。"
+    NOTEPAGESECURED: "此页是受安全保护的。输入您的登录信息，我们会将您送达。"
+    NOTERESETPASSWORD: "输入您的电邮地址，我们会给您发送一个您可重设密码的链接"
+    PASSWORDSENTHEADER: "密码重设链接已发送给“%s”"
+    PASSWORDSENTTEXT: "谢谢！密码重设链接已发送给“%s”"
+  SecurityAdmin:
+    MENUTITLE: "安全"
+    NEWGROUP: "新建会员组"
+  SimpleImageField:
+    NOUPLOAD: "没有上传的图像"
+  SiteTree:
+    TABMAIN: "主要部分"
+  TableField:
+    ISREQUIRED: "在%s栏域内，“%s\"是必需填写的。"
+  TableField.ss:
+  ToggleCompositeField.ss:
+    HIDE: "隐藏"
+    SHOW: "显示"
+  ToggleField:
+    LESS: "隐藏"
+    MORE: "更多"

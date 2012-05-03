@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is the Sapphire bootstrap.  It will get your environment ready to call Director::direct().
+ * This file is the Framework bootstrap.  It will get your environment ready to call Director::direct().
  *
  * It takes care of:
  *  - Including _ss_environment.php
@@ -20,41 +20,27 @@
  * - MODULES_PATH: Not used at the moment
  * - THEMES_DIR: Path relative to webroot, e.g. "themes"
  * - THEMES_PATH: Absolute filepath, e.g. "/var/www/my-webroot/themes"
- * - CMS_DIR: Path relative to webroot, e.g. "cms"
- * - CMS_PATH: Absolute filepath, e.g. "/var/www/my-webroot/cms"
- * - SAPPHIRE_DIR: Path relative to webroot, e.g. "sapphire"
- * - SAPPHIRE_PATH:Absolute filepath, e.g. "/var/www/my-webroot/sapphire"
- * - SAPPHIRE_ADMIN_DIR: 
- * - SAPPHIRE_ADMIN_PATH:
- * - THIRDPARTY_DIR: Path relative to webroot, e.g. "sapphire/thirdparty"
- * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/sapphire/thirdparty"
+ * - FRAMEWORK_DIR: Path relative to webroot, e.g. "framework"
+ * - FRAMEWORK_PATH:Absolute filepath, e.g. "/var/www/my-webroot/framework"
+ * - FRAMEWORK_ADMIN_DIR: Path relative to webroot, e.g. "framework/admin"
+ * - FRAMEWORK_ADMIN_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/admin"
+ * - THIRDPARTY_DIR: Path relative to webroot, e.g. "framework/thirdparty"
+ * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/thirdparty"
  * 
  * @todo This file currently contains a lot of bits and pieces, and its various responsibilities should probably be
  * moved into different subsystems.
  * @todo A lot of this stuff is very order-independent; for example, the require_once calls have to happen after the defines.'
  * This could be decoupled.
- * @package sapphire
+ * @package framework
  * @subpackage core
  */
 
 ///////////////////////////////////////////////////////////////////////////////
 // ENVIRONMENT CONFIG
 
-if(defined('E_DEPRECATED')) error_reporting(E_ALL & ~(E_DEPRECATED | E_STRICT));
-else error_reporting(E_ALL);
-/*
- * This is for versions of PHP prior to version 5.2
- * Creating this here will allow both web requests and cron jobs to inherit it.
- */
-if (!function_exists('array_fill_keys')) {
-	function array_fill_keys($keys,$value) {
-		//Sometimes we get passed an empty array, and if that's the case, you'll get an error message
-		if(sizeof($keys)==0)
-			return Array();
-		else
-			return array_combine($keys,array_fill(0,count($keys),$value));
-	}
-}
+// ALL errors are reported, including E_STRICT by default *unless* the site is in
+// live mode, where reporting is limited to fatal errors and warnings (see later in this file)
+error_reporting(E_ALL | E_STRICT);
 
 /**
  * Include _ss_environment.php files
@@ -130,7 +116,8 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	 * Fix HTTP_HOST from reverse proxies
 	 */
 	if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
-		$_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
+		// Get the first host, in case there's multiple separated through commas
+		$_SERVER['HTTP_HOST'] = strtok($_SERVER['HTTP_X_FORWARDED_HOST'], ',');
 	}
 }
 
@@ -138,8 +125,12 @@ if(!isset($_SERVER['HTTP_HOST'])) {
  * Define system paths
  */
 if(!defined('BASE_PATH')) {
-	// Assuming that this file is sapphire/core/Core.php we can then determine the base path
-	define('BASE_PATH', rtrim(dirname(dirname(dirname(__FILE__)))), DIRECTORY_SEPARATOR);
+	// Assuming that this file is framework/core/Core.php we can then determine the base path
+	$candidateBasePath = rtrim(dirname(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR);
+	// We can't have an empty BASE_PATH.  Making it / means that double-slashes occur in places but that's benign.
+	// This likely only happens on chrooted environemnts
+	if($candidateBasePath == '') $candidateBasePath = DIRECTORY_SEPARATOR;
+	define('BASE_PATH', $candidateBasePath);
 }
 if(!defined('BASE_URL')) {
 	// Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting common elements
@@ -165,13 +156,22 @@ define('MODULES_DIR', 'modules');
 define('MODULES_PATH', BASE_PATH . '/' . MODULES_DIR);
 define('THEMES_DIR', 'themes');
 define('THEMES_PATH', BASE_PATH . '/' . THEMES_DIR);
-define('SAPPHIRE_DIR', 'sapphire');
-define('SAPPHIRE_PATH', BASE_PATH . '/' . SAPPHIRE_DIR);
-define('SAPPHIRE_ADMIN_DIR', 'sapphire/admin');
-define('SAPPHIRE_ADMIN_PATH', BASE_PATH . '/' . SAPPHIRE_ADMIN_DIR);
-define('CMS_DIR', 'cms');
-define('CMS_PATH', BASE_PATH . '/' . CMS_DIR);
-define('THIRDPARTY_DIR', SAPPHIRE_DIR . '/thirdparty');
+// Relies on this being in a subdir of the framework.
+// If it isn't, or is symlinked to a folder with a different name, you must define FRAMEWORK_DIR
+if(!defined('FRAMEWORK_DIR')) {
+	define('FRAMEWORK_DIR', basename(dirname(dirname(__FILE__))));
+}
+define('FRAMEWORK_PATH', BASE_PATH . '/' . FRAMEWORK_DIR);
+define('FRAMEWORK_ADMIN_DIR', FRAMEWORK_DIR . '/admin');
+define('FRAMEWORK_ADMIN_PATH', BASE_PATH . '/' . FRAMEWORK_ADMIN_DIR);
+
+// These are all deprecated. Use the FRAMEWORK_ versions instead.
+define('SAPPHIRE_DIR', FRAMEWORK_DIR);
+define('SAPPHIRE_PATH', FRAMEWORK_PATH);
+define('SAPPHIRE_ADMIN_DIR', FRAMEWORK_ADMIN_DIR);
+define('SAPPHIRE_ADMIN_PATH', FRAMEWORK_ADMIN_PATH);
+
+define('THIRDPARTY_DIR', FRAMEWORK_DIR . '/thirdparty');
 define('THIRDPARTY_PATH', BASE_PATH . '/' . THIRDPARTY_DIR);
 define('ASSETS_DIR', 'assets');
 define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
@@ -196,6 +196,11 @@ define('PR_LOW',10);
 increase_memory_limit_to('64M');
 
 /**
+ * Ensure we don't run into xdebug's fairly conservative infinite recursion protection limit
+ */
+increase_xdebug_nesting_level_to(200);
+
+/**
  * Set default encoding
  */
 if(function_exists('mb_http_output')) {
@@ -209,14 +214,14 @@ if(function_exists('mb_http_output')) {
 
 if(defined('CUSTOM_INCLUDE_PATH')) {
 	$includePath = CUSTOM_INCLUDE_PATH . PATH_SEPARATOR
-		. BASE_PATH . '/sapphire' . PATH_SEPARATOR
-		. BASE_PATH . '/sapphire/parsers' . PATH_SEPARATOR
-		. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
+		. FRAMEWORK_PATH . PATH_SEPARATOR
+		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
+		. THIRDPARTY_PATH . PATH_SEPARATOR
 		. get_include_path();
 } else {
-	$includePath = BASE_PATH . '/sapphire' . PATH_SEPARATOR
-		. BASE_PATH . '/sapphire/parsers' . PATH_SEPARATOR
-		. BASE_PATH . '/sapphire/thirdparty' . PATH_SEPARATOR
+	$includePath = FRAMEWORK_PATH . PATH_SEPARATOR
+		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
+		. THIRDPARTY_PATH . PATH_SEPARATOR
 		. get_include_path();
 }
 
@@ -227,8 +232,13 @@ set_include_path($includePath);
 require_once 'cache/Cache.php';
 require_once 'core/Object.php';
 require_once 'core/ClassInfo.php';
+require_once 'view/TemplateGlobalProvider.php';
 require_once 'control/Director.php';
 require_once 'dev/Debug.php';
+require_once 'dev/DebugView.php';
+require_once 'dev/Backtrace.php';
+require_once 'dev/ZendLog.php';
+require_once 'dev/Log.php';
 require_once 'filesystem/FileFinder.php';
 require_once 'core/manifest/ClassLoader.php';
 require_once 'core/manifest/ClassManifest.php';
@@ -252,17 +262,19 @@ $loader = SS_ClassLoader::instance();
 $loader->registerAutoloader();
 $loader->pushManifest($manifest);
 
+// Now that the class manifest is up, load the configuration
+$configManifest = new SS_ConfigManifest(BASE_PATH, false, $flush);
+Config::inst()->pushConfigManifest($configManifest);
+
 SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
 	BASE_PATH, false, isset($_GET['flush'])
 ));
 
-// If this is a dev site, enable php error reporting
-// This is necessary to force developers to acknowledge and fix
-// notice level errors (you can override this directive in your _config.php)
-if (Director::isLive()) {
-	if(defined('E_DEPRECATED')) error_reporting(E_ALL & ~(E_DEPRECATED | E_STRICT | E_NOTICE));
-	else error_reporting(E_ALL & ~E_NOTICE);
+// If in live mode, ensure deprecation, strict and notices are not reported
+if(Director::isLive()) {
+	error_reporting(E_ALL & ~(E_DEPRECATED | E_STRICT | E_NOTICE));
 }
+
 ///////////////////////////////////////////////////////////////////////////////
 // POST-MANIFEST COMMANDS
 
@@ -275,20 +287,12 @@ Debug::loadErrorHandlers();
 // HELPER FUNCTIONS
 
 function getSysTempDir() {
-	if(function_exists('sys_get_temp_dir')) {
-		$sysTmp = sys_get_temp_dir();
-	} elseif(isset($_ENV['TMP'])) {
-		$sysTmp = $_ENV['TMP'];    	
-	} else {
-		$tmpFile = tempnam('adfadsfdas','');
-		unlink($tmpFile);
-		$sysTmp = dirname($tmpFile);
-	}
-	return $sysTmp;
+	Deprecation::notice(3.0, 'Please use PHP function get_sys_temp_dir() instead.');
+	return sys_get_temp_dir();
 }
 
 /**
- * Returns the temporary folder that sapphire/silverstripe should use for its cache files
+ * Returns the temporary folder that silverstripe should use for its cache files
  * This is loaded into the TEMP_FOLDER define on start up
  * 
  * @param $base The base path to use as the basis for the temp folder name.  Defaults to BASE_PATH,
@@ -308,7 +312,7 @@ function getTempFolder($base = null) {
 		return $ssTmp;
 	}
 
-	$sysTmp = getSysTempDir();
+	$sysTmp = sys_get_temp_dir();
 	$worked = true;
 	$ssTmp = "$sysTmp/$cachefolder";
 
@@ -325,9 +329,11 @@ function getTempFolder($base = null) {
 	}
 
 	if(!$worked) {
-		user_error("Permission problem gaining access to a temp folder. " .
-			"Please create a folder named silverstripe-cache in the base folder "  .
-			"of the installation and ensure it has the correct permissions", E_USER_ERROR);
+		throw new Exception(
+			'Permission problem gaining access to a temp folder. ' .
+			'Please create a folder named silverstripe-cache in the base folder ' .
+			'of the installation and ensure it has the correct permissions'
+		);
 	}
 
 	return $ssTmp;
@@ -380,8 +386,8 @@ function stripslashes_recursively(&$array) {
 /**
  * @see i18n::_t()
  */
-function _t($entity, $string = "", $priority = 40, $context = "") {
-	return i18n::_t($entity, $string, $priority, $context);
+function _t($entity, $string = "", $context = "", $injection = "") {
+	return i18n::_t($entity, $string, $context, $injection);
 }
 
 /**
@@ -405,7 +411,7 @@ function increase_memory_limit_to($memoryLimit = -1) {
 	// Increase the memory limit if it's too low
 	if($memoryLimit == -1 || translate_memstring($memoryLimit) > translate_memstring($curLimit)) {
 		ini_set('memory_limit', $memoryLimit);
-	} 
+	}
 
 	return true;
 }
@@ -430,6 +436,19 @@ function set_increase_memory_limit_max($memoryLimit) {
 function get_increase_memory_limit_max() {
 	global $_increase_memory_limit_max;
 	return $_increase_memory_limit_max;
+}
+
+/**
+ * Increases the XDebug parameter max_nesting_level, which limits how deep recursion can go.
+ * Only does anything if (a) xdebug is installed and (b) the new limit is higher than the existing limit
+ *
+ * @param int $limit - The new limit to increase to
+ */
+function increase_xdebug_nesting_level_to($limit) {
+	if (function_exists('xdebug_enable')) {
+		$current = ini_get('xdebug.max_nesting_level');
+		if ((int)$current < $limit) ini_set('xdebug.max_nesting_level', $limit);
+	}
 }
 
 /**

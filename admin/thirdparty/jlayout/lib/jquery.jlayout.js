@@ -119,8 +119,10 @@ if (jQuery && jLayout) {
 			return $.each(this, function () {
 				var element = $(this),
 					o = $.metadata && element.metadata().layout ? $.extend(opts, element.metadata().layout) : opts,
+					// CUSTOM ischommer 2012-16-02 Allow type setting throgh built-in jQuery HTML5 data getters, to avoid including jQuery.metadata.js
+					o = element.data('layoutType') ? $.extend(o, {type: element.data('layoutType')}) : o,
+					// CUSTOM END
 					elementWrapper = wrap(element, o.resize);
-
 				if (o.type === 'border' && typeof jLayout.border !== 'undefined') {                
 					$.each(['north', 'south', 'west', 'east', 'center'], function (i, name) {
 						if (element.children().hasClass(name)) {

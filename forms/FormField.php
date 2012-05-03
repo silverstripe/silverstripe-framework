@@ -51,49 +51,70 @@ class FormField extends RequestHandler {
 	protected $leftTitle;
 	
 	/**
-	 * Set the "tabindex" HTML attribute on the field.
-	 *
-	 * @var int
-	 */
-	protected $tabIndex;
-
-	/**
 	 * Stores a reference to the FieldList that contains this object.
 	 * @var FieldList
 	 */ 
 	protected $containerFieldSet;
 	
 	/**
-	 * @var $readonly boolean
+	 * @var boolean
 	 */
 	protected $readonly = false;
 
 	/**
-	 * @var $disabled boolean
+	 * @var boolean
 	 */
 	protected $disabled = false;
 	
 	/**
-	 * @var String
-	 */
-	protected $template = 'FormField';
-	
-	/**
-	 * @var Custom Validation Message for the Field
+	 * @var string custom validation message for the Field
 	 */
 	protected $customValidationMessage = "";
-
+	
 	/**
-	 * Template name to render this FormField field holder into.
+	 * Name of the template used to render this form field. If not set, then
+	 * will look up the class ancestry for the first matching template where 
+	 * the template name equals the class name.
+	 *
+	 * To explicitly use a custom template or one named other than the form 
+	 * field see {@link setTemplate()}, {@link setFieldHolderTemplate()}
+	 *
 	 * @var string
 	 */
-	protected $fieldHolderTemplate = 'FieldHolder';
-
+	protected 
+		$template,
+		$fieldHolderTemplate,
+ 		$smallFieldHolderTemplate;
+		
 	/**
 	 * @var array All attributes on the form field (not the field holder).
 	 * Partially determined based on other instance properties, please use {@link getAttributes()}.
 	 */
 	protected $attributes = array();
+
+	/**
+	 * Takes a fieldname and converts camelcase to spaced
+	 * words. Also resolves combined fieldnames with dot syntax
+	 * to spaced words.
+	 *
+	 * Examples:
+	 * - 'TotalAmount' will return 'Total Amount'
+	 * - 'Organisation.ZipCode' will return 'Organisation Zip Code'
+	 *
+	 * @param string $fieldName
+	 * @return string
+	 */
+	public static function name_to_label($fieldName) {
+		if(strpos($fieldName, '.') !== false) {
+			$parts = explode('.', $fieldName);
+			$label = $parts[count($parts)-2] . ' ' . $parts[count($parts)-1];
+		} else {
+			$label = $fieldName;
+		}
+		$label = preg_replace("/([a-z]+)([A-Z])/","$1 $2", $label);
+		
+		return $label;
+	}
 
 	/**
 	 * Create a new field.
@@ -123,7 +144,7 @@ class FormField extends RequestHandler {
 	 * that this ID is included in the field.
 	 */
 	function ID() { 
-		$name = ereg_replace('(^-)|(-$)','',ereg_replace('[^A-Za-z0-9_-]+','-',$this->name));
+		$name = preg_replace('/(^-)|(-$)/', '', preg_replace('/[^A-Za-z0-9_-]+/', '-', $this->name));
 		if($this->form) return $this->form->FormName() . '_' . $name;
 		else return $name;
 	}
@@ -200,6 +221,7 @@ class FormField extends RequestHandler {
 	
 	function setTitle($val) { 
 		$this->title = $val;
+		return $this;
 	}
 
 	function RightTitle() {
@@ -208,6 +230,7 @@ class FormField extends RequestHandler {
 
 	function setRightTitle($val) { 
 		$this->rightTitle = $val;
+		return $this;
 	}
 
 	function LeftTitle() {
@@ -216,44 +239,40 @@ class FormField extends RequestHandler {
 
 	function setLeftTitle($val) {
 		$this->leftTitle = $val;
+		return $this;
 	}
 
 	/**
 	 * Set tabindex HTML attribute
 	 * (defaults to none).
 	 *
+	 * @deprecated 3.0 Use setAttribute("tabindex") instead
 	 * @param int $index
 	 */
 	public function setTabIndex($index) {
-		$this->tabIndex = $index;
+		Deprecation::notice('3.0', 'Use setAttribute("tabindex") instead');
+		$this->setAttribute($index);
+		return $this;
 	}
 
 	/**
 	 * Get tabindex (if previously set)
+	 * 
+	 * @deprecated 3.0 Use getAttribute("tabindex") instead
 	 * @return int
 	 */
 	public function getTabIndex() {
-		return $this->tabIndex;
+		Deprecation::notice('3.0', 'Use getAttribute("tabindex") instead');
+		return $this->getAttribute('tabindex');
 	}
 
-	/**
-	 * Get tabindex HTML string
-	 *
-	 * @param int $increment Increase current tabindex by this value
-	 * @return string
-	 */
-	protected function getTabIndexHTML($increment = 0) {
-		$tabIndex = (int)$this->getTabIndex() + (int)$increment;
-		return (is_numeric($tabIndex)) ? ' tabindex = "' . $tabIndex . '"' : '';
-	}
-	
 	/**
 	 * Compiles all CSS-classes. Optionally includes a "nolabel"-class
 	 * if no title was set on the formfield.
 	 * Uses {@link Message()} and {@link MessageType()} to add validatoin
 	 * error classes which can be used to style the contained tags.
 	 * 
-	 * @return String CSS-classnames
+	 * @return string CSS-classnames
 	 */
 	function extraClass() {
 		$classes = array();
@@ -281,6 +300,7 @@ class FormField extends RequestHandler {
 	 */
 	function addExtraClass($class) {
 		$this->extraClasses[$class] = $class;
+		return $this;
 	}
 
 	/**
@@ -290,28 +310,36 @@ class FormField extends RequestHandler {
 	 */
 	function removeExtraClass($class) {
 		if(isset($this->extraClasses) && array_key_exists($class, $this->extraClasses)) unset($this->extraClasses[$class]);
+		return $this;
 	}
 
 	/**
 	 * Set an HTML attribute on the field element, mostly an <input> tag.
+	 * 
+	 * Some attributes are best set through more specialized methods, to avoid interfering with built-in behaviour:
+	 * - 'class': {@link addExtraClass()}
+	 * - 'title': {@link setDescription()}
+	 * - 'value': {@link setValue}
+	 * - 'name': {@link setName}
 	 * 
 	 * CAUTION Doesn't work on most fields which are composed of more than one HTML form field:
 	 * AjaxUniqueTextField, CheckboxSetField, ComplexTableField, CompositeField, ConfirmedPasswordField, CountryDropdownField,
 	 * CreditCardField, CurrencyField, DateField, DatetimeField, FieldGroup, GridField, HtmlEditorField,
 	 * ImageField, ImageFormAction, InlineFormAction, ListBoxField, etc.
 	 * 
-	 * @param String
-	 * @param String
+	 * @param string
+	 * @param string
 	 */
 	function setAttribute($name, $value) {
 		$this->attributes[$name] = $value;
+		return $this;
 	}
 
 	/**
 	 * Get an HTML attribute defined by the field, or added through {@link setAttribute()}.
 	 * Caution: Doesn't work on all fields, see {@link setAttribute()}.
 	 * 
-	 * @return String
+	 * @return string
 	 */
 	function getAttribute($name) {
 		$attrs = $this->getAttributes();
@@ -328,16 +356,17 @@ class FormField extends RequestHandler {
 			'value' => $this->Value(),			
 			'class' => $this->extraClass(),
 			'id' => $this->ID(),
-			'tabindex' => $this->getTabIndex(),
 			'disabled' => $this->isDisabled(),
+			'title' => $this->getDescription(),
 		);
+		
 		return array_merge($attrs, $this->attributes);
 	}
 
 	/**
 	 * @param Array Custom attributes to process. Falls back to {@link getAttributes()}.
 	 * If at least one argument is passed as a string, all arguments act as excludes by name.
-	 * @return String HTML attributes, ready for insertion into an HTML tag
+	 * @return string HTML attributes, ready for insertion into an HTML tag
 	 */
 	function getAttributesHTML($attrs = null) {
 		$exclude = (is_string($attrs)) ? func_get_args() : null;
@@ -345,7 +374,9 @@ class FormField extends RequestHandler {
 		if(!$attrs || is_string($attrs)) $attrs = $this->getAttributes();
 
 		// Remove empty
-		$attrs = array_filter((array)$attrs, create_function('$v', 'return ($v || $v === 0);')); ; 
+		$attrs = array_filter((array)$attrs, function($v) {
+			return ($v || $v === 0 || $v === '0');
+		}); 
 
 		// Remove excluded
 		if($exclude) $attrs = array_diff_key($attrs, array_flip($exclude));
@@ -378,6 +409,7 @@ class FormField extends RequestHandler {
 	 */
 	function setValue($value) {
 		$this->value = $value; return $this;
+		return $this;
 	}
 	
 	/**
@@ -385,6 +417,7 @@ class FormField extends RequestHandler {
 	 */
 	function setName($name) {
 		$this->name = $name;
+		return $this;
 	}
 	
 	/**
@@ -394,6 +427,7 @@ class FormField extends RequestHandler {
 	 */
 	function setForm($form) {
 		$this->form = $form; 
+		return $this;
 	}
 	
 	/**
@@ -404,27 +438,7 @@ class FormField extends RequestHandler {
 	function getForm() {
 		return $this->form; 
 	}
-
-	/**
-	 * @return String
-	 */
-	public function getFieldHolderTemplate() {
-		return $this->fieldHolderTemplate;
-	}
-
-	/**
-	 * Set name of template (without path or extension) for the holder,
-	 * which in turn is responsible for rendering {@link Field()}.
-	 * 
-	 * Caution: Not consistently implemented in all subclasses,
-	 * please check the {@link Field()} method on the subclass for support.
-	 * 
-	 * @param String
-	 */
-	public function setFieldHolderTemplate($template) {
-		$this->fieldHolderTemplate = $template;
-	}
-
+	
 	/**
 	 * Return TRUE if security token protection is enabled on the parent {@link Form}.
 	 *
@@ -433,6 +447,7 @@ class FormField extends RequestHandler {
 	public function securityTokenEnabled() {
 		$form = $this->getForm();
 		if(!$form) return false;
+		
 		return $form->getSecurityToken()->isEnabled();
 	}
 	
@@ -443,6 +458,8 @@ class FormField extends RequestHandler {
 	function setError($message, $messageType) {
 		$this->message = $message; 
 		$this->messageType = $messageType; 
+		
+		return $this;
 	}
 	
 	/**
@@ -450,10 +467,12 @@ class FormField extends RequestHandler {
 	 * format of Please Fill In XXX. Different from setError() as
 	 * that appends it to the standard error messaging
 	 * 
-	 * @param String Message for the error
+	 * @param string Message for the error
 	 */
 	public function setCustomValidationMessage($msg) {
 		$this->customValidationMessage = $msg;
+		
+		return $this;
 	}
 	
 	/**
@@ -462,7 +481,7 @@ class FormField extends RequestHandler {
 	 * error is defined on {@link Validator}.
 	 *
 	 * @todo Should the default error message be stored here instead
-	 * @return String
+	 * @return string
 	 */
 	public function getCustomValidationMessage() {
 		return $this->customValidationMessage;
@@ -473,17 +492,63 @@ class FormField extends RequestHandler {
 	 * Caution: Not consistently implemented in all subclasses,
 	 * please check the {@link Field()} method on the subclass for support.
 	 * 
-	 * @param String
+	 * @param string
 	 */
 	function setTemplate($template) {
 		$this->template = $template;
+		
+		return $this;
 	}
 	
 	/**
-	 * @return String
+	 * @return string
 	 */
 	function getTemplate() {
 		return $this->template;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getFieldHolderTemplate() {
+		return $this->fieldHolderTemplate;
+	}
+	
+	/**
+	 * Set name of template (without path or extension) for the holder,
+	 * which in turn is responsible for rendering {@link Field()}.
+	 * 
+	 * Caution: Not consistently implemented in all subclasses,
+	 * please check the {@link Field()} method on the subclass for support.
+	 * 
+	 * @param string
+	 */
+	public function setFieldHolderTemplate($template) {
+		$this->fieldHolderTemplate = $template;
+		
+		return $this;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getSmallFieldHolderTemplate() {
+		return $this->smallFieldHolderTemplate;
+	}
+	
+	/**
+	 * Set name of template (without path or extension) for the small holder,
+	 * which in turn is responsible for rendering {@link Field()}.
+	 * 
+	 * Caution: Not consistently implemented in all subclasses,
+	 * please check the {@link Field()} method on the subclass for support.
+	 * 
+	 * @param string
+	 */
+	public function setSmallFieldHolderTemplate($template) {
+		$this->smallFieldHolderTemplate = $template;
+		
+		return $this;
 	}
 	
 	/**
@@ -498,7 +563,8 @@ class FormField extends RequestHandler {
 	 */
 	function Field($properties = array()) {
 		$obj = ($properties) ? $this->customise($properties) : $this;
-		return $obj->renderWith($this->getTemplate());
+
+		return $obj->renderWith($this->getTemplates());
 	}
 
 	/**
@@ -513,28 +579,80 @@ class FormField extends RequestHandler {
 	 */
 	function FieldHolder($properties = array()) {
 		$obj = ($properties) ? $this->customise($properties) : $this;
-		return $obj->renderWith($this->getFieldHolderTemplate());
+
+		return $obj->renderWith($this->getFieldHolderTemplates());
 	}
 
    /**
     * Returns a restricted field holder used within things like FieldGroups.
+	*
+	* @param array $properties
+	*
+	* @return string
     */
-   function SmallFieldHolder() {
-		$result = '';
-		// set label
-		if($title = $this->RightTitle()){
-			$result .= "<label class=\"right\" for=\"" . $this->id() . "\">{$title}</label>\n";
-		} elseif($title = $this->LeftTitle()) {
-			$result .= "<label class=\"left\" for=\"" . $this->id() . "\">{$title}</label>\n";
-		} elseif($title = $this->Title()) {
-			$result .= "<label for=\"" . $this->id() . "\">{$title}</label>\n";
+   function SmallFieldHolder($properties = array()) {
+		$obj = ($properties) ? $this->customise($properties) : $this;
+
+		return $obj->renderWith($this->getSmallFieldHolderTemplates());
+	}
+	
+	/**
+	* Returns an array of templates to use for rendering {@link FieldH}
+	 *
+	 * @return array
+	 */
+	public function getTemplates() {
+		return $this->_templates($this->getTemplate());
+	}
+	
+	/**
+	 * Returns an array of templates to use for rendering {@link FieldHolder}
+	 *
+	 * @return array
+	 */
+	public function getFieldHolderTemplates() {
+		return $this->_templates(
+			$this->getFieldHolderTemplate(), 
+			'_holder'
+		);
+	}
+
+	/**
+	 * Returns an array of templates to use for rendering {@link SmallFieldHolder}
+	 *
+	 * @return array
+	 */	
+	public function getSmallFieldHolderTemplates() {
+		return $this->_templates(
+			$this->getSmallFieldHolderTemplate(), 
+			'_holder_small'
+		);
+	}
+
+
+	/**
+	 * Generate an array of classname strings to use for rendering this form 
+	 * field into HTML
+	 *
+	 * @param string $custom custom template (if set)
+	 * @param string $suffix template suffix
+	 *
+	 * @return array $stack a stack of 
+	 */
+	private function _templates($custom = null, $suffix = null) {
+		$matches = array();
+		
+		foreach(array_reverse(ClassInfo::ancestry($this)) as $className) {
+			$matches[] = $className . $suffix;
+			
+			if($className == "FormField") break;
 		}
-
-		$result .= $this->Field();
-
-		return $result;
-   }
-
+		
+		if($custom) array_unshift($matches, $custom);
+		
+		return $matches;
+	}
+	
 	/**
 	 * Returns true if this field is a composite field.
 	 * To create composite field types, you should subclass {@link CompositeField}.
@@ -569,13 +687,14 @@ class FormField extends RequestHandler {
 	 */
 	function setReadonly($bool) { 
 		$this->readonly = $bool; 
+		return $this;
 	}
 	
 	/**
 	 * @return boolean
 	 */
-	function isDisabled() { 
-		return $this->disabled; 
+	function isDisabled() {
+		return $this->disabled;
 	}
 
 	/**
@@ -583,8 +702,9 @@ class FormField extends RequestHandler {
 	 * to actually transform this instance.
 	 * @param $bool boolean Setting "false" has no effect on the field-state.
 	 */
-	function setDisabled($bool) { 
-		$this->disabled = $bool; 
+	function setDisabled($bool) {
+		$this->disabled = $bool;
+		return $this;
 	}
 	
 	/**
@@ -598,21 +718,23 @@ class FormField extends RequestHandler {
 	}
 	
 	/**
-	 * Return a disabled version of this field
+	 * Return a disabled version of this field.
+	 * Tries to find a class of the class name of this field suffixed with "_Disabled",
+	 * failing that, finds a method {@link setDisabled()}.
+	 *
+	 * @return FormField
 	 */
 	function performDisabledTransformation() {
 		$clone = clone $this;
 		$disabledClassName = $clone->class . '_Disabled';
-		if( ClassInfo::exists( $disabledClassName ) )
-			return new $disabledClassName( $this->name, $this->title, $this->value );
-		elseif($clone->hasMethod('setDisabled')){
+		if(ClassInfo::exists($disabledClassName)) {
+			return new $disabledClassName($this->name, $this->title, $this->value);
+		} else {
 			$clone->setDisabled(true);
 			return $clone;
-		}else{
-			return $this->performReadonlyTransformation();
 		}
 	}
-	
+
 	function transform(FormTransformation $trans) {
 		return $trans->transform($this);
 	}
@@ -632,7 +754,7 @@ class FormField extends RequestHandler {
 	 * @return string
 	 */
 	function Type() {
-		return strtolower(ereg_replace('Field$', '', $this->class));	
+		return strtolower(preg_replace('/Field$/', '', $this->class));	
 	}
 
 	/**
@@ -653,36 +775,44 @@ class FormField extends RequestHandler {
 		if($content || $tag != 'input') return "<$tag$preparedAttributes>$content</$tag>";
 		else return "<$tag$preparedAttributes />";
 	}
-	
+
 	/**
-	 * javascript handler Functions for each field type by default
-	 * formfield doesnt have a validation function
-	 * 
-	 * @todo shouldn't this be an abstract method?
+	 * Abstract method each {@link FormField} subclass must implement,
+	 * determines whether the field is valid or not based on the value.
+	 * @todo Make this abstract.
+	 *
+	 * @param Validator
+	 * @return boolean
 	 */
-	function jsValidation() {
-	}
-	
-	/**
-	 * Validation Functions for each field type by default
-	 * formfield doesnt have a validation function
-	 * 
-	 * @todo shouldn't this be an abstract method?
-	 */
-	function validate() {
+	function validate($validator) {
 		return true;
 	}
 
 	/**
+	 * @deprecated 3.0 Use setDescription()
+	 */
+	function describe($description) {
+		Deprecation::notice('3.0', 'Use setDescription()');
+		$this->setDescription($description);
+		return $this;
+	}
+
+	/**
 	 * Describe this field, provide help text for it.
-	 * The function returns this so it can be used like this:
-	 * $action = FormAction::create('submit', 'Submit')->describe("Send your changes to be approved")
+	 * By default, renders as a "title" attribute on the form field.
 	 * 
 	 * @return string Description
 	 */
-	function describe($description) {
+	function setDescription($description) {
 		$this->description = $description;
 		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	function getDescription() {
+		return $this->description;
 	}
 	
 	function debug() {
@@ -706,31 +836,7 @@ class FormField extends RequestHandler {
 			return $validator->fieldIsRequired($this->name);
 		}
 	}
-	
-	/**
-	 * Takes a fieldname and converts camelcase to spaced
-	 * words. Also resolves combined fieldnames with dot syntax
-	 * to spaced words.
-	 * 
-	 * Examples:
-	 * - 'TotalAmount' will return 'Total Amount'
-	 * - 'Organisation.ZipCode' will return 'Organisation Zip Code'
-	 *
-	 * @param string $fieldName
-	 * @return string
-	 */
-	public function name_to_label($fieldName) {
-		if(strpos($fieldName, '.') !== false) {
-			$parts = explode('.', $fieldName);
-			$label = $parts[count($parts)-2] . ' ' . $parts[count($parts)-1];
-		} else {
-			$label = $fieldName;
-		}
-		$label = preg_replace("/([a-z]+)([A-Z])/","$1 $2", $label);
-		
-		return $label;
-	}
-	
+
 	/**
 	 * Set the FieldList that contains this field. 
 	 *
@@ -738,6 +844,7 @@ class FormField extends RequestHandler {
 	 */ 
 	function setContainerFieldSet($containerFieldSet) {
 		$this->containerFieldSet = $containerFieldSet;
+		return $this;
 	}
 	
 	function rootFieldSet() {

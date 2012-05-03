@@ -19,7 +19,7 @@ class SimpleTestCompatibility {
      *    @access public
      *    @static
      */
-    function copy($object) {
+    static function copy($object) {
         if (version_compare(phpversion(), '5') >= 0) {
             eval('$copy = clone $object;');
             return $copy;

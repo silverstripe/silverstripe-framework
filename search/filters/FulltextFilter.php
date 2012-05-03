@@ -1,6 +1,6 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 
@@ -22,7 +22,7 @@
  *   );
  * </code>
  *
- * @package sapphire
+ * @package framework
  * @subpackage search
  */
 class FulltextFilter extends SearchFilter {
@@ -40,4 +40,3 @@ class FulltextFilter extends SearchFilter {
 		return $this->getValue() == null || $this->getValue() == '';
 	}
 }
-?>

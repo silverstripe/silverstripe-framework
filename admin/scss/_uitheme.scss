@@ -13,7 +13,7 @@
 .cms {	
 	.ui-tabs {
 		padding: 0;
-		background: $tab-panel-texture-background;
+		background: none;
 		
 		.ui-widget-header {
 			border: 0;
@@ -39,7 +39,6 @@
 		
 		.ui-tabs-panel {
 			background: transparent; // default it's white
-			padding: $grid-vertical * 2 $grid-horizontal * 2;
 		}
 	}
 
@@ -55,10 +54,9 @@
 		background-color: darken($color-widget-bg, 20%);
 		padding: 8px 8px 6px 8px;	
 		border-bottom: 2px solid darken($color-widget-bg, 35%);
-		@include linear-gradient(color-stops(
-			darken($color-widget-bg, 5%),
-			darken($color-widget-bg, 30%)
-		));
+		@include background-image(
+			linear-gradient(darken($color-widget-bg, 5%), darken($color-widget-bg, 30%))
+			);
 		border-bottom: 3px solid darken($color-widget-bg, 50%);
 		padding: 8px;	
 		@include border-radius(0);

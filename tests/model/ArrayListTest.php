@@ -1,6 +1,6 @@
 <?php
 /**
- * @package    sapphire
+ * @package framework
  * @subpackage tests
  */
 class ArrayListTest extends SapphireTest {
@@ -61,11 +61,11 @@ class ArrayListTest extends SapphireTest {
 		));
 	}
 
-	public function testGetRange() {
+	public function testLimit() {
 		$list = new ArrayList(array(
 			array('Key' => 1), array('Key' => 2), array('Key' => 3)
 		));
-		$this->assertEquals($list->getRange(1, 2)->toArray(), array(
+		$this->assertEquals($list->limit(2,1)->toArray(), array(
 			array('Key' => 2), array('Key' => 3)
 		));
 	}
@@ -255,6 +255,23 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'Steve'),
 			array('Name' => 'John'),
 			(object) array('Name' => 'Bob')
+		));
+	}
+	
+	public function testReverse() {
+		$list = new ArrayList(array(
+			array('Name' => 'John'),
+			array('Name' => 'Bob'),
+			array('Name' => 'Steve')
+		));
+
+		$list->sort('Name', 'ASC');
+		$list->reverse();
+		
+		$this->assertEquals($list->toArray(), array(
+			array('Name' => 'Steve'),
+			array('Name' => 'John'),
+			array('Name' => 'Bob')
 		));
 	}
 

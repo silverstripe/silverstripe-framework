@@ -1,14 +1,11 @@
 <?php
 /**
- * @package sapphire
+ * @package framework
  * @subpackage security
  */
 class MemberDatetimeOptionsetField extends OptionsetField {
 
-	function Field() {
-		Requirements::javascript(THIRDPARTY_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(SAPPHIRE_DIR . '/javascript/MemberDatetimeOptionsetField.js');
-
+	function Field($properties = array()) {
 		$options = '';
 		$odd = 0;
 		$source = $this->getSource();
@@ -45,8 +42,12 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 			_t('MemberDatetimeOptionsetField.Preview', 'Preview'),
 			Zend_Date::now()->toString($value)
 		) : '';
-		$options .= "<a class=\"formattingHelpToggle\" href=\"#\">" . _t('MemberDatetimeOptionsetField.TOGGLEHELP', 'Toggle formatting help') . "</a>";
-		$options .= "<div class=\"formattingHelpText\">";
+		$options .= sprintf(
+			'<a class="cms-help-toggle" href="#%s">%s</a>',
+			$this->id() . '_Help',
+			_t('MemberDatetimeOptionsetField.TOGGLEHELP', 'Toggle formatting help')
+		);
+		$options .= "<div id=\"" . $this->id() . "_Help\">";
 		$options .= $this->getFormattingHelpText();
 		$options .= "</div>";
 		$options .= "</li>\n";
@@ -88,12 +89,11 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 		}
 	}
 
-	function validate() {
+	function validate($validator) {
 		$value = isset($_POST[$this->name . '_custom']) ? $_POST[$this->name . '_custom'] : null;
 		if(!$value) return true; // no custom value, don't validate
 
 		// Check that the current date with the date format is valid or not
-		$validator = $this->form ? $this->form->getValidator() : null;
 		require_once 'Zend/Date.php';
 		$date = Zend_Date::now()->toString($value);
 		$valid = Zend_Date::isDate($date, $value);

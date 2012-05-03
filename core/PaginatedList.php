@@ -2,7 +2,7 @@
 /**
  * A decorator that wraps around a data list in order to provide pagination.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage view
  */
 class PaginatedList extends SS_ListDecorator {
@@ -149,7 +149,7 @@ class PaginatedList extends SS_ListDecorator {
 	 */
 	public function getIterator() {
 		return new IteratorIterator(
-			$this->list->getRange($this->getPageStart(), $this->pageLength)
+			$this->list->limit($this->pageLength, $this->getPageStart())
 		);
 	}
 

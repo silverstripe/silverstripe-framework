@@ -1,6 +1,9 @@
 <?php
 /**
- * @package sapphire
+ * See {@link SSViewerTest->testCastingHelpers()} for more tests related to casting and ViewableData behaviour, 
+ * from a template-parsing perspective.
+ * 
+ * @package framework
  * @subpackage tests
  */
 class ViewableDataTest extends SapphireTest {
@@ -55,22 +58,28 @@ class ViewableDataTest extends SapphireTest {
 		
 		$this->assertEquals('test', $viewableData->XML_val('test'));
 		$this->assertEquals('casted', $viewableData->XML_val('alwaysCasted'));
-		
+
 		$this->assertEquals('overwritten', $newViewableData->XML_val('test'));
 		$this->assertEquals('overwritten', $newViewableData->XML_val('alwaysCasted'));
+
+		$this->assertEquals('castable', $viewableData->forTemplate());
+		$this->assertEquals('castable', $newViewableData->forTemplate());
 	}
-	
+
 	public function testObjectCustomise() {
 		$viewableData    = new ViewableDataTest_Castable();
 		$newViewableData = $viewableData->customise(new ViewableDataTest_RequiresCasting());
-		
+
 		$this->assertEquals('test', $viewableData->XML_val('test'));
 		$this->assertEquals('casted', $viewableData->XML_val('alwaysCasted'));
-		
+
 		$this->assertEquals('overwritten', $newViewableData->XML_val('test'));
 		$this->assertEquals('casted', $newViewableData->XML_val('alwaysCasted'));
+
+		$this->assertEquals('castable', $viewableData->forTemplate());
+		$this->assertEquals('casted', $newViewableData->forTemplate());
 	}
-	
+
 	public function testRAWVal() {
 		$data = new ViewableDataTest_Castable();
 		$data->test = 'This &amp; This';
@@ -111,23 +120,6 @@ class ViewableDataTest extends SapphireTest {
 			);
 		}
 	}
-
-	function testFirstLast() {
-		$vd = new ViewableData();
-		
-		$vd->iteratorProperties(0, 3);
-		$this->assertEquals('first', $vd->FirstLast());
-
-		$vd->iteratorProperties(1, 3);
-		$this->assertEquals(null, $vd->FirstLast());
-
-		$vd->iteratorProperties(2, 3);
-		$this->assertEquals('last', $vd->FirstLast());
-
-		$vd->iteratorProperties(0, 1);
-		$this->assertEquals('first last', $vd->FirstLast());
-	}
-
 }
 
 /**#@+
@@ -161,7 +153,10 @@ class ViewableDataTest_Castable extends ViewableData {
 	public function castedUnsafeXML() {
 		return $this->unsafeXML();
 	}
-	
+
+    	public function forTemplate() {
+        	return 'castable';
+    	}
 }
 
 class ViewableDataTest_RequiresCasting extends ViewableData {

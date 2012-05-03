@@ -2,7 +2,7 @@
 /**
  * Tests for the {@link SS_ClassManifest} class.
  *
- * @package    sapphire
+ * @package framework
  * @subpackage tests
  */
 class ClassManifestTest extends SapphireTest {
@@ -105,7 +105,7 @@ class ClassManifestTest extends SapphireTest {
 		$this->assertEquals($expect, $this->manifest->getConfigs());
 		$this->assertEquals($expect, $this->manifestTests->getConfigs());
 	}
-	
+
 	public function testGetModules() {
 		$expect = array("module" => "{$this->base}/module");
 		$this->assertEquals($expect, $this->manifest->getModules());
@@ -117,4 +117,7 @@ class ClassManifestTest extends SapphireTest {
 		$this->assertContains('testclassa', array_keys($this->manifestTests->getClasses()));
 	}
 
+	public function testManifestExcludeFilesPrefixedWithUnderscore() {
+		$this->assertNotContains('ignore', array_keys($this->manifest->getClasses()));
+	}
 }

@@ -1,1 +1,1 @@
-<input $AttributesHTML>
+<input $AttributesHTML />

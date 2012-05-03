@@ -63,7 +63,7 @@ HasManyFileFieldUploadButton.prototype = {
 	initialize: function() {
 		this.upload = new Upload({
 			fileUploadLimit : '6',
-			securityID : $('SecurityID').value,
+			securityID : document.getElementById('SecurityID').value,
 			beginUploadOnQueue : true,
 			fileQueued : this.uploadFileQueuedCallback.bind(this),
 			fileComplete : this.uploadFileCompleteCallback.bind(this),

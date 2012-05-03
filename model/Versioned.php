@@ -2,7 +2,7 @@
 /**
  * The Versioned extension allows your DataObjects to have several versions, allowing
  * you to rollback changes and view history. An example of this is the pages used in the CMS.
- * @package sapphire
+ * @package framework
  * @subpackage model
  */
 class Versioned extends DataExtension {
@@ -102,25 +102,15 @@ class Versioned extends DataExtension {
 		$this->defaultStage = reset($stages);
 		$this->liveStage = array_pop($stages);
 	}
-	
-	/**
-	 *
-	 * @param string $class
-	 * @param string $extension
-	 * @return array
-	 */
-	function extraStatics($class=null, $extension=null) {
-		return array(
-			'db' => array(
-				'Version' => 'Int',
-			),
-			'has_many' => array(
-				// TODO this method is called *both* statically and on an instance
-				'Versions' => ($class) ? $class : $this->owner->class,
-			)
-		);
+
+	static $db = array(
+		'Version' => 'Int'
+	);
+
+	static function add_to_class($class, $extensionClass, $args = null) {
+		Config::inst()->update($class, 'has_many', array('Versions' => $class));
+		parent::add_to_class($class, $extensionClass, $args);
 	}
-	
 	
 	/**
 	 * Amend freshly created DataQuery objects with versioned-specific information 
@@ -142,7 +132,7 @@ class Versioned extends DataExtension {
 	 * Augment the the SQLQuery that is created by the DataQuery
 	 * @todo Should this all go into VersionedDataQuery?
 	 */
-	function augmentSQL(SQLQuery &$query, DataQuery &$dataQuery) {
+	function augmentSQL(SQLQuery &$query, DataQuery &$dataQuery = null) {
 	    $baseTable = ClassInfo::baseDataClass($dataQuery->dataClass());
 	    
 		switch($dataQuery->getQueryParam('Versioned.mode')) {
@@ -159,9 +149,9 @@ class Versioned extends DataExtension {
 				
 				// Add all <basetable>_versions columns
 				foreach(self::$db_for_versions_table as $name => $type) {
-					$query->select[] = sprintf('"%s_versions"."%s"', $baseTable, $name);
+					$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 				}
-				$query->select[] = sprintf('"%s_versions"."%s" AS "ID"', $baseTable, 'RecordID');
+				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
 
 				if($table != $baseTable) {
 					$query->from[$table] .= " AND \"{$table}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
@@ -205,9 +195,9 @@ class Versioned extends DataExtension {
 		
     		// Add all <basetable>_versions columns
     		foreach(self::$db_for_versions_table as $name => $type) {
-    			$query->selectMore(sprintf('"%s_versions"."%s"', $baseTable, $name));
+    			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
     		}
-    		$query->selectMore(sprintf('"%s_versions"."%s" AS "ID"', $baseTable, 'RecordID'));
+    		$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
     		
     		// latest_version has one more step
     	    // Return latest version instances, regardless of whether they are on a particular stage
@@ -318,7 +308,7 @@ class Versioned extends DataExtension {
 			else $table = $classTable;
 
 			if($fields = DataObject::database_fields($this->owner->class)) {
-				$options = Object::get_static($this->owner->class, 'create_table_options');
+				$options = Config::inst()->get($this->owner->class, 'create_table_options', Config::FIRST_SET);
 				$indexes = $this->owner->databaseIndexes();
 				if ($suffix && ($ext = $this->owner->getExtensionInstance($allSuffixes[$suffix]))) {
 					if (!$ext->isVersionedTable($table)) continue;
@@ -732,7 +722,7 @@ class Versioned extends DataExtension {
 		
 		// Add all <basetable>_versions columns
 		foreach(self::$db_for_versions_table as $name => $type) {
-			$query->select[] = sprintf('"%s_versions"."%s"', $baseTable, $name);
+			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 		}
 		
 		$query->where[] = "\"{$baseTable}_versions\".\"RecordID\" = '{$this->owner->ID}'";
@@ -1016,7 +1006,7 @@ class Versioned extends DataExtension {
 	}
 
 	/**
-	 * Return the equivalent of a DataObject::get() call, querying the latest
+	 * Return the equivalent of a DataList::create() call, querying the latest
 	 * version of each page stored in the (class)_versions tables.
 	 *
 	 * In particular, this will query deleted records as well as active ones.
@@ -1059,7 +1049,7 @@ class Versioned extends DataExtension {
 	protected static $reading_mode = null;
 	
 	function updateFieldLabels(&$labels) {
-		$labels['Versions'] = _t('Versioned.has_many_Versions', 'Versions', PR_MEDIUM, 'Past Versions of this page');
+		$labels['Versions'] = _t('Versioned.has_many_Versions', 'Versions', 'Past Versions of this page');
 	}
 	
 	function flushCache() {
@@ -1077,7 +1067,7 @@ class Versioned extends DataExtension {
 /**
  * Represents a single version of a record.
  *
- * @package sapphire
+ * @package framework
  * @subpackage model
  *
  * @see Versioned

@@ -32,23 +32,10 @@ might consist of more than one *URLSegment*).
 ## Nested/Hierarchical URLs
 
 In a nutshell, the nested URLs feature means that your site URLs now reflect the actual parent/child page structure of
-your site. In SilverStripe 2.3 and earlier, all page URLs would be on the top level, regardless of whether they were
-nested under other pages or not. In 2.4 however, the URLs now map directly to the chain of parent and child pages. The
+your site. The URLs map directly to the chain of parent and child pages. The
 below table shows a quick summary of what these changes mean for your site:
 
 ![url table](http://silverstripe.org/assets/screenshots/Nested-URLs-Table.png)
-
-This feature is enabled by default in SilverStripe 2.4 or newer. To activate it for older sites, insert the following
-code in your *mysite/_config.php*:
-
-	:::php
-	SiteTree::enable_nested_urls();
-
-
-After activating nested URLs on an existing database, you'll have to run a migration task to rewrite internal URL
-references in the *SiteTree.Content* field.
-
-	http://<yourdomain.tld>/dev/tasks/MigrateSiteTreeLinkingTask
 
 ## Limiting Children/Parent
 
