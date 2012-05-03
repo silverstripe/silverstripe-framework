@@ -290,14 +290,13 @@ abstract class Object {
 	 * @return any - The value of the static property $name on class $class, or $default if that property is not defined
 	 */
 	public static function static_lookup($class, $name, $default = null) {
-		if (version_compare(PHP_VERSION, '5.4', '>=') && is_subclass_of($class, 'Object')) {
+		if (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION >= 4 && is_subclass_of($class, 'Object')) {
 			if (isset($class::$$name)) {
 				$parent = get_parent_class($class);
 				if (!$parent || !isset($parent::$$name) || $parent::$$name !== $class::$$name) return $class::$$name;
 			}
 			return $default;
-		}
-		else {
+		} else {
 			// TODO: This gets set once, then not updated, so any changes to statics after this is called the first time for any class won't be exposed
 			static $static_properties = array();
 
