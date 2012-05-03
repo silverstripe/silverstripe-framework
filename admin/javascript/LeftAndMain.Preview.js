@@ -164,7 +164,7 @@
 				this.find('iframe').hide();
 				this.find('.cms-preview-toggle a').html('&laquo;');
 				this.find('.cms-preview-controls').hide();
-				containerEl.find('.cms-menu').expandPanel();
+ 				containerEl.find('.cms-menu').expandPanel();
 				
 				// Already triggered through panel toggle above
 				// containerEl.redraw();
@@ -237,24 +237,29 @@
 				}
 			}
 		});
-				
+
 		$('.cms-preview .cms-preview-states').entwine({
 			onmatch: function() {
 				this.find('a').addClass('ss-ui-button');
-				this.find('.active a').addClass('ui-state-highlight');
+				this.find('.active a').addClass('ui-state-disabled');
+				this.find('.cms-preview-watermark').show();
+				this.find('.active .cms-preview-watermark').hide();
 			}
 		});
-		
+
 		$('.cms-preview .cms-preview-states a').entwine({
 			onclick: function(e) {
 				e.preventDefault();
 				this.parents('.cms-preview').loadUrl(this.attr('href'));
-				this.addClass('ui-state-highlight');
-				this.parents('.cms-preview-states').find('a').not(this).removeClass('ui-state-highlight');
-				
+				this.addClass('ui-state-disabled');
+				this.parents('.cms-preview-states').find('a').not(this).removeClass('ui-state-disabled');
+				//This hides all watermarks
+				this.parents('.cms-preview-states').find('.cms-preview-watermark').hide();
+				//Show the watermark for the current state
+				this.siblings('.cms-preview-watermark').show();
 			}
 		});
-				
+
 		$('.cms-preview-toggle-link').entwine({
 			onclick: function(e) {
 				e.preventDefault();
