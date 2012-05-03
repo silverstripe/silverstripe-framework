@@ -118,7 +118,7 @@ class LeftAndMainTest extends FunctionalTest {
 		
 		// anonymous user
 		$this->session()->inst_set('loggedInAs', null);
-		$menuItems = singleton('LeftAndMain')->MainMenu();
+		$menuItems = singleton('LeftAndMain')->MainMenu(false);
 		$this->assertEquals(
 			array_map($allValsFn, $menuItems->column('Code')),
 			array(),
@@ -127,7 +127,7 @@ class LeftAndMainTest extends FunctionalTest {
 		
 		// restricted cms user
 		$this->session()->inst_set('loggedInAs', $securityonlyuser->ID);
-		$menuItems = singleton('LeftAndMain')->MainMenu();
+		$menuItems = singleton('LeftAndMain')->MainMenu(false);
 		$this->assertEquals(
 			array_map($allValsFn, $menuItems->column('Code')),
 			array('SecurityAdmin','Help'),
@@ -136,7 +136,7 @@ class LeftAndMainTest extends FunctionalTest {
 		
 		// all cms sections user
 		$this->session()->inst_set('loggedInAs', $allcmssectionsuser->ID);
-		$menuItems = singleton('LeftAndMain')->MainMenu();
+		$menuItems = singleton('LeftAndMain')->MainMenu(false);
 		$this->assertContains('SecurityAdmin', 
 			array_map($allValsFn, $menuItems->column('Code')),
 			'Group with CMS_ACCESS_LeftAndMain permission can access all sections'
@@ -148,7 +148,7 @@ class LeftAndMainTest extends FunctionalTest {
 		
 		// admin
 		$this->session()->inst_set('loggedInAs', $adminuser->ID);
-		$menuItems = singleton('LeftAndMain')->MainMenu();
+		$menuItems = singleton('LeftAndMain')->MainMenu(false);
 		$this->assertContains(
 			'SecurityAdmin',
 			array_map($allValsFn, $menuItems->column('Code')),
