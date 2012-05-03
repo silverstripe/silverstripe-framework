@@ -144,6 +144,8 @@ class DirectorTest extends SapphireTest {
 		$this->assertTrue(Director::is_site_url('/relative'));
 		$this->assertTrue(Director::is_site_url('relative'));
 		$this->assertFalse(Director::is_site_url("http://test.com/?url=$siteUrl"));
+		$this->assertFalse(Director::is_site_url("https://test.com/?url=$siteUrl"));
+		$this->assertFalse(Director::is_site_url("//test.com/?url=$siteUrl"));
 	}
 	
 	public function testResetGlobalsAfterTestRequest() {
