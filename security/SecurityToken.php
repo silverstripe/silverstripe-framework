@@ -55,9 +55,6 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	 */
 	function __construct($name = null) {
 		$this->name = ($name) ? $name : self::get_default_name();
-		// only regenerate if the token isn't already set in the session
-		if(!$this->getValue()) $this->setValue($this->generate());
-		
 		parent::__construct();
 	}
 	
@@ -132,7 +129,15 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	 * @return String
 	 */
 	function getValue() {
-		return Session::get($this->getName());
+		$value = Session::get($this->getName());
+
+		// only regenerate if the token isn't already set in the session
+		if(!$value) {
+			$value = $this->generate();
+			$this->setValue($value);
+		}
+
+		return $value;
 	}
 	
 	/**

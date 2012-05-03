@@ -93,10 +93,15 @@ class Director implements TemplateGlobalProvider {
 			$req->addHeader($header, $value);
 		}
 
-		// Load the session into the controller
+		// Only resume a session if its not started already, and a session identifier exists
+		if(!isset($_SESSION) && (isset($_COOKIE[session_name()]) || isset($_REQUEST[session_name()]))) Session::start();
+		// Initiate an empty session - doesn't initialize an actual PHP session until saved (see belwo)
 		$session = new Session(isset($_SESSION) ? $_SESSION : null);
 		
+		// Main request handling
 		$result = Director::handleRequest($req, $session, $model);
+
+		// Save session data (and start/resume it if required)
 		$session->inst_save();
 
 		// Return code for a redirection request

@@ -59,9 +59,7 @@ if (version_compare(phpversion(), '5.3.2', '<')) {
 /**
  * Include SilverStripe's core code
  */
-require_once("core/Core.php");
-
-Session::start();
+require_once('core/Core.php');
 
 // IIS will sometimes generate this.
 if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
