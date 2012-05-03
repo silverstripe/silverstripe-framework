@@ -117,10 +117,16 @@ body.cms {
 		display:table-cell;
 		vertical-align:top;
 		width:60%;
+
+		.section-icon {
+			display: inline-block;
+			vertical-align: middle;
+		}
+
 		.breadcrumbs-wrapper {
-			// display:table;
+			display: inline-block;
+			vertical-align: middle;
 			.crumb {
-				// display:table-cell;
 				display: inline;
 				line-height:26px;
 				padding:0 5px;

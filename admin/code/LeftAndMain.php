@@ -437,73 +437,85 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Returns the main menu of the CMS.  This is also used by init() 
 	 * to work out which sections the user has access to.
 	 * 
+	 * @param Boolean
 	 * @return SS_List
 	 */
-	public function MainMenu() {
-		// Don't accidentally return a menu if you're not logged in - it's used to determine access.
-		if(!Member::currentUser()) return new ArrayList();
+	public function MainMenu($cached = true) {
+		if(!isset($this->_cache_MainMenu) || !$cached) {
+			// Don't accidentally return a menu if you're not logged in - it's used to determine access.
+			if(!Member::currentUser()) return new ArrayList();
 
-		// Encode into DO set
-		$menu = new ArrayList();
-		$menuItems = CMSMenu::get_viewable_menu_items();
-		if($menuItems) {
-			foreach($menuItems as $code => $menuItem) {
-				// alternate permission checks (in addition to LeftAndMain->canView())
-				if(
-					isset($menuItem->controller) 
-					&& $this->hasMethod('alternateMenuDisplayCheck')
-					&& !$this->alternateMenuDisplayCheck($menuItem->controller)
-				) {
-					continue;
-				}
+			// Encode into DO set
+			$menu = new ArrayList();
+			$menuItems = CMSMenu::get_viewable_menu_items();
+			if($menuItems) {
+				foreach($menuItems as $code => $menuItem) {
+					// alternate permission checks (in addition to LeftAndMain->canView())
+					if(
+						isset($menuItem->controller) 
+						&& $this->hasMethod('alternateMenuDisplayCheck')
+						&& !$this->alternateMenuDisplayCheck($menuItem->controller)
+					) {
+						continue;
+					}
 
-				$linkingmode = "link";
-				
-				if($menuItem->controller && get_class($this) == $menuItem->controller) {
-					$linkingmode = "current";
-				} else if(strpos($this->Link(), $menuItem->url) !== false) {
-					if($this->Link() == $menuItem->url) {
+					$linkingmode = "link";
+					
+					if($menuItem->controller && get_class($this) == $menuItem->controller) {
 						$linkingmode = "current";
-				
-					// default menu is the one with a blank {@link url_segment}
-					} else if(singleton($menuItem->controller)->stat('url_segment') == '') {
-						if($this->Link() == $this->stat('url_base').'/') {
+					} else if(strpos($this->Link(), $menuItem->url) !== false) {
+						if($this->Link() == $menuItem->url) {
+							$linkingmode = "current";
+					
+						// default menu is the one with a blank {@link url_segment}
+						} else if(singleton($menuItem->controller)->stat('url_segment') == '') {
+							if($this->Link() == $this->stat('url_base').'/') {
+								$linkingmode = "current";
+							}
+
+						} else {
 							$linkingmode = "current";
 						}
-
-					} else {
-						$linkingmode = "current";
 					}
+			
+					// already set in CMSMenu::populate_menu(), but from a static pre-controller
+					// context, so doesn't respect the current user locale in _t() calls - as a workaround,
+					// we simply call LeftAndMain::menu_title_for_class() again 
+					// if we're dealing with a controller
+					if($menuItem->controller) {
+						$defaultTitle = LeftAndMain::menu_title_for_class($menuItem->controller);
+						$title = _t("{$menuItem->controller}.MENUTITLE", $defaultTitle);
+					} else {
+						$title = $menuItem->title;
+					}
+					
+					$menu->push(new ArrayData(array(
+						"MenuItem" => $menuItem,
+						"Title" => Convert::raw2xml($title),
+						"Code" => DBField::create_field('Text', $code),
+						"Link" => $menuItem->url,
+						"LinkingMode" => $linkingmode
+					)));
 				}
-		
-				// already set in CMSMenu::populate_menu(), but from a static pre-controller
-				// context, so doesn't respect the current user locale in _t() calls - as a workaround,
-				// we simply call LeftAndMain::menu_title_for_class() again 
-				// if we're dealing with a controller
-				if($menuItem->controller) {
-					$defaultTitle = LeftAndMain::menu_title_for_class($menuItem->controller);
-					$title = _t("{$menuItem->controller}.MENUTITLE", $defaultTitle);
-				} else {
-					$title = $menuItem->title;
-				}
-				
-				$menu->push(new ArrayData(array(
-					"MenuItem" => $menuItem,
-					"Title" => Convert::raw2xml($title),
-					"Code" => DBField::create_field('Text', $code),
-					"Link" => $menuItem->url,
-					"LinkingMode" => $linkingmode
-				)));
 			}
+
+			$this->_cache_MainMenu = $menu;
 		}
 
-		// if no current item is found, assume that first item is shown
-		//if(!isset($foundCurrent)) 
-		return $menu;
+		return $this->_cache_MainMenu;
 	}
 
 	public function Menu() {
 		return $this->renderWith($this->getTemplatesWithSuffix('_Menu'));
+	}
+
+	/**
+	 * @todo Wrap in CMSMenu instance accessor
+	 * @return ArrayData A single menu entry (see {@link MainMenu})
+	 */
+	public function MenuCurrentItem() {
+		$items = $this->MainMenu();
+		return $items->find('LinkingMode', 'current');
 	}
 
 	/**
@@ -1244,10 +1256,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	function SectionTitle() {
 		if($title = $this->stat('menu_title')) return $title;
 		
-		// Get menu - use obj() to cache it in the same place as the template engine
-		$menu = $this->obj('MainMenu');
-
-		foreach($menu as $menuItem) {
+		foreach($this->MainMenu() as $menuItem) {
 			if($menuItem->LinkingMode != 'link') return $menuItem->Title;
 		}
 	}

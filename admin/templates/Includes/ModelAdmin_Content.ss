@@ -3,6 +3,7 @@
 	<div class="cms-content-header north">
 		<div>
 			<h2>
+				<% include CMSSectionIcon %>
 				<% if SectionTitle %>
 					$SectionTitle
 				<% else %>

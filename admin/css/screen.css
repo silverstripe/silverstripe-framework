@@ -262,6 +262,8 @@ body.cms { overflow: hidden; }
 .cms-content-header a { color: #1556b2; }
 .cms-content-header .backlink span.btn-icon-back { height: 16px; }
 .cms-content-header h2 { padding: 8px 8px 0 8px; font-size: 14px; line-height: 24px; font-weight: bold; text-shadow: #bfcad2 1px 1px 0; margin: 0; display: table-cell; vertical-align: top; width: 60%; }
+.cms-content-header h2 .section-icon { display: inline-block; vertical-align: middle; }
+.cms-content-header h2 .breadcrumbs-wrapper { display: inline-block; vertical-align: middle; }
 .cms-content-header h2 .breadcrumbs-wrapper .crumb { display: inline; line-height: 26px; padding: 0 5px; }
 .cms-content-header h2 .breadcrumbs-wrapper .crumb:first-child { padding-left: 0px; }
 .cms-content-header h2 .breadcrumbs-wrapper .crumb:last-child { padding-right: 0px; }

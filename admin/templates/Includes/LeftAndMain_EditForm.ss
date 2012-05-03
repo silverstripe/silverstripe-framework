@@ -3,21 +3,11 @@
 <% end_if %>
 	<div class="cms-content-header north">
 		<div>
-			<% with Controller %>
-                <% if class=CMSFileAddController %>
-                    <span class="section-icon icon icon-24 icon-assetadmin"></span>
-                <% else %>
-                    <% with ToplevelController %>
-                        <% if class=SecurityAdmin %>
-                            <span class="section-icon icon icon-24 icon-securityadmin"></span>
-                        <% end_if %>
-                    <% end_with %>
-                <% end_if %>
-            <% end_with %>
 			<% include BackLink_Button %>
 
 			<h2 id="page-title-heading">
 			<% control Controller %>
+				<% include CMSSectionIcon %>
 				<% include CMSBreadcrumbs %>
 			<% end_control %>
 			</h2>
