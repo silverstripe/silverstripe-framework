@@ -20,7 +20,6 @@ class TextareaFieldTest extends SapphireTest {
 		$field = new TextareaField("Test", "Test");
 		$field = $field->performReadonlyTransformation();
 		$field->setValue($inputText);
-		Debug::show($field->Field());
 		$this->assertContains('These are some special &lt;html&gt; chars including &#039;single&#039; &amp; &quot;double&quot; quotations', $field->Field());
 	}
 	
