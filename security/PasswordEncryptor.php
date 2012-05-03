@@ -134,12 +134,11 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 	protected static $cost = 10;
 
 	function encrypt($password, $salt = null, $member = null) {
-		// We use $2y$ here instead of $2a$ - in PHP < 5.3.7, passwords
-		// with non-ascii characters will use a flawed version of the blowfish
-		// algorithm when specified with $2a$. $2y$ specifies non-flawed version
-		// in all cases.
-		// See https://bugs.php.net/bug.php?id=55477&edit=1
-		$method_and_salt = '$2y$' . $salt;
+		// Although $2a$ has flaws in PHP < 5.3.7 with certain non-unicode passwords,
+		// $2y$ doesn't exist at all.  We use $2a$ across the board.  Note that this will
+		// mean that a password generated on PHP < 5.3.7 will fail if PHP gets upgraded to >= 5.3.7
+		// See http://open.silverstripe.org/ticket/7276 and https://bugs.php.net/bug.php?id=55477 
+		$method_and_salt = '$2a$' . $salt;
 		$encrypted_password = crypt($password, $method_and_salt);
 		// We *never* want to generate blank passwords. If something
 		// goes wrong, throw an exception.
