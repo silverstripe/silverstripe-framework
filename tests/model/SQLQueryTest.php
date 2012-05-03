@@ -132,18 +132,18 @@ class SQLQueryTest extends SapphireTest {
 		$query = new SQLQuery();
 		$query->from[] = "MyTable";
 		$query->orderby('implode("MyName","Color")');
-		$this->assertEquals('SELECT *, implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY _SortColumn0 ASC', $query->sql());
+		$this->assertEquals('SELECT *, implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" ASC', $query->sql());
 		
 		$query = new SQLQuery();
 		$query->from[] = "MyTable";
 		$query->orderby('implode("MyName","Color") DESC');
-		$this->assertEquals('SELECT *, implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY _SortColumn0 DESC', $query->sql());
+		$this->assertEquals('SELECT *, implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" DESC', $query->sql());
 		
 		$query = new SQLQuery();
 		$query->from[] = "MyTable";
 		$query->orderby('RAND()');
 		
-		$this->assertEquals('SELECT *, RAND() AS "_SortColumn0" FROM MyTable ORDER BY _SortColumn0 ASC', $query->sql());
+		$this->assertEquals('SELECT *, RAND() AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" ASC', $query->sql());
 	}
 	
 	public function testReverseOrderBy() {
@@ -174,7 +174,7 @@ class SQLQueryTest extends SapphireTest {
 		$query->orderby('implode("MyName","Color") DESC');
 		$query->reverseOrderBy();
 		
-		$this->assertEquals('SELECT *, implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY _SortColumn0 ASC',$query->sql());
+		$this->assertEquals('SELECT *, implode("MyName","Color") AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" ASC',$query->sql());
 	}
 
 	function testFiltersOnID() {
