@@ -531,6 +531,8 @@ class Director {
 	
 	/**
 	 * Checks if a given URL is absolute (e.g. starts with 'http://' etc.).
+	 * Note URLs beginning with "//" are absolute, as browsers take this to mean
+	 * the same protocol as currently being used.
 	 * 
 	 * @param string $url
 	 * @return boolean
@@ -540,7 +542,7 @@ class Director {
 		// remove all query strings to avoid parse_url choking on URLs like 'test.com?url=http://test.com'
 		$url = preg_replace('/(.*)\?.*/', '$1', $url);
 		$parsed = parse_url($url);
-		return (isset($parsed['scheme']));
+		return (isset($parsed['scheme']) || strpos($url, '//') === 0);
 	}
 	
 	/**
