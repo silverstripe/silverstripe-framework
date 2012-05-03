@@ -383,9 +383,9 @@ class SQLQuery {
 					
 					$clause = trim($clause);
 					$column = "_SortColumn{$i}";
-					
+
 					$this->selectField($clause, $column);
-					$this->orderby($column, $dir, false);
+					$this->orderby('"' . $column . '"', $dir, false);
 					$i++;
 				}
 			}

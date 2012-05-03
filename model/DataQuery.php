@@ -240,16 +240,16 @@ class DataQuery {
 				// don't touch functions in the ORDER BY or function calls 
 				// selected as fields
 				if(strpos($k, '(') !== false) continue;
-				
-				// Pull through SortColumn references from the originalSelect variables
-				if(preg_match('/_SortColumn/', $k)) {
-					if(isset($originalSelect[$k])) $query->selectField($originalSelect[$k], $k);
-					continue;
-				}
-				
+
 				$col = str_replace('"', '', trim($k));
 				$parts = explode('.', $col);
 
+				// Pull through SortColumn references from the originalSelect variables
+				if(preg_match('/_SortColumn/', $col)) {
+					if(isset($originalSelect[$col])) $query->selectField($originalSelect[$col], $col);
+					continue;
+				}
+				
 				if(count($parts) == 1) {
 					$databaseFields = DataObject::database_fields($baseClass);
 	
