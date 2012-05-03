@@ -1,1 +1,0 @@
-<span id="$ID" class="readonly$extraClass" name="$Name"><% if Value %>$Value<% else %><em>(<% _t('NONE', 'none') %>)</em><% end_if %></span>
