@@ -478,6 +478,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @param array $data Additional data to pass to the email (can be used in the template)
 	 */
 	function sendInfo($type = 'signup', $data = null) {
+		Deprecation::notice('3.0', 'Please use Member_ChangePasswordEmail or Member_ForgotPasswordEmail directly instead');
+
 		switch($type) {
 			case "changePassword":
 				$e = Member_ChangePasswordEmail::create();
@@ -644,7 +646,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			&& $this->record['Password'] 
 			&& Member::$notify_password_change
 		) {
-			$this->sendInfo('changePassword');
+			$e = Member_ChangePasswordEmail::create();
+			$e->populateTemplate($this);
+			$e->setTo($this->Email);
+			$e->send();
 		}
 
 		// The test on $this->ID is used for when records are initially created.
