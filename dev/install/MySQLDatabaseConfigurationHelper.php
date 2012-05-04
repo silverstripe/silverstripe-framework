@@ -122,7 +122,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 			$alreadyExists = true;
 		} else {
 			if($conn && $conn->query('CREATE DATABASE testing123')) {
-				mysql_query('DROP DATABASE testing123', $conn);
+				$conn->query('DROP DATABASE testing123');
 				$success = true;
 				$alreadyExists = false;
 			}
