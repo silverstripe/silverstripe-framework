@@ -9,7 +9,4 @@
 			</li>
 		<% end_control %>
 	</ul>
-	<a href="$Record.Link" target="_blank" class="cms-preview-popup-link">
-		<% _t('SilverStripeNavigator.OpenNewWindow', 'Open in new window') %>
-	</a>
 </div>

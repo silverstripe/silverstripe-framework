@@ -366,19 +366,6 @@ form.small .field, .field.small {
 			border: 1px solid $color-button-highlight-border;
 		}
 
-		&.ui-state-disabled {
-			color: lighten($color-text-dark, 20%);
-			border-color: darken($color-button-disabled, 20%);
-			border-top-color: darken($color-button-disabled, 60%);
-			cursor: default;
-			@include background(
-				linear-gradient(color-stops(
-					darken($color-button-disabled, 5%),
-					lighten($color-button-disabled, 10%)
-				))
-			);
-		}
-
 		&.ss-ui-action-minor {
 			background: none;
 			border: 0;

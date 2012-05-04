@@ -240,8 +240,8 @@
 
 		$('.cms-preview .cms-preview-states').entwine({
 			onmatch: function() {
-				this.find('a').addClass('ss-ui-button');
-				this.find('.active a').addClass('ui-state-disabled');
+				this.find('a').addClass('disabled');
+				this.find('.active a').removeClass('disabled');
 				this.find('.cms-preview-watermark').show();
 				this.find('.active .cms-preview-watermark').hide();
 			}
@@ -251,8 +251,8 @@
 			onclick: function(e) {
 				e.preventDefault();
 				this.parents('.cms-preview').loadUrl(this.attr('href'));
-				this.addClass('ui-state-disabled');
-				this.parents('.cms-preview-states').find('a').not(this).removeClass('ui-state-disabled');
+				this.addClass('disabled');
+				this.parents('.cms-preview-states').find('a').not(this).removeClass('disabled');
 				//This hides all watermarks
 				this.parents('.cms-preview-states').find('.cms-preview-watermark').hide();
 				//Show the watermark for the current state

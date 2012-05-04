@@ -878,10 +878,25 @@ body.cms {
 			* {
 				display: inline-block;
 			}
-		} 
+		}
+
+		li{
+			margin: 0 2px;
+		}
+
+		a.disabled {
+			padding:.4em 1em;
+			color: lighten($color-text-dark, 20%);
+			border: 1px solid;
+			border-color: darken($color-button-disabled, 20%);
+			border-radius:12px;
+			cursor: default;
+			background:$color-base;
+		}
 		
 		.cms-preview-states {
 			margin-right: 10px;
+			margin-left: 10px;
 		}
 
 		.cms-preview-popup-link {
@@ -891,6 +906,7 @@ body.cms {
 		.cms-preview-toggle-link {
 			float: right;
 		}
+
 	}
 	
 }
