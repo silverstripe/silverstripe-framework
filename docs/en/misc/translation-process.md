@@ -24,6 +24,10 @@ Most modules are managed under the "silverstripe" user there,
 see [list of translatable modules](http://www.getlocalization.com/profile/?username=silverstripe).
 If you don't have an account yet, please follow the links there to sign up.
 
+For all modules listed there, we automatically import new master strings
+as they get committed to the various codebases, so you're always translating
+on the latest and greatest version (through github service hooks).
+
 ## Set up your module for localization
 
 ### Collecting translatable text
