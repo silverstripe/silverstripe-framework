@@ -122,6 +122,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	protected static $session_regenerate_id = true;
 
+	private static $_already_tried_to_auto_log_in = false;
+
 	public static function set_session_regenerate_id($bool) {
 		self::$session_regenerate_id = $bool;
 	}
@@ -363,7 +365,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	static function logged_in_session_exists() {
 		if($id = Member::currentUserID()) {
-			if($member = DataObject::get_by_id('Member', $id)) {
+			if($member = Member::get()->byId($id)) {
 				if($member->exists()) return true;
 			}
 		}
@@ -385,7 +387,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			list($uid, $token) = explode(':', Cookie::get('alc_enc'), 2);
 			$SQL_uid = Convert::raw2sql($uid);
 
-			$member = DataObject::get_one("Member", "\"Member\".\"ID\" = '$SQL_uid'");
+			$member = Member::get()->byId($SQL_uid);
 
 			// check if autologin token matches
 			if($member && (!$member->RememberLoginToken || $member->RememberLoginToken != $token)) {
@@ -446,7 +448,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		do {
 			$generator = new RandomGenerator();
 			$hash = $generator->generateHash('sha1');
-		} while(DataObject::get_one('Member', "\"AutoLoginHash\" = '$hash'"));
+		} while(Member::get()->filter(array('AutoLoginHash' => $hash))->First());
 
 		$this->AutoLoginHash = $hash;
 		$this->AutoLoginExpired = date('Y-m-d', time() + (86400 * $lifetime));
@@ -460,12 +462,12 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @param bool $login Should the member be logged in?
 	 */
 	static function member_from_autologinhash($RAW_hash, $login = false) {
-		$SQL_hash = Convert::raw2sql($RAW_hash);
+		$member = Member::get()->filter(array(
+			'AutoLoginHash' => $RAW_hash, // this value gets SQL-escaped automatically by DataList
+			'AutoLoginExpired:GreaterThan' => DB::getConn()->now()
+		))->First();
 
-		$member = DataObject::get_one('Member',"\"AutoLoginHash\"='" . $SQL_hash . "' AND \"AutoLoginExpired\" > " . DB::getConn()->now());
-
-		if($login && $member)
-			$member->logIn();
+		if($login && $member) $member->logIn();
 
 		return $member;
 	}
@@ -546,7 +548,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		return new Member_Validator();
 	}
 
-
 	/**
 	 * Returns the current logged in user
 	 *
@@ -555,11 +556,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	static function currentUser() {
 		$id = Member::currentUserID();
-		if($id) {
-			return DataObject::get_one("Member", "\"Member\".\"ID\" = $id", true, 1);
-		}
+		return ($id) ? Member::get()->byId($id) : false;
 	}
-
 
 	/**
 	 * Get the ID of the current logged in user
@@ -575,8 +573,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		return is_numeric($id) ? $id : 0;
 	}
-	private static $_already_tried_to_auto_log_in = false;
-
 
 	/*
 	 * Generate a random password, with randomiser to kick in if there's no words file on the
@@ -613,18 +609,13 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// Note: This does not a full replacement for safeguards in the controller layer (e.g. in a registration form), 
 		// but rather a last line of defense against data inconsistencies.
 		$identifierField = self::$unique_identifier_field;
-		if($this->$identifierField) {
+		$identifierValue = $this->$identifierField;
+		if($identifierValue) {
 			// Note: Same logic as Member_Validator class
-			$idClause = ($this->ID) ? sprintf(" AND \"Member\".\"ID\" <> %d", (int)$this->ID) : '';
-			$existingRecord = DataObject::get_one(
-				'Member', 
-				sprintf(
-					"\"%s\" = '%s' %s",
-					$identifierField,
-					Convert::raw2sql($this->$identifierField),
-					$idClause
-				)
-			);
+			$query = Member::get()->filter(array($identifierField => $identifierValue));
+			if($this->ID) $query->filter(array('ID:Negation' => $this->ID));
+			$existingRecord = $query->First();
+
 			if($existingRecord) {
 				throw new ValidationException(new ValidationResult(false, _t(
 					'Member.ValidationIdentifierFailed', 
@@ -738,10 +729,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public function inGroup($group, $strict = false) {
 		if(is_numeric($group)) {
-			$groupCheckObj = DataObject::get_by_id('Group', $group);
+			$groupCheckObj = Group::get()->byId($group);
 		} elseif(is_string($group)) {
-			$SQL_group = Convert::raw2sql($group);
-			$groupCheckObj = DataObject::get_one('Group', "\"Code\" = '{$SQL_group}'");
+			$groupCheckObj = Group::get()->filter(array('Code' => $group))->First();
 		} elseif($group instanceof Group) {
 			$groupCheckObj = $group;
 		} else {
@@ -766,8 +756,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @param string Title of the group
 	 */
 	public function addToGroupByCode($groupcode, $title = "") {
-		$group = DataObject::get_one('Group', "\"Code\" = '" . Convert::raw2sql($groupcode). "'");
-		
+		$group = Group::get()->filter(array('Code' => $groupcode))->First();
+
 		if($group) {
 			$this->Groups()->add($group);
 		}
@@ -1027,7 +1017,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			
 			$SQL_perms = "'" . implode("', '", Convert::raw2sql($perms)) . "'";
 			
-			$groups = DataObject::get('Group')->innerJoin("Permission", "\"Permission\".\"GroupID\" = \"Group\".\"ID\" AND \"Permission\".\"Code\" IN ($SQL_perms)");
+			$groups = Group::get()->innerJoin("Permission", "\"Permission\".\"GroupID\" = \"Group\".\"ID\" AND \"Permission\".\"Code\" IN ($SQL_perms)");
 		}
 
 		$groupIDList = array();
@@ -1040,11 +1030,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$groupIDList = $groups;
 		}
 
-		$filterClause = ($groupIDList)
-			? "\"GroupID\" IN (" . implode( ',', $groupIDList ) . ")"
-			: "";
-			
-		return DataList::create("Member")->where($filterClause)->sort("\"Surname\", \"FirstName\"")
+		$query = Member::get();
+		if($groupIDList) $query->exclude(array('GroupID' => $groupIDList));
+		return $query->sort("\"Surname\", \"FirstName\"")
 			->innerJoin("Group_Members", "\"MemberID\"=\"Member\".\"ID\"")
 			->innerJoin("Group", "\"Group\".\"ID\"=\"GroupID\"")
 			->map();
@@ -1419,7 +1407,7 @@ class Member_GroupSet extends ManyManyList {
 		$allGroupIDs = array();
 		while($groupIDs) {
 			$allGroupIDs = array_merge($allGroupIDs, $groupIDs);
-			$groupIDs = DataObject::get("Group")->byIDs($groupIDs)->column("ParentID");
+			$groupIDs = Group::get()->byIDs($groupIDs)->column("ParentID");
 			$groupIDs = array_filter($groupIDs);
 		}
 		
@@ -1462,14 +1450,13 @@ class Member_ProfileForm extends Form {
 		if(!isset($data['ID']) || $data['ID'] != Member::currentUserID()) {
 			return $this->controller->redirectBack();
 		}
-		
-		$SQL_data = Convert::raw2sql($data);
-		$member = DataObject::get_by_id("Member", $SQL_data['ID']);
-		
-		if($SQL_data['Locale'] != $member->Locale) {
+
+		$member = Member::get()->byId($data['ID']);
+
+		if($data['Locale'] != $member->Locale) {
 			$form->addErrorMessage("Generic", _t('Member.REFRESHLANG'),"good");
 		}
-		
+
 		$form->saveInto($member);
 		$member->write();
 		
@@ -1606,9 +1593,9 @@ class Member_Validator extends RequiredFields {
 		$valid = parent::php($data);
 		
 		$identifierField = Member::get_unique_identifier_field();
-		
-		$SQL_identifierField = Convert::raw2sql($data[$identifierField]);
-		$member = DataObject::get_one('Member', "\"$identifierField\" = '{$SQL_identifierField}'");
+		$identifierFieldValue = $data[$identifierField];
+
+		$member = Member::get()->filter(array($identifierField => $identifierFieldValue))->First();
 
 		// if we are in a complex table field popup, use ctf[childID], else use ID
 		if(isset($_REQUEST['ctf']['childID'])) {
