@@ -18,6 +18,11 @@
 		 * Base edit form, provides ajaxified saving
 		 * and reloading itself through the ajax return values.
 		 * Takes care of resizing tabsets within the layout container.
+		 *
+		 * Change tracking is enabled on all fields within the form. If you want
+		 * to disable change tracking for a specific field, add a "no-change-track"
+		 * class to it.
+		 *
 		 * @name ss.Form_EditForm
 		 * @require jquery.changetracker
 		 * 
@@ -40,7 +45,7 @@
 			 * (Object)
 			 */
 			ChangeTrackerOptions: {
-				ignoreFieldSelector: '.ss-upload :input'
+				ignoreFieldSelector: '.no-change-track, .ss-upload :input'
 			},
 		
 			/**
