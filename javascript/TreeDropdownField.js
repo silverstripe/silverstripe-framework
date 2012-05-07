@@ -122,9 +122,11 @@
 				var updateFn = function() {
 					var val = self.getValue();
 					if(val) {
+						
 						var node = tree.find('*[data-id="' + val + '"]'),
-							title = (node) ? tree.jstree('get_text', node[0]) : null;
-
+							title = node.children('a').find("span.jstree_pageicon")?node.children('a').find("span.item").html():null;
+						if(!title) title=(node) ? tree.jstree('get_text', node[0]) : null;
+						
 						if(title) self.setTitle(title);
 						if(node) tree.jstree('select_node', node);
 					}
