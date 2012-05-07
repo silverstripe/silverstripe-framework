@@ -60,7 +60,7 @@ class SQLQuery {
 	 *
 	 * @var string
 	 */
-	protected $limit;
+	protected $limit = array();
 	
 	/**
 	 * If this is true DISTINCT will be added to the SQL.
@@ -98,22 +98,18 @@ class SQLQuery {
 
 	/**
 	 * Construct a new SQLQuery.
-	 * 
-	 * @param array $select An array of fields to select.
-	 * @param array $from An array of join clauses. The first one should be just the table name.
-	 * @param array $where An array of filters, to be inserted into the WHERE clause.
-	 * @param string $orderby An ORDER BY clause.
-	 * @param array $groupby An array of fields to group by.
-	 * @param array $having An array of having clauses.
-	 * @param string $limit A LIMIT clause.
-	 * 
-	 * TODO: perhaps we can quote things here instead of requiring all the parameters to be quoted
-	 * by this stage.
+	 *
+	 * @param array $select An array of SELECT fields.
+	 * @param array $from An array of FROM clauses. The first one should be just the table name.
+	 * @param array $where An array of WHERE clauses.
+	 * @param array $orderby An array ORDER BY clause.
+	 * @param array $groupby An array of GROUP BY clauses.
+	 * @param array $having An array of HAVING clauses.
+	 * @param array|string $limit A LIMIT clause or array with limit and offset keys
 	 */
-	function __construct($select = "*", $from = array(), $where = "", $orderby = "", $groupby = "", $having = "", $limit = "") {
+	function __construct($select = "*", $from = array(), $where = array(), $orderby = array(), $groupby = array(), $having = array(), $limit = array()) {
 		$this->setSelect($select);
-		// @todo 
-		$this->from = is_array($from) ? $from : array(str_replace(array('"','`'),'',$from) => $from);
+		$this->setFrom($from);
 		$this->setWhere($where);
 		$this->setOrderBy($orderby);
 		$this->setGroupBy($groupby);
@@ -417,8 +413,8 @@ class SQLQuery {
 	}
 
 	/**
-	 * Get limit clause
-	 * @return string
+	 * Get the limit property.
+	 * @return array
 	 */
 	public function getLimit() {
 		return $this->limit;
@@ -438,17 +434,16 @@ class SQLQuery {
 				'limit' => $limit,
 			);
 		} else if($limit && is_string($limit)) {
-			if(strpos($limit,',') !== false) list($start, $innerLimit) = explode(',', $limit, 2);
+			if(strpos($limit, ',') !== false) list($start, $innerLimit) = explode(',', $limit, 2);
 			else list($innerLimit, $start) = explode(' OFFSET ', strtoupper($limit), 2);
 			$this->limit = array(
 				'start' => trim($start),
 				'limit' => trim($innerLimit),
 			);
-			
 		} else {
 			$this->limit = $limit;
 		}
-		
+
 		return $this;
 	}
 
