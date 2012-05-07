@@ -258,12 +258,13 @@ JS
 		if($member) {
 			$member->generateAutologinHash();
 
-			$member->sendInfo(
-				'forgotPassword',
-				array(
-					'PasswordResetLink' => Security::getPasswordResetLink($member->AutoLoginHash)
-				)
-			);
+			$e = Member_ForgotPasswordEmail::create();
+			$e->populateTemplate($member);
+			$e->populateTemplate(array(
+				'PasswordResetLink' => Security::getPasswordResetLink($member->AutoLoginHash)
+			));
+			$e->setTo($member->Email);
+			$e->send();
 
 			$this->controller->redirect('Security/passwordsent/' . urlencode($data['Email']));
 		} elseif($data['Email']) {
