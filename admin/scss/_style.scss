@@ -1059,10 +1059,6 @@ form.member-profile-form {
 		@include box-shadow(3px 0 4px rgba(0,0,0,0.15));
 		@include border-radius(0);
 	}
-
-	form.cms-content {
-		padding:$grid-y $grid-x*2 $grid-y*2 $grid-x*2; 
-	}
 	
 	.cms-content-fields {
 		// always show a y scroll bar as popups like TreeDropdowns 
