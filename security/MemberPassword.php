@@ -6,9 +6,9 @@
  */
 class MemberPassword extends DataObject {
 	static $db = array(
-		'Password' => 'Varchar',
-		'Salt' => 'Varchar',
-		'PasswordEncryption' => 'Varchar',
+		'Password' => 'Varchar(160)',
+		'Salt' => 'Varchar(50)',
+		'PasswordEncryption' => 'Varchar(50)',
 	);
 	
 	static $has_one = array(
