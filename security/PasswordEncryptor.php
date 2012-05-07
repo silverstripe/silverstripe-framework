@@ -109,9 +109,22 @@ abstract class PasswordEncryptor {
 	 * @param String $hash1
 	 * @param String $hash2
 	 * @return boolean
+	 *
+	 * @deprecated 3.0 - Use PasswordEncryptor::check() instead.
 	 */
 	function compare($hash1, $hash2) {
+		Deprecation::notice('3.0.0', 'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
 		return ($hash1 === $hash2);
+	}
+
+	/**
+	 * This usually just returns a strict string comparison,
+	 * but is necessary for retain compatibility with password hashed
+	 * with flawed algorithms - see {@link PasswordEncryptor_LegacyPHPHash} and
+	 * {@link PasswordEncryptor_Blowfish}
+	 */
+	function check($hash, $password, $salt = null, $member = null) {
+		return $hash === $this->encrypt($password, $salt, $member);
 	}
 }
 
@@ -134,26 +147,120 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 	protected static $cost = 10;
 
 	function encrypt($password, $salt = null, $member = null) {
-		// Although $2a$ has flaws in PHP < 5.3.7 with certain non-unicode passwords,
-		// $2y$ doesn't exist at all.  We use $2a$ across the board.  Note that this will
-		// mean that a password generated on PHP < 5.3.7 will fail if PHP gets upgraded to >= 5.3.7
-		// See http://open.silverstripe.org/ticket/7276 and https://bugs.php.net/bug.php?id=55477 
-		$method_and_salt = '$2a$' . $salt;
-		$encrypted_password = crypt($password, $method_and_salt);
+		// See: http://nz.php.net/security/crypt_blowfish.php
+		// There are three version of the algorithm - y, a and x, in order
+		// of decreasing security. Attempt to use the strongest version.
+		$encrypted_password = $this->encrypt_y($password, $salt);
+		if(!$encrypted_password) {
+			$encrypted_password = $this->encrypt_a($password, $salt);
+		}
+		if(!$encrypted_password) {
+			$encrypted_password = $this->encrypt_x($password, $salt);
+		}
+
 		// We *never* want to generate blank passwords. If something
 		// goes wrong, throw an exception.
-		if(strpos($encrypted_password, $method_and_salt) === false) {
+		if(strpos($encrypted_password, '$2') === false) {
 			throw new PasswordEncryptor_EncryptionFailed('Blowfish password encryption failed.');
 		}
 
-		// Remove the method and salt from the password, as the salt
-		// is stored in a separate column.
-		return substr($encrypted_password, strlen($method_and_salt));
+		return $encrypted_password;
 	}
 
-	function salt($password, $memeber = null) {
+	function encrypt_x($password, $salt) {
+		$method_and_salt = '$2x$' . $salt;
+		$encrypted_password = crypt($password, $method_and_salt);
+
+		if(strpos($encrypted_password, '$2x$') === 0) {
+			return $encrypted_password;
+		}
+
+		// Check if system a is actually x, and if available, use that.
+		if($this->what_is_a() == 'x') {
+			$method_and_salt = '$2a$' . $salt;
+			$encrypted_password = crypt($password, $method_and_salt);
+
+			if(strpos($encrypted_password, '$2a$') === 0) {
+				$encrypted_password = '$2x$' . substr($encrypted_password, strlen('$2a$'));
+				return $encrypted_password;
+			}
+		}
+
+		return false;
+	}
+
+	function encrypt_y($password, $salt) {
+		$method_and_salt = '$2y$' . $salt;
+		$encrypted_password = crypt($password, $method_and_salt);
+
+		if(strpos($encrypted_password, '$2y$') === 0) {
+			return $encrypted_password;
+		}
+
+		// Check if system a is actually y, and if available, use that.
+		if($this->what_is_a() == 'y') {
+			$method_and_salt = '$2a$' . $salt;
+			$encrypted_password = crypt($password, $method_and_salt);
+
+			if(strpos($encrypted_password, '$2a$') === 0) {
+				$encrypted_password = '$2y$' . substr($encrypted_password, strlen('$2a$'));
+				return $encrypted_password;
+			}
+		}
+
+		return false;
+	}
+
+	function encrypt_a($password, $salt) {
+		if($this->what_is_a() == 'a') {
+			$method_and_salt = '$2a$' . $salt;
+			$encrypted_password = crypt($password, $method_and_salt);
+
+			if(strpos($encrypted_password, '$2a$') === 0) {
+				return $encrypted_password;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * The algorithm returned by using '$2a$' is not consistent - 
+	 * it might be either the correct (y), incorrect (x) or mostly-correct (a)
+	 * version, depending on the version of PHP and the operating system,
+	 * so we need to test it.
+	 */
+	function what_is_a() {
+		// Test hashes taken from http://cvsweb.openwall.com/cgi/cvsweb.cgi/~checkout~/Owl/packages/glibc/crypt_blowfish/wrapper.c?rev=1.9.2.1;content-type=text%2Fplain
+		$x_or_y = crypt("\xff\xa334\xff\xff\xff\xa3345", '$2a$05$/OK.fbVrR/bpIqNJ5ianF.o./n25XVfn6oAPaUvHe.Csk4zRfsYPi') == '$2x$05$/OK.fbVrR/bpIqNJ5ianF.o./n25XVfn6oAPaUvHe.Csk4zRfsYPi';
+		$y_or_a = crypt("\xa3", '$2a$05$/OK.fbVrR/bpIqNJ5ianF.Sa7shbm4.OzKpvFnX1pQLmQW96oUlCq') == '$2a$05$/OK.fbVrR/bpIqNJ5ianF.Sa7shbm4.OzKpvFnX1pQLmQW96oUlCq';
+
+		if($x_or_y && $y_or_a) {
+			return 'y';
+		} elseif($x_or_y) {
+			return 'x';
+		} elseif($y_or_a) {
+			return 'a';
+		}
+
+		return 'unknown';
+	}
+
+	function salt($password, $member = null) {
 		$generator = new RandomGenerator();
-		return self::$cost . '$' . substr($generator->generateHash('sha1'), 0, 21);
+		return self::$cost . '$' . substr($generator->generateHash('sha1'), 0, 22);
+	}
+
+	function check($hash, $password, $salt = null, $member = null) {
+		if(strpos($hash, '$2y$') === 0) {
+			return $hash === $this->encrypt_y($password, $salt);
+		} elseif(strpos($hash, '$2a$') === 0) {
+			return $hash === $this->encrypt_a($password, $salt);
+		} elseif(strpos($hash, '$2x$') === 0) {
+			return $hash === $this->encrypt_x($password, $salt);
+		}
+
+		return false;
 	}
 }
 
@@ -217,9 +324,17 @@ class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
 	}
 	
 	function compare($hash1, $hash2) {
+		Deprecation::notice('3.0.0', 'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
+
 		// Due to flawed base_convert() floating poing precision, 
 		// only the first 10 characters are consistently useful for comparisons.
 		return (substr($hash1, 0, 10) === substr($hash2, 0, 10));
+	}
+
+	function check($hash, $password, $salt = null, $member = null) {
+		// Due to flawed base_convert() floating poing precision, 
+		// only the first 10 characters are consistently useful for comparisons.
+		return (substr($hash, 0, 10) === substr($this->encrypt($password, $salt, $member), 0, 10));
 	}
 }
 
