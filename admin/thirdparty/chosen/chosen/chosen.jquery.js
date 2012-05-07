@@ -321,7 +321,7 @@ Copyright (c) 2011 by Harvest
     };
 
     Chosen.prototype.set_up_html = function() {
-      var container_div, dd_top, dd_width, sf_width;
+      var container_div, dd_top, dd_width, rise, sf_width;
       this.container_id = this.form_field.id.length ? this.form_field.id.replace(/(:|\.)/g, '_') : this.generate_field_id();
       this.container_id += "_chzn";
       this.f_width = this.form_field_jq.outerWidth();
@@ -340,7 +340,13 @@ Copyright (c) 2011 by Harvest
       this.container = $('#' + this.container_id);
       this.container.addClass("chzn-container-" + (this.is_multiple ? "multi" : "single"));
       this.dropdown = this.container.find('div.chzn-drop').first();
-      dd_top = this.container.height();
+      /*
+            CALL CUSTOM FUNCTION: rise_up
+              # if rise-up true, reverse drop-up direction
+      */
+
+      rise = this.rise_up(this.container, this.dropdown);
+      dd_top = rise ? -this.container.find('.chzn-drop').height() : this.container.height();
       dd_width = this.container.width - get_side_border_padding(this.dropdown);
       this.dropdown.css({
         "width": dd_width + "px",
@@ -582,14 +588,20 @@ Copyright (c) 2011 by Harvest
     };
 
     Chosen.prototype.results_show = function() {
-      var dd_top, dd_width;
+      var dd_top, dd_width, rise;
       if (!this.is_multiple) {
         this.selected_item.addClass("chzn-single-with-drop");
         if (this.result_single_selected) {
           this.result_do_highlight(this.result_single_selected);
         }
       }
-      dd_top = this.is_multiple ? this.container.height() : this.container.height() - 1;
+      /*
+            CALL CUSTOM FUNCTION: rise_up
+              # if rise-up true, reverse drop-up direction
+      */
+
+      rise = this.rise_up(this.container, this.dropdown);
+      dd_top = rise ? -this.container.find('.chzn-drop').height() : this.is_multiple ? this.container.height() : this.container.height() - 1;
       dd_width = this.container.width() - get_side_border_padding(this.dropdown);
       this.dropdown.css({
         "top": dd_top + "px",
@@ -961,7 +973,7 @@ Copyright (c) 2011 by Harvest
     };
 
     Chosen.prototype.search_field_scale = function() {
-      var dd_top, div, h, style, style_block, styles, w, _i, _len;
+      var dd_top, div, h, rise, style, style_block, styles, w, _i, _len;
       if (this.is_multiple) {
         h = 0;
         w = 0;
@@ -984,7 +996,13 @@ Copyright (c) 2011 by Harvest
         this.search_field.css({
           'width': w + 'px'
         });
-        dd_top = this.container.height();
+        /*
+                CALL CUSTOM FUNCTION: rise_up
+                  # if rise-up true, reverse drop-up direction
+        */
+
+        rise = this.rise_up(this.container, this.dropdown);
+        dd_top = rise ? -this.container.find('.chzn-drop').height() : this.container.height();
         return this.dropdown.css({
           "top": dd_top + "px"
         });
@@ -998,6 +1016,31 @@ Copyright (c) 2011 by Harvest
         string += this.generate_random_char();
       }
       return string;
+    };
+
+    /*
+      SILVERSTRIPE CUSTOM FUNCTION
+        Rise_up function handles the case where a dropdown exceeds the height of the window
+          # Adds class if true, returns true
+          # Removes class if false, returns false 
+        This facilitates the behaviour where the drop-down will drop up if there is no room 
+        to drop down
+    */
+
+
+    Chosen.prototype.rise_up = function(container, dropdown) {
+      var elHeight, elPos, endOfWindow, trigger;
+      trigger = container.find('a.chzn-single');
+      endOfWindow = ($(window).height() + $(document).scrollTop()) - container.find('a').innerHeight();
+      elPos = trigger.offset().top;
+      elHeight = dropdown.innerHeight();
+      if (elPos + elHeight > endOfWindow && elPos - elHeight > 0) {
+        container.addClass('chzn-with-rise');
+        return true;
+      } else {
+        container.removeClass('chzn-with-rise');
+        return false;
+      }
     };
 
     return Chosen;
