@@ -67,7 +67,7 @@ class PasswordEncryptorTest extends SapphireTest {
 		$password = 'mypassword';
 		$salt = '10$mysaltmustbetwen2chars';
 
-		$this->assertTrue($e->what_is_a() == 'y' || $e->what_is_a() == 'x' || $e->what_is_a() == 'a');
+		$this->assertTrue($e->checkAEncryptionLevel() == 'y' || $e->checkAEncryptionLevel() == 'x' || $e->checkAEncryptionLevel() == 'a');
 		$this->assertTrue($e->check($e->encrypt($password, $salt), "mypassword", $salt));
 		$this->assertFalse($e->check($e->encrypt($password, $salt), "anotherpw", $salt));
 		$this->assertFalse($e->check($e->encrypt($password, $salt), "mypassword", '10$anothersaltetwen2chars'));
