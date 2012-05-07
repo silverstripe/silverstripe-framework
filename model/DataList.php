@@ -201,7 +201,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		
 		return $this;
 	}
-	
+
 	/**
 	 * Filter the list to include items with these charactaristics
 	 *

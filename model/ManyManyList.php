@@ -115,15 +115,15 @@ class ManyManyList extends RelationList {
 	    if(!is_numeric($itemID)) throw new InvalidArgumentException("ManyManyList::removeById() expecting an ID");
 
 		$query = new SQLQuery("*", array("\"$this->joinTable\""));
-		$query->delete = true;
+		$query->setDelete(true);
 		
 		if($filter = $this->foreignIDFilter()) {
-			$query->where($filter);
+			$query->setWhere($filter);
 		} else {
 			user_error("Can't call ManyManyList::remove() until a foreign ID is set", E_USER_WARNING);
 		}
 		
-		$query->where("\"$this->localKey\" = {$itemID}");
+		$query->addWhere("\"$this->localKey\" = {$itemID}");
 		$query->execute();
 	}
 
@@ -132,10 +132,9 @@ class ManyManyList extends RelationList {
      */
     function removeAll() {
 		$query = $this->dataQuery()->query();
-		$query->delete = true;
-		$query->select(array('*'));
-		$query->from = array("\"$this->joinTable\"");
-		$query->orderby = null;
+		$query->setDelete(true);
+		$query->setSelect(array('*'));
+		$query->setFrom("\"$this->joinTable\"");
 		$query->execute();
     }
 
