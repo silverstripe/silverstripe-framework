@@ -439,7 +439,7 @@ class SimplePie
 	 * @see SimplePie::set_cache_location()
 	 * @access private
 	 */
-	var $cache_location = './cache';
+	var $cache_location = TEMP_FOLDER;
 
 	/**
 	 * @var string Function that creates the cache filename
