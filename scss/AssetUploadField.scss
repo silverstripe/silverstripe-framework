@@ -1,8 +1,9 @@
 @import "compass/css3";
 
+
 // TODO we need a seperated file for styles that are used in both cms and front end (such as buttons)
 @import "../admin/scss/themes/default.scss";
-
+@import "../admin/scss/_mixins";
 
 
 #AssetUploadField {
@@ -15,7 +16,8 @@ body.cms.ss-uploadfield-edit-iframe {
 	overflow: auto;
 	span.readonly{
 		font-style:italic;
-		color:lighten($color-text, 15%);
+		color:lighten($color-text, 20%);
+		text-shadow: 0px 1px 0px #fff;
 	}
 }
 
@@ -36,6 +38,39 @@ body.cms.ss-uploadfield-edit-iframe {
 		border-bottom: 0;
 		box-shadow:none;
 	}
+	.fileOverview{
+		clear:both;
+		margin-top:10px;
+		margin-bottom:5px;
+		padding-bottom:5px;
+		height:50px;
+		position:relative;
+		.ss-ui-button {
+			position:absolute;
+			bottom:0;
+			background: none;
+			border: 0;
+			right:0;
+			@include box-shadow(none);
+			color: $color-text;		
+			@include editButton;
+			&.ss-uploadfield-item-edit-all {
+				@extend .ss-uploadfield-item-edit; 
+				height:auto;
+			}
+		}
+
+		.state{
+			font-size: 16px;
+			font-weight:bold;
+			line-height:20px;
+			margin-bottom:5px;
+		}
+		.details{
+			color:lighten($color-text, 15%);
+		}
+	}
+
 	
 	.ss-uploadfield-files {
 		margin: 0;
@@ -67,46 +102,78 @@ body.cms.ss-uploadfield-edit-iframe {
 		.ui-state-error .ss-uploadfield-item-info {
 			background-color: #c11f1d;
 			@include background-image(linear-gradient(top,  #c11f1d 0%,#bf1d1b 4%,#b71b1c 8%,#b61e1d 15%,#b11d1d 27%,#ab1d1c 31%,#a51b1b 42%,#9f1b19 46%,#9f1b19 50%,#991c1a 54%,#971a18 58%,#911b1b 62%,#911b1b 65%,#7e1816 88%,#771919 92%,#731817 100%));
+			.ss-uploadfield-item-name{
+				cursor:default;
+				background: rgba(darken($color-button-disabled, 15%),0.9);
+				.name { 
+					text-shadow: 0px 1px 0px rgba(#fff, 0.7);
+				}
+			}
 		}
+		.ui-state-warning .ss-uploadfield-item-info {
+			background-color: #c11f1d;
+			@include background-image(
+				linear-gradient(
+					top,  
+					desaturate(lighten($color-warning, 10%), 20%)  0%,
+					desaturate(lighten($color-warning, 5%), 20%)  8%,
+					desaturate($color-warning, 20%)  50%,
+					desaturate(darken(mix($color-warning, $color-button-destructive, 99%),0%), 20%)  54%,
+					desaturate(darken(mix($color-warning, $color-button-destructive, 80%),1%), 20%)  96%,
+					desaturate(darken(mix($color-warning, $color-button-destructive, 70%),2%), 20%) 100%)
+			);
+		}
+
 		.ss-uploadfield-item-name {
 			position: relative;
 			z-index: 1;
 			margin: 3px 0 3px 50px;
 			width: 40%;
-			color:lighten($color-text, 20%);
-			background: $color-button-disabled;
-			border: 1px solid lighten($color-medium-separator, 20%);
-			@include border-radius(5px);
+			color:lighten($color-text, 10%);
+			background: rgba(#fff, 0.8);
+			@include border-radius(3px);
 			display: block;
 			line-height: 24px;
 			height: 22px;
 			padding: 0 5px;
 			text-align: left;
-			
-			b { 
-				font-weight: bold; 
+			cursor:pointer;			
+			.name { 
+				text-shadow: 0px 1px 0px rgba(#fff, 0.5);
+				display:inline;
+				float:left;
+				max-width:40%;
+				font-weight: normal; 
 				padding: 0 5px 0 0;
 			}
-			span {
-				font-size: $font-base-size - 1;
-				color: lighten($color-text, 25%);
+			.ss-uploadfield-item-status {
+				float: right;
+				padding: 0 0 0 5px;
+				max-width:300px;
+				@include hide-text-overflow;
+				text-shadow: 0px 1px 0px rgba(#fff, 0.5);
+				&.ui-state-error-text {
+					text-shadow: 0px 1px 0px rgba(#fff, 0.6);
+					color: darken($color-button-destructive, 10%);
+				}
+				&.ui-state-warning-text {
+					color: darken($color-warning, 10%);
+				}
+				&.ui-state-success-text {
+					color: $color-button-constructive;
+				}
 			}
-		}
-		.ss-uploadfield-item-status {
-			float: right;
-			padding: 0 0 0 5px;
-			
-			&.ui-state-error-text {
-				color: $color-button-destructive;
-				font-weight: bold;
-			}
-		}
+		} 
+		
 		.ss-uploadfield-item-actions {
 			position: absolute;
 			top: 0;
 			right: 0;
 			left: 0;
 			z-index: 0;
+			color:#f00;
+			
+
 		}
 		.ss-ui-button {
 			background: none;
@@ -120,15 +187,7 @@ body.cms.ss-uploadfield-edit-iframe {
 				// TODO tmp hack until we have permissions and can disable delete
 				display: none;
 			}
-			&.ss-uploadfield-item-edit {
-				padding-top: 0;
-				padding-bottom: 0;
-				line-height: 30px;
-			}
-
-			.ui-icon {
-				display: none;
-			}
+			@include editButton;
 		}
 		.ss-uploadfield-item-progress {
 			width: 100%;
@@ -167,7 +226,6 @@ body.cms.ss-uploadfield-edit-iframe {
 				height: 16px;
 				cursor: pointer;
 				@include single-box-shadow(none);
-				// background: sprite($sprites16, cross-circle) no-repeat;
 			}
 		}
 		
@@ -187,7 +245,15 @@ body.cms.ss-uploadfield-edit-iframe {
 	
 		.ss-uploadfield-item-info {
 			float: left;
-			margin: 19px 0 0;		
+			margin: 34px 0 0;	
+			label{
+				width:300px;
+				height:30px;
+				font-size:14px;
+				&.ui-state-focus{
+					@include single-box-shadow(none);
+				}	
+			}
 		}
 		.ss-uploadfield-fromcomputer {
 			position: relative;
@@ -201,37 +267,44 @@ body.cms.ss-uploadfield-edit-iframe {
 			font-size: 22px;
 			padding: 0 20px;
 			line-height: 70px;
+			margin-top:16px;
 			display: none;
 		}
 		.ss-uploadfield-dropzone { 
-			@include border-radius(10px);
-			@include box-shadow(lighten($color-medium-separator, 10%) 0 0 3px 3px inset);
+			margin-top:9px;
+			@include border-radius(13px);
+			@include box-shadow(rgba($color-medium-separator, 0.3) 0 0 3px 2px inset);
 			border: 2px dashed $color-medium-separator;
-			background: $color-light-separator;
+			background: lighten($color-base,12%);
 			display: none;
-			height: 66px;
-			width: 300px;
+			height: 82px;
+			width: 408px;
 			float: left;
 			&.active{
 				&.hover{
-					@include box-shadow(rgba(#fff,0.6) 0 0 3px 3px inset);
+					@include box-shadow(rgba(#fff,0.6) 0 0 3px 2px inset);
 				}
 			}
 			div {
+				color:lighten($color-text, 10%);
+				text-shadow: 0px 1px 0px #fff;
+				background: url('../images/upload.png') 0 25px no-repeat;
+				width:230px;
 				z-index:1;
-				padding: 15px 0 0;
-				line-height: 22px;
-				font-size: 20px;
+				padding: 20px 0 0;
+				line-height: 25px;
+				font-size: 25px;
 				font-weight: bold;
 				text-align: center;
 				display:block;
 				margin:0 auto;
 				span {
 					display: block;
-					font-size: 12px;
+					font-size: 14px;
 					z-index:-1;
 				}
 			}
 		}
 	}
 }
+

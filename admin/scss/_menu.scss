@@ -228,7 +228,7 @@
 
 				.toggle-children {
 					.toggle-children-icon {
-						background: sprite($sprites32, menu-arrow-down) no-repeat;
+						background: sprite($sprites32, menu-arrow-down) no-repeat;	
 					}
 					
 					&.opened {

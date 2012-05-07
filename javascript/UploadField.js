@@ -21,22 +21,48 @@
 			var firstNewFile = this._files.find('.ss-uploadfield-item').slice(data.files.length*-1).first();
 			var top = '+=' + (firstNewFile.position().top - parseInt(firstNewFile.css('marginTop')) || 0 - parseInt(firstNewFile.css('borderTopWidth')) || 0);
 			firstNewFile.offsetParent().animate({scrollTop: top}, 1000);
+		
+			/* Compute total size of files */		
+			var fSize = 0;
+			for(var i = 0; i < data.files.length; i++){
+				fSize = fSize + data.files[i].fileSize;
+			}
+			fSize = this._formatFileSize(fSize);
+
+			$('.fileOverview .uploadStatus .state.started').show();
+			$('.fileOverview .uploadStatus .state.completed').hide();
+			$('.fileOverview .uploadStatus .details .total').text(data.files.length);
+			$('.fileOverview .uploadStatus .details .fileSize').text(fSize);
+			$('.fileOverview button').hide();
 			return result;
-		}
+		},
+		_onAlways: function (jqXHRorResult, textStatus, jqXHRorError, options) {
+            $.blueimpUI.fileupload.prototype._onAlways.call(this, jqXHRorResult, textStatus, jqXHRorError, options);
+
+            if (this._active === 0) {
+                this._trigger('stop');
+				$('.fileOverview .uploadStatus .state.started').hide();
+				$('.fileOverview .uploadStatus .state.completed').show();
+				$('.fileOverview button').show();
+
+            }
+        }		
 	});
+
+
 	$.entwine('ss', function($) {
+
 		$('div.ss-upload').entwine({
 
 			Config: null,
 
 			onmatch: function() {
-				
+			
 				if(this.is('.readonly,.disabled')) return;
 
 				var fileInput = this.find('input');
 				var dropZone = this.find('.ss-uploadfield-dropzone');
-				var config = $.parseJSON(fileInput.data('config').replace(/'/g,'"'));
-				
+				var config = $.parseJSON(fileInput.data('config').replace(/'/g,'"'));				
 				
 				/* Attach classes to dropzone when element can be dropped*/
 				$(document).unbind('dragover');
@@ -123,6 +149,8 @@
 					dropZone.show(); // drag&drop avaliable
 					
 				}
+
+				
 				this._super();
 			},
 
@@ -204,6 +232,8 @@
 				return false;
 			}
 		});
+
+
 		$('div.ss-upload .ss-uploadfield-item-remove:not(.ui-state-disabled), .ss-uploadfield-item-delete:not(.ui-state-disabled)').entwine({
 			onclick: function(e) {
 				var fileupload = this.closest('div.ss-upload').data('fileupload'), 
@@ -222,18 +252,57 @@
 				return false;
 			}
 		});
-		$('div.ss-upload .ss-uploadfield-item-edit').entwine({
+
+		$('div.ss-upload .fileOverview .ss-uploadfield-item-edit-all').entwine({
+			onclick: function(e) {
+
+				if($(this).hasClass('opened')){
+					$('.ss-uploadfield-item .ss-uploadfield-item-edit .toggle-details-icon.opened').each(function(i){
+						$(this).closest('.ss-uploadfield-item-edit').click();
+					});
+					$(this).removeClass('opened').find('.toggle-details-icon').removeClass('opened');
+				}else{
+					$('.ss-uploadfield-item .ss-uploadfield-item-edit .toggle-details-icon').each(function(i){
+						if(!$(this).hasClass('opened')){							
+							$(this).closest('.ss-uploadfield-item-edit').click();
+						}
+					});
+					$(this).addClass('opened').find('.toggle-details-icon').addClass('opened');
+				}
+
+				e.preventDefault(); // Avoid a form submit
+			} 
+		});
+		$('div.ss-upload .ss-uploadfield-item-edit, div.ss-upload .ss-uploadfield-item-name').entwine({
 			onclick: function(e) {
 				var editform = this.closest('.ss-uploadfield-item').find('.ss-uploadfield-item-editform');
+				var disabled;
+				var iframe = editform.find('iframe');
+				var inputs = iframe.contents().find('.ss-uploadfield-edit-iframe input');
+				
+				for(var i=0;i<inputs.length;i++){
+					$(inputs[i]).change(function(){
+						editform.addClass('edited'); 
+					});
+				}				
 				if (editform.hasClass('loading')) {
 					// TODO Display loading indication, and register an event to toggle edit form 
 				} else {
-					this.siblings().toggleClass('ui-state-disabled');
+					if(this.hasClass('ss-uploadfield-item-edit')){
+						disabled=this.siblings();
+					}else{
+						disabled=this.find('ss-uploadfield-item-edit').siblings();
+					}
+					editform.parent('.ss-uploadfield-item').removeClass('ui-state-warning');
+					disabled.toggleClass('ui-state-disabled');
 					editform.toggleEditForm();
 				}
 				e.preventDefault(); // Avoid a form submit
 			}
 		});
+
+
+
 		$('div.ss-upload .ss-uploadfield-item-editform').entwine({
 			fitHeight: function() {
 				var iframe = this.find('iframe'), padding = 32;
@@ -257,10 +326,36 @@
 
 			},
 			toggleEditForm: function() {
+				var itemInfo = this.prev('.ss-uploadfield-item-info'), status = itemInfo.find('.ss-uploadfield-item-status');
+				var iframe = this.find('iframe').contents(), saved=iframe.find('#Form_EditForm_error');
+				
 				if(this.height() === 0) {
-					this.fitHeight();	
+					this.fitHeight();
+					itemInfo.find('.toggle-details-icon').addClass('opened');					
+					status.removeClass('ui-state-success-text').removeClass('ui-state-warning-text').text("Editing...");
+					iframe.find('#Form_EditForm_action_doEdit').click(function(){
+						itemInfo.find('label .name').text(iframe.find('#Name input').val());
+					});	
+					if($('div.ss-upload  .ss-uploadfield-files .ss-uploadfield-item-actions .toggle-details-icon:not(.opened)').index() < 0){
+						$('div.ss-upload .fileOverview .ss-uploadfield-item-edit-all').addClass('opened').find('.toggle-details-icon').addClass('opened');
+					}
+
 				} else {
 					this.height(0);
+					itemInfo.find('.toggle-details-icon').removeClass('opened');
+					$('div.ss-upload .fileOverview .ss-uploadfield-item-edit-all').removeClass('opened').find('.toggle-details-icon').removeClass('opened');
+					if(!this.hasClass('edited')){
+						status.addClass('ui-state-success-text').text(ss.i18n._t('UploadField.NOCHANGES', 'No Changes'));
+					}else{
+						if(saved.hasClass('good')){
+							this.removeClass('edited').parent('.ss-uploadfield-item').removeClass('ui-state-warning');
+							status.addClass('ui-state-success-text').text(ss.i18n._t('UploadField.CHANGESSAVED', 'Changes Saved'));								
+						}else{
+							this.parent('.ss-uploadfield-item').addClass('ui-state-warning');
+							status.addClass('ui-state-warning-text').text(ss.i18n._t('UploadField.UNSAVEDCHANGES', 'Unsaved Changes'));
+						}
+					}
+					saved.removeClass('good').hide();
 				}
 			}
 		});

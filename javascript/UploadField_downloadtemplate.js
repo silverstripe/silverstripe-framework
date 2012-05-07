@@ -6,10 +6,11 @@ window.tmpl.cache['ss-uploadfield-downloadtemplate'] = tmpl(
 			'</span></div>' +
 			'<div class="ss-uploadfield-item-info">' +
 				'<label class="ss-uploadfield-item-name">' + 
-					'<b>{%=file.name%}</b> ' + 
-					'<span>{%=o.formatFileSize(file.size)%}</span>' +
-					'{% if (file.error) { %}' +
-						'<span class="ss-uploadfield-item-status ui-state-error-text">{%=o.options.errorMessages[file.error] || file.error%}</span>' + 
+					'<span class="name">{%=file.name%}</span> ' + 
+					'{% if (!file.error) { %}' +
+						'<div class="ss-uploadfield-item-status ui-state-success-text">Uploaded</div>' +						
+					'{% } else {  %}' +
+							'<div class="ss-uploadfield-item-status ui-state-error-text">{%=o.options.errorMessages[file.error].substring(0,25) || file.error.substring(0,25)%}</div>' + 
 					'{% } %}' + 
 					'<div class="clear"><!-- --></div>' + 
 				'</label>' +
