@@ -65,11 +65,12 @@ class PasswordEncryptorTest extends SapphireTest {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_blowfish'=>array('PasswordEncryptor_Blowfish'=>'')));
 		$e = PasswordEncryptor::create_for_algorithm('test_blowfish');
 		$password = 'mypassword';
-		$salt = '10$mysaltmustbetwen2char';
-		$this->assertEquals(
-			crypt($password, '$2y$' . $salt), 
-			'$2y$' . $salt . $e->encrypt($password, $salt)
-		);
+		$salt = '10$mysaltmustbetwen2chars';
+
+		$this->assertTrue($e->what_is_a() == 'y' || $e->what_is_a() == 'x' || $e->what_is_a() == 'a');
+		$this->assertTrue($e->check($e->encrypt($password, $salt), "mypassword", $salt));
+		$this->assertFalse($e->check($e->encrypt($password, $salt), "anotherpw", $salt));
+		$this->assertFalse($e->check($e->encrypt($password, $salt), "mypassword", '10$anothersaltetwen2chars'));
 	}
 	
 	function testEncryptorPHPHashCheck() {
