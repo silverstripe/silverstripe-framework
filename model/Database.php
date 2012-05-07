@@ -783,7 +783,7 @@ abstract class SS_Database {
 	 * @return string
 	 */
 	public function sqlHavingToString($having) {
-		return ' HAVING ( ' . implode(' ) AND ( ', $having);
+		return ' HAVING ( ' . implode(' ) AND ( ', $having) . ')';
 	}
 
 	/**
@@ -829,7 +829,7 @@ abstract class SS_Database {
 		// these clauses only make sense in SELECT queries, not DELETE
 		if(!$query->getDelete()) {
 			if($query->getGroupBy()) $text .= $this->sqlGroupByToString($query->getGroupBy());
-			if($query->getHaving()) $text .= $this->sqlHavingToString($query->getHaving()) . ' )';
+			if($query->getHaving()) $text .= $this->sqlHavingToString($query->getHaving());
 			if($query->getOrderBy()) $text .= $this->sqlOrderByToString($query->getOrderBy());
 			if($query->getLimit()) $text .= $this->sqlLimitToString($query->getLimit());
 		}
