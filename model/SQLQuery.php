@@ -13,28 +13,25 @@
 class SQLQuery {
 	
 	/**
-	 * An array of fields to select, keyed by an optional alias.
-	 *
+	 * An array of SELECT fields, keyed by an optional alias.
 	 * @var array
 	 */
 	protected $select = array();
 	
 	/**
-	 * An array of join clauses. The first one is just the table name.
-	 *
+	 * An array of FROM clauses. The first one is just the table name.
 	 * @var array
 	 */
 	protected $from = array();
 	
 	/**
-	 * An array of filters.
-	 *
+	 * An array of WHERE clauses.
 	 * @var array
 	 */
 	protected $where = array();
 	
 	/**
-	 * An array of order by clauses, functions. Stores as an associative
+	 * An array of ORDER BY clauses, functions. Stores as an associative
 	 * array of column / function to direction.
 	 *
 	 * @var string
@@ -42,23 +39,20 @@ class SQLQuery {
 	protected $orderby = array();
 	
 	/**
-	 * An array of fields to group by.
-	 *
+	 * An array of GROUP BY clauses.
 	 * @var array
 	 */
 	protected $groupby = array();
 	
 	/**
 	 * An array of having clauses.
-	 *
 	 * @var array
 	 */
 	protected $having = array();
 	
 	/**
-	 * A limit clause.
-	 *
-	 * @var string
+	 * An array containing limit and offset keys for LIMIT clause.
+	 * @var array
 	 */
 	protected $limit = array();
 	
@@ -70,14 +64,12 @@ class SQLQuery {
 	
 	/**
 	 * If this is true, this statement will delete rather than select.
-	 *
 	 * @var boolean
 	 */
 	protected $delete = false;
 	
 	/**
 	 * The logical connective used to join WHERE clauses. Defaults to AND.
-	 *
 	 * @var string
 	 */
 	protected $connective = 'AND';
