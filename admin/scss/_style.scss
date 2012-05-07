@@ -412,8 +412,11 @@ body.cms {
 	}
 	
 	&.good {
-		background-color: lighten($color-good, 20%);
+		background-color: rgba($color-good,0.7);
 		border-color: $color-good;
+		color:#fff;
+		@include text-shadow(1px -1px 0 $color-button-constructive);
+		@include border-radius(3px 3px 3px 3px);
 	}
 	
 	p {
@@ -432,6 +435,7 @@ body.cms {
 
 .cms-add-form {
 	.step-label {
+		opacity:0.9;
 		.flyout {
 			height:17px; //centres number within the grey arrow 
 			padding-top:5px;
@@ -1200,6 +1204,7 @@ form.member-profile-form {
 .cms {
 	.cms-panel-padded {
 		padding: $grid-y*2 $grid-x*2;
+		margin:0;
 	}
 }
 
@@ -1713,6 +1718,27 @@ form.import-form {
 	 		clear:both;
 	 		border-top:1px solid $color-button-generic-border;
 	 	}
+	}
+}
+
+
+/** --------------------------------------------
+ * Buttons for FileUpload
+ * -------------------------------------------- */
+span.toggle-details{	
+	.toggle-details-icon {
+		background: sprite($sprites32, menu-arrow-down) no-repeat;
+		.fileOverview &{
+			background: sprite($sprites32, menu-arrow-deselected-down) no-repeat;
+			
+		}
+
+		&.opened {					
+			background: sprite($sprites32, menu-arrow-up) no-repeat;	
+			.fileOverview &{
+				background: sprite($sprites32, menu-arrow-deselected-up) no-repeat;			
+			}		
+		}
 	}
 }
 
