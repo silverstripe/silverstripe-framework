@@ -65,18 +65,19 @@ class PasswordEncryptorTest extends SapphireTest {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_blowfish'=>array('PasswordEncryptor_Blowfish'=>'')));
 		$e = PasswordEncryptor::create_for_algorithm('test_blowfish');
 		$password = 'mypassword';
-		$salt = '10$mysaltmustbetwen2char';
-		$this->assertEquals(
-			crypt($password, '$2y$' . $salt), 
-			'$2y$' . $salt . $e->encrypt($password, $salt)
-		);
+		$salt = '10$mysaltmustbetwen2chars';
+
+		$this->assertTrue($e->what_is_a() == 'y' || $e->what_is_a() == 'x' || $e->what_is_a() == 'a');
+		$this->assertTrue($e->check($e->encrypt($password, $salt), "mypassword", $salt));
+		$this->assertFalse($e->check($e->encrypt($password, $salt), "anotherpw", $salt));
+		$this->assertFalse($e->check($e->encrypt($password, $salt), "mypassword", '10$anothersaltetwen2chars'));
 	}
 	
-	function testEncryptorPHPHashCompare() {
+	function testEncryptorPHPHashCheck() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_sha1'=>array('PasswordEncryptor_PHPHash'=>'sha1')));
 		$e = PasswordEncryptor::create_for_algorithm('test_sha1');
-		$this->assertTrue($e->compare(sha1('mypassword'), sha1('mypassword')));
-		$this->assertFalse($e->compare(sha1('mypassword'), sha1('mywrongpassword')));
+		$this->assertTrue($e->check(sha1('mypassword'), 'mypassword'));
+		$this->assertFalse($e->check(sha1('mypassword'), 'mywrongpassword'));
 	}
 	
 	/**
@@ -85,15 +86,16 @@ class PasswordEncryptorTest extends SapphireTest {
 	 * Handy command for reproducing via CLI on different architectures:
 	 * 	php -r "echo(base_convert(sha1('mypassword'), 16, 36));"
 	 */
-	function testEncryptorLegacyPHPHashCompare() {
+	function testEncryptorLegacyPHPHashCheck() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_sha1legacy'=>array('PasswordEncryptor_LegacyPHPHash'=>'sha1')));
 		$e = PasswordEncryptor::create_for_algorithm('test_sha1legacy');
 		// precomputed hashes for 'mypassword' from different architectures
 		$amdHash = 'h1fj0a6m4o6k0sosks88oo08ko4gc4s';
 		$intelHash = 'h1fj0a6m4o0g04ocg00o4kwoc4wowws';
 		$wrongHash = 'h1fjxxxxxxxxxxxxxxxxxxxxxxxxxxx';
-		$this->assertTrue($e->compare($amdHash, $intelHash));
-		$this->assertFalse($e->compare($amdHash, $wrongHash));
+		$this->assertTrue($e->check($amdHash, "mypassword"));
+		$this->assertTrue($e->check($intelHash, "mypassword"));
+		$this->assertFalse($e->check($wrongHash, "mypassword"));
 	}
 }
 
