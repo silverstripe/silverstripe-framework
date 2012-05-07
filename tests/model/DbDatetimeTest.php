@@ -91,11 +91,13 @@ class DbDatetimeTest extends FunctionalTest {
 			$this->matchesRoughly($result, date('Y-m-d H:i:s', strtotime('+1 Day', $this->getDbNow())), 'tomorrow');
 
 			$query = new SQLQuery();
-			$query->setSelect(array("test" => $this->adapter->datetimeIntervalClause('"Created"', '-15 Minutes')))
-			 	->setFrom('"DbDateTimeTest_Team"')
+			$query->setSelect(array());
+			$query->selectField($this->adapter->datetimeIntervalClause('"Created"', '-15 Minutes'), 'test')
+				->setFrom('"DbDateTimeTest_Team"')
 				->setLimit(1);
+
 			$result = $query->execute()->value();
-			$this->matchesRoughly($result, date('Y-m-d H:i:s', strtotime(Dataobject::get_one('DbDateTimeTest_Team')->Created) - 900), '15 Minutes before creating fixture');
+			$this->matchesRoughly($result, date('Y-m-d H:i:s', strtotime(DataObject::get_one('DbDateTimeTest_Team')->Created) - 900), '15 Minutes before creating fixture');
 
 		}
 	}
@@ -116,10 +118,11 @@ class DbDatetimeTest extends FunctionalTest {
 			$this->matchesRoughly($result, -45 * 60, 'now - 45 minutes ahead');
 
 			$query = new SQLQuery();
-			$query->setSelect(array("test" => $this->adapter->datetimeDifferenceClause('"LastEdited"', '"Created"')))
+			$query->setSelect(array());
+			$query->selectField($this->adapter->datetimeDifferenceClause('"LastEdited"', '"Created"'), 'test')
 				->setFrom('"DbDateTimeTest_Team"')
 				->setLimit(1);
-				
+
 			$result = $query->execute()->value();
 			$lastedited = Dataobject::get_one('DbDateTimeTest_Team')->LastEdited;
 			$created = Dataobject::get_one('DbDateTimeTest_Team')->Created;

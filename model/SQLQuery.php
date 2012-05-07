@@ -214,10 +214,11 @@ class SQLQuery {
 	}
 
 	/**
-	 * Select an additional field
+	 * Select an additional field.
 	 *
 	 * @param $field The field to select
 	 * @param $alias The alias of that field
+	 * @return SQLQuery
 	 */
 	public function selectField($field, $alias = null) {
 		if(!$alias) {
@@ -225,6 +226,7 @@ class SQLQuery {
 			else $alias = $field;
 		}
 		$this->select[$alias] = $field;
+		return $this;
 	}
 
 	/**
