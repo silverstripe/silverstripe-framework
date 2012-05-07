@@ -143,7 +143,7 @@ class Versioned extends DataExtension {
 		// Reading a specific data from the archive
 		case 'archive':
 			$date = $dataQuery->getQueryParam('Versioned.date');
-			foreach($query->from as $table => $dummy) {
+			foreach($query->getFrom() as $table => $dummy) {
 				$query->renameTable($table, $table . '_versions');
 				$query->replaceText("\"$table\".\"ID\"", "\"$table\".\"RecordID\"");
 				
@@ -154,7 +154,7 @@ class Versioned extends DataExtension {
 				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
 
 				if($table != $baseTable) {
-					$query->from[$table] .= " AND \"{$table}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
+					$query->from(array($table => " AND \"{$table}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\""));
 				}
 			}
 
@@ -169,7 +169,7 @@ class Versioned extends DataExtension {
 		case 'stage':
 			$stage = $dataQuery->getQueryParam('Versioned.stage');
 			if($stage && ($stage != $this->defaultStage)) {
-				foreach($query->from as $table => $dummy) {
+				foreach($query->getFrom() as $table => $dummy) {
 					// Only rewrite table names that are actually part of the subclass tree
 					// This helps prevent rewriting of other tables that get joined in, in
 					// particular, many_many tables
@@ -186,7 +186,7 @@ class Versioned extends DataExtension {
 		// Return all version instances	
 		case 'all_versions':
 		case 'latest_versions':
-    		foreach($query->from as $alias => $join) {
+    		foreach($query->getFrom() as $alias => $join) {
     		    if($alias != $baseTable) {
     		        $query->setJoinFilter($alias, "\"$alias\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$alias\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
 		        }
@@ -204,7 +204,7 @@ class Versioned extends DataExtension {
 		    // This provides "show all, including deleted" functonality
             if($dataQuery->getQueryParam('Versioned.mode') == 'latest_versions') {
     		    $archiveTable = self::requireArchiveTempTable($baseTable);
-    		    $query->innerJoin($archiveTable, "\"$archiveTable\".\"ID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
+    		    $query->addInnerJoin($archiveTable, "\"$archiveTable\".\"ID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
 		    }
 
             break;
@@ -711,11 +711,11 @@ class Versioned extends DataExtension {
 		
 		$query = $list->dataQuery()->query();
 
-		foreach($query->from as $table => $tableJoin) {
+		foreach($query->getFrom() as $table => $tableJoin) {
 			if(is_string($tableJoin) && $tableJoin[0] == '"') {
 				$baseTable = str_replace('"','',$tableJoin);
 			} elseif(is_string($tableJoin) && substr($tableJoin,0,5) != 'INNER') {
-				$query->from[$table] = "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
+				$query->setFrom(array($table => "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\""));
 			}
 			$query->renameTable($table, $table . '_versions');
 		}
@@ -725,12 +725,12 @@ class Versioned extends DataExtension {
 			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
 		}
 		
-		$query->where[] = "\"{$baseTable}_versions\".\"RecordID\" = '{$this->owner->ID}'";
-		$query->orderby = ($sort) ? $sort : "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC";
-		
+		$query->addWhere("\"{$baseTable}_versions\".\"RecordID\" = '{$this->owner->ID}'");
+		$query->setOrderBy(($sort) ? $sort : "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC");
+
 		$records = $query->execute();
 		$versions = new ArrayList();
-		
+
 		foreach($records as $record) {
 			$versions->push(new Versioned_Version($record));
 		}

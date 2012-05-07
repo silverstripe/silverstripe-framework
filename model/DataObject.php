@@ -1216,9 +1216,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		//    obviously, that means getting requireTable() to configure cascading deletes ;-)
 		$srcQuery = DataList::create($this->class, $this->model)->where("ID = $this->ID")->dataQuery()->query();
 		foreach($srcQuery->queriedTables() as $table) {
-			$query = new SQLQuery("*", array('"'.$table.'"'));
-			$query->where("\"ID\" = $this->ID");
-			$query->delete = true;
+			$query = new SQLQuery("*", array('"' . $table . '"'));
+			$query->setWhere("\"ID\" = $this->ID");
+			$query->setDelete(true);
 			$query->execute();
 		}
 		// Remove this item out of any caches

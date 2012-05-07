@@ -705,7 +705,7 @@ abstract class SS_Database {
 						break;
 					case "deleted":
 						$color = "red";
-						break;						
+						break;
 					case "changed":
 						$color = "blue";
 						break;
@@ -721,42 +721,119 @@ abstract class SS_Database {
 	}
 
 	/**
-	 * Convert a SQLQuery object into a SQL statement
+	 * Returns the SELECT clauses ready for inserting into a query.
+	 * @param array $select Select columns
+	 * @param boolean $distinct Distinct select?
+	 * @return string
 	 */
-	public function sqlQueryToString(SQLQuery $sqlQuery) {
-		$distinct = $sqlQuery->distinct ? "DISTINCT " : "";
-		
-		if($sqlQuery->delete) {
-			$text = "DELETE ";
-		} else {
-			$text = "SELECT $distinct" . $sqlQuery->prepareSelect();
+	public function sqlSelectToString($select, $distinct = false) {
+		$clauses = array();
+
+		foreach($select as $alias => $field) {
+			// Don't include redundant aliases.
+			if($alias === $field || preg_match('/"' . preg_quote($alias) . '"$/', $field)) $clauses[] = $field;
+			else $clauses[] = "$field AS \"$alias\"";
 		}
-		
-		if($sqlQuery->from) $text .= " FROM " . implode(" ", $sqlQuery->from);
-		if($sqlQuery->where) $text .= " WHERE (" . $sqlQuery->prepareWhere(). ")";
-		if($sqlQuery->groupby) $text .= " GROUP BY " . $sqlQuery->prepareGroupBy();
-		if($sqlQuery->having) $text .= " HAVING ( " .$sqlQuery->prepareHaving() . " )";
-		if($sqlQuery->orderby) $text .= " ORDER BY " . $sqlQuery->prepareOrderBy();
 
-		if($sqlQuery->limit) {
-			$limit = $sqlQuery->limit;
-			// Pass limit as array or SQL string value
-			if(is_array($limit)) {
-				if(!array_key_exists('limit',$limit)) throw new InvalidArgumentException('SQLQuery::limit(): Wrong format for $limit: ' . var_export($limit, true));
+		$text = 'SELECT ';
+		if($distinct) $text .= 'DISTINCT ';
+		return $text .= implode(', ', $clauses);
+	}
 
-				if(isset($limit['start']) && is_numeric($limit['start']) && isset($limit['limit']) && is_numeric($limit['limit'])) {
-					$combinedLimit = $limit['start'] ? "$limit[limit] OFFSET $limit[start]" : "$limit[limit]";
-				} elseif(isset($limit['limit']) && is_numeric($limit['limit'])) {
-					$combinedLimit = (int)$limit['limit'];
-				} else {
-					$combinedLimit = false;
-				}
-				if(!empty($combinedLimit)) $text .= " LIMIT " . $combinedLimit;
+	/**
+	 * Return the FROM clause ready for inserting into a query.
+	 * @return string
+	 */
+	public function sqlFromToString($from) {
+		return ' FROM ' . implode(' ', $from);
+	}
 
+	/**
+	 * Returns the WHERE clauses ready for inserting into a query.
+	 * @return string
+	 */
+	public function sqlWhereToString($where, $connective) {
+		return ' WHERE (' . implode(") {$connective} (" , $where) . ')';
+	}
+
+	/**
+	 * Returns the ORDER BY clauses ready for inserting into a query.
+	 * @return string
+	 */
+	public function sqlOrderByToString($orderby) {
+		$statements = array();
+
+		foreach($orderby as $clause => $dir) {
+			$statements[] = trim($clause . ' ' . $dir);
+		}
+
+		return ' ORDER BY ' . implode(', ', $statements);
+	}
+
+	/**
+	 * Returns the GROUP BY clauses ready for inserting into a query.
+	 * @return string
+	 */
+	public function sqlGroupByToString($groupby) {
+		return ' GROUP BY ' . implode(', ', $groupby);
+	}
+
+	/**
+	 * Returns the HAVING clauses ready for inserting into a query.
+	 * @return string
+	 */
+	public function sqlHavingToString($having) {
+		return ' HAVING ( ' . implode(' ) AND ( ', $having);
+	}
+
+	/**
+	 * Return the LIMIT clause ready for inserting into a query.
+	 * @return string
+	 */
+	public function sqlLimitToString($limit) {
+		$clause = '';
+
+		// Pass limit as array or SQL string value
+		if(is_array($limit)) {
+			if(!array_key_exists('limit', $limit)) throw new InvalidArgumentException('Database::sqlLimitToString(): Wrong format for $limit: ' . var_export($limit, true));
+
+			if(isset($limit['start']) && is_numeric($limit['start']) && isset($limit['limit']) && is_numeric($limit['limit'])) {
+				$combinedLimit = $limit['start'] ? "$limit[limit] OFFSET $limit[start]" : "$limit[limit]";
+			} elseif(isset($limit['limit']) && is_numeric($limit['limit'])) {
+				$combinedLimit = (int) $limit['limit'];
 			} else {
-				$text .= " LIMIT " . $sqlQuery->limit;
+				$combinedLimit = false;
 			}
+			if(!empty($combinedLimit)) $clause .= ' LIMIT ' . $combinedLimit;
+		} else {
+			$clause .= ' LIMIT ' . $limit;
 		}
+
+		return $clause;
+	}
+
+	/**
+	 * Convert a SQLQuery object into a SQL statement
+	 * @param $query SQLQuery
+	 */
+	public function sqlQueryToString(SQLQuery $query) {
+		if($query->getDelete()) {
+			$text = 'DELETE ';
+		} else {
+			$text = $this->sqlSelectToString($query->getSelect(), $query->getDistinct());
+		}
+
+		if($query->getFrom()) $text .= $this->sqlFromToString($query->getFrom());
+		if($query->getWhere()) $text .= $this->sqlWhereToString($query->getWhere(), $query->getConnective());
+
+		// these clauses only make sense in SELECT queries, not DELETE
+		if(!$query->getDelete()) {
+			if($query->getGroupBy()) $text .= $this->sqlGroupByToString($query->getGroupBy());
+			if($query->getHaving()) $text .= $this->sqlHavingToString($query->getHaving()) . ' )';
+			if($query->getOrderBy()) $text .= $this->sqlOrderByToString($query->getOrderBy());
+			if($query->getLimit()) $text .= $this->sqlLimitToString($query->getLimit());
+		}
+
 		return $text;
 	}
 

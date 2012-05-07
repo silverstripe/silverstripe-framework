@@ -17,21 +17,21 @@ class SQLQuery {
 	 *
 	 * @var array
 	 */
-	public $select = array();
+	protected $select = array();
 	
 	/**
 	 * An array of join clauses. The first one is just the table name.
 	 *
 	 * @var array
 	 */
-	public $from = array();
+	protected $from = array();
 	
 	/**
 	 * An array of filters.
 	 *
 	 * @var array
 	 */
-	public $where = array();
+	protected $where = array();
 	
 	/**
 	 * An array of order by clauses, functions. Stores as an associative
@@ -39,55 +39,63 @@ class SQLQuery {
 	 *
 	 * @var string
 	 */
-	public $orderby = array();
+	protected $orderby = array();
 	
 	/**
 	 * An array of fields to group by.
 	 *
 	 * @var array
 	 */
-	public $groupby = array();
+	protected $groupby = array();
 	
 	/**
 	 * An array of having clauses.
 	 *
 	 * @var array
 	 */
-	public $having = array();
+	protected $having = array();
 	
 	/**
 	 * A limit clause.
 	 *
 	 * @var string
 	 */
-	public $limit;
+	protected $limit;
 	
 	/**
 	 * If this is true DISTINCT will be added to the SQL.
 	 * @var boolean
 	 */
-	public $distinct = false;
+	protected $distinct = false;
 	
 	/**
 	 * If this is true, this statement will delete rather than select.
 	 *
 	 * @var boolean
 	 */
-	public $delete = false;
+	protected $delete = false;
 	
 	/**
 	 * The logical connective used to join WHERE clauses. Defaults to AND.
 	 *
 	 * @var string
 	 */
-	public $connective = 'AND';
+	protected $connective = 'AND';
 	
 	/**
 	 * Keep an internal register of find/replace pairs to execute when it's time to actually get the
 	 * query SQL.
+	 * @var array
 	 */
-	private $replacementsOld = array(), $replacementsNew = array();
-	
+	protected $replacementsOld = array();
+
+	/**
+	 * Keep an internal register of find/replace pairs to execute when it's time to actually get the
+	 * query SQL.
+	 * @var array
+	 */
+	protected $replacementsNew = array();
+
 	/**
 	 * Construct a new SQLQuery.
 	 * 
@@ -103,64 +111,91 @@ class SQLQuery {
 	 * by this stage.
 	 */
 	function __construct($select = "*", $from = array(), $where = "", $orderby = "", $groupby = "", $having = "", $limit = "") {
-		$this->select($select);
+		$this->setSelect($select);
 		// @todo 
 		$this->from = is_array($from) ? $from : array(str_replace(array('"','`'),'',$from) => $from);
-		$this->where($where);
-		$this->orderby($orderby);
-		$this->groupby($groupby);
-		$this->having($having);
-		$this->limit($limit);
+		$this->setWhere($where);
+		$this->setOrderBy($orderby);
+		$this->setGroupBy($groupby);
+		$this->setHaving($having);
+		$this->setLimit($limit);
 	}
-	
-	/**
-	 * Clear the selected fields to start over
-	 */
-	function clearSelect() {
-		$this->select = array();
-		return $this;
+
+	function __get($field) {
+		if(strtolower($field) == 'select') Deprecation::notice('3.0', 'Please use getSlect() instead');
+		if(strtolower($field) == 'from') Deprecation::notice('3.0', 'Please use getFrom() instead');
+		if(strtolower($field) == 'groupby') Deprecation::notice('3.0', 'Please use getGroupBy() instead');
+		if(strtolower($field) == 'orderby') Deprecation::notice('3.0', 'Please use getOrderBy() instead');
+		if(strtolower($field) == 'having') Deprecation::notice('3.0', 'Please use getHaving() instead');
+		if(strtolower($field) == 'limit') Deprecation::notice('3.0', 'Please use getLimit() instead');
+		if(strtolower($field) == 'delete') Deprecation::notice('3.0', 'Please use getDelete() instead');
+		if(strtolower($field) == 'connective') Deprecation::notice('3.0', 'Please use getConnective() instead');
+		if(strtolower($field) == 'distinct') Deprecation::notice('3.0', 'Please use getDistinct() instead');
+
+		return $this->$field;
 	}
-	
+
+	function __set($field, $value) {
+		if(strtolower($field) == 'select') Deprecation::notice('3.0', 'Please use setSelect() or addSelect() instead');
+		if(strtolower($field) == 'from') Deprecation::notice('3.0', 'Please use setFrom() or addFrom() instead');
+		if(strtolower($field) == 'groupby') Deprecation::notice('3.0', 'Please use setGroupBy() or addGroupBy() instead');
+		if(strtolower($field) == 'orderby') Deprecation::notice('3.0', 'Please use setOrderBy() or addOrderBy() instead');
+		if(strtolower($field) == 'having') Deprecation::notice('3.0', 'Please use setHaving() or addHaving() instead');
+		if(strtolower($field) == 'limit') Deprecation::notice('3.0', 'Please use setLimit() instead');
+		if(strtolower($field) == 'delete') Deprecation::notice('3.0', 'Please use setDelete() instead');
+		if(strtolower($field) == 'connective') Deprecation::notice('3.0', 'Please use setConnective() instead');
+		if(strtolower($field) == 'distinct') Deprecation::notice('3.0', 'Please use setDistinct() instead');
+
+		return $this->$field = $value;
+	}
+
 	/**
-	 * Specify the list of columns to be selected by the query.
+	 * Set the list of columns to be selected by the query.
 	 *
 	 * <code>
 	 *  // pass fields to select as single parameter array
 	 *  $query->select(array("Col1","Col2"))->from("MyTable");
-	 * 
+	 *
 	 *  // pass fields to select as multiple parameters
 	 *  $query->select("Col1", "Col2")->from("MyTable");
 	 * </code>
-	 * 
-	 * @param mixed $fields
+	 *
+	 * @param string|array $fields
+	 * @param boolean $clear Clear existing select fields?
 	 * @return SQLQuery
 	 */
-	public function select($fields) {
+	public function setSelect($fields) {
+		$this->select = array();
+		if (func_num_args() > 1) {
+			$fields = func_get_args();
+		} else if(!is_array($fields)) {
+			$fields = array($fields);
+		}
+		return $this->addSelect($fields);
+	}
+
+	/**
+	 * Add to the list of columns to be selected by the query.
+	 *
+	 * <code>
+	 *  // pass fields to select as single parameter array
+	 *  $query->select(array("Col1","Col2"))->from("MyTable");
+	 *
+	 *  // pass fields to select as multiple parameters
+	 *  $query->select("Col1", "Col2")->from("MyTable");
+	 * </code>
+	 *
+	 * @param string|array $fields
+	 * @param boolean $clear Clear existing select fields?
+	 * @return SQLQuery
+	 */
+	public function addSelect($fields) {
 		if (func_num_args() > 1) {
 			$fields = func_get_args();
 		} else if(!is_array($fields)) {
 			$fields = array($fields);
 		}
 
-		$this->select = array();
-		$this->selectMore($fields);
-		
-		return $this;
-	}
-	
-	/**
-	 * Add addition columns to the select clause
-	 *
-	 * @param array|string
-	 */
-	public function selectMore($fields) {
-		if (func_num_args() > 1) {
-			$fields = func_get_args();
-		} else if(!is_array($fields)) {
-			$fields = array($fields);
-		}
-		
-		$this->select = array();
 		foreach($fields as $idx => $field) {
 			if(preg_match('/^(.*) +AS +"?([^"]*)"?/i', $field, $matches)) {
 				Deprecation::notice("3.0", "Use selectField() to specify column aliases");
@@ -169,8 +204,15 @@ class SQLQuery {
 				$this->selectField($field, is_numeric($idx) ? null : $idx);
 			}
 		}
+		
+		return $this;
 	}
-	
+
+	public function select($fields) {
+		Deprecation::notice('3.0', 'Please use setSelect() or addSelect() instead!');
+		$this->setSelect($fields);
+	}
+
 	/**
 	 * Select an additional field
 	 *
@@ -194,68 +236,107 @@ class SQLQuery {
 	}
 	
 	/**
-	 * Specify the target table to select from.
-	 * 
+	 * Set table for the SELECT clause.
+	 *
 	 * <code>
 	 *  $query->from("MyTable"); // SELECT * FROM MyTable
 	 * </code>
 	 *
-	 * @param string $table
-	 * @return SQLQuery This instance
+	 * @param string|array $from
+	 * @return SQLQuery
 	 */
-	public function from($table) {
-		$this->from[str_replace(array('"','`'),'',$table)] = $table;
-		
+	public function setFrom($from) {
+		$this->from = array();
+		return $this->addFrom($from);
+	}
+
+	/**
+	 * Add a table to the SELECT clause.
+	 *
+	 * <code>
+	 *  $query->from("MyTable"); // SELECT * FROM MyTable
+	 * </code>
+	 *
+	 * @param string|array $from
+	 * @return SQLQuery
+	 */
+	public function addFrom($from) {
+		if(is_array($from)) {
+			$this->from = array_merge($this->from, $from);
+		} elseif(!empty($from)) {
+			$this->from[str_replace(array('"','`'), '', $from)] = $from;
+		}
+
 		return $this;
+	}
+
+	public function from($from) {
+		Deprecation::notice('3.0', 'Please use setFrom() or addFrom() instead!');
+		return $this->setFrom($from);
 	}
 	
 	/**
 	 * Add a LEFT JOIN criteria to the FROM clause.
-	 * 
-	 * @param String $table Table name (unquoted)
-	 * @param String $onPredicate The "ON" SQL fragment in a "LEFT JOIN ... AS ... ON ..." statement.
+	 *
+	 * @param string $table Table name (unquoted)
+	 * @param string $onPredicate The "ON" SQL fragment in a "LEFT JOIN ... AS ... ON ..." statement.
 	 *  Needs to be valid (quoted) SQL.
-	 * @param String $tableAlias Optional alias which makes it easier to identify and replace joins later on
-	 * @return SQLQuery This instance 
+	 * @param string $tableAlias Optional alias which makes it easier to identify and replace joins later on
+	 * @return SQLQuery
 	 */
-	public function leftJoin($table, $onPredicate, $tableAlias=null) {
-		if( !$tableAlias ) {
-			$tableAlias = $table;
-		}
+	public function addLeftJoin($table, $onPredicate, $tableAlias = null) {
+		if(!$tableAlias) $tableAlias = $table;
 		$this->from[$tableAlias] = array('type' => 'LEFT', 'table' => $table, 'filter' => array($onPredicate));
 		return $this;
 	}
-	
-	/**
-	 * Add an INNER JOIN criteria to the FROM clause.
-	 * 
-	 * @param String $table Table name (unquoted)
-	 * @param String $onPredicate The "ON" SQL fragment in a "LEFT JOIN ... AS ... ON ..." statement.
-	 *  Needs to be valid (quoted) SQL.
-	 * @param String $tableAlias Optional alias which makes it easier to identify and replace joins later on
-	 * @return SQLQuery This instance 
-	 */
-	public function innerJoin($table, $onPredicate, $tableAlias=null) {
-		if( !$tableAlias ) {
-			$tableAlias = $table;
-		}
-		$this->from[$tableAlias] = array('type' => 'INNER', 'table' => $table, 'filter' => array($onPredicate));
-		return $this;
-	}
-	
-	/**
-	 * Add an additional filter (part of the ON clause) on a join
-	 */
-	public function addFilterToJoin($tableAlias, $filter) {
-		$this->from[$tableAlias]['filter'][] = $filter;
+
+	public function leftjoin($table, $onPredicate, $tableAlias = null) {
+		Deprecation::notice('3.0', 'Please use addLeftJoin() instead!');
+		$this->addLeftJoin($table, $onPredicate, $tableAlias);
 	}
 
 	/**
-	 * Replace the existing filter (ON clause) on a join
+	 * Add an INNER JOIN criteria to the FROM clause.
+	 *
+	 * @param string $table Table name (unquoted)
+	 * @param string $onPredicate The "ON" SQL fragment in an "INNER JOIN ... AS ... ON ..." statement.
+	 *  Needs to be valid (quoted) SQL.
+	 * @param string $tableAlias Optional alias which makes it easier to identify and replace joins later on
+	 * @return SQLQuery
 	 */
-	public function setJoinFilter($tableAlias, $filter) {
-		if(is_string($this->from[$tableAlias])) {Debug::message($tableAlias); Debug::dump($this->from);}
-		$this->from[$tableAlias]['filter'] = array($filter);
+	public function addInnerJoin($table, $onPredicate, $tableAlias = null) {
+		if(!$tableAlias) $tableAlias = $table;
+		$this->from[$tableAlias] = array('type' => 'INNER', 'table' => $table, 'filter' => array($onPredicate));
+		return $this;
+	}
+
+	public function innerjoin($table, $onPredicate, $tableAlias = null) {
+		Deprecation::notice('3.0', 'Please use addInnerJoin() instead!');
+		return $this->addInnerJoin($table, $onPredicate, $tableAlias);
+	}
+
+	/**
+	 * Add an additional filter (part of the ON clause) on a join.
+	 *
+	 * @param string $table Table to join on from the original join
+	 * @param string $filter The "ON" SQL fragment
+	 * @return SQLQuery
+	 */
+	public function addFilterToJoin($table, $filter) {
+		$this->from[$table]['filter'][] = $filter;
+		return $this;
+	}
+
+	/**
+	 * Set the filter (part of the ON clause) on a join.
+	 *
+	 * @param string $table Table to join on from the original join
+	 * @param string $filter The "ON" SQL fragment
+	 * @return SQLQuery
+	 */
+	public function setJoinFilter($table, $filter) {
+		$this->from[$table]['filter'] = array($filter);
+		return $this;
 	}
 	
 	/**
@@ -286,13 +367,69 @@ class SQLQuery {
 	}
 
 	/**
+	 * Set distinct property.
+	 * @param boolean $value
+	 */
+	public function setDistinct($value) {
+		$this->distinct = $value;
+	}
+
+	/**
+	 * Get the distinct property.
+	 * @return boolean
+	 */
+	public function getDistinct() {
+		return $this->distinct;
+	}
+
+	/**
+	 * Set the delete property.
+	 * @param boolean $value
+	 */
+	public function setDelete($value) {
+		$this->delete = $value;
+	}
+
+	/**
+	 * Get the delete property.
+	 * @return boolean
+	 */
+	public function getDelete() {
+		return $this->delete;
+	}
+
+	/**
+	 * Set the connective property.
+	 * @param boolean $value
+	 */
+	public function setConnective($value) {
+		$this->connective = $value;
+	}
+
+	/**
+	 * Get the connective property.
+	 * @return string
+	 */
+	public function getConnective() {
+		return $this->connective;
+	}
+
+	/**
+	 * Get limit clause
+	 * @return string
+	 */
+	public function getLimit() {
+		return $this->limit;
+	}
+
+	/**
 	 * Pass LIMIT clause either as SQL snippet or in array format.
 	 * Internally, limit will always be stored as a map containing the keys 'start' and 'limit'
 	 *
 	 * @param string|array $limit
 	 * @return SQLQuery This instance
 	 */
-	public function limit($limit, $offset = 0) {
+	public function setLimit($limit, $offset = 0) {
 		if($limit && is_numeric($limit)) {
 			$this->limit = array(
 				'start' => $offset,
@@ -312,9 +449,14 @@ class SQLQuery {
 		
 		return $this;
 	}
-	
+
+	public function limit($limit, $offset = 0) {
+		Deprecation::notice('3.0', 'Please use setLimit() instead!');
+		return $this->setLimit($limit, $offset);
+	}
+
 	/**
-	 * Pass ORDER BY clause either as SQL snippet or in array format.
+	 * Set ORDER BY clause either as SQL snippet or in array format.
 	 *
 	 * @example $sql->orderby("Column");
 	 * @example $sql->orderby("Column DESC");
@@ -322,24 +464,39 @@ class SQLQuery {
 	 * @example $sql->orderby("Column", "DESC");
 	 * @example $sql->orderby(array("Column" => "ASC", "ColumnTwo" => "DESC"));
 	 *
-	 * @param string|array $orderby
-	 * @param string $dir
-	 * @param bool $clear remove existing order by clauses
+	 * @param string|array $orderby Clauses to add
+	 * @param string $dir Sort direction, ASC or DESC
 	 *
 	 * @return SQLQuery
 	 */
-	public function orderby($clauses = null, $direction = null, $clear = true) {
-		if($clear) $this->orderby = array();
+	public function setOrderBy($clauses = null, $direction = null) {
+		$this->orderby = array();
+		return $this->addOrderBy($clauses, $direction);
+	}
 
+	/**
+	 * Add ORDER BY clause either as SQL snippet or in array format.
+	 *
+	 * @example $sql->orderby("Column");
+	 * @example $sql->orderby("Column DESC");
+	 * @example $sql->orderby("Column DESC, ColumnTwo ASC");
+	 * @example $sql->orderby("Column", "DESC");
+	 * @example $sql->orderby(array("Column" => "ASC", "ColumnTwo" => "DESC"));
+	 *
+	 * @param string|array $orderby Clauses to add
+	 * @param string $dir Sort direction, ASC or DESC
+	 *
+	 * @return SQLQuery
+	 */
+	public function addOrderBy($clauses = null, $direction = null) {
 		if(!$clauses) {
 			return $this;
 		}
 		
 		if(is_string($clauses)) {
-			if(strpos($clauses, "(") !== false) {				
+			if(strpos($clauses, "(") !== false) {
 				$sort = preg_split("/,(?![^()]*+\\))/", $clauses);
-			}
-			else {
+			} else {
 				$sort = explode(",", $clauses);
 			}
 
@@ -356,15 +513,13 @@ class SQLQuery {
 				if(!is_numeric($key)) {
 					$column = trim($key);
 					$columnDir = strtoupper(trim($value));
-				}
-				else {
+				} else {
 					list($column, $columnDir) = $this->getDirectionFromString($value);
 				}
-				
+
 				$this->orderby[$column] = $columnDir;
 			}
-		}
-		else {
+		} else {
 			user_error('SQLQuery::orderby() incorrect format for $orderby', E_USER_WARNING);
 		}
 
@@ -385,15 +540,20 @@ class SQLQuery {
 					$column = "_SortColumn{$i}";
 
 					$this->selectField($clause, $column);
-					$this->orderby('"' . $column . '"', $dir, false);
+					$this->addOrderBy('"' . $column . '"', $dir);
 					$i++;
 				}
 			}
 		}
-		
+
 		return $this;
 	}
-	
+
+	public function orderby($clauses = null, $direction = null) {
+		Deprecation::notice('3.0', 'Please use setOrderBy() instead!');
+		return $this->setOrderBy($clauses, $direction);
+	}
+
 	/**
 	 * Extract the direction part of a single-column order by clause.
 	 * 
@@ -412,29 +572,27 @@ class SQLQuery {
 
 	/**
 	 * Returns the current order by as array if not already. To handle legacy
-	 * statements which are stored as strings. Without clauses and directions, 
+	 * statements which are stored as strings. Without clauses and directions,
 	 * convert the orderby clause to something readable.
-	 *
-	 * @todo When $orderby is a private variable and all orderby statements
-	 *		set through 
 	 *
 	 * @return array
 	 */
 	public function getOrderBy() {
 		$orderby = $this->orderby;
-		
+		if(!$orderby) $orderby = array();
+
 		if(!is_array($orderby)) {
 			// spilt by any commas not within brackets
-			$orderby = preg_split("/,(?![^()]*+\\))/", $orderby);
+			$orderby = preg_split('/,(?![^()]*+\\))/', $orderby);
 		}
-		
+
 		foreach($orderby as $k => $v) {
-			if(strpos($v, " ") !== false) {
+			if(strpos($v, ' ') !== false) {
 				unset($orderby[$k]);
 
-				$rule = explode(" ", trim($v));
+				$rule = explode(' ', trim($v));
 				$clause = $rule[0];
-				$dir = (isset($rule[1])) ? $rule[1] : "ASC";
+				$dir = (isset($rule[1])) ? $rule[1] : 'ASC';
 
 				$orderby[$clause] = $dir;
 			}
@@ -445,91 +603,142 @@ class SQLQuery {
 	
 	/**
 	 * Reverses the order by clause by replacing ASC or DESC references in the
-	 * current order by with it's corollary. 
+	 * current order by with it's corollary.
 	 *
 	 * @return SQLQuery
 	 */
 	public function reverseOrderBy() {
 		$order = $this->getOrderBy();
-		
 		$this->orderby = array();
-		
-		foreach($order as $clause => $dir) {
-			$dir = (strtoupper($dir) == "DESC") ? "ASC" : "DESC";
 
-			$this->orderby($clause, $dir, false);
+		foreach($order as $clause => $dir) {
+			$dir = (strtoupper($dir) == 'DESC') ? 'ASC' : 'DESC';
+			$this->addOrderBy($clause, $dir);
 		}
-		
+
 		return $this;
 	}
 	
+	/**
+	 * Set a GROUP BY clause.
+	 *
+	 * @param string|array $groupby
+	 * @return SQLQuery
+	 */
+	public function setGroupBy($groupby) {
+		$this->groupby = array();
+		return $this->addGroupBy($groupby);
+	}
+
 	/**
 	 * Add a GROUP BY clause.
 	 *
 	 * @param string|array $groupby
 	 * @return SQLQuery
 	 */
-	public function groupby($groupby) {
+	public function addGroupBy($groupby) {
 		if(is_array($groupby)) {
-			$this->groupby = array_merge($this->groupby, $groupby);  
+			$this->groupby = array_merge($this->groupby, $groupby);
 		} elseif(!empty($groupby)) {
 			$this->groupby[] = $groupby;
+		}
+
+		return $this;
+	}
+
+	public function groupby($where) {
+		Deprecation::notice('3.0', 'Please use setGroupBy() or addHaving() instead!');
+		return $this->setGroupBy($where);
+	}
+
+	/**
+	 * Set a HAVING clause.
+	 *
+	 * @param string|array $having
+	 * @return SQLQuery
+	 */
+	public function setHaving($having) {
+		$this->having = array();
+		return $this->addHaving($having);
+	}
+
+	/**
+	 * Add a HAVING clause
+	 *
+	 * @param string|array $having
+	 * @return SQLQuery
+	 */
+	public function addHaving($having) {
+		if(is_array($having)) {
+			$this->having = array_merge($this->having, $having);
+		} elseif(!empty($having)) {
+			$this->having[] = $having;
+		}
+
+		return $this;
+	}
+
+	public function having($having) {
+		Deprecation::notice('3.0', 'Please use setHaving() or addHaving() instead!');
+		return $this->setHaving($having);
+	}
+
+	/**
+	 * Set a WHERE clause.
+	 *
+	 * There are two different ways of doing this:
+	 *
+	 * <code>
+	 *  // the entire predicate as a single string
+	 *  $query->where("Column = 'Value'");
+	 *
+	 *  // multiple predicates as an array
+	 *  $query->where(array("Column = 'Value'", "Column != 'Value'"));
+	 * </code>
+	 *
+	 * @param string|array $where Predicate(s) to set
+	 * @return SQLQuery
+	 */
+	public function setWhere($where) {
+		$this->where = array();
+
+		$args = func_get_args();
+		if(isset($args[1])) {
+			Deprecation::notice('3.0', 'Multiple arguments to where is deprecated. Pleas use where("Column = Something") syntax instead');
+		}
+
+		return $this->addWhere($where);
+	}
+
+	/**
+	 * Add a WHERE predicate.
+	 *
+	 * There are two different ways of doing this:
+	 *
+	 * <code>
+	 *  // the entire predicate as a single string
+	 *  $query->where("Column = 'Value'");
+	 *
+	 *  // multiple predicates as an array
+	 *  $query->where(array("Column = 'Value'", "Column != 'Value'"));
+	 * </code>
+	 *
+	 * @param string|array $where Predicate(s) to set
+	 * @return SQLQuery
+	 */
+	public function addWhere($where) {
+		if(is_array($where)) {
+			$this->where = array_merge($this->where, $where);
+		} elseif(!empty($where)) {
+			$this->where[] = $where;
 		}
 		
 		return $this;
 	}
 
-	/**
-	 * Add a HAVING clause.
-	 *
-	 * @param string|array $having
-	 * @return SQLQuery
-	 */
-	public function having($having) {
-		if(is_array($having)) {
-			$this->having = array_merge($this->having, $having);  
-		} elseif(!empty($having)) {
-			$this->having[] = $having;
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Apply a predicate filter to the where clause.
-	 * 
-	 * Accepts a variable length of arguments, which represent
-	 * different ways of formatting a predicate in a where clause:
-	 * 
-	 * <code>
-	 *  // the entire predicate as a single string
-	 *  $query->where("Column = 'Value'");
-	 * 
-	 *  // an exact match predicate with a key value pair
-	 *  $query->where("Column", "Value");
-	 * 
-	 *  // a predicate with user defined operator
-	 *  $query->where("Column", "!=", "Value");
-	 * </code>
-	 * 
-	 */
-	public function where() {
-		$args = func_get_args();
-		if (func_num_args() == 3) {
-			$filter = "{$args[0]} {$args[1]} '{$args[2]}'";
-		} elseif (func_num_args() == 2) {
-			$filter = "{$args[0]} = '{$args[1]}'";
-		} else {
-			$filter = $args[0];
-		}
-		
-		if(is_array($filter)) {
-			$this->where = array_merge($this->where,$filter);
-		} elseif(!empty($filter)) {
-			$this->where[] = $filter;
-		}
-		
-		return $this;
+	public function where($where) {
+		Deprecation::notice('3.0', 'Please use setWhere() or addWhere() instead!');
+		return $this->setWhere($where);
 	}
 
 	/**
@@ -538,7 +747,7 @@ class SQLQuery {
 	function whereAny($filters) {
 		if(is_string($filters)) $filters = func_get_args();
 		$clause = implode(" OR ", $filters);
-		return $this->where($clause);
+		return $this->setWhere($clause);
 	}
 		
 	/**
@@ -579,71 +788,48 @@ class SQLQuery {
 		Deprecation::notice('3.0', 'Please use prepareWhere() instead of getFilter()');
 		return $this->prepareWhere();
 	}
-	
+
+	/**
+	 * Return a list of FROM clauses used internally.
+	 * @return array
+	 */
+	public function getFrom() {
+		return $this->from;
+	}
+
+	/**
+	 * Return a list of HAVING clauses used internally.
+	 * @return array
+	 */
+	public function getHaving() {
+		return $this->having;
+	}
+
+	/**
+	 * Return a list of GROUP BY clauses used internally.
+	 * @return array
+	 */
+	public function getGroupBy() {
+		return $this->groupby;
+	}
+
+	/**
+	 * Return a list of WHERE clauses used internally.
+	 * @return array
+	 */
+	public function getWhere() {
+		return $this->where;
+	}
+
 	/**
 	 * Return an itemised select list as a map, where keys are the aliases, and values are the column sources.
 	 * Aliases will always be provided (if the alias is implicit, the alias value will be inferred), and won't be quoted.
 	 * E.g., 'Title' => '"SiteTree"."Title"'.
 	 */
-	public function itemisedSelect() {
+	public function getSelect() {
 		return $this->select;
 	}
 
-	/**
-	 * Returns the WHERE clauses ready for inserting into a query.
-	 * @return string
-	 */
-	public function prepareSelect() {
-		$clauses = array();
-		foreach($this->select as $alias => $field) {
-			// Don't include redundant aliases.
-			if($alias === $field || preg_match('/"' . preg_quote($alias) . '"$/', $field)) $clauses[] = $field;
-			else $clauses[] = "$field AS \"$alias\"";
-		}
-		return implode(", ", $clauses);
-	}
-
-	/**
-	 * Returns the WHERE clauses ready for inserting into a query.
-	 * @return string
-	 */
-	public function prepareWhere() {
-		return ($this->where) ? implode(") {$this->connective} (" , $this->where) : '';
-	}
-	
-	/**
-	 * Returns the ORDER BY clauses ready for inserting into a query.
-	 * @return string
-	 */
-	public function prepareOrderBy() {
-		$statments = array();
-			
-		if($order = $this->getOrderBy()) {
-			foreach($order as $clause => $dir) {
-				$statements[] = trim($clause . ' '. $dir);
-			}
-		}
-		
-		return implode(", ", $statements);
-	}
-	
-	/**
-	 * Returns the GROUP BY clauses ready for inserting into a query.
-	 * @return string
-	 */
-	public function prepareGroupBy() {
-		return implode(", ", $this->groupby);
-	}
-	
-	/**
-	 * Returns the HAVING clauses ready for inserting into a query.
-	 * @return string
-	 */
-	public function prepareHaving() {
-		return  implode(" ) AND ( ", $sqlQuery->having);
-	}
-	
-	
 	/**
 	 * Generate the SQL statement for this query.
 	 * 
@@ -842,7 +1028,7 @@ class SQLQuery {
 	function firstRow() {
 		$query = clone $this;
 		$offset = $this->limit ? $this->limit['start'] : 0;
-		$query->limit(1, $offset);
+		$query->setLimit(1, $offset);
 		return $query;
 	}
 
@@ -852,7 +1038,7 @@ class SQLQuery {
 	function lastRow() {
 		$query = clone $this;
 		$offset = $this->limit ? $this->limit['start'] : 0;
-		$query->limit(1, $this->count() + $offset - 1);
+		$query->setLimit(1, $this->count() + $offset - 1);
 		return $query;
 	}
 
