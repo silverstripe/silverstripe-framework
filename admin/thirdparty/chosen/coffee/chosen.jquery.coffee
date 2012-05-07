@@ -6,6 +6,7 @@ root = this
 $ = jQuery
 
 $.fn.extend({
+
   chosen: (options) ->
     # Do no harm and return as soon as possible for unsupported browsers, namely IE6 and IE7
     return this if $.browser.msie and ($.browser.version is "6.0" or  $.browser.version is "7.0")
@@ -50,8 +51,14 @@ class Chosen extends AbstractChosen
     @container = ($ '#' + @container_id)
     @container.addClass( "chzn-container-" + (if @is_multiple then "multi" else "single") )
     @dropdown = @container.find('div.chzn-drop').first()
-    
-    dd_top = @container.height()
+
+    ###
+      CALL CUSTOM FUNCTION: rise_up
+        # if rise-up true, reverse drop-up direction
+    ###
+    rise = @rise_up(@container, @dropdown)
+    dd_top = if rise then -this.container.find('.chzn-drop').height() else @container.height()
+
     #patch applied: https://github.com/harvesthq/chosen/issues/300
     dd_width = (@container.width - get_side_border_padding(@dropdown))
     
@@ -71,7 +78,7 @@ class Chosen extends AbstractChosen
       @selected_item = @container.find('.chzn-single').first()
       sf_width = dd_width - get_side_border_padding(@search_container) - get_side_border_padding(@search_field)
       @search_field.css( {"width" : sf_width + "px"} )
-    
+
     this.results_build()
     this.set_tab_index()
     @form_field_jq.trigger("liszt:ready", {chosen: this})
@@ -173,6 +180,7 @@ class Chosen extends AbstractChosen
     @parsing = true
     @results_data = root.SelectParser.select_to_array @form_field
 
+
     if @is_multiple and @choices > 0
       @search_choices.find("li.search-choice").remove()
       @choices = 0
@@ -201,7 +209,6 @@ class Chosen extends AbstractChosen
     
     @search_results.html content
     @parsing = false
-
 
   result_add_group: (group) ->
     if not group.disabled
@@ -237,9 +244,14 @@ class Chosen extends AbstractChosen
     if not @is_multiple
       @selected_item.addClass "chzn-single-with-drop"
       if @result_single_selected
-        this.result_do_highlight( @result_single_selected )
+        this.result_do_highlight( @result_single_selected )    
 
-    dd_top = if @is_multiple then @container.height() else (@container.height() - 1)
+    ###
+      CALL CUSTOM FUNCTION: rise_up
+        # if rise-up true, reverse drop-up direction
+    ###
+    rise = @rise_up(@container, @dropdown)
+    dd_top = if rise then -this.container.find('.chzn-drop').height() else if @is_multiple then @container.height() else (@container.height() - 1)
 
     #patch applied: https://github.com/harvesthq/chosen/issues/300, add variable assignment dd_width
     dd_width = this.container.width() - get_side_border_padding(@dropdown);
@@ -552,7 +564,13 @@ class Chosen extends AbstractChosen
 
       @search_field.css({'width': w + 'px'})
 
-      dd_top = @container.height()
+      ###
+        CALL CUSTOM FUNCTION: rise_up
+          # if rise-up true, reverse drop-up direction
+      ###
+      rise = @rise_up(@container, @dropdown)
+      dd_top = if rise then -this.container.find('.chzn-drop').height() else @container.height()
+      
       @dropdown.css({"top":  dd_top + "px"})
   
   generate_random_id: ->
@@ -560,6 +578,30 @@ class Chosen extends AbstractChosen
     while $("#" + string).length > 0
       string += this.generate_random_char()
     string
+
+
+
+  ###
+  SILVERSTRIPE CUSTOM FUNCTION
+    Rise_up function handles the case where a dropdown exceeds the height of the window
+      # Adds class if true, returns true
+      # Removes class if false, returns false 
+    This facilitates the behaviour where the drop-down will drop up if there is no room 
+    to drop down
+  ###
+  rise_up: (container, dropdown) -> 
+    trigger = container.find('a.chzn-single');
+    endOfWindow = ($(window).height() + $(document).scrollTop()) - container.find('a').innerHeight();
+    elPos = trigger.offset().top
+    elHeight = dropdown.innerHeight()
+
+    if elPos + elHeight > endOfWindow and elPos - elHeight > 0
+      container.addClass('chzn-with-rise')     
+      true
+    else
+      container.removeClass('chzn-with-rise')
+      false      
+
     
 get_side_border_padding = (elmt) ->
   side_border_padding = elmt.outerWidth() - elmt.width()

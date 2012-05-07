@@ -358,8 +358,9 @@ body.cms { overflow: hidden; }
 
 /* -------------------------------------------------------- Content Tools is the sidebar on the left of the main content panel */
 .cms-content-tools { background-color: #c6d7df; width: 192px; border-right: 1px solid #bfcad2; overflow-y: auto; overflow-x: hidden; z-index: 70; -moz-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; -webkit-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; -o-box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; box-shadow: rgba(107, 120, 123, 0.5) 0 0 4px; float: left; position: relative; }
+.cms-content-tools.filter { padding: 0 !important; }
 .cms-content-tools .cms-panel-header { clear: both; margin: 0 0 7px; line-height: 24px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); }
-.cms-content-tools .cms-panel-content { width: 176px; padding: 0 8px; overflow: auto; height: 100%; }
+.cms-content-tools .cms-panel-content { width: 176px; padding: 0 8px; overflow: auto; overflow-x: hidden; height: 100%; }
 .cms-content-tools .cms-panel-content .dropdown select { width: 160px; }
 .cms-content-tools .cms-panel-content #LastEditedFrom { -moz-box-shadow: none; -webkit-box-shadow: none; -o-box-shadow: none; box-shadow: none; }
 .cms-content-tools .cms-panel-content #LastEditedFrom input { width: 160px; }
@@ -527,7 +528,8 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .htmleditorfield-mediaform .ss-htmleditorfield-file .details { padding: 16px; }
 
 /** -------------------------------------------- Search forms (used in AssetAdmin, ModelAdmin, etc) -------------------------------------------- */
-.cms-search-form { overflow: auto; margin-bottom: 16px; }
+.cms-search-form { margin-bottom: 16px; }
+.filter .cms-search-form { margin-bottom: 0; }
 
 /** -------------------------------------------- Step labels -------------------------------------------- */
 .step-label > * { display: inline-block; vertical-align: top; }
