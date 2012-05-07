@@ -109,9 +109,22 @@ abstract class PasswordEncryptor {
 	 * @param String $hash1
 	 * @param String $hash2
 	 * @return boolean
+	 *
+	 * @deprecated 3.0 - Use PasswordEncryptor::check() instead.
 	 */
 	function compare($hash1, $hash2) {
+		Deprecation::notice('3.0.0', 'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
 		return ($hash1 === $hash2);
+	}
+
+	/**
+	 * This usually just returns a strict string comparison,
+	 * but is necessary for retain compatibility with password hashed
+	 * with flawed algorithms - see {@link PasswordEncryptor_LegacyPHPHash} and
+	 * {@link PasswordEncryptor_Blowfish}
+	 */
+	function check($hash, $password, $salt = null, $member = null) {
+		return $hash === $this->encrypt($password, $salt, $member);
 	}
 }
 
@@ -217,9 +230,17 @@ class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
 	}
 	
 	function compare($hash1, $hash2) {
+		Deprecation::notice('3.0.0', 'PasswordEncryptor::compare() is deprecated, replaced by PasswordEncryptor::check().');
+
 		// Due to flawed base_convert() floating poing precision, 
 		// only the first 10 characters are consistently useful for comparisons.
 		return (substr($hash1, 0, 10) === substr($hash2, 0, 10));
+	}
+
+	function check($hash, $password, $salt = null, $member = null) {
+		// Due to flawed base_convert() floating poing precision, 
+		// only the first 10 characters are consistently useful for comparisons.
+		return (substr($hash, 0, 10) === substr($this->encrypt($password, $salt, $member), 0, 10));
 	}
 }
 

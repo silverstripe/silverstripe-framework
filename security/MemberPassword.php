@@ -42,13 +42,8 @@ class MemberPassword extends DataObject {
 	 * @return Boolean
 	 */	
 	function checkPassword($password) {
-		$spec = Security::encrypt_password(
-			$password, 
-			$this->Salt, 
-			$this->PasswordEncryption
-		);
-		$e = $spec['encryptor'];
-		return $e->compare($this->Password, $spec['password']);
+		$e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
+		return $e->check($this->Password, $password, $this->Salt, $this->Member());
 	}
 	
 	

@@ -190,15 +190,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public function checkPassword($password) {
 		$result = $this->canLogIn();
 
-		$spec = Security::encrypt_password(
-			$password, 
-			$this->Salt, 
-			$this->PasswordEncryption,
-			$this
-		);
-		$e = $spec['encryptor'];
-
-		if(!$e->compare($this->Password, $spec['password'])) {
+		$e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
+		if(!$e->check($this->Password, $password, $this->Salt, $this)) {
 			$result->error(_t (
 				'Member.ERRORWRONGCRED',
 				'That doesn\'t seem to be the right e-mail address or password. Please try again.'
