@@ -471,10 +471,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @param array $data Additional data to pass to the email (can be used in the template)
 	 */
 	function sendInfo($type = 'signup', $data = null) {
+		Deprecation::notice('3.0', 'Please use Member_ChangePasswordEmail or Member_ForgotPasswordEmail directly instead');
+
 		switch($type) {
-			case "signup":
-				$e = Member_SignupEmail::create();
-				break;
 			case "changePassword":
 				$e = Member_ChangePasswordEmail::create();
 				break;
@@ -640,7 +639,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			&& $this->record['Password'] 
 			&& Member::$notify_password_change
 		) {
-			$this->sendInfo('changePassword');
+			$e = Member_ChangePasswordEmail::create();
+			$e->populateTemplate($this);
+			$e->setTo($this->Email);
+			$e->send();
 		}
 
 		// The test on $this->ID is used for when records are initially created.
@@ -1474,53 +1476,6 @@ class Member_ProfileForm extends Form {
 		$form->sessionMessage($message, 'good');
 		
 		$this->controller->redirectBack();
-	}
-}
-
-/**
- * Class used as template to send an email to new members
- * @package framework
- * @subpackage security
- */
-class Member_SignupEmail extends Email {
-	protected $from = '';  // setting a blank from address uses the site's default administrator email
-	protected $subject = '';
-	protected $body = '';
-
-	function __construct() {
-		parent::__construct();
-		$this->subject = _t('Member.EMAILSIGNUPSUBJECT', "Thanks for signing up");
-		$this->body = '
-			<h1>' . _t('Member.GREETING','Welcome') . ', $FirstName.</h1>
-			<p>' . _t('Member.EMAILSIGNUPINTRO1','Thanks for signing up to become a new member, your details are listed below for future reference.') . '</p>
-
-			<p>' . _t('Member.EMAILSIGNUPINTRO2','You can login to the website using the credentials listed below')  . ':
-				<ul>
-					<li><strong>' . _t('Member.EMAIL') . '</strong>$Email</li>
-					<li><strong>' . _t('Member.PASSWORD') . ':</strong>$Password</li>
-				</ul>
-			</p>
-
-			<h3>' . _t('Member.CONTACTINFO','Contact Information') . '</h3>
-			<ul>
-				<li><strong>' . _t('Member.NAME','Name')  . ':</strong> $FirstName $Surname</li>
-				<% if Phone %>
-					<li><strong>' . _t('Member.PHONE','Phone') . ':</strong> $Phone</li>
-				<% end_if %>
-
-				<% if Mobile %>
-					<li><strong>' . _t('Member.MOBILE','Mobile') . ':</strong> $Mobile</li>
-				<% end_if %>
-
-				<li><strong>' . _t('Member.ADDRESS','Address') . ':</strong>
-				<br/>
-				$Number $Street $StreetType<br/>
-				$Suburb<br/>
-				$City $Postcode
-				</li>
-
-			</ul>
-		';
 	}
 }
 
