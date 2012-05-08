@@ -28,16 +28,17 @@ Note: You need to be logged in as an administrator to perform this command.
 
 ## Querying Data
 
-Every query to data starts with a `DataList::create($class)` call.  For example, this query would return all of the Member objects:
+Every query to data starts with a `DataList::create($class)` or `$class::get()` call. For example, this query would return
+all of the Member objects:
 
 	:::php
-	$members = DataList::create('Member');
+	$members = Member::get();
 
 The ORM uses a "fluent" syntax, where you specify a query by chaining together different methods.  Two common methods 
 are filter() and sort():
 
 	:::php
-	$members = DataList::create('Member')->filter(array('FirstName' => 'Sam'))->sort('Surname');
+	$members = Member::get()->filter(array('FirstName' => 'Sam'))->sort('Surname');
 	
 Those of you who know a bit about SQL might be thinking "it looks like you're querying all members, and then filtering
 to those with a first name of 'Sam'. Isn't this very slow?"  Is isn't, because the ORM doesn't actually execute the 
@@ -45,7 +46,7 @@ query until you iterate on the result with a `foreach()` or `<% control %>`.
 
 	:::php
 	// The SQL query isn't executed here...
-	$members = DataList::create('Member');
+	$members = Member::get();
 	// ...or here
 	$members = $members->filter(array('FirstName' => 'Sam'));
 	// ...or even here
@@ -59,7 +60,7 @@ query until you iterate on the result with a `foreach()` or `<% control %>`.
 This also means that getting the count of a list of objects will be done with a single, efficient query.
 
 	:::php
-	$members = DataList::create('Member')->filter(array('FirstName' => 'Sam'))->sort('Surname');
+	$members = Member::get()->filter(array('FirstName' => 'Sam'))->sort('Surname');
 	// This will create an single SELECT COUNT query.
 	echo $members->Count();
 	
@@ -70,12 +71,12 @@ All of this lets you focus on writing your application, and not worrying too muc
 There are a couple of ways of getting a single DataObject from the ORM.  If you know the ID number of the object, you can use `byID($id)`:
 
 	:::php
-	$member = DataList::create('Member')->byID(5);
+	$member = Member::get()->byID(5);
 
 If you have constructed a query that you know should return a single record, you can call `First()`:
 
 	:::php
-	$member = DataList::create('Member')->filter(array('FirstName' => 'Sam', 'Surname' => 'Minnee'))->First();
+	$member = Member::get()->filter(array('FirstName' => 'Sam', 'Surname' => 'Minnee'))->First();
 
 
 ### Sort
@@ -85,19 +86,19 @@ Quiet often you would like to sort a list. Doing this on a list could be done in
 If would like to sort the list by FirstName in a ascending way (from A to Z).
 
 	:::php
-	$member = DataList::create('Member')->sort('FirstName');
+	$member = Member::get()->sort('FirstName');
 	// Or the more expressive way
-	$member = DataList::create('Member')->sort('FirstName', 'ASC');
+	$member = Member::get()->sort('FirstName', 'ASC');
 
 To reverse the sort
 
 	:::php
-	$member = DataList::create('Member')->sort('FirstName', 'DESC');
+	$member = Member::get()->sort('FirstName', 'DESC');
 
 However you might have several entries with the same FirstName and would like to sort them by FirstName and LastName
 
 	:::php
-	$member = DataList::create('Member')->sort(array(
+	$member = Member::get()->sort(array(
 		'FirstName' => 'ASC',
 		'LastName'=>'ASC'
 	));
@@ -108,7 +109,7 @@ As you might expect, the `filter()` method filters the list of objects that gets
 included this filter, which returns all Members with a first name of "Sam".
 
 	:::php
-	$members = DataList::create('Member')->filter(array('FirstName' => 'Sam'));
+	$members = Member::get()->filter(array('FirstName' => 'Sam'));
 
 In SilverStripe 2, we would have passed `"\"FirstName\" = 'Sam'` to make this query.  Now, we pass an  array, 
 `array('FirstName' => 'Sam')`, to minimise the risk of SQL injection bugs.  The format of this array follows a few 
@@ -122,7 +123,7 @@ true.
 So, this would return only those members called "Sam Minnée".
 
 	:::php
-	$members = DataList::create('Member')->filter(array(
+	$members = Member::get()->filter(array(
 		'FirstName' => 'Sam',
 		'Surname' => 'Minnée',
 	));
@@ -130,12 +131,12 @@ So, this would return only those members called "Sam Minnée".
 There are also a short hand way of getting Members with the FirstName of Sam.
 
 	:::php
-	$members = DataList::create('Member')->filter('FirstName', 'Sam');
+	$members = Member::get()->filter('FirstName', 'Sam');
 
 Or if you want to find both Sam and Sig.
 
 	:::php
-	$members = DataList::create('Member')->filter(
+	$members = Member::get()->filter(
 		'FirstName', array('Sam', 'Sig')
 	);
 
@@ -143,7 +144,7 @@ Or if you want to find both Sam and Sig.
 Then there is the most complex task when you want to find Sam and Sig that has either Age 17 or 74.
 
 	:::php
-	$members = DataList::create('Member')->filter(array(
+	$members = Member::get()->filter(array(
 		'FirstName' => array('Sam', 'Sig'),
 		'Age' => array(17, 74)
 	));
@@ -161,17 +162,17 @@ The `exclude()` method is the opposite to the filter in that it removes entries 
 If we would like to remove all members from the list with the FirstName of Sam.
 
 	:::php
-	$members = DataList::create('Member')->exclude('FirstName', 'Sam');
+	$members = Member::get()->exclude('FirstName', 'Sam');
 
 Remove both Sam and Sig is as easy as.
 
 	:::php
-	$members = DataList::create('Member')->exclude('FirstName', array('Sam','Sig'));
+	$members = Member::get()->exclude('FirstName', array('Sam','Sig'));
 
 As you can see it follows the same pattern as filter, so for removing only Sam Minnée from the list
 
 	:::php
-	$members = DataList::create('Member')->exclude(array(
+	$members = Member::get()->exclude(array(
 		'FirstName' => 'Sam',
 		'Surname' => 'Minnée',
 	));
@@ -179,7 +180,7 @@ As you can see it follows the same pattern as filter, so for removing only Sam M
 And removing Sig and Sam with that are either age 17 or 74.
 
 	:::php
-	$members = DataList::create('Member')->exclude(array(
+	$members = Member::get()->exclude(array(
 		'FirstName' => array('Sam', 'Sig'),
 		'Age' => array(17, 43)
 	));
@@ -198,7 +199,7 @@ field names to change this: `":StartsWith"`, `":EndsWith"`, `":PartialMatch"`, `
 This query will return everyone whose first name doesn't start with S, who have logged on since 1/1/2011.
 
 	:::php
-	$members = DataList::create('Member')->filter(array(
+	$members = Member::get()->filter(array(
 		'FirstName:StartsWith:Not' => 'S'
 		'LastVisited:GreaterThan' => '2011-01-01'
 	));
@@ -207,7 +208,7 @@ If you wish to match against any of a number of columns, you can list several fi
 will return all members whose first name or surname contain the string 'sam'.
 
 	:::php
-	$members = DataList::create('Member')->filter(array(
+	$members = Member::get()->filter(array(
 		'FirstName,Surname:Contains' => 'sam'
 	));
 
@@ -215,7 +216,7 @@ If you wish to match against any of a number of values, you can pass an array as
 members whose first name is either Sam or Ingo.
 
 	:::php
-	$members = DataList::create('Member')->filter(array(
+	$members = Member::get()->filter(array(
 		'FirstName' => array('sam', 'ingo'),
 	));
 
@@ -224,8 +225,8 @@ members whose first name is either Sam or Ingo.
 You can subtract entries from a DataList by passing in another DataList to `subtract()`
 
 	:::php
-	$allSams = DataList::create('Member')->filter('FirstName', 'Sam');
-	$allMembers = DataList::create('Member');
+	$allSams = Member::get()->filter('FirstName', 'Sam');
+	$allMembers = Member::get();
 	$noSams = $allMembers->subtract($allSams);
 
 Though for the above example it would probably be easier to use `filter()` and `exclude()`. A better
@@ -233,7 +234,7 @@ use case could be when you want to find all the members that does not exist in a
 
 	:::php
 	// ... Finding all members that does not belong to $group.
-	$otherMembers = DataList::create('Member')->subtract($group->Members());
+	$otherMembers = Member::get()->subtract($group->Members());
 
 
 ### Relation filters
@@ -249,7 +250,7 @@ times as is necessary.
 For example, this will return all members assigned ot a group that has a permission record with the code "ADMIN".  In other words, it will return all administrators.
 
 	:::php
-	$members = DataList::create('Member')->filter(array(
+	$members = Member::get()->filter(array(
 		'Groups.Permissions.Code' => 'ADMIN',
 	));
 
@@ -259,20 +260,20 @@ The other features of filters can be applied to relation filters as well.  This 
 names start with 'A' or 'B'.
 
 	:::php
-	$members = DataList::create('Member')->filter(array(
+	$members = Member::get()->filter(array(
 		'Groups.Title:StartsWith' => array('A', 'B'),
 	));
 
 You can even follow a relation back to the original model class!  This will return all members are in at least 1 group that also has a member called Sam.
 
 	:::php
-	$members = DataList::create('Member')->filter(array(
+	$members = Member::get()->filter(array(
 		'Groups.Members.FirstName' => 'Sam'
 	));
 
 ### Raw SQL options for advanced users
 
-Occassionally, the system described above won't let you do exactly what you need to do.  In these situtations, we have 
+Occasionally, the system described above won't let you do exactly what you need to do.  In these situtations, we have 
 methods that manipulate the SQL query at a lower level.  When using these, please ensure that all table & field names 
 are escaped with double quotes, otherwise some DB back-ends (e.g. PostgreSQL) won't work.
 
@@ -284,7 +285,7 @@ you need it to, you may also consider extending the ORM with new data types or f
 You can specify a WHERE clause fragment (that will be combined with other filters using AND) with the `where()` method:
 
 	:: php
-	$members = DataList::create('Member')->where("\"FirstName\" = 'Sam'")
+	$members = Member::get()->where("\"FirstName\" = 'Sam'")
 
 #### Joining 
 
@@ -298,9 +299,9 @@ For example:
 
 	:: php
 	// Without an alias
-	$members = DataList::create('Member')->leftJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
+	$members = Member::get()->leftJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
 
-	$members = DataList::create('Member')->innerJoin("Group_Members", "\"Rel\".\"MemberID\" = \"Member\".\"ID\"", "REl");
+	$members = Member::get()->innerJoin("Group_Members", "\"Rel\".\"MemberID\" = \"Member\".\"ID\"", "REl");
 	
 Passing a *$join* statement to DataObject::get will filter results further by the JOINs performed against the foreign
 table. **It will NOT return the additionally joined data.**  The returned *$records* will always be a
@@ -580,20 +581,20 @@ A map is an array where the array indexes contain data as well as the values.  Y
 from any DataList like this:
 
 	:::php
-	$members = DataList::create('Member')->map('ID', 'FirstName');
+	$members = Member::get()->map('ID', 'FirstName');
 	
 This will return a map where the keys are Member IDs, and the values are the corresponding FirstName
 values.  Like everything else in the ORM, these maps are lazy loaded, so the following code will only
 query a single record from the database:
 
 	:::php
-	$members = DataList::create('Member')->map('ID', 'FirstName');
+	$members = Member::get()->map('ID', 'FirstName');
 	echo $member[5];
 	
 This functionality is provided by the `SS_Map` class, which can be used to build a map around any `SS_List`.
 
 	:::php
-	$members = DataList::create('Member');
+	$members = Member::get();
 	$map = new SS_Map($members, 'ID', 'FirstName');
 
 ## Data Handling
