@@ -412,7 +412,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 *  
 	 * @return PJAXResponseNegotiator
 	 */
-	protected function getResponseNegotiator() {
+	public function getResponseNegotiator() {
 		if(!$this->responseNegotiator) {
 			$controller = $this;
 			$this->responseNegotiator = new PJAXResponseNegotiator(array(
