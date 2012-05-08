@@ -21,11 +21,24 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	 */
 	protected $displayFields = array();
 
+	/**
+	 * Modify the list of columns displayed in the table.
+	 * See {@link GridFieldDataColumns->getDisplayFields()} and {@link GridFieldDataColumns}.
+	 * 
+	 * @param GridField $gridField
+	 * @param array - List reference of all column names.
+	 */
 	public function augmentColumns($gridField, &$columns) {
 		$baseColumns = array_keys($this->getDisplayFields($gridField));
 		foreach($baseColumns as $col) $columns[] = $col;
 	}
 
+	/**
+	 * Names of all columns which are affected by this component.
+	 * 
+	 * @param GridField $gridField
+	 * @return array 
+	 */
 	public function getColumnsHandled($gridField) {
 		return array_keys($this->getDisplayFields($gridField));
 	}
@@ -97,50 +110,48 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	}
 
 	/**
-	 *
-	 * @param string $fieldName
-	 * @param string $value
-	 * @param boolean $xmlSafe
-	 * @return type 
+	 * HTML for the column, content of the <td> element.
+	 * 
+	 * @param  GridField
+	 * @param  DataObject - Record displayed in this row
+	 * @param  string 
+	 * @return string HTML for the column. Return NULL to skip.
 	 */
-	public function getColumnContent($gridField, $item, $column) {
-		// Find the data column for the given named column
-		$fieldName = $column;
-		$xmlSafe = true;
-		
+	public function getColumnContent($gridField, $record, $columnName) {
 		// This supports simple FieldName syntax
-		if(strpos($fieldName, '.') === false) {
-			$value = ($item->XML_val($fieldName) && $xmlSafe) ? $item->XML_val($fieldName) : $item->RAW_val($fieldName);
+		if(strpos($columnName, '.') === false) {
+			$value = $record->XML_val($columnName);
 		} else {
-			$fieldNameParts = explode('.', $fieldName);
-			$tmpItem = $item;
-			for($idx = 0; $idx < sizeof($fieldNameParts); $idx++) {
-				$relationMethod = $fieldNameParts[$idx];
-				// Last value for value
-				if($idx == sizeof($fieldNameParts) - 1) {
-					if($tmpItem) {
-						$value = ($tmpItem->XML_val($relationMethod) && $xmlSafe) ? $tmpItem->XML_val($relationMethod) : $tmpItem->RAW_val($relationMethod);
-					}
-					// else get the object for the next iteration
-				} else {
-					if($tmpItem) {
-						$tmpItem = $tmpItem->$relationMethod();
-					}
-				}
-			}
+			$value = $this->getValueFromRelation($record, $columnName);
 		}
 
-		$value = $this->castValue($gridField, $column, $value);
-		$value = $this->formatValue($gridField, $item, $column, $value);
+		$value = $this->castValue($gridField, $columnName, $value);
+		$value = $this->formatValue($gridField, $record, $columnName, $value);
 		$value = $this->escapeValue($gridField, $value);
 
 		return $value;
 	}
 	
-	public function getColumnAttributes($gridField, $item, $column) {
-		return array('class' => 'col-' . preg_replace('/[^\w]/', '-', $column));
+	/**
+	 * Attributes for the element containing the content returned by {@link getColumnContent()}.
+	 * 
+	 * @param  GridField $gridField
+	 * @param  DataObject $record displayed in this row
+	 * @param  string $columnName
+	 * @return array
+	 */
+	public function getColumnAttributes($gridField, $record, $columnName) {
+		return array('class' => 'col-' . preg_replace('/[^\w]/', '-', $columnName));
 	}
 	
+	/**
+	 * Additional metadata about the column which can be used by other components,
+	 * e.g. to set a title for a search column header.
+	 * 
+	 * @param GridField $gridField
+	 * @param string $columnName
+	 * @return array - Map of arbitrary metadata identifiers to their values.
+	 */
 	public function getColumnMetadata($gridField, $column) {
 		$columns = $this->getDisplayFields($gridField);
 		return array(
@@ -149,10 +160,33 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	}
 	
 	/**
+	 * Translate a Object.RelationName.ColumnName $columnName into the value that ColumnName returns
 	 *
-	 * @param type $fieldName
-	 * @param type $value
-	 * @return type 
+	 * @param DataObject $record
+	 * @param string $columnName
+	 * @return string|null - returns null if it could not found a value
+	 */
+	protected function getValueFromRelation($record, $columnName) {
+		$fieldNameParts = explode('.', $columnName);
+		$tmpItem = clone($record);
+		for($idx = 0; $idx < sizeof($fieldNameParts); $idx++) {
+			$methodName = $fieldNameParts[$idx];
+			// Last mmethod call from $columnName return what that method is returning
+			if($idx == sizeof($fieldNameParts) - 1) {
+				return $tmpItem->XML_val($methodName);
+			}
+			// else get the object from this $methodName
+			$tmpItem = $tmpItem->$methodName();
+		}
+		return null;
+	}
+	
+	/**
+	 *
+	 * @param GridField $gridField
+	 * @param string $fieldName
+	 * @param string $value
+	 * @return string 
 	 */
 	protected function castValue($gridField, $fieldName, $value) {
 		if(array_key_exists($fieldName, $this->fieldCasting)) {
@@ -165,9 +199,11 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	
 	/**
 	 *
-	 * @param type $fieldName
-	 * @param type $value
-	 * @return type 
+	 * @param GridField $gridField
+	 * @param DataObject $item
+	 * @param string $fieldName
+	 * @param string $value
+	 * @return string 
 	 */
 	protected function formatValue($gridField, $item, $fieldName, $value) {
 		if(!array_key_exists($fieldName, $this->fieldFormatting)) {
@@ -189,8 +225,9 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	/**
 	 * Remove values from a value using FieldEscape setter
 	 *
-	 * @param type $value
-	 * @return type
+	 * @param GridField $gridField
+	 * @param string $value
+	 * @return string
 	 */
 	protected function escapeValue($gridField, $value) {
 		if(!$escape = $gridField->FieldEscape) {
