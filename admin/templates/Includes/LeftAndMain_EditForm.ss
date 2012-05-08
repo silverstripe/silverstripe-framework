@@ -16,7 +16,7 @@
 				<div class="cms-content-header-tabs">
 					<ul>
 					<% control Tabs %>
-						<li><a href="#$id"<% if extraClass %> class="$extraClass"<% end_if %>>$Title</a></li>
+						<li<% if extraClass %> class="$extraClass"<% end_if %>><a href="#$id">$Title</a></li>
 					<% end_control %>
 					</ul>
 				</div>
