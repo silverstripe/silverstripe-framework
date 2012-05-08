@@ -27,7 +27,7 @@ class CreditCardField extends TextField {
 	 * @return string
 	 */
 	protected function getTabIndexHTML($increment = 0) {
-		$tabIndex = (int)$this->getTabIndex() + (int)$increment;
+		$tabIndex = (int)$this->getAttribute('tabindex') + (int)$increment;
 		return (is_numeric($tabIndex)) ? ' tabindex = "' . $tabIndex . '"' : '';
 	}
 	
