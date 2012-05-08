@@ -22,6 +22,9 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		'memberimport',
 		'GroupImportForm',
 		'groupimport',
+		'groups',
+		'users',
+		'roles'
 	);
 
 	/**
@@ -32,6 +35,27 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	public function init() {
 		parent::init();
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/SecurityAdmin.js');
+	}
+
+	/**
+	 * Shortcut action for setting the correct active tab.
+	 */
+	public function users($request) {
+		return $this->index($request);
+	}
+
+	/**
+	 * Shortcut action for setting the correct active tab.
+	 */
+	public function groups($request) {
+		return $this->index($request);
+	}
+
+	/**
+	 * Shortcut action for setting the correct active tab.
+	 */
+	public function roles($request) {
+		return $this->index($request);
 	}
 	
 	public function getEditForm($id = null, $fields = null) {
@@ -66,7 +90,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		$fields = new FieldList(
 			$root = new TabSet(
 				'Root',
-				new Tab('Users', _t('SecurityAdmin.Users', 'Users'),
+				$usersTab = new Tab('Users', _t('SecurityAdmin.Users', 'Users'),
 					$memberList,
 					new LiteralField('MembersCautionText',
 						sprintf('<p class="caution-remove"><strong>%s</strong></p>',
@@ -85,7 +109,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 						)
 					)
 				),
-				new Tab('Groups', singleton('Group')->plural_name(),
+				$groupsTab = new Tab('Groups', singleton('Group')->plural_name(),
 					$groupList,
 					new HeaderField(_t('SecurityAdmin.IMPORTGROUPS', 'Import groups'), 3),
 					new LiteralField(
@@ -105,7 +129,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		
 		// Add roles editing interface
 		if(Permission::check('APPLY_ROLES')) {
-			$rolesField = GridField::create(				'Roles',
+			$rolesField = GridField::create('Roles',
 				false,
 				DataList::create('PermissionRole'),
 				GridFieldConfig_RecordEditor::create()
@@ -113,6 +137,15 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 			$rolesTab = $fields->findOrMakeTab('Root.Roles', _t('SecurityAdmin.TABROLES', 'Roles'));
 			$rolesTab->push($rolesField);
+		}
+
+		$actionParam = $this->request->param('Action');
+		if($actionParam == 'groups') {
+			$groupsTab->addExtraClass('ui-state-selected');
+		} elseif($actionParam == 'users') {
+			$usersTab->addExtraClass('ui-state-selected');
+		} elseif($actionParam == 'roles') {
+			$rolesTab->addExtraClass('ui-state-selected');
 		}
 
 		$actions = new FieldList();
@@ -126,7 +159,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		$form->addExtraClass('cms-edit-form');
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
-		$form->addExtraClass('center ss-tabset ' . $this->BaseCSSClasses());
+		$form->addExtraClass('center ss-tabset cms-tabset ' . $this->BaseCSSClasses());
 
 		$this->extend('updateEditForm', $form);
 
@@ -191,6 +224,13 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		return $form;
 	}
 
+	/**
+	 * Disable GridFieldDetailForm backlinks for this view, as its 
+	 */
+	public function Backlink() {
+		return false;
+	}
+
 	public function Breadcrumbs($unlinked = false) {
 		$crumbs = parent::Breadcrumbs($unlinked);
 
@@ -199,18 +239,28 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		// Note: Titles should be same titles as tabs in RootForm().
 		$params = $this->request->allParams();
 		if(isset($params['FieldName'])) {
+			// TODO FieldName param gets overwritten by nested GridFields,
+			// so shows "Members" rather than "Groups" for the following URL:
+			// admin/security/EditForm/field/Groups/item/2/ItemEditForm/field/Members/item/1/edit
+			$firstCrumb = $crumbs->shift();
 			if($params['FieldName'] == 'Groups') {
-				$crumbs->First()->Title = singleton('Group')->plural_name();
+				$crumbs->unshift(new ArrayData(array(
+					'Title' => singleton('Group')->plural_name(),
+					'Link' => $this->Link('groups')
+				)));
 			} elseif($params['FieldName'] == 'Users') {
-				$crumbs->First()->Title = _t('SecurityAdmin.Users', 'Users');
+				$crumbs->unshift(new ArrayData(array(
+					'Title' => _t('SecurityAdmin.Users', 'Users'),
+					'Link' => $this->Link('users')
+				)));
 			} elseif($params['FieldName'] == 'Roles') {
-				$crumbs->First()->Title = _t('SecurityAdmin.TABROLES', 'Roles');
+				$crumbs->unshift(new ArrayData(array(
+					'Title' => _t('SecurityAdmin.TABROLES', 'Roles'),
+					'Link' => $this->Link('roles')
+				)));
 			}
-		} else {
-			// Avoid writing "Users" (the controller menu title) as a breadcrumb
-			// because its confusing and inaccurate.
-			$crumbs = new ArrayList();
-		}
+			$crumbs->unshift($firstCrumb);
+		} 
 
 		return $crumbs;
 	}
