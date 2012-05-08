@@ -1,12 +1,12 @@
-<div class="ss-tabset" id="$id">
+<div $AttributesHTML>
 	<ul>
 	<% control Tabs %>
-		<li class="$FirstLast $MiddleString"><a href="#$id" id="tab-$id">$Title</a></li>
+		<li class="$FirstLast $MiddleString $extraClass"><a href="#$id" id="tab-$id">$Title</a></li>
 	<% end_control %>
 	</ul>
 
 	<% control Tabs %>
-	<div class="tab" id="$id">
+	<div $AttributesHTML>
 	<% if Tabs %>
 		$FieldHolder
 	<% else %>

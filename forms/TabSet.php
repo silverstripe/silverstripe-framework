@@ -102,6 +102,16 @@ class TabSet extends CompositeField {
 	public function getTabSet() {
 		if(isset($this->tabSet)) return $this->tabSet;
 	}
+
+	public function getAttributes() {
+		return array_merge(
+			$this->attributes,
+			array(
+				'id' => $this->id(),
+				'class' => 'ss-tabset ' . $this->extraClass()
+			)
+		);
+	}
 	
 	/**
 	 * Returns the named tab

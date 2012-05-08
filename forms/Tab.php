@@ -67,5 +67,19 @@ class Tab extends CompositeField {
 			if($name == $child->getName()) return $child;
 		}
 	}
+
+	public function extraClass() {
+		return implode(' ', (array)$this->extraClasses);
+	}
+
+	public function getAttributes() {
+		return array_merge(
+			$this->attributes,
+			array(
+				'id' => $this->id(),
+				'class' => 'tab ' . $this->extraClass()
+			)
+		);
+	}
 }
 
