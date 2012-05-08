@@ -231,7 +231,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$form = $this->ItemEditForm($this->gridField, $request);
 
 		$return = $this->customise(array(
-			'Backlink' => $controller->Link(),
+			'Backlink' => $controller->hasMethod('Backlink') ? $controller->Backlink() : $controller->Link(),
 			'ItemEditForm' => $form,
 		))->renderWith($this->template);
 
@@ -308,7 +308,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			// which requires more URL knowledge than the current link to this field gives us.
 			// The current root record is held in session only, 
 			// e.g. page/edit/show/6/ vs. page/edit/EditForm/field/MyGridField/....
-			$form->Backlink = $toplevelController->Link();
+			$form->Backlink = $toplevelController->hasMethod('Backlink') ? $toplevelController->Backlink() : $toplevelController->Link();
 		}
 
 		$cb = $this->component->getItemEditFormCallback();
