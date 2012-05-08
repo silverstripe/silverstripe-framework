@@ -3,7 +3,7 @@
 	<%-- Tab nav is rendered in CMSEditForm.ss --%>
 	
 	<% control Tabs %>
-	<div class="tab" id="$id">
+	<div $AttributesHTML>
 	<% if Tabs %>
 		$FieldHolder
 	<% else %>
