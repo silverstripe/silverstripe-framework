@@ -426,7 +426,7 @@ en:
     IMPORTGROUPS: 'Import groups'
     IMPORTUSERS: 'Import users'
     MEMBERS: Members
-    MENUTITLE: Users
+    MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
     NEWGROUP: 'New Group'
     PERMISSIONS: Permissions
