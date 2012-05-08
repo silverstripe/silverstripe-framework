@@ -38,36 +38,36 @@ interface GridField_ColumnProvider extends GridFieldComponent {
 	 * Modify the list of columns displayed in the table.
 	 * See {@link GridFieldDataColumns->getDisplayFields()} and {@link GridFieldDataColumns}.
 	 * 
-	 * @param  GridField
-	 * @param  Array List reference of all column names.
+	 * @param GridField $gridField
+	 * @param array - List reference of all column names.
 	 */
 	function augmentColumns($gridField, &$columns);
 
 	/**
 	 * Names of all columns which are affected by this component.
 	 * 
-	 * @param  GridField
-	 * @return Array 
+	 * @param GridField $gridField
+	 * @return array 
 	 */
 	function getColumnsHandled($gridField);
 
 	/**
 	 * HTML for the column, content of the <td> element.
 	 * 
-	 * @param  GridField
-	 * @param  DataObject Record displayed in this row
-	 * @param  String 
-	 * @return String HTML for the column. Return NULL to skip.
+	 * @param  GridField $gridField
+	 * @param  DataObject $record - Record displayed in this row
+	 * @param  string $columnName
+	 * @return string - HTML for the column. Return NULL to skip.
 	 */
 	function getColumnContent($gridField, $record, $columnName);
 
 	/**
 	 * Attributes for the element containing the content returned by {@link getColumnContent()}.
 	 * 
-	 * @param  GridField
-	 * @param  DataObject Record displayed in this row
-	 * @param  String
-	 * @return Array
+	 * @param  GridField $gridField
+	 * @param  DataObject $record displayed in this row
+	 * @param  string $columnName
+	 * @return array
 	 */
 	function getColumnAttributes($gridField, $record, $columnName);
 
@@ -75,9 +75,9 @@ interface GridField_ColumnProvider extends GridFieldComponent {
 	 * Additional metadata about the column which can be used by other components,
 	 * e.g. to set a title for a search column header.
 	 * 
-	 * @param GridField
-	 * @param  String
-	 * @return Array Map of arbitrary metadata identifiers to their values.
+	 * @param GridField $gridField
+	 * @param string $columnName
+	 * @return array - Map of arbitrary metadata identifiers to their values.
 	 */
 	function getColumnMetadata($gridField, $columnName);
 }
