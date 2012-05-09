@@ -41,10 +41,10 @@ class DataExtensionTest extends SapphireTest {
 		$object = DataObject::get_one('DataExtensionTest_RelatedObject', "\"ContactID\" = {$contactID}");
 
 		$this->assertNotNull($object, 'Related object not null');
-		$this->assertType('DataExtensionTest_Member', $object->Contact(), 'Related contact is a member dataobject');
-		$this->assertType('DataExtensionTest_Member', $object->getComponent('Contact'), 'getComponent does the same thing as Contact()');
+		$this->assertInstanceOf('DataExtensionTest_Member', $object->Contact(), 'Related contact is a member dataobject');
+		$this->assertInstanceOf('DataExtensionTest_Member', $object->getComponent('Contact'), 'getComponent does the same thing as Contact()');
 		
-		$this->assertType('DataExtensionTest_RelatedObject', $contact->RelatedObjects()->First());
+		$this->assertInstanceOf('DataExtensionTest_RelatedObject', $contact->RelatedObjects()->First());
 		$this->assertEquals("Lorem ipsum dolor", $contact->RelatedObjects()->First()->FieldOne);
 		$this->assertEquals("Random notes", $contact->RelatedObjects()->First()->FieldTwo);
 		$contact->delete();
@@ -143,7 +143,7 @@ class DataExtensionTest extends SapphireTest {
 	function testDbObjectOnExtendedFields() {
 		$member = $this->objFromFixture('DataExtensionTest_Member', 'member1');
 		$this->assertNotNull($member->dbObject('Website'));
-		$this->assertType('Varchar', $member->dbObject('Website'));
+		$this->assertInstanceOf('Varchar', $member->dbObject('Website'));
 	}	
 	
 	function testExtensionCanBeAppliedToDataObject() {

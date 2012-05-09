@@ -719,7 +719,7 @@ class DataObjectTest extends SapphireTest {
 		$changedFields = $changedDO->getChangedFields();
 		
 		// Don't write the record, it will reset changed fields
-		$this->assertType('DataObjectTest_SubTeam', $changedDO);
+		$this->assertInstanceOf('DataObjectTest_SubTeam', $changedDO);
 		$this->assertEquals($changedDO->ClassName, 'DataObjectTest_SubTeam');
 		$this->assertContains('ClassName', array_keys($changedFields));
 		$this->assertEquals($changedFields['ClassName']['before'], 'DataObjectTest_Team');
@@ -727,7 +727,7 @@ class DataObjectTest extends SapphireTest {
 
 		$changedDO->write();
 
-		$this->assertType('DataObjectTest_SubTeam', $changedDO);
+		$this->assertInstanceOf('DataObjectTest_SubTeam', $changedDO);
 		$this->assertEquals($changedDO->ClassName, 'DataObjectTest_SubTeam');
 	}
 	

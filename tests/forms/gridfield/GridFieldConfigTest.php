@@ -8,7 +8,7 @@ class GridFieldConfigTest extends SapphireTest {
 
 	function testGetComponents() {
 		$config = GridFieldConfig::create();
-		$this->assertType('ArrayList', $config->getComponents());
+		$this->assertInstanceOf('ArrayList', $config->getComponents());
 		$this->assertEquals($config->getComponents()->Count(), 0);
 
 		$config
