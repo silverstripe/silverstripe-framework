@@ -27,7 +27,7 @@ class URLSegmentFilterTest extends SapphireTest {
 		$f = new URLSegmentFilter();
 		$f->setAllowMultibyte(true);
 		$this->assertEquals(
-			'brötchen', 
+			urlencode('brötchen'), 
 			$f->filter('Brötchen')
 		);
 	}
