@@ -64,13 +64,17 @@ class URLSegmentFilter extends Object {
 		
 		$name = mb_strtolower($name);
 		$replacements = $this->getReplacements();
-		if($this->getAllowMultibyte()) {
-			// unset automated removal of non-ASCII characters, and don't try to transliterate
-			if(isset($replacements['/[^A-Za-z0-9+.-]+/u'])) unset($replacements['/[^A-Za-z0-9+.-]+/u']);
-		}
+		
+		// Unset automated removal of non-ASCII characters, and don't try to transliterate
+		if($this->getAllowMultibyte() && isset($replacements['/[^A-Za-z0-9+.-]+/u'])) unset($replacements['/[^A-Za-z0-9+.-]+/u']);
+		
 		foreach($replacements as $regex => $replace) {
 			$name = preg_replace($regex, $replace, $name);
 		}
+
+		// Multibyte URLs require percent encoding to comply to RFC 3986.
+		// Without this setting, the "remove non-ASCII chars" regex takes care of that.
+		if($this->getAllowMultibyte()) $name = rawurlencode($name);
 		
 		return $name;
 	}

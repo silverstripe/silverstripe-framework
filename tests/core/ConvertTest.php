@@ -116,10 +116,13 @@ class ConvertTest extends SapphireTest {
 	 * @todo test toASCII()
 	 */
 	function testRaw2URL() {
+		$orig = URLSegmentFilter::$default_allow_multibyte;
+		URLSegmentFilter::$default_allow_multibyte = false;
 		$this->assertEquals('foo', Convert::raw2url('foo'));
 		$this->assertEquals('foo-and-bar', Convert::raw2url('foo & bar'));
 		$this->assertEquals('foo-and-bar', Convert::raw2url('foo &amp; bar!'));
 		$this->assertEquals('foos-bar-2', Convert::raw2url('foo\'s [bar] (2)'));
+		URLSegmentFilter::$default_allow_multibyte = $orig;
 	}
 
 }
