@@ -1,24 +1,21 @@
+/** This file contains the default theme definitions for the admin interface. Please put mostly SCSS variable definitions in here, and leave the actual styling to _style.scss and auxilliary files. */
+/** ----------------------------------------------- Colours ------------------------------------------------ */
+/** ----------------------------------------------- Textures ----------------------------------------------- */
+/** ----------------------------------------------- Typography.  ------------------------------------------------ */
+/** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
+/** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
 .cms .ss-ui-button { background-color: #e6e6e6; }
 .cms .ss-ui-button.ui-state-hover { background-color: #f3f3f3; }
-.cms .ss-ui-button.ss-ui-action-constructive { background-color: #669933; }
-.cms .ss-ui-button.ss-ui-action-constructive.ui-state-hover { background-color: #73ac39; }
-
-.cms-panel .cms-panel-content-collapsed { width: 40px; }
-.cms-panel .cms-panel-content-collapsed h2, .cms-panel .cms-panel-content-collapsed h3 { display: none; }
-
-.cms-content-toolbar .cms-tree-view-modes .checkboxAboveTree { margin-right: 1px; }
+.cms .ss-ui-button.ss-ui-action-constructive { background-color: #1f9433; }
+.cms .ss-ui-button.ss-ui-action-constructive.ui-state-hover { background-color: #23a93a; }
 
 .cms-content-toolbar { border-bottom: 1px solid #c9cdce; }
-
-.cms-content-tools .cms-panel-content .dropdown select { width: 152px; }
-
-.ss-ui-button.cms-page-add-button.ui-state-hover, .cms .ss-ui-button.cms-page-add-button:hover { background: #80bf40 url("../images/btn-icon/add.png") 0px 0px no-repeat; }
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { background-image: none; }
 
 .ss-gridfield-button-filter.ss-ui-button { background: #e6e6e6 url(../images/filter-icons.png) no-repeat -40px 6px; filter: none; }
-.ss-gridfield-button-filter.ss-ui-button.hover-alike:active { background: #2e7ead url(../images/filter-icons.png) no-repeat -15px 7px; filter: none; }
-.ss-gridfield-button-filter.ss-ui-button.hover-alike { background: #338dc1 url(../images/filter-icons.png) no-repeat -16px 6px; filter: none; }
+.ss-gridfield-button-filter.ss-ui-button.hover-alike:active { background-color: #2e7ead; background-position: -15px 7px; filter: none; }
+.ss-gridfield-button-filter.ss-ui-button.hover-alike { background-color: #338DC1; background-position: -16px 6px; filter: none; }
 
 .ss-gridfield-button-reset.ss-ui-button { background: #e6e6e6 url(../images/filter-icons.png) no-repeat 8px 5px; filter: none; }
 .ss-gridfield-button-reset.ss-ui-button.filtered:hover { background: red url(../images/filter-icons.png) no-repeat 8px -17px; filter: none; }
@@ -27,13 +24,20 @@
 .cms table.ss-gridfield-table tr td { border-right: 1px solid #9a9a9a; }
 .cms table.ss-gridfield-table tr th { border-right: 1px solid #9a9a9a; }
 .cms table.ss-gridfield-table tr th.main { border-top: 1px solid #9a9a9a; border-bottom: none; }
-.cms table.ss-gridfield-table tr th.extra { border-top: 1px solid #9a9a9a; }
+.cms table.ss-gridfield-table tr th.extra { border-top: 1px solid #9a9a9a; padding-right: 12px; }
 .cms table.ss-gridfield-table td:first-child, .cms table.ss-gridfield-table th:first-child { border-left: 1px solid #9a9a9a; }
 
-.cms .cms-content .cms-content-fields .aligned_right_label { margin-left: 0; }
-
 .cms .ss-gridfield table.ss-gridfield-table tbody td button { border: 0; background: none; }
+
+.cms .cms-content .cms-content-fields .aligned_right_label { margin-left: 0; }
 
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.file { margin: 0px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.file input.file { margin-left: -132px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.checkbox { padding: 0px; }
+
+.cms-panel .cms-panel-content-collapsed { width: 40px; }
+.cms-panel .cms-panel-content-collapsed h2, .cms-panel .cms-panel-content-collapsed h3 { display: none; }
+
+.cms-content-toolbar .cms-tree-view-modes .checkboxAboveTree { margin-right: 1px; }
+
+.cms-content-tools .cms-panel-content .dropdown select { width: 152px; }
