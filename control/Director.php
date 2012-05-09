@@ -97,8 +97,14 @@ class Director implements TemplateGlobalProvider {
 		if(!isset($_SESSION) && (isset($_COOKIE[session_name()]) || isset($_REQUEST[session_name()]))) Session::start();
 		// Initiate an empty session - doesn't initialize an actual PHP session until saved (see belwo)
 		$session = new Session(isset($_SESSION) ? $_SESSION : null);
+
+		$output = Injector::inst()->get('RequestProcessor')->preRequest($req, $session, $model);
 		
-		// Main request handling
+		if ($output === false) {
+			// @TODO Need to NOT proceed with the request in an elegant manner
+			throw new HttpRequestException("Invalid request", 500);
+		}
+
 		$result = Director::handleRequest($req, $session, $model);
 
 		// Save session data (and start/resume it if required)
@@ -108,8 +114,10 @@ class Director implements TemplateGlobalProvider {
 		if(is_string($result) && substr($result,0,9) == 'redirect:') {
 			$response = new SS_HTTPResponse();
 			$response->redirect(substr($result, 9));
-			$response->output();
-
+			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
+			if ($res !== false) {
+				$response->output();
+			}
 		// Handle a controller
 		} else if($result) {
 			if($result instanceof SS_HTTPResponse) {
@@ -120,15 +128,22 @@ class Director implements TemplateGlobalProvider {
 				$response->setBody($result);
 			}
 			
-			// ?debug_memory=1 will output the number of bytes of memory used for this request
-			if(isset($_REQUEST['debug_memory']) && $_REQUEST['debug_memory']) {
-				Debug::message(sprintf(
-					"Peak memory usage in bytes: %s", 
-					number_format(memory_get_peak_usage(),0)
-				));
+			$res = Injector::inst()->get('RequestProcessor')->postRequest($req, $response, $model);
+			if ($res !== false) {
+				// ?debug_memory=1 will output the number of bytes of memory used for this request
+				if(isset($_REQUEST['debug_memory']) && $_REQUEST['debug_memory']) {
+					Debug::message(sprintf(
+						"Peak memory usage in bytes: %s", 
+						number_format(memory_get_peak_usage(),0)
+					));
+				} else {
+					$response->output();
+				}
 			} else {
-				$response->output();
+				// @TODO Proper response here.
+				throw new SS_HTTPResponse_Exception("Invalid response");
 			}
+			
 
 			//$controllerObj->getSession()->inst_save();
 		}
@@ -255,7 +270,7 @@ class Director implements TemplateGlobalProvider {
 
 					} else {
 						Director::$urlParams = $arguments;
-						$controllerObj = new $controller();
+						$controllerObj = Injector::inst()->create($controller);
 						$controllerObj->setSession($session);
 
 						try {

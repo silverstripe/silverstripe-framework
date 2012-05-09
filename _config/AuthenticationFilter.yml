@@ -1,0 +1,10 @@
+name: AuthenticationFilter
+---
+AuthenticationFilter:
+  dependencies:
+    authenticationService: %$AuthenticationService
+Injector:
+  AuthenticationService: 
+    properties:
+      providers:
+        0: %$DbAuthProvider

@@ -1,0 +1,7 @@
+name: RequestProcessor
+---
+Injector:
+  RequestProcessor: 
+    constructor: 
+      0: 
+        0: %$AuthenticationFilter
