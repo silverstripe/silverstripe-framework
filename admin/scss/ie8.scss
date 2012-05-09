@@ -1,16 +1,6 @@
-//fix for background colors on buttons
-.cms .ss-ui-button {
-	background-color: #e6e6e6;
-	&.ui-state-hover {
-			background-color:lighten(#e6e6e6, 5%);
-		}
-	&.ss-ui-action-constructive {
-		background-color:#669933;
-		&.ui-state-hover {
-			background-color:lighten(#669933, 5%);
-		}
-	}
-}
+@import 'themes/default';
+@import 'ieShared';
+
 
 .cms-panel {
 	.cms-panel-content-collapsed {
@@ -22,104 +12,16 @@
 }
 
 //fix for overlapping of tree view mode checkboxes
-.cms-content-toolbar .cms-tree-view-modes .checkboxAboveTree {
-	margin-right:1px;
+.cms-content-toolbar{
+	.cms-tree-view-modes{
+		.checkboxAboveTree {
+			margin-right:1px;
+		}
+	}
 }
 
-//add border below the content toolbar
-.cms-content-toolbar {
-	border-bottom:1px solid rgb(201, 205, 206);
-}
 
 //fix for width of dropdowns in filter panel
 .cms-content-tools .cms-panel-content .dropdown select {
-			width:152px;
-}
-
-//fix for the button icon shifting on hover
-.ss-ui-button.cms-page-add-button.ui-state-hover, .cms .ss-ui-button.cms-page-add-button:hover { 
-	background: #80bf40 url('../images/btn-icon/add.png') 0px 0px no-repeat; 
-}
-
-//fix for background color on default tabs
-.ui-state-default, 
-.ui-widget-content .ui-state-default, 
-.ui-widget-header .ui-state-default {
-	background-image:none;
-}
-
-//fix for filter and reset icons on datagrid
-
-.ss-gridfield-button-filter.ss-ui-button{
-	background: #e6e6e6 url(../images/filter-icons.png) no-repeat -40px 6px; filter:none;
-	&.hover-alike:active {
-		background: darken(#338DC1, 5%) url(../images/filter-icons.png) no-repeat -15px 7px; filter:none;
-	}
-	&.hover-alike {
-		background: #338DC1 url(../images/filter-icons.png) no-repeat -16px 6px; filter:none;
-	}
-}
-.ss-gridfield-button-reset.ss-ui-button{
-	background: #e6e6e6 url(../images/filter-icons.png) no-repeat 8px 5px; filter:none;
-	&.filtered:hover {
-		background: #FF0000 url(../images/filter-icons.png) no-repeat 8px -17px; filter:none;
-	}
-	&.filtered:active {
-		background: darken(#FF0000, 5%) url(../images/filter-icons.png) no-repeat 9px -16px; filter:none;
-	}
-}
-
-//fix for borders on gridfield table
-
-.cms table.ss-gridfield-table {
-	tr {
-		td {
-			border-right: 1px solid lighten(#808080, 10%);
-		}
-		th {
-			border-right: 1px solid lighten(#808080, 10%);
-			&.main {
-				border-top: 1px solid lighten(#808080, 10%);
-				border-bottom: none;
-			}
-			&.extra {
-				border-top: 1px solid lighten(#808080, 10%);
-			}
-		}
-	}
-	td:first-child, th:first-child {
-		border-left: 1px solid lighten(#808080, 10%);
-	}
-}
-
-//fix for wrong alignment of label on parent groups field in users groups
-
-.cms .cms-content .cms-content-fields .aligned_right_label {
-			margin-left:0;
-}
-
-//fix for edit and delete icons - border appears on click.
-
-.cms .ss-gridfield table.ss-gridfield-table tbody {
-	td {
-		button {
-			border:0;
-			background:none;
-		}
-	}
-}
-
-//fix for model admin filter styling 
-.ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content {
-	#Form_ImportForm {
-		div.file {
-			margin:0px;
-			input.file {
-				margin-left: -132px; //hides unnecessary text input field 
-			}
-		}	
-		div.checkbox {
-			padding:0px; //stops clear database text from overflowing onto two lines.
-		}
-	}
+	width:152px;
 }
