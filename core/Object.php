@@ -104,11 +104,7 @@ abstract class Object {
 		
 		$class = self::getCustomClass($class);
 		
-		$reflector = new ReflectionClass($class);
-		if($reflector->getConstructor()) {
-			return $reflector->newInstanceArgs($args);
-		}
-		return new $class;
+		return Injector::inst()->createWithArgs($class, $args);
 	}
 	
 	private static $_cache_inst_args = array();
