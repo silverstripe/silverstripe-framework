@@ -96,7 +96,7 @@ if (isset($_GET['debug_profile'])) {
 }
 
 // Connect to database
-require_once("model/DB.php");
+require_once('model/DB.php');
 
 // Redirect to the installer if no database is selected
 if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {

@@ -37,7 +37,9 @@ if(isset($_SERVER['argv'][2])) {
 $_GET['flush'] = 1;
 
 // Connect to database
-require_once($frameworkPath . "/core/Core.php");
+require_once $frameworkPath . '/core/Core.php';
+require_once $frameworkPath . '/tests/FakeController.php';
+
 global $databaseConfig;
 DB::connect($databaseConfig);
 
