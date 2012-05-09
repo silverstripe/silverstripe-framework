@@ -187,7 +187,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$subteam1Lazy = $teams->find('ID', $subteam1->ID);
 
 		$parentTeamLazy = $subteam1Lazy->ParentTeam();
-		$this->assertType('DataObjectTest_Team', $parentTeamLazy);
+		$this->assertInstanceOf('DataObjectTest_Team', $parentTeamLazy);
 		$this->assertEquals($parentTeam->ID, $parentTeamLazy->ID);
 	}
 

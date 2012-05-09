@@ -26,7 +26,6 @@ class SS_LogTest extends SapphireTest {
 		SS_Log::add_writer($testFileWriter, SS_Log::WARN);
 
 		$writers = SS_Log::get_writers();
-		$this->assertType('array', $writers);
 		$this->assertEquals(2, count($writers));
 	}
 
@@ -38,12 +37,11 @@ class SS_LogTest extends SapphireTest {
 
 		SS_Log::remove_writer($testEmailWriter);
 		$writers = SS_Log::get_writers();
-		$this->assertType('array', $writers);
+		
 		$this->assertEquals(1, count($writers));
 
 		SS_Log::remove_writer($testFileWriter);
 		$writers = SS_Log::get_writers();
-		$this->assertType('array', $writers);
 		$this->assertEquals(0, count($writers));
 	}
 
