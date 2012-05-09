@@ -102,7 +102,7 @@ class Director implements TemplateGlobalProvider {
 		
 		if ($output === false) {
 			// @TODO Need to NOT proceed with the request in an elegant manner
-			throw new HttpRequestException("Invalid request", 500);
+			throw new SS_HTTPResponse_Exception(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
 		}
 
 		$result = Director::handleRequest($req, $session, $model);

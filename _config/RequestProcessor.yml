@@ -1,7 +1,6 @@
 name: RequestProcessor
 ---
+# Providing an empty config so it can be overridden at a later point
 Injector:
   RequestProcessor: 
-    constructor: 
       0: 
-        0: %$AuthenticationFilter
