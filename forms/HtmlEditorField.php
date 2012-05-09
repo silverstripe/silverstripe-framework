@@ -313,8 +313,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 							'external' => _t('HtmlEditorField.LINKEXTERNAL', 'Another website'),
 							'anchor' => _t('HtmlEditorField.LINKANCHOR', 'Anchor on this page'),
 							'email' => _t('HtmlEditorField.LINKEMAIL', 'Email address'),
-							'file' => _t('HtmlEditorField.LINKFILE', 'Download a file'),			
-						)
+							'file' => _t('HtmlEditorField.LINKFILE', 'Download a file'),
+						),
+						'internal'
 					),
 					new LiteralField('Step2',
 						'<div class="step2">' . sprintf($numericLabelTmpl, '2', _t('HtmlEditorField.DETAILS', 'Details')) . '</div>'
