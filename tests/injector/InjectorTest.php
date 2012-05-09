@@ -412,6 +412,15 @@ class InjectorTest extends SapphireTest {
 		$this->assertEquals('OriginalRequirementsBackend', get_class($requirements->backend));
 	}
 
+	public function testInheritedConfig() {
+		$injector = new Injector(array('locator' => 'SilverStripeServiceConfigurationLocator'));
+		Config::inst()->update('Injector', 'MyParentClass', array('properties' => array('one' => 'the one')));
+		$obj = $injector->get('MyParentClass');
+		$this->assertEquals($obj->one, 'the one');
+		
+		$obj = $injector->get('MyChildClass');
+		$this->assertEquals($obj->one, 'the one');
+	}
 }
 
 class TestObject {
@@ -461,6 +470,14 @@ class NeedsBothCirculars {
 	public $circularTwo;
 	public $var;
 
+}
+
+class MyParentClass {
+	public $one;
+}
+
+class MyChildClass extends MyParentClass {
+	
 }
 
 class DummyRequirements {
