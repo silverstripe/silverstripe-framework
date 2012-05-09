@@ -349,23 +349,22 @@ class UploadField extends FileField {
 			$allowedExtensions = $this->getValidator()->getAllowedExtensions();
 			$config['acceptFileTypes'] = '(\.|\/)(' . implode('|', $allowedExtensions) . ')$';
 			$config['errorMessages']['acceptFileTypes'] = _t(
-				'File.INVALIDEXTENSION', 
-				'Extension is not allowed (valid: {extensions})',
-				array('extensions' => wordwrap(implode(', ', $allowedExtensions)))
+				'File.INVALIDEXTENSIONSHORT', 
+				'Extension is not allowed'
 			);
 		}
 		if ($this->getValidator()->getAllowedMaxFileSize()) {
 			$config['maxFileSize'] = $this->getValidator()->getAllowedMaxFileSize();
 			$config['errorMessages']['maxFileSize'] = _t(
-				'File.TOOLARGE', 
-				'Filesize is too large, maximum {size} allowed.',
+				'File.TOOLARGESHORT', 
+				'Filesize exceeds {size}',
 				array('size' => File::format_size($config['maxFileSize']))
 			);
 		}
 		if ($config['maxNumberOfFiles'] > 1) {
 			$config['errorMessages']['maxNumberOfFiles'] = _t(
-				'UploadField.MAXNUMBEROFFILES', 
-				'Max number of {count} file(s) exceeded.',
+				'UploadField.MAXNUMBEROFFILESSHORT', 
+				'Can only upload {count} files',
 				array('count' => $config['maxNumberOfFiles'])
 			);
 		}
