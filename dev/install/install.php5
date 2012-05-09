@@ -431,8 +431,11 @@ class InstallRequirements {
 		// Check for iconv support
 		$this->requireFunction('iconv', array('PHP Configuration', 'iconv support', 'iconv support not included in PHP.'));
 
+		// Check for mbstring support
+		$this->requireFunction('iconv', array('PHP Configuration', 'iconv support', 'iconv support not included in PHP.'));
+
 		// Check for hash support
-		$this->requireFunction('hash', array('PHP Configuration', 'hash support', 'hash support not included in PHP.'));
+		$this->requireFunction('mb_internal_encoding', array('PHP Configuration', 'mbstring support', 'mbstring support not included in PHP.'));
 
 		// Check for Reflection support
 		$this->requireClass('ReflectionClass', array('PHP Configuration', 'Reflection support', 'Reflection support not included in PHP.'));
