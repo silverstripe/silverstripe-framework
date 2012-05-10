@@ -590,17 +590,21 @@ class Chosen extends AbstractChosen
     to drop down
   ###
   rise_up: (container, dropdown) -> 
-    trigger = container.find('a.chzn-single');
-    endOfWindow = ($(window).height() + $(document).scrollTop()) - container.find('a').innerHeight();
-    elPos = trigger.offset().top
-    elHeight = dropdown.innerHeight()
+    trigger = container.find('a.chzn-single');    
+   
+    if trigger.length > 0 
+      endOfWindow = ($(window).height() + $(document).scrollTop()) - container.find('a').innerHeight();
+      elPos = trigger.offset().top
+      elHeight = dropdown.innerHeight()
 
-    if elPos + elHeight > endOfWindow and elPos - elHeight > 0
-      container.addClass('chzn-with-rise')     
-      true
+      if elPos + elHeight > endOfWindow and elPos - elHeight > 0
+        container.addClass('chzn-with-rise')     
+        true
+      else
+        container.removeClass('chzn-with-rise')
+        false  
     else
-      container.removeClass('chzn-with-rise')
-      false      
+      false        
 
     
 get_side_border_padding = (elmt) ->
