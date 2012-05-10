@@ -18,7 +18,7 @@
 						<% end_if %>
 					</div>
 				</div>
-				<div class="ss-uploadfield-item-editform loading">
+				<div class="ss-uploadfield-item-editform loading includeParent">
 					<iframe frameborder="0" src="$UploadFieldEditLink"></iframe>
 				</div>
 			</li>
