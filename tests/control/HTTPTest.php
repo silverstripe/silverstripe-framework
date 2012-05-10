@@ -106,4 +106,18 @@ class HTTPTest extends SapphireTest {
 		}
 	}
 	
+	/**
+	 * Test that the the get_mime_type() works correctly
+	 * 
+	 */
+	public function testGetMimeType() {
+		$this->assertEquals('text/plain', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.csv'));
+		$this->assertEquals('image/gif', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.gif'));
+		$this->assertEquals('text/html', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.html'));
+		$this->assertEquals('image/jpeg', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.jpg'));
+		$this->assertEquals('image/png', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.png'));
+		$this->assertEquals('image/vnd.adobe.photoshop', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.psd'));
+		$this->assertEquals('audio/x-wav', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.wav'));
+		$this->assertEquals('application/vnd.ms-office', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.xls'));
+	}
 }

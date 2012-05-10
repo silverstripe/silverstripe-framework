@@ -181,47 +181,25 @@ class HTTP {
 		return self::findByTagAndAttribute($content, array("img" => "src"));
 	}
 	
-	/*
+	/**
 	 * Get mime type based on extension
+	 * 
+	 * @uses finfo
+	 * @deprecated Use HTTP::get_mime_type() instead
 	 */
-	static function getMimeType($filename) {
-		global $global_mimetypes;
-		if(!$global_mimetypes) self::loadMimeTypes();
-		$ext = strtolower(substr($filename,strrpos($filename,'.')+1));
-		if(isset($global_mimetypes[$ext])) return $global_mimetypes[$ext];
+	public static function getMimeType($filename) {
+		Deprecation::notice('3.0', 'Use HTTP::get_mime_type() instead.');
+		self::get_mime_type($filename);
 	}
-
-	/*
-	 * Load the mime-type data from the system file
+	
+	/**
+	 * Get mime type based on extension
+	 * 
+	 * @uses finfo
 	 */
-	static function loadMimeTypes() {
-		if(@file_exists('/etc/mime.types')) {
-			$mimeTypes = file('/etc/mime.types');
-			foreach($mimeTypes as $typeSpec) {
-				if(($typeSpec = trim($typeSpec)) && substr($typeSpec,0,1) != "#") {
-					$parts = preg_split("/[ \t\r\n]+/", $typeSpec);
-					if(sizeof($parts) > 1) {
-						$mimeType = array_shift($parts);
-						foreach($parts as $ext) {
-							$ext = strtolower($ext);
-							$mimeData[$ext] = $mimeType;
-						}
-					}
-				}
-			}
-
-		// Fail-over for if people don't have /etc/mime.types on their server.  it's unclear how important this actually is
-		} else {
-			$mimeData = array(
-				"doc" => "application/msword",
-				"xls" => "application/vnd.ms-excel",
-				"rtf" => "application/rtf",
-			);
-		}
-
-		global $global_mimetypes;
-		$global_mimetypes = $mimeData;
-		return $mimeData;
+	public static function get_mime_type($filename) {
+		$finfo = new finfo(FILEINFO_MIME_TYPE);
+		return $finfo->file(BASE_PATH.DIRECTORY_SEPARATOR.$filename);
 	}
 
 	/**
