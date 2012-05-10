@@ -47,17 +47,18 @@ jQuery.noConflict();
 					window.History.pushState(opts, '', url);
 				}
 			}
-		});
-		$(document).ajaxError(function(e, xhr, settings, error) {
-			if(xhr.status == 0) return; // ignore aborted requests
 
-			if(xhr.status < 200 || xhr.status > 399) {
-				var msg = (xhr.getResponseHeader('X-Status')) ? xhr.getResponseHeader('X-Status') : xhr.statusText;
-			} else {
-				msg = error;
+			// Handle custom status message headers
+			var msg = (xhr.getResponseHeader('X-Status')) ? xhr.getResponseHeader('X-Status') : xhr.statusText,
+				msgType = (xhr.status < 200 || xhr.status > 399) ? 'bad' : 'good',
+				ignoredMessages = ['OK'];
+
+			// Show message (but ignore aborted requests)
+			if(xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages)) {
+				statusMessage(msg, msgType);
 			}
-			statusMessage(msg, 'bad');
 		});
+		
 		
 		/**
 		 * Main LeftAndMain interface with some control panel and an edit form.
