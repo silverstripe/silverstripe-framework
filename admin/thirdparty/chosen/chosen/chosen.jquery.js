@@ -1031,14 +1031,18 @@ Copyright (c) 2011 by Harvest
     Chosen.prototype.rise_up = function(container, dropdown) {
       var elHeight, elPos, endOfWindow, trigger;
       trigger = container.find('a.chzn-single');
-      endOfWindow = ($(window).height() + $(document).scrollTop()) - container.find('a').innerHeight();
-      elPos = trigger.offset().top;
-      elHeight = dropdown.innerHeight();
-      if (elPos + elHeight > endOfWindow && elPos - elHeight > 0) {
-        container.addClass('chzn-with-rise');
-        return true;
+      if (trigger.length > 0) {
+        endOfWindow = ($(window).height() + $(document).scrollTop()) - container.find('a').innerHeight();
+        elPos = trigger.offset().top;
+        elHeight = dropdown.innerHeight();
+        if (elPos + elHeight > endOfWindow && elPos - elHeight > 0) {
+          container.addClass('chzn-with-rise');
+          return true;
+        } else {
+          container.removeClass('chzn-with-rise');
+          return false;
+        }
       } else {
-        container.removeClass('chzn-with-rise');
         return false;
       }
     };
