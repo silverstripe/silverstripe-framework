@@ -359,7 +359,10 @@ form.small .field, .field.small {
 		}
 
 		&.ss-ui-button-small {
-			padding: ($grid-y/2) ($grid-x/2);
+			.ui-button-text {
+				padding: ($grid-y/4) ($grid-x/4);
+				font-size: $font-base-size - 2;
+			}
 		}
 			
 		&.ui-state-highlight {
