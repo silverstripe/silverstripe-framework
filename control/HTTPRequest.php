@@ -284,8 +284,9 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * Construct an SS_HTTPResponse that will deliver a file to the client
 	 */
 	static function send_file($fileData, $fileName, $mimeType = null) {
-		if(!$mimeType) $mimeType = HTTP::getMimeType($fileName);
-
+		if(!$mimeType) {
+			$mimeType = HTTP::get_mime_type($fileName);
+		}
 		$response = new SS_HTTPResponse($fileData);
 		$response->addHeader("Content-Type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
 		$response->addHeader("Content-disposition", "attachment; filename=" . addslashes($fileName));

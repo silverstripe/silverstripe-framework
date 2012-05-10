@@ -377,9 +377,8 @@ function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $
 	if(!$destFileName) $base = basename($file['filename']);
 	else $base = $destFileName;
 
-	$mimeType = $file['mimetype'] ? $file['mimetype'] : getMimeType($file['filename']);
+	$mimeType = $file['mimetype'] ? $file['mimetype'] : HTTP::get_mime_type($file['filename']);
 	if(!$mimeType) $mimeType = "application/unknown";
-		
 	if (empty($disposition)) $disposition = isset($file['contentLocation']) ? 'inline' : 'attachment';
 	
 	// Encode for emailing
@@ -430,39 +429,4 @@ function validEmailAddr($emailAddress) {
 	}
 	
 	return $emailAddress;
-}
-
-/*
- * Get mime type based on extension
- */
-function getMimeType($filename) {
-	global $global_mimetypes;
-	if(!$global_mimetypes) loadMimeTypes();
-	$ext = strtolower(substr($filename,strrpos($filename,'.')+1));
-	return $global_mimetypes[$ext];
-}
-
-/*
- * Load the mime-type data from the system file
- */
-function loadMimeTypes() {
-	$mimetypePathCustom = '/etc/mime.types';
-	$mimetypePathGeneric = FRAMEWORK_PATH . '/email/mime.types';
-	$mimeTypes = file_exists($mimetypePathGeneric) ?  file($mimetypePathGeneric) : file($mimetypePathCustom);
-	foreach($mimeTypes as $typeSpec) {
-		if(($typeSpec = trim($typeSpec)) && substr($typeSpec,0,1) != "#") {
-			$parts = preg_split("/[ \t\r\n]+/", $typeSpec);
-			if(sizeof($parts) > 1) {
-				$mimeType = array_shift($parts);
-				foreach($parts as $ext) {
-					$ext = strtolower($ext);
-					$mimeData[$ext] = $mimeType;
-				}
-			}
-		}
-	}
-
-	global $global_mimetypes;
-	$global_mimetypes = $mimeData;
-	return $mimeData;
 }
