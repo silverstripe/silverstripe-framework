@@ -5,6 +5,12 @@
 // Make sure display_errors is on
 ini_set('display_errors', 1);
 
+// Check we're using at least PHPUnit 3.6
+if(version_compare(PHPUnit_Runner_Version::id(), '3.6', '<')) {
+	echo 'PHPUnit 3.6 required to run tests using bootstrap.php';
+	die();
+}
+
 // Fake the script name and base
 global $_SERVER;
 if (!$_SERVER) $_SERVER = array();
@@ -37,7 +43,9 @@ if(isset($_SERVER['argv'][2])) {
 $_GET['flush'] = 1;
 
 // Connect to database
-require_once($frameworkPath . "/core/Core.php");
+require_once $frameworkPath . '/core/Core.php';
+require_once $frameworkPath . '/tests/FakeController.php';
+
 global $databaseConfig;
 DB::connect($databaseConfig);
 

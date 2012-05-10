@@ -441,8 +441,8 @@ class i18nTest extends SapphireTest {
 		i18n::register_translator($translator, 'custom', 10);
 		$translators = i18n::get_translators();
 		$this->assertArrayHasKey('custom', $translators[10]);
-		$this->assertType('Zend_Translate', $translators[10]['custom']);
-		$this->assertType('i18nTest_CustomTranslatorAdapter', $translators[10]['custom']->getAdapter());
+		$this->assertInstanceOf('Zend_Translate', $translators[10]['custom']);
+		$this->assertInstanceOf('i18nTest_CustomTranslatorAdapter', $translators[10]['custom']->getAdapter());
 		
 		i18n::unregister_translator('custom');
 		$translators = i18n::get_translators();

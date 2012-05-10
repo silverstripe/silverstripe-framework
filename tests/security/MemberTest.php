@@ -150,7 +150,7 @@ class MemberTest extends FunctionalTest {
 		$this->assertTrue($passwords->current()->checkPassword('test1'), "Password test1 not found in MemberRecord");
 	
 		$passwords->next();
-		$this->assertType('DataObject', $passwords->current());
+		$this->assertInstanceOf('DataObject', $passwords->current());
 		$this->assertTrue($passwords->current()->checkPassword('1nitialPassword'), "Password 1nitialPassword not found in MemberRecord");
 	}
 	
