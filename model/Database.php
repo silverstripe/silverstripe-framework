@@ -230,9 +230,9 @@ abstract class SS_Database {
 	 * Returns true if schema modifications were requested after a beginSchemaUpdate() call.
 	 */
 	function doesSchemaNeedUpdating() {
-		return (bool)$this->schemaUpdateTransaction;
+		return ($this->schemaUpdateTransaction === null) ? false : true;
 	}
-	
+
 	// Transactional schema altering functions - they don't do anyhting except for update schemaUpdateTransaction
 	
 	/**
