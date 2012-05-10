@@ -805,7 +805,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				}
 			}
 
-			$this->response->addHeader('X-Status', _t('LeftAndMain.SAVED','saved'));
+			$this->response->addHeader('X-Status', _t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.'));
 		}
 		
 		// Update sorting
@@ -826,7 +826,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				}
 			}
 			
-			$this->response->addHeader('X-Status', _t('LeftAndMain.SAVED','saved'));
+			$this->response->addHeader('X-Status', _t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.'));
 		}
 
 		return Convert::raw2json($statusUpdates);
