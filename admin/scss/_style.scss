@@ -418,6 +418,7 @@ body.cms {
 	}
 	
 	&.good {
+		background-color: $color-good;//for browsers that don't understand rgba
 		background-color: rgba($color-good,0.7);
 		border-color: $color-good;
 		color:#fff;

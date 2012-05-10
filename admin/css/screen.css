@@ -325,7 +325,7 @@ body.cms { overflow: hidden; }
 .message.notice a { color: #999; }
 .message.warning { background-color: #ffbe66; border-color: #ff9300; }
 .message.error, .message.bad, .message.required { background-color: #ffbe66; border-color: #ff9300; }
-.message.good { background-color: rgba(101, 168, 57, 0.7); border-color: #65a839; color: #fff; text-shadow: 1px -1px 0 #1f9433; -moz-border-radius: 3px 3px 3px 3px; -webkit-border-radius: 3px 3px 3px 3px; -o-border-radius: 3px 3px 3px 3px; -ms-border-radius: 3px 3px 3px 3px; -khtml-border-radius: 3px 3px 3px 3px; border-radius: 3px 3px 3px 3px; }
+.message.good { background-color: #65a839; background-color: rgba(101, 168, 57, 0.7); border-color: #65a839; color: #fff; text-shadow: 1px -1px 0 #1f9433; -moz-border-radius: 3px 3px 3px 3px; -webkit-border-radius: 3px 3px 3px 3px; -o-border-radius: 3px 3px 3px 3px; -ms-border-radius: 3px 3px 3px 3px; -khtml-border-radius: 3px 3px 3px 3px; border-radius: 3px 3px 3px 3px; }
 .message p { margin: 0; }
 
 /** -------------------------------------------- "Add page" dialog -------------------------------------------- */
