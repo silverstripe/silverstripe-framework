@@ -17,7 +17,7 @@
 .ss-uploadfield .ss-uploadfield-item-status.ui-state-error-text { color: red; font-weight: bold; }
 .ss-uploadfield .ss-ui-button { display: block; float: left; margin: 0 10px 0 0; }
 .ss-uploadfield .ss-ui-button.ss-uploadfield-fromcomputer { position: relative; overflow: hidden; }
-.ss-uploadfield .ss-uploadfield-files { margin: 0; padding: 0; max-height: 272px; overflow: auto; position: relative; }
+.ss-uploadfield .ss-uploadfield-files { margin: 0; padding: 0; overflow: auto; position: relative; }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item, .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item.ui-state-error { border: 0; border-bottom: 1px solid #b3b3b3; background: none; color: #444444; }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item:last-child, .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item.ui-state-error:last-child { border-bottom: 0; }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-actions { height: 28px; margin: 6px 0 0; position: relative; }
