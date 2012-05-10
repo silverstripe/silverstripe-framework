@@ -55,11 +55,6 @@ $_SERVER['REQUEST_URI'] = BASE_URL . '/dev';
 // Fake a session 
 $_SESSION = null;
 
-global $_ALL_CLASSES;
-if(isset($_ALL_CLASSES)) {
-	$_ALL_CLASSES['parents']['FakeController'] = array_merge($_ALL_CLASSES['parents']['Controller'], array('Controller' => 'Controller'));
-}
-
 // Prepare manifest autoloader
 $controller = new FakeController();
 
