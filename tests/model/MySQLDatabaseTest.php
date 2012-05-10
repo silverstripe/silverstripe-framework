@@ -35,9 +35,10 @@ class MySQLDatabaseTest extends SapphireTest {
 			$db->beginSchemaUpdate();
 			$obj = new MySQLDatabaseTest_DO();
 			$obj->requireTable();
-			$this->assertTrue($db->doesSchemaNeedUpdating());
+			$needsUpdating = $db->doesSchemaNeedUpdating();
 			$db->cancelSchemaUpdate();
-			$this->assertFalse($db->doesSchemaNeedUpdating());
+
+			$this->assertFalse($needsUpdating);
 		}
 	}
 }
