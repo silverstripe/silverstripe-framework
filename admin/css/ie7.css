@@ -39,6 +39,8 @@ html { overflow: hidden; }
 
 .field input.text, .field textarea, .field .TreeDropdownField { padding-left: 0; padding-right: 0; }
 
+.ss-uploadfield-item-name { display: block; }
+
 .ss-uploadfield-edit-iframe .field.treedropdown { height: 150px !important; }
 .ss-uploadfield-edit-iframe .field .TreeDropdownField ul { min-height: 100px; height: auto; max-height: 150px; }
 
