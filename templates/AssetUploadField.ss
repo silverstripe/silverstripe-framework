@@ -36,13 +36,11 @@
 	</h3>
 	<div class="fileOverview">
 		<div class="uploadStatus">
-			<div class="state started"><% _t('AssetUploadField.UPLOADINPROGRESS', 'Please wait… upload in progress') %></div>
-			<div class="state completed" style="display:none;"><% _t('AssetUploadField.FILEUPLOADCOMPLETED', 'File Upload Completed!') %></div>
-			
+			<div class="state"><% _t('AssetUploadField.UPLOADINPROGRESS', 'Please wait… upload in progress') %></div>
 			<div class="details"><% _t('AssetUploadField.TOTAL', 'Total') %>: <span class="total"></span> <% _t('AssetUploadField.FILES', 'Files') %> <span class="fileSize"></span> </div>
 		</div>		
 		<div class="ss-uploadfield-item-actions">
-		<button class="ss-uploadfield-item-edit-all ss-ui-button ui-corner-all" title="<% _t('AssetUploadField.EDITINFO', 'Edit files') %>">
+		<button class="ss-uploadfield-item-edit-all ss-ui-button ui-corner-all" title="<% _t('AssetUploadField.EDITINFO', 'Edit files') %>" style="display:none;">
 			<% _t('AssetUploadField.EDITALL', 'Edit all') %>
 			<span class="toggle-details">
 				<span class="toggle-details-icon"></span>
