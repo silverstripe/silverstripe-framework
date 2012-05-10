@@ -322,6 +322,7 @@ form.small .field, .field.small {
 		
 		/* constructive */
 		&.ss-ui-action-constructive {
+			text-shadow:none;
 			font-weight: bold;
 			color: $color-text-light;
 			border-color: $color-button-constructive-border;
@@ -329,19 +330,19 @@ form.small .field, .field.small {
 			background-color: $color-button-constructive;
 			@include background(
 				linear-gradient(color-stops(
-					lighten($color-button-constructive, 10%),
-					darken($color-button-constructive, 5%)
+					scale-color(lighten($color-button-constructive, 10%), $red:50%),
+					$color-button-constructive
 				))
 			);
-			@include text-shadow(darken($color-button-constructive, 10%) 0 1px 1px);
-
+			@include text-shadow(darken($color-button-constructive, 3%) 0 -1px -1px);
+	
 			&.ui-state-hover, &:hover {
 				border-color: darken($color-button-constructive-border, 10%);
-				background-color: lighten($color-button-constructive, 10%);
+				background-color: $color-button-constructive;
 				@include background(
 					linear-gradient(color-stops(
-						lighten($color-button-constructive, 15%),
-						$color-button-constructive
+						scale-color(saturate(lighten($color-button-constructive, 10%), 10%), $red:60%),
+						lighten($color-button-constructive, 5%)
 					))
 				);
 			}
@@ -505,3 +506,9 @@ input.radio {
 .action-hidden {
 	display:  none;
 }
+
+
+
+
+
+
