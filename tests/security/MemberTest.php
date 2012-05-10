@@ -564,6 +564,29 @@ class MemberTest extends FunctionalTest {
 			'Adding new admin group relation is allowed for admin members'
 		);
 	}
+	
+	/**
+	 * Test that all members are returned
+	 */
+	function testMap_in_groupsReturnsAll() {
+		$members = Member::map_in_groups();
+		$this->assertEquals(13, count($members), 'There are 12 members in the mock plus a fake admin');
+	}
+	
+	/**
+	 * Test that only admin members are returned 
+	 */
+	function testMap_in_groupsReturnsAdmins() {
+		$adminID = $this->objFromFixture('Group', 'admingroup')->ID;
+		$members = Member::map_in_groups($adminID);
+		
+		$admin = $this->objFromFixture('Member', 'admin');
+		$otherAdmin = $this->objFromFixture('Member', 'other-admin');
+		
+		$this->assertTrue(in_array($admin->getTitle(), $members), $admin->getTitle().' should be in the returned list.');
+		$this->assertTrue(in_array($otherAdmin->getTitle(), $members), $otherAdmin->getTitle().' should be in the returned list.');
+		$this->assertEquals(2, count($members), 'There should be 2 members from the admin group');
+	}
 
 	/**
 	 * Add the given array of member extensions as class names.

@@ -965,38 +965,55 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		return $map;
 	}
 
-
 	/**
 	 * Get a member SQLMap of members in specific groups
-	 *
-	 * @param mixed $groups Optional groups to include in the map. If NULL is
-	 *                      passed, all groups are returned, i.e.
-	 *                      {@link map()} will be called.
+	 * 
+	 * If no $groups is passed, all members will be returned
+	 * 
+	 * @param mixed $groups - takes a SS_List, an array or a single Group.ID
 	 * @return SQLMap Returns an SQLMap that returns all Member data.
 	 * @see map()
-	 *
-	 * @todo Improve documentation of this function! (Markus)
 	 */
 	public static function mapInGroups($groups = null) {
-		if(!$groups)
-			return Member::map();
-
+		Deprecation::notice('3.0', 'Use Member::map_in_groups() instead');
+		return self::map_in_groups();
+	}
+	
+	/**
+	 * Get a member SQLMap of members in specific groups
+	 * 
+	 * If no $groups is passed, all members will be returned
+	 * 
+	 * @param mixed $groups - takes a SS_List, an array or a single Group.ID
+	 * @return SQLMap Returns an SQLMap that returns all Member data.
+	 * @see map()
+	 */
+	public static function map_in_groups($groups = null) {
 		$groupIDList = array();
-
-		if(is_a($groups, 'SS_List')) {
-			foreach( $groups as $group )
+		
+		if($groups instanceof SS_List) {
+			foreach( $groups as $group ) {
 				$groupIDList[] = $group->ID;
+			}
 		} elseif(is_array($groups)) {
 			$groupIDList = $groups;
-		} else {
+		} elseif($groups) {
 			$groupIDList[] = $groups;
 		}
-
-		if(empty($groupIDList))
-			return Member::map();
-
-		return DataList::create("Member")->where("\"GroupID\" IN (" . implode( ',', $groupIDList ) . ")")
-			->sort("\"Surname\", \"FirstName\"")->map();
+		
+		// No groups, return all Members
+		if(!$groupIDList) {
+			return Member::get()->sort(array('Surname'=>'ASC', 'FirstName'=>'ASC'))->map();
+		}
+		
+		$membersList = new ArrayList();
+		// This is a bit ineffective, but follow the ORM style
+		foreach(Group::get()->byIDs($groupIDList) as $group) {
+			$membersList->merge($group->Members());
+		}
+		
+		$membersList->removeDuplicates('ID');
+		return $membersList->map();
 	}
 
 
