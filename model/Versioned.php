@@ -154,15 +154,15 @@ class Versioned extends DataExtension {
 				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
 
 				if($table != $baseTable) {
-					$query->from(array($table => " AND \"{$table}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\""));
+					$query->addFrom(array($table => " AND \"{$table}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\""));
 				}
 			}
 
 			// Link to the version archived on that date
 			$archiveTable = $this->requireArchiveTempTable($baseTable, $date);
-			$query->from[$archiveTable] = "INNER JOIN \"$archiveTable\"
+			$query->addFrom(array($archiveTable => "INNER JOIN \"$archiveTable\"
 				ON \"$archiveTable\".\"ID\" = \"{$baseTable}_versions\".\"RecordID\" 
-				AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"";
+				AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\""));
 			break;
 		
 		// Reading a specific stage (Stage or Live)

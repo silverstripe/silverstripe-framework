@@ -78,8 +78,8 @@ class Aggregate extends ViewableData {
 	protected function query($attr) {
 		$singleton = singleton($this->type);
 		$query = $singleton->buildSQL($this->filter);
-		$query->select($attr);
-		$query->orderby = null;
+		$query->setSelect($attr);
+		$query->setOrderBy(array()); 
 		$singleton->extend('augmentSQL', $query);
 		return $query;
 	}
@@ -161,8 +161,8 @@ class Aggregate_Relationship extends Aggregate {
 			$query = $this->object->getManyManyComponentsQuery($this->relationship, $this->filter);
 		}
 		
-		$query->select($attr);
-		$query->groupby = array();
+		$query->setSelect($attr);
+		$query->setGroupBy(array());
 		
 		$singleton = singleton($this->type);
 		$singleton->extend('augmentSQL', $query);

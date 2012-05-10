@@ -37,8 +37,8 @@
 * 	
 * 	function addToQuery(&$query) {
 * 		parent::addToQuery($query);
-* 		$query->select("{$this->name}Number");
-* 		$query->select("{$this->name}Name");
+* 		$query->setSelect("{$this->name}Number");
+* 		$query->setSelect("{$this->name}Name");
 * 	}
 * 	
 * 	function setValue($value, $record = null, $markChanged=true) {
