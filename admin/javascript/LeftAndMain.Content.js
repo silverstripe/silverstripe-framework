@@ -148,8 +148,11 @@
 					this.trigger('reloadeditform', {form: form, origData: origData, xmlhttp: xmlhttp});
 				}
 
-				// set status message based on response
+				// Display status message, if available.
 				var _statusMessage = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.statusText;
+				if (typeof _statusMessage==='string') {
+					statusMessage(_statusMessage);
+				}
 			},
 			
 			/**
