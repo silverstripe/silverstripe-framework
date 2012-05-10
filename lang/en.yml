@@ -188,11 +188,13 @@ en:
     ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
-  GridFieldDetailsForm:
+  GridFieldDetailForm:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Save: Save
+    Saved: 'Saved %s %s'
+    Deleted: 'Deleted %s %s'
   GridFieldItemEditView.ss:
     'Go back': 'Go back'
   Group:

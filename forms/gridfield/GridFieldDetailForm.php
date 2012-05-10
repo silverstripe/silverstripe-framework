@@ -266,13 +266,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		$actions = new FieldList();
 		if($this->record->ID !== 0) {
-			$actions->push(FormAction::create('doSave', _t('GridFieldDetailsForm.Save', 'Save'))
+			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
 				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'));
-			$actions->push(FormAction::create('doDelete', _t('GridFieldDetailsForm.Delete', 'Delete'))
+			$actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
 				->addExtraClass('ss-ui-action-destructive'));
 		}else{ // adding new record
 			//Change the Save label to 'Create'
-			$actions->push(FormAction::create('doSave', _t('GridFieldDetailsForm.Create', 'Create'))
+			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Create', 'Create'))
 				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'add'));
 				
 			// Add a Cancel link which is a button-like link and link back to one level up.
@@ -347,7 +347,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		// TODO Save this item into the given relationship
 
 		$message = sprintf(
-			_t('ComplexTableField.SUCCESSEDIT2', 'Saved %s %s'),
+			_t('GridFieldDetailForm.Saved', 'Saved %s %s'),
 			$this->record->singular_name(),
 			'<a href="' . $this->Link('edit') . '">"' . htmlspecialchars($this->record->Title, ENT_QUOTES) . '"</a>'
 		);
@@ -361,7 +361,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		try {
 			$toDelete = $this->record;
 			if (!$toDelete->canDelete()) {
-				throw new ValidationException(_t('GridFieldDetailsForm.DeletePermissionsFailure',"No delete permissions"),0);
+				throw new ValidationException(_t('GridFieldDetailForm.DeletePermissionsFailure',"No delete permissions"),0);
 			}
 
 			$toDelete->delete();
@@ -371,7 +371,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		}
 
 		$message = sprintf(
-			_t('ComplexTableField.SUCCESSEDIT2', 'Deleted %s %s'),
+			_t('GridFieldDetailForm.Deleted', 'Deleted %s %s'),
 			$this->record->singular_name(),
 			'<a href="' . $this->Link('edit') . '">"' . htmlspecialchars($this->record->Title, ENT_QUOTES) . '"</a>'
 		);
