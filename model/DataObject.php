@@ -1982,6 +1982,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array A map of field names to field values.
 	 */
 	public function getAllFields() {
+		Deprecation::notice('3.0', 'Use toMap() instead.');
 		return $this->toMap();
 	}
 

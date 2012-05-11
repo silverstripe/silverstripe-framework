@@ -374,7 +374,7 @@ class ViewableData extends Object implements IteratorAggregate {
 				}
 				
 				$valueObject = Object::create_from_string($castConstructor, $fieldName);
-				$valueObject->setValue($value, ($this->hasMethod('getAllFields') ? $this->getAllFields() : null));
+				$valueObject->setValue($value, ($this->hasMethod('toMap') ? $this->toMap() : null));
 				
 				$value = $valueObject;
 			}
@@ -704,10 +704,10 @@ class ViewableData_Debugger extends ViewableData {
 		
 		$debug .= '</ul>';
 		
-		if($this->object->hasMethod('getAllFields')) {
+		if($this->object->hasMethod('toMap')) {
 			$debug .= "<b>Debugging Information: all fields available in '{$this->object->class}'</b><br/><ul>";
 			
-			foreach($this->object->getAllFields() as $field => $value) {
+			foreach($this->object->toMap() as $field => $value) {
 				$debug .= "<li>\$$field</li>";
 			}
 			

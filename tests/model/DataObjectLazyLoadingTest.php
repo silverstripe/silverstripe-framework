@@ -228,7 +228,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$parentTeam = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$teams = DataObject::get('DataObjectTest_Team'); // query parent class
 		$subteam1Lazy = $teams->find('ID', $subteam1->ID);
-		$this->assertArrayNotHasKey('SubclassDatabaseField_Lazy', $subteam1Lazy->getAllFields());
-		$this->assertArrayHasKey('SubclassDatabaseField', $subteam1Lazy->getAllFields());
+		$this->assertArrayNotHasKey('SubclassDatabaseField_Lazy', $subteam1Lazy->toMap());
+		$this->assertArrayHasKey('SubclassDatabaseField', $subteam1Lazy->toMap());
 	}
 }
