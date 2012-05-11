@@ -193,6 +193,17 @@
 			}
 		});
 
+		/**
+		 * Hide tabs when only one is available
+		 */
+		$('.cms-edit-form .ss-tabset').entwine({
+			onmatch: function() {
+				var tabs = this.find("ul:first").children('li');
+				if(tabs.length == 1) this.find('ul:first').hide();
+				this._super();
+			}
+		});
+
 	});
 
 }(jQuery));
