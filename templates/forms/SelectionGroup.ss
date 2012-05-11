@@ -1,6 +1,6 @@
 <% if IsReadonly %>
 	<ul class="SelectionGroup<% if extraClass %> $extraClass<% end_if %>">
-	<% control FieldSet %>
+	<% loop FieldSet %>
 	<% if Selected %>
 	<li$Selected>
 		$RadioLabel
@@ -8,7 +8,7 @@
 	</li>
 	</ul>
 	<% end_if %>
-	<% end_control %>
+	<% end_loop %>
 <% else %>
-	<ul class="SelectionGroup<% if extraClass %> $extraClass<% end_if %>"><% control FieldSet %><li$Selected>{$RadioButton}{$RadioLabel}{$FieldHolder}</li><% end_control %></ul>
+	<ul class="SelectionGroup<% if extraClass %> $extraClass<% end_if %>"><% loop FieldSet %><li$Selected>{$RadioButton}{$RadioLabel}{$FieldHolder}</li><% end_loop %></ul>
 <% end_if %>

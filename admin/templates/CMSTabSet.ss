@@ -1,16 +1,15 @@
 <div id="$id">
-	
 	<%-- Tab nav is rendered in CMSEditForm.ss --%>
-	
-	<% control Tabs %>
+
+	<% loop Tabs %>
 	<div $AttributesHTML>
 	<% if Tabs %>
 		$FieldHolder
 	<% else %>
-		<% control Fields %>
+		<% loop Fields %>
 		$FieldHolder
-		<% end_control %>
+		<% end_loop %>
 	<% end_if %>
 	</div>
-	<% end_control %>
+	<% end_loop %>
 </div>

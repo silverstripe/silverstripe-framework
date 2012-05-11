@@ -7,12 +7,12 @@
 		<% if $Title %><h3>$Title</h3><% end_if %>
 		<table>
 			<thead>
-				<tr><% control Header %><th>$CellString</th><% end_control %></tr>
+				<tr><% loop Header %><th>$CellString</th><% end_loop %></tr>
 			</thead>
 			<tbody>
-				<% control ItemRows %>
-					<tr><% control ItemRow %><td>$CellString</td><% end_control %></tr>
-				<% end_control %>
+				<% loop ItemRows %>
+					<tr><% loop ItemRow %><td>$CellString</td><% end_loop %></tr>
+				<% end_loop %>
 			</tbody>
 		</table>
 		<p>

@@ -3,19 +3,19 @@
 	<div class="details" id="SpecDetailsFor{$ModelName}">
 	<h4><% sprintf(_t('IMPORTSPECTITLE', 'Specification for %s'),$ModelName) %></h4>
 		<h5><% _t('IMPORTSPECFIELDS', 'Database columns') %></h5>
-		<% control Fields %>
+		<% loop Fields %>
 		<dl>
 			<dt><em>$Name</em></dt>
 			<dd>$Description</dd>
 		</dl>
-		<% end_control %>
+		<% end_loop %>
 
 		<h5><% _t('IMPORTSPECRELATIONS', 'Relations') %></h5>
-		<% control Relations %>
+		<% loop Relations %>
 		<dl>
 			<dt><em>$Name</em></dt>
 			<dd>$Description</dd>
 		</dl>
-		<% end_control %>
+		<% end_loop %>
 	</div>
 </div>

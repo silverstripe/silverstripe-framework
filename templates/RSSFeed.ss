@@ -6,7 +6,7 @@
 		<atom:link href="$Link" rel="self" type="application/rss+xml" />
 		<description>$Description.XML</description>
 
-		<% control Entries %>
+		<% loop Entries %>
 		<item>
 			<title>$Title.XML</title>
 			<link>$AbsoluteLink</link>
@@ -16,7 +16,6 @@
 			<% if Author %><dc:creator>$Author.XML</dc:creator><% end_if %>
 			<guid>$AbsoluteLink</guid>
 		</item>
-		<% end_control %>
-
+		<% end_loop %>
 	</channel>
 </rss>

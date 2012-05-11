@@ -3,10 +3,10 @@
 		&laquo; <% _t('SilverStripeNavigator.Edit', 'Edit') %>
 	</a>
 	<ul class="cms-preview-states">
-		<% control Items %>
+		<% loop Items %>
 			<li class="<% if isActive %> active<% end_if %>">$HTML
 				<% if Watermark %><span class="cms-preview-watermark">$Watermark</span><% end_if %>
 			</li>
-		<% end_control %>
+		<% end_loop %>
 	</ul>
 </div>

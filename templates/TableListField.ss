@@ -10,13 +10,13 @@
 			<tr>
 			<% if Markable %><th width="16"><% if MarkableTitle %>$MarkableTitle<% else %>&nbsp;<% end_if %></th><% end_if %>
 			<% if Print %>
-				<% control Headings %>
+				<% loop Headings %>
 				<th class="$Name">
 					$Title
 				</th>
-				<% end_control %>
+				<% end_loop %>
 			<% else %>
-			<% control Headings %>
+			<% loop Headings %>
 				<th class="$Name">
 				<% if IsSortable %>
 					<span class="sortTitle">
@@ -35,7 +35,7 @@
 					<span>$Title</span>
 				<% end_if %>
 				</th>
-			<% end_control %>
+			<% end_loop %>
 			<% end_if %>
 			<% if Can(delete) %><th width="18">&nbsp;</th><% end_if %>
 			</tr>
@@ -51,19 +51,19 @@
 		
 		<tbody>
 			<% if HasGroupedItems %>
-				<% control GroupedItems %>
-					<% control Items %>
+				<% loop GroupedItems %>
+					<% loop Items %>
 						<% include TableListField_Item %>
-					<% end_control %>
+					<% end_loop %>
 					<tr class="summary partialSummary">
 						<% include TableListField_Summary %>
 					</tr>
-				<% end_control %>
+				<% end_loop %>
 			<% else %>
 				<% if Items %>
-					<% control Items %>
+					<% loop Items %>
 						<% include TableListField_Item %>
-					<% end_control %>
+					<% end_loop %>
 				<% else %>
 					<tr class="notfound">
 						<% if Markable %><th width="18">&nbsp;</th><% end_if %>
@@ -78,8 +78,8 @@
 		</tbody>
 	</table>
 	<% if Print %><% else %><div class="utility">
-		<% control Utility %>
+		<% loop Utility %>
 			<span class="item"><a href="$Link">$Title</a></span>
-		<% end_control %>
+		<% end_loop %>
 	</div><% end_if %>
 </div>

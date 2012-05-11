@@ -8,9 +8,9 @@
 	</div>
 	<div class="details">
 		<fieldset>
-			<% control Fields %>
+			<% loop Fields %>
 				$FieldHolder
-			<% end_control %>
+			<% end_loop %>
 		</fieldset>
 	</div>
 </div>

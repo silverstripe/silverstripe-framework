@@ -1,5 +1,5 @@
 <tr class="sortable-header">
-	<% control Fields %>
+	<% loop Fields %>
 		<th class="main col-$getName"><span>$Field</span></th>
-	<% end_control %>
+	<% end_loop %>
 </tr>
