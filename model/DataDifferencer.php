@@ -70,10 +70,10 @@ class DataDifferencer extends ViewableData {
 	function diffedData() {
 		if($this->fromRecord) {
 			$diffed = clone $this->fromRecord;
-			$fields = array_keys($diffed->getAllFields() + $this->toRecord->getAllFields());
+			$fields = array_keys($diffed->toMap() + $this->toRecord->toMap());
 		} else {
 			$diffed = clone $this->toRecord;
-			$fields = array_keys($this->toRecord->getAllFields());
+			$fields = array_keys($this->toRecord->toMap());
 		}
 		
 		$hasOnes = $this->fromRecord->has_one();
@@ -144,10 +144,10 @@ class DataDifferencer extends ViewableData {
 
 		if($this->fromRecord) {
 			$base = $this->fromRecord;
-			$fields = array_keys($this->fromRecord->getAllFields());
+			$fields = array_keys($this->fromRecord->toMap());
 		} else {
 			$base = $this->toRecord;
-			$fields = array_keys($this->toRecord->getAllFields());
+			$fields = array_keys($this->toRecord->toMap());
 		}
 		
 		foreach($fields as $field) {
@@ -190,13 +190,13 @@ class DataDifferencer extends ViewableData {
 	 */
 	function changedFieldNames() {
 		$diffed = clone $this->fromRecord;
-		$fields = array_keys($diffed->getAllFields());
+		$fields = array_keys($diffed->toMap());
 		
 		$changedFields = array();
 		
 		foreach($fields as $field) {
 			if(in_array($field, $this->ignoredFields)) continue;
-			if($this->fromRecord->$field != $this->toRecord->$field) {			
+			if($this->fromRecord->$field != $this->toRecord->$field) {
 				$changedFields[] = $field;
 			}
 		}
