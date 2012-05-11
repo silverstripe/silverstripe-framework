@@ -142,10 +142,10 @@ class SQLQuery {
 	 *
 	 * <code>
 	 *  // pass fields to select as single parameter array
-	 *  $query->select(array("Col1","Col2"))->from("MyTable");
+	 *  $query->setSelect(array("Col1","Col2"))->setFrom("MyTable");
 	 *
 	 *  // pass fields to select as multiple parameters
-	 *  $query->select("Col1", "Col2")->from("MyTable");
+	 *  $query->setSelect("Col1", "Col2")->setFrom("MyTable");
 	 * </code>
 	 *
 	 * @param string|array $fields
@@ -167,10 +167,10 @@ class SQLQuery {
 	 *
 	 * <code>
 	 *  // pass fields to select as single parameter array
-	 *  $query->select(array("Col1","Col2"))->from("MyTable");
+	 *  $query->addSelect(array("Col1","Col2"))->setFrom("MyTable");
 	 *
 	 *  // pass fields to select as multiple parameters
-	 *  $query->select("Col1", "Col2")->from("MyTable");
+	 *  $query->addSelect("Col1", "Col2")->setFrom("MyTable");
 	 * </code>
 	 *
 	 * @param string|array $fields
@@ -229,7 +229,7 @@ class SQLQuery {
 	 * Set table for the SELECT clause.
 	 *
 	 * <code>
-	 *  $query->from("MyTable"); // SELECT * FROM MyTable
+	 *  $query->setFrom("MyTable"); // SELECT * FROM MyTable
 	 * </code>
 	 *
 	 * @param string|array $from
@@ -244,7 +244,7 @@ class SQLQuery {
 	 * Add a table to the SELECT clause.
 	 *
 	 * <code>
-	 *  $query->from("MyTable"); // SELECT * FROM MyTable
+	 *  $query->addFrom("MyTable"); // SELECT * FROM MyTable
 	 * </code>
 	 *
 	 * @param string|array $from
@@ -937,13 +937,13 @@ class SQLQuery {
 				return $countQuery->execute()->value();
 
 			} else {
-				$clone->select = array("count(*)");
+				$clone->setSelect(array("count(*)"));
 			}
 		} else {
-			$clone->select = array("count($column)");
+			$clone->setSelect(array("count($column)"));
 		}
 
-		$clone->groupby = null;
+		$clone->setGroupBy(array());;
 		return $clone->execute()->value();
 	}
 
@@ -993,23 +993,23 @@ class SQLQuery {
 		}
 	}
 
-    /**
-     * Return a new SQLQuery that calls the given aggregate functions on this data.
-     * @param $column An aggregate expression, such as 'MAX("Balance")', or a set of them.
-     */
-    function aggregate($column) {
+	/**
+	 * Return a new SQLQuery that calls the given aggregate functions on this data.
+	 * @param $column An aggregate expression, such as 'MAX("Balance")', or a set of them.
+	 */
+	function aggregate($column) {
 		if($this->groupby || $this->limit) {
-		    throw new Exception("SQLQuery::aggregate() doesn't work with groupby or limit, yet");
-	    }
+			throw new Exception("SQLQuery::aggregate() doesn't work with groupby or limit, yet");
+		}
 
 		$clone = clone $this;
-		$clone->limit = null;
-		$clone->orderby = null;
-		$clone->groupby = null;
-		$clone->select($column);
+		$clone->setLimit(array());
+		$clone->setOrderBy(array());
+		$clone->setGroupBy(array());
+		$clone->setSelect($column);
 
 		return $clone;
-    }
+	}
 	
 	/**
 	 * Returns a query that returns only the first row of this query
