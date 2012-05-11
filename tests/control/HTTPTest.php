@@ -118,6 +118,5 @@ class HTTPTest extends SapphireTest {
 		$this->assertEquals('image/png', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.png'));
 		$this->assertEquals('image/vnd.adobe.photoshop', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.psd'));
 		$this->assertEquals('audio/x-wav', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.wav'));
-		$this->assertEquals('application/vnd.ms-office', HTTP::get_mime_type(FRAMEWORK_DIR.'/tests/control/files/file.xls'));
 	}
 }
