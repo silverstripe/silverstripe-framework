@@ -287,27 +287,18 @@
 				var editform = this.closest('.ss-uploadfield-item').find('.ss-uploadfield-item-editform');
 				var disabled;
 				var iframe = editform.find('iframe');
-				var inputs = iframe.contents().find('.ss-uploadfield-edit-iframe input');
-				var ulSelects =iframe.contents().find('.ss-uploadfield-edit-iframe .chzn-drop ul.chzn-results');
-				
-				for(var i=0;i<inputs.length;i++){
-					$(inputs[i]).change(function(){
+
+				// Mark the row as changed if any of its form fields are edited
+				iframe.contents().ready(function() {
+					// Need to use the iframe's own jQuery, as custom event triggers
+					// (e.g. from TreeDropdownField) can't be captured by the parent jQuery object.
+					var iframe_jQuery = iframe.get(0).contentWindow.jQuery;
+					iframe_jQuery(iframe_jQuery.find(':input')).bind('change', function(e){
 						editform.removeClass('edited'); 
 						editform.addClass('edited'); 
 					});
-
-				}	 
-				for(var i=0;i<ulSelects.length;i++){
-					var current= $(ulSelects[i]).find('li.result-selected');
-					$(ulSelects[i]).children('li').click(function(){
-						if(this !== current[0]){
-							editform.removeClass('edited'); 
-							editform.addClass('edited'); 
-						}
-					});
-				}	
-
-
+				});
+				
 				if (editform.hasClass('loading')) {
 					// TODO Display loading indication, and register an event to toggle edit form 
 				} else {
