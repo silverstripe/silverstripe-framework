@@ -101,8 +101,10 @@ body.cms.ss-uploadfield-edit-iframe {
 		}
 		.ui-state-error .ss-uploadfield-item-info {
 			background-color: #c11f1d;
+			padding-right:110px;
 			@include background-image(linear-gradient(top,  #c11f1d 0%,#bf1d1b 4%,#b71b1c 8%,#b61e1d 15%,#b11d1d 27%,#ab1d1c 31%,#a51b1b 42%,#9f1b19 46%,#9f1b19 50%,#991c1a 54%,#971a18 58%,#911b1b 62%,#911b1b 65%,#7e1816 88%,#771919 92%,#731817 100%));
 			.ss-uploadfield-item-name{
+				width:100%;				
 				cursor:default;
 				background: darken($color-button-disabled,20%); //for browsers that don't support rgba
 				background: rgba(darken($color-button-disabled, 15%),0.9);
@@ -153,12 +155,16 @@ body.cms.ss-uploadfield-edit-iframe {
 				@include hide-text-overflow;
 			}
 			.ss-uploadfield-item-status {
+				position:relative;
 				float: right;
 				padding: 0 0 0 5px;
 				max-width:30%;
 				@include hide-text-overflow;
 				text-shadow: 0px 1px 0px rgba(#fff, 0.5);
 				&.ui-state-error-text {
+					max-width:70%;
+					position:absolute;
+					right:5px;
 					text-shadow: 0px 1px 0px rgba(#fff, 0.6);
 					color: darken($color-button-destructive, 10%);
 				}
