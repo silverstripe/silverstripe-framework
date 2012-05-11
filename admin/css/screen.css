@@ -148,6 +148,7 @@ form.nostyle label { float: none; width: auto; }
 form.nostyle .middleColumn { margin-left: 0; }
 
 .field { display: block; padding: 10px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); padding: 0 0 7px 0; margin: 0 0 8px 0; *zoom: 1; }
+.field:last-child { border-bottom: none; -moz-box-shadow: none; -webkit-box-shadow: none; -o-box-shadow: none; box-shadow: none; }
 .field:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
 .field.nolabel .middleColumn { margin-left: 0; }
 .field label.left { float: left; display: block; width: 176px; padding: 8px 8px 8px 0; line-height: 16px; font-weight: bold; text-shadow: 1px 1px 0 white; }
