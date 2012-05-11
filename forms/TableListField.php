@@ -961,10 +961,10 @@ JS
 	 * @todo Make relation-syntax available (at the moment you'll have to use custom sql) 
 	 */
 	function export() {
-		$now = Date("d-m-Y-H-i");
+		$now = date("d-m-Y-H-i");
 		$fileName = "export-$now.csv";
 
-        // No pagination for export
+		// No pagination for export
 		$oldShowPagination = $this->showPagination;
 		$this->showPagination = false;
 		
@@ -973,8 +973,8 @@ JS
 		$this->showPagination = $oldShowPagination;
 		
 		if($fileData = $this->generateExportFileData($numColumns, $numRows)){
-			return SS_HTTPRequest::send_file($fileData, $fileName);
-		}else{
+			return SS_HTTPRequest::send_file($fileData, $fileName, 'text/csv');
+		} else {
 			user_error("No records found", E_USER_ERROR);
 		}
 	}
