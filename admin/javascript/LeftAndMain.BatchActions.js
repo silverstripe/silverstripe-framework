@@ -43,7 +43,7 @@
 				tree.bind('check_node.jstree', function(e, data) {
 					self.serializeFromTree();
 				});
-						
+		
 				$('.cms-tree-view-modes :input[name=view-mode]').bind('click', function(e) {
 					var val = $(e.target).val(), dropdown = self.find(':input[name=Action]');
 					if(val == 'multiselect') {
@@ -53,14 +53,26 @@
 						tree.removeClass('multiple');	
 					}
 
-					// Batch actions only make sense when multiselect is enabled
-					if(val == 'multiselect') dropdown.removeAttr('disabled').change();
-					else dropdown.attr('disabled', 'disabled').change();
+					self._updateStateFromViewMode();
 				});
-				
+
+				self._updateStateFromViewMode();
+
 				this._super();
 			},
 		
+			/**
+			 * Updates the select box state according to the current view mode.
+			 */
+			_updateStateFromViewMode: function() {
+				var viewMode = $('.cms-tree-view-modes :input[name=view-mode]:checked').val();
+				var dropdown = this.find(':input[name=Action]');
+
+				// Batch actions only make sense when multiselect is enabled.
+				if(viewMode == 'multiselect') dropdown.removeAttr('disabled').trigger("liszt:updated");
+				else dropdown.attr('disabled', true).trigger("liszt:updated");
+			},
+
 			/**
 			 * Function: register
 			 * 
