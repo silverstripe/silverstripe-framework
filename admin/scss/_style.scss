@@ -260,17 +260,18 @@ body.cms {
 					font-weight: bold;
 					line-height: $grid-y * 2;
 					padding: ($grid-y * 2 - 4) ($grid-x * 2 + 4) $grid-y + 3;
-					text-indent:-9999em;
+					text-indent: -9999em;
+					background: url(../images/content-header-tabs-sprite.png) no-repeat
+				}
 
-					&.content-treeview {
-						background:url(../images/content-header-tabs-sprite.png) no-repeat 2px 0px;
-					}
-					&.content-galleryview {
-						background:url(../images/content-header-tabs-sprite.png) no-repeat -87px 0px;
-					}
-					&.content-listview {
-						background:url(../images/content-header-tabs-sprite.png) no-repeat -38px 0px;
-					}
+				&.content-treeview a {
+					background-position: 2px 0px;
+				}
+				&.content-galleryview a {
+					background-position: -87px 0px;
+				}
+				&.content-listview a {
+					background-position: -38px 0px;
 				}
 			}
 			
@@ -282,16 +283,14 @@ body.cms {
 				}
 				padding-bottom:1px;
 		
-				a {
-					&.content-treeview {
-						background:url(../images/content-header-tabs-sprite.png) no-repeat 2px -40px;
-					}
-					&.content-galleryview {
-						background:url(../images/content-header-tabs-sprite.png) no-repeat -87px -40px;
-					}
-					&.content-listview {
-						background:url(../images/content-header-tabs-sprite.png) no-repeat -38px -40px;
-					}
+				&.content-treeview a {
+					background-position: 2px -40px;
+				}
+				&.content-galleryview a {
+					background-position: -87px -40px;
+				}
+				&.content-listview a {
+					background-position: -38px -40px;
 				}
 			}
 		}
