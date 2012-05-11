@@ -1,8 +1,8 @@
 	<% if SelectOptions %>
 		<ul class="selectOptions">
 			<li><% _t('TableListField.SELECT', 'Select:') %></li>
-		<% control SelectOptions %>
+		<% loop SelectOptions %>
 			<li><a rel="$Key" href="#" title="$Key">$Value</a></li>
-		<% end_control %>
+		<% end_loop %>
 		</ul>
 	<% end_if %>

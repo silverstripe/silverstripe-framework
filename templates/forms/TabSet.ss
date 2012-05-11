@@ -1,19 +1,19 @@
 <div $AttributesHTML>
 	<ul>
-	<% control Tabs %>
+	<% loop Tabs %>
 		<li class="$FirstLast $MiddleString $extraClass"><a href="#$id" id="tab-$id">$Title</a></li>
-	<% end_control %>
+	<% end_loop %>
 	</ul>
 
-	<% control Tabs %>
+	<% loop Tabs %>
 	<div $AttributesHTML>
 	<% if Tabs %>
 		$FieldHolder
 	<% else %>
-		<% control Fields %>
+		<% loop Fields %>
 		$FieldHolder
-		<% end_control %>
+		<% end_loop %>
 	<% end_if %>
 	</div>
-	<% end_control %>
+	<% end_loop %>
 </div>

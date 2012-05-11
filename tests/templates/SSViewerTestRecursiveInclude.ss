@@ -1,6 +1,6 @@
 $Title
 <% if Children %>
-<% control Children %>
+<% loop Children %>
 <% include SSViewerTestRecursiveInclude %>
-<% end_control %>
+<% end_loop %>
 <% end_if %>

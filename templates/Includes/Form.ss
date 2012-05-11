@@ -9,17 +9,17 @@
 	
 	<fieldset>
 		<% if Legend %><legend>$Legend</legend><% end_if %> 
-		<% control Fields %>
+		<% loop Fields %>
 			$FieldHolder
-		<% end_control %>
+		<% end_loop %>
 		<div class="clear"><!-- --></div>
 	</fieldset>
 
 	<% if Actions %>
 	<div class="Actions">
-		<% control Actions %>
+		<% loop Actions %>
 			$Field
-		<% end_control %>
+		<% end_loop %>
 	</div>
 	<% end_if %>
 <% if IncludeFormTag %>

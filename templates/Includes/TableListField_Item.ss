@@ -1,9 +1,9 @@
 <tr id="record-$Parent.id-$ID"<% if HighlightClasses %> class="$HighlightClasses"<% end_if %>>
 	<% if Markable %><td width="16" class="$SelectOptionClasses">$MarkingCheckbox</td><% end_if %>
-	<% control Fields %>
+	<% loop Fields %>
 		<td class="field-$Title.HTMLATT $FirstLast $Name">$Value</td>
-	<% end_control %>
-	<% control Actions %>
+	<% end_loop %>
+	<% loop Actions %>
 		<td width="16" class="action">
 			<% if IsAllowed %>
 			<a class="$Class" href="$Link"<% if TitleText %> title="$TitleText"<% end_if %>>
@@ -15,5 +15,5 @@
 				</span>
 			<% end_if %>
 		</td>
-	<% end_control %>
+	<% end_loop %>
 </tr>

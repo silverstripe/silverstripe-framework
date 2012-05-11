@@ -5,8 +5,8 @@
 		$Title
 	</h$HeadingLevel>
 	<div class="contentMore">
-	<% control FieldSet %>
+	<% loop FieldSet %>
 	$FieldHolder
-	<% end_control %>
+	<% end_loop %>
 	</div>
 </div>

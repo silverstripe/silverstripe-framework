@@ -21,13 +21,13 @@
 					<% if xdsfdsf %>
 					<% else %>
 						<td>
-							<% control Paginator.Pages %>
+							<% loop Paginator.Pages %>
 								<% if active %>
 									<a href="$link">$number</a>
 								<% else %>
 									<span>$number</span>
 								<% end_if %>
-							<% end_control %>
+							<% end_loop %>
 						</td>
 					<% end_if %>
 					<% if Paginator.NextLink %>
