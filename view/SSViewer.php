@@ -23,7 +23,7 @@
 class SSViewer_Scope {
 	
 	// The stack of previous "global" items
-	// And array of item, itemIterator, pop_index, up_index, current_index
+	// And array of item, itemIterator, itemIteratorTotal, pop_index, up_index, current_index
 	private $itemStack = array(); 
 	
 	protected $item; // The current "global" item (the one any lookup starts from)
@@ -40,7 +40,7 @@ class SSViewer_Scope {
 	function __construct($item){
 		$this->item = $item;
 		$this->localIndex=0;
-		$this->itemStack[] = array($this->item, null, null, null, 0);
+		$this->itemStack[] = array($this->item, null, 0, null, null, 0);
 	}
 	
 	function getItem(){
@@ -48,9 +48,8 @@ class SSViewer_Scope {
 	}
 	
 	function resetLocalScope(){
-		list($this->item, $this->itemIterator, $this->popIndex, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->localIndex];
+		list($this->item, $this->itemIterator, $this->itemIteratorTotal, $this->popIndex, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->localIndex];
 		array_splice($this->itemStack, $this->localIndex+1);
-		$this->itemIteratorTotal = $this->itemIterator ? $this->itemIterator->count() : 0;
 	}
 	
 	function obj($name){
@@ -59,11 +58,11 @@ class SSViewer_Scope {
 			case 'Up':
 				if ($this->upIndex === null) user_error('Up called when we\'re already at the top of the scope', E_USER_ERROR);
 
-				list($this->item, $this->itemIterator, $unused2, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->upIndex];
+				list($this->item, $this->itemIterator, $this->itemIteratorTotal, $unused2, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->upIndex];
 				break;
 			
 			case 'Top':
-				list($this->item, $this->itemIterator, $unused2, $this->upIndex, $this->currentIndex) = $this->itemStack[0];
+				list($this->item, $this->itemIterator, $this->itemIteratorTotal, $unused2, $this->upIndex, $this->currentIndex) = $this->itemStack[0];
 				break;
 			
 			default:
@@ -78,14 +77,14 @@ class SSViewer_Scope {
 				break;
 		}
 		
-		$this->itemStack[] = array($this->item, $this->itemIterator, null, $this->upIndex, $this->currentIndex);
+		$this->itemStack[] = array($this->item, $this->itemIterator, $this->itemIteratorTotal, null, $this->upIndex, $this->currentIndex);
 		return $this;
 	}
 	
 	function pushScope(){
 		$newLocalIndex = count($this->itemStack)-1;
 		
-		$this->popIndex = $this->itemStack[$newLocalIndex][2] = $this->localIndex;
+		$this->popIndex = $this->itemStack[$newLocalIndex][3] = $this->localIndex;
 		$this->localIndex = $newLocalIndex;
 		
 		// We normally keep any previous itemIterator around, so local $Up calls reference the right element. But
@@ -111,6 +110,7 @@ class SSViewer_Scope {
 			
 			$this->itemStack[$this->localIndex][1] = $this->itemIterator;
 			$this->itemIteratorTotal = iterator_count($this->itemIterator); //count the total number of items
+			$this->itemStack[$this->localIndex][2] = $this->itemIteratorTotal;
 			$this->itemIterator->rewind();
 		}
 		else {
