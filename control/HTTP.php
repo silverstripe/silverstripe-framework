@@ -183,7 +183,7 @@ class HTTP {
 	
 	/**
 	 * Get mime type based on extension
-	 * 
+	 *
 	 * @uses finfo
 	 * @deprecated Use HTTP::get_mime_type() instead
 	 */
@@ -193,13 +193,15 @@ class HTTP {
 	}
 	
 	/**
-	 * Get mime type based on extension
-	 * 
+	 * Get mime type based on file extension.
+	 *
 	 * @uses finfo
+	 * @param string $filename Relative path to filename from project root, e.g. "mysite/tests/file.csv"
+	 * @return string MIME type
 	 */
 	public static function get_mime_type($filename) {
 		$finfo = new finfo(FILEINFO_MIME_TYPE);
-		return $finfo->file(BASE_PATH.DIRECTORY_SEPARATOR.$filename);
+		return $finfo->file(BASE_PATH . DIRECTORY_SEPARATOR . $filename);
 	}
 
 	/**
