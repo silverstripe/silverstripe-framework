@@ -4,11 +4,12 @@ window.tmpl.cache['ss-uploadfield-uploadtemplate'] = tmpl(
 			'<div class="ss-uploadfield-item-preview preview"><span></span></div>' +
 			'<div class="ss-uploadfield-item-info">' +
 				'<label class="ss-uploadfield-item-name">' + 
-					'<span class="name">{% if (file.name) { %}{%=file.name%}{% } else { %}' + ss.i18n._t('UploadField.NOFILENAME', 'Untitled') + '{% } %}</span> ' + 
+					'<span class="name" title="{% if (file.name) { %}{%=file.name%}{% } else { %}' + ss.i18n._t('UploadField.NOFILENAME', 'Untitled') + '{% } %}">' +
+					'{% if (file.name) { %}{%=file.name%}{% } else { %}' + ss.i18n._t('UploadField.NOFILENAME', 'Untitled') + '{% } %}</span> ' + 
 					'{% if (!file.error) { %}' +
 						'<div class="ss-uploadfield-item-status">0%</div>' +						
 					'{% } else {  %}' +
-						'<div class="ss-uploadfield-item-status ui-state-error-text">{%=o.options.errorMessages[file.error].substring(0,25) || file.error.substring(0,25)%}</div>' + 
+						'<div class="ss-uploadfield-item-status ui-state-error-text" title="{%=o.options.errorMessages[file.error] || file.error%}">{%=o.options.errorMessages[file.error] || file.error%}</div>' + 
 					'{% } %}' + 
 					'<div class="clear"><!-- --></div>' + 
 				'</label>' +

@@ -288,12 +288,26 @@
 				var disabled;
 				var iframe = editform.find('iframe');
 				var inputs = iframe.contents().find('.ss-uploadfield-edit-iframe input');
+				var ulSelects =iframe.contents().find('.ss-uploadfield-edit-iframe .chzn-drop ul.chzn-results');
 				
 				for(var i=0;i<inputs.length;i++){
 					$(inputs[i]).change(function(){
+						editform.removeClass('edited'); 
 						editform.addClass('edited'); 
 					});
-				}				
+
+				}	 
+				for(var i=0;i<ulSelects.length;i++){
+					var current= $(ulSelects[i]).find('li.result-selected');
+					$(ulSelects[i]).children('li').click(function(){
+						if(this !== current[0]){
+							editform.removeClass('edited'); 
+							editform.addClass('edited'); 
+						}
+					});
+				}	
+
+
 				if (editform.hasClass('loading')) {
 					// TODO Display loading indication, and register an event to toggle edit form 
 				} else {
@@ -339,11 +353,13 @@
 			toggleEditForm: function() {
 				var itemInfo = this.prev('.ss-uploadfield-item-info'), status = itemInfo.find('.ss-uploadfield-item-status');
 				var iframe = this.find('iframe').contents(), saved=iframe.find('#Form_EditForm_error');
-				
+				var text="";
+
 				if(this.height() === 0) {
+					text = "Editing...";
 					this.fitHeight();
 					itemInfo.find('.toggle-details-icon').addClass('opened');					
-					status.removeClass('ui-state-success-text').removeClass('ui-state-warning-text').text("Editing...");
+					status.removeClass('ui-state-success-text').removeClass('ui-state-warning-text');
 					iframe.find('#Form_EditForm_action_doEdit').click(function(){
 						itemInfo.find('label .name').text(iframe.find('#Name input').val());
 					});	
@@ -352,22 +368,26 @@
 					}
 
 				} else {
-					this.height(0);
+					this.height(0);					
 					itemInfo.find('.toggle-details-icon').removeClass('opened');
 					$('div.ss-upload .fileOverview .ss-uploadfield-item-edit-all').removeClass('opened').find('.toggle-details-icon').removeClass('opened');
 					if(!this.hasClass('edited')){
-						status.addClass('ui-state-success-text').text(ss.i18n._t('UploadField.NOCHANGES', 'No Changes'));
+						text = ss.i18n._t('UploadField.NOCHANGES', 'No Changes')
+						status.addClass('ui-state-success-text');
 					}else{
 						if(saved.hasClass('good')){
+							text = ss.i18n._t('UploadField.CHANGESSAVED', 'Changes Saved')
 							this.removeClass('edited').parent('.ss-uploadfield-item').removeClass('ui-state-warning');
-							status.addClass('ui-state-success-text').text(ss.i18n._t('UploadField.CHANGESSAVED', 'Changes Saved'));								
+							status.addClass('ui-state-success-text');						
 						}else{
+							text = ss.i18n._t('UploadField.UNSAVEDCHANGES', 'Unsaved Changes')
 							this.parent('.ss-uploadfield-item').addClass('ui-state-warning');
-							status.addClass('ui-state-warning-text').text(ss.i18n._t('UploadField.UNSAVEDCHANGES', 'Unsaved Changes'));
-						}
+							status.addClass('ui-state-warning-text');
+						}							
 					}
 					saved.removeClass('good').hide();
 				}
+				status.attr('title',text).text(text);	
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-item-editform iframe').entwine({
