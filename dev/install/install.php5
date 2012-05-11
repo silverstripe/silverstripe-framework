@@ -409,6 +409,9 @@ class InstallRequirements {
 
 		$this->requireServerVariables(array('SCRIPT_NAME','HTTP_HOST','SCRIPT_FILENAME'), array("Webserver config", "Recognised webserver", "You seem to be using an unsupported webserver.  The server variables SCRIPT_NAME, HTTP_HOST, SCRIPT_FILENAME need to be set."));
 
+		// check for fileinfo extension, this gets used for MIME type detection
+		$this->requireClass('finfo', array('PHP Configuration', 'fileinfo support', 'fileinfo support not included in PHP.'));
+
 		// Check for GD support
 		if(!$this->requireFunction("imagecreatetruecolor", array("PHP Configuration", "GD2 support", "PHP must have GD version 2."))) {
 			$this->requireFunction("imagecreate", array("PHP Configuration", "GD2 support", "GD support for PHP not included."));
