@@ -489,6 +489,10 @@ jQuery.noConflict();
 				// Explicitly disable default placeholder if no custom one is defined
 				if(!this.data('placeholder')) this.data('placeholder', ' ');
 
+				// We could've gotten stale classes and DOM elements from deferred cache.
+				this.removeClass('has-chzn chzn-done');
+				this.siblings('.chzn-container').remove();
+
 				// Apply Chosen
 				applyChosen(this);
 				
