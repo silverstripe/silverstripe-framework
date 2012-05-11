@@ -234,8 +234,10 @@
 		$('.cms-content.loading,.cms-edit-form.loading,.cms-content-fields.loading,.cms-content-view.loading').entwine({
 			onmatch: function() {
 				this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>');
+				this._super();
 			},
 			onunmatch: function() {
+				this._super();
 				this.find('.cms-content-loading-overlay,.cms-content-loading-spinner').remove();
 			}
 		});

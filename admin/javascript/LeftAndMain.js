@@ -87,6 +87,8 @@ jQuery.noConflict();
 						'</span></p>'
 					).css('z-index', $('.ss-loading-screen').css('z-index')+1);
 					$('.loading-animation').remove();
+
+					this._super();
 					return;
 				}
 				
@@ -459,7 +461,10 @@ jQuery.noConflict();
 		$('.cms .field.date input.text').entwine({
 			onmatch: function() {
 				var holder = $(this).parents('.field.date:first'), config = holder.data();
-				if(!config.showcalendar) return;
+				if(!config.showcalendar) {
+					this._super();
+					return;
+				}
 
 				config.showOn = 'button';
 				if(config.locale && $.datepicker.regional[config.locale]) {
@@ -485,7 +490,10 @@ jQuery.noConflict();
 		
 		$('.cms .field.dropdown select, .cms .field select[multiple]').entwine({
 			onmatch: function() {
-				if(this.is('.no-chzn')) return;
+				if(this.is('.no-chzn')) {
+					this._super();
+					return;
+				}
 
 				// Explicitly disable default placeholder if no custom one is defined
 				if(!this.data('placeholder')) this.data('placeholder', ' ');

@@ -265,10 +265,8 @@
 					}
 				}
 
-			},
-			onunmatch: function() {
-
 			}
+
 		});
 		
 		$('.cms-tree.multiple').entwine({

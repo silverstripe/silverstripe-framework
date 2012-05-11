@@ -255,6 +255,7 @@
 					filterbtn.addClass('filtered');
 					resetbtn.addClass('filtered');
 				}
+				this._super();
 			},
 			onkeydown: function(e) {
 				// Skip reset button events, they should trigger default submission
