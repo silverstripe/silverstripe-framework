@@ -137,7 +137,7 @@
 				else this.loadTree(null, updateFn);
 			},
 			setValue: function(val) {
-				this.find(':input:hidden').val(val);
+				this.find(':input:hidden').val(val).trigger('change');
 				this.updateTitle();
 				this.trigger('change');
 			},
