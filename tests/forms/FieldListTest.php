@@ -789,5 +789,66 @@ class FieldListTest extends SapphireTest {
 		$this->assertNotNull($visible->dataFieldByName('D2'));
 	}
 	
+	function testRewriteTabPath() {
+		$fields = new FieldList(
+			new Tabset("Root",
+				$tab1Level1 = new Tab("Tab1Level1", 
+					$tab1Level2 = new Tab("Tab1Level2"),
+					$tab2Level2 = new Tab("Tab2Level2")
+				),
+				$tab2Level1 = new Tab("Tab2Level1")
+			)
+		);
+		$fields->setTabPathRewrites(array(
+			'/Root\.Tab1Level1\.([^.]+)$/' => 'Root.Tab1Level1Renamed.\\1',
+			'/Root\.Tab1Level1$/' => 'Root.Tab1Level1Renamed',
+		));
+		$method = new ReflectionMethod($fields, 'rewriteTabPath');
+		$method->setAccessible(true);
+		$this->assertEquals(
+			'Root.Tab1Level1Renamed', 
+			$method->invoke($fields, 'Root.Tab1Level1Renamed'),
+			"Doesn't rewrite new name"
+		);
+		$this->assertEquals(
+			'Root.Tab1Level1Renamed', 
+			$method->invoke($fields, 'Root.Tab1Level1'),
+			'Direct aliasing on toplevel'
+		);
+		$this->assertEquals(
+			'Root.Tab1Level1Renamed.Tab1Level2', 
+			$method->invoke($fields, 'Root.Tab1Level1.Tab1Level2'),
+			'Indirect aliasing on toplevel'
+		);
+	}
+
+	function testRewriteTabPathFindOrMakeTab() {
+		$fields = new FieldList(
+			new Tabset("Root",
+				$tab1Level1 = new Tab("Tab1Level1Renamed", 
+					$tab1Level2 = new Tab("Tab1Level2"),
+					$tab2Level2 = new Tab("Tab2Level2")
+				),
+				$tab2Level1 = new Tab("Tab2Level1")
+			)
+		);
+		$fields->setTabPathRewrites(array(
+			'/Root\.Tab1Level1\.([^.]+)$/' => 'Root.Tab1Level1Renamed.\\1',
+			'/Root\.Tab1Level1$/' => 'Root.Tab1Level1Renamed',
+		));
+
+		$this->assertEquals($tab1Level1, $fields->findOrMakeTab('Root.Tab1Level1'), 
+			'findOrMakeTab() with toplevel tab under old name'
+		);
+		$this->assertEquals($tab1Level1, $fields->findOrMakeTab('Root.Tab1Level1Renamed'), 
+			'findOrMakeTab() with toplevel tab under new name'
+		);
+		$this->assertEquals($tab1Level2, $fields->findOrMakeTab('Root.Tab1Level1.Tab1Level2'), 
+			'findOrMakeTab() with nested tab under old parent tab name'
+		);
+		$this->assertEquals($tab1Level2, $fields->findOrMakeTab('Root.Tab1Level1Renamed.Tab1Level2'), 
+			'findOrMakeTab() with nested tab under new parent tab name'
+		);
+	}
 	
 }

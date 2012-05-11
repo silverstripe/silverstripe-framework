@@ -25,6 +25,12 @@ class FieldList extends ArrayList {
 	 * @todo Documentation
 	 */
 	protected $containerField;
+
+	/**
+	 * @var array Ordered list of regular expressions,
+	 * see {@link setTabPathRewrites()}.
+	 */
+	protected $tabPathRewrites = array();
 	
 	public function __construct($items = array()) {
 		if (!is_array($items) || func_num_args() > 1) {
@@ -255,6 +261,9 @@ class FieldList extends ArrayList {
 	 * @return Tab The found or newly created Tab instance
 	 */
 	public function findOrMakeTab($tabName, $title = null) {
+		// Backwards compatibility measure: Allow rewriting of outdated tab paths
+		$tabName = $this->rewriteTabPath($tabName);
+
 		$parts = explode('.',$tabName);
 		$last_idx = count($parts) - 1;
 		// We could have made this recursive, but I've chosen to keep all the logic code within FieldList rather than add it to TabSet and Tab too.
@@ -291,6 +300,7 @@ class FieldList extends ArrayList {
 	 * @todo Implement similiarly to dataFieldByName() to support nested sets - or merge with dataFields()
 	 */
 	public function fieldByName($name) {
+		$name = $this->rewriteTabPath($name);
 		if(strpos($name,'.') !== false)	list($name, $remainder) = explode('.',$name,2);
 		else $remainder = null;
 		
@@ -553,6 +563,59 @@ class FieldList extends ArrayList {
 		}
 		
 		return false;
+	}
+
+	/**
+	 * Ordered list of regular expressions
+	 * matching a tab path, to their rewrite rule (through preg_replace()).
+	 * Mainly used for backwards compatibility.
+	 * Ensure that more specific rules are placed earlier in the list,
+	 * and that tabs with children are accounted for in the rule sets.
+	 * 
+	 * Example: 
+	 * $fields->setTabPathRewriting(array(
+	 * 	// Rewrite specific innermost tab
+	 * 	'/^Root\.Content\.Main$/' => 'Root.Content',
+	 * 	// Rewrite all innermost tabs
+	 * 	'/^Root\.Content\.([^.]+)$/' => 'Root.\\1',
+	 * ));
+	 * 
+	 * @param array $rewrites 
+	 */
+	public function setTabPathRewrites($rewrites) {
+		$this->tabPathRewrites = $rewrites;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getTabPathRewrites() {
+		return $this->tabPathRewrites;
+	}
+
+	/**
+	 * Support function for backwards compatibility purposes.
+	 * Caution: Volatile API, might be removed in 3.1 or later.
+	 * 
+	 * @param  String $tabname Path to a tab, e.g. "Root.Content.Main"
+	 * @return String Rewritten path, based on {@link tabPathRewrites}
+	 */
+	protected function rewriteTabPath($name) {
+		$isRunningTest = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
+		foreach($this->getTabPathRewrites() as $regex => $replace) {
+			if(preg_match($regex, $name)) {
+				$newName = preg_replace($regex, $replace, $name);
+				Deprecation::notice('3.0.0', sprintf(
+					'Using outdated tab path "%s", please use the new location "%s" instead',
+					$name,
+					$newName
+				));
+				return $newName;
+			}
+		}
+
+		// No match found, return original path
+		return $name;
 	}
 
 	/**
