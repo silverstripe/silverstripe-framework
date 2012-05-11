@@ -9,9 +9,9 @@
 	<table class="data">
 		<thead>
 			<tr>
-				<% control Headings %>
+				<% loop Headings %>
 					<th class="$Name $Class" scope="col">$Title</th>
-				<% end_control %>
+				<% end_loop %>
 				<th style="display: none"></th>
 				<% if Can(delete) %><th width="18">&nbsp;</th><% end_if %>
 			</tr>
@@ -20,9 +20,9 @@
 		<% if HasSummary %>
 			<tr class="summary">
 				<td><i>$SummaryTitle</i></td>
-				<% control SummaryFields %>
+				<% loop SummaryFields %>
 					<td<% if Function %> class="$Function"<% end_if %>>$SummaryValue</td>
-				<% end_control %>
+				<% end_loop %>
 				<th style="display: none"></th>
 				<% if Can(delete) %><td width="18">&nbsp;</td><% end_if %>
 			</tr>
@@ -41,15 +41,15 @@
 		</tfoot>
 		<tbody>
 			<% if Items %>
-			<% control Items %>
+			<% loop Items %>
 				<tr id="record-$Parent.id-$ID" class="row<% if HighlightClasses %> $HighlightClasses<% end_if %>">
-					<% control Fields %>
+					<% loop Fields %>
 						<td class="$FieldClass $extraClass $ClassName $Title tablecolumn">$Field</td>
-					<% end_control %>
+					<% end_loop %>
 					<td style="display: none">$ExtraData</td>
 					<% if Can(delete) %><td width="18"><a class="deletelink" href="$DeleteLink" title="<% _t('DELETEROW') %>"><img src="$ModulePath(framework)/images/delete.gif" alt="<% _t('DELETE') %>" /></a></td><% end_if %>
 				</tr>
-			<% end_control %>
+			<% end_loop %>
 			<% else %>
 				<tr class="notfound">
 					<% if Markable %><th width="18">&nbsp;</th><% end_if %>
@@ -60,9 +60,9 @@
 		</tbody>
 	</table>
 	<% if Print %><% else %><div class="utility">
-		<% control Utility %>
+		<% loop Utility %>
 			<span class="item"><a href="$Link">$Title</a></span>
-		<% end_control %>
+		<% end_loop %>
 	</div><% end_if %>
 	<% if Message %>
 	<span class="message $MessageType">$Message</span>

@@ -8,7 +8,7 @@
 		<thead>
 			<tr>
 				<% if Markable %><th width="18">&nbsp;</th><% end_if %>
-				<% control Headings %>
+				<% loop Headings %>
 				<th class="$Name">
 					<% if IsSortable %>
 						<span class="sortTitle">
@@ -28,8 +28,8 @@
 						$Title
 					<% end_if %>
 				</th>
-				<% end_control %>
-				<% control Actions %><th width="18">&nbsp;</th><% end_control %>
+				<% end_loop %>
+				<% loop Actions %><th width="18">&nbsp;</th><% end_loop %>
 			</tr>
 		</thead>
 		<tfoot>
@@ -37,10 +37,10 @@
 			<tr class="summary">
 				<% if Markable %><th width="18">&nbsp;</th><% end_if %>
 				<td><i>$SummaryTitle</i></td>
-				<% control SummaryFields %>
+				<% loop SummaryFields %>
 					<td<% if Function %> class="$Function"<% end_if %>>$SummaryValue</td>
-				<% end_control %>
-				<% control Actions %><td width="18">&nbsp;</td><% end_control %>
+				<% end_loop %>
+				<% loop Actions %><td width="18">&nbsp;</td><% end_loop %>
 			</tr>
 			<% end_if %>
 			<% if Can(add) %>
@@ -53,29 +53,29 @@
 						<% sprintf(_t('ADDITEM', 'Add %s', 'Add [name]'),$Title) %>
 					</a>
 				</td>
-				<% control Actions %><td width="18">&nbsp;</td><% end_control %>
+				<% loop Actions %><td width="18">&nbsp;</td><% end_loop %>
 			</tr>
 			<% end_if %>
 		</tfoot>
 		<tbody>
 			<% if Items %>
-			<% control Items %>
+			<% loop Items %>
 				<% include TableListField_Item %>
-			<% end_control %>
+			<% end_loop %>
 			<% else %>
 				<tr class="notfound">
 					<% if Markable %><th width="18">&nbsp;</th><% end_if %>
 					<td colspan="$Headings.Count"><i><% _t('NOITEMSFOUND', 'No items found') %></i></td>
-					<% control Actions %><td width="18">&nbsp;</td><% end_control %>
+					<% loop Actions %><td width="18">&nbsp;</td><% end_loop %>
 				</tr>
 			<% end_if %>
 		</tbody>
 	</table>
 	<% if Utility %>
 		<div class="utility">
-			<% control Utility %>
+			<% loop Utility %>
 				<span class="item"><a href="$Link" target="_blank">$Title</a></span>
-			<% end_control %>
+			<% end_loop %>
 		</div>
 	<% end_if %>
 	</div>

@@ -1,10 +1,10 @@
 <form $FormAttributes>
 	<fieldset>
-		<% control Fields %>
+		<% loop Fields %>
 			$FieldHolder
-		<% end_control %>
-		<% control Actions %>
+		<% end_loop %>
+		<% loop Actions %>
 			$Field
-		<% end_control %>
+		<% end_loop %>
 	</fieldset>
 </form>

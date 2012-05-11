@@ -13,11 +13,11 @@
 
 			<div class="cms-content-header-tabs ss-ui-tabs-nav">
 				<ul>
-				<% control ManagedModelTabs %>
+				<% loop ManagedModelTabs %>
 					<li class="tab-$ClassName $LinkOrCurrent">
 						<a href="$Link" class="cms-panel-link">$Title</a>
 					</li>
-				<% end_control %>
+				<% end_loop %>
 				</ul>
 			</div>
 

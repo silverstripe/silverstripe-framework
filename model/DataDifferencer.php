@@ -13,10 +13,12 @@
  * And then it can be used in a number of ways.  You can use the ChangedFields() method in a template:
  * <pre>
  * <dl class="diff">
- * <% control Diff.ChangedFields %>
+ * <% with Diff %>
+ * <% loop ChangedFields %>
  *    <dt>$Title</dt>
  *    <dd>$Diff</dd>
- * <% end_control %>
+ * <% end_loop %>
+ * <% end_with %>
  * </dl>
  * </pre>
  * 

@@ -7,9 +7,9 @@
 		<thead>
 			<tr>
 				<% if Markable %><th width="18">&nbsp;</th><% end_if %>
-				<% control Headings %>
+				<% loop Headings %>
 				<th class="$Name">$Title</th>
-				<% end_control %>
+				<% end_loop %>
 				<% if Can(show) %><th width="18">&nbsp;</th><% end_if %>
 				<% if Can(edit) %><th width="18">&nbsp;</th><% end_if %>
 				<% if Can(delete) %><th width="18">&nbsp;</th><% end_if %>
@@ -20,9 +20,9 @@
 			<tr class="summary">
 				<% if Markable %><th width="18">&nbsp;</th><% end_if %>
 				<td><i>$SummaryTitle</i></td>
-				<% control SummaryFields %>
+				<% loop SummaryFields %>
 					<td<% if Function %> class="$Function"<% end_if %>>&nbsp;</td>
-				<% end_control %>
+				<% end_loop %>
 				<% if Can(show) %><td width="18">&nbsp;</td><% end_if %>
 				<% if Can(edit) %><td width="18">&nbsp;</td><% end_if %>
 				<% if Can(delete) %><td width="18">&nbsp;</td><% end_if %>
@@ -44,9 +44,9 @@
 		</tfoot>
 		<tbody>
 			<% if Items %>
-			<% control Items %>
+			<% loop Items %>
 				<% include TableListField_Item %>
-			<% end_control %>
+			<% end_loop %>
 			<% else %>
 				<tr class="notfound">
 					<% if Markable %><th width="18">&nbsp;</th><% end_if %>

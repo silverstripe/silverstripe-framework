@@ -209,7 +209,7 @@ class PaginatedList extends SS_ListDecorator {
 	 * 		<% if MyPages.NotFirstPage %>
 	 * 			<a class="prev" href="$MyPages.PrevLink">Prev</a>
 	 * 		<% end_if %>
-	 * 		<% control MyPages.PaginationSummary(4) %>
+	 * 		<% loop MyPages.PaginationSummary(4) %>
 	 * 			<% if CurrentBool %>
 	 * 				$PageNum
 	 * 			<% else %>
@@ -219,7 +219,7 @@ class PaginatedList extends SS_ListDecorator {
 	 * 					...
 	 * 				<% end_if %>
 	 * 			<% end_if %>
-	 * 			<% end_control %>
+	 * 		<% end_loop %>
 	 * 		<% if MyPages.NotLastPage %>
 	 * 			<a class="next" href="$MyPages.NextLink">Next</a>
 	 * 		<% end_if %>

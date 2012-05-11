@@ -1,4 +1,5 @@
-<div class="add-existing-autocompleter"><% control Fields %>
+<div class="add-existing-autocompleter">
+	<% loop Fields %>
 	<span>$Field</span>
-	<% end_control %>
+	<% end_loop %>
 </div>

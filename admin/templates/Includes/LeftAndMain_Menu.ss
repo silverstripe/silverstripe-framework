@@ -9,20 +9,20 @@
 	
 		<div class="cms-login-status">
 			<a href="Security/logout" class="logout-link" title="<% _t('LOGOUT','Log out') %>"><% _t('LOGOUT','Log out') %></a>
-			<% control CurrentMember %>
+			<% with CurrentMember %>
 				<span>
 					<% _t('Hello','Hi') %>
 					<a href="{$AbsoluteBaseURL}admin/myprofile" class="profile-link ss-ui-dialog-link" data-popupclass="edit-profile-popup">
 						<% if FirstName && Surname %>$FirstName $Surname<% else_if FirstName %>$FirstName<% else %>$Email<% end_if %>
 					</a>
 				</span>
-			<% end_control %>
+			<% end_with %>
 		</div>
 	</div>
 		
 	<div class="cms-panel-content center">
 		<ul class="cms-menu-list">
-		<% control MainMenu %>
+		<% loop MainMenu %>
 			<li class="$LinkingMode $FirstLast <% if LinkingMode == 'link' %><% else %>opened<% end_if %>" id="Menu-$Code">
 				<a href="$Link" <% if Code == 'Help' %>target="_blank"<% end_if%>>
 					<span class="icon icon-16 icon-{$Code.LowerCase}">&nbsp;</span>
@@ -44,7 +44,7 @@
 					</ul>
 				<% end_if %>
 			</li>
-		<% end_control %>
+		<% end_loop %>
 		</ul>
 	</div>
 		
