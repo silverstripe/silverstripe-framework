@@ -68,7 +68,7 @@ class ArrayDataTest extends SapphireTest {
 		
 		$arrayData = new ArrayData($array);
 		
-		$this->assertEquals($arrayData->getArray(), $array);
+		$this->assertEquals($arrayData->toMap(), $array);
 
 		Deprecation::restore_settings($originalDeprecation);
 	}
