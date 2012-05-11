@@ -8,8 +8,11 @@
  */
 class HTTP {
 
-	static $userName;
-	static $password;
+	protected static $cache_age = 0;
+
+	protected static $modification_date = null;
+
+	protected static $etag = null;
 
 	/**
 	 * Turns a local system filename into a URL by comparing it to the script filename
@@ -203,75 +206,6 @@ class HTTP {
 		$finfo = new finfo(FILEINFO_MIME_TYPE);
 		return $finfo->file(BASE_PATH . DIRECTORY_SEPARATOR . $filename);
 	}
-
-	/**
-	 * Send an HTTP request to the host.
-	 *
-	 * @return String Response text
-	 */
-	static function sendRequest( $host, $path, $query, $port = 80 ) {
-		$socket = fsockopen( $host, $port, $errno, $error );
-
-		if( !$socket )
-			return $error;
-
-		if( $query )
-			$query = '?' . $query;
-
-		if( self::$userName && self::$password ) {
-			$auth = "Authorization: Basic " . base64_encode( self::$userName . ':' . self::$password ) . "\r\n";
-		} else {
-			$auth = '';
-		}
-
-		$request = "GET {$path}{$query} HTTP/1.1\r\nHost: $host\r\nConnection: Close\r\n{$auth}\r\n";
-
-		fwrite( $socket, $request );
-		$response = stream_get_contents( $socket );
-
-		return $response;
-	}
-
-	/**
-	 * Send a HTTP POST request through fsockopen().
-	 *
-	 * @param string $host Absolute URI without path, e.g. http://silverstripe.com
-	 * @param string $path Path with leading slash
-	 * @param array|string $data Payload for the request
-	 * @param string $name Parametername for the payload (only if passed as a string)
-	 * @param string $query
-	 * @param string $port
-	 * @return string Raw HTTP-result including headers
-	 */
-	static function sendPostRequest($host, $path, $data, $name = null, $query = '', $port = 80, $getResponse = true) {
-		$socket = fsockopen($host, $port, $errno, $error);
-
-		if(!$socket)
-			return $error;
-
-		if(self::$userName && self::$password)
-			$auth = "Authorization: Basic " . base64_encode(self::$userName . ':' . self::$password) . "\r\n";
-		else
-			$auth = '';
-
-		if($query)
-			$query = '?' . $query;
-
-		$dataStr = (is_array($data)) ? http_build_query($data) : $name . '=' . urlencode($data);
-		$request = "POST {$path}{$query} HTTP/1.1\r\nHost: $host\r\n{$auth}Content-Type: application/x-www-form-urlencoded\r\nContent-Length: " . strlen($dataStr) . "\r\n\r\n";
-		$request .= $dataStr . "\r\n\r\n";
-
-		fwrite($socket, $request);
-		
-		if($getResponse){
-			$response = stream_get_contents($socket);
-			return $response;
-		}
-
-	}
-
-	protected static $cache_age = 0, $modification_date = null;
-	protected static $etag = null;
 
 	/**
 	 * Set the maximum age of this page in web caches, in seconds
