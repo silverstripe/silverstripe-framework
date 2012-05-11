@@ -1,34 +1,36 @@
 (function($) {
 
-	/**
-	 * Creates a jQuery UI tab navigation bar, detached from the container DOM structure.
-	 */
-	$('.ss-ui-tabs-nav').entwine({
-	 onmatch: function() {
-		 this.redraw();
-	
-		 this._super();
-	 },
+	$.entwine('ss', function($) {
+		/**
+		 * Creates a jQuery UI tab navigation bar, detached from the container DOM structure.
+		 */
+		$('.ss-ui-tabs-nav').entwine({
+			onmatch: function() {
+				this.redraw();
 
-	 redraw: function() {
-	 		this.addClass('ui-tabs ui-widget ui-widget-content ui-corner-all ui-tabs-panel ui-corner-bottom');
-			this.find('ul').addClass('ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all');
-		 	this.find('li').addClass('ui-state-default ui-corner-top');
-		 	// TODO Figure out selected tab
-		 	var selected = this.find('li.current');
-		 	if(!selected.length) selected = this.find('li:first');
-		 	selected.selectIt();
-	 }
-	});
-	
-	$('.ss-ui-tabs-nav li').entwine({
-		onclick: function() {
-			this.selectIt();
-		},
-		selectIt: function() {
-			var cls = 'ui-tabs-selected ui-state-active';
-			this.addClass(cls).siblings().not(this).removeClass(cls);
-		}
+				this._super();
+			},
+
+			redraw: function() {
+				this.addClass('ui-tabs ui-widget ui-widget-content ui-corner-all ui-tabs-panel ui-corner-bottom');
+				this.find('ul').addClass('ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all');
+				this.find('li').addClass('ui-state-default ui-corner-top');
+				// TODO Figure out selected tab
+				var selected = this.find('li.current');
+				if(!selected.length) selected = this.find('li:first');
+				selected.selectIt();
+			}
+		});
+		
+		$('.ss-ui-tabs-nav li').entwine({
+			onclick: function() {
+				this.selectIt();
+			},
+			selectIt: function() {
+				var cls = 'ui-tabs-selected ui-state-active';
+				this.addClass(cls).siblings().not(this).removeClass(cls);
+			}
+		});
 	});
 
 	/**

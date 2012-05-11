@@ -282,83 +282,83 @@
 			}
 		
 		});
-	});
 	
-	/**
-	 * Class: #Form_BatchActionsForm :select[name=Action]
-	 */
-	$('#Form_BatchActionsForm select[name=Action]').entwine({
-		
-		onmatch: function() {
-			this.trigger('change');
-			this._super();
-		},
-		
 		/**
-		 * Function: onchange
-		 * 
-		 * Parameters:
-		 *  (Event) e
+		 * Class: #Form_BatchActionsForm :select[name=Action]
 		 */
-		onchange: function(e) {
-			var form = $(e.target.form), btn = form.find(':submit');
-			if($(e.target).val() == -1) {
-				btn.attr('disabled', 'disabled').button('refresh');
-			} else {
-				btn.removeAttr('disabled').button('refresh');
-				// form.submit();
-			} 
+		$('#Form_BatchActionsForm select[name=Action]').entwine({
+			
+			onmatch: function() {
+				this.trigger('change');
+				this._super();
+			},
+			
+			/**
+			 * Function: onchange
+			 * 
+			 * Parameters:
+			 *  (Event) e
+			 */
+			onchange: function(e) {
+				var form = $(e.target.form), btn = form.find(':submit');
+				if($(e.target).val() == -1) {
+					btn.attr('disabled', 'disabled').button('refresh');
+				} else {
+					btn.removeAttr('disabled').button('refresh');
+					// form.submit();
+				} 
 
-			// TODO Should work by triggering change() along, but doesn't - entwine event bubbling?
-			this.trigger("liszt:updated");
+				// TODO Should work by triggering change() along, but doesn't - entwine event bubbling?
+				this.trigger("liszt:updated");
 
-			this._super(e);
-		}
-	});
-	
-	$(document).ready(function() {
-		/**
-		 * Publish selected pages action
-		 */
-		$('#Form_BatchActionsForm').entwine('ss').register('admin/batchactions/publish', function(ids) {
-			var confirmed = confirm(
-				"You have " + ids.length + " pages selected.\n\n"
-				+ "Do your really want to publish?"
-			);
-			return (confirmed) ? ids : false;
+				this._super(e);
+			}
 		});
-		
-		/**
-		 * Unpublish selected pages action
-		 */
-		$('#Form_BatchActionsForm').entwine('ss').register('admin/batchactions/unpublish', function(ids) {
-			var confirmed = confirm(
-				"You have " + ids.length + " pages selected.\n\n"
-				+ "Do your really want to unpublish?"
-			);
-			return (confirmed) ? ids : false;
-		});
-		
-		/**
-		 * Delete selected pages action
-		 */
-		$('#Form_BatchActionsForm').entwine('ss').register('admin/batchactions/delete', function(ids) {
-			var confirmed = confirm(
-				"You have " + ids.length + " pages selected.\n\n"
-				+ "Do your really want to delete?"
-			);
-			return (confirmed) ? ids : false;
-		});
-		
-		/**
-		 * Delete selected pages from live action 
-		 */
-		$('#Form_BatchActionsForm').entwine('ss').register('admin/batchactions/deletefromlive', function(ids) {
-			var confirmed = confirm(
-				"You have " + ids.length + " pages selected.\n\n"
-				+ "Do your really want to delete these pages from live?"
-			);
-			return (confirmed) ? ids : false;
+
+		$(document).ready(function() {
+			/**
+			 * Publish selected pages action
+			 */
+			$('#Form_BatchActionsForm').register('admin/batchactions/publish', function(ids) {
+				var confirmed = confirm(
+					"You have " + ids.length + " pages selected.\n\n"
+					+ "Do your really want to publish?"
+				);
+				return (confirmed) ? ids : false;
+			});
+			
+			/**
+			 * Unpublish selected pages action
+			 */
+			$('#Form_BatchActionsForm').register('admin/batchactions/unpublish', function(ids) {
+				var confirmed = confirm(
+					"You have " + ids.length + " pages selected.\n\n"
+					+ "Do your really want to unpublish?"
+				);
+				return (confirmed) ? ids : false;
+			});
+			
+			/**
+			 * Delete selected pages action
+			 */
+			$('#Form_BatchActionsForm').register('admin/batchactions/delete', function(ids) {
+				var confirmed = confirm(
+					"You have " + ids.length + " pages selected.\n\n"
+					+ "Do your really want to delete?"
+				);
+				return (confirmed) ? ids : false;
+			});
+			
+			/**
+			 * Delete selected pages from live action 
+			 */
+			$('#Form_BatchActionsForm').register('admin/batchactions/deletefromlive', function(ids) {
+				var confirmed = confirm(
+					"You have " + ids.length + " pages selected.\n\n"
+					+ "Do your really want to delete these pages from live?"
+				);
+				return (confirmed) ? ids : false;
+			});
 		});
 	});
 	

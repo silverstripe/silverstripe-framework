@@ -420,36 +420,36 @@ jQuery.noConflict();
 		 * Add styling to all contained buttons, and create buttonsets if required.
 		 */
 		$('.cms .Actions').entwine({
-		onmatch: function() {
-			this.find('.ss-ui-button').click(function() {
-					var form = this.form;
-					// forms don't natively store the button they've been triggered with
-					if(form) {
-						form.clickedButton = this;
-						// Reset the clicked button shortly after the onsubmit handlers
-						// have fired on the form
-						setTimeout(function() {form.clickedButton = null;}, 10);
-					}
+			onmatch: function() {
+				this.find('.ss-ui-button').click(function() {
+						var form = this.form;
+						// forms don't natively store the button they've been triggered with
+						if(form) {
+							form.clickedButton = this;
+							// Reset the clicked button shortly after the onsubmit handlers
+							// have fired on the form
+							setTimeout(function() {form.clickedButton = null;}, 10);
+						}
+					});
+
+				this.redraw();
+				this._super();
+			},
+			redraw: function() {
+				// Remove whitespace to avoid gaps with inline elements
+				this.contents().filter(function() { 
+					return (this.nodeType == 3 && !/\S/.test(this.nodeValue)); 
+				}).remove();
+
+				// Init buttons if required
+				this.find('.ss-ui-button').each(function() {
+					if(!$(this).data('button')) $(this).button();
 				});
-
-			this.redraw();
-			this._super();
-		},
-		redraw: function() {
-			// Remove whitespace to avoid gaps with inline elements
-			this.contents().filter(function() { 
-				return (this.nodeType == 3 && !/\S/.test(this.nodeValue)); 
-			}).remove();
-
-			// Init buttons if required
-			this.find('.ss-ui-button').each(function() {
-				if(!$(this).data('button')) $(this).button();
-			});
-			
-			// Mark up buttonsets
-			this.find('.ss-ui-buttonset').buttonset();
-		}
-	});
+				
+				// Mark up buttonsets
+				this.find('.ss-ui-buttonset').buttonset();
+			}
+		});
 		
 		/**
 		 * Duplicates functionality in DateField.js, but due to using entwine we can match
@@ -508,166 +508,166 @@ jQuery.noConflict();
 				});
 			}
 		});
-	});
 	
-	/**
-	 * Overload the default GridField behaviour (open a new URL in the browser)
-	 * with the CMS-specific ajax loading.
-	 */
-	$('.cms .ss-gridfield').entwine({
-		showDetailView: function(url) {
-			// Include any GET parameters from the current URL, as the view state might depend on it.
-			// For example, a list prefiltered through external search criteria might be passed to GridField.
-			if(window.location.search) url += window.location.search;
-			$('.cms-container').entwine('ss').loadPanel(url);
-		}
-	});
+		/**
+		 * Overload the default GridField behaviour (open a new URL in the browser)
+		 * with the CMS-specific ajax loading.
+		 */
+		$('.cms .ss-gridfield').entwine({
+			showDetailView: function(url) {
+				// Include any GET parameters from the current URL, as the view state might depend on it.
+				// For example, a list prefiltered through external search criteria might be passed to GridField.
+				if(window.location.search) url += window.location.search;
+				$('.cms-container').loadPanel(url);
+			}
+		});
 
-
-	/**
-	 * Generic search form in the CMS, often hooked up to a GridField results display.
-	 */	
-	$('.cms-search-form').entwine({
-
-		onsubmit: function() {
-			// Remove empty elements and make the URL prettier
-			var nonEmptyInputs = this.find(':input:not(:submit)').filter(function() {
-				// Use fieldValue() from jQuery.form plugin rather than jQuery.val(),
-				// as it handles checkbox values more consistently
-				var vals = $.grep($(this).fieldValue(), function(val) { return (val);});
-				return (vals.length);
-			});
-			var url = this.attr('action');
-			if(nonEmptyInputs.length) url = $.path.addSearchParams(url, nonEmptyInputs.serialize());
-
-			var container = this.closest('.cms-container');
-			container.find('.cms-edit-form').tabs('select',0);  //always switch to the first tab (list view) when searching
-			container .entwine('ss').loadPanel(url);
-			return false;
-		},
 
 		/**
-		 * Resets are processed on the serverside, so need to trigger a submit.
+		 * Generic search form in the CMS, often hooked up to a GridField results display.
+		 */	
+		$('.cms-search-form').entwine({
+
+			onsubmit: function() {
+				// Remove empty elements and make the URL prettier
+				var nonEmptyInputs = this.find(':input:not(:submit)').filter(function() {
+					// Use fieldValue() from jQuery.form plugin rather than jQuery.val(),
+					// as it handles checkbox values more consistently
+					var vals = $.grep($(this).fieldValue(), function(val) { return (val);});
+					return (vals.length);
+				});
+				var url = this.attr('action');
+				if(nonEmptyInputs.length) url = $.path.addSearchParams(url, nonEmptyInputs.serialize());
+
+				var container = this.closest('.cms-container');
+				container.find('.cms-edit-form').tabs('select',0);  //always switch to the first tab (list view) when searching
+				container.loadPanel(url);
+				return false;
+			},
+
+			/**
+			 * Resets are processed on the serverside, so need to trigger a submit.
+			 */
+			onreset: function(e) {
+				this.clearForm();
+				this.submit();
+			}
+
+		});
+
+		/**
+		 * Simple toggle link, which points to a DOm element by its ID selector
+		 * in the href attribute (which doubles as an anchor link to that element).
 		 */
-		onreset: function(e) {
-			this.clearForm();
-			this.submit();
-		}
+		$('.cms .cms-help-toggle').entwine({
+			onmatch: function() {
+				this._super();
 
-	});
+				$(this.attr('href')).hide();
+			},
+			onclick: function(e) {
+				$(this.attr('href')).toggle();
+				e.preventDefault();
+			}
+		});
 
-	/**
-	 * Simple toggle link, which points to a DOm element by its ID selector
-	 * in the href attribute (which doubles as an anchor link to that element).
-	 */
-	$('.cms .cms-help-toggle').entwine({
-		onmatch: function() {
-			this._super();
+		/**
+		 * Allows to lazy load a panel, by leaving it empty
+		 * and declaring a URL to load its content via a 'url' HTML5 data attribute.
+		 * The loaded HTML is cached, with cache key being the 'url' attribute.
+		 * In order for this to work consistently, we assume that the responses are stateless.
+		 * To avoid caching, add a 'deferred-no-cache' to the node.
+		 */
+		window._panelDeferredCache = {};
+		$('.cms-panel-deferred').entwine({
+			onmatch: function() {
+				this._super();
+				this.redraw();
+			},
+			onunmatch: function() {
+				// Save the HTML state at the last possible moment.
+				// Don't store the DOM to avoid memory leaks.
+				if(!this.data('deferredNoCache')) window._panelDeferredCache[this.data('url')] = this.html();
+				this._super();
+			},
+			redraw: function() {
+				var self = this, url = this.data('url');
+				if(!url) throw 'Elements of class .cms-panel-deferred need a "data-url" attribute';
 
-			$(this.attr('href')).hide();
-		},
-		onclick: function(e) {
-			$(this.attr('href')).toggle();
-			e.preventDefault();
-		}
-	});
+				this._super();
 
-	/**
-	 * Allows to lazy load a panel, by leaving it empty
-	 * and declaring a URL to load its content via a 'url' HTML5 data attribute.
-	 * The loaded HTML is cached, with cache key being the 'url' attribute.
-	 * In order for this to work consistently, we assume that the responses are stateless.
-	 * To avoid caching, add a 'deferred-no-cache' to the node.
-	 */
-	window._panelDeferredCache = {};
-	$('.cms-panel-deferred').entwine({
-		onmatch: function() {
-			this._super();
-			this.redraw();
-		},
-		onunmatch: function() {
-			// Save the HTML state at the last possible moment.
-			// Don't store the DOM to avoid memory leaks.
-			if(!this.data('deferredNoCache')) window._panelDeferredCache[this.data('url')] = this.html();
-			this._super();
-		},
-		redraw: function() {
-			var self = this, url = this.data('url');
-			if(!url) throw 'Elements of class .cms-panel-deferred need a "data-url" attribute';
-
-			this._super();
-
-			// If the node is empty, try to either load it from cache or via ajax.
-			if(!this.children().length) {
-				if(!this.data('deferredNoCache') && typeof window._panelDeferredCache[url] !== 'undefined') {
-					this.html(window._panelDeferredCache[url]);
-				} else {
-					this.addClass('loading');
-					$.ajax({
-						url: url,
-						complete: function() {
-							self.removeClass('loading');
-						},
-						success: function(data, status, xhr) {
-							self.html(data);
-						}
-					});
+				// If the node is empty, try to either load it from cache or via ajax.
+				if(!this.children().length) {
+					if(!this.data('deferredNoCache') && typeof window._panelDeferredCache[url] !== 'undefined') {
+						this.html(window._panelDeferredCache[url]);
+					} else {
+						this.addClass('loading');
+						$.ajax({
+							url: url,
+							complete: function() {
+								self.removeClass('loading');
+							},
+							success: function(data, status, xhr) {
+								self.html(data);
+							}
+						});
+					}
 				}
 			}
-		}
-	});
+		});
 
-	/**
-	 * Lightweight wrapper around jQuery UI tabs.
-	 * Ensures that anchor links are set properly,
-	 * and any nested tabs are scrolled if they have
-	 * their height explicitly set. This is important
-	 * for forms inside the CMS layout.
-	 */
-	$('.cms-tabset').entwine({
-		onmatch: function() {
-			// Can't name redraw() as it clashes with other CMS entwine classes
-			this.redrawTabs();
-			this._super();
-		},
-		
-		redrawTabs: function() {
-			this.rewriteHashlinks();
-
-			var id = this.attr('id'), cookieId = 'ui-tabs-' + id, 
-				selectedTab = this.find('ul:first .ui-state-selected');
-
-			// Fix for wrong cookie storage of deselected tabs
-			if($.cookie && id && $.cookie(cookieId) == -1) $.cookie(cookieId, 0);
-			this.tabs({
-				cookie: ($.cookie && id) ? { expires: 30, path: '/', name: cookieId } : false,
-				ajaxOptions: {
-					// Overwrite ajax loading to use CMS logic instead
-					beforeSend: function(xhr, settings) {
-						var makeAbs = $.path.makeUrlAbsolute,
-							baseUrl = $('base').attr('href'),
-							isSame = (makeAbs(settings.url, baseUrl) == makeAbs(document.location.href));
-							
-						if(!isSame) $('.cms-container').entwine('ss').loadPanel(settings.url);
-						return false;
-					}
-				},
-				selected: (selectedTab.index() != -1) ? selectedTab.index() : 0
-			});
-		},
-	
 		/**
-		 * Replace prefixes for all hashlinks in tabs.
-		 * SSViewer rewrites them from "#Root_MyTab" to
-		 * e.g. "/admin/#Root_MyTab" which makes them
-		 * unusable for jQuery UI.
+		 * Lightweight wrapper around jQuery UI tabs.
+		 * Ensures that anchor links are set properly,
+		 * and any nested tabs are scrolled if they have
+		 * their height explicitly set. This is important
+		 * for forms inside the CMS layout.
 		 */
-		rewriteHashlinks: function() {
-			$(this).find('ul a').each(function() {
-				var href = $(this).attr('href').replace(/.*(#.*)/, '$1');
-				if(href) $(this).attr('href', href);
-			});
-		}
+		$('.cms-tabset').entwine({
+			onmatch: function() {
+				// Can't name redraw() as it clashes with other CMS entwine classes
+				this.redrawTabs();
+				this._super();
+			},
+			
+			redrawTabs: function() {
+				this.rewriteHashlinks();
+
+				var id = this.attr('id'), cookieId = 'ui-tabs-' + id, 
+					selectedTab = this.find('ul:first .ui-state-selected');
+
+				// Fix for wrong cookie storage of deselected tabs
+				if($.cookie && id && $.cookie(cookieId) == -1) $.cookie(cookieId, 0);
+				this.tabs({
+					cookie: ($.cookie && id) ? { expires: 30, path: '/', name: cookieId } : false,
+					ajaxOptions: {
+						// Overwrite ajax loading to use CMS logic instead
+						beforeSend: function(xhr, settings) {
+							var makeAbs = $.path.makeUrlAbsolute,
+								baseUrl = $('base').attr('href'),
+								isSame = (makeAbs(settings.url, baseUrl) == makeAbs(document.location.href));
+								
+							if(!isSame) $('.cms-container').loadPanel(settings.url);
+							return false;
+						}
+					},
+					selected: (selectedTab.index() != -1) ? selectedTab.index() : 0
+				});
+			},
+		
+			/**
+			 * Replace prefixes for all hashlinks in tabs.
+			 * SSViewer rewrites them from "#Root_MyTab" to
+			 * e.g. "/admin/#Root_MyTab" which makes them
+			 * unusable for jQuery UI.
+			 */
+			rewriteHashlinks: function() {
+				$(this).find('ul a').each(function() {
+					var href = $(this).attr('href').replace(/.*(#.*)/, '$1');
+					if(href) $(this).attr('href', href);
+				});
+			}
+		});
 	});
 	
 }(jQuery));
