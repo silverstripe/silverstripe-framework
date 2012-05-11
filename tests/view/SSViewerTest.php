@@ -967,6 +967,12 @@ after')
 		SSViewer::set_source_file_comments(false);
 	}
 
+	function testLoopIteratorIterator() {
+		$list = new PaginatedList(new ArrayList());
+		$viewer = new SSViewer_FromString('<% loop List %>$ID - $FirstName<br /><% end_loop %>');
+		$result = $viewer->process(new ArrayData(array('List' => $list)));
+		$this->assertEquals($result, '');
+	}
 }
 
 /**
