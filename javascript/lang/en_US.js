@@ -32,6 +32,8 @@ if(typeof(ss) == 'undefined' || typeof(ss.i18n) == 'undefined') {
 		'UploadField.MAXNUMBEROFFILESSIMPLE': 'Max number of files exceeded',
 		'UploadField.UPLOADEDBYTES': 'Uploaded bytes exceed file size',
 		'UploadField.EMPTYRESULT': 'Empty file upload result',
-		'UploadField.LOADING': 'Loading ...'
+		'UploadField.LOADING': 'Loading ...',
+		'UploadField.Editing': 'Editing ...',
+		'UploadField.Uploaded': 'Uploaded'
 	});
 }

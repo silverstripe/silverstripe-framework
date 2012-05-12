@@ -347,7 +347,7 @@
 				var text="";
 
 				if(this.height() === 0) {
-					text = "Editing...";
+					text = ss.i18n._t('UploadField.Editing', "Editing ...");
 					this.fitHeight();
 					itemInfo.find('.toggle-details-icon').addClass('opened');					
 					status.removeClass('ui-state-success-text').removeClass('ui-state-warning-text');
