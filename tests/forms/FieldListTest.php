@@ -790,6 +790,9 @@ class FieldListTest extends SapphireTest {
 	}
 	
 	function testRewriteTabPath() {
+		$originalDeprecation = Deprecation::dump_settings();
+		Deprecation::notification_version('2.4');
+
 		$fields = new FieldList(
 			new Tabset("Root",
 				$tab1Level1 = new Tab("Tab1Level1", 
@@ -820,9 +823,14 @@ class FieldListTest extends SapphireTest {
 			$method->invoke($fields, 'Root.Tab1Level1.Tab1Level2'),
 			'Indirect aliasing on toplevel'
 		);
+
+		Deprecation::restore_settings($originalDeprecation);
 	}
 
 	function testRewriteTabPathFindOrMakeTab() {
+		$originalDeprecation = Deprecation::dump_settings();
+		Deprecation::notification_version('2.4');
+		
 		$fields = new FieldList(
 			new Tabset("Root",
 				$tab1Level1 = new Tab("Tab1Level1Renamed", 
@@ -849,6 +857,8 @@ class FieldListTest extends SapphireTest {
 		$this->assertEquals($tab1Level2, $fields->findOrMakeTab('Root.Tab1Level1Renamed.Tab1Level2'), 
 			'findOrMakeTab() with nested tab under new parent tab name'
 		);
+
+		Deprecation::restore_settings($originalDeprecation);
 	}
 	
 }
