@@ -12,6 +12,9 @@
 					fileList.setState('ParentID', self.getValue());
 					fileList.reload();
 				});
+			},
+			onunmatch: function() {
+				this._super();
 			}
 		});
 	});

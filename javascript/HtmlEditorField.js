@@ -230,6 +230,13 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				this._super();
 			},
+			onunmatch: function() {
+				// TODO Throws exceptions in Firefox, most likely due to the element being removed from the DOM at this point
+				// var ed = tinyMCE.get(this.attr('id'));
+				// if(ed) ed.remove();
+
+				this._super();
+			},
 
 			redraw: function() {
 				// Using a global config (generated through HTMLEditorConfig PHP logic)
@@ -298,13 +305,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						}
 					});
 				}
-			},
-			onunmatch: function() {
-				// TODO Throws exceptions in Firefox, most likely due to the element being removed from the DOM at this point
-				// var ed = tinyMCE.get(this.attr('id'));
-				// if(ed) ed.remove();
-
-				this._super();
 			}
 		});
 
@@ -313,6 +313,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				// Create jQuery dialog
 				this.dialog({autoOpen: true, bgiframe: true, modal: true, height: 500, width: '80%', ghost: true});
 
+				this._super();
+			},
+			onunmatch: function() {
 				this._super();
 			},
 			getForm: function() {
@@ -357,6 +360,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this._super();
 
 				this.redraw();
+			},
+			onunmatch: function() {
+				this._super();
 			},
 			redraw: function() {
 			},
@@ -992,6 +998,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				if(this.attr('name') == 'Width') this.closest('.ss-htmleditorfield-file').updateDimensions('Width', 600);
 
 			},
+			onunmatch: function() {
+				this._super();
+			},
 			onfocusout: function(e) {
 				this.closest('.ss-htmleditorfield-file').updateDimensions(this.attr('name'));
 			}
@@ -1021,6 +1030,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					fileList.setState('ParentID', self.getValue());
 					fileList.reload();
 				});
+			},
+			onunmatch: function() {
+				this._super();
 			}
 		});
 		

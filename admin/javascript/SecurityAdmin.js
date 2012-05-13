@@ -28,6 +28,9 @@
 				
 				// TODO entwine can't seem to bind to iframe load events
 				$(this).bind('load', refreshAfterImport);
+			},
+			onunmatch: function() {
+				this._super();
 			}
 		});
 	});
@@ -44,6 +47,9 @@
 			onmatch: function() {
 				this.toggleCheckboxes();
 
+				this._super();
+			},
+			onunmatch: function() {
 				this._super();
 			},
 			/**

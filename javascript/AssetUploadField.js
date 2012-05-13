@@ -6,6 +6,9 @@
 			// Hide the "second step" part until we're actually uploading
 			this.find('.ss-uploadfield-editandorganize').hide();
 		},
+		onunmatch: function() {
+				this._super();
+		},
 		onfileuploadadd: function(e) {
 			this.find('.ss-uploadfield-editandorganize').show();
 		},

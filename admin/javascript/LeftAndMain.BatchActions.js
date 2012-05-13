@@ -60,6 +60,9 @@
 
 				this._super();
 			},
+			onunmatch: function() {
+				this._super();
+			},
 		
 			/**
 			 * Updates the select box state according to the current view mode.
@@ -290,6 +293,9 @@
 			
 			onmatch: function() {
 				this.trigger('change');
+				this._super();
+			},
+			onunmatch: function() {
 				this._super();
 			},
 			

@@ -105,6 +105,9 @@
 
 				this._super();
 			},
+			onunmatch: function() {
+				this._super();
+			},
 			
 			updateItems: function() {
 				// Hide "edit page" commands unless the section is activated
@@ -150,6 +153,9 @@
 				if(this.find('ul').length) {
 					this.find('a:first').append('<span class="toggle-children"><span class="toggle-children-icon"></span></span>');
 				}
+				this._super();
+			},
+			onunmatch: function() {
 				this._super();
 			},
 			toggle: function() {
