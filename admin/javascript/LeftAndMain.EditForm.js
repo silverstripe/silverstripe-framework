@@ -209,6 +209,9 @@
 				var tabs = this.find("ul:first").children('li');
 				if(tabs.length == 1) this.find('ul:first').hide();
 				this._super();
+			},
+			onunmatch: function() {
+				this._super();
 			}
 		});
 
