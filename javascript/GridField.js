@@ -169,15 +169,8 @@
 		}
 	});
 
-	$('fieldset.ss-gridfield .new-link').entwine({
-		onclick: function(e) {
-			this.getGridField().showDetailView($(this).prop('href'));
-			return false;
-		}
-	});
-
-	$('fieldset.ss-gridfield .edit-link').entwine({
-		onclick: function(e) {
+	$('.ss-gridfield .action-detail').entwine({
+		onclick: function() {
 			this.getGridField().showDetailView($(this).prop('href'));
 			return false;
 		}

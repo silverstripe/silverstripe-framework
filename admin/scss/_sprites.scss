@@ -4,7 +4,8 @@
 @import "compass/utilities/sprites/base";
 
 @import "btn-icon/*.png";
-.ui-state-default {
+
+.ui-state-default, .ui-widget-content {
 	@include all-btn-icon-sprites;
 }
 
