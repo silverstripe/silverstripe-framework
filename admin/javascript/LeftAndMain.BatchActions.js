@@ -246,9 +246,9 @@
 						// Reset action
 						self.find(':input[name=Action]').val('').change();
 					
-						// status message
+						// status message (decode into UTF-8, HTTP headers don't allow multibyte)
 						var msg = xmlhttp.getResponseHeader('X-Status');
-						if(msg) statusMessage(msg, (status == 'success') ? 'good' : 'bad');
+						if(msg) statusMessage(decodeURIComponent(msg), (status == 'success') ? 'good' : 'bad');
 					},
 					success: function(data, status) {
 						var id, node;

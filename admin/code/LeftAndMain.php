@@ -726,7 +726,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$this->extend('onAfterSave', $record);
 		$this->setCurrentPageID($record->ID);
 		
-		$this->response->addHeader('X-Status', _t('LeftAndMain.SAVEDUP'));
+		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP')));
 		return $this->getResponseNegotiator()->respond($this->request);
 	}
 	
@@ -739,7 +739,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		
 		$record->delete();
 
-		$this->response->addHeader('X-Status', _t('LeftAndMain.SAVEDUP'));
+		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP')));
 		return $this->getResponseNegotiator()->respond(
 			$this->request, 
 			array('currentform' => array($this, 'EmptyForm'))
@@ -809,7 +809,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				}
 			}
 
-			$this->response->addHeader('X-Status', _t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.'));
+			$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
 		}
 		
 		// Update sorting
@@ -830,7 +830,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				}
 			}
 			
-			$this->response->addHeader('X-Status', _t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.'));
+			$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.REORGANISATIONSUCCESSFUL', 'Reorganised the site tree successfully.')));
 		}
 
 		return Convert::raw2json($statusUpdates);

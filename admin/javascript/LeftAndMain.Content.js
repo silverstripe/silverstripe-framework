@@ -147,9 +147,6 @@
 					
 					this.trigger('reloadeditform', {form: form, origData: origData, xmlhttp: xmlhttp});
 				}
-
-				// set status message based on response
-				var _statusMessage = (xmlhttp.getResponseHeader('X-Status')) ? xmlhttp.getResponseHeader('X-Status') : xmlhttp.statusText;
 			},
 			
 			/**
