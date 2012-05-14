@@ -138,7 +138,7 @@ HTTP:
       csp: application/vnd.commonspace
       css: text/css
       cst: application/x-director
-      csv: text/csv
+      csv: text/plain
       cu: application/cu-seeme
       curl: text/vnd.curl
       cww: application/prs.cww
@@ -296,6 +296,7 @@ HTTP:
       gv: text/vnd.graphviz
       gxf: application/gxf
       gxt: application/vnd.geonext
+      gz: application/gzip
       h: text/x-c
       h261: video/h261
       h263: video/h263
