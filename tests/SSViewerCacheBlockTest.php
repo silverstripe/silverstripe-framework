@@ -186,12 +186,13 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		$this->assertEquals($this->_runtemplate($template, array('Foo' => 2, 'Fooa' => 9, 'Foob' => 9, 'Bar' => 2, 'Bara' => 1)), ' 9 9 9 ');
 	}
 
-	/**
-     * @expectedException Exception
-     */
 	function testErrorMessageForCachedWithinControlWithinCached() {
 		$this->_reset(true);
-		$this->_runtemplate('<% cached %><% control Foo %><% cached %>$Bar<% end_cached %><% end_control %><% end_cached %>');
+		try {
+			$this->_runtemplate('<% cached %><% control Foo %><% cached %>$Bar<% end_cached %><% end_control %><% end_cached %>');
+		} catch(Exception $e) {
+			return;
+		}
 	}
 
 	function testNoErrorMessageForCachedWithinControlWithinUncached() {
@@ -199,20 +200,24 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		$this->_runtemplate('<% uncached %><% control Foo %><% cached %>$Bar<% end_cached %><% end_control %><% end_uncached %>');
 	}
 
-	/**
-     * @expectedException Exception
-     */
 	function testErrorMessageForCachedWithinIf() {
 		$this->_reset(true);
-		$this->_runtemplate('<% cached %><% if Foo %><% cached %>$Bar<% end_cached %><% end_if %><% end_cached %>');
+		try {
+			$this->_runtemplate('<% cached %><% if Foo %><% cached %>$Bar<% end_cached %><% end_if %><% end_cached %>');	
+		} catch(Exception $e) {
+			return;
+		}
+		$this->fail();
+		
 	}
 
-	/**
-     * @expectedException Exception
-     */
 	function testErrorMessageForInvalidConditional() {
 		$this->_reset(true);
-		$this->_runtemplate('<% cached Foo if %>$Bar<% end_cached %>');
+		try {
+			$this->_runtemplate('<% cached Foo if %>$Bar<% end_cached %>');
+		} catch(Exception $e) {
+			return;
+		}
 	}
 
 }
