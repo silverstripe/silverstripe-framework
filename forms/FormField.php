@@ -53,8 +53,8 @@ class FormField extends RequestHandler {
 	/**
 	 * Stores a reference to the FieldList that contains this object.
 	 * @var FieldList
-	 */ 
-	protected $containerFieldSet;
+	 */
+	protected $containerFieldList;
 	
 	/**
 	 * @var boolean
@@ -837,19 +837,30 @@ class FormField extends RequestHandler {
 		}
 	}
 
+	function setContainerFieldSet($list) {
+		Deprecation::notice('3.0', 'Use setContainerFieldList() instead.');
+		return $this->setContainerFieldList($list);
+	}
+
 	/**
-	 * Set the FieldList that contains this field. 
+	 * Set the FieldList that contains this field.
 	 *
-	 * @param FieldList $containerFieldSet
-	 */ 
-	function setContainerFieldSet($containerFieldSet) {
-		$this->containerFieldSet = $containerFieldSet;
+	 * @param FieldList $list
+	 * @return FieldList
+	 */
+	function setContainerFieldList($list) {
+		$this->containerFieldList = $list;
 		return $this;
 	}
-	
+
 	function rootFieldSet() {
-		if(is_object($this->containerFieldSet)) return $this->containerFieldSet->rootFieldSet();
-		else user_error("rootFieldSet() called on $this->class object without a containerFieldSet", E_USER_ERROR);
+		Deprecation::notice('3.0', 'Use rootFieldList() instead.');
+		return $this->rootFieldList();
+	}
+
+	function rootFieldList() {
+		if(is_object($this->containerFieldList)) return $this->containerFieldList->rootFieldList();
+		else user_error("rootFieldList() called on $this->class object without a containerFieldList", E_USER_ERROR);
 	}
 	
 }

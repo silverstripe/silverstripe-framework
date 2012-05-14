@@ -248,8 +248,8 @@ class CompositeField extends FormField {
 		return $this->children->replaceField($fieldName, $newField);
 	}
 
-	function rootFieldSet() {
-		if(is_object($this->containerFieldSet)) return $this->containerFieldSet->rootFieldSet();
+	function rootFieldList() {
+		if(is_object($this->containerFieldList)) return $this->containerFieldList->rootFieldList();
 		else return $this->children;
 	}
 	
