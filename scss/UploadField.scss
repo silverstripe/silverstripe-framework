@@ -31,7 +31,7 @@
 		font-weight: bold;
 		float: left;
 		overflow: hidden;
-		&.ss-uploadfield-dropzone { 
+		&.ss-uploadfield-dropzone {
 			@include box-shadow(lighten($color-medium-separator, 10%) 0 0 3px 3px inset);
 			border: 2px dashed $color-medium-separator;
 			background: $color-light-separator;
@@ -48,7 +48,7 @@
 		margin: 0;
 		text-align: left;
 		
-		b { 
+		b {
 			font-weight: bold; 
 			padding: 0 5px 0 0;
 		}
@@ -141,7 +141,20 @@
 				height: 16px;
 				cursor: pointer;
 				@include single-box-shadow(none);
+				background: none;
+				position: relative;
 				// background: sprite($sprites16, cross-circle) no-repeat;
+				
+				span {
+				  position: absolute;
+				  left: 0;
+				  top: 0;
+				  margin: 0;
+				  
+				  &.ui-button-text {
+            display: none;
+          }
+				}
 			}
 		}
 		.ss-uploadfield-item-start {
