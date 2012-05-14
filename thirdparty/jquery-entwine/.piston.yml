@@ -1,8 +1,8 @@
 --- 
-format: 1
+repository_url: https://github.com/hafriedlander/jquery.entwine.git
+repository_class: Piston::Git::Repository
 handler: 
-  commit: dd1b1d3c0958aa12990cba80a9b9d429a7e89bee
+  commit: 860ffe280044c3f88e64ba400f8f17b5d2616c39
   branch: master
 lock: false
-repository_class: Piston::Git::Repository
-repository_url: https://github.com/hafriedlander/jquery.entwine.git
+format: 1

@@ -13,6 +13,7 @@ for x in \
 	vendor/jquery.selector/jquery.selector.js \
 	vendor/jquery.selector/jquery.selector.specifity.js \
 	vendor/jquery.selector/jquery.selector.matches.js \
+	src/jquery.selector.affectedby.js \
 	src/jquery.focusinout.js \
 	src/jquery.entwine.js \
 	src/jquery.entwine.dommaybechanged.js \
