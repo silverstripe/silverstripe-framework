@@ -386,7 +386,7 @@ class FieldListTest extends SapphireTest {
 		$this->assertEquals('Title', $fields[1]->getName());
 	}
 
-	function testrootFieldSet() {
+	function testrootFieldList() {
 		/* Given a nested set of FormField, CompositeField, and FieldList objects */
 		$FieldList = new FieldList(
 			$root = new TabSet("Root", 
@@ -397,22 +397,22 @@ class FieldListTest extends SapphireTest {
 			)
 		);
 		
-		/* rootFieldSet() should always evaluate to the same object: the topmost FieldList */		
-		$this->assertSame($FieldList, $FieldList->rootFieldSet());
-		$this->assertSame($FieldList, $root->rootFieldSet());
-		$this->assertSame($FieldList, $main->rootFieldSet());
-		$this->assertSame($FieldList, $a->rootFieldSet());
-		$this->assertSame($FieldList, $b->rootFieldSet());
+		/* rootFieldList() should always evaluate to the same object: the topmost FieldList */		
+		$this->assertSame($FieldList, $FieldList->rootFieldList());
+		$this->assertSame($FieldList, $root->rootFieldList());
+		$this->assertSame($FieldList, $main->rootFieldList());
+		$this->assertSame($FieldList, $a->rootFieldList());
+		$this->assertSame($FieldList, $b->rootFieldList());
 		
-		/* If we push additional fields, they should also have the same rootFieldSet() */
+		/* If we push additional fields, they should also have the same rootFieldList() */
 		$root->push($other = new Tab("Other"));
 		$other->push($c = new TextField("C"));
 		$root->push($third = new Tab("Third", $d = new TextField("D")));
 
-		$this->assertSame($FieldList, $other->rootFieldSet());
-		$this->assertSame($FieldList, $third->rootFieldSet());
-		$this->assertSame($FieldList, $c->rootFieldSet());
-		$this->assertSame($FieldList, $d->rootFieldSet());
+		$this->assertSame($FieldList, $other->rootFieldList());
+		$this->assertSame($FieldList, $third->rootFieldList());
+		$this->assertSame($FieldList, $c->rootFieldList());
+		$this->assertSame($FieldList, $d->rootFieldList());
 	}
 	
 	function testAddingDuplicateReplacesOldField() {

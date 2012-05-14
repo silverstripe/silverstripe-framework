@@ -40,7 +40,7 @@ class FieldList extends ArrayList {
 		parent::__construct($items);
 
 		foreach ($items as $item) {
-			if ($item instanceof FormField) $item->setContainerFieldSet($this);
+			if ($item instanceof FormField) $item->setContainerFieldList($this);
 		}
 	}
 	
@@ -332,7 +332,7 @@ class FieldList extends ArrayList {
 			foreach($dataFields as $child) {
 				if(trim($name) == trim($child->getName()) || $name == $child->id) return $child;
 			}
-		}                                 
+		}
 	}
 
 	/**
@@ -343,7 +343,7 @@ class FieldList extends ArrayList {
 	 */
 	public function insertBefore($item, $name) {
 		$this->onBeforeInsert($item);
-		$item->setContainerFieldSet($this);
+		$item->setContainerFieldList($this);
 		
 		$i = 0;
 		foreach($this->items as $child) {
@@ -368,7 +368,7 @@ class FieldList extends ArrayList {
 	 */
 	public function insertAfter($item, $name) {
 		$this->onBeforeInsert($item);
-		$item->setContainerFieldSet($this);
+		$item->setContainerFieldList($this);
 		
 		$i = 0;
 		foreach($this->items as $child) {
@@ -393,7 +393,7 @@ class FieldList extends ArrayList {
 	 */
 	public function push($item, $key = null) {
 		$this->onBeforeInsert($item);
-		$item->setContainerFieldSet($this);
+		$item->setContainerFieldList($this);
 		return parent::push($item, $key = null);
 	}
 
@@ -402,7 +402,7 @@ class FieldList extends ArrayList {
 	 */
 	protected function onBeforeInsert($item) {
 		$this->flushFieldsCache();
-		if($item->getName()) $this->rootFieldSet()->removeByName($item->getName(), true);
+		if($item->getName()) $this->rootFieldList()->removeByName($item->getName(), true);
 	}
 		
 	
@@ -479,8 +479,8 @@ class FieldList extends ArrayList {
 	/**
 	 * Returns the root field set that this belongs to
 	 */
-	public function rootFieldSet() {
-		if($this->containerField) return $this->containerField->rootFieldSet();
+	public function rootFieldList() {
+		if($this->containerField) return $this->containerField->rootFieldList();
 		else return $this;
 	}
 	
