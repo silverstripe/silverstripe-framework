@@ -14,7 +14,8 @@
 body.cms.ss-uploadfield-edit-iframe {
 	padding: $grid-x*2;
 	overflow: auto;
-	span.readonly{
+	
+	span.readonly {
 		font-style:italic;
 		color:lighten($color-text, 20%);
 		text-shadow: 0px 1px 0px #fff;
@@ -33,7 +34,6 @@ body.cms.ss-uploadfield-edit-iframe {
 		padding: 0 0 7px;
 		clear: both;
 	}
-
 	.field {
 		border-bottom: 0;
 		box-shadow:none;
@@ -45,6 +45,7 @@ body.cms.ss-uploadfield-edit-iframe {
 		padding-bottom:5px;
 		height:50px;
 		position:relative;
+		
 		.ss-ui-button {
 			position:absolute;
 			bottom:0;
@@ -54,12 +55,12 @@ body.cms.ss-uploadfield-edit-iframe {
 			@include box-shadow(none);
 			color: $color-text;		
 			@include ss-uploadfield-editButton;
+			
 			&.ss-uploadfield-item-edit-all {
 				@extend .ss-uploadfield-item-edit; 
 				height:auto;
 			}
 		}
-
 		.state{
 			font-size: 16px;
 			font-weight:bold;
@@ -103,11 +104,13 @@ body.cms.ss-uploadfield-edit-iframe {
 			background-color: #c11f1d;
 			padding-right:110px;
 			@include background-image(linear-gradient(top,  #c11f1d 0%,#bf1d1b 4%,#b71b1c 8%,#b61e1d 15%,#b11d1d 27%,#ab1d1c 31%,#a51b1b 42%,#9f1b19 46%,#9f1b19 50%,#991c1a 54%,#971a18 58%,#911b1b 62%,#911b1b 65%,#7e1816 88%,#771919 92%,#731817 100%));
-			.ss-uploadfield-item-name{
+			
+			.ss-uploadfield-item-name {
 				width:100%;				
 				cursor:default;
 				background: darken($color-button-disabled,20%); //for browsers that don't support rgba
 				background: rgba(darken($color-button-disabled, 15%),0.9);
+				
 				.name { 
 					text-shadow: 0px 1px 0px rgba(#fff, 0.7);
 				}
@@ -144,7 +147,8 @@ body.cms.ss-uploadfield-edit-iframe {
 			cursor:pointer;	
 			//display:table, and table-layout:fixed allows us to use percentages with text-overflow
 			display:table;
-			table-layout:fixed;		
+			table-layout:fixed;
+			
 			.name { 
 				text-shadow: 0px 1px 0px rgba(#fff, 0.5);
 				display:inline;
@@ -161,6 +165,7 @@ body.cms.ss-uploadfield-edit-iframe {
 				max-width:30%;
 				@include hide-text-overflow;
 				text-shadow: 0px 1px 0px rgba(#fff, 0.5);
+				
 				&.ui-state-error-text {
 					max-width:70%;
 					position:absolute;
@@ -175,17 +180,14 @@ body.cms.ss-uploadfield-edit-iframe {
 					color: $color-button-constructive;
 				}
 			}
-		} 
-		
+		}
 		.ss-uploadfield-item-actions {
 			position: absolute;
 			top: 0;
 			right: 0;
 			left: 0;
 			z-index: 0;
-			color:#f00;
-			
-
+			color: #f00;
 		}
 		.ss-ui-button {
 			background: none;
@@ -238,6 +240,15 @@ body.cms.ss-uploadfield-edit-iframe {
 				height: 16px;
 				cursor: pointer;
 				@include single-box-shadow(none);
+				position: relative;
+				
+				.ui-icon {
+				  display: block;
+				  position: absolute;
+				  top: 0;
+				  left: 0;
+				  margin: 0;
+				}
 			}
 		}
 		
