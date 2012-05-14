@@ -232,12 +232,17 @@ body.cms {
 		}
 
 		text-shadow: lighten($color-tab, 5%) 0 1px 0;
+
+		a {
+			color: #FFF;
+			text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+		}
 	}
 	
 	.ui-state-active, 
 	.ui-widget-content .ui-state-active, 
 	.ui-widget-header .ui-state-active {
-		background: $color-widget-bg;
+		background: $tab-panel-texture-background;
 		border: {
 			right-color: darken($color-tab, 20%);
 			left-color: darken($color-tab, 20%);
@@ -247,7 +252,9 @@ body.cms {
 		z-index:2;
 		
 		a {
-			border-bottom:none;
+			border-bottom: none;
+			color: $color-text;
+			text-shadow: none;
 		}
 	}
 }
@@ -294,6 +301,12 @@ body.cms {
 				}
 			}
 		}
+	}
+}
+
+.CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
+	.cms-content-header-tabs .ui-tabs-nav .ui-state-active {
+		background: darken($color-widget-bg, 2%);
 	}
 }
 

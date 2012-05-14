@@ -219,14 +219,19 @@ $gf_grid_x:	16px;
 						@include box-shadow-none;
 					}
 				}
-				a.edit-link {
+				a.view-link, a.edit-link {
 					display:inline-block;
 					width:$gf_grid_x;
 					height:20px; //min height to fit the edit icon
 					text-indent:9999em;
 					overflow: hidden;
 					vertical-align: middle;
-					background: url(../images/icons/document--pencil.png) no-repeat 0 1px;
+				}
+				a.view-link {
+					background: url(../admin/images/btn-icon/magnifier.png) no-repeat 0 1px;
+				}
+				a.edit-link {
+					background: url(../admin/images/btn-icon/document--pencil.png) no-repeat 0 1px;
 				}
 			}
 		}

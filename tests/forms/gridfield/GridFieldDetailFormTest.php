@@ -47,6 +47,26 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertEquals($count + 1, $group->People()->Count());
 	}
 
+	public function testViewForm() {
+		$this->logInWithPermission('ADMIN');
+
+		$response = $this->get('GridFieldDetailFormTest_Controller');
+		$parser   = new CSSContentParser($response->getBody());
+
+		$viewLink = $parser->getBySelector('.ss-gridfield-items .first .view-link');
+		$viewLink = (string) $viewLink[0]['href'];
+
+		$response = $this->get($viewLink);
+		$parser   = new CSSContentParser($response->getBody());
+
+		$firstName = $parser->getBySelector('#Form_ItemEditForm_FirstName');
+		$surname   = $parser->getBySelector('#Form_ItemEditForm_Surname');
+
+		$this->assertFalse($response->isError());
+		$this->assertEquals('Joe', (string) $firstName[0]);
+		$this->assertEquals('Bloggs', (string) $surname[0]);
+	}
+
 	function testEditForm() {
 		$this->logInWithPermission('ADMIN');
 		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
@@ -237,6 +257,7 @@ class GridFieldDetailFormTest_Controller extends Controller implements TestOnly 
 		$field = new GridField('testfield', 'testfield', $group->People());
 		$field->getConfig()->addComponent(new GridFieldToolbarHeader());
 		$field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
+		$field->getConfig()->addComponent(new GridFieldViewButton());
 		$field->getConfig()->addComponent(new GridFieldEditButton());
 		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
 		$field->getConfig()->addComponent(new GridFieldEditButton());

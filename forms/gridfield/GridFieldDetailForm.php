@@ -225,7 +225,30 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	public function Link($action = null) {
 		return Controller::join_links($this->gridField->Link('item'), $this->record->ID ? $this->record->ID : 'new', $action);
 	}
-	
+
+	public function view($request) {
+		if(!$this->record->canView()) {
+			$this->httpError(403);
+		}
+
+		$controller = $this->getToplevelController();
+
+		$form = $this->ItemEditForm($this->gridField, $request);
+		$form->makeReadonly();
+
+		$data = new ArrayData(array(
+			'Backlink'     => $controller->Link(),
+			'ItemEditForm' => $form
+		));
+		$return = $data->renderWith($this->template);
+
+		if($request->isAjax()) {
+			return $return;
+		} else {
+			return $controller->customise(array('Content' => $return));
+		}
+	}
+
 	function edit($request) {
 		$controller = $this->getToplevelController();
 		$form = $this->ItemEditForm($this->gridField, $request);

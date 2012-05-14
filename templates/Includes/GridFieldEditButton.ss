@@ -1,1 +1,1 @@
-<a class="action edit-link" href="$Link">edit</a> 
+<a class="action action-detail edit-link" href="$Link">edit</a>
