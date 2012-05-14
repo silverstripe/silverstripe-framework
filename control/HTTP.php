@@ -211,7 +211,7 @@ class HTTP {
 		
 		// Fallback to use the list from the HTTP.yml configuration and rely on the file extension
 		// to get the file mime-type
-		$ext = substr(strrchr($filename, '.'), 1);
+		$ext = File::get_file_extension($filename);
 		// Get the mime-types
 		$mimeTypes = Config::inst()->get('HTTP', 'MimeTypes');
 		// The mime type doesn't exist
