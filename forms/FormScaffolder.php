@@ -64,7 +64,7 @@ class FormScaffolder extends Object {
 	 * 
 	 * @return FieldList
 	 */
-	public function getFieldSet() {
+	public function getFieldList() {
 		$fields = new FieldList();
 		
 		// tabbed or untabbed
