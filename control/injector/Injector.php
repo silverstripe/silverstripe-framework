@@ -344,7 +344,7 @@ class Injector {
 	 * Use this if you don't want to register a complete new config, just append
 	 * to an existing configuration. Helpful to avoid overwriting someone else's changes
 	 * 
-	 * updateSpect('RequestProcessor', 'filters', '%$MyFilter')
+	 * updateSpec('RequestProcessor', 'filters', '%$MyFilter')
 	 *
 	 * @param string $id
 	 *				The name of the service to update the definition for
@@ -615,6 +615,13 @@ class Injector {
 	/**
 	 * Register a service object with an optional name to register it as the
 	 * service for
+	 * 
+	 * @param stdClass $service
+	 *					The object to register
+	 * @param string $replace
+	 *					The name of the object to replace (if different to the 
+	 *					class name of the object to register)
+	 * 
 	 */
 	public function registerService($service, $replace=null) {
 		$registerAt = get_class($service);
