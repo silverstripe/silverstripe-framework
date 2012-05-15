@@ -1991,12 +1991,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @param tableClass Base table to load the values from. Others are joined as required.
 	 */
-
 	protected function loadLazyFields($tableClass = null) {
 		// Smarter way to work out the tableClass? Should the functionality in toMap and getField be moved into here?
 		if (!$tableClass) $tableClass = $this->ClassName;
 
 		$dataQuery = new DataQuery($tableClass);
+
+		// TableField sets the record ID to "new" on new row data, so don't try doing anything in that case
+		if(!is_numeric($this->record['ID'])) return false;
+
 		$dataQuery->where("\"$tableClass\".\"ID\" = {$this->record['ID']}")->limit(1);
 		$columns = array();
 
