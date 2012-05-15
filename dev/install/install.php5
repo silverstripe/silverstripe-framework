@@ -409,9 +409,6 @@ class InstallRequirements {
 
 		$this->requireServerVariables(array('SCRIPT_NAME','HTTP_HOST','SCRIPT_FILENAME'), array("Webserver config", "Recognised webserver", "You seem to be using an unsupported webserver.  The server variables SCRIPT_NAME, HTTP_HOST, SCRIPT_FILENAME need to be set."));
 
-		// check for fileinfo extension, this gets used for MIME type detection
-		$this->requireClass('finfo', array('PHP Configuration', 'fileinfo support', 'fileinfo support not included in PHP.'));
-
 		// Check for GD support
 		if(!$this->requireFunction("imagecreatetruecolor", array("PHP Configuration", "GD2 support", "PHP must have GD version 2."))) {
 			$this->requireFunction("imagecreate", array("PHP Configuration", "GD2 support", "GD support for PHP not included."));
@@ -434,10 +431,10 @@ class InstallRequirements {
 		// Check for iconv support
 		$this->requireFunction('iconv', array('PHP Configuration', 'iconv support', 'iconv support not included in PHP.'));
 
-		// Check for mbstring support
-		$this->requireFunction('iconv', array('PHP Configuration', 'iconv support', 'iconv support not included in PHP.'));
-
 		// Check for hash support
+		$this->requireFunction('hash', array('PHP Configuration', 'hash support', 'hash support not included in PHP.'));
+
+		// Check for mbstring support
 		$this->requireFunction('mb_internal_encoding', array('PHP Configuration', 'mbstring support', 'mbstring support not included in PHP.'));
 
 		// Check for Reflection support
@@ -447,6 +444,8 @@ class InstallRequirements {
 		$this->requireFunction('spl_classes', array('PHP Configuration', 'SPL support', 'Standard PHP Library (SPL) not included in PHP.'));
 
 		$this->requireDateTimezone(array('PHP Configuration', 'date.timezone setting and validity', 'date.timezone option in php.ini must be set correctly.', ini_get('date.timezone')));
+
+		$this->suggestClass('finfo', array('PHP Configuration', 'fileinfo support', 'fileinfo should be enabled in PHP. SilverStripe uses it for MIME type detection of files. SilverStripe will still operate, but email attachments and sending files to browser (e.g. export data to CSV) may not work correctly without finfo.'));
 
 		$this->suggestPHPSetting('asp_tags', array(false,0,''), array('PHP Configuration', 'asp_tags option', 'This should be turned off as it can cause issues with SilverStripe'));
 		$this->suggestPHPSetting('magic_quotes_gpc', array(false,0,''), array('PHP Configuration', 'magic_quotes_gpc option', 'This should be turned off, as it can cause issues with cookies. More specifically, unserializing data stored in cookies.'));
@@ -463,6 +462,13 @@ class InstallRequirements {
 		$val = ini_get($settingName);
 		if(!in_array($val, $settingValues) && $val != $settingValues) {
 			$testDetails[2] = "$settingName is set to '$val' in php.ini.  $testDetails[2]";
+			$this->warning($testDetails);
+		}
+	}
+
+	function suggestClass($class, $testDetails) {
+		$this->testing($testDetails);
+		if(!class_exists($class)) {
 			$this->warning($testDetails);
 		}
 	}
