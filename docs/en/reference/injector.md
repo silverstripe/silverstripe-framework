@@ -1,4 +1,3 @@
-
 # Injector
 
 ## Introduction
@@ -58,6 +57,8 @@ The subsequent call returns the SAME object as the first call.
 
 	:::php 
 	class MyController extends Controller {
+		// both of these properties will be automatically
+		// set by the injector on object creation
 		public $permissions;
 		public $textProperty;
 
@@ -68,6 +69,10 @@ The subsequent call returns the SAME object as the first call.
 	}
 
 	$object = Injector::inst()->get('MyController');
+	
+	// results in 
+	$object->permissions instanceof PermissionService;
+	$object->textProperty == 'a string value';
 
 In this case, on creation of the MyController object, the injector will 
 automatically instantiate the PermissionService object and set it as
