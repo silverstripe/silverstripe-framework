@@ -774,8 +774,8 @@ class SQLQuery {
 	}
 
 	public function getFilter() {
-		Deprecation::notice('3.0', 'Please use prepareWhere() instead of getFilter()');
-		return $this->prepareWhere();
+		Deprecation::notice('3.0', 'Please use itemized filters in getWhere() instead of getFilter()');
+		return DB::getConn()->sqlWhereToString($this->getWhere(), $this->getConnective());
 	}
 
 	/**
