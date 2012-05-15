@@ -40,7 +40,15 @@ class SS_Datetime extends Date {
 		if(is_numeric($value)) {
 			$this->value = date('Y-m-d H:i:s', $value);
 		} elseif(is_string($value)) {
-			$this->value = date('Y-m-d H:i:s', strtotime($value));
+			// $this->value = date('Y-m-d H:i:s', strtotime($value));
+			try{
+				$date = new DateTime($value);
+				$this->value = $date->Format('Y-m-d H:i:s');
+				return;
+			}catch(Exception $e){
+				$this->value = null;
+				return;
+			}
 		}
 	}
 
@@ -48,23 +56,23 @@ class SS_Datetime extends Date {
 	 * Returns the date in the raw SQL-format, e.g. “2006-01-18 16:32:04”
 	 */
 	function Nice() {
-		if($this->value) return date('d/m/Y g:ia', strtotime($this->value));
+		if($this->value) return $this->Format('d/m/Y g:ia');
 	}
 
 	function Nice24() {
-		if($this->value) return date('d/m/Y H:i', strtotime($this->value));
+		if($this->value) return $this->Format('d/m/Y H:i');
 	}
 
 	function Date() {
-		if($this->value) return date('d/m/Y', strtotime($this->value));
+		if($this->value) return $this->Format('d/m/Y');
 	}
 
 	function Time() {
-		if($this->value) return date('g:ia', strtotime($this->value));
+		if($this->value) return $this->Format('g:ia');
 	}
 
 	function Time24() {
-		if($this->value) return date('H:i', strtotime($this->value));
+		if($this->value) return $this->Format('H:i');
 	}
 
 	function requireField() {
@@ -74,7 +82,7 @@ class SS_Datetime extends Date {
 	}
 	
 	function URLDatetime() {
-		if($this->value) return date('Y-m-d%20H:i:s', strtotime($this->value));
+		if($this->value) return $this->Format('Y-m-d%20H:i:s');
 	}
 	
 	public function scaffoldFormField($title = null, $params = null) {
