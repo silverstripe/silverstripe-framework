@@ -1492,7 +1492,10 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		if (self::locale_filter_enabled()) {
 			self::disable_locale_filter();
 			$reEnableFilter = true;
+		} else {
+			$reEnableFilter = false;
 		}
+		
 		$IDFilter     = ($this->owner->ID) ? "AND \"SiteTree\".\"ID\" <> {$this->owner->ID}" :  null;
 		$parentFilter = null;
 
