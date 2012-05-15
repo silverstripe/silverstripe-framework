@@ -36,10 +36,26 @@
 	label {
 		float: none;
 		width: auto;
+
+		&.left {
+			float: none;
+			display: inherit;
+			width: auto;
+			padding: 0;
+			line-height: inherit;
+		}
 	}
 
 	.middleColumn {
 		margin-left: 0;
+	}
+
+	input.text,
+	textarea,
+	select,
+	.TreeDropdownField {
+		width: auto;
+		max-width: auto;
 	}
 }
 
