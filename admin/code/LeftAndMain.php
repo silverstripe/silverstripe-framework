@@ -593,7 +593,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return String HTML
 	 */
 	public function SiteTreeAsUL() {
-		return $this->getSiteTreeFor($this->stat('tree_class'));
+		$html = $this->getSiteTreeFor($this->stat('tree_class'));
+		$this->extend('updateSiteTreeAsUL', $html);
+		return $html;
 	}
 
 	/**
