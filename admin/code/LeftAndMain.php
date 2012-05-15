@@ -384,14 +384,16 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public function Link($action = null) {
 		// Handle missing url_segments
-		if(!$this->stat('url_segment', true))
-			self::$url_segment = $this->class;
-		return Controller::join_links(
+		if(!$this->stat('url_segment', true)) self::$url_segment = $this->class;
+		
+		$link = Controller::join_links(
 			$this->stat('url_base', true),
 			$this->stat('url_segment', true),
 			'/', // trailing slash needed if $action is null!
 			"$action"
 		);
+		$this->extend('updateLink', $link);
+		return $link;
 	}
 
 	/**
