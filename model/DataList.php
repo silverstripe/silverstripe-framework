@@ -87,7 +87,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Add a WHERE clause to the query.
 	 *
-	 * @param string $filter
+	 * @param string $filter Escaped SQL statement
 	 * @return DataList
 	 */
 	public function where($filter) {
@@ -120,7 +120,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Add an join clause to this data list's query.
 	 *
-	 * @param type $join
+	 * @param type $join Escaped SQL statement
 	 * @return DataList 
 	 * @deprecated 3.0
 	 */
@@ -133,7 +133,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Restrict the records returned in this query by a limit clause
 	 * 
-	 * @param string $limit
+	 * @param int $limit
+	 * @param int $offset
 	 */
 	public function limit($limit, $offset = 0) {
 		if(!$limit && !$offset) {
@@ -151,12 +152,12 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @see SS_List::sort()
 	 * @see SQLQuery::orderby
-	 *
 	 * @example $list->sort('Name'); // default ASC sorting
 	 * @example $list->sort('Name DESC'); // DESC sorting
 	 * @example $list->sort('Name', 'ASC');
 	 * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
 	 *
+	 * @param String|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
 	 * @return DataList
 	 */
 	public function sort() {
@@ -215,6 +216,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @todo extract the sql from $customQuery into a SQLGenerator class
 	 *
+	 * @param String|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
 	 * @return DataList
 	 */
 	public function filter() {
@@ -305,6 +307,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @todo extract the sql from this method into a SQLGenerator class
 	 *
+	 * @param String|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
 	 * @return DataList
 	 */
 	public function exclude(){
@@ -356,8 +359,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Add an inner join clause to this data list's query.
 	 *
-	 * @param string $table
-	 * @param string $onClause
+	 * @param string $table Table name (unquoted)
+	 * @param string $onClause Escaped SQL statement, e.g. '"Table1"."ID" = "Table2"."ID"'
 	 * @param string $alias - if you want this table to be aliased under another name
 	 * @return DataList 
 	 */
@@ -370,8 +373,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Add an left join clause to this data list's query.
 	 *
-	 * @param string $table
-	 * @param string $onClause
+	 * @param string $table Table name (unquoted)
+	 * @param string $onClause Escaped SQL statement, e.g. '"Table1"."ID" = "Table2"."ID"'
 	 * @param string $alias - if you want this table to be aliased under another name
 	 * @return DataList 
 	 */
@@ -574,9 +577,9 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		
 		if($key == 'ID') {
 			$baseClass = ClassInfo::baseDataClass($this->dataClass);
-			$SQL_col = "\"$baseClass\".\"$key\"";
+			$SQL_col = sprintf('"%s"."%s"', $baseClass, Convert::raw2sql($key));
 		} else {
-			$SQL_col = "\"$key\"";
+			$SQL_col = sprintf('"%s"', Convert::raw2sql($key));
 		}
 
 		return $clone->where("$SQL_col = '" . Convert::raw2sql($value) . "'")->First();
@@ -597,10 +600,11 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Filter this list to only contain the given Primary IDs
 	 *
-	 * @param array $ids
+	 * @param array $ids Array of integers, will be automatically cast/escaped.
 	 * @return DataList
 	 */
 	public function byIDs(array $ids) {
+		$ids = array_map('intval', $ids); // sanitize
 		$baseClass = ClassInfo::baseDataClass($this->dataClass);
 		$this->where("\"$baseClass\".\"ID\" IN (" . implode(',', $ids) .")");
 		

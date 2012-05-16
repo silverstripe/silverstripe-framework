@@ -204,8 +204,9 @@ class SQLQuery {
 	/**
 	 * Select an additional field.
 	 *
-	 * @param $field The field to select
-	 * @param $alias The alias of that field
+	 * @param $field String The field to select (escaped SQL statement)
+	 * @param $alias String The alias of that field (escaped SQL statement).
+	 * Defaults to the unquoted column name of the $field parameter.
 	 * @return SQLQuery
 	 */
 	public function selectField($field, $alias = null) {
@@ -220,6 +221,10 @@ class SQLQuery {
 	/**
 	 * Return the SQL expression for the given field alias.
 	 * Returns null if the given alias doesn't exist.
+	 * See {@link selectField()} for details on alias generation.
+	 * 
+	 * @param String $field
+	 * @return String
 	 */
 	public function expressionForField($field) {
 		return isset($this->select[$field]) ? $this->select[$field] : null;
@@ -228,11 +233,9 @@ class SQLQuery {
 	/**
 	 * Set table for the SELECT clause.
 	 *
-	 * <code>
-	 *  $query->setFrom("MyTable"); // SELECT * FROM MyTable
-	 * </code>
+	 * @example $query->setFrom("MyTable"); // SELECT * FROM MyTable
 	 *
-	 * @param string|array $from
+	 * @param string|array $from Escaped SQL statement, usually an unquoted table name
 	 * @return SQLQuery
 	 */
 	public function setFrom($from) {
@@ -243,11 +246,9 @@ class SQLQuery {
 	/**
 	 * Add a table to the SELECT clause.
 	 *
-	 * <code>
-	 *  $query->addFrom("MyTable"); // SELECT * FROM MyTable
-	 * </code>
+	 * @example $query->addFrom("MyTable"); // SELECT * FROM MyTable
 	 *
-	 * @param string|array $from
+	 * @param string|array $from Escaped SQL statement, usually an unquoted table name
 	 * @return SQLQuery
 	 */
 	public function addFrom($from) {
@@ -268,8 +269,8 @@ class SQLQuery {
 	/**
 	 * Add a LEFT JOIN criteria to the FROM clause.
 	 *
-	 * @param string $table Table name (unquoted)
-	 * @param string $onPredicate The "ON" SQL fragment in a "LEFT JOIN ... AS ... ON ..." statement.
+	 * @param string $table Unquoted table name
+	 * @param string $onPredicate The "ON" SQL fragment in a "LEFT JOIN ... AS ... ON ..." statement,
 	 *  Needs to be valid (quoted) SQL.
 	 * @param string $tableAlias Optional alias which makes it easier to identify and replace joins later on
 	 * @return SQLQuery
@@ -288,7 +289,7 @@ class SQLQuery {
 	/**
 	 * Add an INNER JOIN criteria to the FROM clause.
 	 *
-	 * @param string $table Table name (unquoted)
+	 * @param string $table Unquoted table name
 	 * @param string $onPredicate The "ON" SQL fragment in an "INNER JOIN ... AS ... ON ..." statement.
 	 *  Needs to be valid (quoted) SQL.
 	 * @param string $tableAlias Optional alias which makes it easier to identify and replace joins later on
@@ -309,7 +310,7 @@ class SQLQuery {
 	 * Add an additional filter (part of the ON clause) on a join.
 	 *
 	 * @param string $table Table to join on from the original join
-	 * @param string $filter The "ON" SQL fragment
+	 * @param string $filter The "ON" SQL fragment (escaped)
 	 * @return SQLQuery
 	 */
 	public function addFilterToJoin($table, $filter) {
@@ -321,7 +322,7 @@ class SQLQuery {
 	 * Set the filter (part of the ON clause) on a join.
 	 *
 	 * @param string $table Table to join on from the original join
-	 * @param string $filter The "ON" SQL fragment
+	 * @param string $filter The "ON" SQL fragment (escaped)
 	 * @return SQLQuery
 	 */
 	public function setJoinFilter($table, $filter) {
@@ -331,6 +332,8 @@ class SQLQuery {
 	
 	/**
 	 * Returns true if we are already joining to the given table alias
+	 * 
+	 * @return boolean
 	 */
 	public function isJoinedTo($tableAlias) {
 		return isset($this->from[$tableAlias]);
@@ -338,6 +341,8 @@ class SQLQuery {
 	
 	/**
 	 * Return a list of tables that this query is selecting from.
+	 * 
+	 * @return array Unquoted table names
 	 */
 	public function queriedTables() {
 		$tables = array();
@@ -416,7 +421,8 @@ class SQLQuery {
 	 * Pass LIMIT clause either as SQL snippet or in array format.
 	 * Internally, limit will always be stored as a map containing the keys 'start' and 'limit'
 	 *
-	 * @param string|array $limit
+	 * @param int|string|array $limit If passed as a string or array, assumes SQL escaped data.
+	 * @param int $offset
 	 * @return SQLQuery This instance
 	 */
 	public function setLimit($limit, $offset = 0) {
@@ -453,7 +459,7 @@ class SQLQuery {
 	 * @example $sql->orderby("Column", "DESC");
 	 * @example $sql->orderby(array("Column" => "ASC", "ColumnTwo" => "DESC"));
 	 *
-	 * @param string|array $orderby Clauses to add
+	 * @param string|array $orderby Clauses to add (escaped SQL statement)
 	 * @param string $dir Sort direction, ASC or DESC
 	 *
 	 * @return SQLQuery
@@ -472,7 +478,7 @@ class SQLQuery {
 	 * @example $sql->orderby("Column", "DESC");
 	 * @example $sql->orderby(array("Column" => "ASC", "ColumnTwo" => "DESC"));
 	 *
-	 * @param string|array $orderby Clauses to add
+	 * @param string|array $orderby Clauses to add (escaped SQL statements)
 	 * @param string $dir Sort direction, ASC or DESC
 	 *
 	 * @return SQLQuery
@@ -546,7 +552,9 @@ class SQLQuery {
 	/**
 	 * Extract the direction part of a single-column order by clause.
 	 * 
-	 * Return a 2 element array: array($column, $direction)
+	 * @param String
+	 * @param String
+	 * @return Array A two element array: array($column, $direction)
 	 */
 	private function getDirectionFromString($value, $defaultDirection = null) {
 		if(preg_match('/^(.*)(asc|desc)$/i', $value, $matches)) {
@@ -611,7 +619,7 @@ class SQLQuery {
 	/**
 	 * Set a GROUP BY clause.
 	 *
-	 * @param string|array $groupby
+	 * @param string|array $groupby Escaped SQL statement
 	 * @return SQLQuery
 	 */
 	public function setGroupBy($groupby) {
@@ -622,7 +630,7 @@ class SQLQuery {
 	/**
 	 * Add a GROUP BY clause.
 	 *
-	 * @param string|array $groupby
+	 * @param string|array $groupby Escaped SQL statement
 	 * @return SQLQuery
 	 */
 	public function addGroupBy($groupby) {
@@ -654,7 +662,7 @@ class SQLQuery {
 	/**
 	 * Add a HAVING clause
 	 *
-	 * @param string|array $having
+	 * @param string|array $having Escaped SQL statement
 	 * @return SQLQuery
 	 */
 	public function addHaving($having) {
@@ -685,7 +693,7 @@ class SQLQuery {
 	 *  $query->where(array("Column = 'Value'", "Column != 'Value'"));
 	 * </code>
 	 *
-	 * @param string|array $where Predicate(s) to set
+	 * @param string|array $where Predicate(s) to set, as escaped SQL statements.
 	 * @return SQLQuery
 	 */
 	public function setWhere($where) {
@@ -712,7 +720,7 @@ class SQLQuery {
 	 *  $query->where(array("Column = 'Value'", "Column != 'Value'"));
 	 * </code>
 	 *
-	 * @param string|array $where Predicate(s) to set
+	 * @param string|array $where Predicate(s) to set, as escaped SQL statements.
 	 * @return SQLQuery
 	 */
 	public function addWhere($where) {
@@ -731,7 +739,7 @@ class SQLQuery {
 	}
 
 	/**
-	 *
+	 * @param String|array $filters Predicate(s) to set, as escaped SQL statements.
 	 */
 	function whereAny($filters) {
 		if(is_string($filters)) $filters = func_get_args();
@@ -755,8 +763,9 @@ class SQLQuery {
 	
 	/**
 	 * Swap the use of one table with another.
-	 * @param string $old Name of the old table.
-	 * @param string $new Name of the new table.
+	 * 
+	 * @param string $old Name of the old table (unquoted, escaped)
+	 * @param string $new Name of the new table (unquoted, escaped)
 	 */
 	function renameTable($old, $new) {
 		$this->replaceText("`$old`", "`$new`");
@@ -765,8 +774,9 @@ class SQLQuery {
 	
 	/**
 	 * Swap some text in the SQL query with another.
-	 * @param string $old The old text.
-	 * @param string $new The new text.
+	 * 
+	 * @param string $old The old text (escaped)
+	 * @param string $new The new text (escaped)
 	 */
 	function replaceText($old, $new) {
 		$this->replacementsOld[] = $old;
@@ -837,8 +847,8 @@ class SQLQuery {
 				else if(sizeof($join['filter']) == 1) $filter = $join['filter'][0];
 				else $filter = "(" . implode(") AND (", $join['filter']) . ")";
 
-				$aliasClause = ($alias != $join['table']) ? " AS \"$alias\"" : "";
-				$this->from[$alias] = strtoupper($join['type']) . " JOIN \"{$join['table']}\"$aliasClause ON $filter";
+				$aliasClause = ($alias != $join['table']) ? " AS \"" . Convert::raw2sql($alias) . "\"" : "";
+				$this->from[$alias] = strtoupper($join['type']) . " JOIN \"{" . Convert::raw2sql($join['table']) . "}\"$aliasClause ON $filter";
 			}
 		}
 
@@ -959,9 +969,11 @@ class SQLQuery {
 
 	/**
 	 * Return the number of rows in this query if the limit were removed.  Useful in paged data sets.
-	 * @return int
 	 * 
-	 * TODO Respect HAVING and GROUPBY, which can affect the result-count
+	 * @todo Respect HAVING and GROUPBY, which can affect the result-count
+	 * 
+	 * @param String $column Quoted, escaped column name
+	 * @return int
 	 */
 	function count( $column = null) {
 		// Choose a default column
@@ -995,7 +1007,7 @@ class SQLQuery {
 
 	/**
 	 * Return a new SQLQuery that calls the given aggregate functions on this data.
-	 * @param $column An aggregate expression, such as 'MAX("Balance")', or a set of them.
+	 * @param $column An aggregate expression, such as 'MAX("Balance")', or a set of them (as an escaped SQL statement)
 	 */
 	function aggregate($column) {
 		if($this->groupby || $this->limit) {
