@@ -8,6 +8,7 @@
 .cms .ss-ui-button.ui-state-hover { background-color: #f3f3f3; }
 .cms .ss-ui-button.ss-ui-action-constructive { background-color: #1f9433; }
 .cms .ss-ui-button.ss-ui-action-constructive.ui-state-hover { background-color: #23a93a; }
+.cms .ss-ui-button.ss-gridfield-button-filter { background: #55a4d2 url(../../images/icons/filter-icons.png) no-repeat -14px 4px; }
 
 .cms-content-toolbar { border-bottom: 1px solid #c9cdce; }
 

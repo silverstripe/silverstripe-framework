@@ -17,7 +17,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 	/**
 	 * Determine what happens when this component is used with a list that isn't {@link SS_Filterable}.
 	 * 
-	 *  - true: An exception is thrown
+	 *  - true:  An exception is thrown
 	 *  - false: This component will be ignored - it won't make any changes to the GridField.
 	 * 
 	 * By default, this is set to true so that it's clearer what's happening, but the predefined
@@ -60,8 +60,9 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 
 		$state = $gridField->State->GridFieldSortableHeader;
 		$columns = $gridField->getColumns();
-
+		$currentColumn = 0;
 		foreach($columns as $columnField) {
+			$currentColumn++;
 			$metadata = $gridField->getColumnMetadata($columnField);
 			$title = $metadata['title'];
 			if($title && $gridField->getList()->canSortBy($columnField)) {
@@ -84,7 +85,11 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 						$field->addExtraClass('ss-gridfield-sorted-desc');
 				}
 			} else {
-				$field = new LiteralField($columnField, '<span class="non-sortable">' . $title . '</span>');
+				if($currentColumn == count($columns) && $gridField->getConfig()->getComponentByType('GridFieldFilterHeader')){
+					$field = new LiteralField($columnField, '<button name="showFilter" class="ss-gridfield-button-filter" id="showFilter"></button>');				
+				}else{
+					$field = new LiteralField($columnField, '<span class="non-sortable">' . $title . '</span>');
+				}
 			}
 			$forTemplate->Fields->push($field);
 		}

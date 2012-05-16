@@ -11,29 +11,26 @@
 @import "compass/css3/images";
 @import "compass/css3/text-shadow";
 @import "compass/css3/border-radius";
+@import "../admin/scss/themes/default";
+@import "../admin/scss/themes/default";
+@import "_elementMixins";
 
-/*$experimental-support-for-svg variable comes from 
-imported compass/support file and enables svg gradients in IE9. 
-This is needed for the background gradients to work as desired with 
-multiple images. */
+//$experimental-support-for-svg variable comes from 
+//imported compass/support file and enables svg gradients in IE9. 
+//This is needed for the background gradients to work as desired with 
+//multiple images. 
 $experimental-support-for-svg: true; 
 
-$gf_colour_gradient_light: #B1C0C5;
-$gf_colour_gradient_dark: #7F9198;
-$gf_colour_base: #95a5ab;
-$gf_colour_header_border: #819198;
-$gf_colour_subheader: #BAC8CE;
+$gf_colour_base: desaturate(darken(adjust-hue($color-base, -10%), 10%),5%);
+$gf_colour_gradient_light: lighten($gf_colour_base, 10%);
+$gf_colour_gradient_dark: darken($gf_colour_base, 5%);
+$gf_colour_header_border: $gf_colour_gradient_dark;
+$gf_colour_subheader: saturate(lighten($gf_colour_base, 15%),5%);
 $gf_colour_border: rgba(0,0,0,.1);
-$gf_colour_zebra: #F0F4F7;
+$gf_colour_zebra: lighten($gf_colour_subheader,17%);
 $gf_colour_font: #666;
 $gf_colour_text_shadow: rgba(0,0,0,.3);
-$color-text-blue-link:#1556B2 !default;
 $gf_border_radius:	7px;
-$gf_color_border_filter_button: #9A9A9A;
-$gf_color_button: #e6e6e6;
-$gf_color_button_filter_hover: #338DC1;
-$gf_color_button_reset_hover: #FF0000;
-$color-text-light: white;
 
 $gf_grid_y:	12px;
 $gf_grid_x:	16px;
@@ -136,7 +133,8 @@ $gf_grid_x:	16px;
 				width: auto;
 				white-space:nowrap;
 				&.col-buttons {
-					width: auto;
+					width: 70px;
+					padding:0;
 					text-align: right;
 				}
 
@@ -257,7 +255,7 @@ $gf_grid_x:	16px;
 					min-height: 40px; //this is to accomodate the add new button.
 					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
 					@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
-					h2{
+				h2{
 						padding: 0px;
 						font-size: $gf_grid_y*1.4;
 						color:#fff;
@@ -274,12 +272,11 @@ $gf_grid_x:	16px;
 					}
 				}
 			}	
-			&.sortable-header {
-				background: $gf_colour_subheader;	
+			&.sortable-header {		
+				background: $gf_colour_subheader;					
 				th{
 					padding: 0px;
-				}
-				
+				}				
 			}			
 			&:hover {
 				background: #FFFAD6 !important;
@@ -304,12 +301,7 @@ $gf_grid_x:	16px;
 				color: #FFF;
 				padding: 5px;
 				border-right: 1px solid $gf_colour_border;
-				&.main:first-child{
-					//@include border-top-left-radius($gf_border_radius);
-				}
-				&.main:last-child{
-					//@include border-top-right-radius($gf_border_radius);
-				}
+				
 				div {
 					&.fieldgroup,&.fieldgroup-field {
 						width: 100%;
@@ -318,11 +310,15 @@ $gf_grid_x:	16px;
 					&.fieldgroup {
 						min-width: $gf_grid_x*12.5;
 						padding-right:0;
+						&.filter-buttons{
+							min-width:0;
+							div{
+								@extend .col-buttons;
+								width:auto;
+								display:inline;
+							}
+						}
 					}
-				}
-				&.extra,&.action {
-					padding: 0;
-					cursor: default;
 				}
 				&.main{
 					white-space:nowrap;
@@ -337,17 +333,18 @@ $gf_grid_x:	16px;
 						border-right:none;
 					}
 				}
+				&.extra,&.action {
+					padding: 0;
+					cursor: default;
+				}
 				&.extra {
-					background: $gf_colour_subheader;		
+					position:relative;
+					background:darken($color-dark-grey, 10%);
+					background: rgba(#000, 0.7);		
 					padding: 5px;	
 					border-top:	$gf_colour_text_shadow;
-					span {
-						width: auto;
-						display: inline;
-						position: static;
-						input {
-							height:28px; //height of input field - to match design.
-						}
+					input {
+						height:28px; //height of input field - to match design.
 					}
 					button.ss-ui-button {
 						padding: .3em;
@@ -364,6 +361,8 @@ $gf_grid_x:	16px;
 				&.last {
 					@include border-top-right-radius($gf_border_radius);
 				}
+
+
 				
 				button {
 					&#action_gridfield_relationadd:hover {
@@ -377,7 +376,7 @@ $gf_grid_x:	16px;
 						@include box-shadow-none; 
 					}
 					&.ss-gridfield-sort {
-						background: transparent url(../images/arrows.png) no-repeat right 6px;
+						background: transparent url(../images/arrows.png) no-repeat right 10px;
 						border:none;	
 						width:100%;
 						text-align: left;
@@ -386,7 +385,7 @@ $gf_grid_x:	16px;
 						color: #fff;
 						@include border-radius(0);
 						&:hover {
-							background-position: right -34px;
+							background-position: right -30px;
 						}
 						&.ss-gridfield-sorted-desc {
 							background-position: right -72px;
@@ -395,84 +394,110 @@ $gf_grid_x:	16px;
 							background-position: right -116px;
 						}
 					}
-					&.ss-gridfield-button-filter.ss-ui-button{
-						position:absolute;
-						top: -28px;
-						right: -1px;
-						display:block;
-						text-indent:-9999em;
-						width:30px; 
-						height:28px; //match the height of the input field
-						border: {
-							top-left-radius:0px;
-							bottom-left-radius:0px;
-							top-right-radius:4px;
-							bottom-right-radius:4px;
-							bottom-width:1px;
-							color:$gf_color_border_filter_button;
+
+					&.ss-ui-button{
+						&.ss-gridfield-button-filter{
+							$bgImage: url(../images/icons/filter-icons.png) no-repeat;
+							background-color:lighten($color-menu-button,10%);
+							@include gridFieldButtons;
+							@include background(
+								$bgImage -14px 4px,
+								linear-gradient(
+									$color-menu-button, 
+									darken($color-menu-button, 10%)
+								)
+							);						
+							border-top: 1px solid lighten($color-menu-button, 5%);	
+
+							&.hover-alike:active, &:active,	&.hover-alike, &:hover {							
+								@include background (
+								$bgImage -14px 4px,
+								linear-gradient(
+									lighten($color-menu-button, 10%),
+									$color-menu-button								
+								));		
+							} 	
+
+							&#showFilter{	//The magnifying glass before filter is opened						
+								margin-left: $gf_grid_y; 							
+								border:none;						
+								@include background ($bgImage -17px 6px);	
+
+								span{ //this is the dropdown arrow
+									opacity: 0.4;
+									position:absolute;
+									width:10px;
+									left:30px;
+									top:40%;
+									background:	url(../admin/images/btn_arrow_down_grey.png) no-repeat 0px 0px;																
+								}
+								&:hover{
+									@include background ($bgImage -40px 6px);	
+									span{//dropdown arrow
+										opacity:0.9;
+									}
+								}
+							}			
 						}
-						@include background (url(../images/icons/filter-icons.png) no-repeat -40px 6px,
-							linear-gradient(
-								lighten($gf_color_button, 10%),
-								darken($gf_color_button, 5%)
-							));
-						&.hover-alike:active {
-							@include background (url(../images/icons/filter-icons.png) no-repeat -16px 6px,
-							linear-gradient(
-								lighten($gf_color_button_filter_hover, 5%), 
-								darken($gf_color_button_filter_hover, 5%)
-							));
-							@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
+						&.ss-gridfield-button-close{
+							$bgImage: url(../images/icons/filter-icons.png) no-repeat;
+							@include background ($bgImage 7px -17px);	
+							@include gridFieldButtons;		
+							width:25px; 
+							opacity:0.8;
+							margin-right:-5px; //For IE					
+							&.hover-alike:active, &:active, &.hover-alike, &:hover {
+								opacity:1;
+								@include background (
+									$bgImage 7px -17px,
+									linear-gradient(
+										rgba(#fff,0.1),
+										rgba(#fff,0.1)								
+									)									
+								);
+							} 					
+
 						}
-						&.hover-alike {
-							@include background (url(../images/icons/filter-icons.png) no-repeat -16px 6px,
-							linear-gradient(
-								lighten($gf_color_button_filter_hover, 5%), 
-								darken($gf_color_button_filter_hover, 5%)
-							));
-						}
-					}
-					&.ss-gridfield-button-reset.ss-ui-button{
-						position:absolute;
-						right: 28px;
-						top: -28px;
-						display:block;
-						text-indent:-9999em;
-						width:30px;
-						height:28px; //match the height of the input field
-						float:right;
-						border: {
-							radius:0px;
-							bottom-width:1px;
-							color:$gf_color_border_filter_button;
-						}
-						@include background (url(../images/icons/filter-icons.png) no-repeat 8px 5px,
-							linear-gradient(color-stops(
-								lighten($gf_color_button, 10%),
-								darken($gf_color_button, 5%)
-							))
-						);
-						&.filtered:hover {
-							@include background (url(../images/icons/filter-icons.png) no-repeat 8px -17px,
-							linear-gradient(
-								$gf_color_button_reset_hover, 
-								darken($gf_color_button_reset_hover, 10%)
-							));
-						}
-						&.filtered:active {
-							@include background (url(../images/icons/filter-icons.png) no-repeat 8px -17px,
-							linear-gradient(
-								$gf_color_button_reset_hover, 
-								darken($gf_color_button_reset_hover, 10%)
-							));
-							@include box-shadow(inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6));
-						}
-					}		
+						&.ss-gridfield-button-reset{
+							@include gridFieldButtons;						
+							position:absolute;
+							top: -21px;
+							right: -1px;
+							width:20px; 
+							height:20px;				
+							display:none;		
+						
+							&.filtered{
+								display:block;
+								
+								background: url(../admin/images/btn-icon/cross.png) no-repeat 0px 0px;
+								opacity:0.5;
+								&:hover{
+									opacity:0.8;
+								}			
+								&:active {
+									opacity:1;								
+								}
+							}
+						}	
+					}	
 				}
 
 				input {
 					&.ss-gridfield-sort {
-						padding: 2px;
+						height:25px;
+						// Placeholder styling done with an each loop because when a browser 
+						// doesn’t understand a selector, it invalidates the entire line of selectors. 
+						// This avoids that, and keeps the scss tidy
+						$browserPlaceholder: "::-webkit-input-placeholder", ":-moz-placeholder", ":-ms-input-placeholder",	":placeholder";
+
+						@each $browser in $browserPlaceholder {
+							&#{$browser}{
+								font-style:italic;
+								color: lighten($color-dark-grey,30%);
+							}
+						} 						  
+										
 						&:focus {
 							@include box-shadow-none;
 						}
@@ -549,8 +574,11 @@ $gf_grid_x:	16px;
 				border-bottom: 0 none;
 			}
 		}
-		td:first-child, th:first-child{
+		td:first-child{
 			border-left: 1px solid $gf_colour_border;
+		}
+		td:last-child{
+			border-right: 1px solid $gf_colour_border;
 		}
 	}
 }

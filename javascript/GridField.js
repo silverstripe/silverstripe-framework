@@ -5,6 +5,7 @@
 		 * @param {Object} Additional options for jQuery.ajax() call
 		 * @param {successCallback} callback to call after reloading succeeded.
 		 */
+
 		reload: function(ajaxOpts, successCallback) {
 			var self = this, form = this.closest('form'), 
 				focusedElName = this.find(':input:focus').attr('name'), // Save focused element for restoring after refresh
@@ -13,6 +14,7 @@
 			if(!ajaxOpts) ajaxOpts = {};
 			if(!ajaxOpts.data) ajaxOpts.data = [];
 			ajaxOpts.data = ajaxOpts.data.concat(data);
+
 
 			// Include any GET parameters from the current URL, as the view state might depend on it.
 			// For example, a list prefiltered through external search criteria might be passed to GridField.
@@ -36,6 +38,17 @@
 					// Refocus previously focused element. Useful e.g. for finding+adding
 					// multiple relationships via keyboard.
 					if(focusedElName) self.find(':input[name="' + focusedElName + '"]').focus();
+
+					var content;
+					if(ajaxOpts.data[0].filter=="show"){	
+						content = '<span class="non-sortable"></span>';
+						self.addClass('show-filter').find('.filter-header').show();														
+					}else{
+						content = '<button name="showFilter" class="ss-gridfield-button-filter"></button>';
+						self.removeClass('show-filter').find('.filter-header').hide();	
+					}
+
+					self.find('.sortable-header th:last').html(content);
 
 					form.removeClass('loading');
 					if(successCallback) successCallback.apply(this, arguments);
@@ -76,6 +89,20 @@
 		}
 	});
 
+
+
+	$('.ss-gridfield :button[name=showFilter]').entwine({
+		onclick: function(e) {				
+			$('.filter-header')
+				.show('slow') // animate visibility
+				.find(':input:first').focus(); // focus first search field
+			this.closest('.ss-gridfield').addClass('show-filter');
+			this.parent().html('<span class="non-sortable"></span>');
+			e.preventDefault();
+		}
+	});
+
+
 	$('.ss-gridfield .ss-gridfield-item').entwine({
 		onclick: function(e) {
 			if($(e.target).closest('.action').length) {
@@ -93,10 +120,16 @@
 			this.css('cursor', 'default');
 		}
 	});
-		
+
 	$('.ss-gridfield .action').entwine({
 		onclick: function(e){
-			this.getGridField().reload({data: [{name: this.attr('name'), value: this.val()}]});
+			var filterState='show'; //filterstate should equal current state.
+			
+			if(this.hasClass('ss-gridfield-button-close') || !(this.closest('.ss-gridfield').hasClass('show-filter'))){
+				filterState='hidden';
+			}
+
+			this.getGridField().reload({data: [{name: this.attr('name'), value: this.val(), filter: filterState}]});
 			e.preventDefault();
 		}
 	});
@@ -214,19 +247,29 @@
 	 */
 	$('.ss-gridfield .filter-header :input').entwine({
 		onmatch: function(){
-			filterbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter');
-			resetbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-reset');
+			var filterbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter'),
+				resetbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-reset');
+			
 			if(this.val()) {
 				filterbtn.addClass('filtered');
 				resetbtn.addClass('filtered');
 			}
 		},
 		onkeydown: function(e) {
-			filterbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter');
-			resetbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-reset');
+			// Skip reset button events, they should trigger default submission
+			if(this.closest('.ss-gridfield-button-reset').length) return;
+
+			var filterbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter'),
+				resetbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-reset');
+
 			if(e.keyCode == '13') {
-				btns = this.closest('.filter-header').find('.ss-gridfield-button-filter');
-				this.getGridField().reload({data: [{name: btns.attr('name'), value: btns.val()}]});
+				var btns = this.closest('.filter-header').find('.ss-gridfield-button-filter');
+				var filterState='show'; //filterstate should equal current state.				
+				if(this.hasClass('ss-gridfield-button-close')||!(this.closest('.ss-gridfield').hasClass('show-filter'))){
+					filterState='hidden';
+				}
+				
+				this.getGridField().reload({data: [{name: btns.attr('name'), value: btns.val(), filter: filterState}]});
 				return false;
 			}else{
 				filterbtn.addClass('hover-alike');
