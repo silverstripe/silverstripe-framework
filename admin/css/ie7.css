@@ -8,6 +8,7 @@
 .cms .ss-ui-button.ui-state-hover { background-color: #f3f3f3; }
 .cms .ss-ui-button.ss-ui-action-constructive { background-color: #1f9433; }
 .cms .ss-ui-button.ss-ui-action-constructive.ui-state-hover { background-color: #23a93a; }
+.cms .ss-ui-button.ss-gridfield-button-filter { background: #55a4d2 url(../../images/icons/filter-icons.png) no-repeat -14px 4px; }
 
 .cms-content-toolbar { border-bottom: 1px solid #c9cdce; }
 
@@ -71,6 +72,8 @@ html { overflow: hidden; }
 
 .pagination-page-number { position: relative; bottom: 10px; right: 10px; }
 .pagination-page-number input { width: 45px; padding: 0px; position: relative; bottom: 2px; }
+
+input.ss-gridfield-sort { padding-top: 0 !important; padding-bottom: 0 !important; }
 
 table.ss-gridfield-table tr.title th h2 { float: left; }
 
