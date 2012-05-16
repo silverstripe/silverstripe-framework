@@ -512,8 +512,8 @@ $gf_grid_x:	16px;
 								padding:0px;
 							}
 						}
-						button.ss-gridfield-previouspage {
-							@include background (url(../images/icons/pagination-arrows.png) no-repeat -23px 7px);
+						z-index:5;
+						button{							
 							@include box-shadow-none;
 							border:none;
 							width:10px;
@@ -521,35 +521,20 @@ $gf_grid_x:	16px;
 							span {
 								text-indent:-9999em;
 							}
-						}
-						button.ss-gridfield-nextpage {
-							@include background (url(../images/icons/pagination-arrows.png) no-repeat -47px 7px);
-							@include box-shadow-none;
-							border:none;
-							width:10px;
-							margin:0 10px;
-							span {
-								text-indent:-9999em;
+							&.ss-gridfield-previouspage {
+								@include background (url(../images/icons/pagination-arrows.png) no-repeat -23px 7px);
 							}
-						}
-						button.ss-gridfield-firstpage {
-							@include background (url(../images/icons/pagination-arrows.png) no-repeat 0px 7px);
-							@include box-shadow-none;
-							border:none;
-							width:10px;
-							margin:0 10px;
-							span {
-								text-indent:-9999em;
+							&.ss-gridfield-nextpage {
+								@include background (url(../images/icons/pagination-arrows.png) no-repeat -47px 7px);
 							}
-						}
-						button.ss-gridfield-lastpage {
-							@include background (url(../images/icons/pagination-arrows.png) no-repeat -73px 7px);
-							@include box-shadow-none;
-							border:none;
-							width:10px;
-							margin:0 10px;
-							span {
-								text-indent:-9999em;
+							&.ss-gridfield-firstpage {
+								@include background (url(../images/icons/pagination-arrows.png) no-repeat 0px 7px);
+							}
+							&.ss-gridfield-lastpage {
+								@include background (url(../images/icons/pagination-arrows.png) no-repeat -73px 7px);
+							}
+							&.ssui-button-disabled{
+								z-index:-1;
 							}
 						}
 					}
