@@ -418,7 +418,7 @@ $gf_grid_x:	16px;
 								));		
 							} 	
 
-							&#showFilter{	//The magnifying glass before filter is opened						
+							&.trigger{	//The magnifying glass before filter is opened						
 								margin-left: $gf_grid_y; 							
 								border:none;						
 								@include background ($bgImage -17px 6px);	
