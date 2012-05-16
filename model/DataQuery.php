@@ -321,30 +321,38 @@ class DataQuery {
 
 	/**
 	 * Return the maximum value of the given field in this DataList
+	 * 
+	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
 	function Max($field) {
-	    return $this->getFinalisedQuery()->aggregate("MAX(\"$field\")")->execute()->value();
+	    return $this->getFinalisedQuery()->aggregate(sprintf('MAX("%s")', Convert::raw2sql($field))->execute()->value();
 	}
 
 	/**
 	 * Return the minimum value of the given field in this DataList
+	 * 
+	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
 	function Min($field) {
-	    return $this->getFinalisedQuery()->aggregate("MIN(\"$field\")")->execute()->value();
+	    return $this->getFinalisedQuery()->aggregate(sprintf('MIN("%s")', Convert::raw2sql($field))->execute()->value();
 	}
 	
 	/**
 	 * Return the average value of the given field in this DataList
+	 * 
+	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
 	function Avg($field) {
-	    return $this->getFinalisedQuery()->aggregate("AVG(\"$field\")")->execute()->value();
+	    return $this->getFinalisedQuery()->aggregate(sprintf('AVG("%s")', Convert::raw2sql($field))->execute()->value();
 	}
 
 	/**
 	 * Return the sum of the values of the given field in this DataList
+	 * 
+	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
 	function Sum($field) {
-	    return $this->getFinalisedQuery()->aggregate("SUM(\"$field\")")->execute()->value();
+	    return $this->getFinalisedQuery()->aggregate((sprintf('SUM("%s")', Convert::raw2sql($field)))->execute()->value();
 	}
 
 	/**
@@ -392,6 +400,8 @@ class DataQuery {
 	
 	/**
 	 * Set the HAVING clause of this query
+	 * 
+	 * @param String $having Escaped SQL statement
 	 */
 	function having($having) {
 		if($having) {
@@ -404,7 +414,18 @@ class DataQuery {
 	}
 
 	/**
-	 * Set the WHERE clause of this query
+	 * Set the WHERE clause of this query.
+	 * There are two different ways of doing this:
+	 *
+	 * <code>
+	 *  // the entire predicate as a single string
+	 *  $query->where("Column = 'Value'");
+	 *
+	 *  // multiple predicates as an array
+	 *  $query->where(array("Column = 'Value'", "Column != 'Value'"));
+	 * </code>
+	 *
+	 * @param string|array $where Predicate(s) to set, as escaped SQL statements.
 	 */
 	function where($filter) {
 		if($filter) {
@@ -417,11 +438,13 @@ class DataQuery {
 	}
 
 	/**
-	 * Set a WHERE with OR
-	 *
-	 * @param array $filter
-	 * @return DataQuery
+	 * Set a WHERE with OR.
+	 * 
 	 * @example $dataQuery->whereAny(array("Monkey = 'Chimp'", "Color = 'Brown'"));
+	 * @see where()
+	 *
+	 * @param array $filter Escaped SQL statement.
+	 * @return DataQuery
 	 */
 	function whereAny($filter) {
 		if($filter) {
@@ -438,6 +461,9 @@ class DataQuery {
 	 *
 	 * @see SQLQuery::orderby()
 	 *
+	 * @param String $sort Column to sort on (escaped SQL statement)
+	 * @param String $direction Direction ("ASC" or "DESC", escaped SQL statement)
+	 * @param Boolean $clear Clear existing values
 	 * @return DataQuery
 	 */
 	function sort($sort = null, $direction = null, $clear = true) {
@@ -464,7 +490,10 @@ class DataQuery {
 	}
 	
 	/**
-	 * Set the limit of this query
+	 * Set the limit of this query.
+	 * 
+	 * @param int $limit
+	 * @param int $offset
 	 */
 	function limit($limit, $offset = 0) {
 		$clone = $this;
@@ -494,9 +523,11 @@ class DataQuery {
 	}
 	
 	/**
-	 * Add an INNER JOIN clause to this queyr
-	 * @param $table The table to join to.
-	 * @param $onClause The filter for the join.
+	 * Add an INNER JOIN clause to this query.
+	 * 
+	 * @param String $table The unquoted table name to join to.
+	 * @param String $onClause The filter for the join (escaped SQL statement)
+	 * @param String $alias An optional alias name (unquoted)
 	 */
 	public function innerJoin($table, $onClause, $alias = null) {
 		if($table) {
@@ -509,9 +540,11 @@ class DataQuery {
 	}
 
 	/**
-	 * Add a LEFT JOIN clause to this queyr
-	 * @param $table The table to join to.
-	 * @param $onClause The filter for the join.
+	 * Add a LEFT JOIN clause to this query.
+	 * 
+	 * @param String $table The unquoted table to join to.
+	 * @param String $onClause The filter for the join (escaped SQL statement).
+	 * @param String $alias An optional alias name (unquoted)
 	 */
 	public function leftJoin($table, $onClause, $alias = null) {
 		if($table) {
@@ -528,7 +561,7 @@ class DataQuery {
 	 * mappings to the query object state. This has to be called
 	 * in any overloaded {@link SearchFilter->apply()} methods manually.
 	 * 
-	 * @param $relation The array/dot-syntax relation to follow
+	 * @param String|array $relation The array/dot-syntax relation to follow
 	 * @return The model class of the related item
 	 */
 	function applyRelation($relation) {
@@ -619,11 +652,15 @@ class DataQuery {
 	}
 
 	/**
-	 * Select the given fields from the given table
+	 * Select the given fields from the given table.
+	 * 
+	 * @param String $table Unquoted table name (will be escaped automatically)
+	 * @param Array $fields Database column names (will be escaped automatically)
 	 */
 	public function selectFromTable($table, $fields) {
+		$table = Convert::raw2sql($table);
 		$fieldExpressions = array_map(create_function('$item', 
-			"return '\"$table\".\"' . \$item . '\"';"), $fields);
+			"return '\"$table\".\"' . Convert::raw2sql(\$item) . '\"';"), $fields);
 		
 		$this->query->setSelect($fieldExpressions);
 
@@ -632,6 +669,8 @@ class DataQuery {
 
 	/**
 	 * Query the given field column from the database and return as an array.
+	 * 
+	 * @param String $field See {@link expressionForField()}.
 	 */
 	public function column($field = 'ID') {
 		$query = $this->getFinalisedQuery(array($field));
@@ -644,6 +683,12 @@ class DataQuery {
 		return $query->execute()->column($field);
 	}
 	
+	/**
+	 * @param  String $field Select statement identifier, either the unquoted column name,
+	 * the full composite SQL statement, or the alias set through {@link SQLQquery->selectField()}.
+	 * @param  SQLQuery $query
+	 * @return String
+	 */
 	protected function expressionForField($field, $query) {
 		// Special case for ID
 		if($field == 'ID') {
@@ -656,7 +701,10 @@ class DataQuery {
 	}
 
 	/**
-	 * Select the given field expressions.  You must do your own escaping
+	 * Select the given field expressions.
+	 * 
+	 * @param $fieldExpression String The field to select (escaped SQL statement)
+	 * @param $alias String The alias of that field (escaped SQL statement)
 	 */
 	protected function selectField($fieldExpression, $alias = null) {
 		$this->query->selectField($fieldExpression, $alias);

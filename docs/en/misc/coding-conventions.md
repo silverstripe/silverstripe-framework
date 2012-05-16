@@ -425,7 +425,7 @@ Put code into the classes in the following order (where applicable).
 
 ### SQL Format
 
-To make sure your code works across databases make sure you escape your queries like below, 
+If you have to use raw SQL, make sure your code works across databases make sure you escape your queries like below, 
 with the column or table name escaped with double quotes and values with single quotes.
 
 	:::php
