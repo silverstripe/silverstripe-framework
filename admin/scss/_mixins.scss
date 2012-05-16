@@ -1,17 +1,17 @@
-/**
- * This file contains generic mixins which we use throughout
- * the admin panels.
- *
- * Mixins should be stored here rather than individual files
- * so that we can keep.
- */
+//**
+// * This file contains generic mixins which we use throughout
+// * the admin panels.
+// *
+// * Mixins should be stored here rather than individual files
+// * so that we can keep.
+// */
 
-/** ----------------------------------------------------
- * Hides the overflowing text from a container
- *
- * Note: you must define a width on the element with this
- * overflow.
- * ----------------------------------------------------- */
+//** ----------------------------------------------------
+// * Hides the overflowing text from a container
+// *
+// * Note: you must define a width on the element with this
+// * overflow.
+// * ----------------------------------------------------- */
 @mixin hide-text-overflow {
 	overflow: hidden;
 	white-space: nowrap;
@@ -22,11 +22,11 @@
 	o-text-overflow: ellipsis;
 }
 
-/** ----------------------------------------------------
- * Clear the properties of sub form fields. 
- *
- * Often needed for nested form fields and 
- * ----------------------------------------------------- */
+//** ----------------------------------------------------
+// * Clear the properties of sub form fields. 
+// *
+// * Often needed for nested form fields and 
+// * ----------------------------------------------------- */
 @mixin clear-form-field-styles {
 	.field {
 		padding: 0;
@@ -59,11 +59,11 @@
 	}
 }
 
-/** ----------------------------------------------------
- * Double tone borders
- *
- * http://daverupert.com/2011/06/two-tone-borders-with-css3/
- * ----------------------------------------------------- */
+//** ----------------------------------------------------
+// * Double tone borders
+// *
+// * http://daverupert.com/2011/06/two-tone-borders-with-css3/
+// * ----------------------------------------------------- */
 @mixin doubleborder($side, $innerColor, $outerColor) {
     $shadow: "0 0 0";
     border-#{$side}: 1px solid $innerColor;
@@ -78,9 +78,9 @@
 }
 
 
-/**----------------------------------------------------
-Clearfix mixin clears the float of it's parent element
-----------------------------------------------------**/
+//**----------------------------------------------------
+//Clearfix mixin clears the float of it's parent element
+//----------------------------------------------------**/
 @mixin clearfix{
 	&:after{
 		content: ".";
@@ -94,47 +94,3 @@ Clearfix mixin clears the float of it's parent element
 
 
 
-/**
-	Mixin creates a transparent button with a dropdown arrow, 
-	as is used for files in the files up-load area. The arrows 
-	themselves are added in the _style file
-**/
-@mixin ss-uploadfield-editButton{
-	&.ss-uploadfield-item-edit {
-		opacity:0.9;
-		padding-top: 3px;
-		padding-bottom: 0;
-		height:100%;
-		@include border-radius(0);
-		&.ui-state-hover{
-			background:none;		
-			opacity:1;
-			span.toggle-details{
-				opacity:1;
-			}	
-		}
-		span.toggle-details{
-			opacity:0.9;
-			margin-left:3px;
-			display: inline-block;
-			width: 5px;
-			height: 100%;
-			cursor: pointer;
-			.toggle-details-icon {
-				margin-top:1px;
-				display: inline-block;
-				width: 8px;
-				height: 8px;
-				vertical-align: middle;
-				&.opened {	
-					margin-top:0;
-				}
-			}
-		}
-
-	}
-
-	.ui-icon {
-		display: none;
-	}	
-}
