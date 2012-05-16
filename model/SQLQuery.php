@@ -848,7 +848,7 @@ class SQLQuery {
 				else $filter = "(" . implode(") AND (", $join['filter']) . ")";
 
 				$aliasClause = ($alias != $join['table']) ? " AS \"" . Convert::raw2sql($alias) . "\"" : "";
-				$this->from[$alias] = strtoupper($join['type']) . " JOIN \"{" . Convert::raw2sql($join['table']) . "}\"$aliasClause ON $filter";
+				$this->from[$alias] = strtoupper($join['type']) . " JOIN \"" . Convert::raw2sql($join['table']) . "\"$aliasClause ON $filter";
 			}
 		}
 
