@@ -76,8 +76,6 @@
 					if(!self.hasClass('is-collapsed')) self.collapse();
 				});
 
-				this.layout({type: 'border'});
-
 				if(this.hasClass('is-expanded')) this.expand();
 				else this.collapse();
 				this.data('cms-preview-initialized', true);
