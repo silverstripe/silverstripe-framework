@@ -69,7 +69,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		
 		$memberList = GridField::create(
 			'Members',
-			false,
+			_t('SecurityAdmin.USERS', 'Users'),
 			DataList::create('Member'),
 			$memberListConfig = GridFieldConfig_RecordEditor::create()
 				->addComponent(new GridFieldExportButton())
@@ -78,7 +78,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 		$groupList = GridField::create(
 			'Groups',
-			false,
+			_t('SecurityAdmin.GROUPS', 'Groups'),
 			DataList::create('Group'),
 			GridFieldConfig_RecordEditor::create()
 		);
@@ -130,7 +130,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		// Add roles editing interface
 		if(Permission::check('APPLY_ROLES')) {
 			$rolesField = GridField::create('Roles',
-				false,
+				_t('SecurityAdmin.ROLES', 'Roles'),
 				DataList::create('PermissionRole'),
 				GridFieldConfig_RecordEditor::create()
 			);
