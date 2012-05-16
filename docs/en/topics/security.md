@@ -2,9 +2,7 @@
 
 ## Introduction
 
-This page details notes on how to ensure that we develop secure SilverStripe applications. See [security](/topics/security)
-for the Silverstripe-class as a starting-point for most security-related functionality.
-
+This page details notes on how to ensure that we develop secure SilverStripe applications. 
 See our "[Release Process](/misc/release-process#security-releases) on how to report security issues.
 
 ## SQL Injection
@@ -16,11 +14,11 @@ See [http://shiflett.org/articles/sql-injection](http://shiflett.org/articles/sq
 
 ### Automatic escaping
 
-SilverStripe automatically escapes data in `[api:DataObject::write()]` wherever possible,
+SilverStripe automatically escapes data in SQL statements wherever possible,
 through database-specific methods (see `[api:Database->addslashes()]`).
 For `[api:MySQLDatabase]`, this will be `[mysql_real_escape_string()](http://de3.php.net/mysql_real_escape_string)`.
-Data is escaped when saving back to the database, not when writing to object-properties.
 
+*  Most `[api:DataList]` accessors (see escaping note in method documentation)
 *  DataObject::get_by_id()
 *  DataObject::update()
 *  DataObject::castedUpdate()
@@ -29,6 +27,18 @@ Data is escaped when saving back to the database, not when writing to object-pro
 *  Form->saveInto()
 *  FormField->saveInto()
 *  DBField->saveInto()
+
+Data is escaped when saving back to the database, not when writing to object-properties.
+
+Example:
+	
+	:::php
+	// automatically escaped/quoted
+	$members = Member::get()->filter('Name', $_GET['name']); 
+	// automatically escaped/quoted
+	$members = Member::get()->filter(array('Name' => $_GET['name'])); 
+	// needs to be escaped/quoted manually
+	$members = Member::get()->where(sprintf('"Name" = \'%s\'', Convert::raw2sql($_GET['name']))); 
 
 <div class="warning" markdown='1'>
 It is NOT good practice to "be sure" and convert the data passed to the functions below manually. This might
@@ -41,12 +51,13 @@ As a rule of thumb, whenever you're creating raw queries (or just chunks of SQL)
 yourself. See [coding-conventions](/misc/coding-conventions) and [datamodel](/topics/datamodel) for ways to cast and convert
 your data.
 
-*  SQLQuery
-*  DataObject::buildSQL()
-*  DB::query()
-*  Director::urlParams()
-*  Controller->requestParams, Controller->urlParams
-*  GET/POST data passed to a Form-method
+*  `SQLQuery`
+*  `DataObject::buildSQL()`
+*  `DB::query()`
+*  `Director::urlParams()`
+*  `Controller->requestParams`, `Controller->urlParams`
+*  `SS_HTTPRequest` data
+*  GET/POST data passed to a form method
 
 Example:
 
@@ -60,7 +71,7 @@ Example:
 	}
 
 
-*  FormField->Value()
+*  `FormField->Value()`
 *  URLParams passed to a Controller-method
 
 Example:
@@ -95,11 +106,9 @@ This means if you've got a chain of functions passing data through, escaping sho
 	  }
 	}
 
-
 This might not be applicable in all cases - especially if you are building an API thats likely to be customized. If
 you're passing unescaped data, make sure to be explicit about it by writing *phpdoc*-documentation and *prefixing* your
 variables ($RAW_data instead of $data).
-
 
 
 ## XSS (Cross-Site-Scripting)
