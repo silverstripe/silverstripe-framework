@@ -85,7 +85,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 						$field->addExtraClass('ss-gridfield-sorted-desc');
 				}
 			} else {
-				if($currentColumn == count($columns)){
+				if($currentColumn == count($columns) && $gridField->getConfig()->getComponentByType('GridFieldFilterHeader')){
 					$field = new LiteralField($columnField, '<button name="showFilter" class="ss-gridfield-button-filter" id="showFilter"></button>');				
 				}else{
 					$field = new LiteralField($columnField, '<span class="non-sortable">' . $title . '</span>');
