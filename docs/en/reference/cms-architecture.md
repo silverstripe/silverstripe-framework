@@ -37,6 +37,7 @@ plain CSS without SCSS for your custom CMS interfaces as well, we just mandate S
 
 As there's a whole lot of CSS driving the CMS, we have certain best practives around writing it:
 
+ * Use dashed lowercase naming for both `id` and `class` attributes (`my-class-name`), instead of camel case (`myClassName`)
  * Use the `id` attribute sparingly. Remember that it "closes off" the structure to code reuse, as HTML elements
    require unique `id` attributes. Code reuse can happen both in CSS and JavaScript behaviour.
  * Separate presentation from structure in class names, e.g. `left-menu` is encoding the component position
