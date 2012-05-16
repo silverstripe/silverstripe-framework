@@ -1,0 +1,61 @@
+/**
+ * This file contains mixins relating to specific functionality
+ *
+ * Mixins should be stored here rather than individual files
+ */
+
+
+/*Mixin generates the generic button styling for the gridfield*/
+@mixin gridFieldButtons{
+	border:none;			
+	display:block;
+	text-indent:-9999em;
+	width:30px; 
+	height:25px; //match the height of the input field
+}
+
+
+/**
+	Mixin creates a transparent button with a dropdown arrow, 
+	as is used for files in the files up-load area. The arrows 
+	themselves are added in the _style file
+**/
+@mixin ss-uploadfield-editButton{
+	&.ss-uploadfield-item-edit {
+		opacity:0.9;
+		padding-top: 3px;
+		padding-bottom: 0;
+		height:100%;
+		@include border-radius(0);
+		&.ui-state-hover{
+			background:none;		
+			opacity:1;
+			span.toggle-details{
+				opacity:1;
+			}	
+		}
+		span.toggle-details{
+			opacity:0.9;
+			margin-left:3px;
+			display: inline-block;
+			width: 5px;
+			height: 100%;
+			cursor: pointer;
+			.toggle-details-icon {
+				margin-top:1px;
+				display: inline-block;
+				width: 8px;
+				height: 8px;
+				vertical-align: middle;
+				&.opened {	
+					margin-top:0;
+				}
+			}
+		}
+
+	}
+
+	.ui-icon {
+		display: none;
+	}	
+}

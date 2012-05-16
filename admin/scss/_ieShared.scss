@@ -2,13 +2,17 @@
 .cms .ss-ui-button {
 	background-color: $color-button-generic;
 	&.ui-state-hover {
-			background-color:lighten($color-button-generic, 5%);
-		}
+		background-color:lighten($color-button-generic, 5%);
+	}
 	&.ss-ui-action-constructive {
 		background-color:$color-button-constructive;
 		&.ui-state-hover {
 			background-color:lighten($color-button-constructive, 5%);
 		}
+	}
+	&.ss-gridfield-button-filter{
+		$bgImage: url(../../images/icons/filter-icons.png) no-repeat;
+		background:lighten($color-menu-button,10%) $bgImage -14px 4px;			
 	}
 }
 

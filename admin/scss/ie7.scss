@@ -4,7 +4,7 @@
 html {
 	overflow: hidden;
 }
-
+ 
 .field {
 	input.text, 
 	textarea,
@@ -131,6 +131,13 @@ html {
 		padding:0px;
 		position:relative;
 		bottom:2px;
+	}
+}
+
+input {
+	&.ss-gridfield-sort {
+		padding-top:0 !important;
+		padding-bottom:0 !important;
 	}
 }
 
