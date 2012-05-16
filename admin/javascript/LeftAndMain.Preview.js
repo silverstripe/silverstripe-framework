@@ -69,15 +69,18 @@
 					updateAfterXhr();
 				});
 				
-				// Toggle preview when new menu entry is selected
+				// Toggle preview when new menu entry is selected.
+				// Only do this when preview is actually shown,
+				// to avoid auto-expanding the menu in normal CMS mode
 				$('.cms-menu-list li').bind('select', function(e) {
-					self.collapse();
+					if(!self.hasClass('is-collapsed')) self.collapse();
 				});
 
 				this.layout({type: 'border'});
 
 				if(this.hasClass('is-expanded')) this.expand();
 				else this.collapse();
+				this.data('cms-preview-initialized', true);
 				
 				// Preview might not be available in all admin interfaces - block/disable when necessary
 				this.append('<div class="cms-preview-overlay ui-widget-overlay-light"></div>');
@@ -142,7 +145,7 @@
 				}
 			},
 			
-			expand: function() {
+			expand: function(inclMenu) {
 				var self = this, containerEl = this.getLayoutContainer(), contentEl = containerEl.find('.cms-content');
 				this.removeClass('east').addClass('center').removeClass('is-collapsed');
 				// this.css('overflow', 'auto');
@@ -150,7 +153,10 @@
 				this.find('iframe').show();
 				this.find('.cms-preview-toggle a').html('&raquo;');
 				this.find('.cms-preview-controls').show();
-				containerEl.find('.cms-menu').collapsePanel();
+				
+				if(this.data('cms-preview-initialized')) {
+					containerEl.find('.cms-menu').collapsePanel();
+				}
 				
 				// Already triggered through panel toggle above
 				// containerEl.redraw();
@@ -164,7 +170,10 @@
 				this.find('iframe').hide();
 				this.find('.cms-preview-toggle a').html('&laquo;');
 				this.find('.cms-preview-controls').hide();
- 				containerEl.find('.cms-menu').expandPanel();
+
+				if(this.data('cms-preview-initialized')) {
+					containerEl.find('.cms-menu').expandPanel();
+				}
 				
 				// Already triggered through panel toggle above
 				// containerEl.redraw();
