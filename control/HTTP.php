@@ -196,7 +196,10 @@ class HTTP {
 	}
 	
 	/**
-	 * Get mime type based on file extension.
+	 * Get the MIME type based on a file's extension.
+	 *
+	 * If the finfo class exists in PHP, and the file actually exists, then use that
+	 * extension, otherwise fallback to a list of commonly known MIME types.
 	 *
 	 * @uses finfo
 	 * @param string $filename Relative path to filename from project root, e.g. "mysite/tests/file.csv"
@@ -204,20 +207,23 @@ class HTTP {
 	 */
 	public static function get_mime_type($filename) {
 		// If the finfo module is compiled into PHP, use it.
-		if(class_exists('finfo') && file_exists($filename)) {
+		$path = BASE_PATH . DIRECTORY_SEPARATOR . $filename;
+		if(class_exists('finfo') && file_exists($path)) {
 			$finfo = new finfo(FILEINFO_MIME_TYPE);
-			return $finfo->file(BASE_PATH . DIRECTORY_SEPARATOR . $filename);
+			return $finfo->file($path);
 		}
-		
+
 		// Fallback to use the list from the HTTP.yml configuration and rely on the file extension
 		// to get the file mime-type
 		$ext = File::get_file_extension($filename);
 		// Get the mime-types
 		$mimeTypes = Config::inst()->get('HTTP', 'MimeTypes');
+
 		// The mime type doesn't exist
 		if(!isset($mimeTypes[$ext])) {
 			return 'application/unknown';
 		}
+
 		return $mimeTypes[$ext];
 	}
 
