@@ -87,7 +87,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 		$fileName = "export-$now.csv";
 
 		if($fileData = $this->generateExportFileData($gridField)){
-			return SS_HTTPRequest::send_file($fileData, $fileName);
+			return SS_HTTPRequest::send_file($fileData, $fileName, 'text/csv');
 		}
 	}
 
