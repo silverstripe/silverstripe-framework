@@ -104,9 +104,6 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList;
-
-	
-
 		$columns = $gridField->getColumns();
 		$filterArguments = $gridField->State->GridFieldFilterHeader->Columns->toArray();
 		$currentColumn = 0;
