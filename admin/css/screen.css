@@ -709,8 +709,8 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-logo { border-bottom: 1px solid #03090c; height: 31px; overflow: hidden; padding: 0 0 0 4px; vertical-align: middle; font-size: 12px; }
 .cms-logo .version { display: none; }
 .cms-logo a.ss-link { display: inline-block; height: 24px; width: 24px; float: left; margin-right: 8px; background: url("../images/logo_small.png") no-repeat; text-indent: -9999em; padding-right: 7px; border-right: 1px solid #19435c; }
-.cms-logo a.site-link { display: block; color: #ffffff; font-weight: bold; font-size: 14px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; padding-top: 1px; }
-.cms-logo a.site-link:hover { text-decoration: underline; }
+.cms-logo a.site-link { float: none; display: block; color: #ffffff; font-weight: bold; font-size: 14px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; padding-top: 1px; }
+.cms-logo a.site-link:hover { text-decoration: none; color: #4CC1E7; }
 
 .cms-login-status { border-top: 1px solid #19435c; height: 24px; padding: 7px 4px 0 4px; overflow: hidden; line-height: 16px; font-size: 11px; }
 .cms-login-status .logout-link { display: inline-block; height: 16px; width: 16px; float: left; margin: 0 8px 0 3px; background: url('../images/sprites-32x32-sa4e142f7f0.png') 0 -669px no-repeat; text-indent: -9999em; }
