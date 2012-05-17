@@ -204,7 +204,7 @@ class HTTP {
 	 */
 	public static function get_mime_type($filename) {
 		// If the finfo module is compiled into PHP, use it.
-		if(class_exists('finfo')) {
+		if(class_exists('finfo') && file_exists($filename)) {
 			$finfo = new finfo(FILEINFO_MIME_TYPE);
 			return $finfo->file(BASE_PATH . DIRECTORY_SEPARATOR . $filename);
 		}
