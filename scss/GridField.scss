@@ -45,6 +45,9 @@ $gf_grid_x:	16px;
 	.ss-gridfield {
 		& > div {
 			margin-bottom: $gf_grid_y*3;
+			&.addNewGridFieldButton{
+				margin-bottom:$gf_grid_y;
+			}
 		}
 
 		&[data-selectable] {

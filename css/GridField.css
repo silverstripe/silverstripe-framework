@@ -11,14 +11,8 @@
 /** ----------------------------------------------- Typography.  ------------------------------------------------ */
 /** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
-/** This file contains mixins relating to specific functionality  Mixins should be stored here rather than individual files */
-/*Mixin generates the generic button styling for the gridfield*/
-/**
-	Mixin creates a transparent button with a dropdown arrow, 
-	as is used for files in the files up-load area. The arrows 
-	themselves are added in the _style file
-**/
 .cms .ss-gridfield > div { margin-bottom: 36px; }
+.cms .ss-gridfield > div.addNewGridFieldButton { margin-bottom: 12px; }
 .cms .ss-gridfield[data-selectable] tr.ui-selected, .cms .ss-gridfield[data-selectable] tr.ui-selecting { background: #FFFAD6 !important; }
 .cms .ss-gridfield[data-selectable] td { cursor: pointer; }
 .cms .ss-gridfield span button#action_gridfield_relationfind { display: none; }
