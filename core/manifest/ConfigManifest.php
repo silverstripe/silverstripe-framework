@@ -126,7 +126,7 @@ class SS_ConfigManifest {
 
 		$finder = new ManifestFileFinder();
 		$finder->setOptions(array(
-			'name_regex'    => '/_config.php$/',
+			'name_regex'    => '/(^|[\/\\\\])_config.php$/',
 			'ignore_tests'  => !$includeTests,
 			'file_callback' => array($this, 'addSourceConfigFile')
 		));
