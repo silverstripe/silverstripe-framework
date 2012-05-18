@@ -730,7 +730,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$this->extend('onAfterSave', $record);
 		$this->setCurrentPageID($record->ID);
 		
-		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP')));
+		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP', 'Saved.')));
 		return $this->getResponseNegotiator()->respond($this->request);
 	}
 	
@@ -743,7 +743,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		
 		$record->delete();
 
-		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP')));
+		$this->response->addHeader('X-Status', rawurlencode(_t('LeftAndMain.DELETED', 'Deleted.')));
 		return $this->getResponseNegotiator()->respond(
 			$this->request, 
 			array('currentform' => array($this, 'EmptyForm'))
