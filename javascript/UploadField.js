@@ -222,11 +222,12 @@
 		});
 		$('div.ss-upload .ss-uploadfield-files .ss-uploadfield-item').entwine({
 			onmatch: function() {
-			
+				this._super();
 				this.closest('.ss-upload').find('.ss-uploadfield-addfile').addClass('borderTop');
 			},
 			onunmatch: function() {
 				$('.ss-uploadfield-files:not(:has(.ss-uploadfield-item))').closest('.ss-upload').find('.ss-uploadfield-addfile').removeClass('borderTop');
+				this._super();
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-startall').entwine({
@@ -387,6 +388,7 @@
 				this.load(function() {
 					$(this).parent().removeClass('loading');	
 				});
+				this._super();
 			}
 		});
 		$('div.ss-upload .ss-uploadfield-fromfiles').entwine({
