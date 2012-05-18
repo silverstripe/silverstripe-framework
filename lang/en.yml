@@ -18,8 +18,12 @@ en:
     ChooseFiles: 'Choose files'
     DRAGFILESHERE: 'Drag files here'
     DROPAREA: 'Drop Area'
+    EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
+    FILES: Files
     FROMCOMPUTER: 'Choose files from your computer'
+    TOTAL: Total
+    UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
     ALIGNEMENT: Alignment
@@ -78,7 +82,6 @@ en:
     CLOSEPOPUP: 'Close Popup'
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Saved %s %s %s'
-    SUCCESSEDIT2: 'Deleted %s %s'
   ComplexTableField.ss:
     ADDITEM: add
     SORTASC: 'Sort ascending'
@@ -122,6 +125,8 @@ en:
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format}).'
     VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  Director:
+    INVALID_REQUEST: 'Invalid request'
   DropdownField:
     CHOOSE: (Choose)
   EmailField:
@@ -135,12 +140,14 @@ en:
     Content: Content
     Filename: Filename
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
     NOFILESIZE: 'Filesize is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: Name
     PLURALNAME: Files
     SINGULARNAME: File
     TOOLARGE: 'Filesize is too large, maximum {size} allowed.'
+    TOOLARGESHORT: 'Filesize exceeds {size}'
     Title: Title
   FileIFrameField:
     ATTACH: 'Attach {type}'
@@ -176,7 +183,9 @@ en:
   GridField:
     AddNew: 'Add New'
     Filter: Filter
+    FilterBy: 'Filter by '
     Find: Find
+    LEVELUP: 'Level up'
     LinkExisting: 'Link Existing'
     NewRecord: 'New %s'
     NoItemsFound: 'No items found'
@@ -192,9 +201,9 @@ en:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
+    Deleted: 'Deleted %s %s'
     Save: Save
     Saved: 'Saved %s %s'
-    Deleted: 'Deleted %s %s'
   GridFieldItemEditView.ss:
     'Go back': 'Go back'
   Group:
@@ -206,8 +215,10 @@ en:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Locked?'
     NoRoles: 'No roles found'
+    PLURALNAME: Groups
     Parent: 'Parent Group'
     RolesAddEditLink: 'Manage roles'
+    SINGULARNAME: Group
     Sort: 'Sort Order'
     has_many_Permissions: Permissions
     many_many_Members: Members
@@ -263,6 +274,7 @@ en:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
     CANT_REORGANISE: 'You do not have permission to rearange the site tree. Your change was not saved.'
+    DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
     HELP: Help
     PAGETYPE: 'Page type: '
@@ -271,10 +283,9 @@ en:
     PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
     PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
     PreviewButton: Preview
-    SAVED: saved
+    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    SAVEDUP: Saved.
     VersionUnknown: unknown
-  LeftAndMain.ss:
-    VIEWPAGEIN: 'Page view:'
   LeftAndMain_Menu.ss:
     LOGOUT: 'Log out'
   LoginAttempt:
@@ -283,20 +294,15 @@ en:
     Status: Status
   Member:
     ADDGROUP: 'Add group'
-    ADDRESS: Address
     BUTTONCHANGEPASSWORD: 'Change Password'
     BUTTONLOGIN: 'Log in'
     BUTTONLOGINOTHER: 'Log in as someone else'
     BUTTONLOSTPASSWORD: 'I''ve lost my password'
     CONFIRMNEWPASSWORD: 'Confirm New Password'
     CONFIRMPASSWORD: 'Confirm Password'
-    CONTACTINFO: 'Contact Information'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
     EMAIL: Email
-    EMAILSIGNUPINTRO1: 'Thanks for signing up to become a new member, your details are listed below for future reference.'
-    EMAILSIGNUPINTRO2: 'You can login to the website using the credentials listed below'
-    EMAILSIGNUPSUBJECT: 'Thanks for signing up'
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
@@ -304,15 +310,11 @@ en:
     ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
     ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
     FIRSTNAME: 'First Name'
-    GREETING: Welcome
     INTERFACELANG: 'Interface Language'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
     LOGGEDINAS: 'You''re logged in as {name}.'
-    MOBILE: Mobile
-    NAME: Name
     NEWPASSWORD: 'New Password'
     PASSWORD: Password
-    PHONE: Phone
     PLURALNAME: Members
     PROFILESAVESUCCESS: 'Successfully saved.'
     REMEMBERME: 'Remember me next time?'
@@ -393,6 +395,8 @@ en:
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -441,7 +445,6 @@ en:
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
   SilverStripeNavigator:
     Edit: Edit
-    OpenNewWindow: 'Open in new window'
   SimpleImageField:
     NOUPLOAD: 'No Image Uploaded'
   SiteTree:
@@ -484,6 +487,7 @@ en:
     FROMCOMPUTER: 'From your computer'
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
