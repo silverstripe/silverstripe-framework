@@ -2,7 +2,7 @@
  * File: LeftAndMain.BatchActions.js
  */
 (function($) {
-	$.entwine('ss', function($){
+	$.entwine('ss.tree', function($){
 	
 		/**
 		 * Class: #Form_BatchActionsForm

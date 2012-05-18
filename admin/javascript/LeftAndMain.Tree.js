@@ -4,7 +4,7 @@
 
 (function($) {
 
-	$.entwine('ss', function($){
+	$.entwine('ss.tree', function($){
 	
 		$('.cms-tree').entwine({
 			
