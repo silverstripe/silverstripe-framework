@@ -37,24 +37,24 @@ class TestRunner extends Controller {
 		'module/$ModuleName' => 'module',
 		'all' => 'all',
 		'build' => 'build',
-		'$TestCase' => 'only',
+		'$TestCase' => 'only'
 	);
 	
 	static $allowed_actions = array(
-        'index',
-        'browse',
-        'coverage',
-        'coverageOnly',
-        'startsession',
-        'endsession',
-        'cleanupdb',
-        'module',
-        'all',
-        'build',
-        'only'
+		'index',
+		'browse',
+		'coverage',
+		'coverageAll',
+		'coverageModule',
+		'coverageOnly',
+		'startsession',
+		'endsession',
+		'cleanupdb',
+		'module',
+		'all',
+		'build',
+		'only'
 	);
-	
-	
 	
 	/**
 	 * @var Array Blacklist certain directories for the coverage report.
