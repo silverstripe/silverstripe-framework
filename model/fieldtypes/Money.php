@@ -106,9 +106,11 @@ class Money extends DBField implements CompositeDBField {
 			$this->setCurrency($value->getCurrency(), $markChanged);
 			$this->setAmount($value->getAmount(), $markChanged);
 			if($markChanged) $this->isChanged = true;
-		} else if($record && isset($record[$this->name . 'Currency']) && isset($record[$this->name . 'Amount'])) {
-			if($record[$this->name . 'Currency'] && $record[$this->name . 'Amount']) {
-				$this->setCurrency($record[$this->name . 'Currency'], $markChanged);
+		} else if($record && isset($record[$this->name . 'Amount'])) {
+			if($record[$this->name . 'Amount']) {
+				if(!empty($record[$this->name . 'Currency'])) $this->setCurrency($record[$this->name . 'Currency'], $markChanged);
+				else if($currency = (string)$this->config()->get('default_currency')) $this->setCurrency($currency, $markChanged);
+				
 				$this->setAmount($record[$this->name . 'Amount'], $markChanged);
 			} else {
 				$this->value = $this->nullValue();
