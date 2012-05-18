@@ -30,12 +30,13 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 		$success = false;
 		$error = '';
 		$conn = @new MySQLi($databaseConfig['server'], $databaseConfig['username'], $databaseConfig['password']);
-		if($conn && $conn->connect_errno < 2000) {
-			$success = true;
-		} else {
+		if($conn && $conn->connect_errno) {
 			$success = false;
-			$error = ($conn) ? $conn->connect_error : '';
+			$error = $conn->connect_error;
+		} else {
+			$success = true;
 		}
+
 		return array(
 			'success' => $success,
 			'error' => $error
