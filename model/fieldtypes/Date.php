@@ -46,7 +46,14 @@ class Date extends DBField {
 		if(is_numeric($value)) {
 			$this->value = date('Y-m-d', $value);
 		} elseif(is_string($value)) {
-			$this->value = date('Y-m-d', strtotime($value));
+			try{
+				$date = new DateTime($value);
+				$this->value = $date->Format('Y-m-d');
+				return;
+			}catch(Exception $e){
+				$this->value = null;
+				return;
+			}
 		}
 	}
 
@@ -54,42 +61,42 @@ class Date extends DBField {
 	 * Returns the date in the format dd/mm/yy 
 	 */	 
 	function Nice() {
-		if($this->value) return date('d/m/Y', strtotime($this->value));
+		if($this->value) return $this->Format('d/m/Y');
 	}
 	
 	/**
 	 * Returns the date in US format: “01/18/2006”
 	 */
 	function NiceUS() {
-		if($this->value) return date('m/d/Y', strtotime($this->value));
+		if($this->value) return $this->Format('m/d/Y');
 	}
 	
 	/** 
 	 * Returns the year from the given date
 	 */
 	function Year() {
-		if($this->value) return date('Y', strtotime($this->value));
+		if($this->value) return $this->Format('Y');
 	}
 	
 	/**
 	 * Returns the Full day, of the given date.
 	 */
 	function Day(){
-		if($this->value) return date('l', strtotime($this->value));
+		if($this->value) return $this->Format('l');
 	}
 	
 	/**
 	 * Returns a full textual representation of a month, such as January.
 	 */
 	function Month() {
-		if($this->value) return date('F', strtotime($this->value));
+		if($this->value) return $this->Format('F');
 	}
 	
 	/**
 	 * Returns the short version of the month such as Jan
 	 */
 	function ShortMonth() {
-		if($this->value) return date('M', strtotime($this->value));
+		if($this->value) return $this->Format('M');
 	}
 
 	/**
@@ -101,7 +108,7 @@ class Date extends DBField {
 		if($this->value) {
 			$format = 'j';
 			if ($includeOrdinal) $format .= 'S';
-			return date($format, strtotime($this->value));
+			return $this->Format($format);
 		}
 	}
 	
@@ -109,14 +116,14 @@ class Date extends DBField {
 	 * Returns the date in the format 24 December 2006
 	 */
 	function Long() {
-		if($this->value) return date('j F Y', strtotime($this->value));
+		if($this->value) return $this->Format('j F Y');
 	}
 	
 	/**
 	 * Returns the date in the format 24 Dec 2006
 	 */
 	function Full() {
-		if($this->value) return date('j M Y', strtotime($this->value));
+		if($this->value) return $this->Format('j M Y');
 	}
 	
 	/**
@@ -126,7 +133,10 @@ class Date extends DBField {
 	 * @return string The date in the requested format
 	 */
 	function Format($format) {
-		if($this->value) return date($format, strtotime($this->value));
+		if($this->value){
+			$date = new DateTime($this->value);
+			return $date->Format($format);
+		}
 	}
 	
 	/**

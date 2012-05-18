@@ -61,6 +61,36 @@ class DateTest extends SapphireTest {
 		);
 	}
 	
+	function testNiceUS(){
+		$this->assertEquals('03/31/2008', DBField::create_field('Date', 1206968400)->NiceUs(),
+			"Date->NiceUs() works with timestamp integers"
+		);
+	}
+	
+	function testYear(){
+		$this->assertEquals('2008', DBField::create_field('Date', 1206968400)->Year(),
+			"Date->Year() works with timestamp integers"
+		);
+	}
+	
+	function testDay(){
+		$this->assertEquals('Monday', DBField::create_field('Date', 1206968400)->Day(),
+			"Date->Day() works with timestamp integers"
+		);
+	}
+	
+	function testMonth(){
+		$this->assertEquals('March', DBField::create_field('Date', 1206968400)->Month(),
+			"Date->Month() works with timestamp integers"
+		);
+	}
+	
+	function testShortMonth(){
+		$this->assertEquals('Mar', DBField::create_field('Date', 1206968400)->ShortMonth(),
+			"Date->ShortMonth() works with timestamp integers"
+		);
+	}
+	
 	function testLongDate() {
 		$this->assertEquals('31 March 2008', DBField::create_field('Date', 1206968400)->Long(),
 			"Date->Long() works with numeric timestamp"
@@ -79,6 +109,12 @@ class DateTest extends SapphireTest {
 		);
 		$this->assertEquals('3 April 2003', DBField::create_field('Date', '3/4/2003')->Long(),
 			"Date->Long() works with D/M/YYYY"
+		);
+	}
+	
+	function testFull(){
+		$this->assertEquals('31 Mar 2008', DBField::create_field('Date', 1206968400)->Full(),
+			"Date->Full() works with timestamp integers"
 		);
 	}
 
