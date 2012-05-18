@@ -152,9 +152,12 @@ class i18nTextCollector extends Object {
 	}
 	
 	/**
-	 * Build the module's master string table
+	 * Builds a master string table from php and .ss template files for the module passed as the $module param
+	 * @see {@link collectFromCode} and {@link collectFromTemplate}
 	 *
-	 * @param string $module Module's name or 'themes'
+	 * @param string $module A module's name or just 'themes'
+	 * @return array $entities An array of entities found in the files that comprise the module
+	 * @todo Why the type juggling for $this->collectFromBlah()? They always return arrays.
 	 */
 	protected function processModule($module) {	
 		$entities = array();
@@ -194,6 +197,13 @@ class i18nTextCollector extends Object {
 		return $entities;
 	}
 
+	/**
+	 * Extracts translatables from .php files.
+	 * 
+	 * @param string $content The text content of a parsed template-file
+	 * @param string $module Module's name or 'themes'
+	 * @return array $entities An array of entities representing the extracted translation function calls in code
+	 */		
 	public function collectFromCode($content, $module) {
 		$entities = array();
 
@@ -267,6 +277,16 @@ class i18nTextCollector extends Object {
 		return $entities;
 	}
 
+	/**
+	 * Extracts translatables from .ss templates (Self referencing)
+	 * 
+	 * @param string $content The text content of a parsed template-file
+	 * @param string $module Module's name or 'themes'
+	 * @param string $fileName The name of a template file when method is used in self-referencing mode
+	 * @return array $entities An array of entities representing the extracted template function calls
+	 * 
+	 * @todo Why the type juggling for $this->collectFromTemplate()? It always returns an array.
+	 */	
 	public function collectFromTemplate($content, $fileName, $module) {
 		$entities = array();
 		
@@ -330,9 +350,11 @@ class i18nTextCollector extends Object {
 	}
 	
 	/**
-	 * @param String $fullName
-	 * @param String $_namespace 
-	 * @return String|FALSE
+	 * Normalizes enitities with namespaces.
+	 * 
+	 * @param string $fullName
+	 * @param string $_namespace 
+	 * @return string|boolean FALSE
 	 */
 	protected function normalizeEntity($fullName, $_namespace = null) {
 		// split fullname into entity parts
@@ -360,11 +382,12 @@ class i18nTextCollector extends Object {
 	
 	
 	/**
-	 * Helper function that searches for potential files to be parsed
+	 * Helper function that searches for potential files (templates and code) to be parsed
 	 * 
 	 * @param string $folder base directory to scan (will scan recursively)
-	 * @param array $fileList Array where potential files will be added to
-	 * @param String $type Optional, "php" or "ss"
+	 * @param array $fileList Array to which potential files will be appended
+	 * @param string $type Optional, "php" or "ss"
+	 * @return array $fileList An array of files
 	 */
 	protected function getFilesRecursive($folder, &$fileList = null, $type = null) {
 		if(!$fileList) $fileList = array();
