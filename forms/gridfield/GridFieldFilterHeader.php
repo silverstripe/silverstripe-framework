@@ -128,7 +128,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 					GridField_FormAction::create($gridField, 'reset', false, 'reset', null)
 						->addExtraClass('ss-gridfield-button-reset')
 						->setAttribute('title', _t('GridField.ResetFilter', "Reset"))
-						->setAttribute('id', 'action_reset_'.$gridField->getModelClass() . '_' . $columnField)
+						->setAttribute('id', 'action_reset_' . $gridField->getModelClass() . '_' . $columnField)
 
 				);
 			} else {
@@ -137,13 +137,13 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 						GridField_FormAction::create($gridField, 'filter', false, 'filter', null)
 							->addExtraClass('ss-gridfield-button-filter')
 							->setAttribute('title', _t('GridField.Filter', "Filter"))
-							->setAttribute('id', 'action_filter_'.$gridField->getModelClass() . '_' . $columnField),
+							->setAttribute('id', 'action_filter_' . $gridField->getModelClass() . '_' . $columnField),
 						GridField_FormAction::create($gridField, 'reset', false, 'reset', null)
 							->addExtraClass('ss-gridfield-button-close')
 							->setAttribute('title', _t('GridField.ResetFilter', "Reset"))
-							->setAttribute('id', 'action_reset_'.$gridField->getModelClass() . '_' . $columnField)					
-					);	
-					$field->addExtraClass('filter-buttons');				
+							->setAttribute('id', 'action_reset_' . $gridField->getModelClass() . '_' . $columnField)
+					);
+					$field->addExtraClass('filter-buttons');
 				}else{
 					$field = new LiteralField('', '');
 				}
