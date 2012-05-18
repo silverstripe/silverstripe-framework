@@ -637,6 +637,9 @@ jQuery.noConflict();
 				this.redrawTabs();
 				this._super();
 			},
+			onunmatch: function() {
+				this._super();
+			},
 			
 			redrawTabs: function() {
 				this.rewriteHashlinks();

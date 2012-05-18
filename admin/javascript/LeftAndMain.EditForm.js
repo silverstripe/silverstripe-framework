@@ -107,6 +107,9 @@
 			
 				this._super();
 			},
+			onunmatch: function() {
+				this._super();
+			},
 						
 			redraw: function() {
 				// Force initialization of tabsets to avoid layout glitches

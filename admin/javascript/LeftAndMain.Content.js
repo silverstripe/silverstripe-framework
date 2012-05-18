@@ -18,6 +18,9 @@
 				
 				this._super();
 			},
+			onunmatch: function() {
+				this._super();
+			},
 						
 			redraw: function() {
 				// Force initialization of tabsets to avoid layout glitches
@@ -228,6 +231,9 @@
 						self.removeForm();
 					}
 				});
+			},
+			onunmatch: function() {
+				this._super();
 			}
 		});
 
@@ -237,8 +243,8 @@
 				this._super();
 			},
 			onunmatch: function() {
-				this._super();
 				this.find('.cms-content-loading-overlay,.cms-content-loading-spinner').remove();
+				this._super();
 			}
 		});
 	});
