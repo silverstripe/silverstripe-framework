@@ -100,6 +100,9 @@
 						self._onLoadNewPage(e, data);
 					});
 			},
+			onunmatch: function() {
+				this._super();
+			},
 
 			getTreeConfig: function() {
 				var self = this;
