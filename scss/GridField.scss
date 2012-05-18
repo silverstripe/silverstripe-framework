@@ -126,6 +126,11 @@ $gf_grid_x:	16px;
 		
 		tbody {
 			background: #FFF;
+			tr {
+				// This lets iOS Safari know that these elements are clickable
+				// and so to send the click events.
+				cursor: pointer;
+			}
 			td {
 				// Give browser some hints on which cols take priority:
 				// The last column (buttons) should always shrink to fit.
