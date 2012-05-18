@@ -38,9 +38,24 @@ class GridFieldConfig {
 	
 	/**
 	 * @param GridFieldComponent $component 
+	 * @param string $insertBefore The class of the component to insert this one before
 	 */
-	public function addComponent(GridFieldComponent $component) {
-		$this->getComponents()->push($component);
+	public function addComponent(GridFieldComponent $component, $insertBefore = null) {
+		if($insertBefore) {
+			$existingItems = $this->getComponents();
+			$this->components = new ArrayList;
+			$inserted = false;
+			foreach($existingItems as $existingItem) {
+				if(!$inserted && $existingItem instanceof $insertBefore) {
+					$this->components->push($component);
+					$inserted = true;
+				}
+				$this->components->push($existingItem);
+			}
+			if(!$inserted) $this->components->push($component);
+		} else {
+			$this->getComponents()->push($component);
+		}
 		return $this;
 	}
 
