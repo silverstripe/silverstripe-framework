@@ -193,21 +193,25 @@
 		$('.cms-preview.collapsed').entwine({
 			onmatch: function() {
 				this.find('a').text('<');
+				this._super();
 			}
 		});
 		
 		$('.cms-preview.blocked').entwine({
 			onmatch: function() {
 				this.find('.cms-preview-overlay').show();
+				this._super();
 			},
 			onunmatch: function() {
 				this.find('.cms-preview-overlay').hide();
+				this._super();
 			}
 		});
 		
 		$('.cms-preview.expanded').entwine({
 			onmatch: function() {
 				this.find('a').text('>');
+				this._super();
 			}
 		});
 		
@@ -244,6 +248,7 @@
 				this.find('.active a').removeClass('disabled');
 				this.find('.cms-preview-watermark').show();
 				this.find('.active .cms-preview-watermark').hide();
+				this._super();
 			}
 		});
 

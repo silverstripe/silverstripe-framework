@@ -16,7 +16,7 @@
 
 		var _clickTestFn = function(e) {
 			// If the click target is not a child of the current field, close the panel automatically.
-			if(!$(e.target).parents('.TreeDropdownField').length) jQuery('.TreeDropdownField').entwine('ss').closePanel();
+			if(!$(e.target).parents('.TreeDropdownField').length) jQuery('.TreeDropdownField').closePanel();
 		};
 
 		/**

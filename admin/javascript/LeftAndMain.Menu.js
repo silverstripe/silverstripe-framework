@@ -150,6 +150,7 @@
 				if(this.find('ul').length) {
 					this.find('a:first').append('<span class="toggle-children"><span class="toggle-children-icon"></span></span>');
 				}
+				this._super();
 			},
 			toggle: function() {
 				this[this.hasClass('opened') ? 'close' : 'open']();

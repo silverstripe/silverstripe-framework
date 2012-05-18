@@ -355,6 +355,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.getDialog().attr('title', titleEl.text());
 
 				this.setEditor(ss.editorWrappers['default']());
+				this._super();
 			},
 			redraw: function() {
 			},
