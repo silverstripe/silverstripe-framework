@@ -138,10 +138,6 @@
 			},
 			setValue: function(val) {
 				this.find(':input:hidden').val(val).trigger('change');
-				// we don't need to update Title because the input:hidden change event bind to updateTitle()
-				//this.updateTitle();
-				// also we don't need to trigger 'change' event again since its already trigger above.
-				//this.trigger('change');
 			},
 			getValue: function() {
 				return this.find(':input:hidden').val();
