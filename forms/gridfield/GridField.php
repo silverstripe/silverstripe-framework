@@ -79,7 +79,6 @@ class GridField extends FormField {
 		}
 		
 		$this->config->addComponent(new GridState_Component());
-		$this->setComponents($this->config);
 		$this->state = new GridState($this);
 		
 		
@@ -118,17 +117,6 @@ class GridField extends FormField {
 
 		throw new LogicException('GridField doesn\'t have a modelClassName, so it doesn\'t know the columns of this grid.');
 	}
-	
-	/**
-	 * Set which GridFieldComponent's that this GridFields contain by using a GridFieldConfig
-	 *
-	 * @param GridFieldConfig $config
-	 * @see GridFieldComponent
-	 */
-	protected function setComponents(GridFieldConfig $config) {
-		$this->components = $config->getComponents();
-		return $this;
-	}
 
 	/**
 	 * Get the GridFieldConfig
@@ -137,6 +125,10 @@ class GridField extends FormField {
 	 */
 	public function getConfig() {
 		return $this->config;
+	}
+	
+	public function getComponents() {
+		return $this->config->getComponents();
 	}
 	
 	/**
@@ -224,7 +216,7 @@ class GridField extends FormField {
 
 		// Get data
 		$list = $this->getList();
-		foreach($this->components as $item) {
+		foreach($this->getComponents() as $item) {
  			if($item instanceof GridField_DataManipulator) {
 				$list = $item->getManipulatedData($this, $list);
 			}
@@ -238,7 +230,7 @@ class GridField extends FormField {
 			"footer" => "",
 		);
 
-		foreach($this->components as $item) {			
+		foreach($this->getComponents() as $item) {			
 			if($item instanceof GridField_HTMLProvider) {
 				$fragments = $item->getHTMLFragments($this);
 				if($fragments) foreach($fragments as $k => $v) {
@@ -382,7 +374,7 @@ class GridField extends FormField {
 	public function getColumns() {
 		// Get column list
 		$columns = array();
-		foreach($this->components as $item) {
+		foreach($this->getComponents() as $item) {
 			if($item instanceof GridField_ColumnProvider) {
 				$item->augmentColumns($this, $columns);
 			}
@@ -499,7 +491,7 @@ class GridField extends FormField {
 	 */
 	protected function buildColumnDispatch() {
 		$this->columnDispatch = array();
-		foreach($this->components as $item) {
+		foreach($this->getComponents() as $item) {
 			if($item instanceof GridField_ColumnProvider) {
 				$columns = $item->getColumnsHandled($this);
 				foreach($columns as $column) {
@@ -563,7 +555,7 @@ class GridField extends FormField {
 	 */
 	public function handleAction($actionName, $args, $data) {
 		$actionName = strtolower($actionName);
-		foreach($this->components as $component) {
+		foreach($this->getComponents() as $component) {
 			if(!($component instanceof GridField_ActionProvider)) {
 				continue;
 			}
@@ -591,7 +583,7 @@ class GridField extends FormField {
 		$fieldData = $this->request->requestVar($this->getName());
 		if($fieldData && $fieldData['GridState']) $this->getState(false)->setValue($fieldData['GridState']);
 		
-		foreach($this->components as $component) {
+		foreach($this->getComponents() as $component) {
 			if(!($component instanceof GridField_URLHandler)) {
 				continue;
 			}
