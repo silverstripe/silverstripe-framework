@@ -119,10 +119,6 @@ SS
 		$this->assertEquals(i18n::get_locale(), $this->render('{$i18nLocale}'), 'i18n template functions result correct result');
 		$this->assertEquals(i18n::get_locale(), $this->render('{$get_locale}'), 'i18n template functions result correct result');
 
-		//only run this test if we have a controller - i.e. if we are running this test from a web-browser
-		if (Controller::has_curr()) $this->assertEquals((string)Controller::curr(), $this->render('{$CurrentPage}'), 'i18n template functions result correct result');
-		if (Controller::has_curr()) $this->assertEquals((string)Controller::curr(), $this->render('{$currentPage}'), 'i18n template functions result correct result');
-
 		$this->assertEquals((string)Member::currentUser(), $this->render('{$CurrentMember}'), 'Member template functions result correct result');
 		$this->assertEquals((string)Member::currentUser(), $this->render('{$CurrentUser}'), 'Member template functions result correct result');
 		$this->assertEquals((string)Member::currentUser(), $this->render('{$currentMember}'), 'Member template functions result correct result');
