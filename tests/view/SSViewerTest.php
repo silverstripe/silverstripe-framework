@@ -54,7 +54,7 @@ class SSViewerTest extends SapphireTest {
 
 		$this->assertFalse((bool)trim($template), "Should be no content in this return.");
 	}
-	
+
 	function testComments() {
 		$output = $this->render(<<<SS
 This is my template<%-- this is a comment --%>This is some content<%-- this is another comment --%>This is the final content
