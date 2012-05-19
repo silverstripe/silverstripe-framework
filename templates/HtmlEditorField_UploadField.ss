@@ -1,4 +1,4 @@
-<div class="ss-uploadfield-item ss-uploadfield-addfile field">
+<div class="ss-uploadfield-item ss-uploadfield-addfile field ss-uploadfield">
 
 	<h4>
 		<span class="step-label">

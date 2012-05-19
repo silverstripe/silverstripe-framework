@@ -12,9 +12,10 @@
 	@include box-shadow(none);
 }
 
-body.cms.ss-uploadfield-edit-iframe {
+body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fieldset {
 	padding: $grid-x*2;
 	overflow: auto;
+	background: #E2E2E2;
 	
 	span.readonly {
 		font-style:italic;
@@ -23,9 +24,6 @@ body.cms.ss-uploadfield-edit-iframe {
 	}
 }
 
-.ss-uploadfield-edit-iframe {
-	background: #E2E2E2;
-}
 
 .ss-assetuploadfield {
 	h3 {
@@ -55,8 +53,8 @@ body.cms.ss-uploadfield-edit-iframe {
 			right:0;
 			@include box-shadow(none);
 			color: $color-text;		
-			@include ss-uploadfield-editButton;
-			
+
+
 			&.ss-uploadfield-item-edit-all {
 				@extend .ss-uploadfield-item-edit; 
 				height:auto;
@@ -103,7 +101,7 @@ body.cms.ss-uploadfield-edit-iframe {
 		}
 		.ui-state-error .ss-uploadfield-item-info {
 			background-color: #c11f1d;
-			padding-right:110px;
+			padding-right:130px;
 			@include background-image(linear-gradient(top,  #c11f1d 0%,#bf1d1b 4%,#b71b1c 8%,#b61e1d 15%,#b11d1d 27%,#ab1d1c 31%,#a51b1b 42%,#9f1b19 46%,#9f1b19 50%,#991c1a 54%,#971a18 58%,#911b1b 62%,#911b1b 65%,#7e1816 88%,#771919 92%,#731817 100%));
 			
 			.ss-uploadfield-item-name {
@@ -189,21 +187,9 @@ body.cms.ss-uploadfield-edit-iframe {
 			left: 0;
 			z-index: 0;
 			color: #f00;
+			@include ss-uploadfield-action-buttons;			
 		}
-		.ss-ui-button {
-			background: none;
-			border: 0;
-			@include box-shadow(none);
-			@include text-shadow(none);
-			color: $color-text-light;
-			float: right;
-			
-			&.ss-uploadfield-item-delete {
-				// TODO tmp hack until we have permissions and can disable delete
-				display: none;
-			}
-			@include ss-uploadfield-editButton;
-		}
+		
 		.ss-uploadfield-item-progress {
 			width: 100%;
 			
@@ -225,34 +211,6 @@ body.cms.ss-uploadfield-edit-iframe {
 			}
 		}
 				
-		.ss-uploadfield-item-cancel {
-			position: absolute;
-			top: 7px;
-			right: 7px;
-			
-			button {
-				display: block;
-				overflow: hidden;
-				text-indent: -9999px;
-				padding: 0;
-				margin: 0;
-				border: 0;
-				width: 16px;
-				height: 16px;
-				cursor: pointer;
-				@include single-box-shadow(none);
-				position: relative;
-				
-				.ui-icon {
-				  display: block;
-				  position: absolute;
-				  top: 0;
-				  left: 0;
-				  margin: 0;
-				}
-			}
-		}
-		
 		.ss-uploadfield-item-editform {
 			/* don't use display none, for it will break jQuery('iframe').contents().height() */
 			height: 0;
