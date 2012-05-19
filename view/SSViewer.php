@@ -449,7 +449,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 			if ($val = $this->getInjectedValue($property, $params)) {
 				$hasInjected = true;
 				$obj = $val['obj'];
-				$res = ($obj->hasMethod('forTemplate')) ? $obj->forTemplate() : '';
+				$res = $obj->forTemplate();
 			}
 		}
 
