@@ -1,14 +1,4 @@
 <?php
-Director::addRules(50, array(
-	'' => 'RootURLController',
-	'processes//$Action/$ID/$Batch' => 'BatchProcess_Controller',
-	'admin/help//$Action/$ID' => 'CMSHelp',
-	'admin/bulkload//$Action/$ID/$OtherID' => 'BulkLoaderAdmin',
-	'dev/buildcache/$Action' => 'RebuildStaticCacheTask',
-));
-
-CMSMenu::add_director_rules();
-
 // Default CMS HTMLEditorConfig
 HtmlEditorConfig::get('cms')->setOptions(array(
 	'friendly_name' => 'Default CMS',

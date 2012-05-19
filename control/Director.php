@@ -41,7 +41,11 @@ class Director implements TemplateGlobalProvider {
 	 * We recommend priority 100 for your site's rules.  The built-in rules are priority 10, standard modules are priority 50.
 	 */
 	static function addRules($priority, $rules) {
-		Director::$rules[$priority] = isset(Director::$rules[$priority]) ? array_merge($rules, (array)Director::$rules[$priority]) : $rules;
+		if ($priority != 100) {
+			Deprecation::notice('3.0', 'Priority argument is now ignored - use the default of 100. You should really be setting routes via _config yaml fragments though.');
+		}
+
+		Config::inst()->update('Director', 'rules', $rules);
 	}
 
 	/**
@@ -242,48 +246,46 @@ class Director implements TemplateGlobalProvider {
 	 * @return SS_HTTPResponse|string
 	 */
 	protected static function handleRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
-		krsort(Director::$rules);
+		$rules = Config::inst()->get('Director', 'rules');
 
-		if(isset($_REQUEST['debug'])) Debug::show(Director::$rules);
-		foreach(Director::$rules as $priority => $rules) {
-			foreach($rules as $pattern => $controllerOptions) {
-				if(is_string($controllerOptions)) {
-					if(substr($controllerOptions,0,2) == '->') $controllerOptions = array('Redirect' => substr($controllerOptions,2));
-					else $controllerOptions = array('Controller' => $controllerOptions);
+		if(isset($_REQUEST['debug'])) Debug::show($rules);
+
+		foreach($rules as $pattern => $controllerOptions) {
+			if(is_string($controllerOptions)) {
+				if(substr($controllerOptions,0,2) == '->') $controllerOptions = array('Redirect' => substr($controllerOptions,2));
+				else $controllerOptions = array('Controller' => $controllerOptions);
+			}
+
+			if(($arguments = $request->match($pattern, true)) !== false) {
+				// controllerOptions provide some default arguments
+				$arguments = array_merge($controllerOptions, $arguments);
+
+				// Find the controller name
+				if(isset($arguments['Controller'])) $controller = $arguments['Controller'];
+
+				// Pop additional tokens from the tokeniser if necessary
+				if(isset($controllerOptions['_PopTokeniser'])) {
+					$request->shift($controllerOptions['_PopTokeniser']);
 				}
-				
-				if(($arguments = $request->match($pattern, true)) !== false) {
-					// controllerOptions provide some default arguments
-					$arguments = array_merge($controllerOptions, $arguments);
-					
-					// Find the controller name
-					if(isset($arguments['Controller'])) $controller = $arguments['Controller'];
-					
-					// Pop additional tokens from the tokeniser if necessary
-					if(isset($controllerOptions['_PopTokeniser'])) {
-						$request->shift($controllerOptions['_PopTokeniser']);
+
+				// Handle redirections
+				if(isset($arguments['Redirect'])) {
+					return "redirect:" . Director::absoluteURL($arguments['Redirect'], true);
+
+				} else {
+					Director::$urlParams = $arguments;
+					$controllerObj = Injector::inst()->create($controller);
+					$controllerObj->setSession($session);
+
+					try {
+						$result = $controllerObj->handleRequest($request, $model);
+					} catch(SS_HTTPResponse_Exception $responseException) {
+						$result = $responseException->getResponse();
 					}
+					if(!is_object($result) || $result instanceof SS_HTTPResponse) return $result;
 
-					// Handle redirections
-					if(isset($arguments['Redirect'])) {
-						return "redirect:" . Director::absoluteURL($arguments['Redirect'], true);
-
-					} else {
-						Director::$urlParams = $arguments;
-						$controllerObj = Injector::inst()->create($controller);
-						$controllerObj->setSession($session);
-
-						try {
-							$result = $controllerObj->handleRequest($request, $model);
-						} catch(SS_HTTPResponse_Exception $responseException) {
-							$result = $responseException->getResponse();
-						}
-						if(!is_object($result) || $result instanceof SS_HTTPResponse) return $result;
-						
-						user_error("Bad result from url " . $request->getURL() . " handled by " . 
-							get_class($controllerObj)." controller: ".get_class($result), E_USER_WARNING);
-						
-					}
+					user_error("Bad result from url " . $request->getURL() . " handled by " .
+						get_class($controllerObj)." controller: ".get_class($result), E_USER_WARNING);
 				}
 			}
 		}

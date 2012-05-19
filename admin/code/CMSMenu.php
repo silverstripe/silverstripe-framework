@@ -35,13 +35,6 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 	}
 
 	/**
-	 * Add Director rules for all of the CMS controllers.
-	 */
-	public static function add_director_rules() {
-		array_map(array('self','add_director_rule_for_controller'), self::get_cms_classes());
-	}
-
-	/**
 	 * Add a LeftAndMain controller to the CMS menu.
 	 *
 	 * @param string $controllerClass The class name of the controller
@@ -76,27 +69,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
 
 		return new CMSMenuItem($menuTitle, $link, $controllerClass, $menuPriority);
 	}
-	
-	/**
-	 * Add the appropriate Director rules for the given controller.
-	 */
-	protected static function add_director_rule_for_controller($controllerClass) {
-		$urlBase      = Config::inst()->get($controllerClass, 'url_base', Config::FIRST_SET);
-		$urlSegment   = Config::inst()->get($controllerClass, 'url_segment', Config::FIRST_SET);
-		$urlRule      = Config::inst()->get($controllerClass, 'url_rule', Config::FIRST_SET);
-		$urlPriority  = Config::inst()->get($controllerClass, 'url_priority', Config::FIRST_SET);
 
-		if($urlSegment || $controllerClass == 'CMSMain') {
-			$link = Controller::join_links($urlBase, $urlSegment) . '/';
-		
-			// Make director rule
-			if($urlRule[0] == '/') $urlRule = substr($urlRule,1);
-			$rule = $link . '/' . $urlRule; // the / will combine with the / on the end of $link to make a //
-			Director::addRules($urlPriority, array(
-				$rule => $controllerClass
-			));
-		}
-	}
 	
 	/**
 	 * Add an arbitrary URL to the CMS menu.
