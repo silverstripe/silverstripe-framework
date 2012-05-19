@@ -1,4 +1,5 @@
-name: PasswordEncryptor
+---
+name: coreencryptors
 ---
 PasswordEncryptor:
   encryptors:
