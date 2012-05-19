@@ -38,7 +38,6 @@
 
 			//Fixes case where someone uploads a single erroring file
 			if(data.files.length == 1 && data.files[0].error !== null){
-				$('.ss-uploadfield-editandorganize').show();
 				$('.fileOverview .uploadStatus .state').text(ss.i18n._t('AssetUploadField.UploadField.UPLOADFAIL', 'Sorry your upload failed'));
 			}else{
 				$('.fileOverview .uploadStatus .state').text(ss.i18n._t('AssetUploadField.UPLOADINPROGRESS', 'Please wait… upload in progress'));//.show();

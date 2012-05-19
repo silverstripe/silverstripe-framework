@@ -675,8 +675,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				// HACK: See ondialogopen()
 				// jQuery(ed.getContainer()).show();
-
-
+		
 				this.find('.ss-htmleditorfield-file').each(function(el) {
 					$(this).insertHTML();
 				});
@@ -700,7 +699,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			},
 			redraw: function() {
 				this._super();
-				var ed = this.getEditor(), node = $(ed.getSelectedNode()),
+				var textarea = this.closest('.cms').find('.cms-container').find('textarea.htmleditor');
+				var ed = textarea.getEditor(), node = $(ed.getSelectedNode()),
 					hasItems = Boolean(this.find('.ss-htmleditorfield-file').length),
 					editingSelected = node.is('img');
 
@@ -1004,15 +1004,65 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		/**
 		 * Deselect item and remove the 'edit' view
 		 */
-		$('form.htmleditorfield-mediaform .ss-htmleditorfield-file .action-delete').entwine({
+		$('form.htmleditorfield-mediaform .ss-uploadfield-item .ss-uploadfield-item-cancel').entwine({
 			onclick: function(e) {
-				var form = this.closest('form'), file = this.closest('.ss-htmleditorfield-file');
+				var form = this.closest('form'), file = this.closest('ss-uploadfield-item');
 				form.find('.ss-gridfield-item[data-id=' + file.data('id') + ']').removeClass('ui-selected');
-				this.closest('.ss-htmleditorfield-file').remove();
+				this.closest('.ss-uploadfield-item').remove();
 				form.redraw();
 				e.preventDefault();
 			}
 		});
+
+		$('div.ss-assetuploadfield .ss-uploadfield-item-edit, div.ss-assetuploadfield .ss-uploadfield-item-name').entwine({
+			onclick: function(e) {
+				var editForm = this.closest('.ss-uploadfield-item').find('.ss-uploadfield-item-editform');
+	
+				// Mark the row as changed if any of its form fields are edited
+				editForm.ready(function() {					
+					editForm.find(':input').bind('change', function(e){
+						editForm.removeClass('edited'); //so edited class is only there once
+						editForm.addClass('edited'); 
+					});
+				});
+								
+				editForm.parent('.ss-uploadfield-item').removeClass('ui-state-warning');
+
+				editForm.toggleEditForm();
+
+				e.preventDefault(); // Avoid a form submit
+
+				return false; // Avoid duplication from button
+			}
+		});
+
+		$('div.ss-assetuploadfield .ss-uploadfield-item-editform').entwine({
+			toggleEditForm: function() {
+				var itemInfo = this.prev('.ss-uploadfield-item-info'), status = itemInfo.find('.ss-uploadfield-item-status');
+				var text="";
+
+				if(this.height() === 0) {
+					text = ss.i18n._t('UploadField.Editing', "Editing ...");
+					this.height('auto');
+					itemInfo.find('.toggle-details-icon').addClass('opened');					
+					status.removeClass('ui-state-success-text').removeClass('ui-state-warning-text');
+				} else {
+					this.height(0);					
+					itemInfo.find('.toggle-details-icon').removeClass('opened');
+					if(!this.hasClass('edited')){
+						text = ss.i18n._t('UploadField.NOCHANGES', 'No Changes')
+						status.addClass('ui-state-success-text');
+					}else{						
+						text = ss.i18n._t('UploadField.CHANGESSAVED', 'Changes Made')
+						this.removeClass('edited');
+						status.addClass('ui-state-success-text');	
+					}
+				
+				}
+				status.attr('title',text).text(text);	
+			}
+		});
+
 
 		$('form.htmleditorfield-mediaform #ParentID .TreeDropdownField').entwine({
 			onmatch: function() {

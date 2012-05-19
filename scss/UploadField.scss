@@ -22,48 +22,50 @@
 		margin: 0;
 		padding: 15px;
 		overflow: auto;
-	}
-	.ss-uploadfield-item-preview {
-		height: 60px;
-		line-height: 60px;
-		width: 80px;
-		text-align: center;
-		font-weight: bold;
-		float: left;
-		overflow: hidden;
-		&.ss-uploadfield-dropzone {
-			@include box-shadow(lighten($color-medium-separator, 10%) 0 0 3px 3px inset);
-			border: 2px dashed $color-medium-separator;
-			background: $color-light-separator;
-			display: none;
-		}
-	}
-	.ss-uploadfield-item-info {
-		margin: 0 0 0 100px;
-	}
-	.ss-uploadfield-item-name {
-		display: block;
-		line-height: 13px;
-		height: 26px;
-		margin: 0;
-		text-align: left;
-		
-		b {
-			font-weight: bold; 
-			padding: 0 5px 0 0;
-		}
-		span {
-			font-size: $font-base-size - 1;
-			color: lighten($color-text, 25%);
-		}
-	}
-	.ss-uploadfield-item-status {
-		float: right;
-		padding: 0 0 0 5px;
-		
-		&.ui-state-error-text {
-			color: $color-button-destructive;
+
+		.ss-uploadfield-item-preview {
+			height: 60px;
+			line-height: 60px;
+			width: 80px;
+			text-align: center;
 			font-weight: bold;
+			float: left;
+			overflow: hidden;
+			&.ss-uploadfield-dropzone {
+				@include box-shadow(lighten($color-medium-separator, 10%) 0 0 3px 3px inset);
+				border: 2px dashed $color-medium-separator;
+				background: $color-light-separator;
+				display: none;
+			}
+		}
+		.ss-uploadfield-item-info {
+			margin: 0 0 0 100px;
+		
+			.ss-uploadfield-item-name {
+				display: block;
+				line-height: 13px;
+				height: 26px;
+				margin: 0;
+				text-align: left;
+				
+				b {
+					font-weight: bold; 
+					padding: 0 5px 0 0;
+				}
+				span {
+					font-size: $font-base-size - 1;
+					color: lighten($color-text, 25%);
+				}
+				.ss-uploadfield-item-status {
+					float: right;
+					padding: 0 0 0 5px;
+				
+					&.ui-state-error-text {
+						color: $color-button-destructive;
+						font-weight: bold;
+					}
+				}
+			}			
 		}
 	}
 	.ss-ui-button {
@@ -146,14 +148,14 @@
 				// background: sprite($sprites16, cross-circle) no-repeat;
 				
 				span {
-				  position: absolute;
-				  left: 0;
-				  top: 0;
-				  margin: 0;
+					position: absolute;
+					left: 0;
+					top: 0;
+					margin: 0;
 				  
-				  &.ui-button-text {
-            display: none;
-          }
+					&.ui-button-text {
+						display: none;
+					}
 				}
 			}
 		}

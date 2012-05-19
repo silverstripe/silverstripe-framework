@@ -414,11 +414,14 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 		$allFields = new CompositeField(
 			$tabSet,
-			new LiteralField('headerEdit', '<h4 class="field header-edit">' . sprintf($numericLabelTmpl, '2', _t('HtmlEditorField.EditDetails', 'Edit details')) . '</h4>'),
+			new LiteralField('headerEdit', '<h4 class="field header-edit">' . sprintf($numericLabelTmpl, '2', _t('HtmlEditorField.ADJUSTDETAILSDIMENSIONS', 'Details &amp; dimensions')) . '</h4>'),
 			$editComposite = new CompositeField(
-				new LiteralField('contentEdit', '<div class="content-edit"></div>')
+				new LiteralField('contentEdit', '<div class="content-edit ss-uploadfield-files files"></div>')
 			)
+			
 		);
+
+		$editComposite->addExtraClass('ss-assetuploadfield');
 
 		$fields = new FieldList(
 			new LiteralField(
