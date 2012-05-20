@@ -2650,11 +2650,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 	
 	/**
-	 * @deprecated 3.0 Use DataList::create and DataList to do your querying
+	 * To be note, the method previously returned a DataObjectSet which is deprecated in 3.0, but the method itself as
+	 * a DataObject API is still used in partially cached template, e.g. <% cached Aggregate(Page).Max(LastEdited) %>
+	 *
+	 * @param string the class name that the list is aggregated on
+	 * 
+	 * @return DataList that contains all the objects of the given $class, if $class missing, class of $this object is used.
+	 *
 	 */
 	public function Aggregate($class = null) {
-		Deprecation::notice('3.0', 'Use DataList::create and DataList to do your querying instead.');
-
 	    if($class) {
 			$list = new DataList($class);
 			$list->setDataModel(DataModel::inst());
@@ -2667,10 +2671,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @deprecated 3.0 Use DataList::create and DataList to do your querying
+	 * @deprecated 3.0 Use relationship on $this object and DataList to do your querying
 	 */
 	public function RelationshipAggregate($relationship) {
-		Deprecation::notice('3.0', 'Use DataList::create and DataList to do your querying instead.');
+		Deprecation::notice('3.0', 'use '.$relationship.' on this object and then Use DataList to do your querying instead.');
 
 	    return $this->$relationship();
 	}
