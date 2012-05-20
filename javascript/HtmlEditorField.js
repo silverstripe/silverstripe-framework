@@ -295,7 +295,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						url: url,
 						success: function(html) {
 							dialog.html(html);
-							dialog.getForm().redraw();
 						}
 					});
 				}
@@ -356,6 +355,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				this.setEditor(ss.editorWrappers['default']());
 				this._super();
+
+				this.redraw();
 			},
 			redraw: function() {
 			},
