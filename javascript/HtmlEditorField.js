@@ -655,17 +655,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		 * of remove files as well.
 		 */
 		$('form.htmleditorfield-mediaform').entwine({
-			onmatch: function() {
-				this.toggleLooks();
-				this._super();
-			},
-			toggleLooks: function(){
-				var updateExisting = Boolean(this.find('.ss-htmleditorfield-file').length);
-				this.find('.htmleditorfield-mediaform-heading.insert')[updateExisting ? 'hide' : 'show']();
-				this.find('.Actions .image-insert')[updateExisting ? 'hide' : 'show']();
-				this.find('.htmleditorfield-mediaform-heading.update')[updateExisting ? 'show' : 'hide']();
-				this.find('.Actions .image-update')[updateExisting ? 'show' : 'hide']();
-			},
 			toggleCloseButton: function(){
 				var updateExisting = Boolean(this.find('.ss-htmleditorfield-file').length);
 				this.find('.overview .action-delete')[updateExisting ? 'hide' : 'show']();
@@ -695,17 +684,17 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						self.redraw();
 					});
 				}
-				this.toggleLooks();
 				this.redraw();
 			},
 			redraw: function() {
 				this._super();
 				var ed = this.getEditor(), node = $(ed.getSelectedNode()),
 					hasItems = Boolean(this.find('.ss-htmleditorfield-file').length),
-					editingSelected = node.is('img');
+					editingSelected = node.is('img'),
+					header = this.find('.header-edit');
 
 				// Only show second step if files are selected
-				this.find('.header-edit')[(hasItems) ? 'show' : 'hide']();
+				if(header) header[(hasItems) ? 'show' : 'hide']();
 
 				// Disable "insert" button if no files are selected
 				this.find('.Actions :submit')
@@ -714,6 +703,12 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				// Hide file selection and step labels when editing an existing file
 				this.find('#MediaFormInsertImageTabs,.header-edit')[editingSelected ? 'hide' : 'show']();
+
+				var updateExisting = Boolean(this.find('.ss-htmleditorfield-file').length);
+				this.find('.htmleditorfield-mediaform-heading.insert')[updateExisting ? 'hide' : 'show']();
+				this.find('.Actions .image-insert')[updateExisting ? 'hide' : 'show']();
+				this.find('.htmleditorfield-mediaform-heading.update')[updateExisting ? 'show' : 'hide']();
+				this.find('.Actions .image-update')[updateExisting ? 'show' : 'hide']();
 			},
 			resetFields: function() {
 				var ed = this.getEditor(), node = $(ed.getSelectedNode());
