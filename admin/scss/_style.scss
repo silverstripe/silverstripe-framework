@@ -651,7 +651,6 @@ body.cms {
 		width: ($grid-x * 22);
 		padding: 0 $grid-x;
 		overflow: auto;
-		overflow-x:hidden;
 		height:100%;
 		.dropdown select {
 			width:$grid-x * 20;
