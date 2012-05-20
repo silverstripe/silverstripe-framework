@@ -37,7 +37,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	public function __construct($dataClass) {
 		$this->dataClass = $dataClass;
 		$this->dataQuery = new DataQuery($this->dataClass);
-		
+		$this->setDatabase(DB::getConn());
 		parent::__construct();
 	}
 
@@ -385,6 +385,30 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
+	 *
+	 * @var SS_Database
+	 */
+	protected $database;
+
+	/**
+	 *
+	 * @param SS_Database $database
+	 * @return DataList
+	 */
+	public function setDatabase($database) {
+		$this->database = $database;
+		return $this;
+	}
+
+	/**
+	 *
+	 * @return SS_Database
+	 */
+	public function getDatabase() {
+		return $this->database;
+	}
+
+	/**
 	 * Return an array of the actual items that this DataList contains at this stage.
 	 * This is when the query is actually executed.
 	 *
@@ -392,13 +416,11 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 */
 	public function toArray() {
 		$query = $this->dataQuery->query();
-		$rows = $query->execute();
+		$rows = $this->getDatabase()->execute($query);
 		$results = array();
-		
 		foreach($rows as $row) {
 			$results[] = $this->createDataObject($row);
 		}
-		
 		return $results;
 	}
 
@@ -528,7 +550,9 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return DataObject
 	 */
 	public function first() {
-		foreach($this->dataQuery->firstRow()->execute() as $row) {
+		$query = $this->dataQuery->query()->firstRow();
+		$rows = $this->getDatabase()->execute($query);
+		foreach($rows as $row) {
 			return $this->createDataObject($row);
 		}
 	}
