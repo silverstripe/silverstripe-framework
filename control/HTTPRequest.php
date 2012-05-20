@@ -90,8 +90,9 @@ class SS_HTTPRequest implements ArrayAccess {
 	function __construct($httpMethod, $url, $getVars = array(), $postVars = array(), $body = null) {
 		$this->httpMethod = strtoupper(self::detect_method($httpMethod, $postVars));
 		$this->url = $url;
-		
-		if(Director::is_relative_url($url)) {
+
+		// Normalize URL if its relative (strictly speaking), or has leading slashes
+		if(Director::is_relative_url($url) || preg_match('/^\//', $url)) {
 			$this->url = preg_replace(array('/\/+/','/^\//', '/\/$/'),array('/','',''), $this->url);
 		}
 		if(preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $this->url, $matches)) {
