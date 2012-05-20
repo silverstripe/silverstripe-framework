@@ -28,11 +28,5 @@
 </div>
 
 <div class="ss-uploadfield-editandorganize">
-	<h3>
-		<span class="step-label">
-			<span class="flyout">2</span><span class="arrow"></span>
-			<span class="title"><% _t('AssetUploadField.EDITANDORGANIZE', 'Edit & organize') %></span>
-		</span>
-	</h3>
 	<ul class="ss-uploadfield-files files"></ul>
 </div>
