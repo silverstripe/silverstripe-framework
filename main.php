@@ -116,6 +116,7 @@ if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseC
 
 if (isset($_GET['debug_profile'])) Profiler::mark('DB::connect');
 DB::connect($databaseConfig);
+DB::setConn(new CachedDatabase(DB::getConn()));
 if (isset($_GET['debug_profile'])) Profiler::unmark('DB::connect');
 
 if (isset($_GET['debug_profile'])) Profiler::unmark('main.php init');
