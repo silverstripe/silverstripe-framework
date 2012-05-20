@@ -1,4 +1,5 @@
-name: HTTP
+---
+name: basicmimetypes
 ---
 HTTP:
    MimeTypes:

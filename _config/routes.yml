@@ -1,0 +1,23 @@
+---
+Name: coreroutes
+After: cms/routes#modelascontrollerroutes
+Before: '*'
+---
+Director:
+  rules:
+    'Security//$Action/$ID/$OtherID': 'Security'
+    '$Controller//$Action/$ID/$OtherID':  '*'
+    'api/v1/live': 'VersionedRestfulServer'
+    'api/v1': 'RestfulServer'
+    'soap/v1': 'SOAPModelAccess'
+    'dev': 'DevelopmentAdmin'
+    'interactive': 'SapphireREPL'
+---
+Name: adminroutes
+After: framework/routes#coreroutes
+---
+Director:
+  rules:
+    'admin': 'AdminRootController'
+    '': 'RootURLController'
+    'dev/buildcache/$Action': 'RebuildStaticCacheTask'
