@@ -80,10 +80,9 @@
 				// as automatic browser ajax response redirects seem to discard the hash/fragment.
 				formData.push({name: 'BackURL', value:History.getPageUrl()});
 
-				// Some action buttons are redirecting to content areas as oposed to reloading the form.
-				// They will have pjax-content class on them.
+				// Some action buttons are redirecting to content areas as oposed to reloading the form by default.
 				var pjaxType = 'CurrentForm', pjaxSelector = '.cms-edit-form';
-				if ($(button).hasClass('pjax-content')) {
+				if ($(button).hasClass('redirecting-to-content')) {
 					pjaxType = 'Content';
 					pjaxSelector = '.cms-content';
 				}
