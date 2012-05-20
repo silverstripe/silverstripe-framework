@@ -84,11 +84,8 @@
 .cms-menu {
 	z-index: 80;
 	background: $color-base;
-	border-right: 1px solid $color-menu-border;
-	width: ($grid-x * 24) - 1; /* 8x24 - 1 */
-	
-	@include box-shadow($color-shadow-dark 0 0 $grid-x);
-
+	width: ($grid-x * 24); // Removed right border as it clashes with different blues
+	@include box-shadow($color-shadow-blacker 0 0 3px);
 	a {
 		text-decoration: none;
 	}
@@ -143,15 +140,15 @@
 			text-shadow: lighten($color-base, 5%) 1px 1px 0;
 			color: $color-text-dark;
 			padding: ($grid-y - 1) 5px ($grid-y - 1) 8px;
-			background-color: darken($color-base, 12%);
+			background-color: $color-base;
 			cursor: pointer;
 			
 			@include background-image(linear-gradient(
 				$color-base,
-				darken($color-base, 12%)
+				darken($color-base, 10%)
 			));
 
-			border-top: 1px solid lighten($color-base, 10%);
+			border-top: 1px solid lighten($color-base, 6%);
 			border-bottom: 1px solid darken($color-base, 20%);
 			
 			&:hover {
@@ -212,6 +209,10 @@
 					}
 				}
 			}
+			
+		}
+		ul li a {
+			border-top: 1px solid lighten($color-base, 2%);
 		}
 	
 		&.current { //need to apply current stlye to flyout also (at least line height)
@@ -253,7 +254,7 @@
 					line-height: 32px;
 					color: lighten($color-menu-button, 45%);
 				 	background: none;
-					border-top: 1px solid $color-menu-button;
+					border-top: 1px solid darken($color-menu-button,4%);
 					border-bottom: 1px solid darken($color-menu-button, 20%);
 					
 					&.current,
@@ -274,7 +275,7 @@
 				&.current {
 					background: darken($color-menu-button, 5%);
 					border-top: 1px solid darken($color-menu-button, 5%);
-					
+					border-top: none;
 					a {
 						font-weight: bold;
 						color: $color-text-light;
@@ -287,9 +288,19 @@
 			}
 		}
 
-		ul {
+		ul.collapse {
 			display: none;
-			#Menu-CMSPagesController {
+			li {
+				a {
+					background-image:none;
+					font-size: 11px;
+					padding: 0 10px 0 40px;
+					height: 32px;
+					line-height: 32px;
+				}
+			}
+			/* // To specific - was overriding collapsed-flyout styles
+#Menu-CMSPagesController {
 				a {
 					background-image:none;
 					font-size: 11px;
@@ -325,6 +336,7 @@
 					line-height: 32px;
 				}
 			}
+*/
 		}
 
 		/* Style applied to the menu flyout only when the collapsed setting */
@@ -334,14 +346,9 @@
 			li {
 				a {
 					font-size: $font-base-size - 1;
-					padding: 0 10px 0 40px;
+					padding: 0 10px 0 16px;
 					height: 32px;
 					line-height: 32px;
-
-					&.current,
-					&:hover {
-						font-weight: bold;
-					}
 				}
 
 				&.current a {

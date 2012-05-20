@@ -21,8 +21,8 @@
 //multiple images. 
 $experimental-support-for-svg: true; 
 
-$gf_colour_base: desaturate(darken(adjust-hue($color-base, -10%), 10%),5%);
-$gf_colour_gradient_light: lighten($gf_colour_base, 10%);
+$gf_colour_base: desaturate(darken(adjust-hue($color-base, -10%), 10%),5%); // This changes the color significantly, presume gf is gradient friendly? looks very different than #B0BEC7
+$gf_colour_gradient_light: lighten($gf_colour_base, 10%); 
 $gf_colour_gradient_dark: darken($gf_colour_base, 5%);
 $gf_colour_header_border: $gf_colour_gradient_dark;
 $gf_colour_subheader: saturate(lighten($gf_colour_base, 15%),5%);
@@ -259,6 +259,9 @@ $gf_grid_x:	16px;
 					padding: 5px;
 					min-height: 40px; //this is to accomodate the add new button.
 					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
+					/* // would prefer to use the default colors
+					@include background-image(linear-gradient($color-base, #8CA1AE)); 
+					*/
 					@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 				h2{
 						padding: 0px;
@@ -281,7 +284,11 @@ $gf_grid_x:	16px;
 				background: $gf_colour_subheader;					
 				th{
 					padding: 0px;
-				}				
+					font-weight: normal;
+					.ss-ui-button {
+						font-weight: normal;
+					}
+				}			
 			}			
 			&:hover {
 				background: #FFFAD6 !important;
@@ -381,16 +388,16 @@ $gf_grid_x:	16px;
 						@include box-shadow-none; 
 					}
 					&.ss-gridfield-sort {
-						background: transparent url(../images/arrows.png) no-repeat right 10px;
+						background: transparent url(../images/arrows.png) no-repeat right 6px;
 						border:none;	
 						width:100%;
 						text-align: left;
-						padding: 4px 8px 4px 0;
+						padding: 2px 8px 2px 0; // Doesn't need to be so big now that filter has moved
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 						color: #fff;
 						@include border-radius(0);
 						&:hover {
-							background-position: right -30px;
+							background-position: right -34px;
 						}
 						&.ss-gridfield-sorted-desc {
 							background-position: right -72px;
@@ -511,7 +518,7 @@ $gf_grid_x:	16px;
 				}
 
 				span.non-sortable {
-					padding:1em 1em; 
+					padding: 0 1em; 
 					display:block;
 				}
 			}

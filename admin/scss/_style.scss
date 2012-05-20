@@ -87,16 +87,17 @@ body.cms {
 }
 
 .cms-content-header {
-	padding: ($grid-y - 8) $grid-x $grid-y;	
+	padding: ($grid-y - 8) 0 $grid-y $grid-x;	
 	height: $grid-y * 4;
 	z-index: 60;
-	@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2) inset);
+	overflow:hidden;
+	@include box-shadow($color-shadow-light 0 0 ($grid-x / 2) inset);
 	background: {
 		image:url(../images/textures/cms_content_header.png);
 		repeat:repeat;
+		position: 0 1px;
 	}
-	overflow:hidden;
-
+	
 	a {
 		color: $color-text-blue-link;
 	}
@@ -108,11 +109,11 @@ body.cms {
 	}
 
 	h2 {
-		padding: $grid-y $grid-x 0 $grid-x;
+		padding: $grid-y - 2 $grid-x 0 $grid-x;
 		font-size: $font-base-size + 2;
 		line-height: $grid-x * 3;
 		font-weight: bold;
-		text-shadow: darken($color-widget-bg, 15%) 1px 1px 0;
+		/* text-shadow: darken($color-widget-bg, 15%) 1px 1px 0; */  // Gives wrong effect
 		margin: 0;
 		display:table-cell;
 		vertical-align:top;
@@ -156,7 +157,7 @@ body.cms {
 		width:40%;
 		.ui-tabs-nav {
 			float:right;
-			margin-right:$grid-x*4;
+			/* margin-right:$grid-x*4; */ // Removed to make tabs align far right
 			li {
 				a {
 					font-weight: bold;
@@ -180,6 +181,8 @@ body.cms {
 					top:none;
 				}
 				padding-bottom:0px;
+				@include box-shadow($color-shadow-dark 0 0 2px);
+				border-color: #EEE;
 			}
 			.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
 				border-radius:0;
@@ -221,17 +224,16 @@ body.cms {
 	.ui-widget-content .ui-state-default, 
 	.ui-widget-header .ui-state-default {
 		background-color: $color-base;
+		text-shadow: lighten($color-tab, 5%) 0 1px 0;
 		@include background-image(
 			linear-gradient($color-base, darken($color-base, 12%))
 			);
 		
 		border: {
-			right-color: darken($color-tab, 20%);
-			left-color: $color-tab;
+			right-color: darken($color-base, 15%);
+			left-color: lighten($color-base, 10%);
 			bottom:none;
 		}
-
-		text-shadow: lighten($color-tab, 5%) 0 1px 0;
 
 		a {
 			color: #FFF;
@@ -390,14 +392,13 @@ body.cms {
  * -------------------------------------------- */
 
 .cms-content-actions {
-	margin: $grid-y $grid-x*2 $grid-y*2 0;
-	padding-left:$grid-x*2;
+	margin: 0;
+	padding: $grid-y*1.5 $grid-y*2;
 	height: $grid-y*4;
 	z-index: 0;
-	@include box-shadow(darken($color-widget-bg, 2%) 0 $grid-y*-2 $grid-y*2);
-	.root-form &{
-		@include box-shadow(rgba($tab-panel-texture-color, 0.8) 0 $grid-y*-2 $grid-y*2);
-	}
+	border-top: 1px solid $color-light-separator;
+	border-top: 1px solid #FAFAFA;
+	@include box-shadow(#CCC 0 -1px 1px);
 }
 
 /** --------------------------------------------
@@ -625,13 +626,14 @@ body.cms {
  * panel
  */
 .cms-content-tools {
-	background-color: $color-panel-background;
+	background-color: #F1F4F5;
+	background: $tab-panel-texture-background; // Pages bg panel look like same as pages view
 	width: $grid-x * 24;
 	border-right: 1px solid darken($color-widget-bg, 15%);
 	overflow-y: auto;	
 	overflow-x: hidden;
 	z-index: 70;
-	@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2));
+	@include box-shadow($color-shadow-black 0 2px 3px);
 	float: left;
 	position: relative;
 
@@ -688,7 +690,6 @@ body.cms {
 			text-shadow: darken($color-widget-bg, 50%) -1px -1px 0;
 			width: $grid-x * 22 /* 24 - (padding on each side + margin) */;
 			color: lighten($color-widget-bg, 60%);
-			
 			@include hide-text-overflow();
 		}
 	}
@@ -1070,7 +1071,7 @@ form.member-profile-form {
 
 .cms {
 	.cms-content {
-		border-right: 1px solid $color-light-separator;
+		/* border-right: 1px solid $color-light-separator; */ // This holds the cms away from the right side by 1px so removed
 		
 		@include box-shadow(3px 0 4px rgba(0,0,0,0.15));
 		@include border-radius(0);
@@ -1133,20 +1134,16 @@ form.member-profile-form {
 	overflow: hidden;
 
 	.cms-panel-toggle {
-		@include box-shadow(0 0 5px rgba(107, 120, 123, 0.5));
-		
+		@include box-shadow(0 0 1px rgba(107, 120, 123, 0.5));
+		&.south {
+			border-top: 1px solid $color-light-separator;
+		}
 		a { 
 			display: block;
 			text-align: right;
 			padding: $grid-y/2 0;
 			width: 100%;
-		
-			@include background-image(
-				linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 30%))
-			);
-
 			text-decoration: none;
-		
 			span {
 				display: inline-block;
 				margin: 0 5px;
@@ -1157,6 +1154,11 @@ form.member-profile-form {
 			&.toggle-expand {
 				width: 40px; // will set the collapsed width
 			}
+		}
+	}
+	&.cms-content-tools .cms-panel-toggle {
+		&.south {
+			border-top: 1px solid #FFF;
 		}
 	}
 	
@@ -1368,6 +1370,7 @@ form.member-profile-form {
 						border: {
 							right-color: darken($color-tab, 20%);
 							left-color: $color-tab;
+							left-color: red;
 							bottom:none;
 							top:none;
 						}
@@ -1603,8 +1606,9 @@ form.small {
 	}
 
 	.cms-file-info-data {
-		// Ensure it fits beside the image preview
-		max-width: 350px;
+		// Ensure it fits beside the image preview, increased size for long url
+		max-width: 550px;
+		
 
 		// Reduced label widths to fit everything in smaller space
 		.field {
@@ -1665,7 +1669,7 @@ form.import-form {
 .cms-container {
 	.CMSMain.CMSPageEditController {
 		// Fix pixel gap between nav tree and main page header
-	 	margin-left:-1px;
+	 	margin-left: -1px; // Removed to close gap far right of right tabs?
 	 	//Styling of tabs on page edit
 	 	.cms-edit-form {
 	 		background:darken($color-widget-bg, 2%);
@@ -1696,7 +1700,7 @@ form.import-form {
 	 	.ss-tabset .ui-tabs-panel {
 	 		background:darken($color-widget-bg, 2%);
 	 		clear:both;
-	 		border-top:1px solid $color-button-generic-border;
+	 		/* border-top:1px solid $color-button-generic-border; */
 	 		.ss-tabset {
 	 			border-top:none;
 	 			.ui-tabs-nav {
@@ -1737,7 +1741,7 @@ form.import-form {
 	 	.ss-tabset .ui-tabs-panel {
 	 		background:darken($color-widget-bg, 2%);
 	 		clear:both;
-	 		border-top:1px solid $color-button-generic-border;
+	 		/* border-top:1px solid $color-button-generic-border; */
 	 	}
 	}
 	//Styling of tabs on page History
@@ -1771,7 +1775,7 @@ form.import-form {
 	 	.ss-tabset .ui-tabs-panel {
 	 		background:darken($color-widget-bg, 2%);
 	 		clear:both;
-	 		border-top:1px solid $color-button-generic-border;
+	 		/* border-top:1px solid $color-button-generic-border; */ // Double border?
 	 	}
 	}
 }
