@@ -353,7 +353,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var titleEl = this.find(':header:first');
 				this.getDialog().attr('title', titleEl.text());
 
-				this.setEditor(ss.editorWrappers['default']());
 				this._super();
 
 				this.redraw();
@@ -374,6 +373,19 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			updateFromEditor: function() {
 				this.getEditor().onopen();
 				window._ss_htmleditorfield_bookmark = this.getEditor().createBookmark();
+			},
+			createEditor: function(){
+				return ss.editorWrappers['default']();
+			},
+			/**
+			 * Get the tinyMCE editor
+			 */
+			getEditor: function(){
+				var val = this._super();
+				if(!val) {
+					this.setEditor(val = this.createEditor());
+				}
+				return val;
 			}
 		});
 
