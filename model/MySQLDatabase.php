@@ -124,6 +124,16 @@ class MySQLDatabase extends SS_Database {
 		return new MySQLQuery($this, $handle);
 	}
 
+	/**
+	 *
+	 * @param SQLQuery $query
+	 * @param int $errorLevel
+	 * @return SS_Query
+	 */
+	public function execute(SQLQuery $query, $errorLevel = E_USER_ERROR) {
+		return $this->query($query->sql(), $errorLevel);
+	}
+
 	public function getGeneratedID($table) {
 		return $this->dbConn->insert_id;
 	}
