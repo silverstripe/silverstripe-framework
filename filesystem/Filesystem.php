@@ -165,7 +165,8 @@ class Filesystem extends Object {
 		
 		return _t(
 			'Filesystem.SYNCRESULTS',
-			sprintf('Sync complete: %s items created, %d items deleted', (int) $results['added'], (int) $results['deleted'])
+			'Sync complete: {createdcount} items created, {deletedcount} items deleted', 
+			array('createdcount' => (int)$results['added'], 'deletedcount' => (int)$results['deleted'])
 		);
 	}
 	
