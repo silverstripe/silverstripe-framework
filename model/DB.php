@@ -333,5 +333,15 @@ class DB {
 	static function alteration_message($message,$type="") {
 		return self::getConn()->alterationMessage($message, $type);
 	}
-	
+
+	/**
+	 * Forward this call to the active connection if it has the method flush_cache
+	 * 
+	 * @param string $type - which Dataobject to flush
+	 */
+	public static function flush_cache($type) {
+		if(method_exists(self::getConn(), 'flush_cache')) {
+			forward_static_call(array(get_class(self::getConn()), 'flush_cache'), $type);
+		}
+	}
 }

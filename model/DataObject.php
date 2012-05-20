@@ -2779,6 +2779,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function flushCache($persistent = true) {
 		if($persistent) Aggregate::flushCache($this->class);
+		DB::flush_cache($this->class);
 		
 		if($this->class == 'DataObject') {
 			DataObject::$_cache_get_one = array();
