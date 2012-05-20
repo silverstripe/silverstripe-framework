@@ -19,7 +19,7 @@
 			// use _onAdd instead of add since we only want it called once for a file set, not for each file
 			var result = $.blueimpUI.fileupload.prototype._onAdd.call(this, e, data);
 			var firstNewFile = this._files.find('.ss-uploadfield-item').slice(data.files.length*-1).first();
-			var top = '+=' + (firstNewFile.position().top - parseInt(firstNewFile.css('marginTop')) || 0 - parseInt(firstNewFile.css('borderTopWidth')) || 0);
+			var top = '+=' + (firstNewFile.position().top - parseInt(firstNewFile.css('marginTop'), 10) || 0 - parseInt(firstNewFile.css('borderTopWidth'), 10) || 0);
 			firstNewFile.offsetParent().animate({scrollTop: top}, 1000);
 			
 			/* Compute total size of files */		
@@ -48,14 +48,13 @@
 			return result;
 		},
 		_onAlways: function (jqXHRorResult, textStatus, jqXHRorError, options) {
-            $.blueimpUI.fileupload.prototype._onAlways.call(this, jqXHRorResult, textStatus, jqXHRorError, options);
-            if (this._active === 0) {
-                this._trigger('stop');
+			$.blueimpUI.fileupload.prototype._onAlways.call(this, jqXHRorResult, textStatus, jqXHRorError, options);
+			if (this._active === 0) {
+				this._trigger('stop');
 				$('.fileOverview .uploadStatus .state').text(ss.i18n._t('AssetUploadField.FILEUPLOADCOMPLETED', 'File Upload Completed!'));//.hide();
 				$('.fileOverview button').show();
-            }
-
-        }		
+			}
+		}		
 	});
 
 
@@ -364,15 +363,15 @@
 					itemInfo.find('.toggle-details-icon').removeClass('opened');
 					$('div.ss-upload .fileOverview .ss-uploadfield-item-edit-all').removeClass('opened').find('.toggle-details-icon').removeClass('opened');
 					if(!this.hasClass('edited')){
-						text = ss.i18n._t('UploadField.NOCHANGES', 'No Changes')
+						text = ss.i18n._t('UploadField.NOCHANGES', 'No Changes');
 						status.addClass('ui-state-success-text');
 					}else{
 						if(saved.hasClass('good')){
-							text = ss.i18n._t('UploadField.CHANGESSAVED', 'Changes Saved')
+							text = ss.i18n._t('UploadField.CHANGESSAVED', 'Changes Saved');
 							this.removeClass('edited').parent('.ss-uploadfield-item').removeClass('ui-state-warning');
 							status.addClass('ui-state-success-text');						
 						}else{
-							text = ss.i18n._t('UploadField.UNSAVEDCHANGES', 'Unsaved Changes')
+							text = ss.i18n._t('UploadField.UNSAVEDCHANGES', 'Unsaved Changes');
 							this.parent('.ss-uploadfield-item').addClass('ui-state-warning');
 							status.addClass('ui-state-warning-text');
 						}							
