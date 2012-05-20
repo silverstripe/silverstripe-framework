@@ -50,7 +50,6 @@
 		_onAlways: function (jqXHRorResult, textStatus, jqXHRorError, options) {
 			$.blueimpUI.fileupload.prototype._onAlways.call(this, jqXHRorResult, textStatus, jqXHRorError, options);
 			if (this._active === 0) {
-				this._trigger('stop');
 				$('.fileOverview .uploadStatus .state').text(ss.i18n._t('AssetUploadField.FILEUPLOADCOMPLETED', 'File Upload Completed!'));//.hide();
 				$('.fileOverview button').show();
 			}
