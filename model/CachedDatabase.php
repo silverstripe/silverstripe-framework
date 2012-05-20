@@ -326,7 +326,6 @@ class CachedDatabase_Query extends SS_Query {
 	 * @param type $rowNum
 	 */
 	public function seek($rowNum) {
-		die('seek is called');
 		if(isset($this->records[$rowNum])) {
 			return $this->records[$rowNum];
 		}
