@@ -131,7 +131,7 @@ class SS_Backtrace {
 			$args = array();
 			foreach($item['args'] as $arg) {
 				if(!is_object($arg) || method_exists($arg, '__toString')) {
-					$args[] = (string) $arg;
+					$args[] = is_array($arg) ? 'Array' : strval($arg);
 				} else {
 					$args[] = get_class($arg);
 				}
