@@ -56,7 +56,10 @@
 				
 				this._super();
 			},
-	
+			onunmatch: function() {
+				this._super();
+			}
+
 			/**
 			 * Function: onsubmit
 			 * 
@@ -123,7 +126,7 @@
 					origOptions = this.getOrigOptions(), 
 					dropdown = this.find('select[name=PageType]'),
 					disallowed = [],
-					className = (selectedNode) ? selectedNode.getClassname() : null,
+					className = (selectedNode.length>0) ? selectedNode.entwine('ss.tree').getClassname() : null,
 					siteTreeHints = $.parseJSON($('#sitetree_ul').attr('data-hints')),
 					disableDropDown = true,
 					selectedOption = dropdown.val();
