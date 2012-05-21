@@ -161,6 +161,8 @@ en:
     REPLACE: 'Replace {type}'
   FileIFrameField_iframe.ss:
     TITLE: 'Image Uploading Iframe'
+  Filesystem:
+    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   ForgotPasswordEmail.ss:
     HELLO: Hi
     TEXT1: 'Here is your'
@@ -215,10 +217,8 @@ en:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Locked?'
     NoRoles: 'No roles found'
-    PLURALNAME: Groups
     Parent: 'Parent Group'
     RolesAddEditLink: 'Manage roles'
-    SINGULARNAME: Group
     Sort: 'Sort Order'
     has_many_Permissions: Permissions
     many_many_Members: Members
@@ -395,8 +395,6 @@ en:
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
