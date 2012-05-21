@@ -9,9 +9,19 @@
  * @subpackage gridfield
  */
 class GridFieldButtonRow implements GridField_HTMLProvider {
+	protected $targetFragment;
+	
+	public function __construct($targetFragment = 'before') {
+		$this->targetFragment = $targetFragment;
+	}
+
 	public function getHTMLFragments( $gridField) {
+		$data = new ArrayData(array(
+			"LeftFragment" => "\$DefineFragment(buttons-{$this->targetFragment}-left)",
+			"RightFragment" => "\$DefineFragment(buttons-{$this->targetFragment}-right)",
+		));
 		return array(
-			'buttons' => $gridField->renderWith('GridFieldButtonRow')
+			$this->targetFragment => $data->renderWith('GridFieldButtonRow')
 		);
 	}
 }

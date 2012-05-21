@@ -226,7 +226,6 @@ class GridField extends FormField {
 		$content = array(
 			"before" => "",
 			"after" => "",
-			"buttons" => "",
 			"header" => "",
 			"footer" => "",
 		);
@@ -251,7 +250,7 @@ class GridField extends FormField {
 		// Circular dependencies are detected by disallowing any item to be deferred more than 5 times
 		// It's a fairly crude algorithm but it works
 		
-		$fragmentDefined = array('header' => true, 'buttons'=>true, 'footer' => true, 'before' => true, 'after' => true);
+		$fragmentDefined = array('header' => true, 'footer' => true, 'before' => true, 'after' => true);
 		reset($content);
 		while(list($k,$v) = each($content)) {
 			if(preg_match_all('/\$DefineFragment\(([a-z0-9\-_]+)\)/i', $v, $matches)) {
@@ -356,7 +355,6 @@ class GridField extends FormField {
 		return
 			$this->createTag('fieldset', $attrs, 
 				$content['before'] .
-				$content['buttons'] .
 				$this->createTag('table', $tableAttrs, $head."\n".$foot."\n".$body) .
 				$content['after']
 			);

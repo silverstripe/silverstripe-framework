@@ -12,7 +12,7 @@
 @import "compass/css3/text-shadow";
 @import "compass/css3/border-radius";
 @import "../admin/scss/themes/default";
-@import "../admin/scss/themes/default";
+@import "../admin/scss/_mixins";
 @import "_elementMixins";
 
 //$experimental-support-for-svg variable comes from 
@@ -47,6 +47,7 @@ $gf_grid_x:	16px;
 			margin-bottom: $gf_grid_y*3;
 			&.addNewGridFieldButton{
 				margin-bottom:$gf_grid_y;
+				@include clearfix;
 			}
 		}
 
@@ -73,6 +74,22 @@ $gf_grid_x:	16px;
 				padding-left:26px; //to accomodate wider export icon
 			} 
 	 	}
+	 	.right {
+	 		float:right;
+			& > * {
+				float: right;
+				margin-left:5px;			
+				font-size: $gf_grid_y*1.2;
+			}
+		}
+		.left { 
+			float:left;
+			& > * {
+				margin-right:5px;
+				float: left;
+				font-size: $gf_grid_y*1.2;
+			}
+		}
 	}
 	
 	.ss-gridfield {
@@ -105,6 +122,7 @@ $gf_grid_x:	16px;
 		border-collapse: separate;	
 		border-bottom: 0 none;				
 		width: 100%;
+		margin-bottom:$gf_grid_y;
 
 		thead {
 			color: darken($gf_colour_base, 50%);	
@@ -256,7 +274,7 @@ $gf_grid_x:	16px;
 		tr {	
 			&.title {
 				th {
-					position: relative;
+					position: relative;					
 					background: $gf_colour_gradient_dark;
 					border-top: 1px solid $gf_colour_border;
 					padding: 5px;
@@ -269,15 +287,8 @@ $gf_grid_x:	16px;
 						color:#fff;
 						margin:3px 8px 0;
 						display:inline-block;
-					}
-					.right > * {
-						float: right;
-						font-size: $gf_grid_y*1.2;
-					}
-					.left > * {
-						float: left;
-						font-size: $gf_grid_y*1.2;
-					}
+						float:left;
+					}					
 				}
 			}	
 			&.sortable-header {		

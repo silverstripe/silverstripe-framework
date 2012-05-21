@@ -191,11 +191,10 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig {
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
 	public function __construct($itemsPerPage=null) {
-
-		$this->addComponent(new GridFieldToolbarHeader());
-		$this->addComponent(new GridFieldButtonRow());
-		$this->addComponent(new GridFieldAddNewButton('toolbar-header-left'));
 		
+		$this->addComponent(new GridFieldButtonRow('before'));
+		$this->addComponent(new GridFieldAddNewButton('buttons-before-left'));
+		$this->addComponent(new GridFieldToolbarHeader());
 		$this->addComponent($sort = new GridFieldSortableHeader());
 		$this->addComponent($filter = new GridFieldFilterHeader());
 		$this->addComponent(new GridFieldDataColumns());
@@ -241,10 +240,11 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig {
 	 * @param int $itemsPerPage - How many items per page should show up
 	 */
 	public function __construct($itemsPerPage=null) {
+		
+		$this->addComponent(new GridFieldButtonRow('before'));
+		$this->addComponent(new GridFieldAddNewButton('buttons-before-left'));
+		$this->addComponent(new GridFieldAddExistingAutocompleter('buttons-before-left'));
 		$this->addComponent(new GridFieldToolbarHeader());
-		$this->addComponent(new GridFieldAddExistingAutocompleter('toolbar-header-left'));
-		$this->addComponent(new GridFieldButtonRow());
-		$this->addComponent(new GridFieldAddNewButton('toolbar-header-left'));
 		$this->addComponent($sort = new GridFieldSortableHeader());
 		$this->addComponent($filter = new GridFieldFilterHeader());
 		$this->addComponent(new GridFieldDataColumns());
