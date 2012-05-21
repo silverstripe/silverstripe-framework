@@ -167,6 +167,10 @@ table.ss-gridfield-table {
 		}
 	}
 }
+.cms .cms-content-tools {
+	// Visual aid for IE as there are no box-shadows
+	border-right: 1px solid #CCC;
+}
 
 //fix for view children arrow in pages list view 
 .cms .ss-gridfield table.ss-gridfield-table tbody {
@@ -179,4 +183,19 @@ table.ss-gridfield-table {
 			}
 		}
 	}
-}				
+}	
+
+// CMS Content header & tab fix
+.cms-content-header {
+	h2 {
+		float: left;	
+		.section-icon {
+			display: none;
+		}
+	}
+	.cms-content-header-tabs {
+		position: absolute;
+		right: 0;
+	}	
+}
+		
