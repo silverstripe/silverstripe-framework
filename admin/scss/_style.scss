@@ -181,8 +181,7 @@ body.cms {
 					top:none;
 				}
 				padding-bottom:0px;
-				@include box-shadow($color-shadow-dark 0 0 2px);
-				border-color: #EEE;
+				@include box-shadow($color-shadow-light 0 0 2px);
 			}
 			.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
 				border-radius:0;
@@ -232,12 +231,11 @@ body.cms {
 		border: {
 			right-color: darken($color-base, 15%);
 			left-color: lighten($color-base, 10%);
-			bottom:none;
 		}
 
 		a {
 			color: #FFF;
-			text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+			text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
 		}
 	}
 	
@@ -246,8 +244,8 @@ body.cms {
 	.ui-widget-header .ui-state-active {
 		background: $tab-panel-texture-background;
 		border: {
-			right-color: darken($color-tab, 20%);
-			left-color: darken($color-tab, 20%);
+			right-color: darken($color-tab, 15%); // same color as divider between header and body, needed for IE
+			left-color: darken($color-tab, 15%);
 		}
 		margin-right:-1px;
 		margin-left:-1px;
@@ -256,7 +254,7 @@ body.cms {
 		a {
 			border-bottom: none;
 			color: $color-text;
-			text-shadow: none;
+			text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
 		}
 	}
 }
@@ -1370,11 +1368,9 @@ form.member-profile-form {
 						border: {
 							right-color: darken($color-tab, 20%);
 							left-color: $color-tab;
-							left-color: red;
 							bottom:none;
 							top:none;
 						}
-
 						text-shadow: lighten($color-tab, 60%) 0 1px 0;
 					}
 					
@@ -1399,7 +1395,7 @@ form.member-profile-form {
 						}
 					}
 					.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
-					border-radius:0;
+						border-radius:0;
 					}
 
 					.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
