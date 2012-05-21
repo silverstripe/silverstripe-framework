@@ -57,6 +57,8 @@ class GridField extends FormField {
 	 */
 	protected $columnDispatch = null;
 
+	protected $name = '';
+
 	/**
 	 * Creates a new GridField field
 	 *
@@ -67,6 +69,7 @@ class GridField extends FormField {
 	 */
 	public function __construct($name, $title = null, SS_List $dataList = null, GridFieldConfig $config = null) {
 		parent::__construct($name, $title, null);
+		$this->name = $name;
 
 		if($dataList) {
 			$this->setList($dataList);
@@ -79,8 +82,7 @@ class GridField extends FormField {
 		}
 		
 		$this->config->addComponent(new GridState_Component());
-		$this->state = new GridState($this);
-		
+		$this->state = new GridState($this);		
 		
 		$this->addExtraClass('ss-gridfield');
 	}
