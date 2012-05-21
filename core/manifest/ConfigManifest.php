@@ -485,12 +485,7 @@ class SS_ConfigManifest {
 	 */
 	function mergeInYamlFragment(&$into, $fragment) {
 		foreach ($fragment as $k => $v) {
-			if (is_array($v) || is_object($v)) {
-				if (isset($into[$k])) { $sub = $into[$k]; $this->mergeInYamlFragment($sub, $v); $into[$k] = $sub; }
-				else $into[$k] = $v;
-			}
-			else if (is_numeric($k)) $into[] = $v;
-			else $into[$k] = $v;
+			Config::merge_high_into_low($into[$k], $v);
 		}
 	}
 
