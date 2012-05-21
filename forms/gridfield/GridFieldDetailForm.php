@@ -401,11 +401,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		$form->sessionMessage($message, 'good');
 
-		//when an item is deleted, redirect to the revelant admin section without the action parameter
-		$controller = Controller::curr();
-		$noActionURL = $controller->removeAction($data['url']);
-
-		return Director::redirect($noActionURL, 302); //redirect back to admin section
+		$controller = $this->getToplevelController();
+		return $controller->getResponseNegotiator()->forcePjaxType('Content')->respond($controller->request);
 	}
 
 	/**
