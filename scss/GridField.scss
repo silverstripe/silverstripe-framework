@@ -21,16 +21,15 @@
 //multiple images. 
 $experimental-support-for-svg: true; 
 
-$gf_colour_base: desaturate(darken(adjust-hue($color-base, -10%), 10%),5%); // This changes the color significantly, presume gf is gradient friendly? looks very different than #B0BEC7
-$gf_colour_gradient_light: lighten($gf_colour_base, 10%); 
-$gf_colour_gradient_dark: darken($gf_colour_base, 5%);
+$gf_colour_gradient_dark: darken($color-base, 8%);
 $gf_colour_header_border: $gf_colour_gradient_dark;
-$gf_colour_subheader: saturate(lighten($gf_colour_base, 15%),5%);
+$gf_colour_subheader: saturate(lighten($color-base, 15%),5%);
 $gf_colour_border: rgba(0,0,0,.1);
-$gf_colour_zebra: lighten($gf_colour_subheader,17%);
+$gf_colour_zebra: #F0F4F7;
 $gf_colour_font: #666;
-$gf_colour_text_shadow: rgba(0,0,0,.3);
-$gf_border_radius:	7px;
+$gf_colour_text_shadow: rgba(0,0,0,.2);
+$gf_colour_text_shadow_dark: rgba(0,0,0,.4);
+$gf_border_radius:	5px;
 
 $gf_grid_y:	12px;
 $gf_grid_x:	16px;
@@ -104,7 +103,7 @@ $gf_grid_x:	16px;
 		width: 100%;
 
 		thead {
-			color: darken($gf_colour_base, 50%);	
+			color: darken($color-base, 50%);	
 			background: transparent;
 			tr.filter-header {
 				.fieldgroup {
@@ -138,9 +137,9 @@ $gf_grid_x:	16px;
 				width: auto;
 				white-space:nowrap;
 				&.col-buttons {
-					width: 70px;
-					padding:0;
-					text-align: right;
+					width: 40px;
+					padding:0 $gf_grid_x/2;
+					text-align: left;
 				}
 
 				&.col-description {
@@ -210,7 +209,7 @@ $gf_grid_x:	16px;
 					border: none;
 					background: none;
 					margin: 0 0 0 2px;
-					padding: 0;
+					padding: 6px 0;
 					width: auto;
 					text-shadow: none;
 					&.ui-state-hover {
@@ -221,10 +220,17 @@ $gf_grid_x:	16px;
 						border:none;
 						@include box-shadow-none;
 					}
+					&.gridfield-button-delete {
+						width: 20px;
+						margin: 0;
+						span.btn-icon-decline {
+							left: 2px;
+						}
+					}
 				}
 				a.view-link, a.edit-link {
 					display:inline-block;
-					width:$gf_grid_x;
+					width:20px;
 					height:20px; //min height to fit the edit icon
 					text-indent:9999em;
 					overflow: hidden;
@@ -234,16 +240,16 @@ $gf_grid_x:	16px;
 					background: url(../admin/images/btn-icon/magnifier.png) no-repeat 0 1px;
 				}
 				a.edit-link {
-					background: url(../admin/images/btn-icon/document--pencil.png) no-repeat 0 1px;
+					background: url(../admin/images/btn-icon/document--pencil.png) no-repeat 2px 0px;
 				}
 			}
 		}
 
 		tfoot {
-			color: darken($gf_colour_base, 50%);
+			color: darken($color-base, 50%);
 			tr {
 				td {
-					background: $gf_colour_base;
+					background: $color-base;
 					padding: .7em;
 					border-bottom: 1px solid rgba(0,0,0,.1);
 				}
@@ -255,14 +261,11 @@ $gf_grid_x:	16px;
 				th {
 					position: relative;
 					background: $gf_colour_gradient_dark;
-					border-top: 1px solid $gf_colour_border;
+					border-bottom: 1px solid darken($gf_colour_gradient_dark,5%);
 					padding: 5px;
 					min-height: 40px; //this is to accomodate the add new button.
-					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
-					/* // would prefer to use the default colors
-					@include background-image(linear-gradient($color-base, #8CA1AE)); 
-					*/
-					@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
+					@include background-image(linear-gradient($color-base, $gf_colour_gradient_dark));
+					@include single-text-shadow($gf_colour_text_shadow_dark, 0px, -1px, 0);
 				h2{
 						padding: 0px;
 						font-size: $gf_grid_y*1.4;
@@ -283,7 +286,7 @@ $gf_grid_x:	16px;
 			&.sortable-header {		
 				background: $gf_colour_subheader;					
 				th{
-					padding: 0px;
+					padding: 0; // Should be padding: 0 1em; like td
 					font-weight: normal;
 					.ss-ui-button {
 						font-weight: normal;
@@ -334,9 +337,10 @@ $gf_grid_x:	16px;
 				}
 				&.main{
 					white-space:nowrap;
-					border-top: 1px solid $gf_colour_border;
+					border-top: 1px solid darken($color-base,4%);
+					border-left: 1px solid darken($color-base,4%);
 					color:#fff;
-					background: darken($gf_colour_subheader,10%);
+					background: $gf_colour_gradient_dark;
 					border-bottom: 1px solid $gf_colour_border;
 					span{
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
@@ -413,17 +417,18 @@ $gf_grid_x:	16px;
 							background-color:lighten($color-menu-button,10%);
 							@include gridFieldButtons;
 							@include background(
-								$bgImage -14px 4px,
+								$bgImage -15px 4px,
 								linear-gradient(
 									$color-menu-button, 
 									darken($color-menu-button, 10%)
 								)
-							);						
+							);	
+							width: 26px;					
 							border-top: 1px solid lighten($color-menu-button, 5%);	
 
 							&.hover-alike:active, &:active,	&.hover-alike, &:hover {							
 								@include background (
-								$bgImage -14px 4px,
+								$bgImage -15px 4px,
 								linear-gradient(
 									lighten($color-menu-button, 10%),
 									$color-menu-button								
@@ -434,6 +439,8 @@ $gf_grid_x:	16px;
 								margin-left: $gf_grid_y; 							
 								border:none;						
 								@include background ($bgImage -17px 6px);	
+								padding-right: 46px;
+								margin: 0 $gf_grid_y/2;
 
 								span{ //this is the dropdown arrow
 									opacity: 0.4;
@@ -444,16 +451,18 @@ $gf_grid_x:	16px;
 									background:	url(../admin/images/btn_arrow_down_grey.png) no-repeat 0px 0px;																
 								}
 								&:hover{
-									@include background ($bgImage -40px 6px);	
+									@include background ($bgImage -17px -38px);	
+									box-shadow: none;
 									span{//dropdown arrow
 										opacity:0.9;
+										
 									}
 								}
 							}			
 						}
 						&.ss-gridfield-button-close{
 							$bgImage: url(../images/icons/filter-icons.png) no-repeat;
-							@include background ($bgImage 7px -17px);	
+							@include background ($bgImage 8px -17px);	
 							@include gridFieldButtons;		
 							width:25px; 
 							opacity:0.8;
@@ -461,7 +470,7 @@ $gf_grid_x:	16px;
 							&.hover-alike:active, &:active, &.hover-alike, &:hover {
 								opacity:1;
 								@include background (
-									$bgImage 7px -17px,
+									$bgImage 8px -17px,
 									linear-gradient(
 										rgba(#fff,0.1),
 										rgba(#fff,0.1)								
@@ -498,10 +507,12 @@ $gf_grid_x:	16px;
 				input {
 					&.ss-gridfield-sort {
 						height:25px;
+						padding: 4px;
 						// Placeholder styling done with an each loop because when a browser 
 						// doesn’t understand a selector, it invalidates the entire line of selectors. 
 						// This avoids that, and keeps the scss tidy
 						$browserPlaceholder: "::-webkit-input-placeholder", ":-moz-placeholder", ":-ms-input-placeholder",	":placeholder";
+						border: 1px solid #313232;
 
 						@each $browser in $browserPlaceholder {
 							&#{$browser}{
@@ -529,24 +540,28 @@ $gf_grid_x:	16px;
 				color: $gf_colour_font;
 				&.bottom-all {
 					@include border-bottom-radius($gf_border_radius);
-					@include background-image(linear-gradient($gf_colour_gradient_light, $gf_colour_gradient_dark));
+					@include background-image(linear-gradient($color-base, $gf_colour_gradient_dark));
+					padding: $gf_grid_x/4 $gf_grid_y;
 					.datagrid-footer-message {
 					    text-align: center;
 						padding-top: 6px;
 				        color:$color-text-light;
 					}
 					.datagrid-pagination {
-						padding-top:2px;
+						padding-top:1px;
 						position:absolute;
 						left:50%;
 						margin-left:-116px; //half the width of .datagrid-pagination - centers pagination
 						.pagination-page-number {
 							color:$color-text-light;
+							@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 							input {
 								width:35px; //exact width so that a four digit number can be entered
 								height:18px;  
 								margin-bottom:-6px; //moves input field up to be aligned with the pagination buttons
 								padding:0px;
+								border: 1px solid darken($gf_colour_gradient_dark, 5%);
+								border-bottom: 1px solid lighten($gf_colour_gradient_dark, 5%);
 							}
 						}
 						z-index:5;
@@ -559,16 +574,16 @@ $gf_grid_x:	16px;
 								text-indent:-9999em;
 							}
 							&.ss-gridfield-previouspage {
-								@include background (url(../images/icons/pagination-arrows.png) no-repeat -23px 7px);
+								@include background (url(../images/icons/pagination-arrows.png) no-repeat -23px 8px);
 							}
 							&.ss-gridfield-nextpage {
-								@include background (url(../images/icons/pagination-arrows.png) no-repeat -47px 7px);
+								@include background (url(../images/icons/pagination-arrows.png) no-repeat -47px 8px);
 							}
 							&.ss-gridfield-firstpage {
-								@include background (url(../images/icons/pagination-arrows.png) no-repeat 0px 7px);
+								@include background (url(../images/icons/pagination-arrows.png) no-repeat 0px 8px);
 							}
 							&.ss-gridfield-lastpage {
-								@include background (url(../images/icons/pagination-arrows.png) no-repeat -73px 7px);
+								@include background (url(../images/icons/pagination-arrows.png) no-repeat -73px 8px);
 							}
 							&.ssui-button-disabled{
 								z-index:-1;
@@ -579,6 +594,7 @@ $gf_grid_x:	16px;
 						float:right;
 						padding:6px 0;
 						color:$color-text-light;
+						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 					}
 				}
 			}
