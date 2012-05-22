@@ -29,13 +29,13 @@
 
 		init : function(ed, url) {
 			ed.addButton('sslink', {title : ed.getLang('tinymce_ssbuttons.insertlink'), cmd : 'sslink', 'class' : 'mce_link'}); 
-			ed.addButton('ssimage', {title : ed.getLang('tinymce_ssbuttons.insertimage'), cmd : 'ssimage', 'class' : 'mce_image'}); 
+			ed.addButton('ssmedia', {title : ed.getLang('tinymce_ssbuttons.insertmedia'), cmd : 'ssmedia', 'class' : 'mce_image'}); 
 
 			ed.addCommand('sslink', function(ed) {
 				jQuery('#' + this.id).entwine('ss').openLinkDialog();
 			});
 
-			ed.addCommand('ssimage', function(ed) {
+			ed.addCommand('ssmedia', function(ed) {
 				jQuery('#' + this.id).entwine('ss').openMediaDialog();
 			});
 			
@@ -43,6 +43,63 @@
 			ed.onNodeChange.add(function(ed, cm, n, co) {
 				cm.setDisabled('sslink', co && n.nodeName != 'A');
 				cm.setActive('sslink', n.nodeName == 'A' && !n.name);
+			});
+
+			ed.onSaveContent.add(function(ed, o) {
+				var content = jQuery(o.content);
+				content.find('.ss-htmleditorfield-file.embed').each(function() {
+					var el = jQuery(this);
+					var shortCode = '[embed width=' + el.data('width')
+										+ ' height=' + el.data('height')
+										+ ' class=' + el.data('cssclass')
+										+ ' thumbnail=' + el.data('thumbnail')
+										+ ']' + el.data('url')
+										+ '[/embed]';
+					el.replaceWith(shortCode);
+				});
+				o.content = jQuery('<div />').append(content).html(); // Little hack to get outerHTML string
+			});
+
+			var shortTagRegex = /(.?)\[embed(.*?)\](.+?)\[\/\s*embed\s*\](.?)/gi;
+			ed.onBeforeSetContent.add(function(ed, o) {
+				var matches = null, content = o.content;
+				var prefix, suffix, attributes, attributeString, url;
+				var attrs, attr;
+				var imgEl;
+				while((matches = shortTagRegex.exec(content))) {
+					prefix = matches[1];
+					suffix = matches[4];
+					if(prefix === '[' && suffix === ']') {
+						continue;
+					}
+					attributes = {};
+					attributeString = matches[2].replace(/['"]/g, '').replace(/(^\s+|\s+$)/g, '');
+					attrs = attributeString.split(/\s+/);
+					for(attribute in attrs) {
+						attr = attrs[attribute].split('=');
+						if(attr.length == 1) {
+							attributes[attr[0]] = attr[0];
+						} else {
+							attributes[attr[0]] = attr[1];
+						}
+					}
+					attributes.cssclass = attributes.class;
+					url = matches[3];
+					imgEl = jQuery('<img/>').attr({
+						'src': attributes.thumbnail,
+						'width': attributes.width,
+						'height': attributes.height,
+						'class': attributes.cssclass,
+						'data-url': url,
+					}).addClass('ss-htmleditorfield-file embed');
+
+					jQuery.each(attributes, function (key, value) {
+						imgEl.attr('data-' + key, value);
+					});
+
+					content = content.replace(matches[0], prefix + (jQuery('<div/>').append(imgEl).html()) + suffix);
+				}
+				o.content = content;
 			});
 		}
 	});

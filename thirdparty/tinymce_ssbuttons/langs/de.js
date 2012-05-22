@@ -1,5 +1,5 @@
 tinyMCE.addI18n('de.tinymce_ssbuttons',{
 insertlink: 'Link einfügen',
-insertimage: 'Bild einfügen',
+insertmedia: 'Bild einfügen',
 insertflash: 'Flash Objekt einfügen'
 });
