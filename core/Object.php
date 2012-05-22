@@ -235,7 +235,8 @@ abstract class Object {
 			$class = self::$strong_classes[$class];
 		}
 		
-		return Injector::inst()->createWithArgs($class, $args);
+		$reflector = new ReflectionClass($class);
+		return $reflector->newInstanceArgs($args);
 	}
 	
 	/**
