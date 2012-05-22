@@ -250,7 +250,7 @@ class RequestHandlingTest extends FunctionalTest {
 /**
  * Director rules for the test
  */
-Director::addRules(50, array(
+Config::inst()->update('Director', 'rules', array(
 	// If we don't request any variables, then the whole URL will get shifted off.  This is fine, but it means that the
 	// controller will have to parse the Action from the URL itself.
 	'testGoodBase1' => "RequestHandlingTest_Controller",

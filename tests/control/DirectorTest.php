@@ -17,7 +17,7 @@ class DirectorTest extends SapphireTest {
 			self::$originalRequestURI = $_SERVER['REQUEST_URI'];
 		}
 		
-		Director::addRules(99, array(
+		Config::inst()->update('Director', 'rules', array(
 			'DirectorTestRule/$Action/$ID/$OtherID' => 'DirectorTestRequest_Controller'
 		));
 	}
