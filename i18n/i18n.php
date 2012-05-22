@@ -1494,13 +1494,20 @@ class i18n extends Object implements TemplateGlobalProvider {
 			foreach($translators as $name => $translator) {
 				$adapter = $translator->getAdapter();
 
-				// If language table isn't loaded for this locale, get it for each of the modules.
-				// The method will automatically load fallback languages (the lang for a locale).
-				if(!$adapter->isAvailable($locale) && !$adapter->isAvailable($lang)) {
-					// TODO Remove reliance on global state, by refactoring into an i18nTranslatorManager
-					// which is instanciated by core with a $clean instance variable.
+				// at this point, we need to ensure the language and locale are loaded
+				// as include_by_locale() doesn't load a fallback.
+
+				// TODO Remove reliance on global state, by refactoring into an i18nTranslatorManager
+				// which is instanciated by core with a $clean instance variable.
+
+				if(!$adapter->isAvailable($lang)) {
+					i18n::include_by_locale($lang, (isset($_GET['flush'])));
+				}
+
+				if(!$adapter->isAvailable($locale)) {
 					i18n::include_by_locale($locale, (isset($_GET['flush'])));
 				}
+
 				$translation = $adapter->translate($entity, $locale);
 
 				// Return translation only if we found a match thats not the entity itself (Zend fallback)
@@ -1568,7 +1575,8 @@ class i18n extends Object implements TemplateGlobalProvider {
 					'disableNotices' => true,
 				))
 			);
-			
+
+			i18n::include_by_locale('en', isset($_GET['flush']));
 			i18n::include_by_locale('en_US', isset($_GET['flush']));
 		}
 		
@@ -1919,24 +1927,16 @@ class i18n extends Object implements TemplateGlobalProvider {
 
 	/**
 	 * Includes all available language files for a certain defined locale.
-	 * If the locale is a fully qualified locale (e.g. "en_US" rather than "en"),
-	 * will load the base locale file as well (if available).
-	 * 
+	 *
 	 * @param string $locale All resources from any module in locale $locale will be loaded
 	 * @param Boolean $clean Clean old caches?
 	 */
 	static function include_by_locale($locale, $clean = false) {
-		$lang = i18n::get_lang_from_locale($locale);
-
 		if($clean) {
 			$cache = Zend_Translate::getCache();
 			if($cache) $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
 		}
 		
-		// Automatically include fallback language (if applicable)
-		// TODO Also include custom Zend_Translate routing languages
-		$selectedLocales = array_unique(array($lang, $locale));
-
 		// Sort modules by inclusion priority, then alphabetically
 		// TODO Should be handled by priority flags within modules
 		$prios = array('sapphire' => 10, 'framework' => 10, 'admin' => 11, 'cms' => 12, 'mysite' => 90);
@@ -1959,15 +1959,13 @@ class i18n extends Object implements TemplateGlobalProvider {
 
 				// Load translations from modules
 				foreach($modules as $module) {
-					foreach($selectedLocales as $selectedLocale) {
-						$filename = $adapter->getFilenameForLocale($selectedLocale);
-						$filepath = "{$module}/lang/" . $filename;
+					$filename = $adapter->getFilenameForLocale($locale);
+					$filepath = "{$module}/lang/" . $filename;
 
-						if($filename && !file_exists($filepath)) continue;
-						$adapter->addTranslation(
-							array('content' => $filepath, 'locale' => $selectedLocale)
-						);
-					}
+					if($filename && !file_exists($filepath)) continue;
+					$adapter->addTranslation(
+						array('content' => $filepath, 'locale' => $locale)
+					);
 				}
 
 				// Load translations from themes
@@ -1979,29 +1977,25 @@ class i18n extends Object implements TemplateGlobalProvider {
 							strpos($theme, SSViewer::current_theme()) === 0
 							&& file_exists("{$themesBase}/{$theme}/lang/")
 						) {
-							foreach($selectedLocales as $selectedLocale) {
-								$filename = $adapter->getFilenameForLocale($selectedLocale);
-								$filepath = "{$themesBase}/{$theme}/lang/" . $filename;
-								if($filename && !file_exists($filepath)) continue;
-								$adapter->addTranslation(
-									array('content' => $filepath, 'locale' => $selectedLocale)
-								);
-							}
+							$filename = $adapter->getFilenameForLocale($locale);
+							$filepath = "{$themesBase}/{$theme}/lang/" . $filename;
+							if($filename && !file_exists($filepath)) continue;
+							$adapter->addTranslation(
+								array('content' => $filepath, 'locale' => $locale)
+							);
 						}
 					}
 				}
 				
 				// Add empty translations to ensure the locales are "registered" with isAvailable(),
 				// and the next invocation of include_by_locale() doesn't cause a new reparse.
-				foreach($selectedLocales as $selectedLocale) {
-					$adapter->addTranslation(
-						array(
-							'content' => array('_' => '_'), 
-							'locale' => $selectedLocale, 
-							'usetranslateadapter' => true
-						)
-					);
-				}
+				$adapter->addTranslation(
+					array(
+						'content' => array('_' => '_'),
+						'locale' => $locale,
+						'usetranslateadapter' => true
+					)
+				);
 			}
 		}
 	}
