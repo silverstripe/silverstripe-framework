@@ -41,4 +41,5 @@
 
 .cms-content-toolbar .cms-tree-view-modes .checkboxAboveTree { margin-right: 1px; }
 
-.cms-content-tools .cms-panel-content .dropdown select { width: 152px; }
+.cms .cms-content-tools { border-right: 1px solid #CCC; }
+.cms .cms-content-tools .cms-panel-content .dropdown select { width: 152px; }

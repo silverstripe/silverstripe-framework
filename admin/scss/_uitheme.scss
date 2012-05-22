@@ -40,6 +40,9 @@
 		.ui-tabs-panel {
 			background: transparent; // default it's white
 		}
+		.cms-panel-padded .ui-tabs-panel {
+			padding: 0;	// Removes double paddle around main pages page, does not effect other areas of the site from what I can tell
+		}
 	}
 
 	.ui-widget-content,
@@ -49,6 +52,7 @@
 		font-family: $font-family;
 		border: 0;
 	}
+	
 
 	.ui-widget-header {			
 		background-color: darken($color-widget-bg, 20%);
@@ -110,5 +114,5 @@
 	.ui-widget-content .ss-ui-button,
 	.ui-widget-header .ss-ui-button {
 
-	}	
+	}
 }
