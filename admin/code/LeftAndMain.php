@@ -71,7 +71,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		'index',
 		'save',
 		'savetreenode',
-		'getitem',
 		'getsubtree',
 		'printable',
 		'show',
