@@ -118,7 +118,7 @@ class Config {
 	 * @return Config
 	 */
 	static public function inst() {
-		if (!self::$instance) self::$instance = singleton('Config');
+		if (!self::$instance) self::$instance = new Config();
 		return self::$instance;
 	}
 

@@ -367,7 +367,7 @@ function singleton($className) {
 	if(!is_string($className)) user_error("singleton() passed bad class_name: " . var_export($className,true), E_USER_ERROR);
 	if(!isset($_SINGLETONS[$className])) {
 		if(!class_exists($className)) user_error("Bad class to singleton() - $className", E_USER_ERROR);
-		$_SINGLETONS[$className] = Object::strong_create($className,null, true);
+		$_SINGLETONS[$className] = Injector::inst()->get($className);
 		if(!$_SINGLETONS[$className]) user_error("singleton() Unknown class '$className'", E_USER_ERROR);
 	}
 	return $_SINGLETONS[$className];
