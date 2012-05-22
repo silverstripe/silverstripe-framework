@@ -425,18 +425,28 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 		$allFields = new CompositeField(
 			$tabSet,
-			new LiteralField('headerEdit', '<h4 class="field header-edit">' . sprintf($numericLabelTmpl, '2', _t('HtmlEditorField.EditDetails', 'Edit details')) . '</h4>'),
+			new LiteralField('headerEdit', '<h4 class="field header-edit">' . sprintf($numericLabelTmpl, '2', _t('HtmlEditorField.ADJUSTDETAILSDIMENSIONS', 'Details &amp; dimensions')) . '</h4>'),
 			$editComposite = new CompositeField(
-				new LiteralField('contentEdit', '<div class="content-edit"></div>')
-			)
+				new LiteralField('contentEdit', '<div class="content-edit ss-uploadfield-files files"></div>')
+
+			)			
 		);
 
-		$fields = new FieldList(
+		$allFields -> addExtraClass('ss-insert-media');
+
+		$headings = new CompositeField(
 			new LiteralField(
 				'Heading',
 				sprintf('<h3 class="htmleditorfield-mediaform-heading insert">%s</h3>', _t('HtmlEditorField.INSERTMEDIA', 'Insert Media')).
 				sprintf('<h3 class="htmleditorfield-mediaform-heading update">%s</h3>', _t('HtmlEditorField.UpdateMEDIA', 'Update Media'))
-			),
+			)		
+		);
+
+		$headings->addExtraClass('cms-content-header');
+		$editComposite->addExtraClass('ss-assetuploadfield');
+
+		$fields = new FieldList(
+			$headings,
 			$allFields
 		);
 		

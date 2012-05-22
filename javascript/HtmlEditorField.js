@@ -676,14 +676,13 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var updateExisting = Boolean(this.find('.ss-htmleditorfield-file').length);
 				this.find('.overview .action-delete')[updateExisting ? 'hide' : 'show']();
 			},
-			onsubmit: function() {
+			onsubmit: function() {				
 				var self = this, ed = this.getEditor();
 
 				// HACK: See ondialogopen()
 				// jQuery(ed.getContainer()).show();
-
-
-				this.find('.ss-htmleditorfield-file').each(function(el) {
+		
+				this.find('.ss-htmleditorfield-file').each(function() {
 					$(this).insertHTML();
 				});
 				ed.repaint();
@@ -691,7 +690,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				return false;
 			},
-			updateFromEditor: function() {
+			updateFromEditor: function() {			
 				var self = this, ed = this.getEditor(), node = $(ed.getSelectedNode());
 				// TODO Depends on managed mime type
 				if(node.is('img')) {
@@ -705,6 +704,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			},
 			redraw: function() {
 				this._super();
+			
 				var ed = this.getEditor(), node = $(ed.getSelectedNode()),
 					hasItems = Boolean(this.find('.ss-htmleditorfield-file').length),
 					editingSelected = node.is('img'),
@@ -714,9 +714,10 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				if(header) header[(hasItems) ? 'show' : 'hide']();
 
 				// Disable "insert" button if no files are selected
-				this.find('.Actions :submit')
+				 this.find('.Actions :submit')
 					.button(hasItems ? 'enable' : 'disable')
-					.toggleClass('ui-state-disabled', !hasItems);
+					.toggleClass('ui-state-disabled', !hasItems); 
+					
 
 				// Hide file selection and step labels when editing an existing file
 				this.find('#MediaFormInsertImageTabs,.header-edit')[editingSelected ? 'hide' : 'show']();
@@ -727,7 +728,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.find('.htmleditorfield-mediaform-heading.update')[updateExisting ? 'show' : 'hide']();
 				this.find('.Actions .media-update')[updateExisting ? 'show' : 'hide']();
 			},
-			resetFields: function() {
+			resetFields: function() {				
 				var ed = this.getEditor(), node = $(ed.getSelectedNode());
 
 				// HACK: See ondialogopen()
@@ -794,7 +795,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					//get the uploaded file ID when this event triggers, signaling the upload has compeleted successfully
 					editFieldIDs.push($(this).data('id'));
 				});
-				var uploadedFiles = $('ul.ss-uploadfield-files').children('li.ss-uploadfield-item');
+				var uploadedFiles = $('.ss-uploadfield-files').children('.ss-uploadfield-item');
 				uploadedFiles.each(function(){
 					var uploadedID = $(this).data('fileid');
 					if ($.inArray(uploadedID, editFieldIDs) == -1) {
@@ -848,8 +849,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			 * Insert updated HTML content into the rich text editor
 			 */
 			insertHTML: function() {
-				var form = this.closest('form'), ed = form.getEditor();
-
+				
+				var ed = this.getEditor();
+				
 				// Workaround for browsers losing focus, similar to tinyMCEPopup.restoreSelection
 				ed.moveToBookmark(window._ss_htmleditorfield_bookmark);
 				window._ss_htmleditorfield_bookmark = null;
@@ -926,7 +928,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					extraData = this.getExtraData(),
 					// imgEl = $('<img id="_ss_tmp_img" />');
 					imgEl = $('<img />').attr(attrs);
-				
+					
 				if(extraData.CaptionText) {
 					el = $('<div style="width: ' + attrs['width'] + 'px;" class="captionImage ' + attrs['class'] + '"><p class="caption">' + extraData.CaptionText + '</p></div>').prepend(imgEl);
 				} else {
@@ -938,8 +940,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			 * Logic similar to TinyMCE 'advimage' plugin, insertAndClose() method.
 			 */
 			insertHTML: function() {
-				var form = this.closest('form'), ed = form.getEditor(), 
-					node = $(ed.getSelectedNode()), captionNode = node.closest('.captionImage');
+				var form = this.closest('.cms').find('.cms-container textarea.htmleditor'), ed = form.getEditor(), 
+				node = $(ed.getSelectedNode()), captionNode = node.closest('.captionImage');
 
 				// Workaround for browsers losing focus, similar to tinyMCEPopup.restoreSelection.
 				// TODO In TinyMCE core this is restricted to IE, but leaving it our also
@@ -1088,15 +1090,65 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		/**
 		 * Deselect item and remove the 'edit' view
 		 */
-		$('form.htmleditorfield-mediaform .ss-htmleditorfield-file .action-delete').entwine({
+		$('form.htmleditorfield-mediaform .ss-uploadfield-item .ss-uploadfield-item-cancel').entwine({
 			onclick: function(e) {
-				var form = this.closest('form'), file = this.closest('.ss-htmleditorfield-file');
+				var form = this.closest('form'), file = this.closest('ss-uploadfield-item');
 				form.find('.ss-gridfield-item[data-id=' + file.data('id') + ']').removeClass('ui-selected');
-				this.closest('.ss-htmleditorfield-file').remove();
+				this.closest('.ss-uploadfield-item').remove();
 				form.redraw();
 				e.preventDefault();
 			}
 		});
+
+		$('div.ss-assetuploadfield .ss-uploadfield-item-edit, div.ss-assetuploadfield .ss-uploadfield-item-name').entwine({
+			onclick: function(e) {
+				var editForm = this.closest('.ss-uploadfield-item').find('.ss-uploadfield-item-editform');
+	
+				// Mark the row as changed if any of its form fields are edited
+				editForm.ready(function() {					
+					editForm.find(':input').bind('change', function(e){
+						editForm.removeClass('edited'); //so edited class is only there once
+						editForm.addClass('edited'); 
+					});
+				});
+								
+				editForm.parent('.ss-uploadfield-item').removeClass('ui-state-warning');
+
+				editForm.toggleEditForm();
+
+				e.preventDefault(); // Avoid a form submit
+
+				return false; // Avoid duplication from button
+			}
+		});
+
+		$('div.ss-assetuploadfield .ss-uploadfield-item-editform').entwine({
+			toggleEditForm: function() {
+				var itemInfo = this.prev('.ss-uploadfield-item-info'), status = itemInfo.find('.ss-uploadfield-item-status');
+				var text="";
+
+				if(this.height() === 0) {
+					text = ss.i18n._t('UploadField.Editing', "Editing ...");
+					this.height('auto');
+					itemInfo.find('.toggle-details-icon').addClass('opened');					
+					status.removeClass('ui-state-success-text').removeClass('ui-state-warning-text');
+				} else {
+					this.height(0);					
+					itemInfo.find('.toggle-details-icon').removeClass('opened');
+					if(!this.hasClass('edited')){
+						text = ss.i18n._t('UploadField.NOCHANGES', 'No Changes')
+						status.addClass('ui-state-success-text');
+					}else{						
+						text = ss.i18n._t('UploadField.CHANGESSAVED', 'Changes Made')
+						this.removeClass('edited');
+						status.addClass('ui-state-success-text');	
+					}
+				
+				}
+				status.attr('title',text).text(text);	
+			}
+		});
+
 
 		$('form.htmleditorfield-mediaform #ParentID .TreeDropdownField').entwine({
 			onmatch: function() {
