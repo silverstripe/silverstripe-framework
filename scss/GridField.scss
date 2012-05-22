@@ -96,7 +96,7 @@ $gf_grid_x:	16px;
 
 	table.ss-gridfield-table {
 		display: table; 
-		box-shadow: none;		
+		@include box-shadow-none;		
 		padding: 0;
 		border-collapse: separate;	
 		border-bottom: 0 none;				
@@ -270,7 +270,7 @@ $gf_grid_x:	16px;
 						padding: 0px;
 						font-size: $gf_grid_y*1.4;
 						color:#fff;
-						margin:3px 8px 0;
+						margin: 1px 8px 0;
 						display:inline-block;
 					}
 					.right > * {
@@ -344,6 +344,8 @@ $gf_grid_x:	16px;
 					border-bottom: 1px solid $gf_colour_border;
 					span{
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
+						padding-left: $gf_grid_x/2;
+						padding-right: $gf_grid_x/2;
 					}
 					&.col-listChildrenLink {
 						border-right:none;
@@ -452,7 +454,7 @@ $gf_grid_x:	16px;
 								}
 								&:hover{
 									@include background ($bgImage -17px -38px);	
-									box-shadow: none;
+									@include box-shadow-none;
 									span{//dropdown arrow
 										opacity:0.9;
 										
@@ -529,19 +531,19 @@ $gf_grid_x:	16px;
 				}
 
 				span.non-sortable {
-					padding: 0 1em; 
 					display:block;
 				}
 			}
 
 			td {
 				border-right: 1px solid $gf_colour_border;
-				padding: $gf_grid_x/2.5 $gf_grid_y;
+				padding: $gf_grid_x/2 $gf_grid_x/2;
 				color: $gf_colour_font;
 				&.bottom-all {
 					@include border-bottom-radius($gf_border_radius);
 					@include background-image(linear-gradient($color-base, $gf_colour_gradient_dark));
 					padding: $gf_grid_x/4 $gf_grid_y;
+					
 					.datagrid-footer-message {
 					    text-align: center;
 						padding-top: 6px;
@@ -598,6 +600,7 @@ $gf_grid_x:	16px;
 					}
 				}
 			}
+			
 			&.last td {
 				border-bottom: 0 none;
 			}
