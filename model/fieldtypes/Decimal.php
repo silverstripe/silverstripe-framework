@@ -10,7 +10,7 @@ class Decimal extends DBField {
 	/**
 	 * Create a new Decimal field.
 	 */
-	function __construct($name, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0) {
+	function __construct($name = null, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0) {
 		$this->wholeSize = isset($wholeSize) ? $wholeSize : 9;
 		$this->decimalSize = isset($decimalSize) ? $decimalSize : 2;
 		$this->defaultValue = $defaultValue;

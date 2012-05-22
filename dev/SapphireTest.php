@@ -766,6 +766,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		if(self::using_temp_db()) {
 			// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
 			global $_SINGLETONS;
+			Injector::inst()->unregisterAllObjects();
 			$_SINGLETONS = array();
 
 			$dataClasses = ClassInfo::subclassesFor('DataObject');

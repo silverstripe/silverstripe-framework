@@ -68,7 +68,7 @@ class FulltextSearchable extends DataExtension {
 	 * @param Array|String $searchFields Comma-separated list (or array) of database column names
 	 *  that can be searched on. Used for generation of the database index defintions.
 	 */
-	function __construct($searchFields) {
+	function __construct($searchFields = array()) {
 		if(is_array($searchFields)) $this->searchFields = implode(',', $searchFields);
 		else $this->searchFields = $searchFields;
 		

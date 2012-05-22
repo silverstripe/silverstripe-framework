@@ -18,7 +18,7 @@
 class Currency extends Decimal {
 	protected static $currencySymbol = '$';
 	
-	function __construct($name, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0) {
+	function __construct($name = null, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0) {
 		parent::__construct($name, $wholeSize, $decimalSize, $defaultValue);
 	}
 	

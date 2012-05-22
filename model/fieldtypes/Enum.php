@@ -28,7 +28,7 @@ class Enum extends DBField {
 	 * @param enum: A string containing a comma separated list of options or an array of Vals.
 	 * @param default The default option, which is either NULL or one of the items in the enumeration.
 	 */
-	function __construct($name, $enum = NULL, $default = NULL) {
+	function __construct($name = null, $enum = NULL, $default = NULL) {
 		if($enum) {
 			if(!is_array($enum)){
 				$enum = preg_split("/ *, */", trim($enum));
