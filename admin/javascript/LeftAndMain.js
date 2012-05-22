@@ -640,7 +640,6 @@ jQuery.noConflict();
 			onunmatch: function() {
 				this._super();
 			},
-			
 			redrawTabs: function() {
 				this.rewriteHashlinks();
 
