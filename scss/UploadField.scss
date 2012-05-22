@@ -2,12 +2,76 @@
 
 // TODO we need a seperated file for styles that are used in both cms and front end (such as buttons)
 @import "../admin/scss/themes/default.scss";
+@import "../admin/scss/_mixins";
 
+.htmleditorfield-dialog{
+	&.ui-dialog-content{
+		padding:0;
+		position:relative;
+	}
+
+	.cms-content-header{
+		padding:0;
+		width:100%;
+		height: 40px;
+		h3{
+			padding: 0 8px;
+			margin: 10px;
+		}
+	}
+	.ui-tabs{
+		position:static;
+		ul.ui-tabs-nav{
+			float:right;
+			position:absolute;
+			top:0;
+			right: 40px;
+			li{
+				@include background-image(
+					linear-gradient(#B0BEC7, #8CA1AE)
+				);			
+				@include border-radius(0px);
+				padding-top: 10px;
+				height: 28px;
+				overflow:hidden;
+				font-weight:bold;
+				a{
+					color:#fff;
+					text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+				}
+				&.ui-state-active{
+					background:  #F0F3F4 url("../admin/images/textures/bg_cms_main_content.png") repeat left top;
+					a{
+						color:$color-text;
+						text-shadow: none;
+					}
+				}
+			}
+		}
+		.ui-tabs-panel{
+			padding:0;
+		}
+	}
+	.ss-insert-media, .Actions{
+		padding:$grid-y $grid-x*2 ;
+	}
+}
 
 .ss-uploadfield {
+
 	.clear {
 		clear: both;
 	}
+
+	.ss-insert-media &{
+		margin-top:20px;
+
+		h4{
+			float:left;
+		}
+
+	}
+
 	.middleColumn {
 		// TODO .middleColumn styling should probably be theme specific (eg cms ui will look different than blackcandy)
 		// so we should move this style into the cms and black candy files
@@ -22,48 +86,60 @@
 		margin: 0;
 		padding: 15px;
 		overflow: auto;
-	}
-	.ss-uploadfield-item-preview {
-		height: 60px;
-		line-height: 60px;
-		width: 80px;
-		text-align: center;
-		font-weight: bold;
-		float: left;
-		overflow: hidden;
-		&.ss-uploadfield-dropzone {
-			@include box-shadow(lighten($color-medium-separator, 10%) 0 0 3px 3px inset);
-			border: 2px dashed $color-medium-separator;
-			background: $color-light-separator;
-			display: none;
-		}
-	}
-	.ss-uploadfield-item-info {
-		margin: 0 0 0 100px;
-	}
-	.ss-uploadfield-item-name {
-		display: block;
-		line-height: 13px;
-		height: 26px;
-		margin: 0;
-		text-align: left;
-		
-		b {
-			font-weight: bold; 
-			padding: 0 5px 0 0;
-		}
-		span {
-			font-size: $font-base-size - 1;
-			color: lighten($color-text, 25%);
-		}
-	}
-	.ss-uploadfield-item-status {
-		float: right;
-		padding: 0 0 0 5px;
-		
-		&.ui-state-error-text {
-			color: $color-button-destructive;
+
+		.ss-uploadfield-item-preview {
+			height: 60px;
+			line-height: 60px;
+			width: 80px;
+			text-align: center;
 			font-weight: bold;
+			float: left;
+			overflow: hidden;
+			&.ss-uploadfield-dropzone {
+				@include box-shadow(lighten($color-medium-separator, 10%) 0 0 3px 3px inset);
+				border: 2px dashed $color-medium-separator;
+				background: $color-light-separator;
+				display: none;
+			}
+		}
+		.ss-uploadfield-item-info {
+			margin: 0 0 0 100px;
+		
+			.ss-uploadfield-item-name {
+				display: block;
+				line-height: 13px;
+				height: 26px;
+				margin: 0;
+				text-align: left;			
+				b {
+					font-weight: bold; 
+					padding: 0 5px 0 0;
+				}
+				.name {
+					font-size: $font-base-size - 1;
+					color: lighten($color-text, 25%);
+					width:290px; //Ensures the title doesn't interfer with the status message
+					@include hide-text-overflow;
+					display:inline;					
+					float:left;
+				}
+				.ss-uploadfield-item-status {
+					float: right;
+					padding: 0 0 0 5px;
+					width:100px; //Allocates the status message enough room to be useful. Will wrap if it is longer
+					text-align:right;				
+					&.ui-state-error-text {
+						color: $color-button-destructive;
+						font-weight: bold;
+					}
+					&.ui-state-warning-text {
+						color: darken($color-warning, 10%);
+					}
+					&.ui-state-success-text {
+						color: $color-button-constructive;
+					}
+				}
+			}			
 		}
 	}
 	.ss-ui-button {
@@ -146,14 +222,14 @@
 				// background: sprite($sprites16, cross-circle) no-repeat;
 				
 				span {
-				  position: absolute;
-				  left: 0;
-				  top: 0;
-				  margin: 0;
+					position: absolute;
+					left: 0;
+					top: 0;
+					margin: 0;
 				  
-				  &.ui-button-text {
-            display: none;
-          }
+					&.ui-button-text {
+						display: none;
+					}
 				}
 			}
 		}
