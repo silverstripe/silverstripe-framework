@@ -37,7 +37,7 @@ class AdminRootController extends Controller {
 			// Build an array of class => url_priority k/v pairs
 			$classes = array();
 			foreach (CMSMenu::get_cms_classes() as $class) {
-				$classes[$class] =  Config::inst()->get($class, 'url_priority', Config::FIRST_SET);
+				$classes[$class] = Config::inst()->get($class, 'url_priority', Config::FIRST_SET);
 			}
 
 			// Sort them so highest priority item is first
@@ -46,7 +46,6 @@ class AdminRootController extends Controller {
 			// Map over the array calling add_rule_for_controller on each
 			array_map(array(__CLASS__, 'add_rule_for_controller'), array_keys($classes));
 		}
-
 		return self::$_rules;
 	}
 
@@ -57,12 +56,13 @@ class AdminRootController extends Controller {
 		$urlSegment = Config::inst()->get($controllerClass, 'url_segment', Config::FIRST_SET);
 		$urlRule    = Config::inst()->get($controllerClass, 'url_rule', Config::FIRST_SET);
 
-		if($urlSegment || $controllerClass == 'CMSMain') {
+		if($urlSegment) {
 			// Make director rule
 			if($urlRule[0] == '/') $urlRule = substr($urlRule,1);
 			$rule = $urlSegment . '//' . $urlRule;
 
-			self::$_rules[$rule] = $controllerClass;
+			// ensure that the first call to add_rule_for_controller for a rule takes precedence
+			if(!isset(self::$_rules[$rule])) self::$_rules[$rule] = $controllerClass;
 		}
 	}
 
@@ -80,7 +80,6 @@ class AdminRootController extends Controller {
 		// Otherwise
 		else {
 			$rules = self::rules();
-
 			foreach($rules as $pattern => $controller) {
 				if(($arguments = $request->match($pattern, true)) !== false) {
 					$controllerObj = Injector::inst()->create($controller);
