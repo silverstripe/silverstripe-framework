@@ -10,6 +10,9 @@
 
 				this._super();
 			},
+			onunmatch: function() {
+				this._super();
+			},
 
 			redraw: function() {
 				this.addClass('ui-tabs ui-widget ui-widget-content ui-corner-all ui-tabs-panel ui-corner-bottom');
