@@ -255,7 +255,7 @@ en:
     IMAGEHEIGHTPX: Height
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
     IMAGEWIDTHPX: Width
-    INSERTIMAGE: 'Insert Image'
+    INSERTMEDIA: 'Insert Media'
     LINK: 'Insert Link'
     LINKANCHOR: 'Anchor on this page'
     LINKDESCR: 'Link description'

@@ -32,6 +32,7 @@ Object::useCustomClass('Datetime',   'SS_Datetime', true);
 define('MCE_ROOT', FRAMEWORK_DIR . '/thirdparty/tinymce/');
 
 ShortcodeParser::get('default')->register('file_link', array('File', 'link_shortcode_handler'));
+ShortcodeParser::get('default')->register('embed', array('Oembed', 'handle_shortcode'));
 
 /**
  * The secret key that needs to be sent along with pings to /Email_BounceHandler
