@@ -1496,7 +1496,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 
 				// If language table isn't loaded for this locale, get it for each of the modules.
 				// The method will automatically load fallback languages (the lang for a locale).
-				if(!$adapter->isAvailable($locale) && !$adapter->isAvailable($lang)) {
+				if(!$adapter->isAvailable($locale)) {
 					// TODO Remove reliance on global state, by refactoring into an i18nTranslatorManager
 					// which is instanciated by core with a $clean instance variable.
 					i18n::include_by_locale($locale, (isset($_GET['flush'])));
