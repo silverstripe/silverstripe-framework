@@ -434,8 +434,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 	
 	/**
-	 * Redirct to the given URL.
-	 * It is generally recommended to call Director::redirect() rather than calling this function directly.
+	 * Redirect to the given URL.
 	 */
 	function redirect($url, $code=302) {
 		if(!$this->response) $this->response = new SS_HTTPResponse();
