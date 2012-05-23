@@ -67,7 +67,7 @@ class ChangePasswordForm extends Form {
 					_t('Member.ERRORPASSWORDNOTMATCH', "Your current password does not match, please try again"), 
 					"bad"
 				);
-				Director::redirectBack();
+				$this->controller->redirectBack();
 				return;
 			}
 		}
@@ -80,7 +80,7 @@ class ChangePasswordForm extends Form {
 			// The user is not logged in and no valid auto login hash is available
 			if(!$member) {
 				Session::clear('AutoLoginHash');
-				Director::redirect('loginpage');
+				$this->controller->redirect('loginpage');
 				return;
 			}
 		}
@@ -91,7 +91,7 @@ class ChangePasswordForm extends Form {
 			$this->sessionMessage(
 				_t('Member.EMPTYNEWPASSWORD', "The new password can't be empty, please try again"),
 				"bad");
-			Director::redirectBack();
+			$this->controller->redirectBack();
 			return;
 		}
 		else if($data['NewPassword1'] == $data['NewPassword2']) {
@@ -107,12 +107,12 @@ class ChangePasswordForm extends Form {
 					// absolute redirection URLs may cause spoofing 
 					&& Director::is_site_url($_REQUEST['BackURL'])
 				) {
-					Director::redirect($_REQUEST['BackURL']);
+					$this->controller->redirect($_REQUEST['BackURL']);
 				}
 				else {
 					// Redirect to default location - the login form saying "You are logged in as..."
 					$redirectURL = HTTP::setGetVar('BackURL', Director::absoluteBaseURL(), $this->controller->Link('login'));
-					Director::redirect($redirectURL);					
+					$this->controller->redirect($redirectURL);
 				}
 			} else {
 				$this->clearMessage();
@@ -124,7 +124,7 @@ class ChangePasswordForm extends Form {
 					), 
 					"bad"
 				);
-				Director::redirectBack();
+				$this->controller->redirectBack();
 			}
 
 		} else {
@@ -132,7 +132,7 @@ class ChangePasswordForm extends Form {
 			$this->sessionMessage(
 				_t('Member.ERRORNEWPASSWORD', "You have entered your new password differently, try again"),
 				"bad");
-			Director::redirectBack();
+			$this->controller->redirectBack();
 		}
 	}
 

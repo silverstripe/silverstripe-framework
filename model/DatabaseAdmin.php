@@ -97,7 +97,7 @@ class DatabaseAdmin extends Controller {
 			echo "<p>Setting up the database; you will be returned to your site shortly....</p>";
 			$this->doBuild(true);
 			echo "<p>Done!</p>";
-			Director::redirect($_GET['returnURL']);
+			$this->redirect($_GET['returnURL']);
 		} else {
 			$this->doBuild(isset($_REQUEST['quiet']) || isset($_REQUEST['from_installer']), !isset($_REQUEST['dont_populate']));
 		}

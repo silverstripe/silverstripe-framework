@@ -230,9 +230,9 @@ class Security extends Controller {
 
 			// TODO AccessLogEntry needs an extension to handle permission denied errors
 			// Audit logging hook
-			if($controller) $controller->extend('permissionDenied', $member);
+			$controller->extend('permissionDenied', $member);
 
-			Director::redirect("Security/login?BackURL=" . urlencode($_SERVER['REQUEST_URI']));
+			$controller->redirect("Security/login?BackURL=" . urlencode($_SERVER['REQUEST_URI']));
 		}
 		return;
 	}
@@ -319,7 +319,7 @@ class Security extends Controller {
 		// Event handler for pre-login, with an option to let it break you out of the login form
 		$eventResults = $this->extend('onBeforeSecurityLogin');
 		// If there was a redirection, return
-		if(Director::redirected_to()) return;
+		if($this->redirectedTo()) return;
 		// If there was an SS_HTTPResponse object returned, then return that
 		else if($eventResults) {
 			foreach($eventResults as $result) {

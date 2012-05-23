@@ -175,7 +175,7 @@ class FileIFrameField extends FileField {
 			|| ($data['FileSource'] == 'existing' && (!isset($data['ExistingFile']) || !$data['ExistingFile']))
 		) {
 			$form->sessionMessage(_t('FileIFrameField.NOSOURCE', 'Please select a source file to attach'), 'required');
-			Director::redirectBack();
+			Controller::curr()->redirectBack();
 			return;
 		}
 		
@@ -189,12 +189,12 @@ class FileIFrameField extends FileField {
 				$this->upload->loadIntoFile($_FILES['Upload'], $fileObject, $this->folderName);
 			} catch (Exception $e){
 				$form->sessionMessage(_t('FileIFrameField.DISALLOWEDFILETYPE', 'This filetype is not allowed to be uploaded'), 'bad');
-				Director::redirectBack();
+				Controller::curr()->redirectBack();
 				return;
 			}
 			
 			if($this->upload->isError()) {
-				Director::redirectBack();
+				Controller::curr()->redirectBack();
 				return;
 			}
 			
@@ -209,7 +209,7 @@ class FileIFrameField extends FileField {
 			
 			// dont allow the user to attach a folder by default
 			if(!$fileObject || ($fileObject instanceof Folder && $desiredClass != 'Folder')) {
-				Director::redirectBack();
+				Controller::curr()->redirectBack();
 				return;
 			}
 			
@@ -222,7 +222,7 @@ class FileIFrameField extends FileField {
 		}
 		
 		$this->form->getRecord()->write();
-		Director::redirectBack();
+		Controller::curr()->redirectBack();
 	}
 	
 	/**
@@ -260,7 +260,7 @@ class FileIFrameField extends FileField {
 		$this->form->getRecord()->{$this->getName() . 'ID'} = 0;
 		$this->form->getRecord()->write();
 		
-		Director::redirectBack();
+		Controller::curr()->redirectBack();
 	}
 	
 	/**

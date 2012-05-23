@@ -180,6 +180,6 @@ class DevelopmentAdmin extends Controller {
 	}
 	
 	function errors() {
-		Director::redirect("Debug_");
+		$this->redirect("Debug_");
 	}
 }

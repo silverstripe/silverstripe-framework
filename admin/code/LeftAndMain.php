@@ -164,7 +164,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		);
 
 		// Allow customisation of the access check by a extension
-		// Also all the canView() check to execute Director::redirect()
+		// Also all the canView() check to execute Controller::redirect()
 		if(!$this->canView() && !$this->response->isFinished()) {
 			// When access /admin/, we should try a redirect to another part of the admin rather than be locked out
 			$menu = $this->MainMenu();
@@ -175,7 +175,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					&& $candidate->MenuItem->controller 
 					&& singleton($candidate->MenuItem->controller)->canView()
 				) {
-					return Director::redirect($candidate->Link);
+					return $this->redirect($candidate->Link);
 				}
 			}
 			
@@ -194,7 +194,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 		
 		// Don't continue if there's already been a redirection request.
-		if(Director::redirected_to()) return;
+		if($this->redirectedTo()) return;
 
 		// Audit logging hook
 		if(empty($_REQUEST['executeForm']) && !$this->request->isAjax()) $this->extend('accessedCMS');
