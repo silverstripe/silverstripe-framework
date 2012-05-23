@@ -65,15 +65,16 @@ class Enum extends DBField {
 		if(!$title) $title = $this->name;
 		if(!$name) $name = $this->name;
 
-		$field = new DropdownField($name, $title, $this->enumValues($hasEmpty), $value, $form, $emptyString);
-			
-		return $field;		
+		$field = new DropdownField($name, $title, $this->enumValues($hasEmpty), $value, $form);
+		$field->setEmptyString($emptyString);
+
+		return $field;
 	}
 
 	public function scaffoldFormField($title = null, $params = null) {
 		return $this->formField($title);
 	}
-	
+
 	function scaffoldSearchField($title = null) {
 		$anyText = _t('Enum.ANY', 'Any');
 		return $this->formField($title, null, false, '', null, "($anyText)");

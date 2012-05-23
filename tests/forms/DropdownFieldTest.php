@@ -17,39 +17,29 @@ class DropdownFieldTest extends SapphireTest {
 	}
 	
 	function testReadonlyField() {
-		$dropdownField = new DropdownField('FeelingOk', 'Are you feeling ok?', array(0 => 'No', 1 => 'Yes'), '', null, '(Select one)');
-		$dropdownField->setValue(1);
-		$readonlyDropdownField = $dropdownField->performReadonlyTransformation();
-		preg_match('/Yes/', $dropdownField->Field(), $matches);
+		$field = new DropdownField('FeelingOk', 'Are you feeling ok?', array(0 => 'No', 1 => 'Yes'));
+		$field->setEmptyString('(Select one)');
+		$field->setValue(1);
+		$readonlyField = $field->performReadonlyTransformation();
+		preg_match('/Yes/', $field->Field(), $matches);
 		$this->assertEquals($matches[0], 'Yes');
 	}
-	
-	function testEmptyStringAsBooleanConstructorArgument() {
-		$source = array(1=>'one');
-		$field = new DropdownField('Field', null, $source, null, null, true);
-		$this->assertEquals(
-			$field->getSource(),
-			array(
-				'' => '',
-				1 => 'one'
-			)
-		);
-	}
-	
+
 	function testEmptyStringAsLiteralConstructorArgument() {
-		$source = array(1=>'one');
-		$field = new DropdownField('Field', null, $source, null, null, 'select...');
+		$source = array(1 => 'one');
+		$field = new DropdownField('Field', null, $source);
+		$field->setEmptyString('select...');
 		$this->assertEquals(
 			$field->getSource(),
 			array(
-				"" => 'select...',
+				'' => 'select...',
 				1 => 'one'
 			)
 		);
 	}
-	
+
 	function testHasEmptyDefault() {
-		$source = array(1=>'one');
+		$source = array(1 => 'one');
 		$field = new DropdownField('Field', null, $source);
 		$field->setHasEmptyDefault(true);
 		$this->assertEquals(
@@ -60,7 +50,7 @@ class DropdownFieldTest extends SapphireTest {
 			)
 		);
 	}
-	
+
 	function testEmptyDefaultStringThroughSetter() {
 		$source = array(1=>'one');
 		$field = new DropdownField('Field', null, $source);
@@ -76,7 +66,7 @@ class DropdownFieldTest extends SapphireTest {
 			$field->getHasEmptyDefault()
 		);
 	}
-	
+
 	function testZeroArraySourceNotOverwrittenByEmptyString() {
 		$source = array(0=>'zero');
 		$field = new DropdownField('Field', null, $source);
@@ -171,7 +161,10 @@ class DropdownFieldTest extends SapphireTest {
 			1 => 'Yes'
 		);
 		
-		return new DropdownField('Field', null, $source, $value, null, $emptyString);
+		$field = new DropdownField('Field', null, $source, $value);
+		$field->setEmptyString($emptyString);
+
+		return $field;
 	}
 
 	/**
