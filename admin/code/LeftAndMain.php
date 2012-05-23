@@ -105,7 +105,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	);
 
 	/**
-	 * @var PjaxResponseNegotiator
+	 * @var PJAXResponseNegotiator
 	 */
 	protected $responseNegotiator;
 	
@@ -415,12 +415,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * Caution: Volatile API.
 	 *  
-	 * @return PjaxResponseNegotiator
+	 * @return PJAXResponseNegotiator
 	 */
 	public function getResponseNegotiator() {
 		if(!$this->responseNegotiator) {
 			$controller = $this;
-			$this->responseNegotiator = new PjaxResponseNegotiator(array(
+			$this->responseNegotiator = new PJAXResponseNegotiator(array(
 				'CurrentForm' => function() use(&$controller) {
 					return $controller->getEditForm()->forTemplate();
 				},
