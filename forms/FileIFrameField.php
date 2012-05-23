@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * A field that allows you to attach a file to a DataObject without submitting the form it is part of, through the use
  * of an iframe.
@@ -175,12 +175,13 @@ class FileIFrameField extends FileField {
 			|| ($data['FileSource'] == 'existing' && (!isset($data['ExistingFile']) || !$data['ExistingFile']))
 		) {
 			$form->sessionMessage(_t('FileIFrameField.NOSOURCE', 'Please select a source file to attach'), 'required');
-			Controller::curr()->redirectBack();
+			$form->getController()->redirectBack();
 			return;
 		}
-		
+
 		$desiredClass = $this->dataClass();
-		
+		$controller = $this->form->getController();
+
 		// upload a new file
 		if($data['FileSource'] == 'new') {
 			$fileObject = Object::create($desiredClass);
@@ -189,12 +190,12 @@ class FileIFrameField extends FileField {
 				$this->upload->loadIntoFile($_FILES['Upload'], $fileObject, $this->folderName);
 			} catch (Exception $e){
 				$form->sessionMessage(_t('FileIFrameField.DISALLOWEDFILETYPE', 'This filetype is not allowed to be uploaded'), 'bad');
-				Controller::curr()->redirectBack();
+				$controller->redirectBack();
 				return;
 			}
 			
 			if($this->upload->isError()) {
-				Controller::curr()->redirectBack();
+				$controller->redirectBack();
 				return;
 			}
 			
@@ -209,7 +210,7 @@ class FileIFrameField extends FileField {
 			
 			// dont allow the user to attach a folder by default
 			if(!$fileObject || ($fileObject instanceof Folder && $desiredClass != 'Folder')) {
-				Controller::curr()->redirectBack();
+				$controller->redirectBack();
 				return;
 			}
 			
@@ -222,7 +223,7 @@ class FileIFrameField extends FileField {
 		}
 		
 		$this->form->getRecord()->write();
-		Controller::curr()->redirectBack();
+		$controller->redirectBack();
 	}
 	
 	/**
@@ -255,12 +256,12 @@ class FileIFrameField extends FileField {
 				$file->delete();
 			}
 		}
-		
+
 		// then un-attach file from this record
 		$this->form->getRecord()->{$this->getName() . 'ID'} = 0;
 		$this->form->getRecord()->write();
-		
-		Controller::curr()->redirectBack();
+
+		$this->form->getController()->redirectBack();
 	}
 	
 	/**

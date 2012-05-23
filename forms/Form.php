@@ -291,7 +291,7 @@ class Form extends RequestHandler {
 		) {
 			return $this->httpError(
 				403, 
-				sprintf('Action "%s" not allowed on form (Name: "%s")', $funcName, $this->Name())
+				sprintf('Action "%s" not allowed on form (Name: "%s")', $funcName, $this->name)
 			);
 		}
 		// TODO : Once we switch to a stricter policy regarding allowed_actions (meaning actions must be set explicitly in allowed_actions in order to run)
@@ -871,13 +871,13 @@ class Form extends RequestHandler {
 	 * @ignore
 	 */
 	private $htmlID = null;
-	
+
 	/**
 	 * Returns the name of the form
 	 */
 	public function FormName() {
 		if($this->htmlID) return $this->htmlID;
-		else return $this->class . '_' . str_replace(array('.','/'),'',$this->name);
+		else return $this->class . '_' . str_replace(array('.', '/'), '', $this->name);
 	}
 
 	/**
@@ -888,19 +888,57 @@ class Form extends RequestHandler {
 	}
 	
 	/**
-	 * Returns this form's controller
+	 * Returns this form's controller.
+	 * This is used in the templates.
 	 */
 	public function Controller() {
+		return $this->getController();
+	}
+
+	/**
+	 * Get the controller.
+	 * @return Controller
+	 */
+	public function getController() {
 		return $this->controller;
 	}
-	
+
+	/**
+	 * Set the controller.
+	 * @param Controller $controller
+	 * @return Form
+	 */
+	public function setController($controller) {
+		$this->controller = $controller;
+		return $this;
+	}
+
 	/**
 	 * @return string
 	 */
 	public function Name() {
+		Deprecation::notice('3.0', 'Use getName() instead.');
+		return $this->getName();
+	}
+
+	/**
+	 * Get the name of the form.
+	 * @return string
+	 */
+	public function getName() {
 		return $this->name;
 	}
-	
+
+	/**
+	 * Set the name of the form.
+	 * @param string $name
+	 * @return Form
+	 */
+	public function setName($name) {
+		$this->name = $name;
+		return $this;
+	}
+
 	/**
 	 * Returns an object where there is a method with the same name as each data field on the form.
 	 * That method will return the field itself.
