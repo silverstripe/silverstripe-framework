@@ -50,7 +50,8 @@ class Boolean extends DBField {
 			0 => _t('Boolean.NO', 'No')
 		);
 		
-		return new DropdownField($this->name, $title, $source, '', null, "($anyText)");
+		$field = new DropdownField($this->name, $title, $source);
+		$field->setEmptyString("($anyText)");
 	}
 
 	/**
@@ -60,7 +61,7 @@ class Boolean extends DBField {
 	function prepValueForDB($value) {
 		if(strpos($value, '[')!==false)
 			return Convert::raw2sql($value);
-		else {		
+		else {
 			if($value && strtolower($value) != 'f') {
 				return "'1'";
 			} else {

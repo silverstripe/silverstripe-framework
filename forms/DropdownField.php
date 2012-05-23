@@ -14,7 +14,6 @@
  * 	public function getCMSFields() {
  * 		$fields = parent::getCMSFields();
  * 		$field = new DropdownField('GalleryID', 'Gallery', DataList::create('Gallery')->map('ID', 'Title'));
- * 		$field->setHasEmptyDefault(true);
  * 		$field->setEmptyString('(Select one)');
  * 		$fields->addFieldToTab('Root.Content', $field, 'Content');
  * </code>
@@ -29,10 +28,10 @@
  *   static $db = array(
  *     'Country' => "Varchar(100)"
  *   );
- * }			
+ * }
  * </code>
  * 
- * Exampe instantiation:
+ * Example instantiation:
  * <code>
  * new DropdownField(
  *   'Country',
@@ -55,7 +54,7 @@
  *   static $db = array(
  *     'Country' => "Enum('New Zealand,United States,Germany','New Zealand')"
  *   );
- * }			
+ * }
  * </code>
  * 
  * Field construction:
@@ -113,14 +112,21 @@ class DropdownField extends FormField {
 	 * @param $form The parent form
 	 * @param $emptyString mixed Add an empty selection on to of the {@link $source}-Array 
 	 * 	(can also be boolean, which results in an empty string)
-	 *  Argument is deprecated in 2.3, please use {@link setHasEmptyDefault()} and {@link setEmptyString()} instead.
+	 *  Argument is deprecated in 3.1, please use {@link setEmptyString()} and/or {@link setHasEmptyDefault(true)} instead.
 	 */
-	function __construct($name, $title = null, $source = array(), $value = "", $form = null, $emptyString = null) {
+	function __construct($name, $title = null, $source = array(), $value = '', $form = null, $emptyString = null) {
 		$this->setSource($source);
-		
+
+		if($emptyString === true) {
+			Deprecation::notice('3.1', 'Please use setHasEmptyDefault(true) instead of passing a boolean true $emptyString argument');
+		}
+		if(is_string($emptyString)) {
+			Deprecation::notice('3.1', 'Please use setEmptyString() instead of passing a string $emptyString argument.');
+		}
+
 		if($emptyString) $this->setHasEmptyDefault(true);
 		if(is_string($emptyString)) $this->setEmptyString($emptyString);
-	
+
 		parent::__construct($name, ($title===null) ? $name : $title, $value, $form);
 	}
 	
@@ -172,7 +178,7 @@ class DropdownField extends FormField {
 	function isSelected() {
 		return $this->isSelected;
 	}
-  
+
 	/**
 	 * Gets the source array including any empty default values.
 	 * 
@@ -180,12 +186,12 @@ class DropdownField extends FormField {
 	 */
 	function getSource() {
 		if(is_array($this->source) && $this->getHasEmptyDefault()) {
-			return array(""=>$this->emptyString) + (array)$this->source;
+			return array('' => $this->emptyString) + (array) $this->source;
 		} else {
 			return $this->source;
 		}
 	}
-  
+
 	/**
 	 * @param array $source
 	 */
@@ -213,7 +219,7 @@ class DropdownField extends FormField {
 	 * Set the default selection label, e.g. "select...".
 	 * Defaults to an empty string. Automatically sets
 	 * {@link $hasEmptyDefault} to true.
-	 * 
+	 *
 	 * @param string $str
 	 */
 	function setEmptyString($str) {

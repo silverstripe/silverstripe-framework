@@ -41,9 +41,10 @@ class ForeignKey extends Int {
 			// Don't scaffold a dropdown for large tables, as making the list concrete
 			// might exceed the available PHP memory in creating too many DataObject instances
 			if($list->count() < 100) {
-				$field = new DropdownField($this->name, $title, $list->map("ID", $titleField), null, null, ' ');	
+				$field = new DropdownField($this->name, $title, $list->map('ID', $titleField));
+				$field->setEmptyString(' ');
 			} else {
-				$field = new NumericField($this->name, $title);	
+				$field = new NumericField($this->name, $title);
 			}
 			
 		}
