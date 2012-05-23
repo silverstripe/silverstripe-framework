@@ -14,7 +14,6 @@ class Security extends Controller {
 	    'lostpassword', 
 	    'passwordsent', 
 	    'changepassword', 
-	    'ping',
 		'LoginForm',
 		'ChangePasswordForm',
 		'LostPasswordForm',
@@ -590,15 +589,6 @@ class Security extends Controller {
 		return $customisedController->renderWith(array('Security_changepassword', 'Security', $this->stat('template_main'), 'BlankPage'));
 	}
 	
-	/**
-	 * Security/ping can be visited with ajax to keep a session alive.
-	 * This is used in the CMS.
-	 */
-	function ping() {
-		return 1;
-	}
-
-
 	/**
 	 * Factory method for the lost password form
 	 *
