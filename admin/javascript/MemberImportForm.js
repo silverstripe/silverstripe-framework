@@ -11,6 +11,9 @@
 				this._super();
 				
 				this.hide();
+			},
+			onunmatch: function() {
+				this._super();
 			}
 		});
 		

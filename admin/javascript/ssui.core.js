@@ -13,7 +13,6 @@
 			onunmatch: function() {
 				this._super();
 			},
-
 			redraw: function() {
 				this.addClass('ui-tabs ui-widget ui-widget-content ui-corner-all ui-tabs-panel ui-corner-bottom');
 				this.find('ul').addClass('ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all');

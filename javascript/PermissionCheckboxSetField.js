@@ -13,6 +13,9 @@
 
 				this.toggleCheckboxes();
 			},
+			onunmatch: function() {
+				this._super();
+			},
 			onclick: function(e) {
 				this.toggleCheckboxes();
 			},
@@ -60,6 +63,9 @@
 					});
 				}
 				
+				this._super();
+			},
+			onunmatch: function() {
 				this._super();
 			},
 			onclick: function(e) {

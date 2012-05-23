@@ -152,6 +152,9 @@
 				this._super();
 				this.setUUID(new Date().getTime());
 			},
+			onunmatch: function() {
+				this._super();
+			},
 			onclick: function(e){
 				var btn = this.closest(':button'), grid = this.getGridField(),
 					form = this.closest('form'), data = form.find(':input').serialize();
@@ -172,12 +175,14 @@
 		
 		$('.ss-gridfield-print-iframe').entwine({
 			onmatch: function(){
-				this.hide().bind('load', function() 
-				{	
+				this.hide().bind('load', function() {
 					this.focus();
 					var ifWin = this.contentWindow || this;
 					ifWin.print();
 				});;
+			},
+			onunmatch: function() {
+				this._super();
 			}
 		});
 		
@@ -247,7 +252,7 @@
 		 * rather than the whole form.
 		 */
 		$('.ss-gridfield .filter-header :input').entwine({
-			onmatch: function(){
+			onmatch: function() {
 				var filterbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter'),
 					resetbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-reset');
 				
@@ -255,6 +260,9 @@
 					filterbtn.addClass('filtered');
 					resetbtn.addClass('filtered');
 				}
+				this._super();
+			},
+			onunmatch: function() {
 				this._super();
 			},
 			onkeydown: function(e) {

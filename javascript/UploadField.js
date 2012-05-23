@@ -160,7 +160,9 @@
 				
 				this._super();
 			},
-
+			onunmatch: function() {
+				this._super();
+			},
 			openSelectDialog: function() {
 				// Create dialog and load iframe
 				var self = this, config = this.getConfig(), dialogId = 'ss-uploadfield-dialog-' + this.attr('id'), dialog = jQuery('#' + dialogId);
@@ -386,6 +388,9 @@
 				this.load(function() {
 					$(this).parent().removeClass('loading');	
 				});
+				this._super();
+			},
+			onunmatch: function() {
 				this._super();
 			}
 		});
