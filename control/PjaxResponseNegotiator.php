@@ -13,6 +13,11 @@
 class PjaxResponseNegotiator {
 
 	/**
+	 * Holds the overriden type.
+	 */
+	protected $pjaxTypeOverride = null;
+
+	/**
 	 * @var Array See {@link respond()}
 	 */
 	protected $callbacks = array(
@@ -44,8 +49,11 @@ class PjaxResponseNegotiator {
 			array_change_key_case($this->callbacks, CASE_LOWER),
 			array_change_key_case($extraCallbacks, CASE_LOWER)
 		);
+
+		// Get the PJAX type for this request (might have been overriden).
+		$fragment = $this->pjaxTypeOverride ? $this->pjaxTypeOverride : $request->getHeader('X-Pjax');
 		
-		if($fragment = $request->getHeader('X-Pjax')) {
+		if($fragment) {
 			$fragment = strtolower($fragment);
 			if(isset($callbacks[$fragment])) {
 				return call_user_func($callbacks[$fragment]);
@@ -57,6 +65,16 @@ class PjaxResponseNegotiator {
 			return call_user_func($callbacks['default']);
 		}
 		
+	}
+
+	/**
+	 * Overrides the Pjax request type.
+	 *
+	 * @param $type string Overriding type.
+	 */
+	public function forcePjaxType($type) {
+		$this->pjaxTypeOverride = $type;
+		return $this;
 	}
 
 	/**
