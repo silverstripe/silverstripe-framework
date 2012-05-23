@@ -62,7 +62,9 @@
 				
 				this._super();
 			},
-			
+			onunmatch: function() {
+				this._super();
+			},
 			/**
 			 * @param {Boolean} TRUE to expand, FALSE to collapse.
 			 * @param {Boolean} TRUE means that events won't be fired, which is useful for the component initialization phase.
