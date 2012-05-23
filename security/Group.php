@@ -123,8 +123,8 @@ class Group extends DataObject {
 		if(count($editorConfigMap) > 1) {
 			$fields->addFieldToTab('Root.Permissions',
 				new DropdownField(
-					'HtmlEditorConfig', 
-					'HTML Editor Configuration', 
+					'HtmlEditorConfig',
+					'HTML Editor Configuration',
 					$editorConfigMap
 				),
 				'Permissions'
