@@ -62,6 +62,9 @@
 				
 				this._super();
 			},
+			onunmatch: function() {
+				this._super();
+			},
 			
 			/**
 			 * @param {Boolean} TRUE to expand, FALSE to collapse.

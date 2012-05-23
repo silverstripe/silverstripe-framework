@@ -44,6 +44,9 @@
 				this.getPanel().hide();
 				this._super();
 			},
+			onunmatch: function() {
+				this._super();
+			},
 			getPanel: function() {
 				return this.find('.treedropdownfield-panel');
 			},
@@ -267,6 +270,9 @@
 				);
 				
 				this.setTitle(title ? title : strings.searchFieldTitle);
+			},
+			onunmatch: function() {
+				this._super();
 			},
 			setTitle: function(title) {
 				if(!title && title !== '') title = strings.fieldTitle;

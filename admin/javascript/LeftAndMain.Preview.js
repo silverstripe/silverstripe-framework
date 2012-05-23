@@ -89,6 +89,9 @@
 		
 				this._super();
 			},
+			onunmatch: function() {
+				this._super();
+			},
 			
 			loadUrl: function(url) {	
 				this.find('iframe').attr('src', url);
@@ -201,6 +204,9 @@
 			onmatch: function() {
 				this.find('a').text('<');
 				this._super();
+			},
+			onunmatch: function() {
+				this._super();
 			}
 		});
 		
@@ -218,6 +224,9 @@
 		$('.cms-preview.expanded').entwine({
 			onmatch: function() {
 				this.find('a').text('>');
+				this._super();
+			},
+			onunmatch: function() {
 				this._super();
 			}
 		});
@@ -255,6 +264,9 @@
 				this.find('.active a').removeClass('disabled');
 				this.find('.cms-preview-watermark').show();
 				this.find('.active .cms-preview-watermark').hide();
+				this._super();
+			},
+			onunmatch: function() {
 				this._super();
 			}
 		});

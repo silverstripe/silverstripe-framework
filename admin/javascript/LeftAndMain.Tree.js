@@ -332,6 +332,9 @@
 				this.redraw();
 				this._super();
 			},
+			onunmatch: function() {
+				this._super();
+			},
 			onclick: function(e) {
 				this.redraw();
 			},

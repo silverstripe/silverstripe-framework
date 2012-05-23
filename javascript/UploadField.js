@@ -160,6 +160,9 @@
 				
 				this._super();
 			},
+			onunmatch: function() {
+				this._super();
+			},
 
 			openSelectDialog: function() {
 				// Create dialog and load iframe
@@ -386,6 +389,9 @@
 				this.load(function() {
 					$(this).parent().removeClass('loading');	
 				});
+				this._super();
+			},
+			onunmatch: function() {
 				this._super();
 			}
 		});
