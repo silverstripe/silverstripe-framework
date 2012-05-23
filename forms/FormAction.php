@@ -107,6 +107,24 @@ class FormAction extends FormField {
 	}
 
 	/**
+	 * Set the button as redirecting to content, where the default
+	 * behaviour is to reload the same for in place.
+	 *
+	 * It is up to JS to set the headers properly to reflect this.
+	 *
+	 * @param $redirecting bool Should the button redirect to content?
+	 */
+	function setRedirectingToContent($redirecting = true) {
+		if ($redirecting) {
+			$this->addExtraClass('redirecting-to-content');
+		}
+		else {
+			$this->removeExtraClass('redirecting-to-content');
+		}
+		return $this;
+	}
+
+	/**
 	 * @param Boolean
 	 */
 	public function setUseButtonTag($bool) {
