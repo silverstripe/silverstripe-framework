@@ -74,6 +74,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		'getsubtree',
 		'printable',
 		'show',
+		'ping',
 		'EditorToolbar',
 		'EditForm',
 		'AddForm',
@@ -310,7 +311,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			else if($version == 8) Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/ie8.css');
 		}
 
-		// Custom requirements				
+		// Custom requirements
 		foreach (self::$extra_requirements['javascript'] as $file) {
 			Requirements::javascript($file[0]);
 		}
@@ -360,6 +361,13 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		return $this->getResponseNegotiator()->respond($request);
 	}
 
+	/**
+	 * admin/ping can be visited with ajax to keep a session alive.
+	 * This is used in the CMS.
+	 */
+	function ping() {
+		return 1;
+	}
 	
 	/**
 	 * If this is set to true, the "switchView" context in the
