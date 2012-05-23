@@ -153,26 +153,41 @@ class ShortcodeParser {
 		if(!$this->shortcodes) return $content;
 		
 		$shortcodes = implode('|', array_map('preg_quote', array_keys($this->shortcodes)));
-		$pattern    = "/(.?)\[($shortcodes)(.*?)(\/)?\](?(4)|(?:(.+?)\[\/\s*\\2\s*\]))?(.?)/s";
+		$pattern    = "/\[($shortcodes)(.*?)(\/\]|\](?(4)|(?:(.+?)\[\/\s*\\1\s*\]))|\])/s";
+
+		if(preg_match_all($pattern, $content, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER)) {
+			$replacements = array();
+			foreach($matches as $match) {
+				$prefix = $match[0][1] ? $content[$match[0][1]-1] : '';
+				if(strlen($match[0][0]) + $match[0][1] < strlen($content)) {
+					$suffix = $content[strlen($match[0][0]) + $match[0][1]];
+				} else {
+					$suffix = '';
+				}
+				if($prefix == '[' && $suffix == ']') {
+					$replacements[] = array($match[0][0], $match[0][1]-1, strlen($match[0][0]) + 2);
+				} else {
+					$replacements[] = array($this->handleShortcode($match), $match[0][1], strlen($match[0][0]));
+				}
+			}
+			// We reverse this so that replacements don't break offsets
+			foreach(array_reverse($replacements) as $replace) {
+				$content = substr_replace($content, $replace[0], $replace[1], $replace[2]);
+			}
+		}
 		
-		return preg_replace_callback($pattern, array($this, 'handleShortcode'), $content);
+		return $content;
 	}
 	
 	/**
 	 * @ignore
 	 */
 	protected function handleShortcode($matches) {
-		$prefix    = $matches[1];
-		$suffix    = $matches[6];
-		$shortcode = $matches[2];
+		$shortcode = $matches[1][0];
 		
-		// allow for escaping shortcodes by enclosing them in double brackets ([[shortcode]])
-		if($prefix == '[' && $suffix == ']') {
-			return substr($matches[0], 1, -1);
-		}
 		$attributes = array(); // Parse attributes into into this array.
 		
-		if(preg_match_all('/(\w+) *= *(?:([\'"])(.*?)\\2|([^ ,"\'>]+))/', $matches[3], $match, PREG_SET_ORDER)) {
+		if(preg_match_all('/(\w+) *= *(?:([\'"])(.*?)\\2|([^ ,"\'>]+))/', $matches[2][0], $match, PREG_SET_ORDER)) {
 			foreach($match as $attribute) {
 				if(!empty($attribute[4])) {
 					$attributes[strtolower($attribute[1])] = $attribute[4];
@@ -181,8 +196,8 @@ class ShortcodeParser {
 				}
 			}
 		}
-		
-		return $prefix . call_user_func($this->shortcodes[$shortcode], $attributes, $matches[5], $this, $shortcode) . $suffix;
+
+		return call_user_func($this->shortcodes[$shortcode], $attributes, isset($matches[4][0]) ? $matches[4][0] : '', $this, $shortcode);
 	}
 	
 }
