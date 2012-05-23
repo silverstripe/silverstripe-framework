@@ -284,7 +284,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			$controller = Controller::curr();
 			$noActionURL = $controller->removeAction($_REQUEST['url']);
 			$controller->getResponse()->removeHeader('Location');   //clear the existing redirect
-			return Director::redirect($noActionURL, 302);
+			return $controller->redirect($noActionURL, 302);
 		}
 
 		$actions = new FieldList();
@@ -406,7 +406,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$controller = Controller::curr();
 		$noActionURL = $controller->removeAction($data['url']);
 
-		return Director::redirect($noActionURL, 302); //redirect back to admin section
+		return $controller->redirect($noActionURL, 302); //redirect back to admin section
 	}
 
 	/**

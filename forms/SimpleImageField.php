@@ -53,7 +53,7 @@
  *    $file->loadUploaded($_FILES['FileTypeID']);
  * 		
  *    // Redirect to a page thanking people for registering
- *    Director::redirect('thanks-for-your-submission/');
+ *    $this->redirect('thanks-for-your-submission/');
  * }
  * </code>
  * 
