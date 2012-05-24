@@ -111,8 +111,8 @@ so this is considered advanced usage of the field.
 	:::php
 	// File: mysite/_config.php
 	HtmlEditorConfig::get('cms')->disablePlugins('ssbuttons');
-	HtmlEditorConfig::get('cms')->removeButtons('sslink', 'ssimage');
-	HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'link', 'image');
+	HtmlEditorConfig::get('cms')->removeButtons('sslink', 'ssmedia');
+	HtmlEditorConfig::get('cms')->addButtonsToLine(2, 'link', 'media');
 
 ### Developing a wrapper to use a different WYSIWYG editors with HTMLEditorField
 
