@@ -1,12 +1,34 @@
-<div class="ss-htmleditorfield-file $appCategory" data-id="$File.ID" data-url="$URL">
-	<div class="overview">
-		<span class="thumbnail">$Preview</span>
-		<span class="title">$Name</span>
-		<a href="#" class="action-delete ui-state-default">
-			<span class="ui-button-icon-primary ui-icon btn-icon-cross-circle"></span>
-		</a>
+
+
+<div class="ss-uploadfield-item $appCategory ss-htmleditorfield-file template-upload" data-id="$File.ID" data-url="$URL">
+	<div class="ss-uploadfield-item-preview">
+		<span>$Preview.SetRatioSize(30, 40)</span>
 	</div>
-	<div class="details">
+	<div class="ss-uploadfield-item-info">
+		<label class="ss-uploadfield-item-name">
+			<span class="name" title="$Name">
+				$Name
+			</span>
+			<div class="ss-uploadfield-item-status ui-state-success-text" title="<% _t('UploadField.Dimensions', 'Dimensions') %>">Dimensions: $Width x $Height</div>
+			<div class="clear"><!-- --></div> 
+		</label>
+		<div class="ss-uploadfield-item-actions">	
+			<div class="ss-uploadfield-item-cancel cancel">
+				<button data-icon="deleteLight" class="ss-uploadfield-item-cancel ss-uploadfield-item-remove" title="<% _t('UploadField.REMOVE', 'Remove') %>">
+					<% _t('UploadField.REMOVE', 'Remove') %>
+				</button></div>
+				
+				<div class="ss-uploadfield-item-edit edit">
+					<button class="ss-uploadfield-item-edit ss-ui-button ui-corner-all" title="<% _t('UploadField.EDITINFO', 'Edit this file') %>" data-icon="pencil">
+						<% _t('UploadField.EDIT', 'Edit') %>
+						<span class="toggle-details">
+							<span class="toggle-details-icon"></span>
+						</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	<div class="details ss-uploadfield-item-editform loading">
 		<fieldset>
 			<% loop Fields %>
 				$FieldHolder
@@ -14,3 +36,7 @@
 		</fieldset>
 	</div>
 </div>
+
+
+
+

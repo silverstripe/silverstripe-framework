@@ -4,17 +4,33 @@
 /** ----------------------------------------------- Typography.  ------------------------------------------------ */
 /** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
+.htmleditorfield-dialog.ui-dialog-content { padding: 0; position: relative; }
+.htmleditorfield-dialog .cms-content-header { padding: 0; width: 100%; height: 40px; }
+.htmleditorfield-dialog .cms-content-header h3 { padding: 0 8px; margin: 10px; }
+.htmleditorfield-dialog .ui-tabs { position: static; }
+.htmleditorfield-dialog .ui-tabs ul.ui-tabs-nav { float: right; position: absolute; top: 0; right: 40px; }
+.htmleditorfield-dialog .ui-tabs ul.ui-tabs-nav li { background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #8ca1ae)); background-image: -webkit-linear-gradient(#b0bec7, #8ca1ae); background-image: -moz-linear-gradient(#b0bec7, #8ca1ae); background-image: -o-linear-gradient(#b0bec7, #8ca1ae); background-image: -ms-linear-gradient(#b0bec7, #8ca1ae); background-image: linear-gradient(#b0bec7, #8ca1ae); -moz-border-radius: 0px; -webkit-border-radius: 0px; -o-border-radius: 0px; -ms-border-radius: 0px; -khtml-border-radius: 0px; border-radius: 0px; padding-top: 10px; height: 28px; overflow: hidden; font-weight: bold; }
+.htmleditorfield-dialog .ui-tabs ul.ui-tabs-nav li a { color: #fff; text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2); }
+.htmleditorfield-dialog .ui-tabs ul.ui-tabs-nav li.ui-state-active { background: #f0f3f4 url("../admin/images/textures/bg_cms_main_content.png") repeat left top; }
+.htmleditorfield-dialog .ui-tabs ul.ui-tabs-nav li.ui-state-active a { color: #444444; text-shadow: none; }
+.htmleditorfield-dialog .ui-tabs .ui-tabs-panel { padding: 0; }
+.htmleditorfield-dialog .ss-insert-media, .htmleditorfield-dialog .Actions { padding: 8px 16px; }
+
 .ss-uploadfield .clear { clear: both; }
-.ss-uploadfield .middleColumn { width: 526px; padding: 0; background: #fff; border: 1px solid #b3b3b3; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; -o-border-radius: 4px; border-radius: 4px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -ms-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); }
+.ss-insert-media .ss-uploadfield { margin-top: 20px; }
+.ss-insert-media .ss-uploadfield h4 { float: left; }
+.ss-uploadfield .middleColumn { width: 526px; padding: 0; background: #fff; border: 1px solid #b3b3b3; -moz-border-radius: 4px; -webkit-border-radius: 4px; -o-border-radius: 4px; -ms-border-radius: 4px; -khtml-border-radius: 4px; border-radius: 4px; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #efefef), color-stop(10%, #ffffff), color-stop(90%, #ffffff), color-stop(100%, #efefef)); background-image: -webkit-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -moz-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -o-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: -ms-linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); background-image: linear-gradient(#efefef, #ffffff 10%, #ffffff 90%, #efefef); }
 .ss-uploadfield .ss-uploadfield-item { margin: 0; padding: 15px; overflow: auto; }
-.ss-uploadfield .ss-uploadfield-item-preview { height: 60px; line-height: 60px; width: 80px; text-align: center; font-weight: bold; float: left; overflow: hidden; }
-.ss-uploadfield .ss-uploadfield-item-preview.ss-uploadfield-dropzone { -webkit-box-shadow: #9a9a9a 0 0 3px 3px inset; -moz-box-shadow: #9a9a9a 0 0 3px 3px inset; box-shadow: #9a9a9a 0 0 3px 3px inset; border: 2px dashed gray; background: rgba(201, 205, 206, 0.8); display: none; }
-.ss-uploadfield .ss-uploadfield-item-info { margin: 0 0 0 100px; }
-.ss-uploadfield .ss-uploadfield-item-name { display: block; line-height: 13px; height: 26px; margin: 0; text-align: left; }
-.ss-uploadfield .ss-uploadfield-item-name b { font-weight: bold; padding: 0 5px 0 0; }
-.ss-uploadfield .ss-uploadfield-item-name span { font-size: 11px; color: #848484; }
-.ss-uploadfield .ss-uploadfield-item-status { float: right; padding: 0 0 0 5px; }
-.ss-uploadfield .ss-uploadfield-item-status.ui-state-error-text { color: red; font-weight: bold; }
+.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-preview { height: 60px; line-height: 60px; width: 80px; text-align: center; font-weight: bold; float: left; overflow: hidden; }
+.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-preview.ss-uploadfield-dropzone { -moz-box-shadow: #9a9a9a 0 0 3px 3px inset; -webkit-box-shadow: #9a9a9a 0 0 3px 3px inset; -o-box-shadow: #9a9a9a 0 0 3px 3px inset; box-shadow: #9a9a9a 0 0 3px 3px inset; border: 2px dashed gray; background: rgba(201, 205, 206, 0.8); display: none; }
+.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info { margin: 0 0 0 100px; }
+.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name { display: block; line-height: 13px; height: 26px; margin: 0; text-align: left; }
+.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name b { font-weight: bold; padding: 0 5px 0 0; }
+.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .name { font-size: 11px; color: #848484; width: 290px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; display: inline; float: left; }
+.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .ss-uploadfield-item-status { float: right; padding: 0 0 0 5px; width: 100px; text-align: right; }
+.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .ss-uploadfield-item-status.ui-state-error-text { color: red; font-weight: bold; }
+.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .ss-uploadfield-item-status.ui-state-warning-text { color: #cc7600; }
+.ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name .ss-uploadfield-item-status.ui-state-success-text { color: #1f9433; }
 .ss-uploadfield .ss-ui-button { display: block; float: left; margin: 0 10px 0 0; }
 .ss-uploadfield .ss-ui-button.ss-uploadfield-fromcomputer { position: relative; overflow: hidden; }
 .ss-uploadfield .ss-uploadfield-files { margin: 0; padding: 0; overflow: auto; position: relative; }
@@ -22,11 +38,11 @@
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item:last-child, .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item.ui-state-error:last-child { border-bottom: 0; }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-actions { height: 28px; margin: 6px 0 0; position: relative; }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-progress { position: absolute; left: 0; right: 42px; width: auto; margin: 11px 0 0; height: 15px; }
-.ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-progress div { -webkit-border-radius: 25px; -moz-border-radius: 25px; -ms-border-radius: 25px; -o-border-radius: 25px; border-radius: 25px; height: 13px; padding: 0; margin: 0; overflow: hidden; }
+.ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-progress div { -moz-border-radius: 25px; -webkit-border-radius: 25px; -o-border-radius: 25px; -ms-border-radius: 25px; -khtml-border-radius: 25px; border-radius: 25px; height: 13px; padding: 0; margin: 0; overflow: hidden; }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-progressbar { border: 1px solid gray; background-color: #92a6b3; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #92a6b3), color-stop(11%, #90aab8), color-stop(22%, #96b1bf), color-stop(33%, #9eb4c1), color-stop(44%, #a7bac7), color-stop(100%, #c1d5dc)); background-image: -webkit-linear-gradient(top, #92a6b3 0%, #90aab8 11%, #96b1bf 22%, #9eb4c1 33%, #a7bac7 44%, #c1d5dc 100%); background-image: -moz-linear-gradient(top, #92a6b3 0%, #90aab8 11%, #96b1bf 22%, #9eb4c1 33%, #a7bac7 44%, #c1d5dc 100%); background-image: -o-linear-gradient(top, #92a6b3 0%, #90aab8 11%, #96b1bf 22%, #9eb4c1 33%, #a7bac7 44%, #c1d5dc 100%); background-image: -ms-linear-gradient(top, #92a6b3 0%, #90aab8 11%, #96b1bf 22%, #9eb4c1 33%, #a7bac7 44%, #c1d5dc 100%); background-image: linear-gradient(top, #92a6b3 0%, #90aab8 11%, #96b1bf 22%, #9eb4c1 33%, #a7bac7 44%, #c1d5dc 100%); }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-progressbarvalue { border: 0; width: 0%; background: #60b3dd url(../images/progressbar_blue.gif) repeat-x left center; }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-cancel, .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-start { position: absolute; top: 10px; right: 0; }
-.ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-cancel button, .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-start button { display: block; overflow: hidden; text-indent: -9999px; padding: 0; margin: 0; border: 0; width: 16px; height: 16px; cursor: pointer; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; background: none; position: relative; }
+.ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-cancel button, .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-start button { display: block; overflow: hidden; text-indent: -9999px; padding: 0; margin: 0; border: 0; width: 16px; height: 16px; cursor: pointer; -moz-box-shadow: none; -webkit-box-shadow: none; -o-box-shadow: none; box-shadow: none; background: none; position: relative; }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-cancel button span, .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-start button span { position: absolute; left: 0; top: 0; margin: 0; }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-cancel button span.ui-button-text, .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-start button span.ui-button-text { display: none; }
 .ss-uploadfield .ss-uploadfield-files .ss-uploadfield-item-start { right: 20px; }
