@@ -810,7 +810,17 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 		parent::__construct($url, $file);
 		$this->oembed = Oembed::get_oembed_from_url($url);
 		if(!$this->oembed) {
-			return Controller::curr()->httpError(404, 'The URL ' . $url . ' could not be turned into a media resource.');
+			$controller = Controller::curr();
+			$controller->response->addHeader('X-Status',
+				rawurlencode(_t(
+					'HtmlEditorField.URLNOTANOEMBEDRESOURCE',
+					"The URL '{url}' could not be turned into a media resource.",
+					"The URL that has been passed is not a valid Oembed resource, and the embed element could not be created.",
+					array('url' => $url)
+				)));
+			$controller->response->setStatusCode(404);
+
+			throw new SS_HTTPResponse_Exception($controller->response);
 		}
 	}
 
