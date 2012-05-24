@@ -66,6 +66,7 @@
 				var prefix, suffix, attributes, attributeString, url;
 				var attrs, attr;
 				var imgEl;
+				// Match various parts of the embed tag
 				while((matches = shortTagRegex.exec(content))) {
 					prefix = matches[1];
 					suffix = matches[4];
@@ -73,7 +74,10 @@
 						continue;
 					}
 					attributes = {};
+					// Remove quotation marks and trim.
 					attributeString = matches[2].replace(/['"]/g, '').replace(/(^\s+|\s+$)/g, '');
+
+					// Extract the attributes and values into a key-value array (or key-key if no value is set)
 					attrs = attributeString.split(/\s+/);
 					for(attribute in attrs) {
 						attr = attrs[attribute].split('=');
@@ -83,14 +87,16 @@
 							attributes[attr[0]] = attr[1];
 						}
 					}
-					attributes.cssclass = attributes.class;
+
+					// Build HTML element from embed attributes.
+					attributes.cssclass = attributes['class'];
 					url = matches[3];
 					imgEl = jQuery('<img/>').attr({
-						'src': attributes.thumbnail,
-						'width': attributes.width,
-						'height': attributes.height,
-						'class': attributes.cssclass,
-						'data-url': url,
+						'src': attributes['thumbnail'],
+						'width': attributes['width'],
+						'height': attributes['height'],
+						'class': attributes['cssclass'],
+						'data-url': url
 					}).addClass('ss-htmleditorfield-file embed');
 
 					jQuery.each(attributes, function (key, value) {
