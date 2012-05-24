@@ -26,7 +26,7 @@ class Varchar extends StringField {
  	 * @param $options array Optional parameters, e.g. array("nullifyEmpty"=>false). See {@link StringField::setOptions()} for information on the available options
  	 * @return unknown_type
  	 */
- 	function __construct($name, $size = 50, $options = array()) {
+ 	function __construct($name = null, $size = 50, $options = array()) {
 		$this->size = $size ? $size : 50;
 		parent::__construct($name, $options);
 	}
