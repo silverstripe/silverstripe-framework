@@ -391,6 +391,13 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$fromCMS->addExtraClass('content');
 		$selectComposite->addExtraClass('content-select');
 
+		$fromWeb = new CompositeField(
+			new LiteralField('headerURL', '<h4 class="field header-url">' . sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.ADDURL', 'Add URL')) . '</h4>'),
+			$remoteURL = new TextField('RemoteURL', ''),
+			new LiteralField('addURLImage', '<img class="field add-url" src="' . CMS_DIR . '/images/add.gif" width="16" height="16" />')
+		);
+		$remoteURL->addExtraClass('remoteurl');
+
 		Requirements::css(FRAMEWORK_DIR . '/css/AssetUploadField.css');
 		$computerUploadField = Object::create('UploadField', 'AssetUploadField', '');
 		$computerUploadField->setConfig('previewMaxWidth', 40);
@@ -401,10 +408,14 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$computerUploadField->setFolderName(Upload::$uploads_folder);
 
 		$tabSet = new TabSet(
-			"MediaFormInsertImageTabs",
+			"MediaFormInsertMediaTabs",
 			new Tab(
 				_t('HtmlEditorField.FROMCOMPUTER','From your computer'),
 				$computerUploadField
+			),
+			new Tab(
+				_t('HtmlEditorField.FROMWEB', 'From the web'),
+				$fromWeb
 			),
 			new Tab(
 				_t('HtmlEditorField.FROMCMS','From the CMS'),
@@ -423,19 +434,19 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$fields = new FieldList(
 			new LiteralField(
 				'Heading',
-				sprintf('<h3 class="htmleditorfield-mediaform-heading insert">%s</h3>', _t('HtmlEditorField.INSERTIMAGE', 'Insert Image')).
-				sprintf('<h3 class="htmleditorfield-mediaform-heading update">%s</h3>', _t('HtmlEditorField.UpdateIMAGE', 'Update Image'))
+				sprintf('<h3 class="htmleditorfield-mediaform-heading insert">%s</h3>', _t('HtmlEditorField.INSERTMEDIA', 'Insert Media')).
+				sprintf('<h3 class="htmleditorfield-mediaform-heading update">%s</h3>', _t('HtmlEditorField.UpdateMEDIA', 'Update Media'))
 			),
 			$allFields
 		);
 		
 		$actions = new FieldList(
-			FormAction::create('insertimage', _t('HtmlEditorField.BUTTONINSERT', 'Insert'))
-				->addExtraClass('ss-ui-action-constructive image-insert')
+			FormAction::create('insertmedia', _t('HtmlEditorField.BUTTONINSERT', 'Insert'))
+				->addExtraClass('ss-ui-action-constructive media-insert')
 				->setAttribute('data-icon', 'accept')
 				->setUseButtonTag(true),
-			FormAction::create('insertimage', _t('HtmlEditorField.BUTTONUpdate', 'Update'))
-				->addExtraClass('ss-ui-action-constructive image-update')
+			FormAction::create('insertmedia', _t('HtmlEditorField.BUTTONUpdate', 'Update'))
+				->addExtraClass('ss-ui-action-constructive media-update')
 				->setAttribute('data-icon', 'accept')
 				->setUseButtonTag(true)
 		);
@@ -493,6 +504,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		// Instanciate file wrapper and get fields based on its type
 		if($file && $file->appCategory() == 'image') {
 			$fileWrapper = new HtmlEditorField_Image($url, $file);
+		} elseif(!Director::is_site_url($url)) {
+			$fileWrapper = new HtmlEditorField_Embed($url, $file);
 		} else {
 			$fileWrapper = new HtmlEditorField_File($url, $file);
 		}
@@ -516,7 +529,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	protected function getFieldsForFile($url, $file) {
 		$fields = $this->extend('getFieldsForFile', $url, $file);
 		if(!$fields) {
-			if($file->Extension == 'swf') {
+			if($file instanceof HtmlEditorField_Embed) {
+				$fields = $this->getFieldsForOembed($url, $file);
+			} elseif($file->Extension == 'swf') {
 				$fields = $this->getFieldsForFlash($url, $file);
 			} else {
 				$fields = $this->getFieldsForImage($url, $file);
@@ -526,6 +541,75 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 
 		$this->extend('updateFieldsForFile', $fields, $url, $file);
 		
+		return $fields;
+	}
+
+	/**
+	 * @return FieldList
+	 */
+	protected function getFieldsForOembed($url, $file) {
+		if(isset($file->Oembed->thumbnail_url)) {
+			$thumbnailURL = $file->Oembed->thumbnail_url;	
+		} elseif($file->Type == 'photo') {
+			$thumbnailURL = $file->Oembed->url;
+		} else {
+			$thumbnailURL = $url;
+		}
+		
+		$previewField = new LiteralField("ImageFull",
+			"<img id='thumbnailImage' class='thumbnail-preview' src='{$thumbnailURL}?r=" . rand(1,100000)  . "' alt='{$file->Name}' />\n"
+		);
+
+		$fields = new FieldList(
+			$filePreview = CompositeField::create(
+				CompositeField::create(
+					$previewField
+				)->setName("FilePreviewImage")->addExtraClass('cms-file-info-preview'),
+				CompositeField::create(
+					CompositeField::create(
+						new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':', $file->Type),
+						$urlField = new ReadonlyField('ClickableURL', _t('AssetTableField.URL','URL'),
+							sprintf('<a href="%s" target="_blank">%s</a>', $url, $url)
+						)
+					)
+				)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')
+			)->setName("FilePreview")->addExtraClass('cms-file-info'),
+			new TextField('CaptionText', _t('HtmlEditorField.CAPTIONTEXT', 'Caption text')),
+			new DropdownField(
+				'CSSClass',
+				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
+				array(
+					'left' => _t('HtmlEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
+					'leftAlone' => _t('HtmlEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
+					'right' => _t('HtmlEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.'),
+					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
+				)
+			),
+			$dimensionsField = new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
+				$widthField = new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), $file->Width),
+				$heightField = new TextField('Height', " x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), $file->Height)
+			)
+		);
+		$urlField->dontEscape = true;
+		$dimensionsField->addExtraClass('dimensions');
+		$widthField->setMaxLength(5);
+		$heightField->setMaxLength(5);
+
+		if($file->Type == 'photo') {
+			$filePreview->FieldList()->insertBefore(new TextField(
+				'AltText', 
+				_t('HtmlEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image cannot be displayed'), 
+				$file->Title, 
+				80
+			), 'CaptionText');
+			$filePreview->FieldList()->insertBefore(new TextField(
+				'Title', 
+				_t('HtmlEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')
+			), 'CaptionText');
+		}
+
+		$this->extend('updateFieldsForImage', $fields, $url, $file);
+
 		return $fields;
 	}
 
@@ -552,8 +636,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * @return FieldList
 	 */
 	protected function getFieldsForImage($url, $file) {
-		if($file instanceof Image) {
-			$formattedImage = $file->FormattedImage('SetWidth', Image::$asset_preview_width);
+		if($file->File instanceof Image) {
+			$formattedImage = $file->File->generateFormattedImage('SetWidth', Image::$asset_preview_width);
 			$thumbnailURL = $formattedImage ? $formattedImage->URL : $url;	
 		} else {
 			$thumbnailURL = $url;
@@ -717,6 +801,62 @@ class HtmlEditorField_File extends ViewableData {
 		}
 	}
 
+}
+
+class HtmlEditorField_Embed extends HtmlEditorField_File {
+	protected $oembed;
+
+	public function __construct($url, $file = null) {
+		parent::__construct($url, $file);
+		$this->oembed = Oembed::get_oembed_from_url($url);
+		if(!$this->oembed) {
+			$controller = Controller::curr();
+			$controller->response->addHeader('X-Status',
+				rawurlencode(_t(
+					'HtmlEditorField.URLNOTANOEMBEDRESOURCE',
+					"The URL '{url}' could not be turned into a media resource.",
+					"The URL that has been passed is not a valid Oembed resource, and the embed element could not be created.",
+					array('url' => $url)
+				)));
+			$controller->response->setStatusCode(404);
+
+			throw new SS_HTTPResponse_Exception($controller->response);
+		}
+	}
+
+	public function getWidth() {
+		return $this->oembed->Width;
+	}
+
+	public function getHeight() {
+		return $this->oembed->Height;
+	}
+
+	public function getPreview() {
+		if(isset($this->oembed->thumbnail_url)) {
+			return sprintf('<img src="%s" />', $this->oembed->thumbnail_url);
+		}
+	}
+
+	public function getName() {
+		if(isset($this->oembed->title)) {
+			return $this->oembed->title;
+		} else {
+			return parent::getName();
+		}
+	}
+
+	public function getType() {
+		return $this->oembed->type;
+	}
+
+	public function getOembed() {
+		return $this->oembed;
+	}
+
+	public function appCategory() {
+		return 'embed';
+	}
 }
 
 class HtmlEditorField_Image extends HtmlEditorField_File {

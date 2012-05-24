@@ -683,7 +683,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var self = this, ed = this.getEditor(), node = $(ed.getSelectedNode());
 				// TODO Depends on managed mime type
 				if(node.is('img')) {
-					this.showFileView(node.attr('src'), function() {
+					this.showFileView(node.data('url') || node.attr('src'), function() {
 						$(this).updateFromNode(node);
 						self.toggleCloseButton();
 						self.redraw();
@@ -711,9 +711,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				var updateExisting = Boolean(this.find('.ss-htmleditorfield-file').length);
 				this.find('.htmleditorfield-mediaform-heading.insert')[updateExisting ? 'hide' : 'show']();
-				this.find('.Actions .image-insert')[updateExisting ? 'hide' : 'show']();
+				this.find('.Actions .media-insert')[updateExisting ? 'hide' : 'show']();
 				this.find('.htmleditorfield-mediaform-heading.update')[updateExisting ? 'show' : 'hide']();
-				this.find('.Actions .image-update')[updateExisting ? 'show' : 'hide']();
+				this.find('.Actions .media-update')[updateExisting ? 'show' : 'hide']();
 			},
 			resetFields: function() {
 				var ed = this.getEditor(), node = $(ed.getSelectedNode());
@@ -791,6 +791,21 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					}
 				});
 
+				form.redraw();
+			}
+
+		});
+
+		/**
+		 * Show the second step after adding a URL
+		 */
+		$('form.htmleditorfield-form.htmleditorfield-mediaform img.add-url').entwine({
+			onclick: function(e) {
+				var form = this.closest('form');
+
+				var urlField = this.closest('.CompositeField').find('input.remoteurl');
+
+				form.showFileView(urlField.val());
 				form.redraw();
 			}
 
@@ -982,6 +997,60 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			},
 			updateFromNode: function(node) {
 				// TODO Not implemented
+			}
+		});
+
+
+		/**
+		 * Insert an oembed object tag into the content.
+		 * Requires the 'media' plugin for serialization of tags into <img> placeholders.
+		 */
+		$('form.htmleditorfield-mediaform .ss-htmleditorfield-file.embed').entwine({
+			getAttributes: function() {
+				var width = this.find(':input[name=Width]').val(),
+					height = this.find(':input[name=Height]').val();
+				return {
+					'src' : this.find('.thumbnail-preview').attr('src'),
+					'width' : width ? parseInt(width, 10) : null,
+					'height' : height ? parseInt(height, 10) : null,
+					'class' : this.find(':input[name=CSSClass]').val()
+				};
+			},
+			getExtraData: function() {
+				var width = this.find(':input[name=Width]').val(),
+					height = this.find(':input[name=Height]').val();
+				return {
+					'CaptionText': this.find(':input[name=CaptionText]').val(),
+					'Url': this.find(':input[name=URL]').val(),
+					'thumbnail': this.find('.thumbnail-preview').attr('src'),
+					'width' : width ? parseInt(width, 10) : null,
+					'height' : height ? parseInt(height, 10) : null,
+					'cssclass': this.find(':input[name=CSSClass]').val()
+				};
+			},
+			getHTML: function() {
+				var el,
+					attrs = this.getAttributes(),
+					extraData = this.getExtraData(),
+					// imgEl = $('<img id="_ss_tmp_img" />');
+					imgEl = $('<img />').attr(attrs).addClass('ss-htmleditorfield-file embed');
+
+				$.each(extraData, function (key, value) {
+					imgEl.attr('data-' + key, value)
+				});
+
+				if(extraData.CaptionText) {
+					el = $('<div style="width: ' + attrs['width'] + 'px;" class="captionImage ' + attrs['class'] + '"><p class="caption">' + extraData.CaptionText + '</p></div>').prepend(imgEl);
+				} else {
+					el = imgEl;
+				}
+				return $('<div />').append(el).html(); // Little hack to get outerHTML string
+			},
+			updateFromNode: function(node) {
+				this.find(':input[name=Width]').val(node.width());
+				this.find(':input[name=Height]').val(node.height());
+				this.find(':input[name=Title]').val(node.attr('title'));
+				this.find(':input[name=CSSClass]').val(node.data('cssclass'));
 			}
 		});
 
