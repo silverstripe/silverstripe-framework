@@ -224,10 +224,11 @@ class Oembed_Result extends ViewableData {
 		if(!$data) {
 			$data = array();
 		}
-		foreach($data as $k=>$v) {
-			unset($data[$k]);
-			$data[strtolower($k)] = $v;
-		}
+
+		// Convert all keys to lowercase
+		$data = array_change_key_case($data, CASE_LOWER);
+
+		// Purge everything if the type does not match.
 		if($this->type && $this->type != $data['type']) {
 			$data = array();
 		}
