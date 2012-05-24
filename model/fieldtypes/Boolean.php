@@ -52,6 +52,7 @@ class Boolean extends DBField {
 		
 		$field = new DropdownField($this->name, $title, $source);
 		$field->setEmptyString("($anyText)");
+		return $field;
 	}
 
 	/**
