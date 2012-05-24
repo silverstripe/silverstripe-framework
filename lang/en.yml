@@ -183,7 +183,7 @@ en:
     Delete: Delete
     UnlinkRelation: Unlink
   GridField:
-    AddNew: 'Add New'
+    Add: 'Add {name}'
     Filter: Filter
     FilterBy: 'Filter by '
     Find: Find
@@ -217,8 +217,10 @@ en:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Locked?'
     NoRoles: 'No roles found'
+    PLURALNAME: Groups
     Parent: 'Parent Group'
     RolesAddEditLink: 'Manage roles'
+    SINGULARNAME: Group
     Sort: 'Sort Order'
     has_many_Permissions: Permissions
     many_many_Members: Members
@@ -231,6 +233,7 @@ en:
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
+    ADDURL: 'Add URL'
     ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
     BUTTONINSERTLINK: 'Insert link'
@@ -249,6 +252,7 @@ en:
     FOLDER: Folder
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
+    FROMWEB: 'From the web'
     Find: Find
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
     IMAGEDIMENSIONS: Dimensions
@@ -267,7 +271,8 @@ en:
     LINKTO: 'Link to'
     PAGE: Page
     URL: URL
-    UpdateIMAGE: 'Update Image'
+    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Image
   Image_iframe.ss:
@@ -395,6 +400,8 @@ en:
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
