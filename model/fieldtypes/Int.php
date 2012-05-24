@@ -7,7 +7,7 @@
  */
 class Int extends DBField {
 
-	function __construct($name, $defaultVal = 0) {
+	function __construct($name = null, $defaultVal = 0) {
 		$this->defaultVal = is_int($defaultVal) ? $defaultVal : 0;
 		
 		parent::__construct($name);

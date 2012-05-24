@@ -642,6 +642,24 @@ class Injector {
 	}
 	
 	/**
+	 * Removes a named object from the cached list of objects managed
+	 * by the inject
+	 * 
+	 * @param type $name 
+	 *				The name to unregister
+	 */
+	public function unregisterNamedObject($name) {
+		unset($this->serviceCache[$name]);
+	}
+
+	/**
+	 * Clear out all objects that are managed by the injetor. 
+	 */
+	public function unregisterAllObjects() {
+		$this->serviceCache = array();
+	}
+	
+	/**
 	 * Get a named managed object
 	 * 
 	 * Will first check to see if the item has been registered as a configured service/bean
