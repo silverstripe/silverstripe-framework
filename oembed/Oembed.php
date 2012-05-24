@@ -202,6 +202,10 @@ class Oembed_Result extends ViewableData {
 		
 		parent::__construct();
 	}
+
+	public function getOembedURL() {
+		return $this->url;
+	}
 	
 	/**
 	 * Fetches the JSON data from the Oembed URL (cached).
