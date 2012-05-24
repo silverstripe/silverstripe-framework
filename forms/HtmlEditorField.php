@@ -825,11 +825,11 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 	}
 
 	public function getWidth() {
-		return $this->oembed->Width;
+		return $this->oembed->Width ?: 100;
 	}
 
 	public function getHeight() {
-		return $this->oembed->Height;
+		return $this->oembed->Height ?: 100;
 	}
 
 	public function getPreview() {
