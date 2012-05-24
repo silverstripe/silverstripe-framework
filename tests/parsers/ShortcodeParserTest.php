@@ -100,6 +100,10 @@ class ShortcodeParserTest extends SapphireTest {
 		
 		$this->assertEquals(2, $this->arguments['id']);
 	}
+
+	public function testConsecutiveTags() {
+		$this->assertEquals('', $this->parser->parse('[test_shortcode][test_shortcode]'));
+	}
 	
 	// -----------------------------------------------------------------------------------------------------------------
 	
