@@ -4,14 +4,7 @@
 /** ----------------------------------------------- Typography.  ------------------------------------------------ */
 /** ----------------------------------------------- Grid Units (px)  We have a vertical rhythm that the grid is based off both x (=horizontal) and y (=vertical). All internal padding and margins are scaled to this and accounting for paragraphs ------------------------------------------------ */
 /** ----------------------------------------------- Application Logo (CMS Logo) Must be 24px x 24px ------------------------------------------------ */
-/** This file contains mixins relating to specific functionality  Mixins should be stored here rather than individual files */
-/*Mixin generates the generic button styling for the gridfield*/
-/**
-	Mixin creates a transparent button with a dropdown arrow, 
-	as is used for files in the files up-load area. The arrows 
-	themselves are added in the _style file
-**/
-#AssetUploadField { border-bottom: 0; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
+#AssetUploadField { border-bottom: 0; -moz-box-shadow: none; -webkit-box-shadow: none; -o-box-shadow: none; box-shadow: none; }
 
 body.cms.ss-uploadfield-edit-iframe { padding: 16px; overflow: auto; }
 body.cms.ss-uploadfield-edit-iframe span.readonly { font-style: italic; color: #777777; text-shadow: 0px 1px 0px #fff; }

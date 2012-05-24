@@ -1,11 +1,11 @@
-//**
-// * This file contains mixins relating to specific functionality
-// *
-// * Mixins should be stored here rather than individual files
-// */
+/**
+ * This file contains mixins relating to specific functionality
+ *
+ * Mixins should be stored here rather than individual files
+ */
 
 
-//*Mixin generates the generic button styling for the gridfield*/
+/*Mixin generates the generic button styling for the gridfield*/
 @mixin gridFieldButtons{
 	border:none;			
 	display:block;
@@ -15,11 +15,11 @@
 }
 
 
-//**
-//	Mixin creates a transparent button with a dropdown arrow, 
-//	as is used for files in the files up-load area. The arrows 
-//	themselves are added in the _style file
-//**/
+/**
+	Mixin creates a transparent button with a dropdown arrow, 
+	as is used for files in the files up-load area. The arrows 
+	themselves are added in the _style file
+**/
 @mixin ss-uploadfield-editButton{
 	&.ss-uploadfield-item-edit {
 		opacity:0.9;

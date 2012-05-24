@@ -364,7 +364,7 @@ body.cms { overflow: hidden; }
 .cms-content-tools { background-color: #F1F4F5; background: #f0f3f4 url(../images/textures/bg_cms_main_content.png) repeat top left; width: 192px; border-right: 1px solid #bfcad2; overflow-y: auto; overflow-x: hidden; z-index: 70; -webkit-box-shadow: rgba(0, 0, 0, 0.6) 0 2px 3px; -moz-box-shadow: rgba(0, 0, 0, 0.6) 0 2px 3px; box-shadow: rgba(0, 0, 0, 0.6) 0 2px 3px; float: left; position: relative; }
 .cms-content-tools.filter { padding: 0 !important; }
 .cms-content-tools .cms-panel-header { clear: both; margin: 0 0 7px; line-height: 24px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); }
-.cms-content-tools .cms-panel-content { width: 176px; padding: 0 8px; overflow: auto; overflow-x: hidden; height: 100%; }
+.cms-content-tools .cms-panel-content { width: 176px; padding: 0 8px; overflow: auto; height: 100%; }
 .cms-content-tools .cms-panel-content .dropdown select { width: 160px; }
 .cms-content-tools .cms-panel-content #LastEditedFrom { -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
 .cms-content-tools .cms-panel-content #LastEditedFrom input { width: 160px; }
