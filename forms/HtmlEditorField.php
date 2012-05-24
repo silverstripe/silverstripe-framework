@@ -553,7 +553,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		} elseif($file->Type == 'photo') {
 			$thumbnailURL = $file->Oembed->url;
 		} else {
-			$thumbnailURL = $url;
+			$thumbnailURL = FRAMEWORK_DIR . '/images/default_media.png';
 		}
 		
 		$previewField = new LiteralField("ImageFull",
