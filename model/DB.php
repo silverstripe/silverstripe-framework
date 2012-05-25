@@ -95,6 +95,13 @@ class DB {
 
 		$dbClass = $databaseConfig['type'];
 		$conn = new $dbClass($databaseConfig);
+		
+		$dbDecorators = Config::inst()->get('DB', 'decorators');
+		if(is_array($dbDecorators)) {
+			foreach($dbDecorators as $decorator) {
+				$conn = new $decorator($conn);
+			}
+		}
 
 		self::setConn($conn);
 	}
