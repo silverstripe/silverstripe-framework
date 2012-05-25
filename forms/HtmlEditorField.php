@@ -553,7 +553,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		} elseif($file->Type == 'photo') {
 			$thumbnailURL = $file->Oembed->url;
 		} else {
-			$thumbnailURL = $url;
+			$thumbnailURL = FRAMEWORK_DIR . '/images/default_media.png';
 		}
 		
 		$previewField = new LiteralField("ImageFull",
@@ -825,11 +825,11 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 	}
 
 	public function getWidth() {
-		return $this->oembed->Width;
+		return $this->oembed->Width ?: 100;
 	}
 
 	public function getHeight() {
-		return $this->oembed->Height;
+		return $this->oembed->Height ?: 100;
 	}
 
 	public function getPreview() {
