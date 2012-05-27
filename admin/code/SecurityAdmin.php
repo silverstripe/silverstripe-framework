@@ -129,7 +129,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		
 		// Add roles editing interface
 		if(Permission::check('APPLY_ROLES')) {
-			$rolesField = GridField::create('Role',
+			$rolesField = GridField::create('Roles',
 				false,
 				DataList::create('PermissionRole'),
 				GridFieldConfig_RecordEditor::create()
