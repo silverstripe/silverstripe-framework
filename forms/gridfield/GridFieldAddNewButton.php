@@ -15,7 +15,7 @@ class GridFieldAddNewButton implements GridField_HTMLProvider {
 	public function getHTMLFragments($gridField) {
 		$data = new ArrayData(array(
 			'NewLink' => Controller::join_links($gridField->Link('item'), 'new'),
-			'ButtonName' => _t('GridField.Add', 'Add {name}', array('name' => $gridField->name)),
+			'ButtonName' => _t('GridField.Add', 'Add {name}', array('name' => $gridField->getModelClass())),
 		));
 		return array(
 			$this->targetFragment => $data->renderWith('GridFieldAddNewbutton'),
