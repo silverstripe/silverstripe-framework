@@ -96,14 +96,18 @@ abstract class ModelAdmin extends LeftAndMain {
 		
 	/**
 	 * Initialize the model admin interface. Sets up embedded jquery libraries and requisite plugins.
-	 * 
-	 * @todo remove reliance on urlParams
 	 */
 	public function init() {
 		parent::init();
 
 		$models = $this->getManagedModels();
-		$this->modelClass = (isset($this->urlParams['ModelClass'])) ? $this->urlParams['ModelClass'] : key($models);
+
+		if($this->request->param('ModelClass')) {
+			$this->modelClass = $this->request->param('ModelClass');
+		} else {
+			reset($models);
+			$this->modelClass = key($models);
+		}
 
 		// security check for valid models
 		if(!array_key_exists($this->modelClass, $models)) {
