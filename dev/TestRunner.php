@@ -83,9 +83,12 @@ class TestRunner extends Controller {
 	 * top of the loader stacks.
 	 */
 	public static function use_test_manifest() {
-		SS_ClassLoader::instance()->pushManifest(new SS_ClassManifest(
+		$classManifest = new SS_ClassManifest(
 			BASE_PATH, true, isset($_GET['flush'])
-		));
+		);
+		
+		SS_ClassLoader::instance()->pushManifest($classManifest);
+		SapphireTest::set_test_class_manifest($classManifest);
 
 		SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
 			BASE_PATH, true, isset($_GET['flush'])

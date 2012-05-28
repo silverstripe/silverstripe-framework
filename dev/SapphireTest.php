@@ -44,9 +44,16 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected $mailer;
 	
 	/**
+	 * Pointer to the manifest that isn't a test manifest
+	 */
+	protected static $regular_manifest;
+	
+	/**
 	 * @var boolean
 	 */
 	protected static $is_running_test = false;
+	
+	protected static $test_class_manifest;
 	
 	/**
 	 * By default, setUp() does not require default records. Pass
@@ -113,6 +120,21 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	public static function is_running_test() {
 		return self::$is_running_test;
+	}
+
+
+	/**
+	 * Set the manifest to be used to look up test classes by helper functions
+	 */
+	public static function set_test_class_manifest($manifest) {
+		self::$test_class_manifest = $manifest;
+	}
+
+	/**
+	 * Return the manifest being used to look up test classes by helper functions
+	 */
+	public static function get_test_class_manifest() {
+		return self::$test_class_manifest;
 	}
 	
 	/**
@@ -422,7 +444,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @return String Absolute path to current class.
 	 */
 	protected function getCurrentAbsolutePath() {
-		return dirname(SS_ClassLoader::instance()->getManifest()->getItemPath(get_class($this)));
+		$filename = self::$test_class_manifest->getItemPath(get_class($this));
+		if(!$filename) throw new LogicException("getItemPath returned null for " . get_class($this));
+		return dirname($filename);
 	}
 	
 	/**
