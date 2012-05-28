@@ -2618,15 +2618,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
 	 */
-	public static function get($callerClass = null, $filter = "", $sort = "", $join = "", $limit = null, $containerClass = "DataList") {
+	public static function get($callerClass = null, $filter = "", $sort = "", $join = "", $limit = null, $containerClass = 'DataList') {
 		if($callerClass == null) {
 			$callerClass = get_called_class();
 			if($callerClass == 'DataObject') {
-				throw new \InvalidArgumentException("Call <classname>::get() instead of DataObject::get()");
+				throw new \InvalidArgumentException('Call <classname>::get() instead of DataObject::get()');
 			}
 			
-			if($filter || $sort || $join || $limit || ($containerClass != "DataList")) {
-				throw new \InvalidArgumentException("If calling <classname>::get() then you shouldn't pass any other arguments");
+			if($filter || $sort || $join || $limit || ($containerClass != 'DataList')) {
+				throw new \InvalidArgumentException('If calling <classname>::get() then you shouldn\'t pass any other arguments');
 			}
 			
 			$result = DataList::create(get_called_class());
@@ -2636,15 +2636,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		// Todo: Determine if we can deprecate for 3.0.0 and use DI or something instead
 		// Todo: Make the $containerClass method redundant
-		if($containerClass != "DataList") user_error("The DataObject::get() \$containerClass argument has been deprecated", E_USER_NOTICE);
+		if($containerClass != 'DataList') {
+			Deprecation::notice('3.0', '$containerClass argument is deprecated.');
+		}
+
 		$result = DataList::create($callerClass)->where($filter)->sort($sort);
+
 		if($limit && strpos($limit, ',') !== false) {
 			$limitArguments = explode(',', $limit);
 			$result->limit($limitArguments[1],$limitArguments[0]);
 		} elseif($limit) {
 			$result->limit($limit);
 		}
+
 		if($join) $result = $result->join($join);
+
 		$result->setDataModel(DataModel::inst());
 		return $result;
 	}
