@@ -492,7 +492,7 @@ class i18nTest extends SapphireTest {
 			'AdapterEntity1 CustomAdapter (en_US)',
 			'New entities only defined in new adapter are detected'
 		);
-		
+
 		// Add a second new translator to test priorities
 		$translator = new Zend_Translate(array(
 			'adapter' => 'i18nTest_OtherCustomTranslatorAdapter',
@@ -510,10 +510,12 @@ class i18nTest extends SapphireTest {
 			'adapter' => 'i18nTest_OtherCustomTranslatorAdapter',
 			'disableNotices' => true,
 		));
+		
 		i18n::register_translator($translator, 'othercustom_higher_prio', 15);
+
 		$this->assertEquals(
 			i18n::_t('i18nTestModule.ENTITY'),
-			'i18nTestModule.ENTITY OtherCustomAdapter (en_US)',
+			'i18nTestModule.ENTITY OtherCustomAdapter (en)',
 			'Adapter with higher priority wins'
 		);
 		

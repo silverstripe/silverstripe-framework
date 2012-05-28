@@ -1613,6 +1613,7 @@ class i18n extends Object implements TemplateGlobalProvider {
 		krsort(self::$translators);
 	
 		i18n::include_by_locale('en_US');
+		i18n::include_by_locale('en');
 	}
 	
 	/**
