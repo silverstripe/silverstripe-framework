@@ -159,8 +159,7 @@ class HtmlEditorField extends TextareaField {
 				if($width && $height && ($width != $image->getWidth() || $height != $image->getHeight())) {
 					//Make sure that the resized image actually returns an image:
 					$resized=$image->ResizedImage($width, $height);
-					if($resized)
-						$img->setAttribute('src', $resized->getRelativePath());
+					if($resized) $img->setAttribute('src', $resized->getRelativePath());
 				}
 			}
 			
@@ -429,17 +428,17 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			$editComposite = new CompositeField(
 				new LiteralField('contentEdit', '<div class="content-edit ss-uploadfield-files files"></div>')
 
-			)			
+			)
 		);
 
-		$allFields -> addExtraClass('ss-insert-media');
+		$allFields->addExtraClass('ss-insert-media');
 
 		$headings = new CompositeField(
 			new LiteralField(
 				'Heading',
 				sprintf('<h3 class="htmleditorfield-mediaform-heading insert">%s</h3>', _t('HtmlEditorField.INSERTMEDIA', 'Insert Media')).
 				sprintf('<h3 class="htmleditorfield-mediaform-heading update">%s</h3>', _t('HtmlEditorField.UpdateMEDIA', 'Update Media'))
-			)		
+			)
 		);
 
 		$headings->addExtraClass('cms-content-header');

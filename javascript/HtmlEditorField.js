@@ -676,7 +676,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var updateExisting = Boolean(this.find('.ss-htmleditorfield-file').length);
 				this.find('.overview .action-delete')[updateExisting ? 'hide' : 'show']();
 			},
-			onsubmit: function() {				
+			onsubmit: function() {
 				var self = this, ed = this.getEditor();
 
 				// HACK: See ondialogopen()
@@ -690,7 +690,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				return false;
 			},
-			updateFromEditor: function() {			
+			updateFromEditor: function() {
 				var self = this, ed = this.getEditor(), node = $(ed.getSelectedNode());
 				// TODO Depends on managed mime type
 				if(node.is('img')) {
@@ -714,7 +714,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				if(header) header[(hasItems) ? 'show' : 'hide']();
 
 				// Disable "insert" button if no files are selected
-				 this.find('.Actions :submit')
+				this.find('.Actions :submit')
 					.button(hasItems ? 'enable' : 'disable')
 					.toggleClass('ui-state-disabled', !hasItems); 
 					
@@ -728,7 +728,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.find('.htmleditorfield-mediaform-heading.update')[updateExisting ? 'show' : 'hide']();
 				this.find('.Actions .media-update')[updateExisting ? 'show' : 'hide']();
 			},
-			resetFields: function() {				
+			resetFields: function() {
 				var ed = this.getEditor(), node = $(ed.getSelectedNode());
 
 				// HACK: See ondialogopen()
@@ -849,8 +849,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			 * Insert updated HTML content into the rich text editor
 			 */
 			insertHTML: function() {
-				
-				var ed = this.getEditor();
+				var form = this.closest('form'), ed = form.getEditor();
 				
 				// Workaround for browsers losing focus, similar to tinyMCEPopup.restoreSelection
 				ed.moveToBookmark(window._ss_htmleditorfield_bookmark);
@@ -940,7 +939,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			 * Logic similar to TinyMCE 'advimage' plugin, insertAndClose() method.
 			 */
 			insertHTML: function() {
-				var form = this.closest('.cms').find('.cms-container textarea.htmleditor'), ed = form.getEditor(), 
+				var form = this.closest('form'), ed = form.getEditor(), 
 				node = $(ed.getSelectedNode()), captionNode = node.closest('.captionImage');
 
 				// Workaround for browsers losing focus, similar to tinyMCEPopup.restoreSelection.

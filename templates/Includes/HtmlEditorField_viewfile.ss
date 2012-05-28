@@ -1,5 +1,3 @@
-
-
 <div class="ss-uploadfield-item $appCategory ss-htmleditorfield-file template-upload" data-id="$File.ID" data-url="$URL">
 	<div class="ss-uploadfield-item-preview">
 		<span>$Preview.SetRatioSize(30, 40)</span>
@@ -36,7 +34,4 @@
 		</fieldset>
 	</div>
 </div>
-
-
-
 
