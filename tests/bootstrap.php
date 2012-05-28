@@ -1,13 +1,15 @@
 <?php
-// Simulate an execution from framework/cli-script.php, Core.php has too many
-// hardcoded assumptions about folder depth of the executing script.
+
+/** 
+ * This bootstraps the SilverStripe system so that phpunit can be run directly on SilverStripe tests.
+ */
 
 // Make sure display_errors is on
 ini_set('display_errors', 1);
 
-// Check we're using at least PHPUnit 3.6
-if(version_compare(PHPUnit_Runner_Version::id(), '3.6', '<')) {
-	echo 'PHPUnit 3.6 required to run tests using bootstrap.php';
+// Check we're using at least PHPUnit 3.5
+if(version_compare(PHPUnit_Runner_Version::id(), '3.5', '<')) {
+	echo 'PHPUnit 3.5 required to run tests using bootstrap.php';
 	die();
 }
 

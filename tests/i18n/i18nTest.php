@@ -515,7 +515,7 @@ class i18nTest extends SapphireTest {
 
 		$this->assertEquals(
 			i18n::_t('i18nTestModule.ENTITY'),
-			'i18nTestModule.ENTITY OtherCustomAdapter (en)',
+			'i18nTestModule.ENTITY OtherCustomAdapter (en_US)',
 			'Adapter with higher priority wins'
 		);
 		
