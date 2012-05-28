@@ -69,7 +69,7 @@ class GridFieldTest extends SapphireTest {
 	 * @covers GridField::setModelClass
 	 */
 	public function testGridFieldModelClass() {
-		$obj = new GridField('testfield', 'testfield', DataList::create('Member'));
+		$obj = new GridField('testfield', 'testfield', Member::get());
 		$this->assertEquals('Member', $obj->getModelClass(), 'Should return Member');
 		$obj->setModelClass('DataModel');
 		$this->assertEquals('DataModel', $obj->getModelClass(), 'Should return Member');
@@ -89,7 +89,7 @@ class GridFieldTest extends SapphireTest {
 	 * @covers GridField::getList
 	 */
 	public function testSetAndGetList() {
-		$list = DataList::create('Member');
+		$list = Member::get();
 		$arrayList = ArrayList::create(array(1,2,3));
 		$obj = new GridField('testfield', 'testfield', $list);
 		$this->assertEquals($list, $obj->getList());
@@ -110,7 +110,7 @@ class GridFieldTest extends SapphireTest {
 	 * @covers GridField::getColumns
 	 */
 	public function testGetColumns(){
-		$obj = new GridField('testfield', 'testfield', DataList::create('Member'));
+		$obj = new GridField('testfield', 'testfield', Member::get());
 		$expected = array (
 			0 => 'FirstName',
 			1 => 'Surname',
@@ -123,7 +123,7 @@ class GridFieldTest extends SapphireTest {
 	 * @covers GridField::getColumnCount
 	 */
 	public function testGetColumnCount() {
-		$obj = new GridField('testfield', 'testfield', DataList::create('Member'));
+		$obj = new GridField('testfield', 'testfield', Member::get());
 		$this->assertEquals(3, $obj->getColumnCount());
 	}
 

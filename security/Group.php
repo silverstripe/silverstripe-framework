@@ -68,7 +68,7 @@ class Group extends DataObject {
 					new TextField("Title", $this->fieldLabel('Title')),
 					$parentidfield = DropdownField::create(						'ParentID', 
 						$this->fieldLabel('Parent'), 
-						DataList::create('Group')->exclude('ID', $this->ID)->map('ID', 'Breadcrumbs')
+						Group::get()->exclude('ID', $this->ID)->map('ID', 'Breadcrumbs')
 					)->setEmptyString(' ')
 				),
 
@@ -240,7 +240,7 @@ class Group extends DataObject {
 		// Filters are conjunctive in DataQuery by default, so this filter would otherwise overrule any less specific ones.
 		$result->dataQuery()->removeFilterOn('Group_Members');
 		// Now set all children groups as a new foreign key
-		$groups = DataList::create("Group")->byIDs($this->collateFamilyIDs());
+		$groups = Group::get()->byIDs($this->collateFamilyIDs());
 		$result = $result->forForeignID($groups->column('ID'))->where($filter)->sort($sort)->limit($limit);
 		if($join) $result = $result->join($join);
 
@@ -257,7 +257,7 @@ class Group extends DataObject {
 	public static function map($filter = "", $sort = "", $blank="") {
 		Deprecation::notice('3.0', 'Use DataList::("Group")->map()');
 
-		$list = DataList::create("Group")->where($filter)->sort($sort);
+		$list = Group::get()->where($filter)->sort($sort);
 		$map = $list->map();
 
 		if($blank) $map->unshift(0, $blank);
@@ -284,7 +284,7 @@ class Group extends DataObject {
 			
 			// Get the children of *all* the groups identified in the previous chunk.
 			// This minimises the number of SQL queries necessary			
-			$chunkToAdd = DataList::create('Group')->where("\"ParentID\" IN ($idList)")->column('ID');
+			$chunkToAdd = Group::get()->where("\"ParentID\" IN ($idList)")->column('ID');
 		}
 		
 		return $familyIDs;

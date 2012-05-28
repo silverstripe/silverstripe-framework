@@ -85,7 +85,7 @@ class ManyManyListTest extends SapphireTest {
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$team2 = $this->objFromFixture('DataObjectTest_Team', 'team2');
 
-		$playersTeam1Team2 = DataList::create('DataObjectTest_Team')->relation('Players')->setForeignID(array($team1->ID, $team2->ID));
+		$playersTeam1Team2 = DataObjectTest_Team::get()->relation('Players')->setForeignID(array($team1->ID, $team2->ID));
 		$playersTeam1Team2->add($newPlayer);
 		$this->assertEquals(
 			array($team1->ID, $team2->ID),

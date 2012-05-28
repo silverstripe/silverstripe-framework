@@ -60,7 +60,7 @@ class Versioned extends DataExtension {
 		"Version" => "Int",
 		"WasPublished" => "Boolean",
 		"AuthorID" => "Int",
-		"PublisherID" => "Int"				
+		"PublisherID" => "Int"
 	);
 	
 	/**
@@ -138,8 +138,8 @@ class Versioned extends DataExtension {
 		switch($dataQuery->getQueryParam('Versioned.mode')) {
 		// Noop
 		case '':
-		    break;
-		    
+			break;
+
 		// Reading a specific data from the archive
 		case 'archive':
 			$date = $dataQuery->getQueryParam('Versioned.date');
@@ -186,31 +186,30 @@ class Versioned extends DataExtension {
 		// Return all version instances	
 		case 'all_versions':
 		case 'latest_versions':
-    		foreach($query->getFrom() as $alias => $join) {
-    		    if($alias != $baseTable) {
-    		        $query->setJoinFilter($alias, "\"$alias\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$alias\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
-		        }
-    			$query->renameTable($alias, $alias . '_versions');
-    		}
+			foreach($query->getFrom() as $alias => $join) {
+				if($alias != $baseTable) {
+					$query->setJoinFilter($alias, "\"$alias\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$alias\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
+				}
+				$query->renameTable($alias, $alias . '_versions');
+			}
 		
-    		// Add all <basetable>_versions columns
-    		foreach(self::$db_for_versions_table as $name => $type) {
-    			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
-    		}
-    		$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
-    		
-    		// latest_version has one more step
-    	    // Return latest version instances, regardless of whether they are on a particular stage
-		    // This provides "show all, including deleted" functonality
-            if($dataQuery->getQueryParam('Versioned.mode') == 'latest_versions') {
-    		    $archiveTable = self::requireArchiveTempTable($baseTable);
-    		    $query->addInnerJoin($archiveTable, "\"$archiveTable\".\"ID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
-		    }
+			// Add all <basetable>_versions columns
+			foreach(self::$db_for_versions_table as $name => $type) {
+				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
+			}
+			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, 'RecordID'), "ID");
+			
+			// latest_version has one more step
+			// Return latest version instances, regardless of whether they are on a particular stage
+			// This provides "show all, including deleted" functonality
+			if($dataQuery->getQueryParam('Versioned.mode') == 'latest_versions') {
+				$archiveTable = self::requireArchiveTempTable($baseTable);
+				$query->addInnerJoin($archiveTable, "\"$archiveTable\".\"ID\" = \"{$baseTable}_versions\".\"RecordID\" AND \"$archiveTable\".\"Version\" = \"{$baseTable}_versions\".\"Version\"");
+			}
 
-            break;
-            
-        default:
-            throw new InvalidArgumentException("Bad value for query parameter Versioned.mode: " . $dataQuery->getQueryParam('Versioned.mode'));
+			break;
+		default:
+			throw new InvalidArgumentException("Bad value for query parameter Versioned.mode: " . $dataQuery->getQueryParam('Versioned.mode'));
 		}
 	}
 	
@@ -686,7 +685,7 @@ class Versioned extends DataExtension {
 		if(!is_numeric($this->owner->ID)) {
 			return true;
 		}
-            
+
 		// We test for equality - if one of the versions doesn't exist, this will be false
 		//TODO: DB Abstraction: if statement here:
 		$stagesAreEqual = DB::query("SELECT CASE WHEN \"$table1\".\"Version\"=\"$table2\".\"Version\" THEN 1 ELSE 0 END FROM \"$table1\" INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\" AND \"$table1\".\"ID\" = {$this->owner->ID}")->value();
@@ -875,10 +874,10 @@ class Versioned extends DataExtension {
 	 * @return DataObject
 	 */
 	static function get_one_by_stage($class, $stage, $filter = '', $cache = true, $sort = '') {
-	    // TODO: No identity cache operating
-	    $items = self::get_by_stage($class, $stage, $filter, $sort, null, 1);
-	    return $items->First();
-    }
+		// TODO: No identity cache operating
+		$items = self::get_by_stage($class, $stage, $filter, $sort, null, 1);
+		return $items->First();
+	}
 	
 	/**
 	 * Gets the current version number of a specific record.
@@ -992,9 +991,9 @@ class Versioned extends DataExtension {
 	 */
 	static function get_latest_version($class, $id) {
 		$baseClass = ClassInfo::baseDataClass($class);
-	    $list = DataList::create($class)->where("\"$baseClass\".\"RecordID\" = $id");
-	    $list->dataQuery()->setQueryParam("Versioned.mode", "latest_versions");
-        return $list->First();
+		$list = DataList::create($class)->where("\"$baseClass\".\"RecordID\" = $id");
+		$list->dataQuery()->setQueryParam("Versioned.mode", "latest_versions");
+		return $list->First();
 	}
 	
 	/**
@@ -1020,9 +1019,9 @@ class Versioned extends DataExtension {
 	 * In particular, this will query deleted records as well as active ones.
 	 */
 	static function get_including_deleted($class, $filter = "", $sort = "") {
-	    $list = DataList::create($class)->where($filter)->sort($sort);
-	    $list->dataQuery()->setQueryParam("Versioned.mode", "latest_versions");
-	    return $list;
+		$list = DataList::create($class)->where($filter)->sort($sort);
+		$list->dataQuery()->setQueryParam("Versioned.mode", "latest_versions");
+		return $list;
 	}
 	
 	/**
@@ -1031,9 +1030,9 @@ class Versioned extends DataExtension {
 	 */
 	static function get_version($class, $id, $version) {
 		$baseClass = ClassInfo::baseDataClass($class);
-	    $list = DataList::create($class)->where("\"$baseClass\".\"RecordID\" = $id")->where("\"$baseClass\".\"Version\" = " . (int)$version);
-	    $list->dataQuery()->setQueryParam('Versioned.mode', 'all_versions');
-        return $list->First();
+		$list = DataList::create($class)->where("\"$baseClass\".\"RecordID\" = $id")->where("\"$baseClass\".\"Version\" = " . (int)$version);
+		$list->dataQuery()->setQueryParam('Versioned.mode', 'all_versions');
+		return $list->First();
 	}
 
 	/**
@@ -1041,10 +1040,10 @@ class Versioned extends DataExtension {
 	 * @return DataList
 	 */
 	static function get_all_versions($class, $id) {
-        $baseClass = ClassInfo::baseDataClass($class);
-	    $list = DataList::create($class)->where("\"$baseClass\".\"RecordID\" = $id");
-	    $list->dataQuery()->setQueryParam('Versioned.mode', 'all_versions');
-	    return $list;
+		$baseClass = ClassInfo::baseDataClass($class);
+		$list = DataList::create($class)->where("\"$baseClass\".\"RecordID\" = $id");
+		$list->dataQuery()->setQueryParam('Versioned.mode', 'all_versions');
+		return $list;
 	}
 	
 	function contentcontrollerInit($controller) {

@@ -528,7 +528,7 @@ class UploadField extends FileField {
 
 		$return = array();
 
-		$files = DataList::create('File')->byIDs($request->postVar('ids'));
+		$files = File::get()->byIDs($request->postVar('ids'));
 		foreach($files as $file) {
 			$this->attachFile($file);
 			$file =  $this->customiseFile($file);

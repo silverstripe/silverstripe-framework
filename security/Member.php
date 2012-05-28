@@ -963,7 +963,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public static function map($filter = "", $sort = "", $blank="") {
 		Deprecation::notice('3.0', 'Use DataList::("Member")->map()');
 
-		$list = DataList::create("Member")->where($filter)->sort($sort);
+		$list = Member::get()->where($filter)->sort($sort);
 		$map = $list->map();
 		
 		if($blank) $map->unshift(0, $blank);
@@ -1062,7 +1062,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			? "\"GroupID\" IN (" . implode( ',', $groupIDList ) . ")"
 			: "";
 			
-		return DataList::create("Member")->where($filterClause)->sort("\"Surname\", \"FirstName\"")
+		return Member::get()->where($filterClause)->sort("\"Surname\", \"FirstName\"")
 			->innerJoin("Group_Members", "\"MemberID\"=\"Member\".\"ID\"")
 			->innerJoin("Group", "\"Group\".\"ID\"=\"GroupID\"")
 			->map();
@@ -1148,7 +1148,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$fields->removeByName('Groups');
 
 		if(Permission::check('EDIT_PERMISSIONS')) {
-			$groupsMap = DataList::create('Group')->map('ID', 'Breadcrumbs')->toArray();
+			$groupsMap = Group::get()->map('ID', 'Breadcrumbs')->toArray();
 			asort($groupsMap);
 			$fields->addFieldToTab('Root.Main',
 				ListboxField::create('DirectGroups', singleton('Group')->i18n_plural_name())

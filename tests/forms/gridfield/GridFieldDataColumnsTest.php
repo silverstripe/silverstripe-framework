@@ -5,7 +5,7 @@ class GridFieldDataColumnsTest extends SapphireTest {
 	 * @covers GridFieldDataColumns::getDisplayFields
 	 */
 	public function testGridFieldGetDefaultDisplayFields() {
-		$obj = new GridField('testfield', 'testfield', DataList::create('Member'));
+		$obj = new GridField('testfield', 'testfield', Member::get());
 		$expected = singleton('Member')->summaryFields();
 		$columns = $obj->getConfig()->getComponentByType('GridFieldDataColumns');
 		$this->assertEquals($expected, $columns->getDisplayFields($obj));
@@ -16,7 +16,7 @@ class GridFieldDataColumnsTest extends SapphireTest {
 	 * @covers GridFieldDataColumns::getDisplayFields
 	 */
 	public function testGridFieldCustomDisplayFields() {
-		$obj = new GridField('testfield', 'testfield', DataList::create('Member'));
+		$obj = new GridField('testfield', 'testfield', Member::get());
 		$expected = array('Email' => 'Email');
 		$columns = $obj->getConfig()->getComponentByType('GridFieldDataColumns');
 		$columns->setDisplayFields($expected);
@@ -29,7 +29,7 @@ class GridFieldDataColumnsTest extends SapphireTest {
 	 */
 	public function testGridFieldDisplayFieldsWithBadArguments() {
 		$this->setExpectedException('InvalidArgumentException');
-		$obj = new GridField('testfield', 'testfield', DataList::create('Member'));
+		$obj = new GridField('testfield', 'testfield', Member::get());
 		$columns = $obj->getConfig()->getComponentByType('GridFieldDataColumns');
 		$columns->setDisplayFields(new stdClass());
 	}
