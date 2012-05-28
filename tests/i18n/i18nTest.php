@@ -484,12 +484,12 @@ class i18nTest extends SapphireTest {
 		i18n::register_translator($translator, 'custom', 11);
 		$this->assertEquals(
 			i18n::_t('i18nTestModule.ENTITY'),
-			'i18nTestModule.ENTITY CustomAdapter (en)',
+			'i18nTestModule.ENTITY CustomAdapter (en_US)',
 			'Existing entities overruled by adapter with higher priority'
 		);
 		$this->assertEquals(
 			i18n::_t('AdapterEntity1', 'AdapterEntity1'),
-			'AdapterEntity1 CustomAdapter (en)',
+			'AdapterEntity1 CustomAdapter (en_US)',
 			'New entities only defined in new adapter are detected'
 		);
 		
@@ -501,7 +501,7 @@ class i18nTest extends SapphireTest {
 		i18n::register_translator($translator, 'othercustom_lower_prio', 5); 
 		$this->assertEquals(
 			i18n::_t('i18nTestModule.ENTITY'),
-			'i18nTestModule.ENTITY CustomAdapter (en)',
+			'i18nTestModule.ENTITY CustomAdapter (en_US)',
 			'Adapter with lower priority loses'
 		);
 		
@@ -513,7 +513,7 @@ class i18nTest extends SapphireTest {
 		i18n::register_translator($translator, 'othercustom_higher_prio', 15);
 		$this->assertEquals(
 			i18n::_t('i18nTestModule.ENTITY'),
-			'i18nTestModule.ENTITY OtherCustomAdapter (en)',
+			'i18nTestModule.ENTITY OtherCustomAdapter (en_US)',
 			'Adapter with higher priority wins'
 		);
 		
