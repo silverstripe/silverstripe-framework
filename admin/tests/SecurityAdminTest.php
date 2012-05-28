@@ -76,7 +76,7 @@ class SecurityAdminTest extends FunctionalTest {
 		$group = $this->objFromFixture('Group', 'admin');
 		
 		SecurityAdmin::add_hidden_permission('CMS_ACCESS_ReportAdmin');
-		$response = $this->get(sprintf('admin/security/EditForm/field/Group/item/%d/edit', $group->ID));
+		$response = $this->get(sprintf('admin/security/EditForm/field/Groups/item/%d/edit', $group->ID));
 		
 		$this->assertContains(
 			'CMS_ACCESS_SecurityAdmin',
