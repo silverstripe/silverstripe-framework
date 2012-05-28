@@ -110,7 +110,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 				->addExtraClass('gridfield-button-delete')
 				->setAttribute('title', _t('GridAction.Delete', "Delete"))
 				->setAttribute('data-icon', 'cross-circle')
-				->setDescription('Delete');
+				->setDescription(_t('GridAction.DELETE_DESCRIPTION','Delete'));
 		}
 		return $field->Field();
 	}
