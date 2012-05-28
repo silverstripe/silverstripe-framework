@@ -118,11 +118,18 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	 * @return string HTML for the column. Return NULL to skip.
 	 */
 	public function getColumnContent($gridField, $record, $columnName) {
+		// Find the data column for the given named column
+		$columns = $this->getDisplayFields($gridField);
+		$columnInfo = $columns[$columnName];
+		
+		// Allow callbacks
+		if(is_array($columnInfo) && isset($columnInfo['callback'])) {
+			$method = $columnInfo['callback'];
+			$value = Convert::raw2xml($method($record));
+		
 		// This supports simple FieldName syntax
-		if(strpos($columnName, '.') === false) {
-			$value = $record->XML_val($columnName);
 		} else {
-			$value = $this->getValueFromRelation($record, $columnName);
+			$value = Convert::raw2xml($gridField->getDataFieldValue($record, $columnName));
 		}
 
 		$value = $this->castValue($gridField, $columnName, $value);
@@ -154,8 +161,16 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 	 */
 	public function getColumnMetadata($gridField, $column) {
 		$columns = $this->getDisplayFields($gridField);
+		
+		$title = null;
+		if(is_string($columns[$column])) {
+			$title = $columns[$column];
+		} else if(is_array($columns[$column]) && isset($columns[$column]['title'])) {
+			$title = $columns[$column]['title'];
+		}
+		
 		return array(
-			'title' => $columns[$column],
+			'title' => $title,
 		);
 	}
 	

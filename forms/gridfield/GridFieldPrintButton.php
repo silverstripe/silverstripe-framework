@@ -115,7 +115,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 		foreach($items as $item) {
 			$itemRow = new ArrayList();
 			foreach($printColumns as $field => $label) {
-				$value = $item->relField($field);
+				$value = $gridField->getDataFieldValue($item, $field);
 				$itemRow->push(
 					new ArrayData(array(
 						"CellString" => $value,
