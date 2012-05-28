@@ -326,8 +326,8 @@ class DataQuery {
 	 * 
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
-	function max($field) {
-		return $this->getFinalisedQuery()->aggregate(sprintf('MAX("%s")', Convert::raw2sql($field)))->execute()->value();
+function max($field) {
+	    return $this->aggregate(sprintf('MAX("%s")', Convert::raw2sql($field)));
 	}
 
 	/**
@@ -336,7 +336,7 @@ class DataQuery {
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
 	function min($field) {
-		return $this->getFinalisedQuery()->aggregate(sprintf('MIN("%s")', Convert::raw2sql($field)))->execute()->value();
+	    return $this->aggregate(sprintf('MIN("%s")', Convert::raw2sql($field)));
 	}
 	
 	/**
@@ -345,7 +345,7 @@ class DataQuery {
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
 	function avg($field) {
-		return $this->getFinalisedQuery()->aggregate(sprintf('AVG("%s")', Convert::raw2sql($field)))->execute()->value();
+	    return $this->aggregate(sprintf('AVG("%s")', Convert::raw2sql($field)));
 	}
 
 	/**
@@ -354,7 +354,14 @@ class DataQuery {
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
 	function sum($field) {
-		return $this->getFinalisedQuery()->aggregate(sprintf('SUM("%s")', Convert::raw2sql($field)))->execute()->value();
+	    return $this->aggregate(sprintf('SUM("%s")', Convert::raw2sql($field)));
+	}
+	
+	/**
+	 * Runs a raw aggregate expression.  Please handle escaping yourself
+	 */
+	function aggregate($expression) {
+	    return $this->getFinalisedQuery()->aggregate($expression)->execute()->value();
 	}
 
 	/**
