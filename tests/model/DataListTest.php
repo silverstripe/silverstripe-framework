@@ -169,7 +169,7 @@ class DataListTest extends SapphireTest {
 	 * Test DataList->removeByID()
 	 */
 	function testRemoveByID() {
-		$list = DataObjectTest_TeamComment::get();
+		$list = DataObjectTest_Team::get();
 		$id = $this->idFromFixture('DataObjectTest_Team','team2');
 		
 		$this->assertNotNull($list->byID($id));
