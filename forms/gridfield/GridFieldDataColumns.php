@@ -227,7 +227,7 @@ class GridFieldDataColumns implements GridField_ColumnProvider {
 
 		$spec = $this->fieldFormatting[$fieldName];
 		if(is_callable($spec)) {
-			return $spec($item);
+			return $spec($value, $item);
 		} else {
 			$format = str_replace('$value', "__VAL__", $spec);
 			$format = preg_replace('/\$([A-Za-z0-9-_]+)/', '$item->$1', $format);
