@@ -431,6 +431,30 @@ class i18nTest extends SapphireTest {
 		
 		SS_ClassLoader::instance()->popManifest();
 	}
+
+	function testIncludeByLocaleWithoutFallbackLanguage() {
+		$classManifest = new SS_ClassManifest($this->alternateBasePath, true, true, false);
+		SS_ClassLoader::instance()->pushManifest($classManifest);
+		
+		$adapter = i18n::get_translator('core')->getAdapter();
+		$this->assertTrue($adapter->isAvailable('en'));
+		$this->assertFalse($adapter->isAvailable('mi')); // not defined at all
+		$this->assertFalse($adapter->isAvailable('mi_NZ')); // defined, but not loaded yet
+		$this->assertFalse($adapter->isTranslated('i18nTestModule.ENTITY', 'mi'), 
+			'Existing unloaded entity not available before call'
+		);
+		$this->assertFalse($adapter->isTranslated('i18nTestModule.ENTITY', 'mi_NZ'), 
+			'Non-existing unloaded entity not available before call'
+		);
+
+		i18n::include_by_locale('mi_NZ');
+		
+		$this->assertFalse($adapter->isAvailable('mi'));
+		$this->assertTrue($adapter->isAvailable('mi_NZ'));
+		$this->assertTrue($adapter->isTranslated('i18nTestModule.ENTITY', null, 'mi_NZ'), 'Includes module files');
+		
+		SS_ClassLoader::instance()->popManifest();
+	}
 	
 	function testRegisterTranslator() {
 		$translator = new Zend_Translate(array(
