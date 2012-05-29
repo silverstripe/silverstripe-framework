@@ -216,18 +216,18 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @todo extract the sql from $customQuery into a SQLGenerator class
 	 *
-	 * @param String|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
+	 * @param string|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
 	 * @return DataList
 	 */
 	public function filter() {
 		$numberFuncArgs = count(func_get_args());
 		$whereArguments = array();
-		if($numberFuncArgs == 1 && is_array(func_get_arg(0))){
+		if($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
 			$whereArguments = func_get_arg(0);
 		} elseif($numberFuncArgs == 2) {
 			$whereArguments[func_get_arg(0)] = func_get_arg(1);
 		} else {
-			throw new InvalidArgumentException('Arguments passed to filter() is wrong');
+			throw new InvalidArgumentException('Incorrect number of arguments passed to filter()');
 		}
 
 		$SQL_Statements = array();
@@ -307,19 +307,19 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @todo extract the sql from this method into a SQLGenerator class
 	 *
-	 * @param String|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
+	 * @param string|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
 	 * @return DataList
 	 */
-	public function exclude(){
+	public function exclude() {
 		$numberFuncArgs = count(func_get_args());
 		$whereArguments = array();
-		
-		if($numberFuncArgs == 1 && is_array(func_get_arg(0))){
+
+		if($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
 			$whereArguments = func_get_arg(0);
 		} elseif($numberFuncArgs == 2) {
 			$whereArguments[func_get_arg(0)] = func_get_arg(1);
 		} else {
-			throw new InvalidArgumentException('Arguments passed to exclude() is wrong');
+			throw new InvalidArgumentException('Incorrect number of arguments pased to exclude()');
 		}
 
 		$SQL_Statements = array();
