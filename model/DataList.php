@@ -220,18 +220,26 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return DataList
 	 */
 	public function filter() {
-		$numberFuncArgs = count(func_get_args());
-		$whereArguments = array();
-		if($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
-			$whereArguments = func_get_arg(0);
-		} elseif($numberFuncArgs == 2) {
-			$whereArguments[func_get_arg(0)] = func_get_arg(1);
-		} else {
-			throw new InvalidArgumentException('Incorrect number of arguments passed to filter()');
+		// Validate and process arguments
+		$arguments = func_get_args();
+		switch(sizeof($arguments)) {
+			case 1: $filters = $arguments[0]; break;
+			case 2: $filters = array($arguments[0] => $arguments[1]); break;
+			default:
+				throw new InvalidArgumentException('Incorrect number of arguments passed to filter()');
 		}
+		
+		$clone = clone $this;
+		$clone->addFilter($filters);
+		return $clone;
+	}
 
+	/**
+	 * Modify this DataList, adding a filter
+	 */
+	public function addFilter($filterArray) {
 		$SQL_Statements = array();
-		foreach($whereArguments as $field => $value) {
+		foreach($filterArray as $field => $value) {
 			if(is_array($value)) {
 				$customQuery = 'IN (\''.implode('\',\'',Convert::raw2sql($value)).'\')';
 			} else {
