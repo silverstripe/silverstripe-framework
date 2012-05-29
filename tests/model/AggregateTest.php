@@ -1,7 +1,13 @@
 <?php
 
 /*
- * A hierarchy of data types, to 
+ * A hierarchy of data types, to...
+ *
+ * @deprecated. This is testing`
+ * {@link DataObject::Aggregate()} and {@link DataObject::RelationshipAggregate()}
+ * which are deprecated. Aggregates are handled directly by DataList instead.
+ * This test should be removed or merged into DataListTest once those functions are
+ * removed from DataObject.
  */
 class AggregateTest_Foo extends DataObject implements TestOnly {
 	static $db = array(

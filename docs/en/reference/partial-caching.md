@@ -61,21 +61,21 @@ For example, if we have a menu, we want that menu to update whenever _any_ page 
 otherwise. By using aggregates, that's easy
 
 	:::ss
-	<% cached 'navigation', Aggregate(Page).Max(LastEdited) %>
+	<% cached 'navigation', List(Page).max(LastEdited) %>
 
 
 If we have a block that shows a list of categories, we can make sure the cache updates every time a category is added or
 edited
 
 	:::ss
-	<% cached 'categorylist', Aggregate(Category).Max(LastEdited) %>
+	<% cached 'categorylist', List(Category).max(LastEdited) %>
 
 
 We can also calculate aggregates on relationships. A block that shows the current member's favourites needs to update
 whenever the relationship Member::$has_many = array('Favourites' => Favourite') changes.
 
 	:::ss
-	<% cached 'favourites', CurrentMember.ID, CurrentMember.RelationshipAggregate(Favourites).Max(LastEdited) %>
+	<% cached 'favourites', CurrentMember.ID, CurrentMember.Favourites.max(LastEdited) %>
 
 
 ## Cache key calculated in controller
@@ -89,7 +89,7 @@ logic into the controller
 	    return implode('_', array(
 	        'favourites',
 	        $member->ID,
-	        $member->RelationshipAggregate('Favourites')->Max('LastEdited')
+	        $member->Favourites()->max('LastEdited')
 	    ));
 	}
 
@@ -230,7 +230,7 @@ Can be re-written as:
 	:::ss
 	<% cached LastEdited %>
 	
-	  <% cached RelationshipAggregate(Children).Max(LastEdited) %>
+	  <% cached Children.max(LastEdited) %>
 	    <% control Children %>
 	      $Name
 	    <% end_control %>

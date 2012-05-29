@@ -2659,16 +2659,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @deprecated 3.0 Use DataList::create and DataList to do your querying
 	 */
 	public function Aggregate($class = null) {
-		Deprecation::notice('3.0', 'Use DataList::create and DataList to do your querying instead.');
+		Deprecation::notice('3.0', 'Call aggregate methods on a DataList directly instead. In templates ' .
+			'an example of the new syntax is &lt% cached List(Member).max(LastEdited) %&gt instead (check partial-caching.md documentation ' .
+			'for more details.)');
 
-	    if($class) {
+		if($class) {
 			$list = new DataList($class);
 			$list->setDataModel(DataModel::inst());
 		} else if(isset($this)) {
 			$list = new DataList(get_class($this));
 			$list->setDataModel($this->model);
 		}
-	    else throw new InvalidArgumentException("DataObject::aggregate() must be called as an instance method or passed a classname");
+		else throw new InvalidArgumentException("DataObject::aggregate() must be called as an instance method or passed a classname");
 		return $list;
 	}
 
@@ -2676,9 +2678,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @deprecated 3.0 Use DataList::create and DataList to do your querying
 	 */
 	public function RelationshipAggregate($relationship) {
-		Deprecation::notice('3.0', 'Use DataList::create and DataList to do your querying instead.');
+		Deprecation::notice('3.0', 'Call aggregate methods on a relationship directly instead.');
 
-	    return $this->$relationship();
+		return $this->$relationship();
 	}
 
 	/**
