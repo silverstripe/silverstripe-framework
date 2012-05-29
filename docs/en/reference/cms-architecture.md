@@ -183,6 +183,9 @@ Within the PHP logic, the `[api:PjaxResponseNegotiator]` class determines which 
 Through a custom `X-Pjax` HTTP header, the client can declare which view he's expecting,
 through identifiers like `CurrentForm` or `Content` (see `[api:LeftAndMain->getResponseNegotiator()]`).
 These identifiers are passed to `loadPanel()` via the `pjax` data option.
+Keep in mind that the returned view isn't always decided upon when the Ajax request
+is fired, so the server might decide to change it based on its own logic,
+sending back different `X-Pjax` headers and content.
 
 ## Ajax Redirects
 

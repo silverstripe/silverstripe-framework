@@ -351,6 +351,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	function redirect($url, $code=302) {
 		if($this->request->isAjax()) {
 			$this->response->addHeader('X-ControllerURL', $url);
+			if($header = $this->request->getHeader('X-Pjax')) $this->response->addHeader('X-Pjax', $header);
+			if($header = $this->request->getHeader('X-Pjax-Selector')) $this->response->addHeader('X-Pjax-Selector', $header);
 			return ''; // Actual response will be re-requested by client
 		} else {
 			parent::redirect($url, $code);

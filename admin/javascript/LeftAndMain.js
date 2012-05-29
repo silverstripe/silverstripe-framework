@@ -36,13 +36,13 @@ jQuery.noConflict();
 		$(document).ajaxComplete(function(e, xhr, settings) {
 			// Simulates a redirect on an ajax response.
 			if(window.History.enabled) {
-				var url = xhr.getResponseHeader('X-ControllerURL');
+				var url = xhr.getResponseHeader('X-ControllerURL'), opts, requestHeaders = settings.headers;
 				// Normalize trailing slashes in URL to work around routing weirdnesses in SS_HTTPRequest.
 				var isSame = (url && History.getPageUrl().replace(/\/+$/, '') == url.replace(/\/+$/, ''));
 				if(url && !isSame) {
-					var opts = {
-						pjax: settings.headers ? settings.headers['X-Pjax'] : null, 
-						selector: settings.headers ? settings.headers['X-Pjax-Selector'] : null
+					opts = {
+						pjax: xhr.getResponseHeader('X-Pjax') ? xhr.getResponseHeader('X-Pjax') : settings.headers['X-Pjax'], 
+						selector: xhr.getResponseHeader('X-Pjax-Selector') ? xhr.getResponseHeader('X-Pjax-Selector') : settings.headers['X-Pjax-Selector']
 					};
 					window.History.pushState(opts, '', url);
 				}
@@ -216,11 +216,14 @@ jQuery.noConflict();
 					state: state, element: contentEl
 				});
 
+				// Set Pjax headers, which can declare a preference for the returned view.
+				// The actually returned view isn't always decided upon when the request
+				// is fired, so the server might decide to change it based on its own logic.
 				var headers = {};
 				if(state.data.pjax) {
 					headers['X-Pjax'] = state.data.pjax;
 				} else {
-					// Replace full RHS content area
+					// Standard Pjax behaviour is to replace right content area
 					headers["X-Pjax"] = 'Content';
 				}
 				headers['X-Pjax-Selector'] = selector;

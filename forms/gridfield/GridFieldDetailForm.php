@@ -291,9 +291,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		if($this->record->ID !== 0) {
 			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
 				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'));
-			// The delete action will redirect, hence pjax-content class.
 			$actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
-				->addExtraClass('ss-ui-action-destructive')->addExtraClass('pjax-content'));
+				->addExtraClass('ss-ui-action-destructive'));
 		}else{ // adding new record
 			//Change the Save label to 'Create'
 			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Create', 'Create'))
@@ -405,6 +404,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		//when an item is deleted, redirect to the revelant admin section without the action parameter
 		$controller = Controller::curr();
 		$noActionURL = $controller->removeAction($data['url']);
+		$controller->getRequest()->addHeader('X-Pjax', 'Content'); // Force a content refresh
 
 		return $controller->redirect($noActionURL, 302); //redirect back to admin section
 	}
