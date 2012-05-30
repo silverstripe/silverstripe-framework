@@ -195,6 +195,8 @@
 				this[this.hasClass('is-collapsed') ? 'expand' : 'collapse']();
 			},
 			redraw: function() {
+				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
+				
 				this.layout();
 			}
 		});

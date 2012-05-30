@@ -125,6 +125,8 @@ jQuery.noConflict();
 			},
 			
 			redraw: function() {
+				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
+
 				// Move from inner to outer layouts. Some of the elements might not exist.
 				// Not all edit forms are layouted, so qualify by their data value.
 				this.find('.cms-content-fields[data-layout-type]').redraw(); 
@@ -306,6 +308,8 @@ jQuery.noConflict();
 		
 		$('.cms-content-fields').entwine({
 			redraw: function() {
+				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
+
 				this.layout();
 			}
 		});
@@ -456,6 +460,8 @@ jQuery.noConflict();
 				this._super();
 			},
 			redraw: function() {
+				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
+
 				// Remove whitespace to avoid gaps with inline elements
 				this.contents().filter(function() { 
 					return (this.nodeType == 3 && !/\S/.test(this.nodeValue)); 
@@ -535,6 +541,8 @@ jQuery.noConflict();
 	
 		$(".cms-panel-layout").entwine({
 			redraw: function() {
+				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
+
 				this.layout({
 					resize: false
 				});
@@ -626,6 +634,8 @@ jQuery.noConflict();
 				this._super();
 			},
 			redraw: function() {
+				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
+
 				var self = this, url = this.data('url');
 				if(!url) throw 'Elements of class .cms-panel-deferred need a "data-url" attribute';
 
