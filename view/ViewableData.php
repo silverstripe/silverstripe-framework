@@ -68,7 +68,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return string
 	 */
 	public static function castingObjectCreator($fieldSchema) {
-		user_error("Deprecated in a breaking way, use Object::create_from_string()", E_USER_WARNING);
+		Deprecation::notice('2.5', 'Use Object::create_from_string() instead');
 	}
 	
 	/**
@@ -79,7 +79,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return array
 	 */
 	public static function castingObjectCreatorPair($fieldSchema) {
-		user_error("Deprecated in a breaking way, use Object::create_from_string()", E_USER_WARNING);
+		Deprecation::notice('2.5', 'Use Object::create_from_string() instead');
 	}
 	
 	// FIELD GETTERS & SETTERS -----------------------------------------------------------------------------------------
