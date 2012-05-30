@@ -437,6 +437,22 @@ jQuery.noConflict();
 		});
 
 		/**
+		 * Add loading overlay to selected regions in the CMS automatically.
+		 * Not applied to all "*.loading" elements to avoid secondary regions
+		 * like the breadcrumbs showing unnecessary loading status.
+		 */
+		$('form.loading,.cms-content.loading,.cms-content-fields.loading,.cms-content-view.loading').entwine({
+			onmatch: function() {
+				this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>');
+				this._super();
+			},
+			onunmatch: function() {
+				this.find('.cms-content-loading-overlay,.cms-content-loading-spinner').remove();
+				this._super();
+			}
+		});
+
+		/**
 		 * Make all buttons "hoverable" with jQuery theming.
 		 * Also sets the clicked button on a form submission, making it available through
 		 * a new 'clickedButton' property on the form DOM element.
