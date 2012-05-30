@@ -40,16 +40,12 @@ class PjaxResponseNegotiator {
 	 */
 	public function respond(SS_HTTPRequest $request, $extraCallbacks = array()) {
 		// Prepare the default options and combine with the others
-		$callbacks = array_merge(
-			array_change_key_case($this->callbacks, CASE_LOWER),
-			array_change_key_case($extraCallbacks, CASE_LOWER)
-		);
-
+		$callbacks = array_merge($this->callbacks, $extraCallbacks);
 		$response = new SS_HTTPResponse();
 		
 		$responseParts = array();
 		if($fragmentStr = $request->getHeader('X-Pjax')) {
-			$fragments = explode(',', strtolower($fragmentStr));
+			$fragments = explode(',', $fragmentStr);
 			foreach($fragments as $fragment) {
 				if(isset($callbacks[$fragment])) {
 					$responseParts[$fragment] = call_user_func($callbacks[$fragment]);
