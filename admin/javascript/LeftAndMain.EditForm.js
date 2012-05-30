@@ -29,7 +29,6 @@
 		 * Events:
 		 *  ajaxsubmit - Form is about to be submitted through ajax
 		 *  validate - Contains validation result
-		 *  removeform - A form is about to be removed from the DOM
 		 *  load - Form is about to be loaded through ajax
 		 */
 		$('.cms-edit-form').entwine(/** @lends ss.Form_EditForm */{	
@@ -158,7 +157,7 @@
 				// which means the browser auto-selects the first available form button.
 				// This might be an unrelated button of the form field,
 				// or a destructive action (if "save" is not available, or not on first position).
-				if(button) this.closest('.cms-content').submitForm(this, button);
+				if(button) this.closest('.cms-container').submitForm(this, button);
 				
 				return false;
 			},
