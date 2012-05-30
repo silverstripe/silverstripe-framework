@@ -227,7 +227,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return array
 	 */
 	public function castingHelperPair($field) {
-		user_error("castingHelperPair() Deprecated, use castingHelper() instead", E_USER_NOTICE);
+		Deprecation::notice('2.5', 'use castingHelper() instead');
 		return $this->castingHelper($field);
 	}
 
