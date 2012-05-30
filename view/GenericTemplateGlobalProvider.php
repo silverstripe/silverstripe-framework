@@ -3,7 +3,8 @@ class GenericTemplateGlobalProvider implements TemplateGlobalProvider {
 
 	public static function get_template_global_variables() {
 		return array(
-			'ModulePath'
+			'ModulePath',
+			'List' => 'getDataList'
 		);
 	}
 
@@ -28,6 +29,25 @@ class GenericTemplateGlobalProvider implements TemplateGlobalProvider {
 		} else {
 			throw new InvalidArgumentException(sprintf('%s is not a supported argument. Possible values: %s', $name, implode(', ', self::$modules)));
 		}
+	}
+
+	/**
+	 * This allows templates to create a new `DataList` from a known
+	 * DataObject class name, and call methods such as aggregates.
+	 *
+	 * The common use case is for partial caching:
+	 * <code>
+	 *	<% cached List(Member).max(LastEdited) %>
+	 *		loop members here
+	 *	<% end_cached %>
+	 * </code>
+	 *
+	 * @return DataList
+	 */
+	public static function getDataList($className) {
+		$list = new DataList($className);
+		$list->setDataModel(DataModel::inst());
+		return $list;
 	}
 
 }
