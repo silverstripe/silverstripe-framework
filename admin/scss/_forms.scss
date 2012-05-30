@@ -89,6 +89,17 @@ form.nostyle {
 		max-width: $grid-x * 64;
 		@include box-sizing(border-box);
 	}
+
+	// Small fields have a second set of headers
+	.fieldholder-small {
+		margin-top: $grid-y;
+		label {
+			padding-top: $grid-x;
+			width: $grid-x * 8;
+			float: left;
+			margin-left: $grid-x * -8;
+		}
+	}
 	
 	input.text, 
 	textarea,
