@@ -16,7 +16,7 @@ class Cookie {
 	 * Set a cookie variable
 	 * 
 	 * @param string $name The variable name
-	 * @param string $value The variable value.  May be an array or object if you wish.
+	 * @param string $value The variable value.
 	 * @param int $expiry The expiry time, in days. Defaults to 90.
 	 * @param string $path See http://php.net/set_session
 	 * @param string $domain See http://php.net/set_session
