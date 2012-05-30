@@ -810,7 +810,7 @@ jQuery.noConflict();
 				this.rewriteHashlinks();
 
 				var id = this.attr('id'), cookieId = 'ui-tabs-' + id, 
-					selectedTab = this.find('ul:first .ui-state-selected');
+					selectedTab = this.find('ul:first .ui-tabs-selected');
 
 				// Fix for wrong cookie storage of deselected tabs
 				if($.cookie && id && $.cookie(cookieId) == -1) $.cookie(cookieId, 0);
