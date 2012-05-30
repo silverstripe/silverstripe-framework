@@ -53,18 +53,8 @@ class PjaxResponseNegotiator {
 					throw new SS_HTTPResponse_Exception("X-Pjax = '$fragment' not supported for this URL.", 400);
 				}
 			}
-			if(count($responseParts) == 1) {
-				$response->setBody(array_pop($responseParts));
-			} else {
-				if($request->getHeader('Accept') != 'text/json') {
-					throw new SS_HTTPResponse_Exception(
-						'Multiple comma-separated fragments can only be returne with an "Accept: text/json" header',
-						400
-					);
-				}
-				$response->setBody(Convert::raw2json($responseParts));
-				$response->addHeader('Content-Type', 'text/json');
-			}
+			$response->setBody(Convert::raw2json($responseParts));
+			$response->addHeader('Content-Type', 'text/json');
 		} else {
 			if($request->isAjax()) throw new SS_HTTPResponse_Exception("Ajax requests to this URL require an X-Pjax header.", 400);
 			$response->setBody(call_user_func($callbacks['default']));
