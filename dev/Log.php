@@ -76,24 +76,6 @@ class SS_Log {
 	protected static $logger;
 
 	/**
-	 * @var array Logs additional context from PHP's superglobals.
-	 * Caution: Depends on logger implementation (mainly targeted at {@link SS_LogEmailWriter}).
-	 * @see http://framework.zend.com/manual/en/zend.log.overview.html#zend.log.overview.understanding-fields
-	 */
-	static $log_globals = array(
-		'_SERVER' => array(
-			'HTTP_ACCEPT',
-			'HTTP_ACCEPT_CHARSET', 
-			'HTTP_ACCEPT_ENCODING', 
-			'HTTP_ACCEPT_LANGUAGE', 
-			'HTTP_REFERRER',
-			'HTTP_USER_AGENT',
-			'HTTPS',
-			'REMOTE_ADDR',
-		),
-	);
-
-	/**
 	 * Get the logger currently in use, or create a new one if it doesn't exist.
 	 * 
 	 * @return object
@@ -102,14 +84,6 @@ class SS_Log {
 		if(!self::$logger) {
 			// Create default logger
 			self::$logger = new self::$logger_class;
-
-			// Add default context (shouldn't change until the actual log event happens)
-			foreach(self::$log_globals as $globalName => $keys) {
-				foreach($keys as $key) {
-					$val = @$GLOBALS[$globalName][$key];
-					self::$logger->setEventItem(sprintf('$%s[\'%s\']', $globalName, $key), $val);
-				}
-			}
 
 		}
 		return self::$logger;

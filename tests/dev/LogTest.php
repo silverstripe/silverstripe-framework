@@ -106,4 +106,31 @@ class SS_LogTest extends SapphireTest {
 		);
 	}
 
+	function testAddEventItemCallback() {
+		$writer = new SS_LogTest_Writer();
+		$logger = new SS_ZendLog();
+		$logger->addEventItemCallback('test', function() {
+			return array('extrakey' => 'extraval');
+		});
+		$logger->addWriter($writer);
+		$logger->log('test event', Zend_Log::DEBUG, array('paramkey' => 'paramval'));
+		$eventData = $writer->events[0];
+		$this->assertArrayHasKey('paramkey', $eventData);
+		$this->assertEquals('paramval', $eventData['paramkey']);
+		$this->assertArrayHasKey('extrakey', $eventData);
+		$this->assertEquals('extraval', $eventData['extrakey']);
+	}
+
+}
+
+class SS_LogTest_Writer extends Zend_Log_Writer_Abstract implements TestOnly {
+	public $events;
+
+	public static function factory($config) {
+		return new SS_LogTest_Writer();
+	}
+
+	protected function _write($event) {
+		$this->events[] = $event;
+	}
 }
