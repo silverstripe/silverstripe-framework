@@ -171,8 +171,10 @@ method to the *ArticlePage* class.
 		public function getCMSFields() {
 			$fields = parent::getCMSFields();
 			
-			$fields->addFieldToTab('Root.Content', new DateField('Date'), 'Content');
-			$fields->addFieldToTab('Root.Content', new TextField('Author'), 'Content');
+			$datefield = new DateField('Date');
+			$datefield->setConfig('showcalendar', true);
+			$fields->addFieldToTab('Root.Main', $datefield, 'Content');
+			$fields->addFieldToTab('Root.Main', new TextField('Author'), 'Content');
 			
 			return $fields;
 		}
@@ -192,13 +194,14 @@ Firstly, we get the fields from the parent class; we want to add fields, not rep
 returned is a `[api:FieldList]` object.
 
 	:::php
-	$fields->addFieldToTab('Root.Content', new DateField('Date'), 'Content');
-	$fields->addFieldToTab('Root.Content', new TextField('Author'), 'Content');
+	$fields->addFieldToTab('Root.Main', new TextField('Author'), 'Content');
+	$fields->addFieldToTab('Root.Main', new DateField('Date'), 'Content');
 
 
 We can then add our new fields with *addFieldToTab*. The first argument is the tab on which we want to add the field to:
-"Root.Content" is the tab which the content editor is on. The second argument is the field to add; this is not a
-database field, but a `[api:FormField]` documentation for more details.
+"Root.Main" is the tab which the content editor is on (another is "Root.Metadata". The second argument is the field to add; this is not a database field, but a `[api:FormField]` - see the documentation for more details.
+
+We add two fields: A simple `[api:TextField}` and a `[api:DateField]`. There are many more FormFields available in the default installation, please refer to [Form Field Types](form-field-types) for the list.
 
 	:::php
 	return $fields;
@@ -214,10 +217,11 @@ named "News", and create some *ArticlePage*s inside it.
 
 ##  Modifing the date field
 
-**Please note:** As of version 2.4, the DateField type no longer automatically adds a javascript datepicker. Your date field will look just like a text field. 
+At the moment, your date field will look just like a text field. 
 This makes it confusing and doesn't give the user much help when adding a date. 
 
-To make the date field a bit more user friendly, you can add a dropdown calendar, set the date format and add better title.
+To make the date field a bit more user friendly, you can add a dropdown calendar, set the date format and add better title. By default,
+the date field will have the date format defined by your locale.
 
 	:::php
 	<?php
@@ -229,11 +233,11 @@ To make the date field a bit more user friendly, you can add a dropdown calendar
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		
-		$fields->addFieldToTab('Root.Content', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
+		$fields->addFieldToTab('Root.Main', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
 		$dateField->setConfig('showcalendar', true);
 		$dateField->setConfig('dateformat', 'dd/MM/YYYY');
 		
-		$fields->addFieldToTab('Root.Content', new TextField('Author','Author Name'), 'Content');
+		$fields->addFieldToTab('Root.Main', new TextField('Author','Author Name'), 'Content');
 		
 		return $fields;
 	}
@@ -243,7 +247,7 @@ Let's walk through these changes.
 	:::php
 	$fields->addFieldToTab('Root.Content', $dateField = new DateField('Date','Article Date (for example: 20/12/2010)'), 'Content');
 
-*$dateField* is added only to the DateField in order to change the configuration.
+*$dateField* is declared only to in order to change the configuration of the DateField.
 
 	:::php
 	$dateField->setConfig('showcalendar', true);
@@ -258,8 +262,8 @@ Set *showCalendar* to true to have a calendar appear underneath the Date field w
 	:::php
 	$fields->addFieldToTab('Root.Content', new TextField('Author','Author Name'), 'Content');
 
-By default the first argument *'Date'* or *'Author'* is shown as the title, however this might not be that helpful so to change the title,
-add the new title as the second argument. See the `[api:DateField]` documentation for more details.
+By default the field name *'Date'* or *'Author'* is shown as the title, however this might not be that helpful so to change the title,
+add the new title as the second argument. See the `[api:DateField]` documentation for more details of the DateField configuration.
 
 
 ##  Creating the templates
@@ -273,41 +277,32 @@ page layout.
 
 First, the template for displaying a single article:
 
-**themes/tutorial/templates/Layout/ArticlePage.ss**
+**themes/simple/templates/Layout/ArticlePage.ss**
+
 
 	:::ss
-	<% if Menu(2) %>
-		<ul id="Menu2">
-			<% control Menu(2) %>
-				<li class="$LinkingMode"><a href="$Link" title="Go to the $Title page">$MenuTitle</a></li>
-			<% end_control %>
-		</ul>
-	<% end_if %>
-	
-	<div id="Content" class="typography">
-		<% if Level(2) %>
-			<div class="breadcrumbs">
-				$Breadcrumbs
+	<div class="content-container"> 
+		<article>
+			<h1>$Title</h1>
+			<div class="news-details">
+				<p>Posted on $Date.Nice by $Author</p>
 			</div>
-		<% end_if %>
-				
-		<h1>$Title</h1>
-		$Content
-		<div class="newsDetails">
-			Posted on $Date.Nice by $Author
-		</div>
+			<div class="content">$Content</div>
+		</article>
+			$Form
+			$PageComments
 	</div>
+	<% include SideBar %>
 
 
-The first block of code is our regular second level menu; we also have our regular breadcrumbs code here. We will see
-how to remove these blocks of repetitive code in a bit.
+Most of the code is just like the regular Page.ss, we include an informational div with the date and the author of the Article.
 
 We use *$Date* and *$Author* to access the new fields. In fact, all template variables and page controls come from
-either the data object or the controller for the page being displayed. The *$Breadcrumbs* variable comes from the
-*Breadcrumbs()* method of the `[api:SiteTree]` class. *$Date* and *$Author* come from the *Article* table through
-your data object. *$Content* comes from the *SiteTree* table through the same data object. The data for your page is
+either the data object or the controller for the page being displayed. The *$Title* variable comes from the
+*Title* field of the `[api:SiteTree]` class. *$Date* and *$Author* come from the *ArticlePage* table through
+your custom Page. *$Content* comes from the *SiteTree* table through the same data object. The data for your page is
 spread across several tables in the database matched by id - e.g. *Content* is in the *SiteTree* table, and *Date* and
-*Author* are in the *Article* table. SilverStripe matches these records by their ids and collates them into the single
+*Author* are in the *ArticlePage* table. SilverStripe matches these records by their ids and collates them into the single
 data object.
 
 ![](_images/data-collation.jpg)
@@ -321,97 +316,77 @@ database.
 Now we'll create a template for the article holder: we want our news section to show a list of news items, each with a
 summary.
 
-**themes/tutorial/templates/Layout/ArticleHolder.ss**
+**themes/simple/templates/Layout/ArticleHolder.ss**
 
 	:::ss
-	<div id="Content" class="typography">		
-		$Content
-		<ul id="NewsList">
-			<% control Children %>
-				<li class="newsDateTitle"><a href="$Link" title="Read more on &quot;{$Title}&quot;">$Title</a></li>
-				<li class="newsDateTitle">$Date.Nice</li>
-				<li class="newsSummary">$Content.FirstParagraph <a href="$Link" title="Read more on &quot;{$Title}&quot;">Read more &gt;&gt;</a></li>
-			<% end_control %>
-		</ul>
+	<div class="content-container">     
+		<article>
+			<h1>$Title</h1>
+			$Content        
+			<div class="content">$Content</div>
+		</article>
+		<% loop Children %>
+			<article>
+				<h2><a href="$Link" title="Read more on &quot;{$Title}&quot;">$Title</a></h2>
+				<p>$Content.FirstParagraph</p>
+				<a href="$Link" title="Read more on &quot;{$Title}&quot;">Read more &gt;&gt;</a>
+			</article>
+		<% end_loop %>
+			$Form
 	</div>
+	<% include SideBar %>
 
 
 Here we use the page control *Children*. As the name suggests, this control allows you to iterate over the children of a
 page, which in this case is our news articles. The *$Link* variable will give the address of the article which we can
 use to create a link, and the *FirstParagraph* function of the `[api:HTMLText]` field gives us a nice summary of the
-article.
+article. The function strips all tags from the paragraph extracted.
 
 ![](_images/articleholder.jpg)
-
-Remember that the visual styles are not part of the CMS, they are defined in the tutorial CSS file.
 
 
 ### Using include files in templates
 
-The second level menu is something we want in most, but not all, pages so we can't put it in the base template. By
-putting it in a separate file in the *tutorial/templates/Includes* folder, we can use `<% include templatename %>` to
-include it in our other templates. Separate the second level menu into a new file *themes/tutorial/templates/Includes/Menu2.ss*.
+You can make your templates more modular and easier to maintain by separating commonly-used pieces into include files. 
+You are already familiar with the `<% include Sidebar %>`-Line for the menu.
 
-**themes/tutorial/templates/Includes/Menu2.ss**
+We'll separate the display of linked articles as we want to reuse this code later on.
 
-	:::ss
-	<% if Menu(2) %>
-		<ul id="Menu2">
-			<% control Menu(2) %>
-				<li class="$LinkingMode"><a href="$Link" title="Go to the $Title page">$MenuTitle</a></li>
-			<% end_control %>
-		</ul>
-	<% end_if %>
+Replace the code in *ArticleHolder.ss** with an include statement:
 
-
-And then replace the second level menu with `<% include Menu2 %>` in *Page.ss* and *ArticlePage.ss* like so:
-
-**themes/tutorial/templates/Layout/Page.ss**, **themes/tutorial/templates/Layout/ArticlePage.ss**
-
-	:::ss
-	<% include Menu2 %>
-	 
-	<div id="Content" class="typography">
-	...
-
-
-Do the same with the breadcrumbs:
-
-**themes/tutorial/templates/Includes/Breadcrumbs.ss**
-
-	:::ss
-	<% if Level(2) %>
-	<div class="breadcrumbs">
-		$Breadcrumbs
-	</div>
-	<% end_if %>
-
-
-**themes/tutorial/templates/Layout/Page.ss**, **themes/tutorial/templates/Layout/ArticlePage.ss**
+**themes/simple/templates/Layout/ArticleHolder.ss**
 
 	:::ss
 	...
-	<div id="Content" class="typography">
-		<% include Breadcrumbs %>
+	<% loop Children %>
+		<% include ArticleTeaser %>
+	<% end_loop %>
 	...
 
+and paste the code in a new include snippet:
 
-You can make your templates more modular and easier to maintain by separating commonly-used pieces into include files.
+**themes/simple/templates/Includes/ArticleTeaser.ss**
 
-
+	:::ss
+	<article>
+		<h2><a href="$Link" title="Read more on &quot;{$Title}&quot;">$Title</a></h2>
+		<p>$Content.FirstParagraph</p>
+		<a href="$Link" title="Read more on &quot;{$Title}&quot;">Read more &gt;&gt;</a>
+	</article>
+		
 ### Changing the icons of pages in the CMS
 
 Let's now make a purely cosmetic change that nevertheless helps to make the information presented in the CMS clearer.
 Add the following field to the *ArticleHolder* and *ArticlePage* classes:
 
 	:::php
-	static $icon = "themes/tutorial/images/treeicons/news";
+	static $icon = "themes/simple/images/treeicons/news";
 
 
 And this one to the *HomePage* class:
 
 	:::php
-	static $icon = "themes/tutorial/images/treeicons/home";
+	static $icon = "themes/simple/images/treeicons/home";
 
 
 This will change the icons for the pages in the CMS.  
@@ -432,28 +407,25 @@ control. We can get the data for the news articles by implementing our own funct
 	:::php
 	...
 	public function LatestNews($num=5) {
-		$news = DataObject::get_one("ArticleHolder");
-		return ($news) ? DataObject::get("ArticlePage", "ParentID = $news->ID", "Date DESC", "", $num) : false;
+		$holder = DataObject::get_one("ArticleHolder");        
+		return ($holder) ? DataList::create('ArticlePage')->where('"ParentID" = '.$holder->ID)->sort('Date DESC')->limit($num) : false;
 	}
 	...
 
 
 This function simply runs a database query that gets the latest news articles from the database. By default, this is
-five, but you can change it by passing a number to the function. See the `[api:DataObject]` documentation for
+five, but you can change it by passing a number to the function. See the [Data Model](../topics/datamodel) documentation for
 details. We can reference this function as a page control in our *HomePage* template:
 
 **themes/tutorial/templates/Layout/Homepage.ss**
 
 	:::ss
 	...
-	$Content
-	<ul id="NewsList">
-		<% control LatestNews %>
-			<li class="newsDateTitle"><a href="$Link" title="Read more on &quot;{$Title}&quot;">$Title</a></li>
-			<li class="newsDateTitle">$Date.Nice</li>
-			<li class="newsSummary">$Content.FirstParagraph<a href="$Link" title="Read more on &quot;{$Title}&quot;">Read more &gt;&gt;</a></li>
-		<% end_control %>
-	</ul>
+	<div class="content">$Content</div>
+	</article>
+	<% loop LatestNews %>
+		<% include ArticleTeaser %>
+	<% end_loop %>
 	...
 
 
@@ -505,7 +477,7 @@ called when the page is requested. Add this function to *ArticleHolder_Controlle
 
 This automatically generates a link-tag in the header of our template. The *init* function is then called on the parent
 class to ensure any initialization the parent would have done if we hadn't overridden the *init* function is still
-called. In Firefox you can see the RSS feed link in the address bar:
+called. Depending on your browser, you can see the RSS feed link in the address bar:
 
 ![](_images/rss.jpg)
 
@@ -553,7 +525,7 @@ insert an image in the *$Content* field).
 		public function getCMSFields() {
 			$fields = parent::getCMSFields();
 			
-			$fields->addFieldToTab("Root.Content.Images", new UploadField('Photo'));
+			$fields->addFieldToTab("Root.Images", new UploadField('Photo'));
 			
 			return $fields;
 		}
@@ -569,44 +541,42 @@ a simple database field like all the fields we have seen so far, but has its own
 array, we create a relationship between the *StaffPage* table and the *Image* table by storing the id of the respective
 *Image* in the *StaffPage* table.
 
-We then add an `[api:UploadField]` in the *getCMSFields* function to the tab "Root.Content.Images". Since this tab doesn't exist,
-the *addFieldToTab* function will create it for us. The *ImageField* allows us to select an image or upload a new one in
+We then add an `[api:UploadField]` in the *getCMSFields* function to the tab "Root.Images". Since this tab doesn't exist,
+the *addFieldToTab* function will create it for us. The *UploadField* allows us to select an image or upload a new one in
 the CMS.
 
 ![](_images/photo.jpg)
 
 Rebuild the database ([http://localhost/dev/build?flush=1](http://localhost/dev/build?flush=1)) and open the CMS. Create
-a new *StaffHolder* called "Staff" in the "About Us" section, and create some *StaffPage*s in it.
+a new *StaffHolder* called "Staff", and create some *StaffPage*s in it.
 
 ![](_images/create-staff.jpg)
-
-
-
 
 
 ### Creating the staff section templates
 
 The staff section templates aren't too difficult to create, thanks to the utility methods provided by the `[api:Image]` class.
 
-**themes/tutorial/templates/Layout/StaffHolder.ss**
+**themes/simple/templates/Layout/StaffHolder.ss**
 
 	:::ss
-	<% include Menu2 %>
-	
-	<div id="Content" class="typography">
-		<% include Breadcrumbs %>
-		$Content
-		
-		<ul id="StaffList">
-			<% control Children %>
-			<li>
-				<div class="staffname"><a href="$Link">$Title</a></div>
-				<div class="staffphoto">$Photo.SetWidth(50)</div>
-				<div class="staffdescription"><p>$Content.FirstSentence</p></div>
-			</li>
-			<% end_control %>
-		</ul>
+	<div class="content-container">     
+		<article>
+			<h1>$Title</h1>
+			$Content        
+			<div class="content">$Content</div>
+		</article>
+		<% loop Children %>
+			<article>
+				<h2><a href="$Link" title="Read more on &quot;{$Title}&quot;">$Title</a></h2>
+				$Photo.SetWidth(150)
+				<p>$Content.FirstParagraph</p>
+				<a href="$Link" title="Read more on &quot;{$Title}&quot;">Read more &gt;&gt;</a>
+			</article>
+		<% end_loop %>
+			$Form
 	</div>
+	<% include SideBar %>
 
 
 This template is very similar to the *ArticleHolder* template. The *SetWidth* method of the `[api:Image]` class
@@ -620,18 +590,17 @@ The *StaffPage* template is also very straight forward.
 **themes/tutorial/templates/Layout/StaffPage.ss**
 
 	:::ss
-	<% include Menu2 %>
-	
-	<div id="Content" class="typography">
-		<% include Breadcrumbs %>
-		
-		<div id="StaffPhoto">
-			$Photo.SetWidth(150)
-		</div>
-		
-		$Content
+	<div class="content-container"> 
+		<article>
+			<h1>$Title</h1>
+			<div class="content">
+				$Photo.SetWidth(433)
+				$Content</div>
+		</article>
+			$Form
+			$PageComments
 	</div>
-
+	<% include SideBar %>
 
 Here we also use the *SetWidth* function to get a different sized image from the same source image. You should now have
 a complete staff section.
