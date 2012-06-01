@@ -30,9 +30,7 @@ This tutorial uses the SilverStripe CMS default theme 'Simple' which you will fi
 
 After installation, open up the folder where you installed SilverStripe. 
 
-If you installed on windows with WAMP, it will likely be at *c:\wamp\wwww*. 
-
-If you installed on Mac OS X with MAMP, it will likely be at */Applications/MAMP/htdocs/*
+If you installed on windows with WAMP, it will likely be at *c:\wamp\wwww*. On Mac OS X with MAMP, it will likely be at */Applications/MAMP/htdocs/*
 
 Let's have a look at the folder structure.
 
@@ -50,18 +48,18 @@ When designing your site you should only need to modify the *mysite*, *themes* a
 
 ### User Interface Basics
 
-![](_images/cms-basic.jpg)
+![](_images/tutorial1_cms-basic.jpg)
 
 The CMS is the area in which you can manage your site content. You can access the cms at http://localhost/admin (or http://yourdomain.com/admin if you are using you own domain name). You
 will be presented with a login screen. You can login with the details you provided at installation. After logging in you
 should be greeted with the CMS and a list of the pages currently in the CMS. Here you can add, delete and reorganize the pages using the buttons at the top. Clicking on a page will open it in the page editing interface pictured below (we've entered some test content).
 
-![](_images/cms-numbered.jpg)
+![](_images/tutorial1_cms-numbered.jpg)
 
 1.  These buttons allow you to move between the different sections in the CMS. There are four core sections in the CMS - Pages, Files, Users and Settings. Modules may have their own sections here as well, if any are installed. In this tutorial we will be focusing on the Pages and Edit Page section.
 2.  While in Page Edit you can quickly move between the pages in the CMS by clicking the vertical bar between the CMS menu and the editor. This will slide out the Pages Sidebar. To hide this, click the arrow at the bottom of the Sidebar.
 
-![](_images/cms-numbered-2b.jpg)
+![](_images/tutorial1_cms-numbered-2b.jpg)
 
 3.  This section allows you to edit the content for the currently selected page, as well as changing other properties of the page such as the page name and URL. The content editor has full [WYSIWYG](http://en.wikipedia.org/wiki/WYSIWYG) abilities, allow you to change formatting and insert links, images and tables.
 4.  These buttons allow you to save your changes to the draft copy, publish your draft copy, unpublish from the live website or remove a page from the draft website. 
@@ -73,7 +71,7 @@ Once you have selected a page to modify from the Pages section your page will op
 
 The Edit Page section has 3 main areas in which you can edit the content of the page, change the settings and track your revision history (These will be covered in more detail further on in the tutorials).
 
-![](_images/editpage-numbered.jpg)
+![](_images/tutorial1_editpage-numbered.jpg)
 
 1.  *Content* - Allows you to set the title, wysiwyg content, URL and Meta data for your page.
 2.  *Settings* - Here you set the type of page behavior, parent page, show in search, show in menu, and who can view or edit the page.
@@ -90,9 +88,9 @@ When you create a new page, you are given a drop down that allows you to set the
 The page type specifies the templates used to render the page, the fields that are able to be edited in the CMS, and page specific
 behavior. We will explain page types in more depth as we progress; for now, make all pages of the type "Page".
 
-![](_images/addpage.jpg)
+![](_images/tutorial1_addpage.jpg)
 
-**SilverStripe's virtual URLs**
+**SilverStripe's friendly URLs**
 
 While you are on the draft or live SilverStripe site, you may notice the URLs point to files that don't exist, e.g.
 http://localhost/contact or http://yourdomainname.com/about-us etc. SilverStripe uses the URL field on the Meta-Data tab of the Edit Page -> Content section to look up the appropriate
@@ -100,7 +98,7 @@ page in the database.
 
 Note that if you have sub-pages, changing the Top level URL field for a page will affect the URL for all sub-pages. For example, if we changed the URL field "/about-us/" to "/about-silverstripe/" then the sub-pages URLs would now be "/about-silverstripe/URL-of-subpage/" rather than "/about-us/URL-of-subpage/".
 
-![](_images/url.jpg)
+![](_images/tutorial1_url.jpg)
 
 When you create a new page, SilverStripe automatically creates an appropriate URL for it. For example, *About Us* will
 become *about-us*. You are able to change it yourself so that you can make long titles more usable or descriptive. For
@@ -172,7 +170,7 @@ Then, using a loop over the page control *Menu(1)*, we add a link to the list fo
 
 This creates the navigation at the top of the page:
 
-![](_images/menu.jpg)
+![](_images/tutorial1_menu.jpg)
 
 
 
@@ -189,11 +187,11 @@ A useful feature is highlighting the current page the user is looking at. We can
 
 Highlighting the current page is easy, simply assign a css class based on the value of *$LinkingMode*. Then provide a different style for current/section in css, as has been provided for you in *simple/css/layout.css*. 
 
-![](_images/menu-highlighted.jpg)
+![](_images/tutorial1_menu-highlighted.jpg)
 
 ## A second level of navigation
 
-The top navigation system is currently quite restrictive. Currently there is no way to
+The top navigation system is currently quite restrictive. There is no way to
 nest pages, we have a completely flat site. Adding a second level in SilverStripe is easy. First (if you haven't already done so), let's add some pages. 
 
 The "About Us" section could use some expansion. 
@@ -204,7 +202,7 @@ You can also create the pages elsewhere on the site tree, and drag and drop the 
 
 Either way, your site tree should now look something like this:
 
-![](_images/2nd_level-cut.jpg)
+![](_images/tutorial1_2nd_level-cut.jpg)
 
 Great, we now have a hierarchical site structure, let's now look at how this is created and displayed in our template.
 
@@ -265,7 +263,7 @@ This shows how the two level navigation system functions. Both menus should be u
 from page to page. They will also mirror changes done in the SilverStripe CMS, such as renaming pages or moving them
 around.
 
-![](_images/menu-two-level.jpg)
+![](_images/tutorial1_menu-two-level.jpg)
 
 Feel free to experiment with the if and loop blocks, for example you could create a drop down style menu from the top navigation using a combination of the if blocks, loop blocks and some CSS to style it. This uses a *Children* if and loop block which checks to see if there is any sub-pages available within each top level navigation item, you will need to come up with your own CSS to correctly style this approach.
 
@@ -339,7 +337,7 @@ After building the database, we can change the page type of the homepage in the 
 
 Navigate in the CMS to the "Home" page and under the "Behaviour" tab in the "Edit Page > Settings" section. Change it to *Home Page*, and click "Save & Publish".
 
-![](_images/homepage-type.jpg)
+![](_images/tutorial1_homepage-type.jpg)
 
 Our homepage is now of the page type *HomePage*. However, even though it is of the *HomePage* page type, it is still
 rendered with the *Page* template. SilverStripe still renders the homepage using the *Page* template because when we
@@ -352,29 +350,27 @@ to the template of the page type's parents.
 
 To create a new template layout, create a copy of *Page.ss* (found in *themes/simple/templates/Layouts*) and call it *HomePage.ss*. If we flush the cache (*?flush=1*), SilverStripe should now be using *HomePage.ss* for the homepage, and *Page.ss* for the rest of the site. Now let's customize the *HomePage* template. 
 
-First, remove the breadcrumbs and the secondary menu by removing the `<% include SideBar %>` line of code; we don't need them for the homepage. Let's replace the title with our image. Add this line above the *$Content* variable.
-
-Download the welcome banner to your *themes/simple/images/* folder: [Download](_images/welcome.png) 
+First, remove the breadcrumbs and the secondary menu by removing the `<% include SideBar %>` line of code; we don't need them for the homepage. Let's replace the title with an image. Add this line above the *$Content* variable.
 
 Now add the following to replace the `<h1>$Title</h1>` code in your template:
 
 	:::ss
 	<div id="Banner">
-	  <img src="themes/simple/images/welcome.png" alt="Homepage image" />
+	  <img src="http://www.silverstripe.org/themes/silverstripe/images/sslogo.png" alt="Homepage image" />
 	</div>
 
 
 Your Home page should now look like this:
 
 
-![](_images/home-template.jpg)
+![](_images/tutorial1_home-template.jpg)
 
 SilverStripe first searches for a template in the *themes/simple/templates* folder. Since there is no *HomePage.ss*,
 it will use the *Page.ss* for both *Page* and *HomePage* page types. When it comes across the *$Layout* tag, it will
 then descend into the *themes/simple/templates/Layout* folder, and will use *Page.ss* for the *Page* page type, and
 *HomePage.ss* for the *HomePage* page type. So while you could create a HomePage.ss in the *themes/simple/templates/* it is better to reuse the navigation and footer common to both our Home page and the rest of the pages on our website and lets you write less code to achieve the end result.
 
-![](_images/subtemplates-diagram.jpg)
+![](_images/tutorial1_subtemplates-diagram.jpg)
 
 
 ## Summary
