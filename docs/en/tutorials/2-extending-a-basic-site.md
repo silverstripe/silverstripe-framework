@@ -380,19 +380,16 @@ Let's now make a purely cosmetic change that nevertheless helps to make the info
 Add the following field to the *ArticleHolder* and *ArticlePage* classes:
 
 	:::php
-	static $icon = "themes/simple/images/treeicons/news";
+	static $icon = "framework/docs/en/tutorials/_images/treeicons/news-file.gif";
 
 
 And this one to the *HomePage* class:
 
 	:::php
-	static $icon = "themes/simple/images/treeicons/home";
+	static $icon = "framework/docs/en/tutorials/_images/treeicons/home-file.gif";
 
 
 This will change the icons for the pages in the CMS.  
-
-> Note: that the corresponding filename to the path given for $icon will end with **-file.gif**, 
-> e.g. when you specify **news** above, the filename will be **news-file.gif**.
 
 ![](_images/tutorial2_icons2.jpg)
 
