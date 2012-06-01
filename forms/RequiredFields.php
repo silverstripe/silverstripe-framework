@@ -85,7 +85,7 @@ class RequiredFields extends Validator {
 				}
 
 				if($formField && $error) {
-					$errorMessage = sprintf(_t('Form.FIELDISREQUIRED', '%s is required').'.', strip_tags('"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"'));
+					$errorMessage = sprintf(_t('Form.FIELDISREQUIRED', '%s is required'), strip_tags('"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"'));
 					if($msg = $formField->getCustomValidationMessage()) {
 						$errorMessage = $msg;
 					}

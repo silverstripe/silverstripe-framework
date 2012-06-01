@@ -98,7 +98,7 @@ en_GB:
   DropdownField:
     CHOOSE: "(Choose)"
   EmailField:
-    VALIDATION: "Please enter an email address."
+    VALIDATION: "Please enter an email address"
   File:
     Content: "Content"
     Filename: "Filename"
@@ -107,7 +107,7 @@ en_GB:
     Name: "Name"
     PLURALNAME: "Files"
     SINGULARNAME: "File"
-    TOOLARGE: "Filesize is too large; maximum %s is allowed."
+    TOOLARGE: "Filesize is too large; maximum %s is allowed"
     Title: "Title"
   ForgotPasswordEmail.ss:
     HELLO: "Hello"
@@ -115,15 +115,15 @@ en_GB:
     TEXT2: "password reset link"
     TEXT3: "for"
   Form:
-    FIELDISREQUIRED: "%s is required."
-    VALIDATIONCREDITNUMBER: "Please ensure you have entered the %s credit card number correctly."
+    FIELDISREQUIRED: "%s is required"
+    VALIDATIONCREDITNUMBER: "Please ensure you have entered the %s credit card number correctly"
     VALIDATIONFAILED: "Validation failed"
     VALIDATIONNOTUNIQUE: "The value entered is not unique"
     VALIDATIONPASSWORDSDONTMATCH: "Passwords don't match"
     VALIDATIONPASSWORDSNOTEMPTY: "Passwords can't be empty"
-    VALIDATIONSTRONGPASSWORD: "Passwords must have at least one digit and one alphanumeric character."
+    VALIDATIONSTRONGPASSWORD: "Passwords must have at least one digit and one alphanumeric character"
     VALIDATOR: "Validator"
-    VALIDCURRENCY: "Please enter a valid currency."
+    VALIDCURRENCY: "Please enter a valid currency"
   FormField:
     NONE: "none"
   Group:
@@ -265,7 +265,7 @@ en_GB:
   SiteTree:
     TABMAIN: "Main"
   TableField:
-    ISREQUIRED: "In %s '%s' is required."
+    ISREQUIRED: "In %s '%s' is required"
   TableField.ss:
     ADD: "Add a new row"
   TableListField:

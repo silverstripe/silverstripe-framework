@@ -39,7 +39,7 @@ class EmailField extends TextField {
 		if($this->value && !preg_match('/' . $pregSafePattern . '/i', $this->value)){
 			$validator->validationError(
 				$this->name,
-				_t('EmailField.VALIDATION', "Please enter an email address."),
+				_t('EmailField.VALIDATION', "Please enter an email address"),
 				"validation"
 			);
 			return false;

@@ -204,14 +204,14 @@ class FormTest extends FunctionalTest {
 		$this->assertPartialMatchBySelector(
 			'#Email span.message',
 			array(
-				_t('EmailField.VALIDATION', "Please enter an email address.")
+				'Please enter an email address'
 			),
 			'Formfield validation shows note on field if invalid'
 		);
 		$this->assertPartialMatchBySelector(
 			'#SomeRequiredField span.required',
 			array(
-				sprintf(_t('Form.FIELDISREQUIRED').'.','"SomeRequiredField"')
+				'"SomeRequiredField" is required'
 			),
 			'Required fields show a notification on field when left blank'
 		);

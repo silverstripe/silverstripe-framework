@@ -53,7 +53,7 @@ class CreditCardField extends TextField {
 					$this->name,
 					_t(
 						'Form.VALIDATIONCREDITNUMBER', 
-						"Please ensure you have entered the {number} credit card number correctly.",
+						"Please ensure you have entered the {number} credit card number correctly",
 						array('number' => $number)
 					),
 					"validation",

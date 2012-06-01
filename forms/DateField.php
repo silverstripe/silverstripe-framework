@@ -311,7 +311,7 @@ class DateField extends TextField {
 			$validator->validationError(
 				$this->name, 
 				_t(
-					'DateField.VALIDDATEFORMAT2', "Please enter a valid date format ({format}).", 
+					'DateField.VALIDDATEFORMAT2', "Please enter a valid date format ({format})", 
 					array('format' => $this->getConfig('dateformat'))
 				), 
 				"validation", 
