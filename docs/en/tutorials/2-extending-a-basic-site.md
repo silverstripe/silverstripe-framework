@@ -16,7 +16,9 @@ Throughout this tutorial we are going to work on adding two new sections to the 
 first is a news section, with a recent news listing on the homepage and an RSS feed. The second is a staff section,
 which demonstrates more complex database structures by associating an image with each staff member.
 
-![](_images/news-with-rss-small.jpg)![](_images/einstein-small.jpg)
+![](_images/tutorial2_newslist.jpg)
+
+![](_images/tutorial2_einstein.jpg)
 
 
 
