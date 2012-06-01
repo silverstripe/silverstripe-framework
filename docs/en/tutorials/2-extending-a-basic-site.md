@@ -57,7 +57,7 @@ the database, which fields can be edited in the CMS, and can use code to make ou
 A more in-depth introduction of Model-View-Controller can be found
 [here](http://www.slash7.com/articles/2005/02/22/mvc-the-most-vexing-conundrum).
 
-![](_images/pagetype-inheritance.jpg)
+![](_images/tutorial2_pagetype-inheritance.jpg)
 
 ## Creating the news section page types
 
@@ -213,7 +213,7 @@ to edit the fields in the CMS.
 Now that we have created our page types, let's add some content. Go into the CMS and create an *ArticleHolder* page
 named "News", and create some *ArticlePage*s inside it.
 
-![](_images/news-cms.jpg)
+![](_images/tutorial2_news-cms.jpg)
 
 ##  Modifing the date field
 
@@ -305,13 +305,13 @@ spread across several tables in the database matched by id - e.g. *Content* is i
 *Author* are in the *ArticlePage* table. SilverStripe matches these records by their ids and collates them into the single
 data object.
 
-![](_images/data-collation.jpg)
+![](_images/tutorial2_data-collation.jpg)
 
 Rather than using *$Date* directly, we use *$Date.Nice*. If we look in the `[api:Date]` documentation, we can see
 that the *Nice* function returns the date in *dd/mm/yyyy* format, rather than the *yyyy-mm-dd* format stored in the
 database.
 
-![](_images/news.jpg)
+![](_images/tutorial2_news.jpg)
 
 Now we'll create a template for the article holder: we want our news section to show a list of news items, each with a
 summary.
@@ -342,7 +342,7 @@ page, which in this case is our news articles. The *$Link* variable will give th
 use to create a link, and the *FirstParagraph* function of the `[api:HTMLText]` field gives us a nice summary of the
 article. The function strips all tags from the paragraph extracted.
 
-![](_images/articleholder.jpg)
+![](_images/tutorial2_articleholder.jpg)
 
 
 ### Using include files in templates
@@ -394,7 +394,7 @@ This will change the icons for the pages in the CMS.
 > Note: that the corresponding filename to the path given for $icon will end with **-file.gif**, 
 > e.g. when you specify **news** above, the filename will be **news-file.gif**.
 
-![](_images/icons2.jpg)
+![](_images/tutorial2_icons2.jpg)
 
 ## Showing the latest news on the homepage
 
@@ -438,7 +438,7 @@ page is referenced in other pages, e.g. by page controls. A good rule of thumb i
 page currently being viewed in the controller; only if a function needs to be used in another page should you put it in
 the data object.
 
-![](_images/homepage-news.jpg)
+![](_images/tutorial2_homepage-news.jpg)
 
 
 
@@ -463,7 +463,7 @@ that name on the controller if it exists.
 Depending on your browser, you should see something like the picture below. If your browser doesn't support RSS, you
 will most likely see the XML output instead.
 
-![](_images/rss-feed.jpg)
+![](_images/tutorial2_rss-feed.jpg)
 
 Now all we need is to let the user know that our RSS feed exists. The `[api:RSSFeed]` in your controller, it will be
 called when the page is requested. Add this function to *ArticleHolder_Controller*:
@@ -479,7 +479,7 @@ This automatically generates a link-tag in the header of our template. The *init
 class to ensure any initialization the parent would have done if we hadn't overridden the *init* function is still
 called. Depending on your browser, you can see the RSS feed link in the address bar:
 
-![](_images/rss.jpg)
+![](_images/tutorial2_rss.jpg)
 
 ## Adding a staff section
 
@@ -545,12 +545,12 @@ We then add an `[api:UploadField]` in the *getCMSFields* function to the tab "Ro
 the *addFieldToTab* function will create it for us. The *UploadField* allows us to select an image or upload a new one in
 the CMS.
 
-![](_images/photo.jpg)
+![](_images/tutorial2_photo.jpg)
 
 Rebuild the database ([http://localhost/dev/build?flush=1](http://localhost/dev/build?flush=1)) and open the CMS. Create
 a new *StaffHolder* called "Staff", and create some *StaffPage*s in it.
 
-![](_images/create-staff.jpg)
+![](_images/tutorial2_create-staff.jpg)
 
 
 ### Creating the staff section templates
@@ -583,7 +583,7 @@ This template is very similar to the *ArticleHolder* template. The *SetWidth* me
 will resize the image before sending it to the browser. The resized image is cached, so the server doesn't have to
 resize the image every time the page is viewed.
 
-![](_images/staff-section.jpg)
+![](_images/tutorial2_staff-section.jpg)
 
 The *StaffPage* template is also very straight forward.
 
@@ -605,7 +605,7 @@ The *StaffPage* template is also very straight forward.
 Here we also use the *SetWidth* function to get a different sized image from the same source image. You should now have
 a complete staff section.
 
-![](_images/einstein.jpg)
+![](_images/tutorial2_einstein.jpg)
 
 ## Summary
 
