@@ -5,20 +5,12 @@ provides us the basics of creating unit tests.
 
 	:::php
 	<?php
-	
-	/**
-	
-	 * Tests for SiteTree
-	 */
 	class SiteTreeTest extends SapphireTest {
-		/**
-	
-		 * Define the fixture file to use for this test class
-		 */
+		
+		// Define the fixture file to use for this test class
 		static $fixture_file = 'SiteTreeTest.yml';
 	
-		/**
-	
+		/**	
 		 * Test generation of the URLSegment values.
 		 *  - Turns things into lowercase-hyphen-format
 		 *  - Generates from Title by default, unless URLSegment is explicitly set
@@ -49,32 +41,26 @@ There are a number of points to note in this code fragment:
 
 *  Your test is a **subclass of SapphireTest**.  Both unit tests and functional tests are a subclass of `[api:SapphireTest]`.
 *  **static $fixture_file** is defined.  The testing framework will automatically set up a new database for **each** of
-your tests.  The initial database content will be sourced from the YML file that you list in $fixture_file.  You must
-define this value.  Note also that, for the time being, you can only point to one YML file for each test class.
+your tests.  The initial database content will be sourced from the YML file that you list in $fixture_file. The property can take an array of fixture paths.
 *  Each **method that starts with the word "test"** will be executed by the TestRunner.  Define as many as you like; the
 database will be rebuilt for each of these.
 *  **$this->objFromFixture($className, $identifier)** can be used to select one of the objects named in your fixture
 file.  To identify to the object, we provide a class name and an identifier.  The identifier is specified in the YML
 file but not saved in the database anywhere.  objFromFixture() looks the `[api:DataObject]` up in memory rather than using the
 database.  This means that you can use it to test the functions responsible for looking up content in the database.
-*  **$this->assertEquals()** is one of the many assert... functions that PHPUnit provides us.  See below for more
-information.
-
 
 ## Assertion commands
 
-**$this->assertEquals()** is an example of an assertion function.  These functions form the basis of our tests - a test
+**$this->assertEquals()** is an example of an assertion function.  
+These functions form the basis of our tests - a test
 fails if and only if one or more of the assertions fail.  
-
-
-There are many assertions available:
-
-*  See [the PHPUnit manual chapter 22](http://www.phpunit.de/manual/current/en/api.html#api.assert)
+See [the PHPUnit manual](http://www.phpunit.de/manual/current/en/api.html#api.assert)
 for a listing of all PHPUnit's built-in assertions.
-*  **$this->assertEmailSent($to, $from, $subject, $content)**:  When an email is "sent" during a test run, it's not
-actually sent.  Instead, it is logged in an internal register.  You can use assertEmailSent() to verify that an email
-was sent.  Each of the arguments can be a string, for an exact match, or, a preg_match() compatible regular expression,
-if it starts with "/".
+
+The `[api:SapphireTest]` class comes with additional assertions which are more
+specific to the framework, e.g. `[assertEmailSent](api:SapphireTest->assertEmailSent())`
+which can simulate sending emails through the `Email->send()` API without actually
+using a mail server (see the [testing emails](email-sending)) guide.
 
 ## The Database YAML file
 
