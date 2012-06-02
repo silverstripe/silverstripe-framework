@@ -198,6 +198,7 @@ class DataQuery {
 					if(preg_match('/^"([^"]+)"/', $collision, $matches)) {
 						$collisionBase = $matches[1];
 						$collisionClasses = ClassInfo::subclassesFor($collisionBase);
+						$collisionClasses = array_map(array(DB::getConn(), 'prepStringForDB'), $collisionClasses);
 						$caseClauses[] = "WHEN \"$baseClass\".\"ClassName\" IN ('"
 							. implode("', '", $collisionClasses) . "') THEN $collision";
 					} else {
@@ -215,6 +216,7 @@ class DataQuery {
 				// Get the ClassName values to filter to
 				$classNames = ClassInfo::subclassesFor($this->dataClass);
 				if(!$classNames) user_error("DataList::create() Can't find data sub-classes for '$callerClass'");
+				$classNames = array_map(array(DB::getConn(), 'prepStringForDB'), $classNames);
 				$query->addWhere("\"$baseClass\".\"ClassName\" IN ('" . implode("','", $classNames) . "')");
 			}
 		}
