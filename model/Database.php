@@ -391,7 +391,7 @@ abstract class SS_Database {
 		
 		//DB Abstraction: remove this ===true option as a possibility?
 		if($spec === true) {
-			$spec = "($index)";
+			$spec = "(\"$index\")";
 		}
 		
 		//Indexes specified as arrays cannot be checked with this line: (it flattens out the array)
