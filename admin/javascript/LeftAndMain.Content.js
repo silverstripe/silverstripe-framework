@@ -226,6 +226,9 @@
 
 					var url = $(node).find('a:first').attr('href');
 					if(url && url != '#') {
+						// Deselect all nodes (will be reselected after load according to form state)
+						self.jstree('deselect_all');
+						self.jstree('uncheck_all');
 
 						// Ensure URL is absolute (important for IE)
 						if($.path.isExternal($(node).find('a:first'))) url = url = $.path.makeUrlAbsolute(url, $('base').attr('href'));
