@@ -1131,7 +1131,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 							if($dbCommand == 'insert') {
 								$manipulation[$class]['fields']["Created"] = "'".SS_Datetime::now()->Rfc2822()."'";
 								//echo "<li>$this->class - " .get_class($this);
-								$manipulation[$class]['fields']["ClassName"] = "'$this->class'";
+								$manipulation[$class]['fields']["ClassName"] = DB::getConn()->prepStringForDB($this->class);
 							}
 						}
 
