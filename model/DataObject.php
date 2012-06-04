@@ -2942,8 +2942,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 				// Build index list
 				$manymanyIndexes = array(
-					"`{$this->class}ID`" => true,
-				(($this->class == $childClass) ? "ChildID" : "`{$childClass}ID`") => true,
+					"\"{$this->class}ID\"" => true,
+				(($this->class == $childClass) ? "ChildID" : "\"{$childClass}ID\"") => true,
 				);
 				
 				DB::requireTable("{$this->class}_$relationship", $manymanyFields, $manymanyIndexes, true, null, $extensions);
