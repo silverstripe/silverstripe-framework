@@ -19,4 +19,20 @@ class PjaxResponseNegotiatorTest extends SapphireTest {
 		$this->assertEquals('myfragment response', $negotiator->respond($request));
 	}
 
+	function testMultipleFragments() {
+		$negotiator = new PjaxResponseNegotiator(array(
+			'default' => function() {return 'default response';},
+			'myfragment' => function() {return 'myfragment response';},
+			'otherfragment' => function() {return 'otherfragment response';},
+		));
+		$request = new SS_HTTPRequest('GET', '/');
+		$request->addHeader('X-Pjax', 'myfragment,otherfragment');
+		$request->addHeader('Accept', 'text/json');
+		$json = json_decode($negotiator->respond($request));
+		$this->assertObjectHasAttribute('myfragment', $json);
+		$this->assertEquals('myfragment response', $json->myfragment);
+		$this->assertObjectHasAttribute('otherfragment', $json);
+		$this->assertEquals('otherfragment response', $json->otherfragment);
+	}
+
 }

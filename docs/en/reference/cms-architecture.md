@@ -145,7 +145,7 @@ Selectors used in these files should mirrow the "scope" set by its filename,
 so don't place a rule applying to all form buttons inside `ModelAdmin.js`.
 
 The CMS relies heavily on Ajax-loading of interfaces, so each interface and the JavaScript
-driving it have to assume its underlying DOM structure is appended via Ajax callback
+driving it have to assume its underlying DOM structure is appended via an Ajax callback
 rather than being available when the browser window first loads. 
 jQuery.entwine is effectively an advanced version of [jQuery.live](http://api.jquery.com/live/)
 and [jQuery.delegate](http://api.jquery.com/delegate/), so takes care of dynamic event binding.
@@ -167,9 +167,6 @@ a CMS developer needs to fire a navigation event rather than invoking the Ajax c
 The main point of contact here is `$('.cms-container').loadPanel(<url>, <title>, <data>)`
 in `LeftAndMain.js`. The `data` object can contain additional state which is required
 in case the same navigation event is fired again (e.g. when the user pressed the back button).
-Most commonly, the (optional) `data.selector` property declares which DOM element to replace
-with the newly loaded HTML (it defaults to `.cms-content`). This is handy to only replace
-e.g. an edit form, but leave the search panel in the same "content area" unchanged.
 
 No callbacks are allowed in this style of Ajax loading, as all state needs
 to be "repeatable". Any logic required to be exected after the Ajax call
@@ -177,15 +174,78 @@ should be placed in jQuery.entinwe `onmatch()` rules which apply to the newly cr
 See `$('.cms-container').handleStateChange()` in `LeftAndMain.js` for details.
 
 Alternatively, form-related Ajax calls can be invoked through their own wrappers,
-which don't cause history events and hence allow callbacks: `$('.cms-content').submitForm()`.
+which don't cause history events and hence allow callbacks: `$('.cms-container').submitForm()`.
 
-Within the PHP logic, the `[api:PjaxResponseNegotiator]` class determines which view is rendered.
+## PJAX: Partial template replacement through Ajax
+
+Many user interactions can change more than one area in the CMS.
+For example, editing a page title in the CMS form changes it in the page tree
+as well as the breadcrumbs. In order to avoid unnecessary processing,
+we often want to update these sections independently from their neighbouring content.
+
+In order for this to work, the CMS templates declare certain sections as "PJAX fragments"
+through a `data-pjax-fragment` attribute. These names correlate to specific
+rendering logic in the PHP controllers, through the `[api:PjaxResponseNegotiator]` class.
+
 Through a custom `X-Pjax` HTTP header, the client can declare which view he's expecting,
 through identifiers like `CurrentForm` or `Content` (see `[api:LeftAndMain->getResponseNegotiator()]`).
 These identifiers are passed to `loadPanel()` via the `pjax` data option.
+The HTTP response is a JSON object literal, with template replacements keyed by their Pjax fragment.
+Through PHP callbacks, we ensure that only the required template parts are actually executed and rendered.
+When the same URL is loaded without Ajax (and hence without `X-Pjax` headers),
+it should behave like a normal full page template, but using the same controller logic.
+
+Example: Create a bare-bones CMS subclass which shows breadcrumbs (a built-in method),
+as well as info on the current record. A single link updates both sections independently
+in a single Ajax request.
+
+	:::php
+	// mysite/code/MyAdmin.php
+	class MyAdmin extends LeftAndMain {
+		static $url_segment = 'myadmin';
+		public function getResponseNegotiator() {
+			$negotiator = parent::getResponseNegotiator();
+			$controller = $this;
+			// Register a new callback
+			$negotiator->setCallback('MyRecordInfo', function() use(&$controller) {
+				return $controller->MyRecordInfo();
+			});
+			return $negotiator;
+		}
+		public function MyRecordInfo() {
+			return $this->renderWith('MyRecordInfo');
+		}
+	}
+
+	:::js
+	// MyAdmin.ss
+	<% include CMSBreadcrumbs %>
+	<div>Static content (not affected by update)</div>
+	<% include MyRecordInfo %>
+	<a href="admin/myadmin" class="cms-panel-link" data-pjax-target="MyRecordInfo,Breadcrumbs">
+		Update record info
+	</a>
+
+	:::ss
+	// MyRecordInfo.ss
+	<div data-pjax-fragment="MyRecordInfo">
+		Current Record: $currentPage.Title
+	</div>
+
+A click on the link will cause the following (abbreviated) ajax HTTP request:
+
+	GET /admin/myadmin HTTP/1.1
+	X-Pjax:Content
+	X-Requested-With:XMLHttpRequest
+
+... and result in the following response:
+
+	{"MyRecordInfo": "<div...", "CMSBreadcrumbs": "<div..."}
+
 Keep in mind that the returned view isn't always decided upon when the Ajax request
 is fired, so the server might decide to change it based on its own logic,
 sending back different `X-Pjax` headers and content.
+
 
 ## Ajax Redirects
 
@@ -226,8 +286,7 @@ Built-in headers are:
 Some links should do more than load a new page in the browser window.
 To avoid repetition, we've written some helpers for various use cases:
 
- * Load into a panel: `<a href="..." class="cms-panel-link" data-target-panel=".cms-content">`
- * Load via ajax, and show response status message: `<a href="..." class="cms-link-ajax">`
+ * Load into a PJAX panel: `<a href="..." class="cms-panel-link" data-pjax-target="Content">`
  * Load URL as an iframe into a popup/dialog: `<a href="..." class="ss-ui-dialog-link">`
 
 ## Buttons
