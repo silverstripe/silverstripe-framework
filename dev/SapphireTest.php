@@ -829,17 +829,17 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	function logInWithPermission($permCode = "ADMIN") {
 		if(!isset($this->cache_generatedMembers[$permCode])) {
-			$group = new Group();
+			$group = Injector::inst()->create('Group');
 			$group->Title = "$permCode group";
 			$group->write();
 
-			$permission = new Permission();
+			$permission = Injector::inst()->create('Permission');
 			$permission->Code = $permCode;
 			$permission->write();
 			$group->Permissions()->add($permission);
 			
 			$member = DataObject::get_one('Member', sprintf('"Email" = \'%s\'', "$permCode@example.org"));
-			if(!$member) $member = new Member();
+			if(!$member) $member = Injector::inst()->create('Member');
 			
 			$member->FirstName = $permCode;
 			$member->Surname = "User";

@@ -283,7 +283,7 @@ Debug::loadErrorHandlers();
 
 // initialise the dependency injector
 $default_options = array('locator' => 'SilverStripeServiceConfigurationLocator');
-Injector::inst($default_options)->addAutoProperty('injector', Injector::inst()); 
+Injector::inst($default_options); 
 
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
