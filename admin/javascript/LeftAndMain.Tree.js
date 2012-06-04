@@ -247,20 +247,22 @@
 								newNode.find('a:first').html(title).attr('href', ss.i18n.sprintf(
 									self.data('urlEditpage'), id
 								));
-								self.jstree('deselect_node', parentNode);
+								self.jstree('deselect_all');
 								self.jstree('select_node', newNode);
 							}
 						);
-						// set current tree element
+					}
+
+					if(node.length) {
+						// set correct parent (only if it has changed)
+						if(parentID && parentID != node.parents('li:first').data('id')) {
+							this.jstree('move_node', node, parentNode.length ? parentNode : -1, 'last');
+						}
+
+						// Only single selection is supported on initial load
+						this.jstree('deselect_all');
 						this.jstree('select_node', node);
 					}
-
-					// set correct parent (only if it has changed)
-					if(parentID && parentID != node.parents('li:first').data('id')) {
-						this.jstree('move_node', node, parentNode.length ? parentNode : -1, 'last');
-					}
-
-					this.jstree('select_node', node);
 				} else {
 					// If no ID exists in a form view, we're displaying the tree on its own,
 					// hence to page should show as active
