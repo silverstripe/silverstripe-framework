@@ -1131,7 +1131,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 							if($dbCommand == 'insert') {
 								$manipulation[$class]['fields']["Created"] = "'".SS_Datetime::now()->Rfc2822()."'";
 								//echo "<li>$this->class - " .get_class($this);
-								$manipulation[$class]['fields']["ClassName"] = "'$this->class'";
+								$manipulation[$class]['fields']["ClassName"] = DB::getConn()->prepStringForDB($this->class);
 							}
 						}
 
@@ -2942,8 +2942,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 				// Build index list
 				$manymanyIndexes = array(
-					"{$this->class}ID" => true,
-				(($this->class == $childClass) ? "ChildID" : "{$childClass}ID") => true,
+					"\"{$this->class}ID\"" => true,
+				(($this->class == $childClass) ? "ChildID" : "\"{$childClass}ID\"") => true,
 				);
 				
 				DB::requireTable("{$this->class}_$relationship", $manymanyFields, $manymanyIndexes, true, null, $extensions);
