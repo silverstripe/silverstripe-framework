@@ -776,7 +776,7 @@ class MySQLDatabase extends SS_Database {
 
 		$classes = array();
 		foreach($matches[0] as $value) {
-			$classes[] = trim($value, "'");
+			$classes[] = stripslashes(trim($value, "'"));
 		}
 		return $classes;
 	}
