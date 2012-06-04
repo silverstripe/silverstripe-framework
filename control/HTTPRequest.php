@@ -170,7 +170,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * Returns a possible file extension found in parsing the URL
 	 * as denoted by a "."-character near the end of the URL.
 	 * Doesn't necessarily have to belong to an existing file,
-	 * for example used for {@link RestfulServer} content-type-switching.
+	 * as extensions can be also used for content-type-switching.
 	 * 
 	 * @return string
 	 */

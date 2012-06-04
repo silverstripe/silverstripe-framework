@@ -2,8 +2,6 @@
 /**
  * Accepts form encoded strings and converts them
  * to a valid PHP array via {@link parse_str()}.
- * Use together with {@link RESTfulServer} to submit
- * data via POST or PUT.
  *
  * Example when using cURL on commandline:
  * <code>
