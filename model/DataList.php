@@ -454,9 +454,9 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		
 		// Instantiate the class mentioned in RecordClassName only if it exists, otherwise default to $this->dataClass
 		if(class_exists($row['RecordClassName'])) {
-			$item = new $row['RecordClassName']($row, false, $this->model);
+			$item = Injector::inst()->create($row['RecordClassName'], $row, false, $this->model);
 		} else {
-			$item = new $defaultClass($row, false, $this->model);
+			$item = Injector::inst()->create($defaultClass, $row, false, $this->model);
 		}
 		
 		return $item;
@@ -765,7 +765,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 */
 	public function newObject($initialFields = null) {
 		$class = $this->dataClass;
- 		return new $class($initialFields, false, $this->model);
+ 		return Injector::inst()->create($class, $initialFields, false, $this->model);
 	}
 	
 	/**
