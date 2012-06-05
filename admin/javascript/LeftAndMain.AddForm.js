@@ -91,7 +91,7 @@
 				data.push({name:button.attr('name'),value:button.val()});
 
 				// TODO Should be set by hiddenfield already
-				$('.cms-content').submitForm(
+				$('.cms-container').submitForm(
 					this,
 					button,
 					function() {

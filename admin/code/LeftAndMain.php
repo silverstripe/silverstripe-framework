@@ -352,7 +352,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if($this->request->isAjax()) {
 			$this->response->addHeader('X-ControllerURL', $url);
 			if($header = $this->request->getHeader('X-Pjax')) $this->response->addHeader('X-Pjax', $header);
-			if($header = $this->request->getHeader('X-Pjax-Selector')) $this->response->addHeader('X-Pjax-Selector', $header);
 			return ''; // Actual response will be re-requested by client
 		} else {
 			parent::redirect($url, $code);
@@ -436,6 +435,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				},
 				'Content' => function() use(&$controller) {
 					return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
+				},
+				'Breadcrumbs' => function() use (&$controller) {
+					return $controller->renderWith('CMSBreadcrumbs');
 				},
 				'default' => function() use(&$controller) {
 					return $controller->renderWith($controller->getViewer('show'));
@@ -951,6 +953,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$form->addExtraClass('cms-edit-form');
 			$form->loadDataFrom($record);
 			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
+			$form->setAttribute('data-pjax-fragment', 'CurrentForm');
 			
 			// Set this if you want to split up tabs into a separate header row
 			// if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
@@ -1015,6 +1018,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$form->addExtraClass('cms-edit-form');
 		$form->addExtraClass('root-form');
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
+		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
 		
 		return $form;
 	}

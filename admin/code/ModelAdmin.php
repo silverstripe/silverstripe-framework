@@ -151,6 +151,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		$form->addExtraClass('cms-edit-form cms-panel-padded center');
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		$form->setFormAction(Controller::join_links($this->Link($this->modelClass), 'EditForm'));
+		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
 
 		$this->extend('updateEditForm', $form);
 		

@@ -40,10 +40,7 @@ jQuery.noConflict();
 				// Normalize trailing slashes in URL to work around routing weirdnesses in SS_HTTPRequest.
 				var isSame = (url && History.getPageUrl().replace(/\/+$/, '') == url.replace(/\/+$/, ''));
 				if(url && !isSame) {
-					opts = {
-						pjax: xhr.getResponseHeader('X-Pjax') ? xhr.getResponseHeader('X-Pjax') : settings.headers['X-Pjax'], 
-						selector: xhr.getResponseHeader('X-Pjax-Selector') ? xhr.getResponseHeader('X-Pjax-Selector') : settings.headers['X-Pjax-Selector']
-					};
+					opts = {pjax: xhr.getResponseHeader('X-Pjax') ? xhr.getResponseHeader('X-Pjax') : settings.headers['X-Pjax']};
 					window.History.pushState(opts, '', url);
 				}
 			}
@@ -159,11 +156,10 @@ jQuery.noConflict();
 			loadPanel: function(url, title, data) {
 				if(!data) data = {};
 				if(!title) title = "";
-				if(!data.selector) data.selector = '.cms-content';
-				var contentEl = $(data.selector);
-				
+
 				// Check change tracking (can't use events as we need a way to cancel the current state change)
-				var trackedEls = contentEl.find(':data(changetracker)').add(contentEl.filter(':data(changetracker)'));
+				var contentEls = this._findFragments(data.pjax ? data.pjax.split(',') : ['Content']);
+				var trackedEls = contentEls.find(':data(changetracker)').add(contentEls.filter(':data(changetracker)'));
 				
 				if(trackedEls.length) {
 					var abort = false;
@@ -182,6 +178,98 @@ jQuery.noConflict();
 				} else {
 					window.location = $.path.makeUrlAbsolute(url, $('base').attr('href'));
 				}
+			},
+
+			/**
+			 * Function: submitForm
+			 * 
+			 * Parameters:
+			 *  {DOMElement} form - The form to be submitted. Needs to be passed
+			 *   in to avoid entwine methods/context being removed through replacing the node itself.
+			 *  {DOMElement} button - The pressed button (optional)
+			 *  {Function} callback - Called in complete() handler of jQuery.ajax()
+			 *  {Object} ajaxOptions - Object literal to merge into $.ajax() call
+			 * 
+			 * Returns:
+			 *  (boolean)
+			 */
+			submitForm: function(form, button, callback, ajaxOptions) {
+				var self = this;
+		  
+				// look for save button
+				if(!button) button = this.find('.Actions :submit[name=action_save]');
+				// default to first button if none given - simulates browser behaviour
+				if(!button) button = this.find('.Actions :submit:first');
+	
+				form.trigger('beforesave');
+				this.trigger('submitform', {form: form, button: button});
+	
+				// set button to "submitting" state
+				$(button).addClass('loading');
+	
+				// validate if required
+				if(!form.validate()) {
+					// TODO Automatically switch to the tab/position of the first error
+					statusMessage("Validation failed.", "bad");
+
+					$(button).removeClass('loading');
+
+					return false;
+				}
+				
+				// save tab selections in order to reconstruct them later
+				var selectedTabs = [];
+				form.find('.cms-tabset').each(function(i, el) {
+					if($(el).attr('id')) selectedTabs.push({id:$(el).attr('id'), selected:$(el).tabs('option', 'selected')});
+				});
+
+				// get all data from the form
+				var formData = form.serializeArray();
+				// add button action
+				formData.push({name: $(button).attr('name'), value:'1'});
+				// Artificial HTTP referer, IE doesn't submit them via ajax. 
+				// Also rewrites anchors to their page counterparts, which is important
+				// as automatic browser ajax response redirects seem to discard the hash/fragment.
+				formData.push({name: 'BackURL', value:History.getPageUrl()});
+
+				// Standard Pjax behaviour is to replace the submitted form with new content.
+				// The returned view isn't always decided upon when the request
+				// is fired, so the server might decide to change it based on its own logic,
+				// sending back different `X-Pjax` headers and content
+				jQuery.ajax(jQuery.extend({
+					headers: {"X-Pjax" : "CurrentForm,Breadcrumbs"},
+					url: form.attr('action'), 
+					data: formData,
+					type: 'POST',
+					complete: function() {
+						$(button).removeClass('loading');
+					},
+					success: function(data, status, xhr) {
+						form.removeClass('changed'); // TODO This should be using the plugin API
+						if(callback) callback(xmlhttp, status);
+
+						var newContentEls = self.handleAjaxResponse(data, status, xhr);
+						if(!newContentEls) return;
+
+						var newForm = newContentEls.filter('form');
+
+						// Re-init tabs (in case the form tag itself is a tabset)
+						if(newForm.hasClass('cms-tabset')) newForm.removeClass('cms-tabset').addClass('cms-tabset');
+
+						// re-select previously saved tabs
+						$.each(selectedTabs, function(i, selectedTab) {
+							newForm.find('#' + selectedTab.id).tabs('select', selectedTab.selected);
+						});
+
+						// Redraw the layout
+						$('.cms-container').redraw();
+
+						form.trigger('reloadeditform', {form: newForm, formData: formData, xmlhttp: xhr});
+					}, 
+					dataType: 'json'
+				}, ajaxOptions));
+	
+				return false;
 			},
 			
 			/**
@@ -207,91 +295,129 @@ jQuery.noConflict();
 			 * if the URL is loaded without ajax.
 			 */
 			handleStateChange: function() {
-				var self = this, h = window.History, state = h.getState(); 
-				
 				// Don't allow parallel loading to avoid edge cases
 				if(this.getCurrentXHR()) this.getCurrentXHR().abort();
+
+				var self = this, h = window.History, state = h.getState(),
+					fragments = state.data.pjax || 'Content', headers = {},
+					contentEls = this._findFragments(fragments.split(','));
 				
-				var selector = state.data.selector || '.cms-content', contentEl = $(selector);
-				
-				this.trigger('beforestatechange', {
-					state: state, element: contentEl
-				});
+				this.trigger('beforestatechange', {state: state, element: contentEls});
 
 				// Set Pjax headers, which can declare a preference for the returned view.
 				// The actually returned view isn't always decided upon when the request
 				// is fired, so the server might decide to change it based on its own logic.
-				var headers = {};
-				if(state.data.pjax) {
-					headers['X-Pjax'] = state.data.pjax;
-				} else {
-					// Standard Pjax behaviour is to replace right content area
-					headers["X-Pjax"] = 'Content';
-				}
-				headers['X-Pjax-Selector'] = selector;
+				headers['X-Pjax'] = fragments;
 
-				contentEl.addClass('loading');
+				contentEls.addClass('loading');
 				var xhr = $.ajax({
 					headers: headers,
 					url: state.url,
-					success: function(data, status, xhr) {
-						// Pseudo-redirects via X-ControllerURL might return empty data, in which
-						// case we'll ignore the response
-						if(!data) return;
-
-						// Update title
-						var title = xhr.getResponseHeader('X-Title');
-						if(title) document.title = title;
-						
-						// Update panels
-						var newContentEl = $(data);
-						if(newContentEl.find('.cms-container').length) {
-							throw 'Content loaded via ajax is not allowed to contain tags matching the ".cms-container" selector to avoid infinite loops';
-						}
-						
-						// Set loading state and store element state
-						newContentEl.addClass('loading');
-						var origStyle = contentEl.attr('style');
-						var layoutClasses = ['east', 'west', 'center', 'north', 'south'];
-						var elemClasses = contentEl.attr('class');
-						
-						var origLayoutClasses = [];
-						if(elemClasses) {
-							origLayoutClasses = $.grep(
-								elemClasses.split(' '),
-								function(val) { return ($.inArray(val, layoutClasses) >= 0);}
-							);
-						}
-						
-						newContentEl
-							.removeClass(layoutClasses.join(' '))
-							.addClass(origLayoutClasses.join(' '));
-						if(origStyle) newContentEl.attr('style', origStyle);
-						newContentEl.css('visibility', 'hidden');
-
-						// Allow injection of inline styles, as they're not allowed in the document body.
-						// Not handling this through jQuery.ondemand to avoid parsing the DOM twice.
-						var styles = newContentEl.find('style').detach();
-						if(styles.length) $(document).find('head').append(styles);
-
-						// Replace panel completely (we need to override the "layout" attribute, so can't replace the child instead)
-						contentEl.replaceWith(newContentEl);
-
-						// Unset loading and restore element state (to avoid breaking existing panel visibility, e.g. with preview expanded)
-						self.redraw();
-						newContentEl.css('visibility', 'visible');
-						newContentEl.removeClass('loading');
-
-						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: newContentEl});
+					complete: function() {
+						// Remove loading indication from old content els (regardless of which are replaced)
+						contentEls.removeClass('loading');
 					},
-					error: function(xhr, status, e) {
-						contentEl.removeClass('loading');
-						errorMessage(e);
+					success: function(data, status, xhr) {
+						var els = self.handleAjaxResponse(data, status, xhr);
+						self.trigger('afterstatechange', {data: data, status: status, xhr: xhr, element: els});
 					}
 				});
 				
 				this.setCurrentXHR(xhr);
 			},
+
+			/**
+			 * Handles ajax responses containing plain HTML, or mulitple
+			 * PJAX fragments wrapped in JSON (see PjaxResponseNegotiator PHP class).
+			 * Can be hooked into an ajax 'success' callback.
+			 */
+			handleAjaxResponse: function(data, status, xhr) {
+				var self = this;
+
+				// Pseudo-redirects via X-ControllerURL might return empty data, in which
+				// case we'll ignore the response
+				if(!data) return;
+
+				// Update title
+				var title = xhr.getResponseHeader('X-Title');
+				if(title) document.title = title;
+
+				var newFragments = {}, newContentEls = $([]);
+				if(xhr.getResponseHeader('Content-Type') == 'text/json') {
+					newFragments = data;
+				} else {
+					// Fall back to replacing the content fragment if HTML is returned
+					newFragments['Content'] = data;
+				}
+
+				// Replace each fragment individually
+				$.each(newFragments, function(newFragment, html) {
+					var contentEl = $('[data-pjax-fragment]').filter(function() {
+						return $.inArray(newFragment, $(this).data('pjaxFragment').split(' ')) != -1;
+					}), newContentEl = $(html);
+
+					// Add to result collection
+					newContentEls.add(newContentEl);
+					
+					// Update panels
+					if(newContentEl.find('.cms-container').length) {
+						throw 'Content loaded via ajax is not allowed to contain tags matching the ".cms-container" selector to avoid infinite loops';
+					}
+					
+					// Set loading state and store element state
+					var origStyle = contentEl.attr('style');
+					var origVisible = contentEl.is(':visible');
+					var layoutClasses = ['east', 'west', 'center', 'north', 'south'];
+					var elemClasses = contentEl.attr('class');
+					var origLayoutClasses = [];
+					if(elemClasses) {
+						origLayoutClasses = $.grep(
+							elemClasses.split(' '),
+							function(val) { return ($.inArray(val, layoutClasses) >= 0);}
+						);
+					}
+					
+					newContentEl
+						.removeClass(layoutClasses.join(' '))
+						.addClass(origLayoutClasses.join(' '));
+					if(origStyle) newContentEl.attr('style', origStyle);
+					newContentEl.css('visibility', 'hidden');
+
+					// Allow injection of inline styles, as they're not allowed in the document body.
+					// Not handling this through jQuery.ondemand to avoid parsing the DOM twice.
+					var styles = newContentEl.find('style').detach();
+					if(styles.length) $(document).find('head').append(styles);
+
+					// Replace panel completely (we need to override the "layout" attribute, so can't replace the child instead)
+					contentEl.replaceWith(newContentEl);
+
+					// Unset loading and restore element state (to avoid breaking existing panel visibility, e.g. with preview expanded)
+					if(origVisible) newContentEl.css('visibility', 'visible');
+				});
+
+				this.redraw();
+
+				return newContentEls;
+			},
+
+			/**
+			 * 
+			 * 
+			 * Parameters: 
+			 * - fragments {Array}
+			 * Returns: jQuery collection
+			 */
+			_findFragments: function(fragments) {
+				return $('[data-pjax-fragment]').filter(function() {
+					// Allows for more than one fragment per node
+					var i, nodeFragments = $(this).data('pjaxFragment').split(' ');
+					for(i in fragments) {
+						if($.inArray(fragments[i], nodeFragments) != -1) return true;
+					}
+					return false;
+				});
+			},
+
 			/**
 			 * Function: refresh
 			 * 
@@ -311,6 +437,22 @@ jQuery.noConflict();
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
 				this.layout();
+			}
+		});
+
+		/**
+		 * Add loading overlay to selected regions in the CMS automatically.
+		 * Not applied to all "*.loading" elements to avoid secondary regions
+		 * like the breadcrumbs showing unnecessary loading status.
+		 */
+		$('form.loading,.cms-content.loading,.cms-content-fields.loading,.cms-content-view.loading').entwine({
+			onmatch: function() {
+				this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>');
+				this._super();
+			},
+			onunmatch: function() {
+				this.find('.cms-content-loading-overlay,.cms-content-loading-spinner').remove();
+				this._super();
 			}
 		});
 
@@ -346,16 +488,13 @@ jQuery.noConflict();
 		 * as opposed to triggering a full page reload.
 		 * Little helper to avoid repetition, and make it easy to
 		 * "opt in" to panel loading, while by default links still exhibit their default behaviour.
-		 * Same goes for breadcrumbs in the CMS.
+		 * The PJAX target can be specified via a 'data-pjax-target' attribute.
 		 */
 		$('.cms .cms-panel-link').entwine({
 			onclick: function(e) {
 				var href = this.attr('href'), 
 					url = (href && !href.match(/^#/)) ? href : this.data('href'),
-					data = {
-						selector: this.data('targetPanel'),
-						pjax: this.data('pjax')
-					};
+					data = {pjax: this.data('pjaxTarget')};
 
 				$('.cms-container').loadPanel(url, null, data);
 				e.preventDefault();
@@ -681,7 +820,7 @@ jQuery.noConflict();
 				this.rewriteHashlinks();
 
 				var id = this.attr('id'), cookieId = 'ui-tabs-' + id, 
-					selectedTab = this.find('ul:first .ui-state-selected');
+					selectedTab = this.find('ul:first .ui-tabs-selected');
 
 				// Fix for wrong cookie storage of deselected tabs
 				if($.cookie && id && $.cookie(cookieId) == -1) $.cookie(cookieId, 0);

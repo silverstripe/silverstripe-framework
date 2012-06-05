@@ -160,6 +160,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
 		$form->addExtraClass('center ss-tabset cms-tabset ' . $this->BaseCSSClasses());
+		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
 
 		$this->extend('updateEditForm', $form);
 

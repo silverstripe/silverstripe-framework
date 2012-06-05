@@ -326,6 +326,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			// TODO Allow customization, e.g. to display an edit form alongside a search form from the CMS controller
 			$form->setTemplate('LeftAndMain_EditForm');
 			$form->addExtraClass('cms-content cms-edit-form center ss-tabset');
+			$form->setAttribute('data-pjax-fragment', 'CurrentForm Content');
 			if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
 			// TODO Link back to controller action (and edited root record) rather than index,
 			// which requires more URL knowledge than the current link to this field gives us.
