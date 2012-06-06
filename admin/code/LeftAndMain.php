@@ -291,9 +291,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			))
 		);
 
-		if (Director::isDev()) {
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/src/jquery.entwine.inspector.js');
-		}
+		// TODO Confuses jQuery.ondemand through document.write()
+		// if (Director::isDev()) {
+			// Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/src/jquery.entwine.inspector.js');
+		// }
 
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.css');
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
