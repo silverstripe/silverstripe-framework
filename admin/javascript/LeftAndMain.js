@@ -126,19 +126,14 @@ jQuery.noConflict();
 
 				// Move from inner to outer layouts. Some of the elements might not exist.
 				// Not all edit forms are layouted, so qualify by their data value.
+
+				this.layout({resize: false});
+				this.find('.cms-panel-layout').redraw(); 
 				this.find('.cms-content-fields[data-layout-type]').redraw(); 
 				this.find('.cms-edit-form[data-layout-type]').redraw(); 
-				
-				// Only redraw preview if its visible
 				this.find('.cms-preview').redraw();
-
-				// Only redraw the content area if its not the same as the edit form
-				var contentEl = this.find('.cms-content');
-				if(!contentEl.is('.cms-edit-form')) contentEl.redraw();
-				
+				this.find('.cms-content').redraw();
 				this.layout({resize: false});
-		
-				this.find('.cms-panel-layout').redraw(); // sidebar panels.
 			},
 
 			/**
@@ -432,14 +427,6 @@ jQuery.noConflict();
 			}
 		});
 		
-		$('.cms-content-fields').entwine({
-			redraw: function() {
-				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
-
-				this.layout();
-			}
-		});
-
 		/**
 		 * Add loading overlay to selected regions in the CMS automatically.
 		 * Not applied to all "*.loading" elements to avoid secondary regions
@@ -579,7 +566,7 @@ jQuery.noConflict();
 		/**
 		 * Add styling to all contained buttons, and create buttonsets if required.
 		 */
-		$('.cms .Actions').entwine({
+		$('.cms-content .Actions').entwine({
 			onmatch: function() {
 				this.find('.ss-ui-button').click(function() {
 						var form = this.form;
@@ -682,9 +669,7 @@ jQuery.noConflict();
 			redraw: function() {
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
-				this.layout({
-					resize: false
-				});
+				this.layout({resize: false});
 			}
 		});
 	

@@ -181,8 +181,7 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 /** ---------------------------------------------------- Buttons ---------------------------------------------------- */
 .cms .Actions > *, .cms .cms-actions-row > * { display: block; float: left; margin-right: 8px; }
 .cms .Actions > *:last-child, .cms .cms-actions-row > *:last-child { margin-right: 0; }
-.cms .Actions { min-height: 30px; }
-.cms .Actions > div { overflow: auto; }
+.cms .Actions { min-height: 30px; overflow: auto; }
 .cms input.loading, .cms button.loading, .cms input.ui-state-default.loading, .cms .ui-widget-content input.ui-state-default.loading, .cms .ui-widget-header input.ui-state-default.loading { color: #525252; border-color: #d5d3d3; cursor: default; }
 .cms input.loading .ui-icon, .cms button.loading .ui-icon, .cms input.ui-state-default.loading .ui-icon, .cms .ui-widget-content input.ui-state-default.loading .ui-icon, .cms .ui-widget-header input.ui-state-default.loading .ui-icon { background: transparent url(../../images/network-save.gif) no-repeat 0 0; }
 .cms input.loading.ss-ui-action-constructive .ui-icon, .cms button.loading.ss-ui-action-constructive .ui-icon { background: transparent url(../../images/network-save-constructive.gif) no-repeat 0 0; }
@@ -407,7 +406,7 @@ body.cms { overflow: hidden; }
 /** -------------------------------------------- Preview -------------------------------------------- */
 .cms-switch-view a { padding-right: 1em; }
 
-.cms-preview { width: 1px; z-index: 100; }
+.cms-preview { display: none; width: 1px; z-index: 100; }
 .cms-preview .cms-preview-toggle { width: 10px; cursor: pointer; }
 .cms-preview .cms-preview-toggle a { display: block; padding: 2px 12px 2px 6px; height: 16px; position: relative; top: 48%; background-color: #b0bec7; color: white; font-weight: bold; text-decoration: none; z-index: 2000; line-height: 16px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; -ms-border-bottom-right-radius: 4px; -o-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px; -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px; -ms-border-top-right-radius: 4px; -o-border-top-right-radius: 4px; border-top-right-radius: 4px; -webkit-box-shadow: 0 0 10px rgba(180, 180, 180, 0.4); -moz-box-shadow: 0 0 10px rgba(180, 180, 180, 0.4); box-shadow: 0 0 10px rgba(180, 180, 180, 0.4); }
 .cms-preview.is-collapsed .cms-preview-toggle a { left: -15px; }

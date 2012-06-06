@@ -16,7 +16,6 @@
 				// Force initialization of certain UI elements to avoid layout glitches
 				this.find('.cms-tabset').redrawTabs();
 				this.find('.ss-ui-tabs-nav').redraw();
-				this.find('.Actions').redraw();
 				
 				this._super();
 			},
@@ -27,10 +26,12 @@
 			redraw: function() {
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 				
-				// Force initialization of tabsets to avoid layout glitches
+				// Force initialization of certain UI elements to avoid layout glitches
+				this.layout();
 				this.add(this.find('.cms-tabset')).redrawTabs();
 				this.find('.cms-content-header').redraw();
-				this.layout({resize: false});
+				this.find('.cms-content-actions').redraw();
+				this.layout();
 			}
 		});
 
@@ -85,11 +86,14 @@
 			}
 		});
 
-		$('.cms-content .cms-content-header').entwine({
+		$('.cms-content .cms-content-fields').entwine({
 			redraw: function() {
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
-				// Fix height to actual extents, in preparation for a relayout via jslayout.
+				this.layout();
+			}
+		});
+
 		$('.cms-content .cms-content-header, .cms-content .cms-content-actions').entwine({
 			redraw: function() {
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));

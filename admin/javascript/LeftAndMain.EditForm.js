@@ -111,12 +111,11 @@
 			},
 						
 			redraw: function() {
+				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
+				
 				// Force initialization of tabsets to avoid layout glitches
 				this.add(this.find('.cms-tabset')).redrawTabs();
 				this.find('.cms-content-header').redraw();
-
-				var approxWidth = $('.cms-container').width() - $('.cms-menu').width();
-				this.find('.cms-content-actions').width(approxWidth).height('auto');
 				
 				this.layout();
 			},

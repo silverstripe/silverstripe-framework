@@ -263,10 +263,7 @@ form.small .field, .field.small {
 
 	.Actions {
 		min-height: 30px;
-
-		& > div {
-			overflow: auto;
-		}
+		overflow: auto;
 	}
 
 	input.loading, button.loading,

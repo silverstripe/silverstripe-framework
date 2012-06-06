@@ -374,7 +374,6 @@ body.cms {
 .cms-content-actions {
 	margin: 0;
 	padding: $grid-y*1.5 $grid-y*2;
-	height: $grid-y*4;
 	z-index: 0;
 	border-top: 1px solid $color-light-separator;
 	border-top: 1px solid #FAFAFA;
@@ -810,6 +809,7 @@ body.cms {
 	}
 }
 .cms-preview {
+	display: none;
 	width: 1px; // collapsed by default
 	z-index: 100;
 		
