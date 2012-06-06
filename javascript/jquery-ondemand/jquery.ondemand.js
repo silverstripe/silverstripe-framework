@@ -23,42 +23,28 @@
 
 		// loaded files list - to protect against loading existed file again  (by PGA)
 		_ondemand_loaded_list : null,
-		
-		// Added by SRM: Initialise the loaded_list with the scripts included on first load
-		initialiseItemLoadedList : function() {
-			if(this.loaded_list == null) {
-				$this = this;
-				$this.loaded_list = {};
-				$('script').each(function() {
-					if($(this).attr('src')) $this.loaded_list[ $(this).attr('src') ] = 1;
-				});
-				$('link[rel="stylesheet"]').each(function() {
-					if($(this).attr('href')) $this.loaded_list[ $(this).attr('href') ] = 1;
-				});
-			}
-		},
 	    
 		/**
 		 * Returns true if the given CSS or JS script has already been loaded
 		 */
 		isItemLoaded : function(scriptUrl) {
-			var self = this;
-			
-			if(this._ondemand_loaded_list == null) {
+			var self = this, src;
+			if(this._ondemand_loaded_list === null) {
 				this._ondemand_loaded_list = {};
 				$('script').each(function() {
-					if($(this).attr('src')) self._ondemand_loaded_list[ $(this).attr('src') ] = 1;
+					src = $(this).attr('src');
+					if(src) self._ondemand_loaded_list[src] = 1;
 				});
 				$('link[rel="stylesheet"]').each(function() {
-					if($(this).attr('href')) self._ondemand_loaded_list[ $(this).attr('href') ] = 1;
+					src = $(this).attr('href');
+					if(src) self._ondemand_loaded_list[src] = 1;
 				});
 			}
-			
-			return (this._ondemand_loaded_list[decodePath(scriptUrl)] != undefined);
+			return (this._ondemand_loaded_list[decodePath(scriptUrl)] !== undefined);
 		},
 
 		requireCss : function(styleUrl, media){
-			if(media == null) media = 'all';
+			if(media === null) media = 'all';
 
 			// Don't double up on loading scripts
 			if($.isItemLoaded(styleUrl)) return;
