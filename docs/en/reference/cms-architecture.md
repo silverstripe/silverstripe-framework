@@ -235,7 +235,7 @@ in a single Ajax request.
 A click on the link will cause the following (abbreviated) ajax HTTP request:
 
 	GET /admin/myadmin HTTP/1.1
-	X-Pjax:Content
+	X-Pjax:MyRecordInfo,Breadcrumbs
 	X-Requested-With:XMLHttpRequest
 
 ... and result in the following response:
