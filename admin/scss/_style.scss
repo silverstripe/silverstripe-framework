@@ -145,6 +145,7 @@ body.cms {
 				border: {
 					top:none;
 				}
+				@include box-shadow($color-shadow-light 0 0 2px);
 			}
 			
 			.ui-state-active, 
@@ -154,7 +155,7 @@ body.cms {
 					top:none;
 				}
 				padding-bottom:0px;
-				@include box-shadow($color-shadow-light 0 0 2px);
+				@include box-shadow(none);
 			}
 			.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
 				border-radius:0;
