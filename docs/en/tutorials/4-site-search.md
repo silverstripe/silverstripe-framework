@@ -12,7 +12,7 @@ follow this tutorial on any site of your own.
 We are going to add a search box on the top of the page. When a user types something in the box, they are taken to a
 results page.
 
-![](_images/searchresults-small.jpg)
+![](_images/tutorial4_search.png)
 
 ## Creating the search form
 
@@ -27,110 +27,54 @@ After including that in your `_config.php` you will need to rebuild the database
 The actual search form code is already provided in FulltextSearchable so when you add the enable line above to your
 `_config.php` you can add your form as `$SearchForm`.
 
-### Custom CSS code
+In the simple theme, the SearchForm is already added to the header. We will go through the code and explain it.
 
-Add the following css code to the *themes/tutorial/css/layout.css* file. This will style the header form and search
-results page.
-
-	:::css
-	#Header form {
-		float:right;
-		width:160px;
-		margin:25px 25px 0px 25px;
-	}
-		#Header form * {
-			display:inline !important;
-		}
-		#Header form div {
-		}
-		#Header form input.text {
-			width:110px;
-			color:#000;
-			background:#f0f0f0;
-			border:1px solid #aaa;
-			padding:3px;
-		}
-		#Header form input.action {
-			font-weight:bold;
-		}
-
-	.searchResults h2 {
-		font-size:2.2em;
-		font-weight:normal;
-		color:#0083C8;
-		margin-bottom:15px;
-	}
-	.searchResults p.searchQuery {
-		color:#333;
-		margin-bottom:10px;
-	}
-
-	.searchResults ul#SearchResults li {
-		margin-bottom:20px;
-	}
-		ul#SearchResults p {
-			font-size:1.1em;
-			font-weight:normal;
-			line-height:2em;
-			color:#333;
-		}
-		ul#SearchResults a.searchResultHeader {
-			font-size:1.3em;
-			font-weight:bold;
-			color:#0083C8;
-			text-decoration:none;
-			margin:20px 0 8px 0;
-			padding-left:20px;
-			background:url(../images/treeicons/search-file.gif) no-repeat left center;
-		}
-			ul#SearchResults a {
-				text-decoration:none;
-				color:#0083C8;
-			}
-			ul#SearchResults a:hover {
-			border-bottom:1px dotted #0083C8;
-			}
 
 ## Adding the search form
 
-We then just need to add the search form to the template. Add *$SearchForm* to the 'Header' div in
-*themes/tutorial/templates/Page.ss*.
+To add the search form, we can add `$SearchForm` anywhere in our templates. In the simple theme, this is in
+*themes/simple/templates/Includes/Header.ss*
 
-*themes/tutorial/templates/Page.ss*
+*themes/simple/templates/Includes/Header.ss*
 
 	:::ss
-	<div id="Header">
-		$SearchForm
-		<h1>$Title</h1>
-	</div>
+	...
+	<% if SearchForm %>
+		<span class="search-dropdown-icon">L</span>
+		<div class="search-bar">
+			$SearchForm
+			<span class="search-bubble-arrow">}</span>
+		</div>      
+	<% end_if %>
+	<% include Navigation %>
 
+This results in:
 
-![](_images/searchform.jpg)
+![](_images/tutorial4_searchbox.png)
 
 ## Showing the results
 
-Next we need to create the *results* function.
+The results function is already included in the `ContentControllerSearchExtension` which
+is applied via `FulltextSearchable::enable()`
 
-*mysite/code/Page.php*
+*cms/code/search/ContentControllerSearchExtension.php*
 
 	:::php
-	class Page_Controller extends ContentController {
+	class ContentControllerSearchExtension extends Extension {
 		...	
 	
-		public function results($data, $form){
+		function results($data, $form, $request) {
 			$data = array(
 				'Results' => $form->getResults(),
 				'Query' => $form->getSearchQuery(),
-				'Title' => 'Search Results'
+				'Title' => _t('SearchForm.SearchResults', 'Search Results')
 			);
-			$this->Query = $form->getSearchQuery();
-		
-			return $this->customise($data)->renderWith(array('Page_results', 'Page'));
+			return $this->owner->customise($data)->renderWith(array('Page_results', 'Page'));
 		}
 	}
 
 
-First we populate an array with the data we wish to pass to the template - the search results, query and title of the
+The code populates an array with the data we wish to pass to the template - the search results, query and title of the
 page. The final line is a little more complicated.
 
 When we call a function by its url (eg http://localhost/home/results), SilverStripe will look for a template with the
@@ -153,67 +97,68 @@ function, and then attempt to render it with *Page_results.ss*, falling back to 
 
 ## Creating the template
 
-Lastly we need to create the template for the search page. This template uses all the same techniques used in previous
+Lastly we need the template for the search page. This template uses all the same techniques used in previous
 tutorials. It also uses a number of pagination variables, which are provided by the `[api:DataObjectSet]`
 class.
 
-*themes/tutorial/templates/Layout/Page_results.ss*
+*themes/simple/templates/Layout/Page_results.ss*
 
 	:::ss
 	<div id="Content" class="searchResults">
-		<h2>$Title</h2>
-		
-		<% if Query %>
-			<p class="searchQuery"><strong>You searched for &quot;{$Query}&quot;</strong></p>
-		<% end_if %>
-			
-		<% if Results %>
-		<ul id="SearchResults">
-			<% control Results %>
-			<li>
-				<a class="searchResultHeader" href="$Link">
-					<% if MenuTitle %>
-					$MenuTitle
-					<% else %>
-					$Title
-					<% end_if %>
-				</a>
-				<p>$Content.LimitWordCountXML</p>
-				<a class="readMoreLink" href="$Link" title="Read more about &quot;{$Title}&quot;">Read more about &quot;{$Title}&quot;...</a>
-			</li>
-			<% end_control %>
-		</ul>
-		<% else %>
-		<p>Sorry, your search query did not return any results.</p>
-		<% end_if %>
-				
-		<% if Results.MoreThanOnePage %>
-		<div id="PageNumbers">
-			<% if Results.NotLastPage %>
-			<a class="next" href="$Results.NextLink" title="View the next page">Next</a>
-			<% end_if %>
-			<% if Results.NotFirstPage %>
-			<a class="prev" href="$Results.PrevLink" title="View the previous page">Prev</a>
-			<% end_if %>
-			<span>
-				<% control Results.Pages %>
-					<% if CurrentBool %>
-					$PageNum
-					<% else %>
-					<a href="$Link" title="View page number $PageNum">$PageNum</a>
-					<% end_if %>
-				<% end_control %>
-			</span>
-			<p>Page $Results.CurrentPage of $Results.TotalPages</p>
-		</div>
-		<% end_if %>
+	    <h1>$Title</h1>
+	     
+	    <% if Query %>
+	        <p class="searchQuery"><strong>You searched for &quot;{$Query}&quot;</strong></p>
+	    <% end_if %>
+	         
+	    <% if Results %>
+	    <ul id="SearchResults">
+	        <% control Results %>
+	        <li>
+	            <a class="searchResultHeader" href="$Link">
+	                <% if MenuTitle %>
+	                $MenuTitle
+	                <% else %>
+	                $Title
+	                <% end_if %>
+	            </a>
+	            <p>$Content.LimitWordCountXML</p>
+	            <a class="readMoreLink" href="$Link" 
+	            	title="Read more about &quot;{$Title}&quot;"
+	            	>Read more about &quot;{$Title}&quot;...</a>
+	        </li>
+	        <% end_control %>
+	    </ul>
+	    <% else %>
+	    <p>Sorry, your search query did not return any results.</p>
+	    <% end_if %>
+	             
+	    <% if Results.MoreThanOnePage %>
+	    <div id="PageNumbers">
+	        <% if Results.NotLastPage %>
+	        <a class="next" href="$Results.NextLink" title="View the next page">Next</a>
+	        <% end_if %>
+	        <% if Results.NotFirstPage %>
+	        <a class="prev" href="$Results.PrevLink" title="View the previous page">Prev</a>
+	        <% end_if %>
+	        <span>
+	            <% control Results.Pages %>
+	                <% if CurrentBool %>
+	                $PageNum
+	                <% else %>
+	                <a href="$Link" title="View page number $PageNum">$PageNum</a>
+	                <% end_if %>
+	            <% end_control %>
+	        </span>
+	        <p>Page $Results.CurrentPage of $Results.TotalPages</p>
+	    </div>
+	    <% end_if %>
 	</div>
 
 Then finally add ?flush=1 to the URL and you should see the new template.
 
 
-![](_images/searchresults.jpg)
-
+![](_images/tutorial4_search.png)
 
 ## Summary
 
