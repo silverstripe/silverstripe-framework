@@ -27,12 +27,12 @@ After including that in your `_config.php` you will need to rebuild the database
 The actual search form code is already provided in FulltextSearchable so when you add the enable line above to your
 `_config.php` you can add your form as `$SearchForm`.
 
-In the simple theme, the SearchForm is already added to the header. We will go through the code and explain it.
+In the "Simple" theme, the SearchForm is already added to the header. We will go through the code and explain it.
 
 
 ## Adding the search form
 
-To add the search form, we can add `$SearchForm` anywhere in our templates. In the simple theme, this is in
+To add the search form, we can add `$SearchForm` anywhere in our templates. In the "Simple" theme, this is in
 *themes/simple/templates/Includes/Header.ss*
 
 *themes/simple/templates/Includes/Header.ss*
@@ -54,8 +54,12 @@ This results in:
 
 ## Showing the results
 
-The results function is already included in the `ContentControllerSearchExtension` which
-is applied via `FulltextSearchable::enable()`
+The results function is already included in the `ContentControllerSearchExtension`. When you call
+`FulltextSearchable::enable()` in the `_config.php`, this Class is installed as an Extension
+of the `Page_Controller` This is one of the many great features of the silverstripe framework 
+but a bit of magic for PHP programmers. For now, you only have to know that the applied Extension 
+makes all methods of the extension available on the `Page_Controller`. So the function `results()`
+is available on all pages and can be called in the template.
 
 *cms/code/search/ContentControllerSearchExtension.php*
 
