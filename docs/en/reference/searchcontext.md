@@ -188,5 +188,5 @@ See `[api:SearchFilter]` API Documentation
 ## Related
 
 *  `[api:ModelAdmin]`
-*  `[api:RestfulServer]`
+*  [RestfulServer module](https://github.com/silverstripe/silverstripe-restfulserver)
 *  [Tutorial: Site Search](/tutorials/4-site-search)

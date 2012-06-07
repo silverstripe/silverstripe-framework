@@ -147,6 +147,7 @@
 			
 			expand: function(inclMenu) {
 				var self = this, containerEl = this.getLayoutContainer(), contentEl = containerEl.find('.cms-content');
+				this.show();
 				this.removeClass('east').addClass('center').removeClass('is-collapsed');
 				// this.css('overflow', 'auto');
 				contentEl.removeClass('center').hide();
@@ -158,8 +159,7 @@
 					containerEl.find('.cms-menu').collapsePanel();
 				}
 				
-				// Already triggered through panel toggle above
-				// containerEl.redraw();
+				containerEl.redraw();
 			},
 			
 			collapse: function() {
@@ -175,8 +175,7 @@
 					containerEl.find('.cms-menu').expandPanel();
 				}
 				
-				// Already triggered through panel toggle above
-				// containerEl.redraw();
+				containerEl.redraw();
 			},
 			
 			block: function() {
@@ -195,7 +194,9 @@
 				this[this.hasClass('is-collapsed') ? 'expand' : 'collapse']();
 			},
 			redraw: function() {
-				this.layout();
+				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
+				
+				this.layout({resize: false});
 			}
 		});
 		

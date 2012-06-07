@@ -33,7 +33,7 @@ class GridFieldLevelup implements GridField_HTMLProvider{
 			//$controller = $gridField->getForm()->Controller();
 			$forTemplate = new ArrayData(array(
 				'UpLink' => sprintf(
-					'<a class="cms-panel-link list-parent-link" href="?ParentID=%d&view=list" data-target-panel="#Form_ListViewForm" data-pjax="ListViewForm">%s</a>',
+					'<a class="cms-panel-link list-parent-link" href="?ParentID=%d&view=list" data-pjax-target="ListViewForm,Breadcrumbs">%s</a>',
 					$parentID,
 					_t('GridField.LEVELUP', 'Level up' )
 				),

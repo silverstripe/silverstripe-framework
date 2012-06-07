@@ -1131,7 +1131,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 							if($dbCommand == 'insert') {
 								$manipulation[$class]['fields']["Created"] = "'".SS_Datetime::now()->Rfc2822()."'";
 								//echo "<li>$this->class - " .get_class($this);
-								$manipulation[$class]['fields']["ClassName"] = "'$this->class'";
+								$manipulation[$class]['fields']["ClassName"] = DB::getConn()->prepStringForDB($this->class);
 							}
 						}
 
@@ -1447,7 +1447,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function getManyManyComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
 		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
 		
-		$result = new ManyManyList($componentClass, $table, $componentField, $parentField,
+		$result = Injector::inst()->create('ManyManyList', $componentClass, $table, $componentField, $parentField,
 			$this->many_many_extraFields($componentName));
 		if($this->model) $result->setDataModel($this->model);
 

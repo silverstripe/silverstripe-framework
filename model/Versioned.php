@@ -92,7 +92,7 @@ class Versioned extends DataExtension {
 	 * The first stage is consiedered the 'default' stage, the last stage is
 	 * considered the 'live' stage.
 	 */
-	function __construct($stages) {
+	function __construct($stages=array('Stage','Live')) {
 		parent::__construct();
 
 		if(!is_array($stages)) {

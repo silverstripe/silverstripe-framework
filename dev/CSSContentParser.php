@@ -2,7 +2,6 @@
 
 /**
  * CSSContentParser enables parsing & assertion running of HTML content via CSS selectors.
- * 
  * It works by converting the content to XHTML using tidy, rewriting the CSS selectors as XPath queries, and executing
  * those using SimpeXML.
  * 
@@ -12,6 +11,9 @@
  * Tries to use the PHP Tidy extension (http://php.net/tidy),
  * and falls back to the "tidy" CLI tool. If none of those exists,
  * the string is parsed directly without sanitization.
+ * 
+ * Caution: Doesn't fully support HTML elements like <header>
+ * due to them being declared illegal by the "tidy" preprocessing step.
  * 
  * @package framework
  * @subpackage core

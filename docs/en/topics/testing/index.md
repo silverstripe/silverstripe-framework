@@ -8,8 +8,6 @@ The SilverStripe core contains various features designed to simplify the process
 * [Troubleshooting](testing-guide-troubleshooting): Frequently asked questions list for testing issues
 * [Why Unit Test?](why-test): Why should you test and how to start testing
 
-## Introduction
-
 If you are familiar with PHP coding but new to unit testing, you should read the [Introduction](/topics/testing) and
 check out Mark's presentation [Getting to Grips with SilverStripe Testing](http://www.slideshare.net/maetl/getting-to-grips-with-silverstripe-testing).
 
@@ -99,7 +97,6 @@ Some people may note that we have used the same naming convention as Ruby on Rai
 Tutorials and recipes for creating tests using the SilverStripe framework:
 
 *  **[Create a SilverStripe Test](/topics/testing/create-silverstripe-test)**
-*  **Load Test Fixtures**
 *  **[Create a Functional Test](/topics/testing/create-functional-test)**
 *  **[Test Outgoing Email Sending](/topics/testing/email-sending)**
 
@@ -146,8 +143,3 @@ understand the problem space and discover suitable APIs for performing specific 
 for describing the specification of how code should perform. In practice, there's little or no technical difference - it
 all comes down to language. In BDD, the usual terminology is changed to reflect this change of focus, so *Specification*
 is used in place of *Test Case*, and *should* is used in place of *expect* and *assert*.
-
-
-## Feedback
-
-If you have a topic you would like covered in these section please ask for it on our [Bug Tracker](http://open.silverstripe.org)

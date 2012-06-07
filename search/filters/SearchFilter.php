@@ -142,7 +142,7 @@ abstract class SearchFilter extends Object {
 		// Todo: move to somewhere more appropriate, such as DataMapper, the magical class-to-be?
 		$candidateClass = $this->model;
 		while($candidateClass != 'DataObject') {
-			if(singleton($candidateClass)->hasOwnTableDatabaseField($this->name)) break;
+			if(DataObject::has_own_table($candidateClass) && singleton($candidateClass)->hasOwnTableDatabaseField($this->name)) break;
 			$candidateClass = get_parent_class($candidateClass);
 		}
 		if($candidateClass == 'DataObject') user_error("Couldn't find field $this->name in any of $this->model's tables.", E_USER_ERROR);

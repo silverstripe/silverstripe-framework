@@ -15,8 +15,6 @@ class DataExtensionTest extends SapphireTest {
 	);
 	
 	function testOneToManyAssociationWithExtension() {
-		// Fails in RestfulServerTest
-		// Error: Object::__call() Method 'RelatedObjects' not found in class 'RestfulServerTest_Comment' 
 		$contact = new DataExtensionTest_Member();
 		$contact->Website = "http://www.example.com";
 		

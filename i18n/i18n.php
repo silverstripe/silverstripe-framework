@@ -1524,7 +1524,9 @@ class i18n extends Object implements TemplateGlobalProvider {
 			if(!preg_match($regex, $returnValue)) {
 				// Legacy mode: If no injection placeholders are found, 
 				// replace sprintf placeholders in fixed order.
-				$returnValue = vsprintf($returnValue, array_values($injectionArray));
+				// Fail silently in case the translation is outdated
+				$replaced = @vsprintf($returnValue, array_values($injectionArray));	
+				if($replaced) $returnValue = $replaced;
 			} else if(!ArrayLib::is_associative($injectionArray)) {
 				// Legacy mode: If injection placeholders are found,
 				// but parameters are passed without names, replace them in fixed order.

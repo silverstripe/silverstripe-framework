@@ -34,7 +34,7 @@ dedicated search service like the [sphinx module](http://silverstripe.org/sphinx
 ## Related
 
 *  `[api:ModelAdmin]`
-*  `[api:RestfulServer]`
+*  [RestfulServer module](https://github.com/silverstripe/silverstripe-restfulserver)
 *  [Tutorial: Site Search](/tutorials/4-site-search)
 *  [SearchContext](/reference/searchcontext)
 *  [genericviews module](http://silverstripe.org/generic-views-module)

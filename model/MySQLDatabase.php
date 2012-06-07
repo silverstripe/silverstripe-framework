@@ -367,7 +367,9 @@ class MySQLDatabase extends SS_Database {
 	public function fieldList($table) {
 		$fields = DB::query("SHOW FULL FIELDS IN \"$table\"");
 		foreach($fields as $field) {
-			$fieldSpec = $field['Type'];
+
+			// ensure that '' is converted to \' in field specification (mostly for the benefit of ENUM values)
+			$fieldSpec = str_replace('\'\'', '\\\'', $field['Type']);
 			if(!$field['Null'] || $field['Null'] == 'NO') {
 				$fieldSpec .= ' not null';
 			}
@@ -776,7 +778,7 @@ class MySQLDatabase extends SS_Database {
 
 		$classes = array();
 		foreach($matches[0] as $value) {
-			$classes[] = trim($value, "'");
+			$classes[] = stripslashes(trim($value, "'"));
 		}
 		return $classes;
 	}

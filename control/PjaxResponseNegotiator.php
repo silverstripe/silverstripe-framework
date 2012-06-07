@@ -40,23 +40,26 @@ class PjaxResponseNegotiator {
 	 */
 	public function respond(SS_HTTPRequest $request, $extraCallbacks = array()) {
 		// Prepare the default options and combine with the others
-		$callbacks = array_merge(
-			array_change_key_case($this->callbacks, CASE_LOWER),
-			array_change_key_case($extraCallbacks, CASE_LOWER)
-		);
+		$callbacks = array_merge($this->callbacks, $extraCallbacks);
+		$response = new SS_HTTPResponse();
 		
-		if($fragment = $request->getHeader('X-Pjax')) {
-			$fragment = strtolower($fragment);
-			if(isset($callbacks[$fragment])) {
-				return call_user_func($callbacks[$fragment]);
-			} else {
-				throw new SS_HTTPResponse_Exception("X-Pjax = '$fragment' not supported for this URL.", 400);
+		$responseParts = array();
+		if($fragmentStr = $request->getHeader('X-Pjax')) {
+			$fragments = explode(',', $fragmentStr);
+			foreach($fragments as $fragment) {
+				if(isset($callbacks[$fragment])) {
+					$responseParts[$fragment] = call_user_func($callbacks[$fragment]);
+				} else {
+					throw new SS_HTTPResponse_Exception("X-Pjax = '$fragment' not supported for this URL.", 400);
+				}
 			}
+			$response->setBody(Convert::raw2json($responseParts));
+			$response->addHeader('Content-Type', 'text/json');
 		} else {
 			if($request->isAjax()) throw new SS_HTTPResponse_Exception("Ajax requests to this URL require an X-Pjax header.", 400);
-			return call_user_func($callbacks['default']);
+			$response->setBody(call_user_func($callbacks['default']));
 		}
-		
+		return $response;
 	}
 
 	/**

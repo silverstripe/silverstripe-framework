@@ -89,5 +89,7 @@ class AdminRootController extends Controller {
 				}
 			}
 		}
+
+		return $this->httpError(404, 'Not found');
 	}
 }
