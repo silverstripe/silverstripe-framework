@@ -16,7 +16,6 @@ form.nostyle {
 
 .field {
 	display: block;
-	padding: 10px 0;
 	border-bottom: 1px solid $color-shadow-light;
     @include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
 
