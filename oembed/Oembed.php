@@ -80,8 +80,8 @@ class Oembed {
 	 * @returns string/bool Oembed URL, or false.
 	 */
 	protected static function autodiscover_from_url($url) {
-		// Fetch the URL
-		$service = new RestfulService($url);
+		// Fetch the URL (cache for a week by default)
+		$service = new RestfulService($url, 60*60*24*7);
 		$body = $service->request();
 		if(!$body || $body->isError()) {
 			return false;
@@ -216,8 +216,8 @@ class Oembed_Result extends ViewableData {
 			return;
 		}
 
-		// Fetch from Oembed URL
-		$service = new RestfulService($this->url);
+		// Fetch from Oembed URL (cache for a week by default)
+		$service = new RestfulService($this->url, 60*60*24*7);
 		$body = $service->request();
 		if(!$body || $body->isError()) {
 			$this->data = array();
