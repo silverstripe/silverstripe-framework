@@ -13,6 +13,11 @@
  */
 
 class Oembed {
+
+	public static function is_enabled() {
+		return Config::inst()->get('Oembed', 'enabled');
+	}
+
 	/**
 	 * Gets the autodiscover setting from the config.
 	 */
@@ -111,6 +116,8 @@ class Oembed {
 	 * @returns Oembed_Result/bool An Oembed descriptor, or false
 	 */
 	public static function get_oembed_from_url($url, $type = false, array $options = array()) {
+		if(!self::is_enabled()) return false;
+
 		// Find or build the Oembed URL.
 		$endpoint = self::find_endpoint($url);
 		$oembedUrl = false;
