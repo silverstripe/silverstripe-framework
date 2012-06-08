@@ -43,6 +43,27 @@ Example: Remove some buttons for more advanced formatting
 	// File: mysite/_config.php
 	HtmlEditorConfig::get('cms')->removeButtons('tablecontrols', 'blockquote', 'hr');
 
+## Image and Media Insertion
+
+The `[api:HtmlEditorField]` API also handles inserting images and media 
+files into the managed HTML content. It can be used both for referencing
+files on the webserver filesystem (through the `[api:File]` and `[api:Image]` APIs),
+as well as hotlinking files from the web.
+
+## oEmbed: Embedding media through external services
+
+The ["oEmbed" standard](http://www.oembed.com/) is implemented by many media services
+around the web, allowing easy representation of files just by referencing a website URL.
+For example, a content author can insert a playable youtube video just by knowing
+its URL, as opposed to dealing with manual HTML code.
+
+oEmbed powers the "Insert from web" feature available through `[api:HtmlEditorField]`.
+Internally, it makes HTTP queries to a list of external services
+if it finds a matching URL. These services are described in the `Oembed.providers` configuration.
+Since these requests are performed on page rendering, they typically have a long cache time (multiple days). To refresh a cache, append `?flush=1` to a URL.
+
+To disable oEmbed usage, set the `Oembed.enabled` configuration property to "false".
+
 ## Recipes
 
 ### Customizing the "Insert" panels

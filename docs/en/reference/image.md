@@ -2,15 +2,21 @@
 
 ## Introduction
 
-Represents an image object, inheriting all base functionality from the [file](api:file) class with extra functionality
-including resizing.
+Represents an image object through the `[api:Image]` class, inheriting all base functionality from the `[api:File]` class with extra functionality including resizing.
 
 ## Usage
 
-### Form Fields
+### Managing images through form fields
 
-*  `[api:Image]`. Designed to provide a complex image uploader for the CMS.
-*  `[api:FileField]` and `[api:UploadField]`. Allows upload of images (through limiting file extensions with `setAllowedExtensions()`).
+Images can be uploaded like any other file, through `[api:FileField]`.
+More advanced usage is possible through `[api:UploadField]`,
+which provides thumbnails, a detail view of the image properties,
+and management of relationships to other DataObject instances.
+Allows upload of images through limiting file extensions with `setAllowedExtensions()`.
+
+### Inserting images into the WYSIWYG editor
+
+See [Topics: Rich Text Editing](/topics/rich-text-editing).
 
 ### Resizing Images in PHP
 
