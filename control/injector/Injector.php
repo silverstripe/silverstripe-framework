@@ -176,9 +176,17 @@ class Injector {
 	 */
 	public function __construct($config = null) {
 		$this->injectMap = array();
-		$this->serviceCache = array();
+		
+		// Set up with the injector as an initial property
+		$this->serviceCache = array(
+			'Injector'		=> $this,
+		);
+		$this->specs = array(
+			'Injector'		=> array('class' => 'Injector')
+		);
+
 		$this->autoProperties = array();
-		$this->specs = array();
+		
 
 		$creatorClass = isset($config['creator']) ? $config['creator'] : 'InjectionCreator';
 		$locatorClass = isset($config['locator']) ? $config['locator'] : 'ServiceConfigurationLocator';
@@ -603,6 +611,11 @@ class Injector {
 			return $name;
 		}
 		
+		// or if it's been registered manually
+		if (isset($this->serviceCache[$name])) {
+			return $name;
+		}
+
 		// okay, check whether we've got a compound name - don't worry about 0 index, cause that's an 
 		// invalid name
 		if (!strpos($name, '.')) {
@@ -653,10 +666,10 @@ class Injector {
 	}
 
 	/**
-	 * Clear out all objects that are managed by the injetor. 
+	 * Clear out all objects that are managed by the injector. 
 	 */
 	public function unregisterAllObjects() {
-		$this->serviceCache = array();
+		$this->serviceCache = array('Injector' => $this);
 	}
 	
 	/**
@@ -693,7 +706,7 @@ class Injector {
 
 			// if we're a prototype OR we're not wanting a singleton
 			if (($type && $type == 'prototype') || !$asSingleton) {
-				if ($spec) {
+				if ($spec && $constructorArgs) {
 					$spec['constructor'] = $constructorArgs;
 				}
 				return $this->instantiate($spec, $serviceName);
@@ -725,6 +738,17 @@ class Injector {
 		}
 
 		return $this->instantiate($spec);
+	}
+	
+	/**
+	 * Magic method to return an item directly
+	 * 
+	 * @param string $name
+	 *				The named object to retrieve
+	 * @return mixed
+	 */
+	public function __get($name) {
+		return $this->get($name);
 	}
 
 	/**
