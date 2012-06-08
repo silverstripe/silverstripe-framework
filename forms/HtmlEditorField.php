@@ -572,7 +572,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		if($file->Width != null){
 			$dimensionsField = new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
 				$widthField = new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), $file->Width),
-				$heightField = new TextField('Height', " x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), $file->Height)
+				$heightField = new TextField('Height', _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), $file->Height)
 			);
 		}
 
