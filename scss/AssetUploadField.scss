@@ -22,6 +22,12 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 		color:lighten($color-text, 20%);
 		text-shadow: 0px 1px 0px #fff;
 	}
+	.fieldholder-small{
+		margin-top:-8px;
+		label{
+			margin-left:0;
+		}
+	}
 }
 
 
@@ -48,16 +54,14 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 		.ss-ui-button {
 			position:absolute;
 			bottom:0;
+			padding:0;
 			background: none;
 			border: 0;
 			right:0;
 			@include box-shadow(none);
 			color: $color-text;		
-
-
-			&.ss-uploadfield-item-edit-all {
-				@extend .ss-uploadfield-item-edit; 
-				height:auto;
+			&:hover{
+				color: #1e7cba;	
 			}
 		}
 		.state{
@@ -91,6 +95,12 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			width: 40px;
 			overflow: hidden;
 			z-index: 1;
+			.no-preview{		
+				display:block;
+				height:100%;
+				width:100%;
+				background:url('../images/icons/document.png') 2px 0px no-repeat;
+			}
 		}
 		.ss-uploadfield-item-info {
 			position: relative;
@@ -138,7 +148,6 @@ body.cms.ss-uploadfield-edit-iframe, .composite.ss-assetuploadfield .details fie
 			background:$color-button-disabled; //for browsers that don't support rgba
 			background: rgba(#fff, 0.8);
 			@include border-radius(3px);
-			display: block;
 			line-height: 24px;
 			height: 22px;
 			padding: 0 5px;
