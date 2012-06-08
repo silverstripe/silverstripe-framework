@@ -82,15 +82,15 @@ If more variables exist in the future, consider creating a variables file.*/
 .ui-state-default .btn-icon-unpublish_disabled, .ui-widget-content .btn-icon-unpublish_disabled { background-position: 0 -176px; }
 
 .icon { text-indent: -9999px; border: none; outline: none; }
-.icon.icon-24 { width: 24px; height: 24px; background: url('../images/menu-icons/24x24-sb373738c7b.png'); }
-.icon.icon-24.icon-assetadmin { background-position: 0 -136px; }
-.icon.icon-24.icon-cmsmain { background-position: 0 -64px; }
-.icon.icon-24.icon-cmspagescontroller { background-position: 0 -208px; }
-.icon.icon-24.icon-cmssettingscontroller { background-position: 0 -16px; }
-.icon.icon-24.icon-securityadmin { background-position: 0 -40px; }
-.icon.icon-24.icon-reportadmin { background-position: 0 -88px; }
-.icon.icon-24.icon-commentadmin { background-position: 0 -184px; }
-.icon.icon-24.icon-help { background-position: 0 -112px; }
+.icon.icon-24 { width: 24px; height: 24px; background: url('../images/menu-icons/24x24-sedfac01ed1.png'); }
+.icon.icon-24.icon-assetadmin { background-position: 0 -120px; }
+.icon.icon-24.icon-cmsmain { background-position: 0 -48px; }
+.icon.icon-24.icon-cmspagescontroller { background-position: 0 -192px; }
+.icon.icon-24.icon-cmssettingscontroller { background-position: 0 0; }
+.icon.icon-24.icon-securityadmin { background-position: 0 -24px; }
+.icon.icon-24.icon-reportadmin { background-position: 0 -72px; }
+.icon.icon-24.icon-commentadmin { background-position: 0 -168px; }
+.icon.icon-24.icon-help { background-position: 0 -96px; }
 .icon.icon-16 { width: 16px; height: 16px; background: url('../images/menu-icons/16x16-sb173d358c2.png'); }
 .icon.icon-16.icon-assetadmin { background-position: 0 -80px; }
 .icon.icon-16.icon-cmsmain { background-position: 0 -16px; }
@@ -141,7 +141,7 @@ form.nostyle label.left { float: none; display: inherit; width: auto; padding: 0
 form.nostyle .middleColumn { margin-left: 0; }
 form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyle .TreeDropdownField { width: auto; max-width: auto; }
 
-.field { display: block; padding: 10px 0; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); padding: 0 0 7px 0; margin: 0 0 8px 0; *zoom: 1; }
+.field { display: block; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); padding: 0 0 7px 0; margin: 0 0 8px 0; *zoom: 1; }
 .field:last-child { border-bottom: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
 .field:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
 .field.nolabel .middleColumn { margin-left: 0; }
@@ -375,7 +375,7 @@ body.cms { overflow: hidden; }
 .cms-content-tools .cms-panel-content #LastEditedTo input.hasDatepicker { max-width: 160px; }
 .cms-content-tools .cms-panel-content .Actions .ss-ui-action-constructive { margin-right: 5px; }
 .cms-content-tools .cms-content-header { background-color: #748d9d; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2IwYmVjNyIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzc0OGQ5ZCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #b0bec7), color-stop(100%, #748d9d)); background-image: -webkit-linear-gradient(#b0bec7, #748d9d); background-image: -moz-linear-gradient(#b0bec7, #748d9d); background-image: -o-linear-gradient(#b0bec7, #748d9d); background-image: -ms-linear-gradient(#b0bec7, #748d9d); background-image: linear-gradient(#b0bec7, #748d9d); }
-.cms-content-tools .cms-content-header h2 { text-shadow: #5c7382 -1px -1px 0; width: 176px; color: white; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; }
+.cms-content-tools .cms-content-header h2 { text-shadow: #5c7382 -1px -1px 0; width: 176px; color: white; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; }
 .cms-content-tools h3, .cms-content-tools h4, .cms-content-tools h5 { font-weight: bold; line-height: 16px; }
 .cms-content-tools h3 { font-size: 13px; }
 .cms-content-tools h4 { font-size: 12px; margin: 5px 0; }
@@ -595,10 +595,12 @@ form.import-form label.left { width: 250px; }
 .cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings .TreeDropdownField .treedropdownfield-toggle-panel-link { border-left: none; background: none; background-image: none; }
 
 /** -------------------------------------------- Buttons for FileUpload -------------------------------------------- */
-.toggle-details .toggle-details-icon { background: url('../images/sprites-32x32-sb47394f892.png') 0 -217px no-repeat; }
-.fileOverview .toggle-details .toggle-details-icon { background: url('../images/sprites-32x32-sb47394f892.png') 0 -159px no-repeat; }
-.toggle-details .toggle-details-icon.opened { background: url('../images/sprites-32x32-sb47394f892.png') 0 -905px no-repeat; }
-.fileOverview .toggle-details .toggle-details-icon.opened { background: url('../images/sprites-32x32-sb47394f892.png') 0 -143px no-repeat; }
+.ss-uploadfield-item-edit-all .ui-button-text { padding-right: 0; }
+
+.toggle-details-icon { background: url('../images/sprites-32x32-sb47394f892.png') 0 -217px no-repeat; }
+.fileOverview .toggle-details-icon { background: url('../images/sprites-32x32-sb47394f892.png') 0 -159px no-repeat; display: inline-block; width: 8px; height: 8px; padding-left: 5px; }
+.toggle-details-icon.opened { background: url('../images/sprites-32x32-sb47394f892.png') 0 -905px no-repeat; }
+.fileOverview .toggle-details-icon.opened { background: url('../images/sprites-32x32-sb47394f892.png') 0 -143px no-repeat; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load,  but we need it earlier in order to correctly display the uninitialized tree. */
 .cms .jstree ul, .TreeDropdownField .treedropdownfield-panel .jstree ul { display: block; margin: 0; padding: 0; background: none; list-style-type: none; }
@@ -720,7 +722,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-logo { border-bottom: 1px solid #03090c; height: 31px; overflow: hidden; padding: 0 0 0 4px; vertical-align: middle; font-size: 12px; }
 .cms-logo .version { display: none; }
 .cms-logo a { display: inline-block; height: 24px; width: 24px; float: left; margin-right: 8px; background: url("../images/logo_small.png") no-repeat; text-indent: -9999em; padding-right: 7px; border-right: 1px solid #19435c; }
-.cms-logo span { font-weight: bold; font-size: 14px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; padding-top: 1px; }
+.cms-logo span { font-weight: bold; font-size: 14px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; padding-top: 1px; }
 
 .cms-login-status { border-top: 1px solid #19435c; height: 24px; padding: 7px 4px 0 4px; overflow: hidden; line-height: 16px; font-size: 11px; }
 .cms-login-status .logout-link { display: inline-block; height: 16px; width: 16px; float: left; margin: 0 8px 0 3px; background: url('../images/sprites-32x32-sb47394f892.png') 0 -76px no-repeat; text-indent: -9999em; }

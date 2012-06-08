@@ -1489,8 +1489,8 @@ body.cms-dialog {
 	// Emulate .field bottom border styling without applying .field class,
 	// as it messes up the nested .field element styling (blocklevel labels)
 	border-bottom: 1px solid $color-shadow-light;
-  @include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
-  margin-bottom: $grid-x;
+  	@include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
+  	margin-bottom: $grid-x;
 
 	// Preview might not always be available
 	.cms-file-info-preview {
@@ -1730,22 +1730,30 @@ form.import-form {
 /** --------------------------------------------
  * Buttons for FileUpload
  * -------------------------------------------- */
-.toggle-details{	
-	.toggle-details-icon {
-		background: sprite($sprites32, menu-arrow-down) no-repeat;
-		.fileOverview &{
-			background: sprite($sprites32, menu-arrow-deselected-down) no-repeat;
-			
-		}
+.ss-uploadfield-item-edit-all .ui-button-text{
+	padding-right:0;
+}
 
-		&.opened {					
-			background: sprite($sprites32, menu-arrow-up) no-repeat;	
-			.fileOverview &{
-				background: sprite($sprites32, menu-arrow-deselected-up) no-repeat;			
-			}		
-		}
+ 
+	
+.toggle-details-icon {
+	background: sprite($sprites32, menu-arrow-down) no-repeat;
+	.fileOverview &{
+		background: sprite($sprites32, menu-arrow-deselected-down) no-repeat;
+		display:inline-block;
+		width:8px;
+		height:8px;
+		padding-left:5px;		
+	}
+
+	&.opened {					
+		background: sprite($sprites32, menu-arrow-up) no-repeat;	
+		.fileOverview &{
+			background: sprite($sprites32, menu-arrow-deselected-up) no-repeat;			
+		}		
 	}
 }
+
 
 
 
