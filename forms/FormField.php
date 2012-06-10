@@ -540,11 +540,16 @@ HTML;
 		$preparedAttributes = '';
 		foreach($attributes as $k => $v) {
 			// Note: as indicated by the $k == value item here; the decisions over what to include in the attributes can sometimes get finicky
+			is_array($v) && $v = 'Array';
 			if(!empty($v) || $v === '0' || $k == 'value') $preparedAttributes .= " $k=\"" . Convert::raw2att($v) . "\"";
 		}
 
-		if($content || $tag != 'input') return "<$tag$preparedAttributes>$content</$tag>";
-		else return "<$tag$preparedAttributes />";
+		if(is_array($content)) {
+			// First, try to get the 'name' item to get the file name for upload inputs
+			$content = isset($content['name']) ?  $content['name'] : 'Array';
+		}
+
+		return "<$tag$preparedAttributes>$content</$tag>";
 	}
 	
 	/**
