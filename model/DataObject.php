@@ -408,12 +408,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * You'll need to call this to get the memory of an object that has components or extensions freed.
 	 */
 	function destroy() {
-		$this->extension_instances = null;
-		$this->components = null;
-		$this->destroyed = true;
-		$this->record = null;
-		$this->original = null;
-		$this->changed = null;
+		//$this->destroyed = true;
+		gc_collect_cycles();
 		$this->flushCache(false);
 	}
 
