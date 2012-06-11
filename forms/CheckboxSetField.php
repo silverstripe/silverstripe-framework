@@ -179,7 +179,7 @@ class CheckboxSetField extends OptionsetField {
 		if($fieldname && $record && $relation && $relation instanceof RelationList) {
 			$idList = array();
 			if($this->value) foreach($this->value as $id => $bool) {
-			   if($bool) {
+				if($bool) {
 					$idList[] = $id;
 				}
 			}
@@ -187,7 +187,7 @@ class CheckboxSetField extends OptionsetField {
 		} elseif($fieldname && $record) {
 			if($this->value) {
 				$this->value = str_replace(',', '{comma}', $this->value);
-				$record->$fieldname = implode(",", $this->value);
+				$record->$fieldname = implode(',', (array) $this->value);
 			} else {
 				$record->$fieldname = '';
 			}

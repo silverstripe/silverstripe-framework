@@ -630,7 +630,7 @@ body.cms {
 	
 	.cms-panel-content {
 		width: ($grid-x * 22);
-		padding: 0 $grid-x;
+		padding: $grid-x $grid-x 0;
 		overflow: auto;
 		height:100%;
 		.dropdown select {
@@ -1082,6 +1082,21 @@ form.member-profile-form {
 				float:none;
 			}
 		}	
+		
+		.field {
+			.fieldholder-small { // Small fields have a second set of headers
+				margin-top: $grid-y;
+				label {
+					padding-top: $grid-x;
+					width: $grid-x * 8;
+					float: left;
+					margin-left: $grid-x * -8;
+				}
+			}
+			table .fieldholder-small {
+				margin-top: 0;
+			}
+		}
 	}
 }
 
