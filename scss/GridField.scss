@@ -21,6 +21,7 @@
 //multiple images. 
 $experimental-support-for-svg: true; 
 
+
 $gf_colour_gradient_dark: darken($color-base, 8%);
 $gf_colour_header_border: $gf_colour_gradient_dark;
 $gf_colour_subheader: saturate(lighten($color-base, 15%),5%);
@@ -38,6 +39,12 @@ $gf_grid_x:	16px;
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
 	box-shadow: none;
+}
+@mixin hide-text-overflow {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	o-text-overflow: ellipsis;
 }
 
 .cms {
@@ -360,6 +367,9 @@ $gf_grid_x:	16px;
 						@include single-text-shadow($gf_colour_text_shadow, 0px, -1px, 0);
 						padding-left: $gf_grid_x/2;
 						padding-right: $gf_grid_x/2;
+						@include hide-text-overflow; // Add ellipses to overflowing text
+						margin-right: 8px;
+
 					}
 					&.col-listChildrenLink {
 						border-right:none;

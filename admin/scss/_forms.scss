@@ -17,7 +17,7 @@ form.nostyle {
 .field {
 	display: block;
 	border-bottom: 1px solid $color-shadow-light;
-    @include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
+    @include box-shadow(0 1px 0 lighten($color-shadow-light, 16%));
 
 	//TODO: use single border line with shadow instead:: http://daverupert.com/2011/06/two-tone-borders-with-css3/
 	//overflow: hidden;
@@ -89,16 +89,6 @@ form.nostyle {
 		@include box-sizing(border-box);
 	}
 
-	// Small fields have a second set of headers
-	.fieldholder-small {
-		margin-top: $grid-y;
-		label {
-			padding-top: $grid-x;
-			width: $grid-x * 8;
-			float: left;
-			margin-left: $grid-x * -8;
-		}
-	}
 	
 	input.text, 
 	textarea,
@@ -129,7 +119,9 @@ form.nostyle {
 		@include background-image(linear-gradient(darken(#efefef, 20%), #efefef 10%, #fff 90%, darken(#efefef, 20%)));
 		border: 1px solid lighten($color-medium-separator, 20%);
 	}
-
+	&#Action {
+    	box-shadow: none;
+	}
 }
 
 form.stacked .field, .field.stacked {
@@ -513,7 +505,9 @@ input.radio {
 			width: auto;
 		}	
 	}
-	
+	label.left {
+		padding-bottom: $grid-y/2;
+	}
 }
 
 
