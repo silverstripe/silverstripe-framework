@@ -36,6 +36,9 @@ if (version_compare(phpversion(), '5.3.2', '<')) {
  * After that, it calls {@link Director::direct()}, which is responsible for doing most of the 
  * real work.
  *
+ * Finally, main.php will use {@link Profiler} to show a profile if the querystring variable 
+ * "debug_profile" is set.
+ *
  * CONFIGURING THE WEBSERVER
  *
  * To use SilverStripe, every request that doesn't point directly to a file should be rewritten to
@@ -63,47 +66,46 @@ if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
 	$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
 }
 
-// PHP 5.4's built-in webserver uses this
-if (php_sapi_name() == 'cli-server') {
-	$url = $_SERVER['REQUEST_URI'];
-	
-	// Querystring args need to be explicitly parsed
-	if(strpos($url,'?') !== false) {
-		list($url, $query) = explode('?',$url,2);
-		parse_str($query, $_GET);
-		if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
-	}
-	
-	// Pass back to the webserver for files that exist
-	if(file_exists(BASE_PATH . $url)) return false;
+// Lighttp maybe sometimes doesnt parse the get variables into $_GET so do it manually? @todo: Need to check still needed - seems like a perf killer & maybe a hole
+if(strpos($_SERVER['REQUEST_URI'],'?') !== false) {
+	list($garbage, $query) = explode('?', $_SERVER['REQUEST_URI'], 2);
+	parse_str($query, $_GET);
+	if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
+}
 
-// Apache rewrite rules use this
-} else if (isset($_GET['url'])) {
+// My name is
+if (isset($_SERVER['SCRIPT_NAME'])) {
+	$name = $_SERVER['SCRIPT_NAME'];
+}
+else if (isset($_SERVER['SCRIPT_FILENAME']) && isset($_SERVER['DOCUMENT_ROOT']) && strpos($_SERVER['SCRIPT_FILENAME'], $_SERVER['DOCUMENT_ROOT']) === 0) {
+	$name = substr($_SERVER['SCRIPT_FILENAME'], strlen($_SERVER['DOCUMENT_ROOT']));
+}
+else {
+	user_error('Couldn\'t find path to main.php relative to document root');
+}
+
+// Get the URL, first from an append to the script path itself, then from a $_GET variable, then show the homepage
+$url = '';
+
+if (strpos($_SERVER['PHP_SELF'], $name) === 0) {
+	$url = substr($_SERVER['PHP_SELF'], strlen($_SERVER['SCRIPT_NAME']));
+}
+
+if (!$url && isset($_GET['url'])) {
 	$url = $_GET['url'];
-	// IIS includes get variables in url
-	$i = strpos($url, '?');
-	if($i !== false) {
-		$url = substr($url, 0, $i);
-	}
-	
-// Lighttpd uses this
-} else {
-	if(strpos($_SERVER['REQUEST_URI'],'?') !== false) {
-		list($url, $query) = explode('?', $_SERVER['REQUEST_URI'], 2);
-		parse_str($query, $_GET);
-		if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
-	} else {
-		$url = $_SERVER["REQUEST_URI"];
-	}
 }
 
 // Remove base folders from the URL if webroot is hosted in a subfolder
-if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url = substr($url, strlen(BASE_URL));
+if (BASE_URL && strpos(strtolower($url), BASE_URL) === 0) $url = substr($url, strlen(BASE_URL));
+
+if (isset($_GET['debug_profile'])) {
+	Profiler::init();
+	Profiler::mark('all_execution');
+	Profiler::mark('main.php init');
+}
 
 // Connect to database
 require_once('model/DB.php');
-
-global $databaseConfig;
 
 // Redirect to the installer if no database is selected
 if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
@@ -121,8 +123,20 @@ if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseC
 	die();
 }
 
+if (isset($_GET['debug_profile'])) Profiler::mark('DB::connect');
 DB::connect($databaseConfig);
+if (isset($_GET['debug_profile'])) Profiler::unmark('DB::connect');
+
+if (isset($_GET['debug_profile'])) Profiler::unmark('main.php init');
+
 
 // Direct away - this is the "main" function, that hands control to the appropriate controller
 DataModel::set_inst(new DataModel());
 Director::direct($url, DataModel::inst());
+
+if (isset($_GET['debug_profile'])) {
+	Profiler::unmark('all_execution');
+	if(!Director::isLive()) {
+		Profiler::show(isset($_GET['profile_trace']));
+	}
+}
