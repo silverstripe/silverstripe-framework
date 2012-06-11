@@ -66,28 +66,37 @@ if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {
 	$_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_ORIGINAL_URL'];
 }
 
-// Apache rewrite rules use this
-if (isset($_GET['url'])) {
+// Lighttp maybe sometimes doesnt parse the get variables into $_GET so do it manually? @todo: Need to check still needed - seems like a perf killer & maybe a hole
+if(strpos($_SERVER['REQUEST_URI'],'?') !== false) {
+	list($garbage, $query) = explode('?', $_SERVER['REQUEST_URI'], 2);
+	parse_str($query, $_GET);
+	if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
+}
+
+// My name is
+if (isset($_SERVER['SCRIPT_NAME'])) {
+	$name = $_SERVER['SCRIPT_NAME'];
+}
+else if (isset($_SERVER['SCRIPT_FILENAME']) && isset($_SERVER['DOCUMENT_ROOT']) && strpos($_SERVER['SCRIPT_FILENAME'], $_SERVER['DOCUMENT_ROOT']) === 0) {
+	$name = substr($_SERVER['SCRIPT_FILENAME'], strlen($_SERVER['DOCUMENT_ROOT']));
+}
+else {
+	user_error('Couldn\'t find path to main.php relative to document root');
+}
+
+// Get the URL, first from an append to the script path itself, then from a $_GET variable, then show the homepage
+$url = '';
+
+if (strpos($_SERVER['PHP_SELF'], $name) === 0) {
+	$url = substr($_SERVER['PHP_SELF'], strlen($_SERVER['SCRIPT_NAME']));
+}
+
+if (!$url && isset($_GET['url'])) {
 	$url = $_GET['url'];
-	// IIS includes get variables in url
-	$i = strpos($url, '?');
-	if($i !== false) {
-		$url = substr($url, 0, $i);
-	}
-	
-// Lighttpd uses this
-} else {
-	if(strpos($_SERVER['REQUEST_URI'],'?') !== false) {
-		list($url, $query) = explode('?', $_SERVER['REQUEST_URI'], 2);
-		parse_str($query, $_GET);
-		if ($_GET) $_REQUEST = array_merge((array)$_REQUEST, (array)$_GET);
-	} else {
-		$url = $_SERVER["REQUEST_URI"];
-	}
 }
 
 // Remove base folders from the URL if webroot is hosted in a subfolder
-if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url = substr($url, strlen(BASE_URL));
+if (BASE_URL && strpos(strtolower($url), BASE_URL) === 0) $url = substr($url, strlen(BASE_URL));
 
 if (isset($_GET['debug_profile'])) {
 	Profiler::init();

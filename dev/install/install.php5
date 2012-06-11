@@ -1272,13 +1272,22 @@ ErrorDocument 500 /assets/error-500.html
 	RedirectMatch 403 /silverstripe-cache(/|$)
 </IfModule>
 
+AcceptPathInfo Default
+
 <IfModule mod_rewrite.c>
 	SetEnv HTTP_MOD_REWRITE On
 	RewriteEngine On
+
 	$baseClause
-	RewriteCond %{REQUEST_URI} ^(.*)$
+
+	RewriteCond %{REQUEST_URI} ^/?(.*)$
 	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule .* $modulePath/main.php?url=%1&%{QUERY_STRING} [L]
+	RewriteRule .* $modulePath/main.php/%1 [QSA,L]
+
+	# If the above doesn't work, comment it out & uncomment this. @todo - detect in installer
+	# RewriteCond %{REQUEST_URI} ^(.*)$
+	# RewriteCond %{REQUEST_FILENAME} !-f
+	# RewriteRule .* $modulePath/main.php?url=%1&%{QUERY_STRING} [L]
 </IfModule>
 TEXT;
 
