@@ -815,7 +815,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		/**
 		 * Show the second step after adding a URL
 		 */
-		$('form.htmleditorfield-form.htmleditorfield-mediaform img.add-url').entwine({
+		$('form.htmleditorfield-form.htmleditorfield-mediaform .add-url').entwine({
 			onclick: function(e) {
 				var form = this.closest('form');
 
@@ -823,8 +823,8 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				form.showFileView(urlField.val());
 				form.redraw();
+				return false;
 			}
-
 		});
 
 		/**
