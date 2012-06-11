@@ -299,8 +299,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		}
 		// clear singletons, they're caching old extension info 
 		// which is used in DatabaseAdmin->doBuild()
-		global $_SINGLETONS;
-		$_SINGLETONS = array();
+		Injector::inst()->unregisterAllObjects();
 
 		// Set default timezone consistently to avoid NZ-specific dependencies
 		date_default_timezone_set('UTC');
@@ -789,9 +788,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	function resetDBSchema($includeExtraDataObjects = false) {
 		if(self::using_temp_db()) {
 			// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
-			global $_SINGLETONS;
 			Injector::inst()->unregisterAllObjects();
-			$_SINGLETONS = array();
 
 			$dataClasses = ClassInfo::subclassesFor('DataObject');
 			array_shift($dataClasses);

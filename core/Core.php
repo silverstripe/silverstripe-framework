@@ -365,15 +365,10 @@ function getClassFile($className) {
  * @return Object
  */
 function singleton($className) {
-	global $_SINGLETONS;
+	if($className == "Config") user_error("Don't pass Config to singleton()", E_USER_ERROR);
 	if(!isset($className)) user_error("singleton() Called without a class", E_USER_ERROR);
 	if(!is_string($className)) user_error("singleton() passed bad class_name: " . var_export($className,true), E_USER_ERROR);
-	if(!isset($_SINGLETONS[$className])) {
-		if(!class_exists($className)) user_error("Bad class to singleton() - $className", E_USER_ERROR);
-		$_SINGLETONS[$className] = Injector::inst()->get($className);
-		if(!$_SINGLETONS[$className]) user_error("singleton() Unknown class '$className'", E_USER_ERROR);
-	}
-	return $_SINGLETONS[$className];
+	return Injector::inst()->get($className);
 }
 
 function project() {

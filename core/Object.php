@@ -466,6 +466,7 @@ abstract class Object {
 		}
 
 		Config::inst()->update($class, 'extensions', array($extension));
+		Injector::inst()->unregisterAllObjects();
 
 		// load statics now for DataObject classes
 		if(is_subclass_of($class, 'DataObject')) {
@@ -496,8 +497,7 @@ abstract class Object {
 		Config::inst()->remove($class, 'extensions', Config::anything(), $extension);
 
 		// unset singletons to avoid side-effects
-		global $_SINGLETONS;
-		$_SINGLETONS = array();
+		Injector::inst()->unregisterAllObjects();
 
 		// unset some caches
 		$subclasses = ClassInfo::subclassesFor($class);
@@ -541,7 +541,6 @@ abstract class Object {
 		
 		if($extensionClasses = ClassInfo::ancestry($this->class)) foreach($extensionClasses as $class) {
 			if(in_array($class, $notExtendable)) continue;
-
 			if($extensions = Config::inst()->get($class, 'extensions', Config::UNINHERITED)) {
 				foreach($extensions as $extension) {
 					// Get the extension class for this extension

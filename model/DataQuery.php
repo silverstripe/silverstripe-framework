@@ -123,7 +123,8 @@ class DataQuery {
 
 		$this->query->setFrom("\"$baseClass\"");
 
-		singleton($this->dataClass)->extend('augmentDataQueryCreation', $this->query, $this);
+		$obj = Injector::inst()->get($baseClass);
+		$obj->extend('augmentDataQueryCreation', $this->query, $this);
 	}
 
 	function setQueriedColumns($queriedColumns) {
@@ -225,7 +226,9 @@ class DataQuery {
 		$query->selectField("CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE '$baseClass' END", "RecordClassName");
 
 		// TODO: Versioned, Translatable, SiteTreeSubsites, etc, could probably be better implemented as subclasses of DataQuery
-		singleton($this->dataClass)->extend('augmentSQL', $query, $this);
+
+		$obj = Injector::inst()->get(ClassInfo::baseDataClass($this->dataClass));
+		$obj->extend('augmentSQL', $query, $this);
 
 		$this->ensureSelectContainsOrderbyColumns($query);
 
