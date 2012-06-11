@@ -19,9 +19,10 @@ class FormScaffolderTest extends SapphireTest {
 	
 	
 	function testGetCMSFieldsSingleton() {
-		$fields = singleton('FormScaffolderTest_Article')->getCMSFields();
+		$article = new FormScaffolderTest_Article;
+		$fields = $article->getCMSFields();
 		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
-		$form->loadDataFrom(singleton('FormScaffolderTest_Article'));
+		$form->loadDataFrom($article);
 
 		$this->assertTrue($fields->hasTabSet(), 'getCMSFields() produces a TabSet');
 		$this->assertNotNull($fields->dataFieldByName('Title'), 'getCMSFields() includes db fields');
