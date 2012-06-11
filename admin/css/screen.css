@@ -141,7 +141,7 @@ form.nostyle label.left { float: none; display: inherit; width: auto; padding: 0
 form.nostyle .middleColumn { margin-left: 0; }
 form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyle .TreeDropdownField { width: auto; max-width: auto; }
 
-.field { display: block; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); padding: 0 0 7px 0; margin: 0 0 8px 0; *zoom: 1; }
+.field { display: block; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(244, 245, 245, 0.8); -moz-box-shadow: 0 1px 0 rgba(244, 245, 245, 0.8); box-shadow: 0 1px 0 rgba(244, 245, 245, 0.8); padding: 0 0 7px 0; margin: 0 0 8px 0; *zoom: 1; }
 .field:last-child { border-bottom: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
 .field:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
 .field.nolabel .middleColumn { margin-left: 0; }
@@ -151,11 +151,10 @@ form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyl
 .field span.readonly { padding-top: 8px; line-height: 16px; display: block; }
 .field .help { color: #777777; font-style: italic; padding-top: 1em; }
 .field input.text, .field textarea, .field select, .field .TreeDropdownField { width: 100%; max-width: 512px; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
-.field .fieldholder-small { margin-top: 8px; }
-.field .fieldholder-small label { padding-top: 8px; width: 64px; float: left; margin-left: -64px; }
 .field input.text, .field textarea, .field .TreeDropdownField { background: #fff; border: 1px solid #b3b3b3; padding: 7px 7px; line-height: 16px; margin: 0; outline: none; -webkit-transition: 0.2s box-shadow ease-in; -moz-transition: 0.2s box-shadow ease-in; -ms-transition: 0.2s box-shadow ease-in; -o-transition: 0.2s box-shadow ease-in; transition: 0.2s box-shadow ease-in; -webkit-transition: 0.2s border ease-in; -moz-transition: 0.2s border ease-in; -ms-transition: 0.2s border ease-in; -o-transition: 0.2s border ease-in; transition: 0.2s border ease-in; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; -o-border-radius: 4px; border-radius: 4px; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2VhZWFlYSIvPjxzdG9wIG9mZnNldD0iMTAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkKSIgLz48L3N2Zz4g'); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #eaeaea), color-stop(10%, #ffffff)); background-image: -webkit-linear-gradient(#eaeaea, #ffffff 10%); background-image: -moz-linear-gradient(#eaeaea, #ffffff 10%); background-image: -o-linear-gradient(#eaeaea, #ffffff 10%); background-image: -ms-linear-gradient(#eaeaea, #ffffff 10%); background-image: linear-gradient(#eaeaea, #ffffff 10%); }
 .field input.text:focus, .field textarea:focus, .field .TreeDropdownField:focus { border: 1px solid #9a9a9a; border-top-color: gray; -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset; -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) inset; }
 .field input[disabled], .field input.disabled, .field textarea[disabled], .field textarea.disabled, .field select[disabled], .field select.disabled { color: #777777; background: #efefef; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2JjYmNiYyIvPjxzdG9wIG9mZnNldD0iMTAlIiBzdG9wLWNvbG9yPSIjZWZlZmVmIi8+PHN0b3Agb2Zmc2V0PSI5MCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNiY2JjYmMiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #bcbcbc), color-stop(10%, #efefef), color-stop(90%, #ffffff), color-stop(100%, #bcbcbc)); background-image: -webkit-linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); background-image: -moz-linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); background-image: -o-linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); background-image: -ms-linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); background-image: linear-gradient(#bcbcbc, #efefef 10%, #ffffff 90%, #bcbcbc); border: 1px solid #b3b3b3; }
+.field#Action { box-shadow: none; }
 
 form.stacked .field label, .field.stacked label { display: block; float: none; padding-bottom: 10px; }
 form.stacked .field .middleColumn, .field.stacked .middleColumn { margin-left: 0px; clear: left; }
@@ -226,6 +225,7 @@ input.radio { margin-left: 0; }
 /** ---------------------------------------------------- HTML Text  ---------------------------------------------------- */
 .htmleditor textarea { visibility: hidden; }
 .htmleditor .mceEditor input, .htmleditor .mceEditor select { width: auto; }
+.htmleditor label.left { padding-bottom: 4px; }
 
 .action-hidden { display: none; }
 
@@ -365,7 +365,7 @@ body.cms { overflow: hidden; }
 .cms-content-tools { background-color: #F1F4F5; background: #f0f3f4 url(../images/textures/bg_cms_main_content.png) repeat top left; width: 192px; border-right: 1px solid #bfcad2; overflow-y: auto; overflow-x: hidden; z-index: 70; -webkit-box-shadow: rgba(0, 0, 0, 0.6) 0 2px 3px; -moz-box-shadow: rgba(0, 0, 0, 0.6) 0 2px 3px; box-shadow: rgba(0, 0, 0, 0.6) 0 2px 3px; float: left; position: relative; }
 .cms-content-tools.filter { padding: 0 !important; }
 .cms-content-tools .cms-panel-header { clear: both; margin: 0 0 7px; line-height: 24px; border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -o-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); }
-.cms-content-tools .cms-panel-content { width: 176px; padding: 0 8px; overflow: auto; height: 100%; }
+.cms-content-tools .cms-panel-content { width: 176px; padding: 8px 8px 0; overflow: auto; height: 100%; }
 .cms-content-tools .cms-panel-content .dropdown select { width: 160px; }
 .cms-content-tools .cms-panel-content #LastEditedFrom { -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
 .cms-content-tools .cms-panel-content #LastEditedFrom input { width: 160px; }
@@ -456,6 +456,9 @@ form.member-profile-form .ui-tabs-nav .ui-corner-all, form.member-profile-form .
 .cms .cms-content-fields #Root_Main .customFormat { max-width: 80px; }
 .cms .cms-content-fields #Root_Main .cms-help-toggle { text-indent: -9999em; display: inline-block; width: 20px; background: url(../images/question.png) no-repeat 0px 0px; }
 .cms .cms-content-fields #Root_Permissions ul.optionset li { float: none; }
+.cms .cms-content-fields .field .fieldholder-small { margin-top: 8px; }
+.cms .cms-content-fields .field .fieldholder-small label { padding-top: 8px; width: 64px; float: left; margin-left: -64px; }
+.cms .cms-content-fields .field table .fieldholder-small { margin-top: 0; }
 
 /** -------------------------------------------- "Settings" Form -------------------------------------------- */
 #CanViewType .optionset li, #CanEditType .optionset li, #CanCreateTopLevelType .optionset li { float: none; width: auto; white-space: nowrap; }

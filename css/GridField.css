@@ -71,7 +71,7 @@
 .cms table.ss-gridfield-table tr th div.fieldgroup.filter-buttons { min-width: 0; }
 .cms table.ss-gridfield-table tr th div.fieldgroup.filter-buttons div { width: auto; display: inline; }
 .cms table.ss-gridfield-table tr th.main { white-space: nowrap; border-top: 1px solid #a4b4bf; border-left: 1px solid #a4b4bf; color: #fff; background: #98aab6; border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
-.cms table.ss-gridfield-table tr th.main span { text-shadow: rgba(0, 0, 0, 0.2) 0px -1px 0; padding-left: 8px; padding-right: 8px; }
+.cms table.ss-gridfield-table tr th.main span { text-shadow: rgba(0, 0, 0, 0.2) 0px -1px 0; padding-left: 8px; padding-right: 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; o-text-overflow: ellipsis; margin-right: 8px; }
 .cms table.ss-gridfield-table tr th.main.col-listChildrenLink { border-right: none; }
 .cms table.ss-gridfield-table tr th.extra, .cms table.ss-gridfield-table tr th.action { padding: 0; cursor: default; }
 .cms table.ss-gridfield-table tr th.extra { position: relative; background: #637276; background: rgba(0, 0, 0, 0.7); padding: 5px; border-top: rgba(0, 0, 0, 0.2); }
