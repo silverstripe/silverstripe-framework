@@ -111,7 +111,12 @@ class Form extends RequestHandler {
 	protected $message;
 	
 	protected $messageType;
-	
+
+	/**
+	 * @var boolean Did the form have validation errors?
+	 */
+	protected $hasErrors = false;
+
 	/**
 	 * Should we redirect the user back down to the 
 	 * the form on validation errors rather then just the page
@@ -172,6 +177,10 @@ class Form extends RequestHandler {
 		// Form validation
 		$this->validator = ($validator) ? $validator : new RequiredFields();
 		$this->validator->setForm($this);
+
+		if(Session::get("FormInfo.{$this->FormName()}.errors") || Session::get("FormInfo.{$this->FormName()}.formError")) {
+			$this->hasErrors = true;
+		}
 
 		// Form error controls
 		$this->setupFormErrors();
@@ -965,7 +974,7 @@ class Form extends RequestHandler {
 		$this->clearMessage();
 		return $message;
 	}
-	
+
 	/**
 	 * @return string
 	 */
