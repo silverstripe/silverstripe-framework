@@ -22,6 +22,15 @@
 	-o-text-overflow: ellipsis;
 }
 
+@mixin box-shadow-none{
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+
+
+
 //** ----------------------------------------------------
 // * Clear the properties of sub form fields. 
 // *

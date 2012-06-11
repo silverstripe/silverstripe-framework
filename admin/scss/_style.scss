@@ -1435,6 +1435,35 @@ body.cms-dialog {
 		position:relative;
 	}
 
+	#MediaFormInsertMediaTabs_Fromtheweb{
+		.CompositeField{
+			@include clearfix;
+		}
+		#RemoteURL{
+			border:none;
+			@include box-shadow-none;
+			width:55%;
+			float:left;
+		}
+		button.add-url{
+			padding-top:15px;
+			@include clearfix;
+			border:none;
+			background:none;
+			opacity:0.8;
+			cursor: hand;
+			.btn-icon-addMedia{
+				width:20px;
+				height:20px;
+			}
+			&:hover, &:active{
+				border:none;
+				@include box-shadow-none;
+				opacity:1;
+			}
+		}
+	}
+
 	.cms-content-header{
 		padding:0;
 		width:100%;
