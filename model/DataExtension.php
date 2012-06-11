@@ -38,7 +38,7 @@ abstract class DataExtension extends Extension {
 			$extraStaticsMethod = 'extraStatics';
 		}
 
-		$statics = singleton($extensionClass)->$extraStaticsMethod($class, $extensionClass);
+		$statics = Injector::inst()->get($extensionClass, true, $args)->$extraStaticsMethod($class, $extensionClass);
 
 		if ($statics) {
 			Deprecation::notice('3.1.0', "$extraStaticsMethod deprecated. Just define statics on your extension, or use add_to_class");
