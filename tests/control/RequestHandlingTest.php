@@ -5,7 +5,8 @@
  * We've set up a simple URL handling model based on 
  */
 class RequestHandlingTest extends FunctionalTest {
-	static $fixture_file = null;
+	
+	static $fixture_file = 'RequestHandlingTest.yml';
 	
 	// function testRequestHandlerChainingLatestParams() {
 	// 	$c = new RequestHandlingTest_Controller();
@@ -245,6 +246,132 @@ class RequestHandlingTest extends FunctionalTest {
 		$this->assertEquals(404, $response->getStatusCode());
 	}
 	
+	public function testHasAction() {
+		$noMethod = new ControllerTest_ControllerNoMethod();
+		
+		$this->assertTrue($noMethod->hasAction('allowed_but_no_method'), 'non-existent but allowed method is visible');
+		
+		$unsecured = new ControllerTest_ControllerUnsecured();
+		
+		$this->assertTrue($unsecured->hasAction('public_action'), 'public actions are visible');
+		$this->assertTrue($unsecured->hasAction('protected_action'), 'protected actions are visible');
+		
+		$this->assertFalse($unsecured->hasAction('private_action'), 'private actions are invisible');
+		$this->assertFalse($unsecured->hasAction('undefined'), 'undefined actions do not exist');
+		
+		$specific = new ControllerTest_ControllerSpecific();
+		
+		$this->assertTrue($specific->hasAction('allowed'), 'allowed actions are visible');
+		$this->assertTrue($specific->hasAction('allowed_true'), 'allowed actions are visible');
+		$this->assertTrue($specific->hasAction('allowed_by_function'), 'allowed actions are visible');
+		$this->assertTrue($specific->hasAction('disallowed_by_function'), 'function-disallowed actions are visible');
+		$this->assertTrue($specific->hasAction('allowed_admin'), 'disallowed admin actions are visible');
+		$this->assertTrue($specific->hasAction('private_mentioned_action'), 'mentioned private action is invisible'); // Because it's in allowed_actions
+		$this->assertTrue($specific->hasAction('index'), 'not mentioned index is visible'); // Index action has special meaning, should be always visible
+		
+		$this->assertFalse($specific->hasAction('1'), 'numeric actions do not slip through.');
+		$this->assertFalse($specific->hasAction('lowercase'), 'lowercase permissions do not slip through.');
+		$this->assertFalse($specific->hasAction('undefined'), 'undefined actions do not exist');
+		$this->assertFalse($specific->hasAction('public_action'), 'not mentioned public action is invisible');
+		$this->assertFalse($specific->hasAction('private_action'), 'not mentioned private action is invisible');
+		
+		$wildcardAllow = new ControllerTest_ControllerWildcardAllow();
+		
+		$this->assertTrue($wildcardAllow->hasAction('public_action'), 'public actions are visible via wildcard');
+		$this->assertTrue($wildcardAllow->hasAction('allowed_admin'), 'disallowed admin actions are visible');
+
+		$this->assertFalse($wildcardAllow->hasAction('private_action'), 'private actions are invisible');
+		$this->assertFalse($wildcardAllow->hasAction('undefined'), 'undefined actions are invisible');
+		
+		$wildcardAllowTrue = new ControllerTest_ControllerWildcardAllowTrue();
+		
+		$this->assertTrue($wildcardAllowTrue->hasAction('public_action'), 'public actions are visible via wildcard');
+		$this->assertTrue($wildcardAllowTrue->hasAction('allowed_admin'), 'disallowed admin actions are visible');
+
+		$this->assertFalse($wildcardAllowTrue->hasAction('private_action'), 'private actions are invisible');
+		$this->assertFalse($wildcardAllowTrue->hasAction('undefined'), 'undefined actions are invisible');
+		
+		$wildcardDisallow = new ControllerTest_ControllerWildcardDisallow();
+		
+		$this->assertTrue($wildcardDisallow->hasAction('allowed'), 'specifically allowed actions are visible');
+		$this->assertTrue($wildcardDisallow->hasAction('public_action'), 'not mentioned admin actions are visible via wildcard');
+		
+		$this->assertFalse($wildcardDisallow->hasAction('private_action'), 'private action is invisible');
+		$this->assertFalse($wildcardDisallow->hasAction('undefined'), 'undefined action is invisible');
+	}
+	
+	public function testCheckAccessAction() {
+		// Force logout
+		Session::set('loggedInAs', null);
+		
+		$noMethod = new ControllerTest_ControllerNoMethod();
+		
+		$this->assertTrue($noMethod->checkAccessAction('allowed_but_no_method'), 'non-existent but allowed method is allowed');
+		
+		$unsecured = new ControllerTest_ControllerUnsecured();
+		
+		$this->assertTrue($unsecured->checkAccessAction('public_action'), 'public actions are allowed');
+		$this->assertTrue($unsecured->checkAccessAction('protected_action'), 'protected actions are allowed');
+		
+		// See bottom *)
+		//$this->assertFalse($unsecured->checkAccessAction('private_action'), 'private actions are disallowed');
+		//$this->assertFalse($unsecured->checkAccessAction('undefined'), 'undefined actions do not exist');
+		
+		$specific = new ControllerTest_ControllerSpecific();
+		
+		$this->assertTrue($specific->checkAccessAction('allowed'), 'allowed actions are recognised');
+		$this->assertTrue($specific->checkAccessAction('allowed_true'), 'allowed actions are recognised');
+		$this->assertTrue($specific->checkAccessAction('allowed_by_function'), 'allowed actions are recognised');
+		$this->assertTrue($specific->checkAccessAction('private_mentioned_action'), 'mentioned private actions are allowed');
+		$this->assertTrue($specific->checkAccessAction('index'), 'not mentioned index is allowed');
+		
+		$this->assertFalse($specific->checkAccessAction('1'), 'numeric actions do not slip through.');
+		$this->assertFalse($specific->checkAccessAction('lowercase'), 'lowercase permission does not slip through.');
+		$this->assertFalse($specific->checkAccessAction('undefined'), 'undefined actions do not exist');
+		$this->assertFalse($specific->checkAccessAction('disallowed_by_function'), 'actions can be disallowed by function');
+		$this->assertFalse($specific->checkAccessAction('public_action'), 'not mentioned public actions are disallowed');
+		$this->assertFalse($specific->checkAccessAction('private_action'), 'not mentioned private actions are disallowed');
+		$this->assertFalse($specific->checkAccessAction('allowed_admin'), 'admin actions are disallowed');
+
+		$wildcardAllow = new ControllerTest_ControllerWildcardAllow();
+		
+		$this->assertTrue($wildcardAllow->checkAccessAction('public_action'), 'public actions are allowed via wildcard');
+		
+		// See bottom *)
+		//$this->assertFalse($wildcardAllow->checkAccessAction('private_action'), 'private actions are disallowed');
+		//$this->assertFalse($wildcardAllow->checkAccessAction('undefined'), 'undefined actions are disallowed');
+		$this->assertFalse($wildcardAllow->checkAccessAction('allowed_admin'), 'specific rules take precedence over wildcard');
+		
+		$wildcardAllowTrue = new ControllerTest_ControllerWildcardAllowTrue();
+		
+		$this->assertTrue($wildcardAllowTrue->checkAccessAction('public_action'), 'public actions are allowed via wildcard');
+		
+		// See bottom *)
+		//$this->assertFalse($wildcardAllowTrue->checkAccessAction('private_action'), 'private actions are disallowed');
+		//$this->assertFalse($wildcardAllowTrue->checkAccessAction('undefined'), 'undefined actions are disallowed');
+		$this->assertFalse($wildcardAllowTrue->checkAccessAction('allowed_admin'), 'specific rules take precedence over wildcard');
+		
+		$wildcardDisallow = new ControllerTest_ControllerWildcardDisallow();
+		
+		$this->assertTrue($wildcardDisallow->checkAccessAction('allowed'), 'specific rules take precedence over wildcard');
+		
+		$this->assertFalse($wildcardDisallow->checkAccessAction('public_action'), 'not mentioned public actions are disallowed');
+		$this->assertFalse($wildcardDisallow->checkAccessAction('private_action'), 'private actions are disallowed');
+				
+		// Continue testing with admin permission
+		Session::set('loggedInAs', $this->idFromFixture('Member', 'admin'));
+
+		$this->assertTrue($specific->checkAccessAction('allowed_admin'), 'admin actions are allowed after login');
+		$this->assertTrue($wildcardAllow->checkAccessAction('allowed_admin'), 'admin actions are allowed after login');
+		$this->assertTrue($wildcardAllowTrue->checkAccessAction('allowed_admin'), 'admin actions are allowed after login');
+		$this->assertTrue($wildcardDisallow->checkAccessAction('public_action'), 'public actions are allowed via wildcard after login');		
+		
+		Session::set('loggedInAs', null);
+		
+		// *) commented out tests trigger the fallthrough to unspecified template action in checkAccessAction. 
+		// Tests contain reasonable assumptions, but we choose not to enforce it on the code. Asserts left in here
+		// as a warning.
+	}
 }
 
 /**
@@ -583,4 +710,72 @@ class RequestHandlingTest_HandlingField extends FormField {
 	function actionOnField() {
 		return "Test method on $this->name";
 	}
+}
+
+class ControllerTest_ControllerNoMethod extends Controller {
+	public static $allowed_actions = array (
+		'allowed_but_no_method'
+	);
+}
+
+class ControllerTest_ControllerUnsecured extends Controller {
+	function public_action() {}
+	protected function protected_action() {}
+	private function private_action() {}
+}
+
+class ControllerTest_ControllerSpecific extends Controller {
+
+	public static $allowed_actions = array (
+		'allowed',
+		'allowed_true'=>true,
+		'allowed_admin'=>'ADMIN',
+		'allowed_lc_permission'=>'lowercase',
+		'allowed_by_function'=>'->returnTrue',
+		'disallowed_by_function'=>'->returnFalse',
+		'private_mentioned_action'=>true
+	);
+
+	function returnTrue() {
+		return true;
+	}
+
+	function returnFalse() {
+		return false;
+	}
+	
+	function index() {}
+	function public_action() {}
+	private function private_action() {}
+	private function private_mentioned_action() {}
+}
+
+class ControllerTest_ControllerWildcardAllow extends Controller {
+	public static $allowed_actions = array (
+		'*',
+		'allowed_admin'=>'ADMIN'
+	);
+	
+	function public_action() {}
+	private function private_action() {}
+}
+
+class ControllerTest_ControllerWildcardAllowTrue extends Controller {
+	public static $allowed_actions = array (
+		'*'=>true,
+		'allowed_admin'=>'ADMIN'
+	);
+	
+	function public_action() {}
+	private function private_action() {}
+}
+
+class ControllerTest_ControllerWildcardDisallow extends Controller {
+	public static $allowed_actions = array (
+		'*'=>'ADMIN',
+		'allowed'
+	);
+	
+	function public_action() {}
+	private function private_action() {}
 }
