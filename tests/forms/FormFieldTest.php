@@ -12,6 +12,9 @@ class FormFieldTest extends SapphireTest {
 		$attrs = $field->getAttributes();
 		$this->assertArrayHasKey('foo', $attrs);
 		$this->assertEquals('bar', $attrs['foo']);
+		
+		$this->assertTrue($field->hasAttribute('foo'));
+		$this->assertFalse($field->hasAttribute('loremipsum'));
 	}
 
 	function testAttributesHTML() {
