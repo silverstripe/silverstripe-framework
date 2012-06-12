@@ -134,7 +134,7 @@
 									hints = self.getHints(),
 									disallowedChildren = [],
 									hintKey = newParentClass ? newParentClass : 'Root',
-									hint = (typeof hints[hintKey] != 'undefined') ? hints[hintKey] : null;
+									hint = (hints && typeof hints[hintKey] != 'undefined') ? hints[hintKey] : null;
 
 								// Special case for VirtualPage: Check that original page type is an allowed child
 								if(hint && movedNode.attr('class').match(/VirtualPage-([^\s]*)/)) movedNodeClass = RegExp.$1;
@@ -211,7 +211,8 @@
 			updateFromEditForm: function(origData) {
 				var self = this, 
 					form = $('.cms-edit-form').get(0),
-					id = form ? $(form.ID).val() : null;
+					id = form ? $(form.ID).val() : null,
+					urlEditPage = this.data('urlEditpage');
 
 				// check if a form with a valid ID exists
 				if(id) {
@@ -234,7 +235,7 @@
 					node.addClass(statusFlags.join(' ')); 
 
 					// check if node exists, might have been created instead
-					if(!node.length) {
+					if(!node.length && urlEditPage) {
 						this.jstree(
 							'create_node', 
 							parentNode, 
@@ -251,7 +252,7 @@
 								var newNode = self.find('li[data-id='+id+']');
 								// TODO Fix replacement of jstree-icon inside <a> tag
 								newNode.find('a:first').html(title).attr('href', ss.i18n.sprintf(
-									self.data('urlEditpage'), id
+									urlEditPage, id
 								));
 								self.jstree('deselect_all');
 								self.jstree('select_node', newNode);
