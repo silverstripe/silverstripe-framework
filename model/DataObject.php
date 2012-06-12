@@ -313,15 +313,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$record = null;
 		}
 
-		// Convert PostgreSQL boolean values
-		// TODO: Implement this more elegantly, for example by writing a more intelligent SQL SELECT query prior to object construction
-		if(DB::getConn() instanceof PostgreSQLDatabase) {
-			$this->class = get_class($this);
-			foreach($record as $k => $v) {
-				if($this->db($k) == 'Boolean' && $v == 'f') $record[$k] = '0';
-			}
-		}
-
 		// Set $this->record to $record, but ignore NULLs
 		$this->record = array();
 		foreach($record as $k => $v) {
