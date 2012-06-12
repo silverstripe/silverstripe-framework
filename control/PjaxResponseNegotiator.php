@@ -20,12 +20,25 @@ class PjaxResponseNegotiator {
 		'default' => array('Director', 'redirectBack'),
 	);
 
+	protected $response = null;
+
 	/**
 	 * @param RequestHandler $controller
+	 * @param SS_HTTPResponse An existing response to reuse (optional)
 	 * @param Array $callbacks
 	 */
-	function __construct($callbacks = array()) {
+	function __construct($callbacks = array(), $response = null) {
 		$this->callbacks = $callbacks; 
+		$this->response = $response;
+	}
+
+	public function getResponse() {
+		if(!$this->response) $this->response = new SS_HTTPResponse();
+		return $this->response;
+	}
+
+	public function setResponse($response) {
+		$this->response = $response;
 	}
 
 	/**
@@ -41,7 +54,7 @@ class PjaxResponseNegotiator {
 	public function respond(SS_HTTPRequest $request, $extraCallbacks = array()) {
 		// Prepare the default options and combine with the others
 		$callbacks = array_merge($this->callbacks, $extraCallbacks);
-		$response = new SS_HTTPResponse();
+		$response = $this->getResponse();
 		
 		$responseParts = array();
 		if($fragmentStr = $request->getHeader('X-Pjax')) {

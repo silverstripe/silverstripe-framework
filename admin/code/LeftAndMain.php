@@ -430,20 +430,23 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	public function getResponseNegotiator() {
 		if(!$this->responseNegotiator) {
 			$controller = $this;
-			$this->responseNegotiator = new PjaxResponseNegotiator(array(
-				'CurrentForm' => function() use(&$controller) {
-					return $controller->getEditForm()->forTemplate();
-				},
-				'Content' => function() use(&$controller) {
-					return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
-				},
-				'Breadcrumbs' => function() use (&$controller) {
-					return $controller->renderWith('CMSBreadcrumbs');
-				},
-				'default' => function() use(&$controller) {
-					return $controller->renderWith($controller->getViewer('show'));
-				}
-			));
+			$this->responseNegotiator = new PjaxResponseNegotiator(
+				array(
+					'CurrentForm' => function() use(&$controller) {
+						return $controller->getEditForm()->forTemplate();
+					},
+					'Content' => function() use(&$controller) {
+						return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
+					},
+					'Breadcrumbs' => function() use (&$controller) {
+						return $controller->renderWith('CMSBreadcrumbs');
+					},
+					'default' => function() use(&$controller) {
+						return $controller->renderWith($controller->getViewer('show'));
+					}
+				),
+				$this->response
+			);
 		}
 		return $this->responseNegotiator;
 	}
