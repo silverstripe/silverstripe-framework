@@ -36,7 +36,7 @@ jQuery(function($){
 	});
 
 	$('body').bind('keypress', function(e){
-		if ((e.ctrlKey || e.metaKey) && e.which == 96) {
+		if (e.ctrlKey && e.which == 96) {
 			if (inspectorPanel.css('visibility') != 'visible') {
 				inspectorPanel.css({top: 0, visibility: 'visible'});
 				$('body').css({marginTop: 400});
