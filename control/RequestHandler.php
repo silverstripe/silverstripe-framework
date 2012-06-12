@@ -65,8 +65,14 @@ class RequestHandler extends ViewableData {
 
 	
 	/**
-	 * Define a list of action handling methods that are allowed to be called directly by URLs.
-	 * The variable should be an array of action names. This sample shows the different values that it can contain:
+	 * The variable should be an array of action names. You can use wildcard which matches all 
+	 * methods available on the Controller. Specific rules take precedence, so the wildcard will
+	 * apply only if the action did not match on any other rule.
+ 	 *
+	 * Any action explicitly defined here will be treated as existing, regardless of the underlying
+	 * method's existence. Also keep in mind the 'index' action will always be permitted.
+	 *
+	 * This sample shows the different values the list can contain:
 	 *
 	 * <code>
 	 * array(
@@ -74,6 +80,16 @@ class RequestHandler extends ViewableData {
 	 *		'otheraction' => true, // So can otheraction
 	 *		'restrictedaction' => 'ADMIN', // restrictedaction can only be people with ADMIN privilege
 	 *		'complexaction' '->canComplexAction' // complexaction can only be accessed if $this->canComplexAction() returns true
+	 *		'*' => true	// allow all the remaining methods
+	 *	);
+	 * </code>
+	 *
+	 * You may also globally restrict access while allowing specific actions:
+	 *
+	 * <code>
+	 * array(
+	 *		'someaction', // someaction can be accessed by anyone, any time
+	 *		'*' => 'ADMIN	// other actions can be accessed by ADMIN only
 	 *	);
 	 * </code>
 	 * 
@@ -214,27 +230,36 @@ class RequestHandler extends ViewableData {
 	 * Get a unified array of allowed actions on this controller (if such data is available) from both the controller
 	 * ancestry and any extensions.
 	 *
-	 * @return array|null
+	 * @return array|null list of actions, with actions guaranteed to be in the keys
 	 */
 	public function allowedActions() {
-
 		$actions = Config::inst()->get(get_class($this), 'allowed_actions');
 
 		if($actions) {
-			// convert all keys and values to lowercase to 
-			// allow for easier comparison, unless it is a permission code
+			// convert all keys to lowercase to allow for easier comparison
 			$actions = array_change_key_case($actions, CASE_LOWER);
 			
 			foreach($actions as $key => $value) {
-				if(is_numeric($key)) $actions[$key] = strtolower($value);
+				if(is_numeric($key)) {
+					// Convert the value into a key in case it's a mixed array
+					// e.g. array(0=>'action', 'action'=>'ADMIN')
+					$actions[strtolower($value)] = true;
+					unset($actions[$key]);
+				}
 			}
 
 			return $actions;
 		}
 	}
-	
+
 	/**
-	 * Checks if this request handler has a specific action (even if the current user cannot access it).
+	 * Checks if this request handler has a specific action. It's used to avoid controller clashes.
+	 * 
+	 * This function will return TRUE if the action is mentioned in {@link self::$allowed_actions} 
+	 * - even if the underlying method does not exist or the user is not permitted to access it.
+	 * It will also return TRUE for 'index' special-purpose action.
+ 	 *
+	 * This is used to decide if "404 Not Found" error response should be generated.
 	 *
 	 * @param string $action
 	 * @return bool
@@ -245,29 +270,43 @@ class RequestHandler extends ViewableData {
 		$action  = strtolower($action);
 		$actions = $this->allowedActions();
 		
-		// Check if the action is defined in the allowed actions as either a
-		// key or value. Note that if the action is numeric, then keys are not
-		// searched for actions to prevent actual array keys being recognised
-		// as actions.
-		if(is_array($actions)) {
-			$isKey   = !is_numeric($action) && array_key_exists($action, $actions);
-			$isValue = in_array($action, $actions);
-
-			if($isKey || $isValue) return true;
-		}
+		// Check if the action is defined in the allowed actions
+		if(is_array($actions) && array_key_exists($action, $actions)) {
+			return true;
+ 		}
 		
-		if(!is_array($actions) || !$this->config()->get('allowed_actions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES)) {
-			if($action != 'init' && $action != 'run' && method_exists($this, $action)) return true;
+		if(
+			!is_array($actions) 
+			|| !$this->config()->get('allowed_actions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES) 
+			|| array_key_exists('*', $actions)
+		) {
+			$reflected = new ReflectionClass($this);
+			$method = ($reflected->hasMethod($action)) ? $reflected->getMethod($action) : null;
+			return (
+				$action != 'init' 
+				&& $action != 'run' 
+				&& $method 
+				&& !$method->isPrivate()
+			);
 		}
 		
 		return false;
 	}
 	
 	/**
-	 * Check that the given action is allowed to be called from a URL.
-	 * It will interrogate {@link self::$allowed_actions} to determine this.
+	 * Check that the given action is allowed to be called from a URL. It works on top of the
+	 * {@link RequestHandler::allowedActions()}, but is more specific - it will do additional
+	 * check for permissions. See {@link RequestHandler::allowedActions()} for more information.
+	 * 
+	 * This is used to decide if "403 Unauthorized" error response should be generated.
+	 *
+	 * @param string $action
+	 * @return bool
 	 */
 	function checkAccessAction($action) {
+		// Index is always allowed
+		if($action == 'index' || empty($action)) return true;
+
 		$actionOrigCasing = $action;
 		$action            = strtolower($action);
 		$allowedActions    = $this->allowedActions();
@@ -280,7 +319,8 @@ class RequestHandler extends ViewableData {
 					$test = $allowedActions[$actionOrAll];
 					if($test === true || $test === 1 || $test === '1') {
 						// Case 1: TRUE should always allow access
-						return true;
+						// We let the wildcard (*) fallthrough to the method check at the bottom
+						if($actionOrAll != '*') return true;
 					} elseif(substr($test, 0, 2) == '->') {
 						// Case 2: Determined by custom method with "->" prefix
 						return $this->{substr($test, 2)}();
@@ -288,33 +328,25 @@ class RequestHandler extends ViewableData {
 						// Case 3: Value is a permission code to check the current member against
 						return Permission::check($test);
 					}
-					
-				} elseif((($key = array_search($actionOrAll, $allowedActions, true)) !== false) && is_numeric($key)) {
-					// Case 4: Allow numeric array notation (search for array value as action instead of key)
-					return true;
 				}
 			}
 		}
 		
-		// If we get here an the action is 'index', then it hasn't been specified, which means that
-		// it should be allowed.
-		if($action == 'index' || empty($action)) return true;
-		
-		if($allowedActions === null || !$this->config()->get('allowed_actions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES)) {
-			// If no allowed_actions are provided, then we should only let through actions that aren't handled by magic methods
-			// we test this by calling the unmagic method_exists. 
-			if(method_exists($this, $action)) {
-				// Disallow any methods which aren't defined on RequestHandler or subclasses
-				// (e.g. ViewableData->getSecurityID())
-				$r = new ReflectionClass(get_class($this));
-				if($r->hasMethod($actionOrigCasing)) {
-					$m = $r->getMethod($actionOrigCasing);
-					return ($m && is_subclass_of($m->getDeclaringClass()->getName(), 'RequestHandler'));
-				} else {
-					throw new Exception("method_exists() true but ReflectionClass can't find method - PHP is b0kred");
-				}
-			} else if(!$this->hasMethod($action)){
-				// Return true so that a template can handle this action
+		// If $allowed_actions isn't explicity defined, 
+		// or contains a wildcard set to TRUE (see fall-through above),
+		// check for method visibility. 
+		if(
+			$allowedActions === null 
+			|| !$this->config()->get('allowed_actions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES)
+			|| array_key_exists('*', $allowedActions)
+		) {
+			$reflected = new ReflectionClass(get_class($this));
+			$method = ($reflected->hasMethod($actionOrigCasing)) ? $reflected->getMethod($actionOrigCasing) : null;
+			if($method && !$method->isPrivate()) {
+				return is_subclass_of($method->getDeclaringClass()->getName(), 'RequestHandler');
+			} else {
+ 				// Return true so that a template can handle this action
+				// CAUTION: a fallthrough that causes the Sapphire to accept non-existent and private actions
 				return true;
 			}
 		}

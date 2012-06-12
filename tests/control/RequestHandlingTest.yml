@@ -1,0 +1,11 @@
+Permission:
+    admin:
+        Code: ADMIN
+Group:
+    admins:
+        Code: admins
+        Permissions: =>Permission.admin
+Member:
+    admin:
+        Email: admin@test.com
+        Groups: =>Group.admins
