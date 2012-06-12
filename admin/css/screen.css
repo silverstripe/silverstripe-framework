@@ -709,6 +709,7 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree-apple li.Root strong, .cms-tree.jstree-apple li.Root strong { font-weight: bold; padding-left: 1px; }
 .tree-holder.jstree-apple li.Root > a .jstree-icon, .cms-tree.jstree-apple li.Root > a .jstree-icon { background-position: -56px -36px; }
 .tree-holder.jstree-apple a, .tree-holder.jstree-apple a:link, .cms-tree.jstree-apple a, .cms-tree.jstree-apple a:link { color: #1556b2; padding: 3px 6px 3px 3px; border: none; display: inline-block; margin-right: 5px; }
+.tree-holder.jstree-apple li.deletedonlive .text, .cms-tree.jstree-apple li.deletedonlive .text { text-decoration: line-through; }
 .tree-holder.jstree-apple span.badge, .cms-tree.jstree-apple span.badge { clear: both; text-transform: uppercase; display: inline-block; padding: 0px 3px; font-size: 0.75em; line-height: 1em; margin-left: 3px; margin-right: 6px; margin-top: -1px; -webkit-border-radius: 2px 2px; -moz-border-radius: 2px / 2px; -ms-border-radius: 2px / 2px; -o-border-radius: 2px / 2px; border-radius: 2px / 2px; }
 .tree-holder.jstree-apple span.badge.modified, .cms-tree.jstree-apple span.badge.modified { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }
 .tree-holder.jstree-apple span.badge.addedtodraft, .cms-tree.jstree-apple span.badge.addedtodraft { color: #7E7470; border: 1px solid #C9B800; background-color: #FFF0BC; }

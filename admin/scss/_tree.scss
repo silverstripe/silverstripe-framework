@@ -464,6 +464,13 @@
 		display:  inline-block;
 		margin-right: 5px;
 	}
+
+	li.deletedonlive {
+		.text {
+			text-decoration: line-through;
+		}
+	}
+
 	span.badge {
 		clear: both;
 		text-transform: uppercase;

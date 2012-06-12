@@ -660,6 +660,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$titleFn = function(&$child) use(&$controller, &$recordController) {
 			$classes = $child->CMSTreeClasses();
 			if($controller->isCurrentPage($child)) $classes .= " current";
+			$flags = $child->getStatusFlags();
+			if($flags) $classes .= ' ' . implode(' ', array_keys($flags));
 			return "<li id=\"record-$child->ID\" data-id=\"$child->ID\" data-pagetype=\"$child->ClassName\" class=\"" . $classes . "\">" .
 				"<ins class=\"jstree-icon\">&nbsp;</ins>" .
 				"<a href=\"" . Controller::join_links($recordController->Link("show"), $child->ID) . "\" title=\"" .
