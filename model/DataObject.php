@@ -321,35 +321,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				if($this->db($k) == 'Boolean' && $v == 'f') $record[$k] = '0';
 			}
 		}
-		
-		// TODO: MSSQL has a convert function that can do this on the SQL end. We just need a
-		// nice way of telling the database how we want to get the value out on a per-fieldtype basis
-		if(DB::getConn() instanceof MSSQLDatabase) {
-			$this->class = get_class($this);
-			foreach($record as $k => $v) {
-				if($v) {
-					if($k == 'Created' || $k == 'LastEdited') {
-						$fieldtype = 'SS_Datetime';
-					} else {
-						$fieldtype = $this->db($k);
-					}
-				
-					// MSSQLDatabase::date() uses datetime for the data type for "Date" and "SS_Datetime"
-					switch($fieldtype) {
-						case "Date":
-							$v = preg_replace('/:[0-9][0-9][0-9]([ap]m)$/i', ' \\1', $v);
-							$record[$k] = date('Y-m-d', strtotime($v));
-							break;
-					
-						case "Datetime":
-						case "SS_Datetime":
-							$v = preg_replace('/:[0-9][0-9][0-9]([ap]m)$/i', ' \\1', $v);
-							$record[$k] = date('Y-m-d H:i:s', strtotime($v));
-							break;
-					}
-				}
-			}
-		}
 
 		// Set $this->record to $record, but ignore NULLs
 		$this->record = array();
