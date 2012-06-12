@@ -223,7 +223,15 @@
 
 					// set title (either from TreeTitle or from Title fields)
 					// Treetitle has special HTML formatting to denote the status changes.
-					if(title) this.jstree('rename_node', node, title);
+					if(title) node.find('.text').html(title);
+
+					// Collect flag classes and also apply to parent
+					var statusFlags = [];
+					node.children('a').find('.badge').each(function() {
+						statusFlags = statusFlags.concat($(this).attr('class').replace('badge', '').split(' '));
+					});
+					// TODO Doesn't remove classes, gets too complex: Best handled through complete serverside replacement
+					node.addClass(statusFlags.join(' ')); 
 
 					// check if node exists, might have been created instead
 					if(!node.length) {
