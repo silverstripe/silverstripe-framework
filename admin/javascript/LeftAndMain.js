@@ -73,7 +73,7 @@ jQuery.noConflict();
 			/**
 			 * Constructor: onmatch
 			 */
-			onmatch: function() {
+			onadd: function() {
 				var self = this;
 
 				// Browser detection
@@ -92,34 +92,27 @@ jQuery.noConflict();
 				// Initialize layouts
 				this.redraw();
 
-				// Monitor window resizes, panel changes and edit form loads for layout changes.
-				// Also triggers redraw through handleStateChange()
-				$(window).resize(function() {
-					self.redraw();
-				});
-				
-				$('.cms-panel').live('toggle', function() {
-					self.redraw();
-				});
-				
 				// Remove loading screen
 				$('.ss-loading-screen').hide();
 				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
 				
-				History.Adapter.bind(window,'statechange',function(){ 
-					self.handleStateChange();
-				});
+				this._super();
+			},
 
-				this._super();
+			fromWindow: {
+				onstatechange: function(){ this.handleStateChange(); },
+				onresize: function(){ this.redraw(); }
 			},
-			onunmatch: function() {
-				this._super();
+
+			'from .cms-panel': {
+				ontoggle: function(){ this.redraw(); }
 			},
-			onaftersubmitform: function() {
-				this.redraw();
+
+			'from .cms-container': {
+				onaftersubmitform: function(){ this.redraw(); }
 			},
-			
+
 			redraw: function() {
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
@@ -457,12 +450,13 @@ jQuery.noConflict();
 		});
 
 		$('.cms .ss-ui-button').entwine({
-			onmatch: function() {
+			onadd: function() {
 				if(!this.data('button')) this.button();
 
 				this._super();
 			},
-			onunmatch: function() {
+			onremove: function() {
+				this.button('destroy');
 				this._super();
 			}
 		});
@@ -744,11 +738,12 @@ jQuery.noConflict();
 		 */
 		window._panelDeferredCache = {};
 		$('.cms-panel-deferred').entwine({
-			onmatch: function() {
+			onadd: function() {
 				this._super();
 				this.redraw();
 			},
-			onunmatch: function() {
+			onremove: function() {
+				console.log('saving', this.data('url'), this);
 				// Save the HTML state at the last possible moment.
 				// Don't store the DOM to avoid memory leaks.
 				if(!this.data('deferredNoCache')) window._panelDeferredCache[this.data('url')] = this.html();
@@ -790,12 +785,13 @@ jQuery.noConflict();
 		 * for forms inside the CMS layout.
 		 */
 		$('.cms-tabset').entwine({
-			onmatch: function() {
+			onadd: function() {
 				// Can't name redraw() as it clashes with other CMS entwine classes
 				this.redrawTabs();
 				this._super();
 			},
-			onunmatch: function() {
+			onremove: function() {
+				this.tabs('destroy');
 				this._super();
 			},
 			redrawTabs: function() {

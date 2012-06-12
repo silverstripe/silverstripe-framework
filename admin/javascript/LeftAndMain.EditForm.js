@@ -50,7 +50,7 @@
 			/**
 			 * Constructor: onmatch
 			 */
-			onmatch: function() {
+			onadd: function() {
 				var self = this;
 
 				// Turn off autocomplete to fix the access tab randomly switching radio buttons in Firefox
@@ -106,7 +106,7 @@
 			
 				this._super();
 			},
-			onunmatch: function() {
+			onremove: function() {
 				this.changetracker('destroy');
 				this._super();
 			},

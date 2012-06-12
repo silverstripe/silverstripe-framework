@@ -43,34 +43,6 @@
 					if(!self.is('.is-collapsed')) self.loadCurrentPage();
 				});
 				
-				var updateAfterXhr = function() {
-					$('.cms-preview-toggle-link')[self.canPreview() ? 'show' : 'hide']();
-
-					// Only load when panel is visible (see details in iframe load event handler).
-					if(self.is('.is-collapsed')) return;
-
-					// var url = ui.xmlhttp.getResponseHeader('x-frontend-url');
-					var url = $('.cms-edit-form').find(':input[name=StageURLSegment]').val();
-					if(url) {
-						self.loadUrl(url);
-						self.unblock();
-					} else {
-						self.block();
-					}
-				};
-				
-				// Listen to history state changes
-				$('.cms-container').bind('afterstatechange aftersubmitform', function(e) {
-					updateAfterXhr();
-				});
-				
-				// Toggle preview when new menu entry is selected.
-				// Only do this when preview is actually shown,
-				// to avoid auto-expanding the menu in normal CMS mode
-				$('.cms-menu-list li').bind('select', function(e) {
-					if(!self.hasClass('is-collapsed')) self.collapse();
-				});
-
 				if(this.hasClass('is-expanded')) this.expand();
 				else this.collapse();
 				this.data('cms-preview-initialized', true);
@@ -89,6 +61,40 @@
 			},
 			loadUrl: function(url) {
 				this.find('iframe').attr('src', url);
+			},
+
+			updateAfterXhr: function(){
+				$('.cms-preview-toggle-link')[this.canPreview() ? 'show' : 'hide']();
+
+				// Only load when panel is visible (see details in iframe load event handler).
+				if(this.is('.is-collapsed')) return;
+
+				// var url = ui.xmlhttp.getResponseHeader('x-frontend-url');
+				var url = $('.cms-edit-form').find(':input[name=StageURLSegment]').val();
+				if(url) {
+					this.loadUrl(url);
+					this.unblock();
+				} else {
+					this.block();
+				}
+			},
+
+			'from .cms-container': {
+				onaftersubmitform: function(){
+					this.updateAfterXhr();
+				},
+				onafterstatechange: function(){
+					this.updateAfterXhr();
+				}
+			},
+
+			// Toggle preview when new menu entry is selected.
+			// Only do this when preview is actually shown,
+			// to avoid auto-expanding the menu in normal CMS mode
+			'from .cms-menu-list li': {
+				onselect: function(){
+					if(!this.hasClass('is-collapsed')) this.collapse();
+				}
 			},
 
 			/**
