@@ -1734,10 +1734,16 @@ form.import-form {
 	 	//Styling of tabs on page edit
 	 	.cms-edit-form {
 	 		background:darken($color-widget-bg, 2%);
-	 		.ui-tabs-nav {
-				float:right;
-				margin:$grid-x $grid-x*3 -1px 0;
+	 		
+			.ui-tabs-nav {
+				border-bottom: none;
+				float: right;
+				margin: $grid-y 0 -1px 0;
+				padding: 0 $grid-x*3 0 0;
+				
 				li {
+					float: left;
+					
 					a {
 						font-weight: bold;
 						line-height: $grid-y * 2;
@@ -1758,18 +1764,17 @@ form.import-form {
 				}
 			}
 		}
-	 	.ss-tabset .ui-tabs-panel {
-	 		background:darken($color-widget-bg, 2%);
-	 		clear:both;
-	 		/* border-top:1px solid $color-button-generic-border; */
-	 		.ss-tabset {
-	 			border-top:none;
-	 			.ui-tabs-nav {
-	 				margin-top:0px;
-	 				margin-right:8px;
-	 			}
-	 		}
-	 	}
+		.ss-tabset {
+			.ss-tabset {
+				position: static;
+			}
+
+			.ui-tabs-panel {
+				background: darken($color-widget-bg, 2%);
+				border-top:1px solid $color-button-generic-border;
+				clear: both;
+			}
+		}
 	}
 	//Styling of tabs on page settings
 	.CMSPageSettingsController {
