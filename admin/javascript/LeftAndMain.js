@@ -64,7 +64,7 @@ jQuery.noConflict();
 		 * Events:
 		 *  ajaxsubmit - ...
 		 *  validate - ...
-		 *  reloadeditform - ...
+		 *  aftersubmitform - ...
 		 */
 		$('.cms-container').entwine({
 			
@@ -102,10 +102,6 @@ jQuery.noConflict();
 					self.redraw();
 				});
 				
-				$('.cms-edit-form').live('reloadeditform', function(e, data) {
-					self.redraw();
-				});
-				
 				// Remove loading screen
 				$('.ss-loading-screen').hide();
 				$('body').removeClass('loading');
@@ -119,6 +115,9 @@ jQuery.noConflict();
 			},
 			onunmatch: function() {
 				this._super();
+			},
+			onaftersubmitform: function() {
+				this.redraw();
 			},
 			
 			redraw: function() {
@@ -196,7 +195,7 @@ jQuery.noConflict();
 				// default to first button if none given - simulates browser behaviour
 				if(!button) button = this.find('.Actions :submit:first');
 	
-				form.trigger('beforesave');
+				form.trigger('beforesubmitform');
 				this.trigger('submitform', {form: form, button: button});
 	
 				// set button to "submitting" state
@@ -256,10 +255,7 @@ jQuery.noConflict();
 							newForm.find('#' + selectedTab.id).tabs('select', selectedTab.selected);
 						});
 
-						// Redraw the layout
-						$('.cms-container').redraw();
-
-						form.trigger('reloadeditform', {form: newForm, formData: formData, xmlhttp: xhr});
+						newForm.trigger('aftersubmitform', {status: status, xhr: xhr, formData: formData});
 					}, 
 					dataType: 'json'
 				}, ajaxOptions));
@@ -337,7 +333,7 @@ jQuery.noConflict();
 				var title = xhr.getResponseHeader('X-Title');
 				if(title) document.title = title;
 
-				var newFragments = {}, newContentEls = $([]);
+				var newFragments = {}, newContentEls;
 				if(xhr.getResponseHeader('Content-Type') == 'text/json') {
 					newFragments = data;
 				} else {
@@ -352,7 +348,8 @@ jQuery.noConflict();
 					}), newContentEl = $(html);
 
 					// Add to result collection
-					newContentEls.add(newContentEl);
+					if(newContentEls) newContentEls.add(newContentEl);
+					else newContentEls = newContentEl;
 					
 					// Update panels
 					if(newContentEl.find('.cms-container').length) {

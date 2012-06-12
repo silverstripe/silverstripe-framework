@@ -57,15 +57,10 @@
 					} else {
 						self.block();
 					}
-				}
-				
-				// Listen to form loads. Limit to CMS forms for the moment
-				$('.cms-edit-form').bind('reloadeditform', function(e, ui) {
-					updateAfterXhr();
-				});
+				};
 				
 				// Listen to history state changes
-				$('.cms-container').bind('afterstatechange', function(e) {
+				$('.cms-container').bind('afterstatechange aftersubmitform', function(e) {
 					updateAfterXhr();
 				});
 				

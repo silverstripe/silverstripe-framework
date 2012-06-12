@@ -6,7 +6,7 @@
 	// Can't bind this through jQuery
 	window.onbeforeunload = function(e) {
 		var form = $('.cms-edit-form');
-		form.trigger('beforesave');
+		form.trigger('beforesubmitform');
 		if(form.is('.changed')) return ss.i18n._t('LeftAndMain.CONFIRMUNSAVEDSHORT');
 	};
 
@@ -142,7 +142,7 @@
 			 *  or the user wants to discard them.
 			 */
 			confirmUnsavedChanges: function() {
-				this.trigger('beforesave');
+				this.trigger('beforesubmitform');
 				return (this.is('.changed')) ? confirm(ss.i18n._t('LeftAndMain.CONFIRMUNSAVED')) : true;
 			},
 

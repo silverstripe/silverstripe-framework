@@ -205,7 +205,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			onmatch : function() {
 				var self = this, edClass = this.data('editor') || ss.editorWrappers['default'], ed = edClass();
 				this.setEditor(ed);
-				this.closest('form').bind('beforesave', function() {
+				this.closest('form').bind('beforesubmitform', function() {
 					// TinyMCE modifies input, so change tracking might get false
 					// positives when comparing string values - don't save if the editor doesn't think its dirty.
 					if(self.isChanged()) {

@@ -86,11 +86,8 @@
 					}
 					self.updateItems();
 				};
-				$('.cms-container').live('afterstatechange', function(e, data) {
+				$('.cms-container').live('afterstatechange aftersubmitform', function(e, data) {
 					updateMenuFromResponse(data.xhr);
-				});
-				$('.cms-edit-form').live('reloadeditform', function(e, data) {
-					updateMenuFromResponse(data.xmlhttp);
 				});
 				
 				// Sync collapsed state with parent panel

@@ -97,16 +97,12 @@
 							});
 						});
 					
-					$('.cms-container').bind('afterstatechange.tree', function(e, data) {
-						self.updateFromEditForm(e.origData);
-					});
-					$('.cms-content').bind('reloadeditform.tree', function(e, data) {
+					$('.cms-container').bind('afterstatechange.tree aftersubmitform.tree', function(e, data) {
 						self.updateFromEditForm(e.origData);
 					});
 			},
 			onunmatch: function() {
-				$('.cms-container').unbind('afterstatechange.tree');
-				$('.cms-content').unbind('reloadeditform.tree');
+				$('.cms-container').unbind('afterstatechange.tree aftersubmitform.tree');
 				this._super();
 			},
 
@@ -208,7 +204,9 @@
 			
 			/**
 			 * Assumes to be triggered by a form element with the following input fields:
-			 * ID, ParentID, TreeTitle (or Title), ClassName
+			 * ID, ParentID, TreeTitle (or Title), ClassName.
+			 * 
+			 * @todo Serverside node refresh, see http://open.silverstripe.org/ticket/7450
 			 */
 			updateFromEditForm: function(origData) {
 				var self = this, 
