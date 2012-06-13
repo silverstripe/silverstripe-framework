@@ -336,6 +336,14 @@ body.cms { overflow: hidden; }
 .message.good { background-color: #65a839; background-color: rgba(101, 168, 57, 0.7); border-color: #65a839; color: #fff; text-shadow: 1px -1px 0 #1f9433; -webkit-border-radius: 3px 3px 3px 3px; -moz-border-radius: 3px 3px 3px 3px; -ms-border-radius: 3px 3px 3px 3px; -o-border-radius: 3px 3px 3px 3px; border-radius: 3px 3px 3px 3px; }
 .message p { margin: 0; }
 
+/** -------------------------------------------- Page icons -------------------------------------------- */
+.page-icon, a .jstree-pageicon { display: block; width: 16px; height: 16px; background: transparent url(../images/sitetree_ss_pageclass_icons_default.png) no-repeat; }
+
+.page-icon.class-HomePage { background-position: 0 -48px; }
+.page-icon.class-RedirectorPage { background-position: 0 -16px; }
+.page-icon.class-VirtualPage { background-position: 0 -32px; }
+.page-icon.class-ErrorPage { background-position: 0 -112px; }
+
 /** -------------------------------------------- "Add page" dialog -------------------------------------------- */
 .cms-page-add-form-dialog { display: none; }
 
@@ -351,12 +359,8 @@ body.cms { overflow: hidden; }
 .cms-add-form #PageType li.disabled:hover { background: none; }
 .cms-add-form #PageType li input { margin: inherit; }
 .cms-add-form #PageType li label { padding-left: 0; padding-bottom: 0; }
-.cms-add-form #PageType li input, .cms-add-form #PageType li label, .cms-add-form #PageType li .icon, .cms-add-form #PageType li .title { float: left; line-height: 1.3em; }
-.cms-add-form #PageType li .icon { width: 20px; display: block; width: 16px; height: 16px; margin: 0 4px; background-color: transparent; background-image: url(../images/sitetree_ss_pageclass_icons_default.png); background-repeat: no-repeat; }
-.cms-add-form #PageType li .class-HomePage { background-position: 0 -48px; }
-.cms-add-form #PageType li .class-RedirectorPage { background-position: 0 -16px; }
-.cms-add-form #PageType li .class-VirtualPage { background-position: 0 -32px; }
-.cms-add-form #PageType li .class-ErrorPage { background-position: 0 -112px; }
+.cms-add-form #PageType li input, .cms-add-form #PageType li label, .cms-add-form #PageType li .page-icon, .cms-add-form #PageType li .title { float: left; line-height: 1.3em; }
+.cms-add-form #PageType li .page-icon { margin: 0 4px; }
 .cms-add-form #PageType li .title { width: 120px; font-weight: bold; padding-right: 10px; }
 .cms-add-form #PageType li .description { font-style: italic; }
 
@@ -723,7 +727,7 @@ form.import-form label.left { width: 250px; }
 .tree-holder.jstree-apple .jstree-closed > ins, .cms-tree.jstree-apple .jstree-closed > ins { background-position: 0 0; }
 .tree-holder.jstree-apple .jstree-open > ins, .cms-tree.jstree-apple .jstree-open > ins { background-position: -20px 0; }
 
-a .jstree-pageicon { display: block; float: left; width: 16px; height: 16px; margin-right: 4px; background-color: transparent; background-image: url(../images/sitetree_ss_pageclass_icons_default.png); background-repeat: no-repeat; }
+a .jstree-pageicon { float: left; margin-right: 4px; }
 
 li.class-HomePage > a .jstree-pageicon { background-position: 0 -48px; }
 
