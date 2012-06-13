@@ -359,16 +359,6 @@ class FormField extends RequestHandler {
 	}
 	
 	/**
-	 * Returns whether the {@link FormField} has a given attribute set. Avoids
-	 * use of getAttribute to avoid recursion.
-	 *
-	 * @return boolean
-	 */
-	public function hasAttribute($name) {
-		return (isset($this->attributes[$name]));
-	}
-	
-	/**
 	 * @return array
 	 */
 	function getAttributes() {

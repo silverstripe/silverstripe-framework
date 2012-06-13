@@ -80,7 +80,7 @@ class FormAction extends FormField {
 	}
 
 	function getAttributes() {
-		$type = ($this->hasAttribute('src')) ? 'image' : 'submit';
+		$type = (isset($this->attributes['src'])) ? 'image' : 'submit';
 		$type = ($this->useButtonTag) ? null : $type;
 		
 		return array_merge(
