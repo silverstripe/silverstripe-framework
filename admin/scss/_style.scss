@@ -424,6 +424,32 @@ body.cms {
 }
 
 /** --------------------------------------------
+ * Page icons
+ * -------------------------------------------- */
+
+.page-icon, a .jstree-pageicon {
+	display: block;
+	width: 16px;
+	height: 16px;
+	background: transparent url(../images/sitetree_ss_pageclass_icons_default.png) no-repeat;
+}
+
+.page-icon {
+	&.class-HomePage {
+		background-position: 0 -48px;
+	}
+	&.class-RedirectorPage {
+		background-position: 0 -16px;
+	}
+	&.class-VirtualPage {
+		background-position: 0 -32px;
+	}
+	&.class-ErrorPage {
+		background-position: 0 -112px;
+	}
+}
+
+/** --------------------------------------------
  * "Add page" dialog
  * -------------------------------------------- */
 
@@ -487,38 +513,15 @@ body.cms {
 			padding-bottom: 0;
 		}
 		
-		input, label, .icon, .title {
+		input, label, .page-icon, .title {
 			float: left;
 			line-height: 1.3em;
 		}
 		
-		.icon {
-			width: 20px;
-			display: block;
-			width:  16px;
-			height:  16px;
+		.page-icon {
 			margin: 0 4px;
-			background-color: transparent;
-			background-image: url(../images/sitetree_ss_pageclass_icons_default.png);
-			background-repeat: no-repeat;
-		}
-			
-		.class-HomePage {
-			background-position: 0 -48px;
 		}
 		
-		.class-RedirectorPage {
-			background-position: 0 -16px;
-		}
-		
-		.class-VirtualPage {
-			background-position: 0 -32px;
-		}
-		
-		.class-ErrorPage {
-			background-position: 0 -112px;
-		}
-			
 		.title {
 			width: 120px;
 			font-weight: bold;
