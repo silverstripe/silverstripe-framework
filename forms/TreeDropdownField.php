@@ -188,6 +188,7 @@ class TreeDropdownField extends FormField {
 			$properties,
 			array(
 				'Title' => $title,
+				'TitleURLEncoded' => rawurlencode($title),
 				'Metadata' => ($metadata) ? Convert::raw2att(Convert::raw2json($metadata)) : null
 			)
 		);
