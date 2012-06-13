@@ -289,11 +289,18 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		$actions = new FieldList();
 		if($this->record->ID !== 0) {
-			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
-				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'));
-			// The delete action will redirect, hence pjax-content class.
-			$actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
-				->addExtraClass('ss-ui-action-destructive')->addExtraClass('pjax-content'));
+                    // Add check to see if record is providing its own actions.
+                    // If not, fall back to default.
+                    // Currently custom methods for manipulating data need to be
+                    // added to this class via Object::add_extension();
+                    if($this->record->getCMSActions()->exists())
+                            $actions = $this->record->getCMSActions();
+                    else
+                            $actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
+                                    ->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'));
+                            // The delete action will redirect, hence pjax-content class.
+                            $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
+                                    ->addExtraClass('ss-ui-action-destructive')->addExtraClass('pjax-content'));
 		}else{ // adding new record
 			//Change the Save label to 'Create'
 			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Create', 'Create'))
@@ -380,6 +387,30 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		return Controller::curr()->redirect($this->Link());
 	}
+        
+        function doPublish($data, $form) {
+                try {
+                        $form->saveInto($this->owner->record);
+                        $this->owner->record->write();
+                        $this->owner->record->doPublish('Stage','Live');
+                        $this->owner->gridField->getList()->add($this->owner->record);
+                } catch(ValidationException $e) {
+                        $form->sessionMessage($e->getResult()->message(), 'bad');
+                        return Controller::curr()->redirectBack();
+                }
+
+                // TODO Save this item into the given relationship
+
+                $message = sprintf(
+                        _t('GridFieldDetailForm.Published', 'Published %s %s'),
+                        $this->owner->record->singular_name(),
+                        '<a href="' . $this->owner->Link('edit') . '">"' . htmlspecialchars($this->owner->record->Title, ENT_QUOTES) . '"</a>'
+                );
+
+                $form->sessionMessage($message, 'good');
+
+                return Controller::curr()->redirect($this->owner->Link());
+        }
 
 	function doDelete($data, $form) {
 		try {
