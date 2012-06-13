@@ -388,29 +388,66 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		return Controller::curr()->redirect($this->Link());
 	}
         
+        /**
+         * Publish this object to the live
+         * 
+         * @param type $data
+         * @param type $form
+         * @return type 
+         */
         function doPublish($data, $form) {
                 try {
-                        $form->saveInto($this->owner->record);
-                        $this->owner->record->write();
-                        $this->owner->record->doPublish('Stage','Live');
-                        $this->owner->gridField->getList()->add($this->owner->record);
+                        $form->saveInto($this->record);
+                        $this->record->write();
+                        $this->record->publish('Stage','Live');
+                        $this->gridField->getList()->add($this->record);
                 } catch(ValidationException $e) {
                         $form->sessionMessage($e->getResult()->message(), 'bad');
                         return Controller::curr()->redirectBack();
                 }
 
-                // TODO Save this item into the given relationship
-
                 $message = sprintf(
                         _t('GridFieldDetailForm.Published', 'Published %s %s'),
-                        $this->owner->record->singular_name(),
-                        '<a href="' . $this->owner->Link('edit') . '">"' . htmlspecialchars($this->owner->record->Title, ENT_QUOTES) . '"</a>'
+                        $this->record->singular_name(),
+                        '<a href="' . $this->Link('edit') . '">"' . htmlspecialchars($this->record->Title, ENT_QUOTES) . '"</a>'
                 );
 
                 $form->sessionMessage($message, 'good');
 
-                return Controller::curr()->redirect($this->owner->Link());
+                return Controller::curr()->redirect($this->Link());
         }
+        
+        /**
+	 * Unpublish this page - remove it from the live site
+	 * 
+	 * @uses SiteTreeExtension->onBeforeUnpublish()
+	 * @uses SiteTreeExtension->onAfterUnpublish()
+	 */
+	function doUnpublish() {
+                try {
+                        $origStage = Versioned::current_stage();
+                        Versioned::reading_stage('Live');
+
+                        // This way our ID won't be unset
+                        $clone = clone $this->record;
+                        $clone->delete();
+
+                        Versioned::reading_stage($origStage);
+                } catch(ValidationException $e) {
+                        $form->sessionMessage($e->getResult()->message(), 'bad');
+                        return Controller::curr()->redirectBack();
+                }
+
+                $message = sprintf(
+                        _t('GridFieldDetailForm.Published', 'Removed Published %s %s'),
+                        $this->record->singular_name(),
+                        '<a href="' . $this->Link('edit') . '">"' . htmlspecialchars($this->record->Title, ENT_QUOTES) . '"</a>'
+                );
+
+                $form->sessionMessage($message, 'good');
+
+                return Controller::curr()->redirect($this->Link());
+	}
 
 	function doDelete($data, $form) {
 		try {
