@@ -107,6 +107,7 @@
 				this._super();
 			},
 			onunmatch: function() {
+				this.changetracker('destroy');
 				this._super();
 			},
 						
