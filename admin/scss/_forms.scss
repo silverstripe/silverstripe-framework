@@ -42,7 +42,10 @@ form.nostyle {
 	&.nolabel {
 		.middleColumn {
 			margin-left: 0;
-		}	
+		}
+		.help {
+			margin-left: 0;
+		}
 	}
 	
 	label {
@@ -75,9 +78,11 @@ form.nostyle {
 	// Additional help text to clarify the field intent,
 	// displayed alongside the field (rather than in a tooltip)
 	.help {
+		clear: both;
 		color: lighten($color-text, 20%);
+		display: block;
 		font-style: italic;
-		padding-top: 1em;
+		margin: $grid-y/2 0 0 $grid-x*23;
 	}
 	
 	input.text,
@@ -87,9 +92,12 @@ form.nostyle {
 		width: 100%;
 		max-width: $grid-x * 64;
 		@include box-sizing(border-box);
+
+		.help {
+			max-width: $grid-x * 64;
+		}
 	}
 
-	
 	input.text, 
 	textarea,
 	.TreeDropdownField {
