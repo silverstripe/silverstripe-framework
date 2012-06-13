@@ -429,6 +429,35 @@ form.small .field, .field.small {
 		}
 	}
 }
+
+.ss-toggle {
+	margin-bottom: $grid-y;
+
+	.ui-accordion-header {
+		font-weight: bold;
+
+		&.ui-state-default {
+			@include background-image(
+				linear-gradient(lighten($color-shadow-light, 15%), $color-shadow-light)
+			);
+			text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+		}
+	}
+
+	.ui-accordion-content {
+		padding: $grid-y*2 0 $grid-y 0;
+
+		.field {
+			@include box-shadow(none);
+			padding-left: $grid-x*2;
+			padding-right: $grid-x*2;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+}
 /** ----------------------------------------------------
  * Checkbox Field
  * ---------------------------------------------------- */
