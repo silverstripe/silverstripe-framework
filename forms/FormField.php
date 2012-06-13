@@ -357,7 +357,7 @@ class FormField extends RequestHandler {
 		$attrs = $this->getAttributes();
 		return @$attrs[$name];
 	}
-
+	
 	/**
 	 * @return array
 	 */
