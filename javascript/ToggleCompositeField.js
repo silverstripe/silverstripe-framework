@@ -1,29 +1,26 @@
-// Shortcut-function (until we update to Prototye v1.5)
-if(typeof $$ != "Function") $$ = document.getElementsBySelector;
+(function($){
+	$.entwine('ss', function($){
+		$('.ss-toggle').entwine({
+			onmatch: function() {
+				var self = $(this);
+				var opts = { collapsible: true };
+				var tab  = self.parents(".ss-tabset");
 
-var ToggleCompositeField = Class.create();
-ToggleCompositeField.prototype = {
-	initialize: function() {
-		var rules = {};
-		rules['#' + this.id + ' .trigger'] = {
-			onclick: function(e) {
-				this.toggle();
-				Event.stop(e); return false;
-			}.bind(this)
-		};
-		Behaviour.register(rules);
-		
-		// close content by default
-		if(Element.hasClassName(this, 'startClosed')) {
-			Element.toggle($$('#' + this.id + ' .contentMore')[0]);
-		}
-		Element.toggle($$('#' + this.id + ' .triggerClosed')[0]);
-	},
-	
-	toggle: function() {
-		Element.toggle($$('#' + this.id + ' .contentMore')[0]);
-		Element.toggle($$('#' + this.id + ' .triggerClosed')[0]);
-		Element.toggle($$('#' + this.id + ' .triggerOpened')[0]);
-	}
-}
-ToggleCompositeField.applyTo('div.toggleCompositeField');
+				if(self.hasClass("ss-toggle-start-closed")) {
+					opts.active = false;
+				}
+
+				if(tab.length) {
+					tab.bind("tabsshow", function() {
+						self.accordion("resize");
+					});
+				}
+
+				this.accordion(opts);
+			},
+			onunmatch: function() {
+				this._super();
+			}
+		});
+	});
+})(jQuery);

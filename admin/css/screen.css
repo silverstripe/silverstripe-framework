@@ -133,6 +133,8 @@ body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif;
 .cms .ui-widget-header .ui-icon-closethick { background: url('../images/sprites-32x32-sb47394f892.png') 0 -102px no-repeat; width: 30px; height: 30px; }
 .cms .ui-state-hover { cursor: pointer; }
 .cms .ui-widget input, .cms .ui-widget select, .cms .ui-widget textarea, .cms .ui-widget button { color: #444444; font-size: 12px; font-family: Arial, sans-serif; }
+.cms .ui-accordion .ui-accordion-header { border-color: #c0c0c2; margin-bottom: 0; }
+.cms .ui-accordion .ui-accordion-content { border: 1px solid #c0c0c2; border-top: none; }
 
 /** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in framework/css/Form.css.  @package framework @subpackage admin */
 /** ---------------------------------------------------- Basic form fields ---------------------------------------------------- */
@@ -204,6 +206,13 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 /** ---------------------------------------------------- Grouped form fields ---------------------------------------------------- */
 .fieldgroup .fieldgroup-field { float: left; display: block; width: 184px; padding: 8px 0 0 8px; }
 .fieldgroup .fieldgroup-field .field { border: none; padding-bottom: 0; }
+
+.ss-toggle { margin-bottom: 8px; }
+.ss-toggle .ui-accordion-header { font-weight: bold; }
+.ss-toggle .ui-accordion-header.ui-state-default { background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjUwJSIgeTE9IjAlIiB4Mj0iNTAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgyNDEsIDI0MiwgMjQyLCAwLjgpIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDIwMSwgMjA1LCAyMDYsIDAuOCkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(241, 242, 242, 0.8)), color-stop(100%, rgba(201, 205, 206, 0.8))); background-image: -webkit-linear-gradient(rgba(241, 242, 242, 0.8), rgba(201, 205, 206, 0.8)); background-image: -moz-linear-gradient(rgba(241, 242, 242, 0.8), rgba(201, 205, 206, 0.8)); background-image: -o-linear-gradient(rgba(241, 242, 242, 0.8), rgba(201, 205, 206, 0.8)); background-image: -ms-linear-gradient(rgba(241, 242, 242, 0.8), rgba(201, 205, 206, 0.8)); background-image: linear-gradient(rgba(241, 242, 242, 0.8), rgba(201, 205, 206, 0.8)); text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); }
+.ss-toggle .ui-accordion-content { padding: 16px 0 8px 0; }
+.ss-toggle .ui-accordion-content .field { -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; padding-left: 16px; padding-right: 16px; }
+.ss-toggle .ui-accordion-content .field:last-child { margin-bottom: 0; }
 
 /** ---------------------------------------------------- Checkbox Field ---------------------------------------------------- */
 .field.checkbox { padding-left: 184px; margin-bottom: 8px; }
