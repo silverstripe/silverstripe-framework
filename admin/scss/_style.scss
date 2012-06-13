@@ -1530,26 +1530,6 @@ body.cms-dialog {
 				margin-bottom:0;
 			}	
 		}
-		.img-detail-group{
-			border-bottom: 1px solid $color-shadow-light;
-    		@include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
-    		margin: 0 0 8px 0;
-    		.extraLabel{
-				display:block;
-				position:relative;
-				top: 0 - $grid-y;
-				margin-left:176px + $grid-y; //width of main label
-				color: #ccc;
-				color: rgba(#000, 0.5);
-				font-style:italic;
-				padding:0;
-				@include text-shadow(1px 1px 0 rgba($color-text-shadow, 0.7));
-			}					
-			.field{
-				border-bottom:none;
-				@include box-shadow(0 0 0 rgba(0, 0, 0, 0));
-			}
-		}
 	}
 }
 

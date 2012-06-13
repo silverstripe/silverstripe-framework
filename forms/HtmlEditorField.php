@@ -691,22 +691,16 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					)
 				)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')
 			)->setName("FilePreview")->addExtraClass('cms-file-info'),			
-			CompositeField::create(
-				new TextField(
-					'AltText', 
-					_t('HtmlEditorField.IMAGEALT', 'Alternative text (alt)'),  
-					$file->Title, 
-					80
-				),
-				new LiteralField('extraAlt', '<div class="middleColumn extraLabel">' . _t('HtmlEditorField.IMAGEALTTEXTDESC', 'Shown to screen readers or if image can not be displayed') . '</div>')
-			) -> addExtraClass('img-detail-group first'),
-			CompositeField::create(
-				new TextField(
-					'Title', 
-					_t('HtmlEditorField.IMAGETITLETEXT', 'Title text (tooltip)')
-				),
-				new LiteralField('extraTitle', '<div class="middleColumn extraLabel">' . _t('HtmlEditorField.IMAGETITLETEXTDESC', 'For additional information about the image') . '</div>')
-			)-> addExtraClass('img-detail-group'),
+			TextField::create(
+				'AltText', 
+				_t('HtmlEditorField.IMAGEALT', 'Alternative text (alt)'),  
+				$file->Title, 
+				80
+			)->setDescription(_t('HtmlEditorField.IMAGEALTTEXTDESC', 'Shown to screen readers or if image can not be displayed')),
+			TextField::create(
+				'Title', 
+				_t('HtmlEditorField.IMAGETITLETEXT', 'Title text (tooltip)')
+			)->setDescription(_t('HtmlEditorField.IMAGETITLETEXTDESC', 'For additional information about the image')),
 			new TextField('CaptionText', _t('HtmlEditorField.CAPTIONTEXT', 'Caption text')),
 			$alignment = new DropdownField(
 				'CSSClass',

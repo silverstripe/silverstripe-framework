@@ -558,9 +558,6 @@ body.cms-dialog { overflow: auto; background: url("../images/textures/bg_cms_mai
 .htmleditorfield-dialog .details .cms-file-info .field { border: none; -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0); -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0); box-shadow: 0 0 0 rgba(0, 0, 0, 0); }
 .htmleditorfield-dialog .details .field { border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); }
 .htmleditorfield-dialog .details .field.last { border-bottom: none; -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0); -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0); box-shadow: 0 0 0 rgba(0, 0, 0, 0); margin-bottom: 0; }
-.htmleditorfield-dialog .details .img-detail-group { border-bottom: 1px solid rgba(201, 205, 206, 0.8); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); margin: 0 0 8px 0; }
-.htmleditorfield-dialog .details .img-detail-group .extraLabel { display: block; position: relative; top: -8px; margin-left: 184px; color: #ccc; color: rgba(0, 0, 0, 0.5); font-style: italic; padding: 0; text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7); }
-.htmleditorfield-dialog .details .img-detail-group .field { border-bottom: none; -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0); -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0); box-shadow: 0 0 0 rgba(0, 0, 0, 0); }
 
 .htmleditorfield-linkform .step2 { margin-bottom: 16px; }
 
