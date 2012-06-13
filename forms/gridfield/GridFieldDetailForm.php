@@ -423,7 +423,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	 * @uses SiteTreeExtension->onBeforeUnpublish()
 	 * @uses SiteTreeExtension->onAfterUnpublish()
 	 */
-	function doUnpublish() {
+	function doUnpublish($data, $form) {
                 try {
                         $origStage = Versioned::current_stage();
                         Versioned::reading_stage('Live');
