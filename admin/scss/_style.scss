@@ -1774,6 +1774,10 @@ form.import-form {
 				border-top:1px solid $color-button-generic-border;
 				clear: both;
 			}
+
+			&.ss-tabset-tabshidden .ui-tabs-panel {
+				border-top: none;
+			}
 		}
 	}
 	//Styling of tabs on page settings

@@ -603,6 +603,7 @@ form.import-form label.left { width: 250px; }
 .cms-container .CMSMain.CMSPageEditController .cms-edit-form .ui-tabs-nav .ui-state-active, .cms-container .CMSMain.CMSPageEditController .cms-edit-form .ui-tabs-nav .ui-widget-content .ui-state-active, .cms-container .CMSMain.CMSPageEditController .cms-edit-form .ui-tabs-nav .ui-widget-header .ui-state-active { padding-bottom: 1px; background: #e6eaed; border: 1px solid #c0c0c2; }
 .cms-container .CMSMain.CMSPageEditController .ss-tabset .ss-tabset { position: static; }
 .cms-container .CMSMain.CMSPageEditController .ss-tabset .ui-tabs-panel { background: #e6eaed; border-top: 1px solid #c0c0c2; clear: both; }
+.cms-container .CMSMain.CMSPageEditController .ss-tabset.ss-tabset-tabshidden .ui-tabs-panel { border-top: none; }
 .cms-container .CMSPageSettingsController .cms-edit-form { background: #e6eaed; }
 .cms-container .CMSPageSettingsController .cms-edit-form .ui-tabs-nav { float: right; margin: 8px 40px -1px 0; }
 .cms-container .CMSPageSettingsController .cms-edit-form .ui-tabs-nav li a { font-weight: bold; line-height: 16px; padding: 8px 20px 8px; }

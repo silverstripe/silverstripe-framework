@@ -205,8 +205,12 @@
 		 */
 		$('.cms-edit-form .ss-tabset').entwine({
 			onmatch: function() {
-				var tabs = this.find("ul:first").children('li');
-				if(tabs.length == 1) this.find('ul:first').hide();
+				var tabs = this.find("> ul:first");
+
+				if(tabs.children("li").length == 1) {
+					tabs.hide().parent().addClass("ss-tabset-tabshidden");
+				}
+
 				this._super();
 			},
 			onunmatch: function() {
