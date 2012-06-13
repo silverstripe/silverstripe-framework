@@ -84,8 +84,7 @@ class Group extends DataObject {
 			)
 		);
 		
-		$parentidfield->setAttribute(
-			'title', 
+		$parentidfield->setDescription(
 			_t('Group.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles')
 		);
 
