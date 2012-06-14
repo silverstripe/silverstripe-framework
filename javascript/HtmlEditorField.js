@@ -228,7 +228,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						while (parent && parent.nodeType == 1) parent = parent.parentNode;
 
 						if (!parent) $(source).unbind().remove();
-					})
+					});
 				}
 
 				this._super();
@@ -239,7 +239,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			},
 
 			fromContainingForm: {
-				onbeforesave: function(){
+				onbeforesubmitform: function(){
 					if(this.isChanged()) {
 						this.getEditor().save();
 						this.trigger('change'); // TinyMCE assigns value attr directly, which doesn't trigger change event
@@ -265,7 +265,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				// Create editor instance and render it.
 				// Similar logic to adapter/jquery/jquery.tinymce.js, but doesn't rely on monkey-patching
 				// jQuery methods, and avoids replicate the script lazyloading which is already in place with jQuery.ondemand.
-
 				ed.create(this.attr('id'), config, function() {
 					self.css('visibility', 'visible');
 				});
