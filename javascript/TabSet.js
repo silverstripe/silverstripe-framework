@@ -4,12 +4,13 @@
 		 * Lightweight wrapper around jQuery UI tabs.
 		 */
 		$('.ss-tabset').entwine({
-			onmatch: function() {
+			onadd: function() {
 				// Can't name redraw() as it clashes with other CMS entwine classes
 				this.redrawTabs();
 				this._super();
 			},
-			onunmatch: function() {
+			onremove: function() {
+				this.tabs('destroy');
 				this._super();
 			},
 			redrawTabs: function() {

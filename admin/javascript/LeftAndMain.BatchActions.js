@@ -19,50 +19,46 @@
 		$('#Form_BatchActionsForm').entwine({
 	
 			/**
-			 * Variable: Tree 
-			 * (DOMElement)
-			 */
-			Tree: null,
-		
-			/**
 			 * Variable: Actions
 			 * (Array) Stores all actions that can be performed on the collected IDs as
 			 * function closures. This might trigger filtering of the selected IDs,
 			 * a confirmation message, etc.
 			 */
 			Actions: [],
-		
+
+			getTree: function() {
+				return $('.cms-tree');
+			},
+
+			fromTree: {
+				oncheck_node: function(e, data){
+					this.serializeFromTree();
+				}
+			},
+
 			/**
 			 * Constructor: onmatch
 			 */
-			onmatch: function() {
-				var self = this, tree = $('.cms-tree');
-				
-				this.setTree(tree);
-				
-				tree.bind('check_node.jstree', function(e, data) {
-					self.serializeFromTree();
-				});
-		
-				$('.cms-tree-view-modes :input[name=view-mode]').bind('click', function(e) {
-					var val = $(e.target).val(), dropdown = self.find(':input[name=Action]');
+			onadd: function() {
+				this._updateStateFromViewMode();
+				this._super();
+			},
+
+			'from .cms-tree-view-modes :input[name=view-mode]': {
+				onclick: function(e){
+					var val = $(e.target).val(), dropdown = this.find(':input[name=Action]'), tree = this.getTree();
+
 					if(val == 'multiselect') {
 						tree.addClass('multiple');
-						self.serializeFromTree();
+						this.serializeFromTree();
 					} else {
-						tree.removeClass('multiple');	
+						tree.removeClass('multiple');
 					}
 
-					self._updateStateFromViewMode();
-				});
-
-				self._updateStateFromViewMode();
-
-				this._super();
+					this._updateStateFromViewMode();
+				}
 			},
-			onunmatch: function() {
-				this._super();
-			},
+
 			/**
 			 * Updates the select box state according to the current view mode.
 			 */

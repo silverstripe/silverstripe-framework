@@ -69,11 +69,13 @@ jQuery.noConflict();
 		$('.cms-container').entwine({
 			
 			CurrentXHR: null,
+
+			StateChangeCount: 0,
 			
 			/**
 			 * Constructor: onmatch
 			 */
-			onmatch: function() {
+			onadd: function() {
 				var self = this;
 
 				// Browser detection
@@ -92,34 +94,27 @@ jQuery.noConflict();
 				// Initialize layouts
 				this.redraw();
 
-				// Monitor window resizes, panel changes and edit form loads for layout changes.
-				// Also triggers redraw through handleStateChange()
-				$(window).resize(function() {
-					self.redraw();
-				});
-				
-				$('.cms-panel').live('toggle', function() {
-					self.redraw();
-				});
-				
 				// Remove loading screen
 				$('.ss-loading-screen').hide();
 				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
 				
-				History.Adapter.bind(window,'statechange',function(){ 
-					self.handleStateChange();
-				});
+				this._super();
+			},
 
-				this._super();
+			fromWindow: {
+				onstatechange: function(){ this.handleStateChange(); },
+				onresize: function(){ this.redraw(); }
 			},
-			onunmatch: function() {
-				this._super();
+
+			'from .cms-panel': {
+				ontoggle: function(){ this.redraw(); }
 			},
-			onaftersubmitform: function() {
-				this.redraw();
+
+			'from .cms-container': {
+				onaftersubmitform: function(){ this.redraw(); }
 			},
-			
+
 			redraw: function() {
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
@@ -292,6 +287,15 @@ jQuery.noConflict();
 				var self = this, h = window.History, state = h.getState(),
 					fragments = state.data.pjax || 'Content', headers = {},
 					contentEls = this._findFragments(fragments.split(','));
+
+				// For legacy IE versions (IE7 and IE8), reload without ajax
+				// as a crude way to fix memory leaks through whole window refreshes.
+				this.setStateChangeCount(this.getStateChangeCount() + 1);
+				var isLegacyIE = ($.browser.msie && parseInt($.browser.version, 10) < 9);
+				if(isLegacyIE && this.getStateChangeCount() > 20) {
+					document.location.href = state.url;
+					return;
+				}
 				
 				this.trigger('beforestatechange', {state: state, element: contentEls});
 
@@ -440,29 +444,15 @@ jQuery.noConflict();
 			}
 		});
 
-		/**
-		 * Make all buttons "hoverable" with jQuery theming.
-		 * Also sets the clicked button on a form submission, making it available through
-		 * a new 'clickedButton' property on the form DOM element.
-		 */
-		$('.cms input[type="submit"], .cms button, .cms input[type="reset"]').entwine({
-			onmatch: function() {
-				if(!this.hasClass('ss-ui-button')) this.addClass('ss-ui-button');
-				
-				this._super();
-			},
-			onunmatch: function() {
-				this._super();
-			}
-		});
-
-		$('.cms .ss-ui-button').entwine({
-			onmatch: function() {
+		/** Make all buttons "hoverable" with jQuery theming. */
+		$('.cms input[type="submit"], .cms button, .cms input[type="reset"], .cms .ss-ui-button').entwine({
+			onadd: function() {
+				this.addClass('ss-ui-button');
 				if(!this.data('button')) this.button();
-
 				this._super();
 			},
-			onunmatch: function() {
+			onremove: function() {
+				this.button('destroy');
 				this._super();
 			}
 		});
@@ -744,11 +734,13 @@ jQuery.noConflict();
 		 */
 		window._panelDeferredCache = {};
 		$('.cms-panel-deferred').entwine({
-			onmatch: function() {
+			onadd: function() {
 				this._super();
 				this.redraw();
 			},
-			onunmatch: function() {
+			onremove: function() {
+				if(window.debug) console.log('saving', this.data('url'), this);
+				
 				// Save the HTML state at the last possible moment.
 				// Don't store the DOM to avoid memory leaks.
 				if(!this.data('deferredNoCache')) window._panelDeferredCache[this.data('url')] = this.html();
@@ -790,12 +782,13 @@ jQuery.noConflict();
 		 * for forms inside the CMS layout.
 		 */
 		$('.cms-tabset').entwine({
-			onmatch: function() {
+			onadd: function() {
 				// Can't name redraw() as it clashes with other CMS entwine classes
 				this.redrawTabs();
 				this._super();
 			},
-			onunmatch: function() {
+			onremove: function() {
+				this.tabs('destroy');
 				this._super();
 			},
 			redrawTabs: function() {
@@ -806,7 +799,7 @@ jQuery.noConflict();
 
 				// Fix for wrong cookie storage of deselected tabs
 				if($.cookie && id && $.cookie(cookieId) == -1) $.cookie(cookieId, 0);
-				this.tabs({
+				if(!this.data('tabs')) this.tabs({
 					cookie: ($.cookie && id) ? { expires: 30, path: '/', name: cookieId } : false,
 					ajaxOptions: {
 						// Overwrite ajax loading to use CMS logic instead
