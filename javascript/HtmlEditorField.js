@@ -216,7 +216,21 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			},
 			onremove: function() {
 				var ed = tinyMCE.get(this.attr('id'));
-				if (ed) ed.remove();
+				if (ed) {
+					ed.remove();
+
+					// TinyMCE leaves behind events. We should really fix TinyMCE, but lets brute force it for now
+					$.each(jQuery.cache, function(){
+						var source = this.handle && this.handle.elem;
+						if (!source) return;
+
+						var parent = source;
+						while (parent && parent.nodeType == 1) parent = parent.parentNode;
+
+						if (!parent) $(source).unbind().remove();
+					})
+				}
+
 				this._super();
 			},
 
