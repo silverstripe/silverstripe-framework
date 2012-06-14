@@ -324,14 +324,14 @@ function getTempFolder($base = null) {
 	$ssTmp = "$sysTmp/$cachefolder";
 
 	if(!@file_exists($ssTmp)) {
-		@$worked = mkdir($ssTmp);
+		$worked = @mkdir($ssTmp);
 	}
 
 	if(!$worked) {
 		$ssTmp = BASE_PATH . "/silverstripe-cache";
 		$worked = true;
 		if(!@file_exists($ssTmp)) {
-			@$worked = mkdir($ssTmp);
+			$worked = @mkdir($ssTmp);
 		}
 	}
 
