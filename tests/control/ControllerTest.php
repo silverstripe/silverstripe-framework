@@ -41,7 +41,7 @@ class ControllerTest extends FunctionalTest {
 		$this->assertEquals(200, $response->getStatusCode());
 		
 		$response = $this->get("ControllerTest_SecuredController/stringaction");
-		$this->assertEquals(403, $response->getStatusCode());
+		$this->assertEquals(404, $response->getStatusCode());
 
 		$response = $this->get("ControllerTest_SecuredController/adminonly");
 		$this->assertEquals(403, $response->getStatusCode());
@@ -57,7 +57,7 @@ class ControllerTest extends FunctionalTest {
 		);
 		
 		$response = $this->get("ControllerTest_FullSecuredController/adminonly");
-		$this->assertEquals(403, $response->getStatusCode(),
+		$this->assertEquals(404, $response->getStatusCode(),
 			"Actions can be globally disallowed by using asterisk (*) instead of a method name"
 		);
 		
@@ -73,6 +73,12 @@ class ControllerTest extends FunctionalTest {
 			$response->getStatusCode(), 
 			"Permission codes are respected when set in \$allowed_actions"
 		);
+
+		$response = $this->get("ControllerTest_FullSecuredController/adminonly");
+		$this->assertEquals(200, $response->getStatusCode(),
+			"Actions can be globally disallowed by using asterisk (*) instead of a method name"
+		);
+		$this->session()->inst_set('loggedInAs', null);
 	}
 	
 	/**
