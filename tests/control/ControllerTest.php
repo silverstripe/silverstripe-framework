@@ -41,7 +41,7 @@ class ControllerTest extends FunctionalTest {
 		$this->assertEquals(200, $response->getStatusCode());
 		
 		$response = $this->get("ControllerTest_SecuredController/stringaction");
-		$this->assertEquals(404, $response->getStatusCode());
+		$this->assertEquals(403, $response->getStatusCode()); // why 404 not found? the action is in the controller!!
 
 		$response = $this->get("ControllerTest_SecuredController/adminonly");
 		$this->assertEquals(403, $response->getStatusCode());
