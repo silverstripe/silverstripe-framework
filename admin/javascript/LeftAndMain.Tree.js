@@ -93,6 +93,11 @@
 									ID: $(movedNode).data('id'), 
 									ParentID: $(newParentNode).data('id') || 0,
 									SiblingIDs: siblingIDs
+								},
+								statusCode: {
+									403: function() {
+										$.jstree.rollback(data.rlbk);
+									}
 								}
 							});
 						});
