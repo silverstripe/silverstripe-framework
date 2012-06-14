@@ -803,7 +803,7 @@ jQuery.noConflict();
 
 				// Fix for wrong cookie storage of deselected tabs
 				if($.cookie && id && $.cookie(cookieId) == -1) $.cookie(cookieId, 0);
-				this.tabs({
+				if(!this.data('tabs')) this.tabs({
 					cookie: ($.cookie && id) ? { expires: 30, path: '/', name: cookieId } : false,
 					ajaxOptions: {
 						// Overwrite ajax loading to use CMS logic instead
