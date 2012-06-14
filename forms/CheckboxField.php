@@ -44,21 +44,20 @@ class CheckboxField extends FormField {
 	function FieldHolder() {
 		if($this->labelLeft) {
 			return parent::FieldHolder();
-		} else {
-			extract($this->getXMLValues(array( 'Name', 'Field', 'Title', 'Message', 'MessageType' )),
-				EXTR_SKIP);
-			$messageBlock = isset($Message) ? "<span class=\"message $MessageType\">$Message</span>" : '';
-			$Type = $this->XML_val('Type');
-			$extraClass = $this->XML_val('extraClass'); 
-			return <<<HTML
-<p id="$Name" class="field $Type $extraClass">
-	$Field
-	<label class="right" for="{$this->id()}">$Title</label>
-	$messageBlock
-</p>
-HTML;
-			
 		}
+		$properties = array(
+			'Name', 'Field', 'Title', 'RightTitle',
+			'Message', 'MessageType', 'Type', 'extraClass'
+		);
+		extract($this->getXMLValues($properties), EXTR_SKIP);
+
+		$titleBlock = (!empty($Title)) ? "<label for=\"{$this->id()}\">$Title</label>" : "";
+		$rightTitleBlock = (!empty($RightTitle)) ? "<label class=\"right\" for=\"{$this->id()}\">$RightTitle</label>" : "";
+		$messageBlock = (!empty($Message)) ? "<span class=\"message $MessageType\">$Message</span>" : "";
+
+		return <<<HTML
+<div id="$Name" class="field $Type $extraClass"><div class="middleColumn">$Field$titleBlock</div>$rightTitleBlock$messageBlock</div>
+HTML;
 	}
 
 	function useLabelLeft( $labelLeft = true ) {
@@ -81,7 +80,7 @@ HTML;
 	 */
 	 
 	function performReadonlyTransformation() {
-		$field = new CheckboxField_Readonly($this->name, $this->title, $this->value ? _t('CheckboxField.YES', 'Yes') : _t('CheckboxField.NO', 'No'));
+		$field = new CheckboxField_Readonly($this->name, $this->title, $this->value);
 		$field->setForm($this->form);
 		return $field;	
 	}
