@@ -69,6 +69,8 @@ jQuery.noConflict();
 		$('.cms-container').entwine({
 			
 			CurrentXHR: null,
+
+			StateChangeCount: 0,
 			
 			/**
 			 * Constructor: onmatch
@@ -285,6 +287,15 @@ jQuery.noConflict();
 				var self = this, h = window.History, state = h.getState(),
 					fragments = state.data.pjax || 'Content', headers = {},
 					contentEls = this._findFragments(fragments.split(','));
+
+				// For legacy IE versions (IE7 and IE8), reload without ajax
+				// as a crude way to fix memory leaks through whole window refreshes.
+				this.setStateChangeCount(this.getStateChangeCount() + 1);
+				var isLegacyIE = ($.browser.msie && parseInt($.browser.version, 10) < 9);
+				if(isLegacyIE && this.getStateChangeCount() > 20) {
+					document.location.href = state.url;
+					return;
+				}
 				
 				this.trigger('beforestatechange', {state: state, element: contentEls});
 
