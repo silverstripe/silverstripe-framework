@@ -12,6 +12,12 @@ define('TEST_SERVICES', dirname(__FILE__) . '/testservices');
  */
 class InjectorTest extends SapphireTest {
 	
+	public function testCorrectlyInitialised() {
+		$injector = Injector::inst();
+		$this->assertTrue($injector->getConfigLocator() instanceof SilverStripeServiceConfigurationLocator,
+				'If this fails, it is likely because the injector has been referenced BEFORE being initialised in Core.php');
+	}
+	
 	public function testBasicInjector() {
 		$injector = new Injector();
 		$injector->setAutoScanProperties(true);

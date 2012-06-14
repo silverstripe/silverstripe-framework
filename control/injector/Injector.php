@@ -231,6 +231,30 @@ class Injector {
 	}
 	
 	/**
+	 * Accessor (for testing purposes)
+	 * @return InjectionCreator
+	 */
+	public function getObjectCreator() {
+		return $this->objectCreator;
+	}
+	
+	/**
+	 * Set the configuration locator 
+	 * @param ServiceConfigurationLocator $configLocator 
+	 */
+	public function setConfigLocator($configLocator) {
+		$this->configLocator = $configLocator;
+	}
+	
+	/**
+	 * Retrieve the configuration locator 
+	 * @return ServiceConfigurationLocator 
+	 */
+	public function getConfigLocator() {
+		return $this->configLocator;
+	}
+	
+	/**
 	 * Add in a specific mapping that should be catered for on a type. 
 	 * This allows configuration of what should occur when an object
 	 * of a particular type is injected, and what items should be injected
