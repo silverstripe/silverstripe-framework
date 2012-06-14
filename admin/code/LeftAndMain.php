@@ -797,6 +797,18 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$statusUpdates = array('modified'=>array());
 		$id = $request->requestVar('ID');
 		$parentID = $request->requestVar('ParentID');
+
+		if($className == 'SiteTree' && $page = DataObject::get_by_id('Page', $id)){
+			$root = $page->getParentType();
+			if(($parentID == '0' || $root == 'root') && !SiteConfig::current_site_config()->canCreateTopLevel()){
+				$this->response->setStatusCode(
+					403,
+						_t('LeftAndMain.CANT_REORGANISE',"You do not have permission to alter Top level pages. Your change was not saved.")
+					);
+				return;
+			}
+		}
+
 		$siblingIDs = $request->requestVar('SiblingIDs');
 		$statusUpdates = array('modified'=>array());
 		if(!is_numeric($id) || !is_numeric($parentID)) throw new InvalidArgumentException();
