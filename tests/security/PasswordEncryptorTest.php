@@ -64,13 +64,49 @@ class PasswordEncryptorTest extends SapphireTest {
 	function testEncryptorBlowfish() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors', array('test_blowfish'=>array('PasswordEncryptor_Blowfish'=>'')));
 		$e = PasswordEncryptor::create_for_algorithm('test_blowfish');
+		
 		$password = 'mypassword';
-		$salt = '10$mysaltmustbetwen2chars';
+
+		$salt = $e->salt($password);
+		$modSalt = substr($salt, 0, 3) . str_shuffle(substr($salt, 3, strlen($salt)));
 
 		$this->assertTrue($e->checkAEncryptionLevel() == 'y' || $e->checkAEncryptionLevel() == 'x' || $e->checkAEncryptionLevel() == 'a');
 		$this->assertTrue($e->check($e->encrypt($password, $salt), "mypassword", $salt));
 		$this->assertFalse($e->check($e->encrypt($password, $salt), "anotherpw", $salt));
-		$this->assertFalse($e->check($e->encrypt($password, $salt), "mypassword", '10$anothersaltetwen2chars'));
+		$this->assertFalse($e->check($e->encrypt($password, $salt), "mypassword", $modSalt));
+
+		PasswordEncryptor_Blowfish::set_cost(1);
+		$salt = $e->salt($password);
+		$modSalt = substr($salt, 0, 3) . str_shuffle(substr($salt, 3, strlen($salt)));
+
+		$this->assertNotEquals(1, PasswordEncryptor_Blowfish::get_cost());
+		$this->assertEquals(4, PasswordEncryptor_Blowfish::get_cost());
+
+		$this->assertTrue($e->check($e->encrypt($password, $salt), "mypassword", $salt));
+		$this->assertFalse($e->check($e->encrypt($password, $salt), "anotherpw", $salt));
+		$this->assertFalse($e->check($e->encrypt($password, $salt), "mypassword", $modSalt));
+
+		PasswordEncryptor_Blowfish::set_cost(15);
+		$salt = $e->salt($password);
+		$modSalt = substr($salt, 0, 3) . str_shuffle(substr($salt, 3, strlen($salt)));
+
+		$this->assertEquals(15, PasswordEncryptor_Blowfish::get_cost());
+
+		$this->assertTrue($e->check($e->encrypt($password, $salt), "mypassword", $salt));
+		$this->assertFalse($e->check($e->encrypt($password, $salt), "anotherpw", $salt));
+		$this->assertFalse($e->check($e->encrypt($password, $salt), "mypassword", $modSalt));
+
+
+		PasswordEncryptor_Blowfish::set_cost(35);
+
+		$this->assertNotEquals(35, PasswordEncryptor_Blowfish::get_cost());
+		$this->assertEquals(31, PasswordEncryptor_Blowfish::get_cost());
+
+		//Don't actually test this one. It takes too long. 31 takes too long to process
+		// $salt = $e->salt($password);
+		// $this->assertTrue($e->check($e->encrypt($password, $salt), "mypassword", $salt));
+		// $this->assertFalse($e->check($e->encrypt($password, $salt), "anotherpw", $salt));
+
 	}
 	
 	function testEncryptorPHPHashCheck() {
