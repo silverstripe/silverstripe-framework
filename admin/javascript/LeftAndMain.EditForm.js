@@ -68,12 +68,6 @@
 				// in order to avoid changing the menu state if the action is cancelled by the user
 				// $('.cms-menu')
 				
-				// focus input on first form element. Exclude elements which
-				// specifically opt-out of this behaviour via "data-skip-autofocus".
-				// This opt-out is useful if the first visible field is shown far down a scrollable area,
-				// for example for the pagination input field after a long GridField listing.
-				this.find(':input:visible:not(:submit)[data-skip-autofocus!="true"]:first').focus();
-				
 				// Optionally get the form attributes from embedded fields, see Form->formHtmlContent()
 				for(var overrideAttr in {'action':true,'method':true,'enctype':true,'name':true}) {
 					var el = this.find(':input[name='+ '_form_' + overrideAttr + ']');
@@ -110,7 +104,18 @@
 				this.changetracker('destroy');
 				this._super();
 			},
-						
+			onmatch: function() {
+				this._super();
+
+				// focus input on first form element. Exclude elements which
+				// specifically opt-out of this behaviour via "data-skip-autofocus".
+				// This opt-out is useful if the first visible field is shown far down a scrollable area,
+				// for example for the pagination input field after a long GridField listing.
+				this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(':visible:first').focus();
+			},
+			onunmatch: function() {
+				this._super();
+			},
 			redraw: function() {
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 				
