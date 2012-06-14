@@ -21,7 +21,7 @@
 			// Minimum width to keep the CMS operational
 			SharedWidth: null,
 			
-			onmatch: function() {
+			onadd: function() {
 				var self = this, layoutContainer = this.parent();
 				// this.resizable({
 				// 	handles: 'w',
@@ -54,9 +54,6 @@
 
 				self._fixIframeLinks();
 		
-				this._super();
-			},
-			onunmatch: function() {
 				this._super();
 			},
 			loadUrl: function(url) {
