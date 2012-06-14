@@ -9,8 +9,8 @@
 		$('.cms-tree').entwine({
 			
 			Hints: null,
-			
-			onmatch: function() {
+
+			onadd: function(){
 				this._super();
 
 				// Don't reapply (expensive) tree behaviour if already present
@@ -96,14 +96,20 @@
 								}
 							});
 						});
-					
-					$('.cms-container').bind('afterstatechange.tree aftersubmitform.tree', function(e, data) {
-						self.updateFromEditForm(e.origData);
-					});
 			},
-			onunmatch: function() {
-				$('.cms-container').unbind('afterstatechange.tree aftersubmitform.tree');
+			onremove: function(){
+				this.jstree('destroy');
 				this._super();
+			},
+
+			'from .cms-container': {
+				onafterstatechange: function(e){
+					this.updateFromEditForm(e.origData);
+				},
+
+				onaftersubmitform: function(e){
+					this.updateFromEditForm(e.origData);
+				}
 			},
 
 			getTreeConfig: function() {

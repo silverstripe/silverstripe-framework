@@ -268,7 +268,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				FRAMEWORK_DIR . '/javascript/GridField.js',
 			)
 		);
-		
+
+		if (Director::isDev()) Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/leaktools.js');
+
 		HTMLEditorField::include_js();
 
 		Requirements::combine_files(

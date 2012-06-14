@@ -10,7 +10,7 @@
 		 */
 		$('.cms-content').entwine({
 			
-			onmatch: function() {
+			onadd: function() {
 				var self = this;
 				
 				// Force initialization of certain UI elements to avoid layout glitches
@@ -19,10 +19,7 @@
 				
 				this._super();
 			},
-			onunmatch: function() {
-				this._super();
-			},
-						
+
 			redraw: function() {
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 				
@@ -39,7 +36,7 @@
 		 * Load edit form for the selected node when its clicked.
 		 */
 		$('.cms-content .cms-tree').entwine({
-			onmatch: function() {
+			onadd: function() {
 				var self = this;
 
 				this._super();
@@ -80,9 +77,6 @@
 						self.removeForm();
 					}
 				});
-			},
-			onunmatch: function() {
-				this._super();
 			}
 		});
 

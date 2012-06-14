@@ -15,12 +15,6 @@
 		 */
 		$('.cms-edit-form.cms-add-form').entwine({
 			/**
-			 * Variable: Tree
-			 * (DOMElement)
-			 */
-			Tree: null,
-			
-			/**
 			 * Variable: OrigOptions 
 			 * (Array) Map of <option> values to an object of "title" and "value"
 			 */
@@ -31,18 +25,24 @@
 			 * (Array) Internal counter to create unique page identifiers prior to ajax saving
 			 */
 			NewPages: [],
-	
+
+			getTree: function() {
+				return $('.cms-tree');
+			},
+
+			fromTree: {
+				onselect_node: function(e, data){
+					self.refresh(data.rslt.obj);
+				}
+			},
+
 			/**
 			 * Constructor: onmatch
 			 */
-			onmatch: function() {
+			onadd: function() {
 				var self = this, typeDropdown = this.find(':input[name=PageType]');
 		
-				var tree = $('.cms-tree');
-				this.setTree(tree);
-				
 				// Event bindings
-				$(tree).bind('select_node.jstree', function(e, data) {self.refresh(data.rslt.obj);});
 				typeDropdown.bind('change', function(e) {self.refresh();});
 				// TODO Bind on tree initialization to set dropdown for selected node
 				
@@ -56,9 +56,7 @@
 				
 				this._super();
 			},
-			onunmatch: function() {
-				this._super();
-			},
+
 			/**
 			 * Function: onsubmit
 			 * 

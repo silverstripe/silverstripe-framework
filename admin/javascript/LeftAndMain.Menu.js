@@ -78,23 +78,6 @@
 			onmatch: function() {
 				var self = this;
 
-				var updateMenuFromResponse = function(xhr) {
-					var controller = xhr.getResponseHeader('X-Controller');
-					if(controller) {
-						var item = self.find('li#Menu-' + controller);
-						if(!item.hasClass('current')) item.select();
-					}
-					self.updateItems();
-				};
-				$('.cms-container').live('afterstatechange aftersubmitform', function(e, data) {
-					updateMenuFromResponse(data.xhr);
-				});
-				
-				// Sync collapsed state with parent panel
-				this.parents('.cms-panel:first').bind('toggle', function(e) {
-					self.toggleClass('collapsed', $(this).hasClass('collapsed'));
-				});
-				
 				// Select default element (which might reveal children in hidden parents)
 				this.find('li.current').select();
 
@@ -105,6 +88,41 @@
 			onunmatch: function() {
 				this._super();
 			},
+
+			updateMenuFromResponse: function(xhr) {
+				var controller = xhr.getResponseHeader('X-Controller');
+				if(controller) {
+					var item = this.find('li#Menu-' + controller);
+					if(!item.hasClass('current')) item.select();
+				}
+				this.updateItems();
+			},
+
+			'from .cms-container': {
+				onafterstatechange: function(e, data){
+					this.updateMenuFromResponse(data.xhr);
+				},
+				onaftersubmitform: function(e, data){
+					this.updateMenuFromResponse(data.xhr);
+				}
+			},
+
+			'from .cms-edit-form': {
+				onrelodeditform: function(e, data){
+					this.updateMenuFromResponse(data.xmlhttp);
+				}
+			},
+
+			getContainingPanel: function(){
+				return this.closest('.cms-panel');
+			},
+
+			fromContainingPanel: {
+				ontoggle: function(e){
+					this.toggleClass('collapsed', $(e.target).hasClass('collapsed'));
+				}
+			},
+
 			updateItems: function() {
 				// Hide "edit page" commands unless the section is activated
 				var editPageItem = this.find('#Menu-CMSMain');

@@ -3,16 +3,16 @@
 <html>
 <head>
 	<title>Jasmine Test Runner</title>
-	<link rel="stylesheet" type="text/css" href="../vendor/jasmine-1.0.1/jasmine.css">
+	<link rel="stylesheet" type="text/css" href="../vendor/jasmine/jasmine.css">
 
-	<script type="text/javascript" src="../vendor/jasmine-1.0.1/jasmine.js"></script>
-	<script type="text/javascript" src="../vendor/jasmine-1.0.1/jasmine-html.js"></script>
+	<script type="text/javascript" src="../vendor/jasmine/jasmine.js"></script>
+	<script type="text/javascript" src="../vendor/jasmine/jasmine-html.js"></script>
 	<script type="text/javascript" src="../vendor/jasmine-dom/jasmine-dom-matchers.js"></script>
 	<script type="text/javascript" src="../vendor/jasmine-dom/jasmine-dom-fixtures.js"></script>
 
 	<script type="text/javascript">
 		versionarg = window.location.search.match(/version=([^&]+)/);
-		jQueryVersion = versionarg ? versionarg[1] : '1.6';
+		jQueryVersion = versionarg ? versionarg[1] : '1.7.2';
 		jQuerySource = 'local';
 
 		var jQuery;
@@ -34,14 +34,21 @@
 	<script src="../src/jquery.selector.affectedby.js"></script>
 
 	<script src="../src/jquery.entwine.js"></script>
-	<script src="../src/jquery.entwine.dommaybechanged.js"></script>
+
+	<script src="../src/domevents/jquery.entwine.domevents.addrem.js"></script>
+	<script src="../src/domevents/jquery.entwine.domevents.maybechanged.js"></script>
+
 	<script src="../src/jquery.entwine.events.js"></script>
+	<script src="../src/jquery.entwine.eventcapture.js"></script>
 	<script src="../src/jquery.entwine.ctors.js"></script>
+	<script src="../src/jquery.entwine.addrem.js"></script>
 	<script src="../src/jquery.entwine.properties.js"></script>
 
 	<!-- include spec files here... -->
 	<script type="text/javascript" src="spec.entwine.basics.js"></script>
+	<script type="text/javascript" src="spec.entwine.eventcapture.js"></script>
 	<script type="text/javascript" src="spec.entwine.ctors.js"></script>
+	<script type="text/javascript" src="spec.entwine.addrem.js"></script>
 	<script type="text/javascript" src="spec.entwine.events.js"></script>
 	<script type="text/javascript" src="spec.entwine.namespaces.js"></script>
 	<script type="text/javascript" src="spec.entwine.properties.js"></script>
