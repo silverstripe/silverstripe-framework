@@ -743,7 +743,8 @@ jQuery.noConflict();
 				this.redraw();
 			},
 			onremove: function() {
-				console.log('saving', this.data('url'), this);
+				if(window.debug) console.log('saving', this.data('url'), this);
+				
 				// Save the HTML state at the last possible moment.
 				// Don't store the DOM to avoid memory leaks.
 				if(!this.data('deferredNoCache')) window._panelDeferredCache[this.data('url')] = this.html();
