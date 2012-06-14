@@ -444,26 +444,11 @@ jQuery.noConflict();
 			}
 		});
 
-		/**
-		 * Make all buttons "hoverable" with jQuery theming.
-		 * Also sets the clicked button on a form submission, making it available through
-		 * a new 'clickedButton' property on the form DOM element.
-		 */
-		$('.cms input[type="submit"], .cms button, .cms input[type="reset"]').entwine({
-			onmatch: function() {
-				if(!this.hasClass('ss-ui-button')) this.addClass('ss-ui-button');
-				
-				this._super();
-			},
-			onunmatch: function() {
-				this._super();
-			}
-		});
-
-		$('.cms .ss-ui-button').entwine({
+		/** Make all buttons "hoverable" with jQuery theming. */
+		$('.cms input[type="submit"], .cms button, .cms input[type="reset"], .cms .ss-ui-button').entwine({
 			onadd: function() {
+				this.addClass('ss-ui-button');
 				if(!this.data('button')) this.button();
-
 				this._super();
 			},
 			onremove: function() {
