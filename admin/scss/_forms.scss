@@ -181,6 +181,12 @@ form.small .field, .field.small {
 			@include border-bottom-left-radius(0);
 			@include border-bottom-right-radius(0);
 		}
+
+		// Hide badges, as they cost too much horizontal space,
+		// and mess up rendering for selected node title
+		.badge {
+			display: none;
+		}
 	}
 	
 	/* dropdowns */
