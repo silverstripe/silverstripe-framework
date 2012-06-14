@@ -128,13 +128,17 @@ class Folder extends File {
 			}
 		}
 		$unwantedDbChildren = $hasDbChild;
-		
-		
+
+		// if we're syncing a folder with no ID, we assume we're syncing the root assets folder
+		// however the Filename field is populated with "NewFolder", so we need to set this to empty
+		// to satisfy the baseDir variable below, which is the root folder to scan for new files in
+		if(!$parentID) $this->Filename = '';
+
 		// Iterate through the actual children, correcting the database as necessary
 		$baseDir = $this->FullPath;
-		
-		if(!$this->Filename) die($this->ID . " - " . $this->FullPath);
-		
+
+		// @todo this shouldn't call die() but log instead
+		if($parentID && !$this->Filename) die($this->ID . " - " . $this->FullPath);
 
 		if(file_exists($baseDir)) {
 			$actualChildren = scandir($baseDir);
