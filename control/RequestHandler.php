@@ -252,8 +252,8 @@ class RequestHandler extends ViewableData {
 		if(is_array($actions)) {
 			$isKey   = !is_numeric($action) && array_key_exists($action, $actions);
 			$isValue = in_array($action, $actions, true);
-			// we are checking the method exists, not that the method is allowed, there is another method for that which is checkAccessAction
-			if($isKey || $isValue || method_exists($this, $action)) return true;
+			$isWildcard = (in_array('*', $actions) && $this->checkAccessAction($action));
+			if($isKey || $isValue || $isWildcard) return true;
 		}
 
 		if(!is_array($actions) || !$this->config()->get('allowed_actions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES)) {
