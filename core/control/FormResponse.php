@@ -72,16 +72,15 @@ class FormResponse {
 	 * @return string
 	 */
 	static function respond() {
-		$response = new SS_HTTPResponse();
-
 		// we don't want non-ajax calls to receive javascript
 		if(isset($_REQUEST['forcehtml'])) {
-			$response->setBody(self::$non_ajax_content);			
+			return self::$non_ajax_content;			
 		} else if(isset($_REQUEST['forceajax']) || Director::is_ajax()) {
-			$response->addHeader('Content-Type', 'text/javascript');
-			$response->setBody(self::get_javascript());
+			// TODO figure out a way to stay backwards-compatible with Ajax.Evaluator and still use the automatic evaluating of Prototype
+			//header("Content-type: text/javascript");
+			return self::get_javascript();
 		} elseif(!empty(self::$non_ajax_content)) {
-			$response->setBody(self::$non_ajax_content);			
+			return self::$non_ajax_content;			
 		} elseif(!empty(self::$redirect_url)) {
 			Director::redirect(self::$redirect_url);
 			return null;
@@ -91,8 +90,7 @@ class FormResponse {
 		} else {
 			return null;
 		}
-
-		return $response;
+		
 	}
 	
 	/**
