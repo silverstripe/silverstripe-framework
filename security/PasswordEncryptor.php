@@ -142,9 +142,34 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 	 * Higher costs will increase security, but also increase server load.
 	 * If you are using basic auth, you may need to decrease this as encryption
 	 * will be run on every request.
-	 * Must be between 4 and 31.
+	 * The two digit cost parameter is the base-2 logarithm of the iteration 
+	 * count for the underlying Blowfish-based hashing algorithmeter and must 
+	 * be in range 04-31, values outside this range will cause crypt() to fail.
 	 */
 	protected static $cost = 10;
+
+	/**
+	 * Sets the cost of the blowfish algorithm.
+	 * See {@link PasswordEncryptor_Blowfish::$cost}
+	 * Cost is set as an integer but 
+	 * Ensure that set values are from 4-31
+	 * 
+	 * @param int $cost range 4-31
+	 * @return null
+	 */
+	public static function set_cost($cost) {
+		self::$cost = max(min(31, $cost), 4);
+	}
+
+	/**
+	 * Gets the cost that is set for the blowfish algorithm
+	 * 
+	 * @param int $cost
+	 * @return null
+	 */
+	public function get_cost() {
+		return self::$cost;
+	}
 
 	function encrypt($password, $salt = null, $member = null) {
 		// See: http://nz.php.net/security/crypt_blowfish.php
@@ -246,9 +271,12 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 		return 'unknown';
 	}
 
+	/**
+	 * self::$cost param is forced to be two digits with leading zeroes for ints 4-9
+	 */
 	function salt($password, $member = null) {
 		$generator = new RandomGenerator();
-		return self::$cost . '$' . substr($generator->generateHash('sha1'), 0, 22);
+		return sprintf('%02d', self::$cost) . '$' . substr($generator->generateHash('sha1'), 0, 22);
 	}
 
 	function check($hash, $password, $salt = null, $member = null) {
