@@ -127,10 +127,6 @@ class Hierarchy extends DataExtension {
 
 		// foreach can't handle an ever-growing $nodes list
 		while(list($id, $node) = each($this->markedNodes)) {
-			// Inspect the number of potential nodes to mark - if its more than the minimum count,
-			// don't query them in the first place to inspect further marking state in-memory
-			if((sizeof($this->markedNodes) + $node->$numChildrenMethod()) >= $minNodeCount) break;
-			
 			$this->markChildren($node, $context, $childrenMethod, $numChildrenMethod);
 			if($minNodeCount && sizeof($this->markedNodes) >= $minNodeCount) {
 				break;
