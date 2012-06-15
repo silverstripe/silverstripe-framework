@@ -220,18 +220,26 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return DataList
 	 */
 	public function filter() {
-		$numberFuncArgs = count(func_get_args());
-		$whereArguments = array();
-		if($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
-			$whereArguments = func_get_arg(0);
-		} elseif($numberFuncArgs == 2) {
-			$whereArguments[func_get_arg(0)] = func_get_arg(1);
-		} else {
-			throw new InvalidArgumentException('Incorrect number of arguments passed to filter()');
+		// Validate and process arguments
+		$arguments = func_get_args();
+		switch(sizeof($arguments)) {
+			case 1: $filters = $arguments[0]; break;
+			case 2: $filters = array($arguments[0] => $arguments[1]); break;
+			default:
+				throw new InvalidArgumentException('Incorrect number of arguments passed to filter()');
 		}
+		
+		$clone = clone $this;
+		$clone->addFilter($filters);
+		return $clone;
+	}
 
+	/**
+	 * Modify this DataList, adding a filter
+	 */
+	public function addFilter($filterArray) {
 		$SQL_Statements = array();
-		foreach($whereArguments as $field => $value) {
+		foreach($filterArray as $field => $value) {
 			if(is_array($value)) {
 				$customQuery = 'IN (\''.implode('\',\'',Convert::raw2sql($value)).'\')';
 			} else {
@@ -254,6 +262,24 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			}
 		}
 		return $this;
+	}
+
+	/**
+	 * Filter this DataList by a callback function.
+	 * The function will be passed each record of the DataList in turn, and must return true for the record to be included.
+	 * Returns the filtered list.
+	 * 
+	 * Note that, in the current implementation, the filtered list will be an ArrayList, but this may change in a future
+	 * implementation.
+	 */
+	public function filterByCallback($callback) {
+		if(!is_callable($callback)) throw new LogicException("DataList::filterByCallback() must be passed something callable.");
+		
+		$output = new ArrayList;
+		foreach($this as $item) {
+			if($callback($item)) $output->push($item);
+		}
+		return $output;
 	}
 
 	/**
