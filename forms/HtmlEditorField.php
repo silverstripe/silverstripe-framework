@@ -742,8 +742,10 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$files = File::get()->where(implode(' OR ', $wheres));
 		
 		// Limit by folder (if required)
-		if($parentID) $files->filter('ParentID', $parentID);
-		
+		if($parentID) {
+			$files = $files->filter('ParentID', $parentID);
+		}
+
 		return $files;
 	}
 

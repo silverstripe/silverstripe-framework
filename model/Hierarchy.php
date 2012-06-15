@@ -591,7 +591,7 @@ class Hierarchy extends DataExtension {
 			
 			$ids = $stageChildren->column("ID");
 			if($ids) {
-				$children->where("\"$baseClass\".\"ID\" NOT IN (" . implode(',',$ids) . ")");
+				$children = $children->where("\"$baseClass\".\"ID\" NOT IN (" . implode(',',$ids) . ")");
 			}
 		}
 		
