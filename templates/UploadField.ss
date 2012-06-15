@@ -26,6 +26,12 @@
 	<% end_if %>
 </ul>
 <% if isDisabled || isReadonly %>
+	<% if isSaveable %>
+	<% else %>
+		<div class="ss-uploadfield-item">
+			<em><% _t('FileIFrameField.ATTACHONCESAVED2', 'Files can be attached once you have saved the record for the first time.') %></em>
+		</div>
+	<% end_if %>
 <% else %>
 	<div class="ss-uploadfield-item ss-uploadfield-addfile<% if $Items && $displayInput %> borderTop<% end_if %>" <% if not $displayInput %>style="display: none;"<% end_if %>>
 		<div class="ss-uploadfield-item-preview ss-uploadfield-dropzone ui-corner-all">
