@@ -249,8 +249,10 @@ body.cms {
 					font-weight: bold;
 					line-height: $grid-y * 2;
 					padding: ($grid-y * 2 - 4) ($grid-x * 2 + 4) $grid-y + 3;
+					text-transform: capitalize;
 					text-indent: -9999em;
-					background: url(../images/content-header-tabs-sprite.png) no-repeat
+					display: block;
+					background: url(../images/content-header-tabs-sprite.png) no-repeat;
 				}
 
 				&.content-treeview a {
