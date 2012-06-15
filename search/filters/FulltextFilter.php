@@ -28,12 +28,11 @@
 class FulltextFilter extends SearchFilter {
 
 	public function apply(DataQuery $query) {
-		$query->where(sprintf(
+		return $query->where(sprintf(
 			"MATCH (%s) AGAINST ('%s')",
 			$this->getDbName(),
 			Convert::raw2sql($this->getValue())
 		));
-		return $query;
 	}
 
 	public function isEmpty() {
