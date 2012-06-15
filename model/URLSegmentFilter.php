@@ -6,7 +6,7 @@
 
 /**
  * Filter certain characters from "URL segments" (also called "slugs"), for nicer (more SEO-friendly) URLs.
- * Uses {@link Transliterator} to convert non-ASCII characters to meaningful ASCII representations.
+ * Uses {@link SS_Transliterator} to convert non-ASCII characters to meaningful ASCII representations.
  * Use {@link $default_allow_multibyte} to allow a broader range of characters without transliteration.
  * 
  * Caution: Should not be used on full URIs with domains or query parameters.
@@ -94,22 +94,22 @@ class URLSegmentFilter extends Object {
 	}
 		
 	/**
-	 * @var Transliterator
+	 * @var SS_Transliterator
 	 */
 	protected $transliterator;
 	
 	/**
-	 * @return Transliterator|NULL
+	 * @return SS_Transliterator|NULL
 	 */
 	function getTransliterator() {
 		if($this->transliterator === null && self::$default_use_transliterator) {
-			$this->transliterator = Transliterator::create();
+			$this->transliterator = SS_Transliterator::create();
 		} 
 		return $this->transliterator;
 	}
 	
 	/**
-	 * @param Transliterator|FALSE
+	 * @param SS_Transliterator|FALSE
 	 */
 	function setTransliterator($t) {
 		$this->transliterator = $t;
