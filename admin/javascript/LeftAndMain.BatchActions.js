@@ -41,7 +41,7 @@
 				var fn = $.proxy(function() {
 					this.serializeFromTree();
 				}, this);
-				$('.cms-tree').bind('check_node.jstree', fn);
+				$('.cms-tree').bind('check_node.jstree uncheck_node.jstree', fn);
 				this.setProxyCheckNodeGuid(fn.guid);
 
 				this._super();
