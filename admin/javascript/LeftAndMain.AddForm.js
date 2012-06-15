@@ -26,21 +26,19 @@
 			 */
 			NewPages: [],
 
-			getTree: function() {
-				return $('.cms-tree');
-			},
-
-			fromTree: {
-				onselect_node: function(e, data){
-					self.refresh(data.rslt.obj);
-				}
-			},
+			ProxySelectNodeGuid: null,
 
 			/**
 			 * Constructor: onmatch
 			 */
 			onadd: function() {
 				var self = this, typeDropdown = this.find(':input[name=PageType]');
+
+				var fn = $.proxy(function(e, data) {
+					this.refresh(data.rslt.obj);
+				}, this);
+				$('.cms-tree').bind('select_node.jstree', fn);
+				this.setProxySelectNodeGuid(fn.guid);
 		
 				// Event bindings
 				typeDropdown.bind('change', function(e) {self.refresh();});
@@ -54,6 +52,12 @@
 				});
 				this.setOrigOptions(opts);
 				
+				this._super();
+			},
+
+			onremove: function() {
+				$('.cms-tree').unbind('.jstree', this.getProxySelectNodeGuid());
+
 				this._super();
 			},
 
