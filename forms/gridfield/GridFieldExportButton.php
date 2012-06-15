@@ -138,7 +138,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
 					$value = $columnHeader($relObj);
 				} else {
-					$value = $item->relField($columnSource);
+					$value = $gridField->getDataFieldValue($item, $columnSource);
 				}
 
 				$value = str_replace(array("\r", "\n"), "\n", $value);
