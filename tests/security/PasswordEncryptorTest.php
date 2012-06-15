@@ -15,6 +15,7 @@ class PasswordEncryptorTest extends SapphireTest {
 	public function tearDown() {
 		parent::tearDown();
 		Config::set_instance($this->config);
+		PasswordEncryptor_Blowfish::set_cost(10);
 	}
 
 	function testCreateForCode() {
@@ -86,12 +87,12 @@ class PasswordEncryptorTest extends SapphireTest {
 		$this->assertFalse($e->check($e->encrypt($password, $salt), "anotherpw", $salt));
 		$this->assertFalse($e->check($e->encrypt($password, $salt), "mypassword", $modSalt));
 
-		PasswordEncryptor_Blowfish::set_cost(15);
+		PasswordEncryptor_Blowfish::set_cost(11);
 		$salt = $e->salt($password);
 		$modSalt = substr($salt, 0, 3) . str_shuffle(substr($salt, 3, strlen($salt)));
 
-		$this->assertEquals(15, PasswordEncryptor_Blowfish::get_cost());
-
+		$this->assertEquals(11, PasswordEncryptor_Blowfish::get_cost());
+		
 		$this->assertTrue($e->check($e->encrypt($password, $salt), "mypassword", $salt));
 		$this->assertFalse($e->check($e->encrypt($password, $salt), "anotherpw", $salt));
 		$this->assertFalse($e->check($e->encrypt($password, $salt), "mypassword", $modSalt));
@@ -103,10 +104,6 @@ class PasswordEncryptorTest extends SapphireTest {
 		$this->assertEquals(31, PasswordEncryptor_Blowfish::get_cost());
 
 		//Don't actually test this one. It takes too long. 31 takes too long to process
-		// $salt = $e->salt($password);
-		// $this->assertTrue($e->check($e->encrypt($password, $salt), "mypassword", $salt));
-		// $this->assertFalse($e->check($e->encrypt($password, $salt), "anotherpw", $salt));
-
 	}
 	
 	function testEncryptorPHPHashCheck() {
