@@ -22,7 +22,9 @@ jQuery.noConflict();
 		// with css applied and got a width value.
 		var applyChosen = function(el){
 			if(el.outerWidth()){
-				el.chosen().addClass("has-chzn");
+				el.chosen({
+					'allow_single_deselect': true
+				}).addClass("has-chzn");
 				// Copy over title attribute if required
 				if(el.attr('title')) el.siblings('.chzn-container').attr('title', el.attr('title'));
 			} else {
