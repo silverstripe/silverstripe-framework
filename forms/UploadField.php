@@ -848,7 +848,7 @@ class UploadField_ItemHandler extends RequestHandler {
 
 		$form->sessionMessage(_t('UploadField.Saved', 'Saved'), 'good');
 
-		return $this->parent->getForm()->Controller()->redirectBack();
+		return $this->edit($request);
 	}
 	
 }
