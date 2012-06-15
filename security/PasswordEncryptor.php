@@ -167,7 +167,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 	 * @param int $cost
 	 * @return null
 	 */
-	public function get_cost() {
+	public static function get_cost() {
 		return self::$cost;
 	}
 
