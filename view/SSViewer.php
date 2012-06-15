@@ -612,7 +612,9 @@ class SSViewer {
 			if(Director::isDev() || Director::is_cli() || Permission::check('ADMIN')) {
 				self::flush_template_cache();
 			} else {
-				return Security::permissionFailure(null, 'Please log in as an administrator to flush the template cache.');
+				if(!Security::ignore_disallowed_actions()) {
+					return Security::permissionFailure(null, 'Please log in as an administrator to flush the template cache.');
+				}
 			}
 		}
 		

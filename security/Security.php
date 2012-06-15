@@ -158,6 +158,8 @@ class Security extends Controller {
 	 * to log in.
 	 */
 	static function permissionFailure($controller = null, $messageSet = null) {
+		self::set_ignore_disallowed_actions(true);
+		
 		if(!$controller) $controller = Controller::curr();
 		
 		if(Director::is_ajax()) {
@@ -862,6 +864,20 @@ class Security extends Controller {
 	 */
 	public static function default_login_dest() {
 		return self::$default_login_dest;
+	}
+
+	protected static $ignore_disallowed_actions = false;
+	
+	/**
+	 * Set to true to ignore access to disallowed actions, rather than returning permission failure
+	 * Note that this is just a flag that other code needs to check with Security::ignore_disallowed_actions()
+	 * @param $flag True or false
+	 */
+	public static function set_ignore_disallowed_actions($flag) {
+		self::$ignore_disallowed_actions = $flag;
+	}
+	public static function ignore_disallowed_actions() {
+		return self::$ignore_disallowed_actions;
 	}
 
 }
