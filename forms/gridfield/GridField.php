@@ -438,7 +438,13 @@ class GridField extends FormField {
 		}
 		
 		// Default implementation
-		return $record->relField($fieldName);
+		if($record->hasMethod('relField')) {
+			return $record->relField($fieldName);
+		} elseif($record->hasMethod($fieldName)) {
+			return $record->$fieldName();
+		} else {
+			return $record->$fieldName;
+		}
 	}
 
 	/**
