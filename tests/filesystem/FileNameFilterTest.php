@@ -18,7 +18,7 @@ class FileNameFilterTest extends SapphireTest {
 	function testFilterWithTransliterator() {
 		$name = 'Brötchen  für allë-mit_Unterstrich!.jpg';
 		$filter = new FileNameFilter();
-		$filter->setTransliterator(new Transliterator());
+		$filter->setTransliterator(new SS_Transliterator());
 		$this->assertEquals(
 			'Broetchen-fuer-alle-mit-Unterstrich.jpg', 
 			$filter->filter($name)
@@ -39,7 +39,7 @@ class FileNameFilterTest extends SapphireTest {
 	function testFilterWithEmptyString() {
 		$name = 'ö ö ö.jpg';
 		$filter = new FileNameFilter();
-		$filter->setTransliterator(new Transliterator());
+		$filter->setTransliterator(new SS_Transliterator());
 		$result = $filter->filter($name);
 		$this->assertFalse(
 			empty($result)

@@ -91,22 +91,22 @@ class FileNameFilter extends Object {
 	}
 		
 	/**
-	 * @var Transliterator
+	 * @var SS_Transliterator
 	 */
 	protected $transliterator;
 	
 	/**
-	 * @return Transliterator|NULL
+	 * @return SS_Transliterator|NULL
 	 */
 	function getTransliterator() {
 		if($this->transliterator === null && self::$default_use_transliterator) {
-			$this->transliterator = Transliterator::create();
+			$this->transliterator = SS_Transliterator::create();
 		} 
 		return $this->transliterator;
 	}
 	
 	/**
-	 * @param Transliterator|FALSE
+	 * @param SS_Transliterator|FALSE
 	 */
 	function setTransliterator($t) {
 		$this->transliterator = $t;
