@@ -6,7 +6,7 @@ care of fetching a sub-set of the total list and presenting it to the template.
 
 In order to create a paginated list, you can create a method on your controller
 that first creates a `DataList` that will return all pages, and then wraps it
-in a `[api:PaginatedSet]` object. The `PaginatedList` object is also passed the
+in a `[api:PaginatedList]` object. The `PaginatedList` object is also passed the
 HTTP request object so it can read the current page information from the
 "?start=" GET var.
 
@@ -26,7 +26,7 @@ information.
 
 Now all that remains is to render this list into a template, along with pagination
 controls. There are two ways to generate pagination controls:
-`[api:PaginatedSet->Pages()]` and `[api:PaginatedSet->PaginationSummary()]`. In
+`[api:PaginatedList->Pages()]` and `[api:PaginatedList->PaginationSummary()]`. In
 this example we will use `PaginationSummary()`.
 
 The first step is to simply list the objects in the template:
@@ -64,3 +64,11 @@ controls below this so the user can switch between pages:
 
 If there is more than one page, this block will render a set of pagination
 controls in the form `[1] ... [3] [4] [[5]] [6] [7] ... [10]`.
+
+## Paginating Custom Lists
+
+In some situations where you are generating the list yourself, the underlying
+list will already contain only the items that you wish to display on the current
+page. In this situation the automatic limiting done by `[api:PaginatedList]`
+will break the pagination. You can disable automatic limiting using the
+`[api:PaginatedList->setLimitItems()]` method when using custom lists.
