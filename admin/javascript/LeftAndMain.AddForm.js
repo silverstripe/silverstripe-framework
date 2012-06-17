@@ -32,7 +32,7 @@
 
 			fromTree: {
 				onselect_node: function(e, data){
-					self.refresh(data.rslt.obj);
+					this.refresh(data.rslt.obj);
 				}
 			},
 
