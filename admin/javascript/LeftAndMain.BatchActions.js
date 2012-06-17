@@ -33,6 +33,9 @@
 			fromTree: {
 				oncheck_node: function(e, data){
 					this.serializeFromTree();
+				},
+				onuncheck_node: function(e, data){
+					this.serializeFromTree();
 				}
 			},
 
