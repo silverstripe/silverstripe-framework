@@ -135,6 +135,17 @@ class PaginatedListTest extends SapphireTest {
 		$this->assertDOSEquals($expect, $list->PaginationSummary(4));
 	}
 
+	public function testLimitItems() {
+		$list = new ArrayList(range(1, 50));
+		$list = new PaginatedList($list);
+
+		$list->setCurrentPage(3);
+		$this->assertEquals(10, count($list->getIterator()->getInnerIterator()));
+
+		$list->setLimitItems(false);
+		$this->assertEquals(50, count($list->getIterator()->getInnerIterator()));
+	}
+
 	public function testCurrentPage() {
 		$list = new PaginatedList(new ArrayList());
 		$list->setTotalItems(50);
