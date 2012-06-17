@@ -100,7 +100,11 @@
 									}
 								}
 							});
-						});
+						})
+						// Make some jstree events delegatable
+						.bind('select_node.jstree check_node.jstree', function(e, data) {
+							$(document).triggerHandler(e, data);
+						})
 			},
 			onremove: function(){
 				this.jstree('destroy');
