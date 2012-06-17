@@ -190,9 +190,6 @@ This would be equivalent to a SQL query of
 	:::
 	... WHERE ("FirstName" NOT IN ('Sam','Sig) OR "Age" NOT IN ('17', '74));
 
-
-**FUN FACT:** The functionality below isn't implemented in the code yet.
-
 By default, these filters specify case-insensitive exact matches.  There are a number of suffixes that you can put on 
 field names to change this: `":StartsWith"`, `":EndsWith"`, `":PartialMatch"`, `":GreaterThan"`, `":LessThan"`, `":Negation"`.
 
