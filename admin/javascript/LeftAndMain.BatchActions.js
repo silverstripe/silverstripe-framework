@@ -26,14 +26,10 @@
 			 */
 			Actions: [],
 
+			ProxyCheckNodeGuid: null,
+
 			getTree: function() {
 				return $('.cms-tree');
-			},
-
-			fromTree: {
-				oncheck_node: function(e, data){
-					this.serializeFromTree();
-				}
 			},
 
 			/**
@@ -41,6 +37,18 @@
 			 */
 			onadd: function() {
 				this._updateStateFromViewMode();
+				
+				var fn = $.proxy(function() {
+					this.serializeFromTree();
+				}, this);
+				$('.cms-tree').bind('check_node.jstree uncheck_node.jstree', fn);
+				this.setProxyCheckNodeGuid(fn.guid);
+
+				this._super();
+			},
+
+			onremove: function() {
+				$('.cms-tree').unbind('.jstree', this.getProxyCheckNodeGuid());
 				this._super();
 			},
 
