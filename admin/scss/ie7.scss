@@ -199,3 +199,5 @@ table.ss-gridfield-table {
 	}	
 }
 		
+
+@include IEVerticalPanelText; //IE7 needs this defined outside .cms-panel
