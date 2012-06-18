@@ -534,8 +534,16 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 	}
 
 	public function getYaml($entities, $locale) {
-		// Use the Zend copy of this script to prevent class conflicts when RailsYaml is included
-		require_once 'thirdparty/zend_translate_railsyaml/library/Translate/Adapter/thirdparty/sfYaml/lib/sfYamlDumper.php';
+		// Avoid autoloading until we have composer support
+		require_once 'sfYaml/Exception/ExceptionInterface.php';
+		require_once 'sfYaml/Exception/ParseException.php';
+		require_once 'sfYaml/Exception/DUMPException.php';
+		require_once 'sfYaml/Escaper.php';
+		require_once 'sfYaml/Unescaper.php';
+		require_once 'sfYaml/Dumper.php';
+		require_once 'sfYaml/Inline.php';
+		require_once 'sfYaml/Parser.php';
+		require_once 'sfYaml/Yaml.php';
 
 		// Unflatten array
 		$entitiesNested = array();
@@ -553,9 +561,9 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 		}
 
 		// Write YAML
-		$yamlHandler = new sfYaml();
+		$dumper = new Symfony\Component\Yaml\Dumper();
 		// TODO Dumper can't handle YAML comments, so the context information is currently discarded
-		return $yamlHandler->dump(array($locale => $entitiesNested), 99);
+		return $dumper->dump(array($locale => $entitiesNested), 99);
 	}
 }
 
