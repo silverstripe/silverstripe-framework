@@ -58,7 +58,7 @@ jQuery.cookie = function(name, value, options) {
         options = options || {};
         if (value === null) {
             value = '';
-            options = $.extend({}, options); // clone object since it's unexpected behavior if the expired property were changed
+            options = jQuery.extend({}, options); // clone object since it's unexpected behavior if the expired property were changed
             options.expires = -1;
         }
         var expires = '';

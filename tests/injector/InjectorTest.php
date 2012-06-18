@@ -12,6 +12,12 @@ define('TEST_SERVICES', dirname(__FILE__) . '/testservices');
  */
 class InjectorTest extends SapphireTest {
 	
+	public function testCorrectlyInitialised() {
+		$injector = Injector::inst();
+		$this->assertTrue($injector->getConfigLocator() instanceof SilverStripeServiceConfigurationLocator,
+				'If this fails, it is likely because the injector has been referenced BEFORE being initialised in Core.php');
+	}
+	
 	public function testBasicInjector() {
 		$injector = new Injector();
 		$injector->setAutoScanProperties(true);
@@ -209,6 +215,42 @@ class InjectorTest extends SapphireTest {
 		$sample = $injector->get('SampleService');
 		$this->assertEquals($sample->constructorVarOne, 'val1');
 		$this->assertEquals(get_class($sample->constructorVarTwo), 'AnotherService');
+		
+		$injector = new Injector();
+		$config = array(array(
+				'src' => TEST_SERVICES . '/SampleService.php',
+				'constructor' => array(
+					'val1',
+					'val2',
+				)
+				));
+
+		$injector->load($config);
+		$sample = $injector->get('SampleService');
+		$this->assertEquals($sample->constructorVarOne, 'val1');
+		$this->assertEquals($sample->constructorVarTwo, 'val2');
+		
+		// test constructors on prototype
+		$injector = new Injector();
+		$config = array(array(
+			'type'	=> 'prototype',
+			'src' => TEST_SERVICES . '/SampleService.php',
+			'constructor' => array(
+				'val1',
+				'val2',
+			)
+		));
+
+		$injector->load($config);
+		$sample = $injector->get('SampleService');
+		$this->assertEquals($sample->constructorVarOne, 'val1');
+		$this->assertEquals($sample->constructorVarTwo, 'val2');
+		
+		$again = $injector->get('SampleService');
+		$this->assertFalse($sample === $again);
+		
+		$this->assertEquals($sample->constructorVarOne, 'val1');
+		$this->assertEquals($sample->constructorVarTwo, 'val2');
 	}
 
 	public function testInjectUsingSetter() {
@@ -420,6 +462,27 @@ class InjectorTest extends SapphireTest {
 		
 		$obj = $injector->get('MyChildClass');
 		$this->assertEquals($obj->one, 'the one');
+	}
+	
+	public function testSameNamedSingeltonPrototype() {
+		$injector = new Injector();
+		
+		// get a singleton object
+		$object = $injector->get('NeedsBothCirculars');
+		$object->var = 'One';
+		
+		$again = $injector->get('NeedsBothCirculars');
+		$this->assertEquals($again->var, 'One');
+		
+		// create a NEW instance object
+		$new = $injector->create('NeedsBothCirculars');
+		$this->assertNull($new->var);
+		
+		// this will trigger a problem below
+		$new->var = 'Two';
+		
+		$again = $injector->get('NeedsBothCirculars');
+		$this->assertEquals($again->var, 'One');
 	}
 }
 

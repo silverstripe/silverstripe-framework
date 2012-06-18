@@ -233,18 +233,16 @@
 	// Find all forms and bind onsubmit to trigger on the document too. 
 	// This is the only event that can't be grabbed via delegation
 	
-	var form_binding_cache = $([]); // A cache for already-handled form elements
-	var delegate_submit = function(e, data){ 
+	var delegate_submit = function(e, data){
 		var delegationEvent = $.Event('delegatedSubmit'); delegationEvent.delegatedEvent = e;
 		return $(document).trigger(delegationEvent, data); 
 	};
 
-	$(document).bind('DOMMaybeChanged', function(){
-		var forms = $('form');
-		// Only bind to forms we haven't processed yet
-		forms.not(form_binding_cache).bind('submit', delegate_submit);
-		// Then remember the current set of forms
-		form_binding_cache = forms;
+	$(document).bind('EntwineElementsAdded', function(e){
+		var forms = $(e.targets).filter('form');
+		if (!forms.length) return;
+
+		forms.bind('submit.entwine_delegate_submit', delegate_submit);
 	});
 
 })(jQuery);

@@ -115,20 +115,22 @@ class SearchContext extends Object {
 	 * @return DataList
 	 */
 	public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null) {
-	    if($existingQuery) {
-	        if(!($existingQuery instanceof DataList)) throw new InvalidArgumentException("existingQuery must be DataList");
-	        if($existingQuery->dataClass() != $this->modelClass) throw new InvalidArgumentException("existingQuery's dataClass is " . $existingQuery->dataClass() . ", $this->modelClass expected.");
-	        $query = $existingQuery;
-	         
-	    } else {
-	        $query = DataList::create($this->modelClass);
-        }
-        
-		if(is_array($limit)) $query->limit(isset($limit['limit']) ? $limit['limit'] : null, isset($limit['start']) ? $limit['start'] : null);
-		else $query->limit($limit);
-		
-		$query->sort($sort);
-		
+		if($existingQuery) {
+			if(!($existingQuery instanceof DataList)) throw new InvalidArgumentException("existingQuery must be DataList");
+			if($existingQuery->dataClass() != $this->modelClass) throw new InvalidArgumentException("existingQuery's dataClass is " . $existingQuery->dataClass() . ", $this->modelClass expected.");
+			$query = $existingQuery;
+		} else {
+			$query = DataList::create($this->modelClass);
+		}
+
+		if(is_array($limit)) {
+			$query = $query->limit(isset($limit['limit']) ? $limit['limit'] : null, isset($limit['start']) ? $limit['start'] : null);
+		} else {
+			$query = $query->limit($limit);
+		}
+
+		$query = $query->sort($sort);
+
 		// hack to work with $searchParems when it's an Object 
 		$searchParamArray = array();
 		if (is_object($searchParams)) {

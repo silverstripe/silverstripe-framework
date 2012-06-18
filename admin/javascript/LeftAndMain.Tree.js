@@ -9,8 +9,8 @@
 		$('.cms-tree').entwine({
 			
 			Hints: null,
-			
-			onmatch: function() {
+
+			onadd: function(){
 				this._super();
 
 				// Don't reapply (expensive) tree behaviour if already present
@@ -93,17 +93,32 @@
 									ID: $(movedNode).data('id'), 
 									ParentID: $(newParentNode).data('id') || 0,
 									SiblingIDs: siblingIDs
+								},
+								statusCode: {
+									403: function() {
+										$.jstree.rollback(data.rlbk);
+									}
 								}
 							});
-						});
-					
-					$('.cms-container').bind('afterstatechange.tree aftersubmitform.tree', function(e, data) {
-						self.updateFromEditForm(e.origData);
-					});
+						})
+						// Make some jstree events delegatable
+						.bind('select_node.jstree check_node.jstree', function(e, data) {
+							$(document).triggerHandler(e, data);
+						})
 			},
-			onunmatch: function() {
-				$('.cms-container').unbind('afterstatechange.tree aftersubmitform.tree');
+			onremove: function(){
+				this.jstree('destroy');
 				this._super();
+			},
+
+			'from .cms-container': {
+				onafterstatechange: function(e){
+					this.updateFromEditForm(e.origData);
+				},
+
+				onaftersubmitform: function(e){
+					this.updateFromEditForm(e.origData);
+				}
 			},
 
 			getTreeConfig: function() {

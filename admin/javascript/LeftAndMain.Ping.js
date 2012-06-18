@@ -11,12 +11,8 @@
 			 */
 			PingIntervalSeconds: 5*60,
 			
-			onmatch: function() {
+			onadd: function() {
 				this._setupPinging();
-				this._super();
-			},
-
-			onunmatch: function() {
 				this._super();
 			},
 

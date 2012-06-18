@@ -176,9 +176,15 @@ class Injector {
 	 */
 	public function __construct($config = null) {
 		$this->injectMap = array();
-		$this->serviceCache = array();
+		$this->serviceCache = array(
+			'Injector'		=> $this,
+		);
+		$this->specs = array(
+			'Injector'		=> array('class' => 'Injector')
+		);
+		
 		$this->autoProperties = array();
-		$this->specs = array();
+		
 
 		$creatorClass = isset($config['creator']) ? $config['creator'] : 'InjectionCreator';
 		$locatorClass = isset($config['locator']) ? $config['locator'] : 'ServiceConfigurationLocator';
@@ -222,6 +228,30 @@ class Injector {
 	 */
 	public function setObjectCreator($obj) {
 		$this->objectCreator = $obj;
+	}
+	
+	/**
+	 * Accessor (for testing purposes)
+	 * @return InjectionCreator
+	 */
+	public function getObjectCreator() {
+		return $this->objectCreator;
+	}
+	
+	/**
+	 * Set the configuration locator 
+	 * @param ServiceConfigurationLocator $configLocator 
+	 */
+	public function setConfigLocator($configLocator) {
+		$this->configLocator = $configLocator;
+	}
+	
+	/**
+	 * Retrieve the configuration locator 
+	 * @return ServiceConfigurationLocator 
+	 */
+	public function getConfigLocator() {
+		return $this->configLocator;
 	}
 	
 	/**
@@ -418,8 +448,14 @@ class Injector {
 	 *
 	 * @param array $spec
 	 *				The specification of the class to instantiate
+	 * @param string $id
+	 *				The name of the object being created. If not supplied, then the id will be inferred from the
+	 *				object being created
+	 * @param string $type
+	 *				Whether to create as a singleton or prototype object. Allows code to be explicit as to how it
+	 *				wants the object to be returned
 	 */
-	protected function instantiate($spec, $id=null) {
+	protected function instantiate($spec, $id=null, $type = null) {
 		if (is_string($spec)) {
 			$spec = array('class' => $spec);
 		}
@@ -441,7 +477,10 @@ class Injector {
 
 		// now set the service in place if needbe. This is NOT done for prototype beans, as they're
 		// created anew each time
-		$type = isset($spec['type']) ? $spec['type'] : null; 
+		if (!$type) {
+			$type = isset($spec['type']) ? $spec['type'] : null; 
+		}
+		
 		if ($id && (!$type || $type != 'prototype')) {
 			// this ABSOLUTELY must be set before the object is injected.
 			// This prevents circular reference errors down the line
@@ -656,7 +695,7 @@ class Injector {
 	 * Clear out all objects that are managed by the injetor. 
 	 */
 	public function unregisterAllObjects() {
-		$this->serviceCache = array();
+		$this->serviceCache = array('Injector' => $this);
 	}
 	
 	/**
@@ -691,12 +730,12 @@ class Injector {
 			$spec = $this->specs[$serviceName];
 			$type = isset($spec['type']) ? $spec['type'] : null;
 
-			// if we're a prototype OR we're not wanting a singleton
+			// if we're explicitly a prototype OR we're not wanting a singleton
 			if (($type && $type == 'prototype') || !$asSingleton) {
-				if ($spec) {
+				if ($spec && $constructorArgs) {
 					$spec['constructor'] = $constructorArgs;
 				}
-				return $this->instantiate($spec, $serviceName);
+				return $this->instantiate($spec, $serviceName, !$type ? 'prototype' : $type);
 			} else {
 				if (!isset($this->serviceCache[$serviceName])) {
 					$this->instantiate($spec, $serviceName);
@@ -725,6 +764,17 @@ class Injector {
 		}
 
 		return $this->instantiate($spec);
+	}
+	
+	/**
+	 * Magic method to return an item directly
+	 * 
+	 * @param string $name
+	 *				The named object to retrieve
+	 * @return mixed
+	 */
+	public function __get($name) {
+		return $this->get($name);
 	}
 
 	/**

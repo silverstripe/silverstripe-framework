@@ -17,7 +17,7 @@ class GridFieldExportButtonTest extends SapphireTest {
 		parent::setUp();
 
 		$this->list = new DataList('GridFieldExportButtonTest_Team');
-		$this->list->sort('Name');
+		$this->list = $this->list->sort('Name');
 		$config = GridFieldConfig::create()->addComponent(new GridFieldExportButton());
 		$this->gridField = new GridField('testfield', 'testfield', $this->list, $config);
 	}

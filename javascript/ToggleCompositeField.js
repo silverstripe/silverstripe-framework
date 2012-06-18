@@ -1,25 +1,26 @@
 (function($){
 	$.entwine('ss', function($){
 		$('.ss-toggle').entwine({
-			onmatch: function() {
-				var self = $(this);
-				var opts = { collapsible: true };
-				var tab  = self.parents(".ss-tabset");
+			onadd: function() {
+				opts = {collapsible: true};
+				if (this.hasClass("ss-toggle-start-closed")) opts.active = false;
 
-				if(self.hasClass("ss-toggle-start-closed")) {
-					opts.active = false;
-				}
+				this.accordion({ collapsible: true });
 
-				if(tab.length) {
-					tab.bind("tabsshow", function() {
-						self.accordion("resize");
-					});
-				}
-
-				this.accordion(opts);
-			},
-			onunmatch: function() {
 				this._super();
+			},
+			onremove: function() {
+				this.accordion('destroy');
+			},
+
+			getTabSet: function() {
+				return this.closest(".ss-tabset");
+			},
+
+			fromTabSet: {
+				ontabsshow: function() {
+					this.accordion("resize");
+				}
 			}
 		});
 	});

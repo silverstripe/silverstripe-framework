@@ -58,8 +58,7 @@ class SS_MapTest extends SapphireTest {
 	}
 
 	function testKeys() {
-		$list = DataObjectTest_TeamComment::get();
-		$list->sort('Name');
+		$list = DataObjectTest_TeamComment::get()->sort('Name');
 		$map = new SS_Map($list, 'Name', 'Comment');
 		$this->assertEquals(array(
 			'Bob',
@@ -69,8 +68,7 @@ class SS_MapTest extends SapphireTest {
 	}
 
 	function testMethodAsValueField() {
-		$list = DataObjectTest_Team::get();
-		$list->sort('Title');
+		$list = DataObjectTest_Team::get()->sort('Title');
 		$map = new SS_Map($list, 'ID', 'MyTitle');
 		$this->assertEquals(array(
 			'Team Subteam 1',
@@ -83,8 +81,7 @@ class SS_MapTest extends SapphireTest {
 	}
 
 	function testValues() {
-		$list = DataObjectTest_TeamComment::get();
-		$list->sort('Name');
+		$list = DataObjectTest_TeamComment::get()->sort('Name');
 		$map = new SS_Map($list, 'Name', 'Comment');
 		$this->assertEquals(array(
 			'This is a team comment by Bob',

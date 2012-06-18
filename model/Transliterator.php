@@ -6,14 +6,14 @@
  * Usage:
  * 
  * <code>
- * $tr = new Transliterator();
+ * $tr = new SS_Transliterator();
  * $ascii = $tr->toASCII($unicode);
  * </code>
  * 
  * @package framework
  * @subpackage model
  */
-class Transliterator extends Object {
+class SS_Transliterator extends Object {
 	/**
 	 * Allow the use of iconv() to perform transliteration.  Set to false to disable.
 	 * Even if this variable is true, iconv() won't be used if it's not installed.

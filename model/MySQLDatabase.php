@@ -526,7 +526,7 @@ class MySQLDatabase extends SS_Database {
 		if($groupedIndexes) {
 			foreach($groupedIndexes as $index => $details) {
 				ksort($details['fields']);
-				$indexList[$index] = $details['type'] . '(' . implode(',',$details['fields']) . ')';
+				$indexList[$index] = $details['type'] . '("' . implode('","',$details['fields']) . '")';
 			}
 		}
 

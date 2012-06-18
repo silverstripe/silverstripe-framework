@@ -249,6 +249,12 @@ require_once 'core/manifest/ManifestFileFinder.php';
 require_once 'core/manifest/TemplateLoader.php';
 require_once 'core/manifest/TemplateManifest.php';
 require_once 'core/manifest/TokenisedRegularExpression.php';
+require_once 'control/injector/Injector.php';
+
+// Initialise the dependency injector as soon as possible, as it is 
+// subsequently used by some of the following code
+$default_options = array('locator' => 'SilverStripeServiceConfigurationLocator');
+Injector::inst($default_options); 
 
 ///////////////////////////////////////////////////////////////////////////////
 // MANIFEST
@@ -286,9 +292,6 @@ if(Director::isLive()) {
  */
 Debug::loadErrorHandlers();
 
-// initialise the dependency injector
-$default_options = array('locator' => 'SilverStripeServiceConfigurationLocator');
-Injector::inst($default_options); 
 
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
@@ -324,14 +327,14 @@ function getTempFolder($base = null) {
 	$ssTmp = "$sysTmp/$cachefolder";
 
 	if(!@file_exists($ssTmp)) {
-		@$worked = mkdir($ssTmp);
+		$worked = @mkdir($ssTmp);
 	}
 
 	if(!$worked) {
 		$ssTmp = BASE_PATH . "/silverstripe-cache";
 		$worked = true;
 		if(!@file_exists($ssTmp)) {
-			@$worked = mkdir($ssTmp);
+			$worked = @mkdir($ssTmp);
 		}
 	}
 

@@ -198,44 +198,61 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		$('textarea.htmleditor').entwine({
 
 			Editor: null,
-			
+
 			/**
 			 * Constructor: onmatch
 			 */
-			onmatch : function() {
-				var self = this, edClass = this.data('editor') || ss.editorWrappers['default'], ed = edClass();
+			onadd: function() {
+				var edClass = this.data('editor') || ss.editorWrappers['default'], ed = edClass();
 				this.setEditor(ed);
-				this.closest('form').bind('beforesubmitform', function() {
-					// TinyMCE modifies input, so change tracking might get false
-					// positives when comparing string values - don't save if the editor doesn't think its dirty.
-					if(self.isChanged()) {
-						ed.save();
-
-						// TinyMCE assigns value attr directly, which doesn't trigger change event
-						self.trigger('change');
-					}
-				});
 
 				// Using a global config (generated through HTMLEditorConfig PHP logic).
 				// Depending on browser cache load behaviour, entwine's DOMMaybeChanged
 				// can be called before the bottom-most inline script tag is executed,
 				// which defines the global. If that's the case, wait for the window load.
-				if(typeof ssTinyMceConfig != 'undefined') {
-					this.redraw();
-				} else {
-					$(window).bind('load', function() {
-						self.redraw();
+				if(typeof ssTinyMceConfig != 'undefined') this.redraw();
+
+				this._super();
+			},
+			onremove: function() {
+				var ed = tinyMCE.get(this.attr('id'));
+				if (ed) {
+					ed.remove();
+
+					// TinyMCE leaves behind events. We should really fix TinyMCE, but lets brute force it for now
+					$.each(jQuery.cache, function(){
+						var source = this.handle && this.handle.elem;
+						if (!source) return;
+
+						var parent = source;
+						while (parent && parent.nodeType == 1) parent = parent.parentNode;
+
+						if (!parent) $(source).unbind().remove();
 					});
 				}
 
 				this._super();
 			},
-			onunmatch: function() {
-				// TODO Throws exceptions in Firefox, most likely due to the element being removed from the DOM at this point
-				// var ed = tinyMCE.get(this.attr('id'));
-				// if(ed) ed.remove();
-				this._super();
+
+			getContainingForm: function(){
+				return this.closest('form');
 			},
+
+			fromContainingForm: {
+				onbeforesubmitform: function(){
+					if(this.isChanged()) {
+						this.getEditor().save();
+						this.trigger('change'); // TinyMCE assigns value attr directly, which doesn't trigger change event
+					}
+				}
+			},
+
+			fromWindow: {
+				onload: function(){
+					this.redraw();
+				}
+			},
+
 			redraw: function() {
 				// Using a global config (generated through HTMLEditorConfig PHP logic)
 				var config = ssTinyMceConfig, self = this, ed = this.getEditor();
@@ -248,21 +265,22 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				// Create editor instance and render it.
 				// Similar logic to adapter/jquery/jquery.tinymce.js, but doesn't rely on monkey-patching
 				// jQuery methods, and avoids replicate the script lazyloading which is already in place with jQuery.ondemand.
-
 				ed.create(this.attr('id'), config, function() {
 					self.css('visibility', 'visible');
 				});
 				
-				// Handle editor de-registration by hooking into state changes.
-				// TODO Move to onunmatch for less coupling (once we figure out how to work with detached DOM nodes in TinyMCE)
-				$('.cms-container').bind('beforestatechange', function() {
-					self.css('visibility', 'hidden');
-					var container = ed.getInstance() ? ed.getContainer() : null;
-					if(container && container.length) container.remove();
-				});
-
 				this._super();
 			},
+
+			'from .cms-container': {
+				onbeforestatechange: function(){
+					this.css('visibility', 'hidden');
+
+					var ed = this.getEditor(), container = ed.getInstance() ? ed.getContainer() : null;
+					if(container && container.length) container.remove();
+				}
+			},
+
 			isChanged: function() {
 				var ed = this.getEditor();
 				return (ed && ed.getInstance() && ed.isDirty());
@@ -1103,17 +1121,21 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		});
 
 		$('div.ss-assetuploadfield .ss-uploadfield-item-edit, div.ss-assetuploadfield .ss-uploadfield-item-name').entwine({
+			getEditForm: function() {
+				return this.closest('.ss-uploadfield-item').find('.ss-uploadfield-item-editform');
+			},
+
+			fromEditForm: {
+				onchange: function(e){
+					var form = $(e.target);
+					form.removeClass('edited'); //so edited class is only there once
+					form.addClass('edited');
+				}
+			},
+
 			onclick: function(e) {
-				var editForm = this.closest('.ss-uploadfield-item').find('.ss-uploadfield-item-editform');
+				var editForm = this.getEditForm();
 	
-				// Mark the row as changed if any of its form fields are edited
-				editForm.ready(function() {					
-					editForm.find(':input').bind('change', function(e){
-						editForm.removeClass('edited'); //so edited class is only there once
-						editForm.addClass('edited'); 
-					});
-				});
-								
 				editForm.parent('.ss-uploadfield-item').removeClass('ui-state-warning');
 
 				editForm.toggleEditForm();
@@ -1153,7 +1175,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 
 		$('form.htmleditorfield-mediaform #ParentID .TreeDropdownField').entwine({
-			onmatch: function() {
+			onadd: function() {
 				this._super();
 
 				// TODO Custom event doesn't fire in IE if registered through object literal
@@ -1163,9 +1185,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					fileList.setState('ParentID', self.getValue());
 					fileList.reload();
 				});
-			},
-			onunmatch: function() {
-				this._super();
 			}
 		});
 		

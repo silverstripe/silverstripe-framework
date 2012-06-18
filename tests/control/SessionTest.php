@@ -45,6 +45,13 @@ class SessionTest extends SapphireTest {
 		$this->assertEquals($session, array('Test' => 'Test', 'Test-2' => 'Test-2'));
 	}
 
+	function testSettingExistingDoesntClear() {
+		$s = new Session(array('something' => array('does' => 'exist')));
+
+		$s->inst_set('something.does', 'exist');
+		$this->assertEquals(array(), $s->inst_changedData());
+	}
+
 	/**
 	 * Check that changedData isn't populated with junk when clearing non-existent entries.
 	 */

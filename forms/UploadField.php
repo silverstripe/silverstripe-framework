@@ -305,6 +305,12 @@ class UploadField extends FileField {
 		);
 	}
 
+	public function extraClass() {
+		if($this->isDisabled()) $this->addExtraClass('disabled');
+		if($this->isReadonly()) $this->addExtraClass('readonly');
+		return parent::extraClass();
+	}
+
 	public function Field($properties = array()) {
 		$record = $this->getRecord();
 		$name = $this->getName();
@@ -597,6 +603,21 @@ class UploadField extends FileField {
 
 		if (isset($name) && isset($record)) return $record->getRelationClass($name);
 	}
+
+	public function isDisabled() {
+		return (parent::isDisabled() || !$this->isSaveable());
+	}
+
+	/**
+	 * Determines if the field can be saved into a database record.
+	 * 
+	 * @return boolean 
+	 */
+	public function isSaveable() {
+		$record = $this->getRecord();
+		// Don't allow upload or edit of a relation when the underlying record hasn't been persisted yet
+		return (!$record || !$this->managesRelation() || $record->exists());
+	}
 }
 
 /**
@@ -827,7 +848,7 @@ class UploadField_ItemHandler extends RequestHandler {
 
 		$form->sessionMessage(_t('UploadField.Saved', 'Saved'), 'good');
 
-		return $this->parent->getForm()->Controller()->redirectBack();
+		return $this->edit($request);
 	}
 	
 }
