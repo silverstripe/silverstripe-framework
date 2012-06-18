@@ -6,12 +6,6 @@ require_once 'Zend/Locale.php';
 /** Zend_Translate_Adapter */
 require_once 'Zend/Translate/Adapter.php';
 
-// ischommer CUSTOM Check required because SS core also includes the lib, from a different location
-if(!class_exists('sfYaml')) require_once 'thirdparty/sfYaml/lib/sfYaml.php';
-if(!class_exists('sfYamlParser')) require_once 'thirdparty/sfYaml/lib/sfYamlParser.php';
-if(!class_exists('sfYamlDumper')) require_once 'thirdparty/sfYaml/lib/sfYamlDumper.php';
-// ischommer END_CUSTOM
-
 class Translate_Adapter_RailsYaml extends Zend_Translate_Adapter {
 
     /**
@@ -49,7 +43,8 @@ class Translate_Adapter_RailsYaml extends Zend_Translate_Adapter {
             throw new Zend_Translate_Exception('Error opening translation file \'' . $this->_filename . '\'.');
         }
 
-        $content = sfYaml::load(file_get_contents($this->_filename));
+        $parser = new Symfony\Component\Yaml\Parser();
+        $content = $parser->parse(file_get_contents($this->_filename));
         if($locale != 'auto' && $content && !array_key_exists($locale, $content)) {
             require_once 'Zend/Translate/Exception.php';
             throw new Zend_Translate_Exception(sprintf('Locale "%s" not found in file %s', $locale, $this->_filename));
