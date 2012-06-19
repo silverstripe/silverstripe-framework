@@ -112,3 +112,11 @@
 		}
 	}
 }
+
+.filter-buttons{
+	button{
+		&.ss-gridfield-button-filter{
+			background-position: -18px 4px !important;
+		}		
+	}
+}

@@ -36,6 +36,8 @@
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.file input.file { margin-left: -132px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.checkbox { padding: 0px; }
 
+.filter-buttons button.ss-gridfield-button-filter { background-position: -18px 4px !important; }
+
 .cms-panel .cms-panel-content-collapsed { width: 40px; }
 .cms-panel .cms-panel-content-collapsed h2, .cms-panel .cms-panel-content-collapsed h3 { display: none; }
 
@@ -43,3 +45,8 @@
 
 .cms .cms-content-tools { border-right: 1px solid #CCC; }
 .cms .cms-content-tools .cms-panel-content .dropdown select { width: 152px; }
+
+.filter-buttons button { width: 23px !important; height: 23px !important; }
+.filter-buttons button.ss-gridfield-button-close { margin-right: -7px !important; }
+
+.col-buttons { width: 18px; }
