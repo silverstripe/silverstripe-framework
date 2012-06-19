@@ -129,7 +129,7 @@ class TestRunner extends Controller {
 			$reflection = new ReflectionClass($class);
 			if(!$reflection->isInstantiable()) unset($tests[$class]);
 		}
-	
+
 		$this->runTests($tests, $coverage);
 	}
 	
@@ -236,18 +236,21 @@ class TestRunner extends Controller {
 		$classNames = array();
 		$moduleNames = explode(',', $request->param('ModuleName'));
 		
+		$ignored = array('functionaltest', 'phpsyntaxtest');
+
 		foreach($moduleNames as $moduleName) {
 			$classesForModule = ClassInfo::classes_for_folder($moduleName);
 			
 			if($classesForModule) {
 				foreach($classesForModule as $className) {
 					if(class_exists($className) && is_subclass_of($className, 'SapphireTest')) {
-						$classNames[] = $className;
+						if(!in_array($className, $ignored))
+							$classNames[] = $className;
 					}
 				}
 			}
 		}
-		
+
 		$this->runTests($classNames, $coverage);
 	}
 
