@@ -11,7 +11,6 @@ class FileTest extends SapphireTest {
 
 	public function testLinkShortcodeHandler() {
 		$testFile = $this->objFromFixture('File', 'asdf');
-		$errorPage = $this->objFromFixture('ErrorPage', '404');
 
 		$parser = new ShortcodeParser();
 		$parser->register('file_link', array('File', 'link_shortcode_handler'));
@@ -30,15 +29,25 @@ class FileTest extends SapphireTest {
 		$fileShortcode = '[file_link id="-1"]';
 		$fileEnclosed  = '[file_link id="-1"]Example Content[/file_link]';
 
-		$fileShortcodeExpected = $errorPage->Link();
-		$fileEnclosedExpected  = sprintf('<a href="%s">Example Content</a>', $errorPage->Link());
-
-		$this->assertEquals($fileShortcodeExpected, $parser->parse($fileShortcode), 'Test link to 404 page if no suitable matches.');
-		$this->assertEquals($fileEnclosedExpected, $parser->parse($fileEnclosed));
-
 		$this->assertEquals('', $parser->parse('[file_link]'), 'Test that invalid ID attributes are not parsed.');
 		$this->assertEquals('', $parser->parse('[file_link id="text"]'));
 		$this->assertEquals('', $parser->parse('[file_link]Example Content[/file_link]'));
+
+		if(class_exists('ErrorPage')) {
+			$errorPage = ErrorPage::get()->filter('ErrorCode', 404)->First();
+			$this->assertEquals(
+				$errorPage->Link(), 
+				$parser->parse($fileShortcode), 
+				'Test link to 404 page if no suitable matches.'
+			);
+			$this->assertEquals(
+				sprintf('<a href="%s">Example Content</a>', $errorPage->Link()), 
+				$parser->parse($fileEnclosed)
+			);
+		} else {
+			$this->assertEquals('', $parser->parse($fileShortcode), 'Short code is removed if file record is not present.');
+			$this->assertEquals('', $parser->parse($fileEnclosed));
+		}
 	}
 
 	function testCreateWithFilenameWithSubfolder() {
@@ -371,6 +380,16 @@ class FileTest extends SapphireTest {
 			$fh = fopen(BASE_PATH."/$file->Filename", "w");
 			fwrite($fh, str_repeat('x',1000000));
 			fclose($fh);
+		}
+
+		// Conditional fixture creation in case the 'cms' module is installed
+		if(class_exists('ErrorPage')) {
+			$page = new ErrorPage(array(
+				'Title' => 'Page not Found',
+				'ErrorCode' => 404
+			));
+			$page->write();
+			$page->publish('Stage', 'Live');
 		}
 	}
 	
