@@ -1037,7 +1037,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if(!$groups || $groups->Count() == 0) {
 			$perms = array('ADMIN', 'CMS_ACCESS_AssetAdmin');
 			
-			$cmsPerms = singleton('CMSMain')->providePermissions();
+			if(class_exists('CMSMain')) {
+				$cmsPerms = singleton('CMSMain')->providePermissions();
+			} else {
+				$cmsPerms = singleton('LeftAndMain')->providePermissions();
+			}
 			
 			if(!empty($cmsPerms)) {
 				$perms = array_unique(array_merge($perms, array_keys($cmsPerms)));

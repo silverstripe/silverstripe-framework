@@ -68,16 +68,13 @@ class PermissionTest extends SapphireTest {
 	
 	function testHiddenPermissions(){
 		$permissionCheckboxSet = new PermissionCheckboxSetField('Permissions','Permissions','Permission','GroupID');
-		$this->assertContains('CMS_ACCESS_CMSMain', $permissionCheckboxSet->Field());
-		$this->assertContains('CMS_ACCESS_AssetAdmin', $permissionCheckboxSet->Field());
+		$this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 		
-		Permission::add_to_hidden_permissions('CMS_ACCESS_CMSMain');
-		Permission::add_to_hidden_permissions('CMS_ACCESS_AssetAdmin');
-		$this->assertNotContains('CMS_ACCESS_CMSMain', $permissionCheckboxSet->Field());
-		$this->assertNotContains('CMS_ACCESS_AssetAdmin', $permissionCheckboxSet->Field());
+		Permission::add_to_hidden_permissions('CMS_ACCESS_LeftAndMain');
+
+		$this->assertNotContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 		
-		Permission::remove_from_hidden_permissions('CMS_ACCESS_AssetAdmin');
-		$this->assertContains('CMS_ACCESS_AssetAdmin', $permissionCheckboxSet->Field());
-		Permission::remove_from_hidden_permissions('CMS_ACCESS_CMSMain');
+		Permission::remove_from_hidden_permissions('CMS_ACCESS_LeftAndMain');
+		$this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 	}	
 }
