@@ -118,7 +118,7 @@ nl:
   File:
     Content: "Inhoud"
     Filename: "Bestandsnaam "
-    INVALIDEXTENSION: "Extensie is niet toegestaan (gedig: %s)"
+    INVALIDEXTENSION: "Extensie is niet toegestaan (geldig: %s)"
     NOFILESIZE: "Bestandsgrootte is nul bytes."
     NOVALIDUPLOAD: "Geen geldig bestand"
     Name: "Naam"
