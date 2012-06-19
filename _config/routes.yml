@@ -1,4 +1,11 @@
 ---
+Name: rootroutes
+Before: '*'
+---
+Director:
+  rules:
+    '': 'Controller'
+---
 Name: coreroutes
 After: cms/routes#modelascontrollerroutes
 Before: '*'
@@ -19,5 +26,4 @@ After: framework/routes#coreroutes
 Director:
   rules:
     'admin': 'AdminRootController'
-    '': 'RootURLController'
     'dev/buildcache/$Action': 'RebuildStaticCacheTask'

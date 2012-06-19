@@ -274,6 +274,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			$templates = $this->template;
 		} else {
 			// Add action-specific templates for inheritance chain
+			$templates = array();
 			$parentClass = $this->class;
 			if($action && $action != 'index') {
 				$parentClass = $this->class;
@@ -289,9 +290,12 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 				$parentClass = get_parent_class($parentClass);
 			}
 
+			$templates[] = 'Controller';
+
 			// remove duplicates
 			$templates = array_unique($templates);
 		}
+		
 		return new SSViewer($templates);
 	}
 	
