@@ -19,5 +19,5 @@ After: framework/routes#coreroutes
 Director:
   rules:
     'admin': 'AdminRootController'
-    '': 'RootURLController'
+    '': 'Controller'
     'dev/buildcache/$Action': 'RebuildStaticCacheTask'
