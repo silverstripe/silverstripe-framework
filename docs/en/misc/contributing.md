@@ -69,25 +69,28 @@ If you want to learn more about git, please have a look at the [free online git 
 
 ### Commit Messages
 
-We try to maintain a consistent record of descriptive commit messages. As we automatically generate changelogs from them, we need a way to categorize and filter. Please prefix **all** commit messages with one of the following tags: 
+We try to maintain a consistent record of descriptive commit messages. 
+Most importantly: Keep the first line short, and add more detail below.
+This ensures commits are easy to browse, and look nice on github.com
+(more info about [proper git commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)).
+
+As we automatically generate [changelogs](http://doc.silverstripe.org/sapphire/en/trunk/changelogs/) from them, we need a way to categorize and filter. 
+Please prefix **all** commit messages with one of the following tags: 
 
 * `API CHANGE`: You've added or modified the functions available to developers writing custom PHP.
 * `ENHANCEMENT`: You've added something to the user-visible aspects of SilverStripe.
 * `BUGFIX`: You've fixed something that was broken.
-* `MINOR` Mark things that are so trivial they're not even worth telling users about; specifically, to prevent adding
-clutter to our automatically generated changelogs. MINOR is not used to mark a minor bugfix or feature, see above.
-Some examples:
-	* a subsequent commit to a bugfix/feature that you committed earlier that day
-	* adding unit tests (that are more interesting to developers of SilverStripe than users of it)
-	* subversion/codebase plumbing (changing externals, blocking revisions, moving files around, etc)
-	* In summary: if it's worth including in the changelog, it's not `MINOR`.
+* `MINOR` Mark things that are so trivial they're not worth attention by most developers; 
+   specifically, to prevent adding clutter to our automatically generated changelogs. 
+   For example, adding unit tests or documentation would be considered "minor".
+	 Same goes for version control plumbing like merges, file renames or reverts.
 
 Further guidelines:
 
 * Each commit should form a logical unit - if you fix two unrelated bugs, commit each one separately
 * If you are fixing a ticket from our [bugtracker](http://open.silverstripe.com), please append `(fixes #<ticketnumber>)`
-* If your change is related to another changeset, reference it with `r<revisionnumber>`. 
-* Please mention the changed classes and methods in your comment - the message should be understandable on its own without browsing any sourcecode
+* If your change is related to another commit, reference it with its abbreviated commit hash. 
+* Mention important changed classes and methods in the commit summary.
 
 Example: Bad commit message
 
@@ -96,8 +99,11 @@ Example: Bad commit message
 
 Example: Good commit message
 
-	ENHANCEMENT Added prepValueForDB() which is called on DBField->writeToManipulation() to ensure formatting of value before insertion to DB on a per-DBField type basis (see #1234)
-	MINOR Added documentation for DBField->writeToManipulation() (see r55555)
+	ENHANCEMENT Formatting through prepValueForDB() 
+
+	Added prepValueForDB() which is called on DBField->writeToManipulation() 
+	to ensure formatting of value before insertion to DB on a per-DBField type basis (fixes #1234).
+	Added documentation for DBField->writeToManipulation() (related to a4bd42fd).
 	
 <div class="hint" markdown="1">
 Note: By supplying code in patches, tickets and pull requests, 
