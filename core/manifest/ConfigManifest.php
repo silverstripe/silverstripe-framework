@@ -1,14 +1,5 @@
 <?php
-// Avoid autoloading until we have composer support
-require_once 'sfYaml/Exception/ExceptionInterface.php';
-require_once 'sfYaml/Exception/ParseException.php';
-require_once 'sfYaml/Exception/DumpException.php';
-require_once 'sfYaml/Escaper.php';
-require_once 'sfYaml/Unescaper.php';
-require_once 'sfYaml/Dumper.php';
-require_once 'sfYaml/Inline.php';
-require_once 'sfYaml/Parser.php';
-require_once 'sfYaml/Yaml.php';
+
 
 /**
  * A utility class which builds a manifest of configuration items
@@ -186,7 +177,8 @@ class SS_ConfigManifest {
 		$this->addModule(dirname(dirname($pathname)));
 
 		// Use the Zend copy of this script to prevent class conflicts when RailsYaml is included
-		$parser = new Symfony\Component\Yaml\Parser();
+		require_once 'thirdparty/zend_translate_railsyaml/library/Translate/Adapter/thirdparty/sfYaml/lib/sfYamlParser.php';
+		$parser = new sfYamlParser();
 
 		// The base header
 		$base = array(
