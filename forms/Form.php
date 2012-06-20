@@ -1091,11 +1091,12 @@ class Form extends RequestHandler {
 	 *  those fields are overwritten with null regardless if they have a match in {@link $data}.
 	 * @param $fieldList An optional list of fields to process.  This can be useful when you have a 
 	 * form that has some fields that save to one object, and some that save to another.
+	 * @return Form
 	 */
 	public function loadDataFrom($data, $clearMissingFields = false, $fieldList = null) {
 		if(!is_object($data) && !is_array($data)) {
 			user_error("Form::loadDataFrom() not passed an array or an object", E_USER_WARNING);
-			return false;
+			return $this;
 		}
 
 		// if an object is passed, save it for historical reference through {@link getRecord()}
@@ -1145,6 +1146,8 @@ class Form extends RequestHandler {
 				$field->setValue($val, $data);
 			}
 		}
+
+		return $this;
 	}
 	
 	/**
