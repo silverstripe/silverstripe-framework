@@ -7,7 +7,7 @@
  * as PHP doesn't really care about types... 
  *
  * @author Marcus Nyeholt <marcus@silverstripe.com.au>
- * @package sapphire
+ * @package framework
  * @subpackage injector
  * @license BSD http://silverstripe.org/BSD-license
  */

@@ -3,7 +3,7 @@ require_once 'Zend/Translate.php';
 require_once 'zend_translate_railsyaml/library/Translate/Adapter/RailsYAML.php';
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage i18n
  */
 

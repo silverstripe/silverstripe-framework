@@ -153,7 +153,7 @@ class i18nTextCollector extends Object {
 	
 	/**
 	 * Builds a master string table from php and .ss template files for the module passed as the $module param
-	 * @see {@link collectFromCode} and {@link collectFromTemplate}
+	 * @see collectFromCode() and collectFromTemplate()
 	 *
 	 * @param string $module A module's name or just 'themes'
 	 * @return array $entities An array of entities found in the files that comprise the module

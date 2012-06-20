@@ -108,7 +108,7 @@
  * * A service named 'PermissionService' has been configured 
  * 
  * @author marcus@silverstripe.com.au
- * @package sapphire
+ * @package framework
  * @subpackage injector
  * @license BSD License http://silverstripe.org/bsd-license/
  */
