@@ -1145,6 +1145,7 @@ class Form extends RequestHandler {
 				$field->setValue($val, $data);
 			}
 		}
+		return $this;
 	}
 	
 	/**
