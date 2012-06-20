@@ -765,6 +765,7 @@ li.class-ErrorPage > a .jstree-pageicon { background-position: 0 -112px; }
 .cms-menu.collapsed .cms-panel-header { width: 30px; }
 .cms-menu.collapsed .cms-panel-header span { display: none; }
 .cms-menu.collapsed .cms-menu-list { overflow-x: hidden; overflow-y: auto; }
+.cms-menu.collapsed .cms-menu-list li { width: 100%; float: left; }
 .cms-menu.collapsed .cms-menu-list li span.text { display: none; }
 .cms-menu.collapsed .cms-menu-list li ul { display: none; }
 .cms-menu.collapsed.cms-panel .cms-panel-content { display: block; }

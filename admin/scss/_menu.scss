@@ -112,12 +112,15 @@
 		.cms-menu-list {
 			overflow-x: hidden;
 			overflow-y: auto;
-			
-			li span.text {
+			li{  
+			    width: 100%;
+			    float: left;   
+			    span.text {
+					display: none;
+				} 
+				ul {
 				display: none;
-			}
-			li ul {
-				display: none;
+				}
 			}
 		}
 
