@@ -239,7 +239,8 @@
 
 					// set title (either from TreeTitle or from Title fields)
 					// Treetitle has special HTML formatting to denote the status changes.
-					if(title) node.find('.text').html(title);
+					// only update immediate text element, we don't want to update all the nested ones
+					if(title) node.find('.text:first').html(title);
 
 					// Collect flag classes and also apply to parent
 					var statusFlags = [];
