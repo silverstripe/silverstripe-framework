@@ -38,6 +38,8 @@
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.file input.file { margin-left: -132px; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content #Form_ImportForm div.checkbox { padding: 0px; }
 
+.filter-buttons button.ss-gridfield-button-filter { background-position: -18px 4px !important; }
+
 html { overflow: hidden; }
 
 .field input.text, .field textarea, .field .TreeDropdownField { padding-left: 0; padding-right: 0; }
@@ -55,6 +57,8 @@ html { overflow: hidden; }
 .cms-panel-content .cms-tree li { width: 200px; overflow: hidden; float: left; display: inline; }
 
 .cms-content-toolbar { padding-bottom: 5px; }
+
+.cms-menu-list li { list-style-type: none; width: 100%; float: left; margin: 0px; padding: 0px; }
 
 .jstree li a .ui-icon { text-indent: 0px !important; }
 
@@ -94,5 +98,4 @@ table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }
 .cms-content-header h2 .section-icon { display: none; }
 .cms-content-header .cms-content-header-tabs { position: absolute; right: 0; }
 
-.cms-panel-content-collapsed { position: relative; width: 40px; }
-.cms-panel-content-collapsed h2.cms-panel-header, .cms-panel-content-collapsed h3.cms-panel-header { zoom: 1; position: absolute; top: 10px; right: 10px; writing-mode: tb-rl; float: right; z-index: 5000; }
+.ss-ui-button.ss-gridfield-button-filter { border: none !important; }
