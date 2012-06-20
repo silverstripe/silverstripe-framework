@@ -2,7 +2,7 @@
 // Avoid autoloading until we have composer support
 require_once 'sfYaml/Exception/ExceptionInterface.php';
 require_once 'sfYaml/Exception/ParseException.php';
-require_once 'sfYaml/Exception/DUMPException.php';
+require_once 'sfYaml/Exception/DumpException.php';
 require_once 'sfYaml/Escaper.php';
 require_once 'sfYaml/Unescaper.php';
 require_once 'sfYaml/Dumper.php';
