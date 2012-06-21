@@ -102,7 +102,7 @@
 							});
 						})
 						// Make some jstree events delegatable
-						.bind('select_node.jstree check_node.jstree', function(e, data) {
+						.bind('select_node.jstree check_node.jstree uncheck_node.jstree', function(e, data) {
 							$(document).triggerHandler(e, data);
 						})
 			},
