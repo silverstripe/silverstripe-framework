@@ -44,7 +44,7 @@
 		},
 
 		requireCss : function(styleUrl, media){
-			if(media === null) media = 'all';
+			if(!media) media = 'all';
 
 			// Don't double up on loading scripts
 			if($.isItemLoaded(styleUrl)) return;
