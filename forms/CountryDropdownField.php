@@ -32,8 +32,18 @@ class CountryDropdownField extends DropdownField {
 		if(!is_array($source)) {
 			// Get a list of countries from Zend
 			$source = Zend_Locale::getTranslationList('territory', $this->locale(), 2);
+
 			// We want them ordered by display name, not country code
-			asort($source);
+
+			// PHP 5.3 has an extension that sorts UTF-8 strings correctly
+			if (class_exists('Collator') && ($collator = Collator::create($this->locale()))) {
+				$collator->asort($source);
+			}
+			// Otherwise just put up with them being weirdly ordered for now
+			else {
+				asort($source);
+			}
+
 			// We don't want "unknown country" as an option
 			unset($source['ZZ']);
 		}
