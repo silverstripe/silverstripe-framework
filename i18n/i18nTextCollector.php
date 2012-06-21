@@ -153,7 +153,7 @@ class i18nTextCollector extends Object {
 	
 	/**
 	 * Builds a master string table from php and .ss template files for the module passed as the $module param
-	 * @see {@link collectFromCode} and {@link collectFromTemplate}
+	 * @see collectFromCode() and collectFromTemplate()
 	 *
 	 * @param string $module A module's name or just 'themes'
 	 * @return array $entities An array of entities found in the files that comprise the module
@@ -534,8 +534,16 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 	}
 
 	public function getYaml($entities, $locale) {
-		// Use the Zend copy of this script to prevent class conflicts when RailsYaml is included
-		require_once 'thirdparty/zend_translate_railsyaml/library/Translate/Adapter/thirdparty/sfYaml/lib/sfYamlDumper.php';
+		// Avoid autoloading until we have composer support
+		require_once 'sfYaml/Exception/ExceptionInterface.php';
+		require_once 'sfYaml/Exception/ParseException.php';
+		require_once 'sfYaml/Exception/DumpException.php';
+		require_once 'sfYaml/Escaper.php';
+		require_once 'sfYaml/Unescaper.php';
+		require_once 'sfYaml/Dumper.php';
+		require_once 'sfYaml/Inline.php';
+		require_once 'sfYaml/Parser.php';
+		require_once 'sfYaml/Yaml.php';
 
 		// Unflatten array
 		$entitiesNested = array();
@@ -553,9 +561,9 @@ class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
 		}
 
 		// Write YAML
-		$yamlHandler = new sfYaml();
+		$dumper = new Symfony\Component\Yaml\Dumper();
 		// TODO Dumper can't handle YAML comments, so the context information is currently discarded
-		return $yamlHandler->dump(array($locale => $entitiesNested), 99);
+		return $dumper->dump(array($locale => $entitiesNested), 99);
 	}
 }
 

@@ -168,11 +168,14 @@ class File extends DataObject {
 	public static function link_shortcode_handler($arguments, $content = null, $parser = null) {
 		if(!isset($arguments['id']) || !is_numeric($arguments['id'])) return;
 
-		if (
-			   !($record = DataObject::get_by_id('File', $arguments['id']))             // Get the file by ID.
-			&& !($record = DataObject::get_one('ErrorPage', '"ErrorCode" = \'404\''))   // Link to 404 page directly.
-		) {
-			return; // There were no suitable matches at all.
+		$record = DataObject::get_by_id('File', $arguments['id']);
+
+		if (!$record) {
+			if(class_exists('ErrorPage')) {
+				$record = DataObject::get_one('ErrorPage', '"ErrorCode" = \'404\'');
+			}
+
+			if (!$record) return; // There were no suitable matches at all.
 		}
 
 		// build the HTML tag
@@ -360,8 +363,7 @@ class File extends DataObject {
 						sprintf('<a href="%s" target="_blank">%s</a>', $this->Link(), $this->RelativeLink())
 					),
 					new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded') . ':'),
-					new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed') . ':'),
-					new ReadonlyField('BackLinkCount', _t('AssetTableField.BACKLINKCOUNT', 'Used on:'), $this->BackLinkTracking()->Count() . ' ' . _t('AssetTableField.PAGES', 'page(s)'))
+					new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed') . ':')
 				)
 			)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')
 		)->setName("FilePreview")->addExtraClass('cms-file-info');

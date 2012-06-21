@@ -73,14 +73,14 @@ Sake will either run `./framework/cli-script.php` or `./cli-script.php`, dependi
 It's particularly useful for running build tasks...
 
 	cd /your/site/folder
-	sake db/build
+	sake dev/build "flush=1"
 	sake dev/tests/all
 
 
 It can also be handy if you have a long running script.
 
 	cd /your/site/folder
-	sake MyReallyLongTask
+	sake dev/tasks/MyReallyLongTask
 
 
 ### Running processes

@@ -40,6 +40,8 @@ html {
 }
 
 
+
+
 //fix for the tree view modes not displaying inline
 .cms-tree-view-modes {
 	div {
@@ -63,6 +65,17 @@ html {
 .cms-content-toolbar {
 	padding-bottom:5px;
 }
+
+.cms-menu-list{
+	li{
+		list-style-type: none;      
+	    width: 100%;
+	    float: left;    
+	    margin: 0px;
+	    padding: 0px;  
+	}
+}
+
 
 
 
@@ -198,4 +211,10 @@ table.ss-gridfield-table {
 		right: 0;
 	}	
 }
-		
+	
+
+.ss-ui-button{
+	&.ss-gridfield-button-filter{		
+			border:none !important;
+	}
+}	

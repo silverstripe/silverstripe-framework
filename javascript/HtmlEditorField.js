@@ -171,6 +171,13 @@
 		 */
 		moveToBookmark: function(bookmark) {
 			this.getInstance().selection.moveToBookmark(bookmark);
+			this.getInstance().focus();
+		},
+		/**
+		 * Removes any selection & de-focuses this editor
+		 */
+		blur: function() {
+			this.getInstance().selection.collapse();
 		},
 		/**
 		 * Add new undo point with the current DOM content.
@@ -318,6 +325,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						url: url,
 						success: function(html) {
 							dialog.html(html);
+							dialog.trigger('dialogopen');
 						}
 					});
 				}
@@ -325,19 +333,17 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		});
 
 		$('.htmleditorfield-dialog').entwine({
-			onmatch: function() {
+			onadd: function() {
 				// Create jQuery dialog
 
 				var height = $(window).height() * 0.8; 
-				var width = $(window).width() * 0.8; 
+				var width = $(window).width() * 0.8;
 
-				this.dialog({autoOpen: true, bgiframe: true, modal: true, height: height, width: width, ghost: true});
+				if (!this.is('.ui-dialog-content')) this.dialog({autoOpen: true, bgiframe: true, modal: true, height: height, width: width, ghost: true});
 
 				this._super();
 			},
-			onunmatch: function() {
-				this._super();
-			},
+
 			getForm: function() {
 				return this.find('form');
 			},
@@ -350,13 +356,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			toggle: function(bool) {
 				if(this.is(':visible')) this.close();
 				else this.open();
-			},
-			ondialogopen: function(e) {
-				this.getForm().updateFromEditor();
-				this.getForm().redraw();
-			},
-			ondialogclose: function(e) {
-				this.getForm().resetFields();
 			}
 		});
 
@@ -365,44 +364,69 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		 * mostly geared towards modification and insertion of content.
 		 */
 		$('form.htmleditorfield-form').entwine({
+			Selection: null,
+			Bookmark: null,
+
+			setSelection: function(node) {
+				return this._super($(node));
+			},
 
 			// Wrapper for various HTML editors
 			Editor: null,
 
-			// TODO Figure out how to keep bookmark reference in entwine, and still be allowed to delete the JS object
-			// Bookmark: null,
-			onmatch: function() {
+			onadd: function() {
 				// Move title from headline to (jQuery compatible) title attribute
 				var titleEl = this.find(':header:first');
 				this.getDialog().attr('title', titleEl.text());
 
 				this._super();
-
-				this.redraw();
 			},
-			onunmatch: function() {
+			onremove: function() {
+				this.setSelection(null);
+				this.setBookmark(null);
+				this.setEditor(null);
+
 				this._super();
 			},
-			redraw: function() {
-			},
-			resetFields: function() {
-				if(typeof window._ss_htmleditorfield_bookmark != 'undefined') window._ss_htmleditorfield_bookmark = null;
-				this.getEditor().onclose();
-			},
+
 			getDialog: function() {
 				// TODO Refactor to listen to form events to remove two-way coupling
 				return this.closest('.htmleditorfield-dialog');
 			},
-			/**
-			 * Update the view state based on the current editor selection.
-			 */
-			updateFromEditor: function() {
-				this.getEditor().onopen();
-				window._ss_htmleditorfield_bookmark = this.getEditor().createBookmark();
+
+			fromDialog: {
+				ondialogopen: function(){
+					var ed = this.getEditor();
+					ed.onopen();
+
+					this.setSelection(ed.getSelectedNode());
+					this.setBookmark(ed.createBookmark());
+
+					ed.blur();
+
+					this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(':visible:enabled').eq(0).focus();
+
+					this.updateFromEditor();
+					this.redraw();
+				},
+
+				ondialogclose: function(){
+					var ed = this.getEditor();
+					ed.onclose();
+
+					ed.moveToBookmark(this.getBookmark());
+
+					this.setSelection(null);
+					this.setBookmark(null);
+
+					this.resetFields();
+				}
 			},
+
 			createEditor: function(){
 				return ss.editorWrappers['default']();
 			},
+
 			/**
 			 * Get the tinyMCE editor
 			 */
@@ -412,6 +436,28 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					this.setEditor(val = this.createEditor());
 				}
 				return val;
+			},
+
+			modifySelection: function(callback) {
+				var ed = this.getEditor();
+
+				ed.moveToBookmark(this.getBookmark());
+				callback.call(this, ed);
+
+				this.setSelection(ed.getSelectedNode());
+				this.setBookmark(ed.createBookmark());
+
+				ed.blur();
+			},
+
+			updateFromEditor: function() {
+				/* NOP */
+			},
+			redraw: function() {
+				/* NOP */
+			},
+			resetFields: function() {
+				/* NOP */
 			}
 		});
 
@@ -463,7 +509,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				}
 			},
 			insertLink: function() {
-				var href, target = null, anchor = this.find(':input[name=Anchor]').val(), ed = this.getEditor();
+				var href, target = null, anchor = this.find(':input[name=Anchor]').val();
 				
 				// Determine target
 				if(this.find(':input[name=TargetBlank]').is(':checked')) target = '_blank';
@@ -503,17 +549,16 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					title : this.find(':input[name=Description]').val()
 				};
 
-				// Workaround for browsers losing focus, similar to tinyMCEPopup.restoreSelection
-				ed.moveToBookmark(window._ss_htmleditorfield_bookmark);
-				window._ss_htmleditorfield_bookmark = null;
+				this.modifySelection(function(ed){
+					ed.insertLink(attributes);
+				})
 
-				// Add the new link
-				ed.insertLink(attributes);
-				this.trigger('onafterinsert', attributes);
 				this.updateFromEditor();
 			},
 			removeLink: function() {
-				this.getEditor().removeLink();
+				this.modifySelection(function(ed){
+					ed.removeLink();
+				})
 				this.close();
 			},
 			addAnchorSelector: function() {
@@ -590,7 +635,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 		 * form.
 		 */
 		getCurrentLink: function() {
-			var ed = this.getEditor(), selectedEl = $(ed.getSelectedNode()),
+			var selectedEl = this.getSelection(),
 				href = "", target = "", title = "", action = "insert", style_class = "";
 			
 			// We use a separate field for linkDataSource from tinyMCE.linkElement.
@@ -611,7 +656,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					linkDataSource = selectedEl = selectedEl.parents('a:first');
 				}				
 			}
-			if(linkDataSource && linkDataSource.length) ed.selectNode(linkDataSource[0]);
+			if(linkDataSource && linkDataSource.length) this.modifySelection(function(ed){
+				ed.selectNode(linkDataSource[0]);
+			});
 			
 			// Is anchor not a link
 			if (!linkDataSource.attr('href')) linkDataSource = null;
@@ -621,7 +668,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				target = linkDataSource.attr('target');
 				title = linkDataSource.attr('title');
 				style_class = linkDataSource.attr('class');
-				href = ed.cleanLink(href, linkDataSource);
+				href = this.getEditor().cleanLink(href, linkDataSource);
 				action = "update";
 			}
 			
@@ -699,21 +746,20 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.find('.overview .action-delete')[updateExisting ? 'hide' : 'show']();
 			},
 			onsubmit: function() {				
-				var self = this, ed = this.getEditor();
+				this.modifySelection(function(ed){
+					this.find('.ss-htmleditorfield-file').each(function() {
+						$(this).insertHTML(ed);
+					});
 
-				// HACK: See ondialogopen()
-				// jQuery(ed.getContainer()).show();
-		
-				this.find('.ss-htmleditorfield-file').each(function() {
-					$(this).insertHTML();
-				});
-				ed.repaint();
+					ed.repaint();
+				})
+
 				this.getDialog().close();
-
 				return false;
 			},
 			updateFromEditor: function() {			
-				var self = this, ed = this.getEditor(), node = $(ed.getSelectedNode());
+				var self = this, node = this.getSelection();
+
 				// TODO Depends on managed mime type
 				if(node.is('img')) {
 					this.showFileView(node.data('url') || node.attr('src'), function() {
@@ -727,7 +773,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			redraw: function() {
 				this._super();
 			
-				var ed = this.getEditor(), node = $(ed.getSelectedNode()),
+				var node = this.getSelection(),
 					hasItems = Boolean(this.find('.ss-htmleditorfield-file').length),
 					editingSelected = node.is('img'),
 					header = this.find('.header-edit');
@@ -750,11 +796,6 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.find('.Actions .media-update')[updateExisting ? 'show' : 'hide']();
 			},
 			resetFields: function() {				
-				var ed = this.getEditor(), node = $(ed.getSelectedNode());
-
-				// HACK: See ondialogopen()
-				// jQuery(ed.getContainer()).show();
-
 				this.find('.ss-htmleditorfield-file').remove(); // Remove any existing views
 				this.find('.ss-gridfield-items .ui-selected').removeClass('ui-selected'); // Unselect all items
 				this.redraw();
@@ -869,13 +910,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			/**
 			 * Insert updated HTML content into the rich text editor
 			 */
-			insertHTML: function() {
-				var form = this.closest('form'), ed = form.getEditor();
-				
-				// Workaround for browsers losing focus, similar to tinyMCEPopup.restoreSelection
-				ed.moveToBookmark(window._ss_htmleditorfield_bookmark);
-				window._ss_htmleditorfield_bookmark = null;
-
+			insertHTML: function(ed) {
 				// Insert content
 				ed.replaceContent(this.getHTML());
 			},
@@ -959,16 +994,9 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			/**
 			 * Logic similar to TinyMCE 'advimage' plugin, insertAndClose() method.
 			 */
-			insertHTML: function() {
-				var form = this.closest('form'), ed = form.getEditor(), 
-				node = $(ed.getSelectedNode()), captionNode = node.closest('.captionImage');
-
-				// Workaround for browsers losing focus, similar to tinyMCEPopup.restoreSelection.
-				// TODO In TinyMCE core this is restricted to IE, but leaving it our also
-				// breaks Firefox: It doesn't save the selection because it inserts into a temporary TinyMCE
-				// marker element rather than the content DOM nodes
-				ed.moveToBookmark(window._ss_htmleditorfield_bookmark);
-				window._ss_htmleditorfield_bookmark = null;
+			insertHTML: function(ed) {
+				var form = this.closest('form'),
+				node = form.getSelection(), captionNode = node.closest('.captionImage');
 
 				if(node && node.is('img')) {
 					// If the image exists, update it to avoid complications with inserting TinyMCE HTML content

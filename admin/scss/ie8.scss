@@ -1,14 +1,9 @@
 @import 'themes/default';
 @import 'ieShared';
 
-
+//IE8 needs this defined inside .cms-panel
 .cms-panel {
-	.cms-panel-content-collapsed {
-		width: 40px;
-		h2, h3 {
-			display: none;
-		}
-	}
+	@include IEVerticalPanelText;
 }
 
 //fix for overlapping of tree view mode checkboxes
@@ -30,4 +25,18 @@
 	.cms-panel-content .dropdown select {
 		width:152px;
 	}
+}
+
+.filter-buttons{
+	button{
+		width:23px !important;
+		height:23px !important;
+		&.ss-gridfield-button-close{			
+			margin-right:-7px !important;
+		}
+	}
+}
+
+.col-buttons{
+	width:18px;
 }

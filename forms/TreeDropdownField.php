@@ -31,10 +31,10 @@
  * This will generate a tree allowing the user to expand and contract subsections 
  * to find the appropriate page to save to the field.
  * 
- * @see {@link TreeMultiselectField} for the same implementation allowing multiple selections
- * @see {@link DropdownField} for a simple dropdown field.
- * @see {@link CheckboxSetField} for multiple selections through checkboxes.
- * @see {@link OptionsetField} for single selections via radiobuttons.
+ * @see TreeMultiselectField for the same implementation allowing multiple selections
+ * @see DropdownField for a simple dropdown field.
+ * @see CheckboxSetField for multiple selections through checkboxes.
+ * @see OptionsetField for single selections via radiobuttons.
  *
  * @package forms
  * @subpackage fields-relational

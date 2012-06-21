@@ -6,7 +6,7 @@
  * Used extensively by {@link DataList}.
  *
  * @subpackage model
- * @package sapphire
+ * @package framework
  */
 class DataQuery {
 	

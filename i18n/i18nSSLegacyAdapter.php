@@ -3,7 +3,7 @@ require_once 'Zend/Locale.php';
 require_once 'Zend/Translate/Adapter.php';
 
 /**
- * @package sapphire
+ * @package framework
  * @subpackage i18n
  */
 
