@@ -437,6 +437,17 @@ class DataListTest extends SapphireTest {
 		$list->exclude(array('Name'=>'Bob', 'Comment'=>'This is a team comment by Bob'));
 		$this->assertEquals(2, $list->count());
 	}
+
+	/**
+	 * Test that if an exclude() is applied to a filter(), the filter() is still preserved.
+	 */
+	public function testExcludeOnFilter() {
+		$list = DataObjectTest_TeamComment::get();
+ 		$list = $list->filter('Comment', 'Phil is a unique guy, and comments on team2');
+		$list = $list->exclude('Name', 'Bob');
+		
+		$this->assertContains('WHERE ("Comment" = \'Phil is a unique guy, and comments on team2\') AND ("Name" != \'Bob\')', $list->sql());
+	}
 	
 	/**
 	 * $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob with Age 21 or 43

@@ -258,11 +258,11 @@ class SQLQueryTest extends SapphireTest {
 		);
 	}
 
-	public function testWhereAny() {
+	public function testSetWhereAny() {
 		$query = new SQLQuery();
 		$query->setFrom('MyTable');
 
-		$query->whereAny(array("Monkey = 'Chimp'", "Color = 'Brown'"));
+		$query->setWhereAny(array("Monkey = 'Chimp'", "Color = 'Brown'"));
 		$this->assertEquals("SELECT * FROM MyTable WHERE (Monkey = 'Chimp' OR Color = 'Brown')",$query->sql());
 	}
 
