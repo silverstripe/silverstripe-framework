@@ -14,21 +14,34 @@ This format is now deprecated, and we don't provide tools
 for editing the files. Please see below for information on
 how to convert these legacy files and existing translations to YML.
 
+## Download Translations
+
+We are managing our translations through a tool called [getlocalization.com](http://getlocalization.com).
+Most modules are managed under the "silverstripe" user there,
+see [list of translatable modules](http://www.getlocalization.com/profile/?username=silverstripe).
+
+Translations are exported from there into YML files, generated every hour,
+and committed to a special "translation-staging" branch on github.
+You can download individual files by opening them on github.com (inside the `lang/` folder), and using the "Raw" view.
+Place those files in the appropriate directories on a local silverstripe installation. 
+
+ * ["translation-staging" branch for framework module](https://github.com/silverstripe/sapphire/tree/translation-staging)
+ * ["translation-staging" branch for cms module](https://github.com/silverstripe/silverstripe-cms/tree/translation-staging)
+
 ## Help as a translator
 
 ### The online translation tool
 
-We are managing our translations through a tool called
-[getlocalization.com](http://getlocalization.com).
-Most modules are managed under the "silverstripe" user there,
-see [list of translatable modules](http://www.getlocalization.com/profile/?username=silverstripe).
+We provide a GUI for translations through [getlocalization.com](http://getlocalization.com).
 If you don't have an account yet, please follow the links there to sign up.
+Select a project from the [list of translatable modules](http://www.getlocalization.com/profile/?username=silverstripe)
+and start translating online!
 
 For all modules listed there, we automatically import new master strings
 as they get committed to the various codebases, so you're always translating
-on the latest and greatest version (through github service hooks).
+on the latest and greatest version.
 
-## Set up your module for localization
+## Set up your own module for localization
 
 ### Collecting translatable text
 
@@ -61,9 +74,19 @@ change the first line in this file from "en_GB" to "en-GB".
 
 ### Export existing translations
 
-You can simply download the whole language pack as a ZIP archive
+As a project maintainer, you have the permission can simply download the whole language pack as a ZIP archive
 and add it to your project. But for composite locales (e.g. "en-GB"),
-you have to change the keys in the first line of the file (see note above).
+you have to change the keys in the first line of the file.
+
+We encourage you to use the SilverStripe build tools for this instead,
+as they run some additional sanity checks. They require the "phing" tool.
+Create a 'translation-staging' branch in your module before starting,
+and merge it back manually to your 'master' as required.
+
+	pear install phing/phing
+	cp build.properties.default
+	cp build.properties # Add your own getlocalization config to 'build.properties'
+	phing -Dmodule=<yourmodule> -propertyfile build.properties translations-sync
 
 ### Converting your language files from 2.4 PHP format
 
@@ -83,16 +106,10 @@ Special characters (such as german umlauts) need to be entered in their native f
 ### How can I check out my translation in the interface?
 
 Currently translated entities are not directly factored into code (for security reasons and release/review-control), so you can't see them straight away. 
-You can download automatically generated files for your language for each module (e.g. cms, sapphire, forum, ...) - 
-and place those files in the appropriate directories on a local silverstripe installation. 
 
-Example for downloading french files:
-downloaded fr.yml for cms => /cms/lang/fr.yml
-downloaded fr.yml for sapphire => /sapphire/lang/fr.yml
-(repeat for all modules) 
 
 It is strongly encouraged that you check your translation this way, as its a good way to doublecheck your translation works in the right context.
-Please use our daily-builds for your local installation, to ensure you're looking at the most up to date interface.
+Please use our [daily-builds](http://www.silverstripe.org/daily-builds/) for your local installation, to ensure you're looking at the most up to date interface.
 
 ### Can I change a translation just for one SilverStripe version?
 
@@ -131,7 +148,8 @@ We are currently investigating the available options, and are eager to get feedb
 
 ### Can I translate/edit the language files in my favourite text editor (on my local installation)
 
-No, as it causes us a lot of work in merging these files back.
+Not for modules managed by getlocalization.com, including "framework" and "cms.
+It causes us a lot of work in merging these files back.
 Please use the online translation tool for all new and existing translations.
 
 ### How does my translation get into a SilverStripe release?
