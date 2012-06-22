@@ -27,7 +27,38 @@ abstract class CMSBatchAction extends Object {
 	 * Return a set of status-updated JavaScript to return to the CMS.
 	 */
 	abstract function run(SS_List $objs);
-	
+
+	/**
+	 * Helper method for responding to a back action request
+	 * @param $successMessage string - The message to return as a notification.
+	 * Can have up to two %d's in it. The first will be replaced by the number of successful
+	 * changes, the second by the number of failures
+	 * @param $status array - A status array like batchactions builds. Should be
+	 * key => value pairs, the key can be any string: "error" indicates errors, anything
+	 * else indicates a type of success. The value is an array. We don't care what's in it,
+	 * we just use count($value) to find the number of items that succeeded or failed
+	 */
+	public function response($successMessage, $status) {
+		$count = 0;
+		$errors = 0;
+
+		foreach($status as $k => $v) {
+			if ($k == 'errors') $errors = count($v);
+			else $count += count($v);
+		}
+
+		$response = Controller::curr()->getResponse();
+
+		if($response) {
+			$response->setStatusCode(
+				200,
+				sprintf($successMessage, $count, $errors)
+			);
+		}
+
+		return Convert::raw2json($status);
+	}
+
 	/**
 	 * Helper method for processing batch actions.
 	 * Returns a set of status-updating JavaScript to return to the CMS.
@@ -67,15 +98,7 @@ abstract class CMSBatchAction extends Object {
 			unset($obj);
 		}
 
-		$response = Controller::curr()->getResponse();
-		if($response) {
-			$response->setStatusCode(
-				200, 
-				sprintf($successMessage, $objs->Count(), count($status['error']))
-			);
-		}
-
-		return Convert::raw2json($status);
+		return $this->response($successMessage, $status);
 	}
 
 	

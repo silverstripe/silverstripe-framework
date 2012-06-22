@@ -738,13 +738,27 @@ class SQLQuery {
 		return $this->setWhere($where);
 	}
 
+	public function whereAny($where) {
+		Deprecation::notice('3.0', 'Please use setWhereAny() or setWhereAny() instead!');
+		return $this->setWhereAny($where);
+	}
+
 	/**
 	 * @param String|array $filters Predicate(s) to set, as escaped SQL statements.
 	 */
-	function whereAny($filters) {
+	function setWhereAny($filters) {
 		if(is_string($filters)) $filters = func_get_args();
 		$clause = implode(" OR ", $filters);
 		return $this->setWhere($clause);
+	}
+
+	/**
+	 * @param String|array $filters Predicate(s) to set, as escaped SQL statements.
+	 */
+	function addWhereAny($filters) {
+		if(is_string($filters)) $filters = func_get_args();
+		$clause = implode(" OR ", $filters);
+		return $this->addWhere($clause);
 	}
 		
 	/**

@@ -1449,6 +1449,22 @@ body.cms-dialog {
 			@include box-shadow-none;
 			width:55%;
 			float:left;
+			position: relative;
+
+        	label {
+				position: absolute;
+				left: 8px;
+				top: 0px;
+				font-weight: normal; color: #888;
+			}
+
+			.middleColumn {
+				margin-left: 0;
+			}
+
+			input.remoteurl {
+				padding-left: 40px;
+			}
 		}
 		button.add-url{
 			padding-top:15px;
@@ -1465,6 +1481,12 @@ body.cms-dialog {
 				border:none;
 				@include box-shadow-none;
 				opacity:1;
+			}
+			&.ui-state-disabled {
+				&, &:hover, &:active {
+					opacity: 0.35;
+					filter: Alpha(Opacity=35);
+				}
 			}
 		}
 	}

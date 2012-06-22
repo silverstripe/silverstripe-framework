@@ -871,17 +871,51 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 		});
 
+		$('form.htmleditorfield-form.htmleditorfield-mediaform input.remoteurl').entwine({
+			onadd: function() {
+				this.validate();
+			},
+
+			onkeyup: function() {
+				this.validate();
+			},
+
+			onchange: function() {
+				this.validate();
+			},
+
+			getAddButton: function() {
+				return this.closest('.CompositeField').find('button.add-url');
+			},
+
+			validate: function() {
+				var val = this.val(), orig = val;
+
+				val = val.replace(/^https?:\/\//i, '');
+				if (orig !== val) this.val(val);
+
+				this.getAddButton().button(!!val ? 'enable' : 'disable');
+				return !!val;
+			}
+		});
+
 		/**
 		 * Show the second step after adding a URL
 		 */
 		$('form.htmleditorfield-form.htmleditorfield-mediaform .add-url').entwine({
+			getURLField: function() {
+				return this.closest('.CompositeField').find('input.remoteurl');
+			},
+
 			onclick: function(e) {
-				var form = this.closest('form');
+				var urlField = this.getURLField();
 
-				var urlField = this.closest('.CompositeField').find('input.remoteurl');
+				if (urlField.validate()) {
+					var form = this.closest('form');
+					form.showFileView('http://' + urlField.val());
+					form.redraw();
+				}
 
-				form.showFileView(urlField.val());
-				form.redraw();
 				return false;
 			}
 		});
