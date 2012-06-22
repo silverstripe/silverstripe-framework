@@ -1448,13 +1448,14 @@ body.cms-dialog {
 			border:none;
 			@include box-shadow-none;
 			width:55%;
+			max-width:512px;
 			float:left;
 			position: relative;
 
         	label {
 				position: absolute;
 				left: 8px;
-				top: 0px;
+				top: 13px;
 				font-weight: normal; color: #888;
 			}
 
@@ -1467,6 +1468,7 @@ body.cms-dialog {
 			}
 		}
 		button.add-url{
+			margin-top:13px;
 			padding-top:15px;
 			@include clearfix;
 			border:none;
@@ -1575,6 +1577,32 @@ body.cms-dialog {
 		tbody td:first-child img {
 			max-height: 30px;
 		}
+	}
+
+	.ss-uploadfield{
+		&.from-web, &.from-CMS{
+			margin-bottom:48px;
+			.middleColumn {
+				width:auto;
+				background:none;
+				border:none;
+				margin-top:13px;
+			}
+		}
+
+		&.from-CMS{
+			margin-top:33px;
+			h4{
+				margin-top:3px;
+			}
+			.middleColumn {
+				margin-top:0;
+				.TreeDropdownField{
+					margin-top:23px;
+				}			
+			}
+		}
+
 	}
 
 	.ss-uploadfield-editandorganize {
