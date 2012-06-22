@@ -461,7 +461,7 @@ function max($field) {
 	function whereAny($filter) {
 		if($filter) {
 			$clone = $this;
-			$clone->query->whereAny($filter);
+			$clone->query->addWhereAny($filter);
 			return $clone;
 		} else {
 			return $this;
