@@ -321,7 +321,7 @@ then create our graph using a page control in the template. Create the function 
 
 	:::php
 	public function BrowserPollResults() {
-		$submissions = DataObject::get('BrowserPollSubmission');
+		$submissions = BrowserPollSubmission::get();
 		$total = $submissions->Count();
 		
 		$doSet = new DataObjectSet();
@@ -341,7 +341,7 @@ then create our graph using a page control in the template. Create the function 
 This introduces a few new concepts, so let's step through it.
 
 	:::php
-	$submissions = DataObject::get('BrowserPollSubmission');
+	$submissions = BrowserPollSubmission::get();
 
 
 First we get all of the *BrowserPollSubmission*s from the database. This returns the submissions as a

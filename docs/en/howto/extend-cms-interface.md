@@ -115,7 +115,7 @@ Add the following code to a new file `zzz_admin/code/BookmarkedLeftAndMainExtens
 	<?php
 	class BookmarkedPagesLeftAndMainExtension extends LeftAndMainExtension {
 		public function BookmarkedPages() {
-			return DataList::create('Page')->where('"IsBookmarked" = 1');
+			return Page::get()->filter("IsBookmarked", 1);
 		}
 	}
 	

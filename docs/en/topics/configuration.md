@@ -54,7 +54,6 @@ incomplete - please add to it** *Try to keep it in alphabetical order too! :)*
  | Security::encrypt_passwords($encrypt_passwords);  |                  | Specify if you want store your passwords in clear text or encrypted (for more details see [security](/topics/security)) |        
  | Security::set_password_encryption_algorithm($algorithm, $use_salt);| | If you choose to encrypt your passwords, you can choose which algorithm is used to and if a salt should be used to increase the security level even more (for more details see [security](/topics/security)). |        
  | Security::setDefaultAdmin('admin','password'); |                     | Set default admin email and password, helpful for recovering your password |        
- | SSAkismet::setAPIKey(string $key)  |                                 | Enables use of the Akismet spam filter. The key must be a valid WordPress API key. |        
  | SSViewer::set_theme(string $themename) |                             | Choose the default theme for your site |   
 
 ## Constants

@@ -82,7 +82,7 @@ For more information on each of the features used in the example, you can read b
 	);
 	
 	// custom DataObjectSet
-	$myProducts = DataObject::get('Product','Code = "MyCode"');
+	$myProducts = Product::get()->filter('Code', "MyCode");
 	$myTableListField->setCustomSourceItems($myProducts);
 	
 	// custom SQL

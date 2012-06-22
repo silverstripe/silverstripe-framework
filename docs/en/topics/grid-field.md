@@ -166,7 +166,7 @@ Objects can be searched through an input field (partially matching one or more f
 Selecting from the results will add the object to the relation.
 
  	:::php
- 	$group = DataObject::get_one('Group');
+ 	$group = Group::get()->First();
  	$config = GridFieldConfig::create()->addComponent(new GridFieldAddExistingAutocompleter(array('FirstName', 'Surname', 'Email'));
  	$gridField = new GridField('Members', 'Members', $group->Members(), $config);
 

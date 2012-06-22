@@ -406,8 +406,8 @@ control. We can get the data for the news articles by implementing our own funct
 	:::php
 	...
 	public function LatestNews($num=5) {
-		$holder = DataObject::get_one("ArticleHolder");        
-		return ($holder) ? DataList::create('ArticlePage')->where('"ParentID" = '.$holder->ID)->sort('Date DESC')->limit($num) : false;
+		$holder = ArticleHolder::get()->First();
+		return ($holder) ? ArticlePage::get()->filter('ParentID', $holder->ID)->sort('Date DESC')->limit($num) : false;
 	}
 	...
 

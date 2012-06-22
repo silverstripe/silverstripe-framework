@@ -150,7 +150,7 @@ and [tutorial:3-forms](/tutorials/3-forms).
 ## Updating a page:
 
 	:::php
-	$page = DataObject::get_one("Page", "ParentID = 18");
+	$page = Page::get()->filter("ParentID", 18)->First();
 	$page->Title = "More Serious";
 	$page->writeToStage('Stage');
 	$page->Publish('Stage', 'Live');

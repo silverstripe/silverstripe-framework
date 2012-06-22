@@ -703,7 +703,7 @@ it *MyProject* for instance.
 		...
 	
 		public function MyProject() {
-			return DataObject::get( 'Project', "`MyStudentID` = '{$this->ID}'" );
+			return Project::get()->filter("MyStudentID", $this->ID);
 		}
 	
 	}

@@ -3,21 +3,20 @@
 SilverStripe uses an [object-relational model](http://en.wikipedia.org/wiki/Object-relational_model) that assumes the
 following connections:
 
-*  Each database-table maps to a php-class
-*  Each database-row maps to a php-object
-*  Each database-column maps to a property on a php-object
+*  Each database-table maps to a PHP class
+*  Each database-row maps to a PHP object
+*  Each database-column maps to a property on a PHP object
  
 All data tables in SilverStripe are defined as subclasses of `[api:DataObject]`. Inheritance is supported in the data
 model: seperate tables will be linked together, the data spread across these tables. The mapping and saving/loading
 logic is handled by SilverStripe, you don't need to worry about writing SQL most of the time. 
 
-The advanced object-relational layer in SilverStripe is one of the main reasons for requiring PHP5. Most of its
-customizations are possible through [PHP5 Object
+Most of the ORM customizations are possible through [PHP5 Object
 Overloading](http://www.onlamp.com/pub/a/php/2005/06/16/overloading.html) handled in the `[api:Object]`-class.
 
 See [database-structure](/reference/database-structure) for in-depth information on the database-schema.
 
-## Generating the database-schema
+## Generating the Database Schema
 
 The SilverStripe database-schema is generated automatically by visiting the URL.
 `http://<mysite>/dev/build`
@@ -28,14 +27,13 @@ Note: You need to be logged in as an administrator to perform this command.
 
 ## Querying Data
 
-Every query to data starts with a `DataList::create($class)` or `$class::get()` call. For example, this query would return
-all of the Member objects:
+Every query to data starts with a `DataList::create(<class>)` or `<class>::get()` call. For example, this query would return all of the `Member` objects:
 
 	:::php
 	$members = Member::get();
 
 The ORM uses a "fluent" syntax, where you specify a query by chaining together different methods.  Two common methods 
-are filter() and sort():
+are `filter()` and `sort()`:
 
 	:::php
 	$members = Member::get()->filter(array('FirstName' => 'Sam'))->sort('Surname');
@@ -83,19 +81,18 @@ If you have constructed a query that you know should return a single record, you
 
 Quiet often you would like to sort a list. Doing this on a list could be done in a few ways.
 
-If would like to sort the list by FirstName in a ascending way (from A to Z).
+If would like to sort the list by `FirstName` in a ascending way (from A to Z).
 
 	:::php
-	$member = Member::get()->sort('FirstName');
-	// Or the more expressive way
 	$member = Member::get()->sort('FirstName', 'ASC');
+	$member = Member::get()->sort('FirstName'); // Ascending is implied
 
 To reverse the sort
 
 	:::php
 	$member = Member::get()->sort('FirstName', 'DESC');
 
-However you might have several entries with the same FirstName and would like to sort them by FirstName and LastName
+However you might have several entries with the same `FirstName` and would like to sort them by `FirstName` and `LastName`
 
 	:::php
 	$member = Member::get()->sort(array(
@@ -395,7 +392,7 @@ Note: Alternatively you can set defaults directly in the database-schema (rather
 
 Properties defined in *static $db* are automatically casted to their [data-types](data-types) when used in templates. 
 You can also cast the return-values of your custom functions (e.g. your "virtual properties").
-Calling those functions directly will still return whatever type your php-code generates,
+Calling those functions directly will still return whatever type your PHP code generates,
 but using the *obj()*-method or accessing through a template will cast the value according to the $casting-definition.
 
 	:::php
@@ -593,6 +590,9 @@ This functionality is provided by the `SS_Map` class, which can be used to build
 	:::php
 	$members = Member::get();
 	$map = new SS_Map($members, 'ID', 'FirstName');
+
+Note: You can also retrieve a single property from all contained records
+through `[api:SS_List->column()]`.
 
 ## Data Handling
 

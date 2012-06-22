@@ -23,7 +23,7 @@ might consist of more than one *URLSegment*).
 
 	:::php
 	// wrong
-	$mypage = DataObject::get_one('SiteTree', '"URLSegment" = \'<mylink>\'');
+	$mypage = SiteTree::get()->filter("URLSegment", '<mylink>')->First();
 	// right
 	$mypage = SiteTree::get_by_link('<mylink>');
 
@@ -114,7 +114,8 @@ it is a good starting point, for choosing your customisation.
 	
 		public function canCreate() {
 			//here is a trick to only allow one (e.g. holder) of a page
-			return !DataObject::get_one($this->class);
+			$class = $this->class;
+			return !$class::get()->Count();
 		}
 	
 		public function canDelete() {

@@ -1,11 +1,11 @@
 # Paginating A List
 
-Adding pagination to a `[api:DataList]` or `[DataObjectSet]` is quite simple. All
+Adding pagination to a `[api:SS_List]` is quite simple. All
 you need to do is wrap the object in a `[api:PaginatedList]` decorator, which takes
 care of fetching a sub-set of the total list and presenting it to the template.
 
 In order to create a paginated list, you can create a method on your controller
-that first creates a `DataList` that will return all pages, and then wraps it
+that first creates a `SS_List` that will return all pages, and then wraps it
 in a `[api:PaginatedList]` object. The `PaginatedList` object is also passed the
 HTTP request object so it can read the current page information from the
 "?start=" GET var.
@@ -18,8 +18,7 @@ information.
 	 * Returns a paginated list of all pages in the site.
 	 */
 	public function PaginatedPages() {
-		$pages = DataList::create('Page');
-		return new PaginatedList($pages, $this->request);
+		return new PaginatedList(Page::get(), $this->request);
 	}
 
 ## Setting Up The Template
@@ -72,3 +71,7 @@ list will already contain only the items that you wish to display on the current
 page. In this situation the automatic limiting done by `[api:PaginatedList]`
 will break the pagination. You can disable automatic limiting using the
 `[api:PaginatedList->setLimitItems()]` method when using custom lists.
+
+## Related
+
+ * [Howto: "Grouping Lists"](/howto/grouping-dataobjectsets)
