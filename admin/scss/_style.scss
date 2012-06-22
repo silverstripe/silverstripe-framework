@@ -1508,6 +1508,7 @@ body.cms-dialog {
 			top:0;
 			right: 40px;
 			li{
+				background-color:#92A6B3;
 				@include background-image(
 					linear-gradient(#B0BEC7, #8CA1AE)
 				);			
