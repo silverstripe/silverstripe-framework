@@ -397,7 +397,17 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals(1, $list->count(), 'There should be one comments');
 		$this->assertEquals('Bob', $list->first()->Name, 'Only comment should be from Bob');
 	}
-	
+
+	public function testFilterAndExcludeById() {
+		$id = $this->idFromFixture('DataObjectTest_SubTeam', 'subteam1');
+		$list = DataObjectTest_SubTeam::get()->filter('ID', $id);
+		$this->assertEquals($id, $list->first()->ID);
+
+		$list = DataObjectTest_SubTeam::get();
+		$this->assertEquals(3, count($list));
+		$this->assertEquals(2, count($list->exclude('ID', $id)));
+	}
+
 	/**
 	 * $list->exclude('Name', 'bob'); // exclude bob from list
 	 */

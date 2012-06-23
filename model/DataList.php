@@ -253,7 +253,13 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 					$comparisor = $this->applyFilterContext($field, $fieldArg, $value);
 				}
 			} else {
-				$SQL_Statements[] = '"'.Convert::raw2sql($field).'" '.$customQuery;
+				if($field == 'ID') {
+					$field = sprintf('"%s"."ID"', ClassInfo::baseDataClass($this->dataClass));
+				} else {
+					$field = '"' . Convert::raw2sql($field) . '"';
+				}
+
+				$SQL_Statements[] = $field . ' ' . $customQuery;
 			}
 		}
 		if(count($SQL_Statements)) {
@@ -350,10 +356,16 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 
 		$SQL_Statements = array();
 		foreach($whereArguments as $fieldName => $value) {
-			if(is_array($value)){
-				$SQL_Statements[] = ('"'.$fieldName.'" NOT IN (\''.implode('\',\'', Convert::raw2sql($value)).'\')');
+			if($fieldName == 'ID') {
+				$fieldName = sprintf('"%s"."ID"', ClassInfo::baseDataClass($this->dataClass));
 			} else {
-				$SQL_Statements[] = ('"'.$fieldName.'" != \''.Convert::raw2sql($value).'\'');
+				$fieldName = '"' . Convert::raw2sql($fieldName) . '"';
+			}
+
+			if(is_array($value)){
+				$SQL_Statements[] = ($fieldName . ' NOT IN (\''.implode('\',\'', Convert::raw2sql($value)).'\')');
+			} else {
+				$SQL_Statements[] = ($fieldName . ' != \''.Convert::raw2sql($value).'\'');
 			}
 		}
 		$this->dataQuery->whereAny($SQL_Statements);
