@@ -70,7 +70,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		$memberList = GridField::create(
 			'Members',
 			false,
-			DataList::create('Member'),
+			Member::get(),
 			$memberListConfig = GridFieldConfig_RecordEditor::create()
 				->addComponent(new GridFieldExportButton())
 		)->addExtraClass("members_grid");
@@ -79,7 +79,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		$groupList = GridField::create(
 			'Groups',
 			false,
-			DataList::create('Group'),
+			Group::get(),
 			GridFieldConfig_RecordEditor::create()
 		);
 		$columns = $groupList->getConfig()->getComponentByType('GridFieldDataColumns');
@@ -131,7 +131,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		if(Permission::check('APPLY_ROLES')) {
 			$rolesField = GridField::create('Roles',
 				false,
-				DataList::create('PermissionRole'),
+				PermissionRole::get(),
 				GridFieldConfig_RecordEditor::create()
 			);
 
@@ -160,6 +160,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
 		$form->addExtraClass('center ss-tabset cms-tabset ' . $this->BaseCSSClasses());
+		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
 
 		$this->extend('updateEditForm', $form);
 

@@ -216,22 +216,30 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @todo extract the sql from $customQuery into a SQLGenerator class
 	 *
-	 * @param String|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
+	 * @param string|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
 	 * @return DataList
 	 */
 	public function filter() {
-		$numberFuncArgs = count(func_get_args());
-		$whereArguments = array();
-		if($numberFuncArgs == 1 && is_array(func_get_arg(0))){
-			$whereArguments = func_get_arg(0);
-		} elseif($numberFuncArgs == 2) {
-			$whereArguments[func_get_arg(0)] = func_get_arg(1);
-		} else {
-			throw new InvalidArgumentException('Arguments passed to filter() is wrong');
+		// Validate and process arguments
+		$arguments = func_get_args();
+		switch(sizeof($arguments)) {
+			case 1: $filters = $arguments[0]; break;
+			case 2: $filters = array($arguments[0] => $arguments[1]); break;
+			default:
+				throw new InvalidArgumentException('Incorrect number of arguments passed to filter()');
 		}
+		
+		$clone = clone $this;
+		$clone->addFilter($filters);
+		return $clone;
+	}
 
+	/**
+	 * Modify this DataList, adding a filter
+	 */
+	public function addFilter($filterArray) {
 		$SQL_Statements = array();
-		foreach($whereArguments as $field => $value) {
+		foreach($filterArray as $field => $value) {
 			if(is_array($value)) {
 				$customQuery = 'IN (\''.implode('\',\'',Convert::raw2sql($value)).'\')';
 			} else {
@@ -254,6 +262,24 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			}
 		}
 		return $this;
+	}
+
+	/**
+	 * Filter this DataList by a callback function.
+	 * The function will be passed each record of the DataList in turn, and must return true for the record to be included.
+	 * Returns the filtered list.
+	 * 
+	 * Note that, in the current implementation, the filtered list will be an ArrayList, but this may change in a future
+	 * implementation.
+	 */
+	public function filterByCallback($callback) {
+		if(!is_callable($callback)) throw new LogicException("DataList::filterByCallback() must be passed something callable.");
+		
+		$output = new ArrayList;
+		foreach($this as $item) {
+			if($callback($item)) $output->push($item);
+		}
+		return $output;
 	}
 
 	/**
@@ -307,19 +333,19 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @todo extract the sql from this method into a SQLGenerator class
 	 *
-	 * @param String|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
+	 * @param string|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
 	 * @return DataList
 	 */
-	public function exclude(){
+	public function exclude() {
 		$numberFuncArgs = count(func_get_args());
 		$whereArguments = array();
-		
-		if($numberFuncArgs == 1 && is_array(func_get_arg(0))){
+
+		if($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
 			$whereArguments = func_get_arg(0);
 		} elseif($numberFuncArgs == 2) {
 			$whereArguments[func_get_arg(0)] = func_get_arg(1);
 		} else {
-			throw new InvalidArgumentException('Arguments passed to exclude() is wrong');
+			throw new InvalidArgumentException('Incorrect number of arguments passed to exclude()');
 		}
 
 		$SQL_Statements = array();
@@ -454,9 +480,9 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		
 		// Instantiate the class mentioned in RecordClassName only if it exists, otherwise default to $this->dataClass
 		if(class_exists($row['RecordClassName'])) {
-			$item = new $row['RecordClassName']($row, false, $this->model);
+			$item = Injector::inst()->create($row['RecordClassName'], $row, false, $this->model);
 		} else {
-			$item = new $defaultClass($row, false, $this->model);
+			$item = Injector::inst()->create($defaultClass, $row, false, $this->model);
 		}
 		
 		return $item;
@@ -765,7 +791,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 */
 	public function newObject($initialFields = null) {
 		$class = $this->dataClass;
- 		return new $class($initialFields, false, $this->model);
+ 		return Injector::inst()->create($class, $initialFields, false, $this->model);
 	}
 	
 	/**

@@ -19,8 +19,17 @@
 	// could optionally use the compass mixin but that
 	// would require a 3rd party plugin
 	text-overflow: ellipsis;
-	o-text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
 }
+
+@mixin box-shadow-none{
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+
+
 
 //** ----------------------------------------------------
 // * Clear the properties of sub form fields. 

@@ -280,7 +280,7 @@ class ConfirmedPasswordField extends FormField {
 			if(!preg_match('/^(([a-zA-Z]+\d+)|(\d+[a-zA-Z]+))[a-zA-Z0-9]*$/',$value)) {
 				$validator->validationError(
 					'Password', 
-					_t('Form.VALIDATIONSTRONGPASSWORD', "Passwords must have at least one digit and one alphanumeric character."), 
+					_t('Form.VALIDATIONSTRONGPASSWORD', "Passwords must have at least one digit and one alphanumeric character"), 
 					"validation", 
 					false
 				);

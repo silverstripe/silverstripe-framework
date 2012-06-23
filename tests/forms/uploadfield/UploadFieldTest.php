@@ -465,6 +465,28 @@
 		
 	}
 
+	function testIsSaveable() {
+		$form = $this->getMockForm();
+
+		$field = new UploadField('MyField');
+		$this->assertTrue($field->isSaveable(), 'Field without relation is always marked as saveable');
+
+		$field = new UploadField('HasOneFile');
+		$this->assertTrue($field->isSaveable(), 'Field with has_one relation is saveable without record on form');
+
+		$field = new UploadField('HasOneFile');
+		$newRecord = new UploadFieldTest_Record();
+		$form->loadDataFrom($newRecord);
+		$field->setForm($form);
+		$this->assertFalse($field->isSaveable(), 'Field with has_one relation not saveable with new record on form');
+
+		$field = new UploadField('HasOneFile');
+		$existingRecord = $this->objFromFixture('UploadFieldTest_Record', 'record1');
+		$form->loadDataFrom($existingRecord);
+		$field->setForm($form);
+		$this->assertTrue($field->isSaveable(), 'Field with has_one relation saveable with saved record on form');
+	}
+
 	function testSelect() {
 		$this->loginWithPermission('ADMIN');
 

@@ -85,7 +85,7 @@ class ManyManyListTest extends SapphireTest {
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$team2 = $this->objFromFixture('DataObjectTest_Team', 'team2');
 
-		$playersTeam1Team2 = DataList::create('DataObjectTest_Team')->relation('Players')->setForeignID(array($team1->ID, $team2->ID));
+		$playersTeam1Team2 = DataObjectTest_Team::get()->relation('Players')->setForeignID(array($team1->ID, $team2->ID));
 		$playersTeam1Team2->add($newPlayer);
 		$this->assertEquals(
 			array($team1->ID, $team2->ID),
@@ -106,7 +106,7 @@ class ManyManyListTest extends SapphireTest {
 		
 		// Player 2 belongs to both teams: team1, team2
 		$player2 = $this->objFromFixture('DataObjectTest_Player', 'player2');
-		$this->assertEquals(array($teamOneID,$teamTwoID), $player2->Teams()->column("ID"), 'Precondition; player2 belongs to team1 and team2');
+		$this->assertEquals(array($teamOneID,$teamTwoID), $player2->Teams()->sort('Title')->column('ID'), 'Precondition; player2 belongs to team1 and team2');
 
 		// We want to find the teams for player2 where the captain does not belong to
 		$teamsWithoutTheCaptain = $player2->Teams()->subtract($captain1->Teams());

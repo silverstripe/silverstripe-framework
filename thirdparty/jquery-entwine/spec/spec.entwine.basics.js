@@ -32,6 +32,14 @@ describe('Entwine', function(){
 			expect($('.a').foo()).toEqual('a');
 		});
 
+		it('can attach and call a base function on a selector using a psuedo-selector taken from jquery', function(){
+			$('#a:visible').entwine({
+				foo: function(){return this.attr('id');}
+			});
+
+			expect($('.a').foo()).toEqual('a');
+		});
+
 		it('can attach and call several base functions', function(){
 			$('#a').entwine({
 				foo: function(){return 'foo_' + this.attr('id');},

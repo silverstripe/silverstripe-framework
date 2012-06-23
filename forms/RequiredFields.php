@@ -66,6 +66,8 @@ class RequiredFields extends Validator {
 		}
 		if($this->required) {
 			foreach($this->required as $fieldName) {
+				if(!$fieldName) continue;
+
 				$formField = $fields->dataFieldByName($fieldName);
 
 				$error = true;
@@ -74,8 +76,7 @@ class RequiredFields extends Validator {
 				if(is_array($value)) {
 					if ($formField instanceof FileField && isset($value['error']) && $value['error']) {
 						$error = true;
-					}
-					else {
+					} else {
 						$error = (count($value)) ? false : true;
 					}
 				} else {
@@ -84,7 +85,7 @@ class RequiredFields extends Validator {
 				}
 
 				if($formField && $error) {
-					$errorMessage = sprintf(_t('Form.FIELDISREQUIRED', '%s is required').'.', strip_tags('"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"'));
+					$errorMessage = sprintf(_t('Form.FIELDISREQUIRED', '%s is required'), strip_tags('"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"'));
 					if($msg = $formField->getCustomValidationMessage()) {
 						$errorMessage = $msg;
 					}
@@ -96,7 +97,6 @@ class RequiredFields extends Validator {
 					$valid = false;
 				}
 			}
-
 		}
 
 		return $valid;

@@ -2,30 +2,27 @@
 <form $FormAttributes data-layout-type="border">
 <% end_if %>
 	<div class="cms-content-header north">
-		<div>
+		<div class="cms-content-header-info">
 			<% include BackLink_Button %>
-
 			<h2 id="page-title-heading">
 			<% with Controller %>
-				<% include CMSSectionIcon %>
 				<% include CMSBreadcrumbs %>
 			<% end_with %>
 			</h2>
-			<% if Fields.hasTabset %>
-				<% with Fields.fieldByName('Root') %>
-				<div class="cms-content-header-tabs">
-					<ul>
-					<% loop Tabs %>
-						<li<% if extraClass %> class="$extraClass"<% end_if %>><a href="#$id">$Title</a></li>
-					<% end_loop %>
-					</ul>
-				</div>
-				<% end_with %>
-			<% end_if %>
-	
-			<!-- <div class="cms-content-search">...</div> -->
-
 		</div>
+		<% if Fields.hasTabset %>
+			<% with Fields.fieldByName('Root') %>
+			<div class="cms-content-header-tabs">
+				<ul>
+				<% loop Tabs %>
+					<li<% if extraClass %> class="$extraClass"<% end_if %>><a href="#$id">$Title</a></li>
+				<% end_loop %>
+				</ul>
+			</div>
+			<% end_with %>
+		<% end_if %>
+
+		<!-- <div class="cms-content-search">...</div> -->
 	</div>
 
 	<% with Controller %>

@@ -21,7 +21,7 @@
 			// Minimum width to keep the CMS operational
 			SharedWidth: null,
 			
-			onmatch: function() {
+			onadd: function() {
 				var self = this, layoutContainer = this.parent();
 				// this.resizable({
 				// 	handles: 'w',
@@ -43,39 +43,6 @@
 					if(!self.is('.is-collapsed')) self.loadCurrentPage();
 				});
 				
-				var updateAfterXhr = function() {
-					$('.cms-preview-toggle-link')[self.canPreview() ? 'show' : 'hide']();
-
-					// Only load when panel is visible (see details in iframe load event handler).
-					if(self.is('.is-collapsed')) return;
-
-					// var url = ui.xmlhttp.getResponseHeader('x-frontend-url');
-					var url = $('.cms-edit-form').find(':input[name=StageURLSegment]').val();
-					if(url) {
-						self.loadUrl(url);
-						self.unblock();
-					} else {
-						self.block();
-					}
-				}
-				
-				// Listen to form loads. Limit to CMS forms for the moment
-				$('.cms-edit-form').bind('reloadeditform', function(e, ui) {
-					updateAfterXhr();
-				});
-				
-				// Listen to history state changes
-				$('.cms-container').bind('afterstatechange', function(e) {
-					updateAfterXhr();
-				});
-				
-				// Toggle preview when new menu entry is selected.
-				// Only do this when preview is actually shown,
-				// to avoid auto-expanding the menu in normal CMS mode
-				$('.cms-menu-list li').bind('select', function(e) {
-					if(!self.hasClass('is-collapsed')) self.collapse();
-				});
-
 				if(this.hasClass('is-expanded')) this.expand();
 				else this.collapse();
 				this.data('cms-preview-initialized', true);
@@ -89,11 +56,42 @@
 		
 				this._super();
 			},
-			onunmatch: function() {
-				this._super();
-			},
 			loadUrl: function(url) {
 				this.find('iframe').attr('src', url);
+			},
+
+			updateAfterXhr: function(){
+				$('.cms-preview-toggle-link')[this.canPreview() ? 'show' : 'hide']();
+
+				// Only load when panel is visible (see details in iframe load event handler).
+				if(this.is('.is-collapsed')) return;
+
+				// var url = ui.xmlhttp.getResponseHeader('x-frontend-url');
+				var url = $('.cms-edit-form').find(':input[name=StageURLSegment]').val();
+				if(url) {
+					this.loadUrl(url);
+					this.unblock();
+				} else {
+					this.block();
+				}
+			},
+
+			'from .cms-container': {
+				onaftersubmitform: function(){
+					this.updateAfterXhr();
+				},
+				onafterstatechange: function(){
+					this.updateAfterXhr();
+				}
+			},
+
+			// Toggle preview when new menu entry is selected.
+			// Only do this when preview is actually shown,
+			// to avoid auto-expanding the menu in normal CMS mode
+			'from .cms-menu-list li': {
+				onselect: function(){
+					if(!this.hasClass('is-collapsed')) this.collapse();
+				}
 			},
 
 			/**
@@ -147,6 +145,7 @@
 			
 			expand: function(inclMenu) {
 				var self = this, containerEl = this.getLayoutContainer(), contentEl = containerEl.find('.cms-content');
+				this.show();
 				this.removeClass('east').addClass('center').removeClass('is-collapsed');
 				// this.css('overflow', 'auto');
 				contentEl.removeClass('center').hide();
@@ -158,8 +157,7 @@
 					containerEl.find('.cms-menu').collapsePanel();
 				}
 				
-				// Already triggered through panel toggle above
-				// containerEl.redraw();
+				containerEl.redraw();
 			},
 			
 			collapse: function() {
@@ -175,8 +173,7 @@
 					containerEl.find('.cms-menu').expandPanel();
 				}
 				
-				// Already triggered through panel toggle above
-				// containerEl.redraw();
+				containerEl.redraw();
 			},
 			
 			block: function() {
@@ -195,7 +192,9 @@
 				this[this.hasClass('is-collapsed') ? 'expand' : 'collapse']();
 			},
 			redraw: function() {
-				this.layout();
+				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
+				
+				this.layout({resize: false});
 			}
 		});
 		

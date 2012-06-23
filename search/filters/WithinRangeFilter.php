@@ -27,7 +27,7 @@ class WithinRangeFilter extends SearchFilter {
 	
 	function apply(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
-		$query->where(sprintf(
+		return $query->where(sprintf(
 			"%s >= '%s' AND %s <= '%s'",
 			$this->getDbName(),
 			Convert::raw2sql($this->min),

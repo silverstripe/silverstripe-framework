@@ -115,7 +115,11 @@ class Zend_Locale
         'wal_ET'=> true, 'wal'   => true, 'wo_SN' => true, 'wo'    => true, 'xh_ZA' => true,
         'xh'    => true, 'yo_NG' => true, 'yo'    => true, 'zh_CN' => true, 'zh_HK' => true,
         'zh_MO' => true, 'zh_SG' => true, 'zh_TW' => true, 'zh'    => true, 'zu_ZA' => true,
-        'zu'    => true
+        'zu'    => true,
+        // CUSTOM SilverStripe Add Maori locales.
+        // Remove once updating Zend_Locale to 2.0 (which uses CLDR 1.9), see
+        // https://github.com/zendframework/zf2/tree/master/resources/cldr/main
+        'mi' => true, 'mi_NZ' => true,
     );
 
     /**
@@ -172,7 +176,11 @@ class Zend_Locale
         'TZ' => 'sw_TZ', 'UA' => 'uk_UA', 'UG' => 'sw_UG', 'UM' => 'en_UM', 'US' => 'en_US',
         'UY' => 'es_UY', 'UZ' => 'uz_Cyrl_UZ', 'VA' => 'it_VA', 'VC' => 'en_VC', 'VE' => 'es_VE',
         'VG' => 'en_VG', 'VI' => 'en_VI', 'VU' => 'bi_VU', 'WF' => 'wls_WF', 'WS' => 'sm_WS',
-        'YE' => 'ar_YE', 'YT' => 'swb_YT', 'ZA' => 'en_ZA', 'ZM' => 'en_ZM', 'ZW' => 'sn_ZW'
+        'YE' => 'ar_YE', 'YT' => 'swb_YT', 'ZA' => 'en_ZA', 'ZM' => 'en_ZM', 'ZW' => 'sn_ZW',
+        // CUSTOM SilverStripe Add Maori locales.
+        // Remove once updating Zend_Locale to 2.0 (which uses CLDR 1.9), see
+        // https://github.com/zendframework/zf2/tree/master/resources/cldr/main
+        'MI' => 'mi_NZ'
     );
 
     /**

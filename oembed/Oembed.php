@@ -13,6 +13,11 @@
  */
 
 class Oembed {
+
+	public static function is_enabled() {
+		return Config::inst()->get('Oembed', 'enabled');
+	}
+
 	/**
 	 * Gets the autodiscover setting from the config.
 	 */
@@ -80,8 +85,8 @@ class Oembed {
 	 * @returns string/bool Oembed URL, or false.
 	 */
 	protected static function autodiscover_from_url($url) {
-		// Fetch the URL
-		$service = new RestfulService($url);
+		// Fetch the URL (cache for a week by default)
+		$service = new RestfulService($url, 60*60*24*7);
 		$body = $service->request();
 		if(!$body || $body->isError()) {
 			return false;
@@ -111,6 +116,8 @@ class Oembed {
 	 * @returns Oembed_Result/bool An Oembed descriptor, or false
 	 */
 	public static function get_oembed_from_url($url, $type = false, array $options = array()) {
+		if(!self::is_enabled()) return false;
+
 		// Find or build the Oembed URL.
 		$endpoint = self::find_endpoint($url);
 		$oembedUrl = false;
@@ -216,8 +223,8 @@ class Oembed_Result extends ViewableData {
 			return;
 		}
 
-		// Fetch from Oembed URL
-		$service = new RestfulService($this->url);
+		// Fetch from Oembed URL (cache for a week by default)
+		$service = new RestfulService($this->url, 60*60*24*7);
 		$body = $service->request();
 		if(!$body || $body->isError()) {
 			$this->data = array();

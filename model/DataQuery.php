@@ -123,7 +123,8 @@ class DataQuery {
 
 		$this->query->setFrom("\"$baseClass\"");
 
-		singleton($this->dataClass)->extend('augmentDataQueryCreation', $this->query, $this);
+		$obj = Injector::inst()->get($baseClass);
+		$obj->extend('augmentDataQueryCreation', $this->query, $this);
 	}
 
 	function setQueriedColumns($queriedColumns) {
@@ -198,8 +199,9 @@ class DataQuery {
 					if(preg_match('/^"([^"]+)"/', $collision, $matches)) {
 						$collisionBase = $matches[1];
 						$collisionClasses = ClassInfo::subclassesFor($collisionBase);
-						$caseClauses[] = "WHEN \"$baseClass\".\"ClassName\" IN ('"
-							. implode("', '", $collisionClasses) . "') THEN $collision";
+						$collisionClasses = array_map(array(DB::getConn(), 'prepStringForDB'), $collisionClasses);
+						$caseClauses[] = "WHEN \"$baseClass\".\"ClassName\" IN ("
+							. implode(", ", $collisionClasses) . ") THEN $collision";
 					} else {
 						user_error("Bad collision item '$collision'", E_USER_WARNING);
 					}
@@ -215,7 +217,8 @@ class DataQuery {
 				// Get the ClassName values to filter to
 				$classNames = ClassInfo::subclassesFor($this->dataClass);
 				if(!$classNames) user_error("DataList::create() Can't find data sub-classes for '$callerClass'");
-				$query->addWhere("\"$baseClass\".\"ClassName\" IN ('" . implode("','", $classNames) . "')");
+				$classNames = array_map(array(DB::getConn(), 'prepStringForDB'), $classNames);
+				$query->addWhere("\"$baseClass\".\"ClassName\" IN (" . implode(",", $classNames) . ")");
 			}
 		}
 
@@ -223,7 +226,9 @@ class DataQuery {
 		$query->selectField("CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\" ELSE '$baseClass' END", "RecordClassName");
 
 		// TODO: Versioned, Translatable, SiteTreeSubsites, etc, could probably be better implemented as subclasses of DataQuery
-		singleton($this->dataClass)->extend('augmentSQL', $query, $this);
+
+		$obj = Injector::inst()->get(ClassInfo::baseDataClass($this->dataClass));
+		$obj->extend('augmentSQL', $query, $this);
 
 		$this->ensureSelectContainsOrderbyColumns($query);
 
@@ -315,7 +320,7 @@ class DataQuery {
 	 * Note that this will issue a separate SELECT COUNT() query.
 	 */
 	function count() {
-	    $baseClass = ClassInfo::baseDataClass($this->dataClass);
+		$baseClass = ClassInfo::baseDataClass($this->dataClass);
 		return $this->getFinalisedQuery()->count("DISTINCT \"$baseClass\".\"ID\"");
 	}
 
@@ -324,8 +329,8 @@ class DataQuery {
 	 * 
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
-	function Max($field) {
-	    return $this->getFinalisedQuery()->aggregate(sprintf('MAX("%s")', Convert::raw2sql($field)))->execute()->value();
+function max($field) {
+	    return $this->aggregate(sprintf('MAX("%s")', Convert::raw2sql($field)));
 	}
 
 	/**
@@ -333,8 +338,8 @@ class DataQuery {
 	 * 
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
-	function Min($field) {
-	    return $this->getFinalisedQuery()->aggregate(sprintf('MIN("%s")', Convert::raw2sql($field)))->execute()->value();
+	function min($field) {
+	    return $this->aggregate(sprintf('MIN("%s")', Convert::raw2sql($field)));
 	}
 	
 	/**
@@ -342,8 +347,8 @@ class DataQuery {
 	 * 
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
-	function Avg($field) {
-	    return $this->getFinalisedQuery()->aggregate(sprintf('AVG("%s")', Convert::raw2sql($field)))->execute()->value();
+	function avg($field) {
+	    return $this->aggregate(sprintf('AVG("%s")', Convert::raw2sql($field)));
 	}
 
 	/**
@@ -351,8 +356,15 @@ class DataQuery {
 	 * 
 	 * @param String $field Unquoted database column name (will be escaped automatically)
 	 */
-	function Sum($field) {
-	    return $this->getFinalisedQuery()->aggregate(sprintf('SUM("%s")', Convert::raw2sql($field)))->execute()->value();
+	function sum($field) {
+	    return $this->aggregate(sprintf('SUM("%s")', Convert::raw2sql($field)));
+	}
+	
+	/**
+	 * Runs a raw aggregate expression.  Please handle escaping yourself
+	 */
+	function aggregate($expression) {
+	    return $this->getFinalisedQuery()->aggregate($expression)->execute()->value();
 	}
 
 	/**

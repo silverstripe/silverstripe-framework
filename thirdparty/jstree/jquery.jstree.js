@@ -2542,6 +2542,15 @@
 			drag_finish		: $.noop,
 			drag_check		: function (data) { return { after : false, before : false, inside : true }; }
 		},
+		__destroy : function () {
+			// unbind global event handlers when last instance is removed
+			// (no access to private 'instances' variable from here)
+			if($('.jstree').length <= 1) {
+				$(document)
+					.unbind("drag_start.vakata")
+					.unbind("drag_stop.vakata");	
+			}
+		},
 		_fn : {
 			dnd_prepare : function () {
 				if(!r || !r.length) { return; }
@@ -3718,6 +3727,13 @@
 						}
 					}, this));
 			$(document).bind("context_hide.vakata", $.proxy(function () { this.data.contextmenu = false; }, this));
+		},
+		__destroy: function() {
+			// unbind global event handlers when last instance is removed
+			// (no access to private 'instances' variable from here)
+			if($('.jstree').length <= 1) {
+				$(document).unbind("context_hide.vakata");	
+			}
 		},
 		defaults : { 
 			select_node : false, // requires UI plugin

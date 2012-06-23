@@ -20,3 +20,5 @@ Oembed:
       'https://api.twitter.com/1/statuses/oembed.json'
   autodiscover:
     true
+  enabled:
+    true

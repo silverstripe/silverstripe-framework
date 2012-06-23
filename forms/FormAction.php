@@ -80,12 +80,15 @@ class FormAction extends FormField {
 	}
 
 	function getAttributes() {
+		$type = (isset($this->attributes['src'])) ? 'image' : 'submit';
+		$type = ($this->useButtonTag) ? null : $type;
+		
 		return array_merge(
 			parent::getAttributes(),
 			array(
 				'disabled' => ($this->isReadonly() || $this->isDisabled()),
 				'value' => $this->Title(),
-				'type' => ($this->useButtonTag) ? null : 'submit',
+				'type' => $type,
 				'title' => ($this->useButtonTag) ? $this->description : null,
 			)
 		);

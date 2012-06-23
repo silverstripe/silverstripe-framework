@@ -16,9 +16,8 @@ form.nostyle {
 
 .field {
 	display: block;
-	padding: 10px 0;
 	border-bottom: 1px solid $color-shadow-light;
-    @include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
+    @include box-shadow(0 1px 0 lighten($color-shadow-light, 16%));
 
 	//TODO: use single border line with shadow instead:: http://daverupert.com/2011/06/two-tone-borders-with-css3/
 	//overflow: hidden;
@@ -43,7 +42,10 @@ form.nostyle {
 	&.nolabel {
 		.middleColumn {
 			margin-left: 0;
-		}	
+		}
+		.help {
+			margin-left: 0;
+		}
 	}
 	
 	label {
@@ -76,9 +78,11 @@ form.nostyle {
 	// Additional help text to clarify the field intent,
 	// displayed alongside the field (rather than in a tooltip)
 	.help {
+		clear: both;
 		color: lighten($color-text, 20%);
+		display: block;
 		font-style: italic;
-		padding-top: 1em;
+		margin: $grid-y/2 0 0 $grid-x*23;
 	}
 	
 	input.text,
@@ -88,8 +92,12 @@ form.nostyle {
 		width: 100%;
 		max-width: $grid-x * 64;
 		@include box-sizing(border-box);
+
+		.help {
+			max-width: $grid-x * 64;
+		}
 	}
-	
+
 	input.text, 
 	textarea,
 	.TreeDropdownField {
@@ -119,7 +127,9 @@ form.nostyle {
 		@include background-image(linear-gradient(darken(#efefef, 20%), #efefef 10%, #fff 90%, darken(#efefef, 20%)));
 		border: 1px solid lighten($color-medium-separator, 20%);
 	}
-
+	&#Action {
+    	box-shadow: none;
+	}
 }
 
 form.stacked .field, .field.stacked {
@@ -170,6 +180,12 @@ form.small .field, .field.small {
 		&.treedropdownfield-open-tree {
 			@include border-bottom-left-radius(0);
 			@include border-bottom-right-radius(0);
+		}
+
+		// Hide badges, as they cost too much horizontal space,
+		// and mess up rendering for selected node title
+		.badge {
+			display: none;
 		}
 	}
 	
@@ -252,10 +268,7 @@ form.small .field, .field.small {
 
 	.Actions {
 		min-height: 30px;
-
-		& > div {
-			overflow: auto;
-		}
+		overflow: auto;
 	}
 
 	input.loading, button.loading,
@@ -430,6 +443,35 @@ form.small .field, .field.small {
 		}
 	}
 }
+
+.ss-toggle {
+	margin-bottom: $grid-y;
+
+	.ui-accordion-header {
+		font-weight: bold;
+
+		&.ui-state-default {
+			@include background-image(
+				linear-gradient(lighten($color-shadow-light, 15%), $color-shadow-light)
+			);
+			text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+		}
+	}
+
+	.ui-accordion-content {
+		padding: $grid-y*2 0 $grid-y 0;
+
+		.field {
+			@include box-shadow(none);
+			padding-left: $grid-x*2;
+			padding-right: $grid-x*2;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+}
 /** ----------------------------------------------------
  * Checkbox Field
  * ---------------------------------------------------- */
@@ -506,7 +548,9 @@ input.radio {
 			width: auto;
 		}	
 	}
-	
+	label.left {
+		padding-bottom: $grid-y/2;
+	}
 }
 
 

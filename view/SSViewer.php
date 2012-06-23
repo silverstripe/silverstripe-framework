@@ -51,14 +51,13 @@ class SSViewer_Scope {
 		list($this->item, $this->itemIterator, $this->itemIteratorTotal, $this->popIndex, $this->upIndex, $this->currentIndex) = $this->itemStack[$this->localIndex];
 		array_splice($this->itemStack, $this->localIndex+1);
 	}
-	
+
 	function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
 		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
 		return $on->obj($name, $arguments, $forceReturnedObject, $cache, $cacheName);
 	}
-	
-	function obj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null){
-		
+
+	function obj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
 		switch ($name) {
 			case 'Up':
 				if ($this->upIndex === null) user_error('Up called when we\'re already at the top of the scope', E_USER_ERROR);
@@ -72,13 +71,12 @@ class SSViewer_Scope {
 			
 			default:
 				$this->item = $this->getObj($name, $arguments, $forceReturnedObject, $cache, $cacheName);
-				
 				$this->itemIterator = null;
 				$this->upIndex = $this->currentIndex ? $this->currentIndex : count($this->itemStack)-1;
 				$this->currentIndex = count($this->itemStack);
 				break;
 		}
-		
+
 		$this->itemStack[] = array($this->item, $this->itemIterator, $this->itemIteratorTotal, null, $this->upIndex, $this->currentIndex);
 		return $this;
 	}
@@ -380,7 +378,6 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 		// Then for iterator-specific overrides
 		else if (array_key_exists($property, self::$iteratorProperties)) {
 			$source = self::$iteratorProperties[$property];
-
 			if ($this->itemIterator) {
 				// Set the current iterator position and total (the object instance is the first item in the callable array)
 				$source['implementer']->iteratorProperties($this->itemIterator->key(), $this->itemIteratorTotal);
@@ -423,6 +420,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 
 			return $res;
 		}
+
 	}
 
 	function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
@@ -614,7 +612,9 @@ class SSViewer {
 			if(Director::isDev() || Director::is_cli() || Permission::check('ADMIN')) {
 				self::flush_template_cache();
 			} else {
-				return Security::permissionFailure(null, 'Please log in as an administrator to flush the template cache.');
+				if(!Security::ignore_disallowed_actions()) {
+					return Security::permissionFailure(null, 'Please log in as an administrator to flush the template cache.');
+				}
 			}
 		}
 		

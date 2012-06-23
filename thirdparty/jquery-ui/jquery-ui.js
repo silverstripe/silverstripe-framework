@@ -7753,13 +7753,6 @@ $.widget( "ui.tabs", {
 
 				this.load( o.selected );
 			}
-
-			// clean up to avoid memory leaks in certain versions of IE 6
-			// TODO: namespace this event
-			$( window ).bind( "unload", function() {
-				self.lis.add( self.anchors ).unbind( ".tabs" );
-				self.lis = self.anchors = self.panels = null;
-			});
 		// update selected after add/remove
 		} else {
 			o.selected = this.lis.index( this.lis.filter( ".ui-tabs-selected" ) );

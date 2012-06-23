@@ -87,17 +87,19 @@ body.cms {
 }
 
 .cms-content-header {
-	padding: ($grid-y - 8) 0 $grid-y $grid-x;	
-	height: $grid-y * 4;
+	padding-left: $grid-x * 2;
 	z-index: 60;
-	overflow:hidden;
-	@include box-shadow($color-shadow-light 0 0 ($grid-x / 2) inset);
+	@include box-shadow($color-shadow-dark 0 0 ($grid-x / 2) inset);
 	background: {
 		image:url(../images/textures/cms_content_header.png);
 		repeat:repeat;
-		position: 0 1px;
 	}
-	
+
+	.cms-content-header-info *,
+	.cms-content-header-tabs * {
+		@include inline-block;
+	}
+
 	a {
 		color: $color-text-blue-link;
 	}
@@ -109,60 +111,31 @@ body.cms {
 	}
 
 	h2 {
-		padding: $grid-y - 2 $grid-x 0 $grid-x;
 		font-size: $font-base-size + 2;
-		line-height: $grid-x * 3;
 		font-weight: bold;
-		/* text-shadow: darken($color-widget-bg, 15%) 1px 1px 0; */  // Gives wrong effect
 		margin: 0;
-		display:table-cell;
-		vertical-align:top;
-		width:60%;
-
-		.section-icon {
-			display: inline-block;
-			vertical-align: middle;
-		}
-
-		.breadcrumbs-wrapper {
-			display: inline-block;
-			vertical-align: middle;
-			.crumb {
-				display: inline;
-				line-height:26px;
-				padding:0 5px;
-			}
-			.crumb:first-child {
-				padding-left:0px;
-			}
-			.crumb:last-child {
-				padding-right:0px;
-			}
-		}
 	}
 
-	& > div {
-		display:table;
-		width: 100%;
-		.cms_backlink {
-			display:table-cell;
-			vertical-align:middle;
-			width:auto;
-		}
+	.cms-content-header-info {
+		float:left;
+		// TODO 2px less than tabs to ensure tabs bottom align correctly, shouldn't be necessary
+		line-height: 38px; 
 	}
 	
 	.cms-content-header-tabs {
-		display:table-cell;
-		white-space:nowrap;
-		width:40%;
+		float: right;
+		padding-right: $grid-x*3;
+		line-height: 40px;
+
 		.ui-tabs-nav {
-			float:right;
-			/* margin-right:$grid-x*4; */ // Removed to make tabs align far right
 			li {
 				a {
+					@include inline-block;
+					float: none;
+					line-height: 40px;
 					font-weight: bold;
-					line-height: $grid-y * 2;
-					padding: $grid-y*1.5 $grid-x*2.5 $grid-y*1.5;
+					margin: 0;
+					padding: 0 $grid-x*2;
 				}
 			}
 			
@@ -172,6 +145,7 @@ body.cms {
 				border: {
 					top:none;
 				}
+				@include box-shadow($color-shadow-light 0 0 2px);
 			}
 			
 			.ui-state-active, 
@@ -181,7 +155,7 @@ body.cms {
 					top:none;
 				}
 				padding-bottom:0px;
-				@include box-shadow($color-shadow-light 0 0 2px);
+				@include box-shadow(none);
 			}
 			.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
 				border-radius:0;
@@ -190,6 +164,14 @@ body.cms {
 			.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
 				border-radius:0;
 			}
+		}
+	}
+
+	// Reset to default styles
+	.ss-ui-button {
+		line-height: $grid-x*3;
+		.ui-button-text {
+			line-height: 1.4;
 		}
 	}
 }
@@ -267,8 +249,10 @@ body.cms {
 					font-weight: bold;
 					line-height: $grid-y * 2;
 					padding: ($grid-y * 2 - 4) ($grid-x * 2 + 4) $grid-y + 3;
+					text-transform: capitalize;
 					text-indent: -9999em;
-					background: url(../images/content-header-tabs-sprite.png) no-repeat
+					display: block;
+					background: url(../images/content-header-tabs-sprite.png) no-repeat;
 				}
 
 				&.content-treeview a {
@@ -392,7 +376,6 @@ body.cms {
 .cms-content-actions {
 	margin: 0;
 	padding: $grid-y*1.5 $grid-y*2;
-	height: $grid-y*4;
 	z-index: 0;
 	border-top: 1px solid $color-light-separator;
 	border-top: 1px solid #FAFAFA;
@@ -439,6 +422,32 @@ body.cms {
 	
 	p {
 		margin: 0;
+	}
+}
+
+/** --------------------------------------------
+ * Page icons
+ * -------------------------------------------- */
+
+.page-icon, a .jstree-pageicon {
+	display: block;
+	width: 16px;
+	height: 16px;
+	background: transparent url(../images/sitetree_ss_pageclass_icons_default.png) no-repeat;
+}
+
+.page-icon {
+	&.class-HomePage {
+		background-position: 0 -48px;
+	}
+	&.class-RedirectorPage {
+		background-position: 0 -16px;
+	}
+	&.class-VirtualPage {
+		background-position: 0 -32px;
+	}
+	&.class-ErrorPage {
+		background-position: 0 -112px;
 	}
 }
 
@@ -506,38 +515,15 @@ body.cms {
 			padding-bottom: 0;
 		}
 		
-		input, label, .icon, .title {
+		input, label, .page-icon, .title {
 			float: left;
 			line-height: 1.3em;
 		}
 		
-		.icon {
-			width: 20px;
-			display: block;
-			width:  16px;
-			height:  16px;
+		.page-icon {
 			margin: 0 4px;
-			background-color: transparent;
-			background-image: url(../images/sitetree_ss_pageclass_icons_default.png);
-			background-repeat: no-repeat;
-		}
-			
-		.class-HomePage {
-			background-position: 0 -48px;
 		}
 		
-		.class-RedirectorPage {
-			background-position: 0 -16px;
-		}
-		
-		.class-VirtualPage {
-			background-position: 0 -32px;
-		}
-		
-		.class-ErrorPage {
-			background-position: 0 -112px;
-		}
-			
 		.title {
 			width: 120px;
 			font-weight: bold;
@@ -649,7 +635,7 @@ body.cms {
 	
 	.cms-panel-content {
 		width: ($grid-x * 22);
-		padding: 0 $grid-x;
+		padding: $grid-x $grid-x 0;
 		overflow: auto;
 		height:100%;
 		.dropdown select {
@@ -828,6 +814,7 @@ body.cms {
 	}
 }
 .cms-preview {
+	display: none;
 	width: 1px; // collapsed by default
 	z-index: 100;
 		
@@ -1069,8 +1056,6 @@ form.member-profile-form {
 
 .cms {
 	.cms-content {
-		/* border-right: 1px solid $color-light-separator; */ // This holds the cms away from the right side by 1px so removed
-		
 		@include box-shadow(3px 0 4px rgba(0,0,0,0.15));
 		@include border-radius(0);
 	}
@@ -1102,6 +1087,21 @@ form.member-profile-form {
 				float:none;
 			}
 		}	
+		
+		.field {
+			.fieldholder-small { // Small fields have a second set of headers
+				margin-top: $grid-y;
+				label {
+					padding-top: $grid-x;
+					width: $grid-x * 8;
+					float: left;
+					margin-left: $grid-x * -8;
+				}
+			}
+			table .fieldholder-small {
+				margin-top: 0;
+			}
+		}
 	}
 }
 
@@ -1434,6 +1434,110 @@ body.cms-dialog {
 /** --------------------------------------------
  * "Insert X" forms
  * -------------------------------------------- */
+.htmleditorfield-dialog{
+	&.ui-dialog-content{
+		padding:0;
+		position:relative;
+	}
+
+	#MediaFormInsertMediaTabs_Fromtheweb{
+		.CompositeField{
+			@include clearfix;
+		}
+		#RemoteURL{
+			border:none;
+			@include box-shadow-none;
+			width:55%;
+			float:left;
+		}
+		button.add-url{
+			padding-top:15px;
+			@include clearfix;
+			border:none;
+			background:none;
+			opacity:0.8;
+			cursor: hand;
+			.btn-icon-addMedia{
+				width:20px;
+				height:20px;
+			}
+			&:hover, &:active{
+				border:none;
+				@include box-shadow-none;
+				opacity:1;
+			}
+		}
+	}
+
+	.cms-content-header{
+		padding:0;
+		width:100%;
+		height: 40px;
+		h3{
+			padding: 0 8px;
+			margin: 10px;
+		}
+	}
+	.ui-tabs{
+		position:static;
+		ul.ui-tabs-nav{
+			float:right;
+			position:absolute;
+			top:0;
+			right: 40px;
+			li{
+				@include background-image(
+					linear-gradient(#B0BEC7, #8CA1AE)
+				);			
+				@include border-radius(0px);
+				padding-top: 10px;
+				height: 28px;
+				overflow:hidden;
+				font-weight:bold;
+				a{
+					color:#fff;
+					text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+				}
+				&.ui-state-active{
+					background:  #F0F3F4 url("../admin/images/textures/bg_cms_main_content.png") repeat left top;
+					a{
+						color:$color-text;
+						text-shadow: none;
+					}
+				}
+			}
+		}
+		.ui-tabs-panel{
+			padding:0;
+		}
+	}
+	.ss-insert-media, .Actions{
+		padding:$grid-y $grid-x*2 ;
+	}
+	.details{
+		.file-url{
+			display:block;
+			width:450px;
+			@include hide-text-overflow;
+		}
+		.cms-file-info{
+			.field{
+				border:none;
+				@include box-shadow(0 0 0 rgba(0, 0, 0, 0));
+			}
+		}
+		.field{
+			border-bottom: 1px solid $color-shadow-light;
+    		@include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
+    		&.last{				
+				border-bottom:none;
+				@include box-shadow(0 0 0 rgba(0, 0, 0, 0));
+				margin-bottom:0;
+			}	
+		}
+	}
+}
+
 .htmleditorfield-linkform {
 	.step2 {
 		margin-bottom: $grid-x*2;
@@ -1509,8 +1613,8 @@ body.cms-dialog {
 	// Emulate .field bottom border styling without applying .field class,
 	// as it messes up the nested .field element styling (blocklevel labels)
 	border-bottom: 1px solid $color-shadow-light;
-  @include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
-  margin-bottom: $grid-x;
+  	@include box-shadow(0 1px 0 lighten($color-shadow-light, 95%));
+  	margin-bottom: $grid-x;
 
 	// Preview might not always be available
 	.cms-file-info-preview {
@@ -1609,16 +1713,22 @@ form.import-form {
  * -------------------------------------------- */
 
 .cms-container {
-	.CMSMain.CMSPageEditController {
+	.CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
 		// Fix pixel gap between nav tree and main page header
 	 	margin-left: -1px; // Removed to close gap far right of right tabs?
 	 	//Styling of tabs on page edit
 	 	.cms-edit-form {
 	 		background:darken($color-widget-bg, 2%);
-	 		.ui-tabs-nav {
-				float:right;
-				margin:$grid-x $grid-x*3 -1px 0;
+	 		
+			.ui-tabs-nav {
+				border-bottom: none;
+				float: right;
+				margin: $grid-y 0 -1px 0;
+				padding: 0 $grid-x*3 0 0;
+				
 				li {
+					float: left;
+					
 					a {
 						font-weight: bold;
 						line-height: $grid-y * 2;
@@ -1639,86 +1749,21 @@ form.import-form {
 				}
 			}
 		}
-	 	.ss-tabset .ui-tabs-panel {
-	 		background:darken($color-widget-bg, 2%);
-	 		clear:both;
-	 		/* border-top:1px solid $color-button-generic-border; */
-	 		.ss-tabset {
-	 			border-top:none;
-	 			.ui-tabs-nav {
-	 				margin-top:0px;
-	 				margin-right:8px;
-	 			}
-	 		}
-	 	}
-	}
-	//Styling of tabs on page settings
-	.CMSPageSettingsController {
-	 	.cms-edit-form {
-	 		background:darken($color-widget-bg, 2%);
-	 		.ui-tabs-nav {
-				float:right;
-				margin:$grid-x $grid-x*5 -1px 0;
-				li {
-					a {
-						font-weight: bold;
-						line-height: $grid-y * 2;
-						padding: $grid-y $grid-x*2.5 $grid-y;
-					}
-				}
-				.ui-state-default,
-				.ui-widget-content .ui-state-default,
-				.ui-widget-header .ui-state-default {
-					border:1px solid $color-button-generic-border;
-				}
-				.ui-state-active,
-				.ui-widget-content .ui-state-active,
-				.ui-widget-header .ui-state-active {
-					padding-bottom:1px;
-					background:darken($color-widget-bg, 2%);
-					border:1px solid $color-button-generic-border;
-				}
+		.ss-tabset {
+			.ss-tabset {
+				position: static;
+			}
+
+			.ui-tabs-panel {
+				background: darken($color-widget-bg, 2%);
+				border-top:1px solid $color-button-generic-border;
+				clear: both;
+			}
+
+			&.ss-tabset-tabshidden .ui-tabs-panel {
+				border-top: none;
 			}
 		}
-	 	.ss-tabset .ui-tabs-panel {
-	 		background:darken($color-widget-bg, 2%);
-	 		clear:both;
-	 		/* border-top:1px solid $color-button-generic-border; */
-	 	}
-	}
-	//Styling of tabs on page History
-	.CMSPageHistoryController {
-		.cms-edit-form {
-	 		background:darken($color-widget-bg, 2%);
-	 		.ui-tabs-nav {
-				float:right;
-				margin:$grid-x $grid-x*3 -1px 0;
-				li {
-					a {
-						font-weight: bold;
-						line-height: $grid-y * 2;
-						padding: $grid-y $grid-x*2.5 $grid-y;
-					}
-				}
-				.ui-state-default,
-				.ui-widget-content .ui-state-default,
-				.ui-widget-header .ui-state-default {
-					border:1px solid $color-button-generic-border;
-				}
-				.ui-state-active,
-				.ui-widget-content .ui-state-active,
-				.ui-widget-header .ui-state-active {
-					padding-bottom:1px;
-					background:darken($color-widget-bg, 2%);
-					border:1px solid $color-button-generic-border;
-				}
-			}
-		}
-	 	.ss-tabset .ui-tabs-panel {
-	 		background:darken($color-widget-bg, 2%);
-	 		clear:both;
-	 		/* border-top:1px solid $color-button-generic-border; */ // Double border?
-	 	}
 	}
 }
 
@@ -1750,22 +1795,30 @@ form.import-form {
 /** --------------------------------------------
  * Buttons for FileUpload
  * -------------------------------------------- */
-.toggle-details{	
-	.toggle-details-icon {
-		background: sprite($sprites32, menu-arrow-down) no-repeat;
-		.fileOverview &{
-			background: sprite($sprites32, menu-arrow-deselected-down) no-repeat;
-			
-		}
+.ss-uploadfield-item-edit-all .ui-button-text{
+	padding-right:0;
+}
 
-		&.opened {					
-			background: sprite($sprites32, menu-arrow-up) no-repeat;	
-			.fileOverview &{
-				background: sprite($sprites32, menu-arrow-deselected-up) no-repeat;			
-			}		
-		}
+ 
+	
+.toggle-details-icon {
+	background: sprite($sprites32, menu-arrow-down) no-repeat;
+	.fileOverview &{
+		background: sprite($sprites32, menu-arrow-deselected-down) no-repeat;
+		display:inline-block;
+		width:8px;
+		height:8px;
+		padding-left:5px;		
+	}
+
+	&.opened {					
+		background: sprite($sprites32, menu-arrow-up) no-repeat;	
+		.fileOverview &{
+			background: sprite($sprites32, menu-arrow-deselected-up) no-repeat;			
+		}		
 	}
 }
+
 
 
 

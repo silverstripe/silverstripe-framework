@@ -5,13 +5,8 @@
 		 * Creates a jQuery UI tab navigation bar, detached from the container DOM structure.
 		 */
 		$('.ss-ui-tabs-nav').entwine({
-			onmatch: function() {
+			onadd: function() {
 				this.redraw();
-
-				this._super();
-			},
-			onunmatch: function() {
-				this._super();
 			},
 			redraw: function() {
 				this.addClass('ui-tabs ui-widget ui-widget-content ui-corner-all ui-tabs-panel ui-corner-bottom');

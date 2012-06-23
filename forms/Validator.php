@@ -103,10 +103,10 @@ abstract class Validator extends Object {
 	function requireField($fieldName, $data) {
 		if(is_array($data[$fieldName]) && count($data[$fieldName])) {
 			foreach($data[$fieldName] as $componentkey => $componentVal){
-				if(!strlen($componentVal)) $this->validationError($fieldName, "$fieldName $componentkey is required.", "required");
+				if(!strlen($componentVal)) $this->validationError($fieldName, "$fieldName $componentkey is required", "required");
 			}
 			
-		}else if(!strlen($data[$fieldName])) $this->validationError($fieldName, "$fieldName is required.", "required");
+		}else if(!strlen($data[$fieldName])) $this->validationError($fieldName, "$fieldName is required", "required");
 	}
 	
 	/**

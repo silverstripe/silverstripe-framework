@@ -521,7 +521,7 @@ class TableField extends TableListField {
 						if(!trim($fieldObj->Value())){
 							$title = $fieldObj->Title();
 							$errorMessage .= sprintf(
-								_t('TableField.ISREQUIRED', "In %s '%s' is required."),
+								_t('TableField.ISREQUIRED', "In %s '%s' is required"),
 								$this->name,
 								$title
 							);

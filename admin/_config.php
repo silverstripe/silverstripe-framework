@@ -16,7 +16,7 @@ HtmlEditorConfig::get('cms')->setOptions(array(
 	'spellchecker_rpc_url' => THIRDPARTY_DIR . '/tinymce-spellchecker/rpc.php'
 ));
 
-HtmlEditorConfig::get('cms')->enablePlugins('media', 'fullscreen');
+HtmlEditorConfig::get('cms')->enablePlugins('media', 'fullscreen', 'inlinepopups');
 HtmlEditorConfig::get('cms')->enablePlugins(array('ssbuttons' => sprintf('../../../%s/tinymce_ssbuttons/editor_plugin_src.js', THIRDPARTY_DIR)));
 			
 HtmlEditorConfig::get('cms')->insertButtonsBefore('formatselect', 'styleselect');

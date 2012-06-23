@@ -62,7 +62,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * 
 	 * @var string
 	 */
-	static $help_link = 'http://userhelp.silverstripe.org';
+	static $help_link = 'http://3.0.userhelp.silverstripe.org';
 
 	/**
 	 * @var array
@@ -268,7 +268,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				FRAMEWORK_DIR . '/javascript/GridField.js',
 			)
 		);
-		
+
+		if (Director::isDev()) Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/leaktools.js');
+
 		HTMLEditorField::include_js();
 
 		Requirements::combine_files(
@@ -285,15 +287,17 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.AddForm.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
 					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
+					FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.FieldHelp.js',
 				),
 				Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', true, true),
 				Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/javascript/lang', true, true)
 			))
 		);
 
-		if (Director::isDev()) {
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/src/jquery.entwine.inspector.js');
-		}
+		// TODO Confuses jQuery.ondemand through document.write()
+		// if (Director::isDev()) {
+			// Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/src/jquery.entwine.inspector.js');
+		// }
 
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.css');
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
@@ -351,6 +355,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	function redirect($url, $code=302) {
 		if($this->request->isAjax()) {
 			$this->response->addHeader('X-ControllerURL', $url);
+			if($this->request->getHeader('X-Pjax') && !$this->response->getHeader('X-Pjax')) {
+				$this->response->addHeader('X-Pjax', $this->request->getHeader('X-Pjax'));
+			}
 			return ''; // Actual response will be re-requested by client
 		} else {
 			parent::redirect($url, $code);
@@ -428,17 +435,23 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	public function getResponseNegotiator() {
 		if(!$this->responseNegotiator) {
 			$controller = $this;
-			$this->responseNegotiator = new PjaxResponseNegotiator(array(
-				'CurrentForm' => function() use(&$controller) {
-					return $controller->getEditForm()->forTemplate();
-				},
-				'Content' => function() use(&$controller) {
-					return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
-				},
-				'default' => function() use(&$controller) {
-					return $controller->renderWith($controller->getViewer('show'));
-				}
-			));
+			$this->responseNegotiator = new PjaxResponseNegotiator(
+				array(
+					'CurrentForm' => function() use(&$controller) {
+						return $controller->getEditForm()->forTemplate();
+					},
+					'Content' => function() use(&$controller) {
+						return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
+					},
+					'Breadcrumbs' => function() use (&$controller) {
+						return $controller->renderWith('CMSBreadcrumbs');
+					},
+					'default' => function() use(&$controller) {
+						return $controller->renderWith($controller->getViewer('show'));
+					}
+				),
+				$this->response
+			);
 		}
 		return $this->responseNegotiator;
 	}
@@ -655,6 +668,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$titleFn = function(&$child) use(&$controller, &$recordController) {
 			$classes = $child->CMSTreeClasses();
 			if($controller->isCurrentPage($child)) $classes .= " current";
+			$flags = $child->hasMethod('getStatusFlags') ? $child->getStatusFlags() : false;
+			if($flags) $classes .= ' ' . implode(' ', array_keys($flags));
 			return "<li id=\"record-$child->ID\" data-id=\"$child->ID\" data-pagetype=\"$child->ClassName\" class=\"" . $classes . "\">" .
 				"<ins class=\"jstree-icon\">&nbsp;</ins>" .
 				"<a href=\"" . Controller::join_links($recordController->Link("show"), $child->ID) . "\" title=\"" .
@@ -782,6 +797,18 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$statusUpdates = array('modified'=>array());
 		$id = $request->requestVar('ID');
 		$parentID = $request->requestVar('ParentID');
+
+		if($className == 'SiteTree' && $page = DataObject::get_by_id('Page', $id)){
+			$root = $page->getParentType();
+			if(($parentID == '0' || $root == 'root') && !SiteConfig::current_site_config()->canCreateTopLevel()){
+				$this->response->setStatusCode(
+					403,
+						_t('LeftAndMain.CANT_REORGANISE',"You do not have permission to alter Top level pages. Your change was not saved.")
+					);
+				return;
+			}
+		}
+
 		$siblingIDs = $request->requestVar('SiblingIDs');
 		$statusUpdates = array('modified'=>array());
 		if(!is_numeric($id) || !is_numeric($parentID)) throw new InvalidArgumentException();
@@ -949,6 +976,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$form->addExtraClass('cms-edit-form');
 			$form->loadDataFrom($record);
 			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
+			$form->setAttribute('data-pjax-fragment', 'CurrentForm');
 			
 			// Set this if you want to split up tabs into a separate header row
 			// if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
@@ -1013,6 +1041,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$form->addExtraClass('cms-edit-form');
 		$form->addExtraClass('root-form');
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
+		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
 		
 		return $form;
 	}

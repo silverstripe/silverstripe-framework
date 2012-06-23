@@ -28,22 +28,19 @@
  * 
  * <code>
  * //Database request for the object
- * $myDoSet = DataList::create("FooBars","");
- * if($myDoSet){
- *  // This returns an array of ID => Title
- *  $map = $myDoSet->map();
- *  
- *   // Instantiate the OptionsetField 
- *   $FieldList = new FieldList(
- *     new OptionsetField(
- *      $name = "Foobar",
- *      $title = "FooBar's optionset",
- *      $source = $map,
- *      $value = $map[0]
- *     )
- *   );
- * }
- * 
+ * $map = FooBar::get()->map();
+ *  // returns an SS_Map object containing an array of ID => Title
+ *
+ * // Instantiate the OptionsetField 
+ * $FieldList = new FieldList(
+ *   new OptionsetField(
+ *    $name = "Foobar",
+ *    $title = "FooBar's optionset",
+ *    $source = $map,
+ *    $value = $map[0]
+ *   )
+ * );
+ *
  * // Pass the fields to the form constructor. etc
  * </code>
  * 

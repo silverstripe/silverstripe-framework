@@ -179,8 +179,8 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
 			$stmts[] .= sprintf('"%s" LIKE \'%s%%\'', $searchField, $request->param('ID'));
 		}
 		$results = $allList->where(implode(' OR ', $stmts))->subtract($gridField->getList());
-		$results->sort($searchFields[0], 'ASC');
-		
+		$results = $results->sort($searchFields[0], 'ASC');
+
 		$json = array();
 		foreach($results as $result) {
 			$json[$result->ID] = SSViewer::fromString($this->resultsFormat)->process($result);

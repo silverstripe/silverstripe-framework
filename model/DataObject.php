@@ -313,44 +313,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$record = null;
 		}
 
-		// Convert PostgreSQL boolean values
-		// TODO: Implement this more elegantly, for example by writing a more intelligent SQL SELECT query prior to object construction
-		if(DB::getConn() instanceof PostgreSQLDatabase) {
-			$this->class = get_class($this);
-			foreach($record as $k => $v) {
-				if($this->db($k) == 'Boolean' && $v == 'f') $record[$k] = '0';
-			}
-		}
-		
-		// TODO: MSSQL has a convert function that can do this on the SQL end. We just need a
-		// nice way of telling the database how we want to get the value out on a per-fieldtype basis
-		if(DB::getConn() instanceof MSSQLDatabase) {
-			$this->class = get_class($this);
-			foreach($record as $k => $v) {
-				if($v) {
-					if($k == 'Created' || $k == 'LastEdited') {
-						$fieldtype = 'SS_Datetime';
-					} else {
-						$fieldtype = $this->db($k);
-					}
-				
-					// MSSQLDatabase::date() uses datetime for the data type for "Date" and "SS_Datetime"
-					switch($fieldtype) {
-						case "Date":
-							$v = preg_replace('/:[0-9][0-9][0-9]([ap]m)$/i', ' \\1', $v);
-							$record[$k] = date('Y-m-d', strtotime($v));
-							break;
-					
-						case "Datetime":
-						case "SS_Datetime":
-							$v = preg_replace('/:[0-9][0-9][0-9]([ap]m)$/i', ' \\1', $v);
-							$record[$k] = date('Y-m-d H:i:s', strtotime($v));
-							break;
-					}
-				}
-			}
-		}
-
 		// Set $this->record to $record, but ignore NULLs
 		$this->record = array();
 		foreach($record as $k => $v) {
@@ -408,12 +370,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * You'll need to call this to get the memory of an object that has components or extensions freed.
 	 */
 	function destroy() {
-		$this->extension_instances = null;
-		$this->components = null;
-		$this->destroyed = true;
-		$this->record = null;
-		$this->original = null;
-		$this->changed = null;
+		//$this->destroyed = true;
+		gc_collect_cycles();
 		$this->flushCache(false);
 	}
 
@@ -1131,7 +1089,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 							if($dbCommand == 'insert') {
 								$manipulation[$class]['fields']["Created"] = "'".SS_Datetime::now()->Rfc2822()."'";
 								//echo "<li>$this->class - " .get_class($this);
-								$manipulation[$class]['fields']["ClassName"] = "'$this->class'";
+								$manipulation[$class]['fields']["ClassName"] = DB::getConn()->prepStringForDB($this->class);
 							}
 						}
 
@@ -1447,7 +1405,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function getManyManyComponents($componentName, $filter = "", $sort = "", $join = "", $limit = "") {
 		list($parentClass, $componentClass, $parentField, $componentField, $table) = $this->many_many($componentName);
 		
-		$result = new ManyManyList($componentClass, $table, $componentField, $parentField,
+		$result = Injector::inst()->create('ManyManyList', $componentClass, $table, $componentField, $parentField,
 			$this->many_many_extraFields($componentName));
 		if($this->model) $result->setDataModel($this->model);
 
@@ -2618,15 +2576,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * @return mixed The objects matching the filter, in the class specified by $containerClass
 	 */
-	public static function get($callerClass = null, $filter = "", $sort = "", $join = "", $limit = null, $containerClass = "DataList") {
+	public static function get($callerClass = null, $filter = "", $sort = "", $join = "", $limit = null, $containerClass = 'DataList') {
 		if($callerClass == null) {
 			$callerClass = get_called_class();
 			if($callerClass == 'DataObject') {
-				throw new \InvalidArgumentException("Call <classname>::get() instead of DataObject::get()");
+				throw new \InvalidArgumentException('Call <classname>::get() instead of DataObject::get()');
 			}
 			
-			if($filter || $sort || $join || $limit || ($containerClass != "DataList")) {
-				throw new \InvalidArgumentException("If calling <classname>::get() then you shouldn't pass any other arguments");
+			if($filter || $sort || $join || $limit || ($containerClass != 'DataList')) {
+				throw new \InvalidArgumentException('If calling <classname>::get() then you shouldn\'t pass any other arguments');
 			}
 			
 			$result = DataList::create(get_called_class());
@@ -2636,15 +2594,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		
 		// Todo: Determine if we can deprecate for 3.0.0 and use DI or something instead
 		// Todo: Make the $containerClass method redundant
-		if($containerClass != "DataList") user_error("The DataObject::get() \$containerClass argument has been deprecated", E_USER_NOTICE);
+		if($containerClass != 'DataList') {
+			Deprecation::notice('3.0', '$containerClass argument is deprecated.');
+		}
+
 		$result = DataList::create($callerClass)->where($filter)->sort($sort);
+
 		if($limit && strpos($limit, ',') !== false) {
 			$limitArguments = explode(',', $limit);
 			$result->limit($limitArguments[1],$limitArguments[0]);
 		} elseif($limit) {
 			$result->limit($limit);
 		}
+
 		if($join) $result = $result->join($join);
+
 		$result->setDataModel(DataModel::inst());
 		return $result;
 	}
@@ -2653,16 +2617,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @deprecated 3.0 Use DataList::create and DataList to do your querying
 	 */
 	public function Aggregate($class = null) {
-		Deprecation::notice('3.0', 'Use DataList::create and DataList to do your querying instead.');
+		Deprecation::notice('3.0', 'Call aggregate methods on a DataList directly instead. In templates ' .
+			'an example of the new syntax is &lt% cached List(Member).max(LastEdited) %&gt instead (check partial-caching.md documentation ' .
+			'for more details.)');
 
-	    if($class) {
+		if($class) {
 			$list = new DataList($class);
 			$list->setDataModel(DataModel::inst());
 		} else if(isset($this)) {
 			$list = new DataList(get_class($this));
 			$list->setDataModel($this->model);
 		}
-	    else throw new InvalidArgumentException("DataObject::aggregate() must be called as an instance method or passed a classname");
+		else throw new InvalidArgumentException("DataObject::aggregate() must be called as an instance method or passed a classname");
 		return $list;
 	}
 
@@ -2670,9 +2636,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @deprecated 3.0 Use DataList::create and DataList to do your querying
 	 */
 	public function RelationshipAggregate($relationship) {
-		Deprecation::notice('3.0', 'Use DataList::create and DataList to do your querying instead.');
+		Deprecation::notice('3.0', 'Call aggregate methods on a relationship directly instead.');
 
-	    return $this->$relationship();
+		return $this->$relationship();
 	}
 
 	/**

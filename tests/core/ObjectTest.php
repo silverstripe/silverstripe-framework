@@ -11,9 +11,7 @@ class ObjectTest extends SapphireTest {
 	
 	function setUp() {
 		parent::setUp();
-		
-		global $_SINGLETONS;
-		$_SINGLETONS = array();
+		Injector::inst()->unregisterAllObjects();
 	}
 	
 	function testHasmethodBehaviour() {

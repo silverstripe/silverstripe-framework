@@ -18,20 +18,6 @@ Sizzle is good for finding elements for a selector, but not so good for telling 
 	// Does browser support Element.children
 	var hasChildren = div.children && div.children[0].tagName == 'FORM';
 
-	var FUNC_IN  = /^\s*function\s*\([^)]*\)\s*\{/;
-	var FUNC_OUT = /}\s*$/;
-
-	var funcToString = function(f) {
-		return (''+f).replace(FUNC_IN,'').replace(FUNC_OUT,'');
-	};
-
-	// Can we use Function#toString ?
-	try {
-		var testFunc = function(){ return 'good'; };
-		if ((new Function('',funcToString(testFunc)))() != 'good') funcToString = false;
-	}
-	catch(e) { funcToString = false; console.log(e.message);/*pass*/ }
-
 	/**** INTRO ****/
 	
 	var GOOD = /GOOD/g;
@@ -137,7 +123,13 @@ Sizzle is good for finding elements for a selector, but not so good for telling 
 			this.wsattrs[attr] = true;
 			return join([this.uses_attr(attr), 'var _WS_'+varForAttr(attr)+' = " "+'+varForAttr(attr)+'+" ";']); 
 		},
-		
+
+		uses_jqueryFilters: function() {
+			if (this.jqueryFiltersAdded) return;
+			this.jqueryFiltersAdded = true;
+			return 'var _$filters = jQuery.find.selectors.filters;';
+		},
+
 		save: function(lbl) {
 			return 'var el'+lbl+' = el;';
 		},
@@ -249,12 +241,8 @@ Sizzle is good for finding elements for a selector, but not so good for telling 
 				js[js.length] = ( typeof check == 'function' ? check.apply(this, pscls[1]) : check );
 			}
 			else if (check = $.find.selectors.filters[pscls[0]]) {
-				if (funcToString) {
-					js[js.length] = funcToString(check).replace(/elem/g,'el').replace(/return([^;]+);/,'if (!($1)) BAD;');
-				}
-				else {
-					js[js.length] = 'if (!$.find.selectors.filters.'+pscls[0]+'(el)) BAD;';
-				}
+				js[js.length] = el.uses_jqueryFilters();
+				js[js.length] = 'if (!_$filters.'+pscls[0]+'(el)) BAD;';
 			}
 		});
 		

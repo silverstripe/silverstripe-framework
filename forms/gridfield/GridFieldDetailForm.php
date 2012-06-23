@@ -297,10 +297,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
                             $actions = $this->record->getCMSActions();
                     else
                             $actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
-                                    ->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'));
-                            // The delete action will redirect, hence pjax-content class.
+				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'));
                             $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
-                                    ->addExtraClass('ss-ui-action-destructive')->addExtraClass('pjax-content'));
+                                    ->addExtraClass('ss-ui-action-destructive'));
 		}else{ // adding new record
 			//Change the Save label to 'Create'
 			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Create', 'Create'))
@@ -334,6 +333,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			// TODO Allow customization, e.g. to display an edit form alongside a search form from the CMS controller
 			$form->setTemplate('LeftAndMain_EditForm');
 			$form->addExtraClass('cms-content cms-edit-form center ss-tabset');
+			$form->setAttribute('data-pjax-fragment', 'CurrentForm Content');
 			if($form->Fields()->hasTabset()) $form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
 			// TODO Link back to controller action (and edited root record) rather than index,
 			// which requires more URL knowledge than the current link to this field gives us.
@@ -473,6 +473,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		//when an item is deleted, redirect to the revelant admin section without the action parameter
 		$controller = Controller::curr();
 		$noActionURL = $controller->removeAction($data['url']);
+		$controller->getRequest()->addHeader('X-Pjax', 'Content'); // Force a content refresh
 
 		return $controller->redirect($noActionURL, 302); //redirect back to admin section
 	}

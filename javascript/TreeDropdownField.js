@@ -16,7 +16,7 @@
 
 		var _clickTestFn = function(e) {
 			// If the click target is not a child of the current field, close the panel automatically.
-			if(!$(e.target).parents('.TreeDropdownField').length) jQuery('.TreeDropdownField').closePanel();
+			if(!$(e.target).parents('.TreeDropdownField').length) $('.TreeDropdownField').closePanel();
 		};
 
 		/**
@@ -38,8 +38,7 @@
 			
 				var linkTitle = strings.openLink;
 				if(linkTitle) this.find("treedropdownfield-toggle-panel-link a").attr('title', linkTitle);
-				
-				if(this.data('title')) this.setTitle(this.data('title'));
+				if(this.data('title')) this.setTitle(decodeURIComponent(this.data('title')));
 				
 				this.getPanel().hide();
 				this._super();
@@ -111,8 +110,8 @@
 			setTitle: function(title) {
 				if(!title) title = strings.fieldTitle;
 					
-				this.find('.treedropdownfield-title').text(title);
-				this.data('title', title); // separate view from storage (important for search cancellation)				
+				this.find('.treedropdownfield-title').html(title);
+				this.data('title', encodeURIComponent(title)); // separate view from storage (important for search cancellation)				
 			},
 			getTitle: function() {
 				return this.find('.treedropdownfield-title').text();

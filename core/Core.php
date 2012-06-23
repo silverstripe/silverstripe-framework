@@ -207,6 +207,11 @@ mb_http_output('UTF-8');
 mb_internal_encoding('UTF-8');
 mb_regex_encoding('UTF-8');
 
+/**
+ * Enable better garbage collection
+ */
+gc_enable();
+
 ///////////////////////////////////////////////////////////////////////////////
 // INCLUDES
 
@@ -244,6 +249,12 @@ require_once 'core/manifest/ManifestFileFinder.php';
 require_once 'core/manifest/TemplateLoader.php';
 require_once 'core/manifest/TemplateManifest.php';
 require_once 'core/manifest/TokenisedRegularExpression.php';
+require_once 'control/injector/Injector.php';
+
+// Initialise the dependency injector as soon as possible, as it is 
+// subsequently used by some of the following code
+$default_options = array('locator' => 'SilverStripeServiceConfigurationLocator');
+Injector::inst($default_options); 
 
 ///////////////////////////////////////////////////////////////////////////////
 // MANIFEST
@@ -281,9 +292,6 @@ if(Director::isLive()) {
  */
 Debug::loadErrorHandlers();
 
-// initialise the dependency injector
-$default_options = array('locator' => 'SilverStripeServiceConfigurationLocator');
-Injector::inst($default_options)->addAutoProperty('injector', Injector::inst()); 
 
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS
@@ -319,14 +327,14 @@ function getTempFolder($base = null) {
 	$ssTmp = "$sysTmp/$cachefolder";
 
 	if(!@file_exists($ssTmp)) {
-		@$worked = mkdir($ssTmp);
+		$worked = @mkdir($ssTmp);
 	}
 
 	if(!$worked) {
 		$ssTmp = BASE_PATH . "/silverstripe-cache";
 		$worked = true;
 		if(!@file_exists($ssTmp)) {
-			@$worked = mkdir($ssTmp);
+			$worked = @mkdir($ssTmp);
 		}
 	}
 
@@ -356,21 +364,14 @@ function getClassFile($className) {
  * way to access instance methods which don't rely on instance
  * data (e.g. the custom SilverStripe static handling).
  *
- * @uses Object::strong_create()
- *
  * @param string $className
  * @return Object
  */
 function singleton($className) {
-	global $_SINGLETONS;
+	if($className == "Config") user_error("Don't pass Config to singleton()", E_USER_ERROR);
 	if(!isset($className)) user_error("singleton() Called without a class", E_USER_ERROR);
 	if(!is_string($className)) user_error("singleton() passed bad class_name: " . var_export($className,true), E_USER_ERROR);
-	if(!isset($_SINGLETONS[$className])) {
-		if(!class_exists($className)) user_error("Bad class to singleton() - $className", E_USER_ERROR);
-		$_SINGLETONS[$className] = Object::strong_create($className,null, true);
-		if(!$_SINGLETONS[$className]) user_error("singleton() Unknown class '$className'", E_USER_ERROR);
-	}
-	return $_SINGLETONS[$className];
+	return Injector::inst()->get($className);
 }
 
 function project() {

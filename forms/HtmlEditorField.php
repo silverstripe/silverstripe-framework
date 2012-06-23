@@ -159,8 +159,7 @@ class HtmlEditorField extends TextareaField {
 				if($width && $height && ($width != $image->getWidth() || $height != $image->getHeight())) {
 					//Make sure that the resized image actually returns an image:
 					$resized=$image->ResizedImage($width, $height);
-					if($resized)
-						$img->setAttribute('src', $resized->getRelativePath());
+					if($resized) $img->setAttribute('src', $resized->getRelativePath());
 				}
 			}
 			
@@ -394,7 +393,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$fromWeb = new CompositeField(
 			new LiteralField('headerURL', '<h4 class="field header-url">' . sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.ADDURL', 'Add URL')) . '</h4>'),
 			$remoteURL = new TextField('RemoteURL', ''),
-			new LiteralField('addURLImage', '<img class="field add-url" src="' . CMS_DIR . '/images/add.gif" width="16" height="16" />')
+			new LiteralField('addURLImage', '<button class="action ui-action-constructive ui-button field add-url" data-icon="addMedia"></button>')
 		);
 		$remoteURL->addExtraClass('remoteurl');
 
@@ -428,18 +427,17 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			new LiteralField('headerEdit', '<h4 class="field header-edit">' . sprintf($numericLabelTmpl, '2', _t('HtmlEditorField.ADJUSTDETAILSDIMENSIONS', 'Details &amp; dimensions')) . '</h4>'),
 			$editComposite = new CompositeField(
 				new LiteralField('contentEdit', '<div class="content-edit ss-uploadfield-files files"></div>')
-
-			)			
+			)
 		);
 
-		$allFields -> addExtraClass('ss-insert-media');
+		$allFields->addExtraClass('ss-insert-media');
 
 		$headings = new CompositeField(
 			new LiteralField(
 				'Heading',
 				sprintf('<h3 class="htmleditorfield-mediaform-heading insert">%s</h3>', _t('HtmlEditorField.INSERTMEDIA', 'Insert Media')).
 				sprintf('<h3 class="htmleditorfield-mediaform-heading update">%s</h3>', _t('HtmlEditorField.UpdateMEDIA', 'Update Media'))
-			)		
+			)
 		);
 
 		$headings->addExtraClass('cms-content-header');
@@ -486,6 +484,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	 * View of a single file, either on the filesystem or on the web.
 	 */
 	public function viewfile($request) {
+
 		// TODO Would be cleaner to consistently pass URL for both local and remote files,
 		// but GridField doesn't allow for this kind of metadata customization at the moment.
 		if($url = $request->getVar('FileURL')) {
@@ -498,7 +497,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			} else {
 				$url = Director::makeRelative($request->getVar('FileURL'));
 				$url = preg_replace('/_resampled\/[^-]+-/', '', $url);
-				$file = DataList::create('File')->filter('Filename', $url)->first();	
+				$file = File::get()->filter('Filename', $url)->first();	
 				if(!$file) $file = new File(array(
 					'Title' => basename($url),
 					'Filename' => $url
@@ -570,6 +569,14 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			"<img id='thumbnailImage' class='thumbnail-preview' src='{$thumbnailURL}?r=" . rand(1,100000)  . "' alt='{$file->Name}' />\n"
 		);
 
+		if($file->Width != null){
+			$dimensionsField = new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
+				$widthField = new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), $file->Width),
+				$heightField = new TextField('Height', _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), $file->Height)
+			);
+		}
+
+		
 		$fields = new FieldList(
 			$filePreview = CompositeField::create(
 				CompositeField::create(
@@ -579,13 +586,13 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					CompositeField::create(
 						new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':', $file->Type),
 						$urlField = new ReadonlyField('ClickableURL', _t('AssetTableField.URL','URL'),
-							sprintf('<a href="%s" target="_blank">%s</a>', $url, $url)
+							sprintf('<a href="%s" target="_blank" class="file">%s</a>', $url, $url)
 						)
 					)
 				)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')
 			)->setName("FilePreview")->addExtraClass('cms-file-info'),
 			new TextField('CaptionText', _t('HtmlEditorField.CAPTIONTEXT', 'Caption text')),
-			new DropdownField(
+			$alignment = new DropdownField(
 				'CSSClass',
 				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
 				array(
@@ -595,15 +602,18 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
 				)
 			),
-			$dimensionsField = new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
-				$widthField = new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), $file->Width),
-				$heightField = new TextField('Height', " x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), $file->Height)
-			)
+			$dimensionsField
 		);
+		$urlField->addExtraClass('text-wrap');
 		$urlField->dontEscape = true;
-		$dimensionsField->addExtraClass('dimensions');
-		$widthField->setMaxLength(5);
-		$heightField->setMaxLength(5);
+		if($dimensionsField){
+			$dimensionsField->addExtraClass('dimensions last');
+			$widthField->setMaxLength(5);
+			$heightField->setMaxLength(5);
+		}else{
+			$alignment->addExtraClass('last');
+		}
+
 
 		if($file->Type == 'photo') {
 			$filePreview->FieldList()->insertBefore(new TextField(
@@ -657,6 +667,13 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			"<img id='thumbnailImage' class='thumbnail-preview' src='{$thumbnailURL}?r=" . rand(1,100000)  . "' alt='{$file->Name}' />\n"
 		);
 
+		if($file->Width != null){
+			$dimensionsField = new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
+				$widthField = new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), $file->Width),
+				$heightField = new TextField('Height', " x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), $file->Height)
+			);
+		}
+
 		$fields = new FieldList(
 			$filePreview = CompositeField::create(
 				CompositeField::create(
@@ -666,26 +683,26 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					CompositeField::create(
 						new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':', $file->FileType),
 						new ReadonlyField("Size", _t('AssetTableField.SIZE','File size') . ':', $file->getSize()),
-						$urlField = new ReadonlyField('ClickableURL', _t('AssetTableField.URL','URL'),
-							sprintf('<a href="%s" target="_blank">%s</a>', $file->Link(), $file->RelativeLink())
+						$urlField = new ReadonlyField('ClickableURL', _t('AssetTableField.URL','URL'), 
+							sprintf('<a href="%s" target="_blank" class="file-url">%s</a>', $file->Link(), $file->RelativeLink())
 						),
 						new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded') . ':', $file->Created),
 						new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed') . ':', $file->LastEdited)
 					)
 				)->setName("FilePreviewData")->addExtraClass('cms-file-info-data')
-			)->setName("FilePreview")->addExtraClass('cms-file-info'),
-			new TextField(
+			)->setName("FilePreview")->addExtraClass('cms-file-info'),			
+			TextField::create(
 				'AltText', 
-				_t('HtmlEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image cannot be displayed'), 
+				_t('HtmlEditorField.IMAGEALT', 'Alternative text (alt)'),  
 				$file->Title, 
 				80
-			),
-			new TextField(
+			)->setDescription(_t('HtmlEditorField.IMAGEALTTEXTDESC', 'Shown to screen readers or if image can not be displayed')),
+			TextField::create(
 				'Title', 
-				_t('HtmlEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')
-			),
+				_t('HtmlEditorField.IMAGETITLETEXT', 'Title text (tooltip)')
+			)->setDescription(_t('HtmlEditorField.IMAGETITLETEXTDESC', 'For additional information about the image')),
 			new TextField('CaptionText', _t('HtmlEditorField.CAPTIONTEXT', 'Caption text')),
-			new DropdownField(
+			$alignment = new DropdownField(
 				'CSSClass',
 				_t('HtmlEditorField.CSSCLASS', 'Alignment / style'),
 				array(
@@ -695,15 +712,17 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					'center' => _t('HtmlEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
 				)
 			),
-			$dimensionsField = new FieldGroup(_t('HtmlEditorField.IMAGEDIMENSIONS', 'Dimensions'),
-				$widthField = new TextField('Width', _t('HtmlEditorField.IMAGEWIDTHPX', 'Width'), $file->Width),
-				$heightField = new TextField('Height', " x " . _t('HtmlEditorField.IMAGEHEIGHTPX', 'Height'), $file->Height)
-			)
+			$dimensionsField			
 		);
 		$urlField->dontEscape = true;
-		$dimensionsField->addExtraClass('dimensions');
-		$widthField->setMaxLength(5);
-		$heightField->setMaxLength(5);
+		if($dimensionsField){
+			$dimensionsField->addExtraClass('dimensions last');			
+			$widthField->setMaxLength(5);
+			$heightField->setMaxLength(5);
+		}else{
+			$alignment->addExtraClass('last');
+		}
+		
 
 		$this->extend('updateFieldsForImage', $fields, $url, $file);
 
@@ -720,11 +739,13 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$wheres = array();
 		foreach($exts as $ext) $wheres[] = '"Filename" LIKE \'%.' . $ext . '\'';
 
-		$files = DataList::create('File')->where(implode(' OR ', $wheres));
+		$files = File::get()->where(implode(' OR ', $wheres));
 		
 		// Limit by folder (if required)
-		if($parentID) $files->filter('ParentID', $parentID);
-		
+		if($parentID) {
+			$files = $files->filter('ParentID', $parentID);
+		}
+
 		return $files;
 	}
 

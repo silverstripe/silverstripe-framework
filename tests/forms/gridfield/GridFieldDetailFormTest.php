@@ -11,7 +11,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 	function testAddForm() {
 		$this->logInWithPermission('ADMIN');
-		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
+		$group = GridFieldDetailFormTest_PeopleGroup::get()
 			->filter('Name', 'My Group')
 			->sort('Name')
 			->First();
@@ -40,7 +40,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		);
 		$this->assertFalse($response->isError());
 
-		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
+		$group = GridFieldDetailFormTest_PeopleGroup::get()
 			->filter('Name', 'My Group')
 			->sort('Name')
 			->First();
@@ -69,7 +69,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 	function testEditForm() {
 		$this->logInWithPermission('ADMIN');
-		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
+		$group = GridFieldDetailFormTest_PeopleGroup::get()
 			->filter('Name', 'My Group')
 			->sort('Name')
 			->First();
@@ -99,7 +99,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		);
 		$this->assertFalse($response->isError());
 
-		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
+		$group = GridFieldDetailFormTest_PeopleGroup::get()
 			->filter('Name', 'My Group')
 			->sort('Name')
 			->First();
@@ -249,7 +249,7 @@ class GridFieldDetailFormTest_Controller extends Controller implements TestOnly 
 	protected $template = 'BlankPage';
 
 	function Form() {
-		$group = DataList::create('GridFieldDetailFormTest_PeopleGroup')
+		$group = GridFieldDetailFormTest_PeopleGroup::get()
 			->filter('Name', 'My Group')
 			->sort('Name')
 			->First();
@@ -269,7 +269,7 @@ class GridFieldDetailFormTest_GroupController extends Controller implements Test
 	protected $template = 'BlankPage';
 
 	function Form() {
-		$field = new GridField('testfield', 'testfield', DataList::create('GridFieldDetailFormTest_PeopleGroup')->sort('Name'));
+		$field = new GridField('testfield', 'testfield', GridFieldDetailFormTest_PeopleGroup::get()->sort('Name'));
 		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
 		$field->getConfig()->addComponent(new GridFieldToolbarHeader());
 		$field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));

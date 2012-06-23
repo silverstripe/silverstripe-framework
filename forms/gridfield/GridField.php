@@ -56,6 +56,11 @@ class GridField extends FormField {
 	 * @var array
 	 */
 	protected $columnDispatch = null;
+	
+	/**
+	 * Map of callbacks for custom data fields
+	 */
+	protected $customDataFields = array();
 
 	protected $name = '';
 
@@ -409,6 +414,36 @@ class GridField extends FormField {
 			return $content;
 		} else {
 			throw new InvalidArgumentException("Bad column '$column'");
+		}
+	}
+	
+	/**
+	 * Add additional calculated data fields to be used on this GridField
+	 * @param array $fields a map of fieldname to callback.  The callback will bed passed the record as an argument.
+	 */
+	public function addDataFields($fields) {
+		if($this->customDataFields) $this->customDataFields = array_merge($this->customDataFields, $fields);
+		else $this->customDataFields = $fields;		
+	}
+	
+	/**
+	 * Get the value of a named field  on the given record.
+	 * Use of this method ensures that any special rules around the data for this gridfield are followed.
+	 */
+	public function getDataFieldValue($record, $fieldName) {
+		// Custom callbacks
+		if(isset($this->customDataFields[$fieldName])) {
+			$callback = $this->customDataFields[$fieldName];
+			return $callback($record);
+		}
+		
+		// Default implementation
+		if($record->hasMethod('relField')) {
+			return $record->relField($fieldName);
+		} elseif($record->hasMethod($fieldName)) {
+			return $record->$fieldName();
+		} else {
+			return $record->$fieldName;
 		}
 	}
 

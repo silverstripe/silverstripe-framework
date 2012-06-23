@@ -295,13 +295,20 @@ class Session {
 			// We still want to do this even if we have strict path checking for legacy code
 			$var = &$this->data;
 			$diffVar = &$this->changedData;
-			
+
+			// Iterate twice over the names - once to see if the value needs to be changed,
+			// and secondly to get the changed data value. This is done to solve a problem
+			// where iterating over the diff var would create empty arrays, and the value
+			// would then not be set, inadvertently clearing session values.
 			foreach($names as $n) {
 				$var = &$var[$n];
-				$diffVar = &$diffVar[$n];
 			}
 
 			if($var !== $val) {
+				foreach($names as $n) {
+					$diffVar = &$diffVar[$n];
+				}
+
 				$var = $val;
 				$diffVar = $val;
 			}

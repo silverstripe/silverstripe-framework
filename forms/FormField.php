@@ -40,7 +40,8 @@ class FormField extends RequestHandler {
 	public $dontEscape;
 	
 	/**
-	 * @var $rightTitle string Used in SmallFieldHolder() to force a right-aligned label.
+	 * @var $rightTitle string Used in SmallFieldHolder to force a right-aligned label, or in FieldHolder
+	 * to create contextual label.
 	 */
 	protected $rightTitle;
 	
@@ -224,10 +225,21 @@ class FormField extends RequestHandler {
 		return $this;
 	}
 
+	/**
+	 * Gets the contextual label than can be used for additional field description.
+	 * Can be shown to the right or under the field in question.
+	 *
+	 * @return string Contextual label text.
+	 */
 	function RightTitle() {
 		return $this->rightTitle;
 	}
 
+	/**
+	 * Sets the contextual label.
+	 *
+	 * @param $val string Text to set on the label.
+	 */
 	function setRightTitle($val) { 
 		$this->rightTitle = $val;
 		return $this;
@@ -345,7 +357,7 @@ class FormField extends RequestHandler {
 		$attrs = $this->getAttributes();
 		return @$attrs[$name];
 	}
-
+	
 	/**
 	 * @return array
 	 */

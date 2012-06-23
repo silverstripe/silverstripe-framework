@@ -109,10 +109,15 @@
 		font-size: $font-base-size;
 		font-family: $font-family;
 	}
-	
-	.ss-ui-button,
-	.ui-widget-content .ss-ui-button,
-	.ui-widget-header .ss-ui-button {
 
+	.ui-accordion {
+		.ui-accordion-header {
+			border-color: $color-button-generic-border;
+			margin-bottom: 0;
+		}
+		.ui-accordion-content {
+			border: 1px solid $color-button-generic-border;
+			border-top: none;
+		}
 	}
 }

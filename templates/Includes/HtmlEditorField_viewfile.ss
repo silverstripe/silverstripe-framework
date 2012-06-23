@@ -1,15 +1,25 @@
-
-
 <div class="ss-uploadfield-item $appCategory ss-htmleditorfield-file template-upload" data-id="$File.ID" data-url="$URL">
+	
+	
 	<div class="ss-uploadfield-item-preview">
-		<span>$Preview.SetRatioSize(30, 40)</span>
+		<% if $Width %>
+			<span>$Preview.SetRatioSize(30, 40)</span>
+		<% else %>
+		<span class="no-preview"></span>
+		<% end_if %>
 	</div>
+	
 	<div class="ss-uploadfield-item-info">
 		<label class="ss-uploadfield-item-name">
 			<span class="name" title="$Name">
 				$Name
 			</span>
-			<div class="ss-uploadfield-item-status ui-state-success-text" title="<% _t('UploadField.Dimensions', 'Dimensions') %>">Dimensions: $Width x $Height</div>
+			<% if $Width %>
+			<div class="ss-uploadfield-item-status ui-state-success-text" title="<% _t('UploadField.Dimensions', 'Dimensions') %>">
+				{$Width} x {$Height} (px)
+			</div>
+			<% end_if %>
+
 			<div class="clear"><!-- --></div> 
 		</label>
 		<div class="ss-uploadfield-item-actions">	
@@ -36,7 +46,3 @@
 		</fieldset>
 	</div>
 </div>
-
-
-
-

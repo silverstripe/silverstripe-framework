@@ -6,7 +6,7 @@
 	// Can't bind this through jQuery
 	window.onbeforeunload = function(e) {
 		var form = $('.cms-edit-form');
-		form.trigger('beforesave');
+		form.trigger('beforesubmitform');
 		if(form.is('.changed')) return ss.i18n._t('LeftAndMain.CONFIRMUNSAVEDSHORT');
 	};
 
@@ -29,7 +29,6 @@
 		 * Events:
 		 *  ajaxsubmit - Form is about to be submitted through ajax
 		 *  validate - Contains validation result
-		 *  removeform - A form is about to be removed from the DOM
 		 *  load - Form is about to be loaded through ajax
 		 */
 		$('.cms-edit-form').entwine(/** @lends ss.Form_EditForm */{	
@@ -51,7 +50,7 @@
 			/**
 			 * Constructor: onmatch
 			 */
-			onmatch: function() {
+			onadd: function() {
 				var self = this;
 
 				// Turn off autocomplete to fix the access tab randomly switching radio buttons in Firefox
@@ -68,12 +67,6 @@
 				// Catch navigation events before they reach handleStateChange(),
 				// in order to avoid changing the menu state if the action is cancelled by the user
 				// $('.cms-menu')
-				
-				// focus input on first form element. Exclude elements which
-				// specifically opt-out of this behaviour via "data-skip-autofocus".
-				// This opt-out is useful if the first visible field is shown far down a scrollable area,
-				// for example for the pagination input field after a long GridField listing.
-				this.find(':input:visible:not(:submit)[data-skip-autofocus!="true"]:first').focus();
 				
 				// Optionally get the form attributes from embedded fields, see Form->formHtmlContent()
 				for(var overrideAttr in {'action':true,'method':true,'enctype':true,'name':true}) {
@@ -107,16 +100,28 @@
 			
 				this._super();
 			},
+			onremove: function() {
+				this.changetracker('destroy');
+				this._super();
+			},
+			onmatch: function() {
+				this._super();
+
+				// focus input on first form element. Exclude elements which
+				// specifically opt-out of this behaviour via "data-skip-autofocus".
+				// This opt-out is useful if the first visible field is shown far down a scrollable area,
+				// for example for the pagination input field after a long GridField listing.
+				this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(':visible:first').focus();
+			},
 			onunmatch: function() {
 				this._super();
 			},
-						
 			redraw: function() {
+				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
+				
 				// Force initialization of tabsets to avoid layout glitches
 				this.add(this.find('.cms-tabset')).redrawTabs();
-
-				var approxWidth = $('.cms-container').width() - $('.cms-menu').width();
-				this.find('.cms-content-actions').width(approxWidth).height('auto');
+				this.find('.cms-content-header').redraw();
 				
 				this.layout();
 			},
@@ -143,7 +148,7 @@
 			 *  or the user wants to discard them.
 			 */
 			confirmUnsavedChanges: function() {
-				this.trigger('beforesave');
+				this.trigger('beforesubmitform');
 				return (this.is('.changed')) ? confirm(ss.i18n._t('LeftAndMain.CONFIRMUNSAVED')) : true;
 			},
 
@@ -158,7 +163,7 @@
 				// which means the browser auto-selects the first available form button.
 				// This might be an unrelated button of the form field,
 				// or a destructive action (if "save" is not available, or not on first position).
-				if(button) this.closest('.cms-content').submitForm(this, button);
+				if(button) this.closest('.cms-container').submitForm(this, button);
 				
 				return false;
 			},
@@ -206,8 +211,12 @@
 		 */
 		$('.cms-edit-form .ss-tabset').entwine({
 			onmatch: function() {
-				var tabs = this.find("ul:first").children('li');
-				if(tabs.length == 1) this.find('ul:first').hide();
+				var tabs = this.find("> ul:first");
+
+				if(tabs.children("li").length == 1) {
+					tabs.hide().parent().addClass("ss-tabset-tabshidden");
+				}
+
 				this._super();
 			},
 			onunmatch: function() {

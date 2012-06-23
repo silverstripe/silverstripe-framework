@@ -87,23 +87,22 @@ abstract class Object {
 	 * or calling on Object and passing the class name as the first parameter. The following
 	 * are equivalent:
 	 *    $list = DataList::create('SiteTree');
-	 *    $list = DataList::create('SiteTree');
+	 *	  $list = SiteTree::get();
 	 *
 	 * @param string $class the class name
 	 * @param mixed $arguments,... arguments to pass to the constructor
 	 * @return Object
 	 */
 	public static function create() {
-		$args  = func_get_args();
+		$args = func_get_args();
 
 		// Class to create should be the calling class if not Object,
 		// otherwise the first parameter
 		$class = get_called_class();
-		if($class == 'Object')
-			$class = array_shift($args);
-		
+		if($class == 'Object') $class = array_shift($args);
+
 		$class = self::getCustomClass($class);
-		
+
 		return Injector::inst()->createWithArgs($class, $args);
 	}
 	
@@ -235,8 +234,7 @@ abstract class Object {
 			$class = self::$strong_classes[$class];
 		}
 		
-		$reflector = new ReflectionClass($class);
-		return $reflector->newInstanceArgs($args);
+		return Injector::inst()->createWithArgs($class, $args);
 	}
 	
 	/**
@@ -468,6 +466,7 @@ abstract class Object {
 		}
 
 		Config::inst()->update($class, 'extensions', array($extension));
+		Injector::inst()->unregisterAllObjects();
 
 		// load statics now for DataObject classes
 		if(is_subclass_of($class, 'DataObject')) {
@@ -498,8 +497,7 @@ abstract class Object {
 		Config::inst()->remove($class, 'extensions', Config::anything(), $extension);
 
 		// unset singletons to avoid side-effects
-		global $_SINGLETONS;
-		$_SINGLETONS = array();
+		Injector::inst()->unregisterAllObjects();
 
 		// unset some caches
 		$subclasses = ClassInfo::subclassesFor($class);
@@ -543,7 +541,6 @@ abstract class Object {
 		
 		if($extensionClasses = ClassInfo::ancestry($this->class)) foreach($extensionClasses as $class) {
 			if(in_array($class, $notExtendable)) continue;
-
 			if($extensions = Config::inst()->get($class, 'extensions', Config::UNINHERITED)) {
 				foreach($extensions as $extension) {
 					// Get the extension class for this extension

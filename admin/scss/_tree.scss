@@ -464,6 +464,13 @@
 		display:  inline-block;
 		margin-right: 5px;
 	}
+
+	li.deletedonlive {
+		.text {
+			text-decoration: line-through;
+		}
+	}
+
 	span.badge {
 		clear: both;
 		text-transform: uppercase;
@@ -580,14 +587,8 @@
 }
 
 a .jstree-pageicon {
-	display: block;
-	float:  left;
-	width:  16px;
-	height:  16px;
+	float: left;
 	margin-right: 4px;
-	background-color: transparent;
-	background-image: url(../images/sitetree_ss_pageclass_icons_default.png);
-	background-repeat: no-repeat;
 }
 
 li.class-HomePage > a .jstree-pageicon {
@@ -627,5 +628,14 @@ li.class-ErrorPage > a .jstree-pageicon {
 				display: none;
 			}
 		}
+	}
+
+	// Show the loading indicator on the page icon rather than the default
+	// jstree icon (which is only used for its dragging handles)
+	a.jstree-loading .jstree-icon {
+		background-image: none !important;
+	}
+	a.jstree-loading .jstree-pageicon {
+		background: url(../images/throbber.gif) top left no-repeat;
 	}
 }

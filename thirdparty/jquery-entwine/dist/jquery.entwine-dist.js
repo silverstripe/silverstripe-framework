@@ -353,20 +353,6 @@ Sizzle is good for finding elements for a selector, but not so good for telling 
 	// Does browser support Element.children
 	var hasChildren = div.children && div.children[0].tagName == 'FORM';
 
-	var FUNC_IN  = /^\s*function\s*\([^)]*\)\s*\{/;
-	var FUNC_OUT = /}\s*$/;
-
-	var funcToString = function(f) {
-		return (''+f).replace(FUNC_IN,'').replace(FUNC_OUT,'');
-	};
-
-	// Can we use Function#toString ?
-	try {
-		var testFunc = function(){ return 'good'; };
-		if ((new Function('',funcToString(testFunc)))() != 'good') funcToString = false;
-	}
-	catch(e) { funcToString = false; console.log(e.message);/*pass*/ }
-
 	/**** INTRO ****/
 	
 	var GOOD = /GOOD/g;
@@ -472,7 +458,13 @@ Sizzle is good for finding elements for a selector, but not so good for telling 
 			this.wsattrs[attr] = true;
 			return join([this.uses_attr(attr), 'var _WS_'+varForAttr(attr)+' = " "+'+varForAttr(attr)+'+" ";']); 
 		},
-		
+
+		uses_jqueryFilters: function() {
+			if (this.jqueryFiltersAdded) return;
+			this.jqueryFiltersAdded = true;
+			return 'var _$filters = jQuery.find.selectors.filters;';
+		},
+
 		save: function(lbl) {
 			return 'var el'+lbl+' = el;';
 		},
@@ -584,12 +576,8 @@ Sizzle is good for finding elements for a selector, but not so good for telling 
 				js[js.length] = ( typeof check == 'function' ? check.apply(this, pscls[1]) : check );
 			}
 			else if (check = $.find.selectors.filters[pscls[0]]) {
-				if (funcToString) {
-					js[js.length] = funcToString(check).replace(/elem/g,'el').replace(/return([^;]+);/,'if (!($1)) BAD;');
-				}
-				else {
-					js[js.length] = 'if (!$.find.selectors.filters.'+pscls[0]+'(el)) BAD;';
-				}
+				js[js.length] = el.uses_jqueryFilters();
+				js[js.length] = 'if (!_$filters.'+pscls[0]+'(el)) BAD;';
 			}
 		});
 		
@@ -845,8 +833,10 @@ catch (e) {
 			for (var k in $.fn) { if ($.fn[k].isentwinemethod) delete $.fn[k]; }
 			// Remove bound events - TODO: Make this pluggable, so this code can be moved to jquery.entwine.events.js
 			$(document).unbind('.entwine');
+			$(window).unbind('.entwine');
 			// Remove namespaces, and start over again
-			namespaces = $.entwine.namespaces = {};
+			for (var k in namespaces) delete namespaces[k];
+			for (var k in $.entwine.capture_bindings) delete $.entwine.capture_bindings[k];
 		},
 		
 		WARN_LEVEL_NONE: 0,
@@ -997,7 +987,7 @@ catch (e) {
 				
 				for (var i = 0; i < handlers.length; i++) {
 					var handler = handlers[i], builder;
-					
+
 					// Inject jQuery object method overrides
 					if (builder = handler.namespaceMethodOverrides) {
 						var overrides = builder(this);
@@ -1182,7 +1172,144 @@ catch (e) {
 ;
 
 
-/* src/jquery.entwine.dommaybechanged.js */
+/* src/domevents/jquery.entwine.domevents.addrem.js */
+
+(function($){
+
+	// Gets all the child elements of a particular elements, stores it in an array
+	function getElements(store, original) {
+		var node, i = store.length, next = original.firstChild;
+
+		while ((node = next)) {
+			if (node.nodeType === 1) store[i++] = node;
+			next = node.firstChild || node.nextSibling;
+			while (!next && (node = node.parentNode) && node !== original) next = node.nextSibling;
+		}
+	}
+
+	// This might be faster? Or slower? @todo: benchmark.
+	function getElementsAlt(store, node) {
+		if (node.getElementsByTagName) {
+			var els = node.getElementsByTagName('*'), len = els.length, i = 0, j = store.length;
+			for(; i < len; i++, j++) {
+				store[j] = els[i];
+			}
+		}
+		else if (node.childNodes) {
+			var els = node.childNodes, len = els.length, i = 0;
+			for(; i < len; i++) {
+				getElements(store, els[i]);
+			}
+		}
+	}
+
+	var dontTrigger = false;
+
+	// Monkey patch $.fn.domManip to catch all regular jQuery add element calls
+	var _domManip = $.prototype.domManip;
+	$.prototype.domManip = function(args, table, callback) {
+		if (!callback.patched) {
+			var original = callback;
+			arguments[2] = function(elem){
+				var added = [];
+
+				if (!dontTrigger) {
+					if (elem.nodeType == 1) added[added.length] = elem;
+					getElements(added, elem);
+				}
+
+				var rv = original.apply(this, arguments);
+
+				if (!dontTrigger && added.length) {
+					var event = $.Event('EntwineElementsAdded');
+					event.targets = added;
+					$(document).triggerHandler(event);
+				}
+
+				return rv;
+			}
+			arguments[2].patched = true;
+		}
+
+		return _domManip.apply(this, arguments);
+	}
+
+	// Monkey patch $.fn.html to catch when jQuery sets innerHTML directly
+	var _html = $.prototype.html;
+	$.prototype.html = function(value) {
+		if (value === undefined) return _html.apply(this, arguments);
+
+		dontTrigger = true;
+		var res = _html.apply(this, arguments);
+		dontTrigger = false;
+
+		var added = [];
+
+		var i = 0, length = this.length;
+		for (; i < length; i++ ) getElements(added, this[i]);
+
+		var event = $.Event('EntwineElementsAdded');
+		event.targets = added;
+		$(document).triggerHandler(event);
+
+		return res;
+	}
+
+	// If this is true, we've changed something to call cleanData so that we can catch the elements, but we don't
+	// want to call the underlying original $.cleanData
+	var supressActualClean = false;
+
+	// Monkey patch $.cleanData to catch element removal
+	var _cleanData = $.cleanData;
+	$.cleanData = function( elems ) {
+		// By default we can assume all elements passed are legitimately being removeed
+		var removed = elems;
+
+		// Except if we're supressing actual clean - we might be being called by jQuery "being careful" about detaching nodes
+		// before attaching them. So we need to check to make sure these nodes currently are in a document
+		if (supressActualClean) {
+			var i = 0, len = elems.length, removed = [], ri = 0;
+			for(; i < len; i++) {
+				var node = elems[i], current = node;
+				while (current = current.parentNode) {
+					if (current.nodeType == 9) { removed[ri++] = node; break; }
+				}
+			}
+		}
+
+		if (removed.length) {
+			var event = $.Event('EntwineElementsRemoved');
+			event.targets = removed;
+			$(document).triggerHandler(event);
+		}
+
+		if (!supressActualClean) _cleanData.apply(this, arguments);
+	}
+
+	// Monkey patch $.fn.remove to catch when we're just detaching (keepdata == 1) -
+	// this doesn't call cleanData but still needs to trigger event
+	var _remove = $.prototype.remove;
+	$.prototype.remove = function(selector, keepdata) {
+		supressActualClean = keepdata;
+		var rv = _remove.call(this, selector);
+		supressActualClean = false;
+		return rv;
+	}
+
+	// And on DOM ready, trigger adding once
+	$(function(){
+		var added = []; getElements(added, document);
+
+		var event = $.Event('EntwineElementsAdded');
+		event.targets = added;
+		$(document).triggerHandler(event);
+	});
+
+
+})(jQuery);;
+
+
+/* src/domevents/jquery.entwine.domevents.maybechanged.js */
 
 (function($){
 
@@ -1224,15 +1351,11 @@ catch (e) {
 			// Cancel any pending timeout (if we're directly called in the mean time)
 			if (this.check_id) clearTimeout(this.check_id);
 
-			// Create a new event object
-			var event = $.Event("DOMMaybeChanged");
-			event.changes = this;
-
 			// Reset the global changes object to be a new instance (do before trigger, in case trigger fires changes itself)
 			changes = new ChangeDetails();
 
 			// Fire event
-			$(document).triggerHandler(event);
+			$(document).triggerHandler("EntwineSubtreeMaybeChanged", [this]);
 		},
 
 		changed: function() {
@@ -1282,14 +1405,22 @@ catch (e) {
 
 	var changes = new ChangeDetails();
 
+	// Element add events trigger maybechanged events
 
-	monkey('append', 'prepend', 'empty', 'html', function(){
-		changes.addSubtree(this);
+	$(document).bind('EntwineElementsAdded', function(e){ changes.addSubtree(e.targets); });
+
+	// Element remove events trigger maybechanged events, but we have to wait until after the nodes are actually removed
+	// (EntwineElementsRemoved fires _just before_ the elements are removed so the data still exists), especially in syncronous mode
+
+	var removed = null;
+	$(document).bind('EntwineElementsRemoved', function(e){ removed = e.targets; });
+
+	monkey('remove', 'html', 'empty', function(){
+		var subtree = removed; removed = null;
+		if (subtree) changes.addSubtree(subtree);
 	});
 
-	monkey('after', 'before', 'remove', 'detach', function(){
-		changes.addSubtree(this.parent());
-	})
+	// We also need to know when an attribute, class, etc changes. Patch the relevant jQuery methods here
 
 	monkey('removeAttr', function(attr){
 		changes.addAttr(attr, this);
@@ -1304,20 +1435,7 @@ catch (e) {
 		else if (typeof a != 'string') { for (var k in a) changes.addAttr(k, this); }
 	});
 
-	/*
-	These manipulation functions call one or more of the above to do the actual manipulation:
-	appendTo -> append
-	prependTo -> prepend
-	insertBefore -> before
-	insertAfter -> after
-	replaceWith -> before || append
-	replaceAll -> replaceWith
-	text -> empty, appendWith
-	wrapAll -> insertBefore, append
-	wrapInner -> wrapAll || append
-	wrap -> wrapAll
-	unwrap -> replaceWith
-	*/
+	// Add some usefull accessors to $.entwine
 
 	$.extend($.entwine, {
 		/**
@@ -1337,13 +1455,8 @@ catch (e) {
 		 * Called automatically on document.ready
 		 */
 		triggerMatching: function() {
-			changes.addAll(); //.triggerEvent();
+			changes.addAll();
 		}
-	});
-
-	// And on DOM ready, trigger matching once
-	$(function(){
-		$.entwine.triggerMatching();
 	});
 
 })(jQuery);;
@@ -1586,22 +1699,136 @@ catch (e) {
 	// Find all forms and bind onsubmit to trigger on the document too. 
 	// This is the only event that can't be grabbed via delegation
 	
-	var form_binding_cache = $([]); // A cache for already-handled form elements
-	var delegate_submit = function(e, data){ 
+	var delegate_submit = function(e, data){
 		var delegationEvent = $.Event('delegatedSubmit'); delegationEvent.delegatedEvent = e;
 		return $(document).trigger(delegationEvent, data); 
 	};
 
-	$(document).bind('DOMMaybeChanged', function(){
-		var forms = $('form');
-		// Only bind to forms we haven't processed yet
-		forms.not(form_binding_cache).bind('submit', delegate_submit);
-		// Then remember the current set of forms
-		form_binding_cache = forms;
+	$(document).bind('EntwineElementsAdded', function(e){
+		var forms = $(e.targets).filter('form');
+		if (!forms.length) return;
+
+		forms.bind('submit.entwine_delegate_submit', delegate_submit);
 	});
 
 })(jQuery);
 	;
+
+
+/* src/jquery.entwine.eventcapture.js */
+
+(function($) {
+
+	$.entwine.Namespace.addMethods({
+		bind_capture: function(selector, event, name, capture) {
+			var store  = this.captures || (this.captures = {});
+			var rulelists = store[event] || (store[event] = {});
+			var rulelist = rulelists[name] || (rulelists[name] = $.entwine.RuleList());
+
+			rule = rulelist.addRule(selector, event);
+			rule.handler = name;
+
+			this.bind_proxy(selector, name, capture);
+		}
+	});
+
+	var bindings = $.entwine.capture_bindings = {};
+
+	var event_proxy = function(event) {
+		return function(e) {
+			var namespace, capturelists, forevent, capturelist, rule, handler, sel;
+
+			for (var k in $.entwine.namespaces) {
+				namespace = $.entwine.namespaces[k];
+				capturelists = namespace.captures;
+
+				if (capturelists && (forevent = capturelists[event])) {
+					for (var k in forevent) {
+						var capturelist = forevent[k];
+						var triggered = namespace.$([]);
+
+						// Stepping through each selector from most to least specific
+						var j = capturelist.length;
+						while (j--) {
+							rule = capturelist[j];
+							handler = rule.handler;
+							sel = rule.selector.selector;
+
+							var matching = namespace.$(sel).not(triggered);
+							matching[handler].apply(matching, arguments);
+
+							triggered = triggered.add(matching);
+						}
+					}
+				}
+			}
+		}
+	};
+
+	var selector_proxy = function(selector, handler, includechildren) {
+		var matcher = $.selector(selector);
+		return function(e){
+			if (matcher.matches(e.target)) return handler.apply(this, arguments);
+		}
+	};
+
+	var window_proxy = function(selector, handler, includechildren) {
+		return function(e){
+			if (e.target === window) return handler.apply(this, arguments);
+		}
+	};
+
+	var property_proxy = function(property, handler, includechildren) {
+		var matcher;
+
+		return function(e){
+			var match = this['get'+property]();
+
+			if (typeof(match) == 'string') {
+				var matcher = (matcher && match == matcher.selector) ? matcher : $.selector(match);
+				if (matcher.matches(e.target)) return handler.apply(this, arguments);
+			}
+			else {
+				if ($.inArray(e.target, match) !== -1) return handler.apply(this, arguments);
+			}
+		}
+	};
+
+	$.entwine.Namespace.addHandler({
+		order: 10,
+
+		bind: function(selector, k, v) {
+			var match;
+			if ($.isPlainObject(v) && (match = k.match(/^from\s*(.*)/))) {
+				var from = match[1];
+				var proxyGen;
+
+				if (from.match(/[^\w]/)) proxyGen = selector_proxy;
+				else if (from == 'Window' || from == 'window') proxyGen = window_proxy;
+				else proxyGen = property_proxy;
+
+				for (var onevent in v) {
+					var handler = v[onevent];
+					match = onevent.match(/^on(.*)/);
+					var event = match[1];
+
+					this.bind_capture(selector, event, k + '_' + event, proxyGen(from, handler));
+
+					if (!bindings[event]) {
+						var namespaced = event.replace(/(\s+|$)/g, '.entwine$1');
+						bindings[event] = event_proxy(event);
+
+						$(proxyGen == window_proxy ? window : document).bind(namespaced, bindings[event]);
+					}
+				}
+
+				return true;
+			}
+		}
+	});
+
+})(jQuery);
+;
 
 
 /* src/jquery.entwine.ctors.js */
@@ -1672,10 +1899,7 @@ catch (e) {
 	 *   $('#foo').addClass('tabs'); $('#foo').tabFunctionBar();
 	 * won't work.
 	 */
-	$(document).bind('DOMMaybeChanged', function(e){
-		// Get the change delta. Can help stop us from doing heavy lifting if none of the changes could actually trigger an onmatch or onunmatch function
-		var changes = e.changes;
-
+	$(document).bind('EntwineSubtreeMaybeChanged', function(e, changes){
 		// var start = (new Date).getTime();
 
 		// For every namespace
@@ -1736,7 +1960,7 @@ catch (e) {
 					}
 					else {
 						// We don't deal with attributes yet, so any attribute change means we need to do a full recalc
-						for (var k in e.changes.attrs) {	full = true; break; }
+						for (var k in changes.attrs) {	full = true; break; }
 
 						/*
 						 If a class changes, but it isn't listed in our selector, we don't care - the change couldn't affect whether or not any element matches
@@ -1747,7 +1971,7 @@ catch (e) {
 							- NOTE: It might be on _both_
 						 */
 
-						var method = rule.selector.affectedBy(e.changes);
+						var method = rule.selector.affectedBy(changes);
 
 						if (method.classes.context) {
 							full = true;
@@ -1755,7 +1979,7 @@ catch (e) {
 						else {
 							for (var k in method.classes.direct) {
 								calcmatched(j);
-								var recheck = e.changes.classes[k].not(matched);
+								var recheck = changes.classes[k].not(matched);
 
 								if (res === null) {
 									res = rule.cache ? rule.cache.not(taken).add(released.filter(sel)) : $([]);
@@ -1849,6 +2073,74 @@ catch (e) {
 		// console.log((new Date).getTime() - start);
 	});
 	
+
+})(jQuery);
+;
+
+
+/* src/jquery.entwine.addrem.js */
+
+(function($) {
+
+	$.entwine.Namespace.addMethods({
+		build_addrem_proxy: function(name) {
+			var one = this.one(name, 'func');
+
+			return function() {
+				if (this.length === 0){
+					return;
+				}
+				else if (this.length) {
+					var rv, i = this.length;
+					while (i--) rv = one(this[i], arguments);
+					return rv;
+				}
+				else {
+					return one(this, arguments);
+				}
+			};
+		},
+
+		bind_addrem_proxy: function(selector, name, func) {
+			var rulelist = this.store[name] || (this.store[name] = $.entwine.RuleList());
+
+			var rule = rulelist.addRule(selector, name); rule.func = func;
+
+			if (!this.injectee.hasOwnProperty(name)) {
+				this.injectee[name] = this.build_addrem_proxy(name);
+				this.injectee[name].isentwinemethod = true;
+			}
+		}
+	});
+
+	$.entwine.Namespace.addHandler({
+		order: 30,
+
+		bind: function(selector, k, v) {
+			if ($.isFunction(v) && (k == 'onadd' || k == 'onremove')) {
+				this.bind_addrem_proxy(selector, k, v);
+				return true;
+			}
+		}
+	});
+
+	$(document).bind('EntwineElementsAdded', function(e){
+		// For every namespace
+		for (var k in $.entwine.namespaces) {
+			var namespace = $.entwine.namespaces[k];
+			if (namespace.injectee.onadd) namespace.injectee.onadd.call(e.targets);
+		}
+	});
+
+	$(document).bind('EntwineElementsRemoved', function(e){
+		for (var k in $.entwine.namespaces) {
+			var namespace = $.entwine.namespaces[k];
+			if (namespace.injectee.onremove) namespace.injectee.onremove.call(e.targets);
+		}
+	});
+
+
+
 
 })(jQuery);
 ;

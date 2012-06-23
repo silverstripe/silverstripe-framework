@@ -672,8 +672,12 @@ class Form extends RequestHandler {
 	
 	/**
 	 * Remove a field from the given tab.
+	 *
+	 * @deprecated 3.0 Use Fields() and FieldList API instead
 	 */
 	public function unsetFieldFromTab($tabName, $fieldName) {
+		Deprecation::notice('3.0', 'Use Fields() and FieldList API instead');
+
 		// Find the tab
 		$tab = $this->Fields()->findOrMakeTab($tabName);
 		$tab->removeByName($fieldName);

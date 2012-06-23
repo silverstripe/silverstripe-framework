@@ -4,59 +4,6 @@
 @import "../admin/scss/themes/default.scss";
 @import "../admin/scss/_mixins";
 
-.htmleditorfield-dialog{
-	&.ui-dialog-content{
-		padding:0;
-		position:relative;
-	}
-
-	.cms-content-header{
-		padding:0;
-		width:100%;
-		height: 40px;
-		h3{
-			padding: 0 8px;
-			margin: 10px;
-		}
-	}
-	.ui-tabs{
-		position:static;
-		ul.ui-tabs-nav{
-			float:right;
-			position:absolute;
-			top:0;
-			right: 40px;
-			li{
-				@include background-image(
-					linear-gradient(#B0BEC7, #8CA1AE)
-				);			
-				@include border-radius(0px);
-				padding-top: 10px;
-				height: 28px;
-				overflow:hidden;
-				font-weight:bold;
-				a{
-					color:#fff;
-					text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-				}
-				&.ui-state-active{
-					background:  #F0F3F4 url("../admin/images/textures/bg_cms_main_content.png") repeat left top;
-					a{
-						color:$color-text;
-						text-shadow: none;
-					}
-				}
-			}
-		}
-		.ui-tabs-panel{
-			padding:0;
-		}
-	}
-	.ss-insert-media, .Actions{
-		padding:$grid-y $grid-x*2 ;
-	}
-}
-
 .ss-uploadfield {
 
 	.clear {
@@ -251,6 +198,8 @@
 				border-top: 1px solid $color-light-separator;
 				width: 100%;
 			}
+
+
 		}		
 	}
 	.ss-uploadfield-addfile {

@@ -67,14 +67,22 @@
 			
 			// setup original values
 			var fields = this.getFields();
-			fields.filter(':radio,:checkbox').bind('click', onchange);
-			fields.not(':radio,:checkbox').bind('change', onchange);
+			fields.filter(':radio,:checkbox').bind('click.changetracker', onchange);
+			fields.not(':radio,:checkbox').bind('change.changetracker', onchange);
 			fields.each(function() {
 				var origVal = $(this).is(':radio,:checkbox') ? self.find(':input[name=' + $(this).attr('name') + ']:checked').val() : $(this).val();
 				$(this).data('changetracker.origVal', origVal);
 			});
 
 			this.data('changetracker', true);
+		};
+
+		this.destroy = function() {
+			this.getFields()
+				.unbind('.changetracker')
+				.removeClass(options.changedCssClass)
+				.removeData('changetracker.origVal');
+			this.removeData('changetracker');
 		};
 			
 		/**
