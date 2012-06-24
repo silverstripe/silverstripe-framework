@@ -1452,7 +1452,7 @@ body.cms-dialog {
 			float:left;
 			position: relative;
 
-        	label {
+      label {
 				position: absolute;
 				left: 8px;
 				top: 13px;
@@ -1490,6 +1490,12 @@ body.cms-dialog {
 					filter: Alpha(Opacity=35);
 				}
 			}
+		}
+
+		.loading button.add-url .ui-icon {
+			background-image: url(../images/throbber.gif);
+			background-position: 50% 50%;
+			background-repeat: no-repeat;
 		}
 	}
 
