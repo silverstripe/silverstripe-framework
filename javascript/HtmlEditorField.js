@@ -762,7 +762,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				// TODO Depends on managed mime type
 				if(node.is('img')) {
-					this.showFileView(node.data('url') || node.attr('src'), function() {
+					this.showFileView(node.data('url') || node.attr('src')).complete(function() {
 						$(this).updateFromNode(node);
 						self.toggleCloseButton();
 						self.redraw();
@@ -811,7 +811,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				item.addClass('loading');
 				this.find('.content-edit').append(item);
-				$.ajax({
+				return $.ajax({
 					// url: this.data('urlViewfile') + '?ID=' + id,
 					url: $.path.addSearchParams(this.attr('action').replace(/MediaForm/, 'viewfile'), params),
 					success: function(html, status, xhr) {
@@ -908,11 +908,13 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			},
 
 			onclick: function(e) {
-				var urlField = this.getURLField();
+				var urlField = this.getURLField(), container = this.closest('.CompositeField'), form = this.closest('form');
 
 				if (urlField.validate()) {
-					var form = this.closest('form');
-					form.showFileView('http://' + urlField.val());
+					container.addClass('loading');
+					form.showFileView('http://' + urlField.val()).complete(function() {
+						container.removeClass('loading');
+					});
 					form.redraw();
 				}
 
