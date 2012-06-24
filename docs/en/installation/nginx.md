@@ -21,10 +21,13 @@ Now you need to setup a virtual host in Nginx with the following configuration s
 	        error_page  404  /framework/main.php;
 	
 	        location ~ \.php$ {
+	        	include fastcgi_params;
 	                fastcgi_pass   127.0.0.1:9000;
 	                fastcgi_index  index.php;
 	                fastcgi_param  SCRIPT_FILENAME  /home/yoursite.com/httpdocs$fastcgi_script_name;
-	                include fastcgi_params;
+	                fastcgi_buffer_size 32k;
+               		fastcgi_buffers 4 32k;
+               		fastcgi_busy_buffers_size 64k;
 	        }
 	}
 
