@@ -581,7 +581,7 @@ function max($field) {
 	    if(!$relation) return $this->dataClass;
 	    
 	    if(is_string($relation)) $relation = explode(".", $relation);
-	    
+	   
 	    $modelClass = $this->dataClass;
 	    
     	foreach($relation as $rel) {
@@ -601,7 +601,6 @@ function max($field) {
     					foreach($ancestry as $ancestor){
     						if($ancestor != $component){
     							$this->query->addInnerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
-    							$component=$ancestor;
     						}
     					}
     				}
@@ -623,7 +622,6 @@ function max($field) {
     					foreach($ancestry as $ancestor){
     						if($ancestor != $component){
     							$this->query->addInnerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
-    							$component=$ancestor;
     						}
     					}
     				}
