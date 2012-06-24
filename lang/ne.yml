@@ -1,134 +1,480 @@
 ne:
+  AssetAdmin:
+    NEWFOLDER: NewFolder
+  AssetTableField:
+    CREATED: 'First uploaded'
+    DIM: Dimensions
+    FILENAME: Filename
+    FOLDER: Folder
+    LASTEDIT: 'Last changed'
+    OWNER: Owner
+    SIZE: 'File size'
+    TITLE: Title
+    TYPE: 'File type'
+    URL: URL
+  AssetUploadField:
+    ChooseFiles: 'Choose files'
+    DRAGFILESHERE: 'Drag files here'
+    DROPAREA: 'Drop Area'
+    EDITALL: 'Edit all'
+    EDITANDORGANIZE: 'Edit & organize'
+    FILES: Files
+    TOTAL: Total
+    TOUPLOAD: 'Choose file(s) to upload...'
+    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    UPLOADOR: OR
+  BBCodeParser:
+    ALIGNEMENT: Alignment
+    ALIGNEMENTEXAMPLE: 'right aligned'
+    BOLD: 'Bold Text'
+    BOLDEXAMPLE: Bold
+    CODE: 'Code Block'
+    CODEDESCRIPTION: 'Unformatted code block'
+    CODEEXAMPLE: 'Code block'
+    COLORED: 'Colored text'
+    COLOREDEXAMPLE: 'blue text'
+    EMAILLINK: 'Email link'
+    EMAILLINKDESCRIPTION: 'Create link to an email address'
+    IMAGE: Image
+    IMAGEDESCRIPTION: 'Show an image in your post'
+    ITALIC: 'Italic Text'
+    ITALICEXAMPLE: Italics
+    LINK: 'Website link'
+    LINKDESCRIPTION: 'Link to another website or URL'
+    STRUCK: 'Struck-out Text'
+    STRUCKEXAMPLE: Struck-out
+    UNDERLINE: 'Underlined Text'
+    UNDERLINEEXAMPLE: Underlined
+    UNORDERED: 'Unordered list'
+    UNORDEREDDESCRIPTION: 'Unordered list'
+    UNORDEREDEXAMPLE1: 'unordered item 1'
   BasicAuth:
-    ENTERINFO: "कृपया एउता प्रयोगकता नाम र पासओड हल्नुहोस्"
-    ERRORNOTADMIN: "यो प्रयोगकता मुख्य प्रयोगकता होइन"
-    ERRORNOTREC: "त्यो प्रयोगकता / पासओड बुझन् सकिएन"
-  ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: "तपाईंले आफनो पासओड  यसका लागि परिवतन गर्नु भयो "
-    CHANGEPASSWORDTEXT2: "दिएको विवरण अनुसार भित्र जान सक्नुहुन्छ :"
-    HELLO: "हाई"
-  ComplexTableField.ss:
-    ADDITEM: "थप्"
-    SORTASC: "बढ्दो क्रमाङ्कन "
-    SORTDESC: "घट्दो क्रमाङ्कन "
-  ComplexTableField_popup.ss:
-    NEXT: "पछीको"
-    PREVIOUS: "पहिलाको"
+    ENTERINFO: 'कृपया एउता प्रयोगकता नाम र पासओड हल्नुहोस्'
+    ERRORNOTADMIN: 'यो प्रयोगकता मुख्य प्रयोगकता होइन'
+    ERRORNOTREC: 'त्यो प्रयोगकता / पासओड बुझन् सकिएन'
+  Boolean:
+    ANY: Any
+    0: 'False'
+    LOGOUT: 'Log out'
+    1: 'True'
+  CMSMain:
+    ACCESS: 'Access to ''{title}'' section'
+    ACCESSALLINTERFACES: 'Access to all CMS sections'
+    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
+    SAVE: Save
+  CMSProfileController:
+    MENUTITLE: CMSProfileController
+  CheckboxField:
+    - 'False'
+    - 'True'
+  ComplexTableField:
+    CLOSEPOPUP: 'Close Popup'
+    SUCCESSADD2: 'Added {name}'
+    SUCCESSEDIT: 'Saved %s %s %s'
+  ConfirmedPasswordField:
+    ATLEAST: 'Passwords must be at least {min} characters long.'
+    BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    SHOWONCLICKTITLE: 'Change Password'
+  CreditCardField:
+    FIRST: first
+    FOURTH: fourth
+    SECOND: second
+    THIRD: third
+  CurrencyField:
+    CURRENCYSYMBOL: $
+  DataObject:
+    PLURALNAME: 'Data Objects'
+    SINGULARNAME: 'Data Object'
   Date:
-    DAY: "दिन"
-    DAYS: "दिनहरु"
-    HOUR: "घण्टा"
-    HOURS: "घण्टाहरु"
-    MIN: "मिनेट"
-    MINS: "मिनेटहरु"
-    MONTH: "महिना"
-    MONTHS: "महिनाहरु"
-    SEC: "सेकेन्ड"
-    SECS: "सेकेन्डहरु"
-    YEAR: "बर्ष"
-    YEARS: "बर्षाहरु"
+    DAY: दिन
+    DAYS: दिनहरु
+    HOUR: घण्टा
+    HOURS: घण्टाहरु
+    MIN: मिनेट
+    MINS: मिनेटहरु
+    MONTH: महिना
+    MONTHS: महिनाहरु
+    SEC: सेकेन्ड
+    SECS: सेकेन्डहरु
+    TIMEDIFFAGO: '{difference} ago'
+    TIMEDIFFIN: 'in {difference}'
+    YEAR: बर्ष
+    YEARS: बर्षाहरु
   DateField:
+    NOTSET: 'not set'
+    TODAY: today
+    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
+    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
+    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  Director:
+    ADD: Add
+    INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: "(छान्)"
+    CHOOSE: (छान्)
   EmailField:
-    VALIDATION: "कृपया एउटा ईमेल ठेगाना लेखनुहोस् ।"
-  ForgotPasswordEmail.ss:
-    HELLO: "हाई"
+    VALIDATION: 'Please enter an email address'
+  Email_BounceRecord:
+    PLURALNAME: 'Email Bounce Records'
+    SINGULARNAME: 'Email Bounce Record'
+  Enum:
+    ANY: Any
+    LOADING: Loading...
+  File:
+    Content: Content
+    Filename: Filename
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    NOFILESIZE: 'Filesize is zero bytes.'
+    NOVALIDUPLOAD: 'File is not a valid upload'
+    Name: Name
+    PLURALNAME: Files
+    SINGULARNAME: File
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGESHORT: 'Filesize exceeds {size}'
+    Title: Title
+  FileIFrameField:
+    ATTACH: 'Attach {type}'
+    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    DELETE: 'Delete {type}'
+    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
+    FILE: File
+    FROMCOMPUTER: 'From your Computer'
+    FROMFILESTORE: 'From the File Store'
+    NOSOURCE: 'Please select a source file to attach'
+    REPLACE: 'Replace {type}'
+  Filesystem:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
+    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Form:
-    FIELDISREQUIRED: "%s चाहिन्छ"
-    VALIDATIONCREDITNUMBER: "कृपया हेनुहोस् कि तपाईंले लेखनुभएको %s क्रेडिट कार्ड नम्बर ठिक छ"
-    VALIDATIONFAILED: "प्रमाणिकरण् हुन् सकेन"
-    VALIDATIONNOTUNIQUE: "लेखिएको मान भिन्न छैन "
-    VALIDATIONPASSWORDSDONTMATCH: "पासओडहरु मिल्दैन्नन"
-    VALIDATIONPASSWORDSNOTEMPTY: "पासओडहरु खालि छोड्न मिल्दैन"
-    VALIDATIONSTRONGPASSWORD: "पासओडमा कम्तिमा पनि एउटा अक्छेर र एउटा अंक हुनुपर्दछ"
-    VALIDCURRENCY: "कृपया मिलने पैसा लेखनुहोस्"
+    FIELDISREQUIRED: '%s चाहिन्छ'
+    TITLE: 'Image Uploading Iframe'
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONNOTUNIQUE: 'लेखिएको मान भिन्न छैन '
+    VALIDATIONPASSWORDSDONTMATCH: 'पासओडहरु मिल्दैन्नन'
+    VALIDATIONPASSWORDSNOTEMPTY: 'पासओडहरु खालि छोड्न मिल्दैन'
+    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATOR: Validator
+    VALIDCURRENCY: 'Please enter a valid currency'
+  FormField:
+    NONE: none
+  GridAction:
+    DELETE_DESCRIPTION: Delete
+    Delete: Delete
+    UnlinkRelation: Unlink
+  GridField:
+    Add: 'Add {name}'
+    Filter: Filter
+    FilterBy: 'Filter by '
+    Find: Find
+    LEVELUP: 'Level up'
+    LinkExisting: 'Link Existing'
+    NewRecord: 'New %s'
+    NoItemsFound: 'No items found'
+    PRINTEDAT: 'Printed at'
+    PRINTEDBY: 'Printed by'
+    PlaceHolder: 'Find {type}'
+    PlaceHolderWithLabels: 'Find {type} by {name}'
+    RelationSearch: 'Relation search'
+    ResetFilter: Reset
+  GridFieldAction_Delete:
+    DeletePermissionsFailure: 'No delete permissions'
+    NEXT: पछीको
+    PREVIOUS: पहिलाको
+  GridFieldDetailForm:
+    Create: Create
+    Delete: Delete
+    DeletePermissionsFailure: 'No delete permissions'
+    Deleted: 'Deleted %s %s'
+    HELLO: हाई
+    Save: Save
+    Saved: 'Saved %s %s'
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: for
+  Group:
+    AddRole: 'Add a role for this group'
+    CHANGEPASSWORDTEXT1: 'तपाईंले आफनो पासओड  यसका लागि परिवतन गर्नु भयो '
+    CHANGEPASSWORDTEXT2: 'दिएको विवरण अनुसार भित्र जान सक्नुहुन्छ :'
+    Code: 'Group Code'
+    DefaultGroupTitleAdministrators: Administrators
+    DefaultGroupTitleContentAuthors: 'Content Authors'
+    Description: Description
+    EMAIL: Email
+    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    HELLO: हाई
+    Locked: 'Locked?'
+    NoRoles: 'No roles found'
+    PASSWORD: Password
+    Parent: 'Parent Group'
+    RolesAddEditLink: 'Manage roles'
+    Sort: 'Sort Order'
+    TITLE: 'तस्बिर उप्लोओद गर्ने Iफ्रमे'
+    has_many_Permissions: Permissions
+    many_many_Members: Members
+  GroupImportForm:
+    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    ResultCreated: 'Created {count} groups'
+    ResultDeleted: 'Deleted %d groups'
+    ResultUpdated: 'Updated %d groups'
+  Hierarchy:
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    BUTTONINSERTLINK: "लिन्क राखनुहोस्"
-    BUTTONREMOVELINK: "लिन्क हटाउनुहोस्"
-    CSSCLASS: "समरेखिन / स्टाईल"
-    CSSCLASSCENTER: "आँफैमा बिच्मा"
-    CSSCLASSLEFT: "बाँयामा, टेक्स राप गरियोस्"
-    CSSCLASSRIGHT: "दाँयामा, टेक्स राप गरियोस्"
-    EMAIL: "ईमेल ठेगाना  "
-    FILE: "फाइल"
-    FOLDER: "फोल्डर"
-    IMAGE: "तस्बिर हाल्नुहोस्"
-    IMAGEDIMENSIONS: "आयाम"
-    IMAGEHEIGHTPX: "उचाई"
-    IMAGEWIDTHPX: "चौडाई"
-    LINK: "हाईलाईट गरिएको टेक्समा लिन्क हाल्नुहोस्/मिलाउनुहोस्"
-    LINKDESCR: "लिन्क विवरण"
-    LINKEMAIL: "ईमेल ठेगाना  "
-    LINKEXTERNAL: "अर्को वेबसाईट"
-    LINKFILE: "फाइल डाउनलोओद गर्नु "
-    LINKINTERNAL: "साईटको पेज"
-    LINKOPENNEWWIN: "लिन्क नयाँ विन्डोमा खोल्नुहोस् "
-    LINKTO: "लिन्क गर्नुस्"
-    PAGE: "पेज"
-    URL: "यू.र्.ल् "
-  Image_iframe.ss:
-    TITLE: "तस्बिर उप्लोओद गर्ने Iफ्रमे"
+    ADDURL: 'Add URL'
+    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ANCHORVALUE: Anchor
+    BUTTONINSERT: Insert
+    BUTTONINSERTLINK: 'लिन्क राखनुहोस्'
+    BUTTONREMOVELINK: 'लिन्क हटाउनुहोस्'
+    BUTTONUpdate: Update
+    CAPTIONTEXT: 'Caption text'
+    CSSCLASS: 'समरेखिन / स्टाईल'
+    CSSCLASSCENTER: 'आँफैमा बिच्मा'
+    CSSCLASSLEFT: 'बाँयामा, टेक्स राप गरियोस्'
+    CSSCLASSLEFTALONE: 'On the left, on its own.'
+    CSSCLASSRIGHT: 'दाँयामा, टेक्स राप गरियोस्'
+    DETAILS: Details
+    EMAIL: 'ईमेल ठेगाना  '
+    FILE: फाइल
+    FOLDER: फोल्डर
+    FROMCMS: 'From the CMS'
+    FROMCOMPUTER: 'From your computer'
+    FROMWEB: 'From the web'
+    FindInFolder: 'Find in Folder'
+    IMAGEALT: 'Alternative text (alt)'
+    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
+    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEDIMENSIONS: आयाम
+    IMAGEHEIGHTPX: उचाई
+    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
+    IMAGETITLETEXT: 'Title text (tooltip)'
+    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGEWIDTHPX: चौडाई
+    INSERTMEDIA: 'Insert Media'
+    LINK: 'हाईलाईट गरिएको टेक्समा लिन्क हाल्नुहोस्/मिलाउनुहोस्'
+    LINKANCHOR: 'Anchor on this page'
+    LINKDESCR: 'लिन्क विवरण'
+    LINKEMAIL: 'ईमेल ठेगाना  '
+    LINKEXTERNAL: 'अर्को वेबसाईट'
+    LINKFILE: 'फाइल डाउनलोओद गर्नु '
+    LINKINTERNAL: 'साईटको पेज'
+    LINKOPENNEWWIN: 'लिन्क नयाँ विन्डोमा खोल्नुहोस् '
+    LINKTO: 'लिन्क गर्नुस्'
+    PAGE: पेज
+    URL: 'यू.र्.ल् '
+    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    UpdateMEDIA: 'Update Media'
+  ImageField:
+    IMAGE: Image
+  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  LeftAndMain:
+    ADD: 'Add a new row'
+    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    DELETED: Deleted.
+    DropdownBatchActionsDefault: Actions
+    HELP: Help
+    PAGETYPE: 'Page type: '
+    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
+    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
+    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
+    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PreviewButton: Preview
+    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    SAVEDUP: Saved.
+    VersionUnknown: unknown
+  LoginAttempt:
+    Email: 'Email Address'
+    IP: 'IP Address'
+    Status: Status
   Member:
-    ADDRESS: "ठेगाना"
-    BUTTONCHANGEPASSWORD: "पासओड परिवर्तन गर्नुहोस् "
-    BUTTONLOGIN: "भित्र जानुस्"
-    BUTTONLOGINOTHER: "अरु कोही भएर भित्र जानुस् "
-    BUTTONLOSTPASSWORD: "मैले मेरो पासओड हराएँ"
-    CONFIRMNEWPASSWORD: "नयाँ पासओड Confirm गर्नुहोस् "
-    CONFIRMPASSWORD: "Confirm पासओड"
-    CONTACTINFO: "सम्पर्क सुचना"
-    EMAIL: "इमेल"
-    EMAILSIGNUPINTRO1: "नयाँ कार्यकर्ता बन्नुभएकोमा धन्यबाद, तपाईल विवरण तल छ ।"
-    EMAILSIGNUPINTRO2: "तल भएको credentialsको आधारमा तपाई वेबसाईट भित्र जन्सक्नुहुन्छ "
-    EMAILSIGNUPSUBJECT: "sign up गर्नु भएकोमा धन्यबाद"
-    ERRORNEWPASSWORD: "तपाईले तपाईको नयाँ पासओड फरक लेखनुभयो, पुन प्रयास गर्नुहोल"
-    ERRORPASSWORDNOTMATCH: "पासओडहरु मिल्दैन्नन, कृपया पुन प्रयास गर्नुहोल"
-    ERRORWRONGCRED: "त्यो सहि ईमेल अथवा पासओड जस्तो देखिदैन् ।  कृपया पुन प्रयास गर्नुहोल ।"
-    FIRSTNAME: "पहिलो नाम"
-    GREETING: "स्वागत छ "
-    INTERFACELANG: "चलाउने भाषा"
-    LOGGEDINAS: "%s भएर तपाई भित्र हुनुहुन्छ ।"
-    MOBILE: "मोबाईल"
-    NAME: "नाम"
-    NEWPASSWORD: "नयाँ पासओड"
-    PASSWORD: "पासओड"
-    PHONE: "फोन"
-    REMEMBERME: "अर्को पटक मलाई सम्झनुस् "
-    SUBJECTPASSWORDCHANGED: "तपाईंको पासओड परिवतन भएको छ ।"
-    SUBJECTPASSWORDRESET: "तपाईंको पासओड पुनर्स्थापना लिक"
-    SURNAME: "थर"
-    VALIDATIONMEMBEREXISTS: "यो ईमेल भएको प्रयोगकता पहिले देखि छ ।"
-    WELCOMEBACK: "फेरी स्वागत छ, %s मा"
-    YOUROLDPASSWORD: "तपाईंको पुरानो पासओड"
+    ADDGROUP: 'Add group'
+    BUTTONCHANGEPASSWORD: 'पासओड परिवर्तन गर्नुहोस् '
+    BUTTONLOGIN: 'भित्र जानुस्'
+    BUTTONLOGINOTHER: 'अरु कोही भएर भित्र जानुस् '
+    BUTTONLOSTPASSWORD: 'मैले मेरो पासओड हराएँ'
+    CONFIRMNEWPASSWORD: 'नयाँ पासओड Confirm गर्नुहोस् '
+    CONFIRMPASSWORD: 'Confirm पासओड'
+    DefaultAdminFirstname: 'Default Admin'
+    DefaultDateTime: default
+    EMAIL: इमेल
+    EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
+    ENTEREMAIL: 'Please enter an email address to get a password reset link.'
+    ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
+    ERRORNEWPASSWORD: 'तपाईले तपाईको नयाँ पासओड फरक लेखनुभयो, पुन प्रयास गर्नुहोल'
+    ERRORPASSWORDNOTMATCH: 'पासओडहरु मिल्दैन्नन, कृपया पुन प्रयास गर्नुहोल'
+    ERRORWRONGCRED: 'त्यो सहि ईमेल अथवा पासओड जस्तो देखिदैन् ।  कृपया पुन प्रयास गर्नुहोल ।'
+    FIRSTNAME: 'पहिलो नाम'
+    INTERFACELANG: 'चलाउने भाषा'
+    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
+    LOGGEDINAS: 'You''re logged in as {name}.'
+    NEWPASSWORD: 'नयाँ पासओड'
+    PASSWORD: पासओड
+    PLURALNAME: Members
+    PROFILESAVESUCCESS: 'Successfully saved.'
+    REMEMBERME: 'अर्को पटक मलाई सम्झनुस् '
+    SINGULARNAME: Member
+    SUBJECTPASSWORDCHANGED: 'तपाईंको पासओड परिवतन भएको छ ।'
+    SUBJECTPASSWORDRESET: 'तपाईंको पासओड पुनर्स्थापना लिक'
+    SURNAME: थर
+    VALIDATIONMEMBEREXISTS: 'यो ईमेल भएको प्रयोगकता पहिले देखि छ ।'
+    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
+    WELCOMEBACK: 'Welcome Back, {firstname}'
+    YOUROLDPASSWORD: 'तपाईंको पुरानो पासओड'
+    belongs_many_many_Groups: Groups
+    db_LastVisited: 'Last Visited Date'
+    db_Locale: 'Interface Locale'
+    db_LockedOutUntil: 'Locked out until'
+    db_NumVisit: 'Number of Visits'
+    db_Password: Password
+    db_PasswordExpiry: 'Password Expiry Date'
   MemberAuthenticator:
-    TITLE: "ईमेल &amp; पासओड"
+    TITLE: 'ईमेल &amp; पासओड'
+  MemberDatetimeOptionsetField:
+    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    Custom: Custom
+    DATEFORMATBAD: 'Date format is invalid'
+    DAYNOLEADING: 'Day of month without leading zero'
+    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    FOURDIGITYEAR: 'Four-digit year'
+    FULLNAMEMONTH: 'Full name of month (e.g. June)'
+    HOURNOLEADING: 'Hour without leading zero'
+    MINUTENOLEADING: 'Minute without leading zero'
+    MONTHNOLEADING: 'Month digit without leading zero'
+    Preview: Preview
+    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    TOGGLEHELP: 'Toggle formatting help'
+    TWODIGITDAY: 'Two-digit day of month'
+    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
+    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
+    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
+    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITYEAR: 'Two-digit year'
+  MemberImportForm:
+    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    ResultCreated: 'Created {count} members'
+    ResultDeleted: 'Deleted %d members'
+    ResultNone: 'No changes'
+    ResultUpdated: 'Updated {count} members'
+  MemberTableField: null
+  ModelAdmin:
+    DELETE: Delete
+    DELETEDRECORDS: 'Deleted {count} records.'
+    IMPORT: 'Import from CSV'
+    IMPORTEDRECORDS: 'Imported {count} records.'
+    NOCSVFILE: 'Please browse for a CSV file to import'
+    NOIMPORT: 'Nothing to import'
+    RESET: Reset
+    Title: 'Data Models'
+    UPDATEDRECORDS: 'Updated {count} records.'
+  MoneyField:
+    FIELDLABELAMOUNT: Amount
+    FIELDLABELCURRENCY: Currency
+  NullableField:
+    IsNullLabel: 'Is Null'
   NumericField:
-    VALIDATION: "'%s' नम्बर होइन, नम्बर मात्र यो ठाउँमा हाल्न मिल्छ "
+    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Permission:
+    AdminGroup: Administrator
+    CMS_ACCESS_CATEGORY: 'CMS Access'
+    FULLADMINRIGHTS: 'Full administrative rights'
+    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECRELATIONS: Relations
+  PermissionCheckboxSetField:
+    AssignedTo: 'assigned to "{title}"'
+    FromGroup: 'inherited from group "{title}"'
+    FromRole: 'inherited from role "{title}"'
+    FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+  Permissions:
+    PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    VALIDATION: "कृपया मिल्ने फोन नम्बर हाल्नुहोस् "
+    Back: Back
+    VALIDATION: 'कृपया मिल्ने फोन नम्बर हाल्नुहोस् '
   Security:
-    ALREADYLOGGEDIN: "तपाईंसँग भित्र जाने आधिकार छैन । यदि तपाईंसँग अरुकुनै अकाउन्ट छ जस्ले पेज भित्र जान मिल्छ, भने त्यो अकाउन्टले भित्र जानुस् ।       "
-    BUTTONSEND: "मलाई पासओड पुनर्स्थापना लिक पठाउ"
-    CHANGEPASSWORDBELOW: "तपाईंले आफ्नो पासओड परिवर्तन गर्न सक्नुहुन्छ तल ।"
-    CHANGEPASSWORDHEADER: "पासओड परिवर्तन गर्नुहोस्  "
-    ENTERNEWPASSWORD: "कृपया नयाँ पासओड लेखनुहोस्"
-    ERRORPASSWORDPERMISSION: "तपाईंले आफ्नो पासओड परिवर्तन गर्न चाहानुहुन्छ भन्ने तपाईं भित्र जानु भएको हुनुपर्छ    ।"
-    LOGGEDOUT: "तपाईं बहिर निकलिनुभएको छ ।  यदि तपाईं फेरि भित्र जाने हो भन्ने, आफ्नो विवरण तल लेखनुहोस् ।  "
-    NOTEPAGESECURED: "त्यो पजे सुरक्षा छ । तपाईंको विवरण लेखनुहोस् अनी हामि तपाईंलाई भित्र पठाउनेछौ । "
-    NOTERESETPASSWORD: "तपाईंको ईमेल ठेगाना लेखनुहोस् र हामि तपाईंलाई पासओड पुनर्स्थापना लिक पठाउनेछौ "
-    PASSWORDSENTHEADER: "पासओड पुनर्स्थापना लिक '%s' मा पठाइएको छ "
-    PASSWORDSENTTEXT: "धन्यवाद ! पासओड पुनर्स्थापना लिक '%s' मा पठाइएको छ ।"
+    ALREADYLOGGEDIN: 'तपाईंसँग भित्र जाने आधिकार छैन । यदि तपाईंसँग अरुकुनै अकाउन्ट छ जस्ले पेज भित्र जान मिल्छ, भने त्यो अकाउन्टले भित्र जानुस् ।       '
+    BUTTONSEND: 'मलाई पासओड पुनर्स्थापना लिक पठाउ'
+    CHANGEPASSWORDBELOW: 'तपाईंले आफ्नो पासओड परिवर्तन गर्न सक्नुहुन्छ तल ।'
+    CHANGEPASSWORDHEADER: 'पासओड परिवर्तन गर्नुहोस्  '
+    ENTERNEWPASSWORD: 'कृपया नयाँ पासओड लेखनुहोस्'
+    ERRORPASSWORDPERMISSION: 'तपाईंले आफ्नो पासओड परिवर्तन गर्न चाहानुहुन्छ भन्ने तपाईं भित्र जानु भएको हुनुपर्छ    ।'
+    LOGGEDOUT: 'तपाईं बहिर निकलिनुभएको छ ।  यदि तपाईं फेरि भित्र जाने हो भन्ने, आफ्नो विवरण तल लेखनुहोस् ।  '
+    LOGIN: 'Log in'
+    NOTEPAGESECURED: 'त्यो पजे सुरक्षा छ । तपाईंको विवरण लेखनुहोस् अनी हामि तपाईंलाई भित्र पठाउनेछौ । '
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETPASSWORD: 'तपाईंको ईमेल ठेगाना लेखनुहोस् र हामि तपाईंलाई पासओड पुनर्स्थापना लिक पठाउनेछौ '
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+  SecurityAdmin:
+    ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
+    APPLY_ROLES: 'Apply roles to groups'
+    APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
+    EDITPERMISSIONS: 'Manage permissions for groups'
+    EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
+    GROUPNAME: 'Group name'
+    IMPORTGROUPS: 'Import groups'
+    IMPORTUSERS: 'Import users'
+    MEMBERS: Members
+    MENUTITLE: Security
+    MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
+    NEWGROUP: 'New Group'
+    PERMISSIONS: Permissions
+    ROLES: Roles
+    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
+    TABROLES: Roles
+    Users: Users
+  SecurityAdmin_MemberImportForm:
+    BtnImport: 'Import from CSV'
+    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
+  SilverStripeNavigator:
+    Edit: Edit
+    FILTER: Filter
+    IMPORT: Import
+    VIEWFIRST: 'View first'
+    VIEWLAST: 'View last'
+    VIEWNEXT: 'View next'
+    VIEWPREVIOUS: 'View previous'
   SimpleImageField:
-    NOUPLOAD: "कुनै पनि तस्बिर उप्लोओद गरिएको छैन "
+    NOUPLOAD: 'कुनै पनि तस्बिर उप्लोओद गरिएको छैन '
   SiteTree:
-    TABMAIN: "मुख्य"
+    TABMAIN: मुख्य
   TableField:
-    ISREQUIRED: "%s मा '%s' चाहिन्छ"
-  TableField.ss:
-  ToggleCompositeField.ss:
-    HIDE: "लुकाउ"
-    SHOW: "देखाउ"
+    ADDITEM: थप्
+    ISREQUIRED: 'In %s ''%s'' is required'
+    SORTASC: 'Sort in ascending order'
+    SORTDESC: 'Sort in descending order'
+  TableListField:
+    CSVEXPORT: 'Export to CSV'
+    PRINT: Print
+    Print: Print
+    SELECT: 'Select:'
+  TimeField:
+    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: "थोरै"
-    MORE: "धेरै"
+    LESS: थोरै
+    MORE: धेरै
+  UploadField:
+    ATTACHFILE: 'Attach a file'
+    ATTACHFILES: 'Attach files'
+    AttachFile: 'Attach a file'
+    DELETEINFO: 'Permanently delete this file from the file store'
+    DOEDIT: Save
+    DROPFILE: 'drop a file'
+    DROPFILES: 'drop files'
+    Dimensions: Dimensions
+    EDITINFO: 'Edit this file'
+    FIELDNOTSET: 'File information not found'
+    FROMCOMPUTER: 'From your computer'
+    FROMFILES: 'From files'
+    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
+    REMOVE: Remove
+    REMOVEERROR: 'Error removing file'
+    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
+    STARTALL: 'Start all'
+    Saved: Saved
+  Versioned:
+    has_many_Versions: Versions

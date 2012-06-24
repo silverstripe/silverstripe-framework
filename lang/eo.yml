@@ -1,380 +1,480 @@
 eo:
   AssetAdmin:
-    MENUTITLE: "Dosieroj kaj Bildoj"
-    NEWFOLDER: "NewFolder"
+    NEWFOLDER: NewFolder
   AssetTableField:
-    CREATED: "Unue alŝutita"
-    DIM: "Dimensioj"
-    FILENAME: "Nomo de dosiero"
-    LASTEDIT: "Laste ŝanĝita"
-    OWNER: "Posedanto"
-    SIZE: "Grando"
-    TITLE: "Titolo"
-    TYPE: "Tipo"
-    URL: "URL"
+    CREATED: 'Unue alŝutita'
+    DIM: Dimensioj
+    FILENAME: 'Nomo de dosiero'
+    FOLDER: Folder
+    LASTEDIT: 'Laste ŝanĝita'
+    OWNER: Posedanto
+    SIZE: Grando
+    TITLE: Titolo
+    TYPE: Tipo
+    URL: URL
+  AssetUploadField:
+    ChooseFiles: 'Choose files'
+    DRAGFILESHERE: 'Drag files here'
+    DROPAREA: 'Drop Area'
+    EDITALL: 'Edit all'
+    EDITANDORGANIZE: 'Edit & organize'
+    FILES: Files
+    TOTAL: Total
+    TOUPLOAD: 'Choose file(s) to upload...'
+    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    UPLOADOR: OR
   BBCodeParser:
-    ALIGNEMENT: "Ĝisrandigo"
-    ALIGNEMENTEXAMPLE: "ĝisrandigita dekstren"
-    BOLD: "Grasa Teksto"
-    BOLDEXAMPLE: "Grasa"
-    CODE: "Koda Bloko"
-    CODEDESCRIPTION: "Neformatita koda bloko"
-    CODEEXAMPLE: "Koda bloko"
-    COLORED: "Kolora teksto"
-    COLOREDEXAMPLE: "blua teksto"
-    EMAILLINK: "Retpoŝta ligilo"
-    EMAILLINKDESCRIPTION: "Krei ligilon al retpoŝta adreso"
-    IMAGE: "Bildo"
-    IMAGEDESCRIPTION: "Vidigi bildon en via mesaĝo"
-    ITALIC: "Kursiva Teksto"
-    ITALICEXAMPLE: "Kursiva"
-    LINK: "Ligilo al retejo"
-    LINKDESCRIPTION: "Ligilo al alia retejo aŭ URL"
-    STRUCK: "Trastrekita Teksto"
-    STRUCKEXAMPLE: "Trastreka"
-    UNDERLINE: "Substrekita Teksto"
-    UNDERLINEEXAMPLE: "Substrekita"
-    UNORDERED: "Neordigita listo"
-    UNORDEREDDESCRIPTION: "Neordigita listo"
-    UNORDEREDEXAMPLE1: "neordigita ero 1"
+    ALIGNEMENT: Ĝisrandigo
+    ALIGNEMENTEXAMPLE: 'ĝisrandigita dekstren'
+    BOLD: 'Grasa Teksto'
+    BOLDEXAMPLE: Grasa
+    CODE: 'Koda Bloko'
+    CODEDESCRIPTION: 'Neformatita koda bloko'
+    CODEEXAMPLE: 'Koda bloko'
+    COLORED: 'Kolora teksto'
+    COLOREDEXAMPLE: 'blua teksto'
+    EMAILLINK: 'Retpoŝta ligilo'
+    EMAILLINKDESCRIPTION: 'Krei ligilon al retpoŝta adreso'
+    IMAGE: Bildo
+    IMAGEDESCRIPTION: 'Vidigi bildon en via mesaĝo'
+    ITALIC: 'Kursiva Teksto'
+    ITALICEXAMPLE: Kursiva
+    LINK: 'Ligilo al retejo'
+    LINKDESCRIPTION: 'Ligilo al alia retejo aŭ URL'
+    STRUCK: 'Trastrekita Teksto'
+    STRUCKEXAMPLE: Trastreka
+    UNDERLINE: 'Substrekita Teksto'
+    UNDERLINEEXAMPLE: Substrekita
+    UNORDERED: 'Neordigita listo'
+    UNORDEREDDESCRIPTION: 'Neordigita listo'
+    UNORDEREDEXAMPLE1: 'neordigita ero 1'
   BasicAuth:
-    ENTERINFO: "bonvolu enigi salutnomon kaj pasvorton."
-    ERRORNOTADMIN: "Tiu uzanto ne estas administranto."
-    ERRORNOTREC: "Kiuj salutnomo / pasvorto ne estas rekonebla"
+    ENTERINFO: 'bonvolu enigi salutnomon kaj pasvorton.'
+    ERRORNOTADMIN: 'Tiu uzanto ne estas administranto.'
+    ERRORNOTREC: 'Kiuj salutnomo / pasvorto ne estas rekonebla'
   Boolean:
-    ANY: "Ajna"
-    NO: "Ne"
-    YES: "Jes"
+    ANY: Ajna
+    0: Ne
+    LOGOUT: 'Log out'
+    1: Jes
   CMSMain:
-    ACCESS: "Aliro al sekcio '%s'"
-    ACCESSALLINTERFACES: "Aliro al ĉiuj interfacoj de CMS"
-    ACCESSALLINTERFACESHELP: "Nuligas pli specifajn alirajn agordojn."
-    MENUTITLE: "Paĝoj"
-    SAVE: "Konservi"
-  ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: "Vi ŝanĝis vian pasvorton por"
-    CHANGEPASSWORDTEXT2: "Nun vi povas uzi la jenan legitimaĵon por ensaluti:"
-    EMAIL: "Retpoŝto"
-    HELLO: "Saluton"
-    PASSWORD: "Pasvorto"
+    ACCESS: 'Access to ''{title}'' section'
+    ACCESSALLINTERFACES: 'Aliro al ĉiuj interfacoj de CMS'
+    ACCESSALLINTERFACESHELP: 'Nuligas pli specifajn alirajn agordojn.'
+    SAVE: Konservi
+  CMSProfileController:
+    MENUTITLE: CMSProfileController
   CheckboxField:
-    NO: "Ne"
-    YES: "Jes"
+    - Ne
+    - Jes
   ComplexTableField:
-    CLOSEPOPUP: "Fermi Ŝprucfenestron"
-    SUCCESSADD: "Enmetis %s %s %s"
-    SUCCESSEDIT: "Konservita %s %s %s"
-  ComplexTableField.ss:
-    ADDITEM: "Almeti je %s"
-    SORTASC: "Ordigi kreske"
-    SORTDESC: "Ordigi malkreske"
-  ComplexTableField_popup.ss:
-    NEXT: "Sekva"
-    PREVIOUS: "Antaŭa"
+    CLOSEPOPUP: 'Fermi Ŝprucfenestron'
+    SUCCESSADD2: 'Added {name}'
+    SUCCESSEDIT: 'Konservita %s %s %s'
   ConfirmedPasswordField:
-    ATLEAST: "Pasvortoj devas enhavi almenaŭ %s signojn."
-    BETWEEN: "Pasvortoj devas enhavi inter %s kaj %s signojn."
-    MAXIMUM: "Pasvortoj devas enhavi ne pli ol %s signojn."
-    SHOWONCLICKTITLE: "Ŝangi Pasvorton"
+    ATLEAST: 'Passwords must be at least {min} characters long.'
+    BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    SHOWONCLICKTITLE: 'Ŝangi Pasvorton'
   CreditCardField:
-    FIRST: "unuan"
-    FOURTH: "kvaran"
-    SECOND: "duan"
-    THIRD: "trian"
+    FIRST: unuan
+    FOURTH: kvaran
+    SECOND: duan
+    THIRD: trian
   CurrencyField:
-    CURRENCYSYMBOL: "$"
+    CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME: "Datumaj Objektoj"
-    SINGULARNAME: "Datuma Objekto"
+    PLURALNAME: 'Datumaj Objektoj'
+    SINGULARNAME: 'Datuma Objekto'
   Date:
-    DAY: "tago"
-    DAYS: "tagoj"
-    HOUR: "horo"
-    HOURS: "horoj"
-    MIN: "min"
-    MINS: "minutoj"
-    MONTH: "monato"
-    MONTHS: "monatoj"
-    SEC: "sek"
-    SECS: "sekundoj"
-    TIMEDIFFAGO: "antaŭ %s"
-    YEAR: "jaro"
-    YEARS: "jaroj"
+    DAY: tago
+    DAYS: tagoj
+    HOUR: horo
+    HOURS: horoj
+    MIN: min
+    MINS: minutoj
+    MONTH: monato
+    MONTHS: monatoj
+    SEC: sek
+    SECS: sekundoj
+    TIMEDIFFAGO: '{difference} ago'
+    TIMEDIFFIN: 'in {difference}'
+    YEAR: jaro
+    YEARS: jaroj
   DateField:
-    NOTSET: "ne agordita"
-    TODAY: "hodiaŭ"
-    VALIDDATEMAXDATE: "Via dato devas esti pli aĝa ol aŭ egala al la maksimuma permesita dato"
-    VALIDDATEMINDATE: "Via dato devas esti malpli aĝa ol aŭ egala al la minimuma permesita dato"
+    NOTSET: 'ne agordita'
+    TODAY: hodiaŭ
+    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
+    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
+    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  Director:
+    ADD: Enmeti
+    INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: "(Elekti)"
+    CHOOSE: (Elekti)
   EmailField:
-    VALIDATION: "Bonvolu enigi retpoŝtan adreson."
+    VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
-    PLURALNAME: "Registroj de neliveritaj mesaĝoj"
-    SINGULARNAME: "Registro de neliverita mesaĝo"
+    PLURALNAME: 'Registroj de neliveritaj mesaĝoj'
+    SINGULARNAME: 'Registro de neliverita mesaĝo'
   Enum:
-    ANY: "Ajna"
+    ANY: Ajna
+    LOADING: Loading...
   File:
-    Content: "Enhavo"
-    Filename: "Dosiernomo"
-    INVALIDEXTENSION: "Sufikso ne estas valida (valida: %s)"
-    NOFILESIZE: "Dosiero havas nul bajtojn"
-    NOVALIDUPLOAD: "Dosiero ne estas valida alŝutaĵo."
-    Name: "Nomo"
-    PLURALNAME: "Dosieroj"
-    SINGULARNAME: "Dosiero"
-    TOOLARGE: "Dosiero estas tro granda, Maksimumo permesita estas %s."
-    Title: "Titolo"
+    Content: Enhavo
+    Filename: Dosiernomo
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    NOFILESIZE: 'Dosiero havas nul bajtojn'
+    NOVALIDUPLOAD: 'Dosiero ne estas valida alŝutaĵo.'
+    Name: Nomo
+    PLURALNAME: Dosieroj
+    SINGULARNAME: Dosiero
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGESHORT: 'Filesize exceeds {size}'
+    Title: Titolo
   FileIFrameField:
-    ATTACH: "Kunligi je %s"
-    ATTACHONCESAVED: "Eblas kunligi je %ss kiam vi estas unuafoje konservinta la rikordon."
-    DELETE: "Forigi je %s"
-    FILE: "Dosiero"
-    FROMCOMPUTER: "El via komputilo"
-    FROMFILESTORE: "El la dosiera konservejo"
-    NOSOURCE: "Bonvolu elekti fontan dosieron por alkroĉi"
-    REPLACE: "Anstataŭigi je %s"
-  ForgotPasswordEmail.ss:
-    HELLO: "Saluton"
-    TEXT1: "Jen via"
-    TEXT2: "pasvorta reagorda ligilo"
-    TEXT3: "por"
+    ATTACH: 'Attach {type}'
+    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    DELETE: 'Delete {type}'
+    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
+    FILE: Dosiero
+    FROMCOMPUTER: 'El via komputilo'
+    FROMFILESTORE: 'El la dosiera konservejo'
+    NOSOURCE: 'Bonvolu elekti fontan dosieron por alkroĉi'
+    REPLACE: 'Replace {type}'
+  Filesystem:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
+    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Form:
-    FIELDISREQUIRED: "%s estas postulita"
-    VALIDATIONCREDITNUMBER: "Plaĉi certigi vin havas eniritan la %s kreditkarton nombron ĝuste."
-    VALIDATIONFAILED: "Validumado ne sukcesis"
-    VALIDATIONNOTUNIQUE: "La enirita valoron ne unika"
-    VALIDATIONPASSWORDSDONTMATCH: "Pasvortoj ne matĉas"
-    VALIDATIONPASSWORDSNOTEMPTY: "Pasvortoj ne povas est malplena"
-    VALIDATIONSTRONGPASSWORD: "Pasvortoj devas havi almenaŭ unu cifero kaj unu alphanumeric karaktero."
-    VALIDATOR: "Validigilo"
-    VALIDCURRENCY: "Plaĉi eniri validan valuton. "
+    FIELDISREQUIRED: '%s estas postulita'
+    TITLE: 'Image Uploading Iframe'
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONNOTUNIQUE: 'La enirita valoron ne unika'
+    VALIDATIONPASSWORDSDONTMATCH: 'Pasvortoj ne matĉas'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Pasvortoj ne povas est malplena'
+    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATOR: Validigilo
+    VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
-    NONE: "neniu"
+    NONE: neniu
+  GridAction:
+    DELETE_DESCRIPTION: Delete
+    Delete: Delete
+    UnlinkRelation: Unlink
+  GridField:
+    Add: 'Add {name}'
+    Filter: Filter
+    FilterBy: 'Filter by '
+    Find: Find
+    LEVELUP: 'Level up'
+    LinkExisting: 'Link Existing'
+    NewRecord: 'New %s'
+    NoItemsFound: 'No items found'
+    PRINTEDAT: 'Printed at'
+    PRINTEDBY: 'Printed by'
+    PlaceHolder: 'Find {type}'
+    PlaceHolderWithLabels: 'Find {type} by {name}'
+    RelationSearch: 'Relation search'
+    ResetFilter: Reset
+  GridFieldAction_Delete:
+    DeletePermissionsFailure: 'No delete permissions'
+    NEXT: Sekva
+    PREVIOUS: Antaŭa
+  GridFieldDetailForm:
+    Create: Create
+    Delete: Delete
+    DeletePermissionsFailure: 'No delete permissions'
+    Deleted: 'Deleted %s %s'
+    HELLO: Saluton
+    Save: Save
+    Saved: 'Saved %s %s'
+    TEXT1: 'Jen via'
+    TEXT2: 'pasvorta reagorda ligilo'
+    TEXT3: por
   Group:
-    Code: "Grupa Kodo"
-    DefaultGroupTitleAdministrators: "Administrantoj"
-    DefaultGroupTitleContentAuthors: "Enhavaŭtoroj"
-    Description: "Priskribo"
-    Locked: "Ŝlosita?"
-    Parent: "Patra Grupo"
-    RolesAddEditLink: "Aldoni/redakti rolojn"
-    Sort: "Ordiga Ordo"
-    has_many_Permissions: "Permesoj"
-    many_many_Members: "Membroj"
+    AddRole: 'Add a role for this group'
+    CHANGEPASSWORDTEXT1: 'Vi ŝanĝis vian pasvorton por'
+    CHANGEPASSWORDTEXT2: 'Nun vi povas uzi la jenan legitimaĵon por ensaluti:'
+    Code: 'Grupa Kodo'
+    DefaultGroupTitleAdministrators: Administrantoj
+    DefaultGroupTitleContentAuthors: Enhavaŭtoroj
+    Description: Priskribo
+    EMAIL: Retpoŝto
+    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    HELLO: Saluton
+    Locked: 'Ŝlosita?'
+    NoRoles: 'No roles found'
+    PASSWORD: Pasvorto
+    Parent: 'Patra Grupo'
+    RolesAddEditLink: 'Aldoni/redakti rolojn'
+    Sort: 'Ordiga Ordo'
+    TITLE: 'Iframe por alŝuti bildon'
+    has_many_Permissions: Permesoj
+    many_many_Members: Membroj
   GroupImportForm:
-    Help1: "<p>Importi unu aŭ pliaj grupojn en formato <em>CSV</em> (perkome disigitaj valoroj values). <small><a href=\"#\" class=\"toggle-advanced\">Vidigi spertulan uzadon</a></small></p>"
-    Help2: |
-            <div class="advanced">
-            <h4>Spertula uzado</h4>
-            <ul>
-            <li>Permesitaj kolumnoj: <em>%s</em></li>
-            <li>Ekzistantaj grupoj estas kongrueblaj laŭ ili unika <em>Koda</em> valoro, kaj aktualigeblaj per eventualaj novaj valoroj el la importita dosiero</li>
-            <li>Grupaj hierarkioj estas kreeblaj per kolumno <em>PatroKodo</em>.</li>
-            <li>Permkodoj estas agordeblaj per kolumno <em>PermisKodo</em>. Ekzistantaj permiskodoj ne vakiĝos.</li>
-            </ul>
-            </div>
-    ResultCreated: "Kreis %d grupojn"
-    ResultDeleted: "Forigis %d grupojn"
-    ResultUpdated: "Aktualigis %d grupojn"
+    Help1: '<p>Importi unu aŭ pliaj grupojn en formato <em>CSV</em> (perkome disigitaj valoroj values). <small><a href="#" class="toggle-advanced">Vidigi spertulan uzadon</a></small></p>'
+    Help2: '<div class="advanced"><h4>Spertula uzado</h4><ul><li>Permesitaj kolumnoj: <em>%s</em></li><li>Ekzistantaj grupoj estas kongrueblaj laŭ ili unika <em>Koda</em> valoro, kaj aktualigeblaj per eventualaj novaj valoroj el la importita dosiero</li><li>Grupaj hierarkioj estas kreeblaj per kolumno <em>PatroKodo</em>.</li><li>Permkodoj estas agordeblaj per kolumno <em>PermisKodo</em>. Ekzistantaj permiskodoj ne vakiĝos.</li></ul></div>'
+    ResultCreated: 'Created {count} groups'
+    ResultDeleted: 'Forigis %d grupojn'
+    ResultUpdated: 'Aktualigis %d grupojn'
+  Hierarchy:
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ANCHORVALUE: "Ankri"
-    BUTTONINSERTLINK: "Almeti ligilon"
-    BUTTONREMOVELINK: "Forigi ligilon"
-    CAPTIONTEXT: "Titola teksto"
-    CSSCLASS: "Ĝisrandigo / stilo"
-    CSSCLASSCENTER: "Centrita, sola."
-    CSSCLASSLEFT: "Maldekstre, kaj teksto ĉirkaŭfluas."
-    CSSCLASSLEFTALONE: "Maldekstre sole"
-    CSSCLASSRIGHT: "Dekstre, kaj teksto ĉirkaŭfluas."
-    EMAIL: "Retpoŝta adreso"
-    FILE: "Dosiero"
-    FOLDER: "Dosierujo"
-    IMAGE: "Bildo"
-    IMAGEALTTEXT: "Alternativa teksto (alt) - vidigi ĝin se ne eblas vidigi bildon"
-    IMAGEDIMENSIONS: "Dimensioj"
-    IMAGEHEIGHTPX: "Alto"
-    IMAGETITLE: "Titola teksto (ŝpruchelpilo) - por plua informo pri la bildo"
-    IMAGEWIDTHPX: "Larĝo"
-    LINK: "Ligilo"
-    LINKANCHOR: "Ankri al ĉi tiu paĝo"
-    LINKDESCR: "Ligila priskribo"
-    LINKEMAIL: "Retpoŝta adreso"
-    LINKEXTERNAL: "Alia retejo"
-    LINKFILE: "Elŝuti dosieron"
-    LINKINTERNAL: "Paĝo en la retejo"
-    LINKOPENNEWWIN: "Malfermi ligilon en nova fenestro?"
-    LINKTO: "Ligilo al"
-    PAGE: "Paĝo"
-    URL: "URL"
+    ADDURL: 'Add URL'
+    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ANCHORVALUE: Ankri
+    BUTTONINSERT: Insert
+    BUTTONINSERTLINK: 'Almeti ligilon'
+    BUTTONREMOVELINK: 'Forigi ligilon'
+    BUTTONUpdate: Update
+    CAPTIONTEXT: 'Titola teksto'
+    CSSCLASS: 'Ĝisrandigo / stilo'
+    CSSCLASSCENTER: 'Centrita, sola.'
+    CSSCLASSLEFT: 'Maldekstre, kaj teksto ĉirkaŭfluas.'
+    CSSCLASSLEFTALONE: 'Maldekstre sole'
+    CSSCLASSRIGHT: 'Dekstre, kaj teksto ĉirkaŭfluas.'
+    DETAILS: Details
+    EMAIL: 'Retpoŝta adreso'
+    FILE: Dosiero
+    FOLDER: Dosierujo
+    FROMCMS: 'From the CMS'
+    FROMCOMPUTER: 'From your computer'
+    FROMWEB: 'From the web'
+    FindInFolder: 'Find in Folder'
+    IMAGEALT: 'Alternative text (alt)'
+    IMAGEALTTEXT: 'Alternativa teksto (alt) - vidigi ĝin se ne eblas vidigi bildon'
+    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEDIMENSIONS: Dimensioj
+    IMAGEHEIGHTPX: Alto
+    IMAGETITLE: 'Titola teksto (ŝpruchelpilo) - por plua informo pri la bildo'
+    IMAGETITLETEXT: 'Title text (tooltip)'
+    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGEWIDTHPX: Larĝo
+    INSERTMEDIA: 'Insert Media'
+    LINK: Ligilo
+    LINKANCHOR: 'Ankri al ĉi tiu paĝo'
+    LINKDESCR: 'Ligila priskribo'
+    LINKEMAIL: 'Retpoŝta adreso'
+    LINKEXTERNAL: 'Alia retejo'
+    LINKFILE: 'Elŝuti dosieron'
+    LINKINTERNAL: 'Paĝo en la retejo'
+    LINKOPENNEWWIN: 'Malfermi ligilon en nova fenestro?'
+    LINKTO: 'Ligilo al'
+    PAGE: Paĝo
+    URL: URL
+    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    UpdateMEDIA: 'Update Media'
   ImageField:
-    IMAGE: "Bildo"
-  Image_iframe.ss:
-    TITLE: "Iframe por alŝuti bildon"
+    IMAGE: Bildo
+  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
-    CANT_REORGANISE: "Vi ne havas permeson rearanĝi la retejan arbon. Ne konservis vian ŝanĝon."
-    HELP: "Helpo"
-    PAGETYPE: "Tipo de paĝo:"
-    PERMAGAIN: "Vin adiaŭis la CMS. Se vi volas denove saluti, enigu salutnomon kaj pasvorton malsupre."
-    PERMALREADY: "Bedaŭrinde vi ne povas aliri tiun parton de la CMS. Se vi volas saluti kiel iu alia, tiel faru sube"
-    PERMDEFAULT: "Enigi vian retadreson kaj pasvorton por aliri al la CMS."
-    PLEASESAVE: "Bonvolu konservi paĝon: Ne eblis ĝisdatigi ĉi tiun paĝon ĉar ĝi ankoraŭ ne estas konservita."
-    SAVED: "konservis"
+    ADD: 'Enmeti novan vicon'
+    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    DELETED: Deleted.
+    DropdownBatchActionsDefault: Actions
+    HELP: Helpo
+    PAGETYPE: 'Tipo de paĝo:'
+    PERMAGAIN: 'Vin adiaŭis la CMS. Se vi volas denove saluti, enigu salutnomon kaj pasvorton malsupre.'
+    PERMALREADY: 'Bedaŭrinde vi ne povas aliri tiun parton de la CMS. Se vi volas saluti kiel iu alia, tiel faru sube'
+    PERMDEFAULT: 'Enigi vian retadreson kaj pasvorton por aliri al la CMS.'
+    PLEASESAVE: 'Bonvolu konservi paĝon: Ne eblis ĝisdatigi ĉi tiun paĝon ĉar ĝi ankoraŭ ne estas konservita.'
+    PreviewButton: Preview
+    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    SAVEDUP: Saved.
+    VersionUnknown: unknown
   LoginAttempt:
-    Email: "Retadreso"
-    IP: "IP-Adreso"
-    Status: "Stato"
+    Email: Retadreso
+    IP: IP-Adreso
+    Status: Stato
   Member:
-    ADDRESS: "Trakt"
-    BUTTONCHANGEPASSWORD: "Ŝanĝi Pasvorton"
-    BUTTONLOGIN: "Ensaluti"
-    BUTTONLOGINOTHER: "Ensaluti kiel alia homo"
-    BUTTONLOSTPASSWORD: "Mi perdis mian pasvorton"
-    CONFIRMNEWPASSWORD: "Konfirmu novan pasvorton"
-    CONFIRMPASSWORD: "Konfirmu pasvorton"
-    CONTACTINFO: "Kontakto Informoj"
-    DefaultAdminFirstname: "Defaŭlta Administranto"
-    EMAIL: "Retpoŝto"
-    EMAILSIGNUPINTRO1: "Dankon pro aliĝ al fariĝi novan membron, viajn detalojn estas enlistigita sub por estonta referenco."
-    EMAILSIGNUPINTRO2: "Vi povas sinanoncon al la retejo uz la akreditaĵoj enlistig malsupre"
-    EMAILSIGNUPSUBJECT: "Dankon pro registriĝ"
-    ENTEREMAIL: "Bonvolu enigi retadreson por atingi ligilon por reagordi pasvorton."
-    ERRORLOCKEDOUT: "Provizore malvalidigis vian konton ĉar okazis tro da provoj ensaluti. Bonvole provu denove post 20 minutoj."
-    ERRORNEWPASSWORD: "Via ricev enirita vian novan pasvorton malsame, prov denove"
-    ERRORPASSWORDNOTMATCH: "Via aktuala pasvorto ne matĉo, bonvolu prov denove"
-    ERRORWRONGCRED: "Tiu ŝajne ne estas la ĝusta retpoŝta adreso aŭ pasvorto. Bonvolu provi denove."
-    FIRSTNAME: "Antaŭnomo"
-    GREETING: "Bonvenon"
-    INTERFACELANG: "Interfaca Lingvo"
-    LOGGEDINAS: "Vi ensalutis kiel %s."
-    MOBILE: "Moveblo"
-    NAME: "Nomo"
-    NEWPASSWORD: "Novan pasvorton"
-    PASSWORD: "Pasvorto"
-    PHONE: "Telefono"
-    PLURALNAME: "Membroj"
-    PROFILESAVESUCCESS: "Sukcese konservis."
-    REMEMBERME: "Memoru min je la sekva fojo?"
-    SINGULARNAME: "Membro"
-    SUBJECTPASSWORDCHANGED: "Via pasvorto estas ŝanĝita"
-    SUBJECTPASSWORDRESET: "Via pasvorto reagordis ligilon"
-    SURNAME: "Familia nomo"
-    VALIDATIONMEMBEREXISTS: "Jam ekzistas membro kun la sama %s"
-    WELCOMEBACK: "Bonvenon denove, %s"
-    YOUROLDPASSWORD: "Vian malnovan pasvorton"
-    belongs_many_many_Groups: "Grupoj"
-    db_LastVisited: "Dato de Lasta Vizito"
-    db_Locale: "Interfaca Lokaĵaro"
-    db_LockedOutUntil: "Elŝlosita ĝis"
-    db_NumVisit: "Nombro da Vizitoj"
-    db_Password: "Pasvorto"
-    db_PasswordExpiry: "Pasvorta Limdato"
+    ADDGROUP: 'Add group'
+    BUTTONCHANGEPASSWORD: 'Ŝanĝi Pasvorton'
+    BUTTONLOGIN: Ensaluti
+    BUTTONLOGINOTHER: 'Ensaluti kiel alia homo'
+    BUTTONLOSTPASSWORD: 'Mi perdis mian pasvorton'
+    CONFIRMNEWPASSWORD: 'Konfirmu novan pasvorton'
+    CONFIRMPASSWORD: 'Konfirmu pasvorton'
+    DefaultAdminFirstname: 'Defaŭlta Administranto'
+    DefaultDateTime: default
+    EMAIL: Retpoŝto
+    EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
+    ENTEREMAIL: 'Bonvolu enigi retadreson por atingi ligilon por reagordi pasvorton.'
+    ERRORLOCKEDOUT: 'Provizore malvalidigis vian konton ĉar okazis tro da provoj ensaluti. Bonvole provu denove post 20 minutoj.'
+    ERRORNEWPASSWORD: 'Via ricev enirita vian novan pasvorton malsame, prov denove'
+    ERRORPASSWORDNOTMATCH: 'Via aktuala pasvorto ne matĉo, bonvolu prov denove'
+    ERRORWRONGCRED: 'Tiu ŝajne ne estas la ĝusta retpoŝta adreso aŭ pasvorto. Bonvolu provi denove.'
+    FIRSTNAME: Antaŭnomo
+    INTERFACELANG: 'Interfaca Lingvo'
+    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
+    LOGGEDINAS: 'You''re logged in as {name}.'
+    NEWPASSWORD: 'Novan pasvorton'
+    PASSWORD: Pasvorto
+    PLURALNAME: Membroj
+    PROFILESAVESUCCESS: 'Sukcese konservis.'
+    REMEMBERME: 'Memoru min je la sekva fojo?'
+    SINGULARNAME: Membro
+    SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
+    SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
+    SURNAME: 'Familia nomo'
+    VALIDATIONMEMBEREXISTS: 'Jam ekzistas membro kun la sama %s'
+    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
+    WELCOMEBACK: 'Welcome Back, {firstname}'
+    YOUROLDPASSWORD: 'Vian malnovan pasvorton'
+    belongs_many_many_Groups: Grupoj
+    db_LastVisited: 'Dato de Lasta Vizito'
+    db_Locale: 'Interfaca Lokaĵaro'
+    db_LockedOutUntil: 'Elŝlosita ĝis'
+    db_NumVisit: 'Nombro da Vizitoj'
+    db_Password: Pasvorto
+    db_PasswordExpiry: 'Pasvorta Limdato'
   MemberAuthenticator:
-    TITLE: "Retpoŝto &amp; Pasvorto"
+    TITLE: 'Retpoŝto &amp; Pasvorto'
+  MemberDatetimeOptionsetField:
+    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    Custom: Custom
+    DATEFORMATBAD: 'Date format is invalid'
+    DAYNOLEADING: 'Day of month without leading zero'
+    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    FOURDIGITYEAR: 'Four-digit year'
+    FULLNAMEMONTH: 'Full name of month (e.g. June)'
+    HOURNOLEADING: 'Hour without leading zero'
+    MINUTENOLEADING: 'Minute without leading zero'
+    MONTHNOLEADING: 'Month digit without leading zero'
+    Preview: Preview
+    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    TOGGLEHELP: 'Toggle formatting help'
+    TWODIGITDAY: 'Two-digit day of month'
+    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
+    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
+    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
+    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
-    Help1: "<p>Gravaj membroj en <em>CSV-formato</em> (perkome disigitaj valoroj ). <small><a href=\"#\" class=\"toggle-advanced\">Vidigi spertulan uzadon</a></small></p>"
-    Help2: |
-            <div class="advanced">
-            <h4>Spertula uzado</h4>
-            <ul>
-            <li>Permesitaj kolumnoj: <em>%s</em></li>
-            <li>Kongruas ekzistantajn membrojn laŭ ilia unika agordo <em>Kodo</em>, kaj aktualigas ilin laŭ eventualaj novaj valoroj el la importita dosiero.</li>
-            <li>Povas agordi grupojn laŭ la kolumno <em>Grupoj</em>. Identigas grupojn laŭ ilia agordo <em>Kodo</em>, povas apartigi pluroblan grupon per komoj. Ne vakigas ekzistantajn grupojn.</li>
-            </ul>
-            </div>
-    ResultCreated: "Kreis %d membrojn"
-    ResultDeleted: "Forigis %d membrojn"
-    ResultNone: "Neniu ŝanĝo"
-    ResultUpdated: "Aktualigis %d membrojn"
+    Help1: '<p>Gravaj membroj en <em>CSV-formato</em> (perkome disigitaj valoroj ). <small><a href="#" class="toggle-advanced">Vidigi spertulan uzadon</a></small></p>'
+    Help2: '<div class="advanced"><h4>Spertula uzado</h4><ul><li>Permesitaj kolumnoj: <em>%s</em></li><li>Kongruas ekzistantajn membrojn laŭ ilia unika agordo <em>Kodo</em>, kaj aktualigas ilin laŭ eventualaj novaj valoroj el la importita dosiero.</li><li>Povas agordi grupojn laŭ la kolumno <em>Grupoj</em>. Identigas grupojn laŭ ilia agordo <em>Kodo</em>, povas apartigi pluroblan grupon per komoj. Ne vakigas ekzistantajn grupojn.</li></ul></div>'
+    ResultCreated: 'Created {count} members'
+    ResultDeleted: 'Forigis %d membrojn'
+    ResultNone: 'Neniu ŝanĝo'
+    ResultUpdated: 'Updated {count} members'
+  MemberTableField: null
   ModelAdmin:
-    DELETE: "Forigi"
-    DELETEDRECORDS: "Forigis %s rikordojn."
-    IMPORT: "Importi el CSV"
-    IMPORTEDRECORDS: "Importis je %s %s"
-    NOCSVFILE: "Bonvolu foliumi por CSV-dosiero importota"
-    NOIMPORT: "Nenio importota"
-    UPDATEDRECORDS: "Ĝisdatigis %s rikordojn."
+    DELETE: Forigi
+    DELETEDRECORDS: 'Deleted {count} records.'
+    IMPORT: 'Importi el CSV'
+    IMPORTEDRECORDS: 'Imported {count} records.'
+    NOCSVFILE: 'Bonvolu foliumi por CSV-dosiero importota'
+    NOIMPORT: 'Nenio importota'
+    RESET: Reset
+    Title: 'Data Models'
+    UPDATEDRECORDS: 'Updated {count} records.'
   MoneyField:
-    FIELDLABELAMOUNT: "Kvanto"
-    FIELDLABELCURRENCY: "Kurzo"
+    FIELDLABELAMOUNT: Kvanto
+    FIELDLABELCURRENCY: Kurzo
   NullableField:
-    IsNullLabel: "Estas senvalora"
+    IsNullLabel: 'Estas senvalora'
   NumericField:
-    VALIDATION: "'%s' ne estas numero, nur numeroj esti akcepteblaj por ĉi tiu kampo"
+    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Permission:
-    AdminGroup: "Administranto"
-    CMS_ACCESS_CATEGORY: "CMS-aliro"
-    FULLADMINRIGHTS: "Ĉiuj administraj rajtoj"
-    FULLADMINRIGHTS_HELP: "Implicas kaj superregas ĉiujn aliajn agorditajn permesojn."
+    AdminGroup: Administranto
+    CMS_ACCESS_CATEGORY: CMS-aliro
+    FULLADMINRIGHTS: 'Ĉiuj administraj rajtoj'
+    FULLADMINRIGHTS_HELP: 'Implicas kaj superregas ĉiujn aliajn agorditajn permesojn.'
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECRELATIONS: Relations
   PermissionCheckboxSetField:
-    AssignedTo: "agordita al \"%s\""
-    FromGroup: "heredita de grupo \"%s\""
-    FromRole: "heredita de rolo \"%s\""
-    FromRoleOnGroup: "heredita de rolo \"%s\" en grupo \"%s\""
+    AssignedTo: 'assigned to "{title}"'
+    FromGroup: 'inherited from group "{title}"'
+    FromRole: 'inherited from role "{title}"'
+    FromRoleOnGroup: 'heredita de rolo "%s" en grupo "%s"'
   Permissions:
-    PERMISSIONS_CATEGORY: "Roloj kaj aliraj permesoj"
+    PERMISSIONS_CATEGORY: 'Roloj kaj aliraj permesoj'
   PhoneNumberField:
-    VALIDATION: "Bonvolu enigi validan telefonnumeron"
-  RelationComplexTableField.ss:
-    ADD: "Enmeti"
-  ReportAdmin:
-    MENUTITLE: "Raportoj"
+    Back: Back
+    VALIDATION: 'Bonvolu enigi validan telefonnumeron'
   Security:
-    ALREADYLOGGEDIN: "Vi ne rajtas aliri ĉi tiun paĝon. Se vi havas alian konton kiu rajtas aliri tiun paĝon, vi povas <a href=\"%s\">ensaluti denove</a>."
-    BUTTONSEND: "Sendu al mi la ligilon reagordi pasvorton"
-    CHANGEPASSWORDBELOW: "Vi povas ŝanĝi vian pasvorton malsupre."
-    CHANGEPASSWORDHEADER: "Ŝanĝi vian pasvorton"
-    ENTERNEWPASSWORD: "Bonvolu enigi novan pasvorton."
-    ERRORPASSWORDPERMISSION: "Vi devas ensaluti por ŝanĝi vian pasvorton!"
-    LOGGEDOUT: "Vi elsalutis. Se vi volas ensaluti denove, enigu viajn legitimaĵon sube."
-    LOGIN: "Ensaluti"
-    NOTEPAGESECURED: "Tiu paĝo estas sekurigita.  Enigu viajn akreditaĵojn sube kaj vi aliros pluen."
-    NOTERESETLINKINVALID: "<p>La pasvorta reagorda ligilo estas nevalida aŭ pasis limdaton.</p><p>Vi povas peti novan <a href=\"%s\">ĉi tie</a> aŭ ŝanĝi vian pasvorton kiam <a href=\"%s\">ensalutinta</a>.</p>"
-    NOTERESETPASSWORD: "Enigu vian retpoŝtan adreson kaj ni sendos al vi ligilon per kiu vi povas reagordi vian pasvorton"
-    PASSWORDSENTHEADER: "Sendis al '%s' ligilon reagordi pasvorton"
-    PASSWORDSENTTEXT: "Dankon! Sendis al '%s' ligilon reagordi pasvorton, kondiĉe ke ekzistas konto por ĉi tiu retadreso."
+    ALREADYLOGGEDIN: 'Vi ne rajtas aliri ĉi tiun paĝon. Se vi havas alian konton kiu rajtas aliri tiun paĝon, vi povas <a href="%s">ensaluti denove</a>.'
+    BUTTONSEND: 'Sendu al mi la ligilon reagordi pasvorton'
+    CHANGEPASSWORDBELOW: 'Vi povas ŝanĝi vian pasvorton malsupre.'
+    CHANGEPASSWORDHEADER: 'Ŝanĝi vian pasvorton'
+    ENTERNEWPASSWORD: 'Bonvolu enigi novan pasvorton.'
+    ERRORPASSWORDPERMISSION: 'Vi devas ensaluti por ŝanĝi vian pasvorton!'
+    LOGGEDOUT: 'Vi elsalutis. Se vi volas ensaluti denove, enigu viajn legitimaĵon sube.'
+    LOGIN: Ensaluti
+    NOTEPAGESECURED: 'Tiu paĝo estas sekurigita.  Enigu viajn akreditaĵojn sube kaj vi aliros pluen.'
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETPASSWORD: 'Enigu vian retpoŝtan adreson kaj ni sendos al vi ligilon per kiu vi povas reagordi vian pasvorton'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
-    ACCESS_HELP: "Permesi vidigi, enmeti kaj redakti uzantojn, aldone al agordi permesojn kaj rolojn al ili."
-    APPLY_ROLES: "Apliki roloj al grupoj"
-    APPLY_ROLES_HELP: "Eblo redakti la rolojn agorditajn al grupo. Bezonas la permesilon \"Aliro al sekcio 'Sekureco'\""
-    EDITPERMISSIONS: "Agordi permesojn kaj IP-adresojn ĉe ĉiu grupo"
-    EDITPERMISSIONS_HELP: "Eblo redakti Permesojn kaj IP-adresojn por grupo. Bezonas la permesilon \"Aliro al sekcio 'Sekureco'\""
-    GROUPNAME: "Grupa Nomo"
-    MEMBERS: "Membroj"
-    MENUTITLE: "Sekureco"
-    MemberListCaution: "Averto: forigi membrojn el ĉi tiu listo forigos ilin el ĉiuj grupoj kaj la datumbazo."
-    NEWGROUP: "Nova Grupo"
-    PERMISSIONS: "Permesoj"
-    ROLES: "Roloj"
-    ROLESDESCRIPTION: "Ĉi tiu sekcio ebligas aldoni rolojn al ĉi tiu grupo. Roloj estas logikaj grupoj de permesoj, kiuj estas redakteblaj en la langeto Roloj"
-    TABROLES: "Roloj"
+    ACCESS_HELP: 'Permesi vidigi, enmeti kaj redakti uzantojn, aldone al agordi permesojn kaj rolojn al ili.'
+    APPLY_ROLES: 'Apliki roloj al grupoj'
+    APPLY_ROLES_HELP: 'Eblo redakti la rolojn agorditajn al grupo. Bezonas la permesilon "Aliro al sekcio ''Sekureco''"'
+    EDITPERMISSIONS: 'Agordi permesojn kaj IP-adresojn ĉe ĉiu grupo'
+    EDITPERMISSIONS_HELP: 'Eblo redakti Permesojn kaj IP-adresojn por grupo. Bezonas la permesilon "Aliro al sekcio ''Sekureco''"'
+    GROUPNAME: 'Grupa Nomo'
+    IMPORTGROUPS: 'Import groups'
+    IMPORTUSERS: 'Import users'
+    MEMBERS: Membroj
+    MENUTITLE: Security
+    MemberListCaution: 'Averto: forigi membrojn el ĉi tiu listo forigos ilin el ĉiuj grupoj kaj la datumbazo.'
+    NEWGROUP: 'Nova Grupo'
+    PERMISSIONS: Permesoj
+    ROLES: Roloj
+    ROLESDESCRIPTION: 'Ĉi tiu sekcio ebligas aldoni rolojn al ĉi tiu grupo. Roloj estas logikaj grupoj de permesoj, kiuj estas redakteblaj en la langeto Roloj'
+    TABROLES: Roloj
+    Users: Users
   SecurityAdmin_MemberImportForm:
-    BtnImport: "Importi"
-    FileFieldLabel: "CSV-dosiero <small>(Permesitaj sufiksoj: *.csv)</small>"
+    BtnImport: Importi
+    FileFieldLabel: 'CSV-dosiero <small>(Permesitaj sufiksoj: *.csv)</small>'
+  SilverStripeNavigator:
+    Edit: Edit
+    FILTER: Filter
+    IMPORT: Import
+    VIEWFIRST: 'Vidigi unuan'
+    VIEWLAST: 'Vidigi lastan'
+    VIEWNEXT: 'Vidigi sekvan'
+    VIEWPREVIOUS: 'Vidigi antaŭan'
   SimpleImageField:
-    NOUPLOAD: "Neniu Bildo Alŝutita"
+    NOUPLOAD: 'Neniu Bildo Alŝutita'
   SiteTree:
-    TABMAIN: "Ĉefaj"
+    TABMAIN: Ĉefaj
   TableField:
-    ISREQUIRED: "En %s '%s' estas bezonata."
-  TableField.ss:
-    ADD: "Enmeti novan vicon"
+    ADDITEM: 'Almeti je %s'
+    ISREQUIRED: 'In %s ''%s'' is required'
+    SORTASC: 'Ordigi kreskante'
+    SORTDESC: 'Ordigi malkreskante'
   TableListField:
-    CSVEXPORT: "Eksporti al CSV"
-    PRINT: "Presi"
-  TableListField.ss:
-    SORTASC: "Ordigi kreskante"
-    SORTDESC: "Ordigi malkreskante"
-  TableListField_PageControls.ss:
-    VIEWFIRST: "Vidigi unuan"
-    VIEWLAST: "Vidigi lastan"
-    VIEWNEXT: "Vidigi sekvan"
-    VIEWPREVIOUS: "Vidigi antaŭan"
-  ToggleCompositeField.ss:
-    HIDE: "Kaŝi"
-    SHOW: "Vidigi"
+    CSVEXPORT: 'Eksporti al CSV'
+    PRINT: Presi
+    Print: Presi
+    SELECT: 'Select:'
+  TimeField:
+    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: "malpli"
-    MORE: "pli"
+    LESS: malpli
+    MORE: pli
+  UploadField:
+    ATTACHFILE: 'Attach a file'
+    ATTACHFILES: 'Attach files'
+    AttachFile: 'Attach a file'
+    DELETEINFO: 'Permanently delete this file from the file store'
+    DOEDIT: Save
+    DROPFILE: 'drop a file'
+    DROPFILES: 'drop files'
+    Dimensions: Dimensions
+    EDITINFO: 'Edit this file'
+    FIELDNOTSET: 'File information not found'
+    FROMCOMPUTER: 'From your computer'
+    FROMFILES: 'From files'
+    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
+    REMOVE: Remove
+    REMOVEERROR: 'Error removing file'
+    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
+    STARTALL: 'Start all'
+    Saved: Saved
   Versioned:
-    has_many_Versions: "Versioj"
+    has_many_Versions: Versioj

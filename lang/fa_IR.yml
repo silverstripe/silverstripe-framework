@@ -1,233 +1,480 @@
-fa_IR:
-  AssetAdmin:
-    MENUTITLE: "فايل ها و عكس ها"
-    NEWFOLDER: "پوشه جديد"
-  AssetTableField:
-    DIM: "ابعاد"
-    FILENAME: "نام فايل"
-    LASTEDIT: "آخرین تغییرات"
-    OWNER: "دارنده"
-    SIZE: "حجم"
-    TITLE: "عنوان"
-    TYPE: "نوع"
-    URL: "نشانی"
-  BBCodeParser:
-    ALIGNEMENT: "جاگذاری"
-    ALIGNEMENTEXAMPLE: "به راست"
-    BOLD: "نوشته درست"
-    BOLDEXAMPLE: "درست"
-    COLORED: "نوشته رنگی"
-    COLOREDEXAMPLE: "نوشته آبی"
-    EMAILLINK: "پیوند ایمیل"
-    IMAGE: "عکس"
-    ITALIC: "نوشته گژ"
-    ITALICEXAMPLE: "گژ"
-    LINK: "پیوند تارگاه"
-    UNDERLINE: "نوشته با زیرخط"
-    UNDERLINEEXAMPLE: "زیرخط"
-  Boolean:
-    ANY: "هر"
-    NO: "نه"
-    YES: "آری"
-  CMSMain:
-    ACCESS: "دسترسی به '%s' (%s)"
-    MENUTITLE: "محتواي سايت"
-    SAVE: "نگاهداری"
-  ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: "شما گذرواژه تان را دگرگون کردید برای"
-    EMAIL: "ايميل"
-    HELLO: "درود"
-    PASSWORD: "كلمه عبور"
-  CheckboxField:
-    NO: "نه"
-    YES: "آری"
-  ComplexTableField:
-    CLOSEPOPUP: "بستن چنجره"
-    SUCCESSADD: "%s %s %s اضافه شد"
-    SUCCESSEDIT: "%s %s %s ذخيره شد"
-  ComplexTableField.ss:
-    ADDITEM: "افزودن"
-  ComplexTableField_popup.ss:
-    NEXT: "بعدی"
-    PREVIOUS: "قبلی"
-  ConfirmedPasswordField:
-    SHOWONCLICKTITLE: "تغيير كلمه عبور"
-  CreditCardField:
-    FIRST: "نخست"
-    FOURTH: "چهارم"
-    SECOND: "دوم"
-    THIRD: "سوم"
-  DataObject:
-    PLURALNAME: "داده های اشیاء"
-    SINGULARNAME: "داده اشیاء"
-  Date:
-    DAY: "روز"
-    DAYS: "روز"
-    HOUR: "ساعت"
-    HOURS: "ساعت"
-    MIN: "دقیقه"
-    MINS: "دقیقه"
-    MONTH: "ماه"
-    MONTHS: "ماه ها"
-    SEC: "ثانیه"
-    SECS: "ثانیه"
-    TIMEDIFFAGO: "%s قبل"
-    YEAR: "سال"
-    YEARS: "سال"
+fa-IR:
   DateField:
-    TODAY: "امروز"
-    VALIDDATEFORMAT2: "لطفا تاریخ را صحیح را وارد نمایید (%s)"
-  DropdownField:
-    CHOOSE: "(گزینش)"
-  EmailField:
-  File:
-    Content: "محتوا"
-    Filename: "نام پرونده"
-    INVALIDEXTENSION: "گسترش مجاز نیست (درست: %s)"
-    Name: "نام"
-    PLURALNAME: "فايل ها"
-    SINGULARNAME: "فايل"
-    TOOLARGE: "پرونده بیش از اندازه بزرگ است، بیشترین اندازه ممکن %s است."
-    Title: "عنوان"
-  FileIFrameField:
-    NOSOURCE: "لطفا محل یک فایل را جهت پیوست انتخاب کنید"
-  ForgotPasswordEmail.ss:
-    HELLO: "درود"
-    TEXT3: "برای"
-  Form:
-    FIELDISREQUIRED: "%s نیاز است."
-    VALIDATIONPASSWORDSDONTMATCH: "گذرواژه‌ها همانند هم نیستند"
-    VALIDATIONPASSWORDSNOTEMPTY: "گذرواژه نباید تهی باشد"
-  FormField:
-    NONE: "هیچ کدام"
+    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+    NOTSET: 'not set'
+    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
+    TODAY: 'امروز'
+    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
   Group:
-    Code: "كد گروه"
-    DefaultGroupTitleAdministrators: "مدیران کل"
-    DefaultGroupTitleContentAuthors: "نویسندگان مطالب"
-    Description: "توضحیات"
-    Locked: "بسته شده است؟"
-    Parent: "گروه مادر"
-    RolesAddEditLink: "اضافه/ویرایش وظیفه"
-    Sort: "تربیت چیدن"
-    has_many_Permissions: "مجوز‌ها"
-    many_many_Members: "اعضاء"
-  GroupImportForm:
-    ResultCreated: "گروه %d ایجاد شد"
-    ResultDeleted: "گروه %d حذف شد"
-    ResultUpdated: "گروه %d بروز شد"
-  HtmlEditorField:
-    BUTTONINSERTLINK: "گذاشتن پیوند"
-    BUTTONREMOVELINK: "برداشتن پیوند"
-    CSSCLASS: "جاگیری / الگو"
-    EMAIL: "پست الکترونیک"
-    FILE: "پرونده"
-    FOLDER: "پوشه"
-    IMAGE: "عکس"
-    IMAGEHEIGHTPX: "بلندی"
-    IMAGEWIDTHPX: "پهنا"
-    LINK: "پیوند"
-    LINKEMAIL: "پست الکترونیک"
-    LINKEXTERNAL: "تارگاه دیگر"
-    LINKFILE: "یک پرونده را بارگزاری کنید"
-    LINKINTERNAL: "برگ در تارگاه"
-    LINKOPENNEWWIN: "در پنجره جدید باز شود ؟"
-    LINKTO: "پیوند به"
-    PAGE: "برگ"
-    URL: "نشانی"
-  LeftAndMain:
-    HELP: "کمک"
-    PAGETYPE: "نوع صفحه"
-    PERMAGAIN: "شما از سیستم مدیریت محتوا خارج شده اید.اگر میخواهید دوباره وارد شوید نام کاربری و رمز عبور خود را در قسمت زیر وارد کنید"
-    PERMALREADY: "من متاسفم، شما نمی توانید به آن قسمت از سیستم مدیریت محتوا دسترسی پیدا کنید. اگر میخواهید به عنوان شخص دیگری وارد شوید از قسمت زیر تلاش کنید"
-    PLEASESAVE: "لطفاً صفحه را ذخیره کنید : این صفحه نمی تواند بروز شود چراکه هنوز ذخیره نشده است."
-    SAVED: "ذخیره شد"
-  LoginAttempt:
-    Email: "آدرس های ایمیل"
-  Member:
-    ADDRESS: "نشانی"
-    BUTTONCHANGEPASSWORD: "تغییر رمز عبور"
-    BUTTONLOGIN: "ورود"
-    CONFIRMNEWPASSWORD: "تکرار رمز عبور جدید"
-    CONFIRMPASSWORD: "تکرار رمز عبور"
-    DefaultAdminFirstname: "مدیر پیشفرض"
-    EMAIL: "پست الکترونیک"
-    EMAILSIGNUPSUBJECT: "از ثبت نام شما سپاس گزاریم"
-    EMPTYNEWPASSWORD: "رمز عبور جدید نمیتواند خالی باشد، لطفا دوباره تلاش کنید"
-    FIRSTNAME: "نام"
-    GREETING: "خوش آمدید"
-    INTERFACELANG: "زبان برنامه"
-    INVALIDNEWPASSWORD: "ما نمیتوانیم پسورد شما را قبول کنیم: %s"
-    MOBILE: "موبایل"
-    NAME: "نام"
-    NEWPASSWORD: "گذرواژه تازه"
-    PASSWORD: "رمز عبور"
-    PHONE: "تلفن"
-    PLURALNAME: "اعضاء"
-    SINGULARNAME: "عضو"
-    SUBJECTPASSWORDCHANGED: "گذرواژه شما دگرگون شد"
-    SUBJECTPASSWORDRESET: "پیوند ازنوسازی گذرواژه شما"
-    SURNAME: "نام خانوادگی"
-    YOUROLDPASSWORD: "رمز عبور قدیمی"
-    belongs_many_many_Groups: "گروه‌ها"
-    db_LockedOutUntil: "بسته شده تا "
-    db_PasswordExpiry: "تاریخ از میان رفتن گذرواژه"
-  MemberImportForm:
-    ResultCreated: "کاربر %d ایجاد شد"
-    ResultDeleted: "کاربر %d حذف شد"
-    ResultNone: "تغییری ایجاد نشد"
-    ResultUpdated: "کاربر %d بروز شد"
-  ModelAdmin:
-    DELETE: "حذف"
-  NullableField:
-    IsNullLabel: "خالی است"
-  Permission:
-    AdminGroup: "مدیر کل"
-    FULLADMINRIGHTS: "توانایی‌های کامل مدیریتی:"
-  PermissionCheckboxSetField:
-    AssignedTo: "مجوز %s"
-  Permissions:
-    PERMISSIONS_CATEGORY: "مجوز دسترسی ها و وظایف"
-  PhoneNumberField:
-    VALIDATION: "لطفاً شماره تلفن معتبر وارد کنید"
-  RelationComplexTableField.ss:
-    ADD: "افزودن"
-  ReportAdmin:
-    MENUTITLE: "گزارش ها"
-  Security:
-    ALREADYLOGGEDIN: "شما به این صفحه دسترسی ندارید. اگر حساب کاربری دیگری دارید که به این صفحه دسترسی دارد، شما میتوانید <a href=\"%s\">دوباره وارد شوید.</a>."
-    CHANGEPASSWORDHEADER: "تغییر گذرواژه"
-    ENTERNEWPASSWORD: "لطفاً گذرواژه جدید را وارد کنید."
-    LOGIN: "ورود"
+    Sort: 'تربیت چیدن'
+    many_many_Members: اعضاء
+    Code: 'كد گروه'
+    Locked: 'بسته شده است؟'
+    Description: توضحیات
+    Parent: 'گروه مادر'
+    NoRoles: 'No roles found'
+    DefaultGroupTitleAdministrators: 'مدیران کل'
+    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    DefaultGroupTitleContentAuthors: 'نویسندگان مطالب'
+    AddRole: 'Add a role for this group'
+    has_many_Permissions: 'مجوز‌ها'
+    RolesAddEditLink: 'اضافه/ویرایش وظیفه'
+    TITLE: 'Image Uploading Iframe'
+    CHANGEPASSWORDTEXT1: 'شما گذرواژه تان را دگرگون کردید برای'
+    CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    EMAIL: 'ايميل'
+    PASSWORD: 'كلمه عبور'
+    HELLO: درود
   SecurityAdmin:
-    APPLY_ROLES: "اعمال وظایف به گروه"
-    MEMBERS: "کاربران"
-    MENUTITLE: "امنيت"
-    NEWGROUP: "گروه تازه"
-    ROLES: "وظایف"
-    TABROLES: "وظایف"
-  SecurityAdmin_MemberImportForm:
-    BtnImport: "وارد کردن"
-  SiteTree:
-    TABMAIN: "اصلی"
-  TableField.ss:
-    ADD: "افزودن ردیف تازه"
+    IMPORTUSERS: 'Import users'
+    ROLES: وظایف
+    MENUTITLE: Security
+    EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
+    MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
+    TABROLES: وظایف
+    APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
+    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
+    NEWGROUP: 'گروه تازه'
+    Users: Users
+    EDITPERMISSIONS: 'Manage permissions for groups'
+    IMPORTGROUPS: 'Import groups'
+    GROUPNAME: 'Group name'
+    APPLY_ROLES: 'اعمال وظایف به گروه'
+    MEMBERS: کاربران
+    ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
+    PERMISSIONS: Permissions
+  SimpleImageField:
+    NOUPLOAD: 'No Image Uploaded'
   TableListField:
-    PRINT: "چاپ"
-    SELECT: "انتخاب"
-  TableListField.ss:
-    SORTASC: "چینش صعودی"
-    SORTDESC: "چینش نزولی"
-  TableListField_PageControls.ss:
-    VIEWFIRST: "مشاهده اولی"
-    VIEWLAST: "مشاهده آخری"
-    VIEWNEXT: "مشاهده بعدی"
-    VIEWPREVIOUS: "مشاهده قبلی"
+    PRINT: چاپ
+    Print: چاپ
+    CSVEXPORT: 'Export to CSV'
+    SELECT: انتخاب
+  Member:
+    INTERFACELANG: 'زبان برنامه'
+    PLURALNAME: اعضاء
+    db_LockedOutUntil: 'بسته شده تا '
+    BUTTONLOSTPASSWORD: 'I''ve lost my password'
+    db_Locale: 'Interface Locale'
+    ERRORNEWPASSWORD: 'You have entered your new password differently, try again'
+    VALIDATIONMEMBEREXISTS: 'A member already exists with the same %s'
+    CONFIRMPASSWORD: 'تکرار رمز عبور'
+    EMAIL: 'پست الکترونیک'
+    SUBJECTPASSWORDRESET: 'پیوند ازنوسازی گذرواژه شما'
+    belongs_many_many_Groups: گروه‌ها
+    SURNAME: 'نام خانوادگی'
+    db_NumVisit: 'Number of Visits'
+    ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
+    DefaultDateTime: default
+    WELCOMEBACK: 'Welcome Back, {firstname}'
+    CONFIRMNEWPASSWORD: 'تکرار رمز عبور جدید'
+    DefaultAdminFirstname: 'مدیر پیشفرض'
+    ENTEREMAIL: 'Please enter an email address to get a password reset link.'
+    db_LastVisited: 'Last Visited Date'
+    EMPTYNEWPASSWORD: 'رمز عبور جدید نمیتواند خالی باشد، لطفا دوباره تلاش کنید'
+    BUTTONLOGINOTHER: 'Log in as someone else'
+    PROFILESAVESUCCESS: 'Successfully saved.'
+    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
+    REMEMBERME: 'Remember me next time?'
+    BUTTONCHANGEPASSWORD: 'تغییر رمز عبور'
+    SINGULARNAME: عضو
+    LOGGEDINAS: 'You''re logged in as {name}.'
+    PASSWORD: 'رمز عبور'
+    db_PasswordExpiry: 'تاریخ از میان رفتن گذرواژه'
+    YOUROLDPASSWORD: 'رمز عبور قدیمی'
+    ERRORPASSWORDNOTMATCH: 'Your current password does not match, please try again'
+    FIRSTNAME: 'نام'
+    BUTTONLOGIN: ورود
+    db_Password: Password
+    ERRORWRONGCRED: 'That doesn''t seem to be the right e-mail address or password. Please try again.'
+    SUBJECTPASSWORDCHANGED: 'گذرواژه شما دگرگون شد'
+    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
+    ADDGROUP: 'Add group'
+    NEWPASSWORD: 'گذرواژه تازه'
+  UploadField:
+    ATTACHFILE: 'Attach a file'
+    Dimensions: Dimensions
+    AttachFile: 'Attach a file'
+    FROMFILES: 'From files'
+    DROPFILES: 'drop files'
+    FIELDNOTSET: 'File information not found'
+    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
+    ATTACHFILES: 'Attach files'
+    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    DROPFILE: 'drop a file'
+    DOEDIT: Save
+    REMOVE: Remove
+    EDITINFO: 'Edit this file'
+    REMOVEERROR: 'Error removing file'
+    STARTALL: 'Start all'
+    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
+    FROMCOMPUTER: 'From your computer'
+    Saved: Saved
+    DELETEINFO: 'Permanently delete this file from the file store'
+  CreditCardField:
+    SECOND: 'دوم'
+    FOURTH: 'چهارم'
+    THIRD: 'سوم'
+    FIRST: نخست
+  PhoneNumberField:
+    VALIDATION: 'لطفاً شماره تلفن معتبر وارد کنید'
+    Back: Back
   TimeField:
-    VALIDATEFORMAT: "لطفا قالب زمان را صحیح وارد کنید (%s)"
-  ToggleCompositeField.ss:
-    HIDE: "نهان"
-    SHOW: "آشکار"
+    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+  AssetUploadField:
+    FILES: Files
+    EDITALL: 'Edit all'
+    ChooseFiles: 'Choose files'
+    EDITANDORGANIZE: 'Edit & organize'
+    UPLOADOR: OR
+    DRAGFILESHERE: 'Drag files here'
+    TOUPLOAD: 'Choose file(s) to upload...'
+    TOTAL: Total
+    DROPAREA: 'Drop Area'
+    UPLOADINPROGRESS: 'Please wait… upload in progress'
+  NumericField:
+    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Enum:
+    ANY: Any
+    LOADING: Loading...
+  GridField:
+    NewRecord: 'New %s'
+    RelationSearch: 'Relation search'
+    PlaceHolderWithLabels: 'Find {type} by {name}'
+    PRINTEDBY: 'Printed by'
+    LEVELUP: 'Level up'
+    Filter: Filter
+    FilterBy: 'Filter by '
+    Add: 'Add {name}'
+    NoItemsFound: 'No items found'
+    ResetFilter: Reset
+    PRINTEDAT: 'Printed at'
+    LinkExisting: 'Link Existing'
+    PlaceHolder: 'Find {type}'
+    Find: Find
+  Email_BounceRecord:
+    PLURALNAME: 'Email Bounce Records'
+    SINGULARNAME: 'Email Bounce Record'
+  Director:
+    INVALID_REQUEST: 'Invalid request'
+    ADD: افزودن
+  BBCodeParser:
+    EMAILLINK: 'پیوند ایمیل'
+    CODE: 'Code Block'
+    COLORED: 'نوشته رنگی'
+    UNDERLINEEXAMPLE: زیرخط
+    BOLDEXAMPLE: درست
+    IMAGEDESCRIPTION: 'Show an image in your post'
+    LINKDESCRIPTION: 'Link to another website or URL'
+    STRUCKEXAMPLE: Struck-out
+    LINK: 'پیوند تارگاه'
+    ALIGNEMENT: جاگذاری
+    BOLD: 'نوشته درست'
+    UNORDEREDEXAMPLE1: 'unordered item 1'
+    UNORDEREDDESCRIPTION: 'Unordered list'
+    COLOREDEXAMPLE: 'نوشته آبی'
+    ALIGNEMENTEXAMPLE: 'به راست'
+    IMAGE: عکس
+    ITALICEXAMPLE: گژ
+    CODEDESCRIPTION: 'Unformatted code block'
+    UNORDERED: 'Unordered list'
+    CODEEXAMPLE: 'Code block'
+    EMAILLINKDESCRIPTION: 'Create link to an email address'
+    ITALIC: 'نوشته گژ'
+    STRUCK: 'Struck-out Text'
+    UNDERLINE: 'نوشته با زیرخط'
+  Date:
+    TIMEDIFFAGO: '{difference} ago'
+    MINS: دقیقه
+    HOUR: ساعت
+    MIN: دقیقه
+    MONTHS: 'ماه ها'
+    DAYS: روز
+    MONTH: 'ماه'
+    HOURS: ساعت
+    SECS: ثانیه
+    SEC: ثانیه
+    YEAR: سال
+    TIMEDIFFIN: 'in {difference}'
+    YEARS: سال
+    DAY: روز
   ToggleField:
-    MORE: "بیشتر"
+    LESS: less
+    MORE: بیشتر
+  PermissionCheckboxSetField:
+    FromGroup: 'inherited from group "{title}"'
+    AssignedTo: 'assigned to "{title}"'
+    FromRole: 'inherited from role "{title}"'
+    FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+  Permissions:
+    PERMISSIONS_CATEGORY: 'مجوز دسترسی ها و وظایف'
+  GridFieldDetailForm:
+    DeletePermissionsFailure: 'No delete permissions'
+    Deleted: 'Deleted %s %s'
+    Create: Create
+    Save: Save
+    Saved: 'Saved %s %s'
+    Delete: Delete
+    TEXT2: 'password reset link'
+    TEXT3: برای
+    TEXT1: 'Here is your'
+    HELLO: درود
+  MemberTableField: null
+  Filesystem:
+    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+    SEARCHLISTINGS: Search
+    IMPORT_TAB_HEADER: Import
+  SilverStripeNavigator:
+    Edit: Edit
+    VIEWPREVIOUS: 'مشاهده قبلی'
+    VIEWNEXT: 'مشاهده بعدی'
+    VIEWFIRST: 'مشاهده اولی'
+    VIEWLAST: 'مشاهده آخری'
+    FILTER: Filter
+    IMPORT: Import
+  GridFieldAction_Delete:
+    DeletePermissionsFailure: 'No delete permissions'
+    NEXT: بعدی
+    PREVIOUS: قبلی
+  BasicAuth:
+    ERRORNOTREC: 'That username / password isn''t recognised'
+    ENTERINFO: 'Please enter a username and password.'
+    ERRORNOTADMIN: 'That user is not an administrator.'
+  ComplexTableField:
+    CLOSEPOPUP: 'بستن چنجره'
+    SUCCESSEDIT: '%s %s %s ذخيره شد'
+    SUCCESSADD2: 'Added {name}'
+  LoginAttempt:
+    Status: Status
+    IP: 'IP Address'
+    Email: 'آدرس های ایمیل'
+  ImageField:
+    IMAGE: Image
+  HtmlEditorField:
+    LINKEXTERNAL: 'تارگاه دیگر'
+    BUTTONINSERT: Insert
+    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
+    BUTTONINSERTLINK: 'گذاشتن پیوند'
+    BUTTONREMOVELINK: 'برداشتن پیوند'
+    LINK: پیوند
+    FILE: پرونده
+    EMAIL: 'پست الکترونیک'
+    IMAGEWIDTHPX: پهنا
+    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    LINKFILE: 'یک پرونده را بارگزاری کنید'
+    LINKINTERNAL: 'برگ در تارگاه'
+    FOLDER: پوشه
+    FindInFolder: 'Find in Folder'
+    IMAGETITLETEXTDESC: 'For additional information about the image'
+    CSSCLASSCENTER: 'Centered, on its own.'
+    FROMCOMPUTER: 'From your computer'
+    FROMCMS: 'From the CMS'
+    CSSCLASS: 'جاگیری / الگو'
+    UpdateMEDIA: 'Update Media'
+    CSSCLASSLEFTALONE: 'On the left, on its own.'
+    LINKEMAIL: 'پست الکترونیک'
+    ANCHORVALUE: Anchor
+    URL: نشانی
+    INSERTMEDIA: 'Insert Media'
+    IMAGEDIMENSIONS: Dimensions
+    LINKANCHOR: 'Anchor on this page'
+    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
+    IMAGETITLETEXT: 'Title text (tooltip)'
+    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
+    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    FROMWEB: 'From the web'
+    CSSCLASSLEFT: 'On the left, with text wrapping around.'
+    IMAGEALT: 'Alternative text (alt)'
+    LINKTO: 'پیوند به'
+    ADDURL: 'Add URL'
+    IMAGEHEIGHTPX: بلندی
+    LINKOPENNEWWIN: 'در پنجره جدید باز شود ؟'
+    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    CAPTIONTEXT: 'Caption text'
+    LINKDESCR: 'Link description'
+    BUTTONUpdate: Update
+    PAGE: برگ
+    DETAILS: Details
+  MemberImportForm:
+    ResultCreated: 'Created {count} members'
+    ResultUpdated: 'Updated {count} members'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    ResultDeleted: 'کاربر %d حذف شد'
+    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    ResultNone: 'تغییری ایجاد نشد'
+  LeftAndMain:
+    PERMAGAIN: 'شما از سیستم مدیریت محتوا خارج شده اید.اگر میخواهید دوباره وارد شوید نام کاربری و رمز عبور خود را در قسمت زیر وارد کنید'
+    HELP: 'کمک'
+    DropdownBatchActionsDefault: Actions
+    PLEASESAVE: 'لطفاً صفحه را ذخیره کنید : این صفحه نمی تواند بروز شود چراکه هنوز ذخیره نشده است.'
+    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    DELETED: Deleted.
+    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    PreviewButton: Preview
+    SAVEDUP: Saved.
+    VersionUnknown: unknown
+    PAGETYPE: 'نوع صفحه'
+    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
+    PERMALREADY: 'من متاسفم، شما نمی توانید به آن قسمت از سیستم مدیریت محتوا دسترسی پیدا کنید. اگر میخواهید به عنوان شخص دیگری وارد شوید از قسمت زیر تلاش کنید'
+    ADD: 'افزودن ردیف تازه'
+  NullableField:
+    IsNullLabel: 'خالی است'
+  MoneyField:
+    FIELDLABELCURRENCY: Currency
+    FIELDLABELAMOUNT: Amount
+  EmailField:
+    VALIDATION: 'Please enter an email address'
+  FormField:
+    NONE: 'هیچ کدام'
+  FileIFrameField:
+    NOSOURCE: 'لطفا محل یک فایل را جهت پیوست انتخاب کنید'
+    REPLACE: 'Replace {type}'
+    FROMFILESTORE: 'From the File Store'
+    ATTACH: 'Attach {type}'
+    FILE: File
+    FROMCOMPUTER: 'From your Computer'
+    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
+    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    DELETE: 'Delete {type}'
+  SiteTree:
+    TABMAIN: اصلی
   Versioned:
-    has_many_Versions: "نسخه ها"
+    has_many_Versions: 'نسخه ها'
+  CMSMain:
+    ACCESS: 'Access to ''{title}'' section'
+    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
+    SAVE: نگاهداری
+    ACCESSALLINTERFACES: 'Access to all CMS sections'
+  GroupImportForm:
+    ResultCreated: 'Created {count} groups'
+    ResultUpdated: 'گروه %d بروز شد'
+    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    ResultDeleted: 'گروه %d حذف شد'
+  DataObject:
+    PLURALNAME: 'داده های اشیاء'
+    SINGULARNAME: 'داده اشیاء'
+  ConfirmedPasswordField:
+    BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    ATLEAST: 'Passwords must be at least {min} characters long.'
+    SHOWONCLICKTITLE: 'تغيير كلمه عبور'
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
+  AssetAdmin:
+    NEWFOLDER: 'پوشه جديد'
+  DropdownField:
+    CHOOSE: (گزینش)
+  CheckboxField:
+    - نه
+    - آری
+  Form:
+    FIELDISREQUIRED: '%s نیاز است.'
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONPASSWORDSNOTEMPTY: 'گذرواژه نباید تهی باشد'
+    VALIDATOR: Validator
+    VALIDCURRENCY: 'Please enter a valid currency'
+    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATIONNOTUNIQUE: 'The value entered is not unique'
+    VALIDATIONPASSWORDSDONTMATCH: 'گذرواژه‌ها همانند هم نیستند'
+    TITLE: 'Image Uploading Iframe'
+  TableField:
+    ISREQUIRED: 'In %s ''%s'' is required'
+    SORTASC: 'چینش صعودی'
+    ADDITEM: افزودن
+    SORTDESC: 'چینش نزولی'
+  CurrencyField:
+    CURRENCYSYMBOL: $
+  MemberAuthenticator:
+    TITLE: 'E-mail &amp; Password'
+  SecurityAdmin_MemberImportForm:
+    BtnImport: 'وارد کردن'
+    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
+  Security:
+    BUTTONSEND: 'Send me the password reset link'
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    ALREADYLOGGEDIN: 'شما به این صفحه دسترسی ندارید. اگر حساب کاربری دیگری دارید که به این صفحه دسترسی دارد، شما میتوانید <a href="%s">دوباره وارد شوید.</a>.'
+    LOGGEDOUT: 'You have been logged out.  If you would like to log in again, enter your credentials below.'
+    CHANGEPASSWORDBELOW: 'You can change your password below.'
+    ERRORPASSWORDPERMISSION: 'You must be logged in in order to change your password!'
+    ENTERNEWPASSWORD: 'لطفاً گذرواژه جدید را وارد کنید.'
+    NOTEPAGESECURED: 'That page is secured. Enter your credentials below and we will send you right along.'
+    CHANGEPASSWORDHEADER: 'تغییر گذرواژه'
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    LOGIN: ورود
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    NOTERESETPASSWORD: 'Enter your e-mail address and we will send you a link with which you can reset your password'
+  GridAction:
+    DELETE_DESCRIPTION: Delete
+    UnlinkRelation: Unlink
+    Delete: Delete
+  CMSProfileController:
+    MENUTITLE: CMSProfileController
+  MemberDatetimeOptionsetField:
+    DATEFORMATBAD: 'Date format is invalid'
+    TOGGLEHELP: 'Toggle formatting help'
+    DAYNOLEADING: 'Day of month without leading zero'
+    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
+    TWODIGITYEAR: 'Two-digit year'
+    Custom: Custom
+    TWODIGITDAY: 'Two-digit day of month'
+    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
+    Preview: Preview
+    MONTHNOLEADING: 'Month digit without leading zero'
+    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    HOURNOLEADING: 'Hour without leading zero'
+    FOURDIGITYEAR: 'Four-digit year'
+    MINUTENOLEADING: 'Minute without leading zero'
+    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
+    FULLNAMEMONTH: 'Full name of month (e.g. June)'
+    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+  Hierarchy:
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+  Permission:
+    AdminGroup: 'مدیر کل'
+    CMS_ACCESS_CATEGORY: 'CMS Access'
+    FULLADMINRIGHTS: 'توانایی‌های کامل مدیریتی:'
+    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECRELATIONS: Relations
+  Boolean:
+    0: نه
+    1: آری
+    ANY: هر
+    LOGOUT: 'Log out'
+  File:
+    TOOLARGESHORT: 'Filesize exceeds {size}'
+    Name: 'نام'
+    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    NOVALIDUPLOAD: 'File is not a valid upload'
+    Filename: 'نام پرونده'
+    Content: 'محتوا'
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    SINGULARNAME: فايل
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    Title: عنوان
+    NOFILESIZE: 'Filesize is zero bytes.'
+    PLURALNAME: 'فايل ها'
+  AssetTableField:
+    DIM: ابعاد
+    LASTEDIT: 'آخرین تغییرات'
+    CREATED: 'First uploaded'
+    URL: نشانی
+    TITLE: عنوان
+    FILENAME: 'نام فايل'
+    OWNER: دارنده
+    FOLDER: Folder
+    TYPE: نوع
+    SIZE: 'حجم'
+  ModelAdmin:
+    RESET: Reset
+    NOIMPORT: 'Nothing to import'
+    Title: 'Data Models'
+    IMPORTEDRECORDS: 'Imported {count} records.'
+    DELETEDRECORDS: 'Deleted {count} records.'
+    IMPORT: 'Import from CSV'
+    UPDATEDRECORDS: 'Updated {count} records.'
+    NOCSVFILE: 'Please browse for a CSV file to import'
+    DELETE: حذف
+  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
