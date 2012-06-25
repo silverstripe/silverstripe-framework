@@ -896,6 +896,10 @@ class HtmlEditorField_Embed extends HtmlEditorField_File {
 	public function appCategory() {
 		return 'embed';
 	}
+	
+	public function getInfo() {
+		return $this->oembed->info;
+	}
 }
 
 class HtmlEditorField_Image extends HtmlEditorField_File {
