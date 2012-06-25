@@ -93,8 +93,8 @@ pl:
     HOURS: godziny
     MIN: min
     MINS: minuty
-    MONTH: 'miesiąc'
-    MONTHS: 'miesiące'
+    MONTH: miesiąc
+    MONTHS: miesiące
     SEC: sekunda
     SECS: sekundy
     TIMEDIFFAGO: '{difference} ago'

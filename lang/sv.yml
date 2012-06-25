@@ -274,7 +274,7 @@ sv:
     ADD: 'Lägg till ny rad'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
-    DropdownBatchActionsDefault: 'Åtgärder'
+    DropdownBatchActionsDefault: Åtgärder
     HELP: Hjälp
     PAGETYPE: Sidtyp
     PERMAGAIN: 'Du har blivit utloggad. Om du vill logga in igen anger du dina uppgifter nedan.'
