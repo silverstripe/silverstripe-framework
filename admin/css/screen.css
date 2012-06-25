@@ -516,6 +516,8 @@ form.member-profile-form .ui-tabs-nav .ui-corner-all, form.member-profile-form .
 
 .cms .ui-widget-overlay { background-color: #000; background-image: none; }
 
+.cms .ui-dialog { min-width: 570px; }
+.cms .ui-dialog .htmleditorfield-dialog { min-width: 570px; }
 .cms .ui-dialog .ss-ui-dialog.ui-dialog-content { padding-top: 0px; }
 
 .ui-dialog { background: url("../images/textures/bg_cms_main_content.png") repeat left top #f0f3f4; border: 3px solid #000 !important; border-radius: 8px; overflow: visible; padding: 0; }
