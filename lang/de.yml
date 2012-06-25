@@ -18,8 +18,8 @@ de:
     DROPAREA: Dateiablage
     EDITALL: 'Edit all'
     EDITANDORGANIZE: Bearbeiten
-    FILES: Files
-    TOTAL: Total
+    FILES: Dateien
+    TOTAL: Gesamt
     TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: ODER
@@ -55,7 +55,7 @@ de:
   Boolean:
     ANY: alle
     0: Nein
-    LOGOUT: 'Log out'
+    LOGOUT: Ausloggen
     1: Ja
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
@@ -113,7 +113,7 @@ de:
   DropdownField:
     CHOOSE: (Auswahl)
   EmailField:
-    VALIDATION: 'Please enter an email address'
+    VALIDATION: 'Bitte geben Sie eine E-Mail Adresse ein'
   Email_BounceRecord:
     PLURALNAME: 'E-Mail Rückläufer'
     SINGULARNAME: 'E-Mail Rückläufer'
@@ -146,7 +146,7 @@ de:
     REPLACE: 'Replace {type}'
   Filesystem:
     IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
+    SEARCHLISTINGS: Suche
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Form:
     FIELDISREQUIRED: '%s wird benötigt'
@@ -161,14 +161,14 @@ de:
   FormField:
     NONE: keine
   GridAction:
-    DELETE_DESCRIPTION: Delete
+    DELETE_DESCRIPTION: Löschen
     Delete: Delete
     UnlinkRelation: Unlink
   GridField:
     Add: 'Add {name}'
     Filter: Filter
     FilterBy: 'Filter by '
-    Find: Find
+    Find: Suchen
     LEVELUP: 'Level up'
     LinkExisting: 'Link Existing'
     NewRecord: 'Neue(r) %s'
@@ -178,18 +178,18 @@ de:
     PlaceHolder: 'Find {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
     RelationSearch: 'Relation search'
-    ResetFilter: Reset
+    ResetFilter: Zurücksetzen
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
     NEXT: nächste
     PREVIOUS: vorherige
   GridFieldDetailForm:
-    Create: Create
+    Create: Erstellen
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     HELLO: Hallo
-    Save: Save
+    Save: Speichern
     Saved: 'Saved %s %s'
     TEXT1: 'Hier ist Ihr'
     TEXT2: 'Link zum Zurücksetzen des Passworts'
@@ -226,7 +226,7 @@ de:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anker
-    BUTTONINSERT: Insert
+    BUTTONINSERT: Einfügen
     BUTTONINSERTLINK: 'Verweis einfügen'
     BUTTONREMOVELINK: 'Verweise entfernen'
     BUTTONUpdate: Update
@@ -269,7 +269,7 @@ de:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Bild
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Zurück"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Eine neue Zeile hinzufügen'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
@@ -281,7 +281,7 @@ de:
     PERMALREADY: 'Leider dürfen Sie diesen Teil des CMS nicht aufrufen. Wenn Sie sich als jemand anderes einloggen wollen, benutzen Sie bitte das nachstehende Formular.'
     PERMDEFAULT: 'Bitte wählen Sie eine Authentifizierungsmethode und geben Sie Ihre Benutzerdaten für den Zugang zum CMS ein.'
     PLEASESAVE: 'Diese Seite konnte nicht aktualisiert werden weil sie noch nicht gespeichert wurde - bitte speichern.'
-    PreviewButton: Preview
+    PreviewButton: Vorschau
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: unknown
@@ -338,10 +338,10 @@ de:
     DATEFORMATBAD: 'Date format is invalid'
     DAYNOLEADING: 'Day of month without leading zero'
     DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
+    FOURDIGITYEAR: Jahr
     FULLNAMEMONTH: 'Full name of month (e.g. June)'
     HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
+    MINUTENOLEADING: Minute
     MONTHNOLEADING: 'Month digit without leading zero'
     Preview: Preview
     SHORTMONTH: 'Short name of month (e.g. Jun)'
@@ -350,7 +350,7 @@ de:
     TWODIGITHOUR: 'Two digits of hour (00 through 23)'
     TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
     TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITSECOND: Sekunde
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Mitglieder im <em>CSV</em>-Format (kommaseparierte Werte) importieren. <small><a href="#" class="toggle-advanced">Erweiterte Nutzung</a></small></p>'
@@ -362,14 +362,14 @@ de:
   MemberTableField: null
   ModelAdmin:
     DELETE: Löschen
-    DELETEDRECORDS: 'Deleted {count} records.'
+    DELETEDRECORDS: '{count} Datensätze wurden gelöscht.'
     IMPORT: 'CSV Import'
-    IMPORTEDRECORDS: 'Imported {count} records.'
+    IMPORTEDRECORDS: '{count} Datensätze wurden importiert.'
     NOCSVFILE: 'Wählen sie eine CSV-Datei zum Importieren'
     NOIMPORT: 'Kein Import notwendig.'
-    RESET: Reset
+    RESET: Zurücksetzen
     Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    UPDATEDRECORDS: '{count} Datensätze wurden aktualisiert.'
   MoneyField:
     FIELDLABELAMOUNT: Betrag
     FIELDLABELCURRENCY: Währung
@@ -392,7 +392,7 @@ de:
   Permissions:
     PERMISSIONS_CATEGORY: 'Rollen und Zugriffsberechtigungen'
   PhoneNumberField:
-    Back: Back
+    Back: Zurück
     VALIDATION: 'Bitte geben Sie eine gültige Telefonnummer ein'
   Security:
     ALREADYLOGGEDIN: 'Sie haben keinen Zugriff auf diese Seite. Wenn Sie ein anderes Konto besitzen, mit dem Sie auf diese Seite zugreifen können, melden Sie sich bitte unten an.'
@@ -430,9 +430,9 @@ de:
     BtnImport: Import
     FileFieldLabel: 'CSV Datei <small>(Erlaubte Dateierweiterung: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Edit
+    Edit: Bearbeiten
     FILTER: Filter
-    IMPORT: Import
+    IMPORT: Importieren
     VIEWFIRST: 'Ersten anzeigen'
     VIEWLAST: 'Letzten anzeigen'
     VIEWNEXT: 'Nächsten anzeigen'
@@ -471,7 +471,7 @@ de:
     FROMFILES: 'Von "Dateien"'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
+    REMOVE: Entfernen
     REMOVEERROR: 'Fehler beim Entfernen der Datei'
     REMOVEINFO: 'Entfernt die Datei von hier, löscht Sie aber nicht aus dem Dateisystem.'
     STARTALL: 'Alle starten'

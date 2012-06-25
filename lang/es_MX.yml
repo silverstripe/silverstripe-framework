@@ -236,7 +236,7 @@ es_MX:
     CSSCLASSLEFT: 'A la izquierda, justificando texto.'
     CSSCLASSLEFTALONE: 'A la izquierda, en él mismo.'
     CSSCLASSRIGHT: 'A la derecha, justificando texto.'
-    DETAILS: Details
+    DETAILS: Detalles
     EMAIL: 'Dirección de correo-e'
     FILE: Archivo
     FOLDER: Carpeta
@@ -269,7 +269,7 @@ es_MX:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Imagen
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Volver"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Filtro"  GridFieldItemEditView.ss:    Go back: "Volver"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Agregar un nuevo renglón'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
