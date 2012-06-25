@@ -299,9 +299,11 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			$this->controller,
 			"{$this->name}/LinkForm", 
 			new FieldList(
-				new LiteralField(
-					'Heading', 
-					sprintf('<h3>%s</h3>', _t('HtmlEditorField.LINK', 'Insert Link'))
+				$headerWrap = new CompositeField(
+					new LiteralField(
+						'Heading', 
+						sprintf('<h3 class="htmleditorfield-mediaform-heading insert">%s</h3>', _t('HtmlEditorField.LINK', 'Insert Link'))
+					)
 				),
 				$contentComposite = new CompositeField(
 					new OptionsetField(
@@ -340,8 +342,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					->setUseButtonTag(true)
 			)
 		);
-		
-		$contentComposite->addExtraClass('content');
+
+		$headerWrap->addExtraClass('CompositeField composite cms-content-header nolabel ');		
+		$contentComposite->addExtraClass('ss-insert-link content');
 		
 		$form->unsetValidator();
 		$form->loadDataFrom($this);
