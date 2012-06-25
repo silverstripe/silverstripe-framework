@@ -92,7 +92,6 @@ class Oembed {
 			return false;
 		}
 		$body = $body->getBody();
-		
 
 		// Look within the body for an oembed link.
 		if(preg_match_all('#<link[^>]+?(?:href=[\'"](.+?)[\'"][^>]+?)?type=["\']application/json\+oembed["\'](?:[^>]+?href=[\'"](.+?)[\'"])?#', $body, $matches, PREG_SET_ORDER)) {
@@ -118,7 +117,7 @@ class Oembed {
 	 */
 	public static function get_oembed_from_url($url, $type = false, array $options = array()) {
 		if(!self::is_enabled()) return false;
-		
+
 		// Find or build the Oembed URL.
 		$endpoint = self::find_endpoint($url);
 		$oembedUrl = false;
@@ -131,13 +130,6 @@ class Oembed {
 		} else {
 			// Build the url manually - we gave all needed information.
 			$oembedUrl = Controller::join_links($endpoint, '?format=json&url=' . rawurlencode($url));
-		}
-		
-		if(!$oembedUrl) {
-			$extension = strtolower(File::get_file_extension(basename($url)));
-			if(in_array($extension, array("png", "jpg", "gif"))) {
-				return new Oembed_Result($url, $url, $type, $options);
-			}
 		}
 
 		if($oembedUrl) {
@@ -234,7 +226,6 @@ class Oembed_Result extends ViewableData {
 		// Fetch from Oembed URL (cache for a week by default)
 		$service = new RestfulService($this->url, 60*60*24*7);
 		$body = $service->request();
-
 		if(!$body || $body->isError()) {
 			$this->data = array();
 			return;
@@ -242,20 +233,7 @@ class Oembed_Result extends ViewableData {
 		$body = $body->getBody();
 		$data = json_decode($body, true);
 		if(!$data) {
-			// if the response is no valid JSON we might have received a binary stream to an image
 			$data = array();
-			$image = @imagecreatefromstring($body);
-			if($image) {
-				preg_match("/^(http:\/\/)?([^\/]+)/i", $this->url, $matches);
-				$protocoll = $matches[1];
-				$host = $matches[2];
-				$data["type"] = "photo";
-				$data["title"] = basename($this->url) . " ($host)";
-				$data["url"] = $this->url;
-				$data["provider_url"] = $protocoll.$host;
-				$data["width"] = imagesx($image);
-				$data["height"] = imagesy($image);
-			}
 		}
 
 		// Convert all keys to lowercase

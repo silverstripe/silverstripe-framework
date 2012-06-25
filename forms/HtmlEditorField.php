@@ -512,7 +512,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		}
 
 		// Instanciate file wrapper and get fields based on its type
-		if($file && $file->appCategory() == 'image' && Director::is_site_url($url)) {
+		if($file && $file->appCategory() == 'image') {
 			$fileWrapper = new HtmlEditorField_Image($url, $file);
 		} elseif(!Director::is_site_url($url)) {
 			$fileWrapper = new HtmlEditorField_Embed($url, $file);
