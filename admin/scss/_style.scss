@@ -1280,8 +1280,14 @@ form.member-profile-form {
 	background-image: none;
 }
 
-.cms .ui-dialog .ss-ui-dialog.ui-dialog-content {
-	padding-top: 0px; //removes padding so that tabs are flush with header
+.cms .ui-dialog{
+	min-width:570px;
+	.htmleditorfield-dialog{
+		min-width:570px;
+	}
+	.ss-ui-dialog.ui-dialog-content {
+		padding-top: 0px; //removes padding so that tabs are flush with header
+	}
 }
 
 // Elements with this class can either frame inline markup or an iframe,
