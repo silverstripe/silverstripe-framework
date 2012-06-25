@@ -134,7 +134,7 @@ class Oembed {
 		
 		// If autodescovery failed the resource might be a direct link to a file
 		if(!$oembedUrl) {
-			if(File::get_app_category(File::get_file_extension($url))) {
+			if(File::get_app_category(File::get_file_extension($url)) == "image") {
 				return new Oembed_Result($url, $url, $type, $options);
 			}
 		}
