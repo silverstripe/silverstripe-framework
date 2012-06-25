@@ -393,7 +393,6 @@ class File extends DataObject {
 		return $fields;
 	}
 
-	
 	/**
 	 * Returns a category based on the file extension.
 	 * This can be useful when grouping files by type,
@@ -402,12 +401,21 @@ class File extends DataObject {
 	 * 
 	 * @return String
 	 */
-	public function appCategory() {
-		$ext = strtolower($this->Extension);
+	public static function get_app_category($ext) {
+		$ext = strtolower($ext);
 		foreach(self::$app_categories as $category => $exts) {
 			if(in_array($ext, $exts)) return $category;
 		}
 		return false;
+	}
+	
+	/**
+	 * Returns a category based on the file extension.
+	 * 
+	 * @return String
+	 */
+	public function appCategory() {
+		return self::get_app_category($this->Extension);
 	}
 
 	function CMSThumbnail() {
