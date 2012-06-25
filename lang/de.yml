@@ -13,11 +13,11 @@ de:
     TYPE: Typ
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
-    DRAGFILESHERE: 'Drag files here'
-    DROPAREA: 'Drop Area'
+    ChooseFiles: 'Dateien auswählen'
+    DRAGFILESHERE: 'Dateien hier ablegen'
+    DROPAREA: Dateiablage
     EDITALL: 'Edit all'
-    EDITANDORGANIZE: 'Edit & organize'
+    EDITANDORGANIZE: Bearbeiten
     FILES: Files
     TOTAL: Total
     TOUPLOAD: 'Choose file(s) to upload...'
@@ -171,7 +171,7 @@ de:
     Find: Find
     LEVELUP: 'Level up'
     LinkExisting: 'Link Existing'
-    NewRecord: 'New %s'
+    NewRecord: 'Neue(r) %s'
     NoItemsFound: 'No items found'
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Printed by'
@@ -195,7 +195,7 @@ de:
     TEXT2: 'Link zum Zurücksetzen des Passworts'
     TEXT3: für
   Group:
-    AddRole: 'Add a role for this group'
+    AddRole: 'Rolle für die Gruppe hinzufügen'
     CHANGEPASSWORDTEXT1: 'Sie haben ihr Passwort geändert für'
     CHANGEPASSWORDTEXT2: 'Sie können nun folgende Angaben benutzen um sich einzuloggen'
     Code: 'Gruppen Code'
@@ -203,10 +203,10 @@ de:
     DefaultGroupTitleContentAuthors: Inhaltsautoren
     Description: Beschreibung
     EMAIL: E-Mail
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    GroupReminder: 'Bei Zuweisung einer Übergruppe werden alle ihre Rollen übernommen'
     HELLO: Hi
     Locked: 'Gesperrt?'
-    NoRoles: 'No roles found'
+    NoRoles: 'Keine Rollen gefunden'
     PASSWORD: Passwort
     Parent: Elterngruppe
     RolesAddEditLink: 'Rollen hinzufügen/editieren'
@@ -415,8 +415,8 @@ de:
     EDITPERMISSIONS: 'Bearbeiten der Rechte und IP-Adressen für jede Gruppe'
     EDITPERMISSIONS_HELP: 'Möglichkeit Berechtigungen und IP-Adressen einer Gruppen zu editieren. Erfordert Zugriff auf den Bereich "Sicherheit".'
     GROUPNAME: Gruppenname
-    IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
+    IMPORTGROUPS: 'Gruppen importieren'
+    IMPORTUSERS: 'Benutzer importieren'
     MEMBERS: Mitglieder
     MENUTITLE: Security
     MemberListCaution: 'Achtung: Das Entfernen von Mitgliedern aus dieser Liste löscht diese auch aus der Datenbank sowie die entsprechenden Gruppenzuweisungen.'
@@ -425,7 +425,7 @@ de:
     ROLES: Rollen
     ROLESDESCRIPTION: 'Hier können Sie der Gruppe Rollen zuweisen. Rollen sind logische Gruppierungen von Berechtigungen.'
     TABROLES: Rollen
-    Users: Users
+    Users: Benutzer
   SecurityAdmin_MemberImportForm:
     BtnImport: Import
     FileFieldLabel: 'CSV Datei <small>(Erlaubte Dateierweiterung: *.csv)</small>'
@@ -457,18 +457,18 @@ de:
     LESS: weniger
     MORE: mehr
   UploadField:
-    ATTACHFILE: 'Attach a file'
-    ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    ATTACHFILE: 'Datei anhängen'
+    ATTACHFILES: 'Dateien anhängen'
+    AttachFile: 'Datei anhängen'
     DELETEINFO: 'Löscht die Datei dauerhaft aus dem Dateisystem'
     DOEDIT: Speichern
-    DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
+    DROPFILE: 'Datei hier ablegen'
+    DROPFILES: 'Dateien hier ablegen'
     Dimensions: Dimensions
     EDITINFO: 'Diese Datei bearbeiten'
-    FIELDNOTSET: 'File information not found'
+    FIELDNOTSET: 'Dateiinformationen nicht gefunden'
     FROMCOMPUTER: 'Von Ihrem Computer'
-    FROMFILES: 'From files'
+    FROMFILES: 'Von "Dateien"'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
