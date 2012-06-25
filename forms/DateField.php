@@ -119,6 +119,14 @@ class DateField extends TextField {
 		
 		return $html;
 	}
+	
+	function SmallFieldHolder($properties = array()){
+		$d = DateField_View_JQuery::create($this);
+		$d->onBeforeRender();
+		$html = parent::SmallFieldHolder($properties);
+		$html = $d->onAfterRender($html);
+		return $html;
+	}
 
 	function Field($properties = array()) {
 		$config = array(

@@ -26,7 +26,7 @@
 		}
 	});
 
-	$('.field.date input.text').live('click', function() {
+	$('.field.date input.text,.fieldholder-small input.text.date').live('click', function() {
 		$(this).ssDatepicker();
 		$(this).datepicker('show');
 	});
