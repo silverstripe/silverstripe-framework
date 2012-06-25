@@ -415,8 +415,8 @@ nl:
     EDITPERMISSIONS: 'Bewerk rechten en IP-adressen bij elke groep'
     EDITPERMISSIONS_HELP: 'Bewerkingsmogelijkheid van Rechten en IP adressen voor groepen. Heeft rechten voor "Beveiligingsectie" nodig.'
     GROUPNAME: 'Groep naam'
-    IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
+    IMPORTGROUPS: Groepen
+    IMPORTUSERS: 'Importeer gebruikers'
     MEMBERS: Leden
     MENUTITLE: Security
     MemberListCaution: 'Let op: Verwijderen van leden van deze lijst heeft als gevolg dat deze uit alle groepen en de database worden verwijderd'
@@ -425,7 +425,7 @@ nl:
     ROLES: Rollen
     ROLESDESCRIPTION: 'In deze sectie kan je rollen toevoegen aan deze groep. Rollen zijn logische groeperingen van rechten die in het Rollen tapblad gewijzigd kunnen worden.'
     TABROLES: Rollen
-    Users: Users
+    Users: Gebruikers
   SecurityAdmin_MemberImportForm:
     BtnImport: Importeer
     FileFieldLabel: 'CSV Bestand <small>(Toegestane extensies: *.csv)</small>'

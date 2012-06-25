@@ -13,16 +13,16 @@ es_MX:
     TYPE: Tipo
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
-    DRAGFILESHERE: 'Drag files here'
-    DROPAREA: 'Drop Area'
+    ChooseFiles: 'Seleccionar archivos'
+    DRAGFILESHERE: 'Arrastrar archivos acá'
+    DROPAREA: 'Área de arrastre'
     EDITALL: 'Edit all'
-    EDITANDORGANIZE: 'Edit & organize'
+    EDITANDORGANIZE: 'Editar y organizar'
     FILES: Files
     TOTAL: Total
     TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
-    UPLOADOR: OR
+    UPLOADOR: o
   BBCodeParser:
     ALIGNEMENT: Alineación
     ALIGNEMENTEXAMPLE: 'alineado a la derecha'
@@ -166,21 +166,21 @@ es_MX:
     UnlinkRelation: Unlink
   GridField:
     Add: 'Add {name}'
-    Filter: Filter
+    Filter: Filtro
     FilterBy: 'Filter by '
-    Find: Find
+    Find: Buscar
     LEVELUP: 'Level up'
-    LinkExisting: 'Link Existing'
-    NewRecord: 'New %s'
-    NoItemsFound: 'No items found'
-    PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
+    LinkExisting: 'Enlazar existente'
+    NewRecord: 'Nuevo %s'
+    NoItemsFound: 'No hay ítems encontrados'
+    PRINTEDAT: 'Impreso en'
+    PRINTEDBY: 'Imprimir por'
     PlaceHolder: 'Find {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
-    RelationSearch: 'Relation search'
-    ResetFilter: Reset
+    RelationSearch: 'Buscar relación'
+    ResetFilter: Resetear
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'No delete permissions'
+    DeletePermissionsFailure: 'No borrar permisos'
     NEXT: Siguiente
     PREVIOUS: Anterior
   GridFieldDetailForm:
@@ -195,7 +195,7 @@ es_MX:
     TEXT2: 'vínculo para restablecer la contraseña'
     TEXT3: para
   Group:
-    AddRole: 'Add a role for this group'
+    AddRole: 'Agrega un rol para este grupo'
     CHANGEPASSWORDTEXT1: 'Usted ha cambiado su contraseña'
     CHANGEPASSWORDTEXT2: 'Ahora puedes utilizar las siguientes credenciales para ingresar:'
     Code: 'Código del grupo'
@@ -203,10 +203,10 @@ es_MX:
     DefaultGroupTitleContentAuthors: 'Autores de Contenido'
     Description: Descripción
     EMAIL: 'Correo Electrónico'
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    GroupReminder: 'Si eliges el grupo superior, este grupo tomará todos sus roles'
     HELLO: Hey
     Locked: '¿Bloqueado?'
-    NoRoles: 'No roles found'
+    NoRoles: "No se encontraron roles\\n"
     PASSWORD: Contraseña
     Parent: 'Grupo ascendente'
     RolesAddEditLink: 'Agregar/modificar roles'
@@ -226,7 +226,7 @@ es_MX:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anclar
-    BUTTONINSERT: Insert
+    BUTTONINSERT: Insertar
     BUTTONINSERTLINK: 'Insertar enlace'
     BUTTONREMOVELINK: 'Quitar enlace'
     BUTTONUpdate: Update
@@ -240,8 +240,8 @@ es_MX:
     EMAIL: 'Dirección de correo-e'
     FILE: Archivo
     FOLDER: Carpeta
-    FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
+    FROMCMS: 'Desde el CMS'
+    FROMCOMPUTER: 'Desde tu computador'
     FROMWEB: 'From the web'
     FindInFolder: 'Find in Folder'
     IMAGEALT: 'Alternative text (alt)'
@@ -249,7 +249,7 @@ es_MX:
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Dimensiones
     IMAGEHEIGHTPX: Alto
-    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
+    IMAGETITLE: 'Título del tooltip - para información adicional acerca de la imagen'
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Ancho
@@ -269,7 +269,7 @@ es_MX:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Imagen
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Volver"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Agregar un nuevo renglón'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
@@ -298,7 +298,7 @@ es_MX:
     CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
     CONFIRMPASSWORD: 'Confirmar contraseña'
     DefaultAdminFirstname: 'Administrador Predeterminado'
-    DefaultDateTime: default
+    DefaultDateTime: 'Por defecto'
     EMAIL: 'Correo electrónico'
     EMPTYNEWPASSWORD: 'La nueva contraseña no puede estar vacía, por favor, inténtelo de nuevo'
     ENTEREMAIL: 'Por favor ingresa una dirección de correo electrónico para conseguir una contraseña y reiniciar el enlace.'
@@ -409,23 +409,23 @@ es_MX:
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
-    ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
+    ACCESS_HELP: 'Permitir la visualización, agregar y editar usuarios, así como asignar permisos y roles a ellos'
     APPLY_ROLES: 'Aplicar roles a grupos'
-    APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
+    APPLY_ROLES_HELP: 'Habilidad para editar los roles asignados a un grupo. Requiere el permiso "acceso a la sección de usuarios"'
     EDITPERMISSIONS: 'Editar permisos para grupos'
     EDITPERMISSIONS_HELP: 'Habilidad para modificar Permisos y Direcciones IP para un grupo. Requiere permiso para "Acceder a la sección de ''Seguridad´".'
     GROUPNAME: 'Nombre de grupo'
-    IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
+    IMPORTGROUPS: 'Importar grupos'
+    IMPORTUSERS: 'Importar usuarios'
     MEMBERS: Miembros
     MENUTITLE: Security
     MemberListCaution: 'Precaución: Al remover miembros de esta lista, debe eliminarlos de todos los grupos y de la base de datos.'
     NEWGROUP: 'Nuevo grupo'
     PERMISSIONS: Permisos
     ROLES: Roles
-    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
+    ROLESDESCRIPTION: 'Los roles son sets de permisos predefinidos y pueden ser asignados a grupos. <br/> Ellos son heredados desde los grupos superiores si es requerido.'
     TABROLES: Roles
-    Users: Users
+    Users: Usuarios
   SecurityAdmin_MemberImportForm:
     BtnImport: Importar
     FileFieldLabel: 'Archivo CSV <small>(Extensiones permitidas: *.csv)'
@@ -457,24 +457,24 @@ es_MX:
     LESS: menos
     MORE: más
   UploadField:
-    ATTACHFILE: 'Attach a file'
-    ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
-    DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
-    DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
+    ATTACHFILE: 'Adjuntar un archivo'
+    ATTACHFILES: 'Adjuntar archivos'
+    AttachFile: 'Adjuntar un archivo'
+    DELETEINFO: 'Eliminar permanentemente este archivo desde el almacén'
+    DOEDIT: Guardar
+    DROPFILE: 'Arrastrar un archivo'
+    DROPFILES: 'arrastrar archivo aquí'
     Dimensions: Dimensions
-    EDITINFO: 'Edit this file'
-    FIELDNOTSET: 'File information not found'
-    FROMCOMPUTER: 'From your computer'
-    FROMFILES: 'From files'
+    EDITINFO: 'Editar este archivo'
+    FIELDNOTSET: 'Información acerca del archivo no encontrada'
+    FROMCOMPUTER: 'Desde tu computador'
+    FROMFILES: 'Desde archivos'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
-    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
-    STARTALL: 'Start all'
-    Saved: Saved
+    REMOVEERROR: 'Error removiendo archivo'
+    REMOVEINFO: 'Remover este archivo de aquí, pero no borrarlo del almacén de archivos'
+    STARTALL: 'Comenzar todas'
+    Saved: Guardado
   Versioned:
     has_many_Versions: Versiones
