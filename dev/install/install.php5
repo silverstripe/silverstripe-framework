@@ -16,8 +16,10 @@
 
 // speed up mysql_connect timeout if the server can't be found
 ini_set('mysql.connect_timeout', 5);
-
+// Don't die half was through installation; that does more harm than good
 ini_set('max_execution_time', 0);
+// Prevent a white-screen-of-death
+ini_set('display_errors', 'on');
 
 error_reporting(E_ALL | E_STRICT);
 
