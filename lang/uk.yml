@@ -298,10 +298,10 @@ uk:
     CONFIRMNEWPASSWORD: 'Підтвердіть новий пароль'
     CONFIRMPASSWORD: 'Підтвердіть пароль'
     DefaultAdminFirstname: 'Default Admin'
-    DefaultDateTime: default
+    DefaultDateTime: типовий
     EMAIL: Е-пошта
-    EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
-    ENTEREMAIL: 'Please enter an email address to get a password reset link.'
+    EMPTYNEWPASSWORD: 'Новий пароль не може бути порожнім, будь-ласка, спробуйте ще раз'
+    ENTEREMAIL: 'Введіть, будь-ласка, електронну адресу щоб отримати посилання для відновлення паролю.'
     ERRORLOCKEDOUT: 'Ваш екаунт тимчасово заблоковано, тому що було багато невдалих спроб входу. Будь ласка спробуйте знову через 20 хвилин.'
     ERRORNEWPASSWORD: 'Ви ввели новий пароль із відмінностями, спробуйте знову'
     ERRORPASSWORDNOTMATCH: 'Ваш теперішній пароль не збігається, будь ласка, повторіть'
@@ -313,7 +313,7 @@ uk:
     NEWPASSWORD: 'Новий пароль'
     PASSWORD: Пароль
     PLURALNAME: Члени
-    PROFILESAVESUCCESS: 'Successfully saved.'
+    PROFILESAVESUCCESS: 'Збереження пройшло успішно.'
     REMEMBERME: 'Пам''ятати мене наступного разу?'
     SINGULARNAME: Член
     SUBJECTPASSWORDCHANGED: 'Ваш пароль змінено'
@@ -324,10 +324,10 @@ uk:
     WELCOMEBACK: 'Welcome Back, {firstname}'
     YOUROLDPASSWORD: 'Ваш старий пароль'
     belongs_many_many_Groups: Групи
-    db_LastVisited: 'Last Visited Date'
+    db_LastVisited: 'Дата останнього відвідування'
     db_Locale: 'Interface Locale'
     db_LockedOutUntil: 'Заблоковано поки'
-    db_NumVisit: 'Number of Visits'
+    db_NumVisit: 'Кількість відвідувань'
     db_Password: Пароль
     db_PasswordExpiry: 'Дата закінчення терміну дії пароля'
   MemberAuthenticator:
@@ -410,22 +410,22 @@ uk:
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
     ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
-    APPLY_ROLES: 'Apply roles to groups'
+    APPLY_ROLES: 'Застосувати ролі до груп'
     APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
     EDITPERMISSIONS: 'Керувати дозволами для груп'
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
-    GROUPNAME: 'Group name'
-    IMPORTGROUPS: 'Import groups'
+    GROUPNAME: 'Назва групи'
+    IMPORTGROUPS: 'Імпортувати групи'
     IMPORTUSERS: 'Import users'
-    MEMBERS: Members
+    MEMBERS: Члени
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
     NEWGROUP: 'Нова Група'
-    PERMISSIONS: Permissions
-    ROLES: Roles
+    PERMISSIONS: Дозволи
+    ROLES: Ролі
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
-    TABROLES: Roles
-    Users: Users
+    TABROLES: Ролі
+    Users: Користувачі
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
@@ -450,29 +450,29 @@ uk:
     CSVEXPORT: 'Експортувати в CSV'
     PRINT: Друкувати
     Print: Друкувати
-    SELECT: 'Select:'
+    SELECT: 'Вибрати:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
     LESS: менше
     MORE: більше
   UploadField:
-    ATTACHFILE: 'Attach a file'
-    ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    ATTACHFILE: 'Прикріпити файл'
+    ATTACHFILES: 'Прикріпити файли'
+    AttachFile: 'Прикріпити файл'
     DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
+    DOEDIT: Зберегти
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
     Dimensions: Dimensions
-    EDITINFO: 'Edit this file'
+    EDITINFO: 'Редагувати цей файл'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
-    FROMFILES: 'From files'
+    FROMFILES: 'З файлів'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
+    REMOVEERROR: 'Помилка видалення файла'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
     Saved: Saved
