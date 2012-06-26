@@ -199,18 +199,18 @@ uk:
     CHANGEPASSWORDTEXT1: 'Ви змінили свій пароль для'
     CHANGEPASSWORDTEXT2: 'Тепер Ви можете використовувати наступні дані для входу:'
     Code: 'Код групи'
-    DefaultGroupTitleAdministrators: Administrators
+    DefaultGroupTitleAdministrators: Адміністратори
     DefaultGroupTitleContentAuthors: 'Content Authors'
-    Description: Description
+    Description: Опис
     EMAIL: Email
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     HELLO: Привіт
     Locked: 'Заблокувати?'
-    NoRoles: 'No roles found'
+    NoRoles: 'Ролі не знайдені'
     PASSWORD: Password
     Parent: 'Батьківська група'
     RolesAddEditLink: 'Manage roles'
-    Sort: 'Sort Order'
+    Sort: 'Порядок сортування'
     TITLE: 'АйФрейм завантаження зображення'
     has_many_Permissions: Права
     many_many_Members: Члени

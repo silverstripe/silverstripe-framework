@@ -19,9 +19,9 @@ pl:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edytuj i organizuj'
     FILES: Files
-    TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    TOTAL: Razem
+    TOUPLOAD: 'Wybierz pliki do przesłania...'
+    UPLOADINPROGRESS: 'Pliki są przesyłane... proszę czekać'
     UPLOADOR: LUB
   BBCodeParser:
     ALIGNEMENT: Wyrównanie
@@ -119,14 +119,14 @@ pl:
     SINGULARNAME: 'Email Bounce Record'
   Enum:
     ANY: Jakikolwiek
-    LOADING: Loading...
+    LOADING: Wczytywanie...
   File:
     Content: Zawartość
     Filename: 'Nazwa pliku'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
     NOFILESIZE: 'Rozmiar pliku to zero bajtów.'
-    NOVALIDUPLOAD: 'File is not a valid upload'
+    NOVALIDUPLOAD: 'Plik nie został poprawnie przesłany'
     Name: Nazwa
     PLURALNAME: Pliki
     SINGULARNAME: Plik
@@ -135,8 +135,8 @@ pl:
     Title: Tytuł
   FileIFrameField:
     ATTACH: 'Attach {type}'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED: 'Element {type} może zostać dołączony dopiero po pierwszym zapisaniu rekordu.'
+    ATTACHONCESAVED2: 'Pliki mogą zostać dołączone dopiero po pierwszym zapisaniu rekordu.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
     FILE: Plik
@@ -170,7 +170,7 @@ pl:
     FilterBy: 'Filter by '
     Find: Wyszukaj
     LEVELUP: 'Level up'
-    LinkExisting: 'Link Existing'
+    LinkExisting: 'Linkuj istniejący'
     NewRecord: 'Nowy %s'
     NoItemsFound: 'Nie znaleziono elementów'
     PRINTEDAT: 'Wydrukowane na'
@@ -308,8 +308,8 @@ pl:
     ERRORWRONGCRED: 'E-mail lub hasło są nieprawidłowe, Spróbuj ponownie'
     FIRSTNAME: Imię
     INTERFACELANG: 'Język interfejsu'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    LOGGEDINAS: 'You''re logged in as {name}.'
+    INVALIDNEWPASSWORD: 'Nie możesz użyć takiego hasła: {password}'
+    LOGGEDINAS: 'Zostałeś zalogowany jako {name}.'
     NEWPASSWORD: 'Nowe hasło'
     PASSWORD: Hasło
     PLURALNAME: Członkowie
@@ -321,7 +321,7 @@ pl:
     SURNAME: Nazwisko
     VALIDATIONMEMBEREXISTS: 'Użytkownik z tym adresem już istnieje'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
+    WELCOMEBACK: 'Witaj ponownie, {firstname}'
     YOUROLDPASSWORD: 'Twoje stare hasło'
     belongs_many_many_Groups: Grupy
     db_LastVisited: 'Data Ostatniej Wizyty'
@@ -354,9 +354,9 @@ pl:
     TWODIGITYEAR: 'Two-digit year'
   MemberImportForm:
     Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help2: "<div class=\"advanced\">\\n<h4>Zaawansowane użycie</h4>\\n<ul>\\n<li>Dozwolone kolumny: <em>%s</em></li>\\n<li>Istniejący użytkownicy są dopasowani poprzez unikalną właściwość <em>Kod</em> i uaktualniani  nowymi wartościami z zaimportowanego pliku.</li>\\n<li>Grupy mogą być przypisane poprzez kolumnę <em>Grupy</em>. Grupy identyfikowane są poprzez unikalną właściwość  <em>Kod</em>, grupy mogą być oddzielone od siebie przecinkiem. Przypisania użytkowników do grup nie są usuwane.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Created {count} members'
-    ResultDeleted: 'Deleted %d members'
+    ResultDeleted: 'Usunięto %d użytkowników'
     ResultNone: 'No changes'
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
