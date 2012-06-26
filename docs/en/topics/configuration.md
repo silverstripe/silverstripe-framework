@@ -39,7 +39,7 @@ incomplete - please add to it** *Try to keep it in alphabetical order too! :)*
  | BlogEntry::allow_wysiwyg_editing();  |                               | Enable rich text editing for blog posts.  |                                                                                  
  | ContentNegotiator::set_encoding(string $encoding)  |					| The encoding charset to use - UTF-8 by default  |        
  | ContentNegotiator::disable()  |										| Disables the negotiation of content type -usually used to stop it from rewriting the DOCTYPE of the document                                                         
- | DataObject::$create_table_options['MySQLDatabase] = 'ENGINE=MyISAM';|| Set the default database engine to MyISAM. |        
+ | DataObject::$create_table_options['MySQLDatabase'] = 'ENGINE=MyISAM';|	| Set the default database engine to MyISAM (versions 2.4 and below already default to MyISAM) |        
  | Debug::send_errors_to(string $email) |								| Send live errors on your site to this address (site has to be in 'live' mode using Director::set_environment_type(live) for this to occur |        
  | Director::set_environment_type(string dev,test,live) | 				| Sets the environment type (e.g. dev site will show errors, live site hides them and displays a 500 error instead) | 
  | Director::set_dev_servers(array('localhost', 'dev.mysite.com)) |     | Set servers that should be run in dev mode (see [debugging](debugging)) |                                                                                         
