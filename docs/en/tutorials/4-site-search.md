@@ -113,7 +113,7 @@ class.
 	         
 	    <% if Results %>
 	    <ul id="SearchResults">
-	        <% control Results %>
+	        <% loop Results %>
 	        <li>
 	            <a class="searchResultHeader" href="$Link">
 	                <% if MenuTitle %>
@@ -127,7 +127,7 @@ class.
 	            	title="Read more about &quot;{$Title}&quot;"
 	            	>Read more about &quot;{$Title}&quot;...</a>
 	        </li>
-	        <% end_control %>
+	        <% end_loop %>
 	    </ul>
 	    <% else %>
 	    <p>Sorry, your search query did not return any results.</p>
@@ -142,13 +142,13 @@ class.
 	        <a class="prev" href="$Results.PrevLink" title="View the previous page">Prev</a>
 	        <% end_if %>
 	        <span>
-	            <% control Results.Pages %>
+	            <% loop Results.Pages %>
 	                <% if CurrentBool %>
 	                $PageNum
 	                <% else %>
 	                <a href="$Link" title="View page number $PageNum">$PageNum</a>
 	                <% end_if %>
-	            <% end_control %>
+	            <% end_loop %>
 	        </span>
 	        <p>Page $Results.CurrentPage of $Results.TotalPages</p>
 	    </div>

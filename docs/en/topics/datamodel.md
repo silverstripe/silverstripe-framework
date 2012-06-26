@@ -40,7 +40,7 @@ are `filter()` and `sort()`:
 	
 Those of you who know a bit about SQL might be thinking "it looks like you're querying all members, and then filtering
 to those with a first name of 'Sam'. Isn't this very slow?"  Is isn't, because the ORM doesn't actually execute the 
-query until you iterate on the result with a `foreach()` or `<% control %>`.
+query until you iterate on the result with a `foreach()` or `<% loop %>`.
 
 	:::php
 	// The SQL query isn't executed here...
@@ -403,7 +403,7 @@ but using the *obj()*-method or accessing through a template will cast the value
 	
 	  // $myPlayer->MembershipFee() returns a float (e.g. 123.45)
 	  // $myPlayer->obj('MembershipFee') returns a object of type Currency
-	  // In a template: <% control MyPlayer %>MembershipFee.Nice<% end_control %> returns a casted string (e.g. "$123.45")
+	  // In a template: <% loop MyPlayer %>MembershipFee.Nice<% end_loop %> returns a casted string (e.g. "$123.45")
 	  public function getMembershipFee() {
 	    return $this->Team()->BaseFee * $this->MembershipYears;
 	  }

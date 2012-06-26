@@ -130,9 +130,9 @@ and replace it with the following:
 
 	:::ss
 	<ul>
-		<% control BookmarkedPages %>
+		<% loop BookmarkedPages %>
 		<li><a href="admin/page/edit/show/$ID">Edit "$Title"</a></li>
-		<% end_control %>
+		<% end_loop %>
 	</ul>
 
 ## Summary

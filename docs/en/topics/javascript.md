@@ -375,9 +375,9 @@ Template:
 
 	:::ss
 	<ul>
-	<% control Results %>
+	<% loop Results %>
 	  <li id="Result-$ID">$Title</li>
-	<% end_control %>
+	<% end_loop %>
 	</ul>
 
 

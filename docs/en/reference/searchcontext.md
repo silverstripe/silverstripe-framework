@@ -141,9 +141,9 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 	:::ss
 	<% if Results %>
 		<ul>
-			<% control Results %>
-				<li>$Titulo, $Autor</li>
-			<% end_control %>
+			<% loop Results %>
+				<li>$Title, $Autor</li>
+			<% end_loop %>
 		</ul>
 	<% else %>
 		<p>Sorry, your search query did not return any results.</p>
@@ -157,7 +157,7 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 				<% end_if %>
 			
 				<span>
-			    		<% control Results.PaginationSummary(4) %>
+			    		<% loop Results.PaginationSummary(4) %>
 						<% if CurrentBool %>
 							$PageNum
 						<% else %>
@@ -167,7 +167,7 @@ Results.PaginationSummary(4) defines how many pages the search will show in the 
 								&hellip;
 							<% end_if %>
 						<% end_if %>
-					<% end_control %>
+					<% end_loop %>
 				</span>
 			
 				<% if Results.NotLastPage %>

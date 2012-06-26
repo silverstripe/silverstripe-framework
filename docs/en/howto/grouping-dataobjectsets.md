@@ -74,14 +74,14 @@ In this case, the `getTitleFirstLetter()` method defined earlier is used to brea
 	:::ss
 	<%-- Modules list grouped by TitleFirstLetter --%>
 	<h2>Modules</h2>
-	<% control GroupedModules.GroupedBy(TitleFirstLetter) %>
+	<% loop GroupedModules.GroupedBy(TitleFirstLetter) %>
 		<h3>$TitleFirstLetter</h3>
 		<ul>
-			<% control Children %>
+			<% loop Children %>
 				<li>$Title</li>
-			<% end_control %>
+			<% end_loop %>
 		</ul>
-	<% end_control %>
+	<% end_loop %>
 
 ## Grouping Sets By Month
 
@@ -133,14 +133,14 @@ The final step is the render this into the template using the [api:GroupedList->
 	:::ss
 	// Modules list grouped by the Month Posted
 	<h2>Modules</h2>
-	<% control GroupedModulesByDate.GroupedBy(MonthCreated) %>
+	<% loop GroupedModulesByDate.GroupedBy(MonthCreated) %>
 		<h3>$MonthCreated</h3>
 		<ul>
-			<% control Children %>
+			<% loop Children %>
 				<li>$Title ($Created.Nice)</li>
-			<% end_control %>
+			<% end_loop %>
 		</ul>
-	<% end_control %>
+	<% end_loop %>
 
 ## Related
 

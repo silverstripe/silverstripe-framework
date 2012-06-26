@@ -121,10 +121,10 @@ of the CMS you have to take care of instanciation yourself:
 	:::ss
 	// File: mysite/templates/MyController.ss
 	$Form
-	<% control EditorToolbar %>
+	<% with EditorToolbar %>
 		$MediaForm
 		$LinkForm
-	<% end_control %>
+	<% end_with %>
 
 Note: The dialogs rely on CMS-access, e.g. for uploading and browsing files,
 so this is considered advanced usage of the field.

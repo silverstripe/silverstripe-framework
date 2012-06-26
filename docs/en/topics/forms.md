@@ -223,7 +223,7 @@ basic customisation:
 	
 	   <% if Actions %>
 	      <div class="Actions">
-	         <% control Actions %>$Field<% end_control %>
+	         <% loop Actions %>$Field<% end_loop %>
 	      </div>
 	   <% end_if %>
 	</form>
@@ -234,7 +234,7 @@ for the type of field. Pass in the name of the field as the first parameter, as 
 template.
 
 To find more methods, have a look at the `[api:Form]` class, as there is a lot of different methods of customising the form
-templates, for example, you could use `<% control Fields %>` instead of specifying each field manually, as we've done
+templates, for example, you could use `<% loop Fields %>` instead of specifying each field manually, as we've done
 above.
 
 ### Custom form field templates

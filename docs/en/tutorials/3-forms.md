@@ -388,12 +388,12 @@ The final step is to create the template to display our data. Change the 'Browse
 			$BrowserPollForm
 		<% else %>
 		<ul>
-			<% control BrowserPollResults %>
+			<% loop BrowserPollResults %>
 			<li>
 				<div class="browser">$Browser: $Percentage%</div>
 				<div class="bar" style="width:$Percentage%">&nbsp;</div>
 			</li>
-			<% end_control %>
+			<% end_loop %>
 		</ul>
 		<% end_if %>
 	</div>
