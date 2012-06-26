@@ -630,7 +630,7 @@ jQuery.noConflict();
 		 * we can fix the height cropping.
 		 */
 		
-		$('.cms .field.dropdown select, .cms .field select[multiple]').entwine({
+		$('.cms .field.dropdown select, .countrydropdown, .cms .field select[multiple]').entwine({
 			onmatch: function() {
 				if(this.is('.no-chzn')) {
 					this._super();
