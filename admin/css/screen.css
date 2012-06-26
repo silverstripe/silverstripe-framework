@@ -181,6 +181,7 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 .field .chzn-container-single .chzn-single div { width: 24px; }
 .field .chzn-container-single .chzn-single div b { background-position: 4px 0px; }
 .field input.hasDatepicker { width: 50%; max-width: 96px; }
+.field input.month, .field input.day, .field input.year { width: 56px; }
 .field.remove-splitter { border-bottom: none; box-shadow: none; }
 
 /** ---------------------------------------------------- Buttons ---------------------------------------------------- */
