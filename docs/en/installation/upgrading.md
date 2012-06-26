@@ -3,6 +3,16 @@
 Usually an update or upgrade your SilverStripe installation just means overwriting files and updating your
 database-schema. Please see your [upgrade notes and changelogs](/changelogs).
 
+# Upgrade info
+
+* One of the major changes in upgrading to SilverStripe 3.0 is the default database engine changes from MyISAM to InnoDB
+this will affect some modules like forum which currently use MyISAM full text search functionality.
+Please bear this in mind when upgrading and confirm any modules you are using will support the changes you may need to upgrade 
+some of your modules.
+* The Sapphire folder has been renamed to framework so any custom code pointing to Sapphire will need to be updated.
+* It is recommended that you review the change logs these can be viewed at https://github.com/silverstripe/sapphire/blob/master/docs/en/changelogs/3.0.0.md
+* If your current installation is using custom plugins for TinyMCE these may need to be upgraded, please check to see if they will work.
+
 ## Process
 
 Never update a website on the live server without trying it on a development copy first.
@@ -12,10 +22,11 @@ Never update a website on the live server without trying it on a development cop
 *  Backup your website
 *  Download the new release and uncompress it to a temporary folder
 *  Leave custom folders like *mysite* or *themes* in place.
-*  Identify system folders in your webroot (`cms`, `framework` and any additional modules). 
+*  Identify system folders in your webroot (`cms`, `framework`, `sapphire` and any additional modules). 
 * Delete existing system folders (or move them outside of your webroot)
 * Extract and replace system folders from your download (Deleting instead of "copying over" existing folders
 ensures that files removed from the new SilverStripe release are not persisting in your installation)
+* Check your .htaccess file and replace any instances of sapphire with framework
 
 *  Visit http://yoursite.com/dev/build/?flush=1 to rebuild the website Database
 *  Check if you need to adapt your code to changed APIs
