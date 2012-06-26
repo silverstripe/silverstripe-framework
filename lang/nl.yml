@@ -13,16 +13,16 @@ nl:
     TYPE: Type
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
-    DRAGFILESHERE: 'Drag files here'
+    ChooseFiles: 'Selecteer bestanden'
+    DRAGFILESHERE: 'Sleep bestanden hiernaar toe'
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
-    EDITANDORGANIZE: 'Edit & organize'
+    EDITANDORGANIZE: 'Bewerk en beheer'
     FILES: Files
     TOTAL: Total
     TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
-    UPLOADOR: OR
+    UPLOADOR: OF
   BBCodeParser:
     ALIGNEMENT: Uitlijning
     ALIGNEMENTEXAMPLE: 'rechts uitgelijnd'
@@ -138,7 +138,7 @@ nl:
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
+    DISALLOWEDFILETYPE: 'Dit type bestand mag niet worden opgeslagen'
     FILE: Bestand
     FROMCOMPUTER: 'Vanaf computer'
     FROMFILESTORE: 'Vanaf de website''s bestandsopslag'
@@ -150,7 +150,7 @@ nl:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Form:
     FIELDISREQUIRED: '%s is verplicht'
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'Afbeelding uploaden'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'De ingevoerde waarde is niet uniek'
     VALIDATIONPASSWORDSDONTMATCH: 'Wachtwoorden komen niet overeen'
@@ -162,25 +162,25 @@ nl:
     NONE: geen
   GridAction:
     DELETE_DESCRIPTION: Delete
-    Delete: Delete
-    UnlinkRelation: Unlink
+    Delete: Verwijder
+    UnlinkRelation: Ontkoppelen
   GridField:
     Add: 'Add {name}'
     Filter: Filter
     FilterBy: 'Filter by '
-    Find: Find
+    Find: Zoek
     LEVELUP: 'Level up'
     LinkExisting: 'Link Existing'
-    NewRecord: 'New %s'
-    NoItemsFound: 'No items found'
-    PRINTEDAT: 'Printed at'
-    PRINTEDBY: 'Printed by'
+    NewRecord: 'Nieuw %s'
+    NoItemsFound: 'Geen items gevonden.'
+    PRINTEDAT: 'Geprint om'
+    PRINTEDBY: 'Geprint door'
     PlaceHolder: 'Find {type}'
     PlaceHolderWithLabels: 'Find {type} by {name}'
     RelationSearch: 'Relation search'
     ResetFilter: Reset
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'No delete permissions'
+    DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
     NEXT: Volgende
     PREVIOUS: Vorige
   GridFieldDetailForm:
@@ -195,7 +195,7 @@ nl:
     TEXT2: 'wachtwoord reset link'
     TEXT3: voor
   Group:
-    AddRole: 'Add a role for this group'
+    AddRole: 'Voeg een rol toe aan deze groep'
     CHANGEPASSWORDTEXT1: 'U heeft het wachtwoord veranderd voor'
     CHANGEPASSWORDTEXT2: 'U kunt nu onderstaande gegevens gebruiken om in te loggen:'
     Code: 'Groep code'
@@ -203,10 +203,10 @@ nl:
     DefaultGroupTitleContentAuthors: 'Inhoud Auteurs'
     Description: 'Omschrijving '
     EMAIL: E-mail
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    GroupReminder: 'Als je de bovenliggende groep selecteert, neemt deze groep alle rollen over'
     HELLO: Hallo
     Locked: 'Gesloten?'
-    NoRoles: 'No roles found'
+    NoRoles: 'Geen rollen gevonden'
     PASSWORD: Wachtwoord
     Parent: 'Bovenliggende groep'
     RolesAddEditLink: 'Toevoegen/wijzigingen rollen'
@@ -226,7 +226,7 @@ nl:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anker
-    BUTTONINSERT: Insert
+    BUTTONINSERT: Invoegen
     BUTTONINSERTLINK: 'Link invoegen'
     BUTTONREMOVELINK: 'Link verwijderen'
     BUTTONUpdate: Update
@@ -240,8 +240,8 @@ nl:
     EMAIL: Emailadres
     FILE: Bestand
     FOLDER: Map
-    FROMCMS: 'From the CMS'
-    FROMCOMPUTER: 'From your computer'
+    FROMCMS: 'Vanaf CMS'
+    FROMCOMPUTER: 'Vanaf computer'
     FROMWEB: 'From the web'
     FindInFolder: 'Find in Folder'
     IMAGEALT: 'Alternative text (alt)'
@@ -269,12 +269,12 @@ nl:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Afbeelding
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Ga terug"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Nieuwe rij toevoegen'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
-    DropdownBatchActionsDefault: Actions
+    DropdownBatchActionsDefault: Acties
     HELP: Help
     PAGETYPE: 'Pagina type: '
     PERMAGAIN: 'U bent uitgelogd uit het CMS.  Als U weer wilt inloggen vul dan uw gebruikersnaam en wachtwoord hier beneden in.'
@@ -284,7 +284,7 @@ nl:
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
-    VersionUnknown: unknown
+    VersionUnknown: onbekend
   LoginAttempt:
     Email: 'Email adres '
     IP: 'IP Adres'
@@ -298,7 +298,7 @@ nl:
     CONFIRMNEWPASSWORD: 'Bevestig het nieuwe wachtwoord'
     CONFIRMPASSWORD: 'Bevestig wachtwoord'
     DefaultAdminFirstname: 'Standaard Beheerder'
-    DefaultDateTime: default
+    DefaultDateTime: Standaard
     EMAIL: Email
     EMPTYNEWPASSWORD: 'Het nieuwe wachtwoord mag niet leeg zijn, probeer opnieuw'
     ENTEREMAIL: 'Typ uw e-mailadres om een link te ontvangen waarmee u uw wachtwoord kunt resetten.'
@@ -334,9 +334,9 @@ nl:
     TITLE: 'Email &amp; Wachtwoord'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
+    Custom: Aangepast
+    DATEFORMATBAD: 'Datum is niet correct opgegeven'
+    DAYNOLEADING: 'Dag van de maand zonder voorloop-nul'
     DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
     FOURDIGITYEAR: 'Four-digit year'
     FULLNAMEMONTH: 'Full name of month (e.g. June)'
@@ -347,11 +347,11 @@ nl:
     SHORTMONTH: 'Short name of month (e.g. Jun)'
     TOGGLEHELP: 'Toggle formatting help'
     TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
+    TWODIGITHOUR: 'Twee cijfer van het uur (00 tot 23)'
     TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
     TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
     TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
+    TWODIGITYEAR: 'Twee-cijferig jaar'
   MemberImportForm:
     Help1: '<p>Importeer leden in <em>CSV</em> formaat (Kommagescheiden bestandsformaat). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
     Help2: '<div class="advanced"><h4>Geavanceerd gebruik</h4><ul><li>Toegestane kolommen: <em>%s</em></li><li>Bestaande leden worden geïdentificeerd door middel van hun unieke <em>Code</em> waarde en aangepast met de nieuwe waarden van het geïmporteerde bestand</li><li>Groepen kunnen toegewezen worden met de <em>Groups</em> kolom. Groepen worden geïdentificeerd met hun <em>Code</em> waarde en meerdere groepen kunnen worden gescheiden met een komma. Bestaande groep lidmaatschappen worden niet gewist.</li></ul></div></ul></div>'
@@ -457,24 +457,24 @@ nl:
     LESS: minder
     MORE: meer
   UploadField:
-    ATTACHFILE: 'Attach a file'
-    ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
-    DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
-    DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
+    ATTACHFILE: 'Voeg een bestand toe'
+    ATTACHFILES: 'Voeg bestanden toe'
+    AttachFile: 'Voeg een bestand toe'
+    DELETEINFO: 'Verwijder dit bestand uit bestandsopslag van de website.'
+    DOEDIT: Bewaar
+    DROPFILE: 'Bestand hiernaar toe slepen'
+    DROPFILES: 'Sleep hier je bestanden'
     Dimensions: Dimensions
-    EDITINFO: 'Edit this file'
-    FIELDNOTSET: 'File information not found'
-    FROMCOMPUTER: 'From your computer'
-    FROMFILES: 'From files'
+    EDITINFO: 'Bewerk dit bestand'
+    FIELDNOTSET: 'Bestandsinformatie niet gevonden'
+    FROMCOMPUTER: 'Vanaf computer'
+    FROMFILES: 'Bestaande bestanden'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
-    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
-    STARTALL: 'Start all'
-    Saved: Saved
+    REMOVEERROR: 'Fout bij verwijderen'
+    REMOVEINFO: 'Verwijder (ontkoppel) dit bestand, maar behoud het in bestandsopslag van de website.'
+    STARTALL: 'Start alles'
+    Saved: 'Succesvol opgeslagen'
   Versioned:
     has_many_Versions: Versies

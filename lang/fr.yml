@@ -21,7 +21,7 @@ fr:
     FILES: Fichiers
     TOTAL: Total
     TOUPLOAD: 'Choisissez les fichiers à télécharger'
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    UPLOADINPROGRESS: 'Patientez s''il vous plaît… téléchargement en cours '
     UPLOADOR: OU
   BBCodeParser:
     ALIGNEMENT: Alignement
@@ -69,7 +69,7 @@ fr:
     - Oui
   ComplexTableField:
     CLOSEPOPUP: 'Ferme Popup'
-    SUCCESSADD2: 'Added {name}'
+    SUCCESSADD2: '{name} ajouté'
     SUCCESSEDIT: 'Sauvegardé %s %s %s'
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
@@ -97,16 +97,16 @@ fr:
     MONTHS: mois
     SEC: seconde
     SECS: secondes
-    TIMEDIFFAGO: '{difference} ago'
-    TIMEDIFFIN: 'in {difference}'
+    TIMEDIFFAGO: 'Il y a {difference}'
+    TIMEDIFFIN: 'Dans {difference}'
     YEAR: année
     YEARS: années
   DateField:
     NOTSET: 'pas d''ensemble'
     TODAY: 'aujourd''hui'
-    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
-    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
-    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+    VALIDDATEFORMAT2: 'Saisissez la date au format valide ({format})'
+    VALIDDATEMAXDATE: 'La date doit être antérieure ou égale à celle qui a été autorisée ({date})'
+    VALIDDATEMINDATE: 'La date doit être plus récente ou égale à celle qui a été autorisée ({date})'
   Director:
     ADD: Ajouter
     INVALID_REQUEST: 'Requête non valide'
@@ -123,7 +123,7 @@ fr:
   File:
     Content: Contenu
     Filename: 'Nom du fichier'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSION: 'Cette extension n’est pas autorisée (les valides sont&nbsp;: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
     NOFILESIZE: 'La taille du fichier est de zéro bytes.'
     NOVALIDUPLOAD: 'Le fichier n’est pas valide pour le téléversement'
@@ -147,7 +147,7 @@ fr:
   Filesystem:
     IMPORT_TAB_HEADER: Importer
     SEARCHLISTINGS: Rechercher
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+    SYNCRESULTS: 'Synchronisation terminée&nbsp;: {createdcount} éléments créés, {deletedcount} éléments supprimés '
   Form:
     FIELDISREQUIRED: '%s est requis'
     TITLE: 'Iframe de chargement d’images'
@@ -169,14 +169,14 @@ fr:
     Filter: Filtrer
     FilterBy: 'Filtrer par'
     Find: Trouver
-    LEVELUP: 'Level up'
+    LEVELUP: 'Monter d’un niveau'
     LinkExisting: 'Lien existant'
     NewRecord: 'Nouveau %s'
     NoItemsFound: 'Aucun élément n’a été trouvé.'
     PRINTEDAT: 'Imprimé le'
     PRINTEDBY: 'Imprimé par'
-    PlaceHolder: 'Find {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
+    PlaceHolder: 'Rechercher {type}'
+    PlaceHolderWithLabels: 'Rechercher {type} par {name}'
     RelationSearch: 'Rechercher relations'
     ResetFilter: Réinitialiser
   GridFieldAction_Delete:
@@ -186,8 +186,8 @@ fr:
   GridFieldDetailForm:
     Create: Créer
     Delete: Supprimer
-    DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
+    DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
+    Deleted: '%s %s supprimés'
     HELLO: Salut
     Save: Enregistrer
     Saved: '%s %s sauvegardés'
@@ -197,7 +197,7 @@ fr:
   Group:
     AddRole: 'Ajouter un rôle à ce groupe '
     CHANGEPASSWORDTEXT1: 'Vous avez modifié votre mot de passe pour'
-    CHANGEPASSWORDTEXT2: 'Vous pouvez maintenant utiliser les détails suivants pour vous connecter :'
+    CHANGEPASSWORDTEXT2: 'Vous pouvez maintenant utiliser les identifiants suivants pour vous connecter&nbsp;:'
     Code: 'Code de groupe'
     DefaultGroupTitleAdministrators: Administrateur
     DefaultGroupTitleContentAuthors: 'Auteurs du contenu'
@@ -212,11 +212,11 @@ fr:
     RolesAddEditLink: 'Ajouter/éditer les rôles'
     Sort: 'Ordre de tri'
     TITLE: 'Fenêtre de chargement d''images'
-    has_many_Permissions: Permissions
+    has_many_Permissions: Autorisations
     many_many_Members: Membres
   GroupImportForm:
     Help1: '<p>Importer un ou plusieurs groupe(s) au format <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Montrer l''usage avancé</a></small></p>'
-    Help2: '<div class="advanced"><h4>Advanced usage</h4><ul><li>Colonnes permises : <em>%s</em></li><li>Les groupes existants dont le <em>Code</em> valeur concorde, sont mis à jour avec les nouvelles valeurs du fichier importé.</li><li>Une hiérarchie de groupe peut être créé avec la colonne <em>ParentCode</em>.</li><li>Les codes de permissions peuvent être assignés grâce à la colonne <em>PermissionCode</em>. Les codes permissions ne sont pas effacés. </li></ul></div>'
+    Help2: "<div class=\"advanced\">\\n<h4>Utilisations avancée</h4>\\n<ul>\\n<li>Colonnes autorisées&nbsp;: <em>%s</em></li>\\n<li>Les groupes existants dont la valeur <em>Code</em> concorde seront mis à jour avec les données du fichier importé.</li>\\n<li>Des hiérarchies entre groupes peuvent être créées à l’aide de la colonne <em>ParentCode</em>.</li>\\n<li>Des autorisations peuvent être assignées par la colonne <em>PermissionCode</em>. Les autorisations existantes ne seront pas effacées.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Created {count} groups'
     ResultDeleted: '%d groupes supprimés'
     ResultUpdated: '%d groupes mises à jour'
@@ -224,7 +224,7 @@ fr:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: 'Add URL'
-    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ADJUSTDETAILSDIMENSIONS: 'Détails &amp; dimensions'
     ANCHORVALUE: Ancre
     BUTTONINSERT: Insérer
     BUTTONINSERTLINK: 'Insérer un lien'
@@ -243,17 +243,17 @@ fr:
     FROMCMS: 'Depuis le SGC'
     FROMCOMPUTER: 'Depuis votre ordinateur'
     FROMWEB: 'From the web'
-    FindInFolder: 'Find in Folder'
+    FindInFolder: 'Trouver dans un dossier'
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Texte alternatif (alt) - s''affiche si l''image ne peut être affichée.'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Dimensions
     IMAGEHEIGHTPX: Hauteur
     IMAGETITLE: 'Texte du titre (tooltip) - informations à propos de l''image'
-    IMAGETITLETEXT: 'Title text (tooltip)'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGETITLETEXT: 'Texte du titre (info-bulle)'
+    IMAGETITLETEXTDESC: 'Autres informations à propos de l’image'
     IMAGEWIDTHPX: Largeur
-    INSERTMEDIA: 'Insert Media'
+    INSERTMEDIA: 'Insérer un support audiovisuel'
     LINK: Lien
     LINKANCHOR: 'Ancre sur cette page'
     LINKDESCR: 'Description du lien'
@@ -266,21 +266,21 @@ fr:
     PAGE: Page
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    UpdateMEDIA: 'Update Media'
+    UpdateMEDIA: 'Mettre à jour le support audiovisuel'
   ImageField:
     IMAGE: Image
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Appliquer le filtre"  GridFieldItemEditView.ss:    Go back: "Revenir en arrière"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Ajouter une nouvelle ligne'
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    CANT_REORGANISE: 'Vous n’avez pas l’autorisation de modifier les pages de premier niveau. Vos modifications n’ont pas été enregistrées.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
     HELP: Aide
-    PAGETYPE: 'Type de page :'
+    PAGETYPE: 'Type de page&nbsp;:'
     PERMAGAIN: 'Vous avez été déconnecté du CMS. Si vous voulez vous reconnecter, entrez un nom d''utilisateur et un mot de passe ci-dessous.'
     PERMALREADY: 'Désolé, mais vous ne pouvez pas accéder à cette partie du CMS. Si vous voulez changer d''identité, faites le ci-dessous'
     PERMDEFAULT: 'Saisissez votre adresse de courriel et votre mot de passe pour accéder au CMS.'
-    PLEASESAVE: 'Enregistez la page s''il vous plaît : Cette page ne pouvait pas être actualisée, car elle n''a pas encore été enregistrée.'
+    PLEASESAVE: 'Enregistrez la page s’il vous plaît&nbsp;: elle ne pouvait pas être mise à jour car elle n’avait pas encore été sauvegardée.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
@@ -308,8 +308,8 @@ fr:
     ERRORWRONGCRED: 'Il semble que ce ne soit pas le bon email ou mot de passe. Essayez encore s''il vous plaît.'
     FIRSTNAME: Prénom
     INTERFACELANG: 'Langue de l''interface'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    LOGGEDINAS: 'You''re logged in as {name}.'
+    INVALIDNEWPASSWORD: 'Nous ne pouvons pas accepter le mot de passe {password}'
+    LOGGEDINAS: 'Vous êtes connecté comme {name}.'
     NEWPASSWORD: 'Nouveau mot de passe'
     PASSWORD: 'Mot de passe'
     PLURALNAME: Membres
@@ -320,8 +320,8 @@ fr:
     SUBJECTPASSWORDRESET: 'Lien pour modifier votre mot de passe'
     SURNAME: 'Nom de famille'
     VALIDATIONMEMBEREXISTS: 'Il existe déjà un membre avec cet email'
-    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
+    ValidationIdentifierFailed: 'On ne peut pas réenregistrer le membre nº {id} avec un identifiant identique  ({name} = {value}))'
+    WELCOMEBACK: 'Bienvenue {firstname}'
     YOUROLDPASSWORD: 'Votre ancien mot de passe'
     belongs_many_many_Groups: Groupes
     db_LastVisited: 'Date de la dernière visite'
@@ -354,7 +354,7 @@ fr:
     TWODIGITYEAR: 'L’année sur deux chiffres'
   MemberImportForm:
     Help1: '<p>Importer les membres au format<em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Afficher l''usage avancé.</a></small></p>'
-    Help2: '<div class="advanced"><h4>Advanced usage</h4><ul><li>Colonnes permises : <em>%s</em></li><li>Les membres existants dont le <em>Code</em> valeur concorde, sont mis à jour avec les nouvelles valeurs du fichier importé.</li><li>Les groupes peuvent être assignés par la colonne <em>Groups</em>. Les groupes sont identifiés par <em>Code</em> , les groupes multiples sont séparés par une virgule. Les groupes existants ne sont pas effacés.</li></ul></div>'
+    Help2: "<div class=\"advanced\">\\n<h4>Utilisations avancée</h4>\\n<ul>\\n<li>Colonnes autorisées&nbsp;: <em>%s</em></li>\\n<li>Les membres existants dont la valeur <em>Code</em> concorde seront mis à jour avec les données du fichier importé.</li>\\n<li>Des groupes peuvent être assignés par la colonne <em>Groups</em>. Plusieurs groupes, identifiés par leur <em>Code</em>, peuvent être assignés en les séparant par des virgules. Les groupes existants ne seront pas effacés.</li>\\n</ul>\\n</div>\\n"
     ResultCreated: 'Created {count} members'
     ResultDeleted: '%d membres supprimés'
     ResultNone: 'Aucun changements'
@@ -376,18 +376,18 @@ fr:
   NullableField:
     IsNullLabel: 'Est Null'
   NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+    VALIDATION: '« {value} » n’est pas un chiffre, seule donnée acceptée dans ce champ '
   Permission:
     AdminGroup: Administrateur
     CMS_ACCESS_CATEGORY: 'Accès au CMS'
     FULLADMINRIGHTS: 'Droits d''administration complets'
-    FULLADMINRIGHTS_HELP: 'Implique et écrase toute les autres permissions assignées.'
+    FULLADMINRIGHTS_HELP: 'Implique et prévaut sur toutes les autres autorisations assignées.'
     IMPORTSPECFIELDS: 'Database columns'
     IMPORTSPECRELATIONS: Relations
   PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "{title}"'
-    FromGroup: 'inherited from group "{title}"'
-    FromRole: 'inherited from role "{title}"'
+    AssignedTo: 'assignée au groupe « {title} »'
+    FromGroup: 'hérité du groupe « {title} »'
+    FromRole: 'héritée du rôle « {title} »'
     FromRoleOnGroup: 'hérité du rôle "%s" du groupe "%s"'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rôles et autorisations d’accès'
@@ -409,26 +409,26 @@ fr:
     PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
     PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
-    ACCESS_HELP: 'Permettre la visualisation, l''addition et l''édition des utilisateurs, aussi bien que leur assigner des permissions et des rôles.'
+    ACCESS_HELP: 'Permet de consulter, d’ajouter et d’éditer les utilisateurs, aussi bien que de leur assigner des autorisations et des rôles.'
     APPLY_ROLES: 'Appliquer des rôles aux groupes'
-    APPLY_ROLES_HELP: 'Possibilité d''éditer les rôles assignés à un groupe. Nécessite "Access to ''Security'' section".'
-    EDITPERMISSIONS: 'Gérer les permissions des groupes'
-    EDITPERMISSIONS_HELP: 'Possibilité d''éditer les permissions et les l''adresses IP pour un groupe. Nécessite "Access to ''Security'' section".'
+    APPLY_ROLES_HELP: 'Possibilité d''éditer les rôle assignés à un groupe. Nécessite l’autorisation « Accès à la section “Utilisateurs” ».'
+    EDITPERMISSIONS: 'Gérer les autorisations des groupes'
+    EDITPERMISSIONS_HELP: 'Possibilité d''éditer les autorisations et les adresses IP pour un groupe. Nécessite l’autorisation « Accès à la section “Securité” ».'
     GROUPNAME: 'Nom du group'
     IMPORTGROUPS: 'Importer groupes'
     IMPORTUSERS: 'Importer utilisateurs'
     MEMBERS: Membres
     MENUTITLE: Sécurité
-    MemberListCaution: 'Attention : Enlever des membres de cette liste va les enlever de tous les groupes et de la base de donnée'
-    NEWGROUP: 'Nouveau Groupe'
-    PERMISSIONS: Permissions
+    MemberListCaution: 'Attention&nbsp;: en supprimant des membres de cette liste vous les enlèverez de tous les groupes ainsi que de la base de données'
+    NEWGROUP: 'Nouveau groupe'
+    PERMISSIONS: Autorisations
     ROLES: Rôles
-    ROLESDESCRIPTION: 'Cette section vous permet d''ajouter des rôles à ce groupe. Les rôles sont des regroupements logiques d''autorisations, qui peuvent être modifiés dans l''onglet Rôles'
+    ROLESDESCRIPTION: 'Les rôles sont des regroupements logiques d’autorisations qui peuvent être assignés à des groupes.<br />Ils peuvent être hérités de groupes parents, si nécessaire.'
     TABROLES: Rôles
     Users: Utilisateurs
   SecurityAdmin_MemberImportForm:
     BtnImport: Importer
-    FileFieldLabel: 'Fichier CSV <small>(Extension permise: *.csv)</small>'
+    FileFieldLabel: 'Fichier CSV <small>(extension autorisée&nbsp;: *.csv)</small>'
   SilverStripeNavigator:
     Edit: 'Tout modifier'
     FILTER: Filtrer
@@ -450,9 +450,9 @@ fr:
     CSVEXPORT: 'Exporter vers un fichier CSV'
     PRINT: Imprimer
     Print: Imprimer
-    SELECT: 'Sélectionner:'
+    SELECT: 'Sélectionner&nbsp;:'
   TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+    VALIDATEFORMAT: 'Saisissez l’heure au format valide ({format})'
   ToggleField:
     LESS: moins
     MORE: plus
@@ -469,8 +469,8 @@ fr:
     FIELDNOTSET: 'Aucune information sur le fichier n''a été trouvée '
     FROMCOMPUTER: 'Depuis votre ordinateur'
     FROMFILES: 'Depuis les fichiers'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
+    MAXNUMBEROFFILES: 'Le nombre maximal de {count} fichiers a été dépassé.'
+    MAXNUMBEROFFILESSHORT: 'On ne peut pas télécharger plus de {count} fichiers'
     REMOVE: Supprimer
     REMOVEERROR: 'Le fichier n’a pas pu être supprimé'
     REMOVEINFO: 'Supprimer ce fichier ici sans l’effacer des archives'
