@@ -41,7 +41,7 @@ The function is defined as static and calls `update()` with an array and it also
 	static function add_to_class($class, $extensionClass, $args = null) {
 		if($class == 'MyClass') {
 			Config::inst()->update($class, 'db', array(
-				'Debug' => 'Varchar'
+				'FooterContent' => 'Varchar'
 			));
 		}
 		parent::add_to_class($class, $extensionClass, $args);
@@ -53,7 +53,7 @@ Alternatively, you can define statics on the extension directly, like this:
 	<?php
 	//...
 	static $db = array(
-		'Debug' => 'Varchar'
+		'FooterContent' => 'Varchar'
 	);
 
 Then add a link to your extension in the _config.php file like below.
