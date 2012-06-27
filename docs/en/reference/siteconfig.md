@@ -58,6 +58,7 @@ Alternatively, you can define statics on the extension directly, like this:
 
 Then add a link to your extension in the _config.php file like below.
 
+	:::php
 	Object::add_extension('SiteConfig', 'CustomSiteConfig');
 
 
