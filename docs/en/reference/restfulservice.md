@@ -167,7 +167,7 @@ Put something like this code in mysite/code/Page.php inside class Page_Controlle
 		}
 
 
-Put something like this code in mysite/templates/Layout/HomePage.ss:
+Put something like this code in `themes/<your-theme>/templates/Layout/HomePage.ss`:
 
 	:::ss
 	<h3>My Latest Del.icio.us Links</h3>

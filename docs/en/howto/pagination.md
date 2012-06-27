@@ -21,6 +21,10 @@ information.
 		return new PaginatedList(Page::get(), $this->request);
 	}
 
+Note that the concept of "pages" used in pagination does not necessarily
+mean that we're dealing with `Page` classes, its just a term to describe
+a sub-collection of the list.
+
 ## Setting Up The Template
 
 Now all that remains is to render this list into a template, along with pagination

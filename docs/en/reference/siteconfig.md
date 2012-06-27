@@ -1,4 +1,4 @@
-# SiteConfig
+# SiteConfig: Global database content
 
 ## Introduction
 
