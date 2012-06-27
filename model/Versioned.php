@@ -1025,7 +1025,10 @@ class Versioned extends DataExtension {
 	}
 	
 	/**
-	 * Return the specific version of the given id
+	 * Return the specific version of the given id.
+	 * Caution: The record is retrieved as a DataObject, but saving back modifications
+	 * via write() will create a new version, rather than modifying the existing one.
+	 * 
 	 * @return DataObject
 	 */
 	static function get_version($class, $id, $version) {

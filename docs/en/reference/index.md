@@ -31,4 +31,3 @@ Reference articles complement our auto-generated [API docs](http://api.silverstr
 * [TableListField](tablelistfield): View and delete records in the CMS
 * [Typography](typography): CSS file to enable WYSIWYG previews in the CMS
 * [urlvariabletools](urlvariabletools): Debug and maintenance switches
-* [Versioned](versioned): Extension for SiteTree and other classes to store old versions and provide "staging"
