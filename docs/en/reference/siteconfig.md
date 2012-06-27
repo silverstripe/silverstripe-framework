@@ -65,6 +65,56 @@ the admin interface. You may need to reload it with a ?flush=1 on the end.
 
 You can define as many extensions for `[api:SiteConfig]` as you need. For example if you are developing a module you can define
 your own global settings for the dashboard.
+N.B Using extraStatistics on extensions has been deprecated as of SilverStripe 3.0 please see the details below
+
+### SilverStripe 3.0 DataExtension and deprecated extraStatics on extension classes {#extensions}
+
+`DataObjectDecorator` has been renamed to `DataExtension`. Any classes that extend `DataObjectDecorator`
+should now extend `DataExtension` instead.
+
+`extraStatics()` on extensions is now deprecated.
+
+Instead of using `extraStatics()`, you can simply define static variables on your extension directly.
+
+If you need custom logic, e.g. checking for a class before applying the statics on the extension,
+you can use `add_to_class()` as a replacement to `extraStatics()`.
+
+Given the original `extraStatics` function:
+
+	<?php
+	//...
+	function extraStatics($class, $extensionClass) {
+		if($class == 'MyClass') {
+			return array(
+				'db' => array(
+					'Title' => 'Varchar'
+				);
+			);
+		}
+	}
+
+This would now become a static function `add_to_class`, and calls `update()` with an array
+instead of returning it. It also needs to call `parent::add_to_class()`:
+
+	<?php
+	//...
+	static function add_to_class($class, $extensionClass, $args = null) {
+		if($class == 'MyClass') {
+			Config::inst()->update($class, 'db', array(
+				'Title' => 'Varchar'
+			));
+		}
+		parent::add_to_class($class, $extensionClass, $args);
+	}
+
+Alternatively, you can define statics on the extension directly, like this:
+
+	<?php
+	//...
+	static $db = array(
+		'Title' => 'Varchar'
+	);
+
 
 ## API Documentation
 `[api:SiteConfig]`
