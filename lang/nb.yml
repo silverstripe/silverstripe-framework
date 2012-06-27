@@ -13,11 +13,11 @@ nb:
     TYPE: 'File type'
     URL: URL
   AssetUploadField:
-    ChooseFiles: 'Choose files'
+    ChooseFiles: 'Velg filer'
     DRAGFILESHERE: 'Drag files here'
     DROPAREA: 'Drop Area'
     EDITALL: 'Edit all'
-    EDITANDORGANIZE: 'Edit & organize'
+    EDITANDORGANIZE: 'Rediger & organiser'
     FILES: Files
     TOTAL: Total
     TOUPLOAD: 'Choose file(s) to upload...'
@@ -139,7 +139,7 @@ nb:
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    FILE: File
+    FILE: Fil
     FROMCOMPUTER: 'From your Computer'
     FROMFILESTORE: 'From the File Store'
     NOSOURCE: 'Please select a source file to attach'
@@ -195,21 +195,21 @@ nb:
     TEXT2: 'passord resett link'
     TEXT3: for
   Group:
-    AddRole: 'Add a role for this group'
+    AddRole: 'Legg en rolle til denne gruppen'
     CHANGEPASSWORDTEXT1: 'Du har byttet passordet for'
     CHANGEPASSWORDTEXT2: 'Du kan nå bruke følgende informasjon for å logge deg inn:'
     Code: 'Gruppe Kode'
-    DefaultGroupTitleAdministrators: Administrators
-    DefaultGroupTitleContentAuthors: 'Content Authors'
+    DefaultGroupTitleAdministrators: Administratorer
+    DefaultGroupTitleContentAuthors: Innholdsforfattere
     Description: Beskrivelse
     EMAIL: Epost
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     HELLO: Hei
     Locked: 'Låst?'
-    NoRoles: 'No roles found'
+    NoRoles: 'Ingen roller funnet'
     PASSWORD: Passord
     Parent: 'Foreldre Gruppe'
-    RolesAddEditLink: 'Manage roles'
+    RolesAddEditLink: 'Administrer roller'
     Sort: Sorteringsrekkefølge
     TITLE: 'Bildeopplasnings ramme'
     has_many_Permissions: Tillatelser
@@ -226,7 +226,7 @@ nb:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Lenke
-    BUTTONINSERT: Insert
+    BUTTONINSERT: 'Sett inn'
     BUTTONINSERTLINK: 'Sett inn lenke'
     BUTTONREMOVELINK: 'Fjern lenke'
     BUTTONUpdate: Update
@@ -236,7 +236,7 @@ nb:
     CSSCLASSLEFT: 'På venstre side, med tekst rundt.'
     CSSCLASSLEFTALONE: 'På venstre side, alene.'
     CSSCLASSRIGHT: 'På høyde side, med tekst rundt.'
-    DETAILS: Details
+    DETAILS: Detaljer
     EMAIL: 'Epost adresse'
     FILE: Fil
     FOLDER: Mappe
@@ -268,23 +268,23 @@ nb:
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
     UpdateMEDIA: 'Update Media'
   ImageField:
-    IMAGE: Image
+    IMAGE: Bilde
   Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Legg til en rad'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
-    HELP: Help
+    HELP: Hjelp
     PAGETYPE: 'Page type: '
-    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
+    PERMAGAIN: 'Du har blitt logget ut av CMS. Hvis du vil logge deg på igjen, skriv inn brukernavn og passord under.'
     PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
     PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
     PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
-    VersionUnknown: unknown
+    VersionUnknown: Ukjent
   LoginAttempt:
     Email: Epostadresse
     IP: 'IP adresse'
@@ -297,8 +297,8 @@ nb:
     BUTTONLOSTPASSWORD: 'Jeg har mistet passordet'
     CONFIRMNEWPASSWORD: 'Bekreft Nytt Passord'
     CONFIRMPASSWORD: 'Bekreft passord'
-    DefaultAdminFirstname: 'Default Admin'
-    DefaultDateTime: default
+    DefaultAdminFirstname: 'Standard admin'
+    DefaultDateTime: Standard
     EMAIL: Epost
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Vennligst skriv inne en epostadresse for å få tilsendt en lenke til å resette passord.'
@@ -343,8 +343,8 @@ nb:
     HOURNOLEADING: 'Hour without leading zero'
     MINUTENOLEADING: 'Minute without leading zero'
     MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    Preview: Forhåndsvisning
+    SHORTMONTH: 'Forkortelse av måned (f.eks. jun)'
     TOGGLEHELP: 'Toggle formatting help'
     TWODIGITDAY: 'Two-digit day of month'
     TWODIGITHOUR: 'Two digits of hour (00 through 23)'
@@ -357,7 +357,7 @@ nb:
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
     ResultCreated: 'Created {count} members'
     ResultDeleted: 'Deleted %d members'
-    ResultNone: 'No changes'
+    ResultNone: 'Ingen endringer'
     ResultUpdated: 'Updated {count} members'
   MemberTableField: null
   ModelAdmin:
@@ -415,17 +415,17 @@ nb:
     EDITPERMISSIONS: 'Manage permissions for groups'
     EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
     GROUPNAME: Gruppenavn
-    IMPORTGROUPS: 'Import groups'
-    IMPORTUSERS: 'Import users'
+    IMPORTGROUPS: 'Importer grupper'
+    IMPORTUSERS: 'Importer brukere'
     MEMBERS: Medlemmer
     MENUTITLE: Security
     MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    NEWGROUP: 'New Group'
+    NEWGROUP: 'Ny gruppe'
     PERMISSIONS: Tilganger
-    ROLES: Roles
+    ROLES: Roller
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
     TABROLES: Roles
-    Users: Users
+    Users: Brukere
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Import from CSV'
     FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
@@ -450,31 +450,31 @@ nb:
     CSVEXPORT: 'Eksporter til CSV'
     PRINT: 'Skriv ut'
     Print: 'Skriv ut'
-    SELECT: 'Select:'
+    SELECT: 'Velg:'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
     LESS: mindre
     MORE: mer
   UploadField:
-    ATTACHFILE: 'Attach a file'
-    ATTACHFILES: 'Attach files'
-    AttachFile: 'Attach a file'
+    ATTACHFILE: 'Legg ved fil'
+    ATTACHFILES: 'Legg ved filer'
+    AttachFile: 'Legg ved fil'
     DELETEINFO: 'Permanently delete this file from the file store'
-    DOEDIT: Save
-    DROPFILE: 'drop a file'
-    DROPFILES: 'drop files'
+    DOEDIT: Lagre
+    DROPFILE: 'Slipp en fil'
+    DROPFILES: 'Slipp filer'
     Dimensions: Dimensions
-    EDITINFO: 'Edit this file'
-    FIELDNOTSET: 'File information not found'
+    EDITINFO: 'Rediger denne filen'
+    FIELDNOTSET: 'Filinformasjon ikke funnet'
     FROMCOMPUTER: 'From your computer'
-    FROMFILES: 'From files'
+    FROMFILES: 'Fra filer'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
     REMOVE: Remove
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
-    Saved: Saved
+    Saved: Lagret
   Versioned:
     has_many_Versions: Versjoner
