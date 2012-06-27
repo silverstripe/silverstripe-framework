@@ -30,31 +30,35 @@ Or if you want to access variables in the PHP you can do
 
 ## Extending `[api:SiteConfig]`
 
-To extend the options available in the panel you can define your own fields via an Extension.
+To extend the options available in the panel you can define your own fields via the Extension.
+If you need custom logic, e.g. checking for a class before applying the statics on the extension,
 
-Create a mysite/code/CustomSiteConfig.php file.
+The function is defined as static and calls `update()` with an array and it also needs to call `parent::add_to_class()`:
 
 	:::php
 	<?php
-	
-	class CustomSiteConfig extends DataExtension {
-		
-		public function extraStatics() {
-			return array(
-				'db' => array(
-					'FooterContent' => 'HTMLText'
-				)
-			);
+	//...
+	static function add_to_class($class, $extensionClass, $args = null) {
+		if($class == 'MyClass') {
+			Config::inst()->update($class, 'db', array(
+				'FooterContent' => 'Varchar'
+			));
 		}
-	
-		public function updateCMSFields(FieldList $fields) {
-			$fields->addFieldToTab("Root.Main", new HTMLEditorField("FooterContent", "Footer Content"));
-		}
+		parent::add_to_class($class, $extensionClass, $args);
 	}
 
+Alternatively, you can define statics on the extension directly, like this:
+
+	:::php
+	<?php
+	//...
+	static $db = array(
+		'FooterContent' => 'Varchar'
+	);
 
 Then add a link to your extension in the _config.php file like below.
 
+	:::php
 	Object::add_extension('SiteConfig', 'CustomSiteConfig');
 
 
