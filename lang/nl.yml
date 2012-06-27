@@ -69,7 +69,7 @@ nl:
     - Ja
   ComplexTableField:
     CLOSEPOPUP: 'Sluit Popup'
-    SUCCESSADD2: 'Added {name}'
+    SUCCESSADD2: 'Toegevoegd {name}'
     SUCCESSEDIT: '%s %s %s Opgeslagen'
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
@@ -145,9 +145,9 @@ nl:
     NOSOURCE: 'Selecteer een bron bestand om toe te voegen'
     REPLACE: 'Replace {type}'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
-    SEARCHLISTINGS: Search
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+    IMPORT_TAB_HEADER: Importeer
+    SEARCHLISTINGS: Zoeken
+    SYNCRESULTS: 'Synchroniseren compleet: {createdcount} bestanden aangemaakt, {deletedcount} bestanden verwijderd.'
   Form:
     FIELDISREQUIRED: '%s is verplicht'
     TITLE: 'Afbeelding uploaden'
@@ -185,12 +185,12 @@ nl:
     PREVIOUS: Vorige
   GridFieldDetailForm:
     Create: Create
-    Delete: Delete
+    Delete: Verwijder
     DeletePermissionsFailure: 'No delete permissions'
     Deleted: 'Deleted %s %s'
     HELLO: Hallo
-    Save: Save
-    Saved: 'Saved %s %s'
+    Save: Opslaan
+    Saved: '%s %s %s Opgeslagen'
     TEXT1: 'Hier is uw'
     TEXT2: 'wachtwoord reset link'
     TEXT3: voor
@@ -223,8 +223,8 @@ nl:
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ADDURL: 'Add URL'
-    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ADDURL: 'Voeg URL toe'
+    ADJUSTDETAILSDIMENSIONS: 'Details $amp; afmeting'
     ANCHORVALUE: Anker
     BUTTONINSERT: Invoegen
     BUTTONINSERTLINK: 'Link invoegen'
@@ -242,18 +242,18 @@ nl:
     FOLDER: Map
     FROMCMS: 'Vanaf CMS'
     FROMCOMPUTER: 'Vanaf computer'
-    FROMWEB: 'From the web'
-    FindInFolder: 'Find in Folder'
-    IMAGEALT: 'Alternative text (alt)'
+    FROMWEB: 'Vanaf een website'
+    FindInFolder: 'Zoek in map'
+    IMAGEALT: 'Alternatieve tekst (alt tekst) - wordt getoond als de afbeelding niet kan worden geladen'
     IMAGEALTTEXT: 'Alternatieve tekst (alt tekst) - wordt getoond als de afbeelding niet kan worden geladen'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Dimensies
     IMAGEHEIGHTPX: Hoogte
     IMAGETITLE: 'Titel tekst (tooltip) - Toon extra informatie over de afbeelding'
-    IMAGETITLETEXT: 'Title text (tooltip)'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGETITLETEXT: 'Titel tekst (tooltip) - Toon extra informatie over de afbeelding'
+    IMAGETITLETEXTDESC: 'Titel tekst (tooltip) - Toon extra informatie over de afbeelding'
     IMAGEWIDTHPX: Breedte
-    INSERTMEDIA: 'Insert Media'
+    INSERTMEDIA: Invoegen
     LINK: Link
     LINKANCHOR: 'Anker op deze pagina'
     LINKDESCR: 'Link omschrijving'
@@ -430,9 +430,9 @@ nl:
     BtnImport: Importeer
     FileFieldLabel: 'CSV Bestand <small>(Toegestane extensies: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Edit
+    Edit: Bewerken
     FILTER: Filter
-    IMPORT: Import
+    IMPORT: Importeer
     VIEWFIRST: 'Bekijk eerste'
     VIEWLAST: 'Bekijk laatste'
     VIEWNEXT: 'Bekijk volgende'
