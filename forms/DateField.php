@@ -16,6 +16,7 @@ require_once 'Zend/Date.php';
  *    CAUTION: Might not be useable in combination with 'showcalendar', depending on the used javascript library
  * - 'dmyseparator' (string): HTML markup to separate day, month and year fields.
  *    Only applicable with 'dmyfields'=TRUE. Use 'dateformat' to influence date representation with 'dmyfields'=FALSE.
+ * - 'dmyplaceholders': Show HTML5 placehoder text to allow identification of the three separate input fields
  * - 'dateformat' (string): Date format compatible with Zend_Date.
  *    Usually set to default format for {@link locale} through {@link Zend_Locale_Format::getDateFormat()}.
  * - 'datavalueformat' (string): Internal ISO format string used by {@link dataValue()} to save the
@@ -64,6 +65,7 @@ class DateField extends TextField {
 		'jslocale' => null,
 		'dmyfields' => false,
 		'dmyseparator' => '&nbsp;<span class="separator">/</span>&nbsp;',
+		'dmyplaceholders' => true,
 		'dateformat' => null,
 		'datavalueformat' => 'yyyy-MM-dd',
 		'min' => null,
@@ -144,15 +146,21 @@ class DateField extends TextField {
 			$valArr = ($this->valueObj) ? $this->valueObj->toArray() : null;
 
 			// fields
-			$fieldDay = new NumericField($this->name . '[day]', false, ($valArr) ? $valArr['day'] : null);
-			$fieldDay->addExtraClass('day');
-			$fieldDay->setMaxLength(2);
-			$fieldMonth = new NumericField($this->name . '[month]', false, ($valArr) ? $valArr['month'] : null);
-			$fieldMonth->addExtraClass('month');
-			$fieldMonth->setMaxLength(2);
-			$fieldYear = new NumericField($this->name . '[year]', false, ($valArr) ? $valArr['year'] : null);
-			$fieldYear->addExtraClass('year');
-			$fieldYear->setMaxLength(4);
+			$fieldNames = Zend_Locale::getTranslationList('Field', $this->locale);
+			$fieldDay = NumericField::create($this->name . '[day]', false, ($valArr) ? $valArr['day'] : null)
+				->addExtraClass('day')
+				->setAttribute('placeholder', $this->getConfig('dmyplaceholders') ? $fieldNames['day'] : null)
+				->setMaxLength(2);
+
+			$fieldMonth = NumericField::create($this->name . '[month]', false, ($valArr) ? $valArr['month'] : null)
+				->addExtraClass('month')
+				->setAttribute('placeholder', $this->getConfig('dmyplaceholders') ? $fieldNames['month'] : null)
+				->setMaxLength(2);
+			
+			$fieldYear = NumericField::create($this->name . '[year]', false, ($valArr) ? $valArr['year'] : null)
+				->addExtraClass('year')
+				->setAttribute('placeholder', $this->getConfig('dmyplaceholders') ? $fieldNames['year'] : null)
+				->setMaxLength(4);
 			
 			// order fields depending on format
 			$sep = $this->getConfig('dmyseparator');
