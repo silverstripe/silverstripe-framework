@@ -62,18 +62,9 @@ We'll start with the *ArticlePage* page type. First we create the model, a class
 
 	:::php
 	<?php
-	/**
-	 * Defines the ArticlePage page type
-	 */
 	class ArticlePage extends Page {
-		static $db = array(
-		);
-		static $has_one = array(
-		);
 	}
-	
 	class ArticlePage_Controller extends Page_Controller {
-		
 	}
 	 
 
@@ -87,20 +78,10 @@ Let's create the *ArticleHolder* page type.
 
 	:::php
 	<?php
-	/**
-	 * Defines the ArticleHolder page type
-	 */
 	class ArticleHolder extends Page {
-		static $db = array(
-		);
-		static $has_one = array(
-		);
-	   
 		static $allowed_children = array('ArticlePage');
 	}
-	 
 	class ArticleHolder_Controller extends Page_Controller {
-		
 	}
 
 
@@ -111,15 +92,17 @@ We will be introduced to other fields like this as we progress; there is a full 
 
 Now that we have created our page types, we need to let SilverStripe rebuild the database: [http://localhost/your_site_name/dev/build?flush=all](http://localhost/your_site_name/dev/build?flush=all). SilverStripe should detect that there are two new page types, and add them to the list of page types in the database.
 
-> It is SilverStripe convention to suffix general page types with "Page", and page types that hold other page types with
-> "Holder". This is to ensure that we don't have URLs with the same name as a page type; if we named our *ArticleHolder*
-> page type "News", it would conflict with the page name also called "News".
+<div class="hint" markdown="1">
+It is SilverStripe convention to suffix general page types with "Page", and page types that hold other page types with
+"Holder". This is to ensure that we don't have URLs with the same name as a page type; if we named our *ArticleHolder*
+page type "News", it would conflict with the page name also called "News".
+</div>
 
 ## Adding date and author fields
 
 Now that we have an *ArticlePage* page type, let's make it a little more useful. Remember the *$db* array? We can use
 this array to add extra fields to the database. It would be nice to know when each article was posted, and who posted
-it. Change the *$db* array in the *ArticlePage* class to look like this:
+it. Add a *$db* property definition in the *ArticlePage* class:
 
 	:::php
 	<?php
@@ -133,10 +116,12 @@ it. Change the *$db* array in the *ArticlePage* class to look like this:
 	}
 
 
-Every entry in the array is a *key => value* pair. The **key** is the name of the field, and the **value** is the type. See *`[api:Date]`* for a complete list of data types associated with *Date*.
+Every entry in the array is a *key => value* pair. The **key** is the name of the field, and the **value** is the type. See ["data types"](/topics/data-types) for a complete list of types.
 
-> Note: The names chosen for the fields you add must not already be used. Be careful using field names such as Title,
-> Content etc. as these may already be defined in the page types your new page is extending from.
+<div class="hint" markdown="1">
+The names chosen for the fields you add must not already be used. Be careful using field names such as Title,
+Content etc. as these may already be defined in the page types your new page is extending from.
+</div>
 
 When we rebuild the database, we will see that the *ArticlePage* table has been created. Even though we had an *ArticlePage* page type before, a table was not created because there were no fields unique to the article page type. There are now extra fields in the database, but still no way of changing them. 
 
@@ -180,16 +165,13 @@ returned is a `[api:FieldList]` object.
 We can then add our new fields with *addFieldToTab*. The first argument is the tab on which we want to add the field to:
 "Root.Main" is the tab which the content editor is on. The second argument is the field to add; this is not a database field, but a `[api:FormField]` - see the documentation for more details. 
 
-> Note: By default, the CMS only has one tab. Creating new tabs is much like adding to existing tabs. For instance:
-
->	$fields->addFieldToTab('Root.NewTab', new TextField('Author'));
-
-> would create a new tab called "New Tab", and a single "Author" textfield inside.
-
-
+<div class="hint" markdown="1">
+Note: By default, the CMS only has one tab. Creating new tabs is much like adding to existing tabs. For instance: `$fields->addFieldToTab('Root.NewTab', new TextField('Author'));`
+would create a new tab called "New Tab", and a single "Author" textfield inside.
+</div>
 
 We have added two fields: A simple `[api:TextField]` and a `[api:DateField]`.   
-There are many more FormFields available in the default installation, please refer to [Form Field Types](form-field-types) for the list.
+There are many more fields available in the default installation, listed in ["form field types"](/reference/form-field-types).
 
 	:::php
 	return $fields;
@@ -238,12 +220,12 @@ Let's walk through these changes.
 	:::php
 	$dateField->setConfig('showcalendar', true);
 
-Set *showCalendar* to true to have a calendar appear underneath the Date field when you click on the field. 
+By enabling *showCalendar* you show a calendar overlay when clicking on the field. 
 
 	:::php
 	$dateField->setConfig('dateformat', 'dd/MM/YYYY');
 
-*dateFormat* allows you to specify how you wish the date to be entered and displayed in the CMS field.  See the `[api:DateField]` documentation for more details of the DateField configuration.
+*dateFormat* allows you to specify how you wish the date to be entered and displayed in the CMS field.  See the `[api:DateField]` documentation for more configuration options.
 
 	:::php
 	$fields->addFieldToTab('Root.Content', new TextField('Author','Author Name'), 'Content');
@@ -258,7 +240,7 @@ Because our new pages inherit their templates from *Page*, we can view anything 
 To fix this we will create a template for each of our new page types. We'll put these in *themes/tutorial/templates/Layout* so we only have to define the page specific parts: SilverStripe will use *themes/tutorial/templates/Page.ss* for the basic
 page layout.
 
-###ArticlePage Template
+### ArticlePage Template
 First, the template for displaying a single article:
 
 **themes/simple/templates/Layout/ArticlePage.ss**
@@ -274,7 +256,6 @@ First, the template for displaying a single article:
 			<div class="content">$Content</div>
 		</article>
 			$Form
-			$PageComments
 	</div>
 	<% include SideBar %>
 
@@ -545,7 +526,6 @@ The *StaffPage* template is also very straight forward.
 				$Content</div>
 		</article>
 			$Form
-			$PageComments
 	</div>
 	<% include SideBar %>
 

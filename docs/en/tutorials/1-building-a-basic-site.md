@@ -70,8 +70,8 @@ with the editor - try different formatting, tables and images. When you are done
 & Publish" to post the content to the live site. 
 
 ### New pages
-To create a new page, click the add new button above the site tree.  
-When you create a new page, you are given the option of setting the structure of the page (Top level or Under another page) and the page type. 
+To create a new page, click the "Add New" button above the site tree.  
+When you create a new page, you are given the option of setting the structure of the page ("Top level" or "Under another page") and the page type. 
 The page type specifies the templates used to render the page, the fields that are able to be edited in the CMS, and page specific behavior. We will explain page types in more depth as we progress; for now, make all pages of the type "Page".
 
 ![](_images/tutorial1_addpage.jpg)
@@ -91,12 +91,13 @@ become *about-us*. You are able to change it yourself so that you can make long 
 example, *Employment Opportunities* could be shortened to *jobs*. The ability to generate easy to type, descriptive URLs
 for SilverStripe pages improves accessibility for humans and search engines.
 
-You should ensure the URL for the home page is *home*. By default, SilverStripe loads the page with the URL *home*.
+You should ensure the URL for the home page is *home*, as that's the page SilverStripe loads by default.
 
 
 ## Templates
 
-All pages on a SilverStripe site are rendered using a template. A template is an HTML file augmented with special
+All pages on a SilverStripe site are rendered using a template. A template is an file 
+with a special `*.ss` file extension, containing HTML augmented with some
 control codes. Because of this, you can have as much control of your site’s HTML code as you like.
 
 Every page in your site has a **page type**. We will briefly talk about page types later, and go into much more detail
@@ -116,7 +117,7 @@ ensures the browser knows where to locate your site's images and css files.
 	$Title
 	$SiteConfig.Title
 
-These three variables are found within the html <title> tag, and are replaced by the text set in the Meta Title, Page Name, or Settings -> Site Title in the CMS.
+These three variables are found within the html `<title>` tag, and are replaced by the text set in the "Meta Title", "Page Name", or "Settings -> Site Title" in the CMS.
 	
 	:::ss
 	$MetaTags 
@@ -136,7 +137,8 @@ The Content variable is replaced with the content of the page currently being vi
 your site's content in the CMS.
 
 These template markers are processed by SilverStripe into HTML before being sent to your
-browser and are formatted either with a *$* at the beginning or are between the SilverStripe template tags: 
+browser and are either prefixed with a dollar sign ($)
+or placed between SilverStripe template tags: 
 
 	:::ss
 	<%  %>
@@ -185,39 +187,23 @@ This creates the navigation at the top of the page:
 
 ### Highlighting the current page
 
-A useful feature is highlighting the current page the user is looking at. We can do this with the template variable:
-	:::ss
-	$LinkingMode
-
-*$LinkingMode* returns one of three values:
+A useful feature is highlighting the current page the user is looking at. We can do this with the template variable: `$LinkingMode`. It returns one of three values:
 
 *  *current* - This page is being visited
 *  *link* - This page is not currently being visited
 *  *section* - A page under this page is being visited
 
-> For example, if you were here: "Home > Company > Staff > Bob Smith", you may want to highlight 'Company' to say you are in that section. If you add $LinkingMode to your navigation elements as a class, ie:
+For example, if you were here: "Home > Company > Staff > Bob Smith", you may want to highlight 'Company' to say you are in that section. If you add $LinkingMode to your navigation elements as a class, ie:
+
 	:::ss
 	<li class="$LinkingMode">
 	 	<a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
 	</li>
 
-you will then be able to target a section in css (*simple/css/layout.css*), ie: 
+you will then be able to target a section in css (*simple/css/layout.css*), e.g.:
+
 	:::css
-	.section { 
-		background:#ccc;
-	} 
-You may also style the link to the current page this way, eg:
-	:::css	
-	.current { 
-		/* Your styles here */
-	} 
-
-Or, target links that are neither current nor in the same section as the current link, eg:
-
-	:::css	
-	.link { 
-		/* Your styles here */
-	} 
+	.section { background:#ccc; } 
 
 ## A second level of navigation
 
@@ -344,26 +330,16 @@ banner to welcome visitors.
 Earlier we stated that every page in a SilverStripe site has a **page type**, and that SilverStripe will look for a
 template, or template layout, corresponding to the page type. Therefore, the first step when switching the homepage template is to create a new page type.
 
-Each page type is represented by two php classes: a *data object* and a *controller*. Don't worry about the details of page
-types right now, we will go into much more detail in tutorial two.
+Each page type is represented by two PHP classes: a *data object* and a *controller*. Don't worry about the details of page
+types right now, we will go into much more detail in the [next tutorial](2-extending-a-basic-site).
 
 Create a new file *HomePage.php* in *mysite/code*. Copy the following code into it:
 
 	:::php
 	<?php
-	/**
-	 * Defines the HomePage page type
-	 */
-	
 	class HomePage extends Page {
-	   static $db = array(
-	   );
-	   static $has_one = array(
-	   );
 	}
-	
 	class HomePage_Controller extends Page_Controller {
-		
 	}
 
 
@@ -383,24 +359,21 @@ In the CMS, navigate to the "Home" page and switch to the "Settings" tab. Change
 
 ![](_images/tutorial1_homepage-type.jpg)
 
-Our homepage is now of the page type *HomePage*. However, even though it is of the *HomePage* page type, it is still
-rendered with the *Page* template. SilverStripe still renders the homepage using the *Page* template because when we
-created the *HomePage* page type, we inherited from *Page*. So when SilverStripe cannot find a *HomePage* template, it
-will use the *Page* template. SilverStripe always attempts to use the most specific template first, and then falls back
-to the template of the page type's parents.
+Our homepage is now of the page type *HomePage*. Regardless, it is still
+rendered with the *Page* template. SilverStripe does this the type inherits from *Page*,
+which acts as a fallback if no *HomePage* template can be found. 
+It always tries to use the most specific template in an inheritance chain.
 
 
 ### Creating a new template
 
-To create a new template layout, create a copy of *Page.ss* (found in *themes/simple/templates/Layouts*) and call it *HomePage.ss*. If we flush the cache (*?flush=all*), SilverStripe should now be using *HomePage.ss* for the homepage, and *Page.ss* for the rest of the site. Now let's customize the *HomePage* template. 
+To create a new template layout, create a copy of *Page.ss* (found in *themes/simple/templates/Layout*) and call it *HomePage.ss*. If we flush the cache (*?flush=all*), SilverStripe should now be using *HomePage.ss* for the homepage, and *Page.ss* for the rest of the site. Now let's customize the *HomePage* template. 
 
-First, remove the breadcrumbs and the secondary menu by removing:
+First, we don't need the breadcrumbs and the secondary menu for the homepage. Let's remove them:
 	:::ss
 	<% include SideBar %> 
 	
- we don't need it for the homepage. 
-
-Let's replace the title with an image. Find this line:
+We'll also replace the title text with an image. Find this line:
 
 	:::ss
 	<h1>$Title</h1>
@@ -432,7 +405,7 @@ So far we have taken a look at the different areas and functionality within the 
 
 In the next tutorial, [Extending a Basic Site](2-extending-a-basic-site), we will explore page types on a deeper level, and look at customising our own page types to extend the functionality of SilverStripe.
 
-[Next Tutorial >>](2-extending-a-basic-site)
+[Next tutorial >>](2-extending-a-basic-site)
 
 ## Books on SilverStripe 
 
