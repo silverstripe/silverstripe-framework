@@ -30,7 +30,7 @@ Or if you want to access variables in the PHP you can do
 
 ## Extending `[api:SiteConfig]`
 
-To extend the options available in the panel you can define your own fields via the Extension.
+To extend the options available in the panel you can define your own fields via an Extension class.
 If you need custom logic, e.g. checking for a class before applying the statics on the extension,
 
 The function is defined as static and calls `update()` with an array and it also needs to call `parent::add_to_class()`:
