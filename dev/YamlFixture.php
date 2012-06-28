@@ -84,18 +84,29 @@ class YamlFixture extends Object {
 	 * @var array
 	 */
 	protected $fixtureDictionary;
-	
+
+	/**
+	 * String containing fixture
+	 *
+	 * @var String
+	 */
+	protected $fixtureString;
+
 	/**
 	 * @param String Absolute file path, or relative path to {@link Director::baseFolder()}
 	 */
-	function __construct($fixtureFile) {
-		if(!Director::is_absolute($fixtureFile)) $fixtureFile = Director::baseFolder().'/'. $fixtureFile;
-		
-		if(!file_exists($fixtureFile)) {
-			throw new InvalidArgumentException('YamlFixture::__construct(): Fixture path "' . $fixtureFile . '" not found');
+	function __construct($fixture) {
+		if(false !== strpos($fixture, "\n")) {
+			$this->fixtureString = $fixture;
+		} else {
+			if(!Director::is_absolute($fixture)) $fixture = Director::baseFolder().'/'. $fixture;
+
+			if(!file_exists($fixture)) {
+				throw new InvalidArgumentException('YamlFixture::__construct(): Fixture path "' . $fixture . '" not found');
+			}
+
+			$this->fixtureFile = $fixture;
 		}
-		
-		$this->fixtureFile = $fixtureFile;
 		
 		parent::__construct();
 	}
@@ -105,6 +116,13 @@ class YamlFixture extends Object {
 	 */
 	function getFixtureFile() {
 		return $this->fixtureFile;
+	}
+
+	/**
+	 * @return String Fixture string
+	 */
+	function getFixtureString() {
+		return $this->fixtureString;
 	}
 	
 	/**
@@ -162,7 +180,11 @@ class YamlFixture extends Object {
 		DataObject::set_validation_enabled(false);
 		
 		$parser = new Spyc();
-		$fixtureContent = $parser->loadFile($this->fixtureFile);
+		if (isset($this->fixtureString)) {
+			$fixtureContent = $parser->load($this->fixtureString);
+		} else {
+			$fixtureContent = $parser->loadFile($this->fixtureFile);
+		}
 
 		$this->fixtureDictionary = array();
 		foreach($fixtureContent as $dataClass => $items) {
@@ -228,12 +250,12 @@ class YamlFixture extends Object {
 				}
 			}
 			$obj->write();
-            //If LastEdited was set in the fixture, set it here
-            if (array_key_exists('LastEdited', $fields)) {
-                $manip = array($dataClass => array("command" => "update", "id" => $obj->id,
-                    "fields" => array("LastEdited" => "'".$this->parseFixtureVal($fields['LastEdited'])."'")));
-                DB::manipulate($manip);
-            }
+			//If LastEdited was set in the fixture, set it here
+			if (array_key_exists('LastEdited', $fields)) {
+				$manip = array($dataClass => array("command" => "update", "id" => $obj->id,
+					"fields" => array("LastEdited" => "'".$this->parseFixtureVal($fields['LastEdited'])."'")));
+				DB::manipulate($manip);
+			}
 		}
 	}
 	
