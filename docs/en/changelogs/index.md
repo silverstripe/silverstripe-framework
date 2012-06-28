@@ -9,7 +9,10 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
 
 ## Stable Releases
 
- * [3.0.0](3.0.0) - unreleased
+ * [3.0.0](3.0.0) - 28 June 2012
+
+
+
  * [2.4.7](2.4.7) - 1 February 2012
  * [2.4.6](2.4.6) - 18 October 2011
  * [2.4.5](2.4.5) - 2 February 2011
@@ -18,10 +21,16 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
  * [2.4.2](2.4.2) - 22 September 2010
  * [2.4.1](2.4.1) - 23 July 2010
  * [2.4.0](2.4.0)
+
+
+
  * [2.3.13](2.3.13) - 1 February 2012
  * [2.3.12](2.3.12) - 17 October 2011
  * [2.3.11](2.3.11) - 2 February 2011
  * [2.3.10](2.3.10) - 21 December 2010
+
+
+
  * [2.3.9](2.3.9) - 11 November 2010
  * [2.3.8](2.3.8) - 23 July 2010
  * [2.3.7](2.3.7) - 18 March 2010
@@ -32,27 +41,40 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
  * [2.3.2](2.3.2) - 18 June 2009
  * [2.3.1](2.3.1) - 19 March 2009
  * [2.3.0](2.3.0) - 23 February 2009
+
+
+
  * [2.2.4](2.2.4) - 20 March 2009
  * [2.2.3](2.2.3) - ~31 October 2008
  * [2.2.2](2.2.2) - 22 May 2008
  * [2.2.1](2.2.1) - 21 December 2007
  * [2.2.0](2.2.0) - 28 November 2007
+
+
+
  * [2.1.1](2.1.1) - 2 November 2007
  * [2.1.0](2.1.0) - 2 October 2007
+
+
+
  * [2.0.2](2.0.2) - 14 July 2007
  * [2.0.1](2.0.1) - 17 April 2007
  * 2.0.0 - 3 February 2007 (initial release)
 
 ## Alpha/beta/release candidate ##
 
- * [3.0.0-rc2](beta/3.0.0-rc2) - 26 June 2012
- * [3.0.0-rc1](beta/3.0.0-rc1) - 18 June 2012
+* [3.0.0-rc2](rc/3.0.0-rc3) - 27 June 2012
+ * [3.0.0-rc2](rc/3.0.0-rc2) - 26 June 2012
+ * [3.0.0-rc1](rc/3.0.0-rc1) - 18 June 2012
  * [3.0.0-beta3](beta/3.0.0-beta3) - 28 May 2012
  * [3.0.0-beta2](beta/3.0.0-beta2) - 20 April 2012
  * [3.0.0-beta1](beta/3.0.0-beta1) - 12 March 2012
  * [3.0.0-alpha2](alpha/3.0.0-alpha2) - 12 January 2012
  * [3.0.0-alpha1](alpha/3.0.0-alpha1) - 1 November 2011
- * [3.0.0-pr1](pr/3.0.0-pr1) - unreleased
+ * [3.0.0-pr1](pr/3.0.0-pr1) - 2 May 2011
+
+
+
  * [2.4.5-rc1](rc/2.4.5-rc1) - 31 January 2011
  * [2.4.4-rc2](rc/2.4.4-rc2) - 20 December 2010
  * [2.4.4-rc1](rc/2.4.4-rc1) - 10 December 2010
@@ -68,6 +90,9 @@ For information on how to upgrade to newer versions consult the [upgrading](/ins
  * [2.4.0-beta2](beta/2.4.0-beta2) - 17 March 2010
  * [2.4.0-beta1](beta/2.4.0-beta1) - 29 January 2010
  * [2.4.0-alpha1](alpha/2.4.0-alpha1) - 11 November 2009
+
+
+
  * [2.3.11-rc1](rc/2.3.11-rc1) - 31 January 2011
  * [2.3.10-rc2](rc/2.3.10-rc2) - 20 December 2010
  * [2.3.10-rc1](rc/2.3.10-rc1) - 10 December 2010
