@@ -569,6 +569,45 @@ the described relations).
 	  }
 	}
 
+## Validation and Constraints
+
+Traditionally, validation in SilverStripe has been mostly handled on the controller
+through [form validation](/topics/form-validation).
+While this is a useful approach, it can lead to data inconsistencies if the
+record is modified outside of the controller and form context.
+Most validation constraints are actually data constraints which belong on the model.
+SilverStripe provides the `[api:DataObject->validate()]` method for this purpose.
+
+By default, there is no validation - objects are always valid!  
+However, you can overload this method in your
+DataObject sub-classes to specify custom validation, 
+or use the hook through `[api:DataExtension]`.
+
+Invalid objects won't be able to be written - a [api:ValidationException]` 
+will be thrown and no write will occur.
+It is expected that you call validate() in your own application to test that an object 
+is valid before attempting a write, and respond appropriately if it isn't.
+
+The return value of `validate()` is a `[api:ValidationResult]` object.
+You can append your own errors in there.
+
+Example: Validate postcodes based on the selected country
+
+	:::php
+	class MyObject extends DataObject {
+		static $db = array(
+			'Country' => 'Varchar',
+			'Postcode' => 'Varchar'
+		);
+		public function validate() {
+			$result = parent::validate();
+			if($this->Country == 'DE' && $this->Postcode && strlen($this->Postcode) != 5) {
+				$result->error('Need five digits for German postcodes');
+			}
+			return $result;
+		}
+	}
+
 ## Maps
 
 A map is an array where the array indexes contain data as well as the values.  You can build a map
