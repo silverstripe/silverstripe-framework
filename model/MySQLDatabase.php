@@ -880,6 +880,9 @@ class MySQLDatabase extends SS_Database {
 		$list->setPageLEngth($pageLength);
 		$list->setTotalItems($totalCount);
 
+		// The list has already been limited by the query above
+		$list->setLimitItems(false);
+
 		return $list;
 	}
 
