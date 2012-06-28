@@ -105,31 +105,47 @@ for a template file in the *simple/templates* folder, with the name `<PageType>`
 
 Open *themes/simple/templates/Page.ss*. It uses standard HTML apart from these exceptions: 
 
-`<% base_tag %>` is replaced with the HTML [base element](http://www.w3.org/TR/html401/struct/links.html#h-12.4). This
+	:::ss
+	<% base_tag %>
+
+The base_tag variable is replaced with the HTML [base element](http://www.w3.org/TR/html401/struct/links.html#h-12.4). This
 ensures the browser knows where to locate your site's images and css files.
 
-*$MetaTitle, $Title, and $SiteConfig.Title* in the html <title> tag are replaced by the title set in the Meta tags, Page Name, or Settings -> Site Title.
+	:::ss
+	$MetaTitle
+	$Title
+	$SiteConfig.Title
 
-*$Title* is simply replaced with the name of the page ('Page name' on the 'Main' tab in the editor).
+These three variables are found within the html <title> tag, and are replaced by the text set in the Meta Title, Page Name, or Settings -> Site Title in the CMS.
+	
+	:::ss
+	$MetaTags 
 
-*$MetaTags* adds meta tags for search engines, as well as the page title ('Title' on the 'Meta-data' tab in the
-editor). You can define your metatags in the meta-data tab off the content editor in the CMS. 
+The MetaTags variable will add meta tags, which are used by search engines. You can define your meta tags in the tab fields at the bottom of the content editor in the CMS. 
+	:::ss
+	$Layout 
 
-*$Layout* is replaced with the contents of a template file with the same name as the page type we are using. 
+The Layout variable is replaced with the contents of a template file with the same name as the page type we are using. 
 
 Open *themes/simple/templates/Layout/Page.ss*. You will see more HTML and more SilverStripe template replacement tags and variables.
+	
+	:::ss
+	$Content
 
-*$Content* is replaced with the content of the page currently being viewed. This allows you to make all changes to
+The Content variable is replaced with the content of the page currently being viewed. This allows you to make all changes to
 your site's content in the CMS.
 
 These template markers are processed by SilverStripe into HTML before being sent to your
-browser and are formatted either with a *$* at the beginning or are between the SilverStripe template tags *`<%  %>`*.
+browser and are formatted either with a *$* at the beginning or are between the SilverStripe template tags: 
+
+	:::ss
+	<%  %>
 
 
 **Flushing the cache**
 
 Whenever we edit a template file, we need to append *?flush=all* onto the end of the URL, e.g.
-http://localhost/home/?flush=all. SilverStripe stores template files in a cache for quicker load times. Whenever there are
+http://localhost/your_site_name/?flush=all. SilverStripe stores template files in a cache for quicker load times. Whenever there are
 changes to the template, we must flush the cache in order for the changes to take effect.
 
 ##  The Navigation System
@@ -138,11 +154,16 @@ We are now going to look at how the navigation system is implemented in the temp
 
 Open up *themes/simple/templates/Includes/Navigation.ss*
 
-Menu for our site are created using a **loop**. Loops allow us to iterate over a data set, and render each item using a sub-template. The
-**loop** *Menu(1)* returns the set of the first level menu items. We can then use the template variable
-*$MenuTitle* to show the title of the page we are linking to, $Link for the URL of the page and $LinkingMode to help style our menu with CSS (explained in more detail shortly).
+The Menu for our site is created using a **loop**. Loops allow us to iterate over a data set, and render each item using a sub-template.
+	 
+	:::ss 
+	<% loop Menu(1) %>
 
-> $Title refers to *Page Name* in the CMS, whereas $MenuTitle refers to (the often shorter) *Navigation label*
+returns a set of first level menu items. We can then use the template variable
+*$MenuTitle* to show the title of the page we are linking to, *$Link* for the URL of the page and *$LinkingMode* to help style our menu with CSS (explained in more detail shortly).
+
+> *$Title* refers to **Page Name** in the CMS, whereas *$MenuTitle* refers to (the often shorter) **Navigation label**
+
 
 	:::ss
 	<ul>
@@ -164,8 +185,11 @@ This creates the navigation at the top of the page:
 
 ### Highlighting the current page
 
-A useful feature is highlighting the current page the user is looking at. We can do this with the template variable
-*$LinkingMode*, mentioned earlier. *$LinkingMode* returns one of three values:
+A useful feature is highlighting the current page the user is looking at. We can do this with the template variable:
+	:::ss
+	$LinkingMode
+
+*$LinkingMode* returns one of three values:
 
 *  *current* - This page is being visited
 *  *link* - This page is not currently being visited
@@ -178,13 +202,20 @@ A useful feature is highlighting the current page the user is looking at. We can
 	</li>
 
 you will then be able to target a section in css (*simple/css/layout.css*), ie: 
-	:::ss
+	:::css
 	.section { 
 		background:#ccc;
 	} 
 You may also style the link to the current page this way, eg:
-	:::ss	
+	:::css	
 	.current { 
+		/* Your styles here */
+	} 
+
+Or, target links that are neither current nor in the same section as the current link, eg:
+
+	:::css	
+	.link { 
 		/* Your styles here */
 	} 
 
@@ -203,11 +234,9 @@ Either way, your site tree should now look something like this:
 
 ![](_images/tutorial1_2nd_level-cut.jpg)
 
-Great, we now have a hierarchical site structure, let's now look at how this is created and displayed in our template.
+Great, we now have a hierarchical site structure! Let's look at how this is created and displayed in our template.
 
-Adding a second level menu is very similar to adding the first level menu. 
-
-Open up */themes/simple/templates/Includes/Sidebar.ss* template and look at the following code:
+Adding a second level menu is very similar to adding the first level menu. Open up */themes/simple/templates/Includes/Sidebar.ss* template and look at the following code:
 
 	:::ss
 	<ul>
@@ -265,6 +294,7 @@ Breadcrumbs are only useful on pages that aren't in the top level. We can ensure
 the top level with another if statement.
 
 The *Level* page control allows you to get data from the page's parents, e.g. if you used *Level(1)*, you could use:
+	
 	:::ss
 	$Level(1).Title 
 
@@ -298,7 +328,6 @@ The following example runs an if statement, and a loop on *Children*, checking t
 	    </li>
 	  <% end_loop %>
 	</ul>
-
 
 
 
@@ -339,7 +368,7 @@ Create a new file *HomePage.php* in *mysite/code*. Copy the following code into 
 
 
 Every page type also has a database table corresponding to it. Every time we modify the database, we need to rebuild it.
-We can do this by going to [http://localhost/dev/build?flush=all](http://localhost/dev/build?flush=1) (replace *localhost* with your own domain name if applicable). 
+We can do this by going to [http://localhost/your_site_name/dev/build?flush=all](http://localhost/your_site_name/dev/build?flush=1) (replace *localhost/your_site_name* with your own domain name if applicable). 
 
 It may take a moment, so be patient. This add tables and fields needed by your site, and modifies any structures that have changed. It
 does this non-destructively - it will never delete your data.
@@ -366,10 +395,13 @@ to the template of the page type's parents.
 To create a new template layout, create a copy of *Page.ss* (found in *themes/simple/templates/Layouts*) and call it *HomePage.ss*. If we flush the cache (*?flush=all*), SilverStripe should now be using *HomePage.ss* for the homepage, and *Page.ss* for the rest of the site. Now let's customize the *HomePage* template. 
 
 First, remove the breadcrumbs and the secondary menu by removing:
+	:::ss
 	<% include SideBar %> 
+	
  we don't need it for the homepage. 
 
 Let's replace the title with an image. Find this line:
+
 	:::ss
 	<h1>$Title</h1>
 
@@ -396,7 +428,7 @@ then descend into the *themes/simple/templates/Layout* folder, and will use *Pag
 
 ## Summary
 
-So far we have learnt about template variables, controls and if statements. We have used these to build a basic but fully functional website. We have also briefly covered page types, and looked at how they correspond to templates and sub-templates. Using templates, we have customized our website's design according to the page type of any given page.
+So far we have taken a look at the different areas and functionality within the pages area of the CMS. We have learnt about template variables, controls and if statements and used these to build a basic, but fully functional, website. We have also briefly covered page types, and looked at how they correspond to templates and sub-templates. Using this knowledge, we have customized our website's homepage design.
 
 In the next tutorial, [Extending a Basic Site](2-extending-a-basic-site), we will explore page types on a deeper level, and look at customising our own page types to extend the functionality of SilverStripe.
 
