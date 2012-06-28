@@ -12,7 +12,7 @@ The default output of a `[api:SearchContext]` is either a `[api:SQLQuery]` objec
 In case you need multiple contexts, consider namespacing your request parameters by using `FieldList->namespace()` on
 the $fields constructor parameter.
 
-`[api:SearchContext]` is mainly used by `[api:ModelAdmin]`, our generic data administration interface. Another
+`[api:SearchContext]` is mainly used by `[ModelAdmin](/reference/modeladmin)`, our generic data administration interface. Another
 implementation can be found in generic frontend search forms through the [genericviews](http://silverstripe.org/generic-views-module) module.
 
 ## Usage
@@ -187,6 +187,6 @@ See `[api:SearchFilter]` API Documentation
 
 ## Related
 
-*  `[api:ModelAdmin]`
+*  [ModelAdmin](/reference/modeladmin)
 *  [RestfulServer module](https://github.com/silverstripe/silverstripe-restfulserver)
 *  [Tutorial: Site Search](/tutorials/4-site-search)

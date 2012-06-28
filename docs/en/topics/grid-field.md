@@ -14,7 +14,7 @@ This example might come from a Controller designed to manage the members of a gr
 	 */
 	public function MemberForm() {
 		$field = new GridField("Members", "Members of this group", $this->group->Members());
-		return new Form("MemberForm", $this, new FieldSet($field), new FieldSet());
+		return new Form("MemberForm", $this, new FieldList($field), new FieldList());
 	}
 
 Note that the only way to specify the data that is listed in a grid field is with `SS_List` argument.  If you want to customise the data displayed, you can do so by customising this object.

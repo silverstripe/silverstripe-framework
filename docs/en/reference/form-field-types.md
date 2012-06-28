@@ -34,8 +34,6 @@ This is a highlevel overview of available `[api:apiFormField]` subclasses. An au
  * `[api:NumericField]`: Text input field with validation for numeric values.
  * `[api:OptionsetField]`: Set of radio buttons designed to emulate a dropdown.
  * `[api:PhoneNumberField]`: Field for displaying phone numbers. It separates the number, the area code and optionally the country code and extension.
- * `[api:UniqueRestrictedTextField]`: Text field that automatically checks that the value entered is unique for the given set of fields in a given set of tables
- 
  * `[api:SelectionGroup]`: SelectionGroup represents a number of fields which are selectable by a radio button that appears at the beginning of each item.
  * `[api:TimeField]`: Input field with time-specific, localized validation.
 

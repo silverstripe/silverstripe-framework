@@ -214,7 +214,7 @@ To use your *HasOneComplexTableField* table for a **1-to-1** relation, make this
 			
 			$tablefield->setOneToOne();
 			
-			$fields->addFieldToTab( 'Root.Content.Student', $tablefield );
+			$fields->addFieldToTab( 'Root.Student', $tablefield );
 			
 			return $fields;
 		}

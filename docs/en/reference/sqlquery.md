@@ -2,45 +2,40 @@
 
 ## Introduction
 
-An object representing a SQL query. It is easier to deal with object-wrappers than string-parsing a raw SQL-query. This
-object is used by `[api:DataObject]`, though...
+An object representing a SQL query. It is easier to deal with object-wrappers than string-parsing a raw SQL-query. This object is used by the SilverStripe ORM internally.
+Dealing with low-level SQL is not encouraged, since the ORM provides
+powerful abstraction APIs (see [datamodel](/topics/datamodel). 
 
-A word of caution: Dealing with low-level SQL is not encouraged in the SilverStripe [datamodel](/topics/datamodel) for various
-reasons. You'll break the behaviour of:
+You'll run the risk of breaking various assumptions the ORM and code based on it have:
 
-*  Custom getters/setters
-*  DataObject::onBeforeWrite/onBeforeDelete
+*  Custom getters/setters (object property can differ from database column)
+*  DataObject hooks like onBeforeWrite() and onBeforeDelete()
 *  Automatic casting
-*  Default-setting through object-model
-*  `[api:DataObject]`
+*  Default values set through objects
 *  Database abstraction
 
-We'll explain some ways to use *SELECT* with the full power of SQL, but still maintain a connection to the SilverStripe
-[datamodel](/topics/datamodel).
+We'll explain some ways to use *SELECT* with the full power of SQL, 
+but still maintain a connection to the ORM where possible.
 
 ## Usage
-
 
 ### SELECT
 
 	:::php
 	$sqlQuery = new SQLQuery();
-	$sqlQuery->select = array(
-	  'Firstname AS Name',
-	  'YEAR(Birthday) AS BirthYear'
+	$sqlQuery->setFrom('Player');
+	$sqlQuery->selectField('FieldName', 'Name');
+	$sqlQuery->selectField('YEAR("Birthday")', 'BirthYear');
+	$sqlQuery->addLeftJoin(
+		'Team',
+	  '"Player"."TeamID" = "Team"."ID"'
 	);
-	$sqlQuery->from = "
-	  Player
-	  LEFT JOIN Team ON Player.TeamID = Team.ID
-	";
-	$sqlQuery->where = "
-	  YEAR(Birthday) = 1982
-	";
-	// $sqlQuery->orderby = "";
-	// $sqlQuery->groupby = "";
-	// $sqlQuery->having = "";
-	// $sqlQuery->limit = "";
-	// $sqlQuery->distinct = true;
+	$sqlQuery->addWhere('YEAR("Birthday") = 1982');
+	// $sqlQuery->setOrderBy(...);
+	// $sqlQuery->setGroupBy(...);
+	// $sqlQuery->setHaving(...);
+	// $sqlQuery->setLimit(...);
+	// $sqlQuery->setDistinct(true);
 	
 	// get the raw SQL
 	$rawSQL = $sqlQuery->sql();
@@ -53,7 +48,7 @@ We'll explain some ways to use *SELECT* with the full power of SQL, but still ma
 
 	:::php
 	// ...
-	$sqlQuery->delete = true;
+	$sqlQuery->setDelete(true);
 
 
 ### INSERT/UPDATE
@@ -80,10 +75,10 @@ Raw SQL is handy for performance-optimized calls.
 	:::php
 	class Team extends DataObject {
 	  public function getPlayerCount() {
-	    $sqlQuery = new SQLQuery(
-	      "COUNT(Player.ID)",
-	      "Team LEFT JOIN Player ON Team.ID = Player.TeamID"
-	    );
+	    $sqlQuery = new SQLQuery();
+	    $sqlQuery->setFrom('Player');
+	    $sqlQuery->addSelect('COUNT("Player"."ID")');
+	    $sqlQuery->addLeftJoin('Team', '"Team"."ID" = "Player"."TeamID"');
 	    return $sqlQuery->execute()->value();
 	}
 
@@ -99,10 +94,9 @@ Way faster than dealing with `[api:DataObject]`s, but watch out for premature op
 Useful for creating dropdowns.
 
 	:::php
-	$sqlQuery = new SQLQuery(
-	  array('YEAR(Birthdate)', 'Birthdate'),
-	  'Player'
-	);
+	$sqlQuery = new SQLQuery();
+	$sqlQuery->setFrom('Player');
+	$sqlQuery->selectField('YEAR("Birthdate")', 'Birthdate');
 	$map = $sqlQuery->execute()->map();
 	$field = new DropdownField('Birthdates', 'Birthdates', $map);
 
@@ -112,8 +106,11 @@ Useful for creating dropdowns.
 This is not recommended for most cases, but you can also use the SilverStripe database-layer to fire off a raw query:
 
 	:::php
-	DB::query("UPDATE Player SET Status='Active'");
+	DB::query('UPDATE "Player" SET "Status"=\'Active\'');
 
+<<<<<<< Updated upstream
+### Transforming a result to `[api:ArrayList]`
+=======
 One example for using a raw DB::query is when you are wanting to order twice in the database:
 
 	:::php
@@ -130,46 +127,41 @@ You can gain some ground on the datamodel-side when involving the selected class
 need to call *buildSQL* from a specific object-instance, a *singleton* will do just fine.
 
 	:::php
-	$sqlQuery = singleton('Player')->buildSQL(
-	  'YEAR(Birthdate) = 1982'
-	);
+	$sqlQuery = singleton('Player')->buildSQL('YEAR("Birthdate") = 1982');
 
 
 This form of building a query has the following advantages:
 
 *  Respects DataObject::$default_sort
-*  Automatically LEFT JOIN on all base-tables (see [database-structure](database-structure))
+*  Automatically `LEFT JOIN` on all base-tables (see [database-structure](database-structure))
 *  Selection of *ID*, *ClassName*, *RecordClassName*, which are necessary to use *buildDataObjectSet* later on
 *  Filtering records for correct *ClassName*
 
 ### Transforming a result to `[api:DataObjectSet]`
+>>>>>>> Stashed changes
 
 This is a commonly used technique inside SilverStripe: Use raw SQL, but transfer the resulting rows back into
 `[api:DataObject]`s.
 
 	:::php
 	$sqlQuery = new SQLQuery();
-	$sqlQuery->select = array(
-	  'Firstname AS Name',
-	  'YEAR(Birthday) AS BirthYear',
+	$sqlQuery->setSelect(array(
+	  '"Firstname" AS "Name"',
+	  'YEAR("Birthday") AS "BirthYear"',
 	  // IMPORTANT: Needs to be set after other selects to avoid overlays
-	  'Player.ClassName AS ClassName',
-	  'Player.ClassName AS RecordClassName',
-	  'Player.ID AS ID'
-	);
-	$sqlQuery->from = array(
-	  "Player",
-	  "LEFT JOIN Team ON Player.TeamID = Team.ID"
-	);
-	$sqlQuery->where = array(
-	  "YEAR(Player.Birthday) = 1982"
-	);
+	  '"Player"."ClassName" AS "ClassName"',
+	  '"Player"."ClassName" AS "RecordClassName"',
+	  '"Player"."ID" AS "ID"'
+	));
+	$sqlQuery->setFrom('Player');
+	$sqlQuery->addLeftJoin('Team', '"Player"."TeamID" = "Team"."ID"');
+	$sqlQuery->addWhere("YEAR("Player"."Birthday") = 1982");
 	
 	$result = $sqlQuery->execute();
 	var_dump($result->first()); // array
 	
 	// let Silverstripe work the magic
-	$myDataObjectSet = singleton('Player')->buildDataObjectSet($result);
+	$myList = singleton('Player')->buildDataObjectSet($result);
 	var_dump($myDataObjectSet->First()); // DataObject
 	
 	// this is where it gets tricky

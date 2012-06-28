@@ -17,7 +17,7 @@ It is usually added through the `[api:DataObject->getCMSFields()]` method:
 		static $db = array('Content' => 'HTMLText');
 
 		public function getCMSFields() {
-			return new FieldSet(new HTMLEditorField('Content'));
+			return new FieldList(new HTMLEditorField('Content'));
 		}
 	}
 

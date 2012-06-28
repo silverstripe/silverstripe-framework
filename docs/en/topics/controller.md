@@ -88,6 +88,20 @@ after it.  If the URLSegment is **order** then `/order/tag/34` and `/order/tag/a
 
 You can use the `debug_request=1` switch from the [urlvariabletools](/reference/urlvariabletools) to see these in action.
 
+## Redirection
+
+Controllers facilitate HTTP redirection.
+Note: These methods have been formerly located on the `[api:Director]` class.
+
+*  `redirect("action-name")`: If there's no slash in the URL passed to redirect, then it is assumed that you want to go to a different action on the current controller.
+*  `redirect("relative/url")`: If there is a slash in the URL, it's taken to be a normal URL.  Relative URLs
+will are assumed to be relative to the site-root.
+*  `redirect("http://www.absoluteurl.com")`: Of course, you can pass `redirect()` absolute URLs too.
+*  `redirectBack()`: This will return you to the previous page.
+
+The `redirect()` method takes an optional HTTP status code,
+either `301` for permanent redirects, or `302` for temporary redirects (default).
+
 ## API Documentation
 
 `[api:Controller]`

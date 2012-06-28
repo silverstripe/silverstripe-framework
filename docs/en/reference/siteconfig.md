@@ -39,13 +39,9 @@ Create a mysite/code/CustomSiteConfig.php file.
 	
 	class CustomSiteConfig extends DataExtension {
 		
-		public function extraStatics() {
-			return array(
-				'db' => array(
-					'FooterContent' => 'HTMLText'
-				)
-			);
-		}
+		static $db = array(
+			'FooterContent' => 'HTMLText'
+		);
 	
 		public function updateCMSFields(FieldList $fields) {
 			$fields->addFieldToTab("Root.Main", new HTMLEditorField("FooterContent", "Footer Content"));

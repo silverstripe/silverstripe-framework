@@ -31,7 +31,7 @@ by adding, removing or configuring fields.
 			'IsActive' => 'Boolean'
 		);
 	  public function getCMSFields() {
-	    return new FieldSet(
+	    return new FieldList(
 	    	new CheckboxField('IsActive')
 	    );
 	  }

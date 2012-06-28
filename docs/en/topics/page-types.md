@@ -52,14 +52,11 @@ especially useful if you know how long your source data needs to be.
 
 	:::php
 	class StaffPage extends Page {
-	
 	   static $db = array(
 	      'Author' => 'Varchar(50)'
 	   );
-	
 	}
 	class StaffPage_Controller extends Page_Controller {
-	
 	}
 
 
@@ -68,7 +65,8 @@ model works.
 
 ## Adding Form Fields and Tabs
 
-See [form](/topics/forms) and [tutorial:2-extending-a-basic-site](/tutorials/2-extending-a-basic-site)
+See [form](/topics/forms) and [tutorial:2-extending-a-basic-site](/tutorials/2-extending-a-basic-site).
+Note: To modify fields in the "Settings" tab, you need to use `updateSettingsFields()` instead.
 
 ## Removing inherited form fields and tabs
 

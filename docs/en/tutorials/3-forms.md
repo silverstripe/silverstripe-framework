@@ -207,7 +207,7 @@ that the *BrowserPollSubmission* table is created. Now we just need to define 'd
 			$submission = new BrowserPollSubmission();
 			$form->saveInto($submission);
 			$submission->write();
-			Director::redirectBack();
+			return $this->redirectBack();
 		}
 	}
 
@@ -218,7 +218,7 @@ A function that processes a form submission takes two arguments - the first is t
 In our function we create a new *BrowserPollSubmission* object. Since the name of our form fields and the name of the
 database fields are the same we can save the form directly into the data object.
 
-We call the 'write' method to write our data to the database, and 'Director::redirectBack()' will redirect the user back
+We call the 'write' method to write our data to the database, and 'redirectBack()' will redirect the user back
 to the home page.
 
 
@@ -237,11 +237,8 @@ Change the end of the 'BrowserPollForm' function so it looks like this:
 
 	:::php
 	public function BrowserPollForm() {
-		...
-	
-		// Create validator
+		// ...
 		$validator = new RequiredFields('Name', 'Browser');
-		
 		return new Form($this, 'BrowserPollForm', $fields, $actions, $validator);
 	}
 
@@ -266,22 +263,16 @@ First modify the 'doBrowserPoll' to set the session variable 'BrowserPollVoted' 
 *mysite/code/HomePage.php*
 
 	:::php
-	...
-	
-	HomePage_Controller extends Page_Controller {
-		...
-		
+	// ...
+	class HomePage_Controller extends Page_Controller {
+		// ...
 		public function doBrowserPoll($data, $form) {
 			$submission = new BrowserPollSubmission();
 			$form->saveInto($submission);
 			$submission->write();
-			
 			Session::set('BrowserPollVoted', true);
-			
-			Director::redirectBack();
+			return $this->redirectBack();
 		}
-		
-		...
 	}
 
 
@@ -293,59 +284,55 @@ it is.
 		if(Session::get('BrowserPollVoted')) {
 			return false;
 		}
-		
-		...
+		// ...
+	}	
 
 
-If you visit the home page now you will see you can only vote once per session; after that the form won't be shown. You
-can start a new session by closing and reopening your browser (or if you're using Firefox and have installed the [Web
-Developer](http://chrispederick.com/work/web-developer/) extension, you can use its Clear Session Cookies command).
+If you visit the home page now you will see you can only vote once per session; 
+after that the form won't be shown. 
+You can start a new session by closing and reopening your browser.
 
-Although the form is not shown, you'll still see the 'Browser Poll' heading. We'll leave this for now: after we've built
-the bar graph of the results, we'll modify the template to show the graph instead of the form if the user has already
-voted.
+Now that we're collecting data, it would be nice to show the results
+on the website as well. We could simply output every vote, but that's boring.
+Let's group the results by browser, through the SilverStripe data model.
 
-We now need some way of getting the data from the database into the template.
+In the [second tutorial](/tutorials/2-extending-a-basic-site), 
+we got a collection of news articles for the home page by 
+using the 'ArticleHolder::get()' function, which returns a `[api:DataList]`.
+We can get all submissions in the same fashion, through `BrowserPollSubmission::get()`.
+This list will be the starting point for our result aggregation.
 
-In the second tutorial we got the latest news articles for the home page by using the 'DataObject::get' function. We
-can't use the 'DataObject::get' function here directly as we wish to count the total number of votes for each browser.
-By looking at the documentation for 'DataObject::get', we can see that it returns a `[api:DataObjectSet]`
-object. In fact, all data that can be iterated over in a template with a page control is contained in a DataObjectSet.
-
-A `[api:DataObjectSet]` is a set of not just DataObjects, but of ViewableData, which the majority of
-SilverStripe's classes (including DataObject) inherit from. We can create a DataObjectSet, fill it with our data, and
-then create our graph using a page control in the template. Create the function 'BrowserPollResults' on the
-*HomePage_Controller* class.
+Create the function 'BrowserPollResults' on the *HomePage_Controller* class.
 
 ** mysite/code/HomePage.php **
 
 	:::php
 	public function BrowserPollResults() {
-		$submissions = BrowserPollSubmission::get();
+		$submissions = new GroupedList(BrowserPollSubmission::get());
 		$total = $submissions->Count();
 		
-		$doSet = new DataObjectSet();
-		foreach($submissions->groupBy('Browser') as $browser => $data) {
+		$list = new ArrayList();
+		foreach($submissions->groupBy('Browser') as $browserName => $browserSubmissions) {
 			$percentage = (int) ($data->Count() / $total * 100);
-			$record = array(
-				'Browser' => $browser,
+			$list->push(new ArrayData(array(
+				'Browser' => $browserName,
 				'Percentage' => $percentage
-			);
-			$doSet->push(new ArrayData($record));
+			)));
 		}
-		
-		return $doSet;
+		return $list;
 	}
 
-
-This introduces a few new concepts, so let's step through it.
+This code introduces a few new concepts, so let's step through it.
 
 	:::php
-	$submissions = BrowserPollSubmission::get();
+	$submissions = new GroupedList(BrowserPollSubmission::get());
 
 
-First we get all of the *BrowserPollSubmission*s from the database. This returns the submissions as a
-DataObjectSet, which contains the submissions as *BrowserPollSubmission* objects.
+First we get all of the `BrowserPollSubmission` records from the database. 
+This returns the submissions as a `[api:DataList]`.
+Then we wrap it inside a `[api:GroupedList]`, which adds the ability
+to group those records. The resulting object will behave just like
+the original `DataList`, though (with the addition of a `groupBy()` method).
 
 	:::php
 	$total = $submissions->Count();
@@ -354,29 +341,24 @@ DataObjectSet, which contains the submissions as *BrowserPollSubmission* objects
 We get the total number of submissions, which is needed to calculate the percentages.
 
 	:::php
-	$doSet = new DataObjectSet();
-	foreach($submissions->groupBy('Browser') as $browser => $data) {
-		$percentage = (int) ($data->Count() / $total * 100);
-		$record = array(
-			'Browser' => $browser,
+	$list = new ArrayList();
+	foreach($submissions->groupBy('Browser') as $browserName => $browserSubmissions) {
+		$percentage = (int) ($browserSubmissions->Count() / $total * 100);
+		$list->push(new ArrayData(array(
+			'Browser' => $browserName,
 			'Percentage' => $percentage
-		);
-		$doSet->push(new ArrayData($record));
+		)));
 	}
 
 
-Now we create an empty DataObjectSet to hold our data and then iterate over the 'Browser' submissions field. The 'groupBy' 
-method of DataObjectSet splits our DataObjectSet by the 'Browser' field passed to it. The percentage of submissions for each 
-browser is calculated using the size of the DataObjectSet. It puts these new DataObjectSets into an array indexed 
-by the value of the field. The `[api:ArrayData]` class wraps an array into a ViewableData object, so we finally create a new 
-ArrayData object, which we can add to our *$doSet* DataObjectSet of results.
-
-	:::php
-	return $doSet;
-
-
-After we have iterated through all the browsers, the DataObjectSet contains all the results, which is then
-returned.
+Now we create an empty `[api:ArrayList]` to hold the data we'll pass to the template.
+Its similar to `[api:DataList]`, but can hold arbitrary objects rather than just `DataObject` instances.
+Then iterate over the 'Browser' submissions field. 
+The `groupBy()` method splits our list by the 'Browser' field passed to it,
+creating new lists with submissions just for a specific browser.
+Each of those lists is keyed by the browser name.
+The aggregated result is then contained in an `[api:ArrayData]` object,
+which behaves much like a standard PHP array, but allows us to use it in SilverStripe templates.
 
 The final step is to create the template to display our data. Change the 'BrowserPoll' div in
 *themes/tutorial/templates/Layout/HomePage.ss* to the below.
@@ -408,6 +390,9 @@ a complete poll.
 
 ![](_images/pollresults.jpg)
 
+<div class="hint" markdown="1">
+While the ORM is
+</div>
 
 ## Summary
 

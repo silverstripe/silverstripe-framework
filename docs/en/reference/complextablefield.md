@@ -2,6 +2,10 @@
 
 ## Introduction
 
+<div class="warning" markdown="1">
+	This field is deprecated in favour of the new [GridField](/topics/grid-field) API.
+</div>
+
 Shows a group of DataObjects as a (readonly) tabular list (similiar to `[api:TableListField]`.)
 
 You can specify limits and filters for the resultset by customizing query-settings (mostly the ID-field on the other
@@ -129,22 +133,3 @@ Most of the time, you need to override the following methods:
 *  ComplexTableField->sourceItems() - querying
 *  ComplexTableField->DetailForm() - form output
 *  ComplexTableField_Popup->saveComplexTableField() - saving
-
-### Examples
-
-*  `[api:AssetTableField]`
-*  `[api:MemberTableField]`
-
-## API Documentation
-
-`[api:ComplexTableField]`
-
-## Todo
-
-*  Find a less fragile solution for accessing this field through the main controller and ReferencedField, e.g. build a
-seperate CTF-instance (doesn't necessarly have to be connected to the original by ReferencedField)
-*  Control width/height of popup by constructor (hardcoded at the moment)
-*  Integrate search from MemberTableField.php directly on `[api:ComplexTableField]`
-*  Less performance-hungry implementation of detail-view paging (don't return all items on a single view)
-*  Use automatic has-many and many-many functions to return a ComponentSet rather than building the join manually
-*  Javascript/Ajax-Sorting (see [http://www.activewidgets.com/grid/](http://www.activewidgets.com/grid/) and [http://openrico.org/rico/livegrid.page](http://openrico.org/rico/livegrid.page))

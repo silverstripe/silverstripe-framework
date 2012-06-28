@@ -99,7 +99,6 @@ our theme in action. The code for mine is below.
 	<h1>$Title</h1>
 	$Content
 	$Form
-	$PageComments
 
 
 All you have to do now is tell your site to use your new theme - This is defined in the **mysite/_config.php** file
