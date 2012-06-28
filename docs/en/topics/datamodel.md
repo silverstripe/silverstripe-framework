@@ -14,7 +14,8 @@ logic is handled by SilverStripe, you don't need to worry about writing SQL most
 Most of the ORM customizations are possible through [PHP5 Object
 Overloading](http://www.onlamp.com/pub/a/php/2005/06/16/overloading.html) handled in the `[api:Object]`-class.
 
-See [database-structure](/reference/database-structure) for in-depth information on the database-schema.
+See [database-structure](/reference/database-structure) for in-depth information on the database-schema,
+and the ["sql queries" topic](/reference/sqlquery) in case you need to drop down to the bare metal.
 
 ## Generating the Database Schema
 
@@ -523,8 +524,10 @@ accessors available on both ends.
 
 ### Adding relations
 
-Inside SilverStripe it doesn't matter if you're editing a *has_many*- or a *many_many*-relationship. You need to get a
-`[api:ComponentSet]`.
+Adding new items to a relations works the same,
+regardless if you're editing a *has_many*- or a *many_many*. 
+They are encapsulated by `[api:HasManyList]` and `[api:ManyManyList]`,
+both of which provide very similar APIs, e.g. an `add()` and `remove()` method.
 
 	:::php
 	class Team extends DataObject {
@@ -533,20 +536,8 @@ Inside SilverStripe it doesn't matter if you're editing a *has_many*- or a *many
 	    "Categories" => "Category",
 	  );
 		
-	  /**
-	
-	   * @param DataObjectSet
-	   */
-	  public function addCategories($additionalCategories) {
-	    $existingCategories = $this->Categories();
-	    
-	    // method 1: Add many by iteration
-	    foreach($additionalCategories as $category) {
-	      $existingCategories->add($category);
-	    }
-	
-	    // method 2: Add many by ID-List
-	    $existingCategories->addMany(array(1,2,45,745));
+	  public function addCategories(SS_List $cats) {
+	    foreach($cats as $cat) $this->Categories()->add($cat);
 	  }
 	}
 
@@ -554,8 +545,8 @@ Inside SilverStripe it doesn't matter if you're editing a *has_many*- or a *many
 ### Custom Relations
 
 You can use the flexible datamodel to get a filtered result-list without writing any SQL. For example, this snippet gets
-you the "Players"-relation on a team, but only containing active players. (See `[api:DataObject::$has_many]` for more info on
-the described relations).
+you the "Players"-relation on a team, but only containing active players. 
+See `[api:DataObject::$has_many]` for more info on the described relations.
 
 	:::php
 	class Team extends DataObject {
@@ -568,6 +559,9 @@ the described relations).
 	    return $this->Players("Status='Active'");
 	  }
 	}
+
+Note: Adding new records to a filtered `RelationList` like in the example above
+doesn't automatically set the filtered criteria on the added record.
 
 ## Validation and Constraints
 
@@ -742,19 +736,13 @@ It checks if a member is logged in who belongs to a group containing the permiss
 	  }
 	}
 
-
-
-
 ### Saving data with forms
 
 See [forms](/topics/forms).
 
 ### Saving data with custom SQL
 
-See `[api:SQLQuery]` for custom *INSERT*, *UPDATE*, *DELETE* queries.
-
-
-
+See the ["sql queries" topic](/reference/sqlquery) for custom *INSERT*, *UPDATE*, *DELETE* queries.
 
 ## Extending DataObjects
 
@@ -763,18 +751,14 @@ code or subclassing.
 Please see `[api:DataExtension]` for a general description, and `[api:Hierarchy]` for our most
 popular examples.
 
-
-
 ## FAQ
 
 ### Whats the difference between DataObject::get() and a relation-getter?
-You can work with both in pretty much the same way, but relationship-getters return a special type of collection: 
-A `[api:ComponentSet]` with relation-specific functionality.
+
+You can work with both in pretty much the same way, 
+but relationship-getters return a special type of collection: 
+A `[api:HasManyList]` or a `[api:ManyManyList]` with relation-specific functionality.
 
 	:::php
-	$myTeam = DataObject::get_by_id('Team',$myPlayer->TeamID); // returns DataObject
-	$myTeam->add(new Player()); // fails
-	
-	$myTeam = $myPlayer->Team(); // returns Componentset
-	$myTeam->add(new Player()); // works
-
+	$myTeams = $myPlayer->Team(); // returns HasManyList
+	$myTeam->add($myOtherPlayer);
