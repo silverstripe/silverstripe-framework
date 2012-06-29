@@ -128,7 +128,31 @@ class SQLQueryTest extends SapphireTest {
 		
 		$this->assertEquals('SELECT *, RAND() AS "_SortColumn0" FROM MyTable ORDER BY "_SortColumn0" ASC', $query->sql());
 	}
-	
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testNegativeLimit() {
+		$query = new SQLQuery();
+		$query->setLimit(-10);
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testNegativeOffset() {
+		$query = new SQLQuery();
+		$query->setLimit(1, -10);
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testNegativeOffsetAndLimit() {
+		$query = new SQLQuery();
+		$query->setLimit(-10, -10);
+	}
+
 	public function testReverseOrderBy() {
 		$query = new SQLQuery();
 		$query->setFrom('MyTable');
