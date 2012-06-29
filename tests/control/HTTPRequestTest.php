@@ -242,4 +242,16 @@ class HTTPRequestTest extends SapphireTest {
 		$req->addHeader('X-Requested-With', 'XMLHttpRequest');
 		$this->assertTrue($req->isAjax());
 	}
+
+	public function testGetURL() {
+		$req = new SS_HTTPRequest('GET', '/');
+		$this->assertEquals('', $req->getURL());
+
+		$req = new SS_HTTPRequest('GET', '/assets/somefile.gif');
+		$this->assertEquals('assets/somefile.gif', $req->getURL());
+
+		$req = new SS_HTTPRequest('GET', '/home?test=1');
+		$this->assertEquals('home?test=1', $req->getURL(true));
+		$this->assertEquals('home', $req->getURL());
+	}
 }
