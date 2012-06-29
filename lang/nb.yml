@@ -203,7 +203,7 @@ nb:
     DefaultGroupTitleContentAuthors: Innholdsforfattere
     Description: Beskrivelse
     EMAIL: Epost
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    GroupReminder: 'Hvis du velger en overordnet gruppe, vil denne gruppen arve alle rollene'
     HELLO: Hei
     Locked: 'Låst?'
     NoRoles: 'Ingen roller funnet'
@@ -419,12 +419,12 @@ nb:
     IMPORTUSERS: 'Importer brukere'
     MEMBERS: Medlemmer
     MENUTITLE: Security
-    MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
+    MemberListCaution: 'Advarsel: Hvis du fjerner medlemmer fra denne listen vil det samtidig fjerne dem fra alle grupper og databasen'
     NEWGROUP: 'Ny gruppe'
     PERMISSIONS: Tilganger
     ROLES: Roller
     ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
-    TABROLES: Roles
+    TABROLES: Roller
     Users: Brukere
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Import from CSV'
