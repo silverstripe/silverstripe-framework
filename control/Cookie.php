@@ -60,7 +60,7 @@ class Cookie {
 		return self::get_inst()->inst_report_errors();
 	}
 
-	public function inst_set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = false) {
+	protected function inst_set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = false) {
 		if(!headers_sent($file, $line)) {
 			$expiry = $expiry > 0 ? time()+(86400*$expiry) : $expiry;
 			$path = ($path) ? $path : Director::baseURL();
@@ -72,21 +72,21 @@ class Cookie {
 		}
 	}
 
-	public function inst_get($name) {
+	protected function inst_get($name) {
 		return isset($_COOKIE[$name]) ? $_COOKIE[$name] : null;
 	}
 
-	public function inst_forceExpiry($name, $path = null, $domain = null) {
+	protected function inst_forceExpiry($name, $path = null, $domain = null) {
 		if(!headers_sent($file, $line)) {
 			self::set($name, null, -20, $path, $domain);
 		}
 	}
 
-	public function inst_set_report_errors($reportErrors) {
+	protected function inst_set_report_errors($reportErrors) {
 		self::$report_errors = $reportErrors;
 	}
 
-	public function report_errors() {
+	protected function report_errors() {
 		return self::$report_errors;
 	}
 }
