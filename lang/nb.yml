@@ -14,15 +14,15 @@ nb:
     URL: URL
   AssetUploadField:
     ChooseFiles: 'Velg filer'
-    DRAGFILESHERE: 'Drag files here'
-    DROPAREA: 'Drop Area'
+    DRAGFILESHERE: 'Dra filer hit'
+    DROPAREA: Droppunkt
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Rediger & organiser'
-    FILES: Files
+    FILES: Filer
     TOTAL: Total
     TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
-    UPLOADOR: OR
+    UPLOADOR: ELLER
   BBCodeParser:
     ALIGNEMENT: Stilling
     ALIGNEMENTEXAMPLE: 'Stilt til høyre'
@@ -165,7 +165,7 @@ nb:
     Delete: Delete
     UnlinkRelation: Unlink
   GridField:
-    Add: 'Add {name}'
+    Add: 'Legg til {name}'
     Filter: Filter
     FilterBy: 'Filter by '
     Find: Find
@@ -290,7 +290,7 @@ nb:
     IP: 'IP adresse'
     Status: Status
   Member:
-    ADDGROUP: 'Add group'
+    ADDGROUP: 'Legg til en gruppe'
     BUTTONCHANGEPASSWORD: 'Bytt Passord'
     BUTTONLOGIN: 'Logg inn'
     BUTTONLOGINOTHER: 'Logg inn med en annen brukerkonto'
@@ -308,8 +308,8 @@ nb:
     ERRORWRONGCRED: 'Det der ser ikke ut til å være riktig epost adresse eller passord. Vennligst prøv igjen.'
     FIRSTNAME: Fornavn
     INTERFACELANG: 'Språk på grensesnitt'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    LOGGEDINAS: 'You''re logged in as {name}.'
+    INVALIDNEWPASSWORD: 'Vi kunne ikke godkjenne passordet: {password}'
+    LOGGEDINAS: 'Du er logget inn som {name}'
     NEWPASSWORD: 'Nytt Passord'
     PASSWORD: Passord
     PLURALNAME: Medlemmer
@@ -321,7 +321,7 @@ nb:
     SURNAME: Etternavn
     VALIDATIONMEMBEREXISTS: 'Det eksisterer allerede et medlem med denne epost-kontoen.'
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
+    WELCOMEBACK: 'Velkommen tilbake, {firstname}'
     YOUROLDPASSWORD: 'Ditt gamle passord'
     belongs_many_many_Groups: Grupper
     db_LastVisited: 'Siste besøkte dato'
@@ -371,7 +371,7 @@ nb:
     Title: 'Data Models'
     UPDATEDRECORDS: 'Updated {count} records.'
   MoneyField:
-    FIELDLABELAMOUNT: Amount
+    FIELDLABELAMOUNT: Mengde
     FIELDLABELCURRENCY: Currency
   NullableField:
     IsNullLabel: 'Is Null'
@@ -392,7 +392,7 @@ nb:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    Back: Back
+    Back: Tilbake
     VALIDATION: 'Vennligst skriv inn et gyldig tlf nummer'
   Security:
     ALREADYLOGGEDIN: 'Du har ikke adgang til denne siden. Hvis du har en annen konto som har adgang til denne siden, kan du logge inn med den under.'
@@ -467,12 +467,12 @@ nb:
     Dimensions: Dimensions
     EDITINFO: 'Rediger denne filen'
     FIELDNOTSET: 'Filinformasjon ikke funnet'
-    FROMCOMPUTER: 'From your computer'
+    FROMCOMPUTER: 'Fra din pc'
     FROMFILES: 'Fra filer'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
-    REMOVEERROR: 'Error removing file'
+    REMOVE: Fjern
+    REMOVEERROR: 'Feil ved fjerning av fil'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
     Saved: Lagret
