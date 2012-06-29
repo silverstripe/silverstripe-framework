@@ -945,7 +945,7 @@ class Requirements_Backend {
 		if(class_exists('SapphireTest', false)) $runningTest = SapphireTest::is_running_test();
 		else $runningTest = false;
 		
-		if((Director::isDev() && !$runningTest) || !$this->combined_files_enabled) {
+		if((Director::isDev() && !$runningTest && !isset($_REQUEST['combine'])) || !$this->combined_files_enabled) {
 			return;
 		}
 		
