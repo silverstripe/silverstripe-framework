@@ -13,12 +13,22 @@ class YamlFixtureTest extends SapphireTest {
 		$absPath = FRAMEWORK_PATH . '/tests/testing/YamlFixtureTest.yml';
 		$obj = new YamlFixture($absPath);
 		$this->assertEquals($absPath, $obj->getFixtureFile());
+		$this->assertNull($obj->getFixtureString());
 	}
 	
 	function testRelativeFixturePath() {
 		$relPath = FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml';
 		$obj = new YamlFixture($relPath);
 		$this->assertEquals(Director::baseFolder() . '/' . $relPath, $obj->getFixtureFile());
+		$this->assertNull($obj->getFixtureString());
+	}
+
+	function testStringFixture() {
+		$absPath = FRAMEWORK_PATH . '/tests/testing/YamlFixtureTest.yml';
+		$string = file_get_contents($absPath);
+		$obj = new YamlFixture($string);
+		$this->assertEquals($string, $obj->getFixtureString());
+		$this->assertNull($obj->getFixtureFile());
 	}
 	
 	/**
