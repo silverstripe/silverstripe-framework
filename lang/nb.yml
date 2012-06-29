@@ -16,7 +16,7 @@ nb:
     ChooseFiles: 'Velg filer'
     DRAGFILESHERE: 'Dra filer hit'
     DROPAREA: Droppunkt
-    EDITALL: 'Edit all'
+    EDITALL: 'Endre alle'
     EDITANDORGANIZE: 'Rediger & organiser'
     FILES: Filer
     TOTAL: Total
@@ -55,7 +55,7 @@ nb:
   Boolean:
     ANY: Any
     0: 'False'
-    LOGOUT: 'Log out'
+    LOGOUT: 'Logg ut'
     1: 'True'
   CMSMain:
     ACCESS: 'Access to ''{title}'' section'
@@ -72,9 +72,9 @@ nb:
     SUCCESSADD2: 'Added {name}'
     SUCCESSEDIT: 'Lagret %s %s %s'
   ConfirmedPasswordField:
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    ATLEAST: 'Passordet må inneholde minst {min} skrifttegn'
+    BETWEEN: 'Passord må inneholde {min} til {max} skrifttegn'
+    MAXIMUM: 'Passord må inneholde maks {max} skrifttegn'
     SHOWONCLICKTITLE: 'Endre Passord'
   CreditCardField:
     FIRST: første
@@ -130,14 +130,14 @@ nb:
     Name: Navn
     PLURALNAME: Filer
     SINGULARNAME: Fil
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
+    TOOLARGE: 'Filstørrelse for stor, maksimum {size} tillatt '
+    TOOLARGESHORT: 'Filstørrelse overstiger {size}'
     Title: Tittel
   FileIFrameField:
-    ATTACH: 'Attach {type}'
+    ATTACH: 'Legg ved {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
+    DELETE: 'Slett {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
     FILE: Fil
     FROMCOMPUTER: 'From your Computer'
@@ -151,13 +151,13 @@ nb:
   Form:
     FIELDISREQUIRED: 'mangler %s'
     TITLE: 'Image Uploading Iframe'
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONCREDITNUMBER: 'Vennligst sjekk at du har skrevet inn {number} korrekt kortnummer'
     VALIDATIONNOTUNIQUE: 'Den spesifiserte verdien er ikke unik'
     VALIDATIONPASSWORDSDONTMATCH: 'Passordene passer ikke med hverandre'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passord kan ikke være tomt'
     VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
     VALIDATOR: Validator
-    VALIDCURRENCY: 'Please enter a valid currency'
+    VALIDCURRENCY: 'Vennligst skriv inn gyldig valuta'
   FormField:
     NONE: ingen
   GridAction:
@@ -229,7 +229,7 @@ nb:
     BUTTONINSERT: 'Sett inn'
     BUTTONINSERTLINK: 'Sett inn lenke'
     BUTTONREMOVELINK: 'Fjern lenke'
-    BUTTONUpdate: Update
+    BUTTONUpdate: Oppdater
     CAPTIONTEXT: 'Caption text'
     CSSCLASS: 'Stille opp / stil'
     CSSCLASSCENTER: 'Sentrert, alene.'
@@ -281,7 +281,7 @@ nb:
     PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
     PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
     PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
-    PreviewButton: Preview
+    PreviewButton: Forhåndsvisning
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
     VersionUnknown: Ukjent
