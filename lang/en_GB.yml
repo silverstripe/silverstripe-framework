@@ -476,5 +476,6 @@ en_GB:
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'
     Saved: Saved
+    HOTLINKINFO: Info: This image will be hotlinked. Please ensure you have permissions from the original site creator to do so.
   Versioned:
     has_many_Versions: Versions
