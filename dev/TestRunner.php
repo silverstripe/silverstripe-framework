@@ -32,6 +32,7 @@ class TestRunner extends Controller {
 		'sessionloadyml' => 'sessionloadyml',
 		'startsession' => 'startsession',
 		'endsession' => 'endsession',
+		'setdb' => 'setdb',
 		'cleanupdb' => 'cleanupdb',
 		'emptydb' => 'emptydb',
 		'module/$ModuleName' => 'module',
@@ -49,6 +50,7 @@ class TestRunner extends Controller {
 		'coverageOnly',
 		'startsession',
 		'endsession',
+		'setdb',
 		'cleanupdb',
 		'module',
 		'all',
@@ -375,7 +377,8 @@ HTML;
 				// Fixture
 				if($fixtureFile) {
 					$fixture = new YamlFixture($fixtureFile);
-					$fixture->saveIntoDatabase();
+					$model = DataModel::inst();
+					$fixture->saveIntoDatabase($model);
 					
 				// If no fixture, then use defaults
 				} else {
@@ -404,7 +407,8 @@ HTML;
 
 			if(isset($_GET['fixture']) && ($fixtureFile = $_GET['fixture'])) {
 				$fixture = new YamlFixture($fixtureFile);
-				$fixture->saveIntoDatabase();
+				$model = DataModel::inst();
+				$fixture->saveIntoDatabase($model);
 				return "<p>Re-test the test database with fixture '$fixtureFile'.  Time to start testing; where would you like to start?</p>";
 
 			} else {
@@ -419,12 +423,91 @@ HTML;
 	function endsession() {
 		SapphireTest::kill_temp_db();
 		DB::set_alternative_database_name(null);
+		DB::set_alternative_database_server(null);
+		DB::set_alternative_database_username(null);
+		DB::set_alternative_database_password(null);
+		DB::set_alternative_database_path(null);
+		DB::set_alternative_database_type(null);
 
 		return "<p>Test session ended.</p>
 			<ul>
 				<li><a id=\"home-link\" href=\"" .Director::baseURL() . "\">Return to your site</a></li>
 				<li><a id=\"startsession-link\" href=\"" .Director::baseURL() . "dev/tests/startsession\">Start a new test session</a></li>
 			</ul>";
+	}
+
+	function setdb() {
+		if(!Director::isLive()) {
+			$db_session_changelist = '';
+			if (isset($_GET['type'])) {
+				DB::set_alternative_database_type($_GET['type']);
+				$db_session_changelist .= "<li>Type: <em>".DB::get_alternative_database_type()."</em></li>";
+			} else {
+				DB::set_alternative_database_type(null);
+			}
+			if (isset($_GET['server'])) {
+				DB::set_alternative_database_server($_GET['server']);
+				$db_session_changelist .= "<li>Server: <em>".DB::get_alternative_database_server()."</em></li>";
+			} else {
+				DB::set_alternative_database_server(null);
+			}
+			if (isset($_GET['username'])) {
+				DB::set_alternative_database_username($_GET['username']);
+				$db_session_changelist .= "<li>Username: <em>".DB::get_alternative_database_username()."</em></li>";
+			} else {
+				DB::set_alternative_database_username(null);
+			}
+			if (isset($_GET['password'])) {
+				DB::set_alternative_database_password($_GET['password']);
+				$db_session_changelist .= "<li>Password: <em>".DB::get_alternative_database_password()."</em></li>";
+			} else {
+				DB::set_alternative_database_password(null);
+			}
+			if (isset($_GET['database'])) {
+				DB::set_alternative_database_name($_GET['database']);
+				$db_session_changelist .= "<li>Database: <em>".DB::get_alternative_database_name()."</em></li>";
+			} else {
+				DB::set_alternative_database_name(null);
+			}
+			if (isset($_GET['path'])) {
+				DB::set_alternative_database_path($_GET['path']);
+				$db_session_changelist .= "<li>Path: <em>".DB::get_alternative_database_path()."</em></li>";
+			} else {
+				DB::set_alternative_database_path(null);
+			}
+
+			if (empty($db_session_changelist)) {
+				return "<p>setdb must be used with at least one of the following parameters:
+							<em>type</em>, <em>server</em>, <em>username</em>,
+							<em>password</em>, <em>database</em>, <em>path</em>
+						</p>";
+			}
+
+			global $databaseConfig;
+			DB::connect($databaseConfig);
+
+			if (isset($_GET['reload']) && ('1' === $_GET['reload'] || 'true' === $_GET['reload'])) {
+				SapphireTest::empty_temp_db();
+
+				$dataClasses = ClassInfo::subclassesFor('DataObject');
+				array_shift($dataClasses);
+				foreach($dataClasses as $dataClass) singleton($dataClass)->requireDefaultRecords();
+			}
+
+			return "<p>Set database session to:</p>
+					<ul>
+						".$db_session_changelist."
+					</ul>
+					<p>Time to start testing; where would you like to start?</p>
+					<ul>
+						<li><a id=\"home-link\" href=\"" .Director::baseURL() . "\">Homepage - published site</a></li>
+						<li><a id=\"draft-link\" href=\"" .Director::baseURL() . "?stage=Stage\">Homepage - draft site</a></li>
+						<li><a id=\"admin-link\" href=\"" .Director::baseURL() . "admin/\">CMS Admin</a></li>
+						<li><a id=\"endsession-link\" href=\"" .Director::baseURL() . "dev/tests/endsession\">End your test session</a></li>
+					</ul>";
+		} else {
+			return "<p>setdb can only be used on dev and test sites</p>";
+		}
 	}
 
 	function sessionloadyml() {
@@ -465,7 +548,8 @@ HTML;
 
 		// Fixture
 		$fixture = new YamlFixture($fixtureFile);
-		$fixture->saveIntoDatabase();
+		$model = DataModel::inst();
+		$fixture->saveIntoDatabase($model);
 
 		return "<p>Loaded fixture '$fixtureFile' into session</p>";
 	}
