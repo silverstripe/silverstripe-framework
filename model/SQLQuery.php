@@ -423,17 +423,29 @@ class SQLQuery {
 	 *
 	 * @param int|string|array $limit If passed as a string or array, assumes SQL escaped data.
 	 * @param int $offset
+	 *
+	 * @throws InvalidArgumentException
+	 *
 	 * @return SQLQuery This instance
 	 */
 	public function setLimit($limit, $offset = 0) {
+		if((is_numeric($limit) && $limit < 0) || (is_numeric($offset) && $offset < 0)) {
+			throw new InvalidArgumentException("SQLQuery::setLimit() only takes positive values");
+		}
+
 		if($limit && is_numeric($limit)) {
 			$this->limit = array(
 				'start' => $offset,
 				'limit' => $limit,
 			);
 		} else if($limit && is_string($limit)) {
-			if(strpos($limit, ',') !== false) list($start, $innerLimit) = explode(',', $limit, 2);
-			else list($innerLimit, $start) = explode(' OFFSET ', strtoupper($limit), 2);
+			if(strpos($limit, ',') !== false) {
+				list($start, $innerLimit) = explode(',', $limit, 2);
+			}
+			else {
+				list($innerLimit, $start) = explode(' OFFSET ', strtoupper($limit), 2);
+			}
+
 			$this->limit = array(
 				'start' => trim($start),
 				'limit' => trim($innerLimit),
