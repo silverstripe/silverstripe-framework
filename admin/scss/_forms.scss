@@ -245,6 +245,10 @@ form.small .field, .field.small {
 		width: ($grid-x * 7); 
 	}
 	
+	input.time { 
+		width: ($grid-x * 8); 
+	}
+	
 	/* Hides borders in settings/access. Activated from JS */
 	&.remove-splitter {
 		border-bottom: none;
