@@ -299,9 +299,11 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 			$this->controller,
 			"{$this->name}/LinkForm", 
 			new FieldList(
-				new LiteralField(
-					'Heading', 
-					sprintf('<h3>%s</h3>', _t('HtmlEditorField.LINK', 'Insert Link'))
+				$headerWrap = new CompositeField(
+					new LiteralField(
+						'Heading', 
+						sprintf('<h3 class="htmleditorfield-mediaform-heading insert">%s</h3>', _t('HtmlEditorField.LINK', 'Insert Link'))
+					)
 				),
 				$contentComposite = new CompositeField(
 					new OptionsetField(
@@ -340,8 +342,9 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					->setUseButtonTag(true)
 			)
 		);
-		
-		$contentComposite->addExtraClass('content');
+
+		$headerWrap->addExtraClass('CompositeField composite cms-content-header nolabel ');		
+		$contentComposite->addExtraClass('ss-insert-link content');
 		
 		$form->unsetValidator();
 		$form->loadDataFrom($this);
@@ -512,7 +515,8 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		}
 
 		// Instanciate file wrapper and get fields based on its type
-		if($file && $file->appCategory() == 'image') {
+		// Check if appCategory is an image and exists on the local system, otherwise use oEmbed to refference a remote image
+		if($file && $file->appCategory() == 'image' && Director::is_site_url($url)) {
 			$fileWrapper = new HtmlEditorField_Image($url, $file);
 		} elseif(!Director::is_site_url($url)) {
 			$fileWrapper = new HtmlEditorField_Embed($url, $file);

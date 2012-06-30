@@ -1,7 +1,31 @@
 <?php
 
+/**
+ * @package framework
+ * @subpackage tests
+ */
 class RestfulServiceTest extends SapphireTest {
 	
+	protected $member_unique_identifier_field = ''; 
+	
+	function setUp() { 
+		// backup the project unique identifier field
+		$this->member_unique_identifier_field = Member::get_unique_identifier_field();
+
+		Member::set_unique_identifier_field('Email');
+
+		parent::setUp(); 
+	} 
+
+	function tearDown() {
+		parent::tearDown(); 
+
+		// set old member::get_unique_identifier_field value 
+		if ($this->member_unique_identifier_field) { 
+			Member::set_unique_identifier_field($this->member_unique_identifier_field); 
+		}
+	} 
+
 	function testSpecialCharacters() {
 		$service = new RestfulServiceTest_MockRestfulService(Director::absoluteBaseURL());
 		$url = 'RestfulServiceTest_Controller/';
@@ -134,8 +158,16 @@ class RestfulServiceTest extends SapphireTest {
 }
 
 class RestfulServiceTest_Controller extends Controller implements TestOnly {
+
+	public static $allowed_actions = array(
+		'index',
+		'httpErrorWithoutCache',
+		'httpErrorWithCache'
+	);
+
 	public function init() {
 		$this->basicAuthEnabled = false;
+
 		parent::init();
 	}
 
@@ -191,7 +223,7 @@ XML;
 		$this->response->setBody($out);
 		$this->response->setStatusCode(400); 
 		$this->response->addHeader('Content-type', 'text/xml');
-		
+
 		return $this->response;
 	}
 	

@@ -1,360 +1,480 @@
 fi:
   AssetAdmin:
-    MENUTITLE: "Tiedostot ja kuvat"
-    NEWFOLDER: "Uusi kansio"
+    NEWFOLDER: 'Uusi kansio'
   AssetTableField:
-    CREATED: "Ensimmäisen kerran ladattu palvelimelle"
-    DIM: "Mitat"
-    FILENAME: "Tiedoston nimi"
-    LASTEDIT: "Viimeksi muokattu"
-    OWNER: "Omistaja"
-    SIZE: "Koko"
-    TITLE: "Otsikko"
-    TYPE: "Tyyppi"
-    URL: "URL"
+    CREATED: 'Ensimmäisen kerran ladattu palvelimelle'
+    DIM: Mitat
+    FILENAME: 'Tiedoston nimi'
+    FOLDER: Kansio
+    LASTEDIT: 'Viimeksi muokattu'
+    OWNER: Omistaja
+    SIZE: Koko
+    TITLE: Otsikko
+    TYPE: Tyyppi
+    URL: URL
+  AssetUploadField:
+    ChooseFiles: 'Valitse tiedostot'
+    DRAGFILESHERE: 'Raahaa tiedotot tähän'
+    DROPAREA: Pudotusalue
+    EDITALL: 'Edit all'
+    EDITANDORGANIZE: 'Muokkaa & järjestele'
+    FILES: Files
+    TOTAL: Total
+    TOUPLOAD: 'Choose file(s) to upload...'
+    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    UPLOADOR: TAI
   BBCodeParser:
-    ALIGNEMENT: "Tasaus"
-    ALIGNEMENTEXAMPLE: "tasattu oikealle"
-    BOLD: "Lihavoitu teksti"
-    BOLDEXAMPLE: "Lihavoitu"
-    CODE: "Koodilohko"
-    CODEDESCRIPTION: "Muotoilematon koodilohko"
-    CODEEXAMPLE: "Koodilohko"
-    COLORED: "Väritetty teksti"
-    COLOREDEXAMPLE: "sininen teksti"
-    EMAILLINK: "Sähköpostilinkki"
-    EMAILLINKDESCRIPTION: "Luo linkki sähköpostiosoitteeseen"
-    IMAGE: "Kuva"
-    IMAGEDESCRIPTION: "Näytä kuva viestissäsi"
-    ITALIC: "Kursivoitu teksti"
-    ITALICEXAMPLE: "Kursiivi"
-    LINK: "Verkkosivun linkki"
-    LINKDESCRIPTION: "Linkki toiselle verkkosivustolle tai URLiin "
-    STRUCK: "Yliviivattu teksti"
-    STRUCKEXAMPLE: "Yliviivaa"
-    UNDERLINE: "Alleviivattu teksti"
-    UNDERLINEEXAMPLE: "Alleviivaa"
-    UNORDERED: "Järjestämätön lista"
-    UNORDEREDDESCRIPTION: "Järjestämätön lista"
-    UNORDEREDEXAMPLE1: "järjestämätön lista 1"
+    ALIGNEMENT: Tasaus
+    ALIGNEMENTEXAMPLE: 'tasattu oikealle'
+    BOLD: 'Lihavoitu teksti'
+    BOLDEXAMPLE: Lihavoitu
+    CODE: Koodilohko
+    CODEDESCRIPTION: 'Muotoilematon koodilohko'
+    CODEEXAMPLE: Koodilohko
+    COLORED: 'Väritetty teksti'
+    COLOREDEXAMPLE: 'sininen teksti'
+    EMAILLINK: Sähköpostilinkki
+    EMAILLINKDESCRIPTION: 'Luo linkki sähköpostiosoitteeseen'
+    IMAGE: Kuva
+    IMAGEDESCRIPTION: 'Näytä kuva viestissäsi'
+    ITALIC: 'Kursivoitu teksti'
+    ITALICEXAMPLE: Kursiivi
+    LINK: 'Verkkosivun linkki'
+    LINKDESCRIPTION: 'Linkki toiselle verkkosivustolle tai URLiin '
+    STRUCK: 'Yliviivattu teksti'
+    STRUCKEXAMPLE: Yliviivaa
+    UNDERLINE: 'Alleviivattu teksti'
+    UNDERLINEEXAMPLE: Alleviivaa
+    UNORDERED: 'Järjestämätön lista'
+    UNORDEREDDESCRIPTION: 'Järjestämätön lista'
+    UNORDEREDEXAMPLE1: 'järjestämätön lista 1'
   BasicAuth:
-    ENTERINFO: "Anna käyttäjänimi ja salasana"
-    ERRORNOTADMIN: "Tämä käyttäjä ei ole ylläpitäjä"
-    ERRORNOTREC: "Tätä käyttäjänimeä/salasanaa ei tunnistettu."
+    ENTERINFO: 'Anna käyttäjänimi ja salasana'
+    ERRORNOTADMIN: 'Tämä käyttäjä ei ole ylläpitäjä'
+    ERRORNOTREC: 'Tätä käyttäjänimeä/salasanaa ei tunnistettu.'
   Boolean:
-    ANY: "Yhtään"
-    NO: "Ei"
-    YES: "Kyllä"
+    ANY: Yhtään
+    0: Ei
+    LOGOUT: 'Log out'
+    1: Kyllä
   CMSMain:
-    ACCESS: "Pääsy %s:ään CMS:ssä"
-    ACCESSALLINTERFACES: "Pääsy kaikkiin CMS-osioihin"
-    ACCESSALLINTERFACESHELP: "Ohittaa tarkemmat käyttöoikeudet."
-    MENUTITLE: "Sivuston sisältö"
-    SAVE: "Tallenna"
-  ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: "Vaihdoit salasanasi osoitteelle"
-    CHANGEPASSWORDTEXT2: "Kirjautuaksesi sisään voit käyttää seuraavia tietoja:"
-    EMAIL: "Sähköposti"
-    HELLO: "Hei"
-    PASSWORD: "Salasana"
+    ACCESS: 'Access to ''{title}'' section'
+    ACCESSALLINTERFACES: 'Pääsy kaikkiin CMS-osioihin'
+    ACCESSALLINTERFACESHELP: 'Ohittaa tarkemmat käyttöoikeudet.'
+    SAVE: Tallenna
+  CMSProfileController:
+    MENUTITLE: 'CMS-profiili kontrolleri'
   CheckboxField:
-    NO: "Ei"
-    YES: "Kyllä"
+    - Ei
+    - Kyllä
   ComplexTableField:
-    CLOSEPOPUP: "Sulje ponnahdusikkuna"
-    SUCCESSADD: "Lisätty %s %s %s"
-    SUCCESSEDIT: "Tallennettu %s %s %s"
-  ComplexTableField.ss:
-    ADDITEM: "Lisää %s"
-    SORTASC: "Nouseva järjestys"
-    SORTDESC: "Laskeva järjestys"
-  ComplexTableField_popup.ss:
-    NEXT: "Seuraava"
-    PREVIOUS: "Edellinen"
+    CLOSEPOPUP: 'Sulje ponnahdusikkuna'
+    SUCCESSADD2: 'Added {name}'
+    SUCCESSEDIT: 'Tallennettu %s %s %s'
   ConfirmedPasswordField:
-    ATLEAST: "Salasanojen pitää olla vähintään %s merkkiä pitkä."
-    BETWEEN: "Salasanojen pitää olla %s-%s merkkiä pitkät."
-    MAXIMUM: "Salasanojen pitää olla korkeintaan %s merkkiä pitkät."
-    SHOWONCLICKTITLE: "Vaihda salasana"
+    ATLEAST: 'Passwords must be at least {min} characters long.'
+    BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    SHOWONCLICKTITLE: 'Vaihda salasana'
   CreditCardField:
-    FIRST: "ensimmäinen"
-    FOURTH: "neljäs"
-    SECOND: "toinen"
-    THIRD: "kolmas"
+    FIRST: ensimmäinen
+    FOURTH: neljäs
+    SECOND: toinen
+    THIRD: kolmas
   CurrencyField:
-    CURRENCYSYMBOL: "$"
+    CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME: "Dataobjektit"
-    SINGULARNAME: "Dataobjekti"
+    PLURALNAME: Dataobjektit
+    SINGULARNAME: Dataobjekti
   Date:
-    DAY: "päivä"
-    DAYS: " päivää "
-    HOUR: " tunti"
-    HOURS: " tuntia"
-    MIN: "min"
-    MINS: "min."
-    MONTH: "kuukausi"
-    MONTHS: "kuukaudet"
-    SEC: "sek."
-    SECS: "sek."
-    TIMEDIFFAGO: " sitten"
-    YEAR: "vuosi"
-    YEARS: "vuodet"
+    DAY: päivä
+    DAYS: ' päivää '
+    HOUR: ' tunti'
+    HOURS: ' tuntia'
+    MIN: min
+    MINS: min.
+    MONTH: kuukausi
+    MONTHS: kuukaudet
+    SEC: sek.
+    SECS: sek.
+    TIMEDIFFAGO: '{difference} ago'
+    TIMEDIFFIN: 'in {difference}'
+    YEAR: vuosi
+    YEARS: vuodet
   DateField:
-    NOTSET: "ei asetettu"
-    TODAY: "tänään"
-    VALIDDATEFORMAT2: "Anna päivämäärä kelvollisessa muoto (%s)"
-    VALIDDATEMAXDATE: "Päivämäärän täytyy olla vanhempi tai vastata myöhäisintä sallittua päivämäärää (%s)"
-    VALIDDATEMINDATE: "Päivämäärän täytyy olla uudempi tai vastata aikaisinta sallittua päivämäärää (%s)"
+    NOTSET: 'ei asetettu'
+    TODAY: tänään
+    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
+    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
+    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  Director:
+    ADD: Lisää
+    INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: "(Valitse)"
+    CHOOSE: (Valitse)
   EmailField:
-    VALIDATION: "Kirjoita sähköpostiosoite."
+    VALIDATION: 'Please enter an email address'
+  Email_BounceRecord:
+    PLURALNAME: 'Palautetut sähköpostiviestit'
+    SINGULARNAME: 'Palautettu sähköpostiviesti'
   Enum:
-    ANY: "Yhtään"
+    ANY: Yhtään
+    LOADING: Loading...
   File:
-    Content: "Sisältö"
-    Filename: "Tiedostonimi"
-    INVALIDEXTENSION: "Laajennus ei ole mahdollinen (esim: %s)"
-    NOFILESIZE: "Tiedostokoko on nolla tavua."
-    NOVALIDUPLOAD: "Tiedosto ei ole kelvollinen ladattavaksi"
-    Name: "Nimi"
-    PLURALNAME: "Tiedostot"
-    SINGULARNAME: "Tiedosto"
-    TOOLARGE: "Tiedosto on liian iso, %s on suurin sallittu."
-    Title: "Otsikko"
+    Content: Sisältö
+    Filename: Tiedostonimi
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    NOFILESIZE: 'Tiedostokoko on nolla tavua.'
+    NOVALIDUPLOAD: 'Tiedosto ei ole kelvollinen ladattavaksi'
+    Name: Nimi
+    PLURALNAME: Tiedostot
+    SINGULARNAME: Tiedosto
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGESHORT: 'Filesize exceeds {size}'
+    Title: Otsikko
   FileIFrameField:
-    ATTACH: "Liitä %s"
-    ATTACHONCESAVED: "%ss voidaan liittää, kun olet tallentanut tallenteen ensimmäistä kertaa."
-    DELETE: "Poista %s"
-    FILE: "Tiedosto"
-    FROMCOMPUTER: "tietokoneeltasi"
-    FROMFILESTORE: "Tiedostovarastosta"
-    NOSOURCE: "Valitse lähdetiedosto liitettäväksi"
-    REPLACE: "Korvaa %s"
-  ForgotPasswordEmail.ss:
-    HELLO: "Hei"
-    TEXT1: "Tässä on sinun"
-    TEXT2: "salasanan tyhjäys -linkki"
+    ATTACH: 'Attach {type}'
+    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    DELETE: 'Delete {type}'
+    DISALLOWEDFILETYPE: 'Tiedostotyyppin siirtoa ei ole sallittu'
+    FILE: Tiedosto
+    FROMCOMPUTER: tietokoneeltasi
+    FROMFILESTORE: Tiedostovarastosta
+    NOSOURCE: 'Valitse lähdetiedosto liitettäväksi'
+    REPLACE: 'Replace {type}'
+  Filesystem:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
+    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Form:
-    FIELDISREQUIRED: "%s on pakollinen."
-    VALIDATIONCREDITNUMBER: "Varmista, että olet syöttänyt luottokortin %s numeron oikein."
-    VALIDATIONFAILED: "Varmistus epäonnistui"
-    VALIDATIONNOTUNIQUE: "Syötetty arvo ei ole yksilöllinen"
-    VALIDATIONPASSWORDSDONTMATCH: "Salasanat eivät täsmää"
-    VALIDATIONPASSWORDSNOTEMPTY: "Salasana ei voi olla tyhjä"
-    VALIDATIONSTRONGPASSWORD: "Salasanan täytyy sisältää vähintään yksi numero ja yksi kirjain."
-    VALIDATOR: "Tarkistin"
-    VALIDCURRENCY: "Syötä kelvollinen valuutta."
+    FIELDISREQUIRED: '%s on pakollinen.'
+    TITLE: 'Kuvansiirtoikkuna (iFrame)'
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONNOTUNIQUE: 'Syötetty arvo ei ole yksilöllinen'
+    VALIDATIONPASSWORDSDONTMATCH: 'Salasanat eivät täsmää'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Salasana ei voi olla tyhjä'
+    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATOR: Tarkistin
+    VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
-    NONE: "Ei yhtään"
+    NONE: 'Ei yhtään'
+  GridAction:
+    DELETE_DESCRIPTION: Delete
+    Delete: Poista
+    UnlinkRelation: 'Pura linkitys'
+  GridField:
+    Add: 'Add {name}'
+    Filter: Suodatin
+    FilterBy: 'Filter by '
+    Find: Etsi
+    LEVELUP: 'Level up'
+    LinkExisting: 'Linkitä olemassaoleva'
+    NewRecord: 'Uusi %s'
+    NoItemsFound: 'Ei kohteita'
+    PRINTEDAT: Tulostettu
+    PRINTEDBY: Tulostaja
+    PlaceHolder: 'Find {type}'
+    PlaceHolderWithLabels: 'Find {type} by {name}'
+    RelationSearch: Relaatiohaku
+    ResetFilter: Nollaa
+  GridFieldAction_Delete:
+    DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
+    NEXT: Seuraava
+    PREVIOUS: Edellinen
+  GridFieldDetailForm:
+    Create: Create
+    Delete: Delete
+    DeletePermissionsFailure: 'No delete permissions'
+    Deleted: 'Deleted %s %s'
+    HELLO: Hei
+    Save: Save
+    Saved: 'Saved %s %s'
+    TEXT1: 'Tässä on sinun'
+    TEXT2: 'salasanan tyhjäys -linkki'
+    TEXT3: henkilölle
   Group:
-    Code: "Ryhmän koodi"
-    DefaultGroupTitleAdministrators: "Järjestelmänvalvojat"
-    DefaultGroupTitleContentAuthors: "Sisällöntuottajat"
-    Description: "Kuvaus"
-    Locked: "Lukittu?"
-    Parent: "Yliryhmä"
-    RolesAddEditLink: "Lisää/muokkaa rooleja"
-    Sort: "Järjestys"
-    has_many_Permissions: "Luvat"
-    many_many_Members: "Jäsenet"
+    AddRole: 'Lisää ryhmälle rooli'
+    CHANGEPASSWORDTEXT1: 'Vaihdoit salasanasi osoitteelle'
+    CHANGEPASSWORDTEXT2: 'Kirjautuaksesi sisään voit käyttää seuraavia tietoja:'
+    Code: 'Ryhmän koodi'
+    DefaultGroupTitleAdministrators: Järjestelmänvalvojat
+    DefaultGroupTitleContentAuthors: Sisällöntuottajat
+    Description: Kuvaus
+    EMAIL: Sähköposti
+    GroupReminder: 'Valitessasi isäntäryhmän, roolit periytyvät tähän ryhmään'
+    HELLO: Hei
+    Locked: 'Lukittu?'
+    NoRoles: 'Roolia ei löytynyt'
+    PASSWORD: Salasana
+    Parent: Yliryhmä
+    RolesAddEditLink: 'Lisää/muokkaa rooleja'
+    Sort: Järjestys
+    TITLE: 'Kuvansiirto ikkuna (iFrame)'
+    has_many_Permissions: Luvat
+    many_many_Members: Jäsenet
   GroupImportForm:
-    Help1: "<p>Tuo yksi tai useampi ryhmä <em>CSV</em>-muotoisena (arvot pilkulla erotettuina). <small><a href=\"#\" class=\"toggle-advanced\">Näytä edistyksellinen käyttö</a></small></p>"
-    ResultCreated: "Luotu %d ryhmää"
-    ResultDeleted: "Poistettu %d ryhmää"
-    ResultUpdated: "Päivitetty %d ryhmää"
+    Help1: '<p>Tuo yksi tai useampi ryhmä <em>CSV</em>-muotoisena (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
+    Help2: "<div class=\"advanced\">\\n<h4>Edistynyt käyttö</h4>\\n<ul>\\n<li>Sallitut palstat: <em>%s</em></li>\\n<li>Olemassa olevat ryhmät kohdistetaan niiden uniikin <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li>\\n<li>Ryhmien hierarkiat voidaan luoda <em>ParentCode</em>-palstalla.</li>\\n<li>Oikeustasot voidaan kohdistaa <em>PermissionCode</em>-palstalla. Olemassa olevia oikeustasoja ei poisteta.</li>\\n</ul>\\n</div>"
+    ResultCreated: 'Created {count} groups'
+    ResultDeleted: 'Poistettu %d ryhmää'
+    ResultUpdated: 'Päivitetty %d ryhmää'
+  Hierarchy:
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ANCHORVALUE: "Ankkuri"
-    BUTTONINSERTLINK: "Lisää linkki"
-    BUTTONREMOVELINK: "Poista linkki"
-    CAPTIONTEXT: "Kuvateksti"
-    CSSCLASS: "Tasaus/tyyli"
-    CSSCLASSCENTER: "Keskellä omillaan."
-    CSSCLASSLEFT: "Vasemmalla, tekstin ympäröimänä."
-    CSSCLASSLEFTALONE: "Vasemmalla, yksinään."
-    CSSCLASSRIGHT: "Oikealla, tesktin ympätöimänä."
-    EMAIL: "Sähköpostiosoite"
-    FILE: "Tiedosto"
-    FOLDER: "Kansio"
-    IMAGE: "Lisää kuva"
-    IMAGEALTTEXT: "Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää"
-    IMAGEDIMENSIONS: "Mitat"
-    IMAGEHEIGHTPX: "Korkeus"
-    IMAGEWIDTHPX: "Leveys"
-    LINK: "Lisää/muokkaa linkki(ä) valittuun tekstiin"
-    LINKANCHOR: "Ankkuroi tähän sivuun"
-    LINKDESCR: "Linkin kuvaus"
-    LINKEMAIL: "Sähköpostiosoite"
-    LINKEXTERNAL: "Toinen verkkosivusto"
-    LINKFILE: "Lataa tiedosto"
-    LINKINTERNAL: "Sivu sivustolla"
-    LINKOPENNEWWIN: "Avataanko linkki uudessa ikkunassa?"
-    LINKTO: "Linkki"
-    PAGE: "Sivu"
-    URL: "URL-osoite"
+    ADDURL: 'Add URL'
+    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ANCHORVALUE: Ankkuri
+    BUTTONINSERT: Liitä
+    BUTTONINSERTLINK: 'Lisää linkki'
+    BUTTONREMOVELINK: 'Poista linkki'
+    BUTTONUpdate: Update
+    CAPTIONTEXT: Kuvateksti
+    CSSCLASS: Tasaus/tyyli
+    CSSCLASSCENTER: 'Keskellä omillaan.'
+    CSSCLASSLEFT: 'Vasemmalla, tekstin ympäröimänä.'
+    CSSCLASSLEFTALONE: 'Vasemmalla, yksinään.'
+    CSSCLASSRIGHT: 'Oikealla, tesktin ympätöimänä.'
+    DETAILS: Tiedot
+    EMAIL: Sähköpostiosoite
+    FILE: Tiedosto
+    FOLDER: Kansio
+    FROMCMS: CMS-järjestelmästä
+    FROMCOMPUTER: 'Omalta tietokoneeltasi'
+    FROMWEB: 'From the web'
+    FindInFolder: 'Find in Folder'
+    IMAGEALT: 'Alternative text (alt)'
+    IMAGEALTTEXT: 'Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää'
+    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEDIMENSIONS: Mitat
+    IMAGEHEIGHTPX: Korkeus
+    IMAGETITLE: 'Otsikko (tooltip) - kuvan lisätietoja varten'
+    IMAGETITLETEXT: 'Title text (tooltip)'
+    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGEWIDTHPX: Leveys
+    INSERTMEDIA: 'Insert Media'
+    LINK: 'Lisää/muokkaa linkki(ä) valittuun tekstiin'
+    LINKANCHOR: 'Ankkuroi tähän sivuun'
+    LINKDESCR: 'Linkin kuvaus'
+    LINKEMAIL: Sähköpostiosoite
+    LINKEXTERNAL: 'Toinen verkkosivusto'
+    LINKFILE: 'Lataa tiedosto'
+    LINKINTERNAL: 'Sivu sivustolla'
+    LINKOPENNEWWIN: 'Avataanko linkki uudessa ikkunassa?'
+    LINKTO: Linkki
+    PAGE: Sivu
+    URL: URL-osoite
+    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    UpdateMEDIA: 'Update Media'
   ImageField:
-    IMAGE: "Kuva"
+    IMAGE: Kuva
+  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Suodata"  GridFieldItemEditView.ss:    Go back: "Takaisin"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
-    CANT_REORGANISE: "Sinulla ei ole käyttöoikeutta uudelleen järjestää sivustorakennetta. Muutoksiasi ei tallennettu."
-    HELP: "Ohje"
-    PAGETYPE: "Sivun tyyppi:"
-    PERMAGAIN: "Olet kirjautunut ulos CMS:stä. Jos haluat kirjautua uudelleen sisään, syötä käyttäjätunnuksesi ja salasanasi alla."
-    PERMALREADY: "Paihoittelut, mutta et pääse tähän osaan CMS:ää. Jos haluat kirjautua jonain muuna, voit tehdä sen alla."
-    PERMDEFAULT: "Valitse tunnistustapa ja syötä tunnistetietosi CMS:ään."
-    PLEASESAVE: "Tätä sivua ei voitu päivittää, koska sitä ei ole vielä tallennettu. Tallenna sivu."
-    SAVED: "tallennettu"
+    ADD: 'Lisää uusi rivi'
+    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    DELETED: Deleted.
+    DropdownBatchActionsDefault: Toimenpiteet
+    HELP: Ohje
+    PAGETYPE: 'Sivun tyyppi:'
+    PERMAGAIN: 'Olet kirjautunut ulos CMS:stä. Jos haluat kirjautua uudelleen sisään, syötä käyttäjätunnuksesi ja salasanasi alla.'
+    PERMALREADY: 'Paihoittelut, mutta et pääse tähän osaan CMS:ää. Jos haluat kirjautua jonain muuna, voit tehdä sen alla.'
+    PERMDEFAULT: 'Valitse tunnistustapa ja syötä tunnistetietosi CMS:ään.'
+    PLEASESAVE: 'Tätä sivua ei voitu päivittää, koska sitä ei ole vielä tallennettu. Tallenna sivu.'
+    PreviewButton: Preview
+    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    SAVEDUP: Saved.
+    VersionUnknown: tuntematon
   LoginAttempt:
-    Email: "Sähköpostiosoite"
-    IP: "IP-osoite"
-    Status: "Tila"
+    Email: Sähköpostiosoite
+    IP: IP-osoite
+    Status: Tila
   Member:
-    ADDRESS: "Osoite"
-    BUTTONCHANGEPASSWORD: "Vaihda salasana"
-    BUTTONLOGIN: "Kirjaudu sisään"
-    BUTTONLOGINOTHER: "Kirjaudu jonain muuna"
-    BUTTONLOSTPASSWORD: "Kadotin salasanani"
-    CONFIRMNEWPASSWORD: "Syötä uusi salasana uudelleen"
-    CONFIRMPASSWORD: "Syötä salasana uudelleen"
-    CONTACTINFO: "Yhteystiedot"
-    DefaultAdminFirstname: "Oletusylläpitäjä"
-    EMAIL: "Sähköposti"
-    EMAILSIGNUPINTRO1: "Onnea, sinusta tuli meidän uusi jäsen. Tietosi on kerrottu alla."
-    EMAILSIGNUPINTRO2: "Voit kirjautua verkkosivustolle käyttäen seuraavia tietoja"
-    EMAILSIGNUPSUBJECT: "Kiitokset rekisteröinnistä"
-    EMPTYNEWPASSWORD: "Uusi salasana ei voi olla tyhjä, yritä uudelleen"
-    ENTEREMAIL: "Anna sähköpostiosoitteesi saadaksesi salasanan uudelleenasettamislinkin."
-    ERRORLOCKEDOUT: "Tunnuksesti on väliaikaisesti poistettu käytöstä liian monien epäonnistuneiden sisäänkirjausyritysten takia. Ole hyvä ja yritä uudelleen 20 minuutin päästä."
-    ERRORNEWPASSWORD: "Syötit uuden salasanasi erilailla, yritä uudelleen."
-    ERRORPASSWORDNOTMATCH: "Nykyiset salasanasi eivät täsmää, yritä uudelleen."
-    ERRORWRONGCRED: "Tämä ei näytä oikealta sähköpostiosoitteelta tai salasanalta. Yritä uudelleen."
-    FIRSTNAME: "Etunimi"
-    GREETING: "Tervetuloa"
-    INTERFACELANG: "Käyttöliittymän kieli"
-    INVALIDNEWPASSWORD: "Emme voineet hyväksyä salasanaa: %s"
-    LOGGEDINAS: "Olet kirjautunut käyttäjänä %s."
-    MOBILE: "Matkapuhelin"
-    NAME: "Nimi"
-    NEWPASSWORD: "Uusi salasana"
-    PASSWORD: "Salasana"
-    PHONE: "Puhelin"
-    PLURALNAME: "Jäsenet"
-    PROFILESAVESUCCESS: "Tallennettu onnistuneesti."
-    REMEMBERME: "Muista seuraavalla kerralla?"
-    SINGULARNAME: "Jäsen"
-    SUBJECTPASSWORDCHANGED: "Salasanasi on vaihdettu"
-    SUBJECTPASSWORDRESET: "Salasanasi palautuslinkki"
-    SURNAME: "Sukunimi"
-    VALIDATIONMEMBEREXISTS: "Rekisteröityneellä käyttäjällä on jo käytössä tämä sähköpostiosoite."
-    ValidationIdentifierFailed: "Ei voi korvata olemassa olevaa jäsentä #%d samalla tunnisteella (%s = %s))"
-    WELCOMEBACK: "Tervetuloa takaisin, %s"
-    YOUROLDPASSWORD: "Vanha salasanasi"
-    belongs_many_many_Groups: "Ryhmät"
-    db_LastVisited: "Viimeisin vierailu:"
-    db_Locale: "Käyttöliittymän kieli"
-    db_LockedOutUntil: "Lukittuna tähän asti:"
-    db_NumVisit: "Vierailujen määrä"
-    db_Password: "Salasana"
-    db_PasswordExpiry: "Salasanan viimeinen päivämäärä"
+    ADDGROUP: 'Add group'
+    BUTTONCHANGEPASSWORD: 'Vaihda salasana'
+    BUTTONLOGIN: 'Kirjaudu sisään'
+    BUTTONLOGINOTHER: 'Kirjaudu jonain muuna'
+    BUTTONLOSTPASSWORD: 'Kadotin salasanani'
+    CONFIRMNEWPASSWORD: 'Syötä uusi salasana uudelleen'
+    CONFIRMPASSWORD: 'Syötä salasana uudelleen'
+    DefaultAdminFirstname: Oletusylläpitäjä
+    DefaultDateTime: oletus
+    EMAIL: Sähköposti
+    EMPTYNEWPASSWORD: 'Uusi salasana ei voi olla tyhjä, yritä uudelleen'
+    ENTEREMAIL: 'Anna sähköpostiosoitteesi saadaksesi salasanan uudelleenasettamislinkin.'
+    ERRORLOCKEDOUT: 'Tunnuksesti on väliaikaisesti poistettu käytöstä liian monien epäonnistuneiden sisäänkirjausyritysten takia. Ole hyvä ja yritä uudelleen 20 minuutin päästä.'
+    ERRORNEWPASSWORD: 'Syötit uuden salasanasi erilailla, yritä uudelleen.'
+    ERRORPASSWORDNOTMATCH: 'Nykyiset salasanasi eivät täsmää, yritä uudelleen.'
+    ERRORWRONGCRED: 'Tämä ei näytä oikealta sähköpostiosoitteelta tai salasanalta. Yritä uudelleen.'
+    FIRSTNAME: Etunimi
+    INTERFACELANG: 'Käyttöliittymän kieli'
+    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
+    LOGGEDINAS: 'You''re logged in as {name}.'
+    NEWPASSWORD: 'Uusi salasana'
+    PASSWORD: Salasana
+    PLURALNAME: Jäsenet
+    PROFILESAVESUCCESS: 'Tallennettu onnistuneesti.'
+    REMEMBERME: 'Muista seuraavalla kerralla?'
+    SINGULARNAME: Jäsen
+    SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'
+    SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
+    SURNAME: Sukunimi
+    VALIDATIONMEMBEREXISTS: 'Rekisteröityneellä käyttäjällä on jo käytössä tämä sähköpostiosoite.'
+    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
+    WELCOMEBACK: 'Welcome Back, {firstname}'
+    YOUROLDPASSWORD: 'Vanha salasanasi'
+    belongs_many_many_Groups: Ryhmät
+    db_LastVisited: 'Viimeisin vierailu:'
+    db_Locale: 'Käyttöliittymän kieli'
+    db_LockedOutUntil: 'Lukittuna tähän asti:'
+    db_NumVisit: 'Vierailujen määrä'
+    db_Password: Salasana
+    db_PasswordExpiry: 'Salasanan viimeinen päivämäärä'
   MemberAuthenticator:
-    TITLE: "Sähköposti &amp; Salasana"
+    TITLE: 'Sähköposti &amp; Salasana'
+  MemberDatetimeOptionsetField:
+    AMORPM: 'AM (aamupäivä) tai PM (iltapäivä)'
+    Custom: Muokattu
+    DATEFORMATBAD: 'Päivämäärän muoto on virheellinen'
+    DAYNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
+    DIGITSDECFRACTIONSECOND: 'Yksi tai useampi desimaali osoittamaan sekunnin osia'
+    FOURDIGITYEAR: 'Nelinumeroinen vuosiluku'
+    FULLNAMEMONTH: 'Kuukausi kirjoitettuna (esim. kesäkuu)'
+    HOURNOLEADING: 'Tunti ilman edessä olevaa nollaa'
+    MINUTENOLEADING: 'Minuutti ilman edessä olevaa nollaa'
+    MONTHNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
+    Preview: Esikatselu
+    SHORTMONTH: 'Kuukauden lyhyt nimi (esim. kesä)'
+    TOGGLEHELP: 'Vaihda muotoilu apuun'
+    TWODIGITDAY: 'Kaksinumeroinen päivämäärä (01–31)'
+    TWODIGITHOUR: 'Kaksinumeroinen tuntinäyttö (00–23)'
+    TWODIGITMINUTE: 'Kaksinumeroinen minuuttinäyttö (00–59)'
+    TWODIGITMONTH: 'Kaksinumeroinen kuukausi (01=tammikuu, jne.)'
+    TWODIGITSECOND: 'Kaksinumeroinen sekunti (00–59)'
+    TWODIGITYEAR: 'Kaksinumeroinen vuosiluku'
   MemberImportForm:
-    Help1: "<p>Tuo käyttäjät <em>CSV-muodossa</em> (arvot pilkulla erotettuina). <small><a href=\"#\" class=\"toggle-advanced\">Näytä edistyksellinen käyttö</a></small></p>"
-    ResultCreated: "Luotu %d jäsentä"
-    ResultDeleted: "Poistettu %d jäsentä"
-    ResultNone: "Ei muutoksia"
-    ResultUpdated: "Päivitetty %d jäsentä"
+    Help1: '<p>Tuo käyttäjät <em>CSV-muodossa</em> (arvot pilkulla erotettuina). <small><a href="#" class="toggle-advanced">Näytä edistyksellinen käyttö</a></small></p>'
+    Help2: "<div class=\"advanced\">\\n<h4>Edistynyt käyttö</h4>\\n<ul>\\n<li>Sallitut palstat: <em>%s</em></li>\\n<li>Olemassa olevat käyttäjät kohdistetaan uniikilla <em>Code</em>-arvolla, ja päivitetään uudet arvot tuodusta tiedostosta.</li>\\n<li>Ryhmät voidaan kohdistaa <em>Ryhmät</em>-palstaan. Ryhmät tunnistetaan <em>Code</em>-arvosta, useat ryhmät voidaan erottaa pilkulla. Olemassa olevat ryhmäjäsenyydet säilytetään.</li>\\n</ul>\\n</div>"
+    ResultCreated: 'Created {count} members'
+    ResultDeleted: 'Poistettu %d jäsentä'
+    ResultNone: 'Ei muutoksia'
+    ResultUpdated: 'Updated {count} members'
+  MemberTableField: null
   ModelAdmin:
-    DELETE: "Poista"
-    DELETEDRECORDS: "Poistettu %s tietuetta."
-    IMPORT: "Tuo CSV:stä"
-    IMPORTEDRECORDS: "Tuotiin %s tietuetta."
-    NOIMPORT: "Ei tuotavia"
-    UPDATEDRECORDS: "Päivitetty %s tietuetta."
+    DELETE: Poista
+    DELETEDRECORDS: 'Deleted {count} records.'
+    IMPORT: 'Tuo CSV:stä'
+    IMPORTEDRECORDS: 'Imported {count} records.'
+    NOCSVFILE: 'Selaa ja tuo CSV-tiedosto'
+    NOIMPORT: 'Ei tuotavia'
+    RESET: Nollaa
+    Title: 'Data Models'
+    UPDATEDRECORDS: 'Updated {count} records.'
   MoneyField:
-    FIELDLABELAMOUNT: "Määrä"
-    FIELDLABELCURRENCY: "Valuutta"
+    FIELDLABELAMOUNT: Määrä
+    FIELDLABELCURRENCY: Valuutta
   NullableField:
-    IsNullLabel: "On nolla"
+    IsNullLabel: 'On nolla'
   NumericField:
-    VALIDATION: "%s ei ole numero, tähän kenttään hyväksytään vain numeroita."
+    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Permission:
-    AdminGroup: "Järjestelmänvalvoja"
-    CMS_ACCESS_CATEGORY: "CMS-pääsy"
-    FULLADMINRIGHTS: "Täydet ylläpitäjän oikeudet"
-    FULLADMINRIGHTS_HELP: "Merkitsee ja ohittaa kaikki muut määritellyt käyttöoikeudet."
+    AdminGroup: Järjestelmänvalvoja
+    CMS_ACCESS_CATEGORY: CMS-pääsy
+    FULLADMINRIGHTS: 'Täydet ylläpitäjän oikeudet'
+    FULLADMINRIGHTS_HELP: 'Merkitsee ja ohittaa kaikki muut määritellyt käyttöoikeudet.'
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECRELATIONS: Relations
   PermissionCheckboxSetField:
-    AssignedTo: "määritetty \"%s\""
-    FromGroup: "periytynyt ryhmästä \"%s\""
-    FromRole: "periytynyt roolista \"%s\""
-    FromRoleOnGroup: "periytynyt roolista \"%s\" ryhmässä \"%s\""
+    AssignedTo: 'assigned to "{title}"'
+    FromGroup: 'inherited from group "{title}"'
+    FromRole: 'inherited from role "{title}"'
+    FromRoleOnGroup: 'periytynyt roolista "%s" ryhmässä "%s"'
   Permissions:
-    PERMISSIONS_CATEGORY: "Roolit ja käyttöoikeudet"
+    PERMISSIONS_CATEGORY: 'Roolit ja käyttöoikeudet'
   PhoneNumberField:
-    VALIDATION: "Kirjoita pätevä puhelinnumero"
-  RelationComplexTableField.ss:
-    ADD: "Lisää"
-  ReportAdmin:
-    MENUTITLE: "Raportit"
+    Back: Back
+    VALIDATION: 'Kirjoita pätevä puhelinnumero'
   Security:
-    ALREADYLOGGEDIN: "Sinulla ei ole oikeuksia tälle sivulle. Jos sinulla on toinen tili, jolla on oikeudet tälle sivulle, voit kirjautua niillä sisään."
-    BUTTONSEND: "Lähetä minulle salasanan palautuslinkki"
-    CHANGEPASSWORDBELOW: "Voit vaihtaa salasanaasi alla."
-    CHANGEPASSWORDHEADER: "Vaihda salasanasi"
-    ENTERNEWPASSWORD: "Syötä uusi salasanasi"
-    ERRORPASSWORDPERMISSION: "Sinun täytyy olla kirjautuneena sisään, jotta voit vaihtaa salasanasi."
-    LOGGEDOUT: "Kirjauduit ulos. Jos haluat kirjautua sisään, syötä tietosi alle."
-    LOGIN: "Kirjaudu sisään"
-    NOTEPAGESECURED: "Tämä sivu on suojattu. Syötä tunnistetietosi alle ja annamme sinulle oikeat oikeudet."
-    NOTERESETLINKINVALID: "<p>Salasanan linkki on virheellinen tai vanhentunut.</p><p>Voit pyytää uuden <a href=\"%s\">täällä</a> tai vaihda salasanasi <a href=\"%s\">sisäänkirjauduttuasi</a>.</p>"
-    NOTERESETPASSWORD: "Syötä sähköpostiosoitteesi ja lähetämme sinulle linkin, jonka avulla saat palautettua salasanasi"
-    PASSWORDSENTHEADER: "Salasanan palautuslinkki lähetettiin osoitteeseen %s"
-    PASSWORDSENTTEXT: "Kiitos! Salasanan palautuslinkki on lähetetty osoitteeseen %s."
+    ALREADYLOGGEDIN: 'Sinulla ei ole oikeuksia tälle sivulle. Jos sinulla on toinen tili, jolla on oikeudet tälle sivulle, voit kirjautua niillä sisään.'
+    BUTTONSEND: 'Lähetä minulle salasanan palautuslinkki'
+    CHANGEPASSWORDBELOW: 'Voit vaihtaa salasanaasi alla.'
+    CHANGEPASSWORDHEADER: 'Vaihda salasanasi'
+    ENTERNEWPASSWORD: 'Syötä uusi salasanasi'
+    ERRORPASSWORDPERMISSION: 'Sinun täytyy olla kirjautuneena sisään, jotta voit vaihtaa salasanasi.'
+    LOGGEDOUT: 'Kirjauduit ulos. Jos haluat kirjautua sisään, syötä tietosi alle.'
+    LOGIN: 'Kirjaudu sisään'
+    NOTEPAGESECURED: 'Tämä sivu on suojattu. Syötä tunnistetietosi alle ja annamme sinulle oikeat oikeudet.'
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETPASSWORD: 'Syötä sähköpostiosoitteesi ja lähetämme sinulle linkin, jonka avulla saat palautettua salasanasi'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
   SecurityAdmin:
-    ACCESS_HELP: "Oikeuttaa käyttäjien katselun, lisäämisen ja muokkaamisen, kuten myös käyttöoikeuksien ja roolien määrittämisen heille."
-    APPLY_ROLES: "Aseta roolit ryhmille"
-    APPLY_ROLES_HELP: "Mahdollisuus muokata ryhmän roolinimityksiä. Vaatii \"Pääsy turvallisuusosioon\" -oikeuden."
-    EDITPERMISSIONS: "Muokkaa jokaisen ryhmän oikeuksia ja IP-osotteita."
-    EDITPERMISSIONS_HELP: "Mahdollisuus muokata ryhmän käyttöoikeuksia ja IP-osoitteita. Vaatii \"Pääsy turvallisuusosioon\" -oikeuden."
-    GROUPNAME: "Ryhmän nimi"
-    MEMBERS: "Jäsenet"
-    MENUTITLE: "Turvallisuus"
-    MemberListCaution: "Varoitus: Jäsenten poistaminen listalta poistaa ne kaikista ryhmistä ja tietokannasta"
-    NEWGROUP: "Uusi ryhmä"
-    PERMISSIONS: "Oikeudet"
-    ROLES: "Roolit"
-    ROLESDESCRIPTION: "Tässä osiossa voit lisätä rooleja tähän ryhmään. Roolit ovat käyttöoikeuksien loogisia ryhmittymiä, joita voidaan muokata Roolit-välilehdellä"
-    TABROLES: "Roolit"
+    ACCESS_HELP: 'Oikeuttaa käyttäjien katselun, lisäämisen ja muokkaamisen, kuten myös käyttöoikeuksien ja roolien määrittämisen heille.'
+    APPLY_ROLES: 'Aseta roolit ryhmille'
+    APPLY_ROLES_HELP: 'Mahdollisuus muokata ryhmän roolinimityksiä. Vaatii "Pääsy turvallisuusosioon" -oikeuden.'
+    EDITPERMISSIONS: 'Muokkaa jokaisen ryhmän oikeuksia ja IP-osotteita.'
+    EDITPERMISSIONS_HELP: 'Mahdollisuus muokata ryhmän käyttöoikeuksia ja IP-osoitteita. Vaatii "Pääsy turvallisuusosioon" -oikeuden.'
+    GROUPNAME: 'Ryhmän nimi'
+    IMPORTGROUPS: 'Tuo ryhmiä'
+    IMPORTUSERS: 'Tuo käyttäjiä'
+    MEMBERS: Jäsenet
+    MENUTITLE: Security
+    MemberListCaution: 'Varoitus: Jäsenten poistaminen listalta poistaa ne kaikista ryhmistä ja tietokannasta'
+    NEWGROUP: 'Uusi ryhmä'
+    PERMISSIONS: Oikeudet
+    ROLES: Roolit
+    ROLESDESCRIPTION: 'Tässä osiossa voit lisätä rooleja tähän ryhmään. Roolit ovat käyttöoikeuksien loogisia ryhmittymiä, joita voidaan muokata Roolit-välilehdellä'
+    TABROLES: Roolit
+    Users: Käyttäjät
   SecurityAdmin_MemberImportForm:
-    BtnImport: "Tuonti"
-    FileFieldLabel: "CSV-tiedosto <small>(Sallitut päätteet: *.csv)</small>"
+    BtnImport: Tuonti
+    FileFieldLabel: 'CSV-tiedosto <small>(Sallitut päätteet: *.csv)</small>'
+  SilverStripeNavigator:
+    Edit: Edit
+    FILTER: Filter
+    IMPORT: Import
+    VIEWFIRST: 'Näytä ensimmäinen'
+    VIEWLAST: 'Näytä viimeinen'
+    VIEWNEXT: 'Näytä seuraava'
+    VIEWPREVIOUS: 'Näytä edellinen'
   SimpleImageField:
-    NOUPLOAD: "Kuvaa ei kopioitu palvelimelle"
+    NOUPLOAD: 'Kuvaa ei kopioitu palvelimelle'
   SiteTree:
-    TABMAIN: "Yleiset"
+    TABMAIN: Yleiset
   TableField:
-    ISREQUIRED: "%s:ssa %s on tarvittu."
-  TableField.ss:
-    ADD: "Lisää uusi rivi"
+    ADDITEM: 'Lisää %s'
+    ISREQUIRED: 'In %s ''%s'' is required'
+    SORTASC: 'Järjestä nousevasti'
+    SORTDESC: 'Järjestä laskevasti'
   TableListField:
-    CSVEXPORT: "Vie CSV:nä"
-    PRINT: "Tulosta"
-    SELECT: "Valitse:"
-  TableListField.ss:
-    SORTASC: "Järjestä nousevasti"
-    SORTDESC: "Järjestä laskevasti"
-  TableListField_PageControls.ss:
-    VIEWFIRST: "Näytä ensimmäinen"
-    VIEWLAST: "Näytä viimeinen"
-    VIEWNEXT: "Näytä seuraava"
-    VIEWPREVIOUS: "Näytä edellinen"
+    CSVEXPORT: 'Vie CSV:nä'
+    PRINT: Tulosta
+    Print: Tulosta
+    SELECT: 'Valitse:'
   TimeField:
-    VALIDATEFORMAT: "Anna kelvollinen aikamuoto (%s)"
-  ToggleCompositeField.ss:
-    HIDE: "Piilota"
-    SHOW: "Näytä"
+    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: "vähemmän"
-    MORE: "lisää"
+    LESS: vähemmän
+    MORE: lisää
+  UploadField:
+    ATTACHFILE: 'Liitä tiedosto'
+    ATTACHFILES: 'Liitä tiedostoja'
+    AttachFile: 'Liitä tiedosto'
+    DELETEINFO: 'Poista tiedosto pysyvästi'
+    DOEDIT: Tallenna
+    DROPFILE: 'Pudota tiedosto'
+    DROPFILES: 'pudota tiedostot'
+    Dimensions: Dimensions
+    EDITINFO: 'Muokkaa tätä tiedostoa'
+    FIELDNOTSET: 'Tietoja tiedostosta ei löytynyt'
+    FROMCOMPUTER: 'Omalta tietokoneeltasi'
+    FROMFILES: Tiedostoista
+    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
+    REMOVE: Remove
+    REMOVEERROR: 'Virhe poistettaessa tiedostoa'
+    REMOVEINFO: 'Poista tiedosto, mutta säilytä se tiedostovarastossa'
+    STARTALL: 'Aloita kaikki'
+    Saved: Tallennettu
   Versioned:
-    has_many_Versions: "Versiot"
+    has_many_Versions: Versiot

@@ -131,6 +131,13 @@ class Oembed {
 			// Build the url manually - we gave all needed information.
 			$oembedUrl = Controller::join_links($endpoint, '?format=json&url=' . rawurlencode($url));
 		}
+		
+		// If autodescovery failed the resource might be a direct link to a file
+		if(!$oembedUrl) {
+			if(File::get_app_category(File::get_file_extension($url)) == "image") {
+				return new Oembed_Result($url, $url, $type, $options);
+			}
+		}
 
 		if($oembedUrl) {
 			// Inject the options into the Oembed URL.
@@ -233,7 +240,20 @@ class Oembed_Result extends ViewableData {
 		$body = $body->getBody();
 		$data = json_decode($body, true);
 		if(!$data) {
+			// if the response is no valid JSON we might have received a binary stream to an image
 			$data = array();
+			$image = @imagecreatefromstring($body);
+			if($image !== FALSE) {
+				preg_match("/^(http:\/\/)?([^\/]+)/i", $this->url, $matches);
+				$protocoll = $matches[1];
+				$host = $matches[2];
+				$data['type'] = "photo";
+				$data['title'] = basename($this->url) . " ($host)";
+				$data['url'] = $this->url;
+				$data['provider_url'] = $protocoll.$host;
+				$data['width'] = imagesx($image);
+				$data['height'] = imagesy($image);
+			}
 		}
 
 		// Convert all keys to lowercase

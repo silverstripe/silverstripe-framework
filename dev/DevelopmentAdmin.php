@@ -97,8 +97,10 @@ class DevelopmentAdmin extends Controller {
 			$base = Director::baseURL();
 
 			echo '<div class="options"><ul>';
+			$evenOdd = "odd";
 			foreach($actions as $action => $description) {
-				echo "<li><a href=\"{$base}dev/$action\"><b>/dev/$action:</b> $description</a></li>\n";
+				echo "<li class=\"$evenOdd\"><a href=\"{$base}dev/$action\"><b>/dev/$action:</b> $description</a></li>\n";
+				$evenOdd = ($evenOdd == "odd") ? "even" : "odd";
 			}
 
 			$renderer->writeFooter();
@@ -134,9 +136,8 @@ class DevelopmentAdmin extends Controller {
 			$renderer = DebugView::create();
 			$renderer->writeHeader();
 			$renderer->writeInfo("Environment Builder", Director::absoluteBaseURL());
-			echo "<div style=\"margin: 0 2em\">";
-			echo "<div class=\"status pending\"><h2 class='buildProgress'>Database is building.... Check below for any errors</h2><h2 class='buildCompleted'>Database has been built successfully</h2></div>";
-
+			echo "<div class=\"build\">";
+			
 			$da = DatabaseAdmin::create();
 			return $da->handleRequest($request, $this->model);
 

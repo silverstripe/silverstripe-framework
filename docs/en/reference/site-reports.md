@@ -64,7 +64,7 @@ CustomSideReport.php
 		
 		public function records() {
 	        // the data the report returns all the dataobjects of type Page and sorted by title. See datamodel for more info
-			return DataObject::get("Page", "", "Title");
+			return Page::get()->sort("Title");
 		}
 		
 		public function fieldsToShow() {

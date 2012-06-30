@@ -184,9 +184,7 @@ Sample implementation of a custom loader. Assumes a CSV-file in a certain format
 	      $obj->LastName = $parts[1];
 	   }
 	   public static function getTeamByTitle(&$obj, $val, $record) {
-	      $SQL_val = Convert::raw2sql($val);
-	      return DataObject::get_one(
-	         'FootballTeam', "Title = '{$SQL_val}'"
+	      return FootballTeam::get()->filter('Title', $val)->First();
 	      );
 	   }
 	}

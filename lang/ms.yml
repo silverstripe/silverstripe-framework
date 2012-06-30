@@ -1,186 +1,480 @@
 ms:
+  AssetAdmin:
+    NEWFOLDER: NewFolder
+  AssetTableField:
+    CREATED: 'First uploaded'
+    DIM: Dimensions
+    FILENAME: Filename
+    FOLDER: Folder
+    LASTEDIT: 'Last changed'
+    OWNER: Owner
+    SIZE: 'File size'
+    TITLE: Title
+    TYPE: 'File type'
+    URL: URL
+  AssetUploadField:
+    ChooseFiles: 'Choose files'
+    DRAGFILESHERE: 'Drag files here'
+    DROPAREA: 'Drop Area'
+    EDITALL: 'Edit all'
+    EDITANDORGANIZE: 'Edit & organize'
+    FILES: Files
+    TOTAL: Total
+    TOUPLOAD: 'Choose file(s) to upload...'
+    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    UPLOADOR: OR
   BBCodeParser:
-    ALIGNEMENT: "Penjajaran"
-    COLORED: "Teks berwarna"
-    COLOREDEXAMPLE: "teks biru"
-    EMAILLINK: "Pautan email"
-    EMAILLINKDESCRIPTION: "Wujudkan pautan kepada alamat emel"
-    STRUCK: "Teks berpalang"
-    STRUCKEXAMPLE: "Palang"
-    UNDERLINE: "Teks bergaris bawah"
-    UNDERLINEEXAMPLE: "Bergaris bawah"
+    ALIGNEMENT: Penjajaran
+    ALIGNEMENTEXAMPLE: 'right aligned'
+    BOLD: 'Bold Text'
+    BOLDEXAMPLE: Bold
+    CODE: 'Code Block'
+    CODEDESCRIPTION: 'Unformatted code block'
+    CODEEXAMPLE: 'Code block'
+    COLORED: 'Teks berwarna'
+    COLOREDEXAMPLE: 'teks biru'
+    EMAILLINK: 'Pautan email'
+    EMAILLINKDESCRIPTION: 'Wujudkan pautan kepada alamat emel'
+    IMAGE: Image
+    IMAGEDESCRIPTION: 'Show an image in your post'
+    ITALIC: 'Italic Text'
+    ITALICEXAMPLE: Italics
+    LINK: 'Website link'
+    LINKDESCRIPTION: 'Link to another website or URL'
+    STRUCK: 'Teks berpalang'
+    STRUCKEXAMPLE: Palang
+    UNDERLINE: 'Teks bergaris bawah'
+    UNDERLINEEXAMPLE: 'Bergaris bawah'
+    UNORDERED: 'Unordered list'
+    UNORDEREDDESCRIPTION: 'Unordered list'
+    UNORDEREDEXAMPLE1: 'unordered item 1'
   BasicAuth:
-    ENTERINFO: "Maukkan ID pengguna dan katalaluan"
-    ERRORNOTADMIN: "Pengguna ini bukan pentadbir."
-    ERRORNOTREC: "ID pengguna dan katalaluan tidak dikenali"
-  ChangePasswordEmail.ss:
-    CHANGEPASSWORDTEXT1: "Anda telah mengubah kata lalaun untuk"
-    CHANGEPASSWORDTEXT2: "Sila gunakan maklumat di bawah untuk mendaftar masuk:"
-    EMAIL: "Emel"
-    HELLO: "Hi"
-    PASSWORD: "Kata Laluan"
-  ComplexTableField.ss:
-    ADDITEM: "Tambah"
-    SORTASC: "Susun secara menaik"
-    SORTDESC: "Susun secara menurun"
-  ComplexTableField_popup.ss:
-    NEXT: "Berikut"
-    PREVIOUS: "Dahulu"
+    ENTERINFO: 'Maukkan ID pengguna dan katalaluan'
+    ERRORNOTADMIN: 'Pengguna ini bukan pentadbir.'
+    ERRORNOTREC: 'ID pengguna dan katalaluan tidak dikenali'
+  Boolean:
+    ANY: Any
+    0: 'False'
+    LOGOUT: 'Log out'
+    1: 'True'
+  CMSMain:
+    ACCESS: 'Access to ''{title}'' section'
+    ACCESSALLINTERFACES: 'Access to all CMS sections'
+    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
+    SAVE: Save
+  CMSProfileController:
+    MENUTITLE: CMSProfileController
+  CheckboxField:
+    - 'False'
+    - 'True'
+  ComplexTableField:
+    CLOSEPOPUP: 'Close Popup'
+    SUCCESSADD2: 'Added {name}'
+    SUCCESSEDIT: 'Saved %s %s %s'
   ConfirmedPasswordField:
-    SHOWONCLICKTITLE: "Tukar Kata Aluan"
+    ATLEAST: 'Passwords must be at least {min} characters long.'
+    BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    SHOWONCLICKTITLE: 'Tukar Kata Aluan'
+  CreditCardField:
+    FIRST: first
+    FOURTH: fourth
+    SECOND: second
+    THIRD: third
+  CurrencyField:
+    CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME: "Objek-objek Data"
-    SINGULARNAME: "Objek Data"
+    PLURALNAME: 'Objek-objek Data'
+    SINGULARNAME: 'Objek Data'
   Date:
-    DAY: "hari"
-    DAYS: "hari-hari"
-    HOUR: "jam"
-    HOURS: "jam-jam"
-    MIN: "minit"
-    MINS: "minit-minit"
-    MONTH: "bulan"
-    MONTHS: "bulan-bulan"
-    SEC: "saat"
-    SECS: "saat-saat"
-    TIMEDIFFAGO: "%s lalu"
-    YEAR: "tahun"
-    YEARS: "tahun-tahun"
+    DAY: hari
+    DAYS: hari-hari
+    HOUR: jam
+    HOURS: jam-jam
+    MIN: minit
+    MINS: minit-minit
+    MONTH: bulan
+    MONTHS: bulan-bulan
+    SEC: saat
+    SECS: saat-saat
+    TIMEDIFFAGO: '{difference} ago'
+    TIMEDIFFIN: 'in {difference}'
+    YEAR: tahun
+    YEARS: tahun-tahun
   DateField:
+    NOTSET: 'not set'
+    TODAY: today
+    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
+    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
+    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  Director:
+    ADD: Tambah
+    INVALID_REQUEST: 'Invalid request'
   DropdownField:
-    CHOOSE: "(Pilih)"
+    CHOOSE: (Pilih)
   EmailField:
-    VALIDATION: "Masukkan alamat email"
+    VALIDATION: 'Please enter an email address'
+  Email_BounceRecord:
+    PLURALNAME: 'Email Bounce Records'
+    SINGULARNAME: 'Email Bounce Record'
+  Enum:
+    ANY: Any
+    LOADING: Loading...
   File:
-    INVALIDEXTENSION: "Tokokan tidak dibenarkan (sah: %s)"
-    NOFILESIZE: "Saiz fail bersamaan sifar bait."
-    PLURALNAME: "Fail-fail"
-    SINGULARNAME: "Fail"
-    TOOLARGE: "Saiz fail terlalu besar, %s maksimum dibenarkan"
-  ForgotPasswordEmail.ss:
-    HELLO: "Hi"
+    Content: Content
+    Filename: Filename
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    NOFILESIZE: 'Saiz fail bersamaan sifar bait.'
+    NOVALIDUPLOAD: 'File is not a valid upload'
+    Name: Name
+    PLURALNAME: Fail-fail
+    SINGULARNAME: Fail
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGESHORT: 'Filesize exceeds {size}'
+    Title: Title
+  FileIFrameField:
+    ATTACH: 'Attach {type}'
+    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    DELETE: 'Delete {type}'
+    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
+    FILE: File
+    FROMCOMPUTER: 'From your Computer'
+    FROMFILESTORE: 'From the File Store'
+    NOSOURCE: 'Please select a source file to attach'
+    REPLACE: 'Replace {type}'
+  Filesystem:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
+    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Form:
-    FIELDISREQUIRED: "%s dipelukan"
-    VALIDATIONCREDITNUMBER: "Pastikan yang anada telah memasukkan nombor kredit kad yang betul."
-    VALIDATIONFAILED: "Pengesahan gagal"
-    VALIDATIONNOTUNIQUE: "Nilai yang dimasukkan tidak unik"
-    VALIDATIONPASSWORDSDONTMATCH: "Kata-kata laluan tidak sepadan"
-    VALIDATIONPASSWORDSNOTEMPTY: "Kata laluan tidak boleh dibiarkan kosong"
-    VALIDATIONSTRONGPASSWORD: "Kata lalaun mesti mengandungi sekurang-kurangnya satu nombor dan satu huruf"
-    VALIDATOR: "Pengesah"
-    VALIDCURRENCY: "Masukkan matawang yang sah."
+    FIELDISREQUIRED: '%s dipelukan'
+    TITLE: 'Image Uploading Iframe'
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONNOTUNIQUE: 'Nilai yang dimasukkan tidak unik'
+    VALIDATIONPASSWORDSDONTMATCH: 'Kata-kata laluan tidak sepadan'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Kata laluan tidak boleh dibiarkan kosong'
+    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATOR: Pengesah
+    VALIDCURRENCY: 'Please enter a valid currency'
+  FormField:
+    NONE: none
+  GridAction:
+    DELETE_DESCRIPTION: Delete
+    Delete: Delete
+    UnlinkRelation: Unlink
+  GridField:
+    Add: 'Add {name}'
+    Filter: Filter
+    FilterBy: 'Filter by '
+    Find: Find
+    LEVELUP: 'Level up'
+    LinkExisting: 'Link Existing'
+    NewRecord: 'New %s'
+    NoItemsFound: 'No items found'
+    PRINTEDAT: 'Printed at'
+    PRINTEDBY: 'Printed by'
+    PlaceHolder: 'Find {type}'
+    PlaceHolderWithLabels: 'Find {type} by {name}'
+    RelationSearch: 'Relation search'
+    ResetFilter: Reset
+  GridFieldAction_Delete:
+    DeletePermissionsFailure: 'No delete permissions'
+    NEXT: Berikut
+    PREVIOUS: Dahulu
+  GridFieldDetailForm:
+    Create: Create
+    Delete: Delete
+    DeletePermissionsFailure: 'No delete permissions'
+    Deleted: 'Deleted %s %s'
+    HELLO: Hi
+    Save: Save
+    Saved: 'Saved %s %s'
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: for
   Group:
-    Code: "Kod Kumpulan"
-    Locked: "Dikuncikan?"
-    Parent: "Kumpulan Induk"
-    has_many_Permissions: "Keizinan"
-    many_many_Members: "Ahli-ahli"
+    AddRole: 'Add a role for this group'
+    CHANGEPASSWORDTEXT1: 'Anda telah mengubah kata lalaun untuk'
+    CHANGEPASSWORDTEXT2: 'Sila gunakan maklumat di bawah untuk mendaftar masuk:'
+    Code: 'Kod Kumpulan'
+    DefaultGroupTitleAdministrators: Administrators
+    DefaultGroupTitleContentAuthors: 'Content Authors'
+    Description: Description
+    EMAIL: Emel
+    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    HELLO: Hi
+    Locked: 'Dikuncikan?'
+    NoRoles: 'No roles found'
+    PASSWORD: 'Kata Laluan'
+    Parent: 'Kumpulan Induk'
+    RolesAddEditLink: 'Manage roles'
+    Sort: 'Sort Order'
+    TITLE: 'Iframe untuk memuatnaik imej'
+    has_many_Permissions: Keizinan
+    many_many_Members: Ahli-ahli
+  GroupImportForm:
+    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    ResultCreated: 'Created {count} groups'
+    ResultDeleted: 'Deleted %d groups'
+    ResultUpdated: 'Updated %d groups'
+  Hierarchy:
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    BUTTONINSERTLINK: "Masukkan pautan"
-    BUTTONREMOVELINK: "Hapuskan pautan"
-    CSSCLASS: "Penjajaran / gaya"
-    CSSCLASSCENTER: "Di tengah-tengah, bersendirian."
-    CSSCLASSLEFT: "Di sebelah kiri, dengan kata-kata menyelubungi."
-    CSSCLASSRIGHT: "Di sebelah kanan, dengan kata-kata menyelubungi."
-    EMAIL: "Alamat emel"
-    FILE: "Fail"
-    FOLDER: "Fail lipatan"
-    IMAGE: "Imej"
-    IMAGEDIMENSIONS: "Dimensi-dimensi"
-    IMAGEHEIGHTPX: "Tinggi"
-    IMAGEWIDTHPX: "Lebar"
-    LINK: "Pautan"
-    LINKDESCR: "Deskripsi pautan"
-    LINKEMAIL: "Alamat emel"
-    LINKEXTERNAL: "Halaman web lain"
-    LINKFILE: "Muat turun fail"
-    LINKINTERNAL: "Laman dalam tapak"
-    LINKOPENNEWWIN: "Buka pautan dalam tetingkap baru?"
-    LINKTO: "Paut ke"
-    PAGE: "Halaman"
-    URL: "URL"
-  Image_iframe.ss:
-    TITLE: "Iframe untuk memuatnaik imej"
+    ADDURL: 'Add URL'
+    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ANCHORVALUE: Anchor
+    BUTTONINSERT: Insert
+    BUTTONINSERTLINK: 'Masukkan pautan'
+    BUTTONREMOVELINK: 'Hapuskan pautan'
+    BUTTONUpdate: Update
+    CAPTIONTEXT: 'Caption text'
+    CSSCLASS: 'Penjajaran / gaya'
+    CSSCLASSCENTER: 'Di tengah-tengah, bersendirian.'
+    CSSCLASSLEFT: 'Di sebelah kiri, dengan kata-kata menyelubungi.'
+    CSSCLASSLEFTALONE: 'On the left, on its own.'
+    CSSCLASSRIGHT: 'Di sebelah kanan, dengan kata-kata menyelubungi.'
+    DETAILS: Details
+    EMAIL: 'Alamat emel'
+    FILE: Fail
+    FOLDER: 'Fail lipatan'
+    FROMCMS: 'From the CMS'
+    FROMCOMPUTER: 'From your computer'
+    FROMWEB: 'From the web'
+    FindInFolder: 'Find in Folder'
+    IMAGEALT: 'Alternative text (alt)'
+    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
+    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEDIMENSIONS: Dimensi-dimensi
+    IMAGEHEIGHTPX: Tinggi
+    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
+    IMAGETITLETEXT: 'Title text (tooltip)'
+    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGEWIDTHPX: Lebar
+    INSERTMEDIA: 'Insert Media'
+    LINK: Pautan
+    LINKANCHOR: 'Anchor on this page'
+    LINKDESCR: 'Deskripsi pautan'
+    LINKEMAIL: 'Alamat emel'
+    LINKEXTERNAL: 'Halaman web lain'
+    LINKFILE: 'Muat turun fail'
+    LINKINTERNAL: 'Laman dalam tapak'
+    LINKOPENNEWWIN: 'Buka pautan dalam tetingkap baru?'
+    LINKTO: 'Paut ke'
+    PAGE: Halaman
+    URL: URL
+    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    UpdateMEDIA: 'Update Media'
+  ImageField:
+    IMAGE: Image
+  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  LeftAndMain:
+    ADD: 'Add a new row'
+    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    DELETED: Deleted.
+    DropdownBatchActionsDefault: Actions
+    HELP: Help
+    PAGETYPE: 'Page type: '
+    PERMAGAIN: 'You have been logged out of the CMS.  If you would like to log in again, enter a username and password below.'
+    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS.  If you want to log in as someone else, do so below'
+    PERMDEFAULT: 'Please choose an authentication method and enter your credentials to access the CMS.'
+    PLEASESAVE: 'Please Save Page: This page could not be upated because it hasn''t been saved yet.'
+    PreviewButton: Preview
+    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    SAVEDUP: Saved.
+    VersionUnknown: unknown
   LoginAttempt:
-    Email: "Alamat Emel"
+    Email: 'Alamat Emel'
+    IP: 'IP Address'
+    Status: Status
   Member:
-    ADDRESS: "Alamat"
-    BUTTONCHANGEPASSWORD: "Ubah Kata Lalaun"
-    BUTTONLOGIN: "Daftar masuk"
-    BUTTONLOGINOTHER: "Daftar masuk mengunakan id pengguna yang lain"
-    BUTTONLOSTPASSWORD: "Saya telah hilang kata lalaun saya"
-    CONFIRMNEWPASSWORD: "Sahkan Katalaluan Baru"
-    CONFIRMPASSWORD: "Sahkan Kata Lalaun"
-    CONTACTINFO: "Cara menghubungi"
-    EMAIL: "Emel"
-    EMAILSIGNUPINTRO1: "Terima kasih atas pendaftaran sebagai ahli baru, butir-butir keahlian anda disenaraikan di bawah untuk rujukan masa depan."
-    EMAILSIGNUPINTRO2: "Anda kini boleh mendaftar masuk ke laman ini menggunakan madat di bawah"
-    EMAILSIGNUPSUBJECT: "Terima kasih atas pendaftaran"
-    ENTEREMAIL: "Sila masukkan alamat emel untuk mendapatkan pautan menganjak kata lalaun"
-    ERRORLOCKEDOUT: "Akaun anda sedang digantung sementara kerana terlalu banyak cubaan daftar masuk yang gagal. Sila cuba lagi selepas 20 minit."
-    ERRORNEWPASSWORD: "Kata Lalaun baru yang dimasukkan tidak sepadan, sila cuba semula"
-    ERRORPASSWORDNOTMATCH: "Kata lalaun semasa tidak sepadan, sila cuba semula"
-    ERRORWRONGCRED: "Alamat email atau kataluan yang dimasukkan tidak tepat. Sila cuba lagi."
-    FIRSTNAME: "Nama"
-    GREETING: "Selamat Datang"
-    INTERFACELANG: "Bahasa antaramuka"
-    LOGGEDINAS: "Anda berdaftar masuk sebagai %s."
-    MOBILE: "Telefon bimbit"
-    NAME: "Nama"
-    NEWPASSWORD: "Katalaluan Baru"
-    PASSWORD: "Kata Lalaun"
-    PHONE: "Telefon"
-    PLURALNAME: "Ahli-ahli"
-    REMEMBERME: "Ingat (butiran login) saya selepas ini?"
-    SINGULARNAME: "Ahli"
-    SUBJECTPASSWORDCHANGED: "Kata lalaun anda telah ditukar"
-    SUBJECTPASSWORDRESET: "Pautan penukaran kata lalaun anda"
-    SURNAME: "Nama keluarga"
-    VALIDATIONMEMBEREXISTS: "Email ini telah digunakan oleh ahli lain"
-    WELCOMEBACK: "Selamat berjumpa kembali, %s"
-    YOUROLDPASSWORD: "Kata lalaun lama anda"
-    belongs_many_many_Groups: "Kumpulan-kumpulan"
-    db_LockedOutUntil: "Dikuncikan keluar sehingga"
-    db_Password: "Kata Laluan"
-    db_PasswordExpiry: "Tempoh Tamat Kata Lalaun"
+    ADDGROUP: 'Add group'
+    BUTTONCHANGEPASSWORD: 'Ubah Kata Lalaun'
+    BUTTONLOGIN: 'Daftar masuk'
+    BUTTONLOGINOTHER: 'Daftar masuk mengunakan id pengguna yang lain'
+    BUTTONLOSTPASSWORD: 'Saya telah hilang kata lalaun saya'
+    CONFIRMNEWPASSWORD: 'Sahkan Katalaluan Baru'
+    CONFIRMPASSWORD: 'Sahkan Kata Lalaun'
+    DefaultAdminFirstname: 'Default Admin'
+    DefaultDateTime: default
+    EMAIL: Emel
+    EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
+    ENTEREMAIL: 'Sila masukkan alamat emel untuk mendapatkan pautan menganjak kata lalaun'
+    ERRORLOCKEDOUT: 'Akaun anda sedang digantung sementara kerana terlalu banyak cubaan daftar masuk yang gagal. Sila cuba lagi selepas 20 minit.'
+    ERRORNEWPASSWORD: 'Kata Lalaun baru yang dimasukkan tidak sepadan, sila cuba semula'
+    ERRORPASSWORDNOTMATCH: 'Kata lalaun semasa tidak sepadan, sila cuba semula'
+    ERRORWRONGCRED: 'Alamat email atau kataluan yang dimasukkan tidak tepat. Sila cuba lagi.'
+    FIRSTNAME: Nama
+    INTERFACELANG: 'Bahasa antaramuka'
+    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
+    LOGGEDINAS: 'You''re logged in as {name}.'
+    NEWPASSWORD: 'Katalaluan Baru'
+    PASSWORD: 'Kata Lalaun'
+    PLURALNAME: Ahli-ahli
+    PROFILESAVESUCCESS: 'Successfully saved.'
+    REMEMBERME: 'Ingat (butiran login) saya selepas ini?'
+    SINGULARNAME: Ahli
+    SUBJECTPASSWORDCHANGED: 'Kata lalaun anda telah ditukar'
+    SUBJECTPASSWORDRESET: 'Pautan penukaran kata lalaun anda'
+    SURNAME: 'Nama keluarga'
+    VALIDATIONMEMBEREXISTS: 'Email ini telah digunakan oleh ahli lain'
+    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
+    WELCOMEBACK: 'Welcome Back, {firstname}'
+    YOUROLDPASSWORD: 'Kata lalaun lama anda'
+    belongs_many_many_Groups: Kumpulan-kumpulan
+    db_LastVisited: 'Last Visited Date'
+    db_Locale: 'Interface Locale'
+    db_LockedOutUntil: 'Dikuncikan keluar sehingga'
+    db_NumVisit: 'Number of Visits'
+    db_Password: 'Kata Laluan'
+    db_PasswordExpiry: 'Tempoh Tamat Kata Lalaun'
   MemberAuthenticator:
-    TITLE: "Email &amp; katalaluan"
+    TITLE: 'Email &amp; katalaluan'
+  MemberDatetimeOptionsetField:
+    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    Custom: Custom
+    DATEFORMATBAD: 'Date format is invalid'
+    DAYNOLEADING: 'Day of month without leading zero'
+    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    FOURDIGITYEAR: 'Four-digit year'
+    FULLNAMEMONTH: 'Full name of month (e.g. June)'
+    HOURNOLEADING: 'Hour without leading zero'
+    MINUTENOLEADING: 'Minute without leading zero'
+    MONTHNOLEADING: 'Month digit without leading zero'
+    Preview: Preview
+    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    TOGGLEHELP: 'Toggle formatting help'
+    TWODIGITDAY: 'Two-digit day of month'
+    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
+    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
+    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
+    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITYEAR: 'Two-digit year'
+  MemberImportForm:
+    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    ResultCreated: 'Created {count} members'
+    ResultDeleted: 'Deleted %d members'
+    ResultNone: 'No changes'
+    ResultUpdated: 'Updated {count} members'
+  MemberTableField: null
+  ModelAdmin:
+    DELETE: Delete
+    DELETEDRECORDS: 'Deleted {count} records.'
+    IMPORT: 'Import from CSV'
+    IMPORTEDRECORDS: 'Imported {count} records.'
+    NOCSVFILE: 'Please browse for a CSV file to import'
+    NOIMPORT: 'Nothing to import'
+    RESET: Reset
+    Title: 'Data Models'
+    UPDATEDRECORDS: 'Updated {count} records.'
+  MoneyField:
+    FIELDLABELAMOUNT: Amount
+    FIELDLABELCURRENCY: Currency
+  NullableField:
+    IsNullLabel: 'Is Null'
   NumericField:
-    VALIDATION: "'%s' bukan nombor, hanya nombor-nombor boleh diterima untuk medan ini"
+    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Permission:
-    FULLADMINRIGHTS: "Hak mutlah pentadbiran"
+    AdminGroup: Administrator
+    CMS_ACCESS_CATEGORY: 'CMS Access'
+    FULLADMINRIGHTS: 'Hak mutlah pentadbiran'
+    FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECRELATIONS: Relations
+  PermissionCheckboxSetField:
+    AssignedTo: 'assigned to "{title}"'
+    FromGroup: 'inherited from group "{title}"'
+    FromRole: 'inherited from role "{title}"'
+    FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+  Permissions:
+    PERMISSIONS_CATEGORY: 'Roles and access permissions'
   PhoneNumberField:
-    VALIDATION: "Sila isikan nombor telefon yang sah"
-  RelationComplexTableField.ss:
-    ADD: "Tambah"
+    Back: Back
+    VALIDATION: 'Sila isikan nombor telefon yang sah'
   Security:
-    ALREADYLOGGEDIN: "Anda tidak mempunyai kebenaran untuk mencapai mukasurat ini. Jika anda mempunyai akaun lain dengan kebenaran yang deperlukan, sila daftar masuk di bawah."
-    BUTTONSEND: "Hantar pautan penukaran katalaluan kepada saya"
-    CHANGEPASSWORDBELOW: "Anda boleh menukar kata laluan di bawah."
-    CHANGEPASSWORDHEADER: "Tukar kata laluan anda"
-    ENTERNEWPASSWORD: "Masukkan kata laluan yang baru"
-    ERRORPASSWORDPERMISSION: "Anda perlu didaftarkan masuk untuk menukar katalaluan."
-    LOGGEDOUT: "Anda telah mendaftar keluar. Untuk mendaftar masuk semula, masukkan maklumat yang diperlukan di bawah."
-    NOTEPAGESECURED: "Halaman ini adalah halaman berkeselamatan tinggi. Masukkan maklumat yang deperlukan sebelum meneruskan capaian. "
-    NOTERESETPASSWORD: "Masukkan alamat emel dan kami akan hantar pautan untuk menukar kata laluan anda."
-    PASSWORDSENTHEADER: "Pautan penukaran kata laluan telah dihantar ke '%s'"
-    PASSWORDSENTTEXT: "Terima kasih! Pautan penukaran kata laluan telah dihantar ke '%s'"
+    ALREADYLOGGEDIN: 'Anda tidak mempunyai kebenaran untuk mencapai mukasurat ini. Jika anda mempunyai akaun lain dengan kebenaran yang deperlukan, sila daftar masuk di bawah.'
+    BUTTONSEND: 'Hantar pautan penukaran katalaluan kepada saya'
+    CHANGEPASSWORDBELOW: 'Anda boleh menukar kata laluan di bawah.'
+    CHANGEPASSWORDHEADER: 'Tukar kata laluan anda'
+    ENTERNEWPASSWORD: 'Masukkan kata laluan yang baru'
+    ERRORPASSWORDPERMISSION: 'Anda perlu didaftarkan masuk untuk menukar katalaluan.'
+    LOGGEDOUT: 'Anda telah mendaftar keluar. Untuk mendaftar masuk semula, masukkan maklumat yang diperlukan di bawah.'
+    LOGIN: 'Log in'
+    NOTEPAGESECURED: 'Halaman ini adalah halaman berkeselamatan tinggi. Masukkan maklumat yang deperlukan sebelum meneruskan capaian. '
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETPASSWORD: 'Masukkan alamat emel dan kami akan hantar pautan untuk menukar kata laluan anda.'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+  SecurityAdmin:
+    ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
+    APPLY_ROLES: 'Apply roles to groups'
+    APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
+    EDITPERMISSIONS: 'Manage permissions for groups'
+    EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
+    GROUPNAME: 'Group name'
+    IMPORTGROUPS: 'Import groups'
+    IMPORTUSERS: 'Import users'
+    MEMBERS: Members
+    MENUTITLE: Security
+    MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
+    NEWGROUP: 'New Group'
+    PERMISSIONS: Permissions
+    ROLES: Roles
+    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
+    TABROLES: Roles
+    Users: Users
+  SecurityAdmin_MemberImportForm:
+    BtnImport: 'Import from CSV'
+    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
+  SilverStripeNavigator:
+    Edit: Edit
+    FILTER: Filter
+    IMPORT: Import
+    VIEWFIRST: 'Lihat pertama'
+    VIEWLAST: 'Lihat terakhir'
+    VIEWNEXT: 'Lihat berikut'
+    VIEWPREVIOUS: 'Lihat dahulu'
   SimpleImageField:
-    NOUPLOAD: "Tiada imej dimuat naikkan"
+    NOUPLOAD: 'Tiada imej dimuat naikkan'
   SiteTree:
-    TABMAIN: "Utama"
+    TABMAIN: Utama
   TableField:
-    ISREQUIRED: "'%s' diperlukan dalam %s."
-  TableField.ss:
-  TableListField_PageControls.ss:
-    VIEWFIRST: "Lihat pertama"
-    VIEWLAST: "Lihat terakhir"
-    VIEWNEXT: "Lihat berikut"
-    VIEWPREVIOUS: "Lihat dahulu"
-  ToggleCompositeField.ss:
-    HIDE: "Sembunyikan"
-    SHOW: "Paparkan"
+    ADDITEM: Tambah
+    ISREQUIRED: 'In %s ''%s'' is required'
+    SORTASC: 'Sort in ascending order'
+    SORTDESC: 'Sort in descending order'
+  TableListField:
+    CSVEXPORT: 'Export to CSV'
+    PRINT: Print
+    Print: Print
+    SELECT: 'Select:'
+  TimeField:
+    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
   ToggleField:
-    LESS: "kurang"
-    MORE: "lebih"
+    LESS: kurang
+    MORE: lebih
+  UploadField:
+    ATTACHFILE: 'Attach a file'
+    ATTACHFILES: 'Attach files'
+    AttachFile: 'Attach a file'
+    DELETEINFO: 'Permanently delete this file from the file store'
+    DOEDIT: Save
+    DROPFILE: 'drop a file'
+    DROPFILES: 'drop files'
+    Dimensions: Dimensions
+    EDITINFO: 'Edit this file'
+    FIELDNOTSET: 'File information not found'
+    FROMCOMPUTER: 'From your computer'
+    FROMFILES: 'From files'
+    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
+    REMOVE: Remove
+    REMOVEERROR: 'Error removing file'
+    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
+    STARTALL: 'Start all'
+    Saved: Saved
   Versioned:
-    has_many_Versions: "Versi-versi"
+    has_many_Versions: Versi-versi

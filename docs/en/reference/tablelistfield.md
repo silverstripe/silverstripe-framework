@@ -2,6 +2,10 @@
 
 ## Introduction
 
+<div class="warning" markdown="1">
+	This field is deprecated in favour of the new [GridField](/topics/grid-field) API.
+</div>
+
 Form field that embeds a list of `[api:DataObject]`s into a form, such as a member list or a file list.
 Provides customizeable columns, record-deletion by ajax, paging, sorting, CSV-export, printing, input by
 `[api:DataObject]` or raw SQL.
@@ -82,7 +86,7 @@ For more information on each of the features used in the example, you can read b
 	);
 	
 	// custom DataObjectSet
-	$myProducts = DataObject::get('Product','Code = "MyCode"');
+	$myProducts = Product::get()->filter('Code', "MyCode");
 	$myTableListField->setCustomSourceItems($myProducts);
 	
 	// custom SQL

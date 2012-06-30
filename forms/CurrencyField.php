@@ -1,6 +1,9 @@
 <?php
 /**
- * Currency field.
+ * Renders a text field, validating its input as a currency.
+ * Limited to US-centric formats, including a hardcoded currency
+ * symbol and decimal separators.
+ * See {@link MoneyField} for a more flexible implementation.
  * 
  * @todo Add localization support, see http://open.silverstripe.com/ticket/2931 
  *
