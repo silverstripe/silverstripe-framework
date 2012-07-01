@@ -237,8 +237,8 @@ class TableListField extends FormField {
 	 */
 	function __construct($name, $sourceClass = null, $fieldList = null, $sourceFilter = null, 
 		$sourceSort = null, $sourceJoin = null) {
-		if(FRAMEWORK_DIR != 'sapphire' && !SapphireTest::is_running_test()) {
-			user_error('TableListField requires FRAMEWORK_DIR to be sapphire.', E_USER_WARNING);
+		if((FRAMEWORK_DIR != 'sapphire' && FRAMEWORK_DIR != 'framework') && !SapphireTest::is_running_test()) {
+			user_error('TableListField requires FRAMEWORK_DIR to be sapphire or framework.', E_USER_WARNING);
 		}
 
 		if($sourceClass) {
