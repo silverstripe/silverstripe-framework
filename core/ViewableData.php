@@ -822,7 +822,12 @@ class ViewableData_Customised extends ViewableData {
 		
 		return $this->original->obj($fieldName, $arguments, $forceReturnedObject, $cache, $cacheName);
 	}
-	
+
+	public function iteratorProperties($pos, $totalItems) {
+		parent::iteratorProperties($pos, $totalItems);
+		
+		$this->customised->iteratorProperties($pos, $totalItems);
+	}
 }
 
 /**
