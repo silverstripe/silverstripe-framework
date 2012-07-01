@@ -485,27 +485,41 @@ class Director implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Turns an absolute URL or folder into one that's relative to the root of the site.
-	 * This is useful when turning a URL into a filesystem reference, or vice versa.
-	 * 
-	 * @todo Implement checking across http/https protocols
+	 * Turns an absolute URL or folder into one that's relative to the root of 
+	 * the site. This is useful when turning a URL into a filesystem reference, 
+	 * or vice versa.
 	 * 
 	 * @param string $url Accepts both a URL or a filesystem path
-	 * @return string Either a relative URL if the checks succeeded, or the original (possibly absolute) URL.
+	 * @return string Either a relative URL if the checks succeeded, or the 
+	 * original (possibly absolute) URL.
 	 */
-	static function makeRelative($url) {
-		// Allow for the accidental inclusion of a // in the URL
-		$url = preg_replace('#([^:])//#', '\\1/', $url);
-		$url = trim($url);
+	public static function makeRelative($url) {
+		// Allow for the accidental inclusion whitespace and // in the URL
+		$url = trim(preg_replace('#([^:])//#', '\\1/', $url));
+
+		$base1 = self::absoluteBaseURL();
+		$baseDomain = substr($base1, strlen(self::protocol()));
 
 		// Only bother comparing the URL to the absolute version if $url looks like a URL.
-		if(preg_match('/^https?[^:]*:\/\//',$url)) {
-			$base1 = self::absoluteBaseURL();
+		if(preg_match('/^https?[^:]*:\/\//',$url,$matches)) {
+			$urlProtocol = $matches[0];
+			$urlWithoutProtocol = substr($url, strlen($urlProtocol));
+
 			// If we are already looking at baseURL, return '' (substr will return false)
-			if($url == $base1) return '';
-			else if(substr($url,0,strlen($base1)) == $base1) return substr($url,strlen($base1));
-			// Convert http://www.mydomain.com/mysitedir to ''
-			else if(substr($base1,-1)=="/" && $url == substr($base1,0,-1)) return "";
+			if($url == $base1) {
+				return '';
+			}
+			else if(substr($url,0,strlen($base1)) == $base1) {
+				return substr($url,strlen($base1));
+			}
+			else if(substr($base1,-1)=="/" && $url == substr($base1,0,-1)) {
+				// Convert http://www.mydomain.com/mysitedir to ''
+				return "";
+			}
+
+			if(substr($urlWithoutProtocol,0,strlen($baseDomain)) == $baseDomain) {
+				return substr($urlWithoutProtocol,strlen($baseDomain));
+			}
 		}
 		
 		// test for base folder, e.g. /var/www
@@ -514,8 +528,15 @@ class Director implements TemplateGlobalProvider {
 
 		// Test for relative base url, e.g. mywebsite/ if the full URL is http://localhost/mywebsite/
 		$base3 = self::baseURL();
-		if(substr($url,0,strlen($base3)) == $base3) return substr($url,strlen($base3));
-		
+		if(substr($url,0,strlen($base3)) == $base3) {
+			return substr($url,strlen($base3));
+		}
+
+		// Test for relative base url, e.g mywebsite/ if the full url is localhost/myswebsite
+		if(substr($url,0,strlen($baseDomain)) == $baseDomain) {
+			return substr($url, strlen($baseDomain));
+		}
+
 		// Nothing matched, fall back to returning the original URL
 		return $url;
 	}
@@ -936,8 +957,4 @@ class Director implements TemplateGlobalProvider {
 			'BaseHref' => 'absoluteBaseURL',    //@deprecated 3.0
 		);
 	}
-
 }
-
-
-
