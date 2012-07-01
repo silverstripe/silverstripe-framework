@@ -43,6 +43,20 @@ class RSSFeedTest extends SapphireTest {
 		$this->assertContains('<description>ItemC AltContent</description>', $content);
 	}
 
+	public function testRenderWithTemplate() {
+		$rssFeed = new RSSFeed(new ArrayList(), "", "", "");
+		$rssFeed->setTemplate('RSSFeedTest');
+
+		$content = $rssFeed->feedContent();
+
+		$this->assertContains('<title>Test Custom Template</title>', $content);
+
+		$rssFeed->setTemplate('RSSFeed');
+		$content = $rssFeed->feedContent();
+		
+		$this->assertNotContains('<title>Test Custom Template</title>', $content);
+	}
+
 	public function setUp() {
 		parent::setUp();
 		Director::setBaseURL('/');
