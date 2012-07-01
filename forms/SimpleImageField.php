@@ -14,7 +14,8 @@
  * 	static $has_one = array('MyImage' => 'Image');
  * }
  * // use in your form constructor etc.
- * $myField = new SimpleImageField('MyImage');
+ * $myField = new new UploadField(('MyImage', "My Image");
+ * $myField->allowedExtensions = array('jpg', 'gif', 'png');
  * </code>
  * 
  * <b>Usage within a controller</b>
