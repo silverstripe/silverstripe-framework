@@ -2,15 +2,11 @@
 
 ## Overview
 
-This is a short tutorial demonstrating how to add search functionality to a SilverStripe site. It is recommended that
-you have completed the earlier tutorials, especially the tutorial on forms, before attempting this tutorial. While this
-tutorial will add search functionality to the site built in the previous tutorials, it should be straight forward to
-follow this tutorial on any site of your own. 
+This is a short tutorial demonstrating how to add search functionality to a SilverStripe site. It is recommended that you have completed the earlier tutorials, especially the tutorial on forms, before attempting this tutorial. While this tutorial will add search functionality to the site built in the previous tutorials, it should be straight  forward to follow this tutorial on any site of your own. 
 
 ## What are we working towards?
 
-We are going to add a search box on the top of the page. When a user types something in the box, they are taken to a
-results page.
+We are going to add a search box on the top of the page. When a user types something in the box, they are taken to a results page.
 
 ![](_images/tutorial4_search.png)
 
