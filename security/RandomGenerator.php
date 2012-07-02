@@ -47,8 +47,10 @@ class RandomGenerator {
 		if($isWin && class_exists('COM')) {
 			try {
 				$comObj = new COM('CAPICOM.Utilities.1');
-				$e = base64_decode($comObj->GetRandom(64, 0));
-				return $e;
+
+				if(is_callable(array($comObj,'GetRandom'))) {
+					return  base64_decode($comObj->GetRandom(64, 0));
+				}
 			} catch (Exception $ex) {
 			}
 		}
@@ -66,6 +68,5 @@ class RandomGenerator {
 	 */
 	function generateHash($algorithm = 'whirlpool') {
 		return hash($algorithm, $this->generateEntropy());
-	}
-	
+	}	
 }
