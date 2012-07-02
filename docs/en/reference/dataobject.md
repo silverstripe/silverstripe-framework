@@ -2,53 +2,67 @@
 
 ## Introduction
 
-A single database record & abstract class for the data-access-model. 
+The `[api:DataObject]` class represents a single row in a database table,
+following the ["Active Record"](http://en.wikipedia.org/wiki/Active_record_pattern) design pattern.
 
-## Usage
+## Defining Properties
 
-*  [datamodel](/topics/datamodel): The basic pricinples
-*  [data-types](/topics/data-types): Casting and special property-parsing
-*  `[api:DataObject]`: A "container" for DataObjects
+Properties defined through `DataObject::$db` map to table columns,
+and can be declared as different [data-types](/topics/data-types).
 
-## Basics
+## Loading and Saving Records
 
-The call to `DataObject->getCMSFields()` is the centerpiece of every data administration interface in SilverStripe,
-which returns a `[api:FieldList]`''.
+The basic principles around data persistence and querying for objects
+is explained in the ["datamodel" topic](/topics/datamodel).
+
+## Defining Form Fields
+
+In addition to defining how data is persisted, the class can also
+help with editing it by providing form fields through `DataObject->getCMSFields()`.
+The resulting `[api:FieldList]` is the centrepiece of many data administration interfaces in SilverStripe.
+Many customizations of the SilverStripe CMS interface start here,
+by adding, removing or configuring fields.
+
+	Example getCMSFields implementation
 
 	:::php
-	class MyPage extends Page {
+	class MyDataObject extends DataObject {
+		$db = array(
+			'IsActive' => 'Boolean'
+		);
+	  public function getCMSFields() {
+	    return new FieldList(
+	    	new CheckboxField('IsActive')
+	    );
+	  }
+	}
+
+There's various [form field types](/references/form-field-types), for editing text, dates,
+restricting input to numbers, and much more.
+
+## Scaffolding Form Fields
+
+The ORM already has a lot of information about the data represented by a `DataObject`
+through its `$db` property, so why not use it to create form fields as well?
+If you call the parent implementation, the class will use `[api:FormScaffolder]`
+to provide reasonable defaults based on the property type (e.g. a checkbox field for booleans).
+You can then further customize those fields as required.
+
+	:::php
+	class MyDataObject extends DataObject {
+		// ...
 	  public function getCMSFields() {
 	    $fields = parent::getCMSFields();
-	    $fields->addFieldToTab('Root.Content',new CheckboxField('CustomProperty'));
+	    $fields->fieldByName('IsActive')->setTitle('Is active?');
 	    return $fields;
 	  }
 	}
 
+The `[ModelAdmin](/reference/modeladmin)` class uses this approach to provide
+data management interfaces with very little custom coding.
 
-## Scaffolding Formfields
-
-These calls retrieve a `[api:FieldList]` for the area where you intend to work with the scaffolded form.
-
-### For the CMS
-
-	:::php
-	$fields = singleton('MyDataObject')->getCMSFields();
-
-
-### For the Frontend
-
-Used for simple frontend forms without relation editing or `[api:TabSet] behaviour. Uses `scaffoldFormFields()` by
-default. To customize, either overload this method in your subclass, or extend it by `DataExtension->updateFormFields()`.
-
-	:::php
-	$fields = singleton('MyDataObject')->getFrontEndFields();
-
-
-## Customizing Scaffolded Fields
-
-This section covers how to enhance the default scaffolded form fields from above.  It is particularly useful when used
-in conjunction with the `[api:ModelAdmin]` in the CMS to make relevant data administration interfaces.
-
+You can also alter the fields of built-in and module `DataObject` classes through
+your own `[DataExtension](/reference/dataextension)`, and a call to `[api:DataExtension->updateCMSFields()]`.
 
 ### Searchable Fields
 

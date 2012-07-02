@@ -403,7 +403,7 @@ Example:
 		 * This method returns something cool. {@link MyParentMethod} has other cool stuff in it.
 		 * 
 		 * @param string $colour The colour of cool things that you want
-		 * @return DataObjectSet A list of everything cool
+		 * @return DataList A list of everything cool
 		 */
 		public function myMethod($foo) {}
 		
@@ -420,7 +420,7 @@ Put code into the classes in the following order (where applicable).
  *  Commonly used methods like `getCMSFields()`
  *  Accessor methods (`getMyField()` and `setMyField()`)
  *  Controller action methods
- *  Template data-access methods (methods that will be called by a `$MethodName` or `<% control MethodName %>` construct in a template somewhere)
+ *  Template data-access methods (methods that will be called by a `$MethodName` or `<% loop MethodName %>` construct in a template somewhere)
  *  Object methods
 
 ### SQL Format
@@ -429,7 +429,7 @@ If you have to use raw SQL, make sure your code works across databases make sure
 with the column or table name escaped with double quotes and values with single quotes.
 
 	:::php
-	DataObject::get("MyClass", "\"Title\" = 'my title'");
+	MyClass::get()->where("\"Title\" = 'my title'");
 
 Use [ANSI SQL](http://en.wikipedia.org/wiki/SQL#Standardization) format where possible.
 

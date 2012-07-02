@@ -4,22 +4,17 @@
 
 Page Types are the basic building blocks of any SilverStripe website. A page type can define:
 
-*  The template or templates that are used to display content
-*  What fields are available to edit in the CMS
-*  Behaviour specific to a page type – for example a contact form on the ‘Contact Us’ page that sends an email
-when the form is submitted
+*  Templates being used to display content
+*  Form fields available to edit content in the CMS
+*  Behaviour specific to a page type. For example a contact form on a ‘Contact Us’ page type, sending an email when the form is submitted
 
-All the pages on the base installation are of the page type "Page". See
+All the pages on the base installation are of the page type called "Page". See
 [tutorial:2-extending-a-basic-site](/tutorials/2-extending-a-basic-site) for a good introduction to page-types.
 
-## Page type templates
+## Class and Template Inheritance
 
-Each page type on your website is a sub-class of the SiteTree class. Usually, you’ll define a class called ‘Page’
+Each page type on your website is a sub-class of the `SiteTree` class. Usually, you’ll define a class called `Page`
 and use this template to lay out the basic design elements that don’t change. 
-
-Why do we sub-class Page for everything? The easiest way to explain this is to use the example of a search form. If we
-create a search form on the Page class, then any other sub-class can also use it in their templates. This saves us
-re-defining commonly used forms or controls in every class we use.
 
 ![](_images/pagetype-inheritance.png)
 
@@ -31,55 +26,47 @@ we want to do to the CMS for this page type in here.
 
 ![](_images/controllers-and-dataobjects.png)
 
-Page types are created using PHP classes. If you’re not sure about how these work, [click here for a gentler
-introduction to PHP classes](http://www-128.ibm.com/developerworks/opensource/library/os-phpobj/). 
+We put the `Page` class into a file called `Page.php` inside `mysite/code`. 
+As a convention, we also put the `Page_Controller` class in the same file.
 
-We put the Page class into a file called Page.php inside `mysite/code`. We also put Page_Controller in here. Any other
-classes that are based on Page – for example, the class Page_AnythingElse will also go into Page.php. Likewise, the
-StaffPage_Image class will go into StaffPage.php.
+Why do we sub-class `Page` for everything? The easiest way to explain this is to use the example of a search form. If we
+create a search form on the `Page` class, then any other sub-class can also use it in their templates. This saves us
+re-defining commonly used forms or controls in every class we use.
 
 ## Templates
 
-Take a look at mysite/templates/Page.ss. It contains standard HTML markup, with some differences. We’ll go over
-these later, but for now, you can see that this file only generates some of the content – it sets up the 
-`<html>` tags, deals with the `<head>` section, creates the first-level navigation, and then closes it all off again. 
-See $Layout? That’s what is doing most of the work when you visit a page. Now take a look at `mysite/templates/Layout/Page.ss`. 
-This as you can see has a lot more markup in it – it’s what is included into $Layout when the ‘Page’ page type is rendered. 
-Similarly, `mysite/templates/Layout/HomePage.ss` would be rendered into $Layout when the ‘HomePage’ page type is selected for the
-current page you’re viewing.
+Page type templates work much the same as other [templates](/reference/templates) in SilverStripe
+(see ). There's some specialized controls and placeholders, as well as built-in inheritance.
+This is explained in a more in-depth topic at [Page Type Templates](/topics/page-type-templates).
 
-See the [Page Type Templates](/topics/page-type-templates) page for more information.
-
-## Adding database-fields
+## Adding Database Fields
 
 Adding database fields is a simple process. You define them in an array of the static variable `$db`, this array is
 added on the object class. For example, Page or StaffPage. Every time you run db/build to recompile the manifest, it
 checks if any new entries are added to the `$db` array and adds any fields to the database that are missing.
 
-For example, you may want an additional field on a StaffPage class which extends Page, called Author. Author is a
-standard text field, and can be [casted](/topics/datamodel) as a variable character object in php (VARCHAR in SQL). In the
-following example, our Author field is casted as a variable character object with maximum characters of 50. This is
+For example, you may want an additional field on a `StaffPage` class which extends `Page`, called `Author`. `Author` is a
+standard text field, and can be [casted](/topics/datamodel) as a variable character object in php (`VARCHAR` in SQL). In the
+following example, our `Author` field is casted as a variable character object with maximum characters of 50. This is
 especially useful if you know how long your source data needs to be.
 
 	:::php
 	class StaffPage extends Page {
-	
 	   static $db = array(
 	      'Author' => 'Varchar(50)'
 	   );
-	
 	}
 	class StaffPage_Controller extends Page_Controller {
-	
 	}
 
 
 See [datamodel](/topics/datamodel) for a more detailed explanation on adding database fields, and how the SilverStripe data
 model works.
 
-## Adding formfields and tabs
+## Adding Form Fields and Tabs
 
-See [form](/topics/forms) and [tutorial:2-extending-a-basic-site](/tutorials/2-extending-a-basic-site)
+See [form](/topics/forms) and [tutorial:2-extending-a-basic-site](/tutorials/2-extending-a-basic-site).
+Note: To modify fields in the "Settings" tab, you need to use `updateSettingsFields()` instead.
 
 ## Removing inherited form fields and tabs
 
@@ -134,35 +121,3 @@ Metadata tab.
 
 For more information on forms, see [form](/topics/forms), [tutorial:2-extending-a-basic-site](/tutorials/2-extending-a-basic-site)
 and [tutorial:3-forms](/tutorials/3-forms).
-
-## Creating a new page:
-
-	:::php
-	$page = new Page();
-	$page->ParentID = 18; //if you want it to be a child of a certain other page...
-	$page->Title = "Crazy page"; 
-	$page->MetaTitle = "madness";
-	$page->PageTitle = "Funny"; 
-	$page->writeToStage('Stage'); 
-	$page->publish('Stage', 'Live');
-
-
-## Updating a page:
-
-	:::php
-	$page = DataObject::get_one("Page", "ParentID = 18");
-	$page->Title = "More Serious";
-	$page->writeToStage('Stage');
-	$page->Publish('Stage', 'Live');
-	$page->Status = "Published";
-
-
-## Deleting pages:
-
-	:::php
-	$pageID = $page->ID;
-	$stageRecord = Versioned::get_one_by_stage('SiteTree', 'Stage', "SiteTree.ID = $pageID");
-	if ($stageRecord) $stageRecord->delete();
-	$liveRecord = Versioned::get_one_by_stage('SiteTree', 'Live', "SiteTree_Live.ID = $pageID");
-	if ($liveRecord) $liveRecord->delete();
-	

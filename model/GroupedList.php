@@ -10,7 +10,7 @@ class GroupedList extends SS_ListDecorator {
 
 	/**
 	 * @param  string $index
-	 * @return ArrayList
+	 * @return array
 	 */
 	public function groupBy($index) {
 		$result = array();
@@ -29,8 +29,11 @@ class GroupedList extends SS_ListDecorator {
 	}
 
 	/**
+	 * Similar to {@link groupBy()}, but returns
+	 * the data in a format which is suitable for usage in templates.
+	 * 
 	 * @param  string $index
-	 * @param  string $children
+	 * @param  string $children Name of the control under which children can be iterated on
 	 * @return ArrayList
 	 */
 	public function GroupedBy($index, $children = 'Children') {

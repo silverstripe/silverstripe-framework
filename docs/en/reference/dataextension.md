@@ -45,55 +45,41 @@ For example above we want to override Member with a Custom Member so we would wr
 
 ###  Adding extra database fields
 
-Extra database fields can be added with a extension by defining an **extraStatics()** method.  These will be added to the table of the base object - the extension will actually edit the $db, $has_one, etc static variables on load.
+Extra database fields can be added with a extension in the same manner as if they
+were placed on the `DataObject` class they're applied to.  These will be added to the table of the base object - the extension will actually edit the $db, $has_one, etc static variables on load.
 
 The function should return a map where the keys are the names of the static variables to update:
 
 	:::php
 	class CustomMember extends DataExtension {
-	
-		public function extraStatics() {
-			return array(
-				'db' => array(
-					'AvatarURL' => 'Varchar',
-				),
-				'has_one' => array(
-					'RelatedMember' => 'Member',
-				),
-			);
-		}
+		static $db = array(
+			'AvatarURL' => 'Varchar',
+		);
+		static $has_one = array(
+			'RelatedMember' => 'Member',
+		);
 	}
-
-
-*NOTE*
-If you want to add has_one or db items to a particular class, then that class **must** have that static variable
-explicitly defined, even if it's just a blank array.  For example, the extension method above wouldn't work if you added
-to a class that didn't have static $has_one explicitly declared on the object.  This is because of PHP's crappy support
-for statics.
-
 
 ### Modifying CMS Fields
 
-The member class demonstrates an extension that allows you to update the default CMS fields for an object in a
-extension:
+The member class demonstrates an extension that allows you to update the default CMS fields for an 
+object in an extension:
 
 	:::php
 	public function getCMSFields() {
-	   ...
-	   $this->extend('updateCMSFields', $fields);
-	   return $fields;
+	  // ... 
+	  $this->extend('updateCMSFields', $fields);
+	  return $fields;
 	}
 
 
-The $fields parameter is passed by reference, as it is an object.
+The `$`fields parameter is passed by reference, as it is an object.
 
 	:::php
 	public function updateCMSFields(FieldList $fields) {
-	   $fields->push(new TextField('Position', 'Position Title'));
-	   $fields->push(new UploadField('Image', 'Profile Image'));
+	  $fields->push(new TextField('Position', 'Position Title'));
+	  $fields->push(new UploadField('Image', 'Profile Image'));
 	}
-
-
 
 ### Custom database generation
 

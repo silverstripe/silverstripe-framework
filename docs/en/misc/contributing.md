@@ -75,15 +75,17 @@ This ensures commits are easy to browse, and look nice on github.com
 (more info about [proper git commit messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)).
 
 As we automatically generate [changelogs](http://doc.silverstripe.org/sapphire/en/trunk/changelogs/) from them, we need a way to categorize and filter. 
-Please prefix **all** commit messages with one of the following tags: 
+Please prefix **noteworthy** commit messages with one of the following tags: 
 
-* `API CHANGE`: You've added or modified the functions available to developers writing custom PHP.
-* `ENHANCEMENT`: You've added something to the user-visible aspects of SilverStripe.
-* `BUGFIX`: You've fixed something that was broken.
-* `MINOR` Mark things that are so trivial they're not worth attention by most developers; 
-   specifically, to prevent adding clutter to our automatically generated changelogs. 
-   For example, adding unit tests or documentation would be considered "minor".
-	 Same goes for version control plumbing like merges, file renames or reverts.
+* `NEW`: New feature or major enhancement (both for users and developers)
+* `API`: Addition of a new API, or modification/removal/deprecation of an existing API.
+  Includes any change developers should be aware of when upgrading.
+* `BUG`: Bugfix or minor enhancement on something developers or users are likely to encounter.
+
+All other commits should not be tagged if they are so trivial that most developers
+can ignore them during upgrades or when reviewing changes to the codebase.
+For example, adding unit tests or documentation would not be considered "noteworthy".
+Same goes for version control plumbing like merges, file renames or reverts.
 
 Further guidelines:
 

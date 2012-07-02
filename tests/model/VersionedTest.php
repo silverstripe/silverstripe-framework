@@ -242,6 +242,30 @@ class VersionedTest extends SapphireTest {
 	        'VersionedTest_Subclass_Live',
 	    ), DataObject::get('VersionedTest_Subclass')->dataQuery()->query()->queriedTables());
 	}
+	
+	public function testGetVersionWhenClassnameChanged() {
+		$obj = new VersionedTest_DataObject;
+		$obj->Name = "test";
+		$obj->write();
+		$obj->Name = "test2";
+		$obj->ClassName = "VersionedTest_Subclass";
+		$obj->write();
+		$subclassVersion = $obj->Version;
+		
+		$obj->Name = "test3";
+		$obj->ClassName = "VersionedTest_DataObject";
+		$obj->write();
+		
+		// We should be able to pass the subclass and still get the correct class back
+		$obj2 = Versioned::get_version("VersionedTest_Subclass", $obj->ID, $subclassVersion);
+		$this->assertInstanceOf("VersionedTest_Subclass", $obj2);
+		$this->assertEquals("test2", $obj2->Name);
+
+		$obj3 = Versioned::get_latest_version("VersionedTest_Subclass", $obj->ID);
+		$this->assertEquals("test3", $obj3->Name);
+		$this->assertInstanceOf("VersionedTest_DataObject", $obj3);
+
+	}
 }
 
 class VersionedTest_DataObject extends DataObject implements TestOnly {

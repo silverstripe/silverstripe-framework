@@ -39,14 +39,15 @@ class TaskRunner extends Controller {
 			$renderer->writeInfo("SilverStripe Development Tools: Tasks", Director::absoluteBaseURL());
 			$base = Director::absoluteBaseURL();
 			
+			echo "<div class=\"options\">";
 			echo "<ul>";
 			foreach($tasks as $task) {
-				echo "<li>";
+				echo "<li><p>";
 				echo "<a href=\"{$base}dev/tasks/" . $task['class'] . "\">" . $task['title'] . "</a><br />";
 				echo "<span class=\"description\">" . $task['description'] . "</span>";
-				echo "</li>\n";
+				echo "</p></li>\n";
 			}
-			echo "</ul>";
+			echo "</ul></div>";
 
 			$renderer->writeFooter();
 		// CLI mode

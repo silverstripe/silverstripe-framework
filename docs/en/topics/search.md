@@ -8,7 +8,7 @@ See [Tutorial: Site Search](/tutorials/4-site-search) for details.
 ## Searching for DataObjects
 
 The `[api:SearchContext]` class provides a good base implementation that you can hook into your own controllers. 
-A working implementation of searchable DataObjects can be seen in the `[api:ModelAdmin]` class.
+A working implementation of searchable DataObjects can be seen in the `[ModelAdmin](/reference/modeladmin)` class.
 
 [SearchContext](/reference/searchcontext) goes into more detail about setting up a default search form for `[api:DataObject]`s.
 
@@ -33,7 +33,7 @@ dedicated search service like the [sphinx module](http://silverstripe.org/sphinx
 
 ## Related
 
-*  `[api:ModelAdmin]`
+*  [ModelAdmin](/reference/modeladmin)
 *  [RestfulServer module](https://github.com/silverstripe/silverstripe-restfulserver)
 *  [Tutorial: Site Search](/tutorials/4-site-search)
 *  [SearchContext](/reference/searchcontext)

@@ -65,6 +65,14 @@ class SecurityTokenTest extends SapphireTest {
 		$t->setValue('mytoken');
 		$this->assertTrue($t->check('mytoken'), 'Valid token returns true');
 	}
+
+	function testReset() {
+		$t = new SecurityToken();
+		$initialValue = $t->getValue();
+		$t->reset(); 
+
+		$this->assertNotEquals($t->getValue(), $initialValue);
+	}
 	
 	function testCheckRequest() {
 		$t = new SecurityToken();

@@ -240,6 +240,10 @@ form.small .field, .field.small {
 		width: 50%;
 		max-width: ($grid-x * 12);
 	}
+
+	input.month, input.day, input.year { 
+		width: ($grid-x * 7); 
+	}
 	
 	/* Hides borders in settings/access. Activated from JS */
 	&.remove-splitter {

@@ -19,6 +19,8 @@ class CountryDropdownField extends DropdownField {
 	 */
 	static $default_country = 'NZ';
 
+	protected $extraClasses = array('dropdown');
+
 	/**
 	 * Get the locale of the Member, or if we're not logged in or don't have a locale, use the default one
 	 * @return string

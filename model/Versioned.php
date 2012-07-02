@@ -991,7 +991,7 @@ class Versioned extends DataExtension {
 	 */
 	static function get_latest_version($class, $id) {
 		$baseClass = ClassInfo::baseDataClass($class);
-		$list = DataList::create($class)->where("\"$baseClass\".\"RecordID\" = $id");
+		$list = DataList::create($baseClass)->where("\"$baseClass\".\"RecordID\" = $id");
 		$list->dataQuery()->setQueryParam("Versioned.mode", "latest_versions");
 		return $list->First();
 	}
@@ -1025,12 +1025,15 @@ class Versioned extends DataExtension {
 	}
 	
 	/**
-	 * Return the specific version of the given id
+	 * Return the specific version of the given id.
+	 * Caution: The record is retrieved as a DataObject, but saving back modifications
+	 * via write() will create a new version, rather than modifying the existing one.
+	 * 
 	 * @return DataObject
 	 */
 	static function get_version($class, $id, $version) {
 		$baseClass = ClassInfo::baseDataClass($class);
-		$list = DataList::create($class)->where("\"$baseClass\".\"RecordID\" = $id")->where("\"$baseClass\".\"Version\" = " . (int)$version);
+		$list = DataList::create($baseClass)->where("\"$baseClass\".\"RecordID\" = $id")->where("\"$baseClass\".\"Version\" = " . (int)$version);
 		$list->dataQuery()->setQueryParam('Versioned.mode', 'all_versions');
 		return $list->First();
 	}

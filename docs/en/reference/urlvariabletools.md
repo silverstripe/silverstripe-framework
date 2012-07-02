@@ -49,20 +49,10 @@ Append the option and corresponding value to your URL in your browser's address 
 
  | URL Variable     | | Values | | Description                                                                                      | 
  | ------------     | | ------ | | -----------                                                                                      | 
+ | debug_memory     | | 1      | | Output the number of bytes of memory used for this 
  | debug_memory     | | 1      | | Output the number of bytes of memory used for this request                                       | 
  | debug_profile    | | 1      | | Enable the [profiler](/topics/debugging) for the duration of the request                         | 
  | profile_trace    | | 1      | | Includes full stack traces, must be used with **debug_profile**                                  | 
- | debug_behaviour  | | 1      | | Get profiling of [Behaviour.js](http://bennolan.com/behaviour) performance (Firebug recommended) | 
- | debug_javascript | | 1      | | Force debug-output on live-sites                                                                 | 
-
-## Misc
-
- | URL Variable | | Values     | | Description                                                                                                | 
- | ------------ | | ------     | | -----------                                                                                                | 
- | forceFormat  | | xhtml,html | | Force the content negotiator to deliver HTML or XHTML is allowed                                           | 
- | showspam     | | 1          | | Show comments marked as spam when viewing Comments on a Page (Saving spam to the database must be enabled) | 
- | ajax         | | 1          | | Force request to process as AJAX request, useful for debugging from a browser                              | 
- | force_ajax   | | 1          | | Similar to **ajax**                                                                                        | 
 
 ## Security Redirects
 

@@ -1,436 +1,382 @@
-zh-TW:
+zh_TW:
+  AssetAdmin:
+    NEWFOLDER: 新資料夾
+  AssetTableField:
+    CREATED: 第一次上傳
+    DIM: 尺寸
+    FILENAME: 檔案名稱
+    FOLDER: Folder
+    LASTEDIT: 最後一次更新
+    OWNER: '擁有者'
+    SIZE: 大小
+    TITLE: 標題
+    TYPE: 類型
+    URL: URL
+  AssetUploadField:
+    ChooseFiles: 'Choose files'
+    DRAGFILESHERE: 'Drag files here'
+    DROPAREA: 'Drop Area'
+    EDITALL: 'Edit all'
+    EDITANDORGANIZE: 'Edit & organize'
+    FILES: Files
+    TOTAL: Total
+    TOUPLOAD: 'Choose file(s) to upload...'
+    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    UPLOADOR: OR
+  BBCodeParser:
+    ALIGNEMENT: Alignment
+    ALIGNEMENTEXAMPLE: 'right aligned'
+    BOLD: 'Bold Text'
+    BOLDEXAMPLE: Bold
+    CODE: 'Code Block'
+    CODEDESCRIPTION: 'Unformatted code block'
+    CODEEXAMPLE: 'Code block'
+    COLORED: 'Colored text'
+    COLOREDEXAMPLE: 'blue text'
+    EMAILLINK: 'Email link'
+    EMAILLINKDESCRIPTION: 'Create link to an email address'
+    IMAGE: Image
+    IMAGEDESCRIPTION: 'Show an image in your post'
+    ITALIC: 'Italic Text'
+    ITALICEXAMPLE: Italics
+    LINK: 'Website link'
+    LINKDESCRIPTION: 'Link to another website or URL'
+    STRUCK: 'Struck-out Text'
+    STRUCKEXAMPLE: Struck-out
+    UNDERLINE: 'Underlined Text'
+    UNDERLINEEXAMPLE: Underlined
+    UNORDERED: 'Unordered list'
+    UNORDEREDDESCRIPTION: 'Unordered list'
+    UNORDEREDEXAMPLE1: 'unordered item 1'
+  BasicAuth:
+    ENTERINFO: '請輸入帳號密碼。'
+    ERRORNOTADMIN: '那個使用者不是管理員。'
+    ERRORNOTREC: 那組帳號密碼不對。
+  Boolean:
+    ANY: Any
+    0: 'False'
+    LOGOUT: 'Log out'
+    1: 'True'
+  CMSMain:
+    ACCESS: 'Access to ''{title}'' section'
+    ACCESSALLINTERFACES: 'Access to all CMS sections'
+    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
+    SAVE: 儲存
+  CMSProfileController:
+    MENUTITLE: CMSProfileController
+  CheckboxField:
+    - 'False'
+    - 'True'
+  ComplexTableField:
+    CLOSEPOPUP: 'Close Popup'
+    SUCCESSADD2: 'Added {name}'
+    SUCCESSEDIT: 'Saved %s %s %s'
+  ConfirmedPasswordField:
+    ATLEAST: 'Passwords must be at least {min} characters long.'
+    BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    SHOWONCLICKTITLE: 'Change Password'
+  CreditCardField:
+    FIRST: first
+    FOURTH: fourth
+    SECOND: second
+    THIRD: third
+  CurrencyField:
+    CURRENCYSYMBOL: $
+  DataObject:
+    PLURALNAME: 'Data Objects'
+    SINGULARNAME: 'Data Object'
+  Date:
+    DAY: 日
+    DAYS: 日
+    HOUR: 小時
+    HOURS: 小時
+    MIN: 分鐘
+    MINS: 分鐘
+    MONTH: 月
+    MONTHS: 月
+    SEC: 秒
+    SECS: 秒
+    TIMEDIFFAGO: '{difference} ago'
+    TIMEDIFFIN: 'in {difference}'
+    YEAR: 年
+    YEARS: 年
   DateField:
-    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
     NOTSET: 'not set'
-    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
     TODAY: today
     VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
-  Group:
-    Sort: 'Sort Order'
-    many_many_Members: Members
-    Code: 'Group Code'
-    Locked: 'Locked?'
-    Description: Description
-    Parent: 'Parent Group'
-    NoRoles: 'No roles found'
-    DefaultGroupTitleAdministrators: Administrators
-    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
-    DefaultGroupTitleContentAuthors: 'Content Authors'
-    AddRole: 'Add a role for this group'
-    has_many_Permissions: Permissions
-    RolesAddEditLink: 'Manage roles'
-    TITLE: 圖片上載iFrame
-    CHANGEPASSWORDTEXT1: 您為這個帳戶改密碼：
-    CHANGEPASSWORDTEXT2: '您可以用下列的帳號密碼登入：'
-    EMAIL: Email
-    PASSWORD: Password
-    HELLO: 您好
-  SecurityAdmin:
-    IMPORTUSERS: 'Import users'
-    ROLES: Roles
-    MENUTITLE: Security
-    EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
-    MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
-    TABROLES: Roles
-    APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
-    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
-    NEWGROUP: 新增群組
-    Users: Users
-    EDITPERMISSIONS: 'Manage permissions for groups'
-    IMPORTGROUPS: 'Import groups'
-    GROUPNAME: 'Group name'
-    APPLY_ROLES: 'Apply roles to groups'
-    MEMBERS: Members
-    ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
-    PERMISSIONS: Permissions
-  SimpleImageField:
-    NOUPLOAD: 沒有上傳圖片
-  TableListField:
-    PRINT: Print
-    Print: Print
-    CSVEXPORT: 'Export to CSV'
-    SELECT: 'Select:'
-  Member:
-    INTERFACELANG: 介面語言
-    PLURALNAME: Members
-    db_LockedOutUntil: 'Locked out until'
-    BUTTONLOSTPASSWORD: 忘記密碼
-    db_Locale: 'Interface Locale'
-    ERRORNEWPASSWORD: '新密碼不相配，請再試一次。'
-    VALIDATIONMEMBEREXISTS: 已經有人使用此電子郵件地址
-    CONFIRMPASSWORD: 確認密碼
-    EMAIL: 電子郵件
-    SUBJECTPASSWORDRESET: 密碼重設
-    belongs_many_many_Groups: Groups
-    SURNAME: 姓
-    db_NumVisit: 'Number of Visits'
-    ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
-    DefaultDateTime: default
-    WELCOMEBACK: 'Welcome Back, {firstname}'
-    CONFIRMNEWPASSWORD: 確認新密碼
-    DefaultAdminFirstname: 'Default Admin'
-    ENTEREMAIL: 'Please enter an email address to get a password reset link.'
-    db_LastVisited: 'Last Visited Date'
-    EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
-    BUTTONLOGINOTHER: '用別的帳戶登入'
-    PROFILESAVESUCCESS: 'Successfully saved.'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    REMEMBERME: 下次記住我
-    BUTTONCHANGEPASSWORD: 更改密碼
-    SINGULARNAME: Member
-    LOGGEDINAS: 'You''re logged in as {name}.'
-    PASSWORD: 密碼
-    db_PasswordExpiry: 'Password Expiry Date'
-    YOUROLDPASSWORD: 舊密碼
-    ERRORPASSWORDNOTMATCH: 舊密碼不對，請再試一次。
-    FIRSTNAME: 名
-    BUTTONLOGIN: '登入'
-    db_Password: Password
-    ERRORWRONGCRED: 密碼或電子郵件地址錯誤。請再是一次。
-    SUBJECTPASSWORDCHANGED: 密碼更改成功。
-    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    ADDGROUP: 'Add group'
-    NEWPASSWORD: 新密碼
-  UploadField:
-    ATTACHFILE: 'Attach a file'
-    Dimensions: Dimensions
-    AttachFile: 'Attach a file'
-    FROMFILES: 'From files'
-    DROPFILES: 'drop files'
-    FIELDNOTSET: 'File information not found'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    ATTACHFILES: 'Attach files'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
-    DROPFILE: 'drop a file'
-    DOEDIT: Save
-    REMOVE: Remove
-    EDITINFO: 'Edit this file'
-    REMOVEERROR: 'Error removing file'
-    STARTALL: 'Start all'
-    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
-    FROMCOMPUTER: 'From your computer'
-    Saved: Saved
-    DELETEINFO: 'Permanently delete this file from the file store'
-  CreditCardField:
-    SECOND: second
-    FOURTH: fourth
-    THIRD: third
-    FIRST: first
-  PhoneNumberField:
-    VALIDATION: '請輸入有效的電話號碼'
-    Back: Back
-  TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
-  AssetUploadField:
-    FILES: Files
-    EDITALL: 'Edit all'
-    ChooseFiles: 'Choose files'
-    EDITANDORGANIZE: 'Edit & organize'
-    UPLOADOR: OR
-    DRAGFILESHERE: 'Drag files here'
-    TOUPLOAD: 'Choose file(s) to upload...'
-    TOTAL: Total
-    DROPAREA: 'Drop Area'
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
-  NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
-  Enum:
-    ANY: Any
-    LOADING: Loading...
-  GridField:
-    NewRecord: 'New %s'
-    RelationSearch: 'Relation search'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
-    PRINTEDBY: 'Printed by'
-    LEVELUP: 'Level up'
-    Filter: Filter
-    FilterBy: 'Filter by '
-    Add: 'Add {name}'
-    NoItemsFound: 'No items found'
-    ResetFilter: Reset
-    PRINTEDAT: 'Printed at'
-    LinkExisting: 'Link Existing'
-    PlaceHolder: 'Find {type}'
-    Find: Find
+    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
+    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  Director:
+    ADD: Add
+    INVALID_REQUEST: 'Invalid request'
+  DropdownField:
+    CHOOSE: (選擇)
+  EmailField:
+    VALIDATION: 'Please enter an email address'
   Email_BounceRecord:
     PLURALNAME: 'Email Bounce Records'
     SINGULARNAME: 'Email Bounce Record'
-  Director:
-    INVALID_REQUEST: 'Invalid request'
-    ADD: Add
-  BBCodeParser:
-    EMAILLINK: 'Email link'
-    CODE: 'Code Block'
-    COLORED: 'Colored text'
-    UNDERLINEEXAMPLE: Underlined
-    BOLDEXAMPLE: Bold
-    IMAGEDESCRIPTION: 'Show an image in your post'
-    LINKDESCRIPTION: 'Link to another website or URL'
-    STRUCKEXAMPLE: Struck-out
-    LINK: 'Website link'
-    ALIGNEMENT: Alignment
-    BOLD: 'Bold Text'
-    UNORDEREDEXAMPLE1: 'unordered item 1'
-    UNORDEREDDESCRIPTION: 'Unordered list'
-    COLOREDEXAMPLE: 'blue text'
-    ALIGNEMENTEXAMPLE: 'right aligned'
-    IMAGE: Image
-    ITALICEXAMPLE: Italics
-    CODEDESCRIPTION: 'Unformatted code block'
-    UNORDERED: 'Unordered list'
-    CODEEXAMPLE: 'Code block'
-    EMAILLINKDESCRIPTION: 'Create link to an email address'
-    ITALIC: 'Italic Text'
-    STRUCK: 'Struck-out Text'
-    UNDERLINE: 'Underlined Text'
-  Date:
-    TIMEDIFFAGO: '{difference} ago'
-    MINS: 分鐘
-    HOUR: 小時
-    MIN: 分鐘
-    MONTHS: 月
-    DAYS: 日
-    MONTH: 月
-    HOURS: 小時
-    SECS: 秒
-    SEC: 秒
-    YEAR: 年
-    TIMEDIFFIN: 'in {difference}'
-    YEARS: 年
-    DAY: 日
-  ToggleField:
-    LESS: 少
-    MORE: 多
-  PermissionCheckboxSetField:
-    FromGroup: 'inherited from group "{title}"'
-    AssignedTo: 'assigned to "{title}"'
-    FromRole: 'inherited from role "{title}"'
-    FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
-  Permissions:
-    PERMISSIONS_CATEGORY: 'Roles and access permissions'
-  GridFieldDetailForm:
-    DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
-    Create: Create
-    Save: Save
-    Saved: 'Saved %s %s'
-    Delete: Delete
-    TEXT2: 'password reset link'
-    TEXT3: for
-    TEXT1: 'Here is your'
-    HELLO: 您好
-  MemberTableField: null
+  Enum:
+    ANY: Any
+    LOADING: Loading...
+  File:
+    Content: Content
+    Filename: Filename
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    NOFILESIZE: 'Filesize is zero bytes.'
+    NOVALIDUPLOAD: 'File is not a valid upload'
+    Name: Name
+    PLURALNAME: Files
+    SINGULARNAME: File
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGESHORT: 'Filesize exceeds {size}'
+    Title: Title
+  FileIFrameField:
+    ATTACH: 'Attach {type}'
+    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    DELETE: 'Delete {type}'
+    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
+    FILE: File
+    FROMCOMPUTER: 'From your Computer'
+    FROMFILESTORE: 'From the File Store'
+    NOSOURCE: 'Please select a source file to attach'
+    REPLACE: 'Replace {type}'
   Filesystem:
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
-    SEARCHLISTINGS: Search
     IMPORT_TAB_HEADER: Import
-  SilverStripeNavigator:
-    Edit: Edit
-    VIEWPREVIOUS: 'View previous'
-    VIEWNEXT: 'View next'
-    VIEWFIRST: 'View first'
-    VIEWLAST: 'View last'
-    FILTER: Filter
-    IMPORT: Import
+    SEARCHLISTINGS: Search
+    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Form:
+    FIELDISREQUIRED: '必須要填 %s'
+    TITLE: 'Image Uploading Iframe'
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONNOTUNIQUE: '您輸入的數值並不是獨特的。'
+    VALIDATIONPASSWORDSDONTMATCH: '密碼不相配'
+    VALIDATIONPASSWORDSNOTEMPTY: 密碼不能是空的
+    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATOR: Validator
+    VALIDCURRENCY: 'Please enter a valid currency'
+  FormField:
+    NONE: none
+  GridAction:
+    DELETE_DESCRIPTION: Delete
+    Delete: Delete
+    UnlinkRelation: Unlink
+  GridField:
+    Add: 'Add {name}'
+    Filter: Filter
+    FilterBy: 'Filter by '
+    Find: Find
+    LEVELUP: 'Level up'
+    LinkExisting: 'Link Existing'
+    NewRecord: 'New %s'
+    NoItemsFound: 'No items found'
+    PRINTEDAT: 'Printed at'
+    PRINTEDBY: 'Printed by'
+    PlaceHolder: 'Find {type}'
+    PlaceHolderWithLabels: 'Find {type} by {name}'
+    RelationSearch: 'Relation search'
+    ResetFilter: Reset
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No delete permissions'
     NEXT: 下一個
     PREVIOUS: 上一個
-  BasicAuth:
-    ERRORNOTREC: 那組帳號密碼不對。
-    ENTERINFO: '請輸入帳號密碼。'
-    ERRORNOTADMIN: '那個使用者不是管理員。'
-  ComplexTableField:
-    CLOSEPOPUP: 'Close Popup'
-    SUCCESSEDIT: 'Saved %s %s %s'
-    SUCCESSADD2: 'Added {name}'
-  LoginAttempt:
-    Status: Status
-    IP: 'IP Address'
-    Email: 'Email Address'
-  ImageField:
-    IMAGE: Image
-  HtmlEditorField:
-    LINKEXTERNAL: 別的網站
-    BUTTONINSERT: Insert
-    CSSCLASSRIGHT: '靠右被字包圍。'
-    BUTTONINSERTLINK: '插入連結'
-    BUTTONREMOVELINK: 移除連結
-    LINK: '插入或編輯選取的連結'
-    FILE: 檔案
-    EMAIL: 電子郵件地址
-    IMAGEWIDTHPX: 寬
-    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
-    LINKFILE: 下載檔案
-    LINKINTERNAL: 此網站
-    FOLDER: 資料夾
-    FindInFolder: 'Find in Folder'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
-    CSSCLASSCENTER: 獨立置中
-    FROMCOMPUTER: 'From your computer'
-    FROMCMS: 'From the CMS'
-    CSSCLASS: 對齊/樣式
-    UpdateMEDIA: 'Update Media'
-    CSSCLASSLEFTALONE: 'On the left, on its own.'
-    LINKEMAIL: 電子郵件地址
-    ANCHORVALUE: Anchor
-    URL: 網址
-    INSERTMEDIA: 'Insert Media'
-    IMAGEDIMENSIONS: 大小
-    LINKANCHOR: 'Anchor on this page'
-    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
-    IMAGETITLETEXT: 'Title text (tooltip)'
-    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
-    FROMWEB: 'From the web'
-    CSSCLASSLEFT: '靠左被字包圍。'
-    IMAGEALT: 'Alternative text (alt)'
-    LINKTO: 連結至
-    ADDURL: 'Add URL'
-    IMAGEHEIGHTPX: 高
-    LINKOPENNEWWIN: 在新視窗打開連結
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    CAPTIONTEXT: 'Caption text'
-    LINKDESCR: 連結敘述
-    BUTTONUpdate: Update
-    PAGE: '網頁'
-    DETAILS: Details
-  MemberImportForm:
-    ResultCreated: 'Created {count} members'
-    ResultUpdated: 'Updated {count} members'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
-    ResultDeleted: 'Deleted %d members'
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    ResultNone: 'No changes'
-  LeftAndMain:
-    PERMAGAIN: '您已被登出，請在下面重新登入。'
-    HELP: 說明
-    DropdownBatchActionsDefault: Actions
-    PLEASESAVE: '請儲存：這個網頁沒有被更新因為尚未被儲存。'
-    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
-    DELETED: Deleted.
-    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    PreviewButton: Preview
-    SAVEDUP: Saved.
-    VersionUnknown: unknown
-    PAGETYPE: '網頁類型：'
-    PERMDEFAULT: '請選擇一個認證方法並登入。'
-    PERMALREADY: '抱歉，您沒有權力使用這個部分。您可以用別的帳號登入。'
-    ADD: 'Add a new row'
-  NullableField:
-    IsNullLabel: 'Is Null'
-  MoneyField:
-    FIELDLABELCURRENCY: Currency
-    FIELDLABELAMOUNT: Amount
-  EmailField:
-    VALIDATION: 'Please enter an email address'
-  FormField:
-    NONE: none
-  FileIFrameField:
-    NOSOURCE: 'Please select a source file to attach'
-    REPLACE: 'Replace {type}'
-    FROMFILESTORE: 'From the File Store'
-    ATTACH: 'Attach {type}'
-    FILE: File
-    FROMCOMPUTER: 'From your Computer'
-    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
-    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
-    DELETE: 'Delete {type}'
-  SiteTree:
-    TABMAIN: 主要
-  Versioned:
-    has_many_Versions: Versions
-  CMSMain:
-    ACCESS: 'Access to ''{title}'' section'
-    ACCESSALLINTERFACESHELP: 'Overrules more specific access settings.'
-    SAVE: 儲存
-    ACCESSALLINTERFACES: 'Access to all CMS sections'
+  GridFieldDetailForm:
+    Create: Create
+    Delete: Delete
+    DeletePermissionsFailure: 'No delete permissions'
+    Deleted: 'Deleted %s %s'
+    HELLO: 您好
+    Save: Save
+    Saved: 'Saved %s %s'
+    TEXT1: 'Here is your'
+    TEXT2: 'password reset link'
+    TEXT3: for
+  Group:
+    AddRole: 'Add a role for this group'
+    CHANGEPASSWORDTEXT1: 您為這個帳戶改密碼：
+    CHANGEPASSWORDTEXT2: '您可以用下列的帳號密碼登入：'
+    Code: 'Group Code'
+    DefaultGroupTitleAdministrators: Administrators
+    DefaultGroupTitleContentAuthors: 'Content Authors'
+    Description: Description
+    EMAIL: Email
+    GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
+    HELLO: 您好
+    Locked: 'Locked?'
+    NoRoles: 'No roles found'
+    PASSWORD: Password
+    Parent: 'Parent Group'
+    RolesAddEditLink: 'Manage roles'
+    Sort: 'Sort Order'
+    TITLE: 圖片上載iFrame
+    has_many_Permissions: Permissions
+    many_many_Members: Members
   GroupImportForm:
-    ResultCreated: 'Created {count} groups'
-    ResultUpdated: 'Updated %d groups'
     Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
     Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    ResultCreated: 'Created {count} groups'
     ResultDeleted: 'Deleted %d groups'
-  DataObject:
-    PLURALNAME: 'Data Objects'
-    SINGULARNAME: 'Data Object'
-  ConfirmedPasswordField:
-    BETWEEN: 'Passwords must be {min} to {max} characters long.'
-    ATLEAST: 'Passwords must be at least {min} characters long.'
-    SHOWONCLICKTITLE: 'Change Password'
-    MAXIMUM: 'Passwords must be at most {max} characters long.'
-  AssetAdmin:
-    NEWFOLDER: 新資料夾
-  DropdownField:
-    CHOOSE: (選擇)
-  CheckboxField:
-    - 'False'
-    - 'True'
-  Form:
-    FIELDISREQUIRED: '必須要填 %s'
-    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
-    VALIDATIONPASSWORDSNOTEMPTY: 密碼不能是空的
-    VALIDATOR: Validator
-    VALIDCURRENCY: 'Please enter a valid currency'
-    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
-    VALIDATIONNOTUNIQUE: '您輸入的數值並不是獨特的。'
-    VALIDATIONPASSWORDSDONTMATCH: '密碼不相配'
-    TITLE: 'Image Uploading Iframe'
-  TableField:
-    ISREQUIRED: 'In %s ''%s'' is required'
-    SORTASC: 'Sort in ascending order'
-    ADDITEM: 新增
-    SORTDESC: 'Sort in descending order'
-  CurrencyField:
-    CURRENCYSYMBOL: $
-  MemberAuthenticator:
-    TITLE: '電子郵件 &amp; 密碼'
-  SecurityAdmin_MemberImportForm:
-    BtnImport: 'Import from CSV'
-    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
-  Security:
-    BUTTONSEND: 寄給我密碼重設網址。
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
-    ALREADYLOGGEDIN: '你不能瀏覽此頁。請用別的帳戶登入。'
-    LOGGEDOUT: '你已登出。您在下面再登入一次。'
-    CHANGEPASSWORDBELOW: 請在下面更改密碼。
-    ERRORPASSWORDPERMISSION: '你必須先登入才能改密碼！'
-    ENTERNEWPASSWORD: '請輸入新的密碼。'
-    NOTEPAGESECURED: '那的網頁是被保護的。請先登入。'
-    CHANGEPASSWORDHEADER: 更改密碼
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
-    LOGIN: 'Log in'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    NOTERESETPASSWORD: '請輸入您的電子郵件。我們將寄給你重設密媽的網址。'
-  GridAction:
-    DELETE_DESCRIPTION: Delete
-    UnlinkRelation: Unlink
-    Delete: Delete
-  CMSProfileController:
-    MENUTITLE: CMSProfileController
-  MemberDatetimeOptionsetField:
-    DATEFORMATBAD: 'Date format is invalid'
-    TOGGLEHELP: 'Toggle formatting help'
-    DAYNOLEADING: 'Day of month without leading zero'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITYEAR: 'Two-digit year'
-    Custom: Custom
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    Preview: Preview
-    MONTHNOLEADING: 'Month digit without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    HOURNOLEADING: 'Hour without leading zero'
-    FOURDIGITYEAR: 'Four-digit year'
-    MINUTENOLEADING: 'Minute without leading zero'
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    ResultUpdated: 'Updated %d groups'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+  HtmlEditorField:
+    ADDURL: 'Add URL'
+    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ANCHORVALUE: Anchor
+    BUTTONINSERT: Insert
+    BUTTONINSERTLINK: '插入連結'
+    BUTTONREMOVELINK: 移除連結
+    BUTTONUpdate: Update
+    CAPTIONTEXT: 'Caption text'
+    CSSCLASS: 對齊/樣式
+    CSSCLASSCENTER: 獨立置中
+    CSSCLASSLEFT: '靠左被字包圍。'
+    CSSCLASSLEFTALONE: 'On the left, on its own.'
+    CSSCLASSRIGHT: '靠右被字包圍。'
+    DETAILS: Details
+    EMAIL: 電子郵件地址
+    FILE: 檔案
+    FOLDER: 資料夾
+    FROMCMS: 'From the CMS'
+    FROMCOMPUTER: 'From your computer'
+    FROMWEB: 'From the web'
+    FindInFolder: 'Find in Folder'
+    IMAGEALT: 'Alternative text (alt)'
+    IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
+    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEDIMENSIONS: 大小
+    IMAGEHEIGHTPX: 高
+    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
+    IMAGETITLETEXT: 'Title text (tooltip)'
+    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGEWIDTHPX: 寬
+    INSERTMEDIA: 'Insert Media'
+    LINK: '插入或編輯選取的連結'
+    LINKANCHOR: 'Anchor on this page'
+    LINKDESCR: 連結敘述
+    LINKEMAIL: 電子郵件地址
+    LINKEXTERNAL: 別的網站
+    LINKFILE: 下載檔案
+    LINKINTERNAL: 此網站
+    LINKOPENNEWWIN: 在新視窗打開連結
+    LINKTO: 連結至
+    PAGE: '網頁'
+    URL: 網址
+    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    UpdateMEDIA: 'Update Media'
+  ImageField:
+    IMAGE: Image
+  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  LeftAndMain:
+    ADD: 'Add a new row'
+    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    DELETED: Deleted.
+    DropdownBatchActionsDefault: Actions
+    HELP: 說明
+    PAGETYPE: '網頁類型：'
+    PERMAGAIN: '您已被登出，請在下面重新登入。'
+    PERMALREADY: '抱歉，您沒有權力使用這個部分。您可以用別的帳號登入。'
+    PERMDEFAULT: '請選擇一個認證方法並登入。'
+    PLEASESAVE: '請儲存：這個網頁沒有被更新因為尚未被儲存。'
+    PreviewButton: Preview
+    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    SAVEDUP: Saved.
+    VersionUnknown: unknown
+  LoginAttempt:
+    Email: 'Email Address'
+    IP: 'IP Address'
+    Status: Status
+  Member:
+    ADDGROUP: 'Add group'
+    BUTTONCHANGEPASSWORD: 更改密碼
+    BUTTONLOGIN: '登入'
+    BUTTONLOGINOTHER: '用別的帳戶登入'
+    BUTTONLOSTPASSWORD: 忘記密碼
+    CONFIRMNEWPASSWORD: 確認新密碼
+    CONFIRMPASSWORD: 確認密碼
+    DefaultAdminFirstname: 'Default Admin'
+    DefaultDateTime: default
+    EMAIL: 電子郵件
+    EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
+    ENTEREMAIL: 'Please enter an email address to get a password reset link.'
+    ERRORLOCKEDOUT: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in 20 minutes.'
+    ERRORNEWPASSWORD: '新密碼不相配，請再試一次。'
+    ERRORPASSWORDNOTMATCH: 舊密碼不對，請再試一次。
+    ERRORWRONGCRED: 密碼或電子郵件地址錯誤。請再是一次。
+    FIRSTNAME: 名
+    INTERFACELANG: 介面語言
+    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
+    LOGGEDINAS: 'You''re logged in as {name}.'
+    NEWPASSWORD: 新密碼
+    PASSWORD: 密碼
+    PLURALNAME: Members
+    PROFILESAVESUCCESS: 'Successfully saved.'
+    REMEMBERME: 下次記住我
+    SINGULARNAME: Member
+    SUBJECTPASSWORDCHANGED: 密碼更改成功。
+    SUBJECTPASSWORDRESET: 密碼重設
+    SURNAME: 姓
+    VALIDATIONMEMBEREXISTS: 已經有人使用此電子郵件地址
+    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
+    WELCOMEBACK: 'Welcome Back, {firstname}'
+    YOUROLDPASSWORD: 舊密碼
+    belongs_many_many_Groups: Groups
+    db_LastVisited: 'Last Visited Date'
+    db_Locale: 'Interface Locale'
+    db_LockedOutUntil: 'Locked out until'
+    db_NumVisit: 'Number of Visits'
+    db_Password: Password
+    db_PasswordExpiry: 'Password Expiry Date'
+  MemberAuthenticator:
+    TITLE: '電子郵件 &amp; 密碼'
+  MemberDatetimeOptionsetField:
+    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
+    Custom: Custom
+    DATEFORMATBAD: 'Date format is invalid'
+    DAYNOLEADING: 'Day of month without leading zero'
+    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
+    FOURDIGITYEAR: 'Four-digit year'
+    FULLNAMEMONTH: 'Full name of month (e.g. June)'
+    HOURNOLEADING: 'Hour without leading zero'
+    MINUTENOLEADING: 'Minute without leading zero'
+    MONTHNOLEADING: 'Month digit without leading zero'
+    Preview: Preview
+    SHORTMONTH: 'Short name of month (e.g. Jun)'
+    TOGGLEHELP: 'Toggle formatting help'
+    TWODIGITDAY: 'Two-digit day of month'
+    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
+    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
+    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
+    TWODIGITSECOND: 'Two digits of second (00 through 59)'
+    TWODIGITYEAR: 'Two-digit year'
+  MemberImportForm:
+    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
+    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    ResultCreated: 'Created {count} members'
+    ResultDeleted: 'Deleted %d members'
+    ResultNone: 'No changes'
+    ResultUpdated: 'Updated {count} members'
+  MemberTableField: null
+  ModelAdmin:
+    DELETE: Delete
+    DELETEDRECORDS: 'Deleted {count} records.'
+    IMPORT: 'Import from CSV'
+    IMPORTEDRECORDS: 'Imported {count} records.'
+    NOCSVFILE: 'Please browse for a CSV file to import'
+    NOIMPORT: 'Nothing to import'
+    RESET: Reset
+    Title: 'Data Models'
+    UPDATEDRECORDS: 'Updated {count} records.'
+  MoneyField:
+    FIELDLABELAMOUNT: Amount
+    FIELDLABELCURRENCY: Currency
+  NullableField:
+    IsNullLabel: 'Is Null'
+  NumericField:
+    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
   Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Access'
@@ -438,43 +384,97 @@ zh-TW:
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
     IMPORTSPECFIELDS: 'Database columns'
     IMPORTSPECRELATIONS: Relations
-  Boolean:
-    0: 'False'
-    1: 'True'
-    ANY: Any
-    LOGOUT: 'Log out'
-  File:
-    TOOLARGESHORT: 'Filesize exceeds {size}'
-    Name: Name
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
-    NOVALIDUPLOAD: 'File is not a valid upload'
-    Filename: Filename
-    Content: Content
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    SINGULARNAME: File
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    Title: Title
-    NOFILESIZE: 'Filesize is zero bytes.'
-    PLURALNAME: Files
-  AssetTableField:
-    DIM: 尺寸
-    LASTEDIT: 最後一次更新
-    CREATED: 第一次上傳
-    URL: URL
-    TITLE: 標題
-    FILENAME: 檔案名稱
-    OWNER: '擁有者'
-    FOLDER: Folder
-    TYPE: 類型
-    SIZE: 大小
-  ModelAdmin:
-    RESET: Reset
-    NOIMPORT: 'Nothing to import'
-    Title: 'Data Models'
-    IMPORTEDRECORDS: 'Imported {count} records.'
-    DELETEDRECORDS: 'Deleted {count} records.'
-    IMPORT: 'Import from CSV'
-    UPDATEDRECORDS: 'Updated {count} records.'
-    NOCSVFILE: 'Please browse for a CSV file to import'
-    DELETE: Delete
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Go back"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  PermissionCheckboxSetField:
+    AssignedTo: 'assigned to "{title}"'
+    FromGroup: 'inherited from group "{title}"'
+    FromRole: 'inherited from role "{title}"'
+    FromRoleOnGroup: 'inherited from role "%s" on group "%s"'
+  Permissions:
+    PERMISSIONS_CATEGORY: 'Roles and access permissions'
+  PhoneNumberField:
+    Back: Back
+    VALIDATION: '請輸入有效的電話號碼'
+  Security:
+    ALREADYLOGGEDIN: '你不能瀏覽此頁。請用別的帳戶登入。'
+    BUTTONSEND: 寄給我密碼重設網址。
+    CHANGEPASSWORDBELOW: 請在下面更改密碼。
+    CHANGEPASSWORDHEADER: 更改密碼
+    ENTERNEWPASSWORD: '請輸入新的密碼。'
+    ERRORPASSWORDPERMISSION: '你必須先登入才能改密碼！'
+    LOGGEDOUT: '你已登出。您在下面再登入一次。'
+    LOGIN: 'Log in'
+    NOTEPAGESECURED: '那的網頁是被保護的。請先登入。'
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETPASSWORD: '請輸入您的電子郵件。我們將寄給你重設密媽的網址。'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+  SecurityAdmin:
+    ACCESS_HELP: 'Allow viewing, adding and editing users, as well as assigning permissions and roles to them.'
+    APPLY_ROLES: 'Apply roles to groups'
+    APPLY_ROLES_HELP: 'Ability to edit the roles assigned to a group. Requires the "Access to ''Users'' section" permission.'
+    EDITPERMISSIONS: 'Manage permissions for groups'
+    EDITPERMISSIONS_HELP: 'Ability to edit Permissions and IP Addresses for a group. Requires the "Access to ''Security'' section" permission.'
+    GROUPNAME: 'Group name'
+    IMPORTGROUPS: 'Import groups'
+    IMPORTUSERS: 'Import users'
+    MEMBERS: Members
+    MENUTITLE: Security
+    MemberListCaution: 'Caution: Removing members from this list will remove them from all groups and the database'
+    NEWGROUP: 新增群組
+    PERMISSIONS: Permissions
+    ROLES: Roles
+    ROLESDESCRIPTION: 'Roles are predefined sets of permissions, and can be assigned to groups.<br />They are inherited from parent groups if required.'
+    TABROLES: Roles
+    Users: Users
+  SecurityAdmin_MemberImportForm:
+    BtnImport: 'Import from CSV'
+    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
+  SilverStripeNavigator:
+    Edit: Edit
+    FILTER: Filter
+    IMPORT: Import
+    VIEWFIRST: 'View first'
+    VIEWLAST: 'View last'
+    VIEWNEXT: 'View next'
+    VIEWPREVIOUS: 'View previous'
+  SimpleImageField:
+    NOUPLOAD: 沒有上傳圖片
+  SiteTree:
+    TABMAIN: 主要
+  TableField:
+    ADDITEM: 新增
+    ISREQUIRED: 'In %s ''%s'' is required'
+    SORTASC: 'Sort in ascending order'
+    SORTDESC: 'Sort in descending order'
+  TableListField:
+    CSVEXPORT: 'Export to CSV'
+    PRINT: Print
+    Print: Print
+    SELECT: 'Select:'
+  TimeField:
+    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+  ToggleField:
+    LESS: 少
+    MORE: 多
+  UploadField:
+    ATTACHFILE: 'Attach a file'
+    ATTACHFILES: 'Attach files'
+    AttachFile: 'Attach a file'
+    DELETEINFO: 'Permanently delete this file from the file store'
+    DOEDIT: Save
+    DROPFILE: 'drop a file'
+    DROPFILES: 'drop files'
+    Dimensions: Dimensions
+    EDITINFO: 'Edit this file'
+    FIELDNOTSET: 'File information not found'
+    FROMCOMPUTER: 'From your computer'
+    FROMFILES: 'From files'
+    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
+    REMOVE: Remove
+    REMOVEERROR: 'Error removing file'
+    REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
+    STARTALL: 'Start all'
+    Saved: Saved
+  Versioned:
+    has_many_Versions: Versions

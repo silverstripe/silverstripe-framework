@@ -103,7 +103,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		$models = $this->getManagedModels();
 
 		if($this->request->param('ModelClass')) {
-			$this->modelClass = $this->request->param('ModelClass');
+			$this->modelClass = $this->unsanitiseClassName($this->request->param('ModelClass'));
 		} else {
 			reset($models);
 			$this->modelClass = key($models);
@@ -118,7 +118,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	}
 
 	public function Link($action = null) {
-		if(!$action) $action = $this->modelClass;
+		if(!$action) $action = $this->sanitiseClassName($this->modelClass);
 		return parent::Link($action);
 	}
 
@@ -127,7 +127,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		$exportButton = new GridFieldExportButton('before');
 		$exportButton->setExportColumns($this->getExportFields());
 		$listField = GridField::create(
-			$this->modelClass,
+			$this->sanitiseClassName($this->modelClass),
 			false,
 			$list,
 			$fieldConfig = GridFieldConfig_RecordEditor::create($this->stat('page_length'))
@@ -150,7 +150,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		);
 		$form->addExtraClass('cms-edit-form cms-panel-padded center');
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
-		$form->setFormAction(Controller::join_links($this->Link($this->modelClass), 'EditForm'));
+		$form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'EditForm'));
 		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
 
 		$this->extend('updateEditForm', $form);
@@ -199,7 +199,7 @@ abstract class ModelAdmin extends LeftAndMain {
 			new RequiredFields()
 		);
 		$form->setFormMethod('get');
-		$form->setFormAction($this->Link($this->modelClass));
+		$form->setFormAction($this->Link($this->sanitiseClassName($this->modelClass)));
 		$form->addExtraClass('cms-search-form');
 		$form->disableSecurityToken();
 		$form->loadDataFrom($this->request->getVars());
@@ -234,12 +234,28 @@ abstract class ModelAdmin extends LeftAndMain {
 			$forms->push(new ArrayData(array (
 				'Title'     => $options['title'],
 				'ClassName' => $class,
-				'Link' => $this->Link($class),
+				'Link' => $this->Link($this->sanitiseClassName($class)),
 				'LinkOrCurrent' => ($class == $this->modelClass) ? 'current' : 'link'
 			)));
 		}
 		
 		return $forms;
+	}
+
+	/**
+	 * Sanitise a model class' name for inclusion in a link
+	 * @return string
+	 */
+	protected function sanitiseClassName($class) {
+		return str_replace('\\', '-', $class);
+	}
+
+	/**
+	 * Unsanitise a model class' name from a URL param
+	 * @return string
+	 */
+	protected function unsanitiseClassName($class) {
+		return str_replace('-', '\\', $class);
 	}
 	
 	/**
@@ -350,7 +366,7 @@ abstract class ModelAdmin extends LeftAndMain {
 			$fields,
 			$actions
 		);
-		$form->setFormAction(Controller::join_links($this->Link($this->modelClass), 'ImportForm'));
+		$form->setFormAction(Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'ImportForm'));
 
 		$this->extend('updateImportForm', $form);
 
@@ -419,7 +435,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		// Show the class name rather than ModelAdmin title as root node
 		$models = $this->getManagedModels();
 		$items[0]->Title = $models[$this->modelClass]['title'];
-		$items[0]->Link = $this->Link($this->modelClass);
+		$items[0]->Link = $this->Link($this->sanitiseClassName($this->modelClass));
 		
 		return $items;
 	}

@@ -1,4 +1,4 @@
-# SiteConfig
+# SiteConfig: Global database content
 
 ## Introduction
 
@@ -15,9 +15,9 @@ You can access `[api:SiteConfig]` options from any SS template by using the func
 	
 	// or 
 	
-	<% control SiteConfig %>
+	<% loop SiteConfig %>
 	$Title $AnotherField
-	<% end_control %>
+	<% end_loop %>
 
 
 Or if you want to access variables in the PHP you can do
@@ -39,13 +39,9 @@ Create a mysite/code/CustomSiteConfig.php file.
 	
 	class CustomSiteConfig extends DataExtension {
 		
-		public function extraStatics() {
-			return array(
-				'db' => array(
-					'FooterContent' => 'HTMLText'
-				)
-			);
-		}
+		static $db = array(
+			'FooterContent' => 'HTMLText'
+		);
 	
 		public function updateCMSFields(FieldList $fields) {
 			$fields->addFieldToTab("Root.Main", new HTMLEditorField("FooterContent", "Footer Content"));
