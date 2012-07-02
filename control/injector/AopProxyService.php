@@ -5,7 +5,7 @@
  * injected
  * 
  * @author marcus@silverstripe.com.au
- * @package sapphire
+ * @package framework
  * @subpackage injector
  * 
  * @license http://silverstripe.org/bsd-license/

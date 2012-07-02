@@ -14,7 +14,8 @@ class DataListTest extends SapphireTest {
 		'DataObjectTest_FieldlessSubTable',
 		'DataObjectTest_ValidatedObject',
 		'DataObjectTest_Player',
-		'DataObjectTest_TeamComment'
+		'DataObjectTest_TeamComment',
+		'DataObjectTest\NamespacedClass',
 	);
 	
 	public function testSubtract(){
@@ -397,7 +398,26 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals(1, $list->count(), 'There should be one comments');
 		$this->assertEquals('Bob', $list->first()->Name, 'Only comment should be from Bob');
 	}
-	
+
+	public function testFilterAndExcludeById() {
+		$id = $this->idFromFixture('DataObjectTest_SubTeam', 'subteam1');
+		$list = DataObjectTest_SubTeam::get()->filter('ID', $id);
+		$this->assertEquals($id, $list->first()->ID);
+
+		$list = DataObjectTest_SubTeam::get();
+		$this->assertEquals(3, count($list));
+		$this->assertEquals(2, count($list->exclude('ID', $id)));
+
+		// Check that classes with namespaces work.
+		$obj = new DataObjectTest\NamespacedClass();
+		$obj->Name = "Test";
+		$obj->write();
+
+		$list = DataObjectTest\NamespacedClass::get()->filter('ID', $obj->ID);
+		$this->assertEquals('Test', $list->First()->Name);
+		$this->assertEquals(0, $list->exclude('ID', $obj->ID)->count());
+	}
+
 	/**
 	 * $list->exclude('Name', 'bob'); // exclude bob from list
 	 */
@@ -436,6 +456,17 @@ class DataListTest extends SapphireTest {
 		$list = DataObjectTest_TeamComment::get();
 		$list->exclude(array('Name'=>'Bob', 'Comment'=>'This is a team comment by Bob'));
 		$this->assertEquals(2, $list->count());
+	}
+
+	/**
+	 * Test that if an exclude() is applied to a filter(), the filter() is still preserved.
+	 */
+	public function testExcludeOnFilter() {
+		$list = DataObjectTest_TeamComment::get();
+ 		$list = $list->filter('Comment', 'Phil is a unique guy, and comments on team2');
+		$list = $list->exclude('Name', 'Bob');
+		
+		$this->assertContains('WHERE ("Comment" = \'Phil is a unique guy, and comments on team2\') AND ("Name" != \'Bob\')', $list->sql());
 	}
 	
 	/**

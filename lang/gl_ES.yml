@@ -1,0 +1,480 @@
+gl_ES:
+  AssetAdmin:
+    NEWFOLDER: NewFolder
+  AssetTableField:
+    CREATED: 'Primeiro subido'
+    DIM: Dimensións
+    FILENAME: 'Nome ficheiro'
+    FOLDER: Cartafol
+    LASTEDIT: 'Último cambio'
+    OWNER: Propietario
+    SIZE: 'Tamaño ficheiro'
+    TITLE: Título
+    TYPE: 'Tipo ficheiro'
+    URL: URL
+  AssetUploadField:
+    ChooseFiles: 'Escoller ficheiros'
+    DRAGFILESHERE: 'Arrastrar ficheiro aquí'
+    DROPAREA: 'Área Contedor'
+    EDITALL: 'Edit all'
+    EDITANDORGANIZE: 'Editar e organizar'
+    FILES: Files
+    TOTAL: Total
+    TOUPLOAD: 'Choose file(s) to upload...'
+    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    UPLOADOR: OR
+  BBCodeParser:
+    ALIGNEMENT: Aliñamento
+    ALIGNEMENTEXAMPLE: 'aliñamento a dereita'
+    BOLD: 'Texto en negriña'
+    BOLDEXAMPLE: Negriña
+    CODE: 'Bloque de código'
+    CODEDESCRIPTION: 'Bloque de código sen formato'
+    CODEEXAMPLE: 'Bloque de código'
+    COLORED: 'Texto colorado'
+    COLOREDEXAMPLE: 'texto azul'
+    EMAILLINK: 'Ligazón de correo-e'
+    EMAILLINKDESCRIPTION: 'Crear ligazón para un enderezo de correo-e'
+    IMAGE: Imaxe
+    IMAGEDESCRIPTION: 'Amosar a imaxe na túa publicación'
+    ITALIC: 'Texto en cursiva'
+    ITALICEXAMPLE: Cursiva
+    LINK: 'Ligazón ó sitio web'
+    LINKDESCRIPTION: 'Ligar a outro sitio web ou URL'
+    STRUCK: 'Texto tachado'
+    STRUCKEXAMPLE: Tachado
+    UNDERLINE: 'Texto subliñado'
+    UNDERLINEEXAMPLE: Subliñado
+    UNORDERED: 'Lista desordenada'
+    UNORDEREDDESCRIPTION: 'Lista desordenada'
+    UNORDEREDEXAMPLE1: 'elemento desordenado 1'
+  BasicAuth:
+    ENTERINFO: 'Por favor insire un nome de usuario e contrasinal.'
+    ERRORNOTADMIN: 'Ese usuario non é un administrador.'
+    ERRORNOTREC: 'Ese nome de usuario/contrasinal non é recoñecido'
+  Boolean:
+    ANY: Ningún
+    0: Falso
+    LOGOUT: 'Log out'
+    1: Verdadeiro
+  CMSMain:
+    ACCESS: 'Access to ''{title}'' section'
+    ACCESSALLINTERFACES: 'Acceder a todas as seccións do CMS'
+    ACCESSALLINTERFACESHELP: 'Anular a configuración de acceso máis específica.'
+    SAVE: Gardar
+  CMSProfileController:
+    MENUTITLE: CMSProfileController
+  CheckboxField:
+    - Falso
+    - Verdade
+  ComplexTableField:
+    CLOSEPOPUP: 'Pechar Ventá Emerxente'
+    SUCCESSADD2: 'Added {name}'
+    SUCCESSEDIT: 'Gardado %s %s %s'
+  ConfirmedPasswordField:
+    ATLEAST: 'Passwords must be at least {min} characters long.'
+    BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    MAXIMUM: 'Passwords must be at most {max} characters long.'
+    SHOWONCLICKTITLE: 'Mudar Contrasinal'
+  CreditCardField:
+    FIRST: primeiro
+    FOURTH: cuarto
+    SECOND: segundo
+    THIRD: terceiro
+  CurrencyField:
+    CURRENCYSYMBOL: €
+  DataObject:
+    PLURALNAME: 'Obxectos de Datos'
+    SINGULARNAME: 'Obxecto de Dato'
+  Date:
+    DAY: día
+    DAYS: días
+    HOUR: hora
+    HOURS: horas
+    MIN: min
+    MINS: mins
+    MONTH: mes
+    MONTHS: meses
+    SEC: seg
+    SECS: segs
+    TIMEDIFFAGO: '{difference} ago'
+    TIMEDIFFIN: 'in {difference}'
+    YEAR: ano
+    YEARS: anos
+  DateField:
+    NOTSET: 'sen establecer'
+    TODAY: hoxe
+    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
+    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
+    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+  Director:
+    ADD: Engadir
+    INVALID_REQUEST: 'Invalid request'
+  DropdownField:
+    CHOOSE: (Escoller)
+  EmailField:
+    VALIDATION: 'Please enter an email address'
+  Email_BounceRecord:
+    PLURALNAME: 'Rexistro de Correos Rexeitados'
+    SINGULARNAME: 'Rexistro de Correo Rexeitado'
+  Enum:
+    ANY: Ningún
+    LOADING: Loading...
+  File:
+    Content: Contido
+    Filename: 'Nome ficheiro'
+    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    NOFILESIZE: 'O tamaño do ficheiro é cero bytes.'
+    NOVALIDUPLOAD: 'Ficheiro non v&aacute;lido para subir'
+    Name: Nome
+    PLURALNAME: Ficheiros
+    SINGULARNAME: Ficheiro
+    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
+    TOOLARGESHORT: 'Filesize exceeds {size}'
+    Title: Título
+  FileIFrameField:
+    ATTACH: 'Attach {type}'
+    ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
+    DELETE: 'Delete {type}'
+    DISALLOWEDFILETYPE: 'Este tipo de ficheiro non está permitido para ser subido'
+    FILE: Ficheiro
+    FROMCOMPUTER: 'Dende o teu Computador'
+    FROMFILESTORE: 'Dende o Almacén de Ficheiros'
+    NOSOURCE: 'Por favor selecciona un ficheiro fonte para anexar'
+    REPLACE: 'Replace {type}'
+  Filesystem:
+    IMPORT_TAB_HEADER: Import
+    SEARCHLISTINGS: Search
+    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+  Form:
+    FIELDISREQUIRED: '%s é requirido'
+    TITLE: 'Iframe subindo imaxe'
+    VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
+    VALIDATIONNOTUNIQUE: 'O valor inserido non é único'
+    VALIDATIONPASSWORDSDONTMATCH: 'Os contrasinais non emparellan'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Os contrasinais non pode ser baleiro'
+    VALIDATIONSTRONGPASSWORD: 'Passwords must have at least one digit and one alphanumeric character'
+    VALIDATOR: Validador
+    VALIDCURRENCY: 'Please enter a valid currency'
+  FormField:
+    NONE: ningún
+  GridAction:
+    DELETE_DESCRIPTION: Delete
+    Delete: Eliminar
+    UnlinkRelation: Desligar
+  GridField:
+    Add: 'Add {name}'
+    Filter: Filtro
+    FilterBy: 'Filter by '
+    Find: Atopar
+    LEVELUP: 'Level up'
+    LinkExisting: 'Ligazón existente'
+    NewRecord: 'Novo %s'
+    NoItemsFound: 'Ningún elemento atopado'
+    PRINTEDAT: 'Impreso ás'
+    PRINTEDBY: 'Impreso por'
+    PlaceHolder: 'Find {type}'
+    PlaceHolderWithLabels: 'Find {type} by {name}'
+    RelationSearch: 'Busca relacionada'
+    ResetFilter: Reiniciar
+  GridFieldAction_Delete:
+    DeletePermissionsFailure: 'Non eliminar permisos'
+    NEXT: Seguinte
+    PREVIOUS: Anterior
+  GridFieldDetailForm:
+    Create: Create
+    Delete: Delete
+    DeletePermissionsFailure: 'No delete permissions'
+    Deleted: 'Deleted %s %s'
+    HELLO: Ola
+    Save: Save
+    Saved: 'Saved %s %s'
+    TEXT1: 'Estás aquí'
+    TEXT2: 'ligazón de reinicio do contrasinal'
+    TEXT3: para
+  Group:
+    AddRole: 'Engadir un role para este grupo'
+    CHANGEPASSWORDTEXT1: 'Mudaches o teu contrasinal por'
+    CHANGEPASSWORDTEXT2: 'Podes empregar agora as seguintes credenciais para iniciar sesión:'
+    Code: 'Código de Grupo'
+    DefaultGroupTitleAdministrators: Administradores
+    DefaultGroupTitleContentAuthors: 'Autores do Contido'
+    Description: Descrición
+    EMAIL: Correo-e
+    GroupReminder: 'Se escolles un grupo pai, este grupo collerá todos os seus roles'
+    HELLO: Ola
+    Locked: 'Bloqueado?'
+    NoRoles: 'Ningún rol atopado'
+    PASSWORD: Contrasinal
+    Parent: 'Grupo Pai'
+    RolesAddEditLink: 'Xestionar roles'
+    Sort: 'Modo de ordenación'
+    TITLE: 'Iframe subindo imaxe'
+    has_many_Permissions: Permisos
+    many_many_Members: Membros
+  GroupImportForm:
+    Help1: '<p>Importar un ou máis grupos no formato <em>CSV</em>  (valores separados por comas). <small><a href="#" class="toggle-advanced">Amosar uso avanzado</a></small></p>'
+    Help2: "<div class=\"advanced\">\\n<h4>Uso avanzado</h4>\\n<ul>\\n<li>Columnas permitidas: <em>%s</em></li>\\n<li>Os grupos existentes son emparellados polo seu <em>Code</em> único, e actualizado cos novos valores do ficheiro importado</li>\\n<li>As xerarquías de grupo poden ser creados empregando a columna <em>ParentCode</em>.</li>\\n<li>Os códigos de permiso poden ser asinados pola columna <em>PermissionCode</em>. Os códigos de permiso non son borrados.</li>\\n</ul>\\n</div>"
+    ResultCreated: 'Created {count} groups'
+    ResultDeleted: 'Eliminados %d grupos'
+    ResultUpdated: 'Actualizados %d grupos'
+  Hierarchy:
+    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+  HtmlEditorField:
+    ADDURL: 'Add URL'
+    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ANCHORVALUE: Áncora
+    BUTTONINSERT: Inserir
+    BUTTONINSERTLINK: 'Inserir ligazón'
+    BUTTONREMOVELINK: 'Eliminar ligazón'
+    BUTTONUpdate: Update
+    CAPTIONTEXT: 'Texto da lenda (caption)'
+    CSSCLASS: Alineamento/estilo
+    CSSCLASSCENTER: 'Centrado, sobre si mesmo.'
+    CSSCLASSLEFT: 'Sobre a esquerda, co texto arredor del.'
+    CSSCLASSLEFTALONE: 'Á esquerda, sobre si mesmo.'
+    CSSCLASSRIGHT: 'Sobre a dereita, co texto arredor del.'
+    DETAILS: Detalles
+    EMAIL: 'Enderezo Correo-e'
+    FILE: Ficheiro
+    FOLDER: Cartafol
+    FROMCMS: 'Dende o CMS'
+    FROMCOMPUTER: 'Dende o teu Computador'
+    FROMWEB: 'From the web'
+    FindInFolder: 'Find in Folder'
+    IMAGEALT: 'Alternative text (alt)'
+    IMAGEALTTEXT: 'Texto alternativo (alt) - mostrase se a imaxe non pode visualizarse'
+    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
+    IMAGEDIMENSIONS: Dimensións
+    IMAGEHEIGHTPX: Alto
+    IMAGETITLE: 'Texto do título (tooltip) - para información adicional sobre a imaxe'
+    IMAGETITLETEXT: 'Title text (tooltip)'
+    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGEWIDTHPX: Ancho
+    INSERTMEDIA: 'Insert Media'
+    LINK: 'Inserir ligazón'
+    LINKANCHOR: 'Áncora sobre esta páxina'
+    LINKDESCR: 'Descrición da ligazón'
+    LINKEMAIL: 'Enderezo Correo-e'
+    LINKEXTERNAL: 'Outro sitio web'
+    LINKFILE: 'Descargar un ficheiro'
+    LINKINTERNAL: 'Páxina no sitio'
+    LINKOPENNEWWIN: 'Abrir ligazón en nova ventá?'
+    LINKTO: 'Ligar a'
+    PAGE: Páxina
+    URL: URL
+    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    UpdateMEDIA: 'Update Media'
+  ImageField:
+    IMAGE: Imaxe
+  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Aplicar Filtro"  GridFieldItemEditView.ss:    Go back: "Ir atrás"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  LeftAndMain:
+    ADD: 'Engadir unha nova fila'
+    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
+    DELETED: Deleted.
+    DropdownBatchActionsDefault: Accións
+    HELP: Axuda
+    PAGETYPE: 'Tipo de páxina:'
+    PERMAGAIN: 'Non tes unha sesión válida no CMS. Se queres volver entrar, insire o nome de usuario e contrasinal a continuación.'
+    PERMALREADY: 'Sintoo, pero non podes acceder a esta parte do CMS. Se queres iniciar sesión con outras credenciais, faino a continuación'
+    PERMDEFAULT: 'Escolle un método de autenticación e insire as túas credenciais para acceder o CMS.'
+    PLEASESAVE: 'Por favor Garda Páxina: Esta páxina podería non ser actualizada porque inda non foi gardada.'
+    PreviewButton: Preview
+    REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
+    SAVEDUP: Saved.
+    VersionUnknown: descoñecido
+  LoginAttempt:
+    Email: 'Enderezo Correo-e'
+    IP: 'Enderezo IP'
+    Status: Estado
+  Member:
+    ADDGROUP: 'Add group'
+    BUTTONCHANGEPASSWORD: 'Mudar Contrasinal'
+    BUTTONLOGIN: 'Iniciar sesión'
+    BUTTONLOGINOTHER: 'Iniciar sesión como'
+    BUTTONLOSTPASSWORD: 'Perdín o meu contrasinal'
+    CONFIRMNEWPASSWORD: 'Confirmar Novo Contrasinal'
+    CONFIRMPASSWORD: 'Confirmar Contrasinal'
+    DefaultAdminFirstname: 'Administrador por Defecto'
+    DefaultDateTime: 'por defecto'
+    EMAIL: Correo-e
+    EMPTYNEWPASSWORD: 'O novo contrasinal non pode ser baleiro, por favor téntao de novo'
+    ENTEREMAIL: 'Por favor insire un enderezo de correo-e para conseguir unha ligazón de reinicio.'
+    ERRORLOCKEDOUT: 'A túa conta foi temporalmente deshabilitada porque houbo demasiadas tentativas de inicio de sesión. Téntao de novo en 20 minutos.'
+    ERRORNEWPASSWORD: 'Inseriches a nova contrasinal doutra maneira, téntao de novo'
+    ERRORPASSWORDNOTMATCH: 'O teu contrasinal actual non emparella, por favor téntao de novo'
+    ERRORWRONGCRED: 'Ese non parece ser un enderezo de correo-e ou contrasinal. Téntao de novo.'
+    FIRSTNAME: Nome
+    INTERFACELANG: 'Idioma da Interface'
+    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
+    LOGGEDINAS: 'You''re logged in as {name}.'
+    NEWPASSWORD: 'Novo Contrasinal'
+    PASSWORD: Contrasinal
+    PLURALNAME: Membros
+    PROFILESAVESUCCESS: 'Gardado con éxito.'
+    REMEMBERME: 'Lembrarme a próxima vez?'
+    SINGULARNAME: Membro
+    SUBJECTPASSWORDCHANGED: 'O teu contrasinal mudou'
+    SUBJECTPASSWORDRESET: 'A túa ligazón de reinicio de contrasinal'
+    SURNAME: Apelidos
+    VALIDATIONMEMBEREXISTS: 'Un membro ya existe co mesmo %s'
+    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
+    WELCOMEBACK: 'Welcome Back, {firstname}'
+    YOUROLDPASSWORD: 'O teu vello contrasinal'
+    belongs_many_many_Groups: Grupos
+    db_LastVisited: 'Data Última Visita'
+    db_Locale: 'Idioma da Interface'
+    db_LockedOutUntil: 'Bloqueado ata que'
+    db_NumVisit: 'Número de Visitas'
+    db_Password: Contrasinal
+    db_PasswordExpiry: 'Data de expiración do contrasinal'
+  MemberAuthenticator:
+    TITLE: 'Correo-e e Contrasinal'
+  MemberDatetimeOptionsetField:
+    AMORPM: 'AM (Ante meridiem) ou PM (Post meridiem)'
+    Custom: Personalizado
+    DATEFORMATBAD: 'O formato da data é inválida'
+    DAYNOLEADING: 'Día do mes sen ceros a esquerda'
+    DIGITSDECFRACTIONSECOND: 'Un ou máis díxitos representando unha fracción decimal dun segundo'
+    FOURDIGITYEAR: 'Catro díxitos ano'
+    FULLNAMEMONTH: 'Nome completo do mes (p.e. Xuño)'
+    HOURNOLEADING: 'Hora sen ceros a esquerda'
+    MINUTENOLEADING: 'Minuto sen ceros a esquerda'
+    MONTHNOLEADING: 'Díxito do mes sen ceros a esquerda'
+    Preview: Previsualizar
+    SHORTMONTH: 'Nome curto do mes (p.e. Xuñ)'
+    TOGGLEHELP: 'Mudar o formato de axuda'
+    TWODIGITDAY: 'Dous díxitos día do mes'
+    TWODIGITHOUR: 'Dous díxitos para a hora (00 ata 23)'
+    TWODIGITMINUTE: 'Dous díxitos minuto (00 ata 59)'
+    TWODIGITMONTH: 'Dous díxitos para o mes (01=Xaneiro, etc.)'
+    TWODIGITSECOND: 'Dous díxitos de segundo (00 ata 59)'
+    TWODIGITYEAR: 'Dous díxitos ano'
+  MemberImportForm:
+    Help1: '<p>Importar usuarios en <em>formato CSV</em> (valores separados por comas). <small><a href="#" class="toggle-advanced">Amosar uso avanzado</a></small></p>'
+    Help2: "<div class=\"advanced\">\\n<h4>Uso avanzado</h4>\\n<ul>\\n<li>Columnas permitidas: <em>%s</em></li>\\n<li>Os usuarios existentes son emparellados polo súa propiedade <em>Code</em> única,  e actualizados con calquera novo valor do ficheiro importado.</li>\\n<li>Os grupos son asinados pola columna <em>Groups</em>. Os grupos son identificados pola súa propiedade <em>Code</em>, varios grupos poden aparecer separados por comas. A pertenencia a grupos non se borra.</li>\\n</ul>\\n</div>"
+    ResultCreated: 'Created {count} members'
+    ResultDeleted: 'Eliminados %d membros'
+    ResultNone: 'Sen cambios'
+    ResultUpdated: 'Updated {count} members'
+  MemberTableField: null
+  ModelAdmin:
+    DELETE: Eliminar
+    DELETEDRECORDS: 'Deleted {count} records.'
+    IMPORT: 'Importar dende CSV'
+    IMPORTEDRECORDS: 'Imported {count} records.'
+    NOCSVFILE: 'Por favor navega por un ficheiro CSV para importar'
+    NOIMPORT: 'Nada para importar'
+    RESET: Reiniciar
+    Title: 'Data Models'
+    UPDATEDRECORDS: 'Updated {count} records.'
+  MoneyField:
+    FIELDLABELAMOUNT: Cantidade
+    FIELDLABELCURRENCY: Moeda
+  NullableField:
+    IsNullLabel: 'É Nulo'
+  NumericField:
+    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  Permission:
+    AdminGroup: Administrador
+    CMS_ACCESS_CATEGORY: 'Acceso CMS'
+    FULLADMINRIGHTS: 'Todos os dereitos administrativos'
+    FULLADMINRIGHTS_HELP: 'Implica e anula todos os outros permisos asinados.'
+    IMPORTSPECFIELDS: 'Database columns'
+    IMPORTSPECRELATIONS: Relations
+  PermissionCheckboxSetField:
+    AssignedTo: 'assigned to "{title}"'
+    FromGroup: 'inherited from group "{title}"'
+    FromRole: 'inherited from role "{title}"'
+    FromRoleOnGroup: 'herdado do role "%s" sobre o grupo "%s"'
+  Permissions:
+    PERMISSIONS_CATEGORY: 'Roles e permisos de acceso'
+  PhoneNumberField:
+    Back: Back
+    VALIDATION: 'Por favor insire un número de teléfono válido'
+  Security:
+    ALREADYLOGGEDIN: 'Non tes acceso a esta páxina. Se tes outra conta que pode acceder a páxina, podes iniciar sesión a continuación.'
+    BUTTONSEND: 'Enviarme a ligazón de restablecemento do contrasinal'
+    CHANGEPASSWORDBELOW: 'Podes mudar o contrasinal abaixo.'
+    CHANGEPASSWORDHEADER: 'Mudar Contrasinal'
+    ENTERNEWPASSWORD: 'Por favor insire un novo contrasinal.'
+    ERRORPASSWORDPERMISSION: 'Debes iniciar sesión para poder mudar o teu contrasinal!'
+    LOGGEDOUT: 'Pechouse a túa sesión. Se desexas iniciar sesión de novo, insire as túas credenciais a continuación.'
+    LOGIN: 'Iniciar sesión'
+    NOTEPAGESECURED: 'Esa páxina é segura. Insire as túas credenciais abaixo e enviarémoste dereito a ela.'
+    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETPASSWORD: 'Insire o teu enderezo de correo-e e enviarémosche unha ligazón coa que reiniciar o teu contrasinal'
+    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
+    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+  SecurityAdmin:
+    ACCESS_HELP: 'Permitir a visualización, adición e edición de usuarios, asemade asinar permisos e roles aos mesmos.'
+    APPLY_ROLES: 'Aplicar roles aos grupos'
+    APPLY_ROLES_HELP: 'Capacidade para editar os roles asinados a un grupo. Require os permisos "Acceso a sección ''Usuarios'' ".'
+    EDITPERMISSIONS: 'Xestionar permisos para grupos'
+    EDITPERMISSIONS_HELP: 'Capacidade para editar Permisos e Enderezos IP para un grupo. Require o permiso "Acceso a sección de ''Seguridade'' ".'
+    GROUPNAME: 'Nome do grupo'
+    IMPORTGROUPS: 'Importar grupos'
+    IMPORTUSERS: 'Importar usuarios'
+    MEMBERS: Membros
+    MENUTITLE: Security
+    MemberListCaution: 'Coidado: Eliminando os membros da lista eliminaranse de todos os grupos e da base de datos'
+    NEWGROUP: 'Novo grupo'
+    PERMISSIONS: Permisos
+    ROLES: Roles
+    ROLESDESCRIPTION: 'Os roles son conxuntos de permisos predefinidos, e poden ser asinados a grupos.<br />Poden ser herdados dos grupos pai si requeridos.'
+    TABROLES: Roles
+    Users: Usuarios
+  SecurityAdmin_MemberImportForm:
+    BtnImport: 'Importar dende CSV'
+    FileFieldLabel: 'Ficheiro CSV <small>(Extensións permitidas: *.csv)</small>'
+  SilverStripeNavigator:
+    Edit: Edit
+    FILTER: Filter
+    IMPORT: Import
+    VIEWFIRST: 'Ver primeiro'
+    VIEWLAST: 'Ver último'
+    VIEWNEXT: 'Ver seguinte'
+    VIEWPREVIOUS: 'Ver anterior'
+  SimpleImageField:
+    NOUPLOAD: 'Ningunha Imaxe Subida'
+  SiteTree:
+    TABMAIN: Principal
+  TableField:
+    ADDITEM: engadir
+    ISREQUIRED: 'In %s ''%s'' is required'
+    SORTASC: 'Ordear ascendentemente'
+    SORTDESC: 'Ordear descendentemente'
+  TableListField:
+    CSVEXPORT: 'Exportar a CSV'
+    PRINT: Imprimir
+    Print: Imprimir
+    SELECT: 'Seleccionar:'
+  TimeField:
+    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+  ToggleField:
+    LESS: menos
+    MORE: máis
+  UploadField:
+    ATTACHFILE: 'Anexar un ficheiro'
+    ATTACHFILES: 'Anexar ficheiros'
+    AttachFile: 'Anexar un ficheiro'
+    DELETEINFO: 'Eliminar permanentemente este ficheiro do almacén de ficheiros'
+    DOEDIT: Gardar
+    DROPFILE: 'soltar un ficheiro'
+    DROPFILES: 'ficheiros soltados'
+    Dimensions: Dimensions
+    EDITINFO: 'Editar este ficheiro'
+    FIELDNOTSET: 'Ficheiro de información non atopado'
+    FROMCOMPUTER: 'Dende o teu Computador'
+    FROMFILES: 'Dende ficheiros'
+    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
+    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
+    REMOVE: Remove
+    REMOVEERROR: 'Erro eliminando o ficheiro'
+    REMOVEINFO: 'Eliminar este ficheiro daquí, pero non eliminalo do almacén de ficheiros'
+    STARTALL: 'Comezar todo'
+    Saved: Gardado
+  Versioned:
+    has_many_Versions: Versións

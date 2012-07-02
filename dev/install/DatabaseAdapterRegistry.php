@@ -5,7 +5,7 @@
  * and provides a meaning of registering community built
  * adapters in to the installer process.
  *
- * @package installer
+ * @package framework
  * @author Tom Rix
  */
 class DatabaseAdapterRegistry {

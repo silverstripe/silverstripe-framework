@@ -2,14 +2,12 @@ en:
   AssetAdmin:
     NEWFOLDER: NewFolder
   AssetTableField:
-    BACKLINKCOUNT: 'Used on:'
     CREATED: 'First uploaded'
     DIM: Dimensions
     FILENAME: Filename
     FOLDER: Folder
     LASTEDIT: 'Last changed'
     OWNER: Owner
-    PAGES: page(s)
     SIZE: 'File size'
     TITLE: Title
     TYPE: 'File type'
@@ -21,8 +19,8 @@ en:
     EDITALL: 'Edit all'
     EDITANDORGANIZE: 'Edit & organize'
     FILES: Files
-    FROMCOMPUTER: 'Choose files from your computer'
     TOTAL: Total
+    TOUPLOAD: 'Choose file(s) to upload...'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -152,6 +150,7 @@ en:
   FileIFrameField:
     ATTACH: 'Attach {type}'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
+    ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
     DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
     FILE: File
@@ -180,6 +179,7 @@ en:
   FormField:
     NONE: none
   GridAction:
+    DELETE_DESCRIPTION: Delete
     Delete: Delete
     UnlinkRelation: Unlink
   GridField:
@@ -217,10 +217,8 @@ en:
     GroupReminder: 'If you choose a parent group, this group will take all it''s roles'
     Locked: 'Locked?'
     NoRoles: 'No roles found'
-    PLURALNAME: Groups
     Parent: 'Parent Group'
     RolesAddEditLink: 'Manage roles'
-    SINGULARNAME: Group
     Sort: 'Sort Order'
     has_many_Permissions: Permissions
     many_many_Members: Members
@@ -234,6 +232,7 @@ en:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
     ADDURL: 'Add URL'
+    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORVALUE: Anchor
     BUTTONINSERT: Insert
     BUTTONINSERTLINK: 'Insert link'
@@ -247,17 +246,20 @@ en:
     CSSCLASSRIGHT: 'On the right, with text wrapping around.'
     DETAILS: Details
     EMAIL: 'Email address'
-    EditDetails: 'Edit details'
     FILE: File
     FOLDER: Folder
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
-    Find: Find
+    FindInFolder: 'Find in Folder'
+    IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image cannot be displayed'
+    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
     IMAGEDIMENSIONS: Dimensions
     IMAGEHEIGHTPX: Height
     IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
+    IMAGETITLETEXT: 'Title text (tooltip)'
+    IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Width
     INSERTMEDIA: 'Insert Media'
     LINK: 'Insert Link'
@@ -278,7 +280,7 @@ en:
   Image_iframe.ss:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
-    CANT_REORGANISE: 'You do not have permission to rearange the site tree. Your change was not saved.'
+    CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
     HELP: Help
@@ -400,8 +402,6 @@ en:
     CMS_ACCESS_CATEGORY: 'CMS Access'
     FULLADMINRIGHTS: 'Full administrative rights'
     FULLADMINRIGHTS_HELP: 'Implies and overrules all other assigned permissions.'
-    PLURALNAME: Permissions
-    SINGULARNAME: Permission
   PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -473,9 +473,6 @@ en:
     VIEWPREVIOUS: 'View previous'
   TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
-  ToggleCompositeField.ss:
-    HIDE: Hide
-    SHOW: Show
   ToggleField:
     LESS: less
     MORE: more
@@ -487,12 +484,14 @@ en:
     DOEDIT: Save
     DROPFILE: 'drop a file'
     DROPFILES: 'drop files'
+    Dimensions: Dimensions
     EDITINFO: 'Edit this file'
     FIELDNOTSET: 'File information not found'
     FROMCOMPUTER: 'From your computer'
     FROMFILES: 'From files'
     MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
     MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
+    REMOVE: Remove
     REMOVEERROR: 'Error removing file'
     REMOVEINFO: 'Remove this file from here, but do not delete it from the file store'
     STARTALL: 'Start all'

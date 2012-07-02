@@ -1448,9 +1448,27 @@ body.cms-dialog {
 			border:none;
 			@include box-shadow-none;
 			width:55%;
+			max-width:512px;
 			float:left;
+			position: relative;
+
+      label {
+				position: absolute;
+				left: 8px;
+				top: 13px;
+				font-weight: normal; color: #888;
+			}
+
+			.middleColumn {
+				margin-left: 0;
+			}
+
+			input.remoteurl {
+				padding-left: 40px;
+			}
 		}
 		button.add-url{
+			margin-top:13px;
 			padding-top:15px;
 			@include clearfix;
 			border:none;
@@ -1466,6 +1484,18 @@ body.cms-dialog {
 				@include box-shadow-none;
 				opacity:1;
 			}
+			&.ui-state-disabled {
+				&, &:hover, &:active {
+					opacity: 0.35;
+					filter: Alpha(Opacity=35);
+				}
+			}
+		}
+
+		.loading button.add-url .ui-icon {
+			background-image: url(../images/throbber.gif);
+			background-position: 50% 50%;
+			background-repeat: no-repeat;
 		}
 	}
 
@@ -1486,6 +1516,7 @@ body.cms-dialog {
 			top:0;
 			right: 40px;
 			li{
+				background-color:#92A6B3;
 				@include background-image(
 					linear-gradient(#B0BEC7, #8CA1AE)
 				);			
@@ -1497,6 +1528,8 @@ body.cms-dialog {
 				a{
 					color:#fff;
 					text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+					display:block;
+					height:100%;
 				}
 				&.ui-state-active{
 					background:  #F0F3F4 url("../admin/images/textures/bg_cms_main_content.png") repeat left top;
@@ -1550,6 +1583,32 @@ body.cms-dialog {
 		tbody td:first-child img {
 			max-height: 30px;
 		}
+	}
+
+	.ss-uploadfield{
+		&.from-web, &.from-CMS{
+			margin-bottom:48px;
+			.middleColumn {
+				width:auto;
+				background:none;
+				border:none;
+				margin-top:13px;
+			}
+		}
+
+		&.from-CMS{
+			margin-top:33px;
+			h4{
+				margin-top:3px;
+			}
+			.middleColumn {
+				margin-top:0;
+				.TreeDropdownField{
+					margin-top:23px;
+				}			
+			}
+		}
+
 	}
 
 	.ss-uploadfield-editandorganize {

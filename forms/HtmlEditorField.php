@@ -380,22 +380,23 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$numericLabelTmpl = '<span class="step-label"><span class="flyout">%d</span><span class="arrow"></span><strong class="title">%s</strong></span>';
 
 		$fromCMS = new CompositeField(
-			new LiteralField('headerSelect', '<h4 class="field header-select">' . sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.Find', 'Find')) . '</h4>'),
-				$selectComposite = new CompositeField(
-					new TreeDropdownField('ParentID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder'),
-					$fileField
-				)
+			new LiteralField('headerSelect', '<h4>' . sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.FindInFolder', 'Find in Folder')) . '</h4>'),
+				$select = new TreeDropdownField('ParentID', "", 'Folder'),	
+				$fileField
 		);
+		
+		$fromCMS->addExtraClass('content ss-uploadfield from-CMS');
+		$select->addExtraClass('content-select');
 
-		$fromCMS->addExtraClass('content');
-		$selectComposite->addExtraClass('content-select');
 
 		$fromWeb = new CompositeField(
-			new LiteralField('headerURL', '<h4 class="field header-url">' . sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.ADDURL', 'Add URL')) . '</h4>'),
-			$remoteURL = new TextField('RemoteURL', ''),
+			new LiteralField('headerURL', '<h4>' . sprintf($numericLabelTmpl, '1', _t('HtmlEditorField.ADDURL', 'Add URL')) . '</h4>'),
+			$remoteURL = new TextField('RemoteURL', 'http://'),
 			new LiteralField('addURLImage', '<button class="action ui-action-constructive ui-button field add-url" data-icon="addMedia"></button>')
 		);
+
 		$remoteURL->addExtraClass('remoteurl');
+		$fromWeb->addExtraClass('content ss-uploadfield from-web');
 
 		Requirements::css(FRAMEWORK_DIR . '/css/AssetUploadField.css');
 		$computerUploadField = Object::create('UploadField', 'AssetUploadField', '');
