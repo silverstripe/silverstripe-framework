@@ -27,6 +27,11 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	 * @var Validator The form validator used for both add and edit fields.
 	 */
 	protected $validator;
+        
+        /**
+         * @var FieldList
+         */
+        protected $formActions;
 
 	/**
 	 * @var String
@@ -57,6 +62,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	 */
 	public function __construct($name = 'DetailForm') {
 		$this->name = $name;
+                $this->formActions = new FieldList();
 	}
 	
 	/**
@@ -78,10 +84,29 @@ class GridFieldDetailForm implements GridField_URLHandler {
 
 		$handler = Object::create($class, $gridField, $this, $record, $controller, $this->name);
 		$handler->setTemplate($this->template);
+                $handler->setFormActions($this->getFormActions());
 
 		return $handler->handleRequest($request, DataModel::inst());
 	}
 
+        /**
+         * Set the actions to be used in ItemEditForm
+         * 
+         * @param FieldList $actions
+         * @return FieldList 
+         */
+        function setFormActions(FieldList $actions) {
+                $this->formActions = $actions;
+                return $this;
+        }
+        
+        /**
+         * @return FieldList 
+         */
+        function getFormActions() {
+                return $this->formActions;
+        }
+        
 	/**
 	 * @param String
 	 */
@@ -138,7 +163,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	/**
 	 * @return String
 	 */
-	public function getItemRequestClass() {
+	public function getItemRequestClass() {            
 		if($this->itemRequestClass) {
 			return $this->itemRequestClass;
 		} else if(ClassInfo::exists(get_class($this) . "_ItemRequest")) {
@@ -200,6 +225,12 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	 */
 	protected $template = 'GridFieldItemEditView';
 
+        /**
+         *
+         * @var FieldList
+         */
+        protected $formActions;
+        
 	static $url_handlers = array(
 		'$Action!' => '$Action',
 		'' => 'edit',
@@ -287,19 +318,18 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			return $controller->redirect($noActionURL, 302);
 		}
 
-		$actions = new FieldList();
+		$actions = $this->getFormActions();
 		if($this->record->ID !== 0) {
                     // Add check to see if record is providing its own actions.
                     // If not, fall back to default.
                     // Currently custom methods for manipulating data need to be
                     // added to this class via Object::add_extension();
-                    if($this->record->getCMSActions()->exists())
-                            $actions = $this->record->getCMSActions();
-                    else
-                            $actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
-				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'));
-                            $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
-                                    ->addExtraClass('ss-ui-action-destructive'));
+                    if($this->formActions->count() == 0) {
+                        $actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
+                                ->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'));
+                        $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
+                                ->addExtraClass('ss-ui-action-destructive'));
+                    }
 		}else{ // adding new record
 			//Change the Save label to 'Create'
 			$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Create', 'Create'))
@@ -387,67 +417,6 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		return Controller::curr()->redirect($this->Link());
 	}
-        
-        /**
-         * Publish this object to the live
-         * 
-         * @param type $data
-         * @param type $form
-         * @return type 
-         */
-        function doPublish($data, $form) {
-                try {
-                        $form->saveInto($this->record);
-                        $this->record->write();
-                        $this->record->publish('Stage','Live');
-                        $this->gridField->getList()->add($this->record);
-                } catch(ValidationException $e) {
-                        $form->sessionMessage($e->getResult()->message(), 'bad');
-                        return Controller::curr()->redirectBack();
-                }
-
-                $message = sprintf(
-                        _t('GridFieldDetailForm.Published', 'Published %s %s'),
-                        $this->record->singular_name(),
-                        '<a href="' . $this->Link('edit') . '">"' . htmlspecialchars($this->record->Title, ENT_QUOTES) . '"</a>'
-                );
-
-                $form->sessionMessage($message, 'good');
-
-                return Controller::curr()->redirect($this->Link());
-        }
-        
-        /**
-	 * Unpublish this page - remove it from the live site
-	 * 
-	 * @uses SiteTreeExtension->onBeforeUnpublish()
-	 * @uses SiteTreeExtension->onAfterUnpublish()
-	 */
-	function doUnpublish($data, $form) {
-                try {
-                        $origStage = Versioned::current_stage();
-                        Versioned::reading_stage('Live');
-
-                        // This way our ID won't be unset
-                        $clone = clone $this->record;
-                        $clone->delete();
-
-                        Versioned::reading_stage($origStage);
-                } catch(ValidationException $e) {
-                        $form->sessionMessage($e->getResult()->message(), 'bad');
-                        return Controller::curr()->redirectBack();
-                }
-
-                $message = sprintf(
-                        _t('GridFieldDetailForm.Published', 'Removed Published %s %s'),
-                        $this->record->singular_name(),
-                        '<a href="' . $this->Link('edit') . '">"' . htmlspecialchars($this->record->Title, ENT_QUOTES) . '"</a>'
-                );
-
-                $form->sessionMessage($message, 'good');
-
-                return Controller::curr()->redirect($this->Link());
-	}
 
 	function doDelete($data, $form) {
 		try {
@@ -477,6 +446,24 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		return $controller->redirect($noActionURL, 302); //redirect back to admin section
 	}
+        
+        /**
+         * Set the actions to be used in ItemEditForm
+         * 
+         * @param FieldList $actions
+         * @return FieldList 
+         */
+        function setFormActions(FieldList $actions) {
+                $this->formActions = $actions;
+                return $this;
+        }
+        
+        /**
+         * @return FieldList 
+         */
+        function getFormActions() {
+                return $this->formActions;
+        }
 
 	/**
 	 * @param String
