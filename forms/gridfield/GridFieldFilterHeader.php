@@ -120,6 +120,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 				}
 				$field = new TextField('filter['.$columnField.']', '', $value);
 				$field->addExtraClass('ss-gridfield-sort');
+				$field->addExtraClass('no-change-track');
 
 				$field->setAttribute('placeholder', _t('GridField.FilterBy', "Filter by ") . _t('GridField.'.$metadata['title'], $metadata['title']));
 
@@ -144,6 +145,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 							->setAttribute('id', 'action_reset_' . $gridField->getModelClass() . '_' . $columnField)
 					);
 					$field->addExtraClass('filter-buttons');
+					$field->addExtraClass('no-change-track');
 				}else{
 					$field = new LiteralField('', '');
 				}
