@@ -5,7 +5,7 @@ de:
     CREATED: 'Erstmalig hochgeladen'
     DIM: Dimensionen
     FILENAME: Dateiname
-    FOLDER: Folder
+    FOLDER: Ordner
     LASTEDIT: 'Letztmals geändert'
     OWNER: Eigentümer
     SIZE: Größe
@@ -16,11 +16,11 @@ de:
     ChooseFiles: 'Dateien auswählen'
     DRAGFILESHERE: 'Dateien hier ablegen'
     DROPAREA: Dateiablage
-    EDITALL: 'Edit all'
+    EDITALL: 'Alle Bearbeiten'
     EDITANDORGANIZE: Bearbeiten
     FILES: Dateien
     TOTAL: Gesamt
-    TOUPLOAD: 'Choose file(s) to upload...'
+    TOUPLOAD: 'Datei(en) zum Hochladen auswählen'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: ODER
   BBCodeParser:
@@ -69,7 +69,7 @@ de:
     - Ja
   ComplexTableField:
     CLOSEPOPUP: 'Popup schließen'
-    SUCCESSADD2: 'Added {name}'
+    SUCCESSADD2: '{name} hinzugefügt'
     SUCCESSEDIT: 'Gespeichert %s %s %s'
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
@@ -97,7 +97,7 @@ de:
     MONTHS: Monat
     SEC: Sekunden
     SECS: Sekunden
-    TIMEDIFFAGO: '{difference} ago'
+    TIMEDIFFAGO: 'vor {difference}'
     TIMEDIFFIN: 'in {difference}'
     YEAR: Jahr
     YEARS: Jahre
@@ -109,7 +109,7 @@ de:
     VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
   Director:
     ADD: Hinzufügen
-    INVALID_REQUEST: 'Invalid request'
+    INVALID_REQUEST: 'Ungültige Anfrage'
   DropdownField:
     CHOOSE: (Auswahl)
   EmailField:
@@ -119,7 +119,7 @@ de:
     SINGULARNAME: 'E-Mail Rückläufer'
   Enum:
     ANY: alle
-    LOADING: Loading...
+    LOADING: 'Lade Daten ...'
   File:
     Content: Inhalt
     Filename: Dateiname
@@ -134,7 +134,7 @@ de:
     TOOLARGESHORT: 'Filesize exceeds {size}'
     Title: Titel
   FileIFrameField:
-    ATTACH: 'Attach {type}'
+    ATTACH: '{type} anhängen'
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
@@ -143,11 +143,11 @@ de:
     FROMCOMPUTER: 'Von Ihrem Computer'
     FROMFILESTORE: 'Aus dem Datei-Storage'
     NOSOURCE: 'Bitte wählen Sie eine Datei aus'
-    REPLACE: 'Replace {type}'
+    REPLACE: '{type} ersetzen'
   Filesystem:
-    IMPORT_TAB_HEADER: Import
+    IMPORT_TAB_HEADER: Importieren
     SEARCHLISTINGS: Suche
-    SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
+    SYNCRESULTS: 'Synchronisation beendet: {createdcount} Objekte erstellt, {deletedcount} Objekte gelöscht'
   Form:
     FIELDISREQUIRED: '%s wird benötigt'
     TITLE: 'Image Uploading Iframe'
@@ -162,20 +162,20 @@ de:
     NONE: keine
   GridAction:
     DELETE_DESCRIPTION: Löschen
-    Delete: Delete
-    UnlinkRelation: Unlink
+    Delete: Löschen
+    UnlinkRelation: 'Verbindung entfernen'
   GridField:
-    Add: 'Add {name}'
+    Add: '{name} Hinzufügen'
     Filter: Filter
-    FilterBy: 'Filter by '
+    FilterBy: 'Filter nach'
     Find: Suchen
     LEVELUP: 'Level up'
     LinkExisting: 'Link Existing'
     NewRecord: 'Neue(r) %s'
-    NoItemsFound: 'No items found'
+    NoItemsFound: 'Keine Elemente gefunden.'
     PRINTEDAT: 'Printed at'
     PRINTEDBY: 'Printed by'
-    PlaceHolder: 'Find {type}'
+    PlaceHolder: '{type} Suchen'
     PlaceHolderWithLabels: 'Find {type} by {name}'
     RelationSearch: 'Relation search'
     ResetFilter: Zurücksetzen
@@ -185,12 +185,12 @@ de:
     PREVIOUS: vorherige
   GridFieldDetailForm:
     Create: Erstellen
-    Delete: Delete
-    DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted %s %s'
+    Delete: Löschen
+    DeletePermissionsFailure: 'Keine Berechtigungen zum löschen'
+    Deleted: 'Gelöscht %s %s'
     HELLO: Hallo
     Save: Speichern
-    Saved: 'Saved %s %s'
+    Saved: 'Gespeichert %s %s'
     TEXT1: 'Hier ist Ihr'
     TEXT2: 'Link zum Zurücksetzen des Passworts'
     TEXT3: für
@@ -223,13 +223,13 @@ de:
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
-    ADDURL: 'Add URL'
-    ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
+    ADDURL: 'URL hinzufügen'
+    ADJUSTDETAILSDIMENSIONS: 'Details &amp; Dimensionen'
     ANCHORVALUE: Anker
     BUTTONINSERT: Einfügen
     BUTTONINSERTLINK: 'Verweis einfügen'
     BUTTONREMOVELINK: 'Verweise entfernen'
-    BUTTONUpdate: Update
+    BUTTONUpdate: Aktualisieren
     CAPTIONTEXT: Beschriftungstext
     CSSCLASS: Ausrichtung/Stil
     CSSCLASSCENTER: 'Zentriert, selbstständig'
@@ -243,7 +243,7 @@ de:
     FROMCMS: 'From the CMS'
     FROMCOMPUTER: 'From your computer'
     FROMWEB: 'From the web'
-    FindInFolder: 'Find in Folder'
+    FindInFolder: 'In Ordner suchen'
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternativer Text (alt) - angezeigt, wenn das Bild nicht dargestellt werden kann'
     IMAGEALTTEXTDESC: 'Shown to screen readers or if image can not be displayed'
@@ -269,12 +269,12 @@ de:
     UpdateMEDIA: 'Update Media'
   ImageField:
     IMAGE: Bild
-  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Apply Filter"  GridFieldItemEditView.ss:    Go back: "Zurück"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
+  Image_iframe.ss: 'ChangePasswordEmail.ss:  BackLink_Button.ss:  CMSLoadingScreen.ss:  RelationComplexTableField.ss:  ForgotPasswordEmail.ss:    APPLY FILTER: "Filter anwenden"  GridFieldItemEditView.ss:    Go back: "Zurück"  ModelSidebar.ss:  TableListField_PageControls.ss:  ModelAdmin_Tools.ss:  ComplexTableField_popup.ss:  TableField.ss:  FileIFrameField_iframe.ss:  ComplexTableField.ss:  TableListField.ss:  ModelAdmin_ImportSpec.ss:  LeftAndMain_Menu.ss:'
   LeftAndMain:
     ADD: 'Eine neue Zeile hinzufügen'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
-    DropdownBatchActionsDefault: Actions
+    DropdownBatchActionsDefault: Aktionen
     HELP: Hilfe
     PAGETYPE: 'Seitentyp:'
     PERMAGAIN: 'Sie wurden aus dem System ausgeloggt. Falls Sie sich wieder einloggen möchten, geben Sie bitte Benutzernamen und Passwort im untenstehenden Formular an.'
@@ -283,14 +283,14 @@ de:
     PLEASESAVE: 'Diese Seite konnte nicht aktualisiert werden weil sie noch nicht gespeichert wurde - bitte speichern.'
     PreviewButton: Vorschau
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
-    SAVEDUP: Saved.
+    SAVEDUP: Gespeichert.
     VersionUnknown: unknown
   LoginAttempt:
     Email: E-Mail-Adresse
     IP: IP-Adresse
     Status: Status
   Member:
-    ADDGROUP: 'Add group'
+    ADDGROUP: 'Gruppe hinzufügen'
     BUTTONCHANGEPASSWORD: 'Passwort ändern'
     BUTTONLOGIN: Einloggen
     BUTTONLOGINOTHER: 'Als jemand anders einloggen'
@@ -334,8 +334,8 @@ de:
     TITLE: 'E-Mail &amp; Passwort'
   MemberDatetimeOptionsetField:
     AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
+    Custom: Benutzerdefiniert
+    DATEFORMATBAD: 'Ungültiges Datumsformat'
     DAYNOLEADING: 'Day of month without leading zero'
     DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
     FOURDIGITYEAR: Jahr
@@ -343,7 +343,7 @@ de:
     HOURNOLEADING: 'Hour without leading zero'
     MINUTENOLEADING: Minute
     MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
+    Preview: Vorschau
     SHORTMONTH: 'Short name of month (e.g. Jun)'
     TOGGLEHELP: 'Toggle formatting help'
     TWODIGITDAY: 'Two-digit day of month'
@@ -385,9 +385,9 @@ de:
     IMPORTSPECFIELDS: 'Database columns'
     IMPORTSPECRELATIONS: Relations
   PermissionCheckboxSetField:
-    AssignedTo: 'assigned to "{title}"'
-    FromGroup: 'inherited from group "{title}"'
-    FromRole: 'inherited from role "{title}"'
+    AssignedTo: 'Zugewiesen an "{title}"'
+    FromGroup: 'abgeleited von Gruppe "{title}"'
+    FromRole: 'abgeleited von Rolle "{title}"'
     FromRoleOnGroup: 'geerbt von Rolle "%s" für die Gruppe "%s"'
   Permissions:
     PERMISSIONS_CATEGORY: 'Rollen und Zugriffsberechtigungen'
@@ -443,7 +443,7 @@ de:
     TABMAIN: Hauptteil
   TableField:
     ADDITEM: '%s hinzufügen'
-    ISREQUIRED: 'In %s ''%s'' is required'
+    ISREQUIRED: 'In %s wird ''%s'' benötigt'
     SORTASC: 'Aufsteigend sortieren'
     SORTDESC: 'Absteigend sortieren'
   TableListField:
@@ -464,7 +464,7 @@ de:
     DOEDIT: Speichern
     DROPFILE: 'Datei hier ablegen'
     DROPFILES: 'Dateien hier ablegen'
-    Dimensions: Dimensions
+    Dimensions: Dimensionen
     EDITINFO: 'Diese Datei bearbeiten'
     FIELDNOTSET: 'Dateiinformationen nicht gefunden'
     FROMCOMPUTER: 'Von Ihrem Computer'
