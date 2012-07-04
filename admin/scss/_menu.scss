@@ -10,7 +10,7 @@
 .cms-logo-header {
 	background-color: darken($color-dark-bg, 10%);
 	position: relative;
-	padding: $grid-y + 1 8px 0 4px;
+	padding: 0 8px 0 4px;
 	line-height: 24px;
 
 	@include background-image(
@@ -19,8 +19,6 @@
 
 	span {
 		color: $color-text-light;
-		white-space: nowrap;
-		text-overflow: ellipsis;
 		display: block;
 
 		a {
@@ -32,9 +30,9 @@
 
 .cms-logo {
 	border-bottom: 1px solid darken($color-dark-separator, 20%);
-	height: 31px;
 	overflow: hidden;
-	padding: 0 0 0 4px;
+	padding: $grid-y 0;
+	position: relative;
 	vertical-align: middle;
 	font-size: $font-base-size;
 
@@ -43,12 +41,13 @@
 	} 
 
 	a {
-		display: inline-block;
-		height: 24px;
+		position: absolute;
+		top: $grid-y;
+		bottom: $grid-y;
+		left: 4px;
+		display: block;
 		width: 24px;
-		float: left;
-		margin-right: 8px;
-		background: $application-logo-small no-repeat;
+		background: $application-logo-small no-repeat left center;
 		text-indent: -9999em;
 		padding-right: 7px;
 		border-right: 1px solid $color-dark-separator;
@@ -57,8 +56,9 @@
 	span {
 		font-weight: bold;
 		font-size: 14px;
-		@include hide-text-overflow();
-		padding-top:1px;
+		line-height: 20px;
+		padding: 2px 0;
+		margin-left: 44px;
 	}
 }
 
