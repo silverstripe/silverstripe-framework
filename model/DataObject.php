@@ -295,6 +295,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * don't have their defaults set.
 	 */
 	function __construct($record = null, $isSingleton = false, $model = null) {
+
+		parent::__construct();
+
 		// Set the fields data.
 		if(!$record) {
 			$record = array(
@@ -344,8 +347,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(isset($record['LastEdited'])) {
 			HTTP::register_modification_date($record['LastEdited']);
 		}
-
-		parent::__construct();
 
 		// Must be called after parent constructor
 		if(!$isSingleton && (!isset($this->record['ID']) || !$this->record['ID'])) {
