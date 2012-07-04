@@ -55,7 +55,7 @@ pl:
   Boolean:
     ANY: Jakikolwiek
     0: Nie
-    LOGOUT: 'Log out'
+    LOGOUT: 'Wyloguj się'
     1: Tak
   CMSMain:
     ACCESS: 'Dostęp do sekcji ''{title}'''
@@ -123,15 +123,15 @@ pl:
   File:
     Content: Zawartość
     Filename: 'Nazwa pliku'
-    INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    INVALIDEXTENSION: 'Rozszerzenie niedozwolone (dozwolone: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Rozszerzenie niedozwolone'
     NOFILESIZE: 'Rozmiar pliku to zero bajtów.'
     NOVALIDUPLOAD: 'Plik nie został poprawnie przesłany'
     Name: Nazwa
     PLURALNAME: Pliki
     SINGULARNAME: Plik
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
+    TOOLARGE: 'Plik jest za duży, maksymalnie dozwolone jest {size}'
+    TOOLARGESHORT: 'Rozmiar pliku przekracza {size}'
     Title: Tytuł
   FileIFrameField:
     ATTACH: 'Dołącz {type}'
@@ -161,7 +161,7 @@ pl:
   FormField:
     NONE: brak
   GridAction:
-    DELETE_DESCRIPTION: Delete
+    DELETE_DESCRIPTION: Usuń
     Delete: Usuń
     UnlinkRelation: 'Usuń łącze'
   GridField:
@@ -221,7 +221,7 @@ pl:
     ResultDeleted: 'Usunięto grup: %d'
     ResultUpdated: 'Zaktualizowano grup: %d'
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
+    InfiniteLoopNotAllowed: 'Znaleziono nieskończoną pętlę wewnątrz hierarchii "{type}". Proszę zmień rodzica by to rozwiązać.'
   HtmlEditorField:
     ADDURL: 'Dodaj adres URL'
     ADJUSTDETAILSDIMENSIONS: 'Szczegóły i rozmiar'
@@ -362,13 +362,13 @@ pl:
   MemberTableField: null
   ModelAdmin:
     DELETE: Usuń
-    DELETEDRECORDS: 'Deleted {count} records.'
+    DELETEDRECORDS: 'Usunięto rekordów: {count}'
     IMPORT: 'Import z CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
+    IMPORTEDRECORDS: 'Zaimportowano rekordów: {count}'
     NOCSVFILE: 'Wybierz plik CSV do zaimportowania'
     NOIMPORT: 'Nie ma niczego do zaimportowania'
     RESET: Zresetuj
-    Title: 'Data Models'
+    Title: 'Modele danych'
     UPDATEDRECORDS: 'Zaktualizowano {count} rekordów.'
   MoneyField:
     FIELDLABELAMOUNT: Ilość
@@ -382,8 +382,8 @@ pl:
     CMS_ACCESS_CATEGORY: 'Dostęp do CMSa'
     FULLADMINRIGHTS: 'Pełne prawa administracyjne'
     FULLADMINRIGHTS_HELP: 'Zatwierdza i nadpisuje wszystkie istniejące uprawnienia'
-    IMPORTSPECFIELDS: 'Database columns'
-    IMPORTSPECRELATIONS: Relations
+    IMPORTSPECFIELDS: 'Kolumny bazy danych'
+    IMPORTSPECRELATIONS: Relacje
   PermissionCheckboxSetField:
     AssignedTo: 'przypisany do "{title}"'
     FromGroup: 'odziedziczone z grupy "{title}"'
@@ -404,10 +404,10 @@ pl:
     LOGGEDOUT: 'Zostałeś wylogowany. Jeśli chcesz się zalogować ponownie wpisz dane poniżej'
     LOGIN: Logowanie
     NOTEPAGESECURED: 'Ta strona jest zabezpieczona. Wpisz swoje dane a my wyślemy Ci potwierdzenie niebawem'
-    NOTERESETLINKINVALID: '<p>The password reset link is invalid or expired.</p><p>You can request a new one <a href="{link1}">here</a> or change your password after you <a href="{link2}">logged in</a>.</p>'
+    NOTERESETLINKINVALID: '<p>Link resetujący hasło wygasł lub jest nieprawidłowy.</p><p>Możesz poprosić o nowy <a href="{link1}">tutaj</a> lub zmień swoje hasło po <a href="{link2}">zalogowaniu się</a>.</p>'
     NOTERESETPASSWORD: 'Wpisz adres e-mail, na który mamy wysłać link gdzie możesz zresetować swoje hasło'
-    PASSWORDSENTHEADER: 'Password reset link sent to ''{email}'''
-    PASSWORDSENTTEXT: 'Thank you! A reset link has been sent to ''{email}'', provided an account exists for this email address.'
+    PASSWORDSENTHEADER: 'Link resetujący hasła został wysłany do ''{email}'''
+    PASSWORDSENTTEXT: 'Dziękujemy! Link resetujący hasło został wysłany do ''{email}'', o ile konto użytkownika dla takiego e-maila istnieje.'
   SecurityAdmin:
     ACCESS_HELP: 'Pozwala na przeglądanie, dodawanie i edycję użytkowników, jak również przypisywanie im uprawnień i ról.'
     APPLY_ROLES: 'Zatwierdź role dla grup'
