@@ -79,13 +79,9 @@ class GridField extends FormField {
 		if($dataList) {
 			$this->setList($dataList);
 		}
-		
-		if(!$config) {
-			$this->config = GridFieldConfig_Base::create();
-		} else {
-			$this->config = $config;
-		}
-		
+
+		$this->setConfig($config ?: GridFieldConfig_Base::create());
+
 		$this->config->addComponent(new GridState_Component());
 		$this->state = new GridState($this);		
 		
@@ -133,7 +129,16 @@ class GridField extends FormField {
 	public function getConfig() {
 		return $this->config;
 	}
-	
+
+	/**
+	 * @param GridFieldConfig $config
+	 * @return GridField
+	 */
+	public function setConfig(GridFieldConfig $config) {
+		$this->config = $config;
+		return $this;
+	}
+
 	public function getComponents() {
 		return $this->config->getComponents();
 	}
