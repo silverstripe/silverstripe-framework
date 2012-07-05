@@ -5,7 +5,7 @@ es_MX:
     CREATED: 'Agregado por primera vez'
     DIM: Dimensiones
     FILENAME: 'Nombre del archivo'
-    FOLDER: Folder
+    FOLDER: Carpeta
     LASTEDIT: 'Modificado por última vez'
     OWNER: Propietario
     SIZE: Tamaño
@@ -16,12 +16,12 @@ es_MX:
     ChooseFiles: 'Seleccionar archivos'
     DRAGFILESHERE: 'Arrastrar archivos acá'
     DROPAREA: 'Área de arrastre'
-    EDITALL: 'Edit all'
+    EDITALL: 'Editar todos'
     EDITANDORGANIZE: 'Editar y organizar'
-    FILES: Files
+    FILES: Archivos
     TOTAL: Total
-    TOUPLOAD: 'Choose file(s) to upload...'
-    UPLOADINPROGRESS: 'Please wait… upload in progress'
+    TOUPLOAD: 'Seleccionar archivos para subir'
+    UPLOADINPROGRESS: 'Por favor espera, subida de archivos en progreso'
     UPLOADOR: o
   BBCodeParser:
     ALIGNEMENT: Alineación
@@ -63,7 +63,7 @@ es_MX:
     ACCESSALLINTERFACESHELP: 'Anula la configuració de acceso más específica.'
     SAVE: Guardar
   CMSProfileController:
-    MENUTITLE: CMSProfileController
+    MENUTITLE: 'Controladores de perfil del CMS'
   CheckboxField:
     - No
     - Sí
@@ -97,19 +97,19 @@ es_MX:
     MONTHS: meses
     SEC: segundo
     SECS: segundos
-    TIMEDIFFAGO: '{difference} ago'
-    TIMEDIFFIN: 'in {difference}'
+    TIMEDIFFAGO: '{difference} atrás'
+    TIMEDIFFIN: 'en {difference}'
     YEAR: año
     YEARS: años
   DateField:
     NOTSET: 'no especificada'
     TODAY: ahora
-    VALIDDATEFORMAT2: 'Please enter a valid date format ({format})'
-    VALIDDATEMAXDATE: 'Your date has to be older or matching the maximum allowed date ({date})'
-    VALIDDATEMINDATE: 'Your date has to be newer or matching the minimum allowed date ({date})'
+    VALIDDATEFORMAT2: 'Por favor ingresar un formato válido de fecha ({format})'
+    VALIDDATEMAXDATE: 'Tu fecha tiene que ser más antigua o al menos coincidir con la fecha mínima permitida ({date})'
+    VALIDDATEMINDATE: 'Tu fecha tiene que ser nueva o al menos coincidir con la fecha mínima permitida ({date})'
   Director:
     ADD: Agregar
-    INVALID_REQUEST: 'Invalid request'
+    INVALID_REQUEST: 'Solicitud no válida'
   DropdownField:
     CHOOSE: (Seleccione)
   EmailField:
@@ -119,7 +119,7 @@ es_MX:
     SINGULARNAME: 'Correo electrónico devuelto'
   Enum:
     ANY: Cualquiera
-    LOADING: Loading...
+    LOADING: Cargando...
   File:
     Content: Contenido
     Filename: 'Nombre de Archivo'
@@ -138,7 +138,7 @@ es_MX:
     ATTACHONCESAVED: '{type}s can be attached once you have saved the record for the first time.'
     ATTACHONCESAVED2: 'Files can be attached once you have saved the record for the first time.'
     DELETE: 'Delete {type}'
-    DISALLOWEDFILETYPE: 'This filetype is not allowed to be uploaded'
+    DISALLOWEDFILETYPE: 'Este tipo de archivo no se puede subir'
     FILE: Archivo
     FROMCOMPUTER: 'Desde su Ordenador'
     FROMFILESTORE: 'Desde el almacén de archivos'
@@ -150,7 +150,7 @@ es_MX:
     SYNCRESULTS: 'Sync complete: {createdcount} items created, {deletedcount} items deleted'
   Form:
     FIELDISREQUIRED: '%s es obligatorio'
-    TITLE: 'Image Uploading Iframe'
+    TITLE: 'Subidor de imágenes por iFrame'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'El valor ingresado no es único'
     VALIDATIONPASSWORDSDONTMATCH: 'Las contraeñas no son iguales'
@@ -162,21 +162,21 @@ es_MX:
     NONE: ninguno
   GridAction:
     DELETE_DESCRIPTION: Delete
-    Delete: Delete
-    UnlinkRelation: Unlink
+    Delete: Eliminar
+    UnlinkRelation: Desvincular
   GridField:
-    Add: 'Add {name}'
+    Add: 'Agregar {name}'
     Filter: Filtro
-    FilterBy: 'Filter by '
+    FilterBy: 'Filtrar por'
     Find: Buscar
-    LEVELUP: 'Level up'
+    LEVELUP: 'Subir de nivel'
     LinkExisting: 'Enlazar existente'
     NewRecord: 'Nuevo %s'
     NoItemsFound: 'No hay ítems encontrados'
     PRINTEDAT: 'Impreso en'
     PRINTEDBY: 'Imprimir por'
-    PlaceHolder: 'Find {type}'
-    PlaceHolderWithLabels: 'Find {type} by {name}'
+    PlaceHolder: 'Buscar {type}'
+    PlaceHolderWithLabels: 'Buscar {type} por {name}'
     RelationSearch: 'Buscar relación'
     ResetFilter: Resetear
   GridFieldAction_Delete:
@@ -206,7 +206,7 @@ es_MX:
     GroupReminder: 'Si eliges el grupo superior, este grupo tomará todos sus roles'
     HELLO: Hey
     Locked: '¿Bloqueado?'
-    NoRoles: "No se encontraron roles\\n"
+    NoRoles: 'No se encontraron roles'
     PASSWORD: Contraseña
     Parent: 'Grupo ascendente'
     RolesAddEditLink: 'Agregar/modificar roles'
@@ -215,8 +215,8 @@ es_MX:
     has_many_Permissions: Permisos
     many_many_Members: Miembros
   GroupImportForm:
-    Help1: '<p>Import one or more groups in <em>CSV</em> format (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing groups are matched by their unique <em>Code</em> value, and updated with any new values from the imported file</li>	<li>Group hierarchies can be created by using a <em>ParentCode</em> column.</li>	<li>Permission codes can be assigned by the <em>PermissionCode</em> column. Existing permission codes are not cleared.</li>	</ul></div>'
+    Help1: "<p>Importar usuarios en <em>formato CSV</em> (valores separados por comas). <small><a href=\"#\" class=\"toggle-advanced\">Mostrar uso avanzado</a></small></p>\\n"
+    Help2: '<div class="advanced"><h4>Uso Avanzado</h4><ul><li>Columnas permitidas: <em>%s</em></li><li>Usuarios existents son relacionados por su <em>Código</em> único, y actualizados con cualquier valor nuevo desde el archivo importado.</li><li>Grupos pueden see asignados por la columna Grupos. Los grupos son identificados por su <em>código</em>, multiples grupos pueden ser separados por comas. Grupos existentes no son eliminados.</li></ul></div>'
     ResultCreated: 'Created {count} groups'
     ResultDeleted: '%d grupos eliminados'
     ResultUpdated: '%d grupos actualizados'
@@ -274,7 +274,7 @@ es_MX:
     ADD: 'Agregar un nuevo renglón'
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
-    DropdownBatchActionsDefault: Actions
+    DropdownBatchActionsDefault: Acciones
     HELP: Ayuda
     PAGETYPE: 'Tipo de página:'
     PERMAGAIN: 'Usted ha sido desconectado del CMS. Si quiere volver a entrar, introduzca su nombre de usuario y contraseña.'
@@ -284,13 +284,13 @@ es_MX:
     PreviewButton: Preview
     REORGANISATIONSUCCESSFUL: 'Reorganised the site tree successfully.'
     SAVEDUP: Saved.
-    VersionUnknown: unknown
+    VersionUnknown: desconocido
   LoginAttempt:
     Email: 'Dirección de Correo Electrónico'
     IP: 'Dirección IP'
     Status: Estado
   Member:
-    ADDGROUP: 'Add group'
+    ADDGROUP: 'Agregar grupo'
     BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
     BUTTONLOGIN: Ingresar
     BUTTONLOGINOTHER: 'Ingresar como alguien más'
@@ -308,8 +308,8 @@ es_MX:
     ERRORWRONGCRED: 'No parece correcta la dirección de correo-e o la contraseña. Por favor inténtalo de nuevo.'
     FIRSTNAME: 'Primer Nombre'
     INTERFACELANG: 'Lenguaje de la interfaz'
-    INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
-    LOGGEDINAS: 'You''re logged in as {name}.'
+    INVALIDNEWPASSWORD: 'No podemos acceptar see pasword: {password}'
+    LOGGEDINAS: 'Conectado como {name}.'
     NEWPASSWORD: 'Nueva contraseña'
     PASSWORD: Contraseña
     PLURALNAME: Miembros
@@ -320,8 +320,8 @@ es_MX:
     SUBJECTPASSWORDRESET: 'Enlace para reasignar su contraseña'
     SURNAME: Apellido
     VALIDATIONMEMBEREXISTS: 'Ya existe un miembro con el mismo %s'
-    ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
-    WELCOMEBACK: 'Welcome Back, {firstname}'
+    ValidationIdentifierFailed: 'No se puede sobreescribir el miembro existente  #{id} con el identificador idéntico ({name} = {value}))'
+    WELCOMEBACK: 'Bienvenido nuevamente, {firstname}'
     YOUROLDPASSWORD: 'Contraseña anterior'
     belongs_many_many_Groups: Grupos
     db_LastVisited: 'Fecha de Última Visita'
@@ -333,28 +333,28 @@ es_MX:
   MemberAuthenticator:
     TITLE: 'Correo-e y Contraseña'
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) or PM (Post meridiem)'
-    Custom: Custom
-    DATEFORMATBAD: 'Date format is invalid'
-    DAYNOLEADING: 'Day of month without leading zero'
-    DIGITSDECFRACTIONSECOND: 'One or more digits representing a decimal fraction of a second'
-    FOURDIGITYEAR: 'Four-digit year'
-    FULLNAMEMONTH: 'Full name of month (e.g. June)'
-    HOURNOLEADING: 'Hour without leading zero'
-    MINUTENOLEADING: 'Minute without leading zero'
-    MONTHNOLEADING: 'Month digit without leading zero'
-    Preview: Preview
-    SHORTMONTH: 'Short name of month (e.g. Jun)'
-    TOGGLEHELP: 'Toggle formatting help'
-    TWODIGITDAY: 'Two-digit day of month'
-    TWODIGITHOUR: 'Two digits of hour (00 through 23)'
-    TWODIGITMINUTE: 'Two digits of minute (00 through 59)'
-    TWODIGITMONTH: 'Two-digit month (01=January, etc.)'
-    TWODIGITSECOND: 'Two digits of second (00 through 59)'
-    TWODIGITYEAR: 'Two-digit year'
+    AMORPM: 'AM (ante meridian) o PM (post meridiano)'
+    Custom: 'A medida'
+    DATEFORMATBAD: 'El formato de fecha es invalido'
+    DAYNOLEADING: 'Dia del mes sin cero a la izquierda'
+    DIGITSDECFRACTIONSECOND: 'Uno o más dígitos representando una fracción decimal de un segundo'
+    FOURDIGITYEAR: 'Año de 4 dígitos'
+    FULLNAMEMONTH: 'Nombre completo del mes (ej: Junio)'
+    HOURNOLEADING: 'Hora sin cero a la izquierda'
+    MINUTENOLEADING: 'Minuto sin cero a la izquierda'
+    MONTHNOLEADING: 'Dígito del mes  sin cero'
+    Preview: Previo
+    SHORTMONTH: 'Nombre corto del mes (ej: Jun)'
+    TOGGLEHELP: 'Mostrar la ayuda de formato'
+    TWODIGITDAY: 'Dia del mes de dos dígitos'
+    TWODIGITHOUR: 'Dos dígitos de la hora (00 a 23)'
+    TWODIGITMINUTE: 'Dos dígitos de los minutos (00 a 59)'
+    TWODIGITMONTH: 'Mes de 2 dígitos (01=Enero, etc.)'
+    TWODIGITSECOND: 'Dos dígitos de los segundos (00 a 59)'
+    TWODIGITYEAR: 'Año en 2 dígitos'
   MemberImportForm:
-    Help1: '<p>Import users in <em>CSV format</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Show advanced usage</a></small></p>'
-    Help2: '<div class="advanced">	<h4>Advanced usage</h4>	<ul>	<li>Allowed columns: <em>%s</em></li>	<li>Existing users are matched by their unique <em>Code</em> property, and updated with any new values from the imported file.</li>	<li>Groups can be assigned by the <em>Groups</em> column. Groups are identified by their <em>Code</em> property, multiple groups can be separated by comma. Existing group memberships are not cleared.</li>	</ul></div>'
+    Help1: "<p>Importar usurious en <em>format CSV</em> (valores separados por comas). <small><a href=\"#\" class=\"toggle-advanced\">Mostrar uso avanzado</a></small></p>\\n"
+    Help2: "<div class=\"advanced\">\\n<h4>Uso Avanzado</h4>\\n<ul>\\n<li>Columnas permitidas: <em>%s</em></li>\\n<li>Usuarios existents son relacionados por su <em>Código</em> único, y actualizados con cualquier valor nuevo desde el archivo importado.</li>\\n<li>Grupos pueden see asignados por la column Grupos. Los grupos son identificados por su <em>código</em>, multiples grupos pueden ser separados por comas. Grupos existentes no son eliminados.</li>\\n</ul>\\n</div>"
     ResultCreated: 'Created {count} members'
     ResultDeleted: '%d miembros eliminados'
     ResultNone: 'Sin cambios'
@@ -362,21 +362,21 @@ es_MX:
   MemberTableField: null
   ModelAdmin:
     DELETE: Eliminar
-    DELETEDRECORDS: 'Deleted {count} records.'
+    DELETEDRECORDS: 'Borrados {count} registros'
     IMPORT: 'Importar desde CSV'
-    IMPORTEDRECORDS: 'Imported {count} records.'
+    IMPORTEDRECORDS: 'Importados {count} registros'
     NOCSVFILE: 'Por favor navegue hasta el archivo CSV a importar'
     NOIMPORT: 'Nada por Importar'
-    RESET: Reset
-    Title: 'Data Models'
-    UPDATEDRECORDS: 'Updated {count} records.'
+    RESET: Reiniciar
+    Title: 'Modelo de datos'
+    UPDATEDRECORDS: 'Actualizados {count} registros'
   MoneyField:
     FIELDLABELAMOUNT: Importe
     FIELDLABELCURRENCY: Moneda
   NullableField:
     IsNullLabel: 'Es Nulo'
   NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+    VALIDATION: '''{value}'' no es un número, solo números son aceptados por este campo'
   Permission:
     AdminGroup: Administrador
     CMS_ACCESS_CATEGORY: 'Acceder al CMS'
@@ -392,7 +392,7 @@ es_MX:
   Permissions:
     PERMISSIONS_CATEGORY: 'Roles y permisos de acceso'
   PhoneNumberField:
-    Back: Back
+    Back: Volver
     VALIDATION: 'Por favor ingresa un número telefónico válido'
   Security:
     ALREADYLOGGEDIN: 'Usted no tiene acceso a esta página. Si tiene otra cuenta que pueda tener acceso a ésta página, puede <a href="%s">abrir una sesión abajo</a>.'
@@ -418,7 +418,7 @@ es_MX:
     IMPORTGROUPS: 'Importar grupos'
     IMPORTUSERS: 'Importar usuarios'
     MEMBERS: Miembros
-    MENUTITLE: Security
+    MENUTITLE: Seguridad
     MemberListCaution: 'Precaución: Al remover miembros de esta lista, debe eliminarlos de todos los grupos y de la base de datos.'
     NEWGROUP: 'Nuevo grupo'
     PERMISSIONS: Permisos
@@ -452,7 +452,7 @@ es_MX:
     Print: Imprimir
     SELECT: 'Seleccione:'
   TimeField:
-    VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+    VALIDATEFORMAT: 'Por favor ingresar un formato válido de fecha ({format})'
   ToggleField:
     LESS: menos
     MORE: más
@@ -464,14 +464,14 @@ es_MX:
     DOEDIT: Guardar
     DROPFILE: 'Arrastrar un archivo'
     DROPFILES: 'arrastrar archivo aquí'
-    Dimensions: Dimensions
+    Dimensions: Dimensiones
     EDITINFO: 'Editar este archivo'
     FIELDNOTSET: 'Información acerca del archivo no encontrada'
     FROMCOMPUTER: 'Desde tu computador'
     FROMFILES: 'Desde archivos'
-    MAXNUMBEROFFILES: 'Max number of {count} file(s) exceeded.'
-    MAXNUMBEROFFILESSHORT: 'Can only upload {count} files'
-    REMOVE: Remove
+    MAXNUMBEROFFILES: 'Máximo número {count} de archivos sobrepasado'
+    MAXNUMBEROFFILESSHORT: 'Solo puedes subir {count} archivos'
+    REMOVE: Remover
     REMOVEERROR: 'Error removiendo archivo'
     REMOVEINFO: 'Remover este archivo de aquí, pero no borrarlo del almacén de archivos'
     STARTALL: 'Comenzar todas'
