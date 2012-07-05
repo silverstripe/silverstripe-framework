@@ -646,8 +646,6 @@ class Requirements_Backend {
 	 * @return string HTML content thats augumented with the requirements before the closing <head> tag.
 	 */
 	function includeInHTML($templateFile, $content) {
-		if(isset($_GET['debug_profile'])) Profiler::mark("Requirements::includeInHTML");
-		
 		if((strpos($content, '</head>') !== false || strpos($content, '</head ') !== false) && ($this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags)) {
 			$requirements = '';
 			$jsRequirements = '';
@@ -710,8 +708,6 @@ class Requirements_Backend {
 				$content = preg_replace("/(<\/head>)/i", $jsRequirements . "\\1", $content);
 			}
 		} 
-		
-		if(isset($_GET['debug_profile'])) Profiler::unmark("Requirements::includeInHTML");
 		
 		return $content;
 	}
