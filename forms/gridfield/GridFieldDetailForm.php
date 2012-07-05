@@ -318,17 +318,19 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			return $controller->redirect($noActionURL, 302);
 		}
 
-		$actions = $this->getFormActions();
+		$actions = new FieldList();
 		if($this->record->ID !== 0) {
                     // Add check to see if record is providing its own actions.
                     // If not, fall back to default.
                     // Currently custom methods for manipulating data need to be
                     // added to this class via Object::add_extension();
-                    if($this->formActions->count() == 0) {
+                    if(!$this->getFormActions()->exists()) {
                         $actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
                                 ->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept'));
                         $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
                                 ->addExtraClass('ss-ui-action-destructive'));
+                    } else {
+                        $actions->merge($this->getFormActions());
                     }
 		}else{ // adding new record
 			//Change the Save label to 'Create'
